@@ -344,7 +344,7 @@ dl_open_worker (void *a)
   if (nmaps > 1)
     {
       uint16_t seen[nmaps];
-      memset (seen, '\0', nmaps);
+      memset (seen, '\0', sizeof (seen));
       size_t i = 0;
       while (1)
 	{
