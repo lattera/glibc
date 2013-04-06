@@ -65,6 +65,7 @@
 #define	syscall_error	__syscall_error
 #define mcount		_mcount
 
+#undef PSEUDO
 #define	PSEUDO(name, syscall_name, args) \
 lose: SYSCALL_PIC_SETUP				\
     basr %r1,0;					\
