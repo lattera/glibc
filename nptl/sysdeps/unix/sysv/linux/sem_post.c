@@ -17,6 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <atomic.h>
 #include <errno.h>
 #include <sysdep.h>
 #include <lowlevellock.h>
