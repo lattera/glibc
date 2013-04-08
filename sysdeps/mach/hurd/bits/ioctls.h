@@ -141,7 +141,7 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 
 /* Construct an individual type field for TYPE.  */
 #define _IOTS(type)	\
-  (sizeof (type) == 8 ? IOC_64 : (sizeof (type) >> 1))
+  (sizeof (type) == 8 ? IOC_64 : (enum __ioctl_datum) (sizeof (type) >> 1))
 
 /* Construct a type information field for
    a single argument of the scalar TYPE.  */

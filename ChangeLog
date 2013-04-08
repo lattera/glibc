@@ -1,3 +1,9 @@
+2013-04-08  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #14280]
+	* sysdeps/mach/hurd/bits/ioctls.h (_IOTS): Cast to enum __ioctl_datum
+	when computing value.
+
 2013-04-06  Carlos O'Donell  <carlos@redhat.com>
 
 	* math/README.libm-test (How can I generate "libm-test-ulps"?):
