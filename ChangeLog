@@ -1,3 +1,13 @@
+2013-04-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
+	    Roland McGrath  <roland@hack.frob.com>
+	    Ondrej Bilka  <neleai@seznam.cz>
+
+	[BZ #15346]
+	* time/getdate.c: Include ctype.h and alloca.h.
+	(__getdate_r): Trim leading and trailing spaces of input.
+	* time/tst-getdate.c (tests): Add tests with leading and
+	trailing spaces.
+
 2013-04-08  Roland McGrath  <roland@hack.frob.com>
 
 	[BZ #14280]

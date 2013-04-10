@@ -25,6 +25,8 @@
 #include <time.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <ctype.h>
+#include <alloca.h>
 
 #define TM_YEAR_BASE 1900
 
@@ -135,6 +137,44 @@ __getdate_r (const char *string, struct tm *tp)
   /* No threads reading this stream.  */
   __fsetlocking (fp, FSETLOCKING_BYCALLER);
 
+  /* Skip leading whitespace.  */
+  while (isspace (*string))
+    string++;
+
+  size_t inlen, oldlen;
+
+  oldlen = inlen = strlen (string);
+
+  /* Skip trailing whitespace.  */
+  while (inlen > 0 && isspace (string[inlen - 1]))
+    inlen--;
+
+  char *instr = NULL;
+
+  if (inlen < oldlen)
+    {
+      bool using_malloc = false;
+
+      if (__libc_use_alloca (inlen + 1))
+	instr = alloca (inlen + 1);
+      else
+	{
+	  instr = malloc (inlen + 1);
+	  if (instr == NULL)
+	    {
+	      fclose (fp);
+	      return 6;
+	    }
+	  using_malloc = true;
+	}
+      memcpy (instr, string, inlen);
+      instr[inlen] = '\0';
+      string = instr;
+
+      if (!using_malloc)
+	instr = NULL;
+    }
+
   line = NULL;
   len = 0;
   do
@@ -158,6 +198,8 @@ __getdate_r (const char *string, struct tm *tp)
 	break;
     }
   while (!feof_unlocked (fp));
+
+  free (instr);
 
   /* Free the buffer.  */
   free (line);
