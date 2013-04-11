@@ -1,3 +1,7 @@
+2013-04-11  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/m680x0/fpu/libm-test-ulps: Update
+
 2013-03-11  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #15234]
