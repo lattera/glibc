@@ -1,5 +1,9 @@
 2013-04-11  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* Makeconfig (rtld-prefix): Define built linker prefix.
+	* Rules (run-bench): Use it.
+	* math/Makefile (run-regen-ulps): Likewise.
+
 	* Rules (bench): Remove eval.
 
 2013-04-10  Siddhesh Poyarekar  <siddhesh@redhat.com>

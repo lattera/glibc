@@ -604,6 +604,9 @@ endif
 # How to run a program we just linked with our library.
 # The program binary is assumed to be $(word 2,$^).
 built-program-file = $(dir $(word 2,$^))$(notdir $(word 2,$^))
+rtld-prefix = $(elf-objpfx)$(rtld-installed-name)			      \
+	      --library-path						      \
+	      $(rpath-link)$(patsubst %,:%,$(sysdep-library-path))
 ifeq (yes,$(build-shared))
 comma = ,
 sysdep-library-path = \
@@ -617,9 +620,7 @@ $(subst $(empty) ,:,$(strip $(patsubst -Wl$(comma)-rpath-link=%, %,\
 # empty.
 run-via-rtld-prefix =							      \
   $(if $(strip $(filter $(notdir $(built-program-file)),		      \
-			$(tests-static) $(xtests-static))),,		      \
-       $(elf-objpfx)$(rtld-installed-name)				      \
-	 --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)))
+			$(tests-static) $(xtests-static))),, $(rtld-prefix))
 else
 run-via-rtld-prefix =
 endif

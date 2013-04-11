@@ -194,7 +194,7 @@ binaries-bench := $(addprefix $(objpfx)bench-,$(bench))
 
 run-bench = $(test-wrapper-env) \
 	    GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
-	    $($*-ENV) $(run-via-rtld-prefix) $${run}
+	    $($*-ENV) $(rtld-prefix) $${run}
 
 bench: $(binaries-bench)
 	for run in $^; do \

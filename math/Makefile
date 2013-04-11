@@ -156,7 +156,7 @@ ifneq (no,$(PERL))
 
 run-regen-ulps = $(test-wrapper-env) \
 	    GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
-	    $($*-ENV) $(run-via-rtld-prefix) $${run}
+	    $($*-ENV) $(rtld-prefix) $${run}
 
 regen-ulps: $(addprefix $(objpfx),$(libm-tests))
 	rm -f $(objpfx)ULPs; rm -f $(objpfx)NewUlps; \
