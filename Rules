@@ -199,7 +199,7 @@ run-bench = $(test-wrapper-env) \
 bench: $(binaries-bench)
 	for run in $^; do \
 	  echo "Running $${run}"; \
-	  eval $(run-bench) >>  $(objpfx)bench.out-tmp; \
+	  $(run-bench) >>  $(objpfx)bench.out-tmp; \
 	done; \
 	if [ -f $(objpfx)bench.out ]; then \
 	  mv -f $(objpfx)bench.out $(objpfx)bench.out.old; \

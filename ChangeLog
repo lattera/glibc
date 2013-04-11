@@ -1,3 +1,7 @@
+2013-04-11  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* Rules (bench): Remove eval.
+
 2013-04-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
 	    Roland McGrath  <roland@hack.frob.com>
 	    Ondrej Bilka  <neleai@seznam.cz>
