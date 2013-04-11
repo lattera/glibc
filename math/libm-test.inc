@@ -5330,7 +5330,31 @@ cos_test (void)
 
   TEST_f_f (cos, M_PI_6l * 2.0, 0.5);
   TEST_f_f (cos, M_PI_6l * 4.0, -0.5);
-  TEST_f_f (cos, M_PI_2l, 0);
+
+  /* The value of M_PI_2l is never exactly PI/2, and therefore the
+     answer is never exactly zero. The answer is equal to the error
+     in rounding PI/2 for the type used.  Thus the answer is unique
+     to each type.  */
+#ifdef TEST_FLOAT
+  /* 32-bit float.  */
+  TEST_f_f (cos, M_PI_2l, -4.371139000186241438857289400265215e-8L);
+#endif
+#if defined TEST_DOUBLE || (defined TEST_LDOUBLE && LDBL_MANT_DIG == 53)
+  /* 64-bit double or 64-bit long double.  */
+  TEST_f_f (cos, M_PI_2l, 6.123233995736765886130329661375001e-17L);
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG == 64
+  /* 96-bit long double.  */
+  TEST_f_f (cos, M_PI_2l, -2.50827880633416601177866354016537e-20L);
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG == 106
+  /* 128-bit IBM long double.  */
+  TEST_f_f (cos, M_PI_2l, 1.082856673921913968223746169860580e-32L);
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG == 113
+  /* 128-bit long double.  */
+  TEST_f_f (cos, M_PI_2l, 4.335905065061890512398522013021675e-35L);
+#endif
 
   TEST_f_f (cos, 0.75L, 0.731688868873820886311838753000084544L);
 
@@ -12134,7 +12158,31 @@ sincos_test (void)
   TEST_extra (sincos, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
   TEST_extra (sincos, qnan_value, qnan_value, qnan_value);
 
-  TEST_extra (sincos, M_PI_2l, 1, 0);
+  /* The value of M_PI_2l is never exactly PI/2, and therefore the
+     answer is never exactly zero. The answer is equal to the error
+     in rounding PI/2 for the type used.  Thus the answer is unique
+     to each type.  */
+#ifdef TEST_FLOAT
+  /* 32-bit float.  */
+  TEST_extra (sincos, M_PI_2l, 1, -4.371139000186241438857289400265215e-8L);
+#endif
+#if defined TEST_DOUBLE || (defined TEST_LDOUBLE && LDBL_MANT_DIG == 53)
+  /* 64-bit double or 64-bit long double.  */
+  TEST_extra (sincos, M_PI_2l, 1, 6.123233995736765886130329661375001e-17L);
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG == 64
+  /* 96-bit long double.  */
+  TEST_extra (sincos, M_PI_2l, 1, -2.50827880633416601177866354016537e-20L);
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG == 106
+  /* 128-bit IBM long double.  */
+  TEST_extra (sincos, M_PI_2l, 1, 1.082856673921913968223746169860580e-32L);
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG == 113
+  /* 128-bit long double.  */
+  TEST_extra (sincos, M_PI_2l, 1, 4.335905065061890512398522013021675e-35L);
+#endif
+
   TEST_extra (sincos, M_PI_6l, 0.5, 0.86602540378443864676372317075293616L);
   TEST_extra (sincos, M_PI_6l*2.0, 0.86602540378443864676372317075293616L, 0.5);
   TEST_extra (sincos, 0.75L, 0.681638760023334166733241952779893935L, 0.731688868873820886311838753000084544L);

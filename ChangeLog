@@ -1,3 +1,10 @@
+2013-04-11  Carlos O'Donell  <carlos@redhat.com>
+
+	* math/libm-test.inc (cos_test): Fix PI/2 test.
+	(sincos_test): Likewise.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Regenerate.
+	* sysdeps/i386/fpu/libm-test-ulps: Regenerate.
+
 2013-04-11  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #13988]

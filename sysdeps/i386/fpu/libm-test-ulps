@@ -4149,13 +4149,6 @@ idouble: 2
 ifloat: 1
 ildouble: 1
 ldouble: 1
-Test "cos (pi/2) == 0":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 
 # cos_downward
 Test "cos_downward (1) == 0.5403023058681397174009366074429766037323":
@@ -5507,13 +5500,6 @@ float: 1
 idouble: 1
 ifloat: 1
 Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.86602540378443864676372317075293616 in sin_res":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "sincos (pi/2, &sin_res, &cos_res) puts 0 in cos_res":
 double: 1
 float: 1
 idouble: 1
