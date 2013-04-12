@@ -1,3 +1,8 @@
+2013-04-12  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* Rules (bench): Move target definition...
+	* benchtests/Makefile: ... here.
+
 2013-04-11  Carlos O'Donell  <carlos@redhat.com>
 
 	* math/libm-test.inc (cos_test): Fix PI/2 test.

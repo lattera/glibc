@@ -104,5 +104,39 @@ slowatan-RET = double
 slowatan-INCLUDE = slowatan.c
 LDFLAGS-bench-slowatan = -lm
 
+
+
+# Rules to build and execute the benchmarks.  Do not put any benchmark
+# parameters beyond this point.
+
 include ../Makeconfig
 include ../Rules
+
+binaries-bench := $(addprefix $(objpfx)bench-,$(bench))
+
+run-bench = $(test-wrapper-env) \
+	    GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
+	    $($*-ENV) $(rtld-prefix) $${run}
+
+bench: $(binaries-bench)
+	for run in $^; do \
+	  echo "Running $${run}"; \
+	  $(run-bench) >>  $(objpfx)bench.out-tmp; \
+	done; \
+	if [ -f $(objpfx)bench.out ]; then \
+	  mv -f $(objpfx)bench.out $(objpfx)bench.out.old; \
+	fi; \
+	mv -f $(objpfx)bench.out-tmp $(objpfx)bench.out
+
+$(binaries-bench): %: %.o \
+  $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
+  $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
+	$(+link)
+
+$(objpfx)bench-%.c: %-inputs bench-skeleton.c
+	{ if [ -n "$($*-INCLUDE)" ]; then \
+	  cat $($*-INCLUDE); \
+	fi; \
+	$(..)scripts/bench.pl $(patsubst %-inputs,%,$<) \
+	  $($*-ITER) $($*-ARGLIST) $($*-RET); } > $@-tmp
+	mv -f $@-tmp $@
