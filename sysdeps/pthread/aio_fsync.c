@@ -36,17 +36,14 @@
 int
 aio_fsync (int op, struct aiocb *aiocbp)
 {
-  int flags;
-
   if (op != O_DSYNC && __builtin_expect (op != O_SYNC, 0))
     {
       __set_errno (EINVAL);
       return -1;
     }
 
-  flags = fcntl (aiocbp->aio_fildes, F_GETFL);
-  if (__builtin_expect (flags == -1, 0)
-      || __builtin_expect ((flags & O_ACCMODE) == O_RDONLY, 0))
+  /* Verify that this is an open file descriptor.  */
+  if (__glibc_unlikely (fcntl (aiocbp->aio_fildes, F_GETFL) == -1))
     {
       __set_errno (EBADF);
       return -1;

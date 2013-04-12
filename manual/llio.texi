@@ -2320,8 +2320,7 @@ successfully enqueued.  Otherwise the return value is @math{-1} and
 @item EAGAIN
 The request could not be enqueued due to temporary lack of resources.
 @item EBADF
-The file descriptor @code{aiocbp->aio_fildes} is not valid or not open
-for writing.
+The file descriptor @code{@var{aiocbp}->aio_fildes} is not valid.
 @item EINVAL
 The implementation does not support I/O synchronization or the @var{op}
 parameter is other than @code{O_DSYNC} and @code{O_SYNC}.

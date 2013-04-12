@@ -1,3 +1,12 @@
+2013-04-12  Roland McGrath  <roland@hack.frob.com>
+	    Xavier Roche  <roche+kml2@exalead.com>
+
+	[BZ #15361]
+	* sysdeps/pthread/aio_fsync.c (aio_fsync): Don't check open modes,
+	just that it's a file descriptor.
+	* manual/llio.texi (Synchronizing AIO Operations): Update description
+	for EBADF error from aio_fsync.
+
 2013-04-12  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* Rules (bench): Move target definition...
