@@ -1,3 +1,8 @@
+2013-04-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* benchtests/Makefile (bench): Write all output to
+	bench-out.tmp together.
+
 2013-04-15  Andreas Schwab  <schwab@suse.de>
 
 	* nscd/nscd.c (main): Don't fork again after closing files.

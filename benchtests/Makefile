@@ -121,10 +121,10 @@ run-bench = $(test-wrapper-env) \
 	    $($*-ENV) $(rtld-prefix) $${run}
 
 bench: $(binaries-bench)
-	for run in $^; do \
-	  echo "Running $${run}"; \
-	  $(run-bench) >>  $(objpfx)bench.out-tmp; \
-	done; \
+	{ for run in $^; do \
+	  echo "Running $${run}" >&2; \
+	  $(run-bench); \
+	done; } > $(objpfx)bench.out-tmp; \
 	if [ -f $(objpfx)bench.out ]; then \
 	  mv -f $(objpfx)bench.out $(objpfx)bench.out.old; \
 	fi; \
