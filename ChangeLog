@@ -1,5 +1,7 @@
 2013-04-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* libio/tst-fwrite-error.c (do_test): Fix BUF array definition.
+
 	* benchtests/Rules (bench-deps): Collect dependencies into a
 	single variable.  Add Makefile to dependencies.
 	($(objpfx)bench-%.c): Depend on bench-deps.

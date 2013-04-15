@@ -36,7 +36,7 @@ do_test (void)
       return 1;
     }
 
-  char buf[5] = "world";
+  char buf[] = "world";
   setvbuf (fp, NULL, _IONBF, 0);
   close (fd);
   unlink (tmpl);
