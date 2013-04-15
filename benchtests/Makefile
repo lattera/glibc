@@ -114,6 +114,8 @@ include ../Rules
 
 binaries-bench := $(addprefix $(objpfx)bench-,$(bench))
 
+bench-deps := bench-skeleton.c Makefile
+
 run-bench = $(test-wrapper-env) \
 	    GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
 	    $($*-ENV) $(rtld-prefix) $${run}
@@ -133,7 +135,7 @@ $(binaries-bench): %: %.o \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link)
 
-$(objpfx)bench-%.c: %-inputs bench-skeleton.c
+$(objpfx)bench-%.c: %-inputs $(bench-deps)
 	{ if [ -n "$($*-INCLUDE)" ]; then \
 	  cat $($*-INCLUDE); \
 	fi; \

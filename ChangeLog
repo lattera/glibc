@@ -1,3 +1,9 @@
+2013-04-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* benchtests/Rules (bench-deps): Collect dependencies into a
+	single variable.  Add Makefile to dependencies.
+	($(objpfx)bench-%.c): Depend on bench-deps.
+
 2013-04-12  Roland McGrath  <roland@hack.frob.com>
 	    Xavier Roche  <roche+kml2@exalead.com>
 
