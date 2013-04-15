@@ -1,3 +1,7 @@
+2013-04-15  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* stdio-common/tstdiomisc.c: Fix coding-style violation.
+
 2013-04-15  Andreas Schwab  <schwab@suse.de>
 
 	* nscd/grpcache.c (cache_addgr): Properly check for short write.

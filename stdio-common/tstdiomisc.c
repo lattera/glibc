@@ -50,10 +50,10 @@ volatile double qnanval;
 volatile long double lqnanval;
 /* A sNaN is only guaranteed to be representable in variables with static (or
    thread-local) storage duration.  */
-static volatile double snanval = __builtin_nans("");
-static volatile double msnanval = -__builtin_nans("");
-static volatile long double lsnanval = __builtin_nansl("");
-static volatile long double lmsnanval = -__builtin_nansl("");
+static volatile double snanval = __builtin_nans ("");
+static volatile double msnanval = -__builtin_nans ("");
+static volatile long double lsnanval = __builtin_nansl ("");
+static volatile long double lmsnanval = -__builtin_nansl ("");
 volatile double infval;
 volatile long double linfval;
 
