@@ -1,3 +1,8 @@
+2013-04-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* Makefile.in (bench-clean): New target.
+	* benchtests/Makefile (bench-clean): Likewise.
+
 2013-04-16  David Holsgrove  <david.holsgrove@xilinx.com>
 
 	* elf/elf.h: Add EM_MICROBLAZE and MicroBlaze relocations.

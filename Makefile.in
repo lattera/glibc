@@ -12,7 +12,7 @@ install:
 	LANGUAGE=C LC_ALL=C; export LANGUAGE LC_ALL; \
 	$(MAKE) -r PARALLELMFLAGS="$(PARALLELMFLAGS)" -C $(srcdir) objdir=`pwd` $@
 
-bench:
+bench bench-clean:
 	$(MAKE) -C $(srcdir)/benchtests $(PARALLELMFLAGS) objdir=`pwd` $@
 
 # Convenience target to rebuild ULPs for all math tests.

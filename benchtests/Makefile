@@ -120,6 +120,9 @@ run-bench = $(test-wrapper-env) \
 	    GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
 	    $($*-ENV) $(rtld-prefix) $${run}
 
+bench-clean:
+	rm -f $(binaries-bench) $(addsuffix .o,$(binaries-bench))
+
 bench: $(binaries-bench)
 	{ for run in $^; do \
 	  echo "Running $${run}" >&2; \
