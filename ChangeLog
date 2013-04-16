@@ -1,3 +1,16 @@
+2013-06-11  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* benchtests/Makefile: Disable parallel execution of targets.
+	(string-bench): Add memcpy.
+	(benchset): New variable to store a list of benchmark sets.
+	(bench-func): Renamed from bench.
+	(bench-set): New target.
+	(bench): Depend on bench-func and bench-set.
+	* benchtests/README: Add section on benchmark sets.
+	* benchtests/bench-memcpy-ifunc.c: New file.
+	* benchtests/bench-memcpy.c: New file.
+	* benchtests/bench-string.h: New file.
+
 2013-06-11  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #15577]

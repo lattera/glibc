@@ -72,3 +72,18 @@ the same file by using the `name' directive that looks something like this:
 
 See the pow-inputs file for an example of what such a partitioned input file
 would look like.
+
+Benchmark Sets:
+==============
+
+In addition to standard benchmarking of functions, one may also generate
+custom outputs for a set of functions.  This is currently used by string
+function benchmarks where the aim is to compare performance between
+implementations at various alignments and for various sizes.
+
+To add a benchset for `foo':
+
+- Add `foo' to the benchset variable.
+- Write your bench-foo.c that prints out the measurements to stdout.
+- On execution, a bench-foo.out is created in $(objpfx) with the contents of
+  stdout.

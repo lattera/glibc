@@ -23,6 +23,13 @@ subdir := benchtests
 bench := acos acosh asin asinh atan atanh cos cosh exp log modf pow rint sin \
 	 sinh tan tanh
 
+# String function benchmarks.
+string-bench := memcpy
+string-bench-ifunc := $(addsuffix -ifunc, $(string-bench))
+string-bench-all := $(string-bench) $(string-bench-ifunc)
+
+benchset := $(string-bench-all)
+
 acos-ARGLIST = double
 acos-RET = double
 LDFLAGS-bench-acos = -lm
@@ -92,10 +99,15 @@ LDFLAGS-bench-tanh = -lm
 # Rules to build and execute the benchmarks.  Do not put any benchmark
 # parameters beyond this point.
 
+# We don't want the benchmark programs to run in parallel since that could
+# affect their performance.
+.NOTPARALLEL:
+
 include ../Makeconfig
 include ../Rules
 
 binaries-bench := $(addprefix $(objpfx)bench-,$(bench))
+binaries-benchset := $(addprefix $(objpfx)bench-,$(benchset))
 
 # The default duration: 10 seconds.
 ifndef BENCH_DURATION
@@ -112,7 +124,7 @@ endif
 
 # This makes sure CPPFLAGS-nonlib and CFLAGS-nonlib are passed
 # for all these modules.
-cpp-srcs-left := $(binaries-bench:=.c)
+cpp-srcs-left := $(binaries-benchset:=.c) $(binaries-bench:=.c)
 lib := nonlib
 include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 
@@ -124,8 +136,17 @@ run-bench = $(test-wrapper-env) \
 
 bench-clean:
 	rm -f $(binaries-bench) $(addsuffix .o,$(binaries-bench))
+	rm -f $(binaries-benchset) $(addsuffix .o,$(binaries-benchset))
 
-bench: $(binaries-bench)
+bench: bench-set bench-func
+
+bench-set: $(binaries-benchset)
+	for run in $^; do \
+	  echo "Running $${run}"; \
+	  $(run-bench) > $${run}.out; \
+	done
+
+bench-func: $(binaries-bench)
 	{ for run in $^; do \
 	  echo "Running $${run}" >&2; \
 	  $(run-bench); \
@@ -135,7 +156,7 @@ bench: $(binaries-bench)
 	fi; \
 	mv -f $(objpfx)bench.out-tmp $(objpfx)bench.out
 
-$(binaries-bench): %: %.o \
+$(binaries-bench) $(binaries-benchset): %: %.o \
   $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link)
