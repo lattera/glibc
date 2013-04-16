@@ -78,7 +78,7 @@ do_test (void)
       puts ("aio_cancel( -1, {-2..} ) did not return -1 or errno != EBADF");
   }
 
-  /* Test for aio_fsync() detecting bad fd, and fd not open for writing.  */
+  /* Test for aio_fsync() detecting bad fd.  */
   {
     struct aiocb cb;
     int fd = -1;
@@ -98,21 +98,6 @@ do_test (void)
 	puts ("aio_fsync( op, {-1..} ) did not return -1 or errno != EBADF");
 	++result;
       }
-
-    if ((fd = open ("/dev/null", O_RDONLY)) < 0)
-      error (1, errno, "opening /dev/null");
-
-    cb.aio_fildes = fd;
-    errno = 0;
-
-    /* Case two: valid fd but open for read only.  */
-    if (aio_fsync (O_SYNC, &cb) != -1 || errno != EBADF)
-      {
-	puts ("aio_fsync( op, {RO..} ) did not return -1 or errno != EBADF");
-	++result;
-      }
-
-    close (fd);
   }
 
   /* Test for aio_suspend() suspending even if completed elements in list.  */
