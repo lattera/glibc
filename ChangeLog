@@ -1,5 +1,8 @@
 2013-04-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* benchtests/Makefile: Include cppflags-iterator.mk to add
+	-DNOT_IN_libc=1 to CPPFLAGS of all benchmark programs.
+
 	* Makefile.in (bench-clean): New target.
 	* benchtests/Makefile (bench-clean): Likewise.
 
