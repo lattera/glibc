@@ -1,3 +1,14 @@
+2013-04-17  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* benchtests/Makefile (bench): Add cos, tan, slowcos and
+	slowtan.
+	* benchtests/cos-inputs: New file.
+	* benchtests/slowcos-inputs: New file.
+	* benchtests/slowcos.c: New file.
+	* benchtests/slowtan-inputs: New file.
+	* benchtests/slowtan.c: New file.
+	* benchtests/tan-inputs: New file.
+
 2013-04-16  Roland McGrath  <roland@hack.frob.com>
 
 	* rt/tst-aio7.c (do_test): Don't test O_RDONLY fd case, which is now

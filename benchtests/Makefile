@@ -45,7 +45,8 @@
 #   See pow-inputs for an example.
 
 subdir := benchtests
-bench := exp pow rint sin atan slowexp slowpow slowsin slowatan
+bench := exp pow rint sin cos tan atan \
+	 slowexp slowpow slowsin slowcos slowtan slowatan
 
 # exp function fast path
 exp-ITER = 5e8
@@ -77,6 +78,18 @@ sin-ARGLIST = double
 sin-RET = double
 LDFLAGS-bench-sin = -lm
 
+# cos function fast path
+cos-ITER = 3e9
+cos-ARGLIST = double
+cos-RET = double
+LDFLAGS-bench-cos = -lm
+
+# tan function fast path
+tan-ITER = 3e9
+tan-ARGLIST = double
+tan-RET = double
+LDFLAGS-bench-tan = -lm
+
 # atan function fast path
 atan-ITER = 6e9
 atan-ARGLIST = double
@@ -96,6 +109,20 @@ slowsin-ARGLIST = double
 slowsin-RET = double
 slowsin-INCLUDE = slowsin.c
 LDFLAGS-bench-slowsin = -lm
+
+# cos function slowest path
+slowcos-ITER = 3e7
+slowcos-ARGLIST = double
+slowcos-RET = double
+slowcos-INCLUDE = slowcos.c
+LDFLAGS-bench-slowcos = -lm
+
+# tan function slowest path
+slowtan-ITER = 3e7
+slowtan-ARGLIST = double
+slowtan-RET = double
+slowtan-INCLUDE = slowtan.c
+LDFLAGS-bench-slowtan = -lm
 
 # atan function slowest path
 slowatan-ITER = 3e8
