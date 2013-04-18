@@ -1,3 +1,11 @@
+2013-04-17  Carlos O'Donell  <carlos@redhat.com>
+
+	* configure.in: Remove i386 configure warning.
+	* configure: Regenerate.
+	* sysdeps/i386/configure.in: Raise error if machine is i386.
+	Add example to error message.
+	* sysdeps/i386/configure: Regenerate.
+
 2013-04-17  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* benchtests/Makefile (bench): Add cos, tan, slowcos and

@@ -3741,15 +3741,6 @@ case "$machine-$host_os" in
     ;;
 esac
 
-# Configure for i686 if the user asks for i386. We don't support
-# i386 any more but it continues to be common for users to configure
-# 32-bit x86 as i386. We build for i686 instead.
-if test "$machine" = i386; then
-  machine="i686"
-  echo "\
-*** WARNING: Support for i386 is deprecated. Building for i686 instead."
-fi
-
 submachine=
 
 # Check whether --with-cpu was given.
@@ -3945,7 +3936,7 @@ fi
 # type and particular chip.  If an add-on configure fragment already set
 # base_machine, we don't change it.
 test -n "$base_machine" || case "$machine" in
-i[34567]86)	base_machine=i386 machine=i386/$machine ;;
+i[4567]86)	base_machine=i386 machine=i386/$machine ;;
 powerpc)	base_machine=powerpc machine=powerpc/powerpc32 ;;
 powerpc64)	base_machine=powerpc machine=powerpc/powerpc64 ;;
 s390)           base_machine=s390 machine=s390/s390-32 ;;

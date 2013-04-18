@@ -32,6 +32,15 @@ $as_echo "$ac_res" >&6; }
 # This file is generated from configure.in by Autoconf.  DO NOT EDIT!
  # Local configure fragment for sysdeps/i386.
 
+# We no longer support i386 since it lacks the atomic instructions
+# required to implement NPTL threading.
+if test "$config_machine" = i386; then
+  as_fn_error $? "
+*** ERROR: Support for i386 is deprecated.
+*** Please use host i786, i686, i585 or i486.
+*** For example: /src/glibc/configure --host=i686-pc-linux-gnu ...\"" "$LINENO" 5
+fi
+
 # The GNU C Library can't be built for i386.  There are several reasons for
 # this restriction.  The primary reason is that i386 lacks the atomic
 # operations required to support the current NPTL implementation.  While it is
@@ -66,7 +75,8 @@ if test $libc_compiler_builtin_inlined = yes; then
 else
   as_fn_error $? "
 *** Building with -march=i386/-mcpu=i386 is not supported.
-*** Please use host i786, i686, i586, or i486." "$LINENO" 5
+*** Please use host i786, i686, i586, or i486.
+*** For example: /source/glibc/configure CFLAGS='-O2 -march=i686' ..." "$LINENO" 5
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_compiler_builtin_inlined" >&5
 $as_echo "$libc_compiler_builtin_inlined" >&6; }

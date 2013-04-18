@@ -1,6 +1,15 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/i386.
 
+# We no longer support i386 since it lacks the atomic instructions
+# required to implement NPTL threading.
+if test "$config_machine" = i386; then
+  AC_MSG_ERROR([
+*** ERROR: Support for i386 is deprecated.
+*** Please use host i786, i686, i585 or i486.
+*** For example: /src/glibc/configure --host=i686-pc-linux-gnu ..."])
+fi
+
 # The GNU C Library can't be built for i386.  There are several reasons for
 # this restriction.  The primary reason is that i386 lacks the atomic
 # operations required to support the current NPTL implementation.  While it is
@@ -18,7 +27,8 @@ LIBC_COMPILER_BUILTIN_INLINED(
   [libc_cv_unsupported_i386=no],
   [AC_MSG_ERROR([
 *** Building with -march=i386/-mcpu=i386 is not supported.
-*** Please use host i786, i686, i586, or i486.])])
+*** Please use host i786, i686, i586, or i486.
+*** For example: /source/glibc/configure CFLAGS='-O2 -march=i686' ...])])
 
 AC_CHECK_HEADER([cpuid.h], ,
   [AC_MSG_ERROR([gcc must provide the <cpuid.h> header])],
