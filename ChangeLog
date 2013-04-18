@@ -1,3 +1,9 @@
+2015-01-25  Bram  <bug_rh@spam.wizbit.be>
+
+	[BZ #15378]
+	* elf/dl-load.c (open_path): Avoid writing to 'env_path_list'
+	when none of the search directories exist.
+
 2015-01-24  Adhemerval Zanellla  <azanella@linux.vnet.ibm.com>
 
 	[BZ #17869]

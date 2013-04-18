@@ -1889,9 +1889,9 @@ open_path (const char *name, size_t namelen, int mode,
       if (sps->malloced)
 	free (sps->dirs);
 
-      /* rtld_search_dirs is attribute_relro, therefore avoid writing
-	 into it.  */
-      if (sps != &rtld_search_dirs)
+      /* rtld_search_dirs and env_path_list are attribute_relro, therefore
+         avoid writing into it.  */
+      if (sps != &rtld_search_dirs && sps != &env_path_list)
 	sps->dirs = (void *) -1;
     }
 
