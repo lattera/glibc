@@ -1,3 +1,10 @@
+2013-04-19  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/sysdep.h
+	(eabi_fnstart, eabi_fnend, eabi_save, eabi_cantunwind, eabi_pad):
+	New macros.
+	* sysdeps/arm/dl-tlsdesc.S: Use them.
+
 2013-03-26  Mans Rullgard  <mans@mansr.com>
 
 	* sysdeps/arm/preconfigure.in: Use "test" instead of [ ].

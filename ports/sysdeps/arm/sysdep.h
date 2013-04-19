@@ -257,6 +257,15 @@
 
 # endif
 
+/* These are the directives used for EABI unwind info.
+   Wrap them in macros so another configuration's sysdep.h
+   file can define them away if it doesn't use EABI unwind info.  */
+# define eabi_fnstart		.fnstart
+# define eabi_fnend		.fnend
+# define eabi_save(...)		.save __VA_ARGS__
+# define eabi_cantunwind	.cantunwind
+# define eabi_pad(n)		.pad n
+
 #endif	/* __ASSEMBLER__ */
 
 /* This number is the offset from the pc at the current location.  */
