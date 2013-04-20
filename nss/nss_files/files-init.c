@@ -18,6 +18,7 @@
 
 #ifdef USE_NSCD
 
+#include <string.h>
 #include <nscd/nscd.h>
 
 
@@ -30,7 +31,7 @@ static union							\
   {								\
     .file =							\
     {								\
-      .fname = filename, ## __VA_ARGS__				\
+      __VA_ARGS__						\
     }								\
   }
 
@@ -45,16 +46,22 @@ TF (netgr, "/etc/netgroup");
 void
 _nss_files_init (void (*cb) (size_t, struct traced_file *))
 {
+  strcpy (pwd_traced_file.file.fname, "/etc/passwd");
   cb (pwddb, &pwd_traced_file.file);
 
+  strcpy (grp_traced_file.file.fname, "/etc/group");
   cb (grpdb, &grp_traced_file.file);
 
+  strcpy (hst_traced_file.file.fname, "/etc/hosts");
   cb (hstdb, &hst_traced_file.file);
 
+  strcpy (resolv_traced_file.file.fname, "/etc/resolv.conf");
   cb (hstdb, &resolv_traced_file.file);
 
+  strcpy (serv_traced_file.file.fname, "/etc/services");
   cb (servdb, &serv_traced_file.file);
 
+  strcpy (netgr_traced_file.file.fname, "/etc/netgroup");
   cb (netgrdb, &netgr_traced_file.file);
 }
 
