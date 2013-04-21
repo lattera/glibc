@@ -1,3 +1,7 @@
+2013-04-21  David S. Miller  <davem@davemloft.net>
+
+	* po/ru.po: Update Russion translation from translation project.
+
 2013-04-17  Adam Conrad  <adconrad@0c3.net>
 
 	* sysdeps/unix/sysv/linux/sys/fsuid.h: Remove __wur from setfsuid
