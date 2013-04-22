@@ -1,3 +1,8 @@
+2013-04-22  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Compute results
+	size just once.
+
 2013-04-21  David S. Miller  <davem@davemloft.net>
 
 	* po/ru.po: Update Russion translation from translation project.

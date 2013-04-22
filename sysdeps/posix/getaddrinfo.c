@@ -2495,12 +2495,13 @@ getaddrinfo (const char *name, const char *service,
       struct addrinfo *last = NULL;
       char *canonname = NULL;
       bool malloc_results;
+      size_t alloc_size = nresults * (sizeof (*results) + sizeof (size_t));
 
       malloc_results
-	= !__libc_use_alloca (nresults * (sizeof (*results) + sizeof (size_t)));
+	= !__libc_use_alloca (alloc_size);
       if (malloc_results)
 	{
-	  results = malloc (nresults * (sizeof (*results) + sizeof (size_t)));
+	  results = malloc (alloc_size);
 	  if (results == NULL)
 	    {
 	      __free_in6ai (in6ai);
@@ -2508,7 +2509,7 @@ getaddrinfo (const char *name, const char *service,
 	    }
 	}
       else
-	results = alloca (nresults * (sizeof (*results) + sizeof (size_t)));
+	results = alloca (alloc_size);
       order = (size_t *) (results + nresults);
 
       /* Now we definitely need the interface information.  */
