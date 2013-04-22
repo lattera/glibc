@@ -841,7 +841,7 @@ shadow_keys (int number, char *key[])
       setspent ();
       while ((sp = getspent ()) != NULL)
 	print_shadow (sp);
-      endpwent ();
+      endspent ();
       return result;
     }
 

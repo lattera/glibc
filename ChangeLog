@@ -1,3 +1,7 @@
+2013-04-22  Jan-Benedict Glaw  <jbglaw@getslash.de>
+
+	* nss/getent.c (shadow_keys): Call endspent, not endpwent.
+
 2013-04-22  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Compute results
