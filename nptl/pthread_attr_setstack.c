@@ -39,8 +39,9 @@ __pthread_attr_setstack (attr, stackaddr, stacksize)
   iattr = (struct pthread_attr *) attr;
 
   /* Catch invalid sizes.  */
-  if (stacksize < PTHREAD_STACK_MIN)
-    return EINVAL;
+  int ret = check_stacksize_attr (stacksize);
+  if (ret)
+    return ret;
 
 #ifdef EXTRA_PARAM_CHECKS
   EXTRA_PARAM_CHECKS;

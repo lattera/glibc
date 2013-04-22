@@ -31,7 +31,7 @@
 #include <pthread-functions.h>
 #include <atomic.h>
 #include <kernel-features.h>
-
+#include <errno.h>
 
 /* Atomic operations on TLS memory.  */
 #ifndef THREAD_ATOMIC_CMPXCHG_VAL
@@ -588,5 +588,67 @@ extern void __wait_lookup_done (void) attribute_hidden;
 #else
 # define USE_REQUEUE_PI(mut) 0
 #endif
+
+/* Returns 0 if POL is a valid scheduling policy.  */
+static inline int
+check_sched_policy_attr (int pol)
+{
+  if (pol == SCHED_OTHER || pol == SCHED_FIFO || pol == SCHED_RR)
+    return 0;
+
+  return EINVAL;
+}
+
+/* Returns 0 if PR is within the accepted range of priority values for
+   the scheduling policy POL or EINVAL otherwise.  */
+static inline int
+check_sched_priority_attr (int pr, int pol)
+{
+  int min = __sched_get_priority_min (pol);
+  int max = __sched_get_priority_max (pol);
+
+  if (min >= 0 && max >= 0 && pr >= min && pr <= max)
+    return 0;
+
+  return EINVAL;
+}
+
+/* Returns 0 if ST is a valid stack size for a thread stack and EINVAL
+   otherwise.  */
+static inline int
+check_stacksize_attr (size_t st)
+{
+  if (st >= PTHREAD_STACK_MIN)
+    return 0;
+
+  return EINVAL;
+}
+
+/* Defined in pthread_setaffinity.c.  */
+extern size_t __kernel_cpumask_size attribute_hidden;
+extern int __determine_cpumask_size (pid_t tid);
+
+/* Returns 0 if CS and SZ are valid values for the cpuset and cpuset size
+   respectively.  Otherwise it returns an error number.  */
+static inline int
+check_cpuset_attr (const cpu_set_t *cs, const size_t sz)
+{
+  if (__kernel_cpumask_size == 0)
+    {
+      int res = __determine_cpumask_size (THREAD_SELF->tid);
+      if (res)
+	return res;
+    }
+
+  /* Check whether the new bitmask has any bit set beyond the
+     last one the kernel accepts.  */
+  for (size_t cnt = __kernel_cpumask_size; cnt < sz; ++cnt)
+    if (((char *) cs)[cnt] != '\0')
+      /* Found a nonzero byte.  This means the user request cannot be
+	 fulfilled.  */
+      return EINVAL;
+
+  return 0;
+}
 
 #endif	/* pthreadP.h */

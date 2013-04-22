@@ -1,3 +1,22 @@
+2013-04-22  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* pthreadP.h (check_sched_policy_attr): New inline function.
+	(check_sched_priority_attr): Likewise.
+	(check_stacksize_attr): Likewise.
+	(__kernel_cpumask_size, __determine_cpumask_size): Declare
+	extern.
+	(check_cpuset_attr): New inline function.
+	* pthread_attr_setschedparam (__pthread_attr_setschedparam):
+	Use check_sched_priority_attr.
+	* pthread_attr_setschedpolicy.c
+	(__pthread_attr_setschedpolicy): Use check_sched_policy_attr.
+	* pthread_attr_setstack.c (__pthread_attr_setstack): Use
+	check_stacksize_attr.
+	* pthread_attr_setstacksize.c (__pthread_attr_setstacksize):
+	Likewise.
+	* sysdeps/unix/sysv/linux/pthread_attr_setaffinity.c
+	(__pthread_attr_setaffinity_new): Use check_cpuset_attr.
+
 2013-04-11  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S

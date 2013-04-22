@@ -37,8 +37,9 @@ __pthread_attr_setstacksize (attr, stacksize)
   iattr = (struct pthread_attr *) attr;
 
   /* Catch invalid sizes.  */
-  if (stacksize < PTHREAD_STACK_MIN)
-    return EINVAL;
+  int ret = check_stacksize_attr (stacksize);
+  if (ret)
+    return ret;
 
   iattr->stacksize = stacksize;
 

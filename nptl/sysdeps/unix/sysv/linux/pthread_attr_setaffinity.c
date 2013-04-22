@@ -25,9 +25,6 @@
 #include <shlib-compat.h>
 
 
-/* Defined in pthread_setaffinity.c.  */
-extern size_t __kernel_cpumask_size attribute_hidden;
-extern int __determine_cpumask_size (pid_t tid);
 
 
 int
@@ -47,21 +44,10 @@ __pthread_attr_setaffinity_new (pthread_attr_t *attr, size_t cpusetsize,
     }
   else
     {
-      if (__kernel_cpumask_size == 0)
-	{
-	  int res = __determine_cpumask_size (THREAD_SELF->tid);
-	  if (res != 0)
-	    /* Some serious problem.  */
-	    return res;
-	}
+      int ret = check_cpuset_attr (cpuset, cpusetsize);
 
-      /* Check whether the new bitmask has any bit set beyond the
-	 last one the kernel accepts.  */
-      for (size_t cnt = __kernel_cpumask_size; cnt < cpusetsize; ++cnt)
-	if (((char *) cpuset)[cnt] != '\0')
-	  /* Found a nonzero byte.  This means the user request cannot be
-	     fulfilled.  */
-	  return EINVAL;
+      if (ret)
+        return ret;
 
       if (iattr->cpusetsize != cpusetsize)
 	{

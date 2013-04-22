@@ -32,8 +32,9 @@ __pthread_attr_setschedpolicy (attr, policy)
   iattr = (struct pthread_attr *) attr;
 
   /* Catch invalid values.  */
-  if (policy != SCHED_OTHER && policy != SCHED_FIFO && policy != SCHED_RR)
-    return EINVAL;
+  int ret = check_sched_policy_attr (policy);
+  if (ret)
+    return ret;
 
   /* Store the new values.  */
   iattr->schedpolicy = policy;

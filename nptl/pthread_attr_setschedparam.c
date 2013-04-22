@@ -30,11 +30,10 @@ __pthread_attr_setschedparam (attr, param)
   assert (sizeof (*attr) >= sizeof (struct pthread_attr));
   struct pthread_attr *iattr = (struct pthread_attr *) attr;
 
-  int min = sched_get_priority_min (iattr->schedpolicy);
-  int max = sched_get_priority_max (iattr->schedpolicy);
-  if (min == -1 || max == -1
-      || param->sched_priority > max || param->sched_priority < min)
-    return EINVAL;
+  int ret = check_sched_priority_attr (param->sched_priority,
+				       iattr->schedpolicy);
+  if (ret)
+    return ret;
 
   /* Copy the new values.  */
   memcpy (&iattr->schedparam, param, sizeof (struct sched_param));
