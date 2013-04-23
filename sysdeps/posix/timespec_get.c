@@ -26,7 +26,7 @@ timespec_get (struct timespec *ts, int base)
   switch (base)
     {
     case TIME_UTC:
-      if (clock_gettime (CLOCK_REALTIME, ts) < 0)
+      if (__clock_gettime (CLOCK_REALTIME, ts) < 0)
         return 0;
       break;
 
