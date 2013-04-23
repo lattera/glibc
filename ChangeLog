@@ -1,3 +1,17 @@
+2013-05-22  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* benchtests/Makefile (bench): Add asin, acos, sinh, cosh,
+	tanh, asinh, acosh, atanh.
+	* benchtests/acos-inputs: New file.
+	* benchtests/acosh-inputs: New file.
+	* benchtests/asin-inputs: New file.
+	* benchtests/asinh-inputs: New file.
+	* benchtests/atanh-inputs: New file.
+	* benchtests/cosh-inputs: New file.
+	* benchtests/log-inputs: New file.
+	* benchtests/sinh-inputs: New file.
+	* benchtests/tanh-inputs: New file.
+
 2013-05-21  Dmitry V. Levin  <ldv@altlinux.org>
 
 	[BZ #15339]
