@@ -72,7 +72,7 @@ localtime_r (t, tp)
   do {									      \
     int __n = n;							      \
     val = 0;								      \
-    while (*rp == ' ')							      \
+    while (ISSPACE (*rp))						      \
       ++rp;								      \
     if (*rp < '0' || *rp > '9')						      \
       return NULL;							      \
@@ -752,7 +752,7 @@ __strptime_internal (rp, fmt, tmp, statep LOCALE_PARAM)
 	     also specified.  */
 	  {
 	    val = 0;
-	    while (*rp == ' ')
+	    while (ISSPACE (*rp))
 	      ++rp;
 	    if (*rp != '+' && *rp != '-')
 	      return NULL;

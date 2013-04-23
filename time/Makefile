@@ -35,7 +35,7 @@ aux :=	    era alt_digit lc-time-cleanup
 tests	:= test_time clocktest tst-posixtz tst-strptime tst_wcsftime \
 	   tst-getdate tst-mktime tst-mktime2 tst-ftime_l tst-strftime \
 	   tst-mktime3 tst-strptime2 bug-asctime bug-asctime_r bug-mktime1 \
-	   tst-strptime3 bug-getdate1
+	   tst-strptime3 bug-getdate1 tst-strptime-whitespace
 
 include ../Rules
 
