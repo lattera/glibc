@@ -1,3 +1,7 @@
+2013-04-23  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/posix/timespec_get.c: New file.
+
 2013-04-23  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/power5/fpu/s_modf.c: New file: modf optimization for
