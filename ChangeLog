@@ -1,3 +1,9 @@
+2013-04-23  Heiko Carstens  <heiko.carstens@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/bits/statfs.h: Change types of
+	f_type, f_bsize, f_namelen, f_frsize, f_flags,and f_spare to
+	unsigned.
+
 2013-04-22  Jan-Benedict Glaw  <jbglaw@getslash.de>
 
 	* nss/getent.c (shadow_keys): Call endspent, not endpwent.
