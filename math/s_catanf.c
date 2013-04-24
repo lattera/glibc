@@ -67,21 +67,21 @@ __catanf (__complex__ float x)
 
       den = 1 - r2 - __imag__ x * __imag__ x;
 
-      __real__ res = 0.5 * __ieee754_atan2f (2.0 * __real__ x, den);
+      __real__ res = 0.5f * __ieee754_atan2f (2.0f * __real__ x, den);
 
-      num = __imag__ x + 1.0;
+      num = __imag__ x + 1.0f;
       num = r2 + num * num;
 
-      den = __imag__ x - 1.0;
+      den = __imag__ x - 1.0f;
       den = r2 + den * den;
 
       f = num / den;
-      if (f < 0.5)
-	__imag__ res = 0.25 * __ieee754_logf (f);
+      if (f < 0.5f)
+	__imag__ res = 0.25f * __ieee754_logf (f);
       else
 	{
-	  num = 4.0 * __imag__ x;
-	  __imag__ res = 0.25 * __log1pf (num / den);
+	  num = 4.0f * __imag__ x;
+	  __imag__ res = 0.25f * __log1pf (num / den);
 	}
     }
 

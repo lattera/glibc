@@ -67,21 +67,21 @@ __catanl (__complex__ long double x)
 
       den = 1 - r2 - __imag__ x * __imag__ x;
 
-      __real__ res = 0.5 * __ieee754_atan2l (2.0 * __real__ x, den);
+      __real__ res = 0.5L * __ieee754_atan2l (2.0L * __real__ x, den);
 
-      num = __imag__ x + 1.0;
+      num = __imag__ x + 1.0L;
       num = r2 + num * num;
 
-      den = __imag__ x - 1.0;
+      den = __imag__ x - 1.0L;
       den = r2 + den * den;
 
       f = num / den;
-      if (f < 0.5)
-	__imag__ res = 0.25 * __ieee754_logl (f);
+      if (f < 0.5L)
+	__imag__ res = 0.25L * __ieee754_logl (f);
       else
 	{
-	  num = 4.0 * __imag__ x;
-	  __imag__ res = 0.25 * __log1pl (num / den);
+	  num = 4.0L * __imag__ x;
+	  __imag__ res = 0.25L * __log1pl (num / den);
 	}
     }
 

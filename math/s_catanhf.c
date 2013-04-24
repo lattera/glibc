@@ -58,24 +58,24 @@ __catanhf (__complex__ float x)
     {
       float i2 = __imag__ x * __imag__ x;
 
-      float num = 1.0 + __real__ x;
+      float num = 1.0f + __real__ x;
       num = i2 + num * num;
 
-      float den = 1.0 - __real__ x;
+      float den = 1.0f - __real__ x;
       den = i2 + den * den;
 
       float f = num / den;
-      if (f < 0.5)
-	__real__ res = 0.25 * __ieee754_logf (f);
+      if (f < 0.5f)
+	__real__ res = 0.25f * __ieee754_logf (f);
       else
 	{
-	  num = 4.0 * __real__ x;
-	  __real__ res = 0.25 * __log1pf (num / den);
+	  num = 4.0f * __real__ x;
+	  __real__ res = 0.25f * __log1pf (num / den);
 	}
 
       den = 1 - __real__ x * __real__ x - i2;
 
-      __imag__ res = 0.5 * __ieee754_atan2f (2.0 * __imag__ x, den);
+      __imag__ res = 0.5f * __ieee754_atan2f (2.0f * __imag__ x, den);
     }
 
   return res;

@@ -1,5 +1,11 @@
 2013-04-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/s_catanf.c (__catanf): Use suffixed floating-point
+	constants.
+	* math/s_catanhf.c (__catanhf): Likewise.
+	* math/s_catanhl.c (__catanhl): Likewise.
+	* math/s_catanl.c (__catanl): Likewise.
+
 	[BZ #15394]
 	* math/s_catan.c (__catan): Calculate imaginary part of result
 	with log1p not log unless computing log of number close to 0.
