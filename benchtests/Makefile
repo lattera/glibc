@@ -48,13 +48,13 @@ subdir := benchtests
 bench := exp pow rint sin cos tan atan modf \
 	 slowexp slowpow slowsin slowcos slowtan slowatan
 
-# exp function fast path
+# exp function fast path: sysdeps/ieee754/dbl-64/e_exp.c
 exp-ITER = 5e8
 exp-ARGLIST = double
 exp-RET = double
 LDFLAGS-bench-exp = -lm
 
-# pow function fast path
+# pow function fast path: sysdeps/ieee754/dbl-64/e_pow.c
 pow-ITER = 2e8
 pow-ARGLIST = double:double
 pow-RET = double
@@ -65,66 +65,66 @@ rint-ARGLIST = double
 rint-RET = double
 LDFLAGS-bench-rint = -lm
 
-# exp function slowest path
+# exp function slowest path: sysdeps/ieee754/dbl-64/mpexp.c
 slowexp-ITER = 3e5
 slowexp-ARGLIST = double
 slowexp-RET = double
 slowexp-INCLUDE = slowexp.c
 LDFLAGS-bench-slowexp = -lm
 
-# sin function fast path
+# sin function fast path: sysdeps/ieee754/dbl-64/s_sin.c
 sin-ITER = 3e9
 sin-ARGLIST = double
 sin-RET = double
 LDFLAGS-bench-sin = -lm
 
-# cos function fast path
+# cos function fast path: sysdeps/ieee754/dbl-64/s_sin.c
 cos-ITER = 3e9
 cos-ARGLIST = double
 cos-RET = double
 LDFLAGS-bench-cos = -lm
 
-# tan function fast path
+# tan function fast path: sysdeps/ieee754/dbl-64/s_tan.c
 tan-ITER = 3e9
 tan-ARGLIST = double
 tan-RET = double
 LDFLAGS-bench-tan = -lm
 
-# atan function fast path
+# atan function fast path: sysdeps/ieee754/dbl-64/s_atan.c
 atan-ITER = 6e9
 atan-ARGLIST = double
 atan-RET = double
 LDFLAGS-bench-atan = -lm
 
-# pow function slowest path
+# pow function slowest path: sysdeps/ieee754/dbl-64/slowpow.c
 slowpow-ITER = 1e5
 slowpow-ARGLIST = double:double
 slowpow-RET = double
 slowpow-INCLUDE = slowpow.c
 LDFLAGS-bench-slowpow = -lm
 
-# sin function slowest path
+# sin function slowest path: sysdeps/ieee754/dbl-64/sincos32.c
 slowsin-ITER = 3e7
 slowsin-ARGLIST = double
 slowsin-RET = double
 slowsin-INCLUDE = slowsin.c
 LDFLAGS-bench-slowsin = -lm
 
-# cos function slowest path
+# cos function slowest path: sysdeps/ieee754/dbl-64/sincos32.c
 slowcos-ITER = 3e7
 slowcos-ARGLIST = double
 slowcos-RET = double
 slowcos-INCLUDE = slowcos.c
 LDFLAGS-bench-slowcos = -lm
 
-# tan function slowest path
+# tan function slowest path: sysdeps/ieee754/dbl-64/mptan.c
 slowtan-ITER = 3e7
 slowtan-ARGLIST = double
 slowtan-RET = double
 slowtan-INCLUDE = slowtan.c
 LDFLAGS-bench-slowtan = -lm
 
-# atan function slowest path
+# atan function slowest path: sysdeps/ieee754/dbl-64/mpatan.c
 slowatan-ITER = 3e8
 slowatan-ARGLIST = double
 slowatan-RET = double

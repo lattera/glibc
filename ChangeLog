@@ -1,3 +1,8 @@
+2013-04-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* benchtests/Makefile: Mention files in which fast and slow
+	paths of math functions are implemented.
+
 2013-04-23  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/posix/timespec_get.c: New file.
