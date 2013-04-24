@@ -1,5 +1,8 @@
 2013-04-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (catan_test): Add more tests.
+	(catanh_test): Likewise.
+
 	* math/s_catanf.c (__catanf): Use suffixed floating-point
 	constants.
 	* math/s_catanhf.c (__catanhf): Likewise.

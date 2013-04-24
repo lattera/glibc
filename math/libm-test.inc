@@ -4254,6 +4254,15 @@ catan_test (void)
   TEST_c_c (catan, 0, minus_zero, 0, minus_zero);
   TEST_c_c (catan, minus_zero, minus_zero, minus_zero, minus_zero);
 
+  TEST_c_c (catan, 1.0L, plus_zero, M_PI_4l, plus_zero);
+  TEST_c_c (catan, 1.0L, minus_zero, M_PI_4l, minus_zero);
+  TEST_c_c (catan, -1.0L, plus_zero, -M_PI_4l, plus_zero);
+  TEST_c_c (catan, -1.0L, minus_zero, -M_PI_4l, minus_zero);
+  TEST_c_c (catan, plus_zero, 1.0L, plus_zero, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  TEST_c_c (catan, minus_zero, 1.0L, minus_zero, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  TEST_c_c (catan, plus_zero, -1.0L, plus_zero, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  TEST_c_c (catan, minus_zero, -1.0L, minus_zero, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+
   TEST_c_c (catan, plus_infty, plus_infty, M_PI_2l, 0);
   TEST_c_c (catan, plus_infty, minus_infty, M_PI_2l, minus_zero);
   TEST_c_c (catan, minus_infty, plus_infty, -M_PI_2l, 0);
@@ -4349,6 +4358,15 @@ catanh_test (void)
   TEST_c_c (catanh, minus_zero, 0, minus_zero, 0.0);
   TEST_c_c (catanh, 0, minus_zero, 0.0, minus_zero);
   TEST_c_c (catanh, minus_zero, minus_zero, minus_zero, minus_zero);
+
+  TEST_c_c (catanh, 1.0L, plus_zero, plus_infty, plus_zero, DIVIDE_BY_ZERO_EXCEPTION);
+  TEST_c_c (catanh, 1.0L, minus_zero, plus_infty, minus_zero, DIVIDE_BY_ZERO_EXCEPTION);
+  TEST_c_c (catanh, -1.0L, plus_zero, minus_infty, plus_zero, DIVIDE_BY_ZERO_EXCEPTION);
+  TEST_c_c (catanh, -1.0L, minus_zero, minus_infty, minus_zero, DIVIDE_BY_ZERO_EXCEPTION);
+  TEST_c_c (catanh, plus_zero, 1.0L, plus_zero, M_PI_4l);
+  TEST_c_c (catanh, minus_zero, 1.0L, minus_zero, M_PI_4l);
+  TEST_c_c (catanh, plus_zero, -1.0L, plus_zero, -M_PI_4l);
+  TEST_c_c (catanh, minus_zero, -1.0L, minus_zero, -M_PI_4l);
 
   TEST_c_c (catanh, plus_infty, plus_infty, 0.0, M_PI_2l);
   TEST_c_c (catanh, plus_infty, minus_infty, 0.0, -M_PI_2l);
