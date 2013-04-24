@@ -64,7 +64,14 @@ __catanh (__complex__ double x)
       double den = 1.0 - __real__ x;
       den = i2 + den * den;
 
-      __real__ res = 0.25 * (__ieee754_log (num) - __ieee754_log (den));
+      double f = num / den;
+      if (f < 0.5)
+	__real__ res = 0.25 * __ieee754_log (f);
+      else
+	{
+	  num = 4.0 * __real__ x;
+	  __real__ res = 0.25 * __log1p (num / den);
+	}
 
       den = 1 - __real__ x * __real__ x - i2;
 

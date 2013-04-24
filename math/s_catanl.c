@@ -61,7 +61,7 @@ __catanl (__complex__ long double x)
     }
   else
     {
-      long double r2, num, den;
+      long double r2, num, den, f;
 
       r2 = __real__ x * __real__ x;
 
@@ -75,7 +75,14 @@ __catanl (__complex__ long double x)
       den = __imag__ x - 1.0;
       den = r2 + den * den;
 
-      __imag__ res = 0.25 * __ieee754_logl (num / den);
+      f = num / den;
+      if (f < 0.5)
+	__imag__ res = 0.25 * __ieee754_logl (f);
+      else
+	{
+	  num = 4.0 * __imag__ x;
+	  __imag__ res = 0.25 * __log1pl (num / den);
+	}
     }
 
   return res;

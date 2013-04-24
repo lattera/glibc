@@ -64,7 +64,14 @@ __catanhf (__complex__ float x)
       float den = 1.0 - __real__ x;
       den = i2 + den * den;
 
-      __real__ res = 0.25 * (__ieee754_logf (num) - __ieee754_logf (den));
+      float f = num / den;
+      if (f < 0.5)
+	__real__ res = 0.25 * __ieee754_logf (f);
+      else
+	{
+	  num = 4.0 * __real__ x;
+	  __real__ res = 0.25 * __log1pf (num / den);
+	}
 
       den = 1 - __real__ x * __real__ x - i2;
 

@@ -61,7 +61,7 @@ __catan (__complex__ double x)
     }
   else
     {
-      double r2, num, den;
+      double r2, num, den, f;
 
       r2 = __real__ x * __real__ x;
 
@@ -75,7 +75,14 @@ __catan (__complex__ double x)
       den = __imag__ x - 1.0;
       den = r2 + den * den;
 
-      __imag__ res = 0.25 * __ieee754_log (num / den);
+      f = num / den;
+      if (f < 0.5)
+	__imag__ res = 0.25 * __ieee754_log (f);
+      else
+	{
+	  num = 4.0 * __imag__ x;
+	  __imag__ res = 0.25 * __log1p (num / den);
+	}
     }
 
   return res;

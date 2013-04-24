@@ -3417,6 +3417,8 @@ ldouble: 1
 Test "Real part of: catanh (0.75 + 1.25 i) == 0.261492138795671927078652057366532140 + 0.996825126463918666098902241310446708 i":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 
 # cbrt
 Test "cbrt (-27.0) == -3.0":
