@@ -1,3 +1,7 @@
+2013-04-25  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	* soft-fp/op-common.h (_FP_SQRT): s/sNAN/NAN/ in a comment.
+
 2013-04-24  Carlos O'Donell  <carlos@redhat.com>
 
 	* math/libm-test.inc (cos_test): Use accurate hex constants.

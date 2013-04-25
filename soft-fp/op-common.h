@@ -973,7 +973,7 @@ do {									\
     	R##_s = 0;							\
         if (X##_s)							\
           {								\
-	    R##_c = FP_CLS_NAN; /* sNAN */				\
+	    R##_c = FP_CLS_NAN; /* NAN */				\
 	    R##_s = _FP_NANSIGN_##fs;					\
 	    _FP_FRAC_SET_##wc(R, _FP_NANFRAC_##fs);			\
 	    FP_SET_EXCEPTION(FP_EX_INVALID);				\
