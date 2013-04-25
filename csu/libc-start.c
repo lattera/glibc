@@ -161,7 +161,8 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
          So we can set up _dl_phdr and _dl_phnum even without any
          information from auxv.  */
 
-      extern const ElfW(Ehdr) __ehdr_start __attribute__ ((weak));
+      extern const ElfW(Ehdr) __ehdr_start
+	__attribute__ ((weak, visibility ("hidden")));
       if (&__ehdr_start != NULL)
         {
           assert (__ehdr_start.e_phentsize == sizeof *GL(dl_phdr));

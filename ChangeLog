@@ -1,5 +1,8 @@
 2013-04-25  Maciej W. Rozycki  <macro@codesourcery.com>
 
+	* csu/libc-start.c (__libc_start_main) [!SHARED]: Declare
+	__ehdr_start with hidden visibility.
+
 	* soft-fp/op-common.h (_FP_SQRT): s/sNAN/NAN/ in a comment.
 
 2013-04-24  Carlos O'Donell  <carlos@redhat.com>
