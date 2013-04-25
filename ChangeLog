@@ -1,3 +1,99 @@
+2013-04-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* elf/Makefile [$(config-machine) = x86_64] (tests): Remove
+	additions to variable.
+	[$(config-machine) = x86_64] (modules-names): Likewise.
+	($(objpfx)tst-audit3): Remove dependency.
+	($(objpfx)tst-audit3.out): Likewise.
+	($(objpfx)tst-audit4): Likewise.
+	($(objpfx)tst-audit4.out): Likewise.
+	($(objpfx)tst-audit5): Likewise.
+	($(objpfx)tst-audit5.out): Likewise.
+	($(objpfx)tst-audit6): Likewise.
+	($(objpfx)tst-audit6.out): Likewise.
+	($(objpfx)tst-audit7): Likewise.
+	($(objpfx)tst-audit7.out): Likewise.
+	(tst-audit3-ENV): Remove variable.
+	(tst-audit4-ENV): Likewise.
+	(tst-audit5-ENV): Likewise.
+	(tst-audit6-ENV): Likewise.
+	(tst-audit7-ENV): Likewise.
+	[$(config-cflags-avx) = yes] (AVX-CFLAGS): Likewise.
+	[$(config-cflags-avx) = yes] (CFLAGS-tst-audit4.c): Remove
+	addition to variable.
+	[$(config-cflags-avx) = yes] (CFLAGS-tst-auditmod4a.c): Likewise.
+	[$(config-cflags-avx) = yes] (CFLAGS-tst-auditmod4b.c): Likewise.
+	[$(config-cflags-avx) = yes] (CFLAGS-tst-auditmod6b.c): Likewise.
+	[$(config-cflags-avx) = yes] (CFLAGS-tst-auditmod6c.c): Likewise.
+	[$(config-cflags-avx) = yes] (CFLAGS-tst-auditmod7b.c): Likewise.
+	* sysdeps/x86_64/Makefile [$(subdir) = elf] (tests): Add
+	tst-audit3, tst-audit4 and tst-audit5.
+	[$(subdir) = elf && $(config-cflags-avx) = yes] (tests): Add
+	tst-audit6 and tst-audit7.
+	[$(subdir) = elf] (modules-names): Add audit modules for those
+	tests.
+	[$(subdir) = elf] ($(objpfx)tst-audit3): New dependency.
+	[$(subdir) = elf] ($(objpfx)tst-audit3.out): Likewise.
+	[$(subdir) = elf] ($(objpfx)tst-audit4): Likewise.
+	[$(subdir) = elf] ($(objpfx)tst-audit4.out): Likewise.
+	[$(subdir) = elf] ($(objpfx)tst-audit5): Likewise.
+	[$(subdir) = elf] ($(objpfx)tst-audit5.out): Likewise.
+	[$(subdir) = elf] ($(objpfx)tst-audit6): Likewise.
+	[$(subdir) = elf] ($(objpfx)tst-audit6.out): Likewise.
+	[$(subdir) = elf] ($(objpfx)tst-audit7): Likewise.
+	[$(subdir) = elf] ($(objpfx)tst-audit7.out): Likewise.
+	[$(subdir) = elf] (tst-audit3-ENV): New variable.
+	[$(subdir) = elf] (tst-audit4-ENV): Likewise.
+	[$(subdir) = elf] (tst-audit5-ENV): Likewise.
+	[$(subdir) = elf] (tst-audit6-ENV): Likewise.
+	[$(subdir) = elf] (tst-audit7-ENV): Likewise.
+	[$(subdir) = elf && $(config-cflags-avx) = yes] (AVX-CFLAGS):
+	Likewise.
+	[$(subdir) = elf && $(config-cflags-avx) = yes]
+	(CFLAGS-tst-audit4.c): Append $(AVX-CFLAGS).
+	[$(subdir) = elf && $(config-cflags-avx) = yes]
+	(CFLAGS-tst-auditmod4a.c): Likewise.
+	[$(subdir) = elf && $(config-cflags-avx) = yes]
+	(CFLAGS-tst-auditmod4b.c): Likewise.
+	[$(subdir) = elf && $(config-cflags-avx) = yes]
+	(CFLAGS-tst-auditmod6b.c): Likewise.
+	[$(subdir) = elf && $(config-cflags-avx) = yes]
+	(CFLAGS-tst-auditmod6c.c): Likewise.
+	[$(subdir) = elf && $(config-cflags-avx) = yes]
+	(CFLAGS-tst-auditmod7b.c): Likewise.
+	* elf/tst-audit3.c: Move to ...
+	* sysdeps/x86_64/tst-audit3.c: ... here.
+	* elf/tst-audit4.c: Move to ...
+	* sysdeps/x86_64/tst-audit4.c: ... here.
+	* elf/tst-audit5.c: Move to ...
+	* sysdeps/x86_64/tst-audit5.c: ... here.
+	* elf/tst-audit6.c: Move to ...
+	* sysdeps/x86_64/tst-audit6.c: ... here.
+	* elf/tst-audit7.c: Move to ...
+	* sysdeps/x86_64/tst-audit7.c: ... here.
+	* elf/tst-auditmod3a.c: Move to ...
+	* sysdeps/x86_64/tst-auditmod3a.c: ... here.
+	* elf/tst-auditmod3b.c: Move to ...
+	* sysdeps/x86_64/tst-auditmod3b.c: ... here.
+	* elf/tst-auditmod4a.c: Move to ...
+	* sysdeps/x86_64/tst-auditmod4a.c: ... here.
+	* elf/tst-auditmod4b.c: Move to ...
+	* sysdeps/x86_64/tst-auditmod4b.c: ... here.
+	* elf/tst-auditmod5a.c: Move to ...
+	* sysdeps/x86_64/tst-auditmod5a.c: ... here.
+	* elf/tst-auditmod5b.c: Move to ...
+	* sysdeps/x86_64/tst-auditmod5b.c: ... here.
+	* elf/tst-auditmod6a.c: Move to ...
+	* sysdeps/x86_64/tst-auditmod6a.c: ... here.
+	* elf/tst-auditmod6b.c: Move to ...
+	* sysdeps/x86_64/tst-auditmod6b.c: ... here.
+	* elf/tst-auditmod6c.c: Move to ...
+	* sysdeps/x86_64/tst-auditmod6c.c: ... here.
+	* elf/tst-auditmod7a.c: Move to ...
+	* sysdeps/x86_64/tst-auditmod7a.c: ... here.
+	* elf/tst-auditmod7b.c: Move to ...
+	* sysdeps/x86_64/tst-auditmod7b.c: ... here.
+
 2013-04-25  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #15366]
