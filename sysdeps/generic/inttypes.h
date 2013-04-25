@@ -40,11 +40,6 @@ typedef wchar_t __gwchar_t;
 # define ____gwchar_t_defined	1
 #endif
 
-
-/* The ISO C99 standard specifies that these macros must only be
-   defined if explicitly requested.  */
-#if !defined __cplusplus || defined __STDC_FORMAT_MACROS
-
 # if __WORDSIZE == 64
 #  define __PRI64_PREFIX	"l"
 #  define __PRIPTR_PREFIX	"l"
@@ -266,8 +261,6 @@ typedef wchar_t __gwchar_t;
 # define SCNoPTR	__PRIPTR_PREFIX "o"
 # define SCNuPTR	__PRIPTR_PREFIX "u"
 # define SCNxPTR	__PRIPTR_PREFIX "x"
-
-#endif	/* C++ && format macros */
 
 
 __BEGIN_DECLS

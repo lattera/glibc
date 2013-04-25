@@ -1,3 +1,12 @@
+2013-04-25  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #15366]
+	* sysdeps/generic/inttypes.h (PRId8, PRId16, etc.):
+	define unconditionally.
+	* sysdeps/generic/stdint.h (INT8_MIN, INT16_MIN, etc.):
+	define unconditionally.
+	(INT8_C, INT16_C, etc.): Likewise.
+
 2013-04-25  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	* csu/libc-start.c (__libc_start_main) [!SHARED]: Declare
