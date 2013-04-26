@@ -1,3 +1,7 @@
+2013-04-26  Markus Trippelsdorf  <markus@trippelsdorf.de>
+
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
+
 2013-04-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* elf/Makefile [$(config-machine) = x86_64] (tests): Remove
