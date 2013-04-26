@@ -20,7 +20,7 @@
 #include <complex.h>
 #include <math.h>
 #include <math_private.h>
-
+#include <float.h>
 
 __complex__ float
 __catanhf (__complex__ float x)
@@ -76,6 +76,17 @@ __catanhf (__complex__ float x)
       den = 1 - __real__ x * __real__ x - i2;
 
       __imag__ res = 0.5f * __ieee754_atan2f (2.0f * __imag__ x, den);
+
+      if (fabsf (__real__ res) < FLT_MIN)
+	{
+	  volatile float force_underflow = __real__ res * __real__ res;
+	  (void) force_underflow;
+	}
+      if (fabsf (__imag__ res) < FLT_MIN)
+	{
+	  volatile float force_underflow = __imag__ res * __imag__ res;
+	  (void) force_underflow;
+	}
     }
 
   return res;

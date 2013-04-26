@@ -1,5 +1,27 @@
 2013-04-26  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #15406]
+	* math/s_catan.c: Include <float.h>.
+	(__catan): Ensure underflow exception occurs for underflowed
+	result.
+	* math/s_catanf.c: Include <float.h>.
+	(__catanf): Ensure underflow exception occurs for underflowed
+	result.
+	* math/s_catanh.c: Include <float.h>.
+	(__catanh): Ensure underflow exception occurs for underflowed
+	result.
+	* math/s_catanhf.c: Include <float.h>.
+	(__catanhf): Ensure underflow exception occurs for underflowed
+	result.
+	* math/s_catanhl.c: Include <float.h>.
+	(__catanhl): Ensure underflow exception occurs for underflowed
+	result.
+	* math/s_catanl.c: Include <float.h>.
+	(__catanl): Ensure underflow exception occurs for underflowed
+	result.
+	* math/libm-test.inc (catan_test): Add more tests.
+	(catanh_test): Likewise.
+
 	[BZ #15405]
 	* math/s_ccosh.c (__ccosh): Ensure underflow exception occurs for
 	underflowed result.

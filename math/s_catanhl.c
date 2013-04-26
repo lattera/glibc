@@ -20,7 +20,7 @@
 #include <complex.h>
 #include <math.h>
 #include <math_private.h>
-
+#include <float.h>
 
 __complex__ long double
 __catanhl (__complex__ long double x)
@@ -76,6 +76,17 @@ __catanhl (__complex__ long double x)
       den = 1 - __real__ x * __real__ x - i2;
 
       __imag__ res = 0.5L * __ieee754_atan2l (2.0L * __imag__ x, den);
+
+      if (fabsl (__real__ res) < LDBL_MIN)
+	{
+	  volatile long double force_underflow = __real__ res * __real__ res;
+	  (void) force_underflow;
+	}
+      if (fabsl (__imag__ res) < LDBL_MIN)
+	{
+	  volatile long double force_underflow = __imag__ res * __imag__ res;
+	  (void) force_underflow;
+	}
     }
 
   return res;

@@ -20,7 +20,7 @@
 #include <complex.h>
 #include <math.h>
 #include <math_private.h>
-
+#include <float.h>
 
 __complex__ long double
 __catanl (__complex__ long double x)
@@ -82,6 +82,17 @@ __catanl (__complex__ long double x)
 	{
 	  num = 4.0L * __imag__ x;
 	  __imag__ res = 0.25L * __log1pl (num / den);
+	}
+
+      if (fabsl (__real__ res) < LDBL_MIN)
+	{
+	  volatile long double force_underflow = __real__ res * __real__ res;
+	  (void) force_underflow;
+	}
+      if (fabsl (__imag__ res) < LDBL_MIN)
+	{
+	  volatile long double force_underflow = __imag__ res * __imag__ res;
+	  (void) force_underflow;
 	}
     }
 

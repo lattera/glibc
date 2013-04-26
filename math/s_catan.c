@@ -20,7 +20,7 @@
 #include <complex.h>
 #include <math.h>
 #include <math_private.h>
-
+#include <float.h>
 
 __complex__ double
 __catan (__complex__ double x)
@@ -82,6 +82,17 @@ __catan (__complex__ double x)
 	{
 	  num = 4.0 * __imag__ x;
 	  __imag__ res = 0.25 * __log1p (num / den);
+	}
+
+      if (fabs (__real__ res) < DBL_MIN)
+	{
+	  volatile double force_underflow = __real__ res * __real__ res;
+	  (void) force_underflow;
+	}
+      if (fabs (__imag__ res) < DBL_MIN)
+	{
+	  volatile double force_underflow = __imag__ res * __imag__ res;
+	  (void) force_underflow;
 	}
     }
 
