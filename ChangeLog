@@ -1,3 +1,21 @@
+2013-04-26  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15405]
+	* math/s_ccosh.c (__ccosh): Ensure underflow exception occurs for
+	underflowed result.
+	* math/s_ccoshf.c (__ccoshf): Likewise.
+	* math/s_ccoshl.c (__ccoshl): Likewise.
+	* math/s_csin.c (__csin): Likewise.
+	* math/s_csinf.c (__csinf): Likewise.
+	* math/s_csinh.c (__csinh): Likewise.
+	* math/s_csinhf.c (__csinhf): Likewise.
+	* math/s_csinhl.c (__csinhl): Likewise.
+	* math/s_csinl.c (__csinl): Likewise.
+	* math/libm-test.inc (ccos_test): Add more tests.
+	(ccosh_test): Likewise.
+	(csin_test): Likewise.
+	(csinh_test): Likewise.
+
 2013-04-26  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/power5/fpu/s_modf.c: Moved to ...

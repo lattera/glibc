@@ -4570,6 +4570,9 @@ ccos_test (void)
   TEST_c_c (ccos, 0x1p-16434L, 22730, plus_infty, -1.217853148905605987081057582351152052687e4924L, OVERFLOW_EXCEPTION);
 #endif
 
+  TEST_c_c (ccos, min_subnorm_value * 0x1p120, 0x1p-120, 1.0, -min_subnorm_value, UNDERFLOW_EXCEPTION);
+  TEST_c_c (ccos, 0x1p-120, min_subnorm_value * 0x1p120, 1.0, -min_subnorm_value, UNDERFLOW_EXCEPTION);
+
   END (ccos, complex);
 }
 
@@ -4669,6 +4672,9 @@ ccosh_test (void)
 #if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
   TEST_c_c (ccosh, 22730, 0x1p-16434L, plus_infty, 1.217853148905605987081057582351152052687e4924L, OVERFLOW_EXCEPTION);
 #endif
+
+  TEST_c_c (ccosh, min_subnorm_value * 0x1p120, 0x1p-120, 1.0, min_subnorm_value, UNDERFLOW_EXCEPTION);
+  TEST_c_c (ccosh, 0x1p-120, min_subnorm_value * 0x1p120, 1.0, min_subnorm_value, UNDERFLOW_EXCEPTION);
 
   END (ccosh, complex);
 }
@@ -5898,6 +5904,9 @@ csin_test (void)
   TEST_c_c (csin, 0x1p-16434L, 22730, 1.217853148905605987081057582351152052687e4924L, plus_infty, OVERFLOW_EXCEPTION);
 #endif
 
+  TEST_c_c (csin, min_subnorm_value, min_value, min_subnorm_value, min_value, UNDERFLOW_EXCEPTION);
+  TEST_c_c (csin, min_value, min_subnorm_value, min_value, min_subnorm_value, UNDERFLOW_EXCEPTION);
+
   END (csin, complex);
 }
 
@@ -5996,6 +6005,9 @@ csinh_test (void)
 #if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
   TEST_c_c (csinh, 22730, 0x1p-16434L, plus_infty, 1.217853148905605987081057582351152052687e4924L, OVERFLOW_EXCEPTION);
 #endif
+
+  TEST_c_c (csinh, min_subnorm_value, min_value, min_subnorm_value, min_value, UNDERFLOW_EXCEPTION);
+  TEST_c_c (csinh, min_value, min_subnorm_value, min_value, min_subnorm_value, UNDERFLOW_EXCEPTION);
 
   END (csinh, complex);
 }
