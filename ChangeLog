@@ -1,3 +1,14 @@
+2013-04-26  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/power5/fpu/s_modf.c: Moved to ...
+	* sysdeps/powerpc/power5+/fpu/s_modf.c: ... this.
+	* sysdeps/powerpc/power5/fpu/s_modff.c: Moved to ...
+	* sysdeps/powerpc/power5+/fpu/s_modff.c: ... this.
+	* sysdeps/powerpc/powerpc32/power5+/Implies: Add powerpc/power5+ and
+	powerpc/power5+/fpu folders.
+	* sysdeps/powerpc/powerpc64/power5+/Implies: Likewise.
+
+
 2013-04-26  Markus Trippelsdorf  <markus@trippelsdorf.de>
 
 	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
