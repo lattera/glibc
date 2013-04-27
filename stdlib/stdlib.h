@@ -823,9 +823,9 @@ extern char *fcvt (double __value, int __ndigit, int *__restrict __decpt,
    be written to BUF.  */
 extern char *gcvt (double __value, int __ndigit, char *__buf)
      __THROW __nonnull ((3)) __wur;
+#endif
 
-
-# ifdef __USE_MISC
+#ifdef __USE_MISC
 /* Long double versions of above functions.  */
 extern char *qecvt (long double __value, int __ndigit,
 		    int *__restrict __decpt, int *__restrict __sign)
@@ -854,8 +854,7 @@ extern int qfcvt_r (long double __value, int __ndigit,
 		    int *__restrict __decpt, int *__restrict __sign,
 		    char *__restrict __buf, size_t __len)
      __THROW __nonnull ((3, 4, 5));
-# endif	/* misc */
-#endif	/* use MISC || use X/Open Unix */
+#endif	/* misc */
 
 
 __BEGIN_NAMESPACE_STD

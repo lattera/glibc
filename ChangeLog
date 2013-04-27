@@ -1,3 +1,10 @@
+2013-04-27  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #15007]
+	* stdlib/stdlib.h: Update guards for qecvt.
+	* stdlib/bits/stdlib-ldbl.h: Sync guards for qecvt etc with
+	<stdlib.h>.
+
 2013-04-27  Allan McRae  <allan@archlinux.org>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Update.
