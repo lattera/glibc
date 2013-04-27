@@ -22,6 +22,13 @@
 #include <math_private.h>
 #include <float.h>
 
+/* To avoid spurious overflows, use this definition to treat IBM long
+   double as approximating an IEEE-style format.  */
+#if LDBL_MANT_DIG == 106
+# undef LDBL_EPSILON
+# define LDBL_EPSILON 0x1p-106L
+#endif
+
 __complex__ long double
 __catanhl (__complex__ long double x)
 {
@@ -56,26 +63,44 @@ __catanhl (__complex__ long double x)
     }
   else
     {
-      long double i2 = __imag__ x * __imag__ x;
-
-      long double num = 1.0L + __real__ x;
-      num = i2 + num * num;
-
-      long double den = 1.0L - __real__ x;
-      den = i2 + den * den;
-
-      long double f = num / den;
-      if (f < 0.5L)
-	__real__ res = 0.25L * __ieee754_logl (f);
+      if (fabsl (__real__ x) >= 16.0L / LDBL_EPSILON
+	  || fabsl (__imag__ x) >= 16.0L / LDBL_EPSILON)
+	{
+	  __imag__ res = __copysignl (M_PI_2l, __imag__ x);
+	  if (fabsl (__imag__ x) <= 1.0L)
+	    __real__ res = 1.0L / __real__ x;
+	  else if (fabsl (__real__ x) <= 1.0L)
+	    __real__ res = __real__ x / __imag__ x / __imag__ x;
+	  else
+	    {
+	      long double h = __ieee754_hypotl (__real__ x / 2.0L,
+						__imag__ x / 2.0L);
+	      __real__ res = __real__ x / h / h / 4.0L;
+	    }
+	}
       else
 	{
-	  num = 4.0L * __real__ x;
-	  __real__ res = 0.25L * __log1pl (num / den);
+	  long double i2 = __imag__ x * __imag__ x;
+
+	  long double num = 1.0L + __real__ x;
+	  num = i2 + num * num;
+
+	  long double den = 1.0L - __real__ x;
+	  den = i2 + den * den;
+
+	  long double f = num / den;
+	  if (f < 0.5L)
+	    __real__ res = 0.25L * __ieee754_logl (f);
+	  else
+	    {
+	      num = 4.0L * __real__ x;
+	      __real__ res = 0.25L * __log1pl (num / den);
+	    }
+
+	  den = 1 - __real__ x * __real__ x - i2;
+
+	  __imag__ res = 0.5L * __ieee754_atan2l (2.0L * __imag__ x, den);
 	}
-
-      den = 1 - __real__ x * __real__ x - i2;
-
-      __imag__ res = 0.5L * __ieee754_atan2l (2.0L * __imag__ x, den);
 
       if (fabsl (__real__ res) < LDBL_MIN)
 	{

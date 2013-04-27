@@ -1,3 +1,24 @@
+2013-04-27  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15409]
+	* math/s_catan.c (__catan): Handle arguments with large real or
+	imaginary part separately without squaring.
+	* math/s_catanf.c (__catanf): Likewise.
+	* math/s_catanh.c (__catanh): Likewise.
+	* math/s_catanhf.c (__catanhf): Likewise.
+	* math/s_catanhl.c [LDBL_MANT_DIG == 106] (LDBL_EPSILON): Undefine
+	and redefine.
+	(__catanhl): Handle arguments with large real or imaginary part
+	separately without squaring.
+	* math/s_catanl.c [LDBL_MANT_DIG == 106] (LDBL_EPSILON): Undefine
+	and redefine.
+	(__catanl): Handle arguments with large real or imaginary part
+	separately without squaring.
+	* math/libm-test.inc (catan_test): Add more tests.
+	(catanh_test): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2013-04-27  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #15007]

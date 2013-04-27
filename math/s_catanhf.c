@@ -56,26 +56,44 @@ __catanhf (__complex__ float x)
     }
   else
     {
-      float i2 = __imag__ x * __imag__ x;
-
-      float num = 1.0f + __real__ x;
-      num = i2 + num * num;
-
-      float den = 1.0f - __real__ x;
-      den = i2 + den * den;
-
-      float f = num / den;
-      if (f < 0.5f)
-	__real__ res = 0.25f * __ieee754_logf (f);
+      if (fabsf (__real__ x) >= 16.0f / FLT_EPSILON
+	  || fabsf (__imag__ x) >= 16.0f / FLT_EPSILON)
+	{
+	  __imag__ res = __copysignf ((float) M_PI_2, __imag__ x);
+	  if (fabsf (__imag__ x) <= 1.0f)
+	    __real__ res = 1.0f / __real__ x;
+	  else if (fabsf (__real__ x) <= 1.0f)
+	    __real__ res = __real__ x / __imag__ x / __imag__ x;
+	  else
+	    {
+	      float h = __ieee754_hypotf (__real__ x / 2.0f,
+					  __imag__ x / 2.0f);
+	      __real__ res = __real__ x / h / h / 4.0f;
+	    }
+	}
       else
 	{
-	  num = 4.0f * __real__ x;
-	  __real__ res = 0.25f * __log1pf (num / den);
+	  float i2 = __imag__ x * __imag__ x;
+
+	  float num = 1.0f + __real__ x;
+	  num = i2 + num * num;
+
+	  float den = 1.0f - __real__ x;
+	  den = i2 + den * den;
+
+	  float f = num / den;
+	  if (f < 0.5f)
+	    __real__ res = 0.25f * __ieee754_logf (f);
+	  else
+	    {
+	      num = 4.0f * __real__ x;
+	      __real__ res = 0.25f * __log1pf (num / den);
+	    }
+
+	  den = 1 - __real__ x * __real__ x - i2;
+
+	  __imag__ res = 0.5f * __ieee754_atan2f (2.0f * __imag__ x, den);
 	}
-
-      den = 1 - __real__ x * __real__ x - i2;
-
-      __imag__ res = 0.5f * __ieee754_atan2f (2.0f * __imag__ x, den);
 
       if (fabsf (__real__ res) < FLT_MIN)
 	{
