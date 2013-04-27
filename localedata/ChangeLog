@@ -1,3 +1,8 @@
+2013-04-27  Nik Kalach  <nikka@fedoraproject.org>
+
+	[BZ #15221]
+	* locales/ia_FR: Fix postal_fmt definition.
+
 2013-02-01  Andreas Jaeger  <aj@suse.de>
 
 	* CHECKSUMS: Remove file.

@@ -5,7 +5,7 @@ escape_char  /
 % Language: ia
 % Territory: FR
 % Revision: 1.0
-% Date: 2012-11-26
+% Date: 2013-03-01
 % Application: general
 % Users: general
 % Charset: UTF-8
@@ -21,7 +21,7 @@ fax ""
 language "Interlingua"
 territory "France"
 revision "1.0"
-date "2012-11-26"
+date "2013-03-01"
 
 category ia_FR:2000;LC_IDENTIFICATION
 category ia_FR:2000;LC_CTYPE
@@ -120,9 +120,9 @@ END LC_NAME
 LC_ADDRESS
 postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0074><U0025><U0068><U0074><U0025><U0065><U0074><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0074><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
+<U0025><U0074><U0025><U0068><U0025><U0074><U0025><U0065><U0025><U0074>/
+<U0025><U0072><U0025><U004E><U0025><U007A><U0025><U0074><U0025><U0054>/
+<U0025><U004E><U0025><U0063><U0025><U004E>"
 country_post "<U0046>"
 country_ab2 "<U0046><U0052>"
 country_ab3 "<U0046><U0052><U0041>"
