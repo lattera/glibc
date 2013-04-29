@@ -1,10 +1,15 @@
 2013-04-29  Andreas Jaeger  <aj@suse.de>
 
+	[BZ #15085]
+	* resolv/resolv.h (RES_NOCHECKNAME): Mark as unimplemented.
+	* resolv/res_debug.c (p_option): Mark RES_NOCHECKNAME as
+	unimplemented.
+
 	[BZ #15380]
 	* stdlib/random.c (__initstate): Return NULL if
 	__initstate fails.
 
-	[BZ# 15086]
+	[BZ #15086]
 	* resolv/res_debug.c (p_option): Handle RES_NOALIASES,
 	RES_KEEPTSIG, RES_BLAST, RES_NOIP6DOTINT, RES_SNGLKUP,
 	RES_SNGLKUPREOP.

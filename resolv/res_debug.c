@@ -585,7 +585,7 @@ p_option(u_long option) {
 	case RES_NOALIASES:	return "noaliases";
 	case RES_USE_INET6:	return "inet6";
 	case RES_ROTATE:	return "rotate";
-	case RES_NOCHECKNAME:	return "no-check-names";
+	case RES_NOCHECKNAME:	return "no-check-names(unimpl)";
 	case RES_KEEPTSIG:	return "keeptsig(unimpl)";
 	case RES_BLAST:		return "blast";
 	case RES_USEBSTRING:	return "ip6-bytstring";

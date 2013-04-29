@@ -207,7 +207,7 @@ struct res_sym {
 #define	RES_NOALIASES	0x00001000	/* shuts off HOSTALIASES feature */
 #define	RES_USE_INET6	0x00002000	/* use/map IPv6 in gethostbyname() */
 #define RES_ROTATE	0x00004000	/* rotate ns list after each query */
-#define	RES_NOCHECKNAME	0x00008000	/* do not check names for sanity. */
+#define	RES_NOCHECKNAME	0x00008000	/* do not check names for sanity (!IMPL) */
 #define	RES_KEEPTSIG	0x00010000	/* do not strip TSIG records */
 #define	RES_BLAST	0x00020000	/* blast all recursive servers */
 #define RES_USEBSTRING	0x00040000	/* IPv6 reverse lookup with byte
