@@ -163,6 +163,10 @@
 #define EXCEPTIONS_OK INVALID_EXCEPTION_OK+DIVIDE_BY_ZERO_EXCEPTION_OK
 /* Some special test flags, passed together with exceptions.  */
 #define IGNORE_ZERO_INF_SIGN		0x100
+/* Indicate errno settings required or disallowed.  */
+#define ERRNO_UNCHANGED			0x200
+#define ERRNO_EDOM			0x400
+#define ERRNO_ERANGE			0x800
 
 /* Values underflowing only for float.  */
 #ifdef TEST_FLOAT
@@ -218,6 +222,7 @@ static char *output_dir;	/* Directory where generated files will be written.  */
 static int noErrors;	/* number of errors */
 static int noTests;	/* number of tests (without testing exceptions) */
 static int noExcTests;	/* number of tests for exception flags */
+static int noErrnoTests;/* number of tests for errno values */
 static int noXFails;	/* number of expected failures.  */
 static int noXPasses;	/* number of unexpected passes.  */
 
@@ -256,6 +261,7 @@ init_max_error (void)
   real_max_error = 0;
   imag_max_error = 0;
   feclearexcept (FE_ALL_EXCEPT);
+  errno = 0;
 }
 
 static void
@@ -536,6 +542,40 @@ test_exceptions (const char *test_name, int exception)
   feclearexcept (FE_ALL_EXCEPT);
 }
 
+/* Test whether errno for TEST_NAME, set to ERRNO_VALUE, has value
+   EXPECTED_VALUE (description EXPECTED_NAME).  */
+static void
+test_single_errno (const char *test_name, int errno_value,
+		   int expected_value, const char *expected_name)
+{
+  if (errno_value == expected_value)
+    {
+      if (print_screen (1, 0))
+	printf ("Pass: %s: errno set to %d (%s)\n", test_name, errno_value,
+		expected_name);
+    }
+  else
+    {
+      ++noErrors;
+      if (print_screen (0, 0))
+	printf ("Failure: %s: errno set to %d, expected %d (%s)\n",
+		test_name, errno_value, expected_value, expected_name);
+    }
+}
+
+/* Test whether errno (value ERRNO_VALUE) has been for TEST_NAME set
+   as required by EXCEPTIONS.  */
+static void
+test_errno (const char *test_name, int errno_value, int exceptions)
+{
+  ++noErrnoTests;
+  if (exceptions & ERRNO_UNCHANGED)
+    test_single_errno (test_name, errno_value, 0, "unchanged");
+  if (exceptions & ERRNO_EDOM)
+    test_single_errno (test_name, errno_value, EDOM, "EDOM");
+  if (exceptions & ERRNO_ERANGE)
+    test_single_errno (test_name, errno_value, ERANGE, "ERANGE");
+}
 
 static void
 check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
@@ -546,8 +586,10 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
   int print_diff = 0;
   FLOAT diff = 0;
   FLOAT ulp = 0;
+  int errno_value = errno;
 
   test_exceptions (test_name, exceptions);
+  test_errno (test_name, errno_value, exceptions);
   if (issignaling (computed) && issignaling (expected))
     ok = 1;
   else if (issignaling (computed) || issignaling (expected))
@@ -628,6 +670,7 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
   update_stats (ok, xfail);
 
   fpstack_test (test_name);
+  errno = 0;
 }
 
 
@@ -670,7 +713,7 @@ check_complex (const char *test_name, __complex__ FLOAT computed,
   part_max_ulp = __imag__ max_ulp;
   part_xfail = __imag__ xfail;
 
-  /* Don't check again for exceptions, just pass through the
+  /* Don't check again for exceptions or errno, just pass through the
      zero/inf sign test.  */
   check_float_internal (str, part_comp, part_exp, part_max_ulp, part_xfail,
 			exception & IGNORE_ZERO_INF_SIGN,
@@ -686,8 +729,10 @@ check_int (const char *test_name, int computed, int expected, int max_ulp,
 {
   int diff = computed - expected;
   int ok = 0;
+  int errno_value = errno;
 
   test_exceptions (test_name, exceptions);
+  test_errno (test_name, errno_value, exceptions);
   noTests++;
   if (abs (diff) <= max_ulp)
     ok = 1;
@@ -707,6 +752,7 @@ check_int (const char *test_name, int computed, int expected, int max_ulp,
 
   update_stats (ok, xfail);
   fpstack_test (test_name);
+  errno = 0;
 }
 
 
@@ -717,8 +763,10 @@ check_long (const char *test_name, long int computed, long int expected,
 {
   long int diff = computed - expected;
   int ok = 0;
+  int errno_value = errno;
 
   test_exceptions (test_name, exceptions);
+  test_errno (test_name, errno_value, exceptions);
   noTests++;
   if (labs (diff) <= max_ulp)
     ok = 1;
@@ -738,6 +786,7 @@ check_long (const char *test_name, long int computed, long int expected,
 
   update_stats (ok, xfail);
   fpstack_test (test_name);
+  errno = 0;
 }
 
 
@@ -747,8 +796,10 @@ check_bool (const char *test_name, int computed, int expected,
 	    long int max_ulp, int xfail, int exceptions)
 {
   int ok = 0;
+  int errno_value = errno;
 
   test_exceptions (test_name, exceptions);
+  test_errno (test_name, errno_value, exceptions);
   noTests++;
   if ((computed == 0) == (expected == 0))
     ok = 1;
@@ -765,6 +816,7 @@ check_bool (const char *test_name, int computed, int expected,
 
   update_stats (ok, xfail);
   fpstack_test (test_name);
+  errno = 0;
 }
 
 
@@ -777,8 +829,10 @@ check_longlong (const char *test_name, long long int computed,
 {
   long long int diff = computed - expected;
   int ok = 0;
+  int errno_value = errno;
 
   test_exceptions (test_name, exceptions);
+  test_errno (test_name, errno_value, exceptions);
   noTests++;
   if (llabs (diff) <= max_ulp)
     ok = 1;
@@ -798,6 +852,7 @@ check_longlong (const char *test_name, long long int computed,
 
   update_stats (ok, xfail);
   fpstack_test (test_name);
+  errno = 0;
 }
 
 
@@ -5584,15 +5639,9 @@ cos_test (void)
 
   TEST_f_f (cos, 0, 1);
   TEST_f_f (cos, minus_zero, 1);
-  errno = 0;
-  TEST_f_f (cos, plus_infty, qnan_value, INVALID_EXCEPTION);
-  check_int ("errno for cos(+inf) == EDOM", errno, EDOM, 0, 0, 0);
-  errno = 0;
-  TEST_f_f (cos, minus_infty, qnan_value, INVALID_EXCEPTION);
-  check_int ("errno for cos(-inf) == EDOM", errno, EDOM, 0, 0, 0);
-  errno = 0;
-  TEST_f_f (cos, qnan_value, qnan_value);
-  check_int ("errno for cos(qNaN) unchanged", errno, 0, 0, 0, 0);
+  TEST_f_f (cos, plus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM);
+  TEST_f_f (cos, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM);
+  TEST_f_f (cos, qnan_value, qnan_value, ERRNO_UNCHANGED);
 
   TEST_f_f (cos, M_PI_6l * 2.0, 0.5);
   TEST_f_f (cos, M_PI_6l * 4.0, -0.5);
@@ -7118,9 +7167,7 @@ expm1_test (void)
   TEST_f_f (expm1, -10000.0, -1.0);
   TEST_f_f (expm1, -100000.0, -1.0);
 
-  errno = 0;
-  TEST_f_f (expm1, 100000.0, plus_infty, OVERFLOW_EXCEPTION);
-  check_int ("errno for expm1(large) == ERANGE", errno, ERANGE, 0, 0, 0);
+  TEST_f_f (expm1, 100000.0, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE);
   TEST_f_f (expm1, max_value, plus_infty, OVERFLOW_EXCEPTION);
   TEST_f_f (expm1, -max_value, -1);
 
@@ -8346,17 +8393,11 @@ fmod_test (void)
   TEST_ff_f (fmod, minus_zero, 3, minus_zero);
 
   /* fmod (+inf, y) == qNaN plus invalid exception.  */
-  errno = 0;
-  TEST_ff_f (fmod, plus_infty, 3, qnan_value, INVALID_EXCEPTION);
-  check_int ("errno for fmod(Inf,3) unchanged", errno, EDOM, 0, 0, 0);
+  TEST_ff_f (fmod, plus_infty, 3, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM);
   /* fmod (-inf, y) == qNaN plus invalid exception.  */
-  errno = 0;
-  TEST_ff_f (fmod, minus_infty, 3, qnan_value, INVALID_EXCEPTION);
-  check_int ("errno for fmod(-Inf,3) unchanged", errno, EDOM, 0, 0, 0);
+  TEST_ff_f (fmod, minus_infty, 3, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM);
   /* fmod (x, +0) == qNaN plus invalid exception.  */
-  errno = 0;
-  TEST_ff_f (fmod, 3, 0, qnan_value, INVALID_EXCEPTION);
-  check_int ("errno for fmod(3,0) unchanged", errno, EDOM, 0, 0, 0);
+  TEST_ff_f (fmod, 3, 0, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM);
   /* fmod (x, -0) == qNaN plus invalid exception.  */
   TEST_ff_f (fmod, 3, minus_zero, qnan_value, INVALID_EXCEPTION);
 
@@ -8522,21 +8563,13 @@ ilogb_test (void)
   TEST_f_i (ilogb, -2000, 10);
 
   /* ilogb (0.0) == FP_ILOGB0 plus invalid exception  */
-  errno = 0;
-  TEST_f_i (ilogb, 0.0, FP_ILOGB0, INVALID_EXCEPTION);
-  check_int ("errno for ilogb(0.0) unchanged", errno, EDOM, 0, 0, 0);
+  TEST_f_i (ilogb, 0.0, FP_ILOGB0, INVALID_EXCEPTION|ERRNO_EDOM);
   /* ilogb (qNaN) == FP_ILOGBNAN plus invalid exception  */
-  errno = 0;
-  TEST_f_i (ilogb, qnan_value, FP_ILOGBNAN, INVALID_EXCEPTION);
-  check_int ("errno for ilogb(qNaN) unchanged", errno, EDOM, 0, 0, 0);
+  TEST_f_i (ilogb, qnan_value, FP_ILOGBNAN, INVALID_EXCEPTION|ERRNO_EDOM);
   /* ilogb (inf) == INT_MAX plus invalid exception  */
-  errno = 0;
-  TEST_f_i (ilogb, plus_infty, INT_MAX, INVALID_EXCEPTION);
-  check_int ("errno for ilogb(Inf) unchanged", errno, EDOM, 0, 0, 0);
+  TEST_f_i (ilogb, plus_infty, INT_MAX, INVALID_EXCEPTION|ERRNO_EDOM);
   /* ilogb (-inf) == INT_MAX plus invalid exception  */
-  errno = 0;
-  TEST_f_i (ilogb, minus_infty, INT_MAX, INVALID_EXCEPTION);
-  check_int ("errno for ilogb(-Inf) unchanged", errno, EDOM, 0, 0, 0);
+  TEST_f_i (ilogb, minus_infty, INT_MAX, INVALID_EXCEPTION|ERRNO_EDOM);
 
   END (ilogb);
 }
@@ -8991,9 +9024,7 @@ lgamma_test (void)
   TEST_f_f (lgamma, qnan_value, qnan_value);
 
   /* lgamma (x) == +inf plus divide by zero exception for integer x <= 0.  */
-  errno = 0;
-  TEST_f_f (lgamma, -3, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for lgamma(-integer) == ERANGE", errno, ERANGE, 0, 0, 0);
+  TEST_f_f (lgamma, -3, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
   TEST_f_f (lgamma, minus_infty, plus_infty);
   TEST_f_f (lgamma, -max_value, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   TEST_f_f (lgamma, max_value, plus_infty, OVERFLOW_EXCEPTION);
@@ -10648,119 +10679,58 @@ pow_test (void)
   TEST_ff_f (pow, -1.0L, min_subnorm_value, qnan_value, INVALID_EXCEPTION);
   TEST_ff_f (pow, -1.0L, -min_subnorm_value, qnan_value, INVALID_EXCEPTION);
 
-  errno = 0;
-  TEST_ff_f (pow, 0, -1, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(0,-odd) == ERANGE", errno, ERANGE, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (pow, 0, -11, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(0,-odd) == ERANGE", errno, ERANGE, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (pow, 0, -0xffffff, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(0,-odd) == ERANGE", errno, ERANGE, 0, 0, 0);
+  TEST_ff_f (pow, 0, -1, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
+  TEST_ff_f (pow, 0, -11, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
+  TEST_ff_f (pow, 0, -0xffffff, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
 #ifndef TEST_FLOAT
-  errno = 0;
-  TEST_ff_f (pow, 0, -0x1.fffffffffffffp+52L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(0,-odd) == ERANGE", errno, ERANGE, 0, 0, 0);
+  TEST_ff_f (pow, 0, -0x1.fffffffffffffp+52L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
 #endif
 #ifdef TEST_LDOUBLE
 # if LDBL_MANT_DIG >= 64
-  errno = 0;
-  TEST_ff_f (pow, 0, -0x1.fffffffffffffffep+63L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(0,-odd) == ERANGE", errno, ERANGE, 0, 0, 0);
+  TEST_ff_f (pow, 0, -0x1.fffffffffffffffep+63L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
 # endif
 # if LDBL_MANT_DIG >= 106
-  errno = 0;
-  TEST_ff_f (pow, 0, -0x1.ffffffffffffffffffffffffff8p+105L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(0,-odd) == ERANGE", errno, ERANGE, 0, 0, 0);
+  TEST_ff_f (pow, 0, -0x1.ffffffffffffffffffffffffff8p+105L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
 # endif
 # if LDBL_MANT_DIG >= 113
-  errno = 0;
-  TEST_ff_f (pow, 0, -0x1.ffffffffffffffffffffffffffffp+112L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(0,-odd) == ERANGE", errno, ERANGE, 0, 0, 0);
+  TEST_ff_f (pow, 0, -0x1.ffffffffffffffffffffffffffffp+112L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
 # endif
 #endif
-  TEST_ff_f (pow, minus_zero, -1, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(-0,-odd) == ERANGE", errno, ERANGE, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (pow, minus_zero, -11L, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(-0,-odd) == ERANGE", errno, ERANGE, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (pow, minus_zero, -0xffffff, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(-0,-odd) == ERANGE", errno, ERANGE, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (pow, minus_zero, -0x1fffffe, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(-0,-even) == ERANGE", errno, ERANGE, 0, 0, 0);
+  TEST_ff_f (pow, minus_zero, -1, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
+  TEST_ff_f (pow, minus_zero, -11L, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
+  TEST_ff_f (pow, minus_zero, -0xffffff, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
+  TEST_ff_f (pow, minus_zero, -0x1fffffe, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
 #ifndef TEST_FLOAT
-  errno = 0;
-  TEST_ff_f (pow, minus_zero, -0x1.fffffffffffffp+52L, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(-0,-odd) == ERANGE", errno, ERANGE, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (pow, minus_zero, -0x1.fffffffffffffp+53L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(-0,-even) == ERANGE", errno, ERANGE, 0, 0, 0);
+  TEST_ff_f (pow, minus_zero, -0x1.fffffffffffffp+52L, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
+  TEST_ff_f (pow, minus_zero, -0x1.fffffffffffffp+53L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
 #endif
 #ifdef TEST_LDOUBLE
 # if LDBL_MANT_DIG >= 64
-  errno = 0;
-  TEST_ff_f (pow, minus_zero, -0x1.fffffffffffffffep+63L, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(-0,-odd) == ERANGE", errno, ERANGE, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (pow, minus_zero, -0x1.fffffffffffffffep+64L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(-0,-even) == ERANGE", errno, ERANGE, 0, 0, 0);
+  TEST_ff_f (pow, minus_zero, -0x1.fffffffffffffffep+63L, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
+  TEST_ff_f (pow, minus_zero, -0x1.fffffffffffffffep+64L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
 # endif
 # if LDBL_MANT_DIG >= 106
-  errno = 0;
-  TEST_ff_f (pow, minus_zero, -0x1.ffffffffffffffffffffffffff8p+105L, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(-0,-odd) == ERANGE", errno, ERANGE, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (pow, minus_zero, -0x1.ffffffffffffffffffffffffff8p+106L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(-0,-even) == ERANGE", errno, ERANGE, 0, 0, 0);
+  TEST_ff_f (pow, minus_zero, -0x1.ffffffffffffffffffffffffff8p+105L, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
+  TEST_ff_f (pow, minus_zero, -0x1.ffffffffffffffffffffffffff8p+106L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
 # endif
 # if LDBL_MANT_DIG >= 113
-  errno = 0;
-  TEST_ff_f (pow, minus_zero, -0x1.ffffffffffffffffffffffffffffp+112L, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(-0,-odd) == ERANGE", errno, ERANGE, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (pow, minus_zero, -0x1.ffffffffffffffffffffffffffffp+113L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(-0,-even) == ERANGE", errno, ERANGE, 0, 0, 0);
+  TEST_ff_f (pow, minus_zero, -0x1.ffffffffffffffffffffffffffffp+112L, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
+  TEST_ff_f (pow, minus_zero, -0x1.ffffffffffffffffffffffffffffp+113L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
 # endif
 #endif
 
-  errno = 0;
-  TEST_ff_f (pow, 0, -2, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(0,-even) == ERANGE", errno, ERANGE, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (pow, 0, -11.1L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (pow, 0, -min_subnorm_value, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (pow, 0, -0x1p24, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (pow, 0, -0x1p127, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (pow, 0, -max_value, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (pow, minus_zero, -2, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(-0,-even) == ERANGE", errno, ERANGE, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (pow, minus_zero, -11.1L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(-0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (pow, minus_zero, -min_subnorm_value, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(-0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (pow, minus_zero, -0x1p24, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(-0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (pow, minus_zero, -0x1p127, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(-0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (pow, minus_zero, -max_value, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("errno for pow(-0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
+  TEST_ff_f (pow, 0, -2, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
+  TEST_ff_f (pow, 0, -11.1L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
+  TEST_ff_f (pow, 0, -min_subnorm_value, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
+  TEST_ff_f (pow, 0, -0x1p24, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
+  TEST_ff_f (pow, 0, -0x1p127, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
+  TEST_ff_f (pow, 0, -max_value, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
+  TEST_ff_f (pow, minus_zero, -2, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
+  TEST_ff_f (pow, minus_zero, -11.1L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
+  TEST_ff_f (pow, minus_zero, -min_subnorm_value, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
+  TEST_ff_f (pow, minus_zero, -0x1p24, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
+  TEST_ff_f (pow, minus_zero, -0x1p127, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
+  TEST_ff_f (pow, minus_zero, -max_value, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
 
   TEST_ff_f (pow, 0x1p72L, 0x1p72L, plus_infty, OVERFLOW_EXCEPTION);
   TEST_ff_f (pow, 10, -0x1p72L, 0, UNDERFLOW_EXCEPTION);
@@ -11394,52 +11364,22 @@ remainder_test (void)
 
   START (remainder);
 
-  errno = 0;
-  TEST_ff_f (remainder, 1, 0, qnan_value, INVALID_EXCEPTION);
-  check_int ("errno for remainder(1, 0) = EDOM ", errno, EDOM, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (remainder, 1, minus_zero, qnan_value, INVALID_EXCEPTION);
-  check_int ("errno for remainder(1, -0) = EDOM ", errno, EDOM, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (remainder, plus_infty, minus_zero, qnan_value, INVALID_EXCEPTION);
-  check_int ("errno for remainder(INF, -0) = EDOM ", errno, EDOM, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (remainder, plus_infty, 0, qnan_value, INVALID_EXCEPTION);
-  check_int ("errno for remainder(INF, 0) = EDOM ", errno, EDOM, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (remainder, plus_infty, 1, qnan_value, INVALID_EXCEPTION);
-  check_int ("errno for remainder(INF, 1) = EDOM ", errno, EDOM, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (remainder, plus_infty, 2, qnan_value, INVALID_EXCEPTION);
-  check_int ("errno for remainder(INF, 2) = EDOM ", errno, EDOM, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (remainder, minus_infty, minus_zero, qnan_value, INVALID_EXCEPTION);
-  check_int ("errno for remainder(-INF, -0) = EDOM ", errno, EDOM, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (remainder, minus_infty, 0, qnan_value, INVALID_EXCEPTION);
-  check_int ("errno for remainder(-INF, 0) = EDOM ", errno, EDOM, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (remainder, minus_infty, 1, qnan_value, INVALID_EXCEPTION);
-  check_int ("errno for remainder(-INF, 1) = EDOM ", errno, EDOM, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (remainder, minus_infty, 2, qnan_value, INVALID_EXCEPTION);
-  check_int ("errno for remainder(-INF, 2) = EDOM ", errno, EDOM, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (remainder, qnan_value, qnan_value, qnan_value);
-  check_int ("errno for remainder(qNAN, qNAN) unchanged", errno, 0, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (remainder, 0, qnan_value, qnan_value);
-  check_int ("errno for remainder(0, qNAN) unchanged", errno, 0, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (remainder, qnan_value, 0, qnan_value);
-  check_int ("errno for remainder(qNaN, 0) unchanged", errno, 0, 0, 0, 0);
+  TEST_ff_f (remainder, 1, 0, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM);
+  TEST_ff_f (remainder, 1, minus_zero, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM);
+  TEST_ff_f (remainder, plus_infty, minus_zero, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM);
+  TEST_ff_f (remainder, plus_infty, 0, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM);
+  TEST_ff_f (remainder, plus_infty, 1, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM);
+  TEST_ff_f (remainder, plus_infty, 2, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM);
+  TEST_ff_f (remainder, minus_infty, minus_zero, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM);
+  TEST_ff_f (remainder, minus_infty, 0, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM);
+  TEST_ff_f (remainder, minus_infty, 1, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM);
+  TEST_ff_f (remainder, minus_infty, 2, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM);
+  TEST_ff_f (remainder, qnan_value, qnan_value, qnan_value, ERRNO_UNCHANGED);
+  TEST_ff_f (remainder, 0, qnan_value, qnan_value, ERRNO_UNCHANGED);
+  TEST_ff_f (remainder, qnan_value, 0, qnan_value, ERRNO_UNCHANGED);
 
-  errno = 0;
-  TEST_ff_f (remainder, 7.0, plus_infty, 7.0);
-  check_int ("errno for remainder(7.0, INF) unchanged", errno, 0, 0, 0, 0);
-  errno = 0;
-  TEST_ff_f (remainder, 7.0, minus_infty, 7.0);
-  check_int ("errno for remainder(7.0, -INF) unchanged", errno, 0, 0, 0, 0);
+  TEST_ff_f (remainder, 7.0, plus_infty, 7.0, ERRNO_UNCHANGED);
+  TEST_ff_f (remainder, 7.0, minus_infty, 7.0, ERRNO_UNCHANGED);
 
   TEST_ff_f (remainder, 1.625, 1.0, -0.375);
   TEST_ff_f (remainder, -1.625, 1.0, 0.375);
@@ -12226,15 +12166,9 @@ sin_test (void)
 
   TEST_f_f (sin, 0, 0);
   TEST_f_f (sin, minus_zero, minus_zero);
-  errno = 0;
-  TEST_f_f (sin, plus_infty, qnan_value, INVALID_EXCEPTION);
-  check_int ("errno for sin(+inf) == EDOM", errno, EDOM, 0, 0, 0);
-  errno = 0;
-  TEST_f_f (sin, minus_infty, qnan_value, INVALID_EXCEPTION);
-  check_int ("errno for sin(-inf) == EDOM", errno, EDOM, 0, 0, 0);
-  errno = 0;
-  TEST_f_f (sin, qnan_value, qnan_value);
-  check_int ("errno for sin(qNaN) unchanged", errno, 0, 0, 0, 0);
+  TEST_f_f (sin, plus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM);
+  TEST_f_f (sin, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM);
+  TEST_f_f (sin, qnan_value, qnan_value, ERRNO_UNCHANGED);
 
   TEST_f_f (sin, M_PI_6l, 0.5);
   TEST_f_f (sin, -M_PI_6l, -0.5);
@@ -12666,15 +12600,9 @@ tan_test (void)
 
   TEST_f_f (tan, 0, 0);
   TEST_f_f (tan, minus_zero, minus_zero);
-  errno = 0;
-  TEST_f_f (tan, plus_infty, qnan_value, INVALID_EXCEPTION);
-  check_int ("errno for tan(Inf) == EDOM", errno, EDOM, 0, 0, 0);
-  errno = 0;
-  TEST_f_f (tan, minus_infty, qnan_value, INVALID_EXCEPTION);
-  check_int ("errno for tan(-Inf) == EDOM", errno, EDOM, 0, 0, 0);
-  errno = 0;
-  TEST_f_f (tan, qnan_value, qnan_value);
-  check_int ("errno for tan(qNaN) == 0", errno, 0, 0, 0, 0);
+  TEST_f_f (tan, plus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM);
+  TEST_f_f (tan, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM);
+  TEST_f_f (tan, qnan_value, qnan_value, ERRNO_UNCHANGED);
 
   TEST_f_f (tan, M_PI_4l, 1);
   TEST_f_f (tan, 0.75L, 0.931596459944072461165202756573936428L);
@@ -13232,9 +13160,7 @@ yn_test (void)
      and FLT_MIN.  See Bug 14173.  */
   TEST_ff_f (yn, 10, min_value, minus_infty, OVERFLOW_EXCEPTION);
 
-  errno = 0;
-  TEST_ff_f (yn, 10, min_value, minus_infty, OVERFLOW_EXCEPTION);
-  check_int ("errno for yn(10,-min) == ERANGE", errno, ERANGE, 0, 0, 0);
+  TEST_ff_f (yn, 10, min_value, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE);
 
   END (yn);
 }
@@ -13291,6 +13217,7 @@ initialize (void)
 
   /* Clear all exceptions.  From now on we must not get random exceptions.  */
   feclearexcept (FE_ALL_EXCEPT);
+  errno = 0;
 
   /* Test to make sure we start correctly.  */
   fpstack_test ("end *init*");
@@ -13641,8 +13568,9 @@ main (int argc, char **argv)
     fclose (ulps_file);
 
   printf ("\nTest suite completed:\n");
-  printf ("  %d test cases plus %d tests for exception flags executed.\n",
-	  noTests, noExcTests);
+  printf ("  %d test cases plus %d tests for exception flags and\n"
+	  "    %d tests for errno executed.\n",
+	  noTests, noExcTests, noErrnoTests);
   if (noXFails)
     printf ("  %d expected failures occurred.\n", noXFails);
   if (noXPasses)

@@ -1,3 +1,33 @@
+2013-04-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (ERRNO_UNCHANGED): New macro.
+	(ERRNO_EDOM): Likewise.
+	(ERRNO_ERANGE): Likewise.
+	(noErrnoTests): New variable.
+	(init_max_error): Set errno to 0.
+	(test_single_errno): New function.
+	(test_errno): Likewise.
+	(check_float_internal): Call test_errno.  Set errno to 0.
+	(check_complex): Refer to errno tests in comment.
+	(check_int): Call test_errno.  Set errno to 0.
+	(check_long): Likewise.
+	(check_bool): Likewise.
+	(check_longlong): Likewise.
+	(cos_test): Use ERRNO_* flags for errno tests instead of
+	check_int.
+	(expm1_test): Likewise.
+	(fmod_test): Likewise.
+	(ilogb_test): Likewise.
+	(lgamma_test): Likewise.
+	(pow_test): Likewise.
+	(remainder_test): Likewise.
+	(sin_test): Likewise.
+	(tan_test): Likewise.
+	(yn_test): Likewise.
+	(initialize): Set errno to 0.
+	(main): Print number of errno tests.
+	* math/gen-libm-test.pl (parse_args): Allow ERRNO flags on tests.
+
 2013-04-29  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #15084]
