@@ -1,5 +1,9 @@
 2013-04-29  Andreas Jaeger  <aj@suse.de>
 
+	[BZ #15084]
+	* resolv/res_debug.c (p_option): Fix strings for RES_USEBSTRING
+	and RES_USEVC.
+
 	[BZ #15085]
 	* resolv/resolv.h (RES_NOCHECKNAME): Mark as unimplemented.
 	* resolv/res_debug.c (p_option): Mark RES_NOCHECKNAME as

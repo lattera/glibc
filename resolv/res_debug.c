@@ -573,7 +573,7 @@ p_option(u_long option) {
 	case RES_INIT:		return "init";
 	case RES_DEBUG:		return "debug";
 	case RES_AAONLY:	return "aaonly(unimpl)";
-	case RES_USEVC:		return "usevc";
+	case RES_USEVC:		return "use-vc";
 	case RES_PRIMARY:	return "primry(unimpl)";
 	case RES_IGNTC:		return "igntc";
 	case RES_RECURSE:	return "recurs";
@@ -588,7 +588,7 @@ p_option(u_long option) {
 	case RES_NOCHECKNAME:	return "no-check-names(unimpl)";
 	case RES_KEEPTSIG:	return "keeptsig(unimpl)";
 	case RES_BLAST:		return "blast";
-	case RES_USEBSTRING:	return "ip6-bytstring";
+	case RES_USEBSTRING:	return "ip6-bytestring";
 	case RES_NOIP6DOTINT:	return "no-ip6-dotint";
 	case RES_USE_EDNS0:	return "edns0";
 	case RES_SNGLKUP:	return "single-request";
