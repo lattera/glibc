@@ -1,3 +1,10 @@
+2013-04-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (cacos_test): Add missing semicolons at ends
+	of individual tests.
+	(casin_test): Likewise.
+	(casinh_test): Likewise.
+
 2013-04-27  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15409]
