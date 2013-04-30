@@ -97,7 +97,25 @@ __catanhl (__complex__ long double x)
 	      __real__ res = 0.25L * __log1pl (num / den);
 	    }
 
-	  den = 1 - __real__ x * __real__ x - i2;
+	  long double absx, absy;
+
+	  absx = fabsl (__real__ x);
+	  absy = fabsl (__imag__ x);
+	  if (absx < absy)
+	    {
+	      long double t = absx;
+	      absx = absy;
+	      absy = t;
+	    }
+
+	  if (absx >= 1.0L)
+	    den = (1.0L - absx) * (1.0L + absx) - absy * absy;
+	  else if (absx >= 0.75 && absy < LDBL_EPSILON / 2.0L)
+	    den = (1.0L - absx) * (1.0L + absx);
+	  else if (absx >= 0.75L || absy >= 0.5L)
+	    den = -__x2y2m1l (absx, absy);
+	  else
+	    den = (1.0L - absx) * (1.0L + absx) - absy * absy;
 
 	  __imag__ res = 0.5L * __ieee754_atan2l (2.0L * __imag__ x, den);
 	}

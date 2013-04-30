@@ -89,7 +89,25 @@ __catanh (__complex__ double x)
 	      __real__ res = 0.25 * __log1p (num / den);
 	    }
 
-	  den = 1 - __real__ x * __real__ x - i2;
+	  double absx, absy;
+
+	  absx = fabs (__real__ x);
+	  absy = fabs (__imag__ x);
+	  if (absx < absy)
+	    {
+	      double t = absx;
+	      absx = absy;
+	      absy = t;
+	    }
+
+	  if (absx >= 1.0)
+	    den = (1.0 - absx) * (1.0 + absx) - absy * absy;
+	  else if (absx >= 0.75 && absy < DBL_EPSILON / 2.0)
+	    den = (1.0 - absx) * (1.0 + absx);
+	  else if (absx >= 0.75 || absy >= 0.5)
+	    den = -__x2y2m1 (absx, absy);
+	  else
+	    den = (1.0 - absx) * (1.0 + absx) - absy * absy;
 
 	  __imag__ res = 0.5 * __ieee754_atan2 (2.0 * __imag__ x, den);
 	}

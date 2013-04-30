@@ -77,13 +77,29 @@ __catan (__complex__ double x)
 	}
       else
 	{
-	  double r2, num, den, f;
+	  double r2, num, den, f, absx, absy;
 
-	  r2 = __real__ x * __real__ x;
+	  absx = fabs (__real__ x);
+	  absy = fabs (__imag__ x);
+	  if (absx < absy)
+	    {
+	      double t = absx;
+	      absx = absy;
+	      absy = t;
+	    }
 
-	  den = 1 - r2 - __imag__ x * __imag__ x;
+	  if (absx >= 1.0)
+	    den = (1.0 - absx) * (1.0 + absx) - absy * absy;
+	  else if (absx >= 0.75 && absy < DBL_EPSILON / 2.0)
+	    den = (1.0 - absx) * (1.0 + absx);
+	  else if (absx >= 0.75 || absy >= 0.5)
+	    den = -__x2y2m1 (absx, absy);
+	  else
+	    den = (1.0 - absx) * (1.0 + absx) - absy * absy;
 
 	  __real__ res = 0.5 * __ieee754_atan2 (2.0 * __real__ x, den);
+
+	  r2 = __real__ x * __real__ x;
 
 	  num = __imag__ x + 1.0;
 	  num = r2 + num * num;

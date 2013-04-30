@@ -1,3 +1,18 @@
+2013-04-30  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15416]
+	* math/s_catan.c (__catan): Compute expressions 1 - x^2 - y^2 more
+	accurately for denominator in atan2.
+	* math/s_catanf.c (__catanf): Likewise.
+	* math/s_catanh.c (__catanh): Likewise.
+	* math/s_catanhf.c (__catanhf): Likewise.
+	* math/s_catanhl.c (__catanhl): Likewise.
+	* math/s_catanl.c (__catanl): Likewise.
+	* math/libm-test.inc (catan_test): Add more tests.
+	(catanh_test): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2013-04-30  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/s_sin.c: Format code.

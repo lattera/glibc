@@ -78,13 +78,29 @@ __catanf (__complex__ float x)
 	}
       else
 	{
-	  float r2, num, den, f;
+	  float r2, num, den, f, absx, absy;
 
-	  r2 = __real__ x * __real__ x;
+	  absx = fabsf (__real__ x);
+	  absy = fabsf (__imag__ x);
+	  if (absx < absy)
+	    {
+	      float t = absx;
+	      absx = absy;
+	      absy = t;
+	    }
 
-	  den = 1 - r2 - __imag__ x * __imag__ x;
+	  if (absx >= 1.0f)
+	    den = (1.0f - absx) * (1.0f + absx) - absy * absy;
+	  else if (absx >= 0.75f && absy < FLT_EPSILON / 2.0f)
+	    den = (1.0f - absx) * (1.0f + absx);
+	  else if (absx >= 0.75f || absy >= 0.5f)
+	    den = -__x2y2m1f (absx, absy);
+	  else
+	    den = (1.0f - absx) * (1.0f + absx) - absy * absy;
 
 	  __real__ res = 0.5f * __ieee754_atan2f (2.0f * __real__ x, den);
+
+	  r2 = __real__ x * __real__ x;
 
 	  num = __imag__ x + 1.0f;
 	  num = r2 + num * num;

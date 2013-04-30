@@ -90,7 +90,25 @@ __catanhf (__complex__ float x)
 	      __real__ res = 0.25f * __log1pf (num / den);
 	    }
 
-	  den = 1 - __real__ x * __real__ x - i2;
+	  float absx, absy;
+
+	  absx = fabsf (__real__ x);
+	  absy = fabsf (__imag__ x);
+	  if (absx < absy)
+	    {
+	      float t = absx;
+	      absx = absy;
+	      absy = t;
+	    }
+
+	  if (absx >= 1.0f)
+	    den = (1.0f - absx) * (1.0f + absx) - absy * absy;
+	  else if (absx >= 0.75f && absy < FLT_EPSILON / 2.0f)
+	    den = (1.0f - absx) * (1.0f + absx);
+	  else if (absx >= 0.75f || absy >= 0.5f)
+	    den = -__x2y2m1f (absx, absy);
+	  else
+	    den = (1.0f - absx) * (1.0f + absx) - absy * absy;
 
 	  __imag__ res = 0.5f * __ieee754_atan2f (2.0f * __imag__ x, den);
 	}

@@ -85,13 +85,29 @@ __catanl (__complex__ long double x)
 	}
       else
 	{
-	  long double r2, num, den, f;
+	  long double r2, num, den, f, absx, absy;
 
-	  r2 = __real__ x * __real__ x;
+	  absx = fabsl (__real__ x);
+	  absy = fabsl (__imag__ x);
+	  if (absx < absy)
+	    {
+	      long double t = absx;
+	      absx = absy;
+	      absy = t;
+	    }
 
-	  den = 1 - r2 - __imag__ x * __imag__ x;
+	  if (absx >= 1.0L)
+	    den = (1.0L - absx) * (1.0L + absx) - absy * absy;
+	  else if (absx >= 0.75L && absy < LDBL_EPSILON / 2.0L)
+	    den = (1.0L - absx) * (1.0L + absx);
+	  else if (absx >= 0.75L || absy >= 0.5L)
+	    den = -__x2y2m1l (absx, absy);
+	  else
+	    den = (1.0L - absx) * (1.0L + absx) - absy * absy;
 
 	  __real__ res = 0.5L * __ieee754_atan2l (2.0L * __real__ x, den);
+
+	  r2 = __real__ x * __real__ x;
 
 	  num = __imag__ x + 1.0L;
 	  num = r2 + num * num;
