@@ -1,5 +1,7 @@
 2013-04-30  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/s_sin.c: Format code.
+
 	* benchtests/Makefile (bench): Remove slow benchmarks.
 	* benchtests/atan-inputs: Add slow benchmark inputs.
 	* benchtests/bench-modf.c (NUM_VARIANTS): Define.
