@@ -22,23 +22,22 @@ use warnings;
 # Generate a benchmark source file for a given input.
 
 if (@ARGV < 2) {
-  die "Usage: bench.pl <function> <iterations> [parameter types] [return type]"
+  die "Usage: bench.pl <function> [parameter types] [return type]"
 }
 
 my $arg;
 my $func = $ARGV[0];
-my $iters = $ARGV[1];
 my @args;
 my $ret = "void";
 my $getret = "";
 my $retval = "";
 
-if (@ARGV >= 3) {
-  @args = split(':', $ARGV[2]);
+if (@ARGV >= 2) {
+  @args = split(':', $ARGV[1]);
 }
 
-if (@ARGV == 4) {
-  $ret = $ARGV[3];
+if (@ARGV == 3) {
+  $ret = $ARGV[2];
 }
 
 my $decl = "extern $ret $func (";
@@ -88,6 +87,5 @@ if ($ret ne "void") {
 
 print "#define BENCH_FUNC(j) ({$getret CALL_BENCH_FUNC (j);})\n";
 
-print "#define ITER $iters\n";
 print "#define FUNCNAME \"$func\"\n";
 print "#include \"bench-skeleton.c\"\n";

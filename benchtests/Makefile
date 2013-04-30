@@ -23,12 +23,6 @@
 
 # - Append the function name to the bench variable
 
-# - Define foo-ITER with the number of iterations you want to run.  Keep it
-#   high enough that the overhead of clock_gettime is only a small fraction of
-#   the total run time of the test.  A good idea would be to keep the run time
-#   of each test at around 10 seconds for x86_64.  That is just a guideline,
-#   since some scenarios may require higher run times.
-
 # - Define foo-ARGLIST as a colon separated list of types of the input
 #   arguments.  Use `void` if function does not take any inputs.  Put in quotes
 #   if the input argument is a pointer, e.g.:
@@ -49,83 +43,70 @@ bench := exp pow rint sin cos tan atan modf \
 	 slowexp slowpow slowsin slowcos slowtan slowatan
 
 # exp function fast path: sysdeps/ieee754/dbl-64/e_exp.c
-exp-ITER = 5e8
 exp-ARGLIST = double
 exp-RET = double
 LDFLAGS-bench-exp = -lm
 
 # pow function fast path: sysdeps/ieee754/dbl-64/e_pow.c
-pow-ITER = 2e8
 pow-ARGLIST = double:double
 pow-RET = double
 LDFLAGS-bench-pow = -lm
 
-rint-ITER = 250000000
 rint-ARGLIST = double
 rint-RET = double
 LDFLAGS-bench-rint = -lm
 
 # exp function slowest path: sysdeps/ieee754/dbl-64/mpexp.c
-slowexp-ITER = 3e5
 slowexp-ARGLIST = double
 slowexp-RET = double
 slowexp-INCLUDE = slowexp.c
 LDFLAGS-bench-slowexp = -lm
 
 # sin function fast path: sysdeps/ieee754/dbl-64/s_sin.c
-sin-ITER = 3e9
 sin-ARGLIST = double
 sin-RET = double
 LDFLAGS-bench-sin = -lm
 
 # cos function fast path: sysdeps/ieee754/dbl-64/s_sin.c
-cos-ITER = 3e9
 cos-ARGLIST = double
 cos-RET = double
 LDFLAGS-bench-cos = -lm
 
 # tan function fast path: sysdeps/ieee754/dbl-64/s_tan.c
-tan-ITER = 3e9
 tan-ARGLIST = double
 tan-RET = double
 LDFLAGS-bench-tan = -lm
 
 # atan function fast path: sysdeps/ieee754/dbl-64/s_atan.c
-atan-ITER = 6e9
 atan-ARGLIST = double
 atan-RET = double
 LDFLAGS-bench-atan = -lm
 
 # pow function slowest path: sysdeps/ieee754/dbl-64/slowpow.c
-slowpow-ITER = 1e5
 slowpow-ARGLIST = double:double
 slowpow-RET = double
 slowpow-INCLUDE = slowpow.c
 LDFLAGS-bench-slowpow = -lm
 
 # sin function slowest path: sysdeps/ieee754/dbl-64/sincos32.c
-slowsin-ITER = 3e7
 slowsin-ARGLIST = double
 slowsin-RET = double
 slowsin-INCLUDE = slowsin.c
 LDFLAGS-bench-slowsin = -lm
 
 # cos function slowest path: sysdeps/ieee754/dbl-64/sincos32.c
-slowcos-ITER = 3e7
 slowcos-ARGLIST = double
 slowcos-RET = double
 slowcos-INCLUDE = slowcos.c
 LDFLAGS-bench-slowcos = -lm
 
 # tan function slowest path: sysdeps/ieee754/dbl-64/mptan.c
-slowtan-ITER = 3e7
 slowtan-ARGLIST = double
 slowtan-RET = double
 slowtan-INCLUDE = slowtan.c
 LDFLAGS-bench-slowtan = -lm
 
 # atan function slowest path: sysdeps/ieee754/dbl-64/mpatan.c
-slowatan-ITER = 3e8
 slowatan-ARGLIST = double
 slowatan-RET = double
 slowatan-INCLUDE = slowatan.c
@@ -140,6 +121,13 @@ include ../Makeconfig
 include ../Rules
 
 binaries-bench := $(addprefix $(objpfx)bench-,$(bench))
+
+# The default duration: 10 seconds.
+ifndef BENCH_DURATION
+BENCH_DURATION := 10
+endif
+
+CPPFLAGS-nonlib = -DDURATION=$(BENCH_DURATION)
 
 # This makes sure CPPFLAGS-nonlib and CFLAGS-nonlib are passed
 # for all these modules.
@@ -176,5 +164,5 @@ $(objpfx)bench-%.c: %-inputs $(bench-deps)
 	  cat $($*-INCLUDE); \
 	fi; \
 	$(..)scripts/bench.pl $(patsubst %-inputs,%,$<) \
-	  $($*-ITER) $($*-ARGLIST) $($*-RET); } > $@-tmp
+	  $($*-ARGLIST) $($*-RET); } > $@-tmp
 	mv -f $@-tmp $@

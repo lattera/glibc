@@ -33,7 +33,6 @@ struct args
 static volatile double ret = 0.0;
 #define BENCH_FUNC(j) ({double iptr; ret =  CALL_BENCH_FUNC (j, iptr);})
 
-#define ITER 250000000
 #define FUNCNAME "modf"
 
 #include "bench-skeleton.c"

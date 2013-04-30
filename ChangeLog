@@ -1,3 +1,14 @@
+2013-04-30  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* benchtests/Makefile: Remove *-ITER.  Define BENCH_DURATION
+	in CPPFLAGS.
+	($(objpfx)bench-%.c): Remove *-ITER.
+	* benchtests/bench-modf.c: Remove definition of ITER.
+	* benchtests/bench-skeleton.c (TIMESPEC_AFTER): New macro.
+	(main): Loop for DURATION seconds instead of fixed number of
+	iterations.
+	* scripts/bench.pl: Don't expect iterations in parameters.
+
 2013-04-29  Roland McGrath  <roland@hack.frob.com>
 
 	* io/fchdir.c (__fchdir): Renamed from fchdir.
