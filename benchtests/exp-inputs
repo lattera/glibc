@@ -1,1 +1,5 @@
 42
+# Slowest path with computation in 768 bit precision.
+# Implemented in: sysdeps/ieee754/dbl-64/mpexp.c
+## name: 768bits
+708.00096423260981737257679924368858

@@ -25,12 +25,11 @@
 #define TIMESPEC_AFTER(a, b) \
   (((a).tv_sec == (b).tv_sec) ?						      \
      ((a).tv_nsec > (b).tv_nsec) :					      \
-        ((a).tv_sec > (b).tv_sec))
+	((a).tv_sec > (b).tv_sec))
 int
 main (int argc, char **argv)
 {
   unsigned long i, k;
-  uint64_t total = 0, max = 0, min = 0x7fffffffffffffff;
   struct timespec start, end, runtime;
 
   memset (&runtime, 0, sizeof (runtime));
@@ -45,53 +44,57 @@ main (int argc, char **argv)
      but it's better than having nothing at all.  */
   unsigned long iters = 1000 * start.tv_nsec;
 
-  /* Run for approxmately DURATION seconds.  */
-  clock_gettime (CLOCK_MONOTONIC_RAW, &runtime);
-  runtime.tv_sec += DURATION;
-
-  double d_total_i = 0;
-  while (1)
+  for (int v = 0; v < NUM_VARIANTS; v++)
     {
-      for (i = 0; i < NUM_SAMPLES; i++)
+      /* Run for approximately DURATION seconds.  */
+      clock_gettime (CLOCK_MONOTONIC_RAW, &runtime);
+      runtime.tv_sec += DURATION;
+
+      double d_total_i = 0;
+      uint64_t total = 0, max = 0, min = 0x7fffffffffffffff;
+      while (1)
 	{
-	  clock_gettime (CLOCK_PROCESS_CPUTIME_ID, &start);
-	  for (k = 0; k < iters; k++)
-	    BENCH_FUNC(i);
-	  clock_gettime (CLOCK_PROCESS_CPUTIME_ID, &end);
+	  for (i = 0; i < NUM_SAMPLES (v); i++)
+	    {
+	      clock_gettime (CLOCK_PROCESS_CPUTIME_ID, &start);
+	      for (k = 0; k < iters; k++)
+		BENCH_FUNC (v, i);
+	      clock_gettime (CLOCK_PROCESS_CPUTIME_ID, &end);
 
-	  uint64_t cur = (end.tv_nsec - start.tv_nsec
-			 + ((end.tv_sec - start.tv_sec)
-			    * (uint64_t) 1000000000));
+	      uint64_t cur = (end.tv_nsec - start.tv_nsec
+			      + ((end.tv_sec - start.tv_sec)
+				 * (uint64_t) 1000000000));
 
-	  if (cur > max)
-	    max = cur;
+	      if (cur > max)
+		max = cur;
 
-	  if (cur < min)
-	    min = cur;
+	      if (cur < min)
+		min = cur;
 
-	  total += cur;
+	      total += cur;
 
-	  d_total_i += iters;
+	      d_total_i += iters;
+	    }
+	  struct timespec curtime;
+
+	  memset (&curtime, 0, sizeof (curtime));
+	  clock_gettime (CLOCK_MONOTONIC_RAW, &curtime);
+	  if (TIMESPEC_AFTER (curtime, runtime))
+	    goto done;
 	}
 
-      struct timespec curtime;
+      double d_total_s;
+      double d_iters;
 
-      memset (&curtime, 0, sizeof (curtime));
-      clock_gettime (CLOCK_MONOTONIC_RAW, &curtime);
-      if (TIMESPEC_AFTER (curtime, runtime))
-	goto done;
+    done:
+      d_total_s = total * 1e-9;
+      d_iters = iters;
+
+      printf ("%s: ITERS:%g: TOTAL:%gs, MAX:%gns, MIN:%gns, %g iter/s\n",
+	      VARIANT (v),
+	      d_total_i, d_total_s, max / d_iters, min / d_iters,
+	      d_total_i / d_total_s);
     }
-
-  double d_total_s;
-  double d_iters;
-
- done:
-  d_total_s = total * 1e-9;
-  d_iters = iters;
-
-  printf (FUNCNAME ": ITERS:%g: TOTAL:%gs, MAX:%gns, MIN:%gns, %g iter/s\n",
-	  d_total_i, d_total_s, max / d_iters, min / d_iters,
-	  d_total_i / d_total_s);
 
   return 0;
 }

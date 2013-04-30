@@ -3,3 +3,11 @@
 0x1.00000162a932ap0
 0x1.000002d452a11p0
 0x1.000005bc7d86cp0
+# cos slow path at 768 bits
+# Implemented in sysdeps/ieee754/dbl-64/sincos32.c
+## name: 768bits
+0x1.000000cf4a2a2p0
+0x1.0000010b239a9p0
+0x1.00000162a932bp0
+0x1.000002d452a10p0
+0x1.000005bc7d86dp0

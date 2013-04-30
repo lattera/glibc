@@ -42,15 +42,28 @@ if (@ARGV == 3) {
 
 my $decl = "extern $ret $func (";
 
+# Function has no arguments.
 if (@args == 0 || $args[0] eq "void") {
   print "$decl void);\n";
-  print "#define CALL_BENCH_FUNC(j) $func();\n";
-  print "#define NUM_SAMPLES (1)\n";
+  print "#define CALL_BENCH_FUNC(i,j) $func();\n";
+  print "#define NUM_VARIANTS (1)\n";
+  print "#define NUM_SAMPLES(v) (1)\n";
+  print "#define VARIANT(v) FUNCNAME \"()\"\n"
 }
+# The function has arguments, so parse them and populate the inputs.
 else {
   my $num = 0;
-  my $bench_func = "#define CALL_BENCH_FUNC(j) $func (";
-  my $struct = "struct args {";
+  my $bench_func = "#define CALL_BENCH_FUNC(v, i) $func (";
+
+  my $struct =
+    "struct _variants
+    {
+      const char *name;
+      int count;
+      struct args *in;
+    };\n";
+
+  my $arg_struct = "struct args {";
 
   foreach $arg (@args) {
     if ($num > 0) {
@@ -58,24 +71,87 @@ else {
       $decl = "$decl,";
     }
 
-    $struct = "$struct $arg arg$num;";
-    $bench_func = "$bench_func in[j].arg$num";
+    $arg_struct = "$arg_struct $arg arg$num;";
+    $bench_func = "$bench_func variants[v].in[i].arg$num";
     $decl = "$decl $arg";
     $num = $num + 1;
   }
 
-  print "$decl);\n";
-  print "$bench_func);\n";
-  print "$struct } in[] = {";
+  $arg_struct = $arg_struct . "};\n";
+  $decl = $decl . ");\n";
+  $bench_func = $bench_func . ");\n";
+
+  # We create a hash of inputs for each variant of the test.
+  my $variant = "";
+  my @curvals;
+  my %vals;
 
   open INPUTS, "<$func-inputs" or die $!;
 
-  while (<INPUTS>) {
+  LINE:while (<INPUTS>) {
     chomp;
-    print "{$_},\n";
+
+    # New variant.
+    if (/^## (\w+): (\w+)/) {
+      #We only identify Name for now.
+      if ($1 ne "name") {
+        next LINE;
+      }
+
+      # Save values in the last variant.
+      my @copy = @curvals;
+      $vals{$variant} = \@copy;
+
+      # Prepare for the next.
+      $variant=$2;
+      undef @curvals;
+      next LINE;
+    }
+
+    # Skip over comments.
+    if (/^#/) {
+      next LINE;
+    }
+    push (@curvals, $_);
   }
-  print "};\n";
-  print "#define NUM_SAMPLES (sizeof (in) / sizeof (struct args))\n"
+
+  $vals{$variant} = \@curvals;
+
+  # Print the definitions and macros.
+  print $decl;
+  print $bench_func;
+  print $arg_struct;
+  print $struct;
+
+  my $c = 0;
+  my $key;
+
+  # Print the input arrays.
+  foreach $key (keys %vals) {
+    my @arr = @{$vals{$key}};
+
+    print "struct args in" . $c . "[" . @arr . "] = {\n";
+    foreach (@arr) {
+      print "{$_},\n";
+    }
+    print "};\n\n";
+    $c += 1;
+  }
+
+  # The variants.  Each variant then points to the appropriate input array we
+  # defined above.
+  print "struct _variants variants[" . (keys %vals) . "] = {\n";
+  $c = 0;
+  foreach $key (keys %vals) {
+    print "{\"$func($key)\", " . @{$vals{$key}} . ", in$c},\n";
+    $c += 1;
+  }
+  print "};\n\n";
+
+  # Finally, print the last set of macros.
+  print "#define NUM_VARIANTS $c\n";
+  print "#define NUM_SAMPLES(i) (variants[i].count)\n";
+  print "#define VARIANT(i) (variants[i].name)\n";
 }
 
 # In some cases not storing a return value seems to result in the function call
@@ -85,7 +161,8 @@ if ($ret ne "void") {
   $getret = "ret = ";
 }
 
-print "#define BENCH_FUNC(j) ({$getret CALL_BENCH_FUNC (j);})\n";
+# And we're done.
+print "#define BENCH_FUNC(i, j) ({$getret CALL_BENCH_FUNC (i, j);})\n";
 
 print "#define FUNCNAME \"$func\"\n";
 print "#include \"bench-skeleton.c\"\n";

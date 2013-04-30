@@ -1,1 +1,5 @@
 42.0, 42.0
+# pow slowest path at 768 bits
+# Implemented in sysdeps/ieee754/dbl-64/slowpow.c
+## name: 768bits
+1.0000000000000020, 1.5

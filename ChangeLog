@@ -1,5 +1,31 @@
 2013-04-30  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* benchtests/Makefile (bench): Remove slow benchmarks.
+	* benchtests/atan-inputs: Add slow benchmark inputs.
+	* benchtests/bench-modf.c (NUM_VARIANTS): Define.
+	(BENCH_FUNC): Accept variant offset.
+	(VARIANT): Define.
+	* benchtests/bench-skeleton.c (main): Run benchmark for each
+	variant.
+	* benchtests/cos-inputs: Add slow benchmark inputs.
+	* benchtests/exp-inputs: Likewise.
+	* benchtests/pow-inputs: Likewise.
+	* benchtests/sin-inputs: Likewise.
+	* benchtests/slowatan-inputs: Remove.
+	* benchtests/slowatan.c: Remove.
+	* benchtests/slowcos-inputs: Remove.
+	* benchtests/slowcos.c: Remove.
+	* benchtests/slowexp-inputs: Remove.
+	* benchtests/slowexp.c: Remove.
+	* benchtests/slowpow-inputs: Remove.
+	* benchtests/slowpow.c: Remove.
+	* benchtests/slowsin-inputs: Remove.
+	* benchtests/slowsin.c: Remove.
+	* benchtests/slowtan-inputs: Remove.
+	* benchtests/slowtan.c: Remove.
+	* benchtests/tan-inputs: Add slow benchmark inputs.
+	* scripts/bench.pl: Parse comments and directives.
+
 	* benchtests/Makefile: Remove *-ITER.  Define BENCH_DURATION
 	in CPPFLAGS.
 	($(objpfx)bench-%.c): Remove *-ITER.

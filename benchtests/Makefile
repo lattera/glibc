@@ -39,15 +39,12 @@
 #   See pow-inputs for an example.
 
 subdir := benchtests
-bench := exp pow rint sin cos tan atan modf \
-	 slowexp slowpow slowsin slowcos slowtan slowatan
+bench := exp pow rint sin cos tan atan modf
 
-# exp function fast path: sysdeps/ieee754/dbl-64/e_exp.c
 exp-ARGLIST = double
 exp-RET = double
 LDFLAGS-bench-exp = -lm
 
-# pow function fast path: sysdeps/ieee754/dbl-64/e_pow.c
 pow-ARGLIST = double:double
 pow-RET = double
 LDFLAGS-bench-pow = -lm
@@ -56,61 +53,21 @@ rint-ARGLIST = double
 rint-RET = double
 LDFLAGS-bench-rint = -lm
 
-# exp function slowest path: sysdeps/ieee754/dbl-64/mpexp.c
-slowexp-ARGLIST = double
-slowexp-RET = double
-slowexp-INCLUDE = slowexp.c
-LDFLAGS-bench-slowexp = -lm
-
-# sin function fast path: sysdeps/ieee754/dbl-64/s_sin.c
 sin-ARGLIST = double
 sin-RET = double
 LDFLAGS-bench-sin = -lm
 
-# cos function fast path: sysdeps/ieee754/dbl-64/s_sin.c
 cos-ARGLIST = double
 cos-RET = double
 LDFLAGS-bench-cos = -lm
 
-# tan function fast path: sysdeps/ieee754/dbl-64/s_tan.c
 tan-ARGLIST = double
 tan-RET = double
 LDFLAGS-bench-tan = -lm
 
-# atan function fast path: sysdeps/ieee754/dbl-64/s_atan.c
 atan-ARGLIST = double
 atan-RET = double
 LDFLAGS-bench-atan = -lm
-
-# pow function slowest path: sysdeps/ieee754/dbl-64/slowpow.c
-slowpow-ARGLIST = double:double
-slowpow-RET = double
-slowpow-INCLUDE = slowpow.c
-LDFLAGS-bench-slowpow = -lm
-
-# sin function slowest path: sysdeps/ieee754/dbl-64/sincos32.c
-slowsin-ARGLIST = double
-slowsin-RET = double
-slowsin-INCLUDE = slowsin.c
-LDFLAGS-bench-slowsin = -lm
-
-# cos function slowest path: sysdeps/ieee754/dbl-64/sincos32.c
-slowcos-ARGLIST = double
-slowcos-RET = double
-slowcos-INCLUDE = slowcos.c
-LDFLAGS-bench-slowcos = -lm
-
-# tan function slowest path: sysdeps/ieee754/dbl-64/mptan.c
-slowtan-ARGLIST = double
-slowtan-RET = double
-slowtan-INCLUDE = slowtan.c
-LDFLAGS-bench-slowtan = -lm
-
-# atan function slowest path: sysdeps/ieee754/dbl-64/mpatan.c
-slowatan-ARGLIST = double
-slowatan-RET = double
-slowatan-INCLUDE = slowatan.c
-LDFLAGS-bench-slowatan = -lm
 
 
 
