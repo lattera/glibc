@@ -1,3 +1,7 @@
+2013-05-01  Ondřej Bílka  <neleai@seznam.cz>
+
+	* string/bits/string2.h (__strcmp_cg): Call __strcmp_gc.
+
 2013-05-01  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/posix/opendir.c: Include <sys/param.h> to get MIN/MAX macros.

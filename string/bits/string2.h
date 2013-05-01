@@ -887,30 +887,7 @@ __stpcpy_small (char *__dest,
 		      }							      \
 		    __result; }))
 
-# define __strcmp_gc(s1, s2, l2) \
-  (__extension__ ({ const unsigned char *__s1 =				      \
-		      (const unsigned char *) (const char *) (s1);	      \
-		    register int __result =				      \
-		      __s1[0] - ((const unsigned char *)		      \
-				 (const char *) (s2))[0];		      \
-		    if (l2 > 0 && __result == 0)			      \
-		      {							      \
-			__result = (__s1[1]				      \
-				    - ((const unsigned char *)		      \
-				       (const char *) (s2))[1]);	      \
-			if (l2 > 1 && __result == 0)			      \
-			  {						      \
-			    __result =					      \
-			      (__s1[2] - ((const unsigned char *)	      \
-					  (const char *) (s2))[2]);	      \
-			    if (l2 > 2 && __result == 0)		      \
-			      __result =				      \
-				(__s1[3]				      \
-				 - ((const unsigned char *)		      \
-				    (const char *) (s2))[3]);		      \
-			  }						      \
-		      }							      \
-		    __result; }))
+# define __strcmp_gc(s1, s2, l2) (- __strcmp_cg (s2, s1, l2))
 #endif
 
 
