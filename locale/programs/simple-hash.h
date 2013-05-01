@@ -20,6 +20,7 @@
 
 #include <inttypes.h>
 #include <obstack.h>
+#include <stdint.h>
 
 typedef struct hash_table
 {

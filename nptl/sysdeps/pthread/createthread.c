@@ -23,6 +23,7 @@
 #include <atomic.h>
 #include <ldsodefs.h>
 #include <tls.h>
+#include <stdint.h>
 
 #include "kernel-features.h"
 

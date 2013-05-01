@@ -29,6 +29,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <stdint.h>
 #include <arpa/inet.h>
 #include <arpa/nameser.h>
 #include <sys/mman.h>

@@ -17,6 +17,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <stdint.h>
+
 #ifndef _X86_64_DL_TLSDESC_H
 # define _X86_64_DL_TLSDESC_H 1
 

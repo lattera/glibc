@@ -15,6 +15,8 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, see <http://www.gnu.org/licenses/>.  */
 
+#include <stdint.h>
+
 /* For iconv we don't have to handle repertoire maps.  Provide dummy
    definitions to allow the use of linereader.c unchanged.  */
 #include <repertoire.h>

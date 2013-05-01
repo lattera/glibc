@@ -26,6 +26,7 @@
 #include <endian.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include <sys/types.h>
 
 #include "sha256.h"

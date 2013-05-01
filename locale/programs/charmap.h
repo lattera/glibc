@@ -20,6 +20,7 @@
 
 #include <obstack.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "repertoire.h"
 #include "simple-hash.h"

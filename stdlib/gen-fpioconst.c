@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <gmp.h>
+#include <stdint.h>
 
 int
 main (void)

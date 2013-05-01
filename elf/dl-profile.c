@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdint.h>
 #include <ldsodefs.h>
 #include <sys/gmon.h>
 #include <sys/gmon_out.h>

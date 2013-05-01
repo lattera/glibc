@@ -2,7 +2,7 @@
 #include <locale.h>
 #include <stdio.h>
 #include <uchar.h>
-
+#include <stdint.h>
 
 static int
 do_test (void)

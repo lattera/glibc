@@ -77,6 +77,7 @@ static const char rcsid[] = "$BINDId: res_init.c,v 8.16 2000/05/09 07:10:12 vixi
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdint.h>
 #include <arpa/inet.h>
 #include <arpa/nameser.h>
 #include <net/if.h>

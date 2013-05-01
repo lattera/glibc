@@ -17,6 +17,7 @@
 
 #include <errno.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <sys/param.h>
 #if __WORDSIZE == 64 && !defined PWRITEV
 /* Hide the pwritev64 declaration.  */

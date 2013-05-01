@@ -1,3 +1,8 @@
+2013-05-01  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* sysdeps/am33/atomicity.h: Add missing #include <stdint.h> due to
+	uint64_t or uint32_t usage.
+
 2013-03-11  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/am33/bits/mman.h: Remove all defines

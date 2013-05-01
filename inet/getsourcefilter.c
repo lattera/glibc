@@ -19,7 +19,7 @@
 
 #include <errno.h>
 #include <netinet/in.h>
-
+#include <stdint.h>
 
 int
 getsourcefilter (int s, uint32_t interface, const struct sockaddr *group,

@@ -18,6 +18,7 @@
 
 #include <limits.h>
 #include <atomic.h>
+#include <stdint.h>
 
 #ifndef GETSP
 # warning "GETSP is not defined for this architecture."

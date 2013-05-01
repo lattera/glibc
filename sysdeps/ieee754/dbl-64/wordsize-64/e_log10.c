@@ -45,6 +45,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <stdint.h>
 
 static const double two54 = 1.80143985094819840000e+16;		/* 0x4350000000000000 */
 static const double ivln10 = 4.34294481903251816668e-01;	/* 0x3FDBCB7B1526E50E */

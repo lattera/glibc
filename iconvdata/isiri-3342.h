@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 static const uint32_t to_ucs4[256] = {
   [0x01] = 0x0001,
   [0x02] = 0x0002,

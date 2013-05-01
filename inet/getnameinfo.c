@@ -43,6 +43,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdint.h>
 #include <arpa/inet.h>
 #include <net/if.h>
 #include <netinet/in.h>

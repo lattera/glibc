@@ -17,6 +17,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <stdint.h>
+
 /* Table to map to UCS4.  It can be generated using
    (I know, this is a useless use of cat, but the linebreak requires it):
 

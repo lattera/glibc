@@ -19,6 +19,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <stdint.h>
 
 #define ENTNAME		netent
 #define DATABASE	"networks"

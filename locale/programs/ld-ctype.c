@@ -29,6 +29,7 @@
 #include <string.h>
 #include <wchar.h>
 #include <wctype.h>
+#include <stdint.h>
 #include <sys/uio.h>
 
 #include "localedef.h"

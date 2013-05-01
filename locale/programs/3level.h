@@ -15,6 +15,8 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, see <http://www.gnu.org/licenses/>.  */
 
+#include <stdint.h>
+
 /* Construction of sparse 3-level tables.
    See wchar-lookup.h or coll-lookup.h for their structure and the
    meaning of p and q.

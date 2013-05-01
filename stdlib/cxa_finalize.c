@@ -21,6 +21,7 @@
 #include "exit.h"
 #include <fork.h>
 #include <sysdep.h>
+#include <stdint.h>
 
 /* If D is non-NULL, call all functions registered with `__cxa_atexit'
    with the same dso handle.  Otherwise, if D is NULL, call all of the

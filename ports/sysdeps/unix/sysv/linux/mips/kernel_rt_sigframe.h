@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 /* Linux kernel RT signal frame. */
 typedef struct kernel_rt_sigframe
   {

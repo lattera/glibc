@@ -17,6 +17,7 @@
 
 #include <assert.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include <bits/libc-lock.h>
 #include "exit.h"

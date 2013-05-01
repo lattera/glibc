@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdint.h>
 #include <locale.h>
 #include <locale/localeinfo.h>
 

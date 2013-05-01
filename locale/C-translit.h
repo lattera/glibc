@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 #define NTRANSLIT 1355
 static const uint32_t translit_from_idx[] =
 {

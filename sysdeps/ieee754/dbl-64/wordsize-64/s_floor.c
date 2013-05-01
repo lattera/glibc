@@ -32,6 +32,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <stdint.h>
 
 /*
  * floor(x)

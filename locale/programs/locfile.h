@@ -18,6 +18,7 @@
 #ifndef _LOCFILE_H
 #define _LOCFILE_H	1
 
+#include <stdint.h>
 #include <sys/uio.h>
 
 #include "linereader.h"

@@ -33,6 +33,7 @@
  */
 
 #include <string.h>
+#include <stdint.h>
 #include <rpc/des_crypt.h>
 #include <rpc/types.h>
 #include <rpc/auth.h>

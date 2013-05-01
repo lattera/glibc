@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <stdint.h>
 #include <rpcsvc/nis.h>
 #include <rpcsvc/nis_callback.h> /* for "official" Solaris xdr functions */
 

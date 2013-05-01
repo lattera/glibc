@@ -25,6 +25,7 @@
 #include <string.h>
 #include <stringprep.h>
 #include <punycode.h>
+#include <stdint.h>
 
 #include "idna.h"
 

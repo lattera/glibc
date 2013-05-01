@@ -21,6 +21,7 @@
 /* We play dirty tricks with aliases.  */
 #include <rpc/xdr.h>
 
+#include <stdint.h>
 
 /* XDR 64bit integers */
 bool_t

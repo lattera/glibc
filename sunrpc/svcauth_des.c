@@ -43,6 +43,7 @@
 
 #include <limits.h>
 #include <string.h>
+#include <stdint.h>
 #include <sys/param.h>
 #include <netinet/in.h>
 #include <rpc/rpc.h>

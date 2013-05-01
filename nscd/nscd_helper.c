@@ -24,6 +24,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <stdint.h>
 #include <sys/mman.h>
 #include <sys/poll.h>
 #include <sys/socket.h>

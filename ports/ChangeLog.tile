@@ -1,3 +1,9 @@
+2013-05-16  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* sysdeps/tile/tilegx/memusage.h: Add missing #include <stdint.h> due
+	to uint64_t or uint32_t usage.
+	* sysdeps/tile/tilegx/string-endian.h: Likewise.
+
 2013-03-11  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #15234]

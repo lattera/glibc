@@ -17,7 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <ifaddrs.h>
-
+#include <stdint.h>
 
 void
 attribute_hidden

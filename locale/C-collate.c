@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <endian.h>
+#include <stdint.h>
 #include "localeinfo.h"
 
 static const char collseqmb[] =

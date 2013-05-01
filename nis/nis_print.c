@@ -19,6 +19,7 @@
 #include <time.h>
 #include <string.h>
 #include <libintl.h>
+#include <stdint.h>
 
 #include <rpcsvc/nis.h>
 

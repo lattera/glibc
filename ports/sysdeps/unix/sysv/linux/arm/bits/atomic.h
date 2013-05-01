@@ -16,6 +16,8 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <stdint.h>
+
 /* If the compiler doesn't provide a primitive, we'll use this macro
    to get assistance from the kernel.  */
 #ifdef __thumb2__

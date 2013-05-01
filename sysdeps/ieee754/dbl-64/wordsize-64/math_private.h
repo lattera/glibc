@@ -1,6 +1,7 @@
 #ifndef _MATH_PRIVATE_H_
 
 #include_next <math_private.h>
+#include <stdint.h>
 
 #ifndef __isnan
 extern __always_inline int

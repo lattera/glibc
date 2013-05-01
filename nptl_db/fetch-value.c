@@ -19,6 +19,7 @@
 #include "thread_dbP.h"
 #include <byteswap.h>
 #include <assert.h>
+#include <stdint.h>
 
 td_err_e
 _td_check_sizeof (td_thragent_t *ta, uint32_t *sizep, int sizep_name)

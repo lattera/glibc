@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 /* These symbols are defined by the including source file:
 

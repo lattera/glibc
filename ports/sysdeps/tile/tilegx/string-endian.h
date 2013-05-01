@@ -22,6 +22,8 @@
    Also, specify how to count "first" and "last" bits
    when the bits have been read as a word.  */
 
+#include <stdint.h>
+
 #ifndef __BIG_ENDIAN__
 #define MASK(x) (__insn_shl(1ULL, (x << 3)) - 1)
 #define NULMASK(x) ((2ULL << x) - 1)

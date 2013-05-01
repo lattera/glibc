@@ -39,6 +39,7 @@
  */
 #include <stdio.h>
 #include <unistd.h>
+#include <stdint.h>
 #include <rpc/rpc.h>
 #include <rpc/clnt.h>
 #include <sys/types.h>

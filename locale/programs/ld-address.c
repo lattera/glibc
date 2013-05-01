@@ -23,6 +23,7 @@
 #include <error.h>
 #include <langinfo.h>
 #include <string.h>
+#include <stdint.h>
 #include <sys/uio.h>
 
 #include <assert.h>

@@ -22,7 +22,7 @@
 #include <sys/mman.h>
 #include <dl-cache.h>
 #include <dl-procinfo.h>
-
+#include <stdint.h>
 #include <_itoa.h>
 
 #ifndef _DL_PLATFORMS_COUNT

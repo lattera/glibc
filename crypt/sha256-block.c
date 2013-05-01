@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 /* Process LEN bytes of BUFFER, accumulating context into CTX.
    It is assumed that LEN % 64 == 0.  */
 void

@@ -18,7 +18,7 @@
 
 #include <ifaddrs.h>
 #include <netdb.h>
-
+#include <stdint.h>
 
 void
 attribute_hidden

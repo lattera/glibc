@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <stdint.h>
 #include <rpcsvc/nis.h>
 
 /* This is from libc/db/hash/hash_func.c, hash3 is static there */

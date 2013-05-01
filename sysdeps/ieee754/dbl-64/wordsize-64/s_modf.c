@@ -22,6 +22,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <stdint.h>
 
 static const double one = 1.0;
 

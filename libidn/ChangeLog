@@ -1,3 +1,10 @@
+2013-05-16  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* idna.c: Add missing #include <stdint.h> due to uint64_t or uint32_t
+	usage.
+	* nfkc.c: Likewise.
+	* stringprep.c: Likewise.
+
 2013-01-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* All files with FSF copyright notices: Update copyright dates

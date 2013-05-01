@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <dlfcn.h>
+#include <stdint.h>
 
 #define FROM_LOOP		from_generic
 #define TO_LOOP			to_generic

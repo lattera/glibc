@@ -17,6 +17,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <stdint.h>
 
 #undef __isnan
 int __isnan(double x)

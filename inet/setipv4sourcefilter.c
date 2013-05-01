@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
+#include <stdint.h>
 #include <netinet/in.h>
 
 

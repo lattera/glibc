@@ -24,6 +24,7 @@
 #include <paths.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include <sys/param.h>
 
 #include "nss_db.h"

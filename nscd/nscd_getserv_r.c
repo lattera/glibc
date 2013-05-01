@@ -21,6 +21,7 @@
 #include <string.h>
 #include <not-cancel.h>
 #include <_itoa.h>
+#include <stdint.h>
 
 #include "nscd-client.h"
 #include "nscd_proto.h"

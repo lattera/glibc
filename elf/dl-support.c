@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/param.h>
+#include <stdint.h>
 #include <ldsodefs.h>
 #include <dl-machine.h>
 #include <bits/libc-lock.h>

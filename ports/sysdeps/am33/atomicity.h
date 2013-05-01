@@ -22,6 +22,7 @@
 #define _ATOMICITY_H	1
 
 #include <inttypes.h>
+#include <stdint.h>
 
 #define __acquire_lock(lock) \
   __asm__ __volatile__("1:	bset	%1, (%0)\n\t"		\

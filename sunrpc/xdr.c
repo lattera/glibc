@@ -40,6 +40,7 @@
 #include <string.h>
 #include <libintl.h>
 #include <wchar.h>
+#include <stdint.h>
 
 #include <rpc/types.h>
 #include <rpc/xdr.h>

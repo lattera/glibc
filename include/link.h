@@ -37,7 +37,7 @@ struct link_map;
 extern unsigned int la_objopen (struct link_map *__map, Lmid_t __lmid,
 				uintptr_t *__cookie);
 
-
+#include <stdint.h>
 #include <stddef.h>
 #include <bits/linkmap.h>
 #include <dl-lookupcfg.h>

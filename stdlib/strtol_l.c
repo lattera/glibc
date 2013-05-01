@@ -43,6 +43,7 @@
 #include <string.h>
 #include <locale.h>
 #include <xlocale.h>
+#include <stdint.h>
 #include <bits/wordsize.h>
 
 #ifdef USE_NUMBER_GROUPING

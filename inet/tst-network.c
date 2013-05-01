@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <stdio.h>
+#include <stdint.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>

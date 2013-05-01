@@ -31,6 +31,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdint.h>
 #include <arpa/inet.h>
 #ifdef HAVE_NETLINK
 # include <linux/netlink.h>

@@ -144,6 +144,7 @@
 #endif
 
 #include <sysdep.h>
+#include <stdint.h>
 
 #ifndef DL_CALL_FCT
 # define DL_CALL_FCT(fct, args) fct args

@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <stdint.h>
 #include "localeinfo.h"
 
 /* This table's entries are taken from POSIX.2 Table 2-11

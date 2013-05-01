@@ -83,6 +83,7 @@ static const char rcsid[] = "$BINDId: res_mkquery.c,v 8.12 1999/10/13 16:39:40 v
 
 #ifdef _LIBC
 # include <hp-timing.h>
+# include <stdint.h>
 # if HP_TIMING_AVAIL
 #  define RANDOM_BITS(Var) { uint64_t v64; HP_TIMING_NOW (v64); Var = v64; }
 # endif

@@ -2,7 +2,7 @@
 #include <endian.h>
 #include <inttypes.h>
 #include <stdio.h>
-
+#include <stdint.h>
 
 static int
 do_test (void)

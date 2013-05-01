@@ -18,6 +18,7 @@
 
 #include <dlfcn.h>
 #include <fcntl.h>
+#include <stdint.h>
 #include <sys/mman.h>
 #include <bits/libc-lock.h>
 #include "nsswitch.h"

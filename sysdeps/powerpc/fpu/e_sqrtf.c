@@ -20,7 +20,7 @@
 #include <math_private.h>
 #include <fenv_libc.h>
 #include <inttypes.h>
-
+#include <stdint.h>
 #include <sysdep.h>
 #include <ldsodefs.h>
 

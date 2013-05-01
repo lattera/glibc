@@ -19,7 +19,7 @@
 
 #include <math.h>
 #include <math_private.h>
-
+#include <stdint.h>
 
 static const float two30  = 1.0737418e09;
 

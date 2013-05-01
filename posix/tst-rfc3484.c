@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <ifaddrs.h>
+#include <stdint.h>
 
 /* Internal definitions used in the libc code.  */
 #define __getservbyname_r getservbyname_r

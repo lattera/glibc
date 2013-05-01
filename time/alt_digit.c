@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <wchar.h>
 #include <string.h>
+#include <stdint.h>
 
 /* Some of the functions here must not be used while setlocale is called.  */
 __libc_rwlock_define (extern, __libc_setlocale_lock attribute_hidden)

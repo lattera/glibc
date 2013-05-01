@@ -20,6 +20,8 @@
 #ifndef _IBM1390_H
 #define _IBM1390_H 1
 
+#include <stdint.h>
+
 struct gap
 {
   uint32_t start;

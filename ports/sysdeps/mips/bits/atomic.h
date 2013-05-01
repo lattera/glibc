@@ -19,6 +19,7 @@
 #ifndef _MIPS_BITS_ATOMIC_H
 #define _MIPS_BITS_ATOMIC_H 1
 
+#include <stdint.h>
 #include <inttypes.h>
 #include <sgidefs.h>
 

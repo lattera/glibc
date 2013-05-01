@@ -20,6 +20,7 @@
 #include <netdb.h>
 #include <resolv.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <arpa/nameser.h>
 #include <nsswitch.h>
 

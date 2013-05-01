@@ -18,6 +18,7 @@
 #include <errno.h>
 #include <stddef.h>
 #include <sys/param.h>
+#include <stdint.h>
 #if __WORDSIZE == 64
 /* Hide the preadv64 declaration.  */
 # define preadv64 __redirect_preadv64

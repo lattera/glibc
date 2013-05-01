@@ -20,7 +20,7 @@
 #include <math.h>
 
 #include <math_private.h>
-
+#include <stdint.h>
 
 static const double huge = 1.0e300;
 

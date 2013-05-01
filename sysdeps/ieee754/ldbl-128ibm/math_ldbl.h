@@ -4,6 +4,7 @@
 
 #include <sysdeps/ieee754/ldbl-128/math_ldbl.h>
 #include <ieee754.h>
+#include <stdint.h>
   
 static inline void
 ldbl_extract_mantissa (int64_t *hi64, uint64_t *lo64, int *exp, long double x)

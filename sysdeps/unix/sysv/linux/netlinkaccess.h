@@ -18,6 +18,7 @@
 #ifndef _NETLINKACCESS_H
 #define _NETLINKACCESS_H 1
 
+#include <stdint.h>
 #include <asm/types.h>
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>

@@ -18,6 +18,7 @@
 
 #include "localeinfo.h"
 #include <endian.h>
+#include <stdint.h>
 
 #include "C-translit.h"
 

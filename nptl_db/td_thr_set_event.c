@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <stddef.h>
+#include <stdint.h>
 
 #include "thread_dbP.h"
 

@@ -42,6 +42,7 @@
 #include <sys/ioctl.h>
 #include <netdb.h>
 #include <errno.h>
+#include <stdint.h>
 #include <rpc/pmap_clnt.h>
 #include <net/if.h>
 #include <ifaddrs.h>

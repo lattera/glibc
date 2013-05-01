@@ -20,6 +20,8 @@
 #ifndef _JIS0201_H
 #define _JIS0201_H	1
 
+#include <stdint.h>
+
 /* Conversion table.  */
 extern const uint32_t __jisx0201_to_ucs4[];
 
