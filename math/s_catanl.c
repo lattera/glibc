@@ -85,7 +85,7 @@ __catanl (__complex__ long double x)
 	}
       else
 	{
-	  long double r2, num, den, f, absx, absy;
+	  long double den, absx, absy;
 
 	  absx = fabsl (__real__ x);
 	  absy = fabsl (__imag__ x);
@@ -96,10 +96,10 @@ __catanl (__complex__ long double x)
 	      absy = t;
 	    }
 
-	  if (absx >= 1.0L)
-	    den = (1.0L - absx) * (1.0L + absx) - absy * absy;
-	  else if (absx >= 0.75L && absy < LDBL_EPSILON / 2.0L)
+	  if (absy < LDBL_EPSILON / 2.0L)
 	    den = (1.0L - absx) * (1.0L + absx);
+	  else if (absx >= 1.0L)
+	    den = (1.0L - absx) * (1.0L + absx) - absy * absy;
 	  else if (absx >= 0.75L || absy >= 0.5L)
 	    den = -__x2y2m1l (absx, absy);
 	  else
@@ -107,21 +107,31 @@ __catanl (__complex__ long double x)
 
 	  __real__ res = 0.5L * __ieee754_atan2l (2.0L * __real__ x, den);
 
-	  r2 = __real__ x * __real__ x;
-
-	  num = __imag__ x + 1.0L;
-	  num = r2 + num * num;
-
-	  den = __imag__ x - 1.0L;
-	  den = r2 + den * den;
-
-	  f = num / den;
-	  if (f < 0.5L)
-	    __imag__ res = 0.25L * __ieee754_logl (f);
+	  if (fabsl (__imag__ x) == 1.0L
+	      && fabsl (__real__ x) < LDBL_EPSILON * LDBL_EPSILON)
+	    __imag__ res = (__copysignl (0.5L, __imag__ x)
+			    * (M_LN2l - __ieee754_logl (fabsl (__real__ x))));
 	  else
 	    {
-	      num = 4.0L * __imag__ x;
-	      __imag__ res = 0.25L * __log1pl (num / den);
+	      long double r2 = 0.0L, num, f;
+
+	      if (fabsl (__real__ x) >= LDBL_EPSILON * LDBL_EPSILON)
+		r2 = __real__ x * __real__ x;
+
+	      num = __imag__ x + 1.0L;
+	      num = r2 + num * num;
+
+	      den = __imag__ x - 1.0L;
+	      den = r2 + den * den;
+
+	      f = num / den;
+	      if (f < 0.5L)
+		__imag__ res = 0.25L * __ieee754_logl (f);
+	      else
+		{
+		  num = 4.0L * __imag__ x;
+		  __imag__ res = 0.25L * __log1pl (num / den);
+		}
 	    }
 	}
 

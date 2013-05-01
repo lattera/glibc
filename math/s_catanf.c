@@ -78,7 +78,7 @@ __catanf (__complex__ float x)
 	}
       else
 	{
-	  float r2, num, den, f, absx, absy;
+	  float den, absx, absy;
 
 	  absx = fabsf (__real__ x);
 	  absy = fabsf (__imag__ x);
@@ -89,10 +89,10 @@ __catanf (__complex__ float x)
 	      absy = t;
 	    }
 
-	  if (absx >= 1.0f)
-	    den = (1.0f - absx) * (1.0f + absx) - absy * absy;
-	  else if (absx >= 0.75f && absy < FLT_EPSILON / 2.0f)
+	  if (absy < FLT_EPSILON / 2.0f)
 	    den = (1.0f - absx) * (1.0f + absx);
+	  else if (absx >= 1.0f)
+	    den = (1.0f - absx) * (1.0f + absx) - absy * absy;
 	  else if (absx >= 0.75f || absy >= 0.5f)
 	    den = -__x2y2m1f (absx, absy);
 	  else
@@ -100,21 +100,32 @@ __catanf (__complex__ float x)
 
 	  __real__ res = 0.5f * __ieee754_atan2f (2.0f * __real__ x, den);
 
-	  r2 = __real__ x * __real__ x;
-
-	  num = __imag__ x + 1.0f;
-	  num = r2 + num * num;
-
-	  den = __imag__ x - 1.0f;
-	  den = r2 + den * den;
-
-	  f = num / den;
-	  if (f < 0.5f)
-	    __imag__ res = 0.25f * __ieee754_logf (f);
+	  if (fabsf (__imag__ x) == 1.0f
+	      && fabsf (__real__ x) < FLT_EPSILON * FLT_EPSILON)
+	    __imag__ res = (__copysignf (0.5f, __imag__ x)
+			    * ((float) M_LN2
+			       - __ieee754_logf (fabsf (__real__ x))));
 	  else
 	    {
-	      num = 4.0f * __imag__ x;
-	      __imag__ res = 0.25f * __log1pf (num / den);
+	      float r2 = 0.0f, num, f;
+
+	      if (fabsf (__real__ x) >= FLT_EPSILON * FLT_EPSILON)
+		r2 = __real__ x * __real__ x;
+
+	      num = __imag__ x + 1.0f;
+	      num = r2 + num * num;
+
+	      den = __imag__ x - 1.0f;
+	      den = r2 + den * den;
+
+	      f = num / den;
+	      if (f < 0.5f)
+		__imag__ res = 0.25f * __ieee754_logf (f);
+	      else
+		{
+		  num = 4.0f * __imag__ x;
+		  __imag__ res = 0.25f * __log1pf (num / den);
+		}
 	    }
 	}
 
