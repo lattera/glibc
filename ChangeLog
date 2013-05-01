@@ -1,3 +1,7 @@
+2013-05-01  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/posix/opendir.c: Include <sys/param.h> to get MIN/MAX macros.
+
 2013-05-01  Richard Smith  <richard@metafoo.co.uk>
 
 	* misc/sys/cdefs.h (__extern_inline, __extern_always_inline)

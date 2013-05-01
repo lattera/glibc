@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <dirent.h>
 #include <fcntl.h>
+#include <sys/param.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
