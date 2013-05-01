@@ -1,3 +1,11 @@
+2013-05-01  Richard Smith  <richard@metafoo.co.uk>
+
+	* misc/sys/cdefs.h (__extern_inline, __extern_always_inline)
+	[__GNUC__ && (__GNUC_STDC_INLINE__ || __GNUC_GNU_INLINE__)]:
+	Use __attribute__ ((__gnu_inline__)).
+	[__GNUC__ && !(__GNUC_STDC_INLINE__ || __GNUC_GNU_INLINE__)]:
+	Don't use __attribute__ ((__gnu_inline__)).
+
 2013-05-01  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15423]

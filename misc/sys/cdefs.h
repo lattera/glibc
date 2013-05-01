@@ -318,10 +318,12 @@
 # define __attribute_artificial__ /* Ignore */
 #endif
 
-/* GCC 4.3 and above with -std=c99 or -std=gnu99 implements ISO C99
-   inline semantics, unless -fgnu89-inline is used.  */
-#if (!defined __cplusplus || __GNUC_PREREQ (4,3)) && defined __GNUC__
-# if defined __GNUC_STDC_INLINE__ || defined __cplusplus
+#ifdef __GNUC__
+/* One of these will be defined if the __gnu_inline__ attribute is
+   available.  In C++, __GNUC_GNU_INLINE__ will be defined even though
+   __inline does not use the GNU inlining rules.  If neither macro is
+   defined, this version of GCC only supports GNU inline semantics. */
+# if defined __GNUC_STDC_INLINE__ || defined __GNUC_GNU_INLINE__
 #  define __extern_inline extern __inline __attribute__ ((__gnu_inline__))
 #  define __extern_always_inline \
   extern __always_inline __attribute__ ((__gnu_inline__))
@@ -329,10 +331,6 @@
 #  define __extern_inline extern __inline
 #  define __extern_always_inline extern __always_inline
 # endif
-#elif defined __GNUC__ /* C++ and GCC <4.3.  */
-# define __extern_inline extern __inline
-# define __extern_always_inline \
-  extern __always_inline
 #else /* Not GCC.  */
 # define __extern_inline  /* Ignore */
 # define __extern_always_inline /* Ignore */
