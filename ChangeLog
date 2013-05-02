@@ -1,3 +1,7 @@
+2013-05-02  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/fpu/libm-test-ulps: Update.
+
 2013-05-01  Ondřej Bílka  <neleai@seznam.cz>
 
 	* string/bits/string2.h (__strcmp_cg): Call __strcmp_gc.
