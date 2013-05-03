@@ -1,3 +1,8 @@
+2013-05-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (hypot_test): Do not use
+	IGNORE_ZERO_INF_SIGN.
+
 2013-05-03  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/gnu/netinet/tcp.h (TCP_TIMESTAMP): New value, from

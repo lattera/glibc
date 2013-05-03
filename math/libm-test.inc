@@ -9129,8 +9129,8 @@ hypot_test (void)
 
   START (hypot);
 
-  TEST_ff_f (hypot, plus_infty, 1, plus_infty, IGNORE_ZERO_INF_SIGN);
-  TEST_ff_f (hypot, minus_infty, 1, plus_infty, IGNORE_ZERO_INF_SIGN);
+  TEST_ff_f (hypot, plus_infty, 1, plus_infty);
+  TEST_ff_f (hypot, minus_infty, 1, plus_infty);
 
 #ifndef TEST_INLINE
   TEST_ff_f (hypot, plus_infty, qnan_value, plus_infty);
