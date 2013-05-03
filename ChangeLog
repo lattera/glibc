@@ -1,3 +1,7 @@
+2013-05-03  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
+
 2013-05-02  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #15264]
