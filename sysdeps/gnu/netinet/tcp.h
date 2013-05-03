@@ -60,6 +60,7 @@
 #define TCP_QUEUE_SEQ		 21 /* Set sequence number of repaired queue. */
 #define TCP_REPAIR_OPTIONS	 22 /* Repair TCP connection options */
 #define TCP_FASTOPEN		 23 /* Enable FastOpen on listeners */
+#define TCP_TIMESTAMP		 24 /* TCP time stamp */
 
 #ifdef __USE_MISC
 # include <sys/types.h>
