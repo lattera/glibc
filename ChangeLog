@@ -1,3 +1,14 @@
+2013-04-30  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/Versions: Add __vdso_time symbol.
+	* sysdeps/unix/sysv/linux/powerpc/bits/libc-vdso.h: Add __vdso_time
+	definition.
+	(VDSO_IFUNC_RET): Cast to void * to silence compiler warning.
+	* sysdeps/unix/sysv/linux/powerpc/init-first.c
+	(_libc_vdso_platform_setup): Add __vdso_time initialization.
+	* sysdeps/unix/sysv/linux/powerpc/time.c: New file: time implementation
+	for PowerPC using vDSO where is avaliable or gettimeofday as a fallback.
+
 2013-05-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (lgamma_test): Consistently use TEST_f_f1 to

@@ -32,14 +32,16 @@ extern void *__vdso_get_tbfreq;
 
 extern void *__vdso_getcpu;
 
+extern void *__vdso_time;
+
 /* This macro is needed for PPC64 to return a skeleton OPD entry of a vDSO
    symbol.  This works because _dl_vdso_vsym always return the function
    address, and no vDSO symbols use the TOC or chain pointers from the OPD
    so we can allow them to be garbage.  */
 #if defined(__PPC64__) || defined(__powerpc64__)
-#define VDSO_IFUNC_RET(value)  &value
+#define VDSO_IFUNC_RET(value)  ((void *) &(value))
 #else
-#define VDSO_IFUNC_RET(value)  value
+#define VDSO_IFUNC_RET(value)  ((void *) (value))
 #endif
 
 #endif

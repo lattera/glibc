@@ -28,7 +28,7 @@ void *__vdso_clock_gettime;
 void *__vdso_clock_getres;
 void *__vdso_get_tbfreq;
 void *__vdso_getcpu;
-
+void *__vdso_time;
 
 static inline void
 _libc_vdso_platform_setup (void)
@@ -44,6 +44,8 @@ _libc_vdso_platform_setup (void)
   __vdso_get_tbfreq = _dl_vdso_vsym ("__kernel_get_tbfreq", &linux2615);
 
   __vdso_getcpu = _dl_vdso_vsym ("__kernel_getcpu", &linux2615);
+
+  __vdso_time = _dl_vdso_vsym ("__kernel_time", &linux2615);
 }
 
 # define VDSO_SETUP _libc_vdso_platform_setup
