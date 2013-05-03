@@ -9644,18 +9644,16 @@ lgamma_test (void)
 
   START (lgamma);
 
-  TEST_f_f (lgamma, plus_infty, plus_infty);
-  TEST_f_f (lgamma, 0, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("signgam for lgamma(0) == 1", signgam, 1, 0, 0, 0);
-  TEST_f_f (lgamma, minus_zero, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  check_int ("signgam for lgamma(-0) == -1", signgam, -1, 0, 0, 0);
-  TEST_f_f (lgamma, qnan_value, qnan_value);
+  TEST_f_f1 (lgamma, plus_infty, plus_infty, 1);
+  TEST_f_f1 (lgamma, 0, plus_infty, 1, DIVIDE_BY_ZERO_EXCEPTION);
+  TEST_f_f1 (lgamma, minus_zero, plus_infty, -1, DIVIDE_BY_ZERO_EXCEPTION);
+  TEST_f_f1 (lgamma, qnan_value, qnan_value, IGNORE);
 
   /* lgamma (x) == +inf plus divide by zero exception for integer x <= 0.  */
-  TEST_f_f (lgamma, -3, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
-  TEST_f_f (lgamma, minus_infty, plus_infty);
-  TEST_f_f (lgamma, -max_value, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  TEST_f_f (lgamma, max_value, plus_infty, OVERFLOW_EXCEPTION);
+  TEST_f_f1 (lgamma, -3, plus_infty, IGNORE, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
+  TEST_f_f1 (lgamma, minus_infty, plus_infty, IGNORE);
+  TEST_f_f1 (lgamma, -max_value, plus_infty, IGNORE, DIVIDE_BY_ZERO_EXCEPTION);
+  TEST_f_f1 (lgamma, max_value, plus_infty, 1, OVERFLOW_EXCEPTION);
 
   TEST_f_f1 (lgamma, 1, 0, 1);
 

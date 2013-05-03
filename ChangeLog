@@ -1,5 +1,8 @@
 2013-05-03  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (lgamma_test): Consistently use TEST_f_f1 to
+	test signgam value.
+
 	* math/libm-test.inc (hypot_test): Do not use
 	IGNORE_ZERO_INF_SIGN.
 
