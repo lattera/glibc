@@ -1,3 +1,10 @@
+2013-05-03  Roland McGrath  <roland@hack.frob.com>
+
+	* elf/dl-sysdep.c (_dl_sysdep_start) [NEED_DL_SYSINFO]:
+	Separately conditionalize setting of GLRO(dl_sysinfo) so
+	that the GLRO(dl_sysinfo_dso) test is under [NEED_DL_SYSINFO_DSO]
+	as well, but the actual setting is only under [NEED_DL_SYSINFO].
+
 2013-04-30  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/Versions: Add __vdso_time symbol.

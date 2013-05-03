@@ -205,10 +205,15 @@ _dl_sysdep_start (void **start_argptr,
     GLRO(dl_pagesize) = __getpagesize ();
 #endif
 
-#if defined NEED_DL_SYSINFO
-  /* Only set the sysinfo value if we also have the vsyscall DSO.  */
-  if (GLRO(dl_sysinfo_dso) != 0 && new_sysinfo)
-    GLRO(dl_sysinfo) = new_sysinfo;
+#ifdef NEED_DL_SYSINFO
+  if (new_sysinfo != 0)
+    {
+# ifdef NEED_DL_SYSINFO_DSO
+      /* Only set the sysinfo value if we also have the vsyscall DSO.  */
+      if (GLRO(dl_sysinfo_dso) != 0)
+# endif
+        GLRO(dl_sysinfo) = new_sysinfo;
+    }
 #endif
 
 #ifdef DL_SYSDEP_INIT
