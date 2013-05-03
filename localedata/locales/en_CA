@@ -135,7 +135,16 @@ date_fmt	"<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
 END LC_TIME
 
 LC_MESSAGES
+% Yes - Display only the English "Yes." While Canada is bilingual it would be
+%       difficult to display two words e.g. Yes|Oui, where one word is expected.
+%       Thus given that the majority of the population is Anglophone we use only
+%       the English word for yesstr.
+yesstr      "<U0059><U0065><U0073>"
+% No - Display only the English "No." See the rationale for yesstr.
+nostr       "<U004E><U006F>"
+% ^[yYoO].* - Accept both English "Yes" and French "Oui" as Canada is bilingual.
 yesexpr     "<U005E><U005B><U0079><U0059><U006F><U004F><U005D><U002E><U002A>"
+% ^[nN].* - Accept both Engish "No" and French "Non" as Canada is bilingual.
 noexpr      "<U005E><U005B><U006E><U004E><U005D><U002E><U002A>"
 END LC_MESSAGES
 

@@ -1,3 +1,10 @@
+2013-05-02  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #15264]
+	* localedata/locales/en_CA (LC_MESSAGES): Define yesstr and nostr.
+	* localedata/locales/es_AR (LC_MESSAGES): Copy es_ES.
+	* localedata/locales/es_ES (LC_MESSAGES): Define yesstr and nostr.
+
 2013-05-02  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.
