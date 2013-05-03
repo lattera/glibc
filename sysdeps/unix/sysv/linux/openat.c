@@ -29,7 +29,6 @@
 
 #ifndef OPENAT
 # define OPENAT openat
-# define __OPENAT_2 __openat_2
 
 # ifndef __ASSUME_ATFCTS
 /* Set errno after a failed call.  If BUF is not null,
@@ -179,18 +178,3 @@ __OPENAT (fd, file, oflag)
 }
 libc_hidden_def (__OPENAT)
 weak_alias (__OPENAT, OPENAT)
-
-
-int
-__OPENAT_2 (fd, file, oflag)
-     int fd;
-     const char *file;
-     int oflag;
-{
-  if (oflag & O_CREAT)
-#define MSG(s) MSG2 (s)
-#define MSG2(s) "invalid " #s " call: O_CREAT without mode"
-    __fortify_fail (MSG (OPENAT));
-
-  return __OPENAT (fd, file, oflag);
-}

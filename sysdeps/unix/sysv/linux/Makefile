@@ -152,7 +152,7 @@ endif
 
 ifeq ($(subdir),io)
 sysdep_routines += xstatconv internal_statvfs internal_statvfs64 \
-		   sync_file_range open_2 open64_2 fallocate fallocate64
+		   sync_file_range fallocate fallocate64
 sysdep_headers += bits/fcntl-linux.h
 endif
 

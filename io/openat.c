@@ -75,16 +75,6 @@ libc_hidden_def (__openat)
 weak_alias (__openat, openat)
 stub_warning (openat)
 
-
-int
-__openat_2 (fd, file, oflag)
-     int fd;
-     const char *file;
-     int oflag;
-{
-  if (oflag & O_CREAT)
-    __fortify_fail ("invalid openat call: O_CREAT without mode");
-
-  return __openat (fd, file, oflag);
-}
+/* __openat_2 is a generic wrapper that calls __openat.
+   So give a stub warning for that symbol too.  */
 stub_warning (__openat_2)

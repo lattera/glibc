@@ -36,10 +36,10 @@ routines :=								\
 	statvfs fstatvfs statvfs64 fstatvfs64				\
 	umask chmod fchmod lchmod fchmodat				\
 	mkdir mkdirat							\
-	open open64 openat openat64 close				\
+	open open_2 open64 open64_2 openat openat_2 openat64 openat64_2	\
 	read write lseek lseek64 access euidaccess faccessat		\
 	fcntl flock lockf lockf64					\
-	dup dup2 dup3 pipe pipe2					\
+	close dup dup2 dup3 pipe pipe2					\
 	creat creat64							\
 	chdir fchdir							\
 	getcwd getwd getdirname						\

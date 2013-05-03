@@ -1,5 +1,24 @@
 2013-05-03  Roland McGrath  <roland@hack.frob.com>
 
+	* io/open.c (__open_2): Moved to ...
+	* io/open_2.c: ... this new file.
+	* io/open64.c (__open64_2): Moved to ...
+	* io/open64_2.c: ... this new file.
+	* io/openat.c (__openat_2): Moved to ...
+	* io/openat_2.c: ... this new file.
+	* io/openat64.c (__openat64_2): Moved to ...
+	* io/openat64_2.c: ... this new file.
+	* io/Makefile (routines): Add them.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Remove them.
+	* sysdeps/unix/sysv/linux/open_2.c: File removed.
+	* sysdeps/unix/sysv/linux/open64_2.c: File removed.
+	* sysdeps/unix/sysv/linux/openat.c (__OPENAT_2): Removed.
+	* sysdeps/unix/sysv/linux/openat64.c (__OPENAT_2): Removed.
+	* sysdeps/unix/sysv/linux/wordsize-64/openat.c (__openat_2): Removed.
+	(__openat64): Add hidden_ver.
+	* sysdeps/mach/hurd/open.c (__open_2, __open64_2): Removed.
+	* sysdeps/mach/hurd/openat.c (__openat_2): Removed.
+
 	* elf/dl-sysdep.c (_dl_sysdep_start) [NEED_DL_SYSINFO]:
 	Separately conditionalize setting of GLRO(dl_sysinfo) so
 	that the GLRO(dl_sysinfo_dso) test is under [NEED_DL_SYSINFO_DSO]

@@ -1,4 +1,5 @@
-/* Copyright (C) 2007-2013 Free Software Foundation, Inc.
+/* _FORTIFY_SOURCE wrapper for openat.
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,14 +19,11 @@
 #include <fcntl.h>
 #include <stdio.h>
 
-
 int
-__open64_2 (file, oflag)
-     const char *file;
-     int oflag;
+__openat_2 (int fd, const char *file, int oflag)
 {
   if (oflag & O_CREAT)
-    __fortify_fail ("invalid open64 call: O_CREAT without mode");
+    __fortify_fail ("invalid openat call: O_CREAT without mode");
 
-  return __open64 (file, oflag);
+  return __openat (fd, file, oflag);
 }

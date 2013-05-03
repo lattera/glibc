@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2013 Free Software Foundation, Inc.
+/* _FORTIFY_SOURCE wrapper for open64.
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,44 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <fcntl.h>
-#include <stdarg.h>
-#include <stddef.h>
 #include <stdio.h>
 
-/* Open FILE with access OFLAG.  If OFLAG includes O_CREAT,
-   a third argument is the file protection.  */
 int
-__libc_open64 (file, oflag)
-     const char *file;
-     int oflag;
+__open64_2 (const char *file, int oflag)
 {
-  int mode;
-
-  if (file == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
   if (oflag & O_CREAT)
-    {
-      va_list arg;
-      va_start (arg, oflag);
-      mode = va_arg (arg, int);
-      va_end (arg);
-    }
+    __fortify_fail ("invalid open64 call: O_CREAT without mode");
 
-  __set_errno (ENOSYS);
-  return -1;
+  return __open64 (file, oflag);
 }
-strong_alias (__libc_open64, __open64)
-libc_hidden_def (__open64)
-weak_alias (__libc_open64, open64)
-
-stub_warning (open64)
-
-/* __open64_2 is a generic wrapper that calls __open64.
-   So give a stub warning for that symbol too.  */
-stub_warning (__open64_2)
