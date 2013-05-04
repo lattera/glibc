@@ -231,9 +231,25 @@ static int output_max_error;	/* Should the maximal errors printed?  */
 static int output_points;	/* Should the single function results printed?  */
 static int ignore_max_ulp;	/* Should we ignore max_ulp?  */
 
-static FLOAT minus_zero, plus_zero;
-static FLOAT plus_infty, minus_infty, qnan_value, max_value, min_value;
-static FLOAT min_subnorm_value;
+static const FLOAT plus_zero = CHOOSE (0.0L, 0.0, 0.0f,
+				       0.0L, 0.0, 0.0f);
+static const FLOAT minus_zero = CHOOSE (-0.0L, -0.0, -0.0f,
+					-0.0L, -0.0, -0.0f);
+static const FLOAT plus_infty = CHOOSE (HUGE_VALL, HUGE_VAL, HUGE_VALF,
+					HUGE_VALL, HUGE_VAL, HUGE_VALF);
+static const FLOAT minus_infty = CHOOSE (-HUGE_VALL, -HUGE_VAL, -HUGE_VALF,
+					 -HUGE_VALL, -HUGE_VAL, -HUGE_VALF);
+static const FLOAT qnan_value = FUNC (__builtin_nan) ("");
+static const FLOAT max_value = CHOOSE (LDBL_MAX, DBL_MAX, FLT_MAX,
+				       LDBL_MAX, DBL_MAX, FLT_MAX);
+static const FLOAT min_value = CHOOSE (LDBL_MIN, DBL_MIN, FLT_MIN,
+				       LDBL_MIN, DBL_MIN, FLT_MIN);
+static const FLOAT min_subnorm_value = CHOOSE (__LDBL_DENORM_MIN__,
+					       __DBL_DENORM_MIN__,
+					       __FLT_DENORM_MIN__,
+					       __LDBL_DENORM_MIN__,
+					       __DBL_DENORM_MIN__,
+					       __FLT_DENORM_MIN__);
 
 static FLOAT max_error, real_max_error, imag_max_error;
 
@@ -13813,33 +13829,6 @@ static void
 initialize (void)
 {
   fpstack_test ("start *init*");
-
-  plus_zero = 0.0;
-  qnan_value = FUNC (__builtin_nan) ("");
-  minus_zero = FUNC (copysign) (0.0, -1.0);
-  plus_infty = CHOOSE (HUGE_VALL, HUGE_VAL, HUGE_VALF,
-		       HUGE_VALL, HUGE_VAL, HUGE_VALF);
-  minus_infty = CHOOSE (-HUGE_VALL, -HUGE_VAL, -HUGE_VALF,
-			-HUGE_VALL, -HUGE_VAL, -HUGE_VALF);
-  max_value = CHOOSE (LDBL_MAX, DBL_MAX, FLT_MAX,
-		      LDBL_MAX, DBL_MAX, FLT_MAX);
-  min_value = CHOOSE (LDBL_MIN, DBL_MIN, FLT_MIN,
-		      LDBL_MIN, DBL_MIN, FLT_MIN);
-  min_subnorm_value = CHOOSE (__LDBL_DENORM_MIN__,
-			      __DBL_DENORM_MIN__,
-			      __FLT_DENORM_MIN__,
-			      __LDBL_DENORM_MIN__,
-			      __DBL_DENORM_MIN__,
-			      __FLT_DENORM_MIN__);
-
-  (void) &plus_zero;
-  (void) &qnan_value;
-  (void) &minus_zero;
-  (void) &plus_infty;
-  (void) &minus_infty;
-  (void) &max_value;
-  (void) &min_value;
-  (void) &min_subnorm_value;
 
   /* Clear all exceptions.  From now on we must not get random exceptions.  */
   feclearexcept (FE_ALL_EXCEPT);

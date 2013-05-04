@@ -1,3 +1,15 @@
+2013-05-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (plus_zero): Make const.  Add initializer.
+	(minus_zero): Likewise.
+	(plus_infty): Likewise.
+	(minus_infty): Likewise.
+	(qnan_value): Likewise.
+	(max_value): Likewise.
+	(min_value): Likewise.
+	(min_subnorm_value): Likewise.
+	(initialize): Do not initialize those variables dynamically.
+
 2013-05-03  Roland McGrath  <roland@hack.frob.com>
 
 	* io/open.c (__open_2): Moved to ...
