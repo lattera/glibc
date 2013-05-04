@@ -1,5 +1,36 @@
 2013-05-04  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (noXFails): Remove variable.
+	(noXPasses): Likewise.
+	(BUILD_COMPLEX_INT): Remove macro.
+	(print_screen): Remove xfail argument.
+	(print_screen_max_error): Likewise.
+	(update_stats): Likewise.
+	(print_max_error): Likewise.  Update calls to other affected
+	functions.
+	(print_complex_max_error): Likewise.
+	(test_single_exception): Update calls to print_screen.
+	(test_single_errno): Likewise.
+	(check_float_internal): Remove xfail argument.  Update calls to
+	other affected functions.
+	(check_float): Likewise.
+	(check_complex): Likewise.
+	(check_int): Likewise.
+	(check_long): Likewise.
+	(check_bool): Likewise.
+	(check_longlong): Likewise.
+	(main): Don't print noXFails and noXPasses.
+	* math/gen-libm-test.pl (top level): Don't mention expected
+	failure handling in comment.
+	(new_test): Don't handle expected failures.
+	(parse_args): Don't mention expected failure handling in comment.
+	(generate_testfile): Don't handle expected failures.
+	(parse_ulps): Likewise.
+	(print_ulps_file): Likewise.
+	(get_failure): Remove function.
+	(output_test): Don't handle expected failures.
+	* make/README.libm-test: Don't mention expected failure handling.
+
 	* math/libm-test.inc (plus_zero): Make const.  Add initializer.
 	(minus_zero): Likewise.
 	(plus_infty): Likewise.

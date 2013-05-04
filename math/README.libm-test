@@ -78,12 +78,7 @@ Function "yn":
 idouble:  6.0000
 
 The keywords are float, ifloat, double, idouble, ldouble and ildouble
-(the prefix i stands for inline).  You can also specify known
-failures, e.g.:
-
-Test "cos (pi/2) == 0":
-float:  1
-float: fail
+(the prefix i stands for inline).
 
 Adding tests to libm-test.inc
 =============================

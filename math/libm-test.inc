@@ -223,8 +223,6 @@ static int noErrors;	/* number of errors */
 static int noTests;	/* number of tests (without testing exceptions) */
 static int noExcTests;	/* number of tests for exception flags */
 static int noErrnoTests;/* number of tests for errno values */
-static int noXFails;	/* number of expected failures.  */
-static int noXPasses;	/* number of unexpected passes.  */
 
 static int verbose;
 static int output_max_error;	/* Should the maximal errors printed?  */
@@ -256,12 +254,6 @@ static FLOAT max_error, real_max_error, imag_max_error;
 
 #define BUILD_COMPLEX(real, imag) \
   ({ __complex__ FLOAT __retval;					      \
-     __real__ __retval = (real);					      \
-     __imag__ __retval = (imag);					      \
-     __retval; })
-
-#define BUILD_COMPLEX_INT(real, imag) \
-  ({ __complex__ int __retval;						      \
      __real__ __retval = (real);					      \
      __imag__ __retval = (imag);					      \
      __retval; })
@@ -304,11 +296,11 @@ print_float (FLOAT f)
 /* Should the message print to screen?  This depends on the verbose flag,
    and the test status.  */
 static int
-print_screen (int ok, int xfail)
+print_screen (int ok)
 {
   if (output_points
       && (verbose > 1
-	  || (verbose == 1 && ok == xfail)))
+	  || (verbose == 1 && ok == 0)))
     return 1;
   return 0;
 }
@@ -317,25 +309,21 @@ print_screen (int ok, int xfail)
 /* Should the message print to screen?  This depends on the verbose flag,
    and the test status.  */
 static int
-print_screen_max_error (int ok, int xfail)
+print_screen_max_error (int ok)
 {
   if (output_max_error
       && (verbose > 1
-	  || ((verbose == 1) && (ok == xfail))))
+	  || ((verbose == 1) && (ok == 0))))
     return 1;
   return 0;
 }
 
 /* Update statistic counters.  */
 static void
-update_stats (int ok, int xfail)
+update_stats (int ok)
 {
   ++noTests;
-  if (ok && xfail)
-    ++noXPasses;
-  else if (!ok && xfail)
-    ++noXFails;
-  else if (!ok && !xfail)
+  if (!ok)
     ++noErrors;
 }
 
@@ -419,7 +407,7 @@ fpstack_test (const char *test_name)
 
 
 static void
-print_max_error (const char *func_name, FLOAT allowed, int xfail)
+print_max_error (const char *func_name, FLOAT allowed)
 {
   int ok = 0;
 
@@ -432,20 +420,19 @@ print_max_error (const char *func_name, FLOAT allowed, int xfail)
     print_function_ulps (func_name, max_error);
 
 
-  if (print_screen_max_error (ok, xfail))
+  if (print_screen_max_error (ok))
     {
       printf ("Maximal error of `%s'\n", func_name);
       printf (" is      : %.0" PRINTF_NEXPR " ulp\n", FUNC(ceil) (max_error));
       printf (" accepted: %.0" PRINTF_NEXPR " ulp\n", FUNC(ceil) (allowed));
     }
 
-  update_stats (ok, xfail);
+  update_stats (ok);
 }
 
 
 static void
-print_complex_max_error (const char *func_name, __complex__ FLOAT allowed,
-			 __complex__ int xfail)
+print_complex_max_error (const char *func_name, __complex__ FLOAT allowed)
 {
   int ok = 0;
 
@@ -461,7 +448,7 @@ print_complex_max_error (const char *func_name, __complex__ FLOAT allowed,
     print_complex_function_ulps (func_name, real_max_error, imag_max_error);
 
 
-  if (print_screen_max_error (ok, xfail))
+  if (print_screen_max_error (ok))
     {
       printf ("Maximal error of real part of: %s\n", func_name);
       printf (" is      : %.0" PRINTF_NEXPR " ulp\n",
@@ -475,7 +462,7 @@ print_complex_max_error (const char *func_name, __complex__ FLOAT allowed,
 	      FUNC(ceil) (__imag__ allowed));
     }
 
-  update_stats (ok, xfail);
+  update_stats (ok);
 }
 
 
@@ -493,13 +480,13 @@ test_single_exception (const char *test_name,
     {
       if (fetestexcept (fe_flag))
 	{
-	  if (print_screen (1, 0))
+	  if (print_screen (1))
 	    printf ("Pass: %s: Exception \"%s\" set\n", test_name, flag_name);
 	}
       else
 	{
 	  ok = 0;
-	  if (print_screen (0, 0))
+	  if (print_screen (0))
 	    printf ("Failure: %s: Exception \"%s\" not set\n",
 		    test_name, flag_name);
 	}
@@ -509,13 +496,13 @@ test_single_exception (const char *test_name,
       if (fetestexcept (fe_flag))
 	{
 	  ok = 0;
-	  if (print_screen (0, 0))
+	  if (print_screen (0))
 	    printf ("Failure: %s: Exception \"%s\" set\n",
 		    test_name, flag_name);
 	}
       else
 	{
-	  if (print_screen (1, 0))
+	  if (print_screen (1))
 	    printf ("%s: Exception \"%s\" not set\n", test_name,
 		    flag_name);
 	}
@@ -566,14 +553,14 @@ test_single_errno (const char *test_name, int errno_value,
 {
   if (errno_value == expected_value)
     {
-      if (print_screen (1, 0))
+      if (print_screen (1))
 	printf ("Pass: %s: errno set to %d (%s)\n", test_name, errno_value,
 		expected_name);
     }
   else
     {
       ++noErrors;
-      if (print_screen (0, 0))
+      if (print_screen (0))
 	printf ("Failure: %s: errno set to %d, expected %d (%s)\n",
 		test_name, errno_value, expected_value, expected_name);
     }
@@ -595,7 +582,7 @@ test_errno (const char *test_name, int errno_value, int exceptions)
 
 static void
 check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
-		      FLOAT max_ulp, int xfail, int exceptions,
+		      FLOAT max_ulp, int exceptions,
 		      FLOAT *curr_max_error)
 {
   int ok = 0;
@@ -665,7 +652,7 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
 	}
 
     }
-  if (print_screen (ok, xfail))
+  if (print_screen (ok))
     {
       if (!ok)
 	printf ("Failure: ");
@@ -683,7 +670,7 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
 	  printf (" max.ulp   : % .4" PRINTF_NEXPR "\n", max_ulp);
 	}
     }
-  update_stats (ok, xfail);
+  update_stats (ok);
 
   fpstack_test (test_name);
   errno = 0;
@@ -692,9 +679,9 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
 
 static void
 check_float (const char *test_name, FLOAT computed, FLOAT expected,
-	     FLOAT max_ulp, int xfail, int exceptions)
+	     FLOAT max_ulp, int exceptions)
 {
-  check_float_internal (test_name, computed, expected, max_ulp, xfail,
+  check_float_internal (test_name, computed, expected, max_ulp,
 			exceptions, &max_error);
 }
 
@@ -702,11 +689,10 @@ check_float (const char *test_name, FLOAT computed, FLOAT expected,
 static void
 check_complex (const char *test_name, __complex__ FLOAT computed,
 	       __complex__ FLOAT expected,
-	       __complex__ FLOAT max_ulp, __complex__ int xfail,
+	       __complex__ FLOAT max_ulp,
 	       int exception)
 {
   FLOAT part_comp, part_exp, part_max_ulp;
-  int part_xfail;
   char *str;
 
   if (asprintf (&str, "Real part of: %s", test_name) == -1)
@@ -715,9 +701,8 @@ check_complex (const char *test_name, __complex__ FLOAT computed,
   part_comp = __real__ computed;
   part_exp = __real__ expected;
   part_max_ulp = __real__ max_ulp;
-  part_xfail = __real__ xfail;
 
-  check_float_internal (str, part_comp, part_exp, part_max_ulp, part_xfail,
+  check_float_internal (str, part_comp, part_exp, part_max_ulp,
 			exception, &real_max_error);
   free (str);
 
@@ -727,11 +712,10 @@ check_complex (const char *test_name, __complex__ FLOAT computed,
   part_comp = __imag__ computed;
   part_exp = __imag__ expected;
   part_max_ulp = __imag__ max_ulp;
-  part_xfail = __imag__ xfail;
 
   /* Don't check again for exceptions or errno, just pass through the
      zero/inf sign test.  */
-  check_float_internal (str, part_comp, part_exp, part_max_ulp, part_xfail,
+  check_float_internal (str, part_comp, part_exp, part_max_ulp,
 			exception & IGNORE_ZERO_INF_SIGN,
 			&imag_max_error);
   free (str);
@@ -741,7 +725,7 @@ check_complex (const char *test_name, __complex__ FLOAT computed,
 /* Check that computed and expected values are equal (int values).  */
 static void
 check_int (const char *test_name, int computed, int expected, int max_ulp,
-	   int xfail, int exceptions)
+	   int exceptions)
 {
   int diff = computed - expected;
   int ok = 0;
@@ -756,7 +740,7 @@ check_int (const char *test_name, int computed, int expected, int max_ulp,
   if (!ok)
     print_ulps (test_name, diff);
 
-  if (print_screen (ok, xfail))
+  if (print_screen (ok))
     {
       if (!ok)
 	printf ("Failure: ");
@@ -766,7 +750,7 @@ check_int (const char *test_name, int computed, int expected, int max_ulp,
       printf (" should be:  %d\n", expected);
     }
 
-  update_stats (ok, xfail);
+  update_stats (ok);
   fpstack_test (test_name);
   errno = 0;
 }
@@ -775,7 +759,7 @@ check_int (const char *test_name, int computed, int expected, int max_ulp,
 /* Check that computed and expected values are equal (long int values).  */
 static void
 check_long (const char *test_name, long int computed, long int expected,
-	    long int max_ulp, int xfail, int exceptions)
+	    long int max_ulp, int exceptions)
 {
   long int diff = computed - expected;
   int ok = 0;
@@ -790,7 +774,7 @@ check_long (const char *test_name, long int computed, long int expected,
   if (!ok)
     print_ulps (test_name, diff);
 
-  if (print_screen (ok, xfail))
+  if (print_screen (ok))
     {
       if (!ok)
 	printf ("Failure: ");
@@ -800,7 +784,7 @@ check_long (const char *test_name, long int computed, long int expected,
       printf (" should be:  %ld\n", expected);
     }
 
-  update_stats (ok, xfail);
+  update_stats (ok);
   fpstack_test (test_name);
   errno = 0;
 }
@@ -809,7 +793,7 @@ check_long (const char *test_name, long int computed, long int expected,
 /* Check that computed value is true/false.  */
 static void
 check_bool (const char *test_name, int computed, int expected,
-	    long int max_ulp, int xfail, int exceptions)
+	    long int max_ulp, int exceptions)
 {
   int ok = 0;
   int errno_value = errno;
@@ -820,7 +804,7 @@ check_bool (const char *test_name, int computed, int expected,
   if ((computed == 0) == (expected == 0))
     ok = 1;
 
-  if (print_screen (ok, xfail))
+  if (print_screen (ok))
     {
       if (!ok)
 	printf ("Failure: ");
@@ -830,7 +814,7 @@ check_bool (const char *test_name, int computed, int expected,
       printf (" should be:  %d\n", expected);
     }
 
-  update_stats (ok, xfail);
+  update_stats (ok);
   fpstack_test (test_name);
   errno = 0;
 }
@@ -840,7 +824,7 @@ check_bool (const char *test_name, int computed, int expected,
 static void
 check_longlong (const char *test_name, long long int computed,
 		long long int expected,
-		long long int max_ulp, int xfail,
+		long long int max_ulp,
 		int exceptions)
 {
   long long int diff = computed - expected;
@@ -856,7 +840,7 @@ check_longlong (const char *test_name, long long int computed,
   if (!ok)
     print_ulps (test_name, diff);
 
-  if (print_screen (ok, xfail))
+  if (print_screen (ok))
     {
       if (!ok)
 	printf ("Failure:");
@@ -866,7 +850,7 @@ check_longlong (const char *test_name, long long int computed,
       printf (" should be:  %lld\n", expected);
     }
 
-  update_stats (ok, xfail);
+  update_stats (ok);
   fpstack_test (test_name);
   errno = 0;
 }
@@ -14186,10 +14170,6 @@ main (int argc, char **argv)
   printf ("  %d test cases plus %d tests for exception flags and\n"
 	  "    %d tests for errno executed.\n",
 	  noTests, noExcTests, noErrnoTests);
-  if (noXFails)
-    printf ("  %d expected failures occurred.\n", noXFails);
-  if (noXPasses)
-    printf ("  %d unexpected passes occurred.\n", noXPasses);
   if (noErrors)
     {
       printf ("  %d errors occurred.\n", noErrors);

@@ -25,7 +25,6 @@
 # is a maximal error of a function or a single test.
 # $results{$test}{"type"} is the result type, e.g. normal or complex.
 # $results{$test}{"has_ulps"} is set if deltas exist.
-# $results{$test}{"has_fails"} is set if exptected failures exist.
 # In the following description $type and $float are:
 # - $type is either "normal", "real" (for the real part of a complex number)
 #   or "imag" (for the imaginary part # of a complex number).
@@ -33,8 +32,6 @@
 #   It represents the underlying floating point type (float, double or long
 #   double) and if inline functions (the leading i stands for inline)
 #   are used.
-# $results{$test}{$type}{"fail"}{$float} is defined and has a 1 if
-# the test is expected to fail
 # $results{$test}{$type}{"ulp"}{$float} is defined and has a delta as value
 
 
@@ -164,21 +161,16 @@ sub get_variable {
 }
 
 # Add a new test to internal data structures and fill in the
-# ulps, failures and exception information for the C line.
+# ulps and exception information for the C line.
 sub new_test {
   my ($test, $exception) = @_;
   my $rest;
 
-  # Add ulp, xfail
+  # Add ulp.
   if (exists $results{$test}{'has_ulps'}) {
     $rest = ", DELTA$count";
   } else {
     $rest = ', 0';
-  }
-  if (exists $results{$test}{'has_fails'}) {
-    $rest .= ", FAIL$count";
-  } else {
-    $rest .= ', 0';
   }
   if (defined $exception) {
     $rest .= ", $exception";
@@ -369,7 +361,7 @@ sub parse_args {
       ++$current_arg;
     }
   }
-  # Add ulp, xfail
+  # Add ulp.
   $cline .= &new_test ($str, ($current_arg <= $#args) ? $args[$current_arg] : undef);
 
   # special treatment for some functions
@@ -457,11 +449,6 @@ sub generate_testfile {
       } else {
 	$line .= '0';
       }
-      if (exists $results{$fct}{'has_fails'}) {
-	$line .= ", FAIL$fct";
-      } else {
-	$line .= ', 0';
-      }
       $line .= ");\n";
       print OUTPUT $line;
       push @functions, $fct;
@@ -522,10 +509,7 @@ sub parse_ulps {
     if (/^i?(float|double|ldouble):/) {
       ($float, $eps) = split /\s*:\s*/,$_,2;
 
-      if ($eps eq 'fail') {
-	$results{$test}{$type}{'fail'}{$float} = 1;
-	$results{$test}{'has_fails'} = 1;
-      } elsif ($eps eq "0") {
+      if ($eps eq "0") {
 	# ignore
 	next;
       } else {
@@ -591,9 +575,6 @@ sub print_ulps_file {
 	    &clean_up_number ($results{$test}{$type}{'ulp'}{$float}),
 	    "\n";
 	  }
-	  if (exists $results{$test}{$type}{'fail'}{$float}) {
-	    print NEWULP "$float: fail\n";
-	  }
 	}
       }
     }
@@ -616,9 +597,6 @@ sub print_ulps_file {
 	    print NEWULP "$float: ",
 	    &clean_up_number ($results{$fct}{$type}{'ulp'}{$float}),
 	    "\n";
-	  }
-	  if (exists $results{$fct}{$type}{'fail'}{$float}) {
-	    print NEWULP "$float: fail\n";
 	  }
 	}
 	print NEWULP "\n";
@@ -652,37 +630,13 @@ sub get_ulps {
 	  ? $results{$test}{'normal'}{'ulp'}{$float} : "0");
 }
 
-sub get_failure {
-  my ($test, $type, $float) = @_;
-  if ($type eq 'complex') {
-    # return x,y
-    my ($res);
-    # Return 0 instead of BUILD_COMPLEX_INT (0,0)
-    if (!exists $results{$test}{'real'}{'ulp'}{$float} &&
-	!exists $results{$test}{'imag'}{'ulp'}{$float}) {
-      return "0";
-    }
-    $res = 'BUILD_COMPLEX_INT (';
-    $res .= (exists $results{$test}{'real'}{'fail'}{$float}
-	     ? $results{$test}{'real'}{'fail'}{$float} : "0");
-    $res .= ', ';
-    $res .= (exists $results{$test}{'imag'}{'fail'}{$float}
-	     ? $results{$test}{'imag'}{'fail'}{$float} : "0");
-    $res .= ')';
-    return $res;
-  }
-  return (exists $results{$test}{'normal'}{'fail'}{$float}
-	  ? $results{$test}{'normal'}{'fail'}{$float} : "0");
-
-}
-
 # Output the defines for a single test
 sub output_test {
   my ($file, $test, $name) = @_;
   my ($ldouble, $double, $float, $ildouble, $idouble, $ifloat);
   my ($type);
 
-  # Do we have ulps/failures?
+  # Do we have ulps?
   if (!exists $results{$test}{'type'}) {
     return;
   }
@@ -696,16 +650,6 @@ sub output_test {
     $idouble = &get_ulps ($test, $type, "idouble");
     $ifloat = &get_ulps ($test, $type, "ifloat");
     print $file "#define DELTA$name CHOOSE($ldouble, $double, $float, $ildouble, $idouble, $ifloat)\t/* $test  */\n";
-  }
-
-  if (exists $results{$test}{'has_fails'}) {
-    $ldouble = &get_failure ($test, "ldouble");
-    $double = &get_failure ($test, "double");
-    $float = &get_failure ($test, "float");
-    $ildouble = &get_failure ($test, "ildouble");
-    $idouble = &get_failure ($test, "idouble");
-    $ifloat = &get_failure ($test, "ifloat");
-    print $file "#define FAIL$name CHOOSE($ldouble, $double, $float $ildouble, $idouble, $ifloat)\t/* $test  */\n";
   }
 }
 
