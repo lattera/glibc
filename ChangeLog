@@ -1,3 +1,10 @@
+2013-05-06  Roland McGrath  <roland@hack.frob.com>
+
+	* elf/dl-writev.h: New file.
+	* elf/dl-misc.c: Include it.
+	(_dl_debug_vdprintf): Call _dl_writev instead of __writev et al.
+	* sysdeps/unix/sysv/linux/dl-writev.h: New file.
+
 2013-05-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (noXFails): Remove variable.

@@ -31,7 +31,8 @@
 #include <sys/uio.h>
 #include <sysdep.h>
 #include <_itoa.h>
-#include <bits/libc-lock.h>
+#include <dl-writev.h>
+
 
 /* Read the whole contents of FILE into new mmap'd space with given
    protections.  *SIZEP gets the size of the file.  On error MAP_FAILED
@@ -239,25 +240,7 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
     }
 
   /* Finally write the result.  */
-#ifdef HAVE_INLINED_SYSCALLS
-  INTERNAL_SYSCALL_DECL (err);
-  INTERNAL_SYSCALL (writev, err, 3, fd, &iov, niov);
-#elif RTLD_PRIVATE_ERRNO
-  /* We have to take this lock just to be sure we don't clobber the private
-     errno when it's being used by another thread that cares about it.
-     Yet we must be sure not to try calling the lock functions before
-     the thread library is fully initialized.  */
-  if (__builtin_expect (INTUSE (_dl_starting_up), 0))
-    __writev (fd, iov, niov);
-  else
-    {
-      __rtld_lock_lock_recursive (GL(dl_load_lock));
-      __writev (fd, iov, niov);
-      __rtld_lock_unlock_recursive (GL(dl_load_lock));
-    }
-#else
-  __writev (fd, iov, niov);
-#endif
+  _dl_writev (fd, iov, niov);
 }
 
 
