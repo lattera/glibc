@@ -1,3 +1,10 @@
+2013-05-06  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/posix/truncate.c (__truncate): Renamed from truncate.
+	Call __ names for open, ftruncate, and close.
+	For LENGTH==0 case, just use O_TRUNC rather than calling ftruncate.
+	(truncate): Define as weak alias.
+
 2013-05-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/gen-libm-test.pl (parse_args): Initialize x before each
