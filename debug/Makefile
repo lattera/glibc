@@ -22,9 +22,9 @@ subdir	:= debug
 
 headers	:= execinfo.h
 
-# Note that ptsname_r_chk is not here but in login/Makefile instead.
-# If that subdir is omitted from the build, its _FORTIFY_SOURCE
-# support will be too.
+# Note that ptsname_r_chk and getlogin_r are not here, but in
+# login/Makefile instead.  If that subdir is omitted from the
+# build, its _FORTIFY_SOURCE support will be too.
 routines  = backtrace backtracesyms backtracesymsfd noophooks \
 	    memcpy_chk memmove_chk mempcpy_chk memset_chk stpcpy_chk \
 	    strcat_chk strcpy_chk strncat_chk strncpy_chk stpncpy_chk \
@@ -39,7 +39,7 @@ routines  = backtrace backtracesyms backtracesymsfd noophooks \
 	    wcpncpy_chk \
 	    swprintf_chk vswprintf_chk wprintf_chk fwprintf_chk \
 	    vwprintf_chk vfwprintf_chk fgetws_chk fgetws_u_chk \
-	    confstr_chk getgroups_chk ttyname_r_chk getlogin_r_chk \
+	    confstr_chk getgroups_chk ttyname_r_chk \
 	    gethostname_chk getdomainname_chk wcrtomb_chk mbsnrtowcs_chk \
 	    wcsnrtombs_chk mbsrtowcs_chk wcsrtombs_chk mbstowcs_chk \
 	    wcstombs_chk asprintf_chk vasprintf_chk dprintf_chk \

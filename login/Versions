@@ -42,6 +42,7 @@ libc {
     posix_openpt;
   }
   GLIBC_2.4 {
+    __getlogin_r_chk;
     __ptsname_r_chk;
   }
 }
