@@ -1,5 +1,9 @@
 2013-05-06  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/generic/not-cancel.h (NO_CANCELLATION): New macro.
+	(pause_not_cancel, nanosleep_not_cancel, sigsuspend_not_cancel):
+	New macros.
+
 	* debug/getlogin_r_chk.c: Moved to ...
 	* login/getlogin_r_chk.c: ... here.
 	* debug/Makefile (routines): Move getlogin_r_chk to ...

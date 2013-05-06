@@ -44,3 +44,11 @@
   __fcntl (fd, cmd, val)
 # define waitpid_not_cancel(pid, stat_loc, options) \
   __waitpid (pid, stat_loc, options)
+#define pause_not_cancel() \
+  __pause ()
+#define nanosleep_not_cancel(requested_time, remaining) \
+  __nanosleep (requested_time, remaining)
+#define sigsuspend_not_cancel(set) \
+  __sigsuspend (set)
+
+#define NO_CANCELLATION 1
