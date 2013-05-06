@@ -69,21 +69,7 @@ static const float two30  = 1.0737418e09;
 float
 __ieee754_hypotf (float x, float y)
 {
-  x = fabsf (x);
-  y = fabsf (y);
-
   TEST_INF_NAN (x, y);
-
-  if (y > x)
-    {
-      float t = y;
-      y = x;
-      x = t;
-    }
-  if (y == 0.0 || (x / y) > two30)
-    {
-      return x + y;
-    }
 
   return __ieee754_sqrt ((double) x * x + (double) y * y);
 }

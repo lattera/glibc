@@ -26,6 +26,7 @@ static const double two600  = 4.149515568880993e+180;
 static const double two1022 = 4.49423283715579e+307;
 static const double twoM500 = 3.054936363499605e-151;
 static const double twoM600 = 2.4099198651028841e-181;
+static const double two60factor = 1.5592502418239997e+290;
 static const double pdnum   = 2.225073858507201e-308;
 
 /* __ieee754_hypot(x,y)
@@ -87,9 +88,20 @@ __ieee754_hypot (double x, double y)
       x = y;
       y = t;
     }
-  if (y == 0.0 || (x / y) > two60)
+  if (y == 0.0)
+    return x;
+  /* if y is higher enough, y * 2^60 might overflow. The tests if
+     y >= 1.7976931348623157e+308/2^60 (two60factor) and uses the
+     appropriate check to avoid the overflow exception generation.  */
+  if (y > two60factor)
     {
-      return x + y;
+      if ((x / y) > two60)
+	return x + y;
+    }
+  else
+    {
+      if (x > (y * two60))
+	return x + y;
     }
   if (x > two500)
     {
