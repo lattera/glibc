@@ -115,6 +115,7 @@ _dl_tlsdesc_dynamic:
 #endif
 	cmn	r2, #1
 	ittt	ne
+	sfi_breg r1, \
 	ldrne	r3, [r1, #4]
 	addne	r3, r2, r3
 	rsbne	r0, r4, r3

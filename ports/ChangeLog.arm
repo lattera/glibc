@@ -1,3 +1,7 @@
+2013-05-06  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/dl-tlsdesc.S (_dl_tlsdesc_dynamic): Add missing sfi_breg.
+
 2013-04-19  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/sysdep.h
