@@ -1,3 +1,8 @@
+2013-05-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (gamma_test): Consistently use TEST_f_f1 to
+	test signgam value.
+
 2013-05-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ #15418]

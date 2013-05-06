@@ -9103,11 +9103,11 @@ gamma_test (void)
 
   START (gamma);
 
-  TEST_f_f (gamma, plus_infty, plus_infty);
-  TEST_f_f (gamma, 0, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  TEST_f_f (gamma, -3, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  TEST_f_f (gamma, minus_infty, plus_infty);
-  TEST_f_f (gamma, qnan_value, qnan_value);
+  TEST_f_f1 (gamma, plus_infty, plus_infty, 1);
+  TEST_f_f1 (gamma, 0, plus_infty, 1, DIVIDE_BY_ZERO_EXCEPTION);
+  TEST_f_f1 (gamma, -3, plus_infty, IGNORE, DIVIDE_BY_ZERO_EXCEPTION);
+  TEST_f_f1 (gamma, minus_infty, plus_infty, IGNORE);
+  TEST_f_f1 (gamma, qnan_value, qnan_value, IGNORE);
 
   TEST_f_f1 (gamma, 1, 0, 1);
   TEST_f_f1 (gamma, 3, M_LN2l, 1);
