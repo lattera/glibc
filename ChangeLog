@@ -1,5 +1,8 @@
 2013-05-06  Roland McGrath  <roland@hack.frob.com>
 
+	* resource/setrlimit.c (__setrlimit): Renamed from setrlimit.
+	(setrlimit): Define as weak alias.
+
 	* sysdeps/posix/truncate.c (__truncate): Renamed from truncate.
 	Call __ names for open, ftruncate, and close.
 	For LENGTH==0 case, just use O_TRUNC rather than calling ftruncate.
