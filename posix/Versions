@@ -52,7 +52,7 @@ libc {
     # s*
     sched_get_priority_max; sched_get_priority_min; sched_getparam;
     sched_getscheduler; sched_rr_get_interval; sched_setparam;
-    sched_setscheduler; sched_yield; setegid; seteuid; setgid; setlogin;
+    sched_setscheduler; sched_yield; setegid; seteuid; setgid;
     setpgid; setpgrp; setsid; setuid; sleep; sysconf;
 
     # t*

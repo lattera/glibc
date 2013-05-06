@@ -1,5 +1,16 @@
 2013-05-06  Roland McGrath  <roland@hack.frob.com>
 
+	* posix/getlogin.c: Moved to ...
+	* login/getlogin.c: ... here.
+	* posix/getlogin_r.c: Moved to ...
+	* login/getlogin_r.c: ... here.
+	* posix/getlogin_r.c: Moved to ...
+	* login/getlogin_r.c: ... here.
+	* posix/Makefile (routines): Move getlogin, getlogin_r, setlogin to ...
+	* login/Makefile (routines): ... here.
+	* posix/Versions (libc: GLIBC_2.0): Move setlogin to ...
+	* login/Versions (libc: GLIBC_2.0): ... here.
+
 	* resource/setrlimit.c (__setrlimit): Renamed from setrlimit.
 	(setrlimit): Define as weak alias.
 

@@ -11,6 +11,7 @@ libc {
     pututline;
 
     # s*
+    setlogin;
     setutent;
 
     # u*

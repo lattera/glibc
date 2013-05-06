@@ -40,7 +40,6 @@ routines :=								      \
 	getuid geteuid getgid getegid getgroups setuid setgid group_member    \
 	getpgid setpgid getpgrp bsd-getpgrp setpgrp getsid setsid	      \
 	getresuid getresgid setresuid setresgid				      \
-	getlogin getlogin_r setlogin					      \
 	pathconf sysconf fpathconf					      \
 	glob glob64 fnmatch regex					      \
 	confstr								      \
