@@ -25,7 +25,8 @@ headers	:= utmp.h bits/utmp.h lastlog.h pty.h
 
 routines := getlogin getlogin_r setlogin \
 	    getutent getutent_r getutid getutline getutid_r getutline_r \
-	    utmp_file utmpname updwtmp getpt grantpt unlockpt ptsname
+	    utmp_file utmpname updwtmp getpt grantpt unlockpt ptsname \
+	    ptsname_r_chk
 
 CFLAGS-grantpt.c = -DLIBEXECDIR='"$(libexecdir)"'
 

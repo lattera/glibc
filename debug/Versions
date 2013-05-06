@@ -23,7 +23,7 @@ libc {
     __read_chk; __pread_chk; __pread64_chk;
     __readlink_chk; __getcwd_chk; __getwd_chk;
     __recv_chk; __recvfrom_chk;
-    __realpath_chk; __ptsname_r_chk; __wctomb_chk;
+    __realpath_chk; __wctomb_chk;
     __stpncpy_chk;
     __wcscpy_chk; __wmemcpy_chk; __wmemmove_chk; __wmempcpy_chk; __wcpcpy_chk;
     __wcsncpy_chk; __wcscat_chk; __wcsncat_chk; __wmemset_chk; __wcpncpy_chk;

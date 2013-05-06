@@ -41,6 +41,9 @@ libc {
     # p*
     posix_openpt;
   }
+  GLIBC_2.4 {
+    __ptsname_r_chk;
+  }
 }
 
 libutil {
