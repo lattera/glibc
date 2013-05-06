@@ -1,5 +1,9 @@
 2013-05-06  Roland McGrath  <roland@hack.frob.com>
 
+	* io/poll.c (__poll): Renamed from poll.
+	Add libc_hidden_def.
+	(poll): Define as weak alias.
+
 	* debug/ptsname_r_chk.c: Moved to ...
 	* login/ptsname_r_chk.c: ... here.
 	* debug/Makefile (routines): Move ptsname_r_chk to ...

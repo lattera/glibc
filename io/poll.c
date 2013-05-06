@@ -1,4 +1,5 @@
-/* Copyright (C) 1994-2013 Free Software Foundation, Inc.
+/* Poll (or wait) for file descriptor I/O availability.  Stub version.
+   Copyright (C) 1994-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,13 +26,12 @@
    or -1 for errors.  */
 
 int
-poll (fds, nfds, timeout)
-     struct pollfd *fds;
-     nfds_t nfds;
-     int timeout;
+__poll (struct pollfd *fds, nfds_t nfds, int timeout)
 {
   __set_errno (ENOSYS);
   return -1;
 }
+libc_hidden_def (__poll)
+weak_alias (__poll, poll)
 
 stub_warning (poll)
