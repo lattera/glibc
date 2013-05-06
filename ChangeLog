@@ -1,5 +1,8 @@
 2013-05-06  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/wordsize-64/glob64.c: Moved to ...
+	* sysdeps/wordsize-64/glob64.c: ... here.
+
 	* sysdeps/generic/not-cancel.h (NO_CANCELLATION): New macro.
 	(pause_not_cancel, nanosleep_not_cancel, sigsuspend_not_cancel):
 	New macros.
