@@ -1,5 +1,8 @@
 2013-05-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/gen-libm-test.pl (parse_args): Initialize x before each
+	test of frexp, modf and remquo.
+
 	* math/libm-test.inc (gamma_test): Consistently use TEST_f_f1 to
 	test signgam value.
 

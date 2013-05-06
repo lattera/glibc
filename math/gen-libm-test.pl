@@ -366,6 +366,7 @@ sub parse_args {
 
   # special treatment for some functions
   if ($args[0] eq 'frexp') {
+    $pre = "  x = 123456789;\n";
     if (defined $special[0] && $special[0] ne "IGNORE") {
       my ($str) = "$call sets x to $special[0]";
       $post = "  check_int (\"$str\", x, $special[0]";
@@ -379,12 +380,14 @@ sub parse_args {
       $post .= &new_test ($str, undef);
     }
   } elsif ($args[0] eq 'modf') {
+    $pre = "  x = 123.456789;\n";
     if (defined $special[0] && $special[0] ne "IGNORE") {
       my ($str) = "$call sets x to $special[0]";
       $post = "  check_float (\"$str\", x, $special[0]";
       $post .= &new_test ($str, undef);
     }
   } elsif ($args[0] eq 'remquo') {
+    $pre = "  x = 123456789;\n";
     if (defined $special[0] && $special[0] ne "IGNORE") {
       my ($str) = "$call sets x to $special[0]";
       $post = "  check_int (\"$str\", x, $special[0]";
