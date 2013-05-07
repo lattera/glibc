@@ -1,3 +1,7 @@
+2013-05-07  Aurelien Jarno <aurelien@aurel32.net>
+
+	* misc/sys/param.h (DEV_BSIZE): Define only if not already defined.
+
 2013-05-07  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/generic/ldsodefs.h [IS_IN_rtld]: Declare _dl_skip_args

@@ -71,7 +71,9 @@
 
 
 /* Unit of `st_blocks'.  */
-#define DEV_BSIZE       512
+#ifndef DEV_BSIZE
+# define DEV_BSIZE	512
+#endif
 
 
 /* Bit map related macros.  */
