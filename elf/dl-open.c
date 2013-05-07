@@ -37,13 +37,6 @@
 #include <dl-dst.h>
 
 
-extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
-				    void (*dl_main) (const ElfW(Phdr) *phdr,
-						     ElfW(Word) phnum,
-						     ElfW(Addr) *user_entry,
-						     ElfW(auxv_t) *auxv));
-weak_extern (_dl_sysdep_start)
-
 extern int __libc_multiple_libcs;	/* Defined in init-first.c.  */
 
 /* We must be careful not to leave us in an inconsistent state.  Thus we
