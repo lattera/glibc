@@ -1,3 +1,8 @@
+2013-05-07  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/dl-machine.h (elf_machine_dynamic): Use a plain C
+	reference to _GLOBAL_OFFSET_TABLE_ with an STV_HIDDEN declaration.
+
 2013-05-06  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/dl-tlsdesc.S (_dl_tlsdesc_dynamic): Add missing sfi_breg.

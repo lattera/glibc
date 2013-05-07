@@ -39,30 +39,13 @@ elf_machine_matches_host (const Elf32_Ehdr *ehdr)
 
 
 /* Return the link-time address of _DYNAMIC.  Conveniently, this is the
-   first element of the GOT.  We used to use the PIC register to do this
-   without a constant pool reference, but GCC 4.2 will use a pseudo-register
-   for the PIC base, so it may not be in r10.  */
+   first element of the GOT.  */
 static inline Elf32_Addr __attribute__ ((unused))
 elf_machine_dynamic (void)
 {
-  Elf32_Addr dynamic;
-#ifdef __thumb2__
-  long tmp;
-  asm ("ldr\t%0, 1f\n\t"
-       "adr\t%1, 1f\n\t"
-       "ldr\t%0, [%0, %1]\n\t"
-       "b 2f\n"
-       ".align 2\n"
-       "1: .word _GLOBAL_OFFSET_TABLE_ - 1b\n"
-       "2:" : "=r" (dynamic), "=r"(tmp));
-#else
-  asm ("ldr %0, 2f\n"
-       "1: ldr %0, [pc, %0]\n"
-       "b 3f\n"
-       "2: .word _GLOBAL_OFFSET_TABLE_ - (1b+8)\n"
-       "3:" : "=r" (dynamic));
-#endif
-  return dynamic;
+  /* Declaring this hidden ensures that a PC-relative reference is used.  */
+  extern const Elf32_Addr _GLOBAL_OFFSET_TABLE_[] attribute_hidden;
+  return _GLOBAL_OFFSET_TABLE_[0];
 }
 
 
