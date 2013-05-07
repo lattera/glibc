@@ -1,3 +1,8 @@
+2013-05-07  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/generic/ldsodefs.h [IS_IN_rtld]: Declare _dl_skip_args
+	and _dl_skip_args_internal.
+
 2013-05-07  Carlos O'Donell  <carlos@redhat.com>
 
 	* manual/message.texi (Message Translation): Talk about users.
