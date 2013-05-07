@@ -2,9 +2,9 @@
 @c %MENU% How to make the program speak the user's language
 @chapter Message Translation
 
-The program's interface with the human should be designed in a way to
-ease the human the task.  One of the possibilities is to use messages in
-whatever language the user prefers.
+The program's interface with the user should be designed to ease the user's
+task.  One way to ease the user's task is to use messages in whatever
+language the user prefers.
 
 Printing messages in different languages can be implemented in different
 ways.  One could add all the different languages in the source code and
@@ -40,7 +40,7 @@ map a given key to the translated message
 @end itemize
 
 The two approaches mainly differ in the implementation of this last
-step.  The design decisions made for this influences the whole rest.
+step.  Decisions made in the last step influence the rest of the design.
 
 @menu
 * Message catalogs a la X/Open::  The @code{catgets} family of functions.

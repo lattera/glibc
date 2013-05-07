@@ -1,3 +1,8 @@
+2013-05-07  Carlos O'Donell  <carlos@redhat.com>
+
+	* manual/message.texi (Message Translation): Talk about users.
+	Message to key mapping impacts design.
+
 2013-05-06  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/wordsize-64/glob64.c: New file.
