@@ -1,5 +1,7 @@
 2013-05-06  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/wordsize-64/glob64.c: New file.
+
 	* elf/dl-open.c: Remove declaration of _dl_sysdep_start.
 
 	* sysdeps/unix/sysv/linux/wordsize-64/glob64.c: Moved to ...
