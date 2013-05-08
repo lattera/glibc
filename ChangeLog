@@ -1,5 +1,34 @@
 2013-05-08  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (RUN_TEST_f_f): New macro.
+	(RUN_TEST_2_f): Likewise.
+	(RUN_TEST_ff_f): Likewise.
+	(RUN_TEST_fi_f): Likewise.
+	(RUN_TEST_fl_f): Likewise.
+	(RUN_TEST_fff_f): Likewise.
+	(RUN_TEST_c_f): Likewise.
+	(RUN_TEST_f_f1): Likewise.
+	(RUN_TEST_fF_f1): Likewise.
+	(RUN_TEST_fI_f1): Likewise.
+	(RUN_TEST_ffI_f1): Likewise.
+	(RUN_TEST_c_c): Likewise.
+	(RUN_TEST_cc_c): Likewise.
+	(RUN_TEST_f_i): Likewise.
+	(RUN_TEST_f_i_tg): Likewise.
+	(RUN_TEST_ff_i_tg): Likewise.
+	(RUN_TEST_f_b): Likewise.
+	(RUN_TEST_f_b_tg): Likewise.
+	(RUN_TEST_f_l): Likewise.
+	(RUN_TEST_f_L): Likewise.
+	(RUN_TEST_sincos): Likewise.
+	* math/gen-libm-test.pl (new_test): Take new argument to indicate
+	whether to show exceptions.  Do not include ");\n" in return
+	value.
+	(special_functions): Output call to RUN_TEST_sincos instead of
+	check_float calls.  Update calls to new_test.
+	(parse_args): Output call to single RUN_TEST_* macro instead of
+	check_* calls and other assignments.  Update calls to new_test.
+
 	[BZ #2546]
 	[BZ #2560]
 	[BZ #5159]

@@ -163,7 +163,7 @@ sub get_variable {
 # Add a new test to internal data structures and fill in the
 # ulps and exception information for the C line.
 sub new_test {
-  my ($test, $exception) = @_;
+  my ($test, $exception, $show_exception) = @_;
   my $rest;
 
   # Add ulp.
@@ -172,12 +172,13 @@ sub new_test {
   } else {
     $rest = ', 0';
   }
-  if (defined $exception) {
-    $rest .= ", $exception";
-  } else {
-    $rest .= ', 0';
+  if ($show_exception) {
+    if (defined $exception) {
+      $rest .= ", $exception";
+    } else {
+      $rest .= ', 0';
+    }
   }
-  $rest .= ");\n";
   # We must increment here to keep @tests and count in sync
   push @tests, $test;
   ++$count;
@@ -195,24 +196,21 @@ sub special_functions {
   unless ($args[0] =~ /sincos/) {
     die ("Don't know how to handle $args[0] extra.");
   }
-  print $file "  {\n";
-  print $file "    FUNC (sincos) ($args[1], &sin_res, &cos_res);\n";
+  $cline = "  RUN_TEST_sincos ($args[1]";
 
   $str = 'sincos (' . &beautify ($args[1]) . ', &sin_res, &cos_res)';
   # handle sin
   $test = $str . ' puts ' . &beautify ($args[2]) . ' in sin_res';
 
-  $cline = "    check_float (\"$test\", sin_res, $args[2]";
-  $cline .= &new_test ($test, $args[4]);
-  print $file $cline;
+  $cline .= ", \"$test\", sin_res, $args[2]";
+  $cline .= &new_test ($test, $args[4], 0);
 
   # handle cos
   $test = $str . ' puts ' . &beautify ($args[3]) . ' in cos_res';
-  $cline = "    check_float (\"$test\", cos_res, $args[3]";
-  # only tests once for exception
-  $cline .= &new_test ($test, undef);
+  $cline .= ", \"$test\", cos_res, $args[3]";
+  $cline .= &new_test ($test, $args[4], 1);
+  $cline .= ");\n";
   print $file $cline;
-  print $file "  }\n";
 }
 
 # Parse the arguments to TEST_x_y
@@ -220,8 +218,8 @@ sub parse_args {
   my ($file, $descr, $fct, $args) = @_;
   my (@args, $str, $descr_args, $descr_res, @descr);
   my ($current_arg, $cline, $i);
-  my ($pre, $post, @special);
-  my ($extra_var, $call, $c_call);
+  my (@special);
+  my ($extra_var, $call);
 
   if ($descr eq 'extra') {
     &special_functions ($file, $args);
@@ -299,54 +297,34 @@ sub parse_args {
   # Reset some variables to start again
   $current_arg = 1;
   $extra_var = 0;
-  if (substr($descr_res,0,1) eq 'f') {
-    $cline = 'check_float'
-  } elsif (substr($descr_res,0,1) eq 'b') {
-    $cline = 'check_bool';
-  } elsif (substr($descr_res,0,1) eq 'c') {
-    $cline = 'check_complex';
-  } elsif (substr($descr_res,0,1) eq 'i') {
-    $cline = 'check_int';
-  } elsif (substr($descr_res,0,1) eq 'l') {
-    $cline = 'check_long';
-  } elsif (substr($descr_res,0,1) eq 'L') {
-    $cline = 'check_longlong';
-  }
+  $cline = "RUN_TEST_$descr";
   # Special handling for some macros:
-  $cline .= " (\"$str\", ";
   if ($args[0] =~ /fpclassify|isnormal|isfinite|isinf|isnan|issignaling|signbit
       |isgreater|isgreaterequal|isless|islessequal
       |islessgreater|isunordered/x) {
-    $c_call = "$args[0] (";
-  } else {
-    $c_call = " FUNC($args[0]) (";
+      $cline = "${cline}_tg";
   }
+  $cline .= " (\"$str\", $args[0]";
   @descr = split //,$descr_args;
   for ($i=0; $i <= $#descr; $i++) {
-    if ($i >= 1) {
-      $c_call .= ', ';
-    }
     # FLOAT, int, long int, long long int
     if ($descr[$i] =~ /f|i|l|L/) {
-      $c_call .= $args[$current_arg];
+      $cline .= ", $args[$current_arg]";
       $current_arg++;
       next;
     }
     # &FLOAT, &int
     if ($descr[$i] =~ /F|I/) {
-      ++$extra_var;
-      $c_call .= '&' . &get_variable ($extra_var);
       next;
     }
     # complex
     if ($descr[$i] eq 'c') {
-      $c_call .= "BUILD_COMPLEX ($args[$current_arg], $args[$current_arg+1])";
+      $cline .= ", $args[$current_arg], $args[$current_arg+1]";
       $current_arg += 2;
       next;
     }
   }
-  $c_call .= ')';
-  $cline .= "$c_call, ";
+  $cline .= ", ";
 
   @descr = split //,$descr_res;
   foreach (@descr) {
@@ -354,7 +332,7 @@ sub parse_args {
       $cline .= $args[$current_arg];
       $current_arg++;
     } elsif ($_ eq 'c') {
-      $cline .= "BUILD_COMPLEX ($args[$current_arg], $args[$current_arg+1])";
+      $cline .= "$args[$current_arg], $args[$current_arg+1]";
       $current_arg += 2;
     } elsif ($_ eq '1') {
       push @special, $args[$current_arg];
@@ -362,48 +340,75 @@ sub parse_args {
     }
   }
   # Add ulp.
-  $cline .= &new_test ($str, ($current_arg <= $#args) ? $args[$current_arg] : undef);
+  $cline .= &new_test ($str, ($current_arg <= $#args) ? $args[$current_arg] : undef, 1);
 
   # special treatment for some functions
   if ($args[0] eq 'frexp') {
-    $pre = "  x = 123456789;\n";
-    if (defined $special[0] && $special[0] ne "IGNORE") {
-      my ($str) = "$call sets x to $special[0]";
-      $post = "  check_int (\"$str\", x, $special[0]";
-      $post .= &new_test ($str, undef);
+    if (defined $special[0]) {
+      my ($extra_expected) = $special[0];
+      my ($run_extra) = ($extra_expected ne "IGNORE" ? 1 : 0);
+      my ($str) = "$call sets x to $extra_expected";
+      if (!$run_extra) {
+	$str = "";
+	$extra_expected = "0";
+      }
+      $cline .= ", \"$str\", x, 123456789, $run_extra, $extra_expected";
+      if ($run_extra) {
+	$cline .= &new_test ($str, undef, 0);
+      } else {
+	$cline .= ", 0";
+      }
     }
   } elsif ($args[0] eq 'gamma' || $args[0] eq 'lgamma') {
-    $pre = "  signgam = 0;\n";
-    if (defined $special[0] && $special[0] ne "IGNORE") {
-      my ($str) = "$call sets signgam to $special[0]";
-      $post = "  check_int (\"$str\", signgam, $special[0]";
-      $post .= &new_test ($str, undef);
+    if (defined $special[0]) {
+      my ($extra_expected) = $special[0];
+      my ($run_extra) = ($extra_expected ne "IGNORE" ? 1 : 0);
+      my ($str) = "$call sets signgam to $extra_expected";
+      if (!$run_extra) {
+	$str = "";
+	$extra_expected = "0";
+      }
+      $cline .= ", \"$str\", signgam, 0, $run_extra, $extra_expected";
+      if ($run_extra) {
+	$cline .= &new_test ($str, undef, 0);
+      } else {
+	$cline .= ", 0";
+      }
     }
   } elsif ($args[0] eq 'modf') {
-    $pre = "  x = 123.456789;\n";
-    if (defined $special[0] && $special[0] ne "IGNORE") {
-      my ($str) = "$call sets x to $special[0]";
-      $post = "  check_float (\"$str\", x, $special[0]";
-      $post .= &new_test ($str, undef);
+    if (defined $special[0]) {
+      my ($extra_expected) = $special[0];
+      my ($run_extra) = ($extra_expected ne "IGNORE" ? 1 : 0);
+      my ($str) = "$call sets x to $extra_expected";
+      if (!$run_extra) {
+	$str = "";
+	$extra_expected = "0";
+      }
+      $cline .= ", \"$str\", x, 123.456789, $run_extra, $extra_expected";
+      if ($run_extra) {
+	$cline .= &new_test ($str, undef, 0);
+      } else {
+	$cline .= ", 0";
+      }
     }
   } elsif ($args[0] eq 'remquo') {
-    $pre = "  x = 123456789;\n";
-    if (defined $special[0] && $special[0] ne "IGNORE") {
-      my ($str) = "$call sets x to $special[0]";
-      $post = "  check_int (\"$str\", x, $special[0]";
-      $post .= &new_test ($str, undef);
+    if (defined $special[0]) {
+      my ($extra_expected) = $special[0];
+      my ($run_extra) = ($extra_expected ne "IGNORE" ? 1 : 0);
+      my ($str) = "$call sets x to $extra_expected";
+      if (!$run_extra) {
+	$str = "";
+	$extra_expected = "0";
+      }
+      $cline .= ", \"$str\", x, 123456789, $run_extra, $extra_expected";
+      if ($run_extra) {
+	$cline .= &new_test ($str, undef, 0);
+      } else {
+	$cline .= ", 0";
+      }
     }
   }
-
-  if (defined $pre or defined $post) {
-    print $file "  {\n";
-    print $file "  $pre" if (defined $pre);
-    print $file "    $cline";
-    print $file "  $post" if (defined $post);
-    print $file "  }\n";
-  } else {
-    print $file "  $cline";
-  }
+  print $file "  $cline);\n";
 }
 
 # Generate libm-test.c

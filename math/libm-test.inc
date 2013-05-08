@@ -855,6 +855,139 @@ check_longlong (const char *test_name, long long int computed,
   errno = 0;
 }
 
+/* Run an individual test, including any required setup and checking
+   of results.  */
+#define RUN_TEST_f_f(TEST_NAME, FUNC_NAME, ARG, EXPECTED,	\
+		     MAX_ULP, EXCEPTIONS)			\
+  check_float (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
+	       MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_2_f(TEST_NAME, FUNC_NAME, ARG1, ARG2, EXPECTED,	\
+		     MAX_ULP, EXCEPTIONS)				\
+  check_float (TEST_NAME, FUNC (FUNC_NAME) (ARG1, ARG2), EXPECTED,	\
+	       MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_ff_f RUN_TEST_2_f
+#define RUN_TEST_fi_f RUN_TEST_2_f
+#define RUN_TEST_fl_f RUN_TEST_2_f
+#define RUN_TEST_fff_f(TEST_NAME, FUNC_NAME, ARG1, ARG2, ARG3,	\
+		       EXPECTED, MAX_ULP, EXCEPTIONS)		\
+  check_float (TEST_NAME, FUNC (FUNC_NAME) (ARG1, ARG2, ARG3),	\
+	       EXPECTED, MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_c_f(TEST_NAME, FUNC_NAME, ARG1, ARG2, EXPECTED,	\
+		     MAX_ULP, EXCEPTIONS)				\
+  check_float (TEST_NAME,						\
+	       FUNC (FUNC_NAME) (BUILD_COMPLEX (ARG1, ARG2)),		\
+	       EXPECTED, MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_f_f1(TEST_NAME, FUNC_NAME, ARG, EXPECTED,		\
+		      MAX_ULP, EXCEPTIONS,				\
+		      EXTRA_NAME, EXTRA_VAR, EXTRA_INIT, EXTRA_TEST,	\
+		      EXTRA_EXPECTED, EXTRA_ULP)			\
+  do									\
+    {									\
+      (EXTRA_VAR) = (EXTRA_INIT);					\
+      check_float (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED,		\
+		   MAX_ULP, EXCEPTIONS);				\
+      if (EXTRA_TEST)							\
+	check_int (EXTRA_NAME, EXTRA_VAR, EXTRA_EXPECTED,		\
+		   EXTRA_ULP, 0);					\
+    }									\
+  while (0)
+#define RUN_TEST_fF_f1(TEST_NAME, FUNC_NAME, ARG, EXPECTED,		\
+		       MAX_ULP, EXCEPTIONS,				\
+		       EXTRA_NAME, EXTRA_VAR, EXTRA_INIT, EXTRA_TEST,	\
+		       EXTRA_EXPECTED, EXTRA_ULP)			\
+  do									\
+    {									\
+      (EXTRA_VAR) = (EXTRA_INIT);					\
+      check_float (TEST_NAME, FUNC (FUNC_NAME) (ARG, &(EXTRA_VAR)),	\
+		   EXPECTED, MAX_ULP, EXCEPTIONS);			\
+      if (EXTRA_TEST)							\
+	check_float (EXTRA_NAME, EXTRA_VAR, EXTRA_EXPECTED,		\
+		     EXTRA_ULP, 0);					\
+    }									\
+  while (0)
+#define RUN_TEST_fI_f1(TEST_NAME, FUNC_NAME, ARG, EXPECTED,		\
+		       MAX_ULP, EXCEPTIONS,				\
+		       EXTRA_NAME, EXTRA_VAR, EXTRA_INIT, EXTRA_TEST,	\
+		       EXTRA_EXPECTED, EXTRA_ULP)			\
+  do									\
+    {									\
+      (EXTRA_VAR) = (EXTRA_INIT);					\
+      check_float (TEST_NAME, FUNC (FUNC_NAME) (ARG, &(EXTRA_VAR)),	\
+		   EXPECTED, MAX_ULP, EXCEPTIONS);			\
+      if (EXTRA_TEST)							\
+	check_int (EXTRA_NAME, EXTRA_VAR, EXTRA_EXPECTED,		\
+		   EXTRA_ULP, 0);					\
+    }									\
+  while (0)
+#define RUN_TEST_ffI_f1(TEST_NAME, FUNC_NAME, ARG1, ARG2, EXPECTED,	\
+			MAX_ULP, EXCEPTIONS,				\
+			EXTRA_NAME, EXTRA_VAR, EXTRA_INIT, EXTRA_TEST,	\
+			EXTRA_EXPECTED, EXTRA_ULP)			\
+  do									\
+    {									\
+      (EXTRA_VAR) = (EXTRA_INIT);					\
+      check_float (TEST_NAME,						\
+		   FUNC (FUNC_NAME) (ARG1, ARG2, &(EXTRA_VAR)),		\
+		   EXPECTED, MAX_ULP, EXCEPTIONS);			\
+      if (EXTRA_TEST)							\
+	check_int (EXTRA_NAME, EXTRA_VAR, EXTRA_EXPECTED,		\
+		   EXTRA_ULP, 0);					\
+    }									\
+  while (0)
+#define RUN_TEST_c_c(TEST_NAME, FUNC_NAME, ARGR, ARGC, EXPR, EXPC,	\
+		     MAX_ULP, EXCEPTIONS)				\
+  check_complex (TEST_NAME,						\
+		 FUNC (FUNC_NAME) (BUILD_COMPLEX (ARGR, ARGC)),		\
+		 BUILD_COMPLEX (EXPR, EXPC),				\
+		 MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_cc_c(TEST_NAME, FUNC_NAME, ARG1R, ARG1C, ARG2R, ARG2C,	\
+		      EXPR, EXPC, MAX_ULP, EXCEPTIONS)			\
+  check_complex (TEST_NAME,						\
+		 FUNC (FUNC_NAME) (BUILD_COMPLEX (ARG1R, ARG1C),	\
+				   BUILD_COMPLEX (ARG2R, ARG2C)),	\
+		 BUILD_COMPLEX (EXPR, EXPC),				\
+		 MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_f_i(TEST_NAME, FUNC_NAME, ARG, EXPECTED,	\
+		     MAX_ULP, EXCEPTIONS)			\
+  check_int (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
+	     MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_f_i_tg(TEST_NAME, FUNC_NAME, ARG, EXPECTED,	\
+			MAX_ULP, EXCEPTIONS)			\
+  check_int (TEST_NAME, FUNC_NAME (ARG), EXPECTED,		\
+	     MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_ff_i_tg(TEST_NAME, FUNC_NAME, ARG1, ARG2, EXPECTED,	\
+			 MAX_ULP, EXCEPTIONS)				\
+  check_int (TEST_NAME, FUNC_NAME (ARG1, ARG2), EXPECTED,		\
+	     MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_f_b(TEST_NAME, FUNC_NAME, ARG, EXPECTED,	\
+		     MAX_ULP, EXCEPTIONS)			\
+  check_bool (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
+	      MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_f_b_tg(TEST_NAME, FUNC_NAME, ARG, EXPECTED,	\
+			MAX_ULP, EXCEPTIONS)			\
+  check_bool (TEST_NAME, FUNC_NAME (ARG), EXPECTED,		\
+	      MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_f_l(TEST_NAME, FUNC_NAME, ARG, EXPECTED,	\
+		     MAX_ULP, EXCEPTIONS)			\
+  check_long (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
+	      MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_f_L(TEST_NAME, FUNC_NAME, ARG, EXPECTED,	\
+		     MAX_ULP, EXCEPTIONS)			\
+  check_longlong (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
+		  MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_sincos(ARG, TEST_NAME_SIN, SIN_RES_VAR, EXPECTED_SIN,	\
+			MAX_ULP_SIN, TEST_NAME_COS, COS_RES_VAR,	\
+			EXPECTED_COS, MAX_ULP_COS, EXCEPTIONS)		\
+  do									\
+    {									\
+      FUNC (sincos) (ARG, &(SIN_RES_VAR), &(COS_RES_VAR));		\
+      check_float (TEST_NAME_SIN, SIN_RES_VAR,				\
+		   EXPECTED_SIN, MAX_ULP_SIN, EXCEPTIONS);		\
+      check_float (TEST_NAME_COS, COS_RES_VAR,				\
+		   EXPECTED_COS, MAX_ULP_COS, 0);			\
+    }									\
+  while (0)
+
 
 
 /* This is to prevent messages from the SVID libm emulation.  */
