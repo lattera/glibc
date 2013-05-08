@@ -6536,6 +6536,269 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "tgamma (-0x0.fffffffffffff8p0) == -9.0071992547409924227843350984672961392521e+15":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x0.ffffffp0) == -1.6777216422784419250710305882992376932423e+07":
+float: 1
+ifloat: 1
+Test "tgamma (-0x1.000002p0) == 8.3886075772158332060084424806449513922858e+06":
+double: 2
+idouble: 2
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x1.0a32a2p+5) == 1.8125267978155035272941154746083439329912e-37":
+float: 2
+ifloat: 2
+Test "tgamma (-0x13.ffffep0) == 2.1550026214525536756224040483579183652119e-13":
+float: 1
+ifloat: 1
+Test "tgamma (-0x13.fffffffffffffffffffffffff8p0) == 1.0420893204640670202556853709074896123293e+12":
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0x13.ffffffffffffp0) == 1.1569515572952029402736625857313236848570e-04":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x14.000000000001p0) == -1.1569515572951781096476686854873801225397e-04":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0x14.00002p0) == -2.1549777908265594916405421768142757507179e-13":
+float: 1
+ifloat: 1
+Test "tgamma (-0x1d.ffffep0) == 1.9765721589464867957912772592816027583176e-27":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x1d.fffffffffffffffffffffffff8p0) == 9.5580541610429641982963434151488827190079e-03":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x1d.ffffffffffffp0) == 1.0611571800204311628217068863959963842891e-18":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x1e.00000000000000000000000008p0) == -9.5580541610429641982963434151231128067179e-03":
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0x1e.000000000001p0) == -1.0611571800204053929094168642022073530425e-18":
+double: 3
+idouble: 3
+ildouble: 3
+ldouble: 3
+Test "tgamma (-0x1e.00002p0) == -1.9765463890341964384070157599286498212650e-27":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tgamma (-0x2.0000000000002p0) == -1.1258999068426235386078324507668462444260e+15":
+double: 1
+idouble: 1
+Test "tgamma (-0x2.000004p0) == -2.0971515386080557574407223895988378776747e+06":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x2.fffffcp0) == -6.9905087601970247876992248591045142913324e+05":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x27.fffffffffffep0) == 1.7249032006742266376460389310340465554361e-34":
+double: 1
+idouble: 1
+Test "tgamma (-0x27.fffffffffffffffffffffffffp0) == 1.5536546823612837336494536911280147806523e-18":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x28.000000000002p0) == -1.7249032006741359094184881234822934593822e-34":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x28.00004p0) == -3.2128372159115252365699015758097981155793e-43":
+double: 2
+idouble: 2
+Test "tgamma (-0x29.0000000000000000000000001p0) == 3.7894016642958139845108626612656391824122e-20":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x29.00004p0) == 7.8361876024016854597745353972619195760515e-45":
+double: 1
+idouble: 1
+Test "tgamma (-0x29.ffffcp0) == 1.8658121573125798145204120066590953505132e-46":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x29.fffffffffffep0) == 1.0016859469652887505173040814397197718981e-37":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x2a.0000000000000000000000001p0) == -9.0223849149900332964544349077751619246306e-22":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x3.000004p0) == 6.9905045731381300146131914617735687322025e+05":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+Test "tgamma (-0x3.fffffcp0) == 1.7476272942159602684441970627092458855771e+05":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tgamma (-0x3.ffffffffffffep0) == 9.3824992236885396088236184658402406857503e+13":
+double: 2
+idouble: 2
+Test "tgamma (-0x31.fffffffffffep0) == 4.6273774273632946947805289899230181990085e-51":
+double: 3
+idouble: 3
+Test "tgamma (-0x32.0000000000000000000000001p0) == -4.1679710515150795310771069868090576746248e-35":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x32.000000000002p0) == -4.6273774273630367887073532197576655720178e-51":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x4.000008p0) == -8.7381270578483499672965708923121931082305e+04":
+float: 1
+ifloat: 1
+Test "tgamma (-0x4.fffff8p0) == -1.7476280884325863043793087474680780379554e+04":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tgamma (-0x4.ffffffffffffcp0) == -9.3824992236885475509805702650262155809819e+12":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x5.0000000000004p0) == 9.3824992236885191156860964016850034672946e+12":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x5.000008p0) == 1.7476252449031389167286893378510439443844e+04":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+Test "tgamma (-0x5.ffffffffffffcp0) == 1.5637498706147581566449098589862357835505e+12":
+double: 1
+idouble: 1
+Test "tgamma (-0x6.000008p0) == -2.9127085100239567622341538102130981196910e+03":
+float: 2
+ifloat: 2
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x6.fffff8p0) == -4.1610198723079349791939054365613377035519e+02":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x6.ffffffffffffcp0) == -2.2339283865925119357965832452642909859289e+11":
+double: 4
+idouble: 4
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0x63.fffffffffffcp0) == 7.5400833348840965463348754984345825364294e-145":
+double: 2
+idouble: 2
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x63.ffffffffffffffffffffffffep0) == 6.7915032994648558610510614163560656864280e-129":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x64.000000000004p0) == -7.5400833348831085791638490135462230991587e-145":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x7.0000000000004p0) == 2.2339283865925039372192897706214475877342e+11":
+double: 3
+idouble: 3
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x7.000008p0) == 4.1610118737306415004517215226199741948733e+02":
+double: 1
+idouble: 1
+Test "tgamma (-0x7.fffff8p0) == 5.2012751504050764429534086402871289946986e+01":
+double: 3
+float: 1
+idouble: 3
+ifloat: 1
+Test "tgamma (-0x7.ffffffffffffcp0) == 2.7924104832406402297655703264222230055898e+10":
+double: 3
+idouble: 3
+ildouble: 3
+ldouble: 3
+Test "tgamma (-0x8.00000000000000000000000004p0) == -1.2575898811787990094213325450153421028080e+26":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x8.00001p0) == -2.6006296115134418896533598545925084576702e+01":
+double: 2
+idouble: 2
+Test "tgamma (-0x9.ffffffffffff8p0) == 1.5513391573559147700413058496716749249803e+08":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0x9.fffffp0) == 2.8896008370721717567612135720915723136310e-01":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x96.000000000008p0) == -6.1582369322705655439003240743176243138734e-250":
+double: 1
+idouble: 1
+Test "tgamma (-0xa.00001p0) == -2.8895878754728051776830454190076999107021e-01":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "tgamma (-2.5) == -9.4530872048294188122568932444861076415869e-01":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 1
+ldouble: 1
+Test "tgamma (-3.5) == 2.7008820585226910892162552127103164690248e-01":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tgamma (-4.5) == -6.0019601300504246427027893615784810422774e-02":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-5.5) == 1.0912654781909862986732344293779056440504e-02":
+double: 1
+idouble: 1
+Test "tgamma (-6.5) == -1.6788699664476712287280529682737009908468e-03":
+float: 1
+ifloat: 1
+Test "tgamma (-7.5) == 2.2384932885968949716374039576982679877958e-04":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+Test "tgamma (-8.5) == -2.6335215159963470254557693619979623385833e-05":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tgamma (-9.5) == 2.7721279115751021320587045915768024616666e-06":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
 Test "tgamma (0.5) == sqrt (pi)":
 float: 1
 ifloat: 1
@@ -6544,6 +6807,177 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "tgamma (0x1.fffffep0) == 9.9999994960018563231526611134590489120697e-01":
+float: 1
+ifloat: 1
+Test "tgamma (0x1.fffffffffffffp0) == 9.9999999999999990612301934456883679778984e-01":
+double: 1
+idouble: 1
+Test "tgamma (0x1p-24) == 1.6777215422784394050795179874582764575261e+07":
+float: 1
+ifloat: 1
+Test "tgamma (0x1p-53) == 9.0071992547409914227843350984672492007618e+15":
+double: 1
+idouble: 1
+Test "tgamma (0x2.30a43cp+4) == 3.4027979115654976101247558405326779640190e+38":
+double: 1
+idouble: 1
+Test "tgamma (0x2.fffffcp0) == 1.9999995599822108706107786027549565954046e+00":
+float: 3
+ifloat: 3
+Test "tgamma (0x3.fffffcp0) == 5.9999982031095793171233994481968816873643e+00":
+float: 1
+ifloat: 1
+Test "tgamma (0x3.ffffffffffffep0) == 5.9999999999999966530301828845138185025345e+00":
+double: 1
+idouble: 1
+Test "tgamma (0x4.0000000000004p0) == 6.0000000000000066939396342309789716341613e+00":
+double: 1
+idouble: 1
+Test "tgamma (0x4.fffff8p0) == 2.3999982763857938712639837029547357501709e+01":
+float: 1
+ifloat: 1
+Test "tgamma (0x4.ffffffffffffcp0) == 2.3999999999999967895170944875373910918544e+01":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x5.0000000000004p0) == 2.4000000000000032104829055124673225982803e+01":
+double: 1
+idouble: 1
+Test "tgamma (0x5.000008p0) == 2.4000017236155647574166073485628713443799e+01":
+float: 3
+ifloat: 3
+Test "tgamma (0x5.fffff8p0) == 1.1999990237520611552119807476573441975106e+02":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tgamma (0x6.0000000000004p0) == 1.2000000000000018184042734842640022086408e+02":
+double: 1
+idouble: 1
+Test "tgamma (0x6.000008p0) == 1.2000009762487825358530770343720418162783e+02":
+float: 2
+ifloat: 2
+Test "tgamma (0x6.fffff8p0) == 7.1999935703082425988147448928288557689866e+02":
+double: 1
+idouble: 1
+Test "tgamma (0x6.ffffffffffffcp0) == 7.1999999999999880237602554542848858572672e+02":
+double: 4
+idouble: 4
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x7.0000000000004p0) == 7.2000000000000119762397445457359071259652e+02":
+double: 4
+idouble: 4
+Test "tgamma (0x7.000008p0) == 7.2000064296977505705636258629805621178587e+02":
+double: 1
+idouble: 1
+Test "tgamma (0x7.fffff8p0) == 5.0399951558933225045148935487583089307135e+03":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+Test "tgamma (0x7.ffffffffffffcp0) == 5.0399999999999909771437166339103165198442e+03":
+double: 2
+idouble: 2
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x8.00001p0) == 5.0400096882277802019946778420223050233915e+03":
+double: 2
+idouble: 2
+Test "tgamma (0xa.b9fd72b0fb238p+4) == 1.7976931348622298700886249281842651388250e+308":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "tgamma (0xa.b9fd72b0fb23a9ddbf0d3804f4p+4) == 1.7976931348623158079372897140307719334857e+308":
+ildouble: 1
+ldouble: 1
+Test "tgamma (10) == 362880":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tgamma (18.5) == 1.4986120533153361177371791123515513270334e+15":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (19.5) == 2.7724322986333718178137813578503699550119e+16":
+double: 2
+idouble: 2
+Test "tgamma (2.5) == 1.3293403881791370204736256125058588870982e+00":
+float: 2
+ifloat: 2
+ildouble: 1
+ldouble: 1
+Test "tgamma (23.5) == 5.3613035875444147334274983856108155717836e+21":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tgamma (29.5) == 1.6348125198274266444378807806868221866931e+30":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tgamma (3) == 2":
+float: 1
+ifloat: 1
+Test "tgamma (3.5) == 3.3233509704478425511840640312646472177454e+00":
+float: 2
+ifloat: 2
+Test "tgamma (33.5) == 1.5058569756267018925121415841930137587110e+36":
+ildouble: 1
+ldouble: 1
+Test "tgamma (34.5) == 5.0446208683494513399156743070465960916817e+37":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (4) == 6":
+float: 1
+ifloat: 1
+Test "tgamma (4.5) == 1.1631728396567448929144224109426265262109e+01":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tgamma (6) == 120":
+float: 1
+ifloat: 1
+Test "tgamma (6.5) == 2.8788527781504436099631954670830006523720e+02":
+float: 1
+ifloat: 1
+Test "tgamma (7) == 720":
+double: 1
+idouble: 1
+Test "tgamma (7.5) == 1.8712543057977883464760770536039504240418e+03":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (8) == 5040":
+double: 1
+idouble: 1
+Test "tgamma (8.5) == 1.4034407293483412598570577902029628180313e+04":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tgamma (9) == 40320":
+double: 1
+idouble: 1
+Test "tgamma (9.5) == 1.1929246199460900708784991216725183953266e+05":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 
 # y0
 Test "y0 (0.125) == -1.38968062514384052915582277745018693":
@@ -7524,12 +7958,12 @@ ildouble: 1
 ldouble: 1
 
 Function: "tgamma":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
+double: 4
+float: 3
+idouble: 4
+ifloat: 3
+ildouble: 3
+ldouble: 3
 
 Function: "y0":
 double: 2
