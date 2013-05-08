@@ -1,5 +1,10 @@
 2013-05-08  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (RUN_TEST_if_f): New macro.
+	(jn_test): Use TEST_if_f instead of TEST_ff_f.
+	(ldexp_text): Use TEST_fi_i instead of TEST_ff_f.
+	(yn_test): Use TEST_if_f instead of TEST_ff_f.
+
 	* math/libm-test.inc (RUN_TEST_f_f): New macro.
 	(RUN_TEST_2_f): Likewise.
 	(RUN_TEST_ff_f): Likewise.
