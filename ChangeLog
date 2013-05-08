@@ -1,3 +1,16 @@
+2014-04-11  Torvald Riegel  <triegel@redhat.com>
+
+	[BZ #15215]
+	* nptl/sysdeps/unix/sysv/linux/sparc/pthread_once.c: Moved to ...
+	* nptl/sysdeps/unix/sysv/linux/pthread_once.c: ... here.  Add missing
+	memory barriers.  Add comments.
+	* sysdeps/unix/sysv/linux/aarch64/nptl/pthread_once.c: Remove file.
+	* sysdeps/unix/sysv/linux/arm/nptl/pthread_once.c: Remove file.
+	* sysdeps/unix/sysv/linux/ia64/nptl/pthread_once.c: Remove file.
+	* sysdeps/unix/sysv/linux/m68k/nptl/pthread_once.c: Remove file.
+	* sysdeps/unix/sysv/linux/mips/nptl/pthread_once.c: Remove file.
+	* sysdeps/unix/sysv/linux/tile/nptl/pthread_once.c: Remove file.
+
 2014-04-11  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/s390-32/configure.ac: Unify file with ...

@@ -1,3 +1,8 @@
+2014-04-11  Torvald Riegel  <triegel@redhat.com>
+
+	[BZ #15215]
+	* sysdeps/unix/sysv/linux/hppa/nptl/pthread_once.c: Remove file.
+
 2014-04-09  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* ports/sysdeps/unix/sysv/linux/hppa/nptl/bits/pthreadtypes.h
