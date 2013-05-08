@@ -371,6 +371,18 @@ extern float __x2y2m1f (float x, float y);
 extern double __x2y2m1 (double x, double y);
 extern long double __x2y2m1l (long double x, long double y);
 
+/* Compute the product of X + X_EPS, X + X_EPS + 1, ..., X + X_EPS + N
+   - 1, in the form R * (1 + *EPS) where the return value R is an
+   approximation to the product and *EPS is set to indicate the
+   approximate error in the return value.  X is such that all the
+   values X + 1, ..., X + N - 1 are exactly representable, and X_EPS /
+   X is small enough that factors quadratic in it can be
+   neglected.  */
+extern float __gamma_productf (float x, float x_eps, int n, float *eps);
+extern double __gamma_product (double x, double x_eps, int n, double *eps);
+extern long double __gamma_productl (long double x, long double x_eps,
+				     int n, long double *eps);
+
 #ifndef math_opt_barrier
 # define math_opt_barrier(x) \
 ({ __typeof (x) __x = (x); __asm ("" : "+m" (__x)); __x; })

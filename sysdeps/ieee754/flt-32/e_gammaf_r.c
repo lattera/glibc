@@ -19,14 +19,97 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <float.h>
 
+/* Coefficients B_2k / 2k(2k-1) of x^-(2k-1) inside exp in Stirling's
+   approximation to gamma function.  */
+
+static const float gamma_coeff[] =
+  {
+    0x1.555556p-4f,
+    -0xb.60b61p-12f,
+    0x3.403404p-12f,
+  };
+
+#define NCOEFF (sizeof (gamma_coeff) / sizeof (gamma_coeff[0]))
+
+/* Return gamma (X), for positive X less than 42, in the form R *
+   2^(*EXP2_ADJ), where R is the return value and *EXP2_ADJ is set to
+   avoid overflow or underflow in intermediate calculations.  */
+
+static float
+gammaf_positive (float x, int *exp2_adj)
+{
+  int local_signgam;
+  if (x < 0.5f)
+    {
+      *exp2_adj = 0;
+      return __ieee754_expf (__ieee754_lgammaf_r (x + 1, &local_signgam)) / x;
+    }
+  else if (x <= 1.5f)
+    {
+      *exp2_adj = 0;
+      return __ieee754_expf (__ieee754_lgammaf_r (x, &local_signgam));
+    }
+  else if (x < 2.5f)
+    {
+      *exp2_adj = 0;
+      float x_adj = x - 1;
+      return (__ieee754_expf (__ieee754_lgammaf_r (x_adj, &local_signgam))
+	      * x_adj);
+    }
+  else
+    {
+      float eps = 0;
+      float x_eps = 0;
+      float x_adj = x;
+      float prod = 1;
+      if (x < 4.0f)
+	{
+	  /* Adjust into the range for applying Stirling's
+	     approximation.  */
+	  float n = __ceilf (4.0f - x);
+#if FLT_EVAL_METHOD != 0
+	  volatile
+#endif
+	  float x_tmp = x + n;
+	  x_adj = x_tmp;
+	  x_eps = (x - (x_adj - n));
+	  prod = __gamma_productf (x_adj - n, x_eps, n, &eps);
+	}
+      /* The result is now gamma (X_ADJ + X_EPS) / (PROD * (1 + EPS)).
+	 Compute gamma (X_ADJ + X_EPS) using Stirling's approximation,
+	 starting by computing pow (X_ADJ, X_ADJ) with a power of 2
+	 factored out.  */
+      float exp_adj = -eps;
+      float x_adj_int = __roundf (x_adj);
+      float x_adj_frac = x_adj - x_adj_int;
+      int x_adj_log2;
+      float x_adj_mant = __frexpf (x_adj, &x_adj_log2);
+      if (x_adj_mant < (float) M_SQRT1_2)
+	{
+	  x_adj_log2--;
+	  x_adj_mant *= 2.0f;
+	}
+      *exp2_adj = x_adj_log2 * (int) x_adj_int;
+      float ret = (__ieee754_powf (x_adj_mant, x_adj)
+		   * __ieee754_exp2f (x_adj_log2 * x_adj_frac)
+		   * __ieee754_expf (-x_adj)
+		   * __ieee754_sqrtf (2 * (float) M_PI / x_adj)
+		   / prod);
+      exp_adj += x_eps * __ieee754_logf (x);
+      float bsum = gamma_coeff[NCOEFF - 1];
+      float x_adj2 = x_adj * x_adj;
+      for (size_t i = 1; i <= NCOEFF - 1; i++)
+	bsum = bsum / x_adj2 + gamma_coeff[NCOEFF - 1 - i];
+      exp_adj += bsum / x_adj;
+      return ret + ret * __expm1f (exp_adj);
+    }
+}
 
 float
 __ieee754_gammaf_r (float x, int *signgamp)
 {
-  /* We don't have a real gamma implementation now.  We'll use lgamma
-     and the exp function.  But due to the required boundary
-     conditions we must check some values separately.  */
   int32_t hx;
 
   GET_FLOAT_WORD (hx, x);
@@ -50,8 +133,49 @@ __ieee754_gammaf_r (float x, int *signgamp)
       *signgamp = 0;
       return x - x;
     }
+  if (__builtin_expect ((hx & 0x7f800000) == 0x7f800000, 0))
+    {
+      /* Positive infinity (return positive infinity) or NaN (return
+	 NaN).  */
+      *signgamp = 0;
+      return x + x;
+    }
 
-  /* XXX FIXME.  */
-  return __ieee754_expf (__ieee754_lgammaf_r (x, signgamp));
+  if (x >= 36.0f)
+    {
+      /* Overflow.  */
+      *signgamp = 0;
+      return FLT_MAX * FLT_MAX;
+    }
+  else if (x > 0.0f)
+    {
+      *signgamp = 0;
+      int exp2_adj;
+      float ret = gammaf_positive (x, &exp2_adj);
+      return __scalbnf (ret, exp2_adj);
+    }
+  else if (x >= -FLT_EPSILON / 4.0f)
+    {
+      *signgamp = 0;
+      return 1.0f / x;
+    }
+  else
+    {
+      float tx = __truncf (x);
+      *signgamp = (tx == 2.0f * __truncf (tx / 2.0f)) ? -1 : 1;
+      if (x <= -42.0f)
+	/* Underflow.  */
+	return FLT_MIN * FLT_MIN;
+      float frac = tx - x;
+      if (frac > 0.5f)
+	frac = 1.0f - frac;
+      float sinpix = (frac <= 0.25f
+		      ? __sinf ((float) M_PI * frac)
+		      : __cosf ((float) M_PI * (0.5f - frac)));
+      int exp2_adj;
+      float ret = (float) M_PI / (-x * sinpix
+				  * gammaf_positive (-x, &exp2_adj));
+      return __scalbnf (ret, -exp2_adj);
+    }
 }
 strong_alias (__ieee754_gammaf_r, __gammaf_r_finite)

@@ -837,7 +837,7 @@ __kernel_standard(double x, double y, int type)
 		exc.type = OVERFLOW;
 		exc.name = type < 100 ? "tgamma" : (type < 200
 						   ? "tgammaf" : "tgammal");
-		exc.retval = HUGE_VAL;
+		exc.retval = __copysign (HUGE_VAL, x);
 		if (_LIB_VERSION == _POSIX_)
 		  __set_errno (ERANGE);
 		else if (!matherr(&exc)) {

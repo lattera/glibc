@@ -1,3 +1,59 @@
+2013-05-08  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #2546]
+	[BZ #2560]
+	[BZ #5159]
+	[BZ #15426]
+	* sysdeps/ieee754/k_standard.c (__kernel_standard): Copy sign of
+	input to result for tgamma overflow.
+	* sysdeps/ieee754/dbl-64/e_gamma_r.c: Include <float.h>.
+	(gamma_coeff): New variable.
+	(NCOEFF): New macro.
+	(gamma_positive): New function.
+	(__ieee754_gamma_r): Handle positive infinity, NaN, overflow and
+	underflow here.  Use gamma_positive instead of exp (lgamma) for
+	other arguments.
+	* sysdeps/ieee754/flt-32/e_gammaf_r.c: Include <float.h>.
+	(gamma_coeff): New variable.
+	(NCOEFF): New macro.
+	(gammaf_positive): New function.
+	(__ieee754_gammaf_r): Handle positive infinity, NaN, overflow and
+	underflow here.  Use gamma_positive instead of exp (lgamma) for
+	other arguments.
+	* sysdeps/ieee754/ldbl-128/e_gammal_r.c: Include <float.h>.
+	(gamma_coeff): New variable.
+	(NCOEFF): New macro.
+	(gammal_positive): New function.
+	(__ieee754_gammal_r): Handle positive infinity, NaN, overflow and
+	underflow here.  Use gamma_positive instead of exp (lgamma) for
+	other arguments.
+	* sysdeps/ieee754/ldbl-128ibm/e_gammal_r.c: Include <float.h>.
+	(gamma_coeff): New variable.
+	(NCOEFF): New macro.
+	(gammal_positive): New function.
+	(__ieee754_gammal_r): Handle positive infinity, overflow and
+	underflow here.  Handle NaN the same as positive infinity.  Remove
+	check x < 0xffffffff for negative integers.  Use gamma_positive
+	instead of exp (lgamma) for other arguments.
+	* sysdeps/ieee754/ldbl-96/e_gammal_r.c: Include <float.h>.
+	(gamma_coeff): New variable.
+	(NCOEFF): New macro.
+	(gammal_positive): New function.
+	* sysdeps/ieee754/dbl-64/gamma_product.c: New file.
+	* sysdeps/ieee754/dbl-64/gamma_productf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/gamma_productl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/gamma_productl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/gamma_product.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/gamma_productl.c: Likewise.
+	* sysdeps/generic/math_private.h (__gamma_productf): New
+	prototype.
+	(__gamma_product): Likewise.
+	(__gamma_productl): Likewise.
+	* math/Makefile (libm-calls): Add gamma_product.
+	* math/libm-test.inc (tgamma_test): Add more tests.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2013-05-08  Ondřej Bílka  <neleai@seznam.cz>
 
 	* benchtests/bench-skeleton.c (main): Preheat CPU.
