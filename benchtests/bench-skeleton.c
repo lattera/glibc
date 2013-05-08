@@ -22,6 +22,21 @@
 #include <time.h>
 #include <inttypes.h>
 
+volatile unsigned int dontoptimize = 0;
+void startup ()
+{
+  /* This loop should cause CPU to switch to maximal freqency.
+     This makes subsequent measurement more accurate.  We need a side effect
+     to prevent the loop being deleted by compiler.
+     This should be enough to cause CPU to speed up and it is simpler than
+     running loop for constant time. This is used when user does not have root
+     access to set a constant freqency.  */
+
+  int k;
+  for (k = 0; k < 10000000; k++)
+    dontoptimize += 23 * dontoptimize + 2;
+}
+
 #define TIMESPEC_AFTER(a, b) \
   (((a).tv_sec == (b).tv_sec) ?						      \
      ((a).tv_nsec > (b).tv_nsec) :					      \
@@ -31,6 +46,8 @@ main (int argc, char **argv)
 {
   unsigned long i, k;
   struct timespec start, end, runtime;
+
+  startup();
 
   memset (&runtime, 0, sizeof (runtime));
   memset (&start, 0, sizeof (start));

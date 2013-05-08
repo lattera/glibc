@@ -1,3 +1,7 @@
+2013-05-08  Ondřej Bílka  <neleai@seznam.cz>
+
+	* benchtests/bench-skeleton.c (main): Preheat CPU.
+
 2013-05-07  Aurelien Jarno <aurelien@aurel32.net>
 
 	* misc/sys/param.h (DEV_BSIZE): Define only if not already defined.
