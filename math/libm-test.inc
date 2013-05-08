@@ -229,25 +229,34 @@ static int output_max_error;	/* Should the maximal errors printed?  */
 static int output_points;	/* Should the single function results printed?  */
 static int ignore_max_ulp;	/* Should we ignore max_ulp?  */
 
-static const FLOAT plus_zero = CHOOSE (0.0L, 0.0, 0.0f,
-				       0.0L, 0.0, 0.0f);
-static const FLOAT minus_zero = CHOOSE (-0.0L, -0.0, -0.0f,
-					-0.0L, -0.0, -0.0f);
-static const FLOAT plus_infty = CHOOSE (HUGE_VALL, HUGE_VAL, HUGE_VALF,
-					HUGE_VALL, HUGE_VAL, HUGE_VALF);
-static const FLOAT minus_infty = CHOOSE (-HUGE_VALL, -HUGE_VAL, -HUGE_VALF,
-					 -HUGE_VALL, -HUGE_VAL, -HUGE_VALF);
-static const FLOAT qnan_value = FUNC (__builtin_nan) ("");
-static const FLOAT max_value = CHOOSE (LDBL_MAX, DBL_MAX, FLT_MAX,
-				       LDBL_MAX, DBL_MAX, FLT_MAX);
-static const FLOAT min_value = CHOOSE (LDBL_MIN, DBL_MIN, FLT_MIN,
-				       LDBL_MIN, DBL_MIN, FLT_MIN);
-static const FLOAT min_subnorm_value = CHOOSE (__LDBL_DENORM_MIN__,
-					       __DBL_DENORM_MIN__,
-					       __FLT_DENORM_MIN__,
-					       __LDBL_DENORM_MIN__,
-					       __DBL_DENORM_MIN__,
-					       __FLT_DENORM_MIN__);
+#define PLUS_ZERO_INIT	CHOOSE (0.0L, 0.0, 0.0f,	\
+				0.0L, 0.0, 0.0f)
+#define MINUS_ZERO_INIT	CHOOSE (-0.0L, -0.0, -0.0f,	\
+				-0.0L, -0.0, -0.0f)
+#define PLUS_INFTY_INIT	CHOOSE (HUGE_VALL, HUGE_VAL, HUGE_VALF, \
+				HUGE_VALL, HUGE_VAL, HUGE_VALF)
+#define MINUS_INFTY_INIT	CHOOSE (-HUGE_VALL, -HUGE_VAL, -HUGE_VALF, \
+					-HUGE_VALL, -HUGE_VAL, -HUGE_VALF)
+#define QNAN_VALUE_INIT	FUNC (__builtin_nan) ("")
+#define MAX_VALUE_INIT	CHOOSE (LDBL_MAX, DBL_MAX, FLT_MAX,	\
+				LDBL_MAX, DBL_MAX, FLT_MAX)
+#define MIN_VALUE_INIT	CHOOSE (LDBL_MIN, DBL_MIN, FLT_MIN,	\
+				LDBL_MIN, DBL_MIN, FLT_MIN)
+#define MIN_SUBNORM_VALUE_INIT	CHOOSE (__LDBL_DENORM_MIN__,	\
+					__DBL_DENORM_MIN__,	\
+					__FLT_DENORM_MIN__,	\
+					__LDBL_DENORM_MIN__,	\
+					__DBL_DENORM_MIN__,	\
+					__FLT_DENORM_MIN__)
+
+static const FLOAT plus_zero = PLUS_ZERO_INIT;
+static const FLOAT minus_zero = MINUS_ZERO_INIT;
+static const FLOAT plus_infty = PLUS_INFTY_INIT;
+static const FLOAT minus_infty = MINUS_INFTY_INIT;
+static const FLOAT qnan_value = QNAN_VALUE_INIT;
+static const FLOAT max_value = MAX_VALUE_INIT;
+static const FLOAT min_value = MIN_VALUE_INIT;
+static const FLOAT min_subnorm_value = MIN_SUBNORM_VALUE_INIT;
 
 static FLOAT max_error, real_max_error, imag_max_error;
 
