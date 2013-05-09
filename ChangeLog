@@ -1,5 +1,10 @@
 2013-05-09  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #15429]
+	* sysdeps/ieee754/ldbl-128/e_rem_pio2l.c (c): Use 113 bits for
+	high part of pi/2.
+	(__ieee754_rem_pio2l): Update comments.
+
 	* math/libm-test.inc (M_SQRT_2_2): Remove macro.
 	(csqrt_test): Use M_SQRT1_2l instead of M_SQRT_2_2.
 
