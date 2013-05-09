@@ -1,3 +1,7 @@
+2013-05-09  Andi Kleen  <ak@linux.intel.com>
+
+	* tst-mutex8.c (do_test): Check for ENABLE_PI.
+
 2013-04-22  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* pthreadP.h (check_sched_policy_attr): New inline function.
