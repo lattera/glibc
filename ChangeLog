@@ -1,5 +1,8 @@
 2013-05-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (carg_test): Use M_PI_34l instead of 3 *
+	M_PI_4l.
+
 	* math/libm-test.inc (M_PI_34l): Define using decimal constant.
 	(M_PI_34_LOG10El): Likewise.
 	(M_PI2_LOG10El): Likewise.

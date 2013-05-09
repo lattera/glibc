@@ -3031,9 +3031,9 @@ carg_test (void)
 
   TEST_c_f (carg, plus_infty, minus_infty, -M_PI_4l);
 
-  TEST_c_f (carg, minus_infty, plus_infty, 3 * M_PI_4l);
+  TEST_c_f (carg, minus_infty, plus_infty, M_PI_34l);
 
-  TEST_c_f (carg, minus_infty, minus_infty, -3 * M_PI_4l);
+  TEST_c_f (carg, minus_infty, minus_infty, -M_PI_34l);
 
   TEST_c_f (carg, qnan_value, qnan_value, qnan_value);
 
