@@ -1,5 +1,8 @@
 2013-05-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (M_SQRT_2_2): Remove macro.
+	(csqrt_test): Use M_SQRT1_2l instead of M_SQRT_2_2.
+
 	* math/libm-test.inc (carg_test): Use M_PI_34l instead of 3 *
 	M_PI_4l.
 
