@@ -1,3 +1,7 @@
+2013-05-09  Carlos O'Donell  <carlos@redhat.com>
+
+	* elf/dl-close.c (_dl_close_worker): Add comments.
+
 2013-05-09  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15359]

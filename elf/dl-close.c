@@ -183,6 +183,8 @@ _dl_close_worker (struct link_map *map)
       /* Mark all dependencies as used.  */
       if (l->l_initfini != NULL)
 	{
+	  /* We are always the zeroth entry, and since we don't include
+	     ourselves in the dependency analysis start at 1.  */
 	  struct link_map **lp = &l->l_initfini[1];
 	  while (*lp != NULL)
 	    {
@@ -193,6 +195,10 @@ _dl_close_worker (struct link_map *map)
 		  if (!used[(*lp)->l_idx])
 		    {
 		      used[(*lp)->l_idx] = 1;
+		      /* If we marked a new object as used, and we've
+			 already processed it, then we need to go back
+			 and process again from that point forward to
+			 ensure we keep all of its dependencies also.  */
 		      if ((*lp)->l_idx - 1 < done_index)
 			done_index = (*lp)->l_idx - 1;
 		    }
