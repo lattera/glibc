@@ -39,6 +39,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <libintl.h>
+#include <locale.h>
 #include <ctype.h>
 #include <sys/types.h>
 #include <sys/param.h>
@@ -172,6 +173,9 @@ int
 main (int argc, const char *argv[])
 {
   struct commandline cmd;
+
+  setlocale (LC_ALL, "");
+  textdomain (_libc_intl_domainname);
 
   (void) memset ((char *) &cmd, 0, sizeof (struct commandline));
   clear_args ();
