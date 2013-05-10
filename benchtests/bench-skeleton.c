@@ -23,7 +23,9 @@
 #include <inttypes.h>
 
 volatile unsigned int dontoptimize = 0;
-void startup ()
+
+void
+startup (void)
 {
   /* This loop should cause CPU to switch to maximal freqency.
      This makes subsequent measurement more accurate.  We need a side effect
@@ -31,9 +33,7 @@ void startup ()
      This should be enough to cause CPU to speed up and it is simpler than
      running loop for constant time. This is used when user does not have root
      access to set a constant freqency.  */
-
-  int k;
-  for (k = 0; k < 10000000; k++)
+  for (int k = 0; k < 10000000; k++)
     dontoptimize += 23 * dontoptimize + 2;
 }
 

@@ -1,3 +1,7 @@
+2013-05-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* benchtests/bench-skeleton.c (startup): Fix coding style.
+
 2013-05-10  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #6809]
