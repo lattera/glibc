@@ -144,21 +144,21 @@ typedef struct
 # define __CPU_SET_S(cpu, setsize, cpusetp) \
   (__extension__							      \
    ({ size_t __cpu = (cpu);						      \
-      __cpu < 8 * (setsize)						      \
+      __cpu / 8 < (setsize)						      \
       ? (((__cpu_mask *) ((cpusetp)->__bits))[__CPUELT (__cpu)]		      \
 	 |= __CPUMASK (__cpu))						      \
       : 0; }))
 # define __CPU_CLR_S(cpu, setsize, cpusetp) \
   (__extension__							      \
    ({ size_t __cpu = (cpu);						      \
-      __cpu < 8 * (setsize)						      \
+      __cpu / 8 < (setsize)						      \
       ? (((__cpu_mask *) ((cpusetp)->__bits))[__CPUELT (__cpu)]		      \
 	 &= ~__CPUMASK (__cpu))						      \
       : 0; }))
 # define __CPU_ISSET_S(cpu, setsize, cpusetp) \
   (__extension__							      \
    ({ size_t __cpu = (cpu);						      \
-      __cpu < 8 * (setsize)						      \
+      __cpu / 8 < (setsize)						      \
       ? ((((const __cpu_mask *) ((cpusetp)->__bits))[__CPUELT (__cpu)]	      \
 	  & __CPUMASK (__cpu))) != 0					      \
       : 0; }))

@@ -1,3 +1,9 @@
+2013-05-10  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #15448]
+	* sysdeps/unix/sysv/linux/bits/sched.h (__CPU_SET_S)
+	(__CPU_CLR_S, __CPU_ISSET_S): Avoid integer overflow.
+
 2013-05-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/gen-libm-test.pl (adjust_arg): New function.
