@@ -22,7 +22,8 @@ __tgammaf(float x)
 	int local_signgam;
 	float y = __ieee754_gammaf_r(x,&local_signgam);
 
-	if(__builtin_expect(!__finitef(y), 0) && __finitef(x)
+	if(__builtin_expect(!__finitef(y), 0)
+	   && (__finitef (x) || __isinff (x) < 0)
 	   && _LIB_VERSION != _IEEE_) {
 	  if (x == (float)0.0)
 	    /* tgammaf pole */

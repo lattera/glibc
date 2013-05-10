@@ -13615,9 +13615,9 @@ tgamma_test (void)
   TEST_f_f (tgamma, 0, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   TEST_f_f (tgamma, minus_zero, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   /* tgamma (x) == qNaN plus invalid exception for integer x <= 0.  */
-  TEST_f_f (tgamma, -2, qnan_value, INVALID_EXCEPTION);
-  TEST_f_f (tgamma, -max_value, qnan_value, INVALID_EXCEPTION);
-  TEST_f_f (tgamma, minus_infty, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (tgamma, -2, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM);
+  TEST_f_f (tgamma, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM);
+  TEST_f_f (tgamma, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM);
   TEST_f_f (tgamma, qnan_value, qnan_value);
 
   TEST_f_f (tgamma, 0.5, M_SQRT_PIl);

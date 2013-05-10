@@ -27,7 +27,8 @@ __tgammal(long double x)
 	int local_signgam;
 	long double y = __ieee754_gammal_r(x,&local_signgam);
 
-	if(__builtin_expect(!__finitel(y), 0) && __finitel(x)
+	if(__builtin_expect(!__finitel(y), 0)
+	   && (__finitel (x) || __isinfl (x) < 0)
 	   && _LIB_VERSION != _IEEE_) {
 	  if(x==0.0)
 	    return __kernel_standard_l(x,x,250); /* tgamma pole */

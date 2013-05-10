@@ -1,3 +1,15 @@
+2013-05-10  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #6809]
+	* math/w_tgamma.c (__tgamma): Also call __kernel_standard for
+	negative infinity argument.
+	* math/w_tgammaf.c (__tgammaf): Also call __kernel_standard_f for
+	negative infinity argument.
+	* math/w_tgammal.c (__tgammal): Also call __kernel_standard_l for
+	negative infinity argument.
+	* math/libm-test.inc (tgamma_test): Expect errno to be set for
+	domain errors.
+
 2013-05-10  Florian Weimer  <fweimer@redhat.com>
 
 	* elf/sprof.c (load_profdata): Use fstat64 instead of fstat.
