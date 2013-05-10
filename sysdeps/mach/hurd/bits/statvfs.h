@@ -87,7 +87,9 @@ enum
   ,
   ST_NOEXEC = 8,
 # define ST_NOEXEC	ST_NOEXEC
-  ST_SYNCHRONOUS = 16
+  ST_SYNCHRONOUS = 16,
 # define ST_SYNCHRONOUS	ST_SYNCHRONOUS
+  ST_NOATIME = 32		/* Do not update access times.  */
+# define ST_NOATIME	ST_NOATIME
 #endif
 };

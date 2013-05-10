@@ -1,3 +1,7 @@
+2013-05-10  Pino Toscano  <toscano.pino@tiscali.it>
+
+	* sysdeps/mach/hurd/bits/statvfs.h: Add ST_NOATIME.
+
 2013-05-10  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #15448]
