@@ -355,7 +355,7 @@ siblings_uncached (const char *output_path)
 {
   size_t len;
   char *base, *p;
-  struct stat output_stat;
+  struct stat64 output_stat;
   DIR *dirp;
   int nelems;
   const char **elems;
@@ -378,7 +378,7 @@ siblings_uncached (const char *output_path)
   len = p - base;
 
   /* Get the properties of output_path.  */
-  if (lstat (output_path, &output_stat) < 0 || !S_ISDIR (output_stat.st_mode))
+  if (lstat64 (output_path, &output_stat) < 0 || !S_ISDIR (output_stat.st_mode))
     return NULL;
 
   /* Iterate through the directories in base directory.  */
@@ -392,7 +392,7 @@ siblings_uncached (const char *output_path)
       struct dirent64 *other_dentry;
       const char *other_name;
       char *other_path;
-      struct stat other_stat;
+      struct stat64 other_stat;
 
       other_dentry = readdir64 (dirp);
       if (other_dentry == NULL)
@@ -407,7 +407,7 @@ siblings_uncached (const char *output_path)
       other_path[len] = '/';
       strcpy (other_path + len + 1, other_name);
 
-      if (lstat (other_path, &other_stat) >= 0
+      if (lstat64 (other_path, &other_stat) >= 0
 	  && S_ISDIR (other_stat.st_mode)
 	  && other_stat.st_uid == output_stat.st_uid
 	  && other_stat.st_gid == output_stat.st_gid
@@ -580,9 +580,9 @@ write_locale_data (const char *output_path, int catidx, const char *category,
   fd = -2;
   if (strcmp (category, "LC_MESSAGES") == 0)
     {
-      struct stat st;
+      struct stat64 st;
 
-      if (stat (fname, &st) < 0)
+      if (stat64 (fname, &st) < 0)
 	{
 	  if (mkdir (fname, 0777) >= 0)
 	    {
@@ -659,9 +659,9 @@ failure while writing data for category `%s'"), category));
   other_paths = siblings (output_path);
   if (other_paths != NULL)
     {
-      struct stat fname_stat;
+      struct stat64 fname_stat;
 
-      if (lstat (fname, &fname_stat) >= 0
+      if (lstat64 (fname, &fname_stat) >= 0
 	  && S_ISREG (fname_stat.st_mode))
 	{
 	  const char *fname_tail = fname + strlen (output_path);
@@ -680,14 +680,14 @@ failure while writing data for category `%s'"), category));
 	      const char *other_path = *other_p;
 	      size_t other_path_len = strlen (other_path);
 	      char *other_fname;
-	      struct stat other_fname_stat;
+	      struct stat64 other_fname_stat;
 
 	      other_fname =
 		(char *) xmalloc (other_path_len + strlen (fname_tail) + 1);
 	      memcpy (other_fname, other_path, other_path_len);
 	      strcpy (other_fname + other_path_len, fname_tail);
 
-	      if (lstat (other_fname, &other_fname_stat) >= 0
+	      if (lstat64 (other_fname, &other_fname_stat) >= 0
 		  && S_ISREG (other_fname_stat.st_mode)
 		  /* Consider only files on the same device.
 		     Otherwise hard linking won't work anyway.  */

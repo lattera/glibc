@@ -744,7 +744,7 @@ load_profdata (const char *name, struct shobj *shobj)
 {
   struct profdata *result;
   int fd;
-  struct stat st;
+  struct stat64 st;
   void *addr;
   uint32_t *narcsp;
   size_t fromlimit;
@@ -783,7 +783,7 @@ load_profdata (const char *name, struct shobj *shobj)
 
   /* We have found the file, now make sure it is the right one for the
      data file.  */
-  if (fstat (fd, &st) < 0)
+  if (fstat64 (fd, &st) < 0)
     {
       error (0, errno, _("while stat'ing profiling data file"));
       close (fd);

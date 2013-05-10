@@ -1,3 +1,15 @@
+2013-05-10  Florian Weimer  <fweimer@redhat.com>
+
+	* elf/sprof.c (load_profdata): Use fstat64 instead of fstat.
+	* iconv/iconv_charmap.c (charmap_conversion): Likewise.
+	* iconv/iconv_prog.c (main): Likewise.
+	* locale/programs/charmap-dir.c (charmap_readdir)
+	(fopen_uncompressed): Likewise.
+	* locale/programs/locfile.c (siblings_uncached)
+	(write_locale_data): Use lstat64 instead of lstat.
+	* sunrpc/rpc_main.c (find_cpp, checkfiles): Use stat64 instead of
+	stat.
+
 2013-05-10  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #15395]

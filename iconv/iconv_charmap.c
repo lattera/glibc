@@ -171,11 +171,11 @@ charmap_conversion (const char *from_code, struct charmap_t *from_charmap,
 	  }
 
 #ifdef _POSIX_MAPPED_FILES
-	struct stat st;
+	struct stat64 st;
 	char *addr;
 	/* We have possibilities for reading the input file.  First try
 	   to mmap() it since this will provide the fastest solution.  */
-	if (fstat (fd, &st) == 0
+	if (fstat64 (fd, &st) == 0
 	    && ((addr = mmap (NULL, st.st_size, PROT_READ, MAP_PRIVATE,
 			      fd, 0)) != MAP_FAILED))
 	  {
