@@ -1,3 +1,8 @@
+2013-05-10  Christian Grönke  <cgr_bugs@sysgo.com>
+
+	[BZ #12387]
+	* sysdeps/unix/sysv/linux/sh/getgid.c: New file.
+
 2013-05-10  Pino Toscano  <toscano.pino@tiscali.it>
 
 	* sysdeps/mach/hurd/bits/statvfs.h: Add ST_NOATIME.
