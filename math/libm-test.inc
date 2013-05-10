@@ -863,12 +863,53 @@ check_longlong (const char *test_name, long long int computed,
   errno = 0;
 }
 
+/* Structures for each kind of test.  */
+struct test_f_f_data
+{
+  const char *test_name;
+  FLOAT arg;
+  FLOAT expected;
+  FLOAT max_ulp;
+  int exceptions;
+};
+
+/* Set the rounding mode, or restore the saved value.  */
+#define IF_ROUND_INIT_	/* Empty.  */
+#define IF_ROUND_INIT_FE_DOWNWARD		\
+  int save_round_mode = fegetround ();		\
+  if (fesetround (FE_DOWNWARD) == 0)
+#define IF_ROUND_INIT_FE_TONEAREST		\
+  int save_round_mode = fegetround ();		\
+  if (fesetround (FE_TONEAREST) == 0)
+#define IF_ROUND_INIT_FE_TOWARDZERO		\
+  int save_round_mode = fegetround ();		\
+  if (fesetround (FE_TOWARDZERO) == 0)
+#define IF_ROUND_INIT_FE_UPWARD			\
+  int save_round_mode = fegetround ();		\
+  if (fesetround (FE_UPWARD) == 0)
+#define ROUND_RESTORE_	/* Empty.  */
+#define ROUND_RESTORE_FE_DOWNWARD		\
+  fesetround (save_round_mode)
+#define ROUND_RESTORE_FE_TONEAREST		\
+  fesetround (save_round_mode)
+#define ROUND_RESTORE_FE_TOWARDZERO		\
+  fesetround (save_round_mode)
+#define ROUND_RESTORE_FE_UPWARD			\
+  fesetround (save_round_mode)
+
 /* Run an individual test, including any required setup and checking
-   of results.  */
+   of results, or loop over all tests in an array.  */
 #define RUN_TEST_f_f(TEST_NAME, FUNC_NAME, ARG, EXPECTED,	\
 		     MAX_ULP, EXCEPTIONS)			\
   check_float (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
 	       MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_LOOP_f_f(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
+  IF_ROUND_INIT_ ## ROUNDING_MODE					\
+    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
+      RUN_TEST_f_f ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg,	\
+		    (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
+		    (ARRAY)[i].exceptions);				\
+  ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_2_f(TEST_NAME, FUNC_NAME, ARG1, ARG2, EXPECTED,	\
 		     MAX_ULP, EXCEPTIONS)				\
   check_float (TEST_NAME, FUNC (FUNC_NAME) (ARG1, ARG2), EXPECTED,	\
@@ -1012,6 +1053,43 @@ matherr (struct exception *x __attribute__ ((unused)))
   Please keep them alphabetically sorted!
 ****************************************************************************/
 
+static const struct test_f_f_data acos_test_data[] =
+  {
+    START_DATA (acos),
+    TEST_f_f (acos, plus_infty, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (acos, minus_infty, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (acos, qnan_value, qnan_value),
+
+    /* |x| > 1: */
+    TEST_f_f (acos, 1.125L, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (acos, -1.125L, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (acos, max_value, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (acos, -max_value, qnan_value, INVALID_EXCEPTION),
+
+    TEST_f_f (acos, 0, M_PI_2l),
+    TEST_f_f (acos, minus_zero, M_PI_2l),
+    TEST_f_f (acos, 1, 0),
+    TEST_f_f (acos, -1, M_PIl),
+    TEST_f_f (acos, 0.5, M_PI_6l*2.0),
+    TEST_f_f (acos, -0.5, M_PI_6l*4.0),
+    TEST_f_f (acos, 0.75L, 0.722734247813415611178377352641333362L),
+    TEST_f_f (acos, 2e-17L, 1.57079632679489659923132169163975144L),
+    TEST_f_f (acos, 0.0625L, 1.50825556499840522843072005474337068L),
+    TEST_f_f (acos, 0x0.ffffffp0L, 3.4526698471620358760324948263873649728491e-4L),
+    TEST_f_f (acos, -0x0.ffffffp0L, 3.1412473866050770348750401337968641476999L),
+#ifndef TEST_FLOAT
+    TEST_f_f (acos, 0x0.ffffffff8p0L, 1.5258789062648029736620564947844627548516e-5L),
+    TEST_f_f (acos, -0x0.ffffffff8p0L, 3.1415773948007305904329067627145550395696L),
+    TEST_f_f (acos, 0x0.ffffffffffffp0L, 8.4293697021788088529885473244391795127130e-8L),
+    TEST_f_f (acos, -0x0.ffffffffffffp0L, 3.1415925692960962166745548533940296398054L),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 64
+    TEST_f_f (acos, 0x0.ffffffffffffffffp0L, 3.2927225399135962333718255320079907245059e-10L),
+    TEST_f_f (acos, -0x0.ffffffffffffffffp0L, 3.1415926532605209844712837599423203309964L),
+#endif
+    END_DATA (acos)
+  };
+
 static void
 acos_test (void)
 {
@@ -1022,46 +1100,26 @@ acos_test (void)
     return;
 
   START (acos);
-
-  TEST_f_f (acos, plus_infty, qnan_value, INVALID_EXCEPTION);
-  TEST_f_f (acos, minus_infty, qnan_value, INVALID_EXCEPTION);
-  TEST_f_f (acos, qnan_value, qnan_value);
-
-  /* |x| > 1: */
-  TEST_f_f (acos, 1.125L, qnan_value, INVALID_EXCEPTION);
-  TEST_f_f (acos, -1.125L, qnan_value, INVALID_EXCEPTION);
-  TEST_f_f (acos, max_value, qnan_value, INVALID_EXCEPTION);
-  TEST_f_f (acos, -max_value, qnan_value, INVALID_EXCEPTION);
-
-  TEST_f_f (acos, 0, M_PI_2l);
-  TEST_f_f (acos, minus_zero, M_PI_2l);
-  TEST_f_f (acos, 1, 0);
-  TEST_f_f (acos, -1, M_PIl);
-  TEST_f_f (acos, 0.5, M_PI_6l*2.0);
-  TEST_f_f (acos, -0.5, M_PI_6l*4.0);
-  TEST_f_f (acos, 0.75L, 0.722734247813415611178377352641333362L);
-  TEST_f_f (acos, 2e-17L, 1.57079632679489659923132169163975144L);
-  TEST_f_f (acos, 0.0625L, 1.50825556499840522843072005474337068L);
-  TEST_f_f (acos, 0x0.ffffffp0L, 3.4526698471620358760324948263873649728491e-4L);
-  TEST_f_f (acos, -0x0.ffffffp0L, 3.1412473866050770348750401337968641476999L);
-#ifndef TEST_FLOAT
-  TEST_f_f (acos, 0x0.ffffffff8p0L, 1.5258789062648029736620564947844627548516e-5L);
-  TEST_f_f (acos, -0x0.ffffffff8p0L, 3.1415773948007305904329067627145550395696L);
-  TEST_f_f (acos, 0x0.ffffffffffffp0L, 8.4293697021788088529885473244391795127130e-8L);
-  TEST_f_f (acos, -0x0.ffffffffffffp0L, 3.1415925692960962166745548533940296398054L);
-#endif
-#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 64
-  TEST_f_f (acos, 0x0.ffffffffffffffffp0L, 3.2927225399135962333718255320079907245059e-10L);
-  TEST_f_f (acos, -0x0.ffffffffffffffffp0L, 3.1415926532605209844712837599423203309964L);
-#endif
+  RUN_TEST_LOOP_f_f (acos, acos_test_data, );
   END (acos);
 }
 
 
+static const struct test_f_f_data acos_tonearest_test_data[] =
+  {
+    START_DATA (acos_tonearest),
+    TEST_f_f (acos, 0, M_PI_2l),
+    TEST_f_f (acos, minus_zero, M_PI_2l),
+    TEST_f_f (acos, 1, 0),
+    TEST_f_f (acos, -1, M_PIl),
+    TEST_f_f (acos, 0.5, M_PI_6l*2.0),
+    TEST_f_f (acos, -0.5, M_PI_6l*4.0),
+    END_DATA (acos_tonearest)
+  };
+
 static void
 acos_test_tonearest (void)
 {
-  int save_round_mode;
   errno = 0;
   FUNC(acos) (0);
   if (errno == ENOSYS)
@@ -1069,21 +1127,7 @@ acos_test_tonearest (void)
     return;
 
   START (acos_tonearest);
-
-  save_round_mode = fegetround ();
-
-  if (!fesetround (FE_TONEAREST))
-    {
-      TEST_f_f (acos, 0, M_PI_2l);
-      TEST_f_f (acos, minus_zero, M_PI_2l);
-      TEST_f_f (acos, 1, 0);
-      TEST_f_f (acos, -1, M_PIl);
-      TEST_f_f (acos, 0.5, M_PI_6l*2.0);
-      TEST_f_f (acos, -0.5, M_PI_6l*4.0);
-    }
-
-  fesetround (save_round_mode);
-
+  RUN_TEST_LOOP_f_f (acos, acos_tonearest_test_data, FE_TONEAREST);
   END (acos_tonearest);
 }
 

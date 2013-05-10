@@ -1,3 +1,28 @@
+2013-05-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/gen-libm-test.pl (adjust_arg): New function.
+	(special_functions): Handle generating output in both functions
+	and arrays.
+	(parse_args): Likewise.
+	(generate_testfile): Handle START_DATA and END_DATA.  Pass extra
+	$in_func argument to parse_args.
+	* math/libm-test.inc (struct test_f_f_data): New type.
+	(IF_ROUND_INIT_): New macro.
+	(IF_ROUND_INIT_FE_DOWNWARD): Likewise.
+	(IF_ROUND_INIT_FE_TONEAREST): Likewise.
+	(IF_ROUND_INIT_FE_TOWARDZERO): Likewise.
+	(IF_ROUND_INIT_FE_UPWARD): Likewise.
+	(ROUND_RESTORE_): Likewise.
+	(ROUND_RESTORE_FE_DOWNWARD): Likewise.
+	(ROUND_RESTORE_FE_TONEAREST): Likewise.
+	(ROUND_RESTORE_FE_TOWARDZERO): Likewise.
+	(ROUND_RESTORE_FE_UPWARD): Likewise.
+	(RUN_TEST_LOOP_f_f): New macro.
+	(acos_test_data): New variable.
+	(acos_test): Run tests with RUN_TEST_LOOP_f_f.
+	(acos_tonearest_test_data): New variable.
+	(acos_test_tonearest): Run tests with RUN_TEST_LOOP_f_f.
+
 2013-05-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* benchtests/bench-skeleton.c (startup): Fix coding style.
