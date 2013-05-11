@@ -11016,6 +11016,7 @@
 
 2012-07-31  Roland McGrath  <roland@hack.frob.com>
 
+	[BZ #10191]
 	* include/sys/socket.h (__libc_accept, __libc_accept4):
 	Add attribute_hidden.
 	* socket/accept4.c (__libc_accept4): Remove libc_hidden_def.
