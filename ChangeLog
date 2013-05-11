@@ -1,5 +1,9 @@
 2013-05-11  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (fma_test): Use max_value instead of local
+	variable fltmax.
+	(nextafter_test): Likewise.
+
 	* math/libm-test.inc (acos_towardzero_test_data): New variable.
 	(acos_test_towardzero): Run tests with RUN_TEST_LOOP_f_f.
 	(acos_downward_test_data): New variable.

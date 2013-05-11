@@ -8220,12 +8220,10 @@ fma_test (void)
 
   TEST_fff_f (fma, 1.25L, 0.75L, 0.0625L, 1.0L);
 
-  FLOAT fltmax = CHOOSE (LDBL_MAX, DBL_MAX, FLT_MAX,
-			 LDBL_MAX, DBL_MAX, FLT_MAX);
-  TEST_fff_f (fma, -fltmax, -fltmax, minus_infty, minus_infty);
-  TEST_fff_f (fma, fltmax / 2, fltmax / 2, minus_infty, minus_infty);
-  TEST_fff_f (fma, -fltmax, fltmax, plus_infty, plus_infty);
-  TEST_fff_f (fma, fltmax / 2, -fltmax / 4, plus_infty, plus_infty);
+  TEST_fff_f (fma, -max_value, -max_value, minus_infty, minus_infty);
+  TEST_fff_f (fma, max_value / 2, max_value / 2, minus_infty, minus_infty);
+  TEST_fff_f (fma, -max_value, max_value, plus_infty, plus_infty);
+  TEST_fff_f (fma, max_value / 2, -max_value / 4, plus_infty, plus_infty);
   TEST_fff_f (fma, plus_infty, 4, plus_infty, plus_infty);
   TEST_fff_f (fma, 2, minus_infty, minus_infty, minus_infty);
   TEST_fff_f (fma, minus_infty, minus_infty, plus_infty, plus_infty);
@@ -11306,10 +11304,8 @@ nextafter_test (void)
   TEST_ff_f (nextafter, 1.1L, qnan_value, qnan_value);
   TEST_ff_f (nextafter, qnan_value, qnan_value, qnan_value);
 
-  FLOAT fltmax = CHOOSE (LDBL_MAX, DBL_MAX, FLT_MAX,
-			 LDBL_MAX, DBL_MAX, FLT_MAX);
-  TEST_ff_f (nextafter, fltmax, plus_infty, plus_infty, OVERFLOW_EXCEPTION);
-  TEST_ff_f (nextafter, -fltmax, minus_infty, minus_infty, OVERFLOW_EXCEPTION);
+  TEST_ff_f (nextafter, max_value, plus_infty, plus_infty, OVERFLOW_EXCEPTION);
+  TEST_ff_f (nextafter, -max_value, minus_infty, minus_infty, OVERFLOW_EXCEPTION);
 
 #ifdef TEST_LDOUBLE
   // XXX Enable once gcc is fixed.
