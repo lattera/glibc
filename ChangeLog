@@ -1,3 +1,152 @@
+2013-05-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (acos_towardzero_test_data): New variable.
+	(acos_test_towardzero): Run tests with RUN_TEST_LOOP_f_f.
+	(acos_downward_test_data): New variable.
+	(acos_test_downward): Run tests with RUN_TEST_LOOP_f_f.
+	(acos_upward_test_data): New variable.
+	(acos_test_upward): Run tests with RUN_TEST_LOOP_f_f.
+	(acosh_test_data): New variable.
+	(acosh_test): Run tests with RUN_TEST_LOOP_f_f.
+	(asin_test_data): New variable.
+	(asin_test): Run tests with RUN_TEST_LOOP_f_f.
+	(asin_tonearest_test_data): New variable.
+	(asin_test_tonearest): Run tests with RUN_TEST_LOOP_f_f.
+	(asin_towardzero_test_data): New variable.
+	(asin_test_towardzero): Run tests with RUN_TEST_LOOP_f_f.
+	(asin_downward_test_data): New variable.
+	(asin_test_downward): Run tests with RUN_TEST_LOOP_f_f.
+	(asin_upward_test_data): New variable.
+	(asin_test_upward): Run tests with RUN_TEST_LOOP_f_f.
+	(asinh_test_data): New variable.
+	(asinh_test): Run tests with RUN_TEST_LOOP_f_f.
+	(atan_test_data): New variable.
+	(atan_test): Run tests with RUN_TEST_LOOP_f_f.
+	(atanh_test_data): New variable.
+	(atanh_test): Run tests with RUN_TEST_LOOP_f_f.
+	(cbrt_test_data): New variable.
+	(cbrt_test): Run tests with RUN_TEST_LOOP_f_f.
+	(ceil_test_data): New variable.
+	(ceil_test): Run tests with RUN_TEST_LOOP_f_f.
+	(cos_test_data): New variable.
+	(cos_test): Run tests with RUN_TEST_LOOP_f_f.
+	(cos_tonearest_test_data): New variable.
+	(cos_test_tonearest): Run tests with RUN_TEST_LOOP_f_f.
+	(cos_towardzero_test_data): New variable.
+	(cos_test_towardzero): Run tests with RUN_TEST_LOOP_f_f.
+	(cos_downward_test_data): New variable.
+	(cos_test_downward): Run tests with RUN_TEST_LOOP_f_f.
+	(cos_upward_test_data): New variable.
+	(cos_test_upward): Run tests with RUN_TEST_LOOP_f_f.
+	(cosh_test_data): New variable.
+	(cosh_test): Run tests with RUN_TEST_LOOP_f_f.
+	(cosh_tonearest_test_data): New variable.
+	(cosh_test_tonearest): Run tests with RUN_TEST_LOOP_f_f.
+	(cosh_towardzero_test_data): New variable.
+	(cosh_test_towardzero): Run tests with RUN_TEST_LOOP_f_f.
+	(cosh_downward_test_data): New variable.
+	(cosh_test_downward): Run tests with RUN_TEST_LOOP_f_f.
+	(cosh_upward_test_data): New variable.
+	(cosh_test_upward): Run tests with RUN_TEST_LOOP_f_f.
+	(erf_test_data): New variable.
+	(erf_test): Run tests with RUN_TEST_LOOP_f_f.
+	(erfc_test_data): New variable.
+	(erfc_test): Run tests with RUN_TEST_LOOP_f_f.
+	(exp_test_data): New variable.
+	(exp_test): Run tests with RUN_TEST_LOOP_f_f.
+	(exp_tonearest_test_data): New variable.
+	(exp_test_tonearest): Run tests with RUN_TEST_LOOP_f_f.
+	(exp_towardzero_test_data): New variable.
+	(exp_test_towardzero): Run tests with RUN_TEST_LOOP_f_f.
+	(exp_downward_test_data): New variable.
+	(exp_test_downward): Run tests with RUN_TEST_LOOP_f_f.
+	(exp_upward_test_data): New variable.
+	(exp_test_upward): Run tests with RUN_TEST_LOOP_f_f.
+	(exp10_test_data): New variable.
+	(exp10_test): Run tests with RUN_TEST_LOOP_f_f.
+	(exp2_test_data): New variable.
+	(exp2_test): Run tests with RUN_TEST_LOOP_f_f.
+	(expm1_test_data): New variable.
+	(expm1_test): Run tests with RUN_TEST_LOOP_f_f.
+	(fabs_test_data): New variable.
+	(fabs_test): Run tests with RUN_TEST_LOOP_f_f.
+	(floor_test_data): New variable.
+	(floor_test): Run tests with RUN_TEST_LOOP_f_f.
+	(j0_test_data): New variable.
+	(j0_test): Run tests with RUN_TEST_LOOP_f_f.
+	(j1_test_data): New variable.
+	(j1_test): Run tests with RUN_TEST_LOOP_f_f.
+	(log_test_data): New variable.
+	(log_test): Run tests with RUN_TEST_LOOP_f_f.
+	(log10_test_data): New variable.
+	(log10_test): Run tests with RUN_TEST_LOOP_f_f.
+	(log1p_test_data): New variable.
+	(log1p_test): Run tests with RUN_TEST_LOOP_f_f.
+	(log2_test_data): New variable.
+	(log2_test): Run tests with RUN_TEST_LOOP_f_f.
+	(logb_test_data): New variable.
+	(logb_test): Run tests with RUN_TEST_LOOP_f_f.
+	(logb_downward_test_data): New variable.
+	(logb_test_downward): Run tests with RUN_TEST_LOOP_f_f.
+	(nearbyint_test_data): New variable.
+	(nearbyint_test): Run tests with RUN_TEST_LOOP_f_f.
+	(rint_test_data): New variable.
+	(rint_test): Run tests with RUN_TEST_LOOP_f_f.
+	(rint_tonearest_test_data): New variable.
+	(rint_test_tonearest): Run tests with RUN_TEST_LOOP_f_f.
+	(rint_towardzero_test_data): New variable.
+	(rint_test_towardzero): Run tests with RUN_TEST_LOOP_f_f.
+	(rint_downward_test_data): New variable.
+	(rint_test_downward): Run tests with RUN_TEST_LOOP_f_f.
+	(rint_upward_test_data): New variable.
+	(rint_test_upward): Run tests with RUN_TEST_LOOP_f_f.
+	(round_test_data): New variable.
+	(round_test): Run tests with RUN_TEST_LOOP_f_f.
+	(sin_test_data): New variable.
+	(sin_test): Run tests with RUN_TEST_LOOP_f_f.
+	(sin_tonearest_test_data): New variable.
+	(sin_test_tonearest): Run tests with RUN_TEST_LOOP_f_f.
+	(sin_towardzero_test_data): New variable.
+	(sin_test_towardzero): Run tests with RUN_TEST_LOOP_f_f.
+	(sin_downward_test_data): New variable.
+	(sin_test_downward): Run tests with RUN_TEST_LOOP_f_f.
+	(sin_upward_test_data): New variable.
+	(sin_test_upward): Run tests with RUN_TEST_LOOP_f_f.
+	(sinh_test_data): New variable.
+	(sinh_test): Run tests with RUN_TEST_LOOP_f_f.
+	(sinh_tonearest_test_data): New variable.
+	(sinh_test_tonearest): Run tests with RUN_TEST_LOOP_f_f.
+	(sinh_towardzero_test_data): New variable.
+	(sinh_towardzero): Run tests with RUN_TEST_LOOP_f_f.
+	(sinh_downward_test_data): New variable.
+	(sinh_test_downward): Run tests with RUN_TEST_LOOP_f_f.
+	(sinh_upward_test_data): New variable.
+	(sinh_test_upward): Run tests with RUN_TEST_LOOP_f_f.
+	(sqrt_test_data): New variable.
+	(sqrt_test): Run tests with RUN_TEST_LOOP_f_f.
+	(tan_test_data): New variable.
+	(tan_test): Run tests with RUN_TEST_LOOP_f_f.
+	(tan_tonearest_test_data): New variable.
+	(tan_test_tonearest): Run tests with RUN_TEST_LOOP_f_f.
+	(tan_towardzero_test_data): New variable.
+	(tan_test_towardzero): Run tests with RUN_TEST_LOOP_f_f.
+	(tan_downward_test_data): New variable.
+	(tan_test_downward): Run tests with RUN_TEST_LOOP_f_f.
+	(tan_upward_test_data): New variable.
+	(tan_test_upward): Run tests with RUN_TEST_LOOP_f_f.
+	(tanh_test_data): New variable.
+	(tanh_test): Run tests with RUN_TEST_LOOP_f_f.
+	(tgamma_test_data): New variable.
+	(tgamma_test): Run tests with RUN_TEST_LOOP_f_f.
+	(trunc_test_data): New variable.
+	(trunc_test): Run tests with RUN_TEST_LOOP_f_f.
+	(y0_test_data): New variable.
+	(y0_test): Run tests with RUN_TEST_LOOP_f_f.
+	(y1_test_data): New variable.
+	(y1_test): Run tests with RUN_TEST_LOOP_f_f.
+	(significand_test_data): New variable.
+	(significand_test): Run tests with RUN_TEST_LOOP_f_f.
+
 2013-05-10  Christian Grönke  <cgr_bugs@sysgo.com>
 
 	[BZ #12387]
