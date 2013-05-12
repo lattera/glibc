@@ -65,9 +65,10 @@ ENTRY(__clone)
 	svc	0x0
 	cmp	x0, #0
 	beq	2f
-	blt	C_SYMBOL_NAME(__syscall_error)
+	blt	3f
 	RET
 1:	mov	x0, #-EINVAL
+3:
 	b	syscall_error
 
 2:

@@ -24,9 +24,7 @@ ENTRY(__ioctl)
         sxtw	x0, w0
         svc	#0x0
 	cmn	x0, #0x1, lsl #12
-	b.hi	C_SYMBOL_NAME(__syscall_error)
-	ret
-
+	PSEUDO_RET
 	PSEUDO_END (__ioctl)
 
 weak_alias (__ioctl, ioctl)
