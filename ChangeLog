@@ -1,3 +1,43 @@
+2013-05-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (struct test_ff_f_data): New type.
+	(struct test_ff_f_data_nexttoward): Likewise.
+	(RUN_TEST_LOOP_2_f): New macro.
+	(RUN_TEST_LOOP_ff_f): Likewise.
+	(atan2_test_data): New variable.
+	(atan2_test): Run tests with RUN_TEST_LOOP_ff_f.
+	(copysign_test_data): New variable.
+	(copysign_test): Run tests with RUN_TEST_LOOP_ff_f.
+	(fdim_test_data): New variable.
+	(fdim_test): Run tests with RUN_TEST_LOOP_ff_f.
+	(fmax_test_data): New variable.
+	(fmax_test): Run tests with RUN_TEST_LOOP_ff_f.
+	(fmin_test_data): New variable.
+	(fmin_test): Run tests with RUN_TEST_LOOP_ff_f.
+	(fmod_test_data): New variable.
+	(fmod_test): Run tests with RUN_TEST_LOOP_ff_f.
+	(hypot_test_data): New variable.
+	(hypot_test): Run tests with RUN_TEST_LOOP_ff_f.
+	(nextafter_test_data): New variable.
+	(nextafter_test): Run tests with RUN_TEST_LOOP_ff_f.
+	(nexttoward_test_data): New variable.
+	(nexttoward_test): Run tests with RUN_TEST_LOOP_ff_f.
+	(pow_test_data): New variable.
+	(pow_test): Run tests with RUN_TEST_LOOP_ff_f.
+	(pow_tonearest_test_data): New variable.
+	(pow_test_tonearest): Run tests with RUN_TEST_LOOP_ff_f.
+	(pow_towardzero_test_data): New variable.
+	(pow_test_towardzero): Run tests with RUN_TEST_LOOP_ff_f.
+	(pow_downward_test_data): New variable.
+	(pow_test_downward): Run tests with RUN_TEST_LOOP_ff_f.
+	(pow_upward_test_data): New variable.
+	(pow_test_upward): Run tests with RUN_TEST_LOOP_ff_f.
+	(remainder_test_data): New variable.
+	(remainder_test): Run tests with RUN_TEST_LOOP_ff_f.
+	(scalb_test_data): New variable.
+	(scalb_test): Run tests with RUN_TEST_LOOP_ff_f.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+
 2013-05-11  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (fma_test): Use max_value instead of local
