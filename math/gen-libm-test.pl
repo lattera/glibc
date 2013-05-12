@@ -675,12 +675,12 @@ sub get_ulps {
 
   if ($type eq 'complex') {
     my ($res);
-    # Return 0 instead of BUILD_COMPLEX (0,0)
+    # Return 0 instead of BUILD_COMPLEX_ULP (0,0)
     if (!exists $results{$test}{'real'}{'ulp'}{$float} &&
 	!exists $results{$test}{'imag'}{'ulp'}{$float}) {
       return "0";
     }
-    $res = 'BUILD_COMPLEX (';
+    $res = 'BUILD_COMPLEX_ULP (';
     $res .= (exists $results{$test}{'real'}{'ulp'}{$float}
 	     ? $results{$test}{'real'}{'ulp'}{$float} : "0");
     $res .= ', ';

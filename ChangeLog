@@ -1,5 +1,63 @@
 2013-05-12  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (BUILD_COMPLEX_ULP): New macro.
+	(struct test_c_c_data): New type.
+	(RUN_TEST_LOOP_c_c): New macro.
+	(cacos_test_data): New variable.
+	(cacos_test): Run tests with RUN_TEST_LOOP_c_c.
+	(cacosh_test_data): New variable.
+	(cacosh_test): Run tests with RUN_TEST_LOOP_c_c.
+	(casin_test_data): New variable.
+	(casin_test): Run tests with RUN_TEST_LOOP_c_c.
+	(casinh_test_data): New variable.
+	(casinh_test): Run tests with RUN_TEST_LOOP_c_c.
+	(catan_test_data): New variable.
+	(catan_test): Run tests with RUN_TEST_LOOP_c_c.
+	(catanh_test_data): New variable.
+	(catanh_test): Run tests with RUN_TEST_LOOP_c_c.
+	(ccos_test_data): New variable.
+	(ccos_test): Run tests with RUN_TEST_LOOP_c_c.
+	(ccosh_test_data): New variable.
+	(ccosh_test): Run tests with RUN_TEST_LOOP_c_c.
+	(cexp_test_data): New variable.
+	(cexp_test): Run tests with RUN_TEST_LOOP_c_c.
+	(clog_test_data): New variable.
+	(clog_test): Run tests with RUN_TEST_LOOP_c_c.
+	(clog10_test_data): New variable.
+	(clog10_test): Run tests with RUN_TEST_LOOP_c_c.
+	(conj_test_data): New variable.
+	(conj_test): Run tests with RUN_TEST_LOOP_c_c.
+	(cproj_test_data): New variable.
+	(cproj_test): Run tests with RUN_TEST_LOOP_c_c.
+	(csin_test_data): New variable.
+	(csin_test): Run tests with RUN_TEST_LOOP_c_c.
+	(csinh_test_data): New variable.
+	(csinh_test): Run tests with RUN_TEST_LOOP_c_c.
+	(csqrt_test_data): New variable.
+	(csqrt_test): Run tests with RUN_TEST_LOOP_c_c.
+	(ctan_test_data): New variable.
+	(ctan_test): Run tests with RUN_TEST_LOOP_c_c.
+	(ctan_tonearest_test_data): New variable.
+	(ctan_test_tonearest): Run tests with RUN_TEST_LOOP_c_c.
+	(ctan_towardzero_test_data): New variable.
+	(ctan_test_towardzero): Run tests with RUN_TEST_LOOP_c_c.
+	(ctan_downward_test_data): New variable.
+	(ctan_test_downward): Run tests with RUN_TEST_LOOP_c_c.
+	(ctan_upward_test_data): New variable.
+	(ctan_test_upward): Run tests with RUN_TEST_LOOP_c_c.
+	(ctanh_test_data): New variable.
+	(ctanh_test): Run tests with RUN_TEST_LOOP_c_c.
+	(ctanh_tonearest_test_data): New variable.
+	(ctanh_test_tonearest): Run tests with RUN_TEST_LOOP_c_c.
+	(ctanh_towardzero_test_data): New variable.
+	(ctanh_test_towardzero): Run tests with RUN_TEST_LOOP_c_c.
+	(ctanh_downward_test_data): New variable.
+	(ctanh_test_downward): Run tests with RUN_TEST_LOOP_c_c.
+	(ctanh_upward_test_data): New variable.
+	(ctanh_test_upward): Run tests with RUN_TEST_LOOP_c_c.
+	* math/gen-libm-test.pl (get_ulps): Use BUILD_COMPLEX_ULP instead
+	of BUILD_COMPLEX.
+
 	* math/libm-test.inc (struct test_ff_f_data): New type.
 	(struct test_ff_f_data_nexttoward): Likewise.
 	(RUN_TEST_LOOP_2_f): New macro.
