@@ -1,5 +1,16 @@
 2013-05-12  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (struct test_fff_f_data): New type.
+	(RUN_TEST_LOOP_fff_f): New macro.
+	(fma_test_data): New variable.
+	(fma_test): Run tests with RUN_TEST_LOOP_fff_f.
+	(fma_towardzero_test_data): New variable.
+	(fma_test_towardzero): Run tests with RUN_TEST_LOOP_fff_f.
+	(fma_downward_test_data): New variable.
+	(fma_test_downward): Run tests with RUN_TEST_LOOP_fff_f.
+	(fma_upward_test_data): New variable.
+	(fma_test_upward): Run tests with RUN_TEST_LOOP_fff_f.
+
 	* math/libm-test.inc (BUILD_COMPLEX_ULP): New macro.
 	(struct test_c_c_data): New type.
 	(RUN_TEST_LOOP_c_c): New macro.

@@ -889,6 +889,14 @@ struct test_ff_f_data_nexttoward
   FLOAT max_ulp;
   int exceptions;
 };
+struct test_fff_f_data
+{
+  const char *test_name;
+  FLOAT arg1, arg2, arg3;
+  FLOAT expected;
+  FLOAT max_ulp;
+  int exceptions;
+};
 struct test_c_c_data
 {
   const char *test_name;
@@ -955,6 +963,14 @@ struct test_c_c_data
 		       EXPECTED, MAX_ULP, EXCEPTIONS)		\
   check_float (TEST_NAME, FUNC (FUNC_NAME) (ARG1, ARG2, ARG3),	\
 	       EXPECTED, MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_LOOP_fff_f(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
+  IF_ROUND_INIT_ ## ROUNDING_MODE					\
+    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
+      RUN_TEST_fff_f ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg1,	\
+		      (ARRAY)[i].arg2, (ARRAY)[i].arg3,			\
+		      (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
+		      (ARRAY)[i].exceptions);				\
+  ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_c_f(TEST_NAME, FUNC_NAME, ARG1, ARG2, EXPECTED,	\
 		     MAX_ULP, EXCEPTIONS)				\
   check_float (TEST_NAME,						\
@@ -8312,951 +8328,947 @@ floor_test (void)
 }
 
 
+static const struct test_fff_f_data fma_test_data[] =
+  {
+    START_DATA (fma),
+    TEST_fff_f (fma, 1.0, 2.0, 3.0, 5.0),
+    TEST_fff_f (fma, qnan_value, 2.0, 3.0, qnan_value),
+    TEST_fff_f (fma, 1.0, qnan_value, 3.0, qnan_value),
+    TEST_fff_f (fma, 1.0, 2.0, qnan_value, qnan_value, INVALID_EXCEPTION_OK),
+    TEST_fff_f (fma, plus_infty, 0.0, qnan_value, qnan_value, INVALID_EXCEPTION_OK),
+    TEST_fff_f (fma, minus_infty, 0.0, qnan_value, qnan_value, INVALID_EXCEPTION_OK),
+    TEST_fff_f (fma, 0.0, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION_OK),
+    TEST_fff_f (fma, 0.0, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION_OK),
+    TEST_fff_f (fma, plus_infty, 0.0, 1.0, qnan_value, INVALID_EXCEPTION),
+    TEST_fff_f (fma, minus_infty, 0.0, 1.0, qnan_value, INVALID_EXCEPTION),
+    TEST_fff_f (fma, 0.0, plus_infty, 1.0, qnan_value, INVALID_EXCEPTION),
+    TEST_fff_f (fma, 0.0, minus_infty, 1.0, qnan_value, INVALID_EXCEPTION),
+
+    TEST_fff_f (fma, plus_infty, plus_infty, minus_infty, qnan_value, INVALID_EXCEPTION),
+    TEST_fff_f (fma, minus_infty, plus_infty, plus_infty, qnan_value, INVALID_EXCEPTION),
+    TEST_fff_f (fma, plus_infty, minus_infty, plus_infty, qnan_value, INVALID_EXCEPTION),
+    TEST_fff_f (fma, minus_infty, minus_infty, minus_infty, qnan_value, INVALID_EXCEPTION),
+    TEST_fff_f (fma, plus_infty, 3.5L, minus_infty, qnan_value, INVALID_EXCEPTION),
+    TEST_fff_f (fma, minus_infty, -7.5L, minus_infty, qnan_value, INVALID_EXCEPTION),
+    TEST_fff_f (fma, -13.5L, plus_infty, plus_infty, qnan_value, INVALID_EXCEPTION),
+    TEST_fff_f (fma, minus_infty, 7.5L, plus_infty, qnan_value, INVALID_EXCEPTION),
+
+    TEST_fff_f (fma, 1.25L, 0.75L, 0.0625L, 1.0L),
+
+    TEST_fff_f (fma, -max_value, -max_value, minus_infty, minus_infty),
+    TEST_fff_f (fma, max_value / 2, max_value / 2, minus_infty, minus_infty),
+    TEST_fff_f (fma, -max_value, max_value, plus_infty, plus_infty),
+    TEST_fff_f (fma, max_value / 2, -max_value / 4, plus_infty, plus_infty),
+    TEST_fff_f (fma, plus_infty, 4, plus_infty, plus_infty),
+    TEST_fff_f (fma, 2, minus_infty, minus_infty, minus_infty),
+    TEST_fff_f (fma, minus_infty, minus_infty, plus_infty, plus_infty),
+    TEST_fff_f (fma, plus_infty, minus_infty, minus_infty, minus_infty),
+
+    TEST_fff_f (fma, plus_zero, plus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, plus_zero, plus_zero, minus_zero, plus_zero),
+    TEST_fff_f (fma, plus_zero, minus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, plus_zero, minus_zero, minus_zero, minus_zero),
+    TEST_fff_f (fma, minus_zero, plus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, minus_zero, plus_zero, minus_zero, minus_zero),
+    TEST_fff_f (fma, minus_zero, minus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, minus_zero, minus_zero, minus_zero, plus_zero),
+    TEST_fff_f (fma, 1.0, plus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, 1.0, plus_zero, minus_zero, plus_zero),
+    TEST_fff_f (fma, 1.0, minus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, 1.0, minus_zero, minus_zero, minus_zero),
+    TEST_fff_f (fma, -1.0, plus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, -1.0, plus_zero, minus_zero, minus_zero),
+    TEST_fff_f (fma, -1.0, minus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, -1.0, minus_zero, minus_zero, plus_zero),
+    TEST_fff_f (fma, plus_zero, 1.0, plus_zero, plus_zero),
+    TEST_fff_f (fma, plus_zero, 1.0, minus_zero, plus_zero),
+    TEST_fff_f (fma, plus_zero, -1.0, plus_zero, plus_zero),
+    TEST_fff_f (fma, plus_zero, -1.0, minus_zero, minus_zero),
+    TEST_fff_f (fma, minus_zero, 1.0, plus_zero, plus_zero),
+    TEST_fff_f (fma, minus_zero, 1.0, minus_zero, minus_zero),
+    TEST_fff_f (fma, minus_zero, -1.0, plus_zero, plus_zero),
+    TEST_fff_f (fma, minus_zero, -1.0, minus_zero, plus_zero),
+
+    TEST_fff_f (fma, 1.0, 1.0, -1.0, plus_zero),
+    TEST_fff_f (fma, 1.0, -1.0, 1.0, plus_zero),
+    TEST_fff_f (fma, -1.0, 1.0, 1.0, plus_zero),
+    TEST_fff_f (fma, -1.0, -1.0, -1.0, plus_zero),
+
+    TEST_fff_f (fma, min_value, min_value, plus_zero, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, min_value, min_value, minus_zero, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, min_value, -min_value, plus_zero, minus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, min_value, -min_value, minus_zero, minus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -min_value, min_value, plus_zero, minus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -min_value, min_value, minus_zero, minus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -min_value, -min_value, plus_zero, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -min_value, -min_value, minus_zero, plus_zero, UNDERFLOW_EXCEPTION),
+
+    TEST_fff_f (fma, max_value, max_value, min_value, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, max_value, max_value, -min_value, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, max_value, -max_value, min_value, minus_infty, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, max_value, -max_value, -min_value, minus_infty, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -max_value, max_value, min_value, minus_infty, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -max_value, max_value, -min_value, minus_infty, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -max_value, -max_value, min_value, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -max_value, -max_value, -min_value, plus_infty, OVERFLOW_EXCEPTION),
+
+#if defined (TEST_FLOAT) && FLT_MANT_DIG == 24
+    TEST_fff_f (fma, 0x1.7ff8p+13, 0x1.000002p+0, 0x1.ffffp-24, 0x1.7ff802p+13),
+    TEST_fff_f (fma, 0x1.fffp+0, 0x1.00001p+0, -0x1.fffp+0, 0x1.fffp-20),
+    TEST_fff_f (fma, 0x1.9abcdep+127, 0x0.9abcdep-126, -0x1.f08948p+0, 0x1.bb421p-25),
+    TEST_fff_f (fma, 0x1.9abcdep+100, 0x0.9abcdep-126, -0x1.f08948p-27, 0x1.bb421p-52),
+    TEST_fff_f (fma, 0x1.fffffep+127, 0x1.001p+0, -0x1.fffffep+127, 0x1.fffffep+115),
+    TEST_fff_f (fma, -0x1.fffffep+127, 0x1.fffffep+0, 0x1.fffffep+127, -0x1.fffffap+127),
+    TEST_fff_f (fma, 0x1.fffffep+127, 2.0, -0x1.fffffep+127, 0x1.fffffep+127),
+    TEST_fff_f (fma, 0x1.4p-126, 0x1.000004p-1, 0x1p-128, 0x1.c00004p-127, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.4p-126, 0x1.000004p-1, -0x1p-128, -0x1.c00004p-127, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1.fffff8p-126, 0x1.000002p-1, 0x1p-149, 0x1p-126, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, -0x1.fffff8p-126, 0x1.000002p-1, -0x1p-149, -0x1p-126, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-1, 0x0.fffffep-126, 0x1p-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-149, 0x1p-1, -0x0.fffffep-126, -0x1p-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, 0x1.1p-1, 0x0.fffffep-126, 0x1p-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-149, 0x1.1p-1, -0x0.fffffep-126, -0x1p-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p127, 0x1p127),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p127, 0x1p127),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p127, -0x1p127),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p127, -0x1p127),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p-126, 0x1p-126),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p-126, 0x1p-126, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p-126, -0x1p-126, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p-126, -0x1p-126),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x0.fffffep-126, 0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x0.fffffep-126, 0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x0.fffffep-126, -0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x0.fffffep-126, -0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p-149, 0x1p-149, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p-149, 0x1p-149, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p-149, -0x1p-149, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p-149, -0x1p-149, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x0.fffp0, 0x0.fffp0, -0x0.ffep0, 0x1p-24),
+    TEST_fff_f (fma, 0x0.fffp0, -0x0.fffp0, 0x0.ffep0, -0x1p-24),
+    TEST_fff_f (fma, -0x0.fffp0, 0x0.fffp0, 0x0.ffep0, -0x1p-24),
+    TEST_fff_f (fma, -0x0.fffp0, -0x0.fffp0, -0x0.ffep0, 0x1p-24),
+    TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p127, 0x1p127),
+    TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p127, 0x1p127),
+    TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p127, -0x1p127),
+    TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p127, -0x1p127),
+    TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p103, 0x1p103),
+    TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p103, 0x1p103),
+    TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p103, -0x1p103),
+    TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p103, -0x1p103),
+#endif
+#if defined (TEST_DOUBLE) && DBL_MANT_DIG == 53
+    TEST_fff_f (fma, 0x1.7fp+13, 0x1.0000000000001p+0, 0x1.ffep-48, 0x1.7f00000000001p+13),
+    TEST_fff_f (fma, 0x1.fffp+0, 0x1.0000000000001p+0, -0x1.fffp+0, 0x1.fffp-52),
+    TEST_fff_f (fma, 0x1.0000002p+0, 0x1.ffffffcp-1, 0x1p-300, 1.0),
+    TEST_fff_f (fma, 0x1.0000002p+0, 0x1.ffffffcp-1, -0x1p-300, 0x1.fffffffffffffp-1),
+    TEST_fff_f (fma, 0x1.deadbeef2feedp+1023, 0x0.deadbeef2feedp-1022, -0x1.a05f8c01a4bfbp+1, 0x1.0989687bc9da4p-53),
+    TEST_fff_f (fma, 0x1.deadbeef2feedp+900, 0x0.deadbeef2feedp-1022, -0x1.a05f8c01a4bfbp-122, 0x1.0989687bc9da4p-176),
+    TEST_fff_f (fma, 0x1.fffffffffffffp+1023, 0x1.001p+0, -0x1.fffffffffffffp+1023, 0x1.fffffffffffffp+1011),
+    TEST_fff_f (fma, -0x1.fffffffffffffp+1023, 0x1.fffffffffffffp+0, 0x1.fffffffffffffp+1023, -0x1.ffffffffffffdp+1023),
+    TEST_fff_f (fma, 0x1.fffffffffffffp+1023, 2.0, -0x1.fffffffffffffp+1023, 0x1.fffffffffffffp+1023),
+    TEST_fff_f (fma, 0x1.6a09e667f3bccp-538, 0x1.6a09e667f3bccp-538, 0.0, 0.0, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1.deadbeef2feedp-495, 0x1.deadbeef2feedp-495, -0x1.bf86a5786a574p-989, 0x0.0000042625a1fp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1.deadbeef2feedp-503, 0x1.deadbeef2feedp-503, -0x1.bf86a5786a574p-1005, 0x0.0000000004262p-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-537, 0x1p-538, 0x1p-1074, 0x0.0000000000002p-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1.7fffff8p-968, 0x1p-106, 0x0.000001p-1022, 0x0.0000010000001p-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1.4000004p-967, 0x1p-106, 0x0.000001p-1022, 0x0.0000010000003p-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1.4p-967, -0x1p-106, -0x0.000001p-1022, -0x0.0000010000002p-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.19cab66d73e17p-959, 0x1.c7108a8c5ff51p-107, -0x0.80b0ad65d9b64p-1022, -0x0.80b0ad65d9d59p-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.d2eaed6e8e9d3p-979, -0x1.4e066c62ac9ddp-63, -0x0.9245e6b003454p-1022, -0x0.9245c09c5fb5dp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1.153d650bb9f06p-907, 0x1.2d01230d48407p-125, -0x0.b278d5acfc3cp-1022, -0x0.b22757123bbe9p-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.fffffffffffffp-711, 0x1.fffffffffffffp-275, 0x1.fffffe00007ffp-983, 0x1.7ffffe00007ffp-983),
+    TEST_fff_f (fma, 0x1.4p-1022, 0x1.0000000000002p-1, 0x1p-1024, 0x1.c000000000002p-1023, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.4p-1022, 0x1.0000000000002p-1, -0x1p-1024, -0x1.c000000000002p-1023, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1.ffffffffffffcp-1022, 0x1.0000000000001p-1, 0x1p-1074, 0x1p-1022, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, -0x1.ffffffffffffcp-1022, 0x1.0000000000001p-1, -0x1p-1074, -0x1p-1022, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1, 0x0.fffffffffffffp-1022, 0x1p-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-1074, 0x1p-1, -0x0.fffffffffffffp-1022, -0x1p-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, 0x1.1p-1, 0x0.fffffffffffffp-1022, 0x1p-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-1074, 0x1.1p-1, -0x0.fffffffffffffp-1022, -0x1p-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p1023, 0x1p1023),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p1023, 0x1p1023),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p1023, -0x1p1023),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p1023, -0x1p1023),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p-1022, 0x1p-1022),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p-1022, 0x1p-1022, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p-1022, -0x1p-1022, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p-1022, -0x1p-1022),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x0.fffffffffffffp-1022, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x0.fffffffffffffp-1022, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x0.fffffffffffffp-1022, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x0.fffffffffffffp-1022, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p-1074, 0x1p-1074, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p-1074, 0x1p-1074, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p-1074, -0x1p-1074, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p-1074, -0x1p-1074, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x0.fffffffffffff8p0, 0x0.fffffffffffff8p0, -0x0.fffffffffffffp0, 0x1p-106),
+    TEST_fff_f (fma, 0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106),
+    TEST_fff_f (fma, -0x0.fffffffffffff8p0, 0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106),
+    TEST_fff_f (fma, -0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, -0x0.fffffffffffffp0, 0x1p-106),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p1023, 0x1p1023),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p1023, 0x1p1023),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p1023, -0x1p1023),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p1023, -0x1p1023),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p970, 0x1p970),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p970, 0x1p970),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p970, -0x1p970),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p970, -0x1p970),
+#endif
+#if defined (TEST_LDOUBLE) && LDBL_MANT_DIG == 64
+    TEST_fff_f (fma, -0x8.03fcp+3696L, 0xf.fffffffffffffffp-6140L, 0x8.3ffffffffffffffp-2450L, -0x8.01ecp-2440L),
+    TEST_fff_f (fma, 0x9.fcp+2033L, -0x8.000e1f000ff800fp-3613L, -0xf.fffffffffffc0ffp-1579L, -0xd.fc119fb093ed092p-1577L),
+    TEST_fff_f (fma, 0xc.7fc000003ffffffp-1194L, 0x8.1e0003fffffffffp+15327L, -0x8.fffep+14072L, 0xc.ae9f164020effffp+14136L),
+    TEST_fff_f (fma, -0x8.0001fc000000003p+1798L, 0xcp-2230L, 0x8.f7e000000000007p-468L, -0xc.0002f9ffee10404p-429L),
+    TEST_fff_f (fma, 0xc.0000000000007ffp+10130L, -0x8.000000000000001p+4430L, 0xc.07000000001ffffp+14513L, -0xb.fffffffffffd7e4p+14563L),
+    TEST_fff_f (fma, 0xb.ffffp-4777L, 0x8.000000fffffffffp-11612L, -0x0.3800fff8p-16385L, 0x5.c7fe80c7ffeffffp-16385L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1.4p-16382L, 0x1.0000000000000004p-1L, 0x1p-16384L, 0x1.c000000000000004p-16383L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.4p-16382L, 0x1.0000000000000004p-1L, -0x1p-16384L, -0x1.c000000000000004p-16383L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1.fffffffffffffff8p-16382L, 0x1.0000000000000002p-1L, 0x1p-16445L, 0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, -0x1.fffffffffffffff8p-16382L, 0x1.0000000000000002p-1L, -0x1p-16445L, -0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-1L, 0x0.fffffffffffffffep-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-16445L, 0x1p-1L, -0x0.fffffffffffffffep-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1.1p-1L, 0x0.fffffffffffffffep-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-16445L, 0x1.1p-1L, -0x0.fffffffffffffffep-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p16383L, 0x1p16383L),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p16383L, 0x1p16383L),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p16383L, -0x1p16383L),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p16383L, -0x1p16383L),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p-16382L, 0x1p-16382L),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p-16382L, -0x1p-16382L),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x0.fffffffffffffffep-16382L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x0.fffffffffffffffep-16382L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x0.fffffffffffffffep-16382L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x0.fffffffffffffffep-16382L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p-16445L, 0x1p-16445L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p-16445L, 0x1p-16445L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p-16445L, -0x1p-16445L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p-16445L, -0x1p-16445L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x0.ffffffffffffffffp0L, 0x0.ffffffffffffffffp0L, -0x0.fffffffffffffffep0L, 0x1p-128L),
+    TEST_fff_f (fma, 0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L),
+    TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, 0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L),
+    TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, -0x0.fffffffffffffffep0L, 0x1p-128L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16383L, 0x1p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16383L, 0x1p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16383L, -0x1p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16383L, -0x1p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16319L, 0x1p16319L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16319L, 0x1p16319L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16319L, -0x1p16319L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16319L, -0x1p16319L),
+#endif
+#if defined (TEST_LDOUBLE) && LDBL_MANT_DIG == 113
+    TEST_fff_f (fma, 0x1.bb2de33e02ccbbfa6e245a7c1f71p-2584L, -0x1.6b500daf0580d987f1bc0cadfcddp-13777L, 0x1.613cd91d9fed34b33820e5ab9d8dp-16378L, -0x1.3a79fb50eb9ce887cffa0f09bd9fp-16360L),
+    TEST_fff_f (fma, -0x1.f949b880cacb0f0c61540105321dp-5954L, -0x1.3876cec84b4140f3bd6198731b7ep-10525L, -0x0.a5dc1c6cfbc498c54fb0b504bf19p-16382L, -0x0.a5dc1c6cfbc498c54fb0b5038abbp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.0000fffffffffp-16221L, 0x1.0000001fffff8007fep-239L, 0x0.ff87ffffffffffffe000003fffffp-16382L, 0x0.ff87ffffffffffffdffc003bff7fp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.ac79c9376ef447f3827c9e9de008p-2228L, -0x1.5ba830022b6139e21fbe7270cad8p-6314L, 0x1.e8282b6a26bb6a9daf5c8e73e9f9p-8616L, 0x1.22f14a0253878a730cd1aee373adp-8541L),
+    TEST_fff_f (fma, -0x1.c69749ec574caaa2ab8e97ddb9f3p+2652L, 0x1.f34235ff9d095449c29b4831b62dp+3311L, 0x1.fbe4302df23354dbd0c4d3cfe606p+5879L, -0x1.bb473bfdfb7a6e18886ce6e57eafp+5964L),
+    TEST_fff_f (fma, -0x1.ca8835fc6ecfb5398625fc891be5p-1686L, 0x1.621e1972bbe2180e5be9dd7d8df5p-7671L, -0x1.7d2d21b73b52cf20dec2a83902a4p-9395L, -0x1.3d2322191c9c88bc68a62ab8042cp-9356L),
+    TEST_fff_f (fma, -0x1.55cff679ec49c2541fab41fc843ep-11819L, 0x1.e60e9f464f9e8df0509647c7c971p+12325L, 0x1.eaa2a7649d765c2f564f7a5beca7p+454L, -0x1.447e29fa7e406a285f4e350fcf86p+507L),
+    TEST_fff_f (fma, 0x1.f0e7b1454908576f2537d863cf9bp+11432L, 0x1.cdce52f09d4ca76e68706f34b5d5p-1417L, -0x1.2e986187c70f146235ea2066e486p+9979L, 0x1.c030dad3cc5643f3dd0f5619f661p+10016L),
+    TEST_fff_f (fma, 0x1.f102f7da4a57a3a4aab620e29452p-3098L, -0x1.cc06a4ff40248f9e2dcc4b6afd84p-11727L, 0x1.d512a11126b5ac8ed8973b8580c8p-14849L, -0x1.be8f1cf737ab4d1c31c54f5ec23bp-14824L),
+    TEST_fff_f (fma, -0x1.fc47ac7434b993cd8dcb2b431f25p-3816L, 0x1.fbc9750da8468852d84558e1db6dp-5773L, -0x1.00a98abf783f75c40fe5b7a37d86p-9607L, -0x1.f81917b166f45e763cfcc057e2adp-9588L),
+    TEST_fff_f (fma, 0x1.00000000000007ffffffffffffffp-9045L, -0x1.ffffffffffff80000001ffffffffp+4773L, -0x1.f8p-4316L, -0x1.00000000000f88000000fffffdffp-4271L),
+    TEST_fff_f (fma, 0x1.4e922764c90701d4a2f21d01893dp-8683L, -0x1.955a12e2d7c9447c27fa022fc865p+212L, -0x1.e9634462eaef96528b90b6944578p-8521L, -0x1.08e1783184a371943d3598e10865p-8470L),
+    TEST_fff_f (fma, 0x1.801181509c03bdbef10d6165588cp-15131L, 0x1.ad86f8e57d3d40bfa8007780af63p-368L, -0x1.6e9df0dab1c9f1d7a6043c390741p-15507L, 0x1.417c9b2b15e2ad57dc9e0e920844p-15498L),
+    TEST_fff_f (fma, 0x1.4p-16382L, 0x1.0000000000000000000000000002p-1L, 0x1p-16384L, 0x1.c000000000000000000000000002p-16383L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.4p-16382L, 0x1.0000000000000000000000000002p-1L, -0x1p-16384L, -0x1.c000000000000000000000000002p-16383L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1.fffffffffffffffffffffffffffcp-16382L, 0x1.0000000000000000000000000001p-1L, 0x1p-16494L, 0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, -0x1.fffffffffffffffffffffffffffcp-16382L, 0x1.0000000000000000000000000001p-1L, -0x1p-16494L, -0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-1L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-16494L, 0x1p-1L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1.1p-1L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-16494L, 0x1.1p-1L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p16383L, 0x1p16383L),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p16383L, 0x1p16383L),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p16383L, -0x1p16383L),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p16383L, -0x1p16383L),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p-16382L, 0x1p-16382L),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p-16382L, -0x1p-16382L),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p-16494L, 0x1p-16494L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p-16494L, 0x1p-16494L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p-16494L, -0x1p-16494L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p-16494L, -0x1p-16494L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffffp0L, 0x1p-226L),
+    TEST_fff_f (fma, 0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L),
+    TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L),
+    TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffffp0L, 0x1p-226L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x1p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x1p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x1p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x1p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x1p16319L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x1p16319L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x1p16319L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x1p16319L),
+#endif
+    END_DATA (fma)
+  };
+
 static void
 fma_test (void)
 {
   START (fma);
-
-  TEST_fff_f (fma, 1.0, 2.0, 3.0, 5.0);
-  TEST_fff_f (fma, qnan_value, 2.0, 3.0, qnan_value);
-  TEST_fff_f (fma, 1.0, qnan_value, 3.0, qnan_value);
-  TEST_fff_f (fma, 1.0, 2.0, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
-  TEST_fff_f (fma, plus_infty, 0.0, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
-  TEST_fff_f (fma, minus_infty, 0.0, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
-  TEST_fff_f (fma, 0.0, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
-  TEST_fff_f (fma, 0.0, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
-  TEST_fff_f (fma, plus_infty, 0.0, 1.0, qnan_value, INVALID_EXCEPTION);
-  TEST_fff_f (fma, minus_infty, 0.0, 1.0, qnan_value, INVALID_EXCEPTION);
-  TEST_fff_f (fma, 0.0, plus_infty, 1.0, qnan_value, INVALID_EXCEPTION);
-  TEST_fff_f (fma, 0.0, minus_infty, 1.0, qnan_value, INVALID_EXCEPTION);
-
-  TEST_fff_f (fma, plus_infty, plus_infty, minus_infty, qnan_value, INVALID_EXCEPTION);
-  TEST_fff_f (fma, minus_infty, plus_infty, plus_infty, qnan_value, INVALID_EXCEPTION);
-  TEST_fff_f (fma, plus_infty, minus_infty, plus_infty, qnan_value, INVALID_EXCEPTION);
-  TEST_fff_f (fma, minus_infty, minus_infty, minus_infty, qnan_value, INVALID_EXCEPTION);
-  TEST_fff_f (fma, plus_infty, 3.5L, minus_infty, qnan_value, INVALID_EXCEPTION);
-  TEST_fff_f (fma, minus_infty, -7.5L, minus_infty, qnan_value, INVALID_EXCEPTION);
-  TEST_fff_f (fma, -13.5L, plus_infty, plus_infty, qnan_value, INVALID_EXCEPTION);
-  TEST_fff_f (fma, minus_infty, 7.5L, plus_infty, qnan_value, INVALID_EXCEPTION);
-
-  TEST_fff_f (fma, 1.25L, 0.75L, 0.0625L, 1.0L);
-
-  TEST_fff_f (fma, -max_value, -max_value, minus_infty, minus_infty);
-  TEST_fff_f (fma, max_value / 2, max_value / 2, minus_infty, minus_infty);
-  TEST_fff_f (fma, -max_value, max_value, plus_infty, plus_infty);
-  TEST_fff_f (fma, max_value / 2, -max_value / 4, plus_infty, plus_infty);
-  TEST_fff_f (fma, plus_infty, 4, plus_infty, plus_infty);
-  TEST_fff_f (fma, 2, minus_infty, minus_infty, minus_infty);
-  TEST_fff_f (fma, minus_infty, minus_infty, plus_infty, plus_infty);
-  TEST_fff_f (fma, plus_infty, minus_infty, minus_infty, minus_infty);
-
-  TEST_fff_f (fma, plus_zero, plus_zero, plus_zero, plus_zero);
-  TEST_fff_f (fma, plus_zero, plus_zero, minus_zero, plus_zero);
-  TEST_fff_f (fma, plus_zero, minus_zero, plus_zero, plus_zero);
-  TEST_fff_f (fma, plus_zero, minus_zero, minus_zero, minus_zero);
-  TEST_fff_f (fma, minus_zero, plus_zero, plus_zero, plus_zero);
-  TEST_fff_f (fma, minus_zero, plus_zero, minus_zero, minus_zero);
-  TEST_fff_f (fma, minus_zero, minus_zero, plus_zero, plus_zero);
-  TEST_fff_f (fma, minus_zero, minus_zero, minus_zero, plus_zero);
-  TEST_fff_f (fma, 1.0, plus_zero, plus_zero, plus_zero);
-  TEST_fff_f (fma, 1.0, plus_zero, minus_zero, plus_zero);
-  TEST_fff_f (fma, 1.0, minus_zero, plus_zero, plus_zero);
-  TEST_fff_f (fma, 1.0, minus_zero, minus_zero, minus_zero);
-  TEST_fff_f (fma, -1.0, plus_zero, plus_zero, plus_zero);
-  TEST_fff_f (fma, -1.0, plus_zero, minus_zero, minus_zero);
-  TEST_fff_f (fma, -1.0, minus_zero, plus_zero, plus_zero);
-  TEST_fff_f (fma, -1.0, minus_zero, minus_zero, plus_zero);
-  TEST_fff_f (fma, plus_zero, 1.0, plus_zero, plus_zero);
-  TEST_fff_f (fma, plus_zero, 1.0, minus_zero, plus_zero);
-  TEST_fff_f (fma, plus_zero, -1.0, plus_zero, plus_zero);
-  TEST_fff_f (fma, plus_zero, -1.0, minus_zero, minus_zero);
-  TEST_fff_f (fma, minus_zero, 1.0, plus_zero, plus_zero);
-  TEST_fff_f (fma, minus_zero, 1.0, minus_zero, minus_zero);
-  TEST_fff_f (fma, minus_zero, -1.0, plus_zero, plus_zero);
-  TEST_fff_f (fma, minus_zero, -1.0, minus_zero, plus_zero);
-
-  TEST_fff_f (fma, 1.0, 1.0, -1.0, plus_zero);
-  TEST_fff_f (fma, 1.0, -1.0, 1.0, plus_zero);
-  TEST_fff_f (fma, -1.0, 1.0, 1.0, plus_zero);
-  TEST_fff_f (fma, -1.0, -1.0, -1.0, plus_zero);
-
-  TEST_fff_f (fma, min_value, min_value, plus_zero, plus_zero, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, min_value, min_value, minus_zero, plus_zero, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, min_value, -min_value, plus_zero, minus_zero, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, min_value, -min_value, minus_zero, minus_zero, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -min_value, min_value, plus_zero, minus_zero, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -min_value, min_value, minus_zero, minus_zero, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -min_value, -min_value, plus_zero, plus_zero, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -min_value, -min_value, minus_zero, plus_zero, UNDERFLOW_EXCEPTION);
-
-  TEST_fff_f (fma, max_value, max_value, min_value, plus_infty, OVERFLOW_EXCEPTION);
-  TEST_fff_f (fma, max_value, max_value, -min_value, plus_infty, OVERFLOW_EXCEPTION);
-  TEST_fff_f (fma, max_value, -max_value, min_value, minus_infty, OVERFLOW_EXCEPTION);
-  TEST_fff_f (fma, max_value, -max_value, -min_value, minus_infty, OVERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -max_value, max_value, min_value, minus_infty, OVERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -max_value, max_value, -min_value, minus_infty, OVERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -max_value, -max_value, min_value, plus_infty, OVERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -max_value, -max_value, -min_value, plus_infty, OVERFLOW_EXCEPTION);
-
-#if defined (TEST_FLOAT) && FLT_MANT_DIG == 24
-  TEST_fff_f (fma, 0x1.7ff8p+13, 0x1.000002p+0, 0x1.ffffp-24, 0x1.7ff802p+13);
-  TEST_fff_f (fma, 0x1.fffp+0, 0x1.00001p+0, -0x1.fffp+0, 0x1.fffp-20);
-  TEST_fff_f (fma, 0x1.9abcdep+127, 0x0.9abcdep-126, -0x1.f08948p+0, 0x1.bb421p-25);
-  TEST_fff_f (fma, 0x1.9abcdep+100, 0x0.9abcdep-126, -0x1.f08948p-27, 0x1.bb421p-52);
-  TEST_fff_f (fma, 0x1.fffffep+127, 0x1.001p+0, -0x1.fffffep+127, 0x1.fffffep+115);
-  TEST_fff_f (fma, -0x1.fffffep+127, 0x1.fffffep+0, 0x1.fffffep+127, -0x1.fffffap+127);
-  TEST_fff_f (fma, 0x1.fffffep+127, 2.0, -0x1.fffffep+127, 0x1.fffffep+127);
-  TEST_fff_f (fma, 0x1.4p-126, 0x1.000004p-1, 0x1p-128, 0x1.c00004p-127, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -0x1.4p-126, 0x1.000004p-1, -0x1p-128, -0x1.c00004p-127, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1.fffff8p-126, 0x1.000002p-1, 0x1p-149, 0x1p-126, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-  TEST_fff_f (fma, -0x1.fffff8p-126, 0x1.000002p-1, -0x1p-149, -0x1p-126, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-  TEST_fff_f (fma, 0x1p-149, 0x1p-1, 0x0.fffffep-126, 0x1p-126, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -0x1p-149, 0x1p-1, -0x0.fffffep-126, -0x1p-126, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-149, 0x1.1p-1, 0x0.fffffep-126, 0x1p-126, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -0x1p-149, 0x1.1p-1, -0x0.fffffep-126, -0x1p-126, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p127, 0x1p127);
-  TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p127, 0x1p127);
-  TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p127, -0x1p127);
-  TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p127, -0x1p127);
-  TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p-126, 0x1p-126);
-  TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p-126, 0x1p-126, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-  TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p-126, -0x1p-126, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-  TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p-126, -0x1p-126);
-  TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x0.fffffep-126, 0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x0.fffffep-126, 0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x0.fffffep-126, -0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x0.fffffep-126, -0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p-149, 0x1p-149, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p-149, 0x1p-149, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p-149, -0x1p-149, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p-149, -0x1p-149, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x0.fffp0, 0x0.fffp0, -0x0.ffep0, 0x1p-24);
-  TEST_fff_f (fma, 0x0.fffp0, -0x0.fffp0, 0x0.ffep0, -0x1p-24);
-  TEST_fff_f (fma, -0x0.fffp0, 0x0.fffp0, 0x0.ffep0, -0x1p-24);
-  TEST_fff_f (fma, -0x0.fffp0, -0x0.fffp0, -0x0.ffep0, 0x1p-24);
-  TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p127, 0x1p127);
-  TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p127, 0x1p127);
-  TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p127, -0x1p127);
-  TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p127, -0x1p127);
-  TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p103, 0x1p103);
-  TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p103, 0x1p103);
-  TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p103, -0x1p103);
-  TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p103, -0x1p103);
-#endif
-#if defined (TEST_DOUBLE) && DBL_MANT_DIG == 53
-  TEST_fff_f (fma, 0x1.7fp+13, 0x1.0000000000001p+0, 0x1.ffep-48, 0x1.7f00000000001p+13);
-  TEST_fff_f (fma, 0x1.fffp+0, 0x1.0000000000001p+0, -0x1.fffp+0, 0x1.fffp-52);
-  TEST_fff_f (fma, 0x1.0000002p+0, 0x1.ffffffcp-1, 0x1p-300, 1.0);
-  TEST_fff_f (fma, 0x1.0000002p+0, 0x1.ffffffcp-1, -0x1p-300, 0x1.fffffffffffffp-1);
-  TEST_fff_f (fma, 0x1.deadbeef2feedp+1023, 0x0.deadbeef2feedp-1022, -0x1.a05f8c01a4bfbp+1, 0x1.0989687bc9da4p-53);
-  TEST_fff_f (fma, 0x1.deadbeef2feedp+900, 0x0.deadbeef2feedp-1022, -0x1.a05f8c01a4bfbp-122, 0x1.0989687bc9da4p-176);
-  TEST_fff_f (fma, 0x1.fffffffffffffp+1023, 0x1.001p+0, -0x1.fffffffffffffp+1023, 0x1.fffffffffffffp+1011);
-  TEST_fff_f (fma, -0x1.fffffffffffffp+1023, 0x1.fffffffffffffp+0, 0x1.fffffffffffffp+1023, -0x1.ffffffffffffdp+1023);
-  TEST_fff_f (fma, 0x1.fffffffffffffp+1023, 2.0, -0x1.fffffffffffffp+1023, 0x1.fffffffffffffp+1023);
-  TEST_fff_f (fma, 0x1.6a09e667f3bccp-538, 0x1.6a09e667f3bccp-538, 0.0, 0.0, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1.deadbeef2feedp-495, 0x1.deadbeef2feedp-495, -0x1.bf86a5786a574p-989, 0x0.0000042625a1fp-1022, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1.deadbeef2feedp-503, 0x1.deadbeef2feedp-503, -0x1.bf86a5786a574p-1005, 0x0.0000000004262p-1022, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-537, 0x1p-538, 0x1p-1074, 0x0.0000000000002p-1022, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1.7fffff8p-968, 0x1p-106, 0x0.000001p-1022, 0x0.0000010000001p-1022, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1.4000004p-967, 0x1p-106, 0x0.000001p-1022, 0x0.0000010000003p-1022, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1.4p-967, -0x1p-106, -0x0.000001p-1022, -0x0.0000010000002p-1022, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -0x1.19cab66d73e17p-959, 0x1.c7108a8c5ff51p-107, -0x0.80b0ad65d9b64p-1022, -0x0.80b0ad65d9d59p-1022, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -0x1.d2eaed6e8e9d3p-979, -0x1.4e066c62ac9ddp-63, -0x0.9245e6b003454p-1022, -0x0.9245c09c5fb5dp-1022, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1.153d650bb9f06p-907, 0x1.2d01230d48407p-125, -0x0.b278d5acfc3cp-1022, -0x0.b22757123bbe9p-1022, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -0x1.fffffffffffffp-711, 0x1.fffffffffffffp-275, 0x1.fffffe00007ffp-983, 0x1.7ffffe00007ffp-983);
-  TEST_fff_f (fma, 0x1.4p-1022, 0x1.0000000000002p-1, 0x1p-1024, 0x1.c000000000002p-1023, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -0x1.4p-1022, 0x1.0000000000002p-1, -0x1p-1024, -0x1.c000000000002p-1023, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1.ffffffffffffcp-1022, 0x1.0000000000001p-1, 0x1p-1074, 0x1p-1022, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-  TEST_fff_f (fma, -0x1.ffffffffffffcp-1022, 0x1.0000000000001p-1, -0x1p-1074, -0x1p-1022, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-  TEST_fff_f (fma, 0x1p-1074, 0x1p-1, 0x0.fffffffffffffp-1022, 0x1p-1022, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -0x1p-1074, 0x1p-1, -0x0.fffffffffffffp-1022, -0x1p-1022, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-1074, 0x1.1p-1, 0x0.fffffffffffffp-1022, 0x1p-1022, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -0x1p-1074, 0x1.1p-1, -0x0.fffffffffffffp-1022, -0x1p-1022, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p1023, 0x1p1023);
-  TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p1023, 0x1p1023);
-  TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p1023, -0x1p1023);
-  TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p1023, -0x1p1023);
-  TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p-1022, 0x1p-1022);
-  TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p-1022, 0x1p-1022, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-  TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p-1022, -0x1p-1022, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-  TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p-1022, -0x1p-1022);
-  TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x0.fffffffffffffp-1022, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x0.fffffffffffffp-1022, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x0.fffffffffffffp-1022, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x0.fffffffffffffp-1022, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p-1074, 0x1p-1074, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p-1074, 0x1p-1074, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p-1074, -0x1p-1074, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p-1074, -0x1p-1074, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x0.fffffffffffff8p0, 0x0.fffffffffffff8p0, -0x0.fffffffffffffp0, 0x1p-106);
-  TEST_fff_f (fma, 0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106);
-  TEST_fff_f (fma, -0x0.fffffffffffff8p0, 0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106);
-  TEST_fff_f (fma, -0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, -0x0.fffffffffffffp0, 0x1p-106);
-  TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p1023, 0x1p1023);
-  TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p1023, 0x1p1023);
-  TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p1023, -0x1p1023);
-  TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p1023, -0x1p1023);
-  TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p970, 0x1p970);
-  TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p970, 0x1p970);
-  TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p970, -0x1p970);
-  TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p970, -0x1p970);
-#endif
-#if defined (TEST_LDOUBLE) && LDBL_MANT_DIG == 64
-  TEST_fff_f (fma, -0x8.03fcp+3696L, 0xf.fffffffffffffffp-6140L, 0x8.3ffffffffffffffp-2450L, -0x8.01ecp-2440L);
-  TEST_fff_f (fma, 0x9.fcp+2033L, -0x8.000e1f000ff800fp-3613L, -0xf.fffffffffffc0ffp-1579L, -0xd.fc119fb093ed092p-1577L);
-  TEST_fff_f (fma, 0xc.7fc000003ffffffp-1194L, 0x8.1e0003fffffffffp+15327L, -0x8.fffep+14072L, 0xc.ae9f164020effffp+14136L);
-  TEST_fff_f (fma, -0x8.0001fc000000003p+1798L, 0xcp-2230L, 0x8.f7e000000000007p-468L, -0xc.0002f9ffee10404p-429L);
-  TEST_fff_f (fma, 0xc.0000000000007ffp+10130L, -0x8.000000000000001p+4430L, 0xc.07000000001ffffp+14513L, -0xb.fffffffffffd7e4p+14563L);
-  TEST_fff_f (fma, 0xb.ffffp-4777L, 0x8.000000fffffffffp-11612L, -0x0.3800fff8p-16385L, 0x5.c7fe80c7ffeffffp-16385L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1.4p-16382L, 0x1.0000000000000004p-1L, 0x1p-16384L, 0x1.c000000000000004p-16383L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -0x1.4p-16382L, 0x1.0000000000000004p-1L, -0x1p-16384L, -0x1.c000000000000004p-16383L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1.fffffffffffffff8p-16382L, 0x1.0000000000000002p-1L, 0x1p-16445L, 0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-  TEST_fff_f (fma, -0x1.fffffffffffffff8p-16382L, 0x1.0000000000000002p-1L, -0x1p-16445L, -0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-  TEST_fff_f (fma, 0x1p-16445L, 0x1p-1L, 0x0.fffffffffffffffep-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -0x1p-16445L, 0x1p-1L, -0x0.fffffffffffffffep-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-16445L, 0x1.1p-1L, 0x0.fffffffffffffffep-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -0x1p-16445L, 0x1.1p-1L, -0x0.fffffffffffffffep-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p16383L, 0x1p16383L);
-  TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p16383L, 0x1p16383L);
-  TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p16383L, -0x1p16383L);
-  TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p16383L, -0x1p16383L);
-  TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p-16382L, 0x1p-16382L);
-  TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-  TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-  TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p-16382L, -0x1p-16382L);
-  TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x0.fffffffffffffffep-16382L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x0.fffffffffffffffep-16382L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x0.fffffffffffffffep-16382L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x0.fffffffffffffffep-16382L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p-16445L, 0x1p-16445L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p-16445L, 0x1p-16445L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p-16445L, -0x1p-16445L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p-16445L, -0x1p-16445L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x0.ffffffffffffffffp0L, 0x0.ffffffffffffffffp0L, -0x0.fffffffffffffffep0L, 0x1p-128L);
-  TEST_fff_f (fma, 0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L);
-  TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, 0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L);
-  TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, -0x0.fffffffffffffffep0L, 0x1p-128L);
-  TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16383L, 0x1p16383L);
-  TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16383L, 0x1p16383L);
-  TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16383L, -0x1p16383L);
-  TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16383L, -0x1p16383L);
-  TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16319L, 0x1p16319L);
-  TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16319L, 0x1p16319L);
-  TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16319L, -0x1p16319L);
-  TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16319L, -0x1p16319L);
-#endif
-#if defined (TEST_LDOUBLE) && LDBL_MANT_DIG == 113
-  TEST_fff_f (fma, 0x1.bb2de33e02ccbbfa6e245a7c1f71p-2584L, -0x1.6b500daf0580d987f1bc0cadfcddp-13777L, 0x1.613cd91d9fed34b33820e5ab9d8dp-16378L, -0x1.3a79fb50eb9ce887cffa0f09bd9fp-16360L);
-  TEST_fff_f (fma, -0x1.f949b880cacb0f0c61540105321dp-5954L, -0x1.3876cec84b4140f3bd6198731b7ep-10525L, -0x0.a5dc1c6cfbc498c54fb0b504bf19p-16382L, -0x0.a5dc1c6cfbc498c54fb0b5038abbp-16382L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -0x1.0000fffffffffp-16221L, 0x1.0000001fffff8007fep-239L, 0x0.ff87ffffffffffffe000003fffffp-16382L, 0x0.ff87ffffffffffffdffc003bff7fp-16382L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -0x1.ac79c9376ef447f3827c9e9de008p-2228L, -0x1.5ba830022b6139e21fbe7270cad8p-6314L, 0x1.e8282b6a26bb6a9daf5c8e73e9f9p-8616L, 0x1.22f14a0253878a730cd1aee373adp-8541L);
-  TEST_fff_f (fma, -0x1.c69749ec574caaa2ab8e97ddb9f3p+2652L, 0x1.f34235ff9d095449c29b4831b62dp+3311L, 0x1.fbe4302df23354dbd0c4d3cfe606p+5879L, -0x1.bb473bfdfb7a6e18886ce6e57eafp+5964L);
-  TEST_fff_f (fma, -0x1.ca8835fc6ecfb5398625fc891be5p-1686L, 0x1.621e1972bbe2180e5be9dd7d8df5p-7671L, -0x1.7d2d21b73b52cf20dec2a83902a4p-9395L, -0x1.3d2322191c9c88bc68a62ab8042cp-9356L);
-  TEST_fff_f (fma, -0x1.55cff679ec49c2541fab41fc843ep-11819L, 0x1.e60e9f464f9e8df0509647c7c971p+12325L, 0x1.eaa2a7649d765c2f564f7a5beca7p+454L, -0x1.447e29fa7e406a285f4e350fcf86p+507L);
-  TEST_fff_f (fma, 0x1.f0e7b1454908576f2537d863cf9bp+11432L, 0x1.cdce52f09d4ca76e68706f34b5d5p-1417L, -0x1.2e986187c70f146235ea2066e486p+9979L, 0x1.c030dad3cc5643f3dd0f5619f661p+10016L);
-  TEST_fff_f (fma, 0x1.f102f7da4a57a3a4aab620e29452p-3098L, -0x1.cc06a4ff40248f9e2dcc4b6afd84p-11727L, 0x1.d512a11126b5ac8ed8973b8580c8p-14849L, -0x1.be8f1cf737ab4d1c31c54f5ec23bp-14824L);
-  TEST_fff_f (fma, -0x1.fc47ac7434b993cd8dcb2b431f25p-3816L, 0x1.fbc9750da8468852d84558e1db6dp-5773L, -0x1.00a98abf783f75c40fe5b7a37d86p-9607L, -0x1.f81917b166f45e763cfcc057e2adp-9588L);
-  TEST_fff_f (fma, 0x1.00000000000007ffffffffffffffp-9045L, -0x1.ffffffffffff80000001ffffffffp+4773L, -0x1.f8p-4316L, -0x1.00000000000f88000000fffffdffp-4271L);
-  TEST_fff_f (fma, 0x1.4e922764c90701d4a2f21d01893dp-8683L, -0x1.955a12e2d7c9447c27fa022fc865p+212L, -0x1.e9634462eaef96528b90b6944578p-8521L, -0x1.08e1783184a371943d3598e10865p-8470L);
-  TEST_fff_f (fma, 0x1.801181509c03bdbef10d6165588cp-15131L, 0x1.ad86f8e57d3d40bfa8007780af63p-368L, -0x1.6e9df0dab1c9f1d7a6043c390741p-15507L, 0x1.417c9b2b15e2ad57dc9e0e920844p-15498L);
-  TEST_fff_f (fma, 0x1.4p-16382L, 0x1.0000000000000000000000000002p-1L, 0x1p-16384L, 0x1.c000000000000000000000000002p-16383L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -0x1.4p-16382L, 0x1.0000000000000000000000000002p-1L, -0x1p-16384L, -0x1.c000000000000000000000000002p-16383L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1.fffffffffffffffffffffffffffcp-16382L, 0x1.0000000000000000000000000001p-1L, 0x1p-16494L, 0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-  TEST_fff_f (fma, -0x1.fffffffffffffffffffffffffffcp-16382L, 0x1.0000000000000000000000000001p-1L, -0x1p-16494L, -0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-  TEST_fff_f (fma, 0x1p-16494L, 0x1p-1L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -0x1p-16494L, 0x1p-1L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-16494L, 0x1.1p-1L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, -0x1p-16494L, 0x1.1p-1L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p16383L, 0x1p16383L);
-  TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p16383L, 0x1p16383L);
-  TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p16383L, -0x1p16383L);
-  TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p16383L, -0x1p16383L);
-  TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p-16382L, 0x1p-16382L);
-  TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-  TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-  TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p-16382L, -0x1p-16382L);
-  TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p-16494L, 0x1p-16494L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p-16494L, 0x1p-16494L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p-16494L, -0x1p-16494L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p-16494L, -0x1p-16494L, UNDERFLOW_EXCEPTION);
-  TEST_fff_f (fma, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffffp0L, 0x1p-226L);
-  TEST_fff_f (fma, 0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L);
-  TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L);
-  TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffffp0L, 0x1p-226L);
-  TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x1p16383L);
-  TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x1p16383L);
-  TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x1p16383L);
-  TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x1p16383L);
-  TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x1p16319L);
-  TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x1p16319L);
-  TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x1p16319L);
-  TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x1p16319L);
-#endif
-
+  RUN_TEST_LOOP_fff_f (fma, fma_test_data, );
   END (fma);
 }
 
 
-static void
-fma_test_towardzero (void)
-{
-  int save_round_mode;
-  START (fma_towardzero);
+static const struct test_fff_f_data fma_towardzero_test_data[] =
+  {
+    START_DATA (fma_towardzero),
+    TEST_fff_f (fma, plus_zero, plus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, plus_zero, plus_zero, minus_zero, plus_zero),
+    TEST_fff_f (fma, plus_zero, minus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, plus_zero, minus_zero, minus_zero, minus_zero),
+    TEST_fff_f (fma, minus_zero, plus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, minus_zero, plus_zero, minus_zero, minus_zero),
+    TEST_fff_f (fma, minus_zero, minus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, minus_zero, minus_zero, minus_zero, plus_zero),
+    TEST_fff_f (fma, 1.0, plus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, 1.0, plus_zero, minus_zero, plus_zero),
+    TEST_fff_f (fma, 1.0, minus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, 1.0, minus_zero, minus_zero, minus_zero),
+    TEST_fff_f (fma, -1.0, plus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, -1.0, plus_zero, minus_zero, minus_zero),
+    TEST_fff_f (fma, -1.0, minus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, -1.0, minus_zero, minus_zero, plus_zero),
+    TEST_fff_f (fma, plus_zero, 1.0, plus_zero, plus_zero),
+    TEST_fff_f (fma, plus_zero, 1.0, minus_zero, plus_zero),
+    TEST_fff_f (fma, plus_zero, -1.0, plus_zero, plus_zero),
+    TEST_fff_f (fma, plus_zero, -1.0, minus_zero, minus_zero),
+    TEST_fff_f (fma, minus_zero, 1.0, plus_zero, plus_zero),
+    TEST_fff_f (fma, minus_zero, 1.0, minus_zero, minus_zero),
+    TEST_fff_f (fma, minus_zero, -1.0, plus_zero, plus_zero),
+    TEST_fff_f (fma, minus_zero, -1.0, minus_zero, plus_zero),
 
-  save_round_mode = fegetround ();
+    TEST_fff_f (fma, 1.0, 1.0, -1.0, plus_zero),
+    TEST_fff_f (fma, 1.0, -1.0, 1.0, plus_zero),
+    TEST_fff_f (fma, -1.0, 1.0, 1.0, plus_zero),
+    TEST_fff_f (fma, -1.0, -1.0, -1.0, plus_zero),
 
-  if (!fesetround (FE_TOWARDZERO))
-    {
-      TEST_fff_f (fma, plus_zero, plus_zero, plus_zero, plus_zero);
-      TEST_fff_f (fma, plus_zero, plus_zero, minus_zero, plus_zero);
-      TEST_fff_f (fma, plus_zero, minus_zero, plus_zero, plus_zero);
-      TEST_fff_f (fma, plus_zero, minus_zero, minus_zero, minus_zero);
-      TEST_fff_f (fma, minus_zero, plus_zero, plus_zero, plus_zero);
-      TEST_fff_f (fma, minus_zero, plus_zero, minus_zero, minus_zero);
-      TEST_fff_f (fma, minus_zero, minus_zero, plus_zero, plus_zero);
-      TEST_fff_f (fma, minus_zero, minus_zero, minus_zero, plus_zero);
-      TEST_fff_f (fma, 1.0, plus_zero, plus_zero, plus_zero);
-      TEST_fff_f (fma, 1.0, plus_zero, minus_zero, plus_zero);
-      TEST_fff_f (fma, 1.0, minus_zero, plus_zero, plus_zero);
-      TEST_fff_f (fma, 1.0, minus_zero, minus_zero, minus_zero);
-      TEST_fff_f (fma, -1.0, plus_zero, plus_zero, plus_zero);
-      TEST_fff_f (fma, -1.0, plus_zero, minus_zero, minus_zero);
-      TEST_fff_f (fma, -1.0, minus_zero, plus_zero, plus_zero);
-      TEST_fff_f (fma, -1.0, minus_zero, minus_zero, plus_zero);
-      TEST_fff_f (fma, plus_zero, 1.0, plus_zero, plus_zero);
-      TEST_fff_f (fma, plus_zero, 1.0, minus_zero, plus_zero);
-      TEST_fff_f (fma, plus_zero, -1.0, plus_zero, plus_zero);
-      TEST_fff_f (fma, plus_zero, -1.0, minus_zero, minus_zero);
-      TEST_fff_f (fma, minus_zero, 1.0, plus_zero, plus_zero);
-      TEST_fff_f (fma, minus_zero, 1.0, minus_zero, minus_zero);
-      TEST_fff_f (fma, minus_zero, -1.0, plus_zero, plus_zero);
-      TEST_fff_f (fma, minus_zero, -1.0, minus_zero, plus_zero);
-
-      TEST_fff_f (fma, 1.0, 1.0, -1.0, plus_zero);
-      TEST_fff_f (fma, 1.0, -1.0, 1.0, plus_zero);
-      TEST_fff_f (fma, -1.0, 1.0, 1.0, plus_zero);
-      TEST_fff_f (fma, -1.0, -1.0, -1.0, plus_zero);
-
-      TEST_fff_f (fma, min_value, min_value, plus_zero, plus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, min_value, min_value, minus_zero, plus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, min_value, -min_value, plus_zero, minus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, min_value, -min_value, minus_zero, minus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -min_value, min_value, plus_zero, minus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -min_value, min_value, minus_zero, minus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -min_value, -min_value, plus_zero, plus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -min_value, -min_value, minus_zero, plus_zero, UNDERFLOW_EXCEPTION);
+    TEST_fff_f (fma, min_value, min_value, plus_zero, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, min_value, min_value, minus_zero, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, min_value, -min_value, plus_zero, minus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, min_value, -min_value, minus_zero, minus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -min_value, min_value, plus_zero, minus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -min_value, min_value, minus_zero, minus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -min_value, -min_value, plus_zero, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -min_value, -min_value, minus_zero, plus_zero, UNDERFLOW_EXCEPTION),
 
 #if !(defined TEST_LDOUBLE && LDBL_MANT_DIG == 106) /* Bug 13304.  */
-      TEST_fff_f (fma, max_value, max_value, min_value, max_value, OVERFLOW_EXCEPTION);
-      TEST_fff_f (fma, max_value, max_value, -min_value, max_value, OVERFLOW_EXCEPTION);
-      TEST_fff_f (fma, max_value, -max_value, min_value, -max_value, OVERFLOW_EXCEPTION);
-      TEST_fff_f (fma, max_value, -max_value, -min_value, -max_value, OVERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -max_value, max_value, min_value, -max_value, OVERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -max_value, max_value, -min_value, -max_value, OVERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -max_value, -max_value, min_value, max_value, OVERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -max_value, -max_value, -min_value, max_value, OVERFLOW_EXCEPTION);
+    TEST_fff_f (fma, max_value, max_value, min_value, max_value, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, max_value, max_value, -min_value, max_value, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, max_value, -max_value, min_value, -max_value, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, max_value, -max_value, -min_value, -max_value, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -max_value, max_value, min_value, -max_value, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -max_value, max_value, -min_value, -max_value, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -max_value, -max_value, min_value, max_value, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -max_value, -max_value, -min_value, max_value, OVERFLOW_EXCEPTION),
 #endif
 
 #if defined (TEST_FLOAT) && FLT_MANT_DIG == 24
-      TEST_fff_f (fma, 0x1.4p-126, 0x1.000004p-1, 0x1p-128, 0x1.c00004p-127, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1.4p-126, 0x1.000004p-1, -0x1p-128, -0x1.c00004p-127, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1.fffff8p-126, 0x1.000002p-1, 0x1p-149, 0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1.fffff8p-126, 0x1.000002p-1, -0x1p-149, -0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-1, 0x0.fffffep-126, 0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1p-149, 0x1p-1, -0x0.fffffep-126, -0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, 0x1.1p-1, 0x0.fffffep-126, 0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1p-149, 0x1.1p-1, -0x0.fffffep-126, -0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p127, 0x1p127);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p127, 0x0.ffffffp127);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p127, -0x0.ffffffp127);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p127, -0x1p127);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p-126, 0x1p-126);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p-126, 0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p-126, -0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p-126, -0x1p-126);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x0.fffffep-126, 0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x0.fffffep-126, 0x0.fffffcp-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x0.fffffep-126, -0x0.fffffcp-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x0.fffffep-126, -0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p-149, 0x1p-149, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p-149, plus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p-149, minus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p-149, -0x1p-149, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x0.fffp0, 0x0.fffp0, -0x0.ffep0, 0x1p-24);
-      TEST_fff_f (fma, 0x0.fffp0, -0x0.fffp0, 0x0.ffep0, -0x1p-24);
-      TEST_fff_f (fma, -0x0.fffp0, 0x0.fffp0, 0x0.ffep0, -0x1p-24);
-      TEST_fff_f (fma, -0x0.fffp0, -0x0.fffp0, -0x0.ffep0, 0x1p-24);
-      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p127, 0x1p127);
-      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p127, 0x0.ffffffp127);
-      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p127, -0x0.ffffffp127);
-      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p127, -0x1p127);
-      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p103, 0x1p103);
-      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p103, 0x0.ffffffp103);
-      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p103, -0x0.ffffffp103);
-      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p103, -0x1p103);
+    TEST_fff_f (fma, 0x1.4p-126, 0x1.000004p-1, 0x1p-128, 0x1.c00004p-127, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.4p-126, 0x1.000004p-1, -0x1p-128, -0x1.c00004p-127, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1.fffff8p-126, 0x1.000002p-1, 0x1p-149, 0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.fffff8p-126, 0x1.000002p-1, -0x1p-149, -0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-1, 0x0.fffffep-126, 0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-149, 0x1p-1, -0x0.fffffep-126, -0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, 0x1.1p-1, 0x0.fffffep-126, 0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-149, 0x1.1p-1, -0x0.fffffep-126, -0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p127, 0x1p127),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p127, 0x0.ffffffp127),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p127, -0x0.ffffffp127),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p127, -0x1p127),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p-126, 0x1p-126),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p-126, 0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p-126, -0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p-126, -0x1p-126),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x0.fffffep-126, 0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x0.fffffep-126, 0x0.fffffcp-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x0.fffffep-126, -0x0.fffffcp-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x0.fffffep-126, -0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p-149, 0x1p-149, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p-149, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p-149, minus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p-149, -0x1p-149, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x0.fffp0, 0x0.fffp0, -0x0.ffep0, 0x1p-24),
+    TEST_fff_f (fma, 0x0.fffp0, -0x0.fffp0, 0x0.ffep0, -0x1p-24),
+    TEST_fff_f (fma, -0x0.fffp0, 0x0.fffp0, 0x0.ffep0, -0x1p-24),
+    TEST_fff_f (fma, -0x0.fffp0, -0x0.fffp0, -0x0.ffep0, 0x1p-24),
+    TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p127, 0x1p127),
+    TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p127, 0x0.ffffffp127),
+    TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p127, -0x0.ffffffp127),
+    TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p127, -0x1p127),
+    TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p103, 0x1p103),
+    TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p103, 0x0.ffffffp103),
+    TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p103, -0x0.ffffffp103),
+    TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p103, -0x1p103),
 #endif
 #if defined (TEST_DOUBLE) && DBL_MANT_DIG == 53
-      TEST_fff_f (fma, 0x1.4p-1022, 0x1.0000000000002p-1, 0x1p-1024, 0x1.c000000000002p-1023, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1.4p-1022, 0x1.0000000000002p-1, -0x1p-1024, -0x1.c000000000002p-1023, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1.ffffffffffffcp-1022, 0x1.0000000000001p-1, 0x1p-1074, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1.ffffffffffffcp-1022, 0x1.0000000000001p-1, -0x1p-1074, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1, 0x0.fffffffffffffp-1022, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1p-1074, 0x1p-1, -0x0.fffffffffffffp-1022, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, 0x1.1p-1, 0x0.fffffffffffffp-1022, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1p-1074, 0x1.1p-1, -0x0.fffffffffffffp-1022, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p1023, 0x1p1023);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p1023, 0x0.fffffffffffff8p1023);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p1023, -0x0.fffffffffffff8p1023);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p1023, -0x1p1023);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p-1022, 0x1p-1022);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p-1022, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p-1022, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p-1022, -0x1p-1022);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x0.fffffffffffffp-1022, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x0.fffffffffffffp-1022, 0x0.ffffffffffffep-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x0.fffffffffffffp-1022, -0x0.ffffffffffffep-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x0.fffffffffffffp-1022, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p-1074, 0x1p-1074, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p-1074, plus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p-1074, minus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p-1074, -0x1p-1074, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x0.fffffffffffff8p0, 0x0.fffffffffffff8p0, -0x0.fffffffffffffp0, 0x1p-106);
-      TEST_fff_f (fma, 0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106);
-      TEST_fff_f (fma, -0x0.fffffffffffff8p0, 0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106);
-      TEST_fff_f (fma, -0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, -0x0.fffffffffffffp0, 0x1p-106);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p1023, 0x1p1023);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p1023, 0x0.fffffffffffff8p1023);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p1023, -0x0.fffffffffffff8p1023);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p1023, -0x1p1023);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p970, 0x1p970);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p970, 0x0.fffffffffffff8p970);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p970, -0x0.fffffffffffff8p970);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p970, -0x1p970);
+    TEST_fff_f (fma, 0x1.4p-1022, 0x1.0000000000002p-1, 0x1p-1024, 0x1.c000000000002p-1023, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.4p-1022, 0x1.0000000000002p-1, -0x1p-1024, -0x1.c000000000002p-1023, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1.ffffffffffffcp-1022, 0x1.0000000000001p-1, 0x1p-1074, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.ffffffffffffcp-1022, 0x1.0000000000001p-1, -0x1p-1074, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1, 0x0.fffffffffffffp-1022, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-1074, 0x1p-1, -0x0.fffffffffffffp-1022, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, 0x1.1p-1, 0x0.fffffffffffffp-1022, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-1074, 0x1.1p-1, -0x0.fffffffffffffp-1022, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p1023, 0x1p1023),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p1023, 0x0.fffffffffffff8p1023),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p1023, -0x0.fffffffffffff8p1023),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p1023, -0x1p1023),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p-1022, 0x1p-1022),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p-1022, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p-1022, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p-1022, -0x1p-1022),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x0.fffffffffffffp-1022, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x0.fffffffffffffp-1022, 0x0.ffffffffffffep-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x0.fffffffffffffp-1022, -0x0.ffffffffffffep-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x0.fffffffffffffp-1022, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p-1074, 0x1p-1074, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p-1074, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p-1074, minus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p-1074, -0x1p-1074, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x0.fffffffffffff8p0, 0x0.fffffffffffff8p0, -0x0.fffffffffffffp0, 0x1p-106),
+    TEST_fff_f (fma, 0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106),
+    TEST_fff_f (fma, -0x0.fffffffffffff8p0, 0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106),
+    TEST_fff_f (fma, -0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, -0x0.fffffffffffffp0, 0x1p-106),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p1023, 0x1p1023),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p1023, 0x0.fffffffffffff8p1023),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p1023, -0x0.fffffffffffff8p1023),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p1023, -0x1p1023),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p970, 0x1p970),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p970, 0x0.fffffffffffff8p970),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p970, -0x0.fffffffffffff8p970),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p970, -0x1p970),
 #endif
 #if defined (TEST_LDOUBLE) && LDBL_MANT_DIG == 64
-      TEST_fff_f (fma, 0x1.4p-16382L, 0x1.0000000000000004p-1L, 0x1p-16384L, 0x1.c000000000000004p-16383L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1.4p-16382L, 0x1.0000000000000004p-1L, -0x1p-16384L, -0x1.c000000000000004p-16383L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1.fffffffffffffff8p-16382L, 0x1.0000000000000002p-1L, 0x1p-16445L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1.fffffffffffffff8p-16382L, 0x1.0000000000000002p-1L, -0x1p-16445L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-1L, 0x0.fffffffffffffffep-16382L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1p-16445L, 0x1p-1L, -0x0.fffffffffffffffep-16382L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1.1p-1L, 0x0.fffffffffffffffep-16382L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1p-16445L, 0x1.1p-1L, -0x0.fffffffffffffffep-16382L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p16383L, 0x1p16383L);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p16383L, 0x0.ffffffffffffffffp16383L);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p16383L, -0x0.ffffffffffffffffp16383L);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p16383L, -0x1p16383L);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p-16382L, 0x1p-16382L);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p-16382L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p-16382L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p-16382L, -0x1p-16382L);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x0.fffffffffffffffep-16382L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x0.fffffffffffffffep-16382L, 0x0.fffffffffffffffcp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x0.fffffffffffffffep-16382L, -0x0.fffffffffffffffcp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x0.fffffffffffffffep-16382L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p-16445L, 0x1p-16445L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p-16445L, plus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p-16445L, minus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p-16445L, -0x1p-16445L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x0.ffffffffffffffffp0L, 0x0.ffffffffffffffffp0L, -0x0.fffffffffffffffep0L, 0x1p-128L);
-      TEST_fff_f (fma, 0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L);
-      TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, 0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L);
-      TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, -0x0.fffffffffffffffep0L, 0x1p-128L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16383L, 0x1p16383L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16383L, 0x0.ffffffffffffffffp16383L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16383L, -0x0.ffffffffffffffffp16383L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16383L, -0x1p16383L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16319L, 0x1p16319L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16319L, 0x0.ffffffffffffffffp16319L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16319L, -0x0.ffffffffffffffffp16319L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16319L, -0x1p16319L);
+    TEST_fff_f (fma, 0x1.4p-16382L, 0x1.0000000000000004p-1L, 0x1p-16384L, 0x1.c000000000000004p-16383L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.4p-16382L, 0x1.0000000000000004p-1L, -0x1p-16384L, -0x1.c000000000000004p-16383L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1.fffffffffffffff8p-16382L, 0x1.0000000000000002p-1L, 0x1p-16445L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.fffffffffffffff8p-16382L, 0x1.0000000000000002p-1L, -0x1p-16445L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-1L, 0x0.fffffffffffffffep-16382L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-16445L, 0x1p-1L, -0x0.fffffffffffffffep-16382L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1.1p-1L, 0x0.fffffffffffffffep-16382L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-16445L, 0x1.1p-1L, -0x0.fffffffffffffffep-16382L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p16383L, 0x1p16383L),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p16383L, 0x0.ffffffffffffffffp16383L),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p16383L, -0x0.ffffffffffffffffp16383L),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p16383L, -0x1p16383L),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p-16382L, 0x1p-16382L),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p-16382L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p-16382L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p-16382L, -0x1p-16382L),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x0.fffffffffffffffep-16382L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x0.fffffffffffffffep-16382L, 0x0.fffffffffffffffcp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x0.fffffffffffffffep-16382L, -0x0.fffffffffffffffcp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x0.fffffffffffffffep-16382L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p-16445L, 0x1p-16445L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p-16445L, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p-16445L, minus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p-16445L, -0x1p-16445L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x0.ffffffffffffffffp0L, 0x0.ffffffffffffffffp0L, -0x0.fffffffffffffffep0L, 0x1p-128L),
+    TEST_fff_f (fma, 0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L),
+    TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, 0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L),
+    TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, -0x0.fffffffffffffffep0L, 0x1p-128L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16383L, 0x1p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16383L, 0x0.ffffffffffffffffp16383L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16383L, -0x0.ffffffffffffffffp16383L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16383L, -0x1p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16319L, 0x1p16319L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16319L, 0x0.ffffffffffffffffp16319L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16319L, -0x0.ffffffffffffffffp16319L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16319L, -0x1p16319L),
 #endif
 #if defined (TEST_LDOUBLE) && LDBL_MANT_DIG == 113
-      TEST_fff_f (fma, 0x1.4p-16382L, 0x1.0000000000000000000000000002p-1L, 0x1p-16384L, 0x1.c000000000000000000000000002p-16383L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1.4p-16382L, 0x1.0000000000000000000000000002p-1L, -0x1p-16384L, -0x1.c000000000000000000000000002p-16383L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1.fffffffffffffffffffffffffffcp-16382L, 0x1.0000000000000000000000000001p-1L, 0x1p-16494L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1.fffffffffffffffffffffffffffcp-16382L, 0x1.0000000000000000000000000001p-1L, -0x1p-16494L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-1L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1p-16494L, 0x1p-1L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1.1p-1L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1p-16494L, 0x1.1p-1L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p16383L, 0x1p16383L);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p16383L, 0x0.ffffffffffffffffffffffffffff8p16383L);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p16383L, -0x0.ffffffffffffffffffffffffffff8p16383L);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p16383L, -0x1p16383L);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p-16382L, 0x1p-16382L);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p-16382L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p-16382L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p-16382L, -0x1p-16382L);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x0.fffffffffffffffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x0.fffffffffffffffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p-16494L, 0x1p-16494L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p-16494L, plus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p-16494L, minus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p-16494L, -0x1p-16494L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffffp0L, 0x1p-226L);
-      TEST_fff_f (fma, 0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L);
-      TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L);
-      TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffffp0L, 0x1p-226L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x1p16383L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x0.ffffffffffffffffffffffffffff8p16383L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x0.ffffffffffffffffffffffffffff8p16383L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x1p16383L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x1p16319L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x0.ffffffffffffffffffffffffffff8p16319L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x0.ffffffffffffffffffffffffffff8p16319L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x1p16319L);
+    TEST_fff_f (fma, 0x1.4p-16382L, 0x1.0000000000000000000000000002p-1L, 0x1p-16384L, 0x1.c000000000000000000000000002p-16383L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.4p-16382L, 0x1.0000000000000000000000000002p-1L, -0x1p-16384L, -0x1.c000000000000000000000000002p-16383L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1.fffffffffffffffffffffffffffcp-16382L, 0x1.0000000000000000000000000001p-1L, 0x1p-16494L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.fffffffffffffffffffffffffffcp-16382L, 0x1.0000000000000000000000000001p-1L, -0x1p-16494L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-1L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-16494L, 0x1p-1L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1.1p-1L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-16494L, 0x1.1p-1L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p16383L, 0x1p16383L),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p16383L, 0x0.ffffffffffffffffffffffffffff8p16383L),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p16383L, -0x0.ffffffffffffffffffffffffffff8p16383L),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p16383L, -0x1p16383L),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p-16382L, 0x1p-16382L),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p-16382L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p-16382L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p-16382L, -0x1p-16382L),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x0.fffffffffffffffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x0.fffffffffffffffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p-16494L, 0x1p-16494L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p-16494L, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p-16494L, minus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p-16494L, -0x1p-16494L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffffp0L, 0x1p-226L),
+    TEST_fff_f (fma, 0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L),
+    TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L),
+    TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffffp0L, 0x1p-226L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x1p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x0.ffffffffffffffffffffffffffff8p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x0.ffffffffffffffffffffffffffff8p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x1p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x1p16319L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x0.ffffffffffffffffffffffffffff8p16319L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x0.ffffffffffffffffffffffffffff8p16319L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x1p16319L),
 #endif
-    }
+    END_DATA (fma_towardzero)
+  };
 
-  fesetround (save_round_mode);
-
+static void
+fma_test_towardzero (void)
+{
+  START (fma_towardzero);
+  RUN_TEST_LOOP_fff_f (fma, fma_towardzero_test_data, FE_TOWARDZERO);
   END (fma_towardzero);
 }
 
 
-static void
-fma_test_downward (void)
-{
-  int save_round_mode;
-  START (fma_downward);
+static const struct test_fff_f_data fma_downward_test_data[] =
+  {
+    START_DATA (fma_downward),
+    TEST_fff_f (fma, plus_zero, plus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, plus_zero, plus_zero, minus_zero, minus_zero),
+    TEST_fff_f (fma, plus_zero, minus_zero, plus_zero, minus_zero),
+    TEST_fff_f (fma, plus_zero, minus_zero, minus_zero, minus_zero),
+    TEST_fff_f (fma, minus_zero, plus_zero, plus_zero, minus_zero),
+    TEST_fff_f (fma, minus_zero, plus_zero, minus_zero, minus_zero),
+    TEST_fff_f (fma, minus_zero, minus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, minus_zero, minus_zero, minus_zero, minus_zero),
+    TEST_fff_f (fma, 1.0, plus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, 1.0, plus_zero, minus_zero, minus_zero),
+    TEST_fff_f (fma, 1.0, minus_zero, plus_zero, minus_zero),
+    TEST_fff_f (fma, 1.0, minus_zero, minus_zero, minus_zero),
+    TEST_fff_f (fma, -1.0, plus_zero, plus_zero, minus_zero),
+    TEST_fff_f (fma, -1.0, plus_zero, minus_zero, minus_zero),
+    TEST_fff_f (fma, -1.0, minus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, -1.0, minus_zero, minus_zero, minus_zero),
+    TEST_fff_f (fma, plus_zero, 1.0, plus_zero, plus_zero),
+    TEST_fff_f (fma, plus_zero, 1.0, minus_zero, minus_zero),
+    TEST_fff_f (fma, plus_zero, -1.0, plus_zero, minus_zero),
+    TEST_fff_f (fma, plus_zero, -1.0, minus_zero, minus_zero),
+    TEST_fff_f (fma, minus_zero, 1.0, plus_zero, minus_zero),
+    TEST_fff_f (fma, minus_zero, 1.0, minus_zero, minus_zero),
+    TEST_fff_f (fma, minus_zero, -1.0, plus_zero, plus_zero),
+    TEST_fff_f (fma, minus_zero, -1.0, minus_zero, minus_zero),
 
-  save_round_mode = fegetround ();
+    TEST_fff_f (fma, 1.0, 1.0, -1.0, minus_zero),
+    TEST_fff_f (fma, 1.0, -1.0, 1.0, minus_zero),
+    TEST_fff_f (fma, -1.0, 1.0, 1.0, minus_zero),
+    TEST_fff_f (fma, -1.0, -1.0, -1.0, minus_zero),
 
-  if (!fesetround (FE_DOWNWARD))
-    {
-      TEST_fff_f (fma, plus_zero, plus_zero, plus_zero, plus_zero);
-      TEST_fff_f (fma, plus_zero, plus_zero, minus_zero, minus_zero);
-      TEST_fff_f (fma, plus_zero, minus_zero, plus_zero, minus_zero);
-      TEST_fff_f (fma, plus_zero, minus_zero, minus_zero, minus_zero);
-      TEST_fff_f (fma, minus_zero, plus_zero, plus_zero, minus_zero);
-      TEST_fff_f (fma, minus_zero, plus_zero, minus_zero, minus_zero);
-      TEST_fff_f (fma, minus_zero, minus_zero, plus_zero, plus_zero);
-      TEST_fff_f (fma, minus_zero, minus_zero, minus_zero, minus_zero);
-      TEST_fff_f (fma, 1.0, plus_zero, plus_zero, plus_zero);
-      TEST_fff_f (fma, 1.0, plus_zero, minus_zero, minus_zero);
-      TEST_fff_f (fma, 1.0, minus_zero, plus_zero, minus_zero);
-      TEST_fff_f (fma, 1.0, minus_zero, minus_zero, minus_zero);
-      TEST_fff_f (fma, -1.0, plus_zero, plus_zero, minus_zero);
-      TEST_fff_f (fma, -1.0, plus_zero, minus_zero, minus_zero);
-      TEST_fff_f (fma, -1.0, minus_zero, plus_zero, plus_zero);
-      TEST_fff_f (fma, -1.0, minus_zero, minus_zero, minus_zero);
-      TEST_fff_f (fma, plus_zero, 1.0, plus_zero, plus_zero);
-      TEST_fff_f (fma, plus_zero, 1.0, minus_zero, minus_zero);
-      TEST_fff_f (fma, plus_zero, -1.0, plus_zero, minus_zero);
-      TEST_fff_f (fma, plus_zero, -1.0, minus_zero, minus_zero);
-      TEST_fff_f (fma, minus_zero, 1.0, plus_zero, minus_zero);
-      TEST_fff_f (fma, minus_zero, 1.0, minus_zero, minus_zero);
-      TEST_fff_f (fma, minus_zero, -1.0, plus_zero, plus_zero);
-      TEST_fff_f (fma, minus_zero, -1.0, minus_zero, minus_zero);
-
-      TEST_fff_f (fma, 1.0, 1.0, -1.0, minus_zero);
-      TEST_fff_f (fma, 1.0, -1.0, 1.0, minus_zero);
-      TEST_fff_f (fma, -1.0, 1.0, 1.0, minus_zero);
-      TEST_fff_f (fma, -1.0, -1.0, -1.0, minus_zero);
-
-      TEST_fff_f (fma, min_value, min_value, plus_zero, plus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, min_value, min_value, minus_zero, plus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, min_value, -min_value, plus_zero, -min_subnorm_value, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, min_value, -min_value, minus_zero, -min_subnorm_value, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -min_value, min_value, plus_zero, -min_subnorm_value, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -min_value, min_value, minus_zero, -min_subnorm_value, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -min_value, -min_value, plus_zero, plus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -min_value, -min_value, minus_zero, plus_zero, UNDERFLOW_EXCEPTION);
+    TEST_fff_f (fma, min_value, min_value, plus_zero, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, min_value, min_value, minus_zero, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, min_value, -min_value, plus_zero, -min_subnorm_value, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, min_value, -min_value, minus_zero, -min_subnorm_value, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -min_value, min_value, plus_zero, -min_subnorm_value, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -min_value, min_value, minus_zero, -min_subnorm_value, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -min_value, -min_value, plus_zero, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -min_value, -min_value, minus_zero, plus_zero, UNDERFLOW_EXCEPTION),
 
 #if !(defined TEST_LDOUBLE && LDBL_MANT_DIG == 106) /* Bug 13304.  */
-      TEST_fff_f (fma, max_value, max_value, min_value, max_value, OVERFLOW_EXCEPTION);
-      TEST_fff_f (fma, max_value, max_value, -min_value, max_value, OVERFLOW_EXCEPTION);
-      TEST_fff_f (fma, max_value, -max_value, min_value, minus_infty, OVERFLOW_EXCEPTION);
-      TEST_fff_f (fma, max_value, -max_value, -min_value, minus_infty, OVERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -max_value, max_value, min_value, minus_infty, OVERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -max_value, max_value, -min_value, minus_infty, OVERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -max_value, -max_value, min_value, max_value, OVERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -max_value, -max_value, -min_value, max_value, OVERFLOW_EXCEPTION);
+    TEST_fff_f (fma, max_value, max_value, min_value, max_value, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, max_value, max_value, -min_value, max_value, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, max_value, -max_value, min_value, minus_infty, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, max_value, -max_value, -min_value, minus_infty, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -max_value, max_value, min_value, minus_infty, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -max_value, max_value, -min_value, minus_infty, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -max_value, -max_value, min_value, max_value, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -max_value, -max_value, -min_value, max_value, OVERFLOW_EXCEPTION),
 #endif
 
 #if defined (TEST_FLOAT) && FLT_MANT_DIG == 24
-      TEST_fff_f (fma, 0x1.4p-126, 0x1.000004p-1, 0x1p-128, 0x1.c00004p-127, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1.4p-126, 0x1.000004p-1, -0x1p-128, -0x1.c00008p-127, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1.fffff8p-126, 0x1.000002p-1, 0x1p-149, 0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1.fffff8p-126, 0x1.000002p-1, -0x1p-149, -0x1p-126, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-1, 0x0.fffffep-126, 0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1p-149, 0x1p-1, -0x0.fffffep-126, -0x1p-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, 0x1.1p-1, 0x0.fffffep-126, 0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1p-149, 0x1.1p-1, -0x0.fffffep-126, -0x1p-126, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p127, 0x1p127);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p127, 0x0.ffffffp127);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p127, -0x1p127);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p127, -0x1.000002p127);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p-126, 0x1p-126);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p-126, 0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p-126, -0x1p-126, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p-126, -0x1.000002p-126);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x0.fffffep-126, 0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x0.fffffep-126, 0x0.fffffcp-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x0.fffffep-126, -0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x0.fffffep-126, -0x1p-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p-149, 0x1p-149, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p-149, plus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p-149, -0x1p-149, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p-149, -0x1p-148, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x0.fffp0, 0x0.fffp0, -0x0.ffep0, 0x1p-24);
-      TEST_fff_f (fma, 0x0.fffp0, -0x0.fffp0, 0x0.ffep0, -0x1p-24);
-      TEST_fff_f (fma, -0x0.fffp0, 0x0.fffp0, 0x0.ffep0, -0x1p-24);
-      TEST_fff_f (fma, -0x0.fffp0, -0x0.fffp0, -0x0.ffep0, 0x1p-24);
-      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p127, 0x1p127);
-      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p127, 0x0.ffffffp127);
-      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p127, -0x1p127);
-      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p127, -0x1.000002p127);
-      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p103, 0x1p103);
-      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p103, 0x0.ffffffp103);
-      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p103, -0x1p103);
-      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p103, -0x1.000002p103);
+    TEST_fff_f (fma, 0x1.4p-126, 0x1.000004p-1, 0x1p-128, 0x1.c00004p-127, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.4p-126, 0x1.000004p-1, -0x1p-128, -0x1.c00008p-127, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1.fffff8p-126, 0x1.000002p-1, 0x1p-149, 0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.fffff8p-126, 0x1.000002p-1, -0x1p-149, -0x1p-126, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-1, 0x0.fffffep-126, 0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-149, 0x1p-1, -0x0.fffffep-126, -0x1p-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, 0x1.1p-1, 0x0.fffffep-126, 0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-149, 0x1.1p-1, -0x0.fffffep-126, -0x1p-126, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p127, 0x1p127),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p127, 0x0.ffffffp127),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p127, -0x1p127),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p127, -0x1.000002p127),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p-126, 0x1p-126),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p-126, 0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p-126, -0x1p-126, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p-126, -0x1.000002p-126),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x0.fffffep-126, 0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x0.fffffep-126, 0x0.fffffcp-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x0.fffffep-126, -0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x0.fffffep-126, -0x1p-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p-149, 0x1p-149, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p-149, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p-149, -0x1p-149, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p-149, -0x1p-148, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x0.fffp0, 0x0.fffp0, -0x0.ffep0, 0x1p-24),
+    TEST_fff_f (fma, 0x0.fffp0, -0x0.fffp0, 0x0.ffep0, -0x1p-24),
+    TEST_fff_f (fma, -0x0.fffp0, 0x0.fffp0, 0x0.ffep0, -0x1p-24),
+    TEST_fff_f (fma, -0x0.fffp0, -0x0.fffp0, -0x0.ffep0, 0x1p-24),
+    TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p127, 0x1p127),
+    TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p127, 0x0.ffffffp127),
+    TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p127, -0x1p127),
+    TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p127, -0x1.000002p127),
+    TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p103, 0x1p103),
+    TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p103, 0x0.ffffffp103),
+    TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p103, -0x1p103),
+    TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p103, -0x1.000002p103),
 #endif
 #if defined (TEST_DOUBLE) && DBL_MANT_DIG == 53
-      TEST_fff_f (fma, 0x1.4p-1022, 0x1.0000000000002p-1, 0x1p-1024, 0x1.c000000000002p-1023, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1.4p-1022, 0x1.0000000000002p-1, -0x1p-1024, -0x1.c000000000004p-1023, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1.ffffffffffffcp-1022, 0x1.0000000000001p-1, 0x1p-1074, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1.ffffffffffffcp-1022, 0x1.0000000000001p-1, -0x1p-1074, -0x1p-1022, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1, 0x0.fffffffffffffp-1022, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1p-1074, 0x1p-1, -0x0.fffffffffffffp-1022, -0x1p-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, 0x1.1p-1, 0x0.fffffffffffffp-1022, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1p-1074, 0x1.1p-1, -0x0.fffffffffffffp-1022, -0x1p-1022, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p1023, 0x1p1023);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p1023, 0x0.fffffffffffff8p1023);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p1023, -0x1p1023);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p1023, -0x1.0000000000001p1023);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p-1022, 0x1p-1022);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p-1022, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p-1022, -0x1p-1022, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p-1022, -0x1.0000000000001p-1022);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x0.fffffffffffffp-1022, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x0.fffffffffffffp-1022, 0x0.ffffffffffffep-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x0.fffffffffffffp-1022, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x0.fffffffffffffp-1022, -0x1p-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p-1074, 0x1p-1074, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p-1074, plus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p-1074, -0x1p-1074, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p-1074, -0x1p-1073, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x0.fffffffffffff8p0, 0x0.fffffffffffff8p0, -0x0.fffffffffffffp0, 0x1p-106);
-      TEST_fff_f (fma, 0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106);
-      TEST_fff_f (fma, -0x0.fffffffffffff8p0, 0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106);
-      TEST_fff_f (fma, -0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, -0x0.fffffffffffffp0, 0x1p-106);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p1023, 0x1p1023);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p1023, 0x0.fffffffffffff8p1023);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p1023, -0x1p1023);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p1023, -0x1.0000000000001p1023);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p970, 0x1p970);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p970, 0x0.fffffffffffff8p970);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p970, -0x1p970);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p970, -0x1.0000000000001p970);
+    TEST_fff_f (fma, 0x1.4p-1022, 0x1.0000000000002p-1, 0x1p-1024, 0x1.c000000000002p-1023, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.4p-1022, 0x1.0000000000002p-1, -0x1p-1024, -0x1.c000000000004p-1023, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1.ffffffffffffcp-1022, 0x1.0000000000001p-1, 0x1p-1074, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.ffffffffffffcp-1022, 0x1.0000000000001p-1, -0x1p-1074, -0x1p-1022, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1, 0x0.fffffffffffffp-1022, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-1074, 0x1p-1, -0x0.fffffffffffffp-1022, -0x1p-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, 0x1.1p-1, 0x0.fffffffffffffp-1022, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-1074, 0x1.1p-1, -0x0.fffffffffffffp-1022, -0x1p-1022, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p1023, 0x1p1023),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p1023, 0x0.fffffffffffff8p1023),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p1023, -0x1p1023),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p1023, -0x1.0000000000001p1023),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p-1022, 0x1p-1022),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p-1022, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p-1022, -0x1p-1022, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p-1022, -0x1.0000000000001p-1022),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x0.fffffffffffffp-1022, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x0.fffffffffffffp-1022, 0x0.ffffffffffffep-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x0.fffffffffffffp-1022, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x0.fffffffffffffp-1022, -0x1p-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p-1074, 0x1p-1074, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p-1074, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p-1074, -0x1p-1074, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p-1074, -0x1p-1073, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x0.fffffffffffff8p0, 0x0.fffffffffffff8p0, -0x0.fffffffffffffp0, 0x1p-106),
+    TEST_fff_f (fma, 0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106),
+    TEST_fff_f (fma, -0x0.fffffffffffff8p0, 0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106),
+    TEST_fff_f (fma, -0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, -0x0.fffffffffffffp0, 0x1p-106),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p1023, 0x1p1023),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p1023, 0x0.fffffffffffff8p1023),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p1023, -0x1p1023),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p1023, -0x1.0000000000001p1023),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p970, 0x1p970),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p970, 0x0.fffffffffffff8p970),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p970, -0x1p970),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p970, -0x1.0000000000001p970),
 #endif
 #if defined (TEST_LDOUBLE) && LDBL_MANT_DIG == 64
-      TEST_fff_f (fma, 0x1.4p-16382L, 0x1.0000000000000004p-1L, 0x1p-16384L, 0x1.c000000000000004p-16383L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1.4p-16382L, 0x1.0000000000000004p-1L, -0x1p-16384L, -0x1.c000000000000008p-16383L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1.fffffffffffffff8p-16382L, 0x1.0000000000000002p-1L, 0x1p-16445L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1.fffffffffffffff8p-16382L, 0x1.0000000000000002p-1L, -0x1p-16445L, -0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-1L, 0x0.fffffffffffffffep-16382L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1p-16445L, 0x1p-1L, -0x0.fffffffffffffffep-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1.1p-1L, 0x0.fffffffffffffffep-16382L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1p-16445L, 0x1.1p-1L, -0x0.fffffffffffffffep-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p16383L, 0x1p16383L);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p16383L, 0x0.ffffffffffffffffp16383L);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p16383L, -0x1p16383L);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p16383L, -0x1.0000000000000002p16383L);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p-16382L, 0x1p-16382L);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p-16382L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p-16382L, -0x1.0000000000000002p-16382L);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x0.fffffffffffffffep-16382L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x0.fffffffffffffffep-16382L, 0x0.fffffffffffffffcp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x0.fffffffffffffffep-16382L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x0.fffffffffffffffep-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p-16445L, 0x1p-16445L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p-16445L, plus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p-16445L, -0x1p-16445L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p-16445L, -0x1p-16444L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x0.ffffffffffffffffp0L, 0x0.ffffffffffffffffp0L, -0x0.fffffffffffffffep0L, 0x1p-128L);
-      TEST_fff_f (fma, 0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L);
-      TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, 0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L);
-      TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, -0x0.fffffffffffffffep0L, 0x1p-128L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16383L, 0x1p16383L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16383L, 0x0.ffffffffffffffffp16383L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16383L, -0x1p16383L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16383L, -0x1.0000000000000002p16383L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16319L, 0x1p16319L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16319L, 0x0.ffffffffffffffffp16319L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16319L, -0x1p16319L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16319L, -0x1.0000000000000002p16319L);
+    TEST_fff_f (fma, 0x1.4p-16382L, 0x1.0000000000000004p-1L, 0x1p-16384L, 0x1.c000000000000004p-16383L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.4p-16382L, 0x1.0000000000000004p-1L, -0x1p-16384L, -0x1.c000000000000008p-16383L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1.fffffffffffffff8p-16382L, 0x1.0000000000000002p-1L, 0x1p-16445L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.fffffffffffffff8p-16382L, 0x1.0000000000000002p-1L, -0x1p-16445L, -0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-1L, 0x0.fffffffffffffffep-16382L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-16445L, 0x1p-1L, -0x0.fffffffffffffffep-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1.1p-1L, 0x0.fffffffffffffffep-16382L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-16445L, 0x1.1p-1L, -0x0.fffffffffffffffep-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p16383L, 0x1p16383L),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p16383L, 0x0.ffffffffffffffffp16383L),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p16383L, -0x1p16383L),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p16383L, -0x1.0000000000000002p16383L),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p-16382L, 0x1p-16382L),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p-16382L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p-16382L, -0x1.0000000000000002p-16382L),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x0.fffffffffffffffep-16382L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x0.fffffffffffffffep-16382L, 0x0.fffffffffffffffcp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x0.fffffffffffffffep-16382L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x0.fffffffffffffffep-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p-16445L, 0x1p-16445L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p-16445L, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p-16445L, -0x1p-16445L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p-16445L, -0x1p-16444L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x0.ffffffffffffffffp0L, 0x0.ffffffffffffffffp0L, -0x0.fffffffffffffffep0L, 0x1p-128L),
+    TEST_fff_f (fma, 0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L),
+    TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, 0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L),
+    TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, -0x0.fffffffffffffffep0L, 0x1p-128L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16383L, 0x1p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16383L, 0x0.ffffffffffffffffp16383L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16383L, -0x1p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16383L, -0x1.0000000000000002p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16319L, 0x1p16319L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16319L, 0x0.ffffffffffffffffp16319L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16319L, -0x1p16319L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16319L, -0x1.0000000000000002p16319L),
 #endif
 #if defined (TEST_LDOUBLE) && LDBL_MANT_DIG == 113
-      TEST_fff_f (fma, 0x1.4p-16382L, 0x1.0000000000000000000000000002p-1L, 0x1p-16384L, 0x1.c000000000000000000000000002p-16383L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1.4p-16382L, 0x1.0000000000000000000000000002p-1L, -0x1p-16384L, -0x1.c000000000000000000000000004p-16383L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1.fffffffffffffffffffffffffffcp-16382L, 0x1.0000000000000000000000000001p-1L, 0x1p-16494L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1.fffffffffffffffffffffffffffcp-16382L, 0x1.0000000000000000000000000001p-1L, -0x1p-16494L, -0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-1L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1p-16494L, 0x1p-1L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1.1p-1L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1p-16494L, 0x1.1p-1L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p16383L, 0x1p16383L);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p16383L, 0x0.ffffffffffffffffffffffffffff8p16383L);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p16383L, -0x1p16383L);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p16383L, -0x1.0000000000000000000000000001p16383L);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p-16382L, 0x1p-16382L);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p-16382L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p-16382L, -0x1.0000000000000000000000000001p-16382L);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x0.fffffffffffffffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p-16494L, 0x1p-16494L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p-16494L, plus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p-16494L, -0x1p-16494L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p-16494L, -0x1p-16493L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffffp0L, 0x1p-226L);
-      TEST_fff_f (fma, 0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L);
-      TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L);
-      TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffffp0L, 0x1p-226L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x1p16383L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x0.ffffffffffffffffffffffffffff8p16383L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x1p16383L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x1.0000000000000000000000000001p16383L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x1p16319L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x0.ffffffffffffffffffffffffffff8p16319L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x1p16319L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x1.0000000000000000000000000001p16319L);
+    TEST_fff_f (fma, 0x1.4p-16382L, 0x1.0000000000000000000000000002p-1L, 0x1p-16384L, 0x1.c000000000000000000000000002p-16383L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.4p-16382L, 0x1.0000000000000000000000000002p-1L, -0x1p-16384L, -0x1.c000000000000000000000000004p-16383L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1.fffffffffffffffffffffffffffcp-16382L, 0x1.0000000000000000000000000001p-1L, 0x1p-16494L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.fffffffffffffffffffffffffffcp-16382L, 0x1.0000000000000000000000000001p-1L, -0x1p-16494L, -0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-1L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-16494L, 0x1p-1L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1.1p-1L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-16494L, 0x1.1p-1L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p16383L, 0x1p16383L),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p16383L, 0x0.ffffffffffffffffffffffffffff8p16383L),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p16383L, -0x1p16383L),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p16383L, -0x1.0000000000000000000000000001p16383L),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p-16382L, 0x1p-16382L),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p-16382L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p-16382L, -0x1.0000000000000000000000000001p-16382L),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x0.fffffffffffffffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x1p-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p-16494L, 0x1p-16494L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p-16494L, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p-16494L, -0x1p-16494L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p-16494L, -0x1p-16493L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffffp0L, 0x1p-226L),
+    TEST_fff_f (fma, 0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L),
+    TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L),
+    TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffffp0L, 0x1p-226L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x1p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x0.ffffffffffffffffffffffffffff8p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x1p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x1.0000000000000000000000000001p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x1p16319L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x0.ffffffffffffffffffffffffffff8p16319L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x1p16319L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x1.0000000000000000000000000001p16319L),
 #endif
-    }
+    END_DATA (fma_downward)
+  };
 
-  fesetround (save_round_mode);
-
+static void
+fma_test_downward (void)
+{
+  START (fma_downward);
+  RUN_TEST_LOOP_fff_f (fma, fma_downward_test_data, FE_DOWNWARD);
   END (fma_downward);
 }
 
 
-static void
-fma_test_upward (void)
-{
-  int save_round_mode;
-  START (fma_upward);
+static const struct test_fff_f_data fma_upward_test_data[] =
+  {
+    START_DATA (fma_upward),
+    TEST_fff_f (fma, plus_zero, plus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, plus_zero, plus_zero, minus_zero, plus_zero),
+    TEST_fff_f (fma, plus_zero, minus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, plus_zero, minus_zero, minus_zero, minus_zero),
+    TEST_fff_f (fma, minus_zero, plus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, minus_zero, plus_zero, minus_zero, minus_zero),
+    TEST_fff_f (fma, minus_zero, minus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, minus_zero, minus_zero, minus_zero, plus_zero),
+    TEST_fff_f (fma, 1.0, plus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, 1.0, plus_zero, minus_zero, plus_zero),
+    TEST_fff_f (fma, 1.0, minus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, 1.0, minus_zero, minus_zero, minus_zero),
+    TEST_fff_f (fma, -1.0, plus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, -1.0, plus_zero, minus_zero, minus_zero),
+    TEST_fff_f (fma, -1.0, minus_zero, plus_zero, plus_zero),
+    TEST_fff_f (fma, -1.0, minus_zero, minus_zero, plus_zero),
+    TEST_fff_f (fma, plus_zero, 1.0, plus_zero, plus_zero),
+    TEST_fff_f (fma, plus_zero, 1.0, minus_zero, plus_zero),
+    TEST_fff_f (fma, plus_zero, -1.0, plus_zero, plus_zero),
+    TEST_fff_f (fma, plus_zero, -1.0, minus_zero, minus_zero),
+    TEST_fff_f (fma, minus_zero, 1.0, plus_zero, plus_zero),
+    TEST_fff_f (fma, minus_zero, 1.0, minus_zero, minus_zero),
+    TEST_fff_f (fma, minus_zero, -1.0, plus_zero, plus_zero),
+    TEST_fff_f (fma, minus_zero, -1.0, minus_zero, plus_zero),
 
-  save_round_mode = fegetround ();
+    TEST_fff_f (fma, 1.0, 1.0, -1.0, plus_zero),
+    TEST_fff_f (fma, 1.0, -1.0, 1.0, plus_zero),
+    TEST_fff_f (fma, -1.0, 1.0, 1.0, plus_zero),
+    TEST_fff_f (fma, -1.0, -1.0, -1.0, plus_zero),
 
-  if (!fesetround (FE_UPWARD))
-    {
-      TEST_fff_f (fma, plus_zero, plus_zero, plus_zero, plus_zero);
-      TEST_fff_f (fma, plus_zero, plus_zero, minus_zero, plus_zero);
-      TEST_fff_f (fma, plus_zero, minus_zero, plus_zero, plus_zero);
-      TEST_fff_f (fma, plus_zero, minus_zero, minus_zero, minus_zero);
-      TEST_fff_f (fma, minus_zero, plus_zero, plus_zero, plus_zero);
-      TEST_fff_f (fma, minus_zero, plus_zero, minus_zero, minus_zero);
-      TEST_fff_f (fma, minus_zero, minus_zero, plus_zero, plus_zero);
-      TEST_fff_f (fma, minus_zero, minus_zero, minus_zero, plus_zero);
-      TEST_fff_f (fma, 1.0, plus_zero, plus_zero, plus_zero);
-      TEST_fff_f (fma, 1.0, plus_zero, minus_zero, plus_zero);
-      TEST_fff_f (fma, 1.0, minus_zero, plus_zero, plus_zero);
-      TEST_fff_f (fma, 1.0, minus_zero, minus_zero, minus_zero);
-      TEST_fff_f (fma, -1.0, plus_zero, plus_zero, plus_zero);
-      TEST_fff_f (fma, -1.0, plus_zero, minus_zero, minus_zero);
-      TEST_fff_f (fma, -1.0, minus_zero, plus_zero, plus_zero);
-      TEST_fff_f (fma, -1.0, minus_zero, minus_zero, plus_zero);
-      TEST_fff_f (fma, plus_zero, 1.0, plus_zero, plus_zero);
-      TEST_fff_f (fma, plus_zero, 1.0, minus_zero, plus_zero);
-      TEST_fff_f (fma, plus_zero, -1.0, plus_zero, plus_zero);
-      TEST_fff_f (fma, plus_zero, -1.0, minus_zero, minus_zero);
-      TEST_fff_f (fma, minus_zero, 1.0, plus_zero, plus_zero);
-      TEST_fff_f (fma, minus_zero, 1.0, minus_zero, minus_zero);
-      TEST_fff_f (fma, minus_zero, -1.0, plus_zero, plus_zero);
-      TEST_fff_f (fma, minus_zero, -1.0, minus_zero, plus_zero);
-
-      TEST_fff_f (fma, 1.0, 1.0, -1.0, plus_zero);
-      TEST_fff_f (fma, 1.0, -1.0, 1.0, plus_zero);
-      TEST_fff_f (fma, -1.0, 1.0, 1.0, plus_zero);
-      TEST_fff_f (fma, -1.0, -1.0, -1.0, plus_zero);
-
-      TEST_fff_f (fma, min_value, min_value, plus_zero, min_subnorm_value, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, min_value, min_value, minus_zero, min_subnorm_value, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, min_value, -min_value, plus_zero, minus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, min_value, -min_value, minus_zero, minus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -min_value, min_value, plus_zero, minus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -min_value, min_value, minus_zero, minus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -min_value, -min_value, plus_zero, min_subnorm_value, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -min_value, -min_value, minus_zero, min_subnorm_value, UNDERFLOW_EXCEPTION);
+    TEST_fff_f (fma, min_value, min_value, plus_zero, min_subnorm_value, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, min_value, min_value, minus_zero, min_subnorm_value, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, min_value, -min_value, plus_zero, minus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, min_value, -min_value, minus_zero, minus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -min_value, min_value, plus_zero, minus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -min_value, min_value, minus_zero, minus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -min_value, -min_value, plus_zero, min_subnorm_value, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -min_value, -min_value, minus_zero, min_subnorm_value, UNDERFLOW_EXCEPTION),
 
 #if !(defined TEST_LDOUBLE && LDBL_MANT_DIG == 106) /* Bug 13304.  */
-      TEST_fff_f (fma, max_value, max_value, min_value, plus_infty, OVERFLOW_EXCEPTION);
-      TEST_fff_f (fma, max_value, max_value, -min_value, plus_infty, OVERFLOW_EXCEPTION);
-      TEST_fff_f (fma, max_value, -max_value, min_value, -max_value, OVERFLOW_EXCEPTION);
-      TEST_fff_f (fma, max_value, -max_value, -min_value, -max_value, OVERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -max_value, max_value, min_value, -max_value, OVERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -max_value, max_value, -min_value, -max_value, OVERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -max_value, -max_value, min_value, plus_infty, OVERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -max_value, -max_value, -min_value, plus_infty, OVERFLOW_EXCEPTION);
+    TEST_fff_f (fma, max_value, max_value, min_value, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, max_value, max_value, -min_value, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, max_value, -max_value, min_value, -max_value, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, max_value, -max_value, -min_value, -max_value, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -max_value, max_value, min_value, -max_value, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -max_value, max_value, -min_value, -max_value, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -max_value, -max_value, min_value, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -max_value, -max_value, -min_value, plus_infty, OVERFLOW_EXCEPTION),
 #endif
 
 #if defined (TEST_FLOAT) && FLT_MANT_DIG == 24
-      TEST_fff_f (fma, 0x1.4p-126, 0x1.000004p-1, 0x1p-128, 0x1.c00008p-127, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1.4p-126, 0x1.000004p-1, -0x1p-128, -0x1.c00004p-127, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1.fffff8p-126, 0x1.000002p-1, 0x1p-149, 0x1p-126, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, -0x1.fffff8p-126, 0x1.000002p-1, -0x1p-149, -0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-1, 0x0.fffffep-126, 0x1p-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1p-149, 0x1p-1, -0x0.fffffep-126, -0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, 0x1.1p-1, 0x0.fffffep-126, 0x1p-126, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, -0x1p-149, 0x1.1p-1, -0x0.fffffep-126, -0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p127, 0x1.000002p127);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p127, 0x1p127);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p127, -0x0.ffffffp127);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p127, -0x1p127);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p-126, 0x1.000002p-126);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p-126, 0x1p-126, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p-126, -0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p-126, -0x1p-126);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x0.fffffep-126, 0x1p-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x0.fffffep-126, 0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x0.fffffep-126, -0x0.fffffcp-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x0.fffffep-126, -0x0.fffffep-126, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p-149, 0x1p-148, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p-149, 0x1p-149, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p-149, minus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p-149, -0x1p-149, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x0.fffp0, 0x0.fffp0, -0x0.ffep0, 0x1p-24);
-      TEST_fff_f (fma, 0x0.fffp0, -0x0.fffp0, 0x0.ffep0, -0x1p-24);
-      TEST_fff_f (fma, -0x0.fffp0, 0x0.fffp0, 0x0.ffep0, -0x1p-24);
-      TEST_fff_f (fma, -0x0.fffp0, -0x0.fffp0, -0x0.ffep0, 0x1p-24);
-      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p127, 0x1.000002p127);
-      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p127, 0x1p127);
-      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p127, -0x0.ffffffp127);
-      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p127, -0x1p127);
-      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p103, 0x1.000002p103);
-      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p103, 0x1p103);
-      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p103, -0x0.ffffffp103);
-      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p103, -0x1p103);
+    TEST_fff_f (fma, 0x1.4p-126, 0x1.000004p-1, 0x1p-128, 0x1.c00008p-127, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.4p-126, 0x1.000004p-1, -0x1p-128, -0x1.c00004p-127, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1.fffff8p-126, 0x1.000002p-1, 0x1p-149, 0x1p-126, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, -0x1.fffff8p-126, 0x1.000002p-1, -0x1p-149, -0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-1, 0x0.fffffep-126, 0x1p-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-149, 0x1p-1, -0x0.fffffep-126, -0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, 0x1.1p-1, 0x0.fffffep-126, 0x1p-126, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, -0x1p-149, 0x1.1p-1, -0x0.fffffep-126, -0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p127, 0x1.000002p127),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p127, 0x1p127),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p127, -0x0.ffffffp127),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p127, -0x1p127),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p-126, 0x1.000002p-126),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p-126, 0x1p-126, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p-126, -0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p-126, -0x1p-126),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x0.fffffep-126, 0x1p-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x0.fffffep-126, 0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x0.fffffep-126, -0x0.fffffcp-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x0.fffffep-126, -0x0.fffffep-126, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, 0x1p-149, 0x1p-148, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, 0x1p-149, 0x1p-149, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, 0x1p-149, -0x1p-149, minus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-149, -0x1p-149, -0x1p-149, -0x1p-149, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x0.fffp0, 0x0.fffp0, -0x0.ffep0, 0x1p-24),
+    TEST_fff_f (fma, 0x0.fffp0, -0x0.fffp0, 0x0.ffep0, -0x1p-24),
+    TEST_fff_f (fma, -0x0.fffp0, 0x0.fffp0, 0x0.ffep0, -0x1p-24),
+    TEST_fff_f (fma, -0x0.fffp0, -0x0.fffp0, -0x0.ffep0, 0x1p-24),
+    TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p127, 0x1.000002p127),
+    TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p127, 0x1p127),
+    TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p127, -0x0.ffffffp127),
+    TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p127, -0x1p127),
+    TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p103, 0x1.000002p103),
+    TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p103, 0x1p103),
+    TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p103, -0x0.ffffffp103),
+    TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p103, -0x1p103),
 #endif
 #if defined (TEST_DOUBLE) && DBL_MANT_DIG == 53
-      TEST_fff_f (fma, 0x1.4p-1022, 0x1.0000000000002p-1, 0x1p-1024, 0x1.c000000000004p-1023, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1.4p-1022, 0x1.0000000000002p-1, -0x1p-1024, -0x1.c000000000002p-1023, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1.ffffffffffffcp-1022, 0x1.0000000000001p-1, 0x1p-1074, 0x1p-1022, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, -0x1.ffffffffffffcp-1022, 0x1.0000000000001p-1, -0x1p-1074, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1, 0x0.fffffffffffffp-1022, 0x1p-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1p-1074, 0x1p-1, -0x0.fffffffffffffp-1022, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, 0x1.1p-1, 0x0.fffffffffffffp-1022, 0x1p-1022, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, -0x1p-1074, 0x1.1p-1, -0x0.fffffffffffffp-1022, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p1023, 0x1.0000000000001p1023);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p1023, 0x1p1023);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p1023, -0x0.fffffffffffff8p1023);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p1023, -0x1p1023);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p-1022, 0x1.0000000000001p-1022);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p-1022, 0x1p-1022, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p-1022, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p-1022, -0x1p-1022);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x0.fffffffffffffp-1022, 0x1p-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x0.fffffffffffffp-1022, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x0.fffffffffffffp-1022, -0x0.ffffffffffffep-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x0.fffffffffffffp-1022, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p-1074, 0x1p-1073, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p-1074, 0x1p-1074, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p-1074, minus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p-1074, -0x1p-1074, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x0.fffffffffffff8p0, 0x0.fffffffffffff8p0, -0x0.fffffffffffffp0, 0x1p-106);
-      TEST_fff_f (fma, 0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106);
-      TEST_fff_f (fma, -0x0.fffffffffffff8p0, 0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106);
-      TEST_fff_f (fma, -0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, -0x0.fffffffffffffp0, 0x1p-106);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p1023, 0x1.0000000000001p1023);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p1023, 0x1p1023);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p1023, -0x0.fffffffffffff8p1023);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p1023, -0x1p1023);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p970, 0x1.0000000000001p970);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p970, 0x1p970);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p970, -0x0.fffffffffffff8p970);
-      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p970, -0x1p970);
+    TEST_fff_f (fma, 0x1.4p-1022, 0x1.0000000000002p-1, 0x1p-1024, 0x1.c000000000004p-1023, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.4p-1022, 0x1.0000000000002p-1, -0x1p-1024, -0x1.c000000000002p-1023, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1.ffffffffffffcp-1022, 0x1.0000000000001p-1, 0x1p-1074, 0x1p-1022, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, -0x1.ffffffffffffcp-1022, 0x1.0000000000001p-1, -0x1p-1074, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1, 0x0.fffffffffffffp-1022, 0x1p-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-1074, 0x1p-1, -0x0.fffffffffffffp-1022, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, 0x1.1p-1, 0x0.fffffffffffffp-1022, 0x1p-1022, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, -0x1p-1074, 0x1.1p-1, -0x0.fffffffffffffp-1022, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p1023, 0x1.0000000000001p1023),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p1023, 0x1p1023),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p1023, -0x0.fffffffffffff8p1023),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p1023, -0x1p1023),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p-1022, 0x1.0000000000001p-1022),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p-1022, 0x1p-1022, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p-1022, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p-1022, -0x1p-1022),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x0.fffffffffffffp-1022, 0x1p-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x0.fffffffffffffp-1022, 0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x0.fffffffffffffp-1022, -0x0.ffffffffffffep-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x0.fffffffffffffp-1022, -0x0.fffffffffffffp-1022, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, 0x1p-1074, 0x1p-1073, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, 0x1p-1074, 0x1p-1074, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, 0x1p-1074, -0x1p-1074, minus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-1074, -0x1p-1074, -0x1p-1074, -0x1p-1074, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x0.fffffffffffff8p0, 0x0.fffffffffffff8p0, -0x0.fffffffffffffp0, 0x1p-106),
+    TEST_fff_f (fma, 0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106),
+    TEST_fff_f (fma, -0x0.fffffffffffff8p0, 0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106),
+    TEST_fff_f (fma, -0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, -0x0.fffffffffffffp0, 0x1p-106),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p1023, 0x1.0000000000001p1023),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p1023, 0x1p1023),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p1023, -0x0.fffffffffffff8p1023),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p1023, -0x1p1023),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p970, 0x1.0000000000001p970),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p970, 0x1p970),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p970, -0x0.fffffffffffff8p970),
+    TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p970, -0x1p970),
 #endif
 #if defined (TEST_LDOUBLE) && LDBL_MANT_DIG == 64
-      TEST_fff_f (fma, 0x1.4p-16382L, 0x1.0000000000000004p-1L, 0x1p-16384L, 0x1.c000000000000008p-16383L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1.4p-16382L, 0x1.0000000000000004p-1L, -0x1p-16384L, -0x1.c000000000000004p-16383L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1.fffffffffffffff8p-16382L, 0x1.0000000000000002p-1L, 0x1p-16445L, 0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, -0x1.fffffffffffffff8p-16382L, 0x1.0000000000000002p-1L, -0x1p-16445L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-1L, 0x0.fffffffffffffffep-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1p-16445L, 0x1p-1L, -0x0.fffffffffffffffep-16382L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1.1p-1L, 0x0.fffffffffffffffep-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, -0x1p-16445L, 0x1.1p-1L, -0x0.fffffffffffffffep-16382L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p16383L, 0x1.0000000000000002p16383L);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p16383L, 0x1p16383L);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p16383L, -0x0.ffffffffffffffffp16383L);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p16383L, -0x1p16383L);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p-16382L, 0x1.0000000000000002p-16382L);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p-16382L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p-16382L, -0x1p-16382L);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x0.fffffffffffffffep-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x0.fffffffffffffffep-16382L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x0.fffffffffffffffep-16382L, -0x0.fffffffffffffffcp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x0.fffffffffffffffep-16382L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p-16445L, 0x1p-16444L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p-16445L, 0x1p-16445L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p-16445L, minus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p-16445L, -0x1p-16445L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x0.ffffffffffffffffp0L, 0x0.ffffffffffffffffp0L, -0x0.fffffffffffffffep0L, 0x1p-128L);
-      TEST_fff_f (fma, 0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L);
-      TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, 0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L);
-      TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, -0x0.fffffffffffffffep0L, 0x1p-128L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16383L, 0x1.0000000000000002p16383L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16383L, 0x1p16383L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16383L, -0x0.ffffffffffffffffp16383L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16383L, -0x1p16383L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16319L, 0x1.0000000000000002p16319L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16319L, 0x1p16319L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16319L, -0x0.ffffffffffffffffp16319L);
-      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16319L, -0x1p16319L);
+    TEST_fff_f (fma, 0x1.4p-16382L, 0x1.0000000000000004p-1L, 0x1p-16384L, 0x1.c000000000000008p-16383L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.4p-16382L, 0x1.0000000000000004p-1L, -0x1p-16384L, -0x1.c000000000000004p-16383L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1.fffffffffffffff8p-16382L, 0x1.0000000000000002p-1L, 0x1p-16445L, 0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, -0x1.fffffffffffffff8p-16382L, 0x1.0000000000000002p-1L, -0x1p-16445L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-1L, 0x0.fffffffffffffffep-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-16445L, 0x1p-1L, -0x0.fffffffffffffffep-16382L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1.1p-1L, 0x0.fffffffffffffffep-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, -0x1p-16445L, 0x1.1p-1L, -0x0.fffffffffffffffep-16382L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p16383L, 0x1.0000000000000002p16383L),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p16383L, 0x1p16383L),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p16383L, -0x0.ffffffffffffffffp16383L),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p16383L, -0x1p16383L),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p-16382L, 0x1.0000000000000002p-16382L),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p-16382L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p-16382L, -0x1p-16382L),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x0.fffffffffffffffep-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x0.fffffffffffffffep-16382L, 0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x0.fffffffffffffffep-16382L, -0x0.fffffffffffffffcp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x0.fffffffffffffffep-16382L, -0x0.fffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, 0x1p-16445L, 0x1p-16444L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, 0x1p-16445L, 0x1p-16445L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, 0x1p-16445L, -0x1p-16445L, minus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16445L, -0x1p-16445L, -0x1p-16445L, -0x1p-16445L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x0.ffffffffffffffffp0L, 0x0.ffffffffffffffffp0L, -0x0.fffffffffffffffep0L, 0x1p-128L),
+    TEST_fff_f (fma, 0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L),
+    TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, 0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L),
+    TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, -0x0.fffffffffffffffep0L, 0x1p-128L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16383L, 0x1.0000000000000002p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16383L, 0x1p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16383L, -0x0.ffffffffffffffffp16383L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16383L, -0x1p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16319L, 0x1.0000000000000002p16319L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16319L, 0x1p16319L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16319L, -0x0.ffffffffffffffffp16319L),
+    TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16319L, -0x1p16319L),
 #endif
 #if defined (TEST_LDOUBLE) && LDBL_MANT_DIG == 113
-      TEST_fff_f (fma, 0x1.4p-16382L, 0x1.0000000000000000000000000002p-1L, 0x1p-16384L, 0x1.c000000000000000000000000004p-16383L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1.4p-16382L, 0x1.0000000000000000000000000002p-1L, -0x1p-16384L, -0x1.c000000000000000000000000002p-16383L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1.fffffffffffffffffffffffffffcp-16382L, 0x1.0000000000000000000000000001p-1L, 0x1p-16494L, 0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, -0x1.fffffffffffffffffffffffffffcp-16382L, 0x1.0000000000000000000000000001p-1L, -0x1p-16494L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-1L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, -0x1p-16494L, 0x1p-1L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1.1p-1L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, -0x1p-16494L, 0x1.1p-1L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p16383L, 0x1.0000000000000000000000000001p16383L);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p16383L, 0x1p16383L);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p16383L, -0x0.ffffffffffffffffffffffffffff8p16383L);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p16383L, -0x1p16383L);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p-16382L, 0x1.0000000000000000000000000001p-16382L);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p-16382L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p-16382L, -0x1p-16382L);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x0.fffffffffffffffffffffffffffep-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p-16494L, 0x1p-16493L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p-16494L, 0x1p-16494L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p-16494L, minus_zero, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p-16494L, -0x1p-16494L, UNDERFLOW_EXCEPTION);
-      TEST_fff_f (fma, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffffp0L, 0x1p-226L);
-      TEST_fff_f (fma, 0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L);
-      TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L);
-      TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffffp0L, 0x1p-226L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x1.0000000000000000000000000001p16383L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x1p16383L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x0.ffffffffffffffffffffffffffff8p16383L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x1p16383L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x1.0000000000000000000000000001p16319L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x1p16319L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x0.ffffffffffffffffffffffffffff8p16319L);
-      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x1p16319L);
+    TEST_fff_f (fma, 0x1.4p-16382L, 0x1.0000000000000000000000000002p-1L, 0x1p-16384L, 0x1.c000000000000000000000000004p-16383L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1.4p-16382L, 0x1.0000000000000000000000000002p-1L, -0x1p-16384L, -0x1.c000000000000000000000000002p-16383L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1.fffffffffffffffffffffffffffcp-16382L, 0x1.0000000000000000000000000001p-1L, 0x1p-16494L, 0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, -0x1.fffffffffffffffffffffffffffcp-16382L, 0x1.0000000000000000000000000001p-1L, -0x1p-16494L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-1L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, -0x1p-16494L, 0x1p-1L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1.1p-1L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, -0x1p-16494L, 0x1.1p-1L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p16383L, 0x1.0000000000000000000000000001p16383L),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p16383L, 0x1p16383L),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p16383L, -0x0.ffffffffffffffffffffffffffff8p16383L),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p16383L, -0x1p16383L),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p-16382L, 0x1.0000000000000000000000000001p-16382L),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION_BEFORE_ROUNDING),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p-16382L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p-16382L, -0x1p-16382L),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x1p-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x0.ffffffffffffffffffffffffffffp-16382L, 0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x0.fffffffffffffffffffffffffffep-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x0.ffffffffffffffffffffffffffffp-16382L, -0x0.ffffffffffffffffffffffffffffp-16382L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, 0x1p-16494L, 0x1p-16493L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, 0x1p-16494L, 0x1p-16494L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, 0x1p-16494L, -0x1p-16494L, minus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x1p-16494L, -0x1p-16494L, -0x1p-16494L, -0x1p-16494L, UNDERFLOW_EXCEPTION),
+    TEST_fff_f (fma, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffffp0L, 0x1p-226L),
+    TEST_fff_f (fma, 0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L),
+    TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L),
+    TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffffp0L, 0x1p-226L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x1.0000000000000000000000000001p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x1p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x0.ffffffffffffffffffffffffffff8p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x1p16383L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x1.0000000000000000000000000001p16319L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x1p16319L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x0.ffffffffffffffffffffffffffff8p16319L),
+    TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x1p16319L),
 #endif
-    }
+    END_DATA (fma_upward)
+  };
 
-  fesetround (save_round_mode);
-
+static void
+fma_test_upward (void)
+{
+  START (fma_upward);
+  RUN_TEST_LOOP_fff_f (fma, fma_upward_test_data, FE_UPWARD);
   END (fma_upward);
 }
 
