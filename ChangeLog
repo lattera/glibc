@@ -1,3 +1,7 @@
+2013-05-13  Peter Collingbourne  <pcc@google.com>
+
+	* math/atest-exp2.c (get_log2): Remove const attribute.
+
 2013-05-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (struct test_f_l_data): New type.

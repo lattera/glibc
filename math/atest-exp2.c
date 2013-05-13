@@ -77,7 +77,6 @@ read_mpn_hex(mp_limb_t *x, const char *str)
  				      << (FRAC - i * 4 - 4) % mpbpl);
 }
 
-static mp_limb_t *get_log2(void) __attribute__((const));
 static mp_limb_t *
 get_log2(void)
 {
