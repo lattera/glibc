@@ -1,3 +1,10 @@
+2013-05-13  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #14582]
+	* sysdeps/ieee754/s_lib_version.c (_LIB_VERSION_INTERNAL):
+	Renamed from _LIB_VERSION.
+	(_LIB_VERSION): Set as weak alias of _LIB_VERSION_INTERNAL.
+
 2013-05-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (struct test_fff_f_data): New type.
