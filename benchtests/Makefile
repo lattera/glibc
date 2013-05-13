@@ -86,13 +86,19 @@ endif
 
 CPPFLAGS-nonlib = -DDURATION=$(BENCH_DURATION)
 
+# Use clock_gettime to measure performance of functions.  The default is to use
+# HP_TIMING if it is available.
+ifdef USE_CLOCK_GETTIME
+CPPFLAGS-nonlib += -DUSE_CLOCK_GETTIME
+endif
+
 # This makes sure CPPFLAGS-nonlib and CFLAGS-nonlib are passed
 # for all these modules.
 cpp-srcs-left := $(binaries-bench:=.c)
 lib := nonlib
 include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 
-bench-deps := bench-skeleton.c Makefile
+bench-deps := bench-skeleton.c bench-timing.h Makefile
 
 run-bench = $(test-wrapper-env) \
 	    GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \

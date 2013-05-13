@@ -1,5 +1,12 @@
 2013-05-13  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* benchtests/Makefile (CPPFLAGS-nonlib): Add
+	-DUSE_CLOCK_GETTIME if USE_CLOCK_GETTIME is defined.
+	(bench-deps): Add bench-timing.h.
+	* benchtests-bench-skeleton.c: Include bench-timing.h.
+	(main): Use TIMING_* macros instead of clock_gettime.
+	* benchtests/bench-timing.h: New file.
+
 	[BZ #14582]
 	* sysdeps/ieee754/s_lib_version.c (_LIB_VERSION_INTERNAL):
 	Renamed from _LIB_VERSION.

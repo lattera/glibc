@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <inttypes.h>
+#include "bench-timing.h"
 
 volatile unsigned int dontoptimize = 0;
 
@@ -45,21 +46,16 @@ int
 main (int argc, char **argv)
 {
   unsigned long i, k;
-  struct timespec start, end, runtime;
+  struct timespec runtime;
+  timing_t start, end;
 
   startup();
 
   memset (&runtime, 0, sizeof (runtime));
-  memset (&start, 0, sizeof (start));
-  memset (&end, 0, sizeof (end));
 
-  clock_getres (CLOCK_PROCESS_CPUTIME_ID, &start);
+  unsigned long iters;
 
-  /* Measure 1000 times the resolution of the clock.  So for a 1ns resolution
-     clock, we measure 1000 iterations of the function call at a time.
-     Measurements close to the minimum clock resolution won't make much sense,
-     but it's better than having nothing at all.  */
-  unsigned long iters = 1000 * start.tv_nsec;
+  TIMING_INIT (iters);
 
   for (int v = 0; v < NUM_VARIANTS; v++)
     {
@@ -68,19 +64,18 @@ main (int argc, char **argv)
       runtime.tv_sec += DURATION;
 
       double d_total_i = 0;
-      uint64_t total = 0, max = 0, min = 0x7fffffffffffffff;
+      timing_t total = 0, max = 0, min = 0x7fffffffffffffff;
       while (1)
 	{
 	  for (i = 0; i < NUM_SAMPLES (v); i++)
 	    {
-	      clock_gettime (CLOCK_PROCESS_CPUTIME_ID, &start);
+	      uint64_t cur;
+	      TIMING_NOW (start);
 	      for (k = 0; k < iters; k++)
 		BENCH_FUNC (v, i);
-	      clock_gettime (CLOCK_PROCESS_CPUTIME_ID, &end);
+	      TIMING_NOW (end);
 
-	      uint64_t cur = (end.tv_nsec - start.tv_nsec
-			      + ((end.tv_sec - start.tv_sec)
-				 * (uint64_t) 1000000000));
+	      TIMING_DIFF (cur, start, end);
 
 	      if (cur > max)
 		max = cur;
@@ -88,7 +83,7 @@ main (int argc, char **argv)
 	      if (cur < min)
 		min = cur;
 
-	      total += cur;
+	      TIMING_ACCUM (total, cur);
 
 	      d_total_i += iters;
 	    }
@@ -104,13 +99,11 @@ main (int argc, char **argv)
       double d_iters;
 
     done:
-      d_total_s = total * 1e-9;
+      d_total_s = total;
       d_iters = iters;
 
-      printf ("%s: ITERS:%g: TOTAL:%gs, MAX:%gns, MIN:%gns, %g iter/s\n",
-	      VARIANT (v),
-	      d_total_i, d_total_s, max / d_iters, min / d_iters,
-	      d_total_i / d_total_s);
+      TIMING_PRINT_STATS (VARIANT (v), d_total_s, d_iters, d_total_i, max,
+			  min);
     }
 
   return 0;
