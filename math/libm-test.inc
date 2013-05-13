@@ -890,6 +890,15 @@ struct test_ff_f_data_nexttoward
   FLOAT max_ulp;
   int exceptions;
 };
+struct test_fi_f_data
+{
+  const char *test_name;
+  FLOAT arg1;
+  int arg2;
+  FLOAT expected;
+  FLOAT max_ulp;
+  int exceptions;
+};
 struct test_if_f_data
 {
   const char *test_name;
@@ -975,6 +984,7 @@ struct test_c_c_data
 #define RUN_TEST_ff_f RUN_TEST_2_f
 #define RUN_TEST_LOOP_ff_f RUN_TEST_LOOP_2_f
 #define RUN_TEST_fi_f RUN_TEST_2_f
+#define RUN_TEST_LOOP_fi_f RUN_TEST_LOOP_2_f
 #define RUN_TEST_fl_f RUN_TEST_2_f
 #define RUN_TEST_if_f RUN_TEST_2_f
 #define RUN_TEST_LOOP_if_f RUN_TEST_LOOP_2_f
@@ -10040,24 +10050,29 @@ jn_test (void)
 }
 
 
+static const struct test_fi_f_data ldexp_test_data[] =
+  {
+    START_DATA (ldexp),
+    TEST_fi_f (ldexp, 0, 0, 0),
+    TEST_fi_f (ldexp, minus_zero, 0, minus_zero),
+
+    TEST_fi_f (ldexp, plus_infty, 1, plus_infty),
+    TEST_fi_f (ldexp, minus_infty, 1, minus_infty),
+    TEST_fi_f (ldexp, qnan_value, 1, qnan_value),
+
+    TEST_fi_f (ldexp, 0.8L, 4, 12.8L),
+    TEST_fi_f (ldexp, -0.854375L, 5, -27.34L),
+
+    /* ldexp (x, 0) == x.  */
+    TEST_fi_f (ldexp, 1.0L, 0L, 1.0L),
+    END_DATA (ldexp)
+  };
+
 static void
 ldexp_test (void)
 {
   START (ldexp);
-
-  TEST_fi_f (ldexp, 0, 0, 0);
-  TEST_fi_f (ldexp, minus_zero, 0, minus_zero);
-
-  TEST_fi_f (ldexp, plus_infty, 1, plus_infty);
-  TEST_fi_f (ldexp, minus_infty, 1, minus_infty);
-  TEST_fi_f (ldexp, qnan_value, 1, qnan_value);
-
-  TEST_fi_f (ldexp, 0.8L, 4, 12.8L);
-  TEST_fi_f (ldexp, -0.854375L, 5, -27.34L);
-
-  /* ldexp (x, 0) == x.  */
-  TEST_fi_f (ldexp, 1.0L, 0L, 1.0L);
-
+  RUN_TEST_LOOP_fi_f (ldexp, ldexp_test_data, );
   END (ldexp);
 }
 
@@ -13143,33 +13158,38 @@ scalb_test (void)
 }
 
 
+static const struct test_fi_f_data scalbn_test_data[] =
+  {
+    START_DATA (scalbn),
+    TEST_fi_f (scalbn, 0, 0, 0),
+    TEST_fi_f (scalbn, minus_zero, 0, minus_zero),
+
+    TEST_fi_f (scalbn, plus_infty, 1, plus_infty),
+    TEST_fi_f (scalbn, minus_infty, 1, minus_infty),
+    TEST_fi_f (scalbn, qnan_value, 1, qnan_value),
+
+    TEST_fi_f (scalbn, 0.8L, 4, 12.8L),
+    TEST_fi_f (scalbn, -0.854375L, 5, -27.34L),
+
+    TEST_fi_f (scalbn, 1, 0L, 1),
+
+    TEST_fi_f (scalbn, 1, INT_MAX, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_fi_f (scalbn, 1, INT_MIN, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fi_f (scalbn, max_value, INT_MAX, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_fi_f (scalbn, max_value, INT_MIN, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fi_f (scalbn, min_value, INT_MAX, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_fi_f (scalbn, min_value, INT_MIN, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fi_f (scalbn, min_value / 4, INT_MAX, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_fi_f (scalbn, min_value / 4, INT_MIN, plus_zero, UNDERFLOW_EXCEPTION),
+    END_DATA (scalbn)
+  };
+
 static void
 scalbn_test (void)
 {
 
   START (scalbn);
-
-  TEST_fi_f (scalbn, 0, 0, 0);
-  TEST_fi_f (scalbn, minus_zero, 0, minus_zero);
-
-  TEST_fi_f (scalbn, plus_infty, 1, plus_infty);
-  TEST_fi_f (scalbn, minus_infty, 1, minus_infty);
-  TEST_fi_f (scalbn, qnan_value, 1, qnan_value);
-
-  TEST_fi_f (scalbn, 0.8L, 4, 12.8L);
-  TEST_fi_f (scalbn, -0.854375L, 5, -27.34L);
-
-  TEST_fi_f (scalbn, 1, 0L, 1);
-
-  TEST_fi_f (scalbn, 1, INT_MAX, plus_infty, OVERFLOW_EXCEPTION);
-  TEST_fi_f (scalbn, 1, INT_MIN, plus_zero, UNDERFLOW_EXCEPTION);
-  TEST_fi_f (scalbn, max_value, INT_MAX, plus_infty, OVERFLOW_EXCEPTION);
-  TEST_fi_f (scalbn, max_value, INT_MIN, plus_zero, UNDERFLOW_EXCEPTION);
-  TEST_fi_f (scalbn, min_value, INT_MAX, plus_infty, OVERFLOW_EXCEPTION);
-  TEST_fi_f (scalbn, min_value, INT_MIN, plus_zero, UNDERFLOW_EXCEPTION);
-  TEST_fi_f (scalbn, min_value / 4, INT_MAX, plus_infty, OVERFLOW_EXCEPTION);
-  TEST_fi_f (scalbn, min_value / 4, INT_MIN, plus_zero, UNDERFLOW_EXCEPTION);
-
+  RUN_TEST_LOOP_fi_f (scalbn, scalbn_test_data, );
   END (scalbn);
 }
 
