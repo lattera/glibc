@@ -899,6 +899,15 @@ struct test_fi_f_data
   FLOAT max_ulp;
   int exceptions;
 };
+struct test_fl_f_data
+{
+  const char *test_name;
+  FLOAT arg1;
+  long int arg2;
+  FLOAT expected;
+  FLOAT max_ulp;
+  int exceptions;
+};
 struct test_if_f_data
 {
   const char *test_name;
@@ -986,6 +995,7 @@ struct test_c_c_data
 #define RUN_TEST_fi_f RUN_TEST_2_f
 #define RUN_TEST_LOOP_fi_f RUN_TEST_LOOP_2_f
 #define RUN_TEST_fl_f RUN_TEST_2_f
+#define RUN_TEST_LOOP_fl_f RUN_TEST_LOOP_2_f
 #define RUN_TEST_if_f RUN_TEST_2_f
 #define RUN_TEST_LOOP_if_f RUN_TEST_LOOP_2_f
 #define RUN_TEST_fff_f(TEST_NAME, FUNC_NAME, ARG1, ARG2, ARG3,	\
@@ -13194,53 +13204,58 @@ scalbn_test (void)
 }
 
 
+static const struct test_fl_f_data scalbln_test_data[] =
+  {
+    START_DATA (scalbln),
+    TEST_fl_f (scalbln, 0, 0, 0),
+    TEST_fl_f (scalbln, minus_zero, 0, minus_zero),
+
+    TEST_fl_f (scalbln, plus_infty, 1, plus_infty),
+    TEST_fl_f (scalbln, minus_infty, 1, minus_infty),
+    TEST_fl_f (scalbln, qnan_value, 1, qnan_value),
+
+    TEST_fl_f (scalbln, 0.8L, 4, 12.8L),
+    TEST_fl_f (scalbln, -0.854375L, 5, -27.34L),
+
+    TEST_fl_f (scalbln, 1, 0L, 1),
+
+    TEST_fl_f (scalbln, 1, INT_MAX, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_fl_f (scalbln, 1, INT_MIN, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fl_f (scalbln, max_value, INT_MAX, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_fl_f (scalbln, max_value, INT_MIN, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fl_f (scalbln, min_value, INT_MAX, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_fl_f (scalbln, min_value, INT_MIN, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fl_f (scalbln, min_value / 4, INT_MAX, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_fl_f (scalbln, min_value / 4, INT_MIN, plus_zero, UNDERFLOW_EXCEPTION),
+
+    TEST_fl_f (scalbln, 1, LONG_MAX, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_fl_f (scalbln, 1, LONG_MIN, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fl_f (scalbln, max_value, LONG_MAX, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_fl_f (scalbln, max_value, LONG_MIN, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fl_f (scalbln, min_value, LONG_MAX, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_fl_f (scalbln, min_value, LONG_MIN, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fl_f (scalbln, min_value / 4, LONG_MAX, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_fl_f (scalbln, min_value / 4, LONG_MIN, plus_zero, UNDERFLOW_EXCEPTION),
+
+#if LONG_MAX >= 0x100000000
+    TEST_fl_f (scalbln, 1, 0x88000000L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_fl_f (scalbln, 1, -0x88000000L, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fl_f (scalbln, max_value, 0x88000000L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_fl_f (scalbln, max_value, -0x88000000L, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fl_f (scalbln, min_value, 0x88000000L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_fl_f (scalbln, min_value, -0x88000000L, plus_zero, UNDERFLOW_EXCEPTION),
+    TEST_fl_f (scalbln, min_value / 4, 0x88000000L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_fl_f (scalbln, min_value / 4, -0x88000000L, plus_zero, UNDERFLOW_EXCEPTION),
+#endif
+    END_DATA (scalbln)
+  };
+
 static void
 scalbln_test (void)
 {
 
   START (scalbln);
-
-  TEST_fl_f (scalbln, 0, 0, 0);
-  TEST_fl_f (scalbln, minus_zero, 0, minus_zero);
-
-  TEST_fl_f (scalbln, plus_infty, 1, plus_infty);
-  TEST_fl_f (scalbln, minus_infty, 1, minus_infty);
-  TEST_fl_f (scalbln, qnan_value, 1, qnan_value);
-
-  TEST_fl_f (scalbln, 0.8L, 4, 12.8L);
-  TEST_fl_f (scalbln, -0.854375L, 5, -27.34L);
-
-  TEST_fl_f (scalbln, 1, 0L, 1);
-
-  TEST_fl_f (scalbln, 1, INT_MAX, plus_infty, OVERFLOW_EXCEPTION);
-  TEST_fl_f (scalbln, 1, INT_MIN, plus_zero, UNDERFLOW_EXCEPTION);
-  TEST_fl_f (scalbln, max_value, INT_MAX, plus_infty, OVERFLOW_EXCEPTION);
-  TEST_fl_f (scalbln, max_value, INT_MIN, plus_zero, UNDERFLOW_EXCEPTION);
-  TEST_fl_f (scalbln, min_value, INT_MAX, plus_infty, OVERFLOW_EXCEPTION);
-  TEST_fl_f (scalbln, min_value, INT_MIN, plus_zero, UNDERFLOW_EXCEPTION);
-  TEST_fl_f (scalbln, min_value / 4, INT_MAX, plus_infty, OVERFLOW_EXCEPTION);
-  TEST_fl_f (scalbln, min_value / 4, INT_MIN, plus_zero, UNDERFLOW_EXCEPTION);
-
-  TEST_fl_f (scalbln, 1, LONG_MAX, plus_infty, OVERFLOW_EXCEPTION);
-  TEST_fl_f (scalbln, 1, LONG_MIN, plus_zero, UNDERFLOW_EXCEPTION);
-  TEST_fl_f (scalbln, max_value, LONG_MAX, plus_infty, OVERFLOW_EXCEPTION);
-  TEST_fl_f (scalbln, max_value, LONG_MIN, plus_zero, UNDERFLOW_EXCEPTION);
-  TEST_fl_f (scalbln, min_value, LONG_MAX, plus_infty, OVERFLOW_EXCEPTION);
-  TEST_fl_f (scalbln, min_value, LONG_MIN, plus_zero, UNDERFLOW_EXCEPTION);
-  TEST_fl_f (scalbln, min_value / 4, LONG_MAX, plus_infty, OVERFLOW_EXCEPTION);
-  TEST_fl_f (scalbln, min_value / 4, LONG_MIN, plus_zero, UNDERFLOW_EXCEPTION);
-
-#if LONG_MAX >= 0x100000000
-  TEST_fl_f (scalbln, 1, 0x88000000L, plus_infty, OVERFLOW_EXCEPTION);
-  TEST_fl_f (scalbln, 1, -0x88000000L, plus_zero, UNDERFLOW_EXCEPTION);
-  TEST_fl_f (scalbln, max_value, 0x88000000L, plus_infty, OVERFLOW_EXCEPTION);
-  TEST_fl_f (scalbln, max_value, -0x88000000L, plus_zero, UNDERFLOW_EXCEPTION);
-  TEST_fl_f (scalbln, min_value, 0x88000000L, plus_infty, OVERFLOW_EXCEPTION);
-  TEST_fl_f (scalbln, min_value, -0x88000000L, plus_zero, UNDERFLOW_EXCEPTION);
-  TEST_fl_f (scalbln, min_value / 4, 0x88000000L, plus_infty, OVERFLOW_EXCEPTION);
-  TEST_fl_f (scalbln, min_value / 4, -0x88000000L, plus_zero, UNDERFLOW_EXCEPTION);
-#endif
-
+  RUN_TEST_LOOP_fl_f (scalbln, scalbln_test_data, );
   END (scalbn);
 }
 

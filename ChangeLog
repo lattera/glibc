@@ -1,5 +1,10 @@
 2013-05-13  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (struct test_fl_f_data): New type.
+	(RUN_TEST_LOOP_fl_f): New variable.
+	(scalbln_test_data): New variable.
+	(scalbln_test): Run tests with RUN_TEST_LOOP_fl_f.
+
 	* math/libm-test.inc (struct test_fi_f_data): New type.
 	(RUN_TEST_LOOP_fi_f): New macro.
 	(ldexp_test_data): New variable.
