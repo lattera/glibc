@@ -1,3 +1,8 @@
+2013-05-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* math/libm-test.inc (M_1_DIV_El): Define using decimal constant.
+	(log_test_data): Use M_1_DIV_El instead of 1.0 / M_El.
+
 2013-05-13  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* benchtests/Makefile (CPPFLAGS-nonlib): Add

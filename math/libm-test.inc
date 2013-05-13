@@ -212,6 +212,7 @@
 #define M_PI2_LOG10El		0.682188176920920673742891812715677885L
 #define M_PI4_LOG10El		0.341094088460460336871445906357838943L
 #define M_PI_LOG10El		1.364376353841841347485783625431355770L
+#define M_1_DIV_El              0.367879441171442321595523770161460867L /* 1 div e  */
 
 #define ulps_file_name "ULPs"	/* Name of the ULPs file.  */
 static FILE *ulps_file;		/* File to document difference.  */
@@ -10932,7 +10933,7 @@ static const struct test_f_f_data log_test_data[] =
     TEST_f_f (log, qnan_value, qnan_value),
 
     TEST_f_f (log, M_El, 1),
-    TEST_f_f (log, 1.0 / M_El, -1),
+    TEST_f_f (log, M_1_DIV_El, -1),
     TEST_f_f (log, 2, M_LN2l),
     TEST_f_f (log, 10, M_LN10l),
     TEST_f_f (log, 0.75L, -0.287682072451780927439219005993827432L),
