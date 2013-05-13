@@ -1,5 +1,16 @@
 2013-05-13  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (struct test_c_f_data): New type.
+	(RUN_TEST_LOOP_c_f): New macro.
+	(cabs_test_data): New variable.
+	(cabs_test): Run tests with RUN_TEST_LOOP_c_f.
+	(carg_test_data): New variable.
+	(carg_test): Run tests with RUN_TEST_LOOP_c_f.
+	(cimag_test_data): New variable.
+	(cimag_test): Run tests with RUN_TEST_LOOP_c_f.
+	(creal_test_data): New variable.
+	(creal_test): Run tests with RUN_TEST_LOOP_c_f.
+
 	* math/libm-test.inc (struct test_if_f_data): New type.
 	(RUN_TEST_LOOP_if_f): New macro.
 	(jn_test_data): New variable.

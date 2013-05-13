@@ -907,6 +907,14 @@ struct test_fff_f_data
   FLOAT max_ulp;
   int exceptions;
 };
+struct test_c_f_data
+{
+  const char *test_name;
+  FLOAT argr, argc;
+  FLOAT expected;
+  FLOAT max_ulp;
+  int exceptions;
+};
 struct test_c_c_data
 {
   const char *test_name;
@@ -987,6 +995,13 @@ struct test_c_c_data
   check_float (TEST_NAME,						\
 	       FUNC (FUNC_NAME) (BUILD_COMPLEX (ARG1, ARG2)),		\
 	       EXPECTED, MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_LOOP_c_f(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
+  IF_ROUND_INIT_ ## ROUNDING_MODE					\
+    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
+      RUN_TEST_c_f ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].argr,	\
+		    (ARRAY)[i].argc, (ARRAY)[i].expected,		\
+		    (ARRAY)[i].max_ulp, (ARRAY)[i].exceptions);		\
+  ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_f1(TEST_NAME, FUNC_NAME, ARG, EXPECTED,		\
 		      MAX_ULP, EXCEPTIONS,				\
 		      EXTRA_NAME, EXTRA_VAR, EXTRA_INIT, EXTRA_TEST,	\
@@ -1661,6 +1676,43 @@ atan2_test (void)
   END (atan2);
 }
 
+static const struct test_c_f_data cabs_test_data[] =
+  {
+    START_DATA (cabs);
+    /* cabs (x + iy) is specified as hypot (x,y) */
+
+    /* cabs (+inf + i x) == +inf.  */
+    TEST_c_f (cabs, plus_infty, 1.0, plus_infty),
+    /* cabs (-inf + i x) == +inf.  */
+    TEST_c_f (cabs, minus_infty, 1.0, plus_infty),
+
+    TEST_c_f (cabs, minus_infty, qnan_value, plus_infty),
+    TEST_c_f (cabs, minus_infty, qnan_value, plus_infty),
+
+    TEST_c_f (cabs, qnan_value, qnan_value, qnan_value),
+
+    /* cabs (x,y) == cabs (y,x).  */
+    TEST_c_f (cabs, 0.75L, 12.390625L, 12.4133028598606664302388810868156657L),
+    /* cabs (x,y) == cabs (-x,y).  */
+    TEST_c_f (cabs, -12.390625L, 0.75L, 12.4133028598606664302388810868156657L),
+    /* cabs (x,y) == cabs (-y,x).  */
+    TEST_c_f (cabs, -0.75L, 12.390625L, 12.4133028598606664302388810868156657L),
+    /* cabs (x,y) == cabs (-x,-y).  */
+    TEST_c_f (cabs, -12.390625L, -0.75L, 12.4133028598606664302388810868156657L),
+    /* cabs (x,y) == cabs (-y,-x).  */
+    TEST_c_f (cabs, -0.75L, -12.390625L, 12.4133028598606664302388810868156657L),
+    /* cabs (x,0) == fabs (x).  */
+    TEST_c_f (cabs, -0.75L, 0, 0.75L),
+    TEST_c_f (cabs, 0.75L, 0, 0.75L),
+    TEST_c_f (cabs, -1.0L, 0, 1.0L),
+    TEST_c_f (cabs, 1.0L, 0, 1.0L),
+    TEST_c_f (cabs, -5.7e7L, 0, 5.7e7L),
+    TEST_c_f (cabs, 5.7e7L, 0, 5.7e7L),
+
+    TEST_c_f (cabs, 0.75L, 1.25L, 1.45773797371132511771853821938639577L),
+    END_DATA (cabs);
+  };
+
 static void
 cabs_test (void)
 {
@@ -1671,39 +1723,7 @@ cabs_test (void)
     return;
 
   START (cabs);
-
-  /* cabs (x + iy) is specified as hypot (x,y) */
-
-  /* cabs (+inf + i x) == +inf.  */
-  TEST_c_f (cabs, plus_infty, 1.0, plus_infty);
-  /* cabs (-inf + i x) == +inf.  */
-  TEST_c_f (cabs, minus_infty, 1.0, plus_infty);
-
-  TEST_c_f (cabs, minus_infty, qnan_value, plus_infty);
-  TEST_c_f (cabs, minus_infty, qnan_value, plus_infty);
-
-  TEST_c_f (cabs, qnan_value, qnan_value, qnan_value);
-
-  /* cabs (x,y) == cabs (y,x).  */
-  TEST_c_f (cabs, 0.75L, 12.390625L, 12.4133028598606664302388810868156657L);
-  /* cabs (x,y) == cabs (-x,y).  */
-  TEST_c_f (cabs, -12.390625L, 0.75L, 12.4133028598606664302388810868156657L);
-  /* cabs (x,y) == cabs (-y,x).  */
-  TEST_c_f (cabs, -0.75L, 12.390625L, 12.4133028598606664302388810868156657L);
-  /* cabs (x,y) == cabs (-x,-y).  */
-  TEST_c_f (cabs, -12.390625L, -0.75L, 12.4133028598606664302388810868156657L);
-  /* cabs (x,y) == cabs (-y,-x).  */
-  TEST_c_f (cabs, -0.75L, -12.390625L, 12.4133028598606664302388810868156657L);
-  /* cabs (x,0) == fabs (x).  */
-  TEST_c_f (cabs, -0.75L, 0, 0.75L);
-  TEST_c_f (cabs, 0.75L, 0, 0.75L);
-  TEST_c_f (cabs, -1.0L, 0, 1.0L);
-  TEST_c_f (cabs, 1.0L, 0, 1.0L);
-  TEST_c_f (cabs, -5.7e7L, 0, 5.7e7L);
-  TEST_c_f (cabs, 5.7e7L, 0, 5.7e7L);
-
-  TEST_c_f (cabs, 0.75L, 1.25L, 1.45773797371132511771853821938639577L);
-
+  RUN_TEST_LOOP_c_f (cabs, cabs_test_data, );
   END (cabs);
 }
 
@@ -3099,70 +3119,75 @@ cacosh_test (void)
 }
 
 
+static const struct test_c_f_data carg_test_data[] =
+  {
+    START_DATA (carg);
+    /* carg (x + iy) is specified as atan2 (y, x) */
+
+    /* carg (x + i 0) == 0 for x > 0.  */
+    TEST_c_f (carg, 2.0, 0, 0),
+    /* carg (x - i 0) == -0 for x > 0.  */
+    TEST_c_f (carg, 2.0, minus_zero, minus_zero),
+
+    TEST_c_f (carg, 0, 0, 0),
+    TEST_c_f (carg, 0, minus_zero, minus_zero),
+
+    /* carg (x + i 0) == +pi for x < 0.  */
+    TEST_c_f (carg, -2.0, 0, M_PIl),
+
+    /* carg (x - i 0) == -pi for x < 0.  */
+    TEST_c_f (carg, -2.0, minus_zero, -M_PIl),
+
+    TEST_c_f (carg, minus_zero, 0, M_PIl),
+    TEST_c_f (carg, minus_zero, minus_zero, -M_PIl),
+
+    /* carg (+0 + i y) == pi/2 for y > 0.  */
+    TEST_c_f (carg, 0, 2.0, M_PI_2l),
+
+    /* carg (-0 + i y) == pi/2 for y > 0.  */
+    TEST_c_f (carg, minus_zero, 2.0, M_PI_2l),
+
+    /* carg (+0 + i y) == -pi/2 for y < 0.  */
+    TEST_c_f (carg, 0, -2.0, -M_PI_2l),
+
+    /* carg (-0 + i y) == -pi/2 for y < 0.  */
+    TEST_c_f (carg, minus_zero, -2.0, -M_PI_2l),
+
+    /* carg (inf + i y) == +0 for finite y > 0.  */
+    TEST_c_f (carg, plus_infty, 2.0, 0),
+
+    /* carg (inf + i y) == -0 for finite y < 0.  */
+    TEST_c_f (carg, plus_infty, -2.0, minus_zero),
+
+    /* carg(x + i inf) == pi/2 for finite x.  */
+    TEST_c_f (carg, 10.0, plus_infty, M_PI_2l),
+
+    /* carg(x - i inf) == -pi/2 for finite x.  */
+    TEST_c_f (carg, 10.0, minus_infty, -M_PI_2l),
+
+    /* carg (-inf + i y) == +pi for finite y > 0.  */
+    TEST_c_f (carg, minus_infty, 10.0, M_PIl),
+
+    /* carg (-inf + i y) == -pi for finite y < 0.  */
+    TEST_c_f (carg, minus_infty, -10.0, -M_PIl),
+
+    TEST_c_f (carg, plus_infty, plus_infty, M_PI_4l),
+
+    TEST_c_f (carg, plus_infty, minus_infty, -M_PI_4l),
+
+    TEST_c_f (carg, minus_infty, plus_infty, M_PI_34l),
+
+    TEST_c_f (carg, minus_infty, minus_infty, -M_PI_34l),
+
+    TEST_c_f (carg, qnan_value, qnan_value, qnan_value),
+    END_DATA (carg);
+  };
+
 static void
 carg_test (void)
 {
   START (carg);
-
-  /* carg (x + iy) is specified as atan2 (y, x) */
-
-  /* carg (x + i 0) == 0 for x > 0.  */
-  TEST_c_f (carg, 2.0, 0, 0);
-  /* carg (x - i 0) == -0 for x > 0.  */
-  TEST_c_f (carg, 2.0, minus_zero, minus_zero);
-
-  TEST_c_f (carg, 0, 0, 0);
-  TEST_c_f (carg, 0, minus_zero, minus_zero);
-
-  /* carg (x + i 0) == +pi for x < 0.  */
-  TEST_c_f (carg, -2.0, 0, M_PIl);
-
-  /* carg (x - i 0) == -pi for x < 0.  */
-  TEST_c_f (carg, -2.0, minus_zero, -M_PIl);
-
-  TEST_c_f (carg, minus_zero, 0, M_PIl);
-  TEST_c_f (carg, minus_zero, minus_zero, -M_PIl);
-
-  /* carg (+0 + i y) == pi/2 for y > 0.  */
-  TEST_c_f (carg, 0, 2.0, M_PI_2l);
-
-  /* carg (-0 + i y) == pi/2 for y > 0.  */
-  TEST_c_f (carg, minus_zero, 2.0, M_PI_2l);
-
-  /* carg (+0 + i y) == -pi/2 for y < 0.  */
-  TEST_c_f (carg, 0, -2.0, -M_PI_2l);
-
-  /* carg (-0 + i y) == -pi/2 for y < 0.  */
-  TEST_c_f (carg, minus_zero, -2.0, -M_PI_2l);
-
-  /* carg (inf + i y) == +0 for finite y > 0.  */
-  TEST_c_f (carg, plus_infty, 2.0, 0);
-
-  /* carg (inf + i y) == -0 for finite y < 0.  */
-  TEST_c_f (carg, plus_infty, -2.0, minus_zero);
-
-  /* carg(x + i inf) == pi/2 for finite x.  */
-  TEST_c_f (carg, 10.0, plus_infty, M_PI_2l);
-
-  /* carg(x - i inf) == -pi/2 for finite x.  */
-  TEST_c_f (carg, 10.0, minus_infty, -M_PI_2l);
-
-  /* carg (-inf + i y) == +pi for finite y > 0.  */
-  TEST_c_f (carg, minus_infty, 10.0, M_PIl);
-
-  /* carg (-inf + i y) == -pi for finite y < 0.  */
-  TEST_c_f (carg, minus_infty, -10.0, -M_PIl);
-
-  TEST_c_f (carg, plus_infty, plus_infty, M_PI_4l);
-
-  TEST_c_f (carg, plus_infty, minus_infty, -M_PI_4l);
-
-  TEST_c_f (carg, minus_infty, plus_infty, M_PI_34l);
-
-  TEST_c_f (carg, minus_infty, minus_infty, -M_PI_34l);
-
-  TEST_c_f (carg, qnan_value, qnan_value, qnan_value);
-
+  RUN_TEST_LOOP_c_f (carg, carg_test_data, );
   END (carg);
 }
 
@@ -6066,18 +6091,24 @@ cexp_test (void)
 }
 
 
+static const struct test_c_f_data cimag_test_data[] =
+  {
+    START_DATA (cimag);
+    TEST_c_f (cimag, 1.0, 0.0, 0.0),
+    TEST_c_f (cimag, 1.0, minus_zero, minus_zero),
+    TEST_c_f (cimag, 1.0, qnan_value, qnan_value),
+    TEST_c_f (cimag, qnan_value, qnan_value, qnan_value),
+    TEST_c_f (cimag, 1.0, plus_infty, plus_infty),
+    TEST_c_f (cimag, 1.0, minus_infty, minus_infty),
+    TEST_c_f (cimag, 2.0, 3.0, 3.0),
+    END_DATA (cimag);
+  };
+
 static void
 cimag_test (void)
 {
   START (cimag);
-  TEST_c_f (cimag, 1.0, 0.0, 0.0);
-  TEST_c_f (cimag, 1.0, minus_zero, minus_zero);
-  TEST_c_f (cimag, 1.0, qnan_value, qnan_value);
-  TEST_c_f (cimag, qnan_value, qnan_value, qnan_value);
-  TEST_c_f (cimag, 1.0, plus_infty, plus_infty);
-  TEST_c_f (cimag, 1.0, minus_infty, minus_infty);
-  TEST_c_f (cimag, 2.0, 3.0, 3.0);
-
+  RUN_TEST_LOOP_c_f (cimag, cimag_test_data, );
   END (cimag);
 }
 
@@ -6983,18 +7014,24 @@ cproj_test (void)
 }
 
 
+static const struct test_c_f_data creal_test_data[] =
+  {
+    START_DATA (creal);
+    TEST_c_f (creal, 0.0, 1.0, 0.0),
+    TEST_c_f (creal, minus_zero, 1.0, minus_zero),
+    TEST_c_f (creal, qnan_value, 1.0, qnan_value),
+    TEST_c_f (creal, qnan_value, qnan_value, qnan_value),
+    TEST_c_f (creal, plus_infty, 1.0, plus_infty),
+    TEST_c_f (creal, minus_infty, 1.0, minus_infty),
+    TEST_c_f (creal, 2.0, 3.0, 2.0),
+    END_DATA (creal);
+  };
+
 static void
 creal_test (void)
 {
   START (creal);
-  TEST_c_f (creal, 0.0, 1.0, 0.0);
-  TEST_c_f (creal, minus_zero, 1.0, minus_zero);
-  TEST_c_f (creal, qnan_value, 1.0, qnan_value);
-  TEST_c_f (creal, qnan_value, qnan_value, qnan_value);
-  TEST_c_f (creal, plus_infty, 1.0, plus_infty);
-  TEST_c_f (creal, minus_infty, 1.0, minus_infty);
-  TEST_c_f (creal, 2.0, 3.0, 2.0);
-
+  RUN_TEST_LOOP_c_f (creal, creal_test_data, );
   END (creal);
 }
 
