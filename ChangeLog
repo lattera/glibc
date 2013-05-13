@@ -1,5 +1,12 @@
 2013-05-13  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (struct test_if_f_data): New type.
+	(RUN_TEST_LOOP_if_f): New macro.
+	(jn_test_data): New variable.
+	(jn_test): Run tests with RUN_TEST_LOOP_if_f.
+	(yn_test_data): New variable.
+	(yn_test): Run tests with RUN_TEST_LOOP_if_f.
+
 	* math/libm-test.inc (scalbln_test): Consistently use TEST_fl_f.
 
 2013-05-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>

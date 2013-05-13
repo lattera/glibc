@@ -890,6 +890,15 @@ struct test_ff_f_data_nexttoward
   FLOAT max_ulp;
   int exceptions;
 };
+struct test_if_f_data
+{
+  const char *test_name;
+  int arg1;
+  FLOAT arg2;
+  FLOAT expected;
+  FLOAT max_ulp;
+  int exceptions;
+};
 struct test_fff_f_data
 {
   const char *test_name;
@@ -960,6 +969,7 @@ struct test_c_c_data
 #define RUN_TEST_fi_f RUN_TEST_2_f
 #define RUN_TEST_fl_f RUN_TEST_2_f
 #define RUN_TEST_if_f RUN_TEST_2_f
+#define RUN_TEST_LOOP_if_f RUN_TEST_LOOP_2_f
 #define RUN_TEST_fff_f(TEST_NAME, FUNC_NAME, ARG1, ARG2, ARG3,	\
 		       EXPECTED, MAX_ULP, EXCEPTIONS)		\
   check_float (TEST_NAME, FUNC (FUNC_NAME) (ARG1, ARG2, ARG3),	\
@@ -9902,6 +9912,77 @@ j1_test (void)
   END (j1);
 }
 
+static const struct test_if_f_data jn_test_data[] =
+  {
+    START_DATA (jn),
+    /* jn is the Bessel function of the first kind of order n.  */
+    /* jn (0, x) == j0 (x)  */
+    TEST_if_f (jn, 0, qnan_value, qnan_value),
+    TEST_if_f (jn, 0, plus_infty, 0),
+    TEST_if_f (jn, 0, -1.0, 0.765197686557966551449717526102663221L),
+    TEST_if_f (jn, 0, 0.0, 1.0),
+    TEST_if_f (jn, 0, 0.125L, 0.996097563041985204620768999453174712L),
+    TEST_if_f (jn, 0, 0.75L, 0.864242275166648623555731103820923211L),
+    TEST_if_f (jn, 0, 1.0, 0.765197686557966551449717526102663221L),
+    TEST_if_f (jn, 0, 1.5, 0.511827671735918128749051744283411720L),
+    TEST_if_f (jn, 0, 2.0, 0.223890779141235668051827454649948626L),
+    TEST_if_f (jn, 0, 8.0, 0.171650807137553906090869407851972001L),
+    TEST_if_f (jn, 0, 10.0, -0.245935764451348335197760862485328754L),
+    TEST_if_f (jn, 0, 4.0, -3.9714980986384737228659076845169804197562E-1L),
+    TEST_if_f (jn, 0, -4.0, -3.9714980986384737228659076845169804197562E-1L),
+
+    /* jn (1, x) == j1 (x)  */
+    TEST_if_f (jn, 1, qnan_value, qnan_value),
+    TEST_if_f (jn, 1, plus_infty, 0),
+    TEST_if_f (jn, 1, -1.0, -0.440050585744933515959682203718914913L),
+    TEST_if_f (jn, 1, 0.0, 0.0),
+    TEST_if_f (jn, 1, 0.125L, 0.0623780091344946810942311355879361177L),
+    TEST_if_f (jn, 1, 0.75L, 0.349243602174862192523281016426251335L),
+    TEST_if_f (jn, 1, 1.0, 0.440050585744933515959682203718914913L),
+    TEST_if_f (jn, 1, 1.5, 0.557936507910099641990121213156089400L),
+    TEST_if_f (jn, 1, 2.0, 0.576724807756873387202448242269137087L),
+    TEST_if_f (jn, 1, 8.0, 0.234636346853914624381276651590454612L),
+    TEST_if_f (jn, 1, 10.0, 0.0434727461688614366697487680258592883L),
+
+    /* jn (3, x)  */
+    TEST_if_f (jn, 3, qnan_value, qnan_value),
+    TEST_if_f (jn, 3, plus_infty, 0),
+
+    TEST_if_f (jn, 3, -1.0, -0.0195633539826684059189053216217515083L),
+    TEST_if_f (jn, 3, 0.0, 0.0),
+    TEST_if_f (jn, 3, 0.125L, 0.406503832554912875023029337653442868e-4L),
+    TEST_if_f (jn, 3, 0.75L, 0.848438342327410884392755236884386804e-2L),
+    TEST_if_f (jn, 3, 1.0, 0.0195633539826684059189053216217515083L),
+    TEST_if_f (jn, 3, 2.0, 0.128943249474402051098793332969239835L),
+    TEST_if_f (jn, 3, 10.0, 0.0583793793051868123429354784103409563L),
+
+    /*  jn (10, x)  */
+    TEST_if_f (jn, 10, qnan_value, qnan_value),
+    TEST_if_f (jn, 10, plus_infty, 0),
+
+    TEST_if_f (jn, 10, -1.0, 0.263061512368745320699785368779050294e-9L),
+    TEST_if_f (jn, 10, 0.0, 0.0),
+    TEST_if_f (jn, 10, 0.125L, 0.250543369809369890173993791865771547e-18L),
+    TEST_if_f (jn, 10, 0.75L, 0.149621713117596814698712483621682835e-10L),
+    TEST_if_f (jn, 10, 1.0, 0.263061512368745320699785368779050294e-9L),
+    TEST_if_f (jn, 10, 2.0, 0.251538628271673670963516093751820639e-6L),
+    TEST_if_f (jn, 10, 10.0, 0.207486106633358857697278723518753428L),
+
+    /* BZ #11589 .*/
+    TEST_if_f (jn, 2, 2.4048255576957729L, 0.43175480701968038399746111312430703L),
+    TEST_if_f (jn, 3, 2.4048255576957729L, 0.19899990535769083404042146764530813L),
+    TEST_if_f (jn, 4, 2.4048255576957729L, 0.647466661641779720084932282551219891E-1L),
+    TEST_if_f (jn, 5, 2.4048255576957729L, 0.163892432048058525099230549946147698E-1L),
+    TEST_if_f (jn, 6, 2.4048255576957729L, 0.34048184720278336646673682895929161E-2L),
+    TEST_if_f (jn, 7, 2.4048255576957729L, 0.60068836573295394221291569249883076E-3L),
+    TEST_if_f (jn, 8, 2.4048255576957729L, 0.92165786705344923232879022467054148E-4L),
+    TEST_if_f (jn, 9, 2.4048255576957729L, 0.12517270977961513005428966643852564E-4L),
+
+    /* Bug 14155: spurious exception may occur.  */
+    TEST_if_f (jn, 2, 0x1.ffff62p+99L, -4.43860668048170034334926693188979974489e-16L, UNDERFLOW_EXCEPTION_OK),
+    END_DATA (jn)
+  };
+
 static void
 jn_test (void)
 {
@@ -9916,74 +9997,8 @@ jn_test (void)
     /* Function not implemented.  */
     return;
 
-  /* jn is the Bessel function of the first kind of order n.  */
   START (jn);
-
-  /* jn (0, x) == j0 (x)  */
-  TEST_if_f (jn, 0, qnan_value, qnan_value);
-  TEST_if_f (jn, 0, plus_infty, 0);
-  TEST_if_f (jn, 0, -1.0, 0.765197686557966551449717526102663221L);
-  TEST_if_f (jn, 0, 0.0, 1.0);
-  TEST_if_f (jn, 0, 0.125L, 0.996097563041985204620768999453174712L);
-  TEST_if_f (jn, 0, 0.75L, 0.864242275166648623555731103820923211L);
-  TEST_if_f (jn, 0, 1.0, 0.765197686557966551449717526102663221L);
-  TEST_if_f (jn, 0, 1.5, 0.511827671735918128749051744283411720L);
-  TEST_if_f (jn, 0, 2.0, 0.223890779141235668051827454649948626L);
-  TEST_if_f (jn, 0, 8.0, 0.171650807137553906090869407851972001L);
-  TEST_if_f (jn, 0, 10.0, -0.245935764451348335197760862485328754L);
-  TEST_if_f (jn, 0, 4.0, -3.9714980986384737228659076845169804197562E-1L);
-  TEST_if_f (jn, 0, -4.0, -3.9714980986384737228659076845169804197562E-1L);
-
-  /* jn (1, x) == j1 (x)  */
-  TEST_if_f (jn, 1, qnan_value, qnan_value);
-  TEST_if_f (jn, 1, plus_infty, 0);
-  TEST_if_f (jn, 1, -1.0, -0.440050585744933515959682203718914913L);
-  TEST_if_f (jn, 1, 0.0, 0.0);
-  TEST_if_f (jn, 1, 0.125L, 0.0623780091344946810942311355879361177L);
-  TEST_if_f (jn, 1, 0.75L, 0.349243602174862192523281016426251335L);
-  TEST_if_f (jn, 1, 1.0, 0.440050585744933515959682203718914913L);
-  TEST_if_f (jn, 1, 1.5, 0.557936507910099641990121213156089400L);
-  TEST_if_f (jn, 1, 2.0, 0.576724807756873387202448242269137087L);
-  TEST_if_f (jn, 1, 8.0, 0.234636346853914624381276651590454612L);
-  TEST_if_f (jn, 1, 10.0, 0.0434727461688614366697487680258592883L);
-
-  /* jn (3, x)  */
-  TEST_if_f (jn, 3, qnan_value, qnan_value);
-  TEST_if_f (jn, 3, plus_infty, 0);
-
-  TEST_if_f (jn, 3, -1.0, -0.0195633539826684059189053216217515083L);
-  TEST_if_f (jn, 3, 0.0, 0.0);
-  TEST_if_f (jn, 3, 0.125L, 0.406503832554912875023029337653442868e-4L);
-  TEST_if_f (jn, 3, 0.75L, 0.848438342327410884392755236884386804e-2L);
-  TEST_if_f (jn, 3, 1.0, 0.0195633539826684059189053216217515083L);
-  TEST_if_f (jn, 3, 2.0, 0.128943249474402051098793332969239835L);
-  TEST_if_f (jn, 3, 10.0, 0.0583793793051868123429354784103409563L);
-
-  /*  jn (10, x)  */
-  TEST_if_f (jn, 10, qnan_value, qnan_value);
-  TEST_if_f (jn, 10, plus_infty, 0);
-
-  TEST_if_f (jn, 10, -1.0, 0.263061512368745320699785368779050294e-9L);
-  TEST_if_f (jn, 10, 0.0, 0.0);
-  TEST_if_f (jn, 10, 0.125L, 0.250543369809369890173993791865771547e-18L);
-  TEST_if_f (jn, 10, 0.75L, 0.149621713117596814698712483621682835e-10L);
-  TEST_if_f (jn, 10, 1.0, 0.263061512368745320699785368779050294e-9L);
-  TEST_if_f (jn, 10, 2.0, 0.251538628271673670963516093751820639e-6L);
-  TEST_if_f (jn, 10, 10.0, 0.207486106633358857697278723518753428L);
-
-  /* BZ #11589 .*/
-  TEST_if_f (jn, 2, 2.4048255576957729L, 0.43175480701968038399746111312430703L);
-  TEST_if_f (jn, 3, 2.4048255576957729L, 0.19899990535769083404042146764530813L);
-  TEST_if_f (jn, 4, 2.4048255576957729L, 0.647466661641779720084932282551219891E-1L);
-  TEST_if_f (jn, 5, 2.4048255576957729L, 0.163892432048058525099230549946147698E-1L);
-  TEST_if_f (jn, 6, 2.4048255576957729L, 0.34048184720278336646673682895929161E-2L);
-  TEST_if_f (jn, 7, 2.4048255576957729L, 0.60068836573295394221291569249883076E-3L);
-  TEST_if_f (jn, 8, 2.4048255576957729L, 0.92165786705344923232879022467054148E-4L);
-  TEST_if_f (jn, 9, 2.4048255576957729L, 0.12517270977961513005428966643852564E-4L);
-
-  /* Bug 14155: spurious exception may occur.  */
-  TEST_if_f (jn, 2, 0x1.ffff62p+99L, -4.43860668048170034334926693188979974489e-16L, UNDERFLOW_EXCEPTION_OK);
-
+  RUN_TEST_LOOP_if_f (jn, jn_test_data, );
   END (jn);
 }
 
@@ -14640,6 +14655,67 @@ y1_test (void)
 }
 
 
+static const struct test_if_f_data yn_test_data[] =
+  {
+    START_DATA (yn),
+    /* yn is the Bessel function of the second kind of order n */
+    /* yn (0, x) == y0 (x)  */
+    TEST_if_f (yn, 0, -1.0, minus_infty, INVALID_EXCEPTION),
+    TEST_if_f (yn, 0, -max_value, minus_infty, INVALID_EXCEPTION),
+    TEST_if_f (yn, 0, 0.0, minus_infty),
+    TEST_if_f (yn, 0, qnan_value, qnan_value),
+    TEST_if_f (yn, 0, plus_infty, 0),
+
+    TEST_if_f (yn, 0, 0.125L, -1.38968062514384052915582277745018693L),
+    TEST_if_f (yn, 0, 0.75L, -0.137172769385772397522814379396581855L),
+    TEST_if_f (yn, 0, 1.0, 0.0882569642156769579829267660235151628L),
+    TEST_if_f (yn, 0, 1.5, 0.382448923797758843955068554978089862L),
+    TEST_if_f (yn, 0, 2.0, 0.510375672649745119596606592727157873L),
+    TEST_if_f (yn, 0, 8.0, 0.223521489387566220527323400498620359L),
+    TEST_if_f (yn, 0, 10.0, 0.0556711672835993914244598774101900481L),
+
+    /* yn (1, x) == y1 (x)  */
+    TEST_if_f (yn, 1, -1.0, minus_infty, INVALID_EXCEPTION),
+    TEST_if_f (yn, 1, 0.0, minus_infty),
+    TEST_if_f (yn, 1, plus_infty, 0),
+    TEST_if_f (yn, 1, qnan_value, qnan_value),
+
+    TEST_if_f (yn, 1, 0.125L, -5.19993611253477499595928744876579921L),
+    TEST_if_f (yn, 1, 0.75L, -1.03759455076928541973767132140642198L),
+    TEST_if_f (yn, 1, 1.0, -0.781212821300288716547150000047964821L),
+    TEST_if_f (yn, 1, 1.5, -0.412308626973911295952829820633445323L),
+    TEST_if_f (yn, 1, 2.0, -0.107032431540937546888370772277476637L),
+    TEST_if_f (yn, 1, 8.0, -0.158060461731247494255555266187483550L),
+    TEST_if_f (yn, 1, 10.0, 0.249015424206953883923283474663222803L),
+
+    /* yn (3, x)  */
+    TEST_if_f (yn, 3, plus_infty, 0),
+    TEST_if_f (yn, 3, qnan_value, qnan_value),
+
+    TEST_if_f (yn, 3, 0.125L, -2612.69757350066712600220955744091741L),
+    TEST_if_f (yn, 3, 0.75L, -12.9877176234475433186319774484809207L),
+    TEST_if_f (yn, 3, 1.0, -5.82151760596472884776175706442981440L),
+    TEST_if_f (yn, 3, 2.0, -1.12778377684042778608158395773179238L),
+    TEST_if_f (yn, 3, 10.0, -0.251362657183837329779204747654240998L),
+
+    /* yn (10, x)  */
+    TEST_if_f (yn, 10, plus_infty, 0),
+    TEST_if_f (yn, 10, qnan_value, qnan_value),
+
+    TEST_if_f (yn, 10, 0.125L, -127057845771019398.252538486899753195L),
+    TEST_if_f (yn, 10, 0.75L, -2133501638.90573424452445412893839236L),
+    TEST_if_f (yn, 10, 1.0, -121618014.278689189288130426667971145L),
+    TEST_if_f (yn, 10, 2.0, -129184.542208039282635913145923304214L),
+    TEST_if_f (yn, 10, 10.0, -0.359814152183402722051986577343560609L),
+
+    /* Check whether yn returns correct value for LDBL_MIN, DBL_MIN,
+       and FLT_MIN.  See Bug 14173.  */
+    TEST_if_f (yn, 10, min_value, minus_infty, OVERFLOW_EXCEPTION),
+
+    TEST_if_f (yn, 10, min_value, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    END_DATA (yn)
+  };
+
 static void
 yn_test (void)
 {
@@ -14654,64 +14730,8 @@ yn_test (void)
     /* Function not implemented.  */
     return;
 
-  /* yn is the Bessel function of the second kind of order n */
   START (yn);
-
-  /* yn (0, x) == y0 (x)  */
-  TEST_if_f (yn, 0, -1.0, minus_infty, INVALID_EXCEPTION);
-  TEST_if_f (yn, 0, -max_value, minus_infty, INVALID_EXCEPTION);
-  TEST_if_f (yn, 0, 0.0, minus_infty);
-  TEST_if_f (yn, 0, qnan_value, qnan_value);
-  TEST_if_f (yn, 0, plus_infty, 0);
-
-  TEST_if_f (yn, 0, 0.125L, -1.38968062514384052915582277745018693L);
-  TEST_if_f (yn, 0, 0.75L, -0.137172769385772397522814379396581855L);
-  TEST_if_f (yn, 0, 1.0, 0.0882569642156769579829267660235151628L);
-  TEST_if_f (yn, 0, 1.5, 0.382448923797758843955068554978089862L);
-  TEST_if_f (yn, 0, 2.0, 0.510375672649745119596606592727157873L);
-  TEST_if_f (yn, 0, 8.0, 0.223521489387566220527323400498620359L);
-  TEST_if_f (yn, 0, 10.0, 0.0556711672835993914244598774101900481L);
-
-  /* yn (1, x) == y1 (x)  */
-  TEST_if_f (yn, 1, -1.0, minus_infty, INVALID_EXCEPTION);
-  TEST_if_f (yn, 1, 0.0, minus_infty);
-  TEST_if_f (yn, 1, plus_infty, 0);
-  TEST_if_f (yn, 1, qnan_value, qnan_value);
-
-  TEST_if_f (yn, 1, 0.125L, -5.19993611253477499595928744876579921L);
-  TEST_if_f (yn, 1, 0.75L, -1.03759455076928541973767132140642198L);
-  TEST_if_f (yn, 1, 1.0, -0.781212821300288716547150000047964821L);
-  TEST_if_f (yn, 1, 1.5, -0.412308626973911295952829820633445323L);
-  TEST_if_f (yn, 1, 2.0, -0.107032431540937546888370772277476637L);
-  TEST_if_f (yn, 1, 8.0, -0.158060461731247494255555266187483550L);
-  TEST_if_f (yn, 1, 10.0, 0.249015424206953883923283474663222803L);
-
-  /* yn (3, x)  */
-  TEST_if_f (yn, 3, plus_infty, 0);
-  TEST_if_f (yn, 3, qnan_value, qnan_value);
-
-  TEST_if_f (yn, 3, 0.125L, -2612.69757350066712600220955744091741L);
-  TEST_if_f (yn, 3, 0.75L, -12.9877176234475433186319774484809207L);
-  TEST_if_f (yn, 3, 1.0, -5.82151760596472884776175706442981440L);
-  TEST_if_f (yn, 3, 2.0, -1.12778377684042778608158395773179238L);
-  TEST_if_f (yn, 3, 10.0, -0.251362657183837329779204747654240998L);
-
-  /* yn (10, x)  */
-  TEST_if_f (yn, 10, plus_infty, 0);
-  TEST_if_f (yn, 10, qnan_value, qnan_value);
-
-  TEST_if_f (yn, 10, 0.125L, -127057845771019398.252538486899753195L);
-  TEST_if_f (yn, 10, 0.75L, -2133501638.90573424452445412893839236L);
-  TEST_if_f (yn, 10, 1.0, -121618014.278689189288130426667971145L);
-  TEST_if_f (yn, 10, 2.0, -129184.542208039282635913145923304214L);
-  TEST_if_f (yn, 10, 10.0, -0.359814152183402722051986577343560609L);
-
-  /* Check whether yn returns correct value for LDBL_MIN, DBL_MIN,
-     and FLT_MIN.  See Bug 14173.  */
-  TEST_if_f (yn, 10, min_value, minus_infty, OVERFLOW_EXCEPTION);
-
-  TEST_if_f (yn, 10, min_value, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE);
-
+  RUN_TEST_LOOP_if_f (yn, yn_test_data, );
   END (yn);
 }
 
