@@ -35,9 +35,16 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   IFUNC_IMPL (i, name, memcpy,
 	      IFUNC_IMPL_ADD (array, i, memcpy, hwcap & HWCAP_ARM_NEON,
-			      __memcpy_neon)
+#ifdef __ARM_NEON__
+                              memcpy
+#else
+			      __memcpy_neon
+#endif
+                              )
+#ifndef __ARM_NEON__
 	      IFUNC_IMPL_ADD (array, i, memcpy, hwcap & HWCAP_ARM_VFP,
 			      __memcpy_vfp)
+#endif
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_arm));
 
   return i;

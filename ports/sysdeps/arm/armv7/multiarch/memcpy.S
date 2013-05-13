@@ -22,27 +22,29 @@
 #include <sysdep.h>
 #include <rtld-global-offsets.h>
 
-#if !defined NOT_IN_libc
+#ifndef NOT_IN_libc
+/* Under __ARM_NEON__, memcpy_neon.S defines the name memcpy.  */
+# ifndef __ARM_NEON__
 	.text
 ENTRY(memcpy)
 	.type	memcpy, %gnu_indirect_function
-#ifdef __SOFTFP__
+# ifdef __SOFTFP__
 	ldr	r1, .Lmemcpy_arm
 	tst	r0, #HWCAP_ARM_VFP
 	ldrne	r1, .Lmemcpy_vfp
-#else
+# else
 	ldr	r1, .Lmemcpy_vfp
-#endif
+# endif
 	tst	r0, #HWCAP_ARM_NEON
 	ldrne	r1, .Lmemcpy_neon
 1:
 	add	r0, r1, pc
 	DO_RET(lr)
 
-#ifdef __SOFTFP__
+# ifdef __SOFTFP__
 .Lmemcpy_arm:
 	.long	C_SYMBOL_NAME(__memcpy_arm) - 1b - PC_OFS
-#endif
+# endif
 .Lmemcpy_neon:
 	.long	C_SYMBOL_NAME(__memcpy_neon) - 1b - PC_OFS
 .Lmemcpy_vfp:
@@ -51,6 +53,7 @@ ENTRY(memcpy)
 END(memcpy)
 
 libc_hidden_builtin_def (memcpy)
+#endif  /* Not __ARM_NEON__.  */
 
 /* These versions of memcpy are defined not to clobber any VFP or NEON
    registers so they must always call the ARM variant of the memcpy code.  */

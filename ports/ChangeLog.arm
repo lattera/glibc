@@ -1,3 +1,15 @@
+2013-05-13  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/armv7/multiarch/memcpy.S [__ARM_NEON__]: Don't define
+	memcpy here, just __memcpy_arm and __aeabi_memcpy*.
+	* sysdeps/arm/armv7/multiarch/memcpy_neon.S [__ARM_NEON__]:
+	Define memcpy here, not __memcpy_neon.
+	* sysdeps/arm/armv7/multiarch/memcpy_vfp.S [__ARM_NEON__]:
+	Define nothing here.
+	* sysdeps/arm/armv7/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list) [__ARM_NEON__]: Don't list __memcpy_vfp;
+	use memcpy name for NEON implementation.
+
 2013-05-08  Will Newton  <will.newton@linaro.org>
 
 	* sysdeps/arm/armv7/multiarch/Makefile: New file.
