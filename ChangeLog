@@ -1,3 +1,7 @@
+2013-05-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (scalbln_test): Consistently use TEST_fl_f.
+
 2013-05-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* math/libm-test.inc (M_1_DIV_El): Define using decimal constant.
