@@ -1,5 +1,13 @@
 2013-05-14  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (struct test_f_i_data): New type.
+	(RUN_TEST_LOOP_f_i): New macro.
+	(RUN_TEST_LOOP_f_i_tg): Likewise.
+	(fpclassify_test_data): New variable.
+	(fpclassify_test): Run tests with RUN_TEST_LOOP_f_i_tg.
+	(ilogb_test_data): New variable.
+	(ilogb_test): Run tests with RUN_TEST_LOOP_f_i.
+
 	* math/libm-test.inc (scalbln_test): Correct function name in END
 	call.
 

@@ -968,6 +968,14 @@ struct test_c_c_data
   __complex__ FLOAT max_ulp;
   int exceptions;
 };
+struct test_f_i_data
+{
+  const char *test_name;
+  FLOAT arg;
+  int expected;
+  FLOAT max_ulp;
+  int exceptions;
+};
 
 /* Set the rounding mode, or restore the saved value.  */
 #define IF_ROUND_INIT_	/* Empty.  */
@@ -1160,10 +1168,24 @@ struct test_c_c_data
 		     MAX_ULP, EXCEPTIONS)			\
   check_int (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
 	     MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_LOOP_f_i(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
+  IF_ROUND_INIT_ ## ROUNDING_MODE					\
+    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
+      RUN_TEST_f_i ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg,	\
+		    (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
+		    (ARRAY)[i].exceptions);				\
+  ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_i_tg(TEST_NAME, FUNC_NAME, ARG, EXPECTED,	\
 			MAX_ULP, EXCEPTIONS)			\
   check_int (TEST_NAME, FUNC_NAME (ARG), EXPECTED,		\
 	     MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_LOOP_f_i_tg(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
+  IF_ROUND_INIT_ ## ROUNDING_MODE					\
+    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
+      RUN_TEST_f_i_tg ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg,	\
+		       (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
+		       (ARRAY)[i].exceptions);				\
+  ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_ff_i_tg(TEST_NAME, FUNC_NAME, ARG1, ARG2, EXPECTED,	\
 			 MAX_ULP, EXCEPTIONS)				\
   check_int (TEST_NAME, FUNC_NAME (ARG1, ARG2), EXPECTED,		\
@@ -9538,19 +9560,24 @@ fmod_test (void)
 }
 
 
+static const struct test_f_i_data fpclassify_test_data[] =
+  {
+    START_DATA (fpclassify),
+    TEST_f_i (fpclassify, qnan_value, FP_NAN),
+    TEST_f_i (fpclassify, plus_infty, FP_INFINITE),
+    TEST_f_i (fpclassify, minus_infty, FP_INFINITE),
+    TEST_f_i (fpclassify, plus_zero, FP_ZERO),
+    TEST_f_i (fpclassify, minus_zero, FP_ZERO),
+    TEST_f_i (fpclassify, 1000, FP_NORMAL),
+    TEST_f_i (fpclassify, min_subnorm_value, FP_SUBNORMAL),
+    END_DATA (fpclassify)
+  };
+
 static void
 fpclassify_test (void)
 {
   START (fpclassify);
-
-  TEST_f_i (fpclassify, qnan_value, FP_NAN);
-  TEST_f_i (fpclassify, plus_infty, FP_INFINITE);
-  TEST_f_i (fpclassify, minus_infty, FP_INFINITE);
-  TEST_f_i (fpclassify, plus_zero, FP_ZERO);
-  TEST_f_i (fpclassify, minus_zero, FP_ZERO);
-  TEST_f_i (fpclassify, 1000, FP_NORMAL);
-  TEST_f_i (fpclassify, min_subnorm_value, FP_SUBNORMAL);
-
+  RUN_TEST_LOOP_f_i_tg (fpclassify, fpclassify_test_data, );
   END (fpclassify);
 }
 
@@ -9682,25 +9709,30 @@ hypot_test (void)
 }
 
 
+static const struct test_f_i_data ilogb_test_data[] =
+  {
+    START_DATA (ilogb),
+    TEST_f_i (ilogb, 1, 0),
+    TEST_f_i (ilogb, M_El, 1),
+    TEST_f_i (ilogb, 1024, 10),
+    TEST_f_i (ilogb, -2000, 10),
+
+    /* ilogb (0.0) == FP_ILOGB0 plus invalid exception  */
+    TEST_f_i (ilogb, 0.0, FP_ILOGB0, INVALID_EXCEPTION|ERRNO_EDOM),
+    /* ilogb (qNaN) == FP_ILOGBNAN plus invalid exception  */
+    TEST_f_i (ilogb, qnan_value, FP_ILOGBNAN, INVALID_EXCEPTION|ERRNO_EDOM),
+    /* ilogb (inf) == INT_MAX plus invalid exception  */
+    TEST_f_i (ilogb, plus_infty, INT_MAX, INVALID_EXCEPTION|ERRNO_EDOM),
+    /* ilogb (-inf) == INT_MAX plus invalid exception  */
+    TEST_f_i (ilogb, minus_infty, INT_MAX, INVALID_EXCEPTION|ERRNO_EDOM),
+    END_DATA (ilogb)
+  };
+
 static void
 ilogb_test (void)
 {
   START (ilogb);
-
-  TEST_f_i (ilogb, 1, 0);
-  TEST_f_i (ilogb, M_El, 1);
-  TEST_f_i (ilogb, 1024, 10);
-  TEST_f_i (ilogb, -2000, 10);
-
-  /* ilogb (0.0) == FP_ILOGB0 plus invalid exception  */
-  TEST_f_i (ilogb, 0.0, FP_ILOGB0, INVALID_EXCEPTION|ERRNO_EDOM);
-  /* ilogb (qNaN) == FP_ILOGBNAN plus invalid exception  */
-  TEST_f_i (ilogb, qnan_value, FP_ILOGBNAN, INVALID_EXCEPTION|ERRNO_EDOM);
-  /* ilogb (inf) == INT_MAX plus invalid exception  */
-  TEST_f_i (ilogb, plus_infty, INT_MAX, INVALID_EXCEPTION|ERRNO_EDOM);
-  /* ilogb (-inf) == INT_MAX plus invalid exception  */
-  TEST_f_i (ilogb, minus_infty, INT_MAX, INVALID_EXCEPTION|ERRNO_EDOM);
-
+  RUN_TEST_LOOP_f_i (ilogb, ilogb_test_data, );
   END (ilogb);
 }
 
