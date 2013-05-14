@@ -1,3 +1,9 @@
+2013-05-13  Carlos O'Donell  <carlos@redhat.com>
+
+	* elf/dl-hwcaps.c (_dl_important_hwcaps): Comment vDSO hwcap loading.
+	* elf/ldconfig.c (is_hwcap_platform): Comment each hwcap check.
+	(main): Comment "tls" pseudo-hwcap.
+
 2013-05-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (struct test_fl_f_data): New type.

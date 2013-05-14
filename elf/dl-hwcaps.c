@@ -66,6 +66,11 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 	  {
 	    const ElfW(Addr) start = (phdr[i].p_vaddr
 				      + GLRO(dl_sysinfo_map)->l_addr);
+	    /* The standard ELF note layout is exactly as the anonymous struct.
+	       The next element is a variable length vendor name of length
+	       VENDORLEN (with a real length rounded to ElfW(Addr)), followed
+	       by the data of length DATALEN (with a real length rounded to
+	       ElfW(Addr)).  */
 	    const struct
 	    {
 	      ElfW(Word) vendorlen;
@@ -75,6 +80,11 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 	    while ((ElfW(Addr)) (note + 1) - start < phdr[i].p_memsz)
 	      {
 #define ROUND(len) (((len) + sizeof (ElfW(Word)) - 1) & -sizeof (ElfW(Word)))
+		/* The layout of the type 2, vendor "GNU" note is as follows:
+		   .long <Number of capabilities enabled by this note>
+		   .long <Capabilities mask> (as mask >> _DL_FIRST_EXTRA).
+		   .byte <The bit number for the next capability>
+		   .asciz <The name of the capability>.  */
 		if (note->type == NT_GNU_HWCAP
 		    && note->vendorlen == sizeof "GNU"
 		    && !memcmp ((note + 1), "GNU", sizeof "GNU")
@@ -84,7 +94,7 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 					   + ROUND (sizeof "GNU"));
 		    cnt += *p++;
 		    ++p;	/* Skip mask word.  */
-		    dsocaps = (const char *) p;
+		    dsocaps = (const char *) p; /* Pseudo-string "<b>name"  */
 		    dsocapslen = note->datalen - sizeof *p * 2;
 		    break;
 		  }
@@ -107,6 +117,8 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 #ifdef NEED_DL_SYSINFO_DSO
   if (dsocaps != NULL)
     {
+      /* dsocaps points to the .asciz string, and -1 points to the mask
+         .long just before the string.  */
       const ElfW(Word) mask = ((const ElfW(Word) *) dsocaps)[-1];
       GLRO(dl_hwcap) |= (uint64_t) mask << _DL_FIRST_EXTRA;
       /* Note that we add the dsocaps to the set already chosen by the
