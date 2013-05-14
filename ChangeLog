@@ -1,3 +1,12 @@
+2013-05-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (struct test_f_f1_data): New type.
+	(RUN_TEST_LOOP_f_f1): New macro.
+	(gamma_test_data): New variable.
+	(gamma_test): Run tests with RUN_TEST_LOOP_f_f1.
+	(lgamma_test_data): New variable.
+	(lgamma_test): Run tests with RUN_TEST_LOOP_f_f1.
+
 2013-05-13  Carlos O'Donell  <carlos@redhat.com>
 
 	* elf/dl-hwcaps.c (_dl_important_hwcaps): Comment vDSO hwcap loading.

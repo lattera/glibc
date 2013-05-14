@@ -933,6 +933,19 @@ struct test_c_f_data
   FLOAT max_ulp;
   int exceptions;
 };
+struct test_f_f1_data
+{
+  const char *test_name;
+  FLOAT arg;
+  FLOAT expected;
+  FLOAT max_ulp;
+  int exceptions;
+  const char *extra_name;
+  int extra_init;
+  int extra_test;
+  int extra_expected;
+  int extra_ulp;
+};
 struct test_c_c_data
 {
   const char *test_name;
@@ -1036,6 +1049,16 @@ struct test_c_c_data
 		   EXTRA_ULP, 0);					\
     }									\
   while (0)
+#define RUN_TEST_LOOP_f_f1(FUNC_NAME, ARRAY, ROUNDING_MODE, EXTRA_VAR)	\
+  IF_ROUND_INIT_ ## ROUNDING_MODE					\
+    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
+      RUN_TEST_f_f1 ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg,	\
+		     (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
+		     (ARRAY)[i].exceptions, (ARRAY)[i].extra_name,	\
+		     EXTRA_VAR, (ARRAY)[i].extra_init,			\
+		     (ARRAY)[i].extra_test, (ARRAY)[i].extra_expected,	\
+		     (ARRAY)[i].extra_ulp);				\
+  ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_fF_f1(TEST_NAME, FUNC_NAME, ARG, EXPECTED,		\
 		       MAX_ULP, EXCEPTIONS,				\
 		       EXTRA_NAME, EXTRA_VAR, EXTRA_INIT, EXTRA_TEST,	\
@@ -9519,6 +9542,23 @@ frexp_test (void)
 }
 
 
+static const struct test_f_f1_data gamma_test_data[] =
+  {
+    START_DATA (gamma),
+    TEST_f_f1 (gamma, plus_infty, plus_infty, 1),
+    TEST_f_f1 (gamma, 0, plus_infty, 1, DIVIDE_BY_ZERO_EXCEPTION),
+    TEST_f_f1 (gamma, -3, plus_infty, IGNORE, DIVIDE_BY_ZERO_EXCEPTION),
+    TEST_f_f1 (gamma, minus_infty, plus_infty, IGNORE),
+    TEST_f_f1 (gamma, qnan_value, qnan_value, IGNORE),
+
+    TEST_f_f1 (gamma, 1, 0, 1),
+    TEST_f_f1 (gamma, 3, M_LN2l, 1),
+
+    TEST_f_f1 (gamma, 0.5, M_LOG_SQRT_PIl, 1),
+    TEST_f_f1 (gamma, -0.5, M_LOG_2_SQRT_PIl, -1),
+    END_DATA (gamma)
+  };
+
 static void
 gamma_test (void)
 {
@@ -9530,19 +9570,7 @@ gamma_test (void)
     return;
 
   START (gamma);
-
-  TEST_f_f1 (gamma, plus_infty, plus_infty, 1);
-  TEST_f_f1 (gamma, 0, plus_infty, 1, DIVIDE_BY_ZERO_EXCEPTION);
-  TEST_f_f1 (gamma, -3, plus_infty, IGNORE, DIVIDE_BY_ZERO_EXCEPTION);
-  TEST_f_f1 (gamma, minus_infty, plus_infty, IGNORE);
-  TEST_f_f1 (gamma, qnan_value, qnan_value, IGNORE);
-
-  TEST_f_f1 (gamma, 1, 0, 1);
-  TEST_f_f1 (gamma, 3, M_LN2l, 1);
-
-  TEST_f_f1 (gamma, 0.5, M_LOG_SQRT_PIl, 1);
-  TEST_f_f1 (gamma, -0.5, M_LOG_2_SQRT_PIl, -1);
-
+  RUN_TEST_LOOP_f_f1 (gamma, gamma_test_data, , signgam);
   END (gamma);
 }
 
@@ -10087,6 +10115,31 @@ ldexp_test (void)
 }
 
 
+static const struct test_f_f1_data lgamma_test_data[] =
+  {
+    START_DATA (lgamma),
+    TEST_f_f1 (lgamma, plus_infty, plus_infty, 1),
+    TEST_f_f1 (lgamma, 0, plus_infty, 1, DIVIDE_BY_ZERO_EXCEPTION),
+    TEST_f_f1 (lgamma, minus_zero, plus_infty, -1, DIVIDE_BY_ZERO_EXCEPTION),
+    TEST_f_f1 (lgamma, qnan_value, qnan_value, IGNORE),
+
+    /* lgamma (x) == +inf plus divide by zero exception for integer x <= 0.  */
+    TEST_f_f1 (lgamma, -3, plus_infty, IGNORE, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f1 (lgamma, minus_infty, plus_infty, IGNORE),
+    TEST_f_f1 (lgamma, -max_value, plus_infty, IGNORE, DIVIDE_BY_ZERO_EXCEPTION),
+    TEST_f_f1 (lgamma, max_value, plus_infty, 1, OVERFLOW_EXCEPTION),
+
+    TEST_f_f1 (lgamma, 1, 0, 1),
+
+    TEST_f_f1 (lgamma, 3, M_LN2l, 1),
+
+    TEST_f_f1 (lgamma, 0.5, M_LOG_SQRT_PIl, 1),
+    TEST_f_f1 (lgamma, -0.5, M_LOG_2_SQRT_PIl, -1),
+    TEST_f_f1 (lgamma, 0.7L, 0.260867246531666514385732417016759578L, 1),
+    TEST_f_f1 (lgamma, 1.2L, -0.853740900033158497197028392998854470e-1L, 1),
+    END_DATA (lgamma)
+  };
+
 static void
 lgamma_test (void)
 {
@@ -10097,27 +10150,7 @@ lgamma_test (void)
     return;
 
   START (lgamma);
-
-  TEST_f_f1 (lgamma, plus_infty, plus_infty, 1);
-  TEST_f_f1 (lgamma, 0, plus_infty, 1, DIVIDE_BY_ZERO_EXCEPTION);
-  TEST_f_f1 (lgamma, minus_zero, plus_infty, -1, DIVIDE_BY_ZERO_EXCEPTION);
-  TEST_f_f1 (lgamma, qnan_value, qnan_value, IGNORE);
-
-  /* lgamma (x) == +inf plus divide by zero exception for integer x <= 0.  */
-  TEST_f_f1 (lgamma, -3, plus_infty, IGNORE, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE);
-  TEST_f_f1 (lgamma, minus_infty, plus_infty, IGNORE);
-  TEST_f_f1 (lgamma, -max_value, plus_infty, IGNORE, DIVIDE_BY_ZERO_EXCEPTION);
-  TEST_f_f1 (lgamma, max_value, plus_infty, 1, OVERFLOW_EXCEPTION);
-
-  TEST_f_f1 (lgamma, 1, 0, 1);
-
-  TEST_f_f1 (lgamma, 3, M_LN2l, 1);
-
-  TEST_f_f1 (lgamma, 0.5, M_LOG_SQRT_PIl, 1);
-  TEST_f_f1 (lgamma, -0.5, M_LOG_2_SQRT_PIl, -1);
-  TEST_f_f1 (lgamma, 0.7L, 0.260867246531666514385732417016759578L, 1);
-  TEST_f_f1 (lgamma, 1.2L, -0.853740900033158497197028392998854470e-1L, 1);
-
+  RUN_TEST_LOOP_f_f1 (lgamma, lgamma_test_data, , signgam);
   END (lgamma);
 }
 
