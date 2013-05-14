@@ -13333,7 +13333,7 @@ scalbln_test (void)
 
   START (scalbln);
   RUN_TEST_LOOP_fl_f (scalbln, scalbln_test_data, );
-  END (scalbn);
+  END (scalbln);
 }
 
 

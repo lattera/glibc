@@ -1,5 +1,8 @@
 2013-05-14  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (scalbln_test): Correct function name in END
+	call.
+
 	* math/libm-test.inc (struct test_f_f1_data): Add comment.
 	(RUN_TEST_LOOP_fI_f1): New macro.
 	(frexp_test_data): New variable.
