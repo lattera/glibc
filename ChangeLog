@@ -1,5 +1,9 @@
 2013-05-14  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (struct test_fF_f1_data): Change type of
+	extra_test to int.
+	(struct test_f_i_data): Change type of max_ulp to int.
+
 	* math/libm-test.inc (test_ffI_f1_data): New type.
 	(RUN_TEST_LOOP_ffI_f1): New macro.
 	(remquo_test_data): New variable.

@@ -956,7 +956,7 @@ struct test_fF_f1_data
   int exceptions;
   const char *extra_name;
   FLOAT extra_init;
-  FLOAT extra_test;
+  int extra_test;
   FLOAT extra_expected;
   FLOAT extra_ulp;
 };
@@ -986,7 +986,7 @@ struct test_f_i_data
   const char *test_name;
   FLOAT arg;
   int expected;
-  FLOAT max_ulp;
+  int max_ulp;
   int exceptions;
 };
 
