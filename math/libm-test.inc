@@ -946,6 +946,19 @@ struct test_f_f1_data
   int extra_expected;
   int extra_ulp;
 };
+struct test_fF_f1_data
+{
+  const char *test_name;
+  FLOAT arg;
+  FLOAT expected;
+  FLOAT max_ulp;
+  int exceptions;
+  const char *extra_name;
+  FLOAT extra_init;
+  FLOAT extra_test;
+  FLOAT extra_expected;
+  FLOAT extra_ulp;
+};
 struct test_c_c_data
 {
   const char *test_name;
@@ -1073,6 +1086,16 @@ struct test_c_c_data
 		     EXTRA_ULP, 0);					\
     }									\
   while (0)
+#define RUN_TEST_LOOP_fF_f1(FUNC_NAME, ARRAY, ROUNDING_MODE, EXTRA_VAR)	\
+  IF_ROUND_INIT_ ## ROUNDING_MODE					\
+    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
+      RUN_TEST_fF_f1 ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg,	\
+		      (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
+		      (ARRAY)[i].exceptions, (ARRAY)[i].extra_name,	\
+		      EXTRA_VAR, (ARRAY)[i].extra_init,			\
+		      (ARRAY)[i].extra_test, (ARRAY)[i].extra_expected,	\
+		      (ARRAY)[i].extra_ulp);				\
+  ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_fI_f1(TEST_NAME, FUNC_NAME, ARG, EXPECTED,		\
 		       MAX_ULP, EXCEPTIONS,				\
 		       EXTRA_NAME, EXTRA_VAR, EXTRA_INIT, EXTRA_TEST,	\
@@ -11467,24 +11490,29 @@ llround_test (void)
   END (llround);
 }
 
+static const struct test_fF_f1_data modf_test_data[] =
+  {
+    START_DATA (modf),
+    TEST_fF_f1 (modf, plus_infty, 0, plus_infty),
+    TEST_fF_f1 (modf, minus_infty, minus_zero, minus_infty),
+    TEST_fF_f1 (modf, qnan_value, qnan_value, qnan_value),
+    TEST_fF_f1 (modf, 0, 0, 0),
+    TEST_fF_f1 (modf, 1.5, 0.5, 1),
+    TEST_fF_f1 (modf, 2.5, 0.5, 2),
+    TEST_fF_f1 (modf, -2.5, -0.5, -2),
+    TEST_fF_f1 (modf, 20, 0, 20),
+    TEST_fF_f1 (modf, 21, 0, 21),
+    TEST_fF_f1 (modf, 89.5, 0.5, 89),
+    END_DATA (modf)
+  };
+
 static void
 modf_test (void)
 {
   FLOAT x;
 
   START (modf);
-
-  TEST_fF_f1 (modf, plus_infty, 0, plus_infty);
-  TEST_fF_f1 (modf, minus_infty, minus_zero, minus_infty);
-  TEST_fF_f1 (modf, qnan_value, qnan_value, qnan_value);
-  TEST_fF_f1 (modf, 0, 0, 0);
-  TEST_fF_f1 (modf, 1.5, 0.5, 1);
-  TEST_fF_f1 (modf, 2.5, 0.5, 2);
-  TEST_fF_f1 (modf, -2.5, -0.5, -2);
-  TEST_fF_f1 (modf, 20, 0, 20);
-  TEST_fF_f1 (modf, 21, 0, 21);
-  TEST_fF_f1 (modf, 89.5, 0.5, 89);
-
+  RUN_TEST_LOOP_fF_f1 (modf, modf_test_data, , x);
   END (modf);
 }
 
