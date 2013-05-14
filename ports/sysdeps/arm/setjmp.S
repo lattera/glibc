@@ -67,11 +67,6 @@ ENTRY (__sigsetjmp)
 	/* Following instruction is vstmia ip!, {d8-d15}.  */
 	sfi_breg ip, \
 	stc	p11, cr8, [\B], #64
-	/* Store the floating-point status register.  */
-	/* Following instruction is vmrs a4, fpscr.  */
-	mrc	p10, 7, a4, cr1, cr0, 0
-	sfi_breg ip, \
-	str	a4, [\B], #4
 .Lno_vfp:
 
 #ifndef ARM_ASSUME_NO_IWMMXT

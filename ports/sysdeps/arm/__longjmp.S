@@ -83,11 +83,6 @@ ENTRY (__longjmp)
 	/* Following instruction is vldmia ip!, {d8-d15}.  */
 	sfi_breg r12, \
 	ldc	p11, cr8, [\B], #64
-	/* Restore the floating-point status register.  */
-	sfi_breg ip, \
-	ldr     a3, [\B], #4
-	/* Following instruction is fmxr fpscr, a3.  */
-	mcr	p10, 7, a3, cr1, cr0, 0
 .Lno_vfp:
 
 #ifndef ARM_ASSUME_NO_IWMMXT
