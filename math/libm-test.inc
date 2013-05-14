@@ -933,6 +933,7 @@ struct test_c_f_data
   FLOAT max_ulp;
   int exceptions;
 };
+/* Used for both RUN_TEST_LOOP_f_f1 and RUN_TEST_LOOP_fI_f1.  */
 struct test_f_f1_data
 {
   const char *test_name;
@@ -1110,6 +1111,16 @@ struct test_c_c_data
 		   EXTRA_ULP, 0);					\
     }									\
   while (0)
+#define RUN_TEST_LOOP_fI_f1(FUNC_NAME, ARRAY, ROUNDING_MODE, EXTRA_VAR)	\
+  IF_ROUND_INIT_ ## ROUNDING_MODE					\
+    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
+      RUN_TEST_fI_f1 ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg,	\
+		      (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
+		      (ARRAY)[i].exceptions, (ARRAY)[i].extra_name,	\
+		      EXTRA_VAR, (ARRAY)[i].extra_init,			\
+		      (ARRAY)[i].extra_test, (ARRAY)[i].extra_expected,	\
+		      (ARRAY)[i].extra_ulp);				\
+  ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_ffI_f1(TEST_NAME, FUNC_NAME, ARG1, ARG2, EXPECTED,	\
 			MAX_ULP, EXCEPTIONS,				\
 			EXTRA_NAME, EXTRA_VAR, EXTRA_INIT, EXTRA_TEST,	\
@@ -9544,23 +9555,28 @@ fpclassify_test (void)
 }
 
 
+static const struct test_f_f1_data frexp_test_data[] =
+  {
+    START_DATA (frexp),
+    TEST_fI_f1 (frexp, plus_infty, plus_infty, IGNORE),
+    TEST_fI_f1 (frexp, minus_infty, minus_infty, IGNORE),
+    TEST_fI_f1 (frexp, qnan_value, qnan_value, IGNORE),
+
+    TEST_fI_f1 (frexp, 0.0, 0.0, 0.0),
+    TEST_fI_f1 (frexp, minus_zero, minus_zero, 0.0),
+
+    TEST_fI_f1 (frexp, 12.8L, 0.8L, 4),
+    TEST_fI_f1 (frexp, -27.34L, -0.854375L, 5),
+    END_DATA (frexp)
+  };
+
 static void
 frexp_test (void)
 {
   int x;
 
   START (frexp);
-
-  TEST_fI_f1 (frexp, plus_infty, plus_infty, IGNORE);
-  TEST_fI_f1 (frexp, minus_infty, minus_infty, IGNORE);
-  TEST_fI_f1 (frexp, qnan_value, qnan_value, IGNORE);
-
-  TEST_fI_f1 (frexp, 0.0, 0.0, 0.0);
-  TEST_fI_f1 (frexp, minus_zero, minus_zero, 0.0);
-
-  TEST_fI_f1 (frexp, 12.8L, 0.8L, 4);
-  TEST_fI_f1 (frexp, -27.34L, -0.854375L, 5);
-
+  RUN_TEST_LOOP_fI_f1 (frexp, frexp_test_data, , x);
   END (frexp);
 }
 
