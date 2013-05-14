@@ -960,6 +960,19 @@ struct test_fF_f1_data
   FLOAT extra_expected;
   FLOAT extra_ulp;
 };
+struct test_ffI_f1_data
+{
+  const char *test_name;
+  FLOAT arg1, arg2;
+  FLOAT expected;
+  FLOAT max_ulp;
+  int exceptions;
+  const char *extra_name;
+  int extra_init;
+  int extra_test;
+  int extra_expected;
+  int extra_ulp;
+};
 struct test_c_c_data
 {
   const char *test_name;
@@ -1144,6 +1157,19 @@ struct test_f_i_data
 		   EXTRA_ULP, 0);					\
     }									\
   while (0)
+#define RUN_TEST_LOOP_ffI_f1(FUNC_NAME, ARRAY, ROUNDING_MODE,		\
+			     EXTRA_VAR)					\
+  IF_ROUND_INIT_ ## ROUNDING_MODE					\
+    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
+      RUN_TEST_ffI_f1 ((ARRAY)[i].test_name, FUNC_NAME,			\
+		       (ARRAY)[i].arg1, (ARRAY)[i].arg2,		\
+		       (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
+		       (ARRAY)[i].exceptions, (ARRAY)[i].extra_name,	\
+		       EXTRA_VAR, (ARRAY)[i].extra_init,		\
+		       (ARRAY)[i].extra_test,				\
+		       (ARRAY)[i].extra_expected,			\
+		       (ARRAY)[i].extra_ulp);				\
+  ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_c_c(TEST_NAME, FUNC_NAME, ARGR, ARGC, EXPR, EXPC,	\
 		     MAX_ULP, EXCEPTIONS)				\
   check_complex (TEST_NAME,						\
@@ -12615,6 +12641,25 @@ remainder_test (void)
   END (remainder);
 }
 
+static const struct test_ffI_f1_data remquo_test_data[] =
+  {
+    START_DATA (remquo),
+    TEST_ffI_f1 (remquo, 1, 0, qnan_value, IGNORE, INVALID_EXCEPTION),
+    TEST_ffI_f1 (remquo, 1, minus_zero, qnan_value, IGNORE, INVALID_EXCEPTION),
+    TEST_ffI_f1 (remquo, plus_infty, 1, qnan_value, IGNORE, INVALID_EXCEPTION),
+    TEST_ffI_f1 (remquo, minus_infty, 1, qnan_value, IGNORE, INVALID_EXCEPTION),
+    TEST_ffI_f1 (remquo, qnan_value, qnan_value, qnan_value, IGNORE),
+
+    TEST_ffI_f1 (remquo, 1.625, 1.0, -0.375, 2),
+    TEST_ffI_f1 (remquo, -1.625, 1.0, 0.375, -2),
+    TEST_ffI_f1 (remquo, 1.625, -1.0, -0.375, -2),
+    TEST_ffI_f1 (remquo, -1.625, -1.0, 0.375, 2),
+
+    TEST_ffI_f1 (remquo, 5, 2, 1, 2),
+    TEST_ffI_f1 (remquo, 3, 2, -1, 2),
+    END_DATA (remquo)
+  };
+
 static void
 remquo_test (void)
 {
@@ -12628,21 +12673,7 @@ remquo_test (void)
     return;
 
   START (remquo);
-
-  TEST_ffI_f1 (remquo, 1, 0, qnan_value, IGNORE, INVALID_EXCEPTION);
-  TEST_ffI_f1 (remquo, 1, minus_zero, qnan_value, IGNORE, INVALID_EXCEPTION);
-  TEST_ffI_f1 (remquo, plus_infty, 1, qnan_value, IGNORE, INVALID_EXCEPTION);
-  TEST_ffI_f1 (remquo, minus_infty, 1, qnan_value, IGNORE, INVALID_EXCEPTION);
-  TEST_ffI_f1 (remquo, qnan_value, qnan_value, qnan_value, IGNORE);
-
-  TEST_ffI_f1 (remquo, 1.625, 1.0, -0.375, 2);
-  TEST_ffI_f1 (remquo, -1.625, 1.0, 0.375, -2);
-  TEST_ffI_f1 (remquo, 1.625, -1.0, -0.375, -2);
-  TEST_ffI_f1 (remquo, -1.625, -1.0, 0.375, 2);
-
-  TEST_ffI_f1 (remquo, 5, 2, 1, 2);
-  TEST_ffI_f1 (remquo, 3, 2, -1, 2);
-
+  RUN_TEST_LOOP_ffI_f1 (remquo, remquo_test_data, , x);
   END (remquo);
 }
 

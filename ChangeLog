@@ -1,5 +1,10 @@
 2013-05-14  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (test_ffI_f1_data): New type.
+	(RUN_TEST_LOOP_ffI_f1): New macro.
+	(remquo_test_data): New variable.
+	(remquo_test): Run tests with RUN_TEST_LOOP_ffI_f1.
+
 	* setjmp/tst-setjmp-fp.c: New file.
 	* setjmp/Makefile (tests): Add tst-setjmp-fp.
 	(link-libm): New variable.
