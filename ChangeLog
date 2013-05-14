@@ -1,5 +1,7 @@
 2013-05-14  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (RUN_TEST_LOOP_2_f): Fix whitespace.
+
 	* math/libm-test.inc (struct test_fF_f1_data): Change type of
 	extra_test to int.
 	(struct test_f_i_data): Change type of max_ulp to int.

@@ -1036,7 +1036,7 @@ struct test_f_i_data
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_2_f ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg1,	\
 		    (ARRAY)[i].arg2, (ARRAY)[i].expected,		\
-		    (ARRAY)[i].max_ulp,	(ARRAY)[i].exceptions);		\
+		    (ARRAY)[i].max_ulp, (ARRAY)[i].exceptions);		\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_ff_f RUN_TEST_2_f
 #define RUN_TEST_LOOP_ff_f RUN_TEST_LOOP_2_f
