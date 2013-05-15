@@ -1,3 +1,11 @@
+2013-05-15  Edjunior Machado  <emachado@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/bits/siginfo.h (siginfo_t): Remove
+	si_trapno and add si_addr_lsb to _sifields.sigfault.
+	(si_trapno): Remove macro.
+	(si_addr_lsb): Define new macro.
+	(BUS_MCEERR_AR, BUS_MCEERR_AO): Define new values.
+
 2013-05-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (llrint_test): Consistently use TEST_f_L
