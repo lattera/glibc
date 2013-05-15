@@ -1,5 +1,13 @@
 2013-05-15  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (llrint_test): Consistently use TEST_f_L
+	instead of TEST_f_l.
+	(llrint_test_tonearest): Likewise.
+	(llrint_test_towardzero): Likewise.
+	(llrint_test_downward): Likewise.
+	(llrint_test_upward): Likewise.
+	(llround_test): Likewise.
+
 	* math/libm-test.inc (struct test_f_i_data): Add comment.
 	(RUN_TEST_LOOP_f_b): New macro.
 	(RUN_TEST_LOOP_f_b_tg): Likewise.

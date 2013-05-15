@@ -10560,7 +10560,7 @@ llrint_test (void)
   TEST_f_L (llrint, 8388600.3L, 8388600);
   TEST_f_L (llrint, -8388600.3L, -8388600);
 
-  TEST_f_l (llrint, 1071930.0008, 1071930);
+  TEST_f_L (llrint, 1071930.0008, 1071930);
 
   /* Test boundary conditions.  */
   /* 0x1FFFFF */
@@ -10695,7 +10695,7 @@ llrint_test_tonearest (void)
       TEST_f_L (llrint, 8388600.3L, 8388600);
       TEST_f_L (llrint, -8388600.3L, -8388600);
 
-      TEST_f_l (llrint, 1071930.0008, 1071930);
+      TEST_f_L (llrint, 1071930.0008, 1071930);
 
       /* Test boundary conditions.  */
       /* 0x1FFFFF */
@@ -10833,7 +10833,7 @@ llrint_test_towardzero (void)
       TEST_f_L (llrint, 8388600.3L, 8388600);
       TEST_f_L (llrint, -8388600.3L, -8388600);
 
-      TEST_f_l (llrint, 1071930.0008, 1071930);
+      TEST_f_L (llrint, 1071930.0008, 1071930);
 
       /* Test boundary conditions.  */
       /* 0x1FFFFF */
@@ -10971,7 +10971,7 @@ llrint_test_downward (void)
       TEST_f_L (llrint, 8388600.3L, 8388600);
       TEST_f_L (llrint, -8388600.3L, -8388601);
 
-      TEST_f_l (llrint, 1071930.0008, 1071930);
+      TEST_f_L (llrint, 1071930.0008, 1071930);
 
       /* Test boundary conditions.  */
       /* 0x1FFFFF */
@@ -11105,7 +11105,7 @@ llrint_test_upward (void)
       TEST_f_L (llrint, 8388600.3L, 8388601);
       TEST_f_L (llrint, -8388600.3L, -8388600);
 #ifndef TEST_FLOAT
-      TEST_f_l (llrint, 1071930.0008, 1071931);
+      TEST_f_L (llrint, 1071930.0008, 1071931);
 #endif
       /* Test boundary conditions.  */
       /* 0x1FFFFF */
@@ -11505,7 +11505,7 @@ llround_test (void)
   TEST_f_L (llround, -1.5, -2);
   TEST_f_L (llround, 22514.5, 22515);
   TEST_f_L (llround, -22514.5, -22515);
-  TEST_f_l (llround, 1071930.0008, 1071930);
+  TEST_f_L (llround, 1071930.0008, 1071930);
 #ifndef TEST_FLOAT
   TEST_f_L (llround, 2097152.5, 2097153);
   TEST_f_L (llround, -2097152.5, -2097153);
