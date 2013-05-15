@@ -1,3 +1,7 @@
+2013-05-15  Carlos O'Donell  <carlos@redhat.com>
+
+	* sysdeps/hppa/fpu/libm-test-ulps: Regenerate.
+
 2013-05-15  Guy Martin  <gmsoft@tuxicoman.be>
 	    Carlos O'Donell  <carlos@redhat.com>
 
