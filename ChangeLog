@@ -1,5 +1,9 @@
 2013-05-15  Peter Collingbourne  <pcc@google.com>
 
+	* sysdeps/x86_64/fpu/multiarch/s_fma.c (__fma_fma4): Replace xm
+	constraints with x constraints.
+	* sysdeps/x86_64/fpu/multiarch/s_fmaf.c (__fmaf_fma4): Likewise.
+
 	* malloc/obstack.c (_obstack_compat): Add initializer.
 
 2013-05-15  Edjunior Machado  <emachado@linux.vnet.ibm.com>

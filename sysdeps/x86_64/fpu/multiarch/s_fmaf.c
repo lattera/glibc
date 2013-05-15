@@ -37,7 +37,7 @@ __fmaf_fma3 (float x, float y, float z)
 static float
 __fmaf_fma4 (float x, float y, float z)
 {
-  asm ("vfmaddss %3, %2, %1, %0" : "=x" (x) : "x" (x), "xm" (y), "xm" (z));
+  asm ("vfmaddss %3, %2, %1, %0" : "=x" (x) : "x" (x), "x" (y), "x" (z));
   return x;
 }
 # else

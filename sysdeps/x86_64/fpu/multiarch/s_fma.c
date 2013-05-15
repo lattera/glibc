@@ -38,7 +38,7 @@ __fma_fma3 (double x, double y, double z)
 static double
 __fma_fma4 (double x, double y, double z)
 {
-  asm ("vfmaddsd %3, %2, %1, %0" : "=x" (x) : "x" (x), "xm" (y), "xm" (z));
+  asm ("vfmaddsd %3, %2, %1, %0" : "=x" (x) : "x" (x), "x" (y), "x" (z));
   return x;
 }
 # else
