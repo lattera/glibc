@@ -1281,15 +1281,15 @@ matherr (struct exception *x __attribute__ ((unused)))
 static const struct test_f_f_data acos_test_data[] =
   {
     START_DATA (acos),
-    TEST_f_f (acos, plus_infty, qnan_value, INVALID_EXCEPTION),
-    TEST_f_f (acos, minus_infty, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (acos, plus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (acos, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (acos, qnan_value, qnan_value),
 
     /* |x| > 1: */
-    TEST_f_f (acos, 1.125L, qnan_value, INVALID_EXCEPTION),
-    TEST_f_f (acos, -1.125L, qnan_value, INVALID_EXCEPTION),
-    TEST_f_f (acos, max_value, qnan_value, INVALID_EXCEPTION),
-    TEST_f_f (acos, -max_value, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (acos, 1.125L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (acos, -1.125L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (acos, max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (acos, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
 
     TEST_f_f (acos, 0, M_PI_2l),
     TEST_f_f (acos, minus_zero, M_PI_2l),
@@ -1441,12 +1441,12 @@ static const struct test_f_f_data acosh_test_data[] =
   {
     START_DATA (acosh),
     TEST_f_f (acosh, plus_infty, plus_infty),
-    TEST_f_f (acosh, minus_infty, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (acosh, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (acosh, qnan_value, qnan_value),
 
     /* x < 1:  */
-    TEST_f_f (acosh, -1.125L, qnan_value, INVALID_EXCEPTION),
-    TEST_f_f (acosh, -max_value, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (acosh, -1.125L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (acosh, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
 
     TEST_f_f (acosh, 1, 0),
     TEST_f_f (acosh, 7, 2.63391579384963341725009269461593689L),
@@ -1470,15 +1470,15 @@ acosh_test (void)
 static const struct test_f_f_data asin_test_data[] =
   {
     START_DATA (asin),
-    TEST_f_f (asin, plus_infty, qnan_value, INVALID_EXCEPTION),
-    TEST_f_f (asin, minus_infty, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (asin, plus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (asin, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (asin, qnan_value, qnan_value),
 
     /* asin x == qNaN plus invalid exception for |x| > 1.  */
-    TEST_f_f (asin, 1.125L, qnan_value, INVALID_EXCEPTION),
-    TEST_f_f (asin, -1.125L, qnan_value, INVALID_EXCEPTION),
-    TEST_f_f (asin, max_value, qnan_value, INVALID_EXCEPTION),
-    TEST_f_f (asin, -max_value, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (asin, 1.125L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (asin, -1.125L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (asin, max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (asin, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
 
     TEST_f_f (asin, 0, 0),
     TEST_f_f (asin, minus_zero, minus_zero),
@@ -1706,10 +1706,10 @@ static const struct test_f_f_data atanh_test_data[] =
     TEST_f_f (atanh, qnan_value, qnan_value),
 
     /* atanh (x) == qNaN plus invalid exception if |x| > 1.  */
-    TEST_f_f (atanh, 1.125L, qnan_value, INVALID_EXCEPTION),
-    TEST_f_f (atanh, -1.125L, qnan_value, INVALID_EXCEPTION),
-    TEST_f_f (atanh, max_value, qnan_value, INVALID_EXCEPTION),
-    TEST_f_f (atanh, -max_value, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (atanh, 1.125L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (atanh, -1.125L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (atanh, max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (atanh, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
 
     TEST_f_f (atanh, 0.75L, 0.972955074527656652552676371721589865L),
     END_DATA (atanh)
@@ -9565,7 +9565,7 @@ static const struct test_ff_f_data fmod_test_data[] =
     /* fmod (x, +0) == qNaN plus invalid exception.  */
     TEST_ff_f (fmod, 3, 0, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     /* fmod (x, -0) == qNaN plus invalid exception.  */
-    TEST_ff_f (fmod, 3, minus_zero, qnan_value, INVALID_EXCEPTION),
+    TEST_ff_f (fmod, 3, minus_zero, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
 
     /* fmod (x, +inf) == x for x not infinite.  */
     TEST_ff_f (fmod, 3.0, plus_infty, 3.0),
@@ -11181,9 +11181,9 @@ static const struct test_f_f_data log_test_data[] =
 
     TEST_f_f (log, 1, 0),
 
-    TEST_f_f (log, -1, qnan_value, INVALID_EXCEPTION),
-    TEST_f_f (log, -max_value, qnan_value, INVALID_EXCEPTION),
-    TEST_f_f (log, minus_infty, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (log, -1, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (log, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (log, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (log, plus_infty, plus_infty),
     TEST_f_f (log, qnan_value, qnan_value),
 
@@ -11218,9 +11218,9 @@ static const struct test_f_f_data log10_test_data[] =
     TEST_f_f (log10, 1, 0),
 
     /* log10 (x) == qNaN plus invalid exception if x < 0.  */
-    TEST_f_f (log10, -1, qnan_value, INVALID_EXCEPTION),
-    TEST_f_f (log10, -max_value, qnan_value, INVALID_EXCEPTION),
-    TEST_f_f (log10, minus_infty, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (log10, -1, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (log10, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (log10, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
 
     TEST_f_f (log10, plus_infty, plus_infty),
     TEST_f_f (log10, qnan_value, qnan_value),
@@ -11293,9 +11293,9 @@ static const struct test_f_f_data log2_test_data[] =
 
     TEST_f_f (log2, 1, 0),
 
-    TEST_f_f (log2, -1, qnan_value, INVALID_EXCEPTION),
-    TEST_f_f (log2, -max_value, qnan_value, INVALID_EXCEPTION),
-    TEST_f_f (log2, minus_infty, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (log2, -1, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (log2, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (log2, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
 
     TEST_f_f (log2, plus_infty, plus_infty),
     TEST_f_f (log2, qnan_value, qnan_value),
@@ -11961,14 +11961,14 @@ static const struct test_ff_f_data pow_test_data[] =
     TEST_ff_f (pow, 0x1p-72L, 0, 1),
     TEST_ff_f (pow, 0x1p-72L, minus_zero, 1),
 
-    TEST_ff_f (pow, -0.1L, 1.1L, qnan_value, INVALID_EXCEPTION),
-    TEST_ff_f (pow, -0.1L, -1.1L, qnan_value, INVALID_EXCEPTION),
-    TEST_ff_f (pow, -10.1L, 1.1L, qnan_value, INVALID_EXCEPTION),
-    TEST_ff_f (pow, -10.1L, -1.1L, qnan_value, INVALID_EXCEPTION),
-    TEST_ff_f (pow, -1.01L, min_subnorm_value, qnan_value, INVALID_EXCEPTION),
-    TEST_ff_f (pow, -1.01L, -min_subnorm_value, qnan_value, INVALID_EXCEPTION),
-    TEST_ff_f (pow, -1.0L, min_subnorm_value, qnan_value, INVALID_EXCEPTION),
-    TEST_ff_f (pow, -1.0L, -min_subnorm_value, qnan_value, INVALID_EXCEPTION),
+    TEST_ff_f (pow, -0.1L, 1.1L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (pow, -0.1L, -1.1L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (pow, -10.1L, 1.1L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (pow, -10.1L, -1.1L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (pow, -1.01L, min_subnorm_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (pow, -1.01L, -min_subnorm_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (pow, -1.0L, min_subnorm_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (pow, -1.0L, -min_subnorm_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
 
     TEST_ff_f (pow, 0, -1, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_ff_f (pow, 0, -11, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
@@ -12317,9 +12317,9 @@ static const struct test_ff_f_data pow_test_data[] =
 #endif
     TEST_ff_f (pow, -2.0, max_value, plus_infty, OVERFLOW_EXCEPTION),
 
-    TEST_ff_f (pow, -max_value, 0.5, qnan_value, INVALID_EXCEPTION),
-    TEST_ff_f (pow, -max_value, 1.5, qnan_value, INVALID_EXCEPTION),
-    TEST_ff_f (pow, -max_value, 1000.5, qnan_value, INVALID_EXCEPTION),
+    TEST_ff_f (pow, -max_value, 0.5, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (pow, -max_value, 1.5, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (pow, -max_value, 1000.5, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_ff_f (pow, -max_value, -2, plus_zero, UNDERFLOW_EXCEPTION),
     TEST_ff_f (pow, -max_value, -3, minus_zero, UNDERFLOW_EXCEPTION),
     TEST_ff_f (pow, -max_value, 2, plus_infty, OVERFLOW_EXCEPTION),
@@ -12418,9 +12418,9 @@ static const struct test_ff_f_data pow_test_data[] =
 #endif
     TEST_ff_f (pow, -0.5, max_value, plus_zero, UNDERFLOW_EXCEPTION),
 
-    TEST_ff_f (pow, -min_value, 0.5, qnan_value, INVALID_EXCEPTION),
-    TEST_ff_f (pow, -min_value, 1.5, qnan_value, INVALID_EXCEPTION),
-    TEST_ff_f (pow, -min_value, 1000.5, qnan_value, INVALID_EXCEPTION),
+    TEST_ff_f (pow, -min_value, 0.5, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (pow, -min_value, 1.5, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (pow, -min_value, 1000.5, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_ff_f (pow, -min_value, -2, plus_infty, OVERFLOW_EXCEPTION),
     TEST_ff_f (pow, -min_value, -3, minus_infty, OVERFLOW_EXCEPTION),
     /* Allow inexact results to be considered to underflow.  */
@@ -13865,9 +13865,9 @@ static const struct test_f_f_data sqrt_test_data[] =
     TEST_f_f (sqrt, minus_zero, minus_zero),
 
     /* sqrt (x) == qNaN plus invalid exception for x < 0.  */
-    TEST_f_f (sqrt, -1, qnan_value, INVALID_EXCEPTION),
-    TEST_f_f (sqrt, -max_value, qnan_value, INVALID_EXCEPTION),
-    TEST_f_f (sqrt, minus_infty, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (sqrt, -1, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (sqrt, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (sqrt, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
 
     TEST_f_f (sqrt, 2209, 47),
     TEST_f_f (sqrt, 4, 2),
@@ -14791,8 +14791,8 @@ static const struct test_f_f_data y0_test_data[] =
   {
     START_DATA (y0),
     /* y0 is the Bessel function of the second kind of order 0 */
-    TEST_f_f (y0, -1.0, minus_infty, INVALID_EXCEPTION),
-    TEST_f_f (y0, -max_value, minus_infty, INVALID_EXCEPTION),
+    TEST_f_f (y0, -1.0, minus_infty, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (y0, -max_value, minus_infty, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (y0, 0.0, minus_infty),
     TEST_f_f (y0, qnan_value, qnan_value),
     TEST_f_f (y0, plus_infty, 0),
@@ -14855,8 +14855,8 @@ static const struct test_f_f_data y1_test_data[] =
   {
     START_DATA (y1),
     /* y1 is the Bessel function of the second kind of order 1 */
-    TEST_f_f (y1, -1.0, minus_infty, INVALID_EXCEPTION),
-    TEST_f_f (y1, -max_value, minus_infty, INVALID_EXCEPTION),
+    TEST_f_f (y1, -1.0, minus_infty, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (y1, -max_value, minus_infty, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (y1, 0.0, minus_infty),
     TEST_f_f (y1, plus_infty, 0),
     TEST_f_f (y1, qnan_value, qnan_value),
@@ -14920,8 +14920,8 @@ static const struct test_if_f_data yn_test_data[] =
     START_DATA (yn),
     /* yn is the Bessel function of the second kind of order n */
     /* yn (0, x) == y0 (x)  */
-    TEST_if_f (yn, 0, -1.0, minus_infty, INVALID_EXCEPTION),
-    TEST_if_f (yn, 0, -max_value, minus_infty, INVALID_EXCEPTION),
+    TEST_if_f (yn, 0, -1.0, minus_infty, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, 0, -max_value, minus_infty, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_if_f (yn, 0, 0.0, minus_infty),
     TEST_if_f (yn, 0, qnan_value, qnan_value),
     TEST_if_f (yn, 0, plus_infty, 0),
@@ -14935,7 +14935,7 @@ static const struct test_if_f_data yn_test_data[] =
     TEST_if_f (yn, 0, 10.0, 0.0556711672835993914244598774101900481L),
 
     /* yn (1, x) == y1 (x)  */
-    TEST_if_f (yn, 1, -1.0, minus_infty, INVALID_EXCEPTION),
+    TEST_if_f (yn, 1, -1.0, minus_infty, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_if_f (yn, 1, 0.0, minus_infty),
     TEST_if_f (yn, 1, plus_infty, 0),
     TEST_if_f (yn, 1, qnan_value, qnan_value),

@@ -1,5 +1,20 @@
 2013-05-15  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (acos_test_data): Use ERRNO_EDOM together
+	with INVALID_EXCEPTION.
+	(acosh_test_data): Likewise.
+	(asin_test_data): Likewise.
+	(atanh_test_data): Likewise.
+	(fmod_test_data): Likewise.
+	(log_test_data): Likewise.
+	(log10_test_data): Likewise.
+	(log2_test_data): Likewise.
+	(pow_test_data): Likewise.
+	(sqrt_test_data): Likewise.
+	(y0_test_data): Likewise.
+	(y1_test_data): Likewise.
+	(yn_test_data): Likewise.
+
 	* math/libm-test.inc (test_single_errno) [TEST_INLINE]: Disable
 	function contents.
 
