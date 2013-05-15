@@ -560,6 +560,7 @@ static void
 test_single_errno (const char *test_name, int errno_value,
 		   int expected_value, const char *expected_name)
 {
+#ifndef TEST_INLINE
   if (errno_value == expected_value)
     {
       if (print_screen (1))
@@ -573,6 +574,7 @@ test_single_errno (const char *test_name, int errno_value,
 	printf ("Failure: %s: errno set to %d, expected %d (%s)\n",
 		test_name, errno_value, expected_value, expected_name);
     }
+#endif
 }
 
 /* Test whether errno (value ERRNO_VALUE) has been for TEST_NAME set

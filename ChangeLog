@@ -1,5 +1,8 @@
 2013-05-15  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (test_single_errno) [TEST_INLINE]: Disable
+	function contents.
+
 	* math/libm-test.inc (struct test_ff_i_data): New type.
 	(RUN_TEST_LOOP_ff_i_tg): New macro.
 	(isgreater_test_data): New variable.
