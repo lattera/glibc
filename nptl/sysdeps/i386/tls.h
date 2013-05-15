@@ -59,7 +59,9 @@ typedef struct
   int __unused1;
 #endif
   /* Reservation of some values for the TM ABI.  */
-  void *__private_tm[5];
+  void *__private_tm[4];
+  /* GCC split stack support.  */
+  void *__private_ss;
 } tcbhead_t;
 
 # define TLS_MULTIPLE_THREADS_IN_TCB 1

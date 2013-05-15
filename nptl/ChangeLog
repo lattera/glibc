@@ -1,3 +1,9 @@
+2013-05-14  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #10686]
+	* sysdeps/x86_64/tls.h (struct tcbhead_t): Add __private_ss field.
+	* sysdeps/i386/tls.h (struct tcbhead_t): Likewise.
+
 2013-05-09  Andi Kleen  <ak@linux.intel.com>
 
 	* tst-mutex8.c (do_test): Check for ENABLE_PI.

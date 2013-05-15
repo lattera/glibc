@@ -69,7 +69,9 @@ typedef struct
 # endif
   int rtld_must_xmm_save;
   /* Reservation of some values for the TM ABI.  */
-  void *__private_tm[5];
+  void *__private_tm[4];
+  /* GCC split stack support.  */
+  void *__private_ss;
   long int __unused2;
   /* Have space for the post-AVX register size.  */
   __128bits rtld_savespace_sse[8][4] __attribute__ ((aligned (32)));
