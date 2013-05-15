@@ -989,6 +989,14 @@ struct test_f_i_data
   int max_ulp;
   int exceptions;
 };
+struct test_ff_i_data
+{
+  const char *test_name;
+  FLOAT arg1, arg2;
+  int expected;
+  int max_ulp;
+  int exceptions;
+};
 
 /* Set the rounding mode, or restore the saved value.  */
 #define IF_ROUND_INIT_	/* Empty.  */
@@ -1216,6 +1224,14 @@ struct test_f_i_data
 			 MAX_ULP, EXCEPTIONS)				\
   check_int (TEST_NAME, FUNC_NAME (ARG1, ARG2), EXPECTED,		\
 	     MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_LOOP_ff_i_tg(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
+  IF_ROUND_INIT_ ## ROUNDING_MODE					\
+    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
+      RUN_TEST_ff_i_tg ((ARRAY)[i].test_name, FUNC_NAME,		\
+			(ARRAY)[i].arg1, (ARRAY)[i].arg2,		\
+			(ARRAY)[i].expected, (ARRAY)[i].max_ulp,	\
+			(ARRAY)[i].exceptions);				\
+  ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_b(TEST_NAME, FUNC_NAME, ARG, EXPECTED,	\
 		     MAX_ULP, EXCEPTIONS)			\
   check_bool (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
@@ -9778,53 +9794,63 @@ isfinite_test (void)
   END (isfinite);
 }
 
+static const struct test_ff_i_data isgreater_test_data[] =
+  {
+    START_DATA (isgreater),
+    TEST_ff_i (isgreater, minus_zero, minus_zero, 0),
+    TEST_ff_i (isgreater, minus_zero, plus_zero, 0),
+    TEST_ff_i (isgreater, minus_zero, (FLOAT) 1, 0),
+    TEST_ff_i (isgreater, minus_zero, qnan_value, 0),
+    TEST_ff_i (isgreater, plus_zero, minus_zero, 0),
+    TEST_ff_i (isgreater, plus_zero, plus_zero, 0),
+    TEST_ff_i (isgreater, plus_zero, (FLOAT) 1, 0),
+    TEST_ff_i (isgreater, plus_zero, qnan_value, 0),
+    TEST_ff_i (isgreater, (FLOAT) 1, minus_zero, 1),
+    TEST_ff_i (isgreater, (FLOAT) 1, plus_zero, 1),
+    TEST_ff_i (isgreater, (FLOAT) 1, (FLOAT) 1, 0),
+    TEST_ff_i (isgreater, (FLOAT) 1, qnan_value, 0),
+    TEST_ff_i (isgreater, qnan_value, minus_zero, 0),
+    TEST_ff_i (isgreater, qnan_value, plus_zero, 0),
+    TEST_ff_i (isgreater, qnan_value, (FLOAT) 1, 0),
+    TEST_ff_i (isgreater, qnan_value, qnan_value, 0),
+    END_DATA (isgreater)
+  };
+
 static void
 isgreater_test (void)
 {
   START (isgreater);
-
-  TEST_ff_i (isgreater, minus_zero, minus_zero, 0);
-  TEST_ff_i (isgreater, minus_zero, plus_zero, 0);
-  TEST_ff_i (isgreater, minus_zero, (FLOAT) 1, 0);
-  TEST_ff_i (isgreater, minus_zero, qnan_value, 0);
-  TEST_ff_i (isgreater, plus_zero, minus_zero, 0);
-  TEST_ff_i (isgreater, plus_zero, plus_zero, 0);
-  TEST_ff_i (isgreater, plus_zero, (FLOAT) 1, 0);
-  TEST_ff_i (isgreater, plus_zero, qnan_value, 0);
-  TEST_ff_i (isgreater, (FLOAT) 1, minus_zero, 1);
-  TEST_ff_i (isgreater, (FLOAT) 1, plus_zero, 1);
-  TEST_ff_i (isgreater, (FLOAT) 1, (FLOAT) 1, 0);
-  TEST_ff_i (isgreater, (FLOAT) 1, qnan_value, 0);
-  TEST_ff_i (isgreater, qnan_value, minus_zero, 0);
-  TEST_ff_i (isgreater, qnan_value, plus_zero, 0);
-  TEST_ff_i (isgreater, qnan_value, (FLOAT) 1, 0);
-  TEST_ff_i (isgreater, qnan_value, qnan_value, 0);
-
+  RUN_TEST_LOOP_ff_i_tg (isgreater, isgreater_test_data, );
   END (isgreater);
 }
+
+static const struct test_ff_i_data isgreaterequal_test_data[] =
+  {
+    START_DATA (isgreaterequal),
+    TEST_ff_i (isgreaterequal, minus_zero, minus_zero, 1),
+    TEST_ff_i (isgreaterequal, minus_zero, plus_zero, 1),
+    TEST_ff_i (isgreaterequal, minus_zero, (FLOAT) 1, 0),
+    TEST_ff_i (isgreaterequal, minus_zero, qnan_value, 0),
+    TEST_ff_i (isgreaterequal, plus_zero, minus_zero, 1),
+    TEST_ff_i (isgreaterequal, plus_zero, plus_zero, 1),
+    TEST_ff_i (isgreaterequal, plus_zero, (FLOAT) 1, 0),
+    TEST_ff_i (isgreaterequal, plus_zero, qnan_value, 0),
+    TEST_ff_i (isgreaterequal, (FLOAT) 1, minus_zero, 1),
+    TEST_ff_i (isgreaterequal, (FLOAT) 1, plus_zero, 1),
+    TEST_ff_i (isgreaterequal, (FLOAT) 1, (FLOAT) 1, 1),
+    TEST_ff_i (isgreaterequal, (FLOAT) 1, qnan_value, 0),
+    TEST_ff_i (isgreaterequal, qnan_value, minus_zero, 0),
+    TEST_ff_i (isgreaterequal, qnan_value, plus_zero, 0),
+    TEST_ff_i (isgreaterequal, qnan_value, (FLOAT) 1, 0),
+    TEST_ff_i (isgreaterequal, qnan_value, qnan_value, 0),
+    END_DATA (isgreaterequal)
+  };
 
 static void
 isgreaterequal_test (void)
 {
   START (isgreaterequal);
-
-  TEST_ff_i (isgreaterequal, minus_zero, minus_zero, 1);
-  TEST_ff_i (isgreaterequal, minus_zero, plus_zero, 1);
-  TEST_ff_i (isgreaterequal, minus_zero, (FLOAT) 1, 0);
-  TEST_ff_i (isgreaterequal, minus_zero, qnan_value, 0);
-  TEST_ff_i (isgreaterequal, plus_zero, minus_zero, 1);
-  TEST_ff_i (isgreaterequal, plus_zero, plus_zero, 1);
-  TEST_ff_i (isgreaterequal, plus_zero, (FLOAT) 1, 0);
-  TEST_ff_i (isgreaterequal, plus_zero, qnan_value, 0);
-  TEST_ff_i (isgreaterequal, (FLOAT) 1, minus_zero, 1);
-  TEST_ff_i (isgreaterequal, (FLOAT) 1, plus_zero, 1);
-  TEST_ff_i (isgreaterequal, (FLOAT) 1, (FLOAT) 1, 1);
-  TEST_ff_i (isgreaterequal, (FLOAT) 1, qnan_value, 0);
-  TEST_ff_i (isgreaterequal, qnan_value, minus_zero, 0);
-  TEST_ff_i (isgreaterequal, qnan_value, plus_zero, 0);
-  TEST_ff_i (isgreaterequal, qnan_value, (FLOAT) 1, 0);
-  TEST_ff_i (isgreaterequal, qnan_value, qnan_value, 0);
-
+  RUN_TEST_LOOP_ff_i_tg (isgreaterequal, isgreaterequal_test_data, );
   END (isgreaterequal);
 }
 
@@ -9844,78 +9870,93 @@ isinf_test (void)
   END (isinf);
 }
 
+static const struct test_ff_i_data isless_test_data[] =
+  {
+    START_DATA (isless),
+    TEST_ff_i (isless, minus_zero, minus_zero, 0),
+    TEST_ff_i (isless, minus_zero, plus_zero, 0),
+    TEST_ff_i (isless, minus_zero, (FLOAT) 1, 1),
+    TEST_ff_i (isless, minus_zero, qnan_value, 0),
+    TEST_ff_i (isless, plus_zero, minus_zero, 0),
+    TEST_ff_i (isless, plus_zero, plus_zero, 0),
+    TEST_ff_i (isless, plus_zero, (FLOAT) 1, 1),
+    TEST_ff_i (isless, plus_zero, qnan_value, 0),
+    TEST_ff_i (isless, (FLOAT) 1, minus_zero, 0),
+    TEST_ff_i (isless, (FLOAT) 1, plus_zero, 0),
+    TEST_ff_i (isless, (FLOAT) 1, (FLOAT) 1, 0),
+    TEST_ff_i (isless, (FLOAT) 1, qnan_value, 0),
+    TEST_ff_i (isless, qnan_value, minus_zero, 0),
+    TEST_ff_i (isless, qnan_value, plus_zero, 0),
+    TEST_ff_i (isless, qnan_value, (FLOAT) 1, 0),
+    TEST_ff_i (isless, qnan_value, qnan_value, 0),
+    END_DATA (isless)
+  };
+
 static void
 isless_test (void)
 {
   START (isless);
-
-  TEST_ff_i (isless, minus_zero, minus_zero, 0);
-  TEST_ff_i (isless, minus_zero, plus_zero, 0);
-  TEST_ff_i (isless, minus_zero, (FLOAT) 1, 1);
-  TEST_ff_i (isless, minus_zero, qnan_value, 0);
-  TEST_ff_i (isless, plus_zero, minus_zero, 0);
-  TEST_ff_i (isless, plus_zero, plus_zero, 0);
-  TEST_ff_i (isless, plus_zero, (FLOAT) 1, 1);
-  TEST_ff_i (isless, plus_zero, qnan_value, 0);
-  TEST_ff_i (isless, (FLOAT) 1, minus_zero, 0);
-  TEST_ff_i (isless, (FLOAT) 1, plus_zero, 0);
-  TEST_ff_i (isless, (FLOAT) 1, (FLOAT) 1, 0);
-  TEST_ff_i (isless, (FLOAT) 1, qnan_value, 0);
-  TEST_ff_i (isless, qnan_value, minus_zero, 0);
-  TEST_ff_i (isless, qnan_value, plus_zero, 0);
-  TEST_ff_i (isless, qnan_value, (FLOAT) 1, 0);
-  TEST_ff_i (isless, qnan_value, qnan_value, 0);
-
+  RUN_TEST_LOOP_ff_i_tg (isless, isless_test_data, );
   END (isless);
 }
+
+static const struct test_ff_i_data islessequal_test_data[] =
+  {
+    START_DATA (islessequal),
+    TEST_ff_i (islessequal, minus_zero, minus_zero, 1),
+    TEST_ff_i (islessequal, minus_zero, plus_zero, 1),
+    TEST_ff_i (islessequal, minus_zero, (FLOAT) 1, 1),
+    TEST_ff_i (islessequal, minus_zero, qnan_value, 0),
+    TEST_ff_i (islessequal, plus_zero, minus_zero, 1),
+    TEST_ff_i (islessequal, plus_zero, plus_zero, 1),
+    TEST_ff_i (islessequal, plus_zero, (FLOAT) 1, 1),
+    TEST_ff_i (islessequal, plus_zero, qnan_value, 0),
+    TEST_ff_i (islessequal, (FLOAT) 1, minus_zero, 0),
+    TEST_ff_i (islessequal, (FLOAT) 1, plus_zero, 0),
+    TEST_ff_i (islessequal, (FLOAT) 1, (FLOAT) 1, 1),
+    TEST_ff_i (islessequal, (FLOAT) 1, qnan_value, 0),
+    TEST_ff_i (islessequal, qnan_value, minus_zero, 0),
+    TEST_ff_i (islessequal, qnan_value, plus_zero, 0),
+    TEST_ff_i (islessequal, qnan_value, (FLOAT) 1, 0),
+    TEST_ff_i (islessequal, qnan_value, qnan_value, 0),
+    END_DATA (islessequal)
+  };
 
 static void
 islessequal_test (void)
 {
   START (islessequal);
-
-  TEST_ff_i (islessequal, minus_zero, minus_zero, 1);
-  TEST_ff_i (islessequal, minus_zero, plus_zero, 1);
-  TEST_ff_i (islessequal, minus_zero, (FLOAT) 1, 1);
-  TEST_ff_i (islessequal, minus_zero, qnan_value, 0);
-  TEST_ff_i (islessequal, plus_zero, minus_zero, 1);
-  TEST_ff_i (islessequal, plus_zero, plus_zero, 1);
-  TEST_ff_i (islessequal, plus_zero, (FLOAT) 1, 1);
-  TEST_ff_i (islessequal, plus_zero, qnan_value, 0);
-  TEST_ff_i (islessequal, (FLOAT) 1, minus_zero, 0);
-  TEST_ff_i (islessequal, (FLOAT) 1, plus_zero, 0);
-  TEST_ff_i (islessequal, (FLOAT) 1, (FLOAT) 1, 1);
-  TEST_ff_i (islessequal, (FLOAT) 1, qnan_value, 0);
-  TEST_ff_i (islessequal, qnan_value, minus_zero, 0);
-  TEST_ff_i (islessequal, qnan_value, plus_zero, 0);
-  TEST_ff_i (islessequal, qnan_value, (FLOAT) 1, 0);
-  TEST_ff_i (islessequal, qnan_value, qnan_value, 0);
-
+  RUN_TEST_LOOP_ff_i_tg (islessequal, islessequal_test_data, );
   END (islessequal);
 }
+
+static const struct test_ff_i_data islessgreater_test_data[] =
+  {
+    START_DATA (islessgreater),
+    TEST_ff_i (islessgreater, minus_zero, minus_zero, 0),
+    TEST_ff_i (islessgreater, minus_zero, plus_zero, 0),
+    TEST_ff_i (islessgreater, minus_zero, (FLOAT) 1, 1),
+    TEST_ff_i (islessgreater, minus_zero, qnan_value, 0),
+    TEST_ff_i (islessgreater, plus_zero, minus_zero, 0),
+    TEST_ff_i (islessgreater, plus_zero, plus_zero, 0),
+    TEST_ff_i (islessgreater, plus_zero, (FLOAT) 1, 1),
+    TEST_ff_i (islessgreater, plus_zero, qnan_value, 0),
+    TEST_ff_i (islessgreater, (FLOAT) 1, minus_zero, 1),
+    TEST_ff_i (islessgreater, (FLOAT) 1, plus_zero, 1),
+    TEST_ff_i (islessgreater, (FLOAT) 1, (FLOAT) 1, 0),
+    TEST_ff_i (islessgreater, (FLOAT) 1, qnan_value, 0),
+    TEST_ff_i (islessgreater, qnan_value, minus_zero, 0),
+    TEST_ff_i (islessgreater, qnan_value, plus_zero, 0),
+    TEST_ff_i (islessgreater, qnan_value, (FLOAT) 1, 0),
+    TEST_ff_i (islessgreater, qnan_value, qnan_value, 0),
+    END_DATA (islessgreater)
+  };
 
 static void
 islessgreater_test (void)
 {
   START (islessgreater);
-
-  TEST_ff_i (islessgreater, minus_zero, minus_zero, 0);
-  TEST_ff_i (islessgreater, minus_zero, plus_zero, 0);
-  TEST_ff_i (islessgreater, minus_zero, (FLOAT) 1, 1);
-  TEST_ff_i (islessgreater, minus_zero, qnan_value, 0);
-  TEST_ff_i (islessgreater, plus_zero, minus_zero, 0);
-  TEST_ff_i (islessgreater, plus_zero, plus_zero, 0);
-  TEST_ff_i (islessgreater, plus_zero, (FLOAT) 1, 1);
-  TEST_ff_i (islessgreater, plus_zero, qnan_value, 0);
-  TEST_ff_i (islessgreater, (FLOAT) 1, minus_zero, 1);
-  TEST_ff_i (islessgreater, (FLOAT) 1, plus_zero, 1);
-  TEST_ff_i (islessgreater, (FLOAT) 1, (FLOAT) 1, 0);
-  TEST_ff_i (islessgreater, (FLOAT) 1, qnan_value, 0);
-  TEST_ff_i (islessgreater, qnan_value, minus_zero, 0);
-  TEST_ff_i (islessgreater, qnan_value, plus_zero, 0);
-  TEST_ff_i (islessgreater, qnan_value, (FLOAT) 1, 0);
-  TEST_ff_i (islessgreater, qnan_value, qnan_value, 0);
-
+  RUN_TEST_LOOP_ff_i_tg (islessgreater, islessgreater_test_data, );
   END (islessgreater);
 }
 
@@ -9967,28 +10008,33 @@ issignaling_test (void)
   END (issignaling);
 }
 
+static const struct test_ff_i_data isunordered_test_data[] =
+  {
+    START_DATA (isunordered),
+    TEST_ff_i (isunordered, minus_zero, minus_zero, 0),
+    TEST_ff_i (isunordered, minus_zero, plus_zero, 0),
+    TEST_ff_i (isunordered, minus_zero, (FLOAT) 1, 0),
+    TEST_ff_i (isunordered, minus_zero, qnan_value, 1),
+    TEST_ff_i (isunordered, plus_zero, minus_zero, 0),
+    TEST_ff_i (isunordered, plus_zero, plus_zero, 0),
+    TEST_ff_i (isunordered, plus_zero, (FLOAT) 1, 0),
+    TEST_ff_i (isunordered, plus_zero, qnan_value, 1),
+    TEST_ff_i (isunordered, (FLOAT) 1, minus_zero, 0),
+    TEST_ff_i (isunordered, (FLOAT) 1, plus_zero, 0),
+    TEST_ff_i (isunordered, (FLOAT) 1, (FLOAT) 1, 0),
+    TEST_ff_i (isunordered, (FLOAT) 1, qnan_value, 1),
+    TEST_ff_i (isunordered, qnan_value, minus_zero, 1),
+    TEST_ff_i (isunordered, qnan_value, plus_zero, 1),
+    TEST_ff_i (isunordered, qnan_value, (FLOAT) 1, 1),
+    TEST_ff_i (isunordered, qnan_value, qnan_value, 1),
+    END_DATA (isunordered)
+  };
+
 static void
 isunordered_test (void)
 {
   START (isunordered);
-
-  TEST_ff_i (isunordered, minus_zero, minus_zero, 0);
-  TEST_ff_i (isunordered, minus_zero, plus_zero, 0);
-  TEST_ff_i (isunordered, minus_zero, (FLOAT) 1, 0);
-  TEST_ff_i (isunordered, minus_zero, qnan_value, 1);
-  TEST_ff_i (isunordered, plus_zero, minus_zero, 0);
-  TEST_ff_i (isunordered, plus_zero, plus_zero, 0);
-  TEST_ff_i (isunordered, plus_zero, (FLOAT) 1, 0);
-  TEST_ff_i (isunordered, plus_zero, qnan_value, 1);
-  TEST_ff_i (isunordered, (FLOAT) 1, minus_zero, 0);
-  TEST_ff_i (isunordered, (FLOAT) 1, plus_zero, 0);
-  TEST_ff_i (isunordered, (FLOAT) 1, (FLOAT) 1, 0);
-  TEST_ff_i (isunordered, (FLOAT) 1, qnan_value, 1);
-  TEST_ff_i (isunordered, qnan_value, minus_zero, 1);
-  TEST_ff_i (isunordered, qnan_value, plus_zero, 1);
-  TEST_ff_i (isunordered, qnan_value, (FLOAT) 1, 1);
-  TEST_ff_i (isunordered, qnan_value, qnan_value, 1);
-
+  RUN_TEST_LOOP_ff_i_tg (isunordered, isunordered_test_data, );
   END (isunordered);
 }
 

@@ -1,3 +1,20 @@
+2013-05-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (struct test_ff_i_data): New type.
+	(RUN_TEST_LOOP_ff_i_tg): New macro.
+	(isgreater_test_data): New variable.
+	(isgreater_test): Run tests with RUN_TEST_LOOP_ff_i_tg.
+	(isgreaterequal_test_data): New variable.
+	(isgreaterequal_test): Run tests with RUN_TEST_LOOP_ff_i_tg.
+	(isless_test_data): New variable.
+	(isless_test): Run tests with RUN_TEST_LOOP_ff_i_tg.
+	(islessequal_test_data): New variable.
+	(islessequal_test): Run tests with RUN_TEST_LOOP_ff_i_tg.
+	(islessgreater_test_data): New variable.
+	(islessgreater_test): Run tests with RUN_TEST_LOOP_ff_i_tg.
+	(isunordered_test_data): New variable.
+	(isunordered_test): Run tests with RUN_TEST_LOOP_ff_i_tg.
+
 2013-05-14  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.
