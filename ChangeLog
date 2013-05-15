@@ -1,5 +1,23 @@
 2013-05-15  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (struct test_f_i_data): Add comment.
+	(RUN_TEST_LOOP_f_b): New macro.
+	(RUN_TEST_LOOP_f_b_tg): Likewise.
+	(finite_test_data): New variable.
+	(finite_test): Run tests with RUN_TEST_LOOP_f_b.
+	(isfinite_test_data): New variable.
+	(isfinite_test): Run tests with RUN_TEST_LOOP_f_b_tg.
+	(isinf_test_data): New variable.
+	(isinf_test): Run tests with RUN_TEST_LOOP_f_b_tg.
+	(isnan_test_data): New variable.
+	(isnan_test): Run tests with RUN_TEST_LOOP_f_b_tg.
+	(isnormal_test_data): New variable.
+	(isnormal_test): Run tests with RUN_TEST_LOOP_f_b_tg.
+	(issignaling_test_data): New variable.
+	(issignaling_test): Run tests with RUN_TEST_LOOP_f_b_tg.
+	(signbit_test_data): New variable.
+	(signbit_test): Run tests with RUN_TEST_LOOP_f_b_tg.
+
 	* math/libm-test.inc (acos_test_data): Use ERRNO_EDOM together
 	with INVALID_EXCEPTION.
 	(acosh_test_data): Likewise.

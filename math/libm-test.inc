@@ -983,6 +983,8 @@ struct test_c_c_data
   __complex__ FLOAT max_ulp;
   int exceptions;
 };
+/* Used for all of RUN_TEST_LOOP_f_i, RUN_TEST_LOOP_f_i_tg,
+   RUN_TEST_LOOP_f_b and RUN_TEST_LOOP_f_b_tg.  */
 struct test_f_i_data
 {
   const char *test_name;
@@ -1238,10 +1240,24 @@ struct test_ff_i_data
 		     MAX_ULP, EXCEPTIONS)			\
   check_bool (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
 	      MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_LOOP_f_b(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
+  IF_ROUND_INIT_ ## ROUNDING_MODE					\
+    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
+      RUN_TEST_f_b ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg,	\
+		    (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
+		    (ARRAY)[i].exceptions);				\
+  ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_b_tg(TEST_NAME, FUNC_NAME, ARG, EXPECTED,	\
 			MAX_ULP, EXCEPTIONS)			\
   check_bool (TEST_NAME, FUNC_NAME (ARG), EXPECTED,		\
 	      MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_LOOP_f_b_tg(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
+  IF_ROUND_INIT_ ## ROUNDING_MODE					\
+    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
+      RUN_TEST_f_b_tg ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg,	\
+		       (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
+		       (ARRAY)[i].exceptions);				\
+  ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_l(TEST_NAME, FUNC_NAME, ARG, EXPECTED,	\
 		     MAX_ULP, EXCEPTIONS)			\
   check_long (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
@@ -8396,19 +8412,24 @@ fdim_test (void)
 }
 
 
+static const struct test_f_i_data finite_test_data[] =
+  {
+    START_DATA (finite),
+    TEST_f_b (finite, 0, 1),
+    TEST_f_b (finite, minus_zero, 1),
+    TEST_f_b (finite, 10, 1),
+    TEST_f_b (finite, min_subnorm_value, 1),
+    TEST_f_b (finite, plus_infty, 0),
+    TEST_f_b (finite, minus_infty, 0),
+    TEST_f_b (finite, qnan_value, 0),
+    END_DATA (finite)
+  };
+
 static void
 finite_test (void)
 {
   START (finite);
-
-  TEST_f_b (finite, 0, 1);
-  TEST_f_b (finite, minus_zero, 1);
-  TEST_f_b (finite, 10, 1);
-  TEST_f_b (finite, min_subnorm_value, 1);
-  TEST_f_b (finite, plus_infty, 0);
-  TEST_f_b (finite, minus_infty, 0);
-  TEST_f_b (finite, qnan_value, 0);
-
+  RUN_TEST_LOOP_f_b (finite, finite_test_data, );
   END (finite);
 }
 
@@ -9780,19 +9801,24 @@ ilogb_test (void)
   END (ilogb);
 }
 
+static const struct test_f_i_data isfinite_test_data[] =
+  {
+    START_DATA (isfinite),
+    TEST_f_b (isfinite, 0, 1),
+    TEST_f_b (isfinite, minus_zero, 1),
+    TEST_f_b (isfinite, 10, 1),
+    TEST_f_b (isfinite, min_subnorm_value, 1),
+    TEST_f_b (isfinite, plus_infty, 0),
+    TEST_f_b (isfinite, minus_infty, 0),
+    TEST_f_b (isfinite, qnan_value, 0),
+    END_DATA (isfinite)
+  };
+
 static void
 isfinite_test (void)
 {
   START (isfinite);
-
-  TEST_f_b (isfinite, 0, 1);
-  TEST_f_b (isfinite, minus_zero, 1);
-  TEST_f_b (isfinite, 10, 1);
-  TEST_f_b (isfinite, min_subnorm_value, 1);
-  TEST_f_b (isfinite, plus_infty, 0);
-  TEST_f_b (isfinite, minus_infty, 0);
-  TEST_f_b (isfinite, qnan_value, 0);
-
+  RUN_TEST_LOOP_f_b_tg (isfinite, isfinite_test_data, );
   END (isfinite);
 }
 
@@ -9856,19 +9882,24 @@ isgreaterequal_test (void)
   END (isgreaterequal);
 }
 
+static const struct test_f_i_data isinf_test_data[] =
+  {
+    START_DATA (isinf),
+    TEST_f_b (isinf, 0, 0),
+    TEST_f_b (isinf, minus_zero, 0),
+    TEST_f_b (isinf, 10, 0),
+    TEST_f_b (isinf, min_subnorm_value, 0),
+    TEST_f_b (isinf, plus_infty, 1),
+    TEST_f_b (isinf, minus_infty, 1),
+    TEST_f_b (isinf, qnan_value, 0),
+    END_DATA (isinf)
+  };
+
 static void
 isinf_test (void)
 {
   START (isinf);
-
-  TEST_f_b (isinf, 0, 0);
-  TEST_f_b (isinf, minus_zero, 0);
-  TEST_f_b (isinf, 10, 0);
-  TEST_f_b (isinf, min_subnorm_value, 0);
-  TEST_f_b (isinf, plus_infty, 1);
-  TEST_f_b (isinf, minus_infty, 1);
-  TEST_f_b (isinf, qnan_value, 0);
-
+  RUN_TEST_LOOP_f_b_tg (isinf, isinf_test_data, );
   END (isinf);
 }
 
@@ -9962,51 +9993,66 @@ islessgreater_test (void)
   END (islessgreater);
 }
 
+static const struct test_f_i_data isnan_test_data[] =
+  {
+    START_DATA (isnan),
+    TEST_f_b (isnan, 0, 0),
+    TEST_f_b (isnan, minus_zero, 0),
+    TEST_f_b (isnan, 10, 0),
+    TEST_f_b (isnan, min_subnorm_value, 0),
+    TEST_f_b (isnan, plus_infty, 0),
+    TEST_f_b (isnan, minus_infty, 0),
+    TEST_f_b (isnan, qnan_value, 1),
+    END_DATA (isnan)
+  };
+
 static void
 isnan_test (void)
 {
   START (isnan);
-
-  TEST_f_b (isnan, 0, 0);
-  TEST_f_b (isnan, minus_zero, 0);
-  TEST_f_b (isnan, 10, 0);
-  TEST_f_b (isnan, min_subnorm_value, 0);
-  TEST_f_b (isnan, plus_infty, 0);
-  TEST_f_b (isnan, minus_infty, 0);
-  TEST_f_b (isnan, qnan_value, 1);
-
+  RUN_TEST_LOOP_f_b_tg (isnan, isnan_test_data, );
   END (isnan);
 }
+
+static const struct test_f_i_data isnormal_test_data[] =
+  {
+    START_DATA (isnormal),
+    TEST_f_b (isnormal, 0, 0),
+    TEST_f_b (isnormal, minus_zero, 0),
+    TEST_f_b (isnormal, 10, 1),
+    TEST_f_b (isnormal, min_subnorm_value, 0),
+    TEST_f_b (isnormal, plus_infty, 0),
+    TEST_f_b (isnormal, minus_infty, 0),
+    TEST_f_b (isnormal, qnan_value, 0),
+    END_DATA (isnormal)
+  };
 
 static void
 isnormal_test (void)
 {
   START (isnormal);
-
-  TEST_f_b (isnormal, 0, 0);
-  TEST_f_b (isnormal, minus_zero, 0);
-  TEST_f_b (isnormal, 10, 1);
-  TEST_f_b (isnormal, min_subnorm_value, 0);
-  TEST_f_b (isnormal, plus_infty, 0);
-  TEST_f_b (isnormal, minus_infty, 0);
-  TEST_f_b (isnormal, qnan_value, 0);
-
+  RUN_TEST_LOOP_f_b_tg (isnormal, isnormal_test_data, );
   END (isnormal);
 }
+
+static const struct test_f_i_data issignaling_test_data[] =
+  {
+    START_DATA (issignaling),
+    TEST_f_b (issignaling, 0, 0),
+    TEST_f_b (issignaling, minus_zero, 0),
+    TEST_f_b (issignaling, 10, 0),
+    TEST_f_b (issignaling, min_subnorm_value, 0),
+    TEST_f_b (issignaling, plus_infty, 0),
+    TEST_f_b (issignaling, minus_infty, 0),
+    TEST_f_b (issignaling, qnan_value, 0),
+    END_DATA (issignaling)
+  };
 
 static void
 issignaling_test (void)
 {
   START (issignaling);
-
-  TEST_f_b (issignaling, 0, 0);
-  TEST_f_b (issignaling, minus_zero, 0);
-  TEST_f_b (issignaling, 10, 0);
-  TEST_f_b (issignaling, min_subnorm_value, 0);
-  TEST_f_b (issignaling, plus_infty, 0);
-  TEST_f_b (issignaling, minus_infty, 0);
-  TEST_f_b (issignaling, qnan_value, 0);
-
+  RUN_TEST_LOOP_f_b_tg (issignaling, issignaling_test_data, );
   END (issignaling);
 }
 
@@ -13448,23 +13494,27 @@ scalbln_test (void)
 }
 
 
+static const struct test_f_i_data signbit_test_data[] =
+  {
+    START_DATA (signbit),
+    /* TODO: missing qNaN tests.  */
+    TEST_f_b (signbit, 0, 0),
+    TEST_f_b (signbit, minus_zero, 1),
+    TEST_f_b (signbit, plus_infty, 0),
+    TEST_f_b (signbit, minus_infty, 1),
+
+    /* signbit (x) != 0 for x < 0.  */
+    TEST_f_b (signbit, -1, 1),
+    /* signbit (x) == 0 for x >= 0.  */
+    TEST_f_b (signbit, 1, 0),
+    END_DATA (signbit)
+  };
+
 static void
 signbit_test (void)
 {
-  /* TODO: missing qNaN tests.  */
-
   START (signbit);
-
-  TEST_f_b (signbit, 0, 0);
-  TEST_f_b (signbit, minus_zero, 1);
-  TEST_f_b (signbit, plus_infty, 0);
-  TEST_f_b (signbit, minus_infty, 1);
-
-  /* signbit (x) != 0 for x < 0.  */
-  TEST_f_b (signbit, -1, 1);
-  /* signbit (x) == 0 for x >= 0.  */
-  TEST_f_b (signbit, 1, 0);
-
+  RUN_TEST_LOOP_f_b_tg (signbit, signbit_test_data, );
   END (signbit);
 }
 
