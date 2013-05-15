@@ -5,15 +5,17 @@
 
 #if defined __AVX__ || defined SSE2AVX
 # define MOVD "vmovd"
+# define MOVQ "vmovq"
 #else
 # define MOVD "movd"
+# define MOVQ "movq"
 #endif
 
 /* Direct movement of float into integer register.  */
 #define EXTRACT_WORDS64(i, d)						      \
   do {									      \
     int64_t i_;								      \
-    asm (MOVD " %1, %0" : "=rm" (i_) : "x" ((double) (d)));		      \
+    asm (MOVQ " %1, %0" : "=rm" (i_) : "x" ((double) (d)));		      \
     (i) = i_;								      \
   } while (0)
 
@@ -22,7 +24,7 @@
   do {									      \
     int64_t i_ = i;							      \
     double d__;								      \
-    asm (MOVD " %1, %0" : "=x" (d__) : "rm" (i_));			      \
+    asm (MOVQ " %1, %0" : "=x" (d__) : "rm" (i_));			      \
     d = d__;								      \
   } while (0)
 
