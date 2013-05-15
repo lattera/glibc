@@ -1,5 +1,8 @@
 2013-05-15  Carlos O'Donell  <carlos@redhat.com>
 
+	* sysdeps/hppa/fpu/libm-test-ulps: Remove old values for ceil, floor,
+	rint, round, trunc, llrint, and llround.
+
 	* sysdeps/hppa/fpu/libm-test-ulps: Regenerate.
 
 2013-05-15  Guy Martin  <gmsoft@tuxicoman.be>

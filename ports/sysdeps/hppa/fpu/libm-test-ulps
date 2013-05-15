@@ -2797,26 +2797,6 @@ Test "Imaginary part of: ccosh (89.5 - 0.75 i) == 2.7080244607086097320165321856
 float: 1
 ifloat: 1
 
-# ceil
-Test "ceil (-4503599627370496.75) == -4503599627370496.0":
-ildouble: 1
-ldouble: 1
-Test "ceil (-4503599627370497.5) == -4503599627370497.0":
-ildouble: 1
-ldouble: 1
-Test "ceil (-9007199254740991.5) == -9007199254740991.0":
-ildouble: 1
-ldouble: 1
-Test "ceil (-9007199254740993.5) == -9007199254740993.0":
-ildouble: 1
-ldouble: 1
-Test "ceil (4503599627370496.25) == 4503599627370497.0":
-ildouble: 1
-ldouble: 1
-Test "ceil (4503599627370496.5) == 4503599627370497.0":
-ildouble: 1
-ldouble: 1
-
 # cexp
 Test "Imaginary part of: cexp (-2.0 - 3.0 i) == -0.13398091492954261346140525546115575 - 0.019098516261135196432576240858800925 i":
 float: 1
@@ -3661,26 +3641,6 @@ Test "expm1 (500.0) == 1.4035922178528374107397703328409120821806e+217":
 double: 1
 idouble: 1
 
-# floor
-Test "floor (-4503599627370496.25) == -4503599627370497.0":
-ildouble: 1
-ldouble: 1
-Test "floor (-4503599627370496.5) == -4503599627370497.0":
-ildouble: 1
-ldouble: 1
-Test "floor (4503599627370496.75) == 4503599627370496.0":
-ildouble: 1
-ldouble: 1
-Test "floor (4503599627370497.5) == 4503599627370497.0":
-ildouble: 1
-ldouble: 1
-Test "floor (9007199254740991.5) == 9007199254740991.0":
-ildouble: 1
-ldouble: 1
-Test "floor (9007199254740993.5) == 9007199254740993.0":
-ildouble: 1
-ldouble: 1
-
 # hypot
 Test "hypot (-0.7, -12.4) == 12.419742348374220601176836866763271":
 float: 1
@@ -3919,282 +3879,6 @@ ifloat: 2
 ildouble: 1
 ldouble: 1
 
-# llrint
-Test "llrint (-72057594037927936.75) == -72057594037927937LL":
-ildouble: 1
-ldouble: 1
-Test "llrint (-72057594037927937.5) == -72057594037927938LL":
-ildouble: 2
-ldouble: 2
-Test "llrint (-9007199254740992.75) == -9007199254740993LL":
-ildouble: 1
-ldouble: 1
-Test "llrint (72057594037927936.75) == 72057594037927937LL":
-ildouble: -1
-ldouble: -1
-Test "llrint (72057594037927937.5) == 72057594037927938LL":
-ildouble: -2
-ldouble: -2
-Test "llrint (9007199254740992.75) == 9007199254740993LL":
-ildouble: -1
-ldouble: -1
-
-# llrint_downward
-Test "llrint_downward (-4503599627370496.25) == -4503599627370497LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_downward (-4503599627370496.4999999999999) == -4503599627370497LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_downward (-4503599627370496.5) == -4503599627370497LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_downward (-4503599627370497.4999999999999) == -4503599627370498LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_downward (-72057594037927936.25) == -72057594037927937LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_downward (-72057594037927936.5) == -72057594037927937LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_downward (-72057594037927936.75) == -72057594037927937LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_downward (-72057594037927937.5) == -72057594037927938LL":
-ildouble: 2
-ldouble: 2
-Test "llrint_downward (-9007199254740991.4999999999999) == -9007199254740992LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_downward (-9007199254740992.25) == -9007199254740993LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_downward (-9007199254740992.4999999999999) == -9007199254740993LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_downward (-9007199254740992.5) == -9007199254740993LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_downward (-9007199254740992.5000000000001) == -9007199254740993LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_downward (-9007199254740992.75) == -9007199254740993LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_downward (4503599627370496.5000000000001) == 4503599627370496LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_downward (4503599627370496.75) == 4503599627370496LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_downward (4503599627370497.5) == 4503599627370497LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_downward (72057594037927935.5) == 72057594037927935LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_downward (72057594037927937.5) == 72057594037927937LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_downward (9007199254740991.5) == 9007199254740991LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_downward (9007199254740991.5000000000001) == 9007199254740991LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_downward (9007199254740993.4999999999999) == 9007199254740993LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_downward (9007199254740993.5) == 9007199254740993LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_downward (9007199254740993.5000000000001) == 9007199254740993LL":
-ildouble: 1
-ldouble: 1
-
-# llrint_tonearest
-Test "llrint_tonearest (-72057594037927936.75) == -72057594037927937LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_tonearest (-72057594037927937.5) == -72057594037927938LL":
-ildouble: 2
-ldouble: 2
-Test "llrint_tonearest (-9007199254740992.75) == -9007199254740993LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_tonearest (72057594037927936.75) == 72057594037927937LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_tonearest (72057594037927937.5) == 72057594037927938LL":
-ildouble: -2
-ldouble: -2
-Test "llrint_tonearest (9007199254740992.75) == 9007199254740993LL":
-ildouble: -1
-ldouble: -1
-
-# llrint_towardzero
-Test "llrint_towardzero (-4503599627370496.75) == -4503599627370496LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_towardzero (-4503599627370497.5) == -4503599627370497LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_towardzero (-72057594037927935.5) == -72057594037927935LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_towardzero (-72057594037927937.5) == -72057594037927937LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_towardzero (-9007199254740991.5) == -9007199254740991LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_towardzero (-9007199254740993.5) == -9007199254740993LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_towardzero (4503599627370496.75) == 4503599627370496LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_towardzero (4503599627370497.5) == 4503599627370497LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_towardzero (72057594037927935.5) == 72057594037927935LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_towardzero (72057594037927937.5) == 72057594037927937LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_towardzero (9007199254740991.5) == 9007199254740991LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_towardzero (9007199254740993.5) == 9007199254740993LL":
-ildouble: 1
-ldouble: 1
-
-# llrint_upward
-Test "llrint_upward (-4503599627370496.5000000000001) == -4503599627370496LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_upward (-4503599627370496.75) == -4503599627370496LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_upward (-4503599627370497.5) == -4503599627370497LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_upward (-72057594037927935.5) == -72057594037927935LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_upward (-72057594037927937.5) == -72057594037927937LL":
-ildouble: 1
-ldouble: 1
-Test "llrint_upward (-9007199254740991.5) == -9007199254740991LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_upward (-9007199254740991.5000000000001) == -9007199254740991LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_upward (-9007199254740993.4999999999999) == -9007199254740993LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_upward (-9007199254740993.5) == -9007199254740993LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_upward (-9007199254740993.5000000000001) == -9007199254740993LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_upward (4503599627370496.25) == 4503599627370497LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_upward (4503599627370496.4999999999999) == 4503599627370497LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_upward (4503599627370496.5) == 4503599627370497LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_upward (4503599627370497.4999999999999) == 4503599627370498LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_upward (72057594037927936.25) == 72057594037927937LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_upward (72057594037927936.5) == 72057594037927937LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_upward (72057594037927936.75) == 72057594037927937LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_upward (72057594037927937.5) == 72057594037927938LL":
-ildouble: -2
-ldouble: -2
-Test "llrint_upward (9007199254740991.4999999999999) == 9007199254740992LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_upward (9007199254740992.25) == 9007199254740993LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_upward (9007199254740992.4999999999999) == 9007199254740993LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_upward (9007199254740992.5) == 9007199254740993LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_upward (9007199254740992.5000000000001) == 9007199254740993LL":
-ildouble: -1
-ldouble: -1
-Test "llrint_upward (9007199254740992.75) == 9007199254740993LL":
-ildouble: -1
-ldouble: -1
-
-# llround
-Test "llround (-4503599627370496.5) == -4503599627370497LL":
-ildouble: 1
-ldouble: 1
-Test "llround (-72057594037927936.5) == -72057594037927937LL":
-ildouble: 1
-ldouble: 1
-Test "llround (-72057594037927936.75) == -72057594037927937LL":
-ildouble: 1
-ldouble: 1
-Test "llround (-72057594037927937.5) == -72057594037927938LL":
-ildouble: 2
-ldouble: 2
-Test "llround (-9007199254740992.5) == -9007199254740993LL":
-ildouble: 1
-ldouble: 1
-Test "llround (-9007199254740992.75) == -9007199254740993LL":
-ildouble: 1
-ldouble: 1
-Test "llround (-9223372036854775806.25) == -9223372036854775806LL":
-ildouble: -2
-ldouble: -2
-Test "llround (-9223372036854775806.5) == -9223372036854775807LL":
-ildouble: -1
-ldouble: -1
-Test "llround (-9223372036854775807.0) == -9223372036854775807LL":
-ildouble: -1
-ldouble: -1
-Test "llround (4503599627370496.5) == 4503599627370497LL":
-ildouble: -1
-ldouble: -1
-Test "llround (72057594037927936.5) == 72057594037927937LL":
-ildouble: -1
-ldouble: -1
-Test "llround (72057594037927936.75) == 72057594037927937LL":
-ildouble: -1
-ldouble: -1
-Test "llround (72057594037927937.5) == 72057594037927938LL":
-ildouble: -2
-ldouble: -2
-Test "llround (9007199254740992.5) == 9007199254740993LL":
-ildouble: -1
-ldouble: -1
-Test "llround (9007199254740992.75) == 9007199254740993LL":
-ildouble: -1
-ldouble: -1
-Test "llround (9223372036854775806.25) == 9223372036854775806LL":
-ildouble: 1
-ldouble: 1
-
 # log10
 Test "log10 (0.75) == -0.124938736608299953132449886193870744":
 double: 1
@@ -4237,56 +3921,6 @@ ifloat: 1
 Test "pow_upward (1.0625, 1.125) == 1.070582293028761362162622578677070098674":
 float: 1
 ifloat: 1
-
-# rint_downward
-Test "rint_downward (-4503599627370496.25) == -4503599627370497.0":
-ildouble: 1
-ldouble: 1
-Test "rint_downward (-4503599627370496.5) == -4503599627370497.0":
-ildouble: 1
-ldouble: 1
-Test "rint_downward (4503599627370496.75) == 4503599627370496.0":
-ildouble: 1
-ldouble: 1
-Test "rint_downward (4503599627370497.5) == 4503599627370497.0":
-ildouble: 1
-ldouble: 1
-
-# rint_towardzero
-Test "rint_towardzero (-4503599627370496.75) == -4503599627370496.0":
-ildouble: 1
-ldouble: 1
-Test "rint_towardzero (-4503599627370497.5) == -4503599627370497.0":
-ildouble: 1
-ldouble: 1
-Test "rint_towardzero (4503599627370496.75) == 4503599627370496.0":
-ildouble: 1
-ldouble: 1
-Test "rint_towardzero (4503599627370497.5) == 4503599627370497.0":
-ildouble: 1
-ldouble: 1
-
-# rint_upward
-Test "rint_upward (-4503599627370496.75) == -4503599627370496.0":
-ildouble: 1
-ldouble: 1
-Test "rint_upward (-4503599627370497.5) == -4503599627370497.0":
-ildouble: 1
-ldouble: 1
-Test "rint_upward (4503599627370496.25) == 4503599627370497.0":
-ildouble: 1
-ldouble: 1
-Test "rint_upward (4503599627370496.5) == 4503599627370497.0":
-ildouble: 1
-ldouble: 1
-
-# round
-Test "round (-4503599627370496.5) == -4503599627370497.0":
-ildouble: 1
-ldouble: 1
-Test "round (4503599627370496.5) == 4503599627370497.0":
-ildouble: 1
-ldouble: 1
 
 # sin_downward
 Test "sin_downward (10) == -0.5440211108893698134047476618513772816836":
@@ -4788,32 +4422,6 @@ Test "tgamma (9.5) == 1.1929246199460900708784991216725183953266e+05":
 double: 1
 idouble: 1
 
-# trunc
-Test "trunc (-4503599627370496.75) == -4503599627370496.0":
-ildouble: 1
-ldouble: 1
-Test "trunc (-4503599627370497.5) == -4503599627370497.0":
-ildouble: 1
-ldouble: 1
-Test "trunc (-9007199254740991.5) == -9007199254740991.0":
-ildouble: 1
-ldouble: 1
-Test "trunc (-9007199254740993.5) == -9007199254740993.0":
-ildouble: 1
-ldouble: 1
-Test "trunc (4503599627370496.75) == 4503599627370496.0":
-ildouble: 1
-ldouble: 1
-Test "trunc (4503599627370497.5) == 4503599627370497.0":
-ildouble: 1
-ldouble: 1
-Test "trunc (9007199254740991.5) == 9007199254740991.0":
-ildouble: 1
-ldouble: 1
-Test "trunc (9007199254740993.5) == 9007199254740993.0":
-ildouble: 1
-ldouble: 1
-
 # y0
 Test "y0 (0x1.3ffp+74) == 1.818984347516051243459467456433028748678e-12":
 double: 1
@@ -5168,10 +4776,6 @@ float: 1
 idouble: 1
 ifloat: 1
 
-Function: "ceil":
-ildouble: 1
-ldouble: 1
-
 Function: Real part of "cexp":
 double: 2
 float: 1
@@ -5430,10 +5034,6 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
-Function: "floor":
-ildouble: 1
-ldouble: 1
-
 Function: "hypot":
 float: 1
 ifloat: 1
@@ -5498,22 +5098,6 @@ Function: "pow_upward":
 float: 1
 ifloat: 1
 
-Function: "rint_downward":
-ildouble: 1
-ldouble: 1
-
-Function: "rint_towardzero":
-ildouble: 1
-ldouble: 1
-
-Function: "rint_upward":
-ildouble: 1
-ldouble: 1
-
-Function: "round":
-ildouble: 1
-ldouble: 1
-
 Function: "sin_downward":
 float: 1
 ifloat: 1
@@ -5569,10 +5153,6 @@ double: 4
 float: 3
 idouble: 4
 ifloat: 3
-ildouble: 1
-ldouble: 1
-
-Function: "trunc":
 ildouble: 1
 ldouble: 1
 
