@@ -1,3 +1,20 @@
+2013-05-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (struct test_f_l_data): New type.
+	(RUN_TEST_LOOP_f_l): New macro.
+	(lrint_test_data): New variable.
+	(lrint_test): Run tests with RUN_TEST_LOOP_f_l.
+	(lrint_tonearest_test_data): New variable.
+	(lrint_test_tonearest): Run tests with RUN_TEST_LOOP_f_l.
+	(lrint_towardzero_test_data): New variable.
+	(lrint_test_towardzero): Run tests with RUN_TEST_LOOP_f_l.
+	(lrint_downward_test_data): New variable.
+	(lrint_test_downward): Run tests with RUN_TEST_LOOP_f_l.
+	(lrint_upward_test_data): New variable.
+	(lrint_test_upward): Run tests with RUN_TEST_LOOP_f_l.
+	(lround_test_data): New variable.
+	(lround_test): Run tests with RUN_TEST_LOOP_f_l.
+
 2013-05-15  Peter Collingbourne  <pcc@google.com>
 
 	* sysdeps/x86_64/fpu/math_private.h (MOVQ): New macro.

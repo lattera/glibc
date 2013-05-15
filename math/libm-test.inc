@@ -1001,6 +1001,14 @@ struct test_ff_i_data
   int max_ulp;
   int exceptions;
 };
+struct test_f_l_data
+{
+  const char *test_name;
+  FLOAT arg;
+  long int expected;
+  long int max_ulp;
+  int exceptions;
+};
 
 /* Set the rounding mode, or restore the saved value.  */
 #define IF_ROUND_INIT_	/* Empty.  */
@@ -1262,6 +1270,13 @@ struct test_ff_i_data
 		     MAX_ULP, EXCEPTIONS)			\
   check_long (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
 	      MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_LOOP_f_l(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
+  IF_ROUND_INIT_ ## ROUNDING_MODE					\
+    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
+      RUN_TEST_f_l ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg,	\
+		    (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
+		    (ARRAY)[i].exceptions);				\
+  ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_L(TEST_NAME, FUNC_NAME, ARG, EXPECTED,	\
 		     MAX_ULP, EXCEPTIONS)			\
   check_longlong (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
@@ -10346,195 +10361,187 @@ lgamma_test (void)
 }
 
 
+static const struct test_f_l_data lrint_test_data[] =
+  {
+    START_DATA (lrint),
+    /* XXX this test is incomplete.  We need to have a way to specifiy
+       the rounding method and test the critical cases.  So far, only
+       unproblematic numbers are tested.  */
+    /* TODO: missing +/-Inf as well as qNaN tests.  */
+    TEST_f_l (lrint, 0.0, 0),
+    TEST_f_l (lrint, minus_zero, 0),
+    TEST_f_l (lrint, 0.2L, 0),
+    TEST_f_l (lrint, -0.2L, 0),
+
+    TEST_f_l (lrint, 1.4L, 1),
+    TEST_f_l (lrint, -1.4L, -1),
+
+    TEST_f_l (lrint, 8388600.3L, 8388600),
+    TEST_f_l (lrint, -8388600.3L, -8388600),
+
+    TEST_f_l (lrint, 1071930.0008, 1071930),
+#ifndef TEST_FLOAT
+    TEST_f_l (lrint, 1073741824.01, 1073741824),
+# if LONG_MAX > 281474976710656
+    TEST_f_l (lrint, 281474976710656.025, 281474976710656),
+# endif
+#endif
+    END_DATA (lrint)
+  };
+
 static void
 lrint_test (void)
 {
-  /* XXX this test is incomplete.  We need to have a way to specifiy
-     the rounding method and test the critical cases.  So far, only
-     unproblematic numbers are tested.  */
-  /* TODO: missing +/-Inf as well as qNaN tests.  */
-
   START (lrint);
-
-  TEST_f_l (lrint, 0.0, 0);
-  TEST_f_l (lrint, minus_zero, 0);
-  TEST_f_l (lrint, 0.2L, 0);
-  TEST_f_l (lrint, -0.2L, 0);
-
-  TEST_f_l (lrint, 1.4L, 1);
-  TEST_f_l (lrint, -1.4L, -1);
-
-  TEST_f_l (lrint, 8388600.3L, 8388600);
-  TEST_f_l (lrint, -8388600.3L, -8388600);
-
-  TEST_f_l (lrint, 1071930.0008, 1071930);
-#ifndef TEST_FLOAT
-  TEST_f_l (lrint, 1073741824.01, 1073741824);
-# if LONG_MAX > 281474976710656
-  TEST_f_l (lrint, 281474976710656.025, 281474976710656);
-# endif
-#endif
-
+  RUN_TEST_LOOP_f_l (lrint, lrint_test_data, );
   END (lrint);
 }
 
 
+static const struct test_f_l_data lrint_tonearest_test_data[] =
+  {
+    START_DATA (lrint_tonearest),
+    TEST_f_l (lrint, 0.0, 0),
+    TEST_f_l (lrint, minus_zero, 0),
+    TEST_f_l (lrint, 0.2L, 0),
+    TEST_f_l (lrint, -0.2L, 0),
+    TEST_f_l (lrint, 0.5L, 0),
+    TEST_f_l (lrint, -0.5L, 0),
+    TEST_f_l (lrint, 0.8L, 1),
+    TEST_f_l (lrint, -0.8L, -1),
+
+    TEST_f_l (lrint, 1.4L, 1),
+    TEST_f_l (lrint, -1.4L, -1),
+
+    TEST_f_l (lrint, 8388600.3L, 8388600),
+    TEST_f_l (lrint, -8388600.3L, -8388600),
+
+    TEST_f_l (lrint, 1071930.0008, 1071930),
+#ifndef TEST_FLOAT
+    TEST_f_l (lrint, 1073741824.01, 1073741824),
+# if LONG_MAX > 281474976710656
+    TEST_f_l (lrint, 281474976710656.025, 281474976710656),
+# endif
+#endif
+    END_DATA (lrint_tonearest)
+  };
+
 static void
 lrint_test_tonearest (void)
 {
-  int save_round_mode;
   START (lrint_tonearest);
-
-  save_round_mode = fegetround ();
-
-  if (!fesetround (FE_TONEAREST))
-    {
-      TEST_f_l (lrint, 0.0, 0);
-      TEST_f_l (lrint, minus_zero, 0);
-      TEST_f_l (lrint, 0.2L, 0);
-      TEST_f_l (lrint, -0.2L, 0);
-      TEST_f_l (lrint, 0.5L, 0);
-      TEST_f_l (lrint, -0.5L, 0);
-      TEST_f_l (lrint, 0.8L, 1);
-      TEST_f_l (lrint, -0.8L, -1);
-
-      TEST_f_l (lrint, 1.4L, 1);
-      TEST_f_l (lrint, -1.4L, -1);
-
-      TEST_f_l (lrint, 8388600.3L, 8388600);
-      TEST_f_l (lrint, -8388600.3L, -8388600);
-
-      TEST_f_l (lrint, 1071930.0008, 1071930);
-#ifndef TEST_FLOAT
-      TEST_f_l (lrint, 1073741824.01, 1073741824);
-# if LONG_MAX > 281474976710656
-      TEST_f_l (lrint, 281474976710656.025, 281474976710656);
-# endif
-#endif
-    }
-
-  fesetround (save_round_mode);
-
+  RUN_TEST_LOOP_f_l (lrint, lrint_tonearest_test_data, FE_TONEAREST);
   END (lrint_tonearest);
 }
 
 
+static const struct test_f_l_data lrint_towardzero_test_data[] =
+  {
+    START_DATA (lrint_towardzero),
+    TEST_f_l (lrint, 0.0, 0),
+    TEST_f_l (lrint, minus_zero, 0),
+    TEST_f_l (lrint, 0.2L, 0),
+    TEST_f_l (lrint, -0.2L, 0),
+    TEST_f_l (lrint, 0.5L, 0),
+    TEST_f_l (lrint, -0.5L, 0),
+    TEST_f_l (lrint, 0.8L, 0),
+    TEST_f_l (lrint, -0.8L, 0),
+
+    TEST_f_l (lrint, 1.4L, 1),
+    TEST_f_l (lrint, -1.4L, -1),
+
+    TEST_f_l (lrint, 8388600.3L, 8388600),
+    TEST_f_l (lrint, -8388600.3L, -8388600),
+
+    TEST_f_l (lrint, 1071930.0008, 1071930),
+#ifndef TEST_FLOAT
+    TEST_f_l (lrint, 1073741824.01, 1073741824),
+# if LONG_MAX > 281474976710656
+    TEST_f_l (lrint, 281474976710656.025, 281474976710656),
+# endif
+#endif
+    END_DATA (lrint_towardzero)
+  };
+
 static void
 lrint_test_towardzero (void)
 {
-  int save_round_mode;
   START (lrint_towardzero);
-
-  save_round_mode = fegetround ();
-
-  if (!fesetround (FE_TOWARDZERO))
-    {
-      TEST_f_l (lrint, 0.0, 0);
-      TEST_f_l (lrint, minus_zero, 0);
-      TEST_f_l (lrint, 0.2L, 0);
-      TEST_f_l (lrint, -0.2L, 0);
-      TEST_f_l (lrint, 0.5L, 0);
-      TEST_f_l (lrint, -0.5L, 0);
-      TEST_f_l (lrint, 0.8L, 0);
-      TEST_f_l (lrint, -0.8L, 0);
-
-      TEST_f_l (lrint, 1.4L, 1);
-      TEST_f_l (lrint, -1.4L, -1);
-
-      TEST_f_l (lrint, 8388600.3L, 8388600);
-      TEST_f_l (lrint, -8388600.3L, -8388600);
-
-      TEST_f_l (lrint, 1071930.0008, 1071930);
-#ifndef TEST_FLOAT
-      TEST_f_l (lrint, 1073741824.01, 1073741824);
-# if LONG_MAX > 281474976710656
-      TEST_f_l (lrint, 281474976710656.025, 281474976710656);
-# endif
-#endif
-    }
-
-  fesetround (save_round_mode);
-
+  RUN_TEST_LOOP_f_l (lrint, lrint_towardzero_test_data, FE_TOWARDZERO);
   END (lrint_towardzero);
 }
 
 
+static const struct test_f_l_data lrint_downward_test_data[] =
+  {
+    START_DATA (lrint_downward),
+    TEST_f_l (lrint, 0.0, 0),
+    TEST_f_l (lrint, minus_zero, 0),
+    TEST_f_l (lrint, 0.2L, 0),
+    TEST_f_l (lrint, -0.2L, -1),
+    TEST_f_l (lrint, 0.5L, 0),
+    TEST_f_l (lrint, -0.5L, -1),
+    TEST_f_l (lrint, 0.8L, 0),
+    TEST_f_l (lrint, -0.8L, -1),
+
+    TEST_f_l (lrint, 1.4L, 1),
+    TEST_f_l (lrint, -1.4L, -2),
+
+    TEST_f_l (lrint, 8388600.3L, 8388600),
+    TEST_f_l (lrint, -8388600.3L, -8388601),
+
+    TEST_f_l (lrint, 1071930.0008, 1071930),
+#ifndef TEST_FLOAT
+    TEST_f_l (lrint, 1073741824.01, 1073741824),
+# if LONG_MAX > 281474976710656
+    TEST_f_l (lrint, 281474976710656.025, 281474976710656),
+# endif
+#endif
+    END_DATA (lrint_downward)
+  };
+
 static void
 lrint_test_downward (void)
 {
-  int save_round_mode;
   START (lrint_downward);
-
-  save_round_mode = fegetround ();
-
-  if (!fesetround (FE_DOWNWARD))
-    {
-      TEST_f_l (lrint, 0.0, 0);
-      TEST_f_l (lrint, minus_zero, 0);
-      TEST_f_l (lrint, 0.2L, 0);
-      TEST_f_l (lrint, -0.2L, -1);
-      TEST_f_l (lrint, 0.5L, 0);
-      TEST_f_l (lrint, -0.5L, -1);
-      TEST_f_l (lrint, 0.8L, 0);
-      TEST_f_l (lrint, -0.8L, -1);
-
-      TEST_f_l (lrint, 1.4L, 1);
-      TEST_f_l (lrint, -1.4L, -2);
-
-      TEST_f_l (lrint, 8388600.3L, 8388600);
-      TEST_f_l (lrint, -8388600.3L, -8388601);
-
-      TEST_f_l (lrint, 1071930.0008, 1071930);
-#ifndef TEST_FLOAT
-      TEST_f_l (lrint, 1073741824.01, 1073741824);
-# if LONG_MAX > 281474976710656
-      TEST_f_l (lrint, 281474976710656.025, 281474976710656);
-# endif
-#endif
-    }
-
-  fesetround (save_round_mode);
-
+  RUN_TEST_LOOP_f_l (lrint, lrint_downward_test_data, FE_DOWNWARD);
   END (lrint_downward);
 }
 
 
+static const struct test_f_l_data lrint_upward_test_data[] =
+  {
+    START_DATA (lrint_upward),
+    TEST_f_l (lrint, 0.0, 0),
+    TEST_f_l (lrint, minus_zero, 0),
+    TEST_f_l (lrint, 0.2L, 1),
+    TEST_f_l (lrint, -0.2L, 0),
+    TEST_f_l (lrint, 0.5L, 1),
+    TEST_f_l (lrint, -0.5L, 0),
+    TEST_f_l (lrint, 0.8L, 1),
+    TEST_f_l (lrint, -0.8L, 0),
+
+    TEST_f_l (lrint, 1.4L, 2),
+    TEST_f_l (lrint, -1.4L, -1),
+
+    TEST_f_l (lrint, 8388600.3L, 8388601),
+    TEST_f_l (lrint, -8388600.3L, -8388600),
+
+#ifndef TEST_FLOAT
+    TEST_f_l (lrint, 1071930.0008, 1071931),
+    TEST_f_l (lrint, 1073741824.01, 1073741825),
+# if LONG_MAX > 281474976710656 && defined (TEST_LDOUBLE)
+    TEST_f_l (lrint, 281474976710656.025, 281474976710656),
+# endif
+#endif
+    END_DATA (lrint_upward)
+  };
+
 static void
 lrint_test_upward (void)
 {
-  int save_round_mode;
   START (lrint_upward);
-
-  save_round_mode = fegetround ();
-
-  if (!fesetround (FE_UPWARD))
-    {
-      TEST_f_l (lrint, 0.0, 0);
-      TEST_f_l (lrint, minus_zero, 0);
-      TEST_f_l (lrint, 0.2L, 1);
-      TEST_f_l (lrint, -0.2L, 0);
-      TEST_f_l (lrint, 0.5L, 1);
-      TEST_f_l (lrint, -0.5L, 0);
-      TEST_f_l (lrint, 0.8L, 1);
-      TEST_f_l (lrint, -0.8L, 0);
-
-      TEST_f_l (lrint, 1.4L, 2);
-      TEST_f_l (lrint, -1.4L, -1);
-
-      TEST_f_l (lrint, 8388600.3L, 8388601);
-      TEST_f_l (lrint, -8388600.3L, -8388600);
-
-#ifndef TEST_FLOAT
-      TEST_f_l (lrint, 1071930.0008, 1071931);
-      TEST_f_l (lrint, 1073741824.01, 1073741825);
-# if LONG_MAX > 281474976710656 && defined (TEST_LDOUBLE)
-      TEST_f_l (lrint, 281474976710656.025, 281474976710656);
-# endif
-#endif
-    }
-
-  fesetround (save_round_mode);
-
+  RUN_TEST_LOOP_f_l (lrint, lrint_upward_test_data, FE_UPWARD);
   END (lrint_upward);
 }
 
@@ -11442,46 +11449,51 @@ logb_test_downward (void)
   END (logb_downward);
 }
 
+static const struct test_f_l_data lround_test_data[] =
+  {
+    START_DATA (lround),
+    /* TODO: missing +/-Inf as well as qNaN tests.  */
+    TEST_f_l (lround, 0, 0),
+    TEST_f_l (lround, minus_zero, 0),
+    TEST_f_l (lround, 0.2L, 0.0),
+    TEST_f_l (lround, -0.2L, 0),
+    TEST_f_l (lround, 0.5, 1),
+    TEST_f_l (lround, -0.5, -1),
+    TEST_f_l (lround, 0.8L, 1),
+    TEST_f_l (lround, -0.8L, -1),
+    TEST_f_l (lround, 1.5, 2),
+    TEST_f_l (lround, -1.5, -2),
+    TEST_f_l (lround, 22514.5, 22515),
+    TEST_f_l (lround, -22514.5, -22515),
+    TEST_f_l (lround, 1071930.0008, 1071930),
+#ifndef TEST_FLOAT
+    TEST_f_l (lround, 1073741824.01, 1073741824),
+# if LONG_MAX > 281474976710656
+    TEST_f_l (lround, 281474976710656.025, 281474976710656),
+    TEST_f_l (lround, 18014398509481974, 18014398509481974),
+# endif
+    TEST_f_l (lround, 2097152.5, 2097153),
+    TEST_f_l (lround, -2097152.5, -2097153),
+    /* nextafter(0.5,-1)  */
+    TEST_f_l (lround, 0x1.fffffffffffffp-2, 0),
+    /* nextafter(-0.5,1)  */
+    TEST_f_l (lround, -0x1.fffffffffffffp-2, 0),
+#else
+    /* nextafter(0.5,-1)  */
+    TEST_f_l (lround, 0x1.fffffp-2, 0),
+    /* nextafter(-0.5,1)  */
+    TEST_f_l (lround, -0x1.fffffp-2, 0),
+    TEST_f_l (lround, 0x1.fffffep+23, 16777215),
+    TEST_f_l (lround, -0x1.fffffep+23, -16777215),
+#endif
+    END_DATA (lround)
+  };
+
 static void
 lround_test (void)
 {
-  /* TODO: missing +/-Inf as well as qNaN tests.  */
-
   START (lround);
-
-  TEST_f_l (lround, 0, 0);
-  TEST_f_l (lround, minus_zero, 0);
-  TEST_f_l (lround, 0.2L, 0.0);
-  TEST_f_l (lround, -0.2L, 0);
-  TEST_f_l (lround, 0.5, 1);
-  TEST_f_l (lround, -0.5, -1);
-  TEST_f_l (lround, 0.8L, 1);
-  TEST_f_l (lround, -0.8L, -1);
-  TEST_f_l (lround, 1.5, 2);
-  TEST_f_l (lround, -1.5, -2);
-  TEST_f_l (lround, 22514.5, 22515);
-  TEST_f_l (lround, -22514.5, -22515);
-  TEST_f_l (lround, 1071930.0008, 1071930);
-#ifndef TEST_FLOAT
-  TEST_f_l (lround, 1073741824.01, 1073741824);
-# if LONG_MAX > 281474976710656
-  TEST_f_l (lround, 281474976710656.025, 281474976710656);
-  TEST_f_l (lround, 18014398509481974, 18014398509481974);
-# endif
-  TEST_f_l (lround, 2097152.5, 2097153);
-  TEST_f_l (lround, -2097152.5, -2097153);
-  /* nextafter(0.5,-1)  */
-  TEST_f_l (lround, 0x1.fffffffffffffp-2, 0);
-  /* nextafter(-0.5,1)  */
-  TEST_f_l (lround, -0x1.fffffffffffffp-2, 0);
-#else
-  /* nextafter(0.5,-1)  */
-  TEST_f_l (lround, 0x1.fffffp-2, 0);
-  /* nextafter(-0.5,1)  */
-  TEST_f_l (lround, -0x1.fffffp-2, 0);
-  TEST_f_l (lround, 0x1.fffffep+23, 16777215);
-  TEST_f_l (lround, -0x1.fffffep+23, -16777215);
-#endif
+  RUN_TEST_LOOP_f_l (lround, lround_test_data, );
   END (lround);
 }
 
