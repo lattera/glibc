@@ -1,3 +1,7 @@
+2013-05-15  Peter Collingbourne  <pcc@google.com>
+
+	* malloc/obstack.c (_obstack_compat): Add initializer.
+
 2013-05-15  Edjunior Machado  <emachado@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/bits/siginfo.h (siginfo_t): Remove
