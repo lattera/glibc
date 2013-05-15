@@ -1,3 +1,10 @@
+2013-05-15  Guy Martin  <gmsoft@tuxicoman.be>
+	    Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ# 15000]
+	* ports/sysdeps/hppa/fpu/fpu_control.h (_FPU_GETCW): Set cw.
+	(_FPU_SETCW): Pass address to fldd.
+
 2013-04-02  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* sysdeps/hppa/math_private.h: New file.

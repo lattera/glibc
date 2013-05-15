@@ -49,7 +49,7 @@ typedef unsigned int fpu_control_t;
   __asm__ ("fstd %%fr0,0(%1)\n\t"						\
            "fldd 0(%1),%%fr0\n\t"						\
 	   : "=m" (__fullfp.__fpreg) : "r" (&__fullfp.__fpreg) : "%r0");	\
-  __fullfp.__halfreg[0];							\
+  cw = __fullfp.__halfreg[0];							\
 })
 
 #define _FPU_SETCW(cw) \
@@ -57,7 +57,7 @@ typedef unsigned int fpu_control_t;
   union { __extension__ unsigned long long __fpreg; unsigned int __halfreg[2]; } __fullfp;	\
   __fullfp.__halfreg[0] = cw;							\
   __asm__ ("fldd 0(%1),%%fr0\n\t"						\
-	   : : "m" (__fullfp.__fpreg), "r" (__fullfp.__fpreg) : "%r0" );	\
+	   : : "m" (__fullfp.__fpreg), "r" (&__fullfp.__fpreg) : "%r0" );	\
 })
 
 /* Default control word set at startup.  */
