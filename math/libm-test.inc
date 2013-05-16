@@ -1399,12 +1399,6 @@ static const struct test_f_f_data acos_test_data[] =
 static void
 acos_test (void)
 {
-  errno = 0;
-  FUNC(acos) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (acos);
   RUN_TEST_LOOP_f_f (acos, acos_test_data, );
   END (acos);
@@ -1426,12 +1420,6 @@ static const struct test_f_f_data acos_tonearest_test_data[] =
 static void
 acos_test_tonearest (void)
 {
-  errno = 0;
-  FUNC(acos) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (acos_tonearest);
   RUN_TEST_LOOP_f_f (acos, acos_tonearest_test_data, FE_TONEAREST);
   END (acos_tonearest);
@@ -1453,12 +1441,6 @@ static const struct test_f_f_data acos_towardzero_test_data[] =
 static void
 acos_test_towardzero (void)
 {
-  errno = 0;
-  FUNC(acos) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (acos_towardzero);
   RUN_TEST_LOOP_f_f (acos, acos_towardzero_test_data, FE_TOWARDZERO);
   END (acos_towardzero);
@@ -1480,12 +1462,6 @@ static const struct test_f_f_data acos_downward_test_data[] =
 static void
 acos_test_downward (void)
 {
-  errno = 0;
-  FUNC(acos) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (acos_downward);
   RUN_TEST_LOOP_f_f (acos, acos_downward_test_data, FE_DOWNWARD);
   END (acos_downward);
@@ -1507,12 +1483,6 @@ static const struct test_f_f_data acos_upward_test_data[] =
 static void
 acos_test_upward (void)
 {
-  errno = 0;
-  FUNC(acos) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (acos_upward);
   RUN_TEST_LOOP_f_f (acos, acos_upward_test_data, FE_UPWARD);
   END (acos_upward);
@@ -1537,12 +1507,6 @@ static const struct test_f_f_data acosh_test_data[] =
 static void
 acosh_test (void)
 {
-  errno = 0;
-  FUNC(acosh) (7);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (acosh);
   RUN_TEST_LOOP_f_f (acosh, acosh_test_data, );
   END (acosh);
@@ -1586,12 +1550,6 @@ static const struct test_f_f_data asin_test_data[] =
 static void
 asin_test (void)
 {
-  errno = 0;
-  FUNC(asin) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (asin);
   RUN_TEST_LOOP_f_f (asin, asin_test_data, );
   END (asin);
@@ -1613,12 +1571,6 @@ static const struct test_f_f_data asin_tonearest_test_data[] =
 static void
 asin_test_tonearest (void)
 {
-  errno = 0;
-  FUNC(asin) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (asin_tonearest);
   RUN_TEST_LOOP_f_f (asin, asin_tonearest_test_data, FE_TONEAREST);
   END (asin_tonearest);
@@ -1640,12 +1592,6 @@ static const struct test_f_f_data asin_towardzero_test_data[] =
 static void
 asin_test_towardzero (void)
 {
-  errno = 0;
-  FUNC(asin) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (asin_towardzero);
   RUN_TEST_LOOP_f_f (asin, asin_towardzero_test_data, FE_TOWARDZERO);
   END (asin_towardzero);
@@ -1667,12 +1613,6 @@ static const struct test_f_f_data asin_downward_test_data[] =
 static void
 asin_test_downward (void)
 {
-  errno = 0;
-  FUNC(asin) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (asin_downward);
   RUN_TEST_LOOP_f_f (asin, asin_downward_test_data, FE_DOWNWARD);
   END (asin_downward);
@@ -1694,12 +1634,6 @@ static const struct test_f_f_data asin_upward_test_data[] =
 static void
 asin_test_upward (void)
 {
-  errno = 0;
-  FUNC(asin) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (asin_upward);
   RUN_TEST_LOOP_f_f (asin, asin_upward_test_data, FE_UPWARD);
   END (asin_upward);
@@ -1722,12 +1656,6 @@ static const struct test_f_f_data asinh_test_data[] =
 static void
 asinh_test (void)
 {
-  errno = 0;
-  FUNC(asinh) (0.7L);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (asinh);
   RUN_TEST_LOOP_f_f (asinh, asinh_test_data, );
   END (asinh);
@@ -1763,12 +1691,6 @@ static const struct test_f_f_data atan_test_data[] =
 static void
 atan_test (void)
 {
-  errno = 0;
-  FUNC(atan) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (atan);
   RUN_TEST_LOOP_f_f (atan, atan_test_data, );
   END (atan);
@@ -1799,12 +1721,6 @@ static const struct test_f_f_data atanh_test_data[] =
 static void
 atanh_test (void)
 {
-  errno = 0;
-  FUNC(atanh) (0.7L);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (atanh);
   RUN_TEST_LOOP_f_f (atanh, atanh_test_data, );
   END (atanh);
@@ -1889,12 +1805,6 @@ static const struct test_ff_f_data atan2_test_data[] =
 static void
 atan2_test (void)
 {
-  errno = 0;
-  FUNC(atan2) (-0, 1);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (atan2);
   RUN_TEST_LOOP_ff_f (atan2, atan2_test_data, );
   END (atan2);
@@ -1940,12 +1850,6 @@ static const struct test_c_f_data cabs_test_data[] =
 static void
 cabs_test (void)
 {
-  errno = 0;
-  FUNC(cabs) (BUILD_COMPLEX (0.7L, 12.4L));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (cabs);
   RUN_TEST_LOOP_c_f (cabs, cabs_test_data, );
   END (cabs);
@@ -2639,12 +2543,6 @@ static const struct test_c_c_data cacos_test_data[] =
 static void
 cacos_test (void)
 {
-  errno = 0;
-  FUNC(cacos) (BUILD_COMPLEX (0.7L, 1.2L));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (cacos);
   RUN_TEST_LOOP_c_c (cacos, cacos_test_data, );
   END (cacos, complex);
@@ -3331,12 +3229,6 @@ static const struct test_c_c_data cacosh_test_data[] =
 static void
 cacosh_test (void)
 {
-  errno = 0;
-  FUNC(cacosh) (BUILD_COMPLEX (0.7L, 1.2L));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (cacosh);
   RUN_TEST_LOOP_c_c (cacosh, cacosh_test_data, );
   END (cacosh, complex);
@@ -4106,12 +3998,6 @@ static const struct test_c_c_data casin_test_data[] =
 static void
 casin_test (void)
 {
-  errno = 0;
-  FUNC(casin) (BUILD_COMPLEX (0.7L, 1.2L));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (casin);
   RUN_TEST_LOOP_c_c (casin, casin_test_data, );
   END (casin, complex);
@@ -4809,12 +4695,6 @@ static const struct test_c_c_data casinh_test_data[] =
 static void
 casinh_test (void)
 {
-  errno = 0;
-  FUNC(casinh) (BUILD_COMPLEX (0.7L, 1.2L));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (casinh);
   RUN_TEST_LOOP_c_c (casinh, casinh_test_data, );
   END (casinh, complex);
@@ -5326,12 +5206,6 @@ static const struct test_c_c_data catan_test_data[] =
 static void
 catan_test (void)
 {
-  errno = 0;
-  FUNC(catan) (BUILD_COMPLEX (0.7L, 1.2L));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (catan);
   RUN_TEST_LOOP_c_c (catan, catan_test_data, );
   END (catan, complex);
@@ -5841,12 +5715,6 @@ static const struct test_c_c_data catanh_test_data[] =
 static void
 catanh_test (void)
 {
-  errno = 0;
-  FUNC(catanh) (BUILD_COMPLEX (0.7L, 1.2L));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (catanh);
   RUN_TEST_LOOP_c_c (catanh, catanh_test_data, );
   END (catanh, complex);
@@ -5873,12 +5741,6 @@ static const struct test_f_f_data cbrt_test_data[] =
 static void
 cbrt_test (void)
 {
-  errno = 0;
-  FUNC(cbrt) (8);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (cbrt);
   RUN_TEST_LOOP_f_f (cbrt, cbrt_test_data, );
   END (cbrt);
@@ -5980,12 +5842,6 @@ static const struct test_c_c_data ccos_test_data[] =
 static void
 ccos_test (void)
 {
-  errno = 0;
-  FUNC(ccos) (BUILD_COMPLEX (0, 0));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (ccos);
   RUN_TEST_LOOP_c_c (ccos, ccos_test_data, );
   END (ccos, complex);
@@ -6088,12 +5944,6 @@ static const struct test_c_c_data ccosh_test_data[] =
 static void
 ccosh_test (void)
 {
-  errno = 0;
-  FUNC(ccosh) (BUILD_COMPLEX (0.7L, 1.2L));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (ccosh);
   RUN_TEST_LOOP_c_c (ccosh, ccosh_test_data, );
   END (ccosh, complex);
@@ -6303,12 +6153,6 @@ static const struct test_c_c_data cexp_test_data[] =
 static void
 cexp_test (void)
 {
-  errno = 0;
-  FUNC(cexp) (BUILD_COMPLEX (0, 0));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (cexp);
   RUN_TEST_LOOP_c_c (cexp, cexp_test_data, );
   END (cexp, complex);
@@ -6550,12 +6394,6 @@ static const struct test_c_c_data clog_test_data[] =
 static void
 clog_test (void)
 {
-  errno = 0;
-  FUNC(clog) (BUILD_COMPLEX (-2, -3));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (clog);
   RUN_TEST_LOOP_c_c (clog, clog_test_data, );
   END (clog, complex);
@@ -6775,12 +6613,6 @@ static const struct test_c_c_data clog10_test_data[] =
 static void
 clog10_test (void)
 {
-  errno = 0;
-  FUNC(clog10) (BUILD_COMPLEX (0.7L, 1.2L));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (clog10);
   RUN_TEST_LOOP_c_c (clog10, clog10_test_data, );
   END (clog10, complex);
@@ -6913,12 +6745,6 @@ static const struct test_f_f_data cos_test_data[] =
 static void
 cos_test (void)
 {
-  errno = 0;
-  FUNC(cos) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (cos);
   RUN_TEST_LOOP_f_f (cos, cos_test_data, );
   END (cos);
@@ -6944,12 +6770,6 @@ static const struct test_f_f_data cos_tonearest_test_data[] =
 static void
 cos_test_tonearest (void)
 {
-  errno = 0;
-  FUNC(cos) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (cos_tonearest);
   RUN_TEST_LOOP_f_f (cos, cos_tonearest_test_data, FE_TONEAREST);
   END (cos_tonearest);
@@ -6975,12 +6795,6 @@ static const struct test_f_f_data cos_towardzero_test_data[] =
 static void
 cos_test_towardzero (void)
 {
-  errno = 0;
-  FUNC(cos) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (cos_towardzero);
   RUN_TEST_LOOP_f_f (cos, cos_towardzero_test_data, FE_TOWARDZERO);
   END (cos_towardzero);
@@ -7006,12 +6820,6 @@ static const struct test_f_f_data cos_downward_test_data[] =
 static void
 cos_test_downward (void)
 {
-  errno = 0;
-  FUNC(cos) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (cos_downward);
   RUN_TEST_LOOP_f_f (cos, cos_downward_test_data, FE_DOWNWARD);
   END (cos_downward);
@@ -7037,12 +6845,6 @@ static const struct test_f_f_data cos_upward_test_data[] =
 static void
 cos_test_upward (void)
 {
-  errno = 0;
-  FUNC(cos) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (cos_upward);
   RUN_TEST_LOOP_f_f (cos, cos_upward_test_data, FE_UPWARD);
   END (cos_upward);
@@ -7073,12 +6875,6 @@ static const struct test_f_f_data cosh_test_data[] =
 static void
 cosh_test (void)
 {
-  errno = 0;
-  FUNC(cosh) (0.7L);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (cosh);
   RUN_TEST_LOOP_f_f (cosh, cosh_test_data, );
   END (cosh);
@@ -7097,12 +6893,6 @@ static const struct test_f_f_data cosh_tonearest_test_data[] =
 static void
 cosh_test_tonearest (void)
 {
-  errno = 0;
-  FUNC(cosh) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (cosh_tonearest);
   RUN_TEST_LOOP_f_f (cosh, cosh_tonearest_test_data, FE_TONEAREST);
   END (cosh_tonearest);
@@ -7121,12 +6911,6 @@ static const struct test_f_f_data cosh_towardzero_test_data[] =
 static void
 cosh_test_towardzero (void)
 {
-  errno = 0;
-  FUNC(cosh) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (cosh_towardzero);
   RUN_TEST_LOOP_f_f (cosh, cosh_towardzero_test_data, FE_TOWARDZERO);
   END (cosh_towardzero);
@@ -7145,12 +6929,6 @@ static const struct test_f_f_data cosh_downward_test_data[] =
 static void
 cosh_test_downward (void)
 {
-  errno = 0;
-  FUNC(cosh) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (cosh_downward);
   RUN_TEST_LOOP_f_f (cosh, cosh_downward_test_data, FE_DOWNWARD);
   END (cosh_downward);
@@ -7169,12 +6947,6 @@ static const struct test_f_f_data cosh_upward_test_data[] =
 static void
 cosh_test_upward (void)
 {
-  errno = 0;
-  FUNC(cosh) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (cosh_upward);
   RUN_TEST_LOOP_f_f (cosh, cosh_upward_test_data, FE_UPWARD);
   END (cosh_upward);
@@ -7202,12 +6974,6 @@ static const struct test_cc_c_data cpow_test_data[] =
 static void
 cpow_test (void)
 {
-  errno = 0;
-  FUNC(cpow) (BUILD_COMPLEX (1, 0), BUILD_COMPLEX (0, 0));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (cpow);
   RUN_TEST_LOOP_cc_c (cpow, cpow_test_data, );
   END (cpow, complex);
@@ -7359,12 +7125,6 @@ static const struct test_c_c_data csin_test_data[] =
 static void
 csin_test (void)
 {
-  errno = 0;
-  FUNC(csin) (BUILD_COMPLEX (0.7L, 1.2L));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (csin);
   RUN_TEST_LOOP_c_c (csin, csin_test_data, );
   END (csin, complex);
@@ -7466,12 +7226,6 @@ static const struct test_c_c_data csinh_test_data[] =
 static void
 csinh_test (void)
 {
-  errno = 0;
-  FUNC(csinh) (BUILD_COMPLEX (0.7L, 1.2L));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (csinh);
   RUN_TEST_LOOP_c_c (csinh, csinh_test_data, );
   END (csinh, complex);
@@ -7593,12 +7347,6 @@ static const struct test_c_c_data csqrt_test_data[] =
 static void
 csqrt_test (void)
 {
-  errno = 0;
-  FUNC(csqrt) (BUILD_COMPLEX (-1, 0));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (csqrt);
   RUN_TEST_LOOP_c_c (csqrt, csqrt_test_data, );
   END (csqrt, complex);
@@ -7685,12 +7433,6 @@ static const struct test_c_c_data ctan_test_data[] =
 static void
 ctan_test (void)
 {
-  errno = 0;
-  FUNC(ctan) (BUILD_COMPLEX (0.7L, 1.2L));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (ctan);
   RUN_TEST_LOOP_c_c (ctan, ctan_test_data, );
   END (ctan, complex);
@@ -7715,12 +7457,6 @@ static const struct test_c_c_data ctan_tonearest_test_data[] =
 static void
 ctan_test_tonearest (void)
 {
-  errno = 0;
-  FUNC(ctan) (BUILD_COMPLEX (0.7L, 1.2L));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (ctan_tonearest);
   RUN_TEST_LOOP_c_c (ctan, ctan_tonearest_test_data, FE_TONEAREST);
   END (ctan_tonearest, complex);
@@ -7745,12 +7481,6 @@ static const struct test_c_c_data ctan_towardzero_test_data[] =
 static void
 ctan_test_towardzero (void)
 {
-  errno = 0;
-  FUNC(ctan) (BUILD_COMPLEX (0.7L, 1.2L));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (ctan_towardzero);
   RUN_TEST_LOOP_c_c (ctan, ctan_towardzero_test_data, FE_TOWARDZERO);
   END (ctan_towardzero, complex);
@@ -7775,12 +7505,6 @@ static const struct test_c_c_data ctan_downward_test_data[] =
 static void
 ctan_test_downward (void)
 {
-  errno = 0;
-  FUNC(ctan) (BUILD_COMPLEX (0.7L, 1.2L));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (ctan_downward);
   RUN_TEST_LOOP_c_c (ctan, ctan_downward_test_data, FE_DOWNWARD);
   END (ctan_downward, complex);
@@ -7805,12 +7529,6 @@ static const struct test_c_c_data ctan_upward_test_data[] =
 static void
 ctan_test_upward (void)
 {
-  errno = 0;
-  FUNC(ctan) (BUILD_COMPLEX (0.7L, 1.2L));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (ctan_upward);
   RUN_TEST_LOOP_c_c (ctan, ctan_upward_test_data, FE_UPWARD);
   END (ctan_upward, complex);
@@ -7899,12 +7617,6 @@ static const struct test_c_c_data ctanh_test_data[] =
 static void
 ctanh_test (void)
 {
-  errno = 0;
-  FUNC(ctanh) (BUILD_COMPLEX (0, 0));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (ctanh);
   RUN_TEST_LOOP_c_c (ctanh, ctanh_test_data, );
   END (ctanh, complex);
@@ -7929,12 +7641,6 @@ static const struct test_c_c_data ctanh_tonearest_test_data[] =
 static void
 ctanh_test_tonearest (void)
 {
-  errno = 0;
-  FUNC(ctanh) (BUILD_COMPLEX (0.7L, 1.2L));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (ctanh_tonearest);
   RUN_TEST_LOOP_c_c (ctanh, ctanh_tonearest_test_data, FE_TONEAREST);
   END (ctanh_tonearest, complex);
@@ -7959,12 +7665,6 @@ static const struct test_c_c_data ctanh_towardzero_test_data[] =
 static void
 ctanh_test_towardzero (void)
 {
-  errno = 0;
-  FUNC(ctanh) (BUILD_COMPLEX (0.7L, 1.2L));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (ctanh_towardzero);
   RUN_TEST_LOOP_c_c (ctanh, ctanh_towardzero_test_data, FE_TOWARDZERO);
   END (ctanh_towardzero, complex);
@@ -7989,12 +7689,6 @@ static const struct test_c_c_data ctanh_downward_test_data[] =
 static void
 ctanh_test_downward (void)
 {
-  errno = 0;
-  FUNC(ctanh) (BUILD_COMPLEX (0.7L, 1.2L));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (ctanh_downward);
   RUN_TEST_LOOP_c_c (ctanh, ctanh_downward_test_data, FE_DOWNWARD);
   END (ctanh_downward, complex);
@@ -8019,12 +7713,6 @@ static const struct test_c_c_data ctanh_upward_test_data[] =
 static void
 ctanh_test_upward (void)
 {
-  errno = 0;
-  FUNC(ctanh) (BUILD_COMPLEX (0.7L, 1.2L));
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (ctanh_upward);
   RUN_TEST_LOOP_c_c (ctanh, ctanh_upward_test_data, FE_UPWARD);
   END (ctanh_upward, complex);
@@ -8052,12 +7740,6 @@ static const struct test_f_f_data erf_test_data[] =
 static void
 erf_test (void)
 {
-  errno = 0;
-  FUNC(erf) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (erf);
   RUN_TEST_LOOP_f_f (erf, erf_test_data, );
   END (erf);
@@ -8096,12 +7778,6 @@ static const struct test_f_f_data erfc_test_data[] =
 static void
 erfc_test (void)
 {
-  errno = 0;
-  FUNC(erfc) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (erfc);
   RUN_TEST_LOOP_f_f (erfc, erfc_test_data, );
   END (erfc);
@@ -8147,12 +7823,6 @@ static const struct test_f_f_data exp_test_data[] =
 static void
 exp_test (void)
 {
-  errno = 0;
-  FUNC(exp) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (exp);
   RUN_TEST_LOOP_f_f (exp, exp_test_data, );
   END (exp);
@@ -8171,12 +7841,6 @@ static const struct test_f_f_data exp_tonearest_test_data[] =
 static void
 exp_test_tonearest (void)
 {
-  errno = 0;
-  FUNC(exp) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (exp_tonearest);
   RUN_TEST_LOOP_f_f (exp, exp_tonearest_test_data, FE_TONEAREST);
   END (exp_tonearest);
@@ -8195,12 +7859,6 @@ static const struct test_f_f_data exp_towardzero_test_data[] =
 static void
 exp_test_towardzero (void)
 {
-  errno = 0;
-  FUNC(exp) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (exp_towardzero);
   RUN_TEST_LOOP_f_f (exp, exp_towardzero_test_data, FE_TOWARDZERO);
   END (exp_towardzero);
@@ -8219,12 +7877,6 @@ static const struct test_f_f_data exp_downward_test_data[] =
 static void
 exp_test_downward (void)
 {
-  errno = 0;
-  FUNC(exp) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (exp_downward);
   RUN_TEST_LOOP_f_f (exp, exp_downward_test_data, FE_DOWNWARD);
   END (exp_downward);
@@ -8243,12 +7895,6 @@ static const struct test_f_f_data exp_upward_test_data[] =
 static void
 exp_test_upward (void)
 {
-  errno = 0;
-  FUNC(exp) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (exp_upward);
   RUN_TEST_LOOP_f_f (exp, exp_upward_test_data, FE_UPWARD);
   END (exp_upward);
@@ -8287,12 +7933,6 @@ static const struct test_f_f_data exp10_test_data[] =
 static void
 exp10_test (void)
 {
-  errno = 0;
-  FUNC(exp10) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (exp10);
   RUN_TEST_LOOP_f_f (exp10, exp10_test_data, );
   END (exp10);
@@ -8336,12 +7976,6 @@ static const struct test_f_f_data exp2_test_data[] =
 static void
 exp2_test (void)
 {
-  errno = 0;
-  FUNC(exp2) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (exp2);
   RUN_TEST_LOOP_f_f (exp2, exp2_test_data, );
   END (exp2);
@@ -8404,12 +8038,6 @@ static const struct test_f_f_data expm1_test_data[] =
 static void
 expm1_test (void)
 {
-  errno = 0;
-  FUNC(expm1) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (expm1);
   RUN_TEST_LOOP_f_f (expm1, expm1_test_data, );
   END (expm1);
@@ -9683,12 +9311,6 @@ static const struct test_ff_f_data fmod_test_data[] =
 static void
 fmod_test (void)
 {
-  errno = 0;
-  FUNC(fmod) (6.5, 2.3L);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (fmod);
   RUN_TEST_LOOP_ff_f (fmod, fmod_test_data, );
   END (fmod);
@@ -9763,13 +9385,6 @@ static const struct test_f_f1_data gamma_test_data[] =
 static void
 gamma_test (void)
 {
-  errno = 0;
-  FUNC(gamma) (1);
-
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (gamma);
   RUN_TEST_LOOP_f_f1 (gamma, gamma_test_data, , signgam);
   END (gamma);
@@ -9832,12 +9447,6 @@ static const struct test_ff_f_data hypot_test_data[] =
 static void
 hypot_test (void)
 {
-  errno = 0;
-  FUNC(hypot) (0.7L, 12.4L);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (hypot);
   RUN_TEST_LOOP_ff_f (hypot, hypot_test_data, );
   END (hypot);
@@ -10191,17 +9800,6 @@ static const struct test_f_f_data j0_test_data[] =
 static void
 j0_test (void)
 {
-  FLOAT s, c;
-  errno = 0;
-  FUNC (sincos) (0, &s, &c);
-  if (errno == ENOSYS)
-    /* Required function not implemented.  */
-    return;
-  FUNC(j0) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (j0);
   RUN_TEST_LOOP_f_f (j0, j0_test_data, );
   END (j0);
@@ -10242,17 +9840,6 @@ static const struct test_f_f_data j1_test_data[] =
 static void
 j1_test (void)
 {
-  FLOAT s, c;
-  errno = 0;
-  FUNC (sincos) (0, &s, &c);
-  if (errno == ENOSYS)
-    /* Required function not implemented.  */
-    return;
-  FUNC(j1) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (j1);
   RUN_TEST_LOOP_f_f (j1, j1_test_data, );
   END (j1);
@@ -10332,17 +9919,6 @@ static const struct test_if_f_data jn_test_data[] =
 static void
 jn_test (void)
 {
-  FLOAT s, c;
-  errno = 0;
-  FUNC (sincos) (0, &s, &c);
-  if (errno == ENOSYS)
-    /* Required function not implemented.  */
-    return;
-  FUNC(jn) (1, 1);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (jn);
   RUN_TEST_LOOP_if_f (jn, jn_test_data, );
   END (jn);
@@ -10404,12 +9980,6 @@ static const struct test_f_f1_data lgamma_test_data[] =
 static void
 lgamma_test (void)
 {
-  errno = 0;
-  FUNC(lgamma) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (lgamma);
   RUN_TEST_LOOP_f_f1 (lgamma, lgamma_test_data, , signgam);
   END (lgamma);
@@ -11298,11 +10868,6 @@ static const struct test_f_f_data log_test_data[] =
 static void
 log_test (void)
 {
-  errno = 0;
-  FUNC(log) (1);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
   START (log);
   RUN_TEST_LOOP_f_f (log, log_test_data, );
   END (log);
@@ -11337,12 +10902,6 @@ static const struct test_f_f_data log10_test_data[] =
 static void
 log10_test (void)
 {
-  errno = 0;
-  FUNC(log10) (1);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (log10);
   RUN_TEST_LOOP_f_f (log10, log10_test_data, );
   END (log10);
@@ -11373,12 +10932,6 @@ static const struct test_f_f_data log1p_test_data[] =
 static void
 log1p_test (void)
 {
-  errno = 0;
-  FUNC(log1p) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (log1p);
   RUN_TEST_LOOP_f_f (log1p, log1p_test_data, );
   END (log1p);
@@ -11411,12 +10964,6 @@ static const struct test_f_f_data log2_test_data[] =
 static void
 log2_test (void)
 {
-  errno = 0;
-  FUNC(log2) (1);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (log2);
   RUN_TEST_LOOP_f_f (log2, log2_test_data, );
   END (log2);
@@ -11484,13 +11031,6 @@ static const struct test_f_f_data logb_downward_test_data[] =
 static void
 logb_test_downward (void)
 {
-  errno = 0;
-
-  FUNC(logb) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (logb_downward);
   RUN_TEST_LOOP_f_f (logb, logb_downward_test_data, FE_DOWNWARD);
   END (logb_downward);
@@ -12651,12 +12191,6 @@ static void
 pow_test (void)
 {
 
-  errno = 0;
-  FUNC(pow) (0, 0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (pow);
   RUN_TEST_LOOP_ff_f (pow, pow_test_data, );
   END (pow);
@@ -12674,12 +12208,6 @@ static const struct test_ff_f_data pow_tonearest_test_data[] =
 static void
 pow_test_tonearest (void)
 {
-  errno = 0;
-  FUNC(pow) (0, 0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (pow_tonearest);
   RUN_TEST_LOOP_ff_f (pow, pow_tonearest_test_data, FE_TONEAREST);
   END (pow_tonearest);
@@ -12697,12 +12225,6 @@ static const struct test_ff_f_data pow_towardzero_test_data[] =
 static void
 pow_test_towardzero (void)
 {
-  errno = 0;
-  FUNC(pow) (0, 0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (pow_towardzero);
   RUN_TEST_LOOP_ff_f (pow, pow_towardzero_test_data, FE_TOWARDZERO);
   END (pow_towardzero);
@@ -12720,12 +12242,6 @@ static const struct test_ff_f_data pow_downward_test_data[] =
 static void
 pow_test_downward (void)
 {
-  errno = 0;
-  FUNC(pow) (0, 0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (pow_downward);
   RUN_TEST_LOOP_ff_f (pow, pow_downward_test_data, FE_DOWNWARD);
   END (pow_downward);
@@ -12743,12 +12259,6 @@ static const struct test_ff_f_data pow_upward_test_data[] =
 static void
 pow_test_upward (void)
 {
-  errno = 0;
-  FUNC(pow) (0, 0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (pow_upward);
   RUN_TEST_LOOP_ff_f (pow, pow_upward_test_data, FE_UPWARD);
   END (pow_upward);
@@ -12787,12 +12297,6 @@ static const struct test_ff_f_data remainder_test_data[] =
 static void
 remainder_test (void)
 {
-  errno = 0;
-  FUNC(remainder) (1.625, 1.0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (remainder);
   RUN_TEST_LOOP_ff_f (remainder, remainder_test_data, );
   END (remainder);
@@ -12822,12 +12326,6 @@ remquo_test (void)
 {
   /* x is needed.  */
   int x;
-
-  errno = 0;
-  FUNC(remquo) (1.625, 1.0, &x);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
 
   START (remquo);
   RUN_TEST_LOOP_ffI_f1 (remquo, remquo_test_data, , x);
@@ -13630,12 +13128,6 @@ static const struct test_f_f_data sin_test_data[] =
 static void
 sin_test (void)
 {
-  errno = 0;
-  FUNC(sin) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (sin);
   RUN_TEST_LOOP_f_f (sin, sin_test_data, );
   END (sin);
@@ -13661,12 +13153,6 @@ static const struct test_f_f_data sin_tonearest_test_data[] =
 static void
 sin_test_tonearest (void)
 {
-  errno = 0;
-  FUNC(sin) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (sin_tonearest);
   RUN_TEST_LOOP_f_f (sin, sin_tonearest_test_data, FE_TONEAREST);
   END (sin_tonearest);
@@ -13692,12 +13178,6 @@ static const struct test_f_f_data sin_towardzero_test_data[] =
 static void
 sin_test_towardzero (void)
 {
-  errno = 0;
-  FUNC(sin) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (sin_towardzero);
   RUN_TEST_LOOP_f_f (sin, sin_towardzero_test_data, FE_TOWARDZERO);
   END (sin_towardzero);
@@ -13723,12 +13203,6 @@ static const struct test_f_f_data sin_downward_test_data[] =
 static void
 sin_test_downward (void)
 {
-  errno = 0;
-  FUNC(sin) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (sin_downward);
   RUN_TEST_LOOP_f_f (sin, sin_downward_test_data, FE_DOWNWARD);
   END (sin_downward);
@@ -13754,12 +13228,6 @@ static const struct test_f_f_data sin_upward_test_data[] =
 static void
 sin_test_upward (void)
 {
-  errno = 0;
-  FUNC(sin) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (sin_upward);
   RUN_TEST_LOOP_f_f (sin, sin_upward_test_data, FE_UPWARD);
   END (sin_upward);
@@ -13836,12 +13304,6 @@ sincos_test (void)
 {
   FLOAT sin_res, cos_res;
 
-  errno = 0;
-  FUNC(sincos) (0, &sin_res, &cos_res);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (sincos);
   RUN_TEST_LOOP_sincos (sincos_test_data, , sin_res, cos_res);
   END (sincos);
@@ -13867,12 +13329,6 @@ static const struct test_f_f_data sinh_test_data[] =
 static void
 sinh_test (void)
 {
-  errno = 0;
-  FUNC(sinh) (0.7L);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (sinh);
   RUN_TEST_LOOP_f_f (sinh, sinh_test_data, );
   END (sinh);
@@ -13891,12 +13347,6 @@ static const struct test_f_f_data sinh_tonearest_test_data[] =
 static void
 sinh_test_tonearest (void)
 {
-  errno = 0;
-  FUNC(sinh) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (sinh_tonearest);
   RUN_TEST_LOOP_f_f (sinh, sinh_tonearest_test_data, FE_TONEAREST);
   END (sinh_tonearest);
@@ -13915,12 +13365,6 @@ static const struct test_f_f_data sinh_towardzero_test_data[] =
 static void
 sinh_test_towardzero (void)
 {
-  errno = 0;
-  FUNC(sinh) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (sinh_towardzero);
   RUN_TEST_LOOP_f_f (sinh, sinh_towardzero_test_data, FE_TOWARDZERO);
   END (sinh_towardzero);
@@ -13939,12 +13383,6 @@ static const struct test_f_f_data sinh_downward_test_data[] =
 static void
 sinh_test_downward (void)
 {
-  errno = 0;
-  FUNC(sinh) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (sinh_downward);
   RUN_TEST_LOOP_f_f (sinh, sinh_downward_test_data, FE_DOWNWARD);
   END (sinh_downward);
@@ -13963,12 +13401,6 @@ static const struct test_f_f_data sinh_upward_test_data[] =
 static void
 sinh_test_upward (void)
 {
-  errno = 0;
-  FUNC(sinh) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (sinh_upward);
   RUN_TEST_LOOP_f_f (sinh, sinh_upward_test_data, FE_UPWARD);
   END (sinh_upward);
@@ -14002,12 +13434,6 @@ static const struct test_f_f_data sqrt_test_data[] =
 static void
 sqrt_test (void)
 {
-  errno = 0;
-  FUNC(sqrt) (1);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (sqrt);
   RUN_TEST_LOOP_f_f (sqrt, sqrt_test_data, );
   END (sqrt);
@@ -14081,12 +13507,6 @@ static const struct test_f_f_data tan_test_data[] =
 static void
 tan_test (void)
 {
-  errno = 0;
-  FUNC(tan) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (tan);
   RUN_TEST_LOOP_f_f (tan, tan_test_data, );
   END (tan);
@@ -14112,12 +13532,6 @@ static const struct test_f_f_data tan_tonearest_test_data[] =
 static void
 tan_test_tonearest (void)
 {
-  errno = 0;
-  FUNC(tan) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (tan_tonearest);
   RUN_TEST_LOOP_f_f (tan, tan_tonearest_test_data, FE_TONEAREST);
   END (tan_tonearest);
@@ -14143,12 +13557,6 @@ static const struct test_f_f_data tan_towardzero_test_data[] =
 static void
 tan_test_towardzero (void)
 {
-  errno = 0;
-  FUNC(tan) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (tan_towardzero);
   RUN_TEST_LOOP_f_f (tan, tan_towardzero_test_data, FE_TOWARDZERO);
   END (tan_towardzero);
@@ -14174,12 +13582,6 @@ static const struct test_f_f_data tan_downward_test_data[] =
 static void
 tan_test_downward (void)
 {
-  errno = 0;
-  FUNC(tan) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (tan_downward);
   RUN_TEST_LOOP_f_f (tan, tan_downward_test_data, FE_DOWNWARD);
   END (tan_downward);
@@ -14205,12 +13607,6 @@ static const struct test_f_f_data tan_upward_test_data[] =
 static void
 tan_test_upward (void)
 {
-  errno = 0;
-  FUNC(tan) (0);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (tan_upward);
   RUN_TEST_LOOP_f_f (tan, tan_upward_test_data, FE_UPWARD);
   END (tan_upward);
@@ -14243,12 +13639,6 @@ static const struct test_f_f_data tanh_test_data[] =
 static void
 tanh_test (void)
 {
-  errno = 0;
-  FUNC(tanh) (0.7L);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (tanh);
   RUN_TEST_LOOP_f_f (tanh, tanh_test_data, );
   END (tanh);
@@ -14781,12 +14171,6 @@ static const struct test_f_f_data tgamma_test_data[] =
 static void
 tgamma_test (void)
 {
-  errno = 0;
-  FUNC(tgamma) (1);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (tgamma);
   RUN_TEST_LOOP_f_f (tgamma, tgamma_test_data, );
   END (tgamma);
@@ -14954,17 +14338,6 @@ static const struct test_f_f_data y0_test_data[] =
 static void
 y0_test (void)
 {
-  FLOAT s, c;
-  errno = 0;
-  FUNC (sincos) (0, &s, &c);
-  if (errno == ENOSYS)
-    /* Required function not implemented.  */
-    return;
-  FUNC(y0) (1);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (y0);
   RUN_TEST_LOOP_f_f (y0, y0_test_data, );
   END (y0);
@@ -15018,17 +14391,6 @@ static const struct test_f_f_data y1_test_data[] =
 static void
 y1_test (void)
 {
-  FLOAT s, c;
-  errno = 0;
-  FUNC (sincos) (0, &s, &c);
-  if (errno == ENOSYS)
-    /* Required function not implemented.  */
-    return;
-  FUNC(y1) (1);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (y1);
   RUN_TEST_LOOP_f_f (y1, y1_test_data, );
   END (y1);
@@ -15097,17 +14459,6 @@ static const struct test_if_f_data yn_test_data[] =
 static void
 yn_test (void)
 {
-  FLOAT s, c;
-  errno = 0;
-  FUNC (sincos) (0, &s, &c);
-  if (errno == ENOSYS)
-    /* Required function not implemented.  */
-    return;
-  FUNC(yn) (1, 1);
-  if (errno == ENOSYS)
-    /* Function not implemented.  */
-    return;
-
   START (yn);
   RUN_TEST_LOOP_if_f (yn, yn_test_data, );
   END (yn);
