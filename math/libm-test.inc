@@ -1704,8 +1704,8 @@ static const struct test_f_f_data atanh_test_data[] =
     TEST_f_f (atanh, 0, 0),
     TEST_f_f (atanh, minus_zero, minus_zero),
 
-    TEST_f_f (atanh, 1, plus_infty, DIVIDE_BY_ZERO_EXCEPTION),
-    TEST_f_f (atanh, -1, minus_infty, DIVIDE_BY_ZERO_EXCEPTION),
+    TEST_f_f (atanh, 1, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (atanh, -1, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f (atanh, qnan_value, qnan_value),
 
     /* atanh (x) == qNaN plus invalid exception if |x| > 1.  */
@@ -9369,8 +9369,8 @@ static const struct test_f_f1_data gamma_test_data[] =
   {
     START_DATA (gamma),
     TEST_f_f1 (gamma, plus_infty, plus_infty, 1),
-    TEST_f_f1 (gamma, 0, plus_infty, 1, DIVIDE_BY_ZERO_EXCEPTION),
-    TEST_f_f1 (gamma, -3, plus_infty, IGNORE, DIVIDE_BY_ZERO_EXCEPTION),
+    TEST_f_f1 (gamma, 0, plus_infty, 1, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f1 (gamma, -3, plus_infty, IGNORE, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f1 (gamma, minus_infty, plus_infty, IGNORE),
     TEST_f_f1 (gamma, qnan_value, qnan_value, IGNORE),
 
@@ -9956,14 +9956,14 @@ static const struct test_f_f1_data lgamma_test_data[] =
   {
     START_DATA (lgamma),
     TEST_f_f1 (lgamma, plus_infty, plus_infty, 1),
-    TEST_f_f1 (lgamma, 0, plus_infty, 1, DIVIDE_BY_ZERO_EXCEPTION),
-    TEST_f_f1 (lgamma, minus_zero, plus_infty, -1, DIVIDE_BY_ZERO_EXCEPTION),
+    TEST_f_f1 (lgamma, 0, plus_infty, 1, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f1 (lgamma, minus_zero, plus_infty, -1, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f1 (lgamma, qnan_value, qnan_value, IGNORE),
 
     /* lgamma (x) == +inf plus divide by zero exception for integer x <= 0.  */
     TEST_f_f1 (lgamma, -3, plus_infty, IGNORE, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f1 (lgamma, minus_infty, plus_infty, IGNORE),
-    TEST_f_f1 (lgamma, -max_value, plus_infty, IGNORE, DIVIDE_BY_ZERO_EXCEPTION),
+    TEST_f_f1 (lgamma, -max_value, plus_infty, IGNORE, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f1 (lgamma, max_value, plus_infty, 1, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 
     TEST_f_f1 (lgamma, 1, 0, 1),
@@ -10846,8 +10846,8 @@ llrint_test_upward (void)
 static const struct test_f_f_data log_test_data[] =
   {
     START_DATA (log),
-    TEST_f_f (log, 0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION),
-    TEST_f_f (log, minus_zero, minus_infty, DIVIDE_BY_ZERO_EXCEPTION),
+    TEST_f_f (log, 0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (log, minus_zero, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
 
     TEST_f_f (log, 1, 0),
 
@@ -10877,8 +10877,8 @@ log_test (void)
 static const struct test_f_f_data log10_test_data[] =
   {
     START_DATA (log10),
-    TEST_f_f (log10, 0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION),
-    TEST_f_f (log10, minus_zero, minus_infty, DIVIDE_BY_ZERO_EXCEPTION),
+    TEST_f_f (log10, 0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (log10, minus_zero, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
 
     TEST_f_f (log10, 1, 0),
 
@@ -10941,8 +10941,8 @@ log1p_test (void)
 static const struct test_f_f_data log2_test_data[] =
   {
     START_DATA (log2),
-    TEST_f_f (log2, 0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION),
-    TEST_f_f (log2, minus_zero, minus_infty, DIVIDE_BY_ZERO_EXCEPTION),
+    TEST_f_f (log2, 0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (log2, minus_zero, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
 
     TEST_f_f (log2, 1, 0),
 
@@ -13649,8 +13649,8 @@ static const struct test_f_f_data tgamma_test_data[] =
     START_DATA (tgamma),
     TEST_f_f (tgamma, plus_infty, plus_infty),
     TEST_f_f (tgamma, max_value, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
-    TEST_f_f (tgamma, 0, plus_infty, DIVIDE_BY_ZERO_EXCEPTION),
-    TEST_f_f (tgamma, minus_zero, minus_infty, DIVIDE_BY_ZERO_EXCEPTION),
+    TEST_f_f (tgamma, 0, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (tgamma, minus_zero, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     /* tgamma (x) == qNaN plus invalid exception for integer x <= 0.  */
     TEST_f_f (tgamma, -2, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (tgamma, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
