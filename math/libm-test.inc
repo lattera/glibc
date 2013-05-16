@@ -983,6 +983,14 @@ struct test_c_c_data
   __complex__ FLOAT max_ulp;
   int exceptions;
 };
+struct test_cc_c_data
+{
+  const char *test_name;
+  FLOAT arg1r, arg1c, arg2r, arg2c;
+  FLOAT expr, expc;
+  __complex__ FLOAT max_ulp;
+  int exceptions;
+};
 /* Used for all of RUN_TEST_LOOP_f_i, RUN_TEST_LOOP_f_i_tg,
    RUN_TEST_LOOP_f_b and RUN_TEST_LOOP_f_b_tg.  */
 struct test_f_i_data
@@ -1218,6 +1226,15 @@ struct test_f_L_data
 				   BUILD_COMPLEX (ARG2R, ARG2C)),	\
 		 BUILD_COMPLEX (EXPR, EXPC),				\
 		 MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_LOOP_cc_c(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
+  IF_ROUND_INIT_ ## ROUNDING_MODE					\
+    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
+      RUN_TEST_cc_c ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg1r,	\
+		     (ARRAY)[i].arg1c, (ARRAY)[i].arg2r,		\
+		     (ARRAY)[i].arg2c, (ARRAY)[i].expr,			\
+		     (ARRAY)[i].expc, (ARRAY)[i].max_ulp,		\
+		     (ARRAY)[i].exceptions);				\
+  ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_i(TEST_NAME, FUNC_NAME, ARG, EXPECTED,	\
 		     MAX_ULP, EXCEPTIONS)			\
   check_int (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
@@ -7146,6 +7163,24 @@ cosh_test_upward (void)
 }
 
 
+static const struct test_cc_c_data cpow_test_data[] =
+  {
+    START_DATA (cpow),
+    TEST_cc_c (cpow, 1, 0, 0, 0, 1.0, 0.0),
+    TEST_cc_c (cpow, 2, 0, 10, 0, 1024.0, 0.0),
+
+    TEST_cc_c (cpow, M_El, 0, 0, 2 * M_PIl, 1.0, 0.0),
+    TEST_cc_c (cpow, 2, 3, 4, 0, -119.0, -120.0),
+
+    TEST_cc_c (cpow, qnan_value, qnan_value, qnan_value, qnan_value, qnan_value, qnan_value),
+
+    TEST_cc_c (cpow, 0.75L, 1.25L, 0.75L, 1.25L, 0.117506293914473555420279832210420483L, 0.346552747708338676483025352060418001L),
+    TEST_cc_c (cpow, 0.75L, 1.25L, 1.0L, 1.0L, 0.0846958290317209430433805274189191353L, 0.513285749182902449043287190519090481L),
+    TEST_cc_c (cpow, 0.75L, 1.25L, 1.0L, 0.0L, 0.75L, 1.25L),
+    TEST_cc_c (cpow, 0.75L, 1.25L, 0.0L, 1.0L, 0.331825439177608832276067945276730566L, 0.131338600281188544930936345230903032L),
+    END_DATA (cpow)
+  };
+
 static void
 cpow_test (void)
 {
@@ -7156,20 +7191,7 @@ cpow_test (void)
     return;
 
   START (cpow);
-
-  TEST_cc_c (cpow, 1, 0, 0, 0, 1.0, 0.0);
-  TEST_cc_c (cpow, 2, 0, 10, 0, 1024.0, 0.0);
-
-  TEST_cc_c (cpow, M_El, 0, 0, 2 * M_PIl, 1.0, 0.0);
-  TEST_cc_c (cpow, 2, 3, 4, 0, -119.0, -120.0);
-
-  TEST_cc_c (cpow, qnan_value, qnan_value, qnan_value, qnan_value, qnan_value, qnan_value);
-
-  TEST_cc_c (cpow, 0.75L, 1.25L, 0.75L, 1.25L, 0.117506293914473555420279832210420483L, 0.346552747708338676483025352060418001L);
-  TEST_cc_c (cpow, 0.75L, 1.25L, 1.0L, 1.0L, 0.0846958290317209430433805274189191353L, 0.513285749182902449043287190519090481L);
-  TEST_cc_c (cpow, 0.75L, 1.25L, 1.0L, 0.0L, 0.75L, 1.25L);
-  TEST_cc_c (cpow, 0.75L, 1.25L, 0.0L, 1.0L, 0.331825439177608832276067945276730566L, 0.131338600281188544930936345230903032L);
-
+  RUN_TEST_LOOP_cc_c (cpow, cpow_test_data, );
   END (cpow, complex);
 }
 

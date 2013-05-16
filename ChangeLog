@@ -1,5 +1,10 @@
 2013-05-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (struct test_cc_c_data): New type.
+	(RUN_TEST_LOOP_cc_c): New macro.
+	(cpow_test_data): New variable.
+	(cpow_test): Run tests with RUN_TEST_LOOP_cc_c.
+
 	* math/libm-test.inc (struct test_f_L_data): New type.
 	(RUN_TEST_LOOP_f_L): New macro.
 	(llrint_test_data): New variable.
