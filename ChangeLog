@@ -1,3 +1,9 @@
+2013-05-21  Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #15339]
+	* posix/tst-getaddrinfo4.c: New test.
+	* posix/Makefile (tests): Add it.
+
 2013-05-21  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #15339]
