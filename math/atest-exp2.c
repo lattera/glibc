@@ -34,19 +34,39 @@
 #define SZ (FRAC / mpbpl + 1)
 typedef mp_limb_t mp1[SZ], mp2[SZ * 2];
 
-/* This string has 101 hex digits.  */
-static const char exp1[102] = "2" /* point */
-"b7e151628aed2a6abf7158809cf4f3c762e7160f38b4da56a7"
-"84d9045190cfef324e7738926cfbe5f4bf8d8d8c31d763da07";
-static const char exp_m1[102] = "0" /* point */
-"5e2d58d8b3bcdf1abadec7829054f90dda9805aab56c773330"
-"24b9d0a507daedb16400bf472b4215b8245b669d90d27a5aea";
+#if BITS_PER_MP_LIMB == 64
+# define LIMB64(L, H) 0x ## H ## L
+#elif BITS_PER_MP_LIMB == 32
+# define LIMB64(L, H) 0x ## L, 0x ## H
+#else
+# error
+#endif
 
-static const char hexdig[] = "0123456789abcdef";
+/* Once upon a time these constants were generated to 400 bits.
+   We only need FRAC bits (128) at present, but we retain 384 bits
+   in the text Just In Case.  */
+#define CONSTSZ(INT, F1, F2, F3, F4, F5, F6, F7, F8, F9, Fa, Fb, Fc) \
+	LIMB64(F4, F3), LIMB64(F2, F1), INT
+
+static const mp1 mp_exp1 = {
+  CONSTSZ (2, b7e15162, 8aed2a6a, bf715880, 9cf4f3c7, 62e7160f, 38b4da56,
+           a784d904, 5190cfef, 324e7738, 926cfbe5, f4bf8d8d, 8c31d763)
+};
+
+static const mp1 mp_exp_m1 = {
+  CONSTSZ (0, 5e2d58d8, b3bcdf1a, badec782, 9054f90d, da9805aa, b56c7733,
+           3024b9d0, a507daed, b16400bf, 472b4215, b8245b66, 9d90d27a)
+};
+
+static const mp1 mp_log2 = {
+  CONSTSZ (0, b17217f7, d1cf79ab, c9e3b398, 03f2f6af, 40f34326, 7298b62d,
+           8a0d175b, 8baafa2b, e7b87620, 6debac98, 559552fb, 4afa1b10)
+};
 
 static void
 print_mpn_fp (const mp_limb_t *x, unsigned int dp, unsigned int base)
 {
+   static const char hexdig[16] = "0123456789abcdef";
    unsigned int i;
    mp1 tx;
 
@@ -63,35 +83,6 @@ print_mpn_fp (const mp_limb_t *x, unsigned int dp, unsigned int base)
        assert (tx[SZ - 1] < base);
        fputc (hexdig[tx[SZ - 1]], stdout);
      }
-}
-
-static void
-read_mpn_hex(mp_limb_t *x, const char *str)
-{
-  int i;
-
-  memset (x, 0, sizeof (mp1));
-  for (i = -1; i < 100 && i < FRAC / 4; ++i)
-    x[(FRAC - i * 4 - 4) / mpbpl] |= ((mp_limb_t) (strchr (hexdig, str[i + 1])
-						   - hexdig)
- 				      << (FRAC - i * 4 - 4) % mpbpl);
-}
-
-static mp_limb_t *
-get_log2(void)
-{
-  static mp1 log2_m;
-  static int log2_m_inited = 0;
-  static const char log2[102] = "0" /* point */
-    "b17217f7d1cf79abc9e3b39803f2f6af40f343267298b62d8a"
-    "0d175b8baafa2be7b876206debac98559552fb4afa1b10ed2e";
-
-  if (!log2_m_inited)
-    {
-      read_mpn_hex (log2_m, log2);
-      log2_m_inited = 1;
-    }
-  return log2_m;
 }
 
 /* Compute e^x.  */
@@ -133,7 +124,7 @@ static void
 exp2_mpn (mp1 ex, mp1 x)
 {
   mp2 tmp;
-  mpn_mul_n (tmp, x, get_log2 (), SZ);
+  mpn_mul_n (tmp, x, mp_log2, SZ);
   assert(tmp[SZ * 2 - 1] == 0);
   exp_mpn (ex, tmp + FRAC / mpbpl);
 }
@@ -220,11 +211,10 @@ main (void)
   memset (x, 0, sizeof (mp1));
   x[FRAC / mpbpl] = (mp_limb_t)1 << FRAC % mpbpl;
   exp_mpn (ex, x);
-  read_mpn_hex (e2, exp1);
-  if (mpn_cmp (ex, e2, SZ) >= 0)
-    mpn_sub_n (e3, ex, e2, SZ);
+  if (mpn_cmp (ex, mp_exp1, SZ) >= 0)
+    mpn_sub_n (e3, ex, mp_exp1, SZ);
   else
-    mpn_sub_n (e3, e2, ex, SZ);
+    mpn_sub_n (e3, mp_exp1, ex, SZ);
 
   printf ("%d failures; %d errors; error rate %0.2f%%\n", failures, errors,
 	  errors * 100.0 / (double) (1 << N2));

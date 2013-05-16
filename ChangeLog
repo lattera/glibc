@@ -1,3 +1,15 @@
+2013-05-16  Richard Henderson  <rth@redhat.com>
+
+	* math/atest-exp2.c (LIMB64): New macro.
+	(CONSTSZ): New macro.
+	(mp_exp1, mp_exp_m1, mp_log2): New variables.
+	(hexdig): Move ...
+	(print_mpn_fp): ... to function scope.
+	(read_mpn_hex): Remove.
+	(get_log2): Remove.
+	(exp2_mpn): Use mp_log2.
+	(main): Use mp_exp1.
+
 2013-05-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc: Remove comment about not testing "inexact"
