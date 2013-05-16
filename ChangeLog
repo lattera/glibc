@@ -1,3 +1,10 @@
+2013-05-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (struct test_sincos_data): New type.
+	(RUN_TEST_LOOP_sincos): New macro.
+	(sincos_test_data): New variable.
+	(sincos_test): Run tests with RUN_TEST_LOOP_sincos.
+
 2013-05-16  Richard Henderson  <rth@redhat.com>
 
 	* math/atest-exp2.c (LIMB64): New macro.

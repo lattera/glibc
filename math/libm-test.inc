@@ -1030,6 +1030,17 @@ struct test_f_L_data
   long long int max_ulp;
   int exceptions;
 };
+struct test_sincos_data
+{
+  FLOAT arg;
+  const char *test_name_sin;
+  FLOAT expected_sin;
+  FLOAT max_ulp_sin;
+  const char *test_name_cos;
+  FLOAT expected_cos;
+  FLOAT max_ulp_cos;
+  int exceptions;
+};
 
 /* Set the rounding mode, or restore the saved value.  */
 #define IF_ROUND_INIT_	/* Empty.  */
@@ -1330,6 +1341,17 @@ struct test_f_L_data
 		   EXPECTED_COS, MAX_ULP_COS, 0);			\
     }									\
   while (0)
+#define RUN_TEST_LOOP_sincos(ARRAY, ROUNDING_MODE, SIN_RES_VAR,		\
+			     COS_RES_VAR)				\
+  IF_ROUND_INIT_ ## ROUNDING_MODE					\
+    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
+      RUN_TEST_sincos ((ARRAY)[i].arg, (ARRAY)[i].test_name_sin,	\
+		       SIN_RES_VAR, (ARRAY)[i].expected_sin,		\
+		       (ARRAY)[i].max_ulp_sin,				\
+		       (ARRAY)[i].test_name_cos, COS_RES_VAR,		\
+		       (ARRAY)[i].expected_cos, (ARRAY)[i].max_ulp_cos,	\
+		       (ARRAY)[i].exceptions);				\
+  ROUND_RESTORE_ ## ROUNDING_MODE
 
 
 
@@ -13753,6 +13775,71 @@ sin_test_upward (void)
 }
 
 
+static const struct test_sincos_data sincos_test_data[] =
+  {
+    START_DATA (sincos),
+    /* sincos is treated differently because it returns void.  */
+    TEST_extra (sincos, 0, 0, 1),
+
+    TEST_extra (sincos, minus_zero, minus_zero, 1),
+    TEST_extra (sincos, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION),
+    TEST_extra (sincos, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION),
+    TEST_extra (sincos, qnan_value, qnan_value, qnan_value),
+
+    /* The value of M_PI_2l is never exactly PI/2, and therefore the
+       answer is never exactly zero. The answer is equal to the error
+       in rounding PI/2 for the type used.  Thus the answer is unique
+       to each type.  */
+#ifdef TEST_FLOAT
+    /* 32-bit float.  */
+    TEST_extra (sincos, M_PI_2l, 1, -0x1.777a5cp-25L),
+#endif
+#if defined TEST_DOUBLE || (defined TEST_LDOUBLE && LDBL_MANT_DIG == 53)
+    /* 64-bit double or 64-bit long double.  */
+    TEST_extra (sincos, M_PI_2l, 1, 0x1.1a62633145c07p-54L),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG == 64
+    /* 96-bit long double.  */
+    TEST_extra (sincos, M_PI_2l, 1, -0xe.ce675d1fc8f8cbbp-69L),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG == 106
+    /* 128-bit IBM long double.  */
+    TEST_extra (sincos, M_PI_2l, 1, 0x1.c1cd129024e088a67cc74020bcp-107L),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG == 113
+    /* 128-bit long double.  */
+    TEST_extra (sincos, M_PI_2l, 1, 0x1.cd129024e088a67cc74020bbea64p-115L),
+#endif
+
+    TEST_extra (sincos, M_PI_6l, 0.5, 0.86602540378443864676372317075293616L),
+    TEST_extra (sincos, M_PI_6l*2.0, 0.86602540378443864676372317075293616L, 0.5),
+    TEST_extra (sincos, 0.75L, 0.681638760023334166733241952779893935L, 0.731688868873820886311838753000084544L),
+
+    TEST_extra (sincos, 0x1p65, -0.047183876212354673805106149805700013943218L, 0.99888622066058013610642172179340364209972L),
+    TEST_extra (sincos, -0x1p65, 0.047183876212354673805106149805700013943218L, 0.99888622066058013610642172179340364209972L),
+
+#ifdef TEST_DOUBLE
+    TEST_extra (sincos, 0.80190127184058835, 0.71867942238767868, 0.69534156199418473),
+#endif
+
+#ifndef TEST_FLOAT
+    TEST_extra (sincos, 1e22, -0.8522008497671888017727058937530293682618L, 0.5232147853951389454975944733847094921409L),
+    TEST_extra (sincos, 0x1p1023, 0.5631277798508840134529434079444683477104L, -0.826369834614147994500785680811743734805L),
+#endif
+
+#if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
+    TEST_extra (sincos, 0x1p16383L, 0.3893629985894208126948115852610595405563L, 0.9210843909921906206874509522505756251609L),
+#endif
+
+    TEST_extra (sincos, 0x1p+120, 3.77820109360752022655548470056922991960587e-01L, -9.25879022854837867303861764107414946730833e-01L),
+    TEST_extra (sincos, 0x1p+127, 6.23385512955870240370428801097126489001833e-01L, 7.81914638714960072263910298466369236613162e-01L),
+    TEST_extra (sincos, 0x1.fffff8p+127, 4.85786063130487339701113680434728152037092e-02L, 9.98819362551949040703862043664101081064641e-01L),
+    TEST_extra (sincos, 0x1.fffffep+127, -5.21876523333658540551505357019806722935726e-01L, 8.53021039830304158051791467692161107353094e-01L),
+    TEST_extra (sincos, 0x1p+50, 4.96396515208940840876821859865411368093356e-01L, 8.68095904660550604334592502063501320395739e-01L),
+    TEST_extra (sincos, 0x1p+28, -9.86198211836975655703110310527108292055548e-01L, -1.65568979490578758865468278195361551113358e-01L),
+    END_DATA (sincos)
+  };
+
 static void
 sincos_test (void)
 {
@@ -13765,67 +13852,7 @@ sincos_test (void)
     return;
 
   START (sincos);
-
-  /* sincos is treated differently because it returns void.  */
-  TEST_extra (sincos, 0, 0, 1);
-
-  TEST_extra (sincos, minus_zero, minus_zero, 1);
-  TEST_extra (sincos, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
-  TEST_extra (sincos, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
-  TEST_extra (sincos, qnan_value, qnan_value, qnan_value);
-
-  /* The value of M_PI_2l is never exactly PI/2, and therefore the
-     answer is never exactly zero. The answer is equal to the error
-     in rounding PI/2 for the type used.  Thus the answer is unique
-     to each type.  */
-#ifdef TEST_FLOAT
-  /* 32-bit float.  */
-  TEST_extra (sincos, M_PI_2l, 1, -0x1.777a5cp-25L);
-#endif
-#if defined TEST_DOUBLE || (defined TEST_LDOUBLE && LDBL_MANT_DIG == 53)
-  /* 64-bit double or 64-bit long double.  */
-  TEST_extra (sincos, M_PI_2l, 1, 0x1.1a62633145c07p-54L);
-#endif
-#if defined TEST_LDOUBLE && LDBL_MANT_DIG == 64
-  /* 96-bit long double.  */
-  TEST_extra (sincos, M_PI_2l, 1, -0xe.ce675d1fc8f8cbbp-69L);
-#endif
-#if defined TEST_LDOUBLE && LDBL_MANT_DIG == 106
-  /* 128-bit IBM long double.  */
-  TEST_extra (sincos, M_PI_2l, 1, 0x1.c1cd129024e088a67cc74020bcp-107L);
-#endif
-#if defined TEST_LDOUBLE && LDBL_MANT_DIG == 113
-  /* 128-bit long double.  */
-  TEST_extra (sincos, M_PI_2l, 1, 0x1.cd129024e088a67cc74020bbea64p-115L);
-#endif
-
-  TEST_extra (sincos, M_PI_6l, 0.5, 0.86602540378443864676372317075293616L);
-  TEST_extra (sincos, M_PI_6l*2.0, 0.86602540378443864676372317075293616L, 0.5);
-  TEST_extra (sincos, 0.75L, 0.681638760023334166733241952779893935L, 0.731688868873820886311838753000084544L);
-
-  TEST_extra (sincos, 0x1p65, -0.047183876212354673805106149805700013943218L, 0.99888622066058013610642172179340364209972L);
-  TEST_extra (sincos, -0x1p65, 0.047183876212354673805106149805700013943218L, 0.99888622066058013610642172179340364209972L);
-
-#ifdef TEST_DOUBLE
-  TEST_extra (sincos, 0.80190127184058835, 0.71867942238767868, 0.69534156199418473);
-#endif
-
-#ifndef TEST_FLOAT
-  TEST_extra (sincos, 1e22, -0.8522008497671888017727058937530293682618L, 0.5232147853951389454975944733847094921409L);
-  TEST_extra (sincos, 0x1p1023, 0.5631277798508840134529434079444683477104L, -0.826369834614147994500785680811743734805L);
-#endif
-
-#if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
-  TEST_extra (sincos, 0x1p16383L, 0.3893629985894208126948115852610595405563L, 0.9210843909921906206874509522505756251609L);
-#endif
-
-  TEST_extra (sincos, 0x1p+120, 3.77820109360752022655548470056922991960587e-01L, -9.25879022854837867303861764107414946730833e-01L);
-  TEST_extra (sincos, 0x1p+127, 6.23385512955870240370428801097126489001833e-01L, 7.81914638714960072263910298466369236613162e-01L);
-  TEST_extra (sincos, 0x1.fffff8p+127, 4.85786063130487339701113680434728152037092e-02L, 9.98819362551949040703862043664101081064641e-01L);
-  TEST_extra (sincos, 0x1.fffffep+127, -5.21876523333658540551505357019806722935726e-01L, 8.53021039830304158051791467692161107353094e-01L);
-  TEST_extra (sincos, 0x1p+50, 4.96396515208940840876821859865411368093356e-01L, 8.68095904660550604334592502063501320395739e-01L);
-  TEST_extra (sincos, 0x1p+28, -9.86198211836975655703110310527108292055548e-01L, -1.65568979490578758865468278195361551113358e-01L);
-
+  RUN_TEST_LOOP_sincos (sincos_test_data, , sin_res, cos_res);
   END (sincos);
 }
 
