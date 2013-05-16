@@ -1,3 +1,28 @@
+2013-05-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/gen-libm-test.pl (adjust_arg): Remove function.
+	(special_function): Remove argument $in_func.  Only handle
+	generating output for tables of tests, not inside functions.
+	(parse_args): Likewise.
+	(generate_testfile): Remove variable $in_func.  Update call to
+	parse_args.
+	* math/libm-test.inc (PLUS_ZERO_INIT): Rename macro to plus_zero.
+	(MINUS_ZERO_INIT): Rename macro to minus_zero.
+	(PLUS_INFTY_INIT): Rename macro to plus_infty.
+	(MINUS_INFTY_INIT): Rename macro to minus_infty.
+	(QNAN_VALUE_INIT): Rename macro to qnan_value.
+	(MAX_VALUE_INIT): Rename macro to max_value.
+	(MIN_VALUE_INIT): Rename macro to min_value.
+	(MIN_SUBNORM_VALUE_INIT): Rename macro to min_subnorm_value.
+	(plus_zero): Remove variable.
+	(minus_zero): Likewise.
+	(plus_infty): Likewise.
+	(minus_infty): Likewise.
+	(qnan_value): Likewise.
+	(max_value): Likewise.
+	(min_value): Likewise.
+	(min_subnorm_value): Likewise.
+
 2013-05-16  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
 	* crypt/sha512-block.c: Add missing #include <stdint.h> due to

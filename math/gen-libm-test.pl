@@ -185,21 +185,10 @@ sub new_test {
   return $rest;
 }
 
-# Adjust an argument or expected value for use in a constant
-# initializer.
-sub adjust_arg {
-  my ($arg, $in_func) = @_;
-  if (!$in_func) {
-    $arg =~ s/(plus_zero|minus_zero|plus_infty|minus_infty|qnan_value
-	       |max_value|min_value|min_subnorm_value)/\U$1\E_INIT/xg;
-  }
-  return $arg;
-}
-
 # Treat some functions especially.
 # Currently only sincos needs extra treatment.
 sub special_functions {
-  my ($file, $in_func, $args) = @_;
+  my ($file, $args) = @_;
   my (@args, $str, $test, $cline);
 
   @args = split /,\s*/, $args;
@@ -207,43 +196,33 @@ sub special_functions {
   unless ($args[0] =~ /sincos/) {
     die ("Don't know how to handle $args[0] extra.");
   }
-  if ($in_func) {
-    $cline = "  RUN_TEST_sincos (" . adjust_arg ($args[1], $in_func);
-  } else {
-    $cline = "    { " . adjust_arg ($args[1], $in_func);
-  }
+  $cline = "    { $args[1]";
 
   $str = 'sincos (' . &beautify ($args[1]) . ', &sin_res, &cos_res)';
   # handle sin
   $test = $str . ' puts ' . &beautify ($args[2]) . ' in sin_res';
 
-  my ($sin_res_var) = ($in_func ? ", sin_res" : "");
-  $cline .= ", \"$test\"$sin_res_var, " . adjust_arg ($args[2], $in_func);
+  $cline .= ", \"$test\", $args[2]";
   $cline .= &new_test ($test, $args[4], 0);
 
   # handle cos
   $test = $str . ' puts ' . &beautify ($args[3]) . ' in cos_res';
-  my ($cos_res_var) = ($in_func ? ", cos_res" : "");
-  $cline .= ", \"$test\"$cos_res_var, " . adjust_arg ($args[3], $in_func);
+  $cline .= ", \"$test\", $args[3]";
   $cline .= &new_test ($test, $args[4], 1);
-  if ($in_func) {
-    $cline .= ");\n";
-  } else {
-    $cline .= " },\n";
-  }
+  $cline .= " },\n";
   print $file $cline;
 }
 
 # Parse the arguments to TEST_x_y
 sub parse_args {
-  my ($file, $descr, $fct, $in_func, $args) = @_;
+  my ($file, $descr, $fct, $args) = @_;
   my (@args, $str, $descr_args, $descr_res, @descr);
   my ($current_arg, $cline, $i);
   my (@special);
   my ($extra_var, $call);
 
   if ($descr eq 'extra') {
-    &special_functions ($file, $in_func, $args);
+    &special_functions ($file, $args);
     return;
   }
   ($descr_args, $descr_res) = split /_/,$descr, 2;
@@ -318,29 +297,12 @@ sub parse_args {
   # Reset some variables to start again
   $current_arg = 1;
   $extra_var = 0;
-  if ($in_func) {
-    $cline = "RUN_TEST_$descr";
-  } else {
-    $cline = "{ ";
-  }
-  # Special handling for some macros:
-  if ($in_func && $args[0] =~ /fpclassify|isnormal|isfinite|isinf|isnan
-      |issignaling|signbit|isgreater|isgreaterequal|isless|islessequal
-      |islessgreater|isunordered/x) {
-    $cline = "${cline}_tg";
-  }
-  if ($in_func) {
-    $cline .= " (";
-  }
-  $cline .= "\"$str\"";
-  if ($in_func) {
-    $cline .= ", $args[0]";
-  }
+  $cline = "{ \"$str\"";
   @descr = split //,$descr_args;
   for ($i=0; $i <= $#descr; $i++) {
     # FLOAT, int, long int, long long int
     if ($descr[$i] =~ /f|i|l|L/) {
-      $cline .= ", " . adjust_arg ($args[$current_arg], $in_func);
+      $cline .= ", $args[$current_arg]";
       $current_arg++;
       next;
     }
@@ -350,8 +312,7 @@ sub parse_args {
     }
     # complex
     if ($descr[$i] eq 'c') {
-      $cline .= ", " . adjust_arg ($args[$current_arg], $in_func);
-      $cline .= ", " . adjust_arg ($args[$current_arg+1], $in_func);
+      $cline .= ", $args[$current_arg], $args[$current_arg+1]";
       $current_arg += 2;
       next;
     }
@@ -361,11 +322,10 @@ sub parse_args {
   @descr = split //,$descr_res;
   foreach (@descr) {
     if ($_ =~ /b|f|i|l|L/ ) {
-      $cline .= adjust_arg ($args[$current_arg], $in_func);
+      $cline .= $args[$current_arg];
       $current_arg++;
     } elsif ($_ eq 'c') {
-      $cline .= adjust_arg ($args[$current_arg], $in_func);
-      $cline .= ", " . adjust_arg ($args[$current_arg+1], $in_func);
+      $cline .= "$args[$current_arg], $args[$current_arg+1]";
       $current_arg += 2;
     } elsif ($_ eq '1') {
       push @special, $args[$current_arg];
@@ -381,12 +341,11 @@ sub parse_args {
       my ($extra_expected) = $special[0];
       my ($run_extra) = ($extra_expected ne "IGNORE" ? 1 : 0);
       my ($str) = "$call sets x to $extra_expected";
-      my ($out_var) = ($in_func ? ", x" : "");
       if (!$run_extra) {
 	$str = "";
 	$extra_expected = "0";
       }
-      $cline .= ", \"$str\"$out_var, 123456789, $run_extra, $extra_expected";
+      $cline .= ", \"$str\", 123456789, $run_extra, $extra_expected";
       if ($run_extra) {
 	$cline .= &new_test ($str, undef, 0);
       } else {
@@ -398,12 +357,11 @@ sub parse_args {
       my ($extra_expected) = $special[0];
       my ($run_extra) = ($extra_expected ne "IGNORE" ? 1 : 0);
       my ($str) = "$call sets signgam to $extra_expected";
-      my ($out_var) = ($in_func ? ", signgam" : "");
       if (!$run_extra) {
 	$str = "";
 	$extra_expected = "0";
       }
-      $cline .= ", \"$str\"$out_var, 0, $run_extra, $extra_expected";
+      $cline .= ", \"$str\", 0, $run_extra, $extra_expected";
       if ($run_extra) {
 	$cline .= &new_test ($str, undef, 0);
       } else {
@@ -415,13 +373,11 @@ sub parse_args {
       my ($extra_expected) = $special[0];
       my ($run_extra) = ($extra_expected ne "IGNORE" ? 1 : 0);
       my ($str) = "$call sets x to $extra_expected";
-      my ($out_var) = ($in_func ? ", x" : "");
       if (!$run_extra) {
 	$str = "";
 	$extra_expected = "0";
       }
-      $extra_expected = adjust_arg ($extra_expected, $in_func);
-      $cline .= ", \"$str\"$out_var, 123.456789, $run_extra, $extra_expected";
+      $cline .= ", \"$str\", 123.456789, $run_extra, $extra_expected";
       if ($run_extra) {
 	$cline .= &new_test ($str, undef, 0);
       } else {
@@ -433,12 +389,11 @@ sub parse_args {
       my ($extra_expected) = $special[0];
       my ($run_extra) = ($extra_expected ne "IGNORE" ? 1 : 0);
       my ($str) = "$call sets x to $extra_expected";
-      my ($out_var) = ($in_func ? ", x" : "");
       if (!$run_extra) {
 	$str = "";
 	$extra_expected = "0";
       }
-      $cline .= ", \"$str\"$out_var, 123456789, $run_extra, $extra_expected";
+      $cline .= ", \"$str\", 123456789, $run_extra, $extra_expected";
       if ($run_extra) {
 	$cline .= &new_test ($str, undef, 0);
       } else {
@@ -446,24 +401,19 @@ sub parse_args {
       }
     }
   }
-  if ($in_func) {
-    print $file "  $cline);\n";
-  } else {
-    print $file "    $cline },\n";
-  }
+  print $file "    $cline },\n";
 }
 
 # Generate libm-test.c
 sub generate_testfile {
   my ($input, $output) = @_;
   my ($lasttext);
-  my (@args, $i, $str, $thisfct, $in_func);
+  my (@args, $i, $str, $thisfct);
 
   open INPUT, $input or die ("Can't open $input: $!");
   open OUTPUT, ">$output" or die ("Can't open $output: $!");
 
   # Replace the special macros
-  $in_func = 0;
   while (<INPUT>) {
 
     # TEST_...
@@ -471,19 +421,17 @@ sub generate_testfile {
       my ($descr, $args);
       chop;
       ($descr, $args) = ($_ =~ /TEST_(\w+)\s*\((.*)\)/);
-      &parse_args (\*OUTPUT, $descr, $thisfct, $in_func, $args);
+      &parse_args (\*OUTPUT, $descr, $thisfct, $args);
       next;
     }
     # START_DATA (function)
     if (/START_DATA/) {
       ($thisfct) = ($_ =~ /START_DATA\s*\((.*)\)/);
-      $in_func = 0;
       next;
     }
     # START (function)
     if (/START/) {
       ($thisfct) = ($_ =~ /START\s*\((.*)\)/);
-      $in_func = 1;
       print OUTPUT "  init_max_error ();\n";
       next;
     }
@@ -494,7 +442,6 @@ sub generate_testfile {
     # END (function)
     if (/END/) {
       my ($fct, $line, $type);
-      $in_func = 0;
       if (/complex/) {
 	s/,\s*complex\s*//;
 	$type = 'complex';
