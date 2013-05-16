@@ -8117,11 +8117,11 @@ static const struct test_f_f_data exp_test_data[] =
 #endif
 
 #if !(defined TEST_LDOUBLE && LDBL_MAX_EXP > 1024)
-    TEST_f_f (exp, 710, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_f_f (exp, 710, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f (exp, -1234, plus_zero, UNDERFLOW_EXCEPTION),
 #endif
-    TEST_f_f (exp, 1e5, plus_infty, OVERFLOW_EXCEPTION),
-    TEST_f_f (exp, max_value, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_f_f (exp, 1e5, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (exp, max_value, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f (exp, -max_value, 0, UNDERFLOW_EXCEPTION),
     END_DATA (exp)
   };
@@ -8258,9 +8258,9 @@ static const struct test_f_f_data exp10_test_data[] =
     TEST_f_f (exp10, 4932, 1.0e4932L),
     TEST_f_f (exp10, -4932, 1.0e-4932L, UNDERFLOW_EXCEPTION),
 #endif
-    TEST_f_f (exp10, 1e6, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_f_f (exp10, 1e6, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f (exp10, -1e6, 0, UNDERFLOW_EXCEPTION),
-    TEST_f_f (exp10, max_value, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_f_f (exp10, max_value, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f (exp10, -max_value, 0, UNDERFLOW_EXCEPTION),
     TEST_f_f (exp10, 0.75L, 5.62341325190349080394951039776481231L),
     END_DATA (exp10)
@@ -8292,9 +8292,9 @@ static const struct test_f_f_data exp2_test_data[] =
 
     TEST_f_f (exp2, 10, 1024),
     TEST_f_f (exp2, -1, 0.5),
-    TEST_f_f (exp2, 1e6, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_f_f (exp2, 1e6, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f (exp2, -1e6, 0, UNDERFLOW_EXCEPTION),
-    TEST_f_f (exp2, max_value, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_f_f (exp2, max_value, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f (exp2, -max_value, 0, UNDERFLOW_EXCEPTION),
     TEST_f_f (exp2, 0.75L, 1.68179283050742908606225095246642979L),
 
@@ -8378,7 +8378,7 @@ static const struct test_f_f_data expm1_test_data[] =
     TEST_f_f (expm1, -100000.0, -1.0),
 
     TEST_f_f (expm1, 100000.0, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
-    TEST_f_f (expm1, max_value, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_f_f (expm1, max_value, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f (expm1, -max_value, -1),
     END_DATA (expm1)
   };
@@ -10370,7 +10370,7 @@ static const struct test_f_f1_data lgamma_test_data[] =
     TEST_f_f1 (lgamma, -3, plus_infty, IGNORE, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f1 (lgamma, minus_infty, plus_infty, IGNORE),
     TEST_f_f1 (lgamma, -max_value, plus_infty, IGNORE, DIVIDE_BY_ZERO_EXCEPTION),
-    TEST_f_f1 (lgamma, max_value, plus_infty, 1, OVERFLOW_EXCEPTION),
+    TEST_f_f1 (lgamma, max_value, plus_infty, 1, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 
     TEST_f_f1 (lgamma, 1, 0, 1),
 
@@ -12114,9 +12114,9 @@ static const struct test_ff_f_data pow_test_data[] =
     TEST_ff_f (pow, minus_zero, -0x1p127, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_ff_f (pow, minus_zero, -max_value, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
 
-    TEST_ff_f (pow, 0x1p72L, 0x1p72L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, 0x1p72L, 0x1p72L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
     TEST_ff_f (pow, 10, -0x1p72L, 0, UNDERFLOW_EXCEPTION),
-    TEST_ff_f (pow, max_value, max_value, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, max_value, max_value, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
     TEST_ff_f (pow, 10, -max_value, 0, UNDERFLOW_EXCEPTION),
 
     TEST_ff_f (pow, 0, 1, 0),
@@ -12386,35 +12386,35 @@ static const struct test_ff_f_data pow_test_data[] =
 #endif
     TEST_ff_f (pow, -2.0, -max_value, plus_zero, UNDERFLOW_EXCEPTION),
 
-    TEST_ff_f (pow, -2.0, 0xffffff, minus_infty, OVERFLOW_EXCEPTION),
-    TEST_ff_f (pow, -2.0, 0x1fffffe, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -2.0, 0xffffff, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (pow, -2.0, 0x1fffffe, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 #ifndef TEST_FLOAT
-    TEST_ff_f (pow, -2.0, 0x1.fffffffffffffp+52L, minus_infty, OVERFLOW_EXCEPTION),
-    TEST_ff_f (pow, -2.0, 0x1.fffffffffffffp+53L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -2.0, 0x1.fffffffffffffp+52L, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (pow, -2.0, 0x1.fffffffffffffp+53L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 #endif
 #ifdef TEST_LDOUBLE
 # if LDBL_MANT_DIG >= 64
-    TEST_ff_f (pow, -2.0, 0x1.fffffffffffffffep+63L, minus_infty, OVERFLOW_EXCEPTION),
-    TEST_ff_f (pow, -2.0, 0x1.fffffffffffffffep+64L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -2.0, 0x1.fffffffffffffffep+63L, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (pow, -2.0, 0x1.fffffffffffffffep+64L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 # endif
 # if LDBL_MANT_DIG >= 106
-    TEST_ff_f (pow, -2.0, 0x1.ffffffffffffffffffffffffff8p+105L, minus_infty, OVERFLOW_EXCEPTION),
-    TEST_ff_f (pow, -2.0, 0x1.ffffffffffffffffffffffffff8p+106L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -2.0, 0x1.ffffffffffffffffffffffffff8p+105L, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (pow, -2.0, 0x1.ffffffffffffffffffffffffff8p+106L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 # endif
 # if LDBL_MANT_DIG >= 113
-    TEST_ff_f (pow, -2.0, 0x1.ffffffffffffffffffffffffffffp+112L, minus_infty, OVERFLOW_EXCEPTION),
-    TEST_ff_f (pow, -2.0, 0x1.ffffffffffffffffffffffffffffp+113L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -2.0, 0x1.ffffffffffffffffffffffffffffp+112L, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (pow, -2.0, 0x1.ffffffffffffffffffffffffffffp+113L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 # endif
 #endif
-    TEST_ff_f (pow, -2.0, max_value, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -2.0, max_value, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 
     TEST_ff_f (pow, -max_value, 0.5, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_ff_f (pow, -max_value, 1.5, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_ff_f (pow, -max_value, 1000.5, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_ff_f (pow, -max_value, -2, plus_zero, UNDERFLOW_EXCEPTION),
     TEST_ff_f (pow, -max_value, -3, minus_zero, UNDERFLOW_EXCEPTION),
-    TEST_ff_f (pow, -max_value, 2, plus_infty, OVERFLOW_EXCEPTION),
-    TEST_ff_f (pow, -max_value, 3, minus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -max_value, 2, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (pow, -max_value, 3, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 
     TEST_ff_f (pow, -max_value, -0xffffff, minus_zero, UNDERFLOW_EXCEPTION),
     TEST_ff_f (pow, -max_value, -0x1fffffe, plus_zero, UNDERFLOW_EXCEPTION),
@@ -12438,54 +12438,54 @@ static const struct test_ff_f_data pow_test_data[] =
 #endif
     TEST_ff_f (pow, -max_value, -max_value, plus_zero, UNDERFLOW_EXCEPTION),
 
-    TEST_ff_f (pow, -max_value, 0xffffff, minus_infty, OVERFLOW_EXCEPTION),
-    TEST_ff_f (pow, -max_value, 0x1fffffe, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -max_value, 0xffffff, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (pow, -max_value, 0x1fffffe, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 #ifndef TEST_FLOAT
-    TEST_ff_f (pow, -max_value, 0x1.fffffffffffffp+52L, minus_infty, OVERFLOW_EXCEPTION),
-    TEST_ff_f (pow, -max_value, 0x1.fffffffffffffp+53L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -max_value, 0x1.fffffffffffffp+52L, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (pow, -max_value, 0x1.fffffffffffffp+53L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 #endif
 #ifdef TEST_LDOUBLE
 # if LDBL_MANT_DIG >= 64
-    TEST_ff_f (pow, -max_value, 0x1.fffffffffffffffep+63L, minus_infty, OVERFLOW_EXCEPTION),
-    TEST_ff_f (pow, -max_value, 0x1.fffffffffffffffep+64L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -max_value, 0x1.fffffffffffffffep+63L, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (pow, -max_value, 0x1.fffffffffffffffep+64L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 # endif
 # if LDBL_MANT_DIG >= 106
-    TEST_ff_f (pow, -max_value, 0x1.ffffffffffffffffffffffffff8p+105L, minus_infty, OVERFLOW_EXCEPTION),
-    TEST_ff_f (pow, -max_value, 0x1.ffffffffffffffffffffffffff8p+106L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -max_value, 0x1.ffffffffffffffffffffffffff8p+105L, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (pow, -max_value, 0x1.ffffffffffffffffffffffffff8p+106L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 # endif
 # if LDBL_MANT_DIG >= 113
-    TEST_ff_f (pow, -max_value, 0x1.ffffffffffffffffffffffffffffp+112L, minus_infty, OVERFLOW_EXCEPTION),
-    TEST_ff_f (pow, -max_value, 0x1.ffffffffffffffffffffffffffffp+113L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -max_value, 0x1.ffffffffffffffffffffffffffffp+112L, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (pow, -max_value, 0x1.ffffffffffffffffffffffffffffp+113L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 # endif
 #endif
-    TEST_ff_f (pow, -max_value, max_value, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -max_value, max_value, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 
     TEST_ff_f (pow, -0.5, 126, 0x1p-126),
     TEST_ff_f (pow, -0.5, 127, -0x1p-127),
     TEST_ff_f (pow, -0.5, -126, 0x1p126),
     TEST_ff_f (pow, -0.5, -127, -0x1p127),
 
-    TEST_ff_f (pow, -0.5, -0xffffff, minus_infty, OVERFLOW_EXCEPTION),
-    TEST_ff_f (pow, -0.5, -0x1fffffe, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -0.5, -0xffffff, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (pow, -0.5, -0x1fffffe, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 #ifndef TEST_FLOAT
-    TEST_ff_f (pow, -0.5, -0x1.fffffffffffffp+52L, minus_infty, OVERFLOW_EXCEPTION),
-    TEST_ff_f (pow, -0.5, -0x1.fffffffffffffp+53L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -0.5, -0x1.fffffffffffffp+52L, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (pow, -0.5, -0x1.fffffffffffffp+53L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 #endif
 #ifdef TEST_LDOUBLE
 # if LDBL_MANT_DIG >= 64
-    TEST_ff_f (pow, -0.5, -0x1.fffffffffffffffep+63L, minus_infty, OVERFLOW_EXCEPTION),
-    TEST_ff_f (pow, -0.5, -0x1.fffffffffffffffep+64L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -0.5, -0x1.fffffffffffffffep+63L, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (pow, -0.5, -0x1.fffffffffffffffep+64L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 # endif
 # if LDBL_MANT_DIG >= 106
-    TEST_ff_f (pow, -0.5, -0x1.ffffffffffffffffffffffffff8p+105L, minus_infty, OVERFLOW_EXCEPTION),
-    TEST_ff_f (pow, -0.5, -0x1.ffffffffffffffffffffffffff8p+106L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -0.5, -0x1.ffffffffffffffffffffffffff8p+105L, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (pow, -0.5, -0x1.ffffffffffffffffffffffffff8p+106L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 # endif
 # if LDBL_MANT_DIG >= 113
-    TEST_ff_f (pow, -0.5, -0x1.ffffffffffffffffffffffffffffp+112L, minus_infty, OVERFLOW_EXCEPTION),
-    TEST_ff_f (pow, -0.5, -0x1.ffffffffffffffffffffffffffffp+113L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -0.5, -0x1.ffffffffffffffffffffffffffffp+112L, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (pow, -0.5, -0x1.ffffffffffffffffffffffffffffp+113L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 # endif
 #endif
-    TEST_ff_f (pow, -0.5, -max_value, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -0.5, -max_value, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 
     TEST_ff_f (pow, -0.5, 0xffffff, minus_zero, UNDERFLOW_EXCEPTION),
     TEST_ff_f (pow, -0.5, 0x1fffffe, plus_zero, UNDERFLOW_EXCEPTION),
@@ -12512,34 +12512,34 @@ static const struct test_ff_f_data pow_test_data[] =
     TEST_ff_f (pow, -min_value, 0.5, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_ff_f (pow, -min_value, 1.5, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_ff_f (pow, -min_value, 1000.5, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
-    TEST_ff_f (pow, -min_value, -2, plus_infty, OVERFLOW_EXCEPTION),
-    TEST_ff_f (pow, -min_value, -3, minus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -min_value, -2, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (pow, -min_value, -3, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
     /* Allow inexact results to be considered to underflow.  */
     TEST_ff_f (pow, -min_value, 1, -min_value, UNDERFLOW_EXCEPTION_OK),
     TEST_ff_f (pow, -min_value, 2, plus_zero, UNDERFLOW_EXCEPTION),
     TEST_ff_f (pow, -min_value, 3, minus_zero, UNDERFLOW_EXCEPTION),
 
-    TEST_ff_f (pow, -min_value, -0xffffff, minus_infty, OVERFLOW_EXCEPTION),
-    TEST_ff_f (pow, -min_value, -0x1fffffe, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -min_value, -0xffffff, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (pow, -min_value, -0x1fffffe, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 #ifndef TEST_FLOAT
-    TEST_ff_f (pow, -min_value, -0x1.fffffffffffffp+52L, minus_infty, OVERFLOW_EXCEPTION),
-    TEST_ff_f (pow, -min_value, -0x1.fffffffffffffp+53L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -min_value, -0x1.fffffffffffffp+52L, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (pow, -min_value, -0x1.fffffffffffffp+53L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 #endif
 #ifdef TEST_LDOUBLE
 # if LDBL_MANT_DIG >= 64
-    TEST_ff_f (pow, -min_value, -0x1.fffffffffffffffep+63L, minus_infty, OVERFLOW_EXCEPTION),
-    TEST_ff_f (pow, -min_value, -0x1.fffffffffffffffep+64L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -min_value, -0x1.fffffffffffffffep+63L, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (pow, -min_value, -0x1.fffffffffffffffep+64L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 # endif
 # if LDBL_MANT_DIG >= 106
-    TEST_ff_f (pow, -min_value, -0x1.ffffffffffffffffffffffffff8p+105L, minus_infty, OVERFLOW_EXCEPTION),
-    TEST_ff_f (pow, -min_value, -0x1.ffffffffffffffffffffffffff8p+106L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -min_value, -0x1.ffffffffffffffffffffffffff8p+105L, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (pow, -min_value, -0x1.ffffffffffffffffffffffffff8p+106L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 # endif
 # if LDBL_MANT_DIG >= 113
-    TEST_ff_f (pow, -min_value, -0x1.ffffffffffffffffffffffffffffp+112L, minus_infty, OVERFLOW_EXCEPTION),
-    TEST_ff_f (pow, -min_value, -0x1.ffffffffffffffffffffffffffffp+113L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -min_value, -0x1.ffffffffffffffffffffffffffffp+112L, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (pow, -min_value, -0x1.ffffffffffffffffffffffffffffp+113L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 # endif
 #endif
-    TEST_ff_f (pow, -min_value, -max_value, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_ff_f (pow, -min_value, -max_value, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 
     TEST_ff_f (pow, -min_value, 0xffffff, minus_zero, UNDERFLOW_EXCEPTION),
     TEST_ff_f (pow, -min_value, 0x1fffffe, plus_zero, UNDERFLOW_EXCEPTION),
@@ -14233,7 +14233,7 @@ static const struct test_f_f_data tgamma_test_data[] =
   {
     START_DATA (tgamma),
     TEST_f_f (tgamma, plus_infty, plus_infty),
-    TEST_f_f (tgamma, max_value, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_f_f (tgamma, max_value, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f (tgamma, 0, plus_infty, DIVIDE_BY_ZERO_EXCEPTION),
     TEST_f_f (tgamma, minus_zero, minus_infty, DIVIDE_BY_ZERO_EXCEPTION),
     /* tgamma (x) == qNaN plus invalid exception for integer x <= 0.  */
@@ -14290,10 +14290,10 @@ static const struct test_f_f_data tgamma_test_data[] =
     TEST_f_f (tgamma, 0x1p-127L, 1.7014118346046923173168730371588410572742e+38L),
     TEST_f_f (tgamma, -0x1p-127L, -1.7014118346046923173168730371588410572858e+38L),
 #ifdef TEST_FLOAT
-    TEST_f_f (tgamma, 0x1p-128L, plus_infty, OVERFLOW_EXCEPTION),
-    TEST_f_f (tgamma, -0x1p-128L, minus_infty, OVERFLOW_EXCEPTION),
-    TEST_f_f (tgamma, 0x1p-149L, plus_infty, OVERFLOW_EXCEPTION),
-    TEST_f_f (tgamma, -0x1p-149L, minus_infty, OVERFLOW_EXCEPTION),
+    TEST_f_f (tgamma, 0x1p-128L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (tgamma, -0x1p-128L, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (tgamma, 0x1p-149L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (tgamma, -0x1p-149L, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 #else
     TEST_f_f (tgamma, 0x1p-128L, 3.4028236692093846346337460743176821145542e+38L),
     TEST_f_f (tgamma, -0x1p-128L, -3.4028236692093846346337460743176821145658e+38L),
@@ -14304,10 +14304,10 @@ static const struct test_f_f_data tgamma_test_data[] =
     TEST_f_f (tgamma, 0x1p-1023L, 8.9884656743115795386465259539451236680899e+307L),
     TEST_f_f (tgamma, -0x1p-1023L, -8.9884656743115795386465259539451236680899e+307L),
 # if !defined TEST_LDOUBLE || LDBL_MAX_EXP <= 1024
-    TEST_f_f (tgamma, 0x1p-1024L, plus_infty, OVERFLOW_EXCEPTION),
-    TEST_f_f (tgamma, -0x1p-1024L, minus_infty, OVERFLOW_EXCEPTION),
-    TEST_f_f (tgamma, 0x1p-1074L, plus_infty, OVERFLOW_EXCEPTION),
-    TEST_f_f (tgamma, -0x1p-1074L, minus_infty, OVERFLOW_EXCEPTION),
+    TEST_f_f (tgamma, 0x1p-1024L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (tgamma, -0x1p-1024L, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (tgamma, 0x1p-1074L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (tgamma, -0x1p-1074L, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 # else
     TEST_f_f (tgamma, 0x1p-1024L, 1.7976931348623159077293051907890247336180e+308L),
     TEST_f_f (tgamma, -0x1p-1024L, -1.7976931348623159077293051907890247336180e+308L),
@@ -14318,13 +14318,13 @@ static const struct test_f_f_data tgamma_test_data[] =
 #if defined TEST_LDOUBLE && LDBL_MIN_EXP <= -16381
     TEST_f_f (tgamma, 0x1p-16383L, 5.9486574767861588254287966331400356538172e+4931L),
     TEST_f_f (tgamma, -0x1p-16383L, -5.9486574767861588254287966331400356538172e+4931L),
-    TEST_f_f (tgamma, 0x1p-16384L, plus_infty, OVERFLOW_EXCEPTION),
-    TEST_f_f (tgamma, -0x1p-16384L, minus_infty, OVERFLOW_EXCEPTION),
-    TEST_f_f (tgamma, 0x1p-16445L, plus_infty, OVERFLOW_EXCEPTION),
-    TEST_f_f (tgamma, -0x1p-16445L, minus_infty, OVERFLOW_EXCEPTION),
+    TEST_f_f (tgamma, 0x1p-16384L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (tgamma, -0x1p-16384L, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (tgamma, 0x1p-16445L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (tgamma, -0x1p-16445L, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 # if LDBL_MANT_DIG >= 113
-    TEST_f_f (tgamma, 0x1p-16494L, plus_infty, OVERFLOW_EXCEPTION),
-    TEST_f_f (tgamma, -0x1p-16494L, minus_infty, OVERFLOW_EXCEPTION),
+    TEST_f_f (tgamma, 0x1p-16494L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (tgamma, -0x1p-16494L, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 # endif
 #endif
     TEST_f_f (tgamma, 0x8.00001p0L, 5.0400096882277802019946778420223050233915e+03L),
@@ -14722,14 +14722,14 @@ static const struct test_f_f_data tgamma_test_data[] =
     TEST_f_f (tgamma, 34.5L, 5.0446208683494513399156743070465960916817e+37L),
     TEST_f_f (tgamma, 0x2.30a43cp+4L, 3.4027979115654976101247558405326779640190e+38L),
 #ifdef TEST_FLOAT
-    TEST_f_f (tgamma, 0x2.30a44p+4L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_f_f (tgamma, 0x2.30a44p+4L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 #else
     TEST_f_f (tgamma, 0x2.30a44p+4L, 3.4028438913396451054667218138127983367181e+38L),
 #endif
 #ifndef TEST_FLOAT
     TEST_f_f (tgamma, 0xa.b9fd72b0fb238p+4L, 1.7976931348622298700886249281842651388250e+308L),
 # if !defined TEST_LDOUBLE || LDBL_MAX_EXP <= 1024
-    TEST_f_f (tgamma, 0xa.b9fd72b0fb24p+4L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_f_f (tgamma, 0xa.b9fd72b0fb24p+4L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 # else
     TEST_f_f (tgamma, 0xa.b9fd72b0fb24p+4L, 1.7976931348624926129589466917917870782484e+308L),
 # endif
@@ -14737,17 +14737,17 @@ static const struct test_f_f_data tgamma_test_data[] =
 #if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 106
     TEST_f_f (tgamma, 0xa.b9fd72b0fb23a9ddbf0d3804f4p+4L, 1.7976931348623158079372897140307719334857e+308L),
 # if LDBL_MAX_EXP <= 1024
-    TEST_f_f (tgamma, 0xa.b9fd72b0fb23a9ddbf0d3804f8p+4L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_f_f (tgamma, 0xa.b9fd72b0fb23a9ddbf0d3804f8p+4L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 # else
     TEST_f_f (tgamma, 0xa.b9fd72b0fb23a9ddbf0d3804f8p+4L, 1.7976931348623158079372897140599422519044e+308L),
 # endif
 #endif
 #if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
     TEST_f_f (tgamma, 0x6.db8c603359a97108p+8L, 1.1897314953572317517071551278058233700012e+4932L),
-    TEST_f_f (tgamma, 0x6.db8c603359a9711p+8L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_f_f (tgamma, 0x6.db8c603359a9711p+8L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 # if LDBL_MANT_DIG >= 113
     TEST_f_f (tgamma, 0x6.db8c603359a971081bc4a2e9dfdp+8L, 1.1897314953572317650857593266265995494998e+4932L),
-    TEST_f_f (tgamma, 0x6.db8c603359a971081bc4a2e9dfd4p+8L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_f_f (tgamma, 0x6.db8c603359a971081bc4a2e9dfd4p+8L, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 # endif
 #endif
     END_DATA (tgamma)
@@ -15065,8 +15065,6 @@ static const struct test_if_f_data yn_test_data[] =
 
     /* Check whether yn returns correct value for LDBL_MIN, DBL_MIN,
        and FLT_MIN.  See Bug 14173.  */
-    TEST_if_f (yn, 10, min_value, minus_infty, OVERFLOW_EXCEPTION),
-
     TEST_if_f (yn, 10, min_value, minus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
     END_DATA (yn)
   };
