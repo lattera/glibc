@@ -25,6 +25,8 @@
 #define _FP_NANSIGN_Q		0
 
 #define _FP_KEEPNANFRACP 1
+#define _FP_QNANNEGATEDP 0
+
 /* From my experiments it seems X is chosen unless one of the
    NaNs is sNaN,  in which case the result is NANSIGN/NANFRAC.  */
 #define _FP_CHOOSENAN(fs, wc, R, X, Y, OP)			\

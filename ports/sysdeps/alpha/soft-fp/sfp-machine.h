@@ -46,6 +46,7 @@
 #define _FP_NANSIGN_Q		0
 
 #define _FP_KEEPNANFRACP 1
+#define _FP_QNANNEGATEDP 0
 
 /* Alpha Architecture Handbook, 4.7.10.4 sez that we should prefer any
    type of NaN in Fb, then Fa.  */

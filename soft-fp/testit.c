@@ -200,17 +200,17 @@ double gen_special_double(int i)
       case 0:
 	X_c = FP_CLS_NAN;
 #if _FP_W_TYPE_SIZE < _FP_FRACBITS_D
-	__FP_FRAC_SET_2(X, _FP_QNANBIT_D, 0x1234);
+	__FP_FRAC_SET_2(X, _FP_QNANNEGATEDP ? 0 : _FP_QNANBIT_D, 0x1234);
 #else
-	_FP_FRAC_SET_1(X, _FP_QNANBIT_D | 0x1234);
+	_FP_FRAC_SET_1(X, (_FP_QNANNEGATEDP ? 0 : _FP_QNANBIT_D) | 0x1234);
 #endif
 	break;
       case 2:
 	X_c = FP_CLS_NAN;
 #if _FP_W_TYPE_SIZE < _FP_FRACBITS_D
-	__FP_FRAC_SET_2(X, _FP_QNANBIT_D, 0x1);
+	__FP_FRAC_SET_2(X, _FP_QNANNEGATEDP ? 0 : _FP_QNANBIT_D, 0x1);
 #else
-	_FP_FRAC_SET_1(X, _FP_QNANBIT_D | 0x1);
+	_FP_FRAC_SET_1(X, (_FP_QNANNEGATEDP ? 0 : _FP_QNANBIT_D) | 0x1);
 #endif
 	break;
       case 4:

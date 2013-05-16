@@ -1,3 +1,24 @@
+2013-05-16  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	[BZ #15442]
+	* soft-fp/op-common.h (_FP_FRAC_SNANP): New macro.
+	(_FP_FRAC_SNANP_SEMIRAW): Likewise.
+	(_FP_UNPACK_CANONICAL): Use _FP_FRAC_SNANP.
+	(_FP_CHECK_SIGNAN_SEMIRAW): Use _FP_FRAC_SNANP_SEMIRAW.
+	(_FP_SETQNAN): New macro.
+	(_FP_SETQNAN_SEMIRAW): Likewise.
+	(_FP_PACK_SEMIRAW): Use _FP_SETQNAN.
+	(_FP_PACK_CANONICAL): Use _FP_SETQNAN.
+	(_FP_ISSIGNAN): Use _FP_FRAC_SNANP.
+	(FP_EXTEND): Use _FP_FRAC_SNANP.
+	(FP_TRUNC): Use _FP_SETQNAN_SEMIRAW.
+	* soft-fp/testit.c (gen_special_double): Take _FP_QNANNEGATEDP
+	into account.
+	* sysdeps/sparc/sparc32/soft-fp/sfp-machine.h (_FP_QNANNEGATEDP):
+	New macro.
+	* sysdeps/sparc/sparc64/soft-fp/sfp-machine.h (_FP_QNANNEGATEDP):
+	Likewise.
+
 2013-05-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (atanh_test_data): Use ERRNO_ERANGE together

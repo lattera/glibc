@@ -35,6 +35,16 @@
   _FP_I_TYPE X##_e;				\
   _FP_FRAC_DECL_##wc(X)
 
+/* Test whether the qNaN bit denotes a signaling NaN.  */
+#define _FP_FRAC_SNANP(fs, X)						\
+  ((_FP_QNANNEGATEDP)							\
+   ? (_FP_FRAC_HIGH_RAW_##fs(X) & _FP_QNANBIT_##fs)			\
+   : !(_FP_FRAC_HIGH_RAW_##fs(X) & _FP_QNANBIT_##fs))
+#define _FP_FRAC_SNANP_SEMIRAW(fs, X)					\
+  ((_FP_QNANNEGATEDP)							\
+   ? (_FP_FRAC_HIGH_##fs(X) & _FP_QNANBIT_SH_##fs)			\
+   : !(_FP_FRAC_HIGH_##fs(X) & _FP_QNANBIT_SH_##fs))
+
 /*
  * Finish truely unpacking a native fp value by classifying the kind
  * of fp value and normalizing both the exponent and the fraction.
@@ -74,7 +84,7 @@ do {									\
       {									\
 	X##_c = FP_CLS_NAN;						\
 	/* Check for signaling NaN */					\
-	if (!(_FP_FRAC_HIGH_RAW_##fs(X) & _FP_QNANBIT_##fs))		\
+	if (_FP_FRAC_SNANP(fs, X))					\
 	  FP_SET_EXCEPTION(FP_EX_INVALID);				\
       }									\
     break;								\
@@ -112,7 +122,7 @@ do {							\
 do {								\
   if (X##_e == _FP_EXPMAX_##fs					\
       && !_FP_FRAC_ZEROP_##wc(X)				\
-      && !(_FP_FRAC_HIGH_##fs(X) & _FP_QNANBIT_SH_##fs))	\
+      && _FP_FRAC_SNANP_SEMIRAW(fs, X))				\
     FP_SET_EXCEPTION(FP_EX_INVALID);				\
 } while (0)
 
@@ -125,6 +135,39 @@ do {									\
   _FP_FRAC_SRL_##wc(Y, _FP_WORKBITS);					\
   _FP_CHOOSENAN(fs, wc, R, X, Y, OP);					\
   _FP_FRAC_SLL_##wc(R, _FP_WORKBITS);					\
+} while (0)
+
+/* Make the fractional part a quiet NaN, preserving the payload
+   if possible, otherwise make it the canonical quiet NaN and set
+   the sign bit accordingly.  */
+#define _FP_SETQNAN(fs, wc, X)						\
+do {									\
+  if (_FP_QNANNEGATEDP)							\
+    {									\
+      _FP_FRAC_HIGH_RAW_##fs(X) &= _FP_QNANBIT_##fs - 1;		\
+      if (_FP_FRAC_ZEROP_##wc(X))					\
+	{								\
+	  X##_s = _FP_NANSIGN_##fs;					\
+	  _FP_FRAC_SET_##wc(X, _FP_NANFRAC_##fs);			\
+	}								\
+    }									\
+  else									\
+    _FP_FRAC_HIGH_RAW_##fs(X) |= _FP_QNANBIT_##fs;			\
+} while (0)
+#define _FP_SETQNAN_SEMIRAW(fs, wc, X)					\
+do {									\
+  if (_FP_QNANNEGATEDP)							\
+    {									\
+      _FP_FRAC_HIGH_##fs(X) &= _FP_QNANBIT_SH_##fs - 1;			\
+      if (_FP_FRAC_ZEROP_##wc(X))					\
+	{								\
+	  X##_s = _FP_NANSIGN_##fs;					\
+	  _FP_FRAC_SET_##wc(X, _FP_NANFRAC_##fs);			\
+	  _FP_FRAC_SLL_##wc(X, _FP_WORKBITS);				\
+	}								\
+    }									\
+  else									\
+    _FP_FRAC_HIGH_##fs(X) |= _FP_QNANBIT_SH_##fs;			\
 } while (0)
 
 /* Test whether a biased exponent is normal (not zero or maximum).  */
@@ -159,7 +202,7 @@ do {								\
 	  X##_s = _FP_NANSIGN_##fs;				\
 	}							\
       else							\
-	_FP_FRAC_HIGH_RAW_##fs(X) |= _FP_QNANBIT_##fs;		\
+	_FP_SETQNAN(fs, wc, X);					\
     }								\
 } while (0)
 
@@ -273,7 +316,7 @@ do {								\
 	X##_s = _FP_NANSIGN_##fs;				\
       }								\
     else							\
-      _FP_FRAC_HIGH_RAW_##fs(X) |= _FP_QNANBIT_##fs;		\
+      _FP_SETQNAN(fs, wc, X);					\
     break;							\
   }								\
 } while (0)
@@ -287,7 +330,7 @@ do {								\
   if (X##_e == _FP_EXPMAX_##fs)					\
     {								\
       if (!_FP_FRAC_ZEROP_##wc(X)				\
-	  && !(_FP_FRAC_HIGH_RAW_##fs(X) & _FP_QNANBIT_##fs))	\
+	  && _FP_FRAC_SNANP(fs, X))				\
 	__ret = 1;						\
     }								\
   __ret;							\
@@ -1199,7 +1242,7 @@ do {									 \
 	  D##_e = _FP_EXPMAX_##dfs;					 \
 	  if (!_FP_FRAC_ZEROP_##swc(S))					 \
 	    {								 \
-	      if (!(_FP_FRAC_HIGH_RAW_##sfs(S) & _FP_QNANBIT_##sfs))	 \
+	      if (_FP_FRAC_SNANP(sfs, S))				 \
 		FP_SET_EXCEPTION(FP_EX_INVALID);			 \
 	      _FP_FRAC_SLL_##dwc(D, (_FP_FRACBITS_##dfs			 \
 				     - _FP_FRACBITS_##sfs));		 \
@@ -1286,7 +1329,7 @@ do {									     \
 	      /* Semi-raw NaN must have all workbits cleared.  */	     \
 	      _FP_FRAC_LOW_##dwc(D)					     \
 		&= ~(_FP_W_TYPE) ((1 << _FP_WORKBITS) - 1);		     \
-	      _FP_FRAC_HIGH_##dfs(D) |= _FP_QNANBIT_SH_##dfs;		     \
+	      _FP_SETQNAN_SEMIRAW(dfs, dwc, D);				     \
 	    }								     \
 	}								     \
     }									     \

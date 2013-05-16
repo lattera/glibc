@@ -17,14 +17,16 @@
 #define _FP_DIV_MEAT_D(R,X,Y)	_FP_DIV_MEAT_1_udiv_norm(D,R,X,Y)
 #define _FP_DIV_MEAT_Q(R,X,Y)	_FP_DIV_MEAT_2_udiv(Q,R,X,Y)
 
-#define _FP_NANFRAC_S		((_FP_QNANBIT_S << 1) - 1)
-#define _FP_NANFRAC_D		((_FP_QNANBIT_D << 1) - 1)
-#define _FP_NANFRAC_Q		((_FP_QNANBIT_Q << 1) - 1), -1
+#define _FP_NANFRAC_S		(_FP_QNANBIT_S - 1)
+#define _FP_NANFRAC_D		(_FP_QNANBIT_D - 1)
+#define _FP_NANFRAC_Q		(_FP_QNANBIT_Q - 1), -1
 #define _FP_NANSIGN_S		0
 #define _FP_NANSIGN_D		0
 #define _FP_NANSIGN_Q		0
 
 #define _FP_KEEPNANFRACP 1
+#define _FP_QNANNEGATEDP 1
+
 /* From my experiments it seems X is chosen unless one of the
    NaNs is sNaN,  in which case the result is NANSIGN/NANFRAC.  */
 #define _FP_CHOOSENAN(fs, wc, R, X, Y, OP)			\

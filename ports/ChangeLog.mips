@@ -1,3 +1,17 @@
+2013-05-16  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	[BZ #15442]
+	* sysdeps/mips/mips64/soft-fp/sfp-machine.h (_FP_QNANNEGATEDP):
+	New macro.
+	(_FP_NANFRAC_S): Don't set the quiet bit.
+	(_FP_NANFRAC_D): Likewise.
+	(_FP_NANFRAC_Q): Likewise.
+	* sysdeps/mips/soft-fp/sfp-machine.h (_FP_QNANNEGATEDP): New
+	macro.
+	(_FP_NANFRAC_S): Don't set the quiet bit.
+	(_FP_NANFRAC_D): Likewise.
+	(_FP_NANFRAC_Q): Likewise.
+
 2013-05-16  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/mips/kernel_rt_sigframe.h: Add missing
