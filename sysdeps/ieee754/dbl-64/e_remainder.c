@@ -51,6 +51,7 @@ double __ieee754_remainder(double x, double y)
   ky=t.i[HIGH_HALF];
   /*------ |x| < 2^1023  and   2^-970 < |y| < 2^1024 ------------------*/
   if (kx<0x7fe00000 && ky<0x7ff00000 && ky>=0x03500000) {
+    SET_RESTORE_ROUND_NOEX (FE_TONEAREST);
     if (kx+0x00100000<ky) return x;
     if ((kx-0x01500000)<ky) {
       z=x/t.x;

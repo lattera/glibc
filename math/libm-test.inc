@@ -12276,13 +12276,12 @@ static const struct test_ff_f_data remainder_test_data[] =
     TEST_ff_f (remainder, 7.0, plus_infty, 7.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (remainder, 7.0, minus_infty, 7.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
-    /* Bug 15480: spurious "inexact" exception may occur.  */
-    TEST_ff_f (remainder, 1.625, 1.0, -0.375),
-    TEST_ff_f (remainder, -1.625, 1.0, 0.375),
-    TEST_ff_f (remainder, 1.625, -1.0, -0.375),
-    TEST_ff_f (remainder, -1.625, -1.0, 0.375),
-    TEST_ff_f (remainder, 5.0, 2.0, 1.0),
-    TEST_ff_f (remainder, 3.0, 2.0, -1.0),
+    TEST_ff_f (remainder, 1.625, 1.0, -0.375, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, -1.625, 1.0, 0.375, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, 1.625, -1.0, -0.375, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, -1.625, -1.0, 0.375, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, 5.0, 2.0, 1.0, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, 3.0, 2.0, -1.0, NO_INEXACT_EXCEPTION),
     END_DATA (remainder)
   };
 
@@ -12292,6 +12291,158 @@ remainder_test (void)
   START (remainder);
   RUN_TEST_LOOP_ff_f (remainder, remainder_test_data, );
   END (remainder);
+}
+
+
+static const struct test_ff_f_data remainder_tonearest_test_data[] =
+  {
+    START_DATA (remainder_tonearest),
+    TEST_ff_f (remainder, 1, 0, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, 1, minus_zero, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, plus_infty, minus_zero, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, plus_infty, 0, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, plus_infty, 1, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, plus_infty, 2, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, minus_infty, minus_zero, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, minus_infty, 0, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, minus_infty, 1, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, minus_infty, 2, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (remainder, 0, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (remainder, qnan_value, 0, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+
+    TEST_ff_f (remainder, 7.0, plus_infty, 7.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (remainder, 7.0, minus_infty, 7.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+
+    TEST_ff_f (remainder, 1.625, 1.0, -0.375, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, -1.625, 1.0, 0.375, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, 1.625, -1.0, -0.375, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, -1.625, -1.0, 0.375, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, 5.0, 2.0, 1.0, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, 3.0, 2.0, -1.0, NO_INEXACT_EXCEPTION),
+    END_DATA (remainder_tonearest)
+  };
+
+static void
+remainder_test_tonearest (void)
+{
+  START (remainder_tonearest);
+  RUN_TEST_LOOP_ff_f (remainder, remainder_tonearest_test_data, FE_TONEAREST);
+  END (remainder_tonearest);
+}
+
+
+static const struct test_ff_f_data remainder_towardzero_test_data[] =
+  {
+    START_DATA (remainder_towardzero),
+    TEST_ff_f (remainder, 1, 0, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, 1, minus_zero, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, plus_infty, minus_zero, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, plus_infty, 0, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, plus_infty, 1, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, plus_infty, 2, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, minus_infty, minus_zero, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, minus_infty, 0, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, minus_infty, 1, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, minus_infty, 2, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (remainder, 0, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (remainder, qnan_value, 0, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+
+    TEST_ff_f (remainder, 7.0, plus_infty, 7.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (remainder, 7.0, minus_infty, 7.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+
+    TEST_ff_f (remainder, 1.625, 1.0, -0.375, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, -1.625, 1.0, 0.375, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, 1.625, -1.0, -0.375, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, -1.625, -1.0, 0.375, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, 5.0, 2.0, 1.0, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, 3.0, 2.0, -1.0, NO_INEXACT_EXCEPTION),
+    END_DATA (remainder_towardzero)
+  };
+
+static void
+remainder_test_towardzero (void)
+{
+  START (remainder_towardzero);
+  RUN_TEST_LOOP_ff_f (remainder, remainder_towardzero_test_data, FE_TOWARDZERO);
+  END (remainder_towardzero);
+}
+
+
+static const struct test_ff_f_data remainder_downward_test_data[] =
+  {
+    START_DATA (remainder_downward),
+    TEST_ff_f (remainder, 1, 0, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, 1, minus_zero, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, plus_infty, minus_zero, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, plus_infty, 0, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, plus_infty, 1, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, plus_infty, 2, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, minus_infty, minus_zero, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, minus_infty, 0, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, minus_infty, 1, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, minus_infty, 2, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (remainder, 0, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (remainder, qnan_value, 0, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+
+    TEST_ff_f (remainder, 7.0, plus_infty, 7.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (remainder, 7.0, minus_infty, 7.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+
+    TEST_ff_f (remainder, 1.625, 1.0, -0.375, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, -1.625, 1.0, 0.375, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, 1.625, -1.0, -0.375, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, -1.625, -1.0, 0.375, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, 5.0, 2.0, 1.0, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, 3.0, 2.0, -1.0, NO_INEXACT_EXCEPTION),
+    END_DATA (remainder_downward)
+  };
+
+static void
+remainder_test_downward (void)
+{
+  START (remainder_downward);
+  RUN_TEST_LOOP_ff_f (remainder, remainder_downward_test_data, FE_DOWNWARD);
+  END (remainder_downward);
+}
+
+
+static const struct test_ff_f_data remainder_upward_test_data[] =
+  {
+    START_DATA (remainder_upward),
+    TEST_ff_f (remainder, 1, 0, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, 1, minus_zero, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, plus_infty, minus_zero, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, plus_infty, 0, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, plus_infty, 1, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, plus_infty, 2, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, minus_infty, minus_zero, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, minus_infty, 0, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, minus_infty, 1, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, minus_infty, 2, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (remainder, 0, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (remainder, qnan_value, 0, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+
+    TEST_ff_f (remainder, 7.0, plus_infty, 7.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (remainder, 7.0, minus_infty, 7.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+
+    TEST_ff_f (remainder, 1.625, 1.0, -0.375, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, -1.625, 1.0, 0.375, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, 1.625, -1.0, -0.375, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, -1.625, -1.0, 0.375, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, 5.0, 2.0, 1.0, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (remainder, 3.0, 2.0, -1.0, NO_INEXACT_EXCEPTION),
+    END_DATA (remainder_upward)
+  };
+
+static void
+remainder_test_upward (void)
+{
+  START (remainder_upward);
+  RUN_TEST_LOOP_ff_f (remainder, remainder_upward_test_data, FE_UPWARD);
+  END (remainder_upward);
 }
 
 static const struct test_ffI_f1_data remquo_test_data[] =
@@ -14766,6 +14917,10 @@ main (int argc, char **argv)
   /* Remainder functions:  */
   fmod_test ();
   remainder_test ();
+  remainder_test_tonearest ();
+  remainder_test_towardzero ();
+  remainder_test_downward ();
+  remainder_test_upward ();
   remquo_test ();
 
   /* Manipulation functions:  */

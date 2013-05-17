@@ -1,5 +1,22 @@
 2013-05-17  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #15480]
+	[BZ #15485]
+	* sysdeps/ieee754/dbl-64/e_remainder.c (__ieee754_remainder): For
+	main case of finite arguments, set rounding mode to FE_TONEAREST
+	and discard exceptions.
+	* math/libm-test.inc (remainder_test_data): Disallow "inexact"
+	exceptions.
+	(remainder_tonearest_test_data): New variable.
+	(remainder_test_tonearest): New function.
+	(remainder_towardzero_test_data): New variable.
+	(remainder_test_towardzero): New function.
+	(remainder_downward_test_data): New variable.
+	(remainder_test_downward): New function.
+	(remainder_upward_test_data): New variable.
+	(remainder_test_upward): New function.
+	(main): Call the new test functions.
+
 	* math/libm-test.inc (struct test_f_f1_data): Remove field
 	extra_init.
 	(struct test_fF_f1_data): Likewise.
