@@ -1,5 +1,10 @@
 2013-05-17  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (check_int): Expect result to be exactly
+	equal to expected value and do not handle ulps.
+	(check_long): Likewise.
+	(check_longlong): Likewise.
+
 	* math/libm-test.inc (ceil_test_data): Test for "inexact"
 	exceptions.
 	(cimag_test_data): Likewise.

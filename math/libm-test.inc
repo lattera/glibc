@@ -734,18 +734,14 @@ static void
 check_int (const char *test_name, int computed, int expected, int max_ulp,
 	   int exceptions)
 {
-  int diff = computed - expected;
   int ok = 0;
   int errno_value = errno;
 
   test_exceptions (test_name, exceptions);
   test_errno (test_name, errno_value, exceptions);
   noTests++;
-  if (abs (diff) <= max_ulp)
+  if (computed == expected)
     ok = 1;
-
-  if (!ok)
-    print_ulps (test_name, diff);
 
   if (print_screen (ok))
     {
@@ -768,18 +764,14 @@ static void
 check_long (const char *test_name, long int computed, long int expected,
 	    long int max_ulp, int exceptions)
 {
-  long int diff = computed - expected;
   int ok = 0;
   int errno_value = errno;
 
   test_exceptions (test_name, exceptions);
   test_errno (test_name, errno_value, exceptions);
   noTests++;
-  if (labs (diff) <= max_ulp)
+  if (computed == expected)
     ok = 1;
-
-  if (!ok)
-    print_ulps (test_name, diff);
 
   if (print_screen (ok))
     {
@@ -834,18 +826,14 @@ check_longlong (const char *test_name, long long int computed,
 		long long int max_ulp,
 		int exceptions)
 {
-  long long int diff = computed - expected;
   int ok = 0;
   int errno_value = errno;
 
   test_exceptions (test_name, exceptions);
   test_errno (test_name, errno_value, exceptions);
   noTests++;
-  if (llabs (diff) <= max_ulp)
+  if (computed == expected)
     ok = 1;
-
-  if (!ok)
-    print_ulps (test_name, diff);
 
   if (print_screen (ok))
     {
