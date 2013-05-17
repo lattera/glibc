@@ -1,3 +1,11 @@
+2013-07-02  Andi Kleen <ak@linux.intel.com>
+
+	* config.h.in (ENABLE_LOCK_ELISION): Add.
+	* configure.in (--enable-lock-elision): Add option.
+	* manual/install.texi: Document --enable lock elision.
+	* configure: Regenerate
+	* INSTALL: Regenerate.
+
 2013-07-02  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/i686/multiarch/strcasecmp.S (__strcasecmp): Enable

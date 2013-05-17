@@ -742,6 +742,7 @@ enable_versioning
 enable_oldest_abi
 enable_hardcoded_path_in_tests
 enable_stackguard_randomization
+enable_lock_elision
 enable_add_ons
 enable_hidden_plt
 enable_bind_now
@@ -1399,6 +1400,9 @@ Optional Features:
   --enable-stackguard-randomization
                           initialize __stack_chk_guard canary with a random
                           number at program start
+  --enable-lock-elision=yes/no
+                          Enable lock elision for pthread mutexes and rwlocks
+                          by default
   --enable-add-ons[=DIRS...]
                           configure and build add-ons in DIR1,DIR2,... search
                           for add-ons if no parameter given
@@ -3469,6 +3473,18 @@ fi
 
 if test "$enable_stackguard_randomize" = yes; then
   $as_echo "#define ENABLE_STACKGUARD_RANDOMIZE 1" >>confdefs.h
+
+fi
+
+# Check whether --enable-lock-elision was given.
+if test "${enable_lock_elision+set}" = set; then :
+  enableval=$enable_lock_elision; enable_lock_elision=$enableval
+else
+  enable_lock_elision=no
+fi
+
+if test "$enable_lock_elision" = yes ; then
+  $as_echo "#define ENABLE_LOCK_ELISION 1" >>confdefs.h
 
 fi
 

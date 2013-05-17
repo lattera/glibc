@@ -133,6 +133,9 @@ will be used, and CFLAGS sets optimization options for the compiler.
      library.  This option hardcodes the newly built C library path in
      dynamic tests so that they can be invoked directly.
 
+`--enable-lock-elision=yes'
+     Enable lock elision for pthread mutexes and rwlocks by default.
+
 `--build=BUILD-SYSTEM'
 `--host=HOST-SYSTEM'
      These options are for cross-compiling.  If you specify both

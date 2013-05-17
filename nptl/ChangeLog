@@ -1,3 +1,8 @@
+2013-07-02  Andi Kleen <ak@linux.intel.com>
+
+	* sysdeps/unix/sysv/linux/x86/elision-conf.c (elision_init):
+	  Check ENABLE_LOCK_ELISION.
+
 2013-07-02  Andi Kleen  <ak@linux.intel.com>
 
 	* pthread_mutexattr_settype.c (__pthread_mutexattr_settype):

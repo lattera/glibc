@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>. */
 
+#include "config.h"
 #include <pthreadP.h>
 #include <init-arch.h>
 #include <elision-conf.h>
@@ -70,8 +71,10 @@ elision_init (int argc __attribute__ ((unused)),
 	      char **environ)
 {
   __elision_available = HAS_RTM;
+#ifdef ENABLE_LOCK_ELISION
   __pthread_force_elision = __libc_enable_secure ? 0 : __elision_available;
   __rwlock_rtm_enabled = __libc_enable_secure ? 0 : __elision_available;
+#endif
 }
 
 #ifdef SHARED

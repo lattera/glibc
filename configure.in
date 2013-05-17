@@ -184,6 +184,15 @@ if test "$enable_stackguard_randomize" = yes; then
   AC_DEFINE(ENABLE_STACKGUARD_RANDOMIZE)
 fi
 
+AC_ARG_ENABLE([lock-elision],
+	      AC_HELP_STRING([--enable-lock-elision[=yes/no]],
+			     [Enable lock elision for pthread mutexes and rwlocks by default]),
+	      [enable_lock_elision=$enableval],
+	      [enable_lock_elision=no])
+if test "$enable_lock_elision" = yes ; then
+  AC_DEFINE(ENABLE_LOCK_ELISION)
+fi
+
 dnl Generic infrastructure for drop-in additions to libc.
 AC_ARG_ENABLE([add-ons],
 	      AC_HELP_STRING([--enable-add-ons@<:@=DIRS...@:>@],

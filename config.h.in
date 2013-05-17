@@ -164,6 +164,9 @@
 /* Define if __stack_chk_guard canary should be randomized at program startup.  */
 #undef ENABLE_STACKGUARD_RANDOMIZE
 
+/* Define if lock elision should be enabled by default.  */
+#undef ENABLE_LOCK_ELISION
+
 /* Package description.  */
 #undef PKGVERSION
 

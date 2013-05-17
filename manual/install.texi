@@ -160,6 +160,9 @@ By default, dynamic tests are linked to run with the installed C library.
 This option hardcodes the newly built C library path in dynamic tests
 so that they can be invoked directly.
 
+@item --enable-lock-elision=yes
+Enable lock elision for pthread mutexes by default.
+
 @item --build=@var{build-system}
 @itemx --host=@var{host-system}
 These options are for cross-compiling.  If you specify both options and
