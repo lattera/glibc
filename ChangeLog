@@ -1,5 +1,24 @@
 2013-05-17  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (struct test_f_f1_data): Remove field
+	extra_init.
+	(struct test_fF_f1_data): Likewise.
+	(struct test_ffI_f1_data): Likewise.
+	(RUN_TEST_f_f1): Remove argument EXTRA_INIT.  Initialize EXTRA_VAR
+	based on value of EXTRA_EXPECTED.
+	(RUN_TEST_LOOP_f_f1): Update call to RUN_TEST_f_f1.
+	(RUN_TEST_fF_f1): Remove argument EXTRA_INIT.  Initialize
+	EXTRA_VAR based on value of EXTRA_EXPECTED.
+	(RUN_TEST_LOOP_fF_f1): Update call to RUN_TEST_fF_f1.
+	(RUN_TEST_fI_f1): Remove argument EXTRA_INIT.  Initialize
+	EXTRA_VAR based on value of EXTRA_EXPECTED.
+	(RUN_TEST_LOOP_fI_f1): Update call to RUN_TEST_fI_f1.
+	(RUN_TEST_ffI_f1): Remove argument EXTRA_INIT.  Initialize
+	EXTRA_VAR based on value of EXTRA_EXPECTED.
+	(RUN_TEST_LOOP_ffI_f1): Update call to RUN_TEST_ffI_f1.
+	* math/gen-libm-test.pl (parse_args): Don't output initializers
+	for extra output values.
+
 	* math/libm-test.inc (check_int): Expect result to be exactly
 	equal to expected value and do not handle ulps.
 	(check_long): Likewise.

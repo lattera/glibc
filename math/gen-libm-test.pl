@@ -345,7 +345,7 @@ sub parse_args {
 	$str = "";
 	$extra_expected = "0";
       }
-      $cline .= ", \"$str\", 123456789, $run_extra, $extra_expected";
+      $cline .= ", \"$str\", $run_extra, $extra_expected";
       if ($run_extra) {
 	$cline .= &new_test ($str, undef, 0);
       } else {
@@ -361,7 +361,7 @@ sub parse_args {
 	$str = "";
 	$extra_expected = "0";
       }
-      $cline .= ", \"$str\", 0, $run_extra, $extra_expected";
+      $cline .= ", \"$str\", $run_extra, $extra_expected";
       if ($run_extra) {
 	$cline .= &new_test ($str, undef, 0);
       } else {
@@ -377,7 +377,7 @@ sub parse_args {
 	$str = "";
 	$extra_expected = "0";
       }
-      $cline .= ", \"$str\", 123.456789, $run_extra, $extra_expected";
+      $cline .= ", \"$str\", $run_extra, $extra_expected";
       if ($run_extra) {
 	$cline .= &new_test ($str, undef, 0);
       } else {
@@ -393,7 +393,7 @@ sub parse_args {
 	$str = "";
 	$extra_expected = "0";
       }
-      $cline .= ", \"$str\", 123456789, $run_extra, $extra_expected";
+      $cline .= ", \"$str\", $run_extra, $extra_expected";
       if ($run_extra) {
 	$cline .= &new_test ($str, undef, 0);
       } else {

@@ -928,7 +928,6 @@ struct test_f_f1_data
   FLOAT max_ulp;
   int exceptions;
   const char *extra_name;
-  int extra_init;
   int extra_test;
   int extra_expected;
   int extra_ulp;
@@ -941,7 +940,6 @@ struct test_fF_f1_data
   FLOAT max_ulp;
   int exceptions;
   const char *extra_name;
-  FLOAT extra_init;
   int extra_test;
   FLOAT extra_expected;
   FLOAT extra_ulp;
@@ -954,7 +952,6 @@ struct test_ffI_f1_data
   FLOAT max_ulp;
   int exceptions;
   const char *extra_name;
-  int extra_init;
   int extra_test;
   int extra_expected;
   int extra_ulp;
@@ -1101,19 +1098,19 @@ struct test_sincos_data
 		    (ARRAY)[i].argc, (ARRAY)[i].expected,		\
 		    (ARRAY)[i].max_ulp, (ARRAY)[i].exceptions);		\
   ROUND_RESTORE_ ## ROUNDING_MODE
-#define RUN_TEST_f_f1(TEST_NAME, FUNC_NAME, ARG, EXPECTED,		\
-		      MAX_ULP, EXCEPTIONS,				\
-		      EXTRA_NAME, EXTRA_VAR, EXTRA_INIT, EXTRA_TEST,	\
-		      EXTRA_EXPECTED, EXTRA_ULP)			\
-  do									\
-    {									\
-      (EXTRA_VAR) = (EXTRA_INIT);					\
-      check_float (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED,		\
-		   MAX_ULP, EXCEPTIONS);				\
-      if (EXTRA_TEST)							\
-	check_int (EXTRA_NAME, EXTRA_VAR, EXTRA_EXPECTED,		\
-		   EXTRA_ULP, 0);					\
-    }									\
+#define RUN_TEST_f_f1(TEST_NAME, FUNC_NAME, ARG, EXPECTED,	\
+		      MAX_ULP, EXCEPTIONS,			\
+		      EXTRA_NAME, EXTRA_VAR, EXTRA_TEST,	\
+		      EXTRA_EXPECTED, EXTRA_ULP)		\
+  do								\
+    {								\
+      (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;		\
+      check_float (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
+		   MAX_ULP, EXCEPTIONS);			\
+      if (EXTRA_TEST)						\
+	check_int (EXTRA_NAME, EXTRA_VAR, EXTRA_EXPECTED,	\
+		   EXTRA_ULP, 0);				\
+    }								\
   while (0)
 #define RUN_TEST_LOOP_f_f1(FUNC_NAME, ARRAY, ROUNDING_MODE, EXTRA_VAR)	\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
@@ -1121,17 +1118,16 @@ struct test_sincos_data
       RUN_TEST_f_f1 ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg,	\
 		     (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
 		     (ARRAY)[i].exceptions, (ARRAY)[i].extra_name,	\
-		     EXTRA_VAR, (ARRAY)[i].extra_init,			\
-		     (ARRAY)[i].extra_test, (ARRAY)[i].extra_expected,	\
-		     (ARRAY)[i].extra_ulp);				\
+		     EXTRA_VAR, (ARRAY)[i].extra_test,			\
+		     (ARRAY)[i].extra_expected, (ARRAY)[i].extra_ulp);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_fF_f1(TEST_NAME, FUNC_NAME, ARG, EXPECTED,		\
 		       MAX_ULP, EXCEPTIONS,				\
-		       EXTRA_NAME, EXTRA_VAR, EXTRA_INIT, EXTRA_TEST,	\
+		       EXTRA_NAME, EXTRA_VAR, EXTRA_TEST,		\
 		       EXTRA_EXPECTED, EXTRA_ULP)			\
   do									\
     {									\
-      (EXTRA_VAR) = (EXTRA_INIT);					\
+      (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;			\
       check_float (TEST_NAME, FUNC (FUNC_NAME) (ARG, &(EXTRA_VAR)),	\
 		   EXPECTED, MAX_ULP, EXCEPTIONS);			\
       if (EXTRA_TEST)							\
@@ -1145,17 +1141,16 @@ struct test_sincos_data
       RUN_TEST_fF_f1 ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg,	\
 		      (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
 		      (ARRAY)[i].exceptions, (ARRAY)[i].extra_name,	\
-		      EXTRA_VAR, (ARRAY)[i].extra_init,			\
-		      (ARRAY)[i].extra_test, (ARRAY)[i].extra_expected,	\
-		      (ARRAY)[i].extra_ulp);				\
+		      EXTRA_VAR, (ARRAY)[i].extra_test,			\
+		      (ARRAY)[i].extra_expected, (ARRAY)[i].extra_ulp);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_fI_f1(TEST_NAME, FUNC_NAME, ARG, EXPECTED,		\
 		       MAX_ULP, EXCEPTIONS,				\
-		       EXTRA_NAME, EXTRA_VAR, EXTRA_INIT, EXTRA_TEST,	\
+		       EXTRA_NAME, EXTRA_VAR, EXTRA_TEST,		\
 		       EXTRA_EXPECTED, EXTRA_ULP)			\
   do									\
     {									\
-      (EXTRA_VAR) = (EXTRA_INIT);					\
+      (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;			\
       check_float (TEST_NAME, FUNC (FUNC_NAME) (ARG, &(EXTRA_VAR)),	\
 		   EXPECTED, MAX_ULP, EXCEPTIONS);			\
       if (EXTRA_TEST)							\
@@ -1169,17 +1164,16 @@ struct test_sincos_data
       RUN_TEST_fI_f1 ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg,	\
 		      (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
 		      (ARRAY)[i].exceptions, (ARRAY)[i].extra_name,	\
-		      EXTRA_VAR, (ARRAY)[i].extra_init,			\
-		      (ARRAY)[i].extra_test, (ARRAY)[i].extra_expected,	\
-		      (ARRAY)[i].extra_ulp);				\
+		      EXTRA_VAR, (ARRAY)[i].extra_test,			\
+		      (ARRAY)[i].extra_expected, (ARRAY)[i].extra_ulp);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_ffI_f1(TEST_NAME, FUNC_NAME, ARG1, ARG2, EXPECTED,	\
 			MAX_ULP, EXCEPTIONS,				\
-			EXTRA_NAME, EXTRA_VAR, EXTRA_INIT, EXTRA_TEST,	\
+			EXTRA_NAME, EXTRA_VAR, EXTRA_TEST,		\
 			EXTRA_EXPECTED, EXTRA_ULP)			\
   do									\
     {									\
-      (EXTRA_VAR) = (EXTRA_INIT);					\
+      (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;			\
       check_float (TEST_NAME,						\
 		   FUNC (FUNC_NAME) (ARG1, ARG2, &(EXTRA_VAR)),		\
 		   EXPECTED, MAX_ULP, EXCEPTIONS);			\
@@ -1196,8 +1190,7 @@ struct test_sincos_data
 		       (ARRAY)[i].arg1, (ARRAY)[i].arg2,		\
 		       (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
 		       (ARRAY)[i].exceptions, (ARRAY)[i].extra_name,	\
-		       EXTRA_VAR, (ARRAY)[i].extra_init,		\
-		       (ARRAY)[i].extra_test,				\
+		       EXTRA_VAR, (ARRAY)[i].extra_test,		\
 		       (ARRAY)[i].extra_expected,			\
 		       (ARRAY)[i].extra_ulp);				\
   ROUND_RESTORE_ ## ROUNDING_MODE
