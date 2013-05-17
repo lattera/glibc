@@ -46,13 +46,13 @@ static const float two30  = 1.0737418e09;
    ieee_float_shape_type gf_u2;                                  \
    gf_u1.value = (f1);                                           \
    gf_u2.value = (f2);                                           \
-   (i1) = gf_u1.word;                                            \
-   (i2) = gf_u2.word;                                            \
+   (i1) = gf_u1.word & 0x7fffffff;                               \
+   (i2) = gf_u2.word & 0x7fffffff;                               \
  } while (0)
 
 # define TEST_INF_NAN(x, y)                                      \
  do {                                                            \
-   int32_t hx, hy;                                               \
+   uint32_t hx, hy;                                              \
    GET_TWO_FLOAT_WORD(x, y, hx, hy);                             \
    if (hy > hx) {                                                \
      uint32_t ht = hx; hx = hy; hy = ht;                         \

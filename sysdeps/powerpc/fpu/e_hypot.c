@@ -54,13 +54,13 @@ static const double pdnum   = 2.225073858507201e-308;
    ieee_double_shape_type gh_u2;                                  \
    gh_u1.value = (d1);                                            \
    gh_u2.value = (d2);                                            \
-   (i1) = gh_u1.parts.msw;                                        \
-   (i2) = gh_u2.parts.msw;                                        \
+   (i1) = gh_u1.parts.msw & 0x7fffffff;                           \
+   (i2) = gh_u2.parts.msw & 0x7fffffff;                           \
  } while (0)
 
 # define TEST_INF_NAN(x, y)                                      \
  do {                                                            \
-   int32_t hx, hy;                                               \
+   uint32_t hx, hy;                                              \
    GET_TW0_HIGH_WORD(x, y, hx, hy);                              \
    if (hy > hx) {                                                \
      uint32_t ht = hx; hx = hy; hy = ht;                         \
