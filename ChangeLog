@@ -1,3 +1,10 @@
+2013-05-17  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #15424]
+	* benchtests/bench-modf.c (struct args): Mark arg0 as
+	volatile.
+	* scripts/bench.pl: Mark members of struct args as volatile.
+
 2013-05-17  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/e_hypot.c (GET_TWO_FLOAT_WORD): Fix test for

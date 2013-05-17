@@ -21,7 +21,7 @@ extern double modf (double, double *);
 
 struct args
 {
-  double arg0;
+  volatile double arg0;
 } in[] =
 {
   {  42.42 },

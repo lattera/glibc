@@ -71,7 +71,7 @@ else {
       $decl = "$decl,";
     }
 
-    $arg_struct = "$arg_struct $arg arg$num;";
+    $arg_struct = "$arg_struct volatile $arg arg$num;";
     $bench_func = "$bench_func variants[v].in[i].arg$num";
     $decl = "$decl $arg";
     $num = $num + 1;
