@@ -1,3 +1,76 @@
+2013-05-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (ceil_test_data): Test for "inexact"
+	exceptions.
+	(cimag_test_data): Likewise.
+	(conj_test_data): Likewise.
+	(copysign_test_data): Likewise.
+	(cproj_test_data): Likewise.
+	(creal_test_data): Likewise.
+	(fabs_test_data): Likewise.
+	(fdim_test_data): Likewise.
+	(finite_test_data): Likewise.
+	(floor_test_data): Likewise.
+	(fmax_test_data): Likewise.
+	(fmin_test_data): Likewise.
+	(fmod_test_data): Likewise.
+	(fpclassify_test_data): Likewise.
+	(frexp_test_data): Likewise.
+	(ilogb_test_data): Likewise.
+	(isfinite_test_data): Likewise.
+	(isgreater_test_data): Likewise.
+	(isgreaterequal_test_data): Likewise.
+	(isinf_test_data): Likewise.
+	(isless_test_data): Likewise.
+	(islessequal_test_data): Likewise.
+	(islessgreater_test_data): Likewise.
+	(isnan_test_data): Likewise.
+	(isnormal_test_data): Likewise.
+	(issignaling_test_data): Likewise.
+	(isunordered_test_data): Likewise.
+	(ldexp_test_data): Likewise.
+	(lrint_test_data): Likewise.
+	(lrint_test_data) [TEST_FLOAT]: Disable one test.
+	(lrint_test_data) [!TEST_LDOUBLE]: Likewise.
+	(lrint_tonearest_test_data): Test for "inexact" exceptions.
+	(lrint_tonearest_test_data) [TEST_FLOAT]: Disable one test.
+	(lrint_tonearest_test_data) [!TEST_LDOUBLE]: Likewise.
+	(lrint_tonearest_test_data) [TEST_LDOUBLE]: Use "L" suffix on that
+	test input.
+	(lrint_towardzero_test_data): Test for "inexact" exceptions.
+	(lrint_towardzero_test_data) [TEST_FLOAT]: Disable one test.
+	(lrint_towardzero_test_data) [!TEST_LDOUBLE]: Likewise.
+	(lrint_towardzero_test_data) [TEST_LDOUBLE]: Use "L" suffix on
+	that test input.
+	(lrint_downward_test_data): Test for "inexact" exceptions.
+	(lrint_downward_test_data) [TEST_FLOAT]: Disable one test.
+	(lrint_downward_test_data) [!TEST_LDOUBLE]: Likewise.
+	(lrint_downward_test_data) [TEST_LDOUBLE]: Use "L" suffix on that
+	test input.
+	(lrint_upward_test_data): Test for "inexact" exceptions.
+	(lrint_upward_test_data) [TEST_LDOUBLE]: Use "L" suffix on one
+	test input.
+	(llrint_test_data): Test for "inexact" exceptions.
+	(llrint_test_data) [TEST_FLOAT]: Disable one test.
+	(llrint_tonearest_test_data): Test for "inexact" exceptions.
+	(llrint_tonearest_test_data) [TEST_FLOAT]: Disable one test.
+	(llrint_towardzero_test_data): Test for "inexact" exceptions.
+	(llrint_towardzero_test_data) [TEST_FLOAT]: Disable one test.
+	(llrint_downward_test_data): Test for "inexact" exceptions.
+	(llrint_downward_test_data) [TEST_FLOAT]: Disable one test.
+	(llrint_upward_test_data): Test for "inexact" exceptions.
+	(logb_test_data): Likewise.
+	(logb_downward_test_data): Likewise.
+	(nextafter_test_data): Likewise.
+	(nexttoward_test_data): Likewise.
+	(remainder_test_data): Likewise.
+	(remquo_test_data): Likewise.
+	(scalbn_test_data): Likewise.
+	(scalbln_test_data): Likewise.
+	(signbit_test_data): Likewise.
+	(sqrt_test_data): Likewise.
+	(significand_test_data): Likewise.
+
 2013-05-17  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #15424]
