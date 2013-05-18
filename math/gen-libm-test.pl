@@ -41,8 +41,7 @@ use strict;
 
 use vars qw ($input $output);
 use vars qw (%results);
-use vars qw (@tests @functions);
-use vars qw ($count);
+use vars qw (@functions);
 use vars qw (%beautify @all_floats);
 use vars qw ($output_dir $ulps_file);
 
@@ -103,8 +102,6 @@ $output_dir = $opt_o if ($opt_o);
 $input = "libm-test.inc";
 $output = "${output_dir}libm-test.c";
 
-$count = 0;
-
 &parse_ulps ($ulps_file);
 &generate_testfile ($input, $output) unless ($opt_n);
 &output_ulps ("${output_dir}libm-test-ulps.h", $ulps_file) unless ($opt_n);
@@ -160,29 +157,15 @@ sub get_variable {
   return "x$number";
 }
 
-# Add a new test to internal data structures and fill in the
-# ulps and exception information for the C line.
-sub new_test {
-  my ($test, $exception, $show_exception) = @_;
-  my $rest;
-
-  # Add ulp.
-  if (exists $results{$test}{'has_ulps'}) {
-    $rest = ", DELTA$count";
+# Return the text to put in an initializer for a test's exception
+# information.
+sub show_exceptions {
+  my ($exception) = @_;
+  if (defined $exception) {
+    return ", $exception";
   } else {
-    $rest = ', 0';
+    return ', 0';
   }
-  if ($show_exception) {
-    if (defined $exception) {
-      $rest .= ", $exception";
-    } else {
-      $rest .= ', 0';
-    }
-  }
-  # We must increment here to keep @tests and count in sync
-  push @tests, $test;
-  ++$count;
-  return $rest;
 }
 
 # Treat some functions especially.
@@ -203,12 +186,11 @@ sub special_functions {
   $test = $str . ' puts ' . &beautify ($args[2]) . ' in sin_res';
 
   $cline .= ", \"$test\", $args[2]";
-  $cline .= &new_test ($test, $args[4], 0);
 
   # handle cos
   $test = $str . ' puts ' . &beautify ($args[3]) . ' in cos_res';
   $cline .= ", \"$test\", $args[3]";
-  $cline .= &new_test ($test, $args[4], 1);
+  $cline .= show_exceptions ($args[4]);
   $cline .= " },\n";
   print $file $cline;
 }
@@ -332,8 +314,10 @@ sub parse_args {
       ++$current_arg;
     }
   }
-  # Add ulp.
-  $cline .= &new_test ($str, ($current_arg <= $#args) ? $args[$current_arg] : undef, 1);
+  # Add exceptions.
+  $cline .= show_exceptions (($current_arg <= $#args)
+			     ? $args[$current_arg]
+			     : undef);
 
   # special treatment for some functions
   if ($args[0] eq 'frexp') {
@@ -346,11 +330,6 @@ sub parse_args {
 	$extra_expected = "0";
       }
       $cline .= ", \"$str\", $run_extra, $extra_expected";
-      if ($run_extra) {
-	$cline .= &new_test ($str, undef, 0);
-      } else {
-	$cline .= ", 0";
-      }
     }
   } elsif ($args[0] eq 'gamma' || $args[0] eq 'lgamma') {
     if (defined $special[0]) {
@@ -362,11 +341,6 @@ sub parse_args {
 	$extra_expected = "0";
       }
       $cline .= ", \"$str\", $run_extra, $extra_expected";
-      if ($run_extra) {
-	$cline .= &new_test ($str, undef, 0);
-      } else {
-	$cline .= ", 0";
-      }
     }
   } elsif ($args[0] eq 'modf') {
     if (defined $special[0]) {
@@ -378,11 +352,6 @@ sub parse_args {
 	$extra_expected = "0";
       }
       $cline .= ", \"$str\", $run_extra, $extra_expected";
-      if ($run_extra) {
-	$cline .= &new_test ($str, undef, 0);
-      } else {
-	$cline .= ", 0";
-      }
     }
   } elsif ($args[0] eq 'remquo') {
     if (defined $special[0]) {
@@ -394,11 +363,6 @@ sub parse_args {
 	$extra_expected = "0";
       }
       $cline .= ", \"$str\", $run_extra, $extra_expected";
-      if ($run_extra) {
-	$cline .= &new_test ($str, undef, 0);
-      } else {
-	$cline .= ", 0";
-      }
     }
   }
   print $file "    $cline },\n";
@@ -450,16 +414,10 @@ sub generate_testfile {
       }
       ($fct) = ($_ =~ /END\s*\((.*)\)/);
       if ($type eq 'complex') {
-	$line = "  print_complex_max_error (\"$fct\", ";
+	$line = "  print_complex_max_error (\"$fct\");\n";
       } else {
-	$line = "  print_max_error (\"$fct\", ";
+	$line = "  print_max_error (\"$fct\");\n";
       }
-      if (exists $results{$fct}{'has_ulps'}) {
-	$line .= "DELTA$fct";
-      } else {
-	$line .= '0';
-      }
-      $line .= ");\n";
       print OUTPUT $line;
       push @functions, $fct;
       next;
@@ -620,37 +578,15 @@ sub print_ulps_file {
 sub get_ulps {
   my ($test, $type, $float) = @_;
 
-  if ($type eq 'complex') {
-    my ($res);
-    # Return 0 instead of BUILD_COMPLEX_ULP (0,0)
-    if (!exists $results{$test}{'real'}{'ulp'}{$float} &&
-	!exists $results{$test}{'imag'}{'ulp'}{$float}) {
-      return "0";
-    }
-    $res = 'BUILD_COMPLEX_ULP (';
-    $res .= (exists $results{$test}{'real'}{'ulp'}{$float}
-	     ? $results{$test}{'real'}{'ulp'}{$float} : "0");
-    $res .= ', ';
-    $res .= (exists $results{$test}{'imag'}{'ulp'}{$float}
-	     ? $results{$test}{'imag'}{'ulp'}{$float} : "0");
-    $res .= ')';
-    return $res;
-  }
-  return (exists $results{$test}{'normal'}{'ulp'}{$float}
-	  ? $results{$test}{'normal'}{'ulp'}{$float} : "0");
+  return (exists $results{$test}{$type}{'ulp'}{$float}
+	  ? $results{$test}{$type}{'ulp'}{$float} : "0");
 }
 
-# Output the defines for a single test
-sub output_test {
-  my ($file, $test, $name) = @_;
+# Return the ulps value for a single test.
+sub get_all_ulps_for_test {
+  my ($test, $type) = @_;
   my ($ldouble, $double, $float, $ildouble, $idouble, $ifloat);
-  my ($type);
 
-  # Do we have ulps?
-  if (!exists $results{$test}{'type'}) {
-    return;
-  }
-  $type = $results{$test}{'type'};
   if (exists $results{$test}{'has_ulps'}) {
     # XXX use all_floats (change order!)
     $ldouble = &get_ulps ($test, $type, "ldouble");
@@ -659,14 +595,17 @@ sub output_test {
     $ildouble = &get_ulps ($test, $type, "ildouble");
     $idouble = &get_ulps ($test, $type, "idouble");
     $ifloat = &get_ulps ($test, $type, "ifloat");
-    print $file "#define DELTA$name CHOOSE($ldouble, $double, $float, $ildouble, $idouble, $ifloat)\t/* $test  */\n";
+    return "CHOOSE ($ldouble, $double, $float, $ildouble, $idouble, $ifloat)";
+  } else {
+    die "get_all_ulps_for_test called for \"$test\" with no ulps\n";
   }
 }
 
 # Print include file
 sub output_ulps {
   my ($file, $ulps_filename) = @_;
-  my ($i, $fct);
+  my ($i, $fct, $type, $ulp, $ulp_real, $ulp_imag);
+  my (%test_ulps, %func_ulps, %func_real_ulps, %func_imag_ulps);
 
   open ULP, ">$file" or die ("Can't open $file: $!");
 
@@ -674,14 +613,56 @@ sub output_ulps {
   print ULP "   from $ulps_filename with gen-libm-test.pl.\n";
   print ULP "   Don't change it - change instead the master files.  */\n\n";
 
-  print ULP "\n/* Maximal error of functions.  */\n";
-  foreach $fct (@functions) {
-    output_test (\*ULP, $fct, $fct);
+  foreach $fct (keys %results) {
+    $type = $results{$fct}{'type'};
+    if ($type eq 'normal') {
+      $ulp = get_all_ulps_for_test ($fct, 'normal');
+    } elsif ($type eq 'complex') {
+      $ulp_real = get_all_ulps_for_test ($fct, 'real');
+      $ulp_imag = get_all_ulps_for_test ($fct, 'imag');
+    } else {
+      die "unknown results ($fct) type $type\n";
+    }
+    if ($results{$fct}{'kind'} eq 'fct') {
+      if ($type eq 'normal') {
+	$func_ulps{$fct} = $ulp;
+      } else {
+	$func_real_ulps{$fct} = $ulp_real;
+	$func_imag_ulps{$fct} = $ulp_imag;
+      }
+    } elsif ($results{$fct}{'kind'} eq 'test') {
+      if ($type eq 'normal') {
+	$test_ulps{$fct} = $ulp;
+      } else {
+	$test_ulps{"Real part of: $fct"} = $ulp_real;
+	$test_ulps{"Imaginary part of: $fct"} = $ulp_imag;
+      }
+    } else {
+      die "unknown results ($fct) kind $results{$fct}{'kind'}\n";
+    }
   }
+  print ULP "\n/* Maximal error of functions.  */\n";
+  print ULP "static const struct ulp_data func_ulps[] =\n  {\n";
+  foreach $fct (sort keys %func_ulps) {
+    print ULP "    { \"$fct\", $func_ulps{$fct} },\n";
+  }
+  print ULP "  };\n";
+  print ULP "static const struct ulp_data func_real_ulps[] =\n  {\n";
+  foreach $fct (sort keys %func_real_ulps) {
+    print ULP "    { \"$fct\", $func_real_ulps{$fct} },\n";
+  }
+  print ULP "  };\n";
+  print ULP "static const struct ulp_data func_imag_ulps[] =\n  {\n";
+  foreach $fct (sort keys %func_imag_ulps) {
+    print ULP "    { \"$fct\", $func_imag_ulps{$fct} },\n";
+  }
+  print ULP "  };\n";
 
   print ULP "\n/* Error of single function calls.  */\n";
-  for ($i = 0; $i < $count; $i++) {
-    output_test (\*ULP, $tests[$i], $i);
+  print ULP "static const struct ulp_data test_ulps[] =\n  {\n";
+  foreach $fct (sort keys %test_ulps) {
+    print ULP "    { \"$fct\", $test_ulps{$fct} },\n";
   }
+  print ULP "  };\n";
   close ULP;
 }

@@ -115,7 +115,6 @@
 # define _GNU_SOURCE
 #endif
 
-#include "libm-test-ulps.h"
 #include <complex.h>
 #include <math.h>
 #include <float.h>
@@ -128,6 +127,18 @@
 #include <string.h>
 #include <argp.h>
 #include <tininess.h>
+
+/* Structure for ulp data for a test, a function, or the real or
+   imaginary part of a function.  */
+struct ulp_data
+{
+  const char *name;
+  FLOAT max_ulp;
+};
+
+/* This header defines test_ulps, func_ulps, func_real_ulps and
+   func_imag_ulps arrays.  */
+#include "libm-test-ulps.h"
 
 /* Allow platforms without all rounding modes to test properly,
    assuming they provide an __FE_UNDEFINED in <bits/fenv.h> which
@@ -257,10 +268,67 @@ static FLOAT max_error, real_max_error, imag_max_error;
      __real__ __retval = (real);					      \
      __imag__ __retval = (imag);					      \
      __retval; })
-#define BUILD_COMPLEX_ULP(real, imag) ((real) + I * (imag))
 
 #define MANT_DIG CHOOSE ((LDBL_MANT_DIG-1), (DBL_MANT_DIG-1), (FLT_MANT_DIG-1),  \
 			 (LDBL_MANT_DIG-1), (DBL_MANT_DIG-1), (FLT_MANT_DIG-1))
+
+/* Compare KEY (a string, with the name of a test or a function) with
+   ULP (a pointer to a struct ulp_data structure), returning a value
+   less than, equal to or greater than zero for use in bsearch.  */
+
+static int
+compare_ulp_data (const void *key, const void *ulp)
+{
+  const char *keystr = key;
+  const struct ulp_data *ulpdat = ulp;
+  return strcmp (keystr, ulpdat->name);
+}
+
+/* Return the ulps for NAME in array DATA with NMEMB elements, or 0 if
+   no ulps listed.  */
+
+static FLOAT
+find_ulps (const char *name, const struct ulp_data *data, size_t nmemb)
+{
+  const struct ulp_data *entry = bsearch (name, data, nmemb, sizeof (*data),
+					  compare_ulp_data);
+  if (entry == NULL)
+    return 0;
+  else
+    return entry->max_ulp;
+}
+
+/* Return the ulps for test NAME.  */
+
+static FLOAT
+find_test_ulps (const char *name)
+{
+  return find_ulps (name, test_ulps,
+		    sizeof (test_ulps) / sizeof (test_ulps[0]));
+}
+
+/* Return the ulps for real function NAME.  */
+
+static FLOAT
+find_function_ulps (const char *name)
+{
+  return find_ulps (name, func_ulps,
+		    sizeof (func_ulps) / sizeof (func_ulps[0]));
+}
+
+/* Return the ulps for complex function NAME.  */
+
+static __complex__ FLOAT
+find_complex_function_ulps (const char *name)
+{
+  FLOAT ulp_real = find_ulps (name, func_real_ulps,
+			      (sizeof (func_real_ulps)
+			       / sizeof (func_real_ulps[0])));
+  FLOAT ulp_imag = find_ulps (name, func_imag_ulps,
+			      (sizeof (func_imag_ulps)
+			       / sizeof (func_imag_ulps[0])));
+  return BUILD_COMPLEX (ulp_real, ulp_imag);
+}
 
 static void
 init_max_error (void)
@@ -407,8 +475,9 @@ fpstack_test (const char *test_name)
 
 
 static void
-print_max_error (const char *func_name, FLOAT allowed)
+print_max_error (const char *func_name)
 {
+  FLOAT allowed = find_function_ulps (func_name);
   int ok = 0;
 
   if (max_error == 0.0 || (max_error <= allowed && !ignore_max_ulp))
@@ -432,8 +501,9 @@ print_max_error (const char *func_name, FLOAT allowed)
 
 
 static void
-print_complex_max_error (const char *func_name, __complex__ FLOAT allowed)
+print_complex_max_error (const char *func_name)
 {
+  __complex__ FLOAT allowed = find_complex_function_ulps (func_name);
   int ok = 0;
 
   if ((real_max_error == 0 && imag_max_error == 0)
@@ -589,7 +659,7 @@ test_errno (const char *test_name, int errno_value, int exceptions)
 
 static void
 check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
-		      FLOAT max_ulp, int exceptions,
+		      int exceptions,
 		      FLOAT *curr_max_error)
 {
   int ok = 0;
@@ -600,6 +670,7 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
 
   test_exceptions (test_name, exceptions);
   test_errno (test_name, errno_value, exceptions);
+  FLOAT max_ulp = find_test_ulps (test_name);
   if (issignaling (computed) && issignaling (expected))
     ok = 1;
   else if (issignaling (computed) || issignaling (expected))
@@ -686,9 +757,9 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
 
 static void
 check_float (const char *test_name, FLOAT computed, FLOAT expected,
-	     FLOAT max_ulp, int exceptions)
+	     int exceptions)
 {
-  check_float_internal (test_name, computed, expected, max_ulp,
+  check_float_internal (test_name, computed, expected,
 			exceptions, &max_error);
 }
 
@@ -696,10 +767,9 @@ check_float (const char *test_name, FLOAT computed, FLOAT expected,
 static void
 check_complex (const char *test_name, __complex__ FLOAT computed,
 	       __complex__ FLOAT expected,
-	       __complex__ FLOAT max_ulp,
 	       int exception)
 {
-  FLOAT part_comp, part_exp, part_max_ulp;
+  FLOAT part_comp, part_exp;
   char *str;
 
   if (asprintf (&str, "Real part of: %s", test_name) == -1)
@@ -707,9 +777,8 @@ check_complex (const char *test_name, __complex__ FLOAT computed,
 
   part_comp = __real__ computed;
   part_exp = __real__ expected;
-  part_max_ulp = __real__ max_ulp;
 
-  check_float_internal (str, part_comp, part_exp, part_max_ulp,
+  check_float_internal (str, part_comp, part_exp,
 			exception, &real_max_error);
   free (str);
 
@@ -718,11 +787,10 @@ check_complex (const char *test_name, __complex__ FLOAT computed,
 
   part_comp = __imag__ computed;
   part_exp = __imag__ expected;
-  part_max_ulp = __imag__ max_ulp;
 
   /* Don't check again for exceptions or errno, just pass through the
      zero/inf sign test.  */
-  check_float_internal (str, part_comp, part_exp, part_max_ulp,
+  check_float_internal (str, part_comp, part_exp,
 			exception & IGNORE_ZERO_INF_SIGN,
 			&imag_max_error);
   free (str);
@@ -731,7 +799,7 @@ check_complex (const char *test_name, __complex__ FLOAT computed,
 
 /* Check that computed and expected values are equal (int values).  */
 static void
-check_int (const char *test_name, int computed, int expected, int max_ulp,
+check_int (const char *test_name, int computed, int expected,
 	   int exceptions)
 {
   int ok = 0;
@@ -762,7 +830,7 @@ check_int (const char *test_name, int computed, int expected, int max_ulp,
 /* Check that computed and expected values are equal (long int values).  */
 static void
 check_long (const char *test_name, long int computed, long int expected,
-	    long int max_ulp, int exceptions)
+	    int exceptions)
 {
   int ok = 0;
   int errno_value = errno;
@@ -792,7 +860,7 @@ check_long (const char *test_name, long int computed, long int expected,
 /* Check that computed value is true/false.  */
 static void
 check_bool (const char *test_name, int computed, int expected,
-	    long int max_ulp, int exceptions)
+	    int exceptions)
 {
   int ok = 0;
   int errno_value = errno;
@@ -823,7 +891,6 @@ check_bool (const char *test_name, int computed, int expected,
 static void
 check_longlong (const char *test_name, long long int computed,
 		long long int expected,
-		long long int max_ulp,
 		int exceptions)
 {
   int ok = 0;
@@ -856,7 +923,6 @@ struct test_f_f_data
   const char *test_name;
   FLOAT arg;
   FLOAT expected;
-  FLOAT max_ulp;
   int exceptions;
 };
 struct test_ff_f_data
@@ -864,7 +930,6 @@ struct test_ff_f_data
   const char *test_name;
   FLOAT arg1, arg2;
   FLOAT expected;
-  FLOAT max_ulp;
   int exceptions;
 };
 struct test_ff_f_data_nexttoward
@@ -873,7 +938,6 @@ struct test_ff_f_data_nexttoward
   FLOAT arg1;
   long double arg2;
   FLOAT expected;
-  FLOAT max_ulp;
   int exceptions;
 };
 struct test_fi_f_data
@@ -882,7 +946,6 @@ struct test_fi_f_data
   FLOAT arg1;
   int arg2;
   FLOAT expected;
-  FLOAT max_ulp;
   int exceptions;
 };
 struct test_fl_f_data
@@ -891,7 +954,6 @@ struct test_fl_f_data
   FLOAT arg1;
   long int arg2;
   FLOAT expected;
-  FLOAT max_ulp;
   int exceptions;
 };
 struct test_if_f_data
@@ -900,7 +962,6 @@ struct test_if_f_data
   int arg1;
   FLOAT arg2;
   FLOAT expected;
-  FLOAT max_ulp;
   int exceptions;
 };
 struct test_fff_f_data
@@ -908,7 +969,6 @@ struct test_fff_f_data
   const char *test_name;
   FLOAT arg1, arg2, arg3;
   FLOAT expected;
-  FLOAT max_ulp;
   int exceptions;
 };
 struct test_c_f_data
@@ -916,7 +976,6 @@ struct test_c_f_data
   const char *test_name;
   FLOAT argr, argc;
   FLOAT expected;
-  FLOAT max_ulp;
   int exceptions;
 };
 /* Used for both RUN_TEST_LOOP_f_f1 and RUN_TEST_LOOP_fI_f1.  */
@@ -925,43 +984,36 @@ struct test_f_f1_data
   const char *test_name;
   FLOAT arg;
   FLOAT expected;
-  FLOAT max_ulp;
   int exceptions;
   const char *extra_name;
   int extra_test;
   int extra_expected;
-  int extra_ulp;
 };
 struct test_fF_f1_data
 {
   const char *test_name;
   FLOAT arg;
   FLOAT expected;
-  FLOAT max_ulp;
   int exceptions;
   const char *extra_name;
   int extra_test;
   FLOAT extra_expected;
-  FLOAT extra_ulp;
 };
 struct test_ffI_f1_data
 {
   const char *test_name;
   FLOAT arg1, arg2;
   FLOAT expected;
-  FLOAT max_ulp;
   int exceptions;
   const char *extra_name;
   int extra_test;
   int extra_expected;
-  int extra_ulp;
 };
 struct test_c_c_data
 {
   const char *test_name;
   FLOAT argr, argc;
   FLOAT expr, expc;
-  __complex__ FLOAT max_ulp;
   int exceptions;
 };
 struct test_cc_c_data
@@ -969,7 +1021,6 @@ struct test_cc_c_data
   const char *test_name;
   FLOAT arg1r, arg1c, arg2r, arg2c;
   FLOAT expr, expc;
-  __complex__ FLOAT max_ulp;
   int exceptions;
 };
 /* Used for all of RUN_TEST_LOOP_f_i, RUN_TEST_LOOP_f_i_tg,
@@ -979,7 +1030,6 @@ struct test_f_i_data
   const char *test_name;
   FLOAT arg;
   int expected;
-  int max_ulp;
   int exceptions;
 };
 struct test_ff_i_data
@@ -987,7 +1037,6 @@ struct test_ff_i_data
   const char *test_name;
   FLOAT arg1, arg2;
   int expected;
-  int max_ulp;
   int exceptions;
 };
 struct test_f_l_data
@@ -995,7 +1044,6 @@ struct test_f_l_data
   const char *test_name;
   FLOAT arg;
   long int expected;
-  long int max_ulp;
   int exceptions;
 };
 struct test_f_L_data
@@ -1003,7 +1051,6 @@ struct test_f_L_data
   const char *test_name;
   FLOAT arg;
   long long int expected;
-  long long int max_ulp;
   int exceptions;
 };
 struct test_sincos_data
@@ -1011,10 +1058,8 @@ struct test_sincos_data
   FLOAT arg;
   const char *test_name_sin;
   FLOAT expected_sin;
-  FLOAT max_ulp_sin;
   const char *test_name_cos;
   FLOAT expected_cos;
-  FLOAT max_ulp_cos;
   int exceptions;
 };
 
@@ -1045,26 +1090,25 @@ struct test_sincos_data
 /* Run an individual test, including any required setup and checking
    of results, or loop over all tests in an array.  */
 #define RUN_TEST_f_f(TEST_NAME, FUNC_NAME, ARG, EXPECTED,	\
-		     MAX_ULP, EXCEPTIONS)			\
+		     EXCEPTIONS)				\
   check_float (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
-	       MAX_ULP, EXCEPTIONS)
+	       EXCEPTIONS)
 #define RUN_TEST_LOOP_f_f(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_f_f ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg,	\
-		    (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
-		    (ARRAY)[i].exceptions);				\
+		    (ARRAY)[i].expected, (ARRAY)[i].exceptions);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_2_f(TEST_NAME, FUNC_NAME, ARG1, ARG2, EXPECTED,	\
-		     MAX_ULP, EXCEPTIONS)				\
+		     EXCEPTIONS)					\
   check_float (TEST_NAME, FUNC (FUNC_NAME) (ARG1, ARG2), EXPECTED,	\
-	       MAX_ULP, EXCEPTIONS)
+	       EXCEPTIONS)
 #define RUN_TEST_LOOP_2_f(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_2_f ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg1,	\
 		    (ARRAY)[i].arg2, (ARRAY)[i].expected,		\
-		    (ARRAY)[i].max_ulp, (ARRAY)[i].exceptions);		\
+		    (ARRAY)[i].exceptions);				\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_ff_f RUN_TEST_2_f
 #define RUN_TEST_LOOP_ff_f RUN_TEST_LOOP_2_f
@@ -1075,111 +1119,106 @@ struct test_sincos_data
 #define RUN_TEST_if_f RUN_TEST_2_f
 #define RUN_TEST_LOOP_if_f RUN_TEST_LOOP_2_f
 #define RUN_TEST_fff_f(TEST_NAME, FUNC_NAME, ARG1, ARG2, ARG3,	\
-		       EXPECTED, MAX_ULP, EXCEPTIONS)		\
+		       EXPECTED, EXCEPTIONS)			\
   check_float (TEST_NAME, FUNC (FUNC_NAME) (ARG1, ARG2, ARG3),	\
-	       EXPECTED, MAX_ULP, EXCEPTIONS)
+	       EXPECTED, EXCEPTIONS)
 #define RUN_TEST_LOOP_fff_f(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_fff_f ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg1,	\
 		      (ARRAY)[i].arg2, (ARRAY)[i].arg3,			\
-		      (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
-		      (ARRAY)[i].exceptions);				\
+		      (ARRAY)[i].expected, (ARRAY)[i].exceptions);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_c_f(TEST_NAME, FUNC_NAME, ARG1, ARG2, EXPECTED,	\
-		     MAX_ULP, EXCEPTIONS)				\
+		     EXCEPTIONS)					\
   check_float (TEST_NAME,						\
 	       FUNC (FUNC_NAME) (BUILD_COMPLEX (ARG1, ARG2)),		\
-	       EXPECTED, MAX_ULP, EXCEPTIONS)
+	       EXPECTED, EXCEPTIONS)
 #define RUN_TEST_LOOP_c_f(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_c_f ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].argr,	\
 		    (ARRAY)[i].argc, (ARRAY)[i].expected,		\
-		    (ARRAY)[i].max_ulp, (ARRAY)[i].exceptions);		\
+		    (ARRAY)[i].exceptions);				\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_f1(TEST_NAME, FUNC_NAME, ARG, EXPECTED,	\
-		      MAX_ULP, EXCEPTIONS,			\
+		      EXCEPTIONS,				\
 		      EXTRA_NAME, EXTRA_VAR, EXTRA_TEST,	\
-		      EXTRA_EXPECTED, EXTRA_ULP)		\
+		      EXTRA_EXPECTED)		\
   do								\
     {								\
       (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;		\
       check_float (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
-		   MAX_ULP, EXCEPTIONS);			\
+		   EXCEPTIONS);					\
       if (EXTRA_TEST)						\
-	check_int (EXTRA_NAME, EXTRA_VAR, EXTRA_EXPECTED,	\
-		   EXTRA_ULP, 0);				\
+	check_int (EXTRA_NAME, EXTRA_VAR, EXTRA_EXPECTED, 0);	\
     }								\
   while (0)
 #define RUN_TEST_LOOP_f_f1(FUNC_NAME, ARRAY, ROUNDING_MODE, EXTRA_VAR)	\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_f_f1 ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg,	\
-		     (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
+		     (ARRAY)[i].expected,				\
 		     (ARRAY)[i].exceptions, (ARRAY)[i].extra_name,	\
 		     EXTRA_VAR, (ARRAY)[i].extra_test,			\
-		     (ARRAY)[i].extra_expected, (ARRAY)[i].extra_ulp);	\
+		     (ARRAY)[i].extra_expected);			\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_fF_f1(TEST_NAME, FUNC_NAME, ARG, EXPECTED,		\
-		       MAX_ULP, EXCEPTIONS,				\
+		       EXCEPTIONS,					\
 		       EXTRA_NAME, EXTRA_VAR, EXTRA_TEST,		\
-		       EXTRA_EXPECTED, EXTRA_ULP)			\
+		       EXTRA_EXPECTED)					\
   do									\
     {									\
       (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;			\
       check_float (TEST_NAME, FUNC (FUNC_NAME) (ARG, &(EXTRA_VAR)),	\
-		   EXPECTED, MAX_ULP, EXCEPTIONS);			\
+		   EXPECTED, EXCEPTIONS);				\
       if (EXTRA_TEST)							\
-	check_float (EXTRA_NAME, EXTRA_VAR, EXTRA_EXPECTED,		\
-		     EXTRA_ULP, 0);					\
+	check_float (EXTRA_NAME, EXTRA_VAR, EXTRA_EXPECTED, 0);		\
     }									\
   while (0)
 #define RUN_TEST_LOOP_fF_f1(FUNC_NAME, ARRAY, ROUNDING_MODE, EXTRA_VAR)	\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_fF_f1 ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg,	\
-		      (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
+		      (ARRAY)[i].expected,				\
 		      (ARRAY)[i].exceptions, (ARRAY)[i].extra_name,	\
 		      EXTRA_VAR, (ARRAY)[i].extra_test,			\
-		      (ARRAY)[i].extra_expected, (ARRAY)[i].extra_ulp);	\
+		      (ARRAY)[i].extra_expected);			\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_fI_f1(TEST_NAME, FUNC_NAME, ARG, EXPECTED,		\
-		       MAX_ULP, EXCEPTIONS,				\
+		       EXCEPTIONS,					\
 		       EXTRA_NAME, EXTRA_VAR, EXTRA_TEST,		\
-		       EXTRA_EXPECTED, EXTRA_ULP)			\
+		       EXTRA_EXPECTED)					\
   do									\
     {									\
       (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;			\
       check_float (TEST_NAME, FUNC (FUNC_NAME) (ARG, &(EXTRA_VAR)),	\
-		   EXPECTED, MAX_ULP, EXCEPTIONS);			\
+		   EXPECTED, EXCEPTIONS);				\
       if (EXTRA_TEST)							\
-	check_int (EXTRA_NAME, EXTRA_VAR, EXTRA_EXPECTED,		\
-		   EXTRA_ULP, 0);					\
+	check_int (EXTRA_NAME, EXTRA_VAR, EXTRA_EXPECTED, 0);		\
     }									\
   while (0)
 #define RUN_TEST_LOOP_fI_f1(FUNC_NAME, ARRAY, ROUNDING_MODE, EXTRA_VAR)	\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_fI_f1 ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg,	\
-		      (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
+		      (ARRAY)[i].expected,				\
 		      (ARRAY)[i].exceptions, (ARRAY)[i].extra_name,	\
 		      EXTRA_VAR, (ARRAY)[i].extra_test,			\
-		      (ARRAY)[i].extra_expected, (ARRAY)[i].extra_ulp);	\
+		      (ARRAY)[i].extra_expected);			\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_ffI_f1(TEST_NAME, FUNC_NAME, ARG1, ARG2, EXPECTED,	\
-			MAX_ULP, EXCEPTIONS,				\
+			EXCEPTIONS,					\
 			EXTRA_NAME, EXTRA_VAR, EXTRA_TEST,		\
-			EXTRA_EXPECTED, EXTRA_ULP)			\
+			EXTRA_EXPECTED)					\
   do									\
     {									\
       (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;			\
       check_float (TEST_NAME,						\
 		   FUNC (FUNC_NAME) (ARG1, ARG2, &(EXTRA_VAR)),		\
-		   EXPECTED, MAX_ULP, EXCEPTIONS);			\
+		   EXPECTED, EXCEPTIONS);				\
       if (EXTRA_TEST)							\
-	check_int (EXTRA_NAME, EXTRA_VAR, EXTRA_EXPECTED,		\
-		   EXTRA_ULP, 0);					\
+	check_int (EXTRA_NAME, EXTRA_VAR, EXTRA_EXPECTED, 0);		\
     }									\
   while (0)
 #define RUN_TEST_LOOP_ffI_f1(FUNC_NAME, ARRAY, ROUNDING_MODE,		\
@@ -1188,129 +1227,108 @@ struct test_sincos_data
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_ffI_f1 ((ARRAY)[i].test_name, FUNC_NAME,			\
 		       (ARRAY)[i].arg1, (ARRAY)[i].arg2,		\
-		       (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
+		       (ARRAY)[i].expected,				\
 		       (ARRAY)[i].exceptions, (ARRAY)[i].extra_name,	\
 		       EXTRA_VAR, (ARRAY)[i].extra_test,		\
-		       (ARRAY)[i].extra_expected,			\
-		       (ARRAY)[i].extra_ulp);				\
+		       (ARRAY)[i].extra_expected);			\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_c_c(TEST_NAME, FUNC_NAME, ARGR, ARGC, EXPR, EXPC,	\
-		     MAX_ULP, EXCEPTIONS)				\
+		     EXCEPTIONS)					\
   check_complex (TEST_NAME,						\
 		 FUNC (FUNC_NAME) (BUILD_COMPLEX (ARGR, ARGC)),		\
-		 BUILD_COMPLEX (EXPR, EXPC),				\
-		 MAX_ULP, EXCEPTIONS)
+		 BUILD_COMPLEX (EXPR, EXPC), EXCEPTIONS)
 #define RUN_TEST_LOOP_c_c(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_c_c ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].argr,	\
 		    (ARRAY)[i].argc, (ARRAY)[i].expr, (ARRAY)[i].expc,	\
-		    (ARRAY)[i].max_ulp, (ARRAY)[i].exceptions);		\
+		    (ARRAY)[i].exceptions);				\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_cc_c(TEST_NAME, FUNC_NAME, ARG1R, ARG1C, ARG2R, ARG2C,	\
-		      EXPR, EXPC, MAX_ULP, EXCEPTIONS)			\
+		      EXPR, EXPC, EXCEPTIONS)				\
   check_complex (TEST_NAME,						\
 		 FUNC (FUNC_NAME) (BUILD_COMPLEX (ARG1R, ARG1C),	\
 				   BUILD_COMPLEX (ARG2R, ARG2C)),	\
-		 BUILD_COMPLEX (EXPR, EXPC),				\
-		 MAX_ULP, EXCEPTIONS)
+		 BUILD_COMPLEX (EXPR, EXPC), EXCEPTIONS)
 #define RUN_TEST_LOOP_cc_c(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_cc_c ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg1r,	\
 		     (ARRAY)[i].arg1c, (ARRAY)[i].arg2r,		\
 		     (ARRAY)[i].arg2c, (ARRAY)[i].expr,			\
-		     (ARRAY)[i].expc, (ARRAY)[i].max_ulp,		\
-		     (ARRAY)[i].exceptions);				\
+		     (ARRAY)[i].expc, (ARRAY)[i].exceptions);		\
   ROUND_RESTORE_ ## ROUNDING_MODE
-#define RUN_TEST_f_i(TEST_NAME, FUNC_NAME, ARG, EXPECTED,	\
-		     MAX_ULP, EXCEPTIONS)			\
-  check_int (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
-	     MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_f_i(TEST_NAME, FUNC_NAME, ARG, EXPECTED, EXCEPTIONS)	\
+  check_int (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED, EXCEPTIONS)
 #define RUN_TEST_LOOP_f_i(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_f_i ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg,	\
-		    (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
-		    (ARRAY)[i].exceptions);				\
+		    (ARRAY)[i].expected, (ARRAY)[i].exceptions);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_i_tg(TEST_NAME, FUNC_NAME, ARG, EXPECTED,	\
-			MAX_ULP, EXCEPTIONS)			\
-  check_int (TEST_NAME, FUNC_NAME (ARG), EXPECTED,		\
-	     MAX_ULP, EXCEPTIONS)
+			EXCEPTIONS)				\
+  check_int (TEST_NAME, FUNC_NAME (ARG), EXPECTED, EXCEPTIONS)
 #define RUN_TEST_LOOP_f_i_tg(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_f_i_tg ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg,	\
-		       (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
-		       (ARRAY)[i].exceptions);				\
+		       (ARRAY)[i].expected, (ARRAY)[i].exceptions);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_ff_i_tg(TEST_NAME, FUNC_NAME, ARG1, ARG2, EXPECTED,	\
-			 MAX_ULP, EXCEPTIONS)				\
-  check_int (TEST_NAME, FUNC_NAME (ARG1, ARG2), EXPECTED,		\
-	     MAX_ULP, EXCEPTIONS)
+			 EXCEPTIONS)					\
+  check_int (TEST_NAME, FUNC_NAME (ARG1, ARG2), EXPECTED, EXCEPTIONS)
 #define RUN_TEST_LOOP_ff_i_tg(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_ff_i_tg ((ARRAY)[i].test_name, FUNC_NAME,		\
 			(ARRAY)[i].arg1, (ARRAY)[i].arg2,		\
-			(ARRAY)[i].expected, (ARRAY)[i].max_ulp,	\
-			(ARRAY)[i].exceptions);				\
+			(ARRAY)[i].expected, (ARRAY)[i].exceptions);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
-#define RUN_TEST_f_b(TEST_NAME, FUNC_NAME, ARG, EXPECTED,	\
-		     MAX_ULP, EXCEPTIONS)			\
-  check_bool (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
-	      MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_f_b(TEST_NAME, FUNC_NAME, ARG, EXPECTED, EXCEPTIONS)	\
+  check_bool (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED, EXCEPTIONS)
 #define RUN_TEST_LOOP_f_b(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_f_b ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg,	\
-		    (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
-		    (ARRAY)[i].exceptions);				\
+		    (ARRAY)[i].expected, (ARRAY)[i].exceptions);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_b_tg(TEST_NAME, FUNC_NAME, ARG, EXPECTED,	\
-			MAX_ULP, EXCEPTIONS)			\
-  check_bool (TEST_NAME, FUNC_NAME (ARG), EXPECTED,		\
-	      MAX_ULP, EXCEPTIONS)
+			EXCEPTIONS)				\
+  check_bool (TEST_NAME, FUNC_NAME (ARG), EXPECTED, EXCEPTIONS)
 #define RUN_TEST_LOOP_f_b_tg(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_f_b_tg ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg,	\
-		       (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
-		       (ARRAY)[i].exceptions);				\
+		       (ARRAY)[i].expected, (ARRAY)[i].exceptions);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
-#define RUN_TEST_f_l(TEST_NAME, FUNC_NAME, ARG, EXPECTED,	\
-		     MAX_ULP, EXCEPTIONS)			\
-  check_long (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
-	      MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_f_l(TEST_NAME, FUNC_NAME, ARG, EXPECTED, EXCEPTIONS)	\
+  check_long (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED, EXCEPTIONS)
 #define RUN_TEST_LOOP_f_l(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_f_l ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg,	\
-		    (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
-		    (ARRAY)[i].exceptions);				\
+		    (ARRAY)[i].expected, (ARRAY)[i].exceptions);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
-#define RUN_TEST_f_L(TEST_NAME, FUNC_NAME, ARG, EXPECTED,	\
-		     MAX_ULP, EXCEPTIONS)			\
-  check_longlong (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
-		  MAX_ULP, EXCEPTIONS)
+#define RUN_TEST_f_L(TEST_NAME, FUNC_NAME, ARG, EXPECTED, EXCEPTIONS)	\
+  check_longlong (TEST_NAME, FUNC (FUNC_NAME) (ARG), EXPECTED,		\
+		  EXCEPTIONS)
 #define RUN_TEST_LOOP_f_L(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_f_L ((ARRAY)[i].test_name, FUNC_NAME, (ARRAY)[i].arg,	\
-		    (ARRAY)[i].expected, (ARRAY)[i].max_ulp,		\
-		    (ARRAY)[i].exceptions);				\
+		    (ARRAY)[i].expected, (ARRAY)[i].exceptions);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
-#define RUN_TEST_sincos(ARG, TEST_NAME_SIN, SIN_RES_VAR, EXPECTED_SIN,	\
-			MAX_ULP_SIN, TEST_NAME_COS, COS_RES_VAR,	\
-			EXPECTED_COS, MAX_ULP_COS, EXCEPTIONS)		\
+#define RUN_TEST_sincos(ARG, TEST_NAME_SIN, SIN_RES_VAR,		\
+			EXPECTED_SIN, TEST_NAME_COS, COS_RES_VAR,	\
+			EXPECTED_COS, EXCEPTIONS)			\
   do									\
     {									\
       FUNC (sincos) (ARG, &(SIN_RES_VAR), &(COS_RES_VAR));		\
       check_float (TEST_NAME_SIN, SIN_RES_VAR,				\
-		   EXPECTED_SIN, MAX_ULP_SIN, EXCEPTIONS);		\
+		   EXPECTED_SIN, EXCEPTIONS);				\
       check_float (TEST_NAME_COS, COS_RES_VAR,				\
-		   EXPECTED_COS, MAX_ULP_COS, 0);			\
+		   EXPECTED_COS, 0);					\
     }									\
   while (0)
 #define RUN_TEST_LOOP_sincos(ARRAY, ROUNDING_MODE, SIN_RES_VAR,		\
@@ -1319,10 +1337,8 @@ struct test_sincos_data
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_sincos ((ARRAY)[i].arg, (ARRAY)[i].test_name_sin,	\
 		       SIN_RES_VAR, (ARRAY)[i].expected_sin,		\
-		       (ARRAY)[i].max_ulp_sin,				\
 		       (ARRAY)[i].test_name_cos, COS_RES_VAR,		\
-		       (ARRAY)[i].expected_cos, (ARRAY)[i].max_ulp_cos,	\
-		       (ARRAY)[i].exceptions);				\
+		       (ARRAY)[i].expected_cos, (ARRAY)[i].exceptions);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
 
 

@@ -1,3 +1,93 @@
+2013-05-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/gen-libm-test.pl (@tests): Remove variable.
+	($count): Likewise.
+	(new_test): Remove function.
+	(show_exceptions): New function.
+	(special_functions): Use show_exceptions instead of new_test.
+	(parse_args): Likewise.
+	(generate_testfile): Pass only function name in generated call to
+	print_max_error or print_complex_max_error.
+	(get_ulps): Do not handle complex tests specially.
+	(output_test): Rename to ...
+	(get_all_ulps_for_test): ... this.  Return a string rather than
+	printing to a file.  Require ulps to be present.
+	(output_ulps): Generate arrays rather than #defines.
+	* math/libm-test.inc: Move down #include of "libm-test-ulps.h".
+	(struct ulp_data): New type.
+	(BUILD_COMPLEX_ULP): Remove macro.
+	(compare_ulp_data): New function.
+	(find_ulps): Likewise.
+	(find_test_ulps): Likewise.
+	(find_function_ulps): Likewise.
+	(find_complex_function_ulps): Likewise.
+	(print_max_error): Determine allowed ulps using
+	find_function_ulps.
+	(print_complex_max_error): Determine allowed ulps using
+	find_complex_function_ulps.
+	(check_float_internal): Determine max ulps using find_test_ulps.
+	(check_float): Do not take max_ulp parameter.  Update call to
+	check_float_internal.
+	(check_complex): Likewise.
+	(check_int): Do not take max_ulp parameter.
+	(check_long): Likewise.
+	(check_bool): Likewise.
+	(check_longlong): Likewise.
+	(struct test_f_f_data): Remove max_ulp field.
+	(struct test_ff_f_data): Likewise.
+	(struct test_ff_f_data_nexttoward): Likewise.
+	(struct test_fi_f_data): Likewise.
+	(struct test_fl_f_data): Likewise.
+	(struct test_if_f_data): Likewise.
+	(struct test_fff_f_data): Likewise.
+	(struct test_c_f_data): Likewise.
+	(struct test_f_f1_data): Remove max_ulp and extra_ulp fields.
+	(struct test_fF_f1_data): Likewise.
+	(struct test_ffI_f1_data): Likewise.
+	(struct test_c_c_data): Remove max_ulp field.
+	(struct test_cc_c_data): Likewise.
+	(struct test_f_i_data): Likewise.
+	(struct test_ff_i_data): Likewise.
+	(struct test_f_l_data): Likewise.
+	(struct test_f_L_data): Likewise.
+	(struct test_sincos_data): Likewise.
+	(RUN_TEST_f_f): Do not handle ulps.
+	(RUN_TEST_LOOP_f_f): Likewise.
+	(RUN_TEST_2_f): Likewise.
+	(RUN_TEST_LOOP_2_f): Likewise.
+	(RUN_TEST_fff_f): Likewise.
+	(RUN_TEST_LOOP_fff_f): Likewise.
+	(RUN_TEST_c_f): Likewise.
+	(RUN_TEST_LOOP_c_f): Likewise.
+	(RUN_TEST_f_f1): Likewise.
+	(RUN_TEST_LOOP_f_f1): Likewise.
+	(RUN_TEST_fF_f1): Likewise.
+	(RUN_TEST_LOOP_fF_f1): Likewise.
+	(RUN_TEST_fI_f1): Likewise.
+	(RUN_TEST_LOOP_fI_f1): Likewise.
+	(RUN_TEST_ffI_f1): Likewise.
+	(RUN_TEST_LOOP_ffI_f1): Likewise.
+	(RUN_TEST_c_c): Likewise.
+	(RUN_TEST_LOOP_c_c): Likewise.
+	(RUN_TEST_cc_c): Likewise.
+	(RUN_TEST_LOOP_cc_c): Likewise.
+	(RUN_TEST_f_i): Likewise.
+	(RUN_TEST_LOOP_f_i): Likewise.
+	(RUN_TEST_f_i_tg): Likewise.
+	(RUN_TEST_LOOP_f_i_tg): Likewise.
+	(RUN_TEST_ff_i_tg): Likewise.
+	(RUN_TEST_LOOP_ff_i_tg): Likewise.
+	(RUN_TEST_f_b): Likewise.
+	(RUN_TEST_LOOP_f_b): Likewise.
+	(RUN_TEST_f_b_tg): Likewise.
+	(RUN_TEST_LOOP_f_b_tg): Likewise.
+	(RUN_TEST_f_l): Likewise.
+	(RUN_TEST_LOOP_f_l): Likewise.
+	(RUN_TEST_f_L): Likewise.
+	(RUN_TEST_LOOP_f_L): Likewise.
+	(RUN_TEST_sincos): Likewise.
+	(RUN_TEST_LOOP_sincos): Likewise.
+
 2013-05-17  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15480]
