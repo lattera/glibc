@@ -1,5 +1,15 @@
 2013-05-18  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #15488]
+	* math/complex.h [__USE_ISOC11 && __GNUC_PREREQ (4, 7) &&
+	__NO_LONG_DOUBLE_MATH] (CMPLXL): Define macro.
+	* math/tst-CMPLX.c (do_test) [NO_LONG_DOUBLE]: Do not disable long
+	double tests.
+	* make/tst-CMPLX2.c [NO_LONG_DOUBLE] (check_long_double): Do not
+	disable.
+	(do_test) [NO_LONG_DOUBLE]: Do not disable call to
+	check_long_double.
+
 	* math/gen-libm-test.pl (@tests): Remove variable.
 	($count): Likewise.
 	(new_test): Remove function.

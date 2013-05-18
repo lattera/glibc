@@ -45,9 +45,7 @@ CMPLX (" #r ", " #i ") does not produce complex " #t ": %zu\n", s);	      \
 
   C (CMPLXF, float);
   C (CMPLX, double);
-# ifndef NO_LONG_DOUBLE
   C (CMPLXL, long double);
-# endif
 #endif
 
   return result;

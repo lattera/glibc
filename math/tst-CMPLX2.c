@@ -120,14 +120,12 @@ check_double (void)
 	      double, comparec, CMPLX);
 }
 
-# ifndef NO_LONG_DOUBLE
 static void
 check_long_double (void)
 {
   ALL_CHECKS (0.0l, -0.0l, __builtin_nanl (""), __builtin_infl (),
 	      long double, comparecl, CMPLXL);
 }
-# endif
 #endif
 
 static int
@@ -136,9 +134,7 @@ do_test (void)
 #ifdef CMPLX
   check_float ();
   check_double ();
-# ifndef NO_LONG_DOUBLE
   check_long_double ();
-# endif
 #endif
 
   return result;
