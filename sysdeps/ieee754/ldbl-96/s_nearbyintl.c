@@ -54,6 +54,7 @@ long double __nearbyintl(long double x)
 		feholdexcept (&env);
 	        w = TWO63[sx]+x;
 	        t = w-TWO63[sx];
+		math_force_eval (t);
 		fesetenv (&env);
 		GET_LDOUBLE_EXP(i0,t);
 		SET_LDOUBLE_EXP(t,(i0&0x7fff)|(sx<<15));
@@ -80,6 +81,7 @@ long double __nearbyintl(long double x)
 	feholdexcept (&env);
 	w = TWO63[sx]+x;
 	t = w-TWO63[sx];
+	math_force_eval (t);
 	fesetenv (&env);
 	return t;
 }

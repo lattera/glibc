@@ -1,5 +1,17 @@
 2013-05-19  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #15490]
+	* sysdeps/ieee754/dbl-64/s_nearbyint.c (__nearbyint): Use
+	math_force_eval before restoring floating-point envrionment.
+	* sysdeps/ieee754/flt-32/s_nearbyintf.c (__nearbyintf): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nearbyintl.c (__nearbyintl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_nearbyintl.c: Include
+	<math_private.h>.
+	(__nearbyintl): Use math_force_eval before restoring
+	floating-point environment.
+	* sysdeps/ieee754/ldbl-96/s_nearbyintl.c (__nearbyintl): Likewise.
+
 	* math/gen-libm-test.pl (special_functions): Remove.
 	(parse_args): Don't handle TEST_extra.  Handle functions with no
 	return value.

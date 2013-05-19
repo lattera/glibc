@@ -47,6 +47,7 @@ double __nearbyint(double x)
 		libc_feholdexcept (&env);
 	        w = TWO52[sx]+x;
 	        t =  w-TWO52[sx];
+		math_force_eval (t);
 		libc_fesetenv (&env);
 		GET_HIGH_WORD(i0,t);
 		SET_HIGH_WORD(t,(i0&0x7fffffff)|(sx<<31));
@@ -59,6 +60,7 @@ double __nearbyint(double x)
 	libc_feholdexcept (&env);
 	w = TWO52[sx]+x;
 	t = w-TWO52[sx];
+	math_force_eval (t);
 	libc_fesetenv (&env);
 	return t;
 }

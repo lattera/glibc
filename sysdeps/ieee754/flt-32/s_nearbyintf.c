@@ -39,6 +39,7 @@ __nearbyintf(float x)
 		libc_feholdexceptf (&env);
 		w = TWO23[sx]+x;
 		t =  w-TWO23[sx];
+		math_force_eval (t);
 		libc_fesetenvf (&env);
 		GET_FLOAT_WORD(i0,t);
 		SET_FLOAT_WORD(t,(i0&0x7fffffff)|(sx<<31));
@@ -51,6 +52,7 @@ __nearbyintf(float x)
 	libc_feholdexceptf (&env);
 	w = TWO23[sx]+x;
 	t = w-TWO23[sx];
+	math_force_eval (t);
 	libc_fesetenvf (&env);
 	return t;
 }

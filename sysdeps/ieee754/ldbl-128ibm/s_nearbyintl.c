@@ -21,6 +21,7 @@
    when it's coded in C.  */
 
 #include <math.h>
+#include <math_private.h>
 #include <fenv.h>
 #include <math_ldbl_opt.h>
 #include <float.h>
@@ -53,6 +54,8 @@ __nearbyintl (long double x)
 	}
       u.dd[0] = high;
       u.dd[1] = 0.0;
+      math_force_eval (u.dd[0]);
+      math_force_eval (u.dd[1]);
       fesetenv (&env);
     }
   else if (fabs (u.dd[1]) < TWO52 && u.dd[1] != 0.0)
@@ -109,6 +112,8 @@ __nearbyintl (long double x)
 	}
       u.dd[0] = high + low;
       u.dd[1] = high - u.dd[0] + low;
+      math_force_eval (u.dd[0]);
+      math_force_eval (u.dd[1]);
       fesetenv (&env);
     }
 
