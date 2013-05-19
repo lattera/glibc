@@ -616,22 +616,22 @@ ildouble: 1
 ldouble: 1
 
 # sincos
-Test "sincos (0.80190127184058835, &sin_res, &cos_res) puts 0.69534156199418473 in cos_res":
+Test "sincos (0.80190127184058835) extra output 2":
 double: 1
 idouble: 1
-Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.5 in cos_res":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.86602540378443864676372317075293616 in sin_res":
+Test "sincos (M_PI_6l*2.0) extra output 1":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
-Test "sincos (pi/2, &sin_res, &cos_res) puts 0 in cos_res":
+Test "sincos (M_PI_6l*2.0) extra output 2":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "sincos (pi/2) extra output 2":
 double: 1
 float: 1
 idouble: 1
@@ -699,16 +699,16 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "y1 (1.5) == -0.412308626973911295952829820633445323":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "y1 (10.0) == 0.249015424206953883923283474663222803":
 double: 3
 float: 1
 idouble: 3
 ifloat: 1
-Test "y1 (1.5) == -0.412308626973911295952829820633445323";
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "y1 (2.0) == -0.107032431540937546888370772277476637":
 double: 1
 float: 1
@@ -758,16 +758,16 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "yn (1, 1.5) == -0.412308626973911295952829820633445323":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "yn (1, 10.0) == 0.249015424206953883923283474663222803":
 double: 3
 float: 1
 idouble: 3
 ifloat: 1
-Test "yn (1, 1.5) == -0.412308626973911295952829820633445323";
-float: 1
-ifloat: 1
-ldouble: 1
-ildouble: 1
 Test "yn (1, 2.0) == -0.107032431540937546888370772277476637":
 double: 1
 float: 1

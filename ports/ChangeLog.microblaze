@@ -1,3 +1,7 @@
+2013-05-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/microblaze/libm-test-ulps: Update names of sincos tests.
+
 2013-03-28  David Holsgrove  <david.holsgrove@xilinx.com>
 
 	* sysdeps/microblaze/Implies: New file.

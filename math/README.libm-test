@@ -103,8 +103,3 @@ The accepted parameter types are:
 - "L" for long long int.
 - "F" for the address of a FLOAT (only as input parameter)
 - "I" for the address of an int (only as input parameter)
-
-Some functions need special handling.  For example gamma sets the
-global variable signgam and frexp takes an argument to &int.  This
-special treatment is coded in "gen-libm-test.pl" and used while
-parsing "libm-test.inc".

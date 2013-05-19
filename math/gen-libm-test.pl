@@ -156,33 +156,6 @@ sub show_exceptions {
   }
 }
 
-# Treat some functions especially.
-# Currently only sincos needs extra treatment.
-sub special_functions {
-  my ($file, $args) = @_;
-  my (@args, $str, $test, $cline);
-
-  @args = split /,\s*/, $args;
-
-  unless ($args[0] =~ /sincos/) {
-    die ("Don't know how to handle $args[0] extra.");
-  }
-  $cline = "    { $args[1]";
-
-  $str = 'sincos (' . &beautify ($args[1]) . ', &sin_res, &cos_res)';
-  # handle sin
-  $test = $str . ' puts ' . &beautify ($args[2]) . ' in sin_res';
-
-  $cline .= ", \"$test\", $args[2]";
-
-  # handle cos
-  $test = $str . ' puts ' . &beautify ($args[3]) . ' in cos_res';
-  $cline .= ", \"$test\", $args[3]";
-  $cline .= show_exceptions ($args[4]);
-  $cline .= " },\n";
-  print $file $cline;
-}
-
 # Parse the arguments to TEST_x_y
 sub parse_args {
   my ($file, $descr, $fct, $args) = @_;
@@ -191,10 +164,6 @@ sub parse_args {
   my (@special);
   my ($call);
 
-  if ($descr eq 'extra') {
-    &special_functions ($file, $args);
-    return;
-  }
   ($descr_args, $descr_res) = split /_/,$descr, 2;
 
   @args = split /,\s*/, $args;
@@ -284,15 +253,14 @@ sub parse_args {
       next;
     }
   }
-  $cline .= ", ";
 
   @descr = split //,$descr_res;
   foreach (@descr) {
     if ($_ =~ /b|f|i|l|L/ ) {
-      $cline .= $args[$current_arg];
+      $cline .= ", $args[$current_arg]";
       $current_arg++;
     } elsif ($_ eq 'c') {
-      $cline .= "$args[$current_arg], $args[$current_arg+1]";
+      $cline .= ", $args[$current_arg], $args[$current_arg+1]";
       $current_arg += 2;
     } elsif ($_ eq '1') {
       push @special, $args[$current_arg];

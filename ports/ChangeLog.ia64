@@ -1,3 +1,7 @@
+2013-05-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ia64/fpu/libm-test-ulps: Update names of sincos tests.
+
 2013-03-12  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/ia64/sysdep.h (INTERNAL_SYSCALL_DECL): Add

@@ -563,27 +563,27 @@ idouble: 1
 ifloat: 1
 
 # sincos
-Test "sincos (0.7, &sin_res, &cos_res) puts 0.76484218728448842626 in cos_res":
+Test "sincos (0.7) extra output 2":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.5 in cos_res":
+Test "sincos (M_PI_6l*2.0) extra output 1":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "sincos (M_PI_6l*2.0) extra output 2":
 double: 1
 float: 0.5
 idouble: 1
 ifloat: 0.5
-Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.866025403784438646764 in sin_res":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-Test "sincos (pi/2, &sin_res, &cos_res) puts 0 in cos_res":
+Test "sincos (pi/2) extra output 2":
 double: 0.2758
 float: 0.3667
 idouble: 0.2758
 ifloat: 0.3667
-Test "sincos (pi/6, &sin_res, &cos_res) puts 0.866025403784438646764 in cos_res":
+Test "sincos (pi/6) extra output 2":
 float: 1
 ifloat: 1
 
