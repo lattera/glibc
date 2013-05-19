@@ -145,18 +145,6 @@ sub build_complex_beautify {
   return $str1;
 }
 
-# Return name of a variable
-sub get_variable {
-  my ($number) = @_;
-
-  return "x" if ($number == 1);
-  return "y" if ($number == 2);
-  return "z" if ($number == 3);
-  # return x1,x2,...
-  $number =-3;
-  return "x$number";
-}
-
 # Return the text to put in an initializer for a test's exception
 # information.
 sub show_exceptions {
@@ -201,7 +189,7 @@ sub parse_args {
   my (@args, $str, $descr_args, $descr_res, @descr);
   my ($current_arg, $cline, $i);
   my (@special);
-  my ($extra_var, $call);
+  my ($call);
 
   if ($descr eq 'extra') {
     &special_functions ($file, $args);
@@ -215,27 +203,25 @@ sub parse_args {
 
   # Generate first the string that's shown to the user
   $current_arg = 1;
-  $extra_var = 0;
   @descr = split //,$descr_args;
   for ($i = 0; $i <= $#descr; $i++) {
-    if ($i >= 1) {
-      $call .= ', ';
+    my $comma = "";
+    if ($current_arg > 1) {
+      $comma = ', ';
     }
     # FLOAT, int, long int, long long int
     if ($descr[$i] =~ /f|i|l|L/) {
-      $call .= &beautify ($args[$current_arg]);
+      $call .= $comma . &beautify ($args[$current_arg]);
       ++$current_arg;
       next;
     }
-    # &FLOAT, &int - argument is added here
+    # &FLOAT, &int - simplify call by not showing argument.
     if ($descr[$i] =~ /F|I/) {
-      ++$extra_var;
-      $call .= '&' . &get_variable ($extra_var);
       next;
     }
     # complex
     if ($descr[$i] eq 'c') {
-      $call .= &build_complex_beautify ($args[$current_arg], $args[$current_arg+1]);
+      $call .= $comma . &build_complex_beautify ($args[$current_arg], $args[$current_arg+1]);
       $current_arg += 2;
       next;
     }
@@ -278,7 +264,6 @@ sub parse_args {
   # Put the C program line together
   # Reset some variables to start again
   $current_arg = 1;
-  $extra_var = 0;
   $cline = "{ \"$str\"";
   @descr = split //,$descr_args;
   for ($i=0; $i <= $#descr; $i++) {
@@ -320,50 +305,17 @@ sub parse_args {
 			     : undef);
 
   # special treatment for some functions
-  if ($args[0] eq 'frexp') {
-    if (defined $special[0]) {
-      my ($extra_expected) = $special[0];
-      my ($run_extra) = ($extra_expected ne "IGNORE" ? 1 : 0);
-      my ($str) = "$call sets x to $extra_expected";
-      if (!$run_extra) {
-	$str = "";
-	$extra_expected = "0";
-      }
-      $cline .= ", \"$str\", $run_extra, $extra_expected";
+  $i = 0;
+  foreach (@special) {
+    ++$i;
+    my ($extra_expected) = $_;
+    my ($run_extra) = ($extra_expected ne "IGNORE" ? 1 : 0);
+    my ($str) = "$call extra output $i";
+    if (!$run_extra) {
+      $str = "";
+      $extra_expected = "0";
     }
-  } elsif ($args[0] eq 'gamma' || $args[0] eq 'lgamma') {
-    if (defined $special[0]) {
-      my ($extra_expected) = $special[0];
-      my ($run_extra) = ($extra_expected ne "IGNORE" ? 1 : 0);
-      my ($str) = "$call sets signgam to $extra_expected";
-      if (!$run_extra) {
-	$str = "";
-	$extra_expected = "0";
-      }
-      $cline .= ", \"$str\", $run_extra, $extra_expected";
-    }
-  } elsif ($args[0] eq 'modf') {
-    if (defined $special[0]) {
-      my ($extra_expected) = $special[0];
-      my ($run_extra) = ($extra_expected ne "IGNORE" ? 1 : 0);
-      my ($str) = "$call sets x to $extra_expected";
-      if (!$run_extra) {
-	$str = "";
-	$extra_expected = "0";
-      }
-      $cline .= ", \"$str\", $run_extra, $extra_expected";
-    }
-  } elsif ($args[0] eq 'remquo') {
-    if (defined $special[0]) {
-      my ($extra_expected) = $special[0];
-      my ($run_extra) = ($extra_expected ne "IGNORE" ? 1 : 0);
-      my ($str) = "$call sets x to $extra_expected";
-      if (!$run_extra) {
-	$str = "";
-	$extra_expected = "0";
-      }
-      $cline .= ", \"$str\", $run_extra, $extra_expected";
-    }
+    $cline .= ", \"$str\", $run_extra, $extra_expected";
   }
   print $file "    $cline },\n";
 }
