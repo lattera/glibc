@@ -44,8 +44,14 @@ ENTRY (__sigsetjmp)
 	stp	d10, d11, [x0, #JB_D10<<3]
 	stp	d12, d13, [x0, #JB_D12<<3]
 	stp	d14, d15, [x0, #JB_D14<<3]
-	mov	x1,  sp
-	str	x1,  [x0, #JB_SP<<3]
+	mov	x2,  sp
+	str	x2,  [x0, #JB_SP<<3]
+#if defined NOT_IN_libc && defined IS_IN_rtld
+	/* In ld.so we never save the signal mask */
+	mov	w0, #0
+	RET
+#else
 	b	C_SYMBOL_NAME(__sigjmp_save)
+#endif
 END (__sigsetjmp)
 hidden_def (__sigsetjmp)

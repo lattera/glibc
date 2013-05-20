@@ -25,7 +25,8 @@ headers	:= setjmp.h bits/setjmp.h bits/setjmp2.h
 routines	:= setjmp sigjmp bsd-setjmp bsd-_setjmp \
 		   longjmp __longjmp jmp-unwind
 
-tests		:= tst-setjmp jmpbug bug269-setjmp tst-setjmp-fp
+tests		:= tst-setjmp jmpbug bug269-setjmp tst-setjmp-fp \
+		   tst-sigsetjmp
 
 
 include ../Rules

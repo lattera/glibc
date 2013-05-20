@@ -1,3 +1,10 @@
+2013-05-21  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #15493]
+	* sysdeps/aarch64/setjmp.S (__sigsetjmp): Don't clobber register
+	x1.
+	[NOT_IN_libc && IS_IN_rtld]: Don't call __sigjmp_save.
+
 2013-05-21  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
 	* sysdeps/aarch64/libm-test-ulps: Regenerate.
