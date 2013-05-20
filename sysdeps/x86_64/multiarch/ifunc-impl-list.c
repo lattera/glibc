@@ -227,6 +227,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memcpy, HAS_SSSE3,
 			      __memcpy_ssse3_back)
 	      IFUNC_IMPL_ADD (array, i, memcpy, HAS_SSSE3, __memcpy_ssse3)
+	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_sse2))
 
   /* Support sysdeps/x86_64/multiarch/mempcpy_chk.S.  */
