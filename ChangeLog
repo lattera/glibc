@@ -276,6 +276,7 @@
 
 2013-05-17  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	[BZ # 15497]
 	* sysdeps/powerpc/fpu/e_hypot.c (GET_TWO_FLOAT_WORD): Fix test for
 	negative infinity on POWER6 or lower.
 	* sysdeps/powerpc/fpu/e_hypotf.c (GET_TWO_FLOAT_WORD): Likewise.
