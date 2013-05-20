@@ -1,5 +1,11 @@
 2013-05-20  Ondřej Bílka  <neleai@seznam.cz>
 
+	* sysdeps/x86_64/memset.S (memset): New implementation.
+	(__bzero): Likewise.
+	(__memset_tail): New function.
+
+2013-05-20  Ondřej Bílka  <neleai@seznam.cz>
+
 	* sysdeps/x86_64/multiarch/memcpy-sse2-unaligned.S: New file.
 	* sysdeps/x86_64/multiarch/memcpy.S (__new_memcpy): Add
 	__memcpy_sse2_unaligned ifunc selection.
