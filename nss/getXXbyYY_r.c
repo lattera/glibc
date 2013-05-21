@@ -287,10 +287,10 @@ done:
 #endif
   *result = status == NSS_STATUS_SUCCESS ? resbuf : NULL;
 #ifdef NEED_H_ERRNO
-  if (status == NSS_STATUS_UNAVAIL)
-    /* Either we failed to lookup the functions or the functions themselves
-       had a system error.  Set NETDB_INTERNAL here to let the caller know
-       that the errno may have the real reason for failure.  */
+  if (status == NSS_STATUS_UNAVAIL && !any_service && errno != ENOENT)
+    /* This happens when we weren't able to use a service for reasons other
+       than the module not being found.  In such a case, we'd want to tell the
+       caller that errno has the real reason for failure.  */
     *h_errnop = NETDB_INTERNAL;
   else if (status != NSS_STATUS_SUCCESS && !any_service)
     /* We were not able to use any service.  */

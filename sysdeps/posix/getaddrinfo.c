@@ -1036,7 +1036,15 @@ gaih_inet (const char *name, const struct gaih_service *service,
 			}
 		    }
 		  else
-		    status = NSS_STATUS_UNAVAIL;
+		    {
+		      status = NSS_STATUS_UNAVAIL;
+		      /* Could not load any of the lookup functions.  Indicate
+		         an internal error if the failure was due to a system
+			 error other than the file not being found.  We use the
+			 errno from the last failed callback.  */
+		      if (errno != 0 && errno != ENOENT)
+			__set_h_errno (NETDB_INTERNAL);
+		    }
 		}
 
 	      if (nss_next_action (nip, status) == NSS_ACTION_RETURN)
@@ -1050,7 +1058,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	  _res.options |= old_res_options & RES_USE_INET6;
 
-	  if (status == NSS_STATUS_UNAVAIL)
+	  if (h_errno == NETDB_INTERNAL)
 	    {
 	      result = GAIH_OKIFUNSPEC | -EAI_SYSTEM;
 	      goto free_and_return;

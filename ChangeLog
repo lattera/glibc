@@ -1,3 +1,11 @@
+2013-05-21  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #15339]
+	* nss/getXXbyYY_r.c (REENTRANT_NAME): Set NETDB_INTERNAL only
+	when no services were used.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Set h_errno.
+	Return EAI_SYSTEM if h_errno is NETDB_INTERNAL.
+
 2013-05-21  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #15014]
