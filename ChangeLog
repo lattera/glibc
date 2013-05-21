@@ -1,3 +1,10 @@
+2013-05-21  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* benchtests/Makefile: Remove instructions for adding
+	benchmark tests.
+	* benchtests/README: New file to explain how to execute and
+	enhance the benchmark tests.
+
 2013-05-21  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #15493]

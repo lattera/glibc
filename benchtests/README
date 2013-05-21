@@ -1,0 +1,74 @@
+Using the glibc microbenchmark suite
+====================================
+
+The glibc microbenchmark suite automatically generates code for specified
+functions, builds and calls them repeatedly for given inputs to give some
+basic performance properties of the function.
+
+Running the benchmark:
+=====================
+
+The benchmark can be executed by invoking make as follows:
+
+  $ make bench
+
+This runs each function for 10 seconds and appends its output to
+benchtests/bench.out.  To ensure that the tests are rebuilt, one could run:
+
+  $ make bench-clean
+
+The duration of each test can be configured setting the BENCH_DURATION variable
+in the call to make.  One should run `make bench-clean' before changing
+BENCH_DURATION.
+
+  $ make BENCH_DURATION=1 bench
+
+The benchmark suite does function call measurements using architecture-specific
+high precision timing instructions whenever available.  When such support is
+not available, it uses clock_gettime (CLOCK_PROCESS_CPUTIME_ID).  One can force
+the benchmark to use clock_gettime by invoking make as follows:
+
+  $ make USE_CLOCK_GETTIME=1 bench
+
+Again, one must run `make bench-clean' before changing the measurement method.
+
+Adding a function to benchtests:
+===============================
+
+If the name of the function is `foo', then the following procedure should allow
+one to add `foo' to the bench tests:
+
+- Append the function name to the bench variable in the Makefile.
+
+- Define foo-ARGLIST as a colon separated list of types of the input
+  arguments.  Use `void' if function does not take any inputs.  Put in quotes
+  if the input argument is a pointer, e.g.:
+
+     malloc-ARGLIST: "void *"
+
+- Define foo-RET as the type the function returns.  Skip if the function
+  returns void.  One could even skip foo-ARGLIST if the function does not
+  take any inputs AND the function returns void.
+
+- Make a file called `foo-inputs` with one input value per line, an input
+  being a comma separated list of arguments to be passed into the function.
+  See pow-inputs for an example.
+
+  The script that parses the -inputs file treats lines beginning with a single
+  `#' as comments.  Lines beginning with two hashes `##' are treated specially
+  as `directives'.
+
+Multiple execution units per function:
+=====================================
+
+Some functions have distinct performance characteristics for different input
+domains and it may be necessary to measure those separately.  For example, some
+math functions perform computations at different levels of precision (64-bit vs
+240-bit vs 768-bit) and mixing them does not give a very useful picture of the
+performance of these functions.  One could separate inputs for these domains in
+the same file by using the `name' directive that looks something like this:
+
+  ##name: 240bit
+
+See the pow-inputs file for an example of what such a partitioned input file
+would look like.

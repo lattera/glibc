@@ -18,26 +18,6 @@
 
 # Makefile for benchmark tests.  The only useful target here is `bench`.
 
-# Adding a new function `foo`:
-# ---------------------------
-
-# - Append the function name to the bench variable
-
-# - Define foo-ARGLIST as a colon separated list of types of the input
-#   arguments.  Use `void` if function does not take any inputs.  Put in quotes
-#   if the input argument is a pointer, e.g.:
-
-#      malloc-ARGLIST: "void *"
-
-# - Define foo-RET as the type the function returns.  Skip if the function
-#   returns void.  One could even skip foo-ARGLIST if the function does not
-#   take any inputs AND the function returns void.
-
-
-# - Make a file called `foo-inputs` with one input value per line, an input
-#   being a comma separated list of arguments to be passed into the function.
-#   See pow-inputs for an example.
-
 subdir := benchtests
 bench := exp pow rint sin cos tan atan modf
 
