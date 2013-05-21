@@ -101,12 +101,63 @@
     cfi_same_value (gp);						      \
     RESTORESTK;								      \
   L(pseudo_end):
-
+#else
+# undef PSEUDO
+# define PSEUDO(name, syscall_name, args)				      \
+      .align 2;								      \
+  L(pseudo_start):							      \
+      cfi_startproc;							      \
+      cfi_adjust_cfa_offset (STKSPACE);					      \
+  99: RESTORESTK;							      \
+      j __syscall_error;						      \
+  .type __##syscall_name##_nocancel, @function;				      \
+  .globl __##syscall_name##_nocancel;					      \
+  __##syscall_name##_nocancel:						      \
+    SAVESTK;								      \
+    li v0, SYS_ify(syscall_name);					      \
+    syscall;								      \
+    bne a3, zero, SYSCALL_ERROR_LABEL;			       		      \
+    RESTORESTK;								      \
+    ret;								      \
+    cfi_endproc;							      \
+  .size __##syscall_name##_nocancel,.-__##syscall_name##_nocancel;	      \
+  ENTRY (name)								      \
+    SAVESTK;								      \
+    SINGLE_THREAD_P(v1);						      \
+    bne zero, v1, L(pseudo_cancel);					      \
+    .set noreorder;							      \
+    li v0, SYS_ify(syscall_name);					      \
+    syscall;								      \
+    .set reorder;							      \
+    bne a3, zero, SYSCALL_ERROR_LABEL;			       		      \
+    RESTORESTK;								      \
+    ret;								      \
+  L(pseudo_cancel):							      \
+    cfi_adjust_cfa_offset (STKSPACE);					      \
+    REG_S ra, STKOFF_RA(sp);						      \
+    cfi_rel_offset (ra, STKOFF_RA);					      \
+    PUSHARGS_##args;			/* save syscall args */	      	      \
+    CENABLE;								      \
+    REG_S v0, STKOFF_SVMSK(sp);		/* save mask */			      \
+    POPARGS_##args;			/* restore syscall args */	      \
+    .set noreorder;							      \
+    li v0, SYS_ify (syscall_name);				      	      \
+    syscall;								      \
+    .set reorder;							      \
+    REG_S v0, STKOFF_SC_V0(sp);		/* save syscall result */             \
+    REG_S a3, STKOFF_SC_ERR(sp);	/* save syscall error flag */	      \
+    REG_L a0, STKOFF_SVMSK(sp);		/* pass mask as arg1 */		      \
+    CDISABLE;								      \
+    REG_L a3, STKOFF_SC_ERR(sp);	/* restore syscall error flag */      \
+    REG_L ra, STKOFF_RA(sp);		/* restore return address */	      \
+    REG_L v0, STKOFF_SC_V0(sp);		/* restore syscall result */          \
+    bne a3, zero, SYSCALL_ERROR_LABEL;					      \
+    RESTORESTK;								      \
+  L(pseudo_end):
+#endif
 
 # undef PSEUDO_END
 # define PSEUDO_END(sym) cfi_endproc; .end sym; .size sym,.-sym
-
-#endif
 
 # define PUSHARGS_0	/* nothing to do */
 # define PUSHARGS_1	PUSHARGS_0 REG_S a0, STKOFF_A0(sp); cfi_rel_offset (a0, STKOFF_A0);
@@ -126,7 +177,11 @@
 
 /* Save an even number of slots.  Should be 0 if an even number of slots
    are used below, or SZREG if an odd number are used.  */
-# define STK_PAD	SZREG
+# ifdef __PIC__
+#  define STK_PAD	SZREG
+# else
+#  define STK_PAD	0
+# endif
 
 /* Place values that we are more likely to use later in this sequence, i.e.
    closer to the SP at function entry.  If you do that, the are more
@@ -141,21 +196,32 @@
 # define STKOFF_SC_V0	(STKOFF_RA + SZREG)	/* Used if MT.  */
 # define STKOFF_SC_ERR	(STKOFF_SC_V0 + SZREG)	/* Used if MT.  */
 # define STKOFF_SVMSK	(STKOFF_SC_ERR + SZREG)	/* Used if MT.  */
-# define STKOFF_GP	(STKOFF_SVMSK + SZREG)	/* Always used.  */
 
-# define STKSPACE	(STKOFF_GP + SZREG)
+# ifdef __PIC__
+#  define STKOFF_GP	(STKOFF_SVMSK + SZREG)	/* Always used.  */
+#  define STKSPACE	(STKOFF_GP + SZREG)
+# else
+#  define STKSPACE	(STKOFF_SVMSK + SZREG)
+# endif
+
 # define SAVESTK 	PTR_SUBU sp, STKSPACE; cfi_adjust_cfa_offset(STKSPACE)
 # define RESTORESTK 	PTR_ADDU sp, STKSPACE; cfi_adjust_cfa_offset(-STKSPACE)
 
-# ifdef IS_IN_libpthread
-#  define CENABLE	PTR_LA t9, __pthread_enable_asynccancel; jalr t9
-#  define CDISABLE	PTR_LA t9, __pthread_disable_asynccancel; jalr t9
-# elif defined IS_IN_librt
-#  define CENABLE	PTR_LA t9, __librt_enable_asynccancel; jalr t9
-#  define CDISABLE	PTR_LA t9, __librt_disable_asynccancel; jalr t9
+# ifdef __PIC__
+#  define PSEUDO_JMP(sym) PTR_LA t9, sym; jalr t9
 # else
-#  define CENABLE	PTR_LA t9, __libc_enable_asynccancel; jalr t9
-#  define CDISABLE	PTR_LA t9, __libc_disable_asynccancel; jalr t9
+#  define PSEUDO_JMP(sym) jal sym
+# endif
+
+# ifdef IS_IN_libpthread
+#  define CENABLE	PSEUDO_JMP (__pthread_enable_asynccancel)
+#  define CDISABLE	PSEUDO_JMP (__pthread_disable_asynccancel)
+# elif defined IS_IN_librt
+#  define CENABLE	PSEUDO_JMP (__librt_enable_asynccancel)
+#  define CDISABLE	PSEUDO_JMP (__librt_disable_asynccancel)
+# else
+#  define CENABLE	PSEUDO_JMP (__libc_enable_asynccancel)
+#  define CDISABLE	PSEUDO_JMP (__libc_disable_asynccancel)
 # endif
 
 # ifndef __ASSEMBLER__

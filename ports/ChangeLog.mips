@@ -1,3 +1,20 @@
+2013-05-21  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15506]
+	* sysdeps/unix/sysv/linux/mips/mips64/nptl/sysdep-cancel.h
+	[!__PIC__] (PSEUDO): Undefine and redefine.
+	(PSEUDO_END): Undefine and redefine unconditionally.
+	[!__PIC__] (STK_PAD): Define to 0.
+	[!__PIC__] (STKOFF_GP): Do not define.
+	[!__PIC__] (STKSPACE): Define to (STKOFF_SVMSK + SZREG).
+	(PSEUDO_JMP): Define depending on [__PIC__].
+	(CENABLE): Use PSEUDO_JMP in all definitions.
+	(CDISABLE): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h
+	(SYSCALL_ERROR_LABEL): Define unconditionally.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h
+	(SYSCALL_ERROR_LABEL): Define unconditionally.
+
 2013-05-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/mips32/libm-test-ulps: Update names of sincos
