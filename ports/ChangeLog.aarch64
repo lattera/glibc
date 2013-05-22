@@ -1,3 +1,7 @@
+2013-05-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/aarch64/libm-test-ulps: Update test names.
+
 2013-05-21  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #15493]

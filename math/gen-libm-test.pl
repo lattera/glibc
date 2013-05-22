@@ -198,20 +198,17 @@ sub parse_args {
     die ("$descr[$i] is unknown");
   }
   $call .= ')';
-  $str = "$call == ";
+  $str = $call;
 
   # Result
   @descr = split //,$descr_res;
   foreach (@descr) {
     if ($_ =~ /f|i|l|L/) {
-      $str .= &beautify ($args[$current_arg]);
       ++$current_arg;
     } elsif ($_ eq 'c') {
-      $str .= &build_complex_beautify ($args[$current_arg], $args[$current_arg+1]);
       $current_arg += 2;
     } elsif ($_ eq 'b') {
       # boolean
-      $str .= ($args[$current_arg] == 0) ? "false" : "true";
       ++$current_arg;
     } elsif ($_ eq '1') {
       ++$current_arg;

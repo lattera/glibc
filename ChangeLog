@@ -1,3 +1,14 @@
+2013-05-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/gen-libm-test.pl (parse_args): Do not include expected
+	result in test name.
+	* sysdeps/i386/fpu/libm-test-ulps: Update test names.
+	* sysdeps/powerpc/fpu/libm-test-ulps: Likewise.
+	* sysdeps/s390/fpu/libm-test-ulps: Likewise.
+	* sysdeps/sh/sh4/fpu/libm-test-ulps: Likewise.
+	* sysdeps/sparc/fpu/libm-test-ulps: Likewise.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2013-05-22  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* benchtests/Makefile: Sort function entries.

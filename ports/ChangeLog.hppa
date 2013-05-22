@@ -1,3 +1,7 @@
+2013-05-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/hppa/fpu/libm-test-ulps: Update test names.
+
 2013-05-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/hppa/fpu/libm-test-ulps: Update names of sincos tests.

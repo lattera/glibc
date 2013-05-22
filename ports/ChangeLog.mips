@@ -1,3 +1,8 @@
+2013-05-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/mips32/libm-test-ulps: Update test names.
+	* sysdeps/mips/mips64/libm-test-ulps: Likewise.
+
 2013-05-21  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15506]
