@@ -1,3 +1,13 @@
+2013-05-03  Carlos O'Donell  <carlos at redhat.com>
+
+	[BZ #15441]
+	* intl/dcigettext.c (DCIGETTEXT): Skip translating if _nl_find_msg
+	returns -1.
+	(_nl_find_msg): Return -1 if recursive call returned -1. If newmem is
+	null return -1.
+	* intl/loadmsgcat.c (_nl_load_domain): If _nl_find_msg returns -1 abort
+	loading the domain.
+
 2013-05-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/gen-libm-test.pl (parse_args): Do not include expected

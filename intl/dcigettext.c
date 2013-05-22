@@ -638,6 +638,11 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 		  retval = _nl_find_msg (domain->successor[cnt], binding,
 					 msgid1, 1, &retlen);
 
+		  /* Resource problems are not fatal, instead we return no
+		     translation.  */
+		  if (__builtin_expect (retval == (char *) -1, 0))
+		    goto no_translation;
+
 		  if (retval != NULL)
 		    {
 		      domain = domain->successor[cnt];
@@ -941,6 +946,11 @@ _nl_find_msg (domain_file, domainbinding, msgid, convert, lengthp)
 	    nullentry =
 	      _nl_find_msg (domain_file, domainbinding, "", 0, &nullentrylen);
 
+	    /* Resource problems are fatal.  If we continue onwards we will
+	       only attempt to calloc a new conv_tab and fail later.  */
+	    if (__builtin_expect (nullentry == (char *) -1, 0))
+	      return (char *) -1;
+
 	    if (nullentry != NULL)
 	      {
 		const char *charsetstr;
@@ -1170,10 +1180,14 @@ _nl_find_msg (domain_file, domainbinding, msgid, convert, lengthp)
 		      freemem_size = INITIAL_BLOCK_SIZE;
 		      newmem = (transmem_block_t *) malloc (freemem_size);
 # ifdef _LIBC
-		      /* Add the block to the list of blocks we have to free
-			 at some point.  */
-		      newmem->next = transmem_list;
-		      transmem_list = newmem;
+		      if (newmem != NULL)
+			{
+			  /* Add the block to the list of blocks we have to free
+			     at some point.  */
+			  newmem->next = transmem_list;
+			  transmem_list = newmem;
+			}
+		      /* Fall through and return -1.  */
 # endif
 		    }
 		  if (__builtin_expect (newmem == NULL, 0))
