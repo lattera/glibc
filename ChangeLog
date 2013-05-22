@@ -1,5 +1,7 @@
 2013-05-22  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* benchtests/Makefile: Sort function entries.
+
 	* benchtests/Makefile (bench): Add asin, acos, sinh, cosh,
 	tanh, asinh, acosh, atanh.
 	* benchtests/acos-inputs: New file.
