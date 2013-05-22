@@ -95,6 +95,7 @@ typedef struct
 	struct
 	  {
 	    void *si_addr;	/* Faulting insn/memory ref.  */
+	    short int si_addr_lsb;	/* Valid LSB of the reported address.  */
 	  } _sigfault;
 
 	/* SIGPOLL.  */
@@ -127,6 +128,7 @@ typedef struct
 # define si_int		_sifields._rt.si_sigval.sival_int
 # define si_ptr		_sifields._rt.si_sigval.sival_ptr
 # define si_addr	_sifields._sigfault.si_addr
+# define si_addr_lsb	_sifields._sigfault.si_addr_lsb
 # define si_band	_sifields._sigpoll.si_band
 # define si_fd		_sifields._sigpoll.si_fd
 # define si_call_addr 	_sifields._sigsys._call_addr
@@ -217,8 +219,12 @@ enum
 # define BUS_ADRALN	BUS_ADRALN
   BUS_ADRERR,			/* Non-existant physical address.  */
 # define BUS_ADRERR	BUS_ADRERR
-  BUS_OBJERR			/* Object specific hardware error.  */
+  BUS_OBJERR,			/* Object specific hardware error.  */
 # define BUS_OBJERR	BUS_OBJERR
+  BUS_MCEERR_AR,		/* Hardware memory error: action required.  */
+# define BUS_MCEERR_AR	BUS_MCEERR_AR
+  BUS_MCEERR_AO			/* Hardware memory error: action optional.  */
+# define BUS_MCEERR_AO	BUS_MCEERR_AO
 };
 
 /* `si_code' values for SIGTRAP signal.  */

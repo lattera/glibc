@@ -1,3 +1,10 @@
+2013-05-22  Edjunior Barbosa Machado  <emachado@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/tile/bits/siginfo.h (siginfo_t): Fix comment
+	formatting. Add	si_addr_lsb to _sifields.sigfault.
+	(si_addr_lsb): Define new macro.
+	(BUS_MCEERR_AR, BUS_MCEERR_AO): Define new values.
+
 2013-05-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/tile/libm-test-ulps: Update test names.

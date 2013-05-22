@@ -1,3 +1,10 @@
+2013-05-22  Edjunior Barbosa Machado  <emachado@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h (siginfo_t): Add
+	si_addr_lsb to _sifields.sifault.
+	(si_addr_lsb): Define new macro.
+	(BUS_MCEERR_AR, BUS_MCEERR_AO): Define new values.
+
 2013-05-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/mips32/libm-test-ulps: Update test names.

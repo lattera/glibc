@@ -1,3 +1,12 @@
+2013-05-22  Edjunior Barbosa Machado  <emachado@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/bits/siginfo.h (siginfo_t): Add si_addr_lsb
+	to _sifields.sigfault.
+	(si_addr_lsb): Define new macro.
+	(BUS_MCEERR_AR, BUS_MCEERR_AO): Define new values.
+	* sysdeps/unix/sysv/linux/sparc/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/siginfo.h: Likewise.
+
 2013-05-03  Carlos O'Donell  <carlos at redhat.com>
 
 	[BZ #15441]
