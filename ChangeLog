@@ -1,3 +1,89 @@
+2013-05-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/gen-libm-test.pl (parse_args): Output only string of
+	arguments as text for test name, not full call or descriptions of
+	tests for extra outputs.
+	(generate_testfile): Do not pass function name to parse_args.
+	Generate this_func variable from START.
+	* math/libm-test.inc (struct test_f_f_data): Rename test_name
+	field to arg_str.
+	(struct test_ff_f_data): Likewise.
+	(test_ff_f_data_nexttoward): Likewise.
+	(struct test_fi_f_data): Likewise.
+	(struct test_fl_f_data): Likewise.
+	(struct test_if_f_data): Likewise.
+	(struct test_fff_f_data): Likewise.
+	(struct test_c_f_data): Likewise.
+	(struct test_f_f1_data): Likewise.  Remove field extra_name.
+	(struct test_fF_f1_data): Likewise.
+	(struct test_ffI_f1_data): Likewise.
+	(struct test_c_c_data): Rename test_name field to arg_str.
+	(struct test_cc_c_data): Likewise.
+	(struct test_f_i_data): Likewise.
+	(struct test_ff_i_data): Likewise.
+	(struct test_f_l_data): Likewise.
+	(struct test_f_L_data): Likewise.
+	(struct test_fFF_11_data): Likewise.  Remove fields extra1_name
+	and extra2_name.
+	(COMMON_TEST_SETUP): New macro.
+	(EXTRA_OUTPUT_TEST_SETUP): Likewise.
+	(COMMON_TEST_CLEANUP): Likewise.
+	(EXTRA_OUTPUT_TEST_CLEANUP): Likewise.
+	(RUN_TEST_f_f): Take argument string.  Call new setup and cleanup
+	macros.
+	(RUN_TEST_LOOP_f_f): Update call to RUN_TEST_f_f.
+	(RUN_TEST_2_f): Take argument string.  Call new setup and cleanup
+	macros.
+	(RUN_TEST_LOOP_2_f): Update call to RUN_TEST_2_f.
+	(RUN_TEST_fff_f): Take argument string.  Call new setup and
+	cleanup macros.
+	(RUN_TEST_LOOP_fff_f): Update call to RUN_TEST_fff_f.
+	(RUN_TEST_c_f): Take argument string.  Call new setup and cleanup
+	macros.
+	(RUN_TEST_LOOP_c_f): Update call to RUN_TEST_c_f.
+	(RUN_TEST_f_f1): Take argument string.  Call new setup and cleanup
+	macros.
+	(RUN_TEST_LOOP_f_f1): Update call to RUN_TEST_f_f1.
+	(RUN_TEST_fF_f1): Take argument string.  Call new setup and
+	cleanup macros.
+	(RUN_TEST_LOOP_fF_f1): Update call to RUN_TEST_fF_f1.
+	(RUN_TEST_fI_f1): Take argument string.  Call new setup and
+	cleanup macros.
+	(RUN_TEST_LOOP_fI_f1): Update call to RUN_TEST_fI_f1.
+	(RUN_TEST_ffI_f1): Take argument string.  Call new setup and
+	cleanup macros.
+	(RUN_TEST_LOOP_ffI_f1): Update call to RUN_TEST_ffI_f1.
+	(RUN_TEST_c_c): Take argument string.  Call new setup and cleanup
+	macros.
+	(RUN_TEST_LOOP_c_c): Update call to RUN_TEST_c_c.
+	(RUN_TEST_cc_c): Take argument string.  Call new setup and cleanup
+	macros.
+	(RUN_TEST_LOOP_cc_c): Update call to RUN_TEST_cc_c.
+	(RUN_TEST_f_i): Take argument string.  Call new setup and cleanup
+	macros.
+	(RUN_TEST_LOOP_f_i): Update call to RUN_TEST_f_i.
+	(RUN_TEST_f_i_tg): Take argument string.  Call new setup and
+	cleanup macros.
+	(RUN_TEST_LOOP_f_i_tg): Update call to RUN_TEST_f_i_tg.
+	(RUN_TEST_ff_i_tg): Take argument string.  Call new setup and
+	cleanup macros.
+	(RUN_TEST_LOOP_ff_i_tg): Update call to RUN_TEST_ff_i_tg.
+	(RUN_TEST_f_b): Take argument string.  Call new setup and cleanup
+	macros.
+	(RUN_TEST_LOOP_f_b): Update call to RUN_TEST_f_b.
+	(RUN_TEST_f_b_tg): Take argument string.  Call new setup and
+	cleanup macros.
+	(RUN_TEST_LOOP_f_b_tg): Update call to RUN_TEST_f_b_tg.
+	(RUN_TEST_f_l): Take argument string.  Call new setup and cleanup
+	macros.
+	(RUN_TEST_LOOP_f_l): Update call to RUN_TEST_f_l.
+	(RUN_TEST_f_L): Take argument string.  Call new setup and cleanup
+	macros.
+	(RUN_TEST_LOOP_f_L): Update call to RUN_TEST_f_L.
+	(RUN_TEST_fFF_11): Take argument string.  Call new setup and
+	cleanup macros.
+	(RUN_TEST_LOOP_fFF_11): Update call to RUN_TEST_fFF_11.
+
 2013-05-22  Edjunior Barbosa Machado  <emachado@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/bits/siginfo.h (siginfo_t): Add si_addr_lsb

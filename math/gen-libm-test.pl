@@ -158,17 +158,17 @@ sub show_exceptions {
 
 # Parse the arguments to TEST_x_y
 sub parse_args {
-  my ($file, $descr, $fct, $args) = @_;
-  my (@args, $str, $descr_args, $descr_res, @descr);
+  my ($file, $descr, $args) = @_;
+  my (@args, $descr_args, $descr_res, @descr);
   my ($current_arg, $cline, $i);
   my (@special);
-  my ($call);
+  my ($call_args);
 
   ($descr_args, $descr_res) = split /_/,$descr, 2;
 
   @args = split /,\s*/, $args;
 
-  $call = "$fct (";
+  $call_args = "";
 
   # Generate first the string that's shown to the user
   $current_arg = 1;
@@ -180,7 +180,7 @@ sub parse_args {
     }
     # FLOAT, int, long int, long long int
     if ($descr[$i] =~ /f|i|l|L/) {
-      $call .= $comma . &beautify ($args[$current_arg]);
+      $call_args .= $comma . &beautify ($args[$current_arg]);
       ++$current_arg;
       next;
     }
@@ -190,15 +190,13 @@ sub parse_args {
     }
     # complex
     if ($descr[$i] eq 'c') {
-      $call .= $comma . &build_complex_beautify ($args[$current_arg], $args[$current_arg+1]);
+      $call_args .= $comma . &build_complex_beautify ($args[$current_arg], $args[$current_arg+1]);
       $current_arg += 2;
       next;
     }
 
     die ("$descr[$i] is unknown");
   }
-  $call .= ')';
-  $str = $call;
 
   # Result
   @descr = split //,$descr_res;
@@ -230,7 +228,7 @@ sub parse_args {
   # Put the C program line together
   # Reset some variables to start again
   $current_arg = 1;
-  $cline = "{ \"$str\"";
+  $cline = "{ \"$call_args\"";
   @descr = split //,$descr_args;
   for ($i=0; $i <= $#descr; $i++) {
     # FLOAT, int, long int, long long int
@@ -275,12 +273,10 @@ sub parse_args {
     ++$i;
     my ($extra_expected) = $_;
     my ($run_extra) = ($extra_expected ne "IGNORE" ? 1 : 0);
-    my ($str) = "$call extra output $i";
     if (!$run_extra) {
-      $str = "";
       $extra_expected = "0";
     }
-    $cline .= ", \"$str\", $run_extra, $extra_expected";
+    $cline .= ", $run_extra, $extra_expected";
   }
   print $file "    $cline },\n";
 }
@@ -289,7 +285,7 @@ sub parse_args {
 sub generate_testfile {
   my ($input, $output) = @_;
   my ($lasttext);
-  my (@args, $i, $str, $thisfct);
+  my (@args, $i);
 
   open INPUT, $input or die ("Can't open $input: $!");
   open OUTPUT, ">$output" or die ("Can't open $output: $!");
@@ -302,17 +298,18 @@ sub generate_testfile {
       my ($descr, $args);
       chop;
       ($descr, $args) = ($_ =~ /TEST_(\w+)\s*\((.*)\)/);
-      &parse_args (\*OUTPUT, $descr, $thisfct, $args);
+      &parse_args (\*OUTPUT, $descr, $args);
       next;
     }
     # START_DATA (function)
     if (/START_DATA/) {
-      ($thisfct) = ($_ =~ /START_DATA\s*\((.*)\)/);
       next;
     }
     # START (function)
     if (/START/) {
+      my ($thisfct);
       ($thisfct) = ($_ =~ /START\s*\((.*)\)/);
+      print OUTPUT "  const char *this_func = \"$thisfct\";\n";
       print OUTPUT "  init_max_error ();\n";
       next;
     }
