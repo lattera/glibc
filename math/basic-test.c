@@ -148,7 +148,7 @@ NAME (void)								      \
   check (#FLOAT " isinf (-HUGE_VALx) == -1", isinf (x1) == -1);		      \
 }
 
-#define TEST_TRUNC(NAME, FLOAT, DOUBLE, SUFFIX)				      \
+#define TEST_CONVERT(NAME, FLOAT, DOUBLE, SUFFIX)			      \
 void									      \
 NAME (void)								      \
 {									      \
@@ -189,11 +189,14 @@ NAME (void)								      \
 
 TEST_FUNC (float_test, float, f, FLT_EPSILON, HUGE_VALF)
 TEST_FUNC (double_test, double, , DBL_EPSILON, HUGE_VAL)
-TEST_TRUNC (truncdfsf_test, float, double, )
+TEST_CONVERT (convert_dfsf_test, float, double, )
+TEST_CONVERT (convert_sfdf_test, double, float, f)
 #ifndef NO_LONG_DOUBLE
 TEST_FUNC (ldouble_test, long double, l, LDBL_EPSILON, HUGE_VALL)
-TEST_TRUNC (trunctfsf_test, float, long double, l)
-TEST_TRUNC (trunctfdf_test, double, long double, l)
+TEST_CONVERT (convert_tfsf_test, float, long double, l)
+TEST_CONVERT (convert_sftf_test, long double, float, f)
+TEST_CONVERT (convert_tfdf_test, double, long double, l)
+TEST_CONVERT (convert_dftf_test, long double, double, )
 #endif
 
 int
@@ -201,12 +204,15 @@ do_test (void)
 {
   float_test ();
   double_test ();
-  truncdfsf_test();
+  convert_dfsf_test();
+  convert_sfdf_test();
 
 #ifndef NO_LONG_DOUBLE
   ldouble_test ();
-  trunctfsf_test();
-  trunctfdf_test();
+  convert_tfsf_test();
+  convert_sftf_test();
+  convert_tfdf_test();
+  convert_dftf_test();
 #endif
 
   return errors != 0;

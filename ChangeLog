@@ -1,3 +1,14 @@
+2013-08-29  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* math/basic-test.c (TEST_CONVERT): New macro, renamed from
+	TEST_TRUNC.
+	(convert_dfsf_test, convert_tfsf_test, convert_tfdf_test): New
+	functions, renamed from truncdfsf_test, trunctfsf_test,
+	trunctfdf_test.
+	(convert_sfdf_test, convert_sftf_test, convert_dftf_test): New
+	functions.
+	(do_test): Run all these.
+
 2013-08-29   Ondřej Bílka  <neleai@seznam.cz>
 
 	* argp/argp-help.c: Fix typos.
