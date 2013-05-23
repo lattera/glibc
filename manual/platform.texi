@@ -34,3 +34,27 @@ This frequency is not related to the processor clock or the bus clock.
 It is also possible that this frequency is not constant.  More information is
 available in @cite{Power ISA 2.06b - Book II - Section 5.2}.
 @end deftypefun
+
+The following functions provide hints about the usage of resources that are
+shared with other processors.  They can be used, for example, if a program
+waiting on a lock intends to divert the shared resources to be used by other
+processors.  More information is available in @cite{Power ISA 2.06b - Book II -
+Section 3.2}.
+
+@deftypefun {void} __ppc_yield (void)
+Provide a hint that performance will probably be improved if shared resources
+dedicated to the executing processor are released for use by other processors.
+@end deftypefun
+
+@deftypefun {void} __ppc_mdoio (void)
+Provide a hint that performance will probably be improved if shared resources
+dedicated to the executing processor are released until all outstanding storage
+accesses to caching-inhibited storage have been completed.
+@end deftypefun
+
+@deftypefun {void} __ppc_mdoom (void)
+Provide a hint that performance will probably be improved if shared resources
+dedicated to the executing processor are released until all outstanding storage
+accesses to cacheable storage for which the data is not in the cache have been
+completed.
+@end deftypefun

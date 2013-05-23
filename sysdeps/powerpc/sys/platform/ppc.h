@@ -50,4 +50,36 @@ __ppc_get_timebase (void)
 #endif
 }
 
+/* The following functions provide hints about the usage of shared processor
+   resources, as defined in ISA 2.06 and newer. */
+
+/* Provides a hint that performance will probably be improved if shared
+   resources dedicated to the executing processor are released for use by other
+   processors.  */
+static inline void
+__ppc_yield (void)
+{
+  __asm__ volatile ("or 27,27,27");
+}
+
+/* Provides a hint that performance will probably be improved if shared
+   resources dedicated to the executing processor are released until
+   all outstanding storage accesses to caching-inhibited storage have been
+   completed.  */
+static inline void
+__ppc_mdoio (void)
+{
+  __asm__ volatile ("or 29,29,29");
+}
+
+/* Provides a hint that performance will probably be improved if shared
+   resources dedicated to the executing processor are released until all
+   outstanding storage accesses to cacheable storage for which the data is not
+   in the cache have been completed.  */
+static inline void
+__ppc_mdoom (void)
+{
+  __asm__ volatile ("or 30,30,30");
+}
+
 #endif  /* sys/platform/ppc.h */
