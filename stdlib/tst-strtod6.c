@@ -4,11 +4,12 @@
 #include <string.h>
 
 static int
-do_test (void)
+test (const char str[])
 {
-  static const char str[] = "NaN(blabla)something";
   char *endp;
   int result = 0;
+
+  puts (str);
 
   double d = strtod (str, &endp);
   if (!isnan (d))
@@ -60,6 +61,25 @@ do_test (void)
       puts  ("strtold set incorrect end pointer");
       result = 1;
     }
+
+  return result;
+}
+
+static int
+do_test (void)
+{
+  int result = 0;
+
+  result |= test ("NaN(blabla)something");
+  result |= test ("NaN(1234)something");
+  /* UINT32_MAX.  */
+  result |= test ("NaN(4294967295)something");
+  /* UINT64_MAX.  */
+  result |= test ("NaN(18446744073709551615)something");
+  /* The case of zero is special in that "something" has to be done to make the
+     mantissa different from zero, which would mean infinity instead of
+     NaN.  */
+  result |= test ("NaN(0)something");
 
   return result;
 }

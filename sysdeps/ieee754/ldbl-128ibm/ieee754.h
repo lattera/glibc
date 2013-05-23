@@ -199,6 +199,25 @@ union ibm_extended_long_double
 	unsigned int mantissa2:20;
 	unsigned int mantissa3:32;
       } ieee;
+
+    /* This format makes it easier to see if a NaN is a signalling NaN.  */
+    struct
+      { /* Big endian.  There is no other.  */
+
+	unsigned int negative:1;
+	unsigned int exponent:11;
+	unsigned int quiet_nan:1;
+	/* Together Mantissa0-3 comprise the mantissa.  */
+	unsigned int mantissa0:19;
+	unsigned int mantissa1:32;
+
+	unsigned int negative2:1;
+	unsigned int exponent2:11;
+	/* There is an implied 1 here?  */
+	/* Together these comprise the mantissa.  */
+	unsigned int mantissa2:20;
+	unsigned int mantissa3:32;
+      } ieee_nan;
    };
 
 #define IBM_EXTENDED_LONG_DOUBLE_BIAS 0x3ff /* Added to exponent.  */

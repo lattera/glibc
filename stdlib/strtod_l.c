@@ -42,11 +42,10 @@ extern unsigned long long int ____strtoull_l_internal (const char *, char **,
 # define SET_MANTISSA(flt, mant) \
   do { union ieee754_double u;						      \
        u.d = (flt);							      \
-       if ((mant & 0xfffffffffffffULL) == 0)				      \
-	 mant = 0x8000000000000ULL;					      \
-       u.ieee.mantissa0 = ((mant) >> 32) & 0xfffff;			      \
-       u.ieee.mantissa1 = (mant) & 0xffffffff;				      \
-       (flt) = u.d;							      \
+       u.ieee_nan.mantissa0 = (mant) >> 32;				      \
+       u.ieee_nan.mantissa1 = (mant);					      \
+       if ((u.ieee.mantissa0 | u.ieee.mantissa1) != 0)			      \
+	 (flt) = u.d;							      \
   } while (0)
 #endif
 /* End of configuration part.  */

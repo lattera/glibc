@@ -34,11 +34,13 @@
 #define SET_MANTISSA(flt, mant) \
   do { union ieee854_long_double u;					      \
        u.d = (flt);							      \
-       u.ieee.mantissa0 = 0x8000;					      \
-       u.ieee.mantissa1 = 0;						      \
-       u.ieee.mantissa2 = ((mant) >> 32);	      			      \
-       u.ieee.mantissa3 = (mant) & 0xffffffff;				      \
-       (flt) = u.d;							      \
+       u.ieee_nan.mantissa0 = 0;					      \
+       u.ieee_nan.mantissa1 = 0;					      \
+       u.ieee_nan.mantissa2 = (mant) >> 32;				      \
+       u.ieee_nan.mantissa3 = (mant);					      \
+       if ((u.ieee.mantissa0 | u.ieee.mantissa1				      \
+	    | u.ieee.mantissa2 | u.ieee.mantissa3) != 0)		      \
+	 (flt) = u.d;							      \
   } while (0)
 
 #include <strtod_l.c>
