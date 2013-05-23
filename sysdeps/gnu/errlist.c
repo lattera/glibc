@@ -780,11 +780,12 @@ TRANS The user's disk quota was exceeded. */
 #endif
 #ifdef ESTALE
 /*
-TRANS Stale NFS file handle.  This indicates an internal confusion in the NFS
-TRANS system which is due to file system rearrangements on the server host.
-TRANS Repairing this condition usually requires unmounting and remounting
-TRANS the NFS file system on the local host. */
-    [ERR_REMAP (ESTALE)] = N_("Stale NFS file handle"),
+TRANS Stale file handle.  This indicates an internal confusion in the
+TRANS file system which is due to file system rearrangements on the server host
+TRANS for NFS file systems or corruption in other file systems.
+TRANS Repairing this condition usually requires unmounting, possibly repairing
+TRANS and remounting the file system. */
+    [ERR_REMAP (ESTALE)] = N_("Stale file handle"),
 # if ESTALE > ERR_MAX
 # undef ERR_MAX
 # define ERR_MAX ESTALE

@@ -739,13 +739,14 @@ The user's disk quota was exceeded.
 @end deftypevr
 
 @comment errno.h
-@comment BSD: Stale NFS file handle
+@comment BSD: Stale file handle
 @deftypevr Macro int ESTALE
 @comment errno 70 @c DO NOT REMOVE
-Stale NFS file handle.  This indicates an internal confusion in the NFS
-system which is due to file system rearrangements on the server host.
-Repairing this condition usually requires unmounting and remounting
-the NFS file system on the local host.
+Stale file handle.  This indicates an internal confusion in the
+file system which is due to file system rearrangements on the server host
+for NFS file systems or corruption in other file systems.
+Repairing this condition usually requires unmounting, possibly repairing
+and remounting the file system.
 @end deftypevr
 
 @comment errno.h

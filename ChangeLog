@@ -1,3 +1,10 @@
+2012-05-30  Jeff Law  <law@redhat.com>
+
+	[BZ #14256]
+	* manual/errno.texi (ESTALE): Update to account for more than
+	just NFS file systems.
+	* sysdeps/gnu/errlist.c: Regenerated.
+
 2013-05-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #15465]
