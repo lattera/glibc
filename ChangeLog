@@ -1,3 +1,9 @@
+2013-05-22  Carlos O'Donell  <carlos@redhat.com>
+
+	* elf/ldconfig.c (is_hwcap_platform): Make comments full setences.
+	(main): Mention "tls" pseudo-hwcap is legacy.
+	* elf/dl-hwcaps.c (_dl_important_hwcaps): Correct rounding comment.
+
 2013-05-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/gen-libm-test.pl (parse_args): Output only string of

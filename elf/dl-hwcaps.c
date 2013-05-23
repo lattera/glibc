@@ -68,9 +68,9 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 				      + GLRO(dl_sysinfo_map)->l_addr);
 	    /* The standard ELF note layout is exactly as the anonymous struct.
 	       The next element is a variable length vendor name of length
-	       VENDORLEN (with a real length rounded to ElfW(Addr)), followed
+	       VENDORLEN (with a real length rounded to ElfW(Word)), followed
 	       by the data of length DATALEN (with a real length rounded to
-	       ElfW(Addr)).  */
+	       ElfW(Word)).  */
 	    const struct
 	    {
 	      ElfW(Word) vendorlen;

@@ -174,17 +174,17 @@ is_hwcap_platform (const char *name)
 {
   int hwcap_idx = _dl_string_hwcap (name);
 
-  /* Is this a normal hwcap for the machine e.g. fpu?  */
+  /* Is this a normal hwcap for the machine like "fpu?"  */
   if (hwcap_idx != -1 && ((1 << hwcap_idx) & hwcap_mask))
     return 1;
 
-  /* ... Or is it a platform pseudo-hwcap e.g. i686?  */
+  /* Is this a platform pseudo-hwcap like "i686?"  */
   hwcap_idx = _dl_string_platform (name);
   if (hwcap_idx != -1)
     return 1;
 
-  /* ... Or is this one of the extra pseudo-hwcaps that we map beyond
-     _DL_FIRST_EXTRA e.g. tls, or nosegneg?  */
+  /* Is this one of the extra pseudo-hwcaps that we map beyond
+     _DL_FIRST_EXTRA like "tls", or "nosegneg?"  */
   for (hwcap_idx = _DL_FIRST_EXTRA; hwcap_idx < 64; ++hwcap_idx)
     if (hwcap_extra[hwcap_idx - _DL_FIRST_EXTRA] != NULL
 	&& !strcmp (name, hwcap_extra[hwcap_idx - _DL_FIRST_EXTRA]))
@@ -1270,8 +1270,10 @@ main (int argc, char **argv)
 	  add_dir (argv[i]);
     }
 
-  /* The last entry in hwcap_extra is reserved for the "tls"
-     pseudo-hwcap which indicates support for TLS.  */
+  /* The last entry in hwcap_extra is reserved for the "tls" pseudo-hwcap which
+     indicates support for TLS.  This pseudo-hwcap is only used by old versions
+     under which TLS support was optional.  The entry is no longer needed, but
+     must remain for compatibility.  */
   hwcap_extra[63 - _DL_FIRST_EXTRA] = "tls";
 
   set_hwcap ();
