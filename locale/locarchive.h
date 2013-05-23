@@ -84,6 +84,13 @@ struct locarhandle
   void *addr;
   size_t mmaped;
   size_t reserved;
+  /* If this mmap required adjustment (such as re-aligning), then this is the
+     real address that was returned from mmap and thus should be passed to the
+     munmap call.  The addr field above is the first usable address.  */
+  void *mmap_base;
+  /* Same as above for mmap_base vs addr, but this is the real length of the
+     map rather than the usable (which is what reserved represents).  */
+  size_t mmap_len;
 };
 
 

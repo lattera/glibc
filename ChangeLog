@@ -1,5 +1,27 @@
 2013-06-24  Mike Frysinger  <vapier@gentoo.org>
 
+	[BZ #10283]
+	* NEWS: Note fixing of BZ #10283.
+	* locale/locarchive.h (struct locarhandle): Add mmap_base and mmap_len.
+	* locale/programs/locarchive.c: Include libc-mmap.h.
+	(prepare_address_space): Take two new outputs (the mmap base and len).
+	Align p to MAP_FIXED_ALIGNMENT.  Set mmap base and len to the right
+	values.
+	(create_archive): Declare new mmap base and len values for
+	prepare_address_space, and store the result in ah.
+	(file_data_available_p): Replace pagesz with MAP_FIXED_ALIGNMENT.
+	(enlarge_archive): If ah->mmap_base is not NULL, use that and
+	ah->mmap_len to unmap rather than ah->addr and ah->reserved.
+	Declare new mmap base and len values for
+	prepare_address_space, and store the result in new_ah.
+	(open_archive): Declare new mmap base and len values for
+	prepare_address_space, and store the result in ah.
+	(close_archive): If ah->mmap_base is not NULL, use that and
+	ah->mmap_len to unmap rather than ah->addr and ah->reserved.
+	* sysdeps/generic/libc-mmap.h: New file.
+
+2013-06-24  Mike Frysinger  <vapier@gentoo.org>
+
 	* include/libc-internal.h (ALIGN_DOWN): New helper macro.
 	(ALIGN_UP): Likewise.
 	(PTR_ALIGN_DOWN): Likewise.
