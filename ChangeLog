@@ -1,5 +1,6 @@
 2013-05-23  Edjunior Machado  <emachado@linux.vnet.ibm.com>
 
+	[BZ #14894]
 	* sysdeps/powerpc/sys/platform/ppc.h: Add __ppc_yield,
 	__ppc_mdoio and __ppc_mdoom.
 	* manual/platform.texi: Document new functions __ppc_yield,
