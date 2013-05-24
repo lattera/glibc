@@ -62,6 +62,13 @@
 #include <sysdep.h>
 #include <arch/abi.h>
 
+/* Just create no-ops if we don't support PC-relative PLT relocations. */
+#ifdef NO_PLT_PCREL
+# define hw2_last_plt(x)	0
+# define hw1_plt(x)		0
+# define hw0_plt(x)		0
+#endif
+
 	.text
 	.global _start
 	.type   _start,@function
@@ -155,7 +162,11 @@ _start:
 	}
 	{
 	 ADD_PTR r4, r4, r13
-	 jalr r12
+# ifdef NO_PLT_PCREL
+	 j plt(__libc_start_main)
+# else
+	 jr r12
+# endif
 	}
 #else
 	 addli r0, r13, lo16(main - .Lmy_pc)

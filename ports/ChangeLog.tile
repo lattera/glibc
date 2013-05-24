@@ -1,3 +1,12 @@
+2013-05-23  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/tilegx/Makefile ($(cflags-mcmodel-large)):
+	Test for assembler and linker support for "-mcmodel=large -fpic"
+	in addition to compiler support; provide -DNO_PLT_PCREL if not.
+	* sysdeps/tile/start.S [NO_PLT_PCREL]: Guard for no PC-relative
+	PLT operators in assembly.
+	* sysdeps/tile/crti.S [NO_PLT_PCREL]: Likewise.
+
 2013-05-22  Edjunior Barbosa Machado  <emachado@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/tile/bits/siginfo.h (siginfo_t): Fix comment

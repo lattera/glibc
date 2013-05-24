@@ -95,7 +95,7 @@ _init:
 	LD_PTR r0, r0
 	BEQZ r0, .Lno_weak_fn
 	jalr r0
-#elif defined(__tilegx__)
+#elif defined(__tilegx__) && !defined(NO_PLT_PCREL)
 	/* Since we are calling from the start of the object to the PLT,
 	   call by loading the full address into a register.  */
 	lnk r2
