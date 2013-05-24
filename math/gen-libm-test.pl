@@ -300,14 +300,6 @@ sub generate_testfile {
       &parse_args (\*OUTPUT, $descr, $args);
       next;
     }
-    # START_DATA (function)
-    if (/START_DATA/) {
-      next;
-    }
-    # END_DATA (function)
-    if (/END_DATA/) {
-      next;
-    }
     print OUTPUT;
   }
   close INPUT;
