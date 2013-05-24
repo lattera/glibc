@@ -661,6 +661,10 @@ _IO_no_init (fp, flags, orientation, wd, jmp)
 
       fp->_wide_data->_wide_vtable = jmp;
     }
+  else
+    /* Cause predictable crash when a wide function is called on a byte
+       stream.  */
+    fp->_wide_data = (struct _IO_wide_data *) -1L;
 #endif
   fp->_freeres_list = NULL;
 }

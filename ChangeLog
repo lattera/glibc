@@ -1,3 +1,8 @@
+2013-05-24  Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ #15381]
+	* libio/genops.c (_IO_no_init): Initialize wide struct info.
+
 2013-05-23  Edjunior Machado  <emachado@linux.vnet.ibm.com>
 
 	[BZ #14894]
