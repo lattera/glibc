@@ -82,4 +82,34 @@ __ppc_mdoom (void)
   __asm__ volatile ("or 30,30,30");
 }
 
+
+/* ISA 2.05 and beyond support the Program Priority Register (PPR) to adjust
+   thread priorities based on lock acquisition, wait and release. The ISA
+   defines the use of form 'or Rx,Rx,Rx' as the way to modify the PRI field.
+   The unprivileged priorities are:
+     Rx = 1 (low)
+     Rx = 2 (medium)
+     Rx = 6 (medium-low/normal)
+   The 'or' instruction form is a nop in previous hardware, so it is safe to
+   use unguarded. The default value is 'medium'.
+ */
+
+static inline void
+__ppc_set_ppr_med (void)
+{
+  __asm__ volatile ("or 2,2,2");
+}
+
+static inline void
+__ppc_set_ppr_med_low (void)
+{
+  __asm__ volatile ("or 6,6,6");
+}
+
+static inline void
+__ppc_set_ppr_low (void)
+{
+  __asm__ volatile ("or 1,1,1");
+}
+
 #endif  /* sys/platform/ppc.h */

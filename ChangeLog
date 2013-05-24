@@ -1,3 +1,9 @@
+2013-05-24  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* manual/platform.texi: Add PowerPC PPR function set documentation.
+	* sysdeps/powerpc/sys/platform/ppc.h: Add PowerPC PPR set function
+	implementation.
+
 2013-05-24  Carlos O'Donell  <carlos@redhat.com>
 
 	* math/libm-test.inc (MAX_EXP): Define.

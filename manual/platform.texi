@@ -57,4 +57,24 @@ Provide a hint that performance will probably be improved if shared resources
 dedicated to the executing processor are released until all outstanding storage
 accesses to cacheable storage for which the data is not in the cache have been
 completed.
+
+@deftypefun {void} __ppc_set_ppr_med (void)
+Set the Program Priority Register to medium value (default).
+
+The @dfn{Program Priority Register} (PPR) is a 64-bit register that controls
+the program's priority.  By adjusting the PPR value the programmer may
+improve system throughput by causing the system resources to be used
+more efficiently, especially in contention situations.
+The three unprivileged states available are covered by the functions
+@code{__ppc_set_ppr_med} (medium -- default), @code{__ppc_set_ppc_low} (low)
+and @code{__ppc_set_ppc_med_low} (medium low).  More information
+available in @cite{Power ISA 2.06b - Book II - Section 3.1}.
+@end deftypefun
+
+@deftypefun {void} __ppc_set_ppr_low (void)
+Set the Program Priority Register to low value.
+@end deftypefun
+
+@deftypefun {void} __ppc_set_ppr_med_low (void)
+Set the Program Priority Register to medium low value.
 @end deftypefun
