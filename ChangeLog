@@ -1,5 +1,10 @@
 2013-05-24  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #15529]
+	* sysdeps/ieee754/ldbl-96/e_hypotl.c (__ieee754_hypotl): Set high
+	bit of mantissa of 2^16382.
+	* math/libm-test.inc (hypot_test_data): Add more tests.
+
 	* math/libm-test.inc: Add drem and pow10 to list of tested
 	functions.
 	(pow10_test): New function.

@@ -85,7 +85,7 @@ long double __ieee754_hypotl(long double x, long double y)
 		u_int32_t high,low;
 		GET_LDOUBLE_WORDS(exp,high,low,b);
 		if((high|low)==0) return a;
-		SET_LDOUBLE_WORDS(t1, 0x7ffd, 0, 0);	/* t1=2^16382 */
+		SET_LDOUBLE_WORDS(t1, 0x7ffd, 0x80000000, 0); /* t1=2^16382 */
 		b *= t1;
 		a *= t1;
 		k -= 16382;
