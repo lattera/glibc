@@ -8117,26 +8117,6 @@ fdim_test (void)
 }
 
 
-static const struct test_f_i_data finite_test_data[] =
-  {
-    TEST_f_b (finite, 0, 1, NO_INEXACT_EXCEPTION),
-    TEST_f_b (finite, minus_zero, 1, NO_INEXACT_EXCEPTION),
-    TEST_f_b (finite, 10, 1, NO_INEXACT_EXCEPTION),
-    TEST_f_b (finite, min_subnorm_value, 1, NO_INEXACT_EXCEPTION),
-    TEST_f_b (finite, plus_infty, 0, NO_INEXACT_EXCEPTION),
-    TEST_f_b (finite, minus_infty, 0, NO_INEXACT_EXCEPTION),
-    TEST_f_b (finite, qnan_value, 0, NO_INEXACT_EXCEPTION),
-  };
-
-static void
-finite_test (void)
-{
-  START (finite);
-  RUN_TEST_LOOP_f_b (finite, finite_test_data, );
-  END;
-}
-
-
 static const struct test_f_f_data floor_test_data[] =
   {
     TEST_f_f (floor, 0.0, 0.0, NO_INEXACT_EXCEPTION),
@@ -9350,30 +9330,6 @@ frexp_test (void)
   END;
 }
 
-
-static const struct test_f_f1_data gamma_test_data[] =
-  {
-    TEST_f_f1 (gamma, plus_infty, plus_infty, 1),
-    TEST_f_f1 (gamma, 0, plus_infty, 1, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
-    TEST_f_f1 (gamma, -3, plus_infty, IGNORE, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
-    TEST_f_f1 (gamma, minus_infty, plus_infty, IGNORE),
-    TEST_f_f1 (gamma, qnan_value, qnan_value, IGNORE),
-
-    TEST_f_f1 (gamma, 1, 0, 1),
-    TEST_f_f1 (gamma, 3, M_LN2l, 1),
-
-    TEST_f_f1 (gamma, 0.5, M_LOG_SQRT_PIl, 1),
-    TEST_f_f1 (gamma, -0.5, M_LOG_2_SQRT_PIl, -1),
-  };
-
-static void
-gamma_test (void)
-{
-  START (gamma);
-  RUN_TEST_LOOP_f_f1 (gamma, gamma_test_data, , signgam);
-  END;
-}
-
 static const struct test_ff_f_data hypot_test_data[] =
   {
     TEST_ff_f (hypot, plus_infty, 1, plus_infty),
@@ -9476,6 +9432,15 @@ isfinite_test (void)
 {
   START (isfinite);
   RUN_TEST_LOOP_f_b_tg (isfinite, isfinite_test_data, );
+  END;
+}
+
+static void
+finite_test (void)
+{
+  START (finite);
+  /* finite uses the same test data as isfinite.  */
+  RUN_TEST_LOOP_f_b (finite, isfinite_test_data, );
   END;
 }
 
@@ -9930,6 +9895,15 @@ lgamma_test (void)
 {
   START (lgamma);
   RUN_TEST_LOOP_f_f1 (lgamma, lgamma_test_data, , signgam);
+  END;
+}
+
+static void
+gamma_test (void)
+{
+  START (gamma);
+  /* gamma uses the same test data as lgamma.  */
+  RUN_TEST_LOOP_f_f1 (gamma, lgamma_test_data, , signgam);
   END;
 }
 

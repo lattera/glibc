@@ -6472,6 +6472,18 @@ idouble: 1
 Test "gamma (-0.5)":
 ildouble: 1
 ldouble: 1
+Test "gamma (0.7)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "gamma (1.2)":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 1
+ldouble: 1
 
 # hypot
 Test "hypot (-0.7, -12.4)":
@@ -8564,6 +8576,10 @@ ildouble: 1
 ldouble: 1
 
 Function: "gamma":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 

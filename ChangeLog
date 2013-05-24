@@ -1,3 +1,12 @@
+2013-05-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (finite_test_data): Remove.
+	(finite_test): Run tests from isfinite_test_data.
+	(gamma_test_data): Remove.
+	(gamma_test): Run tests from lgamma_test_data.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2013-05-24  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* manual/platform.texi: Add PowerPC PPR function set documentation.
