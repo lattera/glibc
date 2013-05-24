@@ -271,6 +271,8 @@ static FLOAT max_error, real_max_error, imag_max_error;
 
 #define MANT_DIG CHOOSE ((LDBL_MANT_DIG-1), (DBL_MANT_DIG-1), (FLT_MANT_DIG-1),  \
 			 (LDBL_MANT_DIG-1), (DBL_MANT_DIG-1), (FLT_MANT_DIG-1))
+#define MAX_EXP CHOOSE ((LDBL_MAX_EXP-1), (DBL_MAX_EXP-1), (FLT_MAX_EXP-1),	\
+			(LDBL_MAX_EXP-1), (DBL_MAX_EXP-1), (FLT_MAX_EXP-1))
 
 /* Compare KEY (a string, with the name of a test or a function) with
    ULP (a pointer to a struct ulp_data structure), returning a value
@@ -657,6 +659,44 @@ test_errno (const char *test_name, int errno_value, int exceptions)
     test_single_errno (test_name, errno_value, ERANGE, "ERANGE");
 }
 
+/* Returns the number of ulps that GIVEN is away from EXPECTED.  */
+#define ULPDIFF(given, expected) \
+	(FUNC(fabs) ((given) - (expected)) / ulp (expected))
+
+/* Returns the size of an ulp for VALUE.  */
+static FLOAT
+ulp (FLOAT value)
+{
+  FLOAT ulp;
+
+  switch (fpclassify (value))
+    {
+      case FP_ZERO:
+	/* We compute the distance to the next FP which is the same as the
+	   value of the smallest subnormal number. Previously we used
+	   2^(-MANT_DIG) which is too large a value to be useful. Note that we
+	   can't use ilogb(0), since that isn't a valid thing to do. As a point
+	   of comparison Java's ulp returns the next normal value e.g.
+	   2^(1 - MAX_EXP) for ulp(0), but that is not what we want for
+	   glibc.  */
+	/* Fall through...  */
+      case FP_SUBNORMAL:
+        /* The next closest subnormal value is a constant distance away.  */
+	ulp = FUNC(ldexp) (1.0, 1 - (MAX_EXP + MANT_DIG));
+	break;
+
+      case FP_NORMAL:
+	ulp = FUNC(ldexp) (1.0, FUNC(ilogb) (value) - MANT_DIG);
+	break;
+
+      default:
+	/* It should never happen. */
+	abort ();
+	break;
+    }
+  return ulp;
+}
+
 static void
 check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
 		      int exceptions,
@@ -665,7 +705,7 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
   int ok = 0;
   int print_diff = 0;
   FLOAT diff = 0;
-  FLOAT ulp = 0;
+  FLOAT ulps = 0;
   int errno_value = errno;
 
   test_exceptions (test_name, exceptions);
@@ -696,37 +736,19 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
   else
     {
       diff = FUNC(fabs) (computed - expected);
-      switch (fpclassify (expected))
-	{
-	case FP_ZERO:
-	  /* ilogb (0) isn't allowed. */
-	  ulp = diff / FUNC(ldexp) (1.0, - MANT_DIG);
-	  break;
-	case FP_NORMAL:
-	  ulp = diff / FUNC(ldexp) (1.0, FUNC(ilogb) (expected) - MANT_DIG);
-	  break;
-	case FP_SUBNORMAL:
-	  /* 1ulp for a subnormal value, shifted by MANT_DIG, is the
-	     least normal value.  */
-	  ulp = (FUNC(ldexp) (diff, MANT_DIG) / min_value);
-	  break;
-	default:
-	  /* It should never happen. */
-	  abort ();
-	  break;
-	}
-      set_max_error (ulp, curr_max_error);
+      ulps = ULPDIFF (computed, expected);
+      set_max_error (ulps, curr_max_error);
       print_diff = 1;
       if ((exceptions & IGNORE_ZERO_INF_SIGN) == 0
 	  && computed == 0.0 && expected == 0.0
 	  && signbit(computed) != signbit (expected))
 	ok = 0;
-      else if (ulp <= 0.5 || (ulp <= max_ulp && !ignore_max_ulp))
+      else if (ulps <= 0.5 || (ulps <= max_ulp && !ignore_max_ulp))
 	ok = 1;
       else
 	{
 	  ok = 0;
-	  print_ulps (test_name, ulp);
+	  print_ulps (test_name, ulps);
 	}
 
     }
@@ -744,7 +766,7 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
 	{
 	  printf (" difference: % .20" PRINTF_EXPR "  % .20" PRINTF_XEXPR
 		  "\n", diff, diff);
-	  printf (" ulp       : % .4" PRINTF_NEXPR "\n", ulp);
+	  printf (" ulp       : % .4" PRINTF_NEXPR "\n", ulps);
 	  printf (" max.ulp   : % .4" PRINTF_NEXPR "\n", max_ulp);
 	}
     }
@@ -6996,8 +7018,10 @@ static const struct test_cc_c_data cpow_test_data[] =
   {
     TEST_cc_c (cpow, 1, 0, 0, 0, 1.0, 0.0),
     TEST_cc_c (cpow, 2, 0, 10, 0, 1024.0, 0.0),
-
+#if 0
+    /* Disabled until we fix bug 14473.  */
     TEST_cc_c (cpow, M_El, 0, 0, 2 * M_PIl, 1.0, 0.0),
+#endif
     TEST_cc_c (cpow, 2, 3, 4, 0, -119.0, -120.0),
 
     TEST_cc_c (cpow, qnan_value, qnan_value, qnan_value, qnan_value, qnan_value, qnan_value),
@@ -14515,31 +14539,54 @@ parse_opt (int key, char *arg, struct argp_state *state)
   return 0;
 }
 
-#if 0
-/* function to check our ulp calculation.  */
+/* Verify that our ulp () implementation is behaving as expected
+   or abort.  */
 void
 check_ulp (void)
 {
-  int i;
-
-  FLOAT u, diff, ulp;
-  /* This gives one ulp.  */
-  u = FUNC(nextafter) (10, 20);
-  check_equal (10.0, u, 1, &diff, &ulp);
-  printf ("One ulp: % .4" PRINTF_NEXPR "\n", ulp);
-
-  /* This gives one more ulp.  */
-  u = FUNC(nextafter) (u, 20);
-  check_equal (10.0, u, 2, &diff, &ulp);
-  printf ("two ulp: % .4" PRINTF_NEXPR "\n", ulp);
-
-  /* And now calculate 100 ulp.  */
-  for (i = 2; i < 100; i++)
-    u = FUNC(nextafter) (u, 20);
-  check_equal (10.0, u, 100, &diff, &ulp);
-  printf ("100 ulp: % .4" PRINTF_NEXPR "\n", ulp);
+   FLOAT ulps, value;
+   int i;
+   /* Check ulp of zero is a subnormal value...  */
+   ulps = ulp (0x0.0p0);
+   if (fpclassify (ulps) != FP_SUBNORMAL)
+     {
+       fprintf (stderr, "ulp (0x0.0p0) is not FP_SUBNORMAL!\n");
+       exit (EXIT_FAILURE);
+     }
+   /* Check that the ulp of one is a normal value... */
+   ulps = ulp (1.0L);
+   if (fpclassify (ulps) != FP_NORMAL)
+     {
+       fprintf (stderr, "ulp (1.0L) is not FP_NORMAL\n");
+       exit (EXIT_FAILURE);
+     }
+   /* Compute the nearest representable number from 10 towards 20.
+      The result is 10 + 1ulp.  We use this to check the ulp function.  */
+   value = FUNC(nextafter) (10, 20);
+   ulps = ULPDIFF (value, 10);
+   if (ulps > 1.0L)
+     {
+       fprintf (stderr, "The value of ulp (10+1ulp,10) is greater than 1 ulp.\n");
+       exit (EXIT_FAILURE);
+     }
+   /* This gives one more ulp.  */
+   value = FUNC(nextafter) (value, 20);
+   ulps = ULPDIFF (value, 10);
+   if (ulps > 2.0L)
+     {
+       fprintf (stderr, "The value of ulp (10+2ulp,10) is greater than 2 ulp.\n");
+       exit (EXIT_FAILURE);
+     }
+   /* And now calculate 100 ulp.  */
+   for (i = 2; i < 100; i++)
+     value = FUNC(nextafter) (value, 20);
+   ulps = ULPDIFF (value, 10);
+   if (ulps > 100.0L)
+     {
+       fprintf (stderr, "The value of ulp (10+100ulp,10) is greater than 100 ulp.\n");
+       exit (EXIT_FAILURE);
+     }
 }
-#endif
 
 int
 main (int argc, char **argv)
@@ -14590,9 +14637,7 @@ main (int argc, char **argv)
   initialize ();
   printf (TEST_MSG);
 
-#if 0
   check_ulp ();
-#endif
 
   /* Keep the tests a wee bit ordered (according to ISO C99).  */
   /* Classification macros:  */

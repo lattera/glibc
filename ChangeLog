@@ -1,3 +1,13 @@
+2013-05-24  Carlos O'Donell  <carlos@redhat.com>
+
+	* math/libm-test.inc (MAX_EXP): Define.
+	(ULPDIFF): Define.
+	(ulp): New function.
+	(check_float_internal): Use ULPDIFF.
+	(cpow_test): Disable failing test.
+	(check_ulp): Test ulp() implemetnation.
+	(main): Call check_ulp before starting tests.
+
 2013-05-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/gen-libm-test.pl (generate_testfile): Do not handle
