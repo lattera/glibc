@@ -41,7 +41,6 @@ use strict;
 
 use vars qw ($input $output);
 use vars qw (%results);
-use vars qw (@functions);
 use vars qw (%beautify @all_floats);
 use vars qw ($output_dir $ulps_file);
 
@@ -305,35 +304,8 @@ sub generate_testfile {
     if (/START_DATA/) {
       next;
     }
-    # START (function)
-    if (/START/) {
-      my ($thisfct);
-      ($thisfct) = ($_ =~ /START\s*\((.*)\)/);
-      print OUTPUT "  const char *this_func = \"$thisfct\";\n";
-      print OUTPUT "  init_max_error ();\n";
-      next;
-    }
     # END_DATA (function)
     if (/END_DATA/) {
-      next;
-    }
-    # END (function)
-    if (/END/) {
-      my ($fct, $line, $type);
-      if (/complex/) {
-	s/,\s*complex\s*//;
-	$type = 'complex';
-      } else {
-	$type = 'normal';
-      }
-      ($fct) = ($_ =~ /END\s*\((.*)\)/);
-      if ($type eq 'complex') {
-	$line = "  print_complex_max_error (\"$fct\");\n";
-      } else {
-	$line = "  print_max_error (\"$fct\");\n";
-      }
-      print OUTPUT $line;
-      push @functions, $fct;
       next;
     }
     print OUTPUT;

@@ -1,3 +1,179 @@
+2013-05-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/gen-libm-test.pl (@functions): Remove variable.
+	(generate_testfile): Don't handle START and END lines.
+	* math/libm-test.inc (START): New macro.
+	(END): Likewise.
+	(END_COMPLEX): Likewise.
+	(acos_test): Use END macro without arguments.
+	(acos_test_tonearest): Likewise.
+	(acos_test_towardzero): Likewise.
+	(acos_test_downward): Likewise.
+	(acos_test_upward): Likewise.
+	(acosh_test): Likewise.
+	(asin_test): Likewise.
+	(asin_test_tonearest): Likewise.
+	(asin_test_towardzero): Likewise.
+	(asin_test_downward): Likewise.
+	(asin_test_upward): Likewise.
+	(asinh_test): Likewise.
+	(atan_test): Likewise.
+	(atanh_test): Likewise.
+	(atan2_test): Likewise.
+	(cabs_test): Likewise.
+	(cacos_test): Use END_COMPLEX macro without arguments.
+	(cacosh_test): Likewise.
+	(carg_test): Use END macro without arguments.
+	(casin_test): Use END_COMPLEX macro without arguments.
+	(casinh_test): Likewise.
+	(catan_test): Likewise.
+	(catanh_test): Likewise.
+	(cbrt_test): Use END macro without arguments.
+	(ccos_test): Use END_COMPLEX macro without arguments.
+	(ccosh_test): Likewise.
+	(ceil_test): Use END macro without arguments.
+	(cexp_test): Use END_COMPLEX macro without arguments.
+	(cimag_test): Use END macro without arguments.
+	(clog_test): Use END_COMPLEX macro without arguments.
+	(clog10_test): Likewise.
+	(conj_test): Likewise.
+	(copysign_test): Use END macro without arguments.
+	(cos_test): Likewise.
+	(cos_test_tonearest): Likewise.
+	(cos_test_towardzero): Likewise.
+	(cos_test_downward): Likewise.
+	(cos_test_upward): Likewise.
+	(cosh_test): Likewise.
+	(cosh_test_tonearest): Likewise.
+	(cosh_test_towardzero): Likewise.
+	(cosh_test_downward): Likewise.
+	(cosh_test_upward): Likewise.
+	(cpow_test): Use END_COMPLEX macro without arguments.
+	(cproj_test): Likewise.
+	(creal_test): Use END macro without arguments.
+	(csin_test): Use END_COMPLEX macro without arguments.
+	(csinh_test): Likewise.
+	(csqrt_test): Likewise.
+	(ctan_test): Likewise.
+	(ctan_test_tonearest): Likewise.
+	(ctan_test_towardzero): Likewise.
+	(ctan_test_downward): Likewise.
+	(ctan_test_upward): Likewise.
+	(ctanh_test): Likewise.
+	(ctanh_test_tonearest): Likewise.
+	(ctanh_test_towardzero): Likewise.
+	(ctanh_test_downward): Likewise.
+	(ctanh_test_upward): Likewise.
+	(erf_test): Use END macro without arguments.
+	(erfc_test): Likewise.
+	(exp_test): Likewise.
+	(exp_test_tonearest): Likewise.
+	(exp_test_towardzero): Likewise.
+	(exp_test_downward): Likewise.
+	(exp_test_upward): Likewise.
+	(exp10_test): Likewise.
+	(exp2_test): Likewise.
+	(expm1_test): Likewise.
+	(fabs_test): Likewise.
+	(fdim_test): Likewise.
+	(finite_test): Likewise.
+	(floor_test): Likewise.
+	(fma_test): Likewise.
+	(fma_test_towardzero): Likewise.
+	(fma_test_downward): Likewise.
+	(fma_test_upward): Likewise.
+	(fmax_test): Likewise.
+	(fmin_test): Likewise.
+	(fmod_test): Likewise.
+	(fpclassify_test): Likewise.
+	(frexp_test): Likewise.
+	(gamma_test): Likewise.
+	(hypot_test): Likewise.
+	(ilogb_test): Likewise.
+	(isfinite_test): Likewise.
+	(isgreater_test): Likewise.
+	(isgreaterequal_test): Likewise.
+	(isinf_test): Likewise.
+	(isless_test): Likewise.
+	(islessequal_test): Likewise.
+	(islessgreater_test): Likewise.
+	(isnan_test): Likewise.
+	(isnormal_test): Likewise.
+	(issignaling_test): Likewise.
+	(isunordered_test): Likewise.
+	(j0_test): Likewise.
+	(j1_test): Likewise.
+	(jn_test): Likewise.
+	(ldexp_test): Likewise.
+	(lgamma_test): Likewise.
+	(lrint_test): Likewise.
+	(lrint_test_tonearest): Likewise.
+	(lrint_test_towardzero): Likewise.
+	(lrint_test_downward): Likewise.
+	(lrint_test_upward): Likewise.
+	(llrint_test): Likewise.
+	(llrint_test_tonearest): Likewise.
+	(llrint_test_towardzero): Likewise.
+	(llrint_test_downward): Likewise.
+	(llrint_test_upward): Likewise.
+	(log_test): Likewise.
+	(log10_test): Likewise.
+	(log1p_test): Likewise.
+	(log2_test): Likewise.
+	(logb_test): Likewise.
+	(logb_test_downward): Likewise.
+	(lround_test): Likewise.
+	(llround_test): Likewise.
+	(modf_test): Likewise.
+	(nearbyint_test): Likewise.
+	(nextafter_test): Likewise.
+	(nexttoward_test): Likewise.
+	(pow_test): Likewise.
+	(pow_test_tonearest): Likewise.
+	(pow_test_towardzero): Likewise.
+	(pow_test_downward): Likewise.
+	(pow_test_upward): Likewise.
+	(remainder_test): Likewise.
+	(remainder_test_tonearest): Likewise.
+	(remainder_test_towardzero): Likewise.
+	(remainder_test_downward): Likewise.
+	(remainder_test_upward): Likewise.
+	(remquo_test): Likewise.
+	(rint_test): Likewise.
+	(rint_test_tonearest): Likewise.
+	(rint_test_towardzero): Likewise.
+	(rint_test_downward): Likewise.
+	(rint_test_upward): Likewise.
+	(round_test): Likewise.
+	(scalb_test): Likewise.
+	(scalbn_test): Likewise.
+	(scalbln_test): Likewise.
+	(signbit_test): Likewise.
+	(sin_test): Likewise.
+	(sin_test_tonearest): Likewise.
+	(sin_test_towardzero): Likewise.
+	(sin_test_downward): Likewise.
+	(sin_test_upward): Likewise.
+	(sincos_test): Likewise.
+	(sinh_test): Likewise.
+	(sinh_test_tonearest): Likewise.
+	(sinh_test_towardzero): Likewise.
+	(sinh_test_downward): Likewise.
+	(sinh_test_upward): Likewise.
+	(sqrt_test): Likewise.
+	(tan_test): Likewise.
+	(tan_test_tonearest): Likewise.
+	(tan_test_towardzero): Likewise.
+	(tan_test_downward): Likewise.
+	(tan_test_upward): Likewise.
+	(tanh_test): Likewise.
+	(tgamma_test): Likewise.
+	(trunc_test): Likewise.
+	(y0_test): Likewise.
+	(y1_test): Likewise.
+	(yn_test): Likewise.
+	(significand_test): Likewise.
+
 2013-05-24  Ondřej Bílka  <neleai@seznam.cz>
 
 	[BZ #15381]
