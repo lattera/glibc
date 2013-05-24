@@ -1,5 +1,15 @@
 2013-05-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc: Add drem and pow10 to list of tested
+	functions.
+	(pow10_test): New function.
+	(drem_test): Likewise.
+	(drem_test_tonearest): Likewise.
+	(drem_test_towardzero): Likewise.
+	(drem_test_downward): Likewise.
+	(drem_test_upward): Likewise.
+	(main): Call the new functions.
+
 	* math/libm-test.inc (finite_test_data): Remove.
 	(finite_test): Run tests from isfinite_test_data.
 	(gamma_test_data): Remove.

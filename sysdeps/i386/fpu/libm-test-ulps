@@ -5674,6 +5674,11 @@ Test "pow (0x0.ffffffp0, -0x1p24)":
 ildouble: 1
 ldouble: 1
 
+# pow10
+Test "pow10 (0.75)":
+ildouble: 1
+ldouble: 1
+
 # pow_downward
 Test "pow_downward (1.0625, 1.125)":
 double: 1
@@ -7569,6 +7574,10 @@ ildouble: 1
 ldouble: 1
 
 Function: "pow":
+ildouble: 1
+ldouble: 1
+
+Function: "pow10":
 ildouble: 1
 ldouble: 1
 

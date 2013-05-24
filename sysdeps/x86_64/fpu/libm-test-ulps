@@ -6791,6 +6791,26 @@ Test "pow (0x1.000002p0, 0x1p24)":
 float: 1
 ifloat: 1
 
+# pow10
+Test "pow10 (-1)":
+double: 1
+idouble: 1
+Test "pow10 (-305)":
+double: 1
+idouble: 1
+Test "pow10 (-36)":
+double: 1
+idouble: 1
+Test "pow10 (0.75)":
+ildouble: 1
+ldouble: 1
+Test "pow10 (3)":
+double: 1
+idouble: 1
+Test "pow10 (36)":
+double: 1
+idouble: 1
+
 # pow_downward
 Test "pow_downward (1.0625, 1.125)":
 ildouble: 1
@@ -8634,6 +8654,12 @@ ifloat: 1
 Function: "pow":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "pow10":
+double: 1
+idouble: 1
 ildouble: 1
 ldouble: 1
 

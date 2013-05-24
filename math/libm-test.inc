@@ -39,7 +39,7 @@
 
 /* This testsuite has currently tests for:
    acos, acosh, asin, asinh, atan, atan2, atanh,
-   cbrt, ceil, copysign, cos, cosh, erf, erfc, exp, exp10, exp2, expm1,
+   cbrt, ceil, copysign, cos, cosh, drem, erf, erfc, exp, exp10, exp2, expm1,
    fabs, fdim, finite, floor, fma, fmax, fmin, fmod, fpclassify,
    frexp, gamma, hypot,
    ilogb, isfinite, isinf, isnan, isnormal, issignaling,
@@ -47,7 +47,7 @@
    j0, j1, jn,
    ldexp, lgamma, log, log10, log1p, log2, logb,
    modf, nearbyint, nextafter, nexttoward,
-   pow, remainder, remquo, rint, lrint, llrint,
+   pow, pow10, remainder, remquo, rint, lrint, llrint,
    round, lround, llround,
    scalb, scalbn, scalbln, signbit, sin, sincos, sinh, sqrt, tan, tanh, tgamma, trunc,
    y0, y1, yn, significand
@@ -58,10 +58,8 @@
    csin, csinh, csqrt, ctan, ctanh.
 
    At the moment the following functions and macros aren't tested:
-   drem (alias for remainder),
    lgamma_r,
-   nan,
-   pow10 (alias for exp10).
+   nan.
 
    Parameter handling is primitive in the moment:
    --verbose=[0..3] for different levels of output:
@@ -7953,6 +7951,15 @@ exp10_test (void)
   END;
 }
 
+static void
+pow10_test (void)
+{
+  START (pow10);
+  /* pow10 uses the same test data as exp10.  */
+  RUN_TEST_LOOP_f_f (pow10, exp10_test_data, );
+  END;
+}
+
 
 static const struct test_f_f_data exp2_test_data[] =
   {
@@ -12173,6 +12180,15 @@ remainder_test (void)
   END;
 }
 
+static void
+drem_test (void)
+{
+  START (drem);
+  /* drem uses the same test data as remainder.  */
+  RUN_TEST_LOOP_ff_f (drem, remainder_test_data, );
+  END;
+}
+
 
 static const struct test_ff_f_data remainder_tonearest_test_data[] =
   {
@@ -12206,6 +12222,15 @@ remainder_test_tonearest (void)
 {
   START (remainder_tonearest);
   RUN_TEST_LOOP_ff_f (remainder, remainder_tonearest_test_data, FE_TONEAREST);
+  END;
+}
+
+static void
+drem_test_tonearest (void)
+{
+  START (drem_tonearest);
+  /* drem uses the same test data as remainder.  */
+  RUN_TEST_LOOP_ff_f (drem, remainder_tonearest_test_data, FE_TONEAREST);
   END;
 }
 
@@ -12245,6 +12270,15 @@ remainder_test_towardzero (void)
   END;
 }
 
+static void
+drem_test_towardzero (void)
+{
+  START (drem_towardzero);
+  /* drem uses the same test data as remainder.  */
+  RUN_TEST_LOOP_ff_f (drem, remainder_towardzero_test_data, FE_TOWARDZERO);
+  END;
+}
+
 
 static const struct test_ff_f_data remainder_downward_test_data[] =
   {
@@ -12281,6 +12315,15 @@ remainder_test_downward (void)
   END;
 }
 
+static void
+drem_test_downward (void)
+{
+  START (drem_downward);
+  /* drem uses the same test data as remainder.  */
+  RUN_TEST_LOOP_ff_f (drem, remainder_downward_test_data, FE_DOWNWARD);
+  END;
+}
+
 
 static const struct test_ff_f_data remainder_upward_test_data[] =
   {
@@ -12314,6 +12357,15 @@ remainder_test_upward (void)
 {
   START (remainder_upward);
   RUN_TEST_LOOP_ff_f (remainder, remainder_upward_test_data, FE_UPWARD);
+  END;
+}
+
+static void
+drem_test_upward (void)
+{
+  START (drem_upward);
+  /* drem uses the same test data as remainder.  */
+  RUN_TEST_LOOP_ff_f (drem, remainder_upward_test_data, FE_UPWARD);
   END;
 }
 
@@ -14688,6 +14740,7 @@ main (int argc, char **argv)
   logb_test ();
   logb_test_downward ();
   modf_test ();
+  pow10_test ();
   ilogb_test ();
   scalb_test ();
   scalbn_test ();
@@ -14737,6 +14790,11 @@ main (int argc, char **argv)
   trunc_test ();
 
   /* Remainder functions:  */
+  drem_test ();
+  drem_test_tonearest ();
+  drem_test_towardzero ();
+  drem_test_downward ();
+  drem_test_upward ();
   fmod_test ();
   remainder_test ();
   remainder_test_tonearest ();
