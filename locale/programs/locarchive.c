@@ -111,7 +111,7 @@ create_archive (const char *archivefname, struct locarhandle *ah)
   /* Create a temporary file in the correct directory.  */
   fd = mkstemp (fname);
   if (fd == -1)
-    error (EXIT_FAILURE, errno, _("cannot create temporary file"));
+    error (EXIT_FAILURE, errno, _("cannot create temporary file: %s"), fname);
 
   /* Create the initial content of the archive.  */
   head.magic = AR_MAGIC;
@@ -345,7 +345,7 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
   /* Create a temporary file in the correct directory.  */
   fd = mkstemp (fname);
   if (fd == -1)
-    error (EXIT_FAILURE, errno, _("cannot create temporary file"));
+    error (EXIT_FAILURE, errno, _("cannot create temporary file: %s"), fname);
 
   /* Copy the existing head information.  */
   newhead = *head;

@@ -1,3 +1,9 @@
+2013-05-28  Mike Frysinger  <vapier@gentoo.org>
+
+	* locale/programs/locarchive.c (create_archive): Inlucde fname in
+	error message.
+	(enlarge_archive): Likewise.
+
 2013-05-28  Ben North  <ben@redfrontdoor.org>
 
 	* manual/arith.texi (frexp): It is the magnitude of the return
