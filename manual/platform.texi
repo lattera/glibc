@@ -57,6 +57,7 @@ Provide a hint that performance will probably be improved if shared resources
 dedicated to the executing processor are released until all outstanding storage
 accesses to cacheable storage for which the data is not in the cache have been
 completed.
+@end deftypefun
 
 @deftypefun {void} __ppc_set_ppr_med (void)
 Set the Program Priority Register to medium value (default).

@@ -1,3 +1,7 @@
+2013-05-26  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* manual/platform.texi: Add missing @end deftypefun.
+
 2013-05-24  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15529]
