@@ -18,13 +18,10 @@
 
 #ifndef	_LDSODEFS_H
 
-#include <libc-abis.h>
 #include <kernel-features.h>
 
 /* Get the real definitions.  */
 #include_next <ldsodefs.h>
-
-/* Now define our stuff.  */
 
 /* We have the auxiliary vector.  */
 #define HAVE_AUX_VECTOR
@@ -40,25 +37,5 @@
 /* Starting with one of the 2.4.0 pre-releases the Linux kernel passes
    up the page size information.  */
 #define HAVE_AUX_PAGESIZE
-
-/* Accept binaries which identify the binary as using GNU extensions.  */
-#define VALID_ELF_HEADER(hdr,exp,size)	(memcmp (hdr, exp, size) == 0	\
-					 || memcmp (hdr, expected2, size) == 0)
-#define VALID_ELF_OSABI(osabi)		(osabi == ELFOSABI_SYSV \
-					 || osabi == ELFOSABI_GNU)
-#define VALID_ELF_ABIVERSION(osabi,ver) \
-  (ver == 0 || (osabi == ELFOSABI_GNU && ver < LIBC_ABI_MAX))
-#define MORE_ELF_HEADER_DATA \
-  static const unsigned char expected2[EI_PAD] =	\
-  {							\
-    [EI_MAG0] = ELFMAG0,				\
-    [EI_MAG1] = ELFMAG1,				\
-    [EI_MAG2] = ELFMAG2,				\
-    [EI_MAG3] = ELFMAG3,				\
-    [EI_CLASS] = ELFW(CLASS),				\
-    [EI_DATA] = byteorder,				\
-    [EI_VERSION] = EV_CURRENT,				\
-    [EI_OSABI] = ELFOSABI_GNU				\
-  }
 
 #endif /* ldsodefs.h */

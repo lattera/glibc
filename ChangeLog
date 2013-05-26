@@ -1,5 +1,10 @@
 2013-08-29  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/ldsodefs.h (VALID_ELF_HEADER)
+	(VALID_ELF_OSABI, VALID_ELF_ABIVERSION, MORE_ELF_HEADER_DATA):
+	Move macros to...
+	* sysdeps/gnu/ldsodefs.h: ... this new file.
+
 	* sysdeps/unix/sysv/linux/ldsodefs.h (VALID_ELF_OSABI)
 	(VALID_ELF_ABIVERSION, MORE_ELF_HEADER_DATA): Use ELFOSABI_GNU
 	instead of ELFOSABI_LINUX.
