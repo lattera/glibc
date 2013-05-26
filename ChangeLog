@@ -1,5 +1,9 @@
 2013-08-29  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/ldsodefs.h (VALID_ELF_OSABI)
+	(VALID_ELF_ABIVERSION, MORE_ELF_HEADER_DATA): Use ELFOSABI_GNU
+	instead of ELFOSABI_LINUX.
+
 	[BZ #15522] strtod ("nan(N)") returning a sNaN in some cases
 
 	* stdlib/strtof_l.c (SET_MANTISSA): Rewrite.

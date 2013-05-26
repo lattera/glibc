@@ -44,8 +44,8 @@
     || memcmp (hdr, expected3, size) == 0)	\
    && VALID_FLOAT_ABI (ehdr->e_flags))
 #define VALID_ELF_OSABI(osabi)		(osabi == ELFOSABI_SYSV		\
-					 || osabi == EXTRA_OSABI	\
-					 || osabi == ELFOSABI_LINUX)
+					 || osabi == ELFOSABI_GNU	\
+					 || osabi == EXTRA_OSABI)
 #define MORE_ELF_HEADER_DATA				\
   static const unsigned char expected2[EI_PAD] =	\
   {							\
@@ -56,7 +56,7 @@
     [EI_CLASS] = ELFW(CLASS),				\
     [EI_DATA] = byteorder,				\
     [EI_VERSION] = EV_CURRENT,				\
-    [EI_OSABI] = ELFOSABI_LINUX				\
+    [EI_OSABI] = ELFOSABI_GNU				\
   };							\
   static const unsigned char expected3[EI_PAD] =	\
   {							\

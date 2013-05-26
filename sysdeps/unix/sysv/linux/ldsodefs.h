@@ -41,13 +41,13 @@
    up the page size information.  */
 #define HAVE_AUX_PAGESIZE
 
-/* Accept binaries which identify the binary as using Linux extensions.  */
+/* Accept binaries which identify the binary as using GNU extensions.  */
 #define VALID_ELF_HEADER(hdr,exp,size)	(memcmp (hdr, exp, size) == 0	\
 					 || memcmp (hdr, expected2, size) == 0)
 #define VALID_ELF_OSABI(osabi)		(osabi == ELFOSABI_SYSV \
-					 || osabi == ELFOSABI_LINUX)
+					 || osabi == ELFOSABI_GNU)
 #define VALID_ELF_ABIVERSION(osabi,ver) \
-  (ver == 0 || (osabi == ELFOSABI_LINUX && ver < LIBC_ABI_MAX))
+  (ver == 0 || (osabi == ELFOSABI_GNU && ver < LIBC_ABI_MAX))
 #define MORE_ELF_HEADER_DATA \
   static const unsigned char expected2[EI_PAD] =	\
   {							\
@@ -58,7 +58,7 @@
     [EI_CLASS] = ELFW(CLASS),				\
     [EI_DATA] = byteorder,				\
     [EI_VERSION] = EV_CURRENT,				\
-    [EI_OSABI] = ELFOSABI_LINUX				\
+    [EI_OSABI] = ELFOSABI_GNU				\
   }
 
 #endif /* ldsodefs.h */

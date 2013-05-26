@@ -1,3 +1,8 @@
+2013-08-29  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/ldsodefs.h (VALID_ELF_ABIVERSION):
+	Use ELFOSABI_GNU instead of ELFOSABI_LINUX.
+
 2013-08-29   Ondřej Bílka  <neleai@seznam.cz>
 
 	* sysdeps/mips/sys/asm.h: Fix typos.

@@ -1,3 +1,9 @@
+2013-08-29  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/ldsodefs.h (VALID_ELF_OSABI)
+	(MORE_ELF_HEADER_DATA): Use ELFOSABI_GNU instead of
+	ELFOSABI_LINUX.
+
 2013-08-28  Kyle McMartin  <kyle@redhat.com>
 	    Carlos O'Donell  <carlos@redhat.com>
 
