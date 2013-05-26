@@ -1,5 +1,8 @@
 2013-05-26  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* sysdeps/mach/hurd/i386/init-first.c (_dl_non_dynamic_init):
+	Don't declare.
+
 	* manual/platform.texi: Add missing @end deftypefun.
 
 2013-05-24  Joseph Myers  <joseph@codesourcery.com>

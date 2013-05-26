@@ -36,9 +36,6 @@ extern void __init_misc (int, char **, char **);
 #ifdef USE_NONOPTION_FLAGS
 extern void __getopt_clean_environment (char **);
 #endif
-#ifndef SHARED
-extern void _dl_non_dynamic_init (void) internal_function;
-#endif
 extern void __libc_global_ctors (void);
 
 unsigned int __hurd_threadvar_max;
