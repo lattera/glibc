@@ -123,7 +123,6 @@ _dl_sysdep_start (void **start_argptr,
 {
   void go (intptr_t *argdata)
     {
-      extern unsigned int _dl_skip_args; /* rtld.c */
       char **p;
 
       /* Cache the information in various global variables.  */
