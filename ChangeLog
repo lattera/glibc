@@ -1,5 +1,7 @@
 2013-05-26  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* stdio-common/bug26.c (main): Correct fscanf template.
+
 	* sysdeps/mach/hurd/dl-sysdep.c (_dl_sysdep_start:go): Don't
 	declare _dl_skip_args.
 
