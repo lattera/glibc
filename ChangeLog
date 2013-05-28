@@ -1,3 +1,8 @@
+2013-05-28  Ben North  <ben@redfrontdoor.org>
+
+	* manual/arith.texi (frexp): It is the magnitude of the return
+	value which lies in [0.5, 1), not the return value itself.
+
 2013-05-28  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Update.

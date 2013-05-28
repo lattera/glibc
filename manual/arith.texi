@@ -1221,8 +1221,8 @@ These functions are used to split the number @var{value}
 into a normalized fraction and an exponent.
 
 If the argument @var{value} is not zero, the return value is @var{value}
-times a power of two, and is always in the range 1/2 (inclusive) to 1
-(exclusive).  The corresponding exponent is stored in
+times a power of two, and its magnitude is always in the range 1/2
+(inclusive) to 1 (exclusive).  The corresponding exponent is stored in
 @code{*@var{exponent}}; the return value multiplied by 2 raised to this
 exponent equals the original number @var{value}.
 
