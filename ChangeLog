@@ -1,3 +1,10 @@
+2013-06-24  Mike Frysinger  <vapier@gentoo.org>
+
+	* include/libc-internal.h (ALIGN_DOWN): New helper macro.
+	(ALIGN_UP): Likewise.
+	(PTR_ALIGN_DOWN): Likewise.
+	(PTR_ALIGN_UP): Likewise.
+
 2013-06-24  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_platforms): Add "power8"
