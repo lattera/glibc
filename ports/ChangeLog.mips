@@ -1,3 +1,13 @@
+2013-05-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #15465]
+	* sysdeps/mips/dl-lookup.c (do_lookup_x): Use DSO_FILENAME.
+	(add_dependency): Likewise.
+	(_dl_lookup_symbol_x): Likewise.
+	(_dl_debug_bindings): Likewise.
+	* sysdeps/mips/dl-machine.h (elf_machine_reloc): Use
+	RTLD_PROGNAME.
+
 2013-05-22  Edjunior Barbosa Machado  <emachado@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h (siginfo_t): Add

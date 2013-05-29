@@ -1,3 +1,10 @@
+2013-05-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #15465]
+	* sysdeps/arm/dl-machine.h (elf_machine_rel): Use
+	RTLD_PROGNAME.
+	(elf_machine_rela): Likewise.
+
 2013-05-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/libm-test-ulps: Update test names.

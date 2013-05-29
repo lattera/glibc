@@ -1840,10 +1840,8 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	      if (_dl_name_match_p (GLRO(dl_trace_prelink), l))
 		GLRO(dl_trace_prelink_map) = l;
 	      _dl_printf ("\t%s => %s (0x%0*Zx, 0x%0*Zx)",
-			  l->l_libname->name[0] ? l->l_libname->name
-			  : rtld_progname ?: "<main program>",
-			  l->l_name[0] ? l->l_name
-			  : rtld_progname ?: "<main program>",
+			  DSO_FILENAME (l->l_libname->name),
+			  DSO_FILENAME (l->l_name),
 			  (int) sizeof l->l_map_start * 2,
 			  (size_t) l->l_map_start,
 			  (int) sizeof l->l_addr * 2,
@@ -2000,8 +1998,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 		      first = 0;
 		    }
 
-		  _dl_printf ("\t%s:\n",
-			      map->l_name[0] ? map->l_name : rtld_progname);
+		  _dl_printf ("\t%s:\n", DSO_FILENAME (map->l_name));
 
 		  while (1)
 		    {
@@ -2324,7 +2321,7 @@ print_unresolved (int errcode __attribute__ ((unused)), const char *objname,
 		  const char *errstring)
 {
   if (objname[0] == '\0')
-    objname = rtld_progname ?: "<main program>";
+    objname = RTLD_PROGNAME;
   _dl_error_printf ("%s	(%s)\n", errstring, objname);
 }
 
@@ -2334,7 +2331,7 @@ static void
 print_missing_version (int errcode __attribute__ ((unused)),
 		       const char *objname, const char *errstring)
 {
-  _dl_error_printf ("%s: %s: %s\n", rtld_progname ?: "<program name unknown>",
+  _dl_error_printf ("%s: %s: %s\n", RTLD_PROGNAME,
 		    objname, errstring);
 }
 

@@ -430,9 +430,7 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 #  endif
 	      strtab = (const char *) D_PTR (map, l_info[DT_STRTAB]);
 
-	      _dl_error_printf (fmt,
-				rtld_progname ?: "<program name unknown>",
-				strtab + refsym->st_name);
+	      _dl_error_printf (fmt, RTLD_PROGNAME, strtab + refsym->st_name);
 	    }
 	  break;
 #  ifndef RESOLVE_CONFLICT_FIND_MAP

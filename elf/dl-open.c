@@ -733,7 +733,7 @@ void
 _dl_show_scope (struct link_map *l, int from)
 {
   _dl_debug_printf ("object=%s [%lu]\n",
-		    *l->l_name ? l->l_name : rtld_progname, l->l_ns);
+		    DSO_FILENAME (l->l_name), l->l_ns);
   if (l->l_scope != NULL)
     for (int scope_cnt = from; l->l_scope[scope_cnt] != NULL; ++scope_cnt)
       {
@@ -744,7 +744,7 @@ _dl_show_scope (struct link_map *l, int from)
 	    _dl_debug_printf_c (" %s",
 				l->l_scope[scope_cnt]->r_list[cnt]->l_name);
 	  else
-	    _dl_debug_printf_c (" %s", rtld_progname);
+	    _dl_debug_printf_c (" %s", RTLD_PROGNAME);
 
 	_dl_debug_printf_c ("\n");
       }

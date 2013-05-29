@@ -510,8 +510,7 @@ __process_machine_rela (struct link_map *map,
 	  strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
 	  _dl_error_printf ("\
 %s: Symbol `%s' has different size in shared object, consider re-linking\n",
-			    rtld_progname ?: "<program name unknown>",
-			    strtab + refsym->st_name);
+			    RTLD_PROGNAME, strtab + refsym->st_name);
 	}
       memcpy (reloc_addr, (char *) finaladdr, MIN (sym->st_size,
 						   refsym->st_size));

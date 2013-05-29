@@ -119,7 +119,7 @@ _dl_signal_error (int errcode, const char *objname, const char *occation,
       /* Lossage while resolving the program's own symbols is always fatal.  */
       char buffer[1024];
       _dl_fatal_printf ("%s: %s: %s%s%s%s%s\n",
-			rtld_progname ?: "<program name unknown>",
+			RTLD_PROGNAME,
 			occation ?: N_("error while loading shared libraries"),
 			objname, *objname ? ": " : "",
 			errstring, errcode ? ": " : "",

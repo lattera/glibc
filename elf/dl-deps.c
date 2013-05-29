@@ -310,8 +310,7 @@ _dl_map_object_deps (struct link_map *map,
 		      _dl_debug_printf ("load auxiliary object=%s"
 					" requested by file=%s\n",
 					name,
-					l->l_name[0]
-					? l->l_name : rtld_progname);
+					DSO_FILENAME (l->l_name));
 
 		    /* We must be prepared that the addressed shared
 		       object is not available.  */
@@ -337,8 +336,7 @@ _dl_map_object_deps (struct link_map *map,
 		      _dl_debug_printf ("load filtered object=%s"
 					" requested by file=%s\n",
 					name,
-					l->l_name[0]
-					? l->l_name : rtld_progname);
+					DSO_FILENAME (l->l_name));
 
 		    /* For filter objects the dependency must be available.  */
 		    bool malloced;

@@ -1,3 +1,9 @@
+2013-05-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #15465]
+	* sysdeps/m68k/dl-machine.h (elf_machine_rela): Use
+	RTLD_PROGNAME.
+
 2013-05-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/m68k/coldfire/fpu/libm-test-ulps: Update test names.

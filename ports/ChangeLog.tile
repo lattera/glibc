@@ -1,3 +1,9 @@
+2013-05-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #15465]
+	* sysdeps/tile/dl-machine.h (elf_machine_rela): Use
+	RTLD_PROGNAME.
+
 2013-05-23  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/tile/tilegx/Makefile ($(cflags-mcmodel-large)):

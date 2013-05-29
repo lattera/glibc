@@ -1,3 +1,50 @@
+2013-05-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #15465]
+	* elf/Makefile (tests): Add tst-null-argv.
+	(modules-names):  Add tst-null-argv-lib.
+	($(objpfx)tst-null-argv): Depend on tst-null-argv-lib.so.
+	(tst-null-argv-ENV): Set environment for tst-null-argv.
+	* sysdeps/generic/ldsodefs.h (DSO_FILENAME): New macro.
+	(RTLD_PROGNAME): New macro.
+	* elf/tst-null-argv.c: New test case.
+	* elf/tst-null-argv-lib.c: Library for test case.
+	* elf/dl-conflict.c (_dl_resolve_conflicts): Use DSO_FILENAME.
+	* elf/dl-deps.c (_dl_map_object_deps): Likewise.
+	* elf/dl-error.c (_dl_signal_error): Use RTLD_PROGNAME.
+	* elf/dl-fini.c (_dl_fini): Use DSO_FILENAME.
+	* elf/dl-init.c (call_init): Likewise.
+	(_dl_init): Likewise.
+	* elf/dl-load.c (print_search_path): Likewise.
+	(_dl_map_object): Likewise.
+	* elf/dl-lookup.c (do_lookup_x): Likewise.
+	(add_dependency): Likewise.
+	(_dl_lookup_symbol_x): Likewise.
+	(_dl_debug_bindings): Likewise.
+	* elf/dl-open.c (_dl_show_scope): Likewise.
+	* elf/dl-reloc.c (_dl_relocate_object): Likewise.
+	* elf/dl-version.c (match_symbol): Likewise.
+	(_dl_check_map_versions): Likewise.
+	* elf/rtld.c (dl_main): Likewise.
+	(print_unresolved): Use RTLD_PROGNAME.
+	(print_missing_version): Likewise.
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Likewise.
+	(elf_machine_rela): Likewise.
+	* sysdeps/powerpc/powerpc32/dl-machine.c
+	(__process_machine_rela): Likewise.
+	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_rela):
+	Likewise.
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_rela):
+	Likewise.
+	* sysdeps/s390/s390-64/dl-machine.h (elf_machine_rela):
+	Likewise.
+	* sysdeps/sh/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela):
+	Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela):
+	Likewise.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Likewise.
+
 2013-05-28  Carlos O'Donell  <carlos@redhat.com>
 
 	* po/be.po: Add descriptive title.

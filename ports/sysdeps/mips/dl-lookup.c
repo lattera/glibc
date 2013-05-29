@@ -114,7 +114,7 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_SYMBOLS, 0))
 	_dl_debug_printf ("symbol=%s;  lookup in file=%s [%lu]\n",
 			  undef_name,
-			  map->l_name[0] ? map->l_name : rtld_progname,
+			  DSO_FILENAME (map->l_name),
 			  map->l_ns);
 
       /* If the hash table is empty there is nothing to do here.  */
@@ -684,10 +684,9 @@ add_dependency (struct link_map *undef_map, struct link_map *map, int flags)
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
 	_dl_debug_printf ("\
 \nfile=%s [%lu];  needed by %s [%lu] (relocation dependency)\n\n",
-			  map->l_name[0] ? map->l_name : rtld_progname,
+			  DSO_FILENAME (map->l_name),
 			  map->l_ns,
-			  undef_map->l_name[0]
-			  ? undef_map->l_name : rtld_progname,
+			  DSO_FILENAME (undef_map->l_name),
 			  undef_map->l_ns);
     }
   else
@@ -768,9 +767,7 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 	  const char *reference_name = undef_map ? undef_map->l_name : NULL;
 
 	  /* XXX We cannot translate the message.  */
-	  _dl_signal_cerror (0, (reference_name[0]
-				 ? reference_name
-				 : (rtld_progname ?: "<main program>")),
+	  _dl_signal_cerror (0, DSO_FILENAME (reference_name),
 			     N_("relocation error"),
 			     make_string ("symbol ", undef_name, ", version ",
 					  version->name,
@@ -797,9 +794,7 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 				     ? version->name : "");
 
 	  /* XXX We cannot translate the message.  */
-	  _dl_signal_cerror (0, (reference_name[0]
-				 ? reference_name
-				 : (rtld_progname ?: "<main program>")),
+	  _dl_signal_cerror (0, DSO_FILENAME (reference_name),
 			     N_("symbol lookup error"),
 			     make_string (undefined_msg, undef_name,
 					  versionstr, versionname));
@@ -929,11 +924,9 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
   if (GLRO(dl_debug_mask) & DL_DEBUG_BINDINGS)
     {
       _dl_debug_printf ("binding file %s [%lu] to %s [%lu]: %s symbol `%s'",
-			(reference_name[0]
-			 ? reference_name
-			 : (rtld_progname ?: "<main program>")),
+			DSO_FILENAME (reference_name),
 			undef_map->l_ns,
-			value->m->l_name[0] ? value->m->l_name : rtld_progname,
+			DSO_FILENAME (value->m->l_name),
 			value->m->l_ns,
 			protected ? "protected" : "normal", undef_name);
       if (version)

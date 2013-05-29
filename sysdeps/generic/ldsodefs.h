@@ -128,6 +128,11 @@ typedef struct link_map *lookup_t;
    | ((PROT_WRITE | PROT_EXEC) << (PF_W | PF_X) * 4)			      \
    | ((PROT_READ | PROT_WRITE | PROT_EXEC) << ((PF_R | PF_W | PF_X) * 4)))
 
+/* The filename itself, or the main program name, if available.  */
+#define DSO_FILENAME(name) ((name)[0] ? (name)				      \
+			    : (rtld_progname ?: "<main program>"))
+
+#define RTLD_PROGNAME (rtld_progname ?: "<program name unknown>")
 
 /* For the version handling we need an array with only names and their
    hash values.  */

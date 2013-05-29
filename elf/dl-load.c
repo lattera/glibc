@@ -1651,7 +1651,7 @@ print_search_path (struct r_search_path_elem **list,
 
   if (name != NULL)
     _dl_debug_printf_c ("\t\t(%s from file %s)\n", what,
-			name[0] ? name : rtld_progname);
+			DSO_FILENAME (name));
   else
     _dl_debug_printf_c ("\t\t(%s)\n", what);
 }
@@ -2124,8 +2124,7 @@ _dl_map_object (struct link_map *loader, const char *name,
     _dl_debug_printf ((mode & __RTLD_CALLMAP) == 0
 		      ? "\nfile=%s [%lu];  needed by %s [%lu]\n"
 		      : "\nfile=%s [%lu];  dynamically loaded by %s [%lu]\n",
-		      name, nsid, loader->l_name[0]
-		      ? loader->l_name : rtld_progname, loader->l_ns);
+		      name, nsid, DSO_FILENAME (loader->l_name), loader->l_ns);
 
 #ifdef SHARED
   /* Give the auditing libraries a chance to change the name before we
