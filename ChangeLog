@@ -1,3 +1,9 @@
+2013-05-28  Carlos O'Donell  <carlos@redhat.com>
+
+	* po/be.po: Add descriptive title.
+	* po/zh_CN.po: Likewise.
+	* po/header.pot: Likewise.
+
 2013-05-28  Mike Frysinger  <vapier@gentoo.org>
 
 	* locale/programs/locarchive.c (create_archive): Inlucde fname in

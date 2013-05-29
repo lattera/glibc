@@ -1,4 +1,4 @@
-# SOME DESCRIPTIVE TITLE.
+# English (American) messages for the GNU C Library.
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
