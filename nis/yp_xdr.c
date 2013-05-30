@@ -32,6 +32,14 @@
 #include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>
 
+/* The NIS v2 protocol suggests 1024 bytes as a maximum length of all fields.
+   Current Linux systems don't use this limit. To remain compatible with
+   recent Linux systems we choose limits large enough to load large key and
+   data values, but small enough to not pose a DoS threat. */
+
+#define XDRMAXNAME 1024
+#define XDRMAXRECORD (16 * 1024 * 1024)
+
 bool_t
 xdr_ypstat (XDR *xdrs, ypstat *objp)
 {
@@ -49,21 +57,21 @@ libnsl_hidden_def (xdr_ypxfrstat)
 bool_t
 xdr_domainname (XDR *xdrs, domainname *objp)
 {
-  return xdr_string (xdrs, objp, YPMAXDOMAIN);
+  return xdr_string (xdrs, objp, XDRMAXNAME);
 }
 libnsl_hidden_def (xdr_domainname)
 
 bool_t
 xdr_mapname (XDR *xdrs, mapname *objp)
 {
-  return xdr_string (xdrs, objp, YPMAXMAP);
+  return xdr_string (xdrs, objp, XDRMAXNAME);
 }
 libnsl_hidden_def (xdr_mapname)
 
 bool_t
 xdr_peername (XDR *xdrs, peername *objp)
 {
-  return xdr_string (xdrs, objp, YPMAXPEER);
+  return xdr_string (xdrs, objp, XDRMAXNAME);
 }
 libnsl_hidden_def (xdr_peername)
 
@@ -71,7 +79,7 @@ bool_t
 xdr_keydat (XDR *xdrs, keydat *objp)
 {
   return xdr_bytes (xdrs, (char **) &objp->keydat_val,
-		    (u_int *) &objp->keydat_len, YPMAXRECORD);
+		    (u_int *) &objp->keydat_len, XDRMAXRECORD);
 }
 libnsl_hidden_def (xdr_keydat)
 
@@ -79,7 +87,7 @@ bool_t
 xdr_valdat (XDR *xdrs, valdat *objp)
 {
   return xdr_bytes (xdrs, (char **) &objp->valdat_val,
-		    (u_int *) &objp->valdat_len, YPMAXRECORD);
+		    (u_int *) &objp->valdat_len, XDRMAXRECORD);
 }
 libnsl_hidden_def (xdr_valdat)
 

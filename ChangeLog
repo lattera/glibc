@@ -1,4 +1,15 @@
-2012-05-30  Jeff Law  <law@redhat.com>
+2013-05-30  Patsy Franklin  <pfrankli@redhat.com>
+
+	[BZ # 15553]
+	* nis/yp_xdr.c (XDRMAXNAME): Define.
+	(XDRMAXRECORD): Define.
+	(xdr_domainname): Use XDRMAXNAME.
+	(xdr_mapname): Likewise.
+	(xdr_peername): Likewise.
+	(xdr_keydat): Use XDRMAXRECORD.
+	(xdr_valdat): Likewise.
+
+2013-05-30  Jeff Law  <law@redhat.com>
 
 	[BZ #14256]
 	* manual/errno.texi (ESTALE): Update to account for more than
