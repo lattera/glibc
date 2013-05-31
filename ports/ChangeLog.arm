@@ -1,3 +1,9 @@
+2013-05-31  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/Makefile [$(subdir) = malloc]
+	($(objpfx)libmemusage.so): Remove dependency on libc_nonshared.
+	[$(subdir) = math] ($(objpfx)libm.so): Remove dependency on ld.so.
+
 2013-05-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #15465]

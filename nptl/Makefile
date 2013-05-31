@@ -507,14 +507,6 @@ $(objpfx)libpthread.so: $(addprefix $(objpfx),$(crti-objs) $(crtn-objs))
 $(objpfx)libpthread.so: +preinit += $(addprefix $(objpfx),$(crti-objs))
 $(objpfx)libpthread.so: +postinit += $(addprefix $(objpfx),$(crtn-objs))
 
-# Depend on libc.so so a DT_NEEDED is generated in the shared objects.
-# This ensures they will load libc.so for needed symbols if loaded by
-# a statically-linked program that hasn't already loaded it.
-# Depend on ld.so too to get proper versions of ld.so symbols.
-$(objpfx)libpthread.so: $(common-objpfx)libc.so \
-			$(common-objpfx)libc_nonshared.a \
-			$(elfobjdir)/ld.so
-
 # Make sure we link with the thread library.
 ifeq ($(build-shared),yes)
 $(addprefix $(objpfx), \

@@ -33,5 +33,3 @@ include $(..)Makeconfig
 libcidn-inhibit-o = $(filter-out .os,$(object-suffixes))
 
 include $(..)Rules
-
-$(objpfx)libcidn.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a

@@ -25,19 +25,10 @@ sysdep_routines += $(aeabi_constants) $(aeabi_routines)
 static-only-routines += $(aeabi_constants)
 endif
 
-# to pull in __aeabi_read_tp, needed for tls
-ifeq ($(subdir),malloc)
-$(objpfx)libmemusage.so: $(common-objpfx)libc_nonshared.a
-endif
-
 ifeq ($(subdir),gmon)
 sysdep_routines += arm-mcount
 endif
 
 ifeq ($(subdir),debug)
 CFLAGS-backtrace.c += -funwind-tables
-endif
-
-ifeq ($(subdir),math)
-$(objpfx)libm.so: $(elfobjdir)/ld.so
 endif

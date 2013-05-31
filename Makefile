@@ -127,6 +127,9 @@ lib: $(common-objpfx)libc.so
 
 lib: $(common-objpfx)linkobj/libc.so
 
+# Do not filter ld.so out of libc.so link.
+$(common-objpfx)linkobj/libc.so: link-libc-deps = # empty
+
 $(common-objpfx)linkobj/libc.so: $(elfobjdir)/soinit.os \
 				 $(common-objpfx)linkobj/libc_pic.a \
 				 $(elfobjdir)/sofini.os \

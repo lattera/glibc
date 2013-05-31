@@ -98,9 +98,3 @@ cpp-srcs-left := $(addsuffix .c,$(localedef-modules) $(localedef-aux) \
 				$(locale-modules) $(lib-modules))
 lib := locale-programs
 include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
-
-# Depend on libc.so so a DT_NEEDED is generated in the shared objects.
-# This ensures they will load libc.so for needed symbols if loaded by
-# a statically-linked program that hasn't already loaded it.
-$(objpfx)libBrokenLocale.so: $(common-objpfx)libc.so \
-			     $(common-objpfx)libc_nonshared.a

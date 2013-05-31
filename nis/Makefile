@@ -76,12 +76,12 @@ $(objpfx)libnss_nis.so: $(objpfx)libnsl.so$(libnsl.so-version) \
 			$(common-objpfx)nss/libnss_files.so
 $(objpfx)libnss_nisplus.so: $(objpfx)libnsl.so$(libnsl.so-version)
 
-# Depend on libc.so so a DT_NEEDED is generated in the shared objects.
-# This ensures they will load libc.so for needed symbols if loaded by
-# a statically-linked program that hasn't already loaded it.
 libnsl-libc = $(common-objpfx)linkobj/libc.so
-$(services:%=$(objpfx)libnss_%.so) $(objpfx)libnsl.so: $(libnsl-libc) \
-					       $(common-objpfx)libc_nonshared.a
+# Target-specific variable setting to link objects using deprecated
+# RPC interfaces with the version of libc.so that makes them available
+# for new links:
+$(services:%=$(objpfx)libnss_%.so) $(objpfx)libnsl.so: \
+  libc-for-link = $(libnsl-libc)
 
 
 ifeq ($(build-shared),yes)

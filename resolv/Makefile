@@ -83,23 +83,11 @@ CFLAGS-res_hconf.c = -fexceptions
 # The BIND code elicits some harmless warnings.
 +cflags += -Wno-strict-prototypes -Wno-write-strings
 
-# Depend on libc.so so a DT_NEEDED is generated in the shared objects.
-# This ensures they will load libc.so for needed symbols if loaded by
-# a statically-linked program that hasn't already loaded it.
-$(objpfx)libresolv.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a
-# Some hosts need '__stack_chk_guard', so pull in the definition from
-# ld.so if required.
-ifeq (yes,$(have-ssp))
-LDLIBS-resolv.so += $(as-needed) $(elfobjdir)/ld.so $(no-as-needed)
-endif
-
 # The DNS NSS modules needs the resolver.
-$(objpfx)libnss_dns.so: $(objpfx)libresolv.so $(common-objpfx)libc.so \
-			$(common-objpfx)libc_nonshared.a
+$(objpfx)libnss_dns.so: $(objpfx)libresolv.so
 
 # The asynchronous name lookup code needs the thread library.
-$(objpfx)libanl.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a \
-		    $(shared-thread-library)
+$(objpfx)libanl.so: $(shared-thread-library)
 
 $(objpfx)ga_test: $(objpfx)libanl.so $(shared-thread-library)
 

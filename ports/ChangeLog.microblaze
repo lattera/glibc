@@ -1,3 +1,21 @@
+2013-05-31  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/microblaze/Makefile ($(objpfx)libm.so): Remove
+	dependency on ld.so.
+	($(objpfx)libcrypt.so): Likewise.
+	($(objpfx)libresolv.so): Likewise.
+	($(objpfx)libnss_dns.so): Likewise.
+	($(objpfx)libnss_files.so): Likewise.
+	($(objpfx)libnss_db.so): Likewise.
+	($(objpfx)libnss_nis.so): Likewise.
+	($(objpfx)libnss_nisplus.so): Likewise.
+	($(objpfx)libnss_hesiod.so): Likewise.
+	($(objpfx)libnss_compat.so): Likewise.
+	($(objpfx)libanl.so): Likewise.
+	($(objpfx)libnsl.so): Likewise.
+	($(objpfx)libcidn.so): Likewise.
+	($(objpfx)libutil.so): Likewise.
+
 2013-05-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #15465]

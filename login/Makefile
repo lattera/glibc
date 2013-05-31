@@ -68,8 +68,3 @@ endif
 $(inst_libexecdir)/pt_chown: $(objpfx)pt_chown $(+force)
 	$(make-target-directory)
 	-$(INSTALL_PROGRAM) -m 4755 -o root $< $@
-
-# Depend on libc.so so a DT_NEEDED is generated in the shared objects.
-# This ensures they will load libc.so for needed symbols if loaded by
-# a statically-linked program that hasn't already loaded it.
-$(objpfx)libutil.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a

@@ -117,14 +117,6 @@ $(objpfx)bug-atexit1.out: $(objpfx)bug-atexit1-lib.so
 $(objpfx)bug-atexit2: $(libdl)
 $(objpfx)bug-atexit2.out: $(objpfx)bug-atexit2-lib.so
 
-LDLIBS-bug-atexit3-lib.so = -lstdc++ -lgcc_eh $(elfobjdir)/ld.so \
-			    $(common-objpfx)libc_nonshared.a
+LDLIBS-bug-atexit3-lib.so = -lstdc++ -lgcc_eh
 $(objpfx)bug-atexit3: $(libdl)
 $(objpfx)bug-atexit3.out: $(objpfx)bug-atexit3-lib.so
-
-
-# Depend on libc.so so a DT_NEEDED is generated in the shared objects.
-# This ensures they will load libc.so for needed symbols if loaded by
-# a statically-linked program that hasn't already loaded it.
-$(objpfx)libdl.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a \
-		   $(elfobjdir)/ld.so

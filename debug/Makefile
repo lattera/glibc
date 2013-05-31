@@ -186,13 +186,3 @@ $(objpfx)xtrace: xtrace.sh
 	    -e 's|@PKGVERSION@|$(PKGVERSION)|' \
 	    -e 's|@REPORT_BUGS_TO@|$(REPORT_BUGS_TO)|' $^ > $@.new \
 	&& rm -f $@ && mv $@.new $@ && chmod +x $@
-
-# Depend on libc.so so a DT_NEEDED is generated in the shared objects.
-# This ensures they will load libc.so for needed symbols if loaded by
-# a statically-linked program that hasn't already loaded it.
-$(objpfx)libSegFault.so: $(common-objpfx)libc.so \
-			 $(common-objpfx)libc_nonshared.a \
-			 $(elf-objpfx)$(rtld-installed-name)
-$(objpfx)libpcprofile.so: $(common-objpfx)libc.so \
-			  $(common-objpfx)libc_nonshared.a \
-			  $(elf-objpfx)$(rtld-installed-name)

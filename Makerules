@@ -432,13 +432,33 @@ map-file = $(firstword $($(@F:.so=-map)) \
 load-map-file = $(map-file:%=-Wl,--version-script=%)
 endif
 
+# Compiler arguments to use to link a shared object with libc and
+# ld.so.  This is intended to be as similar as possible to a default
+# link with an installed libc.
+link-libc-args = -Wl,--start-group \
+		 $(libc-for-link) \
+		 $(common-objpfx)libc_nonshared.a \
+		 $(as-needed) $(elfobjdir)/ld.so $(no-as-needed) \
+		 -Wl,--end-group
+
+# The corresponding shared libc to use.  This may be modified for a
+# particular target.
+libc-for-link = $(common-objpfx)libc.so
+
+# The corresponding dependencies.  As these are used in dependencies,
+# not just commands, they cannot use target-specific variables so need
+# to name both possible libc.so objects.
+link-libc-deps = $(common-objpfx)libc.so $(common-objpfx)linkobj/libc.so \
+		 $(common-objpfx)libc_nonshared.a $(elfobjdir)/ld.so
+
 # Pattern rule to build a shared object from an archive of PIC objects.
 # This must come after the installation rules so Make doesn't try to
 # build shared libraries in place from the installed *_pic.a files.
 # $(LDLIBS-%.so) may contain -l switches to generate run-time dependencies
-# on other shared objects.
-lib%.so: lib%_pic.a $(+preinit) $(+postinit) $(+interp)
-	$(build-shlib)
+# on other shared objects.  The linking with libc and ld.so is intended
+# to be as similar as possible to a default link with an installed libc.
+lib%.so: lib%_pic.a $(+preinit) $(+postinit) $(+interp) $(link-libc-deps)
+	$(build-shlib) $(link-libc-args)
 
 define build-shlib-helper
 $(LINK.o) -shared $(static-libgcc) -Wl,-O1 $(sysdep-LDFLAGS) \
@@ -513,17 +533,19 @@ endef
 # not for shared objects
 define build-module
 $(build-module-helper) -o $@ $(shlib-lds-flags) \
-	  $(csu-objpfx)abi-note.o $(build-module-objlist)
+	  $(csu-objpfx)abi-note.o $(build-module-objlist) $(link-libc-args)
 endef
 define build-module-asneeded
 $(build-module-helper) -o $@ $(shlib-lds-flags) \
 	  $(csu-objpfx)abi-note.o \
-	  -Wl,--as-needed $(build-module-objlist) -Wl,--no-as-needed
+	  -Wl,--as-needed $(build-module-objlist) -Wl,--no-as-needed \
+	  $(link-libc-args)
 endef
 
 build-module-helper-objlist = \
 	$(patsubst %_pic.a,$(whole-archive) %_pic.a $(no-whole-archive),\
-		   $(filter-out %.lds $(map-file) $(+preinit) $(+postinit),$^))
+		   $(filter-out %.lds $(map-file) $(+preinit) $(+postinit) \
+				$(link-libc-deps),$^))
 
 build-module-objlist = $(build-module-helper-objlist) $(LDLIBS-$(@F:%.so=%).so)
 build-shlib-objlist = $(build-module-helper-objlist) \
@@ -565,6 +587,9 @@ generated += libc_pic.opts libc_pic.os.clean
 
 libc_pic_clean := .clean
 endif
+
+# Do not filter ld.so out of libc.so link.
+$(common-objpfx)libc.so: link-libc-deps = # empty
 
 # Use our own special initializer and finalizer files for libc.so.
 $(common-objpfx)libc.so: $(elfobjdir)/soinit.os \
@@ -621,8 +646,7 @@ include $(patsubst %,$(..)extra-modules.mk,$(modules-names))
 
 extra-modules-build := $(filter-out $(modules-names-nobuild),$(modules-names))
 $(extra-modules-build:%=$(objpfx)%.so): $(objpfx)%.so: \
-		$(objpfx)%.os $(shlib-lds) \
-		$(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a
+		$(objpfx)%.os $(shlib-lds) $(link-libs-deps)
 	$(build-module)
 endif
 

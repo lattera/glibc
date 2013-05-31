@@ -33,12 +33,7 @@ libnss_hesiod-inhibit-o	= $(filter-out .os,$(object-suffixes))
 
 include ../Rules
 
-# Depend on libc.so so a DT_NEEDED is generated in the shared objects.
-# This ensures they will load libc.so for needed symbols if loaded by
-# a statically-linked program that hasn't already loaded it.
-# The Hesiod NSS modules also needs the resolver and some help from
+# The Hesiod NSS module also needs the resolver and some help from
 # the file service.
 $(objpfx)libnss_hesiod.so: $(common-objpfx)resolv/libresolv.so \
-			   $(common-objpfx)nss/libnss_files.so \
-			   $(common-objpfx)libc.so \
-			   $(common-objpfx)libc_nonshared.a
+			   $(common-objpfx)nss/libnss_files.so

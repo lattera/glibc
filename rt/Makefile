@@ -64,12 +64,7 @@ CFLAGS-librt-cancellation.c = -fasynchronous-unwind-tables
 
 LDFLAGS-rt.so = -Wl,--enable-new-dtags,-z,nodelete
 
-# Depend on libc.so so a DT_NEEDED is generated in the shared objects.
-# This ensures they will load libc.so for needed symbols if loaded by
-# a statically-linked program that hasn't already loaded it.
-$(objpfx)librt.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a \
-		   $(shared-thread-library) \
-		   $(elfobjdir)/ld.so
+$(objpfx)librt.so: $(shared-thread-library)
 
 ifeq (yes,$(build-shared))
 $(addprefix $(objpfx),$(tests)): $(objpfx)librt.so $(shared-thread-library)
