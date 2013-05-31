@@ -1,3 +1,9 @@
+2013-05-31  Carlos O'Donell  <carlos@redhat.com>
+
+	* po/be.po: Revert last change.
+	* po/zh_CN.po: Likewise.
+	* po/header.pot: Likewise.
+
 2013-05-31  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makefile ($(common-objpfx)linkobj/libc.so): Define

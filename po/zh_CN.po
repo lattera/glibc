@@ -1,4 +1,4 @@
-# Chinese (simplified) messages for the GNU C Library.
+# SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2002, 2007 Free Software Foundation, Inc.
 # LI Daobing <lidaobing@gmail.com>, 2007.
 # Wang Li <charles@linux.net.cn>, 2002.

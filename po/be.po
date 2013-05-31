@@ -1,4 +1,4 @@
-# Belarusian messages for the GNU C Library.
+# SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 # Ales Nyakhaychyk <nab@mail.by>, 2002, 2003.
 #
