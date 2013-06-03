@@ -1,3 +1,11 @@
+2013-06-03  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #15536]
+	* math/libm-test.inc (MAX_EXP): Remove
+	(MIN_EXP): Define.
+	(ulp): Use MIN_EXP - MANT_DIG.
+	(check_ulp): Verify subnormal ulps. Only allow a range of +/- 1 ulp.
+
 2013-05-31  Carlos O'Donell  <carlos@redhat.com>
 
 	* po/be.po: Revert last change.

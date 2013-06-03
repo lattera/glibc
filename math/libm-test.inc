@@ -269,8 +269,8 @@ static FLOAT max_error, real_max_error, imag_max_error;
 
 #define MANT_DIG CHOOSE ((LDBL_MANT_DIG-1), (DBL_MANT_DIG-1), (FLT_MANT_DIG-1),  \
 			 (LDBL_MANT_DIG-1), (DBL_MANT_DIG-1), (FLT_MANT_DIG-1))
-#define MAX_EXP CHOOSE ((LDBL_MAX_EXP-1), (DBL_MAX_EXP-1), (FLT_MAX_EXP-1),	\
-			(LDBL_MAX_EXP-1), (DBL_MAX_EXP-1), (FLT_MAX_EXP-1))
+#define MIN_EXP CHOOSE ((LDBL_MIN_EXP-1), (DBL_MIN_EXP-1), (FLT_MIN_EXP-1),	\
+			(LDBL_MIN_EXP-1), (DBL_MIN_EXP-1), (FLT_MIN_EXP-1))
 
 /* Compare KEY (a string, with the name of a test or a function) with
    ULP (a pointer to a struct ulp_data structure), returning a value
@@ -680,7 +680,7 @@ ulp (FLOAT value)
 	/* Fall through...  */
       case FP_SUBNORMAL:
         /* The next closest subnormal value is a constant distance away.  */
-	ulp = FUNC(ldexp) (1.0, 1 - (MAX_EXP + MANT_DIG));
+	ulp = FUNC(ldexp) (1.0, MIN_EXP - MANT_DIG);
 	break;
 
       case FP_NORMAL:
@@ -14583,7 +14583,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
 void
 check_ulp (void)
 {
-   FLOAT ulps, value;
+   FLOAT ulps, ulpx, value;
    int i;
    /* Check ulp of zero is a subnormal value...  */
    ulps = ulp (0x0.0p0);
@@ -14599,30 +14599,45 @@ check_ulp (void)
        fprintf (stderr, "ulp (1.0L) is not FP_NORMAL\n");
        exit (EXIT_FAILURE);
      }
+
+   /* Compute the next subnormal value using nextafter to validate ulp.
+      We allow +/- 1 ulp around the represented value.  */
+   value = FUNC(nextafter) (0, 1);
+   ulps = ULPDIFF (value, 0);
+   ulpx = ulp (1.0L);
+   if (ulps < (1.0L - ulpx) || ulps > (1.0L + ulpx))
+     {
+       fprintf (stderr, "Value outside of 1 +/- 1ulp.\n");
+       exit (EXIT_FAILURE);
+     }
    /* Compute the nearest representable number from 10 towards 20.
-      The result is 10 + 1ulp.  We use this to check the ulp function.  */
+      The result is 10 + 1ulp.  We use this to check the ulp function.
+      We allow +/- 1 ulp around the represented value.  */
    value = FUNC(nextafter) (10, 20);
    ulps = ULPDIFF (value, 10);
-   if (ulps > 1.0L)
+   ulpx = ulp (1.0L);
+   if (ulps < (1.0L - ulpx) || ulps > (1.0L + ulpx))
      {
-       fprintf (stderr, "The value of ulp (10+1ulp,10) is greater than 1 ulp.\n");
+       fprintf (stderr, "Value outside of 1 +/- 1ulp.\n");
        exit (EXIT_FAILURE);
      }
    /* This gives one more ulp.  */
    value = FUNC(nextafter) (value, 20);
    ulps = ULPDIFF (value, 10);
-   if (ulps > 2.0L)
+   ulpx = ulp (2.0L);
+   if (ulps < (2.0L - ulpx) || ulps > (2.0L + ulpx))
      {
-       fprintf (stderr, "The value of ulp (10+2ulp,10) is greater than 2 ulp.\n");
+       fprintf (stderr, "Value outside of 2 +/- 1ulp.\n");
        exit (EXIT_FAILURE);
      }
    /* And now calculate 100 ulp.  */
    for (i = 2; i < 100; i++)
      value = FUNC(nextafter) (value, 20);
    ulps = ULPDIFF (value, 10);
-   if (ulps > 100.0L)
+   ulpx = ulp (100.0L);
+   if (ulps < (100.0L - ulpx) || ulps > (100.0L + ulpx))
      {
-       fprintf (stderr, "The value of ulp (10+100ulp,10) is greater than 100 ulp.\n");
+       fprintf (stderr, "Value outside of 100 +/- 1ulp.\n");
        exit (EXIT_FAILURE);
      }
 }
