@@ -1,5 +1,7 @@
 2013-06-03  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* string/test-strchrnul.c: Add copyright header.
+
 	* posix/tst-getaddrinfo4.c: Increase test timeout.
 
 2013-06-03  Carlos O'Donell  <carlos@redhat.com>
