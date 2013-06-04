@@ -1,3 +1,7 @@
+2013-06-03  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* posix/tst-getaddrinfo4.c: Increase test timeout.
+
 2013-06-03  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #15536]
