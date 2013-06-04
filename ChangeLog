@@ -1,5 +1,67 @@
 2013-06-11  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* benchtests/Makefile (string-bench): Add string benchmarks.
+	* benchtests/bench-bcopy-ifunc.c: New file.
+	* benchtests/bench-bcopy.c: New file.
+	* benchtests/bench-bzero-ifunc.c: New file.
+	* benchtests/bench-bzero.c: New file.
+	* benchtests/bench-memccpy-ifunc.c: New file.
+	* benchtests/bench-memccpy.c: New file.
+	* benchtests/bench-memchr-ifunc.c: New file.
+	* benchtests/bench-memchr.c: New file.
+	* benchtests/bench-memcmp-ifunc.c: New file.
+	* benchtests/bench-memcmp.c: New file.
+	* benchtests/bench-memmem-ifunc.c: New file.
+	* benchtests/bench-memmem.c: New file.
+	* benchtests/bench-memmove-ifunc.c: New file.
+	* benchtests/bench-memmove.c: New file.
+	* benchtests/bench-mempcpy-ifunc.c: New file.
+	* benchtests/bench-mempcpy.c: New file.
+	* benchtests/bench-memset-ifunc.c: New file.
+	* benchtests/bench-memset.c: New file.
+	* benchtests/bench-rawmemchr-ifunc.c: New file.
+	* benchtests/bench-rawmemchr.c: New file.
+	* benchtests/bench-stpcpy-ifunc.c: New file.
+	* benchtests/bench-stpcpy.c: New file.
+	* benchtests/bench-stpncpy-ifunc.c: New file.
+	* benchtests/bench-stpncpy.c: New file.
+	* benchtests/bench-strcasecmp-ifunc.c: New file.
+	* benchtests/bench-strcasecmp.c: New file.
+	* benchtests/bench-strcasestr-ifunc.c: New file.
+	* benchtests/bench-strcasestr.c: New file.
+	* benchtests/bench-strcat-ifunc.c: New file.
+	* benchtests/bench-strcat.c: New file.
+	* benchtests/bench-strchr-ifunc.c: New file.
+	* benchtests/bench-strchr.c: New file.
+	* benchtests/bench-strchrnul-ifunc.c: New file.
+	* benchtests/bench-strchrnul.c: New file.
+	* benchtests/bench-strcmp-ifunc.c: New file.
+	* benchtests/bench-strcmp.c: New file.
+	* benchtests/bench-strcpy-ifunc.c: New file.
+	* benchtests/bench-strcpy.c: New file.
+	* benchtests/bench-strcspn-ifunc.c: New file.
+	* benchtests/bench-strcspn.c: New file.
+	* benchtests/bench-strlen-ifunc.c: New file.
+	* benchtests/bench-strlen.c: New file.
+	* benchtests/bench-strncasecmp-ifunc.c: New file.
+	* benchtests/bench-strncasecmp.c: New file.
+	* benchtests/bench-strncat-ifunc.c: New file.
+	* benchtests/bench-strncat.c: New file.
+	* benchtests/bench-strncmp-ifunc.c: New file.
+	* benchtests/bench-strncmp.c: New file.
+	* benchtests/bench-strncpy-ifunc.c: New file.
+	* benchtests/bench-strncpy.c: New file.
+	* benchtests/bench-strnlen-ifunc.c: New file.
+	* benchtests/bench-strnlen.c: New file.
+	* benchtests/bench-strpbrk-ifunc.c: New file.
+	* benchtests/bench-strpbrk.c: New file.
+	* benchtests/bench-strrchr-ifunc.c: New file.
+	* benchtests/bench-strrchr.c: New file.
+	* benchtests/bench-strspn-ifunc.c: New file.
+	* benchtests/bench-strspn.c: New file.
+	* benchtests/bench-strstr-ifunc.c: New file.
+	* benchtests/bench-strstr.c: New file.
+
 	* benchtests/Makefile: Disable parallel execution of targets.
 	(string-bench): Add memcpy.
 	(benchset): New variable to store a list of benchmark sets.
