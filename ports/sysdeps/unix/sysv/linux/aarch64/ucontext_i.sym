@@ -37,6 +37,7 @@ STACK_FLAGS			stack (ss_flags)
 oX0				mcontext (regs)
 oSP				mcontext (sp)
 oPC				mcontext (pc)
+oPSTATE				mcontext (pstate)
 oEXTENSION                      mcontext (__reserved)
 
 #define fpsimd_context(member)  offsetof (struct fpsimd_context, member)

@@ -1,3 +1,9 @@
+2013-06-04  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* sysdeps/unix/sysv/linux/aarch64/getcontext.S (__getcontext):
+	Initialize pstate.
+	* sysdeps/unix/sysv/linux/aarch64/ucontext_i.sym (oPSTATE): Define.
+
 2013-05-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #15465]
