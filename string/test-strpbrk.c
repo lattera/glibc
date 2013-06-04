@@ -70,24 +70,6 @@ do_one_test (impl_t *impl, const char *s, const char *rej, RES_TYPE exp_res)
       ret = 1;
       return;
     }
-
-  if (HP_TIMING_AVAIL)
-    {
-      hp_timing_t start __attribute ((unused));
-      hp_timing_t stop __attribute ((unused));
-      hp_timing_t best_time = ~ (hp_timing_t) 0;
-      size_t i;
-
-      for (i = 0; i < 32; ++i)
-	{
-	  HP_TIMING_NOW (start);
-	  CALL (impl, s, rej);
-	  HP_TIMING_NOW (stop);
-	  HP_TIMING_BEST (best_time, start, stop);
-	}
-
-      printf ("\t%zd", (size_t) best_time);
-    }
 }
 
 static void
@@ -137,14 +119,8 @@ do_test (size_t align, size_t pos, size_t len)
     }
   result = STRPBRK_RESULT (s, pos);
 
-  if (HP_TIMING_AVAIL)
-    printf ("Length %4zd, alignment %2zd, rej len %2zd:", pos, align, len);
-
   FOR_EACH_IMPL (impl, 0)
     do_one_test (impl, s, rej, result);
-
-  if (HP_TIMING_AVAIL)
-    putchar ('\n');
 }
 
 static void

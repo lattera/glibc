@@ -82,24 +82,6 @@ do_one_test (impl_t *impl, const void *haystack, size_t haystack_len,
   if (check_result (impl, haystack, haystack_len, needle, needle_len,
 		    expected) < 0)
     return;
-
-  if (HP_TIMING_AVAIL)
-    {
-      hp_timing_t start __attribute ((unused));
-      hp_timing_t stop __attribute ((unused));
-      hp_timing_t best_time = ~ (hp_timing_t) 0;
-      size_t i;
-
-      for (i = 0; i < 32; ++i)
-	{
-	  HP_TIMING_NOW (start);
-	  CALL (impl, haystack, haystack_len, needle, needle_len);
-	  HP_TIMING_NOW (stop);
-	  HP_TIMING_BEST (best_time, start, stop);
-	}
-
-      printf ("\t%zd", (size_t) best_time);
-    }
 }
 
 static void
@@ -110,16 +92,10 @@ do_test (const char *str, size_t len, size_t idx)
   memcpy (tmpbuf, buf1 + idx, len);
   memcpy (buf1 + idx, str, len);
 
-  if (HP_TIMING_AVAIL)
-    printf ("String %s, offset %zd:", str, idx);
-
   FOR_EACH_IMPL (impl, 0)
     do_one_test (impl, buf1, BUF1PAGES * page_size, str, len, buf1 + idx);
 
   memcpy (buf1 + idx, tmpbuf, len);
-
-  if (HP_TIMING_AVAIL)
-    putchar ('\n');
 }
 
 static void
@@ -143,15 +119,9 @@ do_random_tests (void)
 	  buf1[idx + off] = ch;
 	}
 
-      if (HP_TIMING_AVAIL)
-	printf ("String %.*s, offset %zd:", (int) len, buf1 + idx, idx);
-
       FOR_EACH_IMPL (impl, 0)
 	do_one_test (impl, buf1, BUF1PAGES * page_size, buf1 + idx, len,
 		     buf1 + idx);
-
-      if (HP_TIMING_AVAIL)
-	putchar ('\n');
 
       memcpy (buf1 + idx, tmpbuf, len);
     }

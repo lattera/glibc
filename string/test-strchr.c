@@ -107,24 +107,6 @@ do_one_test (impl_t *impl, const CHAR *s, int c, const CHAR *exp_res)
 {
   if (check_result (impl, s, c, exp_res) < 0)
     return;
-
-  if (HP_TIMING_AVAIL)
-    {
-      hp_timing_t start __attribute ((unused));
-      hp_timing_t stop __attribute ((unused));
-      hp_timing_t best_time = ~ (hp_timing_t) 0;
-      size_t i;
-
-      for (i = 0; i < 32; ++i)
-	{
-	  HP_TIMING_NOW (start);
-	  CALL (impl, s, c);
-	  HP_TIMING_NOW (stop);
-	  HP_TIMING_BEST (best_time, start, stop);
-	}
-
-      printf ("\t%zd", (size_t) best_time);
-    }
 }
 
 static void
@@ -160,15 +142,8 @@ do_test (size_t align, size_t pos, size_t len, int seek_char, int max_char)
   else
     result = NULLRET (buf + align + len);
 
-  if (HP_TIMING_AVAIL)
-    printf ("Length %4zd, alignment in bytes %2zd:",
-	    pos, align * sizeof (CHAR));
-
   FOR_EACH_IMPL (impl, 0)
     do_one_test (impl, buf + align, seek_char, result);
-
-  if (HP_TIMING_AVAIL)
-    putchar ('\n');
 }
 
 static void

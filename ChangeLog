@@ -1,5 +1,58 @@
 2013-06-11  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* string/test-memccpy.c (do_one_test): Remove HP_TIMING code.
+	(do_test): Likewise.
+	* string/test-memchr.c (do_one_test): Likewise.
+	(do_test): Likewise.
+	* string/test-memcmp.c (do_one_test): Likewise.
+	(do_test): Likewise.
+	* string/test-memcpy.c (do_one_test): Likewise.
+	(do_test): Likewise.
+	* string/test-memmem.c (do_one_test): Likewise.
+	(do_test): Likewise.
+	(do_random_tests): Likewise.
+	* string/test-memmove.c (do_one_test): Likewise.
+	(do_test): Likewise.
+	* string/test-memset.c (do_one_test): Likewise.
+	(do_test): Likewise.
+	* string/test-rawmemchr.c (do_one_test): Likewise.
+	(do_test): Likewise.
+	* string/test-strcasecmp.c (do_one_test): Likewise.
+	(do_test): Likewise.
+	* string/test-strcasestr.c (do_one_test): Likewise.
+	(do_test): Likewise.
+	* string/test-strcat.c (do_one_test): Likewise.
+	(do_test): Likewise.
+	* string/test-strchr.c (do_one_test): Likewise.
+	(do_test): Likewise.
+	* string/test-strcmp.c (do_one_test): Likewise.
+	(do_test): Likewise.
+	* string/test-strcpy.c (do_one_test): Likewise.
+	(do_test): Likewise.
+	* string/test-string.h: Likewise.
+	(test_init): Likewise.
+	* string/test-strlen.c (do_one_test): Likewise.
+	(do_test): Likewise.
+	* string/test-strncasecmp.c (do_one_test): Likewise.
+	(do_test): Likewise.
+	* string/test-strncat.c (do_one_test): Likewise.
+	(do_test): Likewise.
+	* string/test-strncmp.c (do_one_test): Likewise.
+	(do_test_limit): Likewise.
+	(do_test): Likewise.
+	* string/test-strncpy.c (do_one_test): Likewise.
+	(do_test): Likewise.
+	* string/test-strnlen.c (do_one_test): Likewise.
+	(do_test): Likewise.
+	* string/test-strpbrk.c (do_one_test): Likewise.
+	(do_test): Likewise.
+	* string/test-strrchr.c (do_one_test): Likewise.
+	(do_test): Likewise.
+	* string/test-strspn.c (do_one_test): Likewise.
+	(do_test): Likewise.
+	* string/test-strstr.c (do_one_test): Likewise.
+	(do_test): Likewise.
+
 	* benchtests/Makefile (string-bench): Add string benchmarks.
 	* benchtests/bench-bcopy-ifunc.c: New file.
 	* benchtests/bench-bcopy.c: New file.

@@ -91,29 +91,6 @@ do_one_test (impl_t *impl, char *s, int c __attribute ((unused)), size_t n)
       ret = 1;
       return;
     }
-
-  if (HP_TIMING_AVAIL)
-    {
-      hp_timing_t start __attribute ((unused));
-      hp_timing_t stop __attribute ((unused));
-      hp_timing_t best_time = ~ (hp_timing_t) 0;
-      size_t i;
-
-      for (i = 0; i < 32; ++i)
-	{
-	  HP_TIMING_NOW (start);
-#ifdef TEST_BZERO
-	  CALL (impl, s, n);
-#else
-	  CALL (impl, s, c, n);
-#endif
-
-	  HP_TIMING_NOW (stop);
-	  HP_TIMING_BEST (best_time, start, stop);
-	}
-
-      printf ("\t%zd", (size_t) best_time);
-    }
 }
 
 static void
@@ -123,14 +100,8 @@ do_test (size_t align, int c, size_t len)
   if (align + len > page_size)
     return;
 
-  if (HP_TIMING_AVAIL)
-    printf ("Length %4zd, alignment %2zd, c %2d:", len, align, c);
-
   FOR_EACH_IMPL (impl, 0)
     do_one_test (impl, (char *) buf1 + align, c, len);
-
-  if (HP_TIMING_AVAIL)
-    putchar ('\n');
 }
 
 #ifndef TEST_BZERO
