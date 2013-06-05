@@ -1,3 +1,9 @@
+2013-06-05  Richard Henderson  <rth@redhat.com>
+
+	[BZ #15583]
+	* sysdeps/arm/armv6/strcpy.S (strcpy): Fix register usage in
+	non ARCH_HAS_T2 case.
+
 2013-06-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/machine-gmon.h: Remove trailing whitespace.

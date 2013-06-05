@@ -89,7 +89,7 @@ ENTRY (strcpy)
 	tst	r0, #3			@ Test alignment of DEST
 	movt	r7, #0x0101
 #else
-	ldr	ip, =0x01010101
+	ldr	r7, =0x01010101
 	tst	r0, #3
 #endif
 	bne	.Lunaligned
