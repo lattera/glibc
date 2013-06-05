@@ -50,7 +50,7 @@ int
 main (void)
 {
   foo_p p;
-  
+
   if (foo_ptr != foo)
     abort ();
   if ((*foo_ptr) () != -30)

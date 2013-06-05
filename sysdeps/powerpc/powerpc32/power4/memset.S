@@ -162,7 +162,7 @@ L(cacheAligned):
 	add	rMEMP,rMEMP,rCLS
 	b	L(cacheAligned)
 
-/* We are here because the cache line size was set and the remainder 
+/* We are here because the cache line size was set and the remainder
   (rLEN) is less than the actual cache line size.
    So set up the preconditions for L(nondcbz) and go there.  */
 L(handletail32):

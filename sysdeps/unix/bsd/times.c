@@ -54,7 +54,7 @@ __times (buffer)
     }
 
   clk_tck = __getclktck ();
-  
+
   if (__getrusage (RUSAGE_SELF, &usage) < 0)
     return (clock_t) -1;
   buffer->tms_utime = (clock_t) timeval_to_clock_t (&usage.ru_utime, clk_tck);

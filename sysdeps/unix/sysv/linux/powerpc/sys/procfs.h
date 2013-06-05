@@ -31,9 +31,9 @@
 
 __BEGIN_DECLS
 
-/* These definitions are normally provided by ucontext.h via 
-   asm/sigcontext.h, asm/ptrace.h, and asm/elf.h.  Otherwise we define 
-   them here.  */ 
+/* These definitions are normally provided by ucontext.h via
+   asm/sigcontext.h, asm/ptrace.h, and asm/elf.h.  Otherwise we define
+   them here.  */
 #if !defined __PPC64_ELF_H && !defined _ASM_POWERPC_ELF_H
 #define ELF_NGREG       48      /* includes nip, msr, lr, etc. */
 #define ELF_NFPREG      33      /* includes fpscr */

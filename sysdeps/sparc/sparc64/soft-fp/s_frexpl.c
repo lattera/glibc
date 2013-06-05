@@ -26,7 +26,7 @@
  *      arg = x*2^exp.
  * If arg is inf, 0.0, or NaN, then frexpl(arg,&exp) returns arg
  * with *exp=0.
- */       
+ */
 
 #include "soft-fp.h"
 #include "quad.h"

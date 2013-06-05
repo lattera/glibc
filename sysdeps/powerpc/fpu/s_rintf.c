@@ -36,7 +36,7 @@ __rintf (float x)
 	  x = -(x - TWO23);
 	}
     }
-  
+
   return x;
 }
 weak_alias (__rintf, rintf)

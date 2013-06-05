@@ -43,7 +43,7 @@ ENTRY(__mmap)
         stg     %r1,0(%r15)             /* Store back chain.  */
         stg     %r0,8(%r15)             /* Store eos.  */
 
-        /* Store parameters on stack, because old_mmap 
+        /* Store parameters on stack, because old_mmap
            takes only one parameter: a pointer to the parameter area.  */
         mvc     200(8,%r15),368(%r15)   /* Move 'offset'.  */
         lgfr    %r6,%r6
@@ -63,7 +63,7 @@ ENTRY(__mmap)
 	cfi_adjust_cfa_offset (-208)
         lmg     %r6,%r15,48(%r15)       /* Load registers.  */
 
-        /* Check gpr 2 for error.  */ 
+        /* Check gpr 2 for error.  */
         lghi    %r0,-4096
         clgr    %r2,%r0
         jgnl    SYSCALL_ERROR_LABEL

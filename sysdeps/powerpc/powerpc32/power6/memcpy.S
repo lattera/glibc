@@ -21,7 +21,7 @@
 /* __ptr_t [r3] memcpy (__ptr_t dst [r3], __ptr_t src [r4], size_t len [r5]);
    Returns 'dst'.
 
-   Memcpy handles short copies (< 32-bytes) using a binary move blocks 
+   Memcpy handles short copies (< 32-bytes) using a binary move blocks
    (no loops) of lwz/stw.  The tail (remaining 1-3) bytes is handled
    with the appropriate combination of byte and halfword load/stores.
    There is minimal effort to optimize the alignment of short moves.

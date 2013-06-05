@@ -41,7 +41,7 @@ enum
 
    These go in the low byte.  Avoid using the top bit, it will
    conflict with error returns.  */
-enum 
+enum
   {
     PER_LINUX = 0x0000,
     PER_LINUX_32BIT = 0x0000 | ADDR_LIMIT_32BIT,

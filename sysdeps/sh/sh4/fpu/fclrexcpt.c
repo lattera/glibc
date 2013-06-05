@@ -33,7 +33,7 @@ feclearexcept (int excepts)
 
   /* Clear exception bits.  */
   cw &= ~excepts;
-  
+
   /* Put the new data in effect.  */
   _FPU_SETCW (cw);
 

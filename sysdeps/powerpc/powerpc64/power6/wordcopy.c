@@ -37,7 +37,7 @@ _wordcopy_fwd_aligned (dstp, srcp, len)
   if (len & 1)
   {
     ((op_t *) dstp)[0] = ((op_t *) srcp)[0];
-    
+
     if (len == 1)
       return;
     srcp += OPSIZ;
@@ -105,10 +105,10 @@ _wordcopy_fwd_dest_aligned (dstp, srcp, len)
   {
     a1 = ((op_t *) srcp)[1];
     ((op_t *) dstp)[0] = MERGE (a0, sh_1, a1, sh_2);
-    
+
     if (len == 1)
       return;
-    
+
     a0 = a1;
     srcp += OPSIZ;
     dstp += OPSIZ;
@@ -137,7 +137,7 @@ _wordcopy_bwd_aligned (dstp, srcp, len)
     srcp -= OPSIZ;
     dstp -= OPSIZ;
     ((op_t *) dstp)[0] = ((op_t *) srcp)[0];
-    
+
     if (len == 1)
       return;
     len -= 1;

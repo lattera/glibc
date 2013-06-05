@@ -47,7 +47,7 @@ __getsockname (fd, addrarg, len)
 
   if (*len > buflen)
     *len = buflen;
-  
+
   if (buf != (char *) addr)
     {
       memcpy (addr, buf, *len);

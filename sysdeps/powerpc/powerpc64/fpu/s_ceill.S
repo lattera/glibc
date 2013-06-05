@@ -69,7 +69,7 @@ ENTRY (__ceill)
 	mtfsf	0x01,fp11	/* restore previous rounding mode.  */
 	fnabs	fp1,fp1		/* if (x == 0.0)  */
 	blr			/* x = -0.0; */
-	
+
 /* The high double is > TWO52 so we need to round the low double and
    perhaps the high double.  In this case we have to round the low
    double and handle any adjustment to the high double that may be
@@ -93,7 +93,7 @@ ENTRY (__ceill)
 	beqlr-  cr0
 	mtfsfi	7,2		/* Set rounding mode toward +inf.  */
 	fdiv	fp8,fp1,fp13	/* x_high/TWO52  */
-	
+
 	bng-	cr6,.L6		/* if (x > 0.0)  */
 	fctidz	fp0,fp8
 	fcfid	fp8,fp0		/* tau = floor(x_high/TWO52);  */
@@ -110,7 +110,7 @@ ENTRY (__ceill)
 	b	.L9
 .L6:				/* if (x < 0.0)  */
 	fctidz	fp0,fp8
-	fcfid	fp8,fp0		/* tau = floor(x_high/TWO52);  */	
+	fcfid	fp8,fp0		/* tau = floor(x_high/TWO52);  */
 	bnl	cr5,.L7		/* if (x_low < 0.0)  */
 	fmr	fp3,fp1
 	fmr	fp4,fp2

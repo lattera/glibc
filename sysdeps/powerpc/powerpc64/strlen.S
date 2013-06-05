@@ -57,11 +57,11 @@
    2) How popular are bytes with the high bit set? If they are very rare,
    on some processors it might be useful to use the simpler expression
    ~((x - 0x01010101) | 0x7f7f7f7f) (that is, on processors with only one
-   ALU), but this fails when any character has its high bit set.  
-   
+   ALU), but this fails when any character has its high bit set.
+
    Answer:
-   1) Added a Data Cache Block Touch early to prefetch the first 128 
-   byte cache line. Adding dcbt instructions to the loop would not be 
+   1) Added a Data Cache Block Touch early to prefetch the first 128
+   byte cache line. Adding dcbt instructions to the loop would not be
    effective since most strings will be shorter than the cache line.*/
 
 /* Some notes on register usage: Under the SVR4 ABI, we can use registers
@@ -101,7 +101,7 @@ ENTRY (strlen)
 	li	rMASK, -1
 	insrdi	r7F7F, r7F7F, 32, 0
 /* That's the setup done, now do the first pair of doublewords.
-   We make an exception and use method (2) on the first two doublewords, 
+   We make an exception and use method (2) on the first two doublewords,
    to reduce overhead.  */
 	srd	rMASK, rMASK, rPADN
 	and	rTMP1, r7F7F, rWORD1

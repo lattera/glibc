@@ -100,10 +100,10 @@ ENTRY(__socket)
         lmg     %r6,15,48(%r15)         /* Load registers.  */
 
 	/* gpr2 is < 0 if there was an error.  */
-        lghi    %r0,-125 
+        lghi    %r0,-125
         clgr    %r2,%r0
         jgnl    SYSCALL_ERROR_LABEL
- 
+
 	/* Successful; return the syscall's value.  */
 	br      %r14
 

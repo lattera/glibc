@@ -23,10 +23,10 @@
    On the start of each function _mcount is called with the address of a
    data word in %r1 (initialized to 0, used for counting). The compiler
    with the option -p generates code of the form:
-  
+
            STM    6,15,24(15)
            BRAS   13,.LTN0_0
-   .LT0_0: 
+   .LT0_0:
    .LC13:  .long  .LP0
            .data
            .align 4
@@ -37,7 +37,7 @@
            lg     1,.LC13-.LT0_0(13)
            brasl  14,_mcount
            lg     14,4(15)
-  
+
    The _mcount implementation now has to call __mcount_internal with the
    address of .LP0 as first parameter and the return address as second
    parameter. &.LP0 was loaded to %r1 and the return address is in %r14.

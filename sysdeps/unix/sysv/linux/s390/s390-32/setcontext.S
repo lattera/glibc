@@ -58,7 +58,7 @@ ENTRY(__setcontext)
 	ld      %f13,SC_FPRS+104(%r1)
 	ld      %f14,SC_FPRS+112(%r1)
 	ld      %f15,SC_FPRS+120(%r1)
- 
+
 	/* Don't touch %a0, used for thread purposes.  */
 	lam	%a1,%a15,SC_ACRS+4(%r1)
 

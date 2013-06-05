@@ -1,7 +1,7 @@
 /* s_tanl.c -- long double version of s_tan.c.
  * Conversion to IEEE quad long double by Jakub Jelinek, jj@ultra.linux.cz.
  */
-  
+
 /* @(#)s_tan.c 5.1 93/09/24 */
 /*
  * ====================================================

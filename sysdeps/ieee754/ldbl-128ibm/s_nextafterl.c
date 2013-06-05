@@ -56,7 +56,7 @@ long double __nextafterl(long double x, long double y)
 	    math_force_eval (u);		/* raise underflow flag */
 	    return x;
 	}
-	
+
 	long double u;
 	if(x > y) {	/* x > y, x -= ulp */
 	    if((hx==0xffefffffffffffffLL)&&(lx==0xfc8ffffffffffffeLL))

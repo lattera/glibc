@@ -70,7 +70,7 @@ ENTRY(__swapcontext)
 
 	/* Store general purpose registers.  */
 	stm     %r0,%r15,SC_GPRS(%r1)
-	
+
 	/* sigprocmask (SIG_SETMASK, &sc->sc_mask, NULL).  */
 	la      %r2,SIG_BLOCK
 	lr	%r5,%r0
@@ -98,7 +98,7 @@ ENTRY(__swapcontext)
 	ld      %f13,SC_FPRS+104(%r5)
 	ld      %f14,SC_FPRS+112(%r5)
 	ld      %f15,SC_FPRS+120(%r5)
- 
+
 	/* Don't touch %a0, used for thread purposes.  */
 	lam	%a1,%a15,SC_ACRS+4(%r5)
 
@@ -107,5 +107,5 @@ ENTRY(__swapcontext)
 
 	/* Return.  */
 	br	%r14
-END(__swapcontext)	
+END(__swapcontext)
 weak_alias (__swapcontext, swapcontext)

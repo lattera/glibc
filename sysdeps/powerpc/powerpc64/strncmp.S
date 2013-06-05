@@ -51,7 +51,7 @@ EALIGN (strncmp, 4, 0)
 	clrldi	rN, rN, 61
 	addi	rFEFE, rFEFE, -0x101
 	addi	r7F7F, r7F7F, 0x7f7f
-	cmpldi	cr1, rN, 0	
+	cmpldi	cr1, rN, 0
 	beq	L(unaligned)
 
 	mtctr	rTMP	/* Power4 wants mtctr 1st in dispatch group.  */
@@ -62,7 +62,7 @@ EALIGN (strncmp, 4, 0)
 	add	rFEFE, rFEFE, rTMP
 	b	L(g1)
 
-L(g0):	
+L(g0):
 	ldu	rWORD1, 8(rSTR1)
 	bne-	cr1, L(different)
 	ldu	rWORD2, 8(rSTR2)
@@ -72,11 +72,11 @@ L(g1):	add	rTMP, rFEFE, rWORD1
 	and.	rTMP, rTMP, rNEG
 	cmpd	cr1, rWORD1, rWORD2
 	beq+	L(g0)
-	
+
 /* OK. We've hit the end of the string. We need to be careful that
    we don't compare two strings as different because of gunk beyond
    the end of the strings...  */
-	
+
 L(endstring):
 	and	rTMP, r7F7F, rWORD1
 	beq	cr1, L(equal)
@@ -152,7 +152,7 @@ L(u1):
 	lbzu	rWORD1, 1(rSTR1)
 	bne+	cr1, L(u0)
 
-L(u2):	lbzu	rWORD1, -1(rSTR1)	
+L(u2):	lbzu	rWORD1, -1(rSTR1)
 L(u3):	sub	rRTN, rWORD1, rWORD2
 	blr
 END (strncmp)

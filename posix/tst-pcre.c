@@ -132,7 +132,7 @@ main (int argc, char **argv)
 	{
 	  regex_t re;
 	  int n;
-    
+
 	  if (!pattern_valid)
 	    {
 	      printf ("%zd: No previous valid pattern %s\n", linenum, line);

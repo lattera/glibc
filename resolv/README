@@ -62,7 +62,7 @@ the `gethostby*' family of functions, which means that for example
 traditional resolver interfaces however, continue to use a single
 resolver state and are therefore still thread-unsafe.  The resolver
 state is the same resolver state that is used for the initial ("main")
-thread.  
+thread.
 
 This has the following consequences for existing binaries and source
 code:

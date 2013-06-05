@@ -101,11 +101,11 @@ ENTRY(__swapcontext)
 
 	/* Don't touch %a0 and %a1, used for thread purposes.  */
 	lam     %a2,%a15,SC_ACRS+8(%r5)
- 
+
 	/* Load general purpose registers.  */
 	lmg	%r0,%r15,SC_GPRS(%r5)
 
 	/* Return.  */
 	br	%r14
-END(__swapcontext)	
+END(__swapcontext)
 weak_alias (__swapcontext, swapcontext)

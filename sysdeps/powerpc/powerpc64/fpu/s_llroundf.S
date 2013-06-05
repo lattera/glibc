@@ -24,13 +24,13 @@
 .LC1:	/* 0.5 */
 	.tc FD_3fe00000_0[TC],0x3fe0000000000000
 	.section	".text"
-	
+
 /* long long [r3] llroundf (float x [fp1])
-   IEEE 1003.1 llroundf function.  IEEE specifies "roundf to the nearest 
+   IEEE 1003.1 llroundf function.  IEEE specifies "roundf to the nearest
    integer value, rounding halfway cases away from zero, regardless of
    the current rounding mode."  However PowerPC Architecture defines
-   "roundf to Nearest" as "Choose the best approximation. In case of a 
-   tie, choose the one that is even (least significant bit o).". 
+   "roundf to Nearest" as "Choose the best approximation. In case of a
+   tie, choose the one that is even (least significant bit o).".
    So we can't use the PowerPC "round to Nearest" mode. Instead we set
    "round toward Zero" mode and round by adding +-0.5 before rounding
    to the integer value.

@@ -49,8 +49,8 @@ versioned_symbol (libc, __swapcontext, swapcontext, GLIBC_2_3_4)
 #if SHLIB_COMPAT (libc, GLIBC_2_3_3, GLIBC_2_3_4)
 
 	compat_text_section
-	
-# undef __CONTEXT_FUNC_NAME	
+
+# undef __CONTEXT_FUNC_NAME
 # define __CONTEXT_FUNC_NAME __novec_swapcontext
 # undef __CONTEXT_ENABLE_VRS
 

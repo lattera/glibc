@@ -31,4 +31,4 @@
 		} else {}
 #endif
 
-#endif /* _RES_DEBUG_H_ */ 
+#endif /* _RES_DEBUG_H_ */

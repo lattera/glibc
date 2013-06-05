@@ -61,7 +61,7 @@ ENTRY(__setcontext)
 
 	/* Don't touch %a0 and %a1, used for thread purposes.  */
 	lam     %a2,%a15,SC_ACRS+8(%r1)
- 
+
 	/* Load general purpose registers.  */
 	lmg	%r0,%r15,SC_GPRS(%r1)
 

@@ -24,13 +24,13 @@
 .LC0:	/* 0.5 */
 	.long 0x3f000000
 	.section	".text"
-	
+
 /* long [r3] lround (float x [fp1])
-   IEEE 1003.1 lround function.  IEEE specifies "round to the nearest 
+   IEEE 1003.1 lround function.  IEEE specifies "round to the nearest
    integer value, rounding halfway cases away from zero, regardless of
    the current rounding mode."  However PowerPC Architecture defines
-   "round to Nearest" as "Choose the best approximation. In case of a 
-   tie, choose the one that is even (least significant bit o).". 
+   "round to Nearest" as "Choose the best approximation. In case of a
+   tie, choose the one that is even (least significant bit o).".
    So we can't use the PowerPC "round to Nearest" mode. Instead we set
    "round toward Zero" mode and round by adding +-0.5 before rounding
    to the integer value.  It is necessary to detect when x is
@@ -60,7 +60,7 @@ ENTRY (__lround)
 	blt-	cr6,.Lretzero
 	fadd	fp3,fp2,fp10	/* |x|+=0.5 bias to prepare to round.  */
 	bge	cr7,.Lconvert	/* x is positive so don't negate x.  */
-	fnabs	fp3,fp3		/* -(|x|+=0.5)  */ 
+	fnabs	fp3,fp3		/* -(|x|+=0.5)  */
 .Lconvert:
 	fctiwz	fp4,fp3		/* Convert to Integer word lround toward 0.  */
 	stfd	fp4,8(r1)

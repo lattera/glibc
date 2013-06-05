@@ -50,7 +50,7 @@ __remquol (long double x, long double y, int *quo)
 
   if (hy <= 0x7ffbffffffffffffLL)
     x = __ieee754_fmodl (x, 8 * y);              /* now x < 8y */
-      
+
   if (((hx - hy) | (lx - ly)) == 0)
     {
       *quo = qs ? -1 : 1;

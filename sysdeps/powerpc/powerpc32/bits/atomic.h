@@ -24,7 +24,7 @@
     atomic operation.  In that case we don't expect additional updates
     adjacent to the lock word after the Store Conditional and the hint
     should be false.  */
-    
+
 #if defined _ARCH_PWR6 || defined _ARCH_PWR6X
 # define MUTEX_HINT_ACQ	",1"
 # define MUTEX_HINT_REL	",0"

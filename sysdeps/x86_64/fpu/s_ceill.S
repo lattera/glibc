@@ -1,7 +1,7 @@
 /*
  * Written by J.T. Conklin <jtc@netbsd.org>.
  * Changes for long double by Ulrich Drepper <drepper@cygnus.com>
- * Changes for x86-64 by Andreas Jaeger <aj@suse.de>	
+ * Changes for x86-64 by Andreas Jaeger <aj@suse.de>
  * Public domain.
  */
 

@@ -92,13 +92,13 @@ ENTRY(strchr)
 #else
 	sub		%g5, %o2, %g5
 #endif
-	or		%g5, %o4, %o4	
+	or		%g5, %o4, %o4
 	andcc		%o4, %o3, %g0
 	be		7b
 	 add		%o0, 4, %o0
 
 	/* Check every byte. */
-8:	srl		%g4, 24, %g5 
+8:	srl		%g4, 24, %g5
 7:	andcc		%g5, 0xff, %g5
 	be		9f
 	 cmp		%g5, %o1
@@ -243,13 +243,13 @@ ENTRY(strrchr)
 #else
 	sub		%g5, %o2, %g5
 #endif
-	or		%g5, %o4, %o4	
+	or		%g5, %o4, %o4
 	andcc		%o4, %o3, %g0
 	be		6b
 	 add		%o0, 4, %o0
 
 	/* Check every byte. */
-3:	srl		%g4, 24, %g5 
+3:	srl		%g4, 24, %g5
 8:	andcc		%g5, 0xff, %g5
 	be		9f
 	 cmp		%g5, %o1

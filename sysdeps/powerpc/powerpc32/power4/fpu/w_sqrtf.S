@@ -25,20 +25,20 @@
    sets the appropriate floating point exceptions.  Extended checking is
    only needed to set errno (via __kernel_standard) if the input value
    is negative.
-   
+
    The fsqrts will set FPCC and FU (Floating Point Unordered or NaN
    to indicated that the input value was negative or NaN. Use Move to
    Condition Register from FPSCR to copy the FPCC field to cr1.  The
    branch on summary overflow transfers control to w_sqrt to process
    any error conditions. Otherwise we can return the result directly.
-   
+
    This part of the function is a leaf routine,  so no need to stack a
    frame or execute prologue/epilogue code. This means it is safe to
    transfer directly to w_sqrt as long as the input value (f1) is
    preserved. Putting the sqrt result into f2 (float parameter 2)
    allows passing both the input value and sqrt result into the extended
    wrapper so there is no need to recompute.
-   
+
    This tactic avoids the overhead of stacking a frame for the normal
    (non-error) case.  Until gcc supports prologue shrink-wrapping
    this is the best we can do.  */

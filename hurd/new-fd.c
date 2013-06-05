@@ -32,7 +32,7 @@ _hurd_new_fd (io_t port, io_t ctty)
       /* Initialize the port cells.  */
       _hurd_port_init (&d->port, port);
       _hurd_port_init (&d->ctty, ctty);
-      
+
       /* And the fcntl flags.  */
       d->flags = 0;
     }

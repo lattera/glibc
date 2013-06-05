@@ -56,7 +56,7 @@ ENTRY(__clone)
 	not	r1, r1			// r1=0 means r0 = -1 to -4095
 	tst	r1, r1			// i.e. error in linux
 	bf	.Lclone_end
-.Lsyscall_error:	
+.Lsyscall_error:
 	SYSCALL_ERROR_HANDLER
 .Lclone_end:
 	tst	r0, r0
@@ -84,10 +84,10 @@ ENTRY(__clone)
 	stc	gbr, r1
 	mov.w	.Lpidoff, r2
 	add	r1, r2
-	mov.l	r0, @r2	
+	mov.l	r0, @r2
 	mov.w	.Ltidoff, r2
 	add	r1, r2
-	mov.l	r0, @r2	
+	mov.l	r0, @r2
 4:
 #endif
 	/* thread starts */

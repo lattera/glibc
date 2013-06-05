@@ -48,7 +48,7 @@ EALIGN (__floor, 4, 0)
 	fnabs	fp1,fp1		/* if (x == 0.0)  */
 				/* x = -0.0; */
 .L9:
-	mtfsf	0x01,fp11	/* restore previous rounding mode.  */	
+	mtfsf	0x01,fp11	/* restore previous rounding mode.  */
 	blr
 	END (__floor)
 

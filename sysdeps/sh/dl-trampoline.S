@@ -299,7 +299,7 @@ _dl_runtime_profile:
 	mov r15,r4
 	shlr2 r1
 	tst r1,r1
-5:	
+5:
 	bt/s 6f
 	 dt r1
 	mov.l @r3+,r2

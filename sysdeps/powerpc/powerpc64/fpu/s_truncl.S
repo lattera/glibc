@@ -79,7 +79,7 @@ ENTRY (__truncl)
 	beqlr-  cr0
 	mtfsfi	7,1		/* Set rounding mode toward 0.  */
 	fdiv	fp8,fp1,fp13	/* x_high/TWO52  */
-	
+
 	bng-	cr6,.L6		/* if (x > 0.0)  */
 	fctidz	fp0,fp8
 	fcfid	fp8,fp0		/* tau = floor(x_high/TWO52);  */
@@ -98,7 +98,7 @@ ENTRY (__truncl)
 .L6:				/* if (x < 0.0)  */
 	fctidz	fp0,fp8
 	fcfid	fp8,fp0		/* tau = floor(x_high/TWO52);  */
-	fadd	fp8,fp8,fp8	/* tau++; Make tau even  */	
+	fadd	fp8,fp8,fp8	/* tau++; Make tau even  */
 	bnl	cr5,.L7		/* if (x_low < 0.0)  */
 	fmr	fp3,fp1
 	fmr	fp4,fp2

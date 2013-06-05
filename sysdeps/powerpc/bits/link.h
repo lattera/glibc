@@ -83,7 +83,7 @@ typedef struct La_ppc64_retval
   uint64_t lrv_r3;
   uint64_t lrv_r4;
   double lrv_fp[4];	/* f1-f4, float - complex long double.  */
-  uint32_t lrv_v2[4];	/* v2.  */ 
+  uint32_t lrv_v2[4];	/* v2.  */
 } La_ppc64_retval;
 
 

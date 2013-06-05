@@ -25,19 +25,19 @@
    sets the appropriate floating point exceptions.  Extended checking is
    only needed to set errno (via __kernel_standard) if the input value
    is negative.
-   
+
    So compare the input value against the absolute value of itself.
    This will compare equal unless the value is negative (EDOM) or a NAN,
    in which case we branch to the extend wrapper.  If equal we can return
    the result directly.
-   
+
    This part of the function looks like a leaf routine,  so no need to
    stack a frame or execute prologue/epilogue code. It is safe to
    branch directly to w_sqrt as long as the input value (f1) is
    preserved. Putting the sqrt result into f2 (float parameter 2)
    allows passing both the input value and sqrt result into the extended
    wrapper so there is no need to recompute.
-   
+
    This tactic avoids the overhead of stacking a frame for the normal
    (non-error) case.  Until gcc supports prologue shrink-wrapping
    this is the best we can do.  */

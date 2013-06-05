@@ -106,6 +106,6 @@ main (void)
       result++;
     }
 
-  
+
   return result;
 }

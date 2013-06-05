@@ -49,7 +49,7 @@ PROCINFO_CLASS const char _dl_powerpc_cap_flags[25][10]
 #endif
 #ifndef PROCINFO_DECL
 = {
-    "vsx", 
+    "vsx",
     "arch_2_06", "power6x", "dfp", "pa6t",
     "arch_2_05", "ic_snoop", "smt", "booke",
     "cellbe", "power5+", "power5", "power4",

@@ -40,7 +40,7 @@ ENTRY (syscall)
 	cfi_adjust_cfa_offset (160)
 	stg	%r1,0(%r15)	   /* Store back chain.	 */
 	stg	%r0,8(%r15)	   /* Store eos.  */
-	
+
 	lgr    %r1,%r2		   /* Move syscall number.  */
 	lgr    %r2,%r3		   /* First parameter.	*/
 	lgr    %r3,%r4		   /* Second parameter.	 */

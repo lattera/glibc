@@ -306,7 +306,7 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 	mov		32, %g2
 	be		4f
 	 sub		%g2, %g4, %g6
-	
+
 	blu		3f
 	 cmp		%g3, 0x8
 
@@ -539,7 +539,7 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 	add		%o1, 64, %o1
 	bne		41b
 	 add		%o0, 64, %o0
-	 
+
 	andcc		%o2, 0x30, %o3
 	be,a		1f
 	 srl		%g1, 16, %g2
@@ -584,7 +584,7 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 	add		%o1, 64, %o1
 	bne		42b
 	 add		%o0, 64, %o0
-	 
+
 	andcc		%o2, 0x30, %o3
 	be,a		1f
 	 srl		%g1, 16, %g2
@@ -598,7 +598,7 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 1:	sth		%g2, [%o0 - 2]
 
 	/* Fall through */
-	 
+
 88:	and		%o2, 0xe, %o3
 	mov		%o7, %g2
 	sll		%o3, 3, %o4

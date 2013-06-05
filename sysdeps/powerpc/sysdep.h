@@ -15,8 +15,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* 
- * Powerpc Feature masks for the Aux Vector Hardware Capabilities (AT_HWCAP). 
+/*
+ * Powerpc Feature masks for the Aux Vector Hardware Capabilities (AT_HWCAP).
  * This entry is copied to _dl_hwcap or rtld_global._dl_hwcap during startup.
  */
 #define _SYS_AUXV_H 1

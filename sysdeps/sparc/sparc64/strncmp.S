@@ -1,5 +1,5 @@
-/* Compare no more than N characters of S1 and S2, returning less than, 
-   equal to or greater than zero if S1 is lexicographically less than, 
+/* Compare no more than N characters of S1 and S2, returning less than,
+   equal to or greater than zero if S1 is lexicographically less than,
    equal to or greater than S2.
    For SPARC v9.
    Copyright (C) 1997-2013 Free Software Foundation, Inc.
@@ -140,7 +140,7 @@ ENTRY(strncmp)
 	cmp		%o2, -8				/* IEU1				*/
 	be,pn		%XCC, 4b			/* CTI				*/
 	 srlx		%o3, 56, %o5			/* IEU0		Group		*/
-	
+
 	andcc		%o4, 0xff, %g0			/* IEU1				*/
 	be,pn		%xcc, 8f			/* CTI				*/
 	 subcc		%o4, %o5, %o4			/* IEU1		Group		*/

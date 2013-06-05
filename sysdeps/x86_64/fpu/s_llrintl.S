@@ -30,4 +30,4 @@ END(__llrintl)
 weak_alias (__llrintl, llrintl)
 strong_alias (__llrintl, __lrintl)
 weak_alias (__llrintl, lrintl)
-	
+

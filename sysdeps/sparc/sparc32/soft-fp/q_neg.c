@@ -26,7 +26,7 @@ long double _Q_neg(const long double a)
 {
   FP_DECL_EX;
   long double c = a;
-  
+
 #if (__BYTE_ORDER == __BIG_ENDIAN)
   ((UWtype *)&c)[0] ^= (((UWtype)1) << (W_TYPE_SIZE - 1));
 #elif (__BYTE_ORDER == __LITTLE_ENDIAN) && (W_TYPE_SIZE == 64)

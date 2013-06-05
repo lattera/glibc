@@ -38,7 +38,7 @@ ENTRY(memset)
 	bt	L_wordalign
 
 	mov.b	r5,@r4
-	add	#-1,r6	
+	add	#-1,r6
 	add	#1,r4
 	mov	r4,r0
 

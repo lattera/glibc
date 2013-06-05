@@ -119,10 +119,10 @@ extern struct __bb *__bb_head;
  */
 #define	ARCINDEX	u_long
 
-/* 
+/*
  * Maximum number of arcs we want to allow.
- * Used to be max representable value of ARCINDEX minus 2, but now 
- * that ARCINDEX is a long, that's too large; we don't really want 
+ * Used to be max representable value of ARCINDEX minus 2, but now
+ * that ARCINDEX is a long, that's too large; we don't really want
  * to allow a 48 gigabyte table.
  * The old value of 1<<16 wasn't high enough in practice for large C++
  * programs; will 1<<20 be adequate for long?  FIXME

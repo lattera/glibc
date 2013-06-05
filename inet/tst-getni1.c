@@ -19,7 +19,7 @@ do_test (void)
       puts ("failed without NI_NAMEREQD");
       retval = 1;
     }
-  
+
   r = getnameinfo((struct sockaddr *) &s, sizeof (s), NULL, 0, NULL, 0,
 		  NI_NUMERICHOST | NI_NUMERICSERV | NI_NAMEREQD);
   printf("r = %d\n", r);

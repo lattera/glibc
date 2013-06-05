@@ -276,7 +276,7 @@ do_test (void)
       != GLOB_ABORTED)
     {
       puts ("glob did not fail with GLOB_ABORTED");
-      exit (EXIT_FAILURE); 
+      exit (EXIT_FAILURE);
     }
 
   globfree (&gl);
@@ -288,7 +288,7 @@ do_test (void)
   if (glob ("dir2/*", GLOB_DOOFFS, NULL, &gl) != GLOB_NOMATCH)
     {
       puts ("glob did not fail with GLOB_NOMATCH");
-      exit (EXIT_FAILURE); 
+      exit (EXIT_FAILURE);
     }
 
   globfree (&gl);

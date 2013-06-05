@@ -23,7 +23,7 @@
      %r3 = s1_ptr
      %r4 = s2_ptr
      %r5 = size.  */
-	
+
 #include "sysdep.h"
 #include "asm-syntax.h"
 

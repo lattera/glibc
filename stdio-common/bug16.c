@@ -20,7 +20,7 @@ do_test (void)
   int ret = 0;
 
   for (size_t i = 0; i < sizeof (tests) / sizeof (tests[0]); ++i)
-    {  
+    {
       snprintf (buf, sizeof (buf), "%.0LA", tests[i].val);
 
       size_t j;

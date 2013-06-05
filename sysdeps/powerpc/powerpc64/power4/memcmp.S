@@ -51,17 +51,17 @@ EALIGN (memcmp, 4, 0)
 /* If less than 8 bytes or not aligned, use the unaligned
    byte loop.  */
 	blt	cr1, L(bytealigned)
-	std	rWORD8,-8(r1)	
+	std	rWORD8,-8(r1)
 	cfi_offset(rWORD8,-8)
-	std	rWORD7,-16(r1)	
+	std	rWORD7,-16(r1)
 	cfi_offset(rWORD7,-16)
 	bne	L(unaligned)
 /* At this point we know both strings have the same alignment and the
    compare length is at least 8 bytes.  rBITDIF contains the low order
    3 bits of rSTR1 and cr5 contains the result of the logical compare
-   of rBITDIF to 0.  If rBITDIF == 0 then we are already double word 
+   of rBITDIF to 0.  If rBITDIF == 0 then we are already double word
    aligned and can perform the DWaligned loop.
-  
+
    Otherwise we know the two strings have the same alignment (but not
    yet DW).  So we can force the string addresses to the next lower DW
    boundary and special case this first DW word using shift left to
@@ -141,7 +141,7 @@ L(DWaligned):
 	beq	L(dP4)
 	bgt	cr1, L(dP3)
 	beq	cr1, L(dP2)
-		
+
 /* Remainder is 8 */
 	.align 4
 L(dP1):
@@ -150,7 +150,7 @@ L(dP1):
    (8-15 byte compare), we want to use only volatile registers.  This
    means we can avoid restoring non-volatile registers since we did not
    change any on the early exit path.  The key here is the non-early
-   exit path only cares about the condition code (cr5), not about which 
+   exit path only cares about the condition code (cr5), not about which
    register pair was used.  */
 	ld	rWORD5, 0(rSTR1)
 	ld	rWORD6, 0(rSTR2)
@@ -168,7 +168,7 @@ L(dP1e):
 	cmpld	cr6, rWORD5, rWORD6
 	bne	cr5, L(dLcr5)
 	bne	cr0, L(dLcr0)
-	
+
 	ldu	rWORD7, 32(rSTR1)
 	ldu	rWORD8, 32(rSTR2)
 	bne	cr1, L(dLcr1)
@@ -185,7 +185,7 @@ L(dP1x):
 	bne	L(d00)
 	li	rRTN, 0
 	blr
-		
+
 /* Remainder is 16 */
 	.align 4
 L(dP2):
@@ -226,7 +226,7 @@ L(dP2x):
 	bne	L(d00)
 	li	rRTN, 0
 	blr
-		
+
 /* Remainder is 24 */
 	.align 4
 L(dP3):
@@ -268,7 +268,7 @@ L(dP3x):
 	bne	L(d00)
 	li	rRTN, 0
 	blr
-	
+
 /* Count is a multiple of 32, remainder is 0 */
 	.align 4
 L(dP4):
@@ -311,8 +311,8 @@ L(dLoop3):
 	ldu	rWORD8, 32(rSTR2)
 	bne-	cr1, L(dLcr1)
 	cmpld	cr0, rWORD1, rWORD2
-	bdnz+	L(dLoop)	
-	
+	bdnz+	L(dLoop)
+
 L(dL4):
 	cmpld	cr1, rWORD3, rWORD4
 	bne	cr6, L(dLcr6)
@@ -327,7 +327,7 @@ L(d24):
 	bne	cr6, L(dLcr6)
 L(d14):
 	sldi.	r12, rN, 3
-	bne	cr5, L(dLcr5) 
+	bne	cr5, L(dLcr5)
 L(d04):
 	ld	rWORD8,-8(r1)
 	ld	rWORD7,-16(r1)
@@ -338,7 +338,7 @@ L(d04):
    shift right double to eliminate bits beyond the compare length.  */
 L(d00):
 	ld	rWORD1, 8(rSTR1)
-	ld	rWORD2, 8(rSTR2) 
+	ld	rWORD2, 8(rSTR2)
 	srd	rWORD1, rWORD1, rN
 	srd	rWORD2, rWORD2, rN
 	cmpld	cr5, rWORD1, rWORD2
@@ -378,22 +378,22 @@ L(dLcr5x):
 	bgtlr	cr5
 	li	rRTN, -1
 	blr
-	
+
 	.align 4
 L(bytealigned):
 	mtctr   rN	/* Power4 wants mtctr 1st in dispatch group */
 	beq-	cr6, L(zeroLength)
 
 /* We need to prime this loop.  This loop is swing modulo scheduled
-   to avoid pipe delays.  The dependent instruction latencies (load to 
+   to avoid pipe delays.  The dependent instruction latencies (load to
    compare to conditional branch) is 2 to 3 cycles.  In this loop each
    dispatch group ends in a branch and takes 1 cycle.  Effectively
-   the first iteration of the loop only serves to load operands and 
-   branches based on compares are delayed until the next loop. 
+   the first iteration of the loop only serves to load operands and
+   branches based on compares are delayed until the next loop.
 
    So we must precondition some registers and condition codes so that
    we don't exit the loop early on the first iteration.  */
-   
+
 	lbz	rWORD1, 0(rSTR1)
 	lbz	rWORD2, 0(rSTR2)
 	bdz-	L(b11)
@@ -413,7 +413,7 @@ L(bLoop):
 
 	cmpld	cr6, rWORD5, rWORD6
 	bdz-	L(b3i)
-	
+
 	lbzu	rWORD3, 1(rSTR1)
 	lbzu	rWORD4, 1(rSTR2)
 	bne-	cr1, L(bLcr1)
@@ -427,10 +427,10 @@ L(bLoop):
 
 	cmpld	cr1, rWORD3, rWORD4
 	bdnz+	L(bLoop)
-	
+
 /* We speculatively loading bytes before we have tested the previous
    bytes.  But we must avoid overrunning the length (in the ctr) to
-   prevent these speculative loads from causing a segfault.  In this 
+   prevent these speculative loads from causing a segfault.  In this
    case the loop will exit early (before the all pending bytes are
    tested.  In this case we must complete the pending operations
    before returning.  */
@@ -474,14 +474,14 @@ L(bx56):
 	nop
 L(b12):
 	bne-	cr0, L(bx12)
-L(bx34):	
+L(bx34):
 	sub	rRTN, rWORD3, rWORD4
 	blr
 L(b11):
 L(bx12):
 	sub	rRTN, rWORD1, rWORD2
 	blr
-	.align 4 
+	.align 4
 L(zeroLengthReturn):
 	ld	rWORD8,-8(r1)
 	ld	rWORD7,-16(r1)
@@ -493,9 +493,9 @@ L(zeroLength):
 /* At this point we know the strings have different alignment and the
    compare length is at least 8 bytes.  rBITDIF contains the low order
    3 bits of rSTR1 and cr5 contains the result of the logical compare
-   of rBITDIF to 0.  If rBITDIF == 0 then rStr1 is double word 
+   of rBITDIF to 0.  If rBITDIF == 0 then rStr1 is double word
    aligned and can perform the DWunaligned loop.
-  
+
    Otherwise we know that rSTR1 is not already DW aligned yet.
    So we can force the string addresses to the next lower DW
    boundary and special case this first DW word using shift left to
@@ -515,14 +515,14 @@ L(zeroLength):
 #define rE		r0	/* Right rotation temp for rWORD6.  */
 #define rG		r12	/* Right rotation temp for rWORD8.  */
 L(unaligned):
-	std	r29,-24(r1)	
+	std	r29,-24(r1)
 	cfi_offset(r29,-24)
 	clrldi	rSHL, rSTR2, 61
 	beq-	cr6, L(duzeroLength)
-	std	r28,-32(r1)	
+	std	r28,-32(r1)
 	cfi_offset(r28,-32)
 	beq	cr5, L(DWunaligned)
-	std	r27,-40(r1)	
+	std	r27,-40(r1)
 	cfi_offset(r27,-40)
 /* Adjust the logical start of rSTR2 ro compensate for the extra bits
    in the 1st rSTR1 DW.  */
@@ -530,19 +530,19 @@ L(unaligned):
 /* But do not attempt to address the DW before that DW that contains
    the actual start of rSTR2.  */
 	clrrdi	rSTR2, rSTR2, 3
-	std	r26,-48(r1)	
+	std	r26,-48(r1)
 	cfi_offset(r26,-48)
 /* Compute the left/right shift counts for the unalign rSTR2,
-   compensating for the logical (DW aligned) start of rSTR1.  */ 
+   compensating for the logical (DW aligned) start of rSTR1.  */
 	clrldi	rSHL, r27, 61
-	clrrdi	rSTR1, rSTR1, 3	
-	std	r25,-56(r1)	
+	clrrdi	rSTR1, rSTR1, 3
+	std	r25,-56(r1)
 	cfi_offset(r25,-56)
 	sldi	rSHL, rSHL, 3
 	cmpld	cr5, r27, rSTR2
 	add	rN, rN, rBITDIF
 	sldi	r11, rBITDIF, 3
-	std	r24,-64(r1)	
+	std	r24,-64(r1)
 	cfi_offset(r24,-64)
 	subfic	rSHR, rSHL, 64
 	srdi	rTMP, rN, 5	/* Divide by 32 */
@@ -618,16 +618,16 @@ L(duPs4):
    compare length is at least 8 bytes.  */
 	.align 4
 L(DWunaligned):
-	std	r27,-40(r1)	
+	std	r27,-40(r1)
 	cfi_offset(r27,-40)
 	clrrdi	rSTR2, rSTR2, 3
-	std	r26,-48(r1)	
+	std	r26,-48(r1)
 	cfi_offset(r26,-48)
 	srdi	rTMP, rN, 5	/* Divide by 32 */
-	std	r25,-56(r1)	
+	std	r25,-56(r1)
 	cfi_offset(r25,-56)
 	andi.	rBITDIF, rN, 24	/* Get the DW remainder */
-	std	r24,-64(r1)	
+	std	r24,-64(r1)
 	cfi_offset(r24,-64)
 	sldi	rSHL, rSHL, 3
 	ld	rWORD6, 0(rSTR2)
@@ -641,7 +641,7 @@ L(DWunaligned):
 	mtctr   rTMP	/* Power4 wants mtctr 1st in dispatch group */
 	bgt	cr1, L(duP3)
 	beq	cr1, L(duP2)
-		
+
 /* Remainder is 8 */
 	.align 4
 L(duP1):
@@ -672,7 +672,7 @@ L(duP1e):
 	bne	cr0, L(duLcr0)
 	or	rWORD6, rE, rF
 	cmpld	cr6, rWORD5, rWORD6
-	b	L(duLoop3)	
+	b	L(duLoop3)
 	.align 4
 /* At this point we exit early with the first double word compare
    complete and remainder of 0 to 7 bytes.  See L(du14) for details on
@@ -736,7 +736,7 @@ L(duP2x):
 	ld	rWORD2, 8(rSTR2)
 	srd	rA, rWORD2, rSHR
 	b	L(dutrim)
-		
+
 /* Remainder is 24 */
 	.align 4
 L(duP3):
@@ -786,7 +786,7 @@ L(duP3x):
 	ld	rWORD2, 8(rSTR2)
 	srd	rA, rWORD2, rSHR
 	b	L(dutrim)
-	
+
 /* Count is a multiple of 32, remainder is 0 */
 	.align 4
 L(duP4):
@@ -852,8 +852,8 @@ L(duLoop3):
 	srd	rG, rWORD8, rSHR
 	sld	rB, rWORD8, rSHL
 	or	rWORD8, rG, rH
-	bdnz+	L(duLoop)	
-	
+	bdnz+	L(duLoop)
+
 L(duL4):
 	bne	cr1, L(duLcr1)
 	cmpld	cr1, rWORD3, rWORD4
@@ -875,7 +875,7 @@ L(du14):
    This allows the use of double word subtract to compute the final
    result.
 
-   However it may not be safe to load rWORD2 which may be beyond the 
+   However it may not be safe to load rWORD2 which may be beyond the
    string length. So we compare the bit length of the remainder to
    the right shift count (rSHR). If the bit count is less than or equal
    we do not need to load rWORD2 (all significant bits are already in
@@ -890,16 +890,16 @@ L(du14):
 L(dutrim):
 	ld	rWORD1, 8(rSTR1)
 	ld	rWORD8,-8(r1)
-	subfic	rN, rN, 64	/* Shift count is 64 - (rN * 8).  */ 
+	subfic	rN, rN, 64	/* Shift count is 64 - (rN * 8).  */
 	or	rWORD2, rA, rB
-	ld	rWORD7,-16(r1)	
+	ld	rWORD7,-16(r1)
 	ld	r29,-24(r1)
 	srd	rWORD1, rWORD1, rN
 	srd	rWORD2, rWORD2, rN
-	ld	r28,-32(r1)	
+	ld	r28,-32(r1)
 	ld	r27,-40(r1)
 	li	rRTN, 0
-	cmpld	cr0, rWORD1, rWORD2	
+	cmpld	cr0, rWORD1, rWORD2
 	ld	r26,-48(r1)
 	ld	r25,-56(r1)
  	beq	cr0, L(dureturn24)
@@ -913,7 +913,7 @@ L(duLcr0):
 	ld	rWORD8,-8(r1)
 	ld	rWORD7,-16(r1)
 	li	rRTN, 1
-	bgt	cr0, L(dureturn29)	
+	bgt	cr0, L(dureturn29)
 	ld	r29,-24(r1)
 	ld	r28,-32(r1)
 	li	rRTN, -1
@@ -923,7 +923,7 @@ L(duLcr1):
 	ld	rWORD8,-8(r1)
 	ld	rWORD7,-16(r1)
 	li	rRTN, 1
-	bgt	cr1, L(dureturn29)	
+	bgt	cr1, L(dureturn29)
 	ld	r29,-24(r1)
 	ld	r28,-32(r1)
 	li	rRTN, -1
@@ -933,7 +933,7 @@ L(duLcr6):
 	ld	rWORD8,-8(r1)
 	ld	rWORD7,-16(r1)
 	li	rRTN, 1
-	bgt	cr6, L(dureturn29)	
+	bgt	cr6, L(dureturn29)
 	ld	r29,-24(r1)
 	ld	r28,-32(r1)
 	li	rRTN, -1
@@ -943,7 +943,7 @@ L(duLcr5):
 	ld	rWORD8,-8(r1)
 	ld	rWORD7,-16(r1)
 	li	rRTN, 1
-	bgt	cr5, L(dureturn29)	
+	bgt	cr5, L(dureturn29)
 	ld	r29,-24(r1)
 	ld	r28,-32(r1)
 	li	rRTN, -1
@@ -955,14 +955,14 @@ L(duZeroReturn):
 L(dureturn):
 	ld	rWORD8,-8(r1)
 	ld	rWORD7,-16(r1)
-L(dureturn29):	
+L(dureturn29):
 	ld	r29,-24(r1)
 	ld	r28,-32(r1)
-L(dureturn27):	
+L(dureturn27):
 	ld	r27,-40(r1)
-L(dureturn26):	
+L(dureturn26):
 	ld	r26,-48(r1)
-L(dureturn25):	
+L(dureturn25):
 	ld	r25,-56(r1)
 L(dureturn24):
 	ld	r24,-64(r1)

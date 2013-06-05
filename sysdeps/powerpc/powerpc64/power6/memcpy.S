@@ -21,22 +21,22 @@
 /* __ptr_t [r3] memcpy (__ptr_t dst [r3], __ptr_t src [r4], size_t len [r5]);
    Returns 'dst'.
 
-   Memcpy handles short copies (< 32-bytes) using a binary move blocks 
-   (no loops) of lwz/stw.  The tail (remaining 1-3) bytes is handled 
-   with the appropriate combination of byte and halfword load/stores. 
-   There is minimal effort to optimize the alignment of short moves.  
+   Memcpy handles short copies (< 32-bytes) using a binary move blocks
+   (no loops) of lwz/stw.  The tail (remaining 1-3) bytes is handled
+   with the appropriate combination of byte and halfword load/stores.
+   There is minimal effort to optimize the alignment of short moves.
    The 64-bit implementations of POWER3 and POWER4 do a reasonable job
    of handling unaligned load/stores that do not cross 32-byte boundaries.
 
    Longer moves (>= 32-bytes) justify the effort to get at least the
    destination doubleword (8-byte) aligned.  Further optimization is
    possible when both source and destination are doubleword aligned.
-   Each case has a optimized unrolled loop.  
-     
+   Each case has a optimized unrolled loop.
+
    For POWER6 unaligned loads will take a 20+ cycle hiccup for any
    L1 cache miss that crosses a 32- or 128-byte boundary.  Store
    is more forgiving and does not take a hiccup until page or
-   segment boundaries.  So we require doubleword alignment for 
+   segment boundaries.  So we require doubleword alignment for
    the source but may take a risk and only require word alignment
    for the destination.  */
 
@@ -54,10 +54,10 @@ EALIGN (memcpy, 7, 0)
     cmpldi cr6,5,8
     ble-  cr1,.L2	/* If move < 32 bytes use short move code.  */
     mtcrf 0x01,0
-    cmpld cr6,10,11  
+    cmpld cr6,10,11
     srdi  9,5,3		/* Number of full double words remaining.  */
     beq   .L0
-  
+
     subf  5,0,5
   /* Move 0-7 bytes as needed to get the destination doubleword aligned.
      Duplicate some code to maximize fall-through and minimize agen delays.  */
@@ -76,7 +76,7 @@ EALIGN (memcpy, 7, 0)
     lwz   6,1(4)
     stw   6,1(3)
     b     0f
-    
+
 2:  bf    30,4f
     lhz   6,0(4)
     sth   6,0(3)
@@ -84,26 +84,26 @@ EALIGN (memcpy, 7, 0)
     lwz   6,2(4)
     stw   6,2(3)
     b     0f
-    
+
 4:  bf    29,0f
     lwz   6,0(4)
     stw   6,0(3)
-0: 
+0:
 /* Add the number of bytes until the 1st doubleword of dst to src and dst.  */
     add   4,4,0
     add   3,3,0
-    
+
     clrldi 10,4,61	/* check alignment of src again.  */
     srdi  9,5,3	/* Number of full double words remaining.  */
-    
+
   /* Copy doublewords from source to destination, assuming the
      destination is aligned on a doubleword boundary.
 
      At this point we know there are at least 25 bytes left (32-7) to copy.
-     The next step is to determine if the source is also doubleword aligned. 
+     The next step is to determine if the source is also doubleword aligned.
      If not branch to the unaligned move code at .L6. which uses
      a load, shift, store strategy.
-     
+
      Otherwise source and destination are doubleword aligned, and we can
      the optimized doubleword copy loop.  */
     .align  4
@@ -121,12 +121,12 @@ EALIGN (memcpy, 7, 0)
      the main loop exits there may be a tail of 1-7 bytes. These byte
      are copied a word/halfword/byte at a time as needed to preserve
      alignment.
-     
+
      For POWER6 the L1 is store-through and the L2 is store-in.  The
      L2 is clocked at half CPU clock so we can store 16 bytes every
      other cycle.  POWER6 also has a load/store bypass so we can do
-     load, load, store, store every 2 cycles.  
-     
+     load, load, store, store every 2 cycles.
+
      The following code is sensitive to cache line alignment.  Do not
      make any change with out first making sure they don't result in
      splitting ld/std pairs across a cache line.  */
@@ -271,7 +271,7 @@ L(das_loop):
     std   8,16+96(10)
     std   0,24+96(10)
     ble   cr5,L(das_loop_e)
-    
+
     mtctr   12
     .align  4
 L(das_loop2):
@@ -324,7 +324,7 @@ L(das_loop_e):
     .align  4
 L(das_tail):
     beq   cr1,0f
-    
+
 L(das_tail2):
 /*  At this point we have a tail of 0-7 bytes and we know that the
     destination is double word aligned.  */
@@ -342,7 +342,7 @@ L(das_tail2):
     lbz   6,4(4)
     stb   6,4(3)
     b     0f
-  
+
 2:  bf    30,1f
     lhz   6,0(4)
     sth   6,0(3)
@@ -350,7 +350,7 @@ L(das_tail2):
     lbz   6,2(4)
     stb   6,2(3)
     b     0f
-    
+
 1:  bf    31,0f
     lbz   6,0(4)
     stb   6,0(3)
@@ -359,7 +359,7 @@ L(das_tail2):
     ld 3,-16(1)
     blr
 
-/* Copy up to 31 bytes.  This divided into two cases 0-8 bytes and 9-31 
+/* Copy up to 31 bytes.  This divided into two cases 0-8 bytes and 9-31
    bytes.  Each case is handled without loops, using binary (1,2,4,8)
    tests.
 
@@ -419,7 +419,7 @@ L(dus_tail):
 /* At least 6 bytes left and the source is word aligned.  This allows
    some speculative loads up front.  */
 /* We need to special case the fall-through because the biggest delays
-   are due to address computation not being ready in time for the 
+   are due to address computation not being ready in time for the
    AGEN.  */
     lwz   6,0(12)
     lwz   7,4(12)
@@ -515,7 +515,7 @@ L(dus_tail4):  /* Move 4 bytes.  */
 L(dus_tail2):  /* Move 2-3 bytes.  */
     bf    30,L(dus_tail1)
     lhz   6,0(12)
-    sth   6,0(3) 
+    sth   6,0(3)
     bf    31,L(dus_tailX)
     lbz   7,2(12)
     stb   7,2(3)
@@ -550,7 +550,7 @@ L(dus_4):
     stw   6,0(3)
     bf    30,L(dus_5)
     lhz   7,4(4)
-    sth   7,4(3) 
+    sth   7,4(3)
     bf    31,L(dus_0)
     lbz   8,6(4)
     stb   8,6(3)
@@ -588,8 +588,8 @@ L(dus_0):
     bge     cr0, L(du4_do)
     blt     cr5, L(du1_do)
     beq     cr5, L(du2_do)
-    b       L(du3_do) 
-       
+    b       L(du3_do)
+
     .align 4
 L(du1_do):
     bf      30,L(du1_1dw)
@@ -663,7 +663,7 @@ L(du1_fini):
     /* calculate and store the final DW */
     sldi   0,6, 8
     srdi   8,7, 64-8
-    or    0,0,8  
+    or    0,0,8
     std   0,0(4)
     b     L(du_done)
 
@@ -740,7 +740,7 @@ L(du2_fini):
     /* calculate and store the final DW */
     sldi   0,6, 16
     srdi   8,7, 64-16
-    or    0,0,8  
+    or    0,0,8
     std   0,0(4)
     b     L(du_done)
 
@@ -817,7 +817,7 @@ L(du3_fini):
     /* calculate and store the final DW */
     sldi   0,6, 24
     srdi   8,7, 64-24
-    or    0,0,8  
+    or    0,0,8
     std   0,0(4)
     b     L(du_done)
 
@@ -900,7 +900,7 @@ L(du4_fini):
     /* calculate and store the final DW */
     sldi   0,6, 32
     srdi   8,7, 64-32
-    or    0,0,8  
+    or    0,0,8
     std   0,0(4)
     b     L(du_done)
 
@@ -977,7 +977,7 @@ L(du5_fini):
     /* calculate and store the final DW */
     sldi   0,6, 40
     srdi   8,7, 64-40
-    or    0,0,8  
+    or    0,0,8
     std   0,0(4)
     b     L(du_done)
 
@@ -1054,7 +1054,7 @@ L(du6_fini):
     /* calculate and store the final DW */
     sldi   0,6, 48
     srdi   8,7, 64-48
-    or    0,0,8  
+    or    0,0,8
     std   0,0(4)
     b     L(du_done)
 
@@ -1131,10 +1131,10 @@ L(du7_fini):
     /* calculate and store the final DW */
     sldi   0,6, 56
     srdi   8,7, 64-56
-    or    0,0,8  
+    or    0,0,8
     std   0,0(4)
     b     L(du_done)
-    
+
     .align 4
 L(du_done):
     rldicr 0,31,0,60
@@ -1142,7 +1142,7 @@ L(du_done):
     beq   cr1,0f	/* If the tail is 0 bytes we are done!  */
 
     add   3,3,0
-    add   12,12,0    
+    add   12,12,0
 /*  At this point we have a tail of 0-7 bytes and we know that the
     destination is double word aligned.  */
 4:  bf    29,2f

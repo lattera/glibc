@@ -82,7 +82,7 @@ register_dump (int fd, struct sigcontext *ctx)
   hexvalue (ctx->sregs->regs.gprs[15], regs[15], 16);
   hexvalue (ctx->sregs->regs.psw.mask, regs[16], 16);
   hexvalue (ctx->sregs->regs.psw.addr, regs[17], 16);
-   
+
   /* Generate the output.  */
   ADD_STRING ("Register dump:\n\n GPR0: ");
   ADD_MEM (regs[0], 16);

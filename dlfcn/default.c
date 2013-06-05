@@ -14,7 +14,7 @@ main (int argc, char *argv[])
   void *p;
   int result = 0;
   Dl_info info;
-  
+
   dladdr(main, &info);
   if (info.dli_fname == NULL)
     {
@@ -28,7 +28,7 @@ main (int argc, char *argv[])
     }
   else
     printf ("%s: dladdr returned correct dli_fname\n", __FILE__);
-      
+
   /* Find function `main'.  */
   p = dlsym (RTLD_DEFAULT, "main");
   if (p == NULL)

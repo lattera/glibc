@@ -12,11 +12,11 @@ libc {
     readdir64; readdir64_r;
 
     # s*
-    scandir64; 
+    scandir64;
   }
   GLIBC_2.3.4 {
     getcontext;
-    setcontext; 
+    setcontext;
     swapcontext;
   }
   GLIBC_2.17 {

@@ -74,7 +74,7 @@ ENTRY (__brk)
 	/* Don't use "ret" cause the preprocessor will eat it.  */
 	jmpl	%i7+8, %g0
 	 restore
-	
+
 	/* What a horrible way to die.  */
 .Lerr0:	set	ENOMEM, %o0
 .Lerr1:

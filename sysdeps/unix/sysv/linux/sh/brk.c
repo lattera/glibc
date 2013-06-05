@@ -31,7 +31,7 @@ __brk (void *addr)
   register long r4 asm ("%r4") = (long)addr;
 
   asm volatile ("trapa #0x11\n\t" SYSCALL_INST_PAD
-		: "=z"(newbrk) 
+		: "=z"(newbrk)
 		: "r" (r3), "r" (r4));
 
   __curbrk = newbrk;

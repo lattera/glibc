@@ -385,7 +385,7 @@ ENTRY(memcpy)
 210:
 #ifndef USE_BPR
 	srl		%o2, 0, %o2			/* IEU1				*/
-#endif	
+#endif
 	brz,pn		%o2, 209b			/* CTI		Group		*/
 218:	 cmp		%o2, 15				/* IEU1				*/
 	bleu,pn		%xcc, 208b			/* CTI		Group		*/

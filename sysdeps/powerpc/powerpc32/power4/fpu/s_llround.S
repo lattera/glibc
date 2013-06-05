@@ -29,11 +29,11 @@
 	.section	".text"
 
 /* long [r3] lround (float x [fp1])
-   IEEE 1003.1 lround function.  IEEE specifies "round to the nearest 
+   IEEE 1003.1 lround function.  IEEE specifies "round to the nearest
    integer value, rounding halfway cases away from zero, regardless of
    the current rounding mode."  However PowerPC Architecture defines
-   "round to Nearest" as "Choose the best approximation. In case of a 
-   tie, choose the one that is even (least significant bit o).". 
+   "round to Nearest" as "Choose the best approximation. In case of a
+   tie, choose the one that is even (least significant bit o).".
    So we can't use the PowerPC "round to Nearest" mode. Instead we set
    "round toward Zero" mode and round by adding +-0.5 before rounding
    to the integer value.

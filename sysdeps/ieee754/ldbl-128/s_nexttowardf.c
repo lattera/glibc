@@ -26,7 +26,7 @@ float __nexttowardf(float x, long double y)
 	int32_t hx,ix;
 	int64_t hy,iy;
 	u_int64_t ly;
-                                
+
 	GET_FLOAT_WORD(hx,x);
 	GET_LDOUBLE_WORDS64(hy,ly,y);
 	ix = hx&0x7fffffff;		/* |x| */

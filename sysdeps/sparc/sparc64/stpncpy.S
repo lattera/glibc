@@ -1,4 +1,4 @@
-/* stpncpy(DST, SRC, COUNT) - Copy no more than N characters of 
+/* stpncpy(DST, SRC, COUNT) - Copy no more than N characters of
    SRC to DEST, returning the address of the terminating '\0' in
    DEST, if any, or else DEST + N.
    For SPARC v9.
@@ -245,7 +245,7 @@ ENTRY(__stpncpy)
 	be,pn		%XCC, 19f			/* CTI				*/
 
 	 srlx		%o3, 8, %o3			/* IEU0		Group		*/
-	stb		%o3, [%o0]			/* Store			*/ 
+	stb		%o3, [%o0]			/* Store			*/
 59:	add		%o0, 1, %o2			/* IEU1				*/
 	andcc		%o3, 0xff, %g0			/* IEU1		Group		*/
 

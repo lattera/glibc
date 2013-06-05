@@ -37,7 +37,7 @@ _hurd_ports_get (unsigned int which, mach_port_t *result)
     return EINVAL;
   if (which >= INIT_PORT_MAX || _hurd_ports_getters[which] == NULL)
     return HURD_PORT_USE (&_hurd_ports[which],
-			  (*result = port) == MACH_PORT_NULL ? 0 
+			  (*result = port) == MACH_PORT_NULL ? 0
 			  : __mach_port_mod_refs (__mach_task_self (),
 						  port, MACH_PORT_RIGHT_SEND,
 						  +1));

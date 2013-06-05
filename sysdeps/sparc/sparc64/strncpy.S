@@ -227,7 +227,7 @@ ENTRY(strncpy)
 	subcc		%o2, 1, %o2			/* IEU1				*/
 	be,pn		%XCC, 19f			/* CTI				*/
 	 srlx		%o3, 16, %g5			/* IEU0		Group		*/
-	
+
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 20f			/* CTI				*/
 	 stb		%g5, [%o0]			/* Store			*/
@@ -236,7 +236,7 @@ ENTRY(strncpy)
 	subcc		%o2, 1, %o2			/* IEU1				*/
 	be,pn		%XCC, 19f			/* CTI				*/
 	 srlx		%o3, 8, %g5			/* IEU0		Group		*/
-	stb		%g5, [%o0]			/* Store			*/ 
+	stb		%g5, [%o0]			/* Store			*/
 
 19:	retl						/* CTI+IEU1	Group		*/
 	 mov		%g6, %o0			/* IEU0				*/

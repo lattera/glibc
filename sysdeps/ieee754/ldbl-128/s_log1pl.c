@@ -36,7 +36,7 @@
  *    IEEE      -1, 8       100000      1.9e-34     4.3e-35
  */
 
-/* Copyright 2001 by Stephen L. Moshier 
+/* Copyright 2001 by Stephen L. Moshier
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public

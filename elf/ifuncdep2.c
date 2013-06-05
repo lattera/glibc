@@ -17,7 +17,7 @@ minus_one (void)
 }
 
 static int
-zero (void) 
+zero (void)
 {
   return 0;
 }
@@ -25,7 +25,7 @@ zero (void)
 void * foo1_ifunc (void) __asm__ ("foo1");
 __asm__(".type foo1, %gnu_indirect_function");
 
-void * 
+void *
 foo1_ifunc (void)
 {
   return ifunc_sel (one, minus_one, zero);
@@ -34,7 +34,7 @@ foo1_ifunc (void)
 void * foo2_ifunc (void) __asm__ ("foo2");
 __asm__(".type foo2, %gnu_indirect_function");
 
-void * 
+void *
 foo2_ifunc (void)
 {
   return ifunc_sel (minus_one, one, zero);
@@ -43,7 +43,7 @@ foo2_ifunc (void)
 void * foo3_ifunc (void) __asm__ ("foo3");
 __asm__(".type foo3, %gnu_indirect_function");
 
-void * 
+void *
 foo3_ifunc (void)
 {
   return ifunc_sel (one, zero, minus_one);

@@ -24,7 +24,7 @@
 /*  __getcontext (const ucontext_t *ucp)
 
   Saves the machine context in UCP such that when it is activated,
-  it appears as if __getcontext() returned again. 
+  it appears as if __getcontext() returned again.
 
   This implementation is intended to be used for *synchronous* context
   switches only.  Therefore, it does not have to save anything

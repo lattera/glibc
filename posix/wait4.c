@@ -20,7 +20,7 @@
 #include <errno.h>
 
 pid_t
-__wait4 (__pid_t pid, __WAIT_STATUS stat_loc, int options, 
+__wait4 (__pid_t pid, __WAIT_STATUS stat_loc, int options,
 	 struct rusage *usage)
 {
   __set_errno (ENOSYS);

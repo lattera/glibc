@@ -65,7 +65,7 @@ ENTRY(.mul)
 	bge	1f
 	rd	%y, %o0
 
-	! %o0 was indeed negative; fix upper 32 bits of result by subtracting 
+	! %o0 was indeed negative; fix upper 32 bits of result by subtracting
 	! %o1 (i.e., return %o4 - %o1 in %o1).
 	retl
 	sub	%o4, %o1, %o1
@@ -79,7 +79,7 @@ ENTRY(.mul)
 	and	%o1, %o2, %o2	! %o2 = 0 or %o1, depending on sign of %o0
 	rd	%y, %o0		! get lower half of product
 	retl
-	sub	%o4, %o2, %o1	! subtract compensation 
+	sub	%o4, %o2, %o1	! subtract compensation
 				!  and put upper half in place
 #endif
 

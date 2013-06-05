@@ -324,7 +324,7 @@ _S_msg_get_env_variable (mach_port_t msgport,
   valuelen = strlen (value);
   if (valuelen > *datalen)
     {
-      if (err = __vm_allocate (__mach_task_self (), 
+      if (err = __vm_allocate (__mach_task_self (),
 			       (vm_address_t *) data, valuelen, 1))
 	return err;
     }

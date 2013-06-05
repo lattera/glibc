@@ -175,7 +175,7 @@ _dl_runtime_profile:
 	cmp	%l0, 0
 	bl	1f
 	 nop
-	
+
 	call	_dl_profile_invoke
 	 nop
 

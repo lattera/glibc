@@ -1,4 +1,4 @@
-/* Support for high precision, low overhead timing functions. 
+/* Support for high precision, low overhead timing functions.
    powerpc64 version.
    Copyright (C) 2005-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.

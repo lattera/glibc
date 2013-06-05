@@ -119,8 +119,8 @@ __kernel_sinl(long double x, long double y, int iy)
 /*
     The following should work for double but generates the wrong index.
     For now the code above converts double to ieee extended to compute
-    the index back to double for the h value. 
-    
+    the index back to double for the h value.
+
       index = 0x3fe - (tix >> 20);
       hix = (tix + (0x2000 << index)) & (0xffffc000 << index);
       x = fabsl (x);

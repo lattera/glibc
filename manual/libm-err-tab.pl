@@ -235,6 +235,6 @@ sub by_platforms {
 
   $pa = $pplatforms{$a} ? $pplatforms{$a} : $a;
   $pb = $pplatforms{$b} ? $pplatforms{$b} : $b;
-  
+
   return $pa cmp $pb;
 }

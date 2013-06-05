@@ -38,10 +38,10 @@ __sqrtf (float x)		/* wrapper sqrtf */
 
   if (__builtin_expect (_LIB_VERSION == _IEEE_, 0))
     return z;
-    
+
   if (__builtin_expect (x != x, 0))
     return z;
-    
+
   if  (__builtin_expect (x < 0.0, 0))
     /* sqrtf(negative) */
     return (float) __kernel_standard ((double) x, (double) x, 126);

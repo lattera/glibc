@@ -27,7 +27,7 @@ struct rquota {
 	unsigned int rq_curfiles;	/* current # allocated files */
 	unsigned int rq_btimeleft;	/* time left for excessive disk use */
 	unsigned int rq_ftimeleft;	/* time left for excessive files */
-};	
+};
 
 enum gqr_status {
 	Q_OK = 1,		/* quota returned */

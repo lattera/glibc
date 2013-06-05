@@ -73,7 +73,7 @@ ENTRY(__getcontext)
 	not	r1, r1			// r1=0 means r0 = -1 to -4095
 	tst	r1, r1			// i.e. error in linux
 	bf	.Lgetcontext_end
-.Lsyscall_error:	
+.Lsyscall_error:
 	SYSCALL_ERROR_HANDLER
 .Lgetcontext_end:
 	/* All done, return 0 for success.  */

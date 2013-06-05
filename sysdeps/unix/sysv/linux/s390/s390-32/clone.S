@@ -52,7 +52,7 @@ error:
 	lhi	%r2,-EINVAL
 	j	SYSCALL_ERROR_LABEL
 PSEUDO_END (__clone)
-	
+
 thread_start:
 #ifdef RESET_PID
 	tmh	%r3,1		/* CLONE_THREAD == 0x00010000 */

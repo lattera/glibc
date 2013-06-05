@@ -21,7 +21,7 @@
 
 /* int __isnan(x)  */
 	.machine power6
-EALIGN (__isnan, 4, 0)	
+EALIGN (__isnan, 4, 0)
 	CALL_MCOUNT 0
 	stfd	fp1,-8(r1)	/* copy FPR to GPR */
 	ori	r1,r1,0
