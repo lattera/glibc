@@ -1,3 +1,12 @@
+2013-06-05  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/generic/math_private.h
+	(libc_feholdexcept_setround_53bit): Replace with
+	libc_feholdsetround_53bit.
+	(libc_feupdateenv_53bit): Replace with
+	libc_feresetround_53bit.
+	(SET_RESTORE_ROUND_53BIT): Adjust.
+
 2013-06-03  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* string/test-strchrnul.c: Add copyright header.

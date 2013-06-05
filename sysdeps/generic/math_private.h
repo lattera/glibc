@@ -446,8 +446,8 @@ default_libc_feholdexcept_setround (fenv_t *e, int r)
 # define libc_feholdexcept_setroundl default_libc_feholdexcept_setround
 #endif
 
-#ifndef libc_feholdexcept_setround_53bit
-# define libc_feholdexcept_setround_53bit libc_feholdexcept_setround
+#ifndef libc_feholdsetround_53bit
+# define libc_feholdsetround_53bit libc_feholdsetround
 #endif
 
 #ifndef libc_fetestexcept
@@ -492,8 +492,8 @@ default_libc_feupdateenv (fenv_t *e)
 # define libc_feupdateenvl default_libc_feupdateenv
 #endif
 
-#ifndef libc_feupdateenv_53bit
-# define libc_feupdateenv_53bit libc_feupdateenv
+#ifndef libc_feresetround_53bit
+# define libc_feresetround_53bit libc_feresetround
 #endif
 
 static __always_inline int
@@ -580,8 +580,8 @@ default_libc_feupdateenv_test (fenv_t *e, int ex)
 
 /* Like SET_RESTORE_ROUND, but also set rounding precision to 53 bits.  */
 #define SET_RESTORE_ROUND_53BIT(RM) \
-  fenv_t __libc_save_rm __attribute__((cleanup(libc_feupdateenv_53bit))); \
-  libc_feholdexcept_setround_53bit (&__libc_save_rm, (RM))
+  fenv_t __libc_save_rm __attribute__((cleanup(libc_feresetround_53bit))); \
+  libc_feholdsetround_53bit (&__libc_save_rm, (RM))
 
 #define __nan(str) \
   (__builtin_constant_p (str) && str[0] == '\0' ? NAN : __nan (str))
