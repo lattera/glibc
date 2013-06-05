@@ -115,7 +115,7 @@ __memchr (const void *s, int xc, size_t n)
 	  s_align++;				\
 	  n -= 64;				\
 	} while (0)
-      
+
       /* While there's still lots more data to potentially be read,
 	 continue issuing prefetches for the 4th cacheline out.  */
       while (n >= 256)

@@ -1,3 +1,8 @@
+2013-06-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/am33/elf/start.S: Remove trailing whitespace.
+	* sysdeps/am33/fpu/fgetexcptflg.c: Likewise.
+
 2013-05-01  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
 	* sysdeps/am33/atomicity.h: Add missing #include <stdint.h> due to

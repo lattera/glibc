@@ -22,7 +22,7 @@
 
 
 /* void *memset(void *s, int c, size_t n);
-	
+
    This could probably be optimized further.  */
 
 #if __MIPSEB

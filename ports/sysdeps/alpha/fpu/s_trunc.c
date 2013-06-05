@@ -27,7 +27,7 @@ __trunc (double x)
 {
   double two52 = copysign (0x1.0p52, x);
   double r, tmp;
-  
+
   __asm (
 #ifdef _IEEE_FP_INEXACT
 	 "addt/suic %2, %3, %1\n\tsubt/suic %1, %3, %0"

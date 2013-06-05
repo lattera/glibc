@@ -20,7 +20,7 @@
 
 /*
  * This is for COMPATIBILITY with Linux/x86 only.  Linux/Alpha system
- * calls return an error indication in a3.  This allows arbitrary 64bit 
+ * calls return an error indication in a3.  This allows arbitrary 64bit
  * values to be returned in v0 (because negative values are not
  * mistaken as error numbers).  However, C allows only one value to
  * be returned, so the interface below folds the error indication passed in

@@ -27,7 +27,7 @@ fesetround (int round)
   if (round & ~FE_DOWNWARD)
     /* round is not a valid rounding mode. */
     return 1;
-  
+
   /* Get the current status word. */
   __asm__ ("fstd %%fr0,0(%1)" : "=m" (s.l) : "r" (&s.l) : "%r0");
   s.sw[0] &= ~FE_DOWNWARD;

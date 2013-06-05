@@ -49,7 +49,7 @@ fesetenv (const fenv_t *envp)
 				  | FE_DOWNWARD
 				  | (FE_ALL_EXCEPT << 27)));
 
-  /* Load the new environment. We use bufptr again since the 
+  /* Load the new environment. We use bufptr again since the
      initial asm has modified the value of the register and here
      we take advantage of that to load in reverse order so fr0
      is loaded last and T-Bit is enabled. */

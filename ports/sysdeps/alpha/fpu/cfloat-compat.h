@@ -16,7 +16,7 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* The behaviour of complex float changed between GCC 3.3 and 3.4.  
+/* The behaviour of complex float changed between GCC 3.3 and 3.4.
 
    In 3.3 and before (below, complex version 1, or "c1"), complex float
    values were packed into one floating point register.

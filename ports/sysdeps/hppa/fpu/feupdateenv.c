@@ -26,8 +26,8 @@ feupdateenv (const fenv_t *envp)
   union { unsigned long long l; unsigned int sw[2]; } s;
   fenv_t temp;
   /* Get the current exception status */
-  __asm__ ("fstd %%fr0,0(%1)	\n\t" 
-           "fldd 0(%1),%%fr0	\n\t" 
+  __asm__ ("fstd %%fr0,0(%1)	\n\t"
+           "fldd 0(%1),%%fr0	\n\t"
 	   : "=m" (s.l) : "r" (&s.l));
   memcpy(&temp, envp, sizeof(fenv_t));
   /* Currently raised exceptions not cleared */

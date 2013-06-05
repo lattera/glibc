@@ -17,7 +17,7 @@ semctl		-	semctl		i:iiii	__semctl	semctl
 # proper socket implementations:
 accept		-	accept		Ci:iBN	__libc_accept	__accept accept
 bind		-	bind		i:ipi	__bind		bind
-connect		-	connect		Ci:ipi	__libc_connect	__connect_internal __connect connect 
+connect		-	connect		Ci:ipi	__libc_connect	__connect_internal __connect connect
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername
 getsockname	-	getsockname	i:ipp	__getsockname	getsockname
 getsockopt	-	getsockopt	i:iiiBN	__getsockopt	getsockopt
@@ -33,6 +33,6 @@ shutdown	-	shutdown	i:ii	__shutdown	shutdown
 socket		-	socket		i:iii	__socket	socket
 socketpair	-	socketpair	i:iiif	__socketpair	socketpair
 
-setrlimit	-	setrlimit	i:ip	__setrlimit	setrlimit	
-getrlimit	-	getrlimit	i:ip	__getrlimit	getrlimit	
+setrlimit	-	setrlimit	i:ip	__setrlimit	setrlimit
+getrlimit	-	getrlimit	i:ip	__getrlimit	getrlimit
 prlimit64	EXTRA	prlimit64	i:iipp	__prlimit64	prlimit64@@GLIBC_2.17

@@ -21,7 +21,7 @@
 
 #if defined(PIC)
 	/* Put this at the end of libc's text segment so that all of
-	   the direct branches from the syscalls are forward, and 
+	   the direct branches from the syscalls are forward, and
 	   thus predicted not taken.  */
 	.section .text.last, "ax", @progbits
 #else

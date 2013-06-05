@@ -1,3 +1,14 @@
+2013-06-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/nofpu/fenv_const.c: Remove trailing whitespace.
+	* sysdeps/powerpc/nofpu/fenv_libc.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/getcontext.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/setcontext.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/swapcontext.S:
+	Likewise.
+
 2013-05-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/nofpu/libm-test-ulps: Update test names.

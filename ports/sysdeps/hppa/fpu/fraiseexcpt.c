@@ -21,7 +21,7 @@
 #include <float.h>
 #include <math.h>
 
-/* Please see section 10, 
+/* Please see section 10,
    page 10-5 "Delayed Trapping" in the PA-RISC 2.0 Architecture manual */
 
 int
@@ -38,7 +38,7 @@ feraiseexcept (int excepts)
      occur. */
 
   /* We use "fldd 0(%%sr0,%%sp),%0" to flush the delayed exception */
-	
+
   /* First: Invalid exception.  */
   if (excepts & FE_INVALID)
     {

@@ -21,7 +21,7 @@
 /* Linuxthread type sizes (bytes):
    sizeof(pthread_attr_t) = 0x24 (36)
    sizeof(pthread_barrier_t) = 0x30 (48)
-   sizeof(pthread_barrierattr_t) = 0x4 (4) 
+   sizeof(pthread_barrierattr_t) = 0x4 (4)
    sizeof(pthread_cond_t) = 0x30 (48)
    sizeof(pthread_condattr_t) = 0x4 (4)
    sizeof(pthread_mutex_t) = 0x30 (48)
@@ -33,9 +33,9 @@
 #define __SIZEOF_PTHREAD_ATTR_T 36
 #define __SIZEOF_PTHREAD_BARRIER_T 48
 #define __SIZEOF_PTHREAD_BARRIERATTR_T 4
-#define __SIZEOF_PTHREAD_COND_T 48 
+#define __SIZEOF_PTHREAD_COND_T 48
 #define __SIZEOF_PTHREAD_CONDATTR_T 4
-#define __SIZEOF_PTHREAD_MUTEX_T 48 
+#define __SIZEOF_PTHREAD_MUTEX_T 48
 #define __SIZEOF_PTHREAD_MUTEXATTR_T 4
 #define __SIZEOF_PTHREAD_RWLOCK_T 64
 #define __SIZEOF_PTHREAD_RWLOCKATTR_T 8
@@ -74,7 +74,7 @@ typedef union
        binary compatibility.  */
     int __kind;
     /* The old 4-word 16-byte aligned lock. This is initalized
-       to all ones by the Linuxthreads PTHREAD_MUTEX_INITIALIZER. 
+       to all ones by the Linuxthreads PTHREAD_MUTEX_INITIALIZER.
        Unused in NPTL.  */
     int __compat_padding[4];
     /* In the old structure there are 4 words left due to alignment.
@@ -105,7 +105,7 @@ typedef union
    the attribute type is not exposed on purpose. However, this structure
    is exposed via PTHREAD_COND_INITIALIZER, and because of this, the
    Linuxthreads version sets the first four ints to one. In the NPTL
-   version we must check, in every function using pthread_cond_t, 
+   version we must check, in every function using pthread_cond_t,
    for the static Linuxthreads initializer and clear the appropriate
    words. */
 typedef union
@@ -114,7 +114,7 @@ typedef union
   {
     /* In the old Linuxthreads pthread_cond_t, this is the
        start of the 4-word lock structure, the next four words
-       are set all to 1 by the Linuxthreads 
+       are set all to 1 by the Linuxthreads
        PTHREAD_COND_INITIALIZER.  */
     int __lock __attribute__ ((aligned(16)));
     /* Tracks the initialization of this structure:

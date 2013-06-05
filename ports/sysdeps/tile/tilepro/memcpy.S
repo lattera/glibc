@@ -138,7 +138,7 @@ ENTRY (__memcpy)
 	   - r16 = WORD_0.
 	   - r17 == r1 + 16.
 	   - r27 holds saved lr to restore.
-	  
+
 	   On exit:
 	   - r0 is incremented by 64.
 	   - r1 is incremented by 64, unless that would point to a word
@@ -282,7 +282,7 @@ ENTRY (__memcpy)
 	/* This copies unaligned words until either there are fewer
 	   than 4 bytes left to copy, or until the destination pointer
 	   is cache-aligned, whichever comes first.
-	  
+
 	   On entry:
 	   - r0 is the next store address.
 	   - r1 points 4 bytes past the load address corresponding to r0.
@@ -329,7 +329,7 @@ ENTRY (__memcpy)
 	{ mvz r3, r8, r1; wh64 r0 }
 
 	/* This loop runs twice.
-	  
+
 	   On entry:
 	   - r17 is even before the first iteration, and odd before
 	     the second.  It is incremented inside the loop.  Encountering

@@ -37,7 +37,7 @@ ENTRY (__mmap)
 	movs	ip, r5, lsl #20
 	bne	.Linval
 	mov	r5, r5, lsr #12
-	
+
 	/* do the syscall */
 	DO_CALL (mmap2, 0)
 

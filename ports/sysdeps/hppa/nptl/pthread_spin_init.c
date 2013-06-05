@@ -23,6 +23,6 @@ pthread_spin_init (pthread_spinlock_t *lock, int pshared)
   int tmp = 0;
   /* This should be a memory barrier to newer compilers */
   __asm__ __volatile__ ("stw,ma %1,0(%0)"
-                        : : "r" (lock), "r" (tmp) : "memory");           
+                        : : "r" (lock), "r" (tmp) : "memory");
   return 0;
 }

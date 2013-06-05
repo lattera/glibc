@@ -1,9 +1,9 @@
 #include_next <internaltypes.h>
-#ifndef _INTERNAL_TYPES_H_HPPA_ 
+#ifndef _INTERNAL_TYPES_H_HPPA_
 #define _INTERNAL_TYPES_H_HPPA_ 1
 #include <atomic.h>
 
-/* In GLIBC 2.10 HPPA switched from Linuxthreads to NPTL, and in order 
+/* In GLIBC 2.10 HPPA switched from Linuxthreads to NPTL, and in order
 to maintain ABI compatibility with pthread_cond_t, some care had to be
 taken.
 

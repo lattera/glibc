@@ -172,7 +172,7 @@ $u_head:
 	or	t0, t6, t6	# e1    : mask original data for zero test
 	cmpbge	zero, t6, t7	# e0    :
 	beq	a2, $u_eocfin	# .. e1 :
-	lda	t6, -1		# e0    : 
+	lda	t6, -1		# e0    :
 	bne	t7, $u_final	# .. e1 :
 
 	mskql	t6, a1, t6		# e0    : mask out bits already seen
@@ -270,7 +270,7 @@ $u_final:
 1:	stq_u	t0, 0(a0)	# e0    :
 	ret	(t9)		# .. e1 :
 
-	/* Got to end-of-count before end of string.  
+	/* Got to end-of-count before end of string.
 	   On entry to this basic block:
 	   t1 == the shifted high-order bits from the previous source word  */
 $u_eoc:

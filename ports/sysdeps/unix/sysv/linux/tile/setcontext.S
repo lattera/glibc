@@ -143,7 +143,7 @@ ENTRY (__setcontext)
 	mtspr EX_CONTEXT_0_1, r12
 	iret
 	jrp lr    /* keep the backtracer happy */
-	
+
 .Lsigreturn:
 	/* This is a context obtained from a signal handler.
 	   Perform a full restore by pushing the context

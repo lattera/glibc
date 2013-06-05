@@ -26,11 +26,11 @@ AC_CACHE_CHECK(for hppa TLS support, libc_cv_hppa_tls, [dnl
 cat > conftest.s <<\EOF
 ; Setup tls data
 .section ".tdata","awT",@progbits
-foo:	.data	32 
+foo:	.data	32
 	.text
 ; Test general dyanmic relocations
 test0:
-	addil 	LT'foo-$tls_gdidx$, %r19	
+	addil 	LT'foo-$tls_gdidx$, %r19
 	ldo 	RT'foo-$tls_gdidx$(%r1), %r26
 	b 	__tls_get_addr
 	nop
@@ -50,7 +50,7 @@ test2:
 ; Test local exec relocations
 test3:
 	mfctl 	%cr27, %r26
-	addil 	LR'foo-$tls_leoff$, %r26 
+	addil 	LR'foo-$tls_leoff$, %r26
 	ldo 	RR'foo-$tls_leoff$(%r1), %r25
 ; Done all the TLS tests.
 EOF

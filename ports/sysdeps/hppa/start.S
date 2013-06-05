@@ -39,8 +39,8 @@
 	.import __libc_csu_fini, code
 	.import __libc_csu_init, code
 
-	/* Have the linker create plabel words so we get PLABEL32 
-	   relocs and not 21/14.  The use of 21/14 relocs is only 
+	/* Have the linker create plabel words so we get PLABEL32
+	   relocs and not 21/14.  The use of 21/14 relocs is only
 	   supported in the latest dynamic linker.  */
 	.section	.rodata
 	.align 4
@@ -66,7 +66,7 @@ _start:
 		r24 - argv
 		r23 - False _dl_fini plabel address
 
-	   This function is called from the lower half of RTLD_START.  
+	   This function is called from the lower half of RTLD_START.
 
 	   The call to __libc_start_main expects:
 
@@ -76,7 +76,7 @@ _start:
 		4. r23 - __libc_csu_init
 		5. sp-52 - __libc_csu_fini
 		6. sp-56 - rtld_fini
-		7. sp-60 - stackend  */ 
+		7. sp-60 - stackend  */
 
 	.proc
 	.callinfo

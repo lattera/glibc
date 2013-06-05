@@ -25,7 +25,7 @@ fegetexcept (void)
   union { unsigned long long l; unsigned int sw[2] } s;
 
   /* Get the current status word. */
-  __asm__ ("fstd %%fr0,0(%1)	\n\t" 
+  __asm__ ("fstd %%fr0,0(%1)	\n\t"
            "fldd 0(%1),%%fr0	\n\t"
       	   : "=m" (s.l) : "r" (&s.l) : "%r0");
 

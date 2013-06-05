@@ -40,7 +40,7 @@ feholdexcept (fenv_t *envp)
   /* Now clear all flags  */
   clear.env.__status_word &= ~(FE_ALL_EXCEPT << 27);
 
-  /* Load the new environment. Note: fr0 must load last to enable T-bit 
+  /* Load the new environment. Note: fr0 must load last to enable T-bit
      Thus we start bufptr at the end and work backwards */
   bufptr = (unsigned long long *)((unsigned int)(clear.buf) + sizeof(unsigned int)*4);
   __asm__ (

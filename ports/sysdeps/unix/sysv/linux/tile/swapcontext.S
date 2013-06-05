@@ -46,7 +46,7 @@ ENTRY (__swapcontext)
 
 	/* Save the current context.  */
 	jal __getcontext
-	
+
 	/* Tear down the frame and restore r0, r1, and lr. */
 	{
 	 BNEZ r0, .Lerror

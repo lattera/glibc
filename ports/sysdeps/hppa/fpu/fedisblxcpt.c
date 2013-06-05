@@ -22,7 +22,7 @@
 int
 fedisableexcept (int excepts)
 {
-  union { unsigned long long l; unsigned int sw[2]; } s; 
+  union { unsigned long long l; unsigned int sw[2]; } s;
   unsigned int old_exc;
 
   /* Get the current status word. */

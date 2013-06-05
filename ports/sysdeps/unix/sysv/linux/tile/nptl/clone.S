@@ -83,7 +83,7 @@ ENTRY (__clone)
 
 	/* We need to switch the argument convention around from
 	   libc to kernel:
-	  
+
 	   libc:
 	    r0 fn
 	    r1 child_stack
@@ -92,14 +92,14 @@ ENTRY (__clone)
 	    r4 ptid
 	    r5 tls
 	    r6 ctid
-	  
+
 	   kernel:
 	    r0 flags
 	    r1 child_stack [same as libc]
 	    r2 ptid
 	    r3 ctid
 	    r4 tls
-	  
+
 	   Plus the callee-saves as described at .Lthread_start, below.  */
 	{
 	 move r32, r0
@@ -151,9 +151,9 @@ ENTRY (__clone)
 	 movei r1, EINVAL
 	 j SYSCALL_ERROR_NAME
 	}
-	
+
 /* This function expects to receive:
-   
+
    sp: the top of a valid stack area
    r30: clone() flags
    r31: the argument to pass to the user function

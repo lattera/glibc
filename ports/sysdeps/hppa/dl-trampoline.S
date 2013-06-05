@@ -19,18 +19,18 @@
 #include <sysdep.h>
 
 /* This code gets called via the .plt stub, and is used in
-   dl-runtime.c to call the `_dl_fixup' function and then redirect 
-   to the address it returns. `_dl_fixup' takes two arguments, however 
-   `_dl_profile_fixup' takes a number of parameters for use with 
+   dl-runtime.c to call the `_dl_fixup' function and then redirect
+   to the address it returns. `_dl_fixup' takes two arguments, however
+   `_dl_profile_fixup' takes a number of parameters for use with
    library auditing (LA).
-   
+
    WARNING: This template is also used by gcc's __cffc, and expects
    that the "bl" for _dl_runtime_resolve exist at a particular offset.
    Do not change this template without changing gcc, while the prefix
    "bl" should fix everything so gcc finds the right spot, it will
    slow down __cffc when it attempts to call fixup to resolve function
    descriptor references. Please refer to gcc/gcc/config/pa/fptr.c
-   
+
    Enter with r19 = reloc offset, r20 = got-8, r21 = fixup ltp.  */
 
 	/* RELOCATION MARKER: bl to provide gcc's __cffc with fixup loc. */
@@ -136,14 +136,14 @@ _dl_runtime_profile:
 	stw	%r21,-32(%sp)	/* PIC register value */
 
 	/* Create La_hppa_retval */
-	/* -140, lrv_r28 
+	/* -140, lrv_r28
            -136, lrv_r29
-           -132, 4 byte pad 
+           -132, 4 byte pad
            -128, lr_fr4 (8 bytes) */
 
 	/* Create save space for _dl_profile_fixup arguments
-	   -120, Saved reloc offset 
-	   -116, Saved struct link_map 
+	   -120, Saved reloc offset
+	   -116, Saved struct link_map
 	   -112, *framesizep */
 
 	/* Create La_hppa_regs */
@@ -216,7 +216,7 @@ L(nf):
 	b,n	L(cont)
 
 L(cpe):
-	/* We are going to call the resolved function, but we have a 
+	/* We are going to call the resolved function, but we have a
 	   stack frame in the middle. We use the value of framesize to
 	   guess how much extra frame we need, and how much frame to
 	   copy forward. */
@@ -254,7 +254,7 @@ L(cont):
 	copy	%r1, %sp
 
 	/* Arguments to _dl_call_pltexit */
-	ldw	-116(%sp), %r26		/* (1) got[1] == struct link_map */ 
+	ldw	-116(%sp), %r26		/* (1) got[1] == struct link_map */
 	ldw 	-120(%sp), %r25		/* (2) reloc offsets */
 	ldo	-56(%sp), %r24		/* (3) *La_hppa_regs */
 	ldo	-124(%sp), %r23		/* (4) *La_hppa_retval */

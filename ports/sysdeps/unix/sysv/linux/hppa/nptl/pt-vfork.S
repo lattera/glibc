@@ -49,7 +49,7 @@
 
 	/* r26, r25, r24, r23 are free since vfork has no arguments */
 ENTRY(__vfork)
-	/* We must not create a frame. When the child unwinds to call 
+	/* We must not create a frame. When the child unwinds to call
 	   exec it will clobber the same frame that the parent
 	   needs to unwind.  */
 
@@ -75,7 +75,7 @@ ENTRY(__vfork)
 
 	/* Return, and DO NOT restore rp. The child may have called
 	   functions that updated the frame's rp. This works because
-	   the kernel ensures rp is preserved across the vfork 
+	   the kernel ensures rp is preserved across the vfork
 	   syscall.  */
 	bv,n	%r0(%rp)
 

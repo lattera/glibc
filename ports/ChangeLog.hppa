@@ -1,3 +1,45 @@
+2013-06-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/hppa/configure.in: Remove trailing whitespace.
+	* sysdeps/hppa/dl-fptr.c: Likewise.
+	* sysdeps/hppa/dl-fptr.h: Likewise.
+	* sysdeps/hppa/dl-irel.h: Likewise.
+	* sysdeps/hppa/dl-trampoline.S: Likewise.
+	* sysdeps/hppa/fpu/bits/fenv.h: Likewise.
+	* sysdeps/hppa/fpu/fedisblxcpt.c: Likewise.
+	* sysdeps/hppa/fpu/fegetenv.c: Likewise.
+	* sysdeps/hppa/fpu/fegetexcept.c: Likewise.
+	* sysdeps/hppa/fpu/feholdexcpt.c: Likewise.
+	* sysdeps/hppa/fpu/fesetenv.c: Likewise.
+	* sysdeps/hppa/fpu/fesetround.c: Likewise.
+	* sysdeps/hppa/fpu/feupdateenv.c: Likewise.
+	* sysdeps/hppa/fpu/fgetexcptflg.c: Likewise.
+	* sysdeps/hppa/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/hppa/fpu/ftestexcept.c: Likewise.
+	* sysdeps/hppa/hppa1.1/addmul_1.S: Likewise.
+	* sysdeps/hppa/hppa1.1/mul_1.S: Likewise.
+	* sysdeps/hppa/hppa1.1/submul_1.S: Likewise.
+	* sysdeps/hppa/hppa1.1/udiv_qrnnd.S: Likewise.
+	* sysdeps/hppa/nptl/pthread_spin_init.c: Likewise.
+	* sysdeps/hppa/nptl/pthread_spin_unlock.c: Likewise.
+	* sysdeps/hppa/nptl/tls.h: Likewise.
+	* sysdeps/hppa/rshift.S: Likewise.
+	* sysdeps/hppa/start.S: Likewise.
+	* sysdeps/hppa/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/atomic.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/internaltypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/makecontext.c: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/mmap.c: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/nptl/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/nptl/pt-vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/nptl/pthreadP.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/nptl/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/sysdep.c: Likewise.
+
 2013-05-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #15465]

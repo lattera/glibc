@@ -1,3 +1,10 @@
+2013-06-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/machine-gmon.h: Remove trailing whitespace.
+	* sysdeps/unix/sysv/linux/arm/mmap.S: Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/swapcontext.S: Likewise.
+
 2013-05-31  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/Makefile [$(subdir) = malloc]

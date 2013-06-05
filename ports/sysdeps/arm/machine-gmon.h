@@ -18,7 +18,7 @@
 
 #include <sysdep.h>
 
-/* GCC for the ARM cannot compile __builtin_return_address(N) for N != 0, 
+/* GCC for the ARM cannot compile __builtin_return_address(N) for N != 0,
    so we must use an assembly stub.  */
 
 /* We must not pollute the global namespace.  */

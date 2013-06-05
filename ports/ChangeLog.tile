@@ -1,3 +1,10 @@
+2013-06-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/tile/tilepro/memcpy.S: Remove trailing whitespace.
+	* sysdeps/unix/sysv/linux/tile/nptl/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/tile/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/tile/swapcontext.S: Likewise.
+
 2013-05-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #15465]

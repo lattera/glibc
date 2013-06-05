@@ -117,7 +117,7 @@ ENTRY(__setcontext)
 
 	/* Do not load oSS_SP into %sp. The value of oSS_SP indicates
 	   the start of the user allocated stack, but not the sp that
-	   should be used by the new context. In fact makecontext 
+	   should be used by the new context. In fact makecontext
 	   will create a frame, and adjust sp as required. We do not
 	   support calling getcontext and modifying ss_sp without
 	   a call to makecontext to synchronize ss_sp into the machine
@@ -141,7 +141,7 @@ ENTRY(__setcontext)
 	/* No further context available. Exit now.  */
 	bl	_exit, %r2
 	ldi	-1, %r26
-	
+
 
 .Lerror:
 	/* Epilogue */

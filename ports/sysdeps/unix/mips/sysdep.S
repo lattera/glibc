@@ -30,7 +30,7 @@ FRAMESZ= (((NARGSAVE+LOCALSZ)*SZREG)+ALSZ)&ALMASK
 RAOFF= FRAMESZ-(1*SZREG)
 GPOFF= FRAMESZ-(2*SZREG)
 V0OFF= FRAMESZ-(3*SZREG)
-	
+
 ENTRY(__syscall_error)
 #ifdef __PIC__
 	.set noat
@@ -79,7 +79,7 @@ ENTRY(__syscall_error)
 	SETUP_GPX (AT)
 #endif
 	SETUP_GPX64 (t9, AT)
-	
+
 #if defined (EWOULDBLOCK_sys) && EWOULDBLOCK_sys != EAGAIN
 	/* We translate the system's EWOULDBLOCK error into EAGAIN.
 	   The GNU C library always defines EWOULDBLOCK==EAGAIN.

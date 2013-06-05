@@ -24,5 +24,5 @@
    get the fegetround definition.  */
 
 #include <fenv.h>
- 
+
 #endif /* fenv_libc.h */

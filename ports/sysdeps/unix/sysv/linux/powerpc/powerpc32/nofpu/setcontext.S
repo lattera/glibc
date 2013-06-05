@@ -34,7 +34,7 @@ versioned_symbol (libc, __setcontext, setcontext, GLIBC_2_3_4)
 
 #if SHLIB_COMPAT (libc, GLIBC_2_3_3, GLIBC_2_3_4)
 
-/* For the nofpu case the old/new versions are the same function.  */  
+/* For the nofpu case the old/new versions are the same function.  */
 strong_alias (__setcontext, __novec_setcontext)
 
 compat_symbol (libc, __novec_setcontext, setcontext, GLIBC_2_3_3)

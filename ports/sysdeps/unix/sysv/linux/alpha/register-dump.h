@@ -32,7 +32,7 @@
    T10: XXXXXXXXXXXXXXXX   T11: XXXXXXXXXXXXXXXX    RA: XXXXXXXXXXXXXXXX
    T12: XXXXXXXXXXXXXXXX    AT: XXXXXXXXXXXXXXXX    GP: XXXXXXXXXXXXXXXX
     SP: XXXXXXXXXXXXXXXX    PC: XXXXXXXXXXXXXXXX
-  
+
    FP0: XXXXXXXXXXXXXXXX   FP1: XXXXXXXXXXXXXXXX   FP2: XXXXXXXXXXXXXXXX
    FP3: XXXXXXXXXXXXXXXX   FP4: XXXXXXXXXXXXXXXX   FP5: XXXXXXXXXXXXXXXX
    FP6: XXXXXXXXXXXXXXXX   FP7: XXXXXXXXXXXXXXXX   FP8: XXXXXXXXXXXXXXXX
@@ -44,13 +44,13 @@
   FP24: XXXXXXXXXXXXXXXX  FP25: XXXXXXXXXXXXXXXX  FP26: XXXXXXXXXXXXXXXX
   FP27: XXXXXXXXXXXXXXXX  FP28: XXXXXXXXXXXXXXXX  FP29: XXXXXXXXXXXXXXXX
   FP30: XXXXXXXXXXXXXXXX  FPCR: XXXXXXXXXXXXXXXX
-  
+
    TA0: XXXXXXXXXXXXXXXX   TA1: XXXXXXXXXXXXXXXX   TA2: XXXXXXXXXXXXXXXX
 */
 
 #define NREGS (32+32+3)
 
-static const char __attribute__((aligned(8))) regnames[NREGS][8] = 
+static const char __attribute__((aligned(8))) regnames[NREGS][8] =
 {
   "    V0: ", "    T0: ", "    T1: ",
   "    T2: ", "    T3: ", "    T4: ",
@@ -81,7 +81,7 @@ static const char __attribute__((aligned(8))) regnames[NREGS][8] =
 
 #define O(FIELD, LF)  offsetof(struct sigcontext, FIELD) + LF
 
-static const int offsets[NREGS] = 
+static const int offsets[NREGS] =
 {
   O(sc_regs[0], 0),  O(sc_regs[1], 0),  O(sc_regs[2], 1),
   O(sc_regs[3], 0),  O(sc_regs[4], 0),  O(sc_regs[5], 1),
@@ -118,7 +118,7 @@ register_dump (int fd, struct sigcontext *ctx)
   char buf[NREGS*(8+16) + 25 + 80];
   char *p = buf;
   size_t i;
-  
+
   p = stpcpy (p, "Register dump:\n\n");
 
   for (i = 0; i < NREGS; ++i)
@@ -126,7 +126,7 @@ register_dump (int fd, struct sigcontext *ctx)
       int this_offset, this_lf;
       unsigned long val;
       signed long j;
-      
+
       this_offset = offsets[i];
       this_lf = this_offset & 7;
 

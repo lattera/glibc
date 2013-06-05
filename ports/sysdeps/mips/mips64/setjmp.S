@@ -35,7 +35,7 @@ ENTRY (__sigsetjmp)
 	PTR_LA t9, __sigsetjmp_aux
 #if _MIPS_SIM == _ABIO32
 	nop
-#endif	
+#endif
 	RESTORE_GP64_REG
 #if _MIPS_SIM != _ABIO32
 	move a4, gp

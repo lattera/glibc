@@ -115,7 +115,7 @@ typedef struct
    elf_gregset_t.  The thread descriptor is sizeof (struct pthread) away.  */
 # define DB_THREAD_SELF \
   REGISTER (32, 32, 53 * 4, -sizeof (struct pthread))
- 
+
 /* Access to data in the thread descriptor is easy.  */
 # define THREAD_GETMEM(descr, member) \
   descr->member

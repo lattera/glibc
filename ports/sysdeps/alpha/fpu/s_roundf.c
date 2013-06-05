@@ -25,7 +25,7 @@ __roundf (float x)
   const float almost_half = 0x1.fffffep-2;
   const float two23 = 0x1.0p23;
   float r, tmp;
-  
+
   __asm (
 #ifdef _IEEE_FP_INEXACT
 	 "adds/suic %2, %3, %1\n\tsubs/suic %1, %3, %0"

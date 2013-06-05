@@ -99,7 +99,7 @@ new_fdesc_table (struct local *l, size_t *size)
 }
 
 /* Must call _dl_fptr_init before using any other function.  */
-void 
+void
 _dl_fptr_init (void)
 {
   struct local *l;

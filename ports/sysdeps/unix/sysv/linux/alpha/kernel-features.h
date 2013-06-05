@@ -34,7 +34,7 @@
 # define __ASSUME_IN_NONBLOCK   1
 #endif
 
-/* Support for the pipe2, eventfd2, signalfd4 syscalls was added for alpha 
+/* Support for the pipe2, eventfd2, signalfd4 syscalls was added for alpha
    after 2.6.33-rc1.  */
 #if __LINUX_KERNEL_VERSION >= 0x020621
 # define __ASSUME_PIPE2     1

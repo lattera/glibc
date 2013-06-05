@@ -42,7 +42,7 @@ ENTRY (memset)
 	sll	t0, a1, 16
 	or	a1, t0			# a1 is now pattern in full word
 
-L(ueven):	
+L(ueven):
 	subu	t0, zero, a0		# Unaligned address?
 	andi	t0, 0x3
 	beq	t0, zero, L(chkw)
@@ -50,33 +50,33 @@ L(ueven):
 	SWHI	a1, 0(a0)		# Yes, handle first unaligned part
 	addu	a0, t0			# Now both a0 and a2 are updated
 
-L(chkw):	
+L(chkw):
 	andi	t0, a2, 0x7		# Enough left for one loop iteration?
 	beq	t0, a2, L(chkl)
 	subu	a3, a2, t0
 	addu	a3, a0			# a3 is last loop address +1
 	move	a2, t0			# a2 is now # of bytes left after loop
-L(loopw):	
+L(loopw):
 	addiu	a0, 8			# Handle 2 words pr. iteration
 	sw	a1, -8(a0)
 	bne	a0, a3, L(loopw)
 	sw	a1, -4(a0)
 
-L(chkl):	
+L(chkl):
 	andi	t0, a2, 0x4		# Check if there is at least a full
 	beq	t0, zero, L(last8)	#  word remaining after the loop
 	subu	a2, t0
 	sw	a1, 0(a0)		# Yes...
 	addiu	a0, 4
 
-L(last8):	
+L(last8):
 	blez	a2, L(exit)		# Handle last 8 bytes (if cnt>0)
 	addu	a3, a2, a0		# a3 is last address +1
-L(lst8l):	
+L(lst8l):
 	addiu	a0, 1
 	bne	a0, a3, L(lst8l)
 	sb	a1, -1(a0)
-L(exit):	
+L(exit):
 	j	ra			# Bye, bye
 	nop
 

@@ -28,7 +28,7 @@ fegetexceptflag (fexcept_t *flagp, int excepts)
   /* Get the current exceptions.  */
   _FPU_GETCW (temp);
 
-  /* We only save the relevant bits here. In particular, care has to be 
+  /* We only save the relevant bits here. In particular, care has to be
      taken with the CAUSE bits, as an inadvertent restore later on could
      generate unexpected exceptions.  */
 

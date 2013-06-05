@@ -35,7 +35,7 @@ ENTRY (setjmp)
 	PTR_LA t9, C_SYMBOL_NAME (__sigsetjmp)
 #if _MIPS_SIM == _ABIO32
 	nop
-#endif	
+#endif
 	RESTORE_GP64_REG
 	dli a1, 1		/* Pass a second argument of one.  */
 #ifdef __PIC__

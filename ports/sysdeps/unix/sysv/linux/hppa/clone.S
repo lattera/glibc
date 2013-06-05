@@ -26,23 +26,23 @@
 #include <bits/errno.h>
 
 /* Non-thread code calls __clone with the following parameters:
-   int clone(int (*fn)(void *arg), 
-	     void *child_stack, 
-	     int flags, 
+   int clone(int (*fn)(void *arg),
+	     void *child_stack,
+	     int flags,
 	     void *arg)
-   
+
    NPTL Code will call __clone with the following parameters:
-   int clone(int (*fn)(void *arg), 
-	     void *child_stack, 
-	     int flags, 
+   int clone(int (*fn)(void *arg),
+	     void *child_stack,
+	     int flags,
 	     void *arg,
-	     int *parent_tidptr, 
-	     struct user_desc *newtls, 
+	     int *parent_tidptr,
+	     struct user_desc *newtls,
 	     int *child_pidptr)
-	
+
    The code should not mangle the extra input registers.
    Syscall expects:				Input to __clone:
-	4(r25) - function pointer 		(r26, arg0) 
+	4(r25) - function pointer 		(r26, arg0)
 	0(r25) - argument			(r23, arg3)
 	r26 - clone flags.			(r24, arg2)
 	r25+64 - user stack pointer.		(r25, arg1)
@@ -53,9 +53,9 @@
 
    Return:
 
-	On success the thread ID of the child process is returend in 
+	On success the thread ID of the child process is returend in
 	the callers context.
-	On error return -1, and set errno to the value returned by 
+	On error return -1, and set errno to the value returned by
 	the syscall.
  */
 
@@ -100,13 +100,13 @@ ENTRY(__clone)
 
 	/* Restore the PIC register.  */
 #ifdef PIC
-	copy	%r4, %r19		/* parent */ 
+	copy	%r4, %r19		/* parent */
 #endif
 
 	comib,=,n 0, %ret0, .LthreadStart
 
 	/* Successful return from the parent
-	   No need to restore the PIC register, 
+	   No need to restore the PIC register,
 	   since we return immediately. */
 
 	ldw	-84(%sp), %rp
@@ -134,14 +134,14 @@ ENTRY(__clone)
 #ifdef RESET_PID
 # define CLONE_VM_BIT		23	/* 0x00000100  */
 # define CLONE_THREAD_BIT	15	/* 0x00010000  */
-	/* Load original clone flags. 
+	/* Load original clone flags.
 	   If CLONE_THREAD was passed, don't reset the PID/TID.
 	   If CLONE_VM was passed, we need to store -1 to PID/TID.
 	   If CLONE_VM and CLONE_THREAD were not set store the result
 	   of getpid to PID/TID.  */
 	ldw	-56(%sp), %r26
 	bb,<,n	%r26, CLONE_THREAD_BIT, 1f
-	bb,<	%r26, CLONE_VM_BIT, 2f 
+	bb,<	%r26, CLONE_VM_BIT, 2f
 	ldi	-1, %ret0
 	ble     0x100(%sr2, %r0)
 	ldi	__NR_getpid, %r20

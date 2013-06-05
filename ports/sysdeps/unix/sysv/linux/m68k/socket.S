@@ -114,7 +114,7 @@ ENTRY (__socket)
 	/* Successful; return the syscall's value.  */
 	rts
 #endif
-	
+
 PSEUDO_END (__socket)
 
 #ifndef NO_WEAK_ALIAS

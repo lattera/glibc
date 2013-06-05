@@ -22,7 +22,7 @@
 #include "config.h"
 
 #undef ASM_LINE_SEP
-#define ASM_LINE_SEP ! 
+#define ASM_LINE_SEP !
 
 #ifdef	__ASSEMBLER__
 
@@ -51,7 +51,7 @@
 
 /* GCC does everything for us. */
 #ifdef	PROF
-#define CALL_MCOUNT 
+#define CALL_MCOUNT
 #else
 #define CALL_MCOUNT		/* Do nothing.  */
 #endif

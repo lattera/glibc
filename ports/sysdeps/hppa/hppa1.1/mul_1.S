@@ -45,7 +45,7 @@
 
 	.text
 	.export		__mpn_mul_1
-__mpn_mul_1:	
+__mpn_mul_1:
 	.proc
 	.callinfo	frame=64,no_calls
 	.entry
@@ -68,7 +68,7 @@ __mpn_mul_1:
 	 ldw		-12(%r30),%r1
 
 ;! Main loop
-L$loop:	
+L$loop:
 	fldws,ma	4(%r25),%fr5
 	stws,ma		%r20,4(%r26)
 	addc		%r28,%r1,%r20
@@ -78,7 +78,7 @@ L$loop:
 	addib,<>	-1,%r24,L$loop
 	 ldw		-12(%r30),%r1
 
-L$end:	
+L$end:
 	stws,ma		%r20,4(%r26)
 	addc		%r28,%r1,%r20
 	ldw		-16(%r30),%r28
@@ -87,7 +87,7 @@ L$end:
 	bv		0(%r2)
 	 ldo		-64(%r30),%r30
 
-L$just_one_limb:	
+L$just_one_limb:
 	xmpyu		%fr4,%fr5,%fr6
 	fstds		%fr6,-16(%r30)
 	ldw		-16(%r30),%r28

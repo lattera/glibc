@@ -29,9 +29,9 @@
 /* Stack must be 64-byte aligned at all times.  */
 #define STACK_ALIGN 64
 /* Size of frame marker in unsigned long words.  */
-#define FRAME_SIZE_UL 8 
+#define FRAME_SIZE_UL 8
 /* Size of frame marker in bytes.  */
-#define FRAME_SIZE_BYTES (8 * sizeof(unsigned long)) 
+#define FRAME_SIZE_BYTES (8 * sizeof(unsigned long))
 /* Size of X arguments in bytes.  */
 #define ARGS(x) (x * sizeof(unsigned long))
 
@@ -42,7 +42,7 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
   va_list ap;
   int i;
 
-  /* Create a 64-byte aligned frame to store args. Use ss_sp if 
+  /* Create a 64-byte aligned frame to store args. Use ss_sp if
      it is available, otherwise be robust and use the currently
      saved stack pointer.  */
   if (ucp->uc_stack.ss_sp && ucp->uc_stack.ss_size)
@@ -50,8 +50,8 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
   else
     osp = (unsigned long *)ucp->uc_mcontext.sc_gr[30];
 
-  sp = (unsigned long *)((((unsigned long) osp) 
-			   + FRAME_SIZE_BYTES + ARGS(argc) + STACK_ALIGN) 
+  sp = (unsigned long *)((((unsigned long) osp)
+			   + FRAME_SIZE_BYTES + ARGS(argc) + STACK_ALIGN)
 			 & ~(STACK_ALIGN - 1));
 
   /* Use new frame.  */
@@ -89,12 +89,12 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
 	  /* 64bit: r19-r22 are arg7-arg4.  */
 	  ucp->uc_mcontext.sc_gr[22+4-i] = va_arg (ap, int);
 	  continue;
-	} 
+	}
 
       /* All other arguments go on the stack.  */
       sp[-1 * (FRAME_SIZE_UL + 1 + i)] = va_arg (ap, int);
     }
-  va_end (ap); 
+  va_end (ap);
 }
 weak_alias(__makecontext, makecontext)
 

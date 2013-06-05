@@ -1,3 +1,17 @@
+2013-06-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/fpu/fgetexcptflg.c: Remove trailing whitespace.
+	* sysdeps/mips/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/mips/memset.S: Likewise.
+	* sysdeps/mips/mips64/bsd-_setjmp.S: Likewise.
+	* sysdeps/mips/mips64/bsd-setjmp.S: Likewise.
+	* sysdeps/mips/mips64/memset.S: Likewise.
+	* sysdeps/mips/mips64/setjmp.S: Likewise.
+	* sysdeps/mips/start.S: Likewise.
+	* sysdeps/unix/mips/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/dl-static.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/nptl/lowlevellock.h: Likewise.
+
 2013-05-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #15465]

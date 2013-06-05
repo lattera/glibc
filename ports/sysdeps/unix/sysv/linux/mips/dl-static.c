@@ -68,7 +68,7 @@ _dl_static_init (struct link_map *l)
 
   loadbase = _dl_lookup_symbol_x ("_dl_var_init", l, &ref, l->l_local_scope,
 				  NULL, 0, 1, NULL);
-  
+
   for (scope = l->l_local_scope; *scope != NULL; scope++)
     for (i = 0; i < (*scope)->r_nlist; i++)
       if ((*scope)->r_list[i] == loadbase)

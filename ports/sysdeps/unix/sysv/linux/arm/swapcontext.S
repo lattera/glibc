@@ -50,7 +50,7 @@ ENTRY(swapcontext)
 	itt	ne
 	movne	r0, r4
 	RETINSTR(ne, r14)
-	
+
 	/* Fix up LR and the PC.  */
 	str	r13,[r0, #MCONTEXT_ARM_SP]
 	str	r14,[r0, #MCONTEXT_ARM_LR]

@@ -1,5 +1,5 @@
 #include_next <pthreadP.h>
-#ifndef _PTHREADP_H_HPPA_ 
+#ifndef _PTHREADP_H_HPPA_
 #define _PTHREADP_H_HPPA_ 1
 
 /* Internal cond functions.  */

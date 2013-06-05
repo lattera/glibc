@@ -24,7 +24,7 @@ int
 fegetenv (fenv_t *envp)
 {
   unsigned long long buf[4], *bufptr = buf;
-  
+
   __asm__ (
 	   "fstd,ma %%fr0,8(%1)	\n\t"
 	   "fldd -8(%1),%%fr0	\n\t"

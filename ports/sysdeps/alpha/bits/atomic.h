@@ -347,7 +347,7 @@ typedef uintmax_t uatomic_max_t;
 	: "memory");							\
   __ret; })
 
-/* ??? Barrier semantics for atomic_exchange_and_add appear to be 
+/* ??? Barrier semantics for atomic_exchange_and_add appear to be
    undefined.  Use full barrier for now, as that's safe.  */
 #define atomic_exchange_and_add(mem, value) \
   __atomic_val_bysize (__arch_exchange_and_add, int, mem, value, __MB, __MB)

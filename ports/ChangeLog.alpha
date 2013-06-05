@@ -1,3 +1,25 @@
+2013-06-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/alpha/bits/atomic.h: Remove trailing whitespace.
+	* sysdeps/alpha/div_libc.h: Likewise.
+	* sysdeps/alpha/divq.S: Likewise.
+	* sysdeps/alpha/divqu.S: Likewise.
+	* sysdeps/alpha/fpu/cfloat-compat.h: Likewise.
+	* sysdeps/alpha/fpu/s_roundf.c: Likewise.
+	* sysdeps/alpha/fpu/s_trunc.c: Likewise.
+	* sysdeps/alpha/fpu/s_truncf.c: Likewise.
+	* sysdeps/alpha/ldiv.S: Likewise.
+	* sysdeps/alpha/memchr.c: Likewise.
+	* sysdeps/alpha/remq.S: Likewise.
+	* sysdeps/alpha/remqu.S: Likewise.
+	* sysdeps/alpha/stxncpy.S: Likewise.
+	* sysdeps/unix/alpha/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/kernel_stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/nptl/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/register-dump.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/syscall.S: Likewise.
+
 2013-05-22  Edjunior Barbosa Machado  <emachado@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/alpha/bits/siginfo.h (siginfo_t): Add

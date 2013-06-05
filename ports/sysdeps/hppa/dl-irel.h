@@ -30,7 +30,7 @@
 /* Implement enough to get the build going again.  */
 #warning "NEED STT_GNU_IFUNC IMPLEMENTATION"
 
-static inline struct fdesc 
+static inline struct fdesc
 __attribute ((always_inline))
 elf_ifunc_invoke (uintptr_t addr)
 {

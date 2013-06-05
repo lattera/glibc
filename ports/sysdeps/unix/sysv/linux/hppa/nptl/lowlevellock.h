@@ -77,7 +77,7 @@
       : (fl))								      \
    : ((fl) | (((private) ^ FUTEX_PRIVATE_FLAG)				      \
 	      & THREAD_GETMEM (THREAD_SELF, header.private_futex))))
-# endif	      
+# endif
 #endif
 
 /* Type for lock object.  */
@@ -257,7 +257,7 @@ __lll_cond_lock (int *futex, int private)
 }
 #define lll_cond_lock(futex, private) __lll_cond_lock (&(futex), private)
 
-extern int __lll_timedlock_wait (lll_lock_t *futex, const struct timespec *, 
+extern int __lll_timedlock_wait (lll_lock_t *futex, const struct timespec *,
 				 int private) attribute_hidden;
 extern int __lll_robust_timedlock_wait (int *futex, const struct timespec *,
 				 int private) attribute_hidden;

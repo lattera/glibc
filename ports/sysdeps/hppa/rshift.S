@@ -1,4 +1,4 @@
-;! HP-PA  __mpn_rshift -- 
+;! HP-PA  __mpn_rshift --
 
 ;! Copyright (C) 1992-2013 Free Software Foundation, Inc.
 

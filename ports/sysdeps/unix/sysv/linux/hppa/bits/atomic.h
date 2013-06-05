@@ -49,13 +49,13 @@ typedef uintmax_t uatomic_max_t;
      *addr = new;
    return prev; */
 
-/* Use the kernel atomic light weight syscalls on hppa.  */ 
+/* Use the kernel atomic light weight syscalls on hppa.  */
 #define _LWS "0xb0"
 #define _LWS_CAS "0"
 /* Note r31 is the link register.  */
 #define _LWS_CLOBBER "r1", "r26", "r25", "r24", "r23", "r22", "r21", "r20", "r28", "r31", "memory"
 /* String constant for -EAGAIN.  */
-#define _ASM_EAGAIN "-11" 
+#define _ASM_EAGAIN "-11"
 /* String constant for -EDEADLOCK.  */
 #define _ASM_EDEADLOCK "-45"
 
@@ -100,7 +100,7 @@ typedef uintmax_t uatomic_max_t;
    })
 #else
 # error __ASSUME_LWS_CAS is required to build glibc.
-#endif	
+#endif
 /* __ASSUME_LWS_CAS */
 
 #endif

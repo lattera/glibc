@@ -33,16 +33,16 @@
 
    	do arguments (read arg5 and arg6 to registers)
 	setup frame
-	
+
 	check if there are threads, yes jump to pseudo_cancel
-	
+
 	unthreaded:
 		syscall
 		check syscall return (jump to pre_end)
 		set errno
 		set return to -1
 		(jump to pre_end)
-		
+
 	pseudo_cancel:
 		cenable
 		syscall
@@ -50,14 +50,14 @@
 		check syscall return (jump to pre_end)
 		set errno
 		set return to -1
-		
+
 	pre_end
 		restore stack
-	
+
 	It is expected that 'ret' and 'END' macros will
-	append an 'undo arguments' and 'return' to the 
+	append an 'undo arguments' and 'return' to the
 	this PSEUDO macro. */
-   
+
 # undef PSEUDO
 # define PSEUDO(name, syscall_name, args)				\
 	ENTRY (__##syscall_name##_nocancel)				\

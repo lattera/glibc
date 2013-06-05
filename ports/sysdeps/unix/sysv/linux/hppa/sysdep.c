@@ -37,8 +37,8 @@ __syscall_error (int err_no)
    INTERNAL_SYSCALL, and all the generated pure assembly syscall wrappers.
    How often the function is used is unknown. */
 
-long int 
-syscall (long int __sysno, ...) 
+long int
+syscall (long int __sysno, ...)
 {
   /* FIXME: Keep this matching INLINE_SYSCALL for hppa */
   va_list args;
@@ -54,7 +54,7 @@ syscall (long int __sysno, ...)
   arg4 = va_arg (args, long int);
   arg5 = va_arg (args, long int);
   va_end (args);
-  
+
   {
     register unsigned long int __res asm("r28");
     PIC_REG_DEF

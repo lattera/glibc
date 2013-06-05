@@ -46,8 +46,8 @@ _start:
 	   later in __libc_start_main.  */
 	mov sp,a3
 	add -32,sp
-	
-	mov a3,(28,sp)		/* stack_end.  */	
+
+	mov a3,(28,sp)		/* stack_end.  */
 	mov d0,(24,sp)		/* rtld_fini.  */
 	mov _fini, d3
 	mov d3,(20,sp)		/* fini.  */
@@ -55,7 +55,7 @@ _start:
 	mov d2,(16,sp)		/* init.  */
 	inc4 a3
 	mov a3,(12,sp)		/* argv.  */
-	
+
 	/* Set the initial frame pointer as 0, so that the bottom of
 	   the stack is clearly marked.  */
 	mov 0,a3
