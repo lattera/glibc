@@ -53,6 +53,8 @@ while (<F>) {
   }
 }
 
+printf "#include <stdint.h>\n";
+
 printf "#define NTRANSLIT %d\n", $#froms + 1;
 
 printf "static const uint32_t translit_from_idx[] =\n{\n  ";

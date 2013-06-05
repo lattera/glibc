@@ -1,3 +1,10 @@
+2013-06-05  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* locale/C-translit.h: Revert #include <stdint.h> because this is a
+	generated file.  Regenerate properly from gen-translit.pl.
+	* locale/gen-translit.pl: Add #include <stdint.h>.  This generates
+	locale/C-translit.h.
+
 2013-06-05  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #15100]
