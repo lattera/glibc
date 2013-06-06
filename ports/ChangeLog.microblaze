@@ -1,7 +1,7 @@
 2013-06-05  Ondřej Bílka  <neleai@seznam.cz>
 
-	* ports/sysdeps/microblaze/bits/atomic.h: Remove executable mode.
-	* ports/sysdeps/unix/sysv/linux/microblaze/sysdep.h: Likewise.
+	* sysdeps/microblaze/bits/atomic.h: Remove executable mode.
+	* sysdeps/unix/sysv/linux/microblaze/sysdep.h: Likewise.
 
 2013-05-31  Joseph Myers  <joseph@codesourcery.com>
 

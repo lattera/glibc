@@ -1,6 +1,6 @@
 2013-06-05  Ondřej Bílka  <neleai@seznam.cz>
 
-	* posix/transbug.c: Likewise.
+	* posix/transbug.c: Remove executable mode.
 
 2013-06-05  Joseph Myers  <joseph@codesourcery.com>
 
