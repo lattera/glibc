@@ -1,3 +1,11 @@
+2013-06-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/config.guess: Update to version 2013-05-16.
+	* scripts/config.sub: Update to version 2013-04-24.
+	* scripts/install-sh: Update to version 2011-11-20.07.
+	* scripts/mkinstalldirs: Update to version 2009-04-28.21.
+	* scripts/move-if-change: Update to version 2012-01-06 07:23.
+
 2013-06-06   Ondřej Bílka  <neleai@seznam.cz>
 
 	* debug/fgetws_u_chk.c: Fix leading whitespaces.
