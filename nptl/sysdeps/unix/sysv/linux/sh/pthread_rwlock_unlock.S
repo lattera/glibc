@@ -209,7 +209,7 @@ __pthread_rwlock_unlock:
 	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE
 #endif
 	.align	2
-.Lwait8:	
+.Lwait8:
 	.long	__lll_lock_wait-.Lwait8b
 .Lwake8:
 	.long	__lll_unlock_wake-.Lwake8b

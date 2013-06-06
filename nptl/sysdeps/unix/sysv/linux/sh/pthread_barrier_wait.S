@@ -210,7 +210,7 @@ pthread_barrier_wait:
 	bra	7b
 	 mov	r9, r6
 
-9:	
+9:
 	mov	r6, r9
 	mov.l	@(PRIVATE,r8), r5
 	mov	#LLL_SHARED, r0

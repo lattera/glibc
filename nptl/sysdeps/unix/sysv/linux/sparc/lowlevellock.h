@@ -78,7 +78,7 @@ extern void __cpu_relax (void);
       : (fl))								      \
    : ((fl) | (((private) ^ FUTEX_PRIVATE_FLAG)				      \
 	      & THREAD_GETMEM (THREAD_SELF, header.private_futex))))
-# endif	      
+# endif
 #endif
 
 

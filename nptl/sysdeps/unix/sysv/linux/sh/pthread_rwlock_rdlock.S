@@ -192,7 +192,7 @@ __pthread_rwlock_rdlock:
 
 .Ltidoff:
 	.word	TID - TLS_PRE_TCB_SIZE
-	
+
 6:
 	mov	r8, r4
 #if MUTEX != 0

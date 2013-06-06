@@ -48,7 +48,7 @@ symbol_version (__novmx_siglongjmp,siglongjmp,GLIBC_2.3);
 symbol_version (__novmx_longjmp,longjmp,GLIBC_2.0);
 symbol_version (__novmx_siglongjmp,siglongjmp,GLIBC_2.0);
 # endif
-#endif /* defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4))  */ 
+#endif /* defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4))  */
 
 void
 __vmx_longjmp (jmp_buf env, int val)

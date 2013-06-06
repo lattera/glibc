@@ -67,7 +67,7 @@ do_test (void)
 	      fifo_max + 1);
       return 1;
     }
-  
+
   if (fifo_min > 0
       && pthread_mutexattr_setprioceiling (&ma, fifo_min - 1) != EINVAL)
     {
@@ -245,7 +245,7 @@ do_test (void)
       printf ("unexpected m1 old prioceiling %d != 6\n", prioceiling);
       return 1;
     }
-    
+
   if (pthread_mutex_getprioceiling (&m1, &prioceiling))
     {
       puts ("mutex_getprioceiling m1 failed");

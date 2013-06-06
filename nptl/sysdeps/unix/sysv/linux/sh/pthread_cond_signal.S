@@ -162,7 +162,7 @@ __pthread_cond_signal:
 	bf/s	99f
 	 mov	#LLL_PRIVATE, r5
 	mov	#LLL_SHARED, r5
-99:	
+99:
 	mov.l	.Lwake4, r1
 	bsrf	r1
 	 extu.b	r5, r5
@@ -181,7 +181,7 @@ __pthread_cond_signal:
 	bf/s	99f
 	 mov	#LLL_PRIVATE, r6
 	mov	#LLL_SHARED, r6
-99:	
+99:
 	extu.b	r6, r6
 	mov.l	.Lwait4, r1
 	bsrf	r1

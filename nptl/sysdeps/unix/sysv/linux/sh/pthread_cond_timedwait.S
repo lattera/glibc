@@ -107,7 +107,7 @@ __pthread_cond_timedwait:
 	bt	17f
 	mov.l	r9, @(dep_mutex,r8)
 
-17:	
+17:
 	/* Unlock the mutex.  */
 	mov.l	.Lmunlock1, r1
 	mov	#0, r5
@@ -137,14 +137,14 @@ __pthread_cond_timedwait:
 	mov.l	@(cond_nwaiters,r8), r0
 	add	r2, r0
 	mov.l	r0, @(cond_nwaiters,r8)
-	
+
 	/* Get and store current wakeup_seq value.  */
 	mov.l	@(wakeup_seq,r8), r10
 	mov.l	@(wakeup_seq+4,r8), r11
 	mov.l	@(broadcast_seq,r8), r0
 	mov.l	r0, @(4,r15)
 
-8:	
+8:
 	/* Get current time.  */
 #ifdef __NR_clock_gettime
 	/* Get the clock number.	 */
@@ -168,7 +168,7 @@ __pthread_cond_timedwait:
 .L__NR_clock_gettime:
 	.word	__NR_clock_gettime
 
-0:	
+0:
 #else
 	mov	r15, r4
 	add	#16, r4
@@ -240,7 +240,7 @@ __pthread_cond_timedwait:
 	mov	#FUTEX_WAIT, r0
 	or	r0, r5
 #endif
-99:	
+99:
 	mov.l	@(8,r15), r6
 	mov	r8, r4
 	add	#cond_futex, r4
@@ -364,15 +364,15 @@ __pthread_cond_timedwait:
 	mov	#FUTEX_WAKE, r0
 	or	r0, r5
 #endif
-99:	
+99:
 	mov	#1, r6
 	mov	#0, r7
 	mov	#SYS_futex, r3
 	extu.b	r3, r3
 	trapa	#0x14
 	SYSCALL_INST_PAD
-	
-25:	
+
+25:
 #if cond_lock != 0
 	DEC (@(cond_lock,r8), r2)
 #else
@@ -393,7 +393,7 @@ __pthread_cond_timedwait:
 	bf	18f
 	mov.l	@(24,r15), r0
 
-18:	
+18:
 	cfi_remember_state
 	add	#64, r15
 	cfi_adjust_cfa_offset (-64)
@@ -449,7 +449,7 @@ __pthread_cond_timedwait:
 	bf/s	99f
 	 mov	#LLL_PRIVATE, r6
 	mov	#LLL_SHARED, r6
-99:	
+99:
 	extu.b	r6, r6
 	mov.l	.Lwait2, r1
 	bsrf	r1
@@ -469,7 +469,7 @@ __pthread_cond_timedwait:
 	bf/s	99f
 	 mov	#LLL_PRIVATE, r5
 	mov	#LLL_SHARED, r5
-99:	
+99:
 	mov.l	.Lmwait2, r1
 	bsrf	r1
 	 extu.b	r5, r5
@@ -488,7 +488,7 @@ __pthread_cond_timedwait:
 	bf/s	99f
 	 mov	#LLL_PRIVATE, r6
 	mov	#LLL_SHARED, r6
-99:	
+99:
 	extu.b	r6, r6
 	mov.l	.Lwait3, r1
 	bsrf	r1
@@ -508,7 +508,7 @@ __pthread_cond_timedwait:
 	bf/s	99f
 	 mov	#LLL_PRIVATE, r5
 	mov	#LLL_SHARED, r5
-99:	
+99:
 	mov.l	.Lmwait3, r1
 	bsrf	r1
 	 extu.b	r5, r5
@@ -536,7 +536,7 @@ __pthread_cond_timedwait:
 	bf/s	99f
 	 mov	#LLL_PRIVATE, r5
 	mov	#LLL_SHARED, r5
-99:	
+99:
 	mov.l	.Lmwait4, r1
 	bsrf	r1
 	 extu.b	r5, r5
@@ -585,7 +585,7 @@ __condvar_tw_cleanup:
 	bf/s	99f
 	 mov	#LLL_PRIVATE, r6
 	mov	#LLL_SHARED, r6
-99:	
+99:
 	extu.b	r6, r6
 	mov.l	.Lwait5, r1
 	bsrf	r1
@@ -685,7 +685,7 @@ __condvar_tw_cleanup:
 	bf/s	99f
 	 mov	#LLL_PRIVATE, r5
 	mov	#LLL_SHARED, r5
-99:	
+99:
 	mov.l	.Lmwait5, r1
 	bsrf	r1
 	 extu.b	r5, r5

@@ -200,7 +200,7 @@ __pthread_cond_broadcast:
 	bf/s	99f
 	 mov	#LLL_PRIVATE, r6
 	mov	#LLL_SHARED, r6
-99:	
+99:
 	extu.b	r6, r6
 	mov.l	.Lwait5, r1
 	bsrf	r1
@@ -220,7 +220,7 @@ __pthread_cond_broadcast:
 	bf/s	99f
 	 mov	#LLL_PRIVATE, r5
 	mov	#LLL_SHARED, r5
-99:	
+99:
 	mov.l	.Lwake5, r1
 	bsrf	r1
 	 extu.b	r5, r5
@@ -239,7 +239,7 @@ __pthread_cond_broadcast:
 	bf/s	99f
 	 mov	#LLL_PRIVATE, r5
 	mov	#LLL_SHARED, r5
-99:	
+99:
 	mov.l	.Lwake6, r1
 	bsrf	r1
 	 extu.b	r5, r5
@@ -263,7 +263,7 @@ __pthread_cond_broadcast:
 	mov	#FUTEX_WAKE, r0
 	or	r0, r5
 #endif
-99:	
+99:
 	mov	#-1, r6
 	shlr	r6		/* r6 = 0x7fffffff */
 	mov	#0, r7

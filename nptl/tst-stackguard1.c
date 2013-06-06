@@ -190,7 +190,7 @@ do_test (void)
      the 16 runs, something is very wrong.  */
   int ndifferences = 0;
   int ndefaults = 0;
-  for (i = 0; i < N; ++i) 
+  for (i = 0; i < N; ++i)
     {
       if (child_stack_chk_guards[i] != child_stack_chk_guards[i+1])
 	ndifferences++;

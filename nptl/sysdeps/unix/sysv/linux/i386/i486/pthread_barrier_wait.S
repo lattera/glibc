@@ -114,7 +114,7 @@ pthread_barrier_wait:
 
 	cfi_adjust_cfa_offset(4)
 	cfi_offset(%ebx, -8)
-	
+
 	/* The necessary number of threads arrived.  */
 3:
 #if CURR_EVENT == 0

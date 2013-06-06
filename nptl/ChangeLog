@@ -1,3 +1,21 @@
+2013-06-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_barrier_wait.S: Remove
+	trailing whitespace.
+	* sysdeps/unix/sysv/linux/powerpc/pt-longjmp.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_barrier_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_broadcast.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_signal.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_once.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_rdlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_unlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h: Likewise.
+	* tst-mutexpp10.c: Likewise.
+	* tst-stackguard1.c: Likewise.
+
 2013-05-31  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makefile ($(objpfx)libpthread.so): Remove dependencies on libc
