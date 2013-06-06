@@ -1,3 +1,7 @@
+2013-06-05  Ondřej Bílka  <neleai@seznam.cz>
+
+	* posix/transbug.c: Likewise.
+
 2013-06-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* crypt/speeds.c: Remove trailing whitespace.
