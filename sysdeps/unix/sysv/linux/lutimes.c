@@ -45,7 +45,7 @@ lutimes (const char *file, const struct timeval tvp[2])
     }
 
   return INLINE_SYSCALL (utimensat, 4, AT_FDCWD, file, tvp ? ts : NULL,
-  			 AT_SYMLINK_NOFOLLOW);
+			 AT_SYMLINK_NOFOLLOW);
 #else
   __set_errno (ENOSYS);
   return -1;

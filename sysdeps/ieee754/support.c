@@ -354,16 +354,16 @@ double x,y;
 	static const n0=0,n1=1,n2=2,n3=3;
 #endif
 
-    	static const unsigned short mexp =0x7ff0, m25 =0x0190, m57 =0x0390;
+	static const unsigned short mexp =0x7ff0, m25 =0x0190, m57 =0x0390;
 	static const double zero=0.0;
 	double hy,y1,t,t1;
 	short k;
 	long n;
 	int i,e;
 	unsigned short xexp,yexp, *px  =(unsigned short *) &x  ,
-	      		nx,nf,	  *py  =(unsigned short *) &y  ,
-	      		sign,	  *pt  =(unsigned short *) &t  ,
-	      			  *pt1 =(unsigned short *) &t1 ;
+			nx,nf,	  *py  =(unsigned short *) &y  ,
+			sign,	  *pt  =(unsigned short *) &t  ,
+				  *pt1 =(unsigned short *) &t1 ;
 
 	xexp = px[n0] & mexp ;	/* exponent of x */
 	yexp = py[n0] & mexp ;	/* exponent of y */

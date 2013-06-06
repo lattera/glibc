@@ -433,10 +433,10 @@
     R##_f1 = (_t240 << (128 - (wfracbits - 1)))					\
 	     | ((_u240 & 0xffffff) >> ((wfracbits - 1) - 104));			\
     R##_f0 = ((_u240 & 0xffffff) << (168 - (wfracbits - 1)))			\
-    	     | ((_v240 & 0xffffff) << (144 - (wfracbits - 1)))			\
-    	     | ((_w240 & 0xffffff) << (120 - (wfracbits - 1)))			\
-    	     | ((_x240 & 0xffffff) >> ((wfracbits - 1) - 96))			\
-    	     | _y240;								\
+	     | ((_v240 & 0xffffff) << (144 - (wfracbits - 1)))			\
+	     | ((_w240 & 0xffffff) << (120 - (wfracbits - 1)))			\
+	     | ((_x240 & 0xffffff) >> ((wfracbits - 1) - 96))			\
+	     | _y240;								\
     resetfe;									\
   } while (0)
 

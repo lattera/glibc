@@ -215,7 +215,7 @@ __ieee754_expl (long double x)
 	  ex3_u.d = (result - ex2_u.d) - x22 * ex2_u.d;
 	  ex2_u.d = result;
 	  ex3_u.ieee.exponent += LDBL_MANT_DIG + 15 + IEEE854_LONG_DOUBLE_BIAS
-	  			 - ex2_u.ieee.exponent;
+				 - ex2_u.ieee.exponent;
 	  n_i = abs (ex3_u.d);
 	  n_i = (n_i + 1) / 2;
 	  fesetenv (&oldenv);

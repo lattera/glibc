@@ -128,7 +128,7 @@ __elf_preferred_address (struct link_map *loader, size_t maplength,
 	   _dl_loaded does not work for static binaries loading
 	   e.g. libnss_*.so.  */
 	if ((mapend >= high || l->l_type == lt_executable)
-  	    && high >= mapstart)
+	    && high >= mapstart)
 	  high = mapstart;
 	else if (mapend >= low && low >= mapstart)
 	  low = mapend;

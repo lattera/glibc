@@ -29,7 +29,7 @@
    gnu.author		empty if st_author==st_uid
 			uid_t giving st_author value
    gnu.translator	empty if no passive translator
-  			translator and arguments: "/hurd/foo\0arg1\0arg2\0"
+			translator and arguments: "/hurd/foo\0arg1\0arg2\0"
 */
 
 error_t

@@ -54,7 +54,7 @@ extern int hurd_register_ioctl_handler (int first_request, int last_request,
 
 #define	_HURD_HANDLE_IOCTLS_1(handler, first, last, moniker)		      \
   static const struct ioctl_handler handler##_ioctl_handler##moniker	      \
-  	__attribute__ ((__unused__)) =					      \
+	__attribute__ ((__unused__)) =					      \
     { _IOC_NOTYPE (first), _IOC_NOTYPE (last),				      \
 	(ioctl_handler_t) (handler), NULL };				      \
   text_set_element (_hurd_ioctl_handler_lists,				      \

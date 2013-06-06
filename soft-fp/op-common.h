@@ -992,28 +992,28 @@ do {									\
     case FP_CLS_NAN:							\
 	_FP_FRAC_COPY_##wc(R, X);					\
 	R##_s = X##_s;							\
-    	R##_c = FP_CLS_NAN;						\
-    	break;								\
+	R##_c = FP_CLS_NAN;						\
+	break;								\
     case FP_CLS_INF:							\
-    	if (X##_s)							\
-    	  {								\
-    	    R##_s = _FP_NANSIGN_##fs;					\
+	if (X##_s)							\
+	  {								\
+	    R##_s = _FP_NANSIGN_##fs;					\
 	    R##_c = FP_CLS_NAN; /* NAN */				\
 	    _FP_FRAC_SET_##wc(R, _FP_NANFRAC_##fs);			\
 	    FP_SET_EXCEPTION(FP_EX_INVALID);				\
-    	  }								\
-    	else								\
-    	  {								\
-    	    R##_s = 0;							\
-    	    R##_c = FP_CLS_INF; /* sqrt(+inf) = +inf */			\
-    	  }								\
-    	break;								\
+	  }								\
+	else								\
+	  {								\
+	    R##_s = 0;							\
+	    R##_c = FP_CLS_INF; /* sqrt(+inf) = +inf */			\
+	  }								\
+	break;								\
     case FP_CLS_ZERO:							\
 	R##_s = X##_s;							\
 	R##_c = FP_CLS_ZERO; /* sqrt(+-0) = +-0 */			\
 	break;								\
     case FP_CLS_NORMAL:							\
-    	R##_s = 0;							\
+	R##_s = 0;							\
         if (X##_s)							\
           {								\
 	    R##_c = FP_CLS_NAN; /* NAN */				\
@@ -1022,7 +1022,7 @@ do {									\
 	    FP_SET_EXCEPTION(FP_EX_INVALID);				\
 	    break;							\
           }								\
-    	R##_c = FP_CLS_NORMAL;						\
+	R##_c = FP_CLS_NORMAL;						\
         if (X##_e & 1)							\
           _FP_FRAC_SLL_##wc(X, 1);					\
         R##_e = X##_e >> 1;						\

@@ -30,8 +30,8 @@ ENTRY(__longjmp)
 	PTR_DEMANGLE (%g3, %g3, %g4)
 #endif
 	mov %o0, %g1		/* ENV in %g1 */
-     	orcc %o1, %g0, %g2	/* VAL in %g2 */
-     	be,a 0f			/* Branch if zero; else skip delay slot.  */
+	orcc %o1, %g0, %g2	/* VAL in %g2 */
+	be,a 0f			/* Branch if zero; else skip delay slot.  */
 	 mov 1, %g2		/* Delay slot only hit if zero: VAL = 1.  */
 0:
 	xor %fp, %g3, %o0

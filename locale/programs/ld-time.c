@@ -1040,7 +1040,7 @@ time_read (struct linereader *ldfile, struct localedef_t *result,
 		  time->cat[cnt] = "";					      \
 		  time->w##cat[cnt++] = empty_wstr;			      \
 		}							      \
-	      								      \
+									      \
 	      if (now->tok == tok_semicolon)				      \
 		{							      \
 		  now = lr_token (ldfile, charmap, result, repertoire,	      \

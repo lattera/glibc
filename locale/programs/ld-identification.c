@@ -144,7 +144,7 @@ No definition for %s category found"), "LC_IDENTIFICATION"));
     {									      \
       if (verbose && ! nothing)						      \
 	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),	      \
-			       	"LC_IDENTIFICATION", #cat));		      \
+				"LC_IDENTIFICATION", #cat));		      \
       identification->cat = "";						      \
     }
 

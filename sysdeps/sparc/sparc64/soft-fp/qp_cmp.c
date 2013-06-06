@@ -36,7 +36,7 @@ int _Qp_cmp(const long double *a, const long double *b)
   if (r == 3 && (FP_ISSIGNAN_Q(A) || FP_ISSIGNAN_Q(B)))
     FP_SET_EXCEPTION(FP_EX_INVALID);
   QP_HANDLE_EXCEPTIONS(
-  	__asm (
+	__asm (
 "	ldd [%0], %%f52\n"
 "	ldd [%0+8], %%f54\n"
 "	ldd [%1], %%f56\n"

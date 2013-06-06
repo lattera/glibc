@@ -45,7 +45,7 @@ double __nexttoward(double x, long double y)
 
 	if(((ix>=0x7ff00000)&&((ix-0x7ff00000)|lx)!=0) ||   /* x is nan */
 	   ((iy>=0x7ff0000000000000LL)&&((iy-0x7ff0000000000000LL)|uly)!=0))
-	   						    /* y is nan */
+							    /* y is nan */
 	   return x+y;
 	if((long double) x==y) return y;	/* x=y, return y */
 	if((ix|lx)==0) {			/* x == 0 */

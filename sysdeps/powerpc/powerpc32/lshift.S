@@ -19,7 +19,7 @@
 #include <sysdep.h>
 
 /* mp_limb_t mpn_lshift (mp_ptr wp, mp_srcptr up, mp_size_t usize,
-  			 unsigned int cnt)  */
+			 unsigned int cnt)  */
 
 EALIGN (__mpn_lshift, 3, 0)
 

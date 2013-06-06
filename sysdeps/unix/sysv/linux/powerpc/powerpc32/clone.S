@@ -30,7 +30,7 @@
    all the freaky stuff we have to do to make the call useful.  */
 
 /* int [r3] clone(int (*fn)(void *arg) [r3], void *child_stack [r4],
-   		  int flags [r5], void *arg [r6], void *parent_tid [r7],
+		  int flags [r5], void *arg [r6], void *parent_tid [r7],
 		  void *tls [r8], void *child_tid [r9]); */
 
 ENTRY (__clone)

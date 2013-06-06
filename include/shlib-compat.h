@@ -57,7 +57,7 @@
    the version set name to use for e.g. symbols first introduced into
    libm in the GLIBC_2.1 version.  Definitions of symbols with explicit
    versions should look like:
-   	versioned_symbol (libm, new_foo, foo, GLIBC_2_1);
+	versioned_symbol (libm, new_foo, foo, GLIBC_2_1);
    This will define the symbol `foo' with the appropriate default version,
    i.e. either GLIBC_2.1 or the "earliest version" specified in
    shlib-versions if that is newer.  */

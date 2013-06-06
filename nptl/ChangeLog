@@ -1,3 +1,8 @@
+2013-06-06   Ondřej Bílka  <neleai@seznam.cz>
+
+	* tst-cond22.c: Fix leading whitespaces.
+	* tst-umask1.c: Likewise.
+
 2013-06-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_barrier_wait.S: Remove

@@ -384,7 +384,7 @@ __printf_fphex (FILE *fp,
 		{
 		  wnumstr[cnt] = (wchar_t) info->spec;
 		  numstr[cnt] = info->spec;	/* This is tricky,
-		  				   think about it!  */
+						   think about it!  */
 		  break;
 		}
 	      else if (tolower (ch) < 'f')

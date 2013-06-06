@@ -46,7 +46,7 @@ libnss_files_hidden_proto (_nss_files_endnetgrent)
 	  status = NSS_STATUS_UNAVAIL;					      \
 	  goto the_end;							      \
 	}								      \
-      									      \
+									      \
       result->cursor = result->data + old_cursor;			      \
     }									      \
   while (0)

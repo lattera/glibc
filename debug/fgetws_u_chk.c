@@ -46,7 +46,7 @@ __fgetws_unlocked_chk (wchar_t *buf, size_t size, int n, _IO_FILE *fp)
   /* If we read in some bytes and errno is EAGAIN, that error will
      be reported for next read. */
   if (count == 0 || ((fp->_IO_file_flags & _IO_ERR_SEEN)
-  		     && errno != EAGAIN))
+		     && errno != EAGAIN))
     result = NULL;
   else if (count >= size)
     __chk_fail ();

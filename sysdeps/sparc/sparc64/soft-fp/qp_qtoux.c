@@ -34,7 +34,7 @@ unsigned long _Qp_qtoux(const long double *a)
   FP_TO_INT_Q(r, A, 64, -1);
   QP_HANDLE_EXCEPTIONS(
 	unsigned long rx;
-  	__asm (
+	__asm (
 "	ldd [%1], %%f52\n"
 "	ldd [%1+8], %%f54\n"
 "	fqtox %%f52, %%f60\n"

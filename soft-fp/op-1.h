@@ -233,7 +233,7 @@ do {							\
 	_nl = X##_f << (_FP_W_TYPE_SIZE - 1);				\
 	_nh = X##_f >> 1;						\
       }									\
-    									\
+									\
     udiv_qrnnd(_q, _r, _nh, _nl, _y);					\
     R##_f = _q | (_r != 0);						\
   } while (0)

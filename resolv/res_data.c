@@ -236,7 +236,7 @@ res_sendsigned(const u_char *buf, int buflen, ns_tsig_key *key,
 void
 res_close(void) {
 #ifdef _LIBC
-  	/*
+	/*
 	 * Some stupid programs out there call res_close() before res_init().
 	 * Since _res._vcsock isn't explicitly initialized, these means that
 	 * we could do a close(0), which might lead to some security problems.

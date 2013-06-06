@@ -65,7 +65,7 @@ work (const char *fname, int mask)
       if ((st.st_mode & mask) != 0)
 	{
 	  printf ("mask not successful after %s: %x still set\n",
-	      	  fcts[i].name, (unsigned int) (st.st_mode & mask));
+		  fcts[i].name, (unsigned int) (st.st_mode & mask));
 	  result = 1;
 	}
     }

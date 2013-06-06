@@ -382,15 +382,15 @@ realloc(old_base, new_size)
 void
 print_malloc_free_list()
 {
-  	register int i, size;
+	register int i, size;
 	register free_list_t fl;
 	register int n;
-  	register header_t h;
+	register header_t h;
 	int total_used = 0;
 	int total_free = 0;
 
 	fprintf(stderr, "      Size     In Use       Free      Total\n");
-  	for (i = 0, size = MIN_SIZE, fl = malloc_free_list;
+	for (i = 0, size = MIN_SIZE, fl = malloc_free_list;
 	     i < NBUCKETS;
 	     i += 1, size <<= 1, fl += 1) {
 		spin_lock(&fl->lock);
@@ -403,8 +403,8 @@ print_malloc_free_list()
 				size, fl->in_use, n, fl->in_use + n);
 		}
 		spin_unlock(&fl->lock);
-  	}
-  	fprintf(stderr, " all sizes %10d %10d %10d\n",
+	}
+	fprintf(stderr, " all sizes %10d %10d %10d\n",
 		total_used, total_free, total_used + total_free);
 }
 #endif	/* DEBUG */

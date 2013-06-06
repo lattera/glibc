@@ -33,7 +33,7 @@ ENTRY (_setjmp)
 	xorl %eax, %eax
 	movl JMPBUF(%esp), %edx
 
-     	/* Save registers.  */
+	/* Save registers.  */
 	movl %ebx, (JB_BX*4)(%edx)
 	movl %esi, (JB_SI*4)(%edx)
 	movl %edi, (JB_DI*4)(%edx)
@@ -41,13 +41,13 @@ ENTRY (_setjmp)
 #ifdef PTR_MANGLE
 	PTR_MANGLE (%ecx)
 #endif
-     	movl %ecx, (JB_SP*4)(%edx)
+	movl %ecx, (JB_SP*4)(%edx)
 	movl 0(%esp), %ecx	/* Save PC we are returning to now.  */
 	LIBC_PROBE (setjmp, 3, 4@%edx, -4@$0, 4@%ecx)
 #ifdef PTR_MANGLE
 	PTR_MANGLE (%ecx)
 #endif
-     	movl %ecx, (JB_PC*4)(%edx)
+	movl %ecx, (JB_PC*4)(%edx)
 	movl %ebp, (JB_BP*4)(%edx) /* Save caller's frame pointer.  */
 
 	movl %eax, JB_SIZE(%edx) /* No signal mask set.  */

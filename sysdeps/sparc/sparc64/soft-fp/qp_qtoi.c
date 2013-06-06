@@ -33,8 +33,8 @@ int _Qp_qtoi(const long double *a)
   FP_UNPACK_RAW_QP(A, a);
   FP_TO_INT_Q(r, A, 32, 1);
   QP_HANDLE_EXCEPTIONS(
-  	int rx;
-  	__asm (
+	int rx;
+	__asm (
 "	ldd [%1], %%f52\n"
 "	ldd [%1+8], %%f54\n"
 "	fqtoi %%f52, %%f31\n"

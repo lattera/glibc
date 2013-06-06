@@ -75,10 +75,10 @@ __mach_msg_destroy(msg)
 	mach_msg_body_t		*body;
 	mach_msg_descriptor_t	*saddr, *eaddr;
 
-    	body = (mach_msg_body_t *) (msg + 1);
-    	saddr = (mach_msg_descriptor_t *)
+	body = (mach_msg_body_t *) (msg + 1);
+	saddr = (mach_msg_descriptor_t *)
 			((mach_msg_base_t *) msg + 1);
-    	eaddr =  saddr + body->msgh_descriptor_count;
+	eaddr =  saddr + body->msgh_descriptor_count;
 
 	for  ( ; saddr < eaddr; saddr++) {
 	    switch (saddr->type.type) {

@@ -69,7 +69,7 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
       else
 	{
           /* It is a denormal number, meaning it has no implicit leading
-  	     one bit, and its exponent is in fact the format minimum.  */
+	     one bit, and its exponent is in fact the format minimum.  */
 	  int cnt;
 
 #if N == 2

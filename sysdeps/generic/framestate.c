@@ -44,7 +44,7 @@ __frame_state_for (void *pc, struct frame_state *frame_state)
 #ifndef __USING_SJLJ_EXCEPTIONS__
 	frame_state_for = fallback_frame_state_for;
 #else
-      	frame_state_for = abort;
+	frame_state_for = abort;
 #endif
     }
 

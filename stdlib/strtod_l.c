@@ -976,7 +976,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 		/* The exponent is too large/small to represent a valid
 		   number.  */
 		{
-	 	  FLOAT result;
+		  FLOAT result;
 
 		  /* We have to take care for special situation: a joker
 		     might have written "0.0e100000" which is in fact

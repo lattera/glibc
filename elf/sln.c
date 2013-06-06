@@ -176,13 +176,13 @@ makesymlink (src, dest)
       if (S_ISDIR (stats.st_mode))
 	{
 	  fprintf (stderr, _("%s: destination must not be a directory\n"),
-	  	   dest);
+		   dest);
 	  return 1;
 	}
       else if (unlink (dest) && errno != ENOENT)
 	{
 	  fprintf (stderr, _("%s: failed to remove the old destination\n"),
-	  	   dest);
+		   dest);
 	  return 1;
 	}
     }
@@ -205,7 +205,7 @@ makesymlink (src, dest)
 	  error = strerror (errno);
 	  unlink (dest);
 	  fprintf (stderr, _("Invalid link from \"%s\" to \"%s\": %s\n"),
-	  	   src, dest, error);
+		   src, dest, error);
 	  return 1;
 	}
       return 0;
@@ -214,7 +214,7 @@ makesymlink (src, dest)
     {
       error = strerror (errno);
       fprintf (stderr, _("Invalid link from \"%s\" to \"%s\": %s\n"),
-      	       src, dest, error);
+	       src, dest, error);
       return 1;
     }
 }

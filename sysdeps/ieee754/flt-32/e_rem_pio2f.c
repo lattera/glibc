@@ -145,11 +145,11 @@ int32_t __ieee754_rem_pio2f(float x, float *y)
 		    GET_FLOAT_WORD(high,y[0]);
 		    i = j-((high>>23)&0xff);
 		    if(i>25)  {	/* 3rd iteration need, 74 bits acc */
-		    	t  = r;	/* will cover all possible cases */
-		    	w  = fn*pio2_3;
-		    	r  = t-w;
-		    	w  = fn*pio2_3t-((t-r)-w);
-		    	y[0] = r-w;
+			t  = r;	/* will cover all possible cases */
+			w  = fn*pio2_3;
+			r  = t-w;
+			w  = fn*pio2_3t-((t-r)-w);
+			y[0] = r-w;
 		    }
 		}
 	    }

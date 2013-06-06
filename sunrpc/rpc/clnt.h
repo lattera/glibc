@@ -132,7 +132,7 @@ struct CLIENT {
   struct clnt_ops {
     enum clnt_stat (*cl_call) (CLIENT *, u_long, xdrproc_t, caddr_t, xdrproc_t,
 			       caddr_t, struct timeval);
-			       	/* call remote procedure */
+				/* call remote procedure */
     void (*cl_abort) (void);	/* abort a call */
     void (*cl_geterr) (CLIENT *, struct rpc_err *);
 				/* get specific error code */

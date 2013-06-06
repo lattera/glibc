@@ -104,9 +104,9 @@ recompute:
 	    if(q0>0) {		/* rare case: chance is 1 in 12 */
 	        switch(q0) {
 	        case 1:
-	    	   iq[jz-1] &= 0x7f; break;
-	    	case 2:
-	    	   iq[jz-1] &= 0x3f; break;
+		   iq[jz-1] &= 0x7f; break;
+		case 2:
+		   iq[jz-1] &= 0x3f; break;
 	        }
 	    }
 	    if(ih==2) {

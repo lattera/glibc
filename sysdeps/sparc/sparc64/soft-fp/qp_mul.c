@@ -36,8 +36,8 @@ void _Qp_mul(long double *c, const long double *a, const long double *b)
   FP_MUL_Q(C, A, B);
   FP_PACK_QP(c, C);
   QP_HANDLE_EXCEPTIONS(
-  	_FPU_SETCW(_fcw);
-  	__asm (
+	_FPU_SETCW(_fcw);
+	__asm (
 "	ldd [%1], %%f52\n"
 "	ldd [%1+8], %%f54\n"
 "	ldd [%2], %%f56\n"

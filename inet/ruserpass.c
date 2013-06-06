@@ -108,7 +108,7 @@ ruserpass(host, aname, apass)
 		   which is no improvement. This really should call
 		   getpwuid(getuid()).  */
 		/*hdir = ".";*/
-	  	return -1;
+		return -1;
 	}
 
 	buf = alloca (strlen (hdir) + 8);

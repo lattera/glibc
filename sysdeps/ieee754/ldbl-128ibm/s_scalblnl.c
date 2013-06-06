@@ -61,14 +61,14 @@ long double __scalblnl (long double x, long int n)
 	if (k > 0) {				/* normal result */
 	    hx = (hx&0x800fffffffffffffULL)|(k<<52);
 	    if ((lx & 0x7fffffffffffffffULL) == 0) { /* low part +-0 */
-	    	SET_LDOUBLE_WORDS64(x,hx,lx);
-	    	return x;
+		SET_LDOUBLE_WORDS64(x,hx,lx);
+		return x;
 	    }
 	    if (l == 0) { /* low part subnormal */
-	    	u.i = lx;
-	    	u.d *= two54;
-	    	lx = u.i;
-	    	l = ((lx>>52)&0x7ff) - 54;
+		u.i = lx;
+		u.d *= two54;
+		lx = u.i;
+		l = ((lx>>52)&0x7ff) - 54;
 	    }
 	    l = l + n;
 	    if (l > 0)
@@ -76,10 +76,10 @@ long double __scalblnl (long double x, long int n)
 	    else if (l <= -54)
 		lx = (lx&0x8000000000000000ULL);
 	    else {
-	    	l += 54;
-	    	u.i = (lx&0x800fffffffffffffULL)|(l<<52);
-	    	u.d *= twom54;
-	    	lx = u.i;
+		l += 54;
+		u.i = (lx&0x800fffffffffffffULL)|(l<<52);
+		u.d *= twom54;
+		lx = u.i;
 	    }
 	    SET_LDOUBLE_WORDS64(x,hx,lx);
 	    return x;
