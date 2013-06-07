@@ -2,7 +2,7 @@ comment_char    %
 escape_char     /
 % Urdu language locale for India.
 % Contributed by Pravin Satpute <psatpute@redhat.com> and
-% Mrs. Nasreen Khan 
+% Mrs. Nasreen Khan
 
 LC_IDENTIFICATION
 

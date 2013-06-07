@@ -2,7 +2,7 @@ comment_char %
 escape_char  /
 %
 % Amazigh Language Locale for Algeria (latin)
-% Source: 
+% Source:
 % Contact: Pablo Saratxaga
 % Email: <pablo@mandrakesoft.com>
 % Language: ber
@@ -47,8 +47,8 @@ END LC_IDENTIFICATION
 % TODO: fix LC_TIME, LC_MONETARY, LC_MESSAGES, LC_NAME, LC_ADDRESS
 
 LC_COLLATE
-% The latin amazigh alphabet is:       
-% <a>, <eps>, <b>, <b*>, <c>, <c<>, <d>, <d-.>, <e>, <f>, <g>, <g*>, <g(>, 
+% The latin amazigh alphabet is:
+% <a>, <eps>, <b>, <b*>, <c>, <c<>, <d>, <d-.>, <e>, <f>, <g>, <g*>, <g(>,
 % <h>, <h-.>, <i>, <j>, <k>, <k*>, <l>, <m>, <n>, <q>, <q*>, <gam>, <gam*>,
 % <r>, <r-.>, <s>, <s-.>, <t>, <t-.>, <u>, <w>, <x>, <x*>, <y>, <z>, <z-.>
 %
@@ -291,7 +291,7 @@ country_num 12
 %country_isbn ""
 %country_car ""
 lang_name "<U0074><U0061><U006D><U0061><U007A><U0069><U0067><U0068><U0074>"
-%lang_ab 
+%lang_ab
 lang_term "<U0062><U0065><U0072>"
 lang_lib "<U0062><U0065><U0072>"
 

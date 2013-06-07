@@ -16,7 +16,7 @@
 %     Aprhic Tech. CO., LTD. Big5 <==> Unicode mapping table.
 %
 % Irrevsible mapping Big5 characters (using %IRREVERSIBLE% notation):
-%     /xa2/xcc, /xa2/xce, /xf9/xe9, /xf9/xea, /xf9/xeb, 
+%     /xa2/xcc, /xa2/xce, /xf9/xe9, /xf9/xea, /xf9/xeb,
 %     /xf9/xf9, /xf9/xfa, /xf9/xfb, /xf9/xfc, /xf9/xfd
 %
 % alias BIG5-CP950

@@ -6,7 +6,7 @@ escape_char  /
 % Contact:	Reshat Sabiq
 % Email:	<tatar.iqtelif.i18n@gmail.com>
 % Language:	tt@iqtelif
-% Territory:	RU	
+% Territory:	RU
 % Revision:	0.1
 % Date:		2006-10-12
 % Application:	general
@@ -47,7 +47,7 @@ END LC_IDENTIFICATION
 
 LC_COLLATE
 % IQTElif:
-% <a>, <b>, <c>, <c,>, <d>, <e>, <f>, <g>, <g(>, <h>, 
+% <a>, <b>, <c>, <c,>, <d>, <e>, <f>, <g>, <g(>, <h>,
 % <i> (dotless i), <i.> (i with dot), <i'>, <j>, <k>, <l>, <m>, <n>, <n?>, <o>,
 % <o:>, <p>, <q>, <r>, <s>, <s,>, <t>, <u>, <u:>, <v>, <w>, <x>, <y>, <z>
 

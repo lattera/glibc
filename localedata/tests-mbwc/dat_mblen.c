@@ -80,11 +80,11 @@ TST_MBLEN tst_mblen_loc [] = {
       {	 { 1, "a",	   USE_MBCURMAX }, { 0,	1,  1 }	 },
       /* 03: a character + an invalid byte.  */
       {	 { 1, "Z\204",	   USE_MBCURMAX }, { 0,	1, +1 }	 },
-      /* 04: control/invalid characters.  */ 
+      /* 04: control/invalid characters.  */
       {	 { 1, "\177\000",  USE_MBCURMAX }, { 0,	1, +1 }	 },
-      /* 05: a null string.  */		     
+      /* 05: a null string.  */
       {	 { 1, "",	   USE_MBCURMAX }, { 0,	1,  0 }	 },
-      /* 06: a null pointer.  */	     
+      /* 06: a null pointer.  */
       {	 { 0, "",	   USE_MBCURMAX }, { 0,	0,  0 }	 },
       /* Last element.	*/
       {	 .is_last = 1 }
@@ -95,15 +95,15 @@ TST_MBLEN tst_mblen_loc [] = {
     {
       /* 01: a character.  */
       {	 { 1, "\264\301",	   USE_MBCURMAX }, { 0, 1,  2 }	 },
-      /* 02: a character.  */			     
+      /* 02: a character.  */
       {	 { 1, "\216\261",	   USE_MBCURMAX }, { 0, 1,  2 }  },
-      /* 03: a character + an invalid byte.  */	     
+      /* 03: a character + an invalid byte.  */
       {	 { 1, "\260\241\200",	   USE_MBCURMAX }, { 0, 1,  2 }	 },
       /* 04: control/invalid characters.  */
       {	 { 1, "\377\202",  USE_MBCURMAX }, { EILSEQ, 1, -1 }	 },
-      /* 05: a null string.  */		     
+      /* 05: a null string.  */
       {	 { 1, "",	   USE_MBCURMAX }, { 0,	1,  0 }	 },
-      /* 06: a null pointer.  */	     
+      /* 06: a null pointer.  */
       {	 { 0, "",	   USE_MBCURMAX }, { 0,	0,  0 }	 },
       /* Last element.	*/
       {	 .is_last = 1 }

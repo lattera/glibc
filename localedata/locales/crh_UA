@@ -11,7 +11,7 @@ escape_char  /
 % Date:		2009-08-16
 % Application:	general
 % Users:	general
-% Charset:	UTF-8 
+% Charset:	UTF-8
 % Distribution and use is free, also
 % for commercial purposes.
 
@@ -48,7 +48,7 @@ END LC_IDENTIFICATION
 
 LC_COLLATE
 % The new Crimean Tatar alphabet (Latin) is:
-% <a>, <b>, <c>, <c,>, <d>, <e>, <f>, <g>, <g(>, <h>, 
+% <a>, <b>, <c>, <c,>, <d>, <e>, <f>, <g>, <g(>, <h>,
 % <i> (dotless i), <i.> (i with dot), <j>, <k>, <l>, <m>, <n>, <n?>, <o>,
 % <o:>, <p>, <q>, <r>, <s>, <s,>, <t>, <u>, <u:>, <v>, <y>, <z>
 

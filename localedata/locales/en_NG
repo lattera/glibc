@@ -104,7 +104,7 @@ day         "<U0053><U0075><U006E><U0064><U0061><U0079>";/
             "<U0046><U0072><U0069><U0064><U0061><U0079>";/
             "<U0053><U0061><U0074><U0075><U0072><U0064><U0061><U0079>"
 
-% abmon - The abbreviations for the months 
+% abmon - The abbreviations for the months
 % - Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec
 abmon       "<U004A><U0061><U006E>";"<U0046><U0065><U0062>";/
             "<U004D><U0061><U0072>";"<U0041><U0070><U0072>";/
@@ -113,7 +113,7 @@ abmon       "<U004A><U0061><U006E>";"<U0046><U0065><U0062>";/
             "<U0053><U0065><U0070>";"<U004F><U0063><U0074>";/
             "<U004E><U006F><U0076>";"<U0044><U0065><U0063>"
 
-% mon - The full names of the months - 
+% mon - The full names of the months -
 % - January, February, March, April, May, June
 %   July, August, September, October, November, December
 mon         "<U004A><U0061><U006E><U0075><U0061><U0072><U0079>";/

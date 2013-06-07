@@ -2,7 +2,7 @@ escape_char /
 comment_char %
 %
 % Inupiaq language locale for Canada
-% Source: 
+% Source:
 % Contact: Pablo Saratxaga
 % Email: pablo@mandriva.com
 % Language: ik
@@ -43,7 +43,7 @@ END LC_IDENTIFICATION
 
 LC_COLLATE
 
-% Inupiaq uses the following extra letters: 
+% Inupiaq uses the following extra letters:
 % gdotabove, ldotbelow, lbarred, lbarreddotbelow (not in unicode,
 % has to be composed as lbarred+composingdotbelow), eng, ntilde
 %
@@ -82,10 +82,10 @@ collating-symbol  <eng>
 
 collating-symbol <CAP-MIN>
 collating-symbol <MIN-CAP>
- 
+
 reorder-after <MIN>
 <MIN-CAP>
- 
+
 reorder-after <CAP>
 <CAP-MIN>
 
@@ -142,7 +142,7 @@ reorder-after <U0053>
 <S-R>   <s-r-ik>;<PCT>;<CAP>;IGNORE
 <S-r>   <s-r-ik>;<PCT>;<CAP-MIN>;IGNORE
 
- 
+
 reorder-end
 
 END LC_COLLATE
@@ -162,7 +162,7 @@ END LC_NUMERIC
 LC_TELEPHONE
 copy "en_CA"
 END LC_TELEPHONE
- 
+
 LC_TIME
 abday       "<U004D><U0069><U006E>";"<U0053><U0061><U0076>";/
             "<U0049><U006C><U0061>";"<U0051><U0069><U0074>";/

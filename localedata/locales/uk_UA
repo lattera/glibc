@@ -5,7 +5,7 @@ escape_char  /
 % Copyright (C) 2006 Max Kutny <mkutny@gmail.com>
 %
 % Ukrainian Language Locale for Ukraine
-% Source: 
+% Source:
 % Contact: Volodymyr M. Lisivka
 % Email: v_lisivka@users.sourceforge.net
 % Contact: Max Kutny
@@ -118,7 +118,7 @@ translit_start
 %  transliteration into English.
 %
 % Ukrainian  English  Note  Example
-% letter     letter 
+% letter     letter
 %
 
 % <U0410>	<U0410>	-	<U0410><U043B><U0443><U0448><U0442><U0430> - Alushta
@@ -831,7 +831,7 @@ LC_NUMERIC
 % 0,001
 % 0,0001
 % 0,00001
-% 
+%
 %  1
 % -1
 %
@@ -954,7 +954,7 @@ abmon /
         "<U0432><U0435><U0440>"; %ver  /
         "<U0436><U043E><U0432>"; %zhov /
         "<U043B><U0438><U0441>"; %lys  /
-        "<U0433><U0440><U0443>"  %hru 
+        "<U0433><U0440><U0443>"  %hru
 
 % A list of month names in proper form for calendar, see alt_digits. (%B)
 mon /
@@ -969,7 +969,7 @@ mon /
         "<U0432><U0435><U0440><U0435><U0441><U0435><U043D><U044C>"; %veresen` /
         "<U0436><U043E><U0432><U0442><U0435><U043D><U044C>";  %zhovten` /
         "<U043B><U0438><U0441><U0442><U043E><U043F><U0430><U0434>"; %lystopad /
-        "<U0433><U0440><U0443><U0434><U0435><U043D><U044C>"   %hruden` 
+        "<U0433><U0440><U0443><U0434><U0435><U043D><U044C>"   %hruden`
 
 % Initially alt_digits was supposed to hold alternative symbols for _digits_,
 % corresponding to %O modified conversion specification.
@@ -1057,7 +1057,7 @@ timezone "<U0437><U002E><U0447><U002E><U002D><U0030><U0032><U003A><U0030><U0030>
 % pt  +2++9+16 23 30       6 13 20 27
 % *sb* *3*10*17*24*31*     *7*14*21+28+
 % +nd+ +4+11+18+25+    +1+ +8+15+22+29+
-% 
+%
 % + - means red color
 % * - means bold font
 %
@@ -1083,12 +1083,12 @@ LC_TELEPHONE
 
 % Format of a telephone number for international use.
 %
-% a area code without nationwide prefix (prefix is often <0>). 
-% A area code including nationwide prefix (prefix is often <0>). 
-% l local number (within area code). 
-% e extension (to local number) 
-% c country code 
-% C alternate carrier service code used for dialling abroad 
+% a area code without nationwide prefix (prefix is often <0>).
+% A area code including nationwide prefix (prefix is often <0>).
+% l local number (within area code).
+% e extension (to local number)
+% c country code
+% C alternate carrier service code used for dialling abroad
 % t Insert a <space> if the previous descriptor's value was not an empty
 %  string; otherwise ignore.
 %
@@ -1152,10 +1152,10 @@ LC_NAME
 % FIXME:
 %  to make proper salutation, we must change person name and middle name
 %  to proper forms (klychna forma), but this is imposible without
-%  ispell-like rules. 
+%  ispell-like rules.
 %  Now I use regular form, like in Russian (sic!) langauge.
 
-% Field descriptors for the <name_fmt> keyword: 
+% Field descriptors for the <name_fmt> keyword:
 % f - family name
 % F - family name in uppercase
 % g - first given name
@@ -1244,27 +1244,27 @@ LC_ADDRESS
 % Means:
 %  vul. Hranychna 7 - street and building
 %  s. Bohdashiv - village name (s. - selo)
-%  Zdolbunivs`koho rajonu - in region of town Zdolbuniv (rajon) 
+%  Zdolbunivs`koho rajonu - in region of town Zdolbuniv (rajon)
 
 
-% n Person's name, possibly constructed with the LC_NAME <name_fmt> keyword. 
-% a Care of person, or organization. 
-% f Firm name. 
-% d Department name. 
-% b Building name. 
-% s Street or block (eg. Japanese) name. 
-% h House number or designation. 
+% n Person's name, possibly constructed with the LC_NAME <name_fmt> keyword.
+% a Care of person, or organization.
+% f Firm name.
+% d Department name.
+% b Building name.
+% s Street or block (eg. Japanese) name.
+% h House number or designation.
 % N Insert an <end-of-line> if the previous descriptor s value was not an empty
 % string; otherwise ignore.
 % t Insert a <space> if the previous descriptor s value was not an empty string;
 % otherwise ignore.
-% r Room number, door designation. 
-% e Floor number. 
-% C Country designation, from the <country_post> keyword. 
-% l Local township within town or city 
-% z Zip number, postal code. 
-% T Town, city. 
-% S State, province, or prefecture. 
+% r Room number, door designation.
+% e Floor number.
+% C Country designation, from the <country_post> keyword.
+% l Local township within town or city
+% z Zip number, postal code.
+% T Town, city.
+% S State, province, or prefecture.
 % c Country, as taken from data record.
 %
 % Each field descriptor may have an <R> after the <%> to specify that the
@@ -1276,10 +1276,10 @@ LC_ADDRESS
 %postal_fmt "<U0025><U0061><U0025><U0074><U0025><U006E><U0025><U0074><U0025><U0066><U0025><U0074><U0025><U0064><U0025><U004E><U0025><U0073><U0025><U0074><U0025><U0068><U0025><U0074><U002C><U0020><U0025><U0062><U0025><U0074><U0025><U0065><U0025><U0074><U0025><U0072><U0025><U004E><U0025><U006C><U0025><U0074><U0025><U0054><U0025><U0074><U0025><U0053><U0025><U004E><U0025><U007A><U0025><U004E><U0025><U0063>"
 postal_fmt "<U0025><U0061><U0025><U0074><U0025><U0066><U0025><U0074><U0025><U0064><U0025><U004E><U0025><U0073><U0025><U0074><U0025><U0068><U0025><U0074><U002C><U0020><U0025><U0062><U0025><U0074><U0025><U0065><U0025><U0074><U0025><U0072><U0025><U004E><U0025><U0054><U0025><U0074><U0025><U0053><U0025><U004E><U0025><U007A><U0025><U004E><U0025><U0063>"
 
-% Giving: 
+% Giving:
 %
-% Care of person Person's name Firm Department 
-% Street Number, Building Floor Room 
+% Care of person Person's name Firm Department
+% Street Number, Building Floor Room
 % Town City State
 % Zip
 % Country

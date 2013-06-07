@@ -5,7 +5,7 @@
 % source: Iranian standard ISIRI 3342 (1993)
 % author: Pablo Saratxaga, and Roozbeh Pournader
 % email: pablo@mandrakesoft.com, roozbeh@sina.sharif.ac.ir
- 
+
 % I think the mnemonic for upper space (0xA0) should be different from
 % lower space (0x20). Because the semantics are different, although they
 % are mapped to a single Unicode character. This is specially important
@@ -23,7 +23,7 @@
 % </>f>, <kf>, <yf>, <)/>+>, <<(+>, <!)+>, <(!+>, <<<+>, </>/>+>, <*+>,
 % <!!+>, and <////+>. Also, all character sequences
 % <NU>..<US>, <SP>, <DT> have counter-parts <NU+>..<US+>, <SP+>, <DT+>
- 
+
 CHARMAP
 <U0000>     /x00         NULL (NUL)
 <U0001>     /x01         START OF HEADING (SOH)

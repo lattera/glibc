@@ -2,8 +2,8 @@ comment_char %
 escape_char  /
 %
 % Filipino Language Locale for Philippines
-% Source: 
-% Contact: Rene Torres, Pablo Saratxaga 
+% Source:
+% Contact: Rene Torres, Pablo Saratxaga
 % Email: <rgtorre@rocketmail.com>, <pablo@mandrakesoft.com>
 % Language: fil
 % Territory: PH
@@ -73,7 +73,7 @@ reorder-after <U006E>
 <U00F1> <ntilde>;<TIL>;<MIN>;IGNORE
 <n-g>	<n-g-ph>;<PCT>;<MIN>;IGNORE
 <n-G>	<n-g-ph>;<PCT>;<MIN-CAP>;IGNORE
-reorder-after <U004E> 
+reorder-after <U004E>
 <U00D1> <ntilde>;<TIL>;<CAP>;IGNORE
 <N-G>	<n-g-ph>;<PCT>;<CAP>;IGNORE
 <N-g>	<n-g-ph>;<PCT>;<CAP-MIN>;IGNORE

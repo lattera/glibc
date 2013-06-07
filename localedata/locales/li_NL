@@ -2,7 +2,7 @@ comment_char %
 escape_char  /
 % Distribution and use is
 
-LC_IDENTIFICATION 
+LC_IDENTIFICATION
 title "Limburgish Language Locale for the Netherlands"
 source "information from Kenneth Christiansen"
 address ""

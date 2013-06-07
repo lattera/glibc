@@ -3,7 +3,7 @@ escape_char  /
 % charset "ISO_8859-1:1987"
 % Distribution and use is
 
-LC_IDENTIFICATION 
+LC_IDENTIFICATION
 title "Sater Frisian and North Frisian Locale for Germany"
 source "information from Kenneth Christiansen"
 address ""

@@ -54,8 +54,8 @@ reorder-after <d_ha>
 <d_shra>
 
 reorder-after <U0939>
-<dv_ksha> <d_ksha>;<BAS>;<MIN>;IGNORE 
-<dv_dnya> <d_dnya>;<BAS>;<MIN>;IGNORE 
+<dv_ksha> <d_ksha>;<BAS>;<MIN>;IGNORE
+<dv_dnya> <d_dnya>;<BAS>;<MIN>;IGNORE
 <dv_shra> <d_shra>;<BAS>;<MIN>;IGNORE
 
 reorder-end

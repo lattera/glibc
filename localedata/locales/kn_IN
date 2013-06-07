@@ -51,7 +51,7 @@ map to_inpunct; /
   (<U0036>,<U0CEC>); /
   (<U0037>,<U0CED>); /
   (<U0038>,<U0CEE>); /
-  (<U0039>,<U0CEF>); 
+  (<U0039>,<U0CEF>);
 
 translit_start
 include  "translit_combining";""

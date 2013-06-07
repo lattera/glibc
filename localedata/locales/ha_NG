@@ -2,7 +2,7 @@ escape_char /
 comment_char %
 %
 % Hausa language locale for Nigeria
-% Source: 
+% Source:
 % Contact: Pablo Saratxaga
 % Email: pablo@mandriva.com
 % Language: ha
@@ -72,7 +72,7 @@ collating-element <'1y> from "<U0027><U0079>"
 collating-element <'1Y> from "<U0027><U0059>"
 collating-element <'2y> from "<U2019><U0079>"
 collating-element <'2Y> from "<U2019><U0059>"
-collating-symbol  <rtilde> 
+collating-symbol  <rtilde>
 collating-element <r?>  from "<U0072><U0303>"
 collating-element <R?>  from "<U0052><U0303>"
 collating-symbol  <bcurl>
@@ -81,10 +81,10 @@ collating-symbol  <kcurl>
 
 collating-symbol <CAP-MIN>
 collating-symbol <MIN-CAP>
- 
+
 reorder-after <MIN>
 <MIN-CAP>
- 
+
 reorder-after <CAP>
 <CAP-MIN>
 
@@ -165,7 +165,7 @@ END LC_NUMERIC
 LC_TELEPHONE
 copy "en_NG"
 END LC_TELEPHONE
- 
+
 LC_TIME
 % Lah, Lit, Tal, Lar, Alh, Jum, Asa
 % maybe "Lhd" "Lrb" => "Lh"/"Lb" on 2letter tables?
@@ -188,7 +188,7 @@ abmon       "<U004A><U0061><U006E>";"<U0046><U0061><U0062>";/
             "<U0059><U0075><U006C>";"<U0041><U0067><U0075>";/
             "<U0053><U0061><U0074>";"<U004F><U006B><U0074>";/
             "<U004E><U0075><U0077>";"<U0044><U0069><U0073>"
-% Janairu, Fabrairu, Maris, Afrilu, Mayu, Yuni, 
+% Janairu, Fabrairu, Maris, Afrilu, Mayu, Yuni,
 % Yuli, Agusta, Satumba, Oktoba, Nuwamba, Disamba
 mon         "<U004A><U0061><U006E><U0061><U0069><U0072><U0075>";/
             "<U0046><U0061><U0062><U0072><U0061><U0069><U0072><U0075>";/

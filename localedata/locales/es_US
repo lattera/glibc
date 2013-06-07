@@ -86,7 +86,7 @@ reorder-after <U0063>
 <c-H>	<ch>;<BAS>;<MIN-CAP>;IGNORE
 <c-h>	<ch>;<BAS>;<MIN>;IGNORE
 
-reorder-after <U0043> 
+reorder-after <U0043>
 <C-H>	<ch>;<BAS>;<CAP>;IGNORE
 <C-h>	<ch>;<BAS>;<CAP-MIN>;IGNORE
 
@@ -97,7 +97,7 @@ reorder-after <U006C>
 <l-L>	<ll>;<BAS>;<MIN-CAP>;IGNORE
 <l-l>	<ll>;<BAS>;<MIN>;IGNORE
 
-reorder-after <U004C> 
+reorder-after <U004C>
 <L-L>	<ll>;<BAS>;<CAP>;IGNORE
 <L-l>	<ll>;<BAS>;<CAP-MIN>;IGNORE
 

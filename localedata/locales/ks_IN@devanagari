@@ -1,7 +1,7 @@
 comment_char    %
 escape_char     /
 % Kashmiri(devanagari) language locale for India.
-% Contributed by Rakesh Pandit <rakesh.pandit@gmail.com> and 
+% Contributed by Rakesh Pandit <rakesh.pandit@gmail.com> and
 % Pravin Satpute <psatpute@redhat.com>
 
 LC_IDENTIFICATION

@@ -1,3 +1,47 @@
+2013-06-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* charmaps/BIG5: Remove trailing whitespace.
+	* charmaps/IBM866NAV: Likewise.
+	* charmaps/ISIRI-3342: Likewise.
+	* charmaps/ISO_8859-1,GL: Likewise.
+	* locales/ber_DZ: Likewise.
+	* locales/bn_BD: Likewise.
+	* locales/crh_UA: Likewise.
+	* locales/en_NG: Likewise.
+	* locales/es_US: Likewise.
+	* locales/fil_PH: Likewise.
+	* locales/fy_DE: Likewise.
+	* locales/gu_IN: Likewise.
+	* locales/ha_NG: Likewise.
+	* locales/hi_IN: Likewise.
+	* locales/ig_NG: Likewise.
+	* locales/ik_CA: Likewise.
+	* locales/iu_CA: Likewise.
+	* locales/kn_IN: Likewise.
+	* locales/ks_IN@devanagari: Likewise.
+	* locales/li_BE: Likewise.
+	* locales/li_NL: Likewise.
+	* locales/mg_MG: Likewise.
+	* locales/ml_IN: Likewise.
+	* locales/mr_IN: Likewise.
+	* locales/nso_ZA: Likewise.
+	* locales/or_IN: Likewise.
+	* locales/pa_IN: Likewise.
+	* locales/ro_RO: Likewise.
+	* locales/shs_CA: Likewise.
+	* locales/so_ET: Likewise.
+	* locales/ta_IN: Likewise.
+	* locales/te_IN: Likewise.
+	* locales/tk_TM: Likewise.
+	* locales/tt_RU@iqtelif: Likewise.
+	* locales/uk_UA: Likewise.
+	* locales/ur_IN: Likewise.
+	* locales/uz_UZ: Likewise.
+	* locales/uz_UZ@cyrillic: Likewise.
+	* locales/yo_NG: Likewise.
+	* tests-mbwc/dat_mblen.c: Likewise.
+	* tests-mbwc/dat_towctrans.c: Likewise.
+
 2013-04-27  Nik Kalach  <nikka@fedoraproject.org>
 
 	[BZ #15221]

@@ -90,7 +90,7 @@ include "translit_combining";""
 <U044A> ""               % hard sign omitted
 <U044B> "<U0079>"        % yeru -> y
 <U044C> ""               % soft sign omitted.
-<U044D> "<U0065>"        % je=  -> e 
+<U044D> "<U0065>"        % je=  -> e
 <U04D9> "<U00E4>"        % sw=  -> a:
 <U044E> "<U00FD><U0075>" % ju   -> y'u
 <U044F> "<U00FD><U0061>" % ja   -> y'a
@@ -130,7 +130,7 @@ include "translit_combining";""
 <U042A> ""               % hard sign omitted
 <U042B> "<U0059>"        % yeru -> y
 <U042C> ""               % soft sign omitted.
-<U042D> "<U0045>"        % je=  -> e 
+<U042D> "<U0045>"        % je=  -> e
 <U04D8> "<U00C4>"        % sw=  -> a:
 <U042E> "<U00DD><U0075>" % ju   -> y'u
 <U042F> "<U00DD><U0061>" % ja   -> y'a
@@ -152,7 +152,7 @@ LC_COLLATE
 % <a=>, <b=>, <v=>, <g=>, <d=>, <e=>, <io>, <z%>, <z%,=>, <z=>, <i=>,
 % <j=>, <k=>, <l=>, <m=>, <n=>, <n,=>, <o=>, <o-=>, <p=>, <r=>, <s=>,
 % <t=>, <u=>, <u'=>, <f=>, <h=>, <c=>, <c%>, <s%>, <='>, <y=>, <%'>,
-% <je>, <sw=>, <ju>, <ja> 
+% <je>, <sw=>, <ju>, <ja>
 %
 copy "iso14651_t1"
 

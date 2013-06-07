@@ -2,7 +2,7 @@ escape_char /
 comment_char %
 %
 % Yoruba language locale for Nigeria
-% Source: 
+% Source:
 % Contact: Pablo Saratxaga
 % Email: pablo@mandriva.com
 % Language: yo
@@ -52,7 +52,7 @@ LC_COLLATE
 % * m and n may be nazalization marks when they follow a vowel;
 %   or they can be vocalic, in such case they get the three
 %   tones, and middle tone is marked with a macron
-% * a same vowel with following up/down or down/up tones 
+% * a same vowel with following up/down or down/up tones
 %   may be written with respectively a circumflex or a caron,
 %   eg: áà = â, àá = ǎ
 % * old orthography also has tilde on vowels, but is deprecated
@@ -165,7 +165,7 @@ collating-element <u<> from "<U0075><U030C>"
 
 collating-symbol <CAP-MIN>
 collating-symbol <MIN-CAP>
- 
+
 reorder-after <BAS>
 <ACA>
 <MAC>
@@ -173,7 +173,7 @@ reorder-after <BAS>
 
 reorder-after <MIN>
 <MIN-CAP>
- 
+
 reorder-after <CAP>
 <CAP-MIN>
 
@@ -370,7 +370,7 @@ END LC_NUMERIC
 LC_TELEPHONE
 copy "en_NG"
 END LC_TELEPHONE
- 
+
 LC_TIME
 % SUN, MON, TUE, WED, THU, FRI, SAT
 abday       "<U0053><U0055><U004E>";"<U004D><U004F><U004E>";/

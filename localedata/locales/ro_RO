@@ -115,9 +115,9 @@ copy "i18n"
 
 %
 % Transliteration is _currently_ a good idea as most fonts/applications do not
-% have the correct diacritics for "t comma bellow" (U021A, U021B) and 
+% have the correct diacritics for "t comma bellow" (U021A, U021B) and
 % "s comma bellow" (U0218, U0219). Thus we currently use and compromise with
-% "t cedilla" (U0162, U0163) - which, actually, does not belong to any 
+% "t cedilla" (U0162, U0163) - which, actually, does not belong to any
 % language - and "s cedilla" (U015E, U015F) - which is _not_ correct for
 % Romanian, but is correct for Turkish.
 %
@@ -197,11 +197,11 @@ abday   "<U0044><U0075>";"<U004C><U0075>";"<U004D><U0061>";"<U004D><U0069>";/
 % Because in 1992 the Romanian Academy stated that within words the
 % writing of the letter i> (i circumflex - U00EE) should be replaced
 % by a> (acircumflex - U00E2), we use the post92 writing.
-% Note: The actual rule is more complex, but the case which applies for 
+% Note: The actual rule is more complex, but the case which applies for
 % Satruday is covered by the exposed explanation above.
 %
 % Day names are not capitalized:
-% duminic<abreve>, luni, mar<tcomma>i, 
+% duminic<abreve>, luni, mar<tcomma>i,
 % miercuri, joi, vineri,
 % s<acircumflex>mb<abreve>t<abreve>
 %
@@ -247,7 +247,7 @@ mon     "<U0069><U0061><U006E><U0075><U0061><U0072><U0069><U0065>";/
         "<U006E><U006F><U0069><U0065><U006D><U0062><U0072><U0069><U0065>";/
         "<U0064><U0065><U0063><U0065><U006D><U0062><U0072><U0069><U0065>"
 % Appropriate date and time representation (%c)
-% Romania uses daylight saving and the names of the time zones are 
+% Romania uses daylight saving and the names of the time zones are
 % not widely known nor used
 %	"%a %d %b %Y %T %z"
 d_t_fmt "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020>/
@@ -296,7 +296,7 @@ END LC_MEASUREMENT
 LC_NAME
 % Format of a name, taken from the glibc locale for Ukrainian.
 % %f Family names.
-% %F Family names in uppercase. 
+% %F Family names in uppercase.
 % %g First given name.
 % %G First given initial.
 % %l First given name with Latin letters.
@@ -337,23 +337,23 @@ LC_ADDRESS
 
 % %n Person's name, possibly constructed with the LC_NAME
 %    "name_fmt" keyword. (it appears to be invalid)
-% %a Care of person, or organization. 
-% %f Firm name. 
-% %d Department name. 
-% %b Building name. 
-% %s Street or block (eg. Japanese) name. 
-% %h House number or designation. 
+% %a Care of person, or organization.
+% %f Firm name.
+% %d Department name.
+% %b Building name.
+% %s Street or block (eg. Japanese) name.
+% %h House number or designation.
 % %N Insert an <end-of-line> if the previous descriptor
 %    value was not an empty string; otherwise ignore.
 % %t Insert a <space> if the previous descriptor value
 %    was not an empty string; otherwise ignore.
-% %r Room number, door designation. 
-% %e Floor number. 
-% %C Country designation, from the <country_post> keyword. 
+% %r Room number, door designation.
+% %e Floor number.
+% %C Country designation, from the <country_post> keyword.
 % %l Local township within town or city. (it appears to be invalid)
-% %z Zip number, postal code. 
-% %T Town, city. 
-% %S State, province, or prefecture. 
+% %z Zip number, postal code.
+% %T Town, city.
+% %S State, province, or prefecture.
 % %c Country, as taken from data record.
 %
 % FIXME: it appears that %n and %l are not working; correct form is:

@@ -3,10 +3,10 @@
 <escape_char> /
 % Obtained by editing IBM866 charmap  (Alexander Vidybida)
 %
-% Corresponds to Ukrainian texts produced with "keyrus" screen and 
+% Corresponds to Ukrainian texts produced with "keyrus" screen and
 % keyboard driver under DOS
 %
-% Corresponds to file `cp866nav.def' from the 
+% Corresponds to file `cp866nav.def' from the
 % standard LaTeX `Cyrillic Bundle' except of codes /xfd, /xfe
 
 % alias CP866NAV
