@@ -29,8 +29,8 @@ __stpcpy_chk (dest, src, destlen)
      const char *src;
      size_t destlen;
 {
-  register char *d = dest;
-  register const char *s = src;
+  char *d = dest;
+  const char *s = src;
 
   do
     {

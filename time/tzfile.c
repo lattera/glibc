@@ -104,10 +104,10 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
 {
   static const char default_tzdir[] = TZDIR;
   size_t num_isstd, num_isgmt;
-  register FILE *f;
+  FILE *f;
   struct tzhead tzhead;
   size_t chars;
-  register size_t i;
+  size_t i;
   size_t total_size;
   size_t types_idx;
   size_t leaps_idx;
@@ -630,7 +630,7 @@ __tzfile_compute (time_t timer, int use_localtime,
 		  long int *leap_correct, int *leap_hit,
 		  struct tm *tp)
 {
-  register size_t i;
+  size_t i;
 
   if (use_localtime)
     {

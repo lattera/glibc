@@ -20,9 +20,9 @@
 
 wchar_t *
 wmemchr (s, c, n)
-     register const wchar_t *s;
-     register wchar_t c;
-     register size_t n;
+     const wchar_t *s;
+     wchar_t c;
+     size_t n;
 {
   /* For performance reasons unfold the loop four times.  */
   while (n >= 4)

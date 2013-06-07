@@ -178,9 +178,9 @@ Dprintf(msg, num)
 static struct hostent *
 getanswer (const querybuf *answer, int anslen, const char *qname, int qtype)
 {
-	register const HEADER *hp;
-	register const u_char *cp;
-	register int n;
+	const HEADER *hp;
+	const u_char *cp;
+	int n;
 	const u_char *eom, *erdata;
 	char *bp, **ap, **hap;
 	int type, class, buflen, ancount, qdcount;
@@ -409,7 +409,7 @@ getanswer (const querybuf *answer, int anslen, const char *qname, int qtype)
 				continue;
 			}
 			if (!haveanswer) {
-				register int nn;
+				int nn;
 
 				host.h_name = bp;
 				nn = strlen(bp) + 1;	/* for the \0 */
@@ -514,7 +514,7 @@ gethostbyname2(name, af)
 	  u_char *ptr;
 	} buf;
 	querybuf *origbuf;
-	register const char *cp;
+	const char *cp;
 	char *bp;
 	int n, size, type, len;
 	struct hostent *ret;
@@ -653,10 +653,10 @@ gethostbyaddr(addr, len, af)
 	  u_char *ptr;
 	} buf;
 	querybuf *orig_buf;
-	register struct hostent *hp;
+	struct hostent *hp;
 	char qbuf[MAXDNAME+1], *qp = NULL;
 #ifdef SUNSECURITY
-	register struct hostent *rhp;
+	struct hostent *rhp;
 	char **haddr;
 	u_long old_options;
 	char hname2[MAXDNAME+1];
@@ -807,7 +807,7 @@ struct hostent *
 _gethtent()
 {
 	char *p;
-	register char *cp, **q;
+	char *cp, **q;
 	int af, len;
 
 	if (!hostf && !(hostf = fopen(_PATH_HOSTS, "rce" ))) {
@@ -888,8 +888,8 @@ _gethtbyname2(name, af)
 	const char *name;
 	int af;
 {
-	register struct hostent *p;
-	register char **cp;
+	struct hostent *p;
+	char **cp;
 
 	_sethtent(0);
 	while ((p = _gethtent())) {
@@ -913,7 +913,7 @@ _gethtbyaddr(addr, len, af)
 	size_t len;
 	int af;
 {
-	register struct hostent *p;
+	struct hostent *p;
 
 	_sethtent(0);
 	while ((p = _gethtent()))

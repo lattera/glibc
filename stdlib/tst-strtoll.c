@@ -312,14 +312,14 @@ static void expand (char *dst, int c);
 int
 main (void)
 {
-  register const struct ltest *lt;
+  const struct ltest *lt;
   char *ep;
   int status = 0;
   int save_errno;
 
   for (lt = tests; lt->str != NULL; ++lt)
     {
-      register long long int l;
+      long long int l;
 
       errno = 0;
       l = strtoll (lt->str, &ep, lt->base);
@@ -352,7 +352,7 @@ main (void)
 
   for (++lt; lt->str != NULL; lt++)
     {
-      register unsigned long long int ul;
+      unsigned long long int ul;
 
       errno = 0;
       ul = strtoull (lt->str, &ep, lt->base);

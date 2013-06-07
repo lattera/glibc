@@ -1263,7 +1263,7 @@ libc_hidden_def (glob)
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
 void
 globfree (pglob)
-     register glob_t *pglob;
+     glob_t *pglob;
 {
   if (pglob->gl_pathv != NULL)
     {
@@ -1303,7 +1303,7 @@ collated_compare (const void *a, const void *b)
 static int
 prefix_array (const char *dirname, char **array, size_t n)
 {
-  register size_t i;
+  size_t i;
   size_t dirlen = strlen (dirname);
 #if defined __MSDOS__ || defined WINDOWS32
   int sep_char = '/';
@@ -1362,7 +1362,7 @@ __glob_pattern_type (pattern, quote)
      const char *pattern;
      int quote;
 {
-  register const char *p;
+  const char *p;
   int ret = 0;
 
   for (p = pattern; *p != '\0'; ++p)

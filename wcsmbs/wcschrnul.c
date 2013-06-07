@@ -21,8 +21,8 @@
 /* Find the first occurrence of WC in WCS.  */
 wchar_t *
 __wcschrnul (wcs, wc)
-     register const wchar_t *wcs;
-     register const wchar_t wc;
+     const wchar_t *wcs;
+     const wchar_t wc;
 {
   while (*wcs != L'\0')
     if (*wcs == wc)

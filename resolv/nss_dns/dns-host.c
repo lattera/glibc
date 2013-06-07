@@ -601,7 +601,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
     char *h_addr_ptrs[0];
   } *host_data;
   int linebuflen;
-  register const HEADER *hp;
+  const HEADER *hp;
   const u_char *end_of_message, *cp;
   int n, ancount, qdcount;
   int haveanswer, had_error;
@@ -920,7 +920,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	    }
 	  if (!haveanswer)
 	    {
-	      register int nn;
+	      int nn;
 
 	      /* We compose a single hostent out of the entire chain of
 	         entries, so the TTL of the hostent is essentially the lowest

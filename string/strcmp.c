@@ -28,8 +28,8 @@ strcmp (p1, p2)
      const char *p1;
      const char *p2;
 {
-  register const unsigned char *s1 = (const unsigned char *) p1;
-  register const unsigned char *s2 = (const unsigned char *) p2;
+  const unsigned char *s1 = (const unsigned char *) p1;
+  const unsigned char *s2 = (const unsigned char *) p2;
   unsigned char c1, c2;
 
   do

@@ -9,8 +9,8 @@ typedef struct _Buffer {
 } Buffer;
 
 void InitBuffer (Buffer *b);
-void AppendToBuffer (register Buffer *b, const char *str, register int len);
-void ReadFile (register Buffer *buffer, FILE *input);
+void AppendToBuffer (Buffer *b, const char *str, int len);
+void ReadFile (Buffer *buffer, FILE *input);
 
 #define INIT_BUFFER_SIZE 10000
 
@@ -23,9 +23,9 @@ void InitBuffer(b)
 }
 
 void AppendToBuffer(b, str, len)
-     register Buffer *b;
+     Buffer *b;
      const char *str;
-     register int len;
+     int len;
 {
   while (b->used + len > b->room) {
     b->buff = (char *)realloc(b->buff, 2*b->room*(sizeof(char)));
@@ -36,11 +36,11 @@ void AppendToBuffer(b, str, len)
 }
 
 void ReadFile(buffer, input)
-     register Buffer *buffer;
+     Buffer *buffer;
      FILE *input;
 {
   char       buf[BUFSIZ + 1];
-  register int        bytes;
+  int        bytes;
 
   buffer->used = 0;
   while (!feof(input) && (bytes = fread(buf, 1, BUFSIZ, input)) > 0) {

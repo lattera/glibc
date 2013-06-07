@@ -112,8 +112,8 @@ __add_to_environ (name, value, combined, replace)
      const char *combined;
      int replace;
 {
-  register char **ep;
-  register size_t size;
+  char **ep;
+  size_t size;
   const size_t namelen = strlen (name);
   const size_t vallen = value != NULL ? strlen (value) + 1 : 0;
 

@@ -1,3 +1,11 @@
+2013-06-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ia64/bits/byteswap-16.h [__GNUC__ && __GNUC__ >= 2]
+	(__bswap_16): Do not use "register".
+	* sysdeps/ia64/bits/byteswap.h [__GNUC__ && __GNUC__ >= 2]
+	(__bswap_32): Likewise.
+	[__GNUC__ && __GNUC__ >= 2] (__bswap_64): Likewise.
+
 2013-05-22  Edjunior Barbosa Machado  <emachado@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h (siginfo_t): Add

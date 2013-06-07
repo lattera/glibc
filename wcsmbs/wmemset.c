@@ -25,7 +25,7 @@ wmemset (s, c, n)
      wchar_t c;
      size_t n;
 {
-  register wchar_t *wp = s;
+  wchar_t *wp = s;
 
   while (n >= 4)
     {

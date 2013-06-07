@@ -44,7 +44,7 @@ in_addr_t
 inet_lnaof(in)
 	struct in_addr in;
 {
-	register u_int32_t i = ntohl(in.s_addr);
+	u_int32_t i = ntohl(in.s_addr);
 
 	if (IN_CLASSA(i))
 		return ((i)&IN_CLASSA_HOST);

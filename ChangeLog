@@ -1,3 +1,148 @@
+2013-06-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* bits/byteswap.h [__GNUC__ && !__GNUC_PREREQ (4, 3)]
+	(__bswap_32): Do not use "register".
+	* crypt/crypt.c (_ufc_doit_r): Likewise.
+	* debug/stpcpy_chk.c (__stpcpy_chk): Likewise.
+	* debug/wcscat_chk.c (__wcscat_chk): Likewise.
+	* gmon/gmon.c (__monstartup): Likewise.
+	* gmon/mcount.c (_MCOUNT_DECL(frompc, selfpc)): Likewise.
+	* hurd/hurdmalloc.c (more_memory): Likewise.
+	(malloc): Likewise.
+	(free): Likewise.
+	(realloc): Likewise.
+	(malloc_fork_prepare): Likewise.
+	(malloc_fork_parent): Likewise.
+	(malloc_fork_child): Likewise.
+	* include/rpc/auth_des.h (xdr_authdes_verf): Likewise.
+	(_svcauth_des): Likewise.
+	* inet/inet_lnaof.c (inet_lnaof): Likewise.
+	* inet/inet_net.c (inet_network): Likewise.
+	* inet/inet_netof.c (inet_netof): Likewise.
+	* inet/rcmd.c (__validuser2_sa): Likewise.
+	* io/fts.c (fts_open): Likewise.
+	(fts_load): Likewise.
+	(fts_close): Likewise.
+	(fts_read): Likewise.
+	(fts_children): Likewise.
+	(fts_build): Likewise.
+	(fts_stat): Likewise.
+	(fts_sort): Likewise.
+	(fts_alloc): Likewise.
+	(fts_lfree): Likewise.
+	* libio/fileops.c (_IO_new_file_xsputn): Likewise.
+	(_IO_file_xsgetn): Likewise.
+	(_IO_file_xsgetn_mmap): Likewise.
+	* libio/iofopncook.c (_IO_cookie_read): Likewise.
+	(_IO_cookie_write): Likewise.
+	* libio/oldfileops.c (_IO_old_file_xsputn): Likewise.
+	* libio/wfileops.c (_IO_wfile_xsputn): Likewise.
+	* mach/msgserver.c (__mach_msg_server_timeout): Likewise.
+	* malloc/obstack.c (_obstack_begin): Likewise.
+	(_obstack_begin_1): Likewise.
+	(_obstack_newchunk): Likewise.
+	(_obstack_allocated_p): Likewise.
+	(obstack_free): Likewise.
+	(_obstack_memory_used): Likewise.
+	* misc/getttyent.c (getttynam): Likewise.
+	(getttyent): Likewise.
+	(skip): Likewise.
+	(value): Likewise.
+	* misc/getusershell.c (initshells): Likewise.
+	* misc/syslog.c (__vsyslog_chk): Likewise.
+	* misc/ttyslot.c (ttyslot): Likewise.
+	* nis/nis_hash.c (__nis_hash): Likewise.
+	* posix/fnmatch_loop.c (FCT): Likewise.
+	* posix/getconf.c (print_all): Likewise.
+	(main): Likewise.
+	* posix/getopt.c (exchange): Likewise.
+	* posix/glob.c (globfree): Likewise.
+	(prefix_array): Likewise.
+	(__glob_pattern_type): Likewise.
+	* resolv/arpa/nameser.h (NS_GET16): Likewise.
+	(NS_GET32): Likewise.
+	(NS_PUT16): Likewise.
+	(NS_PUT32): Likewise.
+	* resolv/gethnamaddr.c (getanswer): Likewise.
+	(gethostbyname2): Likewise.
+	(gethostbyaddr): Likewise.
+	(_gethtent): Likewise.
+	(_gethtbyname2): Likewise.
+	(_gethtbyaddr): Likewise.
+	* resolv/ns_print.c (dst_s_get_int16): Likewise.
+	* resolv/nss_dns/dns-host.c (getanswer_r): Likewise.
+	* resolv/res_init.c (__res_vinit): Likewise.
+	(net_mask): Likewise.
+	* resolv/res_mkquery.c (outchar): Likewise.
+	(PRINT): Likewise.
+	* stdio-common/printf_fp.c (outchar): Likewise.
+	(PRINT): Likewise.
+	* stdio-common/printf_fphex.c (outchar): Likewise.
+	(PRINT): Likewise.
+	* stdio-common/printf_size.c (outchar): Likewise.
+	(PRINT): Likewise.
+	* stdio-common/test_rdwr.c (main): Likewise.
+	* stdio-common/tfformat.c (matches): Likewise.
+	* stdio-common/vfprintf.c (outchar): Likewise.
+	(printf_unknown): Likewise.
+	(buffered_vfprintf): Likewise.
+	* stdio-common/vfscanf.c (_IO_vfscanf_internal): Likewise.
+	* stdio-common/xbug.c (AppendToBuffer): Likewise.
+	(ReadFile): Likewise.
+	* stdlib/qsort.c (SWAP): Likewise.
+	(_quicksort): Likewise.
+	* stdlib/setenv.c (__add_to_environ): Likewise.
+	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Likewise.
+	* stdlib/strtol_l.c (__strtol_l): Likewise.
+	* stdlib/tst-strtod.c (main): Likewise.
+	* stdlib/tst-strtol.c (main): Likewise.
+	* stdlib/tst-strtoll.c (main): Likewise.
+	* string/bits/string2.h (__strcmp_cc): Likewise.
+	(__strcmp_cg): Likewise.
+	(__strcspn_c1): Likewise.
+	(__strcspn_c2): Likewise.
+	(__strcspn_c3): Likewise.
+	(__strspn_c1): Likewise.
+	(__strspn_c2): Likewise.
+	(__strspn_c3): Likewise.
+	(__strsep_1c): Likewise.
+	(__strsep_2c): Likewise.
+	(__strsep_3c): Likewise.
+	* string/memccpy.c (__memccpy): Likewise.
+	* string/stpcpy.c (__stpcpy): Likewise.
+	* string/strcmp.c (strcmp): Likewise.
+	* string/strrchr.c (strrchr): Likewise.
+	* sysdeps/generic/sigset-cvt-mask.h (sigset_get_old_mask):
+	Likewise.
+	* sysdeps/mach/hurd/getcwd.c
+	(_hurd_canonicalize_directory_name_internal): Likewise.
+	* sysdeps/mach/i386/sysdep.h (SNARF_ARGS): Likewise.
+	* sysdeps/powerpc/powerpc32/power6/wcschr.c (wcschr): Likewise.
+	* sysdeps/powerpc/powerpc32/power6/wcsrchr.c (wcsrchr): Likewise.
+	* sysdeps/x86/bits/byteswap-16.h [__GNUC__] (__bswap_16):
+	Likewise, in both definitions.
+	* sysdeps/x86/bits/byteswap.h (__bswap_32): Likewise, in multiple
+	definitions.
+	[__GNUC_PREREQ (2, 0) && !__GNUC_PREREQ (4, 3) && __WORDSIZE ==
+	64] (__bswap_64): Likewise.
+	* time/test_time.c (main): Likewise.
+	* time/tzfile.c (__tzfile_read): Likewise.
+	(__tzfile_compute): Likewise.
+	* time/tzset.c (__tzset_parse_tz): Likewise.
+	(tzset_internal): Likewise.
+	(compute_change): Likewise.
+	* wcsmbs/wcscat.c (__wcscat): Likewise.
+	* wcsmbs/wcschr.c (wcschr): Likewise.
+	* wcsmbs/wcschrnul.c (__wcschrnul): Likewise.
+	* wcsmbs/wcscspn.c (wcscspn): Likewise.
+	* wcsmbs/wcspbrk.c (wcspbrk): Likewise.
+	* wcsmbs/wcsrchr.c (wcsrchr): Likewise.
+	* wcsmbs/wcsspn.c (wcsspn): Likewise.
+	* wcsmbs/wcsstr.c (wcsstr): Likewise.
+	* wcsmbs/wmemchr.c (wmemchr): Likewise.
+	* wcsmbs/wmemcmp.c (WMEMCMP): Likewise.
+	* wcsmbs/wmemset.c (wmemset): Likewise.
+
 2013-06-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/config.guess: Update to version 2013-05-16.

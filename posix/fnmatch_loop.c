@@ -47,8 +47,8 @@ FCT (pattern, string, string_end, no_leading_period, flags, ends, alloca_used)
      struct STRUCT *ends;
      size_t alloca_used;
 {
-  register const CHAR *p = pattern, *n = string;
-  register UCHAR c;
+  const CHAR *p = pattern, *n = string;
+  UCHAR c;
 #ifdef _LIBC
 # if WIDE_CHAR_VERSION
   const char *collseq = (const char *)
@@ -237,7 +237,7 @@ FCT (pattern, string, string_end, no_leading_period, flags, ends, alloca_used)
 	    /* Nonzero if the sense of the character class is inverted.  */
 	    const CHAR *p_init = p;
 	    const CHAR *n_init = n;
-	    register int not;
+	    int not;
 	    CHAR cold;
 	    UCHAR fn;
 

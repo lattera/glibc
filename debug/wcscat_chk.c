@@ -23,8 +23,8 @@
 wchar_t *
 __wcscat_chk (wchar_t *dest, const wchar_t *src, size_t destlen)
 {
-  register wchar_t *s1 = dest;
-  register const wchar_t *s2 = src;
+  wchar_t *s1 = dest;
+  const wchar_t *s2 = src;
   wchar_t c;
 
   /* Find the end of the string.  */

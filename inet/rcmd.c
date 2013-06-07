@@ -769,8 +769,8 @@ __validuser2_sa(hostf, ra, ralen, luser, ruser, rhost)
 	size_t ralen;
 	const char *luser, *ruser, *rhost;
 {
-    register const char *user;
-    register char *p;
+    const char *user;
+    char *p;
     int hcheck, ucheck;
     char *buf = NULL;
     size_t bufsize = 0;

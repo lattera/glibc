@@ -171,10 +171,10 @@ malloc_init (void)
 static void
 more_memory(int size, free_list_t fl)
 {
-	register int amount;
-	register int n;
+	int amount;
+	int n;
 	vm_address_t where;
-	register header_t h;
+	header_t h;
 	kern_return_t r;
 
 	if (size <= vm_page_size) {
@@ -203,11 +203,11 @@ more_memory(int size, free_list_t fl)
 /* Declaration changed to standard one for GNU.  */
 void *
 malloc(size)
-	register size_t size;
+	size_t size;
 {
-	register int i, n;
-	register free_list_t fl;
-	register header_t h;
+	int i, n;
+	free_list_t fl;
+	header_t h;
 
 	if ((int) size < 0)		/* sanity check */
 		return 0;
@@ -272,9 +272,9 @@ void
 free(base)
 	void *base;
 {
-	register header_t h;
-	register free_list_t fl;
-	register int i;
+	header_t h;
+	free_list_t fl;
+	int i;
 
 	if (base == 0)
 		return;
@@ -322,9 +322,9 @@ realloc(old_base, new_size)
         void *old_base;
         size_t new_size;
 {
-	register header_t h;
-	register free_list_t fl;
-	register int i;
+	header_t h;
+	free_list_t fl;
+	int i;
 	unsigned int old_size;
 	char *new_base;
 
@@ -382,10 +382,10 @@ realloc(old_base, new_size)
 void
 print_malloc_free_list()
 {
-	register int i, size;
-	register free_list_t fl;
-	register int n;
-	register header_t h;
+	int i, size;
+	free_list_t fl;
+	int n;
+	header_t h;
 	int total_used = 0;
 	int total_free = 0;
 
@@ -416,7 +416,7 @@ malloc_fork_prepare(void)
  * malloc critical section.
  */
 {
-    register int i;
+    int i;
 
     for (i = 0; i < NBUCKETS; i++) {
 	spin_lock(&malloc_free_list[i].lock);
@@ -429,7 +429,7 @@ malloc_fork_parent(void)
  * Called in the parent process after a fork() to resume normal operation.
  */
 {
-    register int i;
+    int i;
 
     for (i = NBUCKETS-1; i >= 0; i--) {
 	spin_unlock(&malloc_free_list[i].lock);
@@ -442,7 +442,7 @@ malloc_fork_child(void)
  * Called in the child process after a fork() to resume normal operation.
  */
 {
-    register int i;
+    int i;
 
     for (i = NBUCKETS-1; i >= 0; i--) {
 	spin_unlock(&malloc_free_list[i].lock);

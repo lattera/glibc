@@ -907,7 +907,7 @@ _IO_wfile_xsputn (f, data, n)
      const void *data;
      _IO_size_t n;
 {
-  register const wchar_t *s = (const wchar_t *) data;
+  const wchar_t *s = (const wchar_t *) data;
   _IO_size_t to_do = n;
   int must_flush = 0;
   _IO_size_t count;
@@ -925,7 +925,7 @@ _IO_wfile_xsputn (f, data, n)
       count = f->_wide_data->_IO_buf_end - f->_wide_data->_IO_write_ptr;
       if (count >= n)
 	{
-	  register const wchar_t *p;
+	  const wchar_t *p;
 	  for (p = s + n; p > s; )
 	    {
 	      if (*--p == L'\n')
@@ -955,8 +955,8 @@ _IO_wfile_xsputn (f, data, n)
 	}
       else
 	{
-	  register wchar_t *p = f->_wide_data->_IO_write_ptr;
-	  register int i = (int) count;
+	  wchar_t *p = f->_wide_data->_IO_write_ptr;
+	  int i = (int) count;
 	  while (--i >= 0)
 	    *p++ = *s++;
 	  f->_wide_data->_IO_write_ptr = p;

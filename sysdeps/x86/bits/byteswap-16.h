@@ -24,7 +24,7 @@
 # if __GNUC__ >= 2
 #  define __bswap_16(x) \
      (__extension__							      \
-      ({ register unsigned short int __v, __x = (unsigned short int) (x);     \
+      ({ unsigned short int __v, __x = (unsigned short int) (x);	      \
 	 if (__builtin_constant_p (__x))				      \
 	   __v = __bswap_constant_16 (__x);				      \
 	 else								      \
@@ -37,7 +37,7 @@
 /* This is better than nothing.  */
 #  define __bswap_16(x) \
      (__extension__							      \
-      ({ register unsigned short int __x = (unsigned short int) (x);	      \
+      ({ unsigned short int __x = (unsigned short int) (x);		      \
 	 __bswap_constant_16 (__x); }))
 # endif
 #else

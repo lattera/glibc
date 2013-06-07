@@ -104,9 +104,9 @@ res_nmkquery(res_state statp,
 	     u_char *buf,		/* buffer to put query */
 	     int buflen)		/* size of buffer */
 {
-	register HEADER *hp;
-	register u_char *cp;
-	register int n;
+	HEADER *hp;
+	u_char *cp;
+	int n;
 	u_char *dnptrs[20], **dpp, **lastdnptr;
 
 #ifdef DEBUG

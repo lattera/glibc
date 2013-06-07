@@ -48,7 +48,7 @@ __bswap_32 (unsigned int __bsx)
 # else
 #  define __bswap_32(x) \
   (__extension__							      \
-   ({ register unsigned int __bsx = (x); __bswap_constant_32 (__bsx); }))
+   ({ unsigned int __bsx = (x); __bswap_constant_32 (__bsx); }))
 # endif
 #else
 static __inline unsigned int

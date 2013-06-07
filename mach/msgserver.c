@@ -78,8 +78,8 @@ __mach_msg_server_timeout (boolean_t (*demux) (mach_msg_header_t *request,
 			   mach_msg_option_t option,
 			   mach_msg_timeout_t timeout)
 {
-  register mig_reply_header_t *request, *reply;
-  register mach_msg_return_t mr;
+  mig_reply_header_t *request, *reply;
+  mach_msg_return_t mr;
 
   if (max_size == 0)
     {

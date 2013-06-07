@@ -38,7 +38,7 @@
 #if defined __GNUC__ && __GNUC__ >= 2
 # define __bswap_32(x) \
      (__extension__							      \
-      ({ register unsigned int __v, __x = (x);				      \
+      ({ unsigned int __v, __x = (x);					      \
 	 if (__builtin_constant_p (x))					      \
 	   __v = __bswap_constant_32 (__x);				      \
 	 else								      \
@@ -70,7 +70,7 @@ __bswap_32 (unsigned int __bsx)
 
 # define __bswap_64(x) \
      (__extension__							      \
-      ({ register unsigned long int __v, __x = (x);			      \
+      ({ unsigned long int __v, __x = (x);				      \
 	 if (__builtin_constant_p (x))					      \
 	   __v = __bswap_constant_64 (__x);				      \
 	 else								      \

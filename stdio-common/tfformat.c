@@ -4050,7 +4050,7 @@ sprint_double_type sprint_doubles[] =
 int required_precision = 13;
 
 static int
-matches (register char *result, register const char *desired)
+matches (char *result, const char *desired)
 {
     int digits_seen = 0;
     for (;; result++, desired++) {

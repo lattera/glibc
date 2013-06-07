@@ -935,7 +935,7 @@ dst_s_id_calc(const u_char *key, const int keysize)
 static u_int16_t
 dst_s_get_int16(const u_char *buf)
 {
-	register u_int16_t a = 0;
+	u_int16_t a = 0;
 	a = ((u_int16_t)(buf[0] << 8)) | ((u_int16_t)(buf[1]));
 	return (a);
 }

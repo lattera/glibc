@@ -28,7 +28,7 @@
 #define SNARF_ARGS(entry_sp, argc, argv, envp)				      \
   do									      \
     {									      \
-      register char **p;						      \
+      char **p;								      \
       argc = (int) *entry_sp;						      \
       argv = (char **) (entry_sp + 1);					      \
       p = argv;								      \

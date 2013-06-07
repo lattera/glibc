@@ -229,7 +229,7 @@ __vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
 	/* Output to stderr if requested. */
 	if (LogStat & LOG_PERROR) {
 		struct iovec iov[2];
-		register struct iovec *v = iov;
+		struct iovec *v = iov;
 
 		v->iov_base = buf + msgoff;
 		v->iov_len = bufsize - msgoff;

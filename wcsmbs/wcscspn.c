@@ -26,7 +26,7 @@ wcscspn (wcs, reject)
      const wchar_t *wcs;
      const wchar_t *reject;
 {
-  register size_t count = 0;
+  size_t count = 0;
 
   while (*wcs != L'\0')
     if (wcschr (reject, *wcs++) == NULL)

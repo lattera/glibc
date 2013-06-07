@@ -22,10 +22,10 @@
 /* Find the first occurrence of WC in WCS.  */
 wchar_t *
 wcschr (wcs, wc)
-     register const wchar_t *wcs;
-     register const wchar_t wc;
+     const wchar_t *wcs;
+     const wchar_t wc;
 {
-  register const wchar_t *wcs2 = wcs + 1;
+  const wchar_t *wcs2 = wcs + 1;
 
   if (*wcs == wc)
     return (wchar_t *) wcs;

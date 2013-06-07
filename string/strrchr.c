@@ -23,7 +23,7 @@
 char *
 strrchr (const char *s, int c)
 {
-  register const char *found, *p;
+  const char *found, *p;
 
   c = (unsigned char) c;
 

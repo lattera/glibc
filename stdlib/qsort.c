@@ -29,8 +29,8 @@
 #define SWAP(a, b, size)						      \
   do									      \
     {									      \
-      register size_t __size = (size);					      \
-      register char *__a = (a), *__b = (b);				      \
+      size_t __size = (size);						      \
+      char *__a = (a), *__b = (b);					      \
       do								      \
 	{								      \
 	  char __tmp = *__a;						      \
@@ -89,7 +89,7 @@ void
 _quicksort (void *const pbase, size_t total_elems, size_t size,
 	    __compar_d_fn_t cmp, void *arg)
 {
-  register char *base_ptr = (char *) pbase;
+  char *base_ptr = (char *) pbase;
 
   const size_t max_thresh = MAX_THRESH * size;
 
@@ -206,7 +206,7 @@ _quicksort (void *const pbase, size_t total_elems, size_t size,
     char *const end_ptr = &base_ptr[size * (total_elems - 1)];
     char *tmp_ptr = base_ptr;
     char *thresh = min(end_ptr, base_ptr + max_thresh);
-    register char *run_ptr;
+    char *run_ptr;
 
     /* Find smallest element in first threshold and place it at the
        array's beginning.  This is the smallest array element,

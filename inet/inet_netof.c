@@ -43,7 +43,7 @@ in_addr_t
 inet_netof(in)
 	struct in_addr in;
 {
-	register u_int32_t i = ntohl(in.s_addr);
+	u_int32_t i = ntohl(in.s_addr);
 
 	if (IN_CLASSA(i))
 		return (((i)&IN_CLASSA_NET) >> IN_CLASSA_NSHIFT);

@@ -87,12 +87,12 @@ static int      fts_safe_changedir (FTS *, FTSENT *, int, const char *)
 FTS *
 fts_open(argv, options, compar)
 	char * const *argv;
-	register int options;
+	int options;
 	int (*compar) (const FTSENT **, const FTSENT **);
 {
-	register FTS *sp;
-	register FTSENT *p, *root;
-	register int nitems;
+	FTS *sp;
+	FTSENT *p, *root;
+	int nitems;
 	FTSENT *parent = NULL;
 	FTSENT *tmp;
 
@@ -204,10 +204,10 @@ static void
 internal_function
 fts_load(sp, p)
 	FTS *sp;
-	register FTSENT *p;
+	FTSENT *p;
 {
-	register int len;
-	register char *cp;
+	int len;
+	char *cp;
 
 	/*
 	 * Load the stream structure for the next traversal.  Since we don't
@@ -231,7 +231,7 @@ int
 fts_close(sp)
 	FTS *sp;
 {
-	register FTSENT *freep, *p;
+	FTSENT *freep, *p;
 	int saved_errno;
 
 	/*
@@ -283,11 +283,11 @@ fts_close(sp)
 
 FTSENT *
 fts_read(sp)
-	register FTS *sp;
+	FTS *sp;
 {
-	register FTSENT *p, *tmp;
-	register int instr;
-	register char *t;
+	FTSENT *p, *tmp;
+	int instr;
+	char *t;
 	int saved_errno;
 
 	/* If finished or unrecoverable error, return NULL. */
@@ -495,10 +495,10 @@ fts_set(sp, p, instr)
 
 FTSENT *
 fts_children(sp, instr)
-	register FTS *sp;
+	FTS *sp;
 	int instr;
 {
-	register FTSENT *p;
+	FTSENT *p;
 	int fd;
 
 	if (instr != 0 && instr != FTS_NAMEONLY) {
@@ -578,12 +578,12 @@ fts_children(sp, instr)
 static FTSENT *
 internal_function
 fts_build(sp, type)
-	register FTS *sp;
+	FTS *sp;
 	int type;
 {
-	register struct dirent *dp;
-	register FTSENT *p, *head;
-	register int nitems;
+	struct dirent *dp;
+	FTSENT *p, *head;
+	int nitems;
 	FTSENT *cur, *tail;
 	DIR *dirp;
 	void *oldaddr;
@@ -848,12 +848,12 @@ static u_short
 internal_function
 fts_stat(sp, p, follow)
 	FTS *sp;
-	register FTSENT *p;
+	FTSENT *p;
 	int follow;
 {
-	register FTSENT *t;
-	register dev_t dev;
-	register ino_t ino;
+	FTSENT *t;
+	dev_t dev;
+	ino_t ino;
 	struct stat *sbp, sb;
 	int saved_errno;
 
@@ -933,9 +933,9 @@ internal_function
 fts_sort(sp, head, nitems)
 	FTS *sp;
 	FTSENT *head;
-	register int nitems;
+	int nitems;
 {
-	register FTSENT **ap, *p;
+	FTSENT **ap, *p;
 
 	/*
 	 * Construct an array of pointers to the structures and call qsort(3).
@@ -973,7 +973,7 @@ fts_alloc(sp, name, namelen)
 	const char *name;
 	size_t namelen;
 {
-	register FTSENT *p;
+	FTSENT *p;
 	size_t len;
 
 	/*
@@ -1009,9 +1009,9 @@ fts_alloc(sp, name, namelen)
 static void
 internal_function
 fts_lfree(head)
-	register FTSENT *head;
+	FTSENT *head;
 {
-	register FTSENT *p;
+	FTSENT *p;
 
 	/* Free a linked list of structures. */
 	while ((p = head)) {

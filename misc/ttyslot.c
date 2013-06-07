@@ -40,9 +40,9 @@ static char sccsid[] = "@(#)ttyslot.c	8.1 (Berkeley) 6/4/93";
 int
 ttyslot()
 {
-	register struct ttyent *ttyp;
-	register int slot;
-	register char *p;
+	struct ttyent *ttyp;
+	int slot;
+	char *p;
 	int cnt;
 	size_t buflen = __sysconf (_SC_TTY_NAME_MAX) + 1;
 	char *name;

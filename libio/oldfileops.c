@@ -689,7 +689,7 @@ _IO_old_file_xsputn (f, data, n)
      const void *data;
      _IO_size_t n;
 {
-  register const char *s = (char *) data;
+  const char *s = (char *) data;
   _IO_size_t to_do = n;
   int must_flush = 0;
   _IO_size_t count = 0;
@@ -706,7 +706,7 @@ _IO_old_file_xsputn (f, data, n)
       count = f->_IO_buf_end - f->_IO_write_ptr;
       if (count >= n)
 	{
-	  register const char *p;
+	  const char *p;
 	  for (p = s + n; p > s; )
 	    {
 	      if (*--p == '\n')
@@ -738,8 +738,8 @@ _IO_old_file_xsputn (f, data, n)
 	}
       else
 	{
-	  register char *p = f->_IO_write_ptr;
-	  register int i = (int) count;
+	  char *p = f->_IO_write_ptr;
+	  int i = (int) count;
 	  while (--i >= 0)
 	    *p++ = *s++;
 	  f->_IO_write_ptr = p;

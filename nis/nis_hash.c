@@ -30,11 +30,11 @@
  * OZ's original sdbm hash
  */
 uint32_t
-__nis_hash (const void *keyarg, register size_t len)
+__nis_hash (const void *keyarg, size_t len)
 {
-  register const u_char *key;
-  register size_t loop;
-  register uint32_t h;
+  const u_char *key;
+  size_t loop;
+  uint32_t h;
 
 #define HASHC   h = *key++ + 65599 * h
 

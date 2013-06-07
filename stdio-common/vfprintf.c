@@ -147,7 +147,7 @@
 #define	outchar(Ch)							      \
   do									      \
     {									      \
-      register const INT_T outc = (Ch);					      \
+      const INT_T outc = (Ch);						      \
       if (PUTC (outc, s) == EOF || done == INT_MAX)			      \
 	{								      \
 	  done = -1;							      \
@@ -2061,7 +2061,7 @@ printf_unknown (FILE *s, const struct printf_info *info,
   CHAR_T work_buffer[MAX (sizeof (info->width), sizeof (info->prec)) * 3];
   CHAR_T *const workend
     = &work_buffer[sizeof (work_buffer) / sizeof (CHAR_T)];
-  register CHAR_T *w;
+  CHAR_T *w;
 
   outchar (L_('%'));
 
@@ -2267,12 +2267,12 @@ static const struct _IO_jump_t _IO_helper_jumps =
 
 static int
 internal_function
-buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
+buffered_vfprintf (_IO_FILE *s, const CHAR_T *format,
 		   _IO_va_list args)
 {
   CHAR_T buf[_IO_BUFSIZ];
   struct helper_file helper;
-  register _IO_FILE *hp = (_IO_FILE *) &helper._f;
+  _IO_FILE *hp = (_IO_FILE *) &helper._f;
   int result, to_flush;
 
   /* Orient the stream.  */

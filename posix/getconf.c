@@ -1043,7 +1043,7 @@ usage (void)
 static void
 print_all (const char *path)
 {
-  register const struct conf *c;
+  const struct conf *c;
   size_t clen;
   long int value;
   char *cvalue;
@@ -1087,7 +1087,7 @@ print_all (const char *path)
 int
 main (int argc, char *argv[])
 {
-  register const struct conf *c;
+  const struct conf *c;
 
   /* Set locale.  Do not set LC_ALL because the other categories must
      not be affected (according to POSIX.2).  */

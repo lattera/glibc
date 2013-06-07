@@ -206,13 +206,13 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 #endif
 {
   va_list arg;
-  register const CHAR_T *f = format;
-  register UCHAR_T fc;	/* Current character of the format.  */
-  register WINT_T done = 0;	/* Assignments done.  */
-  register size_t read_in = 0;	/* Chars read in.  */
-  register WINT_T c = 0;	/* Last char read.  */
-  register int width;		/* Maximum field width.  */
-  register int flags;		/* Modifiers for current format element.  */
+  const CHAR_T *f = format;
+  UCHAR_T fc;	/* Current character of the format.  */
+  WINT_T done = 0;	/* Assignments done.  */
+  size_t read_in = 0;	/* Chars read in.  */
+  WINT_T c = 0;	/* Last char read.  */
+  int width;		/* Maximum field width.  */
+  int flags;		/* Modifiers for current format element.  */
   int errval = 0;
 #ifndef COMPILE_WSCANF
   __locale_t loc = _NL_CURRENT_LOCALE;

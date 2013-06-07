@@ -24,8 +24,8 @@
 
 wchar_t *
 wcschr (wcs, wc)
-     register const wchar_t *wcs;
-     register const wchar_t wc;
+     const wchar_t *wcs;
+     const wchar_t wc;
 {
   do
     if (*wcs == wc)

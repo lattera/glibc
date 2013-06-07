@@ -300,7 +300,7 @@ __tzset_parse_tz (tz)
   /* Figure out the standard <-> DST rules.  */
   for (unsigned int whichrule = 0; whichrule < 2; ++whichrule)
     {
-      register tz_rule *tzr = &tz_rules[whichrule];
+      tz_rule *tzr = &tz_rules[whichrule];
 
       /* Ignore comma to support string following the incorrect
 	 specification in early POSIX.1 printings.  */
@@ -400,7 +400,7 @@ tzset_internal (always, explicit)
      int explicit;
 {
   static int is_initialized;
-  register const char *tz;
+  const char *tz;
 
   if (is_initialized && !always)
     return;
@@ -471,7 +471,7 @@ compute_change (rule, year)
      tz_rule *rule;
      int year;
 {
-  register time_t t;
+  time_t t;
 
   if (year != -1 && rule->computed_for == year)
     /* Operations on times in 2 BC will be slower.  Oh well.  */

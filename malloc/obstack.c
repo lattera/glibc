@@ -154,7 +154,7 @@ _obstack_begin (struct obstack *h,
 		void *(*chunkfun) (long),
 		void (*freefun) (void *))
 {
-  register struct _obstack_chunk *chunk; /* points to new chunk */
+  struct _obstack_chunk *chunk; /* points to new chunk */
 
   if (alignment == 0)
     alignment = DEFAULT_ALIGNMENT;
@@ -201,7 +201,7 @@ _obstack_begin_1 (struct obstack *h, int size, int alignment,
 		  void (*freefun) (void *, void *),
 		  void *arg)
 {
-  register struct _obstack_chunk *chunk; /* points to new chunk */
+  struct _obstack_chunk *chunk; /* points to new chunk */
 
   if (alignment == 0)
     alignment = DEFAULT_ALIGNMENT;
@@ -252,11 +252,11 @@ _obstack_begin_1 (struct obstack *h, int size, int alignment,
 void
 _obstack_newchunk (struct obstack *h, int length)
 {
-  register struct _obstack_chunk *old_chunk = h->chunk;
-  register struct _obstack_chunk *new_chunk;
-  register long	new_size;
-  register long obj_size = h->next_free - h->object_base;
-  register long i;
+  struct _obstack_chunk *old_chunk = h->chunk;
+  struct _obstack_chunk *new_chunk;
+  long	new_size;
+  long obj_size = h->next_free - h->object_base;
+  long i;
   long already;
   char *object_base;
 
@@ -329,8 +329,8 @@ int _obstack_allocated_p (struct obstack *h, void *obj);
 int
 _obstack_allocated_p (struct obstack *h, void *obj)
 {
-  register struct _obstack_chunk *lp;	/* below addr of any objects in this chunk */
-  register struct _obstack_chunk *plp;	/* point to previous chunk if any */
+  struct _obstack_chunk *lp;	/* below addr of any objects in this chunk */
+  struct _obstack_chunk *plp;	/* point to previous chunk if any */
 
   lp = (h)->chunk;
   /* We use >= rather than > since the object cannot be exactly at
@@ -352,8 +352,8 @@ _obstack_allocated_p (struct obstack *h, void *obj)
 void
 obstack_free (struct obstack *h, void *obj)
 {
-  register struct _obstack_chunk *lp;	/* below addr of any objects in this chunk */
-  register struct _obstack_chunk *plp;	/* point to previous chunk if any */
+  struct _obstack_chunk *lp;	/* below addr of any objects in this chunk */
+  struct _obstack_chunk *plp;	/* point to previous chunk if any */
 
   lp = h->chunk;
   /* We use >= because there cannot be an object at the beginning of a chunk.
@@ -388,8 +388,8 @@ strong_alias (obstack_free, _obstack_free)
 int
 _obstack_memory_used (struct obstack *h)
 {
-  register struct _obstack_chunk* lp;
-  register int nbytes = 0;
+  struct _obstack_chunk* lp;
+  int nbytes = 0;
 
   for (lp = h->chunk; lp != 0; lp = lp->prev)
     {

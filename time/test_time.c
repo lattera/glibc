@@ -24,7 +24,7 @@ int
 main (int argc, char **argv)
 {
   time_t t;
-  register struct tm *tp;
+  struct tm *tp;
   struct tm tbuf;
   int lose = 0;
 

@@ -58,10 +58,10 @@ static char sccsid[] = "@(#)mcount.c	8.1 (Berkeley) 6/4/93";
  */
 _MCOUNT_DECL(frompc, selfpc)	/* _mcount; may be static, inline, etc */
 {
-	register ARCINDEX *frompcindex;
-	register struct tostruct *top, *prevtop;
-	register struct gmonparam *p;
-	register ARCINDEX toindex;
+	ARCINDEX *frompcindex;
+	struct tostruct *top, *prevtop;
+	struct gmonparam *p;
+	ARCINDEX toindex;
 	int i;
 
 	p = &_gmonparam;

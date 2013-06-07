@@ -102,7 +102,7 @@ __monstartup (lowpc, highpc)
      u_long lowpc;
      u_long highpc;
 {
-  register int o;
+  int o;
   char *cp;
   struct gmonparam *p = &_gmonparam;
 

@@ -30,9 +30,9 @@
 #include <shlib-compat.h>
 
 /* Prototyped for local functions.  */
-static _IO_ssize_t _IO_cookie_read (register _IO_FILE* fp, void* buf,
+static _IO_ssize_t _IO_cookie_read (_IO_FILE* fp, void* buf,
 				    _IO_ssize_t size);
-static _IO_ssize_t _IO_cookie_write (register _IO_FILE* fp,
+static _IO_ssize_t _IO_cookie_write (_IO_FILE* fp,
 				     const void* buf, _IO_ssize_t size);
 static _IO_off64_t _IO_cookie_seek (_IO_FILE *fp, _IO_off64_t offset, int dir);
 static _IO_off64_t _IO_cookie_seekoff (_IO_FILE *fp, _IO_off64_t offset,

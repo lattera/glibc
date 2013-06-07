@@ -88,8 +88,8 @@ _ufc_doit_r(itr, __data, res)
 {
   int i;
   long64 l, r, s, *k;
-  register long64 *sb01 = (long64*)__data->sb0;
-  register long64 *sb23 = (long64*)__data->sb2;
+  long64 *sb01 = (long64*)__data->sb0;
+  long64 *sb23 = (long64*)__data->sb2;
 
   l = (((long64)res[0]) << 32) | ((long64)res[1]);
   r = (((long64)res[2]) << 32) | ((long64)res[3]);

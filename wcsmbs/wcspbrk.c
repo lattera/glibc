@@ -22,8 +22,8 @@
 /* Find the first occurrence in WCS of any wide-character in ACCEPT.  */
 wchar_t *
 wcspbrk (wcs, accept)
-     register const wchar_t *wcs;
-     register const wchar_t *accept;
+     const wchar_t *wcs;
+     const wchar_t *accept;
 {
   while (*wcs != L'\0')
     if (wcschr (accept, *wcs) == NULL)

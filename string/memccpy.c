@@ -30,10 +30,10 @@ __memccpy (dest, src, c, n)
       int c;
       size_t n;
 {
-  register const char *s = src;
-  register char *d = dest;
-  register const char x = c;
-  register size_t i = n;
+  const char *s = src;
+  char *d = dest;
+  const char x = c;
+  size_t i = n;
 
   while (i-- > 0)
     if ((*d++ = *s++) == x)

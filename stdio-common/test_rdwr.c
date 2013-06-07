@@ -78,7 +78,7 @@ main (int argc, char **argv)
     long int where = ftell (f);
     if (where == (long int) replace_from)
       {
-	register size_t i;
+	size_t i;
 	for (i = replace_from; i < replace_to; ++i)
 	  if (putc(replace[i], f) == EOF)
 	    {
