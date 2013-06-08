@@ -21,7 +21,7 @@
 
 /* Get the real user ID of the calling process.  */
 uid_t
-__getuid ()
+__getuid (void)
 {
   __set_errno (ENOSYS);
   return -1;

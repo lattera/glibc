@@ -553,7 +553,7 @@ __access (const char *file, int type)
 }
 
 pid_t weak_function
-__getpid ()
+__getpid (void)
 {
   pid_t pid, ppid;
   int orphaned;

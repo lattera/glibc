@@ -22,7 +22,7 @@
 
 /* Get the real user ID of the calling process.  */
 uid_t
-__getuid ()
+__getuid (void)
 {
   error_t err;
   uid_t uid;

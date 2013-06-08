@@ -21,7 +21,7 @@
 
 /* Get the process ID of the calling process.  */
 pid_t
-__getpid ()
+__getpid (void)
 {
   /* Assumes atomic word fetch and store, so doesn't lock _hurd_pid_lock.  */
   return _hurd_pid;

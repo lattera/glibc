@@ -20,7 +20,7 @@
 
 
 long int
-mrand48 ()
+mrand48 (void)
 {
   long int result;
 

@@ -22,7 +22,7 @@
    with the control terminal, and then send a SIGHUP signal to the process
    group of the control terminal.  */
 int
-vhangup ()
+vhangup (void)
 {
   __set_errno (ENOSYS);
   return -1;

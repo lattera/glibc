@@ -72,7 +72,7 @@ static struct expression plone;
 struct expression GERMANIC_PLURAL;
 
 static void
-init_germanic_plural ()
+init_germanic_plural (void)
 {
   if (plone.val.num == 0)
     {

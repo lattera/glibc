@@ -72,7 +72,7 @@ static __ptr_t (*tr_old_memalign_hook) (size_t __alignment, size_t __size,
 extern void tr_break (void) __THROW;
 libc_hidden_proto (tr_break)
 void
-tr_break ()
+tr_break (void)
 {
 }
 libc_hidden_def (tr_break)
@@ -298,7 +298,7 @@ release_libc_mem (void)
    don't forget to set a breakpoint on tr_break!  */
 
 void
-mtrace ()
+mtrace (void)
 {
 #ifdef _LIBC
   static int added_atexit_handler;
@@ -363,7 +363,7 @@ mtrace ()
 }
 
 void
-muntrace ()
+muntrace (void)
 {
   if (mallstream == NULL)
     return;

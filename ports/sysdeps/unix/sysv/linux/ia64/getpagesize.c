@@ -29,7 +29,7 @@
    as mmap and friends.  --davidm 99/11/30 */
 
 int
-__getpagesize ()
+__getpagesize (void)
 {
   assert (GLRO(dl_pagesize) != 0);
   return GLRO(dl_pagesize);

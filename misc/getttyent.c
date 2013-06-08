@@ -61,7 +61,7 @@ static char *skip (char *) __THROW internal_function;
 static char *value (char *) __THROW internal_function;
 
 struct ttyent *
-getttyent()
+getttyent (void)
 {
 	static struct ttyent tty;
 	int c;
@@ -184,7 +184,7 @@ value(p)
 }
 
 int
-setttyent()
+setttyent (void)
 {
 
 	if (tf) {
@@ -200,7 +200,7 @@ setttyent()
 libc_hidden_def (setttyent)
 
 int
-endttyent()
+endttyent (void)
 {
 	int rval;
 

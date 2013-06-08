@@ -125,7 +125,7 @@ __tzstring (const char *s)
 size_t __tzname_cur_max;
 
 long int
-__tzname_max ()
+__tzname_max (void)
 {
   __libc_lock_lock (tzset_lock);
 

@@ -22,7 +22,7 @@
 
 /* Get the effective user ID of the calling process.  */
 uid_t
-__geteuid ()
+__geteuid (void)
 {
   error_t err;
   uid_t euid;

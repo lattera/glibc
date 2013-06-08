@@ -37,6 +37,6 @@ main (void)
 }
 
 void
-noop ()
+noop (void)
 {
 }

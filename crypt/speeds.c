@@ -42,7 +42,7 @@ struct tms tstart, tfinish;
 char *crypt(), *fcrypt();
 
 void
-Stop ()
+Stop (void)
 {
     double elapsed;
 #ifdef NO_ITIMER
@@ -76,7 +76,7 @@ static void clearmem(start, cnt)
       *start++ = '\0';
   }
 
-main ()
+main (void)
 {
    char *s;
 #ifdef NO_ITIMER

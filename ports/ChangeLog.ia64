@@ -1,3 +1,8 @@
+2013-06-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/ia64/getpagesize.c (__getpagesize): Use
+	(void) in function definition.
+
 2013-06-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ia64/bits/byteswap-16.h [__GNUC__ && __GNUC__ >= 2]

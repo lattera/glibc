@@ -21,7 +21,7 @@
 
 /* Get the effective user ID of the calling process.  */
 __uid_t
-__geteuid ()
+__geteuid (void)
 {
   __set_errno (ENOSYS);
   return -1;

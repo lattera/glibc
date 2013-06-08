@@ -795,7 +795,7 @@ _sethtent(f)
 libresolv_hidden_def (_sethtent)
 
 void
-_endhtent()
+_endhtent (void)
 {
 	if (hostf && !stayopen) {
 		(void) fclose(hostf);
@@ -804,7 +804,7 @@ _endhtent()
 }
 
 struct hostent *
-_gethtent()
+_gethtent (void)
 {
 	char *p;
 	char *cp, **q;
@@ -1028,7 +1028,7 @@ ht_sethostent(stayopen)
 }
 
 void
-ht_endhostent()
+ht_endhostent (void)
 {
 	_endhtent();
 }
@@ -1050,13 +1050,13 @@ ht_gethostbyaddr(addr, len, af)
 }
 
 struct hostent *
-gethostent()
+gethostent (void)
 {
 	return (_gethtent());
 }
 
 void
-dns_service()
+dns_service (void)
 {
 	return;
 }

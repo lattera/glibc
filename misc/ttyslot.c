@@ -38,7 +38,7 @@ static char sccsid[] = "@(#)ttyslot.c	8.1 (Berkeley) 6/4/93";
 #include <unistd.h>
 
 int
-ttyslot()
+ttyslot (void)
 {
 	struct ttyent *ttyp;
 	int slot;

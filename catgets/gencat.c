@@ -254,7 +254,7 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 /* The address of this function will be assigned to the hook in the
    error functions.  */
 static void
-error_print ()
+error_print (void)
 {
   /* We don't want the program name to be printed in messages.  Emacs'
      compile.el does not like this.  */

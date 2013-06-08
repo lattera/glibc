@@ -349,7 +349,7 @@ unsetenv (name)
    never made it.  Nevertheless the POSIX.9 standard (POSIX bindings
    for Fortran 77) requires this function.  */
 int
-clearenv ()
+clearenv (void)
 {
   LOCK;
 

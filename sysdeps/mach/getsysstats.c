@@ -24,7 +24,7 @@
 
 /* Return the number of processors configured on the system. */
 int
-__get_nprocs_conf ()
+__get_nprocs_conf (void)
 {
   struct host_basic_info hbi;
   kern_return_t err;
@@ -43,7 +43,7 @@ weak_alias (__get_nprocs_conf, get_nprocs_conf)
 
 /* Return the number of processors currently available on the system. */
 int
-__get_nprocs ()
+__get_nprocs (void)
 {
   struct host_basic_info hbi;
   kern_return_t err;
@@ -62,7 +62,7 @@ weak_alias (__get_nprocs, get_nprocs)
 
 /* Return the number of physical pages on the system. */
 long int
-__get_phys_pages ()
+__get_phys_pages (void)
 {
   struct host_basic_info hbi;
   kern_return_t err;
@@ -81,7 +81,7 @@ weak_alias (__get_phys_pages, get_phys_pages)
 
 /* Return the number of available physical pages */
 long int
-__get_avphys_pages ()
+__get_avphys_pages (void)
 {
   vm_statistics_data_t vs;
   kern_return_t err;

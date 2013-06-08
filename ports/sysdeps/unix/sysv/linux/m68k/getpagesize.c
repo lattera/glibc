@@ -26,7 +26,7 @@
 
 /* Return the system page size.  */
 int
-__getpagesize ()
+__getpagesize (void)
 {
 #ifdef __NR_getpagesize
   int result;

@@ -330,7 +330,7 @@ clntunix_freeres (cl, xdr_res, res_ptr)
 }
 
 static void
-clntunix_abort ()
+clntunix_abort (void)
 {
 }
 

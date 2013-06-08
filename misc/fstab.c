@@ -95,7 +95,7 @@ getfsfile (name)
 
 
 void
-endfsent ()
+endfsent (void)
 {
   struct fstab_state *state;
 

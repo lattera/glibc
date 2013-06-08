@@ -124,7 +124,7 @@ next_line (int fd, char *const buffer, char **cp, char **re,
 
 
 int
-__get_nprocs ()
+__get_nprocs (void)
 {
   static int cached_result;
   static time_t timestamp;
@@ -234,7 +234,7 @@ weak_alias (__get_nprocs, get_nprocs)
 /* On some architectures it is possible to distinguish between configured
    and active cpus.  */
 int
-__get_nprocs_conf ()
+__get_nprocs_conf (void)
 {
   /* XXX Here will come a test for the new system call.  */
 
@@ -333,7 +333,7 @@ phys_pages_info (const char *format)
    But not all systems have support for the /proc filesystem.  If it
    is not available we return -1 as an error signal.  */
 long int
-__get_phys_pages ()
+__get_phys_pages (void)
 {
   /* XXX Here will come a test for the new system call.  */
 
@@ -354,7 +354,7 @@ weak_alias (__get_phys_pages, get_phys_pages)
    But not all systems have support for the /proc filesystem.  If it
    is not available we return -1 as an error signal.  */
 long int
-__get_avphys_pages ()
+__get_avphys_pages (void)
 {
   /* XXX Here will come a test for the new system call.  */
 

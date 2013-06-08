@@ -21,7 +21,7 @@
 
 /* Get the parent process ID of the calling process.  */
 int
-__getppid ()
+__getppid (void)
 {
   __set_errno (ENOSYS);
   return -1;

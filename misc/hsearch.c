@@ -45,7 +45,7 @@ hcreate (nel)
 
 
 void
-__hdestroy ()
+__hdestroy (void)
 {
   hdestroy_r (&htab);
 }

@@ -30,7 +30,7 @@
 #undef getchar
 
 int
-getchar ()
+getchar (void)
 {
   int result;
   _IO_acquire_lock (_IO_stdin);

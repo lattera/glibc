@@ -425,7 +425,7 @@ sigpipe_handler (int signo)
 #endif
 
 static void
-closelog_internal()
+closelog_internal (void)
 {
   if (!connected)
     return;
@@ -436,7 +436,7 @@ closelog_internal()
 }
 
 void
-closelog ()
+closelog (void)
 {
   /* Protect against multiple users and cancellation.  */
   __libc_cleanup_push (cancel_handler, NULL);

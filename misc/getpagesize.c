@@ -20,7 +20,7 @@
 
 /* Return the system page size.  */
 int
-__getpagesize ()
+__getpagesize (void)
 {
   __set_errno (ENOSYS);
   return 0;

@@ -20,7 +20,7 @@
 
 /* Return the time used by the program so far (user time + system time).  */
 clock_t
-clock ()
+clock (void)
 {
   struct tms buf;
 

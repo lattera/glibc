@@ -24,7 +24,7 @@
 
 /* Return the system page size.  */
 int
-__getpagesize ()
+__getpagesize (void)
 {
   assert (GLRO(dl_pagesize) != 0);
   return GLRO(dl_pagesize);

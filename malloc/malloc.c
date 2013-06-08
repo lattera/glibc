@@ -4602,7 +4602,7 @@ struct mallinfo __libc_mallinfo()
 */
 
 void
-__malloc_stats()
+__malloc_stats (void)
 {
   int i;
   mstate ar_ptr;

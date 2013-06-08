@@ -25,7 +25,7 @@
 
 /* Return frequency of times().  */
 int
-__getclktck ()
+__getclktck (void)
 {
   return GLRO(dl_clktck) ?: SYSTEM_CLK_TCK;
 }

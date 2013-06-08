@@ -62,7 +62,7 @@ static char **initshells (void) __THROW;
  * Get a list of shells from _PATH_SHELLS, if it exists.
  */
 char *
-getusershell()
+getusershell (void)
 {
 	char *ret;
 
@@ -75,7 +75,7 @@ getusershell()
 }
 
 void
-endusershell()
+endusershell (void)
 {
 
 	free(shells);
@@ -86,14 +86,14 @@ endusershell()
 }
 
 void
-setusershell()
+setusershell (void)
 {
 
 	curshell = initshells();
 }
 
 static char **
-initshells()
+initshells (void)
 {
 	char **sp, *cp;
 	FILE *fp;

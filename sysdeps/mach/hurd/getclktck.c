@@ -21,7 +21,7 @@
 /* Return frequency of `times'.
    Since Mach reports CPU times in microseconds, we always use 1 million.  */
 int
-__getclktck ()
+__getclktck (void)
 {
   return 1000000;
 }

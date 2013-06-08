@@ -30,7 +30,7 @@
 #undef getchar_unlocked
 
 int
-getchar_unlocked ()
+getchar_unlocked (void)
 {
   return _IO_getc_unlocked (_IO_stdin);
 }

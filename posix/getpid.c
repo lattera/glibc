@@ -20,7 +20,7 @@
 
 /* Get the process ID of the calling process.  */
 int
-__getpid ()
+__getpid (void)
 {
   __set_errno (ENOSYS);
   return -1;

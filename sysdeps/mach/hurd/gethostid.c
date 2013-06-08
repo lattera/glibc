@@ -21,7 +21,7 @@
 
 /* Return the current machine's Internet number.  */
 long int
-gethostid ()
+gethostid (void)
 {
   /* The hostid is just the contents of the file /etc/hostid,
      kept as text of hexadecimal digits.  */

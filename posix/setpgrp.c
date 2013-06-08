@@ -18,7 +18,7 @@
 #include <unistd.h>
 
 int
-setpgrp ()
+setpgrp (void)
 {
   return __setpgid (0, 0);
 }

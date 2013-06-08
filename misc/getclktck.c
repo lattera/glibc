@@ -19,7 +19,7 @@
 
 /* Return frequency of times().  */
 int
-__getclktck ()
+__getclktck (void)
 {
 #ifdef	CLK_TCK
   return CLK_TCK;

@@ -21,7 +21,7 @@
 /* Return the maximum number of file descriptors
    the current process could possibly have.  */
 int
-__getdtablesize ()
+__getdtablesize (void)
 {
   __set_errno (ENOSYS);
   return -1;

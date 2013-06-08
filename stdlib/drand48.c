@@ -20,7 +20,7 @@
 
 
 double
-drand48 ()
+drand48 (void)
 {
   double result;
 

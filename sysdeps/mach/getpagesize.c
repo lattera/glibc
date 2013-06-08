@@ -20,7 +20,7 @@
 
 /* Return the system page size.  */
 int
-__getpagesize ()
+__getpagesize (void)
 {
   return __vm_page_size;
 }

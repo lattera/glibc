@@ -553,7 +553,7 @@ small_tables_done:
 }
 
 void
-__init_des()
+__init_des (void)
 {
   __init_des_r(&_ufc_foobar);
 }

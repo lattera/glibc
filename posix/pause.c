@@ -23,7 +23,7 @@
    This is supposed to always return -1 and set errno to EINTR,
    but rules were meant to be broken.  */
 int
-pause ()
+pause (void)
 {
   __set_errno (ENOSYS);
   return -1;

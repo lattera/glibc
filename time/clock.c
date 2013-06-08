@@ -21,7 +21,7 @@
 
 /* Return the time used by the program so far (user time + system time).  */
 clock_t
-clock ()
+clock (void)
 {
   __set_errno (ENOSYS);
   return (clock_t) -1;

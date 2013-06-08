@@ -22,7 +22,7 @@
 /* Open the master side of a pseudoterminal and return its file
    descriptor, or -1 on error. */
 int
-__getpt ()
+__getpt (void)
 {
   __set_errno (ENOSYS);
   return -1;

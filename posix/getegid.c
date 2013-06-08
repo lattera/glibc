@@ -20,7 +20,7 @@
 
 /* Get the effective group ID of the calling process.  */
 __gid_t
-__getegid ()
+__getegid (void)
 {
   __set_errno (ENOSYS);
   return -1;

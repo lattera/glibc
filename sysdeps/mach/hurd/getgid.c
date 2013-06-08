@@ -22,7 +22,7 @@
 
 /* Get the real group ID of the calling process.  */
 gid_t
-__getgid ()
+__getgid (void)
 {
   error_t err;
   gid_t gid;

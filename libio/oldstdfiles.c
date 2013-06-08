@@ -73,7 +73,7 @@ static void _IO_check_libio (void) __THROW __attribute__ ((constructor));
    _IO_list_all accordingly. */
 
 static void
-_IO_check_libio ()
+_IO_check_libio (void)
 {
   if (&_IO_stdin_used == NULL)
     {

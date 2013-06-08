@@ -20,7 +20,7 @@
 
 /* Return the system page size.  */
 int
-__getpagesize ()
+__getpagesize (void)
 {
 #ifdef	EXEC_PAGESIZE
   return EXEC_PAGESIZE;

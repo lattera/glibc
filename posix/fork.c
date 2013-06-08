@@ -23,7 +23,7 @@
    Return -1 for errors, 0 to the new process,
    and the process ID of the new process to the old process.  */
 int
-__fork ()
+__fork (void)
 {
   __set_errno (ENOSYS);
   return -1;

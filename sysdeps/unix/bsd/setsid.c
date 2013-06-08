@@ -25,7 +25,7 @@
    The process group IDs of the session and the calling process
    are set to the process ID of the calling process, which is returned.  */
 int
-__setsid ()
+__setsid (void)
 {
   pid_t pid = getpid ();
   int tty;

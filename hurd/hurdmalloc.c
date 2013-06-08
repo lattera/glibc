@@ -380,7 +380,7 @@ realloc(old_base, new_size)
 
 #ifdef	DEBUG
 void
-print_malloc_free_list()
+print_malloc_free_list (void)
 {
 	int i, size;
 	free_list_t fl;

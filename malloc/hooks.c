@@ -69,7 +69,7 @@ static int disallow_malloc_check;
 
 /* Activate a standard set of debugging hooks. */
 void
-__malloc_check_init()
+__malloc_check_init (void)
 {
   if (disallow_malloc_check) {
     disallow_malloc_check = 0;

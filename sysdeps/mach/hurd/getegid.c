@@ -22,7 +22,7 @@
 
 /* Get the effective group ID of the calling process.  */
 gid_t
-__getegid ()
+__getegid (void)
 {
   error_t err;
   gid_t egid;

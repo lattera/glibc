@@ -23,7 +23,7 @@
 /* Return the login name of the user, or NULL if it can't be determined.
    The returned pointer, if not NULL, is good only until the next call.  */
 char *
-getlogin ()
+getlogin (void)
 {
   static char login[1024];	/* XXX */
   error_t err;

@@ -24,7 +24,7 @@
 /* Return the maximum number of file descriptors the current process
    could possibly have (until it raises the resource limit).  */
 int
-__getdtablesize ()
+__getdtablesize (void)
 {
   rlim_t limit;
 

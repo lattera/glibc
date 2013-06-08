@@ -21,7 +21,7 @@
 
 /* Get the real group ID of the calling process.  */
 gid_t
-__getgid ()
+__getgid (void)
 {
   __set_errno (ENOSYS);
   return -1;

@@ -20,7 +20,7 @@
 
 /* Return the current machine's Internet number.  */
 long int
-gethostid ()
+gethostid (void)
 {
   __set_errno (ENOSYS);
   return -1L;

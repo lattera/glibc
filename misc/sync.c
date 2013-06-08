@@ -20,7 +20,7 @@
 
 /* Make all changes done to all files actually appear on disk.  */
 void
-sync ()
+sync (void)
 {
   __set_errno (ENOSYS);
 }

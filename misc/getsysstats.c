@@ -21,7 +21,7 @@
 #include <sys/sysinfo.h>
 
 int
-__get_nprocs_conf ()
+__get_nprocs_conf (void)
 {
   /* We don't know how to determine the number.  Simply return always 1.  */
   return 1;
@@ -33,7 +33,7 @@ link_warning (get_nprocs_conf, "warning: get_nprocs_conf will always return 1")
 
 
 int
-__get_nprocs ()
+__get_nprocs (void)
 {
   /* We don't know how to determine the number.  Simply return always 1.  */
   return 1;
@@ -44,7 +44,7 @@ link_warning (get_nprocs, "warning: get_nprocs will always return 1")
 
 
 long int
-__get_phys_pages ()
+__get_phys_pages (void)
 {
   /* We have no general way to determine this value.  */
   __set_errno (ENOSYS);
@@ -56,7 +56,7 @@ stub_warning (get_phys_pages)
 
 
 long int
-__get_avphys_pages ()
+__get_avphys_pages (void)
 {
   /* We have no general way to determine this value.  */
   __set_errno (ENOSYS);

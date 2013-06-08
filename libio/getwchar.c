@@ -30,7 +30,7 @@
 #undef getwchar
 
 wint_t
-getwchar ()
+getwchar (void)
 {
   wint_t result;
   _IO_acquire_lock (_IO_stdin);

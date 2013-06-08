@@ -1,3 +1,112 @@
+2013-06-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* catgets/gencat.c (error_print): Use (void) in function
+	definition.
+	* crypt/crypt_util.c (__init_des): Likewise.
+	* crypt/speeds.c (Stop): Likewise.
+	(main): Likewise.
+	* hurd/hurdmalloc.c (print_malloc_free_list): Likewise.
+	* inet/ruserpass.c (token): Likewise.
+	* intl/finddomain.c (_nl_finddomain_subfreeres): Likewise.
+	* intl/localealias.c (extend_alias_table): Likewise.
+	* intl/plural-exp.c (init_germanic_plural): Likewise.
+	* libio/fcloseall.c (__fcloseall): Likewise.
+	* libio/genops.c (_IO_flush_all): Likewise.
+	(_IO_flush_all_linebuffered): Likewise.
+	(_IO_cleanup): Likewise.
+	(_IO_iter_begin): Likewise.
+	(_IO_iter_end): Likewise.
+	(_IO_list_lock): Likewise.
+	(_IO_list_unlock): Likewise.
+	(_IO_list_resetlock): Likewise.
+	* libio/getchar.c (getchar): Likewise.
+	* libio/getchar_u.c (getchar_unlocked): Likewise.
+	* libio/getwchar.c (getwchar): Likewise.
+	* libio/getwchar_u.c (getwchar_unlocked): Likewise.
+	* libio/oldstdfiles.c (_IO_check_libio): Likewise.
+	* login/getpt.c (__getpt): Likewise.
+	* login/tst-utmp.c (main): Likewise.
+	* malloc/hooks.c (__malloc_check_init): Likewise.
+	* malloc/malloc.c (__malloc_stats): Likewise.
+	* malloc/mtrace.c (tr_break): Likewise.
+	(mtrace): Likewise.
+	(muntrace): Likewise.
+	* misc/fstab.c (endfsent): Likewise.
+	* misc/getclktck.c (__getclktck): Likewise.
+	* misc/getdtsz.c (__getdtablesize): Likewise.
+	* misc/gethostid.c (gethostid): Likewise.
+	* misc/getpagesize.c (__getpagesize): Likewise.
+	* misc/getsysstats.c (__get_nprocs_conf): Likewise.
+	(__get_nprocs): Likewise.
+	(__get_phys_pages): Likewise.
+	(__get_avphys_pages): Likewise.
+	* misc/getttyent.c (getttyent): Likewise.
+	(setttyent): Likewise.
+	(endttyent): Likewise.
+	* misc/getusershell.c (getusershell): Likewise.
+	(endusershell): Likewise.
+	(setusershell): Likewise.
+	(initshells): Likewise.
+	* misc/hsearch.c (__hdestroy): Likewise.
+	* misc/sync.c (sync): Likewise.
+	* misc/syslog.c (closelog_internal): Likewise.
+	(closelog): Likewise.
+	* misc/ttyslot.c (ttyslot): Likewise.
+	* misc/vhangup.c (vhangup): Likewise.
+	* posix/fork.c (__fork): Likewise.
+	* posix/getegid.c (__getegid): Likewise.
+	* posix/geteuid.c (__geteuid): Likewise.
+	* posix/getgid.c (__getgid): Likewise.
+	* posix/getpid.c (__getpid): Likewise.
+	* posix/getppid.c (__getppid): Likewise.
+	* posix/getuid.c (__getuid): Likewise.
+	* posix/pause.c (pause): Likewise.
+	* posix/setpgrp.c (setpgrp): Likewise.
+	* posix/setsid.c (__setsid): Likewise.
+	* posix/test-vfork.c (noop): Likewise.
+	* resolv/gethnamaddr.c (_endhtent): Likewise.
+	(_gethtent): Likewise.
+	(ht_endhostent): Likewise.
+	(gethostent): Likewise.
+	(dns_service): Likewise.
+	* stdlib/drand48.c (drand48): Likewise.
+	* stdlib/lrand48.c (lrand48): Likewise.
+	* stdlib/mrand48.c (mrand48): Likewise.
+	* stdlib/rand.c (rand): Likewise.
+	* stdlib/random.c (__random): Likewise.
+	* stdlib/setenv.c (clearenv): Likewise.
+	* sunrpc/clnt_tcp.c (clnttcp_abort): Likewise.
+	* sunrpc/clnt_unix.c (clntunix_abort): Likewise.
+	* sysdeps/mach/getpagesize.c (__getpagesize): Likewise.
+	* sysdeps/mach/getsysstats.c (__get_nprocs_conf): Likewise.
+	(__get_nprocs): Likewise.
+	(__get_phys_pages): Likewise.
+	(__get_avphys_pages): Likewise.
+	* sysdeps/mach/hurd/dl-sysdep.c (__getpid): Likewise.
+	* sysdeps/mach/hurd/getclktck.c (__getclktck): Likewise.
+	* sysdeps/mach/hurd/getdtsz.c (__getdtablesize): Likewise.
+	* sysdeps/mach/hurd/getegid.c (__getegid): Likewise.
+	* sysdeps/mach/hurd/geteuid.c (__geteuid): Likewise.
+	* sysdeps/mach/hurd/getgid.c (__getgid): Likewise.
+	* sysdeps/mach/hurd/gethostid.c (gethostid): Likewise.
+	* sysdeps/mach/hurd/getlogin.c (getlogin): Likewise.
+	* sysdeps/mach/hurd/getpid.c (__getpid): Likewise.
+	* sysdeps/mach/hurd/getppid.c (__getppid): Likewise.
+	* sysdeps/mach/hurd/getuid.c (__getuid): Likewise.
+	* sysdeps/mach/hurd/sync.c (sync): Likewise.
+	* sysdeps/posix/clock.c (clock): Likewise.
+	* sysdeps/unix/bsd/setsid.c (__setsid): Likewise.
+	* sysdeps/unix/getpagesize.c (__getpagesize): Likewise.
+	* sysdeps/unix/sysv/linux/getclktck.c (__getclktck): Likewise.
+	* sysdeps/unix/sysv/linux/gethostid.c (gethostid): Likewise.
+	* sysdeps/unix/sysv/linux/getpagesize.c (__getpagesize): Likewise.
+	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs): Likewise.
+	(__get_nprocs_conf): Likewise.
+	(__get_phys_pages): Likewise.
+	(__get_avphys_pages): Likewise.
+	* time/clock.c (clock): Likewise.
+	* time/tzset.c (__tzname_max): Likewise.
+
 2013-06-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* bits/byteswap.h [__GNUC__ && !__GNUC_PREREQ (4, 3)]

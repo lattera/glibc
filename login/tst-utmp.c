@@ -395,7 +395,7 @@ do_test (int argc, char *argv[])
 
 /* No field 'ut_type' in struct utmp.  */
 int
-main ()
+main (void)
 {
   return 0;
 }
