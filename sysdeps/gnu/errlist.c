@@ -53,7 +53,7 @@ TRANS No process matches the specified process ID. */
 TRANS Interrupted function call; an asynchronous signal occurred and prevented
 TRANS completion of the call.  When this happens, you should try the call
 TRANS again.
-TRANS 
+TRANS
 TRANS You can choose to have functions resume after a signal that is handled,
 TRANS rather than failing with @code{EINTR}; see @ref{Interrupted
 TRANS Primitives}. */
@@ -256,7 +256,7 @@ TRANS with passing the wrong argument to a library function. */
 /*
 TRANS The current process has too many files open and can't open any more.
 TRANS Duplicate descriptors do count toward this limit.
-TRANS 
+TRANS
 TRANS In BSD and GNU, the number of open files is controlled by a resource
 TRANS limit that can usually be increased.  If you get this error, you might
 TRANS want to increase the @code{RLIMIT_NOFILE} limit or make it unlimited;
@@ -387,9 +387,9 @@ TRANS not representable because of overflow or underflow. */
 TRANS Resource temporarily unavailable; the call might work if you try again
 TRANS later.  The macro @code{EWOULDBLOCK} is another name for @code{EAGAIN};
 TRANS they are always the same in @theglibc{}.
-TRANS 
+TRANS
 TRANS This error can happen in a few different situations:
-TRANS 
+TRANS
 TRANS @itemize @bullet
 TRANS @item
 TRANS An operation that would block was attempted on an object that has
@@ -397,12 +397,12 @@ TRANS non-blocking mode selected.  Trying the same operation again will block
 TRANS until some external condition makes it possible to read, write, or
 TRANS connect (whatever the operation).  You can use @code{select} to find out
 TRANS when the operation will be possible; @pxref{Waiting for I/O}.
-TRANS 
+TRANS
 TRANS @strong{Portability Note:} In many older Unix systems, this condition
 TRANS was indicated by @code{EWOULDBLOCK}, which was a distinct error code
 TRANS different from @code{EAGAIN}.  To make your program portable, you should
 TRANS check for both codes and treat them the same.
-TRANS 
+TRANS
 TRANS @item
 TRANS A temporary resource shortage made an operation impossible.  @code{fork}
 TRANS can return this error.  It indicates that the shortage is expected to
@@ -423,7 +423,7 @@ TRANS @end itemize */
 /*
 TRANS In @theglibc{}, this is another name for @code{EAGAIN} (above).
 TRANS The values are always the same, on every operating system.
-TRANS 
+TRANS
 TRANS C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
 TRANS separate error code. */
     [ERR_REMAP (EWOULDBLOCK)] = N_("Operation would block"),
@@ -864,7 +864,7 @@ TRANS operating system. */
 /*
 TRANS Inappropriate file type or format.  The file was the wrong type for the
 TRANS operation, or a data file had the wrong format.
-TRANS 
+TRANS
 TRANS On some systems @code{chmod} returns this error if you try to set the
 TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}. */
     [ERR_REMAP (EFTYPE)] = N_("Inappropriate file type or format"),
@@ -915,7 +915,7 @@ TRANS might instead mean that only @emph{that specific object} (file
 TRANS descriptor, port, etc.) is unable to support the other parameters given;
 TRANS different file descriptors might support different ranges of parameter
 TRANS values.
-TRANS 
+TRANS
 TRANS If the entire function is not available at all in the implementation,
 TRANS it returns @code{ENOSYS} instead. */
     [ERR_REMAP (ENOTSUP)] = N_("Not supported"),

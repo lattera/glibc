@@ -99,7 +99,7 @@ errnoh == 4 && $1 == "@end" && $2 == "deftypevr" \
 errnoh == 4 \
   {
     # This magic tag in C comments gets them copied into libc.pot.
-    desc = desc "\nTRANS " $0; next
+    desc = desc "\nTRANS" ($0 != "" ? " " : "") $0; next
   }
 { errnoh=0 }
 END {

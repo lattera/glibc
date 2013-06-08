@@ -1,5 +1,9 @@
 2013-06-08  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/gnu/errlist.awk: Do not generate space at end of
+	otherwise empty TRANS lines.
+	* sysdeps/gnu/errlist.c: Regenerated.
+
 	* catgets/gencat.c (error_print): Use (void) in function
 	definition.
 	* crypt/crypt_util.c (__init_des): Likewise.
