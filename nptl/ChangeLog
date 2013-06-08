@@ -1,3 +1,7 @@
+2013-08-06   Ondřej Bílka  <neleai@seznam.cz>
+
+	* sysdeps/pthread/allocalim.h: (__libc_use_alloca): Fix warning.
+
 2013-06-06   Ondřej Bílka  <neleai@seznam.cz>
 
 	* tst-cond22.c: Fix leading whitespaces.

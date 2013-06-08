@@ -20,8 +20,8 @@
 #include <limits.h>
 
 
-extern int
 __always_inline
+extern int
 __libc_use_alloca (size_t size)
 {
   return (__builtin_expect (size <= PTHREAD_STACK_MIN / 4, 1)
