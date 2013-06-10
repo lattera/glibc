@@ -1,3 +1,15 @@
+2013-06-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/math-tests.h (ROUNDING_TESTS_float): New macro.
+	(ROUNDING_TESTS_double): Likewise.
+	(ROUNDING_TESTS_long_double): Likewise.
+	(ROUNDING_TESTS): Likewise.
+	* math/libm-test.inc: Include <math-tests.h>.
+	(IF_ROUND_INIT_FE_DOWNWARD): Use ROUNDING_TESTS.
+	(IF_ROUND_INIT_FE_TONEAREST): Likewise.
+	(IF_ROUND_INIT_FE_TOWARDZERO): Likewise.
+	(IF_ROUND_INIT_FE_UPWARD): Likewise.
+
 2013-06-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* benchtests/Makefile (CPPFLAGS-nonlib): Append values instead

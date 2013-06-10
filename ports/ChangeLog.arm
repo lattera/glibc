@@ -1,3 +1,7 @@
+2013-06-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/math-tests.h: New file.
+
 2013-06-05  Richard Henderson  <rth@redhat.com>
 
 	[BZ #15583]
