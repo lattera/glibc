@@ -1,3 +1,12 @@
+2013-06-11  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #15577]
+	* nscd/connections.c (nscd_run_worker): Always zero-terminate key.
+	* nscd/netgroupcache.c (addgetnetgrentX): Properly handle absent
+	values in the triple.
+	* nscd/nscd_netgroup.c (__nscd_setnetgrent): Include zero
+	terminator in the group key.
+
 2013-06-11  Andreas Jaeger  <aj@suse.de>
 
 	* po/zh_TW.po: Update Chinese (traditional) translation from

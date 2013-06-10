@@ -192,18 +192,26 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
 			    const char *nuser = data.val.triple.user;
 			    const char *ndomain = data.val.triple.domain;
 
-			    if (data.val.triple.host > data.val.triple.user
-				|| data.val.triple.user > data.val.triple.domain)
+			    if (nhost == NULL || nuser == NULL || ndomain == NULL
+				|| nhost > nuser || nuser > ndomain)
 			      {
-				const char *last = MAX (nhost,
-							MAX (nuser, ndomain));
-				size_t bufused = (last + strlen (last) + 1
-						  - buffer);
+				const char *last = nhost;
+				if (last == NULL
+				    || (nuser != NULL && nuser > last))
+				  last = nuser;
+				if (last == NULL
+				    || (ndomain != NULL && ndomain > last))
+				  last = ndomain;
+
+				size_t bufused
+				  = (last == NULL
+				     ? buffilled
+				     : last + strlen (last) + 1 - buffer);
 
 				/* We have to make temporary copies.  */
-				size_t hostlen = strlen (nhost) + 1;
-				size_t userlen = strlen (nuser) + 1;
-				size_t domainlen = strlen (ndomain) + 1;
+				size_t hostlen = strlen (nhost ?: "") + 1;
+				size_t userlen = strlen (nuser ?: "") + 1;
+				size_t domainlen = strlen (ndomain ?: "") + 1;
 				size_t needed = hostlen + userlen + domainlen;
 
 				if (buflen - req->key_len - bufused < needed)
@@ -226,11 +234,11 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
 				  }
 
 				nhost = memcpy (buffer + bufused,
-						nhost, hostlen);
+						nhost ?: "", hostlen);
 				nuser = memcpy ((char *) nhost + hostlen,
-						nuser, userlen);
+						nuser ?: "", userlen);
 				ndomain = memcpy ((char *) nuser + userlen,
-						  ndomain, domainlen);
+						  ndomain ?: "", domainlen);
 			      }
 
 			    char *wp = buffer + buffilled;
