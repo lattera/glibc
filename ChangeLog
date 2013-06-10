@@ -1,3 +1,8 @@
+2013-06-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* benchtests/Makefile (CPPFLAGS-nonlib): Append values instead
+	of assigning.
+
 2013-06-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/gnu/errlist.awk: Do not generate space at end of
