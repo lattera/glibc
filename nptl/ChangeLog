@@ -1,3 +1,10 @@
+2013-06-10  Carlos O'Donell  <carlos@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h
+	(lll_futex_wake): Return syscall error.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h
+	(lll_futex_wake): Return syscall error.
+
 2013-08-06   Ondřej Bílka  <neleai@seznam.cz>
 
 	* sysdeps/pthread/allocalim.h: (__libc_use_alloca): Fix warning.
