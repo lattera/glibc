@@ -1,5 +1,9 @@
 2013-06-10  Joseph Myers  <joseph@codesourcery.com>
 
+	* mach/err_boot.sub: Remove trailing whitespace.
+	* mach/err_ipc.sub: Likewise.
+	* mach/err_mach.sub: Likewise.
+
 	* sysdeps/generic/math-tests.h (ROUNDING_TESTS_float): New macro.
 	(ROUNDING_TESTS_double): Likewise.
 	(ROUNDING_TESTS_long_double): Likewise.
