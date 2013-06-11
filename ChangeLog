@@ -1,3 +1,7 @@
+2013-06-11  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* locale/iso-639.def: Convert to UTF-8.
+
 2013-06-11  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/generic/math-tests.h (EXCEPTION_TESTS_float): New macro.
