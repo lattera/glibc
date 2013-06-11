@@ -20,8 +20,8 @@
 #include <time.h>
 
 int
-clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
-		 struct timespec *rem)
+__clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
+		   struct timespec *rem)
 {
   if (__builtin_expect (req->tv_nsec, 0) < 0
       || __builtin_expect (req->tv_nsec, 0) >= 1000000000)
@@ -33,5 +33,5 @@ clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
   /* Not implemented.  */
   return ENOSYS;
 }
-strong_alias (clock_nanosleep, __clock_nanosleep)
+weak_alias (__clock_nanosleep, clock_nanosleep)
 stub_warning (clock_nanosleep)

@@ -21,7 +21,7 @@
 #include <unistd.h>
 
 int
-clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
+__clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
 {
   /* We don't allow any process ID but our own.  */
   if (pid != 0 && pid != getpid ())
@@ -37,4 +37,4 @@ clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
   return ENOENT;
 #endif
 }
-strong_alias (clock_getcpuclockid, __clock_getcpuclockid)
+weak_alias (__clock_getcpuclockid, clock_getcpuclockid)

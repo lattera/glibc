@@ -23,7 +23,7 @@
 #include "kernel-posix-cpu-timers.h"
 
 int
-clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
+__clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
 {
   /* The clockid_t value is a simple computation from the PID.
      But we do a clock_getres call to validate it.  */
@@ -46,4 +46,4 @@ clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
   else
     return INTERNAL_SYSCALL_ERRNO (r, err);
 }
-strong_alias (clock_getcpuclockid, __clock_getcpuclockid)
+weak_alias (__clock_getcpuclockid, clock_getcpuclockid)

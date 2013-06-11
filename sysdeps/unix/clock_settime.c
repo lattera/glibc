@@ -72,7 +72,7 @@ hp_timing_settime (clockid_t clock_id, const struct timespec *tp)
 
 /* Set CLOCK to value TP.  */
 int
-clock_settime (clockid_t clock_id, const struct timespec *tp)
+__clock_settime (clockid_t clock_id, const struct timespec *tp)
 {
   int retval;
 
@@ -124,4 +124,4 @@ clock_settime (clockid_t clock_id, const struct timespec *tp)
 
   return retval;
 }
-strong_alias (clock_settime, __clock_settime)
+weak_alias (__clock_settime, clock_settime)

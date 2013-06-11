@@ -39,8 +39,8 @@
 /* This implementation assumes that these is only a `nanosleep' system
    call.  So we have to remap all other activities.  */
 int
-clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
-		 struct timespec *rem)
+__clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
+		   struct timespec *rem)
 {
   struct timespec now;
 
@@ -98,4 +98,4 @@ clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
 
   return __builtin_expect (nanosleep (req, rem), 0) ? errno : 0;
 }
-strong_alias (clock_nanosleep, __clock_nanosleep)
+weak_alias (__clock_nanosleep, clock_nanosleep)

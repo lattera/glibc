@@ -1,3 +1,25 @@
+2013-06-11  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* include/time.h (__clock_gettime): Add libc_hidden_proto.
+	* rt/clock_getcpuclockid.c (clock_getcpuclockid): Rename to
+	__clock_getcpuclockid.  Add weak_alias and libc_hidden_def.
+	* sysdeps/unix/sysv/linux/clock_getcpuclockid.c
+	(clock_getcpuclockid): Likewise.
+	* rt/clock_getres.c (clock_getres): Rename to __clock_getres.
+	Add weak_alias and libc_hidden_def.
+	* sysdeps/posix/clock_getres.c (clock_getres): Likewise.
+	* rt/clock_gettime.c (clock_gettime): Rename to
+	__clock_gettime.  Add weak_alias and libc_hidden_def.
+	* sysdeps/unix/clock_gettime.c (clock_gettime): Likewise.
+	* rt/clock_nanosleep.c (clock_nanosleep): Rename to
+	__clock_nanosleep.  Add weak_alias and libc_hidden_def.
+	* sysdeps/unix/clock_nanosleep.c (clock_nanosleep): Likewise.
+	* sysdeps/unix/sysv/linux/clock_nanosleep.c (clock_nanosleep):
+	Likewise.
+	* rt/clock_settime.c (clock_settime): Rename to
+	__clock_settime.  Add weak_alias and libc_hidden_def.
+	* sysdeps/unix/clock_settime.c (clock_settime): Likewise.
+
 2013-06-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* mach/err_boot.sub: Remove trailing whitespace.

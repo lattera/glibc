@@ -21,10 +21,11 @@
 
 /* Get current value of CLOCK and store it in TP.  */
 int
-clock_gettime (clockid_t clock_id, struct timespec *tp)
+__clock_gettime (clockid_t clock_id, struct timespec *tp)
 {
   __set_errno (ENOSYS);
   return -1;
 }
-strong_alias (clock_gettime, __clock_gettime)
+weak_alias (__clock_gettime, clock_gettime)
+libc_hidden_def (__clock_gettime)
 stub_warning (clock_gettime)

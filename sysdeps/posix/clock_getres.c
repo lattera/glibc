@@ -76,7 +76,7 @@ realtime_getres (struct timespec *res)
 
 /* Get resolution of clock.  */
 int
-clock_getres (clockid_t clock_id, struct timespec *res)
+__clock_getres (clockid_t clock_id, struct timespec *res)
 {
   int retval = -1;
 
@@ -115,4 +115,4 @@ clock_getres (clockid_t clock_id, struct timespec *res)
 
   return retval;
 }
-strong_alias (clock_getres, __clock_getres)
+weak_alias (__clock_getres, clock_getres)

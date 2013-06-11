@@ -21,6 +21,7 @@ libc_hidden_proto (strptime)
 
 extern __typeof (clock_getres) __clock_getres;
 extern __typeof (clock_gettime) __clock_gettime;
+libc_hidden_proto (__clock_gettime)
 extern __typeof (clock_settime) __clock_settime;
 extern __typeof (clock_nanosleep) __clock_nanosleep;
 extern __typeof (clock_getcpuclockid) __clock_getcpuclockid;
