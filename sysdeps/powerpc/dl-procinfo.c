@@ -13,7 +13,7 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
+   License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
 /* This information must be kept in sync with the _DL_HWCAP_COUNT and
@@ -67,7 +67,7 @@ PROCINFO_CLASS const char _dl_powerpc_cap_flags[25][10]
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_powerpc_platforms
 #else
-PROCINFO_CLASS const char _dl_powerpc_platforms[9][12]
+PROCINFO_CLASS const char _dl_powerpc_platforms[13][12]
 #endif
 #ifndef PROCINFO_DECL
 = {
@@ -79,7 +79,11 @@ PROCINFO_CLASS const char _dl_powerpc_platforms[9][12]
     [PPC_PLATFORM_CELL_BE] = "ppc-cell-be",
     [PPC_PLATFORM_POWER6X] = "power6x",
     [PPC_PLATFORM_POWER7] = "power7",
-    [PPC_PLATFORM_PPCA2] = "ppca2"
+    [PPC_PLATFORM_PPCA2] = "ppca2",
+    [PPC_PLATFORM_PPC405] = "ppc405",
+    [PPC_PLATFORM_PPC440] = "ppc440",
+    [PPC_PLATFORM_PPC464] = "ppc464",
+    [PPC_PLATFORM_PPC476] = "ppc476"
   }
 #endif
 #if !defined SHARED || defined PROCINFO_DECL

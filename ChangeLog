@@ -1,3 +1,18 @@
+2013-06-11  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_platforms): Add ppc405,
+	ppc440, ppc464, and ppc476, merging from ports/ dl-procinfo.c.
+	* sysdeps/powerpc/dl-procinfo.h: Fix whitespace by correcting spaces
+	with tabs where appropriate.
+	[PPC_PLATFORM_PPC405]: Define new platform merging from ports/
+	dl-procinfo.h.
+	[PPC_PLATFORM_PPC440]: Likewise.
+	[PPC_PLATFORM_PPC464]: Likewise.
+	[PPC_PLATFORM_PPC476]: Likewise.
+	(_dl_string_platform): Add support for detecting ppc405, ppc440,
+	ppc464, and ppc476 platform strings merging from ports/
+	dl-procinfo.h.
+
 2013-06-11  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #14991]

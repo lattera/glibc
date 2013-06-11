@@ -1,3 +1,8 @@
+2013-06-11  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	 * sysdeps/powerpc/dl-procinfo.h: Fix whitespace by correcting
+	 spaces with tabs where appropriate.
+
 2013-06-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/nofpu/fenv_const.c: Remove trailing whitespace.
