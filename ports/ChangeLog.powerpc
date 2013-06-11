@@ -1,5 +1,12 @@
 2013-06-11  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/dl-procinfo.c: Remove as this is now redundant with
+	glibc/sysdeps/powerpc/dl-procinfo.c.
+	* sysdeps/powerpc/dl-procinfo.h: Remove as this is now redundant with
+	glibc/sysdeps/powerpc/dl-procinfo.h
+
+2013-06-11  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
 	 * sysdeps/powerpc/dl-procinfo.h: Fix whitespace by correcting
 	 spaces with tabs where appropriate.
 
