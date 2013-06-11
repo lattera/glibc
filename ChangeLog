@@ -1,3 +1,8 @@
+2013-06-11  Andreas Jaeger  <aj@suse.de>
+
+	* po/zh_TW.po: Update Chinese (traditional) translation from
+	translation project.
+
 2013-06-11  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* include/time.h (__clock_gettime): Add libc_hidden_proto.
