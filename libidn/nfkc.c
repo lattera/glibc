@@ -526,7 +526,7 @@ err_out:
  * @string: a UCS-4 encoded string.
  * @len: the maximum length of @string to use.
  *
- * Computes the canonical ordering of a string in-place. 
+ * Computes the canonical ordering of a string in-place.
  * This rearranges decomposed characters in the string
  * according to their combining classes.  See the Unicode
  * manual for more information.

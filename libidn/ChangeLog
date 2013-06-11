@@ -1,3 +1,10 @@
+2013-06-11   Ondřej Bílka  <neleai@seznam.cz>
+
+	* gunicomp.h: Fix trailing whitespaces.
+	* gunidecomp.h: Likewise.
+	* nfkc.c: Likewise.
+	* rfc3454.c: Likewise.
+
 2013-05-31  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makefile ($(objpfx)libcidn.so): Remove dependencies on libc.

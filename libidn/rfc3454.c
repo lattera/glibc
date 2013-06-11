@@ -5,7 +5,7 @@
 
 /*
  * A.1 Unassigned code points in Unicode 3.2
- * 
+ *
  */
 
 const Stringprep_table_element stringprep_rfc3454_A_1[] = {
@@ -411,7 +411,7 @@ const Stringprep_table_element stringprep_rfc3454_A_1[] = {
 
 /*
  * B.1 Commonly mapped to nothing
- * 
+ *
  */
 
 const Stringprep_table_element stringprep_rfc3454_B_1[] = {
@@ -448,7 +448,7 @@ const Stringprep_table_element stringprep_rfc3454_B_1[] = {
 
 /*
  * B.2 Mapping for case-folding used with NFKC
- * 
+ *
  */
 
 const Stringprep_table_element stringprep_rfc3454_B_2[] = {
@@ -1990,7 +1990,7 @@ const Stringprep_table_element stringprep_rfc3454_B_2[] = {
 
 /*
  * B.3 Mapping for case-folding used with no normalization
- * 
+ *
  */
 
 const Stringprep_table_element stringprep_rfc3454_B_3[] = {
@@ -2941,7 +2941,7 @@ const Stringprep_table_element stringprep_rfc3454_B_3[] = {
 
 /*
  * C.1.1 ASCII space characters
- * 
+ *
  */
 
 const Stringprep_table_element stringprep_rfc3454_C_1_1[] = {
@@ -2978,7 +2978,7 @@ const Stringprep_table_element stringprep_rfc3454_C_1_2[] = {
 
 /*
  * C.2.1 ASCII control characters
- * 
+ *
  */
 
 const Stringprep_table_element stringprep_rfc3454_C_2_1[] = {
@@ -2990,7 +2990,7 @@ const Stringprep_table_element stringprep_rfc3454_C_2_1[] = {
 
 /*
  * C.2.2 Non-ASCII control characters
- * 
+ *
  */
 
 const Stringprep_table_element stringprep_rfc3454_C_2_2[] = {
@@ -3016,7 +3016,7 @@ const Stringprep_table_element stringprep_rfc3454_C_2_2[] = {
 
 /*
  * C.3 Private use
- * 
+ *
  */
 
 const Stringprep_table_element stringprep_rfc3454_C_3[] = {
@@ -3029,7 +3029,7 @@ const Stringprep_table_element stringprep_rfc3454_C_3[] = {
 
 /*
  * C.4 Non-character code points
- * 
+ *
  */
 
 const Stringprep_table_element stringprep_rfc3454_C_4[] = {
@@ -3057,7 +3057,7 @@ const Stringprep_table_element stringprep_rfc3454_C_4[] = {
 
 /*
  * C.5 Surrogate codes
- * 
+ *
  */
 
 const Stringprep_table_element stringprep_rfc3454_C_5[] = {
@@ -3068,7 +3068,7 @@ const Stringprep_table_element stringprep_rfc3454_C_5[] = {
 
 /*
  * C.6 Inappropriate for plain text
- * 
+ *
  */
 
 const Stringprep_table_element stringprep_rfc3454_C_6[] = {
@@ -3083,7 +3083,7 @@ const Stringprep_table_element stringprep_rfc3454_C_6[] = {
 
 /*
  * C.7 Inappropriate for canonical representation
- * 
+ *
  */
 
 const Stringprep_table_element stringprep_rfc3454_C_7[] = {
@@ -3094,7 +3094,7 @@ const Stringprep_table_element stringprep_rfc3454_C_7[] = {
 
 /*
  * C.8 Change display properties or are deprecated
- * 
+ *
  */
 
 const Stringprep_table_element stringprep_rfc3454_C_8[] = {
@@ -3119,7 +3119,7 @@ const Stringprep_table_element stringprep_rfc3454_C_8[] = {
 
 /*
  * C.9 Tagging characters
- * 
+ *
  */
 
 const Stringprep_table_element stringprep_rfc3454_C_9[] = {
@@ -3131,7 +3131,7 @@ const Stringprep_table_element stringprep_rfc3454_C_9[] = {
 
 /*
  * D.1 Characters with bidirectional property "R" or "AL"
- * 
+ *
  */
 
 const Stringprep_table_element stringprep_rfc3454_D_1[] = {
@@ -3175,7 +3175,7 @@ const Stringprep_table_element stringprep_rfc3454_D_1[] = {
 
 /*
  * D.2 Characters with bidirectional property "L"
- * 
+ *
  */
 
 const Stringprep_table_element stringprep_rfc3454_D_2[] = {
