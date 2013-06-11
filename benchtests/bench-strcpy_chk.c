@@ -1,7 +1,6 @@
-/* Test and measure __strcpy_chk functions.
-   Copyright (C) 1999-2013 Free Software Foundation, Inc.
+/* Measure __strcpy_chk functions.
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -21,7 +20,7 @@
 # define STRCPY_RESULT(dst, len) dst
 # define TEST_MAIN
 # define TEST_NAME "strcpy_chk"
-# include "../string/test-string.h"
+# include "bench-string.h"
 
 /* This test case implicitly tests the availability of the __chk_fail
    symbol, which is part of the public ABI and may be used
@@ -110,6 +109,24 @@ do_one_test (impl_t *impl, char *dst, const char *src,
       ret = 1;
       return;
     }
+
+  if (HP_TIMING_AVAIL)
+    {
+      hp_timing_t start __attribute ((unused));
+      hp_timing_t stop __attribute ((unused));;
+      hp_timing_t best_time = ~ (hp_timing_t) 0;
+      size_t i;
+
+      for (i = 0; i < 32; ++i)
+	{
+	  HP_TIMING_NOW (start);
+	  CALL (impl, dst, src, dlen);
+	  HP_TIMING_NOW (stop);
+	  HP_TIMING_BEST (best_time, start, stop);
+	}
+
+      printf ("\t%zd", (size_t) best_time);
+    }
 }
 
 static void
@@ -133,137 +150,14 @@ do_test (size_t align1, size_t align2, size_t len, size_t dlen, int max_char)
     s1[i] = 32 + 23 * i % (max_char - 32);
   s1[len] = 0;
 
+  if (HP_TIMING_AVAIL && dlen > len)
+    printf ("Length %4zd, alignment %2zd/%2zd:", len, align1, align2);
+
   FOR_EACH_IMPL (impl, 0)
     do_one_test (impl, s2, s1, len, dlen);
-}
 
-static void
-do_random_tests (void)
-{
-  size_t i, j, n, align1, align2, len, dlen;
-  unsigned char *p1 = buf1 + page_size - 512;
-  unsigned char *p2 = buf2 + page_size - 512;
-  unsigned char *res;
-
-  for (n = 0; n < ITERATIONS; n++)
-    {
-      align1 = random () & 31;
-      if (random () & 1)
-	align2 = random () & 31;
-      else
-	align2 = align1 + (random () & 24);
-      len = random () & 511;
-      j = align1;
-      if (align2 > j)
-	j = align2;
-      if (len + j >= 511)
-	len = 510 - j - (random () & 7);
-      j = len + align1 + 64;
-      if (j > 512)
-	j = 512;
-      for (i = 0; i < j; i++)
-	{
-	  if (i == len + align1)
-	    p1[i] = 0;
-	  else
-	    {
-	      p1[i] = random () & 255;
-	      if (i >= align1 && i < len + align1 && !p1[i])
-		p1[i] = (random () & 127) + 3;
-	    }
-	}
-
-      switch (random () & 7)
-	{
-	case 0:
-	  dlen = len - (random () & 31);
-	  if (dlen > len)
-	    dlen = len;
-	  break;
-	case 1:
-	  dlen = (size_t) -1;
-	  break;
-	case 2:
-	  dlen = len + 1 + (random () & 65535);
-	  break;
-	case 3:
-	  dlen = len + 1 + (random () & 255);
-	  break;
-	case 4:
-	  dlen = len + 1 + (random () & 31);
-	  break;
-	case 5:
-	  dlen = len + 1 + (random () & 7);
-	  break;
-	case 6:
-	  dlen = len + 1 + (random () & 3);
-	  break;
-	default:
-	  dlen = len + 1;
-	  break;
-	}
-
-      FOR_EACH_IMPL (impl, 1)
-	{
-	  if (dlen <= len)
-	    {
-	      if (impl->test != 1)
-		{
-		  chk_fail_ok = 1;
-		  if (setjmp (chk_fail_buf) == 0)
-		    {
-		      res = (unsigned char *)
-			    CALL (impl, (char *) p2 + align2,
-				  (char *) p1 + align1, dlen);
-		      printf ("Iteration %zd - did not __chk_fail\n", n);
-		      chk_fail_ok = 0;
-		      ret = 1;
-		    }
-		}
-	      continue;
-	    }
-	  memset (p2 - 64, '\1', 512 + 64);
-	  res = (unsigned char *)
-		CALL (impl, (char *) p2 + align2, (char *) p1 + align1, dlen);
-	  if (res != STRCPY_RESULT (p2 + align2, len))
-	    {
-	      printf ("\
-Iteration %zd - wrong result in function %s (%zd, %zd, %zd) %p != %p\n",
-		      n, impl->name, align1, align2, len, res,
-		      STRCPY_RESULT (p2 + align2, len));
-	      ret = 1;
-	    }
-	  for (j = 0; j < align2 + 64; ++j)
-	    {
-	      if (p2[j - 64] != '\1')
-		{
-		  printf ("\
-Iteration %zd - garbage before, %s (%zd, %zd, %zd)\n",
-			  n, impl->name, align1, align2, len);
-		  ret = 1;
-		  break;
-		}
-	    }
-	  for (j = align2 + len + 1; j < 512; ++j)
-	    {
-	      if (p2[j] != '\1')
-		{
-		  printf ("\
-Iteration %zd - garbage after, %s (%zd, %zd, %zd)\n",
-			  n, impl->name, align1, align2, len);
-		  ret = 1;
-		  break;
-		}
-	    }
-	  if (memcmp (p1 + align1, p2 + align2, len + 1))
-	    {
-	      printf ("\
-Iteration %zd - different strings, %s (%zd, %zd, %zd)\n",
-		      n, impl->name, align1, align2, len);
-	      ret = 1;
-	    }
-	}
-    }
+  if (HP_TIMING_AVAIL && dlen > len)
+    putchar ('\n');
 }
 
 int
@@ -362,8 +256,7 @@ test_main (void)
       do_test (i, i, (8 << i), (8 << i) + i + 3, 255);
     }
 
-  do_random_tests ();
-  return ret;
+  return 0;
 }
 
 #include "../test-skeleton.c"

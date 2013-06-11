@@ -1,3 +1,15 @@
+2013-06-11  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* benchtests/Makefile (string-bench): Add strcpy_chk and
+	stpcpy_chk.
+	* benchtests/bench-stpcpy_chk-ifunc.c: New file.
+	* benchtests/bench-stpcpy_chk.c: New file.
+	* benchtests/bench-strcpy_chk-ifunc.c: New file.
+	* benchtests/bench-strcpy_chk.c: New file.
+	* debug/test-strcpy_chk.c (do_one_test): Remove HP_TIMING
+	code.
+	(do_test): Likewise.
+
 2013-06-11  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_platforms): Add ppc405,
