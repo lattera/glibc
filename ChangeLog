@@ -1,5 +1,7 @@
 2013-06-11  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* include/sys/time.h: Fix indentation and add copyright header.
+
 	* string/test-memccpy.c (do_one_test): Remove HP_TIMING code.
 	(do_test): Likewise.
 	* string/test-memchr.c (do_one_test): Likewise.
