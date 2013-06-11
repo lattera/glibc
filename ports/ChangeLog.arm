@@ -1,3 +1,10 @@
+2013-06-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/math-tests.h [__SOFTFP__] (EXCEPTION_TESTS_float):
+	Define to 0.
+	[__SOFTFP__] (EXCEPTION_TESTS_double): Likewise.
+	[__SOFTFP__] (EXCEPTION_TESTS_long_double): Likewise.
+
 2013-06-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/math-tests.h: New file.

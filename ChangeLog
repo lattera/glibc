@@ -1,3 +1,12 @@
+2013-06-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/math-tests.h (EXCEPTION_TESTS_float): New macro.
+	(EXCEPTION_TESTS_double): Likewise.
+	(EXCEPTION_TESTS_long_double): Likewise.
+	(EXCEPTION_TESTS): Likewise.
+	* math/libm-test.inc (test_exceptions): Only test exceptions if
+	EXCEPTION_TESTS (FLOAT).
+
 2013-06-11  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* benchtests/Makefile (string-bench): Add strcpy_chk and
