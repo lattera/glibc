@@ -1,3 +1,7 @@
+2013-06-12  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/bits/endian.h (__BYTE_ORDER): Default to little.
+
 2013-06-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/tile/tilepro/memcpy.S: Remove trailing whitespace.

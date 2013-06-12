@@ -6,8 +6,6 @@
 
 #if defined __BIG_ENDIAN__
 # define __BYTE_ORDER __BIG_ENDIAN
-#elif defined __LITTLE_ENDIAN__
-# define __BYTE_ORDER __LITTLE_ENDIAN
 #else
-# error "Endianness not declared!!"
+# define __BYTE_ORDER __LITTLE_ENDIAN
 #endif
