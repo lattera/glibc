@@ -1,5 +1,6 @@
 #ifndef _FENV_H
 #include <math/fenv.h>
+#include <stdbool.h>
 
 #ifndef _ISOMAC
 /* Now define the internal interfaces.  */
@@ -22,5 +23,14 @@ libm_hidden_proto (feupdateenv)
 libm_hidden_proto (fetestexcept)
 libm_hidden_proto (feclearexcept)
 #endif
+
+/* Rounding mode context.  This allows functions to set/restore rounding mode
+   only when the desired rounding mode is different from the current rounding
+   mode.  */
+struct rm_ctx
+{
+  fenv_t env;
+  bool updated_status;
+};
 
 #endif

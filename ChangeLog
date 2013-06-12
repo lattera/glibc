@@ -1,3 +1,52 @@
+2013-06-12  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* include/fenv.h: Include stdbool.h.
+	(struct rm_ctx): New structure.
+	* sysdeps/generic/math_private.h (SET_RESTORE_ROUND_GENERIC):
+	Define macro.
+	(SET_RESTORE_ROUND): Define using SET_RESTORE_ROUND_GENERIC.
+	(SET_RESTORE_ROUNDF): Likewise.
+	(SET_RESTORE_ROUNDL): Likewise.
+	(SET_RESTORE_ROUND_NOEX): Likewise.
+	(SET_RESTORE_ROUND_NOEXF): Likewise.
+	(SET_RESTORE_ROUND_NOEXL): Likewise.
+	(SET_RESTORE_ROUND_53BIT): Likewise.
+	[HAVE_RM_CTX] (libc_feresetround_noex_ctx): Define macro.
+	(libc_feresetround_noexf_ctx): Likewise.
+	(libc_feresetround_noexl_ctx): Likewise.
+	(libc_feholdsetround_53bit_ctx): Likewise.
+	(libc_feresetround_53bit_ctx): Likewise.
+	* sysdeps/i386/fpu/fenv_private.h (HAVE_RM_CTX): Define macro.
+	(libc_feholdexcept_setround_sse_ctx): New function.
+	(libc_fesetenv_sse_ctx): Likewise.
+	(libc_feupdateenv_sse_ctx): Likewise.
+	(libc_feholdexcept_setround_387_prec_ctx): Likewise.
+	(libc_feholdexcept_setround_387_ctx): Likewise.
+	(libc_feholdexcept_setround_387_53bit_ctx): Likewise.
+	(libc_feholdsetround_387_prec_ctx): Likewise.
+	(libc_feholdsetround_387_ctx): Likewise.
+	(libc_feholdsetround_387_53bit_ctx): Likewise.
+	(libc_feholdsetround_sse_ctx): Likewise.
+	(libc_feresetround_sse_ctx): Likewise.
+	(libc_feresetround_387_ctx): Likewise.
+	(libc_feupdateenv_387_ctx): Likewise.
+	(libc_feholdexcept_setroundf_ctx): Define macro.
+	(libc_fesetenvf_ctx): Likewise.
+	(libc_feupdateenvf_ctx): Likewise.
+	(libc_feholdsetroundf_ctx): Likewise.
+	(libc_feresetroundf_ctx): Likewise.
+	(libc_feholdexcept_setround_ctx): Likewise.
+	(libc_fesetenv_ctx): Likewise.
+	(libc_feupdateenv_ctx): Likewise.
+	(libc_feholdsetround_ctx): Likewise.
+	(libc_feresetround_ctx): Likewise.
+	(libc_feholdexcept_setroundl_ctx): Likewise.
+	(libc_feupdateenvl_ctx): Likewise.
+	(libc_feholdsetroundl_ctx): Likewise.
+	(libc_feresetroundl_ctx): Likewise.
+	[!__SSE2_MATH__] (libc_feholdsetround_53bit_ctx): Likewise.
+	(libc_feresetround_53bit_ctx): Likewise.
+
 2013-06-11  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* locale/iso-639.def: Convert to UTF-8.

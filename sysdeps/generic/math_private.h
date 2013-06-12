@@ -553,35 +553,62 @@ default_libc_feupdateenv_test (fenv_t *e, int ex)
 # define libc_feresetround_noexl libc_fesetenvl
 #endif
 
+#if HAVE_RM_CTX
+/* Set/Restore Rounding Modes only when necessary.  If defined, these functions
+   set/restore floating point state only if the state needed within the lexical
+   block is different from the current state.  This saves a lot of time when
+   the floating point unit is much slower than the fixed point units.  */
+
+# ifndef libc_feresetround_noex_ctx
+#   define libc_feresetround_noex_ctx  libc_fesetenv_ctx
+# endif
+# ifndef libc_feresetround_noexf_ctx
+#   define libc_feresetround_noexf_ctx libc_fesetenvf_ctx
+# endif
+# ifndef libc_feresetround_noexl_ctx
+#   define libc_feresetround_noexl_ctx libc_fesetenvl_ctx
+# endif
+
+# ifndef libc_feholdsetround_53bit_ctx
+#   define libc_feholdsetround_53bit_ctx libc_feholdsetround_ctx
+# endif
+
+# ifndef libc_feresetround_53bit_ctx
+#   define libc_feresetround_53bit_ctx libc_feresetround_ctx
+# endif
+
+# define SET_RESTORE_ROUND_GENERIC(RM,ROUNDFUNC,CLEANUPFUNC) \
+  struct rm_ctx ctx __attribute__((cleanup(CLEANUPFUNC ## _ctx)));	      \
+  ROUNDFUNC ## _ctx (&ctx, (RM))
+#else
+# define SET_RESTORE_ROUND_GENERIC(RM, ROUNDFUNC, CLEANUPFUNC) \
+  fenv_t __libc_save_rm __attribute__((cleanup(CLEANUPFUNC)));	\
+  ROUNDFUNC (&__libc_save_rm, (RM))
+#endif
+
 /* Save and restore the rounding mode within a lexical block.  */
 
 #define SET_RESTORE_ROUND(RM) \
-  fenv_t __libc_save_rm __attribute__((cleanup(libc_feresetround)));	\
-  libc_feholdsetround (&__libc_save_rm, (RM))
+  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround, libc_feresetround)
 #define SET_RESTORE_ROUNDF(RM) \
-  fenv_t __libc_save_rm __attribute__((cleanup(libc_feresetroundf)));	\
-  libc_feholdsetroundf (&__libc_save_rm, (RM))
+  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetroundf, libc_feresetroundf)
 #define SET_RESTORE_ROUNDL(RM) \
-  fenv_t __libc_save_rm __attribute__((cleanup(libc_feresetroundl)));	\
-  libc_feholdsetroundl (&__libc_save_rm, (RM))
+  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetroundl, libc_feresetroundl)
 
 /* Save and restore the rounding mode within a lexical block, and also
    the set of exceptions raised within the block may be discarded.  */
 
 #define SET_RESTORE_ROUND_NOEX(RM) \
-  fenv_t __libc_save_rm __attribute__((cleanup(libc_feresetround_noex))); \
-  libc_feholdsetround (&__libc_save_rm, (RM))
+  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround, libc_feresetround_noex)
 #define SET_RESTORE_ROUND_NOEXF(RM) \
-  fenv_t __libc_save_rm __attribute__((cleanup(libc_feresetround_noexf))); \
-  libc_feholdsetroundf (&__libc_save_rm, (RM))
+  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetroundf, libc_feresetround_noexf)
 #define SET_RESTORE_ROUND_NOEXL(RM) \
-  fenv_t __libc_save_rm __attribute__((cleanup(libc_feresetround_noexl))); \
-  libc_feholdsetroundl (&__libc_save_rm, (RM))
+  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetroundl, libc_feresetround_noexl)
 
 /* Like SET_RESTORE_ROUND, but also set rounding precision to 53 bits.  */
 #define SET_RESTORE_ROUND_53BIT(RM) \
-  fenv_t __libc_save_rm __attribute__((cleanup(libc_feresetround_53bit))); \
-  libc_feholdsetround_53bit (&__libc_save_rm, (RM))
+  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround_53bit,	      \
+			     libc_feresetround_53bit)
 
 #define __nan(str) \
   (__builtin_constant_p (str) && str[0] == '\0' ? NAN : __nan (str))

@@ -322,6 +322,179 @@ libc_feresetround_387 (fenv_t *e)
 # define libc_feholdsetround_53bit	libc_feholdsetround_387_53bit
 #endif
 
+/* We have support for rounding mode context.  */
+#define HAVE_RM_CTX 1
+
+static __always_inline void
+libc_feholdexcept_setround_sse_ctx (struct rm_ctx *ctx, int r)
+{
+  unsigned int mxcsr, new_mxcsr;
+  asm (STMXCSR " %0" : "=m" (*&mxcsr));
+  new_mxcsr = ((mxcsr | 0x1f80) & ~0x603f) | (r << 3);
+
+  ctx->env.__mxcsr = mxcsr;
+  if (__glibc_unlikely (mxcsr != new_mxcsr))
+    {
+      asm volatile (LDMXCSR " %0" : : "m" (*&new_mxcsr));
+      ctx->updated_status = true;
+    }
+  else
+    ctx->updated_status = false;
+}
+
+/* Unconditional since we want to overwrite any exceptions that occurred in the
+   context.  This is also why all fehold* functions unconditionally write into
+   ctx->env.  */
+static __always_inline void
+libc_fesetenv_sse_ctx (struct rm_ctx *ctx)
+{
+  libc_fesetenv_sse (&ctx->env);
+}
+
+static __always_inline void
+libc_feupdateenv_sse_ctx (struct rm_ctx *ctx)
+{
+  if (__glibc_unlikely (ctx->updated_status))
+    libc_feupdateenv_test_sse (&ctx->env, 0);
+}
+
+static __always_inline void
+libc_feholdexcept_setround_387_prec_ctx (struct rm_ctx *ctx, int r)
+{
+  libc_feholdexcept_387 (&ctx->env);
+
+  fpu_control_t cw = ctx->env.__control_word;
+  fpu_control_t old_cw = cw;
+  cw &= ~(_FPU_RC_ZERO | _FPU_EXTENDED);
+  cw |= r | 0x3f;
+
+  if (__glibc_unlikely (old_cw != cw))
+    {
+      _FPU_SETCW (cw);
+      ctx->updated_status = true;
+    }
+  else
+    ctx->updated_status = false;
+}
+
+static __always_inline void
+libc_feholdexcept_setround_387_ctx (struct rm_ctx *ctx, int r)
+{
+  libc_feholdexcept_setround_387_prec_ctx (ctx, r | _FPU_EXTENDED);
+}
+
+static __always_inline void
+libc_feholdexcept_setround_387_53bit_ctx (struct rm_ctx *ctx, int r)
+{
+  libc_feholdexcept_setround_387_prec_ctx (ctx, r | _FPU_DOUBLE);
+}
+
+static __always_inline void
+libc_feholdsetround_387_prec_ctx (struct rm_ctx *ctx, int r)
+{
+  fpu_control_t cw, new_cw;
+
+  _FPU_GETCW (cw);
+  new_cw = cw;
+  new_cw &= ~(_FPU_RC_ZERO | _FPU_EXTENDED);
+  new_cw |= r;
+
+  ctx->env.__control_word = cw;
+  if (__glibc_unlikely (new_cw != cw))
+    {
+      _FPU_SETCW (new_cw);
+      ctx->updated_status = true;
+    }
+  else
+    ctx->updated_status = false;
+}
+
+static __always_inline void
+libc_feholdsetround_387_ctx (struct rm_ctx *ctx, int r)
+{
+  libc_feholdsetround_387_prec_ctx (ctx, r | _FPU_EXTENDED);
+}
+
+static __always_inline void
+libc_feholdsetround_387_53bit_ctx (struct rm_ctx *ctx, int r)
+{
+  libc_feholdsetround_387_prec_ctx (ctx, r | _FPU_DOUBLE);
+}
+
+static __always_inline void
+libc_feholdsetround_sse_ctx (struct rm_ctx *ctx, int r)
+{
+  unsigned int mxcsr, new_mxcsr;
+
+  asm (STMXCSR " %0" : "=m" (*&mxcsr));
+  new_mxcsr = (mxcsr & ~0x6000) | (r << 3);
+
+  ctx->env.__mxcsr = mxcsr;
+  if (__glibc_unlikely (new_mxcsr != mxcsr))
+    {
+      asm volatile (LDMXCSR " %0" : : "m" (*&new_mxcsr));
+      ctx->updated_status = true;
+    }
+  else
+    ctx->updated_status = false;
+}
+
+static __always_inline void
+libc_feresetround_sse_ctx (struct rm_ctx *ctx)
+{
+  if (__glibc_unlikely (ctx->updated_status))
+    libc_feresetround_sse (&ctx->env);
+}
+
+static __always_inline void
+libc_feresetround_387_ctx (struct rm_ctx *ctx)
+{
+  if (__glibc_unlikely (ctx->updated_status))
+    _FPU_SETCW (ctx->env.__control_word);
+}
+
+static __always_inline void
+libc_feupdateenv_387_ctx (struct rm_ctx *ctx)
+{
+  if (__glibc_unlikely (ctx->updated_status))
+    libc_feupdateenv_test_387 (&ctx->env, 0);
+}
+
+#ifdef __SSE_MATH__
+# define libc_feholdexcept_setroundf_ctx libc_feholdexcept_setround_sse_ctx
+# define libc_fesetenvf_ctx		libc_fesetenv_sse_ctx
+# define libc_feupdateenvf_ctx		libc_feupdateenv_sse_ctx
+# define libc_feholdsetroundf_ctx	libc_feholdsetround_sse_ctx
+# define libc_feresetroundf_ctx		libc_feresetround_sse_ctx
+#else
+# define libc_feholdexcept_setroundf_ctx libc_feholdexcept_setround_387_ctx
+# define libc_feupdateenvf_ctx		libc_feupdateenv_387_ctx
+# define libc_feholdsetroundf_ctx	libc_feholdsetround_387_ctx
+# define libc_feresetroundf_ctx		libc_feresetround_387_ctx
+#endif /* __SSE_MATH__ */
+
+#ifdef __SSE2_MATH__
+# define libc_feholdexcept_setround_ctx	libc_feholdexcept_setround_sse_ctx
+# define libc_fesetenv_ctx		libc_fesetenv_sse_ctx
+# define libc_feupdateenv_ctx		libc_feupdateenv_sse_ctx
+# define libc_feholdsetround_ctx	libc_feholdsetround_sse_ctx
+# define libc_feresetround_ctx		libc_feresetround_sse_ctx
+#else
+# define libc_feholdexcept_setround_ctx	libc_feholdexcept_setround_387_ctx
+# define libc_feupdateenv_ctx		libc_feupdateenv_387_ctx
+# define libc_feresetround_ctx		libc_feresetround_387_ctx
+#endif /* __SSE2_MATH__ */
+
+#define libc_feholdexcept_setroundl_ctx	libc_feholdexcept_setround_387_ctx
+#define libc_feupdateenvl_ctx		libc_feupdateenv_387_ctx
+#define libc_feholdsetroundl_ctx	libc_feholdsetround_387_ctx
+#define libc_feresetroundl_ctx		libc_feresetround_387_ctx
+
+#ifndef __SSE2_MATH__
+# define libc_feholdsetround_53bit_ctx	libc_feholdsetround_387_53bit_ctx
+# define libc_feresetround_53bit_ctx	libc_feresetround_387_ctx
+#endif
+
 #undef __mxcsr
 
 #endif /* FENV_PRIVATE_H */
