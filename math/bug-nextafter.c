@@ -3,6 +3,7 @@
 #include <float.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <math-tests.h>
 
 #if !defined(FE_OVERFLOW) && !defined(FE_UNDERFLOW)
 /* If there's no support for the exceptions this test is checking,
@@ -26,7 +27,7 @@ main (void)
       puts ("nextafterf+ failed");
       ++result;
     }
-  if (fetestexcept (FE_OVERFLOW) == 0)
+  if (EXCEPTION_TESTS (float) && fetestexcept (FE_OVERFLOW) == 0)
     {
       puts ("nextafterf+ did not overflow");
       ++result;
@@ -37,7 +38,7 @@ main (void)
       puts ("nextafterf- failed");
       ++result;
     }
-  if (fetestexcept (FE_OVERFLOW) == 0)
+  if (EXCEPTION_TESTS (float) && fetestexcept (FE_OVERFLOW) == 0)
     {
       puts ("nextafterf- did not overflow");
       ++result;
@@ -52,7 +53,7 @@ main (void)
       puts ("nextafterf+ failed");
       ++result;
     }
-  if (fetestexcept (FE_UNDERFLOW) == 0)
+  if (EXCEPTION_TESTS (float) && fetestexcept (FE_UNDERFLOW) == 0)
     {
       puts ("nextafterf+ did not underflow");
       ++result;
@@ -65,7 +66,7 @@ main (void)
       puts ("nextafterf- failed");
       ++result;
     }
-  if (fetestexcept (FE_UNDERFLOW) == 0)
+  if (EXCEPTION_TESTS (float) && fetestexcept (FE_UNDERFLOW) == 0)
     {
       puts ("nextafterf- did not underflow");
       ++result;
@@ -78,7 +79,7 @@ main (void)
       puts ("nextafterf+ failed");
       ++result;
     }
-  if (fetestexcept (FE_UNDERFLOW) == 0)
+  if (EXCEPTION_TESTS (float) && fetestexcept (FE_UNDERFLOW) == 0)
     {
       puts ("nextafterf+ did not underflow");
       ++result;
@@ -89,7 +90,7 @@ main (void)
       puts ("nextafterf+ failed");
       ++result;
     }
-  if (fetestexcept (FE_UNDERFLOW) == 0)
+  if (EXCEPTION_TESTS (float) && fetestexcept (FE_UNDERFLOW) == 0)
     {
       puts ("nextafterf+ did not underflow");
       ++result;
@@ -101,7 +102,7 @@ main (void)
       puts ("nextafterf- failed");
       ++result;
     }
-  if (fetestexcept (FE_UNDERFLOW) == 0)
+  if (EXCEPTION_TESTS (float) && fetestexcept (FE_UNDERFLOW) == 0)
     {
       puts ("nextafterf- did not underflow");
       ++result;
@@ -112,7 +113,7 @@ main (void)
       puts ("nextafterf- failed");
       ++result;
     }
-  if (fetestexcept (FE_UNDERFLOW) == 0)
+  if (EXCEPTION_TESTS (float) && fetestexcept (FE_UNDERFLOW) == 0)
     {
       puts ("nextafterf- did not underflow");
       ++result;
@@ -126,7 +127,7 @@ main (void)
       puts ("nextafter+ failed");
       ++result;
     }
-  if (fetestexcept (FE_OVERFLOW) == 0)
+  if (EXCEPTION_TESTS (double) && fetestexcept (FE_OVERFLOW) == 0)
     {
       puts ("nextafter+ did not overflow");
       ++result;
@@ -137,7 +138,7 @@ main (void)
       puts ("nextafter failed");
       ++result;
     }
-  if (fetestexcept (FE_OVERFLOW) == 0)
+  if (EXCEPTION_TESTS (double) && fetestexcept (FE_OVERFLOW) == 0)
     {
       puts ("nextafter- did not overflow");
       ++result;
@@ -152,7 +153,7 @@ main (void)
       puts ("nextafter+ failed");
       ++result;
     }
-  if (fetestexcept (FE_UNDERFLOW) == 0)
+  if (EXCEPTION_TESTS (double) && fetestexcept (FE_UNDERFLOW) == 0)
     {
       puts ("nextafter+ did not underflow");
       ++result;
@@ -165,7 +166,7 @@ main (void)
       puts ("nextafter- failed");
       ++result;
     }
-  if (fetestexcept (FE_UNDERFLOW) == 0)
+  if (EXCEPTION_TESTS (double) && fetestexcept (FE_UNDERFLOW) == 0)
     {
       puts ("nextafter- did not underflow");
       ++result;
@@ -178,7 +179,7 @@ main (void)
       puts ("nextafter+ failed");
       ++result;
     }
-  if (fetestexcept (FE_UNDERFLOW) == 0)
+  if (EXCEPTION_TESTS (double) && fetestexcept (FE_UNDERFLOW) == 0)
     {
       puts ("nextafter+ did not underflow");
       ++result;
@@ -189,7 +190,7 @@ main (void)
       puts ("nextafter+ failed");
       ++result;
     }
-  if (fetestexcept (FE_UNDERFLOW) == 0)
+  if (EXCEPTION_TESTS (double) && fetestexcept (FE_UNDERFLOW) == 0)
     {
       puts ("nextafter+ did not underflow");
       ++result;
@@ -201,7 +202,7 @@ main (void)
       puts ("nextafter- failed");
       ++result;
     }
-  if (fetestexcept (FE_UNDERFLOW) == 0)
+  if (EXCEPTION_TESTS (double) && fetestexcept (FE_UNDERFLOW) == 0)
     {
       puts ("nextafter- did not underflow");
       ++result;
@@ -212,7 +213,7 @@ main (void)
       puts ("nextafter- failed");
       ++result;
     }
-  if (fetestexcept (FE_UNDERFLOW) == 0)
+  if (EXCEPTION_TESTS (double) && fetestexcept (FE_UNDERFLOW) == 0)
     {
       puts ("nextafter- did not underflow");
       ++result;
@@ -227,7 +228,7 @@ main (void)
       puts ("nextafterl+ failed");
       ++result;
     }
-  if (fetestexcept (FE_OVERFLOW) == 0)
+  if (EXCEPTION_TESTS (long double) && fetestexcept (FE_OVERFLOW) == 0)
     {
       puts ("nextafterl+ did not overflow");
       ++result;
@@ -238,7 +239,7 @@ main (void)
       puts ("nextafterl failed");
       ++result;
     }
-  if (fetestexcept (FE_OVERFLOW) == 0)
+  if (EXCEPTION_TESTS (long double) && fetestexcept (FE_OVERFLOW) == 0)
     {
       puts ("nextafterl- did not overflow");
       ++result;
@@ -253,7 +254,7 @@ main (void)
       puts ("nextafterl+ failed");
       ++result;
     }
-  if (fetestexcept (FE_UNDERFLOW) == 0)
+  if (EXCEPTION_TESTS (long double) && fetestexcept (FE_UNDERFLOW) == 0)
     {
       puts ("nextafterl+ did not underflow");
       ++result;
@@ -266,7 +267,7 @@ main (void)
       puts ("nextafterl- failed");
       ++result;
     }
-  if (fetestexcept (FE_UNDERFLOW) == 0)
+  if (EXCEPTION_TESTS (long double) && fetestexcept (FE_UNDERFLOW) == 0)
     {
       puts ("nextafterl- did not underflow");
       ++result;
@@ -279,7 +280,7 @@ main (void)
       puts ("nextafterl+ failed");
       ++result;
     }
-  if (fetestexcept (FE_UNDERFLOW) == 0)
+  if (EXCEPTION_TESTS (long double) && fetestexcept (FE_UNDERFLOW) == 0)
     {
       puts ("nextafterl+ did not underflow");
       ++result;
@@ -290,7 +291,7 @@ main (void)
       puts ("nextafterl+ failed");
       ++result;
     }
-  if (fetestexcept (FE_UNDERFLOW) == 0)
+  if (EXCEPTION_TESTS (long double) && fetestexcept (FE_UNDERFLOW) == 0)
     {
       puts ("nextafterl+ did not underflow");
       ++result;
@@ -302,7 +303,7 @@ main (void)
       puts ("nextafterl- failed");
       ++result;
     }
-  if (fetestexcept (FE_UNDERFLOW) == 0)
+  if (EXCEPTION_TESTS (long double) && fetestexcept (FE_UNDERFLOW) == 0)
     {
       puts ("nextafterl- did not underflow");
       ++result;
@@ -313,7 +314,7 @@ main (void)
       puts ("nextafterl- failed");
       ++result;
     }
-  if (fetestexcept (FE_UNDERFLOW) == 0)
+  if (EXCEPTION_TESTS (long double) && fetestexcept (FE_UNDERFLOW) == 0)
     {
       puts ("nextafterl- did not underflow");
       ++result;

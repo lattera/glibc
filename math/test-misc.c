@@ -22,6 +22,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
+#include <math-tests.h>
 
 
 int
@@ -1188,7 +1189,7 @@ main (void)
   f2 += f1;
 #if defined(FE_OVERFLOW) && defined(FE_INEXACT)
   int fe = fetestexcept (FE_ALL_EXCEPT);
-  if (fe != (FE_OVERFLOW | FE_INEXACT))
+  if (EXCEPTION_TESTS (float) && fe != (FE_OVERFLOW | FE_INEXACT))
     {
       printf ("float overflow test failed: %x\n", fe);
       result = 1;
@@ -1203,7 +1204,7 @@ main (void)
   d2 += d1;
 #if defined(FE_OVERFLOW) && defined(FE_INEXACT)
   fe = fetestexcept (FE_ALL_EXCEPT);
-  if (fe != (FE_OVERFLOW | FE_INEXACT))
+  if (EXCEPTION_TESTS (double) && fe != (FE_OVERFLOW | FE_INEXACT))
     {
       printf ("double overflow test failed: %x\n", fe);
       result = 1;
@@ -1219,7 +1220,7 @@ main (void)
   ld2 += ld1;
 # if defined(FE_OVERFLOW) && defined(FE_INEXACT)
   fe = fetestexcept (FE_ALL_EXCEPT);
-  if (fe != (FE_OVERFLOW | FE_INEXACT))
+  if (EXCEPTION_TESTS (long double) && fe != (FE_OVERFLOW | FE_INEXACT))
     {
       printf ("long double overflow test failed: %x\n", fe);
       result = 1;

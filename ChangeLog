@@ -1,3 +1,15 @@
+2013-06-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/bug-nextafter.c: Include <math-tests.h>.
+	(main): Only test for exceptions if EXCEPTION_TESTS is true for
+	the relevant type.
+	* math/bug-nexttoward.c: Include <math-tests.h>.
+	(main): Only test for exceptions if EXCEPTION_TESTS is true for
+	the relevant type.
+	* math/test-misc.c: Include <math-tests.h>.
+	(main): Only test for exceptions if EXCEPTION_TESTS is true for
+	the relevant type.
+
 2013-06-12  Andreas Jaeger  <aj@suse.de>
 
 	* po/ia.po: Update Interlingua translation from translation
