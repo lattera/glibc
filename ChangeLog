@@ -1,3 +1,8 @@
+2013-06-12  Andreas Jaeger  <aj@suse.de>
+
+	* po/ia.po: Update Interlingua translation from translation
+	project.
+
 2013-06-12  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* include/fenv.h: Include stdbool.h.
