@@ -1,3 +1,8 @@
+2013-06-13  Roland McGrath  <roland@hack.frob.com>
+
+	* elf/Makefile ($(objpfx)ld.so): Link into a temporary file and move
+	it into place only when and if the sanity check passes.
+
 2013-06-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* stdlib/gen-tst-strtod-round.c (round_str): Always generate
