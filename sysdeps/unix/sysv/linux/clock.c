@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2013 Free Software Foundation, Inc.
+/* Return the time used by the program so far (user time + system time).
+   Copyright (C) 1991-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,26 +20,21 @@
 #include <time.h>
 #include <unistd.h>
 
-/* Return the time used by the program so far (user time + system time).  */
+#if CLOCKS_PER_SEC != 1000000l
+# error "CLOCKS_PER_SEC should be 1000000"
+#endif
+
 clock_t
 clock (void)
 {
-  struct tms buf;
-  long clk_tck = __sysconf (_SC_CLK_TCK);
+  struct timespec ts;
 
-  /* We don't check for errors here.  The only error the kernel
-     returns is EFAULT if the value cannot be written to the struct we
-     pass a pointer to.  Otherwise the kernel returns an `unsigned
-     long' value which is the number of jiffies since system start.
-     But this number can be negative (when read as `long') when the
-     system is up for some time.  Ignoring errors should therefore
-     have no negative impacts but solve the problem.  */
-  __times (&buf);
+  /* clock_gettime shouldn't fail here since CLOCK_PROCESS_CPUTIME_ID is
+     supported since 2.6.12.  Check the return value anyway in case the kernel
+     barfs on us for some reason.  */
+  if (__glibc_unlikely (__clock_gettime (CLOCK_PROCESS_CPUTIME_ID, &ts) != 0))
+    return (clock_t) -1;
 
-  return
-    (clk_tck <= CLOCKS_PER_SEC)
-    ? ((unsigned long) buf.tms_utime + buf.tms_stime) * (CLOCKS_PER_SEC
-							 / clk_tck)
-    : ((unsigned long) buf.tms_utime + buf.tms_stime) / (clk_tck
-							 / CLOCKS_PER_SEC);
+  return (ts.tv_sec * CLOCKS_PER_SEC
+	  + ts.tv_nsec / (1000000000 / CLOCKS_PER_SEC));
 }

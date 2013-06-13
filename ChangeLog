@@ -1,3 +1,9 @@
+2013-06-13  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #12515]
+	* sysdeps/unix/sysv/linux/clock.c (clock): Use result from
+	CLOCK_PROCESS_CPUTIME_ID clock instead of __times.
+
 2013-06-11  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ #15605]
