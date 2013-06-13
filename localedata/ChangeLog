@@ -1,5 +1,8 @@
 2013-06-13  Johan Heikkila  <johan.heikkila@gmail.com>
 
+	[BZ#15432]
+	* locales/sv_FI@euro: Add LC_MEASUREMENT.
+
 	[BZ#15431]
 	* locales/sv_FI: Add LC_MEASUREMENT, use copy in LC_TELEPHONE,
 	update LC_ADDRESS with using postal_fmt from Finnish Post Office

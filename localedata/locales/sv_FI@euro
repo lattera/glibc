@@ -32,6 +32,7 @@ category  "sv_FI@euro:2000";LC_NUMERIC
 category  "sv_FI@euro:2000";LC_MONETARY
 category  "sv_FI@euro:2000";LC_MESSAGES
 category  "sv_FI@euro:2000";LC_PAPER
+category  "sv_FI@euro:2000";LC_MEASUREMENT
 category  "sv_FI@euro:2000";LC_NAME
 category  "sv_FI@euro:2000";LC_ADDRESS
 category  "sv_FI@euro:2000";LC_TELEPHONE
