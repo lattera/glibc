@@ -1,3 +1,12 @@
+2013-06-13  Johan Heikkila  <johan.heikkila@gmail.com>
+
+	[BZ#15431]
+	* locales/sv_FI: Add LC_MEASUREMENT, use copy in LC_TELEPHONE,
+	update LC_ADDRESS with using postal_fmt from Finnish Post Office
+	recommendations at
+	http://www.posti.fi/hinnatjaohjeet/osoitejakuorimerkinnat/osoitemerkinnat.html
+	and add missing entries.
+
 2013-06-11  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #14991]
