@@ -1,3 +1,13 @@
+2013-06-13  Siddhesh Poyarekar  <siddhesh@redhat.com>
+	    Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #15618]
+	* tst-pthread-attr-affinity: New test case.
+	* Makefile (tests): Add it.
+	* sysdeps/unix/sysv/linux/pthread_attr_getaffinity.c
+	(__pthread_attr_getaffinity_new): Copy minimum of source and
+	destination sizes to avoid a buffer overrun.
+
 2013-06-10  Carlos O'Donell  <carlos@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/lowlevellock.h
