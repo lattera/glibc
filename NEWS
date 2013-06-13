@@ -43,7 +43,8 @@ Version 2.18
 * New <math.h> macro named issignaling to check for a signaling NaN (sNaN).
   It is based on draft TS 18661 and currently enabled as a GNU extension.
 
-* Improved precision of the clock() function on Linux.
+* On Linux, the clock function now uses the clock_gettime system call
+  for improved precision, rather than old times system call.
 
 Version 2.17
 

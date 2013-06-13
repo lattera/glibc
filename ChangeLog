@@ -1,3 +1,8 @@
+2013-06-13  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* NEWS: Fix note on clock function precision.  Text by Roland
+	McGrath.
+
 2013-06-13  Roland McGrath  <roland@hack.frob.com>
 
 	* elf/Makefile ($(objpfx)ld.so): Link into a temporary file and move
