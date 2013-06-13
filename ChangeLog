@@ -1,3 +1,17 @@
+2013-06-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* stdlib/gen-tst-strtod-round.c (round_str): Always generate
+	output for whether conversion result is exact.  Take argument
+	indicating whether type is IBM long double.
+	(round_for_all): Change need_exact field to ibm_ld.
+	* stdlib/tst-strtod-round.c (struct exactness): New type.
+	(struct test): Change bool ld_ok field to struct exactness exact.
+	(TEST): Update all definitions for change to field.
+	(tests): Regenerate array contents.
+	(test_in_one_mode): Take pointer to new field instead of old ld_ok
+	field value.  Check for IBM long double here.
+	(do_test): Update calls to test_in_one_mode.
+
 2013-06-13  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #12515]

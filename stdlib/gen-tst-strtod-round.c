@@ -57,7 +57,7 @@ print_fp (mpfr_t f, const char *suffix, const char *suffix2)
 
 static void
 round_str (const char *s, const char *suffix,
-	   int prec, int emin, int emax, bool need_exact)
+	   int prec, int emin, int emax, bool ibm_ld)
 {
   mpfr_t f;
   mpfr_set_default_prec (prec);
@@ -65,7 +65,7 @@ round_str (const char *s, const char *suffix,
   mpfr_set_emax (emax);
   mpfr_init (f);
   int r = string_to_fp (f, s, MPFR_RNDD);
-  if (need_exact)
+  if (ibm_ld)
     {
       assert (prec == 106 && emin == -1073 && emax == 1024);
       /* The maximum value in IBM long double has discontiguous
@@ -76,9 +76,9 @@ round_str (const char *s, const char *suffix,
 		    MPFR_RNDN);
       if (mpfr_cmpabs (f, max_value) > 0)
 	r = 1;
-      mpfr_printf ("\t%s,\n", r ? "false" : "true");
       mpfr_clear (max_value);
     }
+  mpfr_printf ("\t%s,\n", r ? "false" : "true");
   print_fp (f, suffix, ",\n");
   string_to_fp (f, s, MPFR_RNDN);
   print_fp (f, suffix, ",\n");
@@ -97,7 +97,7 @@ round_for_all (const char *s)
     int prec;
     int emin;
     int emax;
-    bool need_exact;
+    bool ibm_ld;
   } formats[7] = {
     { "f", 24, -148, 128, false },
     { "", 53, -1073, 1024, false },
@@ -122,7 +122,7 @@ round_for_all (const char *s)
   for (i = 0; i < 7; i++)
     {
       round_str (s, formats[i].suffix, formats[i].prec,
-		 formats[i].emin, formats[i].emax, formats[i].need_exact);
+		 formats[i].emin, formats[i].emax, formats[i].ibm_ld);
       if (i < 6)
 	mpfr_printf (",\n");
     }
