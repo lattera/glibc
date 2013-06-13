@@ -4,7 +4,7 @@
 	* sysdeps/unix/sysv/linux/clock.c (clock): Use result from
 	CLOCK_PROCESS_CPUTIME_ID clock instead of __times.
 
-2013-06-11  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+2013-06-12  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ #15605]
 	* sysdeps/generic/symbol-hacks.h: Add workaround for memset/memmove calls
