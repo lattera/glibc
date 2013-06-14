@@ -78,6 +78,13 @@ __init_cpu_features (void)
 	      __cpu_features.feature[index_Slow_BSF] |= bit_Slow_BSF;
 	      break;
 
+	    case 0x37:
+	      /* Unaligned load versions are faster than SSSE3
+		 on Silvermont.  */
+	      __cpu_features.feature[index_Fast_Unaligned_Load]
+		|= bit_Fast_Unaligned_Load;
+	      break;
+
 	    default:
 	      /* Unknown family 0x06 processors.  Assuming this is one
 		 of Core i3/i5/i7 processors if AVX is available.  */

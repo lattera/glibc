@@ -1,3 +1,8 @@
+2013-06-14  Liubov Dmitrieva  <liubov.dmitrieva@intel.com>
+
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features):
+	Set bit_Fast_Unaligned_Load for Intel Silvermont architecture.
+
 2013-06-14  Siddhesh Poyarekar  <siddhesh@redhat.com>
 	    H.J. Lu  <hjl.tools@gmail.com>
 
