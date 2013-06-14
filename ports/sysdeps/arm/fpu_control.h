@@ -39,7 +39,7 @@ extern fpu_control_t __fpu_control;
 
 /* Some bits in the FPSCR are not yet defined.  They must be preserved when
    modifying the contents.  */
-#define _FPU_RESERVED	0x0e08e0e0
+#define _FPU_RESERVED	0x00086060
 #define _FPU_DEFAULT    0x00000000
 /* Default + exceptions enabled. */
 #define _FPU_IEEE	(_FPU_DEFAULT | 0x00001f00)
