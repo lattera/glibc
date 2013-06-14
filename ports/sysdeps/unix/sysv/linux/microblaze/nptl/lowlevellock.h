@@ -87,7 +87,7 @@
     __ret = INTERNAL_SYSCALL (futex, __err, 4, (long) (futexp),                \
                   __lll_private_flag (FUTEX_WAIT, private),                    \
                   (val), (timespec));                                          \
-    INTERNAL_SYSCALL_ERROR_P (__ret, __err) ? -__ret : __ret;                  \
+    __ret;                                                                     \
   })
 
 #define lll_futex_timed_wait_bitset(futexp, val, timespec, clockbit, private)  \
@@ -99,7 +99,7 @@
                   __lll_private_flag (__op, private),                          \
                   (val), (timespec), NULL /* Unused.  */,                      \
                   FUTEX_BITSET_MATCH_ANY);                                     \
-    INTERNAL_SYSCALL_ERROR_P (__ret, __err) ? -__ret : __ret;                  \
+    __ret;                                                                     \
   })
 
 #define lll_futex_wake(futexp, nr, private)                                    \
@@ -109,7 +109,7 @@
     __ret = INTERNAL_SYSCALL (futex, __err, 4, (long) (futexp),                \
                   __lll_private_flag (FUTEX_WAKE, private),                    \
                   (nr), 0);                                                    \
-    INTERNAL_SYSCALL_ERROR_P (__ret, __err) ? -__ret : __ret;                  \
+    __ret;                                                                     \
   })
 
 #define lll_robust_dead(futexv, private)                                       \
@@ -160,7 +160,7 @@
     __ret = INTERNAL_SYSCALL (futex, __err, 5, (futexp),                       \
                   __lll_private_flag (__op, private),                          \
                   (val), (timespec), mutex);                                   \
-    INTERNAL_SYSCALL_ERROR_P (__ret, __err) ? -__ret : __ret;                  \
+    __ret;                                                                     \
   })
 
 #define lll_futex_cmp_requeue_pi(futexp, nr_wake, nr_move, mutex, val, priv)   \

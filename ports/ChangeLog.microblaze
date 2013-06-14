@@ -1,3 +1,8 @@
+2013-06-14  David Holsgrove <david.holsgrove@xilinx.com>
+
+	* sysdeps/unix/sysv/linux/microblaze/nptl/lowlevellock.h: Correct
+	return from macros.
+
 2013-06-05  Ondřej Bílka  <neleai@seznam.cz>
 
 	* sysdeps/microblaze/bits/atomic.h: Remove executable mode.
