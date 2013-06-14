@@ -1,3 +1,7 @@
+2013-06-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/math-tests.h: New file.
+
 2013-06-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/fpu/fgetexcptflg.c: Remove trailing whitespace.
