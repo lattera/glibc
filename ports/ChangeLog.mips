@@ -1,5 +1,17 @@
 2013-06-14  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14909]
+	* sysdeps/mips/bits/setjmp.h (struct __jmp_buf_internal_tag):
+	Rename __fpc_csr field to __glibc_reserved1.
+	* sysdeps/mips/setjmp_aux.c (__sigsetjmp_aux) [__mips_hard_float]:
+	Do not set __fpc_csr.
+	* sysdeps/mips/mips64/setjmp_aux.c (__sigsetjmp_aux)
+	[__mips_hard_float]: Likewise.
+	* sysdeps/mips/__longjmp.c (____longjmp) [__mips_hard_float]: Do
+	not use __fpc_csr.
+	* sysdeps/mips/mips64/__longjmp.c (__longjmp) [__mips_hard_float]:
+	Likewise.
+
 	* sysdeps/mips/math-tests.h: New file.
 
 2013-06-05  Joseph Myers  <joseph@codesourcery.com>

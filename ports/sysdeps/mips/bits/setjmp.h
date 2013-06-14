@@ -59,8 +59,8 @@ typedef struct __jmp_buf_internal_tag
     __extension__ long long __gp;
 #endif
 
-    /* Floating point status register.  */
-    int __fpc_csr;
+    /* Unused (was floating point status register).  */
+    int __glibc_reserved1;
 
     /* Callee-saved floating point registers.  */
 #if _MIPS_SIM == _ABI64

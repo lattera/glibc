@@ -59,10 +59,6 @@ __longjmp (env_arg, val_arg)
   asm volatile ("l.d $f28, %0" : : "m" (env[0].__fpregs[4]));
   asm volatile ("l.d $f30, %0" : : "m" (env[0].__fpregs[5]));
 #endif
-
-  /* Get and reconstruct the floating point csr.  */
-  asm volatile ("lw $2, %0" : : "m" (env[0].__fpc_csr));
-  asm volatile ("ctc1 $2, $31");
 #endif
 
   /* Get the GP. */

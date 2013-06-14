@@ -71,11 +71,6 @@ __sigsetjmp_aux (jmp_buf env, int savemask, long long sp, long long fp,
   asm volatile ("sd $22, %0" : : "m" (env[0].__jmpbuf[0].__regs[6]));
   asm volatile ("sd $23, %0" : : "m" (env[0].__jmpbuf[0].__regs[7]));
 
-#ifdef __mips_hard_float
-  /* .. and finally get and reconstruct the floating point csr.  */
-  asm ("cfc1 %0, $31" : "=r" (env[0].__jmpbuf[0].__fpc_csr));
-#endif
-
   /* Save the signal mask if requested.  */
   return __sigjmp_save (env, savemask);
 }
