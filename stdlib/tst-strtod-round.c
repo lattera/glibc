@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math-tests.h>
 
 struct exactness
 {
@@ -7538,7 +7539,9 @@ static const struct test tests[] = {
 
 static int
 test_in_one_mode (const char *s, const struct test_results *expected,
-		  const struct exactness *exact, const char *mode_name)
+		  const struct exactness *exact, const char *mode_name,
+		  bool float_round_ok, bool double_round_ok,
+		  bool long_double_round_ok)
 {
   int result = 0;
   float f = strtof (s, NULL);
@@ -7549,24 +7552,30 @@ test_in_one_mode (const char *s, const struct test_results *expected,
     {
       printf ("strtof (%s) returned %a not %a (%s)\n", s, f,
 	      expected->f, mode_name);
-      result = 1;
+      if (float_round_ok || exact->f)
+	result = 1;
+      else
+	printf ("ignoring this inexact result\n");
     }
   if (d != expected->d
       || copysign (1.0, d) != copysign (1.0, expected->d))
     {
       printf ("strtod (%s) returned %a not %a (%s)\n", s, d,
 	      expected->d, mode_name);
-      result = 1;
+      if (double_round_ok || exact->d)
+	result = 1;
+      else
+	printf ("ignoring this inexact result\n");
     }
   if (ld != expected->ld
       || copysignl (1.0L, ld) != copysignl (1.0L, expected->ld))
     {
       printf ("strtold (%s) returned %La not %La (%s)\n", s, ld,
 	      expected->ld, mode_name);
-      if (LDBL_MANT_DIG != 106 || exact->ld)
+      if ((long_double_round_ok && LDBL_MANT_DIG != 106) || exact->ld)
 	result = 1;
       else
-	printf ("ignoring this inexact long double result\n");
+	printf ("ignoring this inexact result\n");
     }
   return result;
 }
@@ -7579,12 +7588,17 @@ do_test (void)
   for (size_t i = 0; i < sizeof (tests) / sizeof (tests[0]); i++)
     {
       result |= test_in_one_mode (tests[i].s, &tests[i].rn, &tests[i].exact,
-				  "default rounding mode");
+				  "default rounding mode",
+				  true, true, true);
 #ifdef FE_DOWNWARD
       if (!fesetround (FE_DOWNWARD))
 	{
 	  result |= test_in_one_mode (tests[i].s, &tests[i].rd,
-				      &tests[i].exact, "FE_DOWNWARD");
+				      &tests[i].exact, "FE_DOWNWARD",
+				      ROUNDING_TESTS (float, FE_DOWNWARD),
+				      ROUNDING_TESTS (double, FE_DOWNWARD),
+				      ROUNDING_TESTS (long double,
+						      FE_DOWNWARD));
 	  fesetround (save_round_mode);
 	}
 #endif
@@ -7592,7 +7606,11 @@ do_test (void)
       if (!fesetround (FE_TOWARDZERO))
 	{
 	  result |= test_in_one_mode (tests[i].s, &tests[i].rz,
-				      &tests[i].exact, "FE_TOWARDZERO");
+				      &tests[i].exact, "FE_TOWARDZERO",
+				      ROUNDING_TESTS (float, FE_TOWARDZERO),
+				      ROUNDING_TESTS (double, FE_TOWARDZERO),
+				      ROUNDING_TESTS (long double,
+						      FE_TOWARDZERO));
 	  fesetround (save_round_mode);
 	}
 #endif
@@ -7600,7 +7618,10 @@ do_test (void)
       if (!fesetround (FE_UPWARD))
 	{
 	  result |= test_in_one_mode (tests[i].s, &tests[i].ru,
-				      &tests[i].exact, "FE_UPWARD");
+				      &tests[i].exact, "FE_UPWARD",
+				      ROUNDING_TESTS (float, FE_UPWARD),
+				      ROUNDING_TESTS (double, FE_UPWARD),
+				      ROUNDING_TESTS (long double, FE_UPWARD));
 	  fesetround (save_round_mode);
 	}
 #endif

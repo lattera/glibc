@@ -1,3 +1,11 @@
+2013-06-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* stdlib/tst-strtod-round.c: Include <math-tests.h>.
+	(test_in_one_mode): Take arguments for whether the rounding mode
+	is supported for each floating-point type.
+	(do_test): Pass new arguments to test_in_one_mode using
+	ROUNDING_TESTS.
+
 2013-06-13  Roland McGrath  <roland@hack.frob.com>
 
 	* posix/tst-waitid.c (do_test): Distinguish different instances of
