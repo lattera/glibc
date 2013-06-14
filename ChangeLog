@@ -1,3 +1,10 @@
+2013-06-14  Siddhesh Poyarekar  <siddhesh@redhat.com>
+	    H.J. Lu  <hjl.tools@gmail.com>
+
+	[BZ #15627]
+	* sysdeps/x86_64/rtld-memset.c: Remove file.
+	* sysdeps/x86_64/rtld-memset.S: New file.
+
 2013-06-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* stdlib/tst-strtod-round.c: Include <math-tests.h>.
