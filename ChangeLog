@@ -1,5 +1,10 @@
 2013-06-15  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #15631]
+	* sysdeps/ieee754/dbl-64/e_sqrt.c (__ieee754_sqrt): Save and
+	restore exception state around main square root computation, then
+	check for inexactness explicitly.
+
 	* math/libm-test.inc (fma_test_data): Add another test.
 
 2013-06-15  Siddhesh Poyarekar  <siddhesh@redhat.com>

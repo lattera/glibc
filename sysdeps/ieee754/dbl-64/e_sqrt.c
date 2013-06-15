@@ -63,6 +63,9 @@ double __ieee754_sqrt(double x) {
   s=a.x;
   /*----------------- 2^-1022  <= | x |< 2^1024  -----------------*/
   if (k>0x000fffff && k<0x7ff00000) {
+    fenv_t env;
+    libc_feholdexcept (&env);
+    double ret;
     y=1.0-t*(t*s);
     t=t*(rt0+y*(rt1+y*(rt2+y*rt3)));
     c.i[HIGH_HALF]=0x20000000+((k&0x7fe00000)>>1);
@@ -70,12 +73,22 @@ double __ieee754_sqrt(double x) {
     hy=(y+big)-big;
     del=0.5*t*((s-hy*hy)-(y-hy)*(y+hy));
     res=y+del;
-    if (res == (res+1.002*((y-res)+del))) return res*c.x;
+    if (res == (res+1.002*((y-res)+del))) ret = res*c.x;
     else {
       res1=res+1.5*((y-res)+del);
       EMULV(res,res1,z,zz,p,hx,tx,hy,ty);  /* (z+zz)=res*res1 */
-      return ((((z-s)+zz)<0)?max(res,res1):min(res,res1))*c.x;
+      ret = ((((z-s)+zz)<0)?max(res,res1):min(res,res1))*c.x;
     }
+    math_force_eval (ret);
+    libc_fesetenv (&env);
+    if (x / ret != ret)
+      {
+	double force_inexact = 1.0 / 3.0;
+	math_force_eval (force_inexact);
+      }
+    /* Otherwise (x / ret == ret), either the square root was exact or
+       the division was inexact.  */
+    return ret;
   }
   else {
     if ((k & 0x7ff00000) == 0x7ff00000)
