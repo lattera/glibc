@@ -1,5 +1,9 @@
 2013-06-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* manual/threads.texi (Non-POSIX Extensions): New document
+	node.  Document pthread_getattr_default_np and
+	pthread_setattr_default_np.
+
 	* Versions.def (libpthread): Add GLIBC_2.18.
 	* sysdeps/unix/sysv/linux/i386/nptl/libpthread.abilist: Update.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/libpthread.abilist:

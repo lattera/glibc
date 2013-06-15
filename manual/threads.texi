@@ -9,6 +9,8 @@ This chapter describes the @glibcadj{} POSIX Thread implementation.
 @menu
 * Thread-specific Data::          Support for creating and
 				  managing thread-specific data
+* Non-POSIX Extensions::          Additional functions to extend
+				  POSIX Thread functionality
 @end menu
 
 @node Thread-specific Data
@@ -42,3 +44,41 @@ thread.
 Associate the thread-specific @var{value} with @var{key} in the calling thread.
 
 @end table
+
+@node Non-POSIX Extensions
+@section Non-POSIX Extensions
+
+In addition to implementing the POSIX API for threads, @theglibc{} provides
+additional functions and interfaces to provide functionality not specified in
+the standard.
+
+@menu
+* Default Thread Attributes::             Setting default attributes for
+					  threads in a process.
+@end menu
+
+@node Default Thread Attributes
+@subsection Setting Process-wide defaults for thread attributes
+
+@Theglibc{} provides non-standard API functions to set and get the default
+attributes used in the creation of threads in a process.
+
+@deftypefun int pthread_getattr_default_np (pthread_attr_t *@var{attr})
+Get the default attribute values and set @var{attr} to match.  This
+function returns @math{0} on success and a non-zero error code on
+failure.
+@end deftypefun
+
+@deftypefun int pthread_getattr_default_np (pthread_attr_t *@var{attr})
+Set the default attribute values to match the values in @var{attr}.  The
+function returns @math{0} on success and a non-zero error code on failure.
+The following error codes are defined for this function:
+
+@table @code
+@item EINVAL
+At least one of the values in @var{attr} does not qualify as valid for the
+attributes or the stack address is set in the attribute.
+@item ENOMEM
+The system does not have sufficient memory.
+@end table
+@end deftypefun
