@@ -1,3 +1,7 @@
+2013-06-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (fma_test_data): Add another test.
+
 2013-06-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* manual/threads.texi (Non-POSIX Extensions): New document
