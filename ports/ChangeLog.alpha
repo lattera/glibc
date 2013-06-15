@@ -1,3 +1,7 @@
+2013-06-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/nptl/libpthread.abilist: Update.
+
 2013-06-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/alpha/bits/atomic.h: Remove trailing whitespace.

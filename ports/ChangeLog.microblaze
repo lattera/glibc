@@ -1,3 +1,8 @@
+2013-06-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/unix/sysv/linux/microblaze/nptl/libpthread.abilist:
+	Update.
+
 2013-06-14  David Holsgrove <david.holsgrove@xilinx.com>
 
 	* sysdeps/unix/sysv/linux/microblaze/nptl/lowlevellock.h: Correct

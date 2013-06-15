@@ -1,3 +1,8 @@
+2013-06-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libpthread.abilist:
+	Update.
+
 2013-06-11  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/dl-procinfo.c: Remove as this is now redundant with

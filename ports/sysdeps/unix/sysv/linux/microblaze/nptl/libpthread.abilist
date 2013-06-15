@@ -120,6 +120,7 @@ GLIBC_2.18
  pthread_equal F
  pthread_exit F
  pthread_getaffinity_np F
+ pthread_getattr_default_np F
  pthread_getattr_np F
  pthread_getconcurrency F
  pthread_getcpuclockid F
@@ -175,6 +176,7 @@ GLIBC_2.18
  pthread_rwlockattr_setpshared F
  pthread_self F
  pthread_setaffinity_np F
+ pthread_setattr_default_np F
  pthread_setcancelstate F
  pthread_setcanceltype F
  pthread_setconcurrency F

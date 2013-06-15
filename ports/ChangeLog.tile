@@ -1,3 +1,12 @@
+2013-06-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libpthread.abilist:
+	Update.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libpthread.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libpthread.abilist:
+	Likewise.
+
 2013-06-12  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/tile/bits/endian.h (__BYTE_ORDER): Default to little.

@@ -1,3 +1,12 @@
+2013-06-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libpthread.abilist:
+	Update.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/nptl/libpthread.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/nptl/libpthread.abilist:
+	Likewise.
+
 2013-06-14  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14909]

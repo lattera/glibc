@@ -149,6 +149,7 @@ enum
 
 /* Default pthread attributes.  */
 extern struct pthread_attr __default_pthread_attr attribute_hidden;
+extern int __default_pthread_attr_lock attribute_hidden;
 
 /* Size and alignment of static TLS block.  */
 extern size_t __static_tls_size attribute_hidden;

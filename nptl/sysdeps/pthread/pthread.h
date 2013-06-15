@@ -404,6 +404,14 @@ extern int pthread_attr_getaffinity_np (const pthread_attr_t *__attr,
 					cpu_set_t *__cpuset)
      __THROW __nonnull ((1, 3));
 
+/* Get the default attributes used by pthread_create in this process.  */
+extern int pthread_getattr_default_np (pthread_attr_t *__attr)
+     __THROW __nonnull ((1));
+
+/* Set the default attributes to be used by pthread_create in this
+   process.  */
+extern int pthread_setattr_default_np (const pthread_attr_t *__attr)
+     __THROW __nonnull ((1));
 
 /* Initialize thread attribute *ATTR with attributes corresponding to the
    already running thread TH.  It shall be called on uninitialized ATTR

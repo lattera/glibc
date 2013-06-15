@@ -1,3 +1,7 @@
+2013-06-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/nptl/libpthread.abilist: Update.
+
 2013-06-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/ia64/getpagesize.c (__getpagesize): Use

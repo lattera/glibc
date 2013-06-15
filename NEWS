@@ -45,6 +45,10 @@ Version 2.18
 
 * On Linux, the clock function now uses the clock_gettime system call
   for improved precision, rather than old times system call.
+
+* Added new API functions pthread_getattr_default_np and
+  pthread_setattr_default_np to get and set the default pthread
+  attributes of a process.
 
 Version 2.17
 

@@ -252,6 +252,11 @@ libpthread {
     pthread_setname_np; pthread_getname_np;
   };
 
+  GLIBC_2.18 {
+    pthread_getattr_default_np;
+    pthread_setattr_default_np;
+  }
+
   GLIBC_PRIVATE {
     __pthread_initialize_minimal;
     __pthread_clock_gettime; __pthread_clock_settime;

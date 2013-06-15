@@ -423,8 +423,10 @@ __pthread_initialize_minimal_internal (void)
 
   /* Round the resource limit up to page size.  */
   limit.rlim_cur = (limit.rlim_cur + pagesz - 1) & -pagesz;
+  lll_lock (__default_pthread_attr_lock, LLL_PRIVATE);
   __default_pthread_attr.stacksize = limit.rlim_cur;
   __default_pthread_attr.guardsize = GLRO (dl_pagesize);
+  lll_unlock (__default_pthread_attr_lock, LLL_PRIVATE);
 
 #ifdef SHARED
   /* Transfer the old value from the dynamic linker's internal location.  */

@@ -1,3 +1,8 @@
+2013-06-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/unix/sysv/linux/aarch64/nptl/libpthread.abilist:
+	Update.
+
 2013-06-04  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
 	* sysdeps/unix/sysv/linux/aarch64/getcontext.S (__getcontext):

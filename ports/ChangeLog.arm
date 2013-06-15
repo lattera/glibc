@@ -1,3 +1,7 @@
+2013-06-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/unix/sysv/linux/arm/nptl/libpthread.abilist: Update.
+
 2013-06-14  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15492]

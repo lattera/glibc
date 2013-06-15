@@ -1,3 +1,30 @@
+2013-06-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* Versions (libpthread): Add GLIBC_2.18.
+	(GLIBC_2.18): Add pthread_setattr_default_np and
+	pthread_getattr_default_np.
+	* allocatestack.c (allocate_stack): Synchronize read from
+	__default_pthread_attr.
+	(__reclaim_stacks): Initialize __default_pthread_attr_lock.
+	* nptl-init.c (__pthread_initialize_minimal_internal):
+	Synchronize write to __default_pthread_attr.
+	* pthreadP.h (__default_pthread_attr_lock): Declare.
+	* pthread_attr_getstacksize (__pthread_attr_getstacksize):
+	Synchronize read from __default_pthread_attr.
+	* pthread_create.c (__pthread_create_2_1): Make a local copy of
+	__default_pthread_attr.  Check value of flags in IATTR even if
+	input ATTR is NULL.
+	* pthread_getattr_default_np.c: New file.
+	* pthread_setattr_default_np.c: New file.
+	* sysdeps/pthread/pthread.h [__USE_GNU]
+	(pthread_getattr_default_np, pthread_setattr_default_np):
+	Declare.
+	* tst-default-attr.c: New test case.
+	* Makefile (libpthread-routines): Add
+	pthread_setattr_default_np and pthread_getattr_default_np.
+	(tests): Add tst-default-attr.
+	* vars.c (__default_pthread_attr_lock): Declare and initialize.
+
 2013-06-13  Siddhesh Poyarekar  <siddhesh@redhat.com>
 	    Carlos O'Donell  <carlos@redhat.com>
 

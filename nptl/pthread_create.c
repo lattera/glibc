@@ -449,18 +449,47 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
   STACK_VARIABLES;
 
   const struct pthread_attr *iattr = (struct pthread_attr *) attr;
+  struct pthread_attr default_attr;
+  bool free_cpuset = false;
   if (iattr == NULL)
-    /* Is this the best idea?  On NUMA machines this could mean
-       accessing far-away memory.  */
-    iattr = &__default_pthread_attr;
+    {
+      lll_lock (__default_pthread_attr_lock, LLL_PRIVATE);
+      default_attr = __default_pthread_attr;
+      size_t cpusetsize = default_attr.cpusetsize;
+      if (cpusetsize > 0)
+	{
+	  cpu_set_t *cpuset;
+	  if (__glibc_likely (__libc_use_alloca (cpusetsize)))
+	    cpuset = __alloca (cpusetsize);
+	  else
+	    {
+	      cpuset = malloc (cpusetsize);
+	      if (cpuset == NULL)
+		{
+		  lll_unlock (__default_pthread_attr_lock, LLL_PRIVATE);
+		  return ENOMEM;
+		}
+	      free_cpuset = true;
+	    }
+	  memcpy (cpuset, default_attr.cpuset, cpusetsize);
+	  default_attr.cpuset = cpuset;
+	}
+      lll_unlock (__default_pthread_attr_lock, LLL_PRIVATE);
+      iattr = &default_attr;
+    }
 
   struct pthread *pd = NULL;
   int err = ALLOCATE_STACK (iattr, &pd);
+  int retval = 0;
+
   if (__builtin_expect (err != 0, 0))
     /* Something went wrong.  Maybe a parameter of the attributes is
        invalid or we could not allocate memory.  Note we have to
        translate error codes.  */
-    return err == ENOMEM ? EAGAIN : err;
+    {
+      retval = err == ENOMEM ? EAGAIN : err;
+      goto out;
+    }
 
 
   /* Initialize the TCB.  All initializations with zero should be
@@ -511,8 +540,7 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
 #endif
 
   /* Determine scheduling parameters for the thread.  */
-  if (attr != NULL
-      && __builtin_expect ((iattr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0, 0)
+  if (__builtin_expect ((iattr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0, 0)
       && (iattr->flags & (ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET)) != 0)
     {
       INTERNAL_SYSCALL_DECL (scerr);
@@ -551,7 +579,8 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
 
 	  __deallocate_stack (pd);
 
-	  return EINVAL;
+	  retval = EINVAL;
+	  goto out;
 	}
     }
 
@@ -561,7 +590,13 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
   LIBC_PROBE (pthread_create, 4, newthread, attr, start_routine, arg);
 
   /* Start the thread.  */
-  return create_thread (pd, iattr, STACK_VARIABLES_ARGS);
+  retval = create_thread (pd, iattr, STACK_VARIABLES_ARGS);
+
+ out:
+  if (__glibc_unlikely (free_cpuset))
+    free (default_attr.cpuset);
+
+  return retval;
 }
 versioned_symbol (libpthread, __pthread_create_2_1, pthread_create, GLIBC_2_1);
 

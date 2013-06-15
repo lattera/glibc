@@ -8,6 +8,10 @@ GLIBC_2.12
  pthread_mutexattr_getrobust F
  pthread_mutexattr_setrobust F
  pthread_setname_np F
+GLIBC_2.18
+ GLIBC_2.18 A
+ pthread_getattr_default_np F
+ pthread_setattr_default_np F
 GLIBC_2.3
  GLIBC_2.3 A
  _IO_flockfile F

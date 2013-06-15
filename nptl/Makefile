@@ -125,7 +125,8 @@ libpthread-routines = nptl-init vars events version \
 		      pthread_mutexattr_setprioceiling tpp \
 		      pthread_mutex_getprioceiling \
 		      pthread_mutex_setprioceiling \
-		      pthread_setname pthread_getname
+		      pthread_setname pthread_getname \
+		      pthread_setattr_default_np pthread_getattr_default_np
 #		      pthread_setuid pthread_seteuid pthread_setreuid \
 #		      pthread_setresuid \
 #		      pthread_setgid pthread_setegid pthread_setregid \
@@ -201,7 +202,7 @@ CFLAGS-pt-system.c = -fexceptions
 
 
 tests = tst-typesizes \
-	tst-attr1 tst-attr2 tst-attr3 \
+	tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
 	tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex5 tst-mutex6 \
 	tst-mutex7 tst-mutex8 tst-mutex9 tst-mutex5a tst-mutex7a \
 	tst-mutexpi1 tst-mutexpi2 tst-mutexpi3 tst-mutexpi4 tst-mutexpi5 \
