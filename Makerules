@@ -217,14 +217,9 @@ endif
 # later directory would be chosen over a .c file in an earlier directory,
 # which does not preserve the desired sysdeps ordering behavior.
 
-# System-dependent makefiles can put in `inhibit-sysdep-asm' wildcard
-# patterns matching sysdep directories whose assembly source files should
-# be suppressed.
-ifdef inhibit-sysdep-asm
-define check-inhibit-asm
-case $$sysdir in $(subst $(empty) ,|,$(inhibit-sysdep-asm))) asm= ;; esac;
-endef
-endif
+# System-dependent makefiles can put in `inhibit-sysdep-asm' regexps
+# matching sysdep directories whose assembly source files should be
+# suppressed.
 
 -include $(common-objpfx)sysd-rules
 ifneq ($(sysd-rules-sysdirs),$(config-sysdirs))
@@ -233,34 +228,16 @@ ifneq ($(sysd-rules-sysdirs),$(config-sysdirs))
 sysd-rules-force = FORCE
 FORCE:
 endif
-$(common-objpfx)sysd-rules: $(common-objpfx)config.make $(..)Makerules \
+$(common-objpfx)sysd-rules: $(..)scripts/sysd-rules.awk \
+			    $(common-objpfx)config.make $(..)Makerules \
 			    $(sysdep-makefiles) $(sysdep-makeconfigs) \
 			    $(sysd-rules-force)
 	-@rm -f $@T
-	(echo 'sysd-rules-sysdirs := $(config-sysdirs)';		      \
-	 for dir in $(config-sysdirs); do				      \
-	   case "$$dir" in						      \
-	   /*) ;;							      \
-	   *) dir="\$$(..)$$dir" ;;					      \
-	   esac;							      \
-	   asm='.S';							      \
-	   $(check-inhibit-asm)						      \
-	   for o in $(all-object-suffixes); do				      \
-	     set $(subst :, ,$(sysd-rules-patterns));			      \
-	     while [ $$# -ge 2 ]; do					      \
-	       t=$$1; shift; 						      \
-	       d=$$1; shift;						      \
-	       v=$${t%%%}; [ x"$$v" = x ] || v="\$$($${v}CPPFLAGS)";	      \
-	       for s in $$asm .c; do					      \
-		 echo "\$$(objpfx)$$t$$o: $$dir/$$d$$s \$$(before-compile)";  \
-		 echo "	\$$(compile-command$$s) $$v";			      \
-	       done;							      \
-	     done;							      \
-	   done;							      \
-	   echo "\$$(inst_includedir)/%.h: $$dir/%.h \$$(+force)";	      \
-	   echo "	\$$(do-install)"; 				      \
-	 done;								      \
-	 echo 'sysd-rules-done = t') > $@T
+	LC_ALL=C $(AWK) -f $< > $@T \
+			-v all_object_suffixes='$(all-object-suffixes)' \
+			-v inhibit_sysdep_asm='$(inhibit-sysdep-asm)' \
+			-v sysd_rules_patterns='$(sysd-rules-patterns)' \
+			-v config_sysdirs='$(config-sysdirs)'
 	mv -f $@T $@
 
 ifndef sysd-rules-done

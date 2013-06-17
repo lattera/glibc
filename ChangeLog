@@ -1,3 +1,11 @@
+2013-06-17  Roland McGrath  <roland@hack.frob.com>
+
+	* Makerules [inhibit-sysdep-asm] (check-inhibit-asm): Variable removed.
+	($(common-objpfx)sysd-rules): Replace shell logic with running ...
+	* scripts/sysd-rules.awk: ... this new script.
+	* sysdeps/mach/hurd/Makefile (inhibit-sysdep-asm): Use a regexp rather
+	than a glob-style pattern.
+
 2013-06-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/test-misc.c (main): Do not treat incorrectly rounded
