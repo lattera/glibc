@@ -1,3 +1,9 @@
+2013-06-17  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14907]
+	* sysdeps/arm/feenablxcpt.c (feenableexcept): Test whether all
+	requested exception traps were enabled and return -1 if not.
+
 2013-06-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/unix/sysv/linux/arm/nptl/libpthread.abilist: Update.

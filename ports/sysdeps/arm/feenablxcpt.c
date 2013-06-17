@@ -39,6 +39,18 @@ feenableexcept (int excepts)
 
       _FPU_SETCW(new_exc);
 
+      if (excepts != 0)
+	{
+	  /* VFPv3 and VFPv4 do not support trapping exceptions, so
+	     test whether the relevant bits were set and fail if
+	     not.  */
+	  unsigned int temp;
+	  _FPU_GETCW (temp);
+	  if ((temp & (excepts << FE_EXCEPT_SHIFT))
+	      != (excepts << FE_EXCEPT_SHIFT))
+	    return -1;
+	}
+
       return old_exc;
     }
 
