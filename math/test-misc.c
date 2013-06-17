@@ -1306,7 +1306,11 @@ main (void)
 	    {
 	      printf ("%La incorrectly rounded to %s as %a\n",
 		      ld5 * i, mstr, d5);
-	      result = 1;
+	      if (ROUNDING_TESTS (long double, mode)
+		  && ROUNDING_TESTS (double, mode))
+		result = 1;
+	      else
+		puts ("ignoring this failure");
 	    }
 	}
     }
@@ -1322,7 +1326,11 @@ main (void)
   if (d7 != nextafter (0.0, 1.0))
     {
       printf ("%La incorrectly rounded upward to %a\n", ld7, d7);
-      result = 1;
+      if (ROUNDING_TESTS (long double, FE_UPWARD)
+	  && ROUNDING_TESTS (double, FE_UPWARD))
+	result = 1;
+      else
+	puts ("ignoring this failure");
     }
 #endif
 

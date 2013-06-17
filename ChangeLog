@@ -1,3 +1,8 @@
+2013-06-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/test-misc.c (main): Do not treat incorrectly rounded
+	conversions as failure unless ROUNDING_TESTS passes.
+
 2013-06-15  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15631]
