@@ -14,6 +14,25 @@ BEGIN {
   nsysdirs = split(config_sysdirs, sysdirs);
   npatterns = split(sysd_rules_patterns, patterns);
 
+  # Each element of $(sysd-rules-patterns) is a pair TARGET:DEP.
+  # They are no in particular order.  We need to sort them so that
+  # the longest TARGET is first, and, among elements with the same
+  # TARGET, the longest DEP is first.
+  for (i = 1; i <= npatterns; ++i) {
+    if (split(patterns[i], td, ":") != 2) {
+      msg = "bad sysd-rules-patterns element '" patterns[i] "'";
+      print msg > "/dev/stderr";
+      exit 2;
+    }
+    target_order = sprintf("%09d", npatterns + 1 - length(td[1]));
+    dep_order = sprintf("%09d", npatterns - length(td[2]));
+    sort_patterns[target_order SUBSEP dep_order] = patterns[i];
+  }
+  asorti(sort_patterns, map_patterns);
+  for (i in map_patterns) {
+    patterns[i] = sort_patterns[map_patterns[i]];
+  }
+
   for (sysdir_idx = 1; sysdir_idx <= nsysdirs; ++sysdir_idx) {
     dir = sysdirs[sysdir_idx];
     if (dir !~ /^\//) dir = "$(..)" dir;
@@ -28,10 +47,7 @@ BEGIN {
       o = suffixes[suffix_idx];
       for (pattern_idx = 1; pattern_idx <= npatterns; ++pattern_idx) {
         pattern = patterns[pattern_idx];
-        if (split(pattern, td, ":") != 2) {
-          print "bad sysd-rules-patterns element '" pattern "'" > "/dev/stderr";
-          exit 2;
-        }
+        split(pattern, td, ":");
         target_pattern = td[1];
         dep_pattern = td[2];
         if (target_pattern == "%") {

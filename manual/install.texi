@@ -379,10 +379,11 @@ understand all the tags used in the document, and the installation
 mechanism for the info files is not present or works differently.
 
 @item
-GNU @code{awk} 3.0, or higher
+GNU @code{awk} 3.1.2, or higher
 
-@code{Awk} is used in several places to generate files.
-@code{gawk} 3.0 is known to work.
+@code{awk} is used in several places to generate files.
+Some @code{gawk} extensions are used, including the @code{asorti}
+function, which was introduced in version 3.1.2 of @code{gawk}.
 
 @item
 Perl 5

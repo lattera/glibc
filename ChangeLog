@@ -1,5 +1,11 @@
 2013-06-17  Roland McGrath  <roland@hack.frob.com>
 
+	* scripts/sysd-rules.awk: Sort sysd_rules_patterns by descending
+	length of target pattern, then descending length of dependency pattern.
+	* configure.in (AWK): Require gawk 3.1.2 or newer.
+	* manual/install.texi (Tools for Compilation): Say that we do.
+	* configure: Regenerated.
+
 	* Makerules [inhibit-sysdep-asm] (check-inhibit-asm): Variable removed.
 	($(common-objpfx)sysd-rules): Replace shell logic with running ...
 	* scripts/sysd-rules.awk: ... this new script.
