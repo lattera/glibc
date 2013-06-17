@@ -1,3 +1,8 @@
+2013-06-17  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* nptl/sysdeps/powerpc/tls.h (tcbhead_t): Add Event-Based Branch
+	fields.
+
 2013-06-17  Roland McGrath  <roland@hack.frob.com>
 
 	* scripts/sysd-rules.awk: Sort sysd_rules_patterns by descending

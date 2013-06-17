@@ -61,6 +61,11 @@ typedef union dtv
    are private.  */
 typedef struct
 {
+  /* Reservation for the Event-Based Branching ABI.  */
+  uintptr_t ebb_handler;
+  uintptr_t ebb_ctx_pointer;
+  uintptr_t ebb_reserved1;
+  uintptr_t ebb_reserved2;
   uintptr_t pointer_guard;
   uintptr_t stack_guard;
   dtv_t *dtv;
