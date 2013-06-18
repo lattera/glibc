@@ -19,7 +19,7 @@
 #ifndef _FPU_CONTROL_H
 #define _FPU_CONTROL_H
 
-#if !defined(_LIBC) && defined(__SOFTFP__)
+#if !(defined(_LIBC) && !defined(_LIBC_TEST)) && defined(__SOFTFP__)
 
 #define _FPU_RESERVED 0xffffffff
 #define _FPU_DEFAULT  0x00000000

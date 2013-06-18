@@ -1,3 +1,9 @@
+2013-06-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/fpu_control.h [!_LIBC && __SOFTFP__]: Change
+	condition to [!(_LIBC && !_LIBC_TEST) && __SOFTFP__].
+	* sysdeps/arm/test-fpucw.c: New file.
+
 2013-06-17  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14907]
