@@ -88,29 +88,39 @@ else
 # Some other subdir's Makefile has provided all its normal rules,
 # and we just provide some additional definitions.
 
+rtld-compile-command.S = $(compile-command.S) $(rtld-CPPFLAGS)
+rtld-compile-command.s = $(compile-command.s) $(rtld-CPPFLAGS)
+rtld-compile-command.c = $(compile-command.c) $(rtld-CPPFLAGS)
+
 # These are the basic compilation rules corresponding to the Makerules ones.
 # The sysd-rules generated makefile already defines pattern rules for rtld-%
 # targets built from sysdeps source files.
 $(objpfx)rtld-%.os: rtld-%.S $(before-compile)
-	$(compile-command.S) $(rtld-CPPFLAGS)
+	$(rtld-compile-command.S)
 $(objpfx)rtld-%.os: rtld-%.s $(before-compile)
-	$(compile-command.s) $(rtld-CPPFLAGS)
+	$(rtld-compile-command.s)
 $(objpfx)rtld-%.os: rtld-%.c $(before-compile)
-	$(compile-command.c) $(rtld-CPPFLAGS)
+	$(rtld-compile-command.c)
 $(objpfx)rtld-%.os: %.S $(before-compile)
-	$(compile-command.S) $(rtld-CPPFLAGS)
+	$(rtld-compile-command.S)
 $(objpfx)rtld-%.os: %.s $(before-compile)
-	$(compile-command.s) $(rtld-CPPFLAGS)
+	$(rtld-compile-command.s)
 $(objpfx)rtld-%.os: %.c $(before-compile)
-	$(compile-command.c) $(rtld-CPPFLAGS)
+	$(rtld-compile-command.c)
 
 # The rules for generated source files.
-$(objpfx)rtld-%.os: $(objpfx)rtld-%.S $(before-compile); $(compile-command.S)
-$(objpfx)rtld-%.os: $(objpfx)rtld-%.s $(before-compile); $(compile-command.s)
-$(objpfx)rtld-%.os: $(objpfx)rtld-%.c $(before-compile); $(compile-command.c)
-$(objpfx)rtld-%.os: $(objpfx)%.S $(before-compile); $(compile-command.S)
-$(objpfx)rtld-%.os: $(objpfx)%.s $(before-compile); $(compile-command.s)
-$(objpfx)rtld-%.os: $(objpfx)%.c $(before-compile); $(compile-command.c)
+$(objpfx)rtld-%.os: $(objpfx)rtld-%.S $(before-compile)
+	$(rtld-compile-command.S)
+$(objpfx)rtld-%.os: $(objpfx)rtld-%.s $(before-compile)
+	$(rtld-compile-command.s)
+$(objpfx)rtld-%.os: $(objpfx)rtld-%.c $(before-compile)
+	$(rtld-compile-command.c)
+$(objpfx)rtld-%.os: $(objpfx)%.S $(before-compile)
+	$(rtld-compile-command.S)
+$(objpfx)rtld-%.os: $(objpfx)%.s $(before-compile)
+	$(rtld-compile-command.s)
+$(objpfx)rtld-%.os: $(objpfx)%.c $(before-compile)
+	$(rtld-compile-command.c)
 
 # The command line setting of rtld-modules (see above) tells us
 # what we need to build, and that tells us what dependency files we need.

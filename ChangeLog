@@ -1,3 +1,9 @@
+2013-06-18  Roland McGrath  <roland@hack.frob.com>
+
+	* elf/rtld-Rules (rtld-compile-command.S): New variable.
+	(rtld-compile-command.s, rtld-compile-command.c): New variables.
+	($(objpfx)rtld-%.os rules): Use them.
+
 2013-06-17  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* nptl/sysdeps/powerpc/tls.h (tcbhead_t): Add Event-Based Branch
