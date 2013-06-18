@@ -1,5 +1,7 @@
 2013-06-18  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/arm/arm-mcount.S: Comment typo fix.
+
 	* sysdeps/arm/arm-features.h (ARM_BX_NINSNS): New macro.
 	* sysdeps/arm/armv7/multiarch/memcpy_impl.S: Macroize the
 	computed-jump dispatch sections.  Use sfi_breg throughout.

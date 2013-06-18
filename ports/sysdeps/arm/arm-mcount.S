@@ -39,7 +39,7 @@
    The calling sequence looks something like:
 func:
    push {lr}
-   bl __gnu_mount_nc
+   bl __gnu_mcount_nc
    <function body>
 */
 
