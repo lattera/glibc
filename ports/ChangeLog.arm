@@ -1,3 +1,9 @@
+2013-06-18  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/armv7/multiarch/ifunc-impl-list.c (__libc_ifunc_impl_list)
+	[__ARM_NEON__]: Do not refer to HWCAP_ARM_NEON.
+	[!__SOFTFP__]: Do not refer to HWCAP_ARM_VFP.
+
 2013-06-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/fpu_control.h [!(_LIBC && !_LIBC_TEST) &&

@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <stdbool.h>
 #include <string.h>
 #include <ldsodefs.h>
 #include <sysdep.h>
@@ -29,21 +30,25 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			size_t max)
 {
   size_t i = 0;
-  int hwcap;
 
-  hwcap = GLRO(dl_hwcap);
+  bool use_neon = true;
+#ifdef __ARM_NEON__
+# define __memcpy_neon	memcpy
+#else
+  use_neon = (GLRO(dl_hwcap) & HWCAP_ARM_NEON) != 0;
+#endif
+
+#ifndef __ARM_NEON__
+  bool use_vfp = true;
+# ifdef __SOFTFP__
+  use_vfp = (GLRO(dl_hwcap) & HWCAP_ARM_VFP) != 0;
+# endif
+#endif
 
   IFUNC_IMPL (i, name, memcpy,
-	      IFUNC_IMPL_ADD (array, i, memcpy, hwcap & HWCAP_ARM_NEON,
-#ifdef __ARM_NEON__
-                              memcpy
-#else
-			      __memcpy_neon
-#endif
-                              )
+	      IFUNC_IMPL_ADD (array, i, memcpy, use_neon, __memcpy_neon)
 #ifndef __ARM_NEON__
-	      IFUNC_IMPL_ADD (array, i, memcpy, hwcap & HWCAP_ARM_VFP,
-			      __memcpy_vfp)
+	      IFUNC_IMPL_ADD (array, i, memcpy, use_vfp, __memcpy_vfp)
 #endif
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_arm));
 
