@@ -24,8 +24,8 @@
 #define _FPU_RESERVED 0xffffffff
 #define _FPU_DEFAULT  0x00000000
 typedef unsigned int fpu_control_t;
-#define _FPU_GETCW(cw) 0
-#define _FPU_SETCW(cw) do { } while (0)
+#define _FPU_GETCW(cw) (cw) = 0
+#define _FPU_SETCW(cw) (void) (cw)
 extern fpu_control_t __fpu_control;
 
 #else

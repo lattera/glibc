@@ -1,5 +1,10 @@
 2013-06-18  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/arm/fpu_control.h [!(_LIBC && !_LIBC_TEST) &&
+	__SOFTFP__] (_FPU_GETCW): Define to (cw) = 0.
+	[!(_LIBC && !_LIBC_TEST) && __SOFTFP__] (_FPU_SETCW): Define to
+	(void) (cw).
+
 	* sysdeps/arm/fpu_control.h [!_LIBC && __SOFTFP__]: Change
 	condition to [!(_LIBC && !_LIBC_TEST) && __SOFTFP__].
 	* sysdeps/arm/test-fpucw.c: New file.
