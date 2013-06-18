@@ -1,5 +1,13 @@
 2013-06-18  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/arm/arm-features.h (ARM_BX_NINSNS): New macro.
+	* sysdeps/arm/armv7/multiarch/memcpy_impl.S: Macroize the
+	computed-jump dispatch sections.  Use sfi_breg throughout.
+	[ARM_ALWAYS_BX]: Define a different version of the dispatch macros
+	that uses bx rather than add-to-pc, and respects ARM_BX_ALIGN_LOG2.
+	[!USE_NEON] (D_l, D_h): Use r10, r11 rather than r8, r9.
+	(tmp2): Use r8 rather than r10.
+
 	* sysdeps/arm/armv7/multiarch/ifunc-impl-list.c (__libc_ifunc_impl_list)
 	[__ARM_NEON__]: Do not refer to HWCAP_ARM_NEON.
 	[!__SOFTFP__]: Do not refer to HWCAP_ARM_VFP.

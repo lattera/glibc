@@ -33,6 +33,7 @@
 #define NO_THUMB
 #endif
 #include <sysdep.h>
+#include <arm-features.h>
 
 	.syntax unified
 	/* This implementation requires ARM state.  */
@@ -71,7 +72,139 @@
 /* Locals.  */
 #define tmp1	r3
 #define dst	ip
-#define tmp2	r10
+#define tmp2	r8
+
+/* These two macros both work by repeated invocation of the macro
+   dispatch_step (not defined here).  That macro performs one "step",
+   doing one load instruction and one store instruction to copy one
+   "unit".  On entry, TMP1 contains the number of bytes to be copied,
+   a multiple of the unit size.  The macro clobbers TMP1 in the
+   process of doing a computed jump to the tail containing the
+   appropriate number of steps.
+
+   In dispatch_7_dword, dispatch_step is invoked seven times, with an
+   argument that is 7 for the first and 1 for the last.  Units are
+   double-words (8 bytes).  TMP1 is at most 56.
+
+   In dispatch_15_word, dispatch_step is invoked fifteen times,
+   with an argument that is 15 for the first and 1 for the last.
+   Units are words (4 bytes).  TMP1 is at most 60.  */
+
+#ifndef ARM_ALWAYS_BX
+# if ARM_BX_ALIGN_LOG2 != 2
+#  error case not handled
+# endif
+	.macro dispatch_7_dword
+	rsb	tmp1, tmp1, #((7 * 8) - PC_OFS + INSN_SIZE)
+	add	pc, pc, tmp1
+	dispatch_step 7
+	dispatch_step 6
+	dispatch_step 5
+	dispatch_step 4
+	dispatch_step 3
+	dispatch_step 2
+	dispatch_step 1
+	.purgem dispatch_step
+	.endm
+
+	.macro dispatch_15_word
+	rsb	tmp1, tmp1, #((15 * 4) - PC_OFS/2 + INSN_SIZE/2)
+	add	pc, pc, tmp1, lsl #1
+	dispatch_step 15
+	dispatch_step 14
+	dispatch_step 13
+	dispatch_step 12
+	dispatch_step 11
+	dispatch_step 10
+	dispatch_step 9
+	dispatch_step 8
+	dispatch_step 7
+	dispatch_step 6
+	dispatch_step 5
+	dispatch_step 4
+	dispatch_step 3
+	dispatch_step 2
+	dispatch_step 1
+	.purgem dispatch_step
+	.endm
+#else
+# if ARM_BX_ALIGN_LOG2 < 4
+#  error case not handled
+# endif
+	.macro dispatch_helper steps, log2_bytes_per_step
+	.p2align ARM_BX_ALIGN_LOG2
+	/* TMP1 gets (max_bytes - bytes_to_copy), where max_bytes is
+	   (STEPS << LOG2_BYTES_PER_STEP).
+	   So this is (steps_to_skip << LOG2_BYTES_PER_STEP).  */
+	rsb	tmp1, tmp1, #(\steps << \log2_bytes_per_step)
+	/* Pad so that the add;bx pair immediately precedes an alignment
+	   boundary.  Hence, TMP1=0 will run all the steps.  */
+	.rept (1 << (ARM_BX_ALIGN_LOG2 - 2)) - (2 + ARM_BX_NINSNS)
+	nop
+	.endr
+	/* Shifting down LOG2_BYTES_PER_STEP gives us the number of
+	   steps to skip, then shifting up ARM_BX_ALIGN_LOG2 gives us
+	   the (byte) distance to add to the PC.  */
+	add	tmp1, pc, tmp1, lsl #(ARM_BX_ALIGN_LOG2 - \log2_bytes_per_step)
+	bx	tmp1
+	.endm
+
+	.macro dispatch_7_dword
+	dispatch_helper 7, 3
+	.p2align ARM_BX_ALIGN_LOG2
+	dispatch_step 7
+	.p2align ARM_BX_ALIGN_LOG2
+	dispatch_step 6
+	.p2align ARM_BX_ALIGN_LOG2
+	dispatch_step 5
+	.p2align ARM_BX_ALIGN_LOG2
+	dispatch_step 4
+	.p2align ARM_BX_ALIGN_LOG2
+	dispatch_step 3
+	.p2align ARM_BX_ALIGN_LOG2
+	dispatch_step 2
+	.p2align ARM_BX_ALIGN_LOG2
+	dispatch_step 1
+	.p2align ARM_BX_ALIGN_LOG2
+	.purgem dispatch_step
+	.endm
+
+	.macro dispatch_15_word
+	dispatch_helper 15, 2
+	dispatch_step 15
+	.p2align ARM_BX_ALIGN_LOG2
+	dispatch_step 14
+	.p2align ARM_BX_ALIGN_LOG2
+	dispatch_step 13
+	.p2align ARM_BX_ALIGN_LOG2
+	dispatch_step 12
+	.p2align ARM_BX_ALIGN_LOG2
+	dispatch_step 11
+	.p2align ARM_BX_ALIGN_LOG2
+	dispatch_step 10
+	.p2align ARM_BX_ALIGN_LOG2
+	dispatch_step 9
+	.p2align ARM_BX_ALIGN_LOG2
+	dispatch_step 8
+	.p2align ARM_BX_ALIGN_LOG2
+	dispatch_step 7
+	.p2align ARM_BX_ALIGN_LOG2
+	dispatch_step 6
+	.p2align ARM_BX_ALIGN_LOG2
+	dispatch_step 5
+	.p2align ARM_BX_ALIGN_LOG2
+	dispatch_step 4
+	.p2align ARM_BX_ALIGN_LOG2
+	dispatch_step 3
+	.p2align ARM_BX_ALIGN_LOG2
+	dispatch_step 2
+	.p2align ARM_BX_ALIGN_LOG2
+	dispatch_step 1
+	.p2align ARM_BX_ALIGN_LOG2
+	.purgem dispatch_step
+	.endm
+
+#endif
 
 #ifndef USE_NEON
 /* For bulk copies using GP registers.  */
@@ -81,8 +214,9 @@
 #define	B_h	r5
 #define	C_l	r6
 #define	C_h	r7
-#define	D_l	r8
-#define	D_h	r9
+/* Don't use the pair r8,r9 because in some EABI variants r9 is reserved.  */
+#define	D_l	r10
+#define	D_h	r11
 #endif
 
 /* Number of lines ahead to pre-fetch data.  If you change this the code
@@ -92,40 +226,71 @@
 
 #ifdef USE_VFP
 	.macro	cpy_line_vfp vreg, base
-	vstr	\vreg, [dst, #\base]
-	vldr	\vreg, [src, #\base]
-	vstr	d0, [dst, #\base + 8]
-	vldr	d0, [src, #\base + 8]
-	vstr	d1, [dst, #\base + 16]
-	vldr	d1, [src, #\base + 16]
-	vstr	d2, [dst, #\base + 24]
-	vldr	d2, [src, #\base + 24]
-	vstr	\vreg, [dst, #\base + 32]
-	vldr	\vreg, [src, #\base + prefetch_lines * 64 - 32]
-	vstr	d0, [dst, #\base + 40]
-	vldr	d0, [src, #\base + 40]
-	vstr	d1, [dst, #\base + 48]
-	vldr	d1, [src, #\base + 48]
-	vstr	d2, [dst, #\base + 56]
-	vldr	d2, [src, #\base + 56]
+	sfi_breg dst, \
+	vstr	\vreg, [\B, #\base]
+	sfi_breg src, \
+	vldr	\vreg, [\B, #\base]
+	sfi_breg dst, \
+	vstr	d0, [\B, #\base + 8]
+	sfi_breg src, \
+	vldr	d0, [\B, #\base + 8]
+	sfi_breg dst, \
+	vstr	d1, [\B, #\base + 16]
+	sfi_breg src, \
+	vldr	d1, [\B, #\base + 16]
+	sfi_breg dst, \
+	vstr	d2, [\B, #\base + 24]
+	sfi_breg src, \
+	vldr	d2, [\B, #\base + 24]
+	sfi_breg dst, \
+	vstr	\vreg, [\B, #\base + 32]
+	sfi_breg src, \
+	vldr	\vreg, [\B, #\base + prefetch_lines * 64 - 32]
+	sfi_breg dst, \
+	vstr	d0, [\B, #\base + 40]
+	sfi_breg src, \
+	vldr	d0, [\B, #\base + 40]
+	sfi_breg dst, \
+	vstr	d1, [\B, #\base + 48]
+	sfi_breg src, \
+	vldr	d1, [\B, #\base + 48]
+	sfi_breg dst, \
+	vstr	d2, [\B, #\base + 56]
+	sfi_breg src, \
+	vldr	d2, [\B, #\base + 56]
 	.endm
 
 	.macro	cpy_tail_vfp vreg, base
-	vstr	\vreg, [dst, #\base]
-	vldr	\vreg, [src, #\base]
-	vstr	d0, [dst, #\base + 8]
-	vldr	d0, [src, #\base + 8]
-	vstr	d1, [dst, #\base + 16]
-	vldr	d1, [src, #\base + 16]
-	vstr	d2, [dst, #\base + 24]
-	vldr	d2, [src, #\base + 24]
-	vstr	\vreg, [dst, #\base + 32]
-	vstr	d0, [dst, #\base + 40]
-	vldr	d0, [src, #\base + 40]
-	vstr	d1, [dst, #\base + 48]
-	vldr	d1, [src, #\base + 48]
-	vstr	d2, [dst, #\base + 56]
-	vldr	d2, [src, #\base + 56]
+	sfi_breg dst, \
+	vstr	\vreg, [\B, #\base]
+	sfi_breg src, \
+	vldr	\vreg, [\B, #\base]
+	sfi_breg dst, \
+	vstr	d0, [\B, #\base + 8]
+	sfi_breg src, \
+	vldr	d0, [\B, #\base + 8]
+	sfi_breg dst, \
+	vstr	d1, [\B, #\base + 16]
+	sfi_breg src, \
+	vldr	d1, [\B, #\base + 16]
+	sfi_breg dst, \
+	vstr	d2, [\B, #\base + 24]
+	sfi_breg src, \
+	vldr	d2, [\B, #\base + 24]
+	sfi_breg dst, \
+	vstr	\vreg, [\B, #\base + 32]
+	sfi_breg dst, \
+	vstr	d0, [\B, #\base + 40]
+	sfi_breg src, \
+	vldr	d0, [\B, #\base + 40]
+	sfi_breg dst, \
+	vstr	d1, [\B, #\base + 48]
+	sfi_breg src, \
+	vldr	d1, [\B, #\base + 48]
+	sfi_breg dst, \
+	vstr	d2, [\B, #\base + 56]
+	sfi_breg src, \
+	vldr	d2, [\B, #\base + 56]
 	.endm
 #endif
 
@@ -140,81 +305,62 @@ ENTRY(memcpy)
 
 .Ltail63unaligned:
 #ifdef USE_NEON
+	/* These need an extra layer of macro just to work around a
+	   bug in the assembler's parser when an operand starts with
+	   a {...}.  http://sourceware.org/bugzilla/show_bug.cgi?id=15647
+	   tracks that bug; it was not fixed as of binutils-2.23.2.  */
+	.macro neon_load_d0 reg
+	vld1.8	{d0}, [\reg]!
+	.endm
+	.macro neon_store_d0 reg
+	vst1.8	{d0}, [\reg]!
+	.endm
+
+	/* These are used by the NaCl sfi_breg macro.  */
+	.macro _sfi_breg_dmask_neon_load_d0 reg
+	_sfi_dmask \reg
+	.endm
+	.macro _sfi_breg_dmask_neon_store_d0 reg
+	_sfi_dmask \reg
+	.endm
+
 	and	tmp1, count, #0x38
-	rsb	tmp1, tmp1, #(56 - PC_OFS + INSN_SIZE)
-	add	pc, pc, tmp1
-	vld1.8	{d0}, [src]!	/* 14 words to go.  */
-	vst1.8	{d0}, [dst]!
-	vld1.8	{d0}, [src]!	/* 12 words to go.  */
-	vst1.8	{d0}, [dst]!
-	vld1.8	{d0}, [src]!	/* 10 words to go.  */
-	vst1.8	{d0}, [dst]!
-	vld1.8	{d0}, [src]!	/* 8 words to go.  */
-	vst1.8	{d0}, [dst]!
-	vld1.8	{d0}, [src]!	/* 6 words to go.  */
-	vst1.8	{d0}, [dst]!
-	vld1.8	{d0}, [src]!	/* 4 words to go.  */
-	vst1.8	{d0}, [dst]!
-	vld1.8	{d0}, [src]!	/* 2 words to go.  */
-	vst1.8	{d0}, [dst]!
+	.macro dispatch_step i
+	sfi_breg src, neon_load_d0 \B
+	sfi_breg dst, neon_store_d0 \B
+	.endm
+	dispatch_7_dword
 
 	tst	count, #4
-	ldrne	tmp1, [src], #4
-	strne	tmp1, [dst], #4
+	sfi_breg src, \
+	ldrne	tmp1, [\B], #4
+	sfi_breg dst, \
+	strne	tmp1, [\B], #4
 #else
 	/* Copy up to 15 full words of data.  May not be aligned.  */
 	/* Cannot use VFP for unaligned data.  */
 	and	tmp1, count, #0x3c
 	add	dst, dst, tmp1
 	add	src, src, tmp1
-	rsb	tmp1, tmp1, #(60 - PC_OFS/2 + INSN_SIZE/2)
 	/* Jump directly into the sequence below at the correct offset.  */
-	add	pc, pc, tmp1, lsl #1
-
-	ldr	tmp1, [src, #-60]	/* 15 words to go.  */
-	str	tmp1, [dst, #-60]
-
-	ldr	tmp1, [src, #-56]	/* 14 words to go.  */
-	str	tmp1, [dst, #-56]
-	ldr	tmp1, [src, #-52]
-	str	tmp1, [dst, #-52]
-
-	ldr	tmp1, [src, #-48]	/* 12 words to go.  */
-	str	tmp1, [dst, #-48]
-	ldr	tmp1, [src, #-44]
-	str	tmp1, [dst, #-44]
-
-	ldr	tmp1, [src, #-40]	/* 10 words to go.  */
-	str	tmp1, [dst, #-40]
-	ldr	tmp1, [src, #-36]
-	str	tmp1, [dst, #-36]
-
-	ldr	tmp1, [src, #-32]	/* 8 words to go.  */
-	str	tmp1, [dst, #-32]
-	ldr	tmp1, [src, #-28]
-	str	tmp1, [dst, #-28]
-
-	ldr	tmp1, [src, #-24]	/* 6 words to go.  */
-	str	tmp1, [dst, #-24]
-	ldr	tmp1, [src, #-20]
-	str	tmp1, [dst, #-20]
-
-	ldr	tmp1, [src, #-16]	/* 4 words to go.  */
-	str	tmp1, [dst, #-16]
-	ldr	tmp1, [src, #-12]
-	str	tmp1, [dst, #-12]
-
-	ldr	tmp1, [src, #-8]	/* 2 words to go.  */
-	str	tmp1, [dst, #-8]
-	ldr	tmp1, [src, #-4]
-	str	tmp1, [dst, #-4]
+	.macro dispatch_step i
+	sfi_breg src, \
+	ldr	tmp1, [\B, #-(\i * 4)]
+	sfi_breg dst, \
+	str	tmp1, [\B, #-(\i * 4)]
+	.endm
+	dispatch_15_word
 #endif
 
 	lsls	count, count, #31
-	ldrhcs	tmp1, [src], #2
-	ldrbne	src, [src]		/* Src is dead, use as a scratch.  */
-	strhcs	tmp1, [dst], #2
-	strbne	src, [dst]
+	sfi_breg src, \
+	ldrhcs	tmp1, [\B], #2
+	sfi_breg src, \
+	ldrbne	src, [\B]		/* Src is dead, use as a scratch.  */
+	sfi_breg dst, \
+	strhcs	tmp1, [\B], #2
+	sfi_breg dst, \
+	strbne	src, [\B]
 	bx	lr
 
 .Lcpy_not_short:
@@ -242,13 +388,19 @@ ENTRY(memcpy)
 	beq	1f
 	rsbs	tmp2, tmp2, #0
 	sub	count, count, tmp2, lsr #29
-	ldrmi	tmp1, [src], #4
-	strmi	tmp1, [dst], #4
+	sfi_breg src, \
+	ldrmi	tmp1, [\B], #4
+	sfi_breg dst, \
+	strmi	tmp1, [\B], #4
 	lsls	tmp2, tmp2, #2
-	ldrhcs	tmp1, [src], #2
-	ldrbne	tmp2, [src], #1
-	strhcs	tmp1, [dst], #2
-	strbne	tmp2, [dst], #1
+	sfi_breg src, \
+	ldrhcs	tmp1, [\B], #2
+	sfi_breg src, \
+	ldrbne	tmp2, [\B], #1
+	sfi_breg dst, \
+	strhcs	tmp1, [\B], #2
+	sfi_breg dst, \
+	strbne	tmp2, [\B], #1
 
 1:
 	subs	tmp2, count, #64	/* Use tmp2 for count.  */
@@ -260,24 +412,40 @@ ENTRY(memcpy)
 .Lcpy_body_medium:			/* Count in tmp2.  */
 #ifdef USE_VFP
 1:
-	vldr	d0, [src, #0]
+	sfi_breg src, \
+	vldr	d0, [\B, #0]
 	subs	tmp2, tmp2, #64
-	vldr	d1, [src, #8]
-	vstr	d0, [dst, #0]
-	vldr	d0, [src, #16]
-	vstr	d1, [dst, #8]
-	vldr	d1, [src, #24]
-	vstr	d0, [dst, #16]
-	vldr	d0, [src, #32]
-	vstr	d1, [dst, #24]
-	vldr	d1, [src, #40]
-	vstr	d0, [dst, #32]
-	vldr	d0, [src, #48]
-	vstr	d1, [dst, #40]
-	vldr	d1, [src, #56]
-	vstr	d0, [dst, #48]
+	sfi_breg src, \
+	vldr	d1, [\B, #8]
+	sfi_breg dst, \
+	vstr	d0, [\B, #0]
+	sfi_breg src, \
+	vldr	d0, [\B, #16]
+	sfi_breg dst, \
+	vstr	d1, [\B, #8]
+	sfi_breg src, \
+	vldr	d1, [\B, #24]
+	sfi_breg dst, \
+	vstr	d0, [\B, #16]
+	sfi_breg src, \
+	vldr	d0, [\B, #32]
+	sfi_breg dst, \
+	vstr	d1, [\B, #24]
+	sfi_breg src, \
+	vldr	d1, [\B, #40]
+	sfi_breg dst, \
+	vstr	d0, [\B, #32]
+	sfi_breg src, \
+	vldr	d0, [\B, #48]
+	sfi_breg dst, \
+	vstr	d1, [\B, #40]
+	sfi_breg src, \
+	vldr	d1, [\B, #56]
+	sfi_breg dst, \
+	vstr	d0, [\B, #48]
 	add	src, src, #64
-	vstr	d1, [dst, #56]
+	sfi_breg dst, \
+	vstr	d1, [\B, #56]
 	add	dst, dst, #64
 	bge	1b
 	tst	tmp2, #0x3f
@@ -287,43 +455,49 @@ ENTRY(memcpy)
 	and	tmp1, tmp2, #0x38
 	add	dst, dst, tmp1
 	add	src, src, tmp1
-	rsb	tmp1, tmp1, #(56 - PC_OFS + INSN_SIZE)
-	add	pc, pc, tmp1
-
-	vldr	d0, [src, #-56]	/* 14 words to go.  */
-	vstr	d0, [dst, #-56]
-	vldr	d0, [src, #-48]	/* 12 words to go.  */
-	vstr	d0, [dst, #-48]
-	vldr	d0, [src, #-40]	/* 10 words to go.  */
-	vstr	d0, [dst, #-40]
-	vldr	d0, [src, #-32]	/* 8 words to go.  */
-	vstr	d0, [dst, #-32]
-	vldr	d0, [src, #-24]	/* 6 words to go.  */
-	vstr	d0, [dst, #-24]
-	vldr	d0, [src, #-16]	/* 4 words to go.  */
-	vstr	d0, [dst, #-16]
-	vldr	d0, [src, #-8]	/* 2 words to go.  */
-	vstr	d0, [dst, #-8]
+	.macro dispatch_step i
+	sfi_breg src, \
+	vldr	d0, [\B, #-(\i * 8)]
+	sfi_breg dst, \
+	vstr	d0, [\B, #-(\i * 8)]
+	.endm
+	dispatch_7_dword
 #else
 	sub	src, src, #8
 	sub	dst, dst, #8
 1:
-	ldrd	A_l, A_h, [src, #8]
-	strd	A_l, A_h, [dst, #8]
-	ldrd	A_l, A_h, [src, #16]
-	strd	A_l, A_h, [dst, #16]
-	ldrd	A_l, A_h, [src, #24]
-	strd	A_l, A_h, [dst, #24]
-	ldrd	A_l, A_h, [src, #32]
-	strd	A_l, A_h, [dst, #32]
-	ldrd	A_l, A_h, [src, #40]
-	strd	A_l, A_h, [dst, #40]
-	ldrd	A_l, A_h, [src, #48]
-	strd	A_l, A_h, [dst, #48]
-	ldrd	A_l, A_h, [src, #56]
-	strd	A_l, A_h, [dst, #56]
-	ldrd	A_l, A_h, [src, #64]!
-	strd	A_l, A_h, [dst, #64]!
+	sfi_breg src, \
+	ldrd	A_l, A_h, [\B, #8]
+	sfi_breg dst, \
+	strd	A_l, A_h, [\B, #8]
+	sfi_breg src, \
+	ldrd	A_l, A_h, [\B, #16]
+	sfi_breg dst, \
+	strd	A_l, A_h, [\B, #16]
+	sfi_breg src, \
+	ldrd	A_l, A_h, [\B, #24]
+	sfi_breg dst, \
+	strd	A_l, A_h, [\B, #24]
+	sfi_breg src, \
+	ldrd	A_l, A_h, [\B, #32]
+	sfi_breg dst, \
+	strd	A_l, A_h, [\B, #32]
+	sfi_breg src, \
+	ldrd	A_l, A_h, [\B, #40]
+	sfi_breg dst, \
+	strd	A_l, A_h, [\B, #40]
+	sfi_breg src, \
+	ldrd	A_l, A_h, [\B, #48]
+	sfi_breg dst, \
+	strd	A_l, A_h, [\B, #48]
+	sfi_breg src, \
+	ldrd	A_l, A_h, [\B, #56]
+	sfi_breg dst, \
+	strd	A_l, A_h, [\B, #56]
+	sfi_breg src, \
+	ldrd	A_l, A_h, [\B, #64]!
+	sfi_breg dst, \
+	strd	A_l, A_h, [\B, #64]!
 	subs	tmp2, tmp2, #64
 	bge	1b
 	tst	tmp2, #0x3f
@@ -349,32 +523,29 @@ ENTRY(memcpy)
 	and	tmp1, tmp2, #0x38
 	add	dst, dst, tmp1
 	add	src, src, tmp1
-	rsb	tmp1, tmp1, #(56 - PC_OFS + INSN_SIZE)
-	add	pc, pc, tmp1
-	ldrd	A_l, A_h, [src, #-56]	/* 14 words to go.  */
-	strd	A_l, A_h, [dst, #-56]
-	ldrd	A_l, A_h, [src, #-48]	/* 12 words to go.  */
-	strd	A_l, A_h, [dst, #-48]
-	ldrd	A_l, A_h, [src, #-40]	/* 10 words to go.  */
-	strd	A_l, A_h, [dst, #-40]
-	ldrd	A_l, A_h, [src, #-32]	/* 8 words to go.  */
-	strd	A_l, A_h, [dst, #-32]
-	ldrd	A_l, A_h, [src, #-24]	/* 6 words to go.  */
-	strd	A_l, A_h, [dst, #-24]
-	ldrd	A_l, A_h, [src, #-16]	/* 4 words to go.  */
-	strd	A_l, A_h, [dst, #-16]
-	ldrd	A_l, A_h, [src, #-8]	/* 2 words to go.  */
-	strd	A_l, A_h, [dst, #-8]
-
+	.macro dispatch_step i
+	sfi_breg src, \
+	ldrd	A_l, A_h, [\B, #-(\i * 8)]
+	sfi_breg dst, \
+	strd	A_l, A_h, [\B, #-(\i * 8)]
+	.endm
+	dispatch_7_dword
 #endif
+
 	tst	tmp2, #4
-	ldrne	tmp1, [src], #4
-	strne	tmp1, [dst], #4
+	sfi_breg src, \
+	ldrne	tmp1, [\B], #4
+	sfi_breg dst, \
+	strne	tmp1, [\B], #4
 	lsls	tmp2, tmp2, #31		/* Count (tmp2) now dead. */
-	ldrhcs	tmp1, [src], #2
-	ldrbne	tmp2, [src]
-	strhcs	tmp1, [dst], #2
-	strbne	tmp2, [dst]
+	sfi_breg src, \
+	ldrhcs	tmp1, [\B], #2
+	sfi_breg src, \
+	ldrbne	tmp2, [\B]
+	sfi_breg dst, \
+	strhcs	tmp1, [\B], #2
+	sfi_breg dst, \
+	strbne	tmp2, [\B]
 
 .Ldone:
 	ldr	tmp2, [sp], #FRAME_SIZE
@@ -394,15 +565,23 @@ ENTRY(memcpy)
 	   copy position into a register.  This should act like a PLD
 	   operation but we won't have to repeat the transfer.  */
 
-	vldr	d3, [src, #0]
-	vldr	d4, [src, #64]
-	vldr	d5, [src, #128]
-	vldr	d6, [src, #192]
-	vldr	d7, [src, #256]
+	sfi_breg src, \
+	vldr	d3, [\B, #0]
+	sfi_breg src, \
+	vldr	d4, [\B, #64]
+	sfi_breg src, \
+	vldr	d5, [\B, #128]
+	sfi_breg src, \
+	vldr	d6, [\B, #192]
+	sfi_breg src, \
+	vldr	d7, [\B, #256]
 
-	vldr	d0, [src, #8]
-	vldr	d1, [src, #16]
-	vldr	d2, [src, #24]
+	sfi_breg src, \
+	vldr	d0, [\B, #8]
+	sfi_breg src, \
+	vldr	d1, [\B, #16]
+	sfi_breg src, \
+	vldr	d2, [\B, #24]
 	add	src, src, #32
 
 	subs	tmp2, tmp2, #prefetch_lines * 64 * 2
@@ -427,19 +606,31 @@ ENTRY(memcpy)
 	add	src, src, #3 * 64
 	add	dst, dst, #3 * 64
 	cpy_tail_vfp	d6, 0
-	vstr	d7, [dst, #64]
-	vldr	d7, [src, #64]
-	vstr	d0, [dst, #64 + 8]
-	vldr	d0, [src, #64 + 8]
-	vstr	d1, [dst, #64 + 16]
-	vldr	d1, [src, #64 + 16]
-	vstr	d2, [dst, #64 + 24]
-	vldr	d2, [src, #64 + 24]
-	vstr	d7, [dst, #64 + 32]
+	sfi_breg dst, \
+	vstr	d7, [\B, #64]
+	sfi_breg src, \
+	vldr	d7, [\B, #64]
+	sfi_breg dst, \
+	vstr	d0, [\B, #64 + 8]
+	sfi_breg src, \
+	vldr	d0, [\B, #64 + 8]
+	sfi_breg dst, \
+	vstr	d1, [\B, #64 + 16]
+	sfi_breg src, \
+	vldr	d1, [\B, #64 + 16]
+	sfi_breg dst, \
+	vstr	d2, [\B, #64 + 24]
+	sfi_breg src, \
+	vldr	d2, [\B, #64 + 24]
+	sfi_breg dst, \
+	vstr	d7, [\B, #64 + 32]
 	add	src, src, #96
-	vstr	d0, [dst, #64 + 40]
-	vstr	d1, [dst, #64 + 48]
-	vstr	d2, [dst, #64 + 56]
+	sfi_breg dst, \
+	vstr	d0, [\B, #64 + 40]
+	sfi_breg dst, \
+	vstr	d1, [\B, #64 + 48]
+	sfi_breg dst, \
+	vstr	d2, [\B, #64 + 56]
 	add	dst, dst, #128
 	add	tmp2, tmp2, #prefetch_lines * 64
 	b	.Lcpy_body_medium
@@ -450,59 +641,83 @@ ENTRY(memcpy)
 	/* Pre-bias src and dst.  */
 	sub	src, src, #8
 	sub	dst, dst, #8
-	pld	[src, #8]
-	pld	[src, #72]
+	sfi_pld	src, #8
+	sfi_pld	src, #72
 	subs	tmp2, tmp2, #64
-	pld	[src, #136]
-	ldrd	A_l, A_h, [src, #8]
+	sfi_pld	src, #136
+	sfi_breg src, \
+	ldrd	A_l, A_h, [\B, #8]
 	strd	B_l, B_h, [sp, #8]
 	cfi_rel_offset (B_l, 8)
 	cfi_rel_offset (B_h, 12)
-	ldrd	B_l, B_h, [src, #16]
+	sfi_breg src, \
+	ldrd	B_l, B_h, [\B, #16]
 	strd	C_l, C_h, [sp, #16]
 	cfi_rel_offset (C_l, 16)
 	cfi_rel_offset (C_h, 20)
-	ldrd	C_l, C_h, [src, #24]
+	sfi_breg src, \
+	ldrd	C_l, C_h, [\B, #24]
 	strd	D_l, D_h, [sp, #24]
 	cfi_rel_offset (D_l, 24)
 	cfi_rel_offset (D_h, 28)
-	pld	[src, #200]
-	ldrd	D_l, D_h, [src, #32]!
+	sfi_pld	src, #200
+	sfi_breg src, \
+	ldrd	D_l, D_h, [\B, #32]!
 	b	1f
 	.p2align	6
 2:
-	pld	[src, #232]
-	strd	A_l, A_h, [dst, #40]
-	ldrd	A_l, A_h, [src, #40]
-	strd	B_l, B_h, [dst, #48]
-	ldrd	B_l, B_h, [src, #48]
-	strd	C_l, C_h, [dst, #56]
-	ldrd	C_l, C_h, [src, #56]
-	strd	D_l, D_h, [dst, #64]!
-	ldrd	D_l, D_h, [src, #64]!
+	sfi_pld	src, #232
+	sfi_breg dst, \
+	strd	A_l, A_h, [\B, #40]
+	sfi_breg src, \
+	ldrd	A_l, A_h, [\B, #40]
+	sfi_breg dst, \
+	strd	B_l, B_h, [\B, #48]
+	sfi_breg src, \
+	ldrd	B_l, B_h, [\B, #48]
+	sfi_breg dst, \
+	strd	C_l, C_h, [\B, #56]
+	sfi_breg src, \
+	ldrd	C_l, C_h, [\B, #56]
+	sfi_breg dst, \
+	strd	D_l, D_h, [\B, #64]!
+	sfi_breg src, \
+	ldrd	D_l, D_h, [\B, #64]!
 	subs	tmp2, tmp2, #64
 1:
-	strd	A_l, A_h, [dst, #8]
-	ldrd	A_l, A_h, [src, #8]
-	strd	B_l, B_h, [dst, #16]
-	ldrd	B_l, B_h, [src, #16]
-	strd	C_l, C_h, [dst, #24]
-	ldrd	C_l, C_h, [src, #24]
-	strd	D_l, D_h, [dst, #32]
-	ldrd	D_l, D_h, [src, #32]
+	sfi_breg dst, \
+	strd	A_l, A_h, [\B, #8]
+	sfi_breg src, \
+	ldrd	A_l, A_h, [\B, #8]
+	sfi_breg dst, \
+	strd	B_l, B_h, [\B, #16]
+	sfi_breg src, \
+	ldrd	B_l, B_h, [\B, #16]
+	sfi_breg dst, \
+	strd	C_l, C_h, [\B, #24]
+	sfi_breg src, \
+	ldrd	C_l, C_h, [\B, #24]
+	sfi_breg dst, \
+	strd	D_l, D_h, [\B, #32]
+	sfi_breg src, \
+	ldrd	D_l, D_h, [\B, #32]
 	bcs	2b
 	/* Save the remaining bytes and restore the callee-saved regs.  */
-	strd	A_l, A_h, [dst, #40]
+	sfi_breg dst, \
+	strd	A_l, A_h, [\B, #40]
 	add	src, src, #40
-	strd	B_l, B_h, [dst, #48]
+	sfi_breg dst, \
+	strd	B_l, B_h, [\B, #48]
 	ldrd	B_l, B_h, [sp, #8]
 	cfi_restore (B_l)
 	cfi_restore (B_h)
-	strd	C_l, C_h, [dst, #56]
+	sfi_breg dst, \
+	strd	C_l, C_h, [\B, #56]
 	ldrd	C_l, C_h, [sp, #16]
 	cfi_restore (C_l)
 	cfi_restore (C_h)
-	strd	D_l, D_h, [dst, #64]
+	sfi_breg dst, \
+	strd	D_l, D_h, [\B, #64]
 	ldrd	D_l, D_h, [sp, #24]
 	cfi_restore (D_l)
 	cfi_restore (D_h)
@@ -519,113 +734,173 @@ ENTRY(memcpy)
 	cfi_remember_state
 
 .Lcpy_notaligned:
-	pld	[src]
-	pld	[src, #64]
+	sfi_pld	src
+	sfi_pld	src, #64
 	/* There's at least 64 bytes to copy, but there is no mutual
 	   alignment.  */
 	/* Bring DST to 64-bit alignment.  */
 	lsls	tmp2, dst, #29
-	pld	[src, #(2 * 64)]
+	sfi_pld	src, #(2 * 64)
 	beq	1f
 	rsbs	tmp2, tmp2, #0
 	sub	count, count, tmp2, lsr #29
-	ldrmi	tmp1, [src], #4
-	strmi	tmp1, [dst], #4
+	sfi_breg src, \
+	ldrmi	tmp1, [\B], #4
+	sfi_breg dst, \
+	strmi	tmp1, [\B], #4
 	lsls	tmp2, tmp2, #2
-	ldrbne	tmp1, [src], #1
-	ldrhcs	tmp2, [src], #2
-	strbne	tmp1, [dst], #1
-	strhcs	tmp2, [dst], #2
+	sfi_breg src, \
+	ldrbne	tmp1, [\B], #1
+	sfi_breg src, \
+	ldrhcs	tmp2, [\B], #2
+	sfi_breg dst, \
+	strbne	tmp1, [\B], #1
+	sfi_breg dst, \
+	strhcs	tmp2, [\B], #2
 1:
-	pld	[src, #(3 * 64)]
+	sfi_pld	src, #(3 * 64)
 	subs	count, count, #64
 	ldrmi	tmp2, [sp], #FRAME_SIZE
 	bmi	.Ltail63unaligned
-	pld	[src, #(4 * 64)]
+	sfi_pld	src, #(4 * 64)
 
 #ifdef USE_NEON
-	vld1.8	{d0-d3}, [src]!
-	vld1.8	{d4-d7}, [src]!
+	/* These need an extra layer of macro just to work around a
+	   bug in the assembler's parser when an operand starts with
+	   a {...}.  */
+	.macro neon_load_multi reglist, basereg
+	vld1.8	{\reglist}, [\basereg]!
+	.endm
+	.macro neon_store_multi reglist, basereg
+	vst1.8	{\reglist}, [ALIGN (\basereg, 64)]!
+	.endm
+
+	/* These are used by the NaCl sfi_breg macro.  */
+	.macro _sfi_breg_dmask_neon_load_multi reg
+	_sfi_dmask \reg
+	.endm
+	.macro _sfi_breg_dmask_neon_store_multi reg
+	_sfi_dmask \reg
+	.endm
+
+	sfi_breg src, neon_load_multi d0-d3, \B
+	sfi_breg src, neon_load_multi d4-d7, \B
 	subs	count, count, #64
 	bmi	2f
 1:
-	pld	[src, #(4 * 64)]
-	vst1.8	{d0-d3}, [ALIGN (dst, 64)]!
-	vld1.8	{d0-d3}, [src]!
-	vst1.8	{d4-d7}, [ALIGN (dst, 64)]!
-	vld1.8	{d4-d7}, [src]!
+	sfi_pld	src, #(4 * 64)
+	sfi_breg dst, neon_store_multi d0-d3, \B
+	sfi_breg src, neon_load_multi d0-d3, \B
+	sfi_breg dst, neon_store_multi d4-d7, \B
+	sfi_breg src, neon_load_multi d4-d7, \B
 	subs	count, count, #64
 	bpl	1b
 2:
-	vst1.8	{d0-d3}, [ALIGN (dst, 64)]!
-	vst1.8	{d4-d7}, [ALIGN (dst, 64)]!
+	sfi_breg dst, neon_store_multi d0-d3, \B
+	sfi_breg dst, neon_store_multi d4-d7, \B
 	ands	count, count, #0x3f
 #else
 	/* Use an SMS style loop to maximize the I/O bandwidth.  */
 	sub	src, src, #4
 	sub	dst, dst, #8
 	subs	tmp2, count, #64	/* Use tmp2 for count.  */
-	ldr	A_l, [src, #4]
-	ldr	A_h, [src, #8]
+	sfi_breg src, \
+	ldr	A_l, [\B, #4]
+	sfi_breg src, \
+	ldr	A_h, [\B, #8]
 	strd	B_l, B_h, [sp, #8]
 	cfi_rel_offset (B_l, 8)
 	cfi_rel_offset (B_h, 12)
-	ldr	B_l, [src, #12]
-	ldr	B_h, [src, #16]
+	sfi_breg src, \
+	ldr	B_l, [\B, #12]
+	sfi_breg src, \
+	ldr	B_h, [\B, #16]
 	strd	C_l, C_h, [sp, #16]
 	cfi_rel_offset (C_l, 16)
 	cfi_rel_offset (C_h, 20)
-	ldr	C_l, [src, #20]
-	ldr	C_h, [src, #24]
+	sfi_breg src, \
+	ldr	C_l, [\B, #20]
+	sfi_breg src, \
+	ldr	C_h, [\B, #24]
 	strd	D_l, D_h, [sp, #24]
 	cfi_rel_offset (D_l, 24)
 	cfi_rel_offset (D_h, 28)
-	ldr	D_l, [src, #28]
-	ldr	D_h, [src, #32]!
+	sfi_breg src, \
+	ldr	D_l, [\B, #28]
+	sfi_breg src, \
+	ldr	D_h, [\B, #32]!
 	b	1f
 	.p2align	6
 2:
-	pld	[src, #(5 * 64) - (32 - 4)]
-	strd	A_l, A_h, [dst, #40]
-	ldr	A_l, [src, #36]
-	ldr	A_h, [src, #40]
-	strd	B_l, B_h, [dst, #48]
-	ldr	B_l, [src, #44]
-	ldr	B_h, [src, #48]
-	strd	C_l, C_h, [dst, #56]
-	ldr	C_l, [src, #52]
-	ldr	C_h, [src, #56]
-	strd	D_l, D_h, [dst, #64]!
-	ldr	D_l, [src, #60]
-	ldr	D_h, [src, #64]!
+	sfi_pld	src, #(5 * 64) - (32 - 4)
+	sfi_breg dst, \
+	strd	A_l, A_h, [\B, #40]
+	sfi_breg src, \
+	ldr	A_l, [\B, #36]
+	sfi_breg src, \
+	ldr	A_h, [\B, #40]
+	sfi_breg dst, \
+	strd	B_l, B_h, [\B, #48]
+	sfi_breg src, \
+	ldr	B_l, [\B, #44]
+	sfi_breg src, \
+	ldr	B_h, [\B, #48]
+	sfi_breg dst, \
+	strd	C_l, C_h, [\B, #56]
+	sfi_breg src, \
+	ldr	C_l, [\B, #52]
+	sfi_breg src, \
+	ldr	C_h, [\B, #56]
+	sfi_breg dst, \
+	strd	D_l, D_h, [\B, #64]!
+	sfi_breg src, \
+	ldr	D_l, [\B, #60]
+	sfi_breg src, \
+	ldr	D_h, [\B, #64]!
 	subs	tmp2, tmp2, #64
 1:
-	strd	A_l, A_h, [dst, #8]
-	ldr	A_l, [src, #4]
-	ldr	A_h, [src, #8]
-	strd	B_l, B_h, [dst, #16]
-	ldr	B_l, [src, #12]
-	ldr	B_h, [src, #16]
-	strd	C_l, C_h, [dst, #24]
-	ldr	C_l, [src, #20]
-	ldr	C_h, [src, #24]
-	strd	D_l, D_h, [dst, #32]
-	ldr	D_l, [src, #28]
-	ldr	D_h, [src, #32]
+	sfi_breg dst, \
+	strd	A_l, A_h, [\B, #8]
+	sfi_breg src, \
+	ldr	A_l, [\B, #4]
+	sfi_breg src, \
+	ldr	A_h, [\B, #8]
+	sfi_breg dst, \
+	strd	B_l, B_h, [\B, #16]
+	sfi_breg src, \
+	ldr	B_l, [\B, #12]
+	sfi_breg src, \
+	ldr	B_h, [\B, #16]
+	sfi_breg dst, \
+	strd	C_l, C_h, [\B, #24]
+	sfi_breg src, \
+	ldr	C_l, [\B, #20]
+	sfi_breg src, \
+	ldr	C_h, [\B, #24]
+	sfi_breg dst, \
+	strd	D_l, D_h, [\B, #32]
+	sfi_breg src, \
+	ldr	D_l, [\B, #28]
+	sfi_breg src, \
+	ldr	D_h, [\B, #32]
 	bcs	2b
 
 	/* Save the remaining bytes and restore the callee-saved regs.  */
-	strd	A_l, A_h, [dst, #40]
+	sfi_breg dst, \
+	strd	A_l, A_h, [\B, #40]
 	add	src, src, #36
-	strd	B_l, B_h, [dst, #48]
+	sfi_breg dst, \
+	strd	B_l, B_h, [\B, #48]
 	ldrd	B_l, B_h, [sp, #8]
 	cfi_restore (B_l)
 	cfi_restore (B_h)
-	strd	C_l, C_h, [dst, #56]
+	sfi_breg dst, \
+	strd	C_l, C_h, [\B, #56]
 	ldrd	C_l, C_h, [sp, #16]
 	cfi_restore (C_l)
 	cfi_restore (C_h)
-	strd	D_l, D_h, [dst, #64]
+	sfi_breg dst, \
+	strd	D_l, D_h, [\B, #64]
 	ldrd	D_l, D_h, [sp, #24]
 	cfi_restore (D_l)
 	cfi_restore (D_h)
