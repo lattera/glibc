@@ -22,7 +22,8 @@
 int
 feholdexcept (fenv_t *envp)
 {
-  return 1;		/* Signal failure.  */
+  /* No exception traps to disable and no state to save.  */
+  return 0;
 }
 libm_hidden_def (feholdexcept)
 stub_warning (feholdexcept)

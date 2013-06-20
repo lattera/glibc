@@ -1,3 +1,19 @@
+2013-06-20  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15654]
+	* math/fedisblxcpt.c (fedisableexcept): Return 0.
+	* math/feenablxcpt.c (feenableexcept): Return 0 for argument 0.
+	* math/fegetenv.c (__fegetenv): Return 0.
+	* math/fegetexcept.c (fegetexcept): Return 0.
+	* math/fegetround.c (fegetround) [FE_TONEAREST]: Return
+	FE_TONEAREST.
+	* math/feholdexcpt.c (feholdexcept): Return 0.
+	* math/fesetenv.c (__fesetenv): Return 0.
+	* math/fesetround.c (fesetround) [FE_TONEAREST]: Return 0 for
+	argument FE_TONEAREST.
+	* math/feupdateenv.c (__feupdateenv): Return 0.
+	* math/fgetexcptflg.c (__fegetexceptflag): Return 0.
+
 2013-06-18  Roland McGrath  <roland@hack.frob.com>
 
 	* elf/rtld-Rules (rtld-compile-command.S): New variable.

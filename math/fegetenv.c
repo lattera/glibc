@@ -23,8 +23,8 @@
 int
 __fegetenv (fenv_t *envp)
 {
-  /* This always fails.  */
-  return 1;
+  /* Nothing to do.  */
+  return 0;
 }
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
 strong_alias (__fegetenv, __old_fegetenv)

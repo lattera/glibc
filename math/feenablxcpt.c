@@ -22,7 +22,10 @@
 int
 feenableexcept (int excepts)
 {
-  /* Signal failure.  */
-  return -1;
+  /* Signal failure if any exception traps are to be enabled.  */
+  if (excepts != 0)
+    return -1;
+  else
+    return 0;
 }
 stub_warning (feenableexcept)

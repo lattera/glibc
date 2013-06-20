@@ -22,7 +22,11 @@
 int
 fesetround (int round)
 {
+#ifdef FE_TONEAREST
+  return (round == FE_TONEAREST) ? 0 : 1;
+#else
   return 1;	/* Signal we are unable to set the direction.  */
+#endif
 }
 libm_hidden_def (fesetround)
 stub_warning (fesetround)

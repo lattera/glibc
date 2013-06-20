@@ -22,7 +22,7 @@
 int
 fedisableexcept (int excepts)
 {
-  /* Signal failure.  */
-  return -1;
+  /* All exception traps are disabled.  */
+  return 0;
 }
 stub_warning (fedisableexcept)
