@@ -1,5 +1,8 @@
 2013-06-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/test-misc.c (main): Ignore fesetround failure when failures
+	of subsequent rounding tests would be ignored.
+
 	[BZ #15654]
 	* math/fedisblxcpt.c (fedisableexcept): Return 0.
 	* math/feenablxcpt.c (feenableexcept): Return 0 for argument 0.

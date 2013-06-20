@@ -1295,7 +1295,11 @@ main (void)
 	  if (fesetround (mode))
 	    {
 	      printf ("failed to set rounding mode to %s\n", mstr);
-	      result = 1;
+	      if (ROUNDING_TESTS (long double, mode)
+		  && ROUNDING_TESTS (double, mode))
+		result = 1;
+	      else
+		puts ("ignoring this failure");
 	      break;
 	    }
 	  d5 = ld5 * i;
