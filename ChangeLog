@@ -1,3 +1,9 @@
+2013-06-21  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	* elf/dl-dst.h (DL_DST_REQUIRED): Remove call to
+	DL_DST_REQ_STATIC.
+	(DL_DST_REQ_STATIC): Remove macro.
+
 2013-06-21  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #7006]
