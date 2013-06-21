@@ -41,6 +41,7 @@
 #endif
 
 rettype
+inhibit_loop_to_libcall
 MEMMOVE (a1, a2, len)
      a1const void *a1;
      a2const void *a2;

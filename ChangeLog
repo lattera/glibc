@@ -1,3 +1,19 @@
+2013-06-20  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* config.h.in (HAVE_CC_INHIBIT_LOOP_TO_LIBCALL): New define.
+	* configure.in (libc_cv_cc_loop_to_function): Check if compiler
+	accepts -fno-tree-loop-distribute-patterns.
+	* include/libc-symbols.h (inhibit_loop_to_libcall): New macro.
+	* string/memmove.c (MEMMOVE): Disable loop transformation to avoid
+	recursive call.
+	* string/memset.c (memset): Likewise.
+	* string/test-memmove.c (simple_memmove): Disable loop transformation
+	to library calls.
+	* string/test-memset.c (simple_memset): Likewise.
+	* benchtests/bench-memmove.c (simple_memmove): Likewise.
+	* benchtests/bench-memset.c (simple_memset): Likewise.
+	* configure: Regenerated.
+
 2013-06-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/test-misc.c (main): Ignore fesetround failure when failures

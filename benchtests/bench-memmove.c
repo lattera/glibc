@@ -46,6 +46,7 @@ IMPL (memmove, 1)
 #endif
 
 char *
+inhibit_loop_to_libcall
 simple_memmove (char *dst, const char *src, size_t n)
 {
   char *ret = dst;

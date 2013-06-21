@@ -1964,6 +1964,24 @@ if test -n "$submachine"; then
 fi
 AC_SUBST(libc_cv_cc_submachine)
 
+AC_CACHE_CHECK(if $CC accepts -fno-tree-loop-distribute-patterns with \
+__attribute__ ((__optimize__)), libc_cv_cc_loop_to_function, [dnl
+cat > conftest.c <<EOF
+void
+__attribute__ ((__optimize__ ("-fno-tree-loop-distribute-patterns")))
+foo (void) {}
+EOF
+libc_cv_cc_loop_to_function=no
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -c conftest.c])
+then
+  libc_cv_cc_loop_to_function=yes
+fi
+rm -f conftest*])
+if test $libc_cv_cc_loop_to_function = yes; then
+  AC_DEFINE(HAVE_CC_INHIBIT_LOOP_TO_LIBCALL)
+fi
+AC_SUBST(libc_cv_cc_loop_to_function)
+
 dnl Check whether we have the gd library available.
 AC_MSG_CHECKING(for libgd)
 if test "$with_gd" != "no"; then

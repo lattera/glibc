@@ -64,6 +64,7 @@ builtin_memset (char *s, int c, size_t n)
 #endif
 
 char *
+inhibit_loop_to_libcall
 simple_memset (char *s, int c, size_t n)
 {
   char *r = s, *end = s + n;

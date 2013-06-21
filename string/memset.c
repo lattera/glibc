@@ -21,6 +21,7 @@
 #undef memset
 
 void *
+inhibit_loop_to_libcall
 memset (dstpp, c, len)
      void *dstpp;
      int c;

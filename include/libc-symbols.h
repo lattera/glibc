@@ -782,4 +782,14 @@ for linking")
 #define libc_ifunc_hidden_def(name) \
   libc_ifunc_hidden_def1 (__GI_##name, name)
 
+/* Add the compiler optimization to inhibit loop transformation to library
+   calls.  This is used to avoid recursive calls in memset and memmove
+   default implementations.  */
+#ifdef HAVE_CC_INHIBIT_LOOP_TO_LIBCALL
+# define inhibit_loop_to_libcall \
+    __attribute__ ((__optimize__ ("-fno-tree-loop-distribute-patterns")))
+#else
+# define inhibit_loop_to_libcall
+#endif
+
 #endif /* libc-symbols.h */
