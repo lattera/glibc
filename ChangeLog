@@ -1,3 +1,8 @@
+2013-06-21  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	[BZ #15655]
+	* sysdeps/sh/sh4/fpu/fgetexcptflg.c: New file.
+
 2013-06-20  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* config.h.in (HAVE_CC_INHIBIT_LOOP_TO_LIBCALL): New define.
