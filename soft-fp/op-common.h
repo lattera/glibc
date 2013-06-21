@@ -1163,8 +1163,9 @@ do {									\
 	  {								     \
 	    /* Exactly representable; shift left.  */			     \
 	    _FP_FRAC_DISASSEMBLE_##wc(X, ur_, rsize);			     \
-	    _FP_FRAC_SLL_##wc(X, (_FP_EXPBIAS_##fs			     \
-				  + _FP_FRACBITS_##fs - 1 - X##_e));	     \
+	    if (_FP_EXPBIAS_##fs + _FP_FRACBITS_##fs - 1 - X##_e > 0)	     \
+	      _FP_FRAC_SLL_##wc(X, (_FP_EXPBIAS_##fs			     \
+				    + _FP_FRACBITS_##fs - 1 - X##_e));	     \
 	  }								     \
 	else								     \
 	  {								     \

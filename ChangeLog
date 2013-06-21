@@ -1,3 +1,9 @@
+2013-06-21  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #7006]
+	* soft-fp/op-common.h (_FP_FROM_INT): Do not call _FP_FRAC_SLL
+	with a shift of 0 bits.
+
 2013-06-21  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	* dlfcn/Makefile (tststatic2-ENV): Redefine in terms of
