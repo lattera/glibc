@@ -51,7 +51,7 @@ tests += tststatic tststatic2
 tests-static += tststatic tststatic2
 modules-names += modstatic modstatic2
 tststatic-ENV = LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)elf
-tststatic2-ENV = LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)elf
+tststatic2-ENV = $(tststatic-ENV)
 endif
 
 extra-test-objs += $(modules-names:=.os)
