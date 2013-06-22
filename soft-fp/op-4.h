@@ -525,14 +525,14 @@
 #ifndef __FP_FRAC_ADD_3
 #define __FP_FRAC_ADD_3(r2,r1,r0,x2,x1,x0,y2,y1,y0)		\
   do {								\
-    _FP_W_TYPE _c1, _c2;					\
+    _FP_W_TYPE __FP_FRAC_ADD_3_c1, __FP_FRAC_ADD_3_c2;		\
     r0 = x0 + y0;						\
-    _c1 = r0 < x0;						\
+    __FP_FRAC_ADD_3_c1 = r0 < x0;				\
     r1 = x1 + y1;						\
-    _c2 = r1 < x1;						\
-    r1 += _c1;							\
-    _c2 |= r1 < _c1;						\
-    r2 = x2 + y2 + _c2;						\
+    __FP_FRAC_ADD_3_c2 = r1 < x1;				\
+    r1 += __FP_FRAC_ADD_3_c1;					\
+    __FP_FRAC_ADD_3_c2 |= r1 < __FP_FRAC_ADD_3_c1;		\
+    r2 = x2 + y2 + __FP_FRAC_ADD_3_c2;				\
   } while (0)
 #endif
 

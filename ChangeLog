@@ -1,3 +1,9 @@
+2013-06-22  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15667]
+	* soft-fp/op-4.h (__FP_FRAC_ADD_3): Rename variables _c1 and _c2
+	to __FP_FRAC_ADD_3_c1 and __FP_FRAC_ADD_3_c2.
+
 2013-06-21  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	* elf/dl-dst.h (DL_DST_REQUIRED): Remove call to
