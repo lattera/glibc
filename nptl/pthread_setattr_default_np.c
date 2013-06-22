@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <pthreadP.h>
 #include <assert.h>
+#include <string.h>
 
 int
 pthread_setattr_default_np (const pthread_attr_t *in)

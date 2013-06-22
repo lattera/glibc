@@ -1,3 +1,7 @@
+2013-06-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* pthread_getattr_default_np.c: Include <string.h>.
+
 2013-06-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* Versions (libpthread): Add GLIBC_2.18.
