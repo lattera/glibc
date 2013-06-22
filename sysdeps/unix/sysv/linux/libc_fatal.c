@@ -20,6 +20,7 @@
 #include <execinfo.h>
 #include <fcntl.h>
 #include <not-cancel.h>
+#include <string.h>
 #include <sys/mman.h>
 #include <sys/uio.h>
 
