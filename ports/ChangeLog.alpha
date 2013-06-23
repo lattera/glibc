@@ -1,3 +1,7 @@
+2013-06-23  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/fpu/libm-test-ulps: Update.
+
 2013-06-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/nptl/libpthread.abilist: Update.
