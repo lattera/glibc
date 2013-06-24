@@ -722,8 +722,8 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
 cannot create read-only descriptor for \"%s\"; no mmap"),
 			   dbs[cnt].db_filename);
 
-		/* Before we create the header, initialiye the hash
-		   table.  So that if we get interrupted if writing
+		/* Before we create the header, initialize the hash
+		   table.  That way if we get interrupted while writing
 		   the header we can recognize a partially initialized
 		   database.  */
 		size_t ps = sysconf (_SC_PAGESIZE);
