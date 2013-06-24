@@ -340,10 +340,11 @@ build the GNU C Library:
      installation mechanism for the info files is not present or works
      differently.
 
-   * GNU `awk' 3.0, or higher
+   * GNU `awk' 3.1.2, or higher
 
-     `Awk' is used in several places to generate files.  `gawk' 3.0 is
-     known to work.
+     `awk' is used in several places to generate files.  Some `gawk'
+     extensions are used, including the `asorti' function, which was
+     introduced in version 3.1.2 of `gawk'.
 
    * Perl 5
 

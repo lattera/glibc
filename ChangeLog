@@ -1,5 +1,7 @@
 2013-06-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* INSTALL: Regenerate.
+
 	* nscd/connections.c (nscd_init): Fix comment.
 
 2013-06-22  Joseph Myers  <joseph@codesourcery.com>
