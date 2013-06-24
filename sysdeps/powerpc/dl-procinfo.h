@@ -30,7 +30,7 @@
 #define HWCAP_IMPORTANT		(PPC_FEATURE_HAS_ALTIVEC \
 				+ PPC_FEATURE_HAS_DFP)
 
-#define _DL_PLATFORMS_COUNT	13
+#define _DL_PLATFORMS_COUNT	14
 
 #define _DL_FIRST_PLATFORM	32
 /* Mask to filter out platforms.  */
@@ -51,6 +51,7 @@
 #define PPC_PLATFORM_PPC440		10
 #define PPC_PLATFORM_PPC464		11
 #define PPC_PLATFORM_PPC476		12
+#define PPC_PLATFORM_POWER8		13
 
 static inline const char *
 __attribute__ ((unused))
@@ -110,6 +111,9 @@ _dl_string_platform (const char *str)
 	  break;
 	case '7':
 	  ret = _DL_FIRST_PLATFORM + PPC_PLATFORM_POWER7;
+	  break;
+	case '8':
+	  ret = _DL_FIRST_PLATFORM + PPC_PLATFORM_POWER8;
 	  break;
 	default:
 	  return -1;

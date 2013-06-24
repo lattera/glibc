@@ -1,3 +1,21 @@
+2013-06-24  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_platforms): Add "power8"
+	entry mapped to PPC_PLATFORM_POWER8.
+	* sysdeps/powerpc/dl-procinfo.h (_DL_PLATFORMS_COUNT): Increment for
+	POWER8.
+	(PPC_PLATFORM_POWER8): Add new platform bit for POWER8 processor.
+	(_dl_string_platform): Add case for exporting platform position for
+	POWER8.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power8/Implies: Chain
+	search path to sysdeps/powerpc/powerpc32/power8 directory.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power8/Implies: Chain
+	search path to sysdeps/powerpc/powerpc64/power8 directory.
+	* sysdeps/powerpc/powerpc32/power8/Implies: Chain search path to
+	power7 directories.
+	* sysdeps/powerpc/powerpc64/power8/Implies: Chain search path to
+	power7 directories.
+
 2013-06-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* INSTALL: Regenerate.
