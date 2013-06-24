@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <shlib-compat.h>
 
 #if !defined(_IEEE_FP_INEXACT)
 
@@ -157,9 +158,30 @@ $fixup:									\n\
 									\n\
 	.end	__ieee754_sqrt");
 
+/* Avoid the __sqrt_finite alias that dbl-64/e_sqrt.c would give...  */
+#undef strong_alias
+#define strong_alias(a,b)
+
+/* ... defining our own.  */
+#if SHLIB_COMPAT (libm, GLIBC_2_15, GLIBC_2_18)
+asm (".global	__sqrt_finite1; __sqrt_finite1 = __ieee754_sqrt");
+#else
+asm (".global	__sqrt_finite; __sqrt_finite = __ieee754_sqrt");
+#endif
+
 static double __full_ieee754_sqrt(double) __attribute_used__;
 #define __ieee754_sqrt __full_ieee754_sqrt
 
+#elif SHLIB_COMPAT (libm, GLIBC_2_15, GLIBC_2_18)
+# define __sqrt_finite __sqrt_finite1
 #endif /* _IEEE_FP_INEXACT */
 
 #include <sysdeps/ieee754/dbl-64/e_sqrt.c>
+
+/* Work around forgotten symbol in alphaev6 build.  */
+#if SHLIB_COMPAT (libm, GLIBC_2_15, GLIBC_2_18)
+# undef __sqrt_finite
+# undef __ieee754_sqrt
+compat_symbol (libm, __sqrt_finite1, __sqrt_finite, GLIBC_2_15);
+versioned_symbol (libm, __ieee754_sqrt, __sqrt_finite, GLIBC_2_18);
+#endif

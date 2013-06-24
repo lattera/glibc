@@ -382,6 +382,8 @@ GLIBC_2.15
  __sinh_finite F
  __sinhf_finite F
  __sinhl_finite F
+ __sqrt_finite F
+ __sqrtf_finite F
  __y0_finite F
  __y0f_finite F
  __y0l_finite F
@@ -396,6 +398,9 @@ GLIBC_2.18
  __issignaling F
  __issignalingf F
  __issignalingl F
+ __sqrt_finite F
+ __sqrtf_finite F
+ __sqrtl_finite F
 GLIBC_2.2
  GLIBC_2.2 A
  feclearexcept F

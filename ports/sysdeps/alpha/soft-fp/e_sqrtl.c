@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <soft-fp.h>
 #include <quad.h>
+#include <shlib-compat.h>
 
 long double
 __ieee754_sqrtl (const long double a)
@@ -37,3 +38,12 @@ __ieee754_sqrtl (const long double a)
   FP_HANDLE_EXCEPTIONS;
   return c;
 }
+
+/* ??? We forgot to add this symbol in 2.15.  Getting this into 2.18 isn't as
+   straight-forward as just adding the alias, since a generic Versions file
+   includes the 2.15 version and the linker uses the first one it sees.  */
+#if SHLIB_COMPAT (libm, GLIBC_2_15, GLIBC_2_18)
+versioned_symbol (libm, __ieee754_sqrtl, __sqrtl_finite, GLIBC_2_18);
+#else
+strong_alias(__ieee754_sqrtl, __sqrtl_finite)
+#endif

@@ -16,6 +16,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <shlib-compat.h>
 
 	.arch ev6
 	.set noreorder
@@ -42,3 +43,11 @@ ENTRY(__ieee754_sqrtf)
 	nop
 
 END(__ieee754_sqrtf)
+
+#if SHLIB_COMPAT (libm, GLIBC_2_15, GLIBC_2_18)
+strong_alias(__ieee754_sqrtf, __sqrtf_finite1)
+compat_symbol(libm, __sqrtf_finite1, __sqrtf_finite, GLIBC_2_15)
+versioned_symbol(libm, __ieee754_sqrtf, __sqrtf_finite, GLIBC_2_18)
+#else
+strong_alias(__ieee754_sqrtf, __sqrtf_finite)
+#endif
