@@ -10,7 +10,6 @@
 2013-06-24  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #10283]
-	* NEWS: Note fixing of BZ #10283.
 	* locale/locarchive.h (struct locarhandle): Add mmap_base and mmap_len.
 	* locale/programs/locarchive.c: Include libc-mmap.h.
 	(prepare_address_space): Take two new outputs (the mmap base and len).
