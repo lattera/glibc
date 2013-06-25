@@ -3,11 +3,11 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2012-01-19.16}
+\def\texinfoversion{2013-06-21.17}
 %
 % Copyright 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006,
-% 2007, 2008, 2009, 2010, 2011 Free Software Foundation, Inc.
+% 2007, 2008, 2009, 2010, 2011, 2012, 2013 Free Software Foundation, Inc.
 %
 % This texinfo.tex file is free software: you can redistribute it and/or
 % modify it under the terms of the GNU General Public License as
@@ -24,13 +24,14 @@
 %
 % As a special exception, when this file is read by TeX when processing
 % a Texinfo source document, you may use the result without
-% restriction.  (This has been our intent since Texinfo was invented.)
+% restriction. This Exception is an additional permission under section 7
+% of the GNU General Public License, version 3 ("GPLv3").
 %
 % Please try the latest version of texinfo.tex before submitting bug
 % reports; you can get the latest version from:
-%   http://www.gnu.org/software/texinfo/ (the Texinfo home page), or
-%   ftp://tug.org/tex/texinfo.tex
-%     (and all CTAN mirrors, see http://www.ctan.org).
+%   http://ftp.gnu.org/gnu/texinfo/ (the Texinfo release area), or
+%   http://ftpmirror.gnu.org/texinfo/ (same, via a mirror), or
+%   http://www.gnu.org/software/texinfo/ (the Texinfo home page)
 % The texinfo.tex in any given distribution could well be out
 % of date, so if that's what you're using, please check.
 %
@@ -594,7 +595,7 @@
 \def\:{\spacefactor=1000 }
 
 % @* forces a line break.
-\def\*{\hfil\break\hbox{}\ignorespaces}
+\def\*{\unskip\hfil\break\hbox{}\ignorespaces}
 
 % @/ allows a line break.
 \let\/=\allowbreak
@@ -887,7 +888,7 @@ where each line of input produces a line of output.}
 \def\popthisfilestack{\errthisfilestackempty}
 \def\errthisfilestackempty{\errmessage{Internal error:
   the stack of filenames is empty.}}
-
+%
 \def\thisfile{}
 
 % @center line
@@ -895,36 +896,46 @@ where each line of input produces a line of output.}
 %
 \parseargdef\center{%
   \ifhmode
-    \let\next\centerH
+    \let\centersub\centerH
   \else
-    \let\next\centerV
+    \let\centersub\centerV
   \fi
-  \next{\hfil \ignorespaces#1\unskip \hfil}%
+  \centersub{\hfil \ignorespaces#1\unskip \hfil}%
+  \let\centersub\relax % don't let the definition persist, just in case
 }
-\def\centerH#1{%
-  {%
-    \hfil\break
-    \advance\hsize by -\leftskip
-    \advance\hsize by -\rightskip
-    \line{#1}%
-    \break
-  }%
+\def\centerH#1{{%
+  \hfil\break
+  \advance\hsize by -\leftskip
+  \advance\hsize by -\rightskip
+  \line{#1}%
+  \break
+}}
+%
+\newcount\centerpenalty
+\def\centerV#1{%
+  % The idea here is the same as in \startdefun, \cartouche, etc.: if
+  % @center is the first thing after a section heading, we need to wipe
+  % out the negative parskip inserted by \sectionheading, but still
+  % prevent a page break here.
+  \centerpenalty = \lastpenalty
+  \ifnum\centerpenalty>10000 \vskip\parskip \fi
+  \ifnum\centerpenalty>9999 \penalty\centerpenalty \fi
+  \line{\kern\leftskip #1\kern\rightskip}%
 }
-\def\centerV#1{\line{\kern\leftskip #1\kern\rightskip}}
 
 % @sp n   outputs n lines of vertical space
-
+%
 \parseargdef\sp{\vskip #1\baselineskip}
 
 % @comment ...line which is ignored...
 % @c is the same as @comment
 % @ignore ... @end ignore  is another way to write a comment
-
+%
 \def\comment{\begingroup \catcode`\^^M=\other%
 \catcode`\@=\other \catcode`\{=\other \catcode`\}=\other%
 \commentxxx}
 {\catcode`\^^M=\other \gdef\commentxxx#1^^M{\endgroup}}
-
+%
 \let\c=\comment
 
 % @paragraphindent NCHARS
@@ -1097,7 +1108,7 @@ where each line of input produces a line of output.}
 % for display in the outlines, and in other places.  Thus, we have to
 % double any backslashes.  Otherwise, a name like "\node" will be
 % interpreted as a newline (\n), followed by o, d, e.  Not good.
-% 
+%
 % See http://www.ntg.nl/pipermail/ntg-pdftex/2004-July/000654.html and
 % related messages.  The final outcome is that it is up to the TeX user
 % to double the backslashes and otherwise make the string valid, so
@@ -1107,7 +1118,7 @@ where each line of input produces a line of output.}
 % #1 is a control sequence in which to do the replacements,
 % which we \xdef.
 \def\txiescapepdf#1{%
-  \ifx\pdfescapestring\relax
+  \ifx\pdfescapestring\thisisundefined
     % No primitive available; should we give a warning or log?
     % Many times it won't matter.
   \else
@@ -1173,8 +1184,8 @@ output) for that.)}
   %
   % #1 is image name, #2 width (might be empty/whitespace), #3 height (ditto).
   \def\dopdfimage#1#2#3{%
-    \def\imagewidth{#2}\setbox0 = \hbox{\ignorespaces #2}%
-    \def\imageheight{#3}\setbox2 = \hbox{\ignorespaces #3}%
+    \def\pdfimagewidth{#2}\setbox0 = \hbox{\ignorespaces #2}%
+    \def\pdfimageheight{#3}\setbox2 = \hbox{\ignorespaces #3}%
     %
     % pdftex (and the PDF format) support .pdf, .png, .jpg (among
     % others).  Let's try in that order, PDF first since if
@@ -1212,8 +1223,8 @@ output) for that.)}
     \else
       \immediate\pdfximage
     \fi
-      \ifdim \wd0 >0pt width \imagewidth \fi
-      \ifdim \wd2 >0pt height \imageheight \fi
+      \ifdim \wd0 >0pt width \pdfimagewidth \fi
+      \ifdim \wd2 >0pt height \pdfimageheight \fi
       \ifnum\pdftexversion<13
          #1.\pdfimgext
        \else
@@ -1357,12 +1368,17 @@ output) for that.)}
   \def\skipspaces#1{\def\PP{#1}\def\D{|}%
     \ifx\PP\D\let\nextsp\relax
     \else\let\nextsp\skipspaces
-      \ifx\p\space\else\addtokens{\filename}{\PP}%
-        \advance\filenamelength by 1
-      \fi
+      \addtokens{\filename}{\PP}%
+      \advance\filenamelength by 1
     \fi
     \nextsp}
-  \def\getfilename#1{\filenamelength=0\expandafter\skipspaces#1|\relax}
+  \def\getfilename#1{%
+    \filenamelength=0
+    % If we don't expand the argument now, \skipspaces will get
+    % snagged on things like "@value{foo}".
+    \edef\temp{#1}%
+    \expandafter\skipspaces\temp|\relax
+  }
   \ifnum\pdftexversion < 14
     \let \startlink \pdfannotlink
   \else
@@ -1459,9 +1475,6 @@ output) for that.)}
 \def\ttsl{\setfontstyle{ttsl}}
 
 
-% Default leading.
-\newdimen\textleading  \textleading = 13.2pt
-
 % Set the baselineskip to #1, and the lineskip and strut size
 % correspondingly.  There is no deep meaning behind these magic numbers
 % used as factors; they just match (closely enough) what Knuth defined.
@@ -1473,6 +1486,7 @@ output) for that.)}
 % can get a sort of poor man's double spacing by redefining this.
 \def\baselinefactor{1}
 %
+\newdimen\textleading
 \def\setleading#1{%
   \dimen0 = #1\relax
   \normalbaselineskip = \baselinefactor\dimen0
@@ -1745,18 +1759,24 @@ end
 \fi\fi
 
 
-% Set the font macro #1 to the font named #2, adding on the
-% specified font prefix (normally `cm').
+% Set the font macro #1 to the font named \fontprefix#2.
 % #3 is the font's design size, #4 is a scale factor, #5 is the CMap
-% encoding (currently only OT1, OT1IT and OT1TT are allowed, pass
-% empty to omit).
+% encoding (only OT1, OT1IT and OT1TT are allowed, or empty to omit).
+% Example:
+% #1 = \textrm
+% #2 = \rmshape
+% #3 = 10
+% #4 = \mainmagstep
+% #5 = OT1
+%
 \def\setfont#1#2#3#4#5{%
   \font#1=\fontprefix#2#3 scaled #4
   \csname cmap#5\endcsname#1%
 }
 % This is what gets called when #5 of \setfont is empty.
 \let\cmap\gobble
-% emacs-page end of cmaps
+%
+% (end of cmaps)
 
 % Use cm as the default font prefix.
 % To specify the font prefix, you must define \fontprefix
@@ -1766,7 +1786,7 @@ end
 \fi
 % Support font families that don't use the same naming scheme as CM.
 \def\rmshape{r}
-\def\rmbshape{bx}               %where the normal face is bold
+\def\rmbshape{bx}               % where the normal face is bold
 \def\bfshape{b}
 \def\bxshape{bx}
 \def\ttshape{tt}
@@ -1781,8 +1801,7 @@ end
 \def\scshape{csc}
 \def\scbshape{csc}
 
-% Definitions for a main text size of 11pt.  This is the default in
-% Texinfo.
+% Definitions for a main text size of 11pt.  (The default in Texinfo.)
 %
 \def\definetextfontsizexi{%
 % Text fonts (11.2pt, magstep1).
@@ -1907,7 +1926,7 @@ end
 \textleading = 13.2pt % line spacing for 11pt CM
 \textfonts            % reset the current fonts
 \rm
-} % end of 11pt text font size definitions
+} % end of 11pt text font size definitions, \definetextfontsizexi
 
 
 % Definitions to make the main text be 10pt Computer Modern, with
@@ -2039,7 +2058,7 @@ end
 \textleading = 12pt   % line spacing for 10pt CM
 \textfonts            % reset the current fonts
 \rm
-} % end of 10pt text font size definitions
+} % end of 10pt text font size definitions, \definetextfontsizex
 
 
 % We provide the user-level command
@@ -2254,8 +2273,6 @@ end
 
 \gdef\markupsetcodequoteleft{\let`\codequoteleft}
 \gdef\markupsetcodequoteright{\let'\codequoteright}
-
-\gdef\markupsetnoligaturesquoteleft{\let`\noligaturesquoteleft}
 }
 
 \let\markupsetuplqcode \markupsetcodequoteleft
@@ -2263,6 +2280,9 @@ end
 %
 \let\markupsetuplqexample \markupsetcodequoteleft
 \let\markupsetuprqexample \markupsetcodequoteright
+%
+\let\markupsetuplqkbd     \markupsetcodequoteleft
+\let\markupsetuprqkbd     \markupsetcodequoteright
 %
 \let\markupsetuplqsamp \markupsetcodequoteleft
 \let\markupsetuprqsamp \markupsetcodequoteright
@@ -2272,8 +2292,6 @@ end
 %
 \let\markupsetuplqverbatim \markupsetcodequoteleft
 \let\markupsetuprqverbatim \markupsetcodequoteright
-
-\let\markupsetuplqkbd \markupsetnoligaturesquoteleft
 
 % Allow an option to not use regular directed right quote/apostrophe
 % (char 0x27), but instead the undirected quote from cmtt (char 0x0d).
@@ -2364,8 +2382,7 @@ end
   \aftersmartic
 }
 
-% like \smartslanted except unconditionally uses \ttsl, and no ic.
-% @var is set to this for defun arguments.
+% Unconditional use \ttsl, and no ic.  @var is set to this for defuns.
 \def\ttslanted#1{{\ttsl #1}}
 
 % @cite is like \smartslanted except unconditionally use \sl.  We never want
@@ -2430,34 +2447,12 @@ end
 % @samp.
 \def\samp#1{{\setupmarkupstyle{samp}\lq\tclose{#1}\rq\null}}
 
-% definition of @key that produces a lozenge.  Doesn't adjust to text size.
-%\setfont\keyrm\rmshape{8}{1000}{OT1}
-%\font\keysy=cmsy9
-%\def\key#1{{\keyrm\textfont2=\keysy \leavevmode\hbox{%
-%  \raise0.4pt\hbox{\angleleft}\kern-.08em\vtop{%
-%    \vbox{\hrule\kern-0.4pt
-%     \hbox{\raise0.4pt\hbox{\vphantom{\angleleft}}#1}}%
-%    \kern-0.4pt\hrule}%
-%  \kern-.06em\raise0.4pt\hbox{\angleright}}}}
+% @indicateurl is \samp, that is, with quotes.
+\let\indicateurl=\samp
 
-% definition of @key with no lozenge.  If the current font is already
-% monospace, don't change it; that way, we respect @kbdinputstyle.  But
-% if it isn't monospace, then use \tt.
-%
-\def\key#1{{\setupmarkupstyle{key}%
-  \nohyphenation
-  \ifmonospace\else\tt\fi
-  #1}\null}
-
-% ctrl is no longer a Texinfo command.
-\def\ctrl #1{{\tt \rawbackslash \hat}#1}
-
-% @file, @option are the same as @samp.
-\let\file=\samp
-\let\option=\samp
-
-% @code is a modification of @t,
-% which makes spaces the same size as normal in the surrounding text.
+% @code (and similar) prints in typewriter, but with spaces the same
+% size as normal in the surrounding text, without hyphenation, etc.
+% This is a subroutine for that.
 \def\tclose#1{%
   {%
     % Change normal interword space to be same as for the current font.
@@ -2480,14 +2475,14 @@ end
 }
 
 % We *must* turn on hyphenation at `-' and `_' in @code.
+% (But see \codedashfinish below.)
 % Otherwise, it is too hard to avoid overfull hboxes
 % in the Emacs manual, the Library manual, etc.
-
+%
 % Unfortunately, TeX uses one parameter (\hyphenchar) to control
 % both hyphenation at - and hyphenation within words.
 % We must therefore turn them both off (\tclose does that)
-% and arrange explicitly to hyphenate at a dash.
-%  -- rms.
+% and arrange explicitly to hyphenate at a dash. -- rms.
 {
   \catcode`\-=\active \catcode`\_=\active
   \catcode`\'=\active \catcode`\`=\active
@@ -2501,17 +2496,36 @@ end
      \let-\codedash
      \let_\codeunder
     \else
-     \let-\realdash
+     \let-\normaldash
      \let_\realunder
     \fi
+    % Given -foo (with a single dash), we do not want to allow a break
+    % after the hyphen.
+    \global\let\codedashprev=\codedash
+    %
     \codex
   }
+  %
+  \gdef\codedash{\futurelet\next\codedashfinish}
+  \gdef\codedashfinish{%
+    \normaldash % always output the dash character itself.
+    %
+    % Now, output a discretionary to allow a line break, unless
+    % (a) the next character is a -, or
+    % (b) the preceding character is a -.
+    % E.g., given --posix, we do not want to allow a break after either -.
+    % Given --foo-bar, we do want to allow a break between the - and the b.
+    \ifx\next\codedash \else
+      \ifx\codedashprev\codedash
+      \else \discretionary{}{}{}\fi
+    \fi
+    \global\let\codedashprev=\next
+  }
 }
-
+\def\normaldash{-}
+%
 \def\codex #1{\tclose{#1}\endgroup}
 
-\def\realdash{-}
-\def\codedash{-\discretionary{}{}{}}
 \def\codeunder{%
   % this is all so @math{@code{var_name}+1} can work.  In math mode, _
   % is "active" (mathcode"8000) and \normalunderscore (or \char95, etc.)
@@ -2525,9 +2539,9 @@ end
 }
 
 % An additional complication: the above will allow breaks after, e.g.,
-% each of the four underscores in __typeof__.  This is undesirable in
-% some manuals, especially if they don't have long identifiers in
-% general.  @allowcodebreaks provides a way to control this.
+% each of the four underscores in __typeof__.  This is bad.
+% @allowcodebreaks provides a document-level way to turn breaking at -
+% and _ on and off.
 %
 \newif\ifallowcodebreaks  \allowcodebreakstrue
 
@@ -2545,6 +2559,13 @@ end
     \errmessage{Unknown @allowcodebreaks option `\txiarg', must be true|false}%
   \fi\fi
 }
+
+% For @command, @env, @file, @option quotes seem unnecessary,
+% so use \code rather than \samp.
+\let\command=\code
+\let\env=\code
+\let\file=\code
+\let\option=\code
 
 % @uref (abbreviation for `urlref') takes an optional (comma-separated)
 % second argument specifying the text to display and an optional third
@@ -2692,10 +2713,6 @@ end
   \let\email=\uref
 \fi
 
-% @kbd is like @code, except that if the argument is just one @key command,
-% then @kbd has no effect.
-\def\kbd#1{{\setupmarkupstyle{kbd}\def\look{#1}\expandafter\kbdfoo\look??\par}}
-
 % @kbdinputstyle -- arg is `distinct' (@kbd uses slanted tty font always),
 %   `example' (@kbd uses ttsl only inside of @example and friends),
 %   or `code' (@kbd uses normal tty font always).
@@ -2719,16 +2736,36 @@ end
 % Default is `distinct'.
 \kbdinputstyle distinct
 
-\def\xkey{\key}
-\def\kbdfoo#1#2#3\par{\def\one{#1}\def\three{#3}\def\threex{??}%
-\ifx\one\xkey\ifx\threex\three \key{#2}%
-\else{\tclose{\kbdfont\setupmarkupstyle{kbd}\look}}\fi
-\else{\tclose{\kbdfont\setupmarkupstyle{kbd}\look}}\fi}
+% @kbd is like @code, except that if the argument is just one @key command,
+% then @kbd has no effect.
+\def\kbd#1{{\def\look{#1}\expandafter\kbdsub\look??\par}}
 
-% For @indicateurl, @env, @command quotes seem unnecessary, so use \code.
-\let\indicateurl=\code
-\let\env=\code
-\let\command=\code
+\def\xkey{\key}
+\def\kbdsub#1#2#3\par{%
+  \def\one{#1}\def\three{#3}\def\threex{??}%
+  \ifx\one\xkey\ifx\threex\three \key{#2}%
+  \else{\tclose{\kbdfont\setupmarkupstyle{kbd}\look}}\fi
+  \else{\tclose{\kbdfont\setupmarkupstyle{kbd}\look}}\fi
+}
+
+% definition of @key that produces a lozenge.  Doesn't adjust to text size.
+%\setfont\keyrm\rmshape{8}{1000}{OT1}
+%\font\keysy=cmsy9
+%\def\key#1{{\keyrm\textfont2=\keysy \leavevmode\hbox{%
+%  \raise0.4pt\hbox{\angleleft}\kern-.08em\vtop{%
+%    \vbox{\hrule\kern-0.4pt
+%     \hbox{\raise0.4pt\hbox{\vphantom{\angleleft}}#1}}%
+%    \kern-0.4pt\hrule}%
+%  \kern-.06em\raise0.4pt\hbox{\angleright}}}}
+
+% definition of @key with no lozenge.  If the current font is already
+% monospace, don't change it; that way, we respect @kbdinputstyle.  But
+% if it isn't monospace, then use \tt.
+%
+\def\key#1{{\setupmarkupstyle{key}%
+  \nohyphenation
+  \ifmonospace\else\tt\fi
+  #1}\null}
 
 % @clicksequence{File @click{} Open ...}
 \def\clicksequence#1{\begingroup #1\endgroup}
@@ -2835,6 +2872,9 @@ end
     \let' = \ptexquoteright
   }
 }
+
+% ctrl is no longer a Texinfo command, but leave this definition for fun.
+\def\ctrl #1{{\tt \rawbackslash \hat}#1}
 
 % @inlinefmt{FMTNAME,PROCESSED-TEXT} and @inlineraw{FMTNAME,RAW-TEXT}.
 % Ignore unless FMTNAME == tex; then it is like @iftex and @tex,
@@ -3126,12 +3166,17 @@ end
   % hopefully nobody will notice/care.
   \edef\ecsize{\csname\curfontsize ecsize\endcsname}%
   \edef\nominalsize{\csname\curfontsize nominalsize\endcsname}%
-  \ifx\curfontstyle\bfstylename
-    % bold:
-    \font\thisecfont = ecb\ifusingit{i}{x}\ecsize \space at \nominalsize
+  \ifmonospace
+    % typewriter:
+    \font\thisecfont = ectt\ecsize \space at \nominalsize
   \else
-    % regular:
-    \font\thisecfont = ec\ifusingit{ti}{rm}\ecsize \space at \nominalsize
+    \ifx\curfontstyle\bfstylename
+      % bold:
+      \font\thisecfont = ecb\ifusingit{i}{x}\ecsize \space at \nominalsize
+    \else
+      % regular:
+      \font\thisecfont = ec\ifusingit{ti}{rm}\ecsize \space at \nominalsize
+    \fi
   \fi
   \thisecfont
 }
@@ -3244,6 +3289,20 @@ end
   \finishedtitlepagetrue
 }
 
+% Settings used for typesetting titles: no hyphenation, no indentation,
+% don't worry much about spacing, ragged right.  This should be used
+% inside a \vbox, and fonts need to be set appropriately first.  Because
+% it is always used for titles, nothing else, we call \rmisbold.  \par
+% should be specified before the end of the \vbox, since a vbox is a group.
+%
+\def\raggedtitlesettings{%
+  \rmisbold
+  \hyphenpenalty=10000
+  \parindent=0pt
+  \tolerance=5000
+  \ptexraggedright
+}
+
 % Macros to be used within @titlepage:
 
 \let\subtitlerm=\tenrm
@@ -3251,7 +3310,7 @@ end
 
 \parseargdef\title{%
   \checkenv\titlepage
-  \leftline{\titlefonts\rmisbold #1}
+  \vbox{\titlefonts \raggedtitlesettings #1\par}%
   % print a rule at the page bottom also.
   \finishedtitlepagefalse
   \vskip4pt \hrule height 4pt width \hsize \vskip4pt
@@ -4148,7 +4207,7 @@ end
     % ..., but we might end up with active ones in the argument if
     % we're called from @code, as @code{@value{foo-bar_}}, though.
     % So \let them to their normal equivalents.
-    \let-\realdash \let_\normalunderscore
+    \let-\normaldash \let_\normalunderscore
   }
 }
 
@@ -4172,7 +4231,8 @@ end
 % @ifset VAR ... @end ifset reads the `...' iff VAR has been defined
 % with @set.
 %
-% To get special treatment of `@end ifset,' call \makeond and the redefine.
+% To get the special treatment we need for `@end ifset,' we call
+% \makecond and then redefine.
 %
 \makecond{ifset}
 \def\ifset{\parsearg{\doifset{\let\next=\ifsetfail}}}
@@ -4188,7 +4248,7 @@ end
 }
 \def\ifsetfail{\doignore{ifset}}
 
-% @ifclear VAR ... @end ifclear reads the `...' iff VAR has never been
+% @ifclear VAR ... @end executes the `...' iff VAR has never been
 % defined with @set, or has been undefined with @clear.
 %
 % The `\else' inside the `\doifset' parameter is a trick to reuse the
@@ -4198,6 +4258,35 @@ end
 \makecond{ifclear}
 \def\ifclear{\parsearg{\doifset{\else \let\next=\ifclearfail}}}
 \def\ifclearfail{\doignore{ifclear}}
+
+% @ifcommandisdefined CMD ... @end executes the `...' if CMD (written
+% without the @) is in fact defined.  We can only feasibly check at the
+% TeX level, so something like `mathcode' is going to considered
+% defined even though it is not a Texinfo command.
+%
+\makecond{ifcommanddefined}
+\def\ifcommanddefined{\parsearg{\doifcmddefined{\let\next=\ifcmddefinedfail}}}
+%
+\def\doifcmddefined#1#2{{%
+    \makevalueexpandable
+    \let\next=\empty
+    \expandafter\ifx\csname #2\endcsname\relax
+      #1% If not defined, \let\next as above.
+    \fi
+    \expandafter
+  }\next
+}
+\def\ifcmddefinedfail{\doignore{ifcommanddefined}}
+
+% @ifcommandnotdefined CMD ... handled similar to @ifclear above.
+\makecond{ifcommandnotdefined}
+\def\ifcommandnotdefined{%
+  \parsearg{\doifcmddefined{\else \let\next=\ifcmdnotdefinedfail}}}
+\def\ifcmdnotdefinedfail{\doignore{ifcommandnotdefined}}
+
+% Set the `txicommandconditionals' variable, so documents have a way to
+% test if the @ifcommand...defined conditionals are available.
+\set txicommandconditionals
 
 % @dircategory CATEGORY  -- specify a category of the dir file
 % which this file should belong to.  Ignore this in TeX.
@@ -4435,6 +4524,7 @@ end
   \definedummyword\guillemetright
   \definedummyword\guilsinglleft
   \definedummyword\guilsinglright
+  \definedummyword\lbracechar
   \definedummyword\leq
   \definedummyword\minus
   \definedummyword\ogonek
@@ -4447,6 +4537,7 @@ end
   \definedummyword\quoteleft
   \definedummyword\quoteright
   \definedummyword\quotesinglbase
+  \definedummyword\rbracechar
   \definedummyword\result
   \definedummyword\textdegree
   %
@@ -4498,6 +4589,7 @@ end
   \definedummyword\t
   %
   % Commands that take arguments.
+  \definedummyword\abbr
   \definedummyword\acronym
   \definedummyword\anchor
   \definedummyword\cite
@@ -4509,7 +4601,9 @@ end
   \definedummyword\emph
   \definedummyword\env
   \definedummyword\file
+  \definedummyword\image
   \definedummyword\indicateurl
+  \definedummyword\inforef
   \definedummyword\kbd
   \definedummyword\key
   \definedummyword\math
@@ -4556,7 +4650,10 @@ end
   % content at all.  So for index sorting, we map @{ and @} to strings
   % starting with |, since that ASCII character is between ASCII { and }.
   \def\{{|a}%
+  \def\lbracechar{|a}%
+  %
   \def\}{|b}%
+  \def\rbracechar{|b}%
   %
   % Non-English letters.
   \def\AA{AA}%
@@ -4732,10 +4829,9 @@ end
 %
 % ..., ready, GO:
 %
-\def\safewhatsit#1{%
-\ifhmode
+\def\safewhatsit#1{\ifhmode
   #1%
-\else
+ \else
   % \lastskip and \lastpenalty cannot both be nonzero simultaneously.
   \whatsitskip = \lastskip
   \edef\lastskipmacro{\the\lastskip}%
@@ -4759,7 +4855,6 @@ end
     % to re-insert the same penalty (values >10000 are used for various
     % signals); since we just inserted a non-discardable item, any
     % following glue (such as a \parskip) would be a breakpoint.  For example:
-    %
     %   @deffn deffn-whatever
     %   @vindex index-whatever
     %   Description.
@@ -4772,8 +4867,7 @@ end
     % (the whatsit from the \write), so we must insert a \nobreak.
     \nobreak\vskip\whatsitskip
   \fi
-\fi
-}
+\fi}
 
 % The index entry written in the file actually looks like
 %  \entry {sortstring}{page}{topic}
@@ -5520,14 +5614,6 @@ end
 
 % Define @majorheading, @heading and @subheading
 
-% NOTE on use of \vbox for chapter headings, section headings, and such:
-%       1) We use \vbox rather than the earlier \line to permit
-%          overlong headings to fold.
-%       2) \hyphenpenalty is set to 10000 because hyphenation in a
-%          heading is obnoxious; this forbids it.
-%       3) Likewise, headings look best if no \parindent is used, and
-%          if justification is not attempted.  Hence \raggedright.
-
 \def\majorheading{%
   {\advance\chapheadingskip by 10pt \chapbreak }%
   \parsearg\chapheadingzzz
@@ -5535,10 +5621,8 @@ end
 
 \def\chapheading{\chapbreak \parsearg\chapheadingzzz}
 \def\chapheadingzzz#1{%
-  {\chapfonts \vbox{\hyphenpenalty=10000\tolerance=5000
-                    \parindent=0pt\ptexraggedright
-                    \rmisbold #1\hfill}}%
-  \bigskip \par\penalty 200\relax
+  \vbox{\chapfonts \raggedtitlesettings #1\par}%
+  \nobreak\bigskip \nobreak
   \suppressfirstparagraphindent
 }
 
@@ -5697,8 +5781,7 @@ end
     %
     % Typeset the actual heading.
     \nobreak % Avoid page breaks at the interline glue.
-    \vbox{\hyphenpenalty=10000 \tolerance=5000 \parindent=0pt \ptexraggedright
-          \hangindent=\wd0 \centerparametersmaybe
+    \vbox{\raggedtitlesettings \hangindent=\wd0 \centerparametersmaybe
           \unhbox0 #1\par}%
   }%
   \nobreak\bigskip % no page break after a chapter title
@@ -5720,18 +5803,18 @@ end
 \def\setchapterstyle #1 {\csname CHAPF#1\endcsname}
 %
 \def\unnchfopen #1{%
-\chapoddpage {\chapfonts \vbox{\hyphenpenalty=10000\tolerance=5000
-                       \parindent=0pt\ptexraggedright
-                       \rmisbold #1\hfill}}\bigskip \par\nobreak
+  \chapoddpage
+  \vbox{\chapfonts \raggedtitlesettings #1\par}%
+  \nobreak\bigskip\nobreak
 }
 \def\chfopen #1#2{\chapoddpage {\chapfonts
 \vbox to 3in{\vfil \hbox to\hsize{\hfil #2} \hbox to\hsize{\hfil #1} \vfil}}%
 \par\penalty 5000 %
 }
 \def\centerchfopen #1{%
-\chapoddpage {\chapfonts \vbox{\hyphenpenalty=10000\tolerance=5000
-                       \parindent=0pt
-                       \hfill {\rmisbold #1}\hfill}}\bigskip \par\nobreak
+  \chapoddpage
+  \vbox{\chapfonts \raggedtitlesettings \hfill #1\hfill}%
+  \nobreak\bigskip \nobreak
 }
 \def\CHAPFopen{%
   \global\let\chapmacro=\chfopen
@@ -5876,14 +5959,15 @@ end
   %
   % We'll almost certainly start a paragraph next, so don't let that
   % glue accumulate.  (Not a breakpoint because it's preceded by a
-  % discardable item.)
+  % discardable item.)  However, when a paragraph is not started next
+  % (\startdefun, \cartouche, \center, etc.), this needs to be wiped out
+  % or the negative glue will cause weirdly wrong output, typically
+  % obscuring the section heading with something else.
   \vskip-\parskip
   %
-  % This is purely so the last item on the list is a known \penalty >
-  % 10000.  This is so \startdefun can avoid allowing breakpoints after
-  % section headings.  Otherwise, it would insert a valid breakpoint between:
-  %   @section sec-whatever
-  %   @deffn def-whatever
+  % This is so the last item on the main vertical list is a known
+  % \penalty > 10000, so \startdefun, etc., can recognize the situation
+  % and do the needful.
   \penalty 10001
 }
 
@@ -6303,7 +6387,7 @@ end
   % If this cartouche directly follows a sectioning command, we need the
   % \parskip glue (backspaced over by default) or the cartouche can
   % collide with the section heading.
-  \ifnum\lastpenalty>10000 \vskip\parskip \fi
+  \ifnum\lastpenalty>10000 \vskip\parskip \penalty\lastpenalty \fi
   %
   \vbox\bgroup
       \baselineskip=0pt\parskip=0pt\lineskip=0pt
@@ -6338,7 +6422,7 @@ end
 \newdimen\nonfillparindent
 \def\nonfillstart{%
   \aboveenvbreak
-  \hfuzz = 12pt % Don't be fussy
+  \ifdim\hfuzz < 12pt \hfuzz = 12pt \fi % Don't be fussy
   \sepspaces % Make spaces be word-separators rather than space tokens.
   \let\par = \lisppar % don't ignore blank lines
   \obeylines % each line of input is a line of output
@@ -6496,16 +6580,9 @@ end
 \makedispenvdef{quotation}{\quotationstart}
 %
 \def\quotationstart{%
-  {\parskip=0pt \aboveenvbreak}% because \aboveenvbreak inserts \parskip
-  \parindent=0pt
-  %
-  % @cartouche defines \nonarrowing to inhibit narrowing at next level down.
+  \indentedblockstart % same as \indentedblock, but increase right margin too.
   \ifx\nonarrowing\relax
-    \advance\leftskip by \lispnarrowing
     \advance\rightskip by \lispnarrowing
-    \exdentamount = \lispnarrowing
-  \else
-    \let\nonarrowing = \relax
   \fi
   \parsearg\quotationlabel
 }
@@ -6530,6 +6607,32 @@ end
     {\bf #1: }%
   \fi
 }
+
+% @indentedblock is like @quotation, but indents only on the left and
+% has no optional argument.
+%
+\makedispenvdef{indentedblock}{\indentedblockstart}
+%
+\def\indentedblockstart{%
+  {\parskip=0pt \aboveenvbreak}% because \aboveenvbreak inserts \parskip
+  \parindent=0pt
+  %
+  % @cartouche defines \nonarrowing to inhibit narrowing at next level down.
+  \ifx\nonarrowing\relax
+    \advance\leftskip by \lispnarrowing
+    \exdentamount = \lispnarrowing
+  \else
+    \let\nonarrowing = \relax
+  \fi
+}
+
+% Keep a nonzero parskip for the environment, since we're doing normal filling.
+%
+\def\Eindentedblock{%
+  \par
+  {\parskip=0pt \afterenvbreak}%
+}
+\def\Esmallindentedblock{\Eindentedblock}
 
 
 % LaTeX-like @verbatim...@end verbatim and @verb{<char>...<char>}
@@ -7009,7 +7112,10 @@ end
   \df \sl \hyphenchar\font=0
   %
   % On the other hand, if an argument has two dashes (for instance), we
-  % want a way to get ttsl.  Let's try @var for that.
+  % want a way to get ttsl.  We used to recommend @var for that, so
+  % leave the code in, but it's strange for @var to lead to typewriter.
+  % Nowadays we recommend @code, since the difference between a ttsl hyphen
+  % and a tt hyphen is pretty tiny.  @code also disables ?` !`.
   \def\var##1{{\setupmarkupstyle{var}\ttslanted{##1}}}%
   #1%
   \sl\hyphenchar\font=45
@@ -7793,7 +7899,7 @@ end
   \fi\fi
 }
 
-
+% 
 % @xref, @pxref, and @ref generate cross-references.  For \xrefX, #1 is
 % the node name, #2 the name of the Info cross-reference, #3 the printed
 % node name, #4 the name of the Info file, #5 the name of the printed
@@ -7803,15 +7909,20 @@ end
 \def\xref#1{\putwordSee{} \xrefX[#1,,,,,,,]}
 \def\ref#1{\xrefX[#1,,,,,,,]}
 %
-\newbox\topbox
+\newbox\toprefbox
 \newbox\printedrefnamebox
+\newbox\infofilenamebox
 \newbox\printedmanualbox
 %
 \def\xrefX[#1,#2,#3,#4,#5,#6]{\begingroup
   \unsepspaces
   %
+  % Get args without leading/trailing spaces.
   \def\printedrefname{\ignorespaces #3}%
   \setbox\printedrefnamebox = \hbox{\printedrefname\unskip}%
+  %
+  \def\infofilename{\ignorespaces #4}%
+  \setbox\infofilenamebox = \hbox{\infofilename\unskip}%
   %
   \def\printedmanual{\ignorespaces #5}%
   \setbox\printedmanualbox  = \hbox{\printedmanual\unskip}%
@@ -7845,12 +7956,20 @@ end
   \ifpdf
     {\indexnofonts
      \turnoffactive
+     \makevalueexpandable
      % This expands tokens, so do it after making catcode changes, so _
-     % etc. don't get their TeX definitions.
+     % etc. don't get their TeX definitions.  This ignores all spaces in
+     % #4, including (wrongly) those in the middle of the filename.
      \getfilename{#4}%
      %
+     % This (wrongly) does not take account of leading or trailing
+     % spaces in #1, which should be ignored.
      \edef\pdfxrefdest{#1}%
-     \txiescapepdf\pdfxrefdest
+     \ifx\pdfxrefdest\empty
+       \def\pdfxrefdest{Top}% no empty targets
+     \else
+       \txiescapepdf\pdfxrefdest  % escape PDF special chars
+     \fi
      %
      \leavevmode
      \startlink attr{/Border [0 0 0]}%
@@ -7883,7 +8002,7 @@ end
       \printedrefname
     \fi
     %
-    % if the user also gave the printed manual name (fifth arg), append
+    % If the user also gave the printed manual name (fifth arg), append
     % "in MANUALNAME".
     \ifdim \wd\printedmanualbox > 0pt
       \space \putwordin{} \cite{\printedmanual}%
@@ -7898,32 +8017,20 @@ end
     % this is a loss.  Therefore, we give the text of the node name
     % again, so it is as if TeX is seeing it for the first time.
     %
-    % Cross-manual reference.  Only include the "Section ``foo'' in" if
-    % the foo is neither missing or Top.  Thus, @xref{,,,foo,The Foo Manual}
-    % outputs simply "see The Foo Manual".
     \ifdim \wd\printedmanualbox > 0pt
-      % What is the 7sp about?  The idea is that we also want to omit
-      % the Section part if we would be printing "Top", since they are
-      % clearly trying to refer to the whole manual.  But, this being
-      % TeX, we can't easily compare strings while ignoring the possible
-      % spaces before and after in the input.  By adding the arbitrary
-      % 7sp, we make it much less likely that a real node name would
-      % happen to have the same width as "Top" (e.g., in a monospaced font).
-      % I hope it will never happen in practice.
+      % Cross-manual reference with a printed manual name.
       %
-      % For the same basic reason, we retypeset the "Top" at every
-      % reference, since the current font is indeterminate.
+      \crossmanualxref{\cite{\printedmanual\unskip}}%
+    %
+    \else\ifdim \wd\infofilenamebox > 0pt
+      % Cross-manual reference with only an info filename (arg 4), no
+      % printed manual name (arg 5).  This is essentially the same as
+      % the case above; we output the filename, since we have nothing else.
       %
-      \setbox\topbox = \hbox{Top\kern7sp}%
-      \setbox2 = \hbox{\ignorespaces \printedrefname \unskip \kern7sp}%
-      \ifdim \wd2 > 7sp
-        \ifdim \wd2 = \wd\topbox \else
-          \putwordSection{} ``\printedrefname'' \putwordin{}\space
-        \fi
-      \fi
-      \cite{\printedmanual}%
+      \crossmanualxref{\code{\infofilename\unskip}}%
+    %
     \else
-      % Reference in this manual.
+      % Reference within this manual.
       %
       % _ (for example) has to be the character _ for the purposes of the
       % control sequence corresponding to the node, but it has to expand
@@ -7944,10 +8051,36 @@ end
       %
       % output the `page 3'.
       \turnoffactive \putwordpage\tie\refx{#1-pg}{}%
-    \fi
+    \fi\fi
   \fi
   \endlink
 \endgroup}
+
+% Output a cross-manual xref to #1.  Used just above (twice).
+%
+% Only include the text "Section ``foo'' in" if the foo is neither
+% missing or Top.  Thus, @xref{,,,foo,The Foo Manual} outputs simply
+% "see The Foo Manual", the idea being to refer to the whole manual.
+%
+% But, this being TeX, we can't easily compare our node name against the
+% string "Top" while ignoring the possible spaces before and after in
+% the input.  By adding the arbitrary 7sp below, we make it much less
+% likely that a real node name would have the same width as "Top" (e.g.,
+% in a monospaced font).  Hopefully it will never happen in practice.
+%
+% For the same basic reason, we retypeset the "Top" at every
+% reference, since the current font is indeterminate.
+%
+\def\crossmanualxref#1{%
+  \setbox\toprefbox = \hbox{Top\kern7sp}%
+  \setbox2 = \hbox{\ignorespaces \printedrefname \unskip \kern7sp}%
+  \ifdim \wd2 > 7sp  % nonempty?
+    \ifdim \wd2 = \wd\toprefbox \else  % same as Top?
+      \putwordSection{} ``\printedrefname'' \putwordin{}\space
+    \fi
+  \fi
+  #1%
+}
 
 % This macro is called from \xrefX for the `[nodename]' part of xref
 % output.  It's a separate macro only so it can be changed more easily,
@@ -8316,7 +8449,7 @@ end
   it from ftp://tug.org/tex/epsf.tex.}
 %
 \def\image#1{%
-  \ifx\epsfbox\thisiundefined
+  \ifx\epsfbox\thisisundefined
     \ifwarnednoepsf \else
       \errhelp = \noepsfhelp
       \errmessage{epsf.tex not found, images will be ignored}%
@@ -8340,6 +8473,13 @@ end
   % If the image is by itself, center it.
   \ifvmode
     \imagevmodetrue
+  \else \ifx\centersub\centerV
+    % for @center @image, we need a vbox so we can have our vertical space
+    \imagevmodetrue
+    \vbox\bgroup % vbox has better behavior than vtop herev
+  \fi\fi
+  %
+  \ifimagevmode
     \nobreak\medskip
     % Usually we'll have text after the image which will insert
     % \parskip glue, so insert it here too to equalize the space
@@ -8349,9 +8489,13 @@ end
   \fi
   %
   % Leave vertical mode so that indentation from an enclosing
-  % environment such as @quotation is respected.  On the other hand, if
-  % it's at the top level, we don't want the normal paragraph indentation.
-  \noindent
+  %  environment such as @quotation is respected.
+  % However, if we're at the top level, we don't want the
+  %  normal paragraph indentation.
+  % On the other hand, if we are in the case of @center @image, we don't
+  %  want to start a paragraph, which will create a hsize-width box and
+  %  eradicate the centering.
+  \ifx\centersub\centerV\else \noindent \fi
   %
   % Output the image.
   \ifpdf
@@ -8363,7 +8507,10 @@ end
     \epsfbox{#1.eps}%
   \fi
   %
-  \ifimagevmode \medskip \fi  % space after the standalone image
+  \ifimagevmode
+    \medskip  % space after a standalone image
+  \fi
+  \ifx\centersub\centerV \egroup \fi
 \endgroup}
 
 
@@ -9866,22 +10013,26 @@ directory should work if nowhere else does.}
 @gdef@otherbackslash{@let\=@realbackslash}
 
 % Same as @turnoffactive except outputs \ as {\tt\char`\\} instead of
-% the literal character `\'.
+% the literal character `\'.  Also revert - to its normal character, in
+% case the active - from code has slipped in.
 %
-@def@normalturnoffactive{%
-  @let"=@normaldoublequote
-  @let$=@normaldollar %$ font-lock fix
-  @let+=@normalplus
-  @let<=@normalless
-  @let>=@normalgreater
-  @let\=@normalbackslash
-  @let^=@normalcaret
-  @let_=@normalunderscore
-  @let|=@normalverticalbar
-  @let~=@normaltilde
-  @markupsetuplqdefault
-  @markupsetuprqdefault
-  @unsepspaces
+{@catcode`- = @active
+ @gdef@normalturnoffactive{%
+   @let-=@normaldash
+   @let"=@normaldoublequote
+   @let$=@normaldollar %$ font-lock fix
+   @let+=@normalplus
+   @let<=@normalless
+   @let>=@normalgreater
+   @let\=@normalbackslash
+   @let^=@normalcaret
+   @let_=@normalunderscore
+   @let|=@normalverticalbar
+   @let~=@normaltilde
+   @markupsetuplqdefault
+   @markupsetuprqdefault
+   @unsepspaces
+ }
 }
 
 % Make _ and + \other characters, temporarily.

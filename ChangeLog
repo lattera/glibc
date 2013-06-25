@@ -1,3 +1,8 @@
+2013-06-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* manual/texinfo.tex: Update to version 2013-06-21.17, with
+	trailing whitespace removed.
+
 2013-06-24  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #10283]
