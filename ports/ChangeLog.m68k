@@ -1,3 +1,8 @@
+2013-06-25  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/sysdep.h (CALL_MCOUNT) [PROF]: Use %a6 instead of
+	%fp in cfi insns.
+
 2013-06-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/libpthread.abilist:

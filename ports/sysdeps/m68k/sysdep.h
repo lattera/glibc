@@ -45,11 +45,11 @@
    to locate our caller, so push one just for its benefit.  */
 #  define CALL_MCOUNT \
   move.l %fp, -(%sp);							      \
-  cfi_adjust_cfa_offset (4);  cfi_rel_offset (%fp, 0);			      \
+  cfi_adjust_cfa_offset (4);  cfi_rel_offset (%a6, 0);			      \
   move.l %sp, %fp;							      \
   jbsr JUMPTARGET (_mcount);						      \
   move.l (%sp)+, %fp;							      \
-  cfi_adjust_cfa_offset (-4); cfi_restore (%fp);
+  cfi_adjust_cfa_offset (-4); cfi_restore (%a6);
 # else
 #  define CALL_MCOUNT		/* Do nothing.  */
 # endif
