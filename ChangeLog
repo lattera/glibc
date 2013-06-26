@@ -1,6 +1,9 @@
 2013-06-26  Liubov Dmitrieva  <liubov.dmitrieva@intel.com>
 
 	[BZ #15674]
+	* string/test-memcmp.c (check2): New.
+	(main): Call check2.
+
 	* sysdeps/x86_64/multiarch/memcmp-ssse3.S: Fix buffers overrun.
 
 2013-06-26  Maciej W. Rozycki  <macro@codesourcery.com>

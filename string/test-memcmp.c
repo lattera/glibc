@@ -448,6 +448,29 @@ check1 (void)
     }
 }
 
+/* This test checks that memcmp doesn't overrun buffers.  */
+static void
+check2 (void)
+{
+  size_t max_length = page_size / sizeof (CHAR);
+
+  /* Initialize buf2 to the same values as buf1.  The bug requires the
+     last compared byte to be different.  */
+  memcpy (buf2, buf1, page_size);
+  ((char *) buf2)[page_size - 1] ^= 0x11;
+
+  for (size_t length = 1; length < max_length; length++)
+    {
+      CHAR *s1 = (CHAR *) buf1 + max_length - length;
+      CHAR *s2 = (CHAR *) buf2 + max_length - length;
+
+      const int exp_result = SIMPLE_MEMCMP (s1, s2, length);
+
+      FOR_EACH_IMPL (impl, 0)
+	check_result (impl, s1, s2, length, exp_result);
+    }
+}
+
 int
 test_main (void)
 {
@@ -456,6 +479,7 @@ test_main (void)
   test_init ();
 
   check1 ();
+  check2 ();
 
   printf ("%23s", "");
   FOR_EACH_IMPL (impl, 0)
