@@ -1,3 +1,11 @@
+2013-06-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.in (CC): Require GCC version 4.4 or later.
+	* configure: Regenerated.
+	* manual/install.texi (Tools for Compilation): Update GCC version
+	requirement.
+	* INSTALL: Regenerated.
+
 2013-06-26  Liubov Dmitrieva  <liubov.dmitrieva@intel.com>
 
 	[BZ #15674]

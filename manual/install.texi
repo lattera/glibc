@@ -353,9 +353,9 @@ recommend GNU @code{make} version 3.79.  All earlier versions have severe
 bugs or lack features.
 
 @item
-GCC 4.3 or newer, GCC 4.6 recommended
+GCC 4.4 or newer, GCC 4.6 recommended
 
-GCC 4.3 or higher is required; as of this writing, GCC 4.6 is the
+GCC 4.4 or higher is required; as of this writing, GCC 4.6 is the
 compiler we advise to use to build @theglibc{}.
 
 You can use whatever compiler you like to compile programs that use
