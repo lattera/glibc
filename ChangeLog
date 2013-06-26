@@ -1,3 +1,10 @@
+2013-06-26  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	[BZ #15022]
+	* elf/dl-open.c (_dl_open) [!SHARED]: Move call to DL_STATIC_INIT
+	over to...
+	(dl_open_worker) [!SHARED]: ... here.
+
 2013-06-26  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
 	* elf/elf.h (AT_HWCAP2): Add a new a_type entry.

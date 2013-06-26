@@ -568,6 +568,10 @@ cannot load any more object with static TLS"));
   if (relocation_in_progress)
     LIBC_PROBE (reloc_complete, 3, args->nsid, r, new);
 
+#ifndef SHARED
+  DL_STATIC_INIT (new);
+#endif
+
   /* Run the initializer functions of new objects.  */
   _dl_init (new, args->argc, args->argv, args->env);
 
@@ -720,10 +724,6 @@ no more namespaces available for dlmopen()"));
 
   /* Release the lock.  */
   __rtld_lock_unlock_recursive (GL(dl_load_lock));
-
-#ifndef SHARED
-  DL_STATIC_INIT (args.map);
-#endif
 
   return args.map;
 }
