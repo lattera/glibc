@@ -1463,10 +1463,8 @@ L(next_24_bytes):
 	test	$0x40, %dh
 	jnz	L(Byte22)
 
-	mov	-9(%rdi), %eax
-	and	$0xff, %eax
-	mov	-9(%rsi), %edx
-	and	$0xff, %edx
+	movzbl	-9(%rdi), %eax
+	movzbl	-9(%rsi), %edx
 	sub	%edx, %eax
 	ret
 # else
