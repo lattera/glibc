@@ -1,4 +1,9 @@
 2013-07-02  Andi Kleen  <ak@linux.intel.com>
+
+	* pthread_mutexattr_settype.c (__pthread_mutexattr_settype):
+	  Disable elision for PTHREAD_MUTEX_DEFAULT.
+
+2013-07-02  Andi Kleen  <ak@linux.intel.com>
 	    Hongjiu Lu  <hongjiu.lu@intel.com>
 
 	* pthread_mutex_lock.c
