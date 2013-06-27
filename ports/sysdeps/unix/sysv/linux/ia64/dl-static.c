@@ -35,9 +35,6 @@ _dl_var_init (void *array[])
 }
 
 #else
-#include <bits/libc-lock.h>
-
-__libc_lock_define_initialized_recursive (static, _dl_static_lock)
 
 static void *variables[] =
 {
@@ -52,8 +49,6 @@ _dl_static_init (struct link_map *map)
   lookup_t loadbase;
   void (*f) (void *[]);
 
-  __libc_lock_lock_recursive (_dl_static_lock);
-
   loadbase = _dl_lookup_symbol_x ("_dl_var_init", map, &ref,
 				  map->l_local_scope, NULL, 0, 1, NULL);
   if (ref != NULL)
@@ -61,8 +56,6 @@ _dl_static_init (struct link_map *map)
       f = (void (*) (void *[])) DL_SYMBOL_ADDRESS (loadbase, ref);
       f (variables);
     }
-
-  __libc_lock_unlock_recursive (_dl_static_lock);
 }
 
 #endif

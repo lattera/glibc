@@ -1,3 +1,10 @@
+2013-06-27  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/ia64/dl-static.c: Do not include
+	<bits/libc-lock.h>.
+	(_dl_static_lock): Remove variable.
+	(_dl_static_init): Remove _dl_static_lock locking.
+
 2013-06-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/nptl/libpthread.abilist: Update.
