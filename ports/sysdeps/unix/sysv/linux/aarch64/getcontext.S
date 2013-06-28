@@ -54,8 +54,7 @@ ENTRY(__getcontext)
 	str     x2, [x0, oSP]
 
 	/* Initialize the pstate.  */
-	mov	x3, #0
-	str	x3, [x0, oPSTATE]
+	str	xzr, [x0, oPSTATE]
 
 	/* Figure out where to place the first context extension
 	   block.  */
