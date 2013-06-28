@@ -1,5 +1,13 @@
 2013-07-02  Andi Kleen  <ak@linux.intel.com>
 
+	* tst-mutex5.c: Include config.h.
+	  (do_test): Add checks for ENABLE_LOCK_ELISION.
+	* tst-mutex8.c: Include config.h
+	  (tf): Add checks for ENABLE_LOCK_ELISION.
+	  (check_type): Likewise.
+
+2013-07-02  Andi Kleen  <ak@linux.intel.com>
+
 	* pthreadP.h: Add elision types.
 	  (PTHREAD_MUTEX_TYPE_ELISION): Add.
 	* sysdeps/pthread/pthread.h: Add elision initializers.
