@@ -1,3 +1,7 @@
+2013-06-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/m68k/fpu_control.h: Fix preprocessor indentation.
+
 2013-06-28  Nathan Sidwell  <nathan@codesourcery.com>
 
 	* sysdeps/m68k/fpu_control.h [__mcoldfire__ && !__mcffpu__]
