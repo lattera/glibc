@@ -1,3 +1,13 @@
+2013-06-28  Nathan Sidwell  <nathan@codesourcery.com>
+
+	* sysdeps/m68k/fpu_control.h [__mcoldfire__ && !__mcffpu__]
+	(_FPU_RESERVED): Provide alternative definition.
+	[__mcoldfire__ && !__mcffpu__] (_FPU_DEFAULT): Likewise.
+	[__mcoldfire__ && !__mcffpu__] (_FPU_GETCW): Likewise.
+	[__mcoldfire__ && !__mcffpu__] (_FPU_SETCW): Likewise.
+	[!(__mcoldfire__ && !__mcffpu__)]: Make existing macro definitions
+	conditional.
+
 2013-06-25  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/sysdep.h (CALL_MCOUNT) [PROF]: Use %a6 instead of

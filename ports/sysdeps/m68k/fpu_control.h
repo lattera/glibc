@@ -53,6 +53,15 @@
 
 #include <features.h>
 
+#if defined (__mcoldfire__) && !defined (__mcffpu__)
+
+#define _FPU_RESERVED 0xffffffff
+#define _FPU_DEFAULT  0x00000000
+#define _FPU_GETCW(cw) ((cw) = 0)
+#define _FPU_SETCW(cw) ((void) (cw))
+
+#else
+
 /* masking of interrupts */
 #define _FPU_MASK_BSUN  0x8000
 #define _FPU_MASK_SNAN  0x4000
@@ -95,12 +104,13 @@
    that __setfpucw works.  This bit will be ignored.  */
 #define _FPU_IEEE     0x00000001
 
-/* Type of the control word.  */
-typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__SI__)));
-
 /* Macros for accessing the hardware control word.  */
 #define _FPU_GETCW(cw) __asm__ ("fmove%.l %!, %0" : "=dm" (cw))
 #define _FPU_SETCW(cw) __asm__ volatile ("fmove%.l %0, %!" : : "dm" (cw))
+#endif
+
+/* Type of the control word.  */
+typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__SI__)));
 
 /* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;
