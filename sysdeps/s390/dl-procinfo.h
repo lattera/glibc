@@ -56,7 +56,7 @@ enum
 			  | HWCAP_S390_EIMM | HWCAP_S390_DFP)
 
 /* We cannot provide a general printing function.  */
-#define _dl_procinfo(word) -1
+#define _dl_procinfo(type, word) -1
 
 static inline const char *
 __attribute__ ((unused))

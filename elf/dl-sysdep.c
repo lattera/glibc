@@ -156,6 +156,9 @@ _dl_sysdep_start (void **start_argptr,
       case AT_HWCAP:
 	GLRO(dl_hwcap) = (unsigned long int) av->a_un.a_val;
 	break;
+      case AT_HWCAP2:
+	GLRO(dl_hwcap2) = (unsigned long int) av->a_un.a_val;
+	break;
       case AT_CLKTCK:
 	GLRO(dl_clktck) = av->a_un.a_val;
 	break;
@@ -303,6 +306,7 @@ _dl_show_auxv (void)
 	  [AT_SYSINFO - 2] =		{ "SYSINFO:      0x", hex },
 	  [AT_SYSINFO_EHDR - 2] =	{ "SYSINFO_EHDR: 0x", hex },
 	  [AT_RANDOM - 2] =		{ "RANDOM:       0x", hex },
+	  [AT_HWCAP2 - 2] =		{ "HWCAP2:       0x", hex },
 	};
       unsigned int idx = (unsigned int) (av->a_type - 2);
 
@@ -314,10 +318,10 @@ _dl_show_auxv (void)
       assert (AT_NULL == 0);
       assert (AT_IGNORE == 1);
 
-      if (av->a_type == AT_HWCAP)
+      if (av->a_type == AT_HWCAP || av->a_type == AT_HWCAP2)
 	{
-	  /* This is handled special.  */
-	  if (_dl_procinfo (av->a_un.a_val) == 0)
+	  /* These are handled in a special way per platform.  */
+	  if (_dl_procinfo (av->a_type, av->a_un.a_val) == 0)
 	    continue;
 	}
 

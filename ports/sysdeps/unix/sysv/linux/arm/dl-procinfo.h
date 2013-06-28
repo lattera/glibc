@@ -31,9 +31,13 @@
 
 static inline int
 __attribute__ ((unused))
-_dl_procinfo (int word)
+_dl_procinfo (unsigned int type, unsigned long int word)
 {
   int i;
+
+  /* Fallback to unknown output mechanism.  */
+  if (type == AT_HWCAP2)
+    return -1;
 
   _dl_printf ("AT_HWCAP:   ");
 

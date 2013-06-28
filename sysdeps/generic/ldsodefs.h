@@ -554,6 +554,10 @@ struct rtld_global_ro
   EXTERN struct link_map *_dl_sysinfo_map;
 #endif
 
+  /* Mask for more hardware capabilities that are available on some
+     platforms.  */
+  EXTERN uint64_t _dl_hwcap2;
+
 #ifdef SHARED
   /* We add a function table to _rtld_global which is then used to
      call the function instead of going through the PLT.  The result

@@ -24,11 +24,15 @@
 #undef _dl_procinfo
 static inline int
 __attribute__ ((unused))
-_dl_procinfo (int word)
+_dl_procinfo (unsigned int type, unsigned long int word)
 {
   /* This table should match the information from arch/s390/kernel/setup.c
      in the kernel sources.  */
   int i;
+
+  /* Fallback to unknown output mechanism.  */
+  if (type == AT_HWCAP2)
+    return -1;
 
   _dl_printf ("AT_HWCAP:   ");
 

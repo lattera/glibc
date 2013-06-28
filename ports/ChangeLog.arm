@@ -1,3 +1,10 @@
+2013-06-28  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/arm/dl-procinfo.h (_dl_procinfo): Add
+	TYPE parameter to macro prototype for AT_HWCAP2 support.  Make WORD
+	unsigned long int rather than signed int.  Stub in handler for TYPE ==
+	AT_HWCAP2 to return -1 for unknown a_type display fallback.
+
 2013-06-18  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/arm-mcount.S: Comment typo fix.

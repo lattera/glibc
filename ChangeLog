@@ -1,3 +1,28 @@
+2013-06-28  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* elf/dl-support.c (_dl_hwcap2): Add a new hwcap field for more
+	hardware capabilities in support of AT_HWCAP2.
+	(_dl_aux_init): Read AT_HWCAP2 into GLRO(dl_hwcap2).
+	* elf/dl-sysdep.c (_dl_sysdep_start): Read AT_HWCAP2 into
+	GLRO(dl_hwcap2).
+	(_dl_show_auxv): Add support for calling _dl_procinfo to display
+	AT_HWCAP2.  If a platform doesn't chose to handle displaying AT_HWCAP2
+	explicitly the unknown a_type display mechanism is used.
+	* misc/getauxval.c (__getauxval): Return GLRO(dl_hwcap2) on AT_HWCAP2.
+	* sysdeps/generic/ldsodefs.h (rtld_global_ro): Add _dl_hwcap2 as a new
+	struct member.
+	* sysdeps/generic/dl-procinfo.h (_dl_procinfo): Add TYPE parameter
+	to macro prototype for AT_HWCAP2 support.
+	* sysdeps/i386/dl-procinfo.h: Likewise.
+	* sysdeps/s390/dl-procinfo.h: Likewise.
+	* sysdeps/powerpc/dl-procinfo.h (_dl_procinfo): Add TYPE parameter to
+	macro prototype for AT_HWCAP2 support.  Make WORD unsigned long int
+	rather than signed int.  Stub in handler for TYPE == AT_HWCAP2 to
+	return -1 for unknown a_type display fallback.
+	* sysdeps/sparc/dl-procinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/dl-procinfo.h: Likewise.
+
 2013-06-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mmap64.c (__mmap64): Shift by page_shift

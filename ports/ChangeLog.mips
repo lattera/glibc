@@ -1,3 +1,8 @@
+2013-06-28  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* sysdeps/mips/dl-procinfo.h (_dl_procinfo): Add TYPE parameter
+	to macro prototype for AT_HWCAP2 support.
+
 2013-06-27  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/dl-static.c: Do not include

@@ -21,7 +21,7 @@
 #define _DL_PROCINFO_H	1
 
 /* We cannot provide a general printing function.  */
-#define _dl_procinfo(word) -1
+#define _dl_procinfo(type, word) -1
 
 /* There are no hardware capabilities defined.  */
 #define _dl_hwcap_string(idx) ""

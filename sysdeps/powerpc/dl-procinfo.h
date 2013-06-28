@@ -159,8 +159,12 @@ _dl_string_platform (const char *str)
 #ifdef IS_IN_rtld
 static inline int
 __attribute__ ((unused))
-_dl_procinfo (int word)
+_dl_procinfo (unsigned int type, unsigned long int word)
 {
+  /* Fallback to unknown output mechanism.  */
+  if (type == AT_HWCAP2)
+    return -1;
+
   _dl_printf ("AT_HWCAP:       ");
 
   for (int i = _DL_HWCAP_FIRST; i < _DL_HWCAP_COUNT; ++i)
