@@ -1,5 +1,10 @@
 2013-06-28  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
+	* sysdeps/aarch64/dl-machine.h (elf_machine_dynamic): De-reference
+	_GLOBAL_OFFSET_TABLE_.
+
+2013-06-28  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
 	* sysdeps/unix/sysv/linux/aarch64/getcontext.S (__getcontext): Simplify
 	oPSTATE initialization.
 

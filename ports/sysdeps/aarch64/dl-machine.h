@@ -36,8 +36,8 @@ elf_machine_matches_host (const ElfW(Ehdr) *ehdr)
 static inline ElfW(Addr) __attribute__ ((unused))
 elf_machine_dynamic (void)
 {
-  ElfW(Addr) addr = (ElfW(Addr)) &_DYNAMIC;
-  return addr;
+  extern const ElfW(Addr) _GLOBAL_OFFSET_TABLE_[] attribute_hidden;
+  return _GLOBAL_OFFSET_TABLE_[0];
 }
 
 /* Return the run-time load address of the shared object.  */
