@@ -45,7 +45,7 @@
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_powerpc_cap_flags
 #else
-PROCINFO_CLASS const char _dl_powerpc_cap_flags[25][10]
+PROCINFO_CLASS const char _dl_powerpc_cap_flags[57][10]
 #endif
 #ifndef PROCINFO_DECL
 = {
@@ -56,6 +56,14 @@ PROCINFO_CLASS const char _dl_powerpc_cap_flags[25][10]
     "notb", "efpdouble", "efpsingle", "spe",
     "ucache", "4xxmac", "mmu", "fpu",
     "altivec", "ppc601", "ppc64", "ppc32",
+    "", "", "", "",
+    "", "", "", "",
+    "", "", "", "",
+    "", "", "", "",
+    "", "", "", "",
+    "", "", "", "",
+    "", "", "tar", "isel",
+    "ebb", "dscr", "htm", "arch_2_07",
   }
 #endif
 #if !defined SHARED || defined PROCINFO_DECL

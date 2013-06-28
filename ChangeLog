@@ -1,5 +1,23 @@
 2013-06-28  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/Makefile: Add comment about generating an offset to
+	rtld_global._dl_hwcap2.
+	* sysdeps/powerpc/bits/hwcap.h: Added PPC_FEATURE2_* definitions for
+	POWER8.
+	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_cap_flags): Extend for
+	POWER8 feature descriptions defined in _dl_hwcap2.
+	* sysdeps/powerpc/dl-procinfo.h (_dl_procinfo): Implement AT_HWCAP2
+	string handling for POWER8 feature bits.
+	(_DL_HWCAP_COUNT): Increment to 64 to cover AT_HWCAP2 bits.
+	(_DL_HWCAP_LAST): New definition for position of last AT_HWCAP bit in
+	_dl_powerpc_cap_flags.
+	(_DL_HWCAP2_LAST): New definition for last usable bit of AT_HWCAP2.
+	* sysdeps/powerpc/rtld-global-offsets.sym
+	(RTLD_GLOBAL_RO_DL_HWCAP2_OFFSET): New offset macro to locate
+	_dl_hwcap2 in the rtld_global_ro structure.
+
+2013-06-28  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
 	* elf/dl-support.c (_dl_hwcap2): Add a new hwcap field for more
 	hardware capabilities in support of AT_HWCAP2.
 	(_dl_aux_init): Read AT_HWCAP2 into GLRO(dl_hwcap2).
