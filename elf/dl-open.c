@@ -204,11 +204,9 @@ dl_open_worker (void *a)
     {
       const void *caller_dlopen = args->caller_dlopen;
 
-#ifdef SHARED
       /* We have to find out from which object the caller is calling.
 	 By default we assume this is the main application.  */
       call_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
-#endif
 
       struct link_map *l = _dl_find_dso_for_object ((ElfW(Addr)) caller_dlopen);
 
@@ -216,15 +214,7 @@ dl_open_worker (void *a)
         call_map = l;
 
       if (args->nsid == __LM_ID_CALLER)
-	{
-#ifndef SHARED
-	  /* In statically linked apps there might be no loaded object.  */
-	  if (call_map == NULL)
-	    args->nsid = LM_ID_BASE;
-	  else
-#endif
-	    args->nsid = call_map->l_ns;
-	}
+	args->nsid = call_map->l_ns;
     }
 
   assert (_dl_debug_initialize (0, args->nsid)->r_state == RT_CONSISTENT);
@@ -642,12 +632,6 @@ no more namespaces available for dlmopen()"));
 	       || GL(dl_ns)[nsid]._ns_loaded->l_auditing))
     _dl_signal_error (EINVAL, file, NULL,
 		      N_("invalid target namespace in dlmopen()"));
-#ifndef SHARED
-  else if ((nsid == LM_ID_BASE || nsid == __LM_ID_CALLER)
-	   && GL(dl_ns)[LM_ID_BASE]._ns_loaded == NULL
-	   && GL(dl_nns) == 0)
-    GL(dl_nns) = 1;
-#endif
 
   struct dl_open_args args;
   args.file = file;

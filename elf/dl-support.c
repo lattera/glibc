@@ -70,17 +70,52 @@ const char *_dl_origin_path;
 /* Nonzero if runtime lookup should not update the .got/.plt.  */
 int _dl_bind_not;
 
+/* A dummy link map for the executable, used by dlopen to access the global
+   scope.  We don't export any symbols ourselves, so this can be minimal.  */
+static struct link_map _dl_main_map =
+  {
+    .l_name = (char *) "",
+    .l_real = &_dl_main_map,
+    .l_ns = LM_ID_BASE,
+    .l_libname = &(struct libname_list) { .name = "", .dont_free = 1 },
+    .l_searchlist =
+      {
+	.r_list = &(struct link_map *) { &_dl_main_map },
+	.r_nlist = 1,
+      },
+    .l_symbolic_searchlist = { .r_list = &(struct link_map *) { NULL } },
+    .l_type = lt_executable,
+    .l_scope_mem = { &_dl_main_map.l_searchlist },
+    .l_scope_max = (sizeof (_dl_main_map.l_scope_mem)
+		    / sizeof (_dl_main_map.l_scope_mem[0])),
+    .l_scope = _dl_main_map.l_scope_mem,
+    .l_local_scope = { &_dl_main_map.l_searchlist },
+    .l_used = 1,
+    .l_tls_offset = NO_TLS_OFFSET,
+    .l_serial = 1,
+  };
+
 /* Namespace information.  */
-struct link_namespaces _dl_ns[DL_NNS];
-size_t _dl_nns;
+struct link_namespaces _dl_ns[DL_NNS] =
+  {
+    [LM_ID_BASE] =
+      {
+	._ns_loaded = &_dl_main_map,
+	._ns_nloaded = 1,
+	._ns_main_searchlist = &_dl_main_map.l_searchlist,
+      }
+  };
+size_t _dl_nns = 1;
 
 /* Incremented whenever something may have been added to dl_loaded. */
-unsigned long long _dl_load_adds;
+unsigned long long _dl_load_adds = 1;
 
-/* Fake scope.  In dynamically linked binaries this is the scope of the
-   main application but here we don't have something like this.  So
-   create a fake scope containing nothing.  */
-struct r_scope_elem _dl_initial_searchlist;
+/* Fake scope of the main application.  */
+struct r_scope_elem _dl_initial_searchlist =
+  {
+    .r_list = &(struct link_map *) { &_dl_main_map },
+    .r_nlist = 1,
+  };
 
 #ifndef HAVE_INLINED_SYSCALLS
 /* Nonzero during startup.  */
@@ -265,6 +300,8 @@ void
 internal_function
 _dl_non_dynamic_init (void)
 {
+  _dl_main_map.l_origin = _dl_get_origin ();
+
   if (HP_TIMING_AVAIL)
     HP_TIMING_NOW (_dl_cpuclock_offset);
 

@@ -1,3 +1,26 @@
+2013-06-28  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	[BZ #15022]
+	* elf/dl-support.c (_dl_main_map): New variable.
+	(_dl_ns): Use it to initialize [LM_ID_BASE] element.
+	(_dl_nns, _dl_load_adds): Set to 1.
+	(_dl_initial_searchlist): Refer to _dl_main_map.
+	(_dl_non_dynamic_init): Initialize _dl_main_map.l_origin.
+	* elf/dl-load.c (_dl_dst_substitute) [!SHARED]: Remove fallback
+	call to _dl_get_origin.
+	* elf/dl-open.c (dl_open_worker): Remove !SHARED special casing
+	around call_map.
+	(_dl_open) [!SHARED]: Remove code to initialize GL(dl_nns).
+	* dlfcn/modstatic3.c: New file.
+	* dlfcn/tststatic3.c: New file.
+	* dlfcn/tststatic4.c: New file.
+	* dlfcn/Makefile (tests): Add tststatic3 and tststatic4.
+	(tests-static): Likewise.
+	(modules-names): Add modstatic3.
+	(tststatic3-ENV, tststatic4-ENV): New variables.
+	($(objpfx)tststatic3, $(objpfx)tststatic3.out): New dependencies.
+	($(objpfx)tststatic4, $(objpfx)tststatic4.out): Likewise.
+
 2013-06-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* configure.in (CC): Require GCC version 4.4 or later.
