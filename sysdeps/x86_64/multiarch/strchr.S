@@ -29,6 +29,8 @@ ENTRY(strchr)
 	jne	1f
 	call	__init_cpu_features
 1:	leaq	__strchr_sse2(%rip), %rax
+	testl	$bit_Slow_SSE4_2, __cpu_features+CPUID_OFFSET+index_Slow_SSE4_2(%rip)
+	jnz	2f
 	testl	$bit_SSE4_2, __cpu_features+CPUID_OFFSET+index_SSE4_2(%rip)
 	jz	2f
 	leaq	__strchr_sse42(%rip), %rax

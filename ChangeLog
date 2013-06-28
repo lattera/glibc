@@ -1,3 +1,17 @@
+2013-06-28  Liubov Dmitrieva  <liubov.dmitrieva@intel.com>
+
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features): Set
+	bit_Slow_SSE4_2 and bit_Prefer_PMINUB_for_stringop for Intel
+	Silvermont.
+	* sysdeps/x86_64/multiarch/init-arch.h (bit_Slow_SSE4_2): New
+	macro.
+	(index_Slow_SSE4_2): Likewise.
+	(index_Prefer_PMINUB_for_stringop): Likewise.
+	* sysdeps/x86_64/multiarch/strchr.S: Skip SSE4.2 version if
+	bit_Slow_SSE4_2 is set.
+	* sysdeps/x86_64/multiarch/strcmp.S: Likewise.
+	* sysdeps/x86_64/multiarch/strrchr.S: Likewise.
+
 2013-06-28  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/Makefile: Add comment about generating an offset to

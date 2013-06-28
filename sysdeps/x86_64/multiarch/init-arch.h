@@ -23,6 +23,7 @@
 #define bit_AVX_Usable			(1 << 6)
 #define bit_FMA_Usable			(1 << 7)
 #define bit_FMA4_Usable			(1 << 8)
+#define bit_Slow_SSE4_2			(1 << 9)
 
 /* CPUID Feature flags.  */
 
@@ -62,6 +63,7 @@
 # define index_AVX_Usable		FEATURE_INDEX_1*FEATURE_SIZE
 # define index_FMA_Usable		FEATURE_INDEX_1*FEATURE_SIZE
 # define index_FMA4_Usable		FEATURE_INDEX_1*FEATURE_SIZE
+# define index_Slow_SSE4_2		FEATURE_INDEX_1*FEATURE_SIZE
 
 #else	/* __ASSEMBLER__ */
 
@@ -156,9 +158,11 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define index_Fast_Copy_Backward	FEATURE_INDEX_1
 # define index_Slow_BSF			FEATURE_INDEX_1
 # define index_Fast_Unaligned_Load	FEATURE_INDEX_1
+# define index_Prefer_PMINUB_for_stringop FEATURE_INDEX_1
 # define index_AVX_Usable		FEATURE_INDEX_1
 # define index_FMA_Usable		FEATURE_INDEX_1
 # define index_FMA4_Usable		FEATURE_INDEX_1
+# define index_Slow_SSE4_2		FEATURE_INDEX_1
 
 # define HAS_ARCH_FEATURE(name) \
   ((__get_cpu_features ()->feature[index_##name] & (bit_##name)) != 0)
