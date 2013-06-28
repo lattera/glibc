@@ -131,7 +131,18 @@ struct here_cg_arc_record
   {
     uintptr_t from_pc;
     uintptr_t self_pc;
-    uint32_t count;
+    /* The count field is atomically incremented in _dl_mcount, which
+       requires it to be properly aligned for its type, and for this
+       alignment to be visible to the compiler.  The amount of data
+       before an array of this structure is calculated as
+       expected_size in _dl_start_profile.  Everything in that
+       calculation is a multiple of 4 bytes (in the case of
+       kcountsize, because it is derived from a subtraction of
+       page-aligned values, and the corresponding calculation in
+       __monstartup also ensures it is at least a multiple of the size
+       of u_long), so all copies of this field do in fact have the
+       appropriate alignment.  */
+    uint32_t count __attribute__ ((aligned (__alignof__ (uint32_t))));
   } __attribute__ ((packed));
 
 static struct here_cg_arc_record *data;

@@ -1,3 +1,9 @@
+2013-06-28  Nathan Froyd  <froydnj@codesourcery.com>
+	    Joseph Myers  <joseph@codesourcery.com>
+
+	* elf/dl-profile.c (struct here_cg_arc_record): Declare 'count'
+	as being properly aligned.
+
 2013-06-28  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	* dlfcn/modstatic5.c: New file.
