@@ -1,5 +1,13 @@
 2013-06-28  Maciej W. Rozycki  <macro@codesourcery.com>
 
+	* dlfcn/modstatic5.c: New file.
+	* dlfcn/tststatic5.c: New file.
+	* dlfcn/Makefile (tests): Add tststatic5.
+	(tests-static): Likewise.
+	(modules-names): Add modstatic5.
+	(tststatic5-ENV): New variable.
+	($(objpfx)tststatic5, $(objpfx)tststatic5.out): New dependencies.
+
 	[BZ #15022]
 	* elf/dl-support.c (_dl_main_map): New variable.
 	(_dl_ns): Use it to initialize [LM_ID_BASE] element.

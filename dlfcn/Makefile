@@ -47,13 +47,14 @@ glreflib2.so-no-z-defs = yes
 errmsg1mod.so-no-z-defs = yes
 
 ifeq (yes,$(build-shared))
-tests += tststatic tststatic2 tststatic3 tststatic4
-tests-static += tststatic tststatic2 tststatic3 tststatic4
-modules-names += modstatic modstatic2 modstatic3
+tests += tststatic tststatic2 tststatic3 tststatic4 tststatic5
+tests-static += tststatic tststatic2 tststatic3 tststatic4 tststatic5
+modules-names += modstatic modstatic2 modstatic3 modstatic5
 tststatic-ENV = LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)elf
 tststatic2-ENV = $(tststatic-ENV)
 tststatic3-ENV = $(tststatic-ENV)
 tststatic4-ENV = $(tststatic-ENV)
+tststatic5-ENV = $(tststatic-ENV)
 endif
 
 extra-test-objs += $(modules-names:=.os)
@@ -111,6 +112,9 @@ $(objpfx)tststatic3.out: $(objpfx)tststatic3 $(objpfx)modstatic3.so
 
 $(objpfx)tststatic4: $(objpfx)libdl.a
 $(objpfx)tststatic4.out: $(objpfx)tststatic4 $(objpfx)modstatic3.so
+
+$(objpfx)tststatic5: $(objpfx)libdl.a
+$(objpfx)tststatic5.out: $(objpfx)tststatic5 $(objpfx)modstatic5.so
 
 $(objpfx)bug-dlopen1: $(libdl)
 
