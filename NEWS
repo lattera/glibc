@@ -39,6 +39,21 @@ Version 2.18
 * Support for priority inherited mutexes in pthread condition variables on
   non-x86 architectures.
 
+* Port to Xilinx MicroBlaze contributed by David Holsgrove.
+
+* Optimized string functions for AArch64.  Implemented by Marcus Shawcroft.
+
+* Optimized string functions for ARM.  Implemented by Will Newton and
+  Richard Henderson.
+
+* Optimized libm functions for SPARC.  Implemented by David S. Miller.
+
+* Support for building more of ARM glibc as Thumb-2 code.  Implemented by
+  Richard Henderson.
+
+* Support for building most of MIPS glibc as MIPS16 code.  Implemented by
+  Chung-Lin Tang, Maciej W. Rozycki and Maxim Kuvyrkov.
+
 * Added a benchmark framework to track performance of functions in glibc.
 
 * New <math.h> macro named issignaling to check for a signaling NaN (sNaN).
