@@ -1,3 +1,9 @@
+2013-06-28  Pierre Ynard  <linkfanel@yahoo.fr>
+
+	[BZ #12492]
+	* elf/dl-load.c (_dl_map_object_from_fd): Test for failure of
+	mprotect making __stack_prot writable.
+
 2013-06-28  Nathan Froyd  <froydnj@codesourcery.com>
 	    Joseph Myers  <joseph@codesourcery.com>
 
