@@ -1,3 +1,8 @@
+2013-06-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mmap64.c (__mmap64): Shift by page_shift
+	instead of MMAP2_PAGE_SHIFT in call to INLINE_SYSCALL.
+
 2013-06-28  Pierre Ynard  <linkfanel@yahoo.fr>
 
 	[BZ #12492]

@@ -56,7 +56,7 @@ __mmap64 (void *addr, size_t len, int prot, int flags, int fd, off64_t offset)
   result = (void *)
     INLINE_SYSCALL (mmap2, 6, addr,
 		    len, prot, flags, fd,
-		    (off_t) (offset >> MMAP2_PAGE_SHIFT));
+		    (off_t) (offset >> page_shift));
   return result;
 }
 weak_alias (__mmap64, mmap64)
