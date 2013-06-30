@@ -1,3 +1,11 @@
+2013-06-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/m68k/dl-trampoline.S (FMOVE): Define conditional on
+	[__mcoldfire__] and [__mcffpu__].
+	(FPSPACE): Likewise.
+	(_dl_runtime_profile): Save and restore %fp0 with FMOVE, only if
+	[FMOVE].  Use FPSPACE in stack offsets.
+
 2013-06-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/m68k/fpu_control.h: Fix preprocessor indentation.

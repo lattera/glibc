@@ -18,6 +18,16 @@
 
 #include <sysdep.h>
 
+#if !defined (__mcoldfire__)
+# define FMOVE		fmove.x
+# define FPSPACE	12
+#elif defined (__mcffpu__)
+# define FMOVE		fmove.d
+# define FPSPACE	8
+#else
+# define FPSPACE	0
+#endif
+
 	.text
 	.globl _dl_runtime_resolve
 	.type _dl_runtime_resolve, @function
@@ -174,12 +184,9 @@ _dl_runtime_profile:
 	    +4      %a1
 	   %sp      %a0
 	*/
-#ifdef __mcoldfire__
-	fmove.d %fp0, -(%sp)
-	cfi_adjust_cfa_offset (8)
-#else
-	fmove.x %fp0, -(%sp)
-	cfi_adjust_cfa_offset (12)
+#ifdef FMOVE
+	FMOVE %fp0, -(%sp)
+	cfi_adjust_cfa_offset (FPSPACE)
 #endif
 	move.l %a0, -(%sp)
 	cfi_adjust_cfa_offset (4)
@@ -189,21 +196,12 @@ _dl_runtime_profile:
 	cfi_adjust_cfa_offset (4)
 	pea (%sp)
 	cfi_adjust_cfa_offset (4)
-#ifdef __mcoldfire__
-	pea 24(%sp)
+	pea (16+FPSPACE)(%sp)
 	cfi_adjust_cfa_offset (4)
-	move.l 40(%sp), -(%sp)
+	move.l (32+FPSPACE)(%sp), -(%sp)
 	cfi_adjust_cfa_offset (4)
-	move.l 40(%sp), -(%sp)
+	move.l (32+FPSPACE)(%sp), -(%sp)
 	cfi_adjust_cfa_offset (4)
-#else
-	pea 28(%sp)
-	cfi_adjust_cfa_offset (4)
-	move.l 44(%sp), -(%sp)
-	cfi_adjust_cfa_offset (4)
-	move.l 44(%sp), -(%sp)
-	cfi_adjust_cfa_offset (4)
-#endif
 	jbsr _dl_call_pltexit
 	lea 16(%sp), %sp
 	cfi_adjust_cfa_offset (-16)
@@ -213,12 +211,9 @@ _dl_runtime_profile:
 	cfi_adjust_cfa_offset (-4)
 	move.l (%sp)+, %a0
 	cfi_adjust_cfa_offset (-4)
-#ifdef __mcoldfire__
-	fmove.d (%sp)+, %fp0
-	cfi_adjust_cfa_offset (-8)
-#else
-	fmove.x (%sp)+, %fp0
-	cfi_adjust_cfa_offset (-12)
+#ifdef FMOVE
+	FMOVE (%sp)+, %fp0
+	cfi_adjust_cfa_offset (-FPSPACE)
 #endif
 	lea 20(%sp), %sp
 	cfi_adjust_cfa_offset (-20)
