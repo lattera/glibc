@@ -1,3 +1,12 @@
+2013-06-28  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/fegetenv.c: Delete now-redundant file.
+	* sysdeps/tile/fegetround.c: Likewise.
+	* sysdeps/tile/feholdexcpt.c: Likewise.
+	* sysdeps/tile/fesetenv.c: Likewise.
+	* sysdeps/tile/fesetround.c: Likewise.
+	* sysdeps/tile/feupdateenv.c: Likewise.
+
 2013-06-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libpthread.abilist:
