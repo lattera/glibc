@@ -1,3 +1,7 @@
+2013-07-02  Richard Henderson  <rth@redhat.com>
+
+        * sysdeps/alpha/fpu/libm-test-ulps: Update.
+
 2013-06-28  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
 	* sysdeps/alpha/dl-procinfo.h (_dl_procinfo): Add TYPE parameter
