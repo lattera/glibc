@@ -1,3 +1,9 @@
+2013-07-02  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/strcasecmp.S (__strcasecmp): Enable
+	SSE4.2 strcasecmp for libc.a.
+	* sysdeps/i386/i686/multiarch/strncase.S (__strncasecmp): Likewise.
+
 2013-07-02  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13304]

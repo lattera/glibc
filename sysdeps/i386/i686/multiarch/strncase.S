@@ -54,12 +54,9 @@ ENTRY(__strncasecmp)
 	testl	$bit_SSSE3, CPUID_OFFSET+index_SSSE3+__cpu_features
 	jz	2f
 	leal	__strncasecmp_ssse3, %eax
-#if 0
-	// XXX Temporarily
 	testl	$bit_SSE4_2, CPUID_OFFSET+index_SSE4_2+__cpu_features
 	jz	2f
 	leal	__strncasecmp_sse4_2, %eax
-#endif
 2:	ret
 END(__strncasecmp)
 #endif
