@@ -847,6 +847,217 @@ do {							\
 } while (0)
 
 
+/* Fused multiply-add.  The input values should be cooked.  */
+
+#define _FP_FMA(fs, wc, dwc, R, X, Y, Z)			\
+do {								\
+  FP_DECL_##fs(T);						\
+  T##_s = X##_s ^ Y##_s;					\
+  T##_e = X##_e + Y##_e + 1;					\
+  switch (_FP_CLS_COMBINE(X##_c, Y##_c))			\
+  {								\
+  case _FP_CLS_COMBINE(FP_CLS_NORMAL,FP_CLS_NORMAL):		\
+    switch (Z##_c)						\
+      {								\
+      case FP_CLS_INF:						\
+      case FP_CLS_NAN:						\
+	R##_s = Z##_s;						\
+	_FP_FRAC_COPY_##wc(R, Z);				\
+	R##_c = Z##_c;						\
+	break;							\
+								\
+      case FP_CLS_ZERO:						\
+	R##_c = FP_CLS_NORMAL;					\
+	R##_s = T##_s;						\
+	R##_e = T##_e;						\
+								\
+	_FP_MUL_MEAT_##fs(R, X, Y);				\
+								\
+	if (_FP_FRAC_OVERP_##wc(fs, R))				\
+	  _FP_FRAC_SRS_##wc(R, 1, _FP_WFRACBITS_##fs);		\
+	else							\
+	  R##_e--;						\
+	break;							\
+								\
+      case FP_CLS_NORMAL:;					\
+	_FP_FRAC_DECL_##dwc(TD);				\
+	_FP_FRAC_DECL_##dwc(ZD);				\
+	_FP_FRAC_DECL_##dwc(RD);				\
+	_FP_MUL_MEAT_DW_##fs(TD, X, Y);				\
+	R##_e = T##_e;						\
+	int tsh = _FP_FRAC_HIGHBIT_DW_##dwc(fs, TD) == 0;	\
+	T##_e -= tsh;						\
+	int ediff = T##_e - Z##_e;				\
+	if (ediff >= 0)						\
+	  {							\
+	    int shift = _FP_WFRACBITS_##fs - tsh - ediff;	\
+	    if (shift <= -_FP_WFRACBITS_##fs)			\
+	      _FP_FRAC_SET_##dwc(ZD, _FP_MINFRAC_##dwc);	\
+	    else						\
+	      {							\
+		_FP_FRAC_COPY_##dwc##_##wc(ZD, Z);		\
+		if (shift < 0)					\
+		  _FP_FRAC_SRS_##dwc(ZD, -shift,		\
+				     _FP_WFRACBITS_DW_##fs);	\
+		else if (shift > 0)				\
+		  _FP_FRAC_SLL_##dwc(ZD, shift);		\
+	      }							\
+	    R##_s = T##_s;					\
+	    if (T##_s == Z##_s)					\
+	      _FP_FRAC_ADD_##dwc(RD, TD, ZD);			\
+	    else						\
+	      {							\
+		_FP_FRAC_SUB_##dwc(RD, TD, ZD);			\
+		if (_FP_FRAC_NEGP_##dwc(RD))			\
+		  {						\
+		    R##_s = Z##_s;				\
+		    _FP_FRAC_SUB_##dwc(RD, ZD, TD);		\
+		  }						\
+	      }							\
+	  }							\
+	else							\
+	  {							\
+	    R##_e = Z##_e;					\
+	    R##_s = Z##_s;					\
+	    _FP_FRAC_COPY_##dwc##_##wc(ZD, Z);			\
+	    _FP_FRAC_SLL_##dwc(ZD, _FP_WFRACBITS_##fs);		\
+	    int shift = -ediff - tsh;				\
+	    if (shift >= _FP_WFRACBITS_DW_##fs)			\
+	      _FP_FRAC_SET_##dwc(TD, _FP_MINFRAC_##dwc);	\
+	    else if (shift > 0)					\
+	      _FP_FRAC_SRS_##dwc(TD, shift,			\
+				 _FP_WFRACBITS_DW_##fs);	\
+	    if (Z##_s == T##_s)					\
+	      _FP_FRAC_ADD_##dwc(RD, ZD, TD);			\
+	    else						\
+	      _FP_FRAC_SUB_##dwc(RD, ZD, TD);			\
+	  }							\
+	if (_FP_FRAC_ZEROP_##dwc(RD))				\
+	  {							\
+	    if (T##_s == Z##_s)					\
+	      R##_s = Z##_s;					\
+	    else						\
+	      R##_s = (FP_ROUNDMODE == FP_RND_MINF);		\
+	    _FP_FRAC_SET_##wc(R, _FP_ZEROFRAC_##wc);		\
+	    R##_c = FP_CLS_ZERO;				\
+	  }							\
+	else							\
+	  {							\
+	    int rlz;						\
+	    _FP_FRAC_CLZ_##dwc(rlz, RD);			\
+	    rlz -= _FP_WFRACXBITS_DW_##fs;			\
+	    R##_e -= rlz;					\
+	    int shift = _FP_WFRACBITS_##fs - rlz;		\
+	    if (shift > 0)					\
+	      _FP_FRAC_SRS_##dwc(RD, shift,			\
+				 _FP_WFRACBITS_DW_##fs);	\
+	    else if (shift < 0)					\
+	      _FP_FRAC_SLL_##dwc(RD, -shift);			\
+	    _FP_FRAC_COPY_##wc##_##dwc(R, RD);			\
+	    R##_c = FP_CLS_NORMAL;				\
+	  }							\
+	break;							\
+      }								\
+    goto done_fma;						\
+								\
+  case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_NAN):			\
+    _FP_CHOOSENAN(fs, wc, T, X, Y, '*');			\
+    break;							\
+								\
+  case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_NORMAL):		\
+  case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_INF):			\
+  case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_ZERO):			\
+    T##_s = X##_s;						\
+								\
+  case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_INF):			\
+  case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_NORMAL):		\
+  case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_NORMAL):		\
+  case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_ZERO):		\
+    _FP_FRAC_COPY_##wc(T, X);					\
+    T##_c = X##_c;						\
+    break;							\
+								\
+  case _FP_CLS_COMBINE(FP_CLS_NORMAL,FP_CLS_NAN):		\
+  case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_NAN):			\
+  case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_NAN):			\
+    T##_s = Y##_s;						\
+								\
+  case _FP_CLS_COMBINE(FP_CLS_NORMAL,FP_CLS_INF):		\
+  case _FP_CLS_COMBINE(FP_CLS_NORMAL,FP_CLS_ZERO):		\
+    _FP_FRAC_COPY_##wc(T, Y);					\
+    T##_c = Y##_c;						\
+    break;							\
+								\
+  case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_ZERO):			\
+  case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_INF):			\
+    T##_s = _FP_NANSIGN_##fs;					\
+    T##_c = FP_CLS_NAN;						\
+    _FP_FRAC_SET_##wc(T, _FP_NANFRAC_##fs);			\
+    FP_SET_EXCEPTION(FP_EX_INVALID);				\
+    break;							\
+								\
+  default:							\
+    abort();							\
+  }								\
+								\
+  /* T = X * Y is zero, infinity or NaN.  */			\
+  switch (_FP_CLS_COMBINE(T##_c, Z##_c))			\
+  {								\
+  case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_NAN):			\
+    _FP_CHOOSENAN(fs, wc, R, T, Z, '+');			\
+    break;							\
+								\
+  case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_NORMAL):		\
+  case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_INF):			\
+  case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_ZERO):			\
+  case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_NORMAL):		\
+  case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_ZERO):			\
+    R##_s = T##_s;						\
+    _FP_FRAC_COPY_##wc(R, T);					\
+    R##_c = T##_c;						\
+    break;							\
+								\
+  case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_NAN):			\
+  case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_NAN):			\
+  case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_NORMAL):		\
+  case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_INF):			\
+    R##_s = Z##_s;						\
+    _FP_FRAC_COPY_##wc(R, Z);					\
+    R##_c = Z##_c;						\
+    break;							\
+								\
+  case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_INF):			\
+    if (T##_s == Z##_s)						\
+      {								\
+	R##_s = Z##_s;						\
+	_FP_FRAC_COPY_##wc(R, Z);				\
+	R##_c = Z##_c;						\
+      }								\
+    else							\
+      {								\
+	R##_s = _FP_NANSIGN_##fs;				\
+	R##_c = FP_CLS_NAN;					\
+	_FP_FRAC_SET_##wc(R, _FP_NANFRAC_##fs);			\
+	FP_SET_EXCEPTION(FP_EX_INVALID);			\
+      }								\
+    break;							\
+								\
+  case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_ZERO):		\
+    if (T##_s == Z##_s)						\
+      R##_s = Z##_s;						\
+    else							\
+      R##_s = (FP_ROUNDMODE == FP_RND_MINF);			\
+    _FP_FRAC_COPY_##wc(R, Z);					\
+    R##_c = Z##_c;						\
+    break;							\
+								\
+  default:							\
+    abort();							\
+  }								\
+ done_fma: ;							\
+} while (0)
+
+
 /*
  * Main division routine.  The input values should be cooked.
  */

@@ -72,6 +72,7 @@ do {							\
 #define _FP_FRAC_ZEROP_1(X)	(X##_f == 0)
 #define _FP_FRAC_OVERP_1(fs,X)	(X##_f & _FP_OVERFLOW_##fs)
 #define _FP_FRAC_CLEAR_OVERP_1(fs,X)	(X##_f &= ~_FP_OVERFLOW_##fs)
+#define _FP_FRAC_HIGHBIT_DW_1(fs,X)	(X##_f & _FP_HIGHBIT_DW_##fs)
 #define _FP_FRAC_EQ_1(X, Y)	(X##_f == Y##_f)
 #define _FP_FRAC_GE_1(X, Y)	(X##_f >= Y##_f)
 #define _FP_FRAC_GT_1(X, Y)	(X##_f > Y##_f)
@@ -137,9 +138,14 @@ do {							\
 /* Basic.  Assuming the host word size is >= 2*FRACBITS, we can do the
    multiplication immediately.  */
 
-#define _FP_MUL_MEAT_1_imm(wfracbits, R, X, Y)				\
+#define _FP_MUL_MEAT_DW_1_imm(wfracbits, R, X, Y)			\
   do {									\
     R##_f = X##_f * Y##_f;						\
+  } while (0)
+
+#define _FP_MUL_MEAT_1_imm(wfracbits, R, X, Y)				\
+  do {									\
+    _FP_MUL_MEAT_DW_1_imm(wfracbits, R, X, Y);				\
     /* Normalize since we know where the msb of the multiplicands	\
        were (bit B), we know that the msb of the of the product is	\
        at either 2B or 2B-1.  */					\
@@ -148,10 +154,15 @@ do {							\
 
 /* Given a 1W * 1W => 2W primitive, do the extended multiplication.  */
 
+#define _FP_MUL_MEAT_DW_1_wide(wfracbits, R, X, Y, doit)		\
+  do {									\
+    doit(R##_f1, R##_f0, X##_f, Y##_f);					\
+  } while (0)
+
 #define _FP_MUL_MEAT_1_wide(wfracbits, R, X, Y, doit)			\
   do {									\
-    _FP_W_TYPE _Z_f0, _Z_f1;						\
-    doit(_Z_f1, _Z_f0, X##_f, Y##_f);					\
+    _FP_FRAC_DECL_2(_Z);						\
+    _FP_MUL_MEAT_DW_1_wide(wfracbits, _Z, X, Y, doit);			\
     /* Normalize since we know where the msb of the multiplicands	\
        were (bit B), we know that the msb of the of the product is	\
        at either 2B or 2B-1.  */					\
@@ -161,9 +172,10 @@ do {							\
 
 /* Finally, a simple widening multiply algorithm.  What fun!  */
 
-#define _FP_MUL_MEAT_1_hard(wfracbits, R, X, Y)				\
+#define _FP_MUL_MEAT_DW_1_hard(wfracbits, R, X, Y)			\
   do {									\
-    _FP_W_TYPE _xh, _xl, _yh, _yl, _z_f0, _z_f1, _a_f0, _a_f1;		\
+    _FP_W_TYPE _xh, _xl, _yh, _yl;					\
+    _FP_FRAC_DECL_2(_a);						\
 									\
     /* split the words in half */					\
     _xh = X##_f >> (_FP_W_TYPE_SIZE/2);					\
@@ -172,17 +184,23 @@ do {							\
     _yl = Y##_f & (((_FP_W_TYPE)1 << (_FP_W_TYPE_SIZE/2)) - 1);		\
 									\
     /* multiply the pieces */						\
-    _z_f0 = _xl * _yl;							\
+    R##_f0 = _xl * _yl;							\
     _a_f0 = _xh * _yl;							\
     _a_f1 = _xl * _yh;							\
-    _z_f1 = _xh * _yh;							\
+    R##_f1 = _xh * _yh;							\
 									\
     /* reassemble into two full words */				\
     if ((_a_f0 += _a_f1) < _a_f1)					\
-      _z_f1 += (_FP_W_TYPE)1 << (_FP_W_TYPE_SIZE/2);			\
+      R##_f1 += (_FP_W_TYPE)1 << (_FP_W_TYPE_SIZE/2);			\
     _a_f1 = _a_f0 >> (_FP_W_TYPE_SIZE/2);				\
     _a_f0 = _a_f0 << (_FP_W_TYPE_SIZE/2);				\
-    _FP_FRAC_ADD_2(_z, _z, _a);						\
+    _FP_FRAC_ADD_2(R, R, _a);						\
+  } while (0)
+
+#define _FP_MUL_MEAT_1_hard(wfracbits, R, X, Y)				\
+  do {									\
+    _FP_FRAC_DECL_2(_z);						\
+    _FP_MUL_MEAT_DW_1_hard(wfracbits, _z, X, Y);			\
 									\
     /* normalize */							\
     _FP_FRAC_SRS_2(_z, wfracbits - 1, 2*wfracbits);			\

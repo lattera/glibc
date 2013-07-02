@@ -1,3 +1,54 @@
+2013-07-02  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13304]
+	* soft-fp/op-common.h (_FP_FMA): New macro.
+	* soft-fp/op-1.h (_FP_FRAC_HIGHBIT_DW_1): New macro.
+	(_FP_MUL_MEAT_DW_1_imm): Likewise.  Split out of ...
+	(_FP_MUL_MEAT_1_imm): ... here.
+	(_FP_MUL_MEAT_DW_1_wide): New macro.  Split out of ...
+	(_FP_MUL_MEAT_1_wide): ... here.
+	(_FP_MUL_MEAT_DW_1_hard): Likewise.  Split out of ...
+	(_FP_MUL_MEAT_1_hard): ... here.
+	* soft-fp/op-2.h (_FP_FRAC_HIGHBIT_DW_2): New macro.
+	(_FP_MUL_MEAT_DW_2_wide): Likewise.  Split out of ...
+	(_FP_MUL_MEAT_2_wide): ... here.
+	(_FP_MUL_MEAT_DW_2_wide_3mul): New macro.  Split out of ...
+	(_FP_MUL_MEAT_2_wide_3mul): ... here.
+	(_FP_MUL_MEAT_DW_2_gmp): New macro.  Split out of ...
+	(_FP_MUL_MEAT_2_gmp): ... here.
+	* soft-fp/op-4.h (_FP_FRAC_HIGHBIT_DW_4): New macro.
+	(_FP_MUL_MEAT_DW_4_wide): Likewise.  Split out of ...
+	(_FP_MUL_MEAT_4_wide): ... here.
+	(_FP_MUL_MEAT_DW_4_gmp): New macro.  Split out of ...
+	(_FP_MUL_MEAT_4_gmp): ... here.
+	* soft-fp/single.h (_FP_FRACTBITS_DW_S): New macro.
+	(_FP_WFRACBITS_DW_S): Likewise.
+	(_FP_WFRACXBITS_DW_S): Likewise.
+	(_FP_HIGHBIT_DW_S): Likewise.
+	(FP_FMA_S): Likewise.
+	(_FP_FRAC_HIGH_DW_S): Likewise.
+	* soft-fp/double.h (_FP_FRACTBITS_DW_D): New macro.
+	(_FP_WFRACBITS_DW_D): Likewise.
+	(_FP_WFRACXBITS_DW_D): Likewise.
+	(_FP_HIGHBIT_DW_D): Likewise.
+	(FP_FMA_D): Likewise.
+	(_FP_FRAC_HIGH_DW_D): Likewise.
+	* soft-fp/extended.h (_FP_FRACTBITS_DW_E): New macro.
+	(_FP_WFRACBITS_DW_E): Likewise.
+	(_FP_WFRACXBITS_DW_E): Likewise.
+	(_FP_HIGHBIT_DW_E): Likewise.
+	(FP_FMA_E): Likewise.
+	(_FP_FRAC_HIGH_DW_E): Likewise.
+	* soft-fp/quad.h (_FP_FRACTBITS_DW_Q): New macro.
+	(_FP_WFRACBITS_DW_Q): Likewise.
+	(_FP_WFRACXBITS_DW_Q): Likewise.
+	(_FP_HIGHBIT_DW_Q): Likewise.
+	(FP_FMA_Q): Likewise.
+	(_FP_FRAC_HIGH_DW_Q): Likewise.
+	* soft-fp/fmasf4.c: New file.
+	* soft-fp/fmadf4.c: Likewise.
+	* soft-fp/fmatf4.c: Likewise.
+
 2013-06-28  Liubov Dmitrieva  <liubov.dmitrieva@intel.com>
 
 	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features): Set

@@ -33,8 +33,10 @@
 
 #if _FP_W_TYPE_SIZE < 64
 #define _FP_FRACTBITS_E         (4*_FP_W_TYPE_SIZE)
+#define _FP_FRACTBITS_DW_E	(8*_FP_W_TYPE_SIZE)
 #else
 #define _FP_FRACTBITS_E		(2*_FP_W_TYPE_SIZE)
+#define _FP_FRACTBITS_DW_E	(4*_FP_W_TYPE_SIZE)
 #endif
 
 #define _FP_FRACBITS_E		64
@@ -55,6 +57,11 @@
 	((_FP_W_TYPE)1 << (_FP_FRACBITS_E-1+_FP_WORKBITS) % _FP_W_TYPE_SIZE)
 #define _FP_OVERFLOW_E		\
 	((_FP_W_TYPE)1 << (_FP_WFRACBITS_E % _FP_W_TYPE_SIZE))
+
+#define _FP_WFRACBITS_DW_E	(2 * _FP_WFRACBITS_E)
+#define _FP_WFRACXBITS_DW_E	(_FP_FRACTBITS_DW_E - _FP_WFRACBITS_DW_E)
+#define _FP_HIGHBIT_DW_E	\
+  ((_FP_W_TYPE)1 << (_FP_WFRACBITS_DW_E - 1) % _FP_W_TYPE_SIZE)
 
 typedef float XFtype __attribute__((mode(XF)));
 
@@ -192,6 +199,7 @@ union _FP_UNION_E
 #define FP_MUL_E(R,X,Y)		_FP_MUL(E,4,R,X,Y)
 #define FP_DIV_E(R,X,Y)		_FP_DIV(E,4,R,X,Y)
 #define FP_SQRT_E(R,X)		_FP_SQRT(E,4,R,X)
+#define FP_FMA_E(R,X,Y,Z)	_FP_FMA(E,4,8,R,X,Y,Z)
 
 /*
  * Square root algorithms:
@@ -257,6 +265,8 @@ union _FP_UNION_E
 
 #define _FP_FRAC_HIGH_E(X)	(X##_f[2])
 #define _FP_FRAC_HIGH_RAW_E(X)	(X##_f[1])
+
+#define _FP_FRAC_HIGH_DW_E(X)	(X##_f[4])
 
 #else   /* not _FP_W_TYPE_SIZE < 64 */
 union _FP_UNION_E
@@ -383,6 +393,7 @@ union _FP_UNION_E
 #define FP_MUL_E(R,X,Y)		_FP_MUL(E,2,R,X,Y)
 #define FP_DIV_E(R,X,Y)		_FP_DIV(E,2,R,X,Y)
 #define FP_SQRT_E(R,X)		_FP_SQRT(E,2,R,X)
+#define FP_FMA_E(R,X,Y,Z)	_FP_FMA(E,2,4,R,X,Y,Z)
 
 /*
  * Square root algorithms:
@@ -426,5 +437,7 @@ union _FP_UNION_E
 
 #define _FP_FRAC_HIGH_E(X)	(X##_f1)
 #define _FP_FRAC_HIGH_RAW_E(X)	(X##_f0)
+
+#define _FP_FRAC_HIGH_DW_E(X)	(X##_f[2])
 
 #endif /* not _FP_W_TYPE_SIZE < 64 */

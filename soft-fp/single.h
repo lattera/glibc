@@ -36,6 +36,12 @@
 
 #define _FP_FRACTBITS_S		_FP_W_TYPE_SIZE
 
+#if _FP_W_TYPE_SIZE < 64
+# define _FP_FRACTBITS_DW_S	(2 * _FP_W_TYPE_SIZE)
+#else
+# define _FP_FRACTBITS_DW_S	_FP_W_TYPE_SIZE
+#endif
+
 #define _FP_FRACBITS_S		24
 #define _FP_FRACXBITS_S		(_FP_FRACTBITS_S - _FP_FRACBITS_S)
 #define _FP_WFRACBITS_S		(_FP_WORKBITS + _FP_FRACBITS_S)
@@ -48,6 +54,11 @@
 #define _FP_IMPLBIT_S		((_FP_W_TYPE)1 << (_FP_FRACBITS_S-1))
 #define _FP_IMPLBIT_SH_S	((_FP_W_TYPE)1 << (_FP_FRACBITS_S-1+_FP_WORKBITS))
 #define _FP_OVERFLOW_S		((_FP_W_TYPE)1 << (_FP_WFRACBITS_S))
+
+#define _FP_WFRACBITS_DW_S	(2 * _FP_WFRACBITS_S)
+#define _FP_WFRACXBITS_DW_S	(_FP_FRACTBITS_DW_S - _FP_WFRACBITS_DW_S)
+#define _FP_HIGHBIT_DW_S	\
+  ((_FP_W_TYPE)1 << (_FP_WFRACBITS_DW_S - 1) % _FP_W_TYPE_SIZE)
 
 /* The implementation of _FP_MUL_MEAT_S and _FP_DIV_MEAT_S should be
    chosen by the target machine.  */
@@ -139,6 +150,12 @@ union _FP_UNION_S
 #define FP_SQRT_S(R,X)			_FP_SQRT(S,1,R,X)
 #define _FP_SQRT_MEAT_S(R,S,T,X,Q)	_FP_SQRT_MEAT_1(R,S,T,X,Q)
 
+#if _FP_W_TYPE_SIZE < 64
+# define FP_FMA_S(R, X, Y, Z)	_FP_FMA(S, 1, 2, R, X, Y, Z)
+#else
+# define FP_FMA_S(R, X, Y, Z)	_FP_FMA(S, 1, 1, R, X, Y, Z)
+#endif
+
 #define FP_CMP_S(r,X,Y,un)	_FP_CMP(S,1,r,X,Y,un)
 #define FP_CMP_EQ_S(r,X,Y)	_FP_CMP_EQ(S,1,r,X,Y)
 #define FP_CMP_UNORD_S(r,X,Y)	_FP_CMP_UNORD(S,1,r,X,Y)
@@ -148,3 +165,9 @@ union _FP_UNION_S
 
 #define _FP_FRAC_HIGH_S(X)	_FP_FRAC_HIGH_1(X)
 #define _FP_FRAC_HIGH_RAW_S(X)	_FP_FRAC_HIGH_1(X)
+
+#if _FP_W_TYPE_SIZE < 64
+# define _FP_FRAC_HIGH_DW_S(X)	_FP_FRAC_HIGH_2(X)
+#else
+# define _FP_FRAC_HIGH_DW_S(X)	_FP_FRAC_HIGH_1(X)
+#endif

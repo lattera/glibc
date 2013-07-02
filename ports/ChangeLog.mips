@@ -1,3 +1,21 @@
+2013-07-02  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13304]
+	* sysdeps/mips/ieee754/s_fma.c: New file.
+	* sysdeps/mips/ieee754/s_fmaf.c: Likewise.
+	* sysdeps/mips/ieee754/s_fmal.c: Likewise.
+	* sysdeps/mips/mips32/Implies: Add mips/soft-fp.
+	* sysdeps/mips/mips64/n32/s_fma.c: Remove file.
+	* sysdeps/mips/mips64/n64/s_fma.c: Likewise.
+	* sysdeps/mips/mips64/soft-fp/sfp-machine.h (_FP_MUL_MEAT_DW_S):
+	New macro.
+	(_FP_MUL_MEAT_DW_D): Likewise.
+	(_FP_MUL_MEAT_DW_Q): Likewise.
+	* sysdeps/mips/soft-fp/sfp-machine.h (_FP_MUL_MEAT_DW_S): New
+	macro.
+	(_FP_MUL_MEAT_DW_D): Likewise.
+	(_FP_MUL_MEAT_DW_Q): Likewise.
+
 2013-06-28  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
 	* sysdeps/mips/dl-procinfo.h (_dl_procinfo): Add TYPE parameter

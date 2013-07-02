@@ -1,3 +1,4 @@
 mips/ieee754
+mips/soft-fp
 mips
 wordsize-32

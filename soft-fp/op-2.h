@@ -134,6 +134,8 @@
 #define _FP_FRAC_ZEROP_2(X)	((X##_f1 | X##_f0) == 0)
 #define _FP_FRAC_OVERP_2(fs,X)	(_FP_FRAC_HIGH_##fs(X) & _FP_OVERFLOW_##fs)
 #define _FP_FRAC_CLEAR_OVERP_2(fs,X)	(_FP_FRAC_HIGH_##fs(X) &= ~_FP_OVERFLOW_##fs)
+#define _FP_FRAC_HIGHBIT_DW_2(fs,X)	\
+  (_FP_FRAC_HIGH_DW_##fs(X) & _FP_HIGHBIT_DW_##fs)
 #define _FP_FRAC_EQ_2(X, Y)	(X##_f1 == Y##_f1 && X##_f0 == Y##_f0)
 #define _FP_FRAC_GT_2(X, Y)	\
   (X##_f1 > Y##_f1 || (X##_f1 == Y##_f1 && X##_f0 > Y##_f0))
@@ -257,23 +259,30 @@
 
 /* Given a 1W * 1W => 2W primitive, do the extended multiplication.  */
 
-#define _FP_MUL_MEAT_2_wide(wfracbits, R, X, Y, doit)			\
+#define _FP_MUL_MEAT_DW_2_wide(wfracbits, R, X, Y, doit)		\
   do {									\
-    _FP_FRAC_DECL_4(_z); _FP_FRAC_DECL_2(_b); _FP_FRAC_DECL_2(_c);	\
+    _FP_FRAC_DECL_2(_b); _FP_FRAC_DECL_2(_c);				\
 									\
-    doit(_FP_FRAC_WORD_4(_z,1), _FP_FRAC_WORD_4(_z,0), X##_f0, Y##_f0);	\
+    doit(_FP_FRAC_WORD_4(R,1), _FP_FRAC_WORD_4(R,0), X##_f0, Y##_f0);	\
     doit(_b_f1, _b_f0, X##_f0, Y##_f1);					\
     doit(_c_f1, _c_f0, X##_f1, Y##_f0);					\
-    doit(_FP_FRAC_WORD_4(_z,3), _FP_FRAC_WORD_4(_z,2), X##_f1, Y##_f1);	\
+    doit(_FP_FRAC_WORD_4(R,3), _FP_FRAC_WORD_4(R,2), X##_f1, Y##_f1);	\
 									\
-    __FP_FRAC_ADD_3(_FP_FRAC_WORD_4(_z,3),_FP_FRAC_WORD_4(_z,2),	\
-		    _FP_FRAC_WORD_4(_z,1), 0, _b_f1, _b_f0,		\
-		    _FP_FRAC_WORD_4(_z,3),_FP_FRAC_WORD_4(_z,2),	\
-		    _FP_FRAC_WORD_4(_z,1));				\
-    __FP_FRAC_ADD_3(_FP_FRAC_WORD_4(_z,3),_FP_FRAC_WORD_4(_z,2),	\
-		    _FP_FRAC_WORD_4(_z,1), 0, _c_f1, _c_f0,		\
-		    _FP_FRAC_WORD_4(_z,3),_FP_FRAC_WORD_4(_z,2),	\
-		    _FP_FRAC_WORD_4(_z,1));				\
+    __FP_FRAC_ADD_3(_FP_FRAC_WORD_4(R,3),_FP_FRAC_WORD_4(R,2),		\
+		    _FP_FRAC_WORD_4(R,1), 0, _b_f1, _b_f0,		\
+		    _FP_FRAC_WORD_4(R,3),_FP_FRAC_WORD_4(R,2),		\
+		    _FP_FRAC_WORD_4(R,1));				\
+    __FP_FRAC_ADD_3(_FP_FRAC_WORD_4(R,3),_FP_FRAC_WORD_4(R,2),		\
+		    _FP_FRAC_WORD_4(R,1), 0, _c_f1, _c_f0,		\
+		    _FP_FRAC_WORD_4(R,3),_FP_FRAC_WORD_4(R,2),		\
+		    _FP_FRAC_WORD_4(R,1));				\
+  } while (0)
+
+#define _FP_MUL_MEAT_2_wide(wfracbits, R, X, Y, doit)			\
+  do {									\
+    _FP_FRAC_DECL_4(_z);						\
+									\
+    _FP_MUL_MEAT_DW_2_wide(wfracbits, _z, X, Y, doit);			\
 									\
     /* Normalize since we know where the msb of the multiplicands	\
        were (bit B), we know that the msb of the of the product is	\
@@ -287,9 +296,9 @@
    Do only 3 multiplications instead of four. This one is for machines
    where multiplication is much more expensive than subtraction.  */
 
-#define _FP_MUL_MEAT_2_wide_3mul(wfracbits, R, X, Y, doit)		\
+#define _FP_MUL_MEAT_DW_2_wide_3mul(wfracbits, R, X, Y, doit)		\
   do {									\
-    _FP_FRAC_DECL_4(_z); _FP_FRAC_DECL_2(_b); _FP_FRAC_DECL_2(_c);	\
+    _FP_FRAC_DECL_2(_b); _FP_FRAC_DECL_2(_c);				\
     _FP_W_TYPE _d;							\
     int _c1, _c2;							\
 									\
@@ -297,27 +306,34 @@
     _c1 = _b_f0 < X##_f0;						\
     _b_f1 = Y##_f0 + Y##_f1;						\
     _c2 = _b_f1 < Y##_f0;						\
-    doit(_d, _FP_FRAC_WORD_4(_z,0), X##_f0, Y##_f0);			\
-    doit(_FP_FRAC_WORD_4(_z,2), _FP_FRAC_WORD_4(_z,1), _b_f0, _b_f1);	\
+    doit(_d, _FP_FRAC_WORD_4(R,0), X##_f0, Y##_f0);			\
+    doit(_FP_FRAC_WORD_4(R,2), _FP_FRAC_WORD_4(R,1), _b_f0, _b_f1);	\
     doit(_c_f1, _c_f0, X##_f1, Y##_f1);					\
 									\
     _b_f0 &= -_c2;							\
     _b_f1 &= -_c1;							\
-    __FP_FRAC_ADD_3(_FP_FRAC_WORD_4(_z,3),_FP_FRAC_WORD_4(_z,2),	\
-		    _FP_FRAC_WORD_4(_z,1), (_c1 & _c2), 0, _d,		\
-		    0, _FP_FRAC_WORD_4(_z,2), _FP_FRAC_WORD_4(_z,1));	\
-    __FP_FRAC_ADDI_2(_FP_FRAC_WORD_4(_z,3),_FP_FRAC_WORD_4(_z,2),	\
+    __FP_FRAC_ADD_3(_FP_FRAC_WORD_4(R,3),_FP_FRAC_WORD_4(R,2),		\
+		    _FP_FRAC_WORD_4(R,1), (_c1 & _c2), 0, _d,		\
+		    0, _FP_FRAC_WORD_4(R,2), _FP_FRAC_WORD_4(R,1));	\
+    __FP_FRAC_ADDI_2(_FP_FRAC_WORD_4(R,3),_FP_FRAC_WORD_4(R,2),		\
 		     _b_f0);						\
-    __FP_FRAC_ADDI_2(_FP_FRAC_WORD_4(_z,3),_FP_FRAC_WORD_4(_z,2),	\
+    __FP_FRAC_ADDI_2(_FP_FRAC_WORD_4(R,3),_FP_FRAC_WORD_4(R,2),		\
 		     _b_f1);						\
-    __FP_FRAC_DEC_3(_FP_FRAC_WORD_4(_z,3),_FP_FRAC_WORD_4(_z,2),	\
-		    _FP_FRAC_WORD_4(_z,1),				\
-		    0, _d, _FP_FRAC_WORD_4(_z,0));			\
-    __FP_FRAC_DEC_3(_FP_FRAC_WORD_4(_z,3),_FP_FRAC_WORD_4(_z,2),	\
-		    _FP_FRAC_WORD_4(_z,1), 0, _c_f1, _c_f0);		\
-    __FP_FRAC_ADD_2(_FP_FRAC_WORD_4(_z,3), _FP_FRAC_WORD_4(_z,2),	\
+    __FP_FRAC_DEC_3(_FP_FRAC_WORD_4(R,3),_FP_FRAC_WORD_4(R,2),		\
+		    _FP_FRAC_WORD_4(R,1),				\
+		    0, _d, _FP_FRAC_WORD_4(R,0));			\
+    __FP_FRAC_DEC_3(_FP_FRAC_WORD_4(R,3),_FP_FRAC_WORD_4(R,2),		\
+		    _FP_FRAC_WORD_4(R,1), 0, _c_f1, _c_f0);		\
+    __FP_FRAC_ADD_2(_FP_FRAC_WORD_4(R,3), _FP_FRAC_WORD_4(R,2),		\
 		    _c_f1, _c_f0,					\
-		    _FP_FRAC_WORD_4(_z,3), _FP_FRAC_WORD_4(_z,2));	\
+		    _FP_FRAC_WORD_4(R,3), _FP_FRAC_WORD_4(R,2));	\
+  } while (0)
+
+#define _FP_MUL_MEAT_2_wide_3mul(wfracbits, R, X, Y, doit)		\
+  do {									\
+    _FP_FRAC_DECL_4(_z);						\
+									\
+    _FP_MUL_MEAT_DW_2_wide_3mul(wfracbits, _z, X, Y, doit);		\
 									\
     /* Normalize since we know where the msb of the multiplicands	\
        were (bit B), we know that the msb of the of the product is	\
@@ -327,14 +343,20 @@
     R##_f1 = _FP_FRAC_WORD_4(_z,1);					\
   } while (0)
 
-#define _FP_MUL_MEAT_2_gmp(wfracbits, R, X, Y)				\
+#define _FP_MUL_MEAT_DW_2_gmp(wfracbits, R, X, Y)			\
   do {									\
-    _FP_FRAC_DECL_4(_z);						\
     _FP_W_TYPE _x[2], _y[2];						\
     _x[0] = X##_f0; _x[1] = X##_f1;					\
     _y[0] = Y##_f0; _y[1] = Y##_f1;					\
 									\
-    mpn_mul_n(_z_f, _x, _y, 2);						\
+    mpn_mul_n(R##_f, _x, _y, 2);					\
+  } while (0)
+
+#define _FP_MUL_MEAT_2_gmp(wfracbits, R, X, Y)				\
+  do {									\
+    _FP_FRAC_DECL_4(_z);						\
+									\
+    _FP_MUL_MEAT_DW_2_gmp(wfracbits, _z, X, Y);				\
 									\
     /* Normalize since we know where the msb of the multiplicands	\
        were (bit B), we know that the msb of the of the product is	\
