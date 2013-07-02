@@ -65,6 +65,12 @@ Version 2.18
 * Added new API functions pthread_getattr_default_np and
   pthread_setattr_default_np to get and set the default pthread
   attributes of a process.
+
+* Added support for TSX lock elision for pthread mutexes on i386 and x86-64.
+  This may improve lock scaling of existing programs on TSX capable systems.
+  When the --enable-lock-elision=yes parameter is specified at configure
+  time lock elision will be enabled by default for all PTHREAD_MUTEX_DEFAULT
+  mutexes.
 
 Version 2.17
 
