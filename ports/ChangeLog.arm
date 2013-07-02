@@ -1,3 +1,8 @@
+2013-07-02  Will Newton  <will.newton@linaro.org>
+
+	* sysdeps/arm/dl-machine.h (elf_machine_rela): Pass dl_hwcap
+	to IFUNC resolver functions.
+
 2013-06-28  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/arm/dl-procinfo.h (_dl_procinfo): Add
