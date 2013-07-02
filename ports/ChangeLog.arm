@@ -1,5 +1,7 @@
 2013-07-02  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/arm/libm-test-ulps: Regenerated.
+
 	[BZ #13304]
 	* sysdeps/arm/s_fma.c: New file.
 	* sysdeps/arm/s_fmaf.c: New file.
