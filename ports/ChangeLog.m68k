@@ -1,3 +1,7 @@
+2013-07-03  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/m680x0/fpu/libm-test-ulps: Update.
+
 2013-06-30  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/m68k/dl-trampoline.S (FMOVE): Define conditional on

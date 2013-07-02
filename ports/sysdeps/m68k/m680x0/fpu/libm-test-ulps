@@ -4197,6 +4197,52 @@ ildouble: 1
 ldouble: 1
 
 # catan
+Test "Imaginary part of: catan (-0x0.fffffffffffff8p0 + 0x1p-27 i)":
+double: 1
+idouble: 1
+Test "Real part of: catan (-0x0.ffffffffffffffffp0 + 0x1p-33 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (-0x0.ffffffffffffffffp0 + 0x1p-33 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catan (-0x0.ffffffffffffffffp0 - 0x1p-33 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (-0x0.ffffffp0 + 0x1p-13 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Imaginary part of: catan (-0x1.000002p0 - 0x1p-13 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (-0x1.fp1023 + 0x1.fp1023 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (-0x1.fp1023 - 0x1.fp1023 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (-0x1.fp127 + 0x1.fp127 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (-0x1.fp127 - 0x1.fp127 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (-0x1p-1020 + 1.0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (-0x1p-1020 - 1.0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (-1.0 - 0x1p-13 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (-1.0 - 0x1p-64 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catan (-2 - 3 i)":
 double: 1
 float: 1
@@ -4205,11 +4251,154 @@ ifloat: 1
 Test "Real part of: catan (0.75 + 1.25 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: catan (0x0.fffffffffffff8p0 + 0x1p-27 i)":
+double: 1
+idouble: 1
+Test "Real part of: catan (0x0.ffffffffffffffffp0 + 0x1p-33 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (0x0.ffffffffffffffffp0 + 0x1p-33 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catan (0x0.ffffffffffffffffp0 - 0x1p-33 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (0x0.ffffffp0 + 0x1p-13 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Imaginary part of: catan (0x1.000002p0 - 0x1p-13 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (0x1.fp1023 + 0x1.fp1023 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (0x1.fp1023 - 0x1.fp1023 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (0x1.fp127 + 0x1.fp127 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (0x1.fp127 - 0x1.fp127 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (0x1p-1020 + 1.0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (0x1p-1020 - 1.0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (1.0 - 0x1p-13 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (1.0 - 0x1p-64 i)":
+ildouble: 1
+ldouble: 1
 
 # catanh
+Test "Real part of: catanh (-0x1.fp1023 + 0x1.fp1023 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1.fp1023 - 0x1.fp1023 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1.fp127 + 0x1.fp127 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1.fp127 - 0x1.fp127 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1p-13 + 0x1.000002p0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1p-13 + 1.0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1p-13 - 0x1.000002p0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1p-13 - 1.0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catanh (-0x1p-33 + 0x0.ffffffffffffffffp0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catanh (-0x1p-33 - 0x0.ffffffffffffffffp0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1p-64 + 1.0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1p-64 - 1.0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-1.0 + 0x1p-1020 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-1.0 - 0x1p-1020 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: catanh (-2 - 3 i)":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (0.75 + 1.25 i)":
+double: 1
+idouble: 1
+Test "Real part of: catanh (0x1.fp1023 + 0x1.fp1023 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (0x1.fp1023 - 0x1.fp1023 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (0x1.fp127 + 0x1.fp127 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (0x1.fp127 - 0x1.fp127 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (0x1p-13 + 0x0.ffffffp0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Real part of: catanh (0x1p-13 - 0x0.ffffffp0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Real part of: catanh (0x1p-27 + 0x0.fffffffffffff8p0 i)":
+double: 1
+idouble: 1
+Test "Real part of: catanh (0x1p-27 - 0x0.fffffffffffff8p0 i)":
+double: 1
+idouble: 1
+Test "Real part of: catanh (0x1p-33 + 0x0.ffffffffffffffffp0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catanh (0x1p-33 + 0x0.ffffffffffffffffp0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (0x1p-33 - 0x0.ffffffffffffffffp0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catanh (0x1p-33 - 0x0.ffffffffffffffffp0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (1.0 + 0x1p-1020 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (1.0 - 0x1p-1020 i)":
 ildouble: 1
 ldouble: 1
 
@@ -5231,6 +5420,16 @@ ldouble: 1
 Test "gamma (0.5)":
 ildouble: 1
 ldouble: 1
+Test "gamma (0.7)":
+float: 1
+ifloat: 1
+Test "gamma (1.2)":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 1
+ldouble: 1
 Test "gamma (3)":
 ildouble: 1
 ldouble: 1
@@ -5254,6 +5453,8 @@ ifloat: 1
 Test "hypot (0.7, 12.4)":
 float: 1
 ifloat: 1
+Test "hypot (0x1p-16445, 0x1p-16445)":
+ldouble: 1
 Test "hypot (12.4, -0.7)":
 float: 1
 ifloat: 1
@@ -5919,6 +6120,281 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "tgamma (-0x0.ffffffffffffffffp0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x0.ffffffp0)":
+float: 1
+ifloat: 1
+Test "tgamma (-0x1.000002p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x1.0a32a2p+5)":
+float: 2
+ifloat: 2
+Test "tgamma (-0x1.fffffffffffffp0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x13.ffffep0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x13.ffffffffffffffep0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x13.ffffffffffffp0)":
+ildouble: 3
+ldouble: 3
+Test "tgamma (-0x14.000000000000002p0)":
+ildouble: 3
+ldouble: 3
+Test "tgamma (-0x14.000000000001p0)":
+double: 1
+idouble: 1
+Test "tgamma (-0x14.00002p0)":
+float: 3
+ifloat: 3
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x1d.ffffffffffffffep0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x1d.ffffffffffffp0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x1e.000000000000002p0)":
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0x1e.000000000001p0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x1e.00002p0)":
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0x1p-24)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x2.0000000000000004p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x2.0000000000002p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x2.000004p0)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x27.ffffcp0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x27.ffffffffffffffcp0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x28.00004p0)":
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0x28.fffffffffffep0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x28.ffffffffffffffcp0)":
+ildouble: 3
+ldouble: 3
+Test "tgamma (-0x29.000000000000004p0)":
+ildouble: 4
+ldouble: 4
+Test "tgamma (-0x29.00004p0)":
+ildouble: 4
+ldouble: 4
+Test "tgamma (-0x29.fffffffffffep0)":
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0x29.ffffffffffffffcp0)":
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0x3.0000000000002p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x3.000004p0)":
+float: 1
+ifloat: 1
+Test "tgamma (-0x3.fffffcp0)":
+float: 1
+ifloat: 1
+Test "tgamma (-0x3.fffffffffffffffcp0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x31.fffffffffffep0)":
+double: 1
+idouble: 1
+Test "tgamma (-0x32.000000000000004p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x3e7.fffffffffffffcp0)":
+ildouble: 4
+ldouble: 4
+Test "tgamma (-0x4.0000000000000008p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x4.000008p0)":
+float: 2
+ifloat: 2
+Test "tgamma (-0x4.fffff8p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x5.0000000000000008p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x5.0000000000004p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x5.000008p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x5.fffff8p0)":
+float: 1
+ifloat: 1
+Test "tgamma (-0x6.0000000000000008p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x6.fffff8p0)":
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0x6.ffffffffffffcp0)":
+double: 3
+idouble: 3
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x63.ffffffffffffff8p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x6e2.fffffffffffff8p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x6e3.00000000000008p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x6e4.fffffffffffff8p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x6e5.00000000000008p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x7.0000000000000008p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x7.0000000000004p0)":
+double: 4
+idouble: 4
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x7.000008p0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x7.fffff8p0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x7.ffffffffffffcp0)":
+double: 3
+idouble: 3
+Test "tgamma (-0x7.fffffffffffffff8p0)":
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0x8.000000000000001p0)":
+ildouble: 3
+ldouble: 3
+Test "tgamma (-0x8.00001p0)":
+double: 1
+idouble: 1
+Test "tgamma (-0x9.ffffffffffff8p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x9.fffffp0)":
+float: 1
+ifloat: 1
+Test "tgamma (-0x95.fffffffffff8p0)":
+ildouble: 3
+ldouble: 3
+Test "tgamma (-0x95.ffffffffffffffp0)":
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0xa.000000000000001p0)":
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0xa.0000000000008p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0xa.00001p0)":
+double: 1
+idouble: 1
+Test "tgamma (-0xb5.00000000000001p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0xb6.000000000008p0)":
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0xb6.fffffffffff8p0)":
+ildouble: 4
+ldouble: 4
+Test "tgamma (-0xb7.000000000008p0)":
+ildouble: 4
+ldouble: 4
+Test "tgamma (-0xb8.00000000000001p0)":
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0xb8.000000000008p0)":
+ildouble: 4
+ldouble: 4
+Test "tgamma (-0xbb.ffffffffffffffp0)":
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0xbd.00000000000001p0)":
+ildouble: 3
+ldouble: 3
+Test "tgamma (-0xf9.ffffffffffffffp0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0xfa.00000000000001p0)":
+ildouble: 4
+ldouble: 4
+Test "tgamma (-1.5)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-2.5)":
+double: 1
+idouble: 1
+Test "tgamma (-4.5)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-6.5)":
+float: 1
+ifloat: 1
+Test "tgamma (-7.5)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-8.5)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-9.5)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
 Test "tgamma (0.5)":
 float: 1
 ifloat: 1
@@ -5929,7 +6405,216 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "tgamma (0x1.fffffep0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x1.fffffffffffffffep0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x1p-24)":
+float: 1
+ifloat: 1
+Test "tgamma (0x1p-53)":
+double: 1
+idouble: 1
+Test "tgamma (0x1p-64)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x2.0000000000002p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x2.000004p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x2.30a43cp+4)":
+float: 2
+ifloat: 2
+ildouble: 3
+ldouble: 3
+Test "tgamma (0x2.30a44p+4)":
+double: 1
+idouble: 1
+Test "tgamma (0x2.fffffcp0)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x2.ffffffffffffep0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x3.0000000000002p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x3.fffffcp0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x3.fffffffffffffffcp0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x4.0000000000000008p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x4.000008p0)":
+float: 1
+ifloat: 1
+Test "tgamma (0x4.fffff8p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x4.fffffffffffffff8p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x5.0000000000000008p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x5.000008p0)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x5.fffff8p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x5.ffffffffffffcp0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x6.0000000000000008p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x6.000008p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x6.fffff8p0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x6.ffffffffffffcp0)":
+double: 3
+idouble: 3
+Test "tgamma (0x7.0000000000000008p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x7.0000000000004p0)":
+double: 4
+idouble: 4
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x7.000008p0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x7.fffff8p0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x7.ffffffffffffcp0)":
+double: 2
+idouble: 2
+Test "tgamma (0x7.fffffffffffffff8p0)":
+ildouble: 2
+ldouble: 2
+Test "tgamma (0x8.000000000000001p0)":
+ildouble: 2
+ldouble: 2
+Test "tgamma (0x8.00001p0)":
+double: 1
+idouble: 1
+Test "tgamma (10)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tgamma (18.5)":
+float: 1
+ifloat: 1
+Test "tgamma (19.5)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (2.5)":
+float: 1
+ifloat: 1
+Test "tgamma (23.5)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (29.5)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (3)":
+float: 1
+ifloat: 1
+Test "tgamma (3.5)":
+float: 1
+ifloat: 1
+Test "tgamma (30.5)":
+float: 1
+ifloat: 1
+Test "tgamma (32.5)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (33.5)":
+float: 1
+ifloat: 1
+Test "tgamma (34.5)":
+float: 1
+ifloat: 1
+ildouble: 3
+ldouble: 3
 Test "tgamma (4)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (4.5)":
+double: 1
+idouble: 1
+Test "tgamma (5)":
+float: 1
+ifloat: 1
+Test "tgamma (5.5)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (6)":
+float: 1
+ifloat: 1
+Test "tgamma (6.5)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (7)":
+double: 1
+idouble: 1
+Test "tgamma (7.5)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (8)":
+double: 1
+idouble: 1
+Test "tgamma (8.5)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "tgamma (9)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tgamma (9.5)":
+float: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
@@ -6285,10 +6970,18 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: Real part of "catanh":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: Imaginary part of "catanh":
 ildouble: 1
 ldouble: 1
 
@@ -6625,12 +7318,17 @@ ildouble: 1
 ldouble: 1
 
 Function: "gamma":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 
 Function: "hypot":
 float: 1
 ifloat: 1
+ldouble: 1
 
 Function: "j0":
 double: 1
@@ -6799,12 +7497,12 @@ ildouble: 1
 ldouble: 1
 
 Function: "tgamma":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
+double: 4
+float: 3
+idouble: 4
+ifloat: 3
+ildouble: 4
+ldouble: 4
 
 Function: "y0":
 double: 1
