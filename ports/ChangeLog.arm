@@ -1,3 +1,9 @@
+2013-07-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/include/bits/setjmp.h [_ISOMAC] (JMP_BUF_REGLIST):
+	Do not define.
+	[_ISOMAC] (__JMP_BUF_SP): Likewise.
+
 2013-07-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/libm-test-ulps: Regenerated.

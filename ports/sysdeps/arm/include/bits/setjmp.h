@@ -24,11 +24,13 @@
 # include <sysdeps/arm/bits/setjmp.h>
 #endif
 
+#ifndef _ISOMAC
 /* Register list for a ldm/stm instruction to load/store
    the general registers from a __jmp_buf.  */
-#define JMP_BUF_REGLIST		{v1-v6, sl, fp, sp, lr}
+# define JMP_BUF_REGLIST	{v1-v6, sl, fp, sp, lr}
 
 /* Index of __jmp_buf where the sp register resides.  */
-#define __JMP_BUF_SP		8
+# define __JMP_BUF_SP		8
+#endif
 
 #endif  /* include/bits/setjmp.h */
