@@ -1,5 +1,11 @@
 2013-07-03  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/unix/sysv/linux/tile/dl-static.c: New file to support
+	variable page size for tile.
+	* sysdeps/unix/sysv/linux/tile/ldsodefs.h: Likewise.
+	* sysdeps/unix/sysv/linux/tile/Makefile: Build dl-static in elf.
+	* sysdeps/unix/sysv/linux/tile/Versions: Add _dl_var_init.
+
 	* sysdeps/tile/libm-test-ulps: Update with new tests.
 
 	* sysdeps/tile/s_fma.c: Use soft-fp version instead of ieee754.
