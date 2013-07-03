@@ -1,3 +1,8 @@
+2013-07-03  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/x86/init-arch.c: New file.
+	* sysdeps/unix/sysv/linux/x86/init-arch.h: Likewise.
+
 2013-07-02  Andi Kleen <ak@linux.intel.com>
 
 	* sysdeps/unix/sysv/linux/x86/elision-conf.c (elision_init):
