@@ -1,5 +1,7 @@
 2013-07-03  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/tile/libm-test-ulps: Update with new tests.
+
 	* sysdeps/tile/s_fma.c: Use soft-fp version instead of ieee754.
 	* sysdeps/tile/s_fmaf.c: Likewise.
 	* sysdeps/tile/sfp-machine.h: New file.
