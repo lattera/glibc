@@ -1,3 +1,14 @@
+2013-07-03  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/sys/ptrace.h (PTRACE_LISTEN): Add
+	define.
+	(PTRACE_PEEKSIGINFO): Add new value from Linux 3.10.
+	(ptrace_peeksiginfo_args): Add.
+	(__ptrace_peeksiginfo_flags): Add.
+	* sysdeps/unix/sysv/linux/sparc/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ptrace.h: Likewise.
+
 2013-07-03  Allan McRae  <allan@archlinux.org>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Update.

@@ -1,3 +1,11 @@
+2013-07-04  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/ia64/sys/ptrace.h (PTRACE_LISTEN):
+	Add define.
+	(PTRACE_PEEKSIGINFO): Add new value from Linux 3.10.
+	(ptrace_peeksiginfo_args): Add.
+	(__ptrace_peeksiginfo_flags): Add.
+
 2013-06-27  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/ia64/dl-static.c: Do not include

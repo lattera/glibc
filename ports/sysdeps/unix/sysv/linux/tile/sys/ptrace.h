@@ -20,6 +20,7 @@
 #define _SYS_PTRACE_H	1
 
 #include <features.h>
+#include <bits/types.h>
 
 __BEGIN_DECLS
 
@@ -101,8 +102,28 @@ enum __ptrace_request
 #define PT_GETSIGINFO PTRACE_GETSIGINFO
 
   /* Set new siginfo for process.  */
-  PTRACE_SETSIGINFO = 0x4203
+  PTRACE_SETSIGINFO = 0x4203,
 #define PT_SETSIGINFO PTRACE_SETSIGINFO
+
+  /* Set register content.  */
+  PTRACE_SETREGSET = 0x4205,
+#define PTRACE_SETREGSET PTRACE_SETREGSET
+
+  /* Like PTRACE_ATTACH, but do not force tracee to trap and do not affect
+     signal or group stop state.  */
+  PTRACE_SEIZE = 0x4206,
+#define PTRACE_SEIZE PTRACE_SEIZE
+
+  /* Trap seized tracee.  */
+  PTRACE_INTERRUPT = 0x4207,
+#define PTRACE_INTERRUPT PTRACE_INTERRUPT
+
+  /* Wait for next group event.  */
+  PTRACE_LISTEN = 0x4208,
+#define PTRACE_LISTEN PTRACE_LISTEN
+
+  PTRACE_PEEKSIGINFO = 0x4209
+#define PTRACE_PEEKSIGINFO PTRACE_PEEKSIGINFO
 };
 
 
@@ -131,6 +152,20 @@ enum __ptrace_eventcodes
   PTRACE_EVENT_EXIT	= 6,
   PTRACE_EVENT_SECCOMP  = 7
 };
+
+/* Arguments for PTRACE_PEEKSIGINFO.  */
+struct ptrace_peeksiginfo_args
+{
+  __uint64_t off;	/* From which siginfo to start.  */
+  __uint32_t flags;	/* Flags for peeksiginfo.  */
+  __int32_t nr;		/* How many siginfos to take.  */
+};
+
+enum __ptrace_peeksiginfo_flags
+{
+  /* Read signals from a shared (process wide) queue.  */
+  PTRACE_PEEKSIGINFO_SHARED = (1 << 0)
+}
 
 /* Perform process tracing functions.  REQUEST is one of the values
    above, and determines the action to be taken.

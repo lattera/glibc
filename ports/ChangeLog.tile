@@ -1,3 +1,12 @@
+2013-07-04  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/tile/sys/ptrace.h (PTRACE_PEEKSIGINFO):
+	Add new value from Linux 3.10.
+	(ptrace_peeksiginfo_args): Add.
+	(__ptrace_peeksiginfo_flags): Add.
+	(PTRACE_SETREGSET, PTRACE_SEIZE, PTRACE_INTERRUPT, PTRACE_LISTEN):
+	Add.
+
 2013-06-28  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/tile/fegetenv.c: Delete now-redundant file.
