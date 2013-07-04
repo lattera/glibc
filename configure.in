@@ -186,7 +186,7 @@ fi
 
 AC_ARG_ENABLE([lock-elision],
 	      AC_HELP_STRING([--enable-lock-elision[=yes/no]],
-			     [Enable lock elision for pthread mutexes and rwlocks by default]),
+			     [Enable lock elision for pthread mutexes by default]),
 	      [enable_lock_elision=$enableval],
 	      [enable_lock_elision=no])
 if test "$enable_lock_elision" = yes ; then

@@ -134,7 +134,7 @@ will be used, and CFLAGS sets optimization options for the compiler.
      dynamic tests so that they can be invoked directly.
 
 `--enable-lock-elision=yes'
-     Enable lock elision for pthread mutexes and rwlocks by default.
+     Enable lock elision for pthread mutexes by default.
 
 `--build=BUILD-SYSTEM'
 `--host=HOST-SYSTEM'

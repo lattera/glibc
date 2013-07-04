@@ -1401,8 +1401,7 @@ Optional Features:
                           initialize __stack_chk_guard canary with a random
                           number at program start
   --enable-lock-elision=yes/no
-                          Enable lock elision for pthread mutexes and rwlocks
-                          by default
+                          Enable lock elision for pthread mutexes by default
   --enable-add-ons[=DIRS...]
                           configure and build add-ons in DIR1,DIR2,... search
                           for add-ons if no parameter given
