@@ -7704,6 +7704,20 @@ idouble: 1
 Test "gamma (-0.5)":
 ildouble: 1
 ldouble: 1
+Test "gamma (0.7)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "gamma (1.2)":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 1
+ldouble: 1
 
 # hypot
 Test "hypot (-0.7, -12.4)":
@@ -8031,6 +8045,28 @@ Test "pow (10.0, 4932.0)":
 ildouble: 1
 ldouble: 1
 Test "pow (1e4932, 0.75)":
+ildouble: 1
+ldouble: 1
+
+# pow10
+Test "pow10 (-1)":
+double: 1
+idouble: 1
+Test "pow10 (-305)":
+double: 1
+idouble: 1
+Test "pow10 (-36)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "pow10 (3)":
+double: 1
+idouble: 1
+Test "pow10 (36)":
+double: 1
+idouble: 1
+Test "pow10 (4932)":
 ildouble: 1
 ldouble: 1
 
@@ -9928,6 +9964,10 @@ ildouble: 1
 ldouble: 1
 
 Function: "gamma":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 
@@ -9986,6 +10026,12 @@ ldouble: 1
 Function: "pow":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "pow10":
+double: 1
+idouble: 1
 ildouble: 1
 ldouble: 1
 

@@ -1,3 +1,7 @@
+2013-07-05  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* sysdeps/aarch64/libm-test-ulps: Regenerate.
+
 2013-07-04  Andreas Jaeger  <aj@suse.de>
 
 	For ChangeLog.aarch64:
