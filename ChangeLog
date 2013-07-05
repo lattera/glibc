@@ -1,3 +1,8 @@
+2013-07-05  Jeroen Albers  <_jeroen_@yahoo.com>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2013-07-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* configure.in (--enable-lock-elision): Fix message text.

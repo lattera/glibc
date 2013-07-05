@@ -4233,6 +4233,9 @@ ifloat: 1
 Test "Real part of: catan (-0x1p-13 + 1.0 i)":
 float: 1
 ifloat: 1
+Test "Imaginary part of: catan (-0x1p-13 + 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catan (-0x1p-13 - 0x0.ffffffp0 i)":
 ildouble: 1
 ldouble: 1
@@ -4251,10 +4254,25 @@ ldouble: 1
 Test "Imaginary part of: catan (-0x1p-16382 - 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: catan (-0x1p-27 - 0x0.fffffffffffff8p0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (-0x1p-27 - 0x1.0000000000001p0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (-0x1p-27 - 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catan (-0x1p-33 + 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: catan (-0x1p-33 + 0x1.0000000000000002p0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catan (-0x1p-33 - 0x0.ffffffffffffffffp0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (-0x1p-33 - 0x1.0000000000000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catan (-0x1p-54 + 1.0 i)":
@@ -4386,6 +4404,9 @@ ifloat: 1
 Test "Real part of: catan (0x1p-13 + 1.0 i)":
 float: 1
 ifloat: 1
+Test "Imaginary part of: catan (0x1p-13 + 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catan (0x1p-13 - 0x0.ffffffp0 i)":
 ildouble: 1
 ldouble: 1
@@ -4404,10 +4425,25 @@ ldouble: 1
 Test "Imaginary part of: catan (0x1p-16382 - 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: catan (0x1p-27 - 0x0.fffffffffffff8p0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (0x1p-27 - 0x1.0000000000001p0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (0x1p-27 - 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catan (0x1p-33 + 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: catan (0x1p-33 + 0x1.0000000000000002p0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catan (0x1p-33 - 0x0.ffffffffffffffffp0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (0x1p-33 - 0x1.0000000000000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catan (0x1p-54 + 1.0 i)":
@@ -4451,6 +4487,12 @@ ildouble: 1
 ldouble: 1
 
 # catanh
+Test "Real part of: catanh (-0x0.fffffffffffff8p0 + 0x1p-27 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x0.fffffffffffff8p0 - 0x1p-27 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: catanh (-0x0.ffffffffffffffffp0 + 0x1p-1022 i)":
 ildouble: 1
 ldouble: 1
@@ -4473,6 +4515,18 @@ Test "Real part of: catanh (-0x0.ffffffp0 + 0x1p-13 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: catanh (-0x0.ffffffp0 - 0x1p-13 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1.0000000000000002p0 + 0x1p-33 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1.0000000000000002p0 - 0x1p-33 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1.0000000000001p0 + 0x1p-27 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1.0000000000001p0 - 0x1p-27 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: catanh (-0x1.000002p0 + 0x1p-13 i)":
@@ -4570,6 +4624,9 @@ ldouble: 1
 Test "Imaginary part of: catanh (-1.0 + 0x1p-13 i)":
 float: 1
 ifloat: 1
+Test "Real part of: catanh (-1.0 + 0x1p-27 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: catanh (-1.0 + 0x1p-54 i)":
 float: 1
 ifloat: 1
@@ -4590,6 +4647,9 @@ ldouble: 1
 Test "Imaginary part of: catanh (-1.0 - 0x1p-13 i)":
 float: 1
 ifloat: 1
+Test "Real part of: catanh (-1.0 - 0x1p-27 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: catanh (-1.0 - 0x1p-54 i)":
 float: 1
 ifloat: 1
@@ -4627,6 +4687,12 @@ Test "Real part of: catanh (0x0.ffffffp0 + 0x1p-13 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: catanh (0x0.ffffffp0 - 0x1p-13 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (0x1.0000000000000002p0 + 0x1p-33 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (0x1.0000000000000002p0 - 0x1p-33 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catanh (0x1.000002p0 + 0x1p-13 i)":
@@ -4721,6 +4787,9 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "Real part of: catanh (1.0 + 0x1p-13 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catanh (1.0 + 0x1p-13 i)":
 float: 1
 ifloat: 1
@@ -4739,6 +4808,9 @@ ldouble: 1
 Test "Real part of: catanh (1.0 - 0x1p-1020 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (1.0 - 0x1p-13 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catanh (1.0 - 0x1p-13 i)":
@@ -5582,6 +5654,9 @@ ildouble: 1
 ldouble: 1
 
 # cosh_upward
+Test "cosh_upward (22)":
+ildouble: 1
+ldouble: 1
 Test "cosh_upward (23)":
 ildouble: 1
 ldouble: 1
@@ -5776,9 +5851,14 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "Real part of: ctan (0.75 + 1.25 i)":
+float: 1
+ifloat: 1
 Test "Imaginary part of: ctan (0.75 + 1.25 i)":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "Real part of: ctan (0x1p1023 + 1 i)":
@@ -5895,9 +5975,9 @@ ldouble: 1
 # ctanh
 Test "Real part of: ctanh (-2 - 3 i)":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: ctanh (-2 - 3 i)":
@@ -6039,6 +6119,9 @@ double: 1
 idouble: 1
 
 # erfc
+Test "erfc (0.75)":
+float: 1
+ifloat: 1
 Test "erfc (0x1.f7303cp+1)":
 double: 1
 idouble: 1
@@ -6589,6 +6672,11 @@ Test "sincos (M_PI_6l*2.0) extra output 2":
 double: 1
 idouble: 1
 
+# sinh
+Test "sinh (0x8p-32)":
+ildouble: 1
+ldouble: 1
+
 # sinh_downward
 Test "sinh_downward (22)":
 float: 1
@@ -6934,7 +7022,9 @@ float: 1
 ifloat: 1
 Test "tgamma (-0x4.fffff8p0)":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "tgamma (-0x4.ffffffffffffcp0)":
@@ -6951,9 +7041,9 @@ ildouble: 1
 ldouble: 1
 Test "tgamma (-0x5.000008p0)":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 Test "tgamma (-0x5.ffffffffffffcp0)":
@@ -7158,9 +7248,9 @@ ildouble: 1
 ldouble: 1
 Test "tgamma (-9.5)":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 2
 ldouble: 2
 Test "tgamma (0.5)":
@@ -7231,6 +7321,8 @@ Test "tgamma (0x4.0000000000004p0)":
 double: 1
 idouble: 1
 Test "tgamma (0x4.fffff8p0)":
+float: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "tgamma (0x4.ffffffffffffcp0)":
@@ -7246,8 +7338,8 @@ Test "tgamma (0x5.0000000000004p0)":
 double: 1
 idouble: 1
 Test "tgamma (0x5.000008p0)":
-float: 2
-ifloat: 2
+float: 3
+ifloat: 3
 ildouble: 1
 ldouble: 1
 Test "tgamma (0x5.fffff8p0)":
@@ -7422,7 +7514,9 @@ ildouble: 1
 ldouble: 1
 Test "tgamma (9.5)":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
@@ -7447,7 +7541,9 @@ Test "y0 (0x1p-110)":
 double: 1
 idouble: 1
 Test "y0 (0x1p-20)":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 Test "y0 (0x1p-30)":
 float: 1
@@ -7462,9 +7558,14 @@ ifloat: 1
 Test "y0 (0x1p-50)":
 float: 1
 ifloat: 1
+Test "y0 (0x1p-60)":
+float: 1
+ifloat: 1
 Test "y0 (0x1p-70)":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 Test "y0 (0x1p-80)":
 double: 1
 float: 1
@@ -7486,8 +7587,13 @@ float: 1
 idouble: 2
 ifloat: 1
 Test "y0 (10.0)":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
+Test "y0 (2.0)":
+double: 1
+idouble: 1
 Test "y0 (8.0)":
 double: 1
 float: 1
@@ -7556,8 +7662,13 @@ float: 1
 idouble: 2
 ifloat: 1
 Test "yn (0, 10.0)":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
+Test "yn (0, 2.0)":
+double: 1
+idouble: 1
 Test "yn (0, 8.0)":
 double: 1
 float: 1
@@ -7597,22 +7708,26 @@ ildouble: 2
 ldouble: 2
 Test "yn (10, 0.75)":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 4
 ldouble: 4
 Test "yn (10, 1.0)":
 double: 1
+float: 2
 idouble: 1
+ifloat: 2
 Test "yn (10, 10.0)":
-double: 1
+double: 2
 float: 1
-idouble: 1
+idouble: 2
 ifloat: 1
 Test "yn (10, 2.0)":
-double: 2
-idouble: 2
+double: 3
+float: 1
+idouble: 3
+ifloat: 1
 Test "yn (3, 0.125)":
 double: 1
 idouble: 1
@@ -8236,6 +8351,10 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "sinh":
 ildouble: 1
 ldouble: 1
 

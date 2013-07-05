@@ -263,9 +263,13 @@ ldouble: 1
 Test "Imaginary part of: cacos (-0x0.fffffffffffff8p0 + 0x1p-52 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: cacos (-0x0.fffffffffffff8p0 - 0x1p-52 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: cacos (-0x0.ffffffffffffffffp0 + 0x1.fp-16385 i)":
 ildouble: 1
 ldouble: 1
@@ -422,6 +426,9 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: cacos (-0x1p-23 + 0x1.000002p0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: cacos (-0x1p-23 - 0.5 i)":
 double: 1
 float: 1
@@ -430,6 +437,9 @@ ifloat: 1
 Test "Imaginary part of: cacos (-0x1p-23 - 0x0.ffffffp0 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: cacos (-0x1p-23 - 0x1.000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: cacos (-0x1p-52 + 0.5 i)":
@@ -470,6 +480,9 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: cacos (-1.0 + 0x1.fp-10 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: cacos (-1.0 + 0x1.fp-30 i)":
 ildouble: 1
 ldouble: 1
@@ -479,6 +492,9 @@ ifloat: 1
 Test "Imaginary part of: cacos (-1.0 - 0.5 i)":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: cacos (-1.0 - 0x1.fp-10 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: cacos (-1.0 - 0x1.fp-30 i)":
@@ -635,12 +651,16 @@ ldouble: 1
 Test "Imaginary part of: cacos (0x0.fffffffffffff8p0 + 0x1p-52 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "Real part of: cacos (0x0.fffffffffffff8p0 - 0x1p-52 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: cacos (0x0.fffffffffffff8p0 - 0x1p-52 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: cacos (0x0.ffffffffffffffffp0 + 0x1.fp-16385 i)":
 ildouble: 1
 ldouble: 1
@@ -799,6 +819,9 @@ idouble: 1
 Test "Imaginary part of: cacos (0x1.fp127 + 0x1.fp127 i)":
 double: 1
 idouble: 1
+Test "Imaginary part of: cacos (0x1.fp16383 + 0x1.fp16383 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: cacos (0x1p-105 + 0.5 i)":
 float: 1
 ifloat: 1
@@ -821,6 +844,9 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: cacos (0x1p-23 + 0x1.000002p0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: cacos (0x1p-23 - 0.5 i)":
 double: 1
 float: 1
@@ -829,6 +855,9 @@ ifloat: 1
 Test "Imaginary part of: cacos (0x1p-23 - 0x0.ffffffp0 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: cacos (0x1p-23 - 0x1.000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: cacos (0x1p-52 + 0.5 i)":
@@ -876,6 +905,9 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: cacos (1.0 + 0x1.fp-10 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: cacos (1.0 + 0x1.fp-30 i)":
 double: 1
 idouble: 1
@@ -895,6 +927,9 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: cacos (1.0 - 0x1.fp-10 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: cacos (1.0 - 0x1.fp-30 i)":
@@ -1058,9 +1093,13 @@ ldouble: 1
 Test "Real part of: cacosh (-0x0.fffffffffffff8p0 + 0x1p-52 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "Real part of: cacosh (-0x0.fffffffffffff8p0 - 0x1p-52 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "Real part of: cacosh (-0x0.ffffffffffffffffp0 + 0x1.fp-16385 i)":
 ildouble: 1
 ldouble: 1
@@ -1217,6 +1256,9 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "Real part of: cacosh (-0x1p-23 + 0x1.000002p0 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: cacosh (-0x1p-23 - 0.5 i)":
 double: 1
 float: 1
@@ -1225,6 +1267,9 @@ ifloat: 1
 Test "Real part of: cacosh (-0x1p-23 - 0x0.ffffffp0 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: cacosh (-0x1p-23 - 0x1.000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: cacosh (-0x1p-52 + 0.5 i)":
@@ -1265,6 +1310,9 @@ ldouble: 1
 Test "Imaginary part of: cacosh (-1.0 + 0.5 i)":
 float: 1
 ifloat: 1
+Test "Real part of: cacosh (-1.0 + 0x1.fp-10 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: cacosh (-1.0 + 0x1.fp-30 i)":
 ildouble: 1
 ldouble: 1
@@ -1276,6 +1324,9 @@ ldouble: 1
 Test "Imaginary part of: cacosh (-1.0 - 0.5 i)":
 float: 1
 ifloat: 1
+Test "Real part of: cacosh (-1.0 - 0x1.fp-10 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: cacosh (-1.0 - 0x1.fp-30 i)":
 ildouble: 1
 ldouble: 1
@@ -1427,12 +1478,16 @@ ldouble: 1
 Test "Real part of: cacosh (0x0.fffffffffffff8p0 + 0x1p-52 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: cacosh (0x0.fffffffffffff8p0 + 0x1p-52 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: cacosh (0x0.fffffffffffff8p0 - 0x1p-52 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: cacosh (0x0.fffffffffffff8p0 - 0x1p-52 i)":
 ildouble: 1
 ldouble: 1
@@ -1594,6 +1649,9 @@ idouble: 1
 Test "Real part of: cacosh (0x1.fp127 + 0x1.fp127 i)":
 double: 1
 idouble: 1
+Test "Real part of: cacosh (0x1.fp16383 + 0x1.fp16383 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: cacosh (0x1p-105 + 0.5 i)":
 float: 1
 ifloat: 1
@@ -1616,6 +1674,9 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "Real part of: cacosh (0x1p-23 + 0x1.000002p0 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: cacosh (0x1p-23 - 0.5 i)":
 double: 1
 float: 1
@@ -1624,6 +1685,9 @@ ifloat: 1
 Test "Real part of: cacosh (0x1p-23 - 0x0.ffffffp0 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: cacosh (0x1p-23 - 0x1.000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: cacosh (0x1p-52 + 0.5 i)":
@@ -1664,6 +1728,9 @@ ldouble: 1
 Test "Imaginary part of: cacosh (1.0 + 0.5 i)":
 float: 1
 ifloat: 1
+Test "Real part of: cacosh (1.0 + 0x1.fp-10 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: cacosh (1.0 + 0x1.fp-10 i)":
 double: 1
 float: 1
@@ -1685,6 +1752,9 @@ ldouble: 1
 Test "Imaginary part of: cacosh (1.0 - 0.5 i)":
 float: 1
 ifloat: 1
+Test "Real part of: cacosh (1.0 - 0x1.fp-10 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: cacosh (1.0 - 0x1.fp-10 i)":
 double: 1
 float: 1
@@ -1859,9 +1929,13 @@ ldouble: 1
 Test "Imaginary part of: casin (-0x0.fffffffffffff8p0 + 0x1p-52 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (-0x0.fffffffffffff8p0 - 0x1p-52 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (-0x0.ffffffffffffffffp0 + 0x1.fp-16385 i)":
 ildouble: 1
 ldouble: 1
@@ -1914,28 +1988,52 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "Real part of: casin (-0x1.fp-100 + 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (-0x1.fp-100 + 1.0 i)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "Real part of: casin (-0x1.fp-100 - 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (-0x1.fp-100 - 1.0 i)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "Real part of: casin (-0x1.fp-1000 + 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (-0x1.fp-1000 + 1.0 i)":
 double: 1
 idouble: 1
+Test "Real part of: casin (-0x1.fp-1000 - 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (-0x1.fp-1000 - 1.0 i)":
 double: 1
 idouble: 1
+Test "Real part of: casin (-0x1.fp-10000 + 1.0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: casin (-0x1.fp-10000 - 1.0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: casin (-0x1.fp-1025 + 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (-0x1.fp-1025 + 1.0 i)":
 double: 1
 idouble: 1
 Test "Imaginary part of: casin (-0x1.fp-1025 + 1.5 i)":
 double: 1
 idouble: 1
+Test "Real part of: casin (-0x1.fp-1025 - 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (-0x1.fp-1025 - 1.0 i)":
 double: 1
 idouble: 1
@@ -1952,6 +2050,9 @@ Test "Imaginary part of: casin (-0x1.fp-129 + 0x1.000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (-0x1.fp-129 + 0x1p-23 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: casin (-0x1.fp-129 + 1.0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (-0x1.fp-129 + 1.0 i)":
@@ -1972,6 +2073,9 @@ Test "Imaginary part of: casin (-0x1.fp-129 - 0x1.000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (-0x1.fp-129 - 0x1p-23 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: casin (-0x1.fp-129 - 1.0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (-0x1.fp-129 - 1.0 i)":
@@ -2040,6 +2144,9 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "Imaginary part of: casin (-0x1p-23 + 0x1.000002p0 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: casin (-0x1p-23 - 0.5 i)":
 double: 1
 float: 1
@@ -2060,6 +2167,9 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "Imaginary part of: casin (-0x1p-23 - 0x1.000002p0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (-0x1p-52 + 0.5 i)":
 double: 1
 float: 1
@@ -2118,6 +2228,9 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: casin (-1.0 + 0x1.fp-10 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (-1.0 + 0x1.fp-30 i)":
 ildouble: 1
 ldouble: 1
@@ -2129,6 +2242,9 @@ ldouble: 1
 Test "Imaginary part of: casin (-1.0 - 0.5 i)":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: casin (-1.0 - 0x1.fp-10 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (-1.0 - 0x1.fp-30 i)":
@@ -2255,9 +2371,13 @@ ldouble: 1
 Test "Imaginary part of: casin (0x0.fffffffffffff8p0 + 0x1p-52 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (0x0.fffffffffffff8p0 - 0x1p-52 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (0x0.ffffffffffffffffp0 + 0x1.fp-16385 i)":
 ildouble: 1
 ldouble: 1
@@ -2310,28 +2430,52 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "Real part of: casin (0x1.fp-100 + 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (0x1.fp-100 + 1.0 i)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "Real part of: casin (0x1.fp-100 - 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (0x1.fp-100 - 1.0 i)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "Real part of: casin (0x1.fp-1000 + 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (0x1.fp-1000 + 1.0 i)":
 double: 1
 idouble: 1
+Test "Real part of: casin (0x1.fp-1000 - 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (0x1.fp-1000 - 1.0 i)":
 double: 1
 idouble: 1
+Test "Real part of: casin (0x1.fp-10000 + 1.0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: casin (0x1.fp-10000 - 1.0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: casin (0x1.fp-1025 + 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (0x1.fp-1025 + 1.0 i)":
 double: 1
 idouble: 1
 Test "Imaginary part of: casin (0x1.fp-1025 + 1.5 i)":
 double: 1
 idouble: 1
+Test "Real part of: casin (0x1.fp-1025 - 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (0x1.fp-1025 - 1.0 i)":
 double: 1
 idouble: 1
@@ -2348,6 +2492,9 @@ Test "Imaginary part of: casin (0x1.fp-129 + 0x1.000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (0x1.fp-129 + 0x1p-23 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: casin (0x1.fp-129 + 1.0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (0x1.fp-129 + 1.0 i)":
@@ -2368,6 +2515,9 @@ Test "Imaginary part of: casin (0x1.fp-129 - 0x1.000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (0x1.fp-129 - 0x1p-23 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: casin (0x1.fp-129 - 1.0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (0x1.fp-129 - 1.0 i)":
@@ -2410,6 +2560,9 @@ idouble: 1
 Test "Imaginary part of: casin (0x1.fp127 + 0x1.fp127 i)":
 double: 1
 idouble: 1
+Test "Imaginary part of: casin (0x1.fp16383 + 0x1.fp16383 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (0x1p-105 + 0.5 i)":
 float: 1
 ifloat: 1
@@ -2442,6 +2595,9 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "Imaginary part of: casin (0x1p-23 + 0x1.000002p0 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: casin (0x1p-23 - 0.5 i)":
 double: 1
 float: 1
@@ -2462,6 +2618,9 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "Imaginary part of: casin (0x1p-23 - 0x1.000002p0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (0x1p-52 + 0.5 i)":
 double: 1
 float: 1
@@ -2520,6 +2679,9 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: casin (1.0 + 0x1.fp-10 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (1.0 + 0x1.fp-30 i)":
 ildouble: 1
 ldouble: 1
@@ -2531,6 +2693,9 @@ ldouble: 1
 Test "Imaginary part of: casin (1.0 - 0.5 i)":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: casin (1.0 - 0x1.fp-10 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (1.0 - 0x1.fp-30 i)":
@@ -2723,6 +2888,9 @@ ldouble: 1
 Test "Imaginary part of: casinh (-0x1.000002p0 + 0x1.fp-129 i)":
 ildouble: 1
 ldouble: 1
+Test "Real part of: casinh (-0x1.000002p0 + 0x1p-23 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casinh (-0x1.000002p0 + 0x1p-23 i)":
 double: 1
 float: 1
@@ -2737,11 +2905,20 @@ ldouble: 1
 Test "Imaginary part of: casinh (-0x1.000002p0 - 0x1.fp-129 i)":
 ildouble: 1
 ldouble: 1
+Test "Real part of: casinh (-0x1.000002p0 - 0x1p-23 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casinh (-0x1.000002p0 - 0x1p-23 i)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "Real part of: casinh (-0x1.fp-10 + 1.0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: casinh (-0x1.fp-10 - 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (-0x1.fp-1025 + 0.5 i)":
 ildouble: 1
 ldouble: 1
@@ -2838,6 +3015,8 @@ ldouble: 1
 Test "Real part of: casinh (-0x1p-52 + 0x0.fffffffffffff8p0 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (-0x1p-52 + 0x1.0000000000001p0 i)":
 ildouble: 1
 ldouble: 1
@@ -2849,6 +3028,8 @@ ldouble: 1
 Test "Real part of: casinh (-0x1p-52 - 0x0.fffffffffffff8p0 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (-0x1p-52 - 0x1.0000000000001p0 i)":
 ildouble: 1
 ldouble: 1
@@ -2892,17 +3073,32 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "Imaginary part of: casinh (-1.0 + 0x1.fp-100 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (-1.0 + 0x1.fp-1000 i)":
 double: 1
 idouble: 1
+Test "Imaginary part of: casinh (-1.0 + 0x1.fp-1000 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: casinh (-1.0 + 0x1.fp-10000 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (-1.0 + 0x1.fp-1025 i)":
 double: 1
 idouble: 1
+Test "Imaginary part of: casinh (-1.0 + 0x1.fp-1025 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (-1.0 + 0x1.fp-129 i)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "Imaginary part of: casinh (-1.0 + 0x1.fp-129 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (-1.0 + 0x1.fp-30 i)":
 double: 1
 float: 1
@@ -2941,17 +3137,32 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "Imaginary part of: casinh (-1.0 - 0x1.fp-100 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (-1.0 - 0x1.fp-1000 i)":
 double: 1
 idouble: 1
+Test "Imaginary part of: casinh (-1.0 - 0x1.fp-1000 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: casinh (-1.0 - 0x1.fp-10000 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (-1.0 - 0x1.fp-1025 i)":
 double: 1
 idouble: 1
+Test "Imaginary part of: casinh (-1.0 - 0x1.fp-1025 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (-1.0 - 0x1.fp-129 i)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "Imaginary part of: casinh (-1.0 - 0x1.fp-129 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (-1.0 - 0x1.fp-30 i)":
 double: 1
 float: 1
@@ -3142,6 +3353,9 @@ ldouble: 1
 Test "Imaginary part of: casinh (0x1.000002p0 + 0x1.fp-129 i)":
 ildouble: 1
 ldouble: 1
+Test "Real part of: casinh (0x1.000002p0 + 0x1p-23 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casinh (0x1.000002p0 + 0x1p-23 i)":
 double: 1
 float: 1
@@ -3156,11 +3370,20 @@ ldouble: 1
 Test "Imaginary part of: casinh (0x1.000002p0 - 0x1.fp-129 i)":
 ildouble: 1
 ldouble: 1
+Test "Real part of: casinh (0x1.000002p0 - 0x1p-23 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casinh (0x1.000002p0 - 0x1p-23 i)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "Real part of: casinh (0x1.fp-10 + 1.0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: casinh (0x1.fp-10 - 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (0x1.fp-1025 + 0.5 i)":
 ildouble: 1
 ldouble: 1
@@ -3221,6 +3444,9 @@ idouble: 1
 Test "Real part of: casinh (0x1.fp127 + 0x1.fp127 i)":
 double: 1
 idouble: 1
+Test "Real part of: casinh (0x1.fp16383 + 0x1.fp16383 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (0x1p-23 + 0.0 i)":
 ildouble: 1
 ldouble: 1
@@ -3263,6 +3489,8 @@ ldouble: 1
 Test "Real part of: casinh (0x1p-52 + 0x0.fffffffffffff8p0 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (0x1p-52 + 0x1.0000000000001p0 i)":
 ildouble: 1
 ldouble: 1
@@ -3274,6 +3502,8 @@ ldouble: 1
 Test "Real part of: casinh (0x1p-52 - 0x0.fffffffffffff8p0 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (0x1p-52 - 0x1.0000000000001p0 i)":
 ildouble: 1
 ldouble: 1
@@ -3317,17 +3547,32 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "Imaginary part of: casinh (1.0 + 0x1.fp-100 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (1.0 + 0x1.fp-1000 i)":
 double: 1
 idouble: 1
+Test "Imaginary part of: casinh (1.0 + 0x1.fp-1000 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: casinh (1.0 + 0x1.fp-10000 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (1.0 + 0x1.fp-1025 i)":
 double: 1
 idouble: 1
+Test "Imaginary part of: casinh (1.0 + 0x1.fp-1025 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (1.0 + 0x1.fp-129 i)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "Imaginary part of: casinh (1.0 + 0x1.fp-129 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (1.0 + 0x1.fp-30 i)":
 double: 1
 float: 1
@@ -3366,17 +3611,32 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "Imaginary part of: casinh (1.0 - 0x1.fp-100 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (1.0 - 0x1.fp-1000 i)":
 double: 1
 idouble: 1
+Test "Imaginary part of: casinh (1.0 - 0x1.fp-1000 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: casinh (1.0 - 0x1.fp-10000 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (1.0 - 0x1.fp-1025 i)":
 double: 1
 idouble: 1
+Test "Imaginary part of: casinh (1.0 - 0x1.fp-1025 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (1.0 - 0x1.fp-129 i)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "Imaginary part of: casinh (1.0 - 0x1.fp-129 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (1.0 - 0x1.fp-30 i)":
 double: 1
 float: 1
@@ -3421,6 +3681,9 @@ ifloat: 1
 Test "Imaginary part of: catan (-0x1.0000000000001p0 + 0x1p-27 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: catan (-0x1.0000000000001p0 - 0x1p-27 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catan (-0x1.000002p0 - 0x1p-13 i)":
 double: 1
 idouble: 1
@@ -3454,16 +3717,37 @@ ldouble: 1
 Test "Imaginary part of: catan (-0x1p-1022 - 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: catan (-0x1p-13 + 0x0.ffffffp0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (-0x1p-13 + 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catan (-0x1p-16382 + 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catan (-0x1p-16382 - 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: catan (-0x1p-27 - 0x0.fffffffffffff8p0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (-0x1p-27 - 0x1.0000000000001p0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (-0x1p-27 - 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catan (-0x1p-33 + 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: catan (-0x1p-33 + 0x1.0000000000000002p0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catan (-0x1p-33 - 0x0.ffffffffffffffffp0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (-0x1p-33 - 0x1.0000000000000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catan (-0x1p-64 + 1.0 i)":
@@ -3472,10 +3756,16 @@ ldouble: 1
 Test "Imaginary part of: catan (-0x1p-64 - 1.0 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: catan (-1.0 + 0x1p-27 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catan (-1.0 + 0x1p-64 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catan (-1.0 - 0x1p-13 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (-1.0 - 0x1p-27 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catan (-1.0 - 0x1p-64 i)":
@@ -3498,6 +3788,9 @@ float: 1
 idouble: 1
 ifloat: 1
 Test "Imaginary part of: catan (0x1.0000000000001p0 + 0x1p-27 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (0x1.0000000000001p0 - 0x1p-27 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catan (0x1.000002p0 - 0x1p-13 i)":
@@ -3533,16 +3826,37 @@ ldouble: 1
 Test "Imaginary part of: catan (0x1p-1022 - 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: catan (0x1p-13 + 0x0.ffffffp0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (0x1p-13 + 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catan (0x1p-16382 + 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catan (0x1p-16382 - 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: catan (0x1p-27 - 0x0.fffffffffffff8p0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (0x1p-27 - 0x1.0000000000001p0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (0x1p-27 - 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catan (0x1p-33 + 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: catan (0x1p-33 + 0x1.0000000000000002p0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catan (0x1p-33 - 0x0.ffffffffffffffffp0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (0x1p-33 - 0x1.0000000000000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catan (0x1p-64 + 1.0 i)":
@@ -3551,10 +3865,16 @@ ldouble: 1
 Test "Imaginary part of: catan (0x1p-64 - 1.0 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: catan (1.0 + 0x1p-27 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catan (1.0 + 0x1p-64 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catan (1.0 - 0x1p-13 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (1.0 - 0x1p-27 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catan (1.0 - 0x1p-64 i)":
@@ -3562,6 +3882,12 @@ ildouble: 1
 ldouble: 1
 
 # catanh
+Test "Real part of: catanh (-0x0.fffffffffffff8p0 + 0x1p-27 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x0.fffffffffffff8p0 - 0x1p-27 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: catanh (-0x0.ffffffffffffffffp0 + 0x1p-1022 i)":
 ildouble: 1
 ldouble: 1
@@ -3578,6 +3904,18 @@ Test "Real part of: catanh (-0x0.ffffffffffffffffp0 - 0x1p-16382 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: catanh (-0x0.ffffffffffffffffp0 - 0x1p-33 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1.0000000000000002p0 + 0x1p-33 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1.0000000000000002p0 - 0x1p-33 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1.0000000000001p0 + 0x1p-27 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1.0000000000001p0 - 0x1p-27 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: catanh (-0x1.fp1023 + 0x1.fp1023 i)":
@@ -3604,6 +3942,18 @@ idouble: 1
 Test "Real part of: catanh (-0x1p-13 - 1.0 i)":
 ildouble: 1
 ldouble: 1
+Test "Real part of: catanh (-0x1p-27 + 0x1.0000000000001p0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1p-27 + 1.0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1p-27 - 0x1.0000000000001p0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1p-27 - 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: catanh (-0x1p-64 + 1.0 i)":
 ildouble: 1
 ldouble: 1
@@ -3616,6 +3966,9 @@ ldouble: 1
 Test "Real part of: catanh (-1.0 + 0x1p-1020 i)":
 ildouble: 1
 ldouble: 1
+Test "Real part of: catanh (-1.0 + 0x1p-27 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: catanh (-1.0 + 0x1p-64 i)":
 ildouble: 1
 ldouble: 1
@@ -3623,6 +3976,9 @@ Test "Real part of: catanh (-1.0 - 0x1.3p-73 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: catanh (-1.0 - 0x1p-1020 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-1.0 - 0x1p-27 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: catanh (-1.0 - 0x1p-64 i)":
@@ -3654,6 +4010,18 @@ ldouble: 1
 Test "Real part of: catanh (0x0.ffffffffffffffffp0 - 0x1p-33 i)":
 ildouble: 1
 ldouble: 1
+Test "Real part of: catanh (0x0.ffffffp0 + 0x1p-13 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (0x0.ffffffp0 - 0x1p-13 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (0x1.0000000000000002p0 + 0x1p-33 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (0x1.0000000000000002p0 - 0x1p-33 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: catanh (0x1.fp1023 + 0x1.fp1023 i)":
 ildouble: 1
 ldouble: 1
@@ -3682,10 +4050,16 @@ idouble: 1
 Test "Real part of: catanh (0x1p-27 + 0x1.0000000000001p0 i)":
 ildouble: 1
 ldouble: 1
+Test "Real part of: catanh (0x1p-27 + 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: catanh (0x1p-27 - 0x0.fffffffffffff8p0 i)":
 double: 1
 idouble: 1
 Test "Real part of: catanh (0x1p-27 - 0x1.0000000000001p0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (0x1p-27 - 1.0 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: catanh (0x1p-33 + 0x0.ffffffffffffffffp0 i)":
@@ -3706,6 +4080,9 @@ ldouble: 1
 Test "Real part of: catanh (1.0 + 0x1p-1020 i)":
 ildouble: 1
 ldouble: 1
+Test "Real part of: catanh (1.0 + 0x1p-13 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: catanh (1.0 + 0x1p-64 i)":
 ildouble: 1
 ldouble: 1
@@ -3713,6 +4090,9 @@ Test "Real part of: catanh (1.0 - 0x1.3p-73 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: catanh (1.0 - 0x1p-1020 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (1.0 - 0x1p-13 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: catanh (1.0 - 0x1p-64 i)":
@@ -3952,6 +4332,9 @@ Test "Real part of: clog (0x1.000566p0 + 0x1.234p-100 i)":
 float: 1
 ifloat: 1
 Test "Real part of: clog (0x1.fffffep+127 + 0x1.fffffep+127 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.fp+16383 + 0x1.fp+16383 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: clog (0x1.fp+16383 + 0x1p+16383 i)":
@@ -4527,6 +4910,7 @@ ldouble: 1
 # cosh_upward
 Test "cosh_upward (22)":
 ildouble: 2
+ldouble: 1
 Test "cosh_upward (23)":
 ildouble: 2
 ldouble: 1
@@ -5494,6 +5878,9 @@ idouble: 1
 # sinh
 Test "sinh (0.75)":
 ildouble: 1
+Test "sinh (0x8p-32)":
+ildouble: 1
+ldouble: 1
 
 # sinh_downward
 Test "sinh_downward (22)":
@@ -5754,8 +6141,8 @@ ldouble: 2
 Test "tgamma (-0x1e.00002p0)":
 float: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 Test "tgamma (-0x1f4.00000000000002p0)":
 ildouble: 3
 ldouble: 3
@@ -7062,6 +7449,7 @@ ldouble: 1
 
 Function: "sinh":
 ildouble: 1
+ldouble: 1
 
 Function: "sinh_downward":
 double: 1
