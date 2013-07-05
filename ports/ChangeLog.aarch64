@@ -1,3 +1,7 @@
+2013-07-12  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* sysdeps/aarch64/Makefile (CFLAGS-backtrace.c): Define.
+
 2013-07-09  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
 	* sysdeps/unix/sysv/linux/aarch64/dl-static.c: New file to support
