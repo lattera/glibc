@@ -1,3 +1,7 @@
+2013-07-07  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/fpu/libm-test-ulps: Regenerate from scratch.
+
 2013-07-05  Jeroen Albers  <_jeroen_@yahoo.com>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Update.
