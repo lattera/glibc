@@ -1,3 +1,9 @@
+2013-07-13  David S. Miller  <davem@davemloft.net>
+
+	* math/libm-test.inc (casin_test_data): Annotate more cases of missing
+	underflows from atanl/atan2l due to bug 15319.
+	(casinh_test_data): Likewise.
+
 2013-07-07  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Regenerate from scratch.
