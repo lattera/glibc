@@ -1,3 +1,10 @@
+2013-07-15  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #15711]
+	* sysdeps/unix/sysv/linux/Makefile ($(objpfx)bits/syscall%h):
+	Avoid system header dependency with -ffreestanding.
+	($(objpfx)bits/syscall%d): Likewise.
+
 2013-07-13  David S. Miller  <davem@davemloft.net>
 
 	* math/libm-test.inc (casin_test_data): Annotate more cases of missing
