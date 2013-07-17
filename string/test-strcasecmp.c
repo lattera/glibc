@@ -17,6 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <locale.h>
 #include <ctype.h>
 #define TEST_MAIN
 #define TEST_NAME "strcasecmp"
@@ -206,14 +207,18 @@ do_random_tests (void)
     }
 }
 
-int
-test_main (void)
+static void
+test_locale (const char *locale)
 {
   size_t i;
 
-  test_init ();
+  if (setlocale (LC_CTYPE, locale) == NULL)
+    {
+      error (0, 0, "cannot set locale \"%s\"", locale);
+      ret = 1;
+    }
 
-  printf ("%23s", "");
+  printf ("%-23s", locale);
   FOR_EACH_IMPL (impl, 0)
     printf ("\t%s", impl->name);
   putchar ('\n');
@@ -246,6 +251,19 @@ test_main (void)
     }
 
   do_random_tests ();
+}
+
+int
+test_main (void)
+{
+  test_init ();
+
+  test_locale ("C");
+  test_locale ("en_US.ISO-8859-1");
+  test_locale ("en_US.UTF-8");
+  test_locale ("tr_TR.ISO-8859-9");
+  test_locale ("tr_TR.UTF-8");
+
   return ret;
 }
 

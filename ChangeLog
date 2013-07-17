@@ -1,5 +1,13 @@
 2013-08-27  Andreas Schwab  <schwab@suse.de>
 
+	[BZ #15736]
+	* locale/categories.def (LC_CTYPE): Add "nonascii-case" element.
+	* string/Makefile (test-strcasecmp-ENV, test-strncasecmp-ENV)
+	(test-strcasecmp-ifunc-ENV, test-strncasecmp-ifunc-ENV): Define.
+	* string/test-strcasecmp.c (test_main): Run tests in several
+	locales.
+	* string/test-strncasecmp.c (test_main): Likewise.
+
 	* sysdeps/i386/i686/multiarch/strcmp-sse4.S (__strcasecmp_sse4_2)
 	(__strncasecmp_sse4_2) [PIC]: Restore %ebx before falling through
 	to __strcasecmp_nonascii and __strncasecmp_nonascii.

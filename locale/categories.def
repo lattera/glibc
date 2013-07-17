@@ -133,6 +133,7 @@ DEFINE_CATEGORY
   DEFINE_ELEMENT (_NL_CTYPE_TRANSLIT_IGNORE_LEN, "ctype-translit-ignore-len", std, word)
   DEFINE_ELEMENT (_NL_CTYPE_TRANSLIT_IGNORE, "ctype-translit-ignore", std, string)
   DEFINE_ELEMENT (_NL_CTYPE_MAP_TO_NONASCII, "map-to-nonascii", std, word)
+  DEFINE_ELEMENT (_NL_CTYPE_NONASCII_CASE, "nonascii-case", std, word)
   ), _nl_postload_ctype)
 
 
