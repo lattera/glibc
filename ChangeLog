@@ -1,3 +1,11 @@
+2013-08-13  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #15749]
+	* sysdeps/ieee754/ldbl-96/s_cbrtl.c (__cbrtl): Use fabsl instead
+	of fabs.
+	* math/libm-test.inc (cbrt_test_data) [TEST_LDOUBLE &&
+	LDBL_MAX_EXP >= 16384]: Add tests for it.
+
 2013-08-12  David S. Miller  <davem@davemloft.net>
 
 	* version.h (RELEASE): Set to "development".

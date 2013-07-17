@@ -45,7 +45,7 @@ __cbrtl (long double x)
   int xe;
 
   /* Reduce X.  XM now is an range 1.0 to 0.5.  */
-  xm = __frexpl (fabs (x), &xe);
+  xm = __frexpl (fabsl (x), &xe);
 
   /* If X is not finite or is null return it (with raising exceptions
      if necessary.

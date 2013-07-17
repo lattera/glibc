@@ -5845,6 +5845,11 @@ static const struct test_f_f_data cbrt_test_data[] =
     TEST_f_f (cbrt, -27.0, -3.0),
     TEST_f_f (cbrt, 0.9921875L, 0.997389022060725270579075195353955217L),
     TEST_f_f (cbrt, 0.75L, 0.908560296416069829445605878163630251L),
+
+#if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
+    TEST_f_f (cbrt, 0x1p16383L, 0x1p5461L),
+    TEST_f_f (cbrt, 0x1p-16383L, 0x1p-5461L),
+#endif
   };
 
 static void
