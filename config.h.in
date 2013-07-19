@@ -238,4 +238,7 @@
 /* The ARM hard-float ABI is being used.  */
 #undef HAVE_ARM_PCS_VFP
 
+/* The pt_chown binary is being built and used by grantpt.  */
+#undef HAVE_PT_CHOWN
+
 #endif

@@ -11,7 +11,7 @@
 
 #include "pty-private.h"
 
-
+#if HAVE_PT_CHOWN
 /* Close all file descriptors except the one specified.  */
 static void
 close_all_fds (void)
@@ -38,6 +38,7 @@ close_all_fds (void)
       __dup2 (STDOUT_FILENO, STDERR_FILENO);
     }
 }
-#define CLOSE_ALL_FDS() close_all_fds()
+# define CLOSE_ALL_FDS() close_all_fds()
+#endif
 
 #include <sysdeps/unix/grantpt.c>

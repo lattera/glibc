@@ -353,6 +353,16 @@ AC_ARG_ENABLE([nscd],
 	      [use_nscd=$enableval],
 	      [use_nscd=yes])
 
+AC_ARG_ENABLE([pt_chown],
+	      [AS_HELP_STRING([--enable-pt_chown],
+	       [Enable building and installing pt_chown])],
+	      [build_pt_chown=$enableval],
+	      [build_pt_chown=no])
+AC_SUBST(build_pt_chown)
+if test $build_pt_chown = yes; then
+  AC_DEFINE(HAVE_PT_CHOWN)
+fi
+
 # The way shlib-versions is used to generate soversions.mk uses a
 # fairly simplistic model for name recognition that can't distinguish
 # i486-pc-linux-gnu fully from i486-pc-gnu.  So we mutate a $host_os

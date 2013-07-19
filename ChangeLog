@@ -1,3 +1,24 @@
+2013-07-21  Siddhesh Poyarekar  <siddhesh@redhat.com>
+	    Andreas Schwab  <schwab@suse.de>
+	    Roland McGrath  <roland@hack.frob.com>
+	    Joseph Myers  <joseph@codesourcery.com>
+	    Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #15755]
+	* config.h.in: Define HAVE_PT_CHOWN.
+	* config.make.in (build-pt-chown): New variable.
+	* configure.in (--enable-pt_chown): New configure option.
+	* configure: Regenerate.
+	* login/Makefile: Include Makeconfig.  Build pt_chown only if
+	build-pt-chown is enabled.
+	* sysdeps/unix/grantpt.c (grantpt) [HAVE_PT_CHOWN]: Spawn
+	pt_chown to fix pty ownership.
+	* sysdeps/unix/sysv/linux/grantpt.c [HAVE_PT_CHOWN]: Define
+	CLOSE_ALL_FDS.
+	* manual/install.texi (Configuring and compiling): Mention
+	--enable-pt_chown. Add @findex for grantpt.
+	* INSTALL: Regenerate.
+
 2013-07-20  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update ULPs to handle minor

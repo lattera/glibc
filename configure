@@ -647,6 +647,7 @@ multi_arch
 base_machine
 add_on_subdirs
 add_ons
+build_pt_chown
 build_nscd
 link_obsolete_rpc
 libc_cv_nss_crypt
@@ -756,6 +757,7 @@ enable_obsolete_rpc
 enable_systemtap
 enable_build_nscd
 enable_nscd
+enable_pt_chown
 with_cpu
 '
       ac_precious_vars='build_alias
@@ -1421,6 +1423,7 @@ Optional Features:
   --enable-systemtap      enable systemtap static probe points [default=no]
   --disable-build-nscd    disable building and installing the nscd daemon
   --disable-nscd          library functions will not contact the nscd daemon
+  --enable-pt_chown       Enable building and installing pt_chown
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -3710,6 +3713,19 @@ else
   use_nscd=yes
 fi
 
+
+# Check whether --enable-pt_chown was given.
+if test "${enable_pt_chown+set}" = set; then :
+  enableval=$enable_pt_chown; build_pt_chown=$enableval
+else
+  build_pt_chown=no
+fi
+
+
+if test $build_pt_chown = yes; then
+  $as_echo "#define HAVE_PT_CHOWN 1" >>confdefs.h
+
+fi
 
 # The way shlib-versions is used to generate soversions.mk uses a
 # fairly simplistic model for name recognition that can't distinguish

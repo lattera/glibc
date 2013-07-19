@@ -163,6 +163,20 @@ so that they can be invoked directly.
 @item --enable-lock-elision=yes
 Enable lock elision for pthread mutexes by default.
 
+@pindex pt_chown
+@findex grantpt
+@item --enable-pt_chown
+The file @file{pt_chown} is a helper binary for @code{grantpt}
+(@pxref{Allocation, Pseudo-Terminals}) that is installed setuid root to
+fix up pseudo-terminal ownership.  It is not built by default because
+systems using the Linux kernel are commonly built with the @code{devpts}
+filesystem enabled and mounted at @file{/dev/pts}, which manages
+pseudo-terminal ownership automatically.  By using
+@samp{--enable-pt_chown}, you may build @file{pt_chown} and install it
+setuid and owned by @code{root}.  The use of @file{pt_chown} introduces
+additional security risks to the system and you should enable it only if
+you understand and accept those risks.
+
 @item --build=@var{build-system}
 @itemx --host=@var{host-system}
 These options are for cross-compiling.  If you specify both options and
