@@ -165,7 +165,7 @@ enum __ptrace_peeksiginfo_flags
 {
   /* Read signals from a shared (process wide) queue.  */
   PTRACE_PEEKSIGINFO_SHARED = (1 << 0)
-}
+};
 
 /* Perform process tracing functions.  REQUEST is one of the values
    above, and determines the action to be taken.

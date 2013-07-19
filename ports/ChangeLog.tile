@@ -1,3 +1,8 @@
+2013-07-19  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/unix/sysv/linux/tile/sys/ptrace.h
+	(__ptrace_peeksiginfo_args): Add missing semicolon.
+
 2013-07-03  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/unix/sysv/linux/tile/dl-static.c: New file to support
