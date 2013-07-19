@@ -1,5 +1,5 @@
-/* Shared RTM header. Emulate TSX intrinsics for compilers and assemblers
-   that do not support the intrinsics and instructions yet. */
+/* Shared RTM header.  Emulate TSX intrinsics for compilers and assemblers
+   that do not support the intrinsics and instructions yet.  */
 #ifndef _HLE_H
 #define _HLE_H 1
 
@@ -28,7 +28,7 @@
 /* Official RTM intrinsics interface matching gcc/icc, but works
    on older gcc compatible compilers and binutils.
    We should somehow detect if the compiler supports it, because
-   it may be able to generate slightly better code. */
+   it may be able to generate slightly better code.  */
 
 #define _XBEGIN_STARTED		(~0u)
 #define _XABORT_EXPLICIT	(1 << 0)

@@ -112,7 +112,7 @@ typedef union
     {
       struct
       {
-        short __espins;
+	short __espins;
 	short __elision;
 # define __spins d.__espins
 # define __elision d.__elision

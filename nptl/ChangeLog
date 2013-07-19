@@ -1,5 +1,20 @@
 2013-07-19  Dominik Vogt  <vogt@de.ibm.com>
 
+	* pthread_mutex_lock.c: Fix whitespace.
+	* pthread_mutex_trylock.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86/elision-conf.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86/elision-conf.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86/elision-lock.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86/elision-timed.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86/elision-trylock.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86/force-elision.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86/hle.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86/pthread_mutex_cond_lock.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86/pthread_mutex_lock.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86/pthread_mutex_timedlock.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86/pthread_mutex_trylock.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/x86/elision-conf.c:
 	Remove __rwlock_rtm_enabled and __rwlock_rtm_read_retries.
 	(elision_init): Don't set __rwlock_rtm_enabled.

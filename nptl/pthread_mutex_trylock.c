@@ -31,7 +31,7 @@
 #endif
 
 /* We don't force elision in trylock, because this can lead to inconsistent
-   lock state if the lock was actually busy. */
+   lock state if the lock was actually busy.  */
 
 int
 __pthread_mutex_trylock (mutex)
@@ -73,7 +73,7 @@ __pthread_mutex_trylock (mutex)
       if (lll_trylock_elision (mutex->__data.__lock,
 			       mutex->__data.__elision) != 0)
         break;
-      /* Don't record the ownership. */
+      /* Don't record the ownership.  */
       return 0;
 
     case PTHREAD_MUTEX_TIMED_NP:

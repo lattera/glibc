@@ -86,7 +86,7 @@ __pthread_mutex_lock (mutex)
       /* This case can never happen on a system without elision,
          as the mutex type initialization functions will not
 	 allow to set the elision flags.  */
-      /* Don't record owner or users for elision case. This is a
+      /* Don't record owner or users for elision case.  This is a
          tail call.  */
       return LLL_MUTEX_LOCK_ELISION (mutex);
     }

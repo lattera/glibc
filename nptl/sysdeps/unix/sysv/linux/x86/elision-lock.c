@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>. */
+   <http://www.gnu.org/licenses/>.  */
 
 #include <pthread.h>
 #include "pthreadP.h"
@@ -58,7 +58,7 @@ __lll_lock_elision (int *futex, short *adapt_count, EXTRAARG int private)
 	      if (*futex == 0)
 		return 0;
 
-	      /* Lock was busy. Fall back to normal locking.
+	      /* Lock was busy.  Fall back to normal locking.
 		 Could also _xend here but xabort with 0xff code
 		 is more visible in the profiler.  */
 	      _xabort (_ABORT_LOCK_BUSY);
@@ -69,12 +69,12 @@ __lll_lock_elision (int *futex, short *adapt_count, EXTRAARG int private)
 	      if ((status & _XABORT_EXPLICIT)
 			&& _XABORT_CODE (status) == _ABORT_LOCK_BUSY)
 	        {
-		  /* Right now we skip here. Better would be to wait a bit
-		     and retry. This likely needs some spinning.  */
+		  /* Right now we skip here.  Better would be to wait a bit
+		     and retry.  This likely needs some spinning.  */
 		  if (*adapt_count != aconf.skip_lock_busy)
 		    *adapt_count = aconf.skip_lock_busy;
 		}
-	      /* Internal abort. There is no chance for retry.
+	      /* Internal abort.  There is no chance for retry.
 		 Use the normal locking and next time use lock.
 		 Be careful to avoid writing to the lock.  */
 	      else if (*adapt_count != aconf.skip_lock_internal_abort)

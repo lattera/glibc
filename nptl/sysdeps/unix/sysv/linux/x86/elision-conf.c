@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>. */
+   <http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include <pthreadP.h>
@@ -32,7 +32,7 @@ struct elision_config __elision_aconf =
        acquisition attempts.  */
     .skip_lock_busy = 3,
     /* How often to not attempt to use elision if a transaction aborted due
-       to reasons other than other threads' memory accesses. Expressed in
+       to reasons other than other threads' memory accesses.  Expressed in
        number of lock acquisition attempts.  */
     .skip_lock_internal_abort = 3,
     /* How often we retry using elision if there is chance for the transaction
@@ -43,13 +43,14 @@ struct elision_config __elision_aconf =
     .skip_trylock_internal_abort = 3,
   };
 
-/* Set when the CPU supports elision. When false elision is never attempted.  */
+/* Set when the CPU supports elision.  When false elision is never attempted.
+ */
 
 int __elision_available attribute_hidden;
 
-/* Force elision for all new locks. This is used to decide whether existing
+/* Force elision for all new locks.  This is used to decide whether existing
    DEFAULT locks should be automatically upgraded to elision in
-   pthread_mutex_lock(). Disabled for suid programs. Only used when elision
+   pthread_mutex_lock().  Disabled for suid programs.  Only used when elision
    is available.  */
 
 int __pthread_force_elision attribute_hidden;

@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>. */
+   <http://www.gnu.org/licenses/>.  */
 
 #include <pthread.h>
 #include <pthreadP.h>
@@ -24,14 +24,14 @@
 
 #define aconf __elision_aconf
 
-/* Try to elide a futex trylock. FUTEX is the futex variable. ADAPT_COUNT is the
-   adaptation counter in the mutex.  */
+/* Try to elide a futex trylock.  FUTEX is the futex variable.  ADAPT_COUNT is
+   the adaptation counter in the mutex.  */
 
 int
 __lll_trylock_elision (int *futex, short *adapt_count)
 {
   /* Implement POSIX semantics by forbiding nesting
-     trylock. Sorry. After the abort the code is re-executed
+     trylock.  Sorry.  After the abort the code is re-executed
      non transactional and if the lock was already locked
      return an error.  */
   _xabort (_ABORT_NESTED_TRYLOCK);
@@ -46,7 +46,7 @@ __lll_trylock_elision (int *futex, short *adapt_count)
 	  if (*futex == 0)
 	    return 0;
 
-	  /* Lock was busy. Fall back to normal locking.
+	  /* Lock was busy.  Fall back to normal locking.
 	     Could also _xend here but xabort with 0xff code
 	     is more visible in the profiler.  */
 	  _xabort (_ABORT_LOCK_BUSY);
@@ -54,12 +54,12 @@ __lll_trylock_elision (int *futex, short *adapt_count)
 
       if (!(status & _XABORT_RETRY))
         {
-          /* Internal abort. No chance for retry. For future
+          /* Internal abort.  No chance for retry.  For future
              locks don't try speculation for some time.  */
           if (*adapt_count != aconf.skip_trylock_internal_abort)
             *adapt_count = aconf.skip_trylock_internal_abort;
         }
-      /* Could do some retries here. */
+      /* Could do some retries here.  */
     }
   else
     {

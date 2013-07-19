@@ -14,7 +14,9 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>. */
+   <http://www.gnu.org/licenses/>.  */
+
 #include <elision-conf.h>
 #include "force-elision.h"
+
 #include "nptl/pthread_mutex_timedlock.c"
