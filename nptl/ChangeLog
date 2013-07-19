@@ -1,3 +1,11 @@
+2013-07-19  Dominik Vogt  <vogt@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/x86/elision-conf.c:
+	Remove __rwlock_rtm_enabled and __rwlock_rtm_read_retries.
+	(elision_init): Don't set __rwlock_rtm_enabled.
+	* sysdeps/unix/sysv/linux/x86/elision-conf.h:
+	Remove __rwlock_rtm_enabled.
+
 2013-07-03  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/x86/init-arch.c: New file.

@@ -43,15 +43,6 @@ struct elision_config __elision_aconf =
     .skip_trylock_internal_abort = 3,
   };
 
-/* Elided rwlock toggle, set when elision is available and is
-   enabled for rwlocks.  */
-
-int __rwlock_rtm_enabled attribute_hidden;
-
-/* Retries for elided rwlocks on read. Conservative initial value.  */
-
-int __rwlock_rtm_read_retries attribute_hidden = 3;
-
 /* Set when the CPU supports elision. When false elision is never attempted.  */
 
 int __elision_available attribute_hidden;
@@ -73,7 +64,6 @@ elision_init (int argc __attribute__ ((unused)),
   __elision_available = HAS_RTM;
 #ifdef ENABLE_LOCK_ELISION
   __pthread_force_elision = __libc_enable_secure ? 0 : __elision_available;
-  __rwlock_rtm_enabled = __libc_enable_secure ? 0 : __elision_available;
 #endif
 }
 
