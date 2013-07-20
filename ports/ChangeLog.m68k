@@ -1,3 +1,13 @@
+2013-07-20  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/m68k/dl-static.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/ldsodefs.h: New file.
+	* sysdeps/unix/sysv/linux/m68k/Makefile (sysdep-dl-routines)
+	(sysdep_routines, sysdep-rtld-routines) [$(subdir) = elf]: Add
+	dl-static.
+	* sysdeps/unix/sysv/linux/m68k/Versions (ld: GLIBC_PRIVATE): Add
+	_dl_var_init.
+
 2013-07-03  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/m680x0/fpu/libm-test-ulps: Update.

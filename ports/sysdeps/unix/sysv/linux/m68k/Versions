@@ -1,3 +1,8 @@
+ld {
+  GLIBC_PRIVATE {
+    _dl_var_init;
+  }
+}
 libc {
   GLIBC_2.0 {
     # Exception handling support functions from libgcc
