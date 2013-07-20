@@ -8327,6 +8327,9 @@ double: 2
 idouble: 2
 ildouble: 2
 ldouble: 2
+Test "tgamma (-0x28.ffffcp0)":
+ildouble: 2
+ldouble: 2
 Test "tgamma (-0x28.ffffffffffffffcp0)":
 ildouble: 1
 ldouble: 1
@@ -8773,6 +8776,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "tgamma (0.5)":
 float: 1
 ifloat: 1
