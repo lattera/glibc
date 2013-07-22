@@ -1,3 +1,9 @@
+2013-07-22  Chris Metcalf  <cmetcalf@tilera.com>
+
+	[BZ #15759]
+	* sysdeps/tile/dl-runtime.c (sim_dlclose): New function.
+	(_dl_unmap): Call sim_dlclose().
+
 2013-07-19  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/unix/sysv/linux/tile/sys/ptrace.h
