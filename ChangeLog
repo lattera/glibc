@@ -1,3 +1,7 @@
+2013-07-22  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* sysdeps/s390/fpu/libm-test-ulps: Refresh.
+
 2013-07-21  Siddhesh Poyarekar  <siddhesh@redhat.com>
 	    Andreas Schwab  <schwab@suse.de>
 	    Roland McGrath  <roland@hack.frob.com>
