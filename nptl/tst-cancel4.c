@@ -83,7 +83,30 @@ static pthread_barrier_t b2;
 # define IPC_ADDVAL 0
 #endif
 
-#define WRITE_BUFFER_SIZE 4096
+/* The WRITE_BUFFER_SIZE value needs to be choosen such that if we set
+   the socket send buffer size to '1', a write of this size on that
+   socket will block.
+
+   The Linux kernel imposes a minimum send socket buffer size
+   which has changed over the years.  Currently the value is:
+
+     2 * (2048 + SKB_DATA_ALIGN(sizeof(struct sk_buff)))
+
+   which is attempting to make sure that with standard MTUs,
+   TCP can always queue up at least 2 full sized packets.
+
+   Furthermore, there is logic in the socket send paths that
+   will allow one more packet (of any size) to be queued up as
+   long as some socket buffer space remains.   Blocking only
+   occurs when we try to queue up a new packet and the send
+   buffer space has already been fully consumed.
+
+   Therefore we must set this value to the largest possible value of
+   the formula above (and since it depends upon the size of "struct
+   sk_buff", it is dependent upon machine word size etc.) plus some
+   slack space.  */
+
+#define WRITE_BUFFER_SIZE 16384
 
 /* Cleanup handling test.  */
 static int cl_called;
