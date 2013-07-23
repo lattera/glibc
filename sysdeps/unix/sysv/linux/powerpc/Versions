@@ -1,3 +1,9 @@
+ld {
+  GLIBC_PRIVATE {
+  # used for loading by static libraries
+    _dl_var_init;
+  }
+}
 libc {
   GLIBC_PRIVATE {
     __vdso_get_tbfreq;

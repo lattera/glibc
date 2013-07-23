@@ -1,3 +1,11 @@
+2013-07-23  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/dl-static.c: New file to support
+	variable page size.
+	* sysdeps/unix/sysv/linux/powerpc/ldsodefs.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile: Build dl-static in elf.
+	* sysdeps/unix/sysv/linux/powerpc/Versions: Add _dl_var_init.
+
 2013-07-22  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
 	* sysdeps/s390/fpu/libm-test-ulps: Refresh.
