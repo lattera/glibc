@@ -87,8 +87,8 @@ static pthread_barrier_t b2;
    the socket send buffer size to '1', a write of this size on that
    socket will block.
 
-   The Linux kernel imposes a minimum send socket buffer size
-   which has changed over the years.  Currently the value is:
+   The Linux kernel imposes a minimum send socket buffer size which
+   has changed over the years.  As of Linux 3.10 the value is:
 
      2 * (2048 + SKB_DATA_ALIGN(sizeof(struct sk_buff)))
 

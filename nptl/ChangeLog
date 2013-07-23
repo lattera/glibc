@@ -1,3 +1,7 @@
+2013-07-23  David S. Miller  <davem@davemloft.net>
+
+	* tst-cancel4.c (WRITE_BUFFER_SIZE): Adjust comment.
+
 2013-07-22  David S. Miller  <davem@davemloft.net>
 
 	* tst-cancel4.c (WRITE_BUFFER_SIZE): Increase to 16384.
