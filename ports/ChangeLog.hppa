@@ -1,3 +1,7 @@
+2013-07-23  Carlos O'Donell  <carlos@redhat.com>
+
+	* sysdeps/hppa/fpu/libm-test-ulps: Regenerate.
+
 2013-06-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/hppa/configure.in: Remove trailing whitespace.
