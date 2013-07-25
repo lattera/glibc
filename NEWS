@@ -79,6 +79,11 @@ Version 2.18
   When the --enable-lock-elision=yes parameter is specified at configure
   time lock elision will be enabled by default for all PTHREAD_MUTEX_DEFAULT
   mutexes.
+
+* Support added for AT_HWCAP2 (to coincide with Linux kernel 3.10
+  availability).  Implemented by Ryan S. Arnold.
+
+* Support added for POWER8 platform.  Implemented by Ryan S. Arnold.
 
 Version 2.17
 
