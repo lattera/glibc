@@ -1,3 +1,7 @@
+2013-07-24  David S. Miller  <davem@davemloft.net>
+
+	* po/libc.pot: Update.
+
 2013-07-23  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/dl-static.c: New file to support
