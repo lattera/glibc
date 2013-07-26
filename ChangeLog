@@ -1,3 +1,9 @@
+2013-07-26  David S. Miller  <davem@davemloft.net>
+
+	* po/nl.po: Update Dutch translation from translation project.
+	* po/pl.po: Update Polish translation from translation project.
+	* po/ru.po: Update Russian translation from translation project.
+
 2013-07-24  David S. Miller  <davem@davemloft.net>
 
 	* po/libc.pot: Update.
