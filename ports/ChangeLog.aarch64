@@ -1,3 +1,10 @@
+2013-07-26  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* sysdeps/aarch64/Versions: New file.
+	* sysdeps/aarch64/machine-gmon.h: New file.
+	* sysdeps/aarch64/mcount.c: New file.
+	* sysdeps/unix/sysv/linux/aarch64/nptl/libc.abilist (_mcount): Add.
+
 2013-07-12  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
 	* sysdeps/aarch64/Makefile (CFLAGS-backtrace.c): Define.
