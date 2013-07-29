@@ -1,3 +1,11 @@
+2013-08-27  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/i386/i686/multiarch/strcmp-sse4.S (__strcasecmp_sse4_2)
+	(__strncasecmp_sse4_2) [PIC]: Restore %ebx before falling through
+	to __strcasecmp_nonascii and __strncasecmp_nonascii.
+	* sysdeps/i386/i686/multiarch/strcmp-ssse3.S (__strcasecmp_ssse3)
+	(__strncasecmp_ssse3) [PIC]: Likewise.
+
 2013-08-26  Roland McGrath  <roland@hack.frob.com>
 
 	* io/lxstat64.c: Just call __xstat64, for parity with stub __lxstat.

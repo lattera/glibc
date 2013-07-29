@@ -121,8 +121,14 @@ ENTRY (__strcasecmp_sse4_2)
 	movl	(%eax), %eax
 # endif
 	testl	$1, LOCALE_DATA_VALUES+_NL_CTYPE_NONASCII_CASE*SIZEOF_VALUES(%eax)
+# ifdef PIC
+	je	L(ascii)
+	POP	(%ebx)
+	jmp	__strcasecmp_nonascii
+# else
 	jne	__strcasecmp_nonascii
 	jmp	L(ascii)
+# endif
 END (__strcasecmp_sse4_2)
 #endif
 
@@ -152,8 +158,14 @@ ENTRY (__strncasecmp_sse4_2)
 	movl	(%eax), %eax
 # endif
 	testl	$1, LOCALE_DATA_VALUES+_NL_CTYPE_NONASCII_CASE*SIZEOF_VALUES(%eax)
+# ifdef PIC
+	je	L(ascii)
+	POP	(%ebx)
+	jmp	__strncasecmp_nonascii
+# else
 	jne	__strncasecmp_nonascii
 	jmp	L(ascii)
+# endif
 END (__strncasecmp_sse4_2)
 #endif
 
