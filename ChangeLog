@@ -1,3 +1,9 @@
+2014-02-24  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #15804]
+	* elf/pldd.c (wait_for_ptrace_stop): New function.
+	(main): Call it after attaching.
+
 2014-02-22  Roland McGrath  <roland@hack.frob.com>
 
 	* Makerules ($(common-objpfx)Versions.v.i): No longer depend
