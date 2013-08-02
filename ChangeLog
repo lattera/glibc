@@ -1,3 +1,9 @@
+2013-08-01  David S. Miller  <davem@davemloft.net>
+
+	* manual/contrib.texi: Update entry for Siddhesh Poyarekar.  Add
+	entries for Will Newton, Andi Kleen, David Holsgrove, and Ondrej
+	Bilka.
+
 2013-07-30  David S. Miller  <davem@davemloft.net>
 
 	* po/fr.po: Update French translation from translation project.

@@ -29,6 +29,9 @@ Stephen R. van den Berg for contributing a highly-optimized
 @code{strstr} function.
 
 @item
+Ondrej Bilka for contributing optimized string routines for x64.
+
+@item
 Eric Blake for adding O(n) implementations of @code{memmem},
 @code{strstr} and @code{strcasestr}.
 
@@ -115,6 +118,9 @@ Richard Henderson for the port to Linux on Alpha
 (@code{alpha-@var{anything}-linux}).
 
 @item
+David Holsgrove for the port to Linux on MicroBlaze.
+
+@item
 Daniel Jacobowitz for various fixes and enhancements.
 
 @item
@@ -143,6 +149,9 @@ running OSF/1 (@code{alpha-dec-osf1}).
 @item
 Mark Kettenis for implementing the @code{utmpx} interface and an utmp
 daemon, and for a Hesiod NSS module.
+
+@item
+Andi Kleen for implementing pthreads lock elision with TSX.
 
 @item
 Kazumoto Kojima for the port of the Mach and Hurd code to the MIPS
@@ -223,6 +232,10 @@ coverage of conformtest, and merging the ports/ subdirectory
 into the @glibcadj{} main repository.
 
 @item
+Will Newton for contributing an optimized memcpy for ARM NEON and
+VFP chips.
+
+@item
 Carlos O'Donell for his maintainership of the HPPA architecture and
 maintaining @theglibc{} web pages.
 
@@ -238,7 +251,8 @@ Paul Pluzhnikov for various fixes.
 Marek Polacek for various fixes.
 
 @item
-Siddhesh Poyarekar for various fixes.
+Siddhesh Poyarekar for various fixes and an implementation of a
+framework for performance benchmarking of functions.
 
 @item
 Tom Quinn for contributing the startup code to support SunOS shared
