@@ -1,3 +1,7 @@
+2013-08-03  David S. Miller  <davem@davemloft.net>
+
+	* po/ko.po: Update Korean translation from translation project.
+
 2013-08-01  David S. Miller  <davem@davemloft.net>
 
 	* manual/contrib.texi: Update entry for Siddhesh Poyarekar.  Add
