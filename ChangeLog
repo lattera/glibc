@@ -6542,7 +6542,7 @@
 	* stdlib/Makefile (routines): Add __cxa_thread_atexit_impl.
 	(tests): Add test case tst-tls-atexit.
 	(modules-names): Add shared library for tst-tls-atexit.
-	* stdlib/Versions (GLIBC_2.17): Add __cxa_thread_atexit_impl.
+	* stdlib/Versions (GLIBC_2.18): Add __cxa_thread_atexit_impl.
 	(GLIBC_PRIVATE): Add __call_tls_dtors.
 	* stdlib/cxa_thread_atexit_impl.c: New file with helper function
 	for libstdc++.
