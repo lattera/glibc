@@ -24,7 +24,6 @@
     ARMv6 (ARMv7-a if using Neon)
     ARM state
     Unaligned accesses
-    LDRD/STRD support unaligned word accesses
 
  */
 
@@ -369,8 +368,8 @@ ENTRY(memcpy)
 	cfi_adjust_cfa_offset (FRAME_SIZE)
 	cfi_rel_offset (tmp2, 0)
 	cfi_remember_state
-	and	tmp2, src, #3
-	and	tmp1, dst, #3
+	and	tmp2, src, #7
+	and	tmp1, dst, #7
 	cmp	tmp1, tmp2
 	bne	.Lcpy_notaligned
 
@@ -381,9 +380,9 @@ ENTRY(memcpy)
 	vmov.f32	s0, s0
 #endif
 
-	/* SRC and DST have the same mutual 32-bit alignment, but we may
+	/* SRC and DST have the same mutual 64-bit alignment, but we may
 	   still need to pre-copy some bytes to get to natural alignment.
-	   We bring DST into full 64-bit alignment.  */
+	   We bring SRC and DST into full 64-bit alignment.  */
 	lsls	tmp2, dst, #29
 	beq	1f
 	rsbs	tmp2, tmp2, #0
@@ -515,7 +514,7 @@ ENTRY(memcpy)
 
 .Ltail63aligned:			/* Count in tmp2.  */
 	/* Copy up to 7 d-words of data.  Similar to Ltail63unaligned, but
-	   we know that the src and dest are 32-bit aligned so we can use
+	   we know that the src and dest are 64-bit aligned so we can use
 	   LDRD/STRD to improve efficiency.  */
 	/* TMP2 is now negative, but we don't care about that.  The bottom
 	   six bits still tell us how many bytes are left to copy.  */

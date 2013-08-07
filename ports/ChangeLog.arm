@@ -1,3 +1,8 @@
+2013-09-16  Will Newton  <will.newton@linaro.org>
+
+	* sysdeps/arm/armv7/multiarch/memcpy_impl.S: Tighten check
+	on entry to aligned copy loop to improve performance.
+
 2013-08-30  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/armv6t2/strlen.S: Use sfi_pld and sfi_breg macros.
