@@ -34,10 +34,24 @@ ENTRY (__longjmp)
 	sfi_breg ip, \
 	ldr	r4, [\B, #32]	/* jmpbuf's sp */
 	cfi_undefined (r4)
+#ifdef PTR_DEMANGLE
+	PTR_DEMANGLE (r4, r4, a3, a4)
+#endif
 	CHECK_SP (r4)
 #endif
 	sfi_sp sfi_breg ip, \
 	ldmia	\B!, JMP_BUF_REGLIST
+#ifdef PTR_DEMANGLE
+	PTR_DEMANGLE (fp, a4, a3, a2)
+	ldr	a4, [ip], #4
+	PTR_DEMANGLE2 (sp, a4, a3)
+	ldr	a4, [ip], #4
+	PTR_DEMANGLE2 (lr, a4, a3)
+#else
+	mov	fp, a4
+	ldr	sp, [ip], #4
+	ldr	lr, [ip], #4
+#endif
 	cfi_restore (v1)
 	cfi_restore (v2)
 	cfi_restore (v3)

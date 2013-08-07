@@ -26,8 +26,9 @@
 
 #ifndef _ISOMAC
 /* Register list for a ldm/stm instruction to load/store
-   the general registers from a __jmp_buf.  */
-# define JMP_BUF_REGLIST	{v1-v6, sl, fp, sp, lr}
+   the general registers from a __jmp_buf. The a4 register
+   contains fp at this point.  */
+# define JMP_BUF_REGLIST	{a4, v1-v6, sl}
 
 /* Index of __jmp_buf where the sp register resides.  */
 # define __JMP_BUF_SP		8

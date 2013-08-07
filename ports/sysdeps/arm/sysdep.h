@@ -171,6 +171,18 @@
 99:	OP	R, [pc, T]
 # endif
 
+/* Load or store to/from a global EXPR into/from R, using T.  */
+# define LDST_GLOBAL(OP, R, T, EXPR)			\
+	ldr	T, 99f;					\
+	ldr	R, 100f;				\
+98:	add	T, T, pc;				\
+	ldr	T, [T, R];				\
+	.subsection 2;					\
+99:	.word	_GLOBAL_OFFSET_TABLE_ - 98b - PC_OFS;	\
+100:	.word	EXPR##(GOT);				\
+	.previous;					\
+	OP	R, [T]
+
 /* Cope with negative memory offsets, which thumb can't encode.
    Use NEGOFF_ADJ_BASE to (conditionally) alter the base register,
    and then NEGOFF_OFF1 to use 0 for thumb and the offset for arm,

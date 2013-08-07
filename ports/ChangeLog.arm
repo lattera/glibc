@@ -1,3 +1,18 @@
+2013-10-03  Will Newton  <will.newton@linaro.org>
+
+	* sysdeps/arm/__longjmp.S (__longjmp): Demangle fp, sp
+	and lr when restoring register values.
+	* sysdeps/arm/include/bits/setjmp.h (JMP_BUF_REGLIST): Remove
+	sp and lr from list and replace fp with a4.
+	* sysdeps/arm/jmpbuf-unwind.h (_jmpbuf_sp): New function.
+	(_JMPBUF_UNWINDS_ADJ): Call _jmpbuf_sp.
+	* sysdeps/arm/setjmp.S (__sigsetjmp): Mangle fp, sp and lr
+	before storing register values.
+	* sysdeps/arm/sysdep.h (LDST_GLOBAL): New macro.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (PTR_MANGLE): New macro.
+	(PTR_DEMANGLE): Likewise. (PTR_MANGLE2): Likewise.
+	(PTR_DEMANGLE2): Likewise.
+
 2013-09-24  Will Newton  <will.newton@linaro.org>
 
 	* ports/sysdeps/arm/nptl/tls.h (TLS_INIT_TP_EXPENSIVE): Remove

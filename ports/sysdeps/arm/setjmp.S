@@ -24,11 +24,25 @@
 #include <arm-features.h>
 
 ENTRY (__sigsetjmp)
+#ifdef PTR_MANGLE
+	PTR_MANGLE (a4, fp, a3, ip)
+#else
+	mov	a4, fp
+#endif
 	mov	ip, r0
 
 	/* Save registers */
 	sfi_breg ip, \
 	stmia	\B!, JMP_BUF_REGLIST
+#ifdef PTR_MANGLE
+	PTR_MANGLE2 (a4, sp, a3)
+	str	a4, [ip], #4
+	PTR_MANGLE2 (a4, lr, a3)
+	str	a4, [ip], #4
+#else
+	str	sp, [ip], #4
+	str	lr, [ip], #4
+#endif
 
 #if !defined ARM_ASSUME_NO_IWMMXT || defined __SOFTFP__
 # define NEED_HWCAP 1
