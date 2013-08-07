@@ -1,3 +1,8 @@
+2013-09-09  Will Newton  <will.newton@linaro.org>
+
+	* malloc/Makefile: Add tst-realloc to tests.
+	* malloc/tst-realloc.c: New file.
+
 2013-09-09  Allan McRae  <allan@archlinux.org>
 
 	[BZ #15844]
