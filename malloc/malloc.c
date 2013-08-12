@@ -3082,6 +3082,13 @@ __libc_pvalloc(size_t bytes)
   size_t page_mask = GLRO(dl_pagesize) - 1;
   size_t rounded_bytes = (bytes + page_mask) & ~(page_mask);
 
+  /* Check for overflow.  */
+  if (bytes > SIZE_MAX - 2*pagesz - MINSIZE)
+    {
+      __set_errno (ENOMEM);
+      return 0;
+    }
+
   void *(*hook) (size_t, size_t, const void *) =
     force_reg (__memalign_hook);
   if (__builtin_expect (hook != NULL, 0))

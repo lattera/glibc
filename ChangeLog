@@ -1,3 +1,9 @@
+2013-09-11  Will Newton  <will.newton@linaro.org>
+
+	[BZ #15855]
+	* malloc/malloc.c (__libc_pvalloc): Check the value of bytes
+	does not overflow.
+
 2013-09-10   Ondřej Bílka  <neleai@seznam.cz>
 
 	* sysdeps/ieee754/dbl-64/e_j0.c: Remove DO_NOT_USE_THIS conditionals.
