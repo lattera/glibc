@@ -1,3 +1,8 @@
+2013-10-02  Will Newton  <will.newton@linaro.org>
+
+	* malloc/Makefile: Add tst-posix_memalign.
+	* malloc/tst-posix_memalign.c: New file.
+
 2013-09-30  Petr Machata  <pmachata@redhat.com>
 
 	* elf/elf.h (R_AARCH64_ABS16): New macro.
