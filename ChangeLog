@@ -1,5 +1,10 @@
 2013-10-02  Will Newton  <will.newton@linaro.org>
 
+	* malloc/tst-valloc.c: Rewrite to use test-skeleton.c and
+	improve test coverage.
+
+2013-10-02  Will Newton  <will.newton@linaro.org>
+
 	* malloc/Makefile: Add tst-posix_memalign.
 	* malloc/tst-posix_memalign.c: New file.
 
