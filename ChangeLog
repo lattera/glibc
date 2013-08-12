@@ -1,3 +1,9 @@
+2013-08-12  David S. Miller  <davem@davemloft.net>
+
+	* version.h (RELEASE): Set to "development".
+	(VERSION): Set to "2.18.90".
+	* NEWS: Add 2.19 section.
+
 2013-08-03  David S. Miller  <davem@davemloft.net>
 
 	* po/ko.po: Update Korean translation from translation project.
