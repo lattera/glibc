@@ -1,5 +1,11 @@
 2013-09-11  Will Newton  <will.newton@linaro.org>
 
+	[BZ #15856]
+	* malloc/malloc.c (__libc_valloc): Check the value of bytes
+	does not overflow.
+
+2013-09-11  Will Newton  <will.newton@linaro.org>
+
 	[BZ #15855]
 	* malloc/malloc.c (__libc_pvalloc): Check the value of bytes
 	does not overflow.
