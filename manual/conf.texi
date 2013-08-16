@@ -1149,6 +1149,9 @@ typed ahead as input.  @xref{I/O Queues}.
 @deftypevr Macro int NAME_MAX
 The uniform system limit (if any) for the length of a file name component, not
 including the terminating null character.
+
+@strong{Portability Note:} On some systems, @theglibc{} defines
+@code{NAME_MAX}, but does not actually enforce this limit.
 @end deftypevr
 
 @comment limits.h
@@ -1157,6 +1160,9 @@ including the terminating null character.
 The uniform system limit (if any) for the length of an entire file name (that
 is, the argument given to system calls such as @code{open}), including the
 terminating null character.
+
+@strong{Portability Note:} @Theglibc{} does not enforce this limit
+even if @code{PATH_MAX} is defined.
 @end deftypevr
 
 @cindex limits, pipe buffer size
@@ -1475,6 +1481,9 @@ Inquire about the value of @code{POSIX_REC_MIN_XFER_SIZE}.
 @item _PC_REC_XFER_ALIGN
 Inquire about the value of @code{POSIX_REC_XFER_ALIGN}.
 @end table
+
+@strong{Portability Note:} On some systems, @theglibc{} does not
+enforce @code{_PC_NAME_MAX} or @code{_PC_PATH_MAX} limits.
 
 @node Utility Limits
 @section Utility Program Capacity Limits

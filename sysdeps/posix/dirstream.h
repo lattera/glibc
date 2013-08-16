@@ -39,6 +39,8 @@ struct __dirstream
 
     off_t filepos;		/* Position of next entry to read.  */
 
+    int errcode;		/* Delayed error code.  */
+
     /* Directory block.  */
     char data[0] __attribute__ ((aligned (__alignof__ (void*))));
   };

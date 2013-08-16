@@ -231,6 +231,7 @@ __alloc_dir (int fd, bool close_fd, int flags, const struct stat64 *statp)
   dirp->size = 0;
   dirp->offset = 0;
   dirp->filepos = 0;
+  dirp->errcode = 0;
 
   return dirp;
 }

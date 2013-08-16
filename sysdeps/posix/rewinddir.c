@@ -33,6 +33,7 @@ rewinddir (dirp)
   dirp->filepos = 0;
   dirp->offset = 0;
   dirp->size = 0;
+  dirp->errcode = 0;
 #ifndef NOT_IN_libc
   __libc_lock_unlock (dirp->lock);
 #endif

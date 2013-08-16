@@ -1,3 +1,25 @@
+2013-08-16  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #14699]
+	CVE-2013-4237
+	* sysdeps/posix/dirstream.h (struct __dirstream): Add errcode
+	member.
+	* sysdeps/posix/opendir.c (__alloc_dir): Initialize errcode
+	member.
+	* sysdeps/posix/rewinddir.c (rewinddir): Reset errcode member.
+	* sysdeps/posix/readdir_r.c (__READDIR_R): Enforce NAME_MAX limit.
+	Return delayed error code.  Remove GETDENTS_64BIT_ALIGNED
+	conditional.
+	* sysdeps/unix/sysv/linux/wordsize-64/readdir_r.c: Do not define
+	GETDENTS_64BIT_ALIGNED.
+	* sysdeps/unix/sysv/linux/i386/readdir64_r.c: Likewise.
+	* manual/filesys.texi (Reading/Closing Directory): Document
+	ENAMETOOLONG return value of readdir_r.  Recommend readdir more
+	strongly.
+	* manual/conf.texi (Limits for Files): Add portability note to
+	NAME_MAX, PATH_MAX.
+	(Pathconf): Add portability note for _PC_NAME_MAX, _PC_PATH_MAX.
+
 2013-08-13  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #15749]

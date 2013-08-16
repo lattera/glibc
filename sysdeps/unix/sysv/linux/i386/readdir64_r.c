@@ -18,7 +18,6 @@
 #define __READDIR_R __readdir64_r
 #define __GETDENTS __getdents64
 #define DIRENT_TYPE struct dirent64
-#define GETDENTS_64BIT_ALIGNED 1
 
 #include <sysdeps/posix/readdir_r.c>
 

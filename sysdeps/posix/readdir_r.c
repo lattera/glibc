@@ -40,6 +40,7 @@ __READDIR_R (DIR *dirp, DIRENT_TYPE *entry, DIRENT_TYPE **result)
   DIRENT_TYPE *dp;
   size_t reclen;
   const int saved_errno = errno;
+  int ret;
 
   __libc_lock_lock (dirp->lock);
 
@@ -70,10 +71,10 @@ __READDIR_R (DIR *dirp, DIRENT_TYPE *entry, DIRENT_TYPE **result)
 		  bytes = 0;
 		  __set_errno (saved_errno);
 		}
+	      if (bytes < 0)
+		dirp->errcode = errno;
 
 	      dp = NULL;
-	      /* Reclen != 0 signals that an error occurred.  */
-	      reclen = bytes != 0;
 	      break;
 	    }
 	  dirp->size = (size_t) bytes;
@@ -106,29 +107,46 @@ __READDIR_R (DIR *dirp, DIRENT_TYPE *entry, DIRENT_TYPE **result)
       dirp->filepos += reclen;
 #endif
 
-      /* Skip deleted files.  */
+#ifdef NAME_MAX
+      if (reclen > offsetof (DIRENT_TYPE, d_name) + NAME_MAX + 1)
+	{
+	  /* The record is very long.  It could still fit into the
+	     caller-supplied buffer if we can skip padding at the
+	     end.  */
+	  size_t namelen = _D_EXACT_NAMLEN (dp);
+	  if (namelen <= NAME_MAX)
+	    reclen = offsetof (DIRENT_TYPE, d_name) + namelen + 1;
+	  else
+	    {
+	      /* The name is too long.  Ignore this file.  */
+	      dirp->errcode = ENAMETOOLONG;
+	      dp->d_ino = 0;
+	      continue;
+	    }
+	}
+#endif
+
+      /* Skip deleted and ignored files.  */
     }
   while (dp->d_ino == 0);
 
   if (dp != NULL)
     {
-#ifdef GETDENTS_64BIT_ALIGNED
-      /* The d_reclen value might include padding which is not part of
-	 the DIRENT_TYPE data structure.  */
-      reclen = MIN (reclen,
-		    offsetof (DIRENT_TYPE, d_name) + sizeof (dp->d_name));
-#endif
       *result = memcpy (entry, dp, reclen);
-#ifdef GETDENTS_64BIT_ALIGNED
+#ifdef _DIRENT_HAVE_D_RECLEN
       entry->d_reclen = reclen;
 #endif
+      ret = 0;
     }
   else
-    *result = NULL;
+    {
+      *result = NULL;
+      ret = dirp->errcode;
+    }
 
   __libc_lock_unlock (dirp->lock);
 
-  return dp != NULL ? 0 : reclen ? errno : 0;
+  return ret;
 }
 
 #ifdef __READDIR_R_ALIAS

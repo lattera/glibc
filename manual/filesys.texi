@@ -444,9 +444,9 @@ symbols are declared in the header file @file{dirent.h}.
 @comment POSIX.1
 @deftypefun {struct dirent *} readdir (DIR *@var{dirstream})
 This function reads the next entry from the directory.  It normally
-returns a pointer to a structure containing information about the file.
-This structure is statically allocated and can be rewritten by a
-subsequent call.
+returns a pointer to a structure containing information about the
+file.  This structure is associated with the @var{dirstream} handle
+and can be rewritten by a subsequent call.
 
 @strong{Portability Note:} On some systems @code{readdir} may not
 return entries for @file{.} and @file{..}, even though these are always
@@ -461,34 +461,67 @@ conditions are defined for this function:
 The @var{dirstream} argument is not valid.
 @end table
 
-@code{readdir} is not thread safe.  Multiple threads using
-@code{readdir} on the same @var{dirstream} may overwrite the return
-value.  Use @code{readdir_r} when this is critical.
+To distinguish between an end-of-directory condition or an error, you
+must set @code{errno} to zero before calling @code{readdir}.  To avoid
+entering an infinite loop, you should stop reading from the directory
+after the first error.
+
+In POSIX.1-2008, @code{readdir} is not thread-safe.  In @theglibc{}
+implementation, it is safe to call @code{readdir} concurrently on
+different @var{dirstream}s, but multiple threads accessing the same
+@var{dirstream} result in undefined behavior.  @code{readdir_r} is a
+fully thread-safe alternative, but suffers from poor portability (see
+below).  It is recommended that you use @code{readdir}, with external
+locking if multiple threads access the same @var{dirstream}.
 @end deftypefun
 
 @comment dirent.h
 @comment GNU
 @deftypefun int readdir_r (DIR *@var{dirstream}, struct dirent *@var{entry}, struct dirent **@var{result})
-This function is the reentrant version of @code{readdir}.  Like
-@code{readdir} it returns the next entry from the directory.  But to
-prevent conflicts between simultaneously running threads the result is
-not stored in statically allocated memory.  Instead the argument
-@var{entry} points to a place to store the result.
+This function is a version of @code{readdir} which performs internal
+locking.  Like @code{readdir} it returns the next entry from the
+directory.  To prevent conflicts between simultaneously running
+threads the result is stored inside the @var{entry} object.
+
+@strong{Portability Note:} It is recommended to use @code{readdir}
+instead of @code{readdir_r} for the following reasons:
+
+@itemize @bullet
+@item
+On systems which do not define @code{NAME_MAX}, it may not be possible
+to use @code{readdir_r} safely because the caller does not specify the
+length of the buffer for the directory entry.
+
+@item
+On some systems, @code{readdir_r} cannot read directory entries with
+very long names.  If such a name is encountered, @theglibc{}
+implementation of @code{readdir_r} returns with an error code of
+@code{ENAMETOOLONG} after the final directory entry has been read.  On
+other systems, @code{readdir_r} may return successfully, but the
+@code{d_name} member may not be NUL-terminated or may be truncated.
+
+@item
+POSIX-1.2008 does not guarantee that @code{readdir} is thread-safe,
+even when access to the same @var{dirstream} is serialized.  But in
+current implementations (including @theglibc{}), it is safe to call
+@code{readdir} concurrently on different @var{dirstream}s, so there is
+no need to use @code{readdir_r} in most multi-threaded programs.  In
+the rare case that multiple threads need to read from the same
+@var{dirstream}, it is still better to use @code{readdir} and external
+synchronization.
+
+@item
+It is expected that future versions of POSIX will obsolete
+@code{readdir_r} and mandate the level of thread safety for
+@code{readdir} which is provided by @theglibc{} and other
+implementations today.
+@end itemize
 
 Normally @code{readdir_r} returns zero and sets @code{*@var{result}}
 to @var{entry}.  If there are no more entries in the directory or an
 error is detected, @code{readdir_r} sets @code{*@var{result}} to a
 null pointer and returns a nonzero error code, also stored in
 @code{errno}, as described for @code{readdir}.
-
-@strong{Portability Note:} On some systems @code{readdir_r} may not
-return a NUL terminated string for the file name, even when there is no
-@code{d_reclen} field in @code{struct dirent} and the file
-name is the maximum allowed size.  Modern systems all have the
-@code{d_reclen} field, and on old systems multi-threading is not
-critical.  In any case there is no such problem with the @code{readdir}
-function, so that even on systems without the @code{d_reclen} member one
-could use multiple threads by using external locking.
 
 It is also important to look at the definition of the @code{struct
 dirent} type.  Simply passing a pointer to an object of this type for
