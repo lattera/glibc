@@ -3015,6 +3015,13 @@ __libc_memalign(size_t alignment, size_t bytes)
   /* Otherwise, ensure that it is at least a minimum chunk size */
   if (alignment <  MINSIZE) alignment = MINSIZE;
 
+  /* Check for overflow.  */
+  if (bytes > SIZE_MAX - alignment - MINSIZE)
+    {
+      __set_errno (ENOMEM);
+      return 0;
+    }
+
   arena_get(ar_ptr, bytes + alignment + MINSIZE);
   if(!ar_ptr)
     return 0;
