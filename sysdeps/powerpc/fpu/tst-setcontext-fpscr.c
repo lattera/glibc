@@ -83,7 +83,7 @@ ElfW(Addr) query_auxv(int type)
   return 0;
 }
 
-typedef unsigned long long di_fpscr_t __attribute__ ((__mode__ (__DI__)));
+typedef unsigned int di_fpscr_t __attribute__ ((__mode__ (__DI__)));
 typedef unsigned int si_fpscr_t __attribute__ ((__mode__ (__SI__)));
 
 #define _FPSCR_RESERVED 0xfffffff8ffffff04ULL
@@ -95,50 +95,51 @@ typedef unsigned int si_fpscr_t __attribute__ ((__mode__ (__SI__)));
 #define _FPSCR_TEST1_RN  0x0000000000000002ULL
 
 /* Macros for accessing the hardware control word on Power6[x].  */
-# define _GET_DI_FPSCR(__fpscr) ({					     \
-   union { double d;							     \
-           di_fpscr_t fpscr; }						     \
-     tmp __attribute__ ((__aligned__(8)));				     \
-   __asm__ ("mffs 0; stfd%U0 0,%0" : "=m" (tmp.d) : : "fr0");		     \
-   (__fpscr)=tmp.fpscr;							     \
-   tmp.fpscr; })
+#define _GET_DI_FPSCR(__fpscr)						\
+  ({union { double d; di_fpscr_t fpscr; } u;				\
+    register double fr;							\
+    __asm__ ("mffs %0" : "=f" (fr));					\
+    u.d = fr;								\
+    (__fpscr) = u.fpscr;						\
+    u.fpscr;								\
+  })
 
-/* We make sure to zero fp0 after we use it in order to prevent stale data
+/* We make sure to zero fp after we use it in order to prevent stale data
    in an fp register from making a test-case pass erroneously.  */
-# define _SET_DI_FPSCR(__fpscr) {					     \
-  union { double d; di_fpscr_t fpscr; }					     \
-    tmp __attribute__ ((__aligned__(8)));				     \
-  tmp.fpscr = __fpscr;							     \
-  /* Set the entire 64-bit FPSCR.  */					     \
-  __asm__ ("lfd%U0 0,%0; "						     \
-	   ".machine push; "						     \
-	   ".machine \"power6\"; "					     \
-	   "mtfsf 255,0,1,0; "						     \
-	   ".machine pop" : : "m" (tmp.d) : "fr0");			     \
-  tmp.d = 0;								     \
-  __asm__("lfd%U0 0,%0" : : "m" (tmp.d) : "fr0");			     \
-}
+# define _SET_DI_FPSCR(__fpscr)						\
+  { union { double d; di_fpscr_t fpscr; } u;				\
+    register double fr;							\
+    u.fpscr = __fpscr;							\
+    fr = u.d;								\
+    /* Set the entire 64-bit FPSCR.  */					\
+    __asm__ (".machine push; "						\
+	     ".machine \"power6\"; "					\
+	     "mtfsf 255,%0,1,0; "					\
+	     ".machine pop" : : "f" (fr));				\
+    fr = 0.0;								\
+  }
 
-# define _GET_SI_FPSCR(__fpscr) ({					     \
-   union { double d;							     \
-           si_fpscr_t cw[2]; }						     \
-     tmp __attribute__ ((__aligned__(8)));				     \
-   __asm__ ("mffs 0; stfd%U0 0,%0" : "=m" (tmp.d) : : "fr0");		     \
-   (__fpscr)=tmp.cw[1];							     \
-   tmp.cw[0]; })
+# define _GET_SI_FPSCR(__fpscr)						\
+  ({union { double d; di_fpscr_t fpscr; } u;				\
+    register double fr;							\
+    __asm__ ("mffs %0" : "=f" (fr));					\
+    u.d = fr;								\
+    (__fpscr) = (si_fpscr_t) u.fpscr;					\
+    (si_fpscr_t) u.fpscr;						\
+  })
 
-/* We make sure to zero fp0 after we use it in order to prevent stale data
+/* We make sure to zero fp after we use it in order to prevent stale data
    in an fp register from making a test-case pass erroneously.  */
-# define _SET_SI_FPSCR(__fpscr) {					     \
-  union { double d; si_fpscr_t fpscr[2]; }				     \
-    tmp __attribute__ ((__aligned__(8)));				     \
-  /* More-or-less arbitrary; this is a QNaN. */				     \
-  tmp.fpscr[0] = 0xFFF80000;						     \
-  tmp.fpscr[1] = __fpscr;						     \
-  __asm__ ("lfd%U0 0,%0; mtfsf 255,0" : : "m" (tmp.d) : "fr0");		     \
-  tmp.d = 0;								     \
-  __asm__("lfd%U0 0,%0" : : "m" (tmp.d) : "fr0");			     \
-}
+# define _SET_SI_FPSCR(__fpscr)						\
+  { union { double d; di_fpscr_t fpscr; } u;				\
+    register double fr;							\
+    /* More-or-less arbitrary; this is a QNaN. */			\
+    u.fpscr = 0xfff80000ULL << 32;					\
+    u.fpscr |= __fpscr & 0xffffffffULL;					\
+    fr = u.d;								\
+    __asm__ ("mtfsf 255,%0" : : "f" (fr));				\
+    fr = 0.0;								\
+  }
 
 void prime_special_regs(int which)
 {

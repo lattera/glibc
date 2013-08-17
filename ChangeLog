@@ -1,5 +1,13 @@
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/powerpc/fpu_control.h (_FPU_GETCW): Rewrite using
+	64-bit int/double union.
+	(_FPU_SETCW): Likewise.
+	* sysdeps/powerpc/fpu/tst-setcontext-fpscr.c (_GET_DI_FPSCR): Likewise.
+	(_SET_DI_FPSCR, _GET_SI_FPSCR, _SET_SI_FPSCR): Likewise.
+
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/fpu/s_llround.c (__llround): Rewrite.
 	* sysdeps/powerpc/fpu/s_llroundf.c (__llroundf): Rewrite.
 
