@@ -2,7 +2,6 @@
 #error "Never use <math_ldbl.h> directly; include <math_private.h> instead."
 #endif
 
-#include <sysdeps/ieee754/ldbl-128/math_ldbl.h>
 #include <ieee754.h>
 #include <stdint.h>
 

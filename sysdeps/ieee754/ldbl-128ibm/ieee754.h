@@ -111,61 +111,6 @@ union ieee754_double
 #define IEEE754_DOUBLE_BIAS	0x3ff /* Added to exponent.  */
 
 
-union ieee854_long_double
-  {
-    long double d;
-
-    /* This is the IEEE 854 quad-precision format.  */
-    struct
-      {
-#if	__BYTE_ORDER == __BIG_ENDIAN
-	unsigned int negative:1;
-	unsigned int exponent:15;
-	/* Together these comprise the mantissa.  */
-	unsigned int mantissa0:16;
-	unsigned int mantissa1:32;
-	unsigned int mantissa2:32;
-	unsigned int mantissa3:32;
-#endif				/* Big endian.  */
-#if	__BYTE_ORDER == __LITTLE_ENDIAN
-	/* Together these comprise the mantissa.  */
-	unsigned int mantissa3:32;
-	unsigned int mantissa2:32;
-	unsigned int mantissa1:32;
-	unsigned int mantissa0:16;
-	unsigned int exponent:15;
-	unsigned int negative:1;
-#endif				/* Little endian.  */
-      } ieee;
-
-    /* This format makes it easier to see if a NaN is a signalling NaN.  */
-    struct
-      {
-#if	__BYTE_ORDER == __BIG_ENDIAN
-	unsigned int negative:1;
-	unsigned int exponent:15;
-	unsigned int quiet_nan:1;
-	/* Together these comprise the mantissa.  */
-	unsigned int mantissa0:15;
-	unsigned int mantissa1:32;
-	unsigned int mantissa2:32;
-	unsigned int mantissa3:32;
-#else
-	/* Together these comprise the mantissa.  */
-	unsigned int mantissa3:32;
-	unsigned int mantissa2:32;
-	unsigned int mantissa1:32;
-	unsigned int mantissa0:15;
-	unsigned int quiet_nan:1;
-	unsigned int exponent:15;
-	unsigned int negative:1;
-#endif
-      } ieee_nan;
-  };
-
-#define IEEE854_LONG_DOUBLE_BIAS 0x3fff /* Added to exponent.  */
-
-
 /* IBM extended format for long double.
 
    Each long double is made up of two IEEE doubles.  The value of the

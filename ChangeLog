@@ -1,5 +1,13 @@
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/ieee754/ldbl-128ibm/ieee754.h (union ieee854_long_double):
+	Delete.
+	(IEEE854_LONG_DOUBLE_BIAS): Delete.
+	* sysdeps/ieee754/ldbl-128ibm/math_ldbl.h: Don't include ieee854
+	version of math_ldbl.h.
+
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
 	[BZ #15734], [BZ #15735]
 	* sysdeps/ieee754/ldbl-128ibm/e_fmodl.c (__ieee754_fmodl): Rewrite
 	all uses of ieee875 long double macros and unions.  Simplify test
