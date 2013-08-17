@@ -35,8 +35,8 @@ ENTRY (strchr)
 	beq	cr7,L(null_match)
 
 	/* Replicate byte to word.  */
-	rlwimi	r4,r4,8,16,23
-	rlwimi	r4,r4,16,0,15
+	insrdi	r4,r4,8,48
+	insrdi	r4,r4,16,32
 
 	/* Now r4 has a word of c bytes and r0 has
 	   a word of null bytes.  */
@@ -46,11 +46,17 @@ ENTRY (strchr)
 
 	/* Move the words left and right to discard the bits that are
 	   not part of the string and to bring them back as zeros.  */
-
+#ifdef __LITTLE_ENDIAN__
+	srw	r10,r10,r6
+	srw	r11,r11,r6
+	slw	r10,r10,r6
+	slw	r11,r11,r6
+#else
 	slw	r10,r10,r6
 	slw	r11,r11,r6
 	srw	r10,r10,r6
 	srw	r11,r11,r6
+#endif
 	or	r5,r10,r11    /* OR the results to speed things up.  */
 	cmpwi	cr7,r5,0      /* If r5 == 0, no c or null bytes
 				 have been found.  */
@@ -65,7 +71,7 @@ ENTRY (strchr)
 
 	/* Handle WORD2 of pair.  */
 	lwzu	r12,4(r8)
-	cmpb    r10,r12,r4
+	cmpb	r10,r12,r4
 	cmpb	r11,r12,r0
 	or	r5,r10,r11
 	cmpwi	cr7,r5,0
@@ -100,22 +106,31 @@ L(loop):
 	bne	cr6,L(done)
 
 	/* The c/null byte must be in the second word.  Adjust the address
-	   again and move the result of cmpb to r10 so we can calculate the
-	   pointer.  */
+	   again and move the result of cmpb to r10/r11 so we can calculate
+	   the pointer.  */
 
 	mr	r10,r6
 	mr	r11,r7
 	addi	r8,r8,4
 
-	/* r5 has the output of the cmpb instruction, that is, it contains
+	/* r10/r11 have the output of the cmpb instructions, that is,
 	   0xff in the same position as the c/null byte in the original
 	   word from the string.  Use that to calculate the pointer.  */
 L(done):
-	cntlzw	r4,r10	      /* Count leading zeroes before c matches.  */
-	cntlzw	r0,r11	      /* Count leading zeroes before null matches.  */
-	cmplw	cr7,r4,r0
+#ifdef __LITTLE_ENDIAN__
+	addi    r3,r10,-1
+	andc    r3,r3,r10
+	popcntw	r0,r3
+	addi    r4,r11,-1
+	andc    r4,r4,r11
+	cmplw	cr7,r3,r4
 	bgt	cr7,L(no_match)
-	srwi	r0,r4,3	      /* Convert leading zeroes to bytes.  */
+#else
+	cntlzw	r0,r10	      /* Count leading zeros before c matches.  */
+	cmplw	cr7,r11,r10
+	bgt	cr7,L(no_match)
+#endif
+	srwi	r0,r0,3	      /* Convert leading zeros to bytes.  */
 	add	r3,r8,r0      /* Return address of the matching c byte
 				 or null in case c was not found.  */
 	blr
@@ -133,10 +148,14 @@ L(null_match):
 	cmpb	r5,r12,r0     /* Compare each byte against null bytes.  */
 
 	/* Move the words left and right to discard the bits that are
-	   not part of the string and to bring them back as zeros.  */
-
+	   not part of the string and bring them back as zeros.  */
+#ifdef __LITTLE_ENDIAN__
+	srw	r5,r5,r6
+	slw	r5,r5,r6
+#else
 	slw	r5,r5,r6
 	srw	r5,r5,r6
+#endif
 	cmpwi	cr7,r5,0      /* If r10 == 0, no c or null bytes
 				 have been found.  */
 	bne	cr7,L(done_null)
@@ -191,7 +210,13 @@ L(loop_null):
 	   0xff in the same position as the null byte in the original
 	   word from the string.  Use that to calculate the pointer.  */
 L(done_null):
+#ifdef __LITTLE_ENDIAN__
+	addi    r0,r5,-1
+	andc    r0,r0,r5
+	popcntw	r0,r0
+#else
 	cntlzw	r0,r5	      /* Count leading zeros before the match.  */
+#endif
 	srwi	r0,r0,3	      /* Convert leading zeros to bytes.  */
 	add	r3,r8,r0      /* Return address of the matching null byte.  */
 	blr

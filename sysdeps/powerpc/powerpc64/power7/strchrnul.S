@@ -27,8 +27,8 @@ ENTRY (__strchrnul)
 	clrrdi	r8,r3,3	      /* Align the address to doubleword boundary.  */
 
 	/* Replicate byte to doubleword.  */
-	rlwimi	r4,r4,8,16,23
-	rlwimi	r4,r4,16,0,15
+	insrdi	r4,r4,8,48
+	insrdi	r4,r4,16,32
 	insrdi	r4,r4,32,0
 
 	rlwinm	r6,r3,3,26,28 /* Calculate padding.  */
@@ -44,10 +44,17 @@ ENTRY (__strchrnul)
 
 	/* Move the doublewords left and right to discard the bits that are
 	   not part of the string and to bring them back as zeros.  */
+#ifdef __LITTLE_ENDIAN__
+	srd	r10,r10,r6
+	srd	r9,r9,r6
+	sld	r10,r10,r6
+	sld	r9,r9,r6
+#else
 	sld	r10,r10,r6
 	sld	r9,r9,r6
 	srd	r10,r10,r6
 	srd	r9,r9,r6
+#endif
 	or	r5,r9,r10     /* OR the results to speed things up.  */
 	cmpdi	cr7,r5,0      /* If r5 == 0, no c or null bytes
 				 have been found.  */
@@ -97,7 +104,7 @@ L(loop):
 	bne	cr6,L(done)
 
 	/* The c/null byte must be in the second doubleword.  Adjust the
-	   address again and move the result of cmpb to r10 so we can calculate
+	   address again and move the result of cmpb to r5 so we can calculate
 	   the pointer.  */
 	mr	r5,r10
 	addi	r8,r8,8
@@ -106,7 +113,13 @@ L(loop):
 	   0xff in the same position as the c/null byte in the original
 	   doubleword from the string.  Use that to calculate the pointer.  */
 L(done):
+#ifdef __LITTLE_ENDIAN__
+	addi    r0,r5,-1
+	andc    r0,r0,r5
+	popcntd	r0,r0
+#else
 	cntlzd	r0,r5	      /* Count leading zeros before the match.  */
+#endif
 	srdi	r0,r0,3	      /* Convert leading zeros to bytes.  */
 	add	r3,r8,r0      /* Return address of matching c/null byte.  */
 	blr

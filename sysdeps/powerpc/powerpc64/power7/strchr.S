@@ -35,8 +35,8 @@ ENTRY (strchr)
 	beq	cr7,L(null_match)
 
 	/* Replicate byte to doubleword.  */
-	rlwimi	r4,r4,8,16,23
-	rlwimi	r4,r4,16,0,15
+	insrdi	r4,r4,8,48
+	insrdi	r4,r4,16,32
 	insrdi  r4,r4,32,0
 
 	/* Now r4 has a doubleword of c bytes and r0 has
@@ -47,11 +47,17 @@ ENTRY (strchr)
 
 	/* Move the doublewords left and right to discard the bits that are
 	   not part of the string and bring them back as zeros.  */
-
+#ifdef __LITTLE_ENDIAN__
+	srd	r10,r10,r6
+	srd	r11,r11,r6
+	sld	r10,r10,r6
+	sld	r11,r11,r6
+#else
 	sld	r10,r10,r6
 	sld	r11,r11,r6
 	srd	r10,r10,r6
 	srd	r11,r11,r6
+#endif
 	or	r5,r10,r11    /* OR the results to speed things up.  */
 	cmpdi	cr7,r5,0      /* If r5 == 0, no c or null bytes
 				 have been found.  */
@@ -108,15 +114,24 @@ L(loop):
 	mr	r11,r7
 	addi	r8,r8,8
 
-	/* r5 has the output of the cmpb instruction, that is, it contains
+	/* r10/r11 have the output of the cmpb instructions, that is,
 	   0xff in the same position as the c/null byte in the original
 	   doubleword from the string.  Use that to calculate the pointer.  */
 L(done):
-	cntlzd	r4,r10	      /* Count leading zeroes before c matches.  */
-	cntlzd	r0,r11	      /* Count leading zeroes before null matches.  */
-	cmpld	cr7,r4,r0
+#ifdef __LITTLE_ENDIAN__
+	addi    r3,r10,-1
+	andc    r3,r3,r10
+	popcntd	r0,r3
+	addi    r4,r11,-1
+	andc    r4,r4,r11
+	cmpld	cr7,r3,r4
 	bgt	cr7,L(no_match)
-	srdi	r0,r4,3	      /* Convert leading zeroes to bytes.  */
+#else
+	cntlzd	r0,r10	      /* Count leading zeros before c matches.  */
+	cmpld	cr7,r11,r10
+	bgt	cr7,L(no_match)
+#endif
+	srdi	r0,r0,3	      /* Convert leading zeros to bytes.  */
 	add	r3,r8,r0      /* Return address of the matching c byte
 				 or null in case c was not found.  */
 	blr
@@ -135,9 +150,13 @@ L(null_match):
 
 	/* Move the doublewords left and right to discard the bits that are
 	   not part of the string and bring them back as zeros.  */
-
+#ifdef __LITTLE_ENDIAN__
+	srd	r5,r5,r6
+	sld	r5,r5,r6
+#else
 	sld	r5,r5,r6
 	srd	r5,r5,r6
+#endif
 	cmpdi	cr7,r5,0      /* If r10 == 0, no c or null bytes
 				 have been found.  */
 	bne	cr7,L(done_null)
@@ -192,7 +211,13 @@ L(loop_null):
 	   0xff in the same position as the null byte in the original
 	   doubleword from the string.  Use that to calculate the pointer.  */
 L(done_null):
+#ifdef __LITTLE_ENDIAN__
+	addi    r0,r5,-1
+	andc    r0,r0,r5
+	popcntd	r0,r0
+#else
 	cntlzd	r0,r5	      /* Count leading zeros before the match.  */
+#endif
 	srdi	r0,r0,3	      /* Convert leading zeros to bytes.  */
 	add	r3,r8,r0      /* Return address of the matching null byte.  */
 	blr

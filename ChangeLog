@@ -1,5 +1,21 @@
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/powerpc/powerpc64/power7/strchr.S (strchr): Add little-endian
+	support.  Correct typos, formatting.  Optimize tail.  Use insrdi
+	rather than rlwimi.
+	* sysdeps/powerpc/powerpc32/power7/strchr.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strchrnul.S (__strchrnul): Add
+	little-endian support.  Correct typos.
+	* sysdeps/powerpc/powerpc32/power7/strchrnul.S: Likewise.  Use insrdi
+	rather than rlwimi.
+	* sysdeps/powerpc/powerpc64/strchr.S (rTMP4, rTMP5): Define.  Use
+	in loop and entry code to keep "and." results.
+	(strchr): Add little-endian support.  Comment.  Move cntlzd
+	earlier in tail.
+	* sysdeps/powerpc/powerpc32/strchr.S: Likewise.
+
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/powerpc64/strcpy.S: Add little-endian support:
 	* sysdeps/powerpc/powerpc32/strcpy.S: Likewise.
 	* sysdeps/powerpc/powerpc64/stpcpy.S: Likewise.
