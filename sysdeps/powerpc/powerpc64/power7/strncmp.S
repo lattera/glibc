@@ -27,7 +27,7 @@
 EALIGN (strncmp,5,0)
 	CALL_MCOUNT 3
 
-#define rTMP	r0
+#define rTMP2	r0
 #define rRTN	r3
 #define rSTR1	r3	/* first string arg */
 #define rSTR2	r4	/* second string arg */
@@ -40,6 +40,7 @@ EALIGN (strncmp,5,0)
 #define r7F7F	r9	/* constant 0x7f7f7f7f7f7f7f7f */
 #define rNEG	r10	/* ~(word in s1 | 0x7f7f7f7f7f7f7f7f) */
 #define rBITDIF	r11	/* bits that differ in s1 & s2 words */
+#define rTMP	r12
 
 	dcbt	0,rSTR1
 	nop
@@ -83,12 +84,57 @@ L(g1):	add	rTMP,rFEFE,rWORD1
    we don't compare two strings as different because of gunk beyond
    the end of the strings...  */
 
+#ifdef __LITTLE_ENDIAN__
+L(endstring):
+	addi    rTMP2, rTMP, -1
+	beq	cr1, L(equal)
+	andc    rTMP2, rTMP2, rTMP
+	rldimi	rTMP2, rTMP2, 1, 0
+	and	rWORD2, rWORD2, rTMP2	/* Mask off gunk.  */
+	and	rWORD1, rWORD1, rTMP2
+	cmpd	cr1, rWORD1, rWORD2
+	beq	cr1, L(equal)
+	cmpb	rBITDIF, rWORD1, rWORD2	/* 0xff on equal bytes.  */
+	addi	rNEG, rBITDIF, 1
+	orc	rNEG, rNEG, rBITDIF	/* 0's below LS differing byte.  */
+	sldi	rNEG, rNEG, 8		/* 1's above LS differing byte.  */
+	andc	rWORD1, rWORD1, rNEG	/* mask off MS bytes.  */
+	andc	rWORD2, rWORD2, rNEG
+	xor.	rBITDIF, rWORD1, rWORD2
+	sub	rRTN, rWORD1, rWORD2
+	blt	L(highbit)
+	sradi	rRTN, rRTN, 63		/* must return an int.  */
+	ori	rRTN, rRTN, 1
+	blr
+L(equal):
+	li	rRTN, 0
+	blr
+
+L(different):
+	ld	rWORD1, -8(rSTR1)
+	cmpb	rBITDIF, rWORD1, rWORD2	/* 0xff on equal bytes.  */
+	addi	rNEG, rBITDIF, 1
+	orc	rNEG, rNEG, rBITDIF	/* 0's below LS differing byte.  */
+	sldi	rNEG, rNEG, 8		/* 1's above LS differing byte.  */
+	andc	rWORD1, rWORD1, rNEG	/* mask off MS bytes.  */
+	andc	rWORD2, rWORD2, rNEG
+	xor.	rBITDIF, rWORD1, rWORD2
+	sub	rRTN, rWORD1, rWORD2
+	blt	L(highbit)
+	sradi	rRTN, rRTN, 63
+	ori	rRTN, rRTN, 1
+	blr
+L(highbit):
+	sradi	rRTN, rWORD2, 63
+	ori	rRTN, rRTN, 1
+	blr
+
+#else
 L(endstring):
 	and	rTMP,r7F7F,rWORD1
 	beq	cr1,L(equal)
 	add	rTMP,rTMP,r7F7F
 	xor.	rBITDIF,rWORD1,rWORD2
-
 	andc	rNEG,rNEG,rTMP
 	blt	L(highbit)
 	cntlzd	rBITDIF,rBITDIF
@@ -97,7 +143,7 @@ L(endstring):
 	cmpd	cr1,rNEG,rBITDIF
 	sub	rRTN,rWORD1,rWORD2
 	blt	cr1,L(equal)
-	sradi	rRTN,rRTN,63
+	sradi	rRTN,rRTN,63		/* must return an int.  */
 	ori	rRTN,rRTN,1
 	blr
 L(equal):
@@ -105,7 +151,7 @@ L(equal):
 	blr
 
 L(different):
-	ldu	rWORD1,-8(rSTR1)
+	ld	rWORD1,-8(rSTR1)
 	xor.	rBITDIF,rWORD1,rWORD2
 	sub	rRTN,rWORD1,rWORD2
 	blt	L(highbit)
@@ -113,11 +159,10 @@ L(different):
 	ori	rRTN,rRTN,1
 	blr
 L(highbit):
-	srdi	rWORD2,rWORD2,56
-	srdi	rWORD1,rWORD1,56
-	sub	rRTN,rWORD1,rWORD2
+	sradi	rRTN,rWORD2,63
+	ori	rRTN,rRTN,1
 	blr
-
+#endif
 
 /* Oh well.  In this case, we just do a byte-by-byte comparison.  */
 	.align	4

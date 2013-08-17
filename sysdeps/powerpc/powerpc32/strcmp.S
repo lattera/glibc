@@ -24,7 +24,7 @@
 
 EALIGN (strcmp, 4, 0)
 
-#define rTMP	r0
+#define rTMP2	r0
 #define rRTN	r3
 #define rSTR1	r3	/* first string arg */
 #define rSTR2	r4	/* second string arg */
@@ -34,6 +34,7 @@ EALIGN (strcmp, 4, 0)
 #define r7F7F	r8	/* constant 0x7f7f7f7f */
 #define rNEG	r9	/* ~(word in s1 | 0x7f7f7f7f) */
 #define rBITDIF	r10	/* bits that differ in s1 & s2 words */
+#define rTMP	r11
 
 
 	or	rTMP, rSTR2, rSTR1
@@ -56,10 +57,45 @@ L(g1):	add	rTMP, rFEFE, rWORD1
 	and.	rTMP, rTMP, rNEG
 	cmpw	cr1, rWORD1, rWORD2
 	beq+	L(g0)
-L(endstring):
+
 /* OK. We've hit the end of the string. We need to be careful that
    we don't compare two strings as different because of gunk beyond
    the end of the strings...  */
+#ifdef __LITTLE_ENDIAN__
+L(endstring):
+	addi    rTMP2, rTMP, -1
+	andc    rTMP2, rTMP2, rTMP
+	rlwimi	rTMP2, rTMP2, 1, 0, 30
+	and	rWORD2, rWORD2, rTMP2		/* Mask off gunk.  */
+	and	rWORD1, rWORD1, rTMP2
+	rlwinm	rTMP2, rWORD2, 8, 0xffffffff	/* Byte reverse word.  */
+	rlwinm	rTMP, rWORD1, 8, 0xffffffff
+	rlwimi	rTMP2, rWORD2, 24, 0, 7
+	rlwimi	rTMP, rWORD1, 24, 0, 7
+	rlwimi	rTMP2, rWORD2, 24, 16, 23
+	rlwimi	rTMP, rWORD1, 24, 16, 23
+	xor.	rBITDIF, rTMP, rTMP2
+	sub	rRTN, rTMP, rTMP2
+	bgelr+
+	ori	rRTN, rTMP2, 1
+	blr
+
+L(different):
+	lwz	rWORD1, -4(rSTR1)
+	rlwinm	rTMP2, rWORD2, 8, 0xffffffff	/* Byte reverse word.  */
+	rlwinm	rTMP, rWORD1, 8, 0xffffffff
+	rlwimi	rTMP2, rWORD2, 24, 0, 7
+	rlwimi	rTMP, rWORD1, 24, 0, 7
+	rlwimi	rTMP2, rWORD2, 24, 16, 23
+	rlwimi	rTMP, rWORD1, 24, 16, 23
+	xor.	rBITDIF, rTMP, rTMP2
+	sub	rRTN, rTMP, rTMP2
+	bgelr+
+	ori	rRTN, rTMP2, 1
+	blr
+
+#else
+L(endstring):
 	and	rTMP, r7F7F, rWORD1
 	beq	cr1, L(equal)
 	add	rTMP, rTMP, r7F7F
@@ -84,7 +120,7 @@ L(different):
 L(highbit):
 	ori	rRTN, rWORD2, 1
 	blr
-
+#endif
 
 /* Oh well.  In this case, we just do a byte-by-byte comparison.  */
 	.align 4

@@ -1,5 +1,18 @@
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/powerpc/powerpc64/strcmp.S (rTMP2): Define as r0.
+	(rTMP): Define as r11.
+	(strcmp): Add little-endian support.  Optimise tail.
+	* sysdeps/powerpc/powerpc32/strcmp.S: Similarly.
+	* sysdeps/powerpc/powerpc64/strncmp.S: Likewise.
+	* sysdeps/powerpc/powerpc32/strncmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power4/strncmp.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/strncmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strncmp.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power7/strncmp.S: Likewise.
+
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/powerpc64/power7/strnlen.S (strnlen): Add
 	little-endian support.  Remove unnecessary "are we done" tests.
 	Handle "s" wrapping around zero and extremely large "size".
