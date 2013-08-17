@@ -87,18 +87,15 @@ typedef unsigned long long int hp_timing_t;
 
 #define HP_TIMING_NOW(Var)						\
   do {									\
-        union { long long ll; long ii[2]; } _var;			\
-	long tmp;							\
-        __asm__ __volatile__ (						\
-		"1:	mfspr	%0,269;"				\
-		"	mfspr	%1,268;"				\
-		"	mfspr	%2,269;"				\
-		"	cmpw	%0,%2;"					\
-		"	bne	1b;"					\
-		: "=r" (_var.ii[0]), "=r" (_var.ii[1]) , "=r" (tmp)	\
-		: : "cr0"						\
-		);							\
-	Var = _var.ll;							\
+    unsigned int hi, lo, tmp;						\
+    __asm__ __volatile__ ("1:	mfspr	%0,269;"			\
+			  "	mfspr	%1,268;"			\
+			  "	mfspr	%2,269;"			\
+			  "	cmpw	%0,%2;"				\
+			  "	bne	1b;"				\
+			  : "=&r" (hi), "=&r" (lo), "=&r" (tmp)		\
+			  : : "cr0");					\
+    Var = ((hp_timing_t) hi << 32) | lo;				\
   } while (0)
 
 

@@ -1,3 +1,8 @@
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
+	* sysdeps/powerpc/powerpc32/power4/hp-timing.h (HP_TIMING_NOW):
+	Don't use a union to pack hi/low value.
+
 2013-10-04  Anton Blanchard <anton@au1.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/fpu/s_ceilf.S: Correct float constants
