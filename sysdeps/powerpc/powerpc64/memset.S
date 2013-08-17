@@ -55,14 +55,14 @@ L(_memset):
 
 /* Align to doubleword boundary.  */
 	cmpldi	cr5, rLEN, 31
-	rlwimi	rCHR, rCHR, 8, 16, 23 /* Replicate byte to halfword.  */
+	insrdi	rCHR, rCHR, 8, 48	/* Replicate byte to halfword.  */
 	beq+	L(aligned2)
 	mtcrf	0x01, rMEMP0
 	subfic	rALIGN, rALIGN, 8
 	cror	28,30,31		/* Detect odd word aligned.  */
 	add	rMEMP, rMEMP, rALIGN
 	sub	rLEN, rLEN, rALIGN
-	rlwimi	rCHR, rCHR, 16, 0, 15 /* Replicate halfword to word.  */
+	insrdi	rCHR, rCHR, 16, 32	/* Replicate halfword to word.  */
 	bt	29, L(g4)
 /* Process the even word of doubleword.  */
 	bf+	31, L(g2)
@@ -84,14 +84,14 @@ L(g0):
 
 /* Handle the case of size < 31.  */
 L(aligned2):
-	rlwimi	rCHR, rCHR, 16, 0, 15 /* Replicate halfword to word.  */
+	insrdi	rCHR, rCHR, 16, 32	/* Replicate halfword to word.  */
 L(aligned):
 	mtcrf	0x01, rLEN
 	ble	cr5, L(medium)
 /* Align to 32-byte boundary.  */
 	andi.	rALIGN, rMEMP, 0x18
 	subfic	rALIGN, rALIGN, 0x20
-	insrdi	rCHR,rCHR,32,0 /* Replicate word to double word. */
+	insrdi	rCHR, rCHR, 32, 0	/* Replicate word to double word. */
 	beq	L(caligned)
 	mtcrf	0x01, rALIGN
 	add	rMEMP, rMEMP, rALIGN
@@ -212,7 +212,7 @@ L(le4):
 /* Memset of 0-31 bytes.  */
 	.align 5
 L(medium):
-	insrdi	rCHR,rCHR,32,0 /* Replicate word to double word.  */
+	insrdi	rCHR, rCHR, 32, 0	/* Replicate word to double word.  */
 	cmpldi	cr1, rLEN, 16
 L(medium_tail2):
 	add	rMEMP, rMEMP, rLEN

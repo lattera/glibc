@@ -1,5 +1,16 @@
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/powerpc/powerpc64/memset.S: Replace rlwimi with
+        insrdi.  Formatting.
+	* sysdeps/powerpc/powerpc64/power4/memset.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power6/memset.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/memset.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/memset.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power6/memset.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power7/memset.S: Likewise.
+
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/powerpc32/power4/memcpy.S: Add little endian support.
 	* sysdeps/powerpc/powerpc32/power6/memcpy.S: Likewise.
 	* sysdeps/powerpc/powerpc32/power7/memcpy.S: Likewise.

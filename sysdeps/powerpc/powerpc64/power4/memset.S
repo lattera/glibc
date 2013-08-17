@@ -50,14 +50,14 @@ L(_memset):
 
 /* Align to doubleword boundary.  */
 	cmpldi	cr5, rLEN, 31
-	rlwimi	rCHR, rCHR, 8, 16, 23 /* Replicate byte to halfword.  */
+	insrdi	rCHR, rCHR, 8, 48	/* Replicate byte to halfword.  */
 	beq+	L(aligned2)
 	mtcrf	0x01, rMEMP0
 	subfic	rALIGN, rALIGN, 8
 	cror	28,30,31		/* Detect odd word aligned.  */
 	add	rMEMP, rMEMP, rALIGN
 	sub	rLEN, rLEN, rALIGN
-	rlwimi	rCHR, rCHR, 16, 0, 15 /* Replicate halfword to word.  */
+	insrdi	rCHR, rCHR, 16, 32	/* Replicate halfword to word.  */
 	bt	29, L(g4)
 /* Process the even word of doubleword.  */
 	bf+	31, L(g2)
@@ -79,14 +79,14 @@ L(g0):
 
 /* Handle the case of size < 31.  */
 L(aligned2):
-	rlwimi	rCHR, rCHR, 16, 0, 15 /* Replicate halfword to word.  */
+	insrdi	rCHR, rCHR, 16, 32	/* Replicate halfword to word.  */
 L(aligned):
 	mtcrf	0x01, rLEN
 	ble	cr5, L(medium)
 /* Align to 32-byte boundary.  */
 	andi.	rALIGN, rMEMP, 0x18
 	subfic	rALIGN, rALIGN, 0x20
-	insrdi	rCHR,rCHR,32,0 /* Replicate word to double word. */
+	insrdi	rCHR, rCHR, 32, 0	/* Replicate word to double word. */
 	beq	L(caligned)
 	mtcrf	0x01, rALIGN
 	add	rMEMP, rMEMP, rALIGN
@@ -146,24 +146,24 @@ L(zloopstart):
 L(getCacheAligned):
 	cmpldi	cr1,rLEN,32
 	andi.	rTMP,rMEMP,127
-	blt		cr1,L(handletail32)
-	beq		L(cacheAligned)
+	blt	cr1,L(handletail32)
+	beq	L(cacheAligned)
 	addi	rMEMP,rMEMP,32
 	addi	rLEN,rLEN,-32
-	std		rCHR,-32(rMEMP)
-	std		rCHR,-24(rMEMP)
-	std		rCHR,-16(rMEMP)
-	std		rCHR,-8(rMEMP)
-	b		L(getCacheAligned)
+	std	rCHR,-32(rMEMP)
+	std	rCHR,-24(rMEMP)
+	std	rCHR,-16(rMEMP)
+	std	rCHR,-8(rMEMP)
+	b	L(getCacheAligned)
 
 /* Now we are aligned to the cache line and can use dcbz.  */
 L(cacheAligned):
 	cmpld	cr1,rLEN,rCLS
-	blt		cr1,L(handletail32)
+	blt	cr1,L(handletail32)
 	dcbz	0,rMEMP
 	subf	rLEN,rCLS,rLEN
-	add		rMEMP,rMEMP,rCLS
-	b		L(cacheAligned)
+	add	rMEMP,rMEMP,rCLS
+	b	L(cacheAligned)
 
 /* We are here because the cache line size was set and was not 32-bytes
    and the remainder (rLEN) is less than the actual cache line size.
@@ -200,7 +200,7 @@ L(le4):
 /* Memset of 0-31 bytes.  */
 	.align 5
 L(medium):
-	insrdi	rCHR,rCHR,32,0 /* Replicate word to double word.  */
+	insrdi	rCHR, rCHR, 32, 0	/* Replicate word to double word.  */
 	cmpldi	cr1, rLEN, 16
 L(medium_tail2):
 	add	rMEMP, rMEMP, rLEN

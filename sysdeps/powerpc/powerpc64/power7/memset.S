@@ -32,8 +32,8 @@ L(_memset):
 	mr	10,3
 
 	/* Replicate byte to word.  */
-	rlwimi	4,4,8,16,23
-	rlwimi	4,4,16,0,15
+	insrdi	4,4,8,48
+	insrdi	4,4,16,32
 	ble	cr6,L(small)	/* If length <= 8, use short copy code.  */
 
 	neg	0,3
@@ -321,7 +321,7 @@ L(medium):
 	clrldi	0,0,62
 	beq	L(medium_aligned)
 
-	/* Force 4-bytes alignment for SRC.  */
+	/* Force 4-bytes alignment for DST.  */
 	mtocrf	0x01,0
 	subf	5,0,5
 1:	/* Copy 1 byte.  */
