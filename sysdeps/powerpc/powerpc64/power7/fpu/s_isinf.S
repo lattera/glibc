@@ -38,9 +38,8 @@ EALIGN (__isinf, 4, 0)
 
 	stfd    fp1,-16(r1)   /* Transfer FP to GPR's.  */
 	ori	2,2,0	      /* Force a new dispatch group.  */
-	lhz	r4,-16(r1)    /* Fetch the upper portion of the high word of
-			      the FP value (where the exponent and sign bits
-			      are).  */
+	lhz	r4,-16+HISHORT(r1)  /* Fetch the upper 16 bits of the FP value
+				    (biased exponent and sign bit).  */
 	cmpwi	cr7,r4,0x7ff0 /* r4 == 0x7ff0?  */
 	li	r3,1
 	beqlr   cr7	      /* EQ means INF, otherwise -INF.  */

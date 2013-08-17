@@ -67,7 +67,7 @@ ENTRY (__lround)
 	nop	/* Ensure the following load is in a different dispatch  */
 	nop	/* group to avoid pipe stall on POWER4&5.  */
 	nop
-	lwz	r3,12(r1)	/* Load return as integer.  */
+	lwz	r3,8+LOWORD(r1)	/* Load return as integer.  */
 .Lout:
 	addi	r1,r1,16
 	blr

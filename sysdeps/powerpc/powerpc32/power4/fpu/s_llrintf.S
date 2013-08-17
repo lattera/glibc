@@ -28,8 +28,8 @@ ENTRY (__llrintf)
 	nop	/* Insure the following load is in a different dispatch group */
 	nop	/* to avoid pipe stall on POWER4&5.  */
 	nop
-	lwz	r3,8(r1)
-	lwz	r4,12(r1)
+	lwz	r3,8+HIWORD(r1)
+	lwz	r4,8+LOWORD(r1)
 	addi	r1,r1,16
 	blr
 	END (__llrintf)

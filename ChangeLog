@@ -1,5 +1,28 @@
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/powerpc/sysdep.h (LOWORD, HIWORD, HISHORT): Define.
+	* sysdeps/powerpc/powerpc32/fpu/s_copysign.S: Load little-endian
+	words of double from correct stack offsets.
+	* sysdeps/powerpc/powerpc32/fpu/s_copysignl.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_lrint.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_lround.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/s_llrint.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/s_llrintf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_llround.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_lround.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power5/fpu/s_isnan.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_isnan.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_llrint.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_llrintf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_llround.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_finite.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_isinf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_isnan.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_finite.S: Use HISHORT.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_isinf.S: Likewise.
+
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/fpu_control.h (_FPU_GETCW): Rewrite using
 	64-bit int/double union.
 	(_FPU_SETCW): Likewise.

@@ -30,7 +30,7 @@ ENTRY(__copysignl)
 	fmr	fp0,fp1
 	fabs	fp1,fp1
 	fcmpu	cr7,fp0,fp1
-	lwz	r3,8(r1)
+	lwz	r3,8+HIWORD(r1)
 	cmpwi	cr6,r3,0
 	addi	r1,r1,16
 	cfi_adjust_cfa_offset (-16)

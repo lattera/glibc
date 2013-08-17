@@ -38,7 +38,7 @@ ENTRY (__lround)
 	nop	/* Ensure the following load is in a different dispatch  */
 	nop	/* group to avoid pipe stall on POWER4&5.  */
 	nop
-	lwz	r3,12(r1)
+	lwz	r3,8+LOWORD(r1)
 	addi	r1,r1,16
 	blr
 	END (__lround)

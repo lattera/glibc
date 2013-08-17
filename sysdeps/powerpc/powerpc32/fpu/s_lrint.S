@@ -24,10 +24,10 @@ ENTRY (__lrint)
 	stwu	r1,-16(r1)
 	fctiw	fp13,fp1
 	stfd	fp13,8(r1)
-	nop	/* Insure the following load is in a different dispatch group */
+	nop	/* Ensure the following load is in a different dispatch group */
 	nop	/* to avoid pipe stall on POWER4&5.  */
 	nop
-	lwz	r3,12(r1)
+	lwz	r3,8+LOWORD(r1)
 	addi	r1,r1,16
 	blr
 	END (__lrint)

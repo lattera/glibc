@@ -27,8 +27,8 @@ EALIGN (__isnan, 4, 0)
 	ori	r1,r1,0
 	stfd	fp1,24(r1)	/* copy FPR to GPR */
 	ori	r1,r1,0
-	lwz	r4,24(r1)
-	lwz	r5,28(r1)
+	lwz	r4,24+HIWORD(r1)
+	lwz	r5,24+LOWORD(r1)
 	lis	r0,0x7ff0	/* const long r0 0x7ff00000 00000000 */
 	clrlwi	r4,r4,1		/* x = fabs(x) */
 	cmpw	cr7,r4,r0	/* if (fabs(x) =< inf) */
