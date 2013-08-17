@@ -1,5 +1,10 @@
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
+	* string/test-memcpy.c (do_one_test): When reporting errors, print
+	string address and don't overrun end of string.
+
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/powerpc64/power7/memchr.S: Replace rlwimi with
 	insrdi.  Make better use of reg selection to speed exit slightly.
 	Schedule entry path a little better.  Remove useless "are we done"
