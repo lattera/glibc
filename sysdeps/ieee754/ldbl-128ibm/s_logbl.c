@@ -27,9 +27,10 @@ long double
 __logbl (long double x)
 {
   int64_t hx, rhx;
-  int64_t lx __attribute__ ((unused));
+  double xhi;
 
-  GET_LDOUBLE_WORDS64 (hx, lx, x);
+  xhi = ldbl_high (x);
+  EXTRACT_WORDS64 (hx, xhi);
   hx &= 0x7fffffffffffffffLL;	/* high |x| */
   if (hx == 0)
     return -1.0 / fabs (x);

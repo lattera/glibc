@@ -173,23 +173,20 @@ static const long double
 long double
 __atanl (long double x)
 {
-  int k, sign;
+  int32_t k, sign, lx;
   long double t, u, p, q;
-  ieee854_long_double_shape_type s;
+  double xhi;
 
-  s.value = x;
-  k = s.parts32.w0;
-  if (k & 0x80000000)
-    sign = 1;
-  else
-    sign = 0;
+  xhi = ldbl_high (x);
+  EXTRACT_WORDS (k, lx, xhi);
+  sign = k & 0x80000000;
 
   /* Check for IEEE special cases.  */
   k &= 0x7fffffff;
   if (k >= 0x7ff00000)
     {
       /* NaN. */
-      if ((k & 0xfffff) | s.parts32.w1 )
+      if (((k - 0x7ff00000) | lx) != 0)
 	return (x + x);
 
       /* Infinity. */

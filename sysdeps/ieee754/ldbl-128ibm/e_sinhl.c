@@ -38,9 +38,11 @@ __ieee754_sinhl(long double x)
 {
 	long double t,w,h;
 	int64_t ix,jx;
+	double xhi;
 
     /* High word of |x|. */
-	GET_LDOUBLE_MSW64(jx,x);
+	xhi = ldbl_high (x);
+	EXTRACT_WORDS64 (jx, xhi);
 	ix = jx&0x7fffffffffffffffLL;
 
     /* x is INF or NaN */

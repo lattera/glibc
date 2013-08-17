@@ -53,9 +53,11 @@ long double __sinl(long double x)
 {
 	long double y[2],z=0.0L;
 	int64_t n, ix;
+	double xhi;
 
     /* High word of x. */
-	GET_LDOUBLE_MSW64(ix,x);
+	xhi = ldbl_high (x);
+	EXTRACT_WORDS64 (ix, xhi);
 
     /* |x| ~< pi/4 */
 	ix &= 0x7fffffffffffffffLL;

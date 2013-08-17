@@ -192,6 +192,9 @@ default_ldbl_unpack (long double l, double *a, double *aa)
 # define ldbl_unpack default_ldbl_unpack
 #endif
 
+/* Extract high double.  */
+#define ldbl_high(x) ((double) x)
+
 /* Convert a finite long double to canonical form.
    Does not handle +/-Inf properly.  */
 static inline void

@@ -36,8 +36,12 @@ __ieee754_acoshl(long double x)
 {
 	long double t;
 	int64_t hx;
-	u_int64_t lx;
-	GET_LDOUBLE_WORDS64(hx,lx,x);
+	uint64_t lx;
+	double xhi, xlo;
+
+	ldbl_unpack (x, &xhi, &xlo);
+	EXTRACT_WORDS64 (hx, xhi);
+	EXTRACT_WORDS64 (lx, xlo);
 	if(hx<0x3ff0000000000000LL) {		/* x < 1 */
 	    return (x-x)/(x-x);
 	} else if(hx >=0x41b0000000000000LL) {	/* x > 2**28 */

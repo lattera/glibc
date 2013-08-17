@@ -46,8 +46,10 @@ ___fpclassifyl (long double x)
 {
   u_int64_t hx, lx;
   int retval = FP_NORMAL;
+  double xhi, xlo;
 
-  GET_LDOUBLE_WORDS64 (hx, lx, x);
+  ldbl_unpack (x, &xhi, &xlo);
+  EXTRACT_WORDS64 (hx, xhi);
   if ((hx & 0x7ff0000000000000ULL) == 0x7ff0000000000000ULL) {
       /* +/-NaN or +/-Inf */
       if (hx & 0x000fffffffffffffULL) {
@@ -65,6 +67,7 @@ ___fpclassifyl (long double x)
 	      retval = FP_NORMAL;
 	  } else {
 	      if ((hx & 0x7ff0000000000000ULL) == 0x0360000000000000ULL) {
+		  EXTRACT_WORDS64 (lx, xlo);
 		  if ((lx & 0x7fffffffffffffff)	/* lower is non-zero */
 		  && ((lx^hx) & 0x8000000000000000ULL)) { /* and sign differs */
 		      /* +/- denormal */

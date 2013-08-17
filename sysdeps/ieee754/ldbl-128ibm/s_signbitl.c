@@ -25,8 +25,10 @@ int
 ___signbitl (long double x)
 {
   int64_t e;
+  double xhi;
 
-  GET_LDOUBLE_MSW64 (e, x);
+  xhi = ldbl_high (x);
+  EXTRACT_WORDS64 (e, xhi);
   return e < 0;
 }
 #ifdef IS_IN_libm

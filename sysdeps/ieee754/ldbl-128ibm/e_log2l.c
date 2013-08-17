@@ -177,11 +177,13 @@ __ieee754_log2l (x)
   long double z;
   long double y;
   int e;
-  int64_t hx, lx;
+  int64_t hx;
+  double xhi;
 
 /* Test for domain */
-  GET_LDOUBLE_WORDS64 (hx, lx, x);
-  if (((hx & 0x7fffffffffffffffLL) | (lx & 0x7fffffffffffffffLL)) == 0)
+  xhi = ldbl_high (x);
+  EXTRACT_WORDS64 (hx, xhi);
+  if ((hx & 0x7fffffffffffffffLL) == 0)
     return (-1.0L / (x - x));
   if (hx < 0)
     return (x - x) / (x - x);

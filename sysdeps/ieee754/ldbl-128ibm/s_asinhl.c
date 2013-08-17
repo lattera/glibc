@@ -38,7 +38,10 @@ long double __asinhl(long double x)
 {
 	long double t,w;
 	int64_t hx,ix;
-	GET_LDOUBLE_MSW64(hx,x);
+	double xhi;
+
+	xhi = ldbl_high (x);
+	EXTRACT_WORDS64 (hx, xhi);
 	ix = hx&0x7fffffffffffffffLL;
 	if(ix>=0x7ff0000000000000LL) return x+x;	/* x is inf or NaN */
 	if(ix< 0x3e20000000000000LL) {	/* |x|<2**-29 */

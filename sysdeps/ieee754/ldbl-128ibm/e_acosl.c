@@ -151,26 +151,25 @@ static const long double
 long double
 __ieee754_acosl (long double x)
 {
-  long double z, r, w, p, q, s, t, f2;
-  ieee854_long_double_shape_type u;
+  long double a, z, r, w, p, q, s, t, f2;
 
-  u.value = __builtin_fabsl (x);
-  if (u.value == 1.0L)
+  a = __builtin_fabsl (x);
+  if (a == 1.0L)
     {
       if (x > 0.0L)
 	return 0.0;		/* acos(1) = 0  */
       else
 	return (2.0 * pio2_hi) + (2.0 * pio2_lo);	/* acos(-1)= pi */
     }
-  else if (u.value > 1.0L)
+  else if (a > 1.0L)
     {
       return (x - x) / (x - x);	/* acos(|x| > 1) is NaN */
     }
-  if (u.value < 0.5L)
+  if (a < 0.5L)
     {
-      if (u.value < 6.938893903907228e-18L)	/* |x| < 2**-57 */
+      if (a < 6.938893903907228e-18L)	/* |x| < 2**-57 */
 	return pio2_hi + pio2_lo;
-      if (u.value < 0.4375L)
+      if (a < 0.4375L)
 	{
 	  /* Arcsine of x.  */
 	  z = x * x;
@@ -199,7 +198,7 @@ __ieee754_acosl (long double x)
 	  return z;
 	}
       /* .4375 <= |x| < .5 */
-      t = u.value - 0.4375L;
+      t = a - 0.4375L;
       p = ((((((((((P10 * t
 		    + P9) * t
 		   + P8) * t
@@ -230,9 +229,9 @@ __ieee754_acosl (long double x)
 	r = acosr4375 + r;
       return r;
     }
-  else if (u.value < 0.625L)
+  else if (a < 0.625L)
     {
-      t = u.value - 0.5625L;
+      t = a - 0.5625L;
       p = ((((((((((rS10 * t
 		    + rS9) * t
 		   + rS8) * t
@@ -264,7 +263,9 @@ __ieee754_acosl (long double x)
     }
   else
     {				/* |x| >= .625 */
-      z = (one - u.value) * 0.5;
+      double shi, slo;
+
+      z = (one - a) * 0.5;
       s = __ieee754_sqrtl (z);
       /* Compute an extended precision square root from
 	 the Newton iteration  s -> 0.5 * (s + z / s).
@@ -273,12 +274,11 @@ __ieee754_acosl (long double x)
 	  Express s = f1 + f2 where f1 * f1 is exactly representable.
 	  w = (z - s^2)/2s = (z - f1^2 - 2 f1 f2 - f2^2)/2s .
 	  s + w has extended precision.  */
-      u.value = s;
-      u.parts32.w2 = 0;
-      u.parts32.w3 = 0;
-      f2 = s - u.value;
-      w = z - u.value * u.value;
-      w = w - 2.0 * u.value * f2;
+      ldbl_unpack (s, &shi, &slo);
+      a = shi;
+      f2 = slo;
+      w = z - a * a;
+      w = w - 2.0 * a * f2;
       w = w - f2 * f2;
       w = w / (2.0 * s);
       /* Arcsine of s.  */

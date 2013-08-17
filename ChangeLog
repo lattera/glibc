@@ -1,5 +1,39 @@
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/ieee754/ldbl-128ibm/math_ldbl.h (ldbl_high): Define.
+	* sysdeps/ieee754/ldbl-128ibm/e_acoshl.c (__ieee754_acoshl): Rewrite
+	all uses of ieee854 long double macros and unions.
+	* sysdeps/ieee754/ldbl-128ibm/e_acosl.c (__ieee754_acosl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_asinl.c (__ieee754_asinl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_atanhl.c (__ieee754_atanhl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_coshl.c (__ieee754_coshl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_log2l.c (__ieee754_log2l): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_rem_pio2l.c (__ieee754_rem_pio2l):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_sinhl.c (__ieee754_sinhl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/k_cosl.c (__kernel_cosl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/k_sincosl.c (__kernel_sincosl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/k_sinl.c (__kernel_sinl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_asinhl.c (__asinhl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_atanl.c (__atanl): Likewise.
+	Simplify sign and nan test too.
+	* sysdeps/ieee754/ldbl-128ibm/s_cosl.c (__cosl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_fabsl.c (__fabsl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_finitel.c (___finitel): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_fpclassifyl.c (___fpclassifyl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_isnanl.c (___isnanl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_issignalingl.c (__issignalingl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_logbl.c (__logbl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_signbitl.c (___signbitl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_sincosl.c (__sincosl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_sinl.c (__sinl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_tanl.c (__tanl): Likewise.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_logbl.c (__logbl): Likewise.
+
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
 	* stdio-common/printf_size.c (__printf_size): Don't use
 	union ieee854_long_double in fpnum union.
 	* stdio-common/printf_fphex.c (__printf_fphex): Likewise.  Use

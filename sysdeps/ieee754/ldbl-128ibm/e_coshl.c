@@ -41,9 +41,11 @@ __ieee754_coshl (long double x)
 {
 	long double t,w;
 	int64_t ix;
+	double xhi;
 
     /* High word of |x|. */
-	GET_LDOUBLE_MSW64(ix,x);
+	xhi = ldbl_high (x);
+	EXTRACT_WORDS64 (ix, xhi);
 	ix &= 0x7fffffffffffffffLL;
 
     /* x is INF or NaN */

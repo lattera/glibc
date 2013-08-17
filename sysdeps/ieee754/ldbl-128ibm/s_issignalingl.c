@@ -22,10 +22,13 @@
 int
 __issignalingl (long double x)
 {
-  u_int64_t xi;
+  uint64_t xi;
   /* For inspecting NaN status, we only have to look at the first of the pair
      of IEEE 754 64-bit precision numbers.  */
-  GET_LDOUBLE_MSW64 (xi, x);
+  double xhi;
+
+  xhi = ldbl_high (x);
+  EXTRACT_WORDS64 (xi, xhi);
 #ifdef HIGH_ORDER_BIT_IS_SET_FOR_SNAN
 # error untested
   /* We only have to care about the high-order bit of x's significand, because

@@ -131,19 +131,18 @@ static const long double
 long double
 __ieee754_asinl (long double x)
 {
-  long double t, w, p, q, c, r, s;
+  long double a, t, w, p, q, c, r, s;
   int flag;
-  ieee854_long_double_shape_type u;
 
   flag = 0;
-  u.value = __builtin_fabsl (x);
-  if (u.value == 1.0L)	/* |x|>= 1 */
+  a = __builtin_fabsl (x);
+  if (a == 1.0L)	/* |x|>= 1 */
     return x * pio2_hi + x * pio2_lo;	/* asin(1)=+-pi/2 with inexact */
-  else if (u.value >= 1.0L)
+  else if (a >= 1.0L)
     return (x - x) / (x - x);	/* asin(|x|>1) is NaN */
-  else if (u.value < 0.5L)
+  else if (a < 0.5L)
     {
-      if (u.value < 6.938893903907228e-18L) /* |x| < 2**-57 */
+      if (a < 6.938893903907228e-18L) /* |x| < 2**-57 */
 	{
 	  if (huge + x > one)
 	    return x;		/* return x with inexact if x!=0 */
@@ -155,9 +154,9 @@ __ieee754_asinl (long double x)
 	  flag = 1;
 	}
     }
-  else if (u.value < 0.625L)
+  else if (a < 0.625L)
     {
-      t = u.value - 0.5625;
+      t = a - 0.5625;
       p = ((((((((((rS10 * t
 		    + rS9) * t
 		   + rS8) * t
@@ -190,7 +189,7 @@ __ieee754_asinl (long double x)
   else
     {
       /* 1 > |x| >= 0.625 */
-      w = one - u.value;
+      w = one - a;
       t = w * 0.5;
     }
 
@@ -223,17 +222,14 @@ __ieee754_asinl (long double x)
     }
 
   s = __ieee754_sqrtl (t);
-  if (u.value > 0.975L)
+  if (a > 0.975L)
     {
       w = p / q;
       t = pio2_hi - (2.0 * (s + s * w) - pio2_lo);
     }
   else
     {
-      u.value = s;
-      u.parts32.w3 = 0;
-      u.parts32.w2 = 0;
-      w = u.value;
+      w = ldbl_high (s);
       c = (t - w * w) / (s + w);
       r = p / q;
       p = 2.0 * s * r - (pio2_lo - 2.0 * c);
