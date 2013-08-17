@@ -1,5 +1,25 @@
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
+	[BZ #15680]
+	* sysdeps/ieee754/ldbl-128ibm/e_rem_pio2l.c: Comment fix.
+	* sysdeps/ieee754/ldbl-128ibm/printf_fphex.c
+	(PRINT_FPHEX_LONG_DOUBLE): Tidy code by moving -53 into ediff
+	calculation.  Remove unnecessary test for denormal exponent.
+	* sysdeps/ieee754/ldbl-128ibm/ldbl2mpn.c (__mpn_extract_long_double):
+	Correct handling of denormals.  Avoid undefined shift behaviour.
+	Correct normalisation of low mantissa when low double is denormal.
+	* sysdeps/ieee754/ldbl-128ibm/math_ldbl.h
+	(ldbl_extract_mantissa): Likewise.  Comment.  Use uint64_t* for hi64.
+	(ldbl_insert_mantissa): Make both hi64 and lo64 parms uint64_t.
+	Correct normalisation of low mantissa.  Test for overflow of high
+	mantissa and normalise.
+	(ldbl_nearbyint): Use more readable constant for two52.
+	* sysdeps/ieee754/ldbl-128ibm/mpn2ldbl.c
+	(__mpn_construct_long_double): Fix test for overflow of high
+	mantissa and correct normalisation.  Avoid undefined shift.
+
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/ieee754/ldbl-128ibm/ieee754.h
 	(union ibm_extended_long_double): Define as an array of ieee754_double.
 	(IBM_EXTENDED_LONG_DOUBLE_BIAS): Delete.

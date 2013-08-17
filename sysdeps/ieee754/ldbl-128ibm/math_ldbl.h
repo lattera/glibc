@@ -6,6 +6,10 @@
 #include <ieee754.h>
 #include <stdint.h>
 
+/* To suit our callers we return *hi64 and *lo64 as if they came from
+   an ieee854 112 bit mantissa, that is, 48 bits in *hi64 (plus one
+   implicit bit) and 64 bits in *lo64.  */
+
 static inline void
 ldbl_extract_mantissa (int64_t *hi64, uint64_t *lo64, int *exp, long double x)
 {
@@ -14,77 +18,119 @@ ldbl_extract_mantissa (int64_t *hi64, uint64_t *lo64, int *exp, long double x)
      the number before the decimal point and the second implicit bit
      as bit 53 of the mantissa.  */
   uint64_t hi, lo;
-  int ediff;
   union ibm_extended_long_double u;
+
   u.ld = x;
   *exp = u.d[0].ieee.exponent - IEEE754_DOUBLE_BIAS;
 
   lo = ((uint64_t) u.d[1].ieee.mantissa0 << 32) | u.d[1].ieee.mantissa1;
   hi = ((uint64_t) u.d[0].ieee.mantissa0 << 32) | u.d[0].ieee.mantissa1;
-  /* If the lower double is not a denomal or zero then set the hidden
-     53rd bit.  */
-  if (u.d[1].ieee.exponent > 0x001)
-    {
-      lo |= (1ULL << 52);
-      lo = lo << 7; /* pre-shift lo to match ieee854.  */
-      /* The lower double is normalized separately from the upper.  We
-	 may need to adjust the lower manitissa to reflect this.  */
-      ediff = u.d[0].ieee.exponent - u.d[1].ieee.exponent;
-      if (ediff > 53)
-	lo = lo >> (ediff-53);
-      hi |= (1ULL << 52);
-    }
 
-  if ((u.d[0].ieee.negative != u.d[1].ieee.negative)
-      && ((u.d[1].ieee.exponent != 0) && (lo != 0LL)))
+  if (u.d[0].ieee.exponent != 0)
     {
-      hi--;
-      lo = (1ULL << 60) - lo;
-      if (hi < (1ULL << 52))
+      int ediff;
+
+      /* If not a denormal or zero then we have an implicit 53rd bit.  */
+      hi |= (uint64_t) 1 << 52;
+
+      if (u.d[1].ieee.exponent != 0)
+	lo |= (uint64_t) 1 << 52;
+      else
+	/* A denormal is to be interpreted as having a biased exponent
+	   of 1.  */
+	lo = lo << 1;
+
+      /* We are going to shift 4 bits out of hi later, because we only
+	 want 48 bits in *hi64.  That means we want 60 bits in lo, but
+	 we currently only have 53.  Shift the value up.  */
+      lo = lo << 7;
+
+      /* The lower double is normalized separately from the upper.
+	 We may need to adjust the lower mantissa to reflect this.
+	 The difference between the exponents can be larger than 53
+	 when the low double is much less than 1ULP of the upper
+	 (in which case there are significant bits, all 0's or all
+	 1's, between the two significands).  The difference between
+	 the exponents can be less than 53 when the upper double
+	 exponent is nearing its minimum value (in which case the low
+	 double is denormal ie. has an exponent of zero).  */
+      ediff = u.d[0].ieee.exponent - u.d[1].ieee.exponent - 53;
+      if (ediff > 0)
 	{
-	  /* we have a borrow from the hidden bit, so shift left 1.  */
-	  hi = (hi << 1) | (lo >> 59);
-	  lo = 0xfffffffffffffffLL & (lo << 1);
-	  *exp = *exp - 1;
+	  if (ediff < 64)
+	    lo = lo >> ediff;
+	  else
+	    lo = 0;
+	}
+      else if (ediff < 0)
+	lo = lo << -ediff;
+
+      if (u.d[0].ieee.negative != u.d[1].ieee.negative
+	  && lo != 0)
+	{
+	  hi--;
+	  lo = ((uint64_t) 1 << 60) - lo;
+	  if (hi < (uint64_t) 1 << 52)
+	    {
+	      /* We have a borrow from the hidden bit, so shift left 1.  */
+	      hi = (hi << 1) | (lo >> 59);
+	      lo = (((uint64_t) 1 << 60) - 1) & (lo << 1);
+	      *exp = *exp - 1;
+	    }
 	}
     }
+  else
+    /* If the larger magnitude double is denormal then the smaller
+       one must be zero.  */
+    hi = hi << 1;
+
   *lo64 = (hi << 60) | lo;
   *hi64 = hi >> 4;
 }
 
 static inline long double
-ldbl_insert_mantissa (int sign, int exp, int64_t hi64, u_int64_t lo64)
+ldbl_insert_mantissa (int sign, int exp, int64_t hi64, uint64_t lo64)
 {
   union ibm_extended_long_double u;
-  unsigned long hidden2, lzcount;
-  unsigned long long hi, lo;
+  int expnt2;
+  uint64_t hi, lo;
 
   u.d[0].ieee.negative = sign;
   u.d[1].ieee.negative = sign;
   u.d[0].ieee.exponent = exp + IEEE754_DOUBLE_BIAS;
-  u.d[1].ieee.exponent = exp-53 + IEEE754_DOUBLE_BIAS;
+  u.d[1].ieee.exponent = 0;
+  expnt2 = exp - 53 + IEEE754_DOUBLE_BIAS;
+
   /* Expect 113 bits (112 bits + hidden) right justified in two longs.
      The low order 53 bits (52 + hidden) go into the lower double */
-  lo = (lo64 >> 7)& ((1ULL << 53) - 1);
-  hidden2 = (lo64 >> 59) &  1ULL;
+  lo = (lo64 >> 7) & (((uint64_t) 1 << 53) - 1);
   /* The high order 53 bits (52 + hidden) go into the upper double */
-  hi = (lo64 >> 60) & ((1ULL << 11) - 1);
-  hi |= (hi64 << 4);
+  hi = lo64 >> 60;
+  hi |= hi64 << 4;
 
-  if (lo != 0LL)
+  if (lo != 0)
     {
-      /* hidden2 bit of low double controls rounding of the high double.
-	 If hidden2 is '1' then round up hi and adjust lo (2nd mantissa)
+      int lzcount;
+
+      /* hidden bit of low double controls rounding of the high double.
+	 If hidden is '1' and either the explicit mantissa is non-zero
+	 or hi is odd, then round up hi and adjust lo (2nd mantissa)
 	 plus change the sign of the low double to compensate.  */
-      if (hidden2)
+      if ((lo & ((uint64_t) 1 << 52)) != 0
+	  && ((hi & 1) != 0 || (lo & (((uint64_t) 1 << 52) - 1)) != 0))
 	{
 	  hi++;
+	  if ((hi & ((uint64_t) 1 << 53)) != 0)
+	    {
+	      hi = hi >> 1;
+	      u.d[0].ieee.exponent++;
+	    }
 	  u.d[1].ieee.negative = !sign;
-	  lo = (1ULL << 53) - lo;
+	  lo = ((uint64_t) 1 << 53) - lo;
 	}
-      /* The hidden bit of the lo mantissa is zero so we need to
-	 normalize the it for the low double.  Shift it left until the
-	 hidden bit is '1' then adjust the 2nd exponent accordingly.  */
+
+      /* Normalize the low double.  Shift the mantissa left until
+	 the hidden bit is '1' and adjust the exponent accordingly.  */
 
       if (sizeof (lo) == sizeof (long))
 	lzcount = __builtin_clzl (lo);
@@ -92,34 +138,30 @@ ldbl_insert_mantissa (int sign, int exp, int64_t hi64, u_int64_t lo64)
 	lzcount = __builtin_clzl ((long) (lo >> 32));
       else
 	lzcount = __builtin_clzl ((long) lo) + 32;
-      lzcount = lzcount - 11;
-      if (lzcount > 0)
+      lzcount = lzcount - (64 - 53);
+      lo <<= lzcount;
+      expnt2 -= lzcount;
+
+      if (expnt2 >= 1)
+	/* Not denormal.  */
+	u.d[1].ieee.exponent = expnt2;
+      else
 	{
-	  int expnt2 = u.d[1].ieee.exponent - lzcount;
-	  if (expnt2 >= 1)
-	    {
-	      /* Not denormal.  Normalize and set low exponent.  */
-	      lo = lo << lzcount;
-	      u.d[1].ieee.exponent = expnt2;
-	    }
+	  /* Is denormal.  Note that biased exponent of 0 is treated
+	     as if it was 1, hence the extra shift.  */
+	  if (expnt2 > -53)
+	    lo >>= 1 - expnt2;
 	  else
-	    {
-	      /* Is denormal.  */
-	      lo = lo << (lzcount + expnt2);
-	      u.d[1].ieee.exponent = 0;
-	    }
+	    lo = 0;
 	}
     }
   else
-    {
-      u.d[1].ieee.negative = 0;
-      u.d[1].ieee.exponent = 0;
-    }
+    u.d[1].ieee.negative = 0;
 
-  u.d[1].ieee.mantissa1 = lo & ((1ULL << 32) - 1);
-  u.d[1].ieee.mantissa0 = (lo >> 32) & ((1ULL << 20) - 1);
-  u.d[0].ieee.mantissa1 = hi & ((1ULL << 32) - 1);
-  u.d[0].ieee.mantissa0 = (hi >> 32) & ((1ULL << 20) - 1);
+  u.d[1].ieee.mantissa1 = lo;
+  u.d[1].ieee.mantissa0 = lo >> 32;
+  u.d[0].ieee.mantissa1 = hi;
+  u.d[0].ieee.mantissa0 = hi >> 32;
   return u.ld;
 }
 
@@ -163,13 +205,13 @@ ldbl_canonicalize (double *a, double *aa)
   *aa = xl;
 }
 
-/* Simple inline nearbyint (double) function .
+/* Simple inline nearbyint (double) function.
    Only works in the default rounding mode
    but is useful in long double rounding functions.  */
 static inline double
 ldbl_nearbyint (double a)
 {
-  double two52 = 0x10000000000000LL;
+  double two52 = 0x1p52;
 
   if (__builtin_expect ((__builtin_fabs (a) < two52), 1))
     {

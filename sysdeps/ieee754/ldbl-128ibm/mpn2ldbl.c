@@ -69,9 +69,9 @@ __mpn_construct_long_double (mp_srcptr frac_ptr, int expt, int sign)
       else
 	lzcount = __builtin_clzl ((long) val) + 32;
       if (hi)
-	lzcount = lzcount - 11;
+	lzcount = lzcount - (64 - 53);
       else
-	lzcount = lzcount + 42;
+	lzcount = lzcount + 53 - (64 - 53);
 
       if (lzcount > u.d[0].ieee.exponent)
 	{
@@ -97,29 +97,27 @@ __mpn_construct_long_double (mp_srcptr frac_ptr, int expt, int sign)
 	}
     }
 
-  if (lo != 0L)
+  if (lo != 0)
     {
-      /* hidden2 bit of low double controls rounding of the high double.
-	 If hidden2 is '1' and either the explicit mantissa is non-zero
+      /* hidden bit of low double controls rounding of the high double.
+	 If hidden is '1' and either the explicit mantissa is non-zero
 	 or hi is odd, then round up hi and adjust lo (2nd mantissa)
 	 plus change the sign of the low double to compensate.  */
       if ((lo & (1LL << 52)) != 0
-	  && ((hi & 1) != 0 || (lo & ((1LL << 52) - 1))))
+	  && ((hi & 1) != 0 || (lo & ((1LL << 52) - 1)) != 0))
 	{
 	  hi++;
-	  if ((hi & ((1LL << 52) - 1)) == 0)
+	  if ((hi & (1LL << 53)) != 0)
 	    {
-	      if ((hi & (1LL << 53)) != 0)
-		hi -= 1LL << 52;
+	      hi >>= 1;
 	      u.d[0].ieee.exponent++;
 	    }
 	  u.d[1].ieee.negative = !sign;
 	  lo = (1LL << 53) - lo;
 	}
 
-      /* The hidden bit of the lo mantissa is zero so we need to normalize
-	 it for the low double.  Shift it left until the hidden bit is '1'
-	 then adjust the 2nd exponent accordingly.  */
+      /* Normalize the low double.  Shift the mantissa left until
+	 the hidden bit is '1' and adjust the exponent accordingly.  */
 
       if (sizeof (lo) == sizeof (long))
 	lzcount = __builtin_clzl (lo);
@@ -127,24 +125,24 @@ __mpn_construct_long_double (mp_srcptr frac_ptr, int expt, int sign)
 	lzcount = __builtin_clzl ((long) (lo >> 32));
       else
 	lzcount = __builtin_clzl ((long) lo) + 32;
-      lzcount = lzcount - 11;
-      if (lzcount > 0)
-	{
-	  lo = lo << lzcount;
-	  exponent2 = exponent2 - lzcount;
-	}
+      lzcount = lzcount - (64 - 53);
+      lo <<= lzcount;
+      exponent2 -= lzcount;
+
       if (exponent2 > 0)
 	u.d[1].ieee.exponent = exponent2;
-      else
+      else if (exponent2 > -53)
 	lo >>= 1 - exponent2;
+      else
+	lo = 0;
     }
   else
     u.d[1].ieee.negative = 0;
 
-  u.d[1].ieee.mantissa1 = lo & 0xffffffffLL;
-  u.d[1].ieee.mantissa0 = (lo >> 32) & 0xfffff;
-  u.d[0].ieee.mantissa1 = hi & 0xffffffffLL;
-  u.d[0].ieee.mantissa0 = (hi >> 32) & ((1LL << (LDBL_MANT_DIG - 86)) - 1);
+  u.d[1].ieee.mantissa1 = lo;
+  u.d[1].ieee.mantissa0 = lo >> 32;
+  u.d[0].ieee.mantissa1 = hi;
+  u.d[0].ieee.mantissa0 = hi >> 32;
 
   return u.ld;
 }

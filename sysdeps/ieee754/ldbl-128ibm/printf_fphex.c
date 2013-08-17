@@ -42,15 +42,15 @@ do {									      \
 	lo <<= 1;							      \
       /* The lower double is normalized separately from the upper.  We	      \
 	 may need to adjust the lower manitissa to reflect this.  */	      \
-      ediff = u.d[0].ieee.exponent - u.d[1].ieee.exponent;		      \
-      if (ediff > 53 + 63)						      \
+      ediff = u.d[0].ieee.exponent - u.d[1].ieee.exponent - 53;		      \
+      if (ediff > 63)							      \
 	lo = 0;								      \
-      else if (ediff > 53)						      \
-	lo = lo >> (ediff - 53);					      \
-      else if (u.d[1].ieee.exponent == 0 && ediff < 53)			      \
-	lo = lo << (53 - ediff);					      \
+      else if (ediff > 0)						      \
+	lo = lo >> ediff;						      \
+      else if (ediff < 0)						      \
+	lo = lo << -ediff;						      \
       if (u.d[0].ieee.negative != u.d[1].ieee.negative			      \
-	  && (u.d[1].ieee.exponent != 0 || lo != 0L))			      \
+	  && lo != 0)							      \
 	{								      \
 	  lo = (1ULL << 60) - lo;					      \
 	  if (hi == 0L)							      \
