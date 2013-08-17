@@ -26,8 +26,10 @@
 /* float [fp1] nearbyintf(float [fp1]) */
 
 	.section	".toc","aw"
+	.p2align 3
 .LC0:	/* 2**23 */
-	.tc FD_4b000000_0[TC],0x4b00000000000000
+	.long 0x4b000000
+	.long 0x0
 	.section	".text"
 
 EALIGN (__nearbyintf, 4, 0)
