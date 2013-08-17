@@ -1,3 +1,9 @@
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
+	* sysdeps/powerpc/fpu/s_float_bitwise.h (__float_and_test28): Don't
+	use vector int constants.
+	(__float_and_test24, __float_and8, __float_get_exp): Likewise.
+
 2013-10-04  Anton Blanchard <anton@au1.ibm.com>
 
 	* sysdeps/powerpc/fpu/fenv_libc.h (fenv_union_t): Replace int
