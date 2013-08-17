@@ -1,5 +1,18 @@
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/powerpc/powerpc32/power4/memcpy.S: Add little endian support.
+	* sysdeps/powerpc/powerpc32/power6/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power7/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power7/mempcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power4/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power6/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/mempcpy.S: Likewise.  Make better
+	use of regs.  Use power7 mtocrf.  Tidy function tails.
+
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/powerpc64/power7/memcmp.S: Add little-endian support.
 	Formatting.  Consistently use rXXX register defines or rN defines.
 	Use early exit labels that avoid restoring unused non-volatile regs.

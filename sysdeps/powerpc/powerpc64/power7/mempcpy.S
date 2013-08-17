@@ -365,13 +365,21 @@ L(copy_GE_32_unaligned_cont):
 	mr	11,12
 	mtcrf	0x01,9
 	cmpldi	cr6,9,1
-	lvsl	5,0,12
+#ifdef __LITTLE_ENDIAN__
+	lvsr    5,0,12
+#else
+	lvsl    5,0,12
+#endif
 	lvx	3,0,12
 	bf	31,L(setup_unaligned_loop)
 
 	/* Copy another 16 bytes to align to 32-bytes due to the loop .  */
 	lvx	4,12,6
-	vperm	6,3,4,5
+#ifdef __LITTLE_ENDIAN__
+	vperm   6,4,3,5
+#else
+	vperm   6,3,4,5
+#endif
 	addi	11,12,16
 	addi	10,3,16
 	stvx	6,0,3
@@ -391,11 +399,17 @@ L(unaligned_loop):
 	vector instructions though.  */
 
 	lvx	4,11,6	      /* vr4 = r11+16.  */
-	vperm	6,3,4,5	      /* Merge the correctly-aligned portions
-				 of vr3/vr4 into vr6.  */
+#ifdef __LITTLE_ENDIAN__
+	vperm   6,4,3,5
+#else
+	vperm   6,3,4,5
+#endif
 	lvx	3,11,7	      /* vr3 = r11+32.  */
-	vperm	10,4,3,5      /* Merge the correctly-aligned portions
-				 of vr3/vr4 into vr10.  */
+#ifdef __LITTLE_ENDIAN__
+	vperm   10,3,4,5
+#else
+	vperm   10,4,3,5
+#endif
 	addi	11,11,32
 	stvx	6,0,10
 	stvx	10,10,6

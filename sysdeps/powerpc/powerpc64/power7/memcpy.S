@@ -23,418 +23,361 @@
 /* __ptr_t [r3] memcpy (__ptr_t dst [r3], __ptr_t src [r4], size_t len [r5]);
    Returns 'dst'.  */
 
+#define dst 11		/* Use r11 so r3 kept unchanged.  */
+#define src 4
+#define cnt 5
+
 	.machine power7
 EALIGN (memcpy, 5, 0)
 	CALL_MCOUNT 3
 
-	cmpldi  cr1,5,31
+	cmpldi	cr1,cnt,31
 	neg	0,3
-	std	3,-16(1)
-	std	31,-8(1)
-	cfi_offset(31,-8)
 	ble	cr1, L(copy_LT_32)  /* If move < 32 bytes use short move
 				    code.  */
 
-	andi.   11,3,7	      /* Check alignment of DST.  */
+#ifdef __LITTLE_ENDIAN__
+/* In little-endian mode, power7 takes an alignment trap on any lxvd2x
+   or stxvd2x crossing a 32-byte boundary, so ensure the aligned_copy
+   loop is only used for quadword aligned copies.  */
+	andi.	10,3,15
+	clrldi	11,4,60
+#else
+	andi.	10,3,7		/* Check alignment of DST.  */
+	clrldi	11,4,61		/* Check alignment of SRC.  */
+#endif
+	cmpld	cr6,10,11	/* SRC and DST alignments match?  */
 
-
-	clrldi  10,4,61       /* Check alignment of SRC.  */
-	cmpld   cr6,10,11     /* SRC and DST alignments match?  */
-	mr	12,4
-	mr	31,5
+	mr	dst,3
 	bne	cr6,L(copy_GE_32_unaligned)
+	beq	L(aligned_copy)
 
-	srdi    9,5,3	      /* Number of full quadwords remaining.  */
+	mtocrf	0x01,0
+#ifdef __LITTLE_ENDIAN__
+	clrldi	0,0,60
+#else
+	clrldi	0,0,61
+#endif
 
-	beq    L(copy_GE_32_aligned_cont)
-
-	clrldi  0,0,61
-	mtcrf   0x01,0
-	subf    31,0,5
-
-	/* Get the SRC aligned to 8 bytes.  */
-
-1:	bf	31,2f
-	lbz	6,0(12)
-	addi    12,12,1
-	stb	6,0(3)
-	addi    3,3,1
-2:	bf      30,4f
-	lhz     6,0(12)
-	addi    12,12,2
-	sth     6,0(3)
-	addi    3,3,2
-4:	bf      29,0f
-	lwz     6,0(12)
-	addi    12,12,4
-	stw     6,0(3)
-	addi    3,3,4
-0:
-	clrldi  10,12,61      /* Check alignment of SRC again.  */
-	srdi    9,31,3	      /* Number of full doublewords remaining.  */
-
-L(copy_GE_32_aligned_cont):
-
-	clrldi  11,31,61
-	mtcrf   0x01,9
-
-	srdi    8,31,5
-	cmpldi  cr1,9,4
-	cmpldi  cr6,11,0
-	mr	11,12
-
-	/* Copy 1~3 doublewords so the main loop starts
-	at a multiple of 32 bytes.  */
-
-	bf	30,1f
-	ld      6,0(12)
-	ld      7,8(12)
-	addi    11,12,16
-	mtctr   8
-	std     6,0(3)
-	std     7,8(3)
-	addi    10,3,16
-	bf      31,4f
-	ld      0,16(12)
-	std     0,16(3)
-	blt     cr1,3f
-	addi    11,12,24
-	addi    10,3,24
-	b       4f
-
-	.align  4
-1:	/* Copy 1 doubleword and set the counter.  */
-	mr	10,3
-	mtctr   8
-	bf      31,4f
-	ld      6,0(12)
-	addi    11,12,8
-	std     6,0(3)
-	addi    10,3,8
-
-L(aligned_copy):
-	/* Main aligned copy loop. Copies up to 128-bytes at a time. */
-	.align  4
+/* Get the DST and SRC aligned to 8 bytes (16 for little-endian).  */
+1:
+	bf	31,2f
+	lbz	6,0(src)
+	addi	src,src,1
+	stb	6,0(dst)
+	addi	dst,dst,1
+2:
+	bf	30,4f
+	lhz	6,0(src)
+	addi	src,src,2
+	sth	6,0(dst)
+	addi	dst,dst,2
 4:
-	/* check for any 32-byte or 64-byte lumps that are outside of a
-	   nice 128-byte range.  R8 contains the number of 32-byte
-	   lumps, so drop this into the CR, and use the SO/EQ bits to help
-	   handle the 32- or 64- byte lumps.  Then handle the rest with an
-	   unrolled 128-bytes-at-a-time copy loop. */
-	mtocrf	1,8
-	li	6,16	# 16() index
-	li	7,32	# 32() index
-	li	8,48	# 48() index
+	bf	29,8f
+	lwz	6,0(src)
+	addi	src,src,4
+	stw	6,0(dst)
+	addi	dst,dst,4
+8:
+#ifdef __LITTLE_ENDIAN__
+	bf	28,16f
+	ld	6,0(src)
+	addi	src,src,8
+	std	6,0(dst)
+	addi	dst,dst,8
+16:
+#endif
+	subf	cnt,0,cnt
 
-L(aligned_32byte):
-	/* if the SO bit (indicating a 32-byte lump) is not set, move along. */
-	bns	cr7,L(aligned_64byte)
-	lxvd2x	6,0,11
-	lxvd2x	7,11,6
-	addi	11,11,32
-	stxvd2x	6,0,10
-	stxvd2x	7,10,6
-	addi	10,10,32
-
-L(aligned_64byte):
-	/* if the EQ bit (indicating a 64-byte lump) is not set, move along. */
-	bne	cr7,L(aligned_128setup)
-	lxvd2x	6,0,11
-	lxvd2x	7,11,6
-	lxvd2x	8,11,7
-	lxvd2x	9,11,8
-	addi	11,11,64
-	stxvd2x	6,0,10
-	stxvd2x	7,10,6
-	stxvd2x	8,10,7
-	stxvd2x	9,10,8
-	addi	10,10,64
-
-L(aligned_128setup):
-	/* Set up for the 128-byte at a time copy loop.  */
-	srdi	8,31,7
-	cmpdi	8,0	# Any 4x lumps left?
-	beq	3f	# if not, move along.
-	lxvd2x	6,0,11
-	lxvd2x	7,11,6
-	mtctr	8	# otherwise, load the ctr and begin.
-	li	8,48	# 48() index
+/* Main aligned copy loop. Copies 128 bytes at a time. */
+L(aligned_copy):
+	li	6,16
+	li	7,32
+	li	8,48
+	mtocrf	0x02,cnt
+	srdi	12,cnt,7
+	cmpdi	12,0
+	beq	L(aligned_tail)
+	lxvd2x	6,0,src
+	lxvd2x	7,src,6
+	mtctr	12
 	b	L(aligned_128loop)
 
+	.align  4
 L(aligned_128head):
 	/* for the 2nd + iteration of this loop. */
-	lxvd2x	6,0,11
-	lxvd2x	7,11,6
+	lxvd2x	6,0,src
+	lxvd2x	7,src,6
 L(aligned_128loop):
-	lxvd2x	8,11,7
-	lxvd2x	9,11,8
-	stxvd2x	6,0,10
-	addi	11,11,64
-	stxvd2x	7,10,6
-	stxvd2x	8,10,7
-	stxvd2x	9,10,8
-	lxvd2x	6,0,11
-	lxvd2x	7,11,6
-	addi	10,10,64
-	lxvd2x	8,11,7
-	lxvd2x	9,11,8
-	addi	11,11,64
-	stxvd2x	6,0,10
-	stxvd2x	7,10,6
-	stxvd2x	8,10,7
-	stxvd2x	9,10,8
-	addi	10,10,64
+	lxvd2x	8,src,7
+	lxvd2x	9,src,8
+	stxvd2x	6,0,dst
+	addi	src,src,64
+	stxvd2x	7,dst,6
+	stxvd2x	8,dst,7
+	stxvd2x	9,dst,8
+	lxvd2x	6,0,src
+	lxvd2x	7,src,6
+	addi	dst,dst,64
+	lxvd2x	8,src,7
+	lxvd2x	9,src,8
+	addi	src,src,64
+	stxvd2x	6,0,dst
+	stxvd2x	7,dst,6
+	stxvd2x	8,dst,7
+	stxvd2x	9,dst,8
+	addi	dst,dst,64
 	bdnz	L(aligned_128head)
 
-3:
-	/* Check for tail bytes.  */
-	rldicr  0,31,0,60
-	mtcrf   0x01,31
-	beq	cr6,0f
-
-.L9:
-	add	3,3,0
-	add	12,12,0
-
-	/*  At this point we have a tail of 0-7 bytes and we know that the
-	destination is doubleword-aligned.  */
-4:	/* Copy 4 bytes.  */
-	bf	29,2f
-
-	lwz     6,0(12)
-	addi    12,12,4
-	stw     6,0(3)
-	addi    3,3,4
-2:	/* Copy 2 bytes.  */
-	bf	30,1f
-
-	lhz     6,0(12)
-	addi    12,12,2
-	sth     6,0(3)
-	addi    3,3,2
-1:	/* Copy 1 byte.  */
-	bf	31,0f
-
-	lbz	6,0(12)
-	stb	6,0(3)
-0:	/* Return original DST pointer.  */
-	ld	31,-8(1)
-	ld	3,-16(1)
+L(aligned_tail):
+	mtocrf	0x01,cnt
+	bf	25,32f
+	lxvd2x	6,0,src
+	lxvd2x	7,src,6
+	lxvd2x	8,src,7
+	lxvd2x	9,src,8
+	addi	src,src,64
+	stxvd2x	6,0,dst
+	stxvd2x	7,dst,6
+	stxvd2x	8,dst,7
+	stxvd2x	9,dst,8
+	addi	dst,dst,64
+32:
+	bf	26,16f
+	lxvd2x	6,0,src
+	lxvd2x	7,src,6
+	addi	src,src,32
+	stxvd2x	6,0,dst
+	stxvd2x	7,dst,6
+	addi	dst,dst,32
+16:
+	bf	27,8f
+	lxvd2x	6,0,src
+	addi	src,src,16
+	stxvd2x	6,0,dst
+	addi	dst,dst,16
+8:
+	bf	28,4f
+	ld	6,0(src)
+	addi	src,src,8
+	std     6,0(dst)
+	addi	dst,dst,8
+4:	/* Copies 4~7 bytes.  */
+	bf	29,L(tail2)
+	lwz	6,0(src)
+	stw     6,0(dst)
+	bf      30,L(tail5)
+	lhz     7,4(src)
+	sth     7,4(dst)
+	bflr	31
+	lbz     8,6(src)
+	stb     8,6(dst)
+	/* Return original DST pointer.  */
 	blr
 
-	/* Handle copies of 0~31 bytes.  */
-	.align  4
+
+/* Handle copies of 0~31 bytes.  */
+	.align	4
 L(copy_LT_32):
-	cmpldi  cr6,5,8
-	mr	12,4
-	mtcrf   0x01,5
+	mr	dst,3
+	cmpldi	cr6,cnt,8
+	mtocrf	0x01,cnt
 	ble	cr6,L(copy_LE_8)
 
 	/* At least 9 bytes to go.  */
 	neg	8,4
-	clrrdi  11,4,2
-	andi.   0,8,3
-	cmpldi  cr1,5,16
-	mr	10,5
+	andi.	0,8,3
+	cmpldi	cr1,cnt,16
 	beq	L(copy_LT_32_aligned)
 
-	/* Force 4-bytes alignment for SRC.  */
-	mtocrf  0x01,0
-	subf    10,0,5
-2:	bf	30,1f
+	/* Force 4-byte alignment for SRC.  */
+	mtocrf	0x01,0
+	subf	cnt,0,cnt
+2:
+	bf	30,1f
+	lhz	6,0(src)
+	addi	src,src,2
+	sth	6,0(dst)
+	addi	dst,dst,2
+1:
+	bf	31,L(end_4bytes_alignment)
+	lbz	6,0(src)
+	addi	src,src,1
+	stb	6,0(dst)
+	addi	dst,dst,1
 
-	lhz	6,0(12)
-	addi    12,12,2
-	sth	6,0(3)
-	addi    3,3,2
-1:	bf	31,L(end_4bytes_alignment)
-
-	lbz	6,0(12)
-	addi    12,12,1
-	stb	6,0(3)
-	addi    3,3,1
-
-	.align  4
+	.align	4
 L(end_4bytes_alignment):
-	cmpldi  cr1,10,16
-	mtcrf   0x01,10
+	cmpldi	cr1,cnt,16
+	mtocrf	0x01,cnt
 
 L(copy_LT_32_aligned):
 	/* At least 6 bytes to go, and SRC is word-aligned.  */
 	blt	cr1,8f
 
 	/* Copy 16 bytes.  */
-	lwz	6,0(12)
-	lwz     7,4(12)
-	stw     6,0(3)
-	lwz     8,8(12)
-	stw     7,4(3)
-	lwz     6,12(12)
-	addi    12,12,16
-	stw     8,8(3)
-	stw     6,12(3)
-	addi    3,3,16
+	lwz	6,0(src)
+	lwz	7,4(src)
+	stw	6,0(dst)
+	lwz	8,8(src)
+	stw	7,4(dst)
+	lwz	6,12(src)
+	addi	src,src,16
+	stw	8,8(dst)
+	stw	6,12(dst)
+	addi	dst,dst,16
 8:	/* Copy 8 bytes.  */
-	bf	28,4f
+	bf	28,L(tail4)
+	lwz	6,0(src)
+	lwz	7,4(src)
+	addi	src,src,8
+	stw	6,0(dst)
+	stw	7,4(dst)
+	addi	dst,dst,8
 
-	lwz     6,0(12)
-	lwz     7,4(12)
-	addi    12,12,8
-	stw     6,0(3)
-	stw     7,4(3)
-	addi    3,3,8
-4:	/* Copy 4 bytes.  */
-	bf	29,2f
+	.align	4
+/* Copies 4~7 bytes.  */
+L(tail4):
+	bf	29,L(tail2)
+	lwz	6,0(src)
+	stw	6,0(dst)
+	bf	30,L(tail5)
+	lhz	7,4(src)
+	sth	7,4(dst)
+	bflr	31
+	lbz	8,6(src)
+	stb	8,6(dst)
+	/* Return original DST pointer.  */
+	blr
 
-	lwz     6,0(12)
-	addi    12,12,4
-	stw     6,0(3)
-	addi    3,3,4
-2:	/* Copy 2-3 bytes.  */
+	.align	4
+/* Copies 2~3 bytes.  */
+L(tail2):
 	bf	30,1f
-
-	lhz     6,0(12)
-	sth     6,0(3)
-	bf      31,0f
-	lbz     7,2(12)
-	stb     7,2(3)
-	ld	3,-16(1)
+	lhz	6,0(src)
+	sth	6,0(dst)
+	bflr	31
+	lbz	7,2(src)
+	stb	7,2(dst)
 	blr
 
-	.align  4
-1:	/* Copy 1 byte.  */
-	bf	31,0f
-
-	lbz	6,0(12)
-	stb	6,0(3)
-0:	/* Return original DST pointer.  */
-	ld	3,-16(1)
+	.align	4
+L(tail5):
+	bflr	31
+	lbz	6,4(src)
+	stb	6,4(dst)
 	blr
 
-	/* Handles copies of 0~8 bytes.  */
-	.align  4
+	.align	4
+1:
+	bflr	31
+	lbz	6,0(src)
+	stb	6,0(dst)
+	/* Return original DST pointer.  */
+	blr
+
+
+/* Handles copies of 0~8 bytes.  */
+	.align	4
 L(copy_LE_8):
-	bne	cr6,4f
+	bne	cr6,L(tail4)
 
 	/* Though we could've used ld/std here, they are still
 	slow for unaligned cases.  */
 
-	lwz	6,0(4)
-	lwz     7,4(4)
-	stw     6,0(3)
-	stw     7,4(3)
-	ld      3,-16(1)      /* Return original DST pointers.  */
+	lwz	6,0(src)
+	lwz	7,4(src)
+	stw	6,0(dst)
+	stw	7,4(dst)
 	blr
 
-	.align  4
-4:	/* Copies 4~7 bytes.  */
-	bf	29,2b
 
-	lwz	6,0(4)
-	stw     6,0(3)
-	bf      30,5f
-	lhz     7,4(4)
-	sth     7,4(3)
-	bf      31,0f
-	lbz     8,6(4)
-	stb     8,6(3)
-	ld	3,-16(1)
-	blr
-
-	.align  4
-5:	/* Copy 1 byte.  */
-	bf	31,0f
-
-	lbz	6,4(4)
-	stb	6,4(3)
-
-0:	/* Return original DST pointer.  */
-	ld	3,-16(1)
-	blr
-
-	/* Handle copies of 32+ bytes where DST is aligned (to quadword) but
-	SRC is not.  Use aligned quadword loads from SRC, shifted to realign
-	the data, allowing for aligned DST stores.  */
-	.align  4
+/* Handle copies of 32+ bytes where DST is aligned (to quadword) but
+   SRC is not.	Use aligned quadword loads from SRC, shifted to realign
+   the data, allowing for aligned DST stores.  */
+	.align	4
 L(copy_GE_32_unaligned):
-	clrldi  0,0,60	      /* Number of bytes until the 1st
-			      quadword.  */
-	andi.   11,3,15       /* Check alignment of DST (against
-			      quadwords).  */
-	srdi    9,5,4	      /* Number of full quadwords remaining.  */
+	clrldi	0,0,60	      /* Number of bytes until the 1st dst quadword.  */
+#ifndef __LITTLE_ENDIAN__
+	andi.	10,3,15	      /* Check alignment of DST (against quadwords).  */
+#endif
+	srdi	9,cnt,4	      /* Number of full quadwords remaining.  */
 
 	beq	L(copy_GE_32_unaligned_cont)
 
-	/* SRC is not quadword aligned, get it aligned.  */
+	/* DST is not quadword aligned, get it aligned.  */
 
-	mtcrf   0x01,0
-	subf    31,0,5
+	mtocrf	0x01,0
+	subf	cnt,0,cnt
 
 	/* Vector instructions work best when proper alignment (16-bytes)
 	is present.  Move 0~15 bytes as needed to get DST quadword-aligned.  */
-1:	/* Copy 1 byte.  */
+1:
 	bf	31,2f
-
-	lbz	6,0(12)
-	addi    12,12,1
-	stb	6,0(3)
-	addi    3,3,1
-2:	/* Copy 2 bytes.  */
+	lbz	6,0(src)
+	addi	src,src,1
+	stb	6,0(dst)
+	addi	dst,dst,1
+2:
 	bf	30,4f
-
-	lhz     6,0(12)
-	addi    12,12,2
-	sth     6,0(3)
-	addi    3,3,2
-4:	/* Copy 4 bytes.  */
+	lhz	6,0(src)
+	addi	src,src,2
+	sth	6,0(dst)
+	addi	dst,dst,2
+4:
 	bf	29,8f
-
-	lwz     6,0(12)
-	addi    12,12,4
-	stw     6,0(3)
-	addi    3,3,4
-8:	/* Copy 8 bytes.  */
+	lwz	6,0(src)
+	addi	src,src,4
+	stw	6,0(dst)
+	addi	dst,dst,4
+8:
 	bf	28,0f
-
-	ld	6,0(12)
-	addi    12,12,8
-	std	6,0(3)
-	addi    3,3,8
+	ld	6,0(src)
+	addi	src,src,8
+	std	6,0(dst)
+	addi	dst,dst,8
 0:
-	clrldi  10,12,60      /* Check alignment of SRC.  */
-	srdi    9,31,4	      /* Number of full quadwords remaining.  */
+	srdi	9,cnt,4	      /* Number of full quadwords remaining.  */
 
 	/* The proper alignment is present, it is OK to copy the bytes now.  */
 L(copy_GE_32_unaligned_cont):
 
 	/* Setup two indexes to speed up the indexed vector operations.  */
-	clrldi  11,31,60
-	li      6,16	      /* Index for 16-bytes offsets.  */
+	clrldi	10,cnt,60
+	li	6,16	      /* Index for 16-bytes offsets.  */
 	li	7,32	      /* Index for 32-bytes offsets.  */
-	cmpldi  cr1,11,0
-	srdi    8,31,5	      /* Setup the loop counter.  */
-	mr      10,3
-	mr      11,12
-	mtcrf   0x01,9
-	cmpldi  cr6,9,1
-	lvsl    5,0,12
-	lvx     3,0,12
-	bf      31,L(setup_unaligned_loop)
+	cmpldi	cr1,10,0
+	srdi	8,cnt,5	      /* Setup the loop counter.  */
+	mtocrf	0x01,9
+	cmpldi	cr6,9,1
+#ifdef __LITTLE_ENDIAN__
+	lvsr	5,0,src
+#else
+	lvsl	5,0,src
+#endif
+	lvx	3,0,src
+	li	0,0
+	bf	31,L(setup_unaligned_loop)
 
-	/* Copy another 16 bytes to align to 32-bytes due to the loop .  */
-	lvx     4,12,6
-	vperm   6,3,4,5
-	addi    11,12,16
-	addi    10,3,16
-	stvx    6,0,3
+	/* Copy another 16 bytes to align to 32-bytes due to the loop.  */
+	lvx	4,src,6
+#ifdef __LITTLE_ENDIAN__
+	vperm	6,4,3,5
+#else
+	vperm	6,3,4,5
+#endif
+	addi	src,src,16
+	stvx	6,0,dst
+	addi	dst,dst,16
 	vor	3,4,4
+	clrrdi	0,src,60
 
 L(setup_unaligned_loop):
-	mtctr   8
-	ble     cr6,L(end_unaligned_loop)
+	mtctr	8
+	ble	cr6,L(end_unaligned_loop)
 
 	/* Copy 32 bytes at a time using vector instructions.  */
-	.align  4
+	.align	4
 L(unaligned_loop):
 
 	/* Note: vr6/vr10 may contain data that was already copied,
@@ -442,62 +385,55 @@ L(unaligned_loop):
 	some portions again. This is faster than having unaligned
 	vector instructions though.  */
 
-	lvx	4,11,6	      /* vr4 = r11+16.  */
-	vperm   6,3,4,5	      /* Merge the correctly-aligned portions
-			      of vr3/vr4 into vr6.  */
-	lvx	3,11,7	      /* vr3 = r11+32.  */
-	vperm   10,4,3,5      /* Merge the correctly-aligned portions
-			      of vr3/vr4 into vr10.  */
-	addi    11,11,32
-	stvx    6,0,10
-	stvx    10,10,6
-	addi    10,10,32
-
+	lvx	4,src,6
+#ifdef __LITTLE_ENDIAN__
+	vperm	6,4,3,5
+#else
+	vperm	6,3,4,5
+#endif
+	lvx	3,src,7
+#ifdef __LITTLE_ENDIAN__
+	vperm	10,3,4,5
+#else
+	vperm	10,4,3,5
+#endif
+	addi	src,src,32
+	stvx	6,0,dst
+	stvx	10,dst,6
+	addi	dst,dst,32
 	bdnz	L(unaligned_loop)
 
-	.align  4
+	clrrdi	0,src,60
+
+	.align	4
 L(end_unaligned_loop):
 
 	/* Check for tail bytes.  */
-	rldicr  0,31,0,59
-	mtcrf   0x01,31
-	beq	cr1,0f
+	mtocrf	0x01,cnt
+	beqlr	cr1
 
-	add	3,3,0
-	add	12,12,0
+	add	src,src,0
 
 	/*  We have 1~15 tail bytes to copy, and DST is quadword aligned.  */
-8:	/* Copy 8 bytes.  */
+	/* Copy 8 bytes.  */
 	bf	28,4f
-
-	lwz	6,0(12)
-	lwz	7,4(12)
-	addi    12,12,8
-	stw	6,0(3)
-	stw	7,4(3)
-	addi    3,3,8
-4:	/* Copy 4 bytes.  */
-	bf	29,2f
-
-	lwz	6,0(12)
-	addi    12,12,4
-	stw	6,0(3)
-	addi    3,3,4
-2:	/* Copy 2~3 bytes.  */
-	bf	30,1f
-
-	lhz	6,0(12)
-	addi    12,12,2
-	sth	6,0(3)
-	addi    3,3,2
-1:	/* Copy 1 byte.  */
-	bf	31,0f
-
-	lbz	6,0(12)
-	stb	6,0(3)
-0:	/* Return original DST pointer.  */
-	ld	31,-8(1)
-	ld	3,-16(1)
+	lwz	6,0(src)
+	lwz	7,4(src)
+	addi	src,src,8
+	stw	6,0(dst)
+	stw	7,4(dst)
+	addi	dst,dst,8
+4:	/* Copy 4~7 bytes.  */
+	bf	29,L(tail2)
+	lwz	6,0(src)
+	stw	6,0(dst)
+	bf	30,L(tail5)
+	lhz	7,4(src)
+	sth	7,4(dst)
+	bflr	31
+	lbz	8,6(src)
+	stb	8,6(dst)
+	/* Return original DST pointer.  */
 	blr
 
 END_GEN_TB (memcpy,TB_TOCLESS)

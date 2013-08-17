@@ -214,15 +214,28 @@ EALIGN (memcpy, 5, 0)
     blt   cr6,5f
     srdi  7,6,16
     bgt	  cr6,3f
+#ifdef __LITTLE_ENDIAN__
+    sth   7,0(3)
+#else
     sth   6,0(3)
+#endif
     b     7f
     .align  4
 3:
+#ifdef __LITTLE_ENDIAN__
+    rotlwi 6,6,24
+    stb   6,0(3)
+    sth   7,1(3)
+#else
     stb   7,0(3)
     sth   6,1(3)
+#endif
     b     7f
     .align  4
 5:
+#ifdef __LITTLE_ENDIAN__
+    rotlwi 6,6,8
+#endif
     stb   6,0(3)
 7:
     cmpldi	cr1,10,16
@@ -334,13 +347,23 @@ EALIGN (memcpy, 5, 0)
     bf      30,1f
 
     /* there are at least two DWs to copy */
+#ifdef __LITTLE_ENDIAN__
+    srd     0,6,10
+    sld     8,7,9
+#else
     sld     0,6,10
     srd     8,7,9
+#endif
     or      0,0,8
     ld      6,16(5)
     std     0,0(4)
+#ifdef __LITTLE_ENDIAN__
+    srd     0,7,10
+    sld     8,6,9
+#else
     sld     0,7,10
     srd     8,6,9
+#endif
     or      0,0,8
     ld      7,24(5)
     std     0,8(4)
@@ -349,8 +372,13 @@ EALIGN (memcpy, 5, 0)
     blt     cr6,8f  /* if total DWs = 3, then bypass loop */
     bf      31,4f
     /* there is a third DW to copy */
+#ifdef __LITTLE_ENDIAN__
+    srd     0,6,10
+    sld     8,7,9
+#else
     sld     0,6,10
     srd     8,7,9
+#endif
     or      0,0,8
     std     0,0(4)
     mr      6,7
@@ -361,8 +389,13 @@ EALIGN (memcpy, 5, 0)
     b       4f
     .align 4
 1:
+#ifdef __LITTLE_ENDIAN__
+    srd     0,6,10
+    sld     8,7,9
+#else
     sld     0,6,10
     srd     8,7,9
+#endif
     addi    5,5,16
     or      0,0,8
     bf      31,4f
@@ -373,23 +406,44 @@ EALIGN (memcpy, 5, 0)
     addi    4,4,8
     .align 4
 /* copy 32 bytes at a time */
-4:  sld   0,6,10
+4:
+#ifdef __LITTLE_ENDIAN__
+    srd   0,6,10
+    sld   8,7,9
+#else
+    sld   0,6,10
     srd   8,7,9
+#endif
     or    0,0,8
     ld    6,0(5)
     std   0,0(4)
+#ifdef __LITTLE_ENDIAN__
+    srd   0,7,10
+    sld   8,6,9
+#else
     sld   0,7,10
     srd   8,6,9
+#endif
     or    0,0,8
     ld    7,8(5)
     std   0,8(4)
+#ifdef __LITTLE_ENDIAN__
+    srd   0,6,10
+    sld   8,7,9
+#else
     sld   0,6,10
     srd   8,7,9
+#endif
     or    0,0,8
     ld    6,16(5)
     std   0,16(4)
+#ifdef __LITTLE_ENDIAN__
+    srd   0,7,10
+    sld   8,6,9
+#else
     sld   0,7,10
     srd   8,6,9
+#endif
     or    0,0,8
     ld    7,24(5)
     std   0,24(4)
@@ -399,8 +453,13 @@ EALIGN (memcpy, 5, 0)
     .align 4
 8:
     /* calculate and store the final DW */
+#ifdef __LITTLE_ENDIAN__
+    srd   0,6,10
+    sld   8,7,9
+#else
     sld   0,6,10
     srd   8,7,9
+#endif
     or    0,0,8
     std   0,0(4)
 3:

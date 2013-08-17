@@ -203,15 +203,28 @@ EALIGN (memcpy, 5, 0)
     blt   cr6,5f
     srwi  7,6,16
     bgt	  cr6,3f
+#ifdef __LITTLE_ENDIAN__
+    sth   7,0(3)
+#else
     sth   6,0(3)
+#endif
     b     7f
     .align  4
 3:
+#ifdef __LITTLE_ENDIAN__
+    rotlwi 6,6,24
+    stb   6,0(3)
+    sth   7,1(3)
+#else
     stb   7,0(3)
     sth   6,1(3)
+#endif
     b     7f
     .align  4
 5:
+#ifdef __LITTLE_ENDIAN__
+    rotlwi 6,6,8
+#endif
     stb   6,0(3)
 7:
     cmplwi	cr1,10,16
@@ -339,13 +352,23 @@ EALIGN (memcpy, 5, 0)
     bf      30,1f
 
     /* there are at least two words to copy, so copy them */
+#ifdef __LITTLE_ENDIAN__
+    srw   0,6,10
+    slw   8,7,9
+#else
     slw   0,6,10  /* shift 1st src word to left align it in R0 */
     srw   8,7,9   /* shift 2nd src word to right align it in R8 */
+#endif
     or    0,0,8   /* or them to get word to store */
     lwz   6,8(5)  /* load the 3rd src word */
     stw   0,0(4)  /* store the 1st dst word */
+#ifdef __LITTLE_ENDIAN__
+    srw   0,7,10
+    slw   8,6,9
+#else
     slw   0,7,10  /* now left align 2nd src word into R0 */
     srw   8,6,9   /* shift 3rd src word to right align it in R8 */
+#endif
     or    0,0,8   /* or them to get word to store */
     lwz   7,12(5)
     stw   0,4(4)  /* store the 2nd dst word */
@@ -353,8 +376,13 @@ EALIGN (memcpy, 5, 0)
     addi  5,5,16
     bf    31,4f
     /* there is a third word to copy, so copy it */
+#ifdef __LITTLE_ENDIAN__
+    srw   0,6,10
+    slw   8,7,9
+#else
     slw   0,6,10  /* shift 3rd src word to left align it in R0 */
     srw   8,7,9   /* shift 4th src word to right align it in R8 */
+#endif
     or    0,0,8   /* or them to get word to store */
     stw   0,0(4)  /* store 3rd dst word */
     mr    6,7
@@ -364,8 +392,13 @@ EALIGN (memcpy, 5, 0)
     b     4f
     .align 4
 1:
+#ifdef __LITTLE_ENDIAN__
+    srw     0,6,10
+    slw     8,7,9
+#else
     slw     0,6,10  /* shift 1st src word to left align it in R0 */
     srw     8,7,9   /* shift 2nd src word to right align it in R8 */
+#endif
     addi  5,5,8
     or    0,0,8   /* or them to get word to store */
     bf    31,4f
@@ -378,23 +411,43 @@ EALIGN (memcpy, 5, 0)
     .align  4
 4:
     /* copy 16 bytes at a time */
+#ifdef __LITTLE_ENDIAN__
+    srw   0,6,10
+    slw   8,7,9
+#else
     slw   0,6,10
     srw   8,7,9
+#endif
     or    0,0,8
     lwz   6,0(5)
     stw   0,0(4)
+#ifdef __LITTLE_ENDIAN__
+    srw   0,7,10
+    slw   8,6,9
+#else
     slw   0,7,10
     srw   8,6,9
+#endif
     or    0,0,8
     lwz   7,4(5)
     stw   0,4(4)
+#ifdef __LITTLE_ENDIAN__
+    srw   0,6,10
+    slw   8,7,9
+#else
     slw   0,6,10
     srw   8,7,9
+#endif
     or    0,0,8
     lwz   6,8(5)
     stw   0,8(4)
+#ifdef __LITTLE_ENDIAN__
+    srw   0,7,10
+    slw   8,6,9
+#else
     slw   0,7,10
     srw   8,6,9
+#endif
     or    0,0,8
     lwz   7,12(5)
     stw   0,12(4)
@@ -403,8 +456,13 @@ EALIGN (memcpy, 5, 0)
     bdnz+ 4b
 8:
     /* calculate and store the final word */
+#ifdef __LITTLE_ENDIAN__
+    srw   0,6,10
+    slw   8,7,9
+#else
     slw   0,6,10
     srw   8,7,9
+#endif
     or    0,0,8
     stw   0,0(4)
 3:
