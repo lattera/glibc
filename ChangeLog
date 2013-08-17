@@ -1,5 +1,12 @@
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/ieee754/ldbl-128ibm/e_sqrtl.c (mynumber): Replace
+	union 32-bit int array member with 64-bit int array.
+	(t515, tm256): Double rather than long double.
+	(__ieee754_sqrtl): Rewrite using 64-bit arithmetic.
+
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/ieee754/ldbl-128ibm/ieee754.h (union ieee854_long_double):
 	Delete.
 	(IEEE854_LONG_DOUBLE_BIAS): Delete.
