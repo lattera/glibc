@@ -124,8 +124,10 @@ L(noparms):
 
   /* If the target function returns we need to do some cleanup.  We use a
      code trick to get the address of our cleanup function into the link
-     register.  Do not add any code between here and L(exitcode).  */
-  bl  L(gotexitcodeaddr);
+     register.  Do not add any code between here and L(exitcode).
+     Use this conditional form of branch and link to avoid destroying
+     the cpu link stack used to predict blr return addresses.  */
+  bcl	20,31,L(gotexitcodeaddr);
 
 	/* This is the helper code which gets called if a function which
 	   is registered with 'makecontext' returns.  In this case we
