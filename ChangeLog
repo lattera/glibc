@@ -1,5 +1,15 @@
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/powerpc/powerpc64/power7/strnlen.S (strnlen): Add
+	little-endian support.  Remove unnecessary "are we done" tests.
+	Handle "s" wrapping around zero and extremely large "size".
+	Correct main loop count.  Handle single left-over word from main
+	loop inline rather than by using small_loop.  Correct comments.
+	Delete "zero" tail, use "end_max" instead.
+	* sysdeps/powerpc/powerpc32/power7/strnlen.S: Likewise.
+
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/powerpc64/power7/strlen.S (strlen): Add little-endian
 	support.  Don't branch over align.
 	* sysdeps/powerpc/powerpc32/power7/strlen.S: Likewise.
