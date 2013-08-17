@@ -27,8 +27,8 @@ ENTRY (__rawmemchr)
 	clrrdi	r8,r3,3	      /* Align the address to doubleword boundary.  */
 
 	/* Replicate byte to doubleword.  */
-	rlwimi	r4,r4,8,16,23
-	rlwimi	r4,r4,16,0,15
+	insrdi	r4,r4,8,48
+	insrdi	r4,r4,16,32
 	insrdi	r4,r4,32,0
 
 	/* Now r4 has a doubleword of c bytes.  */
@@ -36,8 +36,13 @@ ENTRY (__rawmemchr)
 	rlwinm	r6,r3,3,26,28 /* Calculate padding.  */
 	ld	r12,0(r8)     /* Load doubleword from memory.  */
 	cmpb	r5,r12,r4     /* Compare each byte against c byte.  */
+#ifdef __LITTLE_ENDIAN__
+	srd	r5,r5,r6
+	sld	r5,r5,r6
+#else
 	sld	r5,r5,r6      /* Move left to discard ignored bits.  */
 	srd	r5,r5,r6      /* Bring the bits back as zeros.  */
+#endif
 	cmpdi	cr7,r5,0      /* If r5 == 0, no c bytes have been found.  */
 	bne	cr7,L(done)
 
@@ -91,8 +96,14 @@ L(loop):
 	   doubleword from the string.  Use that fact to find out what is
 	   the position of the byte inside the string.  */
 L(done):
+#ifdef __LITTLE_ENDIAN__
+	addi    r0,r5,-1
+	andc    r0,r0,r5
+	popcntd	r0,r0	      /* Count trailing zeros.  */
+#else
 	cntlzd	r0,r5	      /* Count leading zeros before the match.  */
-	srdi	r0,r0,3	      /* Convert leading zeroes to bytes.  */
+#endif
+	srdi	r0,r0,3	      /* Convert leading zeros to bytes.  */
 	add	r3,r8,r0      /* Return address of the matching char.  */
 	blr
 END (__rawmemchr)

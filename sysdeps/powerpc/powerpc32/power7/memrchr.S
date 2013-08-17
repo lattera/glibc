@@ -23,117 +23,131 @@
 	.machine  power7
 ENTRY (__memrchr)
 	CALL_MCOUNT
-	dcbt	0,r3
-	mr	r7,r3
-	add	r3,r7,r5      /* Calculate the last acceptable address.  */
-	cmplw	cr7,r3,r7     /* Is the address equal or less than r3?  */
+	add	r7,r3,r5      /* Calculate the last acceptable address.  */
+	neg	r0,r7
+	addi	r7,r7,-1
+	mr	r10,r3
+	clrrwi	r6,r7,7
+	li	r9,3<<5
+	dcbt	r9,r6,16      /* Stream hint, decreasing addresses.  */
 
 	/* Replicate BYTE to word.  */
-	rlwimi	r4,r4,8,16,23
-	rlwimi	r4,r4,16,0,15
-	bge	cr7,L(proceed)
-
-	li	r3,-1	      /* Make r11 the biggest if r4 <= 0.  */
-L(proceed):
+	rldimi	r4,r4,8,48
+	rldimi	r4,r4,16,32
 	li	r6,-4
-	addi	r9,r3,-1
-	clrrwi  r8,r9,2
-	addi	r8,r8,4
-	neg	r0,r3
+	li	r9,-1
 	rlwinm	r0,r0,3,27,28 /* Calculate padding.  */
-
+	clrrwi	r8,r7,2
+	srw	r9,r9,r0
 	cmplwi	r5,16
+	clrrwi	r0,r10,2
 	ble	L(small_range)
 
-	lwbrx	r12,r8,r6     /* Load reversed word from memory.  */
-	cmpb	r10,r12,r4    /* Check for BYTE in WORD1.  */
-	slw	r10,r10,r0
-	srw	r10,r10,r0
-	cmplwi	cr7,r10,0     /* If r10 == 0, no BYTEs have been found.  */
+#ifdef __LITTLE_ENDIAN__
+	lwzx	r12,0,r8
+#else
+	lwbrx	r12,0,r8      /* Load reversed word from memory.  */
+#endif
+	cmpb	r3,r12,r4     /* Check for BYTE in WORD1.  */
+	and	r3,r3,r9
+	cmplwi	cr7,r3,0      /* If r3 == 0, no BYTEs have been found.  */
 	bne	cr7,L(done)
-
-	/* Are we done already?  */
-	addi	r9,r8,-4
-	cmplw	cr6,r9,r7
-	ble	cr6,L(null)
 
 	mtcrf   0x01,r8
 	/* Are we now aligned to a doubleword boundary?  If so, skip to
 	   the main loop.  Otherwise, go through the alignment code.  */
-	mr	r8,r9
-	bt	29,L(loop_setup)
+	bf	29,L(loop_setup)
 
 	/* Handle WORD2 of pair.  */
+#ifdef __LITTLE_ENDIAN__
+	lwzx	r12,r8,r6
+#else
 	lwbrx	r12,r8,r6
-	cmpb	r10,r12,r4
-	cmplwi	cr7,r10,0
+#endif
+	addi	r8,r8,-4
+	cmpb	r3,r12,r4
+	cmplwi	cr7,r3,0
 	bne	cr7,L(done)
 
-	/* Are we done already?  */
-	addi	r8,r8,-4
-	cmplw	cr6,r8,r7
-	ble	cr6,L(null)
-
 L(loop_setup):
-	li	r0,-8
-	sub	r5,r8,r7
-	srwi	r9,r5,3	      /* Number of loop iterations.  */
+	/* The last word we want to read in the loop below is the one
+	   containing the first byte of the string, ie. the word at
+	   s & ~3, or r0.  The first word read is at r8 - 4, we
+	   read 2 * cnt words, so the last word read will be at
+	   r8 - 4 - 8 * cnt + 4.  Solving for cnt gives
+	   cnt = (r8 - r0) / 8  */
+	sub	r5,r8,r0
+	addi	r8,r8,-4
+	srwi	r9,r5,3       /* Number of loop iterations.  */
 	mtctr	r9	      /* Setup the counter.  */
-	b	L(loop)
-	/* Main loop to look for BYTE backwards in the string.  Since it's a
-	   small loop (< 8 instructions), align it to 32-bytes.  */
-	.p2align  5
+
+	/* Main loop to look for BYTE backwards in the string.
+	   FIXME: Investigate whether 32 byte align helps with this
+	   9 instruction loop.  */
+	.align	5
 L(loop):
 	/* Load two words, compare and merge in a
 	   single register for speed.  This is an attempt
 	   to speed up the byte-checking process for bigger strings.  */
 
-	lwbrx	r12,r8,r6
-	lwbrx	r11,r8,r0
-	addi	r8,r8,-4
-	cmpb	r10,r12,r4
+#ifdef __LITTLE_ENDIAN__
+	lwzx	r12,0,r8
+	lwzx	r11,r8,r6
+#else
+	lwbrx	r12,0,r8
+	lwbrx	r11,r8,r6
+#endif
+	cmpb	r3,r12,r4
 	cmpb	r9,r11,r4
-	or	r5,r9,r10     /* Merge everything in one word.  */
+	or	r5,r9,r3      /* Merge everything in one word.  */
 	cmplwi	cr7,r5,0
 	bne	cr7,L(found)
-	addi	r8,r8,-4
+	addi	r8,r8,-8
 	bdnz	L(loop)
-	/* We're here because the counter reached 0, and that means we
-	   didn't have any matches for BYTE in the whole range.  Just return
-	   the original range.  */
-	addi	r8,r8,4
-	cmplw	cr6,r8,r7
-	bgt	cr6,L(loop_small)
-	b	L(null)
 
-	/* OK, one (or both) of the words contains BYTE.  Check
-	   the first word and decrement the address in case the first
-	   word really contains BYTE.  */
+	/* We may have one more word to read.  */
+	cmplw	r8,r0
+	bnelr
+
+#ifdef __LITTLE_ENDIAN__
+	lwzx	r12,0,r8
+#else
+	lwbrx	r12,0,r8
+#endif
+	cmpb	r3,r12,r4
+	cmplwi	cr7,r3,0
+	bne	cr7,L(done)
+	blr
+
 	.align	4
 L(found):
-	cmplwi	cr6,r10,0
-	addi	r8,r8,4
+	/* OK, one (or both) of the words contains BYTE.  Check
+	   the first word.  */
+	cmplwi	cr6,r3,0
 	bne	cr6,L(done)
 
 	/* BYTE must be in the second word.  Adjust the address
-	   again and move the result of cmpb to r10 so we can calculate the
+	   again and move the result of cmpb to r3 so we can calculate the
 	   pointer.  */
 
-	mr	r10,r9
+	mr	r3,r9
 	addi	r8,r8,-4
 
-	/* r10 has the output of the cmpb instruction, that is, it contains
+	/* r3 has the output of the cmpb instruction, that is, it contains
 	   0xff in the same position as BYTE in the original
 	   word from the string.  Use that to calculate the pointer.
 	   We need to make sure BYTE is *before* the end of the
 	   range.  */
 L(done):
-	cntlzw	r0,r10	      /* Count leading zeroes before the match.  */
-	srwi	r6,r0,3	      /* Convert leading zeroes to bytes.  */
-	addi	r0,r6,1
+	cntlzw	r9,r3	      /* Count leading zeros before the match.  */
+	cmplw	r8,r0         /* Are we on the last word?  */
+	srwi	r6,r9,3	      /* Convert leading zeros to bytes.  */
+	addi	r0,r6,-3
 	sub	r3,r8,r0
-	cmplw	r3,r7
-	blt	L(null)
+	cmplw	cr7,r3,r10
+	bnelr
+	bgelr	cr7
+	li	r3,0
 	blr
 
 	.align	4
@@ -147,28 +161,35 @@ L(small_range):
 	cmplwi	r5,0
 	beq	L(null)
 
-	lwbrx	r12,r8,r6     /* Load reversed word from memory.  */
-	cmpb	r10,r12,r4    /* Check for null bytes in WORD1.  */
-	slw	r10,r10,r0
-	srw	r10,r10,r0
-	cmplwi	cr7,r10,0
+#ifdef __LITTLE_ENDIAN__
+	lwzx	r12,0,r8
+#else
+	lwbrx	r12,0,r8      /* Load reversed word from memory.  */
+#endif
+	cmpb	r3,r12,r4     /* Check for BYTE in WORD1.  */
+	and	r3,r3,r9
+	cmplwi	cr7,r3,0
 	bne	cr7,L(done)
 
+	/* Are we done already?  */
+	cmplw	r8,r0
 	addi	r8,r8,-4
-	cmplw	r8,r7
-	ble	L(null)
-	b	L(loop_small)
+	beqlr
 
-	.p2align  5
+	.align	5
 L(loop_small):
-	lwbrx	r12,r8,r6
-	cmpb	r10,r12,r4
-	cmplwi	cr6,r10,0
-	bne	cr6,L(done)
+#ifdef __LITTLE_ENDIAN__
+	lwzx	r12,0,r8
+#else
+	lwbrx	r12,0,r8
+#endif
+	cmpb	r3,r12,r4
+	cmplw	r8,r0
+	cmplwi	cr7,r3,0
+	bne	cr7,L(done)
 	addi	r8,r8,-4
-	cmplw	r8,r7
-	ble	L(null)
-	b	L(loop_small)
+	bne	L(loop_small)
+	blr
 
 END (__memrchr)
 weak_alias (__memrchr, memrchr)

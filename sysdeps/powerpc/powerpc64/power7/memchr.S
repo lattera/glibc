@@ -25,109 +25,112 @@ ENTRY (__memchr)
 	CALL_MCOUNT 2
 	dcbt	0,r3
 	clrrdi  r8,r3,3
-	rlwimi	r4,r4,8,16,23
-	rlwimi	r4,r4,16,0,15
+	insrdi	r4,r4,8,48
 	add	r7,r3,r5      /* Calculate the last acceptable address.  */
+	insrdi	r4,r4,16,32
 	cmpldi	r5,32
+	li	r9, -1
+	rlwinm	r6,r3,3,26,28 /* Calculate padding.  */
 	insrdi  r4,r4,32,0
+	addi	r7,r7,-1
+#ifdef __LITTLE_ENDIAN__
+	sld	r9,r9,r6
+#else
+	srd	r9,r9,r6
+#endif
 	ble	L(small_range)
 
-	cmpld	cr7,r3,r7     /* Compare the starting address (r3) with the
-				 ending address (r7).  If (r3 >= r7),
-				 the size passed in was zero or negative.  */
-	ble	cr7,L(proceed)
-
-	li	r7,-1         /* Artificially set our ending address (r7)
-				 such that we will exit early.  */
-
-L(proceed):
-	rlwinm	r6,r3,3,26,28 /* Calculate padding.  */
-	cmpldi	cr6,r6,0      /* cr6 == Do we have padding?  */
 	ld	r12,0(r8)     /* Load doubleword from memory.  */
-	cmpb	r10,r12,r4    /* Check for BYTEs in DWORD1.  */
-	beq	cr6,L(proceed_no_padding)
-	sld	r10,r10,r6
-	srd	r10,r10,r6
-L(proceed_no_padding):
-	cmpldi	cr7,r10,0     /* Does r10 indicate we got a hit?  */
+	cmpb	r3,r12,r4     /* Check for BYTEs in DWORD1.  */
+	and	r3,r3,r9
+	clrldi	r5,r7,61      /* Byte count - 1 in last dword.  */
+	clrrdi	r7,r7,3       /* Address of last doubleword.  */
+	cmpldi	cr7,r3,0      /* Does r3 indicate we got a hit?  */
 	bne	cr7,L(done)
-
-	/* See if we are at the last acceptable address yet.  */
-	addi	r9,r8,8
-	cmpld	cr6,r9,r7
-	bge	cr6,L(null)
 
 	mtcrf   0x01,r8
 	/* Are we now aligned to a quadword boundary?  If so, skip to
 	   the main loop.  Otherwise, go through the alignment code.  */
-
 	bt	28,L(loop_setup)
 
 	/* Handle DWORD2 of pair.  */
 	ldu	r12,8(r8)
-	cmpb	r10,r12,r4
-	cmpldi	cr7,r10,0
+	cmpb	r3,r12,r4
+	cmpldi	cr7,r3,0
 	bne	cr7,L(done)
 
-	/* Are we done already?  */
-	addi	r9,r8,8
-	cmpld	cr6,r9,r7
-	bge	cr6,L(null)
-
 L(loop_setup):
-	sub	r5,r7,r9
-	srdi	r6,r5,4	      /* Number of loop iterations.  */
+	/* The last dword we want to read in the loop below is the one
+	   containing the last byte of the string, ie. the dword at
+	   (s + size - 1) & ~7, or r7.  The first dword read is at
+	   r8 + 8, we read 2 * cnt dwords, so the last dword read will
+	   be at r8 + 8 + 16 * cnt - 8.  Solving for cnt gives
+	   cnt = (r7 - r8) / 16  */
+	sub	r6,r7,r8
+	srdi	r6,r6,4	      /* Number of loop iterations.  */
 	mtctr	r6            /* Setup the counter.  */
-	b	L(loop)
-	/* Main loop to look for BYTE backwards in the string.  Since
-	   it's a small loop (< 8 instructions), align it to 32-bytes.  */
-	.p2align  5
+
+	/* Main loop to look for BYTE in the string.  Since
+	   it's a small loop (8 instructions), align it to 32-bytes.  */
+	.align	5
 L(loop):
 	/* Load two doublewords, compare and merge in a
 	   single register for speed.  This is an attempt
 	   to speed up the byte-checking process for bigger strings.  */
 	ld	r12,8(r8)
 	ldu	r11,16(r8)
-	cmpb	r10,r12,r4
+	cmpb	r3,r12,r4
 	cmpb	r9,r11,r4
-	or	r5,r9,r10     /* Merge everything in one doubleword.  */
-	cmpldi	cr7,r5,0
+	or	r6,r9,r3      /* Merge everything in one doubleword.  */
+	cmpldi	cr7,r6,0
 	bne	cr7,L(found)
 	bdnz	L(loop)
 
-	/* We're here because the counter reached 0, and that means we
-	   didn't have any matches for BYTE in the whole range.  */
-	subi	r11,r7,8
-	cmpld	cr6,r8,r11
-	blt	cr6,L(loop_small)
-	b	L(null)
+	/* We may have one more dword to read.  */
+	cmpld	r8,r7
+	beqlr
 
+	ldu	r12,8(r8)
+	cmpb	r3,r12,r4
+	cmpldi	cr6,r3,0
+	bne	cr6,L(done)
+	blr
+
+	.align	4
+L(found):
 	/* OK, one (or both) of the doublewords contains BYTE.  Check
 	   the first doubleword and decrement the address in case the first
 	   doubleword really contains BYTE.  */
-	.align	4
-L(found):
-	cmpldi	cr6,r10,0
+	cmpldi	cr6,r3,0
 	addi	r8,r8,-8
 	bne	cr6,L(done)
 
 	/* BYTE must be in the second doubleword.  Adjust the address
-	   again and move the result of cmpb to r10 so we can calculate the
+	   again and move the result of cmpb to r3 so we can calculate the
 	   pointer.  */
 
-	mr	r10,r9
+	mr	r3,r9
 	addi	r8,r8,8
 
-	/* r10 has the output of the cmpb instruction, that is, it contains
+	/* r3 has the output of the cmpb instruction, that is, it contains
 	   0xff in the same position as BYTE in the original
 	   doubleword from the string.  Use that to calculate the pointer.
 	   We need to make sure BYTE is *before* the end of the range.  */
 L(done):
-	cntlzd	r0,r10	      /* Count leading zeroes before the match.  */
-	srdi	r0,r0,3	      /* Convert leading zeroes to bytes.  */
+#ifdef __LITTLE_ENDIAN__
+	addi    r0,r3,-1
+	andc    r0,r0,r3
+	popcntd	r0,r0	      /* Count trailing zeros.  */
+#else
+	cntlzd	r0,r3	      /* Count leading zeros before the match.  */
+#endif
+	cmpld	r8,r7         /* Are we on the last dword?  */
+	srdi	r0,r0,3	      /* Convert leading/trailing zeros to bytes.  */
 	add	r3,r8,r0
-	cmpld	r3,r7
-	bge	L(null)
+	cmpld	cr7,r0,r5     /* If on the last dword, check byte offset.  */
+	bnelr
+	blelr	cr7
+	li	r3,0
 	blr
 
 	.align	4
@@ -139,66 +142,43 @@ L(null):
 	.align	4
 L(small_range):
 	cmpldi	r5,0
-	rlwinm	r6,r3,3,26,28 /* Calculate padding.  */
-	beq	L(null)       /* This branch is for the cmpldi r5,0 above.  */
+	beq	L(null)
 	ld	r12,0(r8)     /* Load word from memory.  */
-	cmpldi	cr6,r6,0      /* cr6 == Do we have padding?  */
-	cmpb	r10,r12,r4    /* Check for BYTE in DWORD1.  */
-			      /* If no padding, skip the shifts.  */
-	beq	cr6,L(small_no_padding)
-	sld	r10,r10,r6
-	srd	r10,r10,r6
-L(small_no_padding):
-	cmpldi	cr7,r10,0
+	cmpb	r3,r12,r4     /* Check for BYTE in DWORD1.  */
+	and	r3,r3,r9
+	cmpldi	cr7,r3,0
+	clrldi	r5,r7,61      /* Byte count - 1 in last dword.  */
+	clrrdi	r7,r7,3       /* Address of last doubleword.  */
+	cmpld	r8,r7         /* Are we done already?  */
 	bne	cr7,L(done)
+	beqlr
 
-	/* Are we done already?  */
-	addi    r9,r8,8
-	cmpld	r9,r7
-	bge	L(null)
-	/* If we're not done, drop through into loop_small.  */
-
-L(loop_small):                /* loop_small has been unrolled.  */
 	ldu	r12,8(r8)
-	cmpb	r10,r12,r4
-	addi	r9,r8,8
-	cmpldi	cr6,r10,0
-	cmpld	r9,r7
+	cmpb	r3,r12,r4
+	cmpldi	cr6,r3,0
+	cmpld	r8,r7
 	bne	cr6,L(done)   /* Found something.  */
-	bge	L(null)       /* Hit end of string (length).  */
+	beqlr		      /* Hit end of string (length).  */
 
 	ldu	r12,8(r8)
-	cmpb	r10,r12,r4
-	addi	r9,r8,8
-	cmpldi	cr6,r10,0
-	cmpld	r9,r7
-	bne	cr6,L(done)   /* Found something.  */
-	bge	L(null)
-
-	ldu	r12,8(r8)
-	subi	r11,r7,8
-	cmpb	r10,r12,r4
-	cmpldi	cr6,r10,0
-	ori	r2,r2,0       /* Force a dispatch group.  */
+	cmpb	r3,r12,r4
+	cmpldi	cr6,r3,0
+	cmpld	r8,r7
 	bne	cr6,L(done)
+	beqlr
 
-	cmpld	r8,r11        /* At end of range?  */
-	bge	L(null)
-
-	/* For most cases we will never get here.  Under some combinations of
-	   padding + length there is a leftover double that still needs to be
-	   checked.  */
 	ldu	r12,8(r8)
-	cmpb	r10,r12,r4
-	addi	r9,r8,8
-	cmpldi	cr6,r10,0
-	cmpld	r9,r7
-	bne	cr6,L(done)   /* Found something.  */
+	cmpb	r3,r12,r4
+	cmpldi	cr6,r3,0
+	cmpld	r8,r7
+	bne	cr6,L(done)
+	beqlr
 
-	/* Save a branch and exit directly.  */
-	li	r3,0
+	ldu	r12,8(r8)
+	cmpb	r3,r12,r4
+	cmpldi	cr6,r3,0
+	bne	cr6,L(done)
 	blr
-
 
 END (__memchr)
 weak_alias (__memchr, memchr)

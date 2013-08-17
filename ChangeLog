@@ -1,5 +1,23 @@
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/powerpc/powerpc64/power7/memchr.S: Replace rlwimi with
+	insrdi.  Make better use of reg selection to speed exit slightly.
+	Schedule entry path a little better.  Remove useless "are we done"
+	checks on entry to main loop.  Handle wrapping around zero address.
+	Correct main loop count.  Handle single left-over word from main
+	loop inline rather than by using loop_small.  Remove extra word
+	case in loop_small caused by wrong loop count.  Add little-endian
+	support.
+	* sysdeps/powerpc/powerpc32/power7/memchr.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/memrchr.S: Likewise.  Use proper
+	cache hint.
+	* sysdeps/powerpc/powerpc32/power7/memrchr.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/rawmemchr.S: Add little-endian
+	support.  Avoid rlwimi.
+	* sysdeps/powerpc/powerpc32/power7/rawmemchr.S: Likewise.
+
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/powerpc64/memset.S: Replace rlwimi with
         insrdi.  Formatting.
 	* sysdeps/powerpc/powerpc64/power4/memset.S: Likewise.
