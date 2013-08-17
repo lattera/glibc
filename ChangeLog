@@ -1,3 +1,16 @@
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
+	* sysdeps/powerpc/longjmp.c: Use proper symbol versioning macros.
+	* sysdeps/powerpc/novmx-longjmp.c: Likewise.
+	* sysdeps/powerpc/powerpc32/bsd-_setjmp.S: Likewise.
+	* sysdeps/powerpc/powerpc32/bsd-setjmp.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp.S: Likewise.
+	* sysdeps/powerpc/powerpc32/mcount.c: Likewise.
+	* sysdeps/powerpc/powerpc32/setjmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/setjmp.S: Likewise.
+	* nptl/sysdeps/unix/sysv/linux/powerpc/pt-longjmp.c: Likewise.
+
 2013-10-04  Anton Blanchard <anton@au1.ibm.com>
 	    Alistair Popple <alistair@ozlabs.au.ibm.com>
 	    Alan Modra <amodra@gmail.com>

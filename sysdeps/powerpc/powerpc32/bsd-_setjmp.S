@@ -30,7 +30,7 @@ libc_hidden_def (_setjmp)
 /* Build a versioned object for libc.  */
 
 # if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4)
-symbol_version (__novmx_setjmp,_setjmp,GLIBC_2.0);
+compat_symbol (libc, __novmx_setjmp, _setjmp, GLIBC_2_0);
 
 ENTRY (__novmx_setjmp)
 	li r4,0			/* Set second argument to 0.  */
@@ -39,7 +39,7 @@ END (__novmx_setjmp)
 libc_hidden_def (__novmx_setjmp)
 # endif /* defined SHARED  && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4) */
 
-default_symbol_version (__vmx_setjmp,_setjmp,GLIBC_2.3.4)
+versioned_symbol (libc, __vmx_setjmp, _setjmp, GLIBC_2_3_4)
 /* __GI__setjmp prototype is needed for ntpl i.e. _setjmp is defined
    as a libc_hidden_proto & is used in sysdeps/generic/libc-start.c
    if HAVE_CLEANUP_JMP_BUF is defined */

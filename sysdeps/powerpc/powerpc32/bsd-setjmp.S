@@ -26,7 +26,7 @@ ENTRY (__novmxsetjmp)
 	b __novmx__sigsetjmp@local
 END (__novmxsetjmp)
 strong_alias (__novmxsetjmp, __novmx__setjmp)
-symbol_version (__novmxsetjmp, setjmp, GLIBC_2.0)
+compat_symbol (libc, __novmxsetjmp, setjmp, GLIBC_2_0)
 
 #endif  /* defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4) ) */
 
@@ -36,4 +36,4 @@ ENTRY (__vmxsetjmp)
 END (__vmxsetjmp)
 strong_alias (__vmxsetjmp, __vmx__setjmp)
 strong_alias (__vmx__setjmp, __setjmp)
-default_symbol_version (__vmxsetjmp,setjmp,GLIBC_2.3.4)
+versioned_symbol (libc, __vmxsetjmp, setjmp, GLIBC_2_3_4)

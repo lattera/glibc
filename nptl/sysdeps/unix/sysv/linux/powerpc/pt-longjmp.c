@@ -41,13 +41,8 @@ void __novmx_longjmp (jmp_buf env, int val)
   __novmx__libc_longjmp (env, val);
 }
 
-# if __WORDSIZE == 64
-symbol_version (__novmx_longjmp,longjmp,GLIBC_2.3);
-symbol_version (__novmx_siglongjmp,siglongjmp,GLIBC_2.3);
-# else
-symbol_version (__novmx_longjmp,longjmp,GLIBC_2.0);
-symbol_version (__novmx_siglongjmp,siglongjmp,GLIBC_2.0);
-# endif
+compat_symbol (libpthread, __novmx_longjmp, longjmp, GLIBC_2_0);
+compat_symbol (libpthread, __novmx_siglongjmp, siglongjmp, GLIBC_2_0);
 #endif /* defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4))  */
 
 void
@@ -62,5 +57,5 @@ __vmx_siglongjmp (jmp_buf env, int val)
   __libc_siglongjmp (env, val);
 }
 
-versioned_symbol (libc, __vmx_longjmp, longjmp, GLIBC_2_3_4);
-versioned_symbol (libc, __vmx_siglongjmp, siglongjmp, GLIBC_2_3_4);
+versioned_symbol (libpthread, __vmx_longjmp, longjmp, GLIBC_2_3_4);
+versioned_symbol (libpthread, __vmx_siglongjmp, siglongjmp, GLIBC_2_3_4);
