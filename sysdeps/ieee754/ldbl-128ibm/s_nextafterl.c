@@ -30,27 +30,28 @@ static char rcsid[] = "$NetBSD: $";
 
 long double __nextafterl(long double x, long double y)
 {
-	int64_t hx,hy,ihx,ihy,ilx;
-	u_int64_t lx;
-	u_int64_t ly __attribute__ ((unused));
+	int64_t hx,hy,ihx,ihy;
+	uint64_t lx;
+	double xhi, xlo, yhi;
 
-	GET_LDOUBLE_WORDS64(hx,lx,x);
-	GET_LDOUBLE_WORDS64(hy,ly,y);
+	ldbl_unpack (x, &xhi, &xlo);
+	EXTRACT_WORDS64 (hx, xhi);
+	EXTRACT_WORDS64 (lx, xlo);
+	yhi = ldbl_high (y);
+	EXTRACT_WORDS64 (hy, yhi);
 	ihx = hx&0x7fffffffffffffffLL;		/* |hx| */
-	ilx = lx&0x7fffffffffffffffLL;		/* |lx| */
 	ihy = hy&0x7fffffffffffffffLL;		/* |hy| */
 
-	if((((ihx&0x7ff0000000000000LL)==0x7ff0000000000000LL)&&
-	    ((ihx&0x000fffffffffffffLL)!=0)) ||   /* x is nan */
-	   (((ihy&0x7ff0000000000000LL)==0x7ff0000000000000LL)&&
-	    ((ihy&0x000fffffffffffffLL)!=0)))     /* y is nan */
+	if((ihx>0x7ff0000000000000LL) ||	/* x is nan */
+	   (ihy>0x7ff0000000000000LL))		/* y is nan */
 	    return x+y; /* signal the nan */
 	if(x==y)
 	    return y;		/* x=y, return y */
-	if(ihx == 0 && ilx == 0) {			/* x == 0 */
-	    long double u;
+	if(ihx == 0) {				/* x == 0 */
+	    long double u;			/* return +-minsubnormal */
 	    hy = (hy & 0x8000000000000000ULL) | 1;
-	    SET_LDOUBLE_WORDS64(x,hy,0ULL);/* return +-minsubnormal */
+	    INSERT_WORDS64 (yhi, hy);
+	    x = yhi;
 	    u = math_opt_barrier (x);
 	    u = u * u;
 	    math_force_eval (u);		/* raise underflow flag */
@@ -59,10 +60,16 @@ long double __nextafterl(long double x, long double y)
 
 	long double u;
 	if(x > y) {	/* x > y, x -= ulp */
+	    /* This isn't the largest magnitude correctly rounded
+	       long double as you can see from the lowest mantissa
+	       bit being zero.  It is however the largest magnitude
+	       long double with a 106 bit mantissa, and nextafterl
+	       is insane with variable precision.  So to make
+	       nextafterl sane we assume 106 bit precision.  */
 	    if((hx==0xffefffffffffffffLL)&&(lx==0xfc8ffffffffffffeLL))
 	      return x+x;	/* overflow, return -inf */
 	    if (hx >= 0x7ff0000000000000LL) {
-	      SET_LDOUBLE_WORDS64(u,0x7fefffffffffffffLL,0x7c8ffffffffffffeLL);
+	      u = 0x1.fffffffffffff7ffffffffffff8p+1023L;
 	      return u;
 	    }
 	    if(ihx <= 0x0360000000000000LL) {  /* x <= LDBL_MIN */
@@ -77,16 +84,19 @@ long double __nextafterl(long double x, long double y)
 	      return x;
 	    }
 	    if (ihx < 0x06a0000000000000LL) { /* ulp will denormal */
-	      SET_LDOUBLE_WORDS64(u,(hx&0x7ff0000000000000LL),0ULL);
+	      INSERT_WORDS64 (yhi, hx & (0x7ffLL<<52));
+	      u = yhi;
 	      u *= 0x1.0000000000000p-105L;
-	    } else
-	      SET_LDOUBLE_WORDS64(u,(hx&0x7ff0000000000000LL)-0x0690000000000000LL,0ULL);
+	    } else {
+	      INSERT_WORDS64 (yhi, (hx & (0x7ffLL<<52))-(0x069LL<<52));
+	      u = yhi;
+	    }
 	    return x - u;
 	} else {				/* x < y, x += ulp */
 	    if((hx==0x7fefffffffffffffLL)&&(lx==0x7c8ffffffffffffeLL))
 	      return x+x;	/* overflow, return +inf */
-	    if ((u_int64_t) hx >= 0xfff0000000000000ULL) {
-	      SET_LDOUBLE_WORDS64(u,0xffefffffffffffffLL,0xfc8ffffffffffffeLL);
+	    if ((uint64_t) hx >= 0xfff0000000000000ULL) {
+	      u = -0x1.fffffffffffff7ffffffffffff8p+1023L;
 	      return u;
 	    }
 	    if(ihx <= 0x0360000000000000LL) {  /* x <= LDBL_MIN */
@@ -103,10 +113,13 @@ long double __nextafterl(long double x, long double y)
 	      return x;
 	    }
 	    if (ihx < 0x06a0000000000000LL) { /* ulp will denormal */
-	      SET_LDOUBLE_WORDS64(u,(hx&0x7ff0000000000000LL),0ULL);
+	      INSERT_WORDS64 (yhi, hx & (0x7ffLL<<52));
+	      u = yhi;
 	      u *= 0x1.0000000000000p-105L;
-	    } else
-	      SET_LDOUBLE_WORDS64(u,(hx&0x7ff0000000000000LL)-0x0690000000000000LL,0ULL);
+	    } else {
+	      INSERT_WORDS64 (yhi, (hx & (0x7ffLL<<52))-(0x069LL<<52));
+	      u = yhi;
+	    }
 	    return x + u;
 	}
 }

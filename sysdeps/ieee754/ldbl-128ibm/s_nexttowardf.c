@@ -27,16 +27,16 @@ float __nexttowardf(float x, long double y)
 {
 	int32_t hx,ix;
 	int64_t hy,iy;
-	u_int64_t ly, uly;
+	double yhi;
 
 	GET_FLOAT_WORD(hx,x);
-	GET_LDOUBLE_WORDS64(hy,ly,y);
+	yhi = ldbl_high (y);
+	EXTRACT_WORDS64 (hy, yhi);
 	ix = hx&0x7fffffff;		/* |x| */
 	iy = hy&0x7fffffffffffffffLL;	/* |y| */
-	uly = ly&0x7fffffffffffffffLL;	/* |y| */
 
 	if((ix>0x7f800000) ||   /* x is nan */
-	   ((iy>=0x7ff0000000000000LL)&&((iy-0x7ff0000000000000LL)|uly)!=0))
+	   (iy>0x7ff0000000000000LL))
 				/* y is nan */
 	   return x+y;
 	if((long double) x==y) return y;	/* x=y, return y */

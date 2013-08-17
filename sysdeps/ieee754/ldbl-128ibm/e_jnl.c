@@ -70,26 +70,25 @@ static const long double
 long double
 __ieee754_jnl (int n, long double x)
 {
-  u_int32_t se;
+  uint32_t se, lx;
   int32_t i, ix, sgn;
   long double a, b, temp, di;
   long double z, w;
-  ieee854_long_double_shape_type u;
+  double xhi;
 
 
   /* J(-n,x) = (-1)^n * J(n, x), J(n, -x) = (-1)^n * J(n, x)
    * Thus, J(-n,x) = J(n,-x)
    */
 
-  u.value = x;
-  se = u.parts32.w0;
+  xhi = ldbl_high (x);
+  EXTRACT_WORDS (se, lx, xhi);
   ix = se & 0x7fffffff;
 
   /* if J(n,NaN) is NaN */
   if (ix >= 0x7ff00000)
     {
-      if ((u.parts32.w0 & 0xfffff) | u.parts32.w1
-	  | (u.parts32.w2 & 0x7fffffff) | u.parts32.w3)
+      if (((ix - 0x7ff00000) | lx) != 0)
 	return x + x;
     }
 
@@ -298,21 +297,20 @@ strong_alias (__ieee754_jnl, __jnl_finite)
 long double
 __ieee754_ynl (int n, long double x)
 {
-  u_int32_t se;
+  uint32_t se, lx;
   int32_t i, ix;
   int32_t sign;
   long double a, b, temp;
-  ieee854_long_double_shape_type u;
+  double xhi;
 
-  u.value = x;
-  se = u.parts32.w0;
+  xhi = ldbl_high (x);
+  EXTRACT_WORDS (se, lx, xhi);
   ix = se & 0x7fffffff;
 
   /* if Y(n,NaN) is NaN */
   if (ix >= 0x7ff00000)
     {
-      if ((u.parts32.w0 & 0xfffff) | u.parts32.w1
-	  | (u.parts32.w2 & 0x7fffffff) | u.parts32.w3)
+      if (((ix - 0x7ff00000) | lx) != 0)
 	return x + x;
     }
   if (x <= 0.0L)
@@ -377,14 +375,16 @@ __ieee754_ynl (int n, long double x)
       a = __ieee754_y0l (x);
       b = __ieee754_y1l (x);
       /* quit if b is -inf */
-      u.value = b;
-      se = u.parts32.w0 & 0xfff00000;
+      xhi = ldbl_high (b);
+      GET_HIGH_WORD (se, xhi);
+      se &= 0xfff00000;
       for (i = 1; i < n && se != 0xfff00000; i++)
 	{
 	  temp = b;
 	  b = ((long double) (i + i) / x) * b - a;
-	  u.value = b;
-	  se = u.parts32.w0 & 0xfff00000;
+	  xhi = ldbl_high (b);
+	  GET_HIGH_WORD (se, xhi);
+	  se &= 0xfff00000;
 	  a = temp;
 	}
     }

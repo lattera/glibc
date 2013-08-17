@@ -6640,6 +6640,9 @@ float: 1
 ifloat: 1
 ildouble: 2
 ldouble: 2
+Test "tan_towardzero (2)":
+ildouble: 1
+ldouble: 1
 Test "tan_towardzero (3)":
 float: 1
 ifloat: 1

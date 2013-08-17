@@ -1,5 +1,40 @@
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/ieee754/ldbl-128ibm/e_atan2l.c (__ieee754_atan2l): Rewrite
+	all uses of ieee854 long double macros and unions.  Simplify tests
+	for long doubles that are fully specified by the high double.
+	* sysdeps/ieee754/ldbl-128ibm/e_gammal_r.c (__ieee754_gammal_r):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_ilogbl.c (__ieee754_ilogbl): Likewise.
+	Remove dead code too.
+	* sysdeps/ieee754/ldbl-128ibm/e_jnl.c (__ieee754_jnl): Likewise.
+	(__ieee754_ynl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_log10l.c (__ieee754_log10l): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_logl.c (__ieee754_logl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_powl.c (__ieee754_powl): Likewise.
+	Remove dead code too.
+	* sysdeps/ieee754/ldbl-128ibm/k_tanl.c (__kernel_tanl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_expm1l.c (__expm1l): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_frexpl.c (__frexpl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_isinf_nsl.c (__isinf_nsl): Likewise.
+	Simplify.
+	* sysdeps/ieee754/ldbl-128ibm/s_isinfl.c (___isinfl): Likewise.
+	Simplify.
+	* sysdeps/ieee754/ldbl-128ibm/s_log1pl.c (__log1pl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_modfl.c (__modfl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_nextafterl.c (__nextafterl): Likewise.
+	Comment on variable precision.
+	* sysdeps/ieee754/ldbl-128ibm/s_nexttoward.c (__nexttoward): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_nexttowardf.c (__nexttowardf):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_remquol.c (__remquol): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_scalblnl.c (__scalblnl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_scalbnl.c (__scalbnl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_tanhl.c (__tanhl): Likewise.
+	* sysdeps/powerpc/fpu/libm-test-ulps: Adjust tan_towardzero ulps.
+
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/ieee754/ldbl-128ibm/math_ldbl.h (ldbl_high): Define.
 	* sysdeps/ieee754/ldbl-128ibm/e_acoshl.c (__ieee754_acoshl): Rewrite
 	all uses of ieee854 long double macros and unions.

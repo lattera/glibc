@@ -56,11 +56,15 @@ __ieee754_atan2l(long double y, long double x)
 {
 	long double z;
 	int64_t k,m,hx,hy,ix,iy;
-	u_int64_t lx,ly;
+	uint64_t lx;
+	double xhi, xlo, yhi;
 
-	GET_LDOUBLE_WORDS64(hx,lx,x);
+	ldbl_unpack (x, &xhi, &xlo);
+	EXTRACT_WORDS64 (hx, xhi);
+	EXTRACT_WORDS64 (lx, xlo);
 	ix = hx&0x7fffffffffffffffLL;
-	GET_LDOUBLE_WORDS64(hy,ly,y);
+	yhi = ldbl_high (y);
+	EXTRACT_WORDS64 (hy, yhi);
 	iy = hy&0x7fffffffffffffffLL;
 	if(((ix)>0x7ff0000000000000LL)||
 	   ((iy)>0x7ff0000000000000LL))	/* x or y is NaN */
@@ -70,7 +74,7 @@ __ieee754_atan2l(long double y, long double x)
 	m = ((hy>>63)&1)|((hx>>62)&2);	/* 2*sign(x)+sign(y) */
 
     /* when y = 0 */
-	if((iy|(ly&0x7fffffffffffffffLL))==0) {
+	if(iy==0) {
 	    switch(m) {
 		case 0:
 		case 1: return y;	/* atan(+-0,+anything)=+-0 */
@@ -79,7 +83,7 @@ __ieee754_atan2l(long double y, long double x)
 	    }
 	}
     /* when x = 0 */
-	if((ix|(lx&0x7fffffffffffffff))==0) return (hy<0)?  -pi_o_2-tiny: pi_o_2+tiny;
+	if(ix==0) return (hy<0)?  -pi_o_2-tiny: pi_o_2+tiny;
 
     /* when x is INF */
 	if(ix==0x7ff0000000000000LL) {

@@ -33,20 +33,24 @@ __remquol (long double x, long double y, int *quo)
   int64_t hx,hy;
   u_int64_t sx,lx,ly,qs;
   int cquo;
+  double xhi, xlo, yhi, ylo;
 
-  GET_LDOUBLE_WORDS64 (hx, lx, x);
-  GET_LDOUBLE_WORDS64 (hy, ly, y);
+  ldbl_unpack (x, &xhi, &xlo);
+  EXTRACT_WORDS64 (hx, xhi);
+  EXTRACT_WORDS64 (lx, xlo);
+  ldbl_unpack (y, &yhi, &ylo);
+  EXTRACT_WORDS64 (hy, yhi);
+  EXTRACT_WORDS64 (ly, ylo);
   sx = hx & 0x8000000000000000ULL;
   qs = sx ^ (hy & 0x8000000000000000ULL);
   hy &= 0x7fffffffffffffffLL;
   hx &= 0x7fffffffffffffffLL;
 
   /* Purge off exception values.  */
-  if ((hy | (ly & 0x7fffffffffffffff)) == 0)
+  if (hy == 0)
     return (x * y) / (x * y); 			/* y = 0 */
   if ((hx >= 0x7ff0000000000000LL)		/* x not finite */
-      || ((hy >= 0x7ff0000000000000LL)		/* y is NaN */
-	  && (((hy - 0x7ff0000000000000LL) | ly) != 0)))
+      || (hy > 0x7ff0000000000000LL))		/* y is NaN */
     return (x * y) / (x * y);
 
   if (hy <= 0x7fbfffffffffffffLL)

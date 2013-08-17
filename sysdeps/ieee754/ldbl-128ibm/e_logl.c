@@ -188,18 +188,20 @@ static const long double
 long double
 __ieee754_logl(long double x)
 {
-  long double z, y, w;
-  ieee854_long_double_shape_type u, t;
+  long double z, y, w, t;
   unsigned int m;
   int k, e;
+  double xhi;
+  uint32_t hx, lx;
 
-  u.value = x;
-  m = u.parts32.w0;
+  xhi = ldbl_high (x);
+  EXTRACT_WORDS (hx, lx, xhi);
+  m = hx;
 
   /* Check for IEEE special cases.  */
   k = m & 0x7fffffff;
   /* log(0) = -infinity. */
-  if ((k | u.parts32.w1 | (u.parts32.w2 & 0x7fffffff) | u.parts32.w3) == 0)
+  if ((k | lx) == 0)
     {
       return -0.5L / ZERO;
     }
@@ -219,7 +221,7 @@ __ieee754_logl(long double x)
     {
       z = x - 1.0L;
       k = 64;
-      t.value  = 1.0L;
+      t = 1.0L;
       e = 0;
     }
   else
@@ -236,10 +238,8 @@ __ieee754_logl(long double x)
 	  k = (m - 0xff000) >> 13;
 	  /* t is the argument 0.5 + (k+26)/128
 	     of the nearest item to u in the lookup table.  */
-	  t.parts32.w0 = 0x3ff00000 + (k << 13);
-	  t.parts32.w1 = 0;
-	  t.parts32.w2 = 0;
-	  t.parts32.w3 = 0;
+	  INSERT_WORDS (xhi, 0x3ff00000 + (k << 13), 0);
+	  t = xhi;
 	  w0 += 0x100000;
 	  e -= 1;
 	  k += 64;
@@ -247,17 +247,15 @@ __ieee754_logl(long double x)
       else
 	{
 	  k = (m - 0xfe000) >> 14;
-	  t.parts32.w0 = 0x3fe00000 + (k << 14);
-	  t.parts32.w1 = 0;
-	  t.parts32.w2 = 0;
-	  t.parts32.w3 = 0;
+	  INSERT_WORDS (xhi, 0x3fe00000 + (k << 14), 0);
+	  t = xhi;
 	}
-      u.value = __scalbnl (u.value, ((int) ((w0 - u.parts32.w0) * 2)) >> 21);
+      x = __scalbnl (x, ((int) ((w0 - hx) * 2)) >> 21);
       /* log(u) = log( t u/t ) = log(t) + log(u/t)
 	 log(t) is tabulated in the lookup table.
 	 Express log(u/t) = log(1+z),  where z = u/t - 1 = (u-t)/t.
 	 cf. Cody & Waite. */
-      z = (u.value - t.value) / t.value;
+      z = (x - t) / t;
     }
   /* Series expansion of log(1+z).  */
   w = z * z;
@@ -284,7 +282,7 @@ __ieee754_logl(long double x)
   y += e * ln2b;  /* Base 2 exponent offset times ln(2).  */
   y += z;
   y += logtbl[k-26]; /* log(t) - (t-1) */
-  y += (t.value - 1.0L);
+  y += (t - 1.0L);
   y += e * ln2a;
   return y;
 }

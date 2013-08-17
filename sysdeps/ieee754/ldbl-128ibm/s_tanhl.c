@@ -47,10 +47,12 @@ static const long double one=1.0L, two=2.0L, tiny = 1.0e-300L;
 long double __tanhl(long double x)
 {
 	long double t,z;
-	int64_t jx,ix,lx;
+	int64_t jx,ix;
+	double xhi;
 
     /* High word of |x|. */
-	GET_LDOUBLE_WORDS64(jx,lx,x);
+	xhi = ldbl_high (x);
+	EXTRACT_WORDS64 (jx, xhi);
 	ix = jx&0x7fffffffffffffffLL;
 
     /* x is INF or NaN */
@@ -61,7 +63,7 @@ long double __tanhl(long double x)
 
     /* |x| < 22 */
 	if (ix < 0x4036000000000000LL) {		/* |x|<22 */
-	    if ((ix | (lx&0x7fffffffffffffffLL)) == 0)
+	    if (ix == 0)
 		return x;		/* x == +-0 */
 	    if (ix<0x3c60000000000000LL) 	/* |x|<2**-57 */
 		return x*(one+x);    	/* tanh(small) = small */

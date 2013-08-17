@@ -151,37 +151,32 @@ __ieee754_powl (long double x, long double y)
   long double y1, t1, t2, r, s, t, u, v, w;
   long double s2, s_h, s_l, t_h, t_l, ay;
   int32_t i, j, k, yisint, n;
-  u_int32_t ix, iy;
-  int32_t hx, hy;
-  ieee854_long_double_shape_type o, p, q;
+  uint32_t ix, iy;
+  int32_t hx, hy, hax;
+  double ohi, xhi, xlo, yhi, ylo;
+  uint32_t lx, ly, lj;
 
-  p.value = x;
-  hx = p.parts32.w0;
+  ldbl_unpack (x, &xhi, &xlo);
+  EXTRACT_WORDS (hx, lx, xhi);
   ix = hx & 0x7fffffff;
 
-  q.value = y;
-  hy = q.parts32.w0;
+  ldbl_unpack (y, &yhi, &ylo);
+  EXTRACT_WORDS (hy, ly, yhi);
   iy = hy & 0x7fffffff;
 
-
   /* y==zero: x**0 = 1 */
-  if ((iy | q.parts32.w1 | (q.parts32.w2 & 0x7fffffff) | q.parts32.w3) == 0)
+  if ((iy | ly) == 0)
     return one;
 
   /* 1.0**y = 1; -1.0**+-Inf = 1 */
   if (x == one)
     return one;
-  if (x == -1.0L && iy == 0x7ff00000
-      && (q.parts32.w1 | (q.parts32.w2 & 0x7fffffff) | q.parts32.w3) == 0)
+  if (x == -1.0L && ((iy - 0x7ff00000) | ly) == 0)
     return one;
 
   /* +-NaN return x+y */
-  if ((ix > 0x7ff00000)
-      || ((ix == 0x7ff00000)
-	  && ((p.parts32.w1 | (p.parts32.w2 & 0x7fffffff) | p.parts32.w3) != 0))
-      || (iy > 0x7ff00000)
-      || ((iy == 0x7ff00000)
-	  && ((q.parts32.w1 | (q.parts32.w2 & 0x7fffffff) | q.parts32.w3) != 0)))
+  if ((ix >= 0x7ff00000 && ((ix - 0x7ff00000) | lx) != 0)
+      || (iy >= 0x7ff00000 && ((iy - 0x7ff00000) | ly) != 0))
     return x + y;
 
   /* determine if y is an odd int when x < 0
@@ -192,7 +187,10 @@ __ieee754_powl (long double x, long double y)
   yisint = 0;
   if (hx < 0)
     {
-      if ((q.parts32.w2 & 0x7fffffff) >= 0x43400000)	/* Low part >= 2^53 */
+      uint32_t low_ye;
+
+      GET_HIGH_WORD (low_ye, ylo);
+      if ((low_ye & 0x7fffffff) >= 0x43400000)	/* Low part >= 2^53 */
 	yisint = 2;		/* even integer y */
       else if (iy >= 0x3ff00000)	/* 1.0 */
 	{
@@ -207,42 +205,43 @@ __ieee754_powl (long double x, long double y)
 	}
     }
 
+  ax = fabsl (x);
+
   /* special value of y */
-  if ((q.parts32.w1 | (q.parts32.w2 & 0x7fffffff) | q.parts32.w3) == 0)
+  if (ly == 0)
     {
-      if (iy == 0x7ff00000 && q.parts32.w1 == 0)	/* y is +-inf */
+      if (iy == 0x7ff00000)	/* y is +-inf */
 	{
-	  if (((ix - 0x3ff00000) | p.parts32.w1
-	       | (p.parts32.w2 & 0x7fffffff) | p.parts32.w3) == 0)
-	    return y - y;	/* inf**+-1 is NaN */
-	  else if (ix > 0x3ff00000 || fabsl (x) > 1.0L)
+	  if (ax > one)
 	    /* (|x|>1)**+-inf = inf,0 */
 	    return (hy >= 0) ? y : zero;
 	  else
 	    /* (|x|<1)**-,+inf = inf,0 */
 	    return (hy < 0) ? -y : zero;
 	}
-      if (iy == 0x3ff00000)
-	{			/* y is  +-1 */
-	  if (hy < 0)
-	    return one / x;
-	  else
-	    return x;
-	}
-      if (hy == 0x40000000)
-	return x * x;		/* y is  2 */
-      if (hy == 0x3fe00000)
-	{			/* y is  0.5 */
-	  if (hx >= 0)		/* x >= +0 */
-	    return __ieee754_sqrtl (x);
+      if (ylo == 0.0)
+	{
+	  if (iy == 0x3ff00000)
+	    {			/* y is  +-1 */
+	      if (hy < 0)
+		return one / x;
+	      else
+		return x;
+	    }
+	  if (hy == 0x40000000)
+	    return x * x;		/* y is  2 */
+	  if (hy == 0x3fe00000)
+	    {			/* y is  0.5 */
+	      if (hx >= 0)		/* x >= +0 */
+		return __ieee754_sqrtl (x);
+	    }
 	}
     }
 
-  ax = fabsl (x);
   /* special value of x */
-  if ((p.parts32.w1 | (p.parts32.w2 & 0x7fffffff) | p.parts32.w3) == 0)
+  if (lx == 0)
     {
-      if (ix == 0x7ff00000 || ix == 0 || ix == 0x3ff00000)
+      if (ix == 0x7ff00000 || ix == 0 || (ix == 0x3ff00000 && xlo == 0.0))
 	{
 	  z = ax;		/*x is +-0,+-inf,+-1 */
 	  if (hy < 0)
@@ -294,8 +293,8 @@ __ieee754_powl (long double x, long double y)
     {
       ax *= two113;
       n -= 113;
-      o.value = ax;
-      ix = o.parts32.w0;
+      ohi = ldbl_high (ax);
+      GET_HIGH_WORD (ix, ohi);
     }
   n += ((ix) >> 20) - 0x3ff;
   j = ix & 0x000fffff;
@@ -312,26 +311,19 @@ __ieee754_powl (long double x, long double y)
       ix -= 0x00100000;
     }
 
-  o.value = ax;
-  o.value = __scalbnl (o.value, ((int) ((ix - o.parts32.w0) * 2)) >> 21);
-  ax = o.value;
+  ohi = ldbl_high (ax);
+  GET_HIGH_WORD (hax, ohi);
+  ax = __scalbnl (ax, ((int) ((ix - hax) * 2)) >> 21);
 
   /* compute s = s_h+s_l = (x-1)/(x+1) or (x-1.5)/(x+1.5) */
   u = ax - bp[k];		/* bp[0]=1.0, bp[1]=1.5 */
   v = one / (ax + bp[k]);
   s = u * v;
-  s_h = s;
+  s_h = ldbl_high (s);
 
-  o.value = s_h;
-  o.parts32.w3 = 0;
-  o.parts32.w2 = 0;
-  s_h = o.value;
   /* t_h=ax+bp[k] High */
   t_h = ax + bp[k];
-  o.value = t_h;
-  o.parts32.w3 = 0;
-  o.parts32.w2 = 0;
-  t_h = o.value;
+  t_h = ldbl_high (t_h);
   t_l = ax - (t_h - bp[k]);
   s_l = v * ((u - s_h * t_h) - s_h * t_l);
   /* compute log(ax) */
@@ -342,30 +334,21 @@ __ieee754_powl (long double x, long double y)
   r += s_l * (s_h + s);
   s2 = s_h * s_h;
   t_h = 3.0 + s2 + r;
-  o.value = t_h;
-  o.parts32.w3 = 0;
-  o.parts32.w2 = 0;
-  t_h = o.value;
+  t_h = ldbl_high (t_h);
   t_l = r - ((t_h - 3.0) - s2);
   /* u+v = s*(1+...) */
   u = s_h * t_h;
   v = s_l * t_h + t_l * s;
   /* 2/(3log2)*(s+...) */
   p_h = u + v;
-  o.value = p_h;
-  o.parts32.w3 = 0;
-  o.parts32.w2 = 0;
-  p_h = o.value;
+  p_h = ldbl_high (p_h);
   p_l = v - (p_h - u);
   z_h = cp_h * p_h;		/* cp_h+cp_l = 2/(3*log2) */
   z_l = cp_l * p_h + p_l * cp + dp_l[k];
   /* log2(ax) = (s+..)*2/(3*log2) = n + dp_h + z_h + z_l */
   t = (long double) n;
   t1 = (((z_h + z_l) + dp_h[k]) + t);
-  o.value = t1;
-  o.parts32.w3 = 0;
-  o.parts32.w2 = 0;
-  t1 = o.value;
+  t1 = ldbl_high (t1);
   t2 = z_l - (((t1 - t) - dp_h[k]) - z_h);
 
   /* s (sign of result -ve**odd) = -1 else = 1 */
@@ -374,21 +357,16 @@ __ieee754_powl (long double x, long double y)
     s = -one;			/* (-ve)**(odd int) */
 
   /* split up y into y1+y2 and compute (y1+y2)*(t1+t2) */
-  y1 = y;
-  o.value = y1;
-  o.parts32.w3 = 0;
-  o.parts32.w2 = 0;
-  y1 = o.value;
+  y1 = ldbl_high (y);
   p_l = (y - y1) * t1 + y * t2;
   p_h = y1 * t1;
   z = p_l + p_h;
-  o.value = z;
-  j = o.parts32.w0;
+  ohi = ldbl_high (z);
+  EXTRACT_WORDS (j, lj, ohi);
   if (j >= 0x40d00000) /* z >= 16384 */
     {
       /* if z > 16384 */
-      if (((j - 0x40d00000) | o.parts32.w1
-	| (o.parts32.w2 & 0x7fffffff) | o.parts32.w3) != 0)
+      if (((j - 0x40d00000) | lj) != 0)
 	return s * huge * huge;	/* overflow */
       else
 	{
@@ -399,8 +377,7 @@ __ieee754_powl (long double x, long double y)
   else if ((j & 0x7fffffff) >= 0x40d01b90)	/* z <= -16495 */
     {
       /* z < -16495 */
-      if (((j - 0xc0d01bc0) | o.parts32.w1
-	 | (o.parts32.w2 & 0x7fffffff) | o.parts32.w3) != 0)
+      if (((j - 0xc0d01bc0) | lj) != 0)
 	return s * tiny * tiny;	/* underflow */
       else
 	{
@@ -419,10 +396,7 @@ __ieee754_powl (long double x, long double y)
       p_h -= t;
     }
   t = p_l + p_h;
-  o.value = t;
-  o.parts32.w3 = 0;
-  o.parts32.w2 = 0;
-  t = o.value;
+  t = ldbl_high (t);
   u = t * lg2_h;
   v = (p_l - (t - p_h)) * lg2 + t * lg2_l;
   z = u + v;

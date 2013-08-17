@@ -122,11 +122,12 @@ long double
 __ieee754_gammal_r (long double x, int *signgamp)
 {
   int64_t hx;
-  u_int64_t lx;
+  double xhi;
 
-  GET_LDOUBLE_WORDS64 (hx, lx, x);
+  xhi = ldbl_high (x);
+  EXTRACT_WORDS64 (hx, xhi);
 
-  if (((hx | lx) & 0x7fffffffffffffffLL) == 0)
+  if ((hx & 0x7fffffffffffffffLL) == 0)
     {
       /* Return value for x == 0 is Inf with divide by zero exception.  */
       *signgamp = 0;

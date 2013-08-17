@@ -41,11 +41,15 @@ long double __scalblnl (long double x, long int n)
 {
 	int64_t k,l,hx,lx;
 	union { int64_t i; double d; } u;
-	GET_LDOUBLE_WORDS64(hx,lx,x);
+	double xhi, xlo;
+
+	ldbl_unpack (x, &xhi, &xlo);
+	EXTRACT_WORDS64 (hx, xhi);
+	EXTRACT_WORDS64 (lx, xlo);
 	k = (hx>>52)&0x7ff;		/* extract exponent */
 	l = (lx>>52)&0x7ff;
 	if (k==0) {				/* 0 or subnormal x */
-	    if (((hx|lx)&0x7fffffffffffffffULL)==0) return x; /* +-0 */
+	    if ((hx&0x7fffffffffffffffULL)==0) return x; /* +-0 */
 	    u.i = hx;
 	    u.d *= two54;
 	    hx = u.i;
@@ -61,7 +65,9 @@ long double __scalblnl (long double x, long int n)
 	if (k > 0) {				/* normal result */
 	    hx = (hx&0x800fffffffffffffULL)|(k<<52);
 	    if ((lx & 0x7fffffffffffffffULL) == 0) { /* low part +-0 */
-		SET_LDOUBLE_WORDS64(x,hx,lx);
+		INSERT_WORDS64 (xhi, hx);
+		INSERT_WORDS64 (xlo, lx);
+		x = ldbl_pack (xhi, xlo);
 		return x;
 	    }
 	    if (l == 0) { /* low part subnormal */
@@ -81,14 +87,19 @@ long double __scalblnl (long double x, long int n)
 		u.d *= twom54;
 		lx = u.i;
 	    }
-	    SET_LDOUBLE_WORDS64(x,hx,lx);
+	    INSERT_WORDS64 (xhi, hx);
+	    INSERT_WORDS64 (xlo, lx);
+	    x = ldbl_pack (xhi, xlo);
 	    return x;
 	}
 	if (k <= -54)
 	  return tiny*__copysignl(tiny,x); 	/*underflow*/
 	k += 54;				/* subnormal result */
 	lx &= 0x8000000000000000ULL;
-	SET_LDOUBLE_WORDS64(x,(hx&0x800fffffffffffffULL)|(k<<52),lx);
+	hx &= 0x800fffffffffffffULL;
+	INSERT_WORDS64 (xhi, hx|(k<<52));
+	INSERT_WORDS64 (xlo, lx);
+	x = ldbl_pack (xhi, xlo);
 	return x*twolm54;
 }
 long_double_symbol (libm, __scalblnl, scalblnl);

@@ -34,23 +34,22 @@ double __nexttoward(double x, long double y)
 {
 	int32_t hx,ix;
 	int64_t hy,iy;
-	u_int32_t lx;
-	u_int64_t ly,uly;
+	uint32_t lx;
+	double yhi;
 
 	EXTRACT_WORDS(hx,lx,x);
-	GET_LDOUBLE_WORDS64(hy,ly,y);
+	yhi = ldbl_high (y);
+	EXTRACT_WORDS64(hy,yhi);
 	ix = hx&0x7fffffff;		/* |x| */
 	iy = hy&0x7fffffffffffffffLL;	/* |y| */
-	uly = ly&0x7fffffffffffffffLL;	/* |y| */
 
 	if(((ix>=0x7ff00000)&&((ix-0x7ff00000)|lx)!=0) ||   /* x is nan */
-	   ((iy>=0x7ff0000000000000LL)&&((iy-0x7ff0000000000000LL)|uly)!=0))
-							    /* y is nan */
+	   iy>0x7ff0000000000000LL)			    /* y is nan */
 	   return x+y;
 	if((long double) x==y) return y;	/* x=y, return y */
 	if((ix|lx)==0) {			/* x == 0 */
 	    double u;
-	    INSERT_WORDS(x,(u_int32_t)((hy>>32)&0x80000000),1);/* return +-minsub */
+	    INSERT_WORDS(x,(uint32_t)((hy>>32)&0x80000000),1);/* return +-minsub */
 	    u = math_opt_barrier (x);
 	    u = u * u;
 	    math_force_eval (u);		/* raise underflow flag */

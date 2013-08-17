@@ -92,19 +92,19 @@ long double
 __expm1l (long double x)
 {
   long double px, qx, xx;
-  int32_t ix, sign;
-  ieee854_long_double_shape_type u;
+  int32_t ix, lx, sign;
   int k;
+  double xhi;
 
   /* Detect infinity and NaN.  */
-  u.value = x;
-  ix = u.parts32.w0;
+  xhi = ldbl_high (x);
+  EXTRACT_WORDS (ix, lx, xhi);
   sign = ix & 0x80000000;
   ix &= 0x7fffffff;
   if (ix >= 0x7ff00000)
     {
       /* Infinity. */
-      if (((ix & 0xfffff) | u.parts32.w1 | (u.parts32.w2&0x7fffffff) | u.parts32.w3) == 0)
+      if (((ix - 0x7ff00000) | lx) == 0)
 	{
 	  if (sign)
 	    return -1.0L;
@@ -116,7 +116,7 @@ __expm1l (long double x)
     }
 
   /* expm1(+- 0) = +- 0.  */
-  if ((ix == 0) && (u.parts32.w1 | (u.parts32.w2&0x7fffffff) | u.parts32.w3) == 0)
+  if ((ix | lx) == 0)
     return x;
 
   /* Overflow.  */

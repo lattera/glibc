@@ -126,19 +126,18 @@ long double
 __log1pl (long double xm1)
 {
   long double x, y, z, r, s;
-  ieee854_long_double_shape_type u;
-  int32_t hx;
+  double xhi;
+  int32_t hx, lx;
   int e;
 
   /* Test for NaN or infinity input. */
-  u.value = xm1;
-  hx = u.parts32.w0;
+  xhi = ldbl_high (xm1);
+  EXTRACT_WORDS (hx, lx, xhi);
   if (hx >= 0x7ff00000)
     return xm1;
 
   /* log1p(+- 0) = +- 0.  */
-  if (((hx & 0x7fffffff) == 0)
-      && (u.parts32.w1 | (u.parts32.w2 & 0x7fffffff) | u.parts32.w3) == 0)
+  if (((hx & 0x7fffffff) | lx) == 0)
     return xm1;
 
   x = xm1 + 1.0L;

@@ -31,26 +31,24 @@ static char rcsid[] = "$NetBSD: $";
 
 int __ieee754_ilogbl(long double x)
 {
-	int64_t hx,lx;
+	int64_t hx;
 	int ix;
+	double xhi;
 
-	GET_LDOUBLE_WORDS64(hx,lx,x);
+	xhi = ldbl_high (x);
+	EXTRACT_WORDS64 (hx, xhi);
 	hx &= 0x7fffffffffffffffLL;
 	if(hx <= 0x0010000000000000LL) {
-	    if((hx|(lx&0x7fffffffffffffffLL))==0)
+	    if(hx==0)
 		return FP_ILOGB0;	/* ilogbl(0) = FP_ILOGB0 */
 	    else			/* subnormal x */
-		if(hx==0) {
-		    for (ix = -1043; lx>0; lx<<=1) ix -=1;
-		} else {
-		    for (ix = -1022, hx<<=11; hx>0; hx<<=1) ix -=1;
-		}
+		for (ix = -1022, hx<<=11; hx>0; hx<<=1) ix -=1;
 	    return ix;
 	}
 	else if (hx<0x7ff0000000000000LL) return (hx>>52)-0x3ff;
 	else if (FP_ILOGBNAN != INT_MAX) {
 	    /* ISO C99 requires ilogbl(+-Inf) == INT_MAX.  */
-	    if (((hx^0x7ff0000000000000LL)|lx) == 0)
+	    if (hx==0x7ff0000000000000LL)
 		return INT_MAX;
 	}
 	return FP_ILOGBNAN;
