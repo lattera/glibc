@@ -1,3 +1,12 @@
+2013-08-17  Alexandre Oliva <aoliva@redhat.com>
+
+	PR 15483
+	* sysdeps/powerpc/nofpu/sim-full.c: Add FIXME note about
+	the need for thread-specific variables preserved across signal
+	handlers.
+	* sysdeps/powerpc/nofpu/soft-supp.h: Likewise.
+	* sysdeps/powerpc/soft-fp/sfp-machine.h: Likewise.
+
 2013-07-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/nofpu/libm-test-ulps: Regenerated.

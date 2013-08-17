@@ -26,6 +26,11 @@ typedef union
 } fenv_union_t;
 
 
+/* FIXME: these variables should be thread specific (see bugzilla bug
+   15483) and ideally preserved across signal handlers, like hardware
+   FP status words, but the latter is quite difficult to accomplish in
+   userland.  */
+
 extern int __sim_exceptions;
 libc_hidden_proto (__sim_exceptions);
 extern int __sim_disabled_exceptions;
