@@ -61,21 +61,28 @@
 __MATH_INLINE int
 __NTH (__signbitf (float __x))
 {
+#if __GNUC_PREREQ (4, 0)
+  return __builtin_signbitf (__x);
+#else
   __extension__ union { float __f; int __i; } __u = { __f: __x };
   return __u.__i < 0;
+#endif
 }
 __MATH_INLINE int
 __NTH (__signbit (double __x))
 {
-  __extension__ union { double __d; int __i[2]; } __u = { __d: __x };
-  return __u.__i[0] < 0;
+#if __GNUC_PREREQ (4, 0)
+  return __builtin_signbit (__x);
+#else
+  __extension__ union { double __d; long long __i; } __u = { __d: __x };
+  return __u.__i < 0;
+#endif
 }
 #  ifdef __LONG_DOUBLE_128__
 __MATH_INLINE int
 __NTH (__signbitl (long double __x))
 {
-  __extension__ union { long double __d; int __i[4]; } __u = { __d: __x };
-  return __u.__i[0] < 0;
+  return __signbit ((double) __x);
 }
 #  endif
 # endif
@@ -92,22 +99,17 @@ __NTH (lrint (double __x))
 {
   union {
     double __d;
-    int __ll[2];
+    long long __ll;
   } __u;
   __asm__ ("fctiw %0,%1" : "=f"(__u.__d) : "f"(__x));
-  return __u.__ll[1];
+  return __u.__ll;
 }
 
 __MATH_INLINE long int lrintf (float __x) __THROW;
 __MATH_INLINE long int
 __NTH (lrintf (float __x))
 {
-  union {
-    double __d;
-    int __ll[2];
-  } __u;
-  __asm__ ("fctiw %0,%1" : "=f"(__u.__d) : "f"(__x));
-  return __u.__ll[1];
+  return lrint ((double) __x);
 }
 # endif
 

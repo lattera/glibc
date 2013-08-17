@@ -1,3 +1,11 @@
+2013-10-04  Anton Blanchard <anton@au1.ibm.com>
+
+	* sysdeps/powerpc/bits/mathinline.h (__signbitf): Use builtin.
+	(__signbit): Likewise.  Correct for little-endian.
+	(__signbitl): Call __signbit.
+	(lrint): Correct for little-endian.
+	(lrintf): Call lrint.
+
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
 	* sysdeps/ieee754/ldbl-128ibm/e_sqrtl.c (mynumber): Replace
