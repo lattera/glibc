@@ -19,29 +19,28 @@
 #include <math.h>
 #include <math_ldbl_opt.h>
 
-/* I think that what this routine is supposed to do is round a value
-   to the nearest integer, with values exactly on the boundary rounded
-   away from zero.  */
-/* This routine relies on (long long)x, when x is out of range of a long long,
-   clipping to MAX_LLONG or MIN_LLONG.  */
+/* Round to the nearest integer, with values exactly on a 0.5 boundary
+   rounded away from zero, regardless of the current rounding mode.
+   If (long long)x, when x is out of range of a long long, clips at
+   LLONG_MAX or LLONG_MIN, then this implementation also clips.  */
 
 long long int
 __llround (double x)
 {
-  double xrf;
-  long long int xr;
-  xr = (long long int) x;
-  xrf = (double) xr;
+  long long xr = (long long) x;
+  double xrf = (double) xr;
+
   if (x >= 0.0)
-    if (x - xrf >= 0.5 && x - xrf < 1.0 && x+1 > 0)
-      return x+1;
-    else
-      return x;
+    {
+      if (x - xrf >= 0.5)
+	xr += (long long) ((unsigned long long) xr + 1) > 0;
+    }
   else
-    if (xrf - x >= 0.5 && xrf - x < 1.0 && x-1 < 0)
-      return x-1;
-    else
-      return x;
+    {
+      if (xrf - x >= 0.5)
+	xr -= (long long) ((unsigned long long) xr - 1) < 0;
+    }
+  return xr;
 }
 weak_alias (__llround, llround)
 #ifdef NO_LONG_DOUBLE
