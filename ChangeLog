@@ -1,5 +1,14 @@
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/powerpc/powerpc32/fpu/s_roundf.S: Increase alignment of
+	constants to usual value for .cst8 section, and remove redundant
+	high address load.
+	* sysdeps/powerpc/powerpc32/power4/fpu/s_llround.S: Use float
+	constant for 0x1p52.  Load little-endian words of double from
+	correct stack offsets.
+
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/sysdep.h (LOWORD, HIWORD, HISHORT): Define.
 	* sysdeps/powerpc/powerpc32/fpu/s_copysign.S: Load little-endian
 	words of double from correct stack offsets.

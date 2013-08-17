@@ -19,12 +19,10 @@
 #include <sysdep.h>
 #include <math_ldbl_opt.h>
 
- .section .rodata.cst12,"aM",@progbits,12
+ .section .rodata.cst8,"aM",@progbits,8
  .align 3
- .LC0:   /* 0x1.0000000000000p+52 == 2^52 */
-	.long 0x43300000
-	.long 0x00000000
-	.long 0x3f000000 /* Use this for 0.5  */
+ .LC0:	.long (52+127)<<23 /* 0x1p+52  */
+	.long (-1+127)<<23 /* 0.5  */
 
 	.section	".text"
 
@@ -57,12 +55,12 @@ ENTRY (__llround)
 	addi	r9,r9,.LC0-got_label@l
 	mtlr	r11
 	cfi_same_value (lr)
-	lfd	fp9,0(r9)
-	lfs	fp10,8(r9)
+	lfs	fp9,0(r9)
+	lfs	fp10,4(r9)
 #else
 	lis r9,.LC0@ha
-	lfd fp9,.LC0@l(r9)	/* Load 2^52 into fpr9.  */
-	lfs fp10,.LC0@l+8(r9)	/* Load 0.5 into fpr10.  */
+	lfs fp9,.LC0@l(r9)	/* Load 2^52 into fpr9.  */
+	lfs fp10,.LC0@l+4(r9)	/* Load 0.5 into fpr10.  */
 #endif
 	fabs	fp2,fp1		/* Get the absolute value of x.  */
 	fsub	fp12,fp10,fp10	/* Compute 0.0 into fpr12.  */
@@ -80,8 +78,8 @@ ENTRY (__llround)
 	nop
 	nop
 	nop
-	lwz	r4,12(r1)	/* Load return as integer.  */
-	lwz	r3,8(r1)
+	lwz	r3,8+HIWORD(r1)	/* Load return as integer.  */
+	lwz	r4,8+LOWORD(r1)
 .Lout:
 	addi	r1,r1,16
 	blr

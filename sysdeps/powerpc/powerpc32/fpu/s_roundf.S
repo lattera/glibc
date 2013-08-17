@@ -19,7 +19,7 @@
 #include <sysdep.h>
 
 	.section	.rodata.cst8,"aM",@progbits,8
-	.align	2
+	.align	3
 .LC0:	/* 2**23 */
 	.long 0x4b000000
 .LC1:	/* 0.5 */
@@ -60,7 +60,6 @@ ENTRY (__roundf )
 #ifdef SHARED
 	lfs	fp10,.LC1-.LC0(r9)
 #else
-	lis	r9,.LC1@ha
 	lfs	fp10,.LC1@l(r9)
 #endif
 	ble-	cr6,.L4
