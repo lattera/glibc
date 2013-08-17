@@ -1,5 +1,18 @@
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/powerpc/powerpc64/power7/memcmp.S: Add little-endian support.
+	Formatting.  Consistently use rXXX register defines or rN defines.
+	Use early exit labels that avoid restoring unused non-volatile regs.
+	Make cr field use more consistent with rWORDn compares.  Rename
+	regs used as shift registers for unaligned loop, using rN defines
+	for short lifetime/multiple use regs.
+	* sysdeps/powerpc/powerpc64/power4/memcmp.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power7/memcmp.S: Likewise.  Exit with
+	addi 1,1,64 to pop stack frame.  Simplify return value code.
+	* sysdeps/powerpc/powerpc32/power4/memcmp.S: Likewise.
+
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/powerpc64/power7/strchr.S (strchr): Add little-endian
 	support.  Correct typos, formatting.  Optimize tail.  Use insrdi
 	rather than rlwimi.
