@@ -27,14 +27,14 @@ do {									      \
       unsigned long long hi, lo;					      \
       int ediff;							      \
       union ibm_extended_long_double u;					      \
-      u.ld = fpnum.ldbl.d;						      \
+      u.ld = fpnum.ldbl;						      \
 									      \
       assert (sizeof (long double) == 16);				      \
 									      \
       lo = ((long long)u.d[1].ieee.mantissa0 << 32) | u.d[1].ieee.mantissa1;  \
       hi = ((long long)u.d[0].ieee.mantissa0 << 32) | u.d[0].ieee.mantissa1;  \
       lo <<= 7; /* pre-shift lo to match ieee854.  */			      \
-      /* If the lower double is not a denomal or zero then set the hidden     \
+      /* If the lower double is not a denormal or zero then set the hidden    \
 	 53rd bit.  */							      \
       if (u.d[1].ieee.exponent != 0)					      \
 	lo |= (1ULL << (52 + 7));					      \

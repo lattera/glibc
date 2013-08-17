@@ -332,8 +332,7 @@ ___printf_fp (FILE *fp,
       int res;
       if (__isnanl (fpnum.ldbl))
 	{
-	  union ieee854_long_double u = { .d = fpnum.ldbl };
-	  is_neg = u.ieee.negative != 0;
+	  is_neg = signbit (fpnum.ldbl);
 	  if (isupper (info->spec))
 	    {
 	      special = "NAN";

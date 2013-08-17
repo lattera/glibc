@@ -25,10 +25,11 @@ do {									      \
       /* The "strange" 80 bit format on ix86 and m68k has an explicit	      \
 	 leading digit in the 64 bit mantissa.  */			      \
       unsigned long long int num;					      \
+      union ieee854_long_double u;					      \
+      u.d = fpnum.ldbl;							      \
 									      \
-									      \
-      num = (((unsigned long long int) fpnum.ldbl.ieee.mantissa0) << 32	      \
-	     | fpnum.ldbl.ieee.mantissa1);				      \
+      num = (((unsigned long long int) u.ieee.mantissa0) << 32		      \
+	     | u.ieee.mantissa1);					      \
 									      \
       zero_mantissa = num == 0;						      \
 									      \
@@ -61,7 +62,7 @@ do {									      \
 									      \
       /* We have 3 bits from the mantissa in the leading nibble.	      \
 	 Therefore we are here using `IEEE854_LONG_DOUBLE_BIAS + 3'.  */      \
-      exponent = fpnum.ldbl.ieee.exponent;				      \
+      exponent = u.ieee.exponent;					      \
 									      \
       if (exponent == 0)						      \
 	{								      \

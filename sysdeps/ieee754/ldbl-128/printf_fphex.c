@@ -24,13 +24,15 @@ do {									      \
 	 digits we use only the implicit digits for the number before	      \
 	 the decimal point.  */						      \
       unsigned long long int num0, num1;				      \
+      union ieee854_long_double u;					      \
+      u.d = fpnum.ldbl;							      \
 									      \
       assert (sizeof (long double) == 16);				      \
 									      \
-      num0 = (((unsigned long long int) fpnum.ldbl.ieee.mantissa0) << 32      \
-	     | fpnum.ldbl.ieee.mantissa1);				      \
-      num1 = (((unsigned long long int) fpnum.ldbl.ieee.mantissa2) << 32      \
-	     | fpnum.ldbl.ieee.mantissa3);				      \
+      num0 = (((unsigned long long int) u.ieee.mantissa0) << 32		      \
+	     | u.ieee.mantissa1);					      \
+      num1 = (((unsigned long long int) u.ieee.mantissa2) << 32		      \
+	     | u.ieee.mantissa3);					      \
 									      \
       zero_mantissa = (num0|num1) == 0;					      \
 									      \
@@ -75,9 +77,9 @@ do {									      \
 	  *--wnumstr = L'0';						      \
 	}								      \
 									      \
-      leading = fpnum.ldbl.ieee.exponent == 0 ? '0' : '1';		      \
+      leading = u.ieee.exponent == 0 ? '0' : '1';			      \
 									      \
-      exponent = fpnum.ldbl.ieee.exponent;				      \
+      exponent = u.ieee.exponent;					      \
 									      \
       if (exponent == 0)						      \
 	{								      \

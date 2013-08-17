@@ -93,7 +93,7 @@ __printf_fphex (FILE *fp,
   union
     {
       union ieee754_double dbl;
-      union ieee854_long_double ldbl;
+      long double ldbl;
     }
   fpnum;
 
@@ -162,12 +162,11 @@ __printf_fphex (FILE *fp,
 #ifndef __NO_LONG_DOUBLE_MATH
   if (info->is_long_double && sizeof (long double) > sizeof (double))
     {
-      fpnum.ldbl.d = *(const long double *) args[0];
+      fpnum.ldbl = *(const long double *) args[0];
 
       /* Check for special values: not a number or infinity.  */
-      if (__isnanl (fpnum.ldbl.d))
+      if (__isnanl (fpnum.ldbl))
 	{
-	  negative = fpnum.ldbl.ieee.negative != 0;
 	  if (isupper (info->spec))
 	    {
 	      special = "NAN";
@@ -181,8 +180,7 @@ __printf_fphex (FILE *fp,
 	}
       else
 	{
-	  int res = __isinfl (fpnum.ldbl.d);
-	  if (res)
+	  if (__isinfl (fpnum.ldbl))
 	    {
 	      if (isupper (info->spec))
 		{
@@ -194,11 +192,9 @@ __printf_fphex (FILE *fp,
 		  special = "inf";
 		  wspecial = L"inf";
 		}
-	      negative = res < 0;
 	    }
-	  else
-	    negative = signbit (fpnum.ldbl.d);
 	}
+      negative = signbit (fpnum.ldbl);
     }
   else
 #endif	/* no long double */

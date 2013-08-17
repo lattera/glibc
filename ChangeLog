@@ -1,5 +1,19 @@
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
+	* stdio-common/printf_size.c (__printf_size): Don't use
+	union ieee854_long_double in fpnum union.
+	* stdio-common/printf_fphex.c (__printf_fphex): Likewise.  Use
+	signbit macro to retrieve sign from long double.
+	* stdio-common/printf_fp.c (___printf_fp): Use signbit macro to
+	retrieve sign from long double.
+	* sysdeps/ieee754/ldbl-128ibm/printf_fphex.c: Adjust for fpnum change.
+	* sysdeps/ieee754/ldbl-128/printf_fphex.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/printf_fphex.c: Likewise.
+	* sysdeps/x86_64/fpu/printf_fphex.c: Likewise.
+	* math/test-misc.c (main): Don't use union ieee854_long_double.
+
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
 	[BZ #15680]
 	* sysdeps/ieee754/ldbl-128ibm/e_rem_pio2l.c: Comment fix.
 	* sysdeps/ieee754/ldbl-128ibm/printf_fphex.c
