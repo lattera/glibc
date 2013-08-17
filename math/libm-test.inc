@@ -7829,6 +7829,11 @@ static const struct test_f_f_data erf_test_data[] =
     TEST_f_f (erf, 2.0L, 0.995322265018952734162069256367252929L),
     TEST_f_f (erf, 4.125L, 0.999999994576599200434933994687765914L),
     TEST_f_f (erf, 27.0L, 1.0L),
+    TEST_f_f (erf, -27.0L, -1.0L),
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 54
+    /* The input is not exactly representable as a double.  */
+    TEST_f_f (erf, -0x1.fffffffffffff8p-2L, -0.5204998778130465132916303345518417673509L),
+#endif
   };
 
 static void
@@ -7857,6 +7862,10 @@ static const struct test_f_f_data erfc_test_data[] =
     TEST_f_f (erfc, 0x1.ffa002p+2L, 1.233585992097580296336099501489175967033e-29L),
     TEST_f_f (erfc, 0x1.ffffc8p+2L, 1.122671365033056305522366683719541099329e-29L),
 #ifdef TEST_LDOUBLE
+# if LDBL_MANT_DIG >= 54
+    /* The input is not exactly representable as a double.  */
+    TEST_f_f (erfc, -0x1.fffffffffffff8p-2L, 1.52049987781304651329163033455184176735L),
+# endif
     /* The result can only be represented in long double.  */
 # if LDBL_MIN_10_EXP < -319
     TEST_f_f (erfc, 27.0L, 0.523704892378925568501606768284954709e-318L),
@@ -9354,6 +9363,13 @@ static const struct test_ff_f_data fmod_test_data[] =
 #endif
 #if defined TEST_LDOUBLE && LDBL_MIN_EXP <= -16381
     TEST_ff_f (fmod, 0x0.fffffffffffffffep-16382L, 0x1p-16445L, plus_zero, NO_INEXACT_EXCEPTION),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 56
+    TEST_ff_f (fmod, -0x1.00000000000004p+0L, 0x1.fffffffffffff8p-1L, -0x1p-53L, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (fmod, 0x1.fffffffffffffap-1L, 0x1.fffffffffffff8p-1L, 0x1p-56L, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (fmod, -0x1.fffffffffffffap-1L, 0x1.fffffffffffff8p-1L, -0x1p-56L, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (fmod, 0x1.fffffffffffffap-1L, -0x1.fffffffffffff8p-1L, 0x1p-56L, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (fmod, -0x1.fffffffffffffap-1L, -0x1.fffffffffffff8p-1L, -0x1p-56L, NO_INEXACT_EXCEPTION),
 #endif
   };
 
@@ -12316,6 +12332,9 @@ static const struct test_ff_f_data remainder_test_data[] =
     TEST_ff_f (remainder, -1.625, -1.0, 0.375, NO_INEXACT_EXCEPTION),
     TEST_ff_f (remainder, 5.0, 2.0, 1.0, NO_INEXACT_EXCEPTION),
     TEST_ff_f (remainder, 3.0, 2.0, -1.0, NO_INEXACT_EXCEPTION),
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 56
+    TEST_ff_f (remainder, -0x1.80000000000002p1L, 2.0, 0x1.fffffffffffff8p-1L, NO_INEXACT_EXCEPTION),
+#endif
   };
 
 static void

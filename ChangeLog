@@ -1,5 +1,32 @@
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
+	[BZ #15734], [BZ #15735]
+	* sysdeps/ieee754/ldbl-128ibm/e_fmodl.c (__ieee754_fmodl): Rewrite
+	all uses of ieee875 long double macros and unions.  Simplify test
+	for 0.0L.  Correct |x|<|y| and |x|=|y| test.  Use
+	ldbl_extract_mantissa value for ix,iy exponents.  Properly
+	normalize after ldbl_extract_mantissa, and don't add hidden bit
+	already handled.  Don't treat low word of ieee854 mantissa like
+	low word of IBM long double and mask off bit when testing for
+	zero.
+	* sysdeps/ieee754/ldbl-128ibm/e_hypotl.c (__ieee754_hypotl): Rewrite
+	all uses of ieee875 long double macros and unions.  Simplify tests
+	for 0.0L and inf.  Correct double adjustment of k.  Delete dead code
+	adjusting ha,hb.  Simplify code setting kld.  Delete two600 and
+	two1022, instead use their values.  Recognise that tests for large
+	"a" and small "b" are mutually exclusive.  Rename vars.  Comment.
+	* sysdeps/ieee754/ldbl-128ibm/e_remainderl.c (__ieee754_remainderl):
+	Rewrite all uses of ieee875 long double macros and unions.  Simplify
+	test for 0.0L and nan.  Correct negation.
+	* sysdeps/ieee754/ldbl-128ibm/s_erfl.c (__erfl): Rewrite all uses of
+	ieee875 long double macros and unions.  Correct output for large
+	magnitude x.  Correct absolute value calculation.
+	(__erfcl): Likewise.
+	* math/libm-test.inc: Add tests for errors discovered in IBM long
+	double versions of fmodl, remainderl, erfl and erfcl.
+
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/ieee754/ldbl-128ibm/e_atan2l.c (__ieee754_atan2l): Rewrite
 	all uses of ieee854 long double macros and unions.  Simplify tests
 	for long doubles that are fully specified by the high double.

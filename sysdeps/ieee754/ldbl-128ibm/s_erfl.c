@@ -760,16 +760,16 @@ long double
 __erfl (long double x)
 {
   long double a, y, z;
-  int32_t i, ix, sign;
-  ieee854_long_double_shape_type u;
+  int32_t i, ix, hx;
+  double xhi;
 
-  u.value = x;
-  sign = u.parts32.w0;
-  ix = sign & 0x7fffffff;
+  xhi = ldbl_high (x);
+  GET_HIGH_WORD (hx, xhi);
+  ix = hx & 0x7fffffff;
 
   if (ix >= 0x7ff00000)
     {				/* erf(nan)=nan */
-      i = ((sign & 0xfff00000) >> 31) << 1;
+      i = ((uint32_t) hx >> 31) << 1;
       return (long double) (1 - i) + one / x;	/* erf(+-inf)=+-1 */
     }
 
@@ -778,7 +778,7 @@ __erfl (long double x)
       if (ix >= 0x4039A0DE)
 	{
 	/* __erfcl (x) underflows if x > 25.6283 */
-	  if (sign)
+	  if ((hx & 0x80000000) == 0)
 	    return one-tiny;
 	  else
 	    return tiny-one;
@@ -789,8 +789,9 @@ __erfl (long double x)
 	  return (one - y);
 	}
     }
-  u.parts32.w0 = ix;
-  a = u.value;
+  a = x;
+  if ((hx & 0x80000000) != 0)
+    a = -a;
   z = x * x;
   if (ix < 0x3fec0000)  /* a < 0.875 */
     {
@@ -814,7 +815,7 @@ __erfl (long double x)
       y = erf_const + neval (a, TN2, NTN2) / deval (a, TD2, NTD2);
     }
 
-  if (sign & 0x80000000) /* x < 0 */
+  if (hx & 0x80000000) /* x < 0 */
     y = -y;
   return( y );
 }
@@ -824,18 +825,18 @@ long double
 __erfcl (long double x)
 {
   long double y, z, p, r;
-  int32_t i, ix, sign;
-  ieee854_long_double_shape_type u;
+  int32_t i, ix;
+  uint32_t hx;
+  double xhi;
 
-  u.value = x;
-  sign = u.parts32.w0;
-  ix = sign & 0x7fffffff;
-  u.parts32.w0 = ix;
+  xhi = ldbl_high (x);
+  GET_HIGH_WORD (hx, xhi);
+  ix = hx & 0x7fffffff;
 
   if (ix >= 0x7ff00000)
     {				/* erfc(nan)=nan */
       /* erfc(+-inf)=0,2 */
-      return (long double) (((u_int32_t) sign >> 31) << 1) + one / x;
+      return (long double) ((hx >> 31) << 1) + one / x;
     }
 
   if (ix < 0x3fd00000) /* |x| <1/4 */
@@ -846,7 +847,8 @@ __erfcl (long double x)
     }
   if (ix < 0x3ff40000) /* 1.25 */
     {
-      x = u.value;
+      if ((hx & 0x80000000) != 0)
+	x = -x;
       i = 8.0 * x;
       switch (i)
 	{
@@ -891,7 +893,7 @@ __erfcl (long double x)
 	  y += C20a;
 	  break;
 	}
-      if (sign & 0x80000000)
+      if (hx & 0x80000000)
 	y = 2.0L - y;
       return y;
     }
@@ -899,10 +901,11 @@ __erfcl (long double x)
   if (ix < 0x405ac000)
     {
       /* x < -9 */
-      if ((ix >= 0x40220000) && (sign & 0x80000000))
+      if (hx >= 0xc0220000)
 	return two - tiny;
 
-      x = fabsl (x);
+      if ((hx & 0x80000000) != 0)
+	x = -x;
       z = one / (x * x);
       i = 8.0 / x;
       switch (i)
@@ -933,21 +936,17 @@ __erfcl (long double x)
 	  p = neval (z, RNr8, NRNr8) / deval (z, RDr8, NRDr8);
 	  break;
 	}
-      u.value = x;
-      u.parts32.w3 = 0;
-      u.parts32.w2 = 0;
-      u.parts32.w1 &= 0xf8000000;
-      z = u.value;
+      z = (float) x;
       r = __ieee754_expl (-z * z - 0.5625) *
 	__ieee754_expl ((z - x) * (z + x) + p);
-      if ((sign & 0x80000000) == 0)
+      if ((hx & 0x80000000) == 0)
 	return r / x;
       else
 	return two - r / x;
     }
   else
     {
-      if ((sign & 0x80000000) == 0)
+      if ((hx & 0x80000000) == 0)
 	return tiny * tiny;
       else
 	return two - tiny;

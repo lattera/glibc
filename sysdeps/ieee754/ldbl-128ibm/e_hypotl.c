@@ -45,76 +45,84 @@
 #include <math.h>
 #include <math_private.h>
 
-static const long double two600 = 0x1.0p+600L;
-static const long double two1022 = 0x1.0p+1022L;
-
 long double
 __ieee754_hypotl(long double x, long double y)
 {
-	long double a,b,t1,t2,y1,y2,w,kld;
+	long double a,b,a1,a2,b1,b2,w,kld;
 	int64_t j,k,ha,hb;
+	double xhi, yhi, hi, lo;
 
-	GET_LDOUBLE_MSW64(ha,x);
+	xhi = ldbl_high (x);
+	EXTRACT_WORDS64 (ha, xhi);
+	yhi = ldbl_high (y);
+	EXTRACT_WORDS64 (hb, yhi);
 	ha &= 0x7fffffffffffffffLL;
-	GET_LDOUBLE_MSW64(hb,y);
 	hb &= 0x7fffffffffffffffLL;
 	if(hb > ha) {a=y;b=x;j=ha; ha=hb;hb=j;} else {a=x;b=y;}
 	a = fabsl(a);	/* a <- |a| */
 	b = fabsl(b);	/* b <- |b| */
-	if((ha-hb)>0x780000000000000LL) {return a+b;} /* x/y > 2**120 */
+	if((ha-hb)>0x0780000000000000LL) {return a+b;} /* x/y > 2**120 */
 	k=0;
 	kld = 1.0L;
 	if(ha > 0x5f30000000000000LL) {	/* a>2**500 */
 	   if(ha >= 0x7ff0000000000000LL) {	/* Inf or NaN */
-	       u_int64_t low;
 	       w = a+b;			/* for sNaN */
-	       GET_LDOUBLE_LSW64(low,a);
-	       if(((ha&0xfffffffffffffLL)|(low&0x7fffffffffffffffLL))==0)
+	       if(ha == 0x7ff0000000000000LL)
 		 w = a;
-	       GET_LDOUBLE_LSW64(low,b);
-	       if(((hb^0x7ff0000000000000LL)|(low&0x7fffffffffffffffLL))==0)
+	       if(hb == 0x7ff0000000000000LL)
 		 w = b;
 	       return w;
 	   }
 	   /* scale a and b by 2**-600 */
-	   ha -= 0x2580000000000000LL; hb -= 0x2580000000000000LL; k += 600;
-	   a /= two600;
-	   b /= two600;
-	   k += 600;
-	   kld = two600;
+	   a *= 0x1p-600L;
+	   b *= 0x1p-600L;
+	   k = 600;
+	   kld = 0x1p+600L;
 	}
-	if(hb < 0x23d0000000000000LL) {	/* b < 2**-450 */
+	else if(hb < 0x23d0000000000000LL) {	/* b < 2**-450 */
 	    if(hb <= 0x000fffffffffffffLL) {	/* subnormal b or 0 */
-		u_int64_t low;
-		GET_LDOUBLE_LSW64(low,b);
-		if((hb|(low&0x7fffffffffffffffLL))==0) return a;
-		t1=two1022;	/* t1=2^1022 */
-		b *= t1;
-		a *= t1;
-		k -= 1022;
-		kld = kld / two1022;
+		if(hb==0) return a;
+		a *= 0x1p+1022L;
+		b *= 0x1p+1022L;
+		k = -1022;
+		kld = 0x1p-1022L;
 	    } else {		/* scale a and b by 2^600 */
-		ha += 0x2580000000000000LL;	/* a *= 2^600 */
-		hb += 0x2580000000000000LL;	/* b *= 2^600 */
-		k -= 600;
-		a *= two600;
-		b *= two600;
-		kld = kld / two600;
+		a *= 0x1p+600L;
+		b *= 0x1p+600L;
+		k = -600;
+		kld = 0x1p-600L;
 	    }
 	}
     /* medium size a and b */
 	w = a-b;
 	if (w>b) {
-	    SET_LDOUBLE_WORDS64(t1,ha,0);
-	    t2 = a-t1;
-	    w  = __ieee754_sqrtl(t1*t1-(b*(-b)-t2*(a+t1)));
+	    ldbl_unpack (a, &hi, &lo);
+	    a1 = hi;
+	    a2 = lo;
+	    /* a*a + b*b
+	       = (a1+a2)*a + b*b
+	       = a1*a + a2*a + b*b
+	       = a1*(a1+a2) + a2*a + b*b
+	       = a1*a1 + a1*a2 + a2*a + b*b
+	       = a1*a1 + a2*(a+a1) + b*b  */
+	    w  = __ieee754_sqrtl(a1*a1-(b*(-b)-a2*(a+a1)));
 	} else {
 	    a  = a+a;
-	    SET_LDOUBLE_WORDS64(y1,hb,0);
-	    y2 = b - y1;
-	    SET_LDOUBLE_WORDS64(t1,ha+0x0010000000000000LL,0);
-	    t2 = a - t1;
-	    w  = __ieee754_sqrtl(t1*y1-(w*(-w)-(t1*y2+t2*b)));
+	    ldbl_unpack (b, &hi, &lo);
+	    b1 = hi;
+	    b2 = lo;
+	    ldbl_unpack (a, &hi, &lo);
+	    a1 = hi;
+	    a2 = lo;
+	    /* a*a + b*b
+	       = a*a + (a-b)*(a-b) - (a-b)*(a-b) + b*b
+	       = a*a + w*w  - (a*a - 2*a*b + b*b) + b*b
+	       = w*w + 2*a*b
+	       = w*w + (a1+a2)*b
+	       = w*w + a1*b + a2*b
+	       = w*w + a1*(b1+b2) + a2*b
+	       = w*w + a1*b1 + a1*b2 + a2*b  */
+	    w  = __ieee754_sqrtl(a1*b1-(w*(-w)-(a1*b2+a2*b)));
 	}
 	if(k!=0)
 	    return w*kld;

@@ -27,76 +27,83 @@ static const long double one = 1.0, Zero[] = {0.0, -0.0,};
 long double
 __ieee754_fmodl (long double x, long double y)
 {
-	int64_t n,hx,hy,hz,ix,iy,sx, i;
-	u_int64_t lx,ly,lz;
-	int temp;
+	int64_t hx, hy, hz, sx, sy;
+	uint64_t lx, ly, lz;
+	int n, ix, iy;
+	double xhi, xlo, yhi, ylo;
 
-	GET_LDOUBLE_WORDS64(hx,lx,x);
-	GET_LDOUBLE_WORDS64(hy,ly,y);
+	ldbl_unpack (x, &xhi, &xlo);
+	EXTRACT_WORDS64 (hx, xhi);
+	EXTRACT_WORDS64 (lx, xlo);
+	ldbl_unpack (y, &yhi, &ylo);
+	EXTRACT_WORDS64 (hy, yhi);
+	EXTRACT_WORDS64 (ly, ylo);
 	sx = hx&0x8000000000000000ULL;		/* sign of x */
-	hx ^=sx;				/* |x| */
-	hy &= 0x7fffffffffffffffLL;		/* |y| */
+	hx ^= sx;				/* |x| */
+	sy = hy&0x8000000000000000ULL;		/* sign of y */
+	hy ^= sy;				/* |y| */
 
     /* purge off exception values */
-	if(__builtin_expect((hy|(ly&0x7fffffffffffffff))==0 ||
+	if(__builtin_expect(hy==0 ||
 			    (hx>=0x7ff0000000000000LL)|| /* y=0,or x not finite */
 			    (hy>0x7ff0000000000000LL),0))	/* or y is NaN */
 	    return (x*y)/(x*y);
-	if(__builtin_expect(hx<=hy,0)) {
-	    if((hx<hy)||(lx<ly)) return x;	/* |x|<|y| return x */
-	    if(lx==ly)
-		return Zero[(u_int64_t)sx>>63];	/* |x|=|y| return x*0*/
+	if (__builtin_expect (hx <= hy, 0))
+	  {
+	    /* If |x| < |y| return x.  */
+	    if (hx < hy)
+	      return x;
+	    /* At this point the absolute value of the high doubles of
+	       x and y must be equal.  */
+	    /* If the low double of y is the same sign as the high
+	       double of y (ie. the low double increases |y|)...  */
+	    if (((ly ^ sy) & 0x8000000000000000LL) == 0
+		/* ... then a different sign low double to high double
+		   for x or same sign but lower magnitude...  */
+		&& (int64_t) (lx ^ sx) < (int64_t) (ly ^ sy))
+	      /* ... means |x| < |y|.  */
+	      return x;
+	    /* If the low double of x differs in sign to the high
+	       double of x (ie. the low double decreases |x|)...  */
+	    if (((lx ^ sx) & 0x8000000000000000LL) != 0
+		/* ... then a different sign low double to high double
+		   for y with lower magnitude (we've already caught
+		   the same sign for y case above)...  */
+		&& (int64_t) (lx ^ sx) > (int64_t) (ly ^ sy))
+	      /* ... means |x| < |y|.  */
+	      return x;
+	    /* If |x| == |y| return x*0.  */
+	    if ((lx ^ sx) == (ly ^ sy))
+	      return Zero[(uint64_t) sx >> 63];
 	}
-
-    /* determine ix = ilogb(x) */
-	if(__builtin_expect(hx<0x0010000000000000LL,0)) {	/* subnormal x */
-	    if(hx==0) {
-		for (ix = -1043, i=lx; i>0; i<<=1) ix -=1;
-	    } else {
-		for (ix = -1022, i=(hx<<11); i>0; i<<=1) ix -=1;
-	    }
-	} else ix = (hx>>52)-0x3ff;
-
-    /* determine iy = ilogb(y) */
-	if(__builtin_expect(hy<0x0010000000000000LL,0)) {	/* subnormal y */
-	    if(hy==0) {
-		for (iy = -1043, i=ly; i>0; i<<=1) iy -=1;
-	    } else {
-		for (iy = -1022, i=(hy<<11); i>0; i<<=1) iy -=1;
-	    }
-	} else iy = (hy>>52)-0x3ff;
 
     /* Make the IBM extended format 105 bit mantissa look like the ieee854 112
        bit mantissa so the following operations will give the correct
        result.  */
-	ldbl_extract_mantissa(&hx, &lx, &temp, x);
-	ldbl_extract_mantissa(&hy, &ly, &temp, y);
+	ldbl_extract_mantissa(&hx, &lx, &ix, x);
+	ldbl_extract_mantissa(&hy, &ly, &iy, y);
 
-    /* set up {hx,lx}, {hy,ly} and align y to x */
-	if(__builtin_expect(ix >= -1022, 1))
-	    hx = 0x0001000000000000LL|(0x0000ffffffffffffLL&hx);
-	else {		/* subnormal x, shift x to normal */
-	    n = -1022-ix;
-	    if(n<=63) {
-		hx = (hx<<n)|(lx>>(64-n));
-		lx <<= n;
-	    } else {
-		hx = lx<<(n-64);
-		lx = 0;
-	    }
-	}
-	if(__builtin_expect(iy >= -1022, 1))
-	    hy = 0x0001000000000000LL|(0x0000ffffffffffffLL&hy);
-	else {		/* subnormal y, shift y to normal */
-	    n = -1022-iy;
-	    if(n<=63) {
-		hy = (hy<<n)|(ly>>(64-n));
-		ly <<= n;
-	    } else {
-		hy = ly<<(n-64);
-		ly = 0;
-	    }
-	}
+	if (__builtin_expect (ix == -IEEE754_DOUBLE_BIAS, 0))
+	  {
+	    /* subnormal x, shift x to normal.  */
+	    while ((hx & (1LL << 48)) == 0)
+	      {
+		hx = (hx << 1) | (lx >> 63);
+		lx = lx << 1;
+		ix -= 1;
+	      }
+	  }
+
+	if (__builtin_expect (iy == -IEEE754_DOUBLE_BIAS, 0))
+	  {
+	    /* subnormal y, shift y to normal.  */
+	    while ((hy & (1LL << 48)) == 0)
+	      {
+		hy = (hy << 1) | (ly >> 63);
+		ly = ly << 1;
+		iy -= 1;
+	      }
+	  }
 
     /* fix point fmod */
 	n = ix - iy;
@@ -104,7 +111,7 @@ __ieee754_fmodl (long double x, long double y)
 	    hz=hx-hy;lz=lx-ly; if(lx<ly) hz -= 1;
 	    if(hz<0){hx = hx+hx+(lx>>63); lx = lx+lx;}
 	    else {
-		if((hz|(lz&0x7fffffffffffffff))==0)		/* return sign(x)*0 */
+		if((hz|lz)==0)		/* return sign(x)*0 */
 		    return Zero[(u_int64_t)sx>>63];
 		hx = hz+hz+(lz>>63); lx = lz+lz;
 	    }
@@ -113,7 +120,7 @@ __ieee754_fmodl (long double x, long double y)
 	if(hz>=0) {hx=hz;lx=lz;}
 
     /* convert back to floating value and restore the sign */
-	if((hx|(lx&0x7fffffffffffffff))==0)			/* return sign(x)*0 */
+	if((hx|lx)==0)			/* return sign(x)*0 */
 	    return Zero[(u_int64_t)sx>>63];
 	while(hx<0x0001000000000000LL) {	/* normalize x */
 	    hx = hx+hx+(lx>>63); lx = lx+lx;
