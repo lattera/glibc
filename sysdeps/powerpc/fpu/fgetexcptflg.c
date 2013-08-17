@@ -27,7 +27,7 @@ __fegetexceptflag (fexcept_t *flagp, int excepts)
   u.fenv = fegetenv_register ();
 
   /* Return (all of) it.  */
-  *flagp = u.l[1] & excepts & FE_ALL_EXCEPT;
+  *flagp = u.l & excepts & FE_ALL_EXCEPT;
 
   /* Success.  */
   return 0;

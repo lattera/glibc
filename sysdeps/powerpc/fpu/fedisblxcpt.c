@@ -32,15 +32,15 @@ fedisableexcept (int excepts)
 
   fe.fenv = fegetenv_register ();
   if (excepts & FE_INEXACT)
-    fe.l[1] &= ~(1 << (31 - FPSCR_XE));
+    fe.l &= ~(1 << (31 - FPSCR_XE));
   if (excepts & FE_DIVBYZERO)
-    fe.l[1] &= ~(1 << (31 - FPSCR_ZE));
+    fe.l &= ~(1 << (31 - FPSCR_ZE));
   if (excepts & FE_UNDERFLOW)
-    fe.l[1] &= ~(1 << (31 - FPSCR_UE));
+    fe.l &= ~(1 << (31 - FPSCR_UE));
   if (excepts & FE_OVERFLOW)
-    fe.l[1] &= ~(1 << (31 - FPSCR_OE));
+    fe.l &= ~(1 << (31 - FPSCR_OE));
   if (excepts & FE_INVALID)
-    fe.l[1] &= ~(1 << (31 - FPSCR_VE));
+    fe.l &= ~(1 << (31 - FPSCR_VE));
   fesetenv_register (fe.fenv);
 
   new = __fegetexcept ();

@@ -1,5 +1,23 @@
 2013-10-04  Anton Blanchard <anton@au1.ibm.com>
 
+	* sysdeps/powerpc/fpu/fenv_libc.h (fenv_union_t): Replace int
+	array with long long.
+	* sysdeps/powerpc/fpu/e_sqrt.c (__slow_ieee754_sqrt): Adjust.
+	* sysdeps/powerpc/fpu/e_sqrtf.c (__slow_ieee754_sqrtf): Adjust.
+	* sysdeps/powerpc/fpu/fclrexcpt.c (__feclearexcept): Adjust.
+	* sysdeps/powerpc/fpu/fedisblxcpt.c (fedisableexcept): Adjust.
+	* sysdeps/powerpc/fpu/feenablxcpt.c (feenableexcept): Adjust.
+	* sysdeps/powerpc/fpu/fegetexcept.c (__fegetexcept): Adjust.
+	* sysdeps/powerpc/fpu/feholdexcpt.c (feholdexcept): Adjust.
+	* sysdeps/powerpc/fpu/fesetenv.c (__fesetenv): Adjust.
+	* sysdeps/powerpc/fpu/feupdateenv.c (__feupdateenv): Adjust.
+	* sysdeps/powerpc/fpu/fgetexcptflg.c (__fegetexceptflag): Adjust.
+	* sysdeps/powerpc/fpu/fraiseexcpt.c (__feraiseexcept): Adjust.
+	* sysdeps/powerpc/fpu/fsetexcptflg.c (__fesetexceptflag): Adjust.
+	* sysdeps/powerpc/fpu/ftestexcept.c (fetestexcept): Adjust.
+
+2013-10-04  Anton Blanchard <anton@au1.ibm.com>
+
 	* sysdeps/powerpc/bits/mathinline.h (__signbitf): Use builtin.
 	(__signbit): Likewise.  Correct for little-endian.
 	(__signbitl): Call __signbit.

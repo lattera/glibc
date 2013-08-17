@@ -69,7 +69,7 @@ libm_hidden_proto (__fe_nomask_env)
 typedef union
 {
   fenv_t fenv;
-  unsigned int l[2];
+  unsigned long long l;
 } fenv_union_t;
 
 

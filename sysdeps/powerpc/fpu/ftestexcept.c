@@ -28,6 +28,6 @@ fetestexcept (int excepts)
 
   /* The FE_INVALID bit is dealt with correctly by the hardware, so we can
      just:  */
-  return u.l[1] & excepts;
+  return u.l & excepts;
 }
 libm_hidden_def (fetestexcept)

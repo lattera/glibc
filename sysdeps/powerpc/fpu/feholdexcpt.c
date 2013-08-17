@@ -30,13 +30,12 @@ feholdexcept (fenv_t *envp)
 
   /* Clear everything except for the rounding modes and non-IEEE arithmetic
      flag.  */
-  new.l[1] = old.l[1] & 7;
-  new.l[0] = old.l[0];
+  new.l = old.l & 0xffffffff00000007LL;
 
   /* If the old env had any enabled exceptions, then mask SIGFPE in the
      MSR FE0/FE1 bits.  This may allow the FPU to run faster because it
      always takes the default action and can not generate SIGFPE. */
-  if ((old.l[1] & _FPU_MASK_ALL) != 0)
+  if ((old.l & _FPU_MASK_ALL) != 0)
     (void)__fe_mask_env ();
 
   /* Put the new state in effect.  */

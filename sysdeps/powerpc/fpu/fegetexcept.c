@@ -27,15 +27,15 @@ __fegetexcept (void)
 
   fe.fenv = fegetenv_register ();
 
-  if (fe.l[1] & (1 << (31 - FPSCR_XE)))
+  if (fe.l & (1 << (31 - FPSCR_XE)))
       result |= FE_INEXACT;
-  if (fe.l[1] & (1 << (31 - FPSCR_ZE)))
+  if (fe.l & (1 << (31 - FPSCR_ZE)))
       result |= FE_DIVBYZERO;
-  if (fe.l[1] & (1 << (31 - FPSCR_UE)))
+  if (fe.l & (1 << (31 - FPSCR_UE)))
       result |= FE_UNDERFLOW;
-  if (fe.l[1] & (1 << (31 - FPSCR_OE)))
+  if (fe.l & (1 << (31 - FPSCR_OE)))
       result |= FE_OVERFLOW;
-  if (fe.l[1] & (1 << (31 - FPSCR_VE)))
+  if (fe.l & (1 << (31 - FPSCR_VE)))
       result |= FE_INVALID;
 
   return result;

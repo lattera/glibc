@@ -145,7 +145,7 @@ __slow_ieee754_sqrt (double x)
       feraiseexcept (FE_INVALID_SQRT);
 
       fenv_union_t u = { .fenv = fegetenv_register () };
-      if ((u.l[1] & FE_INVALID) == 0)
+      if ((u.l & FE_INVALID) == 0)
 #endif
 	feraiseexcept (FE_INVALID);
       x = a_nan.value;

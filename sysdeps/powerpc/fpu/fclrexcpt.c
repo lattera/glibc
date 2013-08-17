@@ -28,8 +28,8 @@ __feclearexcept (int excepts)
   u.fenv = fegetenv_register ();
 
   /* Clear the relevant bits.  */
-  u.l[1] = u.l[1] & ~((-(excepts >> (31 - FPSCR_VX) & 1) & FE_ALL_INVALID)
-		      | (excepts & FPSCR_STICKY_BITS));
+  u.l = u.l & ~((-(excepts >> (31 - FPSCR_VX) & 1) & FE_ALL_INVALID)
+		| (excepts & FPSCR_STICKY_BITS));
 
   /* Put the new state in effect.  */
   fesetenv_register (u.fenv);

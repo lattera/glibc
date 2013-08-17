@@ -33,11 +33,11 @@ __feraiseexcept (int excepts)
   u.fenv = fegetenv_register ();
 
   /* Add the exceptions */
-  u.l[1] = (u.l[1]
-	    | (excepts & FPSCR_STICKY_BITS)
-	    /* Turn FE_INVALID into FE_INVALID_SOFTWARE.  */
-	    | (excepts >> ((31 - FPSCR_VX) - (31 - FPSCR_VXSOFT))
-	       & FE_INVALID_SOFTWARE));
+  u.l = (u.l
+	 | (excepts & FPSCR_STICKY_BITS)
+	 /* Turn FE_INVALID into FE_INVALID_SOFTWARE.  */
+	 | (excepts >> ((31 - FPSCR_VX) - (31 - FPSCR_VXSOFT))
+	    & FE_INVALID_SOFTWARE));
 
   /* Store the new status word (along with the rest of the environment),
      triggering any appropriate exceptions.  */
@@ -49,7 +49,7 @@ __feraiseexcept (int excepts)
 	 don't have FE_INVALID_SOFTWARE implemented.  Detect this
 	 case and raise FE_INVALID_SNAN instead.  */
       u.fenv = fegetenv_register ();
-      if ((u.l[1] & FE_INVALID) == 0)
+      if ((u.l & FE_INVALID) == 0)
 	set_fpscr_bit (FPSCR_VXSNAN);
     }
 
