@@ -57,7 +57,7 @@ ENTRY (__longjmp)
 	beq	L(no_vmx)
 	la	r5,((JB_VRS)*8)(3)
 	andi.	r6,r5,0xf
-	lwz	r0,((JB_VRSAVE)*8)(3)
+	lwz	r0,((JB_VRSAVE)*8)(3)	/* 32-bit VRSAVE.  */
 	mtspr	VRSAVE,r0
 	beq+	L(aligned_restore_vmx)
 	addi    r6,r5,16
@@ -153,7 +153,7 @@ L(no_vmx):
 	lfd fp21,((JB_FPRS+7)*8)(r3)
 	ld r22,((JB_GPRS+8)*8)(r3)
 	lfd fp22,((JB_FPRS+8)*8)(r3)
-	ld r0,(JB_CR*8)(r3)
+	lwz r0,((JB_CR*8)+4)(r3)	/* 32-bit CR.  */
 	ld r23,((JB_GPRS+9)*8)(r3)
 	lfd fp23,((JB_FPRS+9)*8)(r3)
 	ld r24,((JB_GPRS+10)*8)(r3)

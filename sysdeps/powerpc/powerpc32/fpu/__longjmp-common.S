@@ -43,16 +43,16 @@ ENTRY (__longjmp)
 #   endif
 	mtlr    r6
 	cfi_same_value (lr)
-	lwz     r5,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET+4(r5)
+	lwz     r5,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET+LOWORD(r5)
 #  else
 	lwz     r5,_dl_hwcap@got(r5)
 	mtlr    r6
 	cfi_same_value (lr)
-	lwz     r5,4(r5)
+	lwz     r5,LOWORD(r5)
 #  endif
 # else
-	lis	r5,(_dl_hwcap+4)@ha
-	lwz     r5,(_dl_hwcap+4)@l(r5)
+	lis	r5,(_dl_hwcap+LOWORD)@ha
+	lwz     r5,(_dl_hwcap+LOWORD)@l(r5)
 # endif
 	andis.	r5,r5,(PPC_FEATURE_HAS_ALTIVEC >> 16)
 	beq	L(no_vmx)

@@ -1,3 +1,17 @@
+2013-10-04  Anton Blanchard <anton@au1.ibm.com>
+	    Alistair Popple <alistair@ozlabs.au.ibm.com>
+	    Alan Modra <amodra@gmail.com>
+
+	[BZ #15723]
+	* sysdeps/powerpc/jmpbuf-offsets.h: Comment fix.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S: Correct
+	_dl_hwcap access for little-endian.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S: Likewise.  Don't
+	destroy vmx regs when saving unaligned.
+	* sysdeps/powerpc/powerpc64/__longjmp-common.S: Correct CR load.
+	* sysdeps/powerpc/powerpc64/setjmp-common.S: Likewise CR save.  Don't
+	destroy vmx regs when saving unaligned.
+
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
 	* sysdeps/powerpc/powerpc32/power4/hp-timing.h (HP_TIMING_NOW):
