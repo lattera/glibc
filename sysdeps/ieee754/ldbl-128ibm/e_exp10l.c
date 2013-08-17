@@ -36,9 +36,9 @@ __ieee754_exp10l (long double arg)
   else if (arg > LDBL_MAX_10_EXP + 1)
     return LDBL_MAX * LDBL_MAX;
 
-  u.d = arg;
-  arg_high = u.dd[0];
-  arg_low = u.dd[1];
+  u.ld = arg;
+  arg_high = u.d[0].d;
+  arg_low = u.d[1].d;
   exp_high = arg_high * log10_high;
   exp_low = arg_high * log10_low + arg_low * M_LN10l;
   return __ieee754_expl (exp_high) * __ieee754_expl (exp_low);

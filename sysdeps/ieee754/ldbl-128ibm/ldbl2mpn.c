@@ -36,22 +36,22 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
   union ibm_extended_long_double u;
   unsigned long long hi, lo;
   int ediff;
-  u.d = value;
+  u.ld = value;
 
-  *is_neg = u.ieee.negative;
-  *expt = (int) u.ieee.exponent - IBM_EXTENDED_LONG_DOUBLE_BIAS;
+  *is_neg = u.d[0].ieee.negative;
+  *expt = (int) u.d[0].ieee.exponent - IEEE754_DOUBLE_BIAS;
 
-  lo = ((long long) u.ieee.mantissa2 << 32) | u.ieee.mantissa3;
-  hi = ((long long) u.ieee.mantissa0 << 32) | u.ieee.mantissa1;
+  lo = ((long long) u.d[1].ieee.mantissa0 << 32) | u.d[1].ieee.mantissa1;
+  hi = ((long long) u.d[0].ieee.mantissa0 << 32) | u.d[0].ieee.mantissa1;
   /* If the lower double is not a denomal or zero then set the hidden
      53rd bit.  */
-  if (u.ieee.exponent2 > 0)
+  if (u.d[1].ieee.exponent > 0)
     {
       lo |= 1LL << 52;
 
       /* The lower double is normalized separately from the upper.  We may
 	 need to adjust the lower manitissa to reflect this.  */
-      ediff = u.ieee.exponent - u.ieee.exponent2;
+      ediff = u.d[0].ieee.exponent - u.d[1].ieee.exponent;
       if (ediff > 53)
 	lo = lo >> (ediff-53);
     }
@@ -59,8 +59,8 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
      difference between the long double and the rounded high double
      value.  This is indicated by a differnce between the signs of the
      high and low doubles.  */
-  if ((u.ieee.negative != u.ieee.negative2)
-      && ((u.ieee.exponent2 != 0) && (lo != 0L)))
+  if ((u.d[0].ieee.negative != u.d[1].ieee.negative)
+      && ((u.d[1].ieee.exponent != 0) && (lo != 0L)))
     {
       lo = (1ULL << 53) - lo;
       if (hi == 0LL)
@@ -92,7 +92,7 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 #define NUM_LEADING_ZEROS (BITS_PER_MP_LIMB \
 			   - (LDBL_MANT_DIG - ((N - 1) * BITS_PER_MP_LIMB)))
 
-  if (u.ieee.exponent == 0)
+  if (u.d[0].ieee.exponent == 0)
     {
       /* A biased exponent of zero is a special case.
 	 Either it is a zero or it is a denormal number.  */

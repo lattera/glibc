@@ -89,23 +89,23 @@ __x2y2m1l (long double x, long double y)
   double vals[12];
   SET_RESTORE_ROUND (FE_TONEAREST);
   union ibm_extended_long_double xu, yu;
-  xu.d = x;
-  yu.d = y;
-  if (fabs (xu.dd[1]) < 0x1p-500)
-    xu.dd[1] = 0.0;
-  if (fabs (yu.dd[1]) < 0x1p-500)
-    yu.dd[1] = 0.0;
-  mul_split (&vals[1], &vals[0], xu.dd[0], xu.dd[0]);
-  mul_split (&vals[3], &vals[2], xu.dd[0], xu.dd[1]);
+  xu.ld = x;
+  yu.ld = y;
+  if (fabs (xu.d[1].d) < 0x1p-500)
+    xu.d[1].d = 0.0;
+  if (fabs (yu.d[1].d) < 0x1p-500)
+    yu.d[1].d = 0.0;
+  mul_split (&vals[1], &vals[0], xu.d[0].d, xu.d[0].d);
+  mul_split (&vals[3], &vals[2], xu.d[0].d, xu.d[1].d);
   vals[2] *= 2.0;
   vals[3] *= 2.0;
-  mul_split (&vals[5], &vals[4], xu.dd[1], xu.dd[1]);
-  mul_split (&vals[7], &vals[6], yu.dd[0], yu.dd[0]);
-  mul_split (&vals[9], &vals[8], yu.dd[0], yu.dd[1]);
+  mul_split (&vals[5], &vals[4], xu.d[1].d, xu.d[1].d);
+  mul_split (&vals[7], &vals[6], yu.d[0].d, yu.d[0].d);
+  mul_split (&vals[9], &vals[8], yu.d[0].d, yu.d[1].d);
   vals[8] *= 2.0;
   vals[9] *= 2.0;
-  mul_split (&vals[11], &vals[10], yu.dd[1], yu.dd[1]);
-  if (xu.dd[0] >= 0.75)
+  mul_split (&vals[11], &vals[10], yu.d[1].d, yu.d[1].d);
+  if (xu.d[0].d >= 0.75)
     vals[1] -= 1.0;
   else
     {

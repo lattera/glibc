@@ -26,31 +26,31 @@ do {									      \
       unsigned long long int num0, num1;				      \
       unsigned long long hi, lo;					      \
       int ediff;							      \
-      union ibm_extended_long_double eldbl;				      \
-      eldbl.d = fpnum.ldbl.d;						      \
+      union ibm_extended_long_double u;					      \
+      u.ld = fpnum.ldbl.d;						      \
 									      \
       assert (sizeof (long double) == 16);				      \
 									      \
-      lo = ((long long)eldbl.ieee.mantissa2 << 32) | eldbl.ieee.mantissa3;    \
-      hi = ((long long)eldbl.ieee.mantissa0 << 32) | eldbl.ieee.mantissa1;    \
+      lo = ((long long)u.d[1].ieee.mantissa0 << 32) | u.d[1].ieee.mantissa1;  \
+      hi = ((long long)u.d[0].ieee.mantissa0 << 32) | u.d[0].ieee.mantissa1;  \
       lo <<= 7; /* pre-shift lo to match ieee854.  */			      \
       /* If the lower double is not a denomal or zero then set the hidden     \
 	 53rd bit.  */							      \
-      if (eldbl.ieee.exponent2 != 0)					      \
+      if (u.d[1].ieee.exponent != 0)					      \
 	lo |= (1ULL << (52 + 7));					      \
       else								      \
 	lo <<= 1;							      \
       /* The lower double is normalized separately from the upper.  We	      \
 	 may need to adjust the lower manitissa to reflect this.  */	      \
-      ediff = eldbl.ieee.exponent - eldbl.ieee.exponent2;		      \
+      ediff = u.d[0].ieee.exponent - u.d[1].ieee.exponent;		      \
       if (ediff > 53 + 63)						      \
 	lo = 0;								      \
       else if (ediff > 53)						      \
 	lo = lo >> (ediff - 53);					      \
-      else if (eldbl.ieee.exponent2 == 0 && ediff < 53)			      \
+      else if (u.d[1].ieee.exponent == 0 && ediff < 53)			      \
 	lo = lo << (53 - ediff);					      \
-      if (eldbl.ieee.negative != eldbl.ieee.negative2			      \
-	  && (eldbl.ieee.exponent2 != 0 || lo != 0L))			      \
+      if (u.d[0].ieee.negative != u.d[1].ieee.negative			      \
+	  && (u.d[1].ieee.exponent != 0 || lo != 0L))			      \
 	{								      \
 	  lo = (1ULL << 60) - lo;					      \
 	  if (hi == 0L)							      \
@@ -58,7 +58,7 @@ do {									      \
 	      /* we have a borrow from the hidden bit, so shift left 1.  */   \
 	      hi = 0xffffffffffffeLL | (lo >> 59);			      \
 	      lo = 0xfffffffffffffffLL & (lo << 1);			      \
-	      eldbl.ieee.exponent--;					      \
+	      u.d[0].ieee.exponent--;					      \
 	    }								      \
 	  else								      \
 	    hi--;							      \
@@ -109,9 +109,9 @@ do {									      \
 	  *--wnumstr = L'0';						      \
 	}								      \
 									      \
-      leading = eldbl.ieee.exponent == 0 ? '0' : '1';			      \
+      leading = u.d[0].ieee.exponent == 0 ? '0' : '1';			      \
 									      \
-      exponent = eldbl.ieee.exponent;					      \
+      exponent = u.d[0].ieee.exponent;					      \
 									      \
       if (exponent == 0)						      \
 	{								      \
@@ -121,18 +121,18 @@ do {									      \
 	    {								      \
 	      /* This is a denormalized number.  */			      \
 	      expnegative = 1;						      \
-	      exponent = IBM_EXTENDED_LONG_DOUBLE_BIAS - 1;		      \
+	      exponent = IEEE754_DOUBLE_BIAS - 1;			      \
 	    }								      \
 	}								      \
-      else if (exponent >= IBM_EXTENDED_LONG_DOUBLE_BIAS)		      \
+      else if (exponent >= IEEE754_DOUBLE_BIAS)				      \
 	{								      \
 	  expnegative = 0;						      \
-	  exponent -= IBM_EXTENDED_LONG_DOUBLE_BIAS;			      \
+	  exponent -= IEEE754_DOUBLE_BIAS;				      \
 	}								      \
       else								      \
 	{								      \
 	  expnegative = 1;						      \
-	  exponent = -(exponent - IBM_EXTENDED_LONG_DOUBLE_BIAS);	      \
+	  exponent = -(exponent - IEEE754_DOUBLE_BIAS);			      \
 	}								      \
 } while (0)
 

@@ -15,28 +15,28 @@ ldbl_extract_mantissa (int64_t *hi64, uint64_t *lo64, int *exp, long double x)
      as bit 53 of the mantissa.  */
   uint64_t hi, lo;
   int ediff;
-  union ibm_extended_long_double eldbl;
-  eldbl.d = x;
-  *exp = eldbl.ieee.exponent - IBM_EXTENDED_LONG_DOUBLE_BIAS;
+  union ibm_extended_long_double u;
+  u.ld = x;
+  *exp = u.d[0].ieee.exponent - IEEE754_DOUBLE_BIAS;
 
-  lo = ((int64_t)eldbl.ieee.mantissa2 << 32) | eldbl.ieee.mantissa3;
-  hi = ((int64_t)eldbl.ieee.mantissa0 << 32) | eldbl.ieee.mantissa1;
+  lo = ((uint64_t) u.d[1].ieee.mantissa0 << 32) | u.d[1].ieee.mantissa1;
+  hi = ((uint64_t) u.d[0].ieee.mantissa0 << 32) | u.d[0].ieee.mantissa1;
   /* If the lower double is not a denomal or zero then set the hidden
      53rd bit.  */
-  if (eldbl.ieee.exponent2 > 0x001)
+  if (u.d[1].ieee.exponent > 0x001)
     {
       lo |= (1ULL << 52);
       lo = lo << 7; /* pre-shift lo to match ieee854.  */
       /* The lower double is normalized separately from the upper.  We
 	 may need to adjust the lower manitissa to reflect this.  */
-      ediff = eldbl.ieee.exponent - eldbl.ieee.exponent2;
+      ediff = u.d[0].ieee.exponent - u.d[1].ieee.exponent;
       if (ediff > 53)
 	lo = lo >> (ediff-53);
       hi |= (1ULL << 52);
     }
 
-  if ((eldbl.ieee.negative != eldbl.ieee.negative2)
-      && ((eldbl.ieee.exponent2 != 0) && (lo != 0LL)))
+  if ((u.d[0].ieee.negative != u.d[1].ieee.negative)
+      && ((u.d[1].ieee.exponent != 0) && (lo != 0LL)))
     {
       hi--;
       lo = (1ULL << 60) - lo;
@@ -59,10 +59,10 @@ ldbl_insert_mantissa (int sign, int exp, int64_t hi64, u_int64_t lo64)
   unsigned long hidden2, lzcount;
   unsigned long long hi, lo;
 
-  u.ieee.negative = sign;
-  u.ieee.negative2 = sign;
-  u.ieee.exponent = exp + IBM_EXTENDED_LONG_DOUBLE_BIAS;
-  u.ieee.exponent2 = exp-53 + IBM_EXTENDED_LONG_DOUBLE_BIAS;
+  u.d[0].ieee.negative = sign;
+  u.d[1].ieee.negative = sign;
+  u.d[0].ieee.exponent = exp + IEEE754_DOUBLE_BIAS;
+  u.d[1].ieee.exponent = exp-53 + IEEE754_DOUBLE_BIAS;
   /* Expect 113 bits (112 bits + hidden) right justified in two longs.
      The low order 53 bits (52 + hidden) go into the lower double */
   lo = (lo64 >> 7)& ((1ULL << 53) - 1);
@@ -79,7 +79,7 @@ ldbl_insert_mantissa (int sign, int exp, int64_t hi64, u_int64_t lo64)
       if (hidden2)
 	{
 	  hi++;
-	  u.ieee.negative2 = !sign;
+	  u.d[1].ieee.negative = !sign;
 	  lo = (1ULL << 53) - lo;
 	}
       /* The hidden bit of the lo mantissa is zero so we need to
@@ -95,32 +95,32 @@ ldbl_insert_mantissa (int sign, int exp, int64_t hi64, u_int64_t lo64)
       lzcount = lzcount - 11;
       if (lzcount > 0)
 	{
-	  int expnt2 = u.ieee.exponent2 - lzcount;
+	  int expnt2 = u.d[1].ieee.exponent - lzcount;
 	  if (expnt2 >= 1)
 	    {
 	      /* Not denormal.  Normalize and set low exponent.  */
 	      lo = lo << lzcount;
-	      u.ieee.exponent2 = expnt2;
+	      u.d[1].ieee.exponent = expnt2;
 	    }
 	  else
 	    {
 	      /* Is denormal.  */
 	      lo = lo << (lzcount + expnt2);
-	      u.ieee.exponent2 = 0;
+	      u.d[1].ieee.exponent = 0;
 	    }
 	}
     }
   else
     {
-      u.ieee.negative2 = 0;
-      u.ieee.exponent2 = 0;
+      u.d[1].ieee.negative = 0;
+      u.d[1].ieee.exponent = 0;
     }
 
-  u.ieee.mantissa3 = lo & ((1ULL << 32) - 1);
-  u.ieee.mantissa2 = (lo >> 32) & ((1ULL << 20) - 1);
-  u.ieee.mantissa1 = hi & ((1ULL << 32) - 1);
-  u.ieee.mantissa0 = (hi >> 32) & ((1ULL << 20) - 1);
-  return u.d;
+  u.d[1].ieee.mantissa1 = lo & ((1ULL << 32) - 1);
+  u.d[1].ieee.mantissa0 = (lo >> 32) & ((1ULL << 20) - 1);
+  u.d[0].ieee.mantissa1 = hi & ((1ULL << 32) - 1);
+  u.d[0].ieee.mantissa0 = (hi >> 32) & ((1ULL << 20) - 1);
+  return u.ld;
 }
 
 /* Handy utility functions to pack/unpack/cononicalize and find the nearbyint
@@ -129,18 +129,18 @@ static inline long double
 default_ldbl_pack (double a, double aa)
 {
   union ibm_extended_long_double u;
-  u.dd[0] = a;
-  u.dd[1] = aa;
-  return u.d;
+  u.d[0].d = a;
+  u.d[1].d = aa;
+  return u.ld;
 }
 
 static inline void
 default_ldbl_unpack (long double l, double *a, double *aa)
 {
   union ibm_extended_long_double u;
-  u.d = l;
-  *a = u.dd[0];
-  *aa = u.dd[1];
+  u.ld = l;
+  *a = u.d[0].d;
+  *aa = u.d[1].d;
 }
 
 #ifndef ldbl_pack

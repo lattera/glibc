@@ -162,39 +162,39 @@ __ieee754_expl (long double x)
       x = x + xl;
 
       /* Compute ex2 = 2^n_0 e^(argtable[tval1]) e^(argtable[tval2]).  */
-      ex2_u.d = __expl_table[T_EXPL_RES1 + tval1]
-		* __expl_table[T_EXPL_RES2 + tval2];
+      ex2_u.ld = (__expl_table[T_EXPL_RES1 + tval1]
+		  * __expl_table[T_EXPL_RES2 + tval2]);
       n_i = (int)n;
       /* 'unsafe' is 1 iff n_1 != 0.  */
       unsafe = fabsl(n_i) >= -LDBL_MIN_EXP - 1;
-      ex2_u.ieee.exponent += n_i >> unsafe;
+      ex2_u.d[0].ieee.exponent += n_i >> unsafe;
       /* Fortunately, there are no subnormal lowpart doubles in
 	 __expl_table, only normal values and zeros.
 	 But after scaling it can be subnormal.  */
-      exponent2 = ex2_u.ieee.exponent2 + (n_i >> unsafe);
-      if (ex2_u.ieee.exponent2 == 0)
-	/* assert ((ex2_u.ieee.mantissa2|ex2_u.ieee.mantissa3) == 0) */;
+      exponent2 = ex2_u.d[1].ieee.exponent + (n_i >> unsafe);
+      if (ex2_u.d[1].ieee.exponent == 0)
+	/* assert ((ex2_u.d[1].ieee.mantissa0|ex2_u.d[1].ieee.mantissa1) == 0) */;
       else if (exponent2 > 0)
-	ex2_u.ieee.exponent2 = exponent2;
+	ex2_u.d[1].ieee.exponent = exponent2;
       else if (exponent2 <= -54)
 	{
-	  ex2_u.ieee.exponent2 = 0;
-	  ex2_u.ieee.mantissa2 = 0;
-	  ex2_u.ieee.mantissa3 = 0;
+	  ex2_u.d[1].ieee.exponent = 0;
+	  ex2_u.d[1].ieee.mantissa0 = 0;
+	  ex2_u.d[1].ieee.mantissa1 = 0;
 	}
       else
 	{
 	  static const double
 	    two54 = 1.80143985094819840000e+16, /* 4350000000000000 */
 	    twom54 = 5.55111512312578270212e-17; /* 3C90000000000000 */
-	  ex2_u.dd[1] *= two54;
-	  ex2_u.ieee.exponent2 += n_i >> unsafe;
-	  ex2_u.dd[1] *= twom54;
+	  ex2_u.d[1].d *= two54;
+	  ex2_u.d[1].ieee.exponent += n_i >> unsafe;
+	  ex2_u.d[1].d *= twom54;
 	}
 
       /* Compute scale = 2^n_1.  */
-      scale_u.d = 1.0L;
-      scale_u.ieee.exponent += n_i - (n_i >> unsafe);
+      scale_u.ld = 1.0L;
+      scale_u.d[0].ieee.exponent += n_i - (n_i >> unsafe);
 
       /* Approximate e^x2 - 1, using a seventh-degree polynomial,
 	 with maximum error in [-2^-16-2^-53,2^-16+2^-53]
@@ -204,7 +204,7 @@ __ieee754_expl (long double x)
       /* Return result.  */
       fesetenv (&oldenv);
 
-      result = x22 * ex2_u.d + ex2_u.d;
+      result = x22 * ex2_u.ld + ex2_u.ld;
 
       /* Now we can test whether the result is ultimate or if we are unsure.
 	 In the later case we should probably call a mpn based routine to give
@@ -238,7 +238,7 @@ __ieee754_expl (long double x)
       if (!unsafe)
 	return result;
       else
-	return result * scale_u.d;
+	return result * scale_u.ld;
     }
   /* Exceptional cases:  */
   else if (isless (x, himark))

@@ -33,11 +33,11 @@ __mpn_construct_long_double (mp_srcptr frac_ptr, int expt, int sign)
   unsigned long long hi, lo;
   int exponent2;
 
-  u.ieee.negative = sign;
-  u.ieee.negative2 = sign;
-  u.ieee.exponent = expt + IBM_EXTENDED_LONG_DOUBLE_BIAS;
-  u.ieee.exponent2 = 0;
-  exponent2 = expt - 53 + IBM_EXTENDED_LONG_DOUBLE_BIAS;
+  u.d[0].ieee.negative = sign;
+  u.d[1].ieee.negative = sign;
+  u.d[0].ieee.exponent = expt + IEEE754_DOUBLE_BIAS;
+  u.d[1].ieee.exponent = 0;
+  exponent2 = expt - 53 + IEEE754_DOUBLE_BIAS;
 
 #if BITS_PER_MP_LIMB == 32
   /* The low order 53 bits (52 + hidden) go into the lower double */
@@ -73,15 +73,15 @@ __mpn_construct_long_double (mp_srcptr frac_ptr, int expt, int sign)
       else
 	lzcount = lzcount + 42;
 
-      if (lzcount > u.ieee.exponent)
+      if (lzcount > u.d[0].ieee.exponent)
 	{
-	  lzcount = u.ieee.exponent;
-	  u.ieee.exponent = 0;
+	  lzcount = u.d[0].ieee.exponent;
+	  u.d[0].ieee.exponent = 0;
 	  exponent2 -= lzcount;
 	}
       else
 	{
-	  u.ieee.exponent -= (lzcount - 1);
+	  u.d[0].ieee.exponent -= (lzcount - 1);
 	  exponent2 -= (lzcount - 1);
 	}
 
@@ -111,9 +111,9 @@ __mpn_construct_long_double (mp_srcptr frac_ptr, int expt, int sign)
 	    {
 	      if ((hi & (1LL << 53)) != 0)
 		hi -= 1LL << 52;
-	      u.ieee.exponent++;
+	      u.d[0].ieee.exponent++;
 	    }
-	  u.ieee.negative2 = !sign;
+	  u.d[1].ieee.negative = !sign;
 	  lo = (1LL << 53) - lo;
 	}
 
@@ -134,17 +134,17 @@ __mpn_construct_long_double (mp_srcptr frac_ptr, int expt, int sign)
 	  exponent2 = exponent2 - lzcount;
 	}
       if (exponent2 > 0)
-	u.ieee.exponent2 = exponent2;
+	u.d[1].ieee.exponent = exponent2;
       else
 	lo >>= 1 - exponent2;
     }
   else
-    u.ieee.negative2 = 0;
+    u.d[1].ieee.negative = 0;
 
-  u.ieee.mantissa3 = lo & 0xffffffffLL;
-  u.ieee.mantissa2 = (lo >> 32) & 0xfffff;
-  u.ieee.mantissa1 = hi & 0xffffffffLL;
-  u.ieee.mantissa0 = (hi >> 32) & ((1LL << (LDBL_MANT_DIG - 86)) - 1);
+  u.d[1].ieee.mantissa1 = lo & 0xffffffffLL;
+  u.d[1].ieee.mantissa0 = (lo >> 32) & 0xfffff;
+  u.d[0].ieee.mantissa1 = hi & 0xffffffffLL;
+  u.d[0].ieee.mantissa0 = (hi >> 32) & ((1LL << (LDBL_MANT_DIG - 86)) - 1);
 
-  return u.d;
+  return u.ld;
 }

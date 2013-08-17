@@ -1,3 +1,19 @@
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/ieee754.h
+	(union ibm_extended_long_double): Define as an array of ieee754_double.
+	(IBM_EXTENDED_LONG_DOUBLE_BIAS): Delete.
+	* sysdeps/ieee754/ldbl-128ibm/printf_fphex.c: Update all references
+	to ibm_extended_long_double and IBM_EXTENDED_LONG_DOUBLE_BIAS.
+	* sysdeps/ieee754/ldbl-128ibm/e_exp10l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_expl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/ldbl2mpn.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/math_ldbl.h: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/mpn2ldbl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_nearbyintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/strtold_l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/x2y2m1l.c: Likewise.
+
 2013-10-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* locale/programs/locarchive.c (add_locale): Use constant 4096 for
