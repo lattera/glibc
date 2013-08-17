@@ -30,7 +30,11 @@ ENTRY (strlen)
 				 with cmpb.  */
 	li	r5,-1	      /* MASK = 0xffffffffffffffff.  */
 	ld	r12,0(r4)     /* Load doubleword from memory.  */
+#ifdef __LITTLE_ENDIAN__
+	sld	r5,r5,r6
+#else
 	srd	r5,r5,r6      /* MASK = MASK >> padding.  */
+#endif
 	orc	r9,r12,r5     /* Mask bits that are not part of the string.  */
 	cmpb	r10,r9,r0     /* Check for null bytes in DWORD1.  */
 	cmpdi	cr7,r10,0     /* If r10 == 0, no null's have been found.  */
@@ -48,9 +52,6 @@ ENTRY (strlen)
 	cmpb	r10,r12,r0
 	cmpdi	cr7,r10,0
 	bne	cr7,L(done)
-	b	L(loop)	      /* We branch here (rather than falling through)
-				 to skip the nops due to heavy alignment
-				 of the loop below.  */
 
 	/* Main loop to look for the end of the string.  Since it's a
 	   small loop (< 8 instructions), align it to 32-bytes.  */
@@ -87,9 +88,15 @@ L(loop):
 	   0xff in the same position as the null byte in the original
 	   doubleword from the string.  Use that to calculate the length.  */
 L(done):
-	cntlzd	r0,r10	      /* Count leading zeroes before the match.  */
+#ifdef __LITTLE_ENDIAN__
+	addi	r9, r10, -1   /* Form a mask from trailing zeros.  */
+	andc	r9, r9, r10
+	popcntd r0, r9	      /* Count the bits in the mask.  */
+#else
+	cntlzd	r0,r10	      /* Count leading zeros before the match.  */
+#endif
 	subf	r5,r3,r4
-	srdi	r0,r0,3	      /* Convert leading zeroes to bytes.  */
+	srdi	r0,r0,3	      /* Convert leading/trailing zeros to bytes.  */
 	add	r3,r5,r0      /* Compute final length.  */
 	blr
 END (strlen)

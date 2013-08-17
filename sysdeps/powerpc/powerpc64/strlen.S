@@ -29,7 +29,12 @@
       1 is subtracted you get a value in the range 0x00-0x7f, none of which
       have their high bit set. The expression here is
       (x + 0xfefefeff) & ~(x | 0x7f7f7f7f), which gives 0x00000000 when
-      there were no 0x00 bytes in the word.
+      there were no 0x00 bytes in the word.  You get 0x80 in bytes that
+      match, but possibly false 0x80 matches in the next more significant
+      byte to a true match due to carries.  For little-endian this is
+      of no consequence since the least significant match is the one
+      we're interested in, but big-endian needs method 2 to find which
+      byte matches.
 
    2) Given a word 'x', we can test to see _which_ byte was zero by
       calculating ~(((x & 0x7f7f7f7f) + 0x7f7f7f7f) | x | 0x7f7f7f7f).
@@ -62,7 +67,7 @@
    Answer:
    1) Added a Data Cache Block Touch early to prefetch the first 128
    byte cache line. Adding dcbt instructions to the loop would not be
-   effective since most strings will be shorter than the cache line.*/
+   effective since most strings will be shorter than the cache line.  */
 
 /* Some notes on register usage: Under the SVR4 ABI, we can use registers
    0 and 3 through 12 (so long as we don't call any procedures) without
@@ -78,7 +83,7 @@
 ENTRY (strlen)
 	CALL_MCOUNT 1
 
-#define rTMP1	r0
+#define rTMP4	r0
 #define rRTN	r3	/* incoming STR arg, outgoing result */
 #define rSTR	r4	/* current string position */
 #define rPADN	r5	/* number of padding bits we prepend to the
@@ -88,9 +93,9 @@ ENTRY (strlen)
 #define rWORD1	r8	/* current string doubleword */
 #define rWORD2	r9	/* next string doubleword */
 #define rMASK	r9	/* mask for first string doubleword */
-#define rTMP2	r10
-#define rTMP3	r11
-#define rTMP4	r12
+#define rTMP1	r10
+#define rTMP2	r11
+#define rTMP3	r12
 
 	dcbt	0,rRTN
 	clrrdi	rSTR, rRTN, 3
@@ -100,30 +105,36 @@ ENTRY (strlen)
 	addi	r7F7F, r7F7F, 0x7f7f
 	li	rMASK, -1
 	insrdi	r7F7F, r7F7F, 32, 0
-/* That's the setup done, now do the first pair of doublewords.
-   We make an exception and use method (2) on the first two doublewords,
-   to reduce overhead.  */
+/* We use method (2) on the first two doublewords, because rFEFE isn't
+   required which reduces setup overhead.  Also gives a faster return
+   for small strings on big-endian due to needing to recalculate with
+   method (2) anyway.  */
+#ifdef __LITTLE_ENDIAN__
+	sld	rMASK, rMASK, rPADN
+#else
 	srd	rMASK, rMASK, rPADN
+#endif
 	and	rTMP1, r7F7F, rWORD1
 	or	rTMP2, r7F7F, rWORD1
 	lis	rFEFE, -0x101
 	add	rTMP1, rTMP1, r7F7F
 	addi	rFEFE, rFEFE, -0x101
-	nor	rTMP1, rTMP2, rTMP1
-	and.	rWORD1, rTMP1, rMASK
+	nor	rTMP3, rTMP2, rTMP1
+	and.	rTMP3, rTMP3, rMASK
 	mtcrf	0x01, rRTN
 	bne	L(done0)
-	sldi  rTMP1, rFEFE, 32
-	add  rFEFE, rFEFE, rTMP1
+	sldi	rTMP1, rFEFE, 32
+	add	rFEFE, rFEFE, rTMP1
 /* Are we now aligned to a doubleword boundary?  */
 	bt	28, L(loop)
 
 /* Handle second doubleword of pair.  */
+/* Perhaps use method (1) here for little-endian, saving one instruction?  */
 	ldu	rWORD1, 8(rSTR)
 	and	rTMP1, r7F7F, rWORD1
 	or	rTMP2, r7F7F, rWORD1
 	add	rTMP1, rTMP1, r7F7F
-	nor.	rWORD1, rTMP2, rTMP1
+	nor.	rTMP3, rTMP2, rTMP1
 	bne	L(done0)
 
 /* The loop.  */
@@ -137,28 +148,52 @@ L(loop):
 	add	rTMP3, rFEFE, rWORD2
 	nor	rTMP4, r7F7F, rWORD2
 	bne	L(done1)
-	and.	rTMP1, rTMP3, rTMP4
+	and.	rTMP3, rTMP3, rTMP4
 	beq	L(loop)
 
+#ifndef __LITTLE_ENDIAN__
 	and	rTMP1, r7F7F, rWORD2
 	add	rTMP1, rTMP1, r7F7F
-	andc	rWORD1, rTMP4, rTMP1
+	andc	rTMP3, rTMP4, rTMP1
 	b	L(done0)
 
 L(done1):
 	and	rTMP1, r7F7F, rWORD1
 	subi	rSTR, rSTR, 8
 	add	rTMP1, rTMP1, r7F7F
-	andc	rWORD1, rTMP2, rTMP1
+	andc	rTMP3, rTMP2, rTMP1
 
 /* When we get to here, rSTR points to the first doubleword in the string that
-   contains a zero byte, and the most significant set bit in rWORD1 is in that
-   byte.  */
+   contains a zero byte, and rTMP3 has 0x80 for bytes that are zero, and 0x00
+   otherwise.  */
 L(done0):
-	cntlzd	rTMP3, rWORD1
+	cntlzd	rTMP3, rTMP3
 	subf	rTMP1, rRTN, rSTR
 	srdi	rTMP3, rTMP3, 3
 	add	rRTN, rTMP1, rTMP3
 	blr
+#else
+
+L(done0):
+	addi	rTMP1, rTMP3, -1	/* Form a mask from trailing zeros.  */
+	andc	rTMP1, rTMP1, rTMP3
+	cntlzd	rTMP1, rTMP1		/* Count bits not in the mask.  */
+	subf	rTMP3, rRTN, rSTR
+	subfic	rTMP1, rTMP1, 64-7
+	srdi	rTMP1, rTMP1, 3
+	add	rRTN, rTMP1, rTMP3
+	blr
+
+L(done1):
+	addi	rTMP3, rTMP1, -1
+	andc	rTMP3, rTMP3, rTMP1
+	cntlzd	rTMP3, rTMP3
+	subf	rTMP1, rRTN, rSTR
+	subfic	rTMP3, rTMP3, 64-7-64
+	sradi	rTMP3, rTMP3, 3
+	add	rRTN, rTMP1, rTMP3
+	blr
+#endif
+
 END (strlen)
 libc_hidden_builtin_def (strlen)

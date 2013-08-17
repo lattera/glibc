@@ -1,5 +1,14 @@
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/powerpc/powerpc64/power7/strlen.S (strlen): Add little-endian
+	support.  Don't branch over align.
+	* sysdeps/powerpc/powerpc32/power7/strlen.S: Likewise.
+	* sysdeps/powerpc/powerpc64/strlen.S (strlen): Add little-endian
+	support.  Rearrange tmp reg use to suit.  Comment.
+	* sysdeps/powerpc/powerpc32/strlen.S: Likewise.
+
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/unix/sysv/linux/powerpc/bits/sigstack.h: New file.
 
 2013-10-04  Alan Modra  <amodra@gmail.com>
