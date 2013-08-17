@@ -68,6 +68,32 @@ L(g2):	add	rTMP, rFEFE, rWORD
 	mr	rALT, rWORD
 /* We've hit the end of the string.  Do the rest byte-by-byte.  */
 L(g1):
+#ifdef __LITTLE_ENDIAN__
+	extrdi.	rTMP, rALT, 8, 56
+	stb	rALT, 8(rDEST)
+	beqlr-
+	extrdi.	rTMP, rALT, 8, 48
+	stb	rTMP, 9(rDEST)
+	beqlr-
+	extrdi.	rTMP, rALT, 8, 40
+	stb	rTMP, 10(rDEST)
+	beqlr-
+	extrdi.	rTMP, rALT, 8, 32
+	stb	rTMP, 11(rDEST)
+	beqlr-
+	extrdi.	rTMP, rALT, 8, 24
+	stb	rTMP, 12(rDEST)
+	beqlr-
+	extrdi.	rTMP, rALT, 8, 16
+	stb	rTMP, 13(rDEST)
+	beqlr-
+	extrdi.	rTMP, rALT, 8, 8
+	stb	rTMP, 14(rDEST)
+	beqlr-
+	extrdi	rTMP, rALT, 8, 0
+	stb	rTMP, 15(rDEST)
+	blr
+#else
 	extrdi.	rTMP, rALT, 8, 0
 	stb	rTMP, 8(rDEST)
 	beqlr-
@@ -91,6 +117,7 @@ L(g1):
 	beqlr-
 	stb	rALT, 15(rDEST)
 	blr
+#endif
 
 /* Oh well.  In this case, we just do a byte-by-byte copy.  */
 	.align 4
