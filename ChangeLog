@@ -1,5 +1,12 @@
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext-common.S: Use
+	HIWORD/LOWORD.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext-common.S: Ditto.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S: Ditto.
+
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/longjmp.c: Use proper symbol versioning macros.
 	* sysdeps/powerpc/novmx-longjmp.c: Likewise.
 	* sysdeps/powerpc/powerpc32/bsd-_setjmp.S: Likewise.
