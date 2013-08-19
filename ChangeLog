@@ -1,3 +1,8 @@
+2014-05-12  Will Newton  <will.newton@linaro.org>
+
+	* malloc/Makefile (tests): Add tst-mallopt.
+	* malloc/tst-mallopt.c: New file.
+
 2014-05-09  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/armv7/strcmp.S: Use sfi_breg prefix on loads not from sp.
