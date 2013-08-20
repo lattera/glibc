@@ -24,9 +24,7 @@
 __complex__ double
 __cproj (__complex__ double x)
 {
-  if (isnan (__real__ x) && isnan (__imag__ x))
-    return x;
-  else if (!isfinite (__real__ x) || !isfinite (__imag__ x))
+  if (__isinf_ns (__real__ x) || __isinf_ns (__imag__ x))
     {
       __complex__ double res;
 

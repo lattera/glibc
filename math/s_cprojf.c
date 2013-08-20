@@ -24,9 +24,7 @@
 __complex__ float
 __cprojf (__complex__ float x)
 {
-  if (isnan (__real__ x) && isnan (__imag__ x))
-    return x;
-  else if (!isfinite (__real__ x) || !isfinite (__imag__ x))
+  if (__isinf_nsf (__real__ x) || __isinf_nsf (__imag__ x))
     {
       __complex__ float res;
 
