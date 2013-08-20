@@ -29,6 +29,12 @@ void *__vdso_clock_getres;
 void *__vdso_get_tbfreq;
 void *__vdso_getcpu;
 void *__vdso_time;
+#if defined(__PPC64__) || defined(__powerpc64__)
+void *__vdso_sigtramp_rt64;
+#else
+void *__vdso_sigtramp32;
+void *__vdso_sigtramp_rt32;
+#endif
 
 static inline void
 _libc_vdso_platform_setup (void)
@@ -46,6 +52,16 @@ _libc_vdso_platform_setup (void)
   __vdso_getcpu = _dl_vdso_vsym ("__kernel_getcpu", &linux2615);
 
   __vdso_time = _dl_vdso_vsym ("__kernel_time", &linux2615);
+
+  /* PPC64 uses only one signal trampoline symbol, while PPC32 will use
+     two depending if SA_SIGINFO is used (__kernel_sigtramp_rt32) or not
+     (__kernel_sigtramp32).  */
+#if defined(__PPC64__) || defined(__powerpc64__)
+  __vdso_sigtramp_rt64 = _dl_vdso_vsym ("__kernel_sigtramp_rt64", &linux2615);
+#else
+  __vdso_sigtramp32 = _dl_vdso_vsym ("__kernel_sigtramp32", &linux2615);
+  __vdso_sigtramp_rt32 = _dl_vdso_vsym ("__kernel_sigtramp_rt32", &linux2615);
+#endif
 }
 
 # define VDSO_SETUP _libc_vdso_platform_setup

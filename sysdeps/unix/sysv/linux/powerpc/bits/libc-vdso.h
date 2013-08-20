@@ -34,6 +34,13 @@ extern void *__vdso_getcpu;
 
 extern void *__vdso_time;
 
+#if defined(__PPC64__) || defined(__powerpc64__)
+extern void *__vdso_sigtramp_rt64;
+#else
+extern void *__vdso_sigtramp32;
+extern void *__vdso_sigtramp_rt32;
+#endif
+
 /* This macro is needed for PPC64 to return a skeleton OPD entry of a vDSO
    symbol.  This works because _dl_vdso_vsym always return the function
    address, and no vDSO symbols use the TOC or chain pointers from the OPD
