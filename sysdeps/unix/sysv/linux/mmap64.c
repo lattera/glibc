@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <string.h>
 
 #include <sysdep.h>
 #include <sys/syscall.h>
