@@ -403,8 +403,13 @@ endif
 INSTALL: manual/install.texi manual/macros.texi \
 	 $(common-objpfx)manual/pkgvers.texi
 	makeinfo --no-validate --plaintext --no-number-sections \
-		 -I$(common-objpfx)manual $< -o $@
-	-chmod a-w $@
+		 -I$(common-objpfx)manual $< -o $@-tmp
+	$(AWK) 'NF == 0 { ++n; next } \
+		NF != 0 { while (n-- > 0) print ""; n = 0; print }' \
+	  < $@-tmp > $@-tmp2
+	rm -f $@-tmp
+	-chmod a-w $@-tmp2
+	mv -f $@-tmp2 $@
 $(common-objpfx)manual/%: FORCE
 	$(MAKE) $(PARALLELMFLAGS) -C manual $@
 FORCE:
