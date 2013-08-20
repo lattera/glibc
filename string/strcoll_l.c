@@ -41,11 +41,244 @@
 
 #include "../locale/localeinfo.h"
 
+/* Track status while looking for sequences in a string.  */
+typedef struct
+{
+  int len;			/* Length of the current sequence.  */
+  int val;			/* Position of the sequence relative to the
+				   previous non-ignored sequence.  */
+  size_t idxnow;		/* Current index in sequences.  */
+  size_t idxmax;		/* Maximum index in sequences.  */
+  size_t idxcnt;		/* Current count of indices.  */
+  size_t backw;			/* Current Backward sequence index.  */
+  size_t backw_stop;		/* Index where the backward sequences stop.  */
+  const USTRING_TYPE *us;	/* The string.  */
+  int32_t *idxarr;		/* Array to cache weight indices.  */
+  unsigned char *rulearr;	/* Array to cache rules.  */
+} coll_seq;
+
+/* Get next sequence.  The weight indices are cached, so we don't need to
+   traverse the string.  */
+static void
+get_next_seq_cached (coll_seq *seq, int nrules, int pass,
+		     const unsigned char *rulesets,
+		     const USTRING_TYPE *weights)
+{
+  int val = seq->val = 0;
+  int len = seq->len;
+  size_t backw_stop = seq->backw_stop;
+  size_t backw = seq->backw;
+  size_t idxcnt = seq->idxcnt;
+  size_t idxmax = seq->idxmax;
+  size_t idxnow = seq->idxnow;
+  unsigned char *rulearr = seq->rulearr;
+  int32_t *idxarr = seq->idxarr;
+
+  while (len == 0)
+    {
+      ++val;
+      if (backw_stop != ~0ul)
+	{
+	  /* There is something pushed.  */
+	  if (backw == backw_stop)
+	    {
+	      /* The last pushed character was handled.  Continue
+		 with forward characters.  */
+	      if (idxcnt < idxmax)
+		{
+		  idxnow = idxcnt;
+		  backw_stop = ~0ul;
+		}
+	      else
+		{
+		  /* Nothing any more.  The backward sequence
+		     ended with the last sequence in the string.  */
+		  idxnow = ~0ul;
+		  break;
+		}
+	    }
+	  else
+	    idxnow = --backw;
+	}
+      else
+	{
+	  backw_stop = idxcnt;
+
+	  while (idxcnt < idxmax)
+	    {
+	      if ((rulesets[rulearr[idxcnt] * nrules + pass]
+		   & sort_backward) == 0)
+		/* No more backward characters to push.  */
+		break;
+	      ++idxcnt;
+	    }
+
+	  if (backw_stop == idxcnt)
+	    {
+	      /* No sequence at all or just one.  */
+	      if (idxcnt == idxmax)
+		/* Note that LEN is still zero.  */
+		break;
+
+	      backw_stop = ~0ul;
+	      idxnow = idxcnt++;
+	    }
+	  else
+	    /* We pushed backward sequences.  */
+	    idxnow = backw = idxcnt - 1;
+	}
+      len = weights[idxarr[idxnow]++];
+    }
+
+  /* Update the structure.  */
+  seq->val = val;
+  seq->len = len;
+  seq->backw_stop = backw_stop;
+  seq->backw = backw;
+  seq->idxcnt = idxcnt;
+  seq->idxnow = idxnow;
+}
+
+/* Get next sequence.  Traverse the string as required.  */
+static void
+get_next_seq (coll_seq *seq, int nrules, const unsigned char *rulesets,
+	      const USTRING_TYPE *weights, const int32_t *table,
+	      const USTRING_TYPE *extra, const int32_t *indirect)
+{
+#include WEIGHT_H
+  int val = seq->val = 0;
+  int len = seq->len;
+  size_t backw_stop = seq->backw_stop;
+  size_t backw = seq->backw;
+  size_t idxcnt = seq->idxcnt;
+  size_t idxmax = seq->idxmax;
+  size_t idxnow = seq->idxnow;
+  unsigned char *rulearr = seq->rulearr;
+  int32_t *idxarr = seq->idxarr;
+  const USTRING_TYPE *us = seq->us;
+
+  while (len == 0)
+    {
+      ++val;
+      if (backw_stop != ~0ul)
+	{
+	  /* The is something pushed.  */
+	  if (backw == backw_stop)
+	    {
+	      /* The last pushed character was handled.  Continue
+		 with forward characters.  */
+	      if (idxcnt < idxmax)
+		{
+		  idxnow = idxcnt;
+		  backw_stop = ~0ul;
+		}
+	      else
+		/* Nothing any more.  The backward sequence ended with
+		   the last sequence in the string.  Note that LEN
+		   is still zero.  */
+		break;
+	    }
+	  else
+	    idxnow = --backw;
+	}
+      else
+	{
+	  backw_stop = idxmax;
+
+	  while (*us != L('\0'))
+	    {
+	      int32_t tmp = findidx (&us, -1);
+	      rulearr[idxmax] = tmp >> 24;
+	      idxarr[idxmax] = tmp & 0xffffff;
+	      idxcnt = idxmax++;
+
+	      if ((rulesets[rulearr[idxcnt] * nrules]
+		   & sort_backward) == 0)
+		/* No more backward characters to push.  */
+		break;
+	      ++idxcnt;
+	    }
+
+	  if (backw_stop >= idxcnt)
+	    {
+	      /* No sequence at all or just one.  */
+	      if (idxcnt == idxmax || backw_stop > idxcnt)
+		/* Note that LEN is still zero.  */
+		break;
+
+	      backw_stop = ~0ul;
+	      idxnow = idxcnt;
+	    }
+	  else
+	    /* We pushed backward sequences.  */
+	    idxnow = backw = idxcnt - 1;
+	}
+      len = weights[idxarr[idxnow]++];
+    }
+
+  /* Update the structure.  */
+  seq->val = val;
+  seq->len = len;
+  seq->backw_stop = backw_stop;
+  seq->backw = backw;
+  seq->idxcnt = idxcnt;
+  seq->idxmax = idxmax;
+  seq->idxnow = idxnow;
+  seq->us = us;
+}
+
+/* Compare two sequences.  */
+static int
+do_compare (coll_seq *seq1, coll_seq *seq2, int position,
+	    const USTRING_TYPE *weights)
+{
+  int seq1len = seq1->len;
+  int seq2len = seq2->len;
+  int val1 = seq1->val;
+  int val2 = seq2->val;
+  int32_t *idx1arr = seq1->idxarr;
+  int32_t *idx2arr = seq2->idxarr;
+  int idx1now = seq1->idxnow;
+  int idx2now = seq2->idxnow;
+  int result = 0;
+
+  /* Test for position if necessary.  */
+  if (position && val1 != val2)
+    {
+      result = val1 - val2;
+      goto out;
+    }
+
+  /* Compare the two sequences.  */
+  do
+    {
+      if (weights[idx1arr[idx1now]] != weights[idx2arr[idx2now]])
+	{
+	  /* The sequences differ.  */
+	  result = weights[idx1arr[idx1now]] - weights[idx2arr[idx2now]];
+	  goto out;
+	}
+
+      /* Increment the offsets.  */
+      ++idx1arr[idx1now];
+      ++idx2arr[idx2now];
+
+      --seq1len;
+      --seq2len;
+    }
+  while (seq1len > 0 && seq2len > 0);
+
+  if (position && seq1len != seq2len)
+    result = seq1len - seq2len;
+
+out:
+  seq1->len = seq1len;
+  seq2->len = seq2len;
+  return result;
+}
+
 int
-STRCOLL (s1, s2, l)
-     const STRING_TYPE *s1;
-     const STRING_TYPE *s2;
-     __locale_t l;
+STRCOLL (const STRING_TYPE *s1, const STRING_TYPE *s2, __locale_t l)
 {
   struct __locale_data *current = l->__locales[LC_COLLATE];
   uint_fast32_t nrules = current->values[_NL_ITEM_INDEX (_NL_COLLATE_NRULES)].word;
@@ -56,34 +289,6 @@ STRCOLL (s1, s2, l)
   const USTRING_TYPE *weights;
   const USTRING_TYPE *extra;
   const int32_t *indirect;
-  uint_fast32_t pass;
-  int result = 0;
-  const USTRING_TYPE *us1;
-  const USTRING_TYPE *us2;
-  size_t s1len;
-  size_t s2len;
-  int32_t *idx1arr;
-  int32_t *idx2arr;
-  unsigned char *rule1arr;
-  unsigned char *rule2arr;
-  size_t idx1max;
-  size_t idx2max;
-  size_t idx1cnt;
-  size_t idx2cnt;
-  size_t idx1now;
-  size_t idx2now;
-  size_t backw1_stop;
-  size_t backw2_stop;
-  size_t backw1;
-  size_t backw2;
-  int val1;
-  int val2;
-  int position;
-  int seq1len;
-  int seq2len;
-  int use_malloc;
-
-#include WEIGHT_H
 
   if (nrules == 0)
     return STRCMP (s1, s2);
@@ -98,7 +303,6 @@ STRCOLL (s1, s2, l)
     current->values[_NL_ITEM_INDEX (CONCAT(_NL_COLLATE_EXTRA,SUFFIX))].string;
   indirect = (const int32_t *)
     current->values[_NL_ITEM_INDEX (CONCAT(_NL_COLLATE_INDIRECT,SUFFIX))].string;
-  use_malloc = 0;
 
   assert (((uintptr_t) table) % __alignof__ (table[0]) == 0);
   assert (((uintptr_t) weights) % __alignof__ (weights[0]) == 0);
@@ -106,17 +310,12 @@ STRCOLL (s1, s2, l)
   assert (((uintptr_t) indirect) % __alignof__ (indirect[0]) == 0);
 
   /* We need this a few times.  */
-  s1len = STRLEN (s1);
-  s2len = STRLEN (s2);
+  size_t s1len = STRLEN (s1);
+  size_t s2len = STRLEN (s2);
 
   /* Catch empty strings.  */
-  if (__builtin_expect (s1len == 0, 0) || __builtin_expect (s2len == 0, 0))
+  if (__glibc_unlikely (s1len == 0) || __glibc_unlikely (s2len == 0))
     return (s1len != 0) - (s2len != 0);
-
-  /* We need the elements of the strings as unsigned values since they
-     are used as indeces.  */
-  us1 = (const USTRING_TYPE *) s1;
-  us2 = (const USTRING_TYPE *) s2;
 
   /* Perform the first pass over the string and while doing this find
      and store the weights for each character.  Since we want this to
@@ -127,411 +326,101 @@ STRCOLL (s1, s2, l)
 
      Please note that the localedef programs makes sure that `position'
      is not used at the first level.  */
+
+  coll_seq seq1, seq2;
+  bool use_malloc = false;
+  int result = 0;
+
+  memset (&seq1, 0, sizeof (seq1));
+  seq2 = seq1;
+
+  /* We need the elements of the strings as unsigned values since they
+     are used as indices.  */
+  seq1.us = (const USTRING_TYPE *) s1;
+  seq2.us = (const USTRING_TYPE *) s2;
+
   if (! __libc_use_alloca ((s1len + s2len) * (sizeof (int32_t) + 1)))
     {
-      idx1arr = (int32_t *) malloc ((s1len + s2len) * (sizeof (int32_t) + 1));
-      idx2arr = &idx1arr[s1len];
-      rule1arr = (unsigned char *) &idx2arr[s2len];
-      rule2arr = &rule1arr[s1len];
+      seq1.idxarr = (int32_t *) malloc ((s1len + s2len) * (sizeof (int32_t) + 1));
+      seq2.idxarr = &seq1.idxarr[s1len];
+      seq1.rulearr = (unsigned char *) &seq2.idxarr[s2len];
+      seq2.rulearr = &seq1.rulearr[s1len];
 
-      if (idx1arr == NULL)
+      if (seq1.idxarr == NULL)
 	/* No memory.  Well, go with the stack then.
 
 	   XXX Once this implementation is stable we will handle this
-	   differently.  Instead of precomputing the indeces we will
+	   differently.  Instead of precomputing the indices we will
 	   do this in time.  This means, though, that this happens for
 	   every pass again.  */
 	goto try_stack;
-      use_malloc = 1;
+      use_malloc = true;
     }
   else
     {
     try_stack:
-      idx1arr = (int32_t *) alloca (s1len * sizeof (int32_t));
-      idx2arr = (int32_t *) alloca (s2len * sizeof (int32_t));
-      rule1arr = (unsigned char *) alloca (s1len);
-      rule2arr = (unsigned char *) alloca (s2len);
+      seq1.idxarr = (int32_t *) alloca (s1len * sizeof (int32_t));
+      seq2.idxarr = (int32_t *) alloca (s2len * sizeof (int32_t));
+      seq1.rulearr = (unsigned char *) alloca (s1len);
+      seq2.rulearr = (unsigned char *) alloca (s2len);
     }
 
-  idx1cnt = 0;
-  idx2cnt = 0;
-  idx1max = 0;
-  idx2max = 0;
-  idx1now = 0;
-  idx2now = 0;
-  backw1_stop = ~0ul;
-  backw2_stop = ~0ul;
-  backw1 = ~0ul;
-  backw2 = ~0ul;
-  seq1len = 0;
-  seq2len = 0;
-  position = rulesets[0] & sort_position;
-  while (1)
+  seq1.rulearr[0] = 0;
+
+  /* Cache values in the first pass and if needed, use them in subsequent
+     passes.  */
+  for (int pass = 0; pass < nrules; ++pass)
     {
-      val1 = 0;
-      val2 = 0;
+      seq1.idxcnt = 0;
+      seq1.backw_stop = ~0ul;
+      seq1.backw = ~0ul;
+      seq2.idxcnt = 0;
+      seq2.backw_stop = ~0ul;
+      seq2.backw = ~0ul;
 
-      /* Get the next non-IGNOREd element for string `s1'.  */
-      if (seq1len == 0)
-	do
-	  {
-	    ++val1;
-
-	    if (backw1_stop != ~0ul)
-	      {
-		/* The is something pushed.  */
-		if (backw1 == backw1_stop)
-		  {
-		    /* The last pushed character was handled.  Continue
-		       with forward characters.  */
-		    if (idx1cnt < idx1max)
-		      {
-			idx1now = idx1cnt;
-			backw1_stop = ~0ul;
-		      }
-		    else
-		      /* Nothing anymore.  The backward sequence ended with
-			 the last sequence in the string.  Note that seq1len
-			 is still zero.  */
-		      break;
-		  }
-		else
-		  idx1now = --backw1;
-	      }
-	    else
-	      {
-		backw1_stop = idx1max;
-
-		while (*us1 != L('\0'))
-		  {
-		    int32_t tmp = findidx (&us1, -1);
-		    rule1arr[idx1max] = tmp >> 24;
-		    idx1arr[idx1max] = tmp & 0xffffff;
-		    idx1cnt = idx1max++;
-
-		    if ((rulesets[rule1arr[idx1cnt] * nrules]
-			 & sort_backward) == 0)
-		      /* No more backward characters to push.  */
-		      break;
-		    ++idx1cnt;
-		  }
-
-		if (backw1_stop >= idx1cnt)
-		  {
-		    /* No sequence at all or just one.  */
-		    if (idx1cnt == idx1max || backw1_stop > idx1cnt)
-		      /* Note that seq1len is still zero.  */
-		      break;
-
-		    backw1_stop = ~0ul;
-		    idx1now = idx1cnt;
-		  }
-		else
-		  /* We pushed backward sequences.  */
-		  idx1now = backw1 = idx1cnt - 1;
-	      }
-	  }
-	while ((seq1len = weights[idx1arr[idx1now]++]) == 0);
-
-      /* And the same for string `s2'.  */
-      if (seq2len == 0)
-	do
-	  {
-	    ++val2;
-
-	    if (backw2_stop != ~0ul)
-	      {
-		/* The is something pushed.  */
-		if (backw2 == backw2_stop)
-		  {
-		    /* The last pushed character was handled.  Continue
-		       with forward characters.  */
-		    if (idx2cnt < idx2max)
-		      {
-			idx2now = idx2cnt;
-			backw2_stop = ~0ul;
-		      }
-		    else
-		      /* Nothing anymore.  The backward sequence ended with
-			 the last sequence in the string.  Note that seq2len
-			 is still zero.  */
-		      break;
-		  }
-		else
-		  idx2now = --backw2;
-	      }
-	    else
-	      {
-		backw2_stop = idx2max;
-
-		while (*us2 != L('\0'))
-		  {
-		    int32_t tmp = findidx (&us2, -1);
-		    rule2arr[idx2max] = tmp >> 24;
-		    idx2arr[idx2max] = tmp & 0xffffff;
-		    idx2cnt = idx2max++;
-
-		    if ((rulesets[rule2arr[idx2cnt] * nrules]
-			 & sort_backward) == 0)
-		      /* No more backward characters to push.  */
-		      break;
-		    ++idx2cnt;
-		  }
-
-		if (backw2_stop >= idx2cnt)
-		  {
-		    /* No sequence at all or just one.  */
-		    if (idx2cnt == idx2max || backw2_stop > idx2cnt)
-		      /* Note that seq1len is still zero.  */
-		      break;
-
-		    backw2_stop = ~0ul;
-		    idx2now = idx2cnt;
-		  }
-		else
-		  /* We pushed backward sequences.  */
-		  idx2now = backw2 = idx2cnt - 1;
-	      }
-	  }
-	while ((seq2len = weights[idx2arr[idx2now]++]) == 0);
-
-      /* See whether any or both strings are empty.  */
-      if (seq1len == 0 || seq2len == 0)
-	{
-	  if (seq1len == seq2len)
-	    /* Both ended.  So far so good, both strings are equal at the
-	       first level.  */
-	    break;
-
-	  /* This means one string is shorter than the other.  Find out
-	     which one and return an appropriate value.  */
-	  result = seq1len == 0 ? -1 : 1;
-	  goto free_and_return;
-	}
-
-      /* Test for position if necessary.  */
-      if (position && val1 != val2)
-	{
-	  result = val1 - val2;
-	  goto free_and_return;
-	}
-
-      /* Compare the two sequences.  */
-      do
-	{
-	  if (weights[idx1arr[idx1now]] != weights[idx2arr[idx2now]])
-	    {
-	      /* The sequences differ.  */
-	      result = weights[idx1arr[idx1now]] - weights[idx2arr[idx2now]];
-	      goto free_and_return;
-	    }
-
-	  /* Increment the offsets.  */
-	  ++idx1arr[idx1now];
-	  ++idx2arr[idx2now];
-
-	  --seq1len;
-	  --seq2len;
-	}
-      while (seq1len > 0 && seq2len > 0);
-
-      if (position && seq1len != seq2len)
-	{
-	  result = seq1len - seq2len;
-	  goto free_and_return;
-	}
-    }
-
-  /* Now the remaining passes over the weights.  We now use the
-     indeces we found before.  */
-  for (pass = 1; pass < nrules; ++pass)
-    {
       /* We assume that if a rule has defined `position' in one section
 	 this is true for all of them.  */
-      idx1cnt = 0;
-      idx2cnt = 0;
-      backw1_stop = ~0ul;
-      backw2_stop = ~0ul;
-      backw1 = ~0ul;
-      backw2 = ~0ul;
-      position = rulesets[rule1arr[0] * nrules + pass] & sort_position;
+      int position = rulesets[seq1.rulearr[0] * nrules + pass] & sort_position;
 
       while (1)
 	{
-	  val1 = 0;
-	  val2 = 0;
-
-	  /* Get the next non-IGNOREd element for string `s1'.  */
-	  if (seq1len == 0)
-	    do
-	      {
-		++val1;
-
-		if (backw1_stop != ~0ul)
-		  {
-		    /* The is something pushed.  */
-		    if (backw1 == backw1_stop)
-		      {
-			/* The last pushed character was handled.  Continue
-			   with forward characters.  */
-			if (idx1cnt < idx1max)
-			  {
-			    idx1now = idx1cnt;
-			    backw1_stop = ~0ul;
-			  }
-			else
-			  {
-			    /* Nothing anymore.  The backward sequence
-			       ended with the last sequence in the string.  */
-			    idx1now = ~0ul;
-			    break;
-			  }
-		      }
-		    else
-		      idx1now = --backw1;
-		  }
-		else
-		  {
-		    backw1_stop = idx1cnt;
-
-		    while (idx1cnt < idx1max)
-		      {
-			if ((rulesets[rule1arr[idx1cnt] * nrules + pass]
-			     & sort_backward) == 0)
-			  /* No more backward characters to push.  */
-			  break;
-			++idx1cnt;
-		      }
-
-		    if (backw1_stop == idx1cnt)
-		      {
-			/* No sequence at all or just one.  */
-			if (idx1cnt == idx1max)
-			  /* Note that seq1len is still zero.  */
-			  break;
-
-			backw1_stop = ~0ul;
-			idx1now = idx1cnt++;
-		      }
-		    else
-		      /* We pushed backward sequences.  */
-		      idx1now = backw1 = idx1cnt - 1;
-		  }
-	      }
-	    while ((seq1len = weights[idx1arr[idx1now]++]) == 0);
-
-	  /* And the same for string `s2'.  */
-	  if (seq2len == 0)
-	    do
-	      {
-		++val2;
-
-		if (backw2_stop != ~0ul)
-		  {
-		    /* The is something pushed.  */
-		    if (backw2 == backw2_stop)
-		      {
-			/* The last pushed character was handled.  Continue
-			   with forward characters.  */
-			if (idx2cnt < idx2max)
-			  {
-			    idx2now = idx2cnt;
-			    backw2_stop = ~0ul;
-			  }
-			else
-			  {
-			    /* Nothing anymore.  The backward sequence
-			       ended with the last sequence in the string.  */
-			    idx2now = ~0ul;
-			    break;
-			  }
-		      }
-		    else
-		      idx2now = --backw2;
-		  }
-		else
-		  {
-		    backw2_stop = idx2cnt;
-
-		    while (idx2cnt < idx2max)
-		      {
-			if ((rulesets[rule2arr[idx2cnt] * nrules + pass]
-			     & sort_backward) == 0)
-			  /* No more backward characters to push.  */
-			  break;
-			++idx2cnt;
-		      }
-
-		    if (backw2_stop == idx2cnt)
-		      {
-			/* No sequence at all or just one.  */
-			if (idx2cnt == idx2max)
-			  /* Note that seq2len is still zero.  */
-			  break;
-
-			backw2_stop = ~0ul;
-			idx2now = idx2cnt++;
-		      }
-		    else
-		      /* We pushed backward sequences.  */
-		      idx2now = backw2 = idx2cnt - 1;
-		  }
-	      }
-	    while ((seq2len = weights[idx2arr[idx2now]++]) == 0);
+	  if (pass == 0)
+	    {
+	      get_next_seq (&seq1, nrules, rulesets, weights, table, extra,
+			    indirect);
+	      get_next_seq (&seq2, nrules, rulesets, weights, table, extra,
+			    indirect);
+	    }
+	  else
+	    {
+	      get_next_seq_cached (&seq1, nrules, pass, rulesets, weights);
+	      get_next_seq_cached (&seq2, nrules, pass, rulesets, weights);
+	    }
 
 	  /* See whether any or both strings are empty.  */
-	  if (seq1len == 0 || seq2len == 0)
+	  if (seq1.len == 0 || seq2.len == 0)
 	    {
-	      if (seq1len == seq2len)
+	      if (seq1.len == seq2.len)
 		/* Both ended.  So far so good, both strings are equal
 		   at this level.  */
 		break;
 
 	      /* This means one string is shorter than the other.  Find out
 		 which one and return an appropriate value.  */
-	      result = seq1len == 0 ? -1 : 1;
+	      result = seq1.len == 0 ? -1 : 1;
 	      goto free_and_return;
 	    }
 
-	  /* Test for position if necessary.  */
-	  if (position && val1 != val2)
-	    {
-	      result = val1 - val2;
-	      goto free_and_return;
-	    }
-
-	  /* Compare the two sequences.  */
-	  do
-	    {
-	      if (weights[idx1arr[idx1now]] != weights[idx2arr[idx2now]])
-		{
-		  /* The sequences differ.  */
-		  result = (weights[idx1arr[idx1now]]
-			    - weights[idx2arr[idx2now]]);
-		  goto free_and_return;
-		}
-
-	      /* Increment the offsets.  */
-	      ++idx1arr[idx1now];
-	      ++idx2arr[idx2now];
-
-	      --seq1len;
-	      --seq2len;
-	    }
-	  while (seq1len > 0 && seq2len > 0);
-
-	  if (position && seq1len != seq2len)
-	    {
-	      result = seq1len - seq2len;
-	      goto free_and_return;
-	    }
+	  result = do_compare (&seq1, &seq2, position, weights);
+	  if (result != 0)
+	    goto free_and_return;
 	}
     }
 
   /* Free the memory if needed.  */
  free_and_return:
   if (use_malloc)
-    free (idx1arr);
+    free (seq1.idxarr);
 
   return result;
 }
