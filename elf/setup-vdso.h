@@ -89,7 +89,7 @@ setup_vdso (struct link_map *main_map __attribute__ ((unused)),
 	     addresses in the vsyscall DSO pages in writev() calls.  */
 	  const char *dsoname = ((char *) D_PTR (l, l_info[DT_STRTAB])
 				 + l->l_info[DT_SONAME]->d_un.d_val);
-	  size_t len = strlen (dsoname);
+	  size_t len = strlen (dsoname) + 1;
 	  char *copy = malloc (len);
 	  if (copy == NULL)
 	    _dl_fatal_printf ("out of memory\n");
