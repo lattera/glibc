@@ -42,9 +42,8 @@ __mmap64 (void *addr, size_t len, int prot, int flags, int fd, off64_t offset)
 #if MMAP2_PAGE_SHIFT == -1
   if (page_shift == 0)
     {
-      int page_size = getpagesize ();
-      while ((1 << ++page_shift) != page_size)
-	;
+      int page_size = __getpagesize ();
+      page_shift = __ffs (page_size) - 1;
     }
 #endif
   if (offset & ((1 << page_shift) - 1))
