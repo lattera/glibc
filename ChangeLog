@@ -1,3 +1,8 @@
+2013-08-20  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/sys/procfs.h (struct elf_prstatus):
+	Align 32 bit compat elf_greg to 8 bytes.
+
 2013-08-20  Andreas Arnez  <arnez@linux.vnet.ibm.com>
 
 	* elf/setup-vdso.h (setup_vdso): Fix missing string termination.

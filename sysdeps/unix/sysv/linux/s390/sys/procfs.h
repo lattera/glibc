@@ -123,7 +123,8 @@ typedef struct elf_prpsinfo prpsinfo_t;
    core files.  */
 #define ELF_NGREG32	36
 typedef unsigned int elf_greg_t32;
-typedef elf_greg_t32 elf_gregset_t32[ELF_NGREG32];
+typedef elf_greg_t32
+  elf_gregset_t32[ELF_NGREG32] __attribute__ ((__aligned__ (8)));
 typedef elf_fpregset_t elf_fpregset_t32;
 
 struct elf_prstatus32
