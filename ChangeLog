@@ -1,3 +1,8 @@
+2013-09-02  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/tst-fanotify.c: New test.
+	* sysdeps/unix/sysv/linux/Makefile (tests): Add tst-fanotify.
+
 2013-09-02  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14155]
