@@ -1,3 +1,10 @@
+2013-08-21  Liubov Dmitrieva  <liubov.dmitrieva@intel.com>
+
+	* sysdeps/i386/i686/multiarch/strcmp.S: Skip SSE4_2
+	version if bit_Slow_SSE4_2 is set.
+	* sysdeps/i386/i686/multiarch/strncase.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcasecmp.S: Likewise.
+
 2013-07-23  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ #15867]

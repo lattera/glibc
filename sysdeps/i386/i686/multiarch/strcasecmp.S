@@ -37,6 +37,8 @@ ENTRY(__strcasecmp)
 	leal	__strcasecmp_ssse3@GOTOFF(%ebx), %eax
 	testl	$bit_SSE4_2, CPUID_OFFSET+index_SSE4_2+__cpu_features@GOTOFF(%ebx)
 	jz	2f
+	testl	$bit_Slow_SSE4_2, CPUID_OFFSET+index_Slow_SSE4_2+__cpu_features@GOTOFF(%ebx)
+	jnz	2f
 	leal	__strcasecmp_sse4_2@GOTOFF(%ebx), %eax
 2:	popl	%ebx
 	cfi_adjust_cfa_offset (-4)
@@ -56,6 +58,8 @@ ENTRY(__strcasecmp)
 	leal	__strcasecmp_ssse3, %eax
 	testl	$bit_SSE4_2, CPUID_OFFSET+index_SSE4_2+__cpu_features
 	jz	2f
+	testl	$bit_Slow_SSE4_2, CPUID_OFFSET+index_Slow_SSE4_2+__cpu_features
+	jnz	2f
 	leal	__strcasecmp_sse4_2, %eax
 2:	ret
 END(__strcasecmp)
