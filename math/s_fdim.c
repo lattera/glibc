@@ -26,16 +26,16 @@ __fdim (double x, double y)
   int clsx = fpclassify (x);
   int clsy = fpclassify (y);
 
-  if (clsx == FP_NAN || clsy == FP_NAN
-      || (y < 0 && clsx == FP_INFINITE && clsy == FP_INFINITE))
-    /* Raise invalid flag.  */
+  if (clsx == FP_NAN || clsy == FP_NAN)
+    /* Raise invalid flag for signaling but not quiet NaN.  */
     return x - y;
 
   if (x <= y)
     return 0.0;
 
   double r = x - y;
-  if (fpclassify (r) == FP_INFINITE)
+  if (fpclassify (r) == FP_INFINITE
+      && clsx != FP_INFINITE && clsy != FP_INFINITE)
     __set_errno (ERANGE);
 
   return r;

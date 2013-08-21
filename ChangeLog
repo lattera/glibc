@@ -1,3 +1,13 @@
+2013-08-21  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15797]
+	* math/s_fdim.c (__fdim): Check for infinite arguments if result
+	is infinite, not alongside NaN test.
+	* math/s_fdimf.c (__fdimf): Likewise.
+	* math/s_fdiml.c (__fdiml): Likewise.
+	* math/libm-test.inc (fdim_test_data): Add more tests.  Test that
+	errno is unchanged.
+
 2013-08-21   Ondřej Bílka  <neleai@seznam.cz>
 
 	* argp/argp-help.c: Fix typos.
