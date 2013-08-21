@@ -1,3 +1,7 @@
+2013-08-21   Ondřej Bílka  <neleai@seznam.cz>
+
+	* sysdeps/tile/jmpbuf-offsets.h: Fix typos.
+
 2013-07-22  Chris Metcalf  <cmetcalf@tilera.com>
 
 	[BZ #15759]

@@ -219,7 +219,7 @@
 
 
 /* FIXME: This comment is not true.
- * All the syscall assembly macros rely on finding the approriate
+ * All the syscall assembly macros rely on finding the appropriate
    SYSCALL_ERROR_LABEL or rather HANDLER. */
 
 /* int * __errno_location(void) so you have to store your value

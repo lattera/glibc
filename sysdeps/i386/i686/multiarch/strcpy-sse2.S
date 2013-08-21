@@ -64,7 +64,7 @@
 	/* Get the entry and convert the relative offset to the \
 	absolute	address.  */                            \
 	addl	(%ecx,INDEX,SCALE), %ecx;                       \
-	/* We loaded the jump table and adjuested ECX. Go.  */  \
+	/* We loaded the jump table and adjusted ECX. Go.  */  \
 	jmp	*%ecx
 # else
 #  define JMPTBL(I, B)	I
@@ -128,7 +128,7 @@ ENTRY (STRCPY)
 
 	sub	%ecx, %edi
 
-/* If source adress alignment != destination adress alignment */
+/* If source address alignment != destination address alignment */
 	.p2align 4
 L(Unalign16Both):
 	mov	$16, %ecx
@@ -271,7 +271,7 @@ L(Unaligned64Leave):
 	lea	49(%edi, %edx), %edi
 	jmp	L(StrncpyFillTailWithZero)
 
-/* If source adress alignment == destination adress alignment */
+/* If source address alignment == destination address alignment */
 
 L(SourceStringAlignmentZero):
 	pxor	%xmm0, %xmm0

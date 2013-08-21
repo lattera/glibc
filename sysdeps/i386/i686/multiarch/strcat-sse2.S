@@ -49,7 +49,7 @@
 	/* Get the entry and convert the relative offset to the	\
 	absolute address.  */	\
 	addl	(%ecx,INDEX,SCALE), %ecx;	\
-	/* We loaded the jump table and adjuested ECX. Go.  */	\
+	/* We loaded the jump table and adjusted ECX. Go.  */	\
 	jmp	*%ecx
 # else
 #  define JMPTBL(I, B) I

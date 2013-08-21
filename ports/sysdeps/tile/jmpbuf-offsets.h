@@ -45,7 +45,7 @@
 #define JB_PC   25  /* normally LR, r55 */
 #define JB_ICS  26  /* interrupt critical section bit */
 
-/* We save space for some extra state to accomodate future changes.  */
+/* We save space for some extra state to accommodate future changes.  */
 #define JB_LEN  32  /* number of words */
 
 #define JB_SIZE (JB_LEN * REGSIZE)

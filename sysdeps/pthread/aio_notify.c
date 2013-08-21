@@ -157,7 +157,7 @@ __aio_notify (struct requestlist *req)
 #endif
 	}
       else
-	/* This is part of a asynchronous `lio_listio' operation.  If
+	/* This is part of an asynchronous `lio_listio' operation.  If
 	   this request is the last one, send the signal.  */
 	if (--*waitlist->counterp == 0)
 	  {

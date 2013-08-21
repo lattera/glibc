@@ -396,7 +396,7 @@ dl_open_worker (void *a)
 	  /* If this here is the shared object which we want to profile
 	     make sure the profile is started.  We can find out whether
 	     this is necessary or not by observing the `_dl_profile_map'
-	     variable.  If it was NULL but is not NULL afterwars we must
+	     variable.  If it was NULL but is not NULL afterwards we must
 	     start the profiling.  */
 	  struct link_map *old_profile_map = GL(dl_profile_map);
 

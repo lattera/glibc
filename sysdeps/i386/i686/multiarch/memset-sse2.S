@@ -62,7 +62,7 @@
        absolute address.  */					\
     add		(%ebx,%ecx,4), %ebx;				\
     add		%ecx, %edx;					\
-    /* We loaded the jump table and adjuested EDX. Go.  */	\
+    /* We loaded the jump table and adjusted EDX. Go.  */	\
     jmp		*%ebx
 #else
 # define ENTRANCE

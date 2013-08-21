@@ -1,4 +1,4 @@
-/* non alitivec (old) version of setjmp for PowerPC.
+/* non altivec (old) version of setjmp for PowerPC.
    Copyright (C) 1995-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

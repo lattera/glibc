@@ -115,7 +115,7 @@ __NTH (feraiseexcept (int __excepts))
     {
       if ((FE_INVALID & __excepts) != 0)
 	{
-	  /* One example of a invalid operation is 0.0 / 0.0.  */
+	  /* One example of an invalid operation is 0.0 / 0.0.  */
 	  float __f = 0.0;
 
 # ifdef __SSE_MATH__

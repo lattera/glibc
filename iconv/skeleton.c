@@ -514,7 +514,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
       size_t *lirreversiblep = irreversible ? &lirreversible : NULL;
 
       /* The following assumes that encodings, which have a variable length
-	 what might unalign a buffer even though it is a aligned in the
+	 what might unalign a buffer even though it is an aligned in the
 	 beginning, either don't have the minimal number of bytes as a divisor
 	 of the maximum length or have a minimum length of 1.  This is true
 	 for all known and supported encodings.
@@ -659,7 +659,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	      data->__outbuf = outbuf;
 
 	      /* Remember how many non-identical characters we
-		 converted in a irreversible way.  */
+		 converted in an irreversible way.  */
 	      *irreversible += lirreversible;
 
 	      break;

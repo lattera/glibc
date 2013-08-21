@@ -357,7 +357,7 @@ struct hol_entry
   /* A pointers into the HOL's short_options field, to the first short option
      letter for this entry.  The order of the characters following this point
      corresponds to the order of options pointed to by OPT, and there are at
-     most NUM.  A short option recorded in a option following OPT is only
+     most NUM.  A short option recorded in an option following OPT is only
      valid if it occurs in the right place in SHORT_OPTIONS (otherwise it's
      probably been shadowed by some other entry).  */
   char *short_options;
@@ -736,12 +736,12 @@ hol_entry_cmp (const struct hol_entry *entry1,
   if (entry1->cluster != entry2->cluster)
     {
       /* The entries are not within the same cluster, so we can't compare them
-	 directly, we have to use the appropiate clustering level too.  */
+	 directly, we have to use the appropriate clustering level too.  */
       if (! entry1->cluster)
 	/* ENTRY1 is at the `base level', not in a cluster, so we have to
 	   compare it's group number with that of the base cluster in which
 	   ENTRY2 resides.  Note that if they're in the same group, the
-	   clustered option always comes laster.  */
+	   clustered option always comes last.  */
 	return group_cmp (group1, hol_cluster_base (entry2->cluster)->group, -1);
       else if (! entry2->cluster)
 	/* Likewise, but ENTRY2's not in a cluster.  */

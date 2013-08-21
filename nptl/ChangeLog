@@ -1,3 +1,8 @@
+2013-08-21   Ondřej Bílka  <neleai@seznam.cz>
+
+	* pthread_getschedparam.c: Fix typos.
+	* sysdeps/unix/sysv/linux/register-atfork.c: Likewise.
+
 2013-07-23  David S. Miller  <davem@davemloft.net>
 
 	* tst-cancel4.c (WRITE_BUFFER_SIZE): Adjust comment.

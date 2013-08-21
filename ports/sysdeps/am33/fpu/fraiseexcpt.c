@@ -35,7 +35,7 @@ __feraiseexcept (int excepts)
   /* First: invalid exception.  */
   if (excepts & FE_INVALID)
     {
-      /* One example of a invalid operation is 0 * Infinity.  */
+      /* One example of an invalid operation is 0 * Infinity.  */
       float x = HUGE_VALF, y = 0.0f;
       __asm__ __volatile__ ("fmul %1,%0" : "+f" (x) : "f" (y));
     }

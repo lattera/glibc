@@ -53,7 +53,7 @@
 #  define STR1		8
 # endif
 # define STR2		STR1+4
-# define LOCALE		12	/* Loaded before the adjustement.  */
+# define LOCALE		12	/* Loaded before the adjustment.  */
 # ifdef PIC
 #  define RETURN	POP (%edi); POP (%ebx); ret; \
 			.p2align 4; CFI_PUSH (%ebx); CFI_PUSH (%edi)
@@ -73,7 +73,7 @@
 # endif
 # define STR2		STR1+4
 # define CNT		STR2+4
-# define LOCALE		16	/* Loaded before the adjustement.  */
+# define LOCALE		16	/* Loaded before the adjustment.  */
 # ifdef PIC
 #  define RETURN	POP (%edi); POP (REM); POP (%ebx); ret; \
 			.p2align 4; \

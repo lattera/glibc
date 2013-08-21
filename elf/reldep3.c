@@ -54,7 +54,7 @@ main (void)
     }
 
   /* Now close the first object.  If must still be around since we have
-     a implicit dependency.  */
+     an implicit dependency.  */
   if (dlclose (h1) != 0)
     {
       printf ("closing h1 failed: %s\n", dlerror ());

@@ -1,3 +1,12 @@
+2013-08-21   Ondřej Bílka  <neleai@seznam.cz>
+
+	* sysdeps/ia64/fpu/e_atanhl.S: Fix typos.
+	* sysdeps/ia64/fpu/e_log2l.S: Likewise.
+	* sysdeps/ia64/fpu/e_logl.S: Likewise.
+	* sysdeps/ia64/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/ia64/fpu/libm_lgammal.S: Likewise.
+	* sysdeps/ia64/fpu/s_log1pl.S: Likewise.
+
 2013-07-04  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/ia64/sys/ptrace.h (PTRACE_LISTEN):

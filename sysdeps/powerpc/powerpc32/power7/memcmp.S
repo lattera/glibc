@@ -515,7 +515,7 @@ L(zeroLength):
    of rBITDIF to 0.  If rBITDIF == 0 then rStr1 is word aligned and can
    perform the Wunaligned loop.
 
-   Otherwise we know that rSTR1 is not aready word aligned yet.
+   Otherwise we know that rSTR1 is not already word aligned yet.
    So we can force the string addresses to the next lower word
    boundary and special case this first word using shift left to
    eliminate bits preceding the first byte.  Since we want to join the

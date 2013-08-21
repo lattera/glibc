@@ -49,7 +49,7 @@ EALIGN (memcpy, 5, 0)
 
 .Lbigcopy:
 	neg	r8,r3		/* LS 3 bits = # bytes to 8-byte dest bdry  */
-	clrldi  r8,r8,64-4	/* aling to 16byte boundary  */
+	clrldi  r8,r8,64-4	/* align to 16byte boundary  */
 	sub     r7,r4,r3
 	cmpldi	cr0,r8,0
 	beq+	.Ldst_aligned

@@ -180,7 +180,7 @@ newstring (struct Strtab *st, const char *str, size_t len)
 
 
 /* XXX This function should definitely be rewritten to use a balancing
-   tree algorith (AVL, red-black trees).  For now a simple, correct
+   tree algorithm (AVL, red-black trees).  For now a simple, correct
    implementation is enough.  */
 static struct Strent **
 searchstring (struct Strent **sep, struct Strent *newstr)

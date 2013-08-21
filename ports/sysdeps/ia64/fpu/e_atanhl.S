@@ -99,7 +99,7 @@
 //   calculation is subdivided into two stages. The first stage is
 //   calculating of X = 2*|x|/(1-|x|). The second one is calculating of
 //   sign(x)*log1pl(X)/2. To obtain required accuracy we use precise division
-//   algorythm output of which is a pair of two extended precision values those
+//   algorithm output of which is a pair of two extended precision values those
 //   approximate result of division with accuracy higher than working
 //   precision. This pair is passed to modified log1pl function.
 //

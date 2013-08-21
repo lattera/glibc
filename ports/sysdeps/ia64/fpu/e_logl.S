@@ -211,7 +211,7 @@
 //
 //      Calculate	X_1 := X_0 * Z_1 truncated to lsb = 2^(-14)
 //      		     = 1.0 0 0 0 d_5 ... d_14
-//      		This is accomplised by integer multiplication.
+//      		This is accomplished by integer multiplication.
 //      		It is proved that X_1 indeed always begin
 //      		with 1.0000 in fixed point.
 //
@@ -232,7 +232,7 @@
 //
 //      Calculate	X_2 := X_1 * Z_2 truncated to lsb = 2^(-14)
 //      		     = 1.0 0 0 0 0 0 0 0 d_9 d_10 ... d_14
-//      		This is accomplised by integer multiplication.
+//      		This is accomplished by integer multiplication.
 //      		It is proved that X_2 indeed always begin
 //      		with 1.00000000 in fixed point.
 //

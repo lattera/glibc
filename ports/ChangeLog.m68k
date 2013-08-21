@@ -1,3 +1,7 @@
+2013-08-21   Ondřej Bílka  <neleai@seznam.cz>
+
+	* sysdeps/m68k/m680x0/fpu/fraiseexcpt.c: Fix typos.
+
 2013-07-20  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/m68k/dl-static.c: New file.

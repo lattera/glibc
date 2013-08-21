@@ -471,7 +471,7 @@ GLOBAL_IEEE754_ENTRY(log2l)
   (p7) br.cond.spnt LOG2_PSEUDO_ZERO
 }
 {.mfi
-  // get T_low adress
+  // get T_low address
   shladd r3=r28,3,r3
   // if first 8 bits after leading 1 are all ones, use polynomial approx. only
   (p10) fms.s1 f6=f7,f36,f1

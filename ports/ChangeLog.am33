@@ -1,3 +1,7 @@
+2013-08-21   Ondřej Bílka  <neleai@seznam.cz>
+
+	* sysdeps/am33/fpu/fraiseexcpt.c: Fix typos.
+
 2013-06-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/am33/elf/start.S: Remove trailing whitespace.

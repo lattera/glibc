@@ -58,7 +58,7 @@
 /* Get the entry and convert the relative offset to the	\
 	absolute	address.  */	\
 	addl	(%ebx,INDEX,SCALE), %ebx;	\
-/* We loaded the jump table and adjuested EDX/ESI. Go.  */	\
+/* We loaded the jump table and adjusted EDX/ESI. Go.  */	\
 	jmp	*%ebx
 # else
 #  define JMPTBL(I, B)	I

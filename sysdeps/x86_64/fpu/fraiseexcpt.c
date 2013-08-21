@@ -30,7 +30,7 @@ __feraiseexcept (int excepts)
   /* First: invalid exception.  */
   if ((FE_INVALID & excepts) != 0)
     {
-      /* One example of a invalid operation is 0.0 / 0.0.  */
+      /* One example of an invalid operation is 0.0 / 0.0.  */
       float f = 0.0;
 
       __asm__ __volatile__ ("divss %0, %0 " : : "x" (f));

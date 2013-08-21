@@ -57,7 +57,7 @@ void _dl_unmap (struct link_map *map);
 })
 
 
-/* The test for "addr & 2" below is to accomodate old binaries which
+/* The test for "addr & 2" below is to accommodate old binaries which
    violated the ELF ABI by pointing DT_INIT and DT_FINI at a function
    descriptor.  */
 #define DL_DT_INIT_ADDRESS(map, addr) \

@@ -1,3 +1,46 @@
+2013-08-21   Ondřej Bílka  <neleai@seznam.cz>
+
+	* argp/argp-help.c: Fix typos.
+	* crypt/speeds.c: Likewise.
+	* csu/check_fds.c: Likewise.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-open.c: Likewise.
+	* elf/reldep3.c: Likewise.
+	* elf/reldep.c: Likewise.
+	* elf/sprof.c: Likewise.
+	* iconv/iconv_charmap.c: Likewise.
+	* iconv/skeleton.c: Likewise.
+	* iconv/strtab.c: Likewise.
+	* io/lockf64.c: Likewise.
+	* libio/libioP.h: Likewise.
+	* resolv/gai_notify.c: Likewise.
+	* resolv/ns_name.c: Likewise.
+	* resolv/ns_samedomain.c: Likewise.
+	* resolv/res_send.c: Likewise.
+	* stdlib/random.c: Likewise.
+	* sunrpc/rpc/xdr.h: Likewise.
+	* sysdeps/i386/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/i386/i686/multiarch/memcmp-sse4.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memset-sse2-rep.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memset-sse2.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcat-sse2.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcmp-sse4.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcmp-ssse3.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcpy-sse2.S: Likewise.
+	* sysdeps/mach/hurd/check_fds.c: Likewise.
+	* sysdeps/powerpc/powerpc32/cell/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/memcmp.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power7/memcmp.S: Likewise.
+	* sysdeps/powerpc/powerpc32/setjmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/cell/memcpy.S: Likewise.
+	* sysdeps/pthread/aio_notify.c: Likewise.
+	* sysdeps/sparc/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/unix/sysv/linux/socketcall.h: Likewise.
+	* sysdeps/x86_64/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/x86_64/multiarch/strcpy-sse2-unaligned.S: Likewise.
+	* sysdeps/x86/fpu/bits/fenv.h: Likewise.
+
 2013-08-21  Liubov Dmitrieva  <liubov.dmitrieva@intel.com>
 
 	* sysdeps/i386/i686/multiarch/strcmp.S: Skip SSE4_2

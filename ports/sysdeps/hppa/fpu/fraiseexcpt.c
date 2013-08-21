@@ -42,7 +42,7 @@ feraiseexcept (int excepts)
   /* First: Invalid exception.  */
   if (excepts & FE_INVALID)
     {
-      /* One example of a invalid operation is 0 * Infinity.  */
+      /* One example of an invalid operation is 0 * Infinity.  */
       double d = HUGE_VAL;
       __asm__ __volatile__ (
 		"	fcpy,dbl %%fr0,%%fr22\n"

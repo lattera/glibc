@@ -42,7 +42,7 @@ check_one_fd (int fd, int mode)
     {
       /* This descriptor hasn't been opened.  We try to allocate the
          descriptor and open /dev/null on it so that the SUID program
-         we are about to start does not accidently use this
+         we are about to start does not accidentally use this
          descriptor.  */
       d = _hurd_alloc_fd (NULL, fd);
       if (d != NULL)

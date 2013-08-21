@@ -1364,7 +1364,7 @@ generate_call_graph (struct profdata *profdata)
 	    runp = runp->next;
 	  }
 
-	/* Info abount the function itself.  */
+	/* Info about the function itself.  */
 	n = printf ("[%Zu]", cnt);
 	printf ("%*s%5.1f%8.2f%8.2f%9" PRIdMAX "         %s [%Zd]\n",
 		(int) (7 - n), " ",

@@ -875,7 +875,7 @@ send_vc(res_state statp,
 		}
 	}
 	/*
-	 * If the calling applicating has bailed out of
+	 * If the calling application has bailed out of
 	 * a previous call and failed to arrange to have
 	 * the circuit closed or the server has got
 	 * itself confused, then drop the packet and

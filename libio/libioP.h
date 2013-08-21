@@ -73,7 +73,7 @@ extern "C" {
  * These are all the same, just used differently.
  * An _IO_FILE (or FILE) object is allows followed by a pointer to
  * a jump table (of pointers to functions).  The pointer is accessed
- * with the _IO_JUMPS macro.  The jump table has a eccentric format,
+ * with the _IO_JUMPS macro.  The jump table has an eccentric format,
  * so as to be compatible with the layout of a C++ virtual function table.
  * (as implemented by g++).  When a pointer to a streambuf object is
  * coerced to an (_IO_FILE*), then _IO_JUMPS on the result just
@@ -224,7 +224,7 @@ typedef int (*_IO_doallocate_t) (_IO_FILE *);
    There is no correspondence in the ANSI/ISO C++ standard library.
    The hooks basically correspond to the Unix system functions
    (read, write, close, lseek, and stat) except that a _IO_FILE*
-   parameter is used instead of a integer file descriptor;  the default
+   parameter is used instead of an integer file descriptor;  the default
    implementation used for normal files just calls those functions.
    The advantage of overriding these functions instead of the higher-level
    ones (underflow, overflow etc) is that you can leave all the buffering

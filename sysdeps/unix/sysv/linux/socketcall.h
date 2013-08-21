@@ -22,7 +22,7 @@
 /* Define unique numbers for the operations permitted on socket.  Linux
    uses a single system call for all these functions.  The relevant code
    file is /usr/include/linux/net.h.
-   We cannot use a enum here because the values are used in assembler
+   We cannot use an enum here because the values are used in assembler
    code.  */
 
 #define SOCKOP_socket		1

@@ -454,7 +454,7 @@ process_block (struct convtable *tbl, char *addr, size_t len, FILE *output)
       while (! is_term (cur, byte))
 	if (cur->val[byte].sub == NULL)
 	  {
-	    /* This is a invalid sequence.  Skip the first byte if we are
+	    /* This is an invalid sequence.  Skip the first byte if we are
 	       ignoring errors.  Otherwise punt.  */
 	    if (! omit_invalid)
 	      {
