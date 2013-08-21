@@ -1,3 +1,8 @@
+2013-08-26  Andreas Schwab  <schwab@suse.de>
+
+	* stdlib/Makefile (LDFLAGS-tst-tls-atexit): Remove.
+	($(objpfx)tst-tls-atexit): Add dependencies here instead.
+
 2013-08-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* nscd/aicache.c (addhstaiX): Fix indentation.

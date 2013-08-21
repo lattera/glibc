@@ -161,6 +161,6 @@ $(objpfx)tst-strtod6: $(link-libm)
 
 tst-tls-atexit-lib.so-no-z-defs = yes
 
-LDFLAGS-tst-tls-atexit = $(common-objpfx)nptl/libpthread.so \
+$(objpfx)tst-tls-atexit: $(common-objpfx)nptl/libpthread.so \
 			 $(common-objpfx)dlfcn/libdl.so
 $(objpfx)tst-tls-atexit.out: $(objpfx)tst-tls-atexit-lib.so
