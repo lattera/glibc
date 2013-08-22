@@ -34,7 +34,6 @@ fedisableexcept (int excepts)
   excepts &= FE_ALL_EXCEPT;
 
   new_exc &= ~(excepts << ENABLE_SHIFT);
-  new_exc &= ~_FPU_RESERVED;
   _FPU_SETCW (new_exc);
 
   return old_exc;

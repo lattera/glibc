@@ -28,7 +28,8 @@
  *           causing unimplemented operation exception.  This bit is only
  *           available for MIPS III and newer.
  * 23     -> Condition bit
- * 22-18  -> reserved (read as 0, write with 0)
+ * 22-21  -> reserved for architecture implementers
+ * 20-18  -> reserved (read as 0, write with 0)
  * 17     -> cause bit for unimplemented operation
  * 16     -> cause bit for invalid exception
  * 15     -> cause bit for division by zero exception
@@ -84,7 +85,7 @@ extern fpu_control_t __fpu_control;
 #define _FPU_RC_UP      0x2
 #define _FPU_RC_DOWN    0x3
 
-#define _FPU_RESERVED 0xfebc0000  /* Reserved bits in cw */
+#define _FPU_RESERVED 0xfe9c0000  /* Reserved bits in cw */
 
 
 /* The fdlibm code requires strict IEEE double precision arithmetic,
