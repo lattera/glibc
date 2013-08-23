@@ -145,12 +145,18 @@ __cexpf (__complex__ float x)
     }
   else
     {
-      /* If the real part is NaN the result is NaN + iNaN.  */
+      /* If the real part is NaN the result is NaN + iNaN unless the
+	 imaginary part is zero.  */
       __real__ retval = __nanf ("");
-      __imag__ retval = __nanf ("");
+      if (icls == FP_ZERO)
+	__imag__ retval = __imag__ x;
+      else
+	{
+	  __imag__ retval = __nanf ("");
 
-      if (rcls != FP_NAN || icls != FP_NAN)
-	feraiseexcept (FE_INVALID);
+	  if (rcls != FP_NAN || icls != FP_NAN)
+	    feraiseexcept (FE_INVALID);
+	}
     }
 
   return retval;

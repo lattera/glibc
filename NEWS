@@ -9,7 +9,7 @@ Version 2.19
 
 * The following bugs are resolved with this release:
 
-  14699, 15531, 15749, 15797, 15867
+  14699, 15531, 15532, 15749, 15797, 15867
 
 * CVE-2013-4237 The readdir_r function could write more than NAME_MAX bytes
   to the d_name member of struct dirent, or omit the terminating NUL

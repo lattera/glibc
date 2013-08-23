@@ -145,12 +145,18 @@ __cexpl (__complex__ long double x)
     }
   else
     {
-      /* If the real part is NaN the result is NaN + iNaN.  */
+      /* If the real part is NaN the result is NaN + iNaN unless the
+	 imaginary part is zero.  */
       __real__ retval = __nanl ("");
-      __imag__ retval = __nanl ("");
+      if (icls == FP_ZERO)
+	__imag__ retval = __imag__ x;
+      else
+	{
+	  __imag__ retval = __nanl ("");
 
-      if (rcls != FP_NAN || icls != FP_NAN)
-	feraiseexcept (FE_INVALID);
+	  if (rcls != FP_NAN || icls != FP_NAN)
+	    feraiseexcept (FE_INVALID);
+	}
     }
 
   return retval;

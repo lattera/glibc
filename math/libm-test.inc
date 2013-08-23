@@ -6198,7 +6198,8 @@ static const struct test_c_c_data cexp_test_data[] =
 
     TEST_c_c (cexp, plus_infty, qnan_value, plus_infty, qnan_value),
 
-    TEST_c_c (cexp, qnan_value, 0.0, qnan_value, qnan_value, INVALID_EXCEPTION_OK),
+    TEST_c_c (cexp, qnan_value, 0.0, qnan_value, 0.0),
+    TEST_c_c (cexp, qnan_value, minus_zero, qnan_value, minus_zero),
     TEST_c_c (cexp, qnan_value, 1.0, qnan_value, qnan_value, INVALID_EXCEPTION_OK),
 
     TEST_c_c (cexp, qnan_value, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION_OK),

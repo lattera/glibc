@@ -1,3 +1,12 @@
+2013-08-23  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15532]
+	* math/s_cexp.c (__cexp): Return NaN + i0 for NaN + i0 argument.
+	* math/s_cexpf.c (__cexpf): Likewise.
+	* math/s_cexpl.c (__cexpl): Likewise.
+	* math/libm-test.inc (cexp_test_data): Correct expected return
+	value for NaN + i0.  Add another test.
+
 2013-08-22  David S. Miller  <davem@davemloft.net>
 
 	* po/ca.po: Update Catalan translation from translation project.
