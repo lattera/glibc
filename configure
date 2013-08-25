@@ -3722,7 +3722,7 @@ else
 fi
 
 
-if test $build_pt_chown = yes; then
+if test "$build_pt_chown" = yes; then
   $as_echo "#define HAVE_PT_CHOWN 1" >>confdefs.h
 
 fi

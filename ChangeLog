@@ -1,3 +1,8 @@
+2013-08-25  Mike Frysinger  <vapier@gentoo.org>
+
+	* configure.ac: Quote $build_pt_chown test.
+	* configure: Regenerated.
+
 2013-08-23  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15532]

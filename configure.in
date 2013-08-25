@@ -359,7 +359,7 @@ AC_ARG_ENABLE([pt_chown],
 	      [build_pt_chown=$enableval],
 	      [build_pt_chown=no])
 AC_SUBST(build_pt_chown)
-if test $build_pt_chown = yes; then
+if test "$build_pt_chown" = yes; then
   AC_DEFINE(HAVE_PT_CHOWN)
 fi
 
