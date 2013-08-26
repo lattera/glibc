@@ -1,3 +1,9 @@
+2013-08-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #15890]
+	* nscd/aicache.c: Include res_hconf.h.
+	(addhstaiX): Initialize res_hconf.
+
 2013-08-26  Andreas Schwab  <schwab@suse.de>
 
 	* stdlib/Makefile (LDFLAGS-tst-tls-atexit): Remove.

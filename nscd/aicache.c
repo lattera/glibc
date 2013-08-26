@@ -25,6 +25,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <resolv/res_hconf.h>
 
 #include "dbg_log.h"
 #include "nscd.h"
@@ -100,6 +101,9 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
     no_more = __nss_database_lookup ("hosts", NULL,
 				     "dns [!UNAVAIL=return] files", &nip);
 
+  /* Initialize configurations.  */
+  if (__builtin_expect (!_res_hconf.initialized, 0))
+    _res_hconf_init ();
   if (__res_maybe_init (&_res, 0) == -1)
     no_more = 1;
 
