@@ -1,3 +1,9 @@
+2013-08-26  Roland McGrath  <roland@hack.frob.com>
+
+	* nss/nss_files/files-key.c: Include <rpc/des_crypt.h>
+	instead of explicitly declaring xdecrypt.
+	* nis/nss_nis/nis-publickey.c: Likewise.
+
 2013-08-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #15890]

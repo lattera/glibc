@@ -21,12 +21,10 @@
 #include <string.h>
 #include <netdb.h>
 #include <rpc/key_prot.h>
+#include <rpc/des_crypt.h>
 #include "nsswitch.h"
 
 #define DATAFILE "/etc/publickey"
-
-/* Prototype for function in xcyrpt.c.  */
-extern int xdecrypt (char *, char *);
 
 
 static enum nss_status

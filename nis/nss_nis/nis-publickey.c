@@ -25,7 +25,7 @@
 #include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>
 #include <rpc/key_prot.h>
-extern int xdecrypt (char *, char *);
+#include <rpc/des_crypt.h>
 
 #include "nss-nis.h"
 
