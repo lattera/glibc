@@ -1,3 +1,20 @@
+2013-08-27  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #15897]
+	* dlfcn/Makefile (tests): Add bug-dl-leaf.
+	(modules-names): Add bug-dl-leaf-lib and bug-dl-leaf-lib-cb.
+	($(objpfx)bug-dl-leaf): New rule.
+	($(objpfx)bug-dl-leaf.so): Likewise.
+	($(objpfx)bug-dl-leaf.out): Likewise.
+	($(objpfx)bug-dl-leaf-lib.so): Likewise.
+	($(objpfx)bug-dl-leaf-lib-cb.so): Likewise.
+	* dlfcn/bug-dl-leaf.c: New test.
+	* dlfcn/bug-dl-leaf-lib.c: Likewise.
+	* dlfcn/bug-dl-leaf-lib-cb.c: Likewise.
+	* dlfcn/dlfcn.h (dlopen): Change __THROW to __THROWNL.
+	(dlclose): Likewise.
+	(dlmopen): Likewise.
+
 2013-08-27  Roland McGrath  <roland@hack.frob.com>
 
 	* include/netdb.h [!_ISOMAC]:

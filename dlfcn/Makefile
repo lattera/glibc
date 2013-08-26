@@ -35,12 +35,13 @@ endif
 ifeq (yes,$(build-shared))
 tests = glrefmain failtest tst-dladdr default errmsg1 tstcxaatexit \
 	bug-dlopen1 bug-dlsym1 tst-dlinfo bug-atexit1 bug-atexit2 \
-	bug-atexit3 tstatexit
+	bug-atexit3 tstatexit bug-dl-leaf
 endif
 modules-names = glreflib1 glreflib2 glreflib3 failtestmod defaultmod1 \
 		defaultmod2 errmsg1mod modatexit modcxaatexit \
 		bug-dlsym1-lib1 bug-dlsym1-lib2 bug-atexit1-lib \
-		bug-atexit2-lib bug-atexit3-lib
+		bug-atexit2-lib bug-atexit3-lib bug-dl-leaf-lib \
+		bug-dl-leaf-lib-cb
 
 failtestmod.so-no-z-defs = yes
 glreflib2.so-no-z-defs = yes
@@ -132,3 +133,8 @@ $(objpfx)bug-atexit2.out: $(objpfx)bug-atexit2-lib.so
 LDLIBS-bug-atexit3-lib.so = -lstdc++ -lgcc_eh
 $(objpfx)bug-atexit3: $(libdl)
 $(objpfx)bug-atexit3.out: $(objpfx)bug-atexit3-lib.so
+
+$(objpfx)bug-dl-leaf: $(objpfx)bug-dl-leaf-lib.so
+$(objpfx)bug-dl-leaf.out: $(objpfx)bug-dl-leaf-lib-cb.so
+$(objpfx)bug-dl-leaf-lib.so: $(libdl)
+$(objpfx)bug-dl-leaf-lib-cb.so: $(objpfx)bug-dl-leaf-lib.so

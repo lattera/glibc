@@ -53,11 +53,11 @@ __BEGIN_DECLS
 
 /* Open the shared object FILE and map it in; return a handle that can be
    passed to `dlsym' to get symbol values from it.  */
-extern void *dlopen (const char *__file, int __mode) __THROW;
+extern void *dlopen (const char *__file, int __mode) __THROWNL;
 
 /* Unmap and close a shared object opened by `dlopen'.
    The handle cannot be used again after calling `dlclose'.  */
-extern int dlclose (void *__handle) __THROW __nonnull ((1));
+extern int dlclose (void *__handle) __THROWNL __nonnull ((1));
 
 /* Find the run-time address in the shared object HANDLE refers to
    of the symbol called NAME.  */
@@ -66,7 +66,7 @@ extern void *dlsym (void *__restrict __handle,
 
 #ifdef __USE_GNU
 /* Like `dlopen', but request object to be allocated in a new namespace.  */
-extern void *dlmopen (Lmid_t __nsid, const char *__file, int __mode) __THROW;
+extern void *dlmopen (Lmid_t __nsid, const char *__file, int __mode) __THROWNL;
 
 /* Find the run-time address in the shared object HANDLE refers to
    of the symbol called NAME with VERSION.  */
