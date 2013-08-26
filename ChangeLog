@@ -1,5 +1,7 @@
 2013-08-26  Roland McGrath  <roland@hack.frob.com>
 
+	* io/lxstat64.c: Just call __xstat64, for parity with stub __lxstat.
+
 	* nss/nss_files/files-key.c: Include <rpc/des_crypt.h>
 	instead of explicitly declaring xdecrypt.
 	* nis/nss_nis/nis-publickey.c: Likewise.

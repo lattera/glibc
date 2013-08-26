@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2013 Free Software Foundation, Inc.
+/* lxstat64 -- get file metadata, not following symlinks.  Stub version.
+   Copyright (C) 1991-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,14 +25,6 @@
 int
 __lxstat64 (int vers, const char *file, struct stat64 *buf)
 {
-  if (vers != _STAT_VER || file == NULL || buf == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
-  __set_errno (ENOSYS);
-  return -1;
+  return __xstat64 (vers, file, buf);
 }
 hidden_def (__lxstat64)
-stub_warning (__lxstat64)
