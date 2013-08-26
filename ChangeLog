@@ -1,3 +1,7 @@
+2013-08-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* nscd/aicache.c (addhstaiX): Fix indentation.
+
 2013-08-25  Mike Frysinger  <vapier@gentoo.org>
 
 	* configure.ac: Quote $build_pt_chown test.
