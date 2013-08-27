@@ -1,5 +1,10 @@
 2013-08-27  Roland McGrath  <roland@hack.frob.com>
 
+	* include/netdb.h [!_ISOMAC]:
+	Don't include <tls.h>.
+	(h_errno, __libc_h_errno): Move declaration and macros out of
+	[_LIBC_REENTRANT].
+
 	* include/resolv.h [_RESOLV_H_]:
 	Don't include <tls.h>.
 	(__resp, _res): Move declaration and macro out of [_LIBC_REENTRANT].
