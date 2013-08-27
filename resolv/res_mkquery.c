@@ -77,6 +77,7 @@ static const char rcsid[] = "$BINDId: res_mkquery.c,v 8.12 1999/10/13 16:39:40 v
 #include <resolv.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/time.h>
 
 /* Options.  Leave them on. */
 /* #define DEBUG */
