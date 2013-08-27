@@ -1,5 +1,9 @@
 2013-08-27  Roland McGrath  <roland@hack.frob.com>
 
+	* inet/ifreq.c: Moved to ...
+	* sysdeps/unix/ifreq.c: ... here.
+	* inet/ifreq.c: New file, true stub version.
+
 	* socket/sa_len.c: New file.
 	* socket/Makefile (aux): Add it.
 	* sysdeps/unix/sysv/linux/Makefile
