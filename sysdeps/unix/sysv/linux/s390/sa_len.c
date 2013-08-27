@@ -1,2 +1,3 @@
-#define NEED_AF_IUCV 1
-#include "../sa_len.c"
+#define HAVE_NETIUCV_IUCV_H
+
+#include <sysdeps/unix/sysv/linux/sa_len.c>

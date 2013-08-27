@@ -1,5 +1,14 @@
 2013-08-27  Roland McGrath  <roland@hack.frob.com>
 
+	* socket/sa_len.c: New file.
+	* socket/Makefile (aux): Add it.
+	* sysdeps/unix/sysv/linux/Makefile
+	[$(subdir) = socket] (sysdep_routines): Don't add sa_len here.
+	* sysdeps/unix/sysv/linux/sa_len.c: Just #define HAVE_NET*_H
+	and #include <socket/sa_len.c>.
+	* sysdeps/unix/sysv/linux/s390/sa_len.c: Just #define
+	HAVE_NETIUCV_IUCV_H and #include <sysdeps/unix/sysv/linux/sa_len.c>.
+
 	* sysdeps/unix/bsd/bsd4.4/bits/socket.h: Moved to ...
 	* bits/socket.h: ... here.
 
