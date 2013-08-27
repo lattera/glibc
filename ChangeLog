@@ -1,5 +1,12 @@
 2013-08-27  Roland McGrath  <roland@hack.frob.com>
 
+	* include/resolv.h [_RESOLV_H_]:
+	Don't include <tls.h>.
+	(__resp, _res): Move declaration and macro out of [_LIBC_REENTRANT].
+	* resolv/res_libc.c: Don't include <tls.h>.
+	(_res): Use __attribute__ ((nocommon)) in place of
+	__attribute__ ((section (".bss"))).
+
 	* Makefile ($(common-objpfx)linkobj/libc_pic.a):
 	If [sunrpc not in $(subdirs)], define to use libc_pic.a directly.
 

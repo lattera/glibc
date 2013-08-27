@@ -122,9 +122,7 @@ libc_hidden_def (__res_maybe_init)
    This differs from plain `struct __res_state _res;' in that it doesn't
    create a common definition, but a plain symbol that resides in .bss,
    which can have an alias.  */
-struct __res_state _res __attribute__((section (".bss")));
-
-#include <tls.h>
+struct __res_state _res __attribute__ ((nocommon));
 
 #undef __resp
 __thread struct __res_state *__resp = &_res;

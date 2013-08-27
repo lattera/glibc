@@ -13,20 +13,12 @@
 
 #ifdef _RESOLV_H_
 
-# ifdef _LIBC_REENTRANT
-#  include <tls.h>
-#  undef _res
-#  ifndef NOT_IN_libc
-#   define __resp __libc_resp
-#  endif
-#  define _res (*__resp)
-extern __thread struct __res_state *__resp attribute_tls_model_ie;
-# else
-#  ifndef __BIND_NOSTATIC
-#   undef _res
-extern struct __res_state _res;
-#  endif
+# ifndef NOT_IN_libc
+#  define __resp __libc_resp
 # endif
+extern __thread struct __res_state *__resp attribute_tls_model_ie;
+# undef _res
+# define _res (*__resp)
 
 /* Now define the internal interfaces.  */
 extern int __res_vinit (res_state, int);
