@@ -1229,8 +1229,11 @@ send_dg(res_state statp,
 		    /* Yes, we test ANSCP here.  If we have two buffers
 		       both will be allocatable.  */
 		    && anscp
+#ifdef FIONREAD
 		    && (ioctl (pfd[0].fd, FIONREAD, thisresplenp) < 0
-			|| *thisanssizp < *thisresplenp)) {
+			|| *thisanssizp < *thisresplenp)
+#endif
+                    ) {
 			u_char *newp = malloc (MAXPACKET);
 			if (newp != NULL) {
 				*anssizp = MAXPACKET;
