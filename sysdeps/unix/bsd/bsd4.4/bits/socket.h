@@ -50,9 +50,25 @@ enum __socket_type
 #define SOCK_RAW SOCK_RAW
   SOCK_RDM = 4,			/* Reliably-delivered messages.  */
 #define SOCK_RDM SOCK_RDM
-  SOCK_SEQPACKET = 5		/* Sequenced, reliable, connection-based,
+  SOCK_SEQPACKET = 5,		/* Sequenced, reliable, connection-based,
 				   datagrams of fixed maximum length.  */
 #define SOCK_SEQPACKET SOCK_SEQPACKET
+
+#define SOCK_MAX (SOCK_SEQPACKET + 1)
+  /* Mask which covers at least up to SOCK_MASK-1.
+     The remaining bits are used as flags. */
+#define SOCK_TYPE_MASK 0xf
+
+  /* Flags to be ORed into the type parameter of socket and socketpair and
+     used for the flags parameter of accept4.  */
+
+  SOCK_CLOEXEC = 0x10000000,	/* Atomically set close-on-exec flag for the
+				   new descriptor(s).  */
+#define SOCK_CLOEXEC SOCK_CLOEXEC
+
+  SOCK_NONBLOCK = 0x20000000	/* Atomically mark descriptor(s) as
+				   non-blocking.  */
+#define SOCK_NONBLOCK SOCK_NONBLOCK
 };
 
 /* Protocol families.  */

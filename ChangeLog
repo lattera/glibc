@@ -1,3 +1,9 @@
+2013-08-27  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/bsd/bsd4.4/bits/socket.h (enum __socket_type):
+	Add SOCK_CLOEXEC, SOCK_NONBLOCK with values from FreeBSD.
+	(SOCK_MAX, SOCK_TYPE_MASK): New macros.
+
 2013-08-27  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #15736]
