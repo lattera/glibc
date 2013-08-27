@@ -1,11 +1,11 @@
-/* System-specific socket constants and types.  Generic/4.3 BSD version.
+/* System-specific socket constants and types.  4.4 BSD version.
    Copyright (C) 1991-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+   modify it under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of the
+   License, or (at your option) any later version.
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,21 +13,22 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   License along with the GNU C Library; see the file COPYING.LIB.  If
+   not, see <http://www.gnu.org/licenses/>.  */
 
 #ifndef __BITS_SOCKET_H
 #define __BITS_SOCKET_H	1
 
-#if !defined _SYS_SOCKET_H && !defined _NETINET_IN_H
+#ifndef _SYS_SOCKET_H
 # error "Never include <bits/socket.h> directly; use <sys/socket.h> instead."
 #endif
 
-#include <limits.h>
-#include <bits/types.h>
-
 #define	__need_size_t
+#define __need_NULL
 #include <stddef.h>
+
+#include <limits.h>		/* XXX Is this allowed?  */
+#include <bits/types.h>
 
 /* Type for length arguments in socket calls.  */
 #ifndef __socklen_t_defined
@@ -49,9 +50,25 @@ enum __socket_type
 #define SOCK_RAW SOCK_RAW
   SOCK_RDM = 4,			/* Reliably-delivered messages.  */
 #define SOCK_RDM SOCK_RDM
-  SOCK_SEQPACKET = 5		/* Sequenced, reliable, connection-based,
+  SOCK_SEQPACKET = 5,		/* Sequenced, reliable, connection-based,
 				   datagrams of fixed maximum length.  */
 #define SOCK_SEQPACKET SOCK_SEQPACKET
+
+#define SOCK_MAX (SOCK_SEQPACKET + 1)
+  /* Mask which covers at least up to SOCK_MASK-1.
+     The remaining bits are used as flags. */
+#define SOCK_TYPE_MASK 0xf
+
+  /* Flags to be ORed into the type parameter of socket and socketpair and
+     used for the flags parameter of accept4.  */
+
+  SOCK_CLOEXEC = 0x10000000,	/* Atomically set close-on-exec flag for the
+				   new descriptor(s).  */
+#define SOCK_CLOEXEC SOCK_CLOEXEC
+
+  SOCK_NONBLOCK = 0x20000000	/* Atomically mark descriptor(s) as
+				   non-blocking.  */
+#define SOCK_NONBLOCK SOCK_NONBLOCK
 };
 
 /* Protocol families.  */
@@ -120,6 +137,8 @@ enum __socket_type
 #define AF_INET6	PF_INET6
 #define	AF_MAX		PF_MAX
 
+/* Maximum queue length specifiable by listen.  */
+#define SOMAXCONN	128	/* 5 on the origional 4.4 BSD.  */
 
 /* Get the definition of the macro to define the common sockaddr members.  */
 #include <bits/sockaddr.h>
@@ -167,8 +186,10 @@ enum
 #define MSG_CTRUNC MSG_CTRUNC
     MSG_WAITALL		= 0x40,	/* Wait for full request or error.  */
 #define MSG_WAITALL MSG_WAITALL
-    MSG_DONTWAIT	= 0x80	/* This message should be nonblocking.  */
+    MSG_DONTWAIT	= 0x80,	/* This message should be nonblocking.  */
 #define MSG_DONTWAIT MSG_DONTWAIT
+    MSG_NOSIGNAL	= 0x0400	/* Do not generate SIGPIPE on EPIPE.  */
+#define MSG_NOSIGNAL MSG_NOSIGNAL
   };
 
 
@@ -176,18 +197,105 @@ enum
    `sendmsg' and received by `recvmsg'.  */
 struct msghdr
   {
-    __ptr_t msg_name;		/* Address to send to/receive from.  */
+    void *msg_name;		/* Address to send to/receive from.  */
     socklen_t msg_namelen;	/* Length of address data.  */
 
     struct iovec *msg_iov;	/* Vector of data to send/receive into.  */
     int msg_iovlen;		/* Number of elements in the vector.  */
 
-    __ptr_t msg_accrights;	/* Access rights information.  */
-    socklen_t msg_accrightslen;	/* Length of access rights information.  */
+    void *msg_control;		/* Ancillary data (eg BSD filedesc passing). */
+    socklen_t msg_controllen;	/* Ancillary data buffer length.  */
 
     int msg_flags;		/* Flags in received message.  */
   };
 
+/* Structure used for storage of ancillary data object information.  */
+struct cmsghdr
+  {
+    socklen_t cmsg_len;		/* Length of data in cmsg_data plus length
+				   of cmsghdr structure.  */
+    int cmsg_level;		/* Originating protocol.  */
+    int cmsg_type;		/* Protocol specific type.  */
+#if (!defined __STRICT_ANSI__ && __GNUC__ >= 2) || __STDC_VERSION__ >= 199901L
+    __extension__ unsigned char __cmsg_data __flexarr; /* Ancillary data.  */
+#endif
+  };
+
+/* Ancillary data object manipulation macros.  */
+#if (!defined __STRICT_ANSI__ && __GNUC__ >= 2) || __STDC_VERSION__ >= 199901L
+# define CMSG_DATA(cmsg) ((cmsg)->__cmsg_data)
+#else
+# define CMSG_DATA(cmsg) ((unsigned char *) ((struct cmsghdr *) (cmsg) + 1))
+#endif
+
+#define CMSG_NXTHDR(mhdr, cmsg) __cmsg_nxthdr (mhdr, cmsg)
+
+#define CMSG_FIRSTHDR(mhdr) \
+  ((size_t) (mhdr)->msg_controllen >= sizeof (struct cmsghdr)		      \
+   ? (struct cmsghdr *) (mhdr)->msg_control : (struct cmsghdr *) NULL)
+
+#define CMSG_ALIGN(len) (((len) + sizeof (size_t) - 1) \
+			   & (size_t) ~(sizeof (size_t) - 1))
+#define CMSG_SPACE(len) (CMSG_ALIGN (len) \
+			 + CMSG_ALIGN (sizeof (struct cmsghdr)))
+#define CMSG_LEN(len)   (CMSG_ALIGN (sizeof (struct cmsghdr)) + (len))
+
+extern struct cmsghdr *__cmsg_nxthdr (struct msghdr *__mhdr,
+				      struct cmsghdr *__cmsg) __THROW;
+#ifdef __USE_EXTERN_INLINES
+# ifndef _EXTERN_INLINE
+#  define _EXTERN_INLINE __extern_inline
+# endif
+_EXTERN_INLINE struct cmsghdr *
+__NTH (__cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg))
+{
+  if ((size_t) __cmsg->cmsg_len < sizeof (struct cmsghdr))
+    /* The kernel header does this so there may be a reason.  */
+    return NULL;
+
+  __cmsg = (struct cmsghdr *) ((unsigned char *) __cmsg
+			       + CMSG_ALIGN (__cmsg->cmsg_len));
+  if ((unsigned char *) (__cmsg + 1) > ((unsigned char *) __mhdr->msg_control
+					+ __mhdr->msg_controllen)
+      || ((unsigned char *) __cmsg + CMSG_ALIGN (__cmsg->cmsg_len)
+	  > ((unsigned char *) __mhdr->msg_control + __mhdr->msg_controllen)))
+    /* No more entries.  */
+    return NULL;
+  return __cmsg;
+}
+#endif	/* Use `extern inline'.  */
+
+/* Socket level message types.  */
+enum
+  {
+    SCM_RIGHTS = 0x01,		/* Access rights (array of int).  */
+#define SCM_RIGHTS SCM_RIGHTS
+    SCM_TIMESTAMP = 0x02,	/* Timestamp (struct timeval).  */
+#define SCM_TIMESTAMP SCM_TIMESTAMP
+    SCM_CREDS = 0x03		/* Process creds (struct cmsgcred).  */
+#define SCM_CREDS SCM_CREDS
+  };
+
+/* Unfortunately, BSD practice dictates this structure be of fixed size.
+   If there are more than CMGROUP_MAX groups, the list is truncated.
+   (On GNU systems, the `cmcred_euid' field is just the first in the
+   list of effective UIDs.)  */
+#define CMGROUP_MAX	16
+
+/* Structure delivered by SCM_CREDS.  This describes the identity of the
+   sender of the data simultaneously received on the socket.  By BSD
+   convention, this is included only when a sender on a AF_LOCAL socket
+   sends cmsg data of this type and size; the sender's structure is
+   ignored, and the system fills in the various IDs of the sender process.  */
+struct cmsgcred
+  {
+    __pid_t cmcred_pid;
+    __uid_t cmcred_uid;
+    __uid_t cmcred_euid;
+    __gid_t cmcred_gid;
+    int cmcred_ngroups;
+    __gid_t cmcred_groups[CMGROUP_MAX];
+  };
 
 /* Protocol number used to manipulate socket-level options
    with `getsockopt' and `setsockopt'.  */
