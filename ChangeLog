@@ -1,5 +1,8 @@
 2013-08-27  Roland McGrath  <roland@hack.frob.com>
 
+	* Makefile ($(common-objpfx)linkobj/libc_pic.a):
+	If [sunrpc not in $(subdirs)], define to use libc_pic.a directly.
+
 	* resolv/res_send.c (send_dg): Don't try to use ioctl unless [FIONREAD].
 
 	* resolv/res_hconf.c [!NOT_IN_libc] (ifaddrs): Declare

@@ -138,16 +138,22 @@ $(common-objpfx)linkobj/libc.so: $(elfobjdir)/soinit.os \
 				 $(shlib-lds)
 	$(build-shlib)
 
+ifeq (,$(filter sunrpc,$(subdirs)))
+$(common-objpfx)linkobj/libc_pic.a: $(common-objpfx)libc_pic.a
+	$(make-target-directory)
+	ln -f $< $@
+else
 $(common-objpfx)linkobj/libc_pic.a: $(common-objpfx)libc_pic.a \
 				    $(common-objpfx)sunrpc/librpc_compat_pic.a
-	$(..)./scripts/mkinstalldirs $(common-objpfx)linkobj
+	$(make-target-directory)
 	(cd $(common-objpfx)linkobj; \
 	 $(AR) x ../libc_pic.a; \
 	 rm $$($(AR) t ../sunrpc/librpc_compat_pic.a | sed 's/^compat-//'); \
 	 $(AR) x ../sunrpc/librpc_compat_pic.a; \
 	 $(AR) cr libc_pic.a *.os; \
 	 rm *.os)
-endif
+endif # $(subdirs) contains sunrpc
+endif # $(build-shared)
 
 
 # This is a handy script for running any dynamically linked program against
