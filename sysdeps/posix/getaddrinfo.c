@@ -802,7 +802,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 					     &nip);
 
 	  /* Initialize configurations.  */
-	  if (__builtin_expect (!_res_hconf.initialized, 0))
+	  if (__glibc_unlikely (!_res_hconf.initialized))
 	    _res_hconf_init ();
 	  if (__res_maybe_init (&_res, 0) == -1)
 	    no_more = 1;

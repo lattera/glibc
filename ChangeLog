@@ -1,3 +1,8 @@
+2013-08-28  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* nscd/aicache.c (addhstaiX): Use __glibc_unlikely.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Likewise.
+
 2013-08-27  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #15897]
