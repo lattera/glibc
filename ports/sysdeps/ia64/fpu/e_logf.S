@@ -159,7 +159,7 @@
 //
 // 3. How we define is input argument such that |x-1| < 1/256 or not.
 //
-//    To do it we analyze biased exponent and significand of input argment.
+//    To do it we analyze biased exponent and significand of input argument.
 //
 //      a) First we test is biased exponent equal to 0xFFFE or 0xFFFF (i.e.
 //         we test is 0.5 <= x < 2). This comparison can be performed using

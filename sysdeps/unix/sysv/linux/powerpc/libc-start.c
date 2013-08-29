@@ -54,7 +54,7 @@ __libc_start_main (int argc, char **argv,
       char **temp;
       /* ...in which case, we have argc as the top thing on the
          stack, followed by argv (NULL-terminated), envp (likewise),
-         and the auxilary vector.  */
+         and the auxiliary vector.  */
       /* 32/64-bit agnostic load from stack */
       argc = *(long int *) stack_on_entry;
       argv = stack_on_entry + 1;

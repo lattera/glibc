@@ -1,3 +1,13 @@
+2013-08-29   Ondřej Bílka  <neleai@seznam.cz>
+
+	* sysdeps/ia64/fpu/e_acoshl.S: Fix typos.
+	* sysdeps/ia64/fpu/e_logf.S: Likewise.
+	* sysdeps/ia64/fpu/e_log.S: Likewise.
+	* sysdeps/ia64/fpu/libm_lgammaf.S: Likewise.
+	* sysdeps/ia64/fpu/libm_lgammal.S: Likewise.
+	* sysdeps/ia64/fpu/s_log1p.S: Likewise.
+	* sysdeps/ia64/fpu/w_tgammal.S: Likewise.
+
 2013-08-21   Ondřej Bílka  <neleai@seznam.cz>
 
 	* sysdeps/ia64/fpu/e_atanhl.S: Fix typos.

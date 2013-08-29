@@ -1,3 +1,7 @@
+2013-08-29   Ondřej Bílka  <neleai@seznam.cz>
+
+	* stringprep.c: Fix typos.
+
 2013-06-11   Ondřej Bílka  <neleai@seznam.cz>
 
 	* gunicomp.h: Fix trailing whitespaces.

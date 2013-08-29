@@ -1,3 +1,24 @@
+2013-08-29   Ondřej Bílka  <neleai@seznam.cz>
+
+	* argp/argp-help.c: Fix typos.
+	* argp/argp-parse.c: Likewise.
+	* debug/backtracesyms.c: Likewise.
+	* elf/elf.h: Likewise.
+	* malloc/malloc.c: Likewise.
+	* nis/nis_print.c: Likewise.
+	* resolv/res_comp.c: Likewise.
+	* stdlib/stdlib.h: Likewise.
+	* sunrpc/clnt_tcp.c: Likewise.
+	* sunrpc/clnt_udp.c: Likewise.
+	* sunrpc/clnt_unix.c: Likewise.
+	* sysdeps/unix/bsd/ptsname.c: Likewise.
+	* sysdeps/unix/sysv/linux/ifaddrs.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/libc-start.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext-common.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext-common.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S: Likewise.
+	* sysdeps/unix/sysv/linux/ptsname.c: Likewise.
+
 2013-08-28  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* nscd/aicache.c (addhstaiX): Use __glibc_unlikely.

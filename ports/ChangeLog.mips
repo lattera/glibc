@@ -1,3 +1,7 @@
+2013-08-29   Ondřej Bílka  <neleai@seznam.cz>
+
+	* sysdeps/mips/sys/asm.h: Fix typos.
+
 2013-08-22  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	* sysdeps/mips/fpu_control.h: Document bits reserved for

@@ -382,7 +382,7 @@ clntunix_control (CLIENT *cl, int request, char *info)
       /*
        * This RELIES on the information that, in the call body,
        * the version number field is the fifth field from the
-       * begining of the RPC header. MUST be changed if the
+       * beginning of the RPC header. MUST be changed if the
        * call_struct is changed
        */
       memcpy (&ui32, ct->ct_mcall + 4 * BYTES_PER_XDR_UNIT, sizeof (ui32));
@@ -398,7 +398,7 @@ clntunix_control (CLIENT *cl, int request, char *info)
       /*
        * This RELIES on the information that, in the call body,
        * the program number field is the  field from the
-       * begining of the RPC header. MUST be changed if the
+       * beginning of the RPC header. MUST be changed if the
        * call_struct is changed
        */
       memcpy (&ui32, ct->ct_mcall + 3 * BYTES_PER_XDR_UNIT, sizeof (ui32));

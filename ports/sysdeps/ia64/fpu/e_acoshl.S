@@ -249,7 +249,7 @@
 RODATA
 .align 64
 
-// Near 1 path rational aproximation coefficients
+// Near 1 path rational approximation coefficients
 LOCAL_OBJECT_START(Poly_P)
 data8 0xB0978143F695D40F, 0x3FF1  // .84205539791447100108478906277453574946e-4
 data8 0xB9800D841A8CAD29, 0x3FF6  // .28305085180397409672905983082168721069e-2
@@ -655,7 +655,7 @@ GLOBAL_LIBM_ENTRY(acoshl)
 };;
 
 { .mfi
-      getf.d     GR_Arg       = FR_Arg        // get arument as double (int64)
+      getf.d     GR_Arg       = FR_Arg        // get argument as double (int64)
       fma.s0        FR_Two       = f1, f1, f1    // construct 2.0
       addl       GR_ad_z_1    = @ltoff(Constants_Z_1#),gp // logl tables
 }

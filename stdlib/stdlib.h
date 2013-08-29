@@ -927,7 +927,7 @@ extern int grantpt (int __fd) __THROW;
    Call after grantpt().  */
 extern int unlockpt (int __fd) __THROW;
 
-/* Return the pathname of the pseudo terminal slave assoicated with
+/* Return the pathname of the pseudo terminal slave associated with
    the master FD is open on, or NULL on errors.
    The returned storage is good until the next call to this function.  */
 extern char *ptsname (int __fd) __THROW __wur;

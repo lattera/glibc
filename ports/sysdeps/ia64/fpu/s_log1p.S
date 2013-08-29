@@ -103,7 +103,7 @@
 //   InvX = frcpa(x+1)
 //   r = InvX*(x+1) - 1
 //   P(r) = r*((r*A3 - A2) + r^4*((A4 + r*A5) + r^2*(A6 + r*A7)),
-//   all coefficients are calcutated in quad and rounded to double
+//   all coefficients are calculated in quad and rounded to double
 //   precision. A7,A6,A5,A4 are stored in memory whereas A3 and A2
 //   created with setf.
 //

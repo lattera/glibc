@@ -410,7 +410,7 @@ convert_options (const struct argp *argp,
   return group;
 }
 
-/* Find the merged set of getopt options, with keys appropiately prefixed. */
+/* Find the merged set of getopt options, with keys appropriately prefixed. */
 static void
 parser_convert (struct parser *parser, const struct argp *argp, int flags)
 {

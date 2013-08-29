@@ -1,3 +1,7 @@
+2013-08-29   Ondřej Bílka  <neleai@seznam.cz>
+
+	* sysdeps/unix/sysv/linux/am33/bits/fcntl.h: Fix typos.
+
 2013-08-21   Ondřej Bílka  <neleai@seznam.cz>
 
 	* sysdeps/am33/fpu/fraiseexcpt.c: Fix typos.

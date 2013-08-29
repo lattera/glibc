@@ -23,7 +23,7 @@
    and if appropriate:
      __CONTEXT_ENABLE_FPRS
      __CONTEXT_ENABLE_VRS
-   Any archecture that implements the Vector unit is assumed to also
+   Any architecture that implements the Vector unit is assumed to also
    implement the floating unit.  */
 
 /* Stack frame offsets.  */

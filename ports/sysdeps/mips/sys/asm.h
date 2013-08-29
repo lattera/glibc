@@ -472,7 +472,7 @@ symbol		=	value
 # define MTC0	dmtc0
 #endif
 
-/* The MIPS archtectures do not have a uniform memory model.  Particular
+/* The MIPS architectures do not have a uniform memory model.  Particular
    platforms may provide additional guarantees - for instance, the R4000
    LL and SC instructions implicitly perform a SYNC, and the 4K promises
    strong ordering.

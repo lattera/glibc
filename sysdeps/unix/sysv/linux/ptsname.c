@@ -56,7 +56,7 @@ extern const char __libc_ptyname2[] attribute_hidden;
 static char buffer[sizeof (_PATH_DEVPTS) + 20];
 
 
-/* Return the pathname of the pseudo terminal slave assoicated with
+/* Return the pathname of the pseudo terminal slave associated with
    the master FD is open on, or NULL on errors.
    The returned storage is good until the next call to this function.  */
 char *

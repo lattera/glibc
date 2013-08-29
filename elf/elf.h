@@ -811,7 +811,7 @@ typedef struct
 #define	DF_1_EDITED	0x00200000	/* Object is modified after built.  */
 #define	DF_1_NORELOC	0x00400000
 #define	DF_1_SYMINTPOSE	0x00800000	/* Object has individual interposers.  */
-#define	DF_1_GLOBAUDIT	0x01000000	/* Global auditin required.  */
+#define	DF_1_GLOBAUDIT	0x01000000	/* Global auditing required.  */
 #define	DF_1_SINGLETON	0x02000000	/* Singleton symbols are used.  */
 
 /* Flags for the feature selection in DT_FEATURE_1.  */

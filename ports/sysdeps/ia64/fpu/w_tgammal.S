@@ -1629,7 +1629,7 @@ GLOBAL_LIBM_ENTRY(tgammal)
 
 { .mfi
       nop.m         0
-      fma.s1        FR_l_B14       = FR_l_B16, FR_l_Z2, FR_l_B14// bernulli tail
+      fma.s1        FR_l_B14       = FR_l_B16, FR_l_Z2, FR_l_B14// Bernoulli tail
       nop.i         0
 }
 { .mfi
@@ -1640,18 +1640,18 @@ GLOBAL_LIBM_ENTRY(tgammal)
 
 { .mfi
       nop.m         0
-      fma.s1        FR_l_B2        = FR_l_B4, FR_l_Z2, FR_l_B2 // bernulli tail
+      fma.s1        FR_l_B2        = FR_l_B4, FR_l_Z2, FR_l_B2 // Bernoulli tail
       nop.i         0
 }
 { .mfi
       nop.m         0
-      fma.s1        FR_l_B6        = FR_l_B8, FR_l_Z2, FR_l_B6 // bernulli tail
+      fma.s1        FR_l_B6        = FR_l_B8, FR_l_Z2, FR_l_B6 // Bernoulli tail
       nop.i         0
 };;
 
 { .mfi
       nop.m         0
-      fma.s1        FR_l_B10       = FR_l_B12, FR_l_Z2, FR_l_B10// bernulli tail
+      fma.s1        FR_l_B10       = FR_l_B12, FR_l_Z2, FR_l_B10// Bernoulli tail
       nop.i         0
 }
 { .mfi
@@ -1795,7 +1795,7 @@ GLOBAL_LIBM_ENTRY(tgammal)
 
 { .mfi
       nop.m         0
-      fma.s1        FR_l_SS        = FR_l_B10, FR_l_Z8, FR_l_B2 // bernulli tail
+      fma.s1        FR_l_SS        = FR_l_B10, FR_l_Z8, FR_l_B2 // Bernoulli tail
       nop.i         0
 };;
 

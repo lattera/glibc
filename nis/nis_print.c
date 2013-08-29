@@ -290,7 +290,7 @@ nis_print_link (const link_obj *obj)
   fputs (_("Linked Object Type : "), stdout);
   nis_print_objtype (obj->li_rtype);
   printf (_("Linked to : %s\n"), obj->li_name);
-  /* XXX Print the attributs here, if they exists */
+  /* XXX Print the attributes here, if they exists */
 }
 libnsl_hidden_def (nis_print_link)
 

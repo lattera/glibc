@@ -563,7 +563,7 @@ stringprep_profile (const char *in,
  * @STRINGPREP_CONTAINS_PROHIBITED: String contain code points
  *   prohibited by the profile.
  * @STRINGPREP_BIDI_BOTH_L_AND_RAL: String contain code points with
- *   conflicting bidirection category.
+ *   conflicting bidirectional category.
  * @STRINGPREP_BIDI_LEADTRAIL_NOT_RAL: Leading and trailing character
  *   in string not of proper bidirectional category.
  * @STRINGPREP_BIDI_CONTAINS_PROHIBITED: Contains prohibited code

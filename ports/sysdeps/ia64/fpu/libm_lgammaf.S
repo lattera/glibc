@@ -1064,7 +1064,7 @@ lgammaf_0_1:
 { .mfi
       ldfpd         FR_Ln2,FR_05 = [GR_ad_Data],16
       fma.s1        FR_P32 = FR_P3,FR_r,FR_P2
-      // input argument cann't be equal to 1.0
+      // input argument can't be equal to 1.0
       cmp.eq        p0,p14 = r0,r0
 };;
 { .mfi
@@ -1456,7 +1456,7 @@ lgammaf_negrecursion:
       // load coefficients of polynomial approximation
       // of ln(GAMMA(x)), x is close to one of negative roots
 (p13) ldfpd         FR_R3,FR_R2 = [GR_ad_RootCo]
-      // argumenth for logarithm
+      // arguments for logarithm
 (p10) fma.s1        FR_Req = FR_Req,FR_Xp2,f0
       mov           GR_ExpMask = 0x1ffff
 }

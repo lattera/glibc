@@ -1334,7 +1334,7 @@ LOCAL_OBJECT_END(lgammal_near_neg_half_data)
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 LOCAL_OBJECT_START(lgammal_right_roots_polynomial_data)
 // Polynomial coefficients for right root on [-3, -2]
-// Lgammal is aproximated by polynomial within [-.056244 ; .158208 ] range
+// Lgammal is approximated by polynomial within [-.056244 ; .158208 ] range
 data8 0xBBBD5E9DCD11030B, 0xB867411D9FF87DD4 //A0
 data8 0x3FF83FE966AF535E, 0x3CAA21235B8A769A //A1
 data8 0x40136EEBB002F55C, 0x3CC3959A6029838E //A2
@@ -1356,7 +1356,7 @@ data8 0x40E0FB2C989CE4A3 //A17
 data8 0x40E52739AB005641 //A18
 data8 0x41161E3E6DDF503A //A19
 // Polynomial coefficients for right root on [-4, -3]
-// Lgammal is aproximated by polynomial within [-.172797 ; .171573 ] range
+// Lgammal is approximated by polynomial within [-.172797 ; .171573 ] range
 data8 0x3C172712B248E42E, 0x38CB8D17801A5D67 //A0
 data8 0x401F20A65F2FAC54, 0x3CCB9EA1817A824E //A1
 data8 0x4039D4D2977150EF, 0x3CDA42E149B6276A //A2
@@ -1378,7 +1378,7 @@ data8 0x42A7256F59B286F7 //A17
 data8 0x42D462D1586DE61F //A18
 data8 0x42FBB1228D6C5118 //A19
 // Polynomial coefficients for right root on [-5, -4]
-// Lgammal is aproximated by polynomial within [-.163171 ; .161988 ] range
+// Lgammal is approximated by polynomial within [-.163171 ; .161988 ] range
 data8 0x3C5840FBAFDEE5BB, 0x38CAC0336E8C490A //A0
 data8 0x403ACA5CF4921642, 0x3CCEDCDDA5491E56 //A1
 data8 0x40744415CD813F8E, 0x3CFBFEBC17E39146 //A2
@@ -1400,7 +1400,7 @@ data8 0x44A3507DA81D5C01 //A17
 data8 0x44EF06A31E39EEDF //A18
 data8 0x45333774C99F523F //A19
 // Polynomial coefficients for right root on [-6, -5]
-// Lgammal is aproximated by polynomial within [-.156450 ; .156126 ] range
+// Lgammal is approximated by polynomial within [-.156450 ; .156126 ] range
 data8 0x3C71B82D6B2B3304, 0x3917186E3C0DC231 //A0
 data8 0x405ED72E0829AE02, 0x3C960C25157980EB //A1
 data8 0x40BCECC32EC22F9B, 0x3D5D8335A32F019C //A2
@@ -1422,7 +1422,7 @@ data8 0x4709D045390A3810 //A17
 data8 0x4778D360873C9F64 //A18
 data8 0x47E26965BE9A682A //A19
 // Polynomial coefficients for right root on [-7, -6]
-// Lgammal is aproximated by polynomial within [-.154582 ; .154521 ] range
+// Lgammal is approximated by polynomial within [-.154582 ; .154521 ] range
 data8 0x3C75F103A1B00A48, 0x391C041C190C726D //A0
 data8 0x40869DE49E3AF2AA, 0x3D1C17E1F813063B //A1
 data8 0x410FCE23484CFD10, 0x3DB6F38C2F11DAB9 //A2
@@ -1444,7 +1444,7 @@ data8 0x49C47CC9AE3F1073 //A17
 data8 0x4A5D38E8C35EFF45 //A18
 data8 0x4AF0123E89694CD8 //A19
 // Polynomial coefficients for right root on [-8, -7]
-// Lgammal is aproximated by polynomial within [-.154217 ; .154208 ] range
+// Lgammal is approximated by polynomial within [-.154217 ; .154208 ] range
 data8 0xBCD2507D818DDD68, 0xB97F6940EA2871A0 //A0
 data8 0x40B3B407AA387BCB, 0x3D6320238F2C43D1 //A1
 data8 0x41683E85DAAFBAC7, 0x3E148D085958EA3A //A2
@@ -1466,7 +1466,7 @@ data8 0x4CC05021086F637B //A17
 data8 0x4D8450A345B0FB49 //A18
 data8 0x4E43825848865DB2 //A19
 // Polynomial coefficients for right root on [-9, -8]
-// Lgammal is aproximated by polynomial within [-.154160 ; .154158 ] range
+// Lgammal is approximated by polynomial within [-.154160 ; .154158 ] range
 data8 0x3CDF4358564F2B46, 0x397969BEE6042F81 //A0
 data8 0x40E3B088FED67721, 0x3D82787BA937EE85 //A1
 data8 0x41C83A3893550EF4, 0x3E542ED57E244DA8 //A2
@@ -1488,7 +1488,7 @@ data8 0x4FF03797EACD0F23 //A17
 data8 0x50E4304A8E68A730 //A18
 data8 0x51D3618FB2EC9F93 //A19
 // Polynomial coefficients for right root on [-10, -9]
-// Lgammal is aproximated by polynomial within [-.154152 ; .154152 ] range
+// Lgammal is approximated by polynomial within [-.154152 ; .154152 ] range
 data8 0x3D42F34DA97ECF0C, 0x39FD1256F345B0D0 //A0
 data8 0x4116261203919787, 0x3DC12D44055588EB //A1
 data8 0x422EA8F32FB7FE99, 0x3ED849CE4E7B2D77 //A2
@@ -1510,7 +1510,7 @@ data8 0x534E00B6B0C8B809 //A17
 data8 0x5475022FE21215B2 //A18
 data8 0x5596B02BF6C5E19B //A19
 // Polynomial coefficients for right root on [-11, -10]
-// Lgammal is aproximated by polynomial within [-.154151 ; .154151 ] range
+// Lgammal is approximated by polynomial within [-.154151 ; .154151 ] range
 data8 0x3D7AA9C2E2B1029C, 0x3A15FB37578544DB //A0
 data8 0x414BAF825A0C91D4, 0x3DFB9DA2CE398747 //A1
 data8 0x4297F3EC8AE0AF03, 0x3F34208B55FB8781 //A2
@@ -1532,7 +1532,7 @@ data8 0x56D4D10FEEDB030C //A17
 data8 0x5832385DF86AD28A //A18
 data8 0x598898914B4D6523 //A19
 // Polynomial coefficients for right root on [-12, -11]
-// Lgammal is aproximated by polynomial within [-.154151 ; .154151 ] range
+// Lgammal is approximated by polynomial within [-.154151 ; .154151 ] range
 data8 0xBD96F61647C58B03, 0xBA3ABB0C2A6C755B //A0
 data8 0x418308A82714B70D, 0x3E1088FC6A104C39 //A1
 data8 0x4306A493DD613C39, 0x3FB2341ECBF85741 //A2
@@ -1554,7 +1554,7 @@ data8 0x5A824088688B008D //A17
 data8 0x5C15F75EF7E08EBD //A18
 data8 0x5DA462EA902F0C90 //A19
 // Polynomial coefficients for right root on [-13, -12]
-// Lgammal is aproximated by polynomial within [-.154151 ; .154151 ] range
+// Lgammal is approximated by polynomial within [-.154151 ; .154151 ] range
 data8 0x3DC3191752ACFC9D, 0x3A26CB6629532DBF //A0
 data8 0x41BC8CFC051191BD, 0x3E68A84DA4E62AF2 //A1
 data8 0x43797926294A0148, 0x400F345FF3723CFF //A2
@@ -1576,7 +1576,7 @@ data8 0x5E518FC34C6F54EF //A17
 data8 0x601FB3F17BCCD9A0 //A18
 data8 0x61E61128D512FE97 //A1
 // Polynomial coefficients for right root on [-14, -13]
-// Lgammal is aproximated by polynomial within [-.154151 ; .154151 ] range
+// Lgammal is approximated by polynomial within [-.154151 ; .154151 ] range
 data8 0xBE170D646421B3F5, 0xBAAD95F79FCB5097 //A0
 data8 0x41F7328CBFCD9AC7, 0x3E743B8B1E8AEDB1 //A1
 data8 0x43F0D0FA2DBDA237, 0x40A0422D6A227B55 //A2
@@ -1598,7 +1598,7 @@ data8 0x6240787C4B1C9D6C //A17
 data8 0x6448289235E80977 //A18
 data8 0x664B5352C6C3449E //A19
 // Polynomial coefficients for right root on [-15, -14]
-// Lgammal is aproximated by polynomial within [-.154151 ; .154151 ] range
+// Lgammal is approximated by polynomial within [-.154151 ; .154151 ] range
 data8 0x3E562C2E34A9207D, 0x3ADC00DA3DFF7A83 //A0
 data8 0x42344C3B2F0D90AB, 0x3EB8A2E979F24536 //A1
 data8 0x4469BFFF28B50D07, 0x41181E3D05C1C294 //A2
@@ -1620,7 +1620,7 @@ data8 0x664B3998D60D0F9B //A17
 data8 0x689178710782FA8B //A18
 data8 0x6AD14A66C1C7BEC3 //A19
 // Polynomial coefficients for right root on [-16, -15]
-// Lgammal is aproximated by polynomial within [-.154151 ; .154151 ] range
+// Lgammal is approximated by polynomial within [-.154151 ; .154151 ] range
 data8 0xBE6D7E7192615BAE, 0xBB0137677D7CC719 //A0
 data8 0x4273077763F6628C, 0x3F09250FB8FC8EC9 //A1
 data8 0x44E6A1BF095B1AB3, 0x4178D5A74F6CB3B3 //A2
@@ -1642,7 +1642,7 @@ data8 0x6A722D2B19B7E2F9 //A17
 data8 0x6CF5DEB3073B0743 //A18
 data8 0x6F744AC11550B93A //A19
 // Polynomial coefficients for right root on [-17, -16]
-// Lgammal is aproximated by polynomial within [-.154151 ; .154151 ] range
+// Lgammal is approximated by polynomial within [-.154151 ; .154151 ] range
 data8 0xBEDCC6291188207E, 0xBB872E3FDD48F5B7 //A0
 data8 0x42B3076EE7525EF9, 0x3F6687A5038CA81C //A1
 data8 0x4566A1AAD96EBCB5, 0x421F0FEDFBF548D2 //A2
@@ -1664,7 +1664,7 @@ data8 0x6EB22C9807C21819 //A17
 data8 0x7175DE20D04617C4 //A18
 data8 0x74344AB87C6D655F //A19
 // Polynomial coefficients for right root on [-18, -17]
-// Lgammal is aproximated by polynomial within [-.154151 ; .154151 ] range
+// Lgammal is approximated by polynomial within [-.154151 ; .154151 ] range
 data8 0xBF28AEEE7B61D77C, 0xBBDBBB5FC57ABF79 //A0
 data8 0x42F436F56B3B8A0C, 0x3FA43EE3C5C576E9 //A1
 data8 0x45E98A22535D115D, 0x42984678BE78CC48 //A2
@@ -1686,7 +1686,7 @@ data8 0x730962B4500F4A61 //A17
 data8 0x76103C6ED099192A //A18
 data8 0x79100C7132CFD6E3 //A19
 // Polynomial coefficients for right root on [-19, -18]
-// Lgammal is aproximated by polynomial within [-.154151 ; .154151 ] range
+// Lgammal is approximated by polynomial within [-.154151 ; .154151 ] range
 data8 0x3F3C19A53328A0C3, 0x3BE04ADC3FBE1458 //A0
 data8 0x4336C16C16C16C19, 0x3FE58CE3AC4A7C28 //A1
 data8 0x46702E85C0898B70, 0x432C922E412CEC6E //A2
@@ -1708,7 +1708,7 @@ data8 0x7777C401A8715CF9 //A17
 data8 0x7AC1110C6D350440 //A18
 data8 0x7E02D0971CF84865 //A19
 // Polynomial coefficients for right root on [-20, -19]
-// Lgammal is aproximated by polynomial within [-.154151 ; .154151 ] range
+// Lgammal is approximated by polynomial within [-.154151 ; .154151 ] range
 data8 0xBFAB767F9BE21803, 0xBC5ACEF5BB1BD8B5 //A0
 data8 0x4379999999999999, 0x4029241C7F5914C8 //A1
 data8 0x46F47AE147AE147A, 0x43AC2979B64B9D7E //A2
@@ -1733,7 +1733,7 @@ LOCAL_OBJECT_END(lgammal_right_roots_polynomial_data)
 
 LOCAL_OBJECT_START(lgammal_left_roots_polynomial_data)
 // Polynomial coefficients for left root on [-3, -2]
-// Lgammal is aproximated by polynomial within [.084641 ; -.059553 ] range
+// Lgammal is approximated by polynomial within [.084641 ; -.059553 ] range
 data8 0xBC0844590979B82E, 0xB8BC7CE8CE2ECC3B //A0
 data8 0xBFFEA12DA904B18C, 0xBC91A6B2BAD5EF6E //A1
 data8 0x4023267F3C265A51, 0x3CD7055481D03AED //A2
@@ -1756,7 +1756,7 @@ data8 0x41EA727E3033E2D9 //A18
 data8 0xC20812C297729142 //A19
 //
 // Polynomial coefficients for left root on [-4, -3]
-// Lgammal is aproximated by polynomial within [.147147 ; -.145158 ] range
+// Lgammal is approximated by polynomial within [.147147 ; -.145158 ] range
 data8 0xBC3130AE5C4F54DB, 0xB8ED23294C13398A //A0
 data8 0xC034B99D966C5646, 0xBCE2E5FE3BC3DBB9 //A1
 data8 0x406F76DEAE0436BD, 0x3D14974DDEC057BD //A2
@@ -1778,7 +1778,7 @@ data8 0xC471C4421E908C3A //A17
 data8 0x44B92CD4D59D6D17 //A18
 data8 0xC4FB3A078B5247FA //A19
 // Polynomial coefficients for left root on [-5, -4]
-// Lgammal is aproximated by polynomial within [.155671 ; -.155300 ] range
+// Lgammal is approximated by polynomial within [.155671 ; -.155300 ] range
 data8 0xBC57BF3C6E8A94C1, 0xB902FB666934AC9E //A0
 data8 0xC05D224A3EF9E41F, 0xBCF6F5713913E440 //A1
 data8 0x40BB533C678A3955, 0x3D688E53E3C72538 //A2
@@ -1800,7 +1800,7 @@ data8 0xC6FFDDC6DD938E2E //A17
 data8 0x476DD7C07184B9F9 //A18
 data8 0xC7D554A30085C052 //A19
 // Polynomial coefficients for left root on [-6, -5]
-// Lgammal is aproximated by polynomial within [.157425 ; -.157360 ] range
+// Lgammal is approximated by polynomial within [.157425 ; -.157360 ] range
 data8 0x3C9E20A87C8B79F1, 0x39488BE34B2427DB //A0
 data8 0xC08661F6A43A5E12, 0xBD3D912526D759CC //A1
 data8 0x410F79DCB794F270, 0x3DB9BEE7CD3C1BF5 //A2
@@ -1822,7 +1822,7 @@ data8 0xC9C2C6A864521F3A //A17
 data8 0x4A5AB127C62E8DA1 //A18
 data8 0xCAECF60EF3183C57 //A19
 // Polynomial coefficients for left root on [-7, -6]
-// Lgammal is aproximated by polynomial within [.157749 ; -.157739 ] range
+// Lgammal is approximated by polynomial within [.157749 ; -.157739 ] range
 data8 0x3CC9B9E8B8D551D6, 0x3961813C8E1E10DB //A0
 data8 0xC0B3ABF7A5CEA91F, 0xBD55638D4BCB4CC4 //A1
 data8 0x4168349A25504236, 0x3E0287ECE50CCF76 //A2
@@ -1844,7 +1844,7 @@ data8 0xCCC01CB3021212FF //A17
 data8 0x4D841613AC3431D1 //A18
 data8 0xCE431C9E9EE43AD9 //A19
 // Polynomial coefficients for left root on [-8, -7]
-// Lgammal is aproximated by polynomial within [.157799 ; -.157798 ] range
+// Lgammal is approximated by polynomial within [.157799 ; -.157798 ] range
 data8 0xBCF9C7A33AD9478C, 0xB995B0470F11E5ED //A0
 data8 0xC0E3AF76FE4C2F8B, 0xBD8DBCD503250511 //A1
 data8 0x41C838E76CAAF0D5, 0x3E5D79F5E2E069C3 //A2
@@ -1866,7 +1866,7 @@ data8 0xCFF0351B51508523 //A17
 data8 0x50E4364CCBF53100 //A18
 data8 0xD1D33CFD0BF96FA6 //A19
 // Polynomial coefficients for left root on [-9, -8]
-// Lgammal is aproximated by polynomial within [.157806 ; -.157806 ] range
+// Lgammal is approximated by polynomial within [.157806 ; -.157806 ] range
 data8 0x3D333E4438B1B9D4, 0x39E7B956B83964C1 //A0
 data8 0xC11625EDFC63DCD8, 0xBDCF39625709EFAC //A1
 data8 0x422EA8C150480F16, 0x3EC16ED908AB7EDD //A2
@@ -1888,7 +1888,7 @@ data8 0xD34E085C088404A5 //A17
 data8 0x547511892FF8960E //A18
 data8 0xD5968FA3B1ED67A9 //A19
 // Polynomial coefficients for left root on [-10, -9]
-// Lgammal is aproximated by polynomial within [.157807 ; -.157807 ] range
+// Lgammal is approximated by polynomial within [.157807 ; -.157807 ] range
 data8 0xBD355818A2B42BA2, 0xB9B7320B6A0D61EA //A0
 data8 0xC14BAF7DA5F3770E, 0xBDE64AF9A868F719 //A1
 data8 0x4297F3E8791F9CD3, 0x3F2A553E59B4835E //A2
@@ -1910,7 +1910,7 @@ data8 0xD6D4D760074F6E6B //A17
 data8 0x5832469D58ED3FA9 //A18
 data8 0xD988769F3DC76642 //A19
 // Polynomial coefficients for left root on [-11, -10]
-// Lgammal is aproximated by polynomial within [.157807 ; -.157807 ] range
+// Lgammal is approximated by polynomial within [.157807 ; -.157807 ] range
 data8 0xBDA050601F39778A, 0xBA0D4D1CE53E8241 //A0
 data8 0xC18308A7D8EA4039, 0xBE370C379D3EAD41 //A1
 data8 0x4306A49380644E6C, 0x3FBBB143C0E7B5C8 //A2
@@ -1932,7 +1932,7 @@ data8 0xDA8246294D210BEC //A17
 data8 0x5C1608AAC32C3A8E //A18
 data8 0xDDA446E570A397D5 //A19
 // Polynomial coefficients for left root on [-12, -11]
-// Lgammal is aproximated by polynomial within [.157807 ; -.157807 ] range
+// Lgammal is approximated by polynomial within [.157807 ; -.157807 ] range
 data8 0x3DEACBB3081C502E, 0x3A8AA6F01DEDF745 //A0
 data8 0xC1BC8CFBFB0A9912, 0xBE6556B6504A2AE6 //A1
 data8 0x43797926206941D7, 0x40289A9644C2A216 //A2
@@ -1954,7 +1954,7 @@ data8 0xDE51952FDFD1EC49 //A17
 data8 0x601FCCEC1BBD25F1 //A18
 data8 0xE1E5F2D76B610920 //A19
 // Polynomial coefficients for left root on [-13, -12]
-// Lgammal is aproximated by polynomial within [.157807 ; -.157807 ] range
+// Lgammal is approximated by polynomial within [.157807 ; -.157807 ] range
 data8 0xBE01612F373268ED, 0xBA97B7A18CDF103B //A0
 data8 0xC1F7328CBF7A4FAC, 0xBE89A25A6952F481 //A1
 data8 0x43F0D0FA2DBDA237, 0x40A0422EC1CE6084 //A2
@@ -1976,7 +1976,7 @@ data8 0xE2407D92CD613E82 //A17
 data8 0x64483B9B62367EB7 //A18
 data8 0xE64B2DC830E8A799 //A1
 // Polynomial coefficients for left root on [-14, -13]
-// Lgammal is aproximated by polynomial within [.157807 ; -.157807 ] range
+// Lgammal is approximated by polynomial within [.157807 ; -.157807 ] range
 data8 0x3E563D0B930B371F, 0x3AE779957E14F012 //A0
 data8 0xC2344C3B2F083767, 0xBEC0B7769AA3DD66 //A1
 data8 0x4469BFFF28B50D07, 0x41181E3F13ED2401 //A2
@@ -1998,7 +1998,7 @@ data8 0xE64B4201CDF9F138 //A17
 data8 0x689186351E58AA88 //A18
 data8 0xEAD132A585DFC60A //A19
 // Polynomial coefficients for left root on [-15, -14]
-// Lgammal is aproximated by polynomial within [.157807 ; -.157807 ] range
+// Lgammal is approximated by polynomial within [.157807 ; -.157807 ] range
 data8 0xBE6D7DDE12700AC1, 0xBB1E025BF1667FB5 //A0
 data8 0xC273077763F60AD5, 0xBF2A1698184C7A9A //A1
 data8 0x44E6A1BF095B1AB3, 0x4178D5AE8A4A2874 //A2
@@ -2020,7 +2020,7 @@ data8 0xEA7232C8804F32C3 //A17
 data8 0x6CF5EFEE929A0928 //A18
 data8 0xEF742EE03EC3E8FF //A19
 // Polynomial coefficients for left root on [-16, -15]
-// Lgammal is aproximated by polynomial within [.157807 ; -.157807 ] range
+// Lgammal is approximated by polynomial within [.157807 ; -.157807 ] range
 data8 0xBEDCC628FEAC7A1B, 0xBB80582C8BEBB198 //A0
 data8 0xC2B3076EE752595E, 0xBF5388F55AFAE53E //A1
 data8 0x4566A1AAD96EBCB5, 0x421F0FEFE2444293 //A2
@@ -2042,7 +2042,7 @@ data8 0xEEB23234FE191D55 //A17
 data8 0x7175EF5D1080B105 //A18
 data8 0xF4342ED7B1B7BE31 //A19
 // Polynomial coefficients for left root on [-17, -16]
-// Lgammal is aproximated by polynomial within [.157807 ; -.157807 ] range
+// Lgammal is approximated by polynomial within [.157807 ; -.157807 ] range
 data8 0xBF28AEEE7B58C790, 0xBBC4448DE371FA0A //A0
 data8 0xC2F436F56B3B89B1, 0xBF636755245AC63A //A1
 data8 0x45E98A22535D115D, 0x4298467DA93DB784 //A2
@@ -2064,7 +2064,7 @@ data8 0xF3096A81A69BD8AE //A17
 data8 0x76104951BAD67D5C //A18
 data8 0xF90FECC99786FD5B //A19
 // Polynomial coefficients for left root on [-18, -17]
-// Lgammal is aproximated by polynomial within [.157807 ; -.157807 ] range
+// Lgammal is approximated by polynomial within [.157807 ; -.157807 ] range
 data8 0x3F3C19A53328E26A, 0x3BE238D7BA036B3B //A0
 data8 0xC336C16C16C16C13, 0xBFEACE245DEC56F3 //A1
 data8 0x46702E85C0898B70, 0x432C922B64FD1DA4 //A2
@@ -2086,7 +2086,7 @@ data8 0xF777CB6E2B550D73 //A17
 data8 0x7AC11E468A134A51 //A18
 data8 0xFE02B6BDD0FC40AA //A19
 // Polynomial coefficients for left root on [-19, -18]
-// Lgammal is aproximated by polynomial within [.157807 ; -.157807 ] range
+// Lgammal is approximated by polynomial within [.157807 ; -.157807 ] range
 data8 0xBFAB767F9BE217FC, 0xBC4A5541CE0D8D0D //A0
 data8 0xC379999999999999, 0xC01A84981B490BE8 //A1
 data8 0x46F47AE147AE147A, 0x43AC2987BBC466EB //A2
