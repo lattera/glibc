@@ -1,3 +1,11 @@
+2013-09-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* benchtests/Makefile: Add memrchr benchmark.
+	* benchtests/bench-memchr.c (USE_AS_MEMRCHR): Add define to use
+	benchmark as memrchr.
+	* benchtests/bench-memrchr-ifunc.c: New file.
+	* benchtests/bench-memrchr.c: New file.
+
 2013-09-06   Will Newton  <will.newton@linaro.org>
 
 	* benchtests/Makefile (string-bench): Add memcpy.

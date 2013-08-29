@@ -16,9 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define TEST_MAIN
-#define TEST_NAME "memchr"
-#include "bench-string.h"
+#ifndef USE_AS_MEMRCHR
+# define TEST_MAIN
+# define TEST_NAME "memchr"
+# include "bench-string.h"
 
 typedef char *(*proto_t) (const char *, int, size_t);
 char *simple_memchr (const char *, int, size_t);
@@ -34,6 +35,7 @@ simple_memchr (const char *s, int c, size_t n)
       return (char *) s - 1;
   return NULL;
 }
+#endif
 
 static void
 do_one_test (impl_t *impl, const char *s, int c, size_t n, char *exp_res)
