@@ -93,8 +93,8 @@ PSEUDO_END (__clone)
 	mov	lr, pc
 	bx      ip
 #else
-	mov	lr, pc
-	ldr 	pc, [sp], #8
+	ldr 	lr, [sp], #8
+	blx	lr
 #endif
 
 	@ and we are done, passing the return value through r0

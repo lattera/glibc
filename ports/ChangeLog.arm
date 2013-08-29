@@ -1,5 +1,11 @@
 2013-08-30  Will Newton  <will.newton@linaro.org>
 
+	[BZ #15909]
+	* sysdeps/unix/sysv/linux/arm/clone.S (__clone): Use blx
+	instead of mov lr, pc.
+
+2013-08-30  Will Newton  <will.newton@linaro.org>
+
 	* sysdeps/arm/armv6t2/strlen.S: New file.
 
 2013-08-29  Thomas Schwinge  <thomas@codesourcery.com>
