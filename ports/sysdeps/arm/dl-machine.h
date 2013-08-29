@@ -503,7 +503,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	  break;
 	case R_ARM_IRELATIVE:
 	  value = map->l_addr + *reloc_addr;
-	  value = ((Elf32_Addr (*) (void)) value) ();
+	  value = ((Elf32_Addr (*) (int)) value) (GLRO(dl_hwcap));
 	  *reloc_addr = value;
 	  break;
 #endif

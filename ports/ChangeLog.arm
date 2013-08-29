@@ -1,3 +1,10 @@
+2013-08-28  Kyle McMartin  <kyle@redhat.com>
+	    Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #15905]
+	* sysdeps/arm/dl-machine [!RTLD_BOOTSTRAP] (elf_machine_rel):
+	Pass GLRO(dl_hwcap) to the IFUNC resolver.
+
 2013-07-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/include/bits/setjmp.h [_ISOMAC] (JMP_BUF_REGLIST):
