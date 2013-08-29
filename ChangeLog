@@ -1,3 +1,9 @@
+2013-09-05  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* string/test-memrchr.c: New file.
+	* string/test-memrchr-ifunc.c: New file.
+	* string/Makefile: Add new memrchr testcase.
+
 2013-09-05  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/tst-fanotify.c (do_test): Skip test when
