@@ -34,7 +34,6 @@
 	instead of ELFOSABI_LINUX.
 
 	[BZ #15522] strtod ("nan(N)") returning a sNaN in some cases
-
 	* stdlib/strtof_l.c (SET_MANTISSA): Rewrite.
 	* stdlib/strtod_l.c (SET_MANTISSA): Likewise.
 	* sysdeps/ieee754/ldbl-64-128/strtold_l.c (SET_MANTISSA):
@@ -73,9 +72,12 @@
 	* sysdeps/unix/bsd/ptsname.c: Likewise.
 	* sysdeps/unix/sysv/linux/ifaddrs.c: Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/libc-start.c: Likewise.
-	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext-common.S: Likewise.
-	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext-common.S: Likewise.
-	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext-common.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext-common.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S:
+	Likewise.
 	* sysdeps/unix/sysv/linux/ptsname.c: Likewise.
 
 2013-08-28  Siddhesh Poyarekar  <siddhesh@redhat.com>
