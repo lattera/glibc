@@ -31,6 +31,14 @@ BEGIN {
     print "";
     print "#ifdef _ERRNO_H\n";
     print "enum __error_t_codes\n{";
+    print "\t/* The value zero always means success and it is perfectly fine for";
+    print "\t   code to use 0 explicitly (or implicitly, e.g. via Boolean coercion).";
+    print "\t   Having an enum entry for zero both makes the debugger print the name";
+    print "\t   for error_t-typed zero values, and prevents the compiler from";
+    print "\t   issuing warnings about 'case 0:' in a switch on an error_t-typed";
+    print "\t   value.  */";
+    print "\tESUCCESS = 0,"
+    print "";
     errnoh = 0;
     maxerrno = 0;
     in_mach_errors = "";

@@ -9,6 +9,14 @@
 
 enum __error_t_codes
 {
+	/* The value zero always means success and it is perfectly fine for
+	   code to use 0 explicitly (or implicitly, e.g. via Boolean coercion).
+	   Having an enum entry for zero both makes the debugger print the name
+	   for error_t-typed zero values, and prevents the compiler from
+	   issuing warnings about 'case 0:' in a switch on an error_t-typed
+	   value.  */
+	ESUCCESS = 0,
+
 #undef EDOM
 #undef ERANGE
 	EPERM           = _HURD_ERRNO (1),
@@ -151,7 +159,7 @@ enum __error_t_codes
 	EDQUOT          = _HURD_ERRNO (69),
 #define	EDQUOT          _HURD_ERRNO (69)/* Disk quota exceeded */
 	ESTALE          = _HURD_ERRNO (70),
-#define	ESTALE          _HURD_ERRNO (70)/* Stale NFS file handle */
+#define	ESTALE          _HURD_ERRNO (70)/* Stale file handle */
 	EREMOTE         = _HURD_ERRNO (71),
 #define	EREMOTE         _HURD_ERRNO (71)/* Object is remote */
 	EBADRPC         = _HURD_ERRNO (72),
