@@ -1,3 +1,16 @@
+2013-08-29  Ondřej Bílka  <neleai@seznam.cz>
+
+	* sysdeps/unix/sysv/linux/powerpc/aix/aix-dirent.h: Remove
+	aix specific files.
+	* sysdeps/unix/sysv/linux/powerpc/aix/aix-errno.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/aix/aix-stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/aix/aix-termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/aix/direntconv.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/aix/errnoconv.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/aix/statconv.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/aix/tcgetattr.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/aix/tcsetattr.c: Likewise.
+
 2013-08-29  Thomas Schwinge  <thomas@codesourcery.com>
 	    Roland McGrath  <roland@hack.frob.com>
 
