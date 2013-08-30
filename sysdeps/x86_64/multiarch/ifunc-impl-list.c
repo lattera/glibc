@@ -61,12 +61,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memmove_ssse3)
 	      IFUNC_IMPL_ADD (array, i, memmove, 1, __memmove_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/rawmemchr.S.  */
-  IFUNC_IMPL (i, name, rawmemchr,
-	      IFUNC_IMPL_ADD (array, i, rawmemchr, HAS_SSE4_2,
-			      __rawmemchr_sse42)
-	      IFUNC_IMPL_ADD (array, i, rawmemchr, 1, __rawmemchr_sse2))
-
   /* Support sysdeps/x86_64/multiarch/stpncpy.S.  */
   IFUNC_IMPL (i, name, stpncpy,
 	      IFUNC_IMPL_ADD (array, i, stpncpy, HAS_SSSE3,

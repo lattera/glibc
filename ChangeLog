@@ -1,3 +1,8 @@
+2013-08-30  Ondřej Bílka  <neleai@seznam.cz>
+
+	* sysdeps/x86_64/multiarch/rawmemchr.S: Delete.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c: Remove rawmemchr ifunc.
+
 2013-08-29  Ondřej Bílka  <neleai@seznam.cz>
 
 	* sysdeps/unix/sysv/linux/powerpc/aix/aix-dirent.h: Remove
