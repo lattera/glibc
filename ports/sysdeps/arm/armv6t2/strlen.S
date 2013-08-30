@@ -67,7 +67,7 @@
 	.text
 	.p2align 6
 ENTRY(strlen)
-	pld	[srcin, #0]
+	sfi_pld	srcin, #0
 	strd	r4, r5, [sp, #-8]!
 	cfi_adjust_cfa_offset (8)
 	cfi_rel_offset (r4, 0)
@@ -76,14 +76,15 @@ ENTRY(strlen)
 	bic	src, srcin, #7
 	mvn	const_m1, #0
 	ands	tmp1, srcin, #7		/* (8 - bytes) to alignment.  */
-	pld	[src, #32]
+	sfi_pld	src, #32
 	bne.w	.Lmisaligned8
 	mov	const_0, #0
 	mov	result, #-8
 .Lloop_aligned:
 	/* Bytes 0-7.  */
-	ldrd	data1a, data1b, [src]
-	pld	[src, #64]
+	sfi_breg src, \
+	ldrd	data1a, data1b, [\B]
+	sfi_pld	src, #64
 	add	result, result, #8
 .Lstart_realigned:
 	uadd8	data1a, data1a, const_m1	/* Saturating GE<0:3> set.  */
@@ -93,7 +94,8 @@ ENTRY(strlen)
 	cbnz	data1b, .Lnull_found
 
 	/* Bytes 8-15.  */
-	ldrd	data1a, data1b, [src, #8]
+	sfi_breg src, \
+	ldrd	data1a, data1b, [\B, #8]
 	uadd8	data1a, data1a, const_m1	/* Saturating GE<0:3> set.  */
 	add	result, result, #8
 	sel	data1a, const_0, const_m1	/* Select based on GE<0:3>.  */
@@ -102,7 +104,8 @@ ENTRY(strlen)
 	cbnz	data1b, .Lnull_found
 
 	/* Bytes 16-23.  */
-	ldrd	data1a, data1b, [src, #16]
+	sfi_breg src, \
+	ldrd	data1a, data1b, [\B, #16]
 	uadd8	data1a, data1a, const_m1	/* Saturating GE<0:3> set.  */
 	add	result, result, #8
 	sel	data1a, const_0, const_m1	/* Select based on GE<0:3>.  */
@@ -111,7 +114,8 @@ ENTRY(strlen)
 	cbnz	data1b, .Lnull_found
 
 	/* Bytes 24-31.  */
-	ldrd	data1a, data1b, [src, #24]
+	sfi_breg src, \
+	ldrd	data1a, data1b, [\B, #24]
 	add	src, src, #32
 	uadd8	data1a, data1a, const_m1	/* Saturating GE<0:3> set.  */
 	add	result, result, #8
@@ -139,12 +143,13 @@ ENTRY(strlen)
 
 .Lmisaligned8:
 	cfi_restore_state
-	ldrd	data1a, data1b, [src]
+	sfi_breg src, \
+	ldrd	data1a, data1b, [\B]
 	and	tmp2, tmp1, #3
 	rsb	result, tmp1, #0
 	lsl	tmp2, tmp2, #3			/* Bytes -> bits.  */
 	tst	tmp1, #4
-	pld	[src, #64]
+	sfi_pld	src, #64
 	S2HI	tmp2, const_m1, tmp2
 #ifdef NO_THUMB
 	mvn	tmp1, tmp2

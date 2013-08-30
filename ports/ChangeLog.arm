@@ -1,5 +1,7 @@
 2013-08-30  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/arm/armv6t2/strlen.S: Use sfi_pld and sfi_breg macros.
+
 	* sysdeps/arm/armv6t2/strlen.S: Include <arm-features.h> first thing.
 	[NO_THUMB]: Adapt code for ARM mode.
 
