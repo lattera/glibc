@@ -271,7 +271,7 @@ gconv_end (struct __gconv_step *data)
     if (__builtin_expect (ch, 0) == ESC)				      \
       {									      \
 	/* We now must be prepared to read two to three more		      \
-	   chracters.  If we have a match in the first character but	      \
+	   characters.  If we have a match in the first character but	      \
 	   then the input buffer ends we terminate with an error since	      \
 	   we must not risk missing an escape sequence just because it	      \
 	   is not entirely in the current input buffer.  */		      \

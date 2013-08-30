@@ -54,7 +54,7 @@ int __libc_enable_secure = 0;
 INTVARDEF(__libc_enable_secure)
 int __libc_multiple_libcs = 0;	/* Defining this here avoids the inclusion
 				   of init-first.  */
-/* This variable containts the lowest stack address ever used.  */
+/* This variable contains the lowest stack address ever used.  */
 void *__libc_stack_end;
 
 #if HP_TIMING_AVAIL

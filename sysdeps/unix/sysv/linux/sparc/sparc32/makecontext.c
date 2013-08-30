@@ -28,7 +28,7 @@
    Returning to the correct parent context is pretty simple on
    Sparc.  We only need to link up the register windows correctly.
    Since global registers are clobbered by calls, we need not be
-   concernred about those, and thus is all could be worked out without
+   concerned about those, and thus is all could be worked out without
    using a trampoline.
 
    Except that we must deal with the signal mask, thus a trampoline

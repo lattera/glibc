@@ -205,7 +205,7 @@ L(1):	leal -4(%edx), %eax	/* prepare loop */
 	   1. a character in the stopset was found
 	   and
 	   2. the end of the string was found
-	   But as a sign that the chracter is in the stopset we store its
+	   But as a sign that the character is in the stopset we store its
 	   value in the table.  But the value of NUL is NUL so the loop
 	   terminates for NUL in every case.  */
 

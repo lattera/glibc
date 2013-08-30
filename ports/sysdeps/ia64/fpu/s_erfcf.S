@@ -63,7 +63,7 @@
 //
 //    Let P15(x) - polynomial approximation of degree 15 for function
 //    erfcf(x) * exp( x^2) and x(i) <= x <= x(i+1), i = 0,1,2,3
-//    Polynomial coeffitients we have in the table erfc_p_table.
+//    Polynomial coefficients we have in the table erfc_p_table.
 //
 //    So we can find result for erfcf(x) as above.
 //    Algorithm description for exp function see below.

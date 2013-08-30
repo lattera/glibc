@@ -83,7 +83,7 @@ static pthread_barrier_t b2;
 # define IPC_ADDVAL 0
 #endif
 
-/* The WRITE_BUFFER_SIZE value needs to be choosen such that if we set
+/* The WRITE_BUFFER_SIZE value needs to be chosen such that if we set
    the socket send buffer size to '1', a write of this size on that
    socket will block.
 

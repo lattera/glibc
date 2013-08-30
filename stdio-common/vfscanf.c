@@ -2185,7 +2185,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		    }
 
 		  /* Start checking against localized digits, if
-		     convertion is done correctly. */
+		     conversion is done correctly. */
 		  while (1)
 		    {
 		      if (got_e && wp[wpsize - 1] == exp_char

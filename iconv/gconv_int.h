@@ -49,7 +49,7 @@ struct gconv_alias
 };
 
 
-/* How many character should be conveted in one call?  */
+/* How many character should be converted in one call?  */
 #define GCONV_NCHAR_GOAL	8160
 
 

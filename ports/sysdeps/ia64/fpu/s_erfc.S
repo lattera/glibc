@@ -65,7 +65,7 @@
 //
 //    Let P14(z) - polynomial approximation of degree 14 for function
 //    erfc(z+x(i)) * exp( (z+x(i))^2) and 0 <= z <= x(i+1)-x(i).
-//    Polynomial coeffitients we have in the table erfc_p_table.
+//    Polynomial coefficients we have in the table erfc_p_table.
 //
 //    So we can find result for erfc(x) as above.
 //    Algorithm description for exp function see below.

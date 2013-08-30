@@ -117,7 +117,7 @@ static const long double C[] = {
 #define TWO15 C[11]
  32768.0L,
 
-/* Chebyshev polynom coeficients for (exp(x)-1)/x */
+/* Chebyshev polynom coefficients for (exp(x)-1)/x */
 #define P1 C[12]
 #define P2 C[13]
 #define P3 C[14]

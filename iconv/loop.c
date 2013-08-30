@@ -38,7 +38,7 @@
      BODY		this is supposed to expand to the body of the loop.
 			The user must provide this.
 
-     EXTRA_LOOP_DECLS	extra arguments passed from converion loop call.
+     EXTRA_LOOP_DECLS	extra arguments passed from conversion loop call.
 
      INIT_PARAMS	code to define and initialize variables from params.
      UPDATE_PARAMS	code to store result in params.

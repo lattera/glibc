@@ -1,3 +1,9 @@
+2013-08-30   Ondřej Bílka  <neleai@seznam.cz>
+
+	* tests-mbwc/dat_wcsncat.c: Fix typos.
+	* tests/test6.c: Likewise.
+	* tst-digits.c: Likewise.
+
 2013-06-13  Johan Heikkila  <johan.heikkila@gmail.com>
 
 	[BZ#15432]

@@ -157,10 +157,10 @@
 /* MAX_PREFETCH_SIZE is the maximum size of a prefetch, it must not be less
  * then PREFETCH_CHUNK, the assumed size of each prefetch.  If the real size
  * of a prefetch is greater then MAX_PREFETCH_SIZE and the PREPAREFORSTORE
- * hint is used, the code will not work corrrectly.  If PREPAREFORSTORE is not
+ * hint is used, the code will not work correctly.  If PREPAREFORSTORE is not
  * used then MAX_PREFETCH_SIZE does not matter.  */
 #define MAX_PREFETCH_SIZE 128
-/* PREFETCH_LIMIT is set based on the fact that we neve use an offset greater
+/* PREFETCH_LIMIT is set based on the fact that we never use an offset greater
  * then 5 on a STORE prefetch and that a single prefetch can never be larger
  * then MAX_PREFETCH_SIZE.  We add the extra 32 when USE_DOUBLE is set because
  * we actually do two prefetches in that case, one 32 bytes after the other.  */

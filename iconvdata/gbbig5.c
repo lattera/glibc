@@ -22,7 +22,7 @@
 #include <stdint.h>
 
 /*
- * This module does convertions between gb2312 and big5 encodings.
+ * This module does conversions between gb2312 and big5 encodings.
  * It is necessary because gb2312 encoding use simplified chinese,
  * while big5 use traditional one. Often times both the simplified
  * version of a chinese character and its traditional counterpart

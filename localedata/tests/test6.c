@@ -40,7 +40,7 @@ main (void)
       /* Test basic table handling (basic == not more than 256 characters).
 	 The charmaps swaps the normal lower-upper case meaning of the
 	 ASCII characters used in the source code while the Unicode mapping
-	 in the repertoire map has the normal correspondants.  This test
+	 in the repertoire map has the normal correspondents.  This test
 	 shows the independence of the tables for `char' and `wchar_t'
 	 characters.  */
 

@@ -29,6 +29,6 @@ struct netent
   char **n_aliases;		/* Alias list.  */
   int n_addrtype;		/* Net address type.  */
   /* XXX We should probably use uint32_t for the field and ensure
-     compatiblity by adding appropriate padding.  */
+     compatibility by adding appropriate padding.  */
   unsigned long	int n_net;	/* Network number.  */
 };

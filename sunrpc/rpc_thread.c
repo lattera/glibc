@@ -80,7 +80,7 @@ __rpc_thread_variables (void)
 
 /* Global variables If we're single-threaded, or if this is the first
    thread using the variable, use the existing global variable.  This
-   provides backwards compatability for existing applications which
+   provides backwards compatibility for existing applications which
    dynamically link against this code.  */
 #undef svc_fdset
 #undef rpc_createerr

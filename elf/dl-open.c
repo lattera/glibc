@@ -158,7 +158,7 @@ add_to_global (struct link_map *new)
   return 0;
 }
 
-/* Search link maps in all namespaces for the DSO that containes the object at
+/* Search link maps in all namespaces for the DSO that contains the object at
    address ADDR.  Returns the pointer to the link map of the matching DSO, or
    NULL if a match is not found.  */
 struct link_map *

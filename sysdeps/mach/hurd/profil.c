@@ -216,7 +216,7 @@ fork_profil_parent (void)
 }
 text_set_element (_hurd_fork_parent_hook, fork_profil_parent);
 
-/* In the childs, unlock the interlock, and start a profiling thread up
+/* In the child, unlock the interlock, and start a profiling thread up
    if necessary. */
 static void
 fork_profil_child (void)

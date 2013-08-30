@@ -1,3 +1,28 @@
+2013-08-30   Ondřej Bílka  <neleai@seznam.cz>
+
+	* elf/dl-open.c: Fix typos.
+	* iconvdata/gbbig5.c: Likewise.
+	* iconvdata/iso-2022-jp.c: Likewise.
+	* iconv/gconv_int.h: Likewise.
+	* iconv/loop.c: Likewise.
+	* nis/rpcsvc/nis.h: Likewise.
+	* resolv/ns_name.c: Likewise.
+	* stdio-common/vfscanf.c: Likewise.
+	* streams/stropts.h: Likewise.
+	* sunrpc/rpc_thread.c: Likewise.
+	* sysdeps/i386/strpbrk.S: Likewise.
+	* sysdeps/ieee754/k_standard.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_expl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_expl.c: Likewise.
+	* sysdeps/mach/hurd/dl-sysdep.c: Likewise.
+	* sysdeps/mach/hurd/profil.c: Likewise.
+	* sysdeps/s390/dl-procinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/chown.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/chown.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/makecontext.c: Likewise.
+	* sysdeps/x86_64/dl-trampoline.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcmp-sse42.S: Likewise.
+
 2013-08-30  Ondřej Bílka  <neleai@seznam.cz>
 
 	* sysdeps/x86_64/multiarch/rawmemchr.S: Delete.

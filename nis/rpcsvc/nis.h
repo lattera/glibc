@@ -470,7 +470,7 @@ typedef struct fd_result fd_result;
 #define NIS_NOBODY(a, m)       (((a) & ((m) << 24)) != 0)
 /*
  * EOL Alert - The following non-prefixed test macros are
- * here for backward compatability, and will be not be present
+ * here for backward compatibility, and will be not be present
  * in future releases - use the NIS_*() macros above.
  */
 #define WORLD(a, m)	(((a) & (m)) != 0)

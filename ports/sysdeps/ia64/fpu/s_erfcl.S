@@ -71,7 +71,7 @@
 //    -0.5*[x(i+1)-x(i)] <= z <= 0.5*[x(i+1)-x(i)].
 //
 //    Let  Q(z)= (P(z)- S)/S, S = a0, rounded to 16 bits.
-//    Polynomial coeffitients for Q(z) we have in the table erfc_Q_table as
+//    Polynomial coefficients for Q(z) we have in the table erfc_Q_table as
 //    long double values
 //
 //    We use multi precision to calculate input argument -x^2 for expl and

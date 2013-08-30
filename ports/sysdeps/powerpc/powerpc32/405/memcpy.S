@@ -98,7 +98,7 @@ L(string_count_loop): /* Copy odd 0-31 bytes */
        lswx    r6,0,r4
        stswx   r6,0,r3
 
-L(pre_string_copy): /* Check how many 32 byte chunck to copy */
+L(pre_string_copy): /* Check how many 32 byte chunks to copy */
        srwi.   r7,r5,4
        beq     L(end_memcpy)
        mtctr   r7

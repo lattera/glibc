@@ -1,3 +1,7 @@
+2013-08-30   Ondřej Bílka  <neleai@seznam.cz>
+
+	* sysdeps/powerpc/powerpc32/405/memcpy.S: Fix typos.
+
 2013-08-17  Alexandre Oliva <aoliva@redhat.com>
 
 	PR 15483

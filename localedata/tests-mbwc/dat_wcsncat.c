@@ -9,7 +9,7 @@
 
 /*
  *  Note:
- *	  A terminating null wide chararacter is always appended to
+ *	  A terminating null wide character is always appended to
  *	  the result: ws1.
  *
  */

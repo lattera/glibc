@@ -178,7 +178,7 @@ main (void)
   printf ("%d failures in wprintf tests\n", failures);
   status = failures != 0;
 
-  /* ctype tests.  This makes sure that the multibyte chracter digit
+  /* ctype tests.  This makes sure that the multibyte character digit
      representations are not handle in this table.  */
   failures = 0;
   for (cnt = 0; cnt < 256; ++cnt)

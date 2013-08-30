@@ -75,7 +75,7 @@
 //
 // IEEE Special Conditions:
 //
-//    No condions should be raised.
+//    No conditions should be raised.
 //
 //*********************************************************************
 //
@@ -288,7 +288,7 @@
 //
 // Set sgn_x := sign(x); x := |x|; x_lo := 2 lsb of x.
 //
-// In memory, 2/pi is stored contigously as
+// In memory, 2/pi is stored contiguously as
 //
 //  0x00000000 0x00000000 0xA2F....
 //                       ^
@@ -786,7 +786,7 @@ __libm_pi_by_2_reduce:
 //          setf.sig FR_ScaleP3 = GR_x_lo
 //          fmerge.se FR_X = FR_X,FR_ScaleP3
 //    Set sgn_x := sign(x); x := |x|; x_lo := 2 lsb of x.
-//    2/pi is stored contigously as
+//    2/pi is stored contiguously as
 //    0x00000000 0x00000000.0xA2F....
 //    M = EXP - BIAS  ( M >= 63)
 //    Given x = 2^m * 1.xxxx...xxx; we calculate L := 62 - m.

@@ -35,7 +35,7 @@ typedef __uid_t uid_t;
 typedef __t_scalar_t t_scalar_t;
 typedef __t_uscalar_t t_uscalar_t;
 
-/* Get system specific contants.  */
+/* Get system specific constants.  */
 #include <bits/stropts.h>
 
 

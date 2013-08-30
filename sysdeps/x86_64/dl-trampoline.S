@@ -119,7 +119,7 @@ _dl_runtime_profile:
 	movq %rax, LR_RSP_OFFSET(%rsp)
 
 	/* We always store the XMM registers even if AVX is available.
-	   This is to provide backward binary compatility for existing
+	   This is to provide backward binary compatibility for existing
 	   audit modules.  */
 	movaps %xmm0,		   (LR_XMM_OFFSET)(%rsp)
 	movaps %xmm1, (LR_XMM_OFFSET +   XMM_SIZE)(%rsp)

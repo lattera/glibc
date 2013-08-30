@@ -49,7 +49,7 @@ __real_chown (const char *file, uid_t owner, gid_t group)
 
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-/* Compiling for compatibiity.  */
+/* Compiling for compatibility.  */
 int
 attribute_compat_text_section
 __chown_is_lchown (const char *file, uid_t owner, gid_t group)

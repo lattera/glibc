@@ -155,7 +155,7 @@ ENTRY(__clone)
 	ldw	-60(%sp), %arg0
 	ldw     -64(%sp), %r22
 
-	/* $$dyncall fixes childs PIC register */
+	/* $$dyncall fixes child's PIC register */
 
 	/* Call the user's function */
 #ifdef PIC

@@ -1,3 +1,9 @@
+2013-08-30   Ondřej Bílka  <neleai@seznam.cz>
+
+	* sysdeps/pthread/pthread.h: Fix typos.
+	* sysdeps/unix/sysv/linux/internaltypes.h: Likewise.
+	* tst-cancel4.c: Likewise.
+
 2013-08-21   Ondřej Bílka  <neleai@seznam.cz>
 
 	* pthread_getschedparam.c: Fix typos.

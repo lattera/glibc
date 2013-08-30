@@ -1,3 +1,8 @@
+2013-08-30   Ondřej Bílka  <neleai@seznam.cz>
+
+	* sysdeps/unix/sysv/linux/hppa/clone.S: Fix typos.
+	* sysdeps/unix/sysv/linux/hppa/nptl/pthread.h: Likewise.
+
 2013-08-21   Ondřej Bílka  <neleai@seznam.cz>
 
 	* sysdeps/hppa/dl-lookupcfg.h: Fix typos.
