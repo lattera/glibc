@@ -1,4 +1,4 @@
-/* copy no more then N bytes from SRC to DEST, returning the address of
+/* copy no more than N bytes from SRC to DEST, returning the address of
    the terminating '\0' in DEST.
    For Intel 80x86, x>=3.
    Copyright (C) 1994-2013 Free Software Foundation, Inc.

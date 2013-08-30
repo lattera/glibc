@@ -2674,7 +2674,7 @@ skip_to (struct linereader *ldfile, struct locale_collate_t *collate,
 	}
       else if (nowtok == tok_else)
 	{
-	  lr_error (ldfile, _("%s: more then one 'else'"), "LC_COLLATE");
+	  lr_error (ldfile, _("%s: more than one 'else'"), "LC_COLLATE");
 	}
 
       lr_ignore_rest (ldfile, 0);

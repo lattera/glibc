@@ -1,5 +1,21 @@
 2013-08-30   Ondřej Bílka  <neleai@seznam.cz>
 
+	* csu/init-first.c: Fix then/than typos.
+	* locale/programs/ld-collate.c: Likewise.
+	* locale/programs/linereader.h: Likewise.
+	* manual/charset.texi: Likewise.
+	* manual/filesys.texi: Likewise.
+	* manual/stdio.texi: Likewise.
+	* manual/string.texi: Likewise.
+	* stdlib/fmtmsg.c: Likewise.
+	* sysdeps/i386/stpncpy.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power6/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power6/memset.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power6/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power6/memset.S: Likewise.
+
+2013-08-30   Ondřej Bílka  <neleai@seznam.cz>
+
 	* elf/dl-open.c: Fix typos.
 	* iconvdata/gbbig5.c: Likewise.
 	* iconvdata/iso-2022-jp.c: Likewise.

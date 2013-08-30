@@ -49,7 +49,7 @@ struct token
     struct
     {
       /* This element is sized on the safe expectation that no single
-	 character in any character set uses more then 16 bytes.  */
+	 character in any character set uses more than 16 bytes.  */
       unsigned char bytes[16];
       int nbytes;
     } charcode;

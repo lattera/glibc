@@ -267,7 +267,7 @@ Locks}.
 @deftypefun {FILE *} fopen64 (const char *@var{filename}, const char *@var{opentype})
 This function is similar to @code{fopen} but the stream it returns a
 pointer for is opened using @code{open64}.  Therefore this stream can be
-used even on files larger then @math{2^31} bytes on 32 bit machines.
+used even on files larger than @math{2^31} bytes on 32 bit machines.
 
 Please note that the return type is still @code{FILE *}.  There is no
 special @code{FILE} type for the LFS interface.

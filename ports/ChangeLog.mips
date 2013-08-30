@@ -1,5 +1,9 @@
 2013-08-30   Ondřej Bílka  <neleai@seznam.cz>
 
+	* sysdeps/mips/memcpy.S: Fix then/than typos.
+
+2013-08-30   Ondřej Bílka  <neleai@seznam.cz>
+
 	* sysdeps/mips/memcpy.S: Fix typos.
 
 2013-08-29  Thomas Schwinge  <thomas@codesourcery.com>

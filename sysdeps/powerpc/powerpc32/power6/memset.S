@@ -101,7 +101,7 @@ L(nondcbz):
    boundary may not be at cache line (128-byte) boundary.  */
 L(nzloopstart):
 /* memset in 32-byte chunks until we get to a cache line boundary.
-   If rLEN is less then the distance to the next cache-line boundary use
+   If rLEN is less than the distance to the next cache-line boundary use
    cacheAligned1 code to finish the tail.  */
 	cmplwi	cr1,rLEN,128
 
@@ -306,7 +306,7 @@ L(nzCacheAligned256):
    block zero instruction. */
 L(zloopstart):
 /* memset in 32-byte chunks until we get to a cache line boundary.
-   If rLEN is less then the distance to the next cache-line boundary use
+   If rLEN is less than the distance to the next cache-line boundary use
    cacheAligned1 code to finish the tail.  */
 	cmplwi	cr1,rLEN,128
 	beq	L(medium)

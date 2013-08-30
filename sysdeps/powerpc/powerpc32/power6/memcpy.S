@@ -269,7 +269,7 @@ L(wus_tail16): /* Move 16 bytes.  */
     addi  1,1,32
     blr
     .align  4
-L(wus_tail16p8):  /* less then 8 bytes left.  */
+L(wus_tail16p8):  /* less than 8 bytes left.  */
     beq   cr1,L(wus_tailX) /* exactly 16 bytes, early exit.  */
     cmplwi	cr1,10,20
     bf    29,L(wus_tail16p2)
@@ -283,7 +283,7 @@ L(wus_tail16p8):  /* less then 8 bytes left.  */
     addi  1,1,32
     blr
     .align  4
-L(wus_tail16p4):  /* less then 4 bytes left.  */
+L(wus_tail16p4):  /* less than 4 bytes left.  */
     addi  12,12,24
     addi  11,11,24
     bgt   cr0,L(wus_tail2)
@@ -291,7 +291,7 @@ L(wus_tail16p4):  /* less then 4 bytes left.  */
     addi  1,1,32
     blr
     .align  4
-L(wus_tail16p2):  /* 16 bytes moved, less then 4 bytes left.  */
+L(wus_tail16p2):  /* 16 bytes moved, less than 4 bytes left.  */
     addi  12,12,16
     addi  11,11,16
     b     L(wus_tail2)
@@ -315,7 +315,7 @@ L(wus_tail8):  /* Move 8 bytes.  */
     addi  1,1,32
     blr
     .align  4
-L(wus_tail8p4):  /* less then 4 bytes left.  */
+L(wus_tail8p4):  /* less than 4 bytes left.  */
     addi  12,12,8
     addi  11,11,8
     bgt   cr1,L(wus_tail2)
@@ -326,7 +326,7 @@ L(wus_tail8p4):  /* less then 4 bytes left.  */
     .align  4
 L(wus_tail4):  /* Move 4 bytes.  */
 /*  r6 already loaded speculatively.  If we are here we know there is
-    more then 4 bytes left.  So there is no need to test.  */
+    more than 4 bytes left.  So there is no need to test.  */
     addi  12,12,4
     stw   6,0(11)
     addi  11,11,4
@@ -426,14 +426,14 @@ L(wdu):
      First we need to copy word up to but not crossing the next 32-byte
      boundary. Then perform aligned loads just before and just after
      the boundary and use shifts and or to generate the next aligned
-     word for dst. If more then 32 bytes remain we copy (unaligned src)
-     the next 7 words and repeat the loop until less then 32-bytes
+     word for dst. If more than 32 bytes remain we copy (unaligned src)
+     the next 7 words and repeat the loop until less than 32-bytes
      remain.
 
-     Then if more then 4 bytes remain we again use aligned loads,
+     Then if more than 4 bytes remain we again use aligned loads,
      shifts and or to generate the next dst word. We then process the
      remaining words using unaligned loads as needed. Finally we check
-     if there more then 0 bytes (1-3) bytes remaining and use
+     if there more than 0 bytes (1-3) bytes remaining and use
      halfword and or byte load/stores to complete the copy.
 */
     mr      4,12      /* restore unaligned adjusted src ptr */

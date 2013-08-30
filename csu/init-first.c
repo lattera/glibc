@@ -29,7 +29,7 @@
 
 #include <ldsodefs.h>
 
-/* Set nonzero if we have to be prepared for more then one libc being
+/* Set nonzero if we have to be prepared for more than one libc being
    used in the process.  Safe assumption if initializer never runs.  */
 int __libc_multiple_libcs attribute_hidden = 1;
 

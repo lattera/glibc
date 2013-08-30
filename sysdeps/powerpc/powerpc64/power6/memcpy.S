@@ -450,7 +450,7 @@ L(dus_tail16): /* Move 16 bytes.  */
     ld    3,-16(1)
     blr
     .align  4
-L(dus_tail16p8):  /* less then 8 bytes left.  */
+L(dus_tail16p8):  /* less than 8 bytes left.  */
     beq   cr1,L(dus_tailX) /* exactly 16 bytes, early exit.  */
     cmpldi	cr1,10,20
     bf    29,L(dus_tail16p2)
@@ -464,7 +464,7 @@ L(dus_tail16p8):  /* less then 8 bytes left.  */
     ld    3,-16(1)
     blr
     .align  4
-L(dus_tail16p4):  /* less then 4 bytes left.  */
+L(dus_tail16p4):  /* less than 4 bytes left.  */
     addi  12,12,24
     addi  3,3,24
     bgt   cr0,L(dus_tail2)
@@ -472,7 +472,7 @@ L(dus_tail16p4):  /* less then 4 bytes left.  */
     ld    3,-16(1)
     blr
     .align  4
-L(dus_tail16p2):  /* 16 bytes moved, less then 4 bytes left.  */
+L(dus_tail16p2):  /* 16 bytes moved, less than 4 bytes left.  */
     addi  12,12,16
     addi  3,3,16
     b     L(dus_tail2)
@@ -497,7 +497,7 @@ L(dus_tail8):  /* Move 8 bytes.  */
     ld    3,-16(1)
     blr
     .align  4
-L(dus_tail8p4):  /* less then 4 bytes left.  */
+L(dus_tail8p4):  /* less than 4 bytes left.  */
     addi  12,12,8
     addi  3,3,8
     bgt   cr1,L(dus_tail2)
@@ -508,7 +508,7 @@ L(dus_tail8p4):  /* less then 4 bytes left.  */
     .align  4
 L(dus_tail4):  /* Move 4 bytes.  */
 /*  r6 already loaded speculatively.  If we are here we know there is
-    more then 4 bytes left.  So there is no need to test.  */
+    more than 4 bytes left.  So there is no need to test.  */
     addi  12,12,4
     stw   6,0(3)
     addi  3,3,4

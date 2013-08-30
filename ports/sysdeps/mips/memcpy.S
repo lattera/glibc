@@ -155,14 +155,14 @@
  pref PREFETCH_STORE_HINT, (chunk)*32(reg)
 #endif
 /* MAX_PREFETCH_SIZE is the maximum size of a prefetch, it must not be less
- * then PREFETCH_CHUNK, the assumed size of each prefetch.  If the real size
- * of a prefetch is greater then MAX_PREFETCH_SIZE and the PREPAREFORSTORE
+ * than PREFETCH_CHUNK, the assumed size of each prefetch.  If the real size
+ * of a prefetch is greater than MAX_PREFETCH_SIZE and the PREPAREFORSTORE
  * hint is used, the code will not work correctly.  If PREPAREFORSTORE is not
  * used then MAX_PREFETCH_SIZE does not matter.  */
 #define MAX_PREFETCH_SIZE 128
 /* PREFETCH_LIMIT is set based on the fact that we never use an offset greater
- * then 5 on a STORE prefetch and that a single prefetch can never be larger
- * then MAX_PREFETCH_SIZE.  We add the extra 32 when USE_DOUBLE is set because
+ * than 5 on a STORE prefetch and that a single prefetch can never be larger
+ * than MAX_PREFETCH_SIZE.  We add the extra 32 when USE_DOUBLE is set because
  * we actually do two prefetches in that case, one 32 bytes after the other.  */
 #ifdef USE_DOUBLE
 # define PREFETCH_LIMIT (5 * PREFETCH_CHUNK) + 32 + MAX_PREFETCH_SIZE
@@ -275,7 +275,7 @@ LEAF(MEMCPY_NAME)
 L(memcpy):
 #endif
 /*
- * If the size is less then 2*NSIZE (8 or 16), go to L(lastb).  Regardless of
+ * If the size is less than 2*NSIZE (8 or 16), go to L(lastb).  Regardless of
  * size, copy dst pointer to v0 for the return value.
  */
 	slti	t2,a2,(2 * NSIZE)
@@ -443,7 +443,7 @@ L(chkw):
 	PTR_ADDIU a0,a0,UNIT(8)
 
 /*
- * Here we have less then 32(64) bytes to copy.  Set up for a loop to
+ * Here we have less than 32(64) bytes to copy.  Set up for a loop to
  * copy one word (or double word) at a time.  Set a2 to count how many
  * bytes we have to copy after all the word (or double word) chunks are
  * copied and a3 to the dst pointer after all the (d)word chunks have
@@ -635,7 +635,7 @@ L(ua_chkw):
 	C_ST	REG7,UNIT(7)(a0)
 	PTR_ADDIU a0,a0,UNIT(8)
 /*
- * Here we have less then 32(64) bytes to copy.  Set up for a loop to
+ * Here we have less than 32(64) bytes to copy.  Set up for a loop to
  * copy one word (or double word) at a time.
  */
 L(ua_chk1w):

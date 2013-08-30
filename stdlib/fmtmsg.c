@@ -116,9 +116,9 @@ fmtmsg (long int classification, const char *label, int severity,
       if (cp == NULL)
 	return MM_NOTOK;
 
-      /* The first field must not contain more then 10 bytes.  */
+      /* The first field must not contain more than 10 bytes.  */
       if (cp - label > 10
-	  /* The second field must not have more then 14 bytes.  */
+	  /* The second field must not have more than 14 bytes.  */
 	  || strlen (cp + 1) > 14)
 	return MM_NOTOK;
     }

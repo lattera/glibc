@@ -682,7 +682,7 @@ The behavior of @code{wcpcpy} is undefined if the strings overlap.
 This function is similar to @code{stpcpy} but copies always exactly
 @var{size} characters into @var{to}.
 
-If the length of @var{from} is more then @var{size}, then @code{stpncpy}
+If the length of @var{from} is more than @var{size}, then @code{stpncpy}
 copies just the first @var{size} characters and returns a pointer to the
 character directly following the one which was copied last.  Note that in
 this case there is no null terminator written into @var{to}.
@@ -707,7 +707,7 @@ declared in @file{string.h}.
 This function is similar to @code{wcpcpy} but copies always exactly
 @var{wsize} characters into @var{wto}.
 
-If the length of @var{wfrom} is more then @var{size}, then
+If the length of @var{wfrom} is more than @var{size}, then
 @code{wcpncpy} copies just the first @var{size} wide characters and
 returns a pointer to the wide character directly following the last
 non-null wide character which was copied last.  Note that in this case

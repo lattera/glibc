@@ -786,7 +786,7 @@ mbslen (const char *s)
 This function simply calls @code{mbrlen} for each multibyte character
 in the string and counts the number of function calls.  Please note that
 we here use @code{MB_LEN_MAX} as the size argument in the @code{mbrlen}
-call.  This is acceptable since a) this value is larger then the length of
+call.  This is acceptable since a) this value is larger than the length of
 the longest multibyte character sequence and b) we know that the string
 @var{s} ends with a NUL byte, which cannot be part of any other multibyte
 character sequence but the one representing the NUL wide character.

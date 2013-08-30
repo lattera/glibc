@@ -16,7 +16,7 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* Copy no more then N bytes from SRC to DEST, returning the address of
+/* Copy no more than N bytes from SRC to DEST, returning the address of
    the terminating '\0' in DEST.  */
 
 #include <sysdep.h>

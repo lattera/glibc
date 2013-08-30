@@ -1,5 +1,9 @@
 2013-08-30   Ondřej Bílka  <neleai@seznam.cz>
 
+	* sysdeps/alpha/alphaev67/stpncpy.S: Fix then/than typos.
+
+2013-08-30   Ondřej Bílka  <neleai@seznam.cz>
+
 	* sysdeps/unix/sysv/linux/alpha/bits/netdb.h: Fix typos.
 
 2013-07-02  Richard Henderson  <rth@redhat.com>
