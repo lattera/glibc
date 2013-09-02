@@ -1,3 +1,7 @@
+2013-09-02   Ondřej Bílka  <neleai@seznam.cz>
+
+	* sysdeps/powerpc/powerpc32/power6/memcpy.S: Fix typo.
+
 2013-08-30   Ondřej Bílka  <neleai@seznam.cz>
 
 	* csu/init-first.c: Fix then/than typos.

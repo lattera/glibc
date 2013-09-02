@@ -433,7 +433,7 @@ L(wdu):
      Then if more than 4 bytes remain we again use aligned loads,
      shifts and or to generate the next dst word. We then process the
      remaining words using unaligned loads as needed. Finally we check
-     if there more than 0 bytes (1-3) bytes remaining and use
+     if there are more than 0 bytes (1-3) bytes remaining and use
      halfword and or byte load/stores to complete the copy.
 */
     mr      4,12      /* restore unaligned adjusted src ptr */
