@@ -5635,9 +5635,9 @@ ildouble: 1
 ldouble: 1
 Test "jn (10, 10.0)":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 2
 ldouble: 2
 Test "jn (10, 2.0)":
@@ -5646,6 +5646,14 @@ ldouble: 1
 Test "jn (2, 0x1.ffff62p+99)":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "jn (2, 0x1p1023)":
+double: 1
+idouble: 1
+Test "jn (2, 0x1p127)":
+double: 1
+idouble: 1
 ildouble: 1
 ldouble: 1
 Test "jn (2, 2.4048255576957729)":
@@ -6844,6 +6852,14 @@ ifloat: 1
 Test "yn (10, 2.0)":
 float: 3
 ifloat: 3
+Test "yn (2, 0x1.ffff62p+99)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "yn (2, 0x1p127)":
+float: 2
+ifloat: 2
 Test "yn (3, 0.125)":
 ildouble: 1
 ldouble: 1

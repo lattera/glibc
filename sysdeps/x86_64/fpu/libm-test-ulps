@@ -6403,6 +6403,11 @@ idouble: 2
 ifloat: 2
 ildouble: 1
 ldouble: 1
+Test "jn (2, 0x1p127)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
 Test "jn (2, 2.4048255576957729)":
 double: 2
 float: 1
@@ -7728,6 +7733,16 @@ double: 3
 float: 1
 idouble: 3
 ifloat: 1
+Test "yn (2, 0x1.ffff62p+99)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "yn (2, 0x1p127)":
+double: 1
+float: 3
+idouble: 1
+ifloat: 3
 Test "yn (3, 0.125)":
 double: 1
 idouble: 1
@@ -8428,9 +8443,9 @@ ldouble: 2
 
 Function: "yn":
 double: 3
-float: 2
+float: 3
 idouble: 3
-ifloat: 2
+ifloat: 3
 ildouble: 4
 ldouble: 4
 
