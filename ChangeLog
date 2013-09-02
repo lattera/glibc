@@ -1,3 +1,37 @@
+2013-09-04   Will Newton  <will.newton@linaro.org>
+
+	* benchtests/bench-timing.h (TIMING_PRINT_MEAN): New macro.
+	* benchtests/bench-string.h: Include bench-timing.h instead
+	of including hp-timing.h directly. (INNER_LOOP_ITERS): New
+	define. (HP_TIMING_BEST): Delete macro. (test_init): Remove
+	call to HP_TIMING_DIFF_INIT.
+	* benchtests/bench-memccpy.c: Use bench-timing.h macros
+	instead of hp-timing.h macros.
+	* benchtests/bench-memchr.c: Likewise.
+	* benchtests/bench-memcmp.c: Likewise.
+	* benchtests/bench-memcpy.c: Likewise.
+	* benchtests/bench-memmem.c: Likewise.
+	* benchtests/bench-memmove.c: Likewise.
+	* benchtests/bench-memset.c: Likewise.
+	* benchtests/bench-rawmemchr.c: Likewise.
+	* benchtests/bench-strcasecmp.c: Likewise.
+	* benchtests/bench-strcasestr.c: Likewise.
+	* benchtests/bench-strcat.c: Likewise.
+	* benchtests/bench-strchr.c: Likewise.
+	* benchtests/bench-strcmp.c: Likewise.
+	* benchtests/bench-strcpy.c: Likewise.
+	* benchtests/bench-strcpy_chk.c: Likewise.
+	* benchtests/bench-strlen.c: Likewise.
+	* benchtests/bench-strncasecmp.c: Likewise.
+	* benchtests/bench-strncat.c: Likewise.
+	* benchtests/bench-strncmp.c: Likewise.
+	* benchtests/bench-strncpy.c: Likewise.
+	* benchtests/bench-strnlen.c: Likewise.
+	* benchtests/bench-strpbrk.c: Likewise.
+	* benchtests/bench-strrchr.c: Likewise.
+	* benchtests/bench-strspn.c: Likewise.
+	* benchtests/bench-strstr.c: Likewise.
+
 2013-09-04  Will Newton  <will.newton@linaro.org>
 
 	* benchtests/Makefile: Use LDLIBS instead of LDFLAGS.

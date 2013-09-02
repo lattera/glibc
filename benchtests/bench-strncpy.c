@@ -62,6 +62,9 @@ typedef char *(*proto_t) (char *, const char *, size_t);
 static void
 do_one_test (impl_t *impl, char *dst, const char *src, size_t len, size_t n)
 {
+  size_t i, iters = INNER_LOOP_ITERS;
+  timing_t start, stop, cur;
+
   if (CALL (impl, dst, src, n) != STRNCPY_RESULT (dst, len, n))
     {
       error (0, 0, "Wrong result in function %s %p %p", impl->name,
@@ -90,23 +93,16 @@ do_one_test (impl_t *impl, char *dst, const char *src, size_t len, size_t n)
 	  }
     }
 
-  if (HP_TIMING_AVAIL)
+  TIMING_NOW (start);
+  for (i = 0; i < iters; ++i)
     {
-      hp_timing_t start __attribute__ ((unused));
-      hp_timing_t stop __attribute__ ((unused));
-      hp_timing_t best_time = ~ (hp_timing_t) 0;
-      size_t i;
-
-      for (i = 0; i < 32; ++i)
-	{
-	  HP_TIMING_NOW (start);
-	  CALL (impl, dst, src, n);
-	  HP_TIMING_NOW (stop);
-	  HP_TIMING_BEST (best_time, start, stop);
-	}
-
-      printf ("\t%zd", (size_t) best_time);
+      CALL (impl, dst, src, n);
     }
+  TIMING_NOW (stop);
+
+  TIMING_DIFF (cur, start, stop);
+
+  TIMING_PRINT_MEAN ((double) cur, (double) iters);
 }
 
 static void
@@ -132,14 +128,12 @@ do_test (size_t align1, size_t align2, size_t len, size_t n, int max_char)
   for (i = len + 1; i + align1 < page_size && i < len + 64; ++i)
     s1[i] = 32 + 32 * i % (max_char - 32);
 
-  if (HP_TIMING_AVAIL)
-    printf ("Length %4zd, n %4zd, alignment %2zd/%2zd:", len, n, align1, align2);
+  printf ("Length %4zd, n %4zd, alignment %2zd/%2zd:", len, n, align1, align2);
 
   FOR_EACH_IMPL (impl, 0)
     do_one_test (impl, s2, s1, len, n);
 
-  if (HP_TIMING_AVAIL)
-    putchar ('\n');
+  putchar ('\n');
 }
 
 int

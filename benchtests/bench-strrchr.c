@@ -63,6 +63,9 @@ static void
 do_one_test (impl_t *impl, const CHAR *s, int c, CHAR *exp_res)
 {
   CHAR *res = CALL (impl, s, c);
+  size_t i, iters = INNER_LOOP_ITERS;
+  timing_t start, stop, cur;
+
   if (res != exp_res)
     {
       error (0, 0, "Wrong result in function %s %p %p", impl->name,
@@ -71,23 +74,16 @@ do_one_test (impl_t *impl, const CHAR *s, int c, CHAR *exp_res)
       return;
     }
 
-  if (HP_TIMING_AVAIL)
+  TIMING_NOW (start);
+  for (i = 0; i < iters; ++i)
     {
-      hp_timing_t start __attribute ((unused));
-      hp_timing_t stop __attribute ((unused));
-      hp_timing_t best_time = ~ (hp_timing_t) 0;
-      size_t i;
-
-      for (i = 0; i < 32; ++i)
-	{
-	  HP_TIMING_NOW (start);
-	  CALL (impl, s, c);
-	  HP_TIMING_NOW (stop);
-	  HP_TIMING_BEST (best_time, start, stop);
-	}
-
-      printf ("\t%zd", (size_t) best_time);
+      CALL (impl, s, c);
     }
+  TIMING_NOW (stop);
+
+  TIMING_DIFF (cur, start, stop);
+
+  TIMING_PRINT_MEAN ((double) cur, (double) iters);
 }
 
 static void
@@ -126,14 +122,12 @@ do_test (size_t align, size_t pos, size_t len, int seek_char, int max_char)
   else
     result = NULL;
 
-  if (HP_TIMING_AVAIL)
-    printf ("Length %4zd, alignment in bytes %2zd:", pos, align * sizeof(CHAR));
+  printf ("Length %4zd, alignment in bytes %2zd:", pos, align * sizeof(CHAR));
 
   FOR_EACH_IMPL (impl, 0)
     do_one_test (impl, (CHAR *) (buf + align), seek_char, result);
 
-  if (HP_TIMING_AVAIL)
-    putchar ('\n');
+  putchar ('\n');
 }
 
 int

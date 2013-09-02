@@ -43,7 +43,9 @@ stupid_strncat (char *dst, const char *src, size_t n)
 static void
 do_one_test (impl_t *impl, char *dst, const char *src, size_t n)
 {
-  size_t k = strlen (dst);
+  size_t k = strlen (dst), i, iters = INNER_LOOP_ITERS;
+  timing_t start, stop, cur;
+
   if (CALL (impl, dst, src, n) != dst)
     {
       error (0, 0, "Wrong result in function %s %p != %p", impl->name,
@@ -67,24 +69,18 @@ do_one_test (impl_t *impl, char *dst, const char *src, size_t n)
       ret = 1;
       return;
     }
-  if (HP_TIMING_AVAIL)
+
+  TIMING_NOW (start);
+  for (i = 0; i < iters; ++i)
     {
-      hp_timing_t start __attribute ((unused));
-      hp_timing_t stop __attribute ((unused));
-      hp_timing_t best_time = ~ (hp_timing_t) 0;
-      size_t i;
-
-      for (i = 0; i < 32; ++i)
-	{
-	  dst[k] = '\0';
-	  HP_TIMING_NOW (start);
-	  CALL (impl, dst, src, n);
-	  HP_TIMING_NOW (stop);
-	  HP_TIMING_BEST (best_time, start, stop);
-	}
-
-      printf ("\t%zd", (size_t) best_time);
+      dst[k] = '\0';
+      CALL (impl, dst, src, n);
     }
+  TIMING_NOW (stop);
+
+  TIMING_DIFF (cur, start, stop);
+
+  TIMING_PRINT_MEAN ((double) cur, (double) iters);
 }
 
 static void
@@ -114,9 +110,8 @@ do_test (size_t align1, size_t align2, size_t len1, size_t len2,
   for (i = 0; i < len2; i++)
     s2[i] = 32 + 23 * i % (max_char - 32);
 
-  if (HP_TIMING_AVAIL)
-    printf ("Length %4zd/%4zd, alignment %2zd/%2zd, N %4zd:",
-	    len1, len2, align1, align2, n);
+  printf ("Length %4zd/%4zd, alignment %2zd/%2zd, N %4zd:",
+	  len1, len2, align1, align2, n);
 
   FOR_EACH_IMPL (impl, 0)
     {
@@ -124,8 +119,7 @@ do_test (size_t align1, size_t align2, size_t len1, size_t len2,
       do_one_test (impl, s2, s1, n);
     }
 
-  if (HP_TIMING_AVAIL)
-    putchar ('\n');
+  putchar ('\n');
 }
 
 int

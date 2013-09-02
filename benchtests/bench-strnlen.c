@@ -38,7 +38,9 @@ simple_strnlen (const char *s, size_t maxlen)
 static void
 do_one_test (impl_t *impl, const char *s, size_t maxlen, size_t exp_len)
 {
-  size_t len = CALL (impl, s, maxlen);
+  size_t len = CALL (impl, s, maxlen), i, iters = INNER_LOOP_ITERS;
+  timing_t start, stop, cur;
+
   if (len != exp_len)
     {
       error (0, 0, "Wrong result in function %s %zd %zd", impl->name,
@@ -47,23 +49,16 @@ do_one_test (impl_t *impl, const char *s, size_t maxlen, size_t exp_len)
       return;
     }
 
-  if (HP_TIMING_AVAIL)
+  TIMING_NOW (start);
+  for (i = 0; i < iters; ++i)
     {
-      hp_timing_t start __attribute ((unused));
-      hp_timing_t stop __attribute ((unused));
-      hp_timing_t best_time = ~ (hp_timing_t) 0;
-      size_t i;
-
-      for (i = 0; i < 32; ++i)
-	{
-	  HP_TIMING_NOW (start);
-	  CALL (impl, s, maxlen);
-	  HP_TIMING_NOW (stop);
-	  HP_TIMING_BEST (best_time, start, stop);
-	}
-
-      printf ("\t%zd", (size_t) best_time);
+      CALL (impl, s, maxlen);
     }
+  TIMING_NOW (stop);
+
+  TIMING_DIFF (cur, start, stop);
+
+  TIMING_PRINT_MEAN ((double) cur, (double) iters);
 }
 
 static void
@@ -79,14 +74,12 @@ do_test (size_t align, size_t len, size_t maxlen, int max_char)
     buf1[align + i] = 1 + 7 * i % max_char;
   buf1[align + len] = 0;
 
-  if (HP_TIMING_AVAIL)
-    printf ("Length %4zd, alignment %2zd:", len, align);
+  printf ("Length %4zd, alignment %2zd:", len, align);
 
   FOR_EACH_IMPL (impl, 0)
     do_one_test (impl, (char *) (buf1 + align), maxlen, MIN (len, maxlen));
 
-  if (HP_TIMING_AVAIL)
-    putchar ('\n');
+  putchar ('\n');
 }
 
 int

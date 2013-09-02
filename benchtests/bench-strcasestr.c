@@ -60,23 +60,19 @@ IMPL (strcasestr, 1)
 static void
 do_one_test (impl_t *impl, const char *s1, const char *s2, char *exp_result)
 {
-  if (HP_TIMING_AVAIL)
+  size_t i, iters = INNER_LOOP_ITERS;
+  timing_t start, stop, cur;
+
+  TIMING_NOW (start);
+  for (i = 0; i < iters; ++i)
     {
-      hp_timing_t start __attribute ((unused));
-      hp_timing_t stop __attribute ((unused));
-      hp_timing_t best_time = ~(hp_timing_t) 0;
-      size_t i;
-
-      for (i = 0; i < 32; ++i)
-	{
-	  HP_TIMING_NOW (start);
-	  CALL (impl, s1, s2);
-	  HP_TIMING_NOW (stop);
-	  HP_TIMING_BEST (best_time, start, stop);
-	}
-
-      printf ("\t%zd", (size_t) best_time);
+      CALL (impl, s1, s2);
     }
+  TIMING_NOW (stop);
+
+  TIMING_DIFF (cur, start, stop);
+
+  TIMING_PRINT_MEAN ((double) cur, (double) iters);
 }
 
 
@@ -116,15 +112,13 @@ do_test (size_t align1, size_t align2, size_t len1, size_t len2,
     }
   s1[len1] = '\0';
 
-  if (HP_TIMING_AVAIL)
-    printf ("Length %4zd/%zd, alignment %2zd/%2zd, %s:",
-	    len1, len2, align1, align2, fail ? "fail" : "found");
+  printf ("Length %4zd/%zd, alignment %2zd/%2zd, %s:",
+	  len1, len2, align1, align2, fail ? "fail" : "found");
 
   FOR_EACH_IMPL (impl, 0)
     do_one_test (impl, s1, s2, fail ? NULL : s1 + len1 - len2);
 
-  if (HP_TIMING_AVAIL)
-    putchar ('\n');
+  putchar ('\n');
 }
 
 static int

@@ -52,7 +52,7 @@ extern impl_t __start_impls[], __stop_impls[];
 # include <ifunc-impl-list.h>
 # define GL(x) _##x
 # define GLRO(x) _##x
-# include <hp-timing.h>
+# include "bench-timing.h"
 
 
 # define TEST_FUNCTION test_main ()
@@ -60,6 +60,8 @@ extern impl_t __start_impls[], __stop_impls[];
 # define OPT_ITERATIONS 10000
 # define OPT_RANDOM 10001
 # define OPT_SEED 10002
+
+# define INNER_LOOP_ITERS 64
 
 unsigned char *buf1, *buf2;
 int ret, do_srandom;
@@ -158,16 +160,6 @@ static impl_t *impl_array;
        if (!notall || impl->test)
 # endif /* ! (defined TEST_IFUNC && defined TEST_NAME) */
 
-# define HP_TIMING_BEST(best_time, start, end)	\
-    do									      \
-      {									      \
-	hp_timing_t tmptime;						      \
-	HP_TIMING_DIFF (tmptime, start + _dl_hp_timing_overhead, end);	      \
-	if (best_time > tmptime)					      \
-	  best_time = tmptime;						      \
-      }									      \
-    while (0)
-
 # ifndef BUF1PAGES
 #  define BUF1PAGES 1
 # endif
@@ -198,7 +190,6 @@ test_init (void)
     error (EXIT_FAILURE, errno, "mmap failed");
   if (mprotect (buf2 + page_size, page_size, PROT_NONE))
     error (EXIT_FAILURE, errno, "mprotect failed");
-  HP_TIMING_DIFF_INIT ();
   if (do_srandom)
     {
       printf ("Setting seed to 0x%x\n", seed);

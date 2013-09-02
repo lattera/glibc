@@ -40,6 +40,8 @@ simple_rawmemchr (const char *s, int c)
 static void
 do_one_test (impl_t *impl, const char *s, int c, char *exp_res)
 {
+  size_t i, iters = INNER_LOOP_ITERS;
+  timing_t start, stop, cur;
   char *res = CALL (impl, s, c);
   if (res != exp_res)
     {
@@ -49,23 +51,16 @@ do_one_test (impl_t *impl, const char *s, int c, char *exp_res)
       return;
     }
 
-  if (HP_TIMING_AVAIL)
+  TIMING_NOW (start);
+  for (i = 0; i < iters; ++i)
     {
-      hp_timing_t start __attribute ((unused));
-      hp_timing_t stop __attribute ((unused));
-      hp_timing_t best_time = ~ (hp_timing_t) 0;
-      size_t i;
-
-      for (i = 0; i < 32; ++i)
-	{
-	  HP_TIMING_NOW (start);
-	  CALL (impl, s, c);
-	  HP_TIMING_NOW (stop);
-	  HP_TIMING_BEST (best_time, start, stop);
-	}
-
-      printf ("\t%zd", (size_t) best_time);
+      CALL (impl, s, c);
     }
+  TIMING_NOW (stop);
+
+  TIMING_DIFF (cur, start, stop);
+
+  TIMING_PRINT_MEAN ((double) cur, (double) iters);
 }
 
 static void
@@ -92,14 +87,12 @@ do_test (size_t align, size_t pos, size_t len, int seek_char)
   buf1[align + len] = -seek_char;
   result = (char *) (buf1 + align + pos);
 
-  if (HP_TIMING_AVAIL)
-    printf ("Length %4zd, alignment %2zd:", pos, align);
+  printf ("Length %4zd, alignment %2zd:", pos, align);
 
   FOR_EACH_IMPL (impl, 0)
     do_one_test (impl, (char *) (buf1 + align), seek_char, result);
 
-  if (HP_TIMING_AVAIL)
-    putchar ('\n');
+  putchar ('\n');
 }
 
 int

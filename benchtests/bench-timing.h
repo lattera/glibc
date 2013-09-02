@@ -70,3 +70,6 @@ typedef uint64_t timing_t;
 	  (min) / (d_iters), 1e9 * (d_total_i) / (d_total_s))
 
 #endif
+
+#define TIMING_PRINT_MEAN(d_total_s, d_iters) \
+  printf ("\t%g", (d_total_s) / (d_iters))
