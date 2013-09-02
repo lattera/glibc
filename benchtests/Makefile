@@ -36,67 +36,67 @@ benchset := $(string-bench-all)
 
 acos-ARGLIST = double
 acos-RET = double
-LDFLAGS-bench-acos = -lm
+LDLIBS-bench-acos = -lm
 
 acosh-ARGLIST = double
 acosh-RET = double
-LDFLAGS-bench-acosh = -lm
+LDLIBS-bench-acosh = -lm
 
 asin-ARGLIST = double
 asin-RET = double
-LDFLAGS-bench-asin = -lm
+LDLIBS-bench-asin = -lm
 
 asinh-ARGLIST = double
 asinh-RET = double
-LDFLAGS-bench-asinh = -lm
+LDLIBS-bench-asinh = -lm
 
 atan-ARGLIST = double
 atan-RET = double
-LDFLAGS-bench-atan = -lm
+LDLIBS-bench-atan = -lm
 
 atanh-ARGLIST = double
 atanh-RET = double
-LDFLAGS-bench-atanh = -lm
+LDLIBS-bench-atanh = -lm
 
 cos-ARGLIST = double
 cos-RET = double
-LDFLAGS-bench-cos = -lm
+LDLIBS-bench-cos = -lm
 
 cosh-ARGLIST = double
 cosh-RET = double
-LDFLAGS-bench-cosh = -lm
+LDLIBS-bench-cosh = -lm
 
 exp-ARGLIST = double
 exp-RET = double
-LDFLAGS-bench-exp = -lm
+LDLIBS-bench-exp = -lm
 
 log-ARGLIST = double
 log-RET = double
-LDFLAGS-bench-log = -lm
+LDLIBS-bench-log = -lm
 
 pow-ARGLIST = double:double
 pow-RET = double
-LDFLAGS-bench-pow = -lm
+LDLIBS-bench-pow = -lm
 
 rint-ARGLIST = double
 rint-RET = double
-LDFLAGS-bench-rint = -lm
+LDLIBS-bench-rint = -lm
 
 sin-ARGLIST = double
 sin-RET = double
-LDFLAGS-bench-sin = -lm
+LDLIBS-bench-sin = -lm
 
 sinh-ARGLIST = double
 sinh-RET = double
-LDFLAGS-bench-sinh = -lm
+LDLIBS-bench-sinh = -lm
 
 tan-ARGLIST = double
 tan-RET = double
-LDFLAGS-bench-tan = -lm
+LDLIBS-bench-tan = -lm
 
 tanh-ARGLIST = double
 tanh-RET = double
-LDFLAGS-bench-tanh = -lm
+LDLIBS-bench-tanh = -lm
 
 
 

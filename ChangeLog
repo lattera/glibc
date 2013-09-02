@@ -1,3 +1,7 @@
+2013-09-04  Will Newton  <will.newton@linaro.org>
+
+	* benchtests/Makefile: Use LDLIBS instead of LDFLAGS.
+
 2013-09-03  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15427]
