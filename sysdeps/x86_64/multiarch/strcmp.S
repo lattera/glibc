@@ -66,6 +66,7 @@
 # define STRCMP_SSE2	__strncasecmp_l_sse2
 # define __GI_STRCMP	__GI___strncasecmp_l
 #else
+# define USE_AS_STRCMP
 # define UPDATE_STRNCMP_COUNTER
 # ifndef STRCMP
 #  define STRCMP	strcmp
@@ -88,11 +89,17 @@ ENTRY(STRCMP)
 	jne	1f
 	call	__init_cpu_features
 1:
+#ifdef USE_AS_STRCMP
+	leaq	__strcmp_sse2_unaligned(%rip), %rax
+	testl   $bit_Fast_Unaligned_Load, __cpu_features+CPUID_OFFSET+index_Fast_Unaligned_Load(%rip)
+	jnz     3f
+#else
 	testl	$bit_Slow_SSE4_2, __cpu_features+CPUID_OFFSET+index_Slow_SSE4_2(%rip)
 	jnz	2f
 	leaq	STRCMP_SSE42(%rip), %rax
 	testl	$bit_SSE4_2, __cpu_features+CPUID_OFFSET+index_SSE4_2(%rip)
 	jnz	3f
+#endif
 2:	leaq	STRCMP_SSSE3(%rip), %rax
 	testl	$bit_SSSE3, __cpu_features+CPUID_OFFSET+index_SSSE3(%rip)
 	jnz	3f

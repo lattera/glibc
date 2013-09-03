@@ -6,8 +6,10 @@ endif
 
 ifeq ($(subdir),string)
 
-sysdep_routines += strncat-c stpncpy-c strncpy-c strcmp-ssse3 strncmp-ssse3 \
-		   strend-sse4 memcmp-sse4 memcpy-ssse3 memcpy-sse2-unaligned mempcpy-ssse3 \
+sysdep_routines += strncat-c stpncpy-c strncpy-c strcmp-ssse3 \
+		   strcmp-sse2-unaligned strncmp-ssse3 \
+		   strend-sse4 memcmp-sse4 memcpy-ssse3 \
+		   memcpy-sse2-unaligned mempcpy-ssse3 \
 		   memmove-ssse3 memcpy-ssse3-back mempcpy-ssse3-back \
 		   memmove-ssse3-back strcasestr-nonascii strcasecmp_l-ssse3 \
 		   strncase_l-ssse3 strcat-ssse3 strncat-ssse3\

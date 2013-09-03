@@ -1,3 +1,12 @@
+2013-09-03   Ondřej Bílka  <neleai@seznam.cz>
+
+	* sysdeps/x86_64/multiarch/strcmp-sse2-unaligned.S: New file.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c (__libc_ifunc_impl_list):
+	Add ifunc.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines):
+	Add strcmp-sse2-unaligned
+	* sysdeps/x86_64/multiarch/strcmp.S (strcmp): Add ifunc.
+
 2013-09-02  Mike Frysinger  <vapier@gentoo.org>
 
 	* Versions.def (libc): Add GLIBC_2.19.
