@@ -34,6 +34,12 @@ static int
 do_test (void)
 {
   char *p = NULL;
+  /* gcc can overwrite the success written value by scheduling instructions
+     around sprintf.  It is allowed to do this since according to C99 the first
+     argument of sprintf is a character array and NULL is not a valid character
+     array.  Mark the return value as volatile so that it gets reloaded on
+     return.  */
+  volatile int ret = 0;
   struct sigaction sa;
 
   sa.sa_handler = sig_handler;
@@ -50,7 +56,7 @@ do_test (void)
   if (setjmp (jmpbuf))
     {
       puts ("Exiting main...");
-      return 0;
+      return ret;
     }
 
   sprintf (p, "This should segv\n");

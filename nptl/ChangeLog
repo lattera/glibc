@@ -1,3 +1,9 @@
+2013-09-03  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #15921]
+	* tst-cleanup2.c (do_test): New volatile variable RET to
+	return success.
+
 2013-08-30   Ondřej Bílka  <neleai@seznam.cz>
 
 	* sysdeps/pthread/pthread.h: Fix typos.
