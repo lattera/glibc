@@ -1,3 +1,9 @@
+2013-09-03  Chris Leonard  <cjl@sugarlabs.org>
+
+	[BZ#15887]
+	* locales/quz_PE: New locale for quz_PE.
+	* SUPPORTED: Add quz_PE.
+
 2013-08-30   Ondřej Bílka  <neleai@seznam.cz>
 
 	* tests-mbwc/dat_wcsncat.c: Fix typos.
