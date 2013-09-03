@@ -1,35 +1,45 @@
 comment_char %
-escape_char  /
+escape_char /
+% Charset: UTF-8
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% U006Breyol Language Locale for Haiti
-% Source: OLPC
-% Language: ht
-% Contact: olpchaiti.org
-% Address: 22 rue 2, Port-au-Prince
-% Email: contact@olpchaiti.org
-% Territory: HT
-% Revision: 1.0
-% Date: 2008-08-17
-% Users: general
-% Charset: ISO-8859-1
-% Authors:
-% 2008-08-17, bzg@laptop.org
+% Haitian Kreyol (Kreyòl Ayisyen) language locale for Haiti
 %
-% Distribution and use is free, also
-% for commercial purposes.
+% Prepared and contributed to glibc by Bastien Guerry <bzg@laptop.org> and
+% Chris Leonard <cjl@sugarlabs.org>
+% This locale data has been developed in collaboration between:
+% Sugar Labs,  http://www.sugarlabs.org/
+% One Laptop Per Child, http://one.laptop.org/
+% OLPC France, http://olpc-france.org
+% and members of the OLPC Haiti volunteer team
+%
+% build with: localedef -f UTF-8 -i ht_HT ht_HT
+%
+% This file is a part of GNU C Library (glibc) and contains locale data. The
+% Free Software Foundation does not claim any copyright interest in the
+% locale data contained in this file. The foregoing does not affect the
+% license of GNU C Library (glibc) as a whole. It does not exempt you from the
+% conditions of the license if your use would otherwise be governed by
+% that license.
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 LC_IDENTIFICATION
-title      "Kreyol locale for Haiti"
-source     "OLPC"
-address    ""
-contact    "olpchaiti.org"
-email      "contact@olpchaiti.org"
-tel        ""
-fax        ""
-language   "U006Breyol"
-territory  "Haiti"
-revision   "1.0"
-date       "2008-08-17"
+title        "Kreyol locale for Haiti"
+source       "Sugar Labs / OLPC"
+address      ""
+contact      "sugarlabs.org"
+email        "libc-alpha@sourceware.org"
+tel          ""
+fax          ""
+language     "Kreyol"
+territory    "Haiti"
+revision     "1.1"
+date         "2013-08-09"
 %
 category  "ht_HT:2000";LC_IDENTIFICATION
 category  "ht_HT:2000";LC_CTYPE
@@ -37,35 +47,91 @@ category  "ht_HT:2000";LC_COLLATE
 category  "ht_HT:2000";LC_TIME
 category  "ht_HT:2000";LC_NUMERIC
 category  "ht_HT:2000";LC_MONETARY
-category  "ht_HT:2000";LC_MESSAGES
 category  "ht_HT:2000";LC_PAPER
+category  "ht_HT:2000";LC_MEASUREMENT
+category  "ht_HT:2000";LC_MESSAGES
 category  "ht_HT:2000";LC_NAME
 category  "ht_HT:2000";LC_ADDRESS
 category  "ht_HT:2000";LC_TELEPHONE
-
 END LC_IDENTIFICATION
 
 LC_CTYPE
+% In Haitian Kreyol, accents are simply omitted if they cannot be represented.
 copy "i18n"
-
 translit_start
-
-% In Haiti, accents are simply omitted if they cannot be represented.
 include "translit_combining";""
-
 translit_end
-
 END LC_CTYPE
 
 LC_COLLATE
-% Copy the template from ISO/IEC 14651
 copy "iso14651_t1"
 END LC_COLLATE
 
-LC_MESSAGES
-yesexpr "<U005E><U005B><U006F><U006F><U0079><U0079><U005D><U002E><U002A>"
-noexpr  "<U005E><U005B><U006E><U006E><U005D><U002E><U002A>"
-END LC_MESSAGES
+LC_TIME
+% janvye, fevriye, mas, avril, me, jen, jiyè, out, septanm, oktòb, novanm, desanm
+mon           "<U006A><U0061><U006E><U0076><U0079><U0065>";/
+     "<U0066><U0065><U0076><U0072><U0069><U0079><U0065>";/
+     "<U006D><U0061><U0073>";/
+     "<U0061><U0076><U0072><U0069><U006C>";/
+     "<U006D><U0065>";/
+     "<U006A><U0065><U006E>";/
+     "<U006A><U0069><U0079><U00E8>";/
+     "<U006F><U0075><U0074>";/
+     "<U0073><U0065><U0070><U0074><U0061><U006E><U006D>";/
+     "<U006F><U006B><U0074><U00F2><U0062>";/
+     "<U006E><U006F><U0076><U0061><U006E><U006D>";/
+     "<U0064><U0065><U0073><U0061><U006E><U006D>"
+% jan, fev, mas, avr, me, jen, jiy, out, sep, okt, nov, des
+abmon         "<U006A><U0061><U006E>";/
+       "<U0066><U0065><U0076>";/
+       "<U006D><U0061><U0073>";/
+       "<U0061><U0076><U0072>";/
+       "<U006D><U0065>";/
+       "<U006A><U0065><U006E>";/
+       "<U006A><U0069><U0079>";/
+       "<U006F><U0075><U0074>";/
+       "<U0073><U0065><U0070>";/
+       "<U006F><U006B><U0074>";/
+       "<U006E><U006F><U0076>";/
+       "<U0064><U0065><U0073>"
+% dimanch, lendi , madi, mèkredi, jedi, vandredi, samdi
+day           "<U0064><U0069><U006D><U0061><U006E><U0063><U0068>";/
+     "<U006C><U0065><U006E><U0064><U0069><U0020>";/
+     "<U006D><U0061><U0064><U0069>";/
+     "<U006D><U00E8><U006B><U0072><U0065><U0064><U0069>";/
+     "<U006A><U0065><U0064><U0069>";/
+     "<U0076><U0061><U006E><U0064><U0072><U0065><U0064><U0069>";/
+     "<U0073><U0061><U006D><U0064><U0069>"
+% dim, len , mad, mèk, jed, van, sam
+abday         "<U0064><U0069><U006D>";/
+       "<U006C><U0065><U006E><U0020>";/
+       "<U006D><U0061><U0064>";/
+       "<U006D><U00E8><U006B>";/
+       "<U006A><U0065><U0064>";/
+       "<U0076><U0061><U006E>";/
+       "<U0073><U0061><U006D>"
+week    7;19971130;7
+first_weekday 1
+first_workday 2
+% %a %d %b %Y %T %Z
+d_t_fmt       "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
+% %d/%m/%Y
+d_fmt         "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
+% %T
+t_fmt         "<U0025><U0054>"
+am_pm         "";""
+t_fmt_ampm    ""
+% %a %b %e %H:%M:%S %Z %Y
+date_fmt      "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U005A><U0020><U0025><U0059>"
+END LC_TIME
+
+LC_NUMERIC
+% ,
+decimal_point "<U002C>"
+%
+thousands_sep "<U0020>"
+grouping      3
+END LC_NUMERIC
 
 LC_MONETARY
 int_curr_symbol           "<U0048><U0054><U0047><U0020>"
@@ -85,81 +151,27 @@ p_sign_posn               1
 n_sign_posn               1
 END LC_MONETARY
 
-LC_NUMERIC
-decimal_point             "<U002C>"
-thousands_sep             "<U0020>"
-grouping                  3
-END LC_NUMERIC
-
-LC_TIME
-abday   "<U0064><U0069><U006D><U002E>";/
-        "<U006C><U0045><U006E><U002E>";/
-        "<U006D><U0061><U0064><U002E>";/
-        "<U006D><U00E8><U006B><U002E>";/
-        "<U006A><U0045><U0064><U002E>";/
-        "<U0076><U0061><U006E><U002E>";/
-        "<U0073><U0061><U006D><U002E>"
-day     "<U0064><U0069><U006D><U0061><U006E><U0063><U0068>";/
-        "<U006C><U0045><U006E><U0064><U0069>";/
-        "<U006D><U0061><U0064><U0069>";/
-        "<U006D><U00E8><U006B><U0052><U0045><U0064><U0069>";/
-        "<U006A><U0045><U0064><U0069>";/
-        "<U0076><U0061><U006E><U0064><U0052><U0045><U0064><U0069>";/
-        "<U0073><U0061><U006D><U0064><U0069>"
-abmon   "<U006A><U0061><U006E><U0076><U002E>";/
-        "<U0066><U0045><U0076><U0052><U002E>";/
-        "<U006D><U0061><U0073>";/
-        "<U0061><U0076><U0052><U0069><U006C>";/
-        "<U006D><U0045>";/
-        "<U006A><U0045><U006E>";/
-        "<U006A><U0069><U0079><U00E8><U002E>";/
-        "<U006F><U0055><U0074>";/
-        "<U0073><U0045><U0070><U0074><U002E>";/
-        "<U006F><U006B><U0074><U002E>";/
-        "<U006E><U006F><U0076><U002E>";/
-        "<U0064><U0045><U0073><U002E>"
-mon     "<U006A><U0061><U006E><U0076><U0079><U0045>";/
-        "<U0066><U0045><U0076><U0052><U0069><U0079><U0045>";/
-        "<U006D><U0061><U0073>";/
-        "<U0061><U0076><U0052><U0069><U006C>";/
-        "<U006D><U0045>";/
-        "<U006A><U0045><U006E>";/
-        "<U006A><U0069><U0079><U00E8>";/
-        "<U006F><U0055><U0074>";/
-        "<U0073><U0045><U0070><U0074><U0061><U006E><U006D>";/
-        "<U006F><U0063><U0074><U006F><U0062><U0052><U0045>";/
-        "<U006E><U006F><U0076><U0061><U006E><U006D>";/
-        "<U0064><U0045><U0073><U0061><U006E><U006D>"
-d_t_fmt "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0079><U0020><U0025><U0074><U0020><U0025><U005A>"
-d_fmt   "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0079>"
-t_fmt   "<U0025><U0074>"
-am_pm   "";""
-t_fmt_ampm ""
-date_fmt       "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0045>/
-<U0020><U0025><U0068><U003A><U0025><U006D><U003A><U0025><U0073><U0020>/
-<U0025><U005A><U0020><U0025><U0079>"
-
-week    7;19971130;4
-first_weekday 2
-first_workday 2
-END LC_TIME
-
 LC_PAPER
+% A4
 height   297
 width    210
 END LC_PAPER
 
-LC_TELEPHONE
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
-<U006C>"
-tel_dom_fmt    "<U0025><U0061><U0020><U0025><U006C>"
-int_prefix     "<U0035><U0030><U0039>"
-int_select     "<U0030><U0030>"
-END LC_TELEPHONE
-
 LC_MEASUREMENT
+% metric
 measurement    1
 END LC_MEASUREMENT
+
+LC_MESSAGES
+% ^[wWoOyY].*
+yesexpr "<U005E><U005B><U0077><U0057><U006F><U004F><U0079><U0059><U005D><U002E><U002A>"
+% ^[nN].*
+noexpr  "<U005E><U005B><U006E><U004E><U005D><U002E><U002A>"
+% Wi
+yesstr  "<U0057><U0069>"
+% Non
+nostr   "<U004E><U006F><U006E>"
+END LC_MESSAGES
 
 LC_NAME
 name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
@@ -172,7 +184,32 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0052><U0025>/
 <U004E><U0025><U0025><U005A><U0020><U0025><U0074><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
-country_ab2 "<U0068><U0074>"
-country_ab3 "<U0068><U0074><U0069>"
-%country_num 332
+% Ayiti
+country_name "<U0041><U0079><U0069><U0074><U0069>"
+% HT
+country_post "<U0048><U0054>"
+% HT
+country_ab2  "<U0048><U0054>"
+% HTI
+country_ab3  "<U0048><U0054><U0049>"
+country_num  332
+country_isbn 99935
+%
+% Kreyòl ayisyen
+lang_name    "<U004B><U0072><U0065><U0079><U00F2><U006C><U0020><U0061><U0079><U0069><U0073><U0079><U0065><U006E>"
+% ht
+lang_ab      "<U0068><U0074>"
+% hat
+lang_term    "<U0068><U0061><U0074>"
 END LC_ADDRESS
+
+LC_TELEPHONE
+% +%c %a %l
+tel_int_fmt "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025><U006C>"
+% %a %l
+tel_dom_fmt "<U0025><U0061><U0020><U0025><U006C>"
+% 00
+int_select  "<U0030><U0030>"
+% 509
+int_prefix  "<U0035><U0030><U0039>"
+END LC_TELEPHONE

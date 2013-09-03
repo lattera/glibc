@@ -1,5 +1,8 @@
 2013-09-03  Chris Leonard  <cjl@sugarlabs.org>
 
+	[BZ#15886]
+	* locales/ht_HT: 1.1 revision of ht_HT locale.
+
 	[BZ#15887]
 	* locales/quz_PE: New locale for quz_PE.
 	* SUPPORTED: Add quz_PE.
