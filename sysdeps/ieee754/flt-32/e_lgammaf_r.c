@@ -150,8 +150,8 @@ __ieee754_lgammaf_r(float x, int *signgamp)
 	      *signgamp = -1;
 	    return one/fabsf(x);
 	  }
-	if(__builtin_expect(ix<0x1c800000, 0)) {
-	    /* |x|<2**-70, return -log(|x|) */
+	if(__builtin_expect(ix<0x30800000, 0)) {
+	    /* |x|<2**-30, return -log(|x|) */
 	    if(hx<0) {
 		*signgamp = -1;
 		return -__ieee754_logf(-x);
