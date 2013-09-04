@@ -184,6 +184,8 @@ postal_fmt  "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
 country_ab2 "<U0054><U004E>"
 country_ab3 "<U0054><U0055><U004E>"
 country_num 788
+% TN
+country_car    "<U0054><U004E>"
 
 END LC_ADDRESS
 

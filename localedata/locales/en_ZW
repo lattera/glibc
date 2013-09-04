@@ -113,4 +113,7 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 country_ab2   "<U005A><U0057>"
 country_ab3   "<U005A><U0057><U0045>"
 country_num   716
+% ZW
+country_car    "<U005A><U0057>"
+
 END LC_ADDRESS

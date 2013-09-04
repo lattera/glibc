@@ -181,6 +181,8 @@ postal_fmt  "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
 country_ab2 "<U0041><U0045>"
 country_ab3 "<U0041><U0052><U0045>"
 country_num 784
+% UAE
+country_car    "<U0055><U0041><U0045>"
 END LC_ADDRESS
 
 

@@ -225,6 +225,9 @@ postal_fmt    "<U0025><U0061><U0025><U004E><U0025><U0066><U0025><U004E>/
 country_ab2 "<U0054><U004A>"
 country_ab3 "<U0054><U004A><U004B>"
 country_num 762
+% TJ
+country_car    "<U0054><U004A>"
+
 END LC_ADDRESS
 
 LC_TELEPHONE

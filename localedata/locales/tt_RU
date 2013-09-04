@@ -315,6 +315,9 @@ END LC_NAME
 LC_ADDRESS
 % FIXME
 postal_fmt "???"
+% RUS
+country_car    "<U0052><U0055><U0053>"
+
 END LC_ADDRESS
 
 LC_TELEPHONE

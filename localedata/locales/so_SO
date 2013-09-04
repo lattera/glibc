@@ -176,7 +176,8 @@ country_post  "<U0053><U004F><U004D>"
 country_ab2   "<U0053><U004F>"
 country_ab3   "<U0053><U004F><U004D>"
 country_num   706
-% country_car   unknown
+% SO
+country_car    "<U0053><U004F>"
 % country_isbn  unknown, Need ISO 2108
 lang_name     "<U0053><U006F><U006F><U006D><U0061><U0061><U006C><U0069>"
 lang_ab       "<U0073><U006F>"

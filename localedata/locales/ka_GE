@@ -44,7 +44,8 @@ postal_fmt "<U0025><U0064><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U006
 country_ab2 "GE"
 country_ab3 "GEO"
 country_num 268
-country_car "GE"
+% GE
+country_car    "<U0047><U0045>"
 country_isbn "99928"
 % lang_name FIXME Georgian in Georgian
 lang_ab "ka"

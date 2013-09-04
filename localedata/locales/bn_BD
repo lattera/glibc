@@ -186,7 +186,8 @@ lang_name       "<U09ac><U09be><U0982><U09b2><U09be>"
 % todo
 %country_post   ""
 country_num     050
-%country_car    ""
+% BD
+country_car    "<U0042><U0044>"
 %country_isbn   ""
 %lang_term      ""
 %lang_lib       ""

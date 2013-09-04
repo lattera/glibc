@@ -291,6 +291,9 @@ postal_fmt "???"
 country_ab2 "<U0041><U005A>"
 country_ab3 "<U0041><U005A><U0045>"
 country_num 031
+% AZ
+country_car    "<U0041><U005A>"
+
 END LC_ADDRESS
 
 LC_TELEPHONE

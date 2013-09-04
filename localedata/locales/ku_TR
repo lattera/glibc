@@ -206,7 +206,8 @@ country_ab2  "TR"
 country_ab3  "TUR"
 country_num  792
 country_isbn 975
-country_car "TR"
+% TR
+country_car    "<U0054><U0052>"
 % "kurdi"
 lang_name   "<U006B><U0075><U0072><U0064><U0069>"
 lang_ab     "ku"

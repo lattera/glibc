@@ -314,7 +314,8 @@ country_ab3  "UZB"
 country_num  860
 % FIXME: ISBN number?
 %country_isbn ""
-country_car "UZ"
+% UZ
+country_car    "<U0055><U005A>"
 lang_name   "<U004F><U0027><U007A><U0062><U0065><U006B>"
 lang_ab     "uz"
 lang_term   "uzb"

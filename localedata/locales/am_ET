@@ -1444,7 +1444,8 @@ country_post  "<U0045><U0054><U0048>"
 country_ab2   "<U0045><U0054>"
 country_ab3   "<U0045><U0054><U0048>"
 country_num   231   % 210 found in at least one ISO 3166 doc
-% country_car   unknown
+% ETH
+country_car   "<U0045><U0054><U0048>"
 % country_isbn  unknown, Need ISO 2108
 lang_name     "<U12A0><U121B><U122D><U129B>"
 lang_ab       "<U0061><U006D>"

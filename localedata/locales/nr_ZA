@@ -276,9 +276,12 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 
 % ISO 3166 country number and 2 and 3 letter abreviations
 % http://www.unicode.org/onlinedat/countries.html
-% "ZA", "ZAF"
-country_num   710
+% ZA
 country_ab2   "<U005A><U0041>"
+% ZAF
 country_ab3   "<U005A><U0041><U0046>"
+country_num   710
+% ZA
+country_car    "<U005A><U0041>"
 
 END LC_ADDRESS

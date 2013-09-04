@@ -969,8 +969,8 @@ country_name  "<U0E44><U0E17><U0E22>"
 country_ab2   "<U0054><U0048>"
 country_ab3   "<U0054><U0048><U0041>"
 %country_num   "<U0037><U0036><U0034>"
-%FIXME
-%country_car   ""
+% T
+country_car    "<U0054>"
 %FIXME
 %country_isbn  ""
 lang_name     "<U0E44><U0E17><U0E22>"

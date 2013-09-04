@@ -6247,4 +6247,7 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 country_ab2 "<U004B><U0052>"
 country_ab3 "<U004B><U004F><U0052>"
 country_num 410
+% ROK
+country_car    "<U0052><U004F><U004B>"
+
 END LC_ADDRESS

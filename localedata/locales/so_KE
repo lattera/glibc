@@ -119,7 +119,8 @@ country_post  "<U004B><U0045><U004E>"
 country_ab2   "<U004B><U0045>"
 country_ab3   "<U004B><U0045><U004E>"
 country_num   404
-% country_car   unknown
+% EAK
+country_car    "<U0045><U0041><U004B>"
 % country_isbn  unknown, Need ISO 2108
 lang_name     "<U0053><U006F><U006F><U006D><U0061><U0061><U006C><U0069>"
 lang_ab       "<U0073><U006F>"

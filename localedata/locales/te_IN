@@ -221,6 +221,8 @@ country_name    "<U0C2D><U0C3E><U0C30><U0C24><U0020><U0C26><U0C47><U0C36><U0C02>
 country_ab2     "<U0049><U004E>"
 country_ab3     "<U0049><U004E><U0044>"
 country_num     356
+% IND
+country_car     "<U0049><U004E><U0044>"
 lang_name       "<U0C24><U0C46><U0C32><U0C41><U0C17><U0C41>"
 lang_ab         "te"
 lang_term       "tel"
