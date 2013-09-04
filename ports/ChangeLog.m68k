@@ -1,3 +1,7 @@
+2013-09-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/m68k/mmap64.c: New file.
+
 2013-08-21   Ondřej Bílka  <neleai@seznam.cz>
 
 	* sysdeps/m68k/m680x0/fpu/fraiseexcpt.c: Fix typos.
