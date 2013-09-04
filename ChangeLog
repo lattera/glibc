@@ -1,3 +1,13 @@
+2013-09-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/conformtest.pl (newtoken): Treat tokens not allowed as
+	errors.
+	(top level): Treat second token from macro or constant entries for
+	allowed headers as allowed.
+	* include/complex.h: Condition internal declarations on
+	[!_ISOMAC].
+	* include/fenv.h: Condition include of <stdbool.h> and internal
+	declarations on [!_ISOMAC].
 
 2013-09-04  Chris Leonard  <cjl@sugarlabs,.org>
 

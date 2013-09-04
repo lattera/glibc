@@ -236,6 +236,8 @@ sub newtoken {
   for ($idx = 0; $idx <= $#allow; ++$idx) {
     return if (poorfnmatch ($allow[$idx], $token));
   }
+
+  $errors{$token} = 1;
 }
 
 
@@ -786,7 +788,7 @@ while ($#headers >= 0) {
       if (/^element *({([^}]*)}|([^ ]*)) *({([^}]*)}|([^ ]*)) *([A-Za-z0-9_]*) *(.*)/) {
 	push @allow, $7;
       } elsif (/^(macro|constant|macro-constant|macro-int-constant) +([a-zA-Z0-9_]*) *(?:{([^}]*)} *)?(?:([>=<!]+) ([A-Za-z0-9_-]*))?/) {
-	push @allow, $1;
+	push @allow, $2;
       } elsif (/^(type|tag) *({([^}]*)|([a-zA-Z0-9_]*))/) {
 	my($type) = "$3$4";
 
