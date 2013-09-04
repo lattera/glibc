@@ -63,6 +63,6 @@ geteuids (int n, uid_t *uidset)
 
 /* XXX Remove this alias when we bump the libc soname.  */
 
-#if defined SHARED && DO_VERSIONING
+#ifdef SHARED
 weak_alias (geteuids, __getuids)
 #endif

@@ -27,7 +27,7 @@ extra-libs-others := libdl
 
 include ../Makeconfig
 
-ifeq ($(versioning),yes)
+ifeq ($(build-shared),yes)
 libdl-routines	+= dlopenold
 libdl-shared-only-routines := dlopenold dlfcn
 endif

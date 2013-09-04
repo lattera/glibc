@@ -29,13 +29,6 @@
    by _dl_sysdep_start via DL_PLATFORM_INIT.  */
 extern int __cache_line_size attribute_hidden;
 
-/* Because ld.so is now versioned, these functions can be in their own file;
-   no relocations need to be done to call them.
-   Of course, if ld.so is not versioned...  */
-#if defined SHARED && !(DO_VERSIONING - 0)
-#error This will not work with versioning turned off, sorry.
-#endif
-
 
 /* Stuff for the PLT.  */
 #define PLT_INITIAL_ENTRY_WORDS 18

@@ -93,7 +93,7 @@ before-compile := $(filter $(common-objpfx)mach% $(common-objpfx)hurd%,\
 			       $(before-compile))
 
 # Even before that, we need abi-versions.h which is generated right here.
-ifeq ($(versioning),yes)
+ifeq ($(build-shared),yes)
 ifndef avoid-generated
 before-compile := $(common-objpfx)abi-versions.h $(before-compile)
 $(common-objpfx)abi-versions.h: $(..)scripts/abi-versions.awk \
@@ -106,7 +106,7 @@ $(common-objpfx)%.latest: $(common-objpfx)abi-versions.h
 	    $(common-objpfx)abi-versions.h > $@T
 	mv -f $@T $@
 endif # avoid-generated
-endif # $(versioning) = yes
+endif # $(build-shared) = yes
 
 ifndef avoid-generated
 before-compile := $(common-objpfx)libc-abis.h $(before-compile)
@@ -283,7 +283,7 @@ endif
 
 # Generate version maps, but wait until sysdep-subdirs is known
 ifeq ($(sysd-sorted-done),t)
-ifeq ($(versioning),yes)
+ifeq ($(build-shared),yes)
 -include $(common-objpfx)sysd-versions
 $(addprefix $(common-objpfx),$(version-maps)): $(common-objpfx)sysd-versions
 common-generated += $(version-maps)
@@ -324,7 +324,7 @@ $(common-objpfx)sysd-versions: $(common-objpfx)Versions.all \
 	) > $@T
 	mv -f $@T $@
 endif # avoid-generated
-endif # $(versioning) = yes
+endif # $(build-shared) = yes
 endif # sysd-sorted-done
 
 # Generate .dT files as we compile.
@@ -400,9 +400,9 @@ elide-routines.og += $(shared-only-routines)
 
 ifeq (yes,$(build-shared))
 
-# Reference map file only when versioning is selected and a map file name
+# Reference map file only when shared libraries are built and a map file name
 # is given.
-ifeq ($(versioning),yes)
+ifeq ($(build-shared),yes)
 map-file = $(firstword $($(@F:.so=-map)) \
 		       $(addprefix $(common-objpfx), \
 				   $(filter $(@F:.so=.map),$(version-maps))))
@@ -575,7 +575,7 @@ $(common-objpfx)libc.so: $(elfobjdir)/soinit.os \
 			 $(elfobjdir)/interp.os $(elfobjdir)/ld.so \
 			 $(shlib-lds)
 	$(build-shlib)
-ifeq ($(versioning),yes)
+ifeq ($(build-shared),yes)
 $(common-objpfx)libc.so: $(common-objpfx)libc.map
 endif
 common-generated += libc.so libc_pic.os
@@ -1132,7 +1132,7 @@ endif
 CPPFLAGS-nonlib = -DNOT_IN_libc=1
 
 
-ifeq ($(versioning),yes)
+ifeq ($(build-shared),yes)
 # Generate normalized lists of symbols, versions, and data sizes.
 # This is handy for checking against existing library binaries.
 

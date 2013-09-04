@@ -138,11 +138,6 @@ linker.
 Don't build libraries with profiling information.  You may want to use
 this option if you don't plan to do profiling.
 
-@item --disable-versioning
-Don't compile the shared libraries with symbol version information.
-Doing this will make the resulting library incompatible with old
-binaries, so it's not recommended.
-
 @item --enable-static-nss
 Compile static versions of the NSS (Name Service Switch) libraries.
 This is not recommended because it defeats the purpose of NSS; a program

@@ -1,3 +1,9 @@
+2013-09-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/cancellation.S
+	[SHARED && DO_VERSIONING && !NO_HIDDEN]: Change conditional to
+	[SHARED && !NO_HIDDEN].
+
 2013-09-03  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #15921]

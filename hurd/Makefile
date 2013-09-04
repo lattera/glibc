@@ -71,7 +71,7 @@ inlines = $(inline-headers:%.h=%-inlines)
 routines += hurdmalloc
 
 # Binary compatibility for libc.so.0.2[GLIBC_2.0].
-ifeq ($(versioning),yes)
+ifeq ($(build-shared),yes)
 routines += compat-20
 endif
 

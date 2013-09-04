@@ -1,3 +1,55 @@
+2013-09-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.in (--enable-versioning): Remove configure option.
+	(libc_cv_asm_symver_directive): Remove configure test.
+	(libc_cv_ld_version_script_option): Likewise.
+	(VERSIONING): Remove variable and AC_SUBST.
+	(DO_VERSIONING): Remove AC_DEFINE.
+	* configure: Regenerated.
+	* config.h.in (DO_VERSIONING): Remove macro.
+	* Makerules [$(versioning) = yes]: Change conditionals to
+	[$(build-shared) = yes].
+	* config.make.in (versioning): Remove variable.
+	* dlfcn/Makefile [$(versioning) = yes]: Change conditionals to
+	[$(build-shared) = yes].
+	* dlfcn/modstatic2.c (test) [DO_VERSIONING]: Remove conditional.
+	* dlfcn/tststatic2.c (main) [DO_VERSIONING]: Likewise.
+	* elf/Makefile [$(versioning) = yes]: Change conditionals to
+	[$(build-shared) = yes].
+	* extra-lib.mk [$(versioning) = yes]: Likewise.
+	* hurd/Makefile [$(versioning) = yes]: Likewise.
+	* hurd/geteuids.c [SHARED && DO_VERSIONING]: Change conditional to
+	[SHARED].
+	* include/libc-symbols.h [DO_VERSIONING]: Change conditional to
+	[SHARED].
+	[SHARED && DO_VERSIONING && !NO_HIDDEN]: Change conditional to
+	[SHARED && !NO_HIDDEN].
+	* include/shlib-compat.h [DO_VERSIONING]: Change conditional to
+	[SHARED].
+	[SHARED && DO_VERSIONING]: Likewise..
+	* libio/Makefile [$(versioning) = yes]: Change conditionals to
+	[$(build-shared) = yes].
+	* manual/install.texi (--disable-versioning): Remove
+	documentation.
+	* INSTALL: Regenerated.
+	* resolv/res_libc.c [SHARED && DO_VERSIONING]: Change conditional
+	to [SHARED].
+	* sunrpc/Makefile [$(versioning) = yes]: Change conditional to
+	[$(build-shared) = yes].
+	* sysdeps/gnu/Makefile [$(versioning) = yes]: Likewise.
+	* sysdeps/i386/i686/multiarch/strstr-c.c
+	[SHARED && DO_VERSIONING && !NO_HIDDEN]: Change conditional to
+	[SHARED && !NO_HIDDEN].
+	* sysdeps/ieee754/ldbl-opt/math_ldbl_opt.h
+	[SHARED && DO_VERSIONING]: Change conditional to [SHARED].
+	* sysdeps/powerpc/powerpc32/dl-machine.c
+	[SHARED && !(DO_VERSIONING - 0)]: Remove conditional error.
+	* sysdeps/powerpc/powerpc32/sysdep.h
+	[SHARED && DO_VERSIONING && PIC && !NO_HIDDEN]: Change conditional
+	to [SHARED && PIC && !NO_HIDDEN].
+	* sysdeps/wordsize-32/divdi3.c [SHARED && DO_VERSIONING]: Change
+	conditional to [SHARED].
+
 2013-09-04   Will Newton  <will.newton@linaro.org>
 
 	* benchtests/bench-timing.h (TIMING_PRINT_MEAN): New macro.
