@@ -1,3 +1,7 @@
+2013-09-06   Will Newton  <will.newton@linaro.org>
+
+	* benchtests/Makefile (string-bench): Add memcpy.
+
 2013-09-05  Carlos O'Donell  <carlos@redhat.com>
 	    Cong Wang  <amwang@redhat.com>
 
