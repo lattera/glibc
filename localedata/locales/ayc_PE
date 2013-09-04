@@ -24,14 +24,14 @@ escape_char /
 % todos los interesados ​​en mejorar la representación de todas las lenguas andinas.
 %
 % build with: localedef -f UTF-8 -i ayc_PE ayc_PE
-% 
+%
 % This file is a part of GNU C Library (glibc) and contains locale data. The
 % Free Software Foundation does not claim any copyright interest in the
 % locale data contained in this file. The foregoing does not affect the
 % license of GNU C Library (glibc) as a whole. It does not exempt you from the
 % conditions of the license if your use would otherwise be governed by
 % that license.
-% 
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 LC_IDENTIFICATION
@@ -190,7 +190,7 @@ LC_NAME
 copy "es_PE"
 END LC_NAME
 
-% TO DO - adjust for Aymara specific lang-info for Peru 
+% TO DO - adjust for Aymara specific lang-info for Peru
 LC_ADDRESS
 copy "es_PE"
 END LC_ADDRESS
