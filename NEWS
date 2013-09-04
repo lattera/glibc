@@ -17,6 +17,9 @@ Version 2.19
   character.  (Bugzilla #14699).
 
 * New locales: quz_PE.
+
+* Add country_car field to LC_ADDRESS, many locales.
+
 
 Version 2.18
 
