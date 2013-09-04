@@ -1,3 +1,9 @@
+
+2013-09-04  Chris Leonard  <cjl@sugarlabs,.org>
+
+     [BZ #15923]
+	* locale/iso-4217.def: Update iso-1427.def and related occurrences.
+
 2013-09-04   Will Newton  <will.newton@linaro.org>
 
 	* benchtests/bench-timing.h (TIMING_PRINT_MEAN): New macro.

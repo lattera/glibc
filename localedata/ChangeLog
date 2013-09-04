@@ -1,3 +1,11 @@
+2013-09-04  Chris Leonard  <cjl@sugarlabs,.org>
+
+     [BZ #15923]
+
+	* locales/ar_SD: Update iso-1427.def and related occurrences.
+	* locales/az_AZ: Likewise.
+	* locales/dv_MV: Likewise.
+	* locales/es_VE: Likewise.
 
 2013-09-04  Jakub Bogusz  <qboosh@pld-linux.org>
 

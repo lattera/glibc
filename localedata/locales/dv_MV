@@ -55,7 +55,7 @@ copy "en_DK"
 END LC_COLLATE
 
 LC_MONETARY
-% it is meant to be MVR, could you see if it is correct please
+% MVR
 int_curr_symbol "<U004D><U0056><U0052><U0020>"
 currency_symbol "<U0783><U002E>"
 mon_decimal_point "<U002E>"

@@ -20,6 +20,8 @@ Version 2.19
 
 * Add country_car field to LC_ADDRESS, many locales.
 
+* Update iso-1427.def and related occurrences.
+
 
 Version 2.18
 
