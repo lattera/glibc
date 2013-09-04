@@ -432,6 +432,11 @@
 	[!_SOFT_FLOAT && !__NO_FPRS__] (_FPU_SETCW): Likewise.  Use
 	parentheses around reference to macro parameter.
 
+2013-09-04  Eric Blake  <eblake@redhat.com>
+
+	* posix/glob.c (next_brace_sub, prefix_array, collated_compare):
+	Use __THROWNL rather than __THROW on static functions.
+
 2013-09-13  Richard Sandiford  <richard@codesourcery.com>
 
 	* locale/programs/ld-ctype.c (find_idx): Use uint32_t in
