@@ -67,7 +67,6 @@ output-format = @libc_cv_output_format@
 
 static-libgcc = @libc_cv_gcc_static_libgcc@
 
-versioning = @VERSIONING@
 oldest-abi = @oldest_abi@
 exceptions = @exceptions@
 multi-arch = @multi_arch@

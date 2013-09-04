@@ -117,13 +117,11 @@ test (FILE *out, int a)
       exit (1);
     }
 
-#ifdef DO_VERSIONING
   if (dlvsym (handle2, "_dlfcn_hook", "GLIBC_PRIVATE") == NULL)
     {
       fprintf (out, "dlvsym: %s\n", dlerror ());
       exit (1);
     }
-#endif
 
   void *(*dlsymfn) (void *, const char *);
   dlsymfn = dlsym (handle2, "dlsym");

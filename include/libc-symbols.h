@@ -322,7 +322,7 @@ for linking")
    past the last element in SET.  */
 #define symbol_set_end_p(set, ptr) ((ptr) >= (void *const *) &__stop_##set)
 
-#if DO_VERSIONING
+#ifdef SHARED
 # define symbol_version(real, name, version) \
      _symbol_version(real, name, version)
 # define default_symbol_version(real, name, version) \
@@ -466,7 +466,7 @@ for linking")
    versioned_symbol (libc, __real_foo, foo, GLIBC_2_1);
    libc_hidden_ver (__real_foo, foo)  */
 
-#if defined SHARED && defined DO_VERSIONING && !defined NO_HIDDEN
+#if defined SHARED && !defined NO_HIDDEN
 # ifndef __ASSEMBLER__
 #  define __hidden_proto_hiddenattr(attrs...) \
   __attribute__ ((visibility ("hidden"), ##attrs))

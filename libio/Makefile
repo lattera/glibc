@@ -70,7 +70,7 @@ test-srcs = test-freopen
 
 all: # Make this the default target; it will be defined in Rules.
 
-ifeq ($(versioning),yes)
+ifeq ($(build-shared),yes)
 routines += oldiofopen oldiofdopen oldiofclose oldiopopen oldpclose \
 	    oldtmpfile oldiofgetpos oldiofgetpos64 oldiofsetpos	    \
 	    oldiofsetpos64
@@ -165,7 +165,7 @@ generated = tst-fopenloc.mtrace tst-fopenloc.check
 
 aux	:= fileops genops stdfiles stdio strops
 
-ifeq ($(versioning),yes)
+ifeq ($(build-shared),yes)
 aux	+= oldfileops oldstdfiles
 endif
 

@@ -59,7 +59,7 @@ before-compile  = $(objpfx)trusted-dirs.h
 generated	:= trusted-dirs.h trusted-dirs.st for-renamed/renamed.so
 generated-dirs	:= for-renamed
 
-ifeq ($(versioning),yes)
+ifeq ($(build-shared),yes)
 ld-map		= $(common-objpfx)ld.map
 endif
 

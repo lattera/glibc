@@ -613,7 +613,6 @@ libc_cv_z_combreloc
 ASFLAGS_config
 libc_cv_Bgroup
 libc_cv_cc_with_libunwind
-VERSIONING
 BISON
 INSTALL_INFO
 PERL
@@ -739,7 +738,6 @@ with_default_link
 enable_sanity_checks
 enable_shared
 enable_profile
-enable_versioning
 enable_oldest_abi
 enable_hardcoded_path_in_tests
 enable_stackguard_randomization
@@ -1392,8 +1390,6 @@ Optional Features:
                           in special situations) [default=yes]
   --enable-shared         build shared library [default=yes if GNU ld]
   --enable-profile        build profiled library [default=no]
-  --disable-versioning    do not include versioning information in the library
-                          objects [default=yes if supported]
   --enable-oldest-abi=ABI configure the oldest ABI supported [e.g. 2.2]
                           [default=glibc default]
   --enable-hardcoded-path-in-tests
@@ -3430,13 +3426,6 @@ if test "${enable_profile+set}" = set; then :
   enableval=$enable_profile; profile=$enableval
 else
   profile=no
-fi
-
-# Check whether --enable-versioning was given.
-if test "${enable_versioning+set}" = set; then :
-  enableval=$enable_versioning; enable_versioning=$enableval
-else
-  enable_versioning=yes
 fi
 
 
@@ -5631,90 +5620,6 @@ if test $libc_cv_asm_unique_object = yes; then
 
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for .symver assembler directive" >&5
-$as_echo_n "checking for .symver assembler directive... " >&6; }
-if ${libc_cv_asm_symver_directive+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat > conftest.s <<EOF
-${libc_cv_dot_text}
-_sym:
-.symver _sym,sym@VERS
-EOF
-if ${CC-cc} -c $ASFLAGS conftest.s 1>&5 2>&5; then
-  libc_cv_asm_symver_directive=yes
-else
-  libc_cv_asm_symver_directive=no
-fi
-rm -f conftest*
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_asm_symver_directive" >&5
-$as_echo "$libc_cv_asm_symver_directive" >&6; }
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ld --version-script" >&5
-$as_echo_n "checking for ld --version-script... " >&6; }
-if ${libc_cv_ld_version_script_option+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test $libc_cv_asm_symver_directive = yes; then
-  cat > conftest.s <<EOF
-${libc_cv_dot_text}
-_sym:
-.symver _sym,sym@VERS
-EOF
-  cat > conftest.map <<EOF
-VERS_1 {
-	global: sym;
-};
-
-VERS_2 {
-	global: sym;
-} VERS_1;
-EOF
-  if ${CC-cc} -c $ASFLAGS conftest.s 1>&5 2>&5; then
-    if { ac_try='${CC-cc} $CFLAGS $LDFLAGS -shared
-				-o conftest.so conftest.o
-				-nostartfiles -nostdlib
-				-Wl,--version-script,conftest.map
-		       1>&5'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; };
-    then
-      libc_cv_ld_version_script_option=yes
-    else
-      libc_cv_ld_version_script_option=no
-    fi
-  else
-    libc_cv_ld_version_script_option=no
-  fi
-else
-  libc_cv_ld_version_script_option=no
-fi
-rm -f conftest*
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ld_version_script_option" >&5
-$as_echo "$libc_cv_ld_version_script_option" >&6; }
-if test $shared != no &&
-   test $libc_cv_asm_symver_directive = yes &&
-   test $libc_cv_ld_version_script_option = yes &&
-   test $enable_versioning = yes; then
-  VERSIONING=yes
-  $as_echo "#define DO_VERSIONING 1" >>confdefs.h
-
-else
-  VERSIONING=no
-fi
-
-
-if test $shared != no && test $VERSIONING = no; then
-  echo "\
-*** WARNING: You should not compile GNU libc without versioning. Not using
-*** versioning will introduce incompatibilities so that old binaries
-*** will not run anymore.
-*** For versioning you need recent binutils (binutils-2.8.1.0.23 or newer)."
-fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for .previous assembler directive" >&5
 $as_echo_n "checking for .previous assembler directive... " >&6; }
 if ${libc_cv_asm_previous_directive+:} false; then :

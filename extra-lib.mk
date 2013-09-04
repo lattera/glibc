@@ -90,7 +90,7 @@ $(objpfx)$(patsubst %,$(libtype.oS),$(lib:lib%=%)): \
 	$(build-extra-lib)
 endif
 
-ifeq ($(versioning),yes)
+ifeq ($(build-shared),yes)
 # Add the version script to the dependencies of the shared library.
 $(objpfx)$(lib).so: $(firstword $($(lib)-map) \
 				$(addprefix $(common-objpfx), \

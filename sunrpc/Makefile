@@ -64,7 +64,7 @@ ifeq ($(link-obsolete-rpc),yes)
 headers += $(headers-in-tirpc) $(headers-not-in-tirpc)
 endif
 
-ifeq ($(versioning),yes)
+ifeq ($(build-shared),yes)
 need-export-routines := auth_des auth_unix clnt_gen clnt_perr clnt_tcp \
 			clnt_udp get_myaddr key_call netname pm_getport \
 			rpc_thread svc svc_tcp svc_udp xcrypt xdr_array xdr \

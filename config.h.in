@@ -57,9 +57,6 @@
    directive.  */
 #undef	HAVE_ASM_POPSECTION_DIRECTIVE
 
-/* Define if versioning of the library is wanted.  */
-#undef	DO_VERSIONING
-
 /* Defined to the oldest ABI we support, like 2.1.  */
 #undef GLIBC_OLDEST_ABI
 
