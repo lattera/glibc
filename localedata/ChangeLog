@@ -1,5 +1,7 @@
 2013-09-03  Chris Leonard  <cjl@sugarlabs.org>
 
+	* locales/ayc_PE: Add FSF statement to ayc_PE locale.
+
 	[BZ#15886]
 	* locales/ht_HT: 1.1 revision of ht_HT locale.
 
