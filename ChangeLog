@@ -1,3 +1,8 @@
+2013-09-05  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/tst-fanotify.c (do_test): Skip test when
+	fanotify_init returns EPERM.
+
 2013-09-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/conformtest.pl (newtoken): Treat tokens not allowed as
