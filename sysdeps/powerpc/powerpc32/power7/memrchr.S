@@ -101,8 +101,8 @@ L(loop):
 	/* We're here because the counter reached 0, and that means we
 	   didn't have any matches for BYTE in the whole range.  Just return
 	   the original range.  */
-	addi	r9,r8,4
-	cmplw	cr6,r9,r7
+	addi	r8,r8,4
+	cmplw	cr6,r8,r7
 	bgt	cr6,L(loop_small)
 	b	L(null)
 
