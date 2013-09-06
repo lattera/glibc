@@ -69,6 +69,11 @@ typedef unsigned long rpcport_t;
 #include <sys/types.h>
 #endif
 
+#if defined __APPLE_CC__ || defined __FreeBSD__
+# define __u_char_defined
+# define __daddr_t_defined
+#endif
+
 #ifndef __u_char_defined
 typedef __u_char u_char;
 typedef __u_short u_short;

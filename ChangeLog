@@ -1,3 +1,9 @@
+2013-09-11  Jia Liu  <proljc@gmail.com>
+
+	* sunrpc/rpc/types.h [__APPLE_CC__]: Define __u_char_defined and
+	__daddr_t_defined.
+	[__FreeBSD__]: Likewise.
+
 2013-09-11  Ondřej Bílka  <neleai@seznam.cz>
 
 	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
