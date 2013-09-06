@@ -121,40 +121,13 @@ paper_output (struct localedef_t *locale, const struct charmap_t *charmap,
 	      const char *output_path)
 {
   struct locale_paper_t *paper = locale->categories[LC_PAPER].paper;
-  struct iovec iov[2 + _NL_ITEM_INDEX (_NL_NUM_LC_PAPER)];
-  struct locale_file data;
-  uint32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_PAPER)];
-  size_t cnt = 0;
+  struct locale_file file;
 
-  data.magic = LIMAGIC (LC_PAPER);
-  data.n = _NL_ITEM_INDEX (_NL_NUM_LC_PAPER);
-  iov[cnt].iov_base = (void *) &data;
-  iov[cnt].iov_len = sizeof (data);
-  ++cnt;
-
-  iov[cnt].iov_base = (void *) idx;
-  iov[cnt].iov_len = sizeof (idx);
-  ++cnt;
-
-  idx[cnt - 2] = iov[cnt - 2].iov_len + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = &paper->height;
-  iov[cnt].iov_len = 4;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = &paper->width;
-  iov[cnt].iov_len = 4;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) charmap->code_set_name;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  assert (cnt == 2 + _NL_ITEM_INDEX (_NL_NUM_LC_PAPER));
-
-  write_locale_data (output_path, LC_PAPER, "LC_PAPER",
-		     2 + _NL_ITEM_INDEX (_NL_NUM_LC_PAPER), iov);
+  init_locale_data (&file, _NL_ITEM_INDEX (_NL_NUM_LC_PAPER));
+  add_locale_uint32 (&file, paper->height);
+  add_locale_uint32 (&file, paper->width);
+  add_locale_string (&file, charmap->code_set_name);
+  write_locale_data (output_path, LC_PAPER, "LC_PAPER", &file);
 }
 
 

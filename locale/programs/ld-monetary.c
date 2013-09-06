@@ -364,262 +364,57 @@ monetary_output (struct localedef_t *locale, const struct charmap_t *charmap,
 {
   struct locale_monetary_t *monetary
     = locale->categories[LC_MONETARY].monetary;
-  struct iovec iov[3 + _NL_ITEM_INDEX (_NL_NUM_LC_MONETARY)];
-  struct locale_file data;
-  uint32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_MONETARY)];
-  size_t cnt = 0;
+  struct locale_file file;
 
-  data.magic = LIMAGIC (LC_MONETARY);
-  data.n = _NL_ITEM_INDEX (_NL_NUM_LC_MONETARY);
-  iov[cnt].iov_base = (void *) &data;
-  iov[cnt].iov_len = sizeof (data);
-  ++cnt;
-
-  iov[cnt].iov_base = (void *) idx;
-  iov[cnt].iov_len = sizeof (idx);
-  ++cnt;
-
-  idx[cnt - 2] = iov[0].iov_len + iov[1].iov_len;
-  iov[cnt].iov_base = (void *) monetary->int_curr_symbol;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) monetary->currency_symbol;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) monetary->mon_decimal_point;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) monetary->mon_thousands_sep;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = monetary->mon_grouping;
-  iov[cnt].iov_len = monetary->mon_grouping_len;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) monetary->positive_sign;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) monetary->negative_sign;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->int_frac_digits;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->frac_digits;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->p_cs_precedes;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->p_sep_by_space;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->n_cs_precedes;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->n_sep_by_space;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->p_sign_posn;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->n_sign_posn;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) monetary->crncystr;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->int_p_cs_precedes;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->int_p_sep_by_space;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->int_n_cs_precedes;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->int_n_sep_by_space;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->int_p_sign_posn;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->int_n_sign_posn;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) monetary->duo_int_curr_symbol;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) monetary->duo_currency_symbol;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->duo_int_frac_digits;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->duo_frac_digits;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->duo_p_cs_precedes;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->duo_p_sep_by_space;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->duo_n_cs_precedes;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->duo_n_sep_by_space;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->duo_int_p_cs_precedes;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->duo_int_p_sep_by_space;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->duo_int_n_cs_precedes;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->duo_int_n_sep_by_space;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->duo_p_sign_posn;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->duo_n_sign_posn;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->duo_int_p_sign_posn;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->duo_int_n_sign_posn;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-
-  /* Align following data */
-  iov[cnt].iov_base = (void *) "\0\0";
-  iov[cnt].iov_len = ((idx[cnt - 2] + 3) & ~3) - idx[cnt - 2];
-  idx[cnt - 2] = (idx[cnt - 2] + 3) & ~3;
-  ++cnt;
-
-  iov[cnt].iov_base = (void *) &monetary->uno_valid_from;
-  iov[cnt].iov_len = sizeof(uint32_t);
-  ++cnt;
-
-  idx[cnt - 3] = idx[cnt - 4] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->uno_valid_to;
-  iov[cnt].iov_len = sizeof(uint32_t);
-  ++cnt;
-
-  idx[cnt - 3] = idx[cnt - 4] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->duo_valid_from;
-  iov[cnt].iov_len = sizeof(uint32_t);
-  ++cnt;
-
-  idx[cnt - 3] = idx[cnt - 4] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->duo_valid_to;
-  iov[cnt].iov_len = sizeof(uint32_t);
-  ++cnt;
-
-  idx[cnt - 3] = idx[cnt - 4] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) monetary->conversion_rate;
-  iov[cnt].iov_len = 2 * sizeof(uint32_t);
-  ++cnt;
-
-  idx[cnt - 3] = idx[cnt - 4] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->mon_decimal_point_wc;
-  iov[cnt].iov_len = sizeof (uint32_t);
-  ++cnt;
-
-  idx[cnt - 3] = idx[cnt - 4] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->mon_thousands_sep_wc;
-  iov[cnt].iov_len = sizeof (uint32_t);
-  ++cnt;
-
-  idx[cnt - 3] = idx[cnt - 4] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) charmap->code_set_name;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  assert (cnt == 3 + _NL_ITEM_INDEX (_NL_NUM_LC_MONETARY));
-
-  write_locale_data (output_path, LC_MONETARY, "LC_MONETARY",
-		     3 + _NL_ITEM_INDEX (_NL_NUM_LC_MONETARY), iov);
+  init_locale_data (&file, _NL_ITEM_INDEX (_NL_NUM_LC_MONETARY));
+  add_locale_string (&file, monetary->int_curr_symbol);
+  add_locale_string (&file, monetary->currency_symbol);
+  add_locale_string (&file, monetary->mon_decimal_point);
+  add_locale_string (&file, monetary->mon_thousands_sep);
+  add_locale_raw_data (&file, monetary->mon_grouping,
+		       monetary->mon_grouping_len);
+  add_locale_string (&file, monetary->positive_sign);
+  add_locale_string (&file, monetary->negative_sign);
+  add_locale_char (&file, monetary->int_frac_digits);
+  add_locale_char (&file, monetary->frac_digits);
+  add_locale_char (&file, monetary->p_cs_precedes);
+  add_locale_char (&file, monetary->p_sep_by_space);
+  add_locale_char (&file, monetary->n_cs_precedes);
+  add_locale_char (&file, monetary->n_sep_by_space);
+  add_locale_char (&file, monetary->p_sign_posn);
+  add_locale_char (&file, monetary->n_sign_posn);
+  add_locale_string (&file, monetary->crncystr);
+  add_locale_char (&file, monetary->int_p_cs_precedes);
+  add_locale_char (&file, monetary->int_p_sep_by_space);
+  add_locale_char (&file, monetary->int_n_cs_precedes);
+  add_locale_char (&file, monetary->int_n_sep_by_space);
+  add_locale_char (&file, monetary->int_p_sign_posn);
+  add_locale_char (&file, monetary->int_n_sign_posn);
+  add_locale_string (&file, monetary->duo_int_curr_symbol);
+  add_locale_string (&file, monetary->duo_currency_symbol);
+  add_locale_char (&file, monetary->duo_int_frac_digits);
+  add_locale_char (&file, monetary->duo_frac_digits);
+  add_locale_char (&file, monetary->duo_p_cs_precedes);
+  add_locale_char (&file, monetary->duo_p_sep_by_space);
+  add_locale_char (&file, monetary->duo_n_cs_precedes);
+  add_locale_char (&file, monetary->duo_n_sep_by_space);
+  add_locale_char (&file, monetary->duo_int_p_cs_precedes);
+  add_locale_char (&file, monetary->duo_int_p_sep_by_space);
+  add_locale_char (&file, monetary->duo_int_n_cs_precedes);
+  add_locale_char (&file, monetary->duo_int_n_sep_by_space);
+  add_locale_char (&file, monetary->duo_p_sign_posn);
+  add_locale_char (&file, monetary->duo_n_sign_posn);
+  add_locale_char (&file, monetary->duo_int_p_sign_posn);
+  add_locale_char (&file, monetary->duo_int_n_sign_posn);
+  add_locale_uint32 (&file, monetary->uno_valid_from);
+  add_locale_uint32 (&file, monetary->uno_valid_to);
+  add_locale_uint32 (&file, monetary->duo_valid_from);
+  add_locale_uint32 (&file, monetary->duo_valid_to);
+  add_locale_uint32_array (&file, monetary->conversion_rate, 2);
+  add_locale_uint32 (&file, monetary->mon_decimal_point_wc);
+  add_locale_uint32 (&file, monetary->mon_thousands_sep_wc);
+  add_locale_string (&file, charmap->code_set_name);
+  write_locale_data (output_path, LC_MONETARY, "LC_MONETARY", &file);
 }
 
 

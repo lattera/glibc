@@ -122,35 +122,12 @@ measurement_output (struct localedef_t *locale,
 {
   struct locale_measurement_t *measurement =
     locale->categories[LC_MEASUREMENT].measurement;
-  struct iovec iov[2 + _NL_ITEM_INDEX (_NL_NUM_LC_MEASUREMENT)];
-  struct locale_file data;
-  uint32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_MEASUREMENT)];
-  size_t cnt = 0;
+  struct locale_file file;
 
-  data.magic = LIMAGIC (LC_MEASUREMENT);
-  data.n = _NL_ITEM_INDEX (_NL_NUM_LC_MEASUREMENT);
-  iov[cnt].iov_base = (void *) &data;
-  iov[cnt].iov_len = sizeof (data);
-  ++cnt;
-
-  iov[cnt].iov_base = (void *) idx;
-  iov[cnt].iov_len = sizeof (idx);
-  ++cnt;
-
-  idx[cnt - 2] = iov[0].iov_len + iov[1].iov_len;
-  iov[cnt].iov_base = &measurement->measurement;
-  iov[cnt].iov_len = 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) charmap->code_set_name;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  assert (cnt == 2 + _NL_ITEM_INDEX (_NL_NUM_LC_MEASUREMENT));
-
-  write_locale_data (output_path, LC_MEASUREMENT, "LC_MEASUREMENT",
-		     2 + _NL_ITEM_INDEX (_NL_NUM_LC_MEASUREMENT), iov);
+  init_locale_data (&file, _NL_ITEM_INDEX (_NL_NUM_LC_MEASUREMENT));
+  add_locale_char (&file, measurement->measurement);
+  add_locale_string (&file, charmap->code_set_name);
+  write_locale_data (output_path, LC_MEASUREMENT, "LC_MEASUREMENT", &file);
 }
 
 

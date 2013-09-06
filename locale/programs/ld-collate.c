@@ -165,7 +165,7 @@ struct symbol_t
 #define ELEMENT struct element_t *
 #define DEFAULT NULL
 #define ITERATE
-#define NO_FINALIZE
+#define NO_ADD_LOCALE
 #include "3level.h"
 
 /* Sparse table of int32_t.  */
@@ -1813,8 +1813,6 @@ symbol `%s' has the same encoding as"), (*eptr)->name);
       runp = runp->next;
     }
 
-  collseq_table_finalize (&collate->wcseqorder);
-
   /* Now determine whether the UNDEFINED entry is needed and if yes,
      whether it was defined.  */
   collate->undefined.used_in_level = need_undefined ? ~0ul : 0;
@@ -2098,10 +2096,7 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
 {
   struct locale_collate_t *collate = locale->categories[LC_COLLATE].collate;
   const size_t nelems = _NL_ITEM_INDEX (_NL_NUM_LC_COLLATE);
-  struct iovec iov[2 + nelems];
-  struct locale_file data;
-  uint32_t idx[nelems];
-  size_t cnt;
+  struct locale_file file;
   size_t ch;
   int32_t tablemb[256];
   struct obstack weightpool;
@@ -2114,51 +2109,22 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
   int i;
   struct element_t *runp;
 
-  data.magic = LIMAGIC (LC_COLLATE);
-  data.n = nelems;
-  iov[0].iov_base = (void *) &data;
-  iov[0].iov_len = sizeof (data);
-
-  iov[1].iov_base = (void *) idx;
-  iov[1].iov_len = sizeof (idx);
-
-  idx[0] = iov[0].iov_len + iov[1].iov_len;
-  cnt = 0;
-
-  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_NRULES));
-  iov[2 + cnt].iov_base = &nrules;
-  iov[2 + cnt].iov_len = sizeof (uint32_t);
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  ++cnt;
+  init_locale_data (&file, nelems);
+  add_locale_uint32 (&file, nrules);
 
   /* If we have no LC_COLLATE data emit only the number of rules as zero.  */
   if (collate == NULL)
     {
-      int32_t dummy = 0;
-
-      while (cnt < _NL_ITEM_INDEX (_NL_NUM_LC_COLLATE))
+      size_t idx;
+      for (idx = 1; idx < nelems; idx++)
 	{
 	  /* The words have to be handled specially.  */
-	  if (cnt == _NL_ITEM_INDEX (_NL_COLLATE_SYMB_HASH_SIZEMB))
-	    {
-	      iov[2 + cnt].iov_base = &dummy;
-	      iov[2 + cnt].iov_len = sizeof (int32_t);
-	    }
+	  if (idx == _NL_ITEM_INDEX (_NL_COLLATE_SYMB_HASH_SIZEMB))
+	    add_locale_uint32 (&file, 0);
 	  else
-	    {
-	      iov[2 + cnt].iov_base = NULL;
-	      iov[2 + cnt].iov_len = 0;
-	    }
-
-	  if (cnt + 1 < _NL_ITEM_INDEX (_NL_NUM_LC_COLLATE))
-	    idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-	  ++cnt;
+	    add_locale_empty (&file);
 	}
-
-      assert (cnt == _NL_ITEM_INDEX (_NL_NUM_LC_COLLATE));
-
-      write_locale_data (output_path, LC_COLLATE, "LC_COLLATE", 2 + cnt, iov);
-
+      write_locale_data (output_path, LC_COLLATE, "LC_COLLATE", &file);
       return;
     }
 
@@ -2191,11 +2157,7 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
       obstack_1grow (&weightpool, '\0');
     while (++i < __alignof__ (int32_t));
 
-  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_RULESETS));
-  iov[2 + cnt].iov_len = obstack_object_size (&weightpool);
-  iov[2 + cnt].iov_base = obstack_finish (&weightpool);
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  ++cnt;
+  add_locale_raw_obstack (&file, &weightpool);
 
   /* Generate the 8-bit table.  Walk through the lists of sequences
      starting with the same byte and add them one after the other to
@@ -2382,55 +2344,16 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
     obstack_1grow (&weightpool, 0);
 
   /* Now add the four tables.  */
-  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_TABLEMB));
-  iov[2 + cnt].iov_base = tablemb;
-  iov[2 + cnt].iov_len = sizeof (tablemb);
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  assert ((iov[2 + cnt].iov_len & (__alignof__ (int32_t) - 1)) == 0);
-  ++cnt;
-
-  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_WEIGHTMB));
-  iov[2 + cnt].iov_len = obstack_object_size (&weightpool);
-  iov[2 + cnt].iov_base = obstack_finish (&weightpool);
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  ++cnt;
-
-  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_EXTRAMB));
-  iov[2 + cnt].iov_len = obstack_object_size (&extrapool);
-  iov[2 + cnt].iov_base = obstack_finish (&extrapool);
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  ++cnt;
-
-  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_INDIRECTMB));
-  iov[2 + cnt].iov_len = obstack_object_size (&indirectpool);
-  iov[2 + cnt].iov_base = obstack_finish (&indirectpool);
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  assert ((iov[2 + cnt].iov_len & (__alignof__ (int32_t) - 1)) == 0);
-  ++cnt;
-
+  add_locale_uint32_array (&file, (const uint32_t *) tablemb, 256);
+  add_locale_raw_obstack (&file, &weightpool);
+  add_locale_raw_obstack (&file, &extrapool);
+  add_locale_raw_obstack (&file, &indirectpool);
 
   /* Now the same for the wide character table.  We need to store some
      more information here.  */
-  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_GAP1));
-  iov[2 + cnt].iov_base = NULL;
-  iov[2 + cnt].iov_len = 0;
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  assert (idx[cnt] % __alignof__ (int32_t) == 0);
-  ++cnt;
-
-  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_GAP2));
-  iov[2 + cnt].iov_base = NULL;
-  iov[2 + cnt].iov_len = 0;
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  assert (idx[cnt] % __alignof__ (int32_t) == 0);
-  ++cnt;
-
-  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_GAP3));
-  iov[2 + cnt].iov_base = NULL;
-  iov[2 + cnt].iov_len = 0;
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  assert (idx[cnt] % __alignof__ (int32_t) == 0);
-  ++cnt;
+  add_locale_empty (&file);
+  add_locale_empty (&file);
+  add_locale_empty (&file);
 
   /* Since we are using the sign of an integer to mark indirection the
      offsets in the arrays we are indirectly referring to must not be
@@ -2462,41 +2385,11 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
 
   memset (&atwc, 0, sizeof (atwc));
 
-  collidx_table_finalize (&tablewc);
-
   /* Now add the four tables.  */
-  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_TABLEWC));
-  iov[2 + cnt].iov_base = tablewc.result;
-  iov[2 + cnt].iov_len = tablewc.result_size;
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  assert (iov[2 + cnt].iov_len % sizeof (int32_t) == 0);
-  assert (idx[cnt] % __alignof__ (int32_t) == 0);
-  ++cnt;
-
-  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_WEIGHTWC));
-  iov[2 + cnt].iov_len = obstack_object_size (&weightpool);
-  iov[2 + cnt].iov_base = obstack_finish (&weightpool);
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  assert (iov[2 + cnt].iov_len % sizeof (int32_t) == 0);
-  assert (idx[cnt] % __alignof__ (int32_t) == 0);
-  ++cnt;
-
-  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_EXTRAWC));
-  iov[2 + cnt].iov_len = obstack_object_size (&extrapool);
-  iov[2 + cnt].iov_base = obstack_finish (&extrapool);
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  assert (iov[2 + cnt].iov_len % sizeof (int32_t) == 0);
-  assert (idx[cnt] % __alignof__ (int32_t) == 0);
-  ++cnt;
-
-  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_INDIRECTWC));
-  iov[2 + cnt].iov_len = obstack_object_size (&indirectpool);
-  iov[2 + cnt].iov_base = obstack_finish (&indirectpool);
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  assert (iov[2 + cnt].iov_len % sizeof (int32_t) == 0);
-  assert (idx[cnt] % __alignof__ (int32_t) == 0);
-  ++cnt;
-
+  add_locale_collidx_table (&file, &tablewc);
+  add_locale_raw_obstack (&file, &weightpool);
+  add_locale_raw_obstack (&file, &extrapool);
+  add_locale_raw_obstack (&file, &indirectpool);
 
   /* Finally write the table with collation element names out.  It is
      a hash table with a simple function which gets the name of the
@@ -2594,47 +2487,13 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
     }
 
   /* Prepare to write out this data.  */
-  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_SYMB_HASH_SIZEMB));
-  iov[2 + cnt].iov_base = &elem_size;
-  iov[2 + cnt].iov_len = sizeof (int32_t);
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  assert (idx[cnt] % __alignof__ (int32_t) == 0);
-  ++cnt;
-
-  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_SYMB_TABLEMB));
-  iov[2 + cnt].iov_base = elem_table;
-  iov[2 + cnt].iov_len = elem_size * 2 * sizeof (int32_t);
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  assert (idx[cnt] % __alignof__ (int32_t) == 0);
-  ++cnt;
-
-  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_SYMB_EXTRAMB));
-  iov[2 + cnt].iov_len = obstack_object_size (&extrapool);
-  iov[2 + cnt].iov_base = obstack_finish (&extrapool);
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  ++cnt;
-
-  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_COLLSEQMB));
-  iov[2 + cnt].iov_base = collate->mbseqorder;
-  iov[2 + cnt].iov_len = 256;
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  ++cnt;
-
-  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_COLLSEQWC));
-  iov[2 + cnt].iov_base = collate->wcseqorder.result;
-  iov[2 + cnt].iov_len = collate->wcseqorder.result_size;
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  assert (idx[cnt] % __alignof__ (int32_t) == 0);
-  ++cnt;
-
-  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_CODESET));
-  iov[2 + cnt].iov_base = (void *) charmap->code_set_name;
-  iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
-  ++cnt;
-
-  assert (cnt == _NL_ITEM_INDEX (_NL_NUM_LC_COLLATE));
-
-  write_locale_data (output_path, LC_COLLATE, "LC_COLLATE", 2 + cnt, iov);
+  add_locale_uint32 (&file, elem_size);
+  add_locale_uint32_array (&file, elem_table, 2 * elem_size);
+  add_locale_raw_obstack (&file, &extrapool);
+  add_locale_raw_data (&file, collate->mbseqorder, 256);
+  add_locale_collseq_table (&file, &collate->wcseqorder);
+  add_locale_string (&file, charmap->code_set_name);
+  write_locale_data (output_path, LC_COLLATE, "LC_COLLATE", &file);
 
   obstack_free (&weightpool, NULL);
   obstack_free (&extrapool, NULL);

@@ -26,7 +26,8 @@
      ELEMENT      to the type of every entry
      DEFAULT      to the default value for empty entries
      ITERATE      if you want the TABLE_iterate function to be defined
-     NO_FINALIZE  if you don't want the TABLE_finalize function to be defined
+     NO_ADD_LOCALE  if you don't want the add_locale_TABLE function
+		    to be defined
 
    This will define
 
@@ -36,7 +37,7 @@
      void TABLE_add (struct TABLE *t, uint32_t wc, ELEMENT value);
      void TABLE_iterate (struct TABLE *t,
 			 void (*fn) (uint32_t wc, ELEMENT value));
-     void TABLE_finalize (struct TABLE *t);
+     void add_locale_TABLE (struct locale_file *file, struct TABLE *t);
 */
 
 #define CONCAT(a,b) CONCAT1(a,b)
@@ -57,9 +58,8 @@ struct TABLE
   size_t level3_alloc;
   size_t level3_size;
   ELEMENT *level3;
-  /* Compressed representation.  */
+  /* Size of compressed representation.  */
   size_t result_size;
-  char *result;
 };
 
 /* Initialize.  Assumes t->p and t->q have already been set.  */
@@ -206,15 +206,15 @@ CONCAT(TABLE,_iterate) (struct TABLE *t,
 }
 #endif
 
-#ifndef NO_FINALIZE
+#ifndef NO_ADD_LOCALE
 /* Finalize and shrink.  */
 static void
-CONCAT(TABLE,_finalize) (struct TABLE *t)
+CONCAT(add_locale_,TABLE) (struct locale_file *file, struct TABLE *t)
 {
   size_t i, j, k;
   uint32_t reorder3[t->level3_size];
   uint32_t reorder2[t->level2_size];
-  uint32_t level1_offset, level2_offset, level3_offset, last_offset;
+  uint32_t level2_offset, level3_offset, last_offset;
 
   /* Uniquify level3 blocks.  */
   k = 0;
@@ -271,10 +271,7 @@ CONCAT(TABLE,_finalize) (struct TABLE *t)
     + (t->level2_size << t->q) * sizeof (uint32_t)
     + (t->level3_size << t->p) * sizeof (ELEMENT);
   t->result_size = (last_offset + 3) & ~3ul;
-  t->result = (char *) xmalloc (t->result_size);
 
-  level1_offset =
-    5 * sizeof (uint32_t);
   level2_offset =
     5 * sizeof (uint32_t)
     + t->level1_size * sizeof (uint32_t);
@@ -283,29 +280,36 @@ CONCAT(TABLE,_finalize) (struct TABLE *t)
     + t->level1_size * sizeof (uint32_t)
     + (t->level2_size << t->q) * sizeof (uint32_t);
 
-  ((uint32_t *) t->result)[0] = t->q + t->p;
-  ((uint32_t *) t->result)[1] = t->level1_size;
-  ((uint32_t *) t->result)[2] = t->p;
-  ((uint32_t *) t->result)[3] = (1 << t->q) - 1;
-  ((uint32_t *) t->result)[4] = (1 << t->p) - 1;
+  start_locale_structure (file);
+  add_locale_uint32 (file, t->q + t->p);
+  add_locale_uint32 (file, t->level1_size);
+  add_locale_uint32 (file, t->p);
+  add_locale_uint32 (file, (1 << t->q) - 1);
+  add_locale_uint32 (file, (1 << t->p) - 1);
 
   for (i = 0; i < t->level1_size; i++)
-    ((uint32_t *) (t->result + level1_offset))[i] =
-      (t->level1[i] == EMPTY
+    add_locale_uint32
+      (file,
+       t->level1[i] == EMPTY
        ? 0
        : (t->level1[i] << t->q) * sizeof (uint32_t) + level2_offset);
 
   for (i = 0; i < (t->level2_size << t->q); i++)
-    ((uint32_t *) (t->result + level2_offset))[i] =
-      (t->level2[i] == EMPTY
+    add_locale_uint32
+      (file,
+       t->level2[i] == EMPTY
        ? 0
        : (t->level2[i] << t->p) * sizeof (ELEMENT) + level3_offset);
 
-  for (i = 0; i < (t->level3_size << t->p); i++)
-    ((ELEMENT *) (t->result + level3_offset))[i] = t->level3[i];
-
-  if (last_offset < t->result_size)
-    memset (t->result + last_offset, 0, t->result_size - last_offset);
+  if (sizeof (ELEMENT) == 1)
+    add_locale_raw_data (file, t->level3, t->level3_size << t->p);
+  else if (sizeof (ELEMENT) == sizeof (uint32_t))
+    add_locale_uint32_array (file, (uint32_t *) t->level3,
+			     t->level3_size << t->p);
+  else
+    abort ();
+  align_locale_data (file, 4);
+  end_locale_structure (file);
 
   if (t->level1_alloc > 0)
     free (t->level1);
@@ -321,4 +325,4 @@ CONCAT(TABLE,_finalize) (struct TABLE *t)
 #undef ELEMENT
 #undef DEFAULT
 #undef ITERATE
-#undef NO_FINALIZE
+#undef NO_ADD_LOCALE

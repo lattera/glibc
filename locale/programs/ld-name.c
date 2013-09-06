@@ -157,60 +157,17 @@ name_output (struct localedef_t *locale, const struct charmap_t *charmap,
 	     const char *output_path)
 {
   struct locale_name_t *name = locale->categories[LC_NAME].name;
-  struct iovec iov[2 + _NL_ITEM_INDEX (_NL_NUM_LC_NAME)];
-  struct locale_file data;
-  uint32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_NAME)];
-  size_t cnt = 0;
+  struct locale_file file;
 
-  data.magic = LIMAGIC (LC_NAME);
-  data.n = _NL_ITEM_INDEX (_NL_NUM_LC_NAME);
-  iov[cnt].iov_base = (void *) &data;
-  iov[cnt].iov_len = sizeof (data);
-  ++cnt;
-
-  iov[cnt].iov_base = (void *) idx;
-  iov[cnt].iov_len = sizeof (idx);
-  ++cnt;
-
-  idx[cnt - 2] = iov[0].iov_len + iov[1].iov_len;
-  iov[cnt].iov_base = (void *) name->name_fmt;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) name->name_gen;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) name->name_mr;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) name->name_mrs;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) name->name_miss;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) name->name_ms;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) charmap->code_set_name;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  assert (cnt == 2 + _NL_ITEM_INDEX (_NL_NUM_LC_NAME));
-
-  write_locale_data (output_path, LC_NAME, "LC_NAME",
-		     2 + _NL_ITEM_INDEX (_NL_NUM_LC_NAME), iov);
+  init_locale_data (&file, _NL_ITEM_INDEX (_NL_NUM_LC_NAME));
+  add_locale_string (&file, name->name_fmt);
+  add_locale_string (&file, name->name_gen);
+  add_locale_string (&file, name->name_mr);
+  add_locale_string (&file, name->name_mrs);
+  add_locale_string (&file, name->name_miss);
+  add_locale_string (&file, name->name_ms);
+  add_locale_string (&file, charmap->code_set_name);
+  write_locale_data (output_path, LC_NAME, "LC_NAME", &file);
 }
 
 

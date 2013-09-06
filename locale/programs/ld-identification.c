@@ -182,116 +182,32 @@ identification_output (struct localedef_t *locale,
 {
   struct locale_identification_t *identification
     = locale->categories[LC_IDENTIFICATION].identification;
-  struct iovec iov[2 + _NL_ITEM_INDEX (_NL_NUM_LC_IDENTIFICATION)
-		  + (__LC_LAST - 2)];
-  struct locale_file data;
-  uint32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_IDENTIFICATION)];
-  size_t cnt = 0;
+  struct locale_file file;
   size_t num;
-  size_t last_idx;
 
-  data.magic = LIMAGIC (LC_IDENTIFICATION);
-  data.n = _NL_ITEM_INDEX (_NL_NUM_LC_IDENTIFICATION);
-  iov[cnt].iov_base = (void *) &data;
-  iov[cnt].iov_len = sizeof (data);
-  ++cnt;
-
-  iov[cnt].iov_base = (void *) idx;
-  iov[cnt].iov_len = sizeof (idx);
-  ++cnt;
-
-  idx[cnt - 2] = iov[0].iov_len + iov[1].iov_len;
-  iov[cnt].iov_base = (void *) identification->title;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) identification->source;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) identification->address;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) identification->contact;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) identification->email;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) identification->tel;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) identification->fax;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) identification->language;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) identification->territory;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) identification->audience;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) identification->application;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) identification->abbreviation;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) identification->revision;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) identification->date;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  last_idx = cnt - 1;
-  idx[last_idx] = idx[cnt - 2];
+  init_locale_data (&file, _NL_ITEM_INDEX (_NL_NUM_LC_IDENTIFICATION));
+  add_locale_string (&file, identification->title);
+  add_locale_string (&file, identification->source);
+  add_locale_string (&file, identification->address);
+  add_locale_string (&file, identification->contact);
+  add_locale_string (&file, identification->email);
+  add_locale_string (&file, identification->tel);
+  add_locale_string (&file, identification->fax);
+  add_locale_string (&file, identification->language);
+  add_locale_string (&file, identification->territory);
+  add_locale_string (&file, identification->audience);
+  add_locale_string (&file, identification->application);
+  add_locale_string (&file, identification->abbreviation);
+  add_locale_string (&file, identification->revision);
+  add_locale_string (&file, identification->date);
+  start_locale_structure (&file);
   for (num = 0; num < __LC_LAST; ++num)
     if (num != LC_ALL)
-      {
-	iov[cnt].iov_base = (void *) identification->category[num];
-	iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-	idx[last_idx] += iov[cnt].iov_len;
-	++cnt;
-      }
-
-  assert (last_idx == _NL_ITEM_INDEX (_NL_NUM_LC_IDENTIFICATION) - 1);
-  iov[cnt].iov_base = (void *) charmap->code_set_name;
-  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-  ++cnt;
-
-  assert (cnt == (2 + _NL_ITEM_INDEX (_NL_NUM_LC_IDENTIFICATION)
-		  + (__LC_LAST - 2)));
-
-  write_locale_data (output_path, LC_IDENTIFICATION, "LC_IDENTIFICATION", cnt,
-		     iov);
+      add_locale_string (&file, identification->category[num]);
+  end_locale_structure (&file);
+  add_locale_string (&file, charmap->code_set_name);
+  write_locale_data (output_path, LC_IDENTIFICATION, "LC_IDENTIFICATION",
+		     &file);
 }
 
 

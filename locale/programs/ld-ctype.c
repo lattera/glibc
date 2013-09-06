@@ -119,9 +119,51 @@ struct translit_include_t
 #define TABLE idx_table
 #define ELEMENT uint32_t
 #define DEFAULT ((uint32_t) ~0)
-#define NO_FINALIZE
+#define NO_ADD_LOCALE
 #include "3level.h"
 
+#define TABLE wcwidth_table
+#define ELEMENT uint8_t
+#define DEFAULT 0xff
+#include "3level.h"
+
+#define TABLE wctrans_table
+#define ELEMENT int32_t
+#define DEFAULT 0
+#define wctrans_table_add wctrans_table_add_internal
+#include "3level.h"
+#undef wctrans_table_add
+/* The wctrans_table must actually store the difference between the
+   desired result and the argument.  */
+static inline void
+wctrans_table_add (struct wctrans_table *t, uint32_t wc, uint32_t mapped_wc)
+{
+  wctrans_table_add_internal (t, wc, mapped_wc - wc);
+}
+
+/* Construction of sparse 3-level tables.
+   See wchar-lookup.h for their structure and the meaning of p and q.  */
+
+struct wctype_table
+{
+  /* Parameters.  */
+  unsigned int p;
+  unsigned int q;
+  /* Working representation.  */
+  size_t level1_alloc;
+  size_t level1_size;
+  uint32_t *level1;
+  size_t level2_alloc;
+  size_t level2_size;
+  uint32_t *level2;
+  size_t level3_alloc;
+  size_t level3_size;
+  uint32_t *level3;
+  size_t result_size;
+};
+
+static void add_locale_wctype_table (struct locale_file *file,
+				     struct wctype_table *t);
 
 /* The real definition of the struct for the LC_CTYPE locale.  */
 struct locale_ctype_t
@@ -189,11 +231,11 @@ struct locale_ctype_t
   uint32_t **map_b;
   uint32_t **map32_b;
   uint32_t **class_b;
-  struct iovec *class_3level;
-  struct iovec *map_3level;
+  struct wctype_table *class_3level;
+  struct wctrans_table *map_3level;
   uint32_t *class_name_ptr;
   uint32_t *map_name_ptr;
-  struct iovec width;
+  struct wcwidth_table width;
   uint32_t mb_cur_max;
   const char *codeset_name;
   uint32_t *translit_from_idx;
@@ -905,33 +947,21 @@ void
 ctype_output (struct localedef_t *locale, const struct charmap_t *charmap,
 	      const char *output_path)
 {
-  static const char nulbytes[4] = { 0, 0, 0, 0 };
   struct locale_ctype_t *ctype = locale->categories[LC_CTYPE].ctype;
   const size_t nelems = (_NL_ITEM_INDEX (_NL_CTYPE_EXTRA_MAP_1)
 			 + ctype->nr_charclass + ctype->map_collection_nr);
-  struct iovec *iov = alloca (sizeof *iov
-			      * (2 + nelems + 2 * ctype->nr_charclass
-				 + ctype->map_collection_nr + 4));
-  struct locale_file data;
-  uint32_t *idx = alloca (sizeof *idx * (nelems + 1));
+  struct locale_file file;
   uint32_t default_missing_len;
-  size_t elem, cnt, offset, total;
-  char *cp;
+  size_t elem, cnt;
 
   /* Now prepare the output: Find the sizes of the table we can use.  */
   allocate_arrays (ctype, charmap, ctype->repertoire);
 
-  data.magic = LIMAGIC (LC_CTYPE);
-  data.n = nelems;
-  iov[0].iov_base = (void *) &data;
-  iov[0].iov_len = sizeof (data);
+  default_missing_len = (ctype->default_missing
+			 ? wcslen ((wchar_t *) ctype->default_missing)
+			 : 0);
 
-  iov[1].iov_base = (void *) idx;
-  iov[1].iov_len = nelems * sizeof (uint32_t);
-
-  idx[0] = iov[0].iov_len + iov[1].iov_len;
-  offset = 0;
-
+  init_locale_data (&file, nelems);
   for (elem = 0; elem < nelems; ++elem)
     {
       if (elem < _NL_ITEM_INDEX (_NL_CTYPE_EXTRA_MAP_1))
@@ -939,9 +969,7 @@ ctype_output (struct localedef_t *locale, const struct charmap_t *charmap,
 	  {
 #define CTYPE_EMPTY(name) \
 	  case name:							      \
-	    iov[2 + elem + offset].iov_base = NULL;			      \
-	    iov[2 + elem + offset].iov_len = 0;				      \
-	    idx[elem + 1] = idx[elem];					      \
+	    add_locale_empty (&file);					      \
 	    break
 
 	  CTYPE_EMPTY(_NL_CTYPE_GAP1);
@@ -951,273 +979,156 @@ ctype_output (struct localedef_t *locale, const struct charmap_t *charmap,
 	  CTYPE_EMPTY(_NL_CTYPE_GAP5);
 	  CTYPE_EMPTY(_NL_CTYPE_GAP6);
 
-#define CTYPE_DATA(name, base, len)					      \
+#define CTYPE_RAW_DATA(name, base, size)				      \
 	  case _NL_ITEM_INDEX (name):					      \
-	    iov[2 + elem + offset].iov_base = (base);			      \
-	    iov[2 + elem + offset].iov_len = (len);			      \
-	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;	      \
+	    add_locale_raw_data (&file, base, size);			      \
 	    break
 
-	  CTYPE_DATA (_NL_CTYPE_CLASS,
-		      ctype->ctype_b,
-		      (256 + 128) * sizeof (char_class_t));
+	  CTYPE_RAW_DATA (_NL_CTYPE_CLASS,
+			  ctype->ctype_b,
+			  (256 + 128) * sizeof (char_class_t));
 
-	  CTYPE_DATA (_NL_CTYPE_TOUPPER,
-		      ctype->map_b[0],
-		      (256 + 128) * sizeof (uint32_t));
-	  CTYPE_DATA (_NL_CTYPE_TOLOWER,
-		      ctype->map_b[1],
-		      (256 + 128) * sizeof (uint32_t));
+#define CTYPE_UINT32_ARRAY(name, base, n_elems)				      \
+	  case _NL_ITEM_INDEX (name):					      \
+	    add_locale_uint32_array (&file, base, n_elems);		      \
+	    break
 
-	  CTYPE_DATA (_NL_CTYPE_TOUPPER32,
-		      ctype->map32_b[0],
-		      256 * sizeof (uint32_t));
-	  CTYPE_DATA (_NL_CTYPE_TOLOWER32,
-		      ctype->map32_b[1],
-		      256 * sizeof (uint32_t));
+	  CTYPE_UINT32_ARRAY (_NL_CTYPE_TOUPPER, ctype->map_b[0], 256 + 128);
+	  CTYPE_UINT32_ARRAY (_NL_CTYPE_TOLOWER, ctype->map_b[1], 256 + 128);
+	  CTYPE_UINT32_ARRAY (_NL_CTYPE_TOUPPER32, ctype->map32_b[0], 256);
+	  CTYPE_UINT32_ARRAY (_NL_CTYPE_TOLOWER32, ctype->map32_b[1], 256);
+	  CTYPE_RAW_DATA (_NL_CTYPE_CLASS32,
+			  ctype->ctype32_b,
+			  256 * sizeof (char_class32_t));
 
-	  CTYPE_DATA (_NL_CTYPE_CLASS32,
-		      ctype->ctype32_b,
-		      256 * sizeof (char_class32_t));
+#define CTYPE_UINT32(name, value)					      \
+	  case _NL_ITEM_INDEX (name):					      \
+	    add_locale_uint32 (&file, value);				      \
+	    break
 
-	  CTYPE_DATA (_NL_CTYPE_CLASS_OFFSET,
-		      &ctype->class_offset, sizeof (uint32_t));
+	  CTYPE_UINT32 (_NL_CTYPE_CLASS_OFFSET, ctype->class_offset);
+	  CTYPE_UINT32 (_NL_CTYPE_MAP_OFFSET, ctype->map_offset);
+	  CTYPE_UINT32 (_NL_CTYPE_TRANSLIT_TAB_SIZE, ctype->translit_idx_size);
 
-	  CTYPE_DATA (_NL_CTYPE_MAP_OFFSET,
-		      &ctype->map_offset, sizeof (uint32_t));
+	  CTYPE_UINT32_ARRAY (_NL_CTYPE_TRANSLIT_FROM_IDX,
+			      ctype->translit_from_idx,
+			      ctype->translit_idx_size);
 
-	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_TAB_SIZE,
-		      &ctype->translit_idx_size, sizeof (uint32_t));
+	  CTYPE_UINT32_ARRAY (_NL_CTYPE_TRANSLIT_FROM_TBL,
+			      ctype->translit_from_tbl,
+			      ctype->translit_from_tbl_size
+			      / sizeof (uint32_t));
 
-	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_FROM_IDX,
-		      ctype->translit_from_idx,
-		      ctype->translit_idx_size * sizeof (uint32_t));
+	  CTYPE_UINT32_ARRAY (_NL_CTYPE_TRANSLIT_TO_IDX,
+			      ctype->translit_to_idx,
+			      ctype->translit_idx_size);
 
-	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_FROM_TBL,
-		      ctype->translit_from_tbl,
-		      ctype->translit_from_tbl_size);
-
-	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_TO_IDX,
-		      ctype->translit_to_idx,
-		      ctype->translit_idx_size * sizeof (uint32_t));
-
-	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_TO_TBL,
-		      ctype->translit_to_tbl, ctype->translit_to_tbl_size);
+	  CTYPE_UINT32_ARRAY (_NL_CTYPE_TRANSLIT_TO_TBL,
+			      ctype->translit_to_tbl,
+			      ctype->translit_to_tbl_size / sizeof (uint32_t));
 
 	  case _NL_ITEM_INDEX (_NL_CTYPE_CLASS_NAMES):
 	    /* The class name array.  */
-	    total = 0;
-	    for (cnt = 0; cnt < ctype->nr_charclass; ++cnt, ++offset)
-	      {
-		iov[2 + elem + offset].iov_base
-		  = (void *) ctype->classnames[cnt];
-		iov[2 + elem + offset].iov_len
-		  = strlen (ctype->classnames[cnt]) + 1;
-		total += iov[2 + elem + offset].iov_len;
-	      }
-	    iov[2 + elem + offset].iov_base = (void *) nulbytes;
-	    iov[2 + elem + offset].iov_len = 4 - (total % 4);
-	    total += 4 - (total % 4);
-
-	    idx[elem + 1] = idx[elem] + total;
+	    start_locale_structure (&file);
+	    for (cnt = 0; cnt < ctype->nr_charclass; ++cnt)
+	      add_locale_string (&file, ctype->classnames[cnt]);
+	    add_locale_char (&file, 0);
+	    align_locale_data (&file, 4);
+	    end_locale_structure (&file);
 	    break;
 
 	  case _NL_ITEM_INDEX (_NL_CTYPE_MAP_NAMES):
 	    /* The class name array.  */
-	    total = 0;
-	    for (cnt = 0; cnt < ctype->map_collection_nr; ++cnt, ++offset)
-	      {
-		iov[2 + elem + offset].iov_base
-		  = (void *) ctype->mapnames[cnt];
-		iov[2 + elem + offset].iov_len
-		  = strlen (ctype->mapnames[cnt]) + 1;
-		total += iov[2 + elem + offset].iov_len;
-	      }
-	    iov[2 + elem + offset].iov_base = (void *) nulbytes;
-	    iov[2 + elem + offset].iov_len = 4 - (total % 4);
-	    total += 4 - (total % 4);
-
-	    idx[elem + 1] = idx[elem] + total;
+	    start_locale_structure (&file);
+	    for (cnt = 0; cnt < ctype->map_collection_nr; ++cnt)
+	      add_locale_string (&file, ctype->mapnames[cnt]);
+	    add_locale_char (&file, 0);
+	    align_locale_data (&file, 4);
+	    end_locale_structure (&file);
 	    break;
 
-	  CTYPE_DATA (_NL_CTYPE_WIDTH,
-		      ctype->width.iov_base,
-		      ctype->width.iov_len);
+	  case _NL_ITEM_INDEX (_NL_CTYPE_WIDTH):
+	    add_locale_wcwidth_table (&file, &ctype->width);
+	    break;
 
-	  CTYPE_DATA (_NL_CTYPE_MB_CUR_MAX,
-		      &ctype->mb_cur_max, sizeof (uint32_t));
+	  CTYPE_UINT32 (_NL_CTYPE_MB_CUR_MAX, ctype->mb_cur_max);
 
 	  case _NL_ITEM_INDEX (_NL_CTYPE_CODESET_NAME):
-	    total = strlen (ctype->codeset_name) + 1;
-	    if (total % 4 == 0)
-	      iov[2 + elem + offset].iov_base = (char *) ctype->codeset_name;
-	    else
-	      {
-		iov[2 + elem + offset].iov_base = alloca ((total + 3) & ~3);
-		memset (mempcpy (iov[2 + elem + offset].iov_base,
-				 ctype->codeset_name, total),
-			'\0', 4 - (total & 3));
-		total = (total + 3) & ~3;
-	      }
-	    iov[2 + elem + offset].iov_len = total;
-	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
+	    add_locale_string (&file, ctype->codeset_name);
 	    break;
 
+	  CTYPE_UINT32 (_NL_CTYPE_MAP_TO_NONASCII, ctype->to_nonascii);
 
-	  CTYPE_DATA (_NL_CTYPE_MAP_TO_NONASCII,
-		      &ctype->to_nonascii, sizeof (uint32_t));
-
-	  CTYPE_DATA (_NL_CTYPE_NONASCII_CASE,
-		      &ctype->nonascii_case, sizeof (uint32_t));
+	  CTYPE_UINT32 (_NL_CTYPE_NONASCII_CASE, ctype->nonascii_case);
 
 	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS_MB_LEN):
-	    iov[2 + elem + offset].iov_base = alloca (sizeof (uint32_t));
-	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
-	    *(uint32_t *) iov[2 + elem + offset].iov_base =
-	      ctype->mbdigits_act / 10;
-	    idx[elem + 1] = idx[elem] + sizeof (uint32_t);
+	    add_locale_uint32 (&file, ctype->mbdigits_act / 10);
 	    break;
 
 	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS_WC_LEN):
-	    /* Align entries.  */
-	    iov[2 + elem + offset].iov_base = (void *) nulbytes;
-	    iov[2 + elem + offset].iov_len = (4 - idx[elem] % 4) % 4;
-	    idx[elem] += iov[2 + elem + offset].iov_len;
-	    ++offset;
-
-	    iov[2 + elem + offset].iov_base = alloca (sizeof (uint32_t));
-	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
-	    *(uint32_t *) iov[2 + elem + offset].iov_base =
-	      ctype->wcdigits_act / 10;
-	    idx[elem + 1] = idx[elem] + sizeof (uint32_t);
+	    add_locale_uint32 (&file, ctype->wcdigits_act / 10);
 	    break;
 
 	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS0_MB) ... _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS9_MB):
-	    /* Compute the length of all possible characters.  For INDIGITS
-	       there might be more than one.  We simply concatenate all of
-	       them with a NUL byte following.  The NUL byte wouldn't be
-	       necessary but it makes it easier for the user.  */
-	    total = 0;
-
-	    for (cnt = elem - _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS0_MB);
-		 cnt < ctype->mbdigits_act; cnt += 10)
-	      total += ctype->mbdigits[cnt]->nbytes + 1;
-	    iov[2 + elem + offset].iov_base = (char *) alloca (total);
-	    iov[2 + elem + offset].iov_len = total;
-
-	    cp = iov[2 + elem + offset].iov_base;
+	    start_locale_structure (&file);
 	    for (cnt = elem - _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS0_MB);
 		 cnt < ctype->mbdigits_act; cnt += 10)
 	      {
-		cp = mempcpy (cp, ctype->mbdigits[cnt]->bytes,
-			      ctype->mbdigits[cnt]->nbytes);
-		*cp++ = '\0';
+		add_locale_raw_data (&file, ctype->mbdigits[cnt]->bytes,
+				     ctype->mbdigits[cnt]->nbytes);
+		add_locale_char (&file, 0);
 	      }
-	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
+	    end_locale_structure (&file);
 	    break;
 
 	  case _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT0_MB) ... _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT9_MB):
-	    /* Compute the length of all possible characters.  For INDIGITS
-	       there might be more than one.  We simply concatenate all of
-	       them with a NUL byte following.  The NUL byte wouldn't be
-	       necessary but it makes it easier for the user.  */
+	    start_locale_structure (&file);
 	    cnt = elem - _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT0_MB);
-	    total = ctype->mboutdigits[cnt]->nbytes + 1;
-	    iov[2 + elem + offset].iov_base = (char *) alloca (total);
-	    iov[2 + elem + offset].iov_len = total;
-
-	    *(char *) mempcpy (iov[2 + elem + offset].iov_base,
-			       ctype->mboutdigits[cnt]->bytes,
-			       ctype->mboutdigits[cnt]->nbytes) = '\0';
-	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
+	    add_locale_raw_data (&file, ctype->mboutdigits[cnt]->bytes,
+				 ctype->mboutdigits[cnt]->nbytes);
+	    add_locale_char (&file, 0);
+	    end_locale_structure (&file);
 	    break;
 
 	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS0_WC) ... _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS9_WC):
-	    total = ctype->wcdigits_act / 10;
-
-	    iov[2 + elem + offset].iov_base =
-	      (uint32_t *) alloca (total * sizeof (uint32_t));
-	    iov[2 + elem + offset].iov_len = total * sizeof (uint32_t);
-
+	    start_locale_structure (&file);
 	    for (cnt = elem - _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS0_WC);
 		 cnt < ctype->wcdigits_act; cnt += 10)
-	      ((uint32_t *) iov[2 + elem + offset].iov_base)[cnt / 10]
-		= ctype->wcdigits[cnt];
-	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
+	      add_locale_uint32 (&file, ctype->wcdigits[cnt]);
+	    end_locale_structure (&file);
 	    break;
 
-	  case _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT0_WC):
-	    /* Align entries.  */
-	    iov[2 + elem + offset].iov_base = (void *) nulbytes;
-	    iov[2 + elem + offset].iov_len = (4 - idx[elem] % 4) % 4;
-	    idx[elem] += iov[2 + elem + offset].iov_len;
-	    ++offset;
-	    /* FALLTRHOUGH */
-
-	  case _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT1_WC) ... _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT9_WC):
+	  case _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT0_WC) ... _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT9_WC):
 	    cnt = elem - _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT0_WC);
-	    iov[2 + elem + offset].iov_base = &ctype->wcoutdigits[cnt];
-	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
-	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
+	    add_locale_uint32 (&file, ctype->wcoutdigits[cnt]);
 	    break;
 
 	  case _NL_ITEM_INDEX(_NL_CTYPE_TRANSLIT_DEFAULT_MISSING_LEN):
-	    /* Align entries.  */
-	    iov[2 + elem + offset].iov_base = (void *) nulbytes;
-	    iov[2 + elem + offset].iov_len = (4 - idx[elem] % 4) % 4;
-	    idx[elem] += iov[2 + elem + offset].iov_len;
-	    ++offset;
-
-	    default_missing_len = (ctype->default_missing
-				   ? wcslen ((wchar_t *)ctype->default_missing)
-				   : 0);
-	    iov[2 + elem + offset].iov_base = &default_missing_len;
-	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
-	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
+	    add_locale_uint32 (&file, default_missing_len);
 	    break;
 
 	  case _NL_ITEM_INDEX(_NL_CTYPE_TRANSLIT_DEFAULT_MISSING):
-	    iov[2 + elem + offset].iov_base =
-	      ctype->default_missing ?: (uint32_t *) L"";
-	    iov[2 + elem + offset].iov_len =
-	      wcslen (iov[2 + elem + offset].iov_base) * sizeof (uint32_t);
-	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
+	    add_locale_uint32_array (&file, ctype->default_missing,
+				     default_missing_len);
 	    break;
 
 	  case _NL_ITEM_INDEX(_NL_CTYPE_TRANSLIT_IGNORE_LEN):
-	    /* Align entries.  */
-	    iov[2 + elem + offset].iov_base = (void *) nulbytes;
-	    iov[2 + elem + offset].iov_len = (4 - idx[elem] % 4) % 4;
-	    idx[elem] += iov[2 + elem + offset].iov_len;
-	    ++offset;
-
-	    iov[2 + elem + offset].iov_base = &ctype->ntranslit_ignore;
-	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
-	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
+	    add_locale_uint32 (&file, ctype->ntranslit_ignore);
 	    break;
 
 	  case _NL_ITEM_INDEX(_NL_CTYPE_TRANSLIT_IGNORE):
+	    start_locale_structure (&file);
 	    {
-	      uint32_t *ranges = (uint32_t *) alloca (ctype->ntranslit_ignore
-						      * 3 * sizeof (uint32_t));
 	      struct translit_ignore_t *runp;
-
-	      iov[2 + elem + offset].iov_base = ranges;
-	      iov[2 + elem + offset].iov_len = (ctype->ntranslit_ignore
-						* 3 * sizeof (uint32_t));
-
 	      for (runp = ctype->translit_ignore; runp != NULL;
 		   runp = runp->next)
 		{
-		  *ranges++ = runp->from;
-		  *ranges++ = runp->to;
-		  *ranges++ = runp->step;
+		  add_locale_uint32 (&file, runp->from);
+		  add_locale_uint32 (&file, runp->to);
+		  add_locale_uint32 (&file, runp->step);
 		}
 	    }
-	    /* Remove the following line in case a new entry is added
-	       after _NL_CTYPE_TRANSLIT_DEFAULT_MISSING_LEN.  */
-	    if (elem < nelems)
-	      idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
+	    end_locale_structure (&file);
 	    break;
 
 	  default:
@@ -1229,28 +1140,21 @@ ctype_output (struct localedef_t *locale, const struct charmap_t *charmap,
 	  size_t nr = elem - _NL_ITEM_INDEX (_NL_CTYPE_EXTRA_MAP_1);
 	  if (nr < ctype->nr_charclass)
 	    {
-	      iov[2 + elem + offset].iov_base = ctype->class_b[nr];
-	      iov[2 + elem + offset].iov_len = 256 / 32 * sizeof (uint32_t);
-	      idx[elem] += iov[2 + elem + offset].iov_len;
-	      ++offset;
-
-	      iov[2 + elem + offset] = ctype->class_3level[nr];
+	      start_locale_prelude (&file);
+	      add_locale_uint32_array (&file, ctype->class_b[nr], 256 / 32);
+	      end_locale_prelude (&file);
+	      add_locale_wctype_table (&file, &ctype->class_3level[nr]);
 	    }
 	  else
 	    {
 	      nr -= ctype->nr_charclass;
 	      assert (nr < ctype->map_collection_nr);
-	      iov[2 + elem + offset] = ctype->map_3level[nr];
+	      add_locale_wctrans_table (&file, &ctype->map_3level[nr]);
 	    }
-	  idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
 	}
     }
 
-  assert (2 + elem + offset == (nelems + 2 * ctype->nr_charclass
-				+ ctype->map_collection_nr + 4 + 2));
-
-  write_locale_data (output_path, LC_CTYPE, "LC_CTYPE", 2 + elem + offset,
-		     iov);
+  write_locale_data (output_path, LC_CTYPE, "LC_CTYPE", &file);
 }
 
 
@@ -3529,29 +3433,6 @@ no output digits defined and none of the standard names in the charmap")));
 }
 
 
-/* Construction of sparse 3-level tables.
-   See wchar-lookup.h for their structure and the meaning of p and q.  */
-
-struct wctype_table
-{
-  /* Parameters.  */
-  unsigned int p;
-  unsigned int q;
-  /* Working representation.  */
-  size_t level1_alloc;
-  size_t level1_size;
-  uint32_t *level1;
-  size_t level2_alloc;
-  size_t level2_size;
-  uint32_t *level2;
-  size_t level3_alloc;
-  size_t level3_size;
-  uint32_t *level3;
-  /* Compressed representation.  */
-  size_t result_size;
-  char *result;
-};
-
 /* Initialize.  Assumes t->p and t->q have already been set.  */
 static inline void
 wctype_table_init (struct wctype_table *t)
@@ -3657,12 +3538,12 @@ wctype_table_add (struct wctype_table *t, uint32_t wc)
 
 /* Finalize and shrink.  */
 static void
-wctype_table_finalize (struct wctype_table *t)
+add_locale_wctype_table (struct locale_file *file, struct wctype_table *t)
 {
   size_t i, j, k;
   uint32_t reorder3[t->level3_size];
   uint32_t reorder2[t->level2_size];
-  uint32_t level1_offset, level2_offset, level3_offset;
+  uint32_t level2_offset, level3_offset;
 
   /* Uniquify level3 blocks.  */
   k = 0;
@@ -3712,16 +3593,12 @@ wctype_table_finalize (struct wctype_table *t)
     if (t->level1[i] != EMPTY)
       t->level1[i] = reorder2[t->level1[i]];
 
-  /* Create and fill the resulting compressed representation.  */
   t->result_size =
     5 * sizeof (uint32_t)
     + t->level1_size * sizeof (uint32_t)
     + (t->level2_size << t->q) * sizeof (uint32_t)
     + (t->level3_size << t->p) * sizeof (uint32_t);
-  t->result = (char *) xmalloc (t->result_size);
 
-  level1_offset =
-    5 * sizeof (uint32_t);
   level2_offset =
     5 * sizeof (uint32_t)
     + t->level1_size * sizeof (uint32_t);
@@ -3730,26 +3607,29 @@ wctype_table_finalize (struct wctype_table *t)
     + t->level1_size * sizeof (uint32_t)
     + (t->level2_size << t->q) * sizeof (uint32_t);
 
-  ((uint32_t *) t->result)[0] = t->q + t->p + 5;
-  ((uint32_t *) t->result)[1] = t->level1_size;
-  ((uint32_t *) t->result)[2] = t->p + 5;
-  ((uint32_t *) t->result)[3] = (1 << t->q) - 1;
-  ((uint32_t *) t->result)[4] = (1 << t->p) - 1;
+  start_locale_structure (file);
+  add_locale_uint32 (file, t->q + t->p + 5);
+  add_locale_uint32 (file, t->level1_size);
+  add_locale_uint32 (file, t->p + 5);
+  add_locale_uint32 (file, (1 << t->q) - 1);
+  add_locale_uint32 (file, (1 << t->p) - 1);
 
   for (i = 0; i < t->level1_size; i++)
-    ((uint32_t *) (t->result + level1_offset))[i] =
-      (t->level1[i] == EMPTY
+    add_locale_uint32
+      (file,
+       t->level1[i] == EMPTY
        ? 0
        : (t->level1[i] << t->q) * sizeof (uint32_t) + level2_offset);
 
   for (i = 0; i < (t->level2_size << t->q); i++)
-    ((uint32_t *) (t->result + level2_offset))[i] =
-      (t->level2[i] == EMPTY
+    add_locale_uint32
+      (file,
+       t->level2[i] == EMPTY
        ? 0
        : (t->level2[i] << t->p) * sizeof (uint32_t) + level3_offset);
 
-  for (i = 0; i < (t->level3_size << t->p); i++)
-    ((uint32_t *) (t->result + level3_offset))[i] = t->level3[i];
+  add_locale_uint32_array (file, t->level3, t->level3_size << t->p);
+  end_locale_structure (file);
 
   if (t->level1_alloc > 0)
     free (t->level1);
@@ -3758,26 +3638,6 @@ wctype_table_finalize (struct wctype_table *t)
   if (t->level3_alloc > 0)
     free (t->level3);
 }
-
-#define TABLE wcwidth_table
-#define ELEMENT uint8_t
-#define DEFAULT 0xff
-#include "3level.h"
-
-#define TABLE wctrans_table
-#define ELEMENT int32_t
-#define DEFAULT 0
-#define wctrans_table_add wctrans_table_add_internal
-#include "3level.h"
-#undef wctrans_table_add
-/* The wctrans_table must actually store the difference between the
-   desired result and the argument.  */
-static inline void
-wctrans_table_add (struct wctrans_table *t, uint32_t wc, uint32_t mapped_wc)
-{
-  wctrans_table_add_internal (t, wc, mapped_wc - wc);
-}
-
 
 /* Flattens the included transliterations into a translit list.
    Inserts them in the list at `cursor', and returns the new cursor.  */
@@ -3855,8 +3715,8 @@ allocate_arrays (struct locale_ctype_t *ctype, const struct charmap_t *charmap,
   ctype->ctype32_b = (char_class32_t *) xcalloc (256, sizeof (char_class32_t));
   ctype->class_b = (uint32_t **)
     xmalloc (ctype->nr_charclass * sizeof (uint32_t *));
-  ctype->class_3level = (struct iovec *)
-    xmalloc (ctype->nr_charclass * sizeof (struct iovec));
+  ctype->class_3level = (struct wctype_table *)
+    xmalloc (ctype->nr_charclass * sizeof (struct wctype_table));
 
   /* This is the array accessed using the multibyte string elements.  */
   for (idx = 0; idx < 256; ++idx)
@@ -3888,34 +3748,30 @@ allocate_arrays (struct locale_ctype_t *ctype, const struct charmap_t *charmap,
 
   for (nr = 0; nr < ctype->nr_charclass; nr++)
     {
-      struct wctype_table t;
+      struct wctype_table *t;
 
-      t.p = 4; /* or: 5 */
-      t.q = 7; /* or: 6 */
-      wctype_table_init (&t);
+      t = &ctype->class_3level[nr];
+      t->p = 4; /* or: 5 */
+      t->q = 7; /* or: 6 */
+      wctype_table_init (t);
 
       for (idx = 0; idx < ctype->class_collection_act; ++idx)
 	if (ctype->class_collection[idx] & _ISwbit (nr))
-	  wctype_table_add (&t, ctype->charnames[idx]);
-
-      wctype_table_finalize (&t);
+	  wctype_table_add (t, ctype->charnames[idx]);
 
       if (verbose)
 	WITH_CUR_LOCALE (fprintf (stderr, _("\
 %s: table for class \"%s\": %lu bytes\n"),
 				 "LC_CTYPE", ctype->classnames[nr],
-				 (unsigned long int) t.result_size));
-
-      ctype->class_3level[nr].iov_base = t.result;
-      ctype->class_3level[nr].iov_len = t.result_size;
+				 (unsigned long int) t->result_size));
     }
 
   /* Room for table of mappings.  */
   ctype->map_b = (uint32_t **) xmalloc (2 * sizeof (uint32_t *));
   ctype->map32_b = (uint32_t **) xmalloc (ctype->map_collection_nr
 					  * sizeof (uint32_t *));
-  ctype->map_3level = (struct iovec *)
-    xmalloc (ctype->map_collection_nr * sizeof (struct iovec));
+  ctype->map_3level = (struct wctrans_table *)
+    xmalloc (ctype->map_collection_nr * sizeof (struct wctrans_table));
 
   /* Fill in all mappings.  */
   for (idx = 0; idx < 2; ++idx)
@@ -3956,27 +3812,23 @@ allocate_arrays (struct locale_ctype_t *ctype, const struct charmap_t *charmap,
 
   for (nr = 0; nr < ctype->map_collection_nr; nr++)
     {
-      struct wctrans_table t;
+      struct wctrans_table *t;
 
-      t.p = 7;
-      t.q = 9;
-      wctrans_table_init (&t);
+      t = &ctype->map_3level[nr];
+      t->p = 7;
+      t->q = 9;
+      wctrans_table_init (t);
 
       for (idx = 0; idx < ctype->map_collection_act[nr]; ++idx)
 	if (ctype->map_collection[nr][idx] != 0)
-	  wctrans_table_add (&t, ctype->charnames[idx],
+	  wctrans_table_add (t, ctype->charnames[idx],
 			     ctype->map_collection[nr][idx]);
-
-      wctrans_table_finalize (&t);
 
       if (verbose)
 	WITH_CUR_LOCALE (fprintf (stderr, _("\
 %s: table for map \"%s\": %lu bytes\n"),
 				 "LC_CTYPE", ctype->mapnames[nr],
-				 (unsigned long int) t.result_size));
-
-      ctype->map_3level[nr].iov_base = t.result;
-      ctype->map_3level[nr].iov_len = t.result_size;
+				 (unsigned long int) t->result_size));
     }
 
   /* Extra array for class and map names.  */
@@ -3996,11 +3848,12 @@ allocate_arrays (struct locale_ctype_t *ctype, const struct charmap_t *charmap,
      saves a run-time check.
      But we put L'\0' in the table.  This again saves a run-time check.  */
   {
-    struct wcwidth_table t;
+    struct wcwidth_table *t;
 
-    t.p = 7;
-    t.q = 9;
-    wcwidth_table_init (&t);
+    t = &ctype->width;
+    t->p = 7;
+    t->q = 9;
+    wcwidth_table_init (t);
 
     /* First set all the printable characters of the character set to
        the default width.  */
@@ -4020,7 +3873,7 @@ allocate_arrays (struct locale_ctype_t *ctype, const struct charmap_t *charmap,
 			&ctype->class_collection_act, data->ucs4);
 
 	    if (class_bits != NULL && (*class_bits & BITw (tok_print)))
-	      wcwidth_table_add (&t, data->ucs4, charmap->width_default);
+	      wcwidth_table_add (t, data->ucs4, charmap->width_default);
 	  }
       }
 
@@ -4068,7 +3921,7 @@ allocate_arrays (struct locale_ctype_t *ctype, const struct charmap_t *charmap,
 				&ctype->class_collection_act, wch);
 
 		    if (class_bits != NULL && (*class_bits & BITw (tok_print)))
-		      wcwidth_table_add (&t, wch,
+		      wcwidth_table_add (t, wch,
 					 charmap->width_rules[cnt].width);
 		  }
 
@@ -4098,16 +3951,11 @@ allocate_arrays (struct locale_ctype_t *ctype, const struct charmap_t *charmap,
       }
 
     /* Set the width of L'\0' to 0.  */
-    wcwidth_table_add (&t, 0, 0);
-
-    wcwidth_table_finalize (&t);
+    wcwidth_table_add (t, 0, 0);
 
     if (verbose)
       WITH_CUR_LOCALE (fprintf (stderr, _("%s: table for width: %lu bytes\n"),
-			       "LC_CTYPE", (unsigned long int) t.result_size));
-
-    ctype->width.iov_base = t.result;
-    ctype->width.iov_len = t.result_size;
+			       "LC_CTYPE", (unsigned long int) t->result_size));
   }
 
   /* Set MB_CUR_MAX.  */

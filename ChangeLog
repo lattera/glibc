@@ -1,3 +1,83 @@
+2013-09-06  Richard Sandiford  <richard@codesourcery.com>
+	    Joseph Myers  <joseph@codesourcery.com>
+
+	* locale/programs/locfile.c: Include <assert.h>, <wchar.h> and
+	"localeinfo.h".
+	(obstack_chunk_alloc): New macro.
+	(obstack_chunk_free): Likewise.
+	(record_offset): New function.
+	(init_locale_data): Likewise.
+	(align_locale_data): Likewise.
+	(add_locale_empty): Likewise.
+	(add_locale_raw_data): Likewise.
+	(add_locale_raw_obstack): Likewise.
+	(add_locale_string): Likewise.
+	(add_locale_wstring): Likewise.
+	(add_locale_uint32): Likewise.
+	(add_locale_uint32_array): Likewise.
+	(add_locale_char): Likewise.
+	(start_locale_structure): Likewise.
+	(end_locale_structure): Likewise.
+	(start_locale_prelude): Likewise.
+	(end_locale_prelude): Likewise.
+	(write_locale_data): Take locale_file structure rather than an
+	iovec.
+	* locale/programs/locfile.h: Include "obstack.h".
+	(struct locale_file): Change to store locale file contents instead
+	of header.
+	(init_locale_data): New prototype.
+	(align_locale_data): Likewise.
+	(add_locale_empty): Likewise.
+	(add_locale_raw_data): Likewise.
+	(add_locale_raw_obstack): Likewise.
+	(add_locale_string): Likewise.
+	(add_locale_wstring): Likewise.
+	(add_locale_uint32): Likewise.
+	(add_locale_uint32_array): Likewise.
+	(add_locale_char): Likewise.
+	(start_locale_structure): Likewise.
+	(end_locale_structure): Likewise.
+	(start_locale_prelude): Likewise.
+	(end_locale_prelude): Likewise.
+	(write_locale_data): Update prototype.
+	* locale/programs/3level.h (struct TABLE): Remove result field.
+	(CONCAT(TABLE,_finalize)): Change to CONCAT(add_locale_,TABLE).
+	Use new locale_file interface.
+	[!NO_FINALIZE]: Change condition to [!NO_ADD_LOCALE].
+	(NO_FINALIZE): Change #undef to #undef of NO_ADD_LOCALE.
+	* locale/programs/ld-address.c (address_output): Use new
+	locale_file interface.
+	* locale/programs/ld-collate.c (NO_FINALIZE): Change to
+	NO_ADD_LOCALE.
+	(collate_finish): Don't call collseq_table_finalize.
+	(collate_output): Use new locale_file interface.
+	* locale/programs/ld-ctype.c: Move includes of "3level.h" earlier
+	in file.
+	(NO_FINALIZE): Change to NO_ADD_LOCALE.
+	(TABLE): Move defines earlier in file.
+	(ELEMENT): Likewise.
+	(DEFAULT): Likewise.
+	(wctrans_table_add): Move macro and inline function earlier in
+	file.
+	(struct wctype_table): Move type earlier in file.
+	(add_locale_wctype_table): New static prototype.
+	(struct locale_ctype_t): Use logical types instead of struct iovec
+	pointers for members.
+	(ctype_output): Use new locale_file interface.
+	(wctype_table_finalize): Change to add_locale_wctype_table.  Use
+	new locale_file interface.
+	(allocate_arrays): Update for use of new locale_file interface.
+	* locale/programs/ld-identification.c (identification_output): Use
+	new locale_file interface.
+	* locale/programs/ld-measurement.c (measurement_output): Likewise.
+	* locale/programs/ld-messages.c (messages_output): Likewise.
+	* locale/programs/ld-monetary.c (monetary_output): Likewise.
+	* locale/programs/ld-name.c (name_output): Likewise.
+	* locale/programs/ld-numeric.c (numeric_output): Likewise.
+	* locale/programs/ld-paper.c (paper_output): Likewise.
+	* locale/programs/ld-telephone.c (telephone_output): Likewise.
+	* locale/programs/ld-time.c (time_output): Likewise.
+
 2013-09-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* benchtests/Makefile: Add memrchr benchmark.

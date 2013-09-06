@@ -27,14 +27,19 @@
 #include <unistd.h>
 #include <sys/param.h>
 #include <sys/stat.h>
+#include <assert.h>
+#include <wchar.h>
 
 #include "../../crypt/md5.h"
 #include "localedef.h"
+#include "localeinfo.h"
 #include "locfile.h"
 #include "simple-hash.h"
 
 #include "locfile-kw.h"
 
+#define obstack_chunk_alloc xmalloc
+#define obstack_chunk_free free
 
 /* Temporary storage of the locale data before writing it to the archive.  */
 static locale_data_t to_archive;
@@ -533,17 +538,177 @@ compare_files (const char *filename1, const char *filename2, size_t size,
   return ret;
 }
 
+/* When called outside a start_locale_structure/end_locale_structure
+   or start_locale_prelude/end_locale_prelude block, record that the
+   next byte in FILE's obstack will be the first byte of a new element.
+   Do likewise for the first call inside a start_locale_structure/
+   end_locale_structure block.  */
+static void
+record_offset (struct locale_file *file)
+{
+  if (file->structure_stage < 2)
+    {
+      assert (file->next_element < file->n_elements);
+      file->offsets[file->next_element++]
+	= (obstack_object_size (&file->data)
+	   + (file->n_elements + 2) * sizeof (uint32_t));
+      if (file->structure_stage == 1)
+	file->structure_stage = 2;
+    }
+}
 
-/* Write a locale file, with contents given by N_ELEM and VEC.  */
+/* Initialize FILE for a new output file.  N_ELEMENTS is the number
+   of elements in the file.  */
+void
+init_locale_data (struct locale_file *file, size_t n_elements)
+{
+  file->n_elements = n_elements;
+  file->next_element = 0;
+  file->offsets = xmalloc (sizeof (uint32_t) * n_elements);
+  obstack_init (&file->data);
+  file->structure_stage = 0;
+}
+
+/* Align the size of FILE's obstack object to BOUNDARY bytes.  */
+void
+align_locale_data (struct locale_file *file, size_t boundary)
+{
+  size_t size = -obstack_object_size (&file->data) & (boundary - 1);
+  obstack_blank (&file->data, size);
+  memset (obstack_next_free (&file->data) - size, 0, size);
+}
+
+/* Record that FILE's next element contains no data.  */
+void
+add_locale_empty (struct locale_file *file)
+{
+  record_offset (file);
+}
+
+/* Record that FILE's next element consists of SIZE bytes starting at DATA.  */
+void
+add_locale_raw_data (struct locale_file *file, const void *data, size_t size)
+{
+  record_offset (file);
+  obstack_grow (&file->data, data, size);
+}
+
+/* Finish the current object on OBSTACK and use it as the data for FILE's
+   next element.  */
+void
+add_locale_raw_obstack (struct locale_file *file, struct obstack *obstack)
+{
+  size_t size = obstack_object_size (obstack);
+  record_offset (file);
+  obstack_grow (&file->data, obstack_finish (obstack), size);
+}
+
+/* Use STRING as FILE's next element.  */
+void
+add_locale_string (struct locale_file *file, const char *string)
+{
+  record_offset (file);
+  obstack_grow (&file->data, string, strlen (string) + 1);
+}
+
+/* Likewise for wide strings.  */
+void
+add_locale_wstring (struct locale_file *file, const uint32_t *string)
+{
+  add_locale_uint32_array (file, string, wcslen ((const wchar_t *) string) + 1);
+}
+
+/* Record that FILE's next element is the 32-bit integer VALUE.  */
+void
+add_locale_uint32 (struct locale_file *file, uint32_t value)
+{
+  align_locale_data (file, sizeof (uint32_t));
+  record_offset (file);
+  obstack_grow (&file->data, &value, sizeof (value));
+}
+
+/* Record that FILE's next element is an array of N_ELEMS integers
+   starting at DATA.  */
+void
+add_locale_uint32_array (struct locale_file *file,
+			 const uint32_t *data, size_t n_elems)
+{
+  align_locale_data (file, sizeof (uint32_t));
+  record_offset (file);
+  obstack_grow (&file->data, data, n_elems * sizeof (uint32_t));
+}
+
+/* Record that FILE's next element is the single byte given by VALUE.  */
+void
+add_locale_char (struct locale_file *file, char value)
+{
+  record_offset (file);
+  obstack_1grow (&file->data, value);
+}
+
+/* Start building an element that contains several different pieces of data.
+   Subsequent calls to add_locale_* will add data to the same element up
+   till the next call to end_locale_structure.  The element's alignment
+   is dictated by the first piece of data added to it.  */
+void
+start_locale_structure (struct locale_file *file)
+{
+  assert (file->structure_stage == 0);
+  file->structure_stage = 1;
+}
+
+/* Finish a structure element that was started by start_locale_structure.
+   Empty structures are OK and behave like add_locale_empty.  */
+void
+end_locale_structure (struct locale_file *file)
+{
+  record_offset (file);
+  assert (file->structure_stage == 2);
+  file->structure_stage = 0;
+}
+
+/* Start building data that goes before the next element's recorded offset.
+   Subsequent calls to add_locale_* will add data to the file without
+   treating any of it as the start of a new element.  Calling
+   end_locale_prelude switches back to the usual behavior.  */
+void
+start_locale_prelude (struct locale_file *file)
+{
+  assert (file->structure_stage == 0);
+  file->structure_stage = 3;
+}
+
+/* End a block started by start_locale_prelude.  */
+void
+end_locale_prelude (struct locale_file *file)
+{
+  assert (file->structure_stage == 3);
+  file->structure_stage = 0;
+}
+
+/* Write a locale file, with contents given by FILE.  */
 void
 write_locale_data (const char *output_path, int catidx, const char *category,
-		   size_t n_elem, struct iovec *vec)
+		   struct locale_file *file)
 {
   size_t cnt, step, maxiov;
   int fd;
   char *fname;
   const char **other_paths;
+  uint32_t header[2];
+  size_t n_elem;
+  struct iovec vec[3];
 
+  assert (file->n_elements == file->next_element);
+  header[0] = LIMAGIC (catidx);
+  header[1] = file->n_elements;
+  vec[0].iov_len = sizeof (header);
+  vec[0].iov_base = header;
+  vec[1].iov_len = sizeof (uint32_t) * file->n_elements;
+  vec[1].iov_base = file->offsets;
+  vec[2].iov_len = obstack_object_size (&file->data);
+  vec[2].iov_base = obstack_finish (&file->data);
+  n_elem = 3;
   if (! no_archive)
     {
       /* The data will be added to the archive.  For now we simply

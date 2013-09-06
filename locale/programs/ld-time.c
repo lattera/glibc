@@ -539,394 +539,116 @@ time_output (struct localedef_t *locale, const struct charmap_t *charmap,
 	     const char *output_path)
 {
   struct locale_time_t *time = locale->categories[LC_TIME].time;
-  struct iovec *iov = alloca (sizeof *iov
-			      * (2 + _NL_ITEM_INDEX (_NL_NUM_LC_TIME)
-				 + time->num_era - 1
-				 + 2 * 99
-				 + 2 + time->num_era * 10));
-  struct locale_file data;
-  uint32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_TIME)];
-  size_t cnt, last_idx, num, n;
+  struct locale_file file;
+  size_t num, n;
 
-  data.magic = LIMAGIC (LC_TIME);
-  data.n = _NL_ITEM_INDEX (_NL_NUM_LC_TIME);
-  iov[0].iov_base = (void *) &data;
-  iov[0].iov_len = sizeof (data);
-
-  iov[1].iov_base = (void *) idx;
-  iov[1].iov_len = sizeof (idx);
-
-  idx[0] = iov[0].iov_len + iov[1].iov_len;
+  init_locale_data (&file, _NL_ITEM_INDEX (_NL_NUM_LC_TIME));
 
   /* The ab'days.  */
-  for (cnt = 0; cnt <= _NL_ITEM_INDEX (ABDAY_7); ++cnt)
-    {
-      iov[2 + cnt].iov_base =
-	(void *) (time->abday[cnt - _NL_ITEM_INDEX (ABDAY_1)] ?: "");
-      iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
-      idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-    }
+  for (n = 0; n < 7; ++n)
+    add_locale_string (&file, time->abday[n] ?: "");
 
   /* The days.  */
-  for (; cnt <= _NL_ITEM_INDEX (DAY_7); ++cnt)
-    {
-      iov[2 + cnt].iov_base =
-	(void *) (time->day[cnt - _NL_ITEM_INDEX (DAY_1)] ?: "");
-      iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
-      idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-    }
+  for (n = 0; n < 7; ++n)
+    add_locale_string (&file, time->day[n] ?: "");
 
   /* The ab'mons.  */
-  for (; cnt <= _NL_ITEM_INDEX (ABMON_12); ++cnt)
-    {
-      iov[2 + cnt].iov_base =
-	(void *) (time->abmon[cnt - _NL_ITEM_INDEX (ABMON_1)] ?: "");
-      iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
-      idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-    }
+  for (n = 0; n < 12; ++n)
+    add_locale_string (&file, time->abmon[n] ?: "");
 
   /* The mons.  */
-  for (; cnt <= _NL_ITEM_INDEX (MON_12); ++cnt)
-    {
-      iov[2 + cnt].iov_base =
-	(void *) (time->mon[cnt - _NL_ITEM_INDEX (MON_1)] ?: "");
-      iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
-      idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-    }
+  for (n = 0; n < 12; ++n)
+    add_locale_string (&file, time->mon[n] ?: "");
 
   /* AM/PM.  */
-  for (; cnt <= _NL_ITEM_INDEX (PM_STR); ++cnt)
-    {
-      iov[2 + cnt].iov_base =
-	(void *) (time->am_pm[cnt - _NL_ITEM_INDEX (AM_STR)] ?: "");
-      iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
-      idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-    }
+  for (n = 0; n < 2; ++n)
+    add_locale_string (&file, time->am_pm[n]);
 
-  iov[2 + cnt].iov_base = (void *) (time->d_t_fmt ?: "");
-  iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  ++cnt;
+  add_locale_string (&file, time->d_t_fmt ?: "");
+  add_locale_string (&file, time->d_fmt ?: "");
+  add_locale_string (&file, time->t_fmt ?: "");
+  add_locale_string (&file, time->t_fmt_ampm ?: "");
 
-  iov[2 + cnt].iov_base = (void *) (time->d_fmt ?: "");
-  iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  ++cnt;
+  start_locale_structure (&file);
+  for (num = 0; num < time->num_era; ++num)
+    add_locale_string (&file, time->era[num]);
+  end_locale_structure (&file);
 
-  iov[2 + cnt].iov_base = (void *) (time->t_fmt ?: "");
-  iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  ++cnt;
+  add_locale_string (&file, time->era_year ?: "");
+  add_locale_string (&file, time->era_d_fmt ?: "");
 
-  iov[2 + cnt].iov_base = (void *) (time->t_fmt_ampm ?: "");
-  iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  last_idx = ++cnt;
+  start_locale_structure (&file);
+  for (num = 0; num < 100; ++num)
+    add_locale_string (&file, time->alt_digits[num] ?: "");
+  end_locale_structure (&file);
 
-  idx[1 + last_idx] = idx[last_idx];
-  for (num = 0; num < time->num_era; ++num, ++cnt)
-    {
-      iov[2 + cnt].iov_base = (void *) time->era[num];
-      iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
-      idx[1 + last_idx] += iov[2 + cnt].iov_len;
-    }
-  ++last_idx;
+  add_locale_string (&file, time->era_d_t_fmt ?: "");
+  add_locale_string (&file, time->era_t_fmt ?: "");
+  add_locale_uint32 (&file, time->num_era);
 
-  iov[2 + cnt].iov_base = (void *) (time->era_year ?: "");
-  iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) (time->era_d_fmt ?: "");
-  iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  idx[1 + last_idx] = idx[last_idx];
-  for (num = 0; num < 100; ++num, ++cnt)
-    {
-      iov[2 + cnt].iov_base = (void *) (time->alt_digits[num] ?: "");
-      iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
-      idx[1 + last_idx] += iov[2 + cnt].iov_len;
-    }
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) (time->era_d_t_fmt ?: "");
-  iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) (time->era_t_fmt ?: "");
-  iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-
-  /* We must align the following data.  */
-  iov[2 + cnt].iov_base = (void *) "\0\0";
-  iov[2 + cnt].iov_len = ((idx[last_idx] + 3) & ~3) - idx[last_idx];
-  idx[last_idx] = (idx[last_idx] + 3) & ~3;
-  ++cnt;
-
-  /* The `era' data in usable form.  */
-  iov[2 + cnt].iov_base = (void *) &time->num_era;
-  iov[2 + cnt].iov_len = sizeof (uint32_t);
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  idx[1 + last_idx] = idx[last_idx];
+  start_locale_structure (&file);
   for (num = 0; num < time->num_era; ++num)
     {
-      size_t l, l2;
-
-      iov[2 + cnt].iov_base = (void *) &time->era_entries[num].direction;
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-      iov[2 + cnt].iov_base = (void *) &time->era_entries[num].offset;
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-      iov[2 + cnt].iov_base = (void *) &time->era_entries[num].start_date[0];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-      iov[2 + cnt].iov_base = (void *) &time->era_entries[num].start_date[1];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-      iov[2 + cnt].iov_base = (void *) &time->era_entries[num].start_date[2];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-      iov[2 + cnt].iov_base = (void *) &time->era_entries[num].stop_date[0];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-      iov[2 + cnt].iov_base = (void *) &time->era_entries[num].stop_date[1];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-      iov[2 + cnt].iov_base = (void *) &time->era_entries[num].stop_date[2];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-
-      l = ((char *) rawmemchr (time->era_entries[num].format, '\0')
-	   - time->era_entries[num].name) + 1;
-      l2 = (l + 3) & ~3;
-      iov[2 + cnt].iov_base = alloca (l2);
-      memset (mempcpy (iov[2 + cnt].iov_base, time->era_entries[num].name, l),
-	      '\0', l2 - l);
-      iov[2 + cnt].iov_len = l2;
-      ++cnt;
-
-      idx[1 + last_idx] += 8 * sizeof (int32_t) + l2;
-
-      assert (idx[1 + last_idx] % 4 == 0);
-
-      iov[2 + cnt].iov_base = (void *) time->era_entries[num].wname;
-      iov[2 + cnt].iov_len = ((wcschr ((wchar_t *) time->era_entries[num].wformat, L'\0')
-			       - (wchar_t *) time->era_entries[num].wname + 1)
-			      * sizeof (uint32_t));
-      idx[1 + last_idx] += iov[2 + cnt].iov_len;
-      ++cnt;
+      add_locale_uint32 (&file, time->era_entries[num].direction);
+      add_locale_uint32 (&file, time->era_entries[num].offset);
+      add_locale_uint32 (&file, time->era_entries[num].start_date[0]);
+      add_locale_uint32 (&file, time->era_entries[num].start_date[1]);
+      add_locale_uint32 (&file, time->era_entries[num].start_date[2]);
+      add_locale_uint32 (&file, time->era_entries[num].stop_date[0]);
+      add_locale_uint32 (&file, time->era_entries[num].stop_date[1]);
+      add_locale_uint32 (&file, time->era_entries[num].stop_date[2]);
+      add_locale_string (&file, time->era_entries[num].name);
+      add_locale_string (&file, time->era_entries[num].format);
+      add_locale_wstring (&file, time->era_entries[num].wname);
+      add_locale_wstring (&file, time->era_entries[num].wformat);
     }
-  ++last_idx;
+  end_locale_structure (&file);
 
   /* The wide character ab'days.  */
-  for (n = 0; n < 7; ++n, ++cnt, ++last_idx)
-    {
-      iov[2 + cnt].iov_base =
-	(void *) (time->wabday[n] ?: empty_wstr);
-      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			      * sizeof (uint32_t));
-      idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-    }
+  for (n = 0; n < 7; ++n)
+    add_locale_wstring (&file, time->wabday[n] ?: empty_wstr);
 
   /* The wide character days.  */
-  for (n = 0; n < 7; ++n, ++cnt, ++last_idx)
-    {
-      iov[2 + cnt].iov_base =
-	(void *) (time->wday[n] ?: empty_wstr);
-      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			      * sizeof (uint32_t));
-      idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-    }
+  for (n = 0; n < 7; ++n)
+    add_locale_wstring (&file, time->wday[n] ?: empty_wstr);
 
   /* The wide character ab'mons.  */
-  for (n = 0; n < 12; ++n, ++cnt, ++last_idx)
-    {
-      iov[2 + cnt].iov_base =
-	(void *) (time->wabmon[n] ?: empty_wstr);
-      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			      * sizeof (uint32_t));
-      idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-    }
+  for (n = 0; n < 12; ++n)
+    add_locale_wstring (&file, time->wabmon[n] ?: empty_wstr);
 
   /* The wide character mons.  */
-  for (n = 0; n < 12; ++n, ++cnt, ++last_idx)
-    {
-      iov[2 + cnt].iov_base =
-	(void *) (time->wmon[n] ?: empty_wstr);
-      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			      * sizeof (uint32_t));
-      idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-    }
+  for (n = 0; n < 12; ++n)
+    add_locale_wstring (&file, time->wmon[n] ?: empty_wstr);
 
   /* Wide character AM/PM.  */
-  for (n = 0; n < 2; ++n, ++cnt, ++last_idx)
-    {
-      iov[2 + cnt].iov_base =
-	(void *) (time->wam_pm[n] ?: empty_wstr);
-      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			      * sizeof (uint32_t));
-      idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-    }
+  for (n = 0; n < 2; ++n)
+    add_locale_wstring (&file, time->wam_pm[n] ?: empty_wstr);
 
-  iov[2 + cnt].iov_base = (void *) (time->wd_t_fmt ?: empty_wstr);
-  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			  * sizeof (uint32_t));
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
+  add_locale_wstring (&file, time->wd_t_fmt ?: empty_wstr);
+  add_locale_wstring (&file, time->wd_fmt ?: empty_wstr);
+  add_locale_wstring (&file, time->wt_fmt ?: empty_wstr);
+  add_locale_wstring (&file, time->wt_fmt_ampm ?: empty_wstr);
+  add_locale_wstring (&file, time->wera_year ?: empty_wstr);
+  add_locale_wstring (&file, time->wera_d_fmt ?: empty_wstr);
 
-  iov[2 + cnt].iov_base = (void *) (time->wd_fmt ?: empty_wstr);
-  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			  * sizeof (uint32_t));
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
+  start_locale_structure (&file);
+  for (num = 0; num < 100; ++num)
+    add_locale_wstring (&file, time->walt_digits[num] ?: empty_wstr);
+  end_locale_structure (&file);
 
-  iov[2 + cnt].iov_base = (void *) (time->wt_fmt ?: empty_wstr);
-  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			  * sizeof (uint32_t));
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) (time->wt_fmt_ampm ?: empty_wstr);
-  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			  * sizeof (uint32_t));
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) (time->wera_year ?: empty_wstr);
-  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			  * sizeof (uint32_t));
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) (time->wera_d_fmt ?: empty_wstr);
-  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			  * sizeof (uint32_t));
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  idx[1 + last_idx] = idx[last_idx];
-  for (num = 0; num < 100; ++num, ++cnt)
-    {
-      iov[2 + cnt].iov_base = (void *) (time->walt_digits[num]
-					?: empty_wstr);
-      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			      * sizeof (uint32_t));
-      idx[1 + last_idx] += iov[2 + cnt].iov_len;
-    }
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) (time->wera_d_t_fmt ?: empty_wstr);
-  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			  * sizeof (uint32_t));
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) (time->wera_t_fmt ?: empty_wstr);
-  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			  * sizeof (uint32_t));
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) &time->week_ndays;
-  iov[2 + cnt].iov_len = 1;
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  /* We must align the following data.  */
-  iov[2 + cnt].iov_base = (void *) "\0\0";
-  iov[2 + cnt].iov_len = ((idx[last_idx] + 3) & ~3) - idx[last_idx];
-  idx[last_idx] = (idx[last_idx] + 3) & ~3;
-  ++cnt;
-
-  iov[2 + cnt].iov_base = (void *) &time->week_1stday;
-  iov[2 + cnt].iov_len = sizeof(uint32_t);
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) &time->week_1stweek;
-  iov[2 + cnt].iov_len = 1;
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) &time->first_weekday;
-  iov[2 + cnt].iov_len = 1;
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) &time->first_workday;
-  iov[2 + cnt].iov_len = 1;
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) &time->cal_direction;
-  iov[2 + cnt].iov_len = 1;
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) time->timezone;
-  iov[2 + cnt].iov_len = strlen (time->timezone) + 1;
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) time->date_fmt;
-  iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  /* We must align the following data.  */
-  iov[2 + cnt].iov_base = (void *) "\0\0";
-  iov[2 + cnt].iov_len = -idx[last_idx] & 3;
-  idx[last_idx] += -idx[last_idx] & 3;
-  ++cnt;
-
-  iov[2 + cnt].iov_base = (void *) time->wdate_fmt;
-  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-                          * sizeof (uint32_t));
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) charmap->code_set_name;
-  iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
-  ++cnt;
-  ++last_idx;
-
-  assert (cnt == (_NL_ITEM_INDEX (_NL_NUM_LC_TIME)
-		  + time->num_era - 1
-		  + 2 * 99
-		  + 2 + time->num_era * 10));
-  assert (last_idx  == _NL_ITEM_INDEX (_NL_NUM_LC_TIME));
-
-  write_locale_data (output_path, LC_TIME, "LC_TIME", 2 + cnt, iov);
+  add_locale_wstring (&file, time->wera_d_t_fmt ?: empty_wstr);
+  add_locale_wstring (&file, time->wera_t_fmt ?: empty_wstr);
+  add_locale_char (&file, time->week_ndays);
+  add_locale_uint32 (&file, time->week_1stday);
+  add_locale_char (&file, time->week_1stweek);
+  add_locale_char (&file, time->first_weekday);
+  add_locale_char (&file, time->first_workday);
+  add_locale_char (&file, time->cal_direction);
+  add_locale_string (&file, time->timezone);
+  add_locale_string (&file, time->date_fmt);
+  add_locale_wstring (&file, time->wdate_fmt);
+  add_locale_string (&file, charmap->code_set_name);
+  write_locale_data (output_path, LC_TIME, "LC_TIME", &file);
 }
 
 
