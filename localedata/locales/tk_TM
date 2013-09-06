@@ -399,18 +399,20 @@ LC_MESSAGES
 % (used for "yes" in English, but corresponding to "no" in Turkmen (well,
 %  ý actually)
 %%%%%%%%
-yesstr  "<U0068><U0061><U0077><U0061>" % hawa
-nostr   "<U00FD><U006F><U006B>"        % ýok
+% hawa
+yesstr  "<U0068><U0061><U0077><U0061>"
+% ýok
+nostr   "<U00FD><U006F><U006B>"
+% [hH]
 yesexpr "<U005E><U005B><U0068><U0048>/
-<U005D><U002E><U002A>"                 % [hH]
+<U005D><U002E><U002A>"
+% [ýÝnN]              
 noexpr  "<U005E><U005B><U00FD><U00DD>/
-<U006E><U004E><U005D><U002E><U002A>"   % [ýÝnN]
+<U006E><U004E><U005D><U002E><U002A>"
 END LC_MESSAGES
 
 LC_PAPER
-%
 % A4 Paper
-%
 height 297
 width  210
 END LC_PAPER
@@ -433,19 +435,27 @@ postal_fmt   "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E><U0025>/
 <U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073><U0020><U0025>/
 <U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025><U004E><U0025>/
 <U007A><U0020><U0025><U0054><U0025><U004E><U0025><U0063><U0025><U004E>"
-
+% Türkmenistan
 country_name "<U0054><U00FC><U0072><U006B><U006D>/
-<U0065><U006E><U0069><U0073><U0074><U0061><U006E>" % Türkmenistan
-country_post "<U0054><U004D>"                      % TM
-country_car  "<U0054><U004D>"                      % TM
+<U0065><U006E><U0069><U0073><U0074><U0061><U006E>"
+% TM
+country_post "<U0054><U004D>"
+% TM
+country_car  "<U0054><U004D>"
 country_num  795
-country_ab2 "<U0054><U004D>"                       % TM
-country_ab3 "<U0054><U004B><U004D>"                % TKM
+% TM
+country_ab2 "<U0054><U004D>"
+% TKM
+country_ab3 "<U0054><U004B><U004D>"
+% Türkmençe
 lang_name   "<U0054><U00FC><U0072><U006B><U006D>/
-<U0065><U006E><U00E7><U0065>"                      % Türkmençe
-lang_term   "<U0074><U0075><U006B>"                % tuk
-lang_lib    "<U0074><U0075><U006B>"                % tuk
-lang_ab     "<U0074><U006B>"                       % tk
+<U0065><U006E><U00E7><U0065>"
+% tuk
+lang_term   "<U0074><U0075><U006B>"
+% tuk
+lang_lib    "<U0074><U0075><U006B>"
+% tk
+lang_ab     "<U0074><U006B>"
 END LC_ADDRESS
 
 LC_TELEPHONE

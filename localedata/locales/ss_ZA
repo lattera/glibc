@@ -232,7 +232,7 @@ country_post "<U005A><U0041>"
 
 % UN Geneve 1949:68 Distinguishing signs of vehicles in international traffic
 % http://www.unece.org/trans/conventn/disting-signs-5-2001.pdf
-% "ZA"
+% ZA
 country_car   "<U005A><U0041>"
 
 % FIXME define the following correctly
@@ -284,7 +284,5 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 country_num   710
 country_ab2   "<U005A><U0041>"
 country_ab3   "<U005A><U0041><U0046>"
-% ZA
-country_car    "<U005A><U0041>"
 
 END LC_ADDRESS
