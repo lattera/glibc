@@ -1,3 +1,8 @@
+2013-09-06  David S. Miller  <davem@davemloft.net>
+
+	* po/zh_TW.po: Update Chinese (traditional) translation from
+	translation project.
+
 2013-09-06  Richard Sandiford  <richard@codesourcery.com>
 	    Joseph Myers  <joseph@codesourcery.com>
 
