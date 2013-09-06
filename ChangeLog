@@ -1,3 +1,15 @@
+2013-09-05  Carlos O'Donell  <carlos@redhat.com>
+	    Cong Wang  <amwang@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/in.h
+	[_UAPI_LINUX_IN6_H]: Define __USE_KERNEL_IPV6_DEFS.
+	* inet/netinet/in.h: Move in_addr definition and bits/in.h inclusion
+	before __USE_KERNEL_IPV6_DEFS uses.
+	* inet/netinet/in.h [!__USE_KERNEL_IPV6_DEFS]: Define IPPROTO_MH, and
+	IPPROTO_BEETPH.
+	[__USE_KERNEL_IPV6_DEFS]: Don't define any of IPPROTO_*, in6_addr,
+	sockaddr_in6, or ipv6_mreq.
+
 2013-09-05  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power7/memrchr.S (__memrchr): Fix invalid
