@@ -1,3 +1,12 @@
+2013-09-06  Chris Leonard  <cjl@sugarlabs,.org>
+
+	* locales/nr_ZA: Deduplicate country_car.
+	* locales/nso_ZA: Likewise.
+	* locales/ss_ZA: Likewise.
+	* locales/tn_ZA: Likewise.
+	* locales/ve_ZA: Likewise.
+	* locales/tk_TM: Comment reformat.
+
 2013-09-04  Chris Leonard  <cjl@sugarlabs,.org>
 
      [BZ #15923]
