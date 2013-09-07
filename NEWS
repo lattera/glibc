@@ -22,6 +22,9 @@ Version 2.19
 
 * Update iso-1427.def and related occurrences.
 
+* The configure option --disable-versioning has been removed.  Builds with
+  --disable-versioning had not worked for several years.
+
 
 Version 2.18
 
