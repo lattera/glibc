@@ -263,6 +263,7 @@ get_null_defines (void)
   if (system (command))
     {
       puts ("system() returned nonzero");
+      free (command);
       return NULL;
     }
   free (command);

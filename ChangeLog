@@ -1,5 +1,8 @@
 2013-09-09  Allan McRae  <allan@archlinux.org>
 
+	[BZ #15893]
+	* stdlib/isomac.c (get_null_defines): Fix memory leak.
+
 	[BZ #15892]
 	* libio/memstream.c (open_memstream): Fix memory leak.
 	* libio/wmemstream.c (open_wmemstream): Likewise.
