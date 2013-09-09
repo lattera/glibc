@@ -1,3 +1,25 @@
+2013-09-09  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	* csu/init-first.c (_init): Remove the !SHARED condition around
+	FPU control word initialization.
+	* elf/dl-support.c (_dl_fpu_control): New variable.
+	(_dl_aux_init) <AT_FPUCW>: Initialize it.
+	* math/test-fpucw.c [!FPU_CONTROL] (FPU_CONTROL): New macro.
+	(main): Replace _FPU_DEFAULT with FPU_CONTROL throughout.
+	* math/test-fpucw-static.c: New file.
+	* math/test-fpucw-ieee.c: New file.
+	* math/test-fpucw-ieee-static.c: New file.
+	* math/Makefile (tests): Add `test-fpucw-ieee' and
+	`$(tests-static)'.
+	(tests-static): New variable.
+	[($(build-shared),yes)] ($(addprefix $(objpfx),$(tests))): Move
+	dependency to...
+	[($(build-shared),yes)]
+	($(addprefix $(objpfx),$(filter-out $(tests-static),$(tests)))):
+	... this.
+	[($(build-shared),yes)] ($(addprefix $(objpfx),$(tests-static))):
+	New dependency.
+
 2013-09-09  Allan McRae  <allan@archlinux.org>
 
 	[BZ #15939]

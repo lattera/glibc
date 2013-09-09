@@ -87,9 +87,11 @@ long-c-yes = $(calls:=l)
 
 # Rules for the test suite.
 tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
-	test-misc test-fpucw tst-definitions test-tgmath test-tgmath-ret \
-	bug-nextafter bug-nexttoward bug-tgmath1 test-tgmath-int \
-	test-tgmath2 test-powl tst-CMPLX tst-CMPLX2 test-snan
+	test-misc test-fpucw test-fpucw-ieee tst-definitions test-tgmath \
+	test-tgmath-ret bug-nextafter bug-nexttoward bug-tgmath1 \
+	test-tgmath-int test-tgmath2 test-powl tst-CMPLX tst-CMPLX2 test-snan \
+	$(tests-static)
+tests-static = test-fpucw-static test-fpucw-ieee-static
 # We do the `long double' tests only if this data type is available and
 # distinct from `double'.
 test-longdouble-yes = test-ldouble test-ildoubl
@@ -217,7 +219,8 @@ $(objpfx)libieee.a: $(objpfx)ieee-math.o
 	$(LN_S) $(<F) $(@F)
 
 ifeq ($(build-shared),yes)
-$(addprefix $(objpfx),$(tests)): $(objpfx)libm.so$(libm.so-version)
+$(addprefix $(objpfx),$(filter-out $(tests-static),$(tests))): $(objpfx)libm.so$(libm.so-version)
+$(addprefix $(objpfx),$(tests-static)): $(objpfx)libm.a
 else
 $(addprefix $(objpfx),$(tests)): $(objpfx)libm.a
 endif

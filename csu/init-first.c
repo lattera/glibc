@@ -61,11 +61,8 @@ _init (int argc, char **argv, char **envp)
   if (!__libc_multiple_libcs)
     {
       /* Set the FPU control word to the proper default value if the
-	 kernel would use a different value.  (In a static program we
-	 don't have this information.)  */
-#ifdef SHARED
+	 kernel would use a different value.  */
       if (__fpu_control != GLRO(dl_fpu_control))
-#endif
 	__setfpucw (__fpu_control);
     }
 

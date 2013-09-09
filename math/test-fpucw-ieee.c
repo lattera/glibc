@@ -1,6 +1,6 @@
-/* Copyright (C) 2000-2013 Free Software Foundation, Inc.
+/* FPU control word overridden initialization test.
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Andreas Jaeger <aj@suse.de>, 2000.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,31 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <fpu_control.h>
-#include <stdio.h>
+#define FPU_CONTROL _FPU_IEEE
 
-#ifndef FPU_CONTROL
-# define FPU_CONTROL _FPU_DEFAULT
-#endif
+#include "test-fpucw.c"
 
-int
-main (void)
-{
-#ifdef _FPU_GETCW
-/* Some architectures don't have _FPU_GETCW (e.g. Linux/Alpha).  */
-  fpu_control_t cw;
-
-  _FPU_GETCW (cw);
-
-  cw &= ~_FPU_RESERVED;
-
-  if (cw != (FPU_CONTROL & ~_FPU_RESERVED))
-    printf ("control word is 0x%lx but should be 0x%lx.\n",
-	    (long int) cw, (long int) (FPU_CONTROL & ~_FPU_RESERVED));
-
-  return cw != (FPU_CONTROL & ~_FPU_RESERVED);
-
-#else
-  return 0;
-#endif
-}
+/* Preempt the library's definition of `__fpu_control'.  */
+fpu_control_t __fpu_control = _FPU_IEEE;
