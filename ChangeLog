@@ -1,5 +1,10 @@
 2013-09-09  Allan McRae  <allan@archlinux.org>
 
+	[BZ #15939]
+	* manual/string.texi (Collation Functions): Fix typo in
+	strcoll example.
+	Reported by Suren Karapetyan <me@suren.karapetyan.name>.
+
 	[BZ #15893]
 	* stdlib/isomac.c (get_null_defines): Fix memory leak.
 

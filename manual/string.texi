@@ -1370,7 +1370,7 @@ int
 compare_elements (const void *v1, const void *v2)
 @{
   char * const *p1 = v1;
-  char * const *p1 = v2;
+  char * const *p2 = v2;
 
   return strcoll (*p1, *p2);
 @}
