@@ -1,5 +1,9 @@
 2013-09-09  Allan McRae  <allan@archlinux.org>
 
+	[BZ #15892]
+	* libio/memstream.c (open_memstream): Fix memory leak.
+	* libio/wmemstream.c (open_wmemstream): Likewise.
+
 	[BZ #15895]
 	* nscd/netgroupcache.c: Fix nesting of ifdefs.
 

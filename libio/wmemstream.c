@@ -85,8 +85,10 @@ open_wmemstream (bufloc, sizeloc)
 
   buf = calloc (1, _IO_BUFSIZ);
   if (buf == NULL)
-    return NULL;
-
+    {
+      free (new_f);
+      return NULL;
+    }
   _IO_no_init (&new_f->fp._sf._sbf._f, 0, 0, &new_f->wd, &_IO_wmem_jumps);
   _IO_fwide (&new_f->fp._sf._sbf._f, 1);
   _IO_wstr_init_static (&new_f->fp._sf._sbf._f, buf,
