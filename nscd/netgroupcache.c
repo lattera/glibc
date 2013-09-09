@@ -591,10 +591,10 @@ addinnetgrX (struct database_dyn *db, int fd, request_header *req,
 # endif
 	}
       else
+#endif
 	{
-# ifndef __ASSUME_SENDFILE
+#if defined HAVE_SENDFILE && !defined __ASSUME_SENDFILE
 	use_write:
-# endif
 #endif
 	  writeall (fd, &dataset->resp, sizeof (innetgroup_response_header));
 	}

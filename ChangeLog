@@ -1,3 +1,8 @@
+2013-09-09  Allan McRae  <allan@archlinux.org>
+
+	[BZ #15895]
+	* nscd/netgroupcache.c: Fix nesting of ifdefs.
+
 2013-09-09  Will Newton  <will.newton@linaro.org>
 
 	* malloc/Makefile: Add tst-realloc to tests.
