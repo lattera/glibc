@@ -320,14 +320,11 @@ can dramatically improve performance with NIS+, and may help with DNS as
 well.
 
 One auxiliary program, @file{/usr/libexec/pt_chown}, is installed setuid
-@code{root}.  This program is invoked by the @code{grantpt} function; it
-sets the permissions on a pseudoterminal so it can be used by the
-calling process.  This means programs like @code{xterm} and
-@code{screen} do not have to be setuid to get a pty.  (There may be
-other reasons why they need privileges.)  If you are using a
-Linux kernel with the @code{devptsfs} or @code{devfs} filesystems
-providing pty slaves, you don't need this program; otherwise you do.
-The source for @file{pt_chown} is in @file{login/programs/pt_chown.c}.
+@code{root} if the @samp{--enable-pt_chown} configuration option is used.
+This program is invoked by the @code{grantpt} function; it sets the
+permissions on a pseudoterminal so it can be used by the calling process.
+If you are using a Linux kernel with the @code{devpts} filesystem enabled
+and mounted at @file{/dev/pts}, you don't need this program.
 
 After installation you might want to configure the timezone and locale
 installation of your system.  @Theglibc{} comes with a locale

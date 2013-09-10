@@ -1,3 +1,10 @@
+2013-09-10  Allan McRae  <allan@archlinux.org>
+
+	[BZ #15849]
+	* manual/install.texi (Running make install): Mention
+	--enable-pt-chown.
+	* INSTALL: Regenerated.
+
 2013-09-09  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	* csu/init-first.c (_init): Remove the !SHARED condition around

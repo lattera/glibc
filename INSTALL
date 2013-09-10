@@ -285,14 +285,11 @@ dramatically improve performance with NIS+, and may help with DNS as
 well.
 
    One auxiliary program, `/usr/libexec/pt_chown', is installed setuid
-`root'.  This program is invoked by the `grantpt' function; it sets the
-permissions on a pseudoterminal so it can be used by the calling
-process.  This means programs like `xterm' and `screen' do not have to
-be setuid to get a pty.  (There may be other reasons why they need
-privileges.)  If you are using a Linux kernel with the `devptsfs' or
-`devfs' filesystems providing pty slaves, you don't need this program;
-otherwise you do.  The source for `pt_chown' is in
-`login/programs/pt_chown.c'.
+`root' if the `--enable-pt_chown' configuration option is used.  This
+program is invoked by the `grantpt' function; it sets the permissions
+on a pseudoterminal so it can be used by the calling process.  If you
+are using a Linux kernel with the `devpts' filesystem enabled and
+mounted at `/dev/pts', you don't need this program.
 
    After installation you might want to configure the timezone and
 locale installation of your system.  The GNU C Library comes with a
