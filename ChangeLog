@@ -1,5 +1,9 @@
 2013-09-10  Allan McRae  <allan@archlinux.org>
 
+	[BZ #15748]
+	* manual/arith.texi (Parsing of Floats): Clarify
+	cross-reference.
+
 	[BZ #15849]
 	* manual/install.texi (Running make install): Mention
 	--enable-pt-chown.

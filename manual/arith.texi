@@ -2455,7 +2455,8 @@ is provided mostly for compatibility with existing code; using
 
 @Theglibc{} also provides @samp{_l} versions of these functions,
 which take an additional argument, the locale to use in conversion.
-@xref{Parsing of Integers}.
+
+See also @ref{Parsing of Integers}.
 
 @node System V Number Conversion
 @section Old-fashioned System V number-to-string functions
