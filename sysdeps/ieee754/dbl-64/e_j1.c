@@ -116,11 +116,6 @@ __ieee754_j1(double x)
 	    if(huge+x>one) return 0.5*x;/* inexact if x!=0 necessary */
 	}
 	z = x*x;
-#ifdef DO_NOT_USE_THIS
-	r =  z*(r00+z*(r01+z*(r02+z*r03)));
-	s =  one+z*(s01+z*(s02+z*(s03+z*(s04+z*s05))));
-	r *= x;
-#else
 	r1 = z*R[0]; z2=z*z;
 	r2 = R[1]+z*R[2]; z4=z2*z2;
 	r = r1 + z2*r2 + z4*R[3];
@@ -129,7 +124,6 @@ __ieee754_j1(double x)
 	s2 = S[2]+z*S[3];
 	s3 = S[4]+z*S[5];
 	s = s1 + z2*s2 + z4*s3;
-#endif
 	return(x*0.5+r/s);
 }
 strong_alias (__ieee754_j1, __j1_finite)
@@ -193,10 +187,6 @@ __ieee754_y1(double x)
 	    return(-tpi/x);
 	}
 	z = x*x;
-#ifdef DO_NOT_USE_THIS
-	u = U0[0]+z*(U0[1]+z*(U0[2]+z*(U0[3]+z*U0[4])));
-	v = one+z*(V0[0]+z*(V0[1]+z*(V0[2]+z*(V0[3]+z*V0[4]))));
-#else
 	u1 = U0[0]+z*U0[1];z2=z*z;
 	u2 = U0[2]+z*U0[3];z4=z2*z2;
 	u  = u1 + z2*u2 + z4*U0[4];
@@ -204,7 +194,6 @@ __ieee754_y1(double x)
 	v2 = V0[1]+z*V0[2];
 	v3 = V0[3]+z*V0[4];
 	v = v1 + z2*v2 + z4*v3;
-#endif
 	return(x*(u/v) + tpi*(__ieee754_j1(x)*__ieee754_log(x)-one/x));
 }
 strong_alias (__ieee754_y1, __y1_finite)
@@ -297,10 +286,6 @@ pone(double x)
 	else if(ix>=0x4006DB6D){p = pr3; q= ps3;}
 	else if(ix>=0x40000000){p = pr2; q= ps2;}
 	z = one/(x*x);
-#ifdef DO_NOT_USE_THIS
-	r = p[0]+z*(p[1]+z*(p[2]+z*(p[3]+z*(p[4]+z*p[5]))));
-	s = one+z*(q[0]+z*(q[1]+z*(q[2]+z*(q[3]+z*q[4]))));
-#else
 	r1 = p[0]+z*p[1]; z2=z*z;
 	r2 = p[2]+z*p[3]; z4=z2*z2;
 	r3 = p[4]+z*p[5];
@@ -309,7 +294,6 @@ pone(double x)
 	s2 = q[1]+z*q[2];
 	s3 = q[3]+z*q[4];
 	s = s1 + z2*s2 + z4*s3;
-#endif
 	return one+ r/s;
 }
 
@@ -406,10 +390,6 @@ qone(double x)
 	else if(ix>=0x4006DB6D){p = qr3; q= qs3;}
 	else if(ix>=0x40000000){p = qr2; q= qs2;}
 	z = one/(x*x);
-#ifdef DO_NOT_USE_THIS
-	r = p[0]+z*(p[1]+z*(p[2]+z*(p[3]+z*(p[4]+z*p[5]))));
-	s = one+z*(q[0]+z*(q[1]+z*(q[2]+z*(q[3]+z*(q[4]+z*q[5])))));
-#else
 	r1 = p[0]+z*p[1]; z2=z*z;
 	r2 = p[2]+z*p[3]; z4=z2*z2;
 	r3 = p[4]+z*p[5]; z6=z4*z2;
@@ -418,6 +398,5 @@ qone(double x)
 	s2 = q[1]+z*q[2];
 	s3 = q[3]+z*q[4];
 	s = s1 + z2*s2 + z4*s3 + z6*q[5];
-#endif
 	return (.375 + r/s)/x;
 }

@@ -209,10 +209,6 @@ double __erf(double x)
 		return x + efx*x;
 	    }
 	    z = x*x;
-#ifdef DO_NOT_USE_THIS
-	    r = pp0+z*(pp1+z*(pp2+z*(pp3+z*pp4)));
-	    s = one+z*(qq1+z*(qq2+z*(qq3+z*(qq4+z*qq5))));
-#else
 	    r1 = pp[0]+z*pp[1]; z2=z*z;
 	    r2 = pp[2]+z*pp[3]; z4=z2*z2;
 	    s1 = one+z*qq[1];
@@ -220,17 +216,12 @@ double __erf(double x)
 	    s3 = qq[4]+z*qq[5];
             r = r1 + z2*r2 + z4*pp[4];
 	    s  = s1 + z2*s2 + z4*s3;
-#endif
 	    y = r/s;
 	    return x + x*y;
 	}
 	if(ix < 0x3ff40000) {		/* 0.84375 <= |x| < 1.25 */
 	    double s2,s4,s6,P1,P2,P3,P4,Q1,Q2,Q3,Q4;
 	    s = fabs(x)-one;
-#ifdef DO_NOT_USE_THIS
-	    P = pa0+s*(pa1+s*(pa2+s*(pa3+s*(pa4+s*(pa5+s*pa6)))));
-	    Q = one+s*(qa1+s*(qa2+s*(qa3+s*(qa4+s*(qa5+s*qa6)))));
-#else
 	    P1 = pa[0]+s*pa[1]; s2=s*s;
 	    Q1 = one+s*qa[1];   s4=s2*s2;
 	    P2 = pa[2]+s*pa[3]; s6=s4*s2;
@@ -241,7 +232,6 @@ double __erf(double x)
 	    Q4 = qa[6];
 	    P = P1 + s2*P2 + s4*P3 + s6*P4;
 	    Q = Q1 + s2*Q2 + s4*Q3 + s6*Q4;
-#endif
 	    if(hx>=0) return erx + P/Q; else return -erx - P/Q;
 	}
 	if (ix >= 0x40180000) {		/* inf>|x|>=6 */
@@ -250,12 +240,6 @@ double __erf(double x)
 	x = fabs(x);
  	s = one/(x*x);
 	if(ix< 0x4006DB6E) {	/* |x| < 1/0.35 */
-#ifdef DO_NOT_USE_THIS
-	    R=ra0+s*(ra1+s*(ra2+s*(ra3+s*(ra4+s*(
-				ra5+s*(ra6+s*ra7))))));
-	    S=one+s*(sa1+s*(sa2+s*(sa3+s*(sa4+s*(
-				sa5+s*(sa6+s*(sa7+s*sa8)))))));
-#else
 	    double R1,R2,R3,R4,S1,S2,S3,S4,s2,s4,s6,s8;
 	    R1 = ra[0]+s*ra[1];s2 = s*s;
 	    S1 = one+s*sa[1];  s4 = s2*s2;
@@ -267,14 +251,7 @@ double __erf(double x)
 	    S4 = sa[6]+s*sa[7];
 	    R = R1 + s2*R2 + s4*R3 + s6*R4;
 	    S = S1 + s2*S2 + s4*S3 + s6*S4 + s8*sa[8];
-#endif
 	} else {	/* |x| >= 1/0.35 */
-#ifdef DO_NOT_USE_THIS
-	    R=rb0+s*(rb1+s*(rb2+s*(rb3+s*(rb4+s*(
-				rb5+s*rb6)))));
-	    S=one+s*(sb1+s*(sb2+s*(sb3+s*(sb4+s*(
-				sb5+s*(sb6+s*sb7))))));
-#else
 	    double R1,R2,R3,S1,S2,S3,S4,s2,s4,s6;
 	    R1 = rb[0]+s*rb[1];s2 = s*s;
 	    S1 = one+s*sb[1];  s4 = s2*s2;
@@ -285,7 +262,6 @@ double __erf(double x)
 	    S4 = sb[6]+s*sb[7];
 	    R = R1 + s2*R2 + s4*R3 + s6*rb[6];
 	    S = S1 + s2*S2 + s4*S3 + s6*S4;
-#endif
 	}
 	z  = x;
 	SET_LOW_WORD(z,0);
@@ -314,10 +290,6 @@ double __erfc(double x)
 	    if(ix < 0x3c700000)  	/* |x|<2**-56 */
 		return one-x;
 	    z = x*x;
-#ifdef DO_NOT_USE_THIS
-	    r = pp0+z*(pp1+z*(pp2+z*(pp3+z*pp4)));
-	    s = one+z*(qq1+z*(qq2+z*(qq3+z*(qq4+z*qq5))));
-#else
 	    r1 = pp[0]+z*pp[1]; z2=z*z;
 	    r2 = pp[2]+z*pp[3]; z4=z2*z2;
 	    s1 = one+z*qq[1];
@@ -325,7 +297,6 @@ double __erfc(double x)
 	    s3 = qq[4]+z*qq[5];
             r = r1 + z2*r2 + z4*pp[4];
 	    s  = s1 + z2*s2 + z4*s3;
-#endif
 	    y = r/s;
 	    if(hx < 0x3fd00000) {  	/* x<1/4 */
 		return one-(x+x*y);
@@ -338,10 +309,6 @@ double __erfc(double x)
 	if(ix < 0x3ff40000) {		/* 0.84375 <= |x| < 1.25 */
 	    double s2,s4,s6,P1,P2,P3,P4,Q1,Q2,Q3,Q4;
 	    s = fabs(x)-one;
-#ifdef DO_NOT_USE_THIS
-	    P = pa0+s*(pa1+s*(pa2+s*(pa3+s*(pa4+s*(pa5+s*pa6)))));
-	    Q = one+s*(qa1+s*(qa2+s*(qa3+s*(qa4+s*(qa5+s*qa6)))));
-#else
 	    P1 = pa[0]+s*pa[1]; s2=s*s;
 	    Q1 = one+s*qa[1];   s4=s2*s2;
 	    P2 = pa[2]+s*pa[3]; s6=s4*s2;
@@ -352,7 +319,6 @@ double __erfc(double x)
 	    Q4 = qa[6];
 	    P = P1 + s2*P2 + s4*P3 + s6*P4;
 	    Q = Q1 + s2*Q2 + s4*Q3 + s6*Q4;
-#endif
 	    if(hx>=0) {
 	        z  = one-erx; return z - P/Q;
 	    } else {
@@ -363,12 +329,6 @@ double __erfc(double x)
 	    x = fabs(x);
  	    s = one/(x*x);
 	    if(ix< 0x4006DB6D) {	/* |x| < 1/.35 ~ 2.857143*/
-#ifdef DO_NOT_USE_THIS
-	        R=ra0+s*(ra1+s*(ra2+s*(ra3+s*(ra4+s*(
-				ra5+s*(ra6+s*ra7))))));
-	        S=one+s*(sa1+s*(sa2+s*(sa3+s*(sa4+s*(
-				sa5+s*(sa6+s*(sa7+s*sa8)))))));
-#else
 		double R1,R2,R3,R4,S1,S2,S3,S4,s2,s4,s6,s8;
 	    R1 = ra[0]+s*ra[1];s2 = s*s;
 	    S1 = one+s*sa[1];  s4 = s2*s2;
@@ -380,16 +340,9 @@ double __erfc(double x)
 	    S4 = sa[6]+s*sa[7];
 	    R = R1 + s2*R2 + s4*R3 + s6*R4;
 	    S = S1 + s2*S2 + s4*S3 + s6*S4 + s8*sa[8];
-#endif
 	    } else {			/* |x| >= 1/.35 ~ 2.857143 */
 		double R1,R2,R3,S1,S2,S3,S4,s2,s4,s6;
 		if(hx<0&&ix>=0x40180000) return two-tiny;/* x < -6 */
-#ifdef DO_NOT_USE_THIS
-	        R=rb0+s*(rb1+s*(rb2+s*(rb3+s*(rb4+s*(
-				rb5+s*rb6)))));
-	        S=one+s*(sb1+s*(sb2+s*(sb3+s*(sb4+s*(
-				sb5+s*(sb6+s*sb7))))));
-#else
 		R1 = rb[0]+s*rb[1];s2 = s*s;
 		S1 = one+s*sb[1];  s4 = s2*s2;
 		R2 = rb[2]+s*rb[3];s6 = s4*s2;
@@ -399,7 +352,6 @@ double __erfc(double x)
 		S4 = sb[6]+s*sb[7];
 		R = R1 + s2*R2 + s4*R3 + s6*rb[6];
 		S = S1 + s2*S2 + s4*S3 + s6*S4;
-#endif
 	    }
 	    z  = x;
 	    SET_LOW_WORD(z,0);

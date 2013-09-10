@@ -156,15 +156,11 @@ __log1p(double x)
 	}
 	s = f/(2.0+f);
 	z = s*s;
-#ifdef DO_NOT_USE_THIS
-	R = z*(Lp1+z*(Lp2+z*(Lp3+z*(Lp4+z*(Lp5+z*(Lp6+z*Lp7))))));
-#else
 	R1 = z*Lp[1]; z2=z*z;
 	R2 = Lp[2]+z*Lp[3]; z4=z2*z2;
 	R3 = Lp[4]+z*Lp[5]; z6=z4*z2;
 	R4 = Lp[6]+z*Lp[7];
 	R = R1 + z2*R2 + z4*R3 + z6*R4;
-#endif
 	if(k==0) return f-(hfsq-s*(hfsq+R)); else
 		 return k*ln2_hi-((hfsq-(s*(hfsq+R)+(k*ln2_lo+c)))-f);
 }

@@ -1,3 +1,11 @@
+2013-09-10   Ondřej Bílka  <neleai@seznam.cz>
+
+	* sysdeps/ieee754/dbl-64/e_j0.c: Remove DO_NOT_USE_THIS conditionals.
+	* sysdeps/ieee754/dbl-64/e_j1.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_erf.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_expm1.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_log1p.c: Likewise.
+
 2013-09-10  Allan McRae  <allan@archlinux.org>
 
 	[BZ #15748]

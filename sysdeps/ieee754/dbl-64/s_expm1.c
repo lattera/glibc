@@ -184,14 +184,10 @@ __expm1(double x)
     /* x is now in primary range */
 	hfx = 0.5*x;
 	hxs = x*hfx;
-#ifdef DO_NOT_USE_THIS
-	r1 = one+hxs*(Q1+hxs*(Q2+hxs*(Q3+hxs*(Q4+hxs*Q5))));
-#else
 	R1 = one+hxs*Q[1]; h2 = hxs*hxs;
 	R2 = Q[2]+hxs*Q[3]; h4 = h2*h2;
 	R3 = Q[4]+hxs*Q[5];
 	r1 = R1 + h2*R2 + h4*R3;
-#endif
 	t  = 3.0-r1*hfx;
 	e  = hxs*((r1-t)/(6.0 - x*t));
 	if(k==0) return x - (x*e-hxs);		/* c is 0 */

@@ -116,17 +116,12 @@ __ieee754_j0(double x)
 	  else	      return one - 0.25*x*x;
 	}
 	z = x*x;
-#ifdef DO_NOT_USE_THIS
-	r =  z*(R02+z*(R03+z*(R04+z*R05)));
-	s =  one+z*(S01+z*(S02+z*(S03+z*S04)));
-#else
 	r1 = z*R[2]; z2=z*z;
 	r2 = R[3]+z*R[4]; z4=z2*z2;
 	r  = r1 + z2*r2 + z4*R[5];
 	s1 = one+z*S[1];
 	s2 = S[2]+z*S[3];
 	s = s1 + z2*s2 + z4*S[4];
-#endif
 	if(ix < 0x3FF00000) {	/* |x| < 1.00 */
 	    return one + z*(-0.25+(r/s));
 	} else {
@@ -196,10 +191,6 @@ __ieee754_y0(double x)
 	    return(U[0] + tpi*__ieee754_log(x));
 	}
 	z = x*x;
-#ifdef DO_NOT_USE_THIS
-	u = u00+z*(u01+z*(u02+z*(u03+z*(u04+z*(u05+z*u06)))));
-	v = one+z*(v01+z*(v02+z*(v03+z*v04)));
-#else
 	u1 = U[0]+z*U[1]; z2=z*z;
 	u2 = U[2]+z*U[3]; z4=z2*z2;
 	u3 = U[4]+z*U[5]; z6=z4*z2;
@@ -207,7 +198,6 @@ __ieee754_y0(double x)
 	v1 = one+z*V[0];
 	v2 = V[1]+z*V[2];
 	v = v1 + z2*v2 + z4*V[3];
-#endif
 	return(u/v + tpi*(__ieee754_j0(x)*__ieee754_log(x)));
 }
 strong_alias (__ieee754_y0, __y0_finite)
@@ -299,10 +289,6 @@ pzero(double x)
 	else if(ix>=0x4006DB6D){p = pR3; q= pS3;}
 	else if(ix>=0x40000000){p = pR2; q= pS2;}
 	z = one/(x*x);
-#ifdef DO_NOT_USE_THIS
-	r = p[0]+z*(p[1]+z*(p[2]+z*(p[3]+z*(p[4]+z*p[5]))));
-	s = one+z*(q[0]+z*(q[1]+z*(q[2]+z*(q[3]+z*q[4]))));
-#else
 	r1 = p[0]+z*p[1]; z2=z*z;
 	r2 = p[2]+z*p[3]; z4=z2*z2;
 	r3 = p[4]+z*p[5];
@@ -311,7 +297,6 @@ pzero(double x)
 	s2 = q[1]+z*q[2];
 	s3 = q[3]+z*q[4];
 	s = s1 + z2*s2 + z4*s3;
-#endif
 	return one+ r/s;
 }
 
@@ -407,10 +392,6 @@ qzero(double x)
 	else if(ix>=0x4006DB6D){p = qR3; q= qS3;}
 	else if(ix>=0x40000000){p = qR2; q= qS2;}
 	z = one/(x*x);
-#ifdef DO_NOT_USE_THIS
-	r = p[0]+z*(p[1]+z*(p[2]+z*(p[3]+z*(p[4]+z*p[5]))));
-	s = one+z*(q[0]+z*(q[1]+z*(q[2]+z*(q[3]+z*(q[4]+z*q[5])))));
-#else
 	r1 = p[0]+z*p[1]; z2=z*z;
 	r2 = p[2]+z*p[3]; z4=z2*z2;
 	r3 = p[4]+z*p[5]; z6=z4*z2;
@@ -419,6 +400,5 @@ qzero(double x)
 	s2 = q[1]+z*q[2];
 	s3 = q[3]+z*q[4];
 	s = s1 + z2*s2 + z4*s3 +z6*q[5];
-#endif
 	return (-.125 + r/s)/x;
 }
