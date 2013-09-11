@@ -1,3 +1,12 @@
+2013-09-11  Ondřej Bílka  <neleai@seznam.cz>
+
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Remove: __strchr_sse42.
+	* sysdeps/x86_64/multiarch/strchr.S (__strchr_sse42): Remove.
+	(strchr): Remove __strchr_sse42 ifunc selection.
+	* sysdeps/x86_64/strchr.S (strchr): Use optimized implementation.
+	* sysdeps/x86_64/strchrnul.S: Include sysdeps/x86_64/strchr.S.
+
 2013-09-11  Will Newton  <will.newton@linaro.org>
 
 	* benchtests/bench-timing.h (TIMING_INIT): Rename ITERS
@@ -35,7 +44,7 @@
 	* malloc/malloc.c (__libc_pvalloc): Check the value of bytes
 	does not overflow.
 
-2013-09-10   Ondřej Bílka  <neleai@seznam.cz>
+2013-09-10  Ondřej Bílka  <neleai@seznam.cz>
 
 	* sysdeps/ieee754/dbl-64/e_j0.c: Remove DO_NOT_USE_THIS conditionals.
 	* sysdeps/ieee754/dbl-64/e_j1.c: Likewise.

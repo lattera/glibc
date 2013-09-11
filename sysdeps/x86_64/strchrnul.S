@@ -20,43 +20,8 @@
 
 #include <sysdep.h>
 
-
-	.text
-ENTRY (__strchrnul)
-	movd	%esi, %xmm1
-	movq	%rdi, %rcx
-	punpcklbw %xmm1, %xmm1
-	andq	$~15, %rdi
-	pxor	%xmm2, %xmm2
-	punpcklbw %xmm1, %xmm1
-	orl	$0xffffffff, %esi
-	movdqa	(%rdi), %xmm0
-	pshufd	$0, %xmm1, %xmm1
-	subq	%rdi, %rcx
-	movdqa	%xmm0, %xmm3
-	leaq	16(%rdi), %rdi
-	pcmpeqb	%xmm1, %xmm0
-	pcmpeqb	%xmm2, %xmm3
-	shl	%cl, %esi
-	pmovmskb %xmm0, %edx
-	pmovmskb %xmm3, %ecx
-	orl	%edx, %ecx
-	andl	%esi, %ecx
-	jnz	1f
-
-2:	movdqa	(%rdi), %xmm0
-	leaq	16(%rdi), %rdi
-	movdqa	%xmm0, %xmm3
-	pcmpeqb	%xmm1, %xmm0
-	pcmpeqb	%xmm2, %xmm3
-	pmovmskb %xmm0, %edx
-	pmovmskb %xmm3, %ecx
-	orl	%edx, %ecx
-	jz	2b
-
-1:	bsfl	%ecx, %edx
-	leaq	-16(%rdi,%rdx), %rax
-	ret
-END (__strchrnul)
+#define strchr __strchrnul
+#define AS_STRCHRNUL
+#include "strchr.S"
 
 weak_alias (__strchrnul, strchrnul)

@@ -110,7 +110,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/x86_64/multiarch/strchr.S.  */
   IFUNC_IMPL (i, name, strchr,
-	      IFUNC_IMPL_ADD (array, i, strchr, HAS_SSE4_2, __strchr_sse42)
 	      IFUNC_IMPL_ADD (array, i, strchr, 1, __strchr_sse2_no_bsf)
 	      IFUNC_IMPL_ADD (array, i, strchr, 1, __strchr_sse2))
 
