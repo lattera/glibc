@@ -1,3 +1,10 @@
+2013-09-11  Will Newton  <will.newton@linaro.org>
+
+	* benchtests/bench-timing.h (TIMING_INIT): Rename ITERS
+	parameter to RES. Remove hardcoded 1000 value.
+	* benchtests/bench-skeleton.c (main): Pass RES parameter
+	to TIMING_INIT and multiply result by 1000.
+
 2013-09-10  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Update.

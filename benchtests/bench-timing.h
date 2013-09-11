@@ -25,10 +25,10 @@
 hp_timing_t _dl_hp_timing_overhead;
 typedef hp_timing_t timing_t;
 
-# define TIMING_INIT(iters) \
+# define TIMING_INIT(res) \
 ({									      \
   HP_TIMING_DIFF_INIT();						      \
-  (iters) = 1000;							      \
+  (res) = 1;							      \
 })
 
 # define TIMING_NOW(var) HP_TIMING_NOW (var)
@@ -43,15 +43,13 @@ typedef hp_timing_t timing_t;
 #else
 typedef uint64_t timing_t;
 
-/* Measure 1000 times the resolution of the clock.  So for a 1ns
-   resolution  clock, we measure 1000 iterations of the function call at a
-   time.  Measurements close to the minimum clock resolution won't make
-   much sense, but it's better than having nothing at all.  */
-# define TIMING_INIT(iters) \
+/* Measure the resolution of the clock so we can scale the number of
+   benchmark iterations by this value.  */
+# define TIMING_INIT(res) \
 ({									      \
   struct timespec start;						      \
   clock_getres (CLOCK_PROCESS_CPUTIME_ID, &start);			      \
-  (iters) = 1000 * start.tv_nsec;					      \
+  (res) = start.tv_nsec;					      \
 })
 
 # define TIMING_NOW(var) \

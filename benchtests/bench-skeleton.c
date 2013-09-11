@@ -53,9 +53,11 @@ main (int argc, char **argv)
 
   memset (&runtime, 0, sizeof (runtime));
 
-  unsigned long iters;
+  unsigned long iters, res;
 
-  TIMING_INIT (iters);
+  TIMING_INIT (res);
+
+  iters = 1000 * res;
 
   for (int v = 0; v < NUM_VARIANTS; v++)
     {
