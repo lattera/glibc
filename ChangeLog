@@ -1,3 +1,9 @@
+2014-11-05  Will Newton  <will.newton@linaro.org>
+
+	* benchtests/Makefile: (bench-malloc): Add malloc thread
+	scalability benchmark.
+	* benchtests/bench-malloc-threads.c: New file.
+
 2014-11-05  Richard Earnshaw  <rearnsha@arm.com>
 
 	* sysdeps/aarch64/strchrnul.S: New file.
