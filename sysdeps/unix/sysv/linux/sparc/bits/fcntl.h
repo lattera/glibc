@@ -39,6 +39,7 @@
 #define __O_DIRECT	0x100000 /* direct disk access hint */
 #define __O_NOATIME	0x200000 /* Do not set atime.  */
 #define __O_PATH	0x1000000 /* Resolve pathname but do not open file.  */
+#define __O_TMPFILE	0x2010000 /* Atomically create nameless file.  */
 
 #if __WORDSIZE == 64
 # define __O_LARGEFILE	0
