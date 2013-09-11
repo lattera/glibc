@@ -5927,11 +5927,31 @@ double: 1
 idouble: 1
 
 # gamma
+Test "gamma (-0x1p-10)":
+double: 1
+idouble: 1
+Test "gamma (-0x1p-15)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "gamma (-0x1p-20)":
+double: 1
+idouble: 1
+Test "gamma (-0x1p-5)":
+double: 1
+idouble: 1
 Test "gamma (0.7)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "gamma (0x1p-10)":
+float: 1
+ifloat: 1
+Test "gamma (0x1p-30)":
+double: 1
+idouble: 1
 Test "gamma (1.2)":
 double: 1
 float: 2
@@ -6131,9 +6151,9 @@ ildouble: 1
 ldouble: 1
 Test "jn (10, 10.0)":
 double: 2
-float: 1
+float: 2
 idouble: 2
-ifloat: 1
+ifloat: 2
 ildouble: 4
 ldouble: 4
 Test "jn (10, 2.0)":
@@ -6146,6 +6166,14 @@ double: 2
 float: 2
 idouble: 2
 ifloat: 2
+Test "jn (2, 0x1p1023)":
+ildouble: 1
+ldouble: 1
+Test "jn (2, 0x1p127)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
 Test "jn (2, 2.4048255576957729)":
 double: 2
 float: 1
@@ -6226,11 +6254,31 @@ ildouble: 7
 ldouble: 7
 
 # lgamma
+Test "lgamma (-0x1p-10)":
+double: 1
+idouble: 1
+Test "lgamma (-0x1p-15)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "lgamma (-0x1p-20)":
+double: 1
+idouble: 1
+Test "lgamma (-0x1p-5)":
+double: 1
+idouble: 1
 Test "lgamma (0.7)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "lgamma (0x1p-10)":
+float: 1
+ifloat: 1
+Test "lgamma (0x1p-30)":
+double: 1
+idouble: 1
 Test "lgamma (1.2)":
 double: 1
 float: 2
@@ -7331,6 +7379,19 @@ Test "yn (10, 2.0)":
 double: 3
 float: 1
 idouble: 3
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "yn (2, 0x1.ffff62p+99)":
+double: 1
+idouble: 1
+Test "yn (2, 0x1p1023)":
+ildouble: 1
+ldouble: 1
+Test "yn (2, 0x1p127)":
+double: 1
+float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
