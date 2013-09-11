@@ -51,12 +51,14 @@ $(objpfx)stub-syscalls.c: $(common-objpfx)sysd-syscalls \
 	 for call in $(unix-stub-syscalls); do \
 	   case $$call in \
 	   *@@*) \
-	     ver=$${call##*@}; call=$${call%%@*}; ver=$${ver//./_}; \
+	     ver=$${call##*@}; call=$${call%%@*}; \
+	     ver=`echo "$ver" | sed 's/\./_/g'`; \
 	     echo "strong_alias (_no_syscall, __$${call}_$${ver})"; \
 	     echo "versioned_symbol (libc, __$${call}_$${ver}, $$call, $$ver);"\
 	     ;; \
 	   *@*) \
-	     ver=$${call##*@}; call=$${call%%@*}; ver=$${ver//./_}; \
+	     ver=$${call##*@}; call=$${call%%@*}; \
+	     ver=`echo "$ver" | sed 's/\./_/g'`; \
 	     echo "strong_alias (_no_syscall, __$${call}_$${ver})"; \
 	     echo "compat_symbol (libc, __$${call}_$${ver}, $$call, $$ver);" \
 	     ;; \

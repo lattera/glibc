@@ -1,3 +1,9 @@
+2013-09-11  P. J. McDermott  <pj@pehjota.net>
+
+	* sysdeps/unix/Makefile ($(objpfx)stub-syscalls.c): Don't use
+	${Bash-specific parameter/pattern/string} parameter expansion.
+	* sysdeps/unix/make-syscalls.sh: Likewise.
+
 2013-09-27  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/stackguard-macros.h: New file.

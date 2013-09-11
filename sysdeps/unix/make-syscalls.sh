@@ -275,7 +275,7 @@ while read file srcfile caller syscall args strong weak; do
     # name in the vDSO and KERNEL_X.Y is its symbol version.
     vdso_symbol="${vdso_syscall%@*}"
     vdso_symver="${vdso_syscall#*@}"
-    vdso_symver="${vdso_symver//./_}"
+    vdso_symver=`echo "$vdso_symver" | sed 's/\./_/g'`
     echo "\
 \$(foreach p,\$(sysd-rules-targets),\$(objpfx)\$(patsubst %,\$p,$file).os): \\
 		\$(..)sysdeps/unix/make-syscalls.sh\
