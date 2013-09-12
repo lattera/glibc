@@ -1,3 +1,9 @@
+2013-10-14  P. J. McDermott  <pj@pehjota.net>
+
+	[BZ #832]
+	* elf/ldd.bash.in (try_trace): New function.  Delete previous code
+	testing pipefail option.
+
 2013-10-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* soft-fp/double.h: Indent preprocessor directives inside #if.

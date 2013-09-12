@@ -106,19 +106,18 @@ if test "$unused" = yes; then
   add_env="$add_env LD_DEBUG=\"$LD_DEBUG${LD_DEBUG:+,}unused\""
 fi
 
-# The following use of cat is needed to make ldd work in SELinux
-# environments where the executed program might not have permissions
-# to write to the console/tty.  But only bash 3.x supports the pipefail
-# option, and we don't bother to handle the case for older bash versions.
-if set -o pipefail 2> /dev/null; then
-  try_trace() {
-    eval $add_env '"$@"' | cat
-  }
-else
-  try_trace() {
-    eval $add_env '"$@"'
-  }
-fi
+# The following command substitution is needed to make ldd work in SELinux
+# environments where the RTLD might not have permission to write to the
+# terminal.  The extra "x" character prevents the shell from trimming trailing
+# newlines from command substitution results.  This function is defined as a
+# subshell compound list (using "(...)") to prevent parameter assignments from
+# affecting the calling shell execution environment.
+try_trace() (
+  output=$(eval $add_env '"$@"' 2>&1; rc=$?; printf 'x'; exit $rc)
+  rc=$?
+  printf '%s' "${output%x}"
+  return $rc
+)
 
 case $# in
 0)
