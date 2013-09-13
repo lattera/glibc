@@ -17,6 +17,11 @@ Version 2.19
   to the d_name member of struct dirent, or omit the terminating NUL
   character.  (Bugzilla #14699).
 
+* CVE-2013-4332 The pvalloc, valloc, memalign, posix_memalign and
+  aligned_alloc functions could allocate too few bytes or corrupt the
+  heap when passed very large allocation size values (Bugzilla #15855,
+  #15856, #15857).
+
 * New locales: quz_PE.
 
 * Add country_car field to LC_ADDRESS, many locales.
