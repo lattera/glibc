@@ -270,7 +270,7 @@ static void ctype_map_new (struct linereader *lr,
 			   struct locale_ctype_t *ctype,
 			   const char *name, const struct charmap_t *charmap);
 static uint32_t *find_idx (struct locale_ctype_t *ctype, uint32_t **table,
-			   size_t *max, size_t *act, unsigned int idx);
+			   size_t *max, size_t *act, uint32_t idx);
 static void set_class_defaults (struct locale_ctype_t *ctype,
 				const struct charmap_t *charmap,
 				struct repertoire_t *repertoire);
@@ -311,9 +311,8 @@ ctype_startup (struct linereader *lr, struct localedef_t *locale,
 
 	  /* We have seen no names yet.  */
 	  ctype->charnames_max = charmap->mb_cur_max == 1 ? 256 : 512;
-	  ctype->charnames =
-	    (unsigned int *) xmalloc (ctype->charnames_max
-				      * sizeof (unsigned int));
+	  ctype->charnames = (uint32_t *) xmalloc (ctype->charnames_max
+						   * sizeof (uint32_t));
 	  for (cnt = 0; cnt < 256; ++cnt)
 	    ctype->charnames[cnt] = cnt;
 	  ctype->charnames_act = 256;
