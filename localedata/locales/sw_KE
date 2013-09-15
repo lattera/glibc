@@ -152,6 +152,8 @@ country_ab2   "<U004B><U0045>"
 % KEN
 country_ab3   "<U004B><U0045><U004E>"
 country_num   404
+% EAK
+country_car  "<U0045><U0041><U004B>"
 % Kiswahili
 lang_name     "<U004B><U0069><U0073><U0077><U0061><U0068><U0069><U006C><U0069>"
 % sw

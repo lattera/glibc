@@ -158,7 +158,14 @@ END LC_NAME
 
 
 LC_ADDRESS
-copy "bn_IN"
+
+postal_fmt  "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073><U0025><U0062><U0025><U0065><U0025><U0072>"
+country_ab2 "<U0049><U004E>"
+country_ab3 "<U0049><U004E><U0044>"
+country_num 356
+% IND
+country_car    "<U0049><U004E><U0044>"
+
 END LC_ADDRESS
 
 

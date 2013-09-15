@@ -1,3 +1,70 @@
+2013-09-15  Chris Leonard  <cjl@sugarlabs.org>
+
+	* locales/aa_ER: Add country_car field to LC_ADDRESS.
+	* locales/as_IN: Likewise.
+	* locales/ast_ES: Likewise.
+	* locales/ayc_PE: Likewise.
+	* locales/bem_ZM: Likewise.
+	* locales/ber_DZ: Likewise.
+	* locales/ber_MA: Likewise.
+	* locales/bho_IN: Likewise.
+	* locales/bo_IN: Likewise.
+	* locales/brx_IN: Likewise.
+	* locales/byn_ER: Likewise.
+	* locales/ca_AD: Likewise.
+	* locales/ca_FR: Likewise.
+	* locales/ca_IT: Likewise.
+	* locales/crh_UA: Likewise.
+	* locales/cv_RU: Likewise.
+	* locales/doi_IN: Likewise.
+	* locales/dz_BT: Likewise.
+	* locales/el_CY: Likewise.
+	* locales/en_US: Likewise.
+	* locales/en_ZM: Likewise.
+	* locales/es_CU: Likewise.
+	* locales/ff_SN: Likewise.
+	* locales/fil_PH: Likewise.
+	* locales/gd_GB: Likewise.
+	* locales/hne_IN: Likewise.
+	* locales/ht_HT: Likewise.
+	* locales/kl_GL: Likewise.
+	* locales/kok_IN: Likewise.
+	* locales/ks_IN: Likewise.
+	* locales/lij_IT: Likewise.
+	* locales/mag_IN: Likewise.
+	* locales/mai_IN: Likewise.
+	* locales/mg_MG: Likewise.
+	* locales/mhr_RU: Likewise.
+	* locales/mni_IN: Likewise.
+	* locales/my_MM: Likewise.
+	* locales/nhn_MX: Likewise.
+	* locales/niu_NZ: Likewise.
+	* locales/or_IN: Likewise.
+	* locales/os_RU: Likewise.
+	* locales/pa_PK: Likewise.
+	* locales/quz_PE: Likewise.
+	* locales/rw_RW: Likewise.
+	* locales/sat_IN: Likewise.
+	* locales/sc_IT: Likewise.
+	* locales/sd_IN: Likewise.
+	* locales/sd_IN@devanagari: Likewise.
+	* locales/shs_CA: Likewise.
+	* locales/si_LK: Likewise.
+	* locales/sid_ET: Likewise.
+	* locales/sq_MK: Likewise.
+	* locales/sw_KE: Likewise.
+	* locales/sw_TZ: Likewise.
+	* locales/szl_PL: Likewise.
+	* locales/ta_LK: Likewise.
+	* locales/ti_ER: Likewise.
+	* locales/tig_ER: Likewise.
+	* locales/tl_PH: Likewise.
+	* locales/ts_ZA: Likewise.
+	* locales/unm_US: Likewise.
+	* locales/ur_IN: Likewise.
+	* locales/wa_BE: Likewise.
+	* locales/yi_US: Likewise.
+
 2013-09-06  Chris Leonard  <cjl@sugarlabs,.org>
 
 	* locales/nr_ZA: Deduplicate country_car.
@@ -9,7 +76,7 @@
 
 2013-09-04  Chris Leonard  <cjl@sugarlabs,.org>
 
-     [BZ #15923]
+	[BZ #15923]
 
 	* locales/ar_SD: Update iso-1427.def and related occurrences.
 	* locales/az_AZ: Likewise.

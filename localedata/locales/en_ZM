@@ -85,6 +85,8 @@ country_ab2   "<U005A><U004D>"
 % ZMB
 country_ab3   "<U005A><U004D><U0042>"
 country_num   894
+% Z
+country_car  "<U005A>"
 END LC_ADDRESS
 
 LC_TELEPHONE

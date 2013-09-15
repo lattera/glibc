@@ -47,7 +47,8 @@ country_post "USA"
 country_ab2 "US"
 country_ab3 "USA"
 country_num 840
-country_car "USA"
+% USA
+country_car   "<U0055><U0053><U0041>"
 % FIXME Check which isbn for Yiddish in USA
 country_isbn "0"
 lang_name "<U05D9><U05D9><U05B4><U05D3><U05D9><U05E9>"

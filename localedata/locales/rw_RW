@@ -135,6 +135,8 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 country_name   "<U0052><U0077><U0061><U006E><U0064><U0061>"
 country_ab2    "<U0052><U0057>"
 country_ab3    "<U0052><U0057><U0041>"
+% RWA
+country_car  "<U0052><U0057><U0041>"
 lang_name      "<U004B><U0069><U006E><U0079><U0061><U0072><U0077><U0061><U006E><U0064><U0061>"
 lang_ab        "<U0072><U0077>"
 lang_term      "<U006B><U0069><U006E>"

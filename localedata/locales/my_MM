@@ -312,6 +312,8 @@ postal_fmt   "<U0025><U0061><U0025><U004E><U0025><U0064><U0025><U004E><U0025><U0
 country_name   "<U1019><U103C><U1014><U103A><U1019><U102C>"
 country_post    "<U004D><U0079><U0061><U006E><U006D><U0061><U0072>"
 country_ab2     "<U004D><U004D>"
+% BA
+country_car  "<U0042><U0041>"
 lang_ab         "<U006D><U0079>"
 lang_name       "<U1017><U1019><U102C>"
 lang_term   "<U006D><U0079><U0061>"

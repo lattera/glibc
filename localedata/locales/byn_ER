@@ -120,7 +120,8 @@ country_post  "<U0045><U0052><U0049>"
 country_ab2   "<U0045><U0052>"
 country_ab3   "<U0045><U0052><U0049>"
 country_num   232
-% country_car   unknown
+% ER
+country_car  "<U0045><U0052>"
 % country_isbn  unknown, Need ISO 2108
 lang_name     "<U1265><U120A><U1295>"
 lang_ab       ""

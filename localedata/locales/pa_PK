@@ -177,6 +177,8 @@ postal_fmt    "<U0025><U0061><U0025><U004E><U0025><U0066><U0025><U004E>/
 country_ab2 "<U0050><U004B>"
 country_ab3 "<U0050><U0041><U004B>"
 country_num 586
+% PK
+country_car    "<U0050><U004B>"
 END LC_ADDRESS
 
 LC_TELEPHONE
