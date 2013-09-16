@@ -183,6 +183,12 @@ country_ab3 "<U0041><U0052><U0045>"
 country_num 784
 % UAE
 country_car    "<U0055><U0041><U0045>"
+% ar
+lang_ab      "<U0061><U0072>"
+% ara
+lang_term    "<U0061><U0072><U0061>"
+% ara
+lang_lib    "<U0061><U0072><U0061>"
 END LC_ADDRESS
 
 

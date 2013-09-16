@@ -1448,9 +1448,12 @@ country_num   231   % 210 found in at least one ISO 3166 doc
 country_car   "<U0045><U0054><U0048>"
 % country_isbn  unknown, Need ISO 2108
 lang_name     "<U12A0><U121B><U122D><U129B>"
-lang_ab       "<U0061><U006D>"
-lang_term     "<U0061><U006D><U0068>"
-lang_lib      "<U0061><U006D><U0068>"
+% am
+lang_ab      "<U0061><U006D>"
+% amh
+lang_term    "<U0061><U006D><U0068>"
+% amh
+lang_lib     "<U0061><U006D><U0068>"
 %
 END LC_ADDRESS
 
