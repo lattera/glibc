@@ -1,3 +1,12 @@
+2013-09-17  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15966]
+	* sysdeps/powerpc/fpu_control.h [!_SOFT_FLOAT && !__NO_FPRS__]
+	(_FPU_GETCW): Use initial "__" on variable and field names but not
+	on macro parameter name.
+	[!_SOFT_FLOAT && !__NO_FPRS__] (_FPU_SETCW): Likewise.  Use
+	parentheses around reference to macro parameter.
+
 2013-09-13  Richard Sandiford  <richard@codesourcery.com>
 
 	* locale/programs/ld-ctype.c (find_idx): Use uint32_t in
