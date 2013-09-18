@@ -1,5 +1,8 @@
 2013-12-17  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* manual/time.texi (TZ Variable): Modernize North America example
+	to reflect current (i.e., 2007-and-later) daylight saving rules.
+
 	* manual/time.texi (TZ Variable): POSIX.1 hour can be 24.
 
 2013-12-17  Joseph Myers  <joseph@codesourcery.com>

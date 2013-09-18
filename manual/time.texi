@@ -2088,15 +2088,16 @@ The @var{time} fields specify when, in the local time currently in
 effect, the change to the other time occurs.  If omitted, the default is
 @code{02:00:00}.
 
-For example, here is how you would specify the Eastern time zone in the
-United States, including the appropriate Daylight Saving Time and its dates
-of applicability.  The normal offset from UTC is 5 hours; since this is
+Here is an example @code{TZ} value, including the appropriate
+Daylight Saving Time and its dates of applicability.  In North
+American Eastern Standard Time (EST) and Eastern Daylight Time (EDT),
+the normal offset from UTC is 5 hours; since this is
 west of the prime meridian, the sign is positive.  Summer time begins on
-the first Sunday in April at 2:00am, and ends on the last Sunday in October
+March's second Sunday at 2:00am, and ends on November's first Sunday
 at 2:00am.
 
 @smallexample
-EST+5EDT,M4.1.0/2,M10.5.0/2
+EST+5EDT,M3.2.0/2,M11.1.0/2
 @end smallexample
 
 The schedule of Daylight Saving Time in any particular jurisdiction has
