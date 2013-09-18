@@ -1,5 +1,12 @@
 2013-09-18  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/powerpc/powerpc32/__longjmp-common.S (LOAD_GP): Define
+	macro conditional on [__SPE__ || (__NO_FPRS__ && !_SOFT_FLOAT)].
+	(__longjmp): Use LOAD_GP to load saved GPRs.
+	* sysdeps/powerpc/powerpc32/setjmp-common.S (SAVE_GP): Define
+	macro conditional on [__SPE__ || (__NO_FPRS__ && !_SOFT_FLOAT)].
+	(__sigsetjmp): Use SAVE_GP to save GPRs.
+
 	* sysdeps/powerpc/powerpc32/Makefile [$(with-fp) = no] (+cflags):
 	Do not append -msoft-float.
 	[$(with-fp) = no] (sysdep-LDFLAGS): Likewise.

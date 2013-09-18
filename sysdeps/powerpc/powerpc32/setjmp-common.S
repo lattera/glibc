@@ -24,6 +24,11 @@
 # include <jmpbuf-offsets.h>
 #endif
 
+#if defined __SPE__ || (defined __NO_FPRS__ && !defined _SOFT_FLOAT)
+# define SAVE_GP(N)	evstdd r##N,((JB_FPRS+((N)-14)*2)*4)(3)
+#else
+# define SAVE_GP(N)	stw r##N,((JB_GPRS+(N)-14)*4)(3)
+#endif
 
 ENTRY (__sigsetjmp)
 
@@ -35,31 +40,31 @@ ENTRY (__sigsetjmp)
 	stw  r1,(JB_GPR1*4)(3)
 #endif
 	mflr r0
-	stw  r14,((JB_GPRS+0)*4)(3)
+	SAVE_GP (14)
 #ifdef PTR_MANGLE
 	PTR_MANGLE2 (r0, r10)
 	li   r10,0
 #endif
 	stw  r0,(JB_LR*4)(3)
-	stw  r15,((JB_GPRS+1)*4)(3)
+	SAVE_GP (15)
 	mfcr r0
-	stw  r16,((JB_GPRS+2)*4)(3)
+	SAVE_GP (16)
 	stw  r0,(JB_CR*4)(3)
-	stw  r17,((JB_GPRS+3)*4)(3)
-	stw  r18,((JB_GPRS+4)*4)(3)
-	stw  r19,((JB_GPRS+5)*4)(3)
-	stw  r20,((JB_GPRS+6)*4)(3)
-	stw  r21,((JB_GPRS+7)*4)(3)
-	stw  r22,((JB_GPRS+8)*4)(3)
-	stw  r23,((JB_GPRS+9)*4)(3)
-	stw  r24,((JB_GPRS+10)*4)(3)
-	stw  r25,((JB_GPRS+11)*4)(3)
-	stw  r26,((JB_GPRS+12)*4)(3)
-	stw  r27,((JB_GPRS+13)*4)(3)
-	stw  r28,((JB_GPRS+14)*4)(3)
-	stw  r29,((JB_GPRS+15)*4)(3)
-	stw  r30,((JB_GPRS+16)*4)(3)
-	stw  r31,((JB_GPRS+17)*4)(3)
+	SAVE_GP (17)
+	SAVE_GP (18)
+	SAVE_GP (19)
+	SAVE_GP (20)
+	SAVE_GP (21)
+	SAVE_GP (22)
+	SAVE_GP (23)
+	SAVE_GP (24)
+	SAVE_GP (25)
+	SAVE_GP (26)
+	SAVE_GP (27)
+	SAVE_GP (28)
+	SAVE_GP (29)
+	SAVE_GP (30)
+	SAVE_GP (31)
 #if defined NOT_IN_libc && defined IS_IN_rtld
 	li   r3,0
 	blr
