@@ -2041,7 +2041,7 @@ to get a Coordinated Universal Time value.  It has syntax like
 [@code{+}|@code{-}]@var{hh}[@code{:}@var{mm}[@code{:}@var{ss}]].  This
 is positive if the local time zone is west of the Prime Meridian and
 negative if it is east.  The hour must be between @code{0} and
-@code{23}, and the minute and seconds between @code{0} and @code{59}.
+@code{24}, and the minute and seconds between @code{0} and @code{59}.
 
 For example, here is how we would specify Eastern Standard Time, but
 without any Daylight Saving Time alternative:
