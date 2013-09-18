@@ -2086,9 +2086,11 @@ between @code{1} and @code{12}.
 
 The @var{time} fields specify when, in the local time currently in
 effect, the change to the other time occurs.  If omitted, the default is
-@code{02:00:00}.
+@code{02:00:00}.  The hours part of the time fields can range from
+0 through 167; this is an extension to POSIX.1, which allows
+only the range 0 through 24.
 
-Here is an example @code{TZ} value, including the appropriate
+Here are some example @code{TZ} values, including the appropriate
 Daylight Saving Time and its dates of applicability.  In North
 American Eastern Standard Time (EST) and Eastern Daylight Time (EDT),
 the normal offset from UTC is 5 hours; since this is
@@ -2098,6 +2100,27 @@ at 2:00am.
 
 @smallexample
 EST+5EDT,M3.2.0/2,M11.1.0/2
+@end smallexample
+
+Israel Standard Time (IST) and Israel Daylight Time (IDT) are 2 hours
+ahead of the prime meridian in winter, springing forward an hour on
+March's fourth Tuesday at 26:00 (i.e., 02:00 on the first Friday on or
+after March 23), and falling back on October's last Sunday at 02:00.
+
+@smallexample
+IST-2IDT,M3.4.4/26,M10.5.0
+@end smallexample
+
+Western Argentina Summer Time (WARST) is 3 hours behind the prime
+meridian all year.  There is a dummy fall-back transition on December
+31 at 25:00 daylight saving time (i.e., 24:00 standard time,
+equivalent to January 1 at 00:00 standard time), and a simultaneous
+spring-forward transition on January 1 at 00:00 standard time, so
+daylight saving time is in effect all year and the initial @code{WART}
+is a placeholder.
+
+@smallexample
+WART4WARST,J1/0,J365/25
 @end smallexample
 
 The schedule of Daylight Saving Time in any particular jurisdiction has

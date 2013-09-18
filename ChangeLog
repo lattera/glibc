@@ -1,5 +1,10 @@
 2013-12-17  Paul Eggert  <eggert@cs.ucla.edu>
 
+	Document TZ transition times >= 25:00:00.
+	* manual/time.texi (TZ Variable): Document transition times from
+	25:00:00 through 167:59:59.  These are already supported, and this
+	support will help with version-3 tz-format files.
+
 	* manual/time.texi (TZ Variable): Modernize North America example
 	to reflect current (i.e., 2007-and-later) daylight saving rules.
 
