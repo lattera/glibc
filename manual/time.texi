@@ -2087,7 +2087,7 @@ between @code{1} and @code{12}.
 The @var{time} fields specify when, in the local time currently in
 effect, the change to the other time occurs.  If omitted, the default is
 @code{02:00:00}.  The hours part of the time fields can range from
-0 through 167; this is an extension to POSIX.1, which allows
+@minus{}167 through 167; this is an extension to POSIX.1, which allows
 only the range 0 through 24.
 
 Here are some example @code{TZ} values, including the appropriate
@@ -2121,6 +2121,16 @@ is a placeholder.
 
 @smallexample
 WART4WARST,J1/0,J365/25
+@end smallexample
+
+Western Greenland Time (WGT) and Western Greenland Summer Time (WGST)
+are 3 hours behind UTC in the winter.  Its clocks follow the European
+Union rules of springing forward by one hour on March's last Sunday at
+01:00 UTC (@minus{}02:00 local time) and falling back on October's
+last Sunday at 01:00 UTC (@minus{}01:00 local time).
+
+@smallexample
+WGT3WGST,M3.5.0/-2,M10.5.0/-1
 @end smallexample
 
 The schedule of Daylight Saving Time in any particular jurisdiction has

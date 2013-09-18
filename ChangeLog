@@ -1,5 +1,14 @@
 2013-12-17  Paul Eggert  <eggert@cs.ucla.edu>
 
+	Support TZ transition times < 00:00:00.
+	This is needed for version-3 tz-format files; it supports time
+	stamps past 2037 for America/Godthab (the only entry in the tz
+	database for which this change is relevant).
+	* manual/time.texi (TZ Variable): Document transition times
+	from -167:59:59 through -00:00:01.
+	* time/tzset.c (tz_rule): Time of day is now signed.
+	(__tzset_parse_tz): Parse negative time of day.
+
 	Document TZ transition times >= 25:00:00.
 	* manual/time.texi (TZ Variable): Document transition times from
 	25:00:00 through 167:59:59.  These are already supported, and this

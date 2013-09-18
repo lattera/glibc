@@ -54,7 +54,7 @@ typedef struct
     /* When to change.  */
     enum { J0, J1, M } type;	/* Interpretation of:  */
     unsigned short int m, n, d;	/* Month, week, day.  */
-    unsigned int secs;		/* Time of day.  */
+    int secs;			/* Time of day.  */
 
     long int offset;		/* Seconds east of GMT (west if < 0).  */
 
@@ -362,9 +362,12 @@ __tzset_parse_tz (tz)
       else if (*tz == '/')
 	{
 	  /* Get the time of day of the change.  */
+	  int negative;
 	  ++tz;
 	  if (*tz == '\0')
 	    goto out;
+	  negative = *tz == '-';
+	  tz += negative;
 	  consumed = 0;
 	  switch (sscanf (tz, "%hu%n:%hu%n:%hu%n",
 			  &hh, &consumed, &mm, &consumed, &ss, &consumed))
@@ -379,7 +382,7 @@ __tzset_parse_tz (tz)
 	      break;
 	    }
 	  tz += consumed;
-	  tzr->secs = (hh * 60 * 60) + (mm * 60) + ss;
+	  tzr->secs = (negative ? -1 : 1) * ((hh * 60 * 60) + (mm * 60) + ss);
 	}
       else
 	/* Default to 2:00 AM.  */
