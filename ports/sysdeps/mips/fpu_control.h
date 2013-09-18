@@ -29,7 +29,9 @@
  *           available for MIPS III and newer.
  * 23     -> Condition bit
  * 22-21  -> reserved for architecture implementers
- * 20-18  -> reserved (read as 0, write with 0)
+ * 20     -> reserved (read as 0, write with 0)
+ * 19     -> IEEE 754-2008 non-arithmetic ABS.fmt and NEG.fmt enable
+ * 18     -> IEEE 754-2008 recommended NaN encoding enable
  * 17     -> cause bit for unimplemented operation
  * 16     -> cause bit for invalid exception
  * 15     -> cause bit for division by zero exception
@@ -79,22 +81,33 @@ extern fpu_control_t __fpu_control;
 /* flush denormalized numbers to zero */
 #define _FPU_FLUSH_TZ   0x1000000
 
+/* IEEE 754-2008 compliance control.  */
+#define _FPU_ABS2008    0x80000
+#define _FPU_NAN2008    0x40000
+
 /* rounding control */
 #define _FPU_RC_NEAREST 0x0     /* RECOMMENDED */
 #define _FPU_RC_ZERO    0x1
 #define _FPU_RC_UP      0x2
 #define _FPU_RC_DOWN    0x3
 
-#define _FPU_RESERVED 0xfe9c0000  /* Reserved bits in cw */
+#define _FPU_RESERVED 0xfe840000  /* Reserved bits in cw, incl NAN2008.  */
 
 
 /* The fdlibm code requires strict IEEE double precision arithmetic,
    and no interrupts for exceptions, rounding to nearest.  */
+#ifdef __mips_nan2008
+# define _FPU_DEFAULT 0x00040000
+#else
+# define _FPU_DEFAULT 0x00000000
+#endif
 
-#define _FPU_DEFAULT  0x00000000
-
-/* IEEE:  same as above, but exceptions */
-#define _FPU_IEEE     0x00000F80
+/* IEEE: same as above, but exceptions.  */
+#ifdef __mips_nan2008
+# define _FPU_IEEE    0x00040F80
+#else
+# define _FPU_IEEE    0x00000F80
+#endif
 
 /* Type of the control word.  */
 typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__SI__)));

@@ -18,11 +18,27 @@
 
 #include <ldconfig.h>
 
-/* Redefine the cache ID for new ABIs; o32 keeps using the generic check.  */
-#if _MIPS_SIM == _ABI64
-# define _DL_CACHE_DEFAULT_ID	(FLAG_MIPS64_LIBN64 | FLAG_ELF_LIBC6)
-#elif _MIPS_SIM == _ABIN32
-# define _DL_CACHE_DEFAULT_ID	(FLAG_MIPS64_LIBN32 | FLAG_ELF_LIBC6)
+#if ((defined __mips_nan2008 && !defined HAVE_MIPS_NAN2008) \
+     || (!defined __mips_nan2008 && defined HAVE_MIPS_NAN2008))
+# error "Configuration inconsistency: __mips_nan2008 != HAVE_MIPS_NAN2008, overridden CFLAGS?"
+#endif
+
+/* Redefine the cache ID for new ABIs and 2008 NaN support; legacy o32
+   keeps using the generic check.  */
+#ifdef __mips_nan2008
+# if _MIPS_SIM == _ABIO32
+#  define _DL_CACHE_DEFAULT_ID	(FLAG_MIPS_LIB32_NAN2008 | FLAG_ELF_LIBC6)
+# elif _MIPS_SIM == _ABI64
+#  define _DL_CACHE_DEFAULT_ID	(FLAG_MIPS64_LIBN64_NAN2008 | FLAG_ELF_LIBC6)
+# elif _MIPS_SIM == _ABIN32
+#  define _DL_CACHE_DEFAULT_ID	(FLAG_MIPS64_LIBN32_NAN2008 | FLAG_ELF_LIBC6)
+# endif
+#else
+# if _MIPS_SIM == _ABI64
+#  define _DL_CACHE_DEFAULT_ID	(FLAG_MIPS64_LIBN64 | FLAG_ELF_LIBC6)
+# elif _MIPS_SIM == _ABIN32
+#  define _DL_CACHE_DEFAULT_ID	(FLAG_MIPS64_LIBN32 | FLAG_ELF_LIBC6)
+# endif
 #endif
 
 #ifdef _DL_CACHE_DEFAULT_ID

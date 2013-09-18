@@ -18,9 +18,13 @@
 
 #ifndef _MATH_PRIVATE_H
 
+#ifdef __mips_nan2008
+/* MIPS aligned to IEEE 754-2008.  */
+#else
 /* One of the few architectures where the meaning of the quiet/signaling bit is
    inverse to IEEE 754-2008 (as well as common practice for IEEE 754-1985).  */
-#define HIGH_ORDER_BIT_IS_SET_FOR_SNAN
+# define HIGH_ORDER_BIT_IS_SET_FOR_SNAN
+#endif
 
 #include_next <math_private.h>
 

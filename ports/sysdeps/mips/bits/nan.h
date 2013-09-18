@@ -22,16 +22,19 @@
 
 
 /* IEEE Not A Number.  */
-/* Note that MIPS has the qNaN and sNaN patterns reversed compared to most
-   other architectures.  IEEE 754-1985 left the definition of this open to
-   implementations, and for MIPS the top bit of the mantissa must be SET to
-   indicate a sNaN.  */
+/* In legacy-NaN mode MIPS has the qNaN and sNaN patterns reversed
+   compared to most other architectures.  IEEE 754-1985 left the
+   definition of this open to implementations, and for MIPS the top bit
+   of the mantissa must be SET to indicate a sNaN.  In 2008-NaN mode
+   MIPS aligned to IEEE 754-2008.  */
 
 #if __GNUC_PREREQ(3,3)
 
 # define NAN	(__builtin_nanf (""))
 
 #elif defined __GNUC__
+
+/* No 2008-NaN mode support in any GCC version before 4.9.  */
 
 # define NAN \
   (__extension__							      \
@@ -43,10 +46,18 @@
 # include <endian.h>
 
 # if __BYTE_ORDER == __BIG_ENDIAN
-#  define __qnan_bytes		{ 0x7f, 0xbf, 0xff, 0xff }
+#  ifdef __mips_nan2008
+#   define __qnan_bytes		{ 0x7f, 0xc0, 0, 0 }
+#  else
+#   define __qnan_bytes		{ 0x7f, 0xbf, 0xff, 0xff }
+#  endif
 # endif
 # if __BYTE_ORDER == __LITTLE_ENDIAN
-#  define __qnan_bytes		{ 0xff, 0xff, 0xbf, 0x7f }
+#  ifdef __mips_nan2008
+#   define __qnan_bytes		{ 0, 0, 0xc0, 0x7f }
+#  else
+#   define __qnan_bytes		{ 0xff, 0xff, 0xbf, 0x7f }
+#  endif
 # endif
 
 static union { unsigned char __c[4]; float __d; } __qnan_union

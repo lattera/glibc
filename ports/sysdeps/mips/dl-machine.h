@@ -73,6 +73,16 @@ do { if ((l)->l_info[DT_MIPS (RLD_MAP)]) \
        (ElfW(Addr)) (r); \
    } while (0)
 
+#if ((defined __mips_nan2008 && !defined HAVE_MIPS_NAN2008) \
+     || (!defined __mips_nan2008 && defined HAVE_MIPS_NAN2008))
+# error "Configuration inconsistency: __mips_nan2008 != HAVE_MIPS_NAN2008, overridden CFLAGS?"
+#endif
+#ifdef __mips_nan2008
+# define ELF_MACHINE_NAN2008 EF_MIPS_NAN2008
+#else
+# define ELF_MACHINE_NAN2008 0
+#endif
+
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int __attribute_used__
 elf_machine_matches_host (const ElfW(Ehdr) *ehdr)
@@ -82,6 +92,10 @@ elf_machine_matches_host (const ElfW(Ehdr) *ehdr)
   if (((ehdr->e_flags & EF_MIPS_ABI2) != 0) != (_MIPS_SIM == _ABIN32))
     return 0;
 #endif
+
+  /* Don't link 2008-NaN and legacy-NaN objects together.  */
+  if ((ehdr->e_flags & EF_MIPS_NAN2008) != ELF_MACHINE_NAN2008)
+    return 0;
 
   switch (ehdr->e_machine)
     {

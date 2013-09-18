@@ -44,7 +44,19 @@ if test -z "$libc_mips_float"; then
   AC_MSG_ERROR([could not determine if compiler is using hard or soft floating point ABI])
 fi
 
-LIBC_CONFIG_VAR([default-abi], [${libc_mips_abi}_${libc_mips_float}])
+AC_CACHE_CHECK([whether the compiler is using the 2008 NaN encoding],
+  libc_cv_mips_nan2008, [AC_EGREP_CPP(yes, [dnl
+#ifdef __mips_nan2008
+yes
+#endif], libc_cv_mips_nan2008=yes, libc_cv_mips_nan2008=no)])
+
+libc_mips_nan=
+if test x"$libc_cv_mips_nan2008" = xyes; then
+  libc_mips_nan=_2008
+fi
+
+LIBC_CONFIG_VAR([default-abi],
+  [${libc_mips_abi}_${libc_mips_float}${libc_mips_nan}])
 
 case "$prefix" in
 /usr | /usr/)
@@ -76,3 +88,12 @@ case "$prefix" in
 esac
 
 libc_cv_gcc_unwind_find_fde=yes
+
+if test -z "$arch_minimum_kernel"; then
+  if test x$libc_cv_mips_nan2008 = xyes; then
+    # FIXME: Adjust this setting to the actual first upstream kernel
+    # version to support the 2008 NaN encoding and then remove this
+    # comment.
+    arch_minimum_kernel=10.0.0
+  fi
+fi

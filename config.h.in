@@ -238,4 +238,8 @@
 /* The pt_chown binary is being built and used by grantpt.  */
 #undef HAVE_PT_CHOWN
 
+/* ports/sysdeps/mips/configure.in  */
+/* Define if using the IEEE 754-2008 NaN encoding on the MIPS target.  */
+#undef HAVE_MIPS_NAN2008
+
 #endif
