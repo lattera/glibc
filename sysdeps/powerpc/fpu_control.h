@@ -19,13 +19,50 @@
 #ifndef _FPU_CONTROL_H
 #define _FPU_CONTROL_H
 
-#if defined _SOFT_FLOAT || defined __NO_FPRS__
+#ifdef _SOFT_FLOAT
 
 # define _FPU_RESERVED 0xffffffff
 # define _FPU_DEFAULT  0x00000000 /* Default value.  */
 typedef unsigned int fpu_control_t;
 # define _FPU_GETCW(cw) (cw) = 0
 # define _FPU_SETCW(cw) (void) (cw)
+extern fpu_control_t __fpu_control;
+
+#elif defined __NO_FPRS__ /* e500 */
+
+/* rounding control */
+# define _FPU_RC_NEAREST 0x00   /* RECOMMENDED */
+# define _FPU_RC_DOWN    0x03
+# define _FPU_RC_UP      0x02
+# define _FPU_RC_ZERO    0x01
+
+/* masking of interrupts */
+# define _FPU_MASK_ZM  0x10 /* zero divide */
+# define _FPU_MASK_OM  0x40 /* overflow */
+# define _FPU_MASK_UM  0x80 /* underflow */
+# define _FPU_MASK_XM  0x40 /* inexact */
+# define _FPU_MASK_IM  0x20 /* invalid operation */
+
+# define _FPU_RESERVED 0xff3fff7f /* These bits are reserved and not changed. */
+
+/* The fdlibm code requires no interrupts for exceptions.  */
+# define _FPU_DEFAULT  0x00000000 /* Default value.  */
+
+/* IEEE:  same as above, but (some) exceptions;
+   we leave the 'inexact' exception off.
+ */
+# define _FPU_IEEE     0x000003c0
+
+/* Type of the control word.  */
+typedef unsigned int fpu_control_t;
+
+/* Macros for accessing the hardware control word.  */
+# define _FPU_GETCW(cw) \
+  __asm__ volatile ("mfspefscr %0" : "=r" (cw))
+# define _FPU_SETCW(cw) \
+  __asm__ volatile ("mtspefscr %0" : : "r" (cw))
+
+/* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;
 
 #else /* PowerPC 6xx floating-point.  */

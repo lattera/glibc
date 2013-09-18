@@ -1,4 +1,27 @@
 2013-09-18  Joseph Myers  <joseph@codesourcery.com>
+	    Aldy Hernandez  <aldyh@redhat.com>
+
+	* sysdeps/powerpc/fpu_control.h [_SOFT_FLOAT || __NO_FPRS__]:
+	Change condition to [_SOFT_FLOAT].
+	[__NO_FPRS__ && !_SOFT_FLOAT] (_FPU_RC_NEAREST): New macro.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (_FPU_RC_DOWN): Likewise.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (_FPU_RC_UP): Likewise.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (_FPU_RC_ZERO): Likewise.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (_FPU_MASK_ZM): Likewise.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (_FPU_MASK_OM): Likewise.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (_FPU_MASK_UM): Likewise.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (_FPU_MASK_XM): Likewise.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (_FPU_MASK_IM): Likewise.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (_FPU_RESERVED): Likewise.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (_FPU_DEFAULT): Likewise.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (_FPU_IEEE): Likewise.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (fpu_control_t): New typedef.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (_FPU_GETCW): New macro.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (_FPU_SETCW): Likewise.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (__fpu_control): New variable
+	declaration.
+
+2013-09-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/powerpc32/__longjmp-common.S (LOAD_GP): Define
 	macro conditional on [__SPE__ || (__NO_FPRS__ && !_SOFT_FLOAT)].
