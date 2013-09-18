@@ -1,10 +1,5 @@
 # Powerpc32 specific build options.
 
-ifeq ($(with-fp),no)
-+cflags += -msoft-float
-sysdep-LDFLAGS += -msoft-float
-endif
-
 ifeq ($(subdir),gmon)
 sysdep_routines += ppc-mcount compat-ppc-mcount
 static-only-routines += ppc-mcount
