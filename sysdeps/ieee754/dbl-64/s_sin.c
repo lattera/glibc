@@ -55,6 +55,50 @@
 #include <math_private.h>
 #include <fenv.h>
 
+/* Helper macros to compute sin of the input values.  */
+#define POLYNOMIAL2(xx) ((((s5.x * (xx) + s4.x) * (xx) + s3.x) * (xx) + s2.x) \
+			 * (xx))
+
+#define POLYNOMIAL(xx) (POLYNOMIAL2 (xx) + s1.x)
+
+/* The computed polynomial is a variation of the Taylor series expansion for
+   sin(a):
+
+   a - a^3/3! + a^5/5! - a^7/7! + a^9/9! + (1 - a^2) * da / 2
+
+   The constants s1, s2, s3, etc. are pre-computed values of 1/3!, 1/5! and so
+   on.  The result is returned to LHS and correction in COR.  */
+#define TAYLOR_SINCOS(xx, a, da, cor) \
+({									      \
+  double t = ((POLYNOMIAL (xx)  * (a) - 0.5 * (da))  * (xx) + (da));	      \
+  double res = (a) + t;							      \
+  (cor) = ((a) - res) + t;						      \
+  res;									      \
+})
+
+/* This is again a variation of the Taylor series expansion with the term
+   x^3/3! expanded into the following for better accuracy:
+
+   bb * x ^ 3 + 3 * aa * x * x1 * x2 + aa * x1 ^ 3 + aa * x2 ^ 3
+
+   The correction term is dx and bb + aa = -1/3!
+   */
+#define TAYLOR_SLOW(x0, dx, cor) \
+({									      \
+  static const double th2_36 = 206158430208.0;	/*    1.5*2**37   */	      \
+  double xx = (x0) * (x0);						      \
+  double x1 = ((x0) + th2_36) - th2_36;					      \
+  double y = aa.x * x1 * x1 * x1;					      \
+  double r = (x0) + y;							      \
+  double x2 = ((x0) - x1) + (dx);					      \
+  double t = (((POLYNOMIAL2 (xx) + bb.x) * xx + 3.0 * aa.x * x1 * x2)	      \
+	      * (x0)  + aa.x * x2 * x2 * x2 + (dx));			      \
+  t = (((x0) - r) + y) + t;						      \
+  double res = r + t;							      \
+  (cor) = (r - res) + t;						      \
+  res;									      \
+})
+
 #define SINCOS_TABLE_LOOKUP(u, sn, ssn, cs, ccs) \
 ({									      \
   int4 k = u.i[LOW_HALF] << 2;						      \
@@ -160,9 +204,8 @@ __sin (double x)
   else if (k < 0x3fd00000)
     {
       xx = x * x;
-      /*Taylor series.  */
-      t = (((((s5.x * xx + s4.x) * xx + s3.x) * xx + s2.x) * xx + s1.x)
-	   * (xx * x));
+      /* Taylor series.  */
+      t = POLYNOMIAL (xx) * (xx * x);
       res = x + t;
       cor = (x - res) + t;
       retval = (res == res + 1.07 * cor) ? res : slow (x);
@@ -237,11 +280,8 @@ __sin (double x)
 	    }
 	  if (xx < 0.01588)
 	    {
-	      /*Taylor series */
-	      t = (((((s5.x * xx + s4.x) * xx + s3.x) * xx + s2.x) * xx
-		    + s1.x) * a - 0.5 * da) * xx + da;
-	      res = a + t;
-	      cor = (a - res) + t;
+	      /* Taylor series.  */
+	      res = TAYLOR_SINCOS (xx, a, da, cor);
 	      cor = (cor > 0) ? 1.02 * cor + eps : 1.02 * cor - eps;
 	      retval = (res == res + cor) ? res : sloww (a, da, x);
 	    }
@@ -327,11 +367,8 @@ __sin (double x)
 	    }
 	  if (xx < 0.01588)
 	    {
-	      /* Taylor series */
-	      t = (((((s5.x * xx + s4.x) * xx + s3.x) * xx + s2.x) * xx
-		    + s1.x) * a - 0.5 * da) * xx + da;
-	      res = a + t;
-	      cor = (a - res) + t;
+	      /* Taylor series.  */
+	      res = TAYLOR_SINCOS (xx, a, da, cor);
 	      cor = (cor > 0) ? 1.02 * cor + eps : 1.02 * cor - eps;
 	      retval = (res == res + cor) ? res : bsloww (a, da, x, n);
 	    }
@@ -452,10 +489,7 @@ __cos (double x)
       xx = a * a;
       if (xx < 0.01588)
 	{
-	  t = (((((s5.x * xx + s4.x) * xx + s3.x) * xx + s2.x) * xx + s1.x)
-	       * a - 0.5 * da) * xx + da;
-	  res = a + t;
-	  cor = (a - res) + t;
+	  res = TAYLOR_SINCOS (xx, a, da, cor);
 	  cor = (cor > 0) ? 1.02 * cor + 1.0e-31 : 1.02 * cor - 1.0e-31;
 	  retval = (res == res + cor) ? res : csloww (a, da, x);
 	}
@@ -514,10 +548,7 @@ __cos (double x)
 	    }
 	  if (xx < 0.01588)
 	    {
-	      t = (((((s5.x * xx + s4.x) * xx + s3.x) * xx + s2.x) * xx
-		    + s1.x) * a - 0.5 * da) * xx + da;
-	      res = a + t;
-	      cor = (a - res) + t;
+	      res = TAYLOR_SINCOS (xx, a, da, cor);
 	      cor = (cor > 0) ? 1.02 * cor + eps : 1.02 * cor - eps;
 	      retval = (res == res + cor) ? res : csloww (a, da, x);
 	    }
@@ -602,10 +633,7 @@ __cos (double x)
 	    }
 	  if (xx < 0.01588)
 	    {
-	      t = (((((s5.x * xx + s4.x) * xx + s3.x) * xx + s2.x) * xx
-		    + s1.x) * a - 0.5 * da) * xx + da;
-	      res = a + t;
-	      cor = (a - res) + t;
+	      res = TAYLOR_SINCOS (xx, a, da, cor);
 	      cor = (cor > 0) ? 1.02 * cor + eps : 1.02 * cor - eps;
 	      retval = (res == res + cor) ? res : bsloww (a, da, x, n);
 	    }
@@ -684,18 +712,8 @@ static double
 SECTION
 slow (double x)
 {
-  static const double th2_36 = 206158430208.0;	/*    1.5*2**37   */
-  double y, x1, x2, xx, r, t, res, cor, w[2];
-  x1 = (x + th2_36) - th2_36;
-  y = aa.x * x1 * x1 * x1;
-  r = x + y;
-  x2 = x - x1;
-  xx = x * x;
-  t = (((((s5.x * xx + s4.x) * xx + s3.x) * xx + s2.x) * xx + bb.x) * xx
-       + 3.0 * aa.x * x1 * x2) * x + aa.x * x2 * x2 * x2;
-  t = ((x - r) + y) + t;
-  res = r + t;
-  cor = (r - res) + t;
+  double res, cor, w[2];
+  res = TAYLOR_SLOW (x, 0, cor);
   if (res == res + 1.0007 * cor)
     return res;
   else
@@ -813,24 +831,14 @@ static double
 SECTION
 sloww (double x, double dx, double orig)
 {
-  static const double th2_36 = 206158430208.0;	/*    1.5*2**37   */
-  double y, x1, x2, xx, r, t, res, cor, w[2], a, da, xn;
+  double y, t, res, cor, w[2], a, da, xn;
   union
   {
     int4 i[2];
     double x;
   } v;
   int4 n;
-  x1 = (x + th2_36) - th2_36;
-  y = aa.x * x1 * x1 * x1;
-  r = x + y;
-  x2 = (x - x1) + dx;
-  xx = x * x;
-  t = (((((s5.x * xx + s4.x) * xx + s3.x) * xx + s2.x) * xx + bb.x) * xx
-       + 3.0 * aa.x * x1 * x2) * x + aa.x * x2 * x2 * x2 + dx;
-  t = ((x - r) + y) + t;
-  res = r + t;
-  cor = (r - res) + t;
+  res = TAYLOR_SLOW (x, dx, cor);
   cor =
     (cor >
      0) ? 1.0005 * cor + ABS (orig) * 3.1e-30 : 1.0005 * cor -
@@ -1004,19 +1012,9 @@ static double
 SECTION
 bsloww (double x, double dx, double orig, int n)
 {
-  static const double th2_36 = 206158430208.0;	/*    1.5*2**37   */
-  double y, x1, x2, xx, r, t, res, cor, w[2];
+  double res, cor, w[2];
 
-  x1 = (x + th2_36) - th2_36;
-  y = aa.x * x1 * x1 * x1;
-  r = x + y;
-  x2 = (x - x1) + dx;
-  xx = x * x;
-  t = (((((s5.x * xx + s4.x) * xx + s3.x) * xx + s2.x) * xx + bb.x) * xx
-       + 3.0 * aa.x * x1 * x2) * x + aa.x * x2 * x2 * x2 + dx;
-  t = ((x - r) + y) + t;
-  res = r + t;
-  cor = (r - res) + t;
+  res = TAYLOR_SLOW (x, dx, cor);
   cor = (cor > 0) ? 1.0005 * cor + 1.1e-24 : 1.0005 * cor - 1.1e-24;
   if (res == res + cor)
     return res;
@@ -1191,8 +1189,7 @@ static double
 SECTION
 csloww (double x, double dx, double orig)
 {
-  static const double th2_36 = 206158430208.0;	/*    1.5*2**37   */
-  double y, x1, x2, xx, r, t, res, cor, w[2], a, da, xn;
+  double y, t, res, cor, w[2], a, da, xn;
   union
   {
     int4 i[2];
@@ -1200,17 +1197,8 @@ csloww (double x, double dx, double orig)
   } v;
   int4 n;
 
-  x1 = (x + th2_36) - th2_36;
-  y = aa.x * x1 * x1 * x1;
-  r = x + y;
-  x2 = (x - x1) + dx;
-  xx = x * x;
   /* Taylor series */
-  t = (((((s5.x * xx + s4.x) * xx + s3.x) * xx + s2.x) * xx + bb.x) * xx
-       + 3.0 * aa.x * x1 * x2) * x + aa.x * x2 * x2 * x2 + dx;
-  t = ((x - r) + y) + t;
-  res = r + t;
-  cor = (r - res) + t;
+  t = TAYLOR_SLOW (x, dx, cor);
 
   if (cor > 0)
     cor = 1.0005 * cor + ABS (orig) * 3.1e-30;

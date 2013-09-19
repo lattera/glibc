@@ -1,3 +1,16 @@
+2013-09-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (POLYNOMIAL2): New macro.
+	(POLYNOMIAL): Likewise.
+	(TAYLOR_SINCOS): Likewise.
+	(TAYLOR_SLOW): Likewise.
+	(__sin): Use TAYLOR_SINCOS.
+	(__cos): Likewise.
+	(slow): Use TAYLOR_SLOW.
+	(sloww): Likewise.
+	(bsloww): Likewise.
+	(csloww): Likewise.
+
 2013-09-19  Liubov Dmitrieva  <liubov.dmitrieva@intel.com>
 
 	* stdlib/strtod_l.c: Fix buffer overrun.
