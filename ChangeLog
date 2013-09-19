@@ -1,3 +1,7 @@
+2013-09-19  Liubov Dmitrieva  <liubov.dmitrieva@intel.com>
+
+	* stdlib/strtod_l.c: Fix buffer overrun.
+
 2013-09-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* benchtests/Makefile (bench): Add sincos.

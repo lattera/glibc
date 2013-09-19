@@ -1752,7 +1752,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	      got_limb;
 	    }
 
-	  for (i = densize; num[i] == 0 && i >= 0; --i)
+	  for (i = densize; i >= 0 && num[i] == 0; --i)
 	    ;
 	  return round_and_return (retval, exponent - 1, negative,
 				   quot, BITS_PER_MP_LIMB - 1 - used,
