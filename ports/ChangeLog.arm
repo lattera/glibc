@@ -1,3 +1,13 @@
+2013-09-18  Dinar Temirbulatov  <dtemirbulatov@gmail.com>
+
+	[BZ #15640]
+	* sysdeps/arm/bits/atomic.h (atomic_exchange_acq, atomic_exchange_rel)
+	(atomic_compare_and_exchange_bool_acq)
+	(atomic_compare_and_exchange_val_acq)
+	(atomic_compare_and_exchange_bool_rel)
+	(atomic_compare_and_exchange_val_rel): Use __atomic_exchange_n and
+	__atomic_compare_exchange_n builtins when GCC supports them.
+
 2013-09-16  Will Newton  <will.newton@linaro.org>
 
 	* sysdeps/arm/armv7/multiarch/memcpy_impl.S: Tighten check
