@@ -1,5 +1,8 @@
 2013-09-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* benchtests/Makefile (bench): Add sincos.
+	* benchtests/bench-sincos.c: New file.
+
 	* math/libm-test.inc (cos_test_data): New test inputs.
 	(sin_test_data): Likewise.
 

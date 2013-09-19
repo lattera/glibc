@@ -21,7 +21,7 @@
 
 subdir := benchtests
 bench := acos acosh asin asinh atan atanh cos cosh exp log modf pow rint sin \
-	 sinh tan tanh
+	 sincos sinh tan tanh
 
 # String function benchmarks.
 string-bench := bcopy bzero memccpy memchr memcmp memcpy memmem memmove \
@@ -97,6 +97,8 @@ LDLIBS-bench-tan = -lm
 tanh-ARGLIST = double
 tanh-RET = double
 LDLIBS-bench-tanh = -lm
+
+LDLIBS-bench-sincos = -lm
 
 
 
