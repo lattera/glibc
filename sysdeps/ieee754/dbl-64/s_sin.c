@@ -93,6 +93,39 @@ static double csloww (double x, double dx, double orig);
 static double csloww1 (double x, double dx, double orig);
 static double csloww2 (double x, double dx, double orig, int n);
 
+/* Reduce range of X and compute sin of a + da.  K is the amount by which to
+   rotate the quadrants.  This allows us to use the same routine to compute cos
+   by simply rotating the quadrants by 1.  */
+static inline double
+__always_inline
+reduce_and_compute (double x, double a, double da, unsigned int k)
+{
+  double retval = 0;
+  unsigned int n = __branred (x, &a, &da);
+  k = (n + k) % 4;
+  switch (k)
+    {
+      case 0:
+	if (a * a < 0.01588)
+	  retval = bsloww (a, da, x, n);
+	else
+	  retval = bsloww1 (a, da, x, n);
+	break;
+      case 2:
+	if (a * a < 0.01588)
+	  retval = bsloww (-a, -da, x, n);
+	else
+	  retval = bsloww1 (-a, -da, x, n);
+	break;
+
+      case 1:
+      case 3:
+	retval = bsloww2 (a, da, x, n);
+	break;
+    }
+  return retval;
+}
+
 /*******************************************************************/
 /* An ultimate sin routine. Given an IEEE double machine number x   */
 /* it computes the correctly rounded (to nearest) value of sin(x)  */
@@ -366,29 +399,7 @@ __sin (double x)
 
 /* -----------------281474976710656 <|x| <2^1024----------------------------*/
   else if (k < 0x7ff00000)
-    {
-      n = __branred (x, &a, &da);
-      switch (n)
-	{
-	case 0:
-	  if (a * a < 0.01588)
-	    retval = bsloww (a, da, x, n);
-	  else
-	    retval = bsloww1 (a, da, x, n);
-	  break;
-	case 2:
-	  if (a * a < 0.01588)
-	    retval = bsloww (-a, -da, x, n);
-	  else
-	    retval = bsloww1 (-a, -da, x, n);
-	  break;
-
-	case 1:
-	case 3:
-	  retval = bsloww2 (a, da, x, n);
-	  break;
-	}
-    }				/*   else  if (k <  0x7ff00000 )    */
+    retval = reduce_and_compute (x, a, da, 0);
 
 /*--------------------- |x| > 2^1024 ----------------------------------*/
   else
@@ -684,31 +695,9 @@ __cos (double x)
 	}
     }				/*   else  if (k <  0x42F00000 )    */
 
+  /* 281474976710656 <|x| <2^1024 */
   else if (k < 0x7ff00000)
-    {				/* 281474976710656 <|x| <2^1024 */
-
-      n = __branred (x, &a, &da);
-      switch (n)
-	{
-	case 1:
-	  if (a * a < 0.01588)
-	    retval = bsloww (-a, -da, x, n);
-	  else
-	    retval = bsloww1 (-a, -da, x, n);
-	  break;
-	case 3:
-	  if (a * a < 0.01588)
-	    retval = bsloww (a, da, x, n);
-	  else
-	    retval = bsloww1 (a, da, x, n);
-	  break;
-
-	case 0:
-	case 2:
-	  retval = bsloww2 (a, da, x, n);
-	  break;
-	}
-    }				/*   else  if (k <  0x7ff00000 )    */
+    retval = reduce_and_compute (x, a, da, 1);
 
   else
     {

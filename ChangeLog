@@ -1,5 +1,10 @@
 2013-09-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/s_sin.c (reduce_and_compute): New
+	function.
+	(__sin): Use it.
+	(__cos): Likewise.
+
 	* sysdeps/ieee754/dbl-64/s_sin.c (__sin): Remove redundant
 	gotos.
 	(__cos): Likewise.
