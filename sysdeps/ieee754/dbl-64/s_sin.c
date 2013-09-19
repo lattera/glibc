@@ -55,6 +55,15 @@
 #include <math_private.h>
 #include <fenv.h>
 
+#define SINCOS_TABLE_LOOKUP(u, sn, ssn, cs, ccs) \
+({									      \
+  int4 k = u.i[LOW_HALF] << 2;						      \
+  sn = __sincostab.x[k];						      \
+  ssn = __sincostab.x[k + 1];						      \
+  cs = __sincostab.x[k + 2];						      \
+  ccs = __sincostab.x[k + 3];						      \
+})
+
 #ifndef SECTION
 # define SECTION
 #endif
@@ -166,11 +175,12 @@ __sin (double x)
       xx = y * y;
       s = y + y * xx * (sn3 + xx * sn5);
       c = xx * (cs2 + xx * (cs4 + xx * cs6));
-      k = u.i[LOW_HALF] << 2;
-      sn = (m > 0) ? __sincostab.x[k] : -__sincostab.x[k];
-      ssn = (m > 0) ? __sincostab.x[k + 1] : -__sincostab.x[k + 1];
-      cs = __sincostab.x[k + 2];
-      ccs = __sincostab.x[k + 3];
+      SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
+      if (m <= 0)
+        {
+          sn = -sn;
+	  ssn = -ssn;
+	}
       cor = (ssn + s * ccs - sn * c) + cs * s;
       res = sn + cor;
       cor = (sn - res) + cor;
@@ -195,11 +205,7 @@ __sin (double x)
       xx = y * y;
       s = y + y * xx * (sn3 + xx * sn5);
       c = xx * (cs2 + xx * (cs4 + xx * cs6));
-      k = u.i[LOW_HALF] << 2;
-      sn = __sincostab.x[k];
-      ssn = __sincostab.x[k + 1];
-      cs = __sincostab.x[k + 2];
-      ccs = __sincostab.x[k + 3];
+      SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
       cor = (ccs - s * ssn - cs * c) - sn * s;
       res = cs + cor;
       cor = (cs - res) + cor;
@@ -258,11 +264,7 @@ __sin (double x)
 	      xx = y * y;
 	      s = y + (db + y * xx * (sn3 + xx * sn5));
 	      c = y * db + xx * (cs2 + xx * (cs4 + xx * cs6));
-	      k = u.i[LOW_HALF] << 2;
-	      sn = __sincostab.x[k];
-	      ssn = __sincostab.x[k + 1];
-	      cs = __sincostab.x[k + 2];
-	      ccs = __sincostab.x[k + 3];
+	      SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
 	      cor = (ssn + s * ccs - sn * c) + cs * s;
 	      res = sn + cor;
 	      cor = (sn - res) + cor;
@@ -282,11 +284,7 @@ __sin (double x)
 	  u.x = big.x + a;
 	  y = a - (u.x - big.x) + da;
 	  xx = y * y;
-	  k = u.i[LOW_HALF] << 2;
-	  sn = __sincostab.x[k];
-	  ssn = __sincostab.x[k + 1];
-	  cs = __sincostab.x[k + 2];
-	  ccs = __sincostab.x[k + 3];
+	  SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
 	  s = y + y * xx * (sn3 + xx * sn5);
 	  c = xx * (cs2 + xx * (cs4 + xx * cs6));
 	  cor = (ccs - s * ssn - cs * c) - sn * s;
@@ -356,11 +354,7 @@ __sin (double x)
 	      xx = y * y;
 	      s = y + (db + y * xx * (sn3 + xx * sn5));
 	      c = y * db + xx * (cs2 + xx * (cs4 + xx * cs6));
-	      k = u.i[LOW_HALF] << 2;
-	      sn = __sincostab.x[k];
-	      ssn = __sincostab.x[k + 1];
-	      cs = __sincostab.x[k + 2];
-	      ccs = __sincostab.x[k + 3];
+	      SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
 	      cor = (ssn + s * ccs - sn * c) + cs * s;
 	      res = sn + cor;
 	      cor = (sn - res) + cor;
@@ -380,11 +374,7 @@ __sin (double x)
 	  u.x = big.x + a;
 	  y = a - (u.x - big.x) + da;
 	  xx = y * y;
-	  k = u.i[LOW_HALF] << 2;
-	  sn = __sincostab.x[k];
-	  ssn = __sincostab.x[k + 1];
-	  cs = __sincostab.x[k + 2];
-	  ccs = __sincostab.x[k + 3];
+	  SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
 	  s = y + y * xx * (sn3 + xx * sn5);
 	  c = xx * (cs2 + xx * (cs4 + xx * cs6));
 	  cor = (ccs - s * ssn - cs * c) - sn * s;
@@ -447,11 +437,7 @@ __cos (double x)
       xx = y * y;
       s = y + y * xx * (sn3 + xx * sn5);
       c = xx * (cs2 + xx * (cs4 + xx * cs6));
-      k = u.i[LOW_HALF] << 2;
-      sn = __sincostab.x[k];
-      ssn = __sincostab.x[k + 1];
-      cs = __sincostab.x[k + 2];
-      ccs = __sincostab.x[k + 3];
+      SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
       cor = (ccs - s * ssn - cs * c) - sn * s;
       res = cs + cor;
       cor = (cs - res) + cor;
@@ -492,11 +478,7 @@ __cos (double x)
 	  xx = y * y;
 	  s = y + (db + y * xx * (sn3 + xx * sn5));
 	  c = y * db + xx * (cs2 + xx * (cs4 + xx * cs6));
-	  k = u.i[LOW_HALF] << 2;
-	  sn = __sincostab.x[k];
-	  ssn = __sincostab.x[k + 1];
-	  cs = __sincostab.x[k + 2];
-	  ccs = __sincostab.x[k + 3];
+	  SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
 	  cor = (ssn + s * ccs - sn * c) + cs * s;
 	  res = sn + cor;
 	  cor = (sn - res) + cor;
@@ -558,11 +540,7 @@ __cos (double x)
 	      xx = y * y;
 	      s = y + (db + y * xx * (sn3 + xx * sn5));
 	      c = y * db + xx * (cs2 + xx * (cs4 + xx * cs6));
-	      k = u.i[LOW_HALF] << 2;
-	      sn = __sincostab.x[k];
-	      ssn = __sincostab.x[k + 1];
-	      cs = __sincostab.x[k + 2];
-	      ccs = __sincostab.x[k + 3];
+	      SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
 	      cor = (ssn + s * ccs - sn * c) + cs * s;
 	      res = sn + cor;
 	      cor = (sn - res) + cor;
@@ -582,11 +560,7 @@ __cos (double x)
 	  u.x = big.x + a;
 	  y = a - (u.x - big.x) + da;
 	  xx = y * y;
-	  k = u.i[LOW_HALF] << 2;
-	  sn = __sincostab.x[k];
-	  ssn = __sincostab.x[k + 1];
-	  cs = __sincostab.x[k + 2];
-	  ccs = __sincostab.x[k + 3];
+	  SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
 	  s = y + y * xx * (sn3 + xx * sn5);
 	  c = xx * (cs2 + xx * (cs4 + xx * cs6));
 	  cor = (ccs - s * ssn - cs * c) - sn * s;
@@ -654,11 +628,7 @@ __cos (double x)
 	      xx = y * y;
 	      s = y + (db + y * xx * (sn3 + xx * sn5));
 	      c = y * db + xx * (cs2 + xx * (cs4 + xx * cs6));
-	      k = u.i[LOW_HALF] << 2;
-	      sn = __sincostab.x[k];
-	      ssn = __sincostab.x[k + 1];
-	      cs = __sincostab.x[k + 2];
-	      ccs = __sincostab.x[k + 3];
+	      SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
 	      cor = (ssn + s * ccs - sn * c) + cs * s;
 	      res = sn + cor;
 	      cor = (sn - res) + cor;
@@ -678,11 +648,7 @@ __cos (double x)
 	  u.x = big.x + a;
 	  y = a - (u.x - big.x) + da;
 	  xx = y * y;
-	  k = u.i[LOW_HALF] << 2;
-	  sn = __sincostab.x[k];
-	  ssn = __sincostab.x[k + 1];
-	  cs = __sincostab.x[k + 2];
-	  ccs = __sincostab.x[k + 3];
+	  SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
 	  s = y + y * xx * (sn3 + xx * sn5);
 	  c = xx * (cs2 + xx * (cs4 + xx * cs6));
 	  cor = (ccs - s * ssn - cs * c) - sn * s;
@@ -754,18 +720,13 @@ slow1 (double x)
   mynumber u;
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, c1, c2, xx, cor, res;
   static const double t22 = 6291456.0;
-  int4 k;
   y = ABS (x);
   u.x = big.x + y;
   y = y - (u.x - big.x);
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);
   c = xx * (cs2 + xx * (cs4 + xx * cs6));
-  k = u.i[LOW_HALF] << 2;
-  sn = __sincostab.x[k];	/* Data          */
-  ssn = __sincostab.x[k + 1];	/*  from         */
-  cs = __sincostab.x[k + 2];	/*   tables      */
-  ccs = __sincostab.x[k + 3];	/*    __sincostab.tbl */
+  SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
   y1 = (y + t22) - t22;
   y2 = y - y1;
   c1 = (cs + t22) - t22;
@@ -798,7 +759,6 @@ slow2 (double x)
   mynumber u;
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, e1, e2, xx, cor, res, del;
   static const double t22 = 6291456.0;
-  int4 k;
   y = ABS (x);
   y = hp0.x - y;
   if (y >= 0)
@@ -816,11 +776,7 @@ slow2 (double x)
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);
   c = y * del + xx * (cs2 + xx * (cs4 + xx * cs6));
-  k = u.i[LOW_HALF] << 2;
-  sn = __sincostab.x[k];
-  ssn = __sincostab.x[k + 1];
-  cs = __sincostab.x[k + 2];
-  ccs = __sincostab.x[k + 3];
+  SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
   y1 = (y + t22) - t22;
   y2 = (y - y1) + del;
   e1 = (sn + t22) - t22;
@@ -937,7 +893,6 @@ sloww1 (double x, double dx, double orig)
   mynumber u;
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, c1, c2, xx, cor, res;
   static const double t22 = 6291456.0;
-  int4 k;
 
   y = ABS (x);
   u.x = big.x + y;
@@ -946,11 +901,7 @@ sloww1 (double x, double dx, double orig)
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);
   c = xx * (cs2 + xx * (cs4 + xx * cs6));
-  k = u.i[LOW_HALF] << 2;
-  sn = __sincostab.x[k];
-  ssn = __sincostab.x[k + 1];
-  cs = __sincostab.x[k + 2];
-  ccs = __sincostab.x[k + 3];
+  SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
   y1 = (y + t22) - t22;
   y2 = (y - y1) + dx;
   c1 = (cs + t22) - t22;
@@ -998,7 +949,6 @@ sloww2 (double x, double dx, double orig, int n)
   mynumber u;
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, e1, e2, xx, cor, res;
   static const double t22 = 6291456.0;
-  int4 k;
 
   y = ABS (x);
   u.x = big.x + y;
@@ -1007,11 +957,7 @@ sloww2 (double x, double dx, double orig, int n)
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);
   c = y * dx + xx * (cs2 + xx * (cs4 + xx * cs6));
-  k = u.i[LOW_HALF] << 2;
-  sn = __sincostab.x[k];
-  ssn = __sincostab.x[k + 1];
-  cs = __sincostab.x[k + 2];
-  ccs = __sincostab.x[k + 3];
+  SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
 
   y1 = (y + t22) - t22;
   y2 = (y - y1) + dx;
@@ -1102,7 +1048,6 @@ bsloww1 (double x, double dx, double orig, int n)
   mynumber u;
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, c1, c2, xx, cor, res;
   static const double t22 = 6291456.0;
-  int4 k;
 
   y = ABS (x);
   u.x = big.x + y;
@@ -1111,11 +1056,7 @@ bsloww1 (double x, double dx, double orig, int n)
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);
   c = xx * (cs2 + xx * (cs4 + xx * cs6));
-  k = u.i[LOW_HALF] << 2;
-  sn = __sincostab.x[k];
-  ssn = __sincostab.x[k + 1];
-  cs = __sincostab.x[k + 2];
-  ccs = __sincostab.x[k + 3];
+  SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
   y1 = (y + t22) - t22;
   y2 = (y - y1) + dx;
   c1 = (cs + t22) - t22;
@@ -1158,7 +1099,6 @@ bsloww2 (double x, double dx, double orig, int n)
   mynumber u;
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, e1, e2, xx, cor, res;
   static const double t22 = 6291456.0;
-  int4 k;
 
   y = ABS (x);
   u.x = big.x + y;
@@ -1167,11 +1107,7 @@ bsloww2 (double x, double dx, double orig, int n)
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);
   c = y * dx + xx * (cs2 + xx * (cs4 + xx * cs6));
-  k = u.i[LOW_HALF] << 2;
-  sn = __sincostab.x[k];
-  ssn = __sincostab.x[k + 1];
-  cs = __sincostab.x[k + 2];
-  ccs = __sincostab.x[k + 3];
+  SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
 
   y1 = (y + t22) - t22;
   y2 = (y - y1) + dx;
@@ -1213,7 +1149,6 @@ cslow2 (double x)
   mynumber u;
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, e1, e2, xx, cor, res;
   static const double t22 = 6291456.0;
-  int4 k;
 
   y = ABS (x);
   u.x = big.x + y;
@@ -1221,11 +1156,7 @@ cslow2 (double x)
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);
   c = xx * (cs2 + xx * (cs4 + xx * cs6));
-  k = u.i[LOW_HALF] << 2;
-  sn = __sincostab.x[k];
-  ssn = __sincostab.x[k + 1];
-  cs = __sincostab.x[k + 2];
-  ccs = __sincostab.x[k + 3];
+  SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
   y1 = (y + t22) - t22;
   y2 = y - y1;
   e1 = (sn + t22) - t22;
@@ -1346,7 +1277,6 @@ csloww1 (double x, double dx, double orig)
   mynumber u;
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, c1, c2, xx, cor, res;
   static const double t22 = 6291456.0;
-  int4 k;
 
   y = ABS (x);
   u.x = big.x + y;
@@ -1355,11 +1285,7 @@ csloww1 (double x, double dx, double orig)
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);
   c = xx * (cs2 + xx * (cs4 + xx * cs6));
-  k = u.i[LOW_HALF] << 2;
-  sn = __sincostab.x[k];
-  ssn = __sincostab.x[k + 1];
-  cs = __sincostab.x[k + 2];
-  ccs = __sincostab.x[k + 3];
+  SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
   y1 = (y + t22) - t22;
   y2 = (y - y1) + dx;
   c1 = (cs + t22) - t22;
@@ -1406,7 +1332,6 @@ csloww2 (double x, double dx, double orig, int n)
   mynumber u;
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, e1, e2, xx, cor, res;
   static const double t22 = 6291456.0;
-  int4 k;
 
   y = ABS (x);
   u.x = big.x + y;
@@ -1415,11 +1340,7 @@ csloww2 (double x, double dx, double orig, int n)
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);
   c = y * dx + xx * (cs2 + xx * (cs4 + xx * cs6));
-  k = u.i[LOW_HALF] << 2;
-  sn = __sincostab.x[k];
-  ssn = __sincostab.x[k + 1];
-  cs = __sincostab.x[k + 2];
-  ccs = __sincostab.x[k + 3];
+  SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
 
   y1 = (y + t22) - t22;
   y2 = (y - y1) + dx;

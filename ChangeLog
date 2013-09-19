@@ -1,5 +1,19 @@
 2013-09-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/s_sin.c (SINCOS_TABLE_LOOKUP): New
+	macro.
+	(__sin): Use it.
+	(__cos): Likewise.
+	(slow1): Likewise.
+	(slow2): Likewise.
+	(sloww1): Likewise.
+	(sloww2): Likewise.
+	(bsloww1): Likewise.
+	(bsloww2): Likewise.
+	(cslow2): Likewise.
+	(csloww1): Likewise.
+	(csloww2): Likewise.
+
 	* sysdeps/ieee754/dbl-64/s_sin.c (reduce_and_compute): New
 	function.
 	(__sin): Use it.
