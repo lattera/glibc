@@ -1,3 +1,9 @@
+2013-09-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (__sin): Remove redundant
+	gotos.
+	(__cos): Likewise.
+
 2013-09-18  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	* config.h.in (HAVE_MIPS_NAN2008): New macro.

@@ -113,10 +113,7 @@ __sin (double x)
   m = u.i[HIGH_HALF];
   k = 0x7fffffff & m;		/* no sign           */
   if (k < 0x3e500000)		/* if x->0 =>sin(x)=x */
-    {
-      retval = x;
-      goto ret;
-    }
+    retval = x;
  /*---------------------------- 2^-26 < |x|< 0.25 ----------------------*/
   else if (k < 0x3fd00000)
     {
@@ -127,7 +124,6 @@ __sin (double x)
       res = x + t;
       cor = (x - res) + t;
       retval = (res == res + 1.07 * cor) ? res : slow (x);
-      goto ret;
     }				/*  else  if (k < 0x3fd00000)    */
 /*---------------------------- 0.25<|x|< 0.855469---------------------- */
   else if (k < 0x3feb6000)
@@ -146,7 +142,6 @@ __sin (double x)
       res = sn + cor;
       cor = (sn - res) + cor;
       retval = (res == res + 1.096 * cor) ? res : slow1 (x);
-      goto ret;
     }				/*   else  if (k < 0x3feb6000)    */
 
 /*----------------------- 0.855469  <|x|<2.426265  ----------------------*/
@@ -176,7 +171,6 @@ __sin (double x)
       res = cs + cor;
       cor = (cs - res) + cor;
       retval = (res == res + 1.020 * cor) ? ((m > 0) ? res : -res) : slow2 (x);
-      goto ret;
     }				/*   else  if (k < 0x400368fd)    */
 
 /*-------------------------- 2.426265<|x|< 105414350 ----------------------*/
@@ -211,7 +205,6 @@ __sin (double x)
 	      cor = (a - res) + t;
 	      cor = (cor > 0) ? 1.02 * cor + eps : 1.02 * cor - eps;
 	      retval = (res == res + cor) ? res : sloww (a, da, x);
-	      goto ret;
 	    }
 	  else
 	    {
@@ -243,7 +236,6 @@ __sin (double x)
 	      cor = (cor > 0) ? 1.035 * cor + eps : 1.035 * cor - eps;
 	      retval = ((res == res + cor) ? ((m) ? res : -res)
 			: sloww1 (a, da, x));
-	      goto ret;
 	    }
 	  break;
 
@@ -270,11 +262,8 @@ __sin (double x)
 	  cor = (cor > 0) ? 1.025 * cor + eps : 1.025 * cor - eps;
 	  retval = ((res == res + cor) ? ((n & 2) ? -res : res)
 		    : sloww2 (a, da, x, n));
-	  goto ret;
-
 	  break;
 	}
-
     }				/*   else  if (k <  0x419921FB )    */
 
 /*---------------------105414350 <|x|< 281474976710656 --------------------*/
@@ -314,7 +303,6 @@ __sin (double x)
 	      cor = (a - res) + t;
 	      cor = (cor > 0) ? 1.02 * cor + eps : 1.02 * cor - eps;
 	      retval = (res == res + cor) ? res : bsloww (a, da, x, n);
-	      goto ret;
 	    }
 	  else
 	    {
@@ -346,7 +334,6 @@ __sin (double x)
 	      cor = (cor > 0) ? 1.035 * cor + eps : 1.035 * cor - eps;
 	      retval = ((res == res + cor) ? ((m) ? res : -res)
 			: bsloww1 (a, da, x, n));
-	      goto ret;
 	    }
 	  break;
 
@@ -373,8 +360,6 @@ __sin (double x)
 	  cor = (cor > 0) ? 1.025 * cor + eps : 1.025 * cor - eps;
 	  retval = ((res == res + cor) ? ((n & 2) ? -res : res)
 		    : bsloww2 (a, da, x, n));
-	  goto ret;
-
 	  break;
 	}
     }				/*   else  if (k <  0x42F00000 )   */
@@ -390,20 +375,17 @@ __sin (double x)
 	    retval = bsloww (a, da, x, n);
 	  else
 	    retval = bsloww1 (a, da, x, n);
-	  goto ret;
 	  break;
 	case 2:
 	  if (a * a < 0.01588)
 	    retval = bsloww (-a, -da, x, n);
 	  else
 	    retval = bsloww1 (-a, -da, x, n);
-	  goto ret;
 	  break;
 
 	case 1:
 	case 3:
 	  retval = bsloww2 (a, da, x, n);
-	  goto ret;
 	  break;
 	}
     }				/*   else  if (k <  0x7ff00000 )    */
@@ -414,10 +396,8 @@ __sin (double x)
       if (k == 0x7ff00000 && u.i[LOW_HALF] == 0)
 	__set_errno (EDOM);
       retval = x / x;
-      goto ret;
     }
 
-ret:
   return retval;
 }
 
@@ -444,11 +424,9 @@ __cos (double x)
   m = u.i[HIGH_HALF];
   k = 0x7fffffff & m;
 
+  /* |x|<2^-27 => cos(x)=1 */
   if (k < 0x3e400000)
-    {
-      retval = 1.0;
-      goto ret;
-    }				/* |x|<2^-27 => cos(x)=1 */
+    retval = 1.0;
 
   else if (k < 0x3feb6000)
     {				/* 2^-27 < |x| < 0.855469 */
@@ -467,7 +445,6 @@ __cos (double x)
       res = cs + cor;
       cor = (cs - res) + cor;
       retval = (res == res + 1.020 * cor) ? res : cslow2 (x);
-      goto ret;
     }				/*   else  if (k < 0x3feb6000)    */
 
   else if (k < 0x400368fd)
@@ -484,7 +461,6 @@ __cos (double x)
 	  cor = (a - res) + t;
 	  cor = (cor > 0) ? 1.02 * cor + 1.0e-31 : 1.02 * cor - 1.0e-31;
 	  retval = (res == res + cor) ? res : csloww (a, da, x);
-	  goto ret;
 	}
       else
 	{
@@ -516,7 +492,6 @@ __cos (double x)
 	  cor = (cor > 0) ? 1.035 * cor + 1.0e-31 : 1.035 * cor - 1.0e-31;
 	  retval = ((res == res + cor) ? ((m) ? res : -res)
 		    : csloww1 (a, da, x));
-	  goto ret;
 	}
 
     }				/*   else  if (k < 0x400368fd)    */
@@ -552,7 +527,6 @@ __cos (double x)
 	      cor = (a - res) + t;
 	      cor = (cor > 0) ? 1.02 * cor + eps : 1.02 * cor - eps;
 	      retval = (res == res + cor) ? res : csloww (a, da, x);
-	      goto ret;
 	    }
 	  else
 	    {
@@ -584,7 +558,6 @@ __cos (double x)
 	      cor = (cor > 0) ? 1.035 * cor + eps : 1.035 * cor - eps;
 	      retval = ((res == res + cor) ? ((m) ? res : -res)
 			: csloww1 (a, da, x));
-	      goto ret;
 	    }
 	  break;
 
@@ -611,8 +584,6 @@ __cos (double x)
 	  cor = (cor > 0) ? 1.025 * cor + eps : 1.025 * cor - eps;
 	  retval = ((res == res + cor) ? ((n) ? -res : res)
 		    : csloww2 (a, da, x, n));
-	  goto ret;
-
 	  break;
 	}
     }				/*   else  if (k <  0x419921FB )    */
@@ -652,7 +623,6 @@ __cos (double x)
 	      cor = (a - res) + t;
 	      cor = (cor > 0) ? 1.02 * cor + eps : 1.02 * cor - eps;
 	      retval = (res == res + cor) ? res : bsloww (a, da, x, n);
-	      goto ret;
 	    }
 	  else
 	    {
@@ -684,7 +654,6 @@ __cos (double x)
 	      cor = (cor > 0) ? 1.035 * cor + eps : 1.035 * cor - eps;
 	      retval = ((res == res + cor) ? ((m) ? res : -res)
 			: bsloww1 (a, da, x, n));
-	      goto ret;
 	    }
 	  break;
 
@@ -711,7 +680,6 @@ __cos (double x)
 	  cor = (cor > 0) ? 1.025 * cor + eps : 1.025 * cor - eps;
 	  retval = ((res == res + cor) ? ((n) ? -res : res)
 		    : bsloww2 (a, da, x, n));
-	  goto ret;
 	  break;
 	}
     }				/*   else  if (k <  0x42F00000 )    */
@@ -727,20 +695,17 @@ __cos (double x)
 	    retval = bsloww (-a, -da, x, n);
 	  else
 	    retval = bsloww1 (-a, -da, x, n);
-	  goto ret;
 	  break;
 	case 3:
 	  if (a * a < 0.01588)
 	    retval = bsloww (a, da, x, n);
 	  else
 	    retval = bsloww1 (a, da, x, n);
-	  goto ret;
 	  break;
 
 	case 0:
 	case 2:
 	  retval = bsloww2 (a, da, x, n);
-	  goto ret;
 	  break;
 	}
     }				/*   else  if (k <  0x7ff00000 )    */
@@ -750,10 +715,8 @@ __cos (double x)
       if (k == 0x7ff00000 && u.i[LOW_HALF] == 0)
 	__set_errno (EDOM);
       retval = x / x;		/* |x| > 2^1024 */
-      goto ret;
     }
 
-ret:
   return retval;
 }
 
