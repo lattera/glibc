@@ -2896,6 +2896,8 @@ __libc_free(void* mem)
       {
 	mp_.mmap_threshold = chunksize (p);
 	mp_.trim_threshold = 2 * mp_.mmap_threshold;
+	LIBC_PROBE (memory_mallopt_free_dyn_thresholds, 2,
+		    mp_.mmap_threshold, mp_.trim_threshold);
       }
     munmap_chunk(p);
     return;
@@ -4701,19 +4703,25 @@ int __libc_mallopt(int param_number, int value)
 
   switch(param_number) {
   case M_MXFAST:
-    if (value >= 0 && value <= MAX_FAST_SIZE) {
-      set_max_fast(value);
-    }
+    if (value >= 0 && value <= MAX_FAST_SIZE)
+      {
+	LIBC_PROBE (memory_mallopt_mxfast, 2, value, get_max_fast ());
+	set_max_fast(value);
+      }
     else
       res = 0;
     break;
 
   case M_TRIM_THRESHOLD:
+    LIBC_PROBE (memory_mallopt_trim_threshold, 3, value,
+		mp_.trim_threshold, mp_.no_dyn_threshold);
     mp_.trim_threshold = value;
     mp_.no_dyn_threshold = 1;
     break;
 
   case M_TOP_PAD:
+    LIBC_PROBE (memory_mallopt_top_pad, 3, value,
+		mp_.top_pad, mp_.no_dyn_threshold);
     mp_.top_pad = value;
     mp_.no_dyn_threshold = 1;
     break;
@@ -4724,33 +4732,45 @@ int __libc_mallopt(int param_number, int value)
       res = 0;
     else
       {
+	LIBC_PROBE (memory_mallopt_mmap_threshold, 3, value,
+		    mp_.mmap_threshold, mp_.no_dyn_threshold);
 	mp_.mmap_threshold = value;
 	mp_.no_dyn_threshold = 1;
       }
     break;
 
   case M_MMAP_MAX:
+    LIBC_PROBE (memory_mallopt_mmap_max, 3, value,
+		mp_.n_mmaps_max, mp_.no_dyn_threshold);
     mp_.n_mmaps_max = value;
     mp_.no_dyn_threshold = 1;
     break;
 
   case M_CHECK_ACTION:
+    LIBC_PROBE (memory_mallopt_check_action, 2, value, check_action);
     check_action = value;
     break;
 
   case M_PERTURB:
+    LIBC_PROBE (memory_mallopt_perturb, 2, value, perturb_byte);
     perturb_byte = value;
     break;
 
 #ifdef PER_THREAD
   case M_ARENA_TEST:
     if (value > 0)
-      mp_.arena_test = value;
+      {
+	LIBC_PROBE (memory_mallopt_arena_test, 2, value, mp_.arena_test);
+	mp_.arena_test = value;
+      }
     break;
 
   case M_ARENA_MAX:
     if (value > 0)
-      mp_.arena_max = value;
+      {
+	LIBC_PROBE (memory_mallopt_arena_max, 2, value, mp_.arena_max);
+	mp_.arena_max = value;
+      }
     break;
 #endif
   }

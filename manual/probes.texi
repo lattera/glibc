@@ -22,7 +22,9 @@ arguments.
 @section Memory Allocation Probes
 
 These probes are designed to signal relatively unusual situations within
-the virtual memory subsystem of @theglibc{}.
+the virtual memory subsystem of @theglibc{}.  The location and the
+availability of some probes depend on whether per-thread arenas are
+enabled (the default) or disabled at the time @theglibc{} is compiled.
 
 @deftp Probe memory_arena_new (void *@var{$arg1}, size_t @var{$arg2})
 This probe is triggered when @code{malloc} allocates and initializes an
@@ -38,4 +40,83 @@ This probe is triggered when function @code{mallopt} is called to change
 @code{malloc} internal configuration parameters, before any change to
 the parameters is made.  The arguments @var{$arg1} and @var{$arg2} are
 the ones passed to the @code{mallopt} function.
+@end deftp
+
+@deftp Probe memory_mallopt_mxfast (int @var{$arg1}, int @var{$arg2})
+This probe is triggered shortly after the @code{memory_mallopt} probe,
+when the parameter to be changed is @code{M_MXFAST}, and the requested
+value is in an acceptable range.  Argument @var{$arg1} is the requested
+value, and @var{$arg2} is the previous value of this @code{malloc}
+parameter.
+@end deftp
+
+@deftp Probe memory_mallopt_trim_threshold (int @var{$arg1}, int @var{$arg2}, int @var{$arg3})
+This probe is triggere shortly after the @code{memory_mallopt} probe,
+when the parameter to be changed is @code{M_TRIM_THRESHOLD}.  Argument
+@var{$arg1} is the requested value, @var{$arg2} is the previous value of
+this @code{malloc} parameter, and @var{$arg3} is nonzero if dynamic
+threshold adjustment was already disabled.
+@end deftp
+
+@deftp Probe memory_mallopt_top_pad (int @var{$arg1}, int @var{$arg2}, int @var{$arg3})
+This probe is triggered shortly after the @code{memory_mallopt} probe,
+when the parameter to be changed is @code{M_TOP_PAD}.  Argument
+@var{$arg1} is the requested value, @var{$arg2} is the previous value of
+this @code{malloc} parameter, and @var{$arg3} is nonzero if dynamic
+threshold adjustment was already disabled.
+@end deftp
+
+@deftp Probe memory_mallopt_mmap_threshold (int @var{$arg1}, int @var{$arg2}, int @var{$arg3})
+This probe is triggered shortly after the @code{memory_mallopt} probe,
+when the parameter to be changed is @code{M_MMAP_THRESHOLD}, and the
+requested value is in an acceptable range.  Argument @var{$arg1} is the
+requested value, @var{$arg2} is the previous value of this @code{malloc}
+parameter, and @var{$arg3} is nonzero if dynamic threshold adjustment
+was already disabled.
+@end deftp
+
+@deftp Probe memory_mallopt_mmap_max (int @var{$arg1}, int @var{$arg2}, int @var{$arg3})
+This probe is triggered shortly after the @code{memory_mallopt} probe,
+when the parameter to be changed is @code{M_MMAP_MAX}.  Argument
+@var{$arg1} is the requested value, @var{$arg2} is the previous value of
+this @code{malloc} parameter, and @var{$arg3} is nonzero if dynamic
+threshold adjustment was already disabled.
+@end deftp
+
+@deftp Probe memory_mallopt_check_action (int @var{$arg1}, int @var{$arg2})
+This probe is triggered shortly after the @code{memory_mallopt} probe,
+when the parameter to be changed is @code{M_CHECK_ACTION}.  Argument
+@var{$arg1} is the requested value, and @var{$arg2} is the previous
+value of this @code{malloc} parameter.
+@end deftp
+
+@deftp Probe memory_mallopt_perturb (int @var{$arg1}, int @var{$arg2})
+This probe is triggered shortly after the @code{memory_mallopt} probe,
+when the parameter to be changed is @code{M_PERTURB}.  Argument
+@var{$arg1} is the requested value, and @var{$arg2} is the previous
+value of this @code{malloc} parameter.
+@end deftp
+
+@deftp Probe memory_mallopt_arena_test (int @var{$arg1}, int @var{$arg2})
+This probe is triggered shortly after the @code{memory_mallopt} probe,
+when the parameter to be changed is @code{M_ARENA_TEST}, and the
+requested value is in an acceptable range.  Argument @var{$arg1} is the
+requested value, and @var{$arg2} is the previous value of this
+@code{malloc} parameter.  This probe is only available when per-thread
+arenas are enabled.
+@end deftp
+
+@deftp Probe memory_mallopt_arena_max (int @var{$arg1}, int @var{$arg2})
+This probe is triggered shortly after the @code{memory_mallopt} probe,
+when the parameter to be changed is @code{M_ARENA_MAX}, and the
+requested value is in an acceptable range.  Argument @var{$arg1} is the
+requested value, and @var{$arg2} is the previous value of this
+@code{malloc} parameter.  This probe is only available when per-thread
+arenas are enabled.
+@end deftp
+
+@deftp Probe memory_mallopt_free_dyn_thresholds (int @var{$arg1}, int @var{$arg2})
+This probe is triggered when function @code{free} decides to adjust the
+dynamic brk/mmap thresholds.  Argument @var{$arg1} and @var{$arg2} are
+the adjusted mmap and trim thresholds, respectively.
 @end deftp
