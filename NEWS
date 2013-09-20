@@ -36,6 +36,8 @@ Version 2.19
 * ISO 639 definitions were updated for Chiga (cgg) and Chinese (gan, hak, czh,
   cjy, lzh, cmn, mnp, cdo, czo, cpx, wuu, hsn, yue).
 
+* SystemTap probes for malloc have been introduced.
+
 
 Version 2.18
 
