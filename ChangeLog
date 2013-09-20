@@ -1,5 +1,13 @@
 2013-09-20  Alexandre Oliva <aoliva@redhat.com>
 
+	* malloc/malloc.c (__libc_malloc): Add memory_malloc_retry probe.
+	(__libc_realloc): Add memory_realloc_retry probe.
+	(__libc_memalign): Add memory_memalign_retry probe.
+	(__libc_valloc): Add memory_valloc_retry probe.
+	(__libc_pvalloc): Add memory_pvalloc_retry probe.
+	(__libc_calloc): Add memory_calloc_retry probe.
+	* manual/probes.texi: Document them.
+
 	* malloc/arena.c (get_free_list): Add probe
 	memory_arena_reuse_free_list.
 	(reused_arena) [PER_THREAD]: Add probes memory_arena_reuse_wait

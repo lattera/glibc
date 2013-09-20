@@ -2856,6 +2856,7 @@ __libc_malloc(size_t bytes)
     return 0;
   victim = _int_malloc(ar_ptr, bytes);
   if(!victim) {
+    LIBC_PROBE (memory_malloc_retry, 1, bytes);
     ar_ptr = arena_get_retry(ar_ptr, bytes);
     if (__builtin_expect(ar_ptr != NULL, 1)) {
       victim = _int_malloc(ar_ptr, bytes);
@@ -2991,6 +2992,7 @@ __libc_realloc(void* oldmem, size_t bytes)
   if (newp == NULL)
     {
       /* Try harder to allocate memory in other arenas.  */
+      LIBC_PROBE (memory_realloc_retry, 2, bytes, oldmem);
       newp = __libc_malloc(bytes);
       if (newp != NULL)
 	{
@@ -3032,6 +3034,7 @@ __libc_memalign(size_t alignment, size_t bytes)
     return 0;
   p = _int_memalign(ar_ptr, alignment, bytes);
   if(!p) {
+    LIBC_PROBE (memory_memalign_retry, 2, bytes, alignment);
     ar_ptr = arena_get_retry (ar_ptr, bytes);
     if (__builtin_expect(ar_ptr != NULL, 1)) {
       p = _int_memalign(ar_ptr, alignment, bytes);
@@ -3075,6 +3078,7 @@ __libc_valloc(size_t bytes)
     return 0;
   p = _int_valloc(ar_ptr, bytes);
   if(!p) {
+    LIBC_PROBE (memory_valloc_retry, 1, bytes);
     ar_ptr = arena_get_retry (ar_ptr, bytes);
     if (__builtin_expect(ar_ptr != NULL, 1)) {
       p = _int_memalign(ar_ptr, pagesz, bytes);
@@ -3116,6 +3120,7 @@ __libc_pvalloc(size_t bytes)
   arena_get(ar_ptr, bytes + 2*pagesz + MINSIZE);
   p = _int_pvalloc(ar_ptr, bytes);
   if(!p) {
+    LIBC_PROBE (memory_pvalloc_retry, 1, bytes);
     ar_ptr = arena_get_retry (ar_ptr, bytes + 2*pagesz + MINSIZE);
     if (__builtin_expect(ar_ptr != NULL, 1)) {
       p = _int_memalign(ar_ptr, pagesz, rounded_bytes);
@@ -3192,6 +3197,7 @@ __libc_calloc(size_t n, size_t elem_size)
 	 av == arena_for_chunk(mem2chunk(mem)));
 
   if (mem == 0) {
+    LIBC_PROBE (memory_calloc_retry, 1, sz);
     av = arena_get_retry (av, sz);
     if (__builtin_expect(av != NULL, 1)) {
       mem = _int_malloc(av, sz);
