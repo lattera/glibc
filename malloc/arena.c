@@ -932,6 +932,7 @@ arena_get2(mstate a_tsd, size_t size, mstate avoid_arena)
 static mstate
 arena_get_retry (mstate ar_ptr, size_t bytes)
 {
+  LIBC_PROBE (memory_arena_retry, 2, bytes, ar_ptr);
   if(ar_ptr != &main_arena) {
     (void)mutex_unlock(&ar_ptr->mutex);
     ar_ptr = &main_arena;

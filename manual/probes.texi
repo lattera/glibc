@@ -48,6 +48,18 @@ corresponding two-argument functions, so that in all of these probes the
 user-requested allocation size is in @var{$arg1}.
 @end deftp
 
+@deftp Probe memory_arena_retry (size_t @var{$arg1}, void *@var{$arg2})
+This probe is triggered within @code{arena_get_retry} (the function
+called to select the alternate arena in which to retry an allocation
+that failed on the first attempt), before the selection of an alternate
+arena.  This probe is redundant, but much easier to use when it's not
+important to determine which of the various memory allocation functions
+is failing to allocate on the first try.  Argument @var{$arg1} is the
+same as in the function-specific probes, except for extra room for
+padding introduced by functions that have to ensure stricter alignment.
+Argument @var{$arg2} is the arena in which allocation failed.
+@end deftp
+
 @deftp Probe memory_arena_new (void *@var{$arg1}, size_t @var{$arg2})
 This probe is triggered when @code{malloc} allocates and initializes an
 additional arena (not the main arena), but before the arena is assigned
