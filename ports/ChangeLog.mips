@@ -1,6 +1,6 @@
 2013-09-20  Steve Ellcey  <sellcey@mips.com>
 
-	* sysdeps/mips/memset.S: Change prefetching and add loop unrolling. 
+	* sysdeps/mips/memset.S: Change prefetching and add loop unrolling.
 	* sysdeps/mips/mips64/memset.S: Remove.
 
 2013-09-18  Maciej W. Rozycki  <macro@codesourcery.com>
