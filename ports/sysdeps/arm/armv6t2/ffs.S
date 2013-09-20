@@ -32,4 +32,5 @@ END (__ffs)
 
 weak_alias (__ffs, ffs)
 weak_alias (__ffs, ffsl)
+libc_hidden_def (__ffs)
 libc_hidden_builtin_def (ffs)

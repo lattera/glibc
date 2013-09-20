@@ -46,6 +46,7 @@ __ffs (i)
   return table[x >> a] + a;
 }
 weak_alias (__ffs, ffs)
+libc_hidden_def (__ffs)
 libc_hidden_builtin_def (ffs)
 
 #if ULONG_MAX == UINT_MAX

@@ -27,6 +27,7 @@ __ffs (int x)
   return __builtin_ffs (x);
 }
 weak_alias (__ffs, ffs)
+libc_hidden_def (__ffs)
 libc_hidden_builtin_def (ffs)
 
 #undef ffsll

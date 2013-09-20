@@ -1,3 +1,7 @@
+2013-09-20  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/arm/armv6t2/ffs.S (__ffs): Define as hidden.
+
 2013-09-18  Dinar Temirbulatov  <dtemirbulatov@gmail.com>
 
 	[BZ #15640]

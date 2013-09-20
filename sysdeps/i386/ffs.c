@@ -41,6 +41,7 @@ __ffs (x)
   return cnt;
 }
 weak_alias (__ffs, ffs)
+libc_hidden_def (__ffs)
 libc_hidden_builtin_def (ffs)
 #undef ffsl
 weak_alias (__ffs, ffsl)

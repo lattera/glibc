@@ -35,4 +35,5 @@ __ffs (int x)
   return cnt + 1;
 }
 weak_alias (__ffs, ffs)
+libc_hidden_def (__ffs)
 libc_hidden_builtin_def (ffs)

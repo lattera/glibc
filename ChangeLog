@@ -1,3 +1,13 @@
+2013-09-20  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* include/string.h (__ffs): Declare as hidden.
+	* string/ffs.c (__ffs): Define as hidden.
+	* sysdeps/i386/ffs.c (__ffs): Likewise.
+	* sysdeps/i386/i686/ffs.c (__ffs): Likewise.
+	* sysdeps/powerpc/ffs.c (__ffs): Likewise.
+	* sysdeps/s390/ffs.c (__ffs): Likewise.
+	* sysdeps/x86_64/ffs.c (__ffs): Likewise.
+
 2013-09-20  Alexandre Oliva <aoliva@redhat.com>
 
 	* NEWS: Mention malloc probes.
