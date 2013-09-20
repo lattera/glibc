@@ -736,6 +736,7 @@ _int_new_arena(size_t size)
   top(a) = (mchunkptr)ptr;
   set_head(top(a), (((char*)h + h->size) - ptr) | PREV_INUSE);
 
+  LIBC_PROBE (memory_arena_new, 2, a, size);
   tsd_setspecific(arena_key, (void *)a);
   mutex_init(&a->mutex);
   (void)mutex_lock(&a->mutex);

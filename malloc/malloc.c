@@ -1878,6 +1878,8 @@ static int perturb_byte;
 #define free_perturb(p, n) memset (p, perturb_byte & 0xff, n)
 
 
+#include <stap-probe.h>
+
 /* ------------------- Support for multiple arenas -------------------- */
 #include "arena.c"
 
@@ -4694,6 +4696,8 @@ int __libc_mallopt(int param_number, int value)
   (void)mutex_lock(&av->mutex);
   /* Ensure initialization/consolidation */
   malloc_consolidate(av);
+
+  LIBC_PROBE (memory_mallopt, 2, param_number, value);
 
   switch(param_number) {
   case M_MXFAST:

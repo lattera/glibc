@@ -1,3 +1,12 @@
+2013-09-20  Alexandre Oliva <aoliva@redhat.com>
+
+	* malloc/malloc.c: Include stap-probe.h.
+	(__libc_mallopt): Add memory_mallopt probe.
+	* malloc/arena.c (_int_new_arena): Add memory_arena_new probe.
+	* manual/probes.texi: New.
+	* manual/Makefile (chapters): Add probes.
+	* manual/threads.texi: Set next node.
+
 2013-09-19  Wei-Lun Chao  <bluebat@member.fsf.org>
 
 	[BZ #15963, #13985]

@@ -1,0 +1,41 @@
+@node Internal Probes
+@c @node Internal Probes, , POSIX Threads, Top
+@c %MENU% Probes to monitor libc internal behavior
+@chapter Internal probes
+
+In order to aid in debugging and monitoring internal behavior,
+@theglibc{} exposes nearly-zero-overhead SystemTap probes marked with
+the @code{libc} provider.
+
+These probes are not part of the @glibcadj{} stable ABI, and they are
+subject to change or removal across releases.  Our only promise with
+regard to them is that, if we find a need to remove or modify the
+arguments of a probe, the modified probe will have a different name, so
+that program monitors relying on the old probe will not get unexpected
+arguments.
+
+@menu
+* Memory Allocation Probes::  Probes in the memory allocation subsystem
+@end menu
+
+@node Memory Allocation Probes
+@section Memory Allocation Probes
+
+These probes are designed to signal relatively unusual situations within
+the virtual memory subsystem of @theglibc{}.
+
+@deftp Probe memory_arena_new (void *@var{$arg1}, size_t @var{$arg2})
+This probe is triggered when @code{malloc} allocates and initializes an
+additional arena (not the main arena), but before the arena is assigned
+to the running thread or inserted into the internal linked list of
+arenas.  The arena's @code{malloc_state} internal data structure is
+located at @var{$arg1}, within a newly-allocated heap big enough to hold
+at least @var{$arg2} bytes.
+@end deftp
+
+@deftp Probe memory_mallopt (int @var{$arg1}, int @var{$arg2})
+This probe is triggered when function @code{mallopt} is called to change
+@code{malloc} internal configuration parameters, before any change to
+the parameters is made.  The arguments @var{$arg1} and @var{$arg2} are
+the ones passed to the @code{mallopt} function.
+@end deftp
