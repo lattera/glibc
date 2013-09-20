@@ -1,5 +1,13 @@
 2013-09-20  Alexandre Oliva <aoliva@redhat.com>
 
+	* malloc/arena.c (new_heap): New memory_heap_new probe.
+	(grow_heap): New memory_heap_more probe.
+	(shrink_heap): New memory_heap_less probe.
+	(heap_trim): New memory_heap_free probe.
+	* malloc/malloc.c (sysmalloc): New memory_sbrk_more probe.
+	(systrim): New memory_sbrk_less probe.
+	* manual/probes.texi: Document them.
+
 	* malloc/arena.c (arena_get_retry): Add memory_arena_retry probe.
 	* manual/probes.texi: Document it.
 

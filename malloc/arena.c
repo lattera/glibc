@@ -581,6 +581,7 @@ new_heap(size_t size, size_t top_pad)
   h->size = size;
   h->mprotect_size = size;
   THREAD_STAT(stat_n_heaps++);
+  LIBC_PROBE (memory_heap_new, 2, h, h->size);
   return h;
 }
 
@@ -606,6 +607,7 @@ grow_heap(heap_info *h, long diff)
   }
 
   h->size = new_size;
+  LIBC_PROBE (memory_heap_more, 2, h, h->size);
   return 0;
 }
 
@@ -633,6 +635,7 @@ shrink_heap(heap_info *h, long diff)
   /*fprintf(stderr, "shrink %p %08lx\n", h, new_size);*/
 
   h->size = new_size;
+  LIBC_PROBE (memory_heap_less, 2, h, h->size);
   return 0;
 }
 
@@ -674,6 +677,7 @@ heap_trim(heap_info *heap, size_t pad)
       break;
     ar_ptr->system_mem -= heap->size;
     arena_mem -= heap->size;
+    LIBC_PROBE (memory_heap_free, 2, heap, heap->size);
     delete_heap(heap);
     heap = prev_heap;
     if(!prev_inuse(p)) { /* consolidate backward */

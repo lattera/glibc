@@ -2448,8 +2448,10 @@ static void* sysmalloc(INTERNAL_SIZE_T nb, mstate av)
     below even if we cannot call MORECORE.
   */
 
-  if (size > 0)
+  if (size > 0) {
     brk = (char*)(MORECORE(size));
+    LIBC_PROBE (memory_sbrk_more, 2, brk, size);
+  }
 
   if (brk != (char*)(MORECORE_FAILURE)) {
     /* Call the `morecore' hook if necessary.  */
@@ -2746,6 +2748,8 @@ static int systrim(size_t pad, mstate av)
       if (__builtin_expect (hook != NULL, 0))
 	(*hook) ();
       new_brk = (char*)(MORECORE(0));
+
+      LIBC_PROBE (memory_sbrk_less, 2, new_brk, extra);
 
       if (new_brk != (char*)MORECORE_FAILURE) {
 	released = (long)(current_brk - new_brk);

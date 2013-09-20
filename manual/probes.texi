@@ -26,6 +26,47 @@ the virtual memory subsystem of @theglibc{}.  The location and the
 availability of some probes depend on whether per-thread arenas are
 enabled (the default) or disabled at the time @theglibc{} is compiled.
 
+@deftp Probe memory_sbrk_more (void *@var{$arg1}, size_t @var{$arg2})
+This probe is triggered after the main arena is extended by calling
+@code{sbrk}.  Argument @var{$arg1} is the additional size requested to
+@code{sbrk}, and @var{$arg2} is the pointer that marks the end of the
+@code{sbrk} area, returned in response to the request.
+@end deftp
+
+@deftp Probe memory_sbrk_less (void *@var{$arg1}, size_t @var{$arg2})
+This probe is triggered after the size of the main arena is decreased by
+calling @code{sbrk}.  Argument @var{$arg1} is the size released by
+@code{sbrk} (the positive value, rather than the negative value passed
+to @code{sbrk}), and @var{$arg2} is the pointer that marks the end of
+the @code{sbrk} area, returned in response to the request.
+@end deftp
+
+@deftp Probe memory_heap_new (void *@var{$arg1}, size_t @var{$arg2})
+This probe is triggered after a new heap is @code{mmap}ed.  Argument
+@var{$arg1} is a pointer to the base of the memory area, where the
+@code{heap_info} data structure is held, and @var{$arg2} is the size of
+the heap.
+@end deftp
+
+@deftp Probe memory_heap_free (void *@var{$arg1}, size_t @var{$arg2})
+This probe is triggered @emph{before} (unlike the other sbrk and heap
+probes) a heap is completely removed via @code{munmap}.  Argument
+@var{$arg1} is a pointer to the heap, and @var{$arg2} is the size of the
+heap.
+@end deftp
+
+@deftp Probe memory_heap_more (void *@var{$arg1}, size_t @var{$arg2})
+This probe is triggered after a trailing portion of an @code{mmap}ed
+heap is extended.  Argument @var{$arg1} is a pointer to the heap, and
+@var{$arg2} is the new size of the heap.
+@end deftp
+
+@deftp Probe memory_heap_less (void *@var{$arg1}, size_t @var{$arg2})
+This probe is triggered after a trailing portion of an @code{mmap}ed
+heap is released.  Argument @var{$arg1} is a pointer to the heap, and
+@var{$arg2} is the new size of the heap.
+@end deftp
+
 @deftp Probe memory_malloc_retry (size_t @var{$arg1})
 @deftpx Probe memory_realloc_retry (size_t @var{$arg1}, void *@var{$arg2})
 @deftpx Probe memory_memalign_retry (size_t @var{$arg1}, size_t @var{$arg2})
