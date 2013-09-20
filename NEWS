@@ -25,15 +25,16 @@ Version 2.19
 
 * New locales: quz_PE.
 
-* Add country_car field to LC_ADDRESS, many locales.
+* The LC_ADDRESS field was updated to support country_car for almost all
+  supported locales.
 
-* Update iso-1427.def and related occurrences.
+* ISO 1427 definitions were updated.
 
 * The configure option --disable-versioning has been removed.  Builds with
   --disable-versioning had not worked for several years.
 
-* Update iso-639.def with Chiga (cgg) and Chinese (gan, hak, czh, cjy, lzh,
-  cmn, mnp, cdo, czo, cpx, wuu, hsn, yue).
+* ISO 639 definitions were updated for Chiga (cgg) and Chinese (gan, hak, czh,
+  cjy, lzh, cmn, mnp, cdo, czo, cpx, wuu, hsn, yue).
 
 
 Version 2.18

@@ -1,4 +1,5 @@
 2013-09-19  Wei-Lun Chao  <bluebat@member.fsf.org>
+
 	[BZ #15963, #13985]
 	* locale/iso-639.def: Add Chiga (cgg) and Chinese (gan, hak,
 	czh, cjy, lzh, cmn, mnp, cdo, czo, cpx, wuu, hsn, yue).
@@ -377,7 +378,7 @@
 
 2013-09-04  Chris Leonard  <cjl@sugarlabs,.org>
 
-     [BZ #15923]
+	[BZ #15923]
 	* locale/iso-4217.def: Update iso-1427.def and related occurrences.
 
 2013-09-04  Joseph Myers  <joseph@codesourcery.com>
