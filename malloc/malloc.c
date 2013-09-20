@@ -2977,6 +2977,7 @@ __libc_realloc(void* oldmem, size_t bytes)
 #endif
 
 #if !defined PER_THREAD
+  LIBC_PROBE (memory_arena_reuse_realloc, 1, ar_ptr);
   /* As in malloc(), remember this arena for the next allocation. */
   tsd_setspecific(arena_key, (void *)ar_ptr);
 #endif

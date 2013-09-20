@@ -1,5 +1,14 @@
 2013-09-20  Alexandre Oliva <aoliva@redhat.com>
 
+	* malloc/arena.c (get_free_list): Add probe
+	memory_arena_reuse_free_list.
+	(reused_arena) [PER_THREAD]: Add probes memory_arena_reuse_wait
+	and memory_arena_reuse.
+	(arena_get2) [!PER_THREAD]: Likewise.
+	* malloc/malloc.c (__libc_realloc) [!PER_THREAD]: Add probe
+	memory_arena_reuse_realloc.
+	* manual/probes.texi: Document them.
+
 	* malloc/malloc.c (__libc_free): Add
 	memory_mallopt_free_dyn_thresholds probe.
 	(__libc_mallopt): Add multiple memory_mallopt probes.

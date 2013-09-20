@@ -775,6 +775,7 @@ get_free_list (void)
 
       if (result != NULL)
 	{
+	  LIBC_PROBE (memory_arena_reuse_free_list, 1, result);
 	  (void)mutex_lock(&result->mutex);
 	  tsd_setspecific(arena_key, (void *)result);
 	  THREAD_STAT(++(result->stat_lock_loop));
@@ -811,9 +812,11 @@ reused_arena (mstate avoid_arena)
     result = result->next;
 
   /* No arena available.  Wait for the next in line.  */
+  LIBC_PROBE (memory_arena_reuse_wait, 3, &result->mutex, result, avoid_arena);
   (void)mutex_lock(&result->mutex);
 
  out:
+  LIBC_PROBE (memory_arena_reuse, 2, result, avoid_arena);
   tsd_setspecific(arena_key, (void *)result);
   THREAD_STAT(++(result->stat_lock_loop));
   next_to_use = result->next;
@@ -892,6 +895,7 @@ arena_get2(mstate a_tsd, size_t size, mstate avoid_arena)
       if (retried)
 	(void)mutex_unlock(&list_lock);
       THREAD_STAT(++(a->stat_lock_loop));
+      LIBC_PROBE (memory_arena_reuse, 2, a, a_tsd);
       tsd_setspecific(arena_key, (void *)a);
       return a;
     }
@@ -904,6 +908,7 @@ arena_get2(mstate a_tsd, size_t size, mstate avoid_arena)
      locks. */
   if(!retried && mutex_trylock(&list_lock)) {
     /* We will block to not run in a busy loop.  */
+    LIBC_PROBE (memory_arena_reuse_wait, 3, &list_lock, NULL, a_tsd);
     (void)mutex_lock(&list_lock);
 
     /* Since we blocked there might be an arena available now.  */

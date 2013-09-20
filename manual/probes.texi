@@ -35,6 +35,66 @@ located at @var{$arg1}, within a newly-allocated heap big enough to hold
 at least @var{$arg2} bytes.
 @end deftp
 
+@deftp Probe memory_arena_reuse (void *@var{$arg1}, void *@var{$arg2})
+This probe is triggered when @code{malloc} has just selected an existing
+arena to reuse, and (temporarily) reserved it for exclusive use.
+Argument @var{$arg1} is a pointer to the newly-selected arena, and
+@var{$arg2} is a pointer to the arena previously used by that thread.
+
+When per-thread arenas are enabled, this occurs within
+@code{reused_arena}, right after the mutex mentioned in probe
+@code{memory_arena_reuse_wait} is acquired; argument @var{$arg1} will
+point to the same arena.  In this configuration, this will usually only
+occur once per thread.  The exception is when a thread first selected
+the main arena, but a subsequent allocation from it fails: then, and
+only then, may we switch to another arena to retry that allocations, and
+for further allocations within that thread.
+
+When per-thread arenas are disabled, this occurs within
+@code{arena_get2}, whenever the mutex for the previously-selected arena
+cannot be immediately acquired.
+@end deftp
+
+@deftp Probe memory_arena_reuse_wait (void *@var{$arg1}, void *@var{$arg2}, void *@var{$arg3})
+This probe is triggered when @code{malloc} is about to wait for an arena
+to become available for reuse.  Argument @var{$arg1} holds a pointer to
+the mutex the thread is going to wait on, @var{$arg2} is a pointer to a
+newly-chosen arena to be reused, and @var{$arg3} is a pointer to the
+arena previously used by that thread.
+
+When per-thread arenas are enabled, this occurs within
+@code{reused_arena}, when a thread first tries to allocate memory or
+needs a retry after a failure to allocate from the main arena, there
+isn't any free arena, the maximum number of arenas has been reached, and
+an existing arena was chosen for reuse, but its mutex could not be
+immediately acquired.  The mutex in @var{$arg1} is the mutex of the
+selected arena.
+
+When per-thread arenas are disabled, this occurs within
+@code{arena_get2}, when a thread first tries to allocate memory or the
+mutex of the arena it previously used could not be immediately acquired,
+and none of the existing arenas could be immediately reserved for
+exclusive use.  The mutex in @var{$arg1} is that of the list of arenas,
+and since the arena won't have been selected yet, @var{$arg2} will be
+@code{NULL}.
+@end deftp
+
+@deftp Probe memory_arena_reuse_free_list (void *@var{$arg1})
+This probe is triggered when @code{malloc} has chosen an arena that is
+in the free list for use by a thread, within the @code{get_free_list}
+function.  This probe is only available when @code{malloc} is configured
+to use per-thread arenas.  The argument @var{$arg1} holds a pointer to
+the selected arena.
+@end deftp
+
+@deftp Probe memory_arena_reuse_realloc (void *@var{$arg1})
+This probe is triggered within @code{realloc}, as the arena of the
+current thread is changed to match that in which the given address was
+allocated.  This probe is @emph{not} available when @code{malloc} is
+configured to use per-thread arenas.  The argument @var{$arg1} holds a
+pointer to the newly-selected arena.
+@end deftp
+
 @deftp Probe memory_mallopt (int @var{$arg1}, int @var{$arg2})
 This probe is triggered when function @code{mallopt} is called to change
 @code{malloc} internal configuration parameters, before any change to
