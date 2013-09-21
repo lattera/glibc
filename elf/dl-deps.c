@@ -595,7 +595,6 @@ Filters not supported with LD_TRACE_PRELINKING"));
 	if (list[i]->l_reserved)
 	  {
 	    /* Need to allocate new array of relocation dependencies.  */
-	    struct link_map_reldeps *l_reldeps;
 	    l_reldeps = malloc (sizeof (*l_reldeps)
 				+ map->l_reldepsmax
 				  * sizeof (struct link_map *));

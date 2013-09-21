@@ -1,3 +1,8 @@
+2013-09-15  Vinitha Vijayan <vinitha.vijayann@gmail.com>
+
+	[BZ #15859]
+	* elf/dl-deps.c (_dl_map_object_deps): Remove duplicate declaration.
+
 2013-09-20  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* include/string.h (__ffs): Declare as hidden.
