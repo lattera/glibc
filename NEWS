@@ -11,8 +11,8 @@ Version 2.19
 
   13985, 14155, 14699, 15427, 15522, 15531, 15532, 15640, 15736, 15748,
   15749, 15797, 15844, 15849, 15855, 15856, 15857, 15859, 15867, 15886,
-  15887, 15890, 15892, 15893, 15895, 15897, 15905, 15909, 15921, 15923,
-  15939, 15963, 15966.
+  15887, 15890, 15892, 15893, 15895, 15897, 15905, 15909, 15919, 15921,
+  15923, 15939, 15963, 15966.
 
 * CVE-2013-4237 The readdir_r function could write more than NAME_MAX bytes
   to the d_name member of struct dirent, or omit the terminating NUL
@@ -23,7 +23,7 @@ Version 2.19
   heap when passed very large allocation size values (Bugzilla #15855,
   #15856, #15857).
 
-* New locales: quz_PE.
+* New locales: quz_PE, ak_GH.
 
 * The LC_ADDRESS field was updated to support country_car for almost all
   supported locales.

@@ -1,0 +1,216 @@
+comment_char %
+escape_char /
+% Charset: UTF-8
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Akan locale for Ghana
+%
+% Prepared and contributed to glibc by Chris Leonard <cjl@sugarlabs.org>
+% and Jojoo Imbeah <jojoo.imbeah@kasahorow.com>
+%
+% This locale data has been developed by:
+% Sugar Labs,  http://www.sugarlabs.org/
+% kasahorow, http://www.kasahorow.org/
+%
+% build with: localedef -f UTF-8 -i ak_GH ak_GH
+%
+% This file is a part of GNU C Library (glibc) and contains locale data. The
+% Free Software Foundation does not claim any copyright interest in the
+% locale data contained in this file. The foregoing does not affect the
+% license of GNU C Library (glibc) as a whole. It does not exempt you from the
+% conditions of the license if your use would otherwise be governed by
+% that license.
+%
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+LC_IDENTIFICATION
+title        "Akan locale for Ghana"
+source       "Sugar Labs / OLPC"
+address      ""
+contact      "sugarlabs.org"
+email        "libc-alpha@sourceware.org"
+tel          ""
+fax          ""
+language     "Akan"
+territory    "Ghana"
+revision     "1.0"
+date         "2013-08-24"
+%
+category  "ak_GH:2013";LC_IDENTIFICATION
+category  "ak_GH:2013";LC_CTYPE
+category  "ak_GH:2013";LC_COLLATE
+category  "ak_GH:2013";LC_TIME
+category  "ak_GH:2013";LC_NUMERIC
+category  "ak_GH:2013";LC_MONETARY
+category  "ak_GH:2013";LC_PAPER
+category  "ak_GH:2013";LC_MEASUREMENT
+category  "ak_GH:2013";LC_MESSAGES
+category  "ak_GH:2013";LC_NAME
+category  "ak_GH:2013";LC_ADDRESS
+category  "ak_GH:2013";LC_TELEPHONE
+END LC_IDENTIFICATION
+
+LC_CTYPE
+copy "i18n"
+translit_start
+include "translit_combining";""
+translit_end
+END LC_CTYPE
+
+LC_COLLATE
+copy "iso14651_t1"
+END LC_COLLATE
+
+LC_TIME
+% Sanda-Ɔpɛpɔn, Kwakwar-Ɔgyefuo, Ebɔw-Ɔbenem, Ebɔbira-Oforisuo, Esusow Aketseaba-Kɔtɔnimba, Obirade-Ayɛwohomumu, Ayɛwoho-Kitawonsa, Difuu-Ɔsandaa, Fankwa-Ɛbɔ, Ɔbɛsɛ-Ahinime, Ɔberɛfɛw-Obubuo, Mumu-Ɔpɛnimba
+mon           "<U0053><U0061><U006E><U0064><U0061><U002D><U0186><U0070><U025B><U0070><U0254><U006E>";/
+     "<U004B><U0077><U0061><U006B><U0077><U0061><U0072><U002D><U0186><U0067><U0079><U0065><U0066><U0075><U006F>";/
+     "<U0045><U0062><U0254><U0077><U002D><U0186><U0062><U0065><U006E><U0065><U006D>";/
+     "<U0045><U0062><U0254><U0062><U0069><U0072><U0061><U002D><U004F><U0066><U006F><U0072><U0069><U0073><U0075><U006F>";/
+     "<U0045><U0073><U0075><U0073><U006F><U0077><U0020><U0041><U006B><U0065><U0074><U0073><U0065><U0061><U0062><U0061><U002D><U004B><U0254><U0074><U0254><U006E><U0069><U006D><U0062><U0061>";/
+     "<U004F><U0062><U0069><U0072><U0061><U0064><U0065><U002D><U0041><U0079><U025B><U0077><U006F><U0068><U006F><U006D><U0075><U006D><U0075>";/
+     "<U0041><U0079><U025B><U0077><U006F><U0068><U006F><U002D><U004B><U0069><U0074><U0061><U0077><U006F><U006E><U0073><U0061>";/
+     "<U0044><U0069><U0066><U0075><U0075><U002D><U0186><U0073><U0061><U006E><U0064><U0061><U0061>";/
+     "<U0046><U0061><U006E><U006B><U0077><U0061><U002D><U0190><U0062><U0254>";/
+     "<U0186><U0062><U025B><U0073><U025B><U002D><U0041><U0068><U0069><U006E><U0069><U006D><U0065>";/
+     "<U0186><U0062><U0065><U0072><U025B><U0066><U025B><U0077><U002D><U004F><U0062><U0075><U0062><U0075><U006F>";/
+     "<U004D><U0075><U006D><U0075><U002D><U0186><U0070><U025B><U006E><U0069><U006D><U0062><U0061>"
+% S-Ɔ, K-Ɔ, E-Ɔ, E-O, E-K, O-A, A-K, D-Ɔ, F-Ɛ, Ɔ-A, Ɔ-O, M-Ɔ
+abmon         "<U0053><U002D><U0186>";/
+       "<U004B><U002D><U0186>";/
+       "<U0045><U002D><U0186>";/
+       "<U0045><U002D><U004F>";/
+       "<U0045><U002D><U004B>";/
+       "<U004F><U002D><U0041>";/
+       "<U0041><U002D><U004B>";/
+       "<U0044><U002D><U0186>";/
+       "<U0046><U002D><U0190>";/
+       "<U0186><U002D><U0041>";/
+       "<U0186><U002D><U004F>";/
+       "<U004D><U002D><U0186>"
+% Kwesida, Dwowda, Benada, Wukuda, Yawda, Fida, Memeneda
+day           "<U004B><U0077><U0065><U0073><U0069><U0064><U0061>";/
+     "<U0044><U0077><U006F><U0077><U0064><U0061>";/
+     "<U0042><U0065><U006E><U0061><U0064><U0061>";/
+     "<U0057><U0075><U006B><U0075><U0064><U0061>";/
+     "<U0059><U0061><U0077><U0064><U0061>";/
+     "<U0046><U0069><U0064><U0061>";/
+     "<U004D><U0065><U006D><U0065><U006E><U0065><U0064><U0061>"
+% Kwe, Dwo, Ben, Wuk, Yaw, Fia, Mem
+abday         "<U004B><U0077><U0065>";/
+       "<U0044><U0077><U006F>";/
+       "<U0042><U0065><U006E>";/
+       "<U0057><U0075><U006B>";/
+       "<U0059><U0061><U0077>";/
+       "<U0046><U0069><U0061>";/
+       "<U004D><U0065><U006D>"
+% %a %d %b %Y %T %Z
+d_t_fmt       "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
+% %Y/%m/%d
+d_fmt         "<U0025><U0059><U002F><U0025><U006D><U002F><U0025><U0064>"
+% %r
+t_fmt   "<U0025><U0072>"
+% AM/PM time representation: %I:%M:%S %p
+t_fmt_ampm "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
+% Strings for AM/PM: AN/EW
+am_pm  "<U0041><U004E>";"<U0045><U0057>"
+week    7;19971130;7
+first_weekday 1
+first_workday 2
+END LC_TIME
+
+LC_NUMERIC
+% .
+decimal_point "<U002E>"
+% ,
+thousands_sep "<U002C>"
+grouping      3
+END LC_NUMERIC
+
+LC_MONETARY
+% GHS
+int_curr_symbol		  "<U0047><U0048><U0053><U0020>"
+% GH₵
+currency_symbol           "<U0047><U0048><U20B5>"
+% .
+mon_decimal_point         "<U002E>"
+% ,
+mon_thousands_sep         "<U002C>"
+mon_grouping              3
+positive_sign             ""
+% -
+negative_sign             "<U002D>"
+int_frac_digits           2
+frac_digits               2
+p_cs_precedes             0
+p_sep_by_space            1
+n_cs_precedes             0
+n_sep_by_space            1
+p_sign_posn               1
+n_sign_posn               1
+END LC_MONETARY
+
+LC_PAPER
+% A4
+height   297
+width    210
+END LC_PAPER
+
+LC_MEASUREMENT
+% metric
+measurement    1
+END LC_MEASUREMENT
+
+LC_MESSAGES
+% ^[yY].*
+yesexpr "<U005E><U005B><U0079><U0059><U005D><U002E><U002A>"
+% ^[dDnN].*
+noexpr  "<U005E><U005B><U0064><U0044><U006E><U004E><U005D><U002E><U002A>"
+% Yiw
+yesstr  "<U0059><U0069><U0077>"
+% Daabi
+nostr   "<U0044><U0061><U0061><U0062><U0069>"
+END LC_MESSAGES
+
+LC_NAME
+name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
+<U0025><U006D><U0025><U0074><U0025><U0066>"
+END LC_NAME
+
+LC_ADDRESS
+postal_fmt    "<U0025><U0061><U0025><U004E><U0025><U0066><U0025><U004E>/
+<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0068>/
+<U0020><U0025><U0073><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
+<U004E><U0025><U0054><U002C><U0020><U0025><U0053><U0020><U0025><U007A><U0025>/
+<U004E><U0025><U0063><U0025><U004E>"
+% Gaana
+country_name "<U0047><U0061><U0061><U006E><U0061>"
+% GH
+country_post "<U0047><U0048>"
+% GH
+country_ab2  "<U0047><U0048>"
+% GHA
+country_ab3  "<U0047><U0048><U0041>"
+country_num  288
+country_isbn 9964
+% Akan
+lang_name    "<U0041><U006B><U0061><U006E>"
+% ak
+lang_ab      "<U0061><U006B>"
+% aka
+lang_term    "<U0061><U006B><U0061>"
+END LC_ADDRESS
+
+LC_TELEPHONE
+% +%c %a %l
+tel_int_fmt "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025><U006C>"
+% %a %l
+tel_dom_fmt "<U0025><U0061><U0020><U0025><U006C>"
+% 00
+int_select  "<U0030><U0030>"
+% 233
+int_prefix  "<U0032><U0033><U0033>"
+END LC_TELEPHONE

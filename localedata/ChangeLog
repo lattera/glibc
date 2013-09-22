@@ -1,3 +1,9 @@
+2013-09-21  Chris Leonard  <cjl@sugarlabs.org>
+
+	[BZ#15919]
+	* locales/ak_GH: New locale for ak_GH.
+	* SUPPORTED: Add ak_GH.
+
 2013-09-15  Chris Leonard  <cjl@sugarlabs.org>
 
 	* locales/aa_DJ: Adjust language-code fields of LC_ADDRESS.
