@@ -164,9 +164,11 @@ country_ab3	"<U0043><U0048><U004E>"
 country_num	156
 %country_car	"FIXME"
 country_isbn	"<U0037>"
-
 lang_name     "<U0F54><U0F7C><U0F51><U0F0B><U0F66><U0F90><U0F51><U0F0B>"
+% bo
 lang_ab       "<U0062><U006F>"
+% bod
 lang_term     "<U0062><U006F><U0064>"
+% tib
 lang_lib      "<U0074><U0069><U0062>"
 END LC_ADDRESS

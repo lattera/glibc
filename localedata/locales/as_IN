@@ -159,6 +159,12 @@ postal_fmt  "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
 <U0025><U0062><U0025><U0065><U0025><U0072>"
 % IND
 country_car  "<U0049><U004E><U0044>"
+% as
+lang_ab      "<U0061><U0073>"
+% asm
+lang_term    "<U0061><U0073><U006D>"
+% asm
+lang_lib    "<U0061><U0073><U006D>"
 END LC_ADDRESS
 
 %%%%%%%%%%%%%

@@ -85,6 +85,12 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 country_ab2   "<U0041><U0047>"
 country_ab3   "<U0041><U0054><U0047>"
 country_num   28
+% en
+lang_ab      "<U0065><U006E>"
+% eng
+lang_term    "<U0065><U006E><U0067>"
+% eng
+lang_lib    "<U0065><U006E><U0067>"
 END LC_ADDRESS
 
 LC_TELEPHONE

@@ -294,7 +294,12 @@ country_ab3 "<U0041><U005A><U0045>"
 country_num 031
 % AZ
 country_car    "<U0041><U005A>"
-
+% az
+lang_ab      "<U0061><U007A>"
+% aze
+lang_term    "<U0061><U007A><U0065>"
+% aze
+lang_lib    "<U0061><U007A><U0065>"
 END LC_ADDRESS
 
 LC_TELEPHONE

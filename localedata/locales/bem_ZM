@@ -182,7 +182,10 @@ country_num   894
 % Z
 country_car  "<U005A>"
 lang_name     "<U0069><U0063><U0069><U0042><U0065><U006D><U0062><U0061>"
-lang_term     "<U0062><U0065><U006D>"
+% bem
+lang_term    "<U0062><U0065><U006D>"
+% bem
+lang_lib    "<U0062><U0065><U006D>"
 END LC_ADDRESS
 
 LC_TELEPHONE

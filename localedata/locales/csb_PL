@@ -216,4 +216,8 @@ country_ab3 "<U0050><U004F><U004C>"
 country_num 616
 % PL
 country_car    "<U0050><U004C>"
+% csb
+lang_term    "<U0063><U0073><U0062>"
+% csb
+lang_lib    "<U0063><U0073><U0062>"
 END LC_ADDRESS

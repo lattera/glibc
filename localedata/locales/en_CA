@@ -182,7 +182,10 @@ country_num 124
 % CDN
 country_car    "<U0043><U0044><U004E>"
 lang_name     "<U0045><U006E><U0067><U006C><U0069><U0073><U0068>"
-lang_ab       "<U0065><U006E>"
-lang_term     "<U0065><U006E><U0067>"
-lang_lib      "<U0065><U006E><U0067>"
+% en
+lang_ab      "<U0065><U006E>"
+% eng
+lang_term    "<U0065><U006E><U0067>"
+% eng
+lang_lib    "<U0065><U006E><U0067>"
 END LC_ADDRESS

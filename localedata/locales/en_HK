@@ -198,7 +198,12 @@ country_ab3   "<U0048><U004B><U0047>"
 country_num   344
 % HK
 country_car    "<U0048><U004B>"
-
+% en
+lang_ab      "<U0065><U006E>"
+% eng
+lang_term    "<U0065><U006E><U0067>"
+% eng
+lang_lib    "<U0065><U006E><U0067>"
 END LC_ADDRESS
 
 

@@ -660,8 +660,12 @@ country_ab3   "<U0042><U0048><U0055>"
 %country_num   "<U0042><U0048><U0055>"
 %FIXME
 %country_isbn  ""
-lang_name     "<U0E44><U0E17><U0E22>"
-lang_ab       "<U0074><U0068>"
-lang_term     "<U0074><U0068><U0061>"
-lang_lib      "<U0074><U0068><U0061>"
+% རྫོང་ཁ
+lang_name    "<U0028><U0F62><U0FAB><U0F7C><U0F44><U0F0B><U0F41>"
+% dz
+lang_ab      "<U0064><U007A>"
+% dzo
+lang_term    "<U0064><U007A><U006F>"
+% dzo
+lang_lib     "<U0064><U007A><U006F>"
 END LC_ADDRESS

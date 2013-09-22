@@ -269,6 +269,7 @@ country_isbn  954
 lang_name    "<U0042><U0075><U006C><U0067><U0061><U0072><U0069><U0061><U006E>"
 lang_ab      "<U0062><U0067>"
 lang_term    "<U0062><U0075><U006C>"
+lang_lib    "<U0062><U0075><U006C>"
 END LC_ADDRESS
 
 LC_TELEPHONE

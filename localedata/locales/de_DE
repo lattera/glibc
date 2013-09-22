@@ -195,8 +195,11 @@ country_num   276
 country_car   "<U0044>"
 country_isbn  3
 lang_name     "<U0044><U0065><U0075><U0074><U0073><U0063><U0068>"
+% de
 lang_ab       "<U0064><U0065>"
+% deu
 lang_term     "<U0064><U0065><U0075>"
+% ger
 lang_lib      "<U0067><U0065><U0072>"
 END LC_ADDRESS
 

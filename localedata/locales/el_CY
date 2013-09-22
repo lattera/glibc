@@ -103,4 +103,10 @@ country_ab3 "<U0043><U0059><U0050>"
 country_num 196
 % CY
 country_car  "<U0043><U0059>"
+% el
+lang_ab      "<U0065><U006C>"
+% ell
+lang_term    "<U0065><U006C><U006C>"
+% gre
+lang_lib    "<U0067><U0072><U0065>"
 END LC_ADDRESS

@@ -231,7 +231,7 @@ LC_TELEPHONE
 tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
 <U006C>"
 
-% Represntation of telephone number for domestic use -
+% Representation of telephone number for domestic use -
 % "(%A) %l", which is
 % %A - area code with national prefix
 % %l - local number".
@@ -342,10 +342,12 @@ country_isbn  0
 % ISO 639 language abbreviations:
 % 639-1 2 letter, 639-2 3 letter terminology
 % http://www.loc.gov/standards/iso639-2/englagn.html
-% "en", "eng"
-lang_ab       "<U0065><U006E>"
-lang_term     "<U0065><U006E><U0067>"
-lang_lib      "<U0065><U006E><U0067>"
+% en
+lang_ab      "<U0065><U006E>"
+% eng
+lang_term    "<U0065><U006E><U0067>"
+% eng
+lang_lib    "<U0065><U006E><U0067>"
 
 % ISO 3166 country number and 2 and 3 letter abreviations
 % http://www.unicode.org/onlinedat/countries.html

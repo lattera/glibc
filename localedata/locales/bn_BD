@@ -180,7 +180,12 @@ postal_fmt      "<U0025><U0061><U0025><U004E><U0025><U0066><U0025><U004E><U0025>
 country_name    "<U09AC><U09BE><U0982><U09B2><U09BE><U09A6><U09C7><U09B6>"
 country_ab2     "<U0042><U0044>"
 country_ab3     "<U0042><U0047><U0044>"
-lang_ab         "<U0062><U006E>"
+% bn
+lang_ab      "<U0062><U006E>"
+% ben
+lang_term    "<U0062><U0065><U006E>"
+% ben
+lang_lib       "<U0062><U0065><U006E>"
 %lang_ab3_term   "ben"
 lang_name       "<U09ac><U09be><U0982><U09b2><U09be>"
 % todo

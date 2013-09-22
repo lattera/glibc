@@ -236,7 +236,12 @@ country_ab3 "<U0042><U0049><U0048>"
 country_num 070
 % BIH
 country_car    "<U0042><U0049><U0048>"
-
+% bs
+lang_ab      "<U0062><U0073>"
+% bos
+lang_term    "<U0062><U006F><U0073>"
+% bos
+lang_lib    "<U0062><U006F><U0073>"
 END LC_ADDRESS
 
 LC_TELEPHONE
