@@ -1,6 +1,12 @@
 2013-09-23  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #14547]
+	* string/tst-strcoll-overflow.c: New test case.
+	* string/Makefile (xtests): Add tst-strcoll-overflow.
+	* string/strcoll_l.c (STRCOLL): Skip allocating memory for
+	cache if string sizes may cause integer overflow.
+
+	[BZ #14547]
 	* string/strcoll_l.c (coll_seq): New members rule, idx,
 	save_idx and back_us.
 	(get_next_seq_nocache): New function.

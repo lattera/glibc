@@ -524,7 +524,15 @@ STRCOLL (const STRING_TYPE *s1, const STRING_TYPE *s2, __locale_t l)
   memset (&seq1, 0, sizeof (seq1));
   seq2 = seq1;
 
-  if (! __libc_use_alloca ((s1len + s2len) * (sizeof (int32_t) + 1)))
+  size_t size_max = SIZE_MAX / (sizeof (int32_t) + 1);
+
+  if (MIN (s1len, s2len) > size_max
+      || MAX (s1len, s2len) > size_max - MIN (s1len, s2len))
+    {
+      /* If the strings are long enough to cause overflow in the size request,
+         then skip the allocation and proceed with the non-cached routines.  */
+    }
+  else if (! __libc_use_alloca ((s1len + s2len) * (sizeof (int32_t) + 1)))
     {
       seq1.idxarr = (int32_t *) malloc ((s1len + s2len) * (sizeof (int32_t) + 1));
 
