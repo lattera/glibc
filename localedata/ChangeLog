@@ -1,6 +1,12 @@
 2013-09-21  Wei-Lun Chao <bluebat@member.fsf.org>
 
     [BZ#15608]
+    * locales/nan_TW: New locale for lzh_TW.
+    * SUPPORTED: Add lzh_TW.
+
+2013-09-21  Wei-Lun Chao <bluebat@member.fsf.org>
+
+    [BZ#15608]
     * locales/nan_TW: New locale for nan_TW.
     * SUPPORTED: Add nan_TW.
 
