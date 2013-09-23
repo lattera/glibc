@@ -1,3 +1,8 @@
+2013-09-22  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #15754]
+	* sysdeps/tile/stackguard-macros.h: Define POINTER_CHK_GUARD.
+
 2013-09-20  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/tile/ffs.c (__ffs): Define as hidden.

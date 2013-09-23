@@ -37,6 +37,12 @@ extern void __pthread_initialize_minimal (void);
    in thread local area.  */
 uintptr_t __stack_chk_guard attribute_relro;
 # endif
+# ifndef  THREAD_SET_POINTER_GUARD
+/* Only exported for architectures that don't store the pointer guard
+   value in thread local area.  */
+uintptr_t __pointer_chk_guard_local
+	attribute_relro attribute_hidden __attribute__ ((nocommon));
+# endif
 #endif
 
 #ifdef HAVE_PTR_NTHREADS
@@ -195,6 +201,16 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 # else
   __stack_chk_guard = stack_chk_guard;
 # endif
+
+  /* Set up the pointer guard value.  */
+  uintptr_t pointer_chk_guard = _dl_setup_pointer_guard (_dl_random,
+							 stack_chk_guard);
+# ifdef THREAD_SET_POINTER_GUARD
+  THREAD_SET_POINTER_GUARD (pointer_chk_guard);
+# else
+  __pointer_chk_guard_local = pointer_chk_guard;
+# endif
+
 #endif
 
   /* Register the destructor of the dynamic linker if there is any.  */

@@ -1,3 +1,33 @@
+2013-09-23  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #15754]
+	* elf/Makefile (tests): Add tst-ptrguard1.
+	(tests-static): Add tst-ptrguard1-static.
+	(tst-ptrguard1-ARGS): Define.
+	(tst-ptrguard1-static-ARGS): Define.
+	* elf/tst-ptrguard1.c: New file.
+	* elf/tst-ptrguard1-static.c: New file.
+	* sysdeps/x86_64/stackguard-macros.h: Define POINTER_CHK_GUARD.
+	* sysdeps/i386/stackguard-macros.h: Likewise.
+	* sysdeps/powerpc/powerpc32/stackguard-macros.h: Likewise.
+	* sysdeps/powerpc/powerpc64/stackguard-macros.h: Likewise.
+	* sysdeps/s390/s390-32/stackguard-macros.h: Likewise.
+	* sysdeps/s390/s390-64/stackguard-macros.h: Likewise.
+	* sysdeps/sparc/sparc32/stackguard-macros.h: Likewise.
+	* sysdeps/sparc/sparc64/stackguard-macros.h: Likewise.
+
+2013-09-23  Hector Marco  <hecmargi@upv.es>
+	    Ismael Ripoll  <iripoll@disca.upv.es>
+	    Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #15754]
+	* sysdeps/generic/stackguard-macros.h: Define
+	__pointer_chk_guard_local and POINTER_CHK_GUARD.
+	* csu/libc-start.c [!SHARED && !THREAD_SET_POINTER_GUARD]:
+	Define __pointer_chk_guard_local.
+	(LIBC_START_MAIN) [!SHARED]: Call _dl_setup_pointer_guard.
+	Use THREAD_SET_POINTER_GUARD or set __pointer_chk_guard_local.
+
 2013-09-15  Vinitha Vijayan <vinitha.vijayann@gmail.com>
 
 	[BZ #15859]
