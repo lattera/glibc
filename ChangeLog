@@ -1,3 +1,13 @@
+2013-09-23  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #14547]
+	* string/strcoll_l.c (coll_seq): New members rule, idx,
+	save_idx and back_us.
+	(get_next_seq_nocache): New function.
+	(do_compare_nocache): New function.
+	(STRCOLL): Use get_next_seq_nocache and do_compare_nocache
+	when malloc fails.
+
 2013-09-23  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #15754]
