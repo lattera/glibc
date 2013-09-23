@@ -1,3 +1,8 @@
+2013-09-24  Will Newton  <will.newton@linaro.org>
+
+	* sysdeps/mach/hurd/i386/tls.h (TLS_INIT_TP_EXPENSIVE): Remove
+	macro.
+
 2013-09-23  Joseph Myers  <joseph@codesourcery.com>
 
 	* locale/hashval.h (compute_hashval): Interpret bytes of key as

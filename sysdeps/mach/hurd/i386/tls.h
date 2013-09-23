@@ -118,7 +118,6 @@ _hurd_tls_init (tcbhead_t *tcb, int secondcall)
    operation can cause a failure 'errno' must not be touched.  */
 # define TLS_INIT_TP(descr, secondcall) \
     _hurd_tls_init ((tcbhead_t *) (descr), (secondcall))
-# define TLS_INIT_TP_EXPENSIVE 1
 
 /* Return the TCB address of the current thread.  */
 # define THREAD_SELF							      \
