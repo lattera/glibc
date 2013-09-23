@@ -1,0 +1,220 @@
+comment_char %
+escape_char /
+% Charset: UTF-8
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Min Nan Chinese locale for the Republic of China
+%
+% Prepared and contributed to glibc by Wei-Lun Chao <bluebat@member.fsf.org>
+%
+% build with: localedef -f UTF-8 -i nan_TW nan_TW
+%
+% This file is a part of GNU C Library (glibc) and contains locale data. The
+% Free Software Foundation does not claim any copyright interest in the
+% locale data contained in this file. The foregoing does not affect the
+% license of GNU C Library (glibc) as a whole. It does not exempt you from the
+% conditions of the license if your use would otherwise be governed by
+% that license.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+LC_IDENTIFICATION
+title        "Min Nan Chinese locale for the Republic of China"
+source       ""
+address      ""
+contact      ""
+email        "bug-glibc-locales@gnu.org"
+tel          ""
+fax          ""
+language     "Min Nan Chinese"
+territory    "Republic of China"
+revision     "0.1"
+date         "2013-06-02"
+%
+category  "nan_TW:2000";LC_IDENTIFICATION
+category  "nan_TW:2000";LC_CTYPE
+category  "nan_TW:2000";LC_COLLATE
+category  "nan_TW:2000";LC_TIME
+category  "nan_TW:2000";LC_NUMERIC
+category  "nan_TW:2000";LC_MONETARY
+category  "nan_TW:2000";LC_PAPER
+category  "nan_TW:2000";LC_MEASUREMENT
+category  "nan_TW:2000";LC_MESSAGES
+category  "nan_TW:2000";LC_NAME
+category  "nan_TW:2000";LC_ADDRESS
+category  "nan_TW:2000";LC_TELEPHONE
+END LC_IDENTIFICATION
+
+LC_CTYPE
+copy "i18n"
+class	"hanzi"; /
+<U3007>;/
+<U3400>..<U4DBF>;/
+<U4E00>..<U9FA5>;/
+<UF900>..<UFA6A>;/
+<U00020000>..<U0002A6D6>;/
+<U0002F800>..<U0002FA1D>
+END LC_CTYPE
+
+LC_COLLATE
+copy "iso14651_t1"
+END LC_COLLATE
+
+LC_TIME
+% 一月, 二月, 三月, 四月, 五月, 六月, 七月, 八月, 九月, 十月, 十一月, 十二月
+mon           "<U4E00><U6708>";/
+     "<U4E8C><U6708>";/
+     "<U4E09><U6708>";/
+     "<U56DB><U6708>";/
+     "<U4E94><U6708>";/
+     "<U516D><U6708>";/
+     "<U4E03><U6708>";/
+     "<U516B><U6708>";/
+     "<U4E5D><U6708>";/
+     "<U5341><U6708>";/
+     "<U5341><U4E00><U6708>";/
+     "<U5341><U4E8C><U6708>"
+%  1月,  2月,  3月,  4月,  5月,  6月,  7月,  8月,  9月, 10月, 11月, 12月
+abmon         "<U0020><U0031><U6708>";/
+       "<U0020><U0032><U6708>";/
+       "<U0020><U0033><U6708>";/
+       "<U0020><U0034><U6708>";/
+       "<U0020><U0035><U6708>";/
+       "<U0020><U0036><U6708>";/
+       "<U0020><U0037><U6708>";/
+       "<U0020><U0038><U6708>";/
+       "<U0020><U0039><U6708>";/
+       "<U0031><U0030><U6708>";/
+       "<U0031><U0031><U6708>";/
+       "<U0031><U0032><U6708>"
+% 禮拜日, 禮拜一, 禮拜二, 禮拜三, 禮拜四, 禮拜五, 禮拜六
+day           "<U79AE><U62DC><U65E5>";/
+     "<U79AE><U62DC><U4E00>";/
+     "<U79AE><U62DC><U4E8C>";/
+     "<U79AE><U62DC><U4E09>";/
+     "<U79AE><U62DC><U56DB>";/
+     "<U79AE><U62DC><U4E94>";/
+     "<U79AE><U62DC><U516D>"
+% 日, 一, 二, 三, 四, 五, 六
+abday         "<U65E5>";/
+       "<U4E00>";/
+       "<U4E8C>";/
+       "<U4E09>";/
+       "<U56DB>";/
+       "<U4E94>";/
+       "<U516D>"
+% %Y年%m月%d日 (%A) %H點%M分%S秒
+d_t_fmt       "<U0025><U0059><U5E74><U0025><U006D><U6708><U0025><U0064><U65E5><U0020><U0028><U0025><U0041><U0029><U0020><U0025><U0048><U9EDE><U0025><U004D><U5206><U0025><U0053><U79D2>"
+% %Y年%m月%d日
+d_fmt         "<U0025><U0059><U5E74><U0025><U006D><U6708><U0025><U0064><U65E5>"
+% %H點%M分%S秒
+t_fmt         "<U0025><U0048><U9EDE><U0025><U004D><U5206><U0025><U0053><U79D2>"
+% 頂晡, 下晡
+am_pm         "<U9802><U6661>";/
+       "<U4E0B><U6661>"
+% %p %I點%M分%S秒
+t_fmt_ampm    "<U0025><U0070><U0020><U0025><U0049><U9EDE><U0025><U004D><U5206><U0025><U0053><U79D2>"
+% %Y年 %b %e日 %A %H:%M:%S %Z
+date_fmt      "<U0025><U0059><U5E74><U0020><U0025><U0062><U0020><U0025><U0065><U65E5><U0020><U0025><U0041><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U005A>"
+END LC_TIME
+
+LC_NUMERIC
+% .
+decimal_point "<U002E>"
+% ,
+thousands_sep "<U002C>"
+grouping      4
+END LC_NUMERIC
+
+LC_MONETARY
+% NT$
+currency_symbol    "<U004E><U0054><U0024>"
+% TWD
+int_curr_symbol    "<U0054><U0057><U0044><U0020>"
+% .
+mon_decimal_point  "<U002E>"
+% ,
+mon_thousands_sep  "<U002C>"
+mon_grouping       4
+positive_sign      ""
+% -
+negative_sign      "<U002D>"
+frac_digits        2
+int_frac_digits    2
+p_cs_precedes      1
+p_sep_by_space     0
+n_cs_precedes      1
+n_sep_by_space     0
+p_sign_posn        1
+n_sign_posn        1
+int_p_cs_precedes  1
+int_p_sep_by_space 0
+int_n_cs_precedes  1
+int_n_sep_by_space 0
+int_p_sign_posn    1
+int_n_sign_posn    1
+END LC_MONETARY
+
+LC_PAPER
+height 297
+width  210
+END LC_PAPER
+
+LC_MEASUREMENT
+measurement 1
+END LC_MEASUREMENT
+
+LC_MESSAGES
+% ^[yY是]
+yesexpr "<U005E><U005B><U0079><U0059><U662F><U005D>"
+% ^[nN伓]
+noexpr  "<U005E><U005B><U006E><U004E><U4F13><U005D>"
+END LC_MESSAGES
+
+LC_NAME
+% %f%t%g%t%d
+name_fmt  "<U0025><U0066><U0025><U0074><U0025><U0067><U0025><U0074><U0025><U0064>"
+% 君
+name_gen  "<U541B>"
+% 小姐
+name_miss "<U5C0F><U59D0>"
+% 先生
+name_mr   "<U5148><U751F>"
+% 夫人
+name_mrs  "<U592B><U4EBA>"
+% 女士
+name_ms   "<U5973><U58EB>"
+END LC_NAME
+
+LC_ADDRESS
+% %c%N%T%N%s %h %e %r%N%b%N%d%N%f%N%a%N
+postal_fmt   "<U0025><U0063><U0025><U004E><U0025><U0054><U0025><U004E><U0025><U0073><U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0064><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>"
+% 中華民國
+country_name "<U4E2D><U83EF><U6C11><U570B>"
+% TW
+country_post "<U0054><U0057>"
+% TW
+country_ab2  "<U0054><U0057>"
+% TWN
+country_ab3  "<U0054><U0057><U004E>"
+country_num  158
+country_isbn 957
+% 漢語閩南語
+lang_name    "<U6F22><U8A9E><U95A9><U5357><U8A9E>"
+% nan
+lang_term    "<U006E><U0061><U006E>"
+% nan
+lang_lib     "<U006E><U0061><U006E>"
+END LC_ADDRESS
+
+LC_TELEPHONE
+% +%c-%a-%l
+tel_int_fmt "<U002B><U0025><U0063><U002D><U0025><U0061><U002D><U0025><U006C>"
+% %A-%l
+tel_dom_fmt "<U0025><U0041><U002D><U0025><U006C>"
+% 00
+int_select  "<U0030><U0030>"
+% 886
+int_prefix  "<U0038><U0038><U0036>"
+END LC_TELEPHONE
