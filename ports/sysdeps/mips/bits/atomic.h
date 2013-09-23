@@ -84,7 +84,7 @@ typedef uintmax_t uatomic_max_t;
    support for their efficient implementation was added only in GCC 4.8.
    We still want to use them even with GCC 4.7 for MIPS16 code where we
    have no assembly alternative available and want to avoid the __sync_*
-   if at all possible.  */
+   builtins if at all possible.  */
 
 /* Compare and exchange.
    For all "bool" routines, we return FALSE if exchange succesful.  */
