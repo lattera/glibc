@@ -1,5 +1,5 @@
 @node POSIX Threads
-@c @node POSIX Threads, Intenal Probes, Cryptographic Functions, Top
+@c @node POSIX Threads, Internal Probes, Cryptographic Functions, Top
 @chapter POSIX Threads
 @c %MENU% POSIX Threads
 @cindex pthreads

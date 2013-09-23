@@ -1,3 +1,7 @@
+2013-09-23  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	* manual/threads.texi (POSIX Threads): Fix a typo.
+
 2013-09-23  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #14547]
