@@ -1,3 +1,26 @@
+2013-09-23  Steve Ellcey  <sellcey@mips.com>
+
+	* sysdeps/mips/math_private.h (libc_feholdexcept_mips): New function.
+	(libc_feholdexcept): New macro.
+	(libc_feholdexceptf): New macro.
+	(libc_feholdexceptl): New macro.
+	(libc_fesetround_mips): New function.
+	(libc_fesetround): New macro.
+	(libc_fesetroundf): New macro.
+	(libc_fesetroundl): New macro.
+	(libc_feholdexcept_setround_mips): New function.
+	(libc_feholdexcept_setround): New macro.
+	(libc_feholdexcept_setroundf): New macro.
+	(libc_feholdexcept_setroundl): New macro.
+	(libc_fesetenv_mips): New function.
+	(libc_fesetenv): New macro.
+	(libc_fesetenvf): New macro.
+	(libc_fesetenvl): New macro.
+	(libc_feupdateenv_mips): New function.
+	(libc_feupdateenv): New macro.
+	(libc_feupdateenvf): New macro.
+	(libc_feupdateenvl): New macro.
+
 2013-09-23  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	* sysdeps/mips/bits/atomic.h: Fix comment typo.
