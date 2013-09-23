@@ -1,5 +1,10 @@
 2013-09-23  Steve Ellcey  <sellcey@mips.com>
 
+	* sysdeps/mips/fpu/fegetround.c (fegetround): Use _FPU_RC_MASK.
+	* sysdeps/mips/fpu/fesetround.c (fesetround): Use _FPU_RC_MASK.
+
+2013-09-23  Steve Ellcey  <sellcey@mips.com>
+
 	* sysdeps/mips/fpu_control.h (_FPU_RC_MASK): New.
 
 2013-09-23  Steve Ellcey  <sellcey@mips.com>
