@@ -1,6 +1,11 @@
 2013-09-23  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #15754]
+	* sysdeps/generic/stackguard-macros.h: If PTRGUARD_LOCAL use
+	__pointer_chk_guard_local, otherwise __pointer_chk_guard.
+	* elf/Makefile: Define CFLAGS-tst-ptrguard1-static.c.
+
+	[BZ #15754]
 	* elf/Makefile (tests): Add tst-ptrguard1.
 	(tests-static): Add tst-ptrguard1-static.
 	(tst-ptrguard1-ARGS): Define.
