@@ -37,7 +37,7 @@ compute_hashval (const void *key, size_t keylen)
   while (cnt < keylen)
     {
       hval = (hval << 9) | (hval >> (sizeof hval * CHAR_BIT - 9));
-      hval += (hashval_t) *(((char *) key) + cnt++);
+      hval += (hashval_t) ((const unsigned char *) key)[cnt++];
     }
   return hval != 0 ? hval : ~((hashval_t) 0);
 }

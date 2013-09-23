@@ -1,3 +1,8 @@
+2013-09-23  Joseph Myers  <joseph@codesourcery.com>
+
+	* locale/hashval.h (compute_hashval): Interpret bytes of key as
+	unsigned char.
+
 2013-09-23  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	* manual/threads.texi (POSIX Threads): Fix a typo.
