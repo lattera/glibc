@@ -90,6 +90,8 @@ extern fpu_control_t __fpu_control;
 #define _FPU_RC_ZERO    0x1
 #define _FPU_RC_UP      0x2
 #define _FPU_RC_DOWN    0x3
+/* Mask for rounding control.  */
+#define _FPU_RC_MASK	0x3
 
 #define _FPU_RESERVED 0xfe840000  /* Reserved bits in cw, incl NAN2008.  */
 
