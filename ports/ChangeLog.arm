@@ -1,3 +1,8 @@
+2013-09-24  Will Newton  <will.newton@linaro.org>
+
+	* ports/sysdeps/arm/nptl/tls.h (TLS_INIT_TP_EXPENSIVE): Remove
+	macro.
+
 2013-09-20  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/arm/armv6t2/ffs.S (__ffs): Define as hidden.

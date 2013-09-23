@@ -119,10 +119,6 @@ typedef struct
 #define THREAD_SETMEM_NC(descr, member, idx, value) \
   descr->member[idx] = (value)
 
-/* Initializing the thread pointer will generate a SIGILL if the syscall
-   is not available.  */
-#define TLS_INIT_TP_EXPENSIVE 1
-
 /* Get and set the global scope generation counter in struct pthread.  */
 #define THREAD_GSCOPE_FLAG_UNUSED 0
 #define THREAD_GSCOPE_FLAG_USED   1
