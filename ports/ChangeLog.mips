@@ -1,3 +1,8 @@
+2013-09-23  Steve Ellcey  <sellcey@mips.com>
+
+	* sysdeps/mips/fpu_control.h (comments): Add capitalization and
+	periods to match GNU standard.
+
 2013-09-20  Steve Ellcey  <sellcey@mips.com>
 
 	* sysdeps/mips/memset.S: Change prefetching and add loop unrolling.

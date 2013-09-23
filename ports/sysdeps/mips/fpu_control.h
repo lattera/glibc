@@ -71,21 +71,21 @@ extern fpu_control_t __fpu_control;
 
 #else /* __mips_soft_float */
 
-/* masking of interrupts */
+/* Masks for interrupts.  */
 #define _FPU_MASK_V     0x0800  /* Invalid operation */
 #define _FPU_MASK_Z     0x0400  /* Division by zero  */
 #define _FPU_MASK_O     0x0200  /* Overflow          */
 #define _FPU_MASK_U     0x0100  /* Underflow         */
 #define _FPU_MASK_I     0x0080  /* Inexact operation */
 
-/* flush denormalized numbers to zero */
+/* Flush denormalized numbers to zero.  */
 #define _FPU_FLUSH_TZ   0x1000000
 
 /* IEEE 754-2008 compliance control.  */
 #define _FPU_ABS2008    0x80000
 #define _FPU_NAN2008    0x40000
 
-/* rounding control */
+/* Rounding control.  */
 #define _FPU_RC_NEAREST 0x0     /* RECOMMENDED */
 #define _FPU_RC_ZERO    0x1
 #define _FPU_RC_UP      0x2
