@@ -1,4 +1,18 @@
 2013-09-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/pthread.h-data [POSIX] (PTHREAD_MUTEX_INITIALIZER):
+	Expect macro.
+	[POSIX] (pthread_attr_t): Do not require type.
+	[POSIX] (pthread_cond_t): Likewise.
+	[POSIX] (pthread_condattr_t): Likewise.
+	[POSIX] (pthread_key_t): Likewise.
+	[POSIX] (pthread_mutex_t): Likewise.
+	[POSIX] (pthread_mutexattr_t): Likewise.
+	[POSIX] (pthread_once_t): Likewise.
+	[POSIX] (pthread_t): Likewise.
+	[POSIX-based standards] (pthread_atfork): Expect function.
+
+2013-09-24  Joseph Myers  <joseph@codesourcery.com>
 	    Richard Sandiford  <richard@codesourcery.com>
 
 	* locale/programs/locfile.h: Include <byteswap.h> and <stdbool.h>.

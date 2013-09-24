@@ -17,11 +17,11 @@ constant PTHREAD_PROCESS_SHARED
 constant PTHREAD_PROCESS_PRIVATE
 constant PTHREAD_SCOPE_PROCESS
 constant PTHREAD_SCOPE_SYSTEM
+macro PTHREAD_MUTEX_INITIALIZER
 # ifndef POSIX
 constant PTHREAD_MUTEX_DEFAULT
 constant PTHREAD_MUTEX_ERRORCHECK
 constant PTHREAD_MUTEX_NORMAL
-macro PTHREAD_MUTEX_INITIALIZER
 constant PTHREAD_MUTEX_RECURSIVE
 macro PTHREAD_RWLOCK_INITIALIZER
 # endif
@@ -30,26 +30,27 @@ constant PTHREAD_MUTEX_ROBUST
 constant PTHREAD_MUTEX_STALLED
 # endif
 
+# ifndef POSIX
 type pthread_attr_t
-# if !defined POSIX && !defined UNIX98
+#  ifndef UNIX98
 type pthread_barrier_t
 type pthread_barrierattr_t
-# endif
+#  endif
 type pthread_cond_t
 type pthread_condattr_t
 type pthread_key_t
 type pthread_mutex_t
 type pthread_mutexattr_t
 type pthread_once_t
-# if !defined POSIX
 type pthread_rwlock_t
 type pthread_rwlockattr_t
-# endif
-# if !defined POSIX && !defined UNIX98
+#  ifndef UNIX98
 type pthread_spinlock_t
-# endif
+#  endif
 type pthread_t
+# endif
 
+function int pthread_atfork (void (*) (void), void (*) (void), void (*) (void))
 function int pthread_attr_destroy (pthread_attr_t*)
 function int pthread_attr_getdetachstate (const pthread_attr_t*, int*)
 # ifndef POSIX
