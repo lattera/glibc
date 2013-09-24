@@ -34,6 +34,11 @@
 symbol_set_declare (_hurd_fork_locks)
 
 
+/* Application callbacks registered through pthread_atfork.  */
+DEFINE_HOOK (_hurd_atfork_prepare_hook, (void));
+DEFINE_HOOK (_hurd_atfork_child_hook, (void));
+DEFINE_HOOK (_hurd_atfork_parent_hook, (void));
+
 /* Things that want to be called before we fork, to prepare the parent for
    task_create, when the new child task will inherit our address space.  */
 DEFINE_HOOK (_hurd_fork_prepare_hook, (void));
@@ -61,6 +66,8 @@ __fork (void)
   size_t i;
   error_t err;
   struct hurd_sigstate *volatile ss;
+
+  RUN_HOOK (_hurd_atfork_prepare_hook, ());
 
   ss = _hurd_self_sigstate ();
   __spin_lock (&ss->critical_section_lock);
@@ -694,6 +701,14 @@ __fork (void)
   }
 
   _hurd_critical_section_unlock (ss);
+
+  if (!err)
+    {
+      if (pid != 0)
+	RUN_HOOK (_hurd_atfork_parent_hook, ());
+      else
+	RUN_HOOK (_hurd_atfork_child_hook, ());
+    }
 
   return err ? __hurd_fail (err) : pid;
 }

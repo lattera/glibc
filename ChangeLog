@@ -1,3 +1,10 @@
+2013-10-04  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/fork.c (_hurd_atfork_prepare_hook,
+	_hurd_atfork_child_hook, _hurd_atfork_parent_hook): New hooks.
+	(__fork): Call _hurd_atfork_prepare_hook hooks before all locking, call
+	_hurd_atfork_parent_hook or _hurd_atfork_child_hook after all unlocking.
+
 2013-10-04  Ryan S. Arnold  <ryan.arnold@linaro.org>
 
 	* misc/swapon.c (swapon): Update definition, adding FLAGS parameter to
