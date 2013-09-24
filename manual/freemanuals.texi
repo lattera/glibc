@@ -1,4 +1,7 @@
-@appendix Free Software Needs Free Documentation
+@c freemanuals.texi - blurb for free documentation.
+@c This file is intended to be included within another document,
+@c hence no sectioning command or @node.
+
 @cindex free documentation
 
 The biggest deficiency in the free software community today is not in

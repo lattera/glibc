@@ -118,6 +118,7 @@ of @theglibc{}.
 @include chapters.texi
 
 @node Free Manuals, Copying, Contributors, Top
+@appendix Free Software Needs Free Documentation
 @include freemanuals.texi
 
 @node Copying, Documentation License, Free Manuals, Top
