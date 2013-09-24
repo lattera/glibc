@@ -16,10 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* GCC version 2 gives us a perfect magical function to get
-   just the information we need:
-     void *__builtin_return_address (unsigned int N)
-   returns the return address of the frame N frames up.  */
+/* Accept 'frompc' address as argument from the function that calls
+   __mcount for profiling.  Use  __builtin_return_address (0)
+   for the 'selfpc' address.  */
 
 #include <sysdep.h>
 
@@ -28,8 +27,8 @@ static void mcount_internal (u_long frompc, u_long selfpc);
 #define _MCOUNT_DECL(frompc, selfpc) \
 static inline void mcount_internal (u_long frompc, u_long selfpc)
 
-#define MCOUNT \
-void __mcount (void)							      \
-{									      \
-  mcount_internal ((u_long) RETURN_ADDRESS (1), (u_long) RETURN_ADDRESS (0)); \
+#define MCOUNT                                                    \
+void __mcount (void *frompc)                                      \
+{                                                                 \
+  mcount_internal ((u_long) frompc, (u_long) RETURN_ADDRESS (0)); \
 }
