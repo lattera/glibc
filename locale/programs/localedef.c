@@ -112,6 +112,8 @@ void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
 #define OPT_REPLACE 307
 #define OPT_DELETE_FROM_ARCHIVE 308
 #define OPT_LIST_ARCHIVE 309
+#define OPT_LITTLE_ENDIAN 400
+#define OPT_BIG_ENDIAN 401
 
 /* Definitions of arguments for argp functions.  */
 static const struct argp_option options[] =
@@ -144,6 +146,10 @@ static const struct argp_option options[] =
   { "list-archive", OPT_LIST_ARCHIVE, NULL, 0, N_("List content of archive") },
   { "alias-file", 'A', N_("FILE"), 0,
     N_("locale.alias file to consult when making archive")},
+  { "little-endian", OPT_LITTLE_ENDIAN, NULL, 0,
+    N_("Generate little-endian output") },
+  { "big-endian", OPT_BIG_ENDIAN, NULL, 0,
+    N_("Generate big-endian output") },
   { NULL, 0, NULL, 0, NULL }
 };
 
@@ -325,6 +331,12 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
     case OPT_LIST_ARCHIVE:
       list_archive = true;
+      break;
+    case OPT_LITTLE_ENDIAN:
+      set_big_endian (false);
+      break;
+    case OPT_BIG_ENDIAN:
+      set_big_endian (true);
       break;
     case 'c':
       force_output = 1;

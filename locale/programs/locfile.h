@@ -18,6 +18,8 @@
 #ifndef _LOCFILE_H
 #define _LOCFILE_H	1
 
+#include <byteswap.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <sys/uio.h>
 
@@ -66,6 +68,41 @@ extern void write_all_categories (struct localedef_t *definitions,
 				  const struct charmap_t *charmap,
 				  const char *locname,
 				  const char *output_path);
+
+extern bool swap_endianness_p;
+
+/* Change the output to be big-endian if BIG_ENDIAN is true and
+   little-endian otherwise.  */
+static inline void
+set_big_endian (bool big_endian)
+{
+  swap_endianness_p = (big_endian != (__BYTE_ORDER == __BIG_ENDIAN));
+}
+
+/* Munge VALUE so that, when stored, it has the correct byte order
+   for the output files.  */
+static inline uint32_t
+maybe_swap_uint32 (uint32_t value)
+{
+  return swap_endianness_p ? bswap_32 (value) : value;
+}
+
+/* Likewise, but munge an array of N uint32_ts starting at ARRAY.  */
+static inline void
+maybe_swap_uint32_array (uint32_t *array, size_t n)
+{
+  if (swap_endianness_p)
+    while (n-- > 0)
+      array[n] = bswap_32 (array[n]);
+}
+
+/* Like maybe_swap_uint32_array, but the array of N elements is at
+   the end of OBSTACK's current object.  */
+static inline void
+maybe_swap_uint32_obstack (struct obstack *obstack, size_t n)
+{
+  maybe_swap_uint32_array ((uint32_t *) obstack_next_free (obstack) - n, n);
+}
 
 /* Write out the data.  */
 extern void init_locale_data (struct locale_file *file, size_t n_elements);

@@ -44,6 +44,7 @@ static inline void
 __attribute ((always_inline))
 obstack_int32_grow (struct obstack *obstack, int32_t data)
 {
+  data = maybe_swap_uint32 (data);
   if (sizeof (int32_t) == sizeof (int))
     obstack_int_grow (obstack, data);
   else
@@ -54,6 +55,7 @@ static inline void
 __attribute ((always_inline))
 obstack_int32_grow_fast (struct obstack *obstack, int32_t data)
 {
+  data = maybe_swap_uint32 (data);
   if (sizeof (int32_t) == sizeof (int))
     obstack_int_grow_fast (obstack, data);
   else
@@ -1955,6 +1957,7 @@ output_weightwc (struct obstack *pool, struct locale_collate_t *collate,
       obstack_int32_grow (pool, j);
 
       obstack_grow (pool, buf, j * sizeof (int32_t));
+      maybe_swap_uint32_obstack (pool, j);
     }
 
   return retval | ((elem->section->ruleidx & 0x7f) << 24);
@@ -2479,6 +2482,7 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
 	  obstack_int32_grow (&extrapool, runp->nwcs);
 	  obstack_grow (&extrapool, runp->wcs,
 			runp->nwcs * sizeof (uint32_t));
+	  maybe_swap_uint32_obstack (&extrapool, runp->nwcs);
 
 	  obstack_int32_grow (&extrapool, runp->wcseqorder);
 	}

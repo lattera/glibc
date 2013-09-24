@@ -48,6 +48,10 @@ Version 2.19
 
 * ISO 1427 definitions were updated.
 
+* The localedef utility now supports --big-endian and --little-endian
+  command-line options to generate locales for a different system from that
+  for which the C library was built.
+
 * The configure option --disable-versioning has been removed.  Builds with
   --disable-versioning had not worked for several years.
 

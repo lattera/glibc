@@ -22,6 +22,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -538,6 +539,10 @@ compare_files (const char *filename1, const char *filename2, size_t size,
   return ret;
 }
 
+/* True if the locale files use the opposite endianness to the
+   machine running localedef.  */
+bool swap_endianness_p;
+
 /* When called outside a start_locale_structure/end_locale_structure
    or start_locale_prelude/end_locale_prelude block, record that the
    next byte in FILE's obstack will be the first byte of a new element.
@@ -624,6 +629,7 @@ add_locale_uint32 (struct locale_file *file, uint32_t value)
 {
   align_locale_data (file, sizeof (uint32_t));
   record_offset (file);
+  value = maybe_swap_uint32 (value);
   obstack_grow (&file->data, &value, sizeof (value));
 }
 
@@ -636,6 +642,7 @@ add_locale_uint32_array (struct locale_file *file,
   align_locale_data (file, sizeof (uint32_t));
   record_offset (file);
   obstack_grow (&file->data, data, n_elems * sizeof (uint32_t));
+  maybe_swap_uint32_obstack (&file->data, n_elems);
 }
 
 /* Record that FILE's next element is the single byte given by VALUE.  */
@@ -708,6 +715,8 @@ write_locale_data (const char *output_path, int catidx, const char *category,
   vec[1].iov_base = file->offsets;
   vec[2].iov_len = obstack_object_size (&file->data);
   vec[2].iov_base = obstack_finish (&file->data);
+  maybe_swap_uint32_array (vec[0].iov_base, 2);
+  maybe_swap_uint32_array (vec[1].iov_base, file->n_elements);
   n_elem = 3;
   if (! no_archive)
     {

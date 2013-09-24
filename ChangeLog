@@ -1,3 +1,42 @@
+2013-09-24  Joseph Myers  <joseph@codesourcery.com>
+	    Richard Sandiford  <richard@codesourcery.com>
+
+	* locale/programs/locfile.h: Include <byteswap.h> and <stdbool.h>.
+	(swap_endianness_p): New extern variable.
+	(set_big_endian): New inline function.
+	(maybe_swap_uint32): Likewise.
+	(maybe_swap_uint32_array): Likewise.
+	(maybe_swap_uint32_obstack): Likewise.
+	* locale/programs/locfile.c: Include <stdbool.h>.
+	(swap_endianness_p): New variable.
+	(add_locale_uint32): Call maybe_swap_uint32.
+	(add_locale_uint32_array): Call maybe_swap_uint32_obstack.
+	(write_locale_data): Call maybe_swap_uint32_array.
+	* locale/programs/ld-collate.c (obstack_int32_grow): Call
+	maybe_swap_uint32.
+	(obstack_int32_grow_fast): Likewise.
+	(output_weightwc): Call maybe_swap_uint32_obstack.
+	(collate_output): Likewise.
+	* locale/programs/localedef.c (OPT_LITTLE_ENDIAN): New macro.
+	(OPT_LITTLE_ENDIAN): Likewise.
+	(options): Add --little-endian and --big-endian options.
+	(parse_opt): Handle OPT_LITTLE_ENDIAN and OPT_BIG_ENDIAN.
+	* locale/programs/locarchive.c: Include "locfile.h".
+	(GET): New macro.
+	(SET): Likewise.
+	(INC): Likewise.
+	(create_archive): Use the new macros to access fields of
+	structures directly mapped from or written to locale archives.
+	(oldlocrecentcmp): Likewise.
+	(enlarge_archive): Likewise.
+	(insert_name): Likewise.
+	(add_alias): Likewise.
+	(add_locale): Likewise.
+	(delete_locales_from_archive): Likewise.
+	(show_archive_content): Likewise.
+	(add_locale_to_archive): Likewise.  Use maybe_swap_uint32 on
+	locale data.
+
 2013-09-24  Roland McGrath  <roland@hack.frob.com>
 
 	* manual/freemanuals.texi: Updated from (newly) canonical copy at
