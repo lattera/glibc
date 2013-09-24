@@ -1,3 +1,8 @@
+2013-09-24  Olivier Langlois  <olivier@olivierlanglois.net>
+
+	* stdio-common/tst-long-dbl-fphex.c (do_test): Fix swprintf length
+	argument calculation.
+
 2013-09-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/data/pthread.h-data [POSIX] (PTHREAD_MUTEX_INITIALIZER):
