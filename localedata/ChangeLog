@@ -1,3 +1,8 @@
+2013-09-25  Michael Bauer <fios@akerbeltz.org>
+
+    [BZ#15400]
+    * locales/gd_GB: Version 1.2 of gd_GB locale.
+
 2013-09-23  Wei-Lun Chao <bluebat@member.fsf.org>
 
     [BZ#15609]
