@@ -1,3 +1,16 @@
+2013-09-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/sched.h-data [XPG3 || XPG4]: Disable whole file.
+	[POSIX || UNIX98]: Require rather than permitting all symbols from
+	<time.h>.
+	[POSIX || UNIX98] (sched_ss_low_priority): Do not specify optional
+	element of struct sched_param.
+	[POSIX || UNIX98] (sched_ss_repl_period): Likewise.
+	[POSIX || UNIX98] (sched_ss_init_budget): Likewise.
+	[POSIX || UNIX98] (sched_ss_max_repl): Likewise.
+	[POSIX || UNIX98] (SCHED_SPORADIC): Do not specify optional
+	constant.
+
 2013-09-24  Olivier Langlois  <olivier@olivierlanglois.net>
 
 	* stdio-common/tst-long-dbl-fphex.c (do_test): Fix swprintf length
