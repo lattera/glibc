@@ -6,7 +6,7 @@
 #define POINTER_CHK_GUARD \
   ({												\
      uintptr_t x;										\
-     asm ("ld %0,%1(2)"										\
+     asm ("ld %0,%1(13)"										\
 	  : "=r" (x)										\
 	  : "i" (offsetof (tcbhead_t, pointer_guard) - TLS_TCB_OFFSET - sizeof (tcbhead_t))	\
          );											\
