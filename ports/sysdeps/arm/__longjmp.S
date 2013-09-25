@@ -16,8 +16,6 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* ??? Needs more rearrangement for the LDM to handle thumb mode.  */
-#define NO_THUMB
 #include <sysdep.h>
 #include <bits/setjmp.h>
 #include <rtld-global-offsets.h>
@@ -28,6 +26,7 @@
 ENTRY (__longjmp)
 	mov	ip, r0
 	movs	r0, r1		/* get the return value in place */
+	it	eq
 	moveq	r0, #1		/* can't let setjmp() return zero! */
 
 #ifdef CHECK_SP
@@ -44,7 +43,8 @@ ENTRY (__longjmp)
 #ifdef PTR_DEMANGLE
 	PTR_DEMANGLE (fp, a4, a3, a2)
 	ldr	a4, [ip], #4
-	PTR_DEMANGLE2 (sp, a4, a3)
+	PTR_DEMANGLE2 (a4, a4, a3)
+	mov	sp, a4
 	ldr	a4, [ip], #4
 	PTR_DEMANGLE2 (lr, a4, a3)
 #else

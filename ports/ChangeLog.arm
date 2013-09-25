@@ -1,3 +1,10 @@
+2013-10-04  Will Newton  <will.newton@linaro.org>
+
+	* sysdeps/arm/__longjmp.S (NO_THUMB): Remove define.
+	(__longjmp): Use Thumb supported instructions.
+	* sysdeps/unix/sysv/linux/arm/____longjmp_chk.S (NO_THUMB):
+	Remove define.
+
 2013-10-03  Will Newton  <will.newton@linaro.org>
 
 	* sysdeps/arm/__longjmp.S (__longjmp): Demangle fp, sp
