@@ -16,8 +16,6 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* ??? Needs more rearrangement for the STM to handle thumb mode.  */
-#define NO_THUMB
 #include <sysdep.h>
 #include <bits/setjmp.h>
 #include <rtld-global-offsets.h>
@@ -35,7 +33,8 @@ ENTRY (__sigsetjmp)
 	sfi_breg ip, \
 	stmia	\B!, JMP_BUF_REGLIST
 #ifdef PTR_MANGLE
-	PTR_MANGLE2 (a4, sp, a3)
+	mov	a4, sp
+	PTR_MANGLE2 (a4, a4, a3)
 	str	a4, [ip], #4
 	PTR_MANGLE2 (a4, lr, a3)
 	str	a4, [ip], #4

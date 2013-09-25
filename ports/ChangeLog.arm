@@ -5,6 +5,9 @@
 	* sysdeps/unix/sysv/linux/arm/____longjmp_chk.S (NO_THUMB):
 	Remove define.
 
+	* sysdeps/arm/setjmp.S (NO_THUMB): Remove define.
+	(__sigsetjmp): Use Thumb supported instructions.
+
 2013-10-03  Will Newton  <will.newton@linaro.org>
 
 	* sysdeps/arm/__longjmp.S (__longjmp): Demangle fp, sp
