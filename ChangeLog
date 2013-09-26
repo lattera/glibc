@@ -1,3 +1,14 @@
+2013-10-04  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/strcpy.S (strcpy): Add word load/store
+	to provide a boost for large inputs with word alignment.
+	* sysdeps/powerpc/powerpc64/stpcpy.S (__stpcpy): Rewrite
+	implementation based on optimized PPC64 strcpy.
+	* sysdeps/powerpc/powerpc64/power7/strcpy.S: New file: optimized
+	strcpy for PPC64/POWER7 based on both doubleword and word load/store.
+	* sysdeps/powerpc/powerpc64/power7/stpcpy.S: New file: optimized
+	stpcpy for PPC64/POWER7 based on PPC64/POWER7 strcpy.
+
 2013-10-25   Ondřej Bílka  <neleai@seznam.cz>
 
 	[BZ 2801]

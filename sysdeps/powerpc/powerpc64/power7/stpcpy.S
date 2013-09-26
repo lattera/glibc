@@ -1,5 +1,5 @@
-/* Optimized stpcpy implementation for PowerPC64.
-   Copyright (C) 1997-2013 Free Software Foundation, Inc.
+/* Optimized stpcpy implementation for PowerPC64/POWER7.
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define USE_AS_STPCPY
-#include <sysdeps/powerpc/powerpc64/strcpy.S>
+#include <sysdeps/powerpc/powerpc64/power7/strcpy.S>
 
 weak_alias (__stpcpy, stpcpy)
 libc_hidden_def (__stpcpy)
