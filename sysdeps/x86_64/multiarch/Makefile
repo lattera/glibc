@@ -8,7 +8,7 @@ ifeq ($(subdir),string)
 
 sysdep_routines += strncat-c stpncpy-c strncpy-c strcmp-ssse3 \
 		   strcmp-sse2-unaligned strncmp-ssse3 \
-		   strend-sse4 memcmp-sse4 memcpy-ssse3 \
+		   memcmp-sse4 memcpy-ssse3 \
 		   memcpy-sse2-unaligned mempcpy-ssse3 \
 		   memmove-ssse3 memcpy-ssse3-back mempcpy-ssse3-back \
 		   memmove-ssse3-back strcasestr-nonascii strcasecmp_l-ssse3 \
@@ -17,7 +17,7 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c strcmp-ssse3 \
 		   strcpy-sse2-unaligned strncpy-sse2-unaligned \
 		   stpcpy-sse2-unaligned stpncpy-sse2-unaligned \
 		   strcat-sse2-unaligned strncat-sse2-unaligned \
-		   strrchr-sse2-no-bsf strchr-sse2-no-bsf memcmp-ssse3
+		   strchr-sse2-no-bsf memcmp-ssse3
 ifeq (yes,$(config-cflags-sse4))
 sysdep_routines += strcspn-c strpbrk-c strspn-c strstr-c strcasestr-c varshift
 CFLAGS-varshift.c += -msse4

@@ -1,3 +1,12 @@
+2013-09-26  Ondřej Bílka  <neleai@seznam.cz>
+
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Update.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c: Remove strrchr ifunc.
+	* sysdeps/x86_64/multiarch/strend-sse4.S Remove.
+	* sysdeps/x86_64/multiarch/strrchr-sse2-no-bsf.S Likewise.
+	* sysdeps/x86_64/multiarch/strrchr.S: Likewise.
+	* sysdeps/x86_64/strrchr.S (strrchr): Use optimized implementation.
+
 2013-09-25  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/stackguard-macros.h (POINTER_CHK_GUARD:

@@ -1,6 +1,5 @@
 /* strrchr (str, ch) -- Return pointer to last occurrence of CH in STR.
-   For AMD x86-64.
-   Copyright (C) 2009-2013 Free Software Foundation, Inc.
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,63 +16,217 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+
 #include <sysdep.h>
+
+# ifndef ALIGN
+#  define ALIGN(n)	.p2align n
+# endif
 
 
 	.text
 ENTRY (strrchr)
 	movd	%esi, %xmm1
-	movq	%rdi, %rcx
-	punpcklbw %xmm1, %xmm1
-	andq	$~15, %rdi
-	pxor	%xmm2, %xmm2
-	punpcklbw %xmm1, %xmm1
-	orl	$0xffffffff, %esi
-	movdqa	(%rdi), %xmm0
+	movq	%rdi, %rax
+	andl	$4095, %eax
+	punpcklbw	%xmm1, %xmm1
+	cmpq	$4032, %rax
+	punpcklwd	%xmm1, %xmm1
 	pshufd	$0, %xmm1, %xmm1
-	subq	%rdi, %rcx
+	ja	L(cross_page)
+	movdqu	(%rdi), %xmm0
+	pxor	%xmm2, %xmm2
 	movdqa	%xmm0, %xmm3
-	leaq	16(%rdi), %rdi
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm3
-	shl	%cl, %esi
-	pmovmskb %xmm0, %edx
-	pmovmskb %xmm3, %ecx
-	andl	%esi, %edx
-	andl	%esi, %ecx
+	pmovmskb	%xmm0, %ecx
+	pmovmskb	%xmm3, %edx
+	testq	%rdx, %rdx
+	je	L(next_48_bytes)
+	leaq	-1(%rdx), %rax
+	xorq	%rdx, %rax
+	andq	%rcx, %rax
+	je	L(exit)
+	bsrq	%rax, %rax
+	addq	%rdi, %rax
+	ret
+
+	ALIGN(4)
+L(next_48_bytes):
+	movdqu	16(%rdi), %xmm4
+	movdqa	%xmm4, %xmm5
+	movdqu	32(%rdi), %xmm3
+	pcmpeqb	%xmm1, %xmm4
+	pcmpeqb	%xmm2, %xmm5
+	movdqu	48(%rdi), %xmm0
+	pmovmskb	%xmm5, %edx
+	movdqa	%xmm3, %xmm5
+	pcmpeqb	%xmm1, %xmm3
+	pcmpeqb	%xmm2, %xmm5
+	pcmpeqb	%xmm0, %xmm2
+	salq	$16, %rdx
+	pmovmskb	%xmm3, %r8d
+	pmovmskb	%xmm5, %eax
+	pmovmskb	%xmm2, %esi
+	salq	$32, %r8
+	salq	$32, %rax
+	pcmpeqb	%xmm1, %xmm0
+	orq	%rdx, %rax
+	movq	%rsi, %rdx
+	pmovmskb	%xmm4, %esi
+	salq	$48, %rdx
+	salq	$16, %rsi
+	orq	%r8, %rsi
+	orq	%rcx, %rsi
+	pmovmskb	%xmm0, %ecx
+	salq	$48, %rcx
+	orq	%rcx, %rsi
+	orq	%rdx, %rax
+	je	L(loop_header2)
+	leaq	-1(%rax), %rcx
+	xorq	%rax, %rcx
+	andq	%rcx, %rsi
+	je	L(exit)
+	bsrq	%rsi, %rsi
+	leaq	(%rdi,%rsi), %rax
+	ret
+
+	ALIGN(4)
+L(loop_header2):
+	testq	%rsi, %rsi
+	movq	%rdi, %rcx
+	je	L(no_c_found)
+L(loop_header):
+	addq	$64, %rdi
+	pxor	%xmm7, %xmm7
+	andq	$-64, %rdi
+	jmp	L(loop_entry)
+
+	ALIGN(4)
+L(loop64):
+	testq	%rdx, %rdx
+	cmovne	%rdx, %rsi
+	cmovne	%rdi, %rcx
+	addq	$64, %rdi
+L(loop_entry):
+	movdqa	32(%rdi), %xmm3
+	pxor	%xmm6, %xmm6
+	movdqa	48(%rdi), %xmm2
+	movdqa	%xmm3, %xmm0
+	movdqa	16(%rdi), %xmm4
+	pminub	%xmm2, %xmm0
+	movdqa	(%rdi), %xmm5
+	pminub	%xmm4, %xmm0
+	pminub	%xmm5, %xmm0
+	pcmpeqb	%xmm7, %xmm0
+	pmovmskb	%xmm0, %eax
+	movdqa	%xmm5, %xmm0
+	pcmpeqb	%xmm1, %xmm0
+	pmovmskb	%xmm0, %r9d
+	movdqa	%xmm4, %xmm0
+	pcmpeqb	%xmm1, %xmm0
+	pmovmskb	%xmm0, %edx
+	movdqa	%xmm3, %xmm0
+	pcmpeqb	%xmm1, %xmm0
+	salq	$16, %rdx
+	pmovmskb	%xmm0, %r10d
+	movdqa	%xmm2, %xmm0
+	pcmpeqb	%xmm1, %xmm0
+	salq	$32, %r10
+	orq	%r10, %rdx
+	pmovmskb	%xmm0, %r8d
+	orq	%r9, %rdx
+	salq	$48, %r8
+	orq	%r8, %rdx
+	testl	%eax, %eax
+	je	L(loop64)
+	pcmpeqb	%xmm6, %xmm4
+	pcmpeqb	%xmm6, %xmm3
+	pcmpeqb	%xmm6, %xmm5
+	pmovmskb	%xmm4, %eax
+	pmovmskb	%xmm3, %r10d
+	pcmpeqb	%xmm6, %xmm2
+	pmovmskb	%xmm5, %r9d
+	salq	$32, %r10
+	salq	$16, %rax
+	pmovmskb	%xmm2, %r8d
+	orq	%r10, %rax
+	orq	%r9, %rax
+	salq	$48, %r8
+	orq	%r8, %rax
+	leaq	-1(%rax), %r8
+	xorq	%rax, %r8
+	andq	%r8, %rdx
+	cmovne	%rdi, %rcx
+	cmovne	%rdx, %rsi
+	bsrq	%rsi, %rsi
+	leaq	(%rcx,%rsi), %rax
+	ret
+
+	ALIGN(4)
+L(no_c_found):
+	movl	$1, %esi
+	xorl	%ecx, %ecx
+	jmp	L(loop_header)
+
+	ALIGN(4)
+L(exit):
 	xorl	%eax, %eax
-	movl	%edx, %esi
-	orl	%ecx, %esi
-	jnz	1f
+	ret
 
-2:	movdqa	(%rdi), %xmm0
-	leaq	16(%rdi), %rdi
-	movdqa	%xmm0, %xmm3
-	pcmpeqb	%xmm1, %xmm0
-	pcmpeqb	%xmm2, %xmm3
-	pmovmskb %xmm0, %edx
-	pmovmskb %xmm3, %ecx
-	movl	%edx, %esi
-	orl	%ecx, %esi
-	jz	2b
-
-1:	bsfl	%ecx, %r9d
-	movl	$0xffffffff, %r8d
-	movl	$31, %ecx
-	jnz	5f
-
-	bsrl	%edx, %edx
-	jz	2b
-	leaq	-16(%rdi,%rdx), %rax
-	jmp	2b
-
-5:	subl	%r9d, %ecx
-	shrl	%cl, %r8d
-	andl	%r8d, %edx
-	bsrl	%edx, %edx
-	jz	4f
-	leaq	-16(%rdi,%rdx), %rax
-4:	ret
+	ALIGN(4)
+L(cross_page):
+	movq	%rdi, %rax
+	pxor	%xmm0, %xmm0
+	andq	$-64, %rax
+	movdqu	(%rax), %xmm5
+	movdqa	%xmm5, %xmm6
+	movdqu	16(%rax), %xmm4
+	pcmpeqb	%xmm1, %xmm5
+	pcmpeqb	%xmm0, %xmm6
+	movdqu	32(%rax), %xmm3
+	pmovmskb	%xmm6, %esi
+	movdqa	%xmm4, %xmm6
+	movdqu	48(%rax), %xmm2
+	pcmpeqb	%xmm1, %xmm4
+	pcmpeqb	%xmm0, %xmm6
+	pmovmskb	%xmm6, %edx
+	movdqa	%xmm3, %xmm6
+	pcmpeqb	%xmm1, %xmm3
+	pcmpeqb	%xmm0, %xmm6
+	pcmpeqb	%xmm2, %xmm0
+	salq	$16, %rdx
+	pmovmskb	%xmm3, %r9d
+	pmovmskb	%xmm6, %r8d
+	pmovmskb	%xmm0, %ecx
+	salq	$32, %r9
+	salq	$32, %r8
+	pcmpeqb	%xmm1, %xmm2
+	orq	%r8, %rdx
+	salq	$48, %rcx
+	pmovmskb	%xmm5, %r8d
+	orq	%rsi, %rdx
+	pmovmskb	%xmm4, %esi
+	orq	%rcx, %rdx
+	pmovmskb	%xmm2, %ecx
+	salq	$16, %rsi
+	salq	$48, %rcx
+	orq	%r9, %rsi
+	orq	%r8, %rsi
+	orq	%rcx, %rsi
+	movl	%edi, %ecx
+	subl	%eax, %ecx
+	shrq	%cl, %rdx
+	shrq	%cl, %rsi
+	testq	%rdx, %rdx
+	je	L(loop_header2)
+	leaq	-1(%rdx), %rax
+	xorq	%rdx, %rax
+	andq	%rax, %rsi
+	je	L(exit)
+	bsrq	%rsi, %rax
+	addq	%rdi, %rax
+	ret
 END (strrchr)
 
 weak_alias (strrchr, rindex)
