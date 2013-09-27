@@ -1,3 +1,7 @@
+2013-09-27  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/stackguard-macros.h: New file.
+
 2013-09-26  Ondřej Bílka  <neleai@seznam.cz>
 
 	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Update.
