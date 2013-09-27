@@ -4,7 +4,7 @@
 @include macros.texi
 @include pkgvers.texi
 
-@node Installation, Maintenance, Library Summary, Top
+@node Installation
 @c %MENU% How to install the GNU C Library
 @appendix Installing @theglibc{}
 

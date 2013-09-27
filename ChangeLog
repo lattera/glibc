@@ -1,3 +1,8 @@
+2013-09-27  Allan McRae  <allan@archlinux.org>
+
+	[BZ #15941]
+	* manual/install.texi (Installation) Fix node cross references.
+
 2013-09-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* nptl/sysdeps/pthread/bits/libc-lock.h [_LIBC &&
