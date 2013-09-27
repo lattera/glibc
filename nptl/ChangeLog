@@ -1,3 +1,11 @@
+2013-09-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/pthread/bits/libc-lock.h [_LIBC && (!NOT_IN_libc ||
+	IS_IN_libpthread)] (__libc_lock_fini_recursive): Use the mutex
+	member of the argument.
+	(__libc_lock_trylock_recursive): Likewise.
+	(__libc_lock_unlock_recursive): Likewise.
+
 2013-09-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/cancellation.S
