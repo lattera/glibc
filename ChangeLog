@@ -1,3 +1,12 @@
+2013-09-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* nptl/sysdeps/pthread/bits/libc-lock.h [_LIBC &&
+	(!NOT_IN_libc || IS_IN_libpthread)]
+	(__libc_lock_fini_recursive): Use the mutex member of the
+	argument.
+	(__libc_lock_trylock_recursive): Likewise.
+	(__libc_lock_unlock_recursive): Likewise.
+
 2013-09-27  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/stackguard-macros.h: New file.
