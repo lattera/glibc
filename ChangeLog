@@ -1,8 +1,3 @@
-2013-09-27  Allan McRae  <allan@archlinux.org>
-
-	[BZ #15941]
-	* manual/install.texi (Installation) Fix node cross references.
-
 2013-09-27  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/stackguard-macros.h: New file.
