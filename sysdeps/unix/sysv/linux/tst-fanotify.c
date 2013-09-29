@@ -29,14 +29,15 @@ do_test (void)
   fd = fanotify_init (0, 0);
   if (fd < 0)
     {
-      switch (errno) {
-      case ENOSYS:
-	puts ("SKIP: missing support for fanotify (check CONFIG_FANOTIFY=y)");
-	return 0;
-      case EPERM:
-	puts ("SKIP: missing proper permissions for runtime test");
-	return 0;
-      }
+      switch (errno)
+	{
+	case ENOSYS:
+	  puts ("SKIP: missing support for fanotify (check CONFIG_FANOTIFY=y)");
+	  return 0;
+	case EPERM:
+	  puts ("SKIP: missing proper permissions for runtime test");
+	  return 0;
+	}
 
       perror ("fanotify_init (0, 0) failed");
       return 1;

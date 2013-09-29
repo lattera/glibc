@@ -1,4 +1,8 @@
-2013-09-11  P. J. McDermott  <pj@pehjota.net>
+2013-09-28  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/tst-fanotify.c (do_test): Fix style.
+
+2013-09-28  P. J. McDermott  <pj@pehjota.net>
 
 	* sysdeps/unix/Makefile ($(objpfx)stub-syscalls.c): Don't use
 	${Bash-specific parameter/pattern/string} parameter expansion.
