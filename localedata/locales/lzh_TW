@@ -150,6 +150,7 @@ alt_digits    "<U3007>";/
             "<U5EFF><U4E5D>";/
             "<U5345>";/
             "<U5345><U4E00>"
+%
 END LC_TIME
 
 LC_NUMERIC
