@@ -134,7 +134,7 @@ __local_syscall_error:						\
         str     x19, [sp,16];					\
 	neg	x19, x0;					\
 	bl	C_SYMBOL_NAME(__errno_location);		\
-	str	x19, [x0];					\
+	str	w19, [x0];					\
 	mov	x0, -1;						\
         ldr     x19, [sp,16];					\
         ldp     x29, x30, [sp], 32;				\

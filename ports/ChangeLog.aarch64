@@ -1,3 +1,8 @@
+2013-09-30  Andrew Pinski <andrew.pinski@caviumnetworks.com>
+
+	* sysdeps/unix/sysv/linux/aarch64/sysdep.h (SYSCALL_ERROR_HANDLER):
+	Fix store to errno to use 32bits.
+
 2013-09-24  Venkataramanan Kumar  <venkataramanan.kumar@linaro.org>
 
 	* sysdeps/aarch64/machine-gmon.h (__mcount): Accept parameter and
