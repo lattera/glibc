@@ -343,53 +343,43 @@ __LABEL(name)						\
 	   : : inline_syscall_clobbers);			\
 	_sc_ret = _sc_0, _sc_err = _sc_19;			\
 }
+#endif /* ASSEMBLER */
 
 /* Pointer mangling support.  Note that tls access is slow enough that
    we don't deoptimize things by placing the pointer check value there.  */
 
-#include <stdint.h>
-
-#if defined NOT_IN_libc && defined IS_IN_rtld
-# ifdef __ASSEMBLER__
+#ifdef __ASSEMBLER__
+# if defined NOT_IN_libc && defined IS_IN_rtld
 #  define PTR_MANGLE(dst, src, tmp)				\
 	ldah	tmp, __pointer_chk_guard_local($29) !gprelhigh;	\
 	ldq	tmp, __pointer_chk_guard_local(tmp) !gprellow;	\
 	xor	src, tmp, dst
 #  define PTR_MANGLE2(dst, src, tmp)				\
 	xor	src, tmp, dst
-#  define PTR_DEMANGLE(dst, tmp)   PTR_MANGLE(dst, dst, tmp)
-#  define PTR_DEMANGLE2(dst, tmp)  PTR_MANGLE2(dst, dst, tmp)
-# else
-extern uintptr_t __pointer_chk_guard_local attribute_relro attribute_hidden;
-#  define PTR_MANGLE(var)	\
-  (var) = (__typeof (var)) ((uintptr_t) (var) ^ __pointer_chk_guard_local)
-#  define PTR_DEMANGLE(var)  PTR_MANGLE(var)
-# endif
-#elif defined PIC
-# ifdef __ASSEMBLER__
+# elif defined SHARED
 #  define PTR_MANGLE(dst, src, tmp)		\
 	ldq	tmp, __pointer_chk_guard;	\
 	xor	src, tmp, dst
-#  define PTR_MANGLE2(dst, src, tmp)		\
+# else
+#  define PTR_MANGLE(dst, src, tmp)		\
+	ldq	tmp, __pointer_chk_guard_local;	\
 	xor	src, tmp, dst
-#  define PTR_DEMANGLE(dst, tmp)   PTR_MANGLE(dst, dst, tmp)
-#  define PTR_DEMANGLE2(dst, tmp)  PTR_MANGLE2(dst, dst, tmp)
+# endif
+# define PTR_MANGLE2(dst, src, tmp)		\
+	xor	src, tmp, dst
+# define PTR_DEMANGLE(dst, tmp)   PTR_MANGLE(dst, dst, tmp)
+# define PTR_DEMANGLE2(dst, tmp)  PTR_MANGLE2(dst, dst, tmp)
+#else
+# include <stdint.h>
+# if (defined NOT_IN_libc && defined IS_IN_rtld) \
+     || (!defined SHARED && (!defined NOT_IN_libc || defined IS_IN_libpthread))
+extern uintptr_t __pointer_chk_guard_local attribute_relro attribute_hidden;
+#  define PTR_MANGLE(var) \
+	(var) = (__typeof (var)) ((uintptr_t) (var) ^ __pointer_chk_guard_local)
 # else
 extern const uintptr_t __pointer_chk_guard attribute_relro;
-#  define PTR_MANGLE(var)	\
+#  define PTR_MANGLE(var) \
 	(var) = (__typeof(var)) ((uintptr_t) (var) ^ __pointer_chk_guard)
-#  define PTR_DEMANGLE(var)  PTR_MANGLE(var)
 # endif
-#else
-/* There exists generic C code that assumes that PTR_MANGLE is always
-   defined.  When generating code for the static libc, we don't have
-   __pointer_chk_guard defined.  Nor is there any place that would
-   initialize it if it were defined, so there's little point in doing
-   anything more than nothing.  */
-# ifndef __ASSEMBLER__
-#  define PTR_MANGLE(var)
-#  define PTR_DEMANGLE(var)
-# endif
-#endif
-
+# define PTR_DEMANGLE(var)  PTR_MANGLE(var)
 #endif /* ASSEMBLER */

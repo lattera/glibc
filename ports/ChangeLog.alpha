@@ -1,3 +1,8 @@
+2013-10-01  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/alpha/sysdep.h (PTR_MANGLE): Improve conditions under
+	which it is defined.
+
 2013-09-20  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/alpha/alphaev67/ffs.S (__ffs): Define as hidden.
