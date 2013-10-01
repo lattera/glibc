@@ -63,10 +63,7 @@ __pthread_cond_broadcast (cond)
 
 #if (defined lll_futex_cmp_requeue_pi \
      && defined __ASSUME_REQUEUE_PI)
-      int pi_flag = PTHREAD_MUTEX_PRIO_INHERIT_NP | PTHREAD_MUTEX_ROBUST_NP;
-      pi_flag &= mut->__data.__kind;
-
-      if (pi_flag == PTHREAD_MUTEX_PRIO_INHERIT_NP)
+      if (USE_REQUEUE_PI (mut))
 	{
 	  if (lll_futex_cmp_requeue_pi (&cond->__data.__futex, 1, INT_MAX,
 					&mut->__data.__lock, futex_val,

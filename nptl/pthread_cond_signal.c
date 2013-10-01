@@ -49,14 +49,9 @@ __pthread_cond_signal (cond)
 
 #if (defined lll_futex_cmp_requeue_pi \
      && defined __ASSUME_REQUEUE_PI)
-      int pi_flag = PTHREAD_MUTEX_PRIO_INHERIT_NP | PTHREAD_MUTEX_ROBUST_NP;
       pthread_mutex_t *mut = cond->__data.__mutex;
 
-      /* Do not use requeue for pshared condvars.  */
-      if (mut != (void *) ~0l)
-	pi_flag &= mut->__data.__kind;
-
-      if (__builtin_expect (pi_flag == PTHREAD_MUTEX_PRIO_INHERIT_NP, 0)
+      if (USE_REQUEUE_PI (mut)
 	/* This can only really fail with a ENOSYS, since nobody can modify
 	   futex while we have the cond_lock.  */
 	  && lll_futex_cmp_requeue_pi (&cond->__data.__futex, 1, 0,

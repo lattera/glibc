@@ -1,3 +1,12 @@
+2013-10-01  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #15988]
+	* pthread_cond_broadcast.c (__pthread_cond_broadcast)
+	[lll_futex_cmp_requeue_pi && __ASSUME_REQUEUE_PI]: Use
+	USE_REQUEUE_PI.
+	* pthread_cond_signal.c (__pthread_cond_signal)
+	[lll_futex_cmd_requeue_pi && __ASSUME_REQUEUE_PI]: Likewise.
+
 2013-09-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/pthread/bits/libc-lock.h [_LIBC && (!NOT_IN_libc ||
