@@ -1,3 +1,9 @@
+2013-10-03  Brooks Moses  <bmoses@google.com>
+
+	[BZ #15915]
+	* Makefile (linkobj/libc_pic.a, linkobj/libc.so): Move rules to...
+	* Makerules: ...here, and adjust associated comments.
+
 2013-10-02  Will Newton  <will.newton@linaro.org>
 
 	* malloc/Makefile: Add tst-pvalloc.

@@ -123,36 +123,7 @@ lib-noranlib: subdir_lib
 
 ifeq (yes,$(build-shared))
 # Build the shared object from the PIC object library.
-lib: $(common-objpfx)libc.so
-
-lib: $(common-objpfx)linkobj/libc.so
-
-# Do not filter ld.so out of libc.so link.
-$(common-objpfx)linkobj/libc.so: link-libc-deps = # empty
-
-$(common-objpfx)linkobj/libc.so: $(elfobjdir)/soinit.os \
-				 $(common-objpfx)linkobj/libc_pic.a \
-				 $(elfobjdir)/sofini.os \
-				 $(elfobjdir)/interp.os \
-				 $(elfobjdir)/ld.so \
-				 $(shlib-lds)
-	$(build-shlib)
-
-ifeq (,$(filter sunrpc,$(subdirs)))
-$(common-objpfx)linkobj/libc_pic.a: $(common-objpfx)libc_pic.a
-	$(make-target-directory)
-	ln -f $< $@
-else
-$(common-objpfx)linkobj/libc_pic.a: $(common-objpfx)libc_pic.a \
-				    $(common-objpfx)sunrpc/librpc_compat_pic.a
-	$(make-target-directory)
-	(cd $(common-objpfx)linkobj; \
-	 $(AR) x ../libc_pic.a; \
-	 rm $$($(AR) t ../sunrpc/librpc_compat_pic.a | sed 's/^compat-//'); \
-	 $(AR) x ../sunrpc/librpc_compat_pic.a; \
-	 $(AR) cr libc_pic.a *.os; \
-	 rm *.os)
-endif # $(subdirs) contains sunrpc
+lib: $(common-objpfx)libc.so $(common-objpfx)linkobj/libc.so
 endif # $(build-shared)
 
 

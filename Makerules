@@ -565,16 +565,47 @@ generated += libc_pic.opts libc_pic.os.clean
 libc_pic_clean := .clean
 endif
 
-# Do not filter ld.so out of libc.so link.
-$(common-objpfx)libc.so: link-libc-deps = # empty
+# Build a possibly-modified version of libc_pic.a for use in building
+# linkobj/libc.so.
+ifeq (,$(filter sunrpc,$(subdirs)))
+$(common-objpfx)linkobj/libc_pic.a: $(common-objpfx)libc_pic.a
+	$(make-target-directory)
+	ln -f $< $@
+else
+$(common-objpfx)linkobj/libc_pic.a: $(common-objpfx)libc_pic.a \
+				    $(common-objpfx)sunrpc/librpc_compat_pic.a
+	$(make-target-directory)
+	(cd $(common-objpfx)linkobj; \
+	 $(AR) x ../libc_pic.a; \
+	 rm $$($(AR) t ../sunrpc/librpc_compat_pic.a | sed 's/^compat-//'); \
+	 $(AR) x ../sunrpc/librpc_compat_pic.a; \
+	 $(AR) cr libc_pic.a *.os; \
+	 rm *.os)
+endif # $(subdirs) contains sunrpc
 
-# Use our own special initializer and finalizer files for libc.so.
+# Clear link-libc-deps for the libc.so libraries so build-shlibs does not
+# filter ld.so out of the list of linked objects.
+$(common-objpfx)libc.so: link-libc-deps = # empty
+$(common-objpfx)linkobj/libc.so: link-libc-deps = # empty
+
+# Use our own special initializer and finalizer files for the libc.so
+# libraries.
 $(common-objpfx)libc.so: $(elfobjdir)/soinit.os \
 			 $(common-objpfx)libc_pic.os$(libc_pic_clean) \
 			 $(elfobjdir)/sofini.os \
-			 $(elfobjdir)/interp.os $(elfobjdir)/ld.so \
+			 $(elfobjdir)/interp.os \
+			 $(elfobjdir)/ld.so \
 			 $(shlib-lds)
 	$(build-shlib)
+
+$(common-objpfx)linkobj/libc.so: $(elfobjdir)/soinit.os \
+			 $(common-objpfx)linkobj/libc_pic.a \
+			 $(elfobjdir)/sofini.os \
+			 $(elfobjdir)/interp.os \
+			 $(elfobjdir)/ld.so \
+			 $(shlib-lds)
+	$(build-shlib)
+
 ifeq ($(build-shared),yes)
 $(common-objpfx)libc.so: $(common-objpfx)libc.map
 endif
