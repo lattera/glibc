@@ -3,6 +3,10 @@
 	* malloc/Makefile: Add tst-memalign.
 	* malloc/tst-memalign.c: New file.
 
+	* malloc/tst-posix_memalign.c: Add comments.
+	(do_test): Add comments and call free on all potentially
+	allocated pointers. Add space after cast.
+
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
 	* sysdeps/powerpc/powerpc32/dl-machine.c (__process_machine_rela):

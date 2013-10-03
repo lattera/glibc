@@ -1,4 +1,5 @@
-/* Copyright (C) 2013 Free Software Foundation, Inc.
+/* Test for posix_memalign.
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,11 +36,13 @@ do_test (void)
 {
   void *p;
   int ret;
-  unsigned long pagesize = getpagesize();
+  unsigned long pagesize = getpagesize ();
   unsigned long ptrval;
 
   p = NULL;
 
+  /* An attempt to allocate a huge value should return ENOMEM and
+     p should remain NULL.  */
   ret = posix_memalign (&p, sizeof (void *), -1);
 
   if (ret != ENOMEM)
@@ -48,15 +51,22 @@ do_test (void)
   if (ret == ENOMEM && p != NULL)
     merror ("returned an error but pointer was modified");
 
+  free (p);
+
   p = NULL;
 
+  /* Test to expose integer overflow in malloc internals from BZ #15857.  */
   ret = posix_memalign (&p, pagesize, -pagesize);
 
   if (ret != ENOMEM)
     merror ("posix_memalign (&p, pagesize, -pagesize) succeeded.");
 
+  free (p);
+
   p = NULL;
 
+  /* A zero-sized allocation should succeed with glibc, returning zero
+     and setting p to a non-NULL value.  */
   ret = posix_memalign (&p, sizeof (void *), 0);
 
   if (ret != 0 || p == NULL)
@@ -84,9 +94,9 @@ do_test (void)
   if (ret == 0 && p == NULL)
     merror ("returned success but pointer is NULL");
 
-  ptrval = (unsigned long)p;
+  ptrval = (unsigned long) p;
 
-  if (ret == 0 && (ptrval & 0xff))
+  if (ret == 0 && (ptrval & 0xff) != 0)
     merror ("pointer is not aligned to 0x100");
 
   free (p);
