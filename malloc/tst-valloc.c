@@ -1,4 +1,5 @@
-/* Copyright (C) 2013 Free Software Foundation, Inc.
+/* Test for valloc.
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,12 +35,14 @@ static int
 do_test (void)
 {
   void *p;
-  unsigned long pagesize = getpagesize();
+  unsigned long pagesize = getpagesize ();
   unsigned long ptrval;
   int save;
 
   errno = 0;
 
+  /* An attempt to allocate a huge value should return NULL and set
+     errno to ENOMEM.  */
   p = valloc (-1);
 
   save = errno;
@@ -50,8 +53,11 @@ do_test (void)
   if (p == NULL && save != ENOMEM)
     merror ("valloc (-1) errno is not set correctly");
 
+  free (p);
+
   errno = 0;
 
+  /* Test to expose integer overflow in malloc internals from BZ #15856.  */
   p = valloc (-pagesize);
 
   save = errno;
@@ -62,6 +68,10 @@ do_test (void)
   if (p == NULL && save != ENOMEM)
     merror ("valloc (-pagesize) errno is not set correctly");
 
+  free (p);
+
+  /* A zero-sized allocation should succeed with glibc, returning a
+     non-NULL value.  */
   p = valloc (0);
 
   if (p == NULL)
@@ -69,15 +79,13 @@ do_test (void)
 
   free (p);
 
+  /* Check the alignment of the returned pointer is correct.  */
   p = valloc (32);
 
   if (p == NULL)
     merror ("valloc (32) failed.");
 
-  ptrval = (unsigned long)p;
-
-  if (p == NULL)
-    merror ("valloc (32) failed.");
+  ptrval = (unsigned long) p;
 
   if ((ptrval & (pagesize - 1)) != 0)
     merror ("returned pointer is not page aligned.");
