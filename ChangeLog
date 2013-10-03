@@ -1,5 +1,11 @@
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/powerpc/powerpc32/dl-machine.c (__process_machine_rela):
+	Correct handling of unaligned relocs for little-endian.
+	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_rela): Likewise.
+
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
 	* configure.in: Map powerpc64le and powerpcle to base_machine/machine.
 	* configure: Regenerate.
 	* nptl/shlib-versions: Powerpc*le starts at 2.18.

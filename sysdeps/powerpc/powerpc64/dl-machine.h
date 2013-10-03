@@ -561,6 +561,12 @@ elf_machine_rela (struct link_map *map,
   Elf64_Addr *const reloc_addr = reloc_addr_arg;
   const int r_type = ELF64_R_TYPE (reloc->r_info);
   const Elf64_Sym *const refsym = sym;
+  union unaligned
+    {
+      unsigned u2 __attribute__ ((mode (HI)));
+      unsigned u4 __attribute__ ((mode (SI)));
+      unsigned u8 __attribute__ ((mode (DI)));
+    } __attribute__((__packed__));
 
   if (r_type == R_PPC64_RELATIVE)
     {
@@ -741,23 +747,11 @@ elf_machine_rela (struct link_map *map,
       return;
 
     case R_PPC64_UADDR64:
-      /* We are big-endian.  */
-      ((char *) reloc_addr_arg)[0] = (value >> 56) & 0xff;
-      ((char *) reloc_addr_arg)[1] = (value >> 48) & 0xff;
-      ((char *) reloc_addr_arg)[2] = (value >> 40) & 0xff;
-      ((char *) reloc_addr_arg)[3] = (value >> 32) & 0xff;
-      ((char *) reloc_addr_arg)[4] = (value >> 24) & 0xff;
-      ((char *) reloc_addr_arg)[5] = (value >> 16) & 0xff;
-      ((char *) reloc_addr_arg)[6] = (value >> 8) & 0xff;
-      ((char *) reloc_addr_arg)[7] = (value >> 0) & 0xff;
+      ((union unaligned *) reloc_addr)->u8 = value;
       return;
 
     case R_PPC64_UADDR32:
-      /* We are big-endian.  */
-      ((char *) reloc_addr_arg)[0] = (value >> 24) & 0xff;
-      ((char *) reloc_addr_arg)[1] = (value >> 16) & 0xff;
-      ((char *) reloc_addr_arg)[2] = (value >> 8) & 0xff;
-      ((char *) reloc_addr_arg)[3] = (value >> 0) & 0xff;
+      ((union unaligned *) reloc_addr)->u4 = value;
       return;
 
     case R_PPC64_ADDR32:
@@ -781,10 +775,8 @@ elf_machine_rela (struct link_map *map,
     case R_PPC64_UADDR16:
       if (dont_expect ((value + 0x8000) >= 0x10000))
 	_dl_reloc_overflow (map, "R_PPC64_UADDR16", reloc_addr, refsym);
-      /* We are big-endian.  */
-      ((char *) reloc_addr_arg)[0] = (value >> 8) & 0xff;
-      ((char *) reloc_addr_arg)[1] = (value >> 0) & 0xff;
-      break;
+      ((union unaligned *) reloc_addr)->u2 = value;
+      return;
 
     case R_PPC64_ADDR16_DS:
       if (dont_expect ((value + 0x8000) >= 0x10000 || (value & 3) != 0))

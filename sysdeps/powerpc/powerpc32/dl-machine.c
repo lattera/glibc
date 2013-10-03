@@ -416,6 +416,12 @@ __process_machine_rela (struct link_map *map,
 			Elf32_Addr const finaladdr,
 			int rinfo)
 {
+  union unaligned
+    {
+      unsigned u2 __attribute__ ((mode (HI)));
+      unsigned u4 __attribute__ ((mode (SI)));
+    } __attribute__((__packed__));
+
   switch (rinfo)
     {
     case R_PPC_NONE:
@@ -432,10 +438,7 @@ __process_machine_rela (struct link_map *map,
       return;
 
     case R_PPC_UADDR32:
-      ((char *) reloc_addr)[0] = finaladdr >> 24;
-      ((char *) reloc_addr)[1] = finaladdr >> 16;
-      ((char *) reloc_addr)[2] = finaladdr >> 8;
-      ((char *) reloc_addr)[3] = finaladdr;
+      ((union unaligned *) reloc_addr)->u4 = finaladdr;
       break;
 
     case R_PPC_ADDR24:
@@ -453,8 +456,7 @@ __process_machine_rela (struct link_map *map,
     case R_PPC_UADDR16:
       if (__builtin_expect (finaladdr > 0x7fff && finaladdr < 0xffff8000, 0))
 	_dl_reloc_overflow (map,  "R_PPC_UADDR16", reloc_addr, refsym);
-      ((char *) reloc_addr)[0] = finaladdr >> 8;
-      ((char *) reloc_addr)[1] = finaladdr;
+      ((union unaligned *) reloc_addr)->u2 = finaladdr;
       break;
 
     case R_PPC_ADDR16_LO:
