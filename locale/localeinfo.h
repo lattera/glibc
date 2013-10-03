@@ -87,6 +87,16 @@ struct __locale_data
   values __flexarr;	/* Items, usually pointers into `filedata'.  */
 };
 
+/* This alignment is used for 32-bit integers in locale files, both
+   those that are explicitly int32_t or uint32_t and those that are
+   wchar_t, regardless of the (possibly smaller) alignment required
+   for such integers on a particular host.  */
+#define LOCFILE_ALIGN		sizeof (int32_t)
+#define LOCFILE_ALIGN_MASK	(LOCFILE_ALIGN - 1)
+#define LOCFILE_ALIGN_UP(x)	(((x) + LOCFILE_ALIGN - 1)	\
+				 & ~LOCFILE_ALIGN_MASK)
+#define LOCFILE_ALIGNED_P(x)	(((x) & LOCFILE_ALIGN_MASK) == 0)
+
 /* We know three kinds of collation sorting rules.  */
 enum coll_sort_rule
 {

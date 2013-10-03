@@ -1,3 +1,13 @@
+2013-10-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* locale/localeinfo.h (LOCFILE_ALIGN): New macro.
+	(LOCFILE_ALIGN_MASK): Likewise.
+	(LOCFILE_ALIGN_UP): Likewise.
+	(LOCFILE_ALIGNED_P): Likewise.
+	* locale/programs/ld-collate.c (collate_output): Use the new
+	macros instead of __alignof__ (int32_t).
+	* locale/weight.h (findidx): Likewise.
+
 2013-10-03  Ondřej Bílka  <neleai@seznam.cz>
 
 	[BZ #431]

@@ -69,8 +69,8 @@ findidx (const unsigned char **cpp, size_t len)
 
 	  /* Up to the next entry.  */
 	  cp += nhere;
-	  if ((1 + nhere) % __alignof__ (int32_t) != 0)
-	    cp += __alignof__ (int32_t) - (1 + nhere) % __alignof__ (int32_t);
+	  if (!LOCFILE_ALIGNED_P (1 + nhere))
+	    cp += LOCFILE_ALIGN - (1 + nhere) % LOCFILE_ALIGN;
 	}
       else
 	{
@@ -89,9 +89,9 @@ findidx (const unsigned char **cpp, size_t len)
 		{
 		  /* Cannot be in this range.  */
 		  cp += 2 * nhere;
-		  if ((1 + 2 * nhere) % __alignof__ (int32_t) != 0)
-		    cp += (__alignof__ (int32_t)
-			   - (1 + 2 * nhere) % __alignof__ (int32_t));
+		  if (!LOCFILE_ALIGNED_P (1 + 2 * nhere))
+		    cp += (LOCFILE_ALIGN
+			   - (1 + 2 * nhere) % LOCFILE_ALIGN);
 		  continue;
 		}
 
@@ -104,9 +104,9 @@ findidx (const unsigned char **cpp, size_t len)
 		{
 		  /* Cannot be in this range.  */
 		  cp += 2 * nhere;
-		  if ((1 + 2 * nhere) % __alignof__ (int32_t) != 0)
-		    cp += (__alignof__ (int32_t)
-			   - (1 + 2 * nhere) % __alignof__ (int32_t));
+		  if (!LOCFILE_ALIGNED_P (1 + 2 * nhere))
+		    cp += (LOCFILE_ALIGN
+			   - (1 + 2 * nhere) % LOCFILE_ALIGN);
 		  continue;
 		}
 
