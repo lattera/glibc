@@ -1,5 +1,8 @@
 2013-10-03  Joseph Myers  <joseph@codesourcery.com>
 
+	* locale/programs/locarchive.c (add_locale): Use constant 4096 for
+	page size instead of calling getpagesize.
+
 	* locale/localeinfo.h (LOCFILE_ALIGN): New macro.
 	(LOCFILE_ALIGN_MASK): Likewise.
 	(LOCFILE_ALIGN_UP): Likewise.

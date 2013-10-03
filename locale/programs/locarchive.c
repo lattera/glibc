@@ -838,7 +838,12 @@ add_locale (struct locarhandle *ah,
   off64_t lastoffset;
   char *ptr;
   struct locale_category_data *size_order[__LC_LAST];
-  const size_t pagesz = getpagesize ();
+  /* Page size alignment is a minor optimization for locality; use a
+     common value here rather than making the localedef output depend
+     on the page size of the system on which localedef is run.  See
+     <https://sourceware.org/glibc/wiki/Development_Todo/Master#Locale_archive_alignment>
+     for more discussion.  */
+  const size_t pagesz = 4096;
   int small_mask;
 
   head = ah->addr;
