@@ -955,8 +955,8 @@ The @code{strncat} function could be implemented like this:
 char *
 strncat (char *to, const char *from, size_t size)
 @{
-  to[strlen (to) + size] = '\0';
-  strncpy (to + strlen (to), from, size);
+  memcpy (to + strlen (to), from, strnlen (from, size));
+  to[strlen (to) + strnlen (from, size)] = '\0';
   return to;
 @}
 @end group
@@ -982,8 +982,8 @@ wchar_t *
 wcsncat (wchar_t *restrict wto, const wchar_t *restrict wfrom,
          size_t size)
 @{
-  wto[wcslen (to) + size] = L'\0';
-  wcsncpy (wto + wcslen (wto), wfrom, size);
+  memcpy (wto + wcslen (wto), wfrom, wcsnlen (wfrom, size) * sizeof (wchar_t));
+  wto[wcslen (to) + wcsnlen (wfrom, size)] = '\0';
   return wto;
 @}
 @end group

@@ -1,3 +1,8 @@
+2013-10-03  Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ #431]
+	* manual/string.texi: Fix strncat and wcsncat.
+
 2013-10-03  Brooks Moses  <bmoses@google.com>
 
 	[BZ #15915]
