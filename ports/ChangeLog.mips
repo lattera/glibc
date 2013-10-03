@@ -1,3 +1,13 @@
+2013-09-26  Steve Ellcey  <sellcey@mips.com>
+
+	[BZ #15632]
+	* sysdeps/mips/mips32/fpu/e_sqrt.c: New.
+	* sysdeps/mips/mips32/fpu/e_sqrtf.c: New.
+	* sysdeps/mips/mips64/n32/fpu/e_sqrt.c: New.
+	* sysdeps/mips/mips64/n32/fpu/e_sqrtf.c: New.
+	* sysdeps/mips/mips64/n64/fpu/e_sqrt.c: New.
+	* sysdeps/mips/mips64/n64/fpu/e_sqrtf.c: New.
+
 2013-09-23  Steve Ellcey  <sellcey@mips.com>
 
 	* sysdeps/mips/math_private.h (libc_feholdexcept_mips): New function.
