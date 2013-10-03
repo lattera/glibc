@@ -582,8 +582,8 @@ changequote(,)dnl
 # base_machine, we don't change it.
 test -n "$base_machine" || case "$machine" in
 i[4567]86)	base_machine=i386 machine=i386/$machine ;;
-powerpc)	base_machine=powerpc machine=powerpc/powerpc32 ;;
-powerpc64)	base_machine=powerpc machine=powerpc/powerpc64 ;;
+powerpc64*)	base_machine=powerpc machine=powerpc/powerpc64 ;;
+powerpc*)	base_machine=powerpc machine=powerpc/powerpc32 ;;
 s390)           base_machine=s390 machine=s390/s390-32 ;;
 s390x)          base_machine=s390 machine=s390/s390-64 ;;
 sh3*)		base_machine=sh machine=sh/sh3 ;;

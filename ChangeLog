@@ -1,5 +1,12 @@
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
+	* configure.in: Map powerpc64le and powerpcle to base_machine/machine.
+	* configure: Regenerate.
+	* nptl/shlib-versions: Powerpc*le starts at 2.18.
+	* shlib-versions: Likewise.
+
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
 	* string/tester.c (test_memrchr): Increment reported test cycle.
 
 2013-10-04  Alan Modra  <amodra@gmail.com>

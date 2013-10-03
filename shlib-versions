@@ -23,6 +23,7 @@
 
 s390x-.*-linux.*        DEFAULT			GLIBC_2.2
 powerpc64-.*-linux.*	DEFAULT			GLIBC_2.3
+powerpc.*le-.*-linux.*	DEFAULT			GLIBC_2.18
 .*-.*-gnu-gnu.*		DEFAULT			GLIBC_2.2.6
 
 # Configuration		ABI			Identifier for ABI data files
