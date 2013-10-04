@@ -243,6 +243,10 @@ ENTRY(__CONTEXT_FUNC_NAME)
 	lfd	fp31,_UC_FREGS+(31*8)(r31)
 #endif /* __CONTEXT_ENABLE_FPRS */
 
+#ifdef __CONTEXT_ENABLE_E500
+	setcontext_e500
+#endif
+
 	/* Restore LR and CCR, and set CTR to the NIP value */
 	lwz	r3,_UC_GREGS+(PT_LNK*4)(r31)
 	lwz	r4,_UC_GREGS+(PT_NIP*4)(r31)

@@ -1,3 +1,15 @@
+2013-10-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext-common.S
+	(__CONTEXT_FUNC_NAME) [__CONTEXT_ENABLE_E500]: Use
+	getcontext_e500.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext-common.S
+	(__CONTEXT_FUNC_NAME) [__CONTEXT_ENABLE_E500]: Use
+	setcontext_e500.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S
+	(__CONTEXT_FUNC_NAME) [__CONTEXT_ENABLE_E500]: Use getcontext_e500
+	and setcontext_e500.
+
 2013-10-04  Chris Leonard  <cjl@sugarlabs,.org>
 
 	* locale/iso-3166.def: Update iso-1366.def and related occurrences

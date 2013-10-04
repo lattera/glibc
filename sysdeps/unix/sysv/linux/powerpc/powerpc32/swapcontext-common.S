@@ -265,6 +265,10 @@ ENTRY(__CONTEXT_FUNC_NAME)
 # endif /* __CONTEXT_ENABLE_VRS */
 #endif /* __CONTEXT_ENABLE_FPRS */
 
+#ifdef __CONTEXT_ENABLE_E500
+	getcontext_e500
+#endif
+
 /* Restore ucontext (parm1) from stack.  */
 	lwz	r12,_FRAME_PARM_SAVE1(r1)
 	li	r4,0
@@ -467,6 +471,10 @@ ENTRY(__CONTEXT_FUNC_NAME)
 	lfd	fp30,_UC_FREGS+(30*8)(r31)
 	lfd	fp31,_UC_FREGS+(31*8)(r31)
 #endif /* __CONTEXT_ENABLE_FPRS */
+
+#ifdef __CONTEXT_ENABLE_E500
+	setcontext_e500
+#endif
 
 	/* Restore LR and CCR, and set CTR to the NIP value */
 	lwz	r3,_UC_GREGS+(PT_LNK*4)(r31)

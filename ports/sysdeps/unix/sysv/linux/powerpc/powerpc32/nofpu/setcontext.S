@@ -24,6 +24,8 @@
 #include <asm/ptrace.h>
 #include "ucontext_i.h"
 
+#include <context-e500.h>
+
 #define __CONTEXT_FUNC_NAME __setcontext
 #undef __CONTEXT_ENABLE_FPRS
 #undef __CONTEXT_ENABLE_VRS

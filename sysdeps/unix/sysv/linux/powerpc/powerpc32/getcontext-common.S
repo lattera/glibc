@@ -261,6 +261,11 @@ ENTRY(__CONTEXT_FUNC_NAME)
 2: /* L(no_vec): */
 # endif
 #endif
+
+#ifdef __CONTEXT_ENABLE_E500
+	getcontext_e500
+#endif
+
 /* We need to set up parms and call sigprocmask which will clobber
    volatile registers. So before the call we need to retrieve the
    original ucontext ptr (parm1) from stack and store the UC_REGS_PTR
