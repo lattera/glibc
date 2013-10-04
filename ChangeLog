@@ -1,5 +1,9 @@
 2013-10-04  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/configure.in (powerpc/powerpc32): Change
+	case to powerpc/powerpc32*.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+
 	* sysdeps/powerpc/fpu_control.h [__NO_FPRS__ && !_SOFT_FLOAT]
 	(_FPU_MASK_OM): Define as 0x04.
 	[__NO_FPRS__ && !_SOFT_FLOAT] (_FPU_MASK_UM): Define as 0x08.
