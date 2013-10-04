@@ -563,10 +563,10 @@ elf_machine_rela (struct link_map *map,
   const Elf64_Sym *const refsym = sym;
   union unaligned
     {
-      unsigned u2 __attribute__ ((mode (HI)));
-      unsigned u4 __attribute__ ((mode (SI)));
-      unsigned u8 __attribute__ ((mode (DI)));
-    } __attribute__((__packed__));
+      uint16_t u2;
+      uint32_t u4;
+      uint64_t u8;
+    } __attribute__ ((__packed__));
 
   if (r_type == R_PPC64_RELATIVE)
     {

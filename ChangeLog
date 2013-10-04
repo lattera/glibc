@@ -1,6 +1,12 @@
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
 	* sysdeps/powerpc/powerpc32/dl-machine.c (__process_machine_rela):
+	Use stdint types in rather than __attribute__((mode())).
+	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_rela): Likewise.
+
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
+	* sysdeps/powerpc/powerpc32/dl-machine.c (__process_machine_rela):
 	Correct handling of unaligned relocs for little-endian.
 	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_rela): Likewise.
 

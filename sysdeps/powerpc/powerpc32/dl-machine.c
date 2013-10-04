@@ -418,8 +418,8 @@ __process_machine_rela (struct link_map *map,
 {
   union unaligned
     {
-      unsigned u2 __attribute__ ((mode (HI)));
-      unsigned u4 __attribute__ ((mode (SI)));
+      uint16_t u2;
+      uint32_t u4;
     } __attribute__((__packed__));
 
   switch (rinfo)
