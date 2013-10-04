@@ -1,3 +1,7 @@
+2013-10-04  Chris Leonard  <cjl@sugarlabs,.org>
+
+	* locale/iso-3166.def: Update iso-1366.def and related occurrences
+
 2013-10-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* manual/threads.texi (Default Thread Attributes): Fix typo.
