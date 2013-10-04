@@ -69,7 +69,7 @@ function returns @math{0} on success and a non-zero error code on
 failure.
 @end deftypefun
 
-@deftypefun int pthread_getattr_default_np (pthread_attr_t *@var{attr})
+@deftypefun int pthread_setattr_default_np (pthread_attr_t *@var{attr})
 Set the default attribute values to match the values in @var{attr}.  The
 function returns @math{0} on success and a non-zero error code on failure.
 The following error codes are defined for this function:
