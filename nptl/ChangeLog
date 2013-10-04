@@ -1,3 +1,8 @@
+2013-10-04  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	* tst-mutex8.c (check_type) [ENABLE_PI]: Handle ENOTSUP failure
+	from pthread_mutex_init.
+
 2013-10-01  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #15988]

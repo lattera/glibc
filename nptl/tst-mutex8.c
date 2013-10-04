@@ -93,10 +93,18 @@ tf (void *arg)
 static int
 check_type (const char *mas, pthread_mutexattr_t *ma)
 {
-  int e __attribute__((unused));
+  int e;
 
-  if (pthread_mutex_init (m, ma) != 0)
+  e = pthread_mutex_init (m, ma);
+  if (e != 0)
     {
+#ifdef ENABLE_PI
+      if (e == ENOTSUP)
+	{
+	  puts ("PI mutexes unsupported");
+	  return 0;
+	}
+#endif
       printf ("1st mutex_init failed for %s\n", mas);
       return 1;
     }
