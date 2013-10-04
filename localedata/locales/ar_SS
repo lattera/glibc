@@ -10,7 +10,7 @@ escape_char     /
 % conditions of the license if your use would otherwise be governed by
 % that license.
 %
-% Arabic language locale for Sudan.
+% Arabic language locale for South Sudan.
 % Contributed by Kentaroh Noji <knoji@jp.ibm.com> and
 % Tetsuji Orita <orita@jp.ibm.com>.
 %
@@ -18,7 +18,7 @@ escape_char     /
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 LC_IDENTIFICATION
-title      "Arabic language locale for Sudan"
+title      "Arabic language locale for South Sudan"
 source     "IBM Globalization Center of Competency, Yamato Software Laboratory"
 address    "1623-14, Shimotsuruma, Yamato-shi, Kanagawa-ken, 242-8502, Japan"
 contact    ""
@@ -26,21 +26,21 @@ email      "bug-glibc-locales@gnu.org"
 tel        ""
 fax        ""
 language   "Arabic"
-territory  "Sudan"
+territory  "South Sudan"
 revision   "1.1"
 date       "2000-07-20"
 %
-category  "ar_SD:2000";LC_IDENTIFICATION
-category  "ar_SD:2000";LC_CTYPE
-category  "ar_SD:2000";LC_COLLATE
-category  "ar_SD:2000";LC_TIME
-category  "ar_SD:2000";LC_NUMERIC
-category  "ar_SD:2000";LC_MONETARY
-category  "ar_SD:2000";LC_MESSAGES
-category  "ar_SD:2000";LC_PAPER
-category  "ar_SD:2000";LC_NAME
-category  "ar_SD:2000";LC_ADDRESS
-category  "ar_SD:2000";LC_TELEPHONE
+category  "ar_SS:2000";LC_IDENTIFICATION
+category  "ar_SS:2000";LC_CTYPE
+category  "ar_SS:2000";LC_COLLATE
+category  "ar_SS:2000";LC_TIME
+category  "ar_SS:2000";LC_NUMERIC
+category  "ar_SS:2000";LC_MONETARY
+category  "ar_SS:2000";LC_MESSAGES
+category  "ar_SS:2000";LC_PAPER
+category  "ar_SS:2000";LC_NAME
+category  "ar_SS:2000";LC_ADDRESS
+category  "ar_SS:2000";LC_TELEPHONE
 
 END LC_IDENTIFICATION
 
@@ -195,13 +195,11 @@ LC_ADDRESS
 % LC_ADDRESS
 postal_fmt  "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
 <U0025><U0062><U0025><U0065><U0025><U0072>"
-% SD
-country_ab2 "<U0053><U0044>"
-% SDN
-country_ab3 "<U0053><U0044><U004E>"
-country_num 729
-% SUD
-country_car    "<U0053><U0055><U0044>"
+% SS
+country_ab2 "<U0053><U0053>"
+% SSD
+country_ab3 "<U0053><U0053><U0044>"
+country_num 728
 % ar
 lang_ab      "<U0061><U0072>"
 % ara
