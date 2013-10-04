@@ -1,4 +1,4 @@
-2013-19-04  Alan Modra  <amodra@gmail.com>
+2013-10-04  Alan Modra  <amodra@gmail.com>
 
 	* sysdeps/ia64/fpu/printf_fphex.c: Adjust for fpnum change.
 
