@@ -1,5 +1,14 @@
 2013-10-04  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/powerpc/fpu_control.h [__NO_FPRS__ && !_SOFT_FLOAT]
+	(_FPU_MASK_OM): Define as 0x04.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (_FPU_MASK_UM): Define as 0x08.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (_FPU_RESERVED): Define as
+	0x00c10080.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (_FPU_DEFAULT): Define as
+	0x0000003c.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (_FPU_IEEE): Define as _FPU_DEFAULT.
+
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext-common.S
 	(__CONTEXT_FUNC_NAME) [__CONTEXT_ENABLE_E500]: Use
 	getcontext_e500.
