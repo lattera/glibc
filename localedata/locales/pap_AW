@@ -1,26 +1,32 @@
 comment_char %
 escape_char  /
-% Distribution and use is free, also for commercial purposes.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% This locale is replaced by pap_AW and pap_CW and should be removed in
-% release 2.21.  AN line of iso-3177.def should also be removed.
+% This file is derived from pap_AN ver0.2 (after AN was deprecated in ISO-3166)
+% revision "0.2" date "2000-11-15"
+%
+% This file is a part of GNU C Library (glibc) and contains locale data. The
+% Free Software Foundation does not claim any copyright interest in the
+% locale data contained in this file. The foregoing does not affect the
+% license of GNU C Library (glibc) as a whole. It does not exempt you from the
+% conditions of the license if your use would otherwise be governed by
+% that license.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 LC_IDENTIFICATION
-title "Papiamento Language for the (Netherland) Antilles"
-source "informations from native speaker"
+title "Papiamento Language for Aruba"
+source "information from native speaker"
 address ""
 contact "Pablo Saratxaga"
 email "pablo@mandrakesoft.com"
 tel ""
 fax ""
 language "pap"
-territory "AN"
-revision "0.2"
-date "2000-11-15"
+territory "AW"
+revision "1.0"
+date "2013-09-27"
 
 category i18n:2000;LC_IDENTIFICATION
 category i18n:2000;LC_COLLATE
@@ -46,13 +52,17 @@ postal_fmt "<U0025><U0064><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U006
 <U0025><U0043><U0025><U007A><U0020><U0025><U0054><U0025><U004E><U0025><U0063><U0025><U004E>"
 % FIXME country_name for Antilles in Paplamento
 % FIXME country_post MAIL_CEPTCODE for Nederland Antilles, AN?
-country_ab2 "<U0041><U004E>"
-country_ab3 "<U0041><U004E><U0054>"
-country_num 530
-country_isbn "99904"
-country_car "<U004E><U0041>"
+% AW
+country_ab2  "<U0041><U0057>"
+% ABW
+country_ab3  "<U0041><U0042><U0057>"
+country_num  533
+country_isbn ""
+country_car ""
 % lang_ab
+% pap
 lang_term "<U0070><U0061><U0070>"
+% pap
 lang_lib "<U0070><U0061><U0070>"
 END LC_ADDRESS
 
