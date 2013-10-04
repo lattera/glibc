@@ -1,3 +1,8 @@
+2013-10-04  Ryan S. Arnold  <ryan.arnold@linaro.org>
+
+	* misc/swapon.c (swapon): Update definition, adding FLAGS parameter to
+	match prototype.
+
 2013-10-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/powerpc32/Makefile [$(with-fp) = yes] (+cflags):
