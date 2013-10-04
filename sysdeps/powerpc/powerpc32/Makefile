@@ -1,5 +1,14 @@
 # Powerpc32 specific build options.
 
+# Some Powerpc32 variants assume soft-fp is the default even though there is
+# an fp variant so provide -mhard-float if --with-fp is explicitly passed.
+
+ifeq ($(with-fp),yes)
++cflags += -mhard-float
+ASFLAGS += -mhard-float
+sysdep-LDFLAGS += -mhard-float
+endif
+
 ifeq ($(subdir),gmon)
 sysdep_routines += ppc-mcount compat-ppc-mcount
 static-only-routines += ppc-mcount

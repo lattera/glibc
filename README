@@ -26,7 +26,7 @@ The GNU C Library supports these configurations for using Linux kernels:
 
 	i[4567]86-*-linux-gnu
 	x86_64-*-linux-gnu	Can build either x86_64 or x32
-	powerpc-*-linux-gnu	Hardware floating point required
+	powerpc-*-linux-gnu	Hardware or software floating point
 	powerpc64-*-linux-gnu
 	s390-*-linux-gnu
 	s390x-*-linux-gnu
@@ -47,7 +47,6 @@ located in the `ports' subdirectory of the source tree.
 	m68k-*-linux-gnu
 	mips-*-linux-gnu
 	mips64-*-linux-gnu
-	powerpc-*-linux-gnu	Software floating point (--without-fp)
 	tilegx-*-linux-gnu
 	tilepro-*-linux-gnu
 

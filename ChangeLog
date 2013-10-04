@@ -1,5 +1,35 @@
 2013-10-04  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/powerpc/powerpc32/Makefile [$(with-fp) = yes] (+cflags):
+	Move -mhard-float appending from
+	ports/sysdeps/powerpc/powerpc32/Makefile.
+	[$(with-fp) = yes] (ASFLAGS): Likewise.
+	[$(with-fp) = yes] (sysdep-LDFLAGS): Likewise.
+	* sysdeps/powerpc/nofpu: Move directory from
+	ports/sysdeps/powerpc/nofpu.
+	* sysdeps/powerpc/soft-fp: Move directory from
+	ports/sysdeps/powerpc/soft-fp.
+	* sysdeps/powerpc/powerpc32/405: Move directory from
+	ports/sysdeps/powerpc/powerpc32/405.
+	* sysdeps/powerpc/powerpc32/440: Move directory from
+	ports/sysdeps/powerpc/powerpc32/440.
+	* sysdeps/powerpc/powerpc32/464: Move directory from
+	ports/sysdeps/powerpc/powerpc32/464.
+	* sysdeps/powerpc/powerpc32/476: Move directory from
+	ports/sysdeps/powerpc/powerpc32/476.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu: Move directory
+	from ports/sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/405: Move directory
+	from ports/sysdeps/unix/sysv/linux/powerpc/powerpc32/405.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/440: Move directory
+	from ports/sysdeps/unix/sysv/linux/powerpc/powerpc32/440.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/464: Move directory
+	from ports/sysdeps/unix/sysv/linux/powerpc/powerpc32/464.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/476: Move directory
+	from ports/sysdeps/unix/sysv/linux/powerpc/powerpc32/476.
+	* README: Update for powerpc-*-linux-gnu software floating point
+	support in libc.
+
 	* sysdeps/unix/sysv/linux/configure.in (powerpc/powerpc32): Change
 	case to powerpc/powerpc32*.
 	* sysdeps/unix/sysv/linux/configure: Regenerated.
