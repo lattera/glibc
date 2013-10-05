@@ -1,3 +1,8 @@
+2013-10-05  Alan Modra  <amodra@gmail.com>
+
+	* NEWS: Mention powerpc64le support and bugs fixed.
+	* README: Both big-endian and little-endian powerpc64 supported.
+
 2013-10-04  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/fork.c (_hurd_atfork_prepare_hook,
