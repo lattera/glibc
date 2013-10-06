@@ -26,7 +26,7 @@ The GNU C Library supports these configurations for using Linux kernels:
 
 	i[4567]86-*-linux-gnu
 	x86_64-*-linux-gnu	Can build either x86_64 or x32
-	powerpc-*-linux-gnu	Hardware floating point required, BE only.
+	powerpc-*-linux-gnu	Hardware or software floating point, BE only.
 	powerpc64*-*-linux-gnu	Big-endian and little-endian.
 	s390-*-linux-gnu
 	s390x-*-linux-gnu
