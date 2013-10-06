@@ -51,9 +51,12 @@ country_num 276
 country_isbn "3"
 % FIXME country_name in Low Saxon ?
 lang_name "Frisian"
-lang_ab "fy"
-% FIXME lang_term for Low Saxon ?
-% FIXME lang_lib for Low Saxon ?
+% fy
+lang_ab      "<U0066><U0079>"
+% fry
+lang_term    "<U0066><U0072><U0079>"
+% fry
+lang_lib    "<U0066><U0072><U0079>"
 END LC_ADDRESS
 
 LC_COLLATE

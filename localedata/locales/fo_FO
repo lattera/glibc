@@ -144,5 +144,8 @@ country_ab3 "<U0046><U0052><U004F>"
 country_num 234
 % FO
 country_car    "<U0046><U004F>"
-
+% fo
+lang_ab      "<U0066><U006F>"
+% fao
+lang_term    "<U0066><U0061><U006F>"
 END LC_ADDRESS

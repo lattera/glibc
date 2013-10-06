@@ -183,6 +183,10 @@ country_car  "<U0053><U004E>"
 lang_name    "<U0050><U0075><U006C><U0061><U0061><U0072>"
 % ff
 lang_ab      "<U0066><U0066>"
+% ful
+lang_term    "<U0066><U0075><U006C>"
+% ful
+lang_lib    "<U0066><U0075><U006C>"
 END LC_ADDRESS
 
 LC_TELEPHONE

@@ -160,5 +160,10 @@ country_ab3 "<U0049><U0052><U004C>"
 country_num 372
 % IRL
 country_car    "<U0049><U0052><U004C>"
-
+% ga
+lang_ab      "<U0067><U0061>"
+% gle
+lang_term    "<U0067><U006C><U0065>"
+% gle
+lang_lib    "<U0067><U006C><U0065>"
 END LC_ADDRESS

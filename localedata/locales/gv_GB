@@ -174,5 +174,10 @@ country_ab3 "<U0047><U0042><U0052>"
 country_num 826
 % GB
 country_car    "<U0047><U0042>"
-
+% gv
+lang_ab      "<U0067><U0076>"
+% glv
+lang_term    "<U0067><U006C><U0076>"
+% glv
+lang_lib    "<U0067><U006C><U0076>"
 END LC_ADDRESS

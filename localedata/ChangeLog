@@ -1,3 +1,23 @@
+2013-10-05  Chris Leonard  <cjl@sugarlabs.org>
+
+	* localedata/locales/ff_SN: Adjust language-code fields of LC_ADDRESS.
+	* localedata/locales/fil_PH: Likewise.
+	* localedata/locales/fo_FO: Likewise.
+	* localedata/locales/fr_BE: Likewise.
+	* localedata/locales/fr_CA: Likewise.
+	* localedata/locales/fr_CH: Likewise.
+	* localedata/locales/fr_FR: Likewise.
+	* localedata/locales/fr_LU: Likewise.
+	* localedata/locales/fur_IT: Likewise.
+	* localedata/locales/fy_DE: Likewise.
+	* localedata/locales/fy_NL: Likewise.
+	* localedata/locales/ga_IE: Likewise.
+	* localedata/locales/gez_ER: Likewise.
+	* localedata/locales/gez_ET: Likewise.
+	* localedata/locales/gl_ES: Likewise.
+	* localedata/locales/gu_IN: Likewise.
+	* localedata/locales/gv_GB: Likewise.
+
 2013-09-25  Michael Bauer <fios@akerbeltz.org>
 
     [BZ#15400]
