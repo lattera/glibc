@@ -18,6 +18,18 @@
 	* locales/gu_IN: Likewise.
 	* locales/gv_GB: Likewise.
 
+2013-10-04  Chris Leonard  <cjl@sugarlabs.org>
+
+	* locales/pap_AN: Copy / modify pap_AN into pap_AW and pap_CW.
+	* locales/pap_AW: Likewise.
+	* locales/pap_CW: Likewise.
+	* SUPPORTED: Add ar_SS, pap_AW, pap_CW.
+
+2013-10-04  Chris Leonard  <cjl@sugarlabs.org>
+
+	* locales/ar_SD: Split ar_SD into ar_SD and ar_SS
+	* locales/ar_SS: Likewise.
+
 2013-09-25  Michael Bauer  <fios@akerbeltz.org>
 
 	[BZ #15400]
