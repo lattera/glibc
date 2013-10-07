@@ -1,3 +1,6 @@
+## args: double
+## ret: double
+## includes: math.h
 0x1.dffffffffff1ep-22
 # tan slowest path at 768 bits
 # Implemented in sysdeps/ieee754/dbl-64/mptan.c

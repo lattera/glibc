@@ -1,3 +1,6 @@
+## args: double
+## ret: double
+## includes: math.h
 0x1.000000c5cba86p0
 0x1.000001883003ap0
 0x1.00000dfb2b674p0

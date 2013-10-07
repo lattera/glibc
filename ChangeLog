@@ -1,3 +1,26 @@
+2013-10-07  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* benchtests/Makefile: Remove ARGLIST and RET variables.
+	($(objpfx)bench-%.c): Pass only function name to the script.
+	* benchtests/README: Update documentation.
+	* benchtests/acos-inputs: Add new directives.
+	* benchtests/acosh-inputs: Likewise.
+	* benchtests/asin-inputs: Likewise.
+	* benchtests/asinh-inputs: Likewise.
+	* benchtests/atan-inputs: Likewise.
+	* benchtests/atanh-inputs: Likewise.
+	* benchtests/cos-inputs: Likewise.
+	* benchtests/cosh-inputs: Likewise.
+	* benchtests/exp-inputs: Likewise.
+	* benchtests/log-inputs: Likewise.
+	* benchtests/pow-inputs: Likewise.
+	* benchtests/rint-inputs: Likewise.
+	* benchtests/sin-inputs: Likewise.
+	* benchtests/sinh-inputs: Likewise.
+	* benchtests/tan-inputs: Likewise.
+	* benchtests/tanh-inputs: Likewise.
+	* scripts/bench.pl: Add support for new directives.
+
 2013-10-07  Alan Modra  <amodra@gmail.com>
 
 	* README: Fix careless merge.

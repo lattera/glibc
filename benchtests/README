@@ -40,23 +40,24 @@ one to add `foo' to the bench tests:
 
 - Append the function name to the bench variable in the Makefile.
 
-- Define foo-ARGLIST as a colon separated list of types of the input
-  arguments.  Use `void' if function does not take any inputs.  Put in quotes
-  if the input argument is a pointer, e.g.:
+- Make a file called `foo-inputs` to provide the definition and input for the
+  function.  The file should have some directives telling the parser script
+  about the function and then one input per line.  Directives are lines that
+  have a special meaning for the parser and they begin with two hashes '##'.
+  The following directives are recognized:
 
-     malloc-ARGLIST: "void *"
+  - args: This should be assigned a colon separated list of types of the input
+    arguments.  This directive may be skipped if the function does not take any
+    inputs.
+  - ret: This should be assigned the type that the function returns.  This
+    directive may be skipped if the function does not return a value.
+  - includes: This should be assigned a comma separated list of headers that
+    need to be included to provide declarations for the function and types it
+    may need.
+  - name: See following section for instructions on how to use this directive.
 
-- Define foo-RET as the type the function returns.  Skip if the function
-  returns void.  One could even skip foo-ARGLIST if the function does not
-  take any inputs AND the function returns void.
-
-- Make a file called `foo-inputs` with one input value per line, an input
-  being a comma separated list of arguments to be passed into the function.
-  See pow-inputs for an example.
-
-  The script that parses the -inputs file treats lines beginning with a single
-  `#' as comments.  Lines beginning with two hashes `##' are treated specially
-  as `directives'.
+  Lines beginning with a single hash '#' are treated as comments.  See
+  pow-inputs for an example of an input file.
 
 Multiple execution units per function:
 =====================================

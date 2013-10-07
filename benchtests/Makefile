@@ -34,70 +34,22 @@ string-bench-all := $(string-bench) $(string-bench-ifunc)
 
 benchset := $(string-bench-all)
 
-acos-ARGLIST = double
-acos-RET = double
 LDLIBS-bench-acos = -lm
-
-acosh-ARGLIST = double
-acosh-RET = double
 LDLIBS-bench-acosh = -lm
-
-asin-ARGLIST = double
-asin-RET = double
 LDLIBS-bench-asin = -lm
-
-asinh-ARGLIST = double
-asinh-RET = double
 LDLIBS-bench-asinh = -lm
-
-atan-ARGLIST = double
-atan-RET = double
 LDLIBS-bench-atan = -lm
-
-atanh-ARGLIST = double
-atanh-RET = double
 LDLIBS-bench-atanh = -lm
-
-cos-ARGLIST = double
-cos-RET = double
 LDLIBS-bench-cos = -lm
-
-cosh-ARGLIST = double
-cosh-RET = double
 LDLIBS-bench-cosh = -lm
-
-exp-ARGLIST = double
-exp-RET = double
 LDLIBS-bench-exp = -lm
-
-log-ARGLIST = double
-log-RET = double
 LDLIBS-bench-log = -lm
-
-pow-ARGLIST = double:double
-pow-RET = double
 LDLIBS-bench-pow = -lm
-
-rint-ARGLIST = double
-rint-RET = double
 LDLIBS-bench-rint = -lm
-
-sin-ARGLIST = double
-sin-RET = double
 LDLIBS-bench-sin = -lm
-
-sinh-ARGLIST = double
-sinh-RET = double
 LDLIBS-bench-sinh = -lm
-
-tan-ARGLIST = double
-tan-RET = double
 LDLIBS-bench-tan = -lm
-
-tanh-ARGLIST = double
-tanh-RET = double
 LDLIBS-bench-tanh = -lm
-
 LDLIBS-bench-sincos = -lm
 
 
@@ -171,6 +123,5 @@ $(objpfx)bench-%.c: %-inputs $(bench-deps)
 	{ if [ -n "$($*-INCLUDE)" ]; then \
 	  cat $($*-INCLUDE); \
 	fi; \
-	$(..)scripts/bench.pl $(patsubst %-inputs,%,$<) \
-	  $($*-ARGLIST) $($*-RET); } > $@-tmp
+	$(..)scripts/bench.pl $(patsubst %-inputs,%,$<); } > $@-tmp
 	mv -f $@-tmp $@

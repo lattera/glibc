@@ -1,3 +1,6 @@
+## includes: math.h
+## args: double
+## ret: double
 0.9
 2.3
 3.7

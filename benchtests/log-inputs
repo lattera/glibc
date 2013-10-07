@@ -1,1 +1,4 @@
+## args: double
+## ret: double
+## includes: math.h
 42.0

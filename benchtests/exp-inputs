@@ -1,3 +1,6 @@
+## args: double
+## ret: double
+## includes: math.h
 42
 # Slowest path with computation in 768 bit precision.
 # Implemented in: sysdeps/ieee754/dbl-64/mpexp.c

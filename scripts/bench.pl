@@ -21,40 +21,78 @@ use strict;
 use warnings;
 # Generate a benchmark source file for a given input.
 
-if (@ARGV < 2) {
-  die "Usage: bench.pl <function> [parameter types] [return type]"
+if (@ARGV < 1) {
+  die "Usage: bench.pl <function>"
 }
 
-my $arg;
 my $func = $ARGV[0];
 my @args;
 my $ret = "void";
 my $getret = "";
-my $retval = "";
 
-if (@ARGV >= 2) {
-  @args = split(':', $ARGV[1]);
+# We create a hash of inputs for each variant of the test.
+my $variant = "";
+my @curvals;
+my %vals;
+my @include_files;
+my $incl;
+
+open INPUTS, "<$func-inputs" or die $!;
+
+LINE:while (<INPUTS>) {
+  chomp;
+
+  # Directives.
+  if (/^## (\w+): (.*)/) {
+    # Function argument types.
+    if ($1 eq "args") {
+      @args = split(":", $2);
+    }
+
+    # Function return type.
+    elsif ($1 eq "ret") {
+      $ret = $2;
+    }
+
+    elsif ($1 eq "includes") {
+      @include_files = split (",", $2);
+    }
+
+    # New variant.  This is the only directive allowed in the body of the
+    # inputs to separate inputs into variants.  All others should be at the
+    # top or else all hell will break loose.
+    elsif ($1 eq "name") {
+
+      # Save values in the previous variant.
+      my @copy = @curvals;
+      $vals{$variant} = \@copy;
+
+      # Prepare for the next.
+      $variant=$2;
+      undef @curvals;
+      next LINE;
+    }
+  }
+
+  # Skip over comments.
+  if (/^#/) {
+    next LINE;
+  }
+  push (@curvals, $_);
 }
 
-if (@ARGV == 3) {
-  $ret = $ARGV[2];
+
+my $bench_func = "#define CALL_BENCH_FUNC(v, i) $func (";
+
+
+# Print the definitions and macros.
+foreach $incl (@include_files) {
+  print "#include <" . $incl . ">\n";
 }
 
-my $decl = "extern $ret $func (";
-
-# Function has no arguments.
-if (@args == 0 || $args[0] eq "void") {
-  print "$decl void);\n";
-  print "#define CALL_BENCH_FUNC(i,j) $func();\n";
-  print "#define NUM_VARIANTS (1)\n";
-  print "#define NUM_SAMPLES(v) (1)\n";
-  print "#define VARIANT(v) FUNCNAME \"()\"\n"
-}
-# The function has arguments, so parse them and populate the inputs.
-else {
-  my $num = 0;
-  my $bench_func = "#define CALL_BENCH_FUNC(v, i) $func (";
-
+if (@args > 0) {
+  # Save values in the last variant.
+  $vals{$variant} = \@curvals;
   my $struct =
     "struct _variants
     {
@@ -65,60 +103,21 @@ else {
 
   my $arg_struct = "struct args {";
 
+  my $num = 0;
+  my $arg;
   foreach $arg (@args) {
     if ($num > 0) {
       $bench_func = "$bench_func,";
-      $decl = "$decl,";
     }
 
     $arg_struct = "$arg_struct volatile $arg arg$num;";
     $bench_func = "$bench_func variants[v].in[i].arg$num";
-    $decl = "$decl $arg";
     $num = $num + 1;
   }
 
   $arg_struct = $arg_struct . "};\n";
-  $decl = $decl . ");\n";
   $bench_func = $bench_func . ");\n";
 
-  # We create a hash of inputs for each variant of the test.
-  my $variant = "";
-  my @curvals;
-  my %vals;
-
-  open INPUTS, "<$func-inputs" or die $!;
-
-  LINE:while (<INPUTS>) {
-    chomp;
-
-    # New variant.
-    if (/^## (\w+): (\w+)/) {
-      #We only identify Name for now.
-      if ($1 ne "name") {
-        next LINE;
-      }
-
-      # Save values in the last variant.
-      my @copy = @curvals;
-      $vals{$variant} = \@copy;
-
-      # Prepare for the next.
-      $variant=$2;
-      undef @curvals;
-      next LINE;
-    }
-
-    # Skip over comments.
-    if (/^#/) {
-      next LINE;
-    }
-    push (@curvals, $_);
-  }
-
-  $vals{$variant} = \@curvals;
-
-  # Print the definitions and macros.
-  print $decl;
   print $bench_func;
   print $arg_struct;
   print $struct;
@@ -147,17 +146,24 @@ else {
     $c += 1;
   }
   print "};\n\n";
-
   # Finally, print the last set of macros.
   print "#define NUM_VARIANTS $c\n";
   print "#define NUM_SAMPLES(i) (variants[i].count)\n";
   print "#define VARIANT(i) (variants[i].name)\n";
 }
+else {
+  print $bench_func . ");\n";
+  print "#define NUM_VARIANTS (1)\n";
+  print "#define NUM_SAMPLES(v) (1)\n";
+  print "#define VARIANT(v) FUNCNAME \"()\"\n"
+}
+
+
 
 # In some cases not storing a return value seems to result in the function call
 # being optimized out.
 if ($ret ne "void") {
-  print "static volatile $ret ret = 0.0;\n";
+  print "static volatile $ret ret;\n";
   $getret = "ret = ";
 }
 
