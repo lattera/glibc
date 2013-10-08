@@ -92,7 +92,7 @@ _start:
 
 	/* Call the user's main function, and exit with its value.  But
 	   let the libc call main.  */
-	jbsr __libc_start_main@PLT
+	jbsr __libc_start_main@PLTPC
 #else
 	/* Push the address of our own entry points to `.fini' and
 	   `.init'.  */
