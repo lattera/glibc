@@ -51,9 +51,12 @@ one to add `foo' to the bench tests:
     inputs.
   - ret: This should be assigned the type that the function returns.  This
     directive may be skipped if the function does not return a value.
-  - includes: This should be assigned a comma separated list of headers that
+  - includes: This should be assigned a comma-separated list of headers that
     need to be included to provide declarations for the function and types it
-    may need.
+    may need (specifically, this includes using "#include <header>").
+  - include-sources: This should be assigned a comma-separated list of source
+    files that need to be included to provide definitions of global variables
+    and functions (specifically, this includes using "#include "source").
   - name: See following section for instructions on how to use this directive.
 
   Lines beginning with a single hash '#' are treated as comments.  See

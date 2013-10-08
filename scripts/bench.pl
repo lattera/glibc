@@ -34,7 +34,8 @@ my $getret = "";
 my $variant = "";
 my @curvals;
 my %vals;
-my @include_files;
+my @include_headers;
+my @include_sources;
 my $incl;
 
 open INPUTS, "<$func-inputs" or die $!;
@@ -43,7 +44,7 @@ LINE:while (<INPUTS>) {
   chomp;
 
   # Directives.
-  if (/^## (\w+): (.*)/) {
+  if (/^## ([\w-]+): (.*)/) {
     # Function argument types.
     if ($1 eq "args") {
       @args = split(":", $2);
@@ -55,7 +56,11 @@ LINE:while (<INPUTS>) {
     }
 
     elsif ($1 eq "includes") {
-      @include_files = split (",", $2);
+      @include_headers = split (",", $2);
+    }
+
+    elsif ($1 eq "include-sources") {
+      @include_sources = split (",", $2);
     }
 
     # New variant.  This is the only directive allowed in the body of the
@@ -72,6 +77,10 @@ LINE:while (<INPUTS>) {
       undef @curvals;
       next LINE;
     }
+
+    else {
+      die "Unknown directive: ".$1;
+    }
   }
 
   # Skip over comments.
@@ -86,8 +95,13 @@ my $bench_func = "#define CALL_BENCH_FUNC(v, i) $func (";
 
 
 # Print the definitions and macros.
-foreach $incl (@include_files) {
+foreach $incl (@include_headers) {
   print "#include <" . $incl . ">\n";
+}
+
+# Print the source files.
+foreach $incl (@include_sources) {
+  print "#include \"" . $incl . "\"\n";
 }
 
 if (@args > 0) {
