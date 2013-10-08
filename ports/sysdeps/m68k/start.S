@@ -52,6 +52,8 @@
 					NULL
 */
 
+#include <sysdep.h>
+
 	.text
 	.globl _start
 	.type _start,@function
@@ -74,6 +76,24 @@ _start:
 	pea (%a1)		/* Push address of the shared library
 				   termination function.  */
 
+#ifdef SHARED
+	/* Load PIC register.  */
+	LOAD_GOT (%a5)
+
+	/* Push the address of our own entry points to `.fini' and
+	   `.init'.  */
+	move.l __libc_csu_fini@GOT(%a5), -(%sp)
+	move.l __libc_csu_init@GOT(%a5), -(%sp)
+
+	pea (%a0)		/* Push second argument: argv.  */
+	move.l %d0, -(%sp)	/* Push first argument: argc.  */
+
+	move.l main@GOT(%a5), -(%sp)
+
+	/* Call the user's main function, and exit with its value.  But
+	   let the libc call main.  */
+	jbsr __libc_start_main@PLT
+#else
 	/* Push the address of our own entry points to `.fini' and
 	   `.init'.  */
 	pea __libc_csu_fini
@@ -87,6 +107,7 @@ _start:
 	/* Call the user's main function, and exit with its value.  But
 	   let the libc call main.  */
 	jbsr __libc_start_main
+#endif
 
 	illegal			/* Crash if somehow `exit' does return.  */
 
