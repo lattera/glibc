@@ -1,3 +1,9 @@
+2013-10-08  Yogesh Chaudhari  <mr.yogesh@gmail.com>
+
+	[BZ #156]
+	* manual/socket.texi: Added statement about buffer
+	for gethostbyname2_r.
+
 2013-10-08  Ondřej Bílka  <neleai@seznam.cz>
 
 	* sysdeps/x86_64/memset.S (ALIGN): Macro removed.
