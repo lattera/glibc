@@ -148,7 +148,7 @@ _nl_intern_locale_data (int category, const void *data, size_t datasize)
 	newdata->values[cnt].string = newdata->filedata + idx;
       else
 	{
-	  if (idx % __alignof__ (u_int32_t) != 0)
+	  if (!LOCFILE_ALIGNED_P (idx))
 	    goto puntdata;
 	  newdata->values[cnt].word =
 	    *((const u_int32_t *) (newdata->filedata + idx));

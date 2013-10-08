@@ -270,7 +270,7 @@ CONCAT(add_locale_,TABLE) (struct locale_file *file, struct TABLE *t)
     + t->level1_size * sizeof (uint32_t)
     + (t->level2_size << t->q) * sizeof (uint32_t)
     + (t->level3_size << t->p) * sizeof (ELEMENT);
-  t->result_size = (last_offset + 3) & ~3ul;
+  t->result_size = LOCFILE_ALIGN_UP (last_offset);
 
   level2_offset =
     5 * sizeof (uint32_t)
@@ -308,7 +308,7 @@ CONCAT(add_locale_,TABLE) (struct locale_file *file, struct TABLE *t)
 			     t->level3_size << t->p);
   else
     abort ();
-  align_locale_data (file, 4);
+  align_locale_data (file, LOCFILE_ALIGN);
   end_locale_structure (file);
 
   if (t->level1_alloc > 0)

@@ -1,3 +1,16 @@
+2013-10-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* locale/loadlocale.c (_nl_intern_locale_data): Use
+	LOCFILE_ALIGNED_P.
+	* locale/programs/3level.h (CONCAT(add_locale_,TABLE)): Use
+	LOCFILE_ALIGN_UP and LOCFILE_ALIGN.
+	* locale/programs/ld-collate.c (obstack_int32_grow): Assert that
+	obstack data is appropriately aligned.
+	(obstack_int32_grow_fast): Likewise.
+	* locale/programs/ld-ctype.c (ctype_output): Use LOCFILE_ALIGN.
+	* locale/programs/locfile.c (add_locale_uint32): Likewise.
+	(add_locale_uint32_array): Likewise.
+
 2013-10-07  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* benchtests/Makefile: Remove ARGLIST and RET variables.

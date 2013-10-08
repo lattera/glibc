@@ -627,7 +627,7 @@ add_locale_wstring (struct locale_file *file, const uint32_t *string)
 void
 add_locale_uint32 (struct locale_file *file, uint32_t value)
 {
-  align_locale_data (file, sizeof (uint32_t));
+  align_locale_data (file, LOCFILE_ALIGN);
   record_offset (file);
   value = maybe_swap_uint32 (value);
   obstack_grow (&file->data, &value, sizeof (value));
@@ -639,7 +639,7 @@ void
 add_locale_uint32_array (struct locale_file *file,
 			 const uint32_t *data, size_t n_elems)
 {
-  align_locale_data (file, sizeof (uint32_t));
+  align_locale_data (file, LOCFILE_ALIGN);
   record_offset (file);
   obstack_grow (&file->data, data, n_elems * sizeof (uint32_t));
   maybe_swap_uint32_obstack (&file->data, n_elems);

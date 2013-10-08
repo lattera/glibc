@@ -1032,7 +1032,7 @@ ctype_output (struct localedef_t *locale, const struct charmap_t *charmap,
 	    for (cnt = 0; cnt < ctype->nr_charclass; ++cnt)
 	      add_locale_string (&file, ctype->classnames[cnt]);
 	    add_locale_char (&file, 0);
-	    align_locale_data (&file, 4);
+	    align_locale_data (&file, LOCFILE_ALIGN);
 	    end_locale_structure (&file);
 	    break;
 
@@ -1042,7 +1042,7 @@ ctype_output (struct localedef_t *locale, const struct charmap_t *charmap,
 	    for (cnt = 0; cnt < ctype->map_collection_nr; ++cnt)
 	      add_locale_string (&file, ctype->mapnames[cnt]);
 	    add_locale_char (&file, 0);
-	    align_locale_data (&file, 4);
+	    align_locale_data (&file, LOCFILE_ALIGN);
 	    end_locale_structure (&file);
 	    break;
 

@@ -44,6 +44,7 @@ static inline void
 __attribute ((always_inline))
 obstack_int32_grow (struct obstack *obstack, int32_t data)
 {
+  assert (LOCFILE_ALIGNED_P (obstack_object_size (obstack)));
   data = maybe_swap_uint32 (data);
   if (sizeof (int32_t) == sizeof (int))
     obstack_int_grow (obstack, data);
@@ -55,6 +56,7 @@ static inline void
 __attribute ((always_inline))
 obstack_int32_grow_fast (struct obstack *obstack, int32_t data)
 {
+  assert (LOCFILE_ALIGNED_P (obstack_object_size (obstack)));
   data = maybe_swap_uint32 (data);
   if (sizeof (int32_t) == sizeof (int))
     obstack_int_grow_fast (obstack, data);
