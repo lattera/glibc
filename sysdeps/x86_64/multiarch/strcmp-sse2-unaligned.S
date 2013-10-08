@@ -17,7 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include "sysdep.h"
-#define ALIGN(x)	.p2align x
 
 ENTRY ( __strcmp_sse2_unaligned)
 	movl	%edi, %eax
@@ -43,7 +42,7 @@ L(return):
 	subl	%edx, %eax
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(next_48_bytes):
 	movdqu	16(%rdi), %xmm6
 	movdqu	16(%rsi), %xmm3
@@ -85,7 +84,7 @@ L(main_loop_header):
 	movq	%rcx, %rsi
 	jmp	L(loop_start)
 
-	ALIGN	(4)
+	.p2align 4
 L(loop):
 	addq	$64, %rax
 	addq	$64, %rdx
@@ -141,7 +140,7 @@ L(back_to_loop):
 	subl	%edx, %eax
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(loop_cross_page):
 	xor	%r10, %r10
 	movq	%rdx, %r9
@@ -191,7 +190,7 @@ L(loop_cross_page):
 	subl	%edx, %eax
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(cross_page_loop):
 	cmpb	%cl, %al
 	jne	L(different)

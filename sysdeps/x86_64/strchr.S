@@ -19,11 +19,6 @@
 
 #include <sysdep.h>
 
-# ifndef ALIGN
-#  define ALIGN(n)	.p2align n
-# endif
-
-
 	.text
 ENTRY (strchr)
 	movd	%esi, %xmm1
@@ -54,7 +49,7 @@ ENTRY (strchr)
 #endif
 	ret
 
-	ALIGN(3)
+	.p2align 3
 	L(next_48_bytes):
 	movdqu	16(%rdi), %xmm0
 	movdqa	%xmm0, %xmm4
@@ -83,10 +78,10 @@ ENTRY (strchr)
 L(loop_start):
 	/* We use this alignment to force loop be aligned to 8 but not
 	   16 bytes.  This gives better sheduling on AMD processors.  */
-	ALIGN(4)
+	.p2align 4
 	pxor	%xmm6, %xmm6
 	andq	$-64, %rdi
-	ALIGN(3)
+	.p2align 3
 L(loop64):
 	addq	$64, %rdi
 	movdqa	(%rdi), %xmm5
@@ -129,7 +124,7 @@ L(loop64):
 	orq	%rcx, %rax
 	salq	$48, %rdx
 	orq	%rdx, %rax
-	ALIGN(3)
+	.p2align 3
 L(return):
 	bsfq	%rax, %rax
 #ifdef AS_STRCHRNUL
@@ -141,7 +136,7 @@ L(return):
 	cmovne	%rdx, %rax
 #endif
 	ret
-	ALIGN(4)
+	.p2align 4
 
 L(cross_page):
 	movq	%rdi, %rdx

@@ -20,10 +20,6 @@
 
 #include "asm-syntax.h"
 
-#ifndef ALIGN
-# define ALIGN(n)	.p2align n
-#endif
-
 
 ENTRY(__memcpy_sse2_unaligned)
 	movq	%rsi, %rax
@@ -44,7 +40,7 @@ L(return):
 	movq	%rdi, %rax
 	ret
 	.p2align 4,,10
-	ALIGN(4)
+	.p2align 4
 .L31:
 	movdqu	16(%rsi), %xmm8
 	cmpq	$64, %rdx
@@ -77,7 +73,7 @@ L(return):
 	leaq	32(%r10), %r8
 	leaq	48(%r10), %rax
 	.p2align 4,,10
-	ALIGN(4)
+	.p2align 4
 L(loop):
 	movdqu	(%rcx,%r10), %xmm8
 	movdqa	%xmm8, (%rcx)
@@ -151,7 +147,7 @@ L(less_16):
 .L3:
 	leaq	-1(%rdx), %rax
 	.p2align 4,,10
-	ALIGN(4)
+	.p2align 4
 .L11:
 	movzbl	(%rsi,%rax), %edx
 	movb	%dl, (%rdi,%rax)

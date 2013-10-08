@@ -31,10 +31,6 @@
 # define MEMCPY_CHK	__memcpy_chk_ssse3_back
 #endif
 
-#ifndef ALIGN
-# define ALIGN(n)	.p2align n
-#endif
-
 #define JMPTBL(I, B)	I - B
 
 /* Branch to an entry in a jump table.  TABLE is a jump table with
@@ -87,7 +83,7 @@ L(bk_write):
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_bwd), %rdx, 4)
 #endif
 
-	ALIGN (4)
+	.p2align 4
 L(144bytesormore):
 
 #ifndef USE_AS_MEMMOVE
@@ -119,7 +115,7 @@ L(144bytesormore):
 	jmp	*%r9
 	ud2
 
-	ALIGN (4)
+	.p2align 4
 L(copy_backward):
 #ifdef DATA_CACHE_SIZE
 	mov	$DATA_CACHE_SIZE, %RCX_LP
@@ -149,7 +145,7 @@ L(copy_backward):
 	jmp	*%r9
 	ud2
 
-	ALIGN (4)
+	.p2align 4
 L(shl_0):
 
 	mov	%rdx, %r9
@@ -162,7 +158,7 @@ L(shl_0):
 #endif
 	jae	L(gobble_mem_fwd)
 	sub	$0x80, %rdx
-	ALIGN (4)
+	.p2align 4
 L(shl_0_loop):
 	movdqa	(%rsi), %xmm1
 	movdqa	%xmm1, (%rdi)
@@ -190,7 +186,7 @@ L(shl_0_loop):
 	add	%rdx, %rdi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_fwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_0_bwd):
 	sub	$0x80, %rdx
 L(copy_backward_loop):
@@ -221,7 +217,7 @@ L(copy_backward_loop):
 	sub	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_bwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_1):
 	sub	$0x80, %rdx
 	movaps	-0x01(%rsi), %xmm1
@@ -258,7 +254,7 @@ L(shl_1):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_fwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_1_bwd):
 	movaps	-0x01(%rsi), %xmm1
 
@@ -304,7 +300,7 @@ L(shl_1_bwd):
 	sub	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_bwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_2):
 	sub	$0x80, %rdx
 	movaps	-0x02(%rsi), %xmm1
@@ -341,7 +337,7 @@ L(shl_2):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_fwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_2_bwd):
 	movaps	-0x02(%rsi), %xmm1
 
@@ -387,7 +383,7 @@ L(shl_2_bwd):
 	sub	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_bwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_3):
 	sub	$0x80, %rdx
 	movaps -0x03(%rsi), %xmm1
@@ -424,7 +420,7 @@ L(shl_3):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_fwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_3_bwd):
 	movaps	-0x03(%rsi), %xmm1
 
@@ -470,7 +466,7 @@ L(shl_3_bwd):
 	sub	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_bwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_4):
 	sub	$0x80, %rdx
 	movaps	-0x04(%rsi), %xmm1
@@ -507,7 +503,7 @@ L(shl_4):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_fwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_4_bwd):
 	movaps	-0x04(%rsi), %xmm1
 
@@ -553,7 +549,7 @@ L(shl_4_bwd):
 	sub	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_bwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_5):
 	sub	$0x80, %rdx
 	movaps	-0x05(%rsi), %xmm1
@@ -590,7 +586,7 @@ L(shl_5):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_fwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_5_bwd):
 	movaps	-0x05(%rsi), %xmm1
 
@@ -636,7 +632,7 @@ L(shl_5_bwd):
 	sub	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_bwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_6):
 	sub	$0x80, %rdx
 	movaps	-0x06(%rsi), %xmm1
@@ -673,7 +669,7 @@ L(shl_6):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_fwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_6_bwd):
 	movaps	-0x06(%rsi), %xmm1
 
@@ -719,7 +715,7 @@ L(shl_6_bwd):
 	sub	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_bwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_7):
 	sub	$0x80, %rdx
 	movaps	-0x07(%rsi), %xmm1
@@ -756,7 +752,7 @@ L(shl_7):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_fwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_7_bwd):
 	movaps	-0x07(%rsi), %xmm1
 
@@ -802,7 +798,7 @@ L(shl_7_bwd):
 	sub	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_bwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_8):
 	sub	$0x80, %rdx
 	movaps	-0x08(%rsi), %xmm1
@@ -839,7 +835,7 @@ L(shl_8):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_fwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_8_bwd):
 	movaps	-0x08(%rsi), %xmm1
 
@@ -886,7 +882,7 @@ L(shl_8_end_bwd):
 	sub	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_bwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_9):
 	sub	$0x80, %rdx
 	movaps	-0x09(%rsi), %xmm1
@@ -923,7 +919,7 @@ L(shl_9):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_fwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_9_bwd):
 	movaps	-0x09(%rsi), %xmm1
 
@@ -969,7 +965,7 @@ L(shl_9_bwd):
 	sub	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_bwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_10):
 	sub	$0x80, %rdx
 	movaps	-0x0a(%rsi), %xmm1
@@ -1006,7 +1002,7 @@ L(shl_10):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_fwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_10_bwd):
 	movaps	-0x0a(%rsi), %xmm1
 
@@ -1052,7 +1048,7 @@ L(shl_10_bwd):
 	sub	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_bwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_11):
 	sub	$0x80, %rdx
 	movaps	-0x0b(%rsi), %xmm1
@@ -1089,7 +1085,7 @@ L(shl_11):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_fwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_11_bwd):
 	movaps	-0x0b(%rsi), %xmm1
 
@@ -1135,7 +1131,7 @@ L(shl_11_bwd):
 	sub	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_bwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_12):
 	sub	$0x80, %rdx
 	movdqa	-0x0c(%rsi), %xmm1
@@ -1173,7 +1169,7 @@ L(shl_12):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_fwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_12_bwd):
 	movaps	-0x0c(%rsi), %xmm1
 
@@ -1219,7 +1215,7 @@ L(shl_12_bwd):
 	sub	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_bwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_13):
 	sub	$0x80, %rdx
 	movaps	-0x0d(%rsi), %xmm1
@@ -1256,7 +1252,7 @@ L(shl_13):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_fwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_13_bwd):
 	movaps	-0x0d(%rsi), %xmm1
 
@@ -1302,7 +1298,7 @@ L(shl_13_bwd):
 	sub	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_bwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_14):
 	sub	$0x80, %rdx
 	movaps	-0x0e(%rsi), %xmm1
@@ -1339,7 +1335,7 @@ L(shl_14):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_fwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_14_bwd):
 	movaps	-0x0e(%rsi), %xmm1
 
@@ -1385,7 +1381,7 @@ L(shl_14_bwd):
 	sub	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_bwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_15):
 	sub	$0x80, %rdx
 	movaps	-0x0f(%rsi), %xmm1
@@ -1422,7 +1418,7 @@ L(shl_15):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_fwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_15_bwd):
 	movaps	-0x0f(%rsi), %xmm1
 
@@ -1468,7 +1464,7 @@ L(shl_15_bwd):
 	sub	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_bwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(gobble_mem_fwd):
 	movdqu	(%rsi), %xmm1
 	movdqu	%xmm0, (%r8)
@@ -1570,7 +1566,7 @@ L(gobble_mem_fwd_end):
 	add	%rdx, %rdi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_fwd), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(gobble_mem_bwd):
 	add	%rdx, %rsi
 	add	%rdx, %rdi
@@ -2833,7 +2829,7 @@ L(bwd_write_1bytes):
 END (MEMCPY)
 
 	.section .rodata.ssse3,"a",@progbits
-	ALIGN (3)
+	.p2align 3
 L(table_144_bytes_bwd):
 	.int	JMPTBL (L(bwd_write_0bytes), L(table_144_bytes_bwd))
 	.int	JMPTBL (L(bwd_write_1bytes), L(table_144_bytes_bwd))
@@ -2980,7 +2976,7 @@ L(table_144_bytes_bwd):
 	.int	JMPTBL (L(bwd_write_142bytes), L(table_144_bytes_bwd))
 	.int	JMPTBL (L(bwd_write_143bytes), L(table_144_bytes_bwd))
 
-	ALIGN (3)
+	.p2align 3
 L(table_144_bytes_fwd):
 	.int	JMPTBL (L(fwd_write_0bytes), L(table_144_bytes_fwd))
 	.int	JMPTBL (L(fwd_write_1bytes), L(table_144_bytes_fwd))
@@ -3127,7 +3123,7 @@ L(table_144_bytes_fwd):
 	.int	JMPTBL (L(fwd_write_142bytes), L(table_144_bytes_fwd))
 	.int	JMPTBL (L(fwd_write_143bytes), L(table_144_bytes_fwd))
 
-	ALIGN (3)
+	.p2align 3
 L(shl_table_fwd):
 	.int	JMPTBL (L(shl_0), L(shl_table_fwd))
 	.int	JMPTBL (L(shl_1), L(shl_table_fwd))
@@ -3146,7 +3142,7 @@ L(shl_table_fwd):
 	.int	JMPTBL (L(shl_14), L(shl_table_fwd))
 	.int	JMPTBL (L(shl_15), L(shl_table_fwd))
 
-	ALIGN (3)
+	.p2align 3
 L(shl_table_bwd):
 	.int	JMPTBL (L(shl_0_bwd), L(shl_table_bwd))
 	.int	JMPTBL (L(shl_1_bwd), L(shl_table_bwd))

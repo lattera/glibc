@@ -19,11 +19,6 @@
 
 #include <sysdep.h>
 
-# ifndef ALIGN
-#  define ALIGN(n)	.p2align n
-# endif
-
-
 	.text
 ENTRY (strrchr)
 	movd	%esi, %xmm1
@@ -51,7 +46,7 @@ ENTRY (strrchr)
 	addq	%rdi, %rax
 	ret
 
-	ALIGN(4)
+	.p2align 4
 L(next_48_bytes):
 	movdqu	16(%rdi), %xmm4
 	movdqa	%xmm4, %xmm5
@@ -91,7 +86,7 @@ L(next_48_bytes):
 	leaq	(%rdi,%rsi), %rax
 	ret
 
-	ALIGN(4)
+	.p2align 4
 L(loop_header2):
 	testq	%rsi, %rsi
 	movq	%rdi, %rcx
@@ -102,7 +97,7 @@ L(loop_header):
 	andq	$-64, %rdi
 	jmp	L(loop_entry)
 
-	ALIGN(4)
+	.p2align 4
 L(loop64):
 	testq	%rdx, %rdx
 	cmovne	%rdx, %rsi
@@ -163,18 +158,18 @@ L(loop_entry):
 	leaq	(%rcx,%rsi), %rax
 	ret
 
-	ALIGN(4)
+	.p2align 4
 L(no_c_found):
 	movl	$1, %esi
 	xorl	%ecx, %ecx
 	jmp	L(loop_header)
 
-	ALIGN(4)
+	.p2align 4
 L(exit):
 	xorl	%eax, %eax
 	ret
 
-	ALIGN(4)
+	.p2align 4
 L(cross_page):
 	movq	%rdi, %rax
 	pxor	%xmm0, %xmm0

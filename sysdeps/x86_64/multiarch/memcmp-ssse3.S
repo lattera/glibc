@@ -25,10 +25,6 @@
 #  define MEMCMP	__memcmp_ssse3
 # endif
 
-# ifndef ALIGN
-#  define ALIGN(n)	.p2align n
-# endif
-
 /* Warning!
 	   wmemcmp has to use SIGNED comparison for elements.
 	   memcmp has to use UNSIGNED comparison for elemnts.
@@ -50,7 +46,7 @@ ENTRY (MEMCMP)
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 /* ECX >= 32.  */
 L(48bytesormore):
 	movdqu	(%rdi), %xmm3
@@ -90,7 +86,7 @@ L(48bytesormore):
 	je	L(shr_6)
 	jmp	L(shr_7)
 
-	ALIGN	(2)
+	.p2align 2
 L(next_unaligned_table):
 	cmp	$8, %edx
 	je	L(shr_8)
@@ -117,7 +113,7 @@ L(next_unaligned_table):
 	jmp	L(shr_12)
 # endif
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_0):
 	cmp	$80, %rcx
 	lea	-48(%rcx), %rcx
@@ -137,7 +133,7 @@ L(shr_0):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_0_gobble):
 	movdqa	(%rsi), %xmm0
 	xor	%eax, %eax
@@ -180,7 +176,7 @@ L(next):
 
 # ifndef USE_AS_WMEMCMP
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_1):
 	cmp	$80, %rcx
 	lea	-48(%rcx), %rcx
@@ -207,7 +203,7 @@ L(shr_1):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_1_gobble):
 	sub	$32, %rcx
 	movdqa	16(%rsi), %xmm0
@@ -258,7 +254,7 @@ L(shr_1_gobble_next):
 	jmp	L(less48bytes)
 
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_2):
 	cmp	$80, %rcx
 	lea	-48(%rcx), %rcx
@@ -285,7 +281,7 @@ L(shr_2):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_2_gobble):
 	sub	$32, %rcx
 	movdqa	16(%rsi), %xmm0
@@ -335,7 +331,7 @@ L(shr_2_gobble_next):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_3):
 	cmp	$80, %rcx
 	lea	-48(%rcx), %rcx
@@ -362,7 +358,7 @@ L(shr_3):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_3_gobble):
 	sub	$32, %rcx
 	movdqa	16(%rsi), %xmm0
@@ -414,7 +410,7 @@ L(shr_3_gobble_next):
 
 # endif
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_4):
 	cmp	$80, %rcx
 	lea	-48(%rcx), %rcx
@@ -441,7 +437,7 @@ L(shr_4):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_4_gobble):
 	sub	$32, %rcx
 	movdqa	16(%rsi), %xmm0
@@ -493,7 +489,7 @@ L(shr_4_gobble_next):
 
 # ifndef USE_AS_WMEMCMP
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_5):
 	cmp	$80, %rcx
 	lea	-48(%rcx), %rcx
@@ -520,7 +516,7 @@ L(shr_5):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_5_gobble):
 	sub	$32, %rcx
 	movdqa	16(%rsi), %xmm0
@@ -570,7 +566,7 @@ L(shr_5_gobble_next):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_6):
 	cmp	$80, %rcx
 	lea	-48(%rcx), %rcx
@@ -597,7 +593,7 @@ L(shr_6):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_6_gobble):
 	sub	$32, %rcx
 	movdqa	16(%rsi), %xmm0
@@ -647,7 +643,7 @@ L(shr_6_gobble_next):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_7):
 	cmp	$80, %rcx
 	lea	-48(%rcx), %rcx
@@ -674,7 +670,7 @@ L(shr_7):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_7_gobble):
 	sub	$32, %rcx
 	movdqa	16(%rsi), %xmm0
@@ -726,7 +722,7 @@ L(shr_7_gobble_next):
 
 # endif
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_8):
 	cmp	$80, %rcx
 	lea	-48(%rcx), %rcx
@@ -753,7 +749,7 @@ L(shr_8):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_8_gobble):
 	sub	$32, %rcx
 	movdqa	16(%rsi), %xmm0
@@ -805,7 +801,7 @@ L(shr_8_gobble_next):
 
 # ifndef USE_AS_WMEMCMP
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_9):
 	cmp	$80, %rcx
 	lea	-48(%rcx), %rcx
@@ -832,7 +828,7 @@ L(shr_9):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_9_gobble):
 	sub	$32, %rcx
 	movdqa	16(%rsi), %xmm0
@@ -882,7 +878,7 @@ L(shr_9_gobble_next):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_10):
 	cmp	$80, %rcx
 	lea	-48(%rcx), %rcx
@@ -909,7 +905,7 @@ L(shr_10):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_10_gobble):
 	sub	$32, %rcx
 	movdqa	16(%rsi), %xmm0
@@ -959,7 +955,7 @@ L(shr_10_gobble_next):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_11):
 	cmp	$80, %rcx
 	lea	-48(%rcx), %rcx
@@ -986,7 +982,7 @@ L(shr_11):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_11_gobble):
 	sub	$32, %rcx
 	movdqa	16(%rsi), %xmm0
@@ -1038,7 +1034,7 @@ L(shr_11_gobble_next):
 
 # endif
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_12):
 	cmp	$80, %rcx
 	lea	-48(%rcx), %rcx
@@ -1065,7 +1061,7 @@ L(shr_12):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_12_gobble):
 	sub	$32, %rcx
 	movdqa	16(%rsi), %xmm0
@@ -1117,7 +1113,7 @@ L(shr_12_gobble_next):
 
 # ifndef USE_AS_WMEMCMP
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_13):
 	cmp	$80, %rcx
 	lea	-48(%rcx), %rcx
@@ -1144,7 +1140,7 @@ L(shr_13):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_13_gobble):
 	sub	$32, %rcx
 	movdqa	16(%rsi), %xmm0
@@ -1194,7 +1190,7 @@ L(shr_13_gobble_next):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_14):
 	cmp	$80, %rcx
 	lea	-48(%rcx), %rcx
@@ -1221,7 +1217,7 @@ L(shr_14):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_14_gobble):
 	sub	$32, %rcx
 	movdqa	16(%rsi), %xmm0
@@ -1271,7 +1267,7 @@ L(shr_14_gobble_next):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_15):
 	cmp	$80, %rcx
 	lea	-48(%rcx), %rcx
@@ -1298,7 +1294,7 @@ L(shr_15):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(shr_15_gobble):
 	sub	$32, %rcx
 	movdqa	16(%rsi), %xmm0
@@ -1348,7 +1344,7 @@ L(shr_15_gobble_next):
 	add	%rcx, %rdi
 	jmp	L(less48bytes)
 # endif
-	ALIGN	(4)
+	.p2align 4
 L(exit):
 	pmovmskb %xmm1, %r8d
 	sub	$0xffff, %r8d
@@ -1389,56 +1385,56 @@ L(less16bytes):
 	sub	%edx, %eax
 	ret
 
-	ALIGN	(4)
+	.p2align 4
 L(Byte16):
 	movzbl	-16(%rdi), %eax
 	movzbl	-16(%rsi), %edx
 	sub	%edx, %eax
 	ret
 
-	ALIGN	(4)
+	.p2align 4
 L(Byte17):
 	movzbl	-15(%rdi), %eax
 	movzbl	-15(%rsi), %edx
 	sub	%edx, %eax
 	ret
 
-	ALIGN	(4)
+	.p2align 4
 L(Byte18):
 	movzbl	-14(%rdi), %eax
 	movzbl	-14(%rsi), %edx
 	sub	%edx, %eax
 	ret
 
-	ALIGN	(4)
+	.p2align 4
 L(Byte19):
 	movzbl	-13(%rdi), %eax
 	movzbl	-13(%rsi), %edx
 	sub	%edx, %eax
 	ret
 
-	ALIGN	(4)
+	.p2align 4
 L(Byte20):
 	movzbl	-12(%rdi), %eax
 	movzbl	-12(%rsi), %edx
 	sub	%edx, %eax
 	ret
 
-	ALIGN	(4)
+	.p2align 4
 L(Byte21):
 	movzbl	-11(%rdi), %eax
 	movzbl	-11(%rsi), %edx
 	sub	%edx, %eax
 	ret
 
-	ALIGN	(4)
+	.p2align 4
 L(Byte22):
 	movzbl	-10(%rdi), %eax
 	movzbl	-10(%rsi), %edx
 	sub	%edx, %eax
 	ret
 
-	ALIGN	(4)
+	.p2align 4
 L(next_24_bytes):
 	lea	8(%rdi), %rdi
 	lea	8(%rsi), %rsi
@@ -1479,14 +1475,14 @@ L(next_24_bytes):
 	jne	L(find_diff)
 	ret
 
-	ALIGN	(4)
+	.p2align 4
 L(second_double_word):
 	mov	-12(%rdi), %eax
 	cmp	-12(%rsi), %eax
 	jne	L(find_diff)
 	ret
 
-	ALIGN	(4)
+	.p2align 4
 L(next_two_double_words):
 	and	$15, %dh
 	jz	L(fourth_double_word)
@@ -1495,7 +1491,7 @@ L(next_two_double_words):
 	jne	L(find_diff)
 	ret
 
-	ALIGN	(4)
+	.p2align 4
 L(fourth_double_word):
 	mov	-4(%rdi), %eax
 	cmp	-4(%rsi), %eax
@@ -1503,7 +1499,7 @@ L(fourth_double_word):
 	ret
 # endif
 
-	ALIGN	(4)
+	.p2align 4
 L(less48bytes):
 	cmp	$8, %ecx
 	jae	L(more8bytes)
@@ -1527,7 +1523,7 @@ L(less48bytes):
 	jmp	L(4bytes)
 # endif
 
-	ALIGN	(4)
+	.p2align 4
 L(more8bytes):
 	cmp	$16, %ecx
 	jae	L(more16bytes)
@@ -1551,7 +1547,7 @@ L(more8bytes):
 	jmp	L(12bytes)
 # endif
 
-	ALIGN	(4)
+	.p2align 4
 L(more16bytes):
 	cmp	$24, %ecx
 	jae	L(more24bytes)
@@ -1575,7 +1571,7 @@ L(more16bytes):
 	jmp	L(20bytes)
 # endif
 
-	ALIGN	(4)
+	.p2align 4
 L(more24bytes):
 	cmp	$32, %ecx
 	jae	L(more32bytes)
@@ -1599,7 +1595,7 @@ L(more24bytes):
 	jmp	L(28bytes)
 # endif
 
-	ALIGN	(4)
+	.p2align 4
 L(more32bytes):
 	cmp	$40, %ecx
 	jae	L(more40bytes)
@@ -1623,7 +1619,7 @@ L(more32bytes):
 	jmp	L(36bytes)
 # endif
 
-	ALIGN	(4)
+	.p2align 4
 L(more40bytes):
 	cmp	$40, %ecx
 	je	L(40bytes)
@@ -1642,7 +1638,7 @@ L(more40bytes):
 	je	L(46bytes)
 	jmp	L(47bytes)
 
-	ALIGN	(4)
+	.p2align 4
 L(44bytes):
 	movl	-44(%rdi), %eax
 	movl	-44(%rsi), %ecx
@@ -1702,7 +1698,7 @@ L(0bytes):
 	xor	%eax, %eax
 	ret
 # else
-	ALIGN	(4)
+	.p2align 4
 L(44bytes):
 	movl	-44(%rdi), %eax
 	cmp	-44(%rsi), %eax
@@ -1753,7 +1749,7 @@ L(0bytes):
 # endif
 
 # ifndef USE_AS_WMEMCMP
-	ALIGN	(4)
+	.p2align 4
 L(45bytes):
 	movl	-45(%rdi), %eax
 	movl	-45(%rsi), %ecx
@@ -1816,7 +1812,7 @@ L(1bytes):
 	xor	%eax, %eax
 	ret
 
-	ALIGN	(4)
+	.p2align 4
 L(46bytes):
 	movl	-46(%rdi), %eax
 	movl	-46(%rsi), %ecx
@@ -1882,7 +1878,7 @@ L(2bytes):
 	xor	%eax, %eax
 	ret
 
-	ALIGN	(4)
+	.p2align 4
 L(47bytes):
 	movl	-47(%rdi), %eax
 	movl	-47(%rsi), %ecx
@@ -1951,7 +1947,7 @@ L(3bytes):
 	xor	%eax, %eax
 	ret
 
-	ALIGN	(4)
+	.p2align 4
 L(find_diff):
 	cmpb	%cl, %al
 	jne	L(set)
@@ -1973,19 +1969,19 @@ L(set):
 # else
 
 /* for wmemcmp */
-	ALIGN	(4)
+	.p2align 4
 L(find_diff):
 	mov	$1, %eax
 	jg	L(find_diff_bigger)
 	neg	%eax
 	ret
 
-	ALIGN	(4)
+	.p2align 4
 L(find_diff_bigger):
 	ret
 # endif
 
-	ALIGN	(4)
+	.p2align 4
 L(equal):
 	xor	%eax, %eax
 	ret

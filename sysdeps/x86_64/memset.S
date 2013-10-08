@@ -19,10 +19,6 @@
 
 #include <sysdep.h>
 
-#ifndef ALIGN
-# define ALIGN(n) .p2align n
-#endif
-
 	.text
 #if !defined NOT_IN_libc
 ENTRY(__bzero)
@@ -71,12 +67,12 @@ L(entry_from_bzero):
 L(return):
 	rep
 	ret
-	ALIGN (4)
+	.p2align 4
 L(between_32_64_bytes):
 	movdqu	%xmm8, 16(%rdi)
 	movdqu	%xmm8, -32(%rdi,%rdx)
 	ret
-	ALIGN (4)
+	.p2align 4
 L(loop_start):
 	leaq	64(%rdi), %rcx
 	movdqu	%xmm8, (%rdi)
@@ -92,7 +88,7 @@ L(loop_start):
 	andq	$-64, %rdx
 	cmpq	%rdx, %rcx
 	je	L(return)
-	ALIGN (4)
+	.p2align 4
 L(loop):
 	movdqa	%xmm8, (%rcx)
 	movdqa	%xmm8, 16(%rcx)

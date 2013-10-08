@@ -25,10 +25,6 @@
 #  define MEMCMP	__memcmp_sse4_1
 # endif
 
-# ifndef ALIGN
-#  define ALIGN(n)	.p2align n
-# endif
-
 # define JMPTBL(I, B)	(I - B)
 
 # define BRANCH_TO_JMPTBL_ENTRY(TABLE, INDEX, SCALE)		\
@@ -60,7 +56,7 @@ ENTRY (MEMCMP)
 	BRANCH_TO_JMPTBL_ENTRY(L(table_64bytes), %rdx, 4)
 
 # ifndef USE_AS_WMEMCMP
-	ALIGN (4)
+	.p2align 4
 L(firstbyte):
 	movzbl	(%rdi), %eax
 	movzbl	(%rsi), %ecx
@@ -68,7 +64,7 @@ L(firstbyte):
 	ret
 # endif
 
-	ALIGN (4)
+	.p2align 4
 L(79bytesormore):
 	movdqu	(%rsi), %xmm1
 	movdqu	(%rdi), %xmm2
@@ -316,7 +312,7 @@ L(less32bytesin256):
 	add	%rdx, %rdi
 	BRANCH_TO_JMPTBL_ENTRY(L(table_64bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(512bytesormore):
 # ifdef DATA_CACHE_SIZE_HALF
 	mov	$DATA_CACHE_SIZE_HALF, %R8_LP
@@ -329,7 +325,7 @@ L(512bytesormore):
 	cmp	%r8, %rdx
 	ja	L(L2_L3_cache_unaglined)
 	sub	$64, %rdx
-	ALIGN (4)
+	.p2align 4
 L(64bytesormore_loop):
 	movdqu	(%rdi), %xmm2
 	pxor	(%rsi), %xmm2
@@ -361,7 +357,7 @@ L(64bytesormore_loop):
 
 L(L2_L3_cache_unaglined):
 	sub	$64, %rdx
-	ALIGN (4)
+	.p2align 4
 L(L2_L3_unaligned_128bytes_loop):
 	prefetchnta 0x1c0(%rdi)
 	prefetchnta 0x1c0(%rsi)
@@ -396,7 +392,7 @@ L(L2_L3_unaligned_128bytes_loop):
 /*
  * This case is for machines which are sensitive for unaligned instructions.
  */
-	ALIGN (4)
+	.p2align 4
 L(2aligned):
 	cmp	$128, %rdx
 	ja	L(128bytesormorein2aligned)
@@ -444,7 +440,7 @@ L(less32bytesin64in2alinged):
 	add	%rdx, %rdi
 	BRANCH_TO_JMPTBL_ENTRY(L(table_64bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(128bytesormorein2aligned):
 	cmp	$512, %rdx
 	ja	L(512bytesormorein2aligned)
@@ -519,7 +515,7 @@ L(less32bytesin128in2aligned):
 	add	%rdx, %rdi
 	BRANCH_TO_JMPTBL_ENTRY(L(table_64bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(256bytesormorein2aligned):
 
 	sub	$256, %rdx
@@ -632,7 +628,7 @@ L(less32bytesin256in2alinged):
 	add	%rdx, %rdi
 	BRANCH_TO_JMPTBL_ENTRY(L(table_64bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(512bytesormorein2aligned):
 # ifdef DATA_CACHE_SIZE_HALF
 	mov	$DATA_CACHE_SIZE_HALF, %R8_LP
@@ -646,7 +642,7 @@ L(512bytesormorein2aligned):
 	ja	L(L2_L3_cache_aglined)
 
 	sub	$64, %rdx
-	ALIGN (4)
+	.p2align 4
 L(64bytesormore_loopin2aligned):
 	movdqa	(%rdi), %xmm2
 	pxor	(%rsi), %xmm2
@@ -678,7 +674,7 @@ L(64bytesormore_loopin2aligned):
 L(L2_L3_cache_aglined):
 	sub	$64, %rdx
 
-	ALIGN (4)
+	.p2align 4
 L(L2_L3_aligned_128bytes_loop):
 	prefetchnta 0x1c0(%rdi)
 	prefetchnta 0x1c0(%rsi)
@@ -711,7 +707,7 @@ L(L2_L3_aligned_128bytes_loop):
 	BRANCH_TO_JMPTBL_ENTRY(L(table_64bytes), %rdx, 4)
 
 
-	ALIGN (4)
+	.p2align 4
 L(64bytesormore_loop_end):
 	add	$16, %rdi
 	add	$16, %rsi
@@ -806,7 +802,7 @@ L(8bytes):
 	xor	%eax, %eax
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(12bytes):
 	mov	-12(%rdi), %rax
 	mov	-12(%rsi), %rcx
@@ -827,7 +823,7 @@ L(0bytes):
 
 # ifndef USE_AS_WMEMCMP
 /* unreal case for wmemcmp */
-	ALIGN (4)
+	.p2align 4
 L(65bytes):
 	movdqu	-65(%rdi), %xmm1
 	movdqu	-65(%rsi), %xmm2
@@ -864,7 +860,7 @@ L(9bytes):
 	sub	%edx, %eax
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(13bytes):
 	mov	-13(%rdi), %rax
 	mov	-13(%rsi), %rcx
@@ -877,7 +873,7 @@ L(13bytes):
 	xor	%eax, %eax
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(5bytes):
 	mov	-5(%rdi), %eax
 	mov	-5(%rsi), %ecx
@@ -888,7 +884,7 @@ L(5bytes):
 	sub	%edx, %eax
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(66bytes):
 	movdqu	-66(%rdi), %xmm1
 	movdqu	-66(%rsi), %xmm2
@@ -929,7 +925,7 @@ L(10bytes):
 	sub	%ecx, %eax
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(14bytes):
 	mov	-14(%rdi), %rax
 	mov	-14(%rsi), %rcx
@@ -942,7 +938,7 @@ L(14bytes):
 	xor	%eax, %eax
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(6bytes):
 	mov	-6(%rdi), %eax
 	mov	-6(%rsi), %ecx
@@ -958,7 +954,7 @@ L(2bytes):
 	sub	%ecx, %eax
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(67bytes):
 	movdqu	-67(%rdi), %xmm2
 	movdqu	-67(%rsi), %xmm1
@@ -997,7 +993,7 @@ L(11bytes):
 	xor	%eax, %eax
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(15bytes):
 	mov	-15(%rdi), %rax
 	mov	-15(%rsi), %rcx
@@ -1010,7 +1006,7 @@ L(15bytes):
 	xor	%eax, %eax
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(7bytes):
 	mov	-7(%rdi), %eax
 	mov	-7(%rsi), %ecx
@@ -1023,7 +1019,7 @@ L(7bytes):
 	xor	%eax, %eax
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(3bytes):
 	movzwl	-3(%rdi), %eax
 	movzwl	-3(%rsi), %ecx
@@ -1036,7 +1032,7 @@ L(1bytes):
 	ret
 # endif
 
-	ALIGN (4)
+	.p2align 4
 L(68bytes):
 	movdqu	-68(%rdi), %xmm2
 	movdqu	-68(%rsi), %xmm1
@@ -1079,7 +1075,7 @@ L(20bytes):
 
 # ifndef USE_AS_WMEMCMP
 /* unreal cases for wmemcmp */
-	ALIGN (4)
+	.p2align 4
 L(69bytes):
 	movdqu	-69(%rsi), %xmm1
 	movdqu	-69(%rdi), %xmm2
@@ -1115,7 +1111,7 @@ L(21bytes):
 	xor	%eax, %eax
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(70bytes):
 	movdqu	-70(%rsi), %xmm1
 	movdqu	-70(%rdi), %xmm2
@@ -1151,7 +1147,7 @@ L(22bytes):
 	xor	%eax, %eax
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(71bytes):
 	movdqu	-71(%rsi), %xmm1
 	movdqu	-71(%rdi), %xmm2
@@ -1188,7 +1184,7 @@ L(23bytes):
 	ret
 # endif
 
-	ALIGN (4)
+	.p2align 4
 L(72bytes):
 	movdqu	-72(%rsi), %xmm1
 	movdqu	-72(%rdi), %xmm2
@@ -1227,7 +1223,7 @@ L(24bytes):
 
 # ifndef USE_AS_WMEMCMP
 /* unreal cases for wmemcmp */
-	ALIGN (4)
+	.p2align 4
 L(73bytes):
 	movdqu	-73(%rsi), %xmm1
 	movdqu	-73(%rdi), %xmm2
@@ -1265,7 +1261,7 @@ L(25bytes):
 	sub	%ecx, %eax
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(74bytes):
 	movdqu	-74(%rsi), %xmm1
 	movdqu	-74(%rdi), %xmm2
@@ -1302,7 +1298,7 @@ L(26bytes):
 	movzwl	-2(%rsi), %ecx
 	jmp	L(diffin2bytes)
 
-	ALIGN (4)
+	.p2align 4
 L(75bytes):
 	movdqu	-75(%rsi), %xmm1
 	movdqu	-75(%rdi), %xmm2
@@ -1342,7 +1338,7 @@ L(27bytes):
 	xor	%eax, %eax
 	ret
 # endif
-	ALIGN (4)
+	.p2align 4
 L(76bytes):
 	movdqu	-76(%rsi), %xmm1
 	movdqu	-76(%rdi), %xmm2
@@ -1388,7 +1384,7 @@ L(28bytes):
 
 # ifndef USE_AS_WMEMCMP
 /* unreal cases for wmemcmp */
-	ALIGN (4)
+	.p2align 4
 L(77bytes):
 	movdqu	-77(%rsi), %xmm1
 	movdqu	-77(%rdi), %xmm2
@@ -1430,7 +1426,7 @@ L(29bytes):
 	xor	%eax, %eax
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(78bytes):
 	movdqu	-78(%rsi), %xmm1
 	movdqu	-78(%rdi), %xmm2
@@ -1470,7 +1466,7 @@ L(30bytes):
 	xor	%eax, %eax
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(79bytes):
 	movdqu	-79(%rsi), %xmm1
 	movdqu	-79(%rdi), %xmm2
@@ -1510,7 +1506,7 @@ L(31bytes):
 	xor	%eax, %eax
 	ret
 # endif
-	ALIGN (4)
+	.p2align 4
 L(64bytes):
 	movdqu	-64(%rdi), %xmm2
 	movdqu	-64(%rsi), %xmm1
@@ -1548,7 +1544,7 @@ L(32bytes):
 /*
  * Aligned 8 bytes to avoid 2 branch "taken" in one 16 alinged code block.
  */
-	ALIGN (3)
+	.p2align 3
 L(less16bytes):
 	movsbq	%dl, %rdx
 	mov	(%rsi, %rdx), %rcx
@@ -1585,7 +1581,7 @@ L(diffin2bytes):
 	sub	%ecx, %eax
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(end):
 	and	$0xff, %eax
 	and	$0xff, %ecx
@@ -1599,7 +1595,7 @@ L(end):
 	neg	%eax
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(nequal_bigger):
 	ret
 
@@ -1611,7 +1607,7 @@ L(unreal_case):
 END (MEMCMP)
 
 	.section .rodata.sse4.1,"a",@progbits
-	ALIGN (3)
+	.p2align 3
 # ifndef USE_AS_WMEMCMP
 L(table_64bytes):
 	.int	JMPTBL (L(0bytes), L(table_64bytes))

@@ -1,3 +1,16 @@
+2013-10-08  Ondřej Bílka  <neleai@seznam.cz>
+
+	* sysdeps/x86_64/memset.S (ALIGN): Macro removed.
+	Use .p2align directive instead, throughout.
+	* sysdeps/x86_64/multiarch/memcmp-sse4.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcmp-ssse3.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcpy-sse2-unaligned.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcpy-ssse3-back.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcpy-ssse3.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcmp-sse2-unaligned.S: Likewise.
+	* sysdeps/x86_64/strchr.S: Likewise.
+	* sysdeps/x86_64/strrchr.S: Likewise.
+
 2013-10-08  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/e_pow.c: Fix code formatting.

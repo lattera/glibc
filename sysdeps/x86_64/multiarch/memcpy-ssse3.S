@@ -31,10 +31,6 @@
 # define MEMCPY_CHK	__memcpy_chk_ssse3
 #endif
 
-#ifndef ALIGN
-# define ALIGN(n)	.p2align n
-#endif
-
 #define JMPTBL(I, B)	I - B
 
 /* Branch to an entry in a jump table.  TABLE is a jump table with
@@ -80,7 +76,7 @@ L(copy_forward):
 	jmp	*%r9
 	ud2
 
-	ALIGN (4)
+	.p2align 4
 L(80bytesormore):
 #ifndef USE_AS_MEMMOVE
 	cmp	%dil, %sil
@@ -113,7 +109,7 @@ L(80bytesormore):
 #endif
 	BRANCH_TO_JMPTBL_ENTRY (L(shl_table), %r9, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(copy_backward):
 	movdqu	-16(%rsi, %rdx), %xmm0
 	add	%rdx, %rsi
@@ -144,7 +140,7 @@ L(copy_backward):
 #endif
 	BRANCH_TO_JMPTBL_ENTRY (L(shl_table_bwd), %r9, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_0):
 	sub	$16, %rdx
 	movdqa	(%rsi), %xmm1
@@ -172,7 +168,7 @@ L(shl_0_less_64bytes):
 	add	%rdx, %rdi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_0_gobble):
 #ifdef DATA_CACHE_SIZE_HALF
 	cmp	$DATA_CACHE_SIZE_HALF, %RDX_LP
@@ -228,7 +224,7 @@ L(shl_0_cache_less_64bytes):
 	add	%rdx, %rdi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_0_gobble_mem_loop):
 	prefetcht0 0x1c0(%rsi)
 	prefetcht0 0x280(%rsi)
@@ -287,7 +283,7 @@ L(shl_0_mem_less_32bytes):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_0_bwd):
 	sub	$16, %rdx
 	movdqa	-0x10(%rsi), %xmm1
@@ -313,7 +309,7 @@ L(shl_0_bwd):
 L(shl_0_less_64bytes_bwd):
 	BRANCH_TO_JMPTBL_ENTRY (L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_0_gobble_bwd):
 #ifdef DATA_CACHE_SIZE_HALF
 	cmp	$DATA_CACHE_SIZE_HALF, %RDX_LP
@@ -367,7 +363,7 @@ L(shl_0_gobble_bwd_loop):
 L(shl_0_gobble_bwd_less_64bytes):
 	BRANCH_TO_JMPTBL_ENTRY (L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_0_gobble_mem_bwd_loop):
 	prefetcht0 -0x1c0(%rsi)
 	prefetcht0 -0x280(%rsi)
@@ -423,7 +419,7 @@ L(shl_0_mem_bwd_less_64bytes):
 L(shl_0_mem_bwd_less_32bytes):
 	BRANCH_TO_JMPTBL_ENTRY (L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_1):
 	lea	(L(shl_1_loop_L1)-L(shl_1))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -466,7 +462,7 @@ L(shl_1_end):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_1_bwd):
 	lea	(L(shl_1_bwd_loop_L1)-L(shl_1_bwd))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -508,7 +504,7 @@ L(shl_1_bwd_end):
 	movdqu	%xmm0, (%r8)
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_2):
 	lea	(L(shl_2_loop_L1)-L(shl_2))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -551,7 +547,7 @@ L(shl_2_end):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_2_bwd):
 	lea	(L(shl_2_bwd_loop_L1)-L(shl_2_bwd))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -593,7 +589,7 @@ L(shl_2_bwd_end):
 	movdqu	%xmm0, (%r8)
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_3):
 	lea	(L(shl_3_loop_L1)-L(shl_3))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -636,7 +632,7 @@ L(shl_3_end):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_3_bwd):
 	lea	(L(shl_3_bwd_loop_L1)-L(shl_3_bwd))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -678,7 +674,7 @@ L(shl_3_bwd_end):
 	movdqu	%xmm0, (%r8)
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_4):
 	lea	(L(shl_4_loop_L1)-L(shl_4))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -721,7 +717,7 @@ L(shl_4_end):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_4_bwd):
 	lea	(L(shl_4_bwd_loop_L1)-L(shl_4_bwd))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -763,7 +759,7 @@ L(shl_4_bwd_end):
 	movdqu	%xmm0, (%r8)
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_5):
 	lea	(L(shl_5_loop_L1)-L(shl_5))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -806,7 +802,7 @@ L(shl_5_end):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_5_bwd):
 	lea	(L(shl_5_bwd_loop_L1)-L(shl_5_bwd))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -848,7 +844,7 @@ L(shl_5_bwd_end):
 	movdqu	%xmm0, (%r8)
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_6):
 	lea	(L(shl_6_loop_L1)-L(shl_6))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -891,7 +887,7 @@ L(shl_6_end):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_6_bwd):
 	lea	(L(shl_6_bwd_loop_L1)-L(shl_6_bwd))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -933,7 +929,7 @@ L(shl_6_bwd_end):
 	movdqu	%xmm0, (%r8)
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_7):
 	lea	(L(shl_7_loop_L1)-L(shl_7))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -976,7 +972,7 @@ L(shl_7_end):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_7_bwd):
 	lea	(L(shl_7_bwd_loop_L1)-L(shl_7_bwd))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -1018,7 +1014,7 @@ L(shl_7_bwd_end):
 	movdqu	%xmm0, (%r8)
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_8):
 	lea	(L(shl_8_loop_L1)-L(shl_8))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -1051,7 +1047,7 @@ L(shl_8_loop_L1):
 	movaps	%xmm5, -0x10(%rdi)
 	jmp	*%r9
 	ud2
-	ALIGN (4)
+	.p2align 4
 L(shl_8_end):
 	lea	64(%rdx), %rdx
 	movaps	%xmm4, -0x20(%rdi)
@@ -1061,7 +1057,7 @@ L(shl_8_end):
 	movdqu	%xmm0, (%r8)
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_8_bwd):
 	lea	(L(shl_8_bwd_loop_L1)-L(shl_8_bwd))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -1103,7 +1099,7 @@ L(shl_8_bwd_end):
 	movdqu	%xmm0, (%r8)
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_9):
 	lea	(L(shl_9_loop_L1)-L(shl_9))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -1146,7 +1142,7 @@ L(shl_9_end):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_9_bwd):
 	lea	(L(shl_9_bwd_loop_L1)-L(shl_9_bwd))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -1188,7 +1184,7 @@ L(shl_9_bwd_end):
 	movdqu	%xmm0, (%r8)
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_10):
 	lea	(L(shl_10_loop_L1)-L(shl_10))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -1231,7 +1227,7 @@ L(shl_10_end):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_10_bwd):
 	lea	(L(shl_10_bwd_loop_L1)-L(shl_10_bwd))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -1273,7 +1269,7 @@ L(shl_10_bwd_end):
 	movdqu	%xmm0, (%r8)
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_11):
 	lea	(L(shl_11_loop_L1)-L(shl_11))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -1316,7 +1312,7 @@ L(shl_11_end):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_11_bwd):
 	lea	(L(shl_11_bwd_loop_L1)-L(shl_11_bwd))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -1358,7 +1354,7 @@ L(shl_11_bwd_end):
 	movdqu	%xmm0, (%r8)
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_12):
 	lea	(L(shl_12_loop_L1)-L(shl_12))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -1401,7 +1397,7 @@ L(shl_12_end):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_12_bwd):
 	lea	(L(shl_12_bwd_loop_L1)-L(shl_12_bwd))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -1443,7 +1439,7 @@ L(shl_12_bwd_end):
 	movdqu	%xmm0, (%r8)
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_13):
 	lea	(L(shl_13_loop_L1)-L(shl_13))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -1486,7 +1482,7 @@ L(shl_13_end):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_13_bwd):
 	lea	(L(shl_13_bwd_loop_L1)-L(shl_13_bwd))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -1528,7 +1524,7 @@ L(shl_13_bwd_end):
 	movdqu	%xmm0, (%r8)
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_14):
 	lea	(L(shl_14_loop_L1)-L(shl_14))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -1571,7 +1567,7 @@ L(shl_14_end):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_14_bwd):
 	lea	(L(shl_14_bwd_loop_L1)-L(shl_14_bwd))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -1613,7 +1609,7 @@ L(shl_14_bwd_end):
 	movdqu	%xmm0, (%r8)
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_15):
 	lea	(L(shl_15_loop_L1)-L(shl_15))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -1656,7 +1652,7 @@ L(shl_15_end):
 	add	%rdx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(shl_15_bwd):
 	lea	(L(shl_15_bwd_loop_L1)-L(shl_15_bwd))(%r9), %r9
 	cmp	%rcx, %rdx
@@ -1698,7 +1694,7 @@ L(shl_15_bwd_end):
 	movdqu	%xmm0, (%r8)
 	BRANCH_TO_JMPTBL_ENTRY(L(table_less_80bytes), %rdx, 4)
 
-	ALIGN (4)
+	.p2align 4
 L(write_72bytes):
 	movdqu	-72(%rsi), %xmm0
 	movdqu	-56(%rsi), %xmm1
@@ -1716,7 +1712,7 @@ L(write_72bytes):
 	mov	 %rcx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_64bytes):
 	movdqu	-64(%rsi), %xmm0
 	mov	-48(%rsi), %rcx
@@ -1734,7 +1730,7 @@ L(write_64bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_56bytes):
 	movdqu	-56(%rsi), %xmm0
 	mov	-40(%rsi), %r8
@@ -1750,7 +1746,7 @@ L(write_56bytes):
 	mov	 %rcx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_48bytes):
 	mov	-48(%rsi), %rcx
 	mov	-40(%rsi), %r8
@@ -1766,7 +1762,7 @@ L(write_48bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_40bytes):
 	mov	-40(%rsi), %r8
 	mov	-32(%rsi), %r9
@@ -1780,7 +1776,7 @@ L(write_40bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_32bytes):
 	mov	-32(%rsi), %r9
 	mov	-24(%rsi), %r10
@@ -1792,7 +1788,7 @@ L(write_32bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_24bytes):
 	mov	-24(%rsi), %r10
 	mov	-16(%rsi), %r11
@@ -1802,7 +1798,7 @@ L(write_24bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_16bytes):
 	mov	-16(%rsi), %r11
 	mov	-8(%rsi), %rdx
@@ -1810,14 +1806,14 @@ L(write_16bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_8bytes):
 	mov	-8(%rsi), %rdx
 	mov	 %rdx, -8(%rdi)
 L(write_0bytes):
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_73bytes):
 	movdqu	-73(%rsi), %xmm0
 	movdqu	-57(%rsi), %xmm1
@@ -1837,7 +1833,7 @@ L(write_73bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_65bytes):
 	movdqu	-65(%rsi), %xmm0
 	movdqu	-49(%rsi), %xmm1
@@ -1855,7 +1851,7 @@ L(write_65bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_57bytes):
 	movdqu	-57(%rsi), %xmm0
 	mov	-41(%rsi), %r8
@@ -1873,7 +1869,7 @@ L(write_57bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_49bytes):
 	movdqu	-49(%rsi), %xmm0
 	mov	-33(%rsi), %r9
@@ -1889,7 +1885,7 @@ L(write_49bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_41bytes):
 	mov	-41(%rsi), %r8
 	mov	-33(%rsi), %r9
@@ -1905,7 +1901,7 @@ L(write_41bytes):
 	mov	 %dl, -1(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_33bytes):
 	mov	-33(%rsi), %r9
 	mov	-25(%rsi), %r10
@@ -1919,7 +1915,7 @@ L(write_33bytes):
 	mov	 %dl, -1(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_25bytes):
 	mov	-25(%rsi), %r10
 	mov	-17(%rsi), %r11
@@ -1931,7 +1927,7 @@ L(write_25bytes):
 	mov	 %dl, -1(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_17bytes):
 	mov	-17(%rsi), %r11
 	mov	-9(%rsi), %rcx
@@ -1941,7 +1937,7 @@ L(write_17bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_9bytes):
 	mov	-9(%rsi), %rcx
 	mov	-4(%rsi), %edx
@@ -1949,13 +1945,13 @@ L(write_9bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_1bytes):
 	mov	-1(%rsi), %dl
 	mov	 %dl, -1(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_74bytes):
 	movdqu	-74(%rsi), %xmm0
 	movdqu	-58(%rsi), %xmm1
@@ -1975,7 +1971,7 @@ L(write_74bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_66bytes):
 	movdqu	-66(%rsi), %xmm0
 	movdqu	-50(%rsi), %xmm1
@@ -1995,7 +1991,7 @@ L(write_66bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_58bytes):
 	movdqu	-58(%rsi), %xmm1
 	mov	-42(%rsi), %r8
@@ -2013,7 +2009,7 @@ L(write_58bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_50bytes):
 	movdqu	-50(%rsi), %xmm0
 	mov	-34(%rsi), %r9
@@ -2029,7 +2025,7 @@ L(write_50bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_42bytes):
 	mov	-42(%rsi), %r8
 	mov	-34(%rsi), %r9
@@ -2045,7 +2041,7 @@ L(write_42bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_34bytes):
 	mov	-34(%rsi), %r9
 	mov	-26(%rsi), %r10
@@ -2059,7 +2055,7 @@ L(write_34bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_26bytes):
 	mov	-26(%rsi), %r10
 	mov	-18(%rsi), %r11
@@ -2071,7 +2067,7 @@ L(write_26bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_18bytes):
 	mov	-18(%rsi), %r11
 	mov	-10(%rsi), %rcx
@@ -2081,7 +2077,7 @@ L(write_18bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_10bytes):
 	mov	-10(%rsi), %rcx
 	mov	-4(%rsi), %edx
@@ -2089,13 +2085,13 @@ L(write_10bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_2bytes):
 	mov	-2(%rsi), %dx
 	mov	 %dx, -2(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_75bytes):
 	movdqu	-75(%rsi), %xmm0
 	movdqu	-59(%rsi), %xmm1
@@ -2115,7 +2111,7 @@ L(write_75bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_67bytes):
 	movdqu	-67(%rsi), %xmm0
 	movdqu	-59(%rsi), %xmm1
@@ -2135,7 +2131,7 @@ L(write_67bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_59bytes):
 	movdqu	-59(%rsi), %xmm0
 	mov	-43(%rsi), %r8
@@ -2153,7 +2149,7 @@ L(write_59bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_51bytes):
 	movdqu	-51(%rsi), %xmm0
 	mov	-35(%rsi), %r9
@@ -2169,7 +2165,7 @@ L(write_51bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_43bytes):
 	mov	-43(%rsi), %r8
 	mov	-35(%rsi), %r9
@@ -2185,7 +2181,7 @@ L(write_43bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_35bytes):
 	mov	-35(%rsi), %r9
 	mov	-27(%rsi), %r10
@@ -2199,7 +2195,7 @@ L(write_35bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_27bytes):
 	mov	-27(%rsi), %r10
 	mov	-19(%rsi), %r11
@@ -2211,7 +2207,7 @@ L(write_27bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_19bytes):
 	mov	-19(%rsi), %r11
 	mov	-11(%rsi), %rcx
@@ -2221,7 +2217,7 @@ L(write_19bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_11bytes):
 	mov	-11(%rsi), %rcx
 	mov	-4(%rsi), %edx
@@ -2229,7 +2225,7 @@ L(write_11bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_3bytes):
 	mov	-3(%rsi), %dx
 	mov	-2(%rsi), %cx
@@ -2237,7 +2233,7 @@ L(write_3bytes):
 	mov	 %cx, -2(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_76bytes):
 	movdqu	-76(%rsi), %xmm0
 	movdqu	-60(%rsi), %xmm1
@@ -2257,7 +2253,7 @@ L(write_76bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_68bytes):
 	movdqu	-68(%rsi), %xmm0
 	movdqu	-52(%rsi), %xmm1
@@ -2275,7 +2271,7 @@ L(write_68bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_60bytes):
 	movdqu	-60(%rsi), %xmm0
 	mov	-44(%rsi), %r8
@@ -2293,7 +2289,7 @@ L(write_60bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_52bytes):
 	movdqu	-52(%rsi), %xmm0
 	mov	-36(%rsi), %r9
@@ -2309,7 +2305,7 @@ L(write_52bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_44bytes):
 	mov	-44(%rsi), %r8
 	mov	-36(%rsi), %r9
@@ -2325,7 +2321,7 @@ L(write_44bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_36bytes):
 	mov	-36(%rsi), %r9
 	mov	-28(%rsi), %r10
@@ -2339,7 +2335,7 @@ L(write_36bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_28bytes):
 	mov	-28(%rsi), %r10
 	mov	-20(%rsi), %r11
@@ -2351,7 +2347,7 @@ L(write_28bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_20bytes):
 	mov	-20(%rsi), %r11
 	mov	-12(%rsi), %rcx
@@ -2361,7 +2357,7 @@ L(write_20bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_12bytes):
 	mov	-12(%rsi), %rcx
 	mov	-4(%rsi), %edx
@@ -2369,13 +2365,13 @@ L(write_12bytes):
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_4bytes):
 	mov	-4(%rsi), %edx
 	mov	 %edx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_77bytes):
 	movdqu	-77(%rsi), %xmm0
 	movdqu	-61(%rsi), %xmm1
@@ -2395,7 +2391,7 @@ L(write_77bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_69bytes):
 	movdqu	-69(%rsi), %xmm0
 	movdqu	-53(%rsi), %xmm1
@@ -2413,7 +2409,7 @@ L(write_69bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_61bytes):
 	movdqu	-61(%rsi), %xmm0
 	mov	-45(%rsi), %r8
@@ -2431,7 +2427,7 @@ L(write_61bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_53bytes):
 	movdqu	-53(%rsi), %xmm0
 	mov	-45(%rsi), %r8
@@ -2448,7 +2444,7 @@ L(write_53bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_45bytes):
 	mov	-45(%rsi), %r8
 	mov	-37(%rsi), %r9
@@ -2464,7 +2460,7 @@ L(write_45bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_37bytes):
 	mov	-37(%rsi), %r9
 	mov	-29(%rsi), %r10
@@ -2478,7 +2474,7 @@ L(write_37bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_29bytes):
 	mov	-29(%rsi), %r10
 	mov	-21(%rsi), %r11
@@ -2490,7 +2486,7 @@ L(write_29bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_21bytes):
 	mov	-21(%rsi), %r11
 	mov	-13(%rsi), %rcx
@@ -2500,7 +2496,7 @@ L(write_21bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_13bytes):
 	mov	-13(%rsi), %rcx
 	mov	-8(%rsi), %rdx
@@ -2508,7 +2504,7 @@ L(write_13bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_5bytes):
 	mov	-5(%rsi), %edx
 	mov	-4(%rsi), %ecx
@@ -2516,7 +2512,7 @@ L(write_5bytes):
 	mov	 %ecx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_78bytes):
 	movdqu	-78(%rsi), %xmm0
 	movdqu	-62(%rsi), %xmm1
@@ -2536,7 +2532,7 @@ L(write_78bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_70bytes):
 	movdqu	-70(%rsi), %xmm0
 	movdqu	-54(%rsi), %xmm1
@@ -2554,7 +2550,7 @@ L(write_70bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_62bytes):
 	movdqu	-62(%rsi), %xmm0
 	mov	-46(%rsi), %r8
@@ -2572,7 +2568,7 @@ L(write_62bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_54bytes):
 	movdqu	-54(%rsi), %xmm0
 	mov	-38(%rsi), %r9
@@ -2588,7 +2584,7 @@ L(write_54bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_46bytes):
 	mov	-46(%rsi), %r8
 	mov	-38(%rsi), %r9
@@ -2604,7 +2600,7 @@ L(write_46bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_38bytes):
 	mov	-38(%rsi), %r9
 	mov	-30(%rsi), %r10
@@ -2618,7 +2614,7 @@ L(write_38bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_30bytes):
 	mov	-30(%rsi), %r10
 	mov	-22(%rsi), %r11
@@ -2630,7 +2626,7 @@ L(write_30bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_22bytes):
 	mov	-22(%rsi), %r11
 	mov	-14(%rsi), %rcx
@@ -2640,7 +2636,7 @@ L(write_22bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_14bytes):
 	mov	-14(%rsi), %rcx
 	mov	-8(%rsi), %rdx
@@ -2648,7 +2644,7 @@ L(write_14bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_6bytes):
 	mov	-6(%rsi), %edx
 	mov	-4(%rsi), %ecx
@@ -2656,7 +2652,7 @@ L(write_6bytes):
 	mov	 %ecx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_79bytes):
 	movdqu	-79(%rsi), %xmm0
 	movdqu	-63(%rsi), %xmm1
@@ -2676,7 +2672,7 @@ L(write_79bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_71bytes):
 	movdqu	-71(%rsi), %xmm0
 	movdqu	-55(%rsi), %xmm1
@@ -2694,7 +2690,7 @@ L(write_71bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_63bytes):
 	movdqu	-63(%rsi), %xmm0
 	mov	-47(%rsi), %r8
@@ -2712,7 +2708,7 @@ L(write_63bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_55bytes):
 	movdqu	-55(%rsi), %xmm0
 	mov	-39(%rsi), %r9
@@ -2728,7 +2724,7 @@ L(write_55bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_47bytes):
 	mov	-47(%rsi), %r8
 	mov	-39(%rsi), %r9
@@ -2744,7 +2740,7 @@ L(write_47bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_39bytes):
 	mov	-39(%rsi), %r9
 	mov	-31(%rsi), %r10
@@ -2758,7 +2754,7 @@ L(write_39bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_31bytes):
 	mov	-31(%rsi), %r10
 	mov	-23(%rsi), %r11
@@ -2770,7 +2766,7 @@ L(write_31bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_23bytes):
 	mov	-23(%rsi), %r11
 	mov	-15(%rsi), %rcx
@@ -2780,7 +2776,7 @@ L(write_23bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_15bytes):
 	mov	-15(%rsi), %rcx
 	mov	-8(%rsi), %rdx
@@ -2788,7 +2784,7 @@ L(write_15bytes):
 	mov	 %rdx, -8(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(write_7bytes):
 	mov	-7(%rsi), %edx
 	mov	-4(%rsi), %ecx
@@ -2796,7 +2792,7 @@ L(write_7bytes):
 	mov	 %ecx, -4(%rdi)
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(large_page_fwd):
 	movdqu	(%rsi), %xmm1
 	lea	16(%rsi), %rsi
@@ -2859,7 +2855,7 @@ L(large_page_less_64bytes):
 	BRANCH_TO_JMPTBL_ENTRY (L(table_less_80bytes), %rdx, 4)
 
 #ifdef USE_AS_MEMMOVE
-	ALIGN (4)
+	.p2align 4
 L(ll_cache_copy_fwd_start):
 	prefetcht0 0x1c0(%rsi)
 	prefetcht0 0x200(%rsi)
@@ -2906,7 +2902,7 @@ L(large_page_ll_less_fwd_64bytes):
 	BRANCH_TO_JMPTBL_ENTRY (L(table_less_80bytes), %rdx, 4)
 
 #endif
-	ALIGN (4)
+	.p2align 4
 L(large_page_bwd):
 	movdqu	-0x10(%rsi), %xmm1
 	lea	-16(%rsi), %rsi
@@ -2966,7 +2962,7 @@ L(large_page_less_bwd_64bytes):
 	BRANCH_TO_JMPTBL_ENTRY (L(table_less_80bytes), %rdx, 4)
 
 #ifdef USE_AS_MEMMOVE
-	ALIGN (4)
+	.p2align 4
 L(ll_cache_copy_bwd_start):
 	prefetcht0 -0x1c0(%rsi)
 	prefetcht0 -0x200(%rsi)
@@ -3014,7 +3010,7 @@ L(large_page_ll_less_bwd_64bytes):
 END (MEMCPY)
 
 	.section .rodata.ssse3,"a",@progbits
-	ALIGN (3)
+	.p2align 3
 L(table_less_80bytes):
 	.int	JMPTBL (L(write_0bytes), L(table_less_80bytes))
 	.int	JMPTBL (L(write_1bytes), L(table_less_80bytes))
@@ -3097,7 +3093,7 @@ L(table_less_80bytes):
 	.int	JMPTBL (L(write_78bytes), L(table_less_80bytes))
 	.int	JMPTBL (L(write_79bytes), L(table_less_80bytes))
 
-	ALIGN (3)
+	.p2align 3
 L(shl_table):
 	.int	JMPTBL (L(shl_0), L(shl_table))
 	.int	JMPTBL (L(shl_1), L(shl_table))
@@ -3116,7 +3112,7 @@ L(shl_table):
 	.int	JMPTBL (L(shl_14), L(shl_table))
 	.int	JMPTBL (L(shl_15), L(shl_table))
 
-	ALIGN (3)
+	.p2align 3
 L(shl_table_bwd):
 	.int	JMPTBL (L(shl_0_bwd), L(shl_table_bwd))
 	.int	JMPTBL (L(shl_1_bwd), L(shl_table_bwd))
