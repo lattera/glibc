@@ -23,7 +23,7 @@ subdir := benchtests
 
 include ../Makeconfig
 bench := acos acosh asin asinh atan atanh cos cosh exp exp2 ffs ffsll \
-	log log2 modf pow rint sin sincos sinh sqrt tan tanh
+	log log2 modf pow pthread_once rint sin sincos sinh sqrt tan tanh
 
 # String function benchmarks.
 string-bench := bcopy bzero memccpy memchr memcmp memcpy memmem memmove \
@@ -53,6 +53,7 @@ LDLIBS-bench-exp2 = -lm
 LDLIBS-bench-log = -lm
 LDLIBS-bench-log2 = -lm
 LDLIBS-bench-pow = -lm
+LDLIBS-bench-pthread_once = -lpthread
 LDLIBS-bench-rint = -lm
 LDLIBS-bench-sin = -lm
 LDLIBS-bench-sinh = -lm
