@@ -44,221 +44,299 @@
 # define SECTION
 #endif
 
-double __slowexp(double);
+double __slowexp (double);
 
-/***************************************************************************/
-/* An ultimate exp routine. Given an IEEE double machine number x          */
-/* it computes the correctly rounded (to nearest) value of e^x             */
-/***************************************************************************/
+/* An ultimate exp routine. Given an IEEE double machine number x it computes
+   the correctly rounded (to nearest) value of e^x.  */
 double
 SECTION
-__ieee754_exp(double x) {
+__ieee754_exp (double x)
+{
   double bexp, t, eps, del, base, y, al, bet, res, rem, cor;
-  mynumber junk1, junk2, binexp  = {{0,0}};
-  int4 i,j,m,n,ex;
+  mynumber junk1, junk2, binexp = {{0, 0}};
+  int4 i, j, m, n, ex;
   double retval;
 
   SET_RESTORE_ROUND (FE_TONEAREST);
 
   junk1.x = x;
   m = junk1.i[HIGH_HALF];
-  n = m&hugeint;
+  n = m & hugeint;
 
-  if (n > smallint && n < bigint) {
+  if (n > smallint && n < bigint)
+    {
+      y = x * log2e.x + three51.x;
+      bexp = y - three51.x;	/*  multiply the result by 2**bexp        */
 
-    y = x*log2e.x + three51.x;
-    bexp = y - three51.x;      /*  multiply the result by 2**bexp        */
+      junk1.x = y;
 
-    junk1.x = y;
+      eps = bexp * ln_two2.x;	/* x = bexp*ln(2) + t - eps               */
+      t = x - bexp * ln_two1.x;
 
-    eps = bexp*ln_two2.x;      /* x = bexp*ln(2) + t - eps               */
-    t = x - bexp*ln_two1.x;
+      y = t + three33.x;
+      base = y - three33.x;	/* t rounded to a multiple of 2**-18      */
+      junk2.x = y;
+      del = (t - base) - eps;	/*  x = bexp*ln(2) + base + del           */
+      eps = del + del * del * (p3.x * del + p2.x);
 
-    y = t + three33.x;
-    base = y - three33.x;      /* t rounded to a multiple of 2**-18      */
-    junk2.x = y;
-    del = (t - base) - eps;    /*  x = bexp*ln(2) + base + del           */
-    eps = del + del*del*(p3.x*del + p2.x);
+      binexp.i[HIGH_HALF] = (junk1.i[LOW_HALF] + 1023) << 20;
 
-    binexp.i[HIGH_HALF] =(junk1.i[LOW_HALF]+1023)<<20;
+      i = ((junk2.i[LOW_HALF] >> 8) & 0xfffffffe) + 356;
+      j = (junk2.i[LOW_HALF] & 511) << 1;
 
-    i = ((junk2.i[LOW_HALF]>>8)&0xfffffffe)+356;
-    j = (junk2.i[LOW_HALF]&511)<<1;
+      al = coar.x[i] * fine.x[j];
+      bet = ((coar.x[i] * fine.x[j + 1] + coar.x[i + 1] * fine.x[j])
+	     + coar.x[i + 1] * fine.x[j + 1]);
 
-    al = coar.x[i]*fine.x[j];
-    bet =(coar.x[i]*fine.x[j+1] + coar.x[i+1]*fine.x[j]) + coar.x[i+1]*fine.x[j+1];
+      rem = (bet + bet * eps) + al * eps;
+      res = al + rem;
+      cor = (al - res) + rem;
+      if (res == (res + cor * err_0))
+	{
+	  retval = res * binexp.x;
+	  goto ret;
+	}
+      else
+	{
+	  retval = __slowexp (x);
+	  goto ret;
+	}			/*if error is over bound */
+    }
 
-    rem=(bet + bet*eps)+al*eps;
-    res = al + rem;
-    cor = (al - res) + rem;
-    if  (res == (res+cor*err_0)) { retval = res*binexp.x; goto ret; }
-    else { retval = __slowexp(x); goto ret; } /*if error is over bound */
-  }
+  if (n <= smallint)
+    {
+      retval = 1.0;
+      goto ret;
+    }
 
-  if (n <= smallint) { retval = 1.0; goto ret; }
+  if (n >= badint)
+    {
+      if (n > infint)
+	{
+	  retval = x + x;
+	  goto ret;
+	}			/* x is NaN */
+      if (n < infint)
+	{
+	  retval = (x > 0) ? (hhuge * hhuge) : (tiny * tiny);
+	  goto ret;
+	}
+      /* x is finite,  cause either overflow or underflow  */
+      if (junk1.i[LOW_HALF] != 0)
+	{
+	  retval = x + x;
+	  goto ret;
+	}			/*  x is NaN  */
+      retval = (x > 0) ? inf.x : zero;	/* |x| = inf;  return either inf or 0 */
+      goto ret;
+    }
 
-  if (n >= badint) {
-    if (n > infint) { retval = x+x; goto ret; }               /* x is NaN */
-    if (n < infint) { retval = (x>0) ? (hhuge*hhuge) : (tiny*tiny); goto ret; }
-    /* x is finite,  cause either overflow or underflow  */
-    if (junk1.i[LOW_HALF] != 0) { retval = x+x; goto ret; } /*  x is NaN  */
-    retval = (x>0)?inf.x:zero;             /* |x| = inf;  return either inf or 0 */
-    goto ret;
-  }
-
-  y = x*log2e.x + three51.x;
+  y = x * log2e.x + three51.x;
   bexp = y - three51.x;
   junk1.x = y;
-  eps = bexp*ln_two2.x;
-  t = x - bexp*ln_two1.x;
+  eps = bexp * ln_two2.x;
+  t = x - bexp * ln_two1.x;
   y = t + three33.x;
   base = y - three33.x;
   junk2.x = y;
   del = (t - base) - eps;
-  eps = del + del*del*(p3.x*del + p2.x);
-  i = ((junk2.i[LOW_HALF]>>8)&0xfffffffe)+356;
-  j = (junk2.i[LOW_HALF]&511)<<1;
-  al = coar.x[i]*fine.x[j];
-  bet =(coar.x[i]*fine.x[j+1] + coar.x[i+1]*fine.x[j]) + coar.x[i+1]*fine.x[j+1];
-  rem=(bet + bet*eps)+al*eps;
+  eps = del + del * del * (p3.x * del + p2.x);
+  i = ((junk2.i[LOW_HALF] >> 8) & 0xfffffffe) + 356;
+  j = (junk2.i[LOW_HALF] & 511) << 1;
+  al = coar.x[i] * fine.x[j];
+  bet = ((coar.x[i] * fine.x[j + 1] + coar.x[i + 1] * fine.x[j])
+	 + coar.x[i + 1] * fine.x[j + 1]);
+  rem = (bet + bet * eps) + al * eps;
   res = al + rem;
   cor = (al - res) + rem;
-  if (m>>31) {
-    ex=junk1.i[LOW_HALF];
-    if (res < 1.0) {res+=res; cor+=cor; ex-=1;}
-    if (ex >=-1022) {
-      binexp.i[HIGH_HALF] = (1023+ex)<<20;
-      if  (res == (res+cor*err_0)) { retval = res*binexp.x; goto ret; }
-      else { retval = __slowexp(x); goto ret; } /*if error is over bound */
+  if (m >> 31)
+    {
+      ex = junk1.i[LOW_HALF];
+      if (res < 1.0)
+	{
+	  res += res;
+	  cor += cor;
+	  ex -= 1;
+	}
+      if (ex >= -1022)
+	{
+	  binexp.i[HIGH_HALF] = (1023 + ex) << 20;
+	  if (res == (res + cor * err_0))
+	    {
+	      retval = res * binexp.x;
+	      goto ret;
+	    }
+	  else
+	    {
+	      retval = __slowexp (x);
+	      goto ret;
+	    }			/*if error is over bound */
+	}
+      ex = -(1022 + ex);
+      binexp.i[HIGH_HALF] = (1023 - ex) << 20;
+      res *= binexp.x;
+      cor *= binexp.x;
+      eps = 1.0000000001 + err_0 * binexp.x;
+      t = 1.0 + res;
+      y = ((1.0 - t) + res) + cor;
+      res = t + y;
+      cor = (t - res) + y;
+      if (res == (res + eps * cor))
+	{
+	  binexp.i[HIGH_HALF] = 0x00100000;
+	  retval = (res - 1.0) * binexp.x;
+	  goto ret;
+	}
+      else
+	{
+	  retval = __slowexp (x);
+	  goto ret;
+	}			/*   if error is over bound    */
     }
-    ex = -(1022+ex);
-    binexp.i[HIGH_HALF] = (1023-ex)<<20;
-    res*=binexp.x;
-    cor*=binexp.x;
-    eps=1.0000000001+err_0*binexp.x;
-    t=1.0+res;
-    y = ((1.0-t)+res)+cor;
-    res=t+y;
-    cor = (t-res)+y;
-    if (res == (res + eps*cor))
-    { binexp.i[HIGH_HALF] = 0x00100000;
-      retval = (res-1.0)*binexp.x;
-      goto ret;
+  else
+    {
+      binexp.i[HIGH_HALF] = (junk1.i[LOW_HALF] + 767) << 20;
+      if (res == (res + cor * err_0))
+	{
+	  retval = res * binexp.x * t256.x;
+	  goto ret;
+	}
+      else
+	{
+	  retval = __slowexp (x);
+	  goto ret;
+	}
     }
-    else { retval = __slowexp(x); goto ret; } /*   if error is over bound    */
-  }
-  else {
-    binexp.i[HIGH_HALF] =(junk1.i[LOW_HALF]+767)<<20;
-    if (res == (res+cor*err_0)) { retval = res*binexp.x*t256.x; goto ret; }
-    else { retval = __slowexp(x); goto ret; }
-  }
- ret:
+ret:
   return retval;
 }
 #ifndef __ieee754_exp
 strong_alias (__ieee754_exp, __exp_finite)
 #endif
 
-/************************************************************************/
-/* Compute e^(x+xx)(Double-Length number) .The routine also receive     */
-/* bound of error of previous calculation .If after computing exp       */
-/* error bigger than allows routine return non positive number          */
-/*else return   e^(x + xx)   (always positive )                         */
-/************************************************************************/
-
+/* Compute e^(x+xx).  The routine also receives bound of error of previous
+   calculation.  If after computing exp the error exceeds the allowed bounds,
+   the routine returns a non-positive number.  Otherwise it returns the
+   computed result, which is always positive.  */
 double
 SECTION
-__exp1(double x, double xx, double error) {
+__exp1 (double x, double xx, double error)
+{
   double bexp, t, eps, del, base, y, al, bet, res, rem, cor;
-  mynumber junk1, junk2, binexp  = {{0,0}};
-  int4 i,j,m,n,ex;
+  mynumber junk1, junk2, binexp = {{0, 0}};
+  int4 i, j, m, n, ex;
 
   junk1.x = x;
   m = junk1.i[HIGH_HALF];
-  n = m&hugeint;                 /* no sign */
+  n = m & hugeint;		/* no sign */
 
-  if (n > smallint && n < bigint) {
-    y = x*log2e.x + three51.x;
-    bexp = y - three51.x;      /*  multiply the result by 2**bexp        */
+  if (n > smallint && n < bigint)
+    {
+      y = x * log2e.x + three51.x;
+      bexp = y - three51.x;	/*  multiply the result by 2**bexp        */
 
-    junk1.x = y;
+      junk1.x = y;
 
-    eps = bexp*ln_two2.x;      /* x = bexp*ln(2) + t - eps               */
-    t = x - bexp*ln_two1.x;
+      eps = bexp * ln_two2.x;	/* x = bexp*ln(2) + t - eps               */
+      t = x - bexp * ln_two1.x;
 
-    y = t + three33.x;
-    base = y - three33.x;      /* t rounded to a multiple of 2**-18      */
-    junk2.x = y;
-    del = (t - base) + (xx-eps);    /*  x = bexp*ln(2) + base + del      */
-    eps = del + del*del*(p3.x*del + p2.x);
+      y = t + three33.x;
+      base = y - three33.x;	/* t rounded to a multiple of 2**-18      */
+      junk2.x = y;
+      del = (t - base) + (xx - eps);	/*  x = bexp*ln(2) + base + del      */
+      eps = del + del * del * (p3.x * del + p2.x);
 
-    binexp.i[HIGH_HALF] =(junk1.i[LOW_HALF]+1023)<<20;
+      binexp.i[HIGH_HALF] = (junk1.i[LOW_HALF] + 1023) << 20;
 
-    i = ((junk2.i[LOW_HALF]>>8)&0xfffffffe)+356;
-    j = (junk2.i[LOW_HALF]&511)<<1;
+      i = ((junk2.i[LOW_HALF] >> 8) & 0xfffffffe) + 356;
+      j = (junk2.i[LOW_HALF] & 511) << 1;
 
-    al = coar.x[i]*fine.x[j];
-    bet =(coar.x[i]*fine.x[j+1] + coar.x[i+1]*fine.x[j]) + coar.x[i+1]*fine.x[j+1];
+      al = coar.x[i] * fine.x[j];
+      bet = ((coar.x[i] * fine.x[j + 1] + coar.x[i + 1] * fine.x[j])
+	     + coar.x[i + 1] * fine.x[j + 1]);
 
-    rem=(bet + bet*eps)+al*eps;
-    res = al + rem;
-    cor = (al - res) + rem;
-    if  (res == (res+cor*(1.0+error+err_1))) return res*binexp.x;
-    else return -10.0;
-  }
+      rem = (bet + bet * eps) + al * eps;
+      res = al + rem;
+      cor = (al - res) + rem;
+      if (res == (res + cor * (1.0 + error + err_1)))
+	return res * binexp.x;
+      else
+	return -10.0;
+    }
 
-  if (n <= smallint) return 1.0; /*  if x->0 e^x=1 */
+  if (n <= smallint)
+    return 1.0;			/*  if x->0 e^x=1 */
 
-  if (n >= badint) {
-    if (n > infint) return(zero/zero);    /* x is NaN,  return invalid */
-    if (n < infint) return ( (x>0) ? (hhuge*hhuge) : (tiny*tiny) );
-    /* x is finite,  cause either overflow or underflow  */
-    if (junk1.i[LOW_HALF] != 0)  return (zero/zero);        /*  x is NaN  */
-    return ((x>0)?inf.x:zero );   /* |x| = inf;  return either inf or 0 */
-  }
+  if (n >= badint)
+    {
+      if (n > infint)
+	return (zero / zero);	/* x is NaN,  return invalid */
+      if (n < infint)
+	return ((x > 0) ? (hhuge * hhuge) : (tiny * tiny));
+      /* x is finite,  cause either overflow or underflow  */
+      if (junk1.i[LOW_HALF] != 0)
+	return (zero / zero);	/*  x is NaN  */
+      return ((x > 0) ? inf.x : zero);	/* |x| = inf;  return either inf or 0 */
+    }
 
-  y = x*log2e.x + three51.x;
+  y = x * log2e.x + three51.x;
   bexp = y - three51.x;
   junk1.x = y;
-  eps = bexp*ln_two2.x;
-  t = x - bexp*ln_two1.x;
+  eps = bexp * ln_two2.x;
+  t = x - bexp * ln_two1.x;
   y = t + three33.x;
   base = y - three33.x;
   junk2.x = y;
-  del = (t - base) + (xx-eps);
-  eps = del + del*del*(p3.x*del + p2.x);
-  i = ((junk2.i[LOW_HALF]>>8)&0xfffffffe)+356;
-  j = (junk2.i[LOW_HALF]&511)<<1;
-  al = coar.x[i]*fine.x[j];
-  bet =(coar.x[i]*fine.x[j+1] + coar.x[i+1]*fine.x[j]) + coar.x[i+1]*fine.x[j+1];
-  rem=(bet + bet*eps)+al*eps;
+  del = (t - base) + (xx - eps);
+  eps = del + del * del * (p3.x * del + p2.x);
+  i = ((junk2.i[LOW_HALF] >> 8) & 0xfffffffe) + 356;
+  j = (junk2.i[LOW_HALF] & 511) << 1;
+  al = coar.x[i] * fine.x[j];
+  bet = ((coar.x[i] * fine.x[j + 1] + coar.x[i + 1] * fine.x[j])
+	 + coar.x[i + 1] * fine.x[j + 1]);
+  rem = (bet + bet * eps) + al * eps;
   res = al + rem;
   cor = (al - res) + rem;
-  if (m>>31) {
-    ex=junk1.i[LOW_HALF];
-    if (res < 1.0) {res+=res; cor+=cor; ex-=1;}
-    if (ex >=-1022) {
-      binexp.i[HIGH_HALF] = (1023+ex)<<20;
-      if  (res == (res+cor*(1.0+error+err_1))) return res*binexp.x;
-      else return -10.0;
+  if (m >> 31)
+    {
+      ex = junk1.i[LOW_HALF];
+      if (res < 1.0)
+	{
+	  res += res;
+	  cor += cor;
+	  ex -= 1;
+	}
+      if (ex >= -1022)
+	{
+	  binexp.i[HIGH_HALF] = (1023 + ex) << 20;
+	  if (res == (res + cor * (1.0 + error + err_1)))
+	    return res * binexp.x;
+	  else
+	    return -10.0;
+	}
+      ex = -(1022 + ex);
+      binexp.i[HIGH_HALF] = (1023 - ex) << 20;
+      res *= binexp.x;
+      cor *= binexp.x;
+      eps = 1.00000000001 + (error + err_1) * binexp.x;
+      t = 1.0 + res;
+      y = ((1.0 - t) + res) + cor;
+      res = t + y;
+      cor = (t - res) + y;
+      if (res == (res + eps * cor))
+	{
+	  binexp.i[HIGH_HALF] = 0x00100000;
+	  return (res - 1.0) * binexp.x;
+	}
+      else
+	return -10.0;
     }
-    ex = -(1022+ex);
-    binexp.i[HIGH_HALF] = (1023-ex)<<20;
-    res*=binexp.x;
-    cor*=binexp.x;
-    eps=1.00000000001+(error+err_1)*binexp.x;
-    t=1.0+res;
-    y = ((1.0-t)+res)+cor;
-    res=t+y;
-    cor = (t-res)+y;
-    if (res == (res + eps*cor))
-      {binexp.i[HIGH_HALF] = 0x00100000; return (res-1.0)*binexp.x;}
-    else return -10.0;
-  }
-  else {
-    binexp.i[HIGH_HALF] =(junk1.i[LOW_HALF]+767)<<20;
-    if  (res == (res+cor*(1.0+error+err_1)))
-      return res*binexp.x*t256.x;
-    else return -10.0;
-  }
+  else
+    {
+      binexp.i[HIGH_HALF] = (junk1.i[LOW_HALF] + 767) << 20;
+      if (res == (res + cor * (1.0 + error + err_1)))
+	return res * binexp.x * t256.x;
+      else
+	return -10.0;
+    }
 }

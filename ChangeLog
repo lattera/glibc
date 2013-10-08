@@ -1,5 +1,7 @@
 2013-10-08  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/e_exp.c: Fix code formatting.
+
 	* sysdeps/generic/math_private.h (__mpsin1): Remove
 	declaration.
 	(__mpcos1): Likewise.
