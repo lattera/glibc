@@ -187,50 +187,119 @@ __cos32 (double x, double res, double res1)
     return (res < res1) ? res : res1;
 }
 
-/* Compute sin(x+dx) as Multi Precision number and return result as double.  */
+/* Compute sin() of double-length number (X + DX) as Multi Precision number and
+   return result as double.  If REDUCE_RANGE is true, X is assumed to be the
+   original input and DX is ignored.  */
 double
 SECTION
-__mpsin (double x, double dx)
+__mpsin (double x, double dx, bool reduce_range)
 {
-  int p;
   double y;
-  mp_no a, b, c;
-  p = 32;
-  __dbl_mp (x, &a, p);
-  __dbl_mp (dx, &b, p);
-  __add (&a, &b, &c, p);
-  if (x > 0.8)
+  mp_no a, b, c, s;
+  int n;
+  int p = 32;
+
+  if (reduce_range)
     {
-      __sub (&hp, &c, &a, p);
-      __c32 (&a, &b, &c, p);
+      n = __mpranred (x, &a, p);	/* n is 0, 1, 2 or 3.  */
+      __c32 (&a, &c, &s, p);
     }
   else
-    __c32 (&c, &a, &b, p);	/* b = sin(x+dx)  */
-  __mp_dbl (&b, &y, p);
+    {
+      n = -1;
+      __dbl_mp (x, &b, p);
+      __dbl_mp (dx, &c, p);
+      __add (&b, &c, &a, p);
+      if (x > 0.8)
+        {
+          __sub (&hp, &a, &b, p);
+          __c32 (&b, &s, &c, p);
+        }
+      else
+        __c32 (&a, &c, &s, p);	/* b = sin(x+dx)  */
+    }
+
+  /* Convert result based on which quarter of unit circle y is in.  */
+  switch (n)
+    {
+    case 1:
+      __mp_dbl (&c, &y, p);
+      break;
+
+    case 3:
+      __mp_dbl (&c, &y, p);
+      y = -y;
+      break;
+
+    case 2:
+      __mp_dbl (&s, &y, p);
+      y = -y;
+      break;
+
+    /* Quadrant not set, so the result must be sin (X + DX), which is also in
+       S.  */
+    case 0:
+    default:
+      __mp_dbl (&s, &y, p);
+    }
   return y;
 }
 
-/* Compute cos() of double-length number (x+dx) as Multi Precision number and
-   return result as double.  */
+/* Compute cos() of double-length number (X + DX) as Multi Precision number and
+   return result as double.  If REDUCE_RANGE is true, X is assumed to be the
+   original input and DX is ignored.  */
 double
 SECTION
-__mpcos (double x, double dx)
+__mpcos (double x, double dx, bool reduce_range)
 {
-  int p;
   double y;
-  mp_no a, b, c;
-  p = 32;
-  __dbl_mp (x, &a, p);
-  __dbl_mp (dx, &b, p);
-  __add (&a, &b, &c, p);
-  if (x > 0.8)
+  mp_no a, b, c, s;
+  int n;
+  int p = 32;
+
+  if (reduce_range)
     {
-      __sub (&hp, &c, &b, p);
-      __c32 (&b, &c, &a, p);
+      n = __mpranred (x, &a, p);	/* n is 0, 1, 2 or 3.  */
+      __c32 (&a, &c, &s, p);
     }
   else
-    __c32 (&c, &a, &b, p);	/* a = cos(x+dx)     */
-  __mp_dbl (&a, &y, p);
+    {
+      n = -1;
+      __dbl_mp (x, &b, p);
+      __dbl_mp (dx, &c, p);
+      __add (&b, &c, &a, p);
+      if (x > 0.8)
+        {
+          __sub (&hp, &a, &b, p);
+          __c32 (&b, &s, &c, p);
+        }
+      else
+        __c32 (&a, &c, &s, p);	/* a = cos(x+dx)     */
+    }
+
+  /* Convert result based on which quarter of unit circle y is in.  */
+  switch (n)
+    {
+    case 1:
+      __mp_dbl (&s, &y, p);
+      y = -y;
+      break;
+
+    case 3:
+      __mp_dbl (&s, &y, p);
+      break;
+
+    case 2:
+      __mp_dbl (&c, &y, p);
+      y = -y;
+      break;
+
+    /* Quadrant not set, so the result must be cos (X + DX), which is also
+       stored in C.  */
+    case 0:
+    default:
+      __mp_dbl (&c, &y, p);
+    }
   return y;
 }
 
@@ -293,85 +362,4 @@ __mpranred (double x, mp_no *y, int p)
 	}
       return (n & 3);
     }
-}
-
-/* Multi-Precision sin() function subroutine, for p = 32.  It is based on the
-   routines mpranred() and c32().  */
-double
-SECTION
-__mpsin1 (double x)
-{
-  int p;
-  int n;
-  mp_no u, s, c;
-  double y;
-  p = 32;
-  n = __mpranred (x, &u, p);	/* n is 0, 1, 2 or 3.  */
-  __c32 (&u, &c, &s, p);
-  /* Convert result based on which quarter of unit circle y is in.  */
-  switch (n)
-    {
-    case 0:
-      __mp_dbl (&s, &y, p);
-      return y;
-      break;
-
-    case 2:
-      __mp_dbl (&s, &y, p);
-      return -y;
-      break;
-
-    case 1:
-      __mp_dbl (&c, &y, p);
-      return y;
-      break;
-
-    case 3:
-      __mp_dbl (&c, &y, p);
-      return -y;
-      break;
-    }
-  /* Unreachable, to make the compiler happy.  */
-  return 0;
-}
-
-/* Multi-Precision cos() function subroutine, for p = 32.  It is based on the
-   routines mpranred() and c32().  */
-double
-SECTION
-__mpcos1 (double x)
-{
-  int p;
-  int n;
-  mp_no u, s, c;
-  double y;
-
-  p = 32;
-  n = __mpranred (x, &u, p);	/* n is 0, 1, 2 or 3.  */
-  __c32 (&u, &c, &s, p);
-  /* Convert result based on which quarter of unit circle y is in.  */
-  switch (n)
-    {
-    case 0:
-      __mp_dbl (&c, &y, p);
-      return y;
-      break;
-
-    case 2:
-      __mp_dbl (&c, &y, p);
-      return -y;
-      break;
-
-    case 1:
-      __mp_dbl (&s, &y, p);
-      return -y;
-      break;
-
-    case 3:
-      __mp_dbl (&s, &y, p);
-      return y;
-      break;
-    }
-  /* Unreachable, to make the compiler happy.  */
-  return 0;
 }

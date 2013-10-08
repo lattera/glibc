@@ -1,3 +1,30 @@
+2013-10-08  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/generic/math_private.h (__mpsin1): Remove
+	declaration.
+	(__mpcos1): Likewise.
+	(__mpsin): New argument __range_reduce.
+	(__mpcos): Likewise.
+	* sysdeps/ieee754/dbl-64/s_sin.c: Likewise.
+	(slow): Use __mpsin and __mpcos.
+	(slow1): Likewise.
+	(slow2): Likewise.
+	(sloww): Likewise.
+	(sloww1): Likewise.
+	(sloww2): Likewise.
+	(bsloww): Likewise.
+	(bsloww1): Likewise.
+	(bsloww2): Likewise.
+	(cslow2): Likewise.
+	(csloww): Likewise.
+	(csloww1): Likewise.
+	(csloww2): Likewise.
+	* sysdeps/ieee754/dbl-64/sincos32.c (__mpsin): Add argument
+	range_reduce.  Merge in __mpsin1.
+	(__mpcos): Likewise.
+	(__mpsin1): Remove.
+	(__mpcos1): Likewise.
+
 2013-10-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* locale/loadlocale.c (_nl_intern_locale_data): Use

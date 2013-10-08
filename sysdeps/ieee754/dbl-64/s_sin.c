@@ -127,10 +127,8 @@ static const double
 
 void __dubsin (double x, double dx, double w[]);
 void __docos (double x, double dx, double w[]);
-double __mpsin (double x, double dx);
-double __mpcos (double x, double dx);
-double __mpsin1 (double x);
-double __mpcos1 (double x);
+double __mpsin (double x, double dx, bool reduce_range);
+double __mpcos (double x, double dx, bool reduce_range);
 static double slow (double x);
 static double slow1 (double x);
 static double slow2 (double x);
@@ -722,7 +720,7 @@ slow (double x)
       if (w[0] == w[0] + 1.000000001 * w[1])
 	return (x > 0) ? w[0] : -w[0];
       else
-	return (x > 0) ? __mpsin (x, 0) : -__mpsin (-x, 0);
+	return (x > 0) ? __mpsin (x, 0, false) : -__mpsin (-x, 0, false);
     }
 }
 
@@ -762,7 +760,7 @@ slow1 (double x)
       if (w[0] == w[0] + 1.000000005 * w[1])
 	return (x > 0) ? w[0] : -w[0];
       else
-	return (x > 0) ? __mpsin (x, 0) : -__mpsin (-x, 0);
+	return (x > 0) ? __mpsin (x, 0, false) : -__mpsin (-x, 0, false);
     }
 }
 
@@ -815,7 +813,7 @@ slow2 (double x)
       if (w[0] == w[0] + 1.000000005 * w[1])
 	return (x > 0) ? w[0] : -w[0];
       else
-	return (x > 0) ? __mpsin (x, 0) : -__mpsin (-x, 0);
+	return (x > 0) ? __mpsin (x, 0, false) : -__mpsin (-x, 0, false);
     }
 }
 
@@ -882,7 +880,7 @@ sloww (double x, double dx, double orig)
 	  if (w[0] == w[0] + cor)
 	    return (a > 0) ? w[0] : -w[0];
 	  else
-	    return __mpsin1 (orig);
+	    return __mpsin (orig, 0, true);
 	}
     }
 }
@@ -939,7 +937,7 @@ sloww1 (double x, double dx, double orig)
       if (w[0] == w[0] + cor)
 	return (x > 0) ? w[0] : -w[0];
       else
-	return __mpsin1 (orig);
+	return __mpsin (orig, 0, true);
     }
 }
 
@@ -996,7 +994,7 @@ sloww2 (double x, double dx, double orig, int n)
       if (w[0] == w[0] + cor)
 	return (n & 2) ? -w[0] : w[0];
       else
-	return __mpsin1 (orig);
+	return __mpsin (orig, 0, true);
     }
 }
 
@@ -1028,7 +1026,7 @@ bsloww (double x, double dx, double orig, int n)
       if (w[0] == w[0] + cor)
 	return (x > 0) ? w[0] : -w[0];
       else
-	return (n & 1) ? __mpcos1 (orig) : __mpsin1 (orig);
+	return (n & 1) ? __mpcos (orig, 0, true) : __mpsin (orig, 0, true);
     }
 }
 
@@ -1079,7 +1077,7 @@ bsloww1 (double x, double dx, double orig, int n)
       if (w[0] == w[0] + cor)
 	return (x > 0) ? w[0] : -w[0];
       else
-	return (n & 1) ? __mpcos1 (orig) : __mpsin1 (orig);
+	return (n & 1) ? __mpcos (orig, 0, true) : __mpsin (orig, 0, true);
     }
 }
 
@@ -1131,7 +1129,7 @@ bsloww2 (double x, double dx, double orig, int n)
       if (w[0] == w[0] + cor)
 	return (n & 2) ? -w[0] : w[0];
       else
-	return (n & 1) ? __mpsin1 (orig) : __mpcos1 (orig);
+	return (n & 1) ? __mpsin (orig, 0, true) : __mpcos (orig, 0, true);
     }
 }
 
@@ -1173,7 +1171,7 @@ cslow2 (double x)
       if (w[0] == w[0] + 1.000000005 * w[1])
 	return w[0];
       else
-	return __mpcos (x, 0);
+	return __mpcos (x, 0, false);
     }
 }
 
@@ -1246,7 +1244,7 @@ csloww (double x, double dx, double orig)
 	  if (w[0] == w[0] + cor)
 	    return (a > 0) ? w[0] : -w[0];
 	  else
-	    return __mpcos1 (orig);
+	    return __mpcos (orig, 0, true);
 	}
     }
 }
@@ -1301,7 +1299,7 @@ csloww1 (double x, double dx, double orig)
       if (w[0] == w[0] + cor)
 	return (x > 0) ? w[0] : -w[0];
       else
-	return __mpcos1 (orig);
+	return __mpcos (orig, 0, true);
     }
 }
 
@@ -1357,7 +1355,7 @@ csloww2 (double x, double dx, double orig, int n)
       if (w[0] == w[0] + cor)
 	return (n) ? -w[0] : w[0];
       else
-	return __mpcos1 (orig);
+	return __mpcos (orig, 0, true);
     }
 }
 
