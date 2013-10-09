@@ -1,3 +1,8 @@
+2013-10-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* soft-fp/op-4.h (_FP_FRAC_DISASSEMBLE_4): Remove trailing
+	semicolon.  From Linux kernel.
+
 2013-10-09  Adam Buchbinder  <adam.buchbinder@gmail.com>
 
 	* soft-fp/op-common.h (_FP_UNPACK_CANONICAL): Fix typo in comment.
