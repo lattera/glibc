@@ -1,3 +1,7 @@
+2013-10-09  Adam Buchbinder  <adam.buchbinder@gmail.com>
+
+	* soft-fp/op-common.h (_FP_UNPACK_CANONICAL): Fix typo in comment.
+
 2013-10-08  Yogesh Chaudhari  <mr.yogesh@gmail.com>
 
 	[BZ #156]
