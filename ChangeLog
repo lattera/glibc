@@ -1,3 +1,8 @@
+2013-10-10  Will Newton  <will.newton@linaro.org>
+
+	* malloc/hooks.c (memalign_check): Ensure the value of bytes
+	passed to _int_memalign does not overflow.
+
 2013-10-10  Torvald Riegel  <triegel@redhat.com>
 
 	* scripts/bench.pl: Add include-sources directive.

@@ -361,10 +361,13 @@ memalign_check(size_t alignment, size_t bytes, const void *caller)
   if (alignment <= MALLOC_ALIGNMENT) return malloc_check(bytes, NULL);
   if (alignment <  MINSIZE) alignment = MINSIZE;
 
-  if (bytes+1 == 0) {
-    __set_errno (ENOMEM);
-    return NULL;
-  }
+  /* Check for overflow.  */
+  if (bytes > SIZE_MAX - alignment - MINSIZE)
+    {
+      __set_errno (ENOMEM);
+      return 0;
+    }
+
   (void)mutex_lock(&main_arena.mutex);
   mem = (top_check() >= 0) ? _int_memalign(&main_arena, alignment, bytes+1) :
     NULL;
