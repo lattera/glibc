@@ -134,6 +134,8 @@ __ieee754_asinl (long double x)
   long double a, t, w, p, q, c, r, s;
   int flag;
 
+  if (__glibc_unlikely (__isnanl (x)))
+    return x + x;
   flag = 0;
   a = __builtin_fabsl (x);
   if (a == 1.0L)	/* |x|>= 1 */

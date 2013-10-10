@@ -1,3 +1,10 @@
+2013-10-10  Joseph Myers  <joseph@codsourcery.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/e_acosl.c (__ieee754_acosl): Check
+	for NaNs before doing comparisons on argument.
+	* sysdeps/ieee754/ldbl-128ibm/e_asinl.c (__ieee754_asinl):
+	Likewise.
+
 2013-10-10  Will Newton  <will.newton@linaro.org>
 
 	* malloc/hooks.c (memalign_check): Ensure the value of bytes

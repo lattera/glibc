@@ -153,6 +153,8 @@ __ieee754_acosl (long double x)
 {
   long double a, z, r, w, p, q, s, t, f2;
 
+  if (__glibc_unlikely (__isnanl (x)))
+    return x + x;
   a = __builtin_fabsl (x);
   if (a == 1.0L)
     {
