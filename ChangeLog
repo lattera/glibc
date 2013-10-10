@@ -1,5 +1,21 @@
 2013-10-10  Joseph Myers  <joseph@codesourcery.com>
 
+	* soft-fp/extendxftf2.c: Use copyright year range.  Use URL
+	instead of FSF address.
+	* soft-fp/fixdfti.c: Likewise.
+	* soft-fp/fixsfti.c: Likewise.
+	* soft-fp/fixtfti.c: Likewise.
+	* soft-fp/fixunsdfti.c: Likewise.
+	* soft-fp/fixunssfti.c: Likewise.
+	* soft-fp/fixunstfti.c: Likewise.
+	* soft-fp/floattidf.c: Likewise.
+	* soft-fp/floattisf.c: Likewise.
+	* soft-fp/floattitf.c: Likewise.
+	* soft-fp/floatuntidf.c: Likewise.
+	* soft-fp/floatuntisf.c: Likewise.
+	* soft-fp/floatuntitf.c: Likewise.
+	* soft-fp/trunctfxf2.c: Likewise.
+
 	* soft-fp/extendxftf2.c: New file.  Copied from libgcc.
 	* soft-fp/fixdfti.c: Likewise.
 	* soft-fp/fixsfti.c: Likewise.
