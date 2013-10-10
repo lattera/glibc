@@ -33,15 +33,12 @@
 
 DFtype __negdf2(DFtype a)
 {
-  FP_DECL_EX;
   FP_DECL_D(A); FP_DECL_D(R);
   DFtype r;
 
-  FP_UNPACK_D(A, a);
+  FP_UNPACK_RAW_D(A, a);
   FP_NEG_D(R, A);
-  FP_PACK_D(r, R);
-  FP_CLEAR_EXCEPTIONS;
-  FP_HANDLE_EXCEPTIONS;
+  FP_PACK_RAW_D(r, R);
 
   return r;
 }

@@ -771,14 +771,12 @@ do {									 \
 
 
 /*
- * Main negation routine.  FIXME -- when we care about setting exception
- * bits reliably, this will not do.  We should examine all of the fp classes.
+ * Main negation routine.  The input value is raw.
  */
 
 #define _FP_NEG(fs, wc, R, X)		\
   do {					\
     _FP_FRAC_COPY_##wc(R, X);		\
-    R##_c = X##_c;			\
     R##_e = X##_e;			\
     R##_s = 1 ^ X##_s;			\
   } while (0)

@@ -24,7 +24,6 @@
 
 long double _Q_neg(const long double a)
 {
-  FP_DECL_EX;
   long double c = a;
 
 #if (__BYTE_ORDER == __BIG_ENDIAN)
@@ -36,11 +35,9 @@ long double _Q_neg(const long double a)
 #else
   FP_DECL_Q(A); FP_DECL_Q(C);
 
-  FP_UNPACK_Q(A, a);
+  FP_UNPACK_RAW_Q(A, a);
   FP_NEG_Q(C, A);
-  FP_PACK_Q(c, C);
+  FP_PACK_RAW_Q(c, C);
 #endif
-  FP_CLEAR_EXCEPTIONS;
-  FP_HANDLE_EXCEPTIONS;
   return c;
 }

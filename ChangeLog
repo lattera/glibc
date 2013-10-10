@@ -1,3 +1,14 @@
+2013-10-10  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16034]
+	* soft-fp/op-common.h (_FP_NEG): Document input as raw.  Do not
+	copy class of input value.
+	* soft-fp/negdf2.c (__negdf2): Use raw unpacking and packing.  Do
+	not handle exceptions.
+	* soft-fp/negsf2.c (__negsf2): Likewise.
+	* soft-fp/negtf2.c (__negtf2): Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_neg.c (_Q_neg): Likewise.
+
 2013-10-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* soft-fp/op-4.h (_FP_FRAC_DISASSEMBLE_4): Remove trailing
