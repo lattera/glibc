@@ -39,7 +39,7 @@ DFtype __extendsfdf2(SFtype a)
   FP_DECL_D(R);
   DFtype r;
 
-  FP_INIT_ROUNDMODE;
+  FP_INIT_EXCEPTIONS;
   FP_UNPACK_RAW_S(A, a);
 #if _FP_W_TYPE_SIZE < _FP_FRACBITS_D
   FP_EXTEND(D,S,2,1,R,A);

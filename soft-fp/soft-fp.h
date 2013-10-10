@@ -101,8 +101,16 @@
 #define FP_DECL_EX int _fex = 0
 #endif
 
+/* Initialize any machine-specific state used in FP_ROUNDMODE,
+   FP_TRAPPING_EXCEPTIONS or FP_HANDLE_EXCEPTIONS.  */
 #ifndef FP_INIT_ROUNDMODE
 #define FP_INIT_ROUNDMODE do {} while (0)
+#endif
+
+/* Initialize any machine-specific state used in
+   FP_HANDLE_EXCEPTIONS.  */
+#ifndef FP_INIT_EXCEPTIONS
+#define FP_INIT_EXCEPTIONS FP_INIT_ROUNDMODE
 #endif
 
 #ifndef FP_HANDLE_EXCEPTIONS

@@ -1,5 +1,11 @@
 2013-10-10  Joseph Myers  <joseph@codesourcery.com>
 
+	* soft-fp/soft-fp.h (FP_INIT_EXCEPTIONS): New macro.
+	* soft-fp/extenddftf2.c (__extenddftf2): Use FP_INIT_EXCEPTIONS
+	instead of FP_INIT_ROUNDMODE.
+	* soft-fp/extendsfdf2.c (__extendsfdf2): Likewise.
+	* soft-fp/extendsftf2.c (__extendsftf2): Likewise.
+
 	[BZ #16034]
 	* soft-fp/op-common.h (_FP_NEG): Document input as raw.  Do not
 	copy class of input value.
