@@ -1,3 +1,13 @@
+2013-10-30  Will Newton  <will.newton@linaro.org>
+
+	[BZ #16038]
+	* malloc/hooks.c (memalign_check): Limit alignment to the
+	maximum representable power of two.
+	* malloc/malloc.c (__libc_memalign): Likewise.
+	* malloc/tst-memalign.c (do_test): Add test for very
+	large alignment values.
+	* malloc/tst-posix_memalign.c (do_test): Likewise.
+
 2013-10-30  Ondřej Bílka  <neleai@seznam.cz>
 
 	[BZ #11087]

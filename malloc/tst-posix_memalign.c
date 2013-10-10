@@ -65,6 +65,16 @@ do_test (void)
 
   p = NULL;
 
+  /* Test to expose integer overflow in malloc internals from BZ #16038.  */
+  ret = posix_memalign (&p, -1, pagesize);
+
+  if (ret != EINVAL)
+    merror ("posix_memalign (&p, -1, pagesize) succeeded.");
+
+  free (p);
+
+  p = NULL;
+
   /* A zero-sized allocation should succeed with glibc, returning zero
      and setting p to a non-NULL value.  */
   ret = posix_memalign (&p, sizeof (void *), 0);

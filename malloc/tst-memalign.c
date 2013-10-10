@@ -70,6 +70,21 @@ do_test (void)
 
   free (p);
 
+  errno = 0;
+
+  /* Test to expose integer overflow in malloc internals from BZ #16038.  */
+  p = memalign (-1, pagesize);
+
+  save = errno;
+
+  if (p != NULL)
+    merror ("memalign (-1, pagesize) succeeded.");
+
+  if (p == NULL && save != EINVAL)
+    merror ("memalign (-1, pagesize) errno is not set correctly");
+
+  free (p);
+
   /* A zero-sized allocation should succeed with glibc, returning a
      non-NULL value.  */
   p = memalign (sizeof (void *), 0);

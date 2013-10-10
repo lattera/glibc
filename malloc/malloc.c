@@ -3016,6 +3016,14 @@ __libc_memalign(size_t alignment, size_t bytes)
   /* Otherwise, ensure that it is at least a minimum chunk size */
   if (alignment <  MINSIZE) alignment = MINSIZE;
 
+  /* If the alignment is greater than SIZE_MAX / 2 + 1 it cannot be a
+     power of 2 and will cause overflow in the check below.  */
+  if (alignment > SIZE_MAX / 2 + 1)
+    {
+      __set_errno (EINVAL);
+      return 0;
+    }
+
   /* Check for overflow.  */
   if (bytes > SIZE_MAX - alignment - MINSIZE)
     {
