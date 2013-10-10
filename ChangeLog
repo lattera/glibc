@@ -1,5 +1,13 @@
 2013-10-10  Joseph Myers  <joseph@codsourcery.com>
 
+	* sysdeps/powerpc/nofpu/Makefile [$(subdir) = math]
+	(CFLAGS-e_hypotl.c): Add -fno-builtin-fabsl.
+	[$(subdir) = math] (CFLAGS-w_acosl.c): Likewise.
+	[$(subdir) = math] (CFLAGS-w_asinl.c): Likewise.
+	[$(subdir) = math] (CFLAGS-w_atanhl.c): Likewise.
+	[$(subdir) = math] (CFLAGS-w_j0l.c): Likewise.
+	[$(subdir) = math] (CFLAGS-w_j1l.c): Likewise.
+
 	* sysdeps/ieee754/ldbl-128ibm/e_acosl.c (__ieee754_acosl): Check
 	for NaNs before doing comparisons on argument.
 	* sysdeps/ieee754/ldbl-128ibm/e_asinl.c (__ieee754_asinl):
