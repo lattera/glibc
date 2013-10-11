@@ -1,3 +1,20 @@
+2013-10-11  Eric Biggers  <ebiggers3@gmail.com>
+
+	[BZ #15362]
+	* libio/fileops.c (_IO_new_file_write): Return count of bytes
+	written.
+	(_IO_new_file_xsputn): Don't return EOF if nothing has been
+	written.
+	* libio/iofwrite.c (_IO_fwrite): Return count if bytes were
+	written to buffer but not flushed.
+	* libio/iofwrite_u.c:  Likewise.
+	* libio/iopadn.c:  Return bytes returned even if EOF was
+	encountered.
+	* libio/iowpadn.c:  Likewise.
+	* stdio-common/vfprintf.c [COMPILE_WPRINTF] (PAD): Return error
+	if _IO_padn does not write the whole buffer.
+	[!COMPILE_WPRINTF] (PAD): Likewise.
+
 2013-10-10  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/posix/dirstream.h (struct __dirstream): Fix alignment of

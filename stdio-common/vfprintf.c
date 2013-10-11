@@ -90,13 +90,13 @@
   do {									      \
     if (width > 0)							      \
       {									      \
-	unsigned int d = _IO_padn (s, (Padchar), width);		      \
-	if (__glibc_unlikely (d == EOF))				      \
+	_IO_ssize_t written = _IO_padn (s, (Padchar), width);		      \
+	if (__glibc_unlikely (written != width))			      \
 	  {								      \
 	    done = -1;							      \
 	    goto all_done;						      \
 	  }								      \
-	done_add (d);							      \
+	done_add (written);						      \
       }									      \
   } while (0)
 # define PUTC(C, F)	_IO_putc_unlocked (C, F)
@@ -119,13 +119,13 @@
   do {									      \
     if (width > 0)							      \
       {									      \
-	unsigned int d = _IO_wpadn (s, (Padchar), width);		      \
-	if (__glibc_unlikely (d == EOF))				      \
+	_IO_ssize_t written = _IO_wpadn (s, (Padchar), width);		      \
+	if (__glibc_unlikely (written != width))			      \
 	  {								      \
 	    done = -1;							      \
 	    goto all_done;						      \
 	  }								      \
-	done_add (d);							      \
+	done_add (written);						      \
       }									      \
   } while (0)
 # define PUTC(C, F)	_IO_putwc_unlocked (C, F)

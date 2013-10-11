@@ -65,7 +65,7 @@ _IO_wpadn (fp, pad, count)
       w = _IO_sputn (fp, (char *) padptr, PADSIZE);
       written += w;
       if (w != PADSIZE)
-	return w == EOF ? w : written;
+	return written;
     }
 
   if (i > 0)
