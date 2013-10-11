@@ -42,6 +42,7 @@
 #include "uatan.tbl"
 #include "atnat.h"
 #include <math.h>
+#include <stap-probe.h>
 
 void __mpatan (mp_no *, mp_no *, int);	/* see definition in mpatan.c */
 static double atanMp (double, const int[]);
@@ -306,8 +307,12 @@ atanMp (double x, const int pr[])
       __mp_dbl (&mpy1, &y1, p);
       __mp_dbl (&mpy2, &y2, p);
       if (y1 == y2)
-	return y1;
+	{
+	  LIBC_PROBE (slowatan, 3, &p, &x, &y1);
+	  return y1;
+	}
     }
+  LIBC_PROBE (slowatan_inexact, 3, &p, &x, &y1);
   return y1;			/*if impossible to do exact computing */
 }
 

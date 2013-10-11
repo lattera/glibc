@@ -34,6 +34,8 @@
 #include "mpa.h"
 #include <math_private.h>
 
+#include <stap-probe.h>
+
 #ifndef SECTION
 # define SECTION
 #endif
@@ -97,7 +99,12 @@ __slowpow (double x, double y, double z)
   __sub (&mpp, &eps, &mpr1, p);
   __mp_dbl (&mpr1, &res1, p);
   if (res == res1)
-    return res;
+    {
+      /* Track how often we get to the slow pow code plus
+	 its input/output values.  */
+      LIBC_PROBE (slowpow_p10, 4, &x, &y, &z, &res);
+      return res;
+    }
 
   /* If we don't, then we repeat using a higher precision.  768 bits of
      precision ought to be enough for anybody.  */
@@ -109,5 +116,10 @@ __slowpow (double x, double y, double z)
   __mul (&mpy, &mpz, &mpw, p);
   __mpexp (&mpw, &mpp, p);
   __mp_dbl (&mpp, &res, p);
+
+  /* Track how often we get to the uber-slow pow code plus
+     its input/output values.  */
+  LIBC_PROBE (slowpow_p32, 4, &x, &y, &z, &res);
+
   return res;
 }

@@ -41,6 +41,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <fenv.h>
+#include <stap-probe.h>
 
 #ifndef SECTION
 # define SECTION
@@ -838,6 +839,7 @@ tanMp (double x)
   p = 32;
   __mptan (x, &mpy, p);
   __mp_dbl (&mpy, &y, p);
+  LIBC_PROBE (slowtan, 2, &x, &y);
   return y;
 }
 

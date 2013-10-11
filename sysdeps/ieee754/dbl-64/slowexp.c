@@ -29,6 +29,8 @@
 /**************************************************************************/
 #include <math_private.h>
 
+#include <stap-probe.h>
+
 #ifndef USE_LONG_DOUBLE_FOR_MP
 # include "mpa.h"
 void __mpexp (mp_no *x, mp_no *y, int p);
@@ -60,13 +62,22 @@ __slowexp (double x)
   __mp_dbl (&mpw, &w, p);
   __mp_dbl (&mpz, &z, p);
   if (w == z)
-    return w;
+    {
+      /* Track how often we get to the slow exp code plus
+	 its input/output values.  */
+      LIBC_PROBE (slowexp_p6, 2, &x, &w);
+      return w;
+    }
   else
     {
       p = 32;
       __dbl_mp (x, &mpx, p);
       __mpexp (&mpx, &mpy, p);
       __mp_dbl (&mpy, &res, p);
+
+      /* Track how often we get to the uber-slow exp code plus
+	 its input/output values.  */
+      LIBC_PROBE (slowexp_p32, 2, &x, &res);
       return res;
     }
 #else

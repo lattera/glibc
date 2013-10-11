@@ -42,6 +42,7 @@
 #include "uatan.tbl"
 #include "atnat2.h"
 #include <math_private.h>
+#include <stap-probe.h>
 
 #ifndef SECTION
 # define SECTION
@@ -597,7 +598,11 @@ atan2Mp (double x, double y, const int pr[])
       __mp_dbl (&mpz1, &z1, p);
       __mp_dbl (&mpz2, &z2, p);
       if (z1 == z2)
-	return z1;
+	{
+	  LIBC_PROBE (slowatan2, 4, &p, &x, &y, &z1);
+	  return z1;
+	}
     }
+  LIBC_PROBE (slowatan2_inexact, 4, &p, &x, &y, &z1);
   return z1;			/*if impossible to do exact computing */
 }

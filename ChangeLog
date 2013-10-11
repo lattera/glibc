@@ -1,3 +1,20 @@
+2013-10-11  Siddhesh Poyarekar  <siddhesh@redhat.com>
+	    Jeff Law  <law@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/e_atan2.c: Include stap-probe.h.
+	(atan2Mp): Add systemtap probe marker.
+	* sysdeps/ieee754/dbl-64/e_log.c: include stap-probe.h.
+	(__ieee754_log): Add systemtap probe marker.
+	* sysdeps/ieee754/dbl-64/s_atan.c: Include stap-probe.h.
+	(atanMp): Add systemtap probe marker.
+	* sysdeps/ieee754/dbl-64/s_tan.c: Include stap-probe.h.
+	(tanMp): Add systemtap probe marker.
+	* sysdeps/ieee754/dbl-64/slowexp.c: Include stap-probe.h.
+	(__slowexp): Add systemtap probe marker.
+	* sysdeps/ieee754/dbl-64/slowpow.c: Include stap-probe.h.
+	(__slowpow): Add systemtap probe marker.
+	* manual/probes.texi: Document probes.
+
 2013-10-11  Eric Biggers  <ebiggers3@gmail.com>
 
 	[BZ #15362]

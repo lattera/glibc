@@ -39,6 +39,7 @@
 #include "mpa.h"
 #include "MathLib.h"
 #include <math_private.h>
+#include <stap-probe.h>
 
 #ifndef SECTION
 # define SECTION
@@ -242,8 +243,12 @@ stage_n:
       __mp_dbl (&mpy1, &y1, p);
       __mp_dbl (&mpy2, &y2, p);
       if (y1 == y2)
-	return y1;
+	{
+	  LIBC_PROBE (slowlog, 3, &p, &x, &y1);
+	  return y1;
+	}
     }
+  LIBC_PROBE (slowlog_inexact, 3, &p, &x, &y1);
   return y1;
 }
 
