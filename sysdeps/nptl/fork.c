@@ -141,8 +141,9 @@ __libc_fork (void)
 
       assert (THREAD_GETMEM (self, tid) != ppid);
 
+      /* See __pthread_once.  */
       if (__fork_generation_pointer != NULL)
-	*__fork_generation_pointer += 4;
+	*__fork_generation_pointer += __PTHREAD_ONCE_FORK_GEN_INCR;
 
       /* Adjust the PID field for the new process.  */
       THREAD_SETMEM (self, pid, THREAD_GETMEM (self, tid));

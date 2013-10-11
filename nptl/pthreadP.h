@@ -161,6 +161,12 @@ enum
 #define FUTEX_TID_MASK		0x3fffffff
 
 
+/* pthread_once definitions.  See __pthread_once for how these are used.  */
+#define __PTHREAD_ONCE_INPROGRESS	1
+#define __PTHREAD_ONCE_DONE		2
+#define __PTHREAD_ONCE_FORK_GEN_INCR	4
+
+
 /* Internal variables.  */
 
 
