@@ -1,3 +1,8 @@
+2013-10-10  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/posix/dirstream.h (struct __dirstream): Fix alignment of
+	directory block.
+
 2013-10-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* soft-fp/extendxftf2.c: Use copyright year range.  Use URL

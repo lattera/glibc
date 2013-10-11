@@ -41,8 +41,13 @@ struct __dirstream
 
     int errcode;		/* Delayed error code.  */
 
-    /* Directory block.  */
-    char data[0] __attribute__ ((aligned (__alignof__ (void*))));
+    /* Directory block.  We must make sure that this block starts
+       at an address that is aligned adequately enough to store
+       dirent entries.  Using the alignment of "void *" is not
+       sufficient because dirents on 32-bit platforms can require
+       64-bit alignment.  We use "long double" here to be consistent
+       with what malloc uses.  */
+    char data[0] __attribute__ ((aligned (__alignof__ (long double))));
   };
 
 #define _DIR_dirfd(dirp)	((dirp)->fd)
