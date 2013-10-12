@@ -142,6 +142,30 @@
 #define FP_TRAPPING_EXCEPTIONS 0
 #endif
 
+/* A file using soft-fp may define FP_NO_EXCEPTIONS before including
+   soft-fp.h to indicate that, although a macro used there could raise
+   exceptions, or do rounding and potentially thereby raise
+   exceptions, for some arguments, for the particular arguments used
+   in that file no exceptions or rounding can occur.  Such a file
+   should not itself use macros relating to handling exceptions and
+   rounding modes; this is only for indirect uses (in particular, in
+   _FP_FROM_INT and the macros it calls).  */
+#ifdef FP_NO_EXCEPTIONS
+
+#undef FP_SET_EXCEPTION
+#define FP_SET_EXCEPTION(ex) do {} while (0)
+
+#undef FP_CUR_EXCEPTIONS
+#define FP_CUR_EXCEPTIONS 0
+
+#undef FP_TRAPPING_EXCEPTIONS
+#define FP_TRAPPING_EXCEPTIONS 0
+
+#undef FP_ROUNDMODE
+#define FP_ROUNDMODE FP_RND_ZERO
+
+#endif
+
 #define _FP_ROUND_NEAREST(wc, X)			\
 do {							\
     if ((_FP_FRAC_LOW_##wc(X) & 15) != _FP_WORK_ROUND)	\

@@ -1,5 +1,23 @@
 2013-10-12  Joseph Myers  <joseph@codesourcery.com>
 
+	* soft-fp/soft-fp.h [FP_NO_EXCEPTIONS] (FP_SET_EXCEPTION):
+	Undefine and redefine.
+	[FP_NO_EXCEPTIONS] (FP_CUR_EXCEPTIONS): Likewise.
+	[FP_NO_EXCEPTIONS] (FP_TRAPPING_EXCEPTIONS): Likewise.
+	[FP_NO_EXCEPTIONS] (FP_ROUNDMODE): Likewise.
+	* soft-fp/floatditf.c (FP_NO_EXCEPTIONS): Define macro.
+	(__floatditf): Don't use FP_DECL_EX or FP_HANDLE_EXCEPTIONS.
+	* soft-fp/floatsidf.c (FP_NO_EXCEPTIONS): Define macro.
+	(__floatsidf): Don't use FP_DECL_EX or FP_HANDLE_EXCEPTIONS.
+	* soft-fp/floatsitf.c (FP_NO_EXCEPTIONS): Define macro.
+	(__floatsitf): Don't use FP_DECL_EX or FP_HANDLE_EXCEPTIONS.
+	* soft-fp/floatunditf.c (FP_NO_EXCEPTIONS): Define macro.
+	(__floatunditf): Don't use FP_DECL_EX or FP_HANDLE_EXCEPTIONS.
+	* soft-fp/floatunsidf.c (FP_NO_EXCEPTIONS): Define macro.
+	(__floatunsidf): Don't use FP_DECL_EX or FP_HANDLE_EXCEPTIONS.
+	* soft-fp/floatunsitf.c (FP_NO_EXCEPTIONS): Define macro.
+	(__floatunsitf): Don't use FP_DECL_EX or FP_HANDLE_EXCEPTIONS.
+
 	[BZ #16032]
 	* soft-fp/op-2.h (_FP_DIV_MEAT_2_udiv): Shift numerator right
 	without decrementing exponent if mantissa >= that for the
