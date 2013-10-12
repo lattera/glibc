@@ -412,7 +412,7 @@ setlocale (int category, const char *locale)
 	  /* We must not simply free a global locale since we have no
 	     control over the usage.  So we mark it as un-deletable.
 
-	     Note: do not remove the `if', it's necessary to copy with
+	     Note: do not remove the `if', it's necessary to cope with
 	     the builtin locale data.  */
 	  if (newdata->usage_count != UNDELETABLE)
 	    newdata->usage_count = UNDELETABLE;

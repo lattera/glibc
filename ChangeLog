@@ -1,3 +1,8 @@
+2013-10-12   Reuben Thomas <rrt@sc3d.org>
+
+	[BZ #15764]
+	* locale/setlocale.c: Fix typo.
+
 2013-10-12  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16036]
