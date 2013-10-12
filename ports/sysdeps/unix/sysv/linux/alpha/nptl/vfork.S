@@ -26,7 +26,7 @@
 	mov	v0, a1;							\
 	/* If the cached value is initialized (nonzero), then write	\
 	   back its negation, or INT_MIN, to indicate that the pid	\
-	   value is uninitialized in the the child, and in the window	\
+	   value is uninitialized in the child, and in the window	\
 	   between here and the point at which we restore the value.  */ \
 	ldah	t0, -0x8000;						\
 	negl	a2, t1;							\

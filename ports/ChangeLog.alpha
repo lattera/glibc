@@ -1,3 +1,8 @@
+2013-10-12   Yuri Chornoivan <yurchor@ukr.net>
+
+	* sysdeps/unix/sysv/linux/alpha/nptl/pt-vfork.S: Fix typos.
+	* sysdeps/unix/sysv/linux/alpha/nptl/vfork.S: Likewise.
+
 2013-10-01  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/alpha/sysdep.h (PTR_MANGLE): Improve conditions under

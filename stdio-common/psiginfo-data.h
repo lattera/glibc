@@ -34,7 +34,7 @@ P (TRAP_TRACE, N_("Process trace trap"))
 #if NOW == SIGCLD
 P (CLD_EXITED, N_("Child has exited"))
 P (CLD_KILLED, N_("Child has terminated abnormally and did not create a core file"))
-P (CLD_DUMPED, N_("Child hat terminated abnormally and created a core file"))
+P (CLD_DUMPED, N_("Child has terminated abnormally and created a core file"))
 P (CLD_TRAPPED, N_("Traced child has trapped"))
 P (CLD_STOPPED, N_("Child has stopped"))
 P (CLD_CONTINUED, N_("Stopped child has continued"))

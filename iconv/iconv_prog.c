@@ -789,7 +789,7 @@ print_known_names (void)
 
   if (human_readable)
     fputs (_("\
-The following list contain all the coded character sets known.  This does\n\
+The following list contains all the coded character sets known.  This does\n\
 not necessarily mean that all combinations of these names can be used for\n\
 the FROM and TO command line parameters.  One coded character set can be\n\
 listed with several different names (aliases).\n\n  "), stdout);

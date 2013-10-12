@@ -1,3 +1,8 @@
+2013-10-12   Yuri Chornoivan <yurchor@ukr.net>
+
+	* iconv/iconv_prog.c: Fix typos.
+	* stdio-common/psiginfo-data.h: Likewise.
+
 2013-10-12   Reuben Thomas <rrt@sc3d.org>
 
 	[BZ #15764]
