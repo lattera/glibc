@@ -37,6 +37,7 @@ DFtype __floatdidf(DItype i)
   FP_DECL_D(A);
   DFtype a;
 
+  FP_INIT_ROUNDMODE;
   FP_FROM_INT_D(A, i, DI_BITS, UDItype);
   FP_PACK_RAW_D(a, A);
   FP_HANDLE_EXCEPTIONS;

@@ -37,6 +37,7 @@ SFtype __floatunsisf(USItype i)
   FP_DECL_S(A);
   SFtype a;
 
+  FP_INIT_ROUNDMODE;
   FP_FROM_INT_S(A, i, SI_BITS, USItype);
   FP_PACK_RAW_S(a, A);
   FP_HANDLE_EXCEPTIONS;

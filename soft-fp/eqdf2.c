@@ -37,6 +37,7 @@ CMPtype __eqdf2(DFtype a, DFtype b)
   FP_DECL_D(A); FP_DECL_D(B);
   CMPtype r;
 
+  FP_INIT_EXCEPTIONS;
   FP_UNPACK_RAW_D(A, a);
   FP_UNPACK_RAW_D(B, b);
   FP_CMP_EQ_D(r, A, B);

@@ -36,6 +36,7 @@ TItype __fixdfti(DFtype a)
   FP_DECL_D(A);
   UTItype r;
 
+  FP_INIT_EXCEPTIONS;
   FP_UNPACK_RAW_D(A, a);
   FP_TO_INT_D(r, A, TI_BITS, 1);
   FP_HANDLE_EXCEPTIONS;

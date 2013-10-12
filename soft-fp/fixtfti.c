@@ -36,6 +36,7 @@ TItype __fixtfti(TFtype a)
   FP_DECL_Q(A);
   UTItype r;
 
+  FP_INIT_EXCEPTIONS;
   FP_UNPACK_RAW_Q(A, a);
   FP_TO_INT_Q(r, A, TI_BITS, 1);
   FP_HANDLE_EXCEPTIONS;
