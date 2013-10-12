@@ -469,7 +469,7 @@
 #define _FP_DIV_MEAT_2_udiv(fs, R, X, Y)				\
   do {									\
     _FP_W_TYPE _n_f2, _n_f1, _n_f0, _r_f1, _r_f0, _m_f1, _m_f0;		\
-    if (_FP_FRAC_GT_2(X, Y))						\
+    if (_FP_FRAC_GE_2(X, Y))						\
       {									\
 	_n_f2 = X##_f1 >> 1;						\
 	_n_f1 = X##_f1 << (_FP_W_TYPE_SIZE - 1) | X##_f0 >> 1;		\
@@ -539,9 +539,8 @@
     _FP_W_TYPE _x[4], _y[2], _z[4];					\
     _y[0] = Y##_f0; _y[1] = Y##_f1;					\
     _x[0] = _x[3] = 0;							\
-    if (_FP_FRAC_GT_2(X, Y))						\
+    if (_FP_FRAC_GE_2(X, Y))						\
       {									\
-	R##_e++;							\
 	_x[1] = (X##_f0 << (_FP_WFRACBITS_##fs-1 - _FP_W_TYPE_SIZE) |	\
 		 X##_f1 >> (_FP_W_TYPE_SIZE -				\
 			    (_FP_WFRACBITS_##fs-1 - _FP_W_TYPE_SIZE)));	\
@@ -549,6 +548,7 @@
       }									\
     else								\
       {									\
+	R##_e--;							\
 	_x[1] = (X##_f0 << (_FP_WFRACBITS_##fs - _FP_W_TYPE_SIZE) |	\
 		 X##_f1 >> (_FP_W_TYPE_SIZE -				\
 			    (_FP_WFRACBITS_##fs - _FP_W_TYPE_SIZE)));	\

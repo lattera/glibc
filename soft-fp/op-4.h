@@ -381,7 +381,7 @@
     int _i;								    \
     _FP_FRAC_DECL_4(_n); _FP_FRAC_DECL_4(_m);				    \
     _FP_FRAC_SET_4(_n, _FP_ZEROFRAC_4);					    \
-    if (_FP_FRAC_GT_4(X, Y))						    \
+    if (_FP_FRAC_GE_4(X, Y))						    \
       {									    \
 	_n_f[3] = X##_f[0] << (_FP_W_TYPE_SIZE - 1);			    \
 	_FP_FRAC_SRL_4(X, 1);						    \

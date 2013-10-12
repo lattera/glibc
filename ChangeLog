@@ -1,5 +1,16 @@
 2013-10-12  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16032]
+	* soft-fp/op-2.h (_FP_DIV_MEAT_2_udiv): Shift numerator right
+	without decrementing exponent if mantissa >= that for the
+	denominator, not >.
+	(_FP_DIV_MEAT_2_gmp): Test numerator mantissa >= that for the
+	denominator, not >.  Decrement exponent in < case instead of
+	incrementing in >= case.
+	* soft-fp/op-4.h (_FP_DIV_MEAT_4_udiv): Shift numerator right
+	without decrementing exponent if mantissa >= that for the
+	denominator, not >.
+
 	* soft-fp/op-common.h (_FP_TO_INT): Reverse test of sign for
 	computing saturated result for unsigned overflow.
 
