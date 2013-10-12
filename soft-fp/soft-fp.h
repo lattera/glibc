@@ -33,18 +33,18 @@
 #define SOFT_FP_H
 
 #ifdef _LIBC
-#include <sfp-machine.h>
+# include <sfp-machine.h>
 #else
-#include "sfp-machine.h"
+# include "sfp-machine.h"
 #endif
 
 /* Allow sfp-machine to have its own byte order definitions. */
 #ifndef __BYTE_ORDER
-#ifdef _LIBC
-#include <endian.h>
-#else
-#error "endianness not defined by sfp-machine.h"
-#endif
+# ifdef _LIBC
+#  include <endian.h>
+# else
+#  error "endianness not defined by sfp-machine.h"
+# endif
 #endif
 
 #define _FP_WORKBITS		3
@@ -65,22 +65,22 @@
 
 /* By default don't care about exceptions. */
 #ifndef FP_EX_INVALID
-#define FP_EX_INVALID		0
+# define FP_EX_INVALID		0
 #endif
 #ifndef FP_EX_OVERFLOW
-#define FP_EX_OVERFLOW		0
+# define FP_EX_OVERFLOW		0
 #endif
 #ifndef FP_EX_UNDERFLOW
-#define FP_EX_UNDERFLOW		0
+# define FP_EX_UNDERFLOW	0
 #endif
 #ifndef FP_EX_DIVZERO
-#define FP_EX_DIVZERO		0
+# define FP_EX_DIVZERO		0
 #endif
 #ifndef FP_EX_INEXACT
-#define FP_EX_INEXACT		0
+# define FP_EX_INEXACT		0
 #endif
 #ifndef FP_EX_DENORM
-#define FP_EX_DENORM		0
+# define FP_EX_DENORM		0
 #endif
 
 /* _FP_STRUCT_LAYOUT may be defined as an attribute to determine the
@@ -90,31 +90,31 @@
    differences in how consecutive bit-fields are laid out from the
    default expected by soft-fp.  */
 #ifndef _FP_STRUCT_LAYOUT
-#define _FP_STRUCT_LAYOUT
+# define _FP_STRUCT_LAYOUT
 #endif
 
 #ifdef _FP_DECL_EX
-#define FP_DECL_EX					\
+# define FP_DECL_EX					\
   int _fex = 0;						\
   _FP_DECL_EX
 #else
-#define FP_DECL_EX int _fex = 0
+# define FP_DECL_EX int _fex = 0
 #endif
 
 /* Initialize any machine-specific state used in FP_ROUNDMODE,
    FP_TRAPPING_EXCEPTIONS or FP_HANDLE_EXCEPTIONS.  */
 #ifndef FP_INIT_ROUNDMODE
-#define FP_INIT_ROUNDMODE do {} while (0)
+# define FP_INIT_ROUNDMODE do {} while (0)
 #endif
 
 /* Initialize any machine-specific state used in
    FP_HANDLE_EXCEPTIONS.  */
 #ifndef FP_INIT_EXCEPTIONS
-#define FP_INIT_EXCEPTIONS FP_INIT_ROUNDMODE
+# define FP_INIT_EXCEPTIONS FP_INIT_ROUNDMODE
 #endif
 
 #ifndef FP_HANDLE_EXCEPTIONS
-#define FP_HANDLE_EXCEPTIONS do {} while (0)
+# define FP_HANDLE_EXCEPTIONS do {} while (0)
 #endif
 
 #ifndef FP_INHIBIT_RESULTS
@@ -123,7 +123,7 @@
  * check if some exceptions are unmasked
  * and inhibit it in such a case.
  */
-#define FP_INHIBIT_RESULTS 0
+# define FP_INHIBIT_RESULTS 0
 #endif
 
 #define FP_SET_EXCEPTION(ex)				\
@@ -139,7 +139,7 @@
   (_fex)
 
 #ifndef FP_TRAPPING_EXCEPTIONS
-#define FP_TRAPPING_EXCEPTIONS 0
+# define FP_TRAPPING_EXCEPTIONS 0
 #endif
 
 /* A file using soft-fp may define FP_NO_EXCEPTIONS before including
@@ -152,17 +152,17 @@
    _FP_FROM_INT and the macros it calls).  */
 #ifdef FP_NO_EXCEPTIONS
 
-#undef FP_SET_EXCEPTION
-#define FP_SET_EXCEPTION(ex) do {} while (0)
+# undef FP_SET_EXCEPTION
+# define FP_SET_EXCEPTION(ex) do {} while (0)
 
-#undef FP_CUR_EXCEPTIONS
-#define FP_CUR_EXCEPTIONS 0
+# undef FP_CUR_EXCEPTIONS
+# define FP_CUR_EXCEPTIONS 0
 
-#undef FP_TRAPPING_EXCEPTIONS
-#define FP_TRAPPING_EXCEPTIONS 0
+# undef FP_TRAPPING_EXCEPTIONS
+# define FP_TRAPPING_EXCEPTIONS 0
 
-#undef FP_ROUNDMODE
-#define FP_ROUNDMODE FP_RND_ZERO
+# undef FP_ROUNDMODE
+# define FP_ROUNDMODE FP_RND_ZERO
 
 #endif
 
@@ -239,22 +239,22 @@ typedef USItype UHWtype;
 #endif
 
 #ifndef CMPtype
-#define CMPtype		int
+# define CMPtype	int
 #endif
 
 #define SI_BITS		(__CHAR_BIT__ * (int)sizeof(SItype))
 #define DI_BITS		(__CHAR_BIT__ * (int)sizeof(DItype))
 
 #ifndef umul_ppmm
-#ifdef _LIBC
-#include <stdlib/longlong.h>
-#else
-#include "longlong.h"
-#endif
+# ifdef _LIBC
+#  include <stdlib/longlong.h>
+# else
+#  include "longlong.h"
+# endif
 #endif
 
 #ifdef _LIBC
-#include <stdlib.h>
+# include <stdlib.h>
 #else
 extern void abort (void);
 #endif

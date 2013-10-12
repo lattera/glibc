@@ -537,7 +537,7 @@
   (X##_f[3] = I3, X##_f[2] = I2, X##_f[1] = I1, X##_f[0] = I0)
 
 #ifndef __FP_FRAC_ADD_3
-#define __FP_FRAC_ADD_3(r2,r1,r0,x2,x1,x0,y2,y1,y0)		\
+# define __FP_FRAC_ADD_3(r2,r1,r0,x2,x1,x0,y2,y1,y0)		\
   do {								\
     _FP_W_TYPE __FP_FRAC_ADD_3_c1, __FP_FRAC_ADD_3_c2;		\
     r0 = x0 + y0;						\
@@ -551,7 +551,7 @@
 #endif
 
 #ifndef __FP_FRAC_ADD_4
-#define __FP_FRAC_ADD_4(r3,r2,r1,r0,x3,x2,x1,x0,y3,y2,y1,y0)	\
+# define __FP_FRAC_ADD_4(r3,r2,r1,r0,x3,x2,x1,x0,y3,y2,y1,y0)	\
   do {								\
     _FP_W_TYPE _c1, _c2, _c3;					\
     r0 = x0 + y0;						\
@@ -569,7 +569,7 @@
 #endif
 
 #ifndef __FP_FRAC_SUB_3
-#define __FP_FRAC_SUB_3(r2,r1,r0,x2,x1,x0,y2,y1,y0)		\
+# define __FP_FRAC_SUB_3(r2,r1,r0,x2,x1,x0,y2,y1,y0)		\
   do {								\
     _FP_W_TYPE _c1, _c2;					\
     r0 = x0 - y0;						\
@@ -583,7 +583,7 @@
 #endif
 
 #ifndef __FP_FRAC_SUB_4
-#define __FP_FRAC_SUB_4(r3,r2,r1,r0,x3,x2,x1,x0,y3,y2,y1,y0)	\
+# define __FP_FRAC_SUB_4(r3,r2,r1,r0,x3,x2,x1,x0,y3,y2,y1,y0)	\
   do {								\
     _FP_W_TYPE _c1, _c2, _c3;					\
     r0 = x0 - y0;						\
@@ -601,7 +601,7 @@
 #endif
 
 #ifndef __FP_FRAC_DEC_3
-#define __FP_FRAC_DEC_3(x2,x1,x0,y2,y1,y0)				\
+# define __FP_FRAC_DEC_3(x2,x1,x0,y2,y1,y0)				\
   do {									\
     UWtype _t0, _t1, _t2;						\
     _t0 = x0, _t1 = x1, _t2 = x2;					\
@@ -610,7 +610,7 @@
 #endif
 
 #ifndef __FP_FRAC_DEC_4
-#define __FP_FRAC_DEC_4(x3,x2,x1,x0,y3,y2,y1,y0)			\
+# define __FP_FRAC_DEC_4(x3,x2,x1,x0,y3,y2,y1,y0)			\
   do {									\
     UWtype _t0, _t1, _t2, _t3;						\
     _t0 = x0, _t1 = x1, _t2 = x2, _t3 = x3;				\
@@ -619,7 +619,7 @@
 #endif
 
 #ifndef __FP_FRAC_ADDI_4
-#define __FP_FRAC_ADDI_4(x3,x2,x1,x0,i)					\
+# define __FP_FRAC_ADDI_4(x3,x2,x1,x0,i)				\
   do {									\
     UWtype _t;								\
     _t = ((x0 += i) < i);						\

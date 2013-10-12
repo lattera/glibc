@@ -1,3 +1,14 @@
+2013-10-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* soft-fp/double.h: Indent preprocessor directives inside #if.
+	* soft-fp/extended.h: Likewise.
+	* soft-fp/op-2.h: Likewise.
+	* soft-fp/op-4.h: Likewise.
+	* soft-fp/op-common.h: Likewise.
+	* soft-fp/quad.h: Likewise.
+	* soft-fp/single.h: Likewise.
+	* soft-fp/soft-fp.h: Likewise.
+
 2013-10-12   Yuri Chornoivan <yurchor@ukr.net>
 
 	* iconv/iconv_prog.c: Fix typos.

@@ -1553,7 +1553,7 @@ do {									     \
 
 #ifndef __FP_CLZ
 /* GCC 3.4 and later provide the builtins for us.  */
-#define __FP_CLZ(r, x)							      \
+# define __FP_CLZ(r, x)							      \
   do {									      \
     if (sizeof (_FP_W_TYPE) == sizeof (unsigned int))			      \
       r = __builtin_clz (x);						      \

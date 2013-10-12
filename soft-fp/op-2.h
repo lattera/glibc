@@ -165,36 +165,37 @@
 
 #if 0
 
-#ifndef __FP_FRAC_ADDI_2
-#define __FP_FRAC_ADDI_2(xh, xl, i)	\
+# ifndef __FP_FRAC_ADDI_2
+#  define __FP_FRAC_ADDI_2(xh, xl, i)	\
   (xh += ((xl += i) < i))
-#endif
-#ifndef __FP_FRAC_ADD_2
-#define __FP_FRAC_ADD_2(rh, rl, xh, xl, yh, yl)	\
+# endif
+# ifndef __FP_FRAC_ADD_2
+#  define __FP_FRAC_ADD_2(rh, rl, xh, xl, yh, yl)	\
   (rh = xh + yh + ((rl = xl + yl) < xl))
-#endif
-#ifndef __FP_FRAC_SUB_2
-#define __FP_FRAC_SUB_2(rh, rl, xh, xl, yh, yl)	\
+# endif
+# ifndef __FP_FRAC_SUB_2
+#  define __FP_FRAC_SUB_2(rh, rl, xh, xl, yh, yl)	\
   (rh = xh - yh - ((rl = xl - yl) > xl))
-#endif
-#ifndef __FP_FRAC_DEC_2
-#define __FP_FRAC_DEC_2(xh, xl, yh, yl)	\
+# endif
+# ifndef __FP_FRAC_DEC_2
+#  define __FP_FRAC_DEC_2(xh, xl, yh, yl)	\
   do {					\
     UWtype _t = xl;			\
     xh -= yh + ((xl -= yl) > _t);	\
   } while (0)
-#endif
+# endif
 
 #else
 
-#undef __FP_FRAC_ADDI_2
-#define __FP_FRAC_ADDI_2(xh, xl, i)	add_ssaaaa(xh, xl, xh, xl, 0, i)
-#undef __FP_FRAC_ADD_2
-#define __FP_FRAC_ADD_2			add_ssaaaa
-#undef __FP_FRAC_SUB_2
-#define __FP_FRAC_SUB_2			sub_ddmmss
-#undef __FP_FRAC_DEC_2
-#define __FP_FRAC_DEC_2(xh, xl, yh, yl)	sub_ddmmss(xh, xl, xh, xl, yh, yl)
+# undef __FP_FRAC_ADDI_2
+# define __FP_FRAC_ADDI_2(xh, xl, i)	add_ssaaaa(xh, xl, xh, xl, 0, i)
+# undef __FP_FRAC_ADD_2
+# define __FP_FRAC_ADD_2		add_ssaaaa
+# undef __FP_FRAC_SUB_2
+# define __FP_FRAC_SUB_2		sub_ddmmss
+# undef __FP_FRAC_DEC_2
+# define __FP_FRAC_DEC_2(xh, xl, yh, yl)	\
+  sub_ddmmss(xh, xl, xh, xl, yh, yl)
 
 #endif
 
