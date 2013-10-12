@@ -1,3 +1,8 @@
+2013-10-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* soft-fp/op-common.h (_FP_TO_INT): Reverse test of sign for
+	computing saturated result for unsigned overflow.
+
 2013-10-11  Siddhesh Poyarekar  <siddhesh@redhat.com>
 	    Jeff Law  <law@redhat.com>
 
