@@ -1,5 +1,11 @@
 2013-10-12  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16036]
+	* soft-fp/unorddf2.c (__unorddf2): Raise "invalid" exception for
+	signaling NaN arguments.
+	* soft-fp/unordsf2.c (__unordsf2): Likewise.
+	* soft-fp/unordtf2.c (__unordtf2): Likewise.
+
 	[BZ #14910]
 	* soft-fp/gedf2.c (__gedf2): Raise "invalid" exception for all
 	unordered operands.
