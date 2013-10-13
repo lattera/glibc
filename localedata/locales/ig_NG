@@ -488,10 +488,12 @@ country_isbn  978
 % ISO 639 language abbreviations:
 % 639-1 2 letter, 639-2 3 letter terminology
 % http://www.loc.gov/standards/iso639-2/englagn.html
-% "ig", "ibo"
-lang_ab       "<U0069><U0067>"
-lang_term     "<U0069><U0062><U006F>"
-lang_lib      "<U0069><U0062><U006F>"
+% ig
+lang_ab      "<U0069><U0067>"
+% ibo
+lang_term    "<U0069><U0062><U006F>"
+% ibo
+lang_lib     "<U0069><U0062><U006F>"
 
 % ISO 3166 country number and 2 and 3 letter abreviations
 % http://www.unicode.org/onlinedat/countries.html

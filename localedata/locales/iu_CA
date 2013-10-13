@@ -45,9 +45,12 @@ country_num 124
 country_car    "<U0043><U0044><U004E>"
 % FIXME country_isbn for Canada/inuktitut ?
 lang_name "<U1403><U14C4><U1483><U144E><U1450><U1466>"
-lang_ab "<U0069><U0075>"
-lang_term "<U0069><U006B><U0075>"
-lang_lib  "<U0069><U006B><U0075>"
+% iu
+lang_ab      "<U0069><U0075>"
+% iku
+lang_term    "<U0069><U006B><U0075>"
+% iku
+lang_lib     "<U0069><U006B><U0075>"
 END LC_ADDRESS
 
 %%%%%%%%%%%%%

@@ -1,3 +1,22 @@
+2013-10-13  Chris Leonard  <cjl@sugarlabs.org>
+
+	* locales/he_IL: Adjust language-code fields of LC_ADDRESS.
+	* locales/hi_IN: Likewise.
+	* locales/hne_IN: Likewise.
+	* locales/hr_HR: Likewise.
+	* locales/hsb_DE: Likewise.
+	* locales/ht_HT: Likewise.
+	* locales/hu_HU: Likewise.
+	* locales/hy_AM: Likewise.
+	* locales/ia_FR: Likewise.
+	* locales/id_ID: Likewise.
+	* locales/ig_NG: Likewise.
+	* locales/ik_CA: Likewise.
+	* locales/is_IS: Likewise.
+	* locales/it_CH: Likewise.
+	* locales/it_IT: Likewise.
+	* locales/iu_CA: Likewise.
+
 2013-10-05  Chris Leonard  <cjl@sugarlabs.org>
 
 	* locales/ff_SN: Adjust language-code fields of LC_ADDRESS.

@@ -2265,5 +2265,10 @@ country_ab3 "<U0049><U0053><U004C>"
 country_num 352
 % IS
 country_car    "<U0049><U0053>"
-
+% is
+lang_ab      "<U0069><U0073>"
+% isl
+lang_term    "<U0069><U0073><U006C>"
+% ice
+lang_lib    "<U0069><U0063><U0065>"
 END LC_ADDRESS

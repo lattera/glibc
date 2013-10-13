@@ -186,9 +186,12 @@ country_num 51
 country_car "<U0041><U004D>"
 country_isbn "<U0039><U0039><U0039><U0033><U0030>"
 lang_name "<U0540><U0561><U0575><U0565><U0580><U0565><U0576>"
-lang_ab "<U0068><U0079>"
-lang_term "<U0068><U0079><U0065>"
-lang_lib "<U0061><U0072><U006D>"
+% hy
+lang_ab      "<U0068><U0079>"
+% hye
+lang_term    "<U0068><U0079><U0065>"
+% arm
+lang_lib     "<U0061><U0072><U006D>"
 END LC_ADDRESS
 
 LC_NAME

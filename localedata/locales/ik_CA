@@ -233,6 +233,11 @@ country_ab3 "<U0043><U0041><U004E>"
 country_num 124
 % CDN
 country_car    "<U0043><U0044><U004E>"
-
+% ik
+lang_ab      "<U0069><U006B>"
+% ipk
+lang_term    "<U0069><U0070><U006B>"
+% ipk
+lang_lib    "<U0069><U0070><U006B>"
 END LC_ADDRESS
 

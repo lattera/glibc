@@ -203,6 +203,8 @@ lang_name    "<U004B><U0072><U0065><U0079><U00F2><U006C><U0020><U0061><U0079><U0
 lang_ab      "<U0068><U0074>"
 % hat
 lang_term    "<U0068><U0061><U0074>"
+% hat
+lang_lib    "<U0068><U0061><U0074>"
 END LC_ADDRESS
 
 LC_TELEPHONE

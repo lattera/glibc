@@ -130,9 +130,13 @@ country_num 250
 country_isbn 2
 country_car "<U0046>"
 lang_name "<U0049><U006E><U0074><U0065><U0072><U006C><U0069><U006E><U0067><U0075><U0061>"
-lang_ab "<U0069><U0061>"
-lang_term "<U0069><U006E><U0061>"
-lang_lib "<U0069><U006E><U0061>"
+
+% ia
+lang_ab      "<U0069><U0061>"
+% ina
+lang_term    "<U0069><U006E><U0061>"
+% ina
+lang_lib     "<U0069><U006E><U0061>"
 END LC_ADDRESS
 
 LC_TELEPHONE

@@ -2214,7 +2214,9 @@ country_car   "<U0044>"
 country_isbn  3
 lang_name     "<U0048><U006F><U0072><U006E><U006A><U006F><U0073><U0065>/
 <U0072><U0062><U0161><U0107><U0069><U006E><U0061>"
-lang_ab       ""
-lang_term     "<U0068><U0073><U0062>"
-lang_lib      "<U0068><U0073><U0062>"
+lang_ab      ""
+% hsb
+lang_term    "<U0068><U0073><U0062>"
+% hsb
+lang_lib     "<U0068><U0073><U0062>"
 END LC_ADDRESS
