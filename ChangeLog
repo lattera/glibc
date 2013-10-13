@@ -1,3 +1,9 @@
+2013-10-14  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #13028]
+	* res_send.c(__libc_res_nsend): Correctly copy the nameserver
+	address.
+
 2013-10-14  P. J. McDermott  <pj@pehjota.net>
 
 	[BZ #832]
