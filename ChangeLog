@@ -1,5 +1,18 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/power4/multiarch/strncmp-power7.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/strncmp-ppc32.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/strncmp.c: New file:
+	multiarch strncmp for PPC32.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/Makefile: Added strncmp
+	multiarch objects.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/ifunc-impl-list
+	(__libc_ifunc_impl_list): Likewise.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/power4/multiarch/rtld-strnlen.c: New file.
 	* sysdeps/powerpc/powerpc32//power4/multiarch/strnlen-power7.S: New
 	file.
