@@ -1,5 +1,22 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile: Add sqrt
+	and sqrtf multiarch implementations.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/w_sqrt-power5.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/w_sqrt-ppc32.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/w_sqrt.c: New file:
+	multiarch sqrt for PowerPC32.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/w_sqrtf-power5.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/w_sqrtf-ppc32.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/w_sqrtf.c: New file:
+	multiarch sqrtf for PowerPC32.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile: Add llround
 	and llroundf multiarch implementations.
 	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llround-power5+.S:
