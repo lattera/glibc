@@ -1,5 +1,25 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/power4/multiarch/bzero-power6.S: New file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/bzero-power7.S: New file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/bzero-ppc32.S: New file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/bzero.c: New file:
+	multiarch bzero for PPC32.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memset-power6.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memset-power7.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memset-ppc32.S: New file.
+	* sysdeps/powerpc/powerpc/powerpc32/power4/multiarch/memset.c: New
+	file: multiarch memset for PPC32.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/rtld-memset.S: New file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/Makefile: Add bzero and
+	memset multiarch objects.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Likewise.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/power4/multiarch/memcmp-power7.S: New
 	file.
 	* sysdeps/powerpc/powerpc32/power4/multiarch/memcmp-ppc32.S: New file.

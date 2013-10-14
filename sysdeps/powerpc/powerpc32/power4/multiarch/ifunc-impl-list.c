@@ -58,6 +58,23 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memcpy, hwcap & PPC_FEATURE_CELL_BE,
 			      __memcpy_cell)
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_ppc))
+
+  /* Support sysdeps/powerpc/powerpc32/power4/multiarch/memset.c.  */
+  IFUNC_IMPL (i, name, memset,
+	      IFUNC_IMPL_ADD (array, i, memset, hwcap & PPC_FEATURE_HAS_VSX,
+			      __memset_power7)
+	      IFUNC_IMPL_ADD (array, i, memset, hwcap & PPC_FEATURE_ARCH_2_05,
+			      __memset_power6)
+	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_ppc))
+
+  /* Support sysdeps/powerpc/powerpc32/power4/multiarch/bzero.c.  */
+  IFUNC_IMPL (i, name, bzero,
+	      IFUNC_IMPL_ADD (array, i, bzero, hwcap & PPC_FEATURE_HAS_VSX,
+			      __bzero_power7)
+	      IFUNC_IMPL_ADD (array, i, bzero, hwcap & PPC_FEATURE_ARCH_2_05,
+			      __bzero_power6)
+	      IFUNC_IMPL_ADD (array, i, bzero, 1, __bzero_ppc))
+
 #endif
 
   /* Support sysdeps/powerpc/powerpc32/power4/multiarch/memcmp.c.  */
