@@ -1,5 +1,22 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile: Add floor
+	and floorf multiarch implementations.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_floor-power5+.S:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_floor-ppc32.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_floor.c: New file:
+	multiarch floor for PowerPC32.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_floorf-power5+.S:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_floorf-ppc32.S:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_floorf.c: New file:
+	multiarch floorf for PowerPC32.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile: Add ceil
 	and ceilf multiarch implementations.
 	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_ceil-power5+.S:
