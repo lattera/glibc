@@ -1,5 +1,18 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile: Add lrint
+	and lrintf multiarch implementations.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_lrint-power6x.S:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_lrint-ppc32.S:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_lrint.c: New file:
+	multiarch lrint for PowerPC32.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_lrintf.c: New
+	file: multiarch lrintf for PowerPC32.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile: Add lround
 	and lroundf multiarch implementations.
 	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_lround-power5+.S:

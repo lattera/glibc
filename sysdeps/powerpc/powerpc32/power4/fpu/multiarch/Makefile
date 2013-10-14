@@ -19,5 +19,6 @@ libm-sysdep_routines += s_llrintf-power6 s_llrintf-ppc32 s_llrint-power6 \
 			s_roundf-power5+ s_roundf-ppc32 s_trunc-power5+ \
 			s_trunc-ppc32 s_truncf-power5+ s_truncf-ppc32 \
 			s_copysign-power6 s_copysign-ppc32 s_lround-power6x \
-			s_lround-power5+ s_lround-ppc32
+			s_lround-power5+ s_lround-ppc32 s_lrint-power6x \
+			s_lrint-ppc32
 endif
