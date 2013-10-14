@@ -1,5 +1,22 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile: New file:
+	multiarch PowerPC32 fpu implementations.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llrint-power6.S:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llrint-ppc32.S:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llrint.c: New file:
+	multiarch llrint for PowerPC32.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llrintf-power6.S:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llrintf-ppc32.S:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llrintf.c: New
+	file.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/Implies: Remove.
 
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
