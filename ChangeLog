@@ -1,5 +1,26 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wordcopy-power6.c: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wordcopy-power7.c: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wordcopy-ppc32.c: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wordcopy.c: New file:
+	multiarch wordcopy for PPC32.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/Makefile: Added wcscpy
+	wordcopy objects.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/ifunc-impl-list
+	(__libc_ifunc_impl_list): Likewise.
+	* sysdeps/powerpc/powerpc32/power4/wordcopy.c: Move ...
+	* sysdeps/powerpc/power4/wordcopy.c: ... to here.
+	* sysdeps/powerpc/powerpc32/power6/wordcopy.c: Move ...
+	* sysdeps/powerpc/power6/wordcopy.c: ... to here.
+	* sysdeps/powerpc/powerpc64/power6/wordcopy.c: Remove uneeded file.
+	* sysdeps/powerpc/powerpc64/power4/wordcopy.c: Likewise.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* wcsmbs/wcscpy.c (wcscpy): Using macro to redefine symbol name
 	* sysdeps/powerpc/powerpc32/power4/multiarch/wcscpy-power6.c: New
 	file.
