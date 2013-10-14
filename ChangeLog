@@ -1,5 +1,22 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile: Add ceil
+	and ceilf multiarch implementations.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_ceil-power5+.S:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_ceil-ppc32.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_ceil.c: New file:
+	multiarch ceil for PowerPC32.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_ceilf-power5+.S:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_ceilf-ppc32.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_ceilf.c: New file:
+	multiarch ceilf for PowerPC32.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/ieee754/dbl-64/s_finite.c (__finite): Redefine it if FINITE
 	is defined.
 	* sysdeps/ieee754/flt-32/s_finitef.c (__finitef): Redefine it if
