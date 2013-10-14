@@ -1,5 +1,23 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wcschr-power6.c: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wcschr-power7.c: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wcschr-ppc32.c: New file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wcschr.c: New file:
+	multiarch wcschr for PPc32.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/Makefile: Added wcschr
+	multiarch objects.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/ifunc-impl-list
+	(__libc_ifunc_impl_list): Likewise.
+	* sysdeps/powerpc/powerpc32/power6/wcschr.c: Move ...
+	* sysdeps/powerpc/power6/wcschr.c: ... to here.
+	* sysdeps/powerpc/powerpc64/power6/wcschr.c: Adjust to use
+	sysdeps/powerpc/power6/wcschr.c.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/power4/multiarch/rtld-strchr.S: New file.
 	* sysdeps/powerpc/powerpc32/power4/multiarch/strchr-power7.S: New
 	file.

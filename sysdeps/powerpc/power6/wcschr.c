@@ -1,4 +1,4 @@
-/* wcschr.c - Wide Character Search for powerpc32/power6.
+/* wcschr.c - Wide Character Search for POWER6+.
    Copyright (C) 2012-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,12 +18,13 @@
 
 #include <wchar.h>
 
+#ifndef WCSCHR
+# define WCSCHR wcschr
+#endif
 
 /* Find the first occurrence of WC in WCS.  */
 wchar_t *
-wcschr (wcs, wc)
-     const wchar_t *wcs;
-     const wchar_t wc;
+WCSCHR (const wchar_t *wcs, const wchar_t wc)
 {
   const wchar_t *wcs2 = wcs + 1;
 
