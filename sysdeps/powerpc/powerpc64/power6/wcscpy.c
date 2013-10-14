@@ -1,1 +1,1 @@
-#include "../../powerpc32/power6/wcscpy.c"
+#include <sysdeps/powerpc/power6/wcscpy.c>

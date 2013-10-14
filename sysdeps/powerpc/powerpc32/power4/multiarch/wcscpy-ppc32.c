@@ -1,6 +1,5 @@
-/* Copyright (C) 1995-2013 Free Software Foundation, Inc.
+/* Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,47 +15,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <stddef.h>
 #include <wchar.h>
 
-
-#ifndef WCSCPY
-# define WCSCPY wcscpy
+#ifndef NOT_IN_libc
+# define WCSCPY  __wcscpy_ppc
 #endif
 
-/* Copy SRC to DEST.  */
-wchar_t *
-WCSCPY (dest, src)
-     wchar_t *dest;
-     const wchar_t *src;
-{
-  wint_t c;
-  wchar_t *wcp;
+extern __typeof (wcscpy) __wcscpy_ppc;
 
-  if (__alignof__ (wchar_t) >= sizeof (wchar_t))
-    {
-      const ptrdiff_t off = dest - src - 1;
-
-      wcp = (wchar_t *) src;
-
-      do
-	{
-	  c = *wcp++;
-	  wcp[off] = c;
-	}
-      while (c != L'\0');
-    }
-  else
-    {
-      wcp = dest;
-
-      do
-	{
-	  c = *src++;
-	  *wcp++ = c;
-	}
-      while (c != L'\0');
-    }
-
-  return dest;
-}
+#include <wcsmbs/wcscpy.c>

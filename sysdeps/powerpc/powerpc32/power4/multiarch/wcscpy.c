@@ -1,6 +1,6 @@
-/* Copyright (C) 1995-2013 Free Software Foundation, Inc.
+/* Multiple versions of wcscpy
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,47 +16,21 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <stddef.h>
-#include <wchar.h>
+#ifndef NOT_IN_libc
+# include <wchar.h>
+# include <shlib-compat.h>
+# include "init-arch.h"
 
+extern __typeof (wcscpy) __wcscpy_ppc attribute_hidden;
+extern __typeof (wcscpy) __wcscpy_power6 attribute_hidden;
+extern __typeof (wcscpy) __wcscpy_power7 attribute_hidden;
 
-#ifndef WCSCPY
-# define WCSCPY wcscpy
+libc_ifunc (wcscpy,
+	     (hwcap & PPC_FEATURE_HAS_VSX)
+             ? __wcscpy_power7 :
+	       (hwcap & PPC_FEATURE_ARCH_2_05)
+	       ? __wcscpy_power6
+             : __wcscpy_ppc);
+#else
+#include <wcsmbs/wcscpy.c>
 #endif
-
-/* Copy SRC to DEST.  */
-wchar_t *
-WCSCPY (dest, src)
-     wchar_t *dest;
-     const wchar_t *src;
-{
-  wint_t c;
-  wchar_t *wcp;
-
-  if (__alignof__ (wchar_t) >= sizeof (wchar_t))
-    {
-      const ptrdiff_t off = dest - src - 1;
-
-      wcp = (wchar_t *) src;
-
-      do
-	{
-	  c = *wcp++;
-	  wcp[off] = c;
-	}
-      while (c != L'\0');
-    }
-  else
-    {
-      wcp = dest;
-
-      do
-	{
-	  c = *src++;
-	  *wcp++ = c;
-	}
-      while (c != L'\0');
-    }
-
-  return dest;
-}
