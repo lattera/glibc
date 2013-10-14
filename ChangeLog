@@ -1,5 +1,9 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/Implies: Remove.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/power4/multiarch/wordcopy-power6.c: New
 	file.
 	* sysdeps/powerpc/powerpc32/power4/multiarch/wordcopy-power7.c: New
