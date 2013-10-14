@@ -1,5 +1,18 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/power4/multiarch/rawmemchr-power7.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/rawmemchr-ppc32.c: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/rawmemchr.c: New file:
+	multiarch rawmemchr for PPC32.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/Makefile: Added rawmemchr
+	multiarch objects.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/ifunc-impl-list
+	(__libc_ifunc_impl_list): Likewise.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/power4/multiarch/memrchr-power7.S: New
 	file.
 	* sysdeps/powerpc/powerpc32/power4/multiarch/memrchr-ppc32.c: New
