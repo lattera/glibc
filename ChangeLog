@@ -1,5 +1,18 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile: Add
+	copysign and copysignf multiarch implementations.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_copysign-power6.S:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_copysign-ppc32.S:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_copysign.c: New
+	file: multiarch copysign for PowerPC32.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_copysignf.c: New
+	file: multiarch copysignf for PowerPC32.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile: Add trunc
 	and truncf multiarch implementations.
 	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_trunc-power5+.S:
