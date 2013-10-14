@@ -1,5 +1,20 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile: Add isinf
+	and isinff multiarch implementations.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isinf-power7.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isinf-ppc32.c: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isinf.c: New file:
+	multiarch isinf for PowerPC32.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isinff-ppc32.c:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isinff.c: New file:
+	multiarch isinff for PowerPC32.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/fpu/s_isnan.S (__isnan): Only implement
 	alias when __isnan is defined.
 	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile: Add isnan
