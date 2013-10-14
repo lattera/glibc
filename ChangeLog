@@ -1,5 +1,18 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/power4/multiarch/rtld-strchr.S: New file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/strchr-power7.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/strchr-ppc32.S: New file.
+	* sysdeps/powerpc/powerpc/powerpc32/power4/multiarch/strchr.c: New
+	file: multiarch strchr for PPC32.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/Makefile: Added strchr
+	multiarch objects.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/ifunc-impl-list
+	(__libc_ifunc_impl_list): Likewise.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* string/strchrnul.c (__strchrnul): Using macro to redefine symbol
 	name.
 	* sysdeps/powerpc/powerpc32/power4//multiarch/strchrnul-power7.S: New
