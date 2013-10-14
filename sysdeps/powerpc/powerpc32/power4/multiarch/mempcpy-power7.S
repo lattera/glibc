@@ -1,9 +1,6 @@
-/* Copy memory to memory until the specified number of bytes
-   has been copied, return pointer to following byte.
-   Overlap is NOT handled correctly.
-   Copyright (C) 1991-2013 Free Software Foundation, Inc.
+/* Optimized mempcpy implementation for POWER7.
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Torbjorn Granlund (tege@sics.se).
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -19,20 +16,20 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <string.h>
+#include <sysdep.h>
 
-#undef mempcpy
-#undef __mempcpy
+#undef EALIGN
+#define EALIGN(name, alignt, words)				\
+ .globl C_SYMBOL_NAME(__mempcpy_power7);			\
+ .type C_SYMBOL_NAME(__mempcpy_power7),@function;		\
+ .align ALIGNARG(alignt);					\
+ EALIGN_W_##words;						\
+ C_LABEL(__mempcpy_power7)					\
+ cfi_startproc;
 
-#ifndef MEMPCPY
-# define MEMPCPY __mempcpy
-#endif
+#undef END
+#define END(name)						\
+ cfi_endproc;							\
+ ASM_SIZE_DIRECTIVE(__mempcpy_power7)
 
-void *
-MEMPCPY (void *dest, const void *src, size_t len)
-{
-  return memcpy (dest, src, len) + len;
-}
-libc_hidden_def (__mempcpy)
-weak_alias (__mempcpy, mempcpy)
-libc_hidden_builtin_def (mempcpy)
+#include <sysdeps/powerpc/powerpc32/power7/mempcpy.S>

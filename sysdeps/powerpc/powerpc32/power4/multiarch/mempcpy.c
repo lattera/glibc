@@ -1,9 +1,6 @@
-/* Copy memory to memory until the specified number of bytes
-   has been copied, return pointer to following byte.
-   Overlap is NOT handled correctly.
-   Copyright (C) 1991-2013 Free Software Foundation, Inc.
+/* Multiple versions of mempcpy.
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Torbjorn Granlund (tege@sics.se).
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -19,20 +16,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <string.h>
+#ifndef NOT_IN_libc
+# include <string.h>
+# include <shlib-compat.h>
+# include "init-arch.h"
 
-#undef mempcpy
-#undef __mempcpy
+extern __typeof (__mempcpy) __mempcpy_ppc attribute_hidden;
+extern __typeof (__mempcpy) __mempcpy_power7 attribute_hidden;
 
-#ifndef MEMPCPY
-# define MEMPCPY __mempcpy
-#endif
+/* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
+   ifunc symbol properly.  */
+libc_ifunc (__mempcpy,
+	    (hwcap & PPC_FEATURE_HAS_VSX)
+            ? __mempcpy_power7
+            : __mempcpy_ppc);
 
-void *
-MEMPCPY (void *dest, const void *src, size_t len)
-{
-  return memcpy (dest, src, len) + len;
-}
-libc_hidden_def (__mempcpy)
 weak_alias (__mempcpy, mempcpy)
-libc_hidden_builtin_def (mempcpy)
+libc_hidden_def (mempcpy)
+#else
+# include <string/mempcpy.c>
+#endif

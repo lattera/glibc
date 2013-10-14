@@ -1,9 +1,6 @@
-/* Copy memory to memory until the specified number of bytes
-   has been copied, return pointer to following byte.
-   Overlap is NOT handled correctly.
-   Copyright (C) 1991-2013 Free Software Foundation, Inc.
+/* PowerPC32 default implementation of mempcpy.
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Torbjorn Granlund (tege@sics.se).
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -19,20 +16,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <string.h>
+#define MEMPCPY  __mempcpy_ppc
 
-#undef mempcpy
-#undef __mempcpy
+#undef libc_hidden_def
+#define libc_hidden_def(name)
+#undef weak_alias
+#define weak_alias(a, b)
 
-#ifndef MEMPCPY
-# define MEMPCPY __mempcpy
+#if defined SHARED
+# undef libc_hidden_builtin_def
+# define libc_hidden_builtin_def(name)  \
+  __hidden_ver1 (__mempcpy_ppc, __GI_mempcpy, __mempcpy_ppc);
 #endif
 
-void *
-MEMPCPY (void *dest, const void *src, size_t len)
-{
-  return memcpy (dest, src, len) + len;
-}
-libc_hidden_def (__mempcpy)
-weak_alias (__mempcpy, mempcpy)
-libc_hidden_builtin_def (mempcpy)
+#include <string/mempcpy.c>
