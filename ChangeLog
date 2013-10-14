@@ -1,5 +1,20 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* string/strchrnul.c (__strchrnul): Using macro to redefine symbol
+	name.
+	* sysdeps/powerpc/powerpc32/power4//multiarch/strchrnul-power7.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/strchrnul-ppc32.c: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/strchrnul.c: New file:
+	multiarch strchrnul for PPC32.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/Makefile: Added strchrnul
+	multiarch objects.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/ifunc-impl-list
+	(__libc_ifunc_impl_list): Likewise.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/power4/multiarch/strncase-power7.c: New
 	file.
 	* sysdeps/powerpc/powerpc32/power4/multiarch/strncase.c: New file:

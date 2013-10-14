@@ -27,9 +27,13 @@
 #undef __strchrnul
 #undef strchrnul
 
+#ifndef STRCHRNUL
+# define STRCHRNUL __strchrnul
+#endif
+
 /* Find the first occurrence of C in S or the final NUL byte.  */
 char *
-__strchrnul (s, c_in)
+STRCHRNUL (s, c_in)
      const char *s;
      int c_in;
 {
