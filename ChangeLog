@@ -1,5 +1,17 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/power4/multiarch/strlen-power7.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/strlen-ppc32.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/strlen.c: New file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/Makefile: Added strlen
+	multiarch objects.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/ifunc-impl-list
+	(__libc_ifunc_impl_list): Likewise.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/power4/multiarch/rawmemchr-power7.S: New
 	file.
 	* sysdeps/powerpc/powerpc32/power4/multiarch/rawmemchr-ppc32.c: New
