@@ -1,5 +1,25 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* wcsmbs/wcsrchr.c (wcsrchr): Using macro to redefine symbol name
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wcsrchr-power6.c: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wcsrchr-power7.c: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wcsrchr-ppc32.c: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wcsrchr.c: New file:
+	multiarch wcsrchr for PPC32.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/Makefile: Added wcschr
+	multiarch objects.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/ifunc-impl-list
+	(__libc_ifunc_impl_list): Likewise.
+	* sysdeps/powerpc/powerpc32/power6/wcsrchr.c: Move ...
+	* sysdeps/powerpc/power6/wcsrchr.c: ... to here.
+	* sysdeps/powerpc/powerpc64/power6/wcsrchr.c: Adjust to use
+	sysdeps/powerpc/power6/wcsrchr.c.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/power4/multiarch/wcschr-power6.c: New
 	file.
 	* sysdeps/powerpc/powerpc32/power4/multiarch/wcschr-power7.c: New

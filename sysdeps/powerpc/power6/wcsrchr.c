@@ -1,4 +1,4 @@
-/* wcsrchr.c - Wide Character Reverse Search for powerpc32/power6.
+/* wcsrchr.c - Wide Character Reverse Search for POWER6+.
    Copyright (C) 2012-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,12 +18,13 @@
 
 #include <wchar.h>
 
+#ifndef WCSRCHR
+# define WCSRCHR wcsrchr
+#endif
 
 /* Find the last occurrence of WC in WCS.  */
 wchar_t *
-wcsrchr (wcs, wc)
-     const wchar_t *wcs;
-     const wchar_t wc;
+WCSRCHR (const wchar_t *wcs, const wchar_t wc)
 {
   const wchar_t *wcs2 = wcs + 1;
   const wchar_t *retval = NULL;
