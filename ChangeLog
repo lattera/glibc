@@ -1,5 +1,18 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* string/memchr.c (__memchr): Using macro to redefine symbol name.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memchr-power7.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memchr-ppc32.c: New File.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memchr.c: New file:
+	multiarch memchr for PPC32.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/Makefile: Add memchr
+	multiarch objects.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Likewise.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* string/mempcpy.c (__mempcpy): Using macro to redefine symbol name.
 	* sysdeps/powerpc/powerpc32/power4/multiarch/mempcpy-power7.S: New
 	file.
