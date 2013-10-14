@@ -1,3 +1,14 @@
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power4/multiarch/Makefile: New file to
+	support multiarch for POWER/PPC32.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/ifunc-impl-list.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/init-arch.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power4/Implies: Remove
+	Implies file to make multiarch folder appers before the fpu and
+	default folder for power4 configuration.
+
 2013-12-06  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* scripts/bench.pl: Append volatile keyword to type.
