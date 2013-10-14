@@ -1,5 +1,20 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile: Add llround
+	and llroundf multiarch implementations.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llround-power5+.S:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llround-power6.S:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llround-ppc32.S:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llround.c: New
+	file: multiarch llround for PowerPC32.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llroundf.c: New
+	file: multiarch llroundf for PowerPC32.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile: New file:
 	multiarch PowerPC32 fpu implementations.
 	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llrint-power6.S:
