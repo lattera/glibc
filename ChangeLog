@@ -1,5 +1,24 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/ieee754/dbl-64/s_finite.c (__finite): Redefine it if FINITE
+	is defined.
+	* sysdeps/ieee754/flt-32/s_finitef.c (__finitef): Redefine it if
+	FINITEF is defined.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile: Add finite
+	and finitef multiarch implementations.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_finite-power7.S:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_finite-ppc32.c: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_finite.c: New file:
+	multiarch finite for PowerPC32.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_finitef-ppc32.c:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_finitef.c: New
+	file: multiarch finitef for PowerPC32.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile: Add isinf
 	and isinff multiarch implementations.
 	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isinf-power7.S: New

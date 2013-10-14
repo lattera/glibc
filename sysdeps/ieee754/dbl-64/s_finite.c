@@ -23,8 +23,12 @@ static char rcsid[] = "$NetBSD: s_finite.c,v 1.8 1995/05/10 20:47:17 jtc Exp $";
 #include <math_private.h>
 
 #undef __finite
-int
-__finite (double x)
+
+#ifndef FINITE
+# define FINITE __finite
+#endif
+
+int FINITE(double x)
 {
   int32_t hx;
   GET_HIGH_WORD (hx, x);
