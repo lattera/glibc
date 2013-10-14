@@ -1,5 +1,28 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/fpu/s_isnan.S (__isnan): Only implement
+	alias when __isnan is defined.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile: Add isnan
+	and isnanf multiarch implementations.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isnan-power5.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isnan-power6.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isnan-power7.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isnan-ppc32.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isnan.c: New file:
+	multiarch isnan for PowerPC32.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isnanf-power6.S:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isnanf-power7.S:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isnanf.c: New file:
+	multiarch isnanf for PowerPC32.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile: Add sqrt
 	and sqrtf multiarch implementations.
 	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/w_sqrt-power5.S: New

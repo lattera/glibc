@@ -1,5 +1,5 @@
-/* isnan().  PowerPC32 version.
-   Copyright (C) 2008-2013 Free Software Foundation, Inc.
+/* Multiple versions of isnan.
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,32 +16,26 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
+#include <math.h>
 #include <math_ldbl_opt.h>
+#include <shlib-compat.h>
+#include "init-arch.h"
 
-/* int __isnan(x)  */
-	.machine power4
-EALIGN (__isnan, 4, 0)
-	mffs	fp0
-	mtfsb0	4*cr6+lt /* reset_fpscr_bit (FPSCR_VE) */
-	fcmpu	cr7,fp1,fp1
-	mtfsf	255,fp0
-	li	r3,0
-	beqlr+	cr7	/* (x == x) then not a NAN */
-	li	r3,1	/* else must be a NAN */
-	blr
-	END (__isnan)
+extern __typeof (__isnan) __isnan_ppc32 attribute_hidden;
+extern __typeof (__isnan) __isnan_power5 attribute_hidden;
+extern __typeof (__isnan) __isnan_power6 attribute_hidden;
+extern __typeof (__isnan) __isnan_power7 attribute_hidden;
 
-hidden_def (__isnan)
+libc_ifunc (__isnan,
+	    (hwcap & PPC_FEATURE_ARCH_2_06)
+	    ? __isnan_power7 :
+	      (hwcap & PPC_FEATURE_ARCH_2_05)
+	      ? __isnan_power6 :
+		(hwcap & PPC_FEATURE_POWER5)
+		? __isnan_power5
+            : __isnan_ppc32);
+
 weak_alias (__isnan, isnan)
-
-/* It turns out that the 'double' version will also always work for
-   single-precision.  */
-#ifndef __isnan
-strong_alias (__isnan, __isnanf)
-hidden_def (__isnanf)
-weak_alias (__isnanf, isnanf)
-#endif
 
 #ifdef NO_LONG_DOUBLE
 strong_alias (__isnan, __isnanl)
@@ -54,4 +48,3 @@ compat_symbol (libc, __isnan, __isnanl, GLIBC_2_0);
 compat_symbol (libc, isnan, isnanl, GLIBC_2_0);
 # endif
 #endif
-
