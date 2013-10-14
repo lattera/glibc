@@ -1,5 +1,22 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memcpy-a2.S: New file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memcpy-cell.S: New file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memcpy-power6.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memcpy-power7.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memcpy-ppc32.S: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memcpy.c: New file:
+	multiarch memcpy for PPC32.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/Makefile: Add memcpy
+	multiarch objects.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Likewise.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/power4/multiarch/Makefile: New file to
 	support multiarch for POWER/PPC32.
 	* sysdeps/powerpc/powerpc32/power4/multiarch/ifunc-impl-list.c:
