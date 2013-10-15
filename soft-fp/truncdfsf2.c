@@ -32,7 +32,8 @@
 #include "single.h"
 #include "double.h"
 
-SFtype __truncdfsf2(DFtype a)
+SFtype
+__truncdfsf2(DFtype a)
 {
   FP_DECL_EX;
   FP_DECL_D(A);

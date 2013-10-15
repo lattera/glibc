@@ -33,7 +33,10 @@ float
 __fmaf (float a, float b, float c)
 {
   FP_DECL_EX;
-  FP_DECL_S(A); FP_DECL_S(B); FP_DECL_S(C); FP_DECL_S(R);
+  FP_DECL_S(A);
+  FP_DECL_S(B);
+  FP_DECL_S(C);
+  FP_DECL_S(R);
   float r;
 
   FP_INIT_ROUNDMODE;

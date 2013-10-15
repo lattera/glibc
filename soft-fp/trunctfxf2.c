@@ -31,7 +31,8 @@
 #include "extended.h"
 #include "quad.h"
 
-XFtype __trunctfxf2(TFtype a)
+XFtype
+__trunctfxf2(TFtype a)
 {
   FP_DECL_EX;
   FP_DECL_Q(A);

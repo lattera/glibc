@@ -33,7 +33,10 @@ long double
 __fmal (long double a, long double b, long double c)
 {
   FP_DECL_EX;
-  FP_DECL_Q(A); FP_DECL_Q(B); FP_DECL_Q(C); FP_DECL_Q(R);
+  FP_DECL_Q(A);
+  FP_DECL_Q(B);
+  FP_DECL_Q(C);
+  FP_DECL_Q(R);
   long double r;
 
   FP_INIT_ROUNDMODE;

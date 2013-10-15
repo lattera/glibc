@@ -30,7 +30,8 @@
 #include "soft-fp.h"
 #include "double.h"
 
-DFtype __floattidf(TItype i)
+DFtype
+__floattidf(TItype i)
 {
   FP_DECL_EX;
   FP_DECL_D(A);

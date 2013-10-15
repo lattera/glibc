@@ -31,10 +31,13 @@
 #include "soft-fp.h"
 #include "double.h"
 
-DFtype __muldf3(DFtype a, DFtype b)
+DFtype
+__muldf3(DFtype a, DFtype b)
 {
   FP_DECL_EX;
-  FP_DECL_D(A); FP_DECL_D(B); FP_DECL_D(R);
+  FP_DECL_D(A);
+  FP_DECL_D(B);
+  FP_DECL_D(R);
   DFtype r;
 
   FP_INIT_ROUNDMODE;

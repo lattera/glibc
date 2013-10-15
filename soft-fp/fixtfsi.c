@@ -31,7 +31,8 @@
 #include "soft-fp.h"
 #include "quad.h"
 
-SItype __fixtfsi(TFtype a)
+SItype
+__fixtfsi(TFtype a)
 {
   FP_DECL_EX;
   FP_DECL_Q(A);

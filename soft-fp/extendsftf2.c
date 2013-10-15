@@ -32,7 +32,8 @@
 #include "single.h"
 #include "quad.h"
 
-TFtype __extendsftf2(SFtype a)
+TFtype
+__extendsftf2(SFtype a)
 {
   FP_DECL_EX;
   FP_DECL_S(A);

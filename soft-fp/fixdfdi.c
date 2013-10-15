@@ -31,7 +31,8 @@
 #include "soft-fp.h"
 #include "double.h"
 
-DItype __fixdfdi(DFtype a)
+DItype
+__fixdfdi(DFtype a)
 {
   FP_DECL_EX;
   FP_DECL_D(A);

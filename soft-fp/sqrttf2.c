@@ -31,10 +31,12 @@
 #include "soft-fp.h"
 #include "quad.h"
 
-TFtype __sqrttf2(TFtype a)
+TFtype
+__sqrttf2(TFtype a)
 {
   FP_DECL_EX;
-  FP_DECL_Q(A); FP_DECL_Q(R);
+  FP_DECL_Q(A);
+  FP_DECL_Q(R);
   TFtype r;
 
   FP_INIT_ROUNDMODE;

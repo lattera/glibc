@@ -31,9 +31,11 @@
 #include "soft-fp.h"
 #include "single.h"
 
-SFtype __negsf2(SFtype a)
+SFtype
+__negsf2(SFtype a)
 {
-  FP_DECL_S(A); FP_DECL_S(R);
+  FP_DECL_S(A);
+  FP_DECL_S(R);
   SFtype r;
 
   FP_UNPACK_RAW_S(A, a);

@@ -32,7 +32,8 @@
 #include "single.h"
 #include "double.h"
 
-DFtype __extendsfdf2(SFtype a)
+DFtype
+__extendsfdf2(SFtype a)
 {
   FP_DECL_EX;
   FP_DECL_S(A);

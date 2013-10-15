@@ -32,7 +32,8 @@
 #include "double.h"
 #include "quad.h"
 
-DFtype __trunctfdf2(TFtype a)
+DFtype
+__trunctfdf2(TFtype a)
 {
   FP_DECL_EX;
   FP_DECL_Q(A);

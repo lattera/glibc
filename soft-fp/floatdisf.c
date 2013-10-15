@@ -31,7 +31,8 @@
 #include "soft-fp.h"
 #include "single.h"
 
-SFtype __floatdisf(DItype i)
+SFtype
+__floatdisf(DItype i)
 {
   FP_DECL_EX;
   FP_DECL_S(A);

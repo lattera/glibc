@@ -31,10 +31,12 @@
 #include "soft-fp.h"
 #include "single.h"
 
-SFtype __sqrtsf2(SFtype a)
+SFtype
+__sqrtsf2(SFtype a)
 {
   FP_DECL_EX;
-  FP_DECL_S(A); FP_DECL_S(R);
+  FP_DECL_S(A);
+  FP_DECL_S(R);
   SFtype r;
 
   FP_INIT_ROUNDMODE;

@@ -30,7 +30,8 @@
 #include "soft-fp.h"
 #include "quad.h"
 
-CMPtype __unordtf2(TFtype a, TFtype b)
+CMPtype
+__unordtf2(TFtype a, TFtype b)
 {
   FP_DECL_EX;
   FP_DECL_Q(A);

@@ -31,10 +31,12 @@
 #include "soft-fp.h"
 #include "single.h"
 
-CMPtype __eqsf2(SFtype a, SFtype b)
+CMPtype
+__eqsf2(SFtype a, SFtype b)
 {
   FP_DECL_EX;
-  FP_DECL_S(A); FP_DECL_S(B);
+  FP_DECL_S(A);
+  FP_DECL_S(B);
   CMPtype r;
 
   FP_INIT_EXCEPTIONS;

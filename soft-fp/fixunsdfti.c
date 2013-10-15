@@ -30,7 +30,8 @@
 #include "soft-fp.h"
 #include "double.h"
 
-UTItype __fixunsdfti(DFtype a)
+UTItype
+__fixunsdfti(DFtype a)
 {
   FP_DECL_EX;
   FP_DECL_D(A);

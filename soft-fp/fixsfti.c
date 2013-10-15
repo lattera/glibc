@@ -30,7 +30,8 @@
 #include "soft-fp.h"
 #include "single.h"
 
-TItype __fixsfti(SFtype a)
+TItype
+__fixsfti(SFtype a)
 {
   FP_DECL_EX;
   FP_DECL_S(A);

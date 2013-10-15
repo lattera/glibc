@@ -31,10 +31,12 @@
 #include "soft-fp.h"
 #include "double.h"
 
-DFtype __sqrtdf2(DFtype a)
+DFtype
+__sqrtdf2(DFtype a)
 {
   FP_DECL_EX;
-  FP_DECL_D(A); FP_DECL_D(R);
+  FP_DECL_D(A);
+  FP_DECL_D(R);
   DFtype r;
 
   FP_INIT_ROUNDMODE;

@@ -33,7 +33,10 @@ double
 __fma (double a, double b, double c)
 {
   FP_DECL_EX;
-  FP_DECL_D(A); FP_DECL_D(B); FP_DECL_D(C); FP_DECL_D(R);
+  FP_DECL_D(A);
+  FP_DECL_D(B);
+  FP_DECL_D(C);
+  FP_DECL_D(R);
   double r;
 
   FP_INIT_ROUNDMODE;

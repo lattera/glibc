@@ -31,7 +31,8 @@
 #include "soft-fp.h"
 #include "quad.h"
 
-USItype __fixunstfsi(TFtype a)
+USItype
+__fixunstfsi(TFtype a)
 {
   FP_DECL_EX;
   FP_DECL_Q(A);

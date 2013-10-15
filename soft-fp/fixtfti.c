@@ -30,7 +30,8 @@
 #include "soft-fp.h"
 #include "quad.h"
 
-TItype __fixtfti(TFtype a)
+TItype
+__fixtfti(TFtype a)
 {
   FP_DECL_EX;
   FP_DECL_Q(A);

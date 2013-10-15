@@ -30,7 +30,8 @@
 #include "soft-fp.h"
 #include "single.h"
 
-CMPtype __unordsf2(SFtype a, SFtype b)
+CMPtype
+__unordsf2(SFtype a, SFtype b)
 {
   FP_DECL_EX;
   FP_DECL_S(A);

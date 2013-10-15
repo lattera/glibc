@@ -32,7 +32,8 @@
 #include "soft-fp.h"
 #include "quad.h"
 
-TFtype __floatsitf(SItype i)
+TFtype
+__floatsitf(SItype i)
 {
   FP_DECL_Q(A);
   TFtype a;

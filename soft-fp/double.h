@@ -73,7 +73,8 @@ typedef float DFtype __attribute__((mode(DF)));
 union _FP_UNION_D
 {
   DFtype flt;
-  struct _FP_STRUCT_LAYOUT {
+  struct _FP_STRUCT_LAYOUT
+  {
 # if __BYTE_ORDER == __BIG_ENDIAN
     unsigned sign  : 1;
     unsigned exp   : _FP_EXPBITS_D;
@@ -92,61 +93,79 @@ union _FP_UNION_D
 # define FP_UNPACK_RAW_D(X,val)	_FP_UNPACK_RAW_2(D,X,val)
 # define FP_UNPACK_RAW_DP(X,val)	_FP_UNPACK_RAW_2_P(D,X,val)
 # define FP_PACK_RAW_D(val,X)	_FP_PACK_RAW_2(D,val,X)
-# define FP_PACK_RAW_DP(val,X)		\
-  do {					\
-    if (!FP_INHIBIT_RESULTS)		\
-      _FP_PACK_RAW_2_P(D,val,X);	\
-  } while (0)
+# define FP_PACK_RAW_DP(val,X)			\
+  do						\
+    {						\
+      if (!FP_INHIBIT_RESULTS)			\
+	_FP_PACK_RAW_2_P(D,val,X);		\
+    }						\
+  while (0)
 
-# define FP_UNPACK_D(X,val)		\
-  do {					\
-    _FP_UNPACK_RAW_2(D,X,val);		\
-    _FP_UNPACK_CANONICAL(D,2,X);	\
-  } while (0)
+# define FP_UNPACK_D(X,val)			\
+  do						\
+    {						\
+      _FP_UNPACK_RAW_2(D,X,val);		\
+      _FP_UNPACK_CANONICAL(D,2,X);		\
+    }						\
+  while (0)
 
-# define FP_UNPACK_DP(X,val)		\
-  do {					\
-    _FP_UNPACK_RAW_2_P(D,X,val);	\
-    _FP_UNPACK_CANONICAL(D,2,X);	\
-  } while (0)
+# define FP_UNPACK_DP(X,val)			\
+  do						\
+    {						\
+      _FP_UNPACK_RAW_2_P(D,X,val);		\
+      _FP_UNPACK_CANONICAL(D,2,X);		\
+    }						\
+  while (0)
 
-# define FP_UNPACK_SEMIRAW_D(X,val)	\
-  do {					\
-    _FP_UNPACK_RAW_2(D,X,val);		\
-    _FP_UNPACK_SEMIRAW(D,2,X);		\
-  } while (0)
+# define FP_UNPACK_SEMIRAW_D(X,val)		\
+  do						\
+    {						\
+      _FP_UNPACK_RAW_2(D,X,val);		\
+      _FP_UNPACK_SEMIRAW(D,2,X);		\
+    }						\
+  while (0)
 
-# define FP_UNPACK_SEMIRAW_DP(X,val)	\
-  do {					\
-    _FP_UNPACK_RAW_2_P(D,X,val);	\
-    _FP_UNPACK_SEMIRAW(D,2,X);		\
-  } while (0)
+# define FP_UNPACK_SEMIRAW_DP(X,val)		\
+  do						\
+    {						\
+      _FP_UNPACK_RAW_2_P(D,X,val);		\
+      _FP_UNPACK_SEMIRAW(D,2,X);		\
+    }						\
+  while (0)
 
-# define FP_PACK_D(val,X)		\
-  do {					\
-    _FP_PACK_CANONICAL(D,2,X);		\
-    _FP_PACK_RAW_2(D,val,X);		\
-  } while (0)
+# define FP_PACK_D(val,X)			\
+  do						\
+    {						\
+      _FP_PACK_CANONICAL(D,2,X);		\
+      _FP_PACK_RAW_2(D,val,X);			\
+    }						\
+  while (0)
 
-# define FP_PACK_DP(val,X)		\
-  do {					\
-    _FP_PACK_CANONICAL(D,2,X);		\
-    if (!FP_INHIBIT_RESULTS)		\
-      _FP_PACK_RAW_2_P(D,val,X);	\
-  } while (0)
+# define FP_PACK_DP(val,X)			\
+  do						\
+    {						\
+      _FP_PACK_CANONICAL(D,2,X);		\
+      if (!FP_INHIBIT_RESULTS)			\
+	_FP_PACK_RAW_2_P(D,val,X);		\
+    }						\
+  while (0)
 
-# define FP_PACK_SEMIRAW_D(val,X)	\
-  do {					\
-    _FP_PACK_SEMIRAW(D,2,X);		\
-    _FP_PACK_RAW_2(D,val,X);		\
-  } while (0)
+# define FP_PACK_SEMIRAW_D(val,X)		\
+  do						\
+    {						\
+      _FP_PACK_SEMIRAW(D,2,X);			\
+      _FP_PACK_RAW_2(D,val,X);			\
+    }						\
+  while (0)
 
-# define FP_PACK_SEMIRAW_DP(val,X)	\
-  do {					\
-    _FP_PACK_SEMIRAW(D,2,X);		\
-    if (!FP_INHIBIT_RESULTS)		\
-      _FP_PACK_RAW_2_P(D,val,X);	\
-  } while (0)
+# define FP_PACK_SEMIRAW_DP(val,X)		\
+  do						\
+    {						\
+      _FP_PACK_SEMIRAW(D,2,X);			\
+      if (!FP_INHIBIT_RESULTS)			\
+	_FP_PACK_RAW_2_P(D,val,X);		\
+    }						\
+  while (0)
 
 # define FP_ISSIGNAN_D(X)		_FP_ISSIGNAN(D,2,X)
 # define FP_NEG_D(R,X)			_FP_NEG(D,2,R,X)
@@ -175,7 +194,8 @@ union _FP_UNION_D
 union _FP_UNION_D
 {
   DFtype flt;
-  struct _FP_STRUCT_LAYOUT {
+  struct _FP_STRUCT_LAYOUT
+  {
 # if __BYTE_ORDER == __BIG_ENDIAN
     unsigned sign   : 1;
     unsigned exp    : _FP_EXPBITS_D;
@@ -192,61 +212,79 @@ union _FP_UNION_D
 # define FP_UNPACK_RAW_D(X,val)	_FP_UNPACK_RAW_1(D,X,val)
 # define FP_UNPACK_RAW_DP(X,val)	_FP_UNPACK_RAW_1_P(D,X,val)
 # define FP_PACK_RAW_D(val,X)	_FP_PACK_RAW_1(D,val,X)
-# define FP_PACK_RAW_DP(val,X)		\
-  do {					\
-    if (!FP_INHIBIT_RESULTS)		\
-      _FP_PACK_RAW_1_P(D,val,X);	\
-  } while (0)
+# define FP_PACK_RAW_DP(val,X)			\
+  do						\
+    {						\
+      if (!FP_INHIBIT_RESULTS)			\
+	_FP_PACK_RAW_1_P(D,val,X);		\
+    }						\
+  while (0)
 
-# define FP_UNPACK_D(X,val)		\
-  do {					\
-    _FP_UNPACK_RAW_1(D,X,val);		\
-    _FP_UNPACK_CANONICAL(D,1,X);	\
-  } while (0)
+# define FP_UNPACK_D(X,val)			\
+  do						\
+    {						\
+      _FP_UNPACK_RAW_1(D,X,val);		\
+      _FP_UNPACK_CANONICAL(D,1,X);		\
+    }						\
+  while (0)
 
-# define FP_UNPACK_DP(X,val)		\
-  do {					\
-    _FP_UNPACK_RAW_1_P(D,X,val);	\
-    _FP_UNPACK_CANONICAL(D,1,X);	\
-  } while (0)
+# define FP_UNPACK_DP(X,val)			\
+  do						\
+    {						\
+      _FP_UNPACK_RAW_1_P(D,X,val);		\
+      _FP_UNPACK_CANONICAL(D,1,X);		\
+    }						\
+  while (0)
 
-# define FP_UNPACK_SEMIRAW_D(X,val)	\
-  do {					\
-    _FP_UNPACK_RAW_1(D,X,val);		\
-    _FP_UNPACK_SEMIRAW(D,1,X);		\
-  } while (0)
+# define FP_UNPACK_SEMIRAW_D(X,val)		\
+  do						\
+    {						\
+      _FP_UNPACK_RAW_1(D,X,val);		\
+      _FP_UNPACK_SEMIRAW(D,1,X);		\
+    }						\
+  while (0)
 
-# define FP_UNPACK_SEMIRAW_DP(X,val)	\
-  do {					\
-    _FP_UNPACK_RAW_1_P(D,X,val);	\
-    _FP_UNPACK_SEMIRAW(D,1,X);		\
-  } while (0)
+# define FP_UNPACK_SEMIRAW_DP(X,val)		\
+  do						\
+    {						\
+      _FP_UNPACK_RAW_1_P(D,X,val);		\
+      _FP_UNPACK_SEMIRAW(D,1,X);		\
+    }						\
+  while (0)
 
-# define FP_PACK_D(val,X)		\
-  do {					\
-    _FP_PACK_CANONICAL(D,1,X);		\
-    _FP_PACK_RAW_1(D,val,X);		\
-  } while (0)
+# define FP_PACK_D(val,X)			\
+  do						\
+    {						\
+      _FP_PACK_CANONICAL(D,1,X);		\
+      _FP_PACK_RAW_1(D,val,X);			\
+    }						\
+  while (0)
 
-# define FP_PACK_DP(val,X)		\
-  do {					\
-    _FP_PACK_CANONICAL(D,1,X);		\
-    if (!FP_INHIBIT_RESULTS)		\
-      _FP_PACK_RAW_1_P(D,val,X);	\
-  } while (0)
+# define FP_PACK_DP(val,X)			\
+  do						\
+    {						\
+      _FP_PACK_CANONICAL(D,1,X);		\
+      if (!FP_INHIBIT_RESULTS)			\
+	_FP_PACK_RAW_1_P(D,val,X);		\
+    }						\
+  while (0)
 
-# define FP_PACK_SEMIRAW_D(val,X)	\
-  do {					\
-    _FP_PACK_SEMIRAW(D,1,X);		\
-    _FP_PACK_RAW_1(D,val,X);		\
-  } while (0)
+# define FP_PACK_SEMIRAW_D(val,X)		\
+  do						\
+    {						\
+      _FP_PACK_SEMIRAW(D,1,X);			\
+      _FP_PACK_RAW_1(D,val,X);			\
+    }						\
+  while (0)
 
-# define FP_PACK_SEMIRAW_DP(val,X)	\
-  do {					\
-    _FP_PACK_SEMIRAW(D,1,X);		\
-    if (!FP_INHIBIT_RESULTS)		\
-      _FP_PACK_RAW_1_P(D,val,X);	\
-  } while (0)
+# define FP_PACK_SEMIRAW_DP(val,X)		\
+  do						\
+    {						\
+      _FP_PACK_SEMIRAW(D,1,X);			\
+      if (!FP_INHIBIT_RESULTS)			\
+	_FP_PACK_RAW_1_P(D,val,X);		\
+    }						\
+  while (0)
 
 # define FP_ISSIGNAN_D(X)		_FP_ISSIGNAN(D,1,X)
 # define FP_NEG_D(R,X)			_FP_NEG(D,1,R,X)

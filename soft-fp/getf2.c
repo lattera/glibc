@@ -31,10 +31,12 @@
 #include "soft-fp.h"
 #include "quad.h"
 
-CMPtype __getf2(TFtype a, TFtype b)
+CMPtype
+__getf2(TFtype a, TFtype b)
 {
   FP_DECL_EX;
-  FP_DECL_Q(A); FP_DECL_Q(B);
+  FP_DECL_Q(A);
+  FP_DECL_Q(B);
   CMPtype r;
 
   FP_INIT_EXCEPTIONS;

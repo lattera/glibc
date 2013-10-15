@@ -32,7 +32,8 @@
 #include "soft-fp.h"
 #include "double.h"
 
-DFtype __floatsidf(SItype i)
+DFtype
+__floatsidf(SItype i)
 {
   FP_DECL_D(A);
   DFtype a;

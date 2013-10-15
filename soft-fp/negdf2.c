@@ -31,9 +31,11 @@
 #include "soft-fp.h"
 #include "double.h"
 
-DFtype __negdf2(DFtype a)
+DFtype
+__negdf2(DFtype a)
 {
-  FP_DECL_D(A); FP_DECL_D(R);
+  FP_DECL_D(A);
+  FP_DECL_D(R);
   DFtype r;
 
   FP_UNPACK_RAW_D(A, a);

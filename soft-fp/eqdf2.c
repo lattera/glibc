@@ -31,10 +31,12 @@
 #include "soft-fp.h"
 #include "double.h"
 
-CMPtype __eqdf2(DFtype a, DFtype b)
+CMPtype
+__eqdf2(DFtype a, DFtype b)
 {
   FP_DECL_EX;
-  FP_DECL_D(A); FP_DECL_D(B);
+  FP_DECL_D(A);
+  FP_DECL_D(B);
   CMPtype r;
 
   FP_INIT_EXCEPTIONS;

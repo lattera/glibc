@@ -30,7 +30,8 @@
 #include "soft-fp.h"
 #include "single.h"
 
-SFtype __floattisf(TItype i)
+SFtype
+__floattisf(TItype i)
 {
   FP_DECL_EX;
   FP_DECL_S(A);

@@ -166,48 +166,56 @@
 
 #endif
 
-#define _FP_ROUND_NEAREST(wc, X)			\
-do {							\
-    if ((_FP_FRAC_LOW_##wc(X) & 15) != _FP_WORK_ROUND)	\
-      _FP_FRAC_ADDI_##wc(X, _FP_WORK_ROUND);		\
-} while (0)
+#define _FP_ROUND_NEAREST(wc, X)				\
+  do								\
+    {								\
+      if ((_FP_FRAC_LOW_##wc(X) & 15) != _FP_WORK_ROUND)	\
+	_FP_FRAC_ADDI_##wc(X, _FP_WORK_ROUND);			\
+    }								\
+  while (0)
 
 #define _FP_ROUND_ZERO(wc, X)		(void)0
 
-#define _FP_ROUND_PINF(wc, X)				\
-do {							\
-    if (!X##_s && (_FP_FRAC_LOW_##wc(X) & 7))		\
-      _FP_FRAC_ADDI_##wc(X, _FP_WORK_LSB);		\
-} while (0)
+#define _FP_ROUND_PINF(wc, X)			\
+  do						\
+    {						\
+      if (!X##_s && (_FP_FRAC_LOW_##wc(X) & 7))	\
+	_FP_FRAC_ADDI_##wc(X, _FP_WORK_LSB);	\
+    }						\
+  while (0)
 
-#define _FP_ROUND_MINF(wc, X)				\
-do {							\
-    if (X##_s && (_FP_FRAC_LOW_##wc(X) & 7))		\
-      _FP_FRAC_ADDI_##wc(X, _FP_WORK_LSB);		\
-} while (0)
+#define _FP_ROUND_MINF(wc, X)			\
+  do						\
+    {						\
+      if (X##_s && (_FP_FRAC_LOW_##wc(X) & 7))	\
+	_FP_FRAC_ADDI_##wc(X, _FP_WORK_LSB);	\
+    }						\
+  while (0)
 
 #define _FP_ROUND(wc, X)			\
-do {						\
-	if (_FP_FRAC_LOW_##wc(X) & 7)		\
-	  {					\
-	    FP_SET_EXCEPTION(FP_EX_INEXACT);	\
-	    switch (FP_ROUNDMODE)		\
-	      {					\
-	      case FP_RND_NEAREST:		\
-		_FP_ROUND_NEAREST(wc,X);	\
-		break;				\
-	      case FP_RND_ZERO:			\
-		_FP_ROUND_ZERO(wc,X);		\
-		break;				\
-	      case FP_RND_PINF:			\
-		_FP_ROUND_PINF(wc,X);		\
-		break;				\
-	      case FP_RND_MINF:			\
-		_FP_ROUND_MINF(wc,X);		\
-		break;				\
-	      }					\
-	  }					\
-} while (0)
+  do						\
+    {						\
+      if (_FP_FRAC_LOW_##wc(X) & 7)		\
+	{					\
+	  FP_SET_EXCEPTION(FP_EX_INEXACT);	\
+	  switch (FP_ROUNDMODE)			\
+	    {					\
+	    case FP_RND_NEAREST:		\
+	      _FP_ROUND_NEAREST(wc,X);		\
+	      break;				\
+	    case FP_RND_ZERO:			\
+	      _FP_ROUND_ZERO(wc,X);		\
+	      break;				\
+	    case FP_RND_PINF:			\
+	      _FP_ROUND_PINF(wc,X);		\
+	      break;				\
+	    case FP_RND_MINF:			\
+	      _FP_ROUND_MINF(wc,X);		\
+	      break;				\
+	    }					\
+	}					\
+    }						\
+  while (0)
 
 #define FP_CLS_NORMAL		0
 #define FP_CLS_ZERO		1

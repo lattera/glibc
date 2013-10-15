@@ -31,7 +31,8 @@
 #include "soft-fp.h"
 #include "single.h"
 
-SItype __fixsfsi(SFtype a)
+SItype
+__fixsfsi(SFtype a)
 {
   FP_DECL_EX;
   FP_DECL_S(A);

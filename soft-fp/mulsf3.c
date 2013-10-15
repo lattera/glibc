@@ -31,10 +31,13 @@
 #include "soft-fp.h"
 #include "single.h"
 
-SFtype __mulsf3(SFtype a, SFtype b)
+SFtype
+__mulsf3(SFtype a, SFtype b)
 {
   FP_DECL_EX;
-  FP_DECL_S(A); FP_DECL_S(B); FP_DECL_S(R);
+  FP_DECL_S(A);
+  FP_DECL_S(B);
+  FP_DECL_S(R);
   SFtype r;
 
   FP_INIT_ROUNDMODE;

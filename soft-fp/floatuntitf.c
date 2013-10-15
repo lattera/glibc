@@ -30,7 +30,8 @@
 #include "soft-fp.h"
 #include "quad.h"
 
-TFtype __floatuntitf(UTItype i)
+TFtype
+__floatuntitf(UTItype i)
 {
   FP_DECL_EX;
   FP_DECL_Q(A);

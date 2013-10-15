@@ -31,7 +31,8 @@
 #include "soft-fp.h"
 #include "single.h"
 
-SFtype __floatsisf(SItype i)
+SFtype
+__floatsisf(SItype i)
 {
   FP_DECL_EX;
   FP_DECL_S(A);

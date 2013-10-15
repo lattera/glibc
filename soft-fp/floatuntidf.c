@@ -30,7 +30,8 @@
 #include "soft-fp.h"
 #include "double.h"
 
-DFtype __floatuntidf(UTItype i)
+DFtype
+__floatuntidf(UTItype i)
 {
   FP_DECL_EX;
   FP_DECL_D(A);
