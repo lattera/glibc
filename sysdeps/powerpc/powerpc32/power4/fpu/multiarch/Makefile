@@ -24,11 +24,14 @@ libm-sysdep_routines += s_llrintf-power6 s_llrintf-ppc32 s_llrint-power6 \
 			s_lrint-ppc32 s_modf-power5+ s_modf-ppc32 \
 			s_modff-power5+ s_modff-ppc32 s_logbl-power7 \
 			s_logbl-ppc32 s_logb-power7 s_logb-ppc32 \
-			s_logbf-power7 s_logbf-ppc32
+			s_logbf-power7 s_logbf-ppc32 e_hypot-power7 \
+			e_hypot-ppc32 e_hypotf-power7 e_hypotf-ppc32
 
 CFLAGS-s_modf-power5+.c = -mcpu=power5+
 CFLAGS-s_modff-power5+.c = -mcpu=power5+
 CFLAGS-s_logbl-power7.c = -mcpu=power7
 CFLAGS-s_logb-power7.c = -mcpu=power7
 CFLAGS-s_logbf-power7.c = -mcpu=power7
+CFLAGS-e_hypot-power7.c = -mcpu=power7
+CFLAGS-e_hypotf-power7.c = -mcpu=power7
 endif

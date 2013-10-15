@@ -1,5 +1,22 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile: Add
+	__ieee754_hypot and __ieee754_hypotf multiarch implementations.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/e_hypot-power7.c:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/e_hypot-ppc32.c:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/e_hypot.c: New file:
+	multiarch __ieee754_hypot for PowerPC32.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/e_hypotf-power7.c:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/e_hypotf-ppc32.c:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/e_hypotf.c: New file:
+	multiarch __ieee754_hypotf for PowerPC32.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/ieee754/ldbl-128ibm/s_logbl.c (__logbl): Define
 	long_double_symbol only if __logbl is defined.
 	* sysdeps/powerpc/powerpc32/power7/fpu/s_logb.c: Moved to ...
