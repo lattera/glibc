@@ -1,3 +1,9 @@
+2013-10-17  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #15218]
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't use gethostbyaddr
+	to determine canonical name.
+
 2013-10-17  Ondřej Bílka  <neleai@seznam.cz>
 
 	* sysdeps/ieee754/dbl-64/dbl2mpn.c: Fix formatting.
