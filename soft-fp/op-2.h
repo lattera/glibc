@@ -574,36 +574,6 @@
   while (0)
 
 
-#define _FP_DIV_MEAT_2_gmp(fs, R, X, Y)					\
-  do									\
-    {									\
-      _FP_W_TYPE _x[4], _y[2], _z[4];					\
-      _y[0] = Y##_f0;							\
-      _y[1] = Y##_f1;							\
-      _x[0] = _x[3] = 0;						\
-      if (_FP_FRAC_GE_2(X, Y))						\
-	{								\
-	  _x[1] = (X##_f0 << (_FP_WFRACBITS_##fs-1 - _FP_W_TYPE_SIZE)	\
-		   | X##_f1 >> (_FP_W_TYPE_SIZE -			\
-				(_FP_WFRACBITS_##fs-1 - _FP_W_TYPE_SIZE))); \
-	  _x[2] = X##_f1 << (_FP_WFRACBITS_##fs-1 - _FP_W_TYPE_SIZE);	\
-	}								\
-      else								\
-	{								\
-	  R##_e--;							\
-	  _x[1] = (X##_f0 << (_FP_WFRACBITS_##fs - _FP_W_TYPE_SIZE)	\
-		   | X##_f1 >> (_FP_W_TYPE_SIZE -			\
-				(_FP_WFRACBITS_##fs - _FP_W_TYPE_SIZE))); \
-	  _x[2] = X##_f1 << (_FP_WFRACBITS_##fs - _FP_W_TYPE_SIZE);	\
-	}								\
-									\
-      (void) mpn_divrem (_z, 0, _x, 4, _y, 2);				\
-      R##_f1 = _z[1];							\
-      R##_f0 = _z[0] | ((_x[0] | _x[1]) != 0);				\
-    }									\
-  while (0)
-
-
 /*
  * Square root algorithms:
  * We have just one right now, maybe Newton approximation

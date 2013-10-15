@@ -1,3 +1,8 @@
+2013-10-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* soft-fp/op-2.h (_FP_DIV_MEAT_2_gmp): Remove macro.
+	* soft-fp/soft-fp.h (FP_UNSET_EXCEPTION): Likewise.
+
 2013-10-15   Ondřej Bílka  <neleai@seznam.cz>
 
 	* elf/dl-libc.c: Clear initfini list after freeing.
