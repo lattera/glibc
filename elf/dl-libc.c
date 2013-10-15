@@ -286,6 +286,7 @@ libc_freeres_fn (free_mem)
 	  /* Free the initfini dependency list.  */
 	  if (l->l_free_initfini)
 	    free (l->l_initfini);
+	  l->l_initfini = NULL;
 	}
 
       if (__builtin_expect (GL(dl_ns)[ns]._ns_global_scope_alloc, 0) != 0

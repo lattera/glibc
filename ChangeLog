@@ -1,3 +1,7 @@
+2013-10-15   Ondřej Bílka  <neleai@seznam.cz>
+
+	* elf/dl-libc.c: Clear initfini list after freeing.
+
 2013-10-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* soft-fp/adddf3.c: Fix vertical whitespace and indentation.
