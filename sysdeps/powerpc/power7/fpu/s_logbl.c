@@ -66,5 +66,6 @@ __logbl (long double x)
   /* Test to avoid logb_downward (0.0) == -0.0.  */
   return ret == -0.0 ? 0.0 : ret;
 }
-
+#ifndef __logbl
 long_double_symbol (libm, __logbl, logbl);
+#endif

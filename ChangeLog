@@ -1,5 +1,39 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/ieee754/ldbl-128ibm/s_logbl.c (__logbl): Define
+	long_double_symbol only if __logbl is defined.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_logb.c: Moved to ...
+	* sysdeps/powerpc/power7/fpu/s_logb.c: ... here.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_logbf.c: Move to ...
+	* sysdeps/powerpc/power7/fpu/s_logbf.c: ... here.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_logbl.c: Move to ...
+	* sysdeps/powerpc/power7/fpu/s_logbl.c: ... here.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_logb.c: Adjust to use new
+	path for implementation.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_logbf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_logbl.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile: Add logbf,
+	logb, and logbl multiarch implementations for PowerPC32.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_logb-power7.c: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_logb-ppc32.c: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_logb.c: New file:
+	multiarch logb for PowerPC32.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_logbf-power7.c: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_logbf-ppc32.c: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_logbf.c: New file:
+	multiarch logbf for PowerPC32.
+	* sysdeps/powerpc/power4/fpu/multiarch/s_logbl-power7.c: New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_logbl-ppc32.c: New
+	file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_logbl.c: New file:
+	multiarch logbl implementation for PowerPC32.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile: Add modf
 	and modff multiarch implementations.
 	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_modf-power5+.c:

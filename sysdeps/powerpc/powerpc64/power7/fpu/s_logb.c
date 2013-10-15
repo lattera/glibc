@@ -1,1 +1,1 @@
-#include <sysdeps/powerpc/powerpc32/power7/fpu/s_logb.c>
+#include <sysdeps/powerpc/power7/fpu/s_logb.c>
