@@ -1,5 +1,27 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/power5+/fpu/multiarch/Implies: New file:
+	add multiarch folders.
+	* sysdeps/powerpc/powerpc32/power5+/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc32/power5/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc32/power5/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc32/power6/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc32/power6/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc32/power6x/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc32/power6x/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc32/power7/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc32/power7/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc32/power8/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc32/power8/multiarch/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power5+/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power5/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power6/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power6x/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power7/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power8/Implies: Remove.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile: Add
 	__ieee754_hypot and __ieee754_hypotf multiarch implementations.
 	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/e_hypot-power7.c:
