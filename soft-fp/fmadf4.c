@@ -33,18 +33,18 @@ double
 __fma (double a, double b, double c)
 {
   FP_DECL_EX;
-  FP_DECL_D(A);
-  FP_DECL_D(B);
-  FP_DECL_D(C);
-  FP_DECL_D(R);
+  FP_DECL_D (A);
+  FP_DECL_D (B);
+  FP_DECL_D (C);
+  FP_DECL_D (R);
   double r;
 
   FP_INIT_ROUNDMODE;
-  FP_UNPACK_D(A, a);
-  FP_UNPACK_D(B, b);
-  FP_UNPACK_D(C, c);
-  FP_FMA_D(R, A, B, C);
-  FP_PACK_D(r, R);
+  FP_UNPACK_D (A, a);
+  FP_UNPACK_D (B, b);
+  FP_UNPACK_D (C, c);
+  FP_FMA_D (R, A, B, C);
+  FP_PACK_D (r, R);
   FP_HANDLE_EXCEPTIONS;
 
   return r;

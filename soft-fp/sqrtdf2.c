@@ -32,17 +32,17 @@
 #include "double.h"
 
 DFtype
-__sqrtdf2(DFtype a)
+__sqrtdf2 (DFtype a)
 {
   FP_DECL_EX;
-  FP_DECL_D(A);
-  FP_DECL_D(R);
+  FP_DECL_D (A);
+  FP_DECL_D (R);
   DFtype r;
 
   FP_INIT_ROUNDMODE;
-  FP_UNPACK_D(A, a);
-  FP_SQRT_D(R, A);
-  FP_PACK_D(r, R);
+  FP_UNPACK_D (A, a);
+  FP_SQRT_D (R, A);
+  FP_PACK_D (r, R);
   FP_HANDLE_EXCEPTIONS;
 
   return r;

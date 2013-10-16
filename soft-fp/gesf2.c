@@ -32,22 +32,22 @@
 #include "single.h"
 
 CMPtype
-__gesf2(SFtype a, SFtype b)
+__gesf2 (SFtype a, SFtype b)
 {
   FP_DECL_EX;
-  FP_DECL_S(A);
-  FP_DECL_S(B);
+  FP_DECL_S (A);
+  FP_DECL_S (B);
   CMPtype r;
 
   FP_INIT_EXCEPTIONS;
-  FP_UNPACK_RAW_S(A, a);
-  FP_UNPACK_RAW_S(B, b);
-  FP_CMP_S(r, A, B, -2);
+  FP_UNPACK_RAW_S (A, a);
+  FP_UNPACK_RAW_S (B, b);
+  FP_CMP_S (r, A, B, -2);
   if (r == -2)
-    FP_SET_EXCEPTION(FP_EX_INVALID);
+    FP_SET_EXCEPTION (FP_EX_INVALID);
   FP_HANDLE_EXCEPTIONS;
 
   return r;
 }
 
-strong_alias(__gesf2, __gtsf2);
+strong_alias (__gesf2, __gtsf2);

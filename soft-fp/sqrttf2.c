@@ -32,17 +32,17 @@
 #include "quad.h"
 
 TFtype
-__sqrttf2(TFtype a)
+__sqrttf2 (TFtype a)
 {
   FP_DECL_EX;
-  FP_DECL_Q(A);
-  FP_DECL_Q(R);
+  FP_DECL_Q (A);
+  FP_DECL_Q (R);
   TFtype r;
 
   FP_INIT_ROUNDMODE;
-  FP_UNPACK_Q(A, a);
-  FP_SQRT_Q(R, A);
-  FP_PACK_Q(r, R);
+  FP_UNPACK_Q (A, a);
+  FP_SQRT_Q (R, A);
+  FP_PACK_Q (r, R);
   FP_HANDLE_EXCEPTIONS;
 
   return r;

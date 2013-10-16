@@ -32,15 +32,15 @@
 #include "double.h"
 
 DFtype
-__negdf2(DFtype a)
+__negdf2 (DFtype a)
 {
-  FP_DECL_D(A);
-  FP_DECL_D(R);
+  FP_DECL_D (A);
+  FP_DECL_D (R);
   DFtype r;
 
-  FP_UNPACK_RAW_D(A, a);
-  FP_NEG_D(R, A);
-  FP_PACK_RAW_D(r, R);
+  FP_UNPACK_RAW_D (A, a);
+  FP_NEG_D (R, A);
+  FP_PACK_RAW_D (r, R);
 
   return r;
 }

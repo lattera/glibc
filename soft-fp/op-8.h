@@ -34,9 +34,9 @@
 #define _FP_FRAC_DECL_8(X)	_FP_W_TYPE X##_f[8]
 #define _FP_FRAC_HIGH_8(X)	(X##_f[7])
 #define _FP_FRAC_LOW_8(X)	(X##_f[0])
-#define _FP_FRAC_WORD_8(X,w)	(X##_f[w])
+#define _FP_FRAC_WORD_8(X, w)	(X##_f[w])
 
-#define _FP_FRAC_SLL_8(X,N)				\
+#define _FP_FRAC_SLL_8(X, N)				\
   do							\
     {							\
       _FP_I_TYPE _up, _down, _skip, _i;			\
@@ -58,7 +58,7 @@
     }							\
   while (0)
 
-#define _FP_FRAC_SRL_8(X,N)				\
+#define _FP_FRAC_SRL_8(X, N)				\
   do							\
     {							\
       _FP_I_TYPE _up, _down, _skip, _i;			\
@@ -86,7 +86,7 @@
  * but that if any of the bits that fall off the right hand side
  * were one then we always set the LSbit.
  */
-#define _FP_FRAC_SRS_8(X,N,size)					\
+#define _FP_FRAC_SRS_8(X, N, size)					\
   do									\
     {									\
       _FP_I_TYPE _up, _down, _skip, _i;					\

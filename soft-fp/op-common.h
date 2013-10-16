@@ -30,20 +30,20 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define _FP_DECL(wc, X)				\
-  _FP_I_TYPE X##_c __attribute__((unused));	\
-  _FP_I_TYPE X##_s __attribute__((unused));	\
+  _FP_I_TYPE X##_c __attribute__ ((unused));	\
+  _FP_I_TYPE X##_s __attribute__ ((unused));	\
   _FP_I_TYPE X##_e;				\
-  _FP_FRAC_DECL_##wc(X)
+  _FP_FRAC_DECL_##wc (X)
 
 /* Test whether the qNaN bit denotes a signaling NaN.  */
-#define _FP_FRAC_SNANP(fs, X)						\
-  ((_FP_QNANNEGATEDP)							\
-   ? (_FP_FRAC_HIGH_RAW_##fs(X) & _FP_QNANBIT_##fs)			\
-   : !(_FP_FRAC_HIGH_RAW_##fs(X) & _FP_QNANBIT_##fs))
-#define _FP_FRAC_SNANP_SEMIRAW(fs, X)					\
-  ((_FP_QNANNEGATEDP)							\
-   ? (_FP_FRAC_HIGH_##fs(X) & _FP_QNANBIT_SH_##fs)			\
-   : !(_FP_FRAC_HIGH_##fs(X) & _FP_QNANBIT_SH_##fs))
+#define _FP_FRAC_SNANP(fs, X)				\
+  ((_FP_QNANNEGATEDP)					\
+   ? (_FP_FRAC_HIGH_RAW_##fs (X) & _FP_QNANBIT_##fs)	\
+   : !(_FP_FRAC_HIGH_RAW_##fs (X) & _FP_QNANBIT_##fs))
+#define _FP_FRAC_SNANP_SEMIRAW(fs, X)			\
+  ((_FP_QNANNEGATEDP)					\
+   ? (_FP_FRAC_HIGH_##fs (X) & _FP_QNANBIT_SH_##fs)	\
+   : !(_FP_FRAC_HIGH_##fs (X) & _FP_QNANBIT_SH_##fs))
 
 /*
  * Finish truly unpacking a native fp value by classifying the kind
@@ -56,37 +56,37 @@
       switch (X##_e)						\
 	{							\
 	default:						\
-	  _FP_FRAC_HIGH_RAW_##fs(X) |= _FP_IMPLBIT_##fs;	\
-	  _FP_FRAC_SLL_##wc(X, _FP_WORKBITS);			\
+	  _FP_FRAC_HIGH_RAW_##fs (X) |= _FP_IMPLBIT_##fs;	\
+	  _FP_FRAC_SLL_##wc (X, _FP_WORKBITS);			\
 	  X##_e -= _FP_EXPBIAS_##fs;				\
 	  X##_c = FP_CLS_NORMAL;				\
 	  break;						\
 								\
 	case 0:							\
-	  if (_FP_FRAC_ZEROP_##wc(X))				\
+	  if (_FP_FRAC_ZEROP_##wc (X))				\
 	    X##_c = FP_CLS_ZERO;				\
 	  else							\
 	    {							\
 	      /* a denormalized number */			\
 	      _FP_I_TYPE _shift;				\
-	      _FP_FRAC_CLZ_##wc(_shift, X);			\
+	      _FP_FRAC_CLZ_##wc (_shift, X);			\
 	      _shift -= _FP_FRACXBITS_##fs;			\
-	      _FP_FRAC_SLL_##wc(X, (_shift+_FP_WORKBITS));	\
+	      _FP_FRAC_SLL_##wc (X, (_shift+_FP_WORKBITS));	\
 	      X##_e -= _FP_EXPBIAS_##fs - 1 + _shift;		\
 	      X##_c = FP_CLS_NORMAL;				\
-	      FP_SET_EXCEPTION(FP_EX_DENORM);			\
+	      FP_SET_EXCEPTION (FP_EX_DENORM);			\
 	    }							\
 	  break;						\
 								\
 	case _FP_EXPMAX_##fs:					\
-	  if (_FP_FRAC_ZEROP_##wc(X))				\
+	  if (_FP_FRAC_ZEROP_##wc (X))				\
 	    X##_c = FP_CLS_INF;					\
 	  else							\
 	    {							\
 	      X##_c = FP_CLS_NAN;				\
 	      /* Check for signaling NaN */			\
-	      if (_FP_FRAC_SNANP(fs, X))			\
-		FP_SET_EXCEPTION(FP_EX_INVALID);		\
+	      if (_FP_FRAC_SNANP (fs, X))			\
+		FP_SET_EXCEPTION (FP_EX_INVALID);		\
 	    }							\
 	  break;						\
 	}							\
@@ -96,7 +96,7 @@
 /* Finish unpacking an fp value in semi-raw mode: the mantissa is
    shifted by _FP_WORKBITS but the implicit MSB is not inserted and
    other classification is not done.  */
-#define _FP_UNPACK_SEMIRAW(fs, wc, X)	_FP_FRAC_SLL_##wc(X, _FP_WORKBITS)
+#define _FP_UNPACK_SEMIRAW(fs, wc, X)	_FP_FRAC_SLL_##wc (X, _FP_WORKBITS)
 
 /* A semi-raw value has overflowed to infinity.  Adjust the mantissa
    and exponent appropriately.  */
@@ -108,15 +108,15 @@
 	  || (FP_ROUNDMODE == FP_RND_MINF && X##_s))	\
 	{						\
 	  X##_e = _FP_EXPMAX_##fs;			\
-	  _FP_FRAC_SET_##wc(X, _FP_ZEROFRAC_##wc);	\
+	  _FP_FRAC_SET_##wc (X, _FP_ZEROFRAC_##wc);	\
 	}						\
       else						\
 	{						\
 	  X##_e = _FP_EXPMAX_##fs - 1;			\
-	  _FP_FRAC_SET_##wc(X, _FP_MAXFRAC_##wc);	\
+	  _FP_FRAC_SET_##wc (X, _FP_MAXFRAC_##wc);	\
 	}						\
-      FP_SET_EXCEPTION(FP_EX_INEXACT);			\
-      FP_SET_EXCEPTION(FP_EX_OVERFLOW);			\
+      FP_SET_EXCEPTION (FP_EX_INEXACT);			\
+      FP_SET_EXCEPTION (FP_EX_OVERFLOW);		\
     }							\
   while (0)
 
@@ -126,9 +126,9 @@
   do						\
     {						\
       if (X##_e == _FP_EXPMAX_##fs		\
-	  && !_FP_FRAC_ZEROP_##wc(X)		\
-	  && _FP_FRAC_SNANP_SEMIRAW(fs, X))	\
-	FP_SET_EXCEPTION(FP_EX_INVALID);	\
+	  && !_FP_FRAC_ZEROP_##wc (X)		\
+	  && _FP_FRAC_SNANP_SEMIRAW (fs, X))	\
+	FP_SET_EXCEPTION (FP_EX_INVALID);	\
     }						\
   while (0)
 
@@ -138,10 +138,10 @@
   do									\
     {									\
       /* _FP_CHOOSENAN expects raw values, so shift as required.  */	\
-      _FP_FRAC_SRL_##wc(X, _FP_WORKBITS);				\
-      _FP_FRAC_SRL_##wc(Y, _FP_WORKBITS);				\
-      _FP_CHOOSENAN(fs, wc, R, X, Y, OP);				\
-      _FP_FRAC_SLL_##wc(R, _FP_WORKBITS);				\
+      _FP_FRAC_SRL_##wc (X, _FP_WORKBITS);				\
+      _FP_FRAC_SRL_##wc (Y, _FP_WORKBITS);				\
+      _FP_CHOOSENAN (fs, wc, R, X, Y, OP);				\
+      _FP_FRAC_SLL_##wc (R, _FP_WORKBITS);				\
     }									\
   while (0)
 
@@ -153,15 +153,15 @@
     {								\
       if (_FP_QNANNEGATEDP)					\
 	{							\
-	  _FP_FRAC_HIGH_RAW_##fs(X) &= _FP_QNANBIT_##fs - 1;	\
-	  if (_FP_FRAC_ZEROP_##wc(X))				\
+	  _FP_FRAC_HIGH_RAW_##fs (X) &= _FP_QNANBIT_##fs - 1;	\
+	  if (_FP_FRAC_ZEROP_##wc (X))				\
 	    {							\
 	      X##_s = _FP_NANSIGN_##fs;				\
-	      _FP_FRAC_SET_##wc(X, _FP_NANFRAC_##fs);		\
+	      _FP_FRAC_SET_##wc (X, _FP_NANFRAC_##fs);		\
 	    }							\
 	}							\
       else							\
-	_FP_FRAC_HIGH_RAW_##fs(X) |= _FP_QNANBIT_##fs;		\
+	_FP_FRAC_HIGH_RAW_##fs (X) |= _FP_QNANBIT_##fs;		\
     }								\
   while (0)
 #define _FP_SETQNAN_SEMIRAW(fs, wc, X)				\
@@ -169,16 +169,16 @@
     {								\
       if (_FP_QNANNEGATEDP)					\
 	{							\
-	  _FP_FRAC_HIGH_##fs(X) &= _FP_QNANBIT_SH_##fs - 1;	\
-	  if (_FP_FRAC_ZEROP_##wc(X))				\
+	  _FP_FRAC_HIGH_##fs (X) &= _FP_QNANBIT_SH_##fs - 1;	\
+	  if (_FP_FRAC_ZEROP_##wc (X))				\
 	    {							\
 	      X##_s = _FP_NANSIGN_##fs;				\
-	      _FP_FRAC_SET_##wc(X, _FP_NANFRAC_##fs);		\
-	      _FP_FRAC_SLL_##wc(X, _FP_WORKBITS);		\
+	      _FP_FRAC_SET_##wc (X, _FP_NANFRAC_##fs);		\
+	      _FP_FRAC_SLL_##wc (X, _FP_WORKBITS);		\
 	    }							\
 	}							\
       else							\
-	_FP_FRAC_HIGH_##fs(X) |= _FP_QNANBIT_SH_##fs;		\
+	_FP_FRAC_HIGH_##fs (X) |= _FP_QNANBIT_SH_##fs;		\
     }								\
   while (0)
 
@@ -191,31 +191,31 @@
 #define _FP_PACK_SEMIRAW(fs, wc, X)				\
   do								\
     {								\
-      _FP_ROUND(wc, X);						\
-      if (X##_e == 0 && !_FP_FRAC_ZEROP_##wc(X))		\
+      _FP_ROUND (wc, X);					\
+      if (X##_e == 0 && !_FP_FRAC_ZEROP_##wc (X))		\
 	{							\
 	  if ((FP_CUR_EXCEPTIONS & FP_EX_INEXACT)		\
 	      || (FP_TRAPPING_EXCEPTIONS & FP_EX_UNDERFLOW))	\
-	    FP_SET_EXCEPTION(FP_EX_UNDERFLOW);			\
+	    FP_SET_EXCEPTION (FP_EX_UNDERFLOW);			\
 	}							\
-      if (_FP_FRAC_HIGH_##fs(X)					\
+      if (_FP_FRAC_HIGH_##fs (X)				\
 	  & (_FP_OVERFLOW_##fs >> 1))				\
 	{							\
-	  _FP_FRAC_HIGH_##fs(X) &= ~(_FP_OVERFLOW_##fs >> 1);	\
+	  _FP_FRAC_HIGH_##fs (X) &= ~(_FP_OVERFLOW_##fs >> 1);	\
 	  X##_e++;						\
 	  if (X##_e == _FP_EXPMAX_##fs)				\
-	    _FP_OVERFLOW_SEMIRAW(fs, wc, X);			\
+	    _FP_OVERFLOW_SEMIRAW (fs, wc, X);			\
 	}							\
-      _FP_FRAC_SRL_##wc(X, _FP_WORKBITS);			\
-      if (X##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc(X))	\
+      _FP_FRAC_SRL_##wc (X, _FP_WORKBITS);			\
+      if (X##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (X))	\
 	{							\
 	  if (!_FP_KEEPNANFRACP)				\
 	    {							\
-	      _FP_FRAC_SET_##wc(X, _FP_NANFRAC_##fs);		\
+	      _FP_FRAC_SET_##wc (X, _FP_NANFRAC_##fs);		\
 	      X##_s = _FP_NANSIGN_##fs;				\
 	    }							\
 	  else							\
-	    _FP_SETQNAN(fs, wc, X);				\
+	    _FP_SETQNAN (fs, wc, X);				\
 	}							\
     }								\
   while (0)
@@ -236,13 +236,13 @@
 	  X##_e += _FP_EXPBIAS_##fs;					\
 	  if (X##_e > 0)						\
 	    {								\
-	      _FP_ROUND(wc, X);						\
-	      if (_FP_FRAC_OVERP_##wc(fs, X))				\
+	      _FP_ROUND (wc, X);					\
+	      if (_FP_FRAC_OVERP_##wc (fs, X))				\
 		{							\
-		  _FP_FRAC_CLEAR_OVERP_##wc(fs, X);			\
+		  _FP_FRAC_CLEAR_OVERP_##wc (fs, X);			\
 		  X##_e++;						\
 		}							\
-	      _FP_FRAC_SRL_##wc(X, _FP_WORKBITS);			\
+	      _FP_FRAC_SRL_##wc (X, _FP_WORKBITS);			\
 	      if (X##_e >= _FP_EXPMAX_##fs)				\
 		{							\
 		  /* overflow */					\
@@ -264,16 +264,16 @@
 		    {							\
 		      /* Overflow to infinity */			\
 		      X##_e = _FP_EXPMAX_##fs;				\
-		      _FP_FRAC_SET_##wc(X, _FP_ZEROFRAC_##wc);		\
+		      _FP_FRAC_SET_##wc (X, _FP_ZEROFRAC_##wc);		\
 		    }							\
 		  else							\
 		    {							\
 		      /* Overflow to maximum normal */			\
 		      X##_e = _FP_EXPMAX_##fs - 1;			\
-		      _FP_FRAC_SET_##wc(X, _FP_MAXFRAC_##wc);		\
+		      _FP_FRAC_SET_##wc (X, _FP_MAXFRAC_##wc);		\
 		    }							\
-		  FP_SET_EXCEPTION(FP_EX_OVERFLOW);			\
-		  FP_SET_EXCEPTION(FP_EX_INEXACT);			\
+		  FP_SET_EXCEPTION (FP_EX_OVERFLOW);			\
+		  FP_SET_EXCEPTION (FP_EX_INEXACT);			\
 		}							\
 	    }								\
 	  else								\
@@ -282,58 +282,58 @@
 	      X##_e = -X##_e + 1;					\
 	      if (X##_e <= _FP_WFRACBITS_##fs)				\
 		{							\
-		  _FP_FRAC_SRS_##wc(X, X##_e, _FP_WFRACBITS_##fs);	\
-		  _FP_ROUND(wc, X);					\
-		  if (_FP_FRAC_HIGH_##fs(X)				\
+		  _FP_FRAC_SRS_##wc (X, X##_e, _FP_WFRACBITS_##fs);	\
+		  _FP_ROUND (wc, X);					\
+		  if (_FP_FRAC_HIGH_##fs (X)				\
 		      & (_FP_OVERFLOW_##fs >> 1))			\
 		    {							\
 		      X##_e = 1;					\
-		      _FP_FRAC_SET_##wc(X, _FP_ZEROFRAC_##wc);		\
-		      FP_SET_EXCEPTION(FP_EX_INEXACT);			\
+		      _FP_FRAC_SET_##wc (X, _FP_ZEROFRAC_##wc);		\
+		      FP_SET_EXCEPTION (FP_EX_INEXACT);			\
 		    }							\
 		  else							\
 		    {							\
 		      X##_e = 0;					\
-		      _FP_FRAC_SRL_##wc(X, _FP_WORKBITS);		\
+		      _FP_FRAC_SRL_##wc (X, _FP_WORKBITS);		\
 		    }							\
 		  if ((FP_CUR_EXCEPTIONS & FP_EX_INEXACT)		\
 		      || (FP_TRAPPING_EXCEPTIONS & FP_EX_UNDERFLOW))	\
-		    FP_SET_EXCEPTION(FP_EX_UNDERFLOW);			\
+		    FP_SET_EXCEPTION (FP_EX_UNDERFLOW);			\
 		}							\
 	      else							\
 		{							\
 		  /* underflow to zero */				\
 		  X##_e = 0;						\
-		  if (!_FP_FRAC_ZEROP_##wc(X))				\
+		  if (!_FP_FRAC_ZEROP_##wc (X))				\
 		    {							\
-		      _FP_FRAC_SET_##wc(X, _FP_MINFRAC_##wc);		\
-		      _FP_ROUND(wc, X);					\
-		      _FP_FRAC_LOW_##wc(X) >>= (_FP_WORKBITS);		\
+		      _FP_FRAC_SET_##wc (X, _FP_MINFRAC_##wc);		\
+		      _FP_ROUND (wc, X);				\
+		      _FP_FRAC_LOW_##wc (X) >>= (_FP_WORKBITS);		\
 		    }							\
-		  FP_SET_EXCEPTION(FP_EX_UNDERFLOW);			\
+		  FP_SET_EXCEPTION (FP_EX_UNDERFLOW);			\
 		}							\
 	    }								\
 	  break;							\
 									\
 	case FP_CLS_ZERO:						\
 	  X##_e = 0;							\
-	  _FP_FRAC_SET_##wc(X, _FP_ZEROFRAC_##wc);			\
+	  _FP_FRAC_SET_##wc (X, _FP_ZEROFRAC_##wc);			\
 	  break;							\
 									\
 	case FP_CLS_INF:						\
 	  X##_e = _FP_EXPMAX_##fs;					\
-	  _FP_FRAC_SET_##wc(X, _FP_ZEROFRAC_##wc);			\
+	  _FP_FRAC_SET_##wc (X, _FP_ZEROFRAC_##wc);			\
 	  break;							\
 									\
 	case FP_CLS_NAN:						\
 	  X##_e = _FP_EXPMAX_##fs;					\
 	  if (!_FP_KEEPNANFRACP)					\
 	    {								\
-	      _FP_FRAC_SET_##wc(X, _FP_NANFRAC_##fs);			\
+	      _FP_FRAC_SET_##wc (X, _FP_NANFRAC_##fs);			\
 	      X##_s = _FP_NANSIGN_##fs;					\
 	    }								\
 	  else								\
-	    _FP_SETQNAN(fs, wc, X);					\
+	    _FP_SETQNAN (fs, wc, X);					\
 	  break;							\
 	}								\
     }									\
@@ -347,8 +347,8 @@
     int __ret = 0;				\
     if (X##_e == _FP_EXPMAX_##fs)		\
       {						\
-	if (!_FP_FRAC_ZEROP_##wc(X)		\
-	    && _FP_FRAC_SNANP(fs, X))		\
+	if (!_FP_FRAC_ZEROP_##wc (X)		\
+	    && _FP_FRAC_SNANP (fs, X))		\
 	  __ret = 1;				\
       }						\
     __ret;					\
@@ -373,25 +373,25 @@
 	      if (Y##_e == 0)						\
 		{							\
 		  /* Y is zero or denormalized.  */			\
-		  if (_FP_FRAC_ZEROP_##wc(Y))				\
+		  if (_FP_FRAC_ZEROP_##wc (Y))				\
 		    {							\
-		      _FP_CHECK_SIGNAN_SEMIRAW(fs, wc, X);		\
-		      _FP_FRAC_COPY_##wc(R, X);				\
+		      _FP_CHECK_SIGNAN_SEMIRAW (fs, wc, X);		\
+		      _FP_FRAC_COPY_##wc (R, X);			\
 		      goto add_done;					\
 		    }							\
 		  else							\
 		    {							\
-		      FP_SET_EXCEPTION(FP_EX_DENORM);			\
+		      FP_SET_EXCEPTION (FP_EX_DENORM);			\
 		      ediff--;						\
 		      if (ediff == 0)					\
 			{						\
-			  _FP_FRAC_ADD_##wc(R, X, Y);			\
+			  _FP_FRAC_ADD_##wc (R, X, Y);			\
 			  goto add3;					\
 			}						\
 		      if (X##_e == _FP_EXPMAX_##fs)			\
 			{						\
-			  _FP_CHECK_SIGNAN_SEMIRAW(fs, wc, X);		\
-			  _FP_FRAC_COPY_##wc(R, X);			\
+			  _FP_CHECK_SIGNAN_SEMIRAW (fs, wc, X);		\
+			  _FP_FRAC_COPY_##wc (R, X);			\
 			  goto add_done;				\
 			}						\
 		      goto add1;					\
@@ -400,22 +400,22 @@
 	      else if (X##_e == _FP_EXPMAX_##fs)			\
 		{							\
 		  /* X is NaN or Inf, Y is normal.  */			\
-		  _FP_CHECK_SIGNAN_SEMIRAW(fs, wc, X);			\
-		  _FP_FRAC_COPY_##wc(R, X);				\
+		  _FP_CHECK_SIGNAN_SEMIRAW (fs, wc, X);			\
+		  _FP_FRAC_COPY_##wc (R, X);				\
 		  goto add_done;					\
 		}							\
 									\
 	      /* Insert implicit MSB of Y.  */				\
-	      _FP_FRAC_HIGH_##fs(Y) |= _FP_IMPLBIT_SH_##fs;		\
+	      _FP_FRAC_HIGH_##fs (Y) |= _FP_IMPLBIT_SH_##fs;		\
 									\
 	    add1:							\
 	      /* Shift the mantissa of Y to the right EDIFF steps;	\
 		 remember to account later for the implicit MSB of X.  */ \
 	      if (ediff <= _FP_WFRACBITS_##fs)				\
-		_FP_FRAC_SRS_##wc(Y, ediff, _FP_WFRACBITS_##fs);	\
-	      else if (!_FP_FRAC_ZEROP_##wc(Y))				\
-		_FP_FRAC_SET_##wc(Y, _FP_MINFRAC_##wc);			\
-	      _FP_FRAC_ADD_##wc(R, X, Y);				\
+		_FP_FRAC_SRS_##wc (Y, ediff, _FP_WFRACBITS_##fs);	\
+	      else if (!_FP_FRAC_ZEROP_##wc (Y))			\
+		_FP_FRAC_SET_##wc (Y, _FP_MINFRAC_##wc);		\
+	      _FP_FRAC_ADD_##wc (R, X, Y);				\
 	    }								\
 	  else if (ediff < 0)						\
 	    {								\
@@ -424,25 +424,25 @@
 	      if (X##_e == 0)						\
 		{							\
 		  /* X is zero or denormalized.  */			\
-		  if (_FP_FRAC_ZEROP_##wc(X))				\
+		  if (_FP_FRAC_ZEROP_##wc (X))				\
 		    {							\
-		      _FP_CHECK_SIGNAN_SEMIRAW(fs, wc, Y);		\
-		      _FP_FRAC_COPY_##wc(R, Y);				\
+		      _FP_CHECK_SIGNAN_SEMIRAW (fs, wc, Y);		\
+		      _FP_FRAC_COPY_##wc (R, Y);			\
 		      goto add_done;					\
 		    }							\
 		  else							\
 		    {							\
-		      FP_SET_EXCEPTION(FP_EX_DENORM);			\
+		      FP_SET_EXCEPTION (FP_EX_DENORM);			\
 		      ediff--;						\
 		      if (ediff == 0)					\
 			{						\
-			  _FP_FRAC_ADD_##wc(R, Y, X);			\
+			  _FP_FRAC_ADD_##wc (R, Y, X);			\
 			  goto add3;					\
 			}						\
 		      if (Y##_e == _FP_EXPMAX_##fs)			\
 			{						\
-			  _FP_CHECK_SIGNAN_SEMIRAW(fs, wc, Y);		\
-			  _FP_FRAC_COPY_##wc(R, Y);			\
+			  _FP_CHECK_SIGNAN_SEMIRAW (fs, wc, Y);		\
+			  _FP_FRAC_COPY_##wc (R, Y);			\
 			  goto add_done;				\
 			}						\
 		      goto add2;					\
@@ -451,54 +451,54 @@
 	      else if (Y##_e == _FP_EXPMAX_##fs)			\
 		{							\
 		  /* Y is NaN or Inf, X is normal.  */			\
-		  _FP_CHECK_SIGNAN_SEMIRAW(fs, wc, Y);			\
-		  _FP_FRAC_COPY_##wc(R, Y);				\
+		  _FP_CHECK_SIGNAN_SEMIRAW (fs, wc, Y);			\
+		  _FP_FRAC_COPY_##wc (R, Y);				\
 		  goto add_done;					\
 		}							\
 									\
 	      /* Insert implicit MSB of X.  */				\
-	      _FP_FRAC_HIGH_##fs(X) |= _FP_IMPLBIT_SH_##fs;		\
+	      _FP_FRAC_HIGH_##fs (X) |= _FP_IMPLBIT_SH_##fs;		\
 									\
 	    add2:							\
 	      /* Shift the mantissa of X to the right EDIFF steps;	\
 		 remember to account later for the implicit MSB of Y.  */ \
 	      if (ediff <= _FP_WFRACBITS_##fs)				\
-		_FP_FRAC_SRS_##wc(X, ediff, _FP_WFRACBITS_##fs);	\
-	      else if (!_FP_FRAC_ZEROP_##wc(X))				\
-		_FP_FRAC_SET_##wc(X, _FP_MINFRAC_##wc);			\
-	      _FP_FRAC_ADD_##wc(R, Y, X);				\
+		_FP_FRAC_SRS_##wc (X, ediff, _FP_WFRACBITS_##fs);	\
+	      else if (!_FP_FRAC_ZEROP_##wc (X))			\
+		_FP_FRAC_SET_##wc (X, _FP_MINFRAC_##wc);		\
+	      _FP_FRAC_ADD_##wc (R, Y, X);				\
 	    }								\
 	  else								\
 	    {								\
 	      /* ediff == 0.  */					\
-	      if (!_FP_EXP_NORMAL(fs, wc, X))				\
+	      if (!_FP_EXP_NORMAL (fs, wc, X))				\
 		{							\
 		  if (X##_e == 0)					\
 		    {							\
 		      /* X and Y are zero or denormalized.  */		\
 		      R##_e = 0;					\
-		      if (_FP_FRAC_ZEROP_##wc(X))			\
+		      if (_FP_FRAC_ZEROP_##wc (X))			\
 			{						\
-			  if (!_FP_FRAC_ZEROP_##wc(Y))			\
-			    FP_SET_EXCEPTION(FP_EX_DENORM);		\
-			  _FP_FRAC_COPY_##wc(R, Y);			\
+			  if (!_FP_FRAC_ZEROP_##wc (Y))			\
+			    FP_SET_EXCEPTION (FP_EX_DENORM);		\
+			  _FP_FRAC_COPY_##wc (R, Y);			\
 			  goto add_done;				\
 			}						\
-		      else if (_FP_FRAC_ZEROP_##wc(Y))			\
+		      else if (_FP_FRAC_ZEROP_##wc (Y))			\
 			{						\
-			  FP_SET_EXCEPTION(FP_EX_DENORM);		\
-			  _FP_FRAC_COPY_##wc(R, X);			\
+			  FP_SET_EXCEPTION (FP_EX_DENORM);		\
+			  _FP_FRAC_COPY_##wc (R, X);			\
 			  goto add_done;				\
 			}						\
 		      else						\
 			{						\
-			  FP_SET_EXCEPTION(FP_EX_DENORM);		\
-			  _FP_FRAC_ADD_##wc(R, X, Y);			\
-			  if (_FP_FRAC_HIGH_##fs(R) & _FP_IMPLBIT_SH_##fs) \
+			  FP_SET_EXCEPTION (FP_EX_DENORM);		\
+			  _FP_FRAC_ADD_##wc (R, X, Y);			\
+			  if (_FP_FRAC_HIGH_##fs (R) & _FP_IMPLBIT_SH_##fs) \
 			    {						\
 			      /* Normalized result.  */			\
-			      _FP_FRAC_HIGH_##fs(R)			\
-				&= ~(_FP_W_TYPE)_FP_IMPLBIT_SH_##fs;	\
+			      _FP_FRAC_HIGH_##fs (R)			\
+				&= ~(_FP_W_TYPE) _FP_IMPLBIT_SH_##fs;	\
 			      R##_e = 1;				\
 			    }						\
 			  goto add_done;				\
@@ -507,39 +507,39 @@
 		  else							\
 		    {							\
 		      /* X and Y are NaN or Inf.  */			\
-		      _FP_CHECK_SIGNAN_SEMIRAW(fs, wc, X);		\
-		      _FP_CHECK_SIGNAN_SEMIRAW(fs, wc, Y);		\
+		      _FP_CHECK_SIGNAN_SEMIRAW (fs, wc, X);		\
+		      _FP_CHECK_SIGNAN_SEMIRAW (fs, wc, Y);		\
 		      R##_e = _FP_EXPMAX_##fs;				\
-		      if (_FP_FRAC_ZEROP_##wc(X))			\
-			_FP_FRAC_COPY_##wc(R, Y);			\
-		      else if (_FP_FRAC_ZEROP_##wc(Y))			\
-			_FP_FRAC_COPY_##wc(R, X);			\
+		      if (_FP_FRAC_ZEROP_##wc (X))			\
+			_FP_FRAC_COPY_##wc (R, Y);			\
+		      else if (_FP_FRAC_ZEROP_##wc (Y))			\
+			_FP_FRAC_COPY_##wc (R, X);			\
 		      else						\
-			_FP_CHOOSENAN_SEMIRAW(fs, wc, R, X, Y, OP);	\
+			_FP_CHOOSENAN_SEMIRAW (fs, wc, R, X, Y, OP);	\
 		      goto add_done;					\
 		    }							\
 		}							\
 	      /* The exponents of X and Y, both normal, are equal.  The	\
 		 implicit MSBs will always add to increase the		\
 		 exponent.  */						\
-	      _FP_FRAC_ADD_##wc(R, X, Y);				\
+	      _FP_FRAC_ADD_##wc (R, X, Y);				\
 	      R##_e = X##_e + 1;					\
-	      _FP_FRAC_SRS_##wc(R, 1, _FP_WFRACBITS_##fs);		\
+	      _FP_FRAC_SRS_##wc (R, 1, _FP_WFRACBITS_##fs);		\
 	      if (R##_e == _FP_EXPMAX_##fs)				\
 		/* Overflow to infinity (depending on rounding mode).  */ \
-		_FP_OVERFLOW_SEMIRAW(fs, wc, R);			\
+		_FP_OVERFLOW_SEMIRAW (fs, wc, R);			\
 	      goto add_done;						\
 	    }								\
 	add3:								\
-	  if (_FP_FRAC_HIGH_##fs(R) & _FP_IMPLBIT_SH_##fs)		\
+	  if (_FP_FRAC_HIGH_##fs (R) & _FP_IMPLBIT_SH_##fs)		\
 	    {								\
 	      /* Overflow.  */						\
-	      _FP_FRAC_HIGH_##fs(R) &= ~(_FP_W_TYPE)_FP_IMPLBIT_SH_##fs; \
+	      _FP_FRAC_HIGH_##fs (R) &= ~(_FP_W_TYPE) _FP_IMPLBIT_SH_##fs; \
 	      R##_e++;							\
-	      _FP_FRAC_SRS_##wc(R, 1, _FP_WFRACBITS_##fs);		\
+	      _FP_FRAC_SRS_##wc (R, 1, _FP_WFRACBITS_##fs);		\
 	      if (R##_e == _FP_EXPMAX_##fs)				\
 		/* Overflow to infinity (depending on rounding mode).  */ \
-		_FP_OVERFLOW_SEMIRAW(fs, wc, R);			\
+		_FP_OVERFLOW_SEMIRAW (fs, wc, R);			\
 	    }								\
 	add_done: ;							\
 	}								\
@@ -554,25 +554,25 @@
 	      if (Y##_e == 0)						\
 		{							\
 		  /* Y is zero or denormalized.  */			\
-		  if (_FP_FRAC_ZEROP_##wc(Y))				\
+		  if (_FP_FRAC_ZEROP_##wc (Y))				\
 		    {							\
-		      _FP_CHECK_SIGNAN_SEMIRAW(fs, wc, X);		\
-		      _FP_FRAC_COPY_##wc(R, X);				\
+		      _FP_CHECK_SIGNAN_SEMIRAW (fs, wc, X);		\
+		      _FP_FRAC_COPY_##wc (R, X);			\
 		      goto sub_done;					\
 		    }							\
 		  else							\
 		    {							\
-		      FP_SET_EXCEPTION(FP_EX_DENORM);			\
+		      FP_SET_EXCEPTION (FP_EX_DENORM);			\
 		      ediff--;						\
 		      if (ediff == 0)					\
 			{						\
-			  _FP_FRAC_SUB_##wc(R, X, Y);			\
+			  _FP_FRAC_SUB_##wc (R, X, Y);			\
 			  goto sub3;					\
 			}						\
 		      if (X##_e == _FP_EXPMAX_##fs)			\
 			{						\
-			  _FP_CHECK_SIGNAN_SEMIRAW(fs, wc, X);		\
-			  _FP_FRAC_COPY_##wc(R, X);			\
+			  _FP_CHECK_SIGNAN_SEMIRAW (fs, wc, X);		\
+			  _FP_FRAC_COPY_##wc (R, X);			\
 			  goto sub_done;				\
 			}						\
 		      goto sub1;					\
@@ -581,22 +581,22 @@
 	      else if (X##_e == _FP_EXPMAX_##fs)			\
 		{							\
 		  /* X is NaN or Inf, Y is normal.  */			\
-		  _FP_CHECK_SIGNAN_SEMIRAW(fs, wc, X);			\
-		  _FP_FRAC_COPY_##wc(R, X);				\
+		  _FP_CHECK_SIGNAN_SEMIRAW (fs, wc, X);			\
+		  _FP_FRAC_COPY_##wc (R, X);				\
 		  goto sub_done;					\
 		}							\
 									\
 	      /* Insert implicit MSB of Y.  */				\
-	      _FP_FRAC_HIGH_##fs(Y) |= _FP_IMPLBIT_SH_##fs;		\
+	      _FP_FRAC_HIGH_##fs (Y) |= _FP_IMPLBIT_SH_##fs;		\
 									\
 	    sub1:							\
 	      /* Shift the mantissa of Y to the right EDIFF steps;	\
 		 remember to account later for the implicit MSB of X.  */ \
 	      if (ediff <= _FP_WFRACBITS_##fs)				\
-		_FP_FRAC_SRS_##wc(Y, ediff, _FP_WFRACBITS_##fs);	\
-	      else if (!_FP_FRAC_ZEROP_##wc(Y))				\
-		_FP_FRAC_SET_##wc(Y, _FP_MINFRAC_##wc);			\
-	      _FP_FRAC_SUB_##wc(R, X, Y);				\
+		_FP_FRAC_SRS_##wc (Y, ediff, _FP_WFRACBITS_##fs);	\
+	      else if (!_FP_FRAC_ZEROP_##wc (Y))			\
+		_FP_FRAC_SET_##wc (Y, _FP_MINFRAC_##wc);		\
+	      _FP_FRAC_SUB_##wc (R, X, Y);				\
 	    }								\
 	  else if (ediff < 0)						\
 	    {								\
@@ -606,25 +606,25 @@
 	      if (X##_e == 0)						\
 		{							\
 		  /* X is zero or denormalized.  */			\
-		  if (_FP_FRAC_ZEROP_##wc(X))				\
+		  if (_FP_FRAC_ZEROP_##wc (X))				\
 		    {							\
-		      _FP_CHECK_SIGNAN_SEMIRAW(fs, wc, Y);		\
-		      _FP_FRAC_COPY_##wc(R, Y);				\
+		      _FP_CHECK_SIGNAN_SEMIRAW (fs, wc, Y);		\
+		      _FP_FRAC_COPY_##wc (R, Y);			\
 		      goto sub_done;					\
 		    }							\
 		  else							\
 		    {							\
-		      FP_SET_EXCEPTION(FP_EX_DENORM);			\
+		      FP_SET_EXCEPTION (FP_EX_DENORM);			\
 		      ediff--;						\
 		      if (ediff == 0)					\
 			{						\
-			  _FP_FRAC_SUB_##wc(R, Y, X);			\
+			  _FP_FRAC_SUB_##wc (R, Y, X);			\
 			  goto sub3;					\
 			}						\
 		      if (Y##_e == _FP_EXPMAX_##fs)			\
 			{						\
-			  _FP_CHECK_SIGNAN_SEMIRAW(fs, wc, Y);		\
-			  _FP_FRAC_COPY_##wc(R, Y);			\
+			  _FP_CHECK_SIGNAN_SEMIRAW (fs, wc, Y);		\
+			  _FP_FRAC_COPY_##wc (R, Y);			\
 			  goto sub_done;				\
 			}						\
 		      goto sub2;					\
@@ -633,63 +633,63 @@
 	      else if (Y##_e == _FP_EXPMAX_##fs)			\
 		{							\
 		  /* Y is NaN or Inf, X is normal.  */			\
-		  _FP_CHECK_SIGNAN_SEMIRAW(fs, wc, Y);			\
-		  _FP_FRAC_COPY_##wc(R, Y);				\
+		  _FP_CHECK_SIGNAN_SEMIRAW (fs, wc, Y);			\
+		  _FP_FRAC_COPY_##wc (R, Y);				\
 		  goto sub_done;					\
 		}							\
 									\
 	      /* Insert implicit MSB of X.  */				\
-	      _FP_FRAC_HIGH_##fs(X) |= _FP_IMPLBIT_SH_##fs;		\
+	      _FP_FRAC_HIGH_##fs (X) |= _FP_IMPLBIT_SH_##fs;		\
 									\
 	    sub2:							\
 	      /* Shift the mantissa of X to the right EDIFF steps;	\
 		 remember to account later for the implicit MSB of Y.  */ \
 	      if (ediff <= _FP_WFRACBITS_##fs)				\
-		_FP_FRAC_SRS_##wc(X, ediff, _FP_WFRACBITS_##fs);	\
-	      else if (!_FP_FRAC_ZEROP_##wc(X))				\
-		_FP_FRAC_SET_##wc(X, _FP_MINFRAC_##wc);			\
-	      _FP_FRAC_SUB_##wc(R, Y, X);				\
+		_FP_FRAC_SRS_##wc (X, ediff, _FP_WFRACBITS_##fs);	\
+	      else if (!_FP_FRAC_ZEROP_##wc (X))			\
+		_FP_FRAC_SET_##wc (X, _FP_MINFRAC_##wc);		\
+	      _FP_FRAC_SUB_##wc (R, Y, X);				\
 	    }								\
 	  else								\
 	    {								\
 	      /* ediff == 0.  */					\
-	      if (!_FP_EXP_NORMAL(fs, wc, X))				\
+	      if (!_FP_EXP_NORMAL (fs, wc, X))				\
 		{							\
 		  if (X##_e == 0)					\
 		    {							\
 		      /* X and Y are zero or denormalized.  */		\
 		      R##_e = 0;					\
-		      if (_FP_FRAC_ZEROP_##wc(X))			\
+		      if (_FP_FRAC_ZEROP_##wc (X))			\
 			{						\
-			  _FP_FRAC_COPY_##wc(R, Y);			\
-			  if (_FP_FRAC_ZEROP_##wc(Y))			\
+			  _FP_FRAC_COPY_##wc (R, Y);			\
+			  if (_FP_FRAC_ZEROP_##wc (Y))			\
 			    R##_s = (FP_ROUNDMODE == FP_RND_MINF);	\
 			  else						\
 			    {						\
-			      FP_SET_EXCEPTION(FP_EX_DENORM);		\
+			      FP_SET_EXCEPTION (FP_EX_DENORM);		\
 			      R##_s = Y##_s;				\
 			    }						\
 			  goto sub_done;				\
 			}						\
-		      else if (_FP_FRAC_ZEROP_##wc(Y))			\
+		      else if (_FP_FRAC_ZEROP_##wc (Y))			\
 			{						\
-			  FP_SET_EXCEPTION(FP_EX_DENORM);		\
-			  _FP_FRAC_COPY_##wc(R, X);			\
+			  FP_SET_EXCEPTION (FP_EX_DENORM);		\
+			  _FP_FRAC_COPY_##wc (R, X);			\
 			  R##_s = X##_s;				\
 			  goto sub_done;				\
 			}						\
 		      else						\
 			{						\
-			  FP_SET_EXCEPTION(FP_EX_DENORM);		\
-			  _FP_FRAC_SUB_##wc(R, X, Y);			\
+			  FP_SET_EXCEPTION (FP_EX_DENORM);		\
+			  _FP_FRAC_SUB_##wc (R, X, Y);			\
 			  R##_s = X##_s;				\
-			  if (_FP_FRAC_HIGH_##fs(R) & _FP_IMPLBIT_SH_##fs) \
+			  if (_FP_FRAC_HIGH_##fs (R) & _FP_IMPLBIT_SH_##fs) \
 			    {						\
 			      /* |X| < |Y|, negate result.  */		\
-			      _FP_FRAC_SUB_##wc(R, Y, X);		\
+			      _FP_FRAC_SUB_##wc (R, Y, X);		\
 			      R##_s = Y##_s;				\
 			    }						\
-			  else if (_FP_FRAC_ZEROP_##wc(R))		\
+			  else if (_FP_FRAC_ZEROP_##wc (R))		\
 			    R##_s = (FP_ROUNDMODE == FP_RND_MINF);	\
 			  goto sub_done;				\
 			}						\
@@ -697,38 +697,38 @@
 		  else							\
 		    {							\
 		      /* X and Y are NaN or Inf, of opposite signs.  */	\
-		      _FP_CHECK_SIGNAN_SEMIRAW(fs, wc, X);		\
-		      _FP_CHECK_SIGNAN_SEMIRAW(fs, wc, Y);		\
+		      _FP_CHECK_SIGNAN_SEMIRAW (fs, wc, X);		\
+		      _FP_CHECK_SIGNAN_SEMIRAW (fs, wc, Y);		\
 		      R##_e = _FP_EXPMAX_##fs;				\
-		      if (_FP_FRAC_ZEROP_##wc(X))			\
+		      if (_FP_FRAC_ZEROP_##wc (X))			\
 			{						\
-			  if (_FP_FRAC_ZEROP_##wc(Y))			\
+			  if (_FP_FRAC_ZEROP_##wc (Y))			\
 			    {						\
 			      /* Inf - Inf.  */				\
 			      R##_s = _FP_NANSIGN_##fs;			\
-			      _FP_FRAC_SET_##wc(R, _FP_NANFRAC_##fs);	\
-			      _FP_FRAC_SLL_##wc(R, _FP_WORKBITS);	\
-			      FP_SET_EXCEPTION(FP_EX_INVALID);		\
+			      _FP_FRAC_SET_##wc (R, _FP_NANFRAC_##fs);	\
+			      _FP_FRAC_SLL_##wc (R, _FP_WORKBITS);	\
+			      FP_SET_EXCEPTION (FP_EX_INVALID);		\
 			    }						\
 			  else						\
 			    {						\
 			      /* Inf - NaN.  */				\
 			      R##_s = Y##_s;				\
-			      _FP_FRAC_COPY_##wc(R, Y);			\
+			      _FP_FRAC_COPY_##wc (R, Y);		\
 			    }						\
 			}						\
 		      else						\
 			{						\
-			  if (_FP_FRAC_ZEROP_##wc(Y))			\
+			  if (_FP_FRAC_ZEROP_##wc (Y))			\
 			    {						\
 			      /* NaN - Inf.  */				\
 			      R##_s = X##_s;				\
-			      _FP_FRAC_COPY_##wc(R, X);			\
+			      _FP_FRAC_COPY_##wc (R, X);		\
 			    }						\
 			  else						\
 			    {						\
 			      /* NaN - NaN.  */				\
-			      _FP_CHOOSENAN_SEMIRAW(fs, wc, R, X, Y, OP); \
+			      _FP_CHOOSENAN_SEMIRAW (fs, wc, R, X, Y, OP); \
 			    }						\
 			}						\
 		      goto sub_done;					\
@@ -737,15 +737,15 @@
 	      /* The exponents of X and Y, both normal, are equal.  The	\
 		 implicit MSBs cancel.  */				\
 	      R##_e = X##_e;						\
-	      _FP_FRAC_SUB_##wc(R, X, Y);				\
+	      _FP_FRAC_SUB_##wc (R, X, Y);				\
 	      R##_s = X##_s;						\
-	      if (_FP_FRAC_HIGH_##fs(R) & _FP_IMPLBIT_SH_##fs)		\
+	      if (_FP_FRAC_HIGH_##fs (R) & _FP_IMPLBIT_SH_##fs)		\
 		{							\
 		  /* |X| < |Y|, negate result.  */			\
-		  _FP_FRAC_SUB_##wc(R, Y, X);				\
+		  _FP_FRAC_SUB_##wc (R, Y, X);				\
 		  R##_s = Y##_s;					\
 		}							\
-	      else if (_FP_FRAC_ZEROP_##wc(R))				\
+	      else if (_FP_FRAC_ZEROP_##wc (R))				\
 		{							\
 		  R##_e = 0;						\
 		  R##_s = (FP_ROUNDMODE == FP_RND_MINF);		\
@@ -754,27 +754,27 @@
 	      goto norm;						\
 	    }								\
 	sub3:								\
-	  if (_FP_FRAC_HIGH_##fs(R) & _FP_IMPLBIT_SH_##fs)		\
+	  if (_FP_FRAC_HIGH_##fs (R) & _FP_IMPLBIT_SH_##fs)		\
 	    {								\
 	      int diff;							\
 	      /* Carry into most significant bit of larger one of X and Y, \
 		 canceling it; renormalize.  */				\
-	      _FP_FRAC_HIGH_##fs(R) &= _FP_IMPLBIT_SH_##fs - 1;		\
+	      _FP_FRAC_HIGH_##fs (R) &= _FP_IMPLBIT_SH_##fs - 1;	\
 	    norm:							\
-	      _FP_FRAC_CLZ_##wc(diff, R);				\
+	      _FP_FRAC_CLZ_##wc (diff, R);				\
 	      diff -= _FP_WFRACXBITS_##fs;				\
-	      _FP_FRAC_SLL_##wc(R, diff);				\
+	      _FP_FRAC_SLL_##wc (R, diff);				\
 	      if (R##_e <= diff)					\
 		{							\
 		  /* R is denormalized.  */				\
 		  diff = diff - R##_e + 1;				\
-		  _FP_FRAC_SRS_##wc(R, diff, _FP_WFRACBITS_##fs);	\
+		  _FP_FRAC_SRS_##wc (R, diff, _FP_WFRACBITS_##fs);	\
 		  R##_e = 0;						\
 		}							\
 	      else							\
 		{							\
 		  R##_e -= diff;					\
-		  _FP_FRAC_HIGH_##fs(R) &= ~(_FP_W_TYPE)_FP_IMPLBIT_SH_##fs; \
+		  _FP_FRAC_HIGH_##fs (R) &= ~(_FP_W_TYPE) _FP_IMPLBIT_SH_##fs; \
 		}							\
 	    }								\
 	sub_done: ;							\
@@ -782,13 +782,13 @@
     }									\
   while (0)
 
-#define _FP_ADD(fs, wc, R, X, Y) _FP_ADD_INTERNAL(fs, wc, R, X, Y, '+')
+#define _FP_ADD(fs, wc, R, X, Y) _FP_ADD_INTERNAL (fs, wc, R, X, Y, '+')
 #define _FP_SUB(fs, wc, R, X, Y)					\
   do									\
     {									\
-      if (!(Y##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc(Y)))	\
+      if (!(Y##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (Y)))	\
 	Y##_s ^= 1;							\
-      _FP_ADD_INTERNAL(fs, wc, R, X, Y, '-');				\
+      _FP_ADD_INTERNAL (fs, wc, R, X, Y, '-');				\
     }									\
   while (0)
 
@@ -800,7 +800,7 @@
 #define _FP_NEG(fs, wc, R, X)			\
   do						\
     {						\
-      _FP_FRAC_COPY_##wc(R, X);			\
+      _FP_FRAC_COPY_##wc (R, X);		\
       R##_e = X##_e;				\
       R##_s = 1 ^ X##_s;			\
     }						\
@@ -816,57 +816,57 @@
     {								\
       R##_s = X##_s ^ Y##_s;					\
       R##_e = X##_e + Y##_e + 1;				\
-      switch (_FP_CLS_COMBINE(X##_c, Y##_c))			\
+      switch (_FP_CLS_COMBINE (X##_c, Y##_c))			\
 	{							\
-	case _FP_CLS_COMBINE(FP_CLS_NORMAL,FP_CLS_NORMAL):	\
+	case _FP_CLS_COMBINE (FP_CLS_NORMAL, FP_CLS_NORMAL):	\
 	  R##_c = FP_CLS_NORMAL;				\
 								\
-	  _FP_MUL_MEAT_##fs(R,X,Y);				\
+	  _FP_MUL_MEAT_##fs (R, X, Y);				\
 								\
-	  if (_FP_FRAC_OVERP_##wc(fs, R))			\
-	    _FP_FRAC_SRS_##wc(R, 1, _FP_WFRACBITS_##fs);	\
+	  if (_FP_FRAC_OVERP_##wc (fs, R))			\
+	    _FP_FRAC_SRS_##wc (R, 1, _FP_WFRACBITS_##fs);	\
 	  else							\
 	    R##_e--;						\
 	  break;						\
 								\
-	case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_NAN):		\
-	  _FP_CHOOSENAN(fs, wc, R, X, Y, '*');			\
+	case _FP_CLS_COMBINE (FP_CLS_NAN, FP_CLS_NAN):		\
+	  _FP_CHOOSENAN (fs, wc, R, X, Y, '*');			\
 	  break;						\
 								\
-	case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_NORMAL):		\
-	case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_INF):		\
-	case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_ZERO):		\
+	case _FP_CLS_COMBINE (FP_CLS_NAN, FP_CLS_NORMAL):	\
+	case _FP_CLS_COMBINE (FP_CLS_NAN, FP_CLS_INF):		\
+	case _FP_CLS_COMBINE (FP_CLS_NAN, FP_CLS_ZERO):		\
 	  R##_s = X##_s;					\
 								\
-	case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_INF):		\
-	case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_NORMAL):		\
-	case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_NORMAL):	\
-	case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_ZERO):		\
-	  _FP_FRAC_COPY_##wc(R, X);				\
+	case _FP_CLS_COMBINE (FP_CLS_INF, FP_CLS_INF):		\
+	case _FP_CLS_COMBINE (FP_CLS_INF, FP_CLS_NORMAL):	\
+	case _FP_CLS_COMBINE (FP_CLS_ZERO, FP_CLS_NORMAL):	\
+	case _FP_CLS_COMBINE (FP_CLS_ZERO, FP_CLS_ZERO):	\
+	  _FP_FRAC_COPY_##wc (R, X);				\
 	  R##_c = X##_c;					\
 	  break;						\
 								\
-	case _FP_CLS_COMBINE(FP_CLS_NORMAL,FP_CLS_NAN):		\
-	case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_NAN):		\
-	case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_NAN):		\
+	case _FP_CLS_COMBINE (FP_CLS_NORMAL, FP_CLS_NAN):	\
+	case _FP_CLS_COMBINE (FP_CLS_INF, FP_CLS_NAN):		\
+	case _FP_CLS_COMBINE (FP_CLS_ZERO, FP_CLS_NAN):		\
 	  R##_s = Y##_s;					\
 								\
-	case _FP_CLS_COMBINE(FP_CLS_NORMAL,FP_CLS_INF):		\
-	case _FP_CLS_COMBINE(FP_CLS_NORMAL,FP_CLS_ZERO):	\
-	  _FP_FRAC_COPY_##wc(R, Y);				\
+	case _FP_CLS_COMBINE (FP_CLS_NORMAL, FP_CLS_INF):	\
+	case _FP_CLS_COMBINE (FP_CLS_NORMAL, FP_CLS_ZERO):	\
+	  _FP_FRAC_COPY_##wc (R, Y);				\
 	  R##_c = Y##_c;					\
 	  break;						\
 								\
-	case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_ZERO):		\
-	case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_INF):		\
+	case _FP_CLS_COMBINE (FP_CLS_INF, FP_CLS_ZERO):		\
+	case _FP_CLS_COMBINE (FP_CLS_ZERO, FP_CLS_INF):		\
 	  R##_s = _FP_NANSIGN_##fs;				\
 	  R##_c = FP_CLS_NAN;					\
-	  _FP_FRAC_SET_##wc(R, _FP_NANFRAC_##fs);		\
-	  FP_SET_EXCEPTION(FP_EX_INVALID);			\
+	  _FP_FRAC_SET_##wc (R, _FP_NANFRAC_##fs);		\
+	  FP_SET_EXCEPTION (FP_EX_INVALID);			\
 	  break;						\
 								\
 	default:						\
-	  abort();						\
+	  abort ();						\
 	}							\
     }								\
   while (0)
@@ -877,18 +877,18 @@
 #define _FP_FMA(fs, wc, dwc, R, X, Y, Z)				\
   do									\
     {									\
-      FP_DECL_##fs(T);							\
+      FP_DECL_##fs (T);							\
       T##_s = X##_s ^ Y##_s;						\
       T##_e = X##_e + Y##_e + 1;					\
-      switch (_FP_CLS_COMBINE(X##_c, Y##_c))				\
+      switch (_FP_CLS_COMBINE (X##_c, Y##_c))				\
 	{								\
-	case _FP_CLS_COMBINE(FP_CLS_NORMAL,FP_CLS_NORMAL):		\
+	case _FP_CLS_COMBINE (FP_CLS_NORMAL, FP_CLS_NORMAL):		\
 	  switch (Z##_c)						\
 	    {								\
 	    case FP_CLS_INF:						\
 	    case FP_CLS_NAN:						\
 	      R##_s = Z##_s;						\
-	      _FP_FRAC_COPY_##wc(R, Z);					\
+	      _FP_FRAC_COPY_##wc (R, Z);				\
 	      R##_c = Z##_c;						\
 	      break;							\
 									\
@@ -897,47 +897,47 @@
 	      R##_s = T##_s;						\
 	      R##_e = T##_e;						\
 									\
-	      _FP_MUL_MEAT_##fs(R, X, Y);				\
+	      _FP_MUL_MEAT_##fs (R, X, Y);				\
 									\
-	      if (_FP_FRAC_OVERP_##wc(fs, R))				\
-		_FP_FRAC_SRS_##wc(R, 1, _FP_WFRACBITS_##fs);		\
+	      if (_FP_FRAC_OVERP_##wc (fs, R))				\
+		_FP_FRAC_SRS_##wc (R, 1, _FP_WFRACBITS_##fs);		\
 	      else							\
 		R##_e--;						\
 	      break;							\
 									\
 	    case FP_CLS_NORMAL:;					\
-	      _FP_FRAC_DECL_##dwc(TD);					\
-	      _FP_FRAC_DECL_##dwc(ZD);					\
-	      _FP_FRAC_DECL_##dwc(RD);					\
-	      _FP_MUL_MEAT_DW_##fs(TD, X, Y);				\
+	      _FP_FRAC_DECL_##dwc (TD);					\
+	      _FP_FRAC_DECL_##dwc (ZD);					\
+	      _FP_FRAC_DECL_##dwc (RD);					\
+	      _FP_MUL_MEAT_DW_##fs (TD, X, Y);				\
 	      R##_e = T##_e;						\
-	      int tsh = _FP_FRAC_HIGHBIT_DW_##dwc(fs, TD) == 0;		\
+	      int tsh = _FP_FRAC_HIGHBIT_DW_##dwc (fs, TD) == 0;	\
 	      T##_e -= tsh;						\
 	      int ediff = T##_e - Z##_e;				\
 	      if (ediff >= 0)						\
 		{							\
 		  int shift = _FP_WFRACBITS_##fs - tsh - ediff;		\
 		  if (shift <= -_FP_WFRACBITS_##fs)			\
-		    _FP_FRAC_SET_##dwc(ZD, _FP_MINFRAC_##dwc);		\
+		    _FP_FRAC_SET_##dwc (ZD, _FP_MINFRAC_##dwc);		\
 		  else							\
 		    {							\
-		      _FP_FRAC_COPY_##dwc##_##wc(ZD, Z);		\
+		      _FP_FRAC_COPY_##dwc##_##wc (ZD, Z);		\
 		      if (shift < 0)					\
-			_FP_FRAC_SRS_##dwc(ZD, -shift,			\
-					   _FP_WFRACBITS_DW_##fs);	\
+			_FP_FRAC_SRS_##dwc (ZD, -shift,			\
+					    _FP_WFRACBITS_DW_##fs);	\
 		      else if (shift > 0)				\
-			_FP_FRAC_SLL_##dwc(ZD, shift);			\
+			_FP_FRAC_SLL_##dwc (ZD, shift);			\
 		    }							\
 		  R##_s = T##_s;					\
 		  if (T##_s == Z##_s)					\
-		    _FP_FRAC_ADD_##dwc(RD, TD, ZD);			\
+		    _FP_FRAC_ADD_##dwc (RD, TD, ZD);			\
 		  else							\
 		    {							\
-		      _FP_FRAC_SUB_##dwc(RD, TD, ZD);			\
-		      if (_FP_FRAC_NEGP_##dwc(RD))			\
+		      _FP_FRAC_SUB_##dwc (RD, TD, ZD);			\
+		      if (_FP_FRAC_NEGP_##dwc (RD))			\
 			{						\
 			  R##_s = Z##_s;				\
-			  _FP_FRAC_SUB_##dwc(RD, ZD, TD);		\
+			  _FP_FRAC_SUB_##dwc (RD, ZD, TD);		\
 			}						\
 		    }							\
 		}							\
@@ -945,140 +945,140 @@
 		{							\
 		  R##_e = Z##_e;					\
 		  R##_s = Z##_s;					\
-		  _FP_FRAC_COPY_##dwc##_##wc(ZD, Z);			\
-		  _FP_FRAC_SLL_##dwc(ZD, _FP_WFRACBITS_##fs);		\
+		  _FP_FRAC_COPY_##dwc##_##wc (ZD, Z);			\
+		  _FP_FRAC_SLL_##dwc (ZD, _FP_WFRACBITS_##fs);		\
 		  int shift = -ediff - tsh;				\
 		  if (shift >= _FP_WFRACBITS_DW_##fs)			\
-		    _FP_FRAC_SET_##dwc(TD, _FP_MINFRAC_##dwc);		\
+		    _FP_FRAC_SET_##dwc (TD, _FP_MINFRAC_##dwc);		\
 		  else if (shift > 0)					\
-		    _FP_FRAC_SRS_##dwc(TD, shift,			\
-				       _FP_WFRACBITS_DW_##fs);		\
+		    _FP_FRAC_SRS_##dwc (TD, shift,			\
+					_FP_WFRACBITS_DW_##fs);		\
 		  if (Z##_s == T##_s)					\
-		    _FP_FRAC_ADD_##dwc(RD, ZD, TD);			\
+		    _FP_FRAC_ADD_##dwc (RD, ZD, TD);			\
 		  else							\
-		    _FP_FRAC_SUB_##dwc(RD, ZD, TD);			\
+		    _FP_FRAC_SUB_##dwc (RD, ZD, TD);			\
 		}							\
-	      if (_FP_FRAC_ZEROP_##dwc(RD))				\
+	      if (_FP_FRAC_ZEROP_##dwc (RD))				\
 		{							\
 		  if (T##_s == Z##_s)					\
 		    R##_s = Z##_s;					\
 		  else							\
 		    R##_s = (FP_ROUNDMODE == FP_RND_MINF);		\
-		  _FP_FRAC_SET_##wc(R, _FP_ZEROFRAC_##wc);		\
+		  _FP_FRAC_SET_##wc (R, _FP_ZEROFRAC_##wc);		\
 		  R##_c = FP_CLS_ZERO;					\
 		}							\
 	      else							\
 		{							\
 		  int rlz;						\
-		  _FP_FRAC_CLZ_##dwc(rlz, RD);				\
+		  _FP_FRAC_CLZ_##dwc (rlz, RD);				\
 		  rlz -= _FP_WFRACXBITS_DW_##fs;			\
 		  R##_e -= rlz;						\
 		  int shift = _FP_WFRACBITS_##fs - rlz;			\
 		  if (shift > 0)					\
-		    _FP_FRAC_SRS_##dwc(RD, shift,			\
-				       _FP_WFRACBITS_DW_##fs);		\
+		    _FP_FRAC_SRS_##dwc (RD, shift,			\
+					_FP_WFRACBITS_DW_##fs);		\
 		  else if (shift < 0)					\
-		    _FP_FRAC_SLL_##dwc(RD, -shift);			\
-		  _FP_FRAC_COPY_##wc##_##dwc(R, RD);			\
+		    _FP_FRAC_SLL_##dwc (RD, -shift);			\
+		  _FP_FRAC_COPY_##wc##_##dwc (R, RD);			\
 		  R##_c = FP_CLS_NORMAL;				\
 		}							\
 	      break;							\
 	    }								\
 	  goto done_fma;						\
 									\
-	case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_NAN):			\
-	  _FP_CHOOSENAN(fs, wc, T, X, Y, '*');				\
+	case _FP_CLS_COMBINE (FP_CLS_NAN, FP_CLS_NAN):			\
+	  _FP_CHOOSENAN (fs, wc, T, X, Y, '*');				\
 	  break;							\
 									\
-	case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_NORMAL):			\
-	case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_INF):			\
-	case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_ZERO):			\
+	case _FP_CLS_COMBINE (FP_CLS_NAN, FP_CLS_NORMAL):		\
+	case _FP_CLS_COMBINE (FP_CLS_NAN, FP_CLS_INF):			\
+	case _FP_CLS_COMBINE (FP_CLS_NAN, FP_CLS_ZERO):			\
 	  T##_s = X##_s;						\
 									\
-	case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_INF):			\
-	case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_NORMAL):			\
-	case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_NORMAL):		\
-	case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_ZERO):			\
-	  _FP_FRAC_COPY_##wc(T, X);					\
+	case _FP_CLS_COMBINE (FP_CLS_INF, FP_CLS_INF):			\
+	case _FP_CLS_COMBINE (FP_CLS_INF, FP_CLS_NORMAL):		\
+	case _FP_CLS_COMBINE (FP_CLS_ZERO, FP_CLS_NORMAL):		\
+	case _FP_CLS_COMBINE (FP_CLS_ZERO, FP_CLS_ZERO):		\
+	  _FP_FRAC_COPY_##wc (T, X);					\
 	  T##_c = X##_c;						\
 	  break;							\
 									\
-	case _FP_CLS_COMBINE(FP_CLS_NORMAL,FP_CLS_NAN):			\
-	case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_NAN):			\
-	case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_NAN):			\
+	case _FP_CLS_COMBINE (FP_CLS_NORMAL, FP_CLS_NAN):		\
+	case _FP_CLS_COMBINE (FP_CLS_INF, FP_CLS_NAN):			\
+	case _FP_CLS_COMBINE (FP_CLS_ZERO, FP_CLS_NAN):			\
 	  T##_s = Y##_s;						\
 									\
-	case _FP_CLS_COMBINE(FP_CLS_NORMAL,FP_CLS_INF):			\
-	case _FP_CLS_COMBINE(FP_CLS_NORMAL,FP_CLS_ZERO):		\
-	  _FP_FRAC_COPY_##wc(T, Y);					\
+	case _FP_CLS_COMBINE (FP_CLS_NORMAL, FP_CLS_INF):		\
+	case _FP_CLS_COMBINE (FP_CLS_NORMAL, FP_CLS_ZERO):		\
+	  _FP_FRAC_COPY_##wc (T, Y);					\
 	  T##_c = Y##_c;						\
 	  break;							\
 									\
-	case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_ZERO):			\
-	case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_INF):			\
+	case _FP_CLS_COMBINE (FP_CLS_INF, FP_CLS_ZERO):			\
+	case _FP_CLS_COMBINE (FP_CLS_ZERO, FP_CLS_INF):			\
 	  T##_s = _FP_NANSIGN_##fs;					\
 	  T##_c = FP_CLS_NAN;						\
-	  _FP_FRAC_SET_##wc(T, _FP_NANFRAC_##fs);			\
-	  FP_SET_EXCEPTION(FP_EX_INVALID);				\
+	  _FP_FRAC_SET_##wc (T, _FP_NANFRAC_##fs);			\
+	  FP_SET_EXCEPTION (FP_EX_INVALID);				\
 	  break;							\
 									\
 	default:							\
-	  abort();							\
+	  abort ();							\
 	}								\
 									\
       /* T = X * Y is zero, infinity or NaN.  */			\
-      switch (_FP_CLS_COMBINE(T##_c, Z##_c))				\
+      switch (_FP_CLS_COMBINE (T##_c, Z##_c))				\
 	{								\
-	case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_NAN):			\
-	  _FP_CHOOSENAN(fs, wc, R, T, Z, '+');				\
+	case _FP_CLS_COMBINE (FP_CLS_NAN, FP_CLS_NAN):			\
+	  _FP_CHOOSENAN (fs, wc, R, T, Z, '+');				\
 	  break;							\
 									\
-	case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_NORMAL):			\
-	case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_INF):			\
-	case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_ZERO):			\
-	case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_NORMAL):			\
-	case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_ZERO):			\
+	case _FP_CLS_COMBINE (FP_CLS_NAN, FP_CLS_NORMAL):		\
+	case _FP_CLS_COMBINE (FP_CLS_NAN, FP_CLS_INF):			\
+	case _FP_CLS_COMBINE (FP_CLS_NAN, FP_CLS_ZERO):			\
+	case _FP_CLS_COMBINE (FP_CLS_INF, FP_CLS_NORMAL):		\
+	case _FP_CLS_COMBINE (FP_CLS_INF, FP_CLS_ZERO):			\
 	  R##_s = T##_s;						\
-	  _FP_FRAC_COPY_##wc(R, T);					\
+	  _FP_FRAC_COPY_##wc (R, T);					\
 	  R##_c = T##_c;						\
 	  break;							\
 									\
-	case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_NAN):			\
-	case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_NAN):			\
-	case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_NORMAL):		\
-	case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_INF):			\
+	case _FP_CLS_COMBINE (FP_CLS_INF, FP_CLS_NAN):			\
+	case _FP_CLS_COMBINE (FP_CLS_ZERO, FP_CLS_NAN):			\
+	case _FP_CLS_COMBINE (FP_CLS_ZERO, FP_CLS_NORMAL):		\
+	case _FP_CLS_COMBINE (FP_CLS_ZERO, FP_CLS_INF):			\
 	  R##_s = Z##_s;						\
-	  _FP_FRAC_COPY_##wc(R, Z);					\
+	  _FP_FRAC_COPY_##wc (R, Z);					\
 	  R##_c = Z##_c;						\
 	  break;							\
 									\
-	case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_INF):			\
+	case _FP_CLS_COMBINE (FP_CLS_INF, FP_CLS_INF):			\
 	  if (T##_s == Z##_s)						\
 	    {								\
 	      R##_s = Z##_s;						\
-	      _FP_FRAC_COPY_##wc(R, Z);					\
+	      _FP_FRAC_COPY_##wc (R, Z);				\
 	      R##_c = Z##_c;						\
 	    }								\
 	  else								\
 	    {								\
 	      R##_s = _FP_NANSIGN_##fs;					\
 	      R##_c = FP_CLS_NAN;					\
-	      _FP_FRAC_SET_##wc(R, _FP_NANFRAC_##fs);			\
-	      FP_SET_EXCEPTION(FP_EX_INVALID);				\
+	      _FP_FRAC_SET_##wc (R, _FP_NANFRAC_##fs);			\
+	      FP_SET_EXCEPTION (FP_EX_INVALID);				\
 	    }								\
 	  break;							\
 									\
-	case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_ZERO):			\
+	case _FP_CLS_COMBINE (FP_CLS_ZERO, FP_CLS_ZERO):		\
 	  if (T##_s == Z##_s)						\
 	    R##_s = Z##_s;						\
 	  else								\
 	    R##_s = (FP_ROUNDMODE == FP_RND_MINF);			\
-	  _FP_FRAC_COPY_##wc(R, Z);					\
+	  _FP_FRAC_COPY_##wc (R, Z);					\
 	  R##_c = Z##_c;						\
 	  break;							\
 									\
 	default:							\
-	  abort();							\
+	  abort ();							\
 	}								\
     done_fma: ;								\
     }									\
@@ -1094,57 +1094,57 @@
     {								\
       R##_s = X##_s ^ Y##_s;					\
       R##_e = X##_e - Y##_e;					\
-      switch (_FP_CLS_COMBINE(X##_c, Y##_c))			\
+      switch (_FP_CLS_COMBINE (X##_c, Y##_c))			\
 	{							\
-	case _FP_CLS_COMBINE(FP_CLS_NORMAL,FP_CLS_NORMAL):	\
+	case _FP_CLS_COMBINE (FP_CLS_NORMAL, FP_CLS_NORMAL):	\
 	  R##_c = FP_CLS_NORMAL;				\
 								\
-	  _FP_DIV_MEAT_##fs(R,X,Y);				\
+	  _FP_DIV_MEAT_##fs (R, X, Y);				\
 	  break;						\
 								\
-	case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_NAN):		\
-	  _FP_CHOOSENAN(fs, wc, R, X, Y, '/');			\
+	case _FP_CLS_COMBINE (FP_CLS_NAN, FP_CLS_NAN):		\
+	  _FP_CHOOSENAN (fs, wc, R, X, Y, '/');			\
 	  break;						\
 								\
-	case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_NORMAL):		\
-	case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_INF):		\
-	case _FP_CLS_COMBINE(FP_CLS_NAN,FP_CLS_ZERO):		\
+	case _FP_CLS_COMBINE (FP_CLS_NAN, FP_CLS_NORMAL):	\
+	case _FP_CLS_COMBINE (FP_CLS_NAN, FP_CLS_INF):		\
+	case _FP_CLS_COMBINE (FP_CLS_NAN, FP_CLS_ZERO):		\
 	  R##_s = X##_s;					\
-	  _FP_FRAC_COPY_##wc(R, X);				\
+	  _FP_FRAC_COPY_##wc (R, X);				\
 	  R##_c = X##_c;					\
 	  break;						\
 								\
-	case _FP_CLS_COMBINE(FP_CLS_NORMAL,FP_CLS_NAN):		\
-	case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_NAN):		\
-	case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_NAN):		\
+	case _FP_CLS_COMBINE (FP_CLS_NORMAL, FP_CLS_NAN):	\
+	case _FP_CLS_COMBINE (FP_CLS_INF, FP_CLS_NAN):		\
+	case _FP_CLS_COMBINE (FP_CLS_ZERO, FP_CLS_NAN):		\
 	  R##_s = Y##_s;					\
-	  _FP_FRAC_COPY_##wc(R, Y);				\
+	  _FP_FRAC_COPY_##wc (R, Y);				\
 	  R##_c = Y##_c;					\
 	  break;						\
 								\
-	case _FP_CLS_COMBINE(FP_CLS_NORMAL,FP_CLS_INF):		\
-	case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_INF):		\
-	case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_NORMAL):	\
+	case _FP_CLS_COMBINE (FP_CLS_NORMAL, FP_CLS_INF):	\
+	case _FP_CLS_COMBINE (FP_CLS_ZERO, FP_CLS_INF):		\
+	case _FP_CLS_COMBINE (FP_CLS_ZERO, FP_CLS_NORMAL):	\
 	  R##_c = FP_CLS_ZERO;					\
 	  break;						\
 								\
-	case _FP_CLS_COMBINE(FP_CLS_NORMAL,FP_CLS_ZERO):	\
-	  FP_SET_EXCEPTION(FP_EX_DIVZERO);			\
-	case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_ZERO):		\
-	case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_NORMAL):		\
+	case _FP_CLS_COMBINE (FP_CLS_NORMAL, FP_CLS_ZERO):	\
+	  FP_SET_EXCEPTION (FP_EX_DIVZERO);			\
+	case _FP_CLS_COMBINE (FP_CLS_INF, FP_CLS_ZERO):		\
+	case _FP_CLS_COMBINE (FP_CLS_INF, FP_CLS_NORMAL):	\
 	  R##_c = FP_CLS_INF;					\
 	  break;						\
 								\
-	case _FP_CLS_COMBINE(FP_CLS_INF,FP_CLS_INF):		\
-	case _FP_CLS_COMBINE(FP_CLS_ZERO,FP_CLS_ZERO):		\
+	case _FP_CLS_COMBINE (FP_CLS_INF, FP_CLS_INF):		\
+	case _FP_CLS_COMBINE (FP_CLS_ZERO, FP_CLS_ZERO):	\
 	  R##_s = _FP_NANSIGN_##fs;				\
 	  R##_c = FP_CLS_NAN;					\
-	  _FP_FRAC_SET_##wc(R, _FP_NANFRAC_##fs);		\
-	  FP_SET_EXCEPTION(FP_EX_INVALID);			\
+	  _FP_FRAC_SET_##wc (R, _FP_NANFRAC_##fs);		\
+	  FP_SET_EXCEPTION (FP_EX_INVALID);			\
 	  break;						\
 								\
 	default:						\
-	  abort();						\
+	  abort ();						\
 	}							\
     }								\
   while (0)
@@ -1159,8 +1159,8 @@
   do									\
     {									\
       /* NANs are unordered */						\
-      if ((X##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc(X))		\
-	  || (Y##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc(Y)))	\
+      if ((X##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (X))	\
+	  || (Y##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (Y)))	\
 	{								\
 	  ret = un;							\
 	}								\
@@ -1169,8 +1169,8 @@
 	  int __is_zero_x;						\
 	  int __is_zero_y;						\
 									\
-	  __is_zero_x = (!X##_e && _FP_FRAC_ZEROP_##wc(X)) ? 1 : 0;	\
-	  __is_zero_y = (!Y##_e && _FP_FRAC_ZEROP_##wc(Y)) ? 1 : 0;	\
+	  __is_zero_x = (!X##_e && _FP_FRAC_ZEROP_##wc (X)) ? 1 : 0;	\
+	  __is_zero_y = (!Y##_e && _FP_FRAC_ZEROP_##wc (Y)) ? 1 : 0;	\
 									\
 	  if (__is_zero_x && __is_zero_y)				\
 	    ret = 0;							\
@@ -1184,9 +1184,9 @@
 	    ret = X##_s ? -1 : 1;					\
 	  else if (X##_e < Y##_e)					\
 	    ret = X##_s ? 1 : -1;					\
-	  else if (_FP_FRAC_GT_##wc(X, Y))				\
+	  else if (_FP_FRAC_GT_##wc (X, Y))				\
 	    ret = X##_s ? -1 : 1;					\
-	  else if (_FP_FRAC_GT_##wc(Y, X))				\
+	  else if (_FP_FRAC_GT_##wc (Y, X))				\
 	    ret = X##_s ? 1 : -1;					\
 	  else								\
 	    ret = 0;							\
@@ -1201,16 +1201,16 @@
   do									\
     {									\
       /* NANs are unordered */						\
-      if ((X##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc(X))		\
-	  || (Y##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc(Y)))	\
+      if ((X##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (X))	\
+	  || (Y##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (Y)))	\
 	{								\
 	  ret = 1;							\
 	}								\
       else								\
 	{								\
 	  ret = !(X##_e == Y##_e					\
-		  && _FP_FRAC_EQ_##wc(X, Y)				\
-		  && (X##_s == Y##_s || (!X##_e && _FP_FRAC_ZEROP_##wc(X)))); \
+		  && _FP_FRAC_EQ_##wc (X, Y)				\
+		  && (X##_s == Y##_s || (!X##_e && _FP_FRAC_ZEROP_##wc (X)))); \
 	}								\
     }									\
   while (0)
@@ -1220,8 +1220,8 @@
 #define _FP_CMP_UNORD(fs, wc, ret, X, Y)				\
   do									\
     {									\
-      ret = ((X##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc(X))	\
-	     || (Y##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc(Y)));	\
+      ret = ((X##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (X))	\
+	     || (Y##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (Y))); \
     }									\
   while (0)
 
@@ -1232,13 +1232,13 @@
 #define _FP_SQRT(fs, wc, R, X)					\
   do								\
     {								\
-      _FP_FRAC_DECL_##wc(T);					\
-      _FP_FRAC_DECL_##wc(S);					\
+      _FP_FRAC_DECL_##wc (T);					\
+      _FP_FRAC_DECL_##wc (S);					\
       _FP_W_TYPE q;						\
       switch (X##_c)						\
 	{							\
 	case FP_CLS_NAN:					\
-	  _FP_FRAC_COPY_##wc(R, X);				\
+	  _FP_FRAC_COPY_##wc (R, X);				\
 	  R##_s = X##_s;					\
 	  R##_c = FP_CLS_NAN;					\
 	  break;						\
@@ -1247,8 +1247,8 @@
 	    {							\
 	      R##_s = _FP_NANSIGN_##fs;				\
 	      R##_c = FP_CLS_NAN; /* NAN */			\
-	      _FP_FRAC_SET_##wc(R, _FP_NANFRAC_##fs);		\
-	      FP_SET_EXCEPTION(FP_EX_INVALID);			\
+	      _FP_FRAC_SET_##wc (R, _FP_NANFRAC_##fs);		\
+	      FP_SET_EXCEPTION (FP_EX_INVALID);			\
 	    }							\
 	  else							\
 	    {							\
@@ -1266,18 +1266,18 @@
 	    {							\
 	      R##_c = FP_CLS_NAN; /* NAN */			\
 	      R##_s = _FP_NANSIGN_##fs;				\
-	      _FP_FRAC_SET_##wc(R, _FP_NANFRAC_##fs);		\
-	      FP_SET_EXCEPTION(FP_EX_INVALID);			\
+	      _FP_FRAC_SET_##wc (R, _FP_NANFRAC_##fs);		\
+	      FP_SET_EXCEPTION (FP_EX_INVALID);			\
 	      break;						\
 	    }							\
 	  R##_c = FP_CLS_NORMAL;				\
 	  if (X##_e & 1)					\
-	    _FP_FRAC_SLL_##wc(X, 1);				\
+	    _FP_FRAC_SLL_##wc (X, 1);				\
 	  R##_e = X##_e >> 1;					\
-	  _FP_FRAC_SET_##wc(S, _FP_ZEROFRAC_##wc);		\
-	  _FP_FRAC_SET_##wc(R, _FP_ZEROFRAC_##wc);		\
+	  _FP_FRAC_SET_##wc (S, _FP_ZEROFRAC_##wc);		\
+	  _FP_FRAC_SET_##wc (R, _FP_ZEROFRAC_##wc);		\
 	  q = _FP_OVERFLOW_##fs >> 1;				\
-	  _FP_SQRT_MEAT_##wc(R, S, T, X, q);			\
+	  _FP_SQRT_MEAT_##wc (R, S, T, X, q);			\
 	}							\
     }								\
   while (0)
@@ -1305,14 +1305,14 @@
 	  r = 0;							\
 	  if (X##_e == 0)						\
 	    {								\
-	      if (!_FP_FRAC_ZEROP_##wc(X))				\
+	      if (!_FP_FRAC_ZEROP_##wc (X))				\
 		{							\
-		  FP_SET_EXCEPTION(FP_EX_INEXACT);			\
-		  FP_SET_EXCEPTION(FP_EX_DENORM);			\
+		  FP_SET_EXCEPTION (FP_EX_INEXACT);			\
+		  FP_SET_EXCEPTION (FP_EX_DENORM);			\
 		}							\
 	    }								\
 	  else								\
-	    FP_SET_EXCEPTION(FP_EX_INEXACT);				\
+	    FP_SET_EXCEPTION (FP_EX_INEXACT);				\
 	}								\
       else if (X##_e >= _FP_EXPBIAS_##fs + rsize - (rsigned > 0 || X##_s) \
 	       || (!rsigned && X##_s))					\
@@ -1334,40 +1334,40 @@
 	      /* Possibly converting to most negative integer; check the \
 		 mantissa.  */						\
 	      int inexact = 0;						\
-	      (void)((_FP_FRACBITS_##fs > rsize)			\
-		     ? ({						\
-			 _FP_FRAC_SRST_##wc(X, inexact,			\
-					    _FP_FRACBITS_##fs - rsize,	\
-					    _FP_FRACBITS_##fs);		\
-			 0;						\
-		       })						\
-		     : 0);						\
-	      if (!_FP_FRAC_ZEROP_##wc(X))				\
-		FP_SET_EXCEPTION(FP_EX_INVALID);			\
+	      (void) ((_FP_FRACBITS_##fs > rsize)			\
+		      ? ({						\
+			  _FP_FRAC_SRST_##wc (X, inexact,		\
+					      _FP_FRACBITS_##fs - rsize, \
+					      _FP_FRACBITS_##fs);	\
+			  0;						\
+			})						\
+		      : 0);						\
+	      if (!_FP_FRAC_ZEROP_##wc (X))				\
+		FP_SET_EXCEPTION (FP_EX_INVALID);			\
 	      else if (inexact)						\
-		FP_SET_EXCEPTION(FP_EX_INEXACT);			\
+		FP_SET_EXCEPTION (FP_EX_INEXACT);			\
 	    }								\
 	  else								\
-	    FP_SET_EXCEPTION(FP_EX_INVALID);				\
+	    FP_SET_EXCEPTION (FP_EX_INVALID);				\
 	}								\
       else								\
 	{								\
-	  _FP_FRAC_HIGH_RAW_##fs(X) |= _FP_IMPLBIT_##fs;		\
+	  _FP_FRAC_HIGH_RAW_##fs (X) |= _FP_IMPLBIT_##fs;		\
 	  if (X##_e >= _FP_EXPBIAS_##fs + _FP_FRACBITS_##fs - 1)	\
 	    {								\
-	      _FP_FRAC_ASSEMBLE_##wc(r, X, rsize);			\
+	      _FP_FRAC_ASSEMBLE_##wc (r, X, rsize);			\
 	      r <<= X##_e - _FP_EXPBIAS_##fs - _FP_FRACBITS_##fs + 1;	\
 	    }								\
 	  else								\
 	    {								\
 	      int inexact;						\
-	      _FP_FRAC_SRST_##wc(X, inexact,				\
-				 (_FP_FRACBITS_##fs + _FP_EXPBIAS_##fs - 1 \
-				  - X##_e),				\
-				 _FP_FRACBITS_##fs);			\
+	      _FP_FRAC_SRST_##wc (X, inexact,				\
+				  (_FP_FRACBITS_##fs + _FP_EXPBIAS_##fs - 1 \
+				   - X##_e),				\
+				  _FP_FRACBITS_##fs);			\
 	      if (inexact)						\
-		FP_SET_EXCEPTION(FP_EX_INEXACT);			\
-	      _FP_FRAC_ASSEMBLE_##wc(r, X, rsize);			\
+		FP_SET_EXCEPTION (FP_EX_INEXACT);			\
+	      _FP_FRAC_ASSEMBLE_##wc (r, X, rsize);			\
 	    }								\
 	  if (rsigned && X##_s)						\
 	    r = -r;							\
@@ -1385,31 +1385,32 @@
 	  rtype ur_;							\
 									\
 	  if ((X##_s = (r < 0)))					\
-	    r = -(rtype)r;						\
+	    r = -(rtype) r;						\
 									\
 	  ur_ = (rtype) r;						\
-	  (void)((rsize <= _FP_W_TYPE_SIZE)				\
-		 ? ({							\
-		     int lz_;						\
-		     __FP_CLZ(lz_, (_FP_W_TYPE)ur_);			\
-		     X##_e = _FP_EXPBIAS_##fs + _FP_W_TYPE_SIZE - 1 - lz_; \
-		   })							\
-		 : ((rsize <= 2 * _FP_W_TYPE_SIZE)			\
-		    ? ({						\
-			int lz_;					\
-			__FP_CLZ_2(lz_, (_FP_W_TYPE)(ur_ >> _FP_W_TYPE_SIZE), \
-				   (_FP_W_TYPE)ur_);			\
-			X##_e = (_FP_EXPBIAS_##fs + 2 * _FP_W_TYPE_SIZE - 1 \
-				 - lz_);				\
-		      })						\
-		    : (abort(), 0)));					\
+	  (void) ((rsize <= _FP_W_TYPE_SIZE)				\
+		  ? ({							\
+		      int lz_;						\
+		      __FP_CLZ (lz_, (_FP_W_TYPE) ur_);			\
+		      X##_e = _FP_EXPBIAS_##fs + _FP_W_TYPE_SIZE - 1 - lz_; \
+		    })							\
+		  : ((rsize <= 2 * _FP_W_TYPE_SIZE)			\
+		     ? ({						\
+			 int lz_;					\
+			 __FP_CLZ_2 (lz_,				\
+				     (_FP_W_TYPE) (ur_ >> _FP_W_TYPE_SIZE), \
+				     (_FP_W_TYPE) ur_);			\
+			 X##_e = (_FP_EXPBIAS_##fs + 2 * _FP_W_TYPE_SIZE - 1 \
+				  - lz_);				\
+		       })						\
+		     : (abort (), 0)));					\
 									\
 	  if (rsize - 1 + _FP_EXPBIAS_##fs >= _FP_EXPMAX_##fs		\
 	      && X##_e >= _FP_EXPMAX_##fs)				\
 	    {								\
 	      /* Exponent too big; overflow to infinity.  (May also	\
 		 happen after rounding below.)  */			\
-	      _FP_OVERFLOW_SEMIRAW(fs, wc, X);				\
+	      _FP_OVERFLOW_SEMIRAW (fs, wc, X);				\
 	      goto pack_semiraw;					\
 	    }								\
 									\
@@ -1417,10 +1418,10 @@
 	      || X##_e < _FP_EXPBIAS_##fs + _FP_FRACBITS_##fs)		\
 	    {								\
 	      /* Exactly representable; shift left.  */			\
-	      _FP_FRAC_DISASSEMBLE_##wc(X, ur_, rsize);			\
+	      _FP_FRAC_DISASSEMBLE_##wc (X, ur_, rsize);		\
 	      if (_FP_EXPBIAS_##fs + _FP_FRACBITS_##fs - 1 - X##_e > 0)	\
-		_FP_FRAC_SLL_##wc(X, (_FP_EXPBIAS_##fs			\
-				      + _FP_FRACBITS_##fs - 1 - X##_e)); \
+		_FP_FRAC_SLL_##wc (X, (_FP_EXPBIAS_##fs			\
+				       + _FP_FRACBITS_##fs - 1 - X##_e)); \
 	    }								\
 	  else								\
 	    {								\
@@ -1432,20 +1433,20 @@
 		       | ((ur_ << (rsize - (X##_e - _FP_EXPBIAS_##fs	\
 					    - _FP_WFRACBITS_##fs + 1)))	\
 			  != 0));					\
-	      _FP_FRAC_DISASSEMBLE_##wc(X, ur_, rsize);			\
+	      _FP_FRAC_DISASSEMBLE_##wc (X, ur_, rsize);		\
 	      if ((_FP_EXPBIAS_##fs + _FP_WFRACBITS_##fs - 1 - X##_e) > 0) \
-		_FP_FRAC_SLL_##wc(X, (_FP_EXPBIAS_##fs			\
-				      + _FP_WFRACBITS_##fs - 1 - X##_e)); \
-	      _FP_FRAC_HIGH_##fs(X) &= ~(_FP_W_TYPE)_FP_IMPLBIT_SH_##fs; \
+		_FP_FRAC_SLL_##wc (X, (_FP_EXPBIAS_##fs			\
+				       + _FP_WFRACBITS_##fs - 1 - X##_e)); \
+	      _FP_FRAC_HIGH_##fs (X) &= ~(_FP_W_TYPE) _FP_IMPLBIT_SH_##fs; \
 	    pack_semiraw:						\
-	      _FP_PACK_SEMIRAW(fs, wc, X);				\
+	      _FP_PACK_SEMIRAW (fs, wc, X);				\
 	    }								\
 	}								\
       else								\
 	{								\
 	  X##_s = 0;							\
 	  X##_e = 0;							\
-	  _FP_FRAC_SET_##wc(X, _FP_ZEROFRAC_##wc);			\
+	  _FP_FRAC_SET_##wc (X, _FP_ZEROFRAC_##wc);			\
 	}								\
     }									\
   while (0)
@@ -1453,7 +1454,7 @@
 
 /* Extend from a narrower floating-point format to a wider one.  Input
    and output are raw.  */
-#define FP_EXTEND(dfs,sfs,dwc,swc,D,S)					\
+#define FP_EXTEND(dfs, sfs, dwc, swc, D, S)				\
   do									\
     {									\
       if (_FP_FRACBITS_##dfs < _FP_FRACBITS_##sfs			\
@@ -1461,36 +1462,36 @@
 	      < _FP_EXPMAX_##sfs - _FP_EXPBIAS_##sfs)			\
 	  || (_FP_EXPBIAS_##dfs < _FP_EXPBIAS_##sfs + _FP_FRACBITS_##sfs - 1 \
 	      && _FP_EXPBIAS_##dfs != _FP_EXPBIAS_##sfs))		\
-	abort();							\
+	abort ();							\
       D##_s = S##_s;							\
-      _FP_FRAC_COPY_##dwc##_##swc(D, S);				\
-      if (_FP_EXP_NORMAL(sfs, swc, S))					\
+      _FP_FRAC_COPY_##dwc##_##swc (D, S);				\
+      if (_FP_EXP_NORMAL (sfs, swc, S))					\
 	{								\
 	  D##_e = S##_e + _FP_EXPBIAS_##dfs - _FP_EXPBIAS_##sfs;	\
-	  _FP_FRAC_SLL_##dwc(D, (_FP_FRACBITS_##dfs - _FP_FRACBITS_##sfs)); \
+	  _FP_FRAC_SLL_##dwc (D, (_FP_FRACBITS_##dfs - _FP_FRACBITS_##sfs)); \
 	}								\
       else								\
 	{								\
 	  if (S##_e == 0)						\
 	    {								\
-	      if (_FP_FRAC_ZEROP_##swc(S))				\
+	      if (_FP_FRAC_ZEROP_##swc (S))				\
 		D##_e = 0;						\
 	      else if (_FP_EXPBIAS_##dfs				\
 		       < _FP_EXPBIAS_##sfs + _FP_FRACBITS_##sfs - 1)	\
 		{							\
-		  FP_SET_EXCEPTION(FP_EX_DENORM);			\
-		  _FP_FRAC_SLL_##dwc(D, (_FP_FRACBITS_##dfs		\
-					 - _FP_FRACBITS_##sfs));	\
+		  FP_SET_EXCEPTION (FP_EX_DENORM);			\
+		  _FP_FRAC_SLL_##dwc (D, (_FP_FRACBITS_##dfs		\
+					  - _FP_FRACBITS_##sfs));	\
 		  D##_e = 0;						\
 		}							\
 	      else							\
 		{							\
 		  int _lz;						\
-		  FP_SET_EXCEPTION(FP_EX_DENORM);			\
-		  _FP_FRAC_CLZ_##swc(_lz, S);				\
-		  _FP_FRAC_SLL_##dwc(D,					\
-				     _lz + _FP_FRACBITS_##dfs		\
-				     - _FP_FRACTBITS_##sfs);		\
+		  FP_SET_EXCEPTION (FP_EX_DENORM);			\
+		  _FP_FRAC_CLZ_##swc (_lz, S);				\
+		  _FP_FRAC_SLL_##dwc (D,				\
+				      _lz + _FP_FRACBITS_##dfs		\
+				      - _FP_FRACTBITS_##sfs);		\
 		  D##_e = (_FP_EXPBIAS_##dfs - _FP_EXPBIAS_##sfs + 1	\
 			   + _FP_FRACXBITS_##sfs - _lz);		\
 		}							\
@@ -1498,12 +1499,12 @@
 	  else								\
 	    {								\
 	      D##_e = _FP_EXPMAX_##dfs;					\
-	      if (!_FP_FRAC_ZEROP_##swc(S))				\
+	      if (!_FP_FRAC_ZEROP_##swc (S))				\
 		{							\
-		  if (_FP_FRAC_SNANP(sfs, S))				\
-		    FP_SET_EXCEPTION(FP_EX_INVALID);			\
-		  _FP_FRAC_SLL_##dwc(D, (_FP_FRACBITS_##dfs		\
-					 - _FP_FRACBITS_##sfs));	\
+		  if (_FP_FRAC_SNANP (sfs, S))				\
+		    FP_SET_EXCEPTION (FP_EX_INVALID);			\
+		  _FP_FRAC_SLL_##dwc (D, (_FP_FRACBITS_##dfs		\
+					  - _FP_FRACBITS_##sfs));	\
 		}							\
 	    }								\
 	}								\
@@ -1512,42 +1513,43 @@
 
 /* Truncate from a wider floating-point format to a narrower one.
    Input and output are semi-raw.  */
-#define FP_TRUNC(dfs,sfs,dwc,swc,D,S)					\
+#define FP_TRUNC(dfs, sfs, dwc, swc, D, S)				\
   do									\
     {									\
       if (_FP_FRACBITS_##sfs < _FP_FRACBITS_##dfs			\
 	  || (_FP_EXPBIAS_##sfs < _FP_EXPBIAS_##dfs + _FP_FRACBITS_##dfs - 1 \
 	      && _FP_EXPBIAS_##sfs != _FP_EXPBIAS_##dfs))		\
-	abort();							\
+	abort ();							\
       D##_s = S##_s;							\
-      if (_FP_EXP_NORMAL(sfs, swc, S))					\
+      if (_FP_EXP_NORMAL (sfs, swc, S))					\
 	{								\
 	  D##_e = S##_e + _FP_EXPBIAS_##dfs - _FP_EXPBIAS_##sfs;	\
 	  if (D##_e >= _FP_EXPMAX_##dfs)				\
-	    _FP_OVERFLOW_SEMIRAW(dfs, dwc, D);				\
+	    _FP_OVERFLOW_SEMIRAW (dfs, dwc, D);				\
 	  else								\
 	    {								\
 	      if (D##_e <= 0)						\
 		{							\
 		  if (D##_e < 1 - _FP_FRACBITS_##dfs)			\
 		    {							\
-		      _FP_FRAC_SET_##swc(S, _FP_ZEROFRAC_##swc);	\
-		      _FP_FRAC_LOW_##swc(S) |= 1;			\
+		      _FP_FRAC_SET_##swc (S, _FP_ZEROFRAC_##swc);	\
+		      _FP_FRAC_LOW_##swc (S) |= 1;			\
 		    }							\
 		  else							\
 		    {							\
-		      _FP_FRAC_HIGH_##sfs(S) |= _FP_IMPLBIT_SH_##sfs;	\
-		      _FP_FRAC_SRS_##swc(S, (_FP_WFRACBITS_##sfs	\
-					     - _FP_WFRACBITS_##dfs + 1 - D##_e), \
-					 _FP_WFRACBITS_##sfs);		\
+		      _FP_FRAC_HIGH_##sfs (S) |= _FP_IMPLBIT_SH_##sfs;	\
+		      _FP_FRAC_SRS_##swc (S, (_FP_WFRACBITS_##sfs	\
+					      - _FP_WFRACBITS_##dfs	\
+					      + 1 - D##_e),		\
+					  _FP_WFRACBITS_##sfs);		\
 		    }							\
 		  D##_e = 0;						\
 		}							\
 	      else							\
-		_FP_FRAC_SRS_##swc(S, (_FP_WFRACBITS_##sfs		\
-				       - _FP_WFRACBITS_##dfs),		\
-				   _FP_WFRACBITS_##sfs);		\
-	      _FP_FRAC_COPY_##dwc##_##swc(D, S);			\
+		_FP_FRAC_SRS_##swc (S, (_FP_WFRACBITS_##sfs		\
+					- _FP_WFRACBITS_##dfs),		\
+				    _FP_WFRACBITS_##sfs);		\
+	      _FP_FRAC_COPY_##dwc##_##swc (D, S);			\
 	    }								\
 	}								\
       else								\
@@ -1555,41 +1557,41 @@
 	  if (S##_e == 0)						\
 	    {								\
 	      D##_e = 0;						\
-	      if (_FP_FRAC_ZEROP_##swc(S))				\
-		_FP_FRAC_SET_##dwc(D, _FP_ZEROFRAC_##dwc);		\
+	      if (_FP_FRAC_ZEROP_##swc (S))				\
+		_FP_FRAC_SET_##dwc (D, _FP_ZEROFRAC_##dwc);		\
 	      else							\
 		{							\
-		  FP_SET_EXCEPTION(FP_EX_DENORM);			\
+		  FP_SET_EXCEPTION (FP_EX_DENORM);			\
 		  if (_FP_EXPBIAS_##sfs					\
 		      < _FP_EXPBIAS_##dfs + _FP_FRACBITS_##dfs - 1)	\
 		    {							\
-		      _FP_FRAC_SRS_##swc(S, (_FP_WFRACBITS_##sfs	\
-					     - _FP_WFRACBITS_##dfs),	\
-					 _FP_WFRACBITS_##sfs);		\
-		      _FP_FRAC_COPY_##dwc##_##swc(D, S);		\
+		      _FP_FRAC_SRS_##swc (S, (_FP_WFRACBITS_##sfs	\
+					      - _FP_WFRACBITS_##dfs),	\
+					  _FP_WFRACBITS_##sfs);		\
+		      _FP_FRAC_COPY_##dwc##_##swc (D, S);		\
 		    }							\
 		  else							\
 		    {							\
-		      _FP_FRAC_SET_##dwc(D, _FP_ZEROFRAC_##dwc);	\
-		      _FP_FRAC_LOW_##dwc(D) |= 1;			\
+		      _FP_FRAC_SET_##dwc (D, _FP_ZEROFRAC_##dwc);	\
+		      _FP_FRAC_LOW_##dwc (D) |= 1;			\
 		    }							\
 		}							\
 	    }								\
 	  else								\
 	    {								\
 	      D##_e = _FP_EXPMAX_##dfs;					\
-	      if (_FP_FRAC_ZEROP_##swc(S))				\
-		_FP_FRAC_SET_##dwc(D, _FP_ZEROFRAC_##dwc);		\
+	      if (_FP_FRAC_ZEROP_##swc (S))				\
+		_FP_FRAC_SET_##dwc (D, _FP_ZEROFRAC_##dwc);		\
 	      else							\
 		{							\
-		  _FP_CHECK_SIGNAN_SEMIRAW(sfs, swc, S);		\
-		  _FP_FRAC_SRL_##swc(S, (_FP_WFRACBITS_##sfs		\
-					 - _FP_WFRACBITS_##dfs));	\
-		  _FP_FRAC_COPY_##dwc##_##swc(D, S);			\
+		  _FP_CHECK_SIGNAN_SEMIRAW (sfs, swc, S);		\
+		  _FP_FRAC_SRL_##swc (S, (_FP_WFRACBITS_##sfs		\
+					  - _FP_WFRACBITS_##dfs));	\
+		  _FP_FRAC_COPY_##dwc##_##swc (D, S);			\
 		  /* Semi-raw NaN must have all workbits cleared.  */	\
-		  _FP_FRAC_LOW_##dwc(D)					\
+		  _FP_FRAC_LOW_##dwc (D)				\
 		    &= ~(_FP_W_TYPE) ((1 << _FP_WORKBITS) - 1);		\
-		  _FP_SETQNAN_SEMIRAW(dfs, dwc, D);			\
+		  _FP_SETQNAN_SEMIRAW (dfs, dwc, D);			\
 		}							\
 	    }								\
 	}								\

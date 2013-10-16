@@ -33,13 +33,13 @@
 #include "double.h"
 
 DFtype
-__floatsidf(SItype i)
+__floatsidf (SItype i)
 {
-  FP_DECL_D(A);
+  FP_DECL_D (A);
   DFtype a;
 
-  FP_FROM_INT_D(A, i, SI_BITS, USItype);
-  FP_PACK_RAW_D(a, A);
+  FP_FROM_INT_D (A, i, SI_BITS, USItype);
+  FP_PACK_RAW_D (a, A);
 
   return a;
 }

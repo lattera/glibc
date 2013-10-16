@@ -31,15 +31,15 @@
 #include "single.h"
 
 UTItype
-__fixunssfti(SFtype a)
+__fixunssfti (SFtype a)
 {
   FP_DECL_EX;
-  FP_DECL_S(A);
+  FP_DECL_S (A);
   UTItype r;
 
   FP_INIT_EXCEPTIONS;
-  FP_UNPACK_RAW_S(A, a);
-  FP_TO_INT_S(r, A, TI_BITS, 0);
+  FP_UNPACK_RAW_S (A, a);
+  FP_TO_INT_S (r, A, TI_BITS, 0);
   FP_HANDLE_EXCEPTIONS;
 
   return r;
