@@ -1,3 +1,9 @@
+2013-10-17  Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ #15277]
+	* inet/inet_net.c (inet_network): Detect additional invalid strings.
+	* inet/tst-network.c: Add testcase.
+
 2013-10-17  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #15218]
