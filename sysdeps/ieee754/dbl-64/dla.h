@@ -61,13 +61,13 @@
 /* storage variables of type double.                                   */
 
 #ifdef DLA_FMS
-# define  EMULV(x,y,z,zz,p,hx,tx,hy,ty)          \
-	   z=x*y; zz=DLA_FMS(x,y,z);
+# define  EMULV(x, y, z, zz, p, hx, tx, hy, ty)          \
+  z = x * y; zz = DLA_FMS (x, y, z);
 #else
-# define  EMULV(x,y,z,zz,p,hx,tx,hy,ty)          \
-	   p=CN*(x);  hx=((x)-p)+p;  tx=(x)-hx; \
-	   p=CN*(y);  hy=((y)-p)+p;  ty=(y)-hy; \
-	   z=(x)*(y); zz=(((hx*hy-z)+hx*ty)+tx*hy)+tx*ty;
+# define  EMULV(x, y, z, zz, p, hx, tx, hy, ty)          \
+  p = CN * (x);  hx = ((x) - p) + p;  tx = (x) - hx; \
+  p = CN * (y);  hy = ((y) - p) + p;  ty = (y) - hy; \
+  z = (x) * (y); zz = (((hx * hy - z) + hx * ty) + tx * hy) + tx * ty;
 #endif
 
 
@@ -93,11 +93,11 @@
 /* are assumed to be double-length numbers. r,s are temporary           */
 /* storage variables of type double.                                    */
 
-#define  ADD2(x,xx,y,yy,z,zz,r,s)                    \
-	   r=(x)+(y);  s=(ABS(x)>ABS(y)) ?           \
-		       (((((x)-r)+(y))+(yy))+(xx)) : \
-		       (((((y)-r)+(x))+(xx))+(yy));  \
-	   z=r+s;  zz=(r-z)+s;
+#define  ADD2(x, xx, y, yy, z, zz, r, s)                   \
+  r = (x) + (y);  s = (ABS (x) > ABS (y)) ?                \
+		      (((((x) - r) + (y)) + (yy)) + (xx)) : \
+		      (((((y) - r) + (x)) + (xx)) + (yy));  \
+  z = r + s;  zz = (r - z) + s;
 
 
 /* Double-length subtraction, Dekker. The macro produces a double-length  */
@@ -106,11 +106,11 @@
 /* are assumed to be double-length numbers. r,s are temporary             */
 /* storage variables of type double.                                      */
 
-#define  SUB2(x,xx,y,yy,z,zz,r,s)                    \
-	   r=(x)-(y);  s=(ABS(x)>ABS(y)) ?           \
-		       (((((x)-r)-(y))-(yy))+(xx)) : \
-		       ((((x)-((y)+r))+(xx))-(yy));  \
-	   z=r+s;  zz=(r-z)+s;
+#define  SUB2(x, xx, y, yy, z, zz, r, s)                   \
+  r = (x) - (y);  s = (ABS (x) > ABS (y)) ?                \
+		      (((((x) - r) - (y)) - (yy)) + (xx)) : \
+		      ((((x) - ((y) + r)) + (xx)) - (yy));  \
+  z = r + s;  zz = (r - z) + s;
 
 
 /* Double-length multiplication, Dekker. The macro produces a double-length  */
@@ -119,9 +119,9 @@
 /* are assumed to be double-length numbers. p,hx,tx,hy,ty,q,c,cc are         */
 /* temporary storage variables of type double.                               */
 
-#define  MUL2(x,xx,y,yy,z,zz,p,hx,tx,hy,ty,q,c,cc)  \
-	   MUL12(x,y,c,cc,p,hx,tx,hy,ty,q)          \
-	   cc=((x)*(yy)+(xx)*(y))+cc;   z=c+cc;   zz=(c-z)+cc;
+#define  MUL2(x, xx, y, yy, z, zz, p, hx, tx, hy, ty, q, c, cc)  \
+  MUL12 (x, y, c, cc, p, hx, tx, hy, ty, q)                      \
+  cc = ((x) * (yy) + (xx) * (y)) + cc;   z = c + cc;   zz = (c - z) + cc;
 
 
 /* Double-length division, Dekker. The macro produces a double-length        */
@@ -142,18 +142,18 @@
 /* are assumed to be double-length numbers. r,rr,s,ss,u,uu,w                 */
 /* are temporary storage variables of type double.                           */
 
-#define  ADD2A(x,xx,y,yy,z,zz,r,rr,s,ss,u,uu,w)                        \
-	   r=(x)+(y);                                                  \
-	   if (ABS(x)>ABS(y)) { rr=((x)-r)+(y);  s=(rr+(yy))+(xx); }   \
-	   else               { rr=((y)-r)+(x);  s=(rr+(xx))+(yy); }   \
-	   if (rr!=0.0) {                                              \
-	     z=r+s;  zz=(r-z)+s; }                                     \
-	   else {                                                      \
-	     ss=(ABS(xx)>ABS(yy)) ? (((xx)-s)+(yy)) : (((yy)-s)+(xx)); \
-	     u=r+s;                                                    \
-	     uu=(ABS(r)>ABS(s))   ? ((r-u)+s)   : ((s-u)+r)  ;         \
-	     w=uu+ss;  z=u+w;                                          \
-	     zz=(ABS(u)>ABS(w))   ? ((u-z)+w)   : ((w-z)+u)  ; }
+#define  ADD2A(x, xx, y, yy, z, zz, r, rr, s, ss, u, uu, w)                 \
+  r = (x) + (y);                                                            \
+  if (ABS (x) > ABS (y)) { rr = ((x) - r) + (y);  s = (rr + (yy)) + (xx); } \
+  else               { rr = ((y) - r) + (x);  s = (rr + (xx)) + (yy); }     \
+  if (rr != 0.0) {                                                          \
+      z = r + s;  zz = (r - z) + s; }                                       \
+  else {                                                                    \
+      ss = (ABS (xx) > ABS (yy)) ? (((xx) - s) + (yy)) : (((yy) - s) + (xx));\
+      u = r + s;                                                            \
+      uu = (ABS (r) > ABS (s))   ? ((r - u) + s)   : ((s - u) + r);         \
+      w = uu + ss;  z = u + w;                                              \
+      zz = (ABS (u) > ABS (w))   ? ((u - z) + w)   : ((w - z) + u); }
 
 
 /* Double-length subtraction, slower but more accurate than SUB2.            */
@@ -163,15 +163,15 @@
 /* are assumed to be double-length numbers. r,rr,s,ss,u,uu,w                 */
 /* are temporary storage variables of type double.                           */
 
-#define  SUB2A(x,xx,y,yy,z,zz,r,rr,s,ss,u,uu,w)                        \
-	   r=(x)-(y);                                                  \
-	   if (ABS(x)>ABS(y)) { rr=((x)-r)-(y);  s=(rr-(yy))+(xx); }   \
-	   else               { rr=(x)-((y)+r);  s=(rr+(xx))-(yy); }   \
-	   if (rr!=0.0) {                                              \
-	     z=r+s;  zz=(r-z)+s; }                                     \
-	   else {                                                      \
-	     ss=(ABS(xx)>ABS(yy)) ? (((xx)-s)-(yy)) : ((xx)-((yy)+s)); \
-	     u=r+s;                                                    \
-	     uu=(ABS(r)>ABS(s))   ? ((r-u)+s)   : ((s-u)+r)  ;         \
-	     w=uu+ss;  z=u+w;                                          \
-	     zz=(ABS(u)>ABS(w))   ? ((u-z)+w)   : ((w-z)+u)  ; }
+#define  SUB2A(x, xx, y, yy, z, zz, r, rr, s, ss, u, uu, w)                   \
+  r = (x) - (y);                                                              \
+  if (ABS (x) > ABS (y)) { rr = ((x) - r) - (y);  s = (rr - (yy)) + (xx); }   \
+  else               { rr = (x) - ((y) + r);  s = (rr + (xx)) - (yy); }       \
+  if (rr != 0.0) {                                                            \
+      z = r + s;  zz = (r - z) + s; }                                         \
+  else {                                                                      \
+      ss = (ABS (xx) > ABS (yy)) ? (((xx) - s) - (yy)) : ((xx) - ((yy) + s)); \
+      u = r + s;                                                              \
+      uu = (ABS (r) > ABS (s))   ? ((r - u) + s)   : ((s - u) + r);           \
+      w = uu + ss;  z = u + w;                                                \
+      zz = (ABS (u) > ABS (w))   ? ((u - z) + w)   : ((w - z) + u); }

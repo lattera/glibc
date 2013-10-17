@@ -50,8 +50,8 @@
 #endif
 
 #ifndef NO__CONST
-const mp_no mpone = {1, {1.0, 1.0}};
-const mp_no mptwo = {1, {1.0, 2.0}};
+const mp_no mpone = { 1, { 1.0, 1.0 } };
+const mp_no mptwo = { 1, { 1.0, 2.0 } };
 #endif
 
 #ifndef NO___ACR
@@ -123,7 +123,7 @@ __cpy (const mp_no *x, mp_no *y, int p)
 static void
 norm (const mp_no *x, double *y, int p)
 {
-#define R RADIXI
+# define R RADIXI
   long i;
   double c;
   mantissa_t a, u, v, z[5];
@@ -140,7 +140,7 @@ norm (const mp_no *x, double *y, int p)
     }
   else
     {
-      for (a = 1, z[1] = X[1]; z[1] < TWO23;)
+      for (a = 1, z[1] = X[1]; z[1] < TWO23; )
 	{
 	  a *= 2;
 	  z[1] *= 2;
@@ -188,7 +188,7 @@ norm (const mp_no *x, double *y, int p)
     c *= RADIXI;
 
   *y = c;
-#undef R
+# undef R
 }
 
 /* Convert a multiple precision number *X into a double precision
@@ -201,7 +201,7 @@ denorm (const mp_no *x, double *y, int p)
   double c;
   mantissa_t u, z[5];
 
-#define R RADIXI
+# define R RADIXI
   if (EX < -44 || (EX == -44 && X[1] < TWO5))
     {
       *y = 0;
@@ -298,7 +298,7 @@ denorm (const mp_no *x, double *y, int p)
   c = X[0] * ((z[1] + R * (z[2] + R * z[3])) - TWO10);
 
   *y = c * TWOM1032;
-#undef R
+# undef R
 }
 
 /* Convert multiple precision number *X into double precision number *Y.  The
@@ -394,7 +394,7 @@ add_magnitudes (const mp_no *x, const mp_no *y, mp_no *z, int p)
 	  zk = 1;
 	}
       else
-        {
+	{
 	  Z[k--] = zk;
 	  zk = 0;
 	}
@@ -409,7 +409,7 @@ add_magnitudes (const mp_no *x, const mp_no *y, mp_no *z, int p)
 	  zk = 1;
 	}
       else
-        {
+	{
 	  Z[k--] = zk;
 	  zk = 0;
 	}
@@ -471,7 +471,7 @@ sub_magnitudes (const mp_no *x, const mp_no *y, mp_no *z, int p)
 	  zk = -1;
 	}
       else
-        {
+	{
 	  Z[k--] = zk;
 	  zk = 0;
 	}
@@ -487,18 +487,19 @@ sub_magnitudes (const mp_no *x, const mp_no *y, mp_no *z, int p)
 	  zk = -1;
 	}
       else
-        {
+	{
 	  Z[k--] = zk;
 	  zk = 0;
 	}
     }
 
   /* Normalize.  */
-  for (i = 1; Z[i] == 0; i++);
+  for (i = 1; Z[i] == 0; i++)
+    ;
   EZ = EZ - i + 1;
-  for (k = 1; i <= p2 + 1;)
+  for (k = 1; i <= p2 + 1; )
     Z[k++] = Z[i++];
-  for (; k <= p2;)
+  for (; k <= p2; )
     Z[k++] = 0;
 }
 

@@ -32,7 +32,7 @@ __sincos (double x, double *sinx, double *cosx)
 
   /* |x| ~< pi/4 */
   ix &= 0x7fffffff;
-  if (ix>=0x7ff00000)
+  if (ix >= 0x7ff00000)
     {
       /* sin(Inf or NaN) is NaN */
       *sinx = *cosx = x - x;

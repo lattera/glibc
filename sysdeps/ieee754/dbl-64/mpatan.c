@@ -43,7 +43,6 @@ void
 SECTION
 __mpatan (mp_no *x, mp_no *y, int p)
 {
-
   int i, m, n;
   double dx;
   mp_no mptwoim1 =

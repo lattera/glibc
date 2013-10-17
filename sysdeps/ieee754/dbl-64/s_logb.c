@@ -25,7 +25,7 @@ __logb (double x)
   int32_t lx, ix, rix;
 
   EXTRACT_WORDS (ix, lx, x);
-  ix &= 0x7fffffff;		/* high |x| */
+  ix &= 0x7fffffff;             /* high |x| */
   if ((ix | lx) == 0)
     return -1.0 / fabs (x);
   if (ix >= 0x7ff00000)

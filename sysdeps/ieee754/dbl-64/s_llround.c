@@ -66,7 +66,7 @@ __llround (double x)
   else
     {
       /* The number is too large.  It is left implementation defined
-	 what happens.  */
+         what happens.  */
       return (long long int) x;
     }
 

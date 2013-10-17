@@ -44,7 +44,6 @@ void
 SECTION
 __mptan (double x, mp_no *mpy, int p)
 {
-
   int n;
   mp_no mpw, mpc, mps;
 

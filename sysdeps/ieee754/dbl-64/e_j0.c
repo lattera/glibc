@@ -11,7 +11,7 @@
  */
 /* Modified by Naohiko Shimizu/Tokai University, Japan 1997/08/26,
    for performance improvement on pipelined processors.
-*/
+ */
 
 /* __ieee754_j0(x), __ieee754_y0(x)
  * Bessel function of the first and second kinds of order zero.
@@ -61,144 +61,166 @@
 #include <math.h>
 #include <math_private.h>
 
-static double pzero(double), qzero(double);
+static double pzero (double), qzero (double);
 
 static const double
-huge	= 1e300,
-one	= 1.0,
-invsqrtpi=  5.64189583547756279280e-01, /* 0x3FE20DD7, 0x50429B6D */
-tpi      =  6.36619772367581382433e-01, /* 0x3FE45F30, 0x6DC9C883 */
-		/* R0/S0 on [0, 2.00] */
-R[]  =  {0.0, 0.0, 1.56249999999999947958e-02, /* 0x3F8FFFFF, 0xFFFFFFFD */
- -1.89979294238854721751e-04, /* 0xBF28E6A5, 0xB61AC6E9 */
-  1.82954049532700665670e-06, /* 0x3EBEB1D1, 0x0C503919 */
- -4.61832688532103189199e-09}, /* 0xBE33D5E7, 0x73D63FCE */
-S[]  =  {0.0, 1.56191029464890010492e-02, /* 0x3F8FFCE8, 0x82C8C2A4 */
-  1.16926784663337450260e-04, /* 0x3F1EA6D2, 0xDD57DBF4 */
-  5.13546550207318111446e-07, /* 0x3EA13B54, 0xCE84D5A9 */
-  1.16614003333790000205e-09}; /* 0x3E1408BC, 0xF4745D8F */
+  huge = 1e300,
+  one = 1.0,
+  invsqrtpi = 5.64189583547756279280e-01, /* 0x3FE20DD7, 0x50429B6D */
+  tpi = 6.36619772367581382433e-01,     /* 0x3FE45F30, 0x6DC9C883 */
+/* R0/S0 on [0, 2.00] */
+  R[] = { 0.0, 0.0, 1.56249999999999947958e-02, /* 0x3F8FFFFF, 0xFFFFFFFD */
+	  -1.89979294238854721751e-04, /* 0xBF28E6A5, 0xB61AC6E9 */
+	  1.82954049532700665670e-06, /* 0x3EBEB1D1, 0x0C503919 */
+	  -4.61832688532103189199e-09 }, /* 0xBE33D5E7, 0x73D63FCE */
+  S[] = { 0.0, 1.56191029464890010492e-02, /* 0x3F8FFCE8, 0x82C8C2A4 */
+	  1.16926784663337450260e-04, /* 0x3F1EA6D2, 0xDD57DBF4 */
+	  5.13546550207318111446e-07, /* 0x3EA13B54, 0xCE84D5A9 */
+	  1.16614003333790000205e-09 }; /* 0x3E1408BC, 0xF4745D8F */
 
 static const double zero = 0.0;
 
 double
-__ieee754_j0(double x)
+__ieee754_j0 (double x)
 {
-	double z, s,c,ss,cc,r,u,v,r1,r2,s1,s2,z2,z4;
-	int32_t hx,ix;
+  double z, s, c, ss, cc, r, u, v, r1, r2, s1, s2, z2, z4;
+  int32_t hx, ix;
 
-	GET_HIGH_WORD(hx,x);
-	ix = hx&0x7fffffff;
-	if(ix>=0x7ff00000) return one/(x*x);
-	x = fabs(x);
-	if(ix >= 0x40000000) {	/* |x| >= 2.0 */
-		__sincos (x, &s, &c);
-		ss = s-c;
-		cc = s+c;
-		if(ix<0x7fe00000) {  /* make sure x+x not overflow */
-		    z = -__cos(x+x);
-		    if ((s*c)<zero) cc = z/ss;
-		    else	    ss = z/cc;
-		}
-	/*
-	 * j0(x) = 1/sqrt(pi) * (P(0,x)*cc - Q(0,x)*ss) / sqrt(x)
-	 * y0(x) = 1/sqrt(pi) * (P(0,x)*ss + Q(0,x)*cc) / sqrt(x)
-	 */
-		if(ix>0x48000000) z = (invsqrtpi*cc)/__ieee754_sqrt(x);
-		else {
-		    u = pzero(x); v = qzero(x);
-		    z = invsqrtpi*(u*cc-v*ss)/__ieee754_sqrt(x);
-		}
-		return z;
+  GET_HIGH_WORD (hx, x);
+  ix = hx & 0x7fffffff;
+  if (ix >= 0x7ff00000)
+    return one / (x * x);
+  x = fabs (x);
+  if (ix >= 0x40000000)         /* |x| >= 2.0 */
+    {
+      __sincos (x, &s, &c);
+      ss = s - c;
+      cc = s + c;
+      if (ix < 0x7fe00000)           /* make sure x+x not overflow */
+	{
+	  z = -__cos (x + x);
+	  if ((s * c) < zero)
+	    cc = z / ss;
+	  else
+	    ss = z / cc;
 	}
-	if(ix<0x3f200000) {	/* |x| < 2**-13 */
-	  math_force_eval(huge+x);	/* raise inexact if x != 0 */
-	  if(ix<0x3e400000) return one;	/* |x|<2**-27 */
-	  else	      return one - 0.25*x*x;
+      /*
+       * j0(x) = 1/sqrt(pi) * (P(0,x)*cc - Q(0,x)*ss) / sqrt(x)
+       * y0(x) = 1/sqrt(pi) * (P(0,x)*ss + Q(0,x)*cc) / sqrt(x)
+       */
+      if (ix > 0x48000000)
+	z = (invsqrtpi * cc) / __ieee754_sqrt (x);
+      else
+	{
+	  u = pzero (x); v = qzero (x);
+	  z = invsqrtpi * (u * cc - v * ss) / __ieee754_sqrt (x);
 	}
-	z = x*x;
-	r1 = z*R[2]; z2=z*z;
-	r2 = R[3]+z*R[4]; z4=z2*z2;
-	r  = r1 + z2*r2 + z4*R[5];
-	s1 = one+z*S[1];
-	s2 = S[2]+z*S[3];
-	s = s1 + z2*s2 + z4*S[4];
-	if(ix < 0x3FF00000) {	/* |x| < 1.00 */
-	    return one + z*(-0.25+(r/s));
-	} else {
-	    u = 0.5*x;
-	    return((one+u)*(one-u)+z*(r/s));
-	}
+      return z;
+    }
+  if (ix < 0x3f200000)          /* |x| < 2**-13 */
+    {
+      math_force_eval (huge + x);       /* raise inexact if x != 0 */
+      if (ix < 0x3e400000)
+	return one;                     /* |x|<2**-27 */
+      else
+	return one - 0.25 * x * x;
+    }
+  z = x * x;
+  r1 = z * R[2]; z2 = z * z;
+  r2 = R[3] + z * R[4]; z4 = z2 * z2;
+  r = r1 + z2 * r2 + z4 * R[5];
+  s1 = one + z * S[1];
+  s2 = S[2] + z * S[3];
+  s = s1 + z2 * s2 + z4 * S[4];
+  if (ix < 0x3FF00000)          /* |x| < 1.00 */
+    {
+      return one + z * (-0.25 + (r / s));
+    }
+  else
+    {
+      u = 0.5 * x;
+      return ((one + u) * (one - u) + z * (r / s));
+    }
 }
 strong_alias (__ieee754_j0, __j0_finite)
 
 static const double
-U[]  = {-7.38042951086872317523e-02, /* 0xBFB2E4D6, 0x99CBD01F */
-  1.76666452509181115538e-01, /* 0x3FC69D01, 0x9DE9E3FC */
- -1.38185671945596898896e-02, /* 0xBF8C4CE8, 0xB16CFA97 */
-  3.47453432093683650238e-04, /* 0x3F36C54D, 0x20B29B6B */
- -3.81407053724364161125e-06, /* 0xBECFFEA7, 0x73D25CAD */
-  1.95590137035022920206e-08, /* 0x3E550057, 0x3B4EABD4 */
- -3.98205194132103398453e-11}, /* 0xBDC5E43D, 0x693FB3C8 */
-V[]  =  {1.27304834834123699328e-02, /* 0x3F8A1270, 0x91C9C71A */
-  7.60068627350353253702e-05, /* 0x3F13ECBB, 0xF578C6C1 */
-  2.59150851840457805467e-07, /* 0x3E91642D, 0x7FF202FD */
-  4.41110311332675467403e-10}; /* 0x3DFE5018, 0x3BD6D9EF */
+U[] = { -7.38042951086872317523e-02, /* 0xBFB2E4D6, 0x99CBD01F */
+	 1.76666452509181115538e-01,  /* 0x3FC69D01, 0x9DE9E3FC */
+	-1.38185671945596898896e-02,  /* 0xBF8C4CE8, 0xB16CFA97 */
+	 3.47453432093683650238e-04,  /* 0x3F36C54D, 0x20B29B6B */
+	-3.81407053724364161125e-06,  /* 0xBECFFEA7, 0x73D25CAD */
+	 1.95590137035022920206e-08,  /* 0x3E550057, 0x3B4EABD4 */
+	-3.98205194132103398453e-11 }, /* 0xBDC5E43D, 0x693FB3C8 */
+V[] = { 1.27304834834123699328e-02,   /* 0x3F8A1270, 0x91C9C71A */
+	 7.60068627350353253702e-05,   /* 0x3F13ECBB, 0xF578C6C1 */
+	 2.59150851840457805467e-07,   /* 0x3E91642D, 0x7FF202FD */
+	 4.41110311332675467403e-10 }; /* 0x3DFE5018, 0x3BD6D9EF */
 
 double
-__ieee754_y0(double x)
+__ieee754_y0 (double x)
 {
-	double z, s,c,ss,cc,u,v,z2,z4,z6,u1,u2,u3,v1,v2;
-	int32_t hx,ix,lx;
+  double z, s, c, ss, cc, u, v, z2, z4, z6, u1, u2, u3, v1, v2;
+  int32_t hx, ix, lx;
 
-	EXTRACT_WORDS(hx,lx,x);
-	ix = 0x7fffffff&hx;
-    /* Y0(NaN) is NaN, y0(-inf) is Nan, y0(inf) is 0, y0(0) is -inf.  */
-	if(ix>=0x7ff00000) return  one/(x+x*x);
-	if((ix|lx)==0) return -HUGE_VAL+x; /* -inf and overflow exception.  */
-	if(hx<0) return zero/(zero*x);
-	if(ix >= 0x40000000) {  /* |x| >= 2.0 */
-	/* y0(x) = sqrt(2/(pi*x))*(p0(x)*sin(x0)+q0(x)*cos(x0))
-	 * where x0 = x-pi/4
-	 *      Better formula:
-	 *              cos(x0) = cos(x)cos(pi/4)+sin(x)sin(pi/4)
-	 *                      =  1/sqrt(2) * (sin(x) + cos(x))
-	 *              sin(x0) = sin(x)cos(3pi/4)-cos(x)sin(3pi/4)
-	 *                      =  1/sqrt(2) * (sin(x) - cos(x))
-	 * To avoid cancellation, use
-	 *              sin(x) +- cos(x) = -cos(2x)/(sin(x) -+ cos(x))
-	 * to compute the worse one.
-	 */
-		__sincos (x, &s, &c);
-		ss = s-c;
-		cc = s+c;
-	/*
-	 * j0(x) = 1/sqrt(pi) * (P(0,x)*cc - Q(0,x)*ss) / sqrt(x)
-	 * y0(x) = 1/sqrt(pi) * (P(0,x)*ss + Q(0,x)*cc) / sqrt(x)
-	 */
-		if(ix<0x7fe00000) {  /* make sure x+x not overflow */
-		    z = -__cos(x+x);
-		    if ((s*c)<zero) cc = z/ss;
-		    else            ss = z/cc;
-		}
-		if(ix>0x48000000) z = (invsqrtpi*ss)/__ieee754_sqrt(x);
-		else {
-		    u = pzero(x); v = qzero(x);
-		    z = invsqrtpi*(u*ss+v*cc)/__ieee754_sqrt(x);
-		}
-		return z;
+  EXTRACT_WORDS (hx, lx, x);
+  ix = 0x7fffffff & hx;
+  /* Y0(NaN) is NaN, y0(-inf) is Nan, y0(inf) is 0, y0(0) is -inf.  */
+  if (ix >= 0x7ff00000)
+    return one / (x + x * x);
+  if ((ix | lx) == 0)
+    return -HUGE_VAL + x;                  /* -inf and overflow exception.  */
+  if (hx < 0)
+    return zero / (zero * x);
+  if (ix >= 0x40000000)         /* |x| >= 2.0 */
+    {   /* y0(x) = sqrt(2/(pi*x))*(p0(x)*sin(x0)+q0(x)*cos(x0))
+		 * where x0 = x-pi/4
+		 *      Better formula:
+		 *              cos(x0) = cos(x)cos(pi/4)+sin(x)sin(pi/4)
+		 *                      =  1/sqrt(2) * (sin(x) + cos(x))
+		 *              sin(x0) = sin(x)cos(3pi/4)-cos(x)sin(3pi/4)
+		 *                      =  1/sqrt(2) * (sin(x) - cos(x))
+		 * To avoid cancellation, use
+		 *              sin(x) +- cos(x) = -cos(2x)/(sin(x) -+ cos(x))
+		 * to compute the worse one.
+		 */
+      __sincos (x, &s, &c);
+      ss = s - c;
+      cc = s + c;
+      /*
+       * j0(x) = 1/sqrt(pi) * (P(0,x)*cc - Q(0,x)*ss) / sqrt(x)
+       * y0(x) = 1/sqrt(pi) * (P(0,x)*ss + Q(0,x)*cc) / sqrt(x)
+       */
+      if (ix < 0x7fe00000)           /* make sure x+x not overflow */
+	{
+	  z = -__cos (x + x);
+	  if ((s * c) < zero)
+	    cc = z / ss;
+	  else
+	    ss = z / cc;
 	}
-	if(ix<=0x3e400000) {	/* x < 2**-27 */
-	    return(U[0] + tpi*__ieee754_log(x));
+      if (ix > 0x48000000)
+	z = (invsqrtpi * ss) / __ieee754_sqrt (x);
+      else
+	{
+	  u = pzero (x); v = qzero (x);
+	  z = invsqrtpi * (u * ss + v * cc) / __ieee754_sqrt (x);
 	}
-	z = x*x;
-	u1 = U[0]+z*U[1]; z2=z*z;
-	u2 = U[2]+z*U[3]; z4=z2*z2;
-	u3 = U[4]+z*U[5]; z6=z4*z2;
-	u = u1 + z2*u2 + z4*u3 + z6*U[6];
-	v1 = one+z*V[0];
-	v2 = V[1]+z*V[2];
-	v = v1 + z2*v2 + z4*V[3];
-	return(u/v + tpi*(__ieee754_j0(x)*__ieee754_log(x)));
+      return z;
+    }
+  if (ix <= 0x3e400000)         /* x < 2**-27 */
+    {
+      return (U[0] + tpi * __ieee754_log (x));
+    }
+  z = x * x;
+  u1 = U[0] + z * U[1]; z2 = z * z;
+  u2 = U[2] + z * U[3]; z4 = z2 * z2;
+  u3 = U[4] + z * U[5]; z6 = z4 * z2;
+  u = u1 + z2 * u2 + z4 * u3 + z6 * U[6];
+  v1 = one + z * V[0];
+  v2 = V[1] + z * V[2];
+  v = v1 + z2 * v2 + z4 * V[3];
+  return (u / v + tpi * (__ieee754_j0 (x) * __ieee754_log (x)));
 }
 strong_alias (__ieee754_y0, __y0_finite)
 
@@ -276,28 +298,43 @@ static const double pS2[5] = {
 };
 
 static double
-pzero(double x)
+pzero (double x)
 {
-	const double *p,*q;
-	double z,r,s,z2,z4,r1,r2,r3,s1,s2,s3;
-	int32_t ix;
-	GET_HIGH_WORD(ix,x);
-	ix &= 0x7fffffff;
-	if (ix>=0x41b00000)    {return one;}
-	else if(ix>=0x40200000){p = pR8; q= pS8;}
-	else if(ix>=0x40122E8B){p = pR5; q= pS5;}
-	else if(ix>=0x4006DB6D){p = pR3; q= pS3;}
-	else if(ix>=0x40000000){p = pR2; q= pS2;}
-	z = one/(x*x);
-	r1 = p[0]+z*p[1]; z2=z*z;
-	r2 = p[2]+z*p[3]; z4=z2*z2;
-	r3 = p[4]+z*p[5];
-	r = r1 + z2*r2 + z4*r3;
-	s1 = one+z*q[0];
-	s2 = q[1]+z*q[2];
-	s3 = q[3]+z*q[4];
-	s = s1 + z2*s2 + z4*s3;
-	return one+ r/s;
+  const double *p, *q;
+  double z, r, s, z2, z4, r1, r2, r3, s1, s2, s3;
+  int32_t ix;
+  GET_HIGH_WORD (ix, x);
+  ix &= 0x7fffffff;
+  if (ix >= 0x41b00000)
+    {
+      return one;
+    }
+  else if (ix >= 0x40200000)
+    {
+      p = pR8; q = pS8;
+    }
+  else if (ix >= 0x40122E8B)
+    {
+      p = pR5; q = pS5;
+    }
+  else if (ix >= 0x4006DB6D)
+    {
+      p = pR3; q = pS3;
+    }
+  else if (ix >= 0x40000000)
+    {
+      p = pR2; q = pS2;
+    }
+  z = one / (x * x);
+  r1 = p[0] + z * p[1]; z2 = z * z;
+  r2 = p[2] + z * p[3]; z4 = z2 * z2;
+  r3 = p[4] + z * p[5];
+  r = r1 + z2 * r2 + z4 * r3;
+  s1 = one + z * q[0];
+  s2 = q[1] + z * q[2];
+  s3 = q[3] + z * q[4];
+  s = s1 + z2 * s2 + z4 * s3;
+  return one + r / s;
 }
 
 
@@ -379,26 +416,41 @@ static const double qS2[6] = {
 };
 
 static double
-qzero(double x)
+qzero (double x)
 {
-	const double *p,*q;
-	double s,r,z,z2,z4,z6,r1,r2,r3,s1,s2,s3;
-	int32_t ix;
-	GET_HIGH_WORD(ix,x);
-	ix &= 0x7fffffff;
-	if (ix>=0x41b00000)    {return -.125/x;}
-	else if(ix>=0x40200000){p = qR8; q= qS8;}
-	else if(ix>=0x40122E8B){p = qR5; q= qS5;}
-	else if(ix>=0x4006DB6D){p = qR3; q= qS3;}
-	else if(ix>=0x40000000){p = qR2; q= qS2;}
-	z = one/(x*x);
-	r1 = p[0]+z*p[1]; z2=z*z;
-	r2 = p[2]+z*p[3]; z4=z2*z2;
-	r3 = p[4]+z*p[5]; z6=z4*z2;
-	r= r1 + z2*r2 + z4*r3;
-	s1 = one+z*q[0];
-	s2 = q[1]+z*q[2];
-	s3 = q[3]+z*q[4];
-	s = s1 + z2*s2 + z4*s3 +z6*q[5];
-	return (-.125 + r/s)/x;
+  const double *p, *q;
+  double s, r, z, z2, z4, z6, r1, r2, r3, s1, s2, s3;
+  int32_t ix;
+  GET_HIGH_WORD (ix, x);
+  ix &= 0x7fffffff;
+  if (ix >= 0x41b00000)
+    {
+      return -.125 / x;
+    }
+  else if (ix >= 0x40200000)
+    {
+      p = qR8; q = qS8;
+    }
+  else if (ix >= 0x40122E8B)
+    {
+      p = qR5; q = qS5;
+    }
+  else if (ix >= 0x4006DB6D)
+    {
+      p = qR3; q = qS3;
+    }
+  else if (ix >= 0x40000000)
+    {
+      p = qR2; q = qS2;
+    }
+  z = one / (x * x);
+  r1 = p[0] + z * p[1]; z2 = z * z;
+  r2 = p[2] + z * p[3]; z4 = z2 * z2;
+  r3 = p[4] + z * p[5]; z6 = z4 * z2;
+  r = r1 + z2 * r2 + z4 * r3;
+  s1 = one + z * q[0];
+  s2 = q[1] + z * q[2];
+  s3 = q[3] + z * q[4];
+  s = s1 + z2 * s2 + z4 * s3 + z6 * q[5];
+  return (-.125 + r / s) / x;
 }

@@ -46,7 +46,7 @@ __ieee754_exp2 (double x)
   if (__builtin_expect (isless (x, himark), 1))
     {
       /* Exceptional cases:  */
-      if (__builtin_expect (! isgreaterequal (x, lomark), 0))
+      if (__builtin_expect (!isgreaterequal (x, lomark), 0))
 	{
 	  if (__isinf (x))
 	    /* e^-inf == 0, with no error.  */
@@ -93,7 +93,7 @@ __ieee754_exp2 (double x)
 	/* 3. Compute ex2 = 2^(t/512+e+ex).  */
 	ex2_u.d = exp2_accuratetable[tval & 511];
 	tval >>= 9;
-	unsafe = abs(tval) >= -DBL_MIN_EXP - 1;
+	unsafe = abs (tval) >= -DBL_MIN_EXP - 1;
 	ex2_u.ieee.exponent += tval >> unsafe;
 	scale_u.d = 1.0;
 	scale_u.ieee.exponent += tval - (tval >> unsafe);
@@ -106,7 +106,7 @@ __ieee754_exp2 (double x)
 		 * x + .055504110254308625)
 		* x + .240226506959100583)
 	       * x + .69314718055994495) * ex2_u.d;
-        math_opt_barrier (x22);
+	math_opt_barrier (x22);
       }
 
       /* 5. Return (2^x2-1) * 2^(t/512+e+ex) + 2^(t/512+e+ex).  */
@@ -119,6 +119,6 @@ __ieee754_exp2 (double x)
     }
   else
     /* Return x, if x is a NaN or Inf; or overflow, otherwise.  */
-    return TWO1023*x;
+    return TWO1023 * x;
 }
 strong_alias (__ieee754_exp2, __exp2_finite)

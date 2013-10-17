@@ -44,86 +44,109 @@
 #endif
 
 static const int4 tab54[32] = {
-   262143, 11585, 1782, 511, 210, 107, 63, 42,
-       30,    22,   17,  14,  12,  10,  9,  7,
-	7,     6,    5,   5,   5,   4,  4,  4,
-	3,     3,    3,   3,   3,   3,  3,  3 };
+  262143, 11585,  1782, 511, 210, 107, 63, 42,
+  30,     22,     17,   14,  12,  10,  9, 7,
+  7,      6,      5,    5,   5,   4,   4, 4,
+  3,      3,      3,    3,   3,   3,   3, 3
+};
 
 
 double
 SECTION
-__halfulp(double x, double y)
+__halfulp (double x, double y)
 {
   mynumber v;
-  double z,u,uu;
+  double z, u, uu;
 #ifndef DLA_FMS
-  double j1,j2,j3,j4,j5;
+  double j1, j2, j3, j4, j5;
 #endif
-  int4 k,l,m,n;
-  if (y <= 0) {               /*if power is negative or zero */
-    v.x = y;
-    if (v.i[LOW_HALF] != 0) return -10.0;
-    v.x = x;
-    if (v.i[LOW_HALF] != 0) return -10.0;
-    if ((v.i[HIGH_HALF]&0x000fffff) != 0) return -10;   /* if x =2 ^ n */
-    k = ((v.i[HIGH_HALF]&0x7fffffff)>>20)-1023;         /* find this n */
-    z = (double) k;
-    return (z*y == -1075.0)?0: -10.0;
-  }
-			      /* if y > 0  */
+  int4 k, l, m, n;
+  if (y <= 0)                 /*if power is negative or zero */
+    {
+      v.x = y;
+      if (v.i[LOW_HALF] != 0)
+	return -10.0;
+      v.x = x;
+      if (v.i[LOW_HALF] != 0)
+	return -10.0;
+      if ((v.i[HIGH_HALF] & 0x000fffff) != 0)
+	return -10;                                     /* if x =2 ^ n */
+      k = ((v.i[HIGH_HALF] & 0x7fffffff) >> 20) - 1023; /* find this n */
+      z = (double) k;
+      return (z * y == -1075.0) ? 0 : -10.0;
+    }
+  /* if y > 0  */
   v.x = y;
-    if (v.i[LOW_HALF] != 0) return -10.0;
+  if (v.i[LOW_HALF] != 0)
+    return -10.0;
 
-  v.x=x;
-			      /*  case where x = 2**n for some integer n */
-  if (((v.i[HIGH_HALF]&0x000fffff)|v.i[LOW_HALF]) == 0) {
-    k=(v.i[HIGH_HALF]>>20)-1023;
-    return (((double) k)*y == -1075.0)?0:-10.0;
-  }
+  v.x = x;
+  /*  case where x = 2**n for some integer n */
+  if (((v.i[HIGH_HALF] & 0x000fffff) | v.i[LOW_HALF]) == 0)
+    {
+      k = (v.i[HIGH_HALF] >> 20) - 1023;
+      return (((double) k) * y == -1075.0) ? 0 : -10.0;
+    }
 
   v.x = y;
   k = v.i[HIGH_HALF];
-  m = k<<12;
+  m = k << 12;
   l = 0;
   while (m)
-    {m = m<<1; l++; }
-  n = (k&0x000fffff)|0x00100000;
-  n = n>>(20-l);                       /*   n is the odd integer of y    */
-  k = ((k>>20) -1023)-l;               /*   y = n*2**k                   */
-  if (k>5) return -10.0;
-  if (k>0) for (;k>0;k--) n *= 2;
-  if (n > 34) return -10.0;
+    {
+      m = m << 1; l++;
+    }
+  n = (k & 0x000fffff) | 0x00100000;
+  n = n >> (20 - l);                       /*   n is the odd integer of y    */
+  k = ((k >> 20) - 1023) - l;               /*   y = n*2**k                   */
+  if (k > 5)
+    return -10.0;
+  if (k > 0)
+    for (; k > 0; k--)
+      n *= 2;
+  if (n > 34)
+    return -10.0;
   k = -k;
-  if (k>5) return -10.0;
+  if (k > 5)
+    return -10.0;
 
-			    /*   now treat x        */
-  while (k>0) {
-    z = __ieee754_sqrt(x);
-    EMULV(z,z,u,uu,j1,j2,j3,j4,j5);
-    if (((u-x)+uu) != 0) break;
-    x = z;
-    k--;
- }
-  if (k) return -10.0;
+  /*   now treat x        */
+  while (k > 0)
+    {
+      z = __ieee754_sqrt (x);
+      EMULV (z, z, u, uu, j1, j2, j3, j4, j5);
+      if (((u - x) + uu) != 0)
+	break;
+      x = z;
+      k--;
+    }
+  if (k)
+    return -10.0;
 
   /* it is impossible that n == 2,  so the mantissa of x must be short  */
 
   v.x = x;
-  if (v.i[LOW_HALF]) return -10.0;
+  if (v.i[LOW_HALF])
+    return -10.0;
   k = v.i[HIGH_HALF];
-  m = k<<12;
+  m = k << 12;
   l = 0;
-  while (m) {m = m<<1; l++; }
-  m = (k&0x000fffff)|0x00100000;
-  m = m>>(20-l);                       /*   m is the odd integer of x    */
+  while (m)
+    {
+      m = m << 1; l++;
+    }
+  m = (k & 0x000fffff) | 0x00100000;
+  m = m >> (20 - l);                       /*   m is the odd integer of x    */
 
-	    /*   now check whether the length of m**n is at most 54 bits */
+  /*   now check whether the length of m**n is at most 54 bits */
 
-  if  (m > tab54[n-3]) return -10.0;
+  if (m > tab54[n - 3])
+    return -10.0;
 
-	     /* yes, it is - now compute x**n by simple multiplications  */
+  /* yes, it is - now compute x**n by simple multiplications  */
 
   u = x;
-  for (k=1;k<n;k++) u = u*x;
+  for (k = 1; k < n; k++)
+    u = u * x;
   return u;
 }

@@ -19,11 +19,11 @@ static char rcsid[] = "$NetBSD: s_isinf.c,v 1.3 1995/05/11 23:20:14 jtc Exp $";
 int
 __isinf (double x)
 {
-	int32_t hx,lx;
-	EXTRACT_WORDS(hx,lx,x);
-	lx |= (hx & 0x7fffffff) ^ 0x7ff00000;
-	lx |= -lx;
-	return ~(lx >> 31) & (hx >> 30);
+  int32_t hx, lx;
+  EXTRACT_WORDS (hx, lx, x);
+  lx |= (hx & 0x7fffffff) ^ 0x7ff00000;
+  lx |= -lx;
+  return ~(lx >> 31) & (hx >> 30);
 }
 hidden_def (__isinf)
 weak_alias (__isinf, isinf)

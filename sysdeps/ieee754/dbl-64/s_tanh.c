@@ -41,41 +41,51 @@ static char rcsid[] = "$NetBSD: s_tanh.c,v 1.7 1995/05/10 20:48:22 jtc Exp $";
 #include <math.h>
 #include <math_private.h>
 
-static const double one=1.0, two=2.0, tiny = 1.0e-300;
+static const double one = 1.0, two = 2.0, tiny = 1.0e-300;
 
-double __tanh(double x)
+double
+__tanh (double x)
 {
-	double t,z;
-	int32_t jx,ix,lx;
+  double t, z;
+  int32_t jx, ix, lx;
 
-    /* High word of |x|. */
-	EXTRACT_WORDS(jx,lx,x);
-	ix = jx&0x7fffffff;
+  /* High word of |x|. */
+  EXTRACT_WORDS (jx, lx, x);
+  ix = jx & 0x7fffffff;
 
-    /* x is INF or NaN */
-	if(ix>=0x7ff00000) {
-	    if (jx>=0) return one/x+one;    /* tanh(+-inf)=+-1 */
-	    else       return one/x-one;    /* tanh(NaN) = NaN */
+  /* x is INF or NaN */
+  if (ix >= 0x7ff00000)
+    {
+      if (jx >= 0)
+	return one / x + one;               /* tanh(+-inf)=+-1 */
+      else
+	return one / x - one;               /* tanh(NaN) = NaN */
+    }
+
+  /* |x| < 22 */
+  if (ix < 0x40360000)                  /* |x|<22 */
+    {
+      if ((ix | lx) == 0)
+	return x;                       /* x == +-0 */
+      if (ix < 0x3c800000)              /* |x|<2**-55 */
+	return x * (one + x);           /* tanh(small) = small */
+      if (ix >= 0x3ff00000)             /* |x|>=1  */
+	{
+	  t = __expm1 (two * fabs (x));
+	  z = one - two / (t + two);
 	}
-
-    /* |x| < 22 */
-	if (ix < 0x40360000) {		/* |x|<22 */
-	    if ((ix | lx) == 0)
-		return x;		/* x == +-0 */
-	    if (ix<0x3c800000) 		/* |x|<2**-55 */
-		return x*(one+x);    	/* tanh(small) = small */
-	    if (ix>=0x3ff00000) {	/* |x|>=1  */
-		t = __expm1(two*fabs(x));
-		z = one - two/(t+two);
-	    } else {
-	        t = __expm1(-two*fabs(x));
-	        z= -t/(t+two);
-	    }
-    /* |x| > 22, return +-1 */
-	} else {
-	    z = one - tiny;		/* raised inexact flag */
+      else
+	{
+	  t = __expm1 (-two * fabs (x));
+	  z = -t / (t + two);
 	}
-	return (jx>=0)? z: -z;
+      /* |x| > 22, return +-1 */
+    }
+  else
+    {
+      z = one - tiny;                   /* raised inexact flag */
+    }
+  return (jx >= 0) ? z : -z;
 }
 weak_alias (__tanh, tanh)
 #ifdef NO_LONG_DOUBLE

@@ -135,7 +135,7 @@ __ieee754_gamma_r (double x, int *signgamp)
       *signgamp = 0;
       return (x - x) / (x - x);
     }
-  if (__builtin_expect ((unsigned int) hx == 0xfff00000 && lx==0, 0))
+  if (__builtin_expect ((unsigned int) hx == 0xfff00000 && lx == 0, 0))
     {
       /* x == -Inf.  According to ISO this is NaN.  */
       *signgamp = 0;

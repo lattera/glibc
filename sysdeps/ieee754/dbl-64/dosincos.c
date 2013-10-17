@@ -57,49 +57,52 @@ extern const union
 
 void
 SECTION
-__dubsin(double x, double dx, double v[]) {
-  double r,s,c,cc,d,dd,d2,dd2,e,ee,
-    sn,ssn,cs,ccs,ds,dss,dc,dcc;
+__dubsin (double x, double dx, double v[])
+{
+  double r, s, c, cc, d, dd, d2, dd2, e, ee,
+	 sn, ssn, cs, ccs, ds, dss, dc, dcc;
 #ifndef DLA_FMS
-  double p,hx,tx,hy,ty,q;
+  double p, hx, tx, hy, ty, q;
 #endif
   mynumber u;
   int4 k;
 
-  u.x=x+big.x;
-  k = u.i[LOW_HALF]<<2;
-  x=x-(u.x-big.x);
-  d=x+dx;
-  dd=(x-d)+dx;
-	 /* sin(x+dx)=sin(Xi+t)=sin(Xi)*cos(t) + cos(Xi)sin(t) where t ->0 */
-  MUL2(d,dd,d,dd,d2,dd2,p,hx,tx,hy,ty,q,c,cc);
-  sn=__sincostab.x[k];     /*                                  */
-  ssn=__sincostab.x[k+1];  /*      sin(Xi) and cos(Xi)         */
-  cs=__sincostab.x[k+2];   /*                                  */
-  ccs=__sincostab.x[k+3];  /*                                  */
-  MUL2(d2,dd2,s7.x,ss7.x,ds,dss,p,hx,tx,hy,ty,q,c,cc);  /* Taylor    */
-  ADD2(ds,dss,s5.x,ss5.x,ds,dss,r,s);
-  MUL2(d2,dd2,ds,dss,ds,dss,p,hx,tx,hy,ty,q,c,cc);      /* series    */
-  ADD2(ds,dss,s3.x,ss3.x,ds,dss,r,s);
-  MUL2(d2,dd2,ds,dss,ds,dss,p,hx,tx,hy,ty,q,c,cc);      /* for sin   */
-  MUL2(d,dd,ds,dss,ds,dss,p,hx,tx,hy,ty,q,c,cc);
-  ADD2(ds,dss,d,dd,ds,dss,r,s);                         /* ds=sin(t) */
+  u.x = x + big.x;
+  k = u.i[LOW_HALF] << 2;
+  x = x - (u.x - big.x);
+  d = x + dx;
+  dd = (x - d) + dx;
+  /* sin(x+dx)=sin(Xi+t)=sin(Xi)*cos(t) + cos(Xi)sin(t) where t ->0 */
+  MUL2 (d, dd, d, dd, d2, dd2, p, hx, tx, hy, ty, q, c, cc);
+  sn = __sincostab.x[k];       /*                                  */
+  ssn = __sincostab.x[k + 1];  /*      sin(Xi) and cos(Xi)         */
+  cs = __sincostab.x[k + 2];   /*                                  */
+  ccs = __sincostab.x[k + 3];  /*                                  */
+  /* Taylor series for sin ds=sin(t) */
+  MUL2 (d2, dd2, s7.x, ss7.x, ds, dss, p, hx, tx, hy, ty, q, c, cc);
+  ADD2 (ds, dss, s5.x, ss5.x, ds, dss, r, s);
+  MUL2 (d2, dd2, ds, dss, ds, dss, p, hx, tx, hy, ty, q, c, cc);
+  ADD2 (ds, dss, s3.x, ss3.x, ds, dss, r, s);
+  MUL2 (d2, dd2, ds, dss, ds, dss, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d, dd, ds, dss, ds, dss, p, hx, tx, hy, ty, q, c, cc);
+  ADD2 (ds, dss, d, dd, ds, dss, r, s);
 
-  MUL2(d2,dd2,c8.x,cc8.x,dc,dcc,p,hx,tx,hy,ty,q,c,cc); ;/* Taylor    */
-  ADD2(dc,dcc,c6.x,cc6.x,dc,dcc,r,s);
-  MUL2(d2,dd2,dc,dcc,dc,dcc,p,hx,tx,hy,ty,q,c,cc);      /* series    */
-  ADD2(dc,dcc,c4.x,cc4.x,dc,dcc,r,s);
-  MUL2(d2,dd2,dc,dcc,dc,dcc,p,hx,tx,hy,ty,q,c,cc);      /* for cos   */
-  ADD2(dc,dcc,c2.x,cc2.x,dc,dcc,r,s);
-  MUL2(d2,dd2,dc,dcc,dc,dcc,p,hx,tx,hy,ty,q,c,cc);      /* dc=cos(t) */
+  /* Taylor series for cos dc=cos(t) */
+  MUL2 (d2, dd2, c8.x, cc8.x, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  ADD2 (dc, dcc, c6.x, cc6.x, dc, dcc, r, s);
+  MUL2 (d2, dd2, dc, dcc, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  ADD2 (dc, dcc, c4.x, cc4.x, dc, dcc, r, s);
+  MUL2 (d2, dd2, dc, dcc, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  ADD2 (dc, dcc, c2.x, cc2.x, dc, dcc, r, s);
+  MUL2 (d2, dd2, dc, dcc, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
 
-  MUL2(cs,ccs,ds,dss,e,ee,p,hx,tx,hy,ty,q,c,cc);
-  MUL2(dc,dcc,sn,ssn,dc,dcc,p,hx,tx,hy,ty,q,c,cc);
-  SUB2(e,ee,dc,dcc,e,ee,r,s);
-  ADD2(e,ee,sn,ssn,e,ee,r,s);                    /* e+ee=sin(x+dx) */
+  MUL2 (cs, ccs, ds, dss, e, ee, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (dc, dcc, sn, ssn, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  SUB2 (e, ee, dc, dcc, e, ee, r, s);
+  ADD2 (e, ee, sn, ssn, e, ee, r, s);                    /* e+ee=sin(x+dx) */
 
-  v[0]=e;
-  v[1]=ee;
+  v[0] = e;
+  v[1] = ee;
 }
 /**********************************************************************/
 /* Routine receive Double-Length number (x+dx) and computes cos(x+dx) */
@@ -110,64 +113,65 @@ __dubsin(double x, double dx, double v[]) {
 
 void
 SECTION
-__dubcos(double x, double dx, double v[]) {
-  double r,s,c,cc,d,dd,d2,dd2,e,ee,
-    sn,ssn,cs,ccs,ds,dss,dc,dcc;
+__dubcos (double x, double dx, double v[])
+{
+  double r, s, c, cc, d, dd, d2, dd2, e, ee,
+	 sn, ssn, cs, ccs, ds, dss, dc, dcc;
 #ifndef DLA_FMS
-  double p,hx,tx,hy,ty,q;
+  double p, hx, tx, hy, ty, q;
 #endif
   mynumber u;
   int4 k;
-  u.x=x+big.x;
-  k = u.i[LOW_HALF]<<2;
-  x=x-(u.x-big.x);
-  d=x+dx;
-  dd=(x-d)+dx;  /* cos(x+dx)=cos(Xi+t)=cos(Xi)cos(t) - sin(Xi)sin(t) */
-  MUL2(d,dd,d,dd,d2,dd2,p,hx,tx,hy,ty,q,c,cc);
-  sn=__sincostab.x[k];     /*                                  */
-  ssn=__sincostab.x[k+1];  /*      sin(Xi) and cos(Xi)         */
-  cs=__sincostab.x[k+2];   /*                                  */
-  ccs=__sincostab.x[k+3];  /*                                  */
-  MUL2(d2,dd2,s7.x,ss7.x,ds,dss,p,hx,tx,hy,ty,q,c,cc);
-  ADD2(ds,dss,s5.x,ss5.x,ds,dss,r,s);
-  MUL2(d2,dd2,ds,dss,ds,dss,p,hx,tx,hy,ty,q,c,cc);
-  ADD2(ds,dss,s3.x,ss3.x,ds,dss,r,s);
-  MUL2(d2,dd2,ds,dss,ds,dss,p,hx,tx,hy,ty,q,c,cc);
-  MUL2(d,dd,ds,dss,ds,dss,p,hx,tx,hy,ty,q,c,cc);
-  ADD2(ds,dss,d,dd,ds,dss,r,s);
+  u.x = x + big.x;
+  k = u.i[LOW_HALF] << 2;
+  x = x - (u.x - big.x);
+  d = x + dx;
+  dd = (x - d) + dx;  /* cos(x+dx)=cos(Xi+t)=cos(Xi)cos(t) - sin(Xi)sin(t) */
+  MUL2 (d, dd, d, dd, d2, dd2, p, hx, tx, hy, ty, q, c, cc);
+  sn = __sincostab.x[k];     /*                                  */
+  ssn = __sincostab.x[k + 1];  /*      sin(Xi) and cos(Xi)         */
+  cs = __sincostab.x[k + 2];   /*                                  */
+  ccs = __sincostab.x[k + 3];  /*                                  */
+  MUL2 (d2, dd2, s7.x, ss7.x, ds, dss, p, hx, tx, hy, ty, q, c, cc);
+  ADD2 (ds, dss, s5.x, ss5.x, ds, dss, r, s);
+  MUL2 (d2, dd2, ds, dss, ds, dss, p, hx, tx, hy, ty, q, c, cc);
+  ADD2 (ds, dss, s3.x, ss3.x, ds, dss, r, s);
+  MUL2 (d2, dd2, ds, dss, ds, dss, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d, dd, ds, dss, ds, dss, p, hx, tx, hy, ty, q, c, cc);
+  ADD2 (ds, dss, d, dd, ds, dss, r, s);
 
-  MUL2(d2,dd2,c8.x,cc8.x,dc,dcc,p,hx,tx,hy,ty,q,c,cc);
-  ADD2(dc,dcc,c6.x,cc6.x,dc,dcc,r,s);
-  MUL2(d2,dd2,dc,dcc,dc,dcc,p,hx,tx,hy,ty,q,c,cc);
-  ADD2(dc,dcc,c4.x,cc4.x,dc,dcc,r,s);
-  MUL2(d2,dd2,dc,dcc,dc,dcc,p,hx,tx,hy,ty,q,c,cc);
-  ADD2(dc,dcc,c2.x,cc2.x,dc,dcc,r,s);
-  MUL2(d2,dd2,dc,dcc,dc,dcc,p,hx,tx,hy,ty,q,c,cc);
+  MUL2 (d2, dd2, c8.x, cc8.x, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  ADD2 (dc, dcc, c6.x, cc6.x, dc, dcc, r, s);
+  MUL2 (d2, dd2, dc, dcc, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  ADD2 (dc, dcc, c4.x, cc4.x, dc, dcc, r, s);
+  MUL2 (d2, dd2, dc, dcc, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  ADD2 (dc, dcc, c2.x, cc2.x, dc, dcc, r, s);
+  MUL2 (d2, dd2, dc, dcc, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
 
-  MUL2(cs,ccs,ds,dss,e,ee,p,hx,tx,hy,ty,q,c,cc);
-  MUL2(dc,dcc,sn,ssn,dc,dcc,p,hx,tx,hy,ty,q,c,cc);
+  MUL2 (cs, ccs, ds, dss, e, ee, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (dc, dcc, sn, ssn, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
 
-  MUL2(d2,dd2,s7.x,ss7.x,ds,dss,p,hx,tx,hy,ty,q,c,cc);
-  ADD2(ds,dss,s5.x,ss5.x,ds,dss,r,s);
-  MUL2(d2,dd2,ds,dss,ds,dss,p,hx,tx,hy,ty,q,c,cc);
-  ADD2(ds,dss,s3.x,ss3.x,ds,dss,r,s);
-  MUL2(d2,dd2,ds,dss,ds,dss,p,hx,tx,hy,ty,q,c,cc);
-  MUL2(d,dd,ds,dss,ds,dss,p,hx,tx,hy,ty,q,c,cc);
-  ADD2(ds,dss,d,dd,ds,dss,r,s);
-  MUL2(d2,dd2,c8.x,cc8.x,dc,dcc,p,hx,tx,hy,ty,q,c,cc);
-  ADD2(dc,dcc,c6.x,cc6.x,dc,dcc,r,s);
-  MUL2(d2,dd2,dc,dcc,dc,dcc,p,hx,tx,hy,ty,q,c,cc);
-  ADD2(dc,dcc,c4.x,cc4.x,dc,dcc,r,s);
-  MUL2(d2,dd2,dc,dcc,dc,dcc,p,hx,tx,hy,ty,q,c,cc);
-  ADD2(dc,dcc,c2.x,cc2.x,dc,dcc,r,s);
-  MUL2(d2,dd2,dc,dcc,dc,dcc,p,hx,tx,hy,ty,q,c,cc);
-  MUL2(sn,ssn,ds,dss,e,ee,p,hx,tx,hy,ty,q,c,cc);
-  MUL2(dc,dcc,cs,ccs,dc,dcc,p,hx,tx,hy,ty,q,c,cc);
-  ADD2(e,ee,dc,dcc,e,ee,r,s);
-  SUB2(cs,ccs,e,ee,e,ee,r,s);
+  MUL2 (d2, dd2, s7.x, ss7.x, ds, dss, p, hx, tx, hy, ty, q, c, cc);
+  ADD2 (ds, dss, s5.x, ss5.x, ds, dss, r, s);
+  MUL2 (d2, dd2, ds, dss, ds, dss, p, hx, tx, hy, ty, q, c, cc);
+  ADD2 (ds, dss, s3.x, ss3.x, ds, dss, r, s);
+  MUL2 (d2, dd2, ds, dss, ds, dss, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d, dd, ds, dss, ds, dss, p, hx, tx, hy, ty, q, c, cc);
+  ADD2 (ds, dss, d, dd, ds, dss, r, s);
+  MUL2 (d2, dd2, c8.x, cc8.x, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  ADD2 (dc, dcc, c6.x, cc6.x, dc, dcc, r, s);
+  MUL2 (d2, dd2, dc, dcc, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  ADD2 (dc, dcc, c4.x, cc4.x, dc, dcc, r, s);
+  MUL2 (d2, dd2, dc, dcc, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  ADD2 (dc, dcc, c2.x, cc2.x, dc, dcc, r, s);
+  MUL2 (d2, dd2, dc, dcc, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (sn, ssn, ds, dss, e, ee, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (dc, dcc, cs, ccs, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  ADD2 (e, ee, dc, dcc, e, ee, r, s);
+  SUB2 (cs, ccs, e, ee, e, ee, r, s);
 
-  v[0]=e;
-  v[1]=ee;
+  v[0] = e;
+  v[1] = ee;
 }
 /**********************************************************************/
 /* Routine receive Double-Length number (x+dx) and computes cos(x+dx) */
@@ -175,29 +179,45 @@ __dubcos(double x, double dx, double v[]) {
 /**********************************************************************/
 void
 SECTION
-__docos(double x, double dx, double v[]) {
-  double y,yy,p,w[2];
-  if (x>0) {y=x; yy=dx;}
-     else {y=-x; yy=-dx;}
-  if (y<0.5*hp0.x)                                 /*  y< PI/4    */
-	   {__dubcos(y,yy,w); v[0]=w[0]; v[1]=w[1];}
-     else if (y<1.5*hp0.x) {                       /* y< 3/4 * PI */
-       p=hp0.x-y;  /* p = PI/2 - y */
-       yy=hp1.x-yy;
-       y=p+yy;
-       yy=(p-y)+yy;
-       if (y>0) {__dubsin(y,yy,w); v[0]=w[0]; v[1]=w[1];}
-				       /* cos(x) = sin ( 90 -  x ) */
-	 else {__dubsin(-y,-yy,w); v[0]=-w[0]; v[1]=-w[1];
-	 }
-     }
-  else { /* y>= 3/4 * PI */
-    p=2.0*hp0.x-y;    /* p = PI- y */
-    yy=2.0*hp1.x-yy;
-    y=p+yy;
-    yy=(p-y)+yy;
-    __dubcos(y,yy,w);
-    v[0]=-w[0];
-    v[1]=-w[1];
-  }
+__docos (double x, double dx, double v[])
+{
+  double y, yy, p, w[2];
+  if (x > 0)
+    {
+      y = x; yy = dx;
+    }
+  else
+    {
+      y = -x; yy = -dx;
+    }
+  if (y < 0.5 * hp0.x)                                 /*  y< PI/4    */
+    {
+      __dubcos (y, yy, w); v[0] = w[0]; v[1] = w[1];
+    }
+  else if (y < 1.5 * hp0.x)                        /* y< 3/4 * PI */
+    {
+      p = hp0.x - y; /* p = PI/2 - y */
+      yy = hp1.x - yy;
+      y = p + yy;
+      yy = (p - y) + yy;
+      if (y > 0)
+	{
+	  __dubsin (y, yy, w); v[0] = w[0]; v[1] = w[1];
+	}
+      /* cos(x) = sin ( 90 -  x ) */
+      else
+	{
+	  __dubsin (-y, -yy, w); v[0] = -w[0]; v[1] = -w[1];
+	}
+    }
+  else   /* y>= 3/4 * PI */
+    {
+      p = 2.0 * hp0.x - y; /* p = PI- y */
+      yy = 2.0 * hp1.x - yy;
+      y = p + yy;
+      yy = (p - y) + yy;
+      __dubcos (y, yy, w);
+      v[0] = -w[0];
+      v[1] = -w[1];
+    }
 }

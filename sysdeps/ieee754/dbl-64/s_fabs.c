@@ -21,12 +21,13 @@ static char rcsid[] = "$NetBSD: s_fabs.c,v 1.7 1995/05/10 20:47:13 jtc Exp $";
 #include <math.h>
 #include <math_private.h>
 
-double __fabs(double x)
+double
+__fabs (double x)
 {
-	u_int32_t high;
-	GET_HIGH_WORD(high,x);
-	SET_HIGH_WORD(x,high&0x7fffffff);
-        return x;
+  u_int32_t high;
+  GET_HIGH_WORD (high, x);
+  SET_HIGH_WORD (x, high & 0x7fffffff);
+  return x;
 }
 weak_alias (__fabs, fabs)
 #ifdef NO_LONG_DOUBLE

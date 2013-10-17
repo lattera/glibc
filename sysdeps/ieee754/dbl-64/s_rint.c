@@ -24,33 +24,39 @@
 #include <math_private.h>
 
 static const double
-TWO52[2]={
+  TWO52[2] = {
   4.50359962737049600000e+15, /* 0x43300000, 0x00000000 */
  -4.50359962737049600000e+15, /* 0xC3300000, 0x00000000 */
 };
 
 double
-__rint(double x)
+__rint (double x)
 {
-	int32_t i0,j0,sx;
-	double w,t;
-	GET_HIGH_WORD(i0,x);
-	sx = (i0>>31)&1;
-	j0 = ((i0>>20)&0x7ff)-0x3ff;
-	if(j0<52) {
-	    if(j0<0) {
-		w = TWO52[sx]+x;
-		t =  w-TWO52[sx];
-		GET_HIGH_WORD(i0,t);
-		SET_HIGH_WORD(t,(i0&0x7fffffff)|(sx<<31));
-		return t;
-	    }
-	} else {
-	    if(j0==0x400) return x+x;	/* inf or NaN */
-	    else return x;		/* x is integral */
+  int32_t i0, j0, sx;
+  double w, t;
+  GET_HIGH_WORD (i0, x);
+  sx = (i0 >> 31) & 1;
+  j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
+  if (j0 < 52)
+    {
+      if (j0 < 0)
+	{
+	  w = TWO52[sx] + x;
+	  t = w - TWO52[sx];
+	  GET_HIGH_WORD (i0, t);
+	  SET_HIGH_WORD (t, (i0 & 0x7fffffff) | (sx << 31));
+	  return t;
 	}
-	w = TWO52[sx]+x;
-	return w-TWO52[sx];
+    }
+  else
+    {
+      if (j0 == 0x400)
+	return x + x;                   /* inf or NaN */
+      else
+	return x;                       /* x is integral */
+    }
+  w = TWO52[sx] + x;
+  return w - TWO52[sx];
 }
 #ifndef __rint
 weak_alias (__rint, rint)

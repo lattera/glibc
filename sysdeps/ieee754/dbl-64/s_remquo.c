@@ -28,8 +28,8 @@ static const double zero = 0.0;
 double
 __remquo (double x, double y, int *quo)
 {
-  int32_t hx,hy;
-  u_int32_t sx,lx,ly;
+  int32_t hx, hy;
+  u_int32_t sx, lx, ly;
   int cquo, qs;
 
   EXTRACT_WORDS (hx, lx, x);
@@ -41,14 +41,14 @@ __remquo (double x, double y, int *quo)
 
   /* Purge off exception values.  */
   if ((hy | ly) == 0)
-    return (x * y) / (x * y); 			/* y = 0 */
-  if ((hx >= 0x7ff00000)			/* x not finite */
-      || ((hy >= 0x7ff00000)			/* p is NaN */
+    return (x * y) / (x * y);                   /* y = 0 */
+  if ((hx >= 0x7ff00000)                        /* x not finite */
+      || ((hy >= 0x7ff00000)                    /* p is NaN */
 	  && (((hy - 0x7ff00000) | ly) != 0)))
     return (x * y) / (x * y);
 
   if (hy <= 0x7fbfffff)
-    x = __ieee754_fmod (x, 8 * y);		/* now x < 8y */
+    x = __ieee754_fmod (x, 8 * y);              /* now x < 8y */
 
   if (((hx - hy) | (lx - ly)) == 0)
     {
@@ -56,8 +56,8 @@ __remquo (double x, double y, int *quo)
       return zero * x;
     }
 
-  x  = fabs (x);
-  y  = fabs (y);
+  x = fabs (x);
+  y = fabs (y);
   cquo = 0;
 
   if (x >= 4 * y)

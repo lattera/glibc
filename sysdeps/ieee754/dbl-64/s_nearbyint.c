@@ -29,40 +29,47 @@ static char rcsid[] = "$NetBSD: s_rint.c,v 1.8 1995/05/10 20:48:04 jtc Exp $";
 #include <math_private.h>
 
 static const double
-TWO52[2]={
+  TWO52[2] = {
   4.50359962737049600000e+15, /* 0x43300000, 0x00000000 */
  -4.50359962737049600000e+15, /* 0xC3300000, 0x00000000 */
 };
 
-double __nearbyint(double x)
+double
+__nearbyint (double x)
 {
-	fenv_t env;
-	int32_t i0,j0,sx;
-	double w,t;
-	GET_HIGH_WORD(i0,x);
-	sx = (i0>>31)&1;
-	j0 = ((i0>>20)&0x7ff)-0x3ff;
-	if(j0<52) {
-	    if(j0<0) {
-		libc_feholdexcept (&env);
-	        w = TWO52[sx]+x;
-	        t =  w-TWO52[sx];
-		math_force_eval (t);
-		libc_fesetenv (&env);
-		GET_HIGH_WORD(i0,t);
-		SET_HIGH_WORD(t,(i0&0x7fffffff)|(sx<<31));
-	        return t;
-	    }
-	} else {
-	    if(j0==0x400) return x+x;	/* inf or NaN */
-	    else return x;		/* x is integral */
+  fenv_t env;
+  int32_t i0, j0, sx;
+  double w, t;
+  GET_HIGH_WORD (i0, x);
+  sx = (i0 >> 31) & 1;
+  j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
+  if (j0 < 52)
+    {
+      if (j0 < 0)
+	{
+	  libc_feholdexcept (&env);
+	  w = TWO52[sx] + x;
+	  t = w - TWO52[sx];
+	  math_force_eval (t);
+	  libc_fesetenv (&env);
+	  GET_HIGH_WORD (i0, t);
+	  SET_HIGH_WORD (t, (i0 & 0x7fffffff) | (sx << 31));
+	  return t;
 	}
-	libc_feholdexcept (&env);
-	w = TWO52[sx]+x;
-	t = w-TWO52[sx];
-	math_force_eval (t);
-	libc_fesetenv (&env);
-	return t;
+    }
+  else
+    {
+      if (j0 == 0x400)
+	return x + x;                   /* inf or NaN */
+      else
+	return x;                       /* x is integral */
+    }
+  libc_feholdexcept (&env);
+  w = TWO52[sx] + x;
+  t = w - TWO52[sx];
+  math_force_eval (t);
+  libc_fesetenv (&env);
+  return t;
 }
 weak_alias (__nearbyint, nearbyint)
 #ifdef NO_LONG_DOUBLE

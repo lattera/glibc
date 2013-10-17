@@ -40,7 +40,7 @@ __mpn_construct_double (mp_srcptr frac_ptr, int expt, int negative)
   u.ieee.mantissa0 = (frac_ptr[0] >> 32) & (((mp_limb_t) 1
 					     << (DBL_MANT_DIG - 32)) - 1);
 #else
-  #error "mp_limb size " BITS_PER_MP_LIMB "not accounted for"
+  # error "mp_limb size " BITS_PER_MP_LIMB "not accounted for"
 #endif
 
   return u.d;

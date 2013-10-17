@@ -725,7 +725,7 @@ slow (double x)
 }
 
 /*******************************************************************************/
-/* Routine compute sin(x) for   0.25<|x|< 0.855469 by  __sincostab.tbl   and Taylor */
+/* Routine compute sin(x) for 0.25<|x|< 0.855469 by __sincostab.tbl and Taylor */
 /* and if result still doesn't accurate enough by mpsin   or dubsin            */
 /*******************************************************************************/
 

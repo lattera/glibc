@@ -59,8 +59,8 @@ tan (double x)
 
   int ux, i, n;
   double a, da, a2, b, db, c, dc, c1, cc1, c2, cc2, c3, cc3, fi, ffi, gi, pz,
-    s, sy, t, t1, t2, t3, t4, t7, t8, t9, t10, w, x2, xn, xx2, y, ya, yya, z0,
-    z, zz, z2, zz2;
+	 s, sy, t, t1, t2, t3, t4, t7, t8, t9, t10, w, x2, xn, xx2, y, ya,
+         yya, z0, z, zz, z2, zz2;
 #ifndef DLA_FMS
   double t5, t6;
 #endif
@@ -98,7 +98,6 @@ tan (double x)
   /* (II) The case 1.259e-8 < abs(x) <= 0.0608 */
   if (w <= g2.d)
     {
-
       /* First stage */
       x2 = x * x;
 
@@ -150,7 +149,6 @@ tan (double x)
   /* (III) The case 0.0608 < abs(x) <= 0.787 */
   if (w <= g3.d)
     {
-
       /* First stage */
       i = ((int) (mfftnhf.d + TWO8 * w));
       z = w - xfg[i][0].d;
@@ -377,7 +375,7 @@ tan (double x)
       /* Second stage */
       ffi = xfg[i][3].d;
       EADD (z0, yya, z, zz)
-	MUL2 (z, zz, z, zz, z2, zz2, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (z, zz, z, zz, z2, zz2, t1, t2, t3, t4, t5, t6, t7, t8);
       c1 = z2 * (a7.d + z2 * (a9.d + z2 * a11.d));
       ADD2 (a5.d, aa5.d, c1, 0.0, c2, cc2, t1, t2);
       MUL2 (z2, zz2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);

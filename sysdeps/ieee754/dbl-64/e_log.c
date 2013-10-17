@@ -56,12 +56,12 @@ SECTION
 __ieee754_log (double x)
 {
 #define M 4
-  static const int pr[M] = {8, 10, 18, 32};
+  static const int pr[M] = { 8, 10, 18, 32 };
   int i, j, n, ux, dx, p;
   double dbl_n, u, p0, q, r0, w, nln2a, luai, lubi, lvaj, lvbj,
-    sij, ssij, ttij, A, B, B0, y, y1, y2, polI, polII, sa, sb,
-    t1, t2, t7, t8, t, ra, rb, ww,
-    a0, aa0, s1, s2, ss2, s3, ss3, a1, aa1, a, aa, b, bb, c;
+	 sij, ssij, ttij, A, B, B0, y, y1, y2, polI, polII, sa, sb,
+	 t1, t2, t7, t8, t, ra, rb, ww,
+	 a0, aa0, s1, s2, ss2, s3, ss3, a1, aa1, a, aa, b, bb, c;
 #ifndef DLA_FMS
   double t3, t4, t5, t6;
 #endif
@@ -80,15 +80,15 @@ __ieee754_log (double x)
   if (__builtin_expect (ux < 0x00100000, 0))
     {
       if (__builtin_expect (((ux & 0x7fffffff) | dx) == 0, 0))
-	return MHALF / 0.0;	/* return -INF */
+	return MHALF / 0.0;     /* return -INF */
       if (__builtin_expect (ux < 0, 0))
-	return (x - x) / 0.0;	/* return NaN  */
+	return (x - x) / 0.0;   /* return NaN  */
       n -= 54;
-      x *= two54.d;		/* scale x     */
+      x *= two54.d;             /* scale x     */
       num.d = x;
     }
   if (__builtin_expect (ux >= 0x7ff00000, 0))
-    return x + x;		/* INF or NaN  */
+    return x + x;               /* INF or NaN  */
 
   /* Regular values of x */
 

@@ -14,7 +14,7 @@
 int
 __isinf_ns (double x)
 {
-	int32_t hx,lx;
-	EXTRACT_WORDS(hx,lx,x);
-	return !(lx | ((hx & 0x7fffffff) ^ 0x7ff00000));
+  int32_t hx, lx;
+  EXTRACT_WORDS (hx, lx, x);
+  return !(lx | ((hx & 0x7fffffff) ^ 0x7ff00000));
 }

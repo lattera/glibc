@@ -58,14 +58,14 @@
 #include <math_private.h>
 
 static const double ln2 = 0.69314718055994530942;
-static const double two54 = 1.80143985094819840000e+16;	/* 43500000 00000000 */
-static const double Lg1 = 6.666666666666735130e-01;	/* 3FE55555 55555593 */
-static const double Lg2 = 3.999999999940941908e-01;	/* 3FD99999 9997FA04 */
-static const double Lg3 = 2.857142874366239149e-01;	/* 3FD24924 94229359 */
-static const double Lg4 = 2.222219843214978396e-01;	/* 3FCC71C5 1D8E78AF */
-static const double Lg5 = 1.818357216161805012e-01;	/* 3FC74664 96CB03DE */
-static const double Lg6 = 1.531383769920937332e-01;	/* 3FC39A09 D078C69F */
-static const double Lg7 = 1.479819860511658591e-01;	/* 3FC2F112 DF3E5244 */
+static const double two54 = 1.80143985094819840000e+16; /* 43500000 00000000 */
+static const double Lg1 = 6.666666666666735130e-01;     /* 3FE55555 55555593 */
+static const double Lg2 = 3.999999999940941908e-01;     /* 3FD99999 9997FA04 */
+static const double Lg3 = 2.857142874366239149e-01;     /* 3FD24924 94229359 */
+static const double Lg4 = 2.222219843214978396e-01;     /* 3FCC71C5 1D8E78AF */
+static const double Lg5 = 1.818357216161805012e-01;     /* 3FC74664 96CB03DE */
+static const double Lg6 = 1.531383769920937332e-01;     /* 3FC39A09 D078C69F */
+static const double Lg7 = 1.479819860511658591e-01;     /* 3FC2F112 DF3E5244 */
 
 static const double zero = 0.0;
 
@@ -80,13 +80,13 @@ __ieee754_log2 (double x)
 
   k = 0;
   if (hx < 0x00100000)
-    {				/* x < 2**-1022  */
+    {                           /* x < 2**-1022  */
       if (__builtin_expect (((hx & 0x7fffffff) | lx) == 0, 0))
-	return -two54 / (x - x);	/* log(+-0)=-inf */
+	return -two54 / (x - x);        /* log(+-0)=-inf */
       if (__builtin_expect (hx < 0, 0))
-	return (x - x) / (x - x);	/* log(-#) = NaN */
+	return (x - x) / (x - x);       /* log(-#) = NaN */
       k -= 54;
-      x *= two54;		/* subnormal number, scale up x */
+      x *= two54;               /* subnormal number, scale up x */
       GET_HIGH_WORD (hx, x);
     }
   if (__builtin_expect (hx >= 0x7ff00000, 0))
@@ -94,12 +94,12 @@ __ieee754_log2 (double x)
   k += (hx >> 20) - 1023;
   hx &= 0x000fffff;
   i = (hx + 0x95f64) & 0x100000;
-  SET_HIGH_WORD (x, hx | (i ^ 0x3ff00000));	/* normalize x or x/2 */
+  SET_HIGH_WORD (x, hx | (i ^ 0x3ff00000));     /* normalize x or x/2 */
   k += (i >> 20);
   dk = (double) k;
   f = x - 1.0;
   if ((0x000fffff & (2 + hx)) < 3)
-    {				/* |f| < 2**-20 */
+    {                           /* |f| < 2**-20 */
       if (f == zero)
 	return dk;
       R = f * f * (0.5 - 0.33333333333333333 * f);

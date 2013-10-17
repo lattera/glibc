@@ -40,14 +40,14 @@ __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
 #if BITS_PER_MP_LIMB == 32
   res_ptr[0] = u.ieee.mantissa1; /* Low-order 32 bits of fraction.  */
   res_ptr[1] = u.ieee.mantissa0; /* High-order 20 bits.  */
-  #define N 2
+  # define N 2
 #elif BITS_PER_MP_LIMB == 64
   /* Hopefully the compiler will combine the two bitfield extracts
      and this composition into just the original quadword extract.  */
   res_ptr[0] = ((mp_limb_t) u.ieee.mantissa0 << 32) | u.ieee.mantissa1;
-  #define N 1
+  # define N 1
 #else
-  #error "mp_limb size " BITS_PER_MP_LIMB "not accounted for"
+  # error "mp_limb size " BITS_PER_MP_LIMB "not accounted for"
 #endif
 /* The format does not fill the last limb.  There are some zeros.  */
 #define NUM_LEADING_ZEROS (BITS_PER_MP_LIMB \
@@ -73,7 +73,7 @@ __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
 #if N == 2
 	      res_ptr[N - 1] = res_ptr[1] << cnt
 			       | (N - 1)
-			         * (res_ptr[0] >> (BITS_PER_MP_LIMB - cnt));
+			       * (res_ptr[0] >> (BITS_PER_MP_LIMB - cnt));
 	      res_ptr[0] <<= cnt;
 #else
 	      res_ptr[N - 1] <<= cnt;
