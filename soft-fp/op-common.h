@@ -1505,6 +1505,7 @@
 		    FP_SET_EXCEPTION (FP_EX_INVALID);			\
 		  _FP_FRAC_SLL_##dwc (D, (_FP_FRACBITS_##dfs		\
 					  - _FP_FRACBITS_##sfs));	\
+		  _FP_SETQNAN (dfs, dwc, D);				\
 		}							\
 	    }								\
 	}								\

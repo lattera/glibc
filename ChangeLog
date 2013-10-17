@@ -1,3 +1,9 @@
+2013-10-17  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16041]
+	* soft-fp/op-common.h (FP_EXTEND): When input is a signaling NaN,
+	make result into a quiet NaN.
+
 2013-10-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* soft-fp/adddf3.c: Fix horizontal whitespace.
