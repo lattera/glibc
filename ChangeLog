@@ -1,3 +1,8 @@
+2013-10-18  Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ #12486]
+	* malloc/malloc.c: remove checks for statistics.
+
 2013-10-17  Ondřej Bílka  <neleai@seznam.cz>
 
 	[BZ #15277]

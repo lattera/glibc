@@ -2216,15 +2216,6 @@ static void do_check_malloc_state(mstate av)
   /* top chunk is OK */
   check_chunk(av, av->top);
 
-  /* sanity checks for statistics */
-
-  assert(mp_.n_mmaps <= mp_.max_n_mmaps);
-
-  assert((unsigned long)(av->system_mem) <=
-	 (unsigned long)(av->max_system_mem));
-
-  assert((unsigned long)(mp_.mmapped_mem) <=
-	 (unsigned long)(mp_.max_mmapped_mem));
 }
 #endif
 
