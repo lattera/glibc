@@ -1,3 +1,7 @@
+2013-10-04  Alan Modra  <amodra@gmail.com>
+
+	* sysdeps/ia64/fpu/printf_fphex.c: Adjust for fpnum change.
+
 2013-09-22  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #15754]

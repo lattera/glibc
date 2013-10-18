@@ -2,6 +2,13 @@
 
 	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h (__O_TMPFILE): Define.
 
+2013-09-02  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list (fanotify_mark): New
+	entry.
+	* sysdeps/unix/sysv/linux/hppa/Versions (libc): Add GLIBC_2.19 and
+	fanotify_mark.
+
 2013-08-30   Ondřej Bílka  <neleai@seznam.cz>
 
 	* sysdeps/unix/sysv/linux/hppa/clone.S: Fix typos.
