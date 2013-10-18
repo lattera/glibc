@@ -1,3 +1,29 @@
+2013-10-18  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* elf/tst-tls-dlinfo.c: Don't include tls.h.
+	* elf/tst-tls1.c: Likewise.
+	* elf/tst-tls10.h: Likewise.
+	* elf/tst-tls14.c: Likewise.
+	* elf/tst-tls2.c: Likewise.
+	* elf/tst-tls3.c: Likewise.
+	* elf/tst-tls4.c: Likewise.
+	* elf/tst-tls5.c: Likewise.
+	* elf/tst-tls6.c: Likewise.
+	* elf/tst-tls7.c: Likewise.
+	* elf/tst-tls8.c: Likewise.
+	* elf/tst-tls9.c: Likewise.
+	* elf/tst-tlsmod1.c: Likewise.
+	* elf/tst-tlsmod13.c: Likewise.
+	* elf/tst-tlsmod13a.c: Likewise.
+	* elf/tst-tlsmod14a.c: Likewise.
+	* elf/tst-tlsmod16a.c: Likewise.
+	* elf/tst-tlsmod16b.c: Likewise.
+	* elf/tst-tlsmod2.c: Likewise.
+	* elf/tst-tlsmod3.c: Likewise.
+	* elf/tst-tlsmod4.c: Likewise.
+	* elf/tst-tlsmod5.c: Likewise.
+	* elf/tst-tlsmod6.c: Likewise.
+
 2013-10-18  Ondřej Bílka  <neleai@seznam.cz>
 
 	[BZ #12486]

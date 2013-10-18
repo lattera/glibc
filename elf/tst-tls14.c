@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <tls.h>
-
 #define AL 4096
 struct foo
 {

@@ -1,7 +1,5 @@
 #include <stdio.h>
 
-#include <tls.h>
-
 #include "tls-macros.h"
 
 extern int in_dso (int n, int *caller_foop);

@@ -3,7 +3,6 @@
 #include <stdlib.h>
 
 #include <link.h>
-#include <tls.h>
 
 
 #define TEST_FUNCTION do_test ()

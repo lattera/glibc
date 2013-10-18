@@ -1,8 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include <tls.h>
-
 #define AL 4096
 struct foo
 {
