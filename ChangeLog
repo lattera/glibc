@@ -1,3 +1,11 @@
+2013-10-18  Richard Sandiford  <richard@codesourcery.com>
+	    Joseph Myers  <joseph@codesourcery.com
+
+	[BZ #15948]
+	* locale/programs/ld-collate.c (new_element): Handle <U0000> as a
+	single character.
+	(add_to_tablewc): Assert sequence of wide characters is nonempty.
+
 2013-10-18  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* elf/tst-tls-dlinfo.c: Don't include tls.h.

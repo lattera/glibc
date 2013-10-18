@@ -352,6 +352,9 @@ new_element (struct locale_collate_t *collate, const char *mbs, size_t mbslen,
     {
       size_t nwcs = wcslen ((wchar_t *) wcs);
       uint32_t zero = 0;
+      /* Handle <U0000> as a single character.  */
+      if (nwcs == 0)
+	nwcs = 1;
       obstack_grow (&collate->mempool, wcs, nwcs * sizeof (uint32_t));
       obstack_grow (&collate->mempool, &zero, sizeof (uint32_t));
       newp->wcs = (uint32_t *) obstack_finish (&collate->mempool);
@@ -2078,6 +2081,7 @@ add_to_tablewc (uint32_t ch, struct element_t *runp)
 	      weightidx = output_weightwc (atwc.weightpool, atwc.collate,
 					   runp);
 
+	      assert (runp->nwcs > 0);
 	      added = (1 + 1 + runp->nwcs - 1) * sizeof (int32_t);
 	      if (sizeof (int) == sizeof (int32_t))
 		obstack_make_room (atwc.extrapool, added);
