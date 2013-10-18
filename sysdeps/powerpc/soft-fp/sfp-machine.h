@@ -41,18 +41,64 @@
     R##_c = FP_CLS_NAN;						\
   } while (0)
 
+#if defined __NO_FPRS__ && !defined _SOFT_FLOAT
+
+/* Exception flags.  We use the bit positions of the appropriate bits
+   in the FPEFSCR.  */
+
+# include <fenv_libc.h>
+# include <sysdep.h>
+# include <sys/prctl.h>
+
+int __feraiseexcept_soft (int);
+libc_hidden_proto (__feraiseexcept_soft)
+
+# define FP_EX_INEXACT         SPEFSCR_FINXS
+# define FP_EX_INVALID         SPEFSCR_FINVS
+# define FP_EX_DIVZERO         SPEFSCR_FDBZS
+# define FP_EX_UNDERFLOW       SPEFSCR_FUNFS
+# define FP_EX_OVERFLOW        SPEFSCR_FOVFS
+
+# define _FP_DECL_EX \
+  int _spefscr __attribute__ ((unused)), _ftrapex __attribute__ ((unused)) = 0
+# define FP_INIT_ROUNDMODE						\
+  do									\
+    {									\
+      int _r;								\
+      INTERNAL_SYSCALL_DECL (_err);					\
+									\
+      _spefscr = fegetenv_register ();					\
+      _r = INTERNAL_SYSCALL (prctl, _err, 2, PR_GET_FPEXC, &_ftrapex);	\
+      if (INTERNAL_SYSCALL_ERROR_P (_r, _err))				\
+	_ftrapex = 0;							\
+    }									\
+  while (0)
+# define FP_INIT_EXCEPTIONS /* Empty.  */
+
+# define FP_HANDLE_EXCEPTIONS  __feraiseexcept_soft (_fex)
+# define FP_ROUNDMODE          (_spefscr & 0x3)
+
+/* Not correct in general, but sufficient for the uses in soft-fp.  */
+# define FP_TRAPPING_EXCEPTIONS (_ftrapex & PR_FP_EXC_UND	\
+				 ? FP_EX_UNDERFLOW		\
+				 : 0)
+
+#else
+
 /* Exception flags.  We use the bit positions of the appropriate bits
    in the FPSCR, which also correspond to the FE_* bits.  This makes
    everything easier ;-).  */
-#define FP_EX_INVALID         (1 << (31 - 2))
-#define FP_EX_OVERFLOW        (1 << (31 - 3))
-#define FP_EX_UNDERFLOW       (1 << (31 - 4))
-#define FP_EX_DIVZERO         (1 << (31 - 5))
-#define FP_EX_INEXACT         (1 << (31 - 6))
+# define FP_EX_INVALID         (1 << (31 - 2))
+# define FP_EX_OVERFLOW        (1 << (31 - 3))
+# define FP_EX_UNDERFLOW       (1 << (31 - 4))
+# define FP_EX_DIVZERO         (1 << (31 - 5))
+# define FP_EX_INEXACT         (1 << (31 - 6))
 
-#define FP_HANDLE_EXCEPTIONS  __simulate_exceptions (_fex)
-#define FP_ROUNDMODE          __sim_round_mode
-#define FP_TRAPPING_EXCEPTIONS (~__sim_disabled_exceptions & 0x3e000000)
+# define FP_HANDLE_EXCEPTIONS  __simulate_exceptions (_fex)
+# define FP_ROUNDMODE          __sim_round_mode
+# define FP_TRAPPING_EXCEPTIONS (~__sim_disabled_exceptions & 0x3e000000)
+
+#endif
 
 /* FIXME: these variables should be thread specific (see bugzilla bug
    15483) and ideally preserved across signal handlers, like hardware

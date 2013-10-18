@@ -1,3 +1,61 @@
+2013-10-18  Joseph Myers  <joseph@codesourcery.com>
+	    Aldy Hernandez  <aldyh@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/e500/nofpu/Makefile: New file.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fclrexcpt.c: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fe_note_change.c: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fedisblxcpt.c: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/feenablxcpt.c: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fegetenv.c: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fegetexcept.c: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fegetround.c: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/feholdexcpt.c: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fenv_const.c: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fenv_libc.h: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fesetenv.c: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fesetround.c: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/feupdateenv.c: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fexcepts_from_prctl.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fexcepts_from_spe.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fexcepts_to_prctl.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fexcepts_to_spe.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fgetexcptflg.c: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fraiseexcept-soft.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fraiseexcpt.c: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fsetexcptflg.c: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/ftestexcept.c: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/get-rounding-mode.h:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/s_fabsf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/spe-raise.c: Likewise.
+	* sysdeps/powerpc/preconfigure: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/e500/nofpu/Implies:
+	Likewise.
+	* sysdeps/powerpc/nofpu/soft-supp.h [__NO_FPRS__ && !_SOFT_FLOAT]:
+	Replace contents of file by #include of <fenv_libc.h>.
+	* sysdeps/powerpc/soft-fp/sfp-machine.h
+	[__NO_FPRS__ && !_SOFT_FLOAT]: Include <fenv_libc.h>, <sysdep.h>
+	and <sys/prctl.h>.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (__feraiseexcept_soft): Declare.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (FP_EX_INEXACT): Define macro.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (FP_EX_INVALID): Likewise.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (FP_EX_DIVZERO): Likewise.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (FP_EX_UNDERFLOW): Likewise.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (FP_EX_OVERFLOW): Likewise.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (_FP_DECL_EX): Likewise.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (FP_INIT_ROUNDMODE): Likewise.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (FP_INIT_EXCEPTIONS): Likewise.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (FP_HANDLE_EXCEPTIONS): Likewise.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (FP_ROUNDMODE): Likewise.
+	[__NO_FPRS__ && !_SOFT_FLOAT] (FP_TRAPPING_EXCEPTIONS): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/localplt.data:
+	Allow copysignl PLT reference to be missing.
+
 2013-10-18  Richard Sandiford  <richard@codesourcery.com>
 	    Joseph Myers  <joseph@codesourcery.com
 

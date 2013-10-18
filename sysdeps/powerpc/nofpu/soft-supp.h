@@ -17,7 +17,13 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <fenv.h>
+#if defined __NO_FPRS__ && !defined _SOFT_FLOAT
+
+# include <fenv_libc.h>
+
+#else
+
+# include <fenv.h>
 
 typedef union
 {
@@ -25,6 +31,7 @@ typedef union
   unsigned int l[2];
 } fenv_union_t;
 
+#endif
 
 /* FIXME: these variables should be thread specific (see bugzilla bug
    15483) and ideally preserved across signal handlers, like hardware

@@ -1,0 +1,3 @@
+powerpc/powerpc32/e500/nofpu
+powerpc/nofpu
+powerpc/soft-fp

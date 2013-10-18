@@ -1,0 +1,11 @@
+# Check for e500.
+
+case "$machine" in
+powerpc)
+  $CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null > conftest.i
+  if grep -q __NO_FPRS__ conftest.i && ! grep -q _SOFT_FLOAT conftest.i; then
+    base_machine=powerpc machine=powerpc/powerpc32/e500
+  fi
+  rm -f conftest.i
+  ;;
+esac

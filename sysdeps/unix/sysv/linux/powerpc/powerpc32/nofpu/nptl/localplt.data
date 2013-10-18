@@ -35,7 +35,7 @@ libc.so: realloc
 libm.so: __signbit
 libm.so: __signbitf
 libm.so: __signbitl
-libm.so: copysignl
+libm.so: copysignl ?
 libm.so: fabsl
 libm.so: fegetround
 libm.so: matherr
