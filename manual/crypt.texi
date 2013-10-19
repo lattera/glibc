@@ -30,8 +30,15 @@ message-digest algorithm that is compatible with modern BSD systems,
 and the other based on the Data Encryption Standard (DES) that is
 compatible with Unix systems.
 
+@vindex AUTH_DES
+@cindex FIPS 140-2
 It also provides support for Secure RPC, and some library functions that
-can be used to perform normal DES encryption.
+can be used to perform normal DES encryption.  The @code{AUTH_DES}
+authentication flavor in Secure RPC, as provided by @theglibc{},
+uses DES and does not comply with FIPS 140-2 nor does any other use of DES
+within @theglibc{}.  It is recommended that Secure RPC should not be used
+for systems that need to comply with FIPS 140-2 since all flavors of
+encrypted authentication use normal DES.
 
 @menu
 * Legal Problems::              This software can get you locked up, or worse.
@@ -203,6 +210,7 @@ header @file{crypt.h}.
 @node DES Encryption
 @section DES Encryption
 
+@cindex FIPS 46-3
 The Data Encryption Standard is described in the US Government Federal
 Information Processing Standards (FIPS) 46-3 published by the National
 Institute of Standards and Technology.  The DES has been very thoroughly

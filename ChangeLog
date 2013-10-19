@@ -1,5 +1,10 @@
 2013-10-18  Carlos O'Donell  <carlos@redhat.com>
 
+	* manual/crypt.texi (Cryptographic Functions): Using SunRPC and
+	AUTH_DES will prevent FIPS 140-2 compliance. Add vindex for
+	AUTH_DES and cindex for FIPS 140-2.
+	(DES Encryption): Add cindex FIPS 46-3.
+
 	* locale/locarchive.h (struct locarhandle): Add fname.
 	* locale/programs/localedef.c (main): Pass ARGV[remaining]
 	if an optional argument was specified to --list-archive,
