@@ -1,3 +1,19 @@
+2013-10-18  Carlos O'Donell  <carlos@redhat.com>
+
+	* locale/locarchive.h (struct locarhandle): Add fname.
+	* locale/programs/localedef.c (main): Pass ARGV[remaining]
+	if an optional argument was specified to --list-archive,
+	otherwise NULL.
+	* locale/programs/locarchive.c (show_archive_content): Take new
+	argument fname and pass it via ah.fname to open_archive.
+	* locale/programs/localedef.h: Update decl.
+	(open_archive): If AH->fname is non-null, open that file
+	rather than the default file name, and don't ignore ENOENT.
+	(create_archive): Set AH.fname to NULL.
+	(delete_locales_from_archive): Likewise.
+	(add_locales_to_archive): Likewise.
+	* locale/programs/locfile.c (write_all_categories): Likewise.
+
 2013-10-18  Joseph Myers  <joseph@codesourcery.com>
 	    Aldy Hernandez  <aldyh@redhat.com>
 

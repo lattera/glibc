@@ -80,6 +80,8 @@ struct locrecent
 
 struct locarhandle
 {
+  /* Full path to the locale archive file.  */
+  const char *fname;
   int fd;
   void *addr;
   size_t mmaped;

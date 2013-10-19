@@ -223,6 +223,7 @@ create_archive (const char *archivefname, struct locarhandle *ah)
 	     _("cannot change mode of new locale archive"));
     }
 
+  ah->fname = NULL;
   ah->fd = fd;
   ah->mmap_base = mmap_base;
   ah->mmap_len = mmap_len;
@@ -562,11 +563,17 @@ open_archive (struct locarhandle *ah, bool readonly)
   struct locarhead head;
   int retry = 0;
   size_t prefix_len = output_prefix ? strlen (output_prefix) : 0;
-  char archivefname[prefix_len + sizeof (ARCHIVE_NAME)];
+  char default_fname[prefix_len + sizeof (ARCHIVE_NAME)];
+  char *archivefname = ah->fname;
 
-  if (output_prefix)
-    memcpy (archivefname, output_prefix, prefix_len);
-  strcpy (archivefname + prefix_len, ARCHIVE_NAME);
+  /* If ah has a non-NULL fname open that otherwise open the default.  */
+  if (archivefname == NULL)
+    {
+      archivefname = default_fname;
+      if (output_prefix)
+        memcpy (archivefname, output_prefix, prefix_len);
+      strcpy (archivefname + prefix_len, ARCHIVE_NAME);
+    }
 
   while (1)
     {
@@ -574,8 +581,11 @@ open_archive (struct locarhandle *ah, bool readonly)
       fd = open64 (archivefname, readonly ? O_RDONLY : O_RDWR);
       if (fd == -1)
 	{
-	  /* Maybe the file does not yet exist.  */
-	  if (errno == ENOENT)
+	  /* Maybe the file does not yet exist? If we are opening
+	     the default locale archive we ignore the failure and
+	     list an empty archive, otherwise we print an error
+	     and exit.  */
+	  if (errno == ENOENT && archivefname == default_fname)
 	    {
 	      if (readonly)
 		{
@@ -1329,6 +1339,7 @@ add_locales_to_archive (nlist, list, replace)
 
   /* Open the archive.  This call never returns if we cannot
      successfully open the archive.  */
+  ah.fname = NULL;
   open_archive (&ah, false);
 
   while (nlist-- > 0)
@@ -1528,6 +1539,7 @@ delete_locales_from_archive (nlist, list)
 
   /* Open the archive.  This call never returns if we cannot
      successfully open the archive.  */
+  ah.fname = NULL;
   open_archive (&ah, false);
 
   head = ah.addr;
@@ -1617,7 +1629,7 @@ dataentcmp (const void *a, const void *b)
 
 
 void
-show_archive_content (int verbose)
+show_archive_content (const char *fname, int verbose)
 {
   struct locarhandle ah;
   struct locarhead *head;
@@ -1627,6 +1639,7 @@ show_archive_content (int verbose)
 
   /* Open the archive.  This call never returns if we cannot
      successfully open the archive.  */
+  ah.fname = fname;
   open_archive (&ah, true);
 
   head = ah.addr;

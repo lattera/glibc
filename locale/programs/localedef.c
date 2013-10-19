@@ -209,7 +209,7 @@ main (int argc, char *argv[])
 
   /* Handle a few special cases.  */
   if (list_archive)
-    show_archive_content (verbose);
+    show_archive_content (remaining > 1 ? argv[remaining] : NULL, verbose);
   if (add_to_archive)
     return add_locales_to_archive (argc - remaining, &argv[remaining],
 				   replace_archive);
