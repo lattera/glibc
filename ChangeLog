@@ -1,3 +1,7 @@
+2013-10-19  Michael Stahl  <mstahl@redhat.com>
+
+	* elf/rtld.c (do_preload): Print the reason why preloading failed.
+
 2013-10-19  Ondřej Bílka  <neleai@seznam.cz>
 
 	BZ #10278]

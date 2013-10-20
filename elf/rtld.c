@@ -816,8 +816,8 @@ do_preload (char *fname, struct link_map *main_map, const char *where)
   if (__builtin_expect (err_str != NULL, 0))
     {
       _dl_error_printf ("\
-ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
-			fname, where);
+ERROR: ld.so: object '%s' from %s cannot be preloaded (%s): ignored.\n",
+			fname, where, err_str);
       /* No need to call free, this is still before
 	 the libc's malloc is used.  */
     }
