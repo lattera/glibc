@@ -1,3 +1,8 @@
+2013-10-19  Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ #15670]
+	* time/tzfile.c (__tzfile_read): Replace alloca with malloc.
+
 2013-10-18  Carlos O'Donell  <carlos@redhat.com>
 
 	* manual/crypt.texi (Cryptographic Functions): Using SunRPC and

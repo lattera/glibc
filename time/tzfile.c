@@ -114,6 +114,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   int was_using_tzfile = __use_tzfile;
   int trans_width = 4;
   size_t tzspec_len;
+  char *new = NULL;
 
   if (sizeof (time_t) != 4 && sizeof (time_t) != 8)
     abort ();
@@ -145,22 +146,12 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   if (*file != '/')
     {
       const char *tzdir;
-      unsigned int len, tzdir_len;
-      char *new, *tmp;
 
       tzdir = getenv ("TZDIR");
       if (tzdir == NULL || *tzdir == '\0')
-	{
-	  tzdir = default_tzdir;
-	  tzdir_len = sizeof (default_tzdir) - 1;
-	}
-      else
-	tzdir_len = strlen (tzdir);
-      len = strlen (file) + 1;
-      new = (char *) __alloca (tzdir_len + 1 + len);
-      tmp = __mempcpy (new, tzdir, tzdir_len);
-      *tmp++ = '/';
-      memcpy (tmp, file, len);
+	tzdir = default_tzdir;
+      if (__asprintf (&new, "%s/%s", tzdir, file) == -1)
+	goto ret_free_transitions;
       file = new;
     }
 
@@ -170,11 +161,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
       && stat64 (file, &st) == 0
       && tzfile_ino == st.st_ino && tzfile_dev == st.st_dev
       && tzfile_mtime == st.st_mtime)
-    {
-      /* Nothing to do.  */
-      __use_tzfile = 1;
-      return;
-    }
+    goto done;  /* Nothing to do.  */
 
   /* Note the file is opened with cancellation in the I/O functions
      disabled and if available FD_CLOEXEC set.  */
@@ -527,12 +514,15 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   __daylight = rule_stdoff != rule_dstoff;
   __timezone = -rule_stdoff;
 
+ done:
   __use_tzfile = 1;
+  free (new);
   return;
 
  lose:
   fclose (f);
  ret_free_transitions:
+  free (new);
   free ((void *) transitions);
   transitions = NULL;
 }
