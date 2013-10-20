@@ -1,5 +1,12 @@
 2013-10-19  Ondřej Bílka  <neleai@seznam.cz>
 
+	BZ #10278]
+	* posix/glob.c: Match only directories when trailing slash is present.
+	* posix/tst-gnuglob.c (my_opendir): Do not open files.
+	(main): Add testcase.
+
+2013-10-19  Ondřej Bílka  <neleai@seznam.cz>
+
 	[BZ #15670]
 	* time/tzfile.c (__tzfile_read): Replace alloca with malloc.
 

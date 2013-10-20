@@ -276,6 +276,11 @@ glob (pattern, flags, errfunc, pglob)
       return -1;
     }
 
+  /* POSIX requires all slashes to be matched.  This means that with
+     a trailing slash we must match only directories.  */
+  if (pattern[0] && pattern[strlen (pattern) - 1] == '/')
+    flags |= GLOB_ONLYDIR;
+
   if (!(flags & GLOB_DOOFFS))
     /* Have to do this so `globfree' knows where to start freeing.  It
        also makes all the code that uses gl_offs simpler. */

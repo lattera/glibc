@@ -168,7 +168,7 @@ my_opendir (const char *s)
   my_DIR *dir;
 
 
-  if (idx == -1)
+  if (idx == -1 || filesystem[idx].type != DT_DIR)
     {
       PRINTF ("my_opendir(\"%s\") == NULL\n", s);
       return NULL;
@@ -358,7 +358,7 @@ test_result (const char *fmt, int flags, glob_t *gl, const char *str[])
 	      break;
 
 	  if (str[inner] == NULL)
-	    errstr =  ok ? "" : " *** WRONG";
+	    errstr = ok ? "" : " *** WRONG";
 	  else
 	    errstr = ok ? "" : " * wrong position";
 
@@ -482,6 +482,12 @@ main (void)
 	"/dir2lev1",
 	"/file1lev1",
 	"/file2lev1");
+
+  test ("*/*/", 0 , 0,
+	"dir1lev1/dir1lev2/",
+	"dir1lev1/dir2lev2/",
+	"dir1lev1/dir3lev2/",
+	"dir2lev1/dir1lev2/");
 
   test ("", 0, GLOB_NOMATCH, NULL);
 
