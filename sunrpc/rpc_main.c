@@ -1442,6 +1442,9 @@ options_usage (FILE *stream, int status)
   f_print (stream, _("-t\t\tgenerate RPC dispatch table\n"));
   f_print (stream, _("-T\t\tgenerate code to support RPC dispatch tables\n"));
   f_print (stream, _("-Y path\t\tdirectory name to find C preprocessor (cpp)\n"));
+  f_print (stream, _("-5\t\tSysVr4 compatibility mode\n"));
+  f_print (stream, _("--help\t\tgive this help list\n"));
+  f_print (stream, _("--version\tprint program version\n"));
 
   f_print (stream, _("\n\
 For bug reporting instructions, please see:\n\

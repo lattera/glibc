@@ -1,10 +1,15 @@
+2013-10-21  Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ #15825]
+	* sunrpc/rpc_main.c: Document rpcgen -5.
+
 2013-10-19  Michael Stahl  <mstahl@redhat.com>
 
 	* elf/rtld.c (do_preload): Print the reason why preloading failed.
 
 2013-10-19  Ondřej Bílka  <neleai@seznam.cz>
 
-	BZ #10278]
+	[BZ #10278]
 	* posix/glob.c: Match only directories when trailing slash is present.
 	* posix/tst-gnuglob.c (my_opendir): Do not open files.
 	(main): Add testcase.
