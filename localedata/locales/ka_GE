@@ -48,9 +48,12 @@ country_num 268
 country_car    "<U0047><U0045>"
 country_isbn "99928"
 % lang_name FIXME Georgian in Georgian
-lang_ab "ka"
-lang_term "kat"
-lang_lib "geo"
+% ka
+lang_ab      "<U006B><U0061>"
+% kat
+lang_term    "<U006B><U0061><U0074>"
+% geo
+lang_lib     "<U0067><U0065><U006F>"
 END LC_ADDRESS
 
 LC_COLLATE

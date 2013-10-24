@@ -15044,7 +15044,12 @@ country_ab3 "<U004A><U0050><U004E>"
 country_num 392
 % J
 country_car    "<U004A>"
-
+% ja
+lang_ab      "<U006A><U0061>"
+% jpn
+lang_term    "<U006A><U0070><U006E>"
+% jpn
+lang_lib    "<U006A><U0070><U006E>"
 END LC_ADDRESS
 
 

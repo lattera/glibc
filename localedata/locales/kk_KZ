@@ -263,5 +263,10 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U004E><U0025><U0063><U0025><U004E>"
 % KZ
 country_car    "<U004B><U005A>"
-
+% kk
+lang_ab      "<U006B><U006B>"
+% kaz
+lang_term    "<U006B><U0061><U007A>"
+% kaz
+lang_lib    "<U006B><U0061><U007A>"
 END LC_ADDRESS

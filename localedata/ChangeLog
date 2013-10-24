@@ -1,3 +1,21 @@
+2013-10-24  Chris Leonard  <cjl@sugarlabs.org>
+
+	* locales/ja_JP: Adjust language-code fields of LC_ADDRESS.
+	* locales/ka_GE: Likewise.
+	* locales/kk_KZ: Likewise.
+	* locales/kl_GL: Likewise.
+	* locales/kn_IN: Likewise.
+	* locales/ko_KR: Likewise.
+	* locales/kok_IN: Likewise.
+	* locales/ks_IN: Likewise.
+	* locales/ku_TR: Likewise.
+	* locales/kw_GB: Likewise.
+	* locales/ky_KG: Likewise.
+	* locales/lg_UG: Likewise.
+	* locales/lij_IT: Likewise.
+	* locales/lt_LT: Likewise.
+	* locales/lv_LV: Likewise.
+
 2013-10-13  Chris Leonard  <cjl@sugarlabs.org>
 
 	* locales/he_IL: Adjust language-code fields of LC_ADDRESS.

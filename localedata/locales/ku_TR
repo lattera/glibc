@@ -210,7 +210,10 @@ country_isbn 975
 country_car    "<U0054><U0052>"
 % "kurdi"
 lang_name   "<U006B><U0075><U0072><U0064><U0069>"
-lang_ab     "ku"
-lang_term   "kur"
-lang_lib    "kur"
+% ku
+lang_ab      "<U006B><U0075>"
+% kur
+lang_term    "<U006B><U0075><U0072>"
+% kur
+lang_lib     "<U006B><U0075><U0072>"
 END LC_ADDRESS
