@@ -1,3 +1,8 @@
+2013-10-25   Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ 14029]
+	* manual/pattern.texi: Acknowledge that fnmatch can fail.
+
 2013-10-25  Fabrice Bauzac  <fbauzac@debian71.nce.amadeus.net>
 
 	[BZ #16074]

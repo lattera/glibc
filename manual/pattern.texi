@@ -36,11 +36,8 @@ returns the nonzero value @code{FNM_NOMATCH}.  The arguments
 The argument @var{flags} is a combination of flag bits that alter the
 details of matching.  See below for a list of the defined flags.
 
-In @theglibc{}, @code{fnmatch} cannot experience an ``error''---it
-always returns an answer for whether the match succeeds.  However, other
-implementations of @code{fnmatch} might sometimes report ``errors''.
-They would do so by returning nonzero values that are not equal to
-@code{FNM_NOMATCH}.
+In @theglibc{}, @code{fnmatch} might sometimes report ``errors'' by
+returning nonzero values that are not equal to @code{FNM_NOMATCH}.
 @end deftypefun
 
 These are the available flags for the @var{flags} argument:
