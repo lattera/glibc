@@ -1226,8 +1226,8 @@ as the included @code{malloc} automatically uses @code{mmap} where appropriate.
 
 @end vtable
 
-@code{mmap} returns the address of the new mapping, or @math{-1} for an
-error.
+@code{mmap} returns the address of the new mapping, or
+@code{MAP_FAILED} for an error.
 
 Possible errors include:
 

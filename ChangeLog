@@ -1,3 +1,9 @@
+2013-10-25  Fabrice Bauzac  <fbauzac@debian71.nce.amadeus.net>
+
+	[BZ #16074]
+	* manual/llio.texi (Memory-mapped I/O): Indicate that mmap returns
+	MAP_FAILED on error.
+
 2013-10-25  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #16072]
