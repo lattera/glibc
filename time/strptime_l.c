@@ -744,7 +744,11 @@ __strptime_internal (rp, fmt, tmp, statep LOCALE_PARAM)
 	  s.want_xday = 1;
 	  break;
 	case 'Z':
-	  /* XXX How to handle this?  */
+	  /* Read timezone but perform no conversion.  */
+	  while (ISSPACE (*rp))
+	    rp++;
+	  while (!ISSPACE (*rp) && *rp != '\0')
+	    rp++;
 	  break;
 	case 'z':
 	  /* We recognize two formats: if two digits are given, these
