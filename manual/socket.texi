@@ -1307,23 +1307,25 @@ Here's a small example:
 struct hostent *
 gethostname (char *host)
 @{
-  struct hostent hostbuf, *hp;
+  struct hostent *hostbuf, *hp;
   size_t hstbuflen;
   char *tmphstbuf;
   int res;
   int herr;
 
+  hostbuf = malloc (sizeof (struct hostent));
   hstbuflen = 1024;
-  /* Allocate buffer, remember to free it to avoid memory leakage.  */
   tmphstbuf = malloc (hstbuflen);
 
-  while ((res = gethostbyname_r (host, &hostbuf, tmphstbuf, hstbuflen,
+  while ((res = gethostbyname_r (host, hostbuf, tmphstbuf, hstbuflen,
                                  &hp, &herr)) == ERANGE)
     @{
       /* Enlarge the buffer.  */
       hstbuflen *= 2;
       tmphstbuf = realloc (tmphstbuf, hstbuflen);
     @}
+
+  free (tmphstbuf);
   /*  Check for errors.  */
   if (res || hp == NULL)
     return NULL;

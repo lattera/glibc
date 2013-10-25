@@ -1,5 +1,10 @@
 2013-10-25   Ondřej Bílka  <neleai@seznam.cz>
 
+	[BZ 2801]
+	* manual/socket.texi (Host Names): Fix gethostbyname_r example.
+
+2013-10-25   Ondřej Bílka  <neleai@seznam.cz>
+
 	[BZ #14876]
 	* time/strptime_l.c (__strptime_internal): 14876 Read timezone entry.
 	* time/tst-strptime.c (day_tests): Add testcase.
