@@ -1,3 +1,11 @@
+2013-10-25  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #9954]
+	* sysdeps/posix/getaddrinfo.c (rfc3484_sort): do not assign native
+	result if the result has no associated interface.
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): correctly detect
+	interface for all 127.X.Y.Z addresses.
+
 2013-10-24  Chris Leonard  <cjl@sugarlabs.org>
 
 	* locale/iso-639.def: Add Ligurian (lij)
