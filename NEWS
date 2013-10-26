@@ -64,6 +64,18 @@ Version 2.19
   command-line options to generate locales for a different system from that
   for which the C library was built.
 
+* Binary locale files now only depend on the endianness of the system for
+  which they are generated and not on other properties of that system.  As a
+  consequence, binary files generated with new localedef may be incompatible
+  with old versions of the GNU C Library, and binary files generated with
+  old localedef may be incompatible with this version of the GNU C Library,
+  in the following circumstances:
+
+  + Locale files may be incompatible on m68k systems.
+
+  + Locale archive files (but not separate files for individual locales) may
+    be incompatible on systems where plain "char" is signed.
+
 * The configure option --disable-versioning has been removed.  Builds with
   --disable-versioning had not worked for several years.
 
@@ -73,6 +85,8 @@ Version 2.19
 * SystemTap probes for malloc have been introduced.
 
 * Support for powerpc64le has been added.
+
+* The soft-float powerpc port now supports e500 processors.
 
 Version 2.18
 
