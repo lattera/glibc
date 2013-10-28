@@ -1,4 +1,4 @@
-2013-10-04  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+2013-10-26  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/strcpy.S (strcpy): Add word load/store
 	to provide a boost for large inputs with word alignment.
