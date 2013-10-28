@@ -147,10 +147,9 @@ __sin32 (double x, double res, double res1)
   __dbl_mp (x, &c, p);		/* c = x  */
   __sub (&b, &c, &a, p);
   /* if a > 0 return min (res, res1), otherwise return max (res, res1).  */
-  if (a.d[0] > 0)
-    return (res < res1) ? res : res1;
-  else
-    return (res > res1) ? res : res1;
+  if ((a.d[0] > 0 && res >= res1) || (a.d[0] <= 0 && res <= res1))
+    res = res1;
+  return res;
 }
 
 /* Receive double x and two double results of cos(x) and return result which is
@@ -181,10 +180,9 @@ __cos32 (double x, double res, double res1)
   __dbl_mp (x, &c, p);		/* c = x                  */
   __sub (&b, &c, &a, p);
   /* if a > 0 return max (res, res1), otherwise return min (res, res1).  */
-  if (a.d[0] > 0)
-    return (res > res1) ? res : res1;
-  else
-    return (res < res1) ? res : res1;
+  if ((a.d[0] > 0 && res <= res1) || (a.d[0] <= 0 && res >= res1))
+    res = res1;
+  return res;
 }
 
 /* Compute sin() of double-length number (X + DX) as Multi Precision number and

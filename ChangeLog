@@ -1,3 +1,9 @@
+2013-10-28  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/sincos32.c (__sin32): Consolidate
+	conditional check for return value.
+	(__cos32): Likewise.
+
 2013-10-26  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/strcpy.S (strcpy): Add word load/store
