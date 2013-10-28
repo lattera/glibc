@@ -1,5 +1,7 @@
 2013-10-28  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* benchtests/pow-inputs: Add new inputs.
+
 	* benchtests/exp-inputs: Add new inputs.
 
 	* sysdeps/ieee754/dbl-64/sincos32.c (__sin32): Consolidate
