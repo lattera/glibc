@@ -9,8 +9,8 @@ m4_defn([AC_AUTOCONF_VERSION])
 ), [63])])dnl
 dnl
 dnl We define the macro GLIBC_PROVIDES to do an AC_PROVIDE for each macro
-dnl which appears in configure.in before the sysdep configure scripts are run.
-dnl Each sysdep configure.in does GLIBC_PROVIDES first, to avoid any
+dnl which appears in configure.ac before the sysdep configure scripts are run.
+dnl Each sysdep configure.ac does GLIBC_PROVIDES first, to avoid any
 dnl AC_REQUIREs or AC_BEFOREs duplicating their code.
 dnl
 define([GLIBC_PROVIDES], [dnl
@@ -39,7 +39,7 @@ dnl Ripped out of AS_INIT, which does more cruft we do not want.
 m4_wrap([m4_divert_pop([BODY])[]])
 m4_divert_push([BODY])[]dnl
 dnl End of ripped out of AS_INIT.
-# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+# This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
 define([_AC_LANG], [C])dnl
 ])dnl
 dnl

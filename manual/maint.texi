@@ -316,7 +316,7 @@ This file is a shell script fragment to be run at configuration time.
 The top-level @file{configure} script uses the shell @code{.} command to
 read the @file{configure} file in each system-dependent directory
 chosen, in order.  The @file{configure} files are often generated from
-@file{configure.in} files using Autoconf.
+@file{configure.ac} files using Autoconf.
 
 A system-dependent @file{configure} script will usually add things to
 the shell variables @samp{DEFS} and @samp{config_vars}; see the
@@ -329,14 +329,14 @@ shell variable @w{@samp{with_@var{package}}} (with any dashes in
 just @w{@samp{--with-@var{package}}} (no argument), then it sets
 @w{@samp{with_@var{package}}} to @samp{yes}.
 
-@item configure.in
+@item configure.ac
 
 This file is an Autoconf input fragment to be processed into the file
 @file{configure} in this subdirectory.  @xref{Introduction,,,
 autoconf.info, Autoconf: Generating Automatic Configuration Scripts},
 for a description of Autoconf.  You should write either @file{configure}
-or @file{configure.in}, but not both.  The first line of
-@file{configure.in} should invoke the @code{m4} macro
+or @file{configure.ac}, but not both.  The first line of
+@file{configure.ac} should invoke the @code{m4} macro
 @samp{GLIBC_PROVIDES}.  This macro does several @code{AC_PROVIDE} calls
 for Autoconf macros which are used by the top-level @file{configure}
 script; without this, those macros might be invoked again unnecessarily

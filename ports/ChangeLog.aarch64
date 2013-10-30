@@ -1,3 +1,9 @@
+2013-10-30  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/aarch64/configure.in: Moved to ...
+	* sysdeps/unix/sysv/linux/aarch64/configure.ac: ... here.
+	* sysdeps/unix/sysv/linux/aarch64/configure: Regenerated.
+
 2013-09-30  Andrew Pinski <andrew.pinski@caviumnetworks.com>
 
 	* sysdeps/unix/sysv/linux/aarch64/sysdep.h (SYSCALL_ERROR_HANDLER):

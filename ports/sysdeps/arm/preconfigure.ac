@@ -8,7 +8,7 @@ arm*)
     # If the compiler enables unwind tables by default, this causes
     # problems with undefined symbols in -nostdlib link tests.  To
     # avoid this, add -fno-unwind-tables here and remove it in
-    # sysdeps/unix/sysv/linux/arm/configure.in after those tests have
+    # sysdeps/unix/sysv/linux/arm/configure.ac after those tests have
     # been run.
     if test "${CFLAGS+set}" != "set"; then
       CFLAGS="-g -O2"

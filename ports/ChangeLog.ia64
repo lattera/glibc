@@ -1,3 +1,12 @@
+2013-10-30  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/ia64/configure.in: Moved to ...
+	* sysdeps/ia64/configure.ac: ... here.
+	* sysdeps/unix/sysv/linux/ia64/configure.in: Moved to ...
+	* sysdeps/unix/sysv/linux/ia64/configure.ac: ... here.
+	* sysdeps/ia64/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/ia64/configure: Likewise.
+
 2013-10-04  Alan Modra  <amodra@gmail.com>
 
 	* sysdeps/ia64/fpu/printf_fphex.c: Adjust for fpnum change.

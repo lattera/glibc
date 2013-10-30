@@ -1,3 +1,12 @@
+2013-10-30  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/alpha/configure.in: Moved to ...
+	* sysdeps/alpha/configure.ac: ... here.
+	* sysdeps/unix/sysv/linux/alpha/configure.in: Moved to ...
+	* sysdeps/unix/sysv/linux/alpha/configure.ac: ... here.
+	* sysdeps/alpha/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/alpha/configure: Likewise.
+
 2013-10-12   Yuri Chornoivan <yurchor@ukr.net>
 
 	* sysdeps/unix/sysv/linux/alpha/nptl/pt-vfork.S: Fix typos.

@@ -1,4 +1,4 @@
-# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+# This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for assembler line separator" >&5
 $as_echo_n "checking for assembler line separator... " >&6; }

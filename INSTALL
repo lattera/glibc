@@ -368,7 +368,7 @@ build the GNU C Library:
      should definitely upgrade `sed'.
 
 
-If you change any of the `configure.in' files you will also need
+If you change any of the `configure.ac' files you will also need
 
    * GNU `autoconf' 2.53 or higher
 

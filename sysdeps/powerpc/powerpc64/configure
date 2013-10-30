@@ -1,4 +1,4 @@
-# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+# This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
  # Local configure fragment for sysdeps/powerpc/powerpc64.
 
 # The Aix ld uses global .symbol_names instead of symbol_names

@@ -1,4 +1,4 @@
-# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+# This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
  # Local preconfigure fragment for sysdeps/x86_64
 
 test -n "$base_machine" || case "$machine" in

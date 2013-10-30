@@ -1,3 +1,9 @@
+2013-10-30  Mike Frysinger  <vapier@gentoo.org>
+
+	* configure.in: Moved to ...
+	* configure.ac: ... here.
+	* configure: Regenerated.
+
 2013-08-29   Ondřej Bílka  <neleai@seznam.cz>
 
 	* stringprep.c: Fix typos.

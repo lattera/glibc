@@ -1,3 +1,12 @@
+2013-10-30  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/tile/configure.in: Moved to ...
+	* sysdeps/unix/sysv/linux/tile/configure.ac: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilegx/configure.in: Moved to ...
+	* sysdeps/unix/sysv/linux/tile/tilegx/configure.ac: ... here.
+	* sysdeps/unix/sysv/linux/tile/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/tile/tilegx/configure: Likewise.
+
 2013-09-22  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #15754]

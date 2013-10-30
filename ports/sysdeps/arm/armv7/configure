@@ -1,4 +1,4 @@
-# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+# This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
  # Local configure fragment for sysdeps/arm/armv7.
 
 # We need binutils 2.21 to ensure that NEON alignments are assembled correctly.

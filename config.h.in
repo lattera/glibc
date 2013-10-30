@@ -201,13 +201,13 @@
    They are used only in miscellaneous generator programs, not
    in compiling libc itself.   */
 
-/* sysdeps/generic/configure.in */
+/* sysdeps/generic/configure.ac */
 #undef	HAVE_PSIGNAL
 
-/* sysdeps/unix/configure.in */
+/* sysdeps/unix/configure.ac */
 #undef	HAVE_STRERROR
 
-/* sysdeps/unix/common/configure.in */
+/* sysdeps/unix/common/configure.ac */
 #undef	HAVE_SYS_SIGLIST
 #undef	HAVE__SYS_SIGLIST
 #undef	HAVE__CTYPE_

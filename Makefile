@@ -38,9 +38,9 @@ chmod a-w$(patsubst %,$(comma)a+x,$(filter .,$(@D))) $@.new
 mv -f $@.new $@
 endef
 
-configure: configure.in aclocal.m4; $(autoconf-it)
-%/configure: %/configure.in aclocal.m4; $(autoconf-it)
-%/preconfigure: %/preconfigure.in aclocal.m4; $(autoconf-it)
+configure: configure.ac aclocal.m4; $(autoconf-it)
+%/configure: %/configure.ac aclocal.m4; $(autoconf-it)
+%/preconfigure: %/preconfigure.ac aclocal.m4; $(autoconf-it)
 
 endif # $(AUTOCONF) = no
 

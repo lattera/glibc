@@ -1,3 +1,8 @@
+2013-10-30  Mike Frysinger  <vapier@gentoo.org>
+
+	* README: Change references to preconfigure.in to
+	preconfigure.ac.
+
 2013-01-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* README: Update copyright dates in example.

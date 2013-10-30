@@ -1,3 +1,9 @@
+2013-10-30  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/microblaze/configure.in: Moved to ...
+	* sysdeps/unix/sysv/linux/microblaze/configure.ac: ... here.
+	* sysdeps/unix/sysv/linux/microblaze/configure: Regenerated.
+
 2013-06-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/unix/sysv/linux/microblaze/nptl/libpthread.abilist:

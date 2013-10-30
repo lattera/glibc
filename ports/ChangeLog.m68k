@@ -1,3 +1,9 @@
+2013-10-30  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/m68k/configure.in: Moved to ...
+	* sysdeps/unix/sysv/linux/m68k/configure.ac: ... here.
+	* sysdeps/unix/sysv/linux/m68k/configure: Regenerated.
+
 2013-10-08  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/start.S [SHARED]: Use PIC.

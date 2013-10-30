@@ -1,3 +1,9 @@
+2013-10-30  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/am33/configure.in: Moved to ...
+	* sysdeps/unix/sysv/linux/am33/configure.ac: ... here.
+	* sysdeps/unix/sysv/linux/am33/configure: Regenerated.
+
 2013-08-29   Ondřej Bílka  <neleai@seznam.cz>
 
 	* sysdeps/unix/sysv/linux/am33/bits/fcntl.h: Fix typos.

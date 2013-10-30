@@ -1,3 +1,71 @@
+2013-10-30  Mike Frysinger  <vapier@gentoo.org>
+
+	* configure.in: Moved to ...
+	* configure.ac: ... here. Change reference to configure.in
+	to configure.ac.
+	* sysdeps/arm/preconfigure.ac: ... here.
+	configure.in to configure.ac.
+	* sysdeps/gnu/configure.in: Moved to ...
+	* sysdeps/gnu/configure.ac: ... here.
+	* sysdeps/i386/configure.in: Moved to ...
+	* sysdeps/i386/configure.ac: ... here.
+	* sysdeps/ieee754/ldbl-opt/configure.in: Moved to ...
+	* sysdeps/ieee754/ldbl-opt/configure.ac: ... here.
+	* sysdeps/mach/configure.in: Moved to ...
+	* sysdeps/mach/configure.ac: ... here.
+	* sysdeps/mach/hurd/configure.in: Moved to ...
+	* sysdeps/mach/hurd/configure.ac: ... here.
+	* sysdeps/powerpc/configure.in: Moved to ...
+	* sysdeps/powerpc/configure.ac: ... here.
+	* sysdeps/powerpc/powerpc32/configure.in: Moved to ...
+	* sysdeps/powerpc/powerpc32/configure.ac: ... here.
+	* sysdeps/powerpc/powerpc64/configure.in: Moved to ...
+	* sysdeps/powerpc/powerpc64/configure.ac: ... here.
+	* sysdeps/s390/s390-32/configure.in: Moved to ...
+	* sysdeps/s390/s390-32/configure.ac: ... here.
+	* sysdeps/s390/s390-64/configure.in: Moved to ...
+	* sysdeps/s390/s390-64/configure.ac: ... here.
+	* sysdeps/sh/configure.in: Moved to ...
+	* sysdeps/sh/configure.ac: ... here.
+	* sysdeps/sparc/configure.in: Moved to ...
+	* sysdeps/sparc/configure.ac: ... here.
+	* sysdeps/unix/sysv/linux/configure.in: Moved to ...
+	* sysdeps/unix/sysv/linux/configure.ac: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/configure.in: Moved to ...
+	* sysdeps/unix/sysv/linux/powerpc/configure.ac: ... here.
+	* sysdeps/x86_64/configure.in: Moved to ...
+	* sysdeps/x86_64/configure.ac: ... here.
+	* sysdeps/x86_64/preconfigure.in: Moved to ...
+	* sysdeps/x86_64/preconfigure.ac: ... here.
+	* aclocal.m4: Change reference to configure.in to configure.ac.
+	* config.h.in: Likewise.
+	* manual/install.texi: Likewise.
+	* manual/maint.texi: Likewise.
+	* Makefile: Likewise.
+	* malloc/Makefile: Likewise.
+	* nscd/Makefile: Likewise.
+	* Makeconfig: Change reference to configure.in and
+	preconfigure.in to configure.ac and preconfigure.ac
+	respectively.
+	* INSTALL: Regenerated.
+	* configure: Likewise.
+	* sysdeps/gnu/configure: Likewise.
+	* sysdeps/i386/configure: Likewise.
+	* sysdeps/ieee754/ldbl-opt/configure: Likewise.
+	* sysdeps/mach/configure: Likewise.
+	* sysdeps/mach/hurd/configure: Likewise.
+	* sysdeps/powerpc/configure: Likewise.
+	* sysdeps/powerpc/powerpc32/configure: Likewise.
+	* sysdeps/powerpc/powerpc64/configure: Likewise.
+	* sysdeps/s390/s390-32/configure: Likewise.
+	* sysdeps/s390/s390-64/configure: Likewise.
+	* sysdeps/sh/configure: Likewise.
+	* sysdeps/sparc/configure: Likewise.
+	* sysdeps/unix/sysv/linux/configure: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/configure: Likewise.
+	* sysdeps/x86_64/configure: Likewise.
+	* sysdeps/x86_64/preconfigure: Likewise.
+
 2013-10-29  Andreas Schwab  <schwab@suse.de>
 
 	* stdio-common/Makefile (tst-swscanf-ENV): Define.

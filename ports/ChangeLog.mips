@@ -1,3 +1,15 @@
+2013-10-30  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/mips/configure.in: Moved to ...
+	* sysdeps/mips/configure.ac: ... here.
+	* sysdeps/unix/sysv/linux/mips/configure.in: Moved to ...
+	* sysdeps/unix/sysv/linux/mips/configure.ac: ... here.
+	* sysdeps/unix/sysv/linux/mips/mips64/configure.in: Moved to ...
+	* sysdeps/unix/sysv/linux/mips/mips64/configure.ac: ... here.
+	* sysdeps/mips/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/mips/configure: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/configure: Likewise.
+
 2013-09-26  Steve Ellcey  <sellcey@mips.com>
 
 	[BZ #15632]

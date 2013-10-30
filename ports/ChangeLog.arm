@@ -1,3 +1,23 @@
+2013-10-30  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/arm/configure.in: Moved to ...
+	* sysdeps/arm/configure.ac: ... here.
+	* sysdeps/arm/preconfigure.in: Moved to ...
+	* sysdeps/arm/preconfigure.ac: ... here. Change reference to
+	configure.in to configure.ac.
+	* sysdeps/arm/preconfigure: Regenerated.
+	* sysdeps/arm/armv7/configure.in: Moved to ...
+	* sysdeps/arm/armv7/configure.ac: ... here.
+	* sysdeps/unix/sysv/linux/arm/configure.in: Moved to ...
+	* sysdeps/unix/sysv/linux/arm/configure.ac: ... here. Change
+	reference to preconfigure.in to preconfigure.ac.
+	* sysdeps/unix/sysv/linux/arm/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/arm/nptl/configure.in: Moved to ...
+	* sysdeps/unix/sysv/linux/arm/nptl/configure.ac: ... here.
+	* sysdeps/arm/configure: Regenerated.
+	* sysdeps/sysdeps/arm/armv7/configure: Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/configure: Likewise.
+
 2013-10-04  Will Newton  <will.newton@linaro.org>
 
 	* sysdeps/arm/__longjmp.S (NO_THUMB): Remove define.

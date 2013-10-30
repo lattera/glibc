@@ -1,3 +1,12 @@
+2013-10-30  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/pthread/configure.in: Moved to ...
+	* sysdeps/pthread/configure.ac: ... here.
+	* sysdeps/x86_64/configure.in: Moved to ...
+	* sysdeps/x86_64/configure.ac: ... here.
+	* sysdeps/pthread/configure: Regenerated.
+	* sysdeps/x86_64/configure: Likewise.
+
 2013-10-04  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	* tst-mutex8.c (check_type) [ENABLE_PI]: Handle ENOTSUP failure

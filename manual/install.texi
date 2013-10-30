@@ -413,7 +413,7 @@ should definitely upgrade @code{sed}.
 @end itemize
 
 @noindent
-If you change any of the @file{configure.in} files you will also need
+If you change any of the @file{configure.ac} files you will also need
 
 @itemize @bullet
 @item

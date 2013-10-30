@@ -60,7 +60,7 @@ endif
 nscd-modules += selinux
 selinux-LIBS := -lselinux $(libaudit) $(libcap)
 
-# The configure.in check for libselinux and its headers did not use
+# The configure.ac check for libselinux and its headers did not use
 # $SYSINCLUDES.  The directory specified by --with-headers usually
 # contains only the basic kernel interface headers, not something like
 # libselinux.  So the simplest thing is to presume that the standard

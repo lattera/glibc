@@ -1,3 +1,9 @@
+2013-10-30  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/hppa/configure.in: Moved to ...
+	* sysdeps/hppa/configure.ac: ... here.
+	* sysdeps/hppa/configure: Regenerated.
+
 2013-09-11  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h (__O_TMPFILE): Define.
