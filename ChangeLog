@@ -1,4 +1,11 @@
-2013-10-30   Ondřej Bílka  <neleai@seznam.cz>
+2013-10-30  Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ #11087]
+	* malloc/malloc.c (sysmalloc): Compute statistics atomically.
+	(munmap_chunk): Likewise.
+	(mremap_chunk): Likewise.
+
+2013-10-30  Ondřej Bílka  <neleai@seznam.cz>
 
 	[BZ 15799]
 	* stdlib/div.c (div): Remove obsolete code.

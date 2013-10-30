@@ -2253,7 +2253,6 @@ static void* sysmalloc(INTERNAL_SIZE_T nb, mstate av)
   mchunkptr       remainder;      /* remainder from allocation */
   unsigned long   remainder_size; /* its size */
 
-  unsigned long   sum;            /* for updating stats */
 
   size_t          pagemask  = GLRO(dl_pagesize) - 1;
   bool            tried_mmap = false;
@@ -2325,12 +2324,12 @@ static void* sysmalloc(INTERNAL_SIZE_T nb, mstate av)
 
 	/* update statistics */
 
-	if (++mp_.n_mmaps > mp_.max_n_mmaps)
-	  mp_.max_n_mmaps = mp_.n_mmaps;
+	int new = atomic_exchange_and_add (&mp_.n_mmaps, 1) + 1;
+	atomic_max (&mp_.max_n_mmaps, new);
 
-	sum = mp_.mmapped_mem += size;
-	if (sum > (unsigned long)(mp_.max_mmapped_mem))
-	  mp_.max_mmapped_mem = sum;
+	unsigned long sum;
+	sum = atomic_exchange_and_add(&mp_.mmapped_mem, size) + size;
+	atomic_max (&mp_.max_mmapped_mem, sum);
 
 	check_chunk(av, p);
 
@@ -2780,8 +2779,8 @@ munmap_chunk(mchunkptr p)
       return;
     }
 
-  mp_.n_mmaps--;
-  mp_.mmapped_mem -= total_size;
+  atomic_decrement (&mp_.n_mmaps);
+  atomic_add (&mp_.mmapped_mem, -total_size);
 
   /* If munmap failed the process virtual memory address space is in a
      bad shape.  Just leave the block hanging around, the process will
@@ -2822,10 +2821,10 @@ mremap_chunk(mchunkptr p, size_t new_size)
   assert((p->prev_size == offset));
   set_head(p, (new_size - offset)|IS_MMAPPED);
 
-  mp_.mmapped_mem -= size + offset;
-  mp_.mmapped_mem += new_size;
-  if ((unsigned long)mp_.mmapped_mem > (unsigned long)mp_.max_mmapped_mem)
-    mp_.max_mmapped_mem = mp_.mmapped_mem;
+  INTERNAL_SIZE_T new;
+  new = atomic_exchange_and_add (&mp_.mmapped_mem, new_size - size - offset)
+	+ new_size - size - offset;
+  atomic_max (&mp_.max_mmapped_mem, new);
   return p;
 }
 
