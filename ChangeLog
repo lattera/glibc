@@ -1,3 +1,10 @@
+2013-10-30   Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ 15799]
+	* stdlib/div.c (div): Remove obsolete code.
+	* stdlib/ldiv.c (ldiv): Likewise.
+	* stdlib/lldiv.c (lldiv): Likewise.
+
 2013-10-30  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #16071]
