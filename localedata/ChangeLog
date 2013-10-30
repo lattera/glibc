@@ -1,3 +1,9 @@
+2013-10-29  Chris Leonard  <cjl@sugarlabs.org>
+
+	[BZ #16078]
+	* locales/anp_IN: New locale for anp_IN.
+	* SUPPORTED: Add anp_IN.
+
 2013-10-24  Chris Leonard  <cjl@sugarlabs.org>
 
 	* locales/ja_JP: Adjust language-code fields of LC_ADDRESS.
