@@ -93,7 +93,7 @@
 
 2013-10-25   Ondřej Bílka  <neleai@seznam.cz>
 
-	[BZ 2801]
+	[BZ #2801]
 	* manual/socket.texi (Host Names): Fix gethostbyname_r example.
 
 2013-10-25   Ondřej Bílka  <neleai@seznam.cz>
@@ -104,7 +104,7 @@
 
 2013-10-25   Ondřej Bílka  <neleai@seznam.cz>
 
-	[BZ 14029]
+	[BZ #14029]
 	* manual/pattern.texi: Acknowledge that fnmatch can fail.
 
 2013-10-25  Fabrice Bauzac  <fbauzac@debian71.nce.amadeus.net>
