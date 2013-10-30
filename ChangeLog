@@ -1,3 +1,11 @@
+2013-10-30  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #16071]
+	* nss/nss_files/files-XXX.c (get_contents_ret): New
+	enumerator.
+	(get_contents): New function.
+	(internal_getent): Use it.  Expand size of LINEBUFLEN.
+
 2013-10-30  Mike Frysinger  <vapier@gentoo.org>
 
 	* configure.in: Moved to ...

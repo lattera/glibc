@@ -179,8 +179,51 @@ CONCAT(_nss_files_end,ENTNAME) (void)
   return NSS_STATUS_SUCCESS;
 }
 
-/* Parsing the database file into `struct STRUCTURE' data structures.  */
 
+typedef enum
+{
+  gcr_ok = 0,
+  gcr_error = -1,
+  gcr_overflow = -2
+} get_contents_ret;
+
+/* Hack around the fact that fgets only accepts int sizes.  */
+static get_contents_ret
+get_contents (char *linebuf, size_t len, FILE *stream)
+{
+  size_t remaining_len = len;
+  char *curbuf = linebuf;
+
+  do
+    {
+      int curlen = ((remaining_len > (size_t) INT_MAX) ? INT_MAX
+		    : remaining_len);
+      char *p = fgets_unlocked (curbuf, curlen, stream);
+
+      ((unsigned char *) curbuf)[curlen - 1] = 0xff;
+
+      /* EOF or read error.  */
+      if (p == NULL)
+        return gcr_error;
+
+      /* Done reading in the line.  */
+      if (((unsigned char *) curbuf)[curlen - 1] == 0xff)
+        return gcr_ok;
+
+      /* Drop the terminating '\0'.  */
+      remaining_len -= curlen - 1;
+      curbuf += curlen - 1;
+    }
+  /* fgets copies one less than the input length.  Our last iteration is of
+     REMAINING_LEN and once that is done, REMAINING_LEN is decremented by
+     REMAINING_LEN - 1, leaving the result as 1.  */
+  while (remaining_len > 1);
+
+  /* This means that the current buffer was not large enough.  */
+  return gcr_overflow;
+}
+
+/* Parsing the database file into `struct STRUCTURE' data structures.  */
 static enum nss_status
 internal_getent (struct STRUCTURE *result,
 		 char *buffer, size_t buflen, int *errnop H_ERRNO_PROTO
@@ -188,7 +231,7 @@ internal_getent (struct STRUCTURE *result,
 {
   char *p;
   struct parser_data *data = (void *) buffer;
-  int linebuflen = buffer + buflen - data->linebuffer;
+  size_t linebuflen = buffer + buflen - data->linebuffer;
   int parse_result;
 
   if (buflen < sizeof *data + 2)
@@ -200,17 +243,16 @@ internal_getent (struct STRUCTURE *result,
 
   do
     {
-      /* Terminate the line so that we can test for overflow.  */
-      ((unsigned char *) data->linebuffer)[linebuflen - 1] = '\xff';
+      get_contents_ret r = get_contents (data->linebuffer, linebuflen, stream);
 
-      p = fgets_unlocked (data->linebuffer, linebuflen, stream);
-      if (p == NULL)
+      if (r == gcr_error)
 	{
 	  /* End of file or read error.  */
 	  H_ERRNO_SET (HOST_NOT_FOUND);
 	  return NSS_STATUS_NOTFOUND;
 	}
-      else if (((unsigned char *) data->linebuffer)[linebuflen - 1] != 0xff)
+
+      if (r == gcr_overflow)
 	{
 	  /* The line is too long.  Give the user the opportunity to
 	     enlarge the buffer.  */
@@ -219,7 +261,8 @@ internal_getent (struct STRUCTURE *result,
 	  return NSS_STATUS_TRYAGAIN;
 	}
 
-      /* Skip leading blanks.  */
+      /* Everything OK.  Now skip leading blanks.  */
+      p = data->linebuffer;
       while (isspace (*p))
 	++p;
     }
