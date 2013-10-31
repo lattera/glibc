@@ -109,6 +109,19 @@ struct test double_tests[] =
   { L("-inf"), L("%g"), 1 }
 };
 
+struct test2
+{
+  const CHAR *str;
+  const CHAR *fmt;
+  int retval;
+  char residual;
+} double_tests2[] =
+{
+  { L("0e+0"), L("%g%c"), 1, 0 },
+  { L("0xe+0"), L("%g%c"), 2, '+' },
+  { L("0x.e+0"), L("%g%c"), 2, '+' },
+};
+
 int
 main (void)
 {
@@ -192,6 +205,27 @@ main (void)
 	{
 	  printf ("double_tests[%d] returned %d != %d\n",
 		  i, ret, double_tests[i].retval);
+	  result = 1;
+	}
+    }
+
+  for (i = 0; i < sizeof (double_tests2) / sizeof (double_tests2[0]); ++i)
+    {
+      double dummy;
+      int ret;
+      char c = 0;
+
+      if ((ret = SSCANF (double_tests2[i].str, double_tests2[i].fmt,
+			 &dummy, &c)) != double_tests2[i].retval)
+	{
+	  printf ("double_tests2[%d] returned %d != %d\n",
+		  i, ret, double_tests2[i].retval);
+	  result = 1;
+	}
+      else if (ret == 2 && c != double_tests2[i].residual)
+	{
+	  printf ("double_tests2[%d] stopped at '%c' != '%c'\n",
+		  i, c, double_tests2[i].residual);
 	  result = 1;
 	}
     }

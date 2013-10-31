@@ -1,3 +1,10 @@
+2013-10-31  Andreas Schwab  <schwab@suse.de>
+
+	[BZ# 15917]
+	* stdio-common/vfscanf.c (_IO_vfwscanf): Handle leading '0' not
+	followed by 'x' as part of digit sequence.
+	* stdio-common/tst-sscanf.c (double_tests2): New tests.
+
 2013-10-31  Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
 
 	[BZ #16037]
