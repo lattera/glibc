@@ -1,3 +1,7 @@
+2013-10-31  Chris Leonard  <cjl@sugarlabs.org>
+
+	* locale/iso-639.def: Add Meadow Mari (mhr).
+
 2013-10-31  Ondřej Bílka  <neleai@seznam.cz>
 
 	[BZ #14752], [BZ #15763]
