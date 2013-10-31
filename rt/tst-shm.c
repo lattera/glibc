@@ -134,6 +134,14 @@ do_test (void)
   int status2;
   struct stat64 st;
 
+  fd = shm_open ("/../escaped", O_RDWR | O_CREAT | O_TRUNC | O_EXCL, 0600);
+  if (fd != -1)
+    {
+      perror ("read file outside of SHMDIR directory");
+      return 1;
+    }
+
+
   /* Create the shared memory object.  */
   fd = shm_open ("/shm-test", O_RDWR | O_CREAT | O_TRUNC | O_EXCL, 0600);
   if (fd == -1)
