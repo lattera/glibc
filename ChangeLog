@@ -1,3 +1,9 @@
+2013-10-31  Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
+
+	[BZ #16037]
+	* configure.ac: allow GNU Make 4.0 and greater.
+	* configure: Regenerated.
+
 2013-10-30  Will Newton  <will.newton@linaro.org>
 
 	[BZ #16038]
