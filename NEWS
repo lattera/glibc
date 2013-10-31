@@ -49,8 +49,8 @@ Version 2.19
 * CVE-2013-4458 Stack overflow in getaddrinfo with large number of results
   for AF_INET6 has been fixed (Bugzilla #16072).
 
-* New locales: ak_GH, anp_IN, ar_SS, cmn_TW, hak_TW, lzh_TW, nan_TW, pap_AW, pap_CW,
-  quz_PE
+* New locales: ak_GH, anp_IN, ar_SS, cmn_TW, hak_TW, lzh_TW, nan_TW, pap_AW,
+  pap_CW, quz_PE
 
 * Substantially revised locales: gd_GB, ht_HT
 
