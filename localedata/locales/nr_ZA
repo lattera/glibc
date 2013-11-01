@@ -239,9 +239,12 @@ lang_name "<U0049><U0073><U0069><U004E><U0064><U0065><U0062><U0065><U006C><U0065
 
 % ISO 639 two and three letter language names
 % see http://www.loc.gov/standards/iso639-2/englangn.html
-% "nr", "nbl"
+% nr
 lang_ab   "<U006E><U0072>"
+% nbl
 lang_term "<U006E><U0062><U006C>"
+% nbl
+lang_lib "<U006E><U0062><U006C>"
 
 % Representation of postal addresses (minus the addressee's name) in South
 % Africa. (Ignored for now)

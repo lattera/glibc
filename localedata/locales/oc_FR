@@ -47,9 +47,12 @@ country_num 250
 country_isbn "2"
 country_car "F"
 % FIXME lang_name "Occitan" in Occitan ?
-lang_ab "oc"
-lang_term "oci"
-lang_lib "oci"
+% oc
+lang_ab      "<U006F><U0063>"
+% oci
+lang_term    "<U006F><U0063><U0069>"
+% oci
+lang_lib     "<U006F><U0063><U0069>"
 END LC_ADDRESS
 
 LC_CTYPE

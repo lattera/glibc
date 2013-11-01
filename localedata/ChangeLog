@@ -1,3 +1,18 @@
+2013-11-01  Chris Leonard  <cjl@sugarlabs.org>
+
+	* locales/nb_NO: Adjust language-code fields of LC_ADDRESS.
+	* locales/ne_NP: Likewise.
+	* locales/nhn_MX: Likewise.
+	* locales/niu_NU: Likewise.
+	* locales/niu_NZ: Likewise.
+	* locales/nl_AW: Likewise.
+	* locales/nl_BE: Likewise.
+	* locales/nn_NO: Likewise.
+	* locales/nr_ZA: Likewise.
+	* locales/oc_FR: Likewise.
+	* locales/or_IN: Likewise.
+	* locales/os_RU: Likewise.
+
 2013-10-31  Chris Leonard  <cjl@sugarlabs.org>
 
 	* locales/mag_IN: Adjust language-code fields of LC_ADDRESS.

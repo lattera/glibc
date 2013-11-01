@@ -185,6 +185,8 @@ country_num  554
 country_car    "<U004E><U005A>"
 % niu
 lang_term    "<U006E><U0069><U0075>"
+% niu
+lang_lib    "<U006E><U0069><U0075>"
 END LC_ADDRESS
 
 LC_TELEPHONE
