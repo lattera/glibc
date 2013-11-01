@@ -1364,7 +1364,7 @@ The prototypes for these functions are in @file{stdlib.h}.
 @comment BSD
 @deftypefun {long int} random (void)
 This function returns the next pseudo-random number in the sequence.
-The value returned ranges from @code{0} to @code{RAND_MAX}.
+The value returned ranges from @code{0} to @code{2147483647}.
 
 @strong{NB:} Temporarily this function was defined to return a
 @code{int32_t} value to indicate that the return value always contains

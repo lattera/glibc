@@ -1,3 +1,9 @@
+2013-11-01  Bruno Haible  <bruno@clisp.org>
+
+	[BZ #7003]
+	* manual/math.texi (BSD Random): Specify range upper bound as
+	in POSIX.
+
 2013-10-31  Chris Leonard  <cjl@sugarlabs.org>
 
 	* locale/iso-639.def: Add Meadow Mari (mhr).
