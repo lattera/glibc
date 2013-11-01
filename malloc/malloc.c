@@ -5049,23 +5049,11 @@ malloc_info (int options, FILE *fp)
 	sizes[i].total = sizes[i].count * sizes[i].to;
       }
 
-    mbinptr bin = bin_at (ar_ptr, 1);
-    struct malloc_chunk *r = bin->fd;
-    if (r != NULL)
-      {
-	while (r != bin)
-	  {
-	    ++sizes[NFASTBINS].count;
-	    sizes[NFASTBINS].total += r->size;
-	    sizes[NFASTBINS].from = MIN (sizes[NFASTBINS].from, r->size);
-	    sizes[NFASTBINS].to = MAX (sizes[NFASTBINS].to, r->size);
-	    r = r->fd;
-	  }
-	nblocks += sizes[NFASTBINS].count;
-	avail += sizes[NFASTBINS].total;
-      }
 
-    for (size_t i = 2; i < NBINS; ++i)
+    mbinptr bin;
+    struct malloc_chunk *r;
+
+    for (size_t i = 1; i < NBINS; ++i)
       {
 	bin = bin_at (ar_ptr, i);
 	r = bin->fd;

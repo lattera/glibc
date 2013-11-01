@@ -1,3 +1,9 @@
+2013-11-01  Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ #16112]
+	* malloc/malloc (malloc_info): Do not handle first bin as
+	special case.
+
 2013-11-01  Chris Leonard  <cjl@sugarlabs.org>
 
 	* locale/iso-639.def: Add Central Nahuatl (nhn).
