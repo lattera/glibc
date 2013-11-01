@@ -161,4 +161,8 @@ country_ab3 "<U0052><U0055><U0053>"
 country_num 643
 % RUS
 country_car    "<U0052><U0055><U0053>"
+% mhr
+lang_term    "<U006D><U0068><U0072>"
+% mhr
+lang_lib    "<U006D><U0068><U0072>"
 END LC_ADDRESS

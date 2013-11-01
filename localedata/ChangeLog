@@ -1,3 +1,16 @@
+2013-10-31  Chris Leonard  <cjl@sugarlabs.org>
+
+	* locales/mag_IN: Adjust language-code fields of LC_ADDRESS.
+	* locales/mai_IN: Likewise.
+	* locales/mg_MG: Likewise.
+	* locales/mhr_RU: Likewise.
+	* locales/mi_NZ: Likewise.
+	* locales/ml_IN: Likewise.
+	* locales/mni_IN: Likewise.
+	* locales/mr_IN: Likewise.
+	* locales/ms_MY: Likewise.
+	* locales/mt_MT: Likewise.
+
 2013-10-29  Chris Leonard  <cjl@sugarlabs.org>
 
 	[BZ #16078]

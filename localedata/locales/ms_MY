@@ -203,7 +203,12 @@ country_ab3 "<U004D><U0059><U0053>"
 country_num 458
 % MAL
 country_car    "<U004D><U0041><U004C>"
-
+% ms
+lang_ab      "<U006D><U0073>"
+% msa
+lang_term    "<U006D><U0073><U0061>"
+% may
+lang_lib    "<U006D><U0061><U0079>"
 END LC_ADDRESS
 
 

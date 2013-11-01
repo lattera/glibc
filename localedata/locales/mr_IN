@@ -221,7 +221,12 @@ country_ab3 "<U0049><U004E><U0044>"
 country_num 356
 % IND
 country_car    "<U0049><U004E><U0044>"
-
+% mr
+lang_ab      "<U006D><U0072>"
+% mar
+lang_term    "<U006D><U0061><U0072>"
+% mar
+lang_lib    "<U006D><U0061><U0072>"
 END LC_ADDRESS
 
 
