@@ -355,7 +355,7 @@ it is:
 void *
 xmalloc (size_t size)
 @{
-  register void *value = malloc (size);
+  void *value = malloc (size);
   if (value == 0)
     fatal ("virtual memory exhausted");
   return value;
@@ -371,7 +371,7 @@ a newly allocated null-terminated string:
 char *
 savestring (const char *ptr, size_t len)
 @{
-  register char *value = (char *) xmalloc (len + 1);
+  char *value = (char *) xmalloc (len + 1);
   value[len] = '\0';
   return (char *) memcpy (value, ptr, len);
 @}
@@ -502,7 +502,7 @@ as @code{xmalloc} does for @code{malloc}:
 void *
 xrealloc (void *ptr, size_t size)
 @{
-  register void *value = realloc (ptr, size);
+  void *value = realloc (ptr, size);
   if (value == 0)
     fatal ("Virtual memory exhausted");
   return value;
