@@ -1,3 +1,8 @@
+2013-11-03  Chris Leonard  <cjl@sugarlabs.org>
+
+	* locale/iso-639.def: Add Quechua, Southern (quz) and Silesian (szl)
+	to iso-639.def.
+
 2013-11-03  Ondřej Bílka  <neleai@seznam.cz>
 
 	* elf/rtld.c: Remove unused NONTLS_INIT_TP.
