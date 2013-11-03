@@ -2217,10 +2217,6 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	_dl_start_profile ();
     }
 
-#ifndef NONTLS_INIT_TP
-# define NONTLS_INIT_TP do { } while (0)
-#endif
-
   if (!was_tls_init_tp_called && GL(dl_tls_max_dtv_idx) > 0)
     ++GL(dl_tls_generation);
 

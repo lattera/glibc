@@ -1,5 +1,9 @@
 2013-11-01  Ondřej Bílka  <neleai@seznam.cz>
 
+	* elf/rtld.c: Remove unused NONTLS_INIT_TP.
+
+2013-11-01  Ondřej Bílka  <neleai@seznam.cz>
+
 	[BZ #16112]
 	* malloc/malloc (malloc_info): Do not handle first bin as
 	special case.
