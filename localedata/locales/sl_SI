@@ -2225,5 +2225,10 @@ country_ab3 "<U0053><U0056><U004E>"
 country_num 705
 % SLO
 country_car    "<U0053><U004C><U004F>"
-
+% sl
+lang_ab      "<U0073><U006C>"
+% slv
+lang_term    "<U0073><U006C><U0076>"
+% slv
+lang_lib    "<U0073><U006C><U0076>"
 END LC_ADDRESS

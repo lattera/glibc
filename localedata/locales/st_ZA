@@ -240,9 +240,12 @@ country_car   "<U005A><U0041>"
 
 % ISO 639 two and three letter language names
 % see http://www.loc.gov/standards/iso639-2/englangn.html
-% "st", "sot"
+% st
 lang_ab   "<U0073><U0074>"
+% sot
 lang_term "<U0073><U006F><U0074>"
+% sot
+lang_lib "<U0073><U006F><U0074>"
 
 % Representation of postal addresses (minus the addressee's name) in South
 % Africa. (Ignored for now)

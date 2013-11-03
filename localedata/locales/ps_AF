@@ -29,18 +29,18 @@ LC_IDENTIFICATION
 	revision   "0.2"
 	date       "2009-01-16"
 
-	category  "ps_AF:2007";LC_IDENTIFICATION
-	category  "ps_AF:2007";LC_CTYPE
-	category  "ps_AF:2007";LC_COLLATE
-	category  "ps_AF:2007";LC_TIME
-	category  "ps_AF:2007";LC_NUMERIC
-	category  "ps_AF:2007";LC_MONETARY
-	category  "ps_AF:2007";LC_MESSAGES
-	category  "ps_AF:2007";LC_MEASUREMENT
-	category  "ps_AF:2007";LC_PAPER
-	category  "ps_AF:2007";LC_NAME
-	category  "ps_AF:2007";LC_ADDRESS
-	category  "ps_AF:2007";LC_TELEPHONE
+category  "ps_AF:2007";LC_IDENTIFICATION
+category  "ps_AF:2007";LC_CTYPE
+category  "ps_AF:2007";LC_COLLATE
+category  "ps_AF:2007";LC_TIME
+category  "ps_AF:2007";LC_NUMERIC
+category  "ps_AF:2007";LC_MONETARY
+category  "ps_AF:2007";LC_MESSAGES
+category  "ps_AF:2007";LC_MEASUREMENT
+category  "ps_AF:2007";LC_PAPER
+category  "ps_AF:2007";LC_NAME
+category  "ps_AF:2007";LC_ADDRESS
+category  "ps_AF:2007";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -248,27 +248,26 @@ LC_NAME
 END LC_NAME
 
 LC_ADDRESS
-	postal_fmt	"<U0025><U0061><U0025><U004E><U0025><U0066><U0025>/
+postal_fmt	"<U0025><U0061><U0025><U004E><U0025><U0066><U0025>/
 <U004E><U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025>/
 <U0073><U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072>/
 <U0025><U004E><U0025><U0043><U002D><U0025><U007A><U0020><U0025><U0054>/
 <U0025><U004E><U0025><U0063><U0025><U004E>"
-	country_name	"<U0627><U0641><U063A><U0627><U0646>/
+country_name	"<U0627><U0641><U063A><U0627><U0646>/
 <U0633><U062A><U0627><U0646>"
-	%country_post	"<U0041><U0046><U0047>" % FIXME: Not confirmed.
-	country_ab2	"<U0041><U0046>"
-	country_ab3	"<U0041><U0046><U0047>"
-	country_num	004
-	country_car	"<U0041><U0046><U0047>"
+%country_post	"<U0041><U0046><U0047>" % FIXME: Not confirmed.
+country_ab2	"<U0041><U0046>"
+country_ab3	"<U0041><U0046><U0047>"
+country_num	004
+country_car	"<U0041><U0046><U0047>"
 
-	%country_isbn	"" % Unfortunately not yet assigned :-(
-			   % Since to date there is no ISBN agency working
-			   % in Afghanistan.
+%country_isbn	"" % Unfortunately not yet assigned :-(
+% Since to date there is no ISBN agency working in Afghanistan.
 
-	lang_name	"<U067E><U069A><U062A><U0648>"
-	lang_ab	"<U0070><U0073>"
-	lang_term	"<U0070><U0075><U0073>"
-	lang_lib	"<U0070><U0075><U0073>"
+lang_name	"<U067E><U069A><U062A><U0648>"
+lang_ab	"<U0070><U0073>"
+lang_term	"<U0070><U0075><U0073>"
+lang_lib	"<U0070><U0075><U0073>"
 END LC_ADDRESS
 
 LC_TELEPHONE

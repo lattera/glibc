@@ -157,7 +157,11 @@ country_car  "<U0045><U0041><U004B>"
 % Kiswahili
 lang_name     "<U004B><U0069><U0073><U0077><U0061><U0068><U0069><U006C><U0069>"
 % sw
-lang_ab       "<U0073><U0077>"
+lang_ab      "<U0073><U0077>"
+% swa
+lang_term    "<U0073><U0077><U0061>"
+% swa
+lang_lib     "<U0073><U0077><U0061>"
 END LC_ADDRESS
 
 LC_TELEPHONE

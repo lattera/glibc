@@ -316,5 +316,10 @@ country_ab3 "<U004E><U004F><U0052>"
 country_num 578
 % N
 country_car    "<U004E>"
-
+% se
+lang_ab      "<U0073><U0065>"
+% sme
+lang_term    "<U0073><U006D><U0065>"
+% sme
+lang_lib    "<U0073><U006D><U0065>"
 END LC_ADDRESS
