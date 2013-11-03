@@ -1,4 +1,4 @@
-2013-11-01  Ondřej Bílka  <neleai@seznam.cz>
+2013-11-03  Ondřej Bílka  <neleai@seznam.cz>
 
 	* elf/rtld.c: Remove unused NONTLS_INIT_TP.
 
