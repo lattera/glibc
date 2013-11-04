@@ -317,7 +317,10 @@ country_num  860
 % UZ
 country_car    "<U0055><U005A>"
 lang_name   "<U004F><U0027><U007A><U0062><U0065><U006B>"
-lang_ab     "uz"
-lang_term   "uzb"
-lang_lib    "uzb"
+% uz
+lang_ab      "<U0075><U007A>"
+% uzb
+lang_term    "<U0075><U007A><U0062>"
+% uzb
+lang_lib     "<U0075><U007A><U0062>"
 END LC_ADDRESS

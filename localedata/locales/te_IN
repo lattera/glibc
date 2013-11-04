@@ -224,8 +224,12 @@ country_num     356
 % IND
 country_car     "<U0049><U004E><U0044>"
 lang_name       "<U0C24><U0C46><U0C32><U0C41><U0C17><U0C41>"
-lang_ab         "te"
-lang_term       "tel"
+% te
+lang_ab      "<U0074><U0065>"
+% tel
+lang_term    "<U0074><U0065><U006C>"
+% tel
+lang_lib    "<U0074><U0065><U006C>"
 END LC_ADDRESS
 
 

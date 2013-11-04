@@ -13,7 +13,7 @@ comment_char  %
 % 0.2 (2004-11-02):
 %     2004-11-01 Dwayne Bailey <dwayne@translate.org.za>
 %       - Change all contact information
-%       - d_t_fmt, date_fmt cahnged day number %e to %-e to remove
+%       - d_t_fmt, date_fmt changed day number %e to %-e to remove
 %         space padding in day.
 %       - Remove .* from yes/noexpr
 %     2004-03-30 Dwayne Bailey <dwayne@translate.org.za>
@@ -235,6 +235,7 @@ country_car   "<U005A><U0041>"
 % see http://www.loc.gov/standards/iso639-2/englangn.html
 lang_ab   "<U0078><U0068>"
 lang_term "<U0078><U0068><U006F>"
+lang_lib "<U0078><U0068><U006F>"
 
 % Representation of postal addresses (minus the addressee's name) in South
 % Africa. (Ignored for now)

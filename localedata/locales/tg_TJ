@@ -227,7 +227,12 @@ country_ab3 "<U0054><U004A><U004B>"
 country_num 762
 % TJ
 country_car    "<U0054><U004A>"
-
+% tg
+lang_ab      "<U0074><U0067>"
+% tgk
+lang_term    "<U0074><U0067><U006B>"
+% tgk
+lang_lib    "<U0074><U0067><U006B>"
 END LC_ADDRESS
 
 LC_TELEPHONE

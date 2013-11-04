@@ -243,12 +243,12 @@ lang_name "<U0054><U0073><U0068><U0069><U0076><U0065><U006E><U1E13><U0061>"
 
 % ISO 639 two and three letter language names
 % see http://www.loc.gov/standards/iso639-2/englangn.html
-% "ve", "ven", :ven"
+% ve
 lang_ab         "<U0076><U0065>"
+% ven
 lang_term       "<U0076><U0065><U006E>"
-% FIXME there seems to be an error with the following but am unable to
-% determine what as it works correctly in other locale files
-% lang_lib        "<U0076><U0065><U006E>"
+% ven
+lang_lib        "<U0076><U0065><U006E>"
 
 % Representation of postal addresses (minus the addressee's name) in South
 % Africa. (Ignored for now)

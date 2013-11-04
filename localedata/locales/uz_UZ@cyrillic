@@ -317,7 +317,10 @@ country_num  860
 %country_isbn ""
 country_car "<U0055><U005A>"
 lang_name   "<U040E><U0437><U0431><U0435><U043A><U0447><U0430>"
-lang_ab     "<U0075><U007A>"
-lang_term   "<U0075><U007A><U0062>"
-lang_lib    "<U0075><U007A><U0062>"
+% uz
+lang_ab      "<U0075><U007A>"
+% uzb
+lang_term    "<U0075><U007A><U0062>"
+% uzb
+lang_lib     "<U0075><U007A><U0062>"
 END LC_ADDRESS

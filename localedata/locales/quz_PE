@@ -170,7 +170,10 @@ country_ab3   "<U0050><U0045><U0052>"
 country_num   604
 % PE
 country_car    "<U0050><U0045>"
-
+% quz
+lang_term    "<U0071><U0075><U007A>"
+% quz
+lang_lib    "<U0071><U0075><U007A>"
 END LC_ADDRESS
 
 LC_TELEPHONE

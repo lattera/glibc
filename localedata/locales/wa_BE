@@ -46,9 +46,12 @@ country_isbn "2"
 % B
 country_car  "<U0042>"
 lang_name "<U0057><U0061><U006C><U006F><U006E>"
-lang_ab "wa"
-lang_term "wln"
-lang_lib "wln"
+% wa
+lang_ab      "<U0077><U0061>"
+% wln
+lang_term    "<U0077><U006C><U006E>"
+% wln
+lang_lib     "<U0077><U006C><U006E>"
 END LC_ADDRESS
 
 LC_CTYPE

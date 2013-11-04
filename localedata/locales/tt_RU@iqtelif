@@ -175,7 +175,12 @@ country_ab3 "<U0052><U0055><U0053>"
 country_num 643
 % RUS
 country_car    "<U0052><U0055><U0053>"
-
+% tt
+lang_ab      "<U0074><U0074>"
+% tat
+lang_term    "<U0074><U0061><U0074>"
+% tat
+lang_lib    "<U0074><U0061><U0074>"
 END LC_ADDRESS
 
 LC_TELEPHONE

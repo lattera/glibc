@@ -52,9 +52,12 @@ country_car   "<U0055><U0053><U0041>"
 % FIXME Check which isbn for Yiddish in USA
 country_isbn "0"
 lang_name "<U05D9><U05D9><U05B4><U05D3><U05D9><U05E9>"
-lang_ab "yi"
-lang_term "yid"
-lang_lib "yid"
+% yi
+lang_ab      "<U0079><U0069>"
+% yid
+lang_term    "<U0079><U0069><U0064>"
+% yid
+lang_lib     "<U0079><U0069><U0064>"
 END LC_ADDRESS
 
 LC_CTYPE

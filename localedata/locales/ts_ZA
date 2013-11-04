@@ -240,9 +240,12 @@ lang_name "<U0058><U0069><U0074><U0073><U006F><U006E><U0067><U0061>"
 
 % ISO 639 two and three letter language names
 % see http://www.loc.gov/standards/iso639-2/englangn.html
-% "ts", "tso"
+% ts
 lang_ab   "<U0074><U0073>"
+% tso
 lang_term "<U0074><U0073><U006F>"
+% tso
+lang_lib "<U0074><U0073><U006F>"
 
 % Representation of postal addresses (minus the addressee's name) in South
 % Africa. (Ignored for now)
