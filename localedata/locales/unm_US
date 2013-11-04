@@ -153,8 +153,10 @@ country_car   "<U0055><U0053><U0041>"
 country_isbn  0
 % lang_name     ""
 % lang_ab       ""
-% lang_term     ""
-% lang_lib      ""
+% unm
+lang_term    "<U0075><U006E><U006D>"
+% unm
+lang_lib    "<U0075><U006E><U006D>"
 END LC_ADDRESS
 
 LC_TELEPHONE

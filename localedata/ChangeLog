@@ -1,3 +1,8 @@
+2013-11-04  Chris Leonard  <cjl@sugarlabs.org>
+
+	* locales/unm_US: Adjust language-code fields of LC_ADDRESS.
+	* locales/wal_ET: Likewise.
+
 2013-11-03  Chris Leonard  <cjl@sugarlabs.org>
 
 	* locales/quz_PE: Adjust language-code fields of LC_ADDRESS.
