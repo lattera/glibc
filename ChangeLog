@@ -2,6 +2,13 @@
 
 	* locale/iso-639.def: Correct Walaita (wal) and add Unami Delaware (unm).
 
+2013-11-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/stdc-predef.h [__GCC_IEC_559] (__STDC_IEC_559__): Define
+	depending on [__GCC_IEC_559 > 0].
+	[__GCC_IEC_559_COMPLEX] (__STDC_IEC_559_COMPLEX__): Define
+	depending on [__GCC_IEC_559_COMPLEX > 0].
+
 2013-11-03  Chris Leonard  <cjl@sugarlabs.org>
 
 	* locale/iso-639.def: Add Quechua, Southern (quz) and Silesian (szl)
