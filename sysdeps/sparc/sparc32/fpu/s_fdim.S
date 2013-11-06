@@ -30,7 +30,8 @@ ENTRY(__fdim)
 	fbug	1f
 	 st	%g0, [%sp + 76]
 	ldd	[%sp + 72], %f0
-	fnegd	%f0, %f2
+	fnegs	%f0, %f2
+	fmovs	%f1, %f3
 1:	retl
 	 fsubd	%f0, %f2, %f0
 END(__fdim)

@@ -1,3 +1,9 @@
+2013-11-06  David S. Miller  <davem@davemloft.net>
+
+	[BZ #15985]
+	* sysdeps/sparc/sparc32/fpu/s_fdim.S (__fdim): Do not use fnegd
+	on pre-v9 cpus, use a fnegs+fmovs sequence instead.
+
 2013-11-06  Will Newton  <will.newton@linaro.org>
 
 	* manual/memory.texi (Malloc Examples): Remove register
