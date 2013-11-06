@@ -1,3 +1,17 @@
+2013-12-16  Will Newton  <will.newton@linaro.org>
+
+	* manual/memory.texi (Malloc Examples): Clarify default
+	alignment documentation.  Suggest posix_memalign rather
+	than memalign or valloc.
+	(Aligned Memory Blocks): Remove suggestion to use memalign
+	or valloc.  Remove obsolete comment about BSD.
+	Document memalign errno values and mark the function obsolete.
+	Document posix_memalign returned error codes.  Mark valloc
+	as obsolete.  (Hooks for Malloc): __memalign_hook is also
+	called for posix_memalign and valloc.
+	(Summary of Malloc): Add posix_memalign to function summary.
+	__memalign_hook is also called for posix_memalign and valloc.
+
 2013-12-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/s_sin.c (TAYLOR_SINCOS): Rename to

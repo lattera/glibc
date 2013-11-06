@@ -380,10 +380,10 @@ savestring (const char *ptr, size_t len)
 
 The block that @code{malloc} gives you is guaranteed to be aligned so
 that it can hold any type of data.  On @gnusystems{}, the address is
-always a multiple of eight on most systems, and a multiple of 16 on
+always a multiple of eight on 32-bit systems, and a multiple of 16 on
 64-bit systems.  Only rarely is any higher boundary (such as a page
-boundary) necessary; for those cases, use @code{memalign},
-@code{posix_memalign} or @code{valloc} (@pxref{Aligned Memory Blocks}).
+boundary) necessary; for those cases, use @code{posix_memalign}
+(@pxref{Aligned Memory Blocks}).
 
 Note that the memory located after the end of the block is likely to be
 in use for something else; perhaps a block already allocated by another
@@ -616,14 +616,8 @@ after calling @code{free} wastes memory.  The size threshold for
 The address of a block returned by @code{malloc} or @code{realloc} in
 @gnusystems{} is always a multiple of eight (or sixteen on 64-bit
 systems).  If you need a block whose address is a multiple of a higher
-power of two than that, use @code{memalign}, @code{posix_memalign}, or
-@code{valloc}.  @code{memalign} is declared in @file{malloc.h} and
-@code{posix_memalign} is declared in @file{stdlib.h}.
-
-With @theglibc{}, you can use @code{free} to free the blocks that
-@code{memalign}, @code{posix_memalign}, and @code{valloc} return.  That
-does not work in BSD, however---BSD does not provide any way to free
-such blocks.
+power of two than that, use @code{posix_memalign}.  @code{posix_memalign}
+is declared in @file{stdlib.h}.
 
 @comment malloc.h
 @comment BSD
@@ -633,6 +627,21 @@ address is a multiple of @var{boundary}.  The @var{boundary} must be a
 power of two!  The function @code{memalign} works by allocating a
 somewhat larger block, and then returning an address within the block
 that is on the specified boundary.
+
+The @code{memalign} function returns a null pointer on error and sets
+@code{errno} to one of the following values:
+
+@table @code
+@item ENOMEM
+There was insufficient memory available to satisfy the request.
+
+@item EINVAL
+@var{alignment} is not a power of two.
+
+@end table
+
+The @code{memalign} function is obsolete and @code{posix_memalign} should
+be used instead.
 @end deftypefun
 
 @comment stdlib.h
@@ -647,6 +656,16 @@ parameter @var{alignment}: the value must be a power of two multiple of
 If the function succeeds in allocation memory a pointer to the allocated
 memory is returned in @code{*@var{memptr}} and the return value is zero.
 Otherwise the function returns an error value indicating the problem.
+The possible error values returned are:
+
+@table @code
+@item ENOMEM
+There was insufficient memory available to satisfy the request.
+
+@item EINVAL
+@var{alignment} is not a power of two multiple of @code{sizeof (void *)}.
+
+@end table
 
 This function was introduced in POSIX 1003.1d.
 @end deftypefun
@@ -667,6 +686,9 @@ valloc (size_t size)
 
 @ref{Query Memory Parameters} for more information about the memory
 subsystem.
+
+The @code{valloc} function is obsolete and @code{posix_memalign} should
+be used instead.
 @end deftypefun
 
 @node Malloc Tunable Parameters
@@ -902,17 +924,17 @@ memory consumption of the program.
 @comment malloc.h
 @comment GNU
 @defvar __memalign_hook
-The value of this variable is a pointer to function that @code{memalign}
-uses whenever it is called.  You should define this function to look
-like @code{memalign}; that is, like:
+The value of this variable is a pointer to function that @code{memalign},
+@code{posix_memalign} and @code{valloc} use whenever they are called.
+You should define this function to look like @code{memalign}; that is, like:
 
 @smallexample
 void *@var{function} (size_t @var{alignment}, size_t @var{size}, const void *@var{caller})
 @end smallexample
 
 The value of @var{caller} is the return address found on the stack when
-the @code{memalign} function was called.  This value allows you to trace the
-memory consumption of the program.
+the @code{memalign}, @code{posix_memalign} or @code{valloc} functions are
+called.  This value allows you to trace the memory consumption of the program.
 @end defvar
 
 You must make sure that the function you install as a hook for one of
@@ -1118,6 +1140,10 @@ Space}.
 Allocate a block of @var{size} bytes, starting on a page boundary.
 @xref{Aligned Memory Blocks}.
 
+@item int posix_memalign (void **@var{memptr}, size_t @var{alignment}, size_t @var{size})
+Allocate a block of @var{size} bytes, starting on an address that is a
+multiple of @var{alignment}.  @xref{Aligned Memory Blocks}.
+
 @item void *memalign (size_t @var{size}, size_t @var{boundary})
 Allocate a block of @var{size} bytes, starting on an address that is a
 multiple of @var{boundary}.  @xref{Aligned Memory Blocks}.
@@ -1140,7 +1166,8 @@ A pointer to a function that @code{realloc} uses whenever it is called.
 A pointer to a function that @code{free} uses whenever it is called.
 
 @item void (*__memalign_hook) (size_t @var{size}, size_t @var{alignment}, const void *@var{caller})
-A pointer to a function that @code{memalign} uses whenever it is called.
+A pointer to a function that @code{memalign}, @code{posix_memalign} and
+@code{valloc} use whenever they are called.
 
 @item struct mallinfo mallinfo (void)
 Return information about the current dynamic memory usage.
