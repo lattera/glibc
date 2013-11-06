@@ -1,5 +1,15 @@
 2013-12-16  Will Newton  <will.newton@linaro.org>
 
+	* manual/memory.texi (Malloc Examples): Mention aligned_alloc.
+	(Aligned Memory Blocks): Add documentation for aligned_alloc
+	and suggest it as an alternative to posix_memalign.
+	(Hooks for Malloc): Document __memalign_hook is also called
+	for aligned_alloc.  (Summary of Malloc): Add summary for
+	aligned alloc.  Document __memalign_hook is also called
+	for aligned_alloc.
+
+2013-12-16  Will Newton  <will.newton@linaro.org>
+
 	* manual/memory.texi (Malloc Examples): Clarify default
 	alignment documentation.  Suggest posix_memalign rather
 	than memalign or valloc.
