@@ -22,6 +22,7 @@
 
 # include <dl-vdso.h>
 # include <bits/libc-vdso.h>
+# include <dl-machine.h>
 
 void *gettimeofday_ifunc (void) __asm__ ("__gettimeofday");
 
