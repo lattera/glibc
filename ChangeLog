@@ -1,3 +1,8 @@
+2013-11-07  Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ #15374]
+	* nss/getent.c (services_keys): Recognize services starting with digit.
+
 2013-11-06  David S. Miller  <davem@davemloft.net>
 
 	[BZ #15985]

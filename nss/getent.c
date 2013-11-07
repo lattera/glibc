@@ -788,8 +788,12 @@ services_keys (int number, char *key[])
       if (proto != NULL)
 	*proto++ = '\0';
 
-      if (isdigit (key[i][0]))
-	serv = getservbyport (htons (atol (key[i])), proto);
+      char *endptr;
+      long port = strtol (key[i], &endptr, 10);
+
+      if (isdigit (key[i][0]) && *endptr == '\0'
+	  && 0 <= port && port <= 65535)
+	serv = getservbyport (htons (port), proto);
       else
 	serv = getservbyname (key[i], proto);
 
