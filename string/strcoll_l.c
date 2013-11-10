@@ -24,6 +24,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/param.h>
 
 #ifndef STRING_TYPE
 # define STRING_TYPE char
