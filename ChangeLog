@@ -1,3 +1,9 @@
+2013-11-11  Jan Kratochvil  <jan.kratochvil@redhat.com>
+
+	[BZ #387]
+	* elf/dl-object.c (_dl_new_object): Initialize L_NAME from NEWNAME if
+	it is empty.
+
 2013-11-11  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
         * benchtests/Makefile: Add bench-strtod.

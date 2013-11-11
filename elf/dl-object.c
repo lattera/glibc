@@ -88,7 +88,13 @@ _dl_new_object (char *realname, const char *libname, int type,
   /* newname->next = NULL;	We use calloc therefore not necessary.  */
   newname->dont_free = 1;
 
-  new->l_name = realname;
+  /* When we create the executable link map, or a VDSO link map, we start
+     with "" for the l_name. In these cases "" points to ld.so rodata
+     and won't get dumped during core file generation. Therefore to assist
+     gdb and to create more self-contained core files we adjust l_name to
+     point at the newly allocated copy (which will get dumped) instead of
+     the ld.so rodata copy.  */
+  new->l_name = *realname ? realname : (char *) newname->name + libname_len - 1;
   new->l_type = type;
   /* If we set the bit now since we know it is never used we avoid
      dirtying the cache line later.  */
