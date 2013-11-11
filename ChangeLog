@@ -1,3 +1,9 @@
+2013-11-11  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #16153]
+	* nscd/nscd_getserv_r.c (__nscd_getservbyport_r): Don't include
+	terminating NUL in key length.
+
 2013-11-08  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/bits/libc-vdso.h (VDSO_IFUNC_RET):
