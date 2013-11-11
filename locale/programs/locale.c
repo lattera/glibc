@@ -927,6 +927,24 @@ show_info (const char *name)
 	    printf ("%d\n", val.word);
 	  }
 	  break;
+	case wordarray:
+	  {
+	    int first = 1;
+	    union { unsigned int *wordarray; char *string; } val;
+	    int cnt;
+
+	    val.string = nl_langinfo (item->item_id);
+	    if (show_keyword_name)
+	      printf ("%s=", item->name);
+
+	    for (cnt = 0; cnt < item->max; ++cnt)
+	      {
+		printf ("%s%d", first ? "" : ";", val.wordarray[cnt]);
+		first = 0;
+	      }
+	    putchar ('\n');
+	  }
+	  break;
 	case wstring:
 	case wstringarray:
 	case wstringlist:

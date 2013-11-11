@@ -1,3 +1,12 @@
+2013-11-19  Andreas Schwab  <schwab@suse.de>
+
+	* locale/programs/locale.c (show_info): Decode wordarray elements.
+	* locale/categories.def (LC_MONETARY): Add element for
+	_NL_MONETARY_CRNCYSTR.
+	* locale/C-monetary.c (conversion_rate): New variable.
+	(_nl_C_LC_MONETARY): Use it for _NL_MONETARY_CONVERSION_RATE
+	element.
+
 2013-11-18  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* math/test-fpucw-ieee.c [!defined _FPU_IEEE] (FPU_CONTROL):

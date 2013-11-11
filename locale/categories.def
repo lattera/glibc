@@ -156,6 +156,7 @@ DEFINE_CATEGORY
   DEFINE_ELEMENT (N_SEP_BY_SPACE,                      "n_sep_by_space",         std, byte, 0, 2)
   DEFINE_ELEMENT (P_SIGN_POSN,                         "p_sign_posn",            std, byte, 0, 4)
   DEFINE_ELEMENT (N_SIGN_POSN,                         "n_sign_posn",            std, byte, 0, 4)
+  DEFINE_ELEMENT (_NL_MONETARY_CRNCYSTR,               "crncystr",               std, string)
   DEFINE_ELEMENT (__INT_P_CS_PRECEDES,                 "int_p_cs_precedes",      std, byte, 0, 1)
   DEFINE_ELEMENT (__INT_P_SEP_BY_SPACE,                "int_p_sep_by_space",     std, byte, 0, 2)
   DEFINE_ELEMENT (__INT_N_CS_PRECEDES,                 "int_n_cs_precedes",      std, byte, 0, 1)
