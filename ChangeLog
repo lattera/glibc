@@ -1,3 +1,8 @@
+2013-11-14  Andreas Schwab  <schwab@suse.de>
+
+	* locale/C-address.c (_nl_C_LC_ADDRESS): Set country_num to zero
+	word instead of empty string.
+
 2013-11-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/fe_nomask.c
