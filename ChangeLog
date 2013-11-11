@@ -1,3 +1,19 @@
+2013-11-18  Andreas Schwab  <schwab@suse.de>
+
+	* locale/programs/locale.c (show_info) [case byte]: Check for
+	'\377' instead of '\177'.
+	* locale/C-monetary.c (not_available): Always use "\377".
+	* stdlib/strfmon_l.c (__vstrfmon_l): Use -2 as marker for
+	unspecified p_sign_posn and n_sign_posn.  Check for '\377' to
+	detect unavailable sign_posn locale elements.
+	* locale/localeconv.c (__localeconv): For grouping and
+	mon_grouping handle "\177" and "\377" like no grouping.
+	(INT_ELEM): New macro.  Use it to set all numeric members.
+	* locale/programs/ld-monetary.c (monetary_read)
+	<tok_mon_grouping>: Normalize single -1 to the empty string.
+	* locale/programs/ld-numeric.c (numeric_read) <tok_grouping>:
+	Likewise.
+
 2013-11-07  Ondřej Bílka  <neleai@seznam.cz>
 
 	[BZ #16055]

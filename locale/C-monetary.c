@@ -21,11 +21,7 @@
 /* This table's entries are taken from POSIX.2 Table 2-9
    ``LC_MONETARY Category Definition in the POSIX Locale'',
    with additions from ISO 14652, section 4.4.  */
-#ifdef __CHAR_UNSIGNED__
 static const char not_available[] = "\377";
-#else
-static const char not_available[] = "\177";
-#endif
 
 const struct __locale_data _nl_C_LC_MONETARY attribute_hidden =
 {

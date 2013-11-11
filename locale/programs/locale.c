@@ -895,7 +895,7 @@ show_info (const char *name)
 	      printf ("%s=", item->name);
 
 	    if (val != NULL)
-	      printf ("%d", *val == '\177' ? -1 : *val);
+	      printf ("%d", *val == '\377' ? -1 : *val);
 	    putchar ('\n');
 	  }
 	  break;

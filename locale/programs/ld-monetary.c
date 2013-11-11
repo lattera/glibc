@@ -677,6 +677,9 @@ monetary_read (struct linereader *ldfile, struct localedef_t *result,
 
 	      if (!ignore_content)
 		{
+		  /* A single -1 means no grouping.  */
+		  if (act == 1 && grouping[0] == '\177')
+		    act--;
 		  grouping[act++] = '\0';
 
 		  monetary->mon_grouping = xrealloc (grouping, act);

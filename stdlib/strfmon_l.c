@@ -158,8 +158,8 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
       group = 1;			/* Print digits grouped.  */
       pad = ' ';			/* Fill character is <SP>.  */
       is_long_double = 0;		/* Double argument by default.  */
-      p_sign_posn = -1;			/* This indicates whether the */
-      n_sign_posn = -1;			/* '(' flag is given.  */
+      p_sign_posn = -2;			/* This indicates whether the */
+      n_sign_posn = -2;			/* '(' flag is given.  */
       width = -1;			/* No width specified so far.  */
       left = 0;				/* Right justified by default.  */
 
@@ -181,7 +181,7 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
 	      group = 0;
 	      continue;
 	    case '+':			/* Use +/- for sign of number.  */
-	      if (n_sign_posn != -1)
+	      if (n_sign_posn != -2)
 		{
 		  __set_errno (EINVAL);
 		  return -1;
@@ -190,7 +190,7 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
 	      n_sign_posn = *_NL_CURRENT (LC_MONETARY, N_SIGN_POSN);
 	      continue;
 	    case '(':			/* Use ( ) for negative sign.  */
-	      if (n_sign_posn != -1)
+	      if (n_sign_posn != -2)
 		{
 		  __set_errno (EINVAL);
 		  return -1;
@@ -310,16 +310,16 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
 
       /* If not specified by the format string now find the values for
 	 the format specification.  */
-      if (p_sign_posn == -1)
+      if (p_sign_posn == -2)
 	p_sign_posn = *_NL_CURRENT (LC_MONETARY, int_format ? INT_P_SIGN_POSN : P_SIGN_POSN);
-      if (n_sign_posn == -1)
+      if (n_sign_posn == -2)
 	n_sign_posn = *_NL_CURRENT (LC_MONETARY, int_format ? INT_N_SIGN_POSN : N_SIGN_POSN);
 
       if (right_prec == -1)
 	{
 	  right_prec = *_NL_CURRENT (LC_MONETARY, int_format ? INT_FRAC_DIGITS : FRAC_DIGITS);
 
-	  if (right_prec == CHAR_MAX)
+	  if (right_prec == '\377')
 	    right_prec = 2;
 	}
 
@@ -384,13 +384,13 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
 	cs_precedes = 1;
       if (other_cs_precedes != 0)
 	other_cs_precedes = 1;
-      if (sep_by_space == CHAR_MAX)
+      if (sep_by_space == '\377')
 	sep_by_space = 0;
-      if (other_sep_by_space == CHAR_MAX)
+      if (other_sep_by_space == '\377')
 	other_sep_by_space = 0;
-      if (sign_posn == CHAR_MAX)
+      if (sign_posn == '\377')
 	sign_posn = 1;
-      if (other_sign_posn == CHAR_MAX)
+      if (other_sign_posn == '\377')
 	other_sign_posn = 1;
 
       /* Check for degenerate cases */
