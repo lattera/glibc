@@ -32,7 +32,9 @@ string-bench := bcopy bzero memccpy memchr memcmp memcpy memmem memmove \
 string-bench-ifunc := $(addsuffix -ifunc, $(string-bench))
 string-bench-all := $(string-bench) $(string-bench-ifunc)
 
-benchset := $(string-bench-all)
+stdlib-bench := strtod
+
+benchset := $(string-bench-all) $(stdlib-bench)
 
 LDLIBS-bench-acos = -lm
 LDLIBS-bench-acosh = -lm

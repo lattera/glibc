@@ -1,3 +1,8 @@
+2013-11-11  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+        * benchtests/Makefile: Add bench-strtod.
+        * benchtests/bench-strtod.c: New file: strtod benchtest
+
 2013-11-11  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #16153]
