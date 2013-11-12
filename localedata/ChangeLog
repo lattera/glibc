@@ -1,3 +1,8 @@
+2014-06-05  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #16095]
+	* SUPPORTED: Add uz_UZ.UTF-8/UTF-8.
+
 2014-06-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makefile (TEST_MBWC_ENV): Remove variable.
