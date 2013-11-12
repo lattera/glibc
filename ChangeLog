@@ -1,3 +1,13 @@
+2013-11-11  David S. Miller  <davem@davemloft.net>
+
+	[BZ #16150]
+	* sysdeps/sparc/sparc64/multiarch/add_n.S: Resolve to the correct generic
+	symbol in the non-vis3 case in static builds.
+	* sysdeps/sparc/sparc64/multiarch/addmul_1.S: Likewise.
+	* sysdeps/sparc/sparc64/multiarch/mul_1.S: Likewise.
+	* sysdeps/sparc/sparc64/multiarch/sub_n.S: Likewise.
+	* sysdeps/sparc/sparc64/multiarch/submul_1.S: Likewise.
+
 2013-11-11  Jan Kratochvil  <jan.kratochvil@redhat.com>
 
 	[BZ #387]

@@ -42,7 +42,7 @@ ENTRY(__mpn_add_n)
 	sethi	%gdop_hix22(__mpn_add_n_generic), %o1
 	xor	%o1, %gdop_lox10(__mpn_add_n_generic), %o1
 # else
-	set	__mpn_add_n_vis3, %o1
+	set	__mpn_add_n_generic, %o1
 # endif
 10:
 # ifdef SHARED
