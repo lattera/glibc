@@ -1,3 +1,10 @@
+2013-11-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/fe_nomask.c
+	(__fe_nomask_env): Fir compat symbol to be remove for GLIBC_2.19.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fpu/fe_nomask.c
+	(__fe_nomask_env): Likewise.
+
 2013-11-13  Steve Ellcey  <sellcey@mips.com>
 
 	* benchtests/bench-timing.h: Include time.h.
