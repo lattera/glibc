@@ -1,3 +1,7 @@
+2013-11-13  Steve Ellcey  <sellcey@mips.com>
+
+	* benchtests/bench-timing.h: Include time.h.
+
 2013-11-13  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #15997]

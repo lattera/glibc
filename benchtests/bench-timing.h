@@ -41,6 +41,8 @@ typedef hp_timing_t timing_t;
 	  (min) / (d_iters), 1e6 * (d_total_i) / (d_total_s));
 
 #else
+
+#include <time.h>
 typedef uint64_t timing_t;
 
 /* Measure the resolution of the clock so we can scale the number of
