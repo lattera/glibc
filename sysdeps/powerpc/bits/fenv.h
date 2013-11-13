@@ -153,15 +153,12 @@ extern const fenv_t __fe_enabled_env;
 extern const fenv_t __fe_nonieee_env;
 # define FE_NONIEEE_ENV	(&__fe_nonieee_env)
 
-__BEGIN_DECLS
-
 /* Floating-point environment with all exceptions enabled.  Note that
    just evaluating this value does not change the processor exception mode.
    Passing this mask to fesetenv will result in a prctl syscall to change
    the MSR FE0/FE1 bits to "Precise Mode".  On some processors this will
    result in slower floating point execution.  This will last until an
    fenv or exception mask is installed that disables all FP exceptions.  */
-extern const fenv_t *__fe_nomask_env (void);
 # define FE_NOMASK_ENV	FE_ENABLED_ENV
 
 /* Floating-point environment with all exceptions disabled.  Note that
@@ -169,9 +166,6 @@ extern const fenv_t *__fe_nomask_env (void);
    Passing this mask to fesetenv will result in a prctl syscall to change
    the MSR FE0/FE1 bits to "Ignore Exceptions Mode".  On most processors
    this allows the fastest possible floating point execution.*/
-extern const fenv_t *__fe_mask_env (void);
 # define FE_MASK_ENV	FE_DFL_ENV
-
-__END_DECLS
 
 #endif

@@ -23,7 +23,9 @@
 #include <ldsodefs.h>
 #include <sysdep.h>
 
-libm_hidden_proto (__fe_nomask_env)
+extern const fenv_t *__fe_nomask_env (void);
+
+extern const fenv_t *__fe_mask_env (void);
 
 /* The sticky bits in the FPSCR indicating exceptions have occurred.  */
 #define FPSCR_STICKY_BITS ((FE_ALL_EXCEPT | FE_ALL_INVALID) & ~FE_INVALID)

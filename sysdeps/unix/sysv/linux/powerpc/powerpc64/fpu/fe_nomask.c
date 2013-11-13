@@ -22,17 +22,19 @@
 #include <sys/syscall.h>
 #include <sys/prctl.h>
 #include <kernel-features.h>
+#include <shlib-compat.h>
 
 const fenv_t *
 __fe_nomask_env (void)
 {
 #if defined PR_SET_FPEXC && defined PR_FP_EXC_PRECISE
-  int result;
   INTERNAL_SYSCALL_DECL (err);
-  result = INTERNAL_SYSCALL (prctl, err, 2, PR_SET_FPEXC, PR_FP_EXC_PRECISE);
+  INTERNAL_SYSCALL (prctl, err, 2, PR_SET_FPEXC, PR_FP_EXC_PRECISE);
 #else
   __set_errno (ENOSYS);
 #endif
   return FE_ENABLED_ENV;
 }
-libm_hidden_def (__fe_nomask_env)
+#if SHLIB_COMPAT (libm, GLIBC_2_3, GLIBC_2_18)
+compat_symbol (libm, __fe_nomask_env, __fe_nomask_env, GLIBC_2_3);
+#endif

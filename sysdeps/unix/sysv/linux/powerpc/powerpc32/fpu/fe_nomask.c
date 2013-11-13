@@ -23,6 +23,7 @@
 #include <sysdep.h>
 #include <sys/prctl.h>
 #include <kernel-features.h>
+#include <shlib-compat.h>
 
 const fenv_t *
 __fe_nomask_env (void)
@@ -32,4 +33,6 @@ __fe_nomask_env (void)
 
   return FE_ENABLED_ENV;
 }
-libm_hidden_def (__fe_nomask_env)
+#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_18)
+compat_symbol (libm, __fe_nomask_env, __fe_nomask_env, GLIBC_2_1);
+#endif
