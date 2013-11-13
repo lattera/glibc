@@ -1,5 +1,10 @@
 2013-11-13  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
+        * elf/dl-lookup.c (_dl_lookup_symbol_x): If UNDEF_MAP is false
+	set reference_name to "" to avoid passing NULL to DSO_FILENAME.
+
+2013-11-13  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
 	* elf/tlsdeschtab.h (_dl_make_tlsdesc_dynamic): Handle failure
 	of htab_find_slot().
 
