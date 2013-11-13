@@ -187,6 +187,9 @@ case "$machine" in
     libc_cv_gcc_unwind_find_fde=yes
     arch_minimum_kernel=2.6.16
     ;;
+  x86_64/x32)
+    arch_minimum_kernel=3.4.0
+    ;;
   powerpc/powerpc32*)
     libc_cv_gcc_unwind_find_fde=yes
     arch_minimum_kernel=2.6.16

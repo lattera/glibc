@@ -1,3 +1,10 @@
+2013-11-13  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #15997]
+	* sysdeps/unix/sysv/linux/configure.ac (arch_minimum_kernel): Set
+	to 3.4.0 for x32.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+
 2013-11-13  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16151]
