@@ -1,3 +1,8 @@
+2013-11-13  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* elf/tlsdeschtab.h (_dl_make_tlsdesc_dynamic): Handle failure
+	of htab_find_slot().
+
 2013-11-11  David S. Miller  <davem@davemloft.net>
 
 	[BZ #16150]
