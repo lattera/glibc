@@ -1,3 +1,12 @@
+2013-11-13  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16151]
+	* stdlib/strtod_l.c (round_and_return): Do not consider
+	retval[RETURN_LIBM_SIZE - 1] when determining more_bits for an
+	exponent one less than half the least subnormal exponent.
+	* stdlib/test-strtod-round-data: Add more tests.
+	* stdlib/tst-strtod-round.c (tests): Regenerated.
+
 2013-11-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ #14143]
