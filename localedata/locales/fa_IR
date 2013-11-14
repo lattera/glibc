@@ -42,7 +42,7 @@ category  "fa_IR:2005";LC_PAPER
 category  "fa_IR:2005";LC_NAME
 category  "fa_IR:2005";LC_ADDRESS
 category  "fa_IR:2005";LC_TELEPHONE
-
+category  "fa_IR:2005";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -488,5 +488,6 @@ int_prefix     "<U0039><U0038>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-measurement    1
+% metric
+measurement 1
 END LC_MEASUREMENT

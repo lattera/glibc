@@ -43,7 +43,7 @@ category  "shs_CA:2000";LC_PAPER
 category  "shs_CA:2000";LC_NAME
 category  "shs_CA:2000";LC_ADDRESS
 category  "shs_CA:2000";LC_TELEPHONE
-
+category  "shs_CA:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -138,7 +138,8 @@ copy "en_CA"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-copy "en_CA"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

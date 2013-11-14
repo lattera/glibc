@@ -47,7 +47,7 @@ category  "he_IL:2000";LC_PAPER
 category  "he_IL:2000";LC_NAME
 category  "he_IL:2000";LC_ADDRESS
 category  "he_IL:2000";LC_TELEPHONE
-
+category  "he_IL:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -144,8 +144,8 @@ int_prefix     "<U0039><U0037><U0032>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% FIXME
-measurement    1
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

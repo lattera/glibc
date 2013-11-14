@@ -67,12 +67,13 @@ END LC_CTYPE
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%  Djibouti Specifc and Shared Data:
+%  Djibouti Specific and Shared Data:
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 LC_MEASUREMENT
-copy "aa_DJ"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_MONETARY

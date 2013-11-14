@@ -35,7 +35,7 @@ category  "pt_PT@euro:2000";LC_PAPER
 category  "pt_PT@euro:2000";LC_NAME
 category  "pt_PT@euro:2000";LC_ADDRESS
 category  "pt_PT@euro:2000";LC_TELEPHONE
-
+category  "pt_PT@euro:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -71,7 +71,8 @@ copy "pt_PT"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-copy "pt_PT"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

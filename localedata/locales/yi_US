@@ -148,7 +148,8 @@ copy "en_US"
 END LC_PAPER
 
 LC_MEASUREMENT
-copy "en_US"
+% US customary units
+measurement    2
 END LC_MEASUREMENT
 
 LC_NUMERIC

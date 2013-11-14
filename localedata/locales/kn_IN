@@ -30,7 +30,7 @@ category  "kn_IN:2000";LC_PAPER
 category  "kn_IN:2000";LC_NAME
 category  "kn_IN:2000";LC_ADDRESS
 category  "kn_IN:2000";LC_TELEPHONE
-
+category  "kn_IN:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -236,5 +236,6 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-copy "hi_IN"
+% metric
+measurement 1
 END LC_MEASUREMENT

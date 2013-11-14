@@ -154,6 +154,7 @@ copy "tl_PH"
 END LC_PAPER
 
 LC_MEASUREMENT
+% metric
 measurement 1
 END LC_MEASUREMENT
 

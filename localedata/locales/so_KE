@@ -66,28 +66,29 @@ END LC_CTYPE
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%  Kenya Specifc and Shared Data:
+%  Kenya Specific and Shared Data:
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 LC_MEASUREMENT
-copy "om_ET"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_MONETARY
-copy "om_ET"
+copy "om_KE"
 END LC_MONETARY
 
 LC_NUMERIC
-copy "om_ET"
+copy "om_KE"
 END LC_NUMERIC
 
 LC_PAPER
-copy "om_ET"
+copy "om_KE"
 END LC_PAPER
 
 LC_TELEPHONE
-copy "om_ET"
+copy "om_KE"
 END LC_TELEPHONE
 
 

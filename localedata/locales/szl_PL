@@ -199,7 +199,8 @@ copy "pl_PL"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-copy "pl_PL"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

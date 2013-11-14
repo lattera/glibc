@@ -42,7 +42,7 @@ category  "kk_KZ:2000";LC_PAPER
 category  "kk_KZ:2000";LC_NAME
 category  "kk_KZ:2000";LC_ADDRESS
 category  "kk_KZ:2000";LC_TELEPHONE
-
+category  "kk_KZ:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -246,8 +246,8 @@ int_prefix     "<U0037>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% FIXME
-measurement    1
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

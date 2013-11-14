@@ -29,6 +29,7 @@ category  "or_IN:2004";LC_PAPER
 category  "or_IN:2004";LC_NAME
 category  "or_IN:2004";LC_ADDRESS
 category  "or_IN:2004";LC_TELEPHONE
+category  "or_IN:2004";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 %%%%%%%%%%%%%
@@ -833,5 +834,6 @@ END LC_TELEPHONE
 
 %%%%%%%%%%%%%
 LC_MEASUREMENT
-copy "hi_IN"
+% metric
+measurement 1
 END LC_MEASUREMENT

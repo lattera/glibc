@@ -105,7 +105,8 @@ copy "nl_NL"
 END LC_MONETARY
 
 LC_MEASUREMENT
-copy "nl_NL"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_MESSAGES

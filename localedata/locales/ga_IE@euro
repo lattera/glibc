@@ -34,7 +34,7 @@ category  "ga_IE@euro:2000";LC_PAPER
 category  "ga_IE@euro:2000";LC_NAME
 category  "ga_IE@euro:2000";LC_ADDRESS
 category  "ga_IE@euro:2000";LC_TELEPHONE
-
+category  "ga_IE@euro:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -70,7 +70,8 @@ copy "ga_IE"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-copy "ga_IE"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

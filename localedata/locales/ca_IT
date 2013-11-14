@@ -37,7 +37,7 @@ category  "ca_IT:2000";LC_PAPER
 category  "ca_IT:2000";LC_NAME
 category  "ca_IT:2000";LC_ADDRESS
 category  "ca_IT:2000";LC_TELEPHONE
-
+category  "ca_IT:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -73,7 +73,8 @@ copy "it_IT"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-copy "it_IT"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

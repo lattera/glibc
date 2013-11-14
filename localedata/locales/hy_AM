@@ -156,8 +156,8 @@ yesexpr     "<U005E><U005B><U0079><U0059><U0073><U0053><U0561><U0531><U005D>"
 noexpr      "<U005E><U005B><U006E><U004E><U0578><U0548><U005D>"
 END LC_MESSAGES
 
-% Metric Measurement system (ISO 1000)
 LC_MEASUREMENT
+% metric
 measurement 1
 END LC_MEASUREMENT
 

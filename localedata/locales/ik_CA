@@ -38,7 +38,7 @@ category  "ik_CA:2000";LC_PAPER
 category  "ik_CA:2000";LC_NAME
 category  "ik_CA:2000";LC_ADDRESS
 category  "ik_CA:2000";LC_TELEPHONE
-
+category  "ik_CA:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -211,8 +211,8 @@ LC_PAPER
 copy "en_CA"
 END LC_PAPER
 
-% Metric System (ISO 1000)
 LC_MEASUREMENT
+% metric
 measurement 1
 END LC_MEASUREMENT
 

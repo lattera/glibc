@@ -27,7 +27,7 @@ category  "doi_IN:2012";LC_PAPER
 category  "doi_IN:2012";LC_NAME
 category  "doi_IN:2012";LC_ADDRESS
 category  "doi_IN:2012";LC_TELEPHONE
-
+category  "doi_IN:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -182,5 +182,6 @@ copy "hi_IN"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-copy "hi_IN"
+% metric
+measurement 1
 END LC_MEASUREMENT

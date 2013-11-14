@@ -39,7 +39,7 @@ category  "zh_CN:2000";LC_PAPER
 category  "zh_CN:2000";LC_NAME
 category  "zh_CN:2000";LC_ADDRESS
 category  "zh_CN:2000";LC_TELEPHONE
-
+category  "zh_CN:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 
@@ -188,5 +188,6 @@ lang_lib	"<U0063><U0068><U0069>"
 END LC_ADDRESS
 
 LC_MEASUREMENT
-measurement    1
+% metric
+measurement 1
 END LC_MEASUREMENT

@@ -42,7 +42,7 @@ category  "de_CH:2000";LC_PAPER
 category  "de_CH:2000";LC_NAME
 category  "de_CH:2000";LC_ADDRESS
 category  "de_CH:2000";LC_TELEPHONE
-
+category  "de_CH:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -140,8 +140,8 @@ int_prefix     "<U0034><U0031>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% FIXME
-measurement    1
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

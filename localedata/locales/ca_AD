@@ -37,7 +37,7 @@ category  "ca_AD:2000";LC_PAPER
 category  "ca_AD:2000";LC_NAME
 category  "ca_AD:2000";LC_ADDRESS
 category  "ca_AD:2000";LC_TELEPHONE
-
+category  "ca_AD:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -75,7 +75,8 @@ int_prefix     "<U0033><U0037><U0036>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-copy "ca_ES"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

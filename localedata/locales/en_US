@@ -27,7 +27,7 @@ category  "en_US:2000";LC_PAPER
 category  "en_US:2000";LC_NAME
 category  "en_US:2000";LC_ADDRESS
 category  "en_US:2000";LC_TELEPHONE
-
+category  "en_US:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -183,5 +183,6 @@ int_prefix     "<U0031>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
+% US customary units
 measurement    2
 END LC_MEASUREMENT

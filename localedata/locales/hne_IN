@@ -28,7 +28,7 @@ category  "hne_IN:2008";LC_PAPER
 category  "hne_IN:2008";LC_NAME
 category  "hne_IN:2008";LC_ADDRESS
 category  "hne_IN:2008";LC_TELEPHONE
-
+category  "hne_IN:2008";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -176,5 +176,6 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-copy "hi_IN"
+% metric
+measurement 1
 END LC_MEASUREMENT

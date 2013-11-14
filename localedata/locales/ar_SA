@@ -32,6 +32,7 @@ category  "ar_SA:2000";LC_PAPER
 category  "ar_SA:2000";LC_NAME
 category  "ar_SA:2000";LC_ADDRESS
 category  "ar_SA:2000";LC_TELEPHONE
+category  "ar_SA:2000";LC_MEASUREMENT
 
 END LC_IDENTIFICATION
 
@@ -368,8 +369,8 @@ int_prefix     "<U0039><U0036><U0036>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% FIXME
-measurement    1
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

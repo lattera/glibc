@@ -56,7 +56,7 @@ END LC_IDENTIFICATION
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%  Qubee Specifc Data:
+%  Qubee Specific Data:
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -141,17 +141,14 @@ END LC_CTYPE
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%  Kenya Specifc and Shared Data:
+%  Kenya Specific and Shared Data:
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 LC_MEASUREMENT
-%
-% This is the ISO_IEC TR14652 Locale definition for the LC_MEASUREMENT category.
-%
+% metric
 measurement 1
-%
 END LC_MEASUREMENT
 
 LC_MONETARY

@@ -274,8 +274,9 @@ nostr       "<U1019><U101F><U102F><U1010><U103A><U1018><U1030><U1038>"
 END LC_MESSAGES
 
 
-% Metric Measurement system (ISO 1000)
 LC_MEASUREMENT
+% http://en.wikipedia.org/wiki/Burmese_units_of_measurement
+% metric
 measurement 1
 END LC_MEASUREMENT
 

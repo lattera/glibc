@@ -28,7 +28,7 @@ category  "nn_NO:2000";LC_PAPER
 category  "nn_NO:2000";LC_NAME
 category  "nn_NO:2000";LC_ADDRESS
 category  "nn_NO:2000";LC_TELEPHONE
-
+category  "nn_NO:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -176,5 +176,6 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-copy "nb_NO"
+% metric
+measurement 1
 END LC_MEASUREMENT

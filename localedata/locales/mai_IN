@@ -28,7 +28,7 @@ category  "mai_IN:2006";LC_PAPER
 category  "mai_IN:2006";LC_NAME
 category  "mai_IN:2006";LC_ADDRESS
 category  "mai_IN:2006";LC_TELEPHONE
-
+category  "mai_IN:2006";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -92,5 +92,6 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-copy "hi_IN"
+% metric
+measurement 1
 END LC_MEASUREMENT

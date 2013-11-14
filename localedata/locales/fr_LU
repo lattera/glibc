@@ -42,7 +42,7 @@ category  "fr_LU:2000";LC_PAPER
 category  "fr_LU:2000";LC_NAME
 category  "fr_LU:2000";LC_ADDRESS
 category  "fr_LU:2000";LC_TELEPHONE
-
+category  "fr_LU:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -138,8 +138,8 @@ int_prefix     "<U0033><U0035><U0032>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% FIXME
-measurement    1
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

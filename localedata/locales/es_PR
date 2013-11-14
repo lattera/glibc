@@ -35,7 +35,7 @@ category  "es_PR:2000";LC_PAPER
 category  "es_PR:2000";LC_NAME
 category  "es_PR:2000";LC_ADDRESS
 category  "es_PR:2000";LC_TELEPHONE
-
+category  "es_PR:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -126,6 +126,7 @@ int_prefix     "<U0031><U0037><U0038><U0037>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
+% US customary units
 measurement    2
 END LC_MEASUREMENT
 

@@ -224,6 +224,6 @@ copy "hi_IN"
 END LC_TELEPHONE
 %
 LC_MEASUREMENT
-copy "hi_IN"
+% metric
+measurement 1
 END LC_MEASUREMENT
-%

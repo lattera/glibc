@@ -55,7 +55,7 @@ category  "sk_SK:2000";LC_PAPER
 category  "sk_SK:2000";LC_NAME
 category  "sk_SK:2000";LC_ADDRESS
 category  "sk_SK:2000";LC_TELEPHONE
-
+category  "sk_SK:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -206,8 +206,8 @@ int_prefix     "<U0034><U0032><U0031>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% FIXME
-measurement    1
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

@@ -33,7 +33,7 @@ category  "mn_MN:2000";LC_PAPER
 category  "mn_MN:2000";LC_NAME
 category  "mn_MN:2000";LC_ADDRESS
 category  "mn_MN:2000";LC_TELEPHONE
-
+category  "mn_MN:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -269,5 +269,6 @@ int_prefix     "<U0039><U0037><U0036>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-measurement    1
+% metric
+measurement 1
 END LC_MEASUREMENT

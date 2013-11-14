@@ -1114,10 +1114,8 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-% 1 - ISO 1000
-% 2 - U.S.A.
-% 3 - other
-measurement    1
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 

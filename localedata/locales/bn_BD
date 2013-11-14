@@ -144,8 +144,8 @@ yesstr      "<U09B9><U09CD><U09AF><U09BE><U0981>"
 nostr       "<U09A8><U09BE>"
 END LC_MESSAGES
 
-% Metric Measurement system (ISO 1000)
 LC_MEASUREMENT
+% metric
 measurement 1
 END LC_MEASUREMENT
 

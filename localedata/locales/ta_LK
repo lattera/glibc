@@ -37,7 +37,7 @@ category  "ta_LK:2000";LC_PAPER
 category  "ta_LK:2000";LC_NAME
 category  "ta_LK:2000";LC_ADDRESS
 category  "ta_LK:2000";LC_TELEPHONE
-
+category  "ta_LK:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -73,7 +73,8 @@ copy "si_LK"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-copy "si_LK"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

@@ -28,7 +28,7 @@ category  "kok_IN:2009";LC_PAPER
 category  "kok_IN:2009";LC_NAME
 category  "kok_IN:2009";LC_ADDRESS
 category  "kok_IN:2009";LC_TELEPHONE
-
+category  "kok_IN:2009";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -211,5 +211,6 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-copy "hi_IN"
+% metric
+measurement 1
 END LC_MEASUREMENT

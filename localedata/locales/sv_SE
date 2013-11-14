@@ -50,7 +50,7 @@ category  "sv_SE:2000";LC_PAPER
 category  "sv_SE:2000";LC_NAME
 category  "sv_SE:2000";LC_ADDRESS
 category  "sv_SE:2000";LC_TELEPHONE
-
+category  "sv_SE:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -200,7 +200,8 @@ int_prefix     "<U0034><U0036>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-measurement    1
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

@@ -31,7 +31,7 @@ category  "ja_JP:2000";LC_PAPER
 category  "ja_JP:2000";LC_NAME
 category  "ja_JP:2000";LC_ADDRESS
 category  "ja_JP:2000";LC_TELEPHONE
-
+category  "ja_JP:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -15064,8 +15064,6 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-% This is the ISO_IEC TR14652 Locale definition for the
-%
+% metric
 measurement 1
-
 END LC_MEASUREMENT

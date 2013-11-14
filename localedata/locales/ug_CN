@@ -302,8 +302,8 @@ height 297
 width  210
 END LC_PAPER
 
-% Metric System (ISO 1000)
 LC_MEASUREMENT
+% metric
 measurement 1
 END LC_MEASUREMENT
 

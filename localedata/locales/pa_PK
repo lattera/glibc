@@ -38,7 +38,7 @@ category  "pa_PK:2000";LC_PAPER
 category  "pa_PK:2000";LC_NAME
 category  "pa_PK:2000";LC_ADDRESS
 category  "pa_PK:2000";LC_TELEPHONE
-
+category  "pa_PK:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -158,7 +158,8 @@ copy "ur_PK"
 END LC_PAPER
 
 LC_MEASUREMENT
-copy "ur_PK"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

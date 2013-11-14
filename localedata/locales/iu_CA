@@ -132,8 +132,8 @@ LC_NAME
 copy "en_CA"
 END LC_NAME
 
-% Metric System (ISO 1000)
 LC_MEASUREMENT
+% metric
 measurement 1
 END LC_MEASUREMENT
 

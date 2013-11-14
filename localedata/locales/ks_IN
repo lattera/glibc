@@ -29,8 +29,7 @@ category  "ks_IN:2009";LC_PAPER
 category  "ks_IN:2009";LC_NAME
 category  "ks_IN:2009";LC_ADDRESS
 category  "ks_IN:2009";LC_TELEPHONE
-
-
+category  "ks_IN:2009";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 
@@ -214,5 +213,6 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-copy "hi_IN"
+% metric
+measurement 1
 END LC_MEASUREMENT

@@ -31,7 +31,7 @@ category  "i18n:1997";LC_PAPER
 category  "i18n:1997";LC_NAME
 category  "i18n:1997";LC_ADDRESS
 category  "i18n:1997";LC_TELEPHONE
-
+category  "i18n:1997";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -2187,7 +2187,8 @@ copy "de_DE"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-copy "de_DE"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

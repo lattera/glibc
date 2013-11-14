@@ -121,7 +121,8 @@ copy "en_GB"
 END LC_PAPER
 
 LC_MEASUREMENT
-copy "en_GB"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_MESSAGES

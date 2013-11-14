@@ -27,7 +27,7 @@ category  "mni_IN:2012";LC_PAPER
 category  "mni_IN:2012";LC_NAME
 category  "mni_IN:2012";LC_ADDRESS
 category  "mni_IN:2012";LC_TELEPHONE
-
+category  "mni_IN:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -178,5 +178,6 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-copy "bn_IN"
+% metric
+measurement 1
 END LC_MEASUREMENT

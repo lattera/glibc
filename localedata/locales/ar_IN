@@ -28,7 +28,7 @@ category  "ar_IN:2000";LC_PAPER
 category  "ar_IN:2000";LC_NAME
 category  "ar_IN:2000";LC_ADDRESS
 category  "ar_IN:2000";LC_TELEPHONE
-
+category  "ar_IN:2000";LC_MEASUREMENT
 
 END LC_IDENTIFICATION
 
@@ -179,5 +179,6 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-copy "hi_IN"
+% metric
+measurement 1
 END LC_MEASUREMENT

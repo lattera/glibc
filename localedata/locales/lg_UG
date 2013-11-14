@@ -43,7 +43,7 @@ category  "lg_UG:2001";LC_PAPER
 category  "lg_UG:2001";LC_NAME
 category  "lg_UG:2001";LC_ADDRESS
 category  "lg_UG:2001";LC_TELEPHONE
-
+category  "lg_UG:2001";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -260,7 +260,8 @@ int_prefix     "<U0032><U0035><U0036>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-measurement    1
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

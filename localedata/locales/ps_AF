@@ -229,7 +229,8 @@ LC_MESSAGES
 END LC_MESSAGES
 
 LC_MEASUREMENT
-	measurement	1
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_PAPER

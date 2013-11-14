@@ -42,7 +42,7 @@ category  "nb_NO:2000";LC_PAPER
 category  "nb_NO:2000";LC_NAME
 category  "nb_NO:2000";LC_ADDRESS
 category  "nb_NO:2000";LC_TELEPHONE
-
+category  "nb_NO:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -224,7 +224,8 @@ int_prefix     "<U0034><U0037>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-measurement    1
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

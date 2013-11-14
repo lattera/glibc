@@ -82,7 +82,8 @@ copy "nl_NL"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-copy "nl_NL"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NUMERIC

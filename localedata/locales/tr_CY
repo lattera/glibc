@@ -77,7 +77,8 @@ copy "tr_TR"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-copy "tr_TR"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

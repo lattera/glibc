@@ -57,7 +57,8 @@ copy "en_GB"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-copy "en_GB"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_CTYPE

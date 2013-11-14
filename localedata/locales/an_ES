@@ -42,6 +42,7 @@ category  "i18n:1999";LC_PAPER
 category  "i18n:1999";LC_NAME
 category  "i18n:1999";LC_ADDRESS
 category  "i18n:1999";LC_TELEPHONE
+category  "i18n:1999";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -116,7 +117,8 @@ copy "es_ES"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-copy "es_ES"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

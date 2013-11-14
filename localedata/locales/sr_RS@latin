@@ -170,5 +170,6 @@ copy "sr_RS"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-copy "sr_RS"
+% metric
+measurement 1
 END LC_MEASUREMENT

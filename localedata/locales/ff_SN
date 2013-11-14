@@ -137,7 +137,8 @@ width   210
 END LC_PAPER
 
 LC_MEASUREMENT
-measurement  1
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_MESSAGES

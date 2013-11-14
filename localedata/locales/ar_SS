@@ -41,6 +41,7 @@ category  "ar_SS:2000";LC_PAPER
 category  "ar_SS:2000";LC_NAME
 category  "ar_SS:2000";LC_ADDRESS
 category  "ar_SS:2000";LC_TELEPHONE
+category  "ar_SS:2000";LC_MEASUREMENT
 
 END LC_IDENTIFICATION
 
@@ -220,8 +221,6 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-% This is the ISO_IEC TR14652 Locale definition for the
-%
+% metric
 measurement 1
-
 END LC_MEASUREMENT

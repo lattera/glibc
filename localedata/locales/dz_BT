@@ -31,6 +31,7 @@ date       "2004-09-03"
 %
 category  "dz_BT:2004";LC_IDENTIFICATION
 category  "dz_BT:2004";LC_CTYPE
+category  "dz_BT:2004";LC_TIME
 category  "dz_BT:2004";LC_COLLATE
 category  "dz_BT:2004";LC_NUMERIC
 category  "dz_BT:2004";LC_MONETARY
@@ -39,7 +40,7 @@ category  "dz_BT:2004";LC_PAPER
 category  "dz_BT:2004";LC_NAME
 category  "dz_BT:2004";LC_ADDRESS
 category  "dz_BT:2004";LC_TELEPHONE
-
+category  "dz_BT:2004";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 %%%%%%%%%%%%%%%%
@@ -631,8 +632,8 @@ width    210
 END LC_PAPER
 
 LC_MEASUREMENT
-% FIXME
-measurement    1
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

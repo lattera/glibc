@@ -29,7 +29,7 @@ category  "bho_IN:2011";LC_PAPER
 category  "bho_IN:2011";LC_NAME
 category  "bho_IN:2011";LC_ADDRESS
 category  "bho_IN:2011";LC_TELEPHONE
-
+category  "bho_IN:2011";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -170,5 +170,6 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-copy "hi_IN"
+% metric
+measurement 1
 END LC_MEASUREMENT

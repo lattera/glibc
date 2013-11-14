@@ -192,7 +192,8 @@ copy "en_ZA"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-copy "en_ZA"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

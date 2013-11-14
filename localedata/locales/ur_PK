@@ -38,7 +38,7 @@ category  "ur_PK:2000";LC_PAPER
 category  "ur_PK:2000";LC_NAME
 category  "ur_PK:2000";LC_ADDRESS
 category  "ur_PK:2000";LC_TELEPHONE
-
+category  "ur_PK:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -176,6 +176,7 @@ width       210
 END LC_PAPER
 
 LC_MEASUREMENT
+% metric
 measurement 1
 END LC_MEASUREMENT
 

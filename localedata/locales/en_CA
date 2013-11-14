@@ -45,7 +45,7 @@ category  "en_CA:2000";LC_PAPER
 category  "en_CA:2000";LC_NAME
 category  "en_CA:2000";LC_ADDRESS
 category  "en_CA:2000";LC_TELEPHONE
-
+category  "en_CA:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -161,8 +161,8 @@ int_select     "<U0030><U0031><U0031>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% FIXME
-measurement    1
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

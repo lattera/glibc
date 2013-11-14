@@ -29,7 +29,7 @@ category  "i18n:2002";LC_PAPER
 category  "i18n:2002";LC_NAME
 category  "i18n:2002";LC_ADDRESS
 category  "i18n:2002";LC_TELEPHONE
-
+category  "i18n:2002";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -222,9 +222,6 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-% This is the ISO_IEC TR14652 Locale definition for the LC_MEASUREMENT
-% 1 is ISO 1000 (metric)
-%
+% metric
 measurement 1
-
 END LC_MEASUREMENT

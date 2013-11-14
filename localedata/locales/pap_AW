@@ -146,8 +146,8 @@ thousands_sep             ""
 grouping                  0;0
 END LC_NUMERIC
 
-% Metric Measurement system (ISO 1000)
 LC_MEASUREMENT
+% metric
 measurement 1
 END LC_MEASUREMENT
 

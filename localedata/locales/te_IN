@@ -30,7 +30,7 @@ category  "i18n:2003";LC_PAPER
 category  "i18n:2003";LC_NAME
 category  "i18n:2003";LC_ADDRESS
 category  "i18n:2003";LC_TELEPHONE
-
+category  "i18n:2003";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -239,5 +239,6 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-copy "hi_IN"
+% metric
+measurement 1
 END LC_MEASUREMENT

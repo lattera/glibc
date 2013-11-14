@@ -25,7 +25,7 @@ category  "el_GR@euro:2000";LC_PAPER
 category  "el_GR@euro:2000";LC_NAME
 category  "el_GR@euro:2000";LC_ADDRESS
 category  "el_GR@euro:2000";LC_TELEPHONE
-
+category  "el_GR@euro:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -73,5 +73,6 @@ copy "el_GR"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-copy "el_GR"
+% metric
+measurement 1
 END LC_MEASUREMENT

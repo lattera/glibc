@@ -29,7 +29,7 @@ category  "ur_IN:2009";LC_PAPER
 category  "ur_IN:2009";LC_NAME
 category  "ur_IN:2009";LC_ADDRESS
 category  "ur_IN:2009";LC_TELEPHONE
-
+category  "ur_IN:2009";LC_MEASUREMENT
 
 END LC_IDENTIFICATION
 
@@ -193,5 +193,6 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-copy "hi_IN"
+% metric
+measurement 1
 END LC_MEASUREMENT

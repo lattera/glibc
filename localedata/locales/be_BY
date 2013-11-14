@@ -39,7 +39,7 @@ category  "be_BY:2000";LC_PAPER
 category  "be_BY:2000";LC_NAME
 category  "be_BY:2000";LC_ADDRESS
 category  "be_BY:2000";LC_TELEPHONE
-
+category  "be_BY:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -162,8 +162,8 @@ int_select     "<U0038><U007E><U0031><U0030>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% FIXME
-measurement    1
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

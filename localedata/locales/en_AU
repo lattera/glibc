@@ -43,7 +43,7 @@ category  "en_AU:2000";LC_PAPER
 category  "en_AU:2000";LC_NAME
 category  "en_AU:2000";LC_ADDRESS
 category  "en_AU:2000";LC_TELEPHONE
-
+category  "en_AU:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -139,8 +139,8 @@ int_select     "<U0030><U0030><U0031><U0031>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% FIXME
-measurement    1
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

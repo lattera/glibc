@@ -42,7 +42,7 @@ category  "cv_RU:2000";LC_PAPER
 category  "cv_RU:2000";LC_NAME
 category  "cv_RU:2000";LC_ADDRESS
 category  "cv_RU:2000";LC_TELEPHONE
-
+category  "cv_RU:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -226,7 +226,8 @@ copy "ru_RU"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-copy "ru_RU"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

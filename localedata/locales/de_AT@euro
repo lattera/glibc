@@ -41,7 +41,7 @@ category  "de_AT@euro:2000";LC_PAPER
 category  "de_AT@euro:2000";LC_NAME
 category  "de_AT@euro:2000";LC_ADDRESS
 category  "de_AT@euro:2000";LC_TELEPHONE
-
+category  "de_AT@euro:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -78,7 +78,8 @@ copy "de_AT"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-copy "de_AT"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

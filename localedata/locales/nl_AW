@@ -27,7 +27,7 @@ category  "nl_AW:2008";LC_PAPER
 category  "nl_AW:2008";LC_NAME
 category  "nl_AW:2008";LC_ADDRESS
 category  "nl_AW:2008";LC_TELEPHONE
-
+category  "nl_AW:2008";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -99,5 +99,6 @@ int_select     "<U0030><U0031><U0031>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-copy "en_US"
+% metric
+measurement 1
 END LC_MEASUREMENT

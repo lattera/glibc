@@ -42,7 +42,7 @@ category  "anp_IN:2013";LC_PAPER
 category  "anp_IN:2013";LC_NAME
 category  "anp_IN:2013";LC_ADDRESS
 category  "anp_IN:2013";LC_TELEPHONE
-
+category  "anp_IN:2013";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -201,5 +201,6 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
+% metric
 measurement 1
 END LC_MEASUREMENT

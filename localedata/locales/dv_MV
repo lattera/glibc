@@ -38,7 +38,7 @@ category  "dv_MV:2006";LC_PAPER
 category  "dv_MV:2006";LC_NAME
 category  "dv_MV:2006";LC_ADDRESS
 category  "dv_MV:2006";LC_TELEPHONE
-
+category  "dv_MV:2006";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -163,7 +163,8 @@ int_prefix     "<U0039><U0036><U0030>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-measurement    1
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

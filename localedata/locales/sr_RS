@@ -356,5 +356,6 @@ int_select     "<U0039><U0039>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-measurement    1
+% metric
+measurement 1
 END LC_MEASUREMENT

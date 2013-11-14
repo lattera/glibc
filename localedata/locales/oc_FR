@@ -84,7 +84,8 @@ copy "fr_FR"
 END LC_PAPER
 
 LC_MEASUREMENT
-copy "fr_FR"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_TELEPHONE

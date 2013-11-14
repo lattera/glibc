@@ -72,7 +72,8 @@ END LC_CTYPE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 LC_MEASUREMENT
-copy "ti_ER"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_MONETARY

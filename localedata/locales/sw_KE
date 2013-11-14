@@ -118,7 +118,8 @@ copy "om_KE"
 END LC_PAPER
 
 LC_MEASUREMENT
-copy "om_KE"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_MESSAGES

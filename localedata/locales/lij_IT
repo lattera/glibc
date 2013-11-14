@@ -27,7 +27,7 @@ category  "lij_IT:2000";LC_PAPER
 category  "lij_IT:2000";LC_NAME
 category  "lij_IT:2000";LC_ADDRESS
 category  "lij_IT:2000";LC_TELEPHONE
-
+category  "lij_IT:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 %
 LC_COLLATE
@@ -111,8 +111,8 @@ int_prefix     "<U0033><U0039>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% FIXME
-measurement    1
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

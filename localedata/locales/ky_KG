@@ -30,7 +30,7 @@ category  "ky_KG:2000";LC_PAPER
 category  "ky_KG:2000";LC_NAME
 category  "ky_KG:2000";LC_ADDRESS
 category  "ky_KG:2000";LC_TELEPHONE
-
+category  "ky_KG:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -187,7 +187,8 @@ int_prefix     "<U0039><U0039><U0036>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-measurement    1
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

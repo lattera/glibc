@@ -43,7 +43,7 @@ category  "en_NZ:2000";LC_PAPER
 category  "en_NZ:2000";LC_NAME
 category  "en_NZ:2000";LC_ADDRESS
 category  "en_NZ:2000";LC_TELEPHONE
-
+category  "en_NZ:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -138,8 +138,8 @@ int_prefix     "<U0036><U0034>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% FIXME
-measurement    1
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

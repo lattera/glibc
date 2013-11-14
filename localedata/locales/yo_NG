@@ -38,7 +38,7 @@ category  "yo_NG:2000";LC_PAPER
 category  "yo_NG:2000";LC_NAME
 category  "yo_NG:2000";LC_ADDRESS
 category  "yo_NG:2000";LC_TELEPHONE
-
+category  "yo_NG:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -430,7 +430,8 @@ copy "en_NG"
 END LC_PAPER
 
 LC_MEASUREMENT
-copy "en_NG"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

@@ -44,7 +44,7 @@ category  "csb_PL:2000";LC_PAPER
 category  "csb_PL:2000";LC_NAME
 category  "csb_PL:2000";LC_ADDRESS
 category  "csb_PL:2000";LC_TELEPHONE
-
+category  "csb_PL:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -198,7 +198,8 @@ copy "pl_PL"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-copy "pl_PL"
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

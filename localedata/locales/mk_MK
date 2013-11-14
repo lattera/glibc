@@ -31,7 +31,7 @@ category  "mk_MK:2000";LC_PAPER
 category  "mk_MK:2000";LC_NAME
 category  "mk_MK:2000";LC_ADDRESS
 category  "mk_MK:2000";LC_TELEPHONE
-
+category  "mk_MK:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -166,5 +166,6 @@ width    210
 END LC_PAPER
 
 LC_MEASUREMENT
-measurement    1
+% metric
+measurement 1
 END LC_MEASUREMENT
