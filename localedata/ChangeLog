@@ -1,3 +1,10 @@
+2013-11-14  Chris Leonard  <cjl@sugarlabs.org>
+
+	[BZ #16143]
+	* locales/pap_AN: pap_* locales have duplicated LC_NUMERIC section.
+	* locales/pap_AW: Likewise.
+	* locales/pap_CW: Likewise.
+
 2013-11-08  Chris Leonard  <cjl@sugarlabs.org>
 
 	[BZ #16103]

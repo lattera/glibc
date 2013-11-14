@@ -88,12 +88,6 @@ p_sign_posn               1
 n_sign_posn               2
 END LC_MONETARY
 
-LC_NUMERIC
-decimal_point             "<U002C>"
-thousands_sep             ""
-grouping                  0;0
-END LC_NUMERIC
-
 LC_TIME
 abday   "<U0064><U006F>";"<U006C><U0075>";"<U006D><U0061>";/
         "<U0077><U0065>";"<U0072><U0061>";"<U0062><U0069>";/
