@@ -83,14 +83,21 @@ PSEUDO_END(__syscall_rt_sigaction)
 	cfi_offset (64, \base + 2 * 8)
 	.endm
 
-	.align	4
-
 	cfi_startproc
 	cfi_return_column (64)
 	.cfi_signal_frame
 	SIGCONTEXT_REGS -648
-
 	cfi_def_cfa_offset (648)
+
+	/* While this frame is marked as a signal frame, that only applies
+	   to how this return address is handled for the outer frame.
+	   The return address that arrived here, from the inner frame, is
+	   not marked as a signal frame and so the unwinder still tries to
+	   subtract 1 to examine the presumed call insn.  Thus we must
+	   extend the unwind info to a nop before the start.  */
+	nop
+	.align 4
+
 __syscall_sigreturn:
 	mov	sp, a0
 	ldi	v0, __NR_sigreturn
@@ -98,8 +105,11 @@ __syscall_sigreturn:
 	.size	__syscall_sigreturn, .-__syscall_sigreturn
 	.type	__syscall_sigreturn, @function
 
-	.align 4
+	/* See above wrt including the nop.  */
 	cfi_def_cfa_offset (176 + 648)
+	nop
+	.align 4
+
 __syscall_rt_sigreturn:
 	mov	sp,a0
 	ldi	v0,__NR_rt_sigreturn

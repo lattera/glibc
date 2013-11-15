@@ -1,3 +1,8 @@
+2013-11-16  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/rt_sigaction.S: Include a nop
+	before each signal thunk.
+
 2013-10-30  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/alpha/configure.in: Moved to ...
