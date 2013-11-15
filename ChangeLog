@@ -1,3 +1,7 @@
+2013-11-15  Arun Kumar Pyasi <arun@chitwanix.com>
+
+	* locale/iso-639.def: Add Chitwani Tharu (the).
+
 2013-11-14  Andreas Schwab  <schwab@suse.de>
 
 	* locale/C-address.c (_nl_C_LC_ADDRESS): Set country_num to zero
