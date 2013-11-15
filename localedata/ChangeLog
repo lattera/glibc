@@ -1,3 +1,9 @@
+2013-11-15  Arun Kumar Pyasi <arun@chitwanix.com>
+
+	[BZ#16172]
+	* locales/the_NP: New locale for the_NP.
+	* SUPPORTED: Add the_NP.
+
 2013-11-14  Chris Leonard  <cjl@sugarlabs.org>
 
 	[BZ #16143]
