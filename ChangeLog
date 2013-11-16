@@ -1,5 +1,43 @@
 2013-11-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* libm-test.inc (acos_test_data): Disallow inexact exceptions for
+	tests with quiet NaN input and output.
+	(acosh_test_data): Likewise.
+	(asin_test_data): Likewise.
+	(asinh_test_data): Likewise.
+	(atan_test_data): Likewise.
+	(atanh_test_data): Likewise.
+	(atan2_test_data): Likewise.
+	(cbrt_test_data): Likewise.
+	(cos_test_data): Likewise.
+	(cosh_test_data): Likewise.
+	(erf_test_data): Likewise.
+	(erfc_test_data): Likewise.
+	(exp_test_data): Likewise.
+	(exp10_test_data): Likewise.
+	(exp2_test_data): Likewise.
+	(expm1_test_data): Likewise.
+	(hypot_test_data): Likewise.
+	(j0_test_data): Likewise.
+	(j1_test_data): Likewise.
+	(jn_test_data): Likewise.
+	(lgamma_test_data): Likewise.
+	(log_test_data): Likewise.
+	(log10_test_data): Likewise.
+	(log1p_test_data): Likewise.
+	(log2_test_data): Likewise.
+	(pow_test_data): Likewise.
+	(scalb_test_data): Likewise.
+	(sin_test_data): Likewise.
+	(sincos_test_data): Likewise.
+	(sinh_test_data): Likewise.
+	(tan_test_data): Likewise.
+	(tanh_test_data): Likewise.
+	(tgamma_test_data): Likewise.
+	(y0_test_data): Likewise.
+	(y1_test_data): Likewise.
+	(yn_test_data): Likewise.
+
 	[BZ #16167]
 	* sysdeps/i386/fpu/e_pow.S (__ieee754_pow): Check for first
 	argument being NaN and avoid computations with second argument in
