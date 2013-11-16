@@ -1,5 +1,22 @@
 2013-11-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (TEST_NAN_SIGN): New macro.
+	(NO_TEST_INLINE): Update value.
+	(ERRNO_UNCHANGED): Likewise.
+	(ERRNO_EDOM): Likewise.
+	(ERRNO_ERANGE): Likewise.
+	(IGNORE_RESULT): Likewise.
+	(check_float_internal): Check signs of NaN results if
+	TEST_NAN_SIGN used.
+	(check_complex): Pass TEST_NAN_SIGN flag through to second
+	check_float_internal call.
+	(copysign_test_data): Add tests with quiet NaNs as second
+	argument.  Use TEST_NAN_SIGN.
+	(fabs_test_data): Add test of negative quiet NaN argument.  Use
+	TEST_NAN_SIGN.
+	(signbit_test_data): Add tests of quiet NaN argument.
+	* math/gen-libm-test.pl (parse_args): Handle TEST_NAN_SIGN.
+
 	* math/gen-libm-test.pl (show_exceptions): Take extra argument
 	$ignore_result.
 	(parse_args): Handle function results specified as IGNORE.
