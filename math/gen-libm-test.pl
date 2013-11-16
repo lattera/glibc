@@ -147,11 +147,12 @@ sub build_complex_beautify {
 # Return the text to put in an initializer for a test's exception
 # information.
 sub show_exceptions {
-  my ($exception) = @_;
+  my ($ignore_result, $exception) = @_;
+  $ignore_result = ($ignore_result ? "IGNORE_RESULT|" : "");
   if (defined $exception) {
-    return ", $exception";
+    return ", ${ignore_result}$exception";
   } else {
-    return ', 0';
+    return ", ${ignore_result}0";
   }
 }
 
@@ -162,6 +163,7 @@ sub parse_args {
   my ($current_arg, $cline, $i);
   my (@special);
   my ($call_args);
+  my ($ignore_result_any, $ignore_result_all);
 
   ($descr_args, $descr_res) = split /_/,$descr, 2;
 
@@ -249,20 +251,47 @@ sub parse_args {
   }
 
   @descr = split //,$descr_res;
+  $ignore_result_any = 0;
+  $ignore_result_all = 1;
   foreach (@descr) {
     if ($_ =~ /b|f|i|l|L/ ) {
-      $cline .= ", $args[$current_arg]";
+      my ($result) = $args[$current_arg];
+      if ($result eq "IGNORE") {
+	$ignore_result_any = 1;
+	$result = "0";
+      } else {
+	$ignore_result_all = 0;
+      }
+      $cline .= ", $result";
       $current_arg++;
     } elsif ($_ eq 'c') {
-      $cline .= ", $args[$current_arg], $args[$current_arg+1]";
+      my ($result1) = $args[$current_arg];
+      if ($result1 eq "IGNORE") {
+	$ignore_result_any = 1;
+	$result1 = "0";
+      } else {
+	$ignore_result_all = 0;
+      }
+      my ($result2) = $args[$current_arg + 1];
+      if ($result2 eq "IGNORE") {
+	$ignore_result_any = 1;
+	$result2 = "0";
+      } else {
+	$ignore_result_all = 0;
+      }
+      $cline .= ", $result1, $result2";
       $current_arg += 2;
     } elsif ($_ eq '1') {
       push @special, $args[$current_arg];
       ++$current_arg;
     }
   }
+  if ($ignore_result_any && !$ignore_result_all) {
+    die ("some but not all function results ignored\n");
+  }
   # Add exceptions.
-  $cline .= show_exceptions (($current_arg <= $#args)
+  $cline .= show_exceptions ($ignore_result_any,
+			     ($current_arg <= $#args)
 			     ? $args[$current_arg]
 			     : undef);
 

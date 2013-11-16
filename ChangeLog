@@ -1,5 +1,31 @@
 2013-11-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/gen-libm-test.pl (show_exceptions): Take extra argument
+	$ignore_result.
+	(parse_args): Handle function results specified as IGNORE.
+	* math/libm-test.inc (IGNORE_RESULT): New macro.
+	(check_float_internal): Do not check numerical result if flag
+	IGNORE_RESULT set.
+	(check_complex): Pass through IGNORE_RESULT to second
+	check_float_internal call.
+	(check_int): Do not check numerical result if flag IGNORE_RESULT
+	set.
+	(check_long): Likewise.
+	(check_bool): Likewise.
+	(check_longlong): Likewise.
+	(lrint_test_data): Add tests of infinite and NaN arguments.
+	(lrint_tonearest_test_data): Likewise.
+	(lrint_towardzero_test_data): Likewise.
+	(lrint_downward_test_data): Likewise.
+	(lrint_upward_test_data): Likewise.
+	(llrint_test_data): Likewise.
+	(llrint_tonearest_test_data): Likewise.
+	(llrint_towardzero_test_data): Likewise.
+	(llrint_downward_test_data): Likewise.
+	(llrint_upward_test_data): Likewise.
+	(lround_test_data): Likewise.
+	(llround_test_data): Likewise.
+
 	* math/libm-test.inc (NO_TEST_INLINE): New macro.
 	(ERRNO_UNCHANGED): Update value.
 	(ERRNO_EDOM): Likewise.
