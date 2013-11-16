@@ -1,3 +1,13 @@
+2013-11-16  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16167]
+	* sysdeps/i386/fpu/e_pow.S (__ieee754_pow): Check for first
+	argument being NaN and avoid computations with second argument in
+	that case.
+	* sysdeps/i386/fpu/e_powf.S (__ieee754_powf): Likewise.
+	* sysdeps/i386/fpu/e_powl.S (__ieee754_powl): Likewise.
+	* sysdeps/x86_64/fpu/e_powl.S (__ieee754_powl): Likewise.
+
 2013-11-15  Arun Kumar Pyasi <arun@chitwanix.com>
 
 	* locale/iso-639.def: Add Chitwani Tharu (the).

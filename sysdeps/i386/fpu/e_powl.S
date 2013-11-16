@@ -104,6 +104,9 @@ ENTRY(__ieee754_powl)
 	cmpb	$0x05, %ah
 	je	15f		// x is ±inf
 
+	cmpb	$0x01, %ah
+	je	32f		// x is NaN
+
 	fxch			// y : x
 
 	/* fistpll raises invalid exception for |y| >= 1L<<63.  */
@@ -185,6 +188,12 @@ ENTRY(__ieee754_powl)
 	je	31f
 	fxch			// y : x
 31:	fstp	%st(1)
+	ret
+
+	cfi_adjust_cfa_offset (8)
+32:	addl	$8, %esp
+	cfi_adjust_cfa_offset (-8)
+	fstp	%st(1)
 	ret
 
 	cfi_adjust_cfa_offset (8)

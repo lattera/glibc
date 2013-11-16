@@ -96,6 +96,9 @@ ENTRY(__ieee754_powl)
 	cmpb	$0x05, %ah
 	je	15f		// x is ±inf
 
+	cmpb	$0x01, %ah
+	je	31f		// x is NaN
+
 	fxch			// y : x
 
 	/* fistpll raises invalid exception for |y| >= 1L<<63.  */

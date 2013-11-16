@@ -95,6 +95,9 @@ ENTRY(__ieee754_powf)
 	cmpb	$0x05, %ah
 	je	15f		// x is ±inf
 
+	cmpb	$0x01, %ah
+	je	32f		// x is NaN
+
 	fxch			// y : x
 
 	/* fistpl raises invalid exception for |y| >= 1L<<31.  */
@@ -180,7 +183,7 @@ ENTRY(__ieee754_powf)
 	f2xm1			// 2^fract(y*log2(x))-1 : int(y*log2(x))
 	faddl	MO(one)		// 2^fract(y*log2(x)) : int(y*log2(x))
 	fscale			// 2^fract(y*log2(x))*2^int(y*log2(x)) : int(y*log2(x))
-	addl	$4, %esp
+32:	addl	$4, %esp
 	cfi_adjust_cfa_offset (-4)
 	fstp	%st(1)		// 2^fract(y*log2(x))*2^int(y*log2(x))
 	ret
