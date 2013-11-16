@@ -216,7 +216,7 @@ sub parse_args {
   # consistency check
   if ($current_arg == $#args) {
     die ("wrong number of arguments")
-      unless ($args[$current_arg] =~ /EXCEPTION|ERRNO|IGNORE_ZERO_INF_SIGN/);
+      unless ($args[$current_arg] =~ /EXCEPTION|ERRNO|IGNORE_ZERO_INF_SIGN|NO_TEST_INLINE/);
   } elsif ($current_arg < $#args) {
     die ("wrong number of arguments");
   } elsif ($current_arg > ($#args+1)) {

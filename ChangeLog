@@ -1,5 +1,42 @@
 2013-11-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (NO_TEST_INLINE): New macro.
+	(ERRNO_UNCHANGED): Update value.
+	(ERRNO_EDOM): Likewise.
+	(ERRNO_ERANGE): Likewise.
+	(NO_TEST_INLINE_FLOAT): New macro.
+	(NO_TEST_INLINE_DOUBLE): Likewise.
+	(enable_test): New function.
+	(RUN_TEST_f_f): Check enable_test before running test.
+	(RUN_TEST_2_f): Likewise.
+	(RUN_TEST_fff_f): Likewise.
+	(RUN_TEST_c_f): Likewise.
+	(RUN_TEST_f_f1): Likewise.
+	(RUN_TEST_fF_f1): Likewise.
+	(RUN_TEST_fI_f1): Likewise.
+	(RUN_TEST_ffI_f1): Likewise.
+	(RUN_TEST_c_c): Likewise.
+	(RUN_TEST_cc_c): Likewise.
+	(RUN_TEST_f_i): Likewise.
+	(RUN_TEST_f_i_tg): Likewise.
+	(RUN_TEST_ff_i_tg): Likewise.
+	(RUN_TEST_f_b): Likewise.
+	(RUN_TEST_f_b_tg): Likewise.
+	(RUN_TEST_f_l): Likewise.
+	(RUN_TEST_f_L): Likewise.
+	(RUN_TEST_fFF_11): Likewise.
+	(asinh_test_data): Use NO_TEST_INLINE instead of [!TEST_INLINE]
+	conditionals.
+	(cosh_test_data): Likewise.
+	(exp_test_data): Likewise.
+	(expm1_test_data): Likewise.
+	(hypot_test_data): Likewise.
+	(pow_test_data): Likewise.
+	(sinh_test_data): Likewise.
+	(tanh_test_data): Likewise.
+	* math/gen-libm-test.pl (parse_args): Allow NO_TEST_INLINE as
+	flags argument.
+
 	* libm-test.inc (acos_test_data): Disallow inexact exceptions for
 	tests with quiet NaN input and output.
 	(acosh_test_data): Likewise.

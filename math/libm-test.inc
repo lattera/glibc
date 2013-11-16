@@ -173,10 +173,11 @@ struct ulp_data
 #define EXCEPTIONS_OK INVALID_EXCEPTION_OK+DIVIDE_BY_ZERO_EXCEPTION_OK
 /* Some special test flags, passed together with exceptions.  */
 #define IGNORE_ZERO_INF_SIGN		0x400
+#define NO_TEST_INLINE			0x800
 /* Indicate errno settings required or disallowed.  */
-#define ERRNO_UNCHANGED			0x800
-#define ERRNO_EDOM			0x1000
-#define ERRNO_ERANGE			0x2000
+#define ERRNO_UNCHANGED			0x1000
+#define ERRNO_EDOM			0x2000
+#define ERRNO_ERANGE			0x4000
 
 /* Values underflowing only for float.  */
 #ifdef TEST_FLOAT
@@ -208,6 +209,18 @@ struct ulp_data
 #define UNDERFLOW_EXCEPTION_BEFORE_ROUNDING	(TININESS_AFTER_ROUNDING \
 						 ? 0			\
 						 : UNDERFLOW_EXCEPTION)
+
+/* Inline tests disabled for particular types.  */
+#ifdef TEST_FLOAT
+# define NO_TEST_INLINE_FLOAT	NO_TEST_INLINE
+#else
+# define NO_TEST_INLINE_FLOAT	0
+#endif
+#ifdef TEST_DOUBLE
+# define NO_TEST_INLINE_DOUBLE	NO_TEST_INLINE
+#else
+# define NO_TEST_INLINE_DOUBLE	0
+#endif
 
 /* Various constants (we must supply them precalculated for accuracy).  */
 #define M_PI_6l			.52359877559829887307710723054658383L
@@ -942,6 +955,17 @@ check_longlong (const char *test_name, long long int computed,
   errno = 0;
 }
 
+/* Return whether a test with flags EXCEPTIONS should be run.  */
+static int
+enable_test (int exceptions)
+{
+#ifdef TEST_INLINE
+  if (exceptions & NO_TEST_INLINE)
+    return 0;
+#endif
+  return 1;
+}
+
 /* Structures for each kind of test.  */
 struct test_f_f_data
 {
@@ -1137,15 +1161,16 @@ struct test_fFF_11_data
 
 /* Run an individual test, including any required setup and checking
    of results, or loop over all tests in an array.  */
-#define RUN_TEST_f_f(ARG_STR, FUNC_NAME, ARG, EXPECTED,	\
-		     EXCEPTIONS)				\
-  do								\
-    {								\
-      COMMON_TEST_SETUP (ARG_STR);				\
-      check_float (test_name, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
-		   EXCEPTIONS);					\
-      COMMON_TEST_CLEANUP;					\
-    }								\
+#define RUN_TEST_f_f(ARG_STR, FUNC_NAME, ARG, EXPECTED,			\
+		     EXCEPTIONS)					\
+  do									\
+    if (enable_test (EXCEPTIONS))					\
+      {									\
+	COMMON_TEST_SETUP (ARG_STR);					\
+	check_float (test_name, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
+		     EXCEPTIONS);					\
+	COMMON_TEST_CLEANUP;						\
+      }									\
   while (0)
 #define RUN_TEST_LOOP_f_f(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
@@ -1153,15 +1178,16 @@ struct test_fFF_11_data
       RUN_TEST_f_f ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,	\
 		    (ARRAY)[i].expected, (ARRAY)[i].exceptions);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
-#define RUN_TEST_2_f(ARG_STR, FUNC_NAME, ARG1, ARG2, EXPECTED,		\
-		     EXCEPTIONS)					\
-  do									\
-    {									\
-      COMMON_TEST_SETUP (ARG_STR);					\
-      check_float (test_name, FUNC (FUNC_NAME) (ARG1, ARG2), EXPECTED,	\
-		   EXCEPTIONS);						\
-      COMMON_TEST_CLEANUP;						\
-    }									\
+#define RUN_TEST_2_f(ARG_STR, FUNC_NAME, ARG1, ARG2, EXPECTED,	\
+		     EXCEPTIONS)				\
+  do								\
+    if (enable_test (EXCEPTIONS))				\
+      {								\
+	COMMON_TEST_SETUP (ARG_STR);				\
+	check_float (test_name, FUNC (FUNC_NAME) (ARG1, ARG2),	\
+		     EXPECTED, EXCEPTIONS);			\
+	COMMON_TEST_CLEANUP;					\
+      }								\
   while (0)
 #define RUN_TEST_LOOP_2_f(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
@@ -1181,12 +1207,13 @@ struct test_fFF_11_data
 #define RUN_TEST_fff_f(ARG_STR, FUNC_NAME, ARG1, ARG2, ARG3,		\
 		       EXPECTED, EXCEPTIONS)				\
   do									\
-    {									\
-      COMMON_TEST_SETUP (ARG_STR);					\
-      check_float (test_name, FUNC (FUNC_NAME) (ARG1, ARG2, ARG3),	\
-		   EXPECTED, EXCEPTIONS);				\
-      COMMON_TEST_CLEANUP;						\
-    }									\
+    if (enable_test (EXCEPTIONS))					\
+      {									\
+	COMMON_TEST_SETUP (ARG_STR);					\
+	check_float (test_name, FUNC (FUNC_NAME) (ARG1, ARG2, ARG3),	\
+		     EXPECTED, EXCEPTIONS);				\
+	COMMON_TEST_CLEANUP;						\
+      }									\
   while (0)
 #define RUN_TEST_LOOP_fff_f(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
@@ -1198,13 +1225,14 @@ struct test_fFF_11_data
 #define RUN_TEST_c_f(ARG_STR, FUNC_NAME, ARG1, ARG2, EXPECTED,		\
 		     EXCEPTIONS)					\
   do									\
-    {									\
-      COMMON_TEST_SETUP (ARG_STR);					\
-      check_float (test_name,						\
-		   FUNC (FUNC_NAME) (BUILD_COMPLEX (ARG1, ARG2)),	\
-		   EXPECTED, EXCEPTIONS);				\
-      COMMON_TEST_CLEANUP;						\
-    }									\
+    if (enable_test (EXCEPTIONS))					\
+      {									\
+	COMMON_TEST_SETUP (ARG_STR);					\
+	check_float (test_name,						\
+		     FUNC (FUNC_NAME) (BUILD_COMPLEX (ARG1, ARG2)),	\
+		     EXPECTED, EXCEPTIONS);				\
+	COMMON_TEST_CLEANUP;						\
+      }									\
   while (0)
 #define RUN_TEST_LOOP_c_f(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
@@ -1213,21 +1241,22 @@ struct test_fFF_11_data
 		    (ARRAY)[i].argc, (ARRAY)[i].expected,		\
 		    (ARRAY)[i].exceptions);				\
   ROUND_RESTORE_ ## ROUNDING_MODE
-#define RUN_TEST_f_f1(ARG_STR, FUNC_NAME, ARG, EXPECTED,	\
-		      EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,	\
-		      EXTRA_EXPECTED)				\
-  do								\
-    {								\
-      COMMON_TEST_SETUP (ARG_STR);				\
-      (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;		\
-      check_float (test_name, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
-		   EXCEPTIONS);					\
-      EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);			\
-      if (EXTRA_TEST)						\
-	check_int (extra1_name, EXTRA_VAR, EXTRA_EXPECTED, 0);	\
-      EXTRA_OUTPUT_TEST_CLEANUP (1);				\
-      COMMON_TEST_CLEANUP;					\
-    }								\
+#define RUN_TEST_f_f1(ARG_STR, FUNC_NAME, ARG, EXPECTED,		\
+		      EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,		\
+		      EXTRA_EXPECTED)					\
+  do									\
+    if (enable_test (EXCEPTIONS))					\
+      {									\
+	COMMON_TEST_SETUP (ARG_STR);					\
+	(EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;			\
+	check_float (test_name, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
+		     EXCEPTIONS);					\
+	EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);				\
+	if (EXTRA_TEST)							\
+	  check_int (extra1_name, EXTRA_VAR, EXTRA_EXPECTED, 0);	\
+	EXTRA_OUTPUT_TEST_CLEANUP (1);					\
+	COMMON_TEST_CLEANUP;						\
+      }									\
   while (0)
 #define RUN_TEST_LOOP_f_f1(FUNC_NAME, ARRAY, ROUNDING_MODE, EXTRA_VAR)	\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
@@ -1241,17 +1270,18 @@ struct test_fFF_11_data
 		       EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,		\
 		       EXTRA_EXPECTED)					\
   do									\
-    {									\
-      COMMON_TEST_SETUP (ARG_STR);					\
-      (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;			\
-      check_float (test_name, FUNC (FUNC_NAME) (ARG, &(EXTRA_VAR)),	\
-		   EXPECTED, EXCEPTIONS);				\
-      EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);				\
-      if (EXTRA_TEST)							\
-	check_float (extra1_name, EXTRA_VAR, EXTRA_EXPECTED, 0);	\
-      EXTRA_OUTPUT_TEST_CLEANUP (1);					\
-      COMMON_TEST_CLEANUP;						\
-    }									\
+    if (enable_test (EXCEPTIONS))					\
+      {									\
+	COMMON_TEST_SETUP (ARG_STR);					\
+	(EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;			\
+	check_float (test_name, FUNC (FUNC_NAME) (ARG, &(EXTRA_VAR)),	\
+		     EXPECTED, EXCEPTIONS);				\
+	EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);				\
+	if (EXTRA_TEST)							\
+	  check_float (extra1_name, EXTRA_VAR, EXTRA_EXPECTED, 0);	\
+	EXTRA_OUTPUT_TEST_CLEANUP (1);					\
+	COMMON_TEST_CLEANUP;						\
+      }									\
   while (0)
 #define RUN_TEST_LOOP_fF_f1(FUNC_NAME, ARRAY, ROUNDING_MODE, EXTRA_VAR)	\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
@@ -1265,17 +1295,18 @@ struct test_fFF_11_data
 		       EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,		\
 		       EXTRA_EXPECTED)					\
   do									\
-    {									\
-      COMMON_TEST_SETUP (ARG_STR);					\
-      (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;			\
-      check_float (test_name, FUNC (FUNC_NAME) (ARG, &(EXTRA_VAR)),	\
-		   EXPECTED, EXCEPTIONS);				\
-      EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);				\
-      if (EXTRA_TEST)							\
-	check_int (extra1_name, EXTRA_VAR, EXTRA_EXPECTED, 0);		\
-      EXTRA_OUTPUT_TEST_CLEANUP (1);					\
-      COMMON_TEST_CLEANUP;						\
-    }									\
+    if (enable_test (EXCEPTIONS))					\
+      {									\
+	COMMON_TEST_SETUP (ARG_STR);					\
+	(EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;			\
+	check_float (test_name, FUNC (FUNC_NAME) (ARG, &(EXTRA_VAR)),	\
+		     EXPECTED, EXCEPTIONS);				\
+	EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);				\
+	if (EXTRA_TEST)							\
+	  check_int (extra1_name, EXTRA_VAR, EXTRA_EXPECTED, 0);	\
+	EXTRA_OUTPUT_TEST_CLEANUP (1);					\
+	COMMON_TEST_CLEANUP;						\
+      }									\
   while (0)
 #define RUN_TEST_LOOP_fI_f1(FUNC_NAME, ARRAY, ROUNDING_MODE, EXTRA_VAR)	\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
@@ -1289,18 +1320,19 @@ struct test_fFF_11_data
 			EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,		\
 			EXTRA_EXPECTED)					\
   do									\
-    {									\
-      COMMON_TEST_SETUP (ARG_STR);					\
-      (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;			\
-      check_float (test_name,						\
-		   FUNC (FUNC_NAME) (ARG1, ARG2, &(EXTRA_VAR)),		\
-		   EXPECTED, EXCEPTIONS);				\
-      EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);				\
-      if (EXTRA_TEST)							\
-	check_int (extra1_name, EXTRA_VAR, EXTRA_EXPECTED, 0);		\
-      EXTRA_OUTPUT_TEST_CLEANUP (1);					\
-      COMMON_TEST_CLEANUP;						\
-    }									\
+    if (enable_test (EXCEPTIONS))					\
+      {									\
+	COMMON_TEST_SETUP (ARG_STR);					\
+	(EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;			\
+	check_float (test_name,						\
+		     FUNC (FUNC_NAME) (ARG1, ARG2, &(EXTRA_VAR)),	\
+		     EXPECTED, EXCEPTIONS);				\
+	EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);				\
+	if (EXTRA_TEST)							\
+	  check_int (extra1_name, EXTRA_VAR, EXTRA_EXPECTED, 0);	\
+	EXTRA_OUTPUT_TEST_CLEANUP (1);					\
+	COMMON_TEST_CLEANUP;						\
+      }									\
   while (0)
 #define RUN_TEST_LOOP_ffI_f1(FUNC_NAME, ARRAY, ROUNDING_MODE,		\
 			     EXTRA_VAR)					\
@@ -1315,13 +1347,14 @@ struct test_fFF_11_data
 #define RUN_TEST_c_c(ARG_STR, FUNC_NAME, ARGR, ARGC, EXPR, EXPC,	\
 		     EXCEPTIONS)					\
   do									\
-    {									\
-      COMMON_TEST_SETUP (ARG_STR);					\
-      check_complex (test_name,						\
-		     FUNC (FUNC_NAME) (BUILD_COMPLEX (ARGR, ARGC)),	\
-		     BUILD_COMPLEX (EXPR, EXPC), EXCEPTIONS);		\
-      COMMON_TEST_CLEANUP;						\
-    }									\
+    if (enable_test (EXCEPTIONS))					\
+      {									\
+	COMMON_TEST_SETUP (ARG_STR);					\
+	check_complex (test_name,					\
+		       FUNC (FUNC_NAME) (BUILD_COMPLEX (ARGR, ARGC)),	\
+		       BUILD_COMPLEX (EXPR, EXPC), EXCEPTIONS);		\
+	COMMON_TEST_CLEANUP;						\
+      }									\
   while (0)
 #define RUN_TEST_LOOP_c_c(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
@@ -1333,14 +1366,15 @@ struct test_fFF_11_data
 #define RUN_TEST_cc_c(ARG_STR, FUNC_NAME, ARG1R, ARG1C, ARG2R, ARG2C,	\
 		      EXPR, EXPC, EXCEPTIONS)				\
   do									\
-    {									\
-      COMMON_TEST_SETUP (ARG_STR);					\
-      check_complex (test_name,						\
-		     FUNC (FUNC_NAME) (BUILD_COMPLEX (ARG1R, ARG1C),	\
-				       BUILD_COMPLEX (ARG2R, ARG2C)),	\
-		     BUILD_COMPLEX (EXPR, EXPC), EXCEPTIONS);		\
-      COMMON_TEST_CLEANUP;						\
-    }									\
+    if (enable_test (EXCEPTIONS))					\
+      {									\
+	COMMON_TEST_SETUP (ARG_STR);					\
+	check_complex (test_name,					\
+		       FUNC (FUNC_NAME) (BUILD_COMPLEX (ARG1R, ARG1C),	\
+					 BUILD_COMPLEX (ARG2R, ARG2C)),	\
+		       BUILD_COMPLEX (EXPR, EXPC), EXCEPTIONS);		\
+	COMMON_TEST_CLEANUP;						\
+      }									\
   while (0)
 #define RUN_TEST_LOOP_cc_c(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
@@ -1352,12 +1386,13 @@ struct test_fFF_11_data
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_i(ARG_STR, FUNC_NAME, ARG, EXPECTED, EXCEPTIONS)	\
   do									\
-    {									\
-      COMMON_TEST_SETUP (ARG_STR);					\
-      check_int (test_name, FUNC (FUNC_NAME) (ARG), EXPECTED,		\
-		 EXCEPTIONS);						\
-      COMMON_TEST_CLEANUP;						\
-    }									\
+    if (enable_test (EXCEPTIONS))					\
+      {									\
+	COMMON_TEST_SETUP (ARG_STR);					\
+	check_int (test_name, FUNC (FUNC_NAME) (ARG), EXPECTED,		\
+		   EXCEPTIONS);						\
+	COMMON_TEST_CLEANUP;						\
+      }									\
   while (0)
 #define RUN_TEST_LOOP_f_i(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
@@ -1368,11 +1403,12 @@ struct test_fFF_11_data
 #define RUN_TEST_f_i_tg(ARG_STR, FUNC_NAME, ARG, EXPECTED,		\
 			EXCEPTIONS)					\
   do									\
-    {									\
-      COMMON_TEST_SETUP (ARG_STR);					\
-      check_int (test_name, FUNC_NAME (ARG), EXPECTED, EXCEPTIONS);	\
-      COMMON_TEST_CLEANUP;						\
-    }									\
+    if (enable_test (EXCEPTIONS))					\
+      {									\
+	COMMON_TEST_SETUP (ARG_STR);					\
+	check_int (test_name, FUNC_NAME (ARG), EXPECTED, EXCEPTIONS);	\
+	COMMON_TEST_CLEANUP;						\
+      }									\
   while (0)
 #define RUN_TEST_LOOP_f_i_tg(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
@@ -1383,12 +1419,13 @@ struct test_fFF_11_data
 #define RUN_TEST_ff_i_tg(ARG_STR, FUNC_NAME, ARG1, ARG2, EXPECTED,	\
 			 EXCEPTIONS)					\
   do									\
-    {									\
-      COMMON_TEST_SETUP (ARG_STR);					\
-      check_int (test_name, FUNC_NAME (ARG1, ARG2), EXPECTED,		\
-		 EXCEPTIONS);						\
-      COMMON_TEST_CLEANUP;						\
-    }									\
+    if (enable_test (EXCEPTIONS))					\
+      {									\
+	COMMON_TEST_SETUP (ARG_STR);					\
+	check_int (test_name, FUNC_NAME (ARG1, ARG2), EXPECTED,		\
+		   EXCEPTIONS);						\
+	COMMON_TEST_CLEANUP;						\
+      }									\
   while (0)
 #define RUN_TEST_LOOP_ff_i_tg(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
@@ -1399,12 +1436,13 @@ struct test_fFF_11_data
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_b(ARG_STR, FUNC_NAME, ARG, EXPECTED, EXCEPTIONS)	\
   do									\
-    {									\
-      COMMON_TEST_SETUP (ARG_STR);					\
-      check_bool (test_name, FUNC (FUNC_NAME) (ARG), EXPECTED,		\
-		  EXCEPTIONS);						\
-      COMMON_TEST_CLEANUP;						\
-    }									\
+    if (enable_test (EXCEPTIONS))					\
+      {									\
+	COMMON_TEST_SETUP (ARG_STR);					\
+	check_bool (test_name, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
+		    EXCEPTIONS);					\
+	COMMON_TEST_CLEANUP;						\
+      }									\
   while (0)
 #define RUN_TEST_LOOP_f_b(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
@@ -1415,11 +1453,12 @@ struct test_fFF_11_data
 #define RUN_TEST_f_b_tg(ARG_STR, FUNC_NAME, ARG, EXPECTED,		\
 			EXCEPTIONS)					\
   do									\
-    {									\
-      COMMON_TEST_SETUP (ARG_STR);					\
-      check_bool (test_name, FUNC_NAME (ARG), EXPECTED, EXCEPTIONS);	\
-      COMMON_TEST_CLEANUP;						\
-    }									\
+    if (enable_test (EXCEPTIONS))					\
+      {									\
+	COMMON_TEST_SETUP (ARG_STR);					\
+	check_bool (test_name, FUNC_NAME (ARG), EXPECTED, EXCEPTIONS);	\
+	COMMON_TEST_CLEANUP;						\
+      }									\
   while (0)
 #define RUN_TEST_LOOP_f_b_tg(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
@@ -1429,12 +1468,13 @@ struct test_fFF_11_data
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_l(ARG_STR, FUNC_NAME, ARG, EXPECTED, EXCEPTIONS)	\
   do									\
-    {									\
-      COMMON_TEST_SETUP (ARG_STR);					\
-      check_long (test_name, FUNC (FUNC_NAME) (ARG), EXPECTED,		\
-		  EXCEPTIONS);						\
-      COMMON_TEST_CLEANUP;						\
-    }									\
+    if (enable_test (EXCEPTIONS))					\
+      {									\
+	COMMON_TEST_SETUP (ARG_STR);					\
+	check_long (test_name, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
+		    EXCEPTIONS);					\
+	COMMON_TEST_CLEANUP;						\
+      }									\
   while (0)
 #define RUN_TEST_LOOP_f_l(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
@@ -1444,12 +1484,13 @@ struct test_fFF_11_data
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_L(ARG_STR, FUNC_NAME, ARG, EXPECTED, EXCEPTIONS)	\
   do									\
-    {									\
-      COMMON_TEST_SETUP (ARG_STR);					\
-      check_longlong (test_name, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
-		      EXCEPTIONS);					\
-      COMMON_TEST_CLEANUP;						\
-    }									\
+    if (enable_test (EXCEPTIONS))					\
+      {									\
+	COMMON_TEST_SETUP (ARG_STR);					\
+	check_longlong (test_name, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
+			EXCEPTIONS);					\
+	COMMON_TEST_CLEANUP;						\
+      }									\
   while (0)
 #define RUN_TEST_LOOP_f_L(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
@@ -1462,20 +1503,21 @@ struct test_fFF_11_data
 			EXTRA1_EXPECTED, EXTRA2_VAR,			\
 			EXTRA2_TEST, EXTRA2_EXPECTED)			\
   do									\
-    {									\
-      COMMON_TEST_SETUP (ARG_STR);					\
-      FUNC (FUNC_NAME) (ARG, &(EXTRA1_VAR), &(EXTRA2_VAR));		\
-      EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);				\
-      if (EXTRA1_TEST)							\
-	check_float (extra1_name, EXTRA1_VAR, EXTRA1_EXPECTED,		\
-		     EXCEPTIONS);					\
-      EXTRA_OUTPUT_TEST_CLEANUP (1);					\
-      EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 2);				\
-      if (EXTRA2_TEST)							\
-	check_float (extra2_name, EXTRA2_VAR, EXTRA2_EXPECTED, 0);	\
-      EXTRA_OUTPUT_TEST_CLEANUP (2);					\
-      COMMON_TEST_CLEANUP;						\
-    }									\
+    if (enable_test (EXCEPTIONS))					\
+      {									\
+	COMMON_TEST_SETUP (ARG_STR);					\
+	FUNC (FUNC_NAME) (ARG, &(EXTRA1_VAR), &(EXTRA2_VAR));		\
+	EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);				\
+	if (EXTRA1_TEST)						\
+	  check_float (extra1_name, EXTRA1_VAR, EXTRA1_EXPECTED,	\
+		       EXCEPTIONS);					\
+	EXTRA_OUTPUT_TEST_CLEANUP (1);					\
+	EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 2);				\
+	if (EXTRA2_TEST)						\
+	  check_float (extra2_name, EXTRA2_VAR, EXTRA2_EXPECTED, 0);	\
+	EXTRA_OUTPUT_TEST_CLEANUP (2);					\
+	COMMON_TEST_CLEANUP;						\
+      }									\
   while (0)
 #define RUN_TEST_LOOP_fFF_11(FUNC_NAME, ARRAY, ROUNDING_MODE,		\
 			     EXTRA1_VAR, EXTRA2_VAR)			\
@@ -1774,10 +1816,8 @@ static const struct test_f_f_data asinh_test_data[] =
   {
     TEST_f_f (asinh, 0, 0),
     TEST_f_f (asinh, minus_zero, minus_zero),
-#ifndef TEST_INLINE
-    TEST_f_f (asinh, plus_infty, plus_infty),
-    TEST_f_f (asinh, minus_infty, minus_infty),
-#endif
+    TEST_f_f (asinh, plus_infty, plus_infty, NO_TEST_INLINE),
+    TEST_f_f (asinh, minus_infty, minus_infty, NO_TEST_INLINE),
     TEST_f_f (asinh, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
     TEST_f_f (asinh, 0.75L, 0.693147180559945309417232121458176568L),
   };
@@ -6952,10 +6992,8 @@ static const struct test_f_f_data cosh_test_data[] =
     TEST_f_f (cosh, 0, 1),
     TEST_f_f (cosh, minus_zero, 1),
 
-#ifndef TEST_INLINE
-    TEST_f_f (cosh, plus_infty, plus_infty),
-    TEST_f_f (cosh, minus_infty, plus_infty),
-#endif
+    TEST_f_f (cosh, plus_infty, plus_infty, NO_TEST_INLINE),
+    TEST_f_f (cosh, minus_infty, plus_infty, NO_TEST_INLINE),
     TEST_f_f (cosh, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
 
     TEST_f_f (cosh, 0.75L, 1.29468328467684468784170818539018176L),
@@ -7890,10 +7928,8 @@ static const struct test_f_f_data exp_test_data[] =
     TEST_f_f (exp, 0, 1),
     TEST_f_f (exp, minus_zero, 1),
 
-#ifndef TEST_INLINE
-    TEST_f_f (exp, plus_infty, plus_infty),
-    TEST_f_f (exp, minus_infty, 0),
-#endif
+    TEST_f_f (exp, plus_infty, plus_infty, NO_TEST_INLINE),
+    TEST_f_f (exp, minus_infty, 0, NO_TEST_INLINE),
     TEST_f_f (exp, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
     TEST_f_f (exp, 1, M_El),
 
@@ -8083,10 +8119,8 @@ static const struct test_f_f_data expm1_test_data[] =
     TEST_f_f (expm1, 0, 0),
     TEST_f_f (expm1, minus_zero, minus_zero),
 
-#ifndef TEST_INLINE
-    TEST_f_f (expm1, plus_infty, plus_infty),
-    TEST_f_f (expm1, minus_infty, -1),
-#endif
+    TEST_f_f (expm1, plus_infty, plus_infty, NO_TEST_INLINE),
+    TEST_f_f (expm1, minus_infty, -1, NO_TEST_INLINE),
     TEST_f_f (expm1, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
 
     TEST_f_f (expm1, 1, M_El - 1.0),
@@ -9430,12 +9464,10 @@ static const struct test_ff_f_data hypot_test_data[] =
     TEST_ff_f (hypot, plus_infty, 1, plus_infty),
     TEST_ff_f (hypot, minus_infty, 1, plus_infty),
 
-#ifndef TEST_INLINE
-    TEST_ff_f (hypot, plus_infty, qnan_value, plus_infty),
-    TEST_ff_f (hypot, minus_infty, qnan_value, plus_infty),
-    TEST_ff_f (hypot, qnan_value, plus_infty, plus_infty),
-    TEST_ff_f (hypot, qnan_value, minus_infty, plus_infty),
-#endif
+    TEST_ff_f (hypot, plus_infty, qnan_value, plus_infty, NO_TEST_INLINE),
+    TEST_ff_f (hypot, minus_infty, qnan_value, plus_infty, NO_TEST_INLINE),
+    TEST_ff_f (hypot, qnan_value, plus_infty, plus_infty, NO_TEST_INLINE),
+    TEST_ff_f (hypot, qnan_value, minus_infty, plus_infty, NO_TEST_INLINE),
 
     TEST_ff_f (hypot, qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
 
@@ -9462,18 +9494,16 @@ static const struct test_ff_f_data hypot_test_data[] =
     TEST_ff_f (hypot, 0x1.23456789abcdef0123456789ab8p-500L, 0x1.23456789abcdef0123456789ab8p-500L, 4.9155782399407039128612180934736799735113e-151L),
 #endif
 
-#if !(defined TEST_FLOAT && defined TEST_INLINE)
-    TEST_ff_f (hypot, 0x3p125L, 0x4p125L, 0x5p125L),
-    TEST_ff_f (hypot, 0x1.234566p-126L, 0x1.234566p-126L, 1.891441686191081936598531534017449451173e-38L),
+    TEST_ff_f (hypot, 0x3p125L, 0x4p125L, 0x5p125L, NO_TEST_INLINE_FLOAT),
+    TEST_ff_f (hypot, 0x1.234566p-126L, 0x1.234566p-126L, 1.891441686191081936598531534017449451173e-38L, NO_TEST_INLINE_FLOAT),
+
+#ifndef TEST_FLOAT
+    TEST_ff_f (hypot, 0x3p1021L, 0x4p1021L, 0x5p1021L, NO_TEST_INLINE_DOUBLE),
+    TEST_ff_f (hypot, 0x1p+0L, 0x0.3ep-1022L, 0x1p+0L, NO_TEST_INLINE_DOUBLE),
 #endif
 
-#if !defined TEST_FLOAT && !(defined TEST_DOUBLE && defined TEST_INLINE)
-    TEST_ff_f (hypot, 0x3p1021L, 0x4p1021L, 0x5p1021L),
-    TEST_ff_f (hypot, 0x1p+0L, 0x0.3ep-1022L, 0x1p+0L),
-#endif
-
-#if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384 && !defined TEST_INLINE
-    TEST_ff_f (hypot, 0x3p16381L, 0x4p16381L, 0x5p16381L),
+#if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
+    TEST_ff_f (hypot, 0x3p16381L, 0x4p16381L, 0x5p16381L, NO_TEST_INLINE),
 #endif
 
     TEST_ff_f (hypot, 0x1p-149L, 0x1p-149L, 1.9817352931807469938024533350782879785095e-45L, UNDERFLOW_EXCEPTION_FLOAT),
@@ -9482,10 +9512,10 @@ static const struct test_ff_f_data hypot_test_data[] =
     TEST_ff_f (hypot, 0x1p-1074L, 0x1p-1074L, 6.9871433705131320800651344656990806305791e-324L, UNDERFLOW_EXCEPTION_DOUBLE),
 #endif
 
-#if defined TEST_LDOUBLE && LDBL_MIN_EXP <= -16381 && !defined TEST_INLINE
-    TEST_ff_f (hypot, 0x1p-16445L, 0x1p-16445L, 5.1550906155442528702558159159596215039925e-4951L, UNDERFLOW_EXCEPTION),
+#if defined TEST_LDOUBLE && LDBL_MIN_EXP <= -16381
+    TEST_ff_f (hypot, 0x1p-16445L, 0x1p-16445L, 5.1550906155442528702558159159596215039925e-4951L, UNDERFLOW_EXCEPTION|NO_TEST_INLINE),
 # if LDBL_MANT_DIG >= 113
-    TEST_ff_f (hypot, 0x1p-16494L, 0x1p-16494L, 9.1572804726500807075521065242888978445857e-4966L, UNDERFLOW_EXCEPTION),
+    TEST_ff_f (hypot, 0x1p-16494L, 0x1p-16494L, 9.1572804726500807075521065242888978445857e-4966L, UNDERFLOW_EXCEPTION|NO_TEST_INLINE),
 # endif
 #endif
   };
@@ -11551,63 +11581,61 @@ static const struct test_ff_f_data pow_test_data[] =
     TEST_ff_f (pow, qnan_value, 0, 1),
     TEST_ff_f (pow, qnan_value, minus_zero, 1),
 
-#ifndef TEST_INLINE
-    TEST_ff_f (pow, 1.1L, plus_infty, plus_infty),
-    TEST_ff_f (pow, plus_infty, plus_infty, plus_infty),
-    TEST_ff_f (pow, -1.1L, plus_infty, plus_infty),
-    TEST_ff_f (pow, minus_infty, plus_infty, plus_infty),
+    TEST_ff_f (pow, 1.1L, plus_infty, plus_infty, NO_TEST_INLINE),
+    TEST_ff_f (pow, plus_infty, plus_infty, plus_infty, NO_TEST_INLINE),
+    TEST_ff_f (pow, -1.1L, plus_infty, plus_infty, NO_TEST_INLINE),
+    TEST_ff_f (pow, minus_infty, plus_infty, plus_infty, NO_TEST_INLINE),
 
-    TEST_ff_f (pow, 0.9L, plus_infty, 0),
-    TEST_ff_f (pow, 1e-7L, plus_infty, 0),
-    TEST_ff_f (pow, -0.9L, plus_infty, 0),
-    TEST_ff_f (pow, -1e-7L, plus_infty, 0),
+    TEST_ff_f (pow, 0.9L, plus_infty, 0, NO_TEST_INLINE),
+    TEST_ff_f (pow, 1e-7L, plus_infty, 0, NO_TEST_INLINE),
+    TEST_ff_f (pow, -0.9L, plus_infty, 0, NO_TEST_INLINE),
+    TEST_ff_f (pow, -1e-7L, plus_infty, 0, NO_TEST_INLINE),
 
-    TEST_ff_f (pow, 1.1L, minus_infty, 0),
-    TEST_ff_f (pow, plus_infty, minus_infty, 0),
-    TEST_ff_f (pow, -1.1L, minus_infty, 0),
-    TEST_ff_f (pow, minus_infty, minus_infty, 0),
+    TEST_ff_f (pow, 1.1L, minus_infty, 0, NO_TEST_INLINE),
+    TEST_ff_f (pow, plus_infty, minus_infty, 0, NO_TEST_INLINE),
+    TEST_ff_f (pow, -1.1L, minus_infty, 0, NO_TEST_INLINE),
+    TEST_ff_f (pow, minus_infty, minus_infty, 0, NO_TEST_INLINE),
 
-    TEST_ff_f (pow, 0.9L, minus_infty, plus_infty),
-    TEST_ff_f (pow, 1e-7L, minus_infty, plus_infty),
-    TEST_ff_f (pow, -0.9L, minus_infty, plus_infty),
-    TEST_ff_f (pow, -1e-7L, minus_infty, plus_infty),
+    TEST_ff_f (pow, 0.9L, minus_infty, plus_infty, NO_TEST_INLINE),
+    TEST_ff_f (pow, 1e-7L, minus_infty, plus_infty, NO_TEST_INLINE),
+    TEST_ff_f (pow, -0.9L, minus_infty, plus_infty, NO_TEST_INLINE),
+    TEST_ff_f (pow, -1e-7L, minus_infty, plus_infty, NO_TEST_INLINE),
 
-    TEST_ff_f (pow, plus_infty, 1e-7L, plus_infty),
-    TEST_ff_f (pow, plus_infty, 1, plus_infty),
-    TEST_ff_f (pow, plus_infty, 1e7L, plus_infty),
-    TEST_ff_f (pow, plus_infty, min_subnorm_value, plus_infty),
+    TEST_ff_f (pow, plus_infty, 1e-7L, plus_infty, NO_TEST_INLINE),
+    TEST_ff_f (pow, plus_infty, 1, plus_infty, NO_TEST_INLINE),
+    TEST_ff_f (pow, plus_infty, 1e7L, plus_infty, NO_TEST_INLINE),
+    TEST_ff_f (pow, plus_infty, min_subnorm_value, plus_infty, NO_TEST_INLINE),
 
-    TEST_ff_f (pow, plus_infty, -1e-7L, 0),
-    TEST_ff_f (pow, plus_infty, -1, 0),
-    TEST_ff_f (pow, plus_infty, -1e7L, 0),
-    TEST_ff_f (pow, plus_infty, -min_subnorm_value, 0),
+    TEST_ff_f (pow, plus_infty, -1e-7L, 0, NO_TEST_INLINE),
+    TEST_ff_f (pow, plus_infty, -1, 0, NO_TEST_INLINE),
+    TEST_ff_f (pow, plus_infty, -1e7L, 0, NO_TEST_INLINE),
+    TEST_ff_f (pow, plus_infty, -min_subnorm_value, 0, NO_TEST_INLINE),
 
-    TEST_ff_f (pow, minus_infty, 1, minus_infty),
-    TEST_ff_f (pow, minus_infty, 11, minus_infty),
-    TEST_ff_f (pow, minus_infty, 1001, minus_infty),
+    TEST_ff_f (pow, minus_infty, 1, minus_infty, NO_TEST_INLINE),
+    TEST_ff_f (pow, minus_infty, 11, minus_infty, NO_TEST_INLINE),
+    TEST_ff_f (pow, minus_infty, 1001, minus_infty, NO_TEST_INLINE),
 
-    TEST_ff_f (pow, minus_infty, 2, plus_infty),
-    TEST_ff_f (pow, minus_infty, 12, plus_infty),
-    TEST_ff_f (pow, minus_infty, 1002, plus_infty),
-    TEST_ff_f (pow, minus_infty, 0.1L, plus_infty),
-    TEST_ff_f (pow, minus_infty, 1.1L, plus_infty),
-    TEST_ff_f (pow, minus_infty, 11.1L, plus_infty),
-    TEST_ff_f (pow, minus_infty, 1001.1L, plus_infty),
-    TEST_ff_f (pow, minus_infty, min_subnorm_value, plus_infty),
+    TEST_ff_f (pow, minus_infty, 2, plus_infty, NO_TEST_INLINE),
+    TEST_ff_f (pow, minus_infty, 12, plus_infty, NO_TEST_INLINE),
+    TEST_ff_f (pow, minus_infty, 1002, plus_infty, NO_TEST_INLINE),
+    TEST_ff_f (pow, minus_infty, 0.1L, plus_infty, NO_TEST_INLINE),
+    TEST_ff_f (pow, minus_infty, 1.1L, plus_infty, NO_TEST_INLINE),
+    TEST_ff_f (pow, minus_infty, 11.1L, plus_infty, NO_TEST_INLINE),
+    TEST_ff_f (pow, minus_infty, 1001.1L, plus_infty, NO_TEST_INLINE),
+    TEST_ff_f (pow, minus_infty, min_subnorm_value, plus_infty, NO_TEST_INLINE),
 
-    TEST_ff_f (pow, minus_infty, -1, minus_zero),
-    TEST_ff_f (pow, minus_infty, -11, minus_zero),
-    TEST_ff_f (pow, minus_infty, -1001, minus_zero),
+    TEST_ff_f (pow, minus_infty, -1, minus_zero, NO_TEST_INLINE),
+    TEST_ff_f (pow, minus_infty, -11, minus_zero, NO_TEST_INLINE),
+    TEST_ff_f (pow, minus_infty, -1001, minus_zero, NO_TEST_INLINE),
 
-    TEST_ff_f (pow, minus_infty, -2, 0),
-    TEST_ff_f (pow, minus_infty, -12, 0),
-    TEST_ff_f (pow, minus_infty, -1002, 0),
-    TEST_ff_f (pow, minus_infty, -0.1L, 0),
-    TEST_ff_f (pow, minus_infty, -1.1L, 0),
-    TEST_ff_f (pow, minus_infty, -11.1L, 0),
-    TEST_ff_f (pow, minus_infty, -1001.1L, 0),
-    TEST_ff_f (pow, minus_infty, -min_subnorm_value, 0),
-#endif
+    TEST_ff_f (pow, minus_infty, -2, 0, NO_TEST_INLINE),
+    TEST_ff_f (pow, minus_infty, -12, 0, NO_TEST_INLINE),
+    TEST_ff_f (pow, minus_infty, -1002, 0, NO_TEST_INLINE),
+    TEST_ff_f (pow, minus_infty, -0.1L, 0, NO_TEST_INLINE),
+    TEST_ff_f (pow, minus_infty, -1.1L, 0, NO_TEST_INLINE),
+    TEST_ff_f (pow, minus_infty, -11.1L, 0, NO_TEST_INLINE),
+    TEST_ff_f (pow, minus_infty, -1001.1L, 0, NO_TEST_INLINE),
+    TEST_ff_f (pow, minus_infty, -min_subnorm_value, 0, NO_TEST_INLINE),
 
     TEST_ff_f (pow, qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
     TEST_ff_f (pow, 0, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
@@ -11744,19 +11772,17 @@ static const struct test_ff_f_data pow_test_data[] =
     TEST_ff_f (pow, 0, minus_infty, plus_infty, DIVIDE_BY_ZERO_EXCEPTION_OK),
     TEST_ff_f (pow, minus_zero, minus_infty, plus_infty, DIVIDE_BY_ZERO_EXCEPTION_OK),
 
-#ifndef TEST_INLINE
     /* pow (x, +inf) == +inf for |x| > 1.  */
-    TEST_ff_f (pow, 1.5, plus_infty, plus_infty),
+    TEST_ff_f (pow, 1.5, plus_infty, plus_infty, NO_TEST_INLINE),
 
     /* pow (x, +inf) == +0 for |x| < 1.  */
-    TEST_ff_f (pow, 0.5, plus_infty, 0.0),
+    TEST_ff_f (pow, 0.5, plus_infty, 0.0, NO_TEST_INLINE),
 
     /* pow (x, -inf) == +0 for |x| > 1.  */
-    TEST_ff_f (pow, 1.5, minus_infty, 0.0),
+    TEST_ff_f (pow, 1.5, minus_infty, 0.0, NO_TEST_INLINE),
 
     /* pow (x, -inf) == +inf for |x| < 1.  */
-    TEST_ff_f (pow, 0.5, minus_infty, plus_infty),
-#endif
+    TEST_ff_f (pow, 0.5, minus_infty, plus_infty, NO_TEST_INLINE),
 
     /* pow (+inf, y) == +inf for y > 0.  */
     TEST_ff_f (pow, plus_infty, 2, plus_infty),
@@ -13522,10 +13548,8 @@ static const struct test_f_f_data sinh_test_data[] =
     TEST_f_f (sinh, 0, 0),
     TEST_f_f (sinh, minus_zero, minus_zero),
 
-#ifndef TEST_INLINE
-    TEST_f_f (sinh, plus_infty, plus_infty),
-    TEST_f_f (sinh, minus_infty, minus_infty),
-#endif
+    TEST_f_f (sinh, plus_infty, plus_infty, NO_TEST_INLINE),
+    TEST_f_f (sinh, minus_infty, minus_infty, NO_TEST_INLINE),
     TEST_f_f (sinh, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
 
     TEST_f_f (sinh, 0.75L, 0.822316731935829980703661634446913849L),
@@ -13804,10 +13828,8 @@ static const struct test_f_f_data tanh_test_data[] =
     TEST_f_f (tanh, 0, 0),
     TEST_f_f (tanh, minus_zero, minus_zero),
 
-#ifndef TEST_INLINE
-    TEST_f_f (tanh, plus_infty, 1),
-    TEST_f_f (tanh, minus_infty, -1),
-#endif
+    TEST_f_f (tanh, plus_infty, 1, NO_TEST_INLINE),
+    TEST_f_f (tanh, minus_infty, -1, NO_TEST_INLINE),
     TEST_f_f (tanh, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
 
     TEST_f_f (tanh, 0.75L, 0.635148952387287319214434357312496495L),
