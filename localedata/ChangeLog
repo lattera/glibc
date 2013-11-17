@@ -1,6 +1,11 @@
+2013-11-17  Chris Leonard  <cjl@sugarlabs.org>
+
+	[BZ #16146]
+	* locales/wae_CH: Correct wae_CH to UTF-8 encoding.
+
 2013-11-15  Arun Kumar Pyasi <arun@chitwanix.com>
 
-	[BZ#16172]
+	[BZ #16172]
 	* locales/the_NP: New locale for the_NP.
 	* SUPPORTED: Add the_NP.
 
