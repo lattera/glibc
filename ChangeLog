@@ -1,3 +1,10 @@
+2013-11-18  Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ #10253]
+	* elf/dl-load.c (fillin_rpath): Add linkmap parameter and expand path.
+	(decompose_rpath): Defer expansion to fillin_rpath.
+	(_dl_init_paths): Pass linkmap to fillin_rpath.
+
 2013-11-18  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* benchtests/Makefile: Add strsep.
