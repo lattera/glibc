@@ -1,3 +1,8 @@
+2013-11-18  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* math/test-fpucw-ieee.c [!defined _FPU_IEEE] (FPU_CONTROL):
+	Omit definition of FPU_CONTROL and use default if no _FPU_IEEE.
+
 2013-11-18  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* elf/Makefile (tst-auxv): New test.

@@ -16,9 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define FPU_CONTROL _FPU_IEEE
+#ifdef _FPU_IEEE
+/* Some architectures don't have _FPU_IEEE.  */
+# define FPU_CONTROL _FPU_IEEE
+#endif
 
 #include "test-fpucw.c"
 
 /* Preempt the library's definition of `__fpu_control'.  */
-fpu_control_t __fpu_control = _FPU_IEEE;
+fpu_control_t __fpu_control = FPU_CONTROL;
