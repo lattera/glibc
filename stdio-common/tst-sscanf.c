@@ -92,6 +92,8 @@ struct test
   { L("foo bar"), L("foo bar"), 0 },
   { L("foo bar"), L("foo %d"), 0 },
   { L("foo bar"), L("foon%d"), 0 },
+  { L("foo (nil)"), L("foo %p"), 1},
+  { L("foo (nil)"), L("foo %4p"), 0},
   { L("foo "), L("foo %n"), 0 },
   { L("foo%bar1"), L("foo%%bar%d"), 1 },
   /* Some OSes skip whitespace here while others don't.  */

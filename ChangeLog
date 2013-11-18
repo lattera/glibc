@@ -1,3 +1,10 @@
+2013-11-07  Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ #16055]
+	* stdio-common/vfscanf.c (_IO_vfscanf_internal): Limit width
+	when we match (nil).
+	* stdio-common/tst-sscanf.c (struct test): Add testcase.
+
 2013-11-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (TEST_NAN_SIGN): New macro.
