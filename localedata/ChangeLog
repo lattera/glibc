@@ -1,3 +1,8 @@
+2013-11-18  Chris Leonard  <cjl@sugarlabs.org>
+
+	[BZ #16144]
+	* locales/tk_TM: Duplicated abday value for tk_TM.
+
 2013-11-18  Ondřej Bílka  <neleai@seznam.cz>
 
 	* tests-mbwc/tst_mbrtowc.c (tst_mbrtowc): Remove unused t_ini variable.
