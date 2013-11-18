@@ -1,3 +1,9 @@
+2013-11-18  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* benchtests/Makefile: Add strsep.
+	* benchtests/bench-strsep.c: New file: strsep benchtest.
+	* benchtests/bench-strsep-ifunc.c: New file: strsep benchtest.
+
 2013-11-18  Andreas Schwab  <schwab@suse.de>
 
 	* locale/programs/locale.c (show_info) [case byte]: Check for

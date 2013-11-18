@@ -28,7 +28,7 @@ string-bench := bcopy bzero memccpy memchr memcmp memcpy memmem memmove \
 		mempcpy memset rawmemchr stpcpy stpncpy strcasecmp strcasestr \
 		strcat strchr strchrnul strcmp strcpy strcspn strlen \
 		strncasecmp strncat strncmp strncpy strnlen strpbrk strrchr \
-		strspn strstr strcpy_chk stpcpy_chk memrchr
+		strspn strstr strcpy_chk stpcpy_chk memrchr strsep
 string-bench-ifunc := $(addsuffix -ifunc, $(string-bench))
 string-bench-all := $(string-bench) $(string-bench-ifunc)
 
