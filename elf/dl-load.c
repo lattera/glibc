@@ -481,19 +481,14 @@ static size_t max_dirnamelen;
 
 static struct r_search_path_elem **
 fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
-	      int check_trusted, const char *what, const char *where,
-	      struct link_map *l)
+	      int check_trusted, const char *what, const char *where)
 {
   char *cp;
   size_t nelems = 0;
-  char *to_free;
 
   while ((cp = __strsep (&rpath, sep)) != NULL)
     {
       struct r_search_path_elem *dirp;
-
-      to_free = cp = expand_dynamic_string_token (l, cp);
-
       size_t len = strlen (cp);
 
       /* `strsep' can pass an empty string.  This has to be
@@ -514,10 +509,7 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 
       /* Make sure we don't use untrusted directories if we run SUID.  */
       if (__builtin_expect (check_trusted, 0) && !is_trusted_path (cp, len))
-	{
-	  free (to_free);
-	  continue;
-	}
+	continue;
 
       /* See if this directory is already known.  */
       for (dirp = GL(dl_all_dirs); dirp != NULL; dirp = dirp->next)
@@ -578,7 +570,6 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 	  /* Put it in the result array.  */
 	  result[nelems++] = dirp;
 	}
-      free (to_free);
     }
 
   /* Terminate the array.  */
@@ -634,8 +625,9 @@ decompose_rpath (struct r_search_path_struct *sps,
       while (*inhp != '\0');
     }
 
-  /* Make a writable copy.  */
-  copy = local_strdup (rpath);
+  /* Make a writable copy.  At the same time expand possible dynamic
+     string tokens.  */
+  copy = expand_dynamic_string_token (l, rpath, 1);
   if (copy == NULL)
     {
       errstring = N_("cannot create RUNPATH/RPATH copy");
@@ -668,7 +660,7 @@ decompose_rpath (struct r_search_path_struct *sps,
       _dl_signal_error (ENOMEM, NULL, NULL, errstring);
     }
 
-  fillin_rpath (copy, result, ":", 0, what, where, l);
+  fillin_rpath (copy, result, ":", 0, what, where);
 
   /* Free the copied RPATH string.  `fillin_rpath' make own copies if
      necessary.  */
@@ -716,7 +708,9 @@ _dl_init_paths (const char *llp)
   const char *strp;
   struct r_search_path_elem *pelem, **aelem;
   size_t round_size;
-  struct link_map __attribute__ ((unused)) *l = NULL;
+#ifdef SHARED
+  struct link_map *l;
+#endif
   /* Initialize to please the compiler.  */
   const char *errstring = NULL;
 
@@ -871,7 +865,7 @@ _dl_init_paths (const char *llp)
 
       (void) fillin_rpath (llp_tmp, env_path_list.dirs, ":;",
 			   INTUSE(__libc_enable_secure), "LD_LIBRARY_PATH",
-			   NULL, l);
+			   NULL);
 
       if (env_path_list.dirs[0] == NULL)
 	{
