@@ -1,3 +1,9 @@
+2013-11-18  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* elf/Makefile (tst-auxv): New test.
+	* elf/tst-auxv.c: New
+	* elf/rtld.c (dl_main): Adjust AT_EXECFN
+
 2013-11-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* include/libc-symbols.h (__hidden_proto): Add argument "thread".

@@ -1118,6 +1118,9 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  case AT_ENTRY:
 	    av->a_un.a_val = *user_entry;
 	    break;
+	  case AT_EXECFN:
+	    av->a_un.a_val = (uintptr_t) _dl_argv[0];
+	    break;
 	  }
 #endif
     }

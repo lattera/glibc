@@ -119,7 +119,8 @@ $(inst_auditdir)/sotruss-lib.so: $(objpfx)sotruss-lib.so $(+force)
 endif
 
 tests = tst-tls1 tst-tls2 tst-tls9 tst-leaks1 \
-	tst-array1 tst-array2 tst-array3 tst-array4 tst-array5
+	tst-array1 tst-array2 tst-array3 tst-array4 tst-array5 \
+	tst-auxv
 tests-static = tst-tls1-static tst-tls2-static tst-stackguard1-static \
 	       tst-leaks1-static tst-array1-static tst-array5-static \
 	       tst-ptrguard1-static
