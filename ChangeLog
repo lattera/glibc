@@ -1,3 +1,19 @@
+2013-11-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/libc-symbols.h (__hidden_proto): Add argument "thread".
+	(hidden_proto): Caller changed.
+	(hidden_tls_proto): New macro.
+	(libc_hidden_tls_proto): Likewise.
+	(rtld_hidden_tls_proto): Likewise.
+	(libm_hidden_tls_proto): Likewise.
+	(libresolv_hidden_tls_proto): Likewise.
+	(librt_hidden_tls_proto): Likewise.
+	(libdl_hidden_tls_proto): Likewise.
+	(libnss_files_hidden_tls_proto): Likewise.
+	(libnsl_hidden_tls_proto): Likewise.
+	(libnss_nisplus_hidden_tls_proto): Likewise.
+	(libutil_hidden_tls_proto): Likewise.
+
 2013-11-18  Ondřej Bílka  <neleai@seznam.cz>
 
 	[BZ #10253]
