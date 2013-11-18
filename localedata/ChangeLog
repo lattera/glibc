@@ -1,3 +1,7 @@
+2013-11-18  Ondřej Bílka  <neleai@seznam.cz>
+
+	* tests-mbwc/tst_mbrtowc.c (tst_mbrtowc): Remove unused t_ini variable.
+
 2013-11-17  Chris Leonard  <cjl@sugarlabs.org>
 
 	[BZ #16146]

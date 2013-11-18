@@ -16,7 +16,7 @@ tst_mbrtowc (FILE * fp, int debug_flg)
   char w_flg, s_flg;
   char *s;
   size_t n;
-  char t_flg, t_ini;
+  char t_flg;
   static mbstate_t t = { 0 };
   mbstate_t *pt;
   wchar_t wc, *pwc, wc_ex;
@@ -42,7 +42,6 @@ tst_mbrtowc (FILE * fp, int debug_flg)
 	s = TST_INPUT_SEQ (mbrtowc).s;
 	n = TST_INPUT_SEQ (mbrtowc).n;
 	t_flg = TST_INPUT_SEQ (mbrtowc).t_flg;
-	t_ini = TST_INPUT_SEQ (mbrtowc).t_init;
 	pwc = (w_flg == 0) ? NULL : &wc;
 
 	if (s_flg == 0)
@@ -56,12 +55,7 @@ tst_mbrtowc (FILE * fp, int debug_flg)
 	  }
 
 	pt = (t_flg == 0) ? NULL : &t;
-#if 0
-	if (t_ini != 0)
-	  {
-	    memset (&t, 0, sizeof (t));
-	  }
-#endif
+
 	TST_CLEAR_ERRNO;
 	ret = mbrtowc (pwc, s, n, pt);
 	TST_SAVE_ERRNO;
