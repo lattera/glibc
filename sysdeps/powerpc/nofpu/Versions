@@ -17,4 +17,9 @@ libc {
     __gtdf2; __gtsf2;
     __ltdf2; __ltsf2;
   }
+  GLIBC_PRIVATE {
+    __sim_exceptions_thread;
+    __sim_disabled_exceptions_thread;
+    __sim_round_mode_thread;
+  }
 }

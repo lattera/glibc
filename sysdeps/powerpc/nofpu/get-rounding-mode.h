@@ -29,7 +29,7 @@
 static inline int
 get_rounding_mode (void)
 {
-  return __sim_round_mode;
+  return __sim_round_mode_thread;
 }
 
 #endif /* get-rounding-mode.h */

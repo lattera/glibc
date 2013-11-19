@@ -26,7 +26,8 @@ fesetround (int round)
   if ((unsigned int) round > FE_DOWNWARD)
     return 1;
 
-  __sim_round_mode = round;
+  __sim_round_mode_thread = round;
+  SIM_SET_GLOBAL (__sim_round_mode_global, __sim_round_mode_thread);
 
   return 0;
 }

@@ -33,16 +33,31 @@ typedef union
 
 #endif
 
-/* FIXME: these variables should be thread specific (see bugzilla bug
-   15483) and ideally preserved across signal handlers, like hardware
-   FP status words, but the latter is quite difficult to accomplish in
-   userland.  */
+extern __thread int __sim_exceptions_thread attribute_tls_model_ie;
+libc_hidden_tls_proto (__sim_exceptions_thread, tls_model ("initial-exec"));
+extern __thread int __sim_disabled_exceptions_thread attribute_tls_model_ie;
+libc_hidden_tls_proto (__sim_disabled_exceptions_thread,
+		       tls_model ("initial-exec"));
+extern __thread int __sim_round_mode_thread attribute_tls_model_ie;
+libc_hidden_tls_proto (__sim_round_mode_thread, tls_model ("initial-exec"));
 
-extern int __sim_exceptions;
-libc_hidden_proto (__sim_exceptions);
-extern int __sim_disabled_exceptions;
-libc_hidden_proto (__sim_disabled_exceptions);
-extern int __sim_round_mode;
-libc_hidden_proto (__sim_round_mode);
+/* These variables were formerly global, so there are compat symbols
+   for global versions as well.  */
+
+#include <shlib-compat.h>
+#define SIM_GLOBAL_COMPAT SHLIB_COMPAT (libc, GLIBC_2_3_2, GLIBC_2_19)
+#if SIM_GLOBAL_COMPAT
+extern int __sim_exceptions_global;
+libc_hidden_proto (__sim_exceptions_global);
+extern int __sim_disabled_exceptions_global ;
+libc_hidden_proto (__sim_disabled_exceptions_global);
+extern int __sim_round_mode_global;
+libc_hidden_proto (__sim_round_mode_global);
+# define SIM_COMPAT_SYMBOL(GLOBAL_NAME, NAME) \
+  compat_symbol (libc, GLOBAL_NAME, NAME, GLIBC_2_3_2)
+# define SIM_SET_GLOBAL(GLOBAL_VAR, THREAD_VAR) ((GLOBAL_VAR) = (THREAD_VAR))
+#else
+# define SIM_SET_GLOBAL(GLOBAL_VAR, THREAD_VAR) ((void) 0)
+#endif
 
 extern void __simulate_exceptions (int x) attribute_hidden;

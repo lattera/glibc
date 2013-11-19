@@ -24,9 +24,11 @@
 int
 fedisableexcept (int x)
 {
-  int old_exceptions = ~__sim_disabled_exceptions & FE_ALL_EXCEPT;
+  int old_exceptions = ~__sim_disabled_exceptions_thread & FE_ALL_EXCEPT;
 
-  __sim_disabled_exceptions |= x;
+  __sim_disabled_exceptions_thread |= x;
+  SIM_SET_GLOBAL (__sim_disabled_exceptions_global,
+		  __sim_disabled_exceptions_thread);
 
   return old_exceptions;
 }

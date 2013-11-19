@@ -28,14 +28,15 @@ __feupdateenv (const fenv_t *envp)
   int saved_exceptions;
 
   /* Save currently set exceptions.  */
-  saved_exceptions = __sim_exceptions;
+  saved_exceptions = __sim_exceptions_thread;
 
   /* Set environment.  */
   fesetenv (envp);
 
   /* Raise old exceptions.  */
-  __sim_exceptions |= saved_exceptions;
-  if (saved_exceptions & ~__sim_disabled_exceptions)
+  __sim_exceptions_thread |= saved_exceptions;
+  SIM_SET_GLOBAL (__sim_exceptions_global, __sim_exceptions_thread);
+  if (saved_exceptions & ~__sim_disabled_exceptions_thread)
     raise (SIGFPE);
 
   return 0;

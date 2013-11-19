@@ -23,5 +23,5 @@
 int
 fegetexcept (void)
 {
-  return (__sim_disabled_exceptions ^ FE_ALL_EXCEPT) & FE_ALL_EXCEPT;
+  return (__sim_disabled_exceptions_thread ^ FE_ALL_EXCEPT) & FE_ALL_EXCEPT;
 }

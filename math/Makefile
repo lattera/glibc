@@ -90,7 +90,7 @@ tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
 	test-misc test-fpucw test-fpucw-ieee tst-definitions test-tgmath \
 	test-tgmath-ret bug-nextafter bug-nexttoward bug-tgmath1 \
 	test-tgmath-int test-tgmath2 test-powl tst-CMPLX tst-CMPLX2 test-snan \
-	$(tests-static)
+	test-fenv-tls $(tests-static)
 tests-static = test-fpucw-static test-fpucw-ieee-static
 # We do the `long double' tests only if this data type is available and
 # distinct from `double'.
@@ -232,3 +232,4 @@ gmp-objs = $(patsubst %,$(common-objpfx)stdlib/%.o,\
 $(objpfx)atest-exp: $(gmp-objs)
 $(objpfx)atest-sincos: $(gmp-objs)
 $(objpfx)atest-exp2: $(gmp-objs)
+$(objpfx)test-fenv-tls: $(common-objpfx)nptl/libpthread.so

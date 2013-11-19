@@ -20,18 +20,14 @@
 #include "soft-fp.h"
 #include "soft-supp.h"
 
-extern int __sim_exceptions;
-extern int __sim_disabled_exceptions;
-extern int __sim_round_mode;
-
 int
 __fegetenv (fenv_t *envp)
 {
   fenv_union_t u;
 
-  u.l[0] = __sim_exceptions;
-  u.l[0] |= __sim_round_mode;
-  u.l[1] = __sim_disabled_exceptions;
+  u.l[0] = __sim_exceptions_thread;
+  u.l[0] |= __sim_round_mode_thread;
+  u.l[1] = __sim_disabled_exceptions_thread;
 
   *envp = u.fenv;
 

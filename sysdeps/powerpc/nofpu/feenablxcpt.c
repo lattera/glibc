@@ -17,16 +17,17 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "soft-supp.h"
 #include <fenv.h>
-
-extern int __sim_disabled_exceptions;
 
 int
 feenableexcept (int exceptions)
 {
-  int old_exceptions = ~__sim_disabled_exceptions & FE_ALL_EXCEPT;
+  int old_exceptions = ~__sim_disabled_exceptions_thread & FE_ALL_EXCEPT;
 
-  __sim_disabled_exceptions &= ~exceptions;
+  __sim_disabled_exceptions_thread &= ~exceptions;
+  SIM_SET_GLOBAL (__sim_disabled_exceptions_global,
+		  __sim_disabled_exceptions_thread);
 
   return old_exceptions;
 }

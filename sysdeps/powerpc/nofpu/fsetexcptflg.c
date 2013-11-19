@@ -24,7 +24,9 @@ int
 __fesetexceptflag(const fexcept_t *flagp, int excepts)
 {
   /* Ignore exceptions not listed in 'excepts'.  */
-  __sim_exceptions = (__sim_exceptions & ~excepts) | (*flagp & excepts);
+  __sim_exceptions_thread
+    = (__sim_exceptions_thread & ~excepts) | (*flagp & excepts);
+  SIM_SET_GLOBAL (__sim_exceptions_global, __sim_exceptions_thread);
 
   return 0;
 }

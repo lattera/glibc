@@ -24,5 +24,5 @@
 int
 fegetround (void)
 {
-  return __sim_round_mode;
+  return __sim_round_mode_thread;
 }

@@ -23,7 +23,8 @@
 int
 __feclearexcept (int x)
 {
-  __sim_exceptions &= ~x;
+  __sim_exceptions_thread &= ~x;
+  SIM_SET_GLOBAL (__sim_exceptions_global, __sim_exceptions_thread);
   return 0;
 }
 

@@ -25,8 +25,9 @@
 int
 __feraiseexcept (int x)
 {
-  __sim_exceptions |= x;
-  if (x & ~__sim_disabled_exceptions)
+  __sim_exceptions_thread |= x;
+  SIM_SET_GLOBAL (__sim_exceptions_global, __sim_exceptions_thread);
+  if (x & ~__sim_disabled_exceptions_thread)
     raise (SIGFPE);
   return 0;
 }

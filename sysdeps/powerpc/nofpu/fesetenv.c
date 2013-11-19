@@ -26,9 +26,13 @@ __fesetenv (const fenv_t *envp)
   fenv_union_t u;
 
   u.fenv = *envp;
-  __sim_exceptions = u.l[0] & FE_ALL_EXCEPT;
-  __sim_round_mode = u.l[0] & 0x3;
-  __sim_disabled_exceptions = u.l[1];
+  __sim_exceptions_thread = u.l[0] & FE_ALL_EXCEPT;
+  SIM_SET_GLOBAL (__sim_exceptions_global, __sim_exceptions_thread);
+  __sim_round_mode_thread = u.l[0] & 0x3;
+  SIM_SET_GLOBAL (__sim_round_mode_global, __sim_round_mode_thread);
+  __sim_disabled_exceptions_thread = u.l[1];
+  SIM_SET_GLOBAL (__sim_disabled_exceptions_global,
+		  __sim_disabled_exceptions_thread);
   return 0;
 }
 

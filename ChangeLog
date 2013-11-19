@@ -1,3 +1,70 @@
+2013-11-19  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15483]
+	* sysdeps/powerpc/nofpu/sim-full.c (__sim_exceptions): Change to
+	thread-local __sim_exceptions_thread and global
+	__sim_exceptions_global.
+	(__sim_disabled_exceptions): Change to thread-local
+	__sim_disabled_exceptions_thread and global
+	__sim_disabled_exceptions_global.
+	(__sim_round_mode): Change to thread-local __sim_round_mode_thread
+	and global __sim_round_mode_global.
+	(__simulate_exceptions): Use thread-local floating-point state and
+	set global state from it as needed.
+	* sysdeps/powerpc/nofpu/Versions (GLIBC_PRIVATE): Add
+	__sim_exceptions_thread, __sim_disabled_exceptions_thread and
+	__sim_round_mode_thread.
+	* sysdeps/powerpc/nofpu/soft-supp.h: Include <shlib-compat.h>.
+	(__sim_exceptions): Change to thread-local __sim_exceptions_thread
+	and global __sim_exceptions_global.
+	(__sim_disabled_exceptions): Change to thread-local
+	__sim_disabled_exceptions_thread and global
+	__sim_disabled_exceptions_global.
+	(__sim_round_mode): Change to thread-local __sim_round_mode_thread
+	and global __sim_round_mode_global.
+	[SIM_GLOBAL_COMPAT] (SIM_COMPAT_SYMBOL): New macro.
+	(SIM_SET_GLOBAL): Likewise.
+	* sysdeps/powerpc/soft-fp/sfp-machine.h
+	[!(__NO_FPRS__ && !_SOFT_FLOAT)] (FP_ROUNDMODE): Use
+	__sim_round_mode_thread.
+	[!(__NO_FPRS__ && !_SOFT_FLOAT)] (FP_TRAPPING_EXCEPTIONS): Use
+	__sim_disabled_exceptions_thread.
+	(__sim_exceptions): Change to __sim_exceptions_thread.
+	(__sim_disabled_exceptions): Change to
+	__sim_disabled_exceptions_thread.
+	(__sim_round_mode): Change to __sim_round_mode_thread.
+	* sysdeps/powerpc/nofpu/fclrexcpt.c (__feclearexcept): Use
+	thread-local floating-point state and set global state from it as
+	needed.
+	* sysdeps/powerpc/nofpu/fedisblxcpt.c (fedisableexcept): Likewise.
+	* sysdeps/powerpc/nofpu/feenablxcpt.c: Include "soft-supp.h".
+	(__sim_disabled_exceptions): Remove extern declaration.
+	(feenableexcept): Use thread-local floating-point state and set
+	global state from it as needed.
+	* sysdeps/powerpc/nofpu/fegetenv.c (__sim_exceptions): Remove
+	extern declaration.
+	(__sim_disabled_exceptions): Likewise.
+	(__sim_round_mode): Likewise.
+	(__fegetenv): Use thread-local floating-point state.
+	* sysdeps/powerpc/nofpu/fegetexcept.c (fegetexcept): Likewise.
+	* sysdeps/powerpc/nofpu/fegetround.c (fegetround): Likewise.
+	* sysdeps/powerpc/nofpu/fesetenv.c (__fesetenv): Use thread-local
+	floating-point state and set global state from it as needed.
+	* sysdeps/powerpc/nofpu/fesetround.c (fesetround): Likewise.
+	* sysdeps/powerpc/nofpu/feupdateenv.c (__feupdateenv): Likewise.
+	* sysdeps/powerpc/nofpu/fgetexcptflg.c (__fegetexceptflag):
+	Likewise.
+	* sysdeps/powerpc/nofpu/fraiseexcpt.c (__feraiseexcept): Likewise.
+	* sysdeps/powerpc/nofpu/fsetexcptflg.c (__fesetexceptflag):
+	Likewise.
+	sysdeps/powerpc/nofpu/ftestexcept.c (fetestexcept): Likewise.
+	* sysdeps/powerpc/nofpu/get-rounding-mode.h (get_rounding_mode):
+	Use __sim_round_mode_thread.
+	* math/test-fenv-tls.c: New file.
+	* math/Makefile (tests): Add test-fenv-tls.
+	($(objpfx)test-fenv-tls): Depend on
+	$(common-objpfx)nptl/libpthread.so.
+
 2013-11-19  Andreas Schwab  <schwab@suse.de>
 
 	* locale/programs/locale.c (show_info): Decode wordarray elements.

@@ -23,6 +23,6 @@
 int
 fetestexcept (int x)
 {
-  return __sim_exceptions & x;
+  return __sim_exceptions_thread & x;
 }
 libm_hidden_def (fetestexcept)

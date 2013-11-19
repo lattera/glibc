@@ -21,26 +21,37 @@
 #include "soft-fp.h"
 #include "soft-supp.h"
 
-/* FIXME: these variables should be thread specific (see bugzilla bug
-   15483) and ideally preserved across signal handlers, like hardware
-   FP status words, but the latter is quite difficult to accomplish in
-   userland.  */
-
-/* Global to store sticky exceptions.  */
-int __sim_exceptions __attribute__ ((nocommon));
-libc_hidden_data_def (__sim_exceptions);
+/* Thread-local to store sticky exceptions.  */
+__thread int __sim_exceptions_thread __attribute__ ((nocommon));
+libc_hidden_data_def (__sim_exceptions_thread);
 
 /* By default, no exceptions should trap.  */
-int __sim_disabled_exceptions = 0xffffffff;
-libc_hidden_data_def (__sim_disabled_exceptions);
+__thread int __sim_disabled_exceptions_thread = 0xffffffff;
+libc_hidden_data_def (__sim_disabled_exceptions_thread);
 
-int __sim_round_mode __attribute__ ((nocommon));
-libc_hidden_data_def (__sim_round_mode);
+__thread int __sim_round_mode_thread __attribute__ ((nocommon));
+libc_hidden_data_def (__sim_round_mode_thread);
+
+#if SIM_GLOBAL_COMPAT
+int __sim_exceptions_global __attribute__ ((nocommon));
+libc_hidden_data_def (__sim_exceptions_global);
+SIM_COMPAT_SYMBOL (__sim_exceptions_global, __sim_exceptions);
+
+int __sim_disabled_exceptions_global = 0xffffffff;
+libc_hidden_data_def (__sim_disabled_exceptions_global);
+SIM_COMPAT_SYMBOL (__sim_disabled_exceptions_global,
+		   __sim_disabled_exceptions);
+
+int __sim_round_mode_global __attribute__ ((nocommon));
+libc_hidden_data_def (__sim_round_mode_global);
+SIM_COMPAT_SYMBOL (__sim_round_mode_global, __sim_round_mode);
+#endif
 
 void
 __simulate_exceptions (int x)
 {
-  __sim_exceptions |= x;
-  if (x & ~__sim_disabled_exceptions)
+  __sim_exceptions_thread |= x;
+  SIM_SET_GLOBAL (__sim_exceptions_global, __sim_exceptions_thread);
+  if (x & ~__sim_disabled_exceptions_thread)
     raise (SIGFPE);
 }
