@@ -1,4 +1,4 @@
-2013-11-20  Paul Pluzhnikov  <ppluzhnikov@google.com
+2013-11-20  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* Makefile (tst-cleanup2, tst-cleanupx2): Add -fno-builtin
 
