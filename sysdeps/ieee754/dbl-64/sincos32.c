@@ -43,6 +43,7 @@
 #include "mpa.h"
 #include "sincos32.h"
 #include <math_private.h>
+#include <stap-probe.h>
 
 #ifndef SECTION
 # define SECTION
@@ -149,6 +150,7 @@ __sin32 (double x, double res, double res1)
   /* if a > 0 return min (res, res1), otherwise return max (res, res1).  */
   if ((a.d[0] > 0 && res >= res1) || (a.d[0] <= 0 && res <= res1))
     res = res1;
+  LIBC_PROBE (slowasin, 2, &res, &x);
   return res;
 }
 
@@ -182,6 +184,7 @@ __cos32 (double x, double res, double res1)
   /* if a > 0 return max (res, res1), otherwise return min (res, res1).  */
   if ((a.d[0] > 0 && res <= res1) || (a.d[0] <= 0 && res >= res1))
     res = res1;
+  LIBC_PROBE (slowacos, 2, &res, &x);
   return res;
 }
 
@@ -240,6 +243,7 @@ __mpsin (double x, double dx, bool reduce_range)
     default:
       __mp_dbl (&s, &y, p);
     }
+  LIBC_PROBE (slowsin, 3, &x, &dx, &y);
   return y;
 }
 
@@ -298,6 +302,7 @@ __mpcos (double x, double dx, bool reduce_range)
     default:
       __mp_dbl (&c, &y, p);
     }
+  LIBC_PROBE (slowcos, 3, &x, &dx, &y);
   return y;
 }
 

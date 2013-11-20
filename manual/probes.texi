@@ -353,3 +353,45 @@ results in multiple precision computation with precision 32.  Argument
 @var{$arg1} is the input to the function and @var{$arg2} is the computed
 result.
 @end deftp
+
+@deftp Probe slowasin (double @var{$arg1}, double @var{$arg2})
+This probe is hit when the @code{asin} function is called with an input that
+results in multiple precision computation with precision 32.  Argument
+@var{$arg1} is the input to the function and @var{$arg2} is the computed
+result.
+@end deftp
+
+@deftp Probe slowacos (double @var{$arg1}, double @var{$arg2})
+This probe is hit when the @code{acos} function is called with an input that
+results in multiple precision computation with precision 32.  Argument
+@var{$arg1} is the input to the function and @var{$arg2} is the computed
+result.
+@end deftp
+
+@deftp Probe slowsin (double @var{$arg1}, double @var{$arg2})
+This probe is hit when the @code{sin} function is called with an input that
+results in multiple precision computation with precision 32.  Argument
+@var{$arg1} is the input to the function and @var{$arg2} is the computed
+result.
+@end deftp
+
+@deftp Probe slowcos (double @var{$arg1}, double @var{$arg2})
+This probe is hit when the @code{cos} function is called with an input that
+results in multiple precision computation with precision 32.  Argument
+@var{$arg1} is the input to the function and @var{$arg2} is the computed
+result.
+@end deftp
+
+@deftp Probe slowsin_dx (double @var{$arg1}, double @var{$arg2}, double @var{$arg3})
+This probe is hit when the @code{sin} function is called with an input that
+results in multiple precision computation with precision 32.  Argument
+@var{$arg1} is the input to the function, @var{$arg2} is the error bound of
+@var{$arg1} and @var{$arg3} is the computed result.
+@end deftp
+
+@deftp Probe slowcos_dx (double @var{$arg1}, double @var{$arg2}, double @var{$arg3})
+This probe is hit when the @code{cos} function is called with an input that
+results in multiple precision computation with precision 32.  Argument
+@var{$arg1} is the input to the function, @var{$arg2} is the error bound of
+@var{$arg1} and @var{$arg3} is the computed result.
+@end deftp

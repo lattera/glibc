@@ -1,3 +1,13 @@
+2013-11-20  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* manual/probes.texi (Mathematical Function Probes): Add
+	documentation for sin, cos, asin and acos probes.
+	* sysdeps/ieee754/dbl-64/sincos32.c: Include stap-probe.h.
+	(__sin32): Add slowasin probe.
+	(__cos32): Add slowacos probe.
+	(__mpsin): Add slowsin probe.
+	(__mpcos): Add slowcos probe.
+
 2013-11-19  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15483]
