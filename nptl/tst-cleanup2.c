@@ -52,6 +52,12 @@ do_test (void)
       exit (1);
     }
 
+  if (sigaction (SIGILL, &sa, 0))
+    {
+      perror ("installing SIGILL handler\n");
+      exit (1);
+    }
+
   puts ("Attempting to sprintf to null ptr");
   if (setjmp (jmpbuf))
     {
