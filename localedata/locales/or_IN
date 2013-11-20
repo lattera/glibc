@@ -1,19 +1,19 @@
 comment_char %
 escape_char /
 
-% Oriya locale for India.
+% Odia locale for India.
 % Contributed by Masahide Washizawa <washi at jp ibm com>
 
 %%%%%%%%%%%%%
 LC_IDENTIFICATION
-title       "Oriya language locale for India"
+title       "Odia language locale for India"
 source      "IBM AP Linux Technology Center, Yamato Software Laboratory"
 address     "1623-14, Shimotsuruma, Yamato-shi, Kanagawa-ken, 242-8502, Japan"
 contact     ""
 email       "bug-glibc@gnu.org"
 tel         ""
 fax         ""
-language    "Oriya"
+language    "Odia"
 territory   "India"
 revision    "1.0"
 date        "2006-05-25"
@@ -36,10 +36,10 @@ END LC_IDENTIFICATION
 LC_CTYPE
 copy "i18n"
 
-% Oriya uses the alternate digits U+0B66..U+0B6F
+% Odia uses the alternate digits U+0B66..U+0B6F
 outdigit <U0B66>..<U0B6F>
 
-% This is used in the scanf family of functions to read Oriya numbers
+% This is used in the scanf family of functions to read Odia numbers
 % using "%Id" and such.
 map to_inpunct; /
   (<U0030>,<U0B66>); /

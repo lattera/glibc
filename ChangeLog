@@ -1,5 +1,9 @@
 2013-11-20  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	[BZ #15601]
+	* libio/tst-widetext.input: Rename Oriya to Odia.
+	* locale/iso-639.def: Likewise.
+
 	* manual/probes.texi (Mathematical Function Probes): Add
 	documentation for sin, cos, asin and acos probes.
 	* sysdeps/ieee754/dbl-64/sincos32.c: Include stap-probe.h.

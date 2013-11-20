@@ -1,3 +1,8 @@
+2013-11-20  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #15601]
+	* locales/or_IN: Rename Oriya to Odia.
+
 2013-11-18  Chris Leonard  <cjl@sugarlabs.org>
 
 	[BZ #16144]
