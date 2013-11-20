@@ -1,7 +1,3 @@
-2013-11-20  Paul Pluzhnikov  <ppluzhnikov@google.com>
-
-	* nptl/tst-cleanup2.c (do_test): Handle SIGILL as well.
-
 2013-11-20  Ondřej Bílka  <neleai@seznam.cz>
 
 	* malloc/hooks.c (memalign_check): Add alignment rounding.
