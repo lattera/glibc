@@ -564,15 +564,15 @@ open_archive (struct locarhandle *ah, bool readonly)
   int retry = 0;
   size_t prefix_len = output_prefix ? strlen (output_prefix) : 0;
   char default_fname[prefix_len + sizeof (ARCHIVE_NAME)];
-  char *archivefname = ah->fname;
+  const char *archivefname = ah->fname;
 
   /* If ah has a non-NULL fname open that otherwise open the default.  */
   if (archivefname == NULL)
     {
       archivefname = default_fname;
       if (output_prefix)
-        memcpy (archivefname, output_prefix, prefix_len);
-      strcpy (archivefname + prefix_len, ARCHIVE_NAME);
+        memcpy (default_fname, output_prefix, prefix_len);
+      strcpy (default_fname + prefix_len, ARCHIVE_NAME);
     }
 
   while (1)

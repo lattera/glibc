@@ -1,5 +1,9 @@
 2013-11-20  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* locale/programs/locarchive.c (open_archive): Add const
+	qualifier to ARCHIVEFNAME and copy default fname to
+	DEFAULT_FNAME.
+
 	[BZ #15601]
 	* libio/tst-widetext.input: Rename Oriya to Odia.
 	* locale/iso-639.def: Likewise.
