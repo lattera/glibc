@@ -1,3 +1,7 @@
+2013-11-20  Paul Pluzhnikov  <ppluzhnikov@google.com
+
+	* Makefile (tst-cleanup2, tst-cleanupx2): Add -fno-builtin
+
 2013-10-30  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/pthread/configure.in: Moved to ...
