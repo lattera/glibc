@@ -376,6 +376,13 @@ memalign_check(size_t alignment, size_t bytes, const void *caller)
       return 0;
     }
 
+  /* Make sure alignment is power of 2.  */
+  if (!powerof2(alignment)) {
+    size_t a = MALLOC_ALIGNMENT * 2;
+    while (a < alignment) a <<= 1;
+    alignment = a;
+  }
+
   (void)mutex_lock(&main_arena.mutex);
   mem = (top_check() >= 0) ? _int_memalign(&main_arena, alignment, bytes+1) :
     NULL;

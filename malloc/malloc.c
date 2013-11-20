@@ -1054,8 +1054,8 @@ static void     _int_free(mstate, mchunkptr, int);
 static void*  _int_realloc(mstate, mchunkptr, INTERNAL_SIZE_T,
 			   INTERNAL_SIZE_T);
 static void*  _int_memalign(mstate, size_t, size_t);
-static void*  _int_valloc(mstate, size_t);
-static void*  _int_pvalloc(mstate, size_t);
+static void*  _mid_memalign(size_t, size_t, void *);
+
 static void malloc_printerr(int action, const char *str, void *ptr);
 
 static void* internal_function mem2mem_check(void *p, size_t sz);
@@ -3002,15 +3002,22 @@ libc_hidden_def (__libc_realloc)
 void*
 __libc_memalign(size_t alignment, size_t bytes)
 {
+  void *address = RETURN_ADDRESS (0);
+  return _mid_memalign (alignment, bytes, address);
+}
+
+static void *
+_mid_memalign (size_t alignment, size_t bytes, void *address)
+{
   mstate ar_ptr;
   void *p;
 
   void *(*hook) (size_t, size_t, const void *) =
     force_reg (__memalign_hook);
   if (__builtin_expect (hook != NULL, 0))
-    return (*hook)(alignment, bytes, RETURN_ADDRESS (0));
+    return (*hook)(alignment, bytes, address);
 
-  /* If need less alignment than we give anyway, just relay to malloc */
+  /* If we need less alignment than we give anyway, just relay to malloc.  */
   if (alignment <= MALLOC_ALIGNMENT) return __libc_malloc(bytes);
 
   /* Otherwise, ensure that it is at least a minimum chunk size */
@@ -3030,6 +3037,14 @@ __libc_memalign(size_t alignment, size_t bytes)
       __set_errno (ENOMEM);
       return 0;
     }
+
+
+  /* Make sure alignment is power of 2.  */
+  if (!powerof2(alignment)) {
+    size_t a = MALLOC_ALIGNMENT * 2;
+    while (a < alignment) a <<= 1;
+    alignment = a;
+  }
 
   arena_get(ar_ptr, bytes + alignment + MINSIZE);
   if(!ar_ptr)
@@ -3055,54 +3070,22 @@ libc_hidden_def (__libc_memalign)
 void*
 __libc_valloc(size_t bytes)
 {
-  mstate ar_ptr;
-  void *p;
-
   if(__malloc_initialized < 0)
     ptmalloc_init ();
 
+  void *address = RETURN_ADDRESS (0);
   size_t pagesz = GLRO(dl_pagesize);
-
-  /* Check for overflow.  */
-  if (bytes > SIZE_MAX - pagesz - MINSIZE)
-    {
-      __set_errno (ENOMEM);
-      return 0;
-    }
-
-  void *(*hook) (size_t, size_t, const void *) =
-    force_reg (__memalign_hook);
-  if (__builtin_expect (hook != NULL, 0))
-    return (*hook)(pagesz, bytes, RETURN_ADDRESS (0));
-
-  arena_get(ar_ptr, bytes + pagesz + MINSIZE);
-  if(!ar_ptr)
-    return 0;
-  p = _int_valloc(ar_ptr, bytes);
-  if(!p) {
-    LIBC_PROBE (memory_valloc_retry, 1, bytes);
-    ar_ptr = arena_get_retry (ar_ptr, bytes);
-    if (__builtin_expect(ar_ptr != NULL, 1)) {
-      p = _int_memalign(ar_ptr, pagesz, bytes);
-      (void)mutex_unlock(&ar_ptr->mutex);
-    }
-  } else
-    (void)mutex_unlock (&ar_ptr->mutex);
-  assert(!p || chunk_is_mmapped(mem2chunk(p)) ||
-	 ar_ptr == arena_for_chunk(mem2chunk(p)));
-
-  return p;
+  return _mid_memalign (pagesz, bytes, address);
 }
 
 void*
 __libc_pvalloc(size_t bytes)
 {
-  mstate ar_ptr;
-  void *p;
 
   if(__malloc_initialized < 0)
     ptmalloc_init ();
 
+  void *address = RETURN_ADDRESS (0);
   size_t pagesz = GLRO(dl_pagesize);
   size_t page_mask = GLRO(dl_pagesize) - 1;
   size_t rounded_bytes = (bytes + page_mask) & ~(page_mask);
@@ -3114,26 +3097,7 @@ __libc_pvalloc(size_t bytes)
       return 0;
     }
 
-  void *(*hook) (size_t, size_t, const void *) =
-    force_reg (__memalign_hook);
-  if (__builtin_expect (hook != NULL, 0))
-    return (*hook)(pagesz, rounded_bytes, RETURN_ADDRESS (0));
-
-  arena_get(ar_ptr, bytes + 2*pagesz + MINSIZE);
-  p = _int_pvalloc(ar_ptr, bytes);
-  if(!p) {
-    LIBC_PROBE (memory_pvalloc_retry, 1, bytes);
-    ar_ptr = arena_get_retry (ar_ptr, bytes + 2*pagesz + MINSIZE);
-    if (__builtin_expect(ar_ptr != NULL, 1)) {
-      p = _int_memalign(ar_ptr, pagesz, rounded_bytes);
-      (void)mutex_unlock(&ar_ptr->mutex);
-    }
-  } else
-    (void)mutex_unlock(&ar_ptr->mutex);
-  assert(!p || chunk_is_mmapped(mem2chunk(p)) ||
-	 ar_ptr == arena_for_chunk(mem2chunk(p)));
-
-  return p;
+  return _mid_memalign (pagesz, rounded_bytes, address);
 }
 
 void*
@@ -4318,20 +4282,7 @@ _int_memalign(mstate av, size_t alignment, size_t bytes)
   unsigned long   remainder_size; /* its size */
   INTERNAL_SIZE_T size;
 
-  /* If need less alignment than we give anyway, just relay to malloc */
 
-  if (alignment <= MALLOC_ALIGNMENT) return _int_malloc(av, bytes);
-
-  /* Otherwise, ensure that it is at least a minimum chunk size */
-
-  if (alignment <  MINSIZE) alignment = MINSIZE;
-
-  /* Make sure alignment is power of 2 (in case MINSIZE is not).  */
-  if ((alignment & (alignment - 1)) != 0) {
-    size_t a = MALLOC_ALIGNMENT * 2;
-    while ((unsigned long)a < (unsigned long)alignment) a <<= 1;
-    alignment = a;
-  }
 
   checked_request2size(bytes, nb);
 
@@ -4402,35 +4353,6 @@ _int_memalign(mstate av, size_t alignment, size_t bytes)
 
   check_inuse_chunk(av, p);
   return chunk2mem(p);
-}
-
-
-/*
-  ------------------------------ valloc ------------------------------
-*/
-
-static void*
-_int_valloc(mstate av, size_t bytes)
-{
-  /* Ensure initialization/consolidation */
-  if (have_fastchunks(av)) malloc_consolidate(av);
-  return _int_memalign(av, GLRO(dl_pagesize), bytes);
-}
-
-/*
-  ------------------------------ pvalloc ------------------------------
-*/
-
-
-static void*
-_int_pvalloc(mstate av, size_t bytes)
-{
-  size_t pagesz;
-
-  /* Ensure initialization/consolidation */
-  if (have_fastchunks(av)) malloc_consolidate(av);
-  pagesz = GLRO(dl_pagesize);
-  return _int_memalign(av, pagesz, (bytes + pagesz - 1) & ~(pagesz - 1));
 }
 
 
@@ -4968,14 +4890,9 @@ __posix_memalign (void **memptr, size_t alignment, size_t size)
       || alignment == 0)
     return EINVAL;
 
-  /* Call the hook here, so that caller is posix_memalign's caller
-     and not posix_memalign itself.  */
-  void *(*hook) (size_t, size_t, const void *) =
-    force_reg (__memalign_hook);
-  if (__builtin_expect (hook != NULL, 0))
-    mem = (*hook)(alignment, size, RETURN_ADDRESS (0));
-  else
-    mem = __libc_memalign (alignment, size);
+
+  void *address = RETURN_ADDRESS (0);
+  mem = _mid_memalign (alignment, size, address);
 
   if (mem != NULL) {
     *memptr = mem;

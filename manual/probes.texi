@@ -71,8 +71,6 @@ heap is released.  Argument @var{$arg1} is a pointer to the heap, and
 @deftp Probe memory_malloc_retry (size_t @var{$arg1})
 @deftpx Probe memory_realloc_retry (size_t @var{$arg1}, void *@var{$arg2})
 @deftpx Probe memory_memalign_retry (size_t @var{$arg1}, size_t @var{$arg2})
-@deftpx Probe memory_valloc_retry (size_t @var{$arg1})
-@deftpx Probe memory_pvalloc_retry (size_t @var{$arg1})
 @deftpx Probe memory_calloc_retry (size_t @var{$arg1})
 These probes are triggered when the corresponding functions fail to
 obtain the requested amount of memory from the arena in use, before they
@@ -83,7 +81,8 @@ computed from both function arguments.  In the @code{realloc} case,
 @var{$arg2} is the pointer to the memory area being resized.  In the
 @code{memalign} case, @var{$arg2} is the alignment to be used for the
 request, which may be stricter than the value passed to the
-@code{memalign} function.
+@code{memalign} function.  A @code{memalign} probe is also used by functions
+@code{posix_memalign, valloc} and @code{pvalloc}.
 
 Note that the argument order does @emph{not} match that of the
 corresponding two-argument functions, so that in all of these probes the

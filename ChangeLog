@@ -1,3 +1,12 @@
+2013-11-20  Ondřej Bílka  <neleai@seznam.cz>
+
+	* malloc/hooks.c (memalign_check): Add alignment rounding.
+	* malloc/malloc.c (_mid_memalign): New function.
+	(__libc_valloc, __libc_pvalloc, __libc_memalign, __posix_memalign):
+	Implement by calling _mid_memalign.
+	* manual/probes.texi (Memory Allocation Probes): Remove
+	memory_valloc_retry and memory_pvalloc_retry.
+
 2013-11-20  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* locale/programs/locarchive.c (open_archive): Add const
