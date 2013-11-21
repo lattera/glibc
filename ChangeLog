@@ -1,5 +1,8 @@
 2013-11-21  Roland McGrath  <roland@hack.frob.com>
 
+	* malloc/malloc.c: Move #include <sys/param.h> to the top; comment why
+	it's there.
+
 	* sysdeps/generic/sys/swap.h (swapon): Add FLAGS argument to prototype.
 
 2013-11-21  Meador Inge  <meadori@codesourcery.com>

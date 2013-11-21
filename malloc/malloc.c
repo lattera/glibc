@@ -238,6 +238,9 @@
 /* For va_arg, va_start, va_end.  */
 #include <stdarg.h>
 
+/* For MIN, MAX, powerof2.  */
+#include <sys/param.h>
+
 
 /*
   Debugging:
@@ -4874,8 +4877,6 @@ malloc_printerr(int action, const char *str, void *ptr)
   else if (action & 2)
     abort ();
 }
-
-#include <sys/param.h>
 
 /* We need a wrapper function for one of the additions of POSIX.  */
 int
