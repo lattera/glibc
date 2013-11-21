@@ -1,3 +1,11 @@
+2013-11-21  Meador Inge  <meadori@codesourcery.com>
+
+	[BZ #11157]
+	* crypt/crypt.h (encrypt): Use __glibc_block instead of __block.
+	(encrypt_r): Likewise.
+	* malloc/obstack.h (obstack_free): Likewise.
+	* posix/unistd.h (encrypt): Likewise.
+
 2013-11-21  Guy Martin  <gmsoft@tuxicoman.be>
 
 	* sysdeps/generic/ldsodefs.h: Replace DL_DT_INIT_ADDRESS() and

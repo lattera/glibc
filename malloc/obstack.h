@@ -185,7 +185,7 @@ extern int _obstack_begin_1 (struct obstack *, int, int,
 			     void (*) (void *, void *), void *);
 extern int _obstack_memory_used (struct obstack *);
 
-void obstack_free (struct obstack *__obstack, void *__block);
+void obstack_free (struct obstack *__obstack, void *__glibc_block);
 
 
 /* Error handler called when `obstack_chunk_alloc' failed to allocate
