@@ -205,6 +205,7 @@ country_ab3 "<U004A><U004F><U0052>"
 country_num 400
 % HKJ
 country_car    "<U0048><U004B><U004A>"
+lang_name    "<U0627><U0644><U0639><U0631><U0628><U064A><U0629>"
 % ar
 lang_ab      "<U0061><U0072>"
 % ara

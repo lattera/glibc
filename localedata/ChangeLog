@@ -1,3 +1,25 @@
+2013-11-21  Chris Leonard  <cjl@sugarlabs.org>
+
+	* locales/ar_AE: Add lang_name to Arabic locales.
+	* locales/ar_BH: Likewise.
+	* locales/ar_DZ: Likewise.
+	* locales/ar_EG: Likewise.
+	* locales/ar_IN: Likewise.
+	* locales/ar_IQ: Likewise.
+	* locales/ar_JO: Likewise.
+	* locales/ar_KW: Likewise.
+	* locales/ar_LB: Likewise.
+	* locales/ar_LY: Likewise.
+	* locales/ar_MA: Likewise.
+	* locales/ar_OM: Likewise.
+	* locales/ar_QA: Likewise.
+	* locales/ar_SA: Likewise.
+	* locales/ar_SD: Likewise.
+	* locales/ar_SS: Likewise.
+	* locales/ar_SY: Likewise.
+	* locales/ar_TN: Likewise.
+	* locales/ar_YE: Likewise.
+
 2013-11-20  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #15601]
