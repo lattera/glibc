@@ -76,8 +76,9 @@ typedef struct link_map *lookup_t;
 # define DL_SYMBOL_ADDRESS(map, ref) \
  (void *) (LOOKUP_VALUE_ADDRESS (map) + ref->st_value)
 # define DL_LOOKUP_ADDRESS(addr) ((ElfW(Addr)) (addr))
-# define DL_DT_INIT_ADDRESS(map, start) (start)
-# define DL_DT_FINI_ADDRESS(map, start) (start)
+# define DL_CALL_DT_INIT(map, start, argc, argv, env) \
+ ((init_t) (start)) (argc, argv, env)
+# define DL_CALL_DT_FINI(map, start) ((fini_t) (start)) ()
 #endif
 
 /* On some architectures dladdr can't use st_size of all symbols this way.  */

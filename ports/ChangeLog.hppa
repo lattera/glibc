@@ -1,3 +1,12 @@
+2013-11-21  Guy Martin  <gmsoft@tuxicoman.be>
+
+	* sysdeps/hppa/dl-lookupcfg.h: Remove obsolete
+	DL_DT_INIT_ADDRESS() and DL_DT_FINI_ADDRESS() macro and implement
+	DL_CALL_DT_INIT() as well as DL_CALL_DT_FINI().
+	Define DL_DT_FUNCTION_ADDRESS().
+	* sysdeps/hppa/dl-machine.h: Update ELF_MACHINE_START_ADDRESS()
+	to use DL_DT_FUNCTION_ADDRESS().
+
 2013-10-30  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/hppa/configure.in: Moved to ...

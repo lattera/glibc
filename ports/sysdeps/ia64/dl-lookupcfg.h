@@ -39,24 +39,28 @@ extern void _dl_unmap (struct link_map *map);
 
 #define DL_UNMAP(map) _dl_unmap (map)
 
-#define DL_AUTO_FUNCTION_ADDRESS(map, addr)		\
-({							\
-  unsigned long int fptr[2];				\
-  fptr[0] = (unsigned long int) (addr);			\
-  fptr[1] = (map)->l_info[DT_PLTGOT]->d_un.d_ptr;	\
-  (Elf64_Addr) fptr;					\
-})
+#define DL_DT_FUNCTION_ADDRESS(map, start, attr, addr)			\
+  attr volatile unsigned long int fptr[2];					\
+  fptr[0] = (unsigned long int) (start);					\
+  fptr[1] = (map)->l_info[DT_PLTGOT]->d_un.d_ptr;			\
+  addr = (ElfW(Addr)) fptr;						\
 
-#define DL_STATIC_FUNCTION_ADDRESS(map, addr)		\
-({							\
-  static unsigned long int fptr[2];			\
-  fptr[0] = (unsigned long int) (addr);			\
-  fptr[1] = (map)->l_info[DT_PLTGOT]->d_un.d_ptr;	\
-  (Elf64_Addr) fptr;					\
-})
+#define DL_CALL_DT_INIT(map, start, argc, argv, env)	\
+{							\
+  ElfW(Addr) addr;					\
+  DL_DT_FUNCTION_ADDRESS(map, start, , addr)		\
+  init_t init = (init_t) addr; 				\
+  init (argc, argv, env);				\
+}
 
-#define DL_DT_INIT_ADDRESS(map, addr) DL_AUTO_FUNCTION_ADDRESS (map, addr)
-#define DL_DT_FINI_ADDRESS(map, addr) DL_AUTO_FUNCTION_ADDRESS (map, addr)
+#define DL_CALL_DT_FINI(map, start)		\
+{						\
+  ElfW(Addr) addr;				\
+  DL_DT_FUNCTION_ADDRESS(map, start, , addr)	\
+  fini_t fini = (fini_t) addr;			\
+  fini ();					\
+}
+
 /* The type of the return value of fixup/profile_fixup.  */
 #define DL_FIXUP_VALUE_TYPE struct fdesc
 /* Construct a value of type DL_FIXUP_VALUE_TYPE from a code address

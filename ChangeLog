@@ -1,3 +1,12 @@
+2013-11-21  Guy Martin  <gmsoft@tuxicoman.be>
+
+	* sysdeps/generic/ldsodefs.h: Replace DL_DT_INIT_ADDRESS() and
+	DL_DT_FINI_ADDRESS() macro with DL_CALL_DT_INIT() and
+	DL_CALL_DT_FINI() that call the functions directly.
+	* elf/dl-init.c: Use the new DL_CALL_DT_INIT() macro.
+	* elf/dl-close.c: Use the new DL_CALL_DT_FINI() macro.
+	* elf/dl-fini.c: Likewise.
+
 2013-11-20  Ondřej Bílka  <neleai@seznam.cz>
 
 	* malloc/hooks.c (memalign_check): Add alignment rounding.

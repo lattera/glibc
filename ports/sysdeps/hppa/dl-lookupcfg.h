@@ -38,32 +38,36 @@ void _dl_unmap (struct link_map *map);
 
 #define DL_UNMAP(map) _dl_unmap (map)
 
-#define DL_AUTO_FUNCTION_ADDRESS(map, addr)				\
-({									\
-  unsigned int fptr[2];							\
-  fptr[0] = (unsigned int) (addr);					\
-  fptr[1] = (map)->l_info[DT_PLTGOT]->d_un.d_ptr;			\
-  /* Set bit 30 to indicate to $$dyncall that this is a PLABEL. */	\
-  (ElfW(Addr))((unsigned int)fptr | 2);					\
-})
+#define DL_DT_FUNCTION_ADDRESS(map, start, attr, addr)			\
+  attr volatile unsigned int fptr[2];					\
+ /* The test for "start & 2" below is to accommodate old binaries which	\
+    violated the ELF ABI by pointing DT_INIT and DT_FINI at a function	\
+    descriptor.  */							\
+  if ((ElfW(Addr)) (start) & 2)						\
+    addr = (ElfW(Addr)) start;						\
+  else									\
+    {									\
+      fptr[0] = (unsigned int) (start);					\
+      fptr[1] = (map)->l_info[DT_PLTGOT]->d_un.d_ptr;			\
+      /* Set bit 30 to indicate to $$dyncall that this is a PLABEL. */	\
+      addr = (ElfW(Addr))((unsigned int)fptr | 2);			\
+    }									\
 
-#define DL_STATIC_FUNCTION_ADDRESS(map, addr)				\
-({									\
-  static unsigned int fptr[2];						\
-  fptr[0] = (unsigned int) (addr);					\
-  fptr[1] = (map)->l_info[DT_PLTGOT]->d_un.d_ptr;			\
-  /* Set bit 30 to indicate to $$dyncall that this is a PLABEL. */	\
-  (ElfW(Addr))((unsigned int)fptr | 2);					\
-})
+#define DL_CALL_DT_INIT(map, start, argc, argv, env)	\
+{							\
+  ElfW(Addr) addr;					\
+  DL_DT_FUNCTION_ADDRESS(map, start, , addr)		\
+  init_t init = (init_t) addr; 				\
+  init (argc, argv, env);				\
+}
 
-
-/* The test for "addr & 2" below is to accommodate old binaries which
-   violated the ELF ABI by pointing DT_INIT and DT_FINI at a function
-   descriptor.  */
-#define DL_DT_INIT_ADDRESS(map, addr) \
-  ((Elf32_Addr)(addr) & 2 ? (addr) : DL_AUTO_FUNCTION_ADDRESS (map, addr))
-#define DL_DT_FINI_ADDRESS(map, addr) \
-  ((Elf32_Addr)(addr) & 2 ? (addr) : DL_AUTO_FUNCTION_ADDRESS (map, addr))
+#define DL_CALL_DT_FINI(map, start)		\
+{						\
+  ElfW(Addr) addr;				\
+  DL_DT_FUNCTION_ADDRESS(map, start, , addr)	\
+  fini_t fini = (fini_t) addr;			\
+  fini ();					\
+}
 
 /* The type of the return value of fixup/profile_fixup */
 #define DL_FIXUP_VALUE_TYPE struct fdesc

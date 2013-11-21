@@ -274,9 +274,8 @@ _dl_close_worker (struct link_map *map)
 
 	      /* Next try the old-style destructor.  */
 	      if (imap->l_info[DT_FINI] != NULL)
-		(*(void (*) (void)) DL_DT_FINI_ADDRESS
-		 (imap, ((void *) imap->l_addr
-			 + imap->l_info[DT_FINI]->d_un.d_ptr))) ();
+		DL_CALL_DT_FINI (imap, ((void *) imap->l_addr
+			 + imap->l_info[DT_FINI]->d_un.d_ptr));
 	    }
 
 #ifdef SHARED

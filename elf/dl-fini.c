@@ -254,7 +254,7 @@ _dl_fini (void)
 
 		  /* Next try the old-style destructor.  */
 		  if (l->l_info[DT_FINI] != NULL)
-		    ((fini_t) DL_DT_FINI_ADDRESS (l, l->l_addr + l->l_info[DT_FINI]->d_un.d_ptr)) ();
+		     DL_CALL_DT_FINI(l, l->l_addr + l->l_info[DT_FINI]->d_un.d_ptr);
 		}
 
 #ifdef SHARED
