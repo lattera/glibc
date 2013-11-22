@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <stap-probe.h>
 #define _ASM
 #ifdef __NO_VMX__
 # include <novmxsetjmp.h>
@@ -25,7 +26,7 @@
 #endif
 
 	.machine	"altivec"
-ENTRY (__sigsetjmp)
+ENTRY (__sigsetjmp_symbol)
 
 #ifdef PTR_MANGLE
 	mr   r5,r1
@@ -35,6 +36,9 @@ ENTRY (__sigsetjmp)
 	stw  r1,(JB_GPR1*4)(3)
 #endif
 	mflr r0
+	/* setjmp probe expects longjmp first argument (4@3), second argument
+	   (-4@4), and target address (4@0), respectively.  */
+	LIBC_PROBE (setjmp, 3, 4@3, -4@4, 4@0)
 	stw  r14,((JB_GPRS+0)*4)(3)
 	stfd fp14,((JB_FPRS+0*2)*4)(3)
 #ifdef PTR_MANGLE
@@ -175,5 +179,5 @@ L(aligned_save_vmx):
 	stvx	31,0,r6
 L(no_vmx):
 #endif
-	b __sigjmp_save@local
-END (__sigsetjmp)
+	b __sigjmp_save_symbol@local
+END (__sigsetjmp_symbol)

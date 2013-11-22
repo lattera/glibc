@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <stap-probe.h>
 #define _ASM
 #ifdef __NO_VMX__
 # include <novmxsetjmp.h>
@@ -30,7 +31,7 @@
 # define SAVE_GP(N)	stw r##N,((JB_GPRS+(N)-14)*4)(3)
 #endif
 
-ENTRY (__sigsetjmp)
+ENTRY (__sigsetjmp_symbol)
 
 #ifdef PTR_MANGLE
 	mr   r5,r1
@@ -40,6 +41,9 @@ ENTRY (__sigsetjmp)
 	stw  r1,(JB_GPR1*4)(3)
 #endif
 	mflr r0
+	/* setjmp probe expects longjmp first argument (4@3), second argument
+	   (-4@4), and target address (4@0), respectively.  */
+	LIBC_PROBE (setjmp, 3, 4@3, -4@4, 4@0)
 	SAVE_GP (14)
 #ifdef PTR_MANGLE
 	PTR_MANGLE2 (r0, r10)
@@ -69,6 +73,6 @@ ENTRY (__sigsetjmp)
 	li   r3,0
 	blr
 #else
-	b __sigjmp_save@local
+	b __sigjmp_save_symbol@local
 #endif
-END (__sigsetjmp)
+END (__sigsetjmp_symbol)

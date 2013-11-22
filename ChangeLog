@@ -1,3 +1,34 @@
+2013-12-05  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/__longjmp-common.S: Add "longjmp" and
+	"longjmp_target" static probes.
+	(__longjmp): Rename to __longjmp_symbol.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc32/__longjmp.S: Define __longjmp_symbol based
+	on which longjmp to generate.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S: Add "setjmp" static
+	probe.
+	(__sigsetjmp): Rename to __sigsetjmp_symbol.
+	(__sigjmp_save): Rename to __sigjmp_save_symbol.
+	* sysdeps/powerpc/powerpc32/setjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp.S: Define __sigsetjmp_symbol
+	and __sigjmp_save_symbol based on which sigsetjmp to generated.
+	* sysdeps/powerpc/powerpc32/setjmp.S: Likewise
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/____longjmp_chk.S: Define
+	__longjmp_symbol based on which __longjmp to generate.
+	* sysdeps/powerpc/powerpc64/setjmp-common.S: Add "setjmp" static
+	probe.
+	(setjmp): Rename to setjmp_symbol.
+	(__sigsetjmp): Rename to __sigsetjmp_symbol.
+	(_setjmp): Rename to _setjmp_symbol.
+	(__sigsetjmp): Rename to __sigsetjmp_symbol.
+	* sysdeps/powerpc/powerpc64/setjmp.S: Define setjmp_symbol,
+	_setjmp_symbol, __sigsetjmp_symbol, and __sigjmp_save_symbol based on
+	which setjmp to generate.
+	* sysdeps/powerpc/powerpc64/__longjmp-common.S: Add "longjmp" and
+	"longjmp_target" static probes.
+
 2013-12-05  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* benchtests/README: Add note about output arguments.

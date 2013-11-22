@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <stap-probe.h>
 #define _ASM
 #ifdef __NO_VMX__
 #include <novmxsetjmp.h>
@@ -42,11 +43,11 @@
 #endif
 
 	.machine	"altivec"
-ENTRY (setjmp)
+ENTRY (setjmp_symbol)
 	CALL_MCOUNT 1
 	li r4,1			/* Set second argument to 1.  */
-	b JUMPTARGET (GLUE(__sigsetjmp,_ent))
-END (setjmp)
+	b JUMPTARGET (GLUE(__sigsetjmp_symbol,_ent))
+END (setjmp_symbol)
 
 #if defined SHARED && !defined IS_IN_rtld && !defined __NO_VMX__
 /* When called from within libc we need a special version of _setjmp
@@ -57,20 +58,20 @@ ENTRY (__GI__setjmp)
 	std r2,FRAME_TOC_SAVE(r1)		/* Save the callers TOC in the save area.  */
 	CALL_MCOUNT 1
 	li r4,0			/* Set second argument to 0.  */
-	b JUMPTARGET (GLUE(__sigsetjmp,_ent))
+	b JUMPTARGET (GLUE(__sigsetjmp_symbol,_ent))
 END (__GI__setjmp)
 #endif
 
-ENTRY (_setjmp)
+ENTRY (_setjmp_symbol)
 	CALL_MCOUNT 1
 	li r4,0			/* Set second argument to 0.  */
-	b JUMPTARGET (GLUE(__sigsetjmp,_ent))
-END (_setjmp)
-libc_hidden_def (_setjmp)
+	b JUMPTARGET (GLUE(__sigsetjmp_symbol,_ent))
+END (_setjmp_symbol)
+libc_hidden_def (_setjmp_symbol)
 
-ENTRY (__sigsetjmp)
+ENTRY (__sigsetjmp_symbol)
 	CALL_MCOUNT 2
-JUMPTARGET(GLUE(__sigsetjmp,_ent)):
+JUMPTARGET(GLUE(__sigsetjmp_symbol,_ent)):
 #ifdef PTR_MANGLE
 	mr   r5, r1
 	PTR_MANGLE (r5, r6)
@@ -85,6 +86,9 @@ JUMPTARGET(GLUE(__sigsetjmp,_ent)):
 #else
 	std  r2,(JB_GPR2*8)(3)
 #endif
+	/* setjmp probe expects longjmp first argument (8@3), second argument
+	   (-4@4), and target address (8@0), respectively.  */
+	LIBC_PROBE (setjmp, 3, 8@3, -4@4, 8@0)
 	std  r14,((JB_GPRS+0)*8)(3)
 	stfd fp14,((JB_FPRS+0)*8)(3)
 #ifdef PTR_MANGLE
@@ -213,18 +217,18 @@ L(no_vmx):
 	li	r3,0
 	blr
 #elif defined SHARED
-	b	JUMPTARGET (__sigjmp_save)
+	b	JUMPTARGET (__sigjmp_save_symbol)
 #else
 	mflr	r0
 	std	r0,FRAME_LR_SAVE(r1)
 	stdu	r1,-FRAME_MIN_SIZE(r1)
 	cfi_adjust_cfa_offset(FRAME_MIN_SIZE)
 	cfi_offset(lr,FRAME_LR_SAVE)
-	bl	JUMPTARGET (__sigjmp_save)
+	bl	JUMPTARGET (__sigjmp_save_symbol)
 	nop
 	ld	r0,FRAME_MIN_SIZE+FRAME_LR_SAVE(r1)
 	addi	r1,r1,FRAME_MIN_SIZE
 	mtlr	r0
 	blr
 #endif
-END (__sigsetjmp)
+END (__sigsetjmp_symbol)

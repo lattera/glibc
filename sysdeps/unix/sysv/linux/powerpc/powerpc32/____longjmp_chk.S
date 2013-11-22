@@ -24,7 +24,7 @@
 	.string "longjmp causes uninitialized stack frame"
 	.text
 
-#define __longjmp ____longjmp_chk
+#define __longjmp_symbol ____longjmp_chk
 
 #ifdef PIC
 #  define LOAD_ARG \

@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <stap-probe.h>
 #define _ASM
 #ifdef __NO_VMX__
 # include <novmxsetjmp.h>
@@ -30,7 +31,7 @@
 # define LOAD_GP(N)	lwz r##N,((JB_GPRS+(N)-14)*4)(r3)
 #endif
 
-ENTRY (__longjmp)
+ENTRY (__longjmp_symbol)
 
 #if defined PTR_DEMANGLE || defined CHECK_SP
 	lwz r24,(JB_GPR1*4)(r3)
@@ -58,20 +59,24 @@ ENTRY (__longjmp)
 # endif
 	PTR_DEMANGLE2 (r0, r25)
 #endif
+	/* longjmp/longjmp_target probe expects longjmp first argument (4@3),
+	   second argument (-4@4), and target address (4@0), respectively.  */
+	LIBC_PROBE (longjmp, 3, 4@3, -4@4, 4@0)
 	mtlr r0
 	LOAD_GP (21)
 	LOAD_GP (22)
-	lwz r0,(JB_CR*4)(r3)
+	lwz r5,(JB_CR*4)(r3)
 	LOAD_GP (23)
 	LOAD_GP (24)
 	LOAD_GP (25)
-	mtcrf 0xFF,r0
+	mtcrf 0xFF,r5
 	LOAD_GP (26)
 	LOAD_GP (27)
 	LOAD_GP (28)
 	LOAD_GP (29)
 	LOAD_GP (30)
 	LOAD_GP (31)
+	LIBC_PROBE (longjmp_target, 3, 4@3, -4@4, 4@0)
 	mr r3,r4
 	blr
-END (__longjmp)
+END (__longjmp_symbol)

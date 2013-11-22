@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <stap-probe.h>
 #define _ASM
 #define _SETJMP_H
 #ifdef __NO_VMX__
@@ -147,20 +148,23 @@ L(no_vmx):
 #ifdef PTR_DEMANGLE
 	PTR_DEMANGLE2 (r0, r25)
 #endif
+     /* longjmp/longjmp_target probe expects longjmp first argument (8@3),
+	second argument (-4@4), and target address (8@0), respectively.  */
+	LIBC_PROBE (longjmp, 3, 8@3, -4@4, 8@0)
 	mtlr r0
 /* 	std r2,FRAME_TOC_SAVE(r1)	Restore the TOC save area.  */
 	ld r21,((JB_GPRS+7)*8)(r3)
 	lfd fp21,((JB_FPRS+7)*8)(r3)
 	ld r22,((JB_GPRS+8)*8)(r3)
 	lfd fp22,((JB_FPRS+8)*8)(r3)
-	lwz r0,((JB_CR*8)+4)(r3)	/* 32-bit CR.  */
+	lwz r5,((JB_CR*8)+4)(r3)	/* 32-bit CR.  */
 	ld r23,((JB_GPRS+9)*8)(r3)
 	lfd fp23,((JB_FPRS+9)*8)(r3)
 	ld r24,((JB_GPRS+10)*8)(r3)
 	lfd fp24,((JB_FPRS+10)*8)(r3)
 	ld r25,((JB_GPRS+11)*8)(r3)
 	lfd fp25,((JB_FPRS+11)*8)(r3)
-	mtcrf 0xFF,r0
+	mtcrf 0xFF,r5
 	ld r26,((JB_GPRS+12)*8)(r3)
 	lfd fp26,((JB_FPRS+12)*8)(r3)
 	ld r27,((JB_GPRS+13)*8)(r3)
@@ -173,6 +177,7 @@ L(no_vmx):
 	lfd fp30,((JB_FPRS+16)*8)(r3)
 	ld r31,((JB_GPRS+17)*8)(r3)
 	lfd fp31,((JB_FPRS+17)*8)(r3)
+	LIBC_PROBE (longjmp_target, 3, 8@3, -4@4, 8@0)
 	mr r3,r4
 	blr
 END (__longjmp)

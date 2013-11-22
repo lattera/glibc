@@ -22,20 +22,21 @@
 
 #if defined NOT_IN_libc
 /* Build a non-versioned object for rtld-*.  */
+# define __longjmp_symbol __longjmp
 # include "__longjmp-common.S"
 
 #else /* !NOT_IN_libc */
 /* Build a versioned object for libc.  */
 versioned_symbol (libc, __vmx__longjmp, __longjmp, GLIBC_2_3_4);
-# define __longjmp  __vmx__longjmp
+# define __longjmp_symbol  __vmx__longjmp
 # include "__longjmp-common.S"
 
 # if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4)
 #  define __NO_VMX__
 #  undef JB_SIZE
 compat_symbol (libc, __novmx__longjmp, __longjmp, GLIBC_2_0);
-#  undef __longjmp
-#  define __longjmp  __novmx__longjmp
+#  undef __longjmp_symbol
+#  define __longjmp_symbol  __novmx__longjmp
 #  include "__longjmp-common.S"
 # endif
 #endif /* !NOT_IN_libc */

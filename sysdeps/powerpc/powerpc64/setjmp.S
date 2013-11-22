@@ -22,6 +22,10 @@
 
 #if defined NOT_IN_libc
 /* Build a non-versioned object for rtld-*.  */
+# define setjmp_symbol setjmp
+# define _setjmp_symbol _setjmp
+# define __sigsetjmp_symbol __sigsetjmp
+# define __sigjmp_save_symbol __sigjmp_save
 # include "setjmp-common.S"
 
 #else /* !NOT_IN_libc */
@@ -29,28 +33,28 @@
 versioned_symbol (libc, __vmxsetjmp, setjmp, GLIBC_2_3_4)
 versioned_symbol (libc, __vmx_setjmp, _setjmp, GLIBC_2_3_4)
 versioned_symbol (libc, __vmx__sigsetjmp, __sigsetjmp, GLIBC_2_3_4)
-# define setjmp __vmxsetjmp
-# define _setjmp __vmx_setjmp
-# define __sigsetjmp __vmx__sigsetjmp
-# define __sigjmp_save __vmx__sigjmp_save
+# define setjmp_symbol __vmxsetjmp
+# define _setjmp_symbol __vmx_setjmp
+# define __sigsetjmp_symbol __vmx__sigsetjmp
+# define __sigjmp_save_symbol __vmx__sigjmp_save
 # include "setjmp-common.S"
 strong_alias (__vmxsetjmp, __vmx__setjmp)
 strong_alias (__vmx__sigsetjmp, __setjmp)
 
 # if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4)
-#  undef setjmp
-#  undef _setjmp
-#  undef __sigsetjmp
-#  undef __sigjmp_save
+#  undef setjmp_symbol
+#  undef _setjmp_symbol
+#  undef __sigsetjmp_symbol
+#  undef __sigjmp_save_symbol
 #  undef JB_SIZE
 #  define __NO_VMX__
 compat_symbol (libc, __novmxsetjmp, setjmp, GLIBC_2_3)
 compat_symbol (libc, __novmx_setjmp,_setjmp, GLIBC_2_3);
 compat_symbol (libc, __novmx__sigsetjmp,__sigsetjmp, GLIBC_2_3)
-#  define setjmp __novmxsetjmp
-#  define _setjmp __novmx_setjmp
-#  define __sigsetjmp __novmx__sigsetjmp
-#  define __sigjmp_save __novmx__sigjmp_save
+#  define setjmp_symbol __novmxsetjmp
+#  define _setjmp_symbol __novmx_setjmp
+#  define __sigsetjmp_symbol __novmx__sigsetjmp
+#  define __sigjmp_save_symbol __novmx__sigjmp_save
 #  include "setjmp-common.S"
 strong_alias (__novmxsetjmp, __novmx__setjmp)
 # endif
