@@ -53,14 +53,6 @@
 # define ARM_BX_ALIGN_LOG2	2
 #endif
 
-/* The number of instructions that 'bx' expands to.  A more-specific
-   arm-features.h that defines 'bx' as a macro should define this to the
-   number instructions it expands to.  This is used only in a context
-   where the 'bx' expansion won't cross an ARM_BX_ALIGN_LOG2 boundary.  */
-#ifndef ARM_BX_NINSNS
-# define ARM_BX_NINSNS		1
-#endif
-
 /* An OS-specific arm-features.h file may define ARM_NO_INDEX_REGISTER to
    indicate that the two-register addressing modes must never be used.  */
 

@@ -1,3 +1,11 @@
+2013-11-22  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/armv7/multiarch/memcpy_impl.S
+	[ARM_ALWAYS_BX] (dispatch_helper): Fix PC computation to properly
+	account for instructions after the reference to PC given that 'bx'
+	might actually be expanded to multiple instructions.
+	* sysdeps/arm/arm-features.h (ARM_BX_NINSNS): Macro removed.
+
 2013-10-30  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/arm/configure.in: Moved to ...
