@@ -1,5 +1,12 @@
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/power7/add_n.S: New file: optimized
+	__mpn_add_n for PowerPC64/POWER7.
+	* sysdeps/powerpc/powerpc64/power7/sub_n.S: New file: optimized
+	__mpn_sub_n for PowerPC64/POWER7.
+
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/addmul_1.S: New file: optimized
 	__mpn_addmul_1 for PowerPC64.
 	* sysdeps/powerpc/powerpc64/submul_1.S: New file: optimized
