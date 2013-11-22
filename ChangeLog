@@ -1,3 +1,14 @@
+2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/addmul_1.S: New file: optimized
+	__mpn_addmul_1 for PowerPC64.
+	* sysdeps/powerpc/powerpc64/submul_1.S: New file: optimized
+	__mpn_submul_1 for PowerPC64.
+	* sysdeps/powerpc/powerpc64/lshift.S: New file: optimized __mpn_lshift
+	for PowerPC64.
+	* sysdeps/powerpc/powerpc64/mul_1.S: New file: optimized __mpn_mul_1
+	for PowerPC64.
+
 2013-12-06  Fernando J. V. da Silva  <fernandojvdasilva@gmail.com>
 
 	[BZ #15089]
