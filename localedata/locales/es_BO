@@ -156,6 +156,8 @@ country_ab3   "<U0042><U004F><U004C>"
 country_num   068
 % BOL
 country_car    "<U0042><U004F><U004C>"
+% Español
+lang_name     "<U0045><U0073><U0070><U0061><U00F1><U006F><U006C>"
 % es
 lang_ab      "<U0065><U0073>"
 % spa

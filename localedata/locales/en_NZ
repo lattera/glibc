@@ -158,6 +158,8 @@ country_ab3   "<U004E><U005A><U004C>"
 country_num   554
 % NZ
 country_car    "<U004E><U005A>"
+% English
+lang_name     "<U0045><U006E><U0067><U006C><U0069><U0073><U0068>"
 % en
 lang_ab      "<U0065><U006E>"
 % eng

@@ -155,6 +155,8 @@ country_ab3   "<U0047><U0054><U004D>"
 country_num   320
 % GCA
 country_car    "<U0047><U0043><U0041>"
+% Español
+lang_name     "<U0045><U0073><U0070><U0061><U00F1><U006F><U006C>"
 % es
 lang_ab      "<U0065><U0073>"
 % spa

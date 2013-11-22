@@ -159,6 +159,7 @@ country_isbn  "9930,9977,9968"
 country_ab2   "<U0043><U0052>"
 country_ab3   "<U0043><U0052><U0049>"
 country_num   188
+% Español
 lang_name     "<U0045><U0073><U0070><U0061><U00F1><U006F><U006C>"
 % es
 lang_ab      "<U0065><U0073>"

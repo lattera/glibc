@@ -198,6 +198,8 @@ country_ab3   "<U0048><U004B><U0047>"
 country_num   344
 % HK
 country_car    "<U0048><U004B>"
+% English
+lang_name     "<U0045><U006E><U0067><U006C><U0069><U0073><U0068>"
 % en
 lang_ab      "<U0065><U006E>"
 % eng

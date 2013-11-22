@@ -165,6 +165,7 @@ country_num   840
 % USA
 country_car   "<U0055><U0053><U0041>"
 country_isbn  0
+% English
 lang_name     "<U0045><U006E><U0067><U006C><U0069><U0073><U0068>"
 % en
 lang_ab      "<U0065><U006E>"

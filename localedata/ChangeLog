@@ -1,3 +1,52 @@
+2013-11-22  Chris Leonard  <cjl@sugarlabs.org>
+
+	* locales/de_AT: Add lang_name to German, English, Spanish, French locales.
+	* locales/de_BE: Likewise.
+	* locales/de_CH: Likewise.
+	* locales/de_DE: Likewise.
+	* locales/de_LU: Likewise.
+	* locales/en_AG: Likewise.
+	* locales/en_AU: Likewise.
+	* locales/en_BW: Likewise.
+	* locales/en_CA: Likewise.
+	* locales/en_DK: Likewise.
+	* locales/en_GB: Likewise.
+	* locales/en_HK: Likewise.
+	* locales/en_IE: Likewise.
+	* locales/en_IN: Likewise.
+	* locales/en_NZ: Likewise.
+	* locales/en_PH: Likewise.
+	* locales/en_SG: Likewise.
+	* locales/en_US: Likewise.
+	* locales/en_ZM: Likewise.
+	* locales/en_ZW: Likewise.
+	* locales/es_AR: Likewise.
+	* locales/es_BO: Likewise.
+	* locales/es_CL: Likewise.
+	* locales/es_CO: Likewise.
+	* locales/es_CR: Likewise.
+	* locales/es_CU: Likewise.
+	* locales/es_DO: Likewise.
+	* locales/es_EC: Likewise.
+	* locales/es_ES: Likewise.
+	* locales/es_GT: Likewise.
+	* locales/es_HN: Likewise.
+	* locales/es_MX: Likewise.
+	* locales/es_NI: Likewise.
+	* locales/es_PA: Likewise.
+	* locales/es_PE: Likewise.
+	* locales/es_PR: Likewise.
+	* locales/es_PY: Likewise.
+	* locales/es_SV: Likewise.
+	* locales/es_US: Likewise.
+	* locales/es_UY: Likewise.
+	* locales/es_VE: Likewise.
+	* locales/fr_BE: Likewise.
+	* locales/fr_CA: Likewise.
+	* locales/fr_CH: Likewise.
+	* locales/fr_FR: Likewise.
+	* locales/fr_LU: Likewise.
+
 2013-11-21  Chris Leonard  <cjl@sugarlabs.org>
 
 	* locales/ar_AE: Add lang_name to Arabic locales.

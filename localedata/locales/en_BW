@@ -116,6 +116,8 @@ country_ab3 "<U0042><U0057><U0041>"
 country_num 072
 % RB
 country_car    "<U0052><U0042>"
+% English
+lang_name     "<U0045><U006E><U0067><U006C><U0069><U0073><U0068>"
 % en
 lang_ab      "<U0065><U006E>"
 % eng
