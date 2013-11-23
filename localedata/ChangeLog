@@ -1,5 +1,18 @@
 2013-11-23  Chris Leonard  <cjl@sugarlabs.org>
 
+	* locales/be_BY: Add lang_name to various locales.
+	* locales/be_BY@latin: Likewise.
+	* locales/ber_DZ: Likewise.
+	* locales/ber_MA: Likewise.
+	* locales/bg_BG: Likewise.
+	* locales/bho_IN: Likewise.
+	* locales/bn_BD: Likewise.
+	* locales/bn_IN: Likewise.
+	* locales/br_FR: Likewise.
+	* locales/bs_BA: Likewise.
+
+2013-11-23  Chris Leonard  <cjl@sugarlabs.org>
+
 	* locales/an_ES: Add lang_name to various locales.
 	* locales/anp_IN: Likewise.
 	* locales/as_IN: Likewise.

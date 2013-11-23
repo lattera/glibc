@@ -187,7 +187,8 @@ lang_term    "<U0062><U0065><U006E>"
 % ben
 lang_lib       "<U0062><U0065><U006E>"
 %lang_ab3_term   "ben"
-lang_name       "<U09ac><U09be><U0982><U09b2><U09be>"
+% বাংলা
+lang_name    "<U09AC><U09BE><U0982><U09B2><U09BE>"
 % todo
 %country_post   ""
 country_num     050

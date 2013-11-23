@@ -183,6 +183,8 @@ country_ab3 "<U0049><U004E><U0044>"
 country_num 356
 % IND
 country_car    "<U0049><U004E><U0044>"
+% বাংলা
+lang_name    "<U09AC><U09BE><U0982><U09B2><U09BE>"
 % bn
 lang_ab      "<U0062><U006E>"
 % ben

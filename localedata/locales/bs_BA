@@ -237,6 +237,8 @@ country_ab3 "<U0042><U0049><U0048>"
 country_num 070
 % BIH
 country_car    "<U0042><U0049><U0048>"
+% босански
+lang_name    "<U0431><U043E><U0441><U0430><U043D><U0441><U043A><U0438>"
 % bs
 lang_ab      "<U0062><U0073>"
 % bos

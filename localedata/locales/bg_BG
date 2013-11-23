@@ -267,7 +267,8 @@ country_ab3  "<U0042><U0047><U0052>"
 country_num   100
 country_car  "<U0042><U0047>"
 country_isbn  954
-lang_name    "<U0042><U0075><U006C><U0067><U0061><U0072><U0069><U0061><U006E>"
+% български език
+lang_name    "<U0431><U044A><U043B><U0433><U0430><U0440><U0441><U043A><U0438><U0020><U0435><U0437><U0438><U043A>"
 lang_ab      "<U0062><U0067>"
 lang_term    "<U0062><U0075><U006C>"
 lang_lib    "<U0062><U0075><U006C>"

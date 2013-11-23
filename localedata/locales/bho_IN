@@ -157,6 +157,8 @@ country_ab3 "<U0049><U004E><U0044>"
 country_num 356
 % IND
 country_car    "<U0049><U004E><U0044>"
+% भोजपुरी
+lang_name    "<U092D><U094B><U091C><U092A><U0941><U0930><U0940>"
 % bho
 lang_term    "<U0062><U0068><U006F>"
 % bho
