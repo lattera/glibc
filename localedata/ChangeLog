@@ -1,3 +1,12 @@
+2013-11-23  Chris Leonard  <cjl@sugarlabs.org>
+
+	* locales/an_ES: Add lang_name to various locales.
+	* locales/anp_IN: Likewise.
+	* locales/as_IN: Likewise.
+	* locales/ast_ES: Likewise.
+	* locales/ayc_PE: Likewise.
+	* locales/az_AZ: Likewise.
+
 2013-11-22  Chris Leonard  <cjl@sugarlabs.org>
 
 	* locales/de_AT: Add lang_name to German, English, Spanish, French locales.
