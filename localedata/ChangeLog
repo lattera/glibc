@@ -1,3 +1,21 @@
+2013-11-25  Chris Leonard  <cjl@sugarlabs.org>
+
+	* locales/ga_IE: Add lang_name to various locales.
+	* locales/gl_ES: Likewise.
+	* locales/gu_IN: Likewise.
+	* locales/gv_GB: Likewise.
+	* locales/he_IL: Likewise.
+	* locales/hi_IN: Likewise.
+	* locales/hne_IN: Likewise.
+	* locales/hr_HR: Likewise.
+	* locales/hu_HU: Likewise.
+	* locales/id_ID: Likewise.
+	* locales/ik_CA: Likewise.
+	* locales/is_IS: Likewise.
+	* locales/it_CH: Likewise.
+	* locales/it_IT: Likewise.
+	* locales/ja_JP: Likewise.
+
 2013-11-24  Chris Leonard  <cjl@sugarlabs.org>
 
 	* locales/bs_BA: Add lang_name to various locales.

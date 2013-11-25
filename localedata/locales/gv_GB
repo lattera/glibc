@@ -174,6 +174,8 @@ country_ab3 "<U0047><U0042><U0052>"
 country_num 826
 % GB
 country_car    "<U0047><U0042>"
+% y Ghaelg
+lang_name    "<U0079><U0020><U0047><U0068><U0061><U0065><U006C><U0067>"
 % gv
 lang_ab      "<U0067><U0076>"
 % glv

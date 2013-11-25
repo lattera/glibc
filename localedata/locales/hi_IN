@@ -217,6 +217,8 @@ country_ab3 "<U0049><U004E><U0044>"
 country_num 356
 % IND
 country_car    "<U0049><U004E><U0044>"
+% हिन्दी
+lang_name    "<U0939><U093F><U0928><U094D><U0926><U0940>"
 % hi
 lang_ab      "<U0068><U0069>"
 % hin

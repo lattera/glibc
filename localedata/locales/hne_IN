@@ -165,6 +165,8 @@ country_ab3 "<U0049><U004E><U0044>"
 country_num 356
 % IND
 country_car    "<U0049><U004E><U0044>"
+% छत्तीसगढ़ी
+lang_name    "<U091B><U0924><U094D><U0924><U0940><U0938><U0917><U0922><U093C><U0940>"
 % hne
 lang_term    "<U0068><U006E><U0065>"
 END LC_ADDRESS

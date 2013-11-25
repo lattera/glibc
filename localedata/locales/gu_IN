@@ -217,6 +217,8 @@ country_ab3 "<U0049><U004E><U0044>"
 country_num 356
 % IND
 country_car    "<U0049><U004E><U0044>"
+% ગુજરાતી
+lang_name    "<U0A97><U0AC1><U0A9C><U0AB0><U0ABE><U0AA4><U0AC0>"
 % gu
 lang_ab      "<U0067><U0075>"
 % guj

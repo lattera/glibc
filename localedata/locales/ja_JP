@@ -15044,6 +15044,8 @@ country_ab3 "<U004A><U0050><U004E>"
 country_num 392
 % J
 country_car    "<U004A>"
+% 日本語
+lang_name    "<U65E5><U672C><U8A9E>"
 % ja
 lang_ab      "<U006A><U0061>"
 % jpn
