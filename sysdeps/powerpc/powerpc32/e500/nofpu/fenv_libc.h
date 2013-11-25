@@ -21,6 +21,9 @@
 
 #include <fenv.h>
 
+/* ldbl-128ibm code uses __fegetround.  */
+#define __fegetround()	fegetround ()
+
 int __feraiseexcept_spe (int);
 libm_hidden_proto (__feraiseexcept_spe)
 

@@ -25,4 +25,7 @@
 
 #include <fenv.h>
 
+/* ldbl-128ibm code uses __fegetround.  */
+#define __fegetround()	fegetround ()
+
 #endif /* fenv_libc.h */

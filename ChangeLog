@@ -1,3 +1,9 @@
+2013-11-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/nofpu/fenv_libc.h (__fegetround): New macro.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fenv_libc.h (__fegetround):
+	Likewise.
+
 2013-11-25  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/ieee754/ldbl-128ibm/e_expl.c (__ieee754_expl): Use
