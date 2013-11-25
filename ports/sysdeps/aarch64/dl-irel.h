@@ -22,15 +22,31 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <ldsodefs.h>
 
-/* AArch64 does not yet implement IFUNC support.  However since
-   2011-06-20 provision of a elf_ifunc_invoke has been mandatory.  */
+#define ELF_MACHINE_IRELA	1
 
 static inline ElfW(Addr)
 __attribute ((always_inline))
 elf_ifunc_invoke (ElfW(Addr) addr)
 {
-  return ((ElfW(Addr) (*) (void)) (addr)) ();
+  return ((ElfW(Addr) (*) (unsigned long int)) (addr)) (GLRO(dl_hwcap));
+}
+
+static inline void
+__attribute ((always_inline))
+elf_irela (const ElfW(Rela) *reloc)
+{
+  ElfW(Addr) *const reloc_addr = (void *) reloc->r_offset;
+  const unsigned long int r_type = ELFW(R_TYPE) (reloc->r_info);
+
+  if (__glibc_likely (r_type == R_AARCH64_IRELATIVE))
+    {
+      ElfW(Addr) value = elf_ifunc_invoke (reloc->r_addend);
+      *reloc_addr = value;
+    }
+  else
+    __libc_fatal ("unexpected reloc type in static binary");
 }
 
 #endif

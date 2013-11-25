@@ -1,3 +1,13 @@
+2013-11-26  Will Newton  <will.newton@linaro.org>
+
+	* sysdeps/aarch64/dl-irel.h: Include ldsodefs.h.
+	(ELF_MACHINE_IRELA): Define.  (elf_ifunc_invoke): Pass
+	hwcap to ifunc resolver function.  (elf_irela): New function.
+	* sysdeps/aarch64/dl-machine.h: Include dl-irel.h.
+	(elf_machine_rela) Handle STT_GNU_IFUNC symbols and
+	R_AARCH64_IRELATIVE relocations.  (elf_machine_lazy_rel):
+	Handle R_AARCH64_IRELATIVE relocations.
+
 2013-10-30  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/aarch64/configure.in: Moved to ...
