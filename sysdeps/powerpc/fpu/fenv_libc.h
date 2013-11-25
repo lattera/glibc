@@ -23,9 +23,9 @@
 #include <ldsodefs.h>
 #include <sysdep.h>
 
-extern const fenv_t *__fe_nomask_env (void);
+extern const fenv_t *__fe_nomask_env (void) attribute_hidden;
 
-extern const fenv_t *__fe_mask_env (void);
+extern const fenv_t *__fe_mask_env (void) attribute_hidden;
 
 /* The sticky bits in the FPSCR indicating exceptions have occurred.  */
 #define FPSCR_STICKY_BITS ((FE_ALL_EXCEPT | FE_ALL_INVALID) & ~FE_INVALID)
@@ -83,7 +83,6 @@ __fegetround (void)
 		"mfcr  %0" : "=r"(result) : : "cr7");
   return result & 3;
 }
-#define fegetround() __fegetround()
 
 static inline int
 __fesetround (int round)
@@ -107,7 +106,6 @@ __fesetround (int round)
 
   return 0;
 }
-#define fesetround(mode) __fesetround(mode)
 
 /* Definitions of all the FPSCR bit numbers */
 enum {

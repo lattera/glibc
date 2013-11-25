@@ -1,3 +1,19 @@
+2013-11-25  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/e_expl.c (__ieee754_expl): Use
+	SET_RESTORE_ROUND instead of feholdexcept/fesetround/fesetenv.
+	* sysdeps/powerpc/fpu/fenv_libc.h (__fegetround): Remove define.
+	(__fesetround): Remove define.
+	* sysdeps/powerpc/fpu/fenv_private.h: New file: Inline floating point
+	rounding and exceptions handling.
+	* sysdeps/powerpc/fpu/math_private.h: Include fenv_private.h.
+	* sysdeps/powerpc/fpu/fenv_libc.h (__fe_mask_env): Define as hidden.
+	(__fe_nomask_env): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_llrintl.c (__llrintl): Use
+	__fegetround instead of fegetround.
+	* sysdeps/ieee754/ldbl-128ibm/s_lrintl.c (__lrintl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_rintl.c (__rintl): Likewise.
+
 2013-11-21  Roland McGrath  <roland@hack.frob.com>
 
 	* malloc/malloc.c: Move #include <sys/param.h> to the top; comment why

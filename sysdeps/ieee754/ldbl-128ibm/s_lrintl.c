@@ -49,7 +49,7 @@ __lrintl (long double x)
 #endif
     )
     {
-      save_round = fegetround ();
+      save_round = __fegetround ();
 
 #if __LONG_MAX__ == 2147483647
       long long llhi = (long long) xh;

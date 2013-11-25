@@ -134,18 +134,17 @@ static const long double C[] = {
 long double
 __ieee754_expl (long double x)
 {
+  long double result, x22;
+  union ibm_extended_long_double ex2_u, scale_u;
+  int unsafe;
+
   /* Check for usual case.  */
   if (isless (x, himark) && isgreater (x, lomark))
     {
-      int tval1, tval2, unsafe, n_i, exponent2;
-      long double x22, n, result, xl;
-      union ibm_extended_long_double ex2_u, scale_u;
-      fenv_t oldenv;
+      int tval1, tval2, n_i, exponent2;
+      long double n, xl;
 
-      feholdexcept (&oldenv);
-#ifdef FE_TONEAREST
-      fesetround (FE_TONEAREST);
-#endif
+      SET_RESTORE_ROUND (FE_TONEAREST);
 
       n = __roundl (x*M_1_LN2);
       x = x-n*M_LN2_0;
@@ -201,11 +200,6 @@ __ieee754_expl (long double x)
 	 less than 4.8e-39.  */
       x22 = x + x*x*(P1+x*(P2+x*(P3+x*(P4+x*(P5+x*P6)))));
 
-      /* Return result.  */
-      fesetenv (&oldenv);
-
-      result = x22 * ex2_u.ld + ex2_u.ld;
-
       /* Now we can test whether the result is ultimate or if we are unsure.
 	 In the later case we should probably call a mpn based routine to give
 	 the ultimate result.
@@ -235,10 +229,6 @@ __ieee754_expl (long double x)
 	    return __ieee754_expl_proc2 (origx);
 	  }
        */
-      if (!unsafe)
-	return result;
-      else
-	return result * scale_u.ld;
     }
   /* Exceptional cases:  */
   else if (isless (x, himark))
@@ -253,5 +243,10 @@ __ieee754_expl (long double x)
   else
     /* Return x, if x is a NaN or Inf; or overflow, otherwise.  */
     return TWO1023*x;
+
+  result = x22 * ex2_u.ld + ex2_u.ld;
+  if (!unsafe)
+    return result;
+  return result * scale_u.ld;
 }
 strong_alias (__ieee754_expl, __expl_finite)

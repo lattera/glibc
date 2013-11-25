@@ -43,7 +43,7 @@ __llrintl (long double x)
 #endif
     )
     {
-      save_round = fegetround ();
+      save_round = __fegetround ();
 
       if (__builtin_expect ((xh == -(double) (-__LONG_LONG_MAX__ - 1)), 0))
 	{

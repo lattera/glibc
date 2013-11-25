@@ -40,7 +40,7 @@ __rintl (long double x)
 					     __builtin_inf ()), 1))
     {
       double orig_xh;
-      int save_round = fegetround ();
+      int save_round = __fegetround ();
 
       /* Long double arithmetic, including the canonicalisation below,
 	 only works in round-to-nearest mode.  */
