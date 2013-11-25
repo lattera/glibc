@@ -1,3 +1,27 @@
+2013-11-24  Chris Leonard  <cjl@sugarlabs.org>
+
+	* locales/bs_BA: Add lang_name to various locales.
+	* locales/ca_AD: Likewise.
+	* locales/ca_ES: Likewise.
+	* locales/ca_FR: Likewise.
+	* locales/ca_IT: Likewise.
+	* locales/crh_UA: Likewise.
+	* locales/csb_PL: Likewise.
+	* locales/cv_RU: Likewise.
+	* locales/da_DK: Likewise.
+	* locales/doi_IN: Likewise.
+	* locales/dv_MV: Likewise.
+	* locales/el_CY: Likewise.
+	* locales/el_GR: Likewise.
+	* locales/el_GR@euro: Likewise.
+	* locales/eu_ES: Likewise.
+	* locales/fi_FI: Likewise.
+	* locales/fil_PH: Likewise.
+	* locales/fo_FO: Likewise.
+	* locales/fur_IT: Likewise.
+	* locales/fy_DE: Likewise.
+	* locales/fy_NL: Likewise.
+
 2013-11-23  Chris Leonard  <cjl@sugarlabs.org>
 
 	* locales/be_BY: Add lang_name to various locales.

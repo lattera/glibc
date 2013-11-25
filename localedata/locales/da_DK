@@ -254,6 +254,8 @@ country_ab3 "<U0044><U004E><U004B>"
 country_num 208
 % DK
 country_car    "<U0044><U004B>"
+% dansk
+lang_name    "<U0064><U0061><U006E><U0073><U006B>"
 % da
 lang_ab      "<U0064><U0061>"
 % dan

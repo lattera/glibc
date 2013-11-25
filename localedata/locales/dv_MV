@@ -178,6 +178,9 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
 <U004E><U0025><U0025><U007A><U0020><U0025><U0054><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
+% lang_name FIXME
+% Cannot represent Dhivehi in Thaana script
+% http://en.wikipedia.org/wiki/Maldivian_language
 % dv
 lang_ab      "<U0064><U0076>"
 % div

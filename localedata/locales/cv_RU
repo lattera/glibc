@@ -245,6 +245,8 @@ country_ab3 "<U0052><U0055><U0053>"
 country_num 643
 % RUS
 country_car    "<U0052><U0055><U0053>"
+% Чӑвашла
+lang_name    "<U0427><U04D1><U0432><U0430><U0448><U043B><U0430>"
 % cv
 lang_ab      "<U0063><U0076>"
 % chv

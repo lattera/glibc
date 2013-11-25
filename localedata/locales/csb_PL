@@ -217,6 +217,8 @@ country_ab3 "<U0050><U004F><U004C>"
 country_num 616
 % PL
 country_car    "<U0050><U004C>"
+% kaszëbsczi jãzëk
+lang_name    "<U006B><U0061><U0073><U007A><U00EB><U0062><U0073><U0063><U007A><U0069><U0020><U006A><U00E3><U007A><U00EB><U006B>"
 % csb
 lang_term    "<U0063><U0073><U0062>"
 % csb

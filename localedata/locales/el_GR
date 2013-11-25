@@ -178,6 +178,8 @@ country_ab3 "<U0047><U0052><U0043>"
 country_num 300
 % GR
 country_car    "<U0047><U0052>"
+% ελληνικά
+lang_name    "<U03B5><U03BB><U03BB><U03B7><U03BD><U03B9><U03BA><U03AC>"
 % el
 lang_ab      "<U0065><U006C>"
 % ell

@@ -143,6 +143,8 @@ country_ab3 "<U0049><U0054><U0041>"
 country_num 380
 % I
 country_car    "<U0049>"
+% Furlan
+lang_name    "<U0046><U0075><U0072><U006C><U0061><U006E>"
 % fur
 lang_term    "<U0066><U0075><U0072>"
 END LC_ADDRESS

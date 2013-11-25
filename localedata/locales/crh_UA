@@ -228,6 +228,8 @@ country_ab3 "<U0055><U004B><U0052>"
 country_num 804
 % UA
 country_car  "<U0055><U0041>"
+% Qırımtatarca
+lang_name    "<U0051><U0131><U0072><U0131><U006D><U0074><U0061><U0074><U0061><U0072><U0063><U0061>"
 % crh
 lang_term    "<U0063><U0072><U0068>"
 % crh

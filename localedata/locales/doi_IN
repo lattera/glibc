@@ -170,6 +170,8 @@ country_ab3 "<U0049><U004E><U0044>"
 country_num 356
 % IND
 country_car    "<U0049><U004E><U0044>"
+% डोगरी
+lang_name    "<U0921><U094B><U0917><U0930><U0940>"
 % doi
 lang_term    "<U0064><U006F><U0069>"
 % doi
