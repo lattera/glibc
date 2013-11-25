@@ -447,6 +447,11 @@ tst-cancel7-ARGS = --command "exec $(host-test-program-cmd)"
 tst-cancelx7-ARGS = $(tst-cancel7-ARGS)
 tst-umask1-ARGS = $(objpfx)tst-umask1.temp
 
+# In this test, we create a CLONE_VM "thread" that shares TLS storage
+# with the original thread. Both threads then race in ld.so with lazy PLT
+# resolution. Avoid this race by disabling lazy binding. BZ #11214.
+tst-getpid2-ENV = LD_BIND_NOW=1
+
 $(objpfx)tst-atfork2: $(libdl) $(shared-thread-library)
 LDFLAGS-tst-atfork2 = -rdynamic
 tst-atfork2-ENV = MALLOC_TRACE=$(objpfx)tst-atfork2.mtrace

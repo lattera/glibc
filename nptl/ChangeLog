@@ -1,3 +1,8 @@
+2013-11-25  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #11214]
+	* Makefile (tst-getpid2-ENV): New variable.
+
 2013-11-20  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* Makefile (tst-cleanup2, tst-cleanupx2): Add -fno-builtin
