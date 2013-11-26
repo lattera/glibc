@@ -34,10 +34,10 @@ struct ntptimeval
   long int esterror;	/* estimated error (us) (ro) */
   long int tai;		/* TAI offset (ro) */
 
-  long int __unused1;
-  long int __unused2;
-  long int __unused3;
-  long int __unused4;
+  long int __glibc_reserved1;
+  long int __glibc_reserved2;
+  long int __glibc_reserved3;
+  long int __glibc_reserved4;
 };
 
 /* Clock states (time_state) */

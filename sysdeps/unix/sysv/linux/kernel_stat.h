@@ -18,9 +18,9 @@ struct kernel_stat
     struct timespec st_atim;
     struct timespec st_mtim;
     struct timespec st_ctim;
-    unsigned long int __unused4;
+    unsigned long int __glibc_reserved4;
 #define _HAVE___UNUSED4
-    unsigned long int __unused5;
+    unsigned long int __glibc_reserved5;
 #define _HAVE___UNUSED5
   };
 

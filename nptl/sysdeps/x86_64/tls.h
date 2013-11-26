@@ -65,14 +65,14 @@ typedef struct
 # ifndef __ASSUME_PRIVATE_FUTEX
   int private_futex;
 # else
-  int __unused1;
+  int __glibc_reserved1;
 # endif
   int rtld_must_xmm_save;
   /* Reservation of some values for the TM ABI.  */
   void *__private_tm[4];
   /* GCC split stack support.  */
   void *__private_ss;
-  long int __unused2;
+  long int __glibc_reserved2;
   /* Have space for the post-AVX register size.  */
   __128bits rtld_savespace_sse[8][4] __attribute__ ((aligned (32)));
 

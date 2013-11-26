@@ -586,7 +586,7 @@ struct gaicb
   struct addrinfo *ar_result;	/* Pointer to result.  */
   /* The following are internal elements.  */
   int __return;
-  int __unused[5];
+  int __glibc_reserved[5];
 };
 
 /* Lookup mode.  */

@@ -78,19 +78,19 @@ __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 	buf->st_ctime = kbuf->st_ctime;
 #endif
 #ifdef _HAVE_STAT___UNUSED1
-	buf->__unused1 = 0;
+	buf->__glibc_reserved1 = 0;
 #endif
 #ifdef _HAVE_STAT___UNUSED2
-	buf->__unused2 = 0;
+	buf->__glibc_reserved2 = 0;
 #endif
 #ifdef _HAVE_STAT___UNUSED3
-	buf->__unused3 = 0;
+	buf->__glibc_reserved3 = 0;
 #endif
 #ifdef _HAVE_STAT___UNUSED4
-	buf->__unused4 = 0;
+	buf->__glibc_reserved4 = 0;
 #endif
 #ifdef _HAVE_STAT___UNUSED5
-	buf->__unused5 = 0;
+	buf->__glibc_reserved5 = 0;
 #endif
       }
       break;
@@ -149,19 +149,19 @@ __xstat64_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 	buf->st_ctime = kbuf->st_ctime;
 #endif
 #ifdef _HAVE_STAT64___UNUSED1
-	buf->__unused1 = 0;
+	buf->__glibc_reserved1 = 0;
 #endif
 #ifdef _HAVE_STAT64___UNUSED2
-	buf->__unused2 = 0;
+	buf->__glibc_reserved2 = 0;
 #endif
 #ifdef _HAVE_STAT64___UNUSED3
-	buf->__unused3 = 0;
+	buf->__glibc_reserved3 = 0;
 #endif
 #ifdef _HAVE_STAT64___UNUSED4
-	buf->__unused4 = 0;
+	buf->__glibc_reserved4 = 0;
 #endif
 #ifdef _HAVE_STAT64___UNUSED5
-	buf->__unused5 = 0;
+	buf->__glibc_reserved5 = 0;
 #endif
       }
       break;
@@ -254,19 +254,19 @@ __xstat32_conv (int vers, struct stat64 *kbuf, struct stat *buf)
 #endif
 
 #ifdef _HAVE_STAT___UNUSED1
-	buf->__unused1 = 0;
+	buf->__glibc_reserved1 = 0;
 #endif
 #ifdef _HAVE_STAT___UNUSED2
-	buf->__unused2 = 0;
+	buf->__glibc_reserved2 = 0;
 #endif
 #ifdef _HAVE_STAT___UNUSED3
-	buf->__unused3 = 0;
+	buf->__glibc_reserved3 = 0;
 #endif
 #ifdef _HAVE_STAT___UNUSED4
-	buf->__unused4 = 0;
+	buf->__glibc_reserved4 = 0;
 #endif
 #ifdef _HAVE_STAT___UNUSED5
-	buf->__unused5 = 0;
+	buf->__glibc_reserved5 = 0;
 #endif
       }
       break;

@@ -50,26 +50,26 @@ struct shmid_ds
   {
     struct ipc_perm shm_perm;          /* operation permission struct */
 #if __WORDSIZE == 32
-    unsigned int __unused1;
+    unsigned int __glibc_reserved1;
 #endif
     __time_t shm_atime;                        /* time of last shmat() */
 #if __WORDSIZE == 32
-    unsigned int __unused2;
+    unsigned int __glibc_reserved2;
 #endif
     __time_t shm_dtime;                        /* time of last shmdt() */
 #if __WORDSIZE == 32
-    unsigned int __unused3;
+    unsigned int __glibc_reserved3;
 #endif
     __time_t shm_ctime;			/* time of last change by shmctl() */
 #if __WORDSIZE == 32
-    unsigned int __unused4;
+    unsigned int __glibc_reserved4;
 #endif
     size_t shm_segsz;                  /* size of segment in bytes */
     __pid_t shm_cpid;                  /* pid of creator */
     __pid_t shm_lpid;                  /* pid of last shmop */
     shmatt_t shm_nattch;               /* number of current attaches */
-    unsigned long __unused5;
-    unsigned long __unused6;
+    unsigned long __glibc_reserved5;
+    unsigned long __glibc_reserved6;
   };
 
 #ifdef __USE_MISC
@@ -91,10 +91,10 @@ struct shminfo
     unsigned long int shmmni;
     unsigned long int shmseg;
     unsigned long int shmall;
-    unsigned long int __unused1;
-    unsigned long int __unused2;
-    unsigned long int __unused3;
-    unsigned long int __unused4;
+    unsigned long int __glibc_reserved1;
+    unsigned long int __glibc_reserved2;
+    unsigned long int __glibc_reserved3;
+    unsigned long int __glibc_reserved4;
   };
 
 struct shm_info

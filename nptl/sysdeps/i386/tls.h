@@ -56,7 +56,7 @@ typedef struct
 #ifndef __ASSUME_PRIVATE_FUTEX
   int private_futex;
 #else
-  int __unused1;
+  int __glibc_reserved1;
 #endif
   /* Reservation of some values for the TM ABI.  */
   void *__private_tm[4];

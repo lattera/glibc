@@ -1,3 +1,6 @@
+2013-11-26  Ondřej Bílka  <neleai@seznam.cz>
+	* sysdeps/unix/sysv/linux/arm/bits/shm.h: Use __glibc_reserved instead __unused.
+
 2013-11-22  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/armv7/multiarch/memcpy_impl.S

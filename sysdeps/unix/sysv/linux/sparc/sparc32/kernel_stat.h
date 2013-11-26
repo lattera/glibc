@@ -14,8 +14,8 @@ struct kernel_stat
     struct timespec st_ctim;
     long int st_blksize;
     long int st_blocks;
-    unsigned long int __unused4;
-    unsigned long int __unused5;
+    unsigned long int __glibc_reserved4;
+    unsigned long int __glibc_reserved5;
   };
 
 #define _HAVE___UNUSED4

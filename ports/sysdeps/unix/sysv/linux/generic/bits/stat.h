@@ -87,7 +87,7 @@ struct stat
     __time_t st_ctime;			/* Time of last status change.  */
     unsigned long int st_ctimensec;	/* Nsecs of last status change.  */
 #endif
-    int __unused[2];
+    int __glibc_reserved[2];
   };
 
 #undef __field64
@@ -125,7 +125,7 @@ struct stat64
     __time_t st_ctime;			/* Time of last status change.  */
     unsigned long int st_ctimensec;	/* Nsecs of last status change.  */
 #endif
-    int __unused[2];
+    int __glibc_reserved[2];
   };
 #endif
 

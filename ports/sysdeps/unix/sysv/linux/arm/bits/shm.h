@@ -51,16 +51,16 @@ struct shmid_ds
     struct ipc_perm shm_perm;		/* operation permission struct */
     size_t shm_segsz;			/* size of segment in bytes */
     __time_t shm_atime;			/* time of last shmat() */
-    unsigned long int __unused1;
+    unsigned long int __glibc_reserved1;
     __time_t shm_dtime;			/* time of last shmdt() */
-    unsigned long int __unused2;
+    unsigned long int __glibc_reserved2;
     __time_t shm_ctime;			/* time of last change by shmctl() */
-    unsigned long int __unused3;
+    unsigned long int __glibc_reserved3;
     __pid_t shm_cpid;			/* pid of creator */
     __pid_t shm_lpid;			/* pid of last shmop */
     shmatt_t shm_nattch;		/* number of current attaches */
-    unsigned long int __unused4;
-    unsigned long int __unused5;
+    unsigned long int __glibc_reserved4;
+    unsigned long int __glibc_reserved5;
   };
 
 #ifdef __USE_MISC
@@ -82,10 +82,10 @@ struct	shminfo
     unsigned long int shmmni;
     unsigned long int shmseg;
     unsigned long int shmall;
-    unsigned long int __unused1;
-    unsigned long int __unused2;
-    unsigned long int __unused3;
-    unsigned long int __unused4;
+    unsigned long int __glibc_reserved1;
+    unsigned long int __glibc_reserved2;
+    unsigned long int __glibc_reserved3;
+    unsigned long int __glibc_reserved4;
   };
 
 struct shm_info

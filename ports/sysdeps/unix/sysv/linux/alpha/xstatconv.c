@@ -74,10 +74,10 @@ __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 	buf->st_flags = kbuf->st_flags;
 	buf->st_gen = kbuf->st_gen;
 	buf->__pad3 = 0;
-	buf->__unused[0] = 0;
-	buf->__unused[1] = 0;
-	buf->__unused[2] = 0;
-	buf->__unused[3] = 0;
+	buf->__glibc_reserved[0] = 0;
+	buf->__glibc_reserved[1] = 0;
+	buf->__glibc_reserved[2] = 0;
+	buf->__glibc_reserved[3] = 0;
       }
       break;
 
@@ -105,9 +105,9 @@ __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 	buf->st_ctime = kbuf->st_ctime;
 	buf->st_ctimensec = 0;
 
-	buf->__unused[0] = 0;
-	buf->__unused[1] = 0;
-	buf->__unused[2] = 0;
+	buf->__glibc_reserved[0] = 0;
+	buf->__glibc_reserved[1] = 0;
+	buf->__glibc_reserved[2] = 0;
       }
       break;
 

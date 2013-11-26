@@ -44,7 +44,7 @@ struct utmpx32
   } ut_tv;			/* Time entry was made.  */
 
   __int32_t ut_addr_v6[4];	/* Internet address of remote host.  */
-  char __unused[20];		/* Reserved for future use.  */
+  char __glibc_reserved[20];		/* Reserved for future use.  */
 };
 
 /* The internal interface needed by the compat wrapper functions.  */

@@ -58,8 +58,8 @@ __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 	buf->st_mtim.tv_nsec = 0;
 	buf->st_ctim.tv_sec = kbuf->st_ctime_sec;
 	buf->st_ctim.tv_nsec = 0;
-	buf->__unused4 = 0;
-	buf->__unused5 = 0;
+	buf->__glibc_reserved4 = 0;
+	buf->__glibc_reserved5 = 0;
       }
       break;
 
@@ -108,8 +108,8 @@ __xstat32_conv (int vers, struct stat64 *sbuf, struct stat *buf)
 	buf->st_mtim.tv_nsec = kbuf->st_mtime_nsec;
 	buf->st_ctim.tv_sec = kbuf->st_ctime_sec;
 	buf->st_ctim.tv_nsec = kbuf->st_ctime_nsec;
-	buf->__unused4 = 0;
-	buf->__unused5 = 0;
+	buf->__glibc_reserved4 = 0;
+	buf->__glibc_reserved5 = 0;
       }
       break;
 

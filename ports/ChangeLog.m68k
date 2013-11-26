@@ -1,3 +1,6 @@
+2013-11-26  Ondřej Bílka  <neleai@seznam.cz>
+	* sysdeps/unix/sysv/linux/m68k/bits/stat.h: Use __glibc_reserved instead __unused.
+
 2013-10-30  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/m68k/configure.in: Moved to ...

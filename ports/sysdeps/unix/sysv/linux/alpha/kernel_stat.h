@@ -40,7 +40,7 @@ struct kernel_stat64
     unsigned long   st_mtimensec;
     unsigned long   st_ctime;
     unsigned long   st_ctimensec;
-    long            __unused[3];
+    long            __glibc_reserved[3];
   };
 
 /* Definition of `struct stat' used by glibc 2.0.  */
@@ -82,7 +82,7 @@ struct glibc21_stat
     unsigned int st_flags;
     unsigned int st_gen;
     int __pad3;
-    long __unused[4];
+    long __glibc_reserved[4];
   };
 
 #define XSTAT_IS_XSTAT64 1

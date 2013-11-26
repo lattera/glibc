@@ -97,7 +97,7 @@ typedef struct _libc_vrstate
 } vrregset_t  __attribute__((__aligned__(16)));
 
 typedef struct {
-	unsigned long	__unused[4];
+	unsigned long	__glibc_reserved[4];
 	int		signal;
 	int		__pad0;
 	unsigned long	handler;

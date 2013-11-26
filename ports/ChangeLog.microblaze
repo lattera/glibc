@@ -1,3 +1,7 @@
+2013-11-26  Ondřej Bílka  <neleai@seznam.cz>
+	* sysdeps/unix/sysv/linux/microblaze/bits/stat.h: Use __glibc_reserved instead __unused.
+	* sysdeps/unix/sysv/linux/microblaze/kernel_stat.h: Likewise.
+
 2013-10-30  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/microblaze/configure.in: Moved to ...

@@ -55,7 +55,7 @@ typedef struct
 	unsigned long	pr_regs[32];
 	double		pr_dregs[16];
       }			pr_fr;
-    unsigned long	__unused;
+    unsigned long	__glibc_reserved;
     unsigned long	pr_fsr;
     unsigned char	pr_qcnt;
     unsigned char	pr_q_entrysize;
@@ -150,7 +150,7 @@ typedef struct
 	unsigned int	pr_regs[32];
 	double		pr_dregs[16];
       }			pr_fr;
-    unsigned int	__unused;
+    unsigned int	__glibc_reserved;
     unsigned int	pr_fsr;
     unsigned char	pr_qcnt;
     unsigned char	pr_q_entrysize;

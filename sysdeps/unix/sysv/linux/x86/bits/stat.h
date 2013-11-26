@@ -103,11 +103,11 @@ struct stat
     __syscall_ulong_t st_ctimensec;	/* Nsecs of last status change.  */
 #endif
 #ifdef __x86_64__
-    __syscall_slong_t __unused[3];
+    __syscall_slong_t __glibc_reserved[3];
 #else
 # ifndef __USE_FILE_OFFSET64
-    unsigned long int __unused4;
-    unsigned long int __unused5;
+    unsigned long int __glibc_reserved4;
+    unsigned long int __glibc_reserved5;
 # else
     __ino64_t st_ino;			/* File serial number.	*/
 # endif
@@ -161,7 +161,7 @@ struct stat64
     __syscall_ulong_t st_ctimensec;	/* Nsecs of last status change.  */
 # endif
 # ifdef __x86_64__
-    __syscall_slong_t __unused[3];
+    __syscall_slong_t __glibc_reserved[3];
 # else
     __ino64_t st_ino;			/* File serial number.		*/
 # endif

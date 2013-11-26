@@ -81,7 +81,7 @@ struct stat
 #endif
     __blksize_t st_blksize;	/* Optimal block size for I/O.	*/
     __blkcnt_t st_blocks;	/* Nr. 512-byte blocks allocated.  */
-    long int __unused[3];
+    long int __glibc_reserved[3];
   };
 #else
 struct stat
@@ -133,8 +133,8 @@ struct stat
     unsigned long int st_ctimensec;	/* Nsecs of last status change.  */
 # endif
 # ifndef __USE_FILE_OFFSET64
-    unsigned long int __unused4;
-    unsigned long int __unused5;
+    unsigned long int __glibc_reserved4;
+    unsigned long int __glibc_reserved5;
 # else
     __ino64_t st_ino;			/* File serial number.	*/
 # endif
@@ -178,7 +178,7 @@ struct stat64
 #  endif
     __blksize_t st_blksize;	/* Optimal block size for I/O.	*/
     __blkcnt64_t st_blocks;	/* Nr. 512-byte blocks allocated.  */
-    long int __unused[3];
+    long int __glibc_reserved[3];
   };
 # else
 struct stat64

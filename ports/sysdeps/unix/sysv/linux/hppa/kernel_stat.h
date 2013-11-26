@@ -13,11 +13,11 @@ struct kernel_stat {
 	struct timespec st_ctim;
 	long		st_blksize;
 	long		st_blocks;
-	unsigned long	__unused1;	/* ACL stuff */
-	unsigned long	__unused2;	/* network */
-	unsigned long	__unused3;	/* network */
-	unsigned long	__unused4;	/* cnodes */
-	unsigned short	__unused5;	/* netsite */
+	unsigned long	__glibc_reserved1;	/* ACL stuff */
+	unsigned long	__glibc_reserved2;	/* network */
+	unsigned long	__glibc_reserved3;	/* network */
+	unsigned long	__glibc_reserved4;	/* cnodes */
+	unsigned short	__glibc_reserved5;	/* netsite */
 	short		st_fstype;
 	unsigned long	st_realdev;
 	unsigned short	st_basemode;

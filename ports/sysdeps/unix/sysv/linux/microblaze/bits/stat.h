@@ -71,8 +71,8 @@ struct stat
         __time_t                st_ctime;     /* Time of last status change.  */
         unsigned long int       st_ctimensec; /* Nsecs of last status change.  */
 #endif
-        unsigned int            __unused4;
-        unsigned int            __unused5;
+        unsigned int            __glibc_reserved4;
+        unsigned int            __glibc_reserved5;
 };
 #else /* __USE_FILE_OFFSET64 */
 /* MS: If __USE_FILE_OFFSET64 is setup then struct stat should match stat64
@@ -115,8 +115,8 @@ struct stat
         __time_t                st_ctime;     /* Time of last status change.  */
         unsigned long int       st_ctimensec; /* Nsecs of last status change.  */
 #endif
-        unsigned int            __unused4;
-        unsigned int            __unused5;
+        unsigned int            __glibc_reserved4;
+        unsigned int            __glibc_reserved5;
 };
 #endif /* __USE_FILE_OFFSET64 */
 
@@ -156,8 +156,8 @@ struct stat64
         __time_t                st_ctime;     /* Time of last status change.  */
         unsigned long int       st_ctimensec; /* Nsecs of last status change.  */
 #endif
-        unsigned int            __unused4;
-        unsigned int            __unused5;
+        unsigned int            __glibc_reserved4;
+        unsigned int            __glibc_reserved5;
 };
 #endif
 

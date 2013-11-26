@@ -1,3 +1,10 @@
+2013-11-26  Ondřej Bílka  <neleai@seznam.cz>
+	* sysdeps/unix/sysv/linux/ia64/bits/ipc.h: Use __glibc_reserved instead __unused.
+	* sysdeps/unix/sysv/linux/ia64/bits/msq.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/sem.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/stat.h: Likewise.
+
 2013-11-21  Guy Martin  <gmsoft@tuxicoman.be>
 
 	* sysdeps/ia64/dl-lookupcfg.h: Remove obsolete

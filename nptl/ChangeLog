@@ -1,3 +1,7 @@
+2013-11-26  Ondřej Bílka  <neleai@seznam.cz>
+	* sysdeps/i386/tls.h: Use __glibc_reserved instead __unused.
+	* sysdeps/x86_64/tls.h: Likewise.
+
 2013-11-25  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #11214]

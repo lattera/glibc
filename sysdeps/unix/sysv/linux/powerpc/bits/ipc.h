@@ -49,8 +49,8 @@ struct ipc_perm
     __mode_t mode;		/* Read/write permission.  */
     __uint32_t __seq;		/* Sequence number.  */
     __uint32_t __pad1;
-    __uint64_t __unused1;
-    __uint64_t __unused2;
+    __uint64_t __glibc_reserved1;
+    __uint64_t __glibc_reserved2;
   };
 
 

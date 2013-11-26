@@ -1,3 +1,12 @@
+2013-11-26  Ondřej Bílka  <neleai@seznam.cz>
+	* sysdeps/unix/sysv/linux/alpha/bits/ipc.h: Use __glibc_reserved instead __unused.
+	* sysdeps/unix/sysv/linux/alpha/bits/msq.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/sem.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/kernel_stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/xstatconv.c: Likewise.
+
 2013-11-16  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/rt_sigaction.S: Include a nop

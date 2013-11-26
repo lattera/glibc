@@ -50,6 +50,6 @@ struct ipc_perm
     unsigned short int __pad1;
     unsigned short int __seq;		/* Sequence number.  */
     unsigned short int __pad2;
-    __syscall_ulong_t __unused1;
-    __syscall_ulong_t __unused2;
+    __syscall_ulong_t __glibc_reserved1;
+    __syscall_ulong_t __glibc_reserved2;
   };

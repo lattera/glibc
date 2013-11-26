@@ -48,6 +48,6 @@ struct ipc_perm
     __mode_t mode;			/* Read/write permission.  */
     unsigned short int __seq;		/* Sequence number.  */
     unsigned short int __pad1;
-    unsigned long int __unused1;
-    unsigned long int __unused2;
+    unsigned long int __glibc_reserved1;
+    unsigned long int __glibc_reserved2;
   };

@@ -64,7 +64,7 @@ struct stat
 #endif
     __blksize_t st_blksize;	/* Optimal block size for I/O.  */
     __blkcnt_t st_blocks;	/* Nr. 512-byte blocks allocated.  */
-    long int __unused[3];
+    long int __glibc_reserved[3];
   };
 
 #ifdef __USE_LARGEFILE64
@@ -103,7 +103,7 @@ struct stat64
 #endif
     __blksize_t st_blksize;	/* Optimal block size for I/O.  */
     __blkcnt64_t st_blocks;	/* Nr. 512-byte blocks allocated.  */
-    long int __unused[3];
+    long int __glibc_reserved[3];
   };
 #endif
 

@@ -14,8 +14,8 @@ struct kernel_stat
     long int st_ctime_sec;
     long int st_blksize;
     long int st_blocks;
-    unsigned long int __unused1;
-    unsigned long int __unused2;
+    unsigned long int __glibc_reserved1;
+    unsigned long int __glibc_reserved2;
   };
 
 /* Definition of `struct stat64' used in the kernel.  */
@@ -41,7 +41,7 @@ struct kernel_stat64
     unsigned long int st_mtime_nsec;
     unsigned long int st_ctime_sec;
     unsigned long int st_ctime_nsec;
-    long int __unused[3];
+    long int __glibc_reserved[3];
   };
 
 #define XSTAT_IS_XSTAT64 1
