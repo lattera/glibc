@@ -95,6 +95,7 @@
 	* benchtests/bench-strnlen-ifunc.c: Likewise.
 	* benchtests/bench-strpbrk-ifunc.c: Likewise.
 	* benchtests/bench-strrchr-ifunc.c: Likewise.
+	* benchtests/bench-strsep-ifunc.c: Likewise.
 	* benchtests/bench-strspn-ifunc.c: Likewise.
 	* benchtests/bench-strstr-ifunc.c: Likewise.
 
