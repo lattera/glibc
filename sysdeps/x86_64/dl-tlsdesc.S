@@ -239,6 +239,6 @@ _dl_tlsdesc_resolve_hold:
 	movq	64(%rsp), %rcx
 	addq	$72, %rsp
 	cfi_adjust_cfa_offset (-72)
-	jmp	*(%eax)
+	jmp	*(%rax)
 	cfi_endproc
 	.size	_dl_tlsdesc_resolve_hold, .-_dl_tlsdesc_resolve_hold

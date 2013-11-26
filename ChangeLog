@@ -1,4 +1,7 @@
 2013-11-26  Ondřej Bílka  <neleai@seznam.cz>
+	* sysdeps/x86_64/dl-tlsdesc.S (_dl_tlsdesc_resolve_hold): Fix typo.
+
+2013-11-26  Ondřej Bílka  <neleai@seznam.cz>
 	* resolv/netdb.h: Use __glibc_reserved instead __unused.
 	* rt/aio.h: Likewise.
 	* sysdeps/gnu/bits/utmp.h: Likewise.
