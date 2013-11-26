@@ -21,9 +21,9 @@ Version 2.19
   16071, 16072, 16074, 16078, 16103, 16112, 16143, 16144, 16146, 16150,
   16151, 16153, 16167, 16172, 16245.
 
-* The public and private headers no longer use __unused nor __block.  This
-  change is to support compiling programs that are derived from BSD sources
-  and use __unused internally, and to support compiling with Clang's -fblock
+* The public headers no longer use __unused nor __block.  This change is to
+  support compiling programs that are derived from BSD sources and use
+  __unused internally, and to support compiling with Clang's -fblock
   extension which uses __block.
 
 * CVE-2012-4412 The strcoll implementation caches indices and rules for
