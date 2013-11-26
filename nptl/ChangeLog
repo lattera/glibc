@@ -1,3 +1,10 @@
+2013-12-09  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #15843]
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait): Remove wrong cfi_adjust_cfa_offset
+	before __condvar_tw_cleanup2 label.
+
 2013-12-04  Ulrich Weigand  <Ulrich.Weigand@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h
