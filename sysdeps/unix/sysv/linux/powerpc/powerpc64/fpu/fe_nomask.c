@@ -25,7 +25,7 @@
 #include <shlib-compat.h>
 
 const fenv_t *
-__fe_nomask_env (void)
+__fe_nomask_env_priv (void)
 {
 #if defined PR_SET_FPEXC && defined PR_FP_EXC_PRECISE
   INTERNAL_SYSCALL_DECL (err);
@@ -36,5 +36,5 @@ __fe_nomask_env (void)
   return FE_ENABLED_ENV;
 }
 #if SHLIB_COMPAT (libm, GLIBC_2_3, GLIBC_2_19)
-compat_symbol (libm, __fe_nomask_env, __fe_nomask_env, GLIBC_2_3);
+compat_symbol (libm, __fe_nomask_env_priv, __fe_nomask_env, GLIBC_2_3);
 #endif

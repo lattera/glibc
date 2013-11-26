@@ -41,7 +41,7 @@ __feupdateenv (const fenv_t *envp)
      the hardware into "precise mode" and may cause the FPU to run slower on
      some hardware.  */
   if ((old.l & _FPU_MASK_ALL) == 0 && (new.l & _FPU_MASK_ALL) != 0)
-    (void)__fe_nomask_env ();
+    (void) __fe_nomask_env_priv ();
 
   /* If the old env had any enabled exceptions and the new env has no enabled
      exceptions, then mask SIGFPE in the MSR FE0/FE1 bits.  This may allow the

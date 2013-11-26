@@ -24,10 +24,9 @@
    normally involve a syscall.  */
 
 const fenv_t *
-__fe_nomask_env(void)
+__fe_nomask_env_priv (void)
 {
   __set_errno (ENOSYS);
   return FE_ENABLED_ENV;
 }
-libm_hidden_def (__fe_nomask_env)
-stub_warning (__fe_nomask_env)
+stub_warning (__fe_nomask_env_priv)

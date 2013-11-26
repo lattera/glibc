@@ -23,7 +23,7 @@
 #include <ldsodefs.h>
 #include <sysdep.h>
 
-extern const fenv_t *__fe_nomask_env (void) attribute_hidden;
+extern const fenv_t *__fe_nomask_env_priv (void);
 
 extern const fenv_t *__fe_mask_env (void) attribute_hidden;
 

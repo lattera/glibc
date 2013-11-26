@@ -1,3 +1,21 @@
+2013-11-26  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/feenablxcpt.c (feenableexcept): Use
+	__fe_nomask_env_priv instead of __fe_nomask_env to avoid a PLT call.
+	* sysdeps/powerpc/fpu/fesetenv.c (__fesetenv): Likewise.
+	* sysdeps/powerpc/fpu/feupdateenv.c (__feupdateenv): Likewise.
+	* sysdeps/powerpc/fpu/fenv_libc.h (__fe_nomask_env): Rename to
+	__fe_nomask_env_priv and attribute_hidden.
+	* sysdeps/powerpc/fpu/fenv_private.h (libc_fesetenv_ppc): Likewise.
+	(libc_feupdateenv_test_ppc): Likewise.
+	(libc_feresetround_ppc): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/fe_nomask.c
+	(__fe_nomask_env): Rename to __fe_nomask_env_priv and adjust
+	compat_symbol macro.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fpu/fe_nomask.c
+	(__fe_nomask_env): Likewise.
+	* sysdeps/powerpc/fpu/fe_nomask.c (__fe_nomask_env): Likewise.
+
 2013-11-26  Ondřej Bílka  <neleai@seznam.cz>
 
 	* string/Makefile: Remove ifunc tests.
