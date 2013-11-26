@@ -1,3 +1,9 @@
+2013-11-26  Uros Bizjak  <ubizjak@gmail.com>
+
+	* soft-fp/op-4.h (_FP_FRAC_ASSEMBLE_4): Check rsize against
+	_FP_W_TYPE_SIZE to avoid "left shift count >= width of type"
+	warning.
+
 2013-11-26  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/feenablxcpt.c (feenableexcept): Use
