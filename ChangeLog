@@ -1,7 +1,48 @@
 2013-11-26  Ondřej Bílka  <neleai@seznam.cz>
+
+	* benchtests/Makefile: Remove ifunc tests.
+	* benchtests/bench-string.h: Define TEST_IFUNC.
+	* benchtests/bench-bcopy-ifunc.c: Remove.
+	* benchtests/bench-bzero-ifunc.c: Likewise.
+	* benchtests/bench-memccpy-ifunc.c: Likewise.
+	* benchtests/bench-memchr-ifunc.c: Likewise.
+	* benchtests/bench-memcmp-ifunc.c: Likewise.
+	* benchtests/bench-memcpy-ifunc.c: Likewise.
+	* benchtests/bench-memmem-ifunc.c: Likewise.
+	* benchtests/bench-memmove-ifunc.c: Likewise.
+	* benchtests/bench-mempcpy-ifunc.c: Likewise.
+	* benchtests/bench-memrchr-ifunc.c: Likewise.
+	* benchtests/bench-memset-ifunc.c: Likewise.
+	* benchtests/bench-rawmemchr-ifunc.c: Likewise.
+	* benchtests/bench-stpcpy_chk-ifunc.c: Likewise.
+	* benchtests/bench-stpcpy-ifunc.c: Likewise.
+	* benchtests/bench-stpncpy-ifunc.c: Likewise.
+	* benchtests/bench-strcasecmp-ifunc.c: Likewise.
+	* benchtests/bench-strcasestr-ifunc.c: Likewise.
+	* benchtests/bench-strcat-ifunc.c: Likewise.
+	* benchtests/bench-strchr-ifunc.c: Likewise.
+	* benchtests/bench-strchrnul-ifunc.c: Likewise.
+	* benchtests/bench-strcmp-ifunc.c: Likewise.
+	* benchtests/bench-strcpy_chk-ifunc.c: Likewise.
+	* benchtests/bench-strcpy-ifunc.c: Likewise.
+	* benchtests/bench-strcspn-ifunc.c: Likewise.
+	* benchtests/bench-strlen-ifunc.c: Likewise.
+	* benchtests/bench-strncasecmp-ifunc.c: Likewise.
+	* benchtests/bench-strncat-ifunc.c: Likewise.
+	* benchtests/bench-strncmp-ifunc.c: Likewise.
+	* benchtests/bench-strncpy-ifunc.c: Likewise.
+	* benchtests/bench-strnlen-ifunc.c: Likewise.
+	* benchtests/bench-strpbrk-ifunc.c: Likewise.
+	* benchtests/bench-strrchr-ifunc.c: Likewise.
+	* benchtests/bench-strspn-ifunc.c: Likewise.
+	* benchtests/bench-strstr-ifunc.c: Likewise.
+
+2013-11-26  Ondřej Bílka  <neleai@seznam.cz>
+
 	* sysdeps/x86_64/dl-tlsdesc.S (_dl_tlsdesc_resolve_hold): Fix typo.
 
 2013-11-26  Ondřej Bílka  <neleai@seznam.cz>
+
 	* resolv/netdb.h: Use __glibc_reserved instead __unused.
 	* rt/aio.h: Likewise.
 	* sysdeps/gnu/bits/utmp.h: Likewise.
