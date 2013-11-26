@@ -1,5 +1,42 @@
 2013-11-26  Ondřej Bílka  <neleai@seznam.cz>
 
+	* string/Makefile: Remove ifunc tests.
+	* string/test-string.h: Define TEST_IFUNC.
+	* string/test-bcopy-ifunc.c: Remove.
+	* string/test-bzero-ifunc.c: Likewise.
+	* string/test-memccpy-ifunc.c: Likewise.
+	* string/test-memchr-ifunc.c: Likewise.
+	* string/test-memcmp-ifunc.c: Likewise.
+	* string/test-memcpy-ifunc.c: Likewise.
+	* string/test-memmem-ifunc.c: Likewise.
+	* string/test-memmove-ifunc.c: Likewise.
+	* string/test-mempcpy-ifunc.c: Likewise.
+	* string/test-memrchr-ifunc.c: Likewise.
+	* string/test-memset-ifunc.c: Likewise.
+	* string/test-rawmemchr-ifunc.c: Likewise.
+	* string/test-stpcpy-ifunc.c: Likewise.
+	* string/test-stpncpy-ifunc.c: Likewise.
+	* string/test-strcasecmp-ifunc.c: Likewise.
+	* string/test-strcasestr-ifunc.c: Likewise.
+	* string/test-strcat-ifunc.c: Likewise.
+	* string/test-strchr-ifunc.c: Likewise.
+	* string/test-strchrnul-ifunc.c: Likewise.
+	* string/test-strcmp-ifunc.c: Likewise.
+	* string/test-strcpy-ifunc.c: Likewise.
+	* string/test-strcspn-ifunc.c: Likewise.
+	* string/test-strlen-ifunc.c: Likewise.
+	* string/test-strncasecmp-ifunc.c: Likewise.
+	* string/test-strncat-ifunc.c: Likewise.
+	* string/test-strncmp-ifunc.c: Likewise.
+	* string/test-strncpy-ifunc.c: Likewise.
+	* string/test-strnlen-ifunc.c: Likewise.
+	* string/test-strpbrk-ifunc.c: Likewise.
+	* string/test-strrchr-ifunc.c: Likewise.
+	* string/test-strspn-ifunc.c: Likewise.
+	* string/test-strstr-ifunc.c: Likewise.
+
+2013-11-26  Ondřej Bílka  <neleai@seznam.cz>
+
 	* benchtests/Makefile: Remove ifunc tests.
 	* benchtests/bench-string.h: Define TEST_IFUNC.
 	* benchtests/bench-bcopy-ifunc.c: Remove.

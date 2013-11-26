@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sys/cdefs.h>
+#define TEST_IFUNC
 
 typedef struct
 {

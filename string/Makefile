@@ -54,9 +54,6 @@ tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
 		   bug-envz1 tst-strxfrm2 tst-endian tst-svc2		\
 		   tst-strtok_r
 
-tests-ifunc := $(strop-tests:%=test-%-ifunc)
-tests += $(tests-ifunc)
-
 xtests = tst-strcoll-overflow
 
 include ../Rules
@@ -69,8 +66,6 @@ tst-strxfrm2-ENV = LOCPATH=$(common-objpfx)localedata
 bug-strcoll1-ENV = LOCPATH=$(common-objpfx)localedata
 test-strcasecmp-ENV = LOCPATH=$(common-objpfx)localedata
 test-strncasecmp-ENV = LOCPATH=$(common-objpfx)localedata
-test-strcasecmp-ifunc-ENV = LOCPATH=$(common-objpfx)localedata
-test-strncasecmp-ifunc-ENV = LOCPATH=$(common-objpfx)localedata
 CFLAGS-inl-tester.c = -fno-builtin
 CFLAGS-noinl-tester.c = -fno-builtin
 CFLAGS-tst-strlen.c = -fno-builtin
