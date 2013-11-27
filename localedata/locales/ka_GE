@@ -39,7 +39,6 @@ LC_ADDRESS
 postal_fmt "<U0025><U0064><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E>/
 <U0025><U0073><U0020><U0025><U0068><U0020><U0035><U0065><U0020><U0025><U0072><U0025><U004E>/
 <U0025><U0043><U0025><U007A><U0020><U0025><U0054><U0025><U004E><U0025><U0063><U0025><U004E>"
-% FIXME country_name  'Georgia' in Georgian
 % country_post "GE" for Georgia ?
 country_ab2 "GE"
 country_ab3 "GEO"
@@ -47,7 +46,8 @@ country_num 268
 % GE
 country_car    "<U0047><U0045>"
 country_isbn "99928"
-% lang_name FIXME Georgian in Georgian
+% ქართული
+lang_name    "<U10E5><U10D0><U10E0><U10D7><U10E3><U10DA><U10D8>"
 % ka
 lang_ab      "<U006B><U0061>"
 % kat
@@ -132,7 +132,7 @@ mon	/
 "<U10DC><U10DD><U10D4><U10DB><U10D1><U10D4><U10E0><U10D8>";/
 "<U10D3><U10D4><U10D9><U10D4><U10DB><U10D1><U10D4><U10E0><U10D8>"
 
-%"%Y ���� %d %B"
+%"%Y ÜÊÈÑ %d %B"
 d_t_fmt  "<U0025><U0059><U0020><U10EC><U10DA><U10D8><U10E1><U0020><U0025><U0064><U0020><U0025><U0042><U002C><U0020><U0025><U0054><U0020><U0025><U005A>"
 d_fmt    "<U0025><U006D><U002F><U0025><U0064><U002F><U0025><U0059>"
 t_fmt    "<U0025><U0054>"

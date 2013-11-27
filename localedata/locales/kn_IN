@@ -221,6 +221,8 @@ country_ab3 "<U0049><U004E><U0044>"
 country_num 356
 % IND
 country_car    "<U0049><U004E><U0044>"
+% ಕನ್ನಡ
+lang_name    "<U0C95><U0CA8><U0CCD><U0CA8><U0CA1>"
 % kn
 lang_ab      "<U006B><U006E>"
 % kan

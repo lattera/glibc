@@ -1,3 +1,21 @@
+2013-11-26  Chris Leonard  <cjl@sugarlabs.org>
+
+	* locales/ka_GE: Add lang_name to various locales.
+	* locales/kl_GL: Likewise.
+	* locales/kn_IN: Likewise.
+	* locales/ko_KR: Likewise.
+	* locales/kok_IN: Likewise.
+	* locales/ks_IN: Likewise.
+	* locales/ks_IN@devanagari: Likewise.
+	* locales/kw_GB: Likewise.
+	* locales/ky_KG: Likewise.
+	* locales/lg_UG: Likewise.
+	* locales/li_BE: Likewise.
+	* locales/li_NL: Likewise.
+	* locales/lij_IT: Likewise.
+	* locales/lt_LT: Likewise.
+	* locales/lv_LV: Likewise.
+
 2013-11-25  Chris Leonard  <cjl@sugarlabs.org>
 
 	* locales/ga_IE: Add lang_name to various locales.

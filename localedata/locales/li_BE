@@ -48,7 +48,8 @@ country_ab3   "<U0042><U0045><U004C>"
 country_car   "<U0042>"
 country_num 56
 %FIXME country_isbn "2"
-lang_name "<U004C><U0069><U006D><U0062><U0075><U0072><U0067><U0073>"
+% Lèmbörgs
+lang_name    "<U004C><U00E8><U006D><U0062><U00F6><U0072><U0067><U0073>"
 lang_ab "<U006C><U0069>"
 lang_term "<U006C><U0069><U006D>"
 lang_lib "<U006C><U0069><U006D>"

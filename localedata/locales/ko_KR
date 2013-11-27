@@ -6249,6 +6249,8 @@ country_ab3 "<U004B><U004F><U0052>"
 country_num 410
 % ROK
 country_car    "<U0052><U004F><U004B>"
+% 한국말
+lang_name    "<UD55C><UAD6D><UB9D0>"
 % ko
 lang_ab      "<U006B><U006F>"
 % kor
