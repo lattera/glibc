@@ -1,5 +1,20 @@
 2013-11-27  Aurelien Jarno <aurelien@aurel32.net>
 
+	* sysdeps/unix/sysv/linux/mips/bits/resource.h (RLIM64_INFINITY): Fix
+	Fix 64-bit value for 32-bit ABIs.
+	* sysdeps/unix/sysv/linux/mips/getrlimit64.c: Rename generic getrlimit64
+	version as getrlimit64@@GLIBC_2_2.  Provide the getrlimit64 as
+	getrlimit64@@GLIBC_2_19.
+	* sysdeps/unix/sysv/linux/mips/setrlimit64.c: Ditto with setrlimit64.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libc.abilist (GLIBC_2.19):
+	Add getrlimit64 and setrlimit64.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/nptl/libc.abilist: Ditto.
+	* sysdeps/unix/sysv/linux/mips/mips32/Versions (libc): Add
+	getrlimit64@@GLIBC_2_19 and setrlimit64@@GLIBC_2_19.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/Versions: Ditto.
+
+2013-11-27  Aurelien Jarno <aurelien@aurel32.net>
+
 	* sysdeps/unix/sysv/linux/mips/getrlimit64.c: On O32 and N32 ABIs,
 	include the generic getrlimit64 version as __internal_getrlimit64
 	and add a wrapper around it to convert the RLIM64_INFINITY constant

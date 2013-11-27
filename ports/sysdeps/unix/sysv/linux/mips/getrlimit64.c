@@ -15,17 +15,18 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sys/resource.h>
-
 #if _MIPS_SIM == _ABIO32 || _MIPS_SIM == _ABIN32
 
-# define getrlimit64 static __internal_getrlimit64
-# undef libc_hidden_def
-# define libc_hidden_def(name)
+# include <shlib-compat.h>
+
+# define getrlimit64 __new_getrlimit64
 # include <sysdeps/unix/sysv/linux/getrlimit64.c>
 # undef getrlimit64
-# undef libc_hidden_def
-# define libc_hidden_def(name) hidden_def (name)
+
+versioned_symbol (libc, __new_getrlimit64, getrlimit64, GLIBC_2_19);
+strong_alias (__new_getrlimit64, __GI_getrlimit64)
+
+# if SHLIB_COMPAT (libc, GLIBC_2_2, GLIBC_2_19)
 
 /* RLIM64_INFINITY was supposed to be a glibc convention rather than
    anything seen by the kernel, but it ended being passed to the kernel
@@ -33,31 +34,32 @@
    the wrong constant value are in the wild, provide a wrapper function
    fixing the value after the syscall.  */
 
-# define GLIBC_RLIM64_INFINITY		0x7fffffffffffffffULL
-# define KERNEL_RLIM64_INFINITY		0xffffffffffffffffULL
+#  define OLD_RLIM64_INFINITY		0x7fffffffffffffffULL
 
 int
-getrlimit64 (enum __rlimit_resource resource,
-	     struct rlimit64 *rlimits)
+attribute_compat_text_section
+__old_getrlimit64 (enum __rlimit_resource resource,
+		   struct rlimit64 *rlimits)
 {
   struct rlimit64 krlimits;
 
-  if (__internal_getrlimit64 (resource, &krlimits) < 0)
+  if (__new_getrlimit64 (resource, &krlimits) < 0)
     return -1;
 
-  if (krlimits.rlim_cur == KERNEL_RLIM64_INFINITY)
-    rlimits->rlim_cur = GLIBC_RLIM64_INFINITY;
+  if (krlimits.rlim_cur == RLIM64_INFINITY)
+    rlimits->rlim_cur = OLD_RLIM64_INFINITY;
   else
     rlimits->rlim_cur = krlimits.rlim_cur;
-  if (krlimits.rlim_max == KERNEL_RLIM64_INFINITY)
-    rlimits->rlim_max = GLIBC_RLIM64_INFINITY;
+  if (krlimits.rlim_max == RLIM64_INFINITY)
+    rlimits->rlim_max = OLD_RLIM64_INFINITY;
   else
     rlimits->rlim_max = krlimits.rlim_max;
 
   return 0;
 }
 
-libc_hidden_def (getrlimit64)
+compat_symbol (libc, __old_getrlimit64, getrlimit64, GLIBC_2_2);
+# endif
 
 #else /* !_ABI_O32 && !_ABI_N32 */
 # include <sysdeps/unix/sysv/linux/getrlimit64.c>

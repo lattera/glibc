@@ -1403,6 +1403,10 @@ GLIBC_2.18
  __cxa_thread_atexit_impl F
  __mips_fpu_getcw F
  __mips_fpu_setcw F
+GLIBC_2.19
+ GLIBC_2.19 A
+ getrlimit64 F
+ setrlimit64 F
 GLIBC_2.2
  GLIBC_2.2 A
  _Exit F

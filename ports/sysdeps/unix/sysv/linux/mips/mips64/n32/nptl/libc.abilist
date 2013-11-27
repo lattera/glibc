@@ -1401,6 +1401,10 @@ GLIBC_2.17
 GLIBC_2.18
  GLIBC_2.18 A
  __cxa_thread_atexit_impl F
+GLIBC_2.19
+ GLIBC_2.19 A
+ getrlimit64 F
+ setrlimit64 F
 GLIBC_2.2
  GLIBC_2.2 A
  _Exit F
