@@ -32,3 +32,4 @@ fegetround (void)
 
   return (cw & ROUND_MASK);
 }
+libm_hidden_def (fegetround)

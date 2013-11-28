@@ -22,3 +22,4 @@ fegetround (void)
 {
   return FE_TONEAREST;
 }
+libm_hidden_def (fegetround)

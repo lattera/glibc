@@ -24,3 +24,4 @@ fegetround (void)
 {
   return __fegetround();
 }
+libm_hidden_def (fegetround)

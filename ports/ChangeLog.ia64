@@ -1,3 +1,7 @@
+2013-11-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ia64/fpu/fegetround.c (fegetround): Use libm_hidden_def.
+
 2013-11-26  Ondřej Bílka  <neleai@seznam.cz>
 	* sysdeps/unix/sysv/linux/ia64/bits/ipc.h: Use __glibc_reserved instead __unused.
 	* sysdeps/unix/sysv/linux/ia64/bits/msq.h: Likewise.

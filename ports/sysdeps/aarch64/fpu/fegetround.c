@@ -26,3 +26,4 @@ fegetround (void)
   _FPU_GETCW (fpcr);
   return fpcr & FE_TOWARDZERO;
 }
+libm_hidden_def (fegetround)

@@ -1,3 +1,20 @@
+2013-11-28  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16271]
+	* sysdeps/ieee754/dbl-64/e_sqrt.c (__ieee754_sqrt): Set
+	round-to-nearest then adjust result for other rounding modes.
+	* include/fenv.h (fegetround): Use libm_hidden_proto.
+	* math/fegetround.c (fegetround): Use libm_hidden_def.
+	* sysdeps/i386/fpu/fegetround.c (fegetround): Likewise.
+	* sysdeps/powerpc/fpu/fegetround.c (fegetround): Likewise.
+	* sysdeps/powerpc/nofpu/fegetround.c (fegetround): Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fegetround.c (fegetround):
+	Likewise.
+	* sysdeps/s390/fpu/fegetround.c (fegetround): Likewise.
+	* sysdeps/sh/sh4/fpu/fegetround.c (fegetround): Likewise.
+	* sysdeps/sparc/fpu/fegetround.c (fegetround): Likewise.
+	* sysdeps/x86_64/fpu/fegetround.c (fegetround): Likewise.
+
 2013-11-28  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #16077]

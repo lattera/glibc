@@ -1,3 +1,7 @@
+2013-11-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/fegetround.c (fegetround): Use libm_hidden_def.
+
 2013-11-26  Ondřej Bílka  <neleai@seznam.cz>
 	* sysdeps/unix/sysv/linux/arm/bits/shm.h: Use __glibc_reserved instead __unused.
 

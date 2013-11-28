@@ -30,3 +30,4 @@ fegetround (void)
 
   return cw & 0xc00;
 }
+libm_hidden_def (fegetround)

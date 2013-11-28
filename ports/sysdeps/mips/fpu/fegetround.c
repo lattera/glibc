@@ -30,3 +30,4 @@ fegetround (void)
 
   return cw & _FPU_RC_MASK;
 }
+libm_hidden_def (fegetround)

@@ -28,3 +28,4 @@ fegetround (void)
 
   return fpcr & FE_UPWARD;
 }
+libm_hidden_def (fegetround)

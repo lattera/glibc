@@ -1,3 +1,7 @@
+2013-11-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/fpu/fegetround.c (fegetround): Use libm_hidden_def.
+
 2013-11-27  Aurelien Jarno <aurelien@aurel32.net>
 
 	* sysdeps/unix/sysv/linux/mips/bits/resource.h (RLIM64_INFINITY): Fix

@@ -29,3 +29,4 @@ fegetround (void)
 
   return cw & FPC_RM_MASK;
 }
+libm_hidden_def (fegetround)

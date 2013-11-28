@@ -28,3 +28,4 @@ fegetround (void)
 
   return (fpcr >> FPCR_ROUND_SHIFT) & 3;
 }
+libm_hidden_def (fegetround)

@@ -28,4 +28,5 @@ fegetround (void)
   return 0;
 #endif
 }
+libm_hidden_def (fegetround)
 stub_warning (fegetround)

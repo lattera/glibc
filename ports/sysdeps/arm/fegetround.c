@@ -37,3 +37,4 @@ fegetround (void)
   /* The current soft-float implementation only handles TONEAREST.  */
   return FE_TONEAREST;
 }
+libm_hidden_def (fegetround)

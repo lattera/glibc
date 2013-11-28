@@ -26,3 +26,4 @@ fegetround (void)
 {
   return __sim_round_mode_thread;
 }
+libm_hidden_def (fegetround)

@@ -66,8 +66,9 @@ __ieee754_sqrt (double x)
   /*----------------- 2^-1022  <= | x |< 2^1024  -----------------*/
   if (k > 0x000fffff && k < 0x7ff00000)
     {
+      int rm = fegetround ();
       fenv_t env;
-      libc_feholdexcept (&env);
+      libc_feholdexcept_setround (&env, FE_TONEAREST);
       double ret;
       y = 1.0 - t * (t * s);
       t = t * (rt0 + y * (rt1 + y * (rt2 + y * rt3)));
@@ -82,15 +83,44 @@ __ieee754_sqrt (double x)
 	{
 	  res1 = res + 1.5 * ((y - res) + del);
 	  EMULV (res, res1, z, zz, p, hx, tx, hy, ty); /* (z+zz)=res*res1 */
-	  ret = ((((z - s) + zz) < 0) ? max (res, res1) :
-					min (res, res1)) * c.x;
+	  res = ((((z - s) + zz) < 0) ? max (res, res1) :
+					min (res, res1));
+	  ret = res * c.x;
 	}
       math_force_eval (ret);
       libc_fesetenv (&env);
-      if (x / ret != ret)
+      double dret = x / ret;
+      if (dret != ret)
 	{
 	  double force_inexact = 1.0 / 3.0;
 	  math_force_eval (force_inexact);
+	  /* The square root is inexact, ret is the round-to-nearest
+	     value which may need adjusting for other rounding
+	     modes.  */
+	  switch (rm)
+	    {
+#ifdef FE_UPWARD
+	    case FE_UPWARD:
+	      if (dret > ret)
+		ret = (res + 0x1p-1022) * c.x;
+	      break;
+#endif
+
+#ifdef FE_DOWNWARD
+	    case FE_DOWNWARD:
+#endif
+#ifdef FE_TOWARDZERO
+	    case FE_TOWARDZERO:
+#endif
+#if defined FE_DOWNWARD || defined FE_TOWARDZERO
+	      if (dret < ret)
+		ret = (res - 0x1p-1022) * c.x;
+	      break;
+#endif
+
+	    default:
+	      break;
+	    }
 	}
       /* Otherwise (x / ret == ret), either the square root was exact or
          the division was inexact.  */

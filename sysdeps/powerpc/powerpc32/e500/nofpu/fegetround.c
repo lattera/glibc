@@ -27,3 +27,4 @@ fegetround (void)
   fpescr = fegetenv_register ();
   return fpescr & 3;
 }
+libm_hidden_def (fegetround)

@@ -24,3 +24,4 @@ fegetround (void)
 {
   return get_rounding_mode ();
 }
+libm_hidden_def (fegetround)
