@@ -1,5 +1,8 @@
 2013-11-28  Joseph Myers  <joseph@codesourcery.com>
 
+	* manual/math.texi (Errors in Math Functions): Document accuracy
+	goals.
+
 	[BZ #15004]
 	* sysdeps/ieee754/ldbl-96/e_atan2l.c: Remove file.
 	* sysdeps/ieee754/ldbl-96/e_ilogbl.c: Likewise.

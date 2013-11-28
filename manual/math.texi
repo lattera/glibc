@@ -1227,10 +1227,80 @@ $${|d.d\dots d - (z/2^e)|}\over {2^{p-1}}$$
 @noindent
 where @math{p} is the number of bits in the mantissa of the
 floating-point number representation.  Ideally the error for all
-functions is always less than 0.5ulps.  Using rounding bits this is also
-possible and normally implemented for the basic operations.  To achieve
-the same for the complex math functions requires a lot more work and
-this has not yet been done.
+functions is always less than 0.5ulps in round-to-nearest mode.  Using
+rounding bits this is also
+possible and normally implemented for the basic operations.  Except
+for certain functions such as @code{sqrt}, @code{fma} and @code{rint}
+whose results are fully specified by reference to corresponding IEEE
+754 floating-point operations, and conversions between strings and
+floating point, @theglibc{} does not aim for correctly rounded results
+for functions in the math library, and does not aim for correctness in
+whether ``inexact'' exceptions are raised.  Instead, the goals for
+accuracy of functions without fully specified results are as follows;
+some functions have bugs meaning they do not meet these goals in all
+cases.  In future, @theglibc{} may provide some other correctly
+rounding functions under the names such as @code{crsin} proposed for
+an extension to ISO C.
+
+@itemize @bullet
+
+@item
+Each function with a floating-point result behaves as if it computes
+an infinite-precision result that is within a few ulp (in both real
+and complex parts, for functions with complex results) of the
+mathematically correct value of the function (interpreted together
+with ISO C or POSIX semantics for the function in question) at the
+exact value passed as the input.  Exceptions are raised appropriately
+for this value and in accordance with IEEE 754 / ISO C / POSIX
+semantics, and it is then rounded according to the current rounding
+direction to the result that is returned to the user.  @code{errno}
+may also be set (@pxref{Math Error Reporting}).
+
+@item
+For the IBM @code{long double} format, as used on PowerPC GNU/Linux,
+the accuracy goal is weaker for input values not exactly representable
+in 106 bits of precision; it is as if the input value is some value
+within 0.5ulp of the value actually passed, where ``ulp'' is
+interpreted in terms of a fixed-precision 106-bit mantissa, but not
+necessarily the exact value actually passed with discontiguous
+mantissa bits.
+
+@item
+Functions behave as if the infinite-precision result computed is zero,
+infinity or NaN if and only if that is the mathematically correct
+infinite-precision result.  They behave as if the infinite-precision
+result computed always has the same sign as the mathematically correct
+result.
+
+@item
+If the mathematical result is more than a few ulp above the overflow
+threshold for the current rounding direction, the value returned is
+the appropriate overflow value for the current rounding direction,
+with the overflow exception raised.
+
+@item
+If the mathematical result has magnitude well below half the least
+subnormal magnitude, the returned value is either zero or the least
+subnormal (in each case, with the correct sign), according to the
+current rounding direction and with the underflow exception raised.
+
+@item
+Where the mathematical result underflows and is not exactly
+representable as a floating-point value, the underflow exception is
+raised (so there may be spurious underflow exceptions in cases where
+the underflowing result is exact, but not missing underflow exceptions
+in cases where it is inexact).
+
+@item
+@Theglibc{} does not aim for functions to satisfy other properties of
+the underlying mathematical function, such as monotonicity, where not
+implied by the above goals.
+
+@item
+All the above applies to both real and complex parts, for complex
+functions.
+
+@end itemize
 
 Therefore many of the functions in the math library have errors.  The
 table lists the maximum error for each function which is exposed by one
