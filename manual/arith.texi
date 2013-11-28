@@ -497,7 +497,8 @@ In the System V math library, the user-defined function @code{matherr}
 is called when certain exceptions occur inside math library functions.
 However, the Unix98 standard deprecates this interface.  We support it
 for historical compatibility, but recommend that you do not use it in
-new programs.
+new programs.  When this interface is used, exceptions may not be
+raised.
 
 @noindent
 The exceptions defined in @w{IEEE 754} are:
@@ -806,7 +807,8 @@ an integer.  Do not attempt to modify an @code{fexcept_t} variable.
 Many of the math functions are defined only over a subset of the real or
 complex numbers.  Even if they are mathematically defined, their result
 may be larger or smaller than the range representable by their return
-type.  These are known as @dfn{domain errors}, @dfn{overflows}, and
+type without loss of accuracy.  These are known as @dfn{domain errors},
+@dfn{overflows}, and
 @dfn{underflows}, respectively.  Math functions do several things when
 one of these errors occurs.  In this manual we will refer to the
 complete response as @dfn{signalling} a domain error, overflow, or
@@ -816,11 +818,20 @@ When a math function suffers a domain error, it raises the invalid
 exception and returns NaN.  It also sets @var{errno} to @code{EDOM};
 this is for compatibility with old systems that do not support @w{IEEE
 754} exception handling.  Likewise, when overflow occurs, math
-functions raise the overflow exception and return @math{@infinity{}} or
-@math{-@infinity{}} as appropriate.  They also set @var{errno} to
-@code{ERANGE}.  When underflow occurs, the underflow exception is
-raised, and zero (appropriately signed) is returned.  @var{errno} may be
-set to @code{ERANGE}, but this is not guaranteed.
+functions raise the overflow exception and, in the default rounding
+mode, return @math{@infinity{}} or @math{-@infinity{}} as appropriate
+(in other rounding modes, the largest finite value of the appropriate
+sign is returned when appropriate for that rounding mode).  They also
+set @var{errno} to @code{ERANGE} if returning @math{@infinity{}} or
+@math{-@infinity{}}; @var{errno} may or may not be set to
+@code{ERANGE} when a finite value is returned on overflow.  When
+underflow occurs, the underflow exception is raised, and zero
+(appropriately signed) or a subnormal value, as appropriate for the
+mathematical result of the function and the rounding mode, is
+returned.  @var{errno} may be set to @code{ERANGE}, but this is not
+guaranteed; it is intended that @theglibc{} should set it when the
+underflow is to an appropriately signed zero, but not necessarily for
+other underflows.
 
 Some of the math functions are defined mathematically to result in a
 complex value over parts of their domains.  The most familiar example of

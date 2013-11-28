@@ -1,5 +1,12 @@
 2013-11-28  Joseph Myers  <joseph@codesourcery.com>
 
+	* manual/arith.texi (FP Exceptions): Document that exceptions may
+	not be raised when matherr is used.
+	(Math Error Reporting): Document overflow in directed rounding
+	modes.  Document that errno may not be set when finite values are
+	returned on overflow.  Document intent to set errno on underflow
+	only for underflow to zero.
+
 	[BZ #16271]
 	* sysdeps/ieee754/dbl-64/e_sqrt.c (__ieee754_sqrt): Set
 	round-to-nearest then adjust result for other rounding modes.
