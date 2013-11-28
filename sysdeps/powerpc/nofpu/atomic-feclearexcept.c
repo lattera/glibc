@@ -1,7 +1,6 @@
-/* Raise given exceptions.  e500 version for use from soft-fp.
-   Copyright (C) 2004-2013 Free Software Foundation, Inc.
+/* Clear floating-point exceptions for atomic compound assignment.
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Aldy Hernandez <aldyh@redhat.com>, 2004.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -14,12 +13,16 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
+   License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <fenv_libc.h>
-#include <libc-symbols.h>
+#include "soft-fp.h"
+#include "soft-supp.h"
 
-#define __FERAISEEXCEPT_INTERNAL __feraiseexcept_soft
-#include "spe-raise.c"
-libc_hidden_def (__feraiseexcept_soft)
+void
+__atomic_feclearexcept (void)
+{
+  /* This function postdates the global variables being turned into
+     compat symbols, so no need to set them.  */
+  __sim_exceptions_thread = 0;
+}

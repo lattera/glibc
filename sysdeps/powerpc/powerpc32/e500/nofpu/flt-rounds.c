@@ -1,7 +1,7 @@
-/* Raise given exceptions.  e500 version for use from soft-fp.
-   Copyright (C) 2004-2013 Free Software Foundation, Inc.
+/* Return current rounding mode as correct value for FLT_ROUNDS.  e500
+   version.
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Aldy Hernandez <aldyh@redhat.com>, 2004.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -14,12 +14,26 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
+   License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
 #include <fenv_libc.h>
-#include <libc-symbols.h>
+#include <stdlib.h>
 
-#define __FERAISEEXCEPT_INTERNAL __feraiseexcept_soft
-#include "spe-raise.c"
-libc_hidden_def (__feraiseexcept_soft)
+int
+__flt_rounds (void)
+{
+  switch (fegetenv_register () & SPEFSCR_FRMC)
+    {
+    case FE_TOWARDZERO:
+      return 0;
+    case FE_TONEAREST:
+      return 1;
+    case FE_UPWARD:
+      return 2;
+    case FE_DOWNWARD:
+      return 3;
+    default:
+      abort ();
+    }
+}

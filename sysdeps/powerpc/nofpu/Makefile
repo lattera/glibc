@@ -2,7 +2,8 @@
 
 ifeq ($(subdir),soft-fp)
 sysdep_routines += $(gcc-single-routines) $(gcc-double-routines) \
-		   sim-full
+		   sim-full atomic-feholdexcept atomic-feclearexcept \
+		   atomic-feupdateenv flt-rounds
 endif
 
 ifeq ($(subdir),math)

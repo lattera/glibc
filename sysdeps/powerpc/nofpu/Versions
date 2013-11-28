@@ -17,6 +17,10 @@ libc {
     __gtdf2; __gtsf2;
     __ltdf2; __ltsf2;
   }
+  GLIBC_2.19 {
+    __atomic_feholdexcept; __atomic_feclearexcept; __atomic_feupdateenv;
+    __flt_rounds;
+  }
   GLIBC_PRIVATE {
     __sim_exceptions_thread;
     __sim_disabled_exceptions_thread;

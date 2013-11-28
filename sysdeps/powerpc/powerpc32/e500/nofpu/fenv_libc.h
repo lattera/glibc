@@ -27,6 +27,9 @@
 int __feraiseexcept_spe (int);
 libm_hidden_proto (__feraiseexcept_spe)
 
+int __feraiseexcept_soft (int);
+libc_hidden_proto (__feraiseexcept_soft)
+
 int __fexcepts_to_spe (int);
 libm_hidden_proto (__fexcepts_to_spe)
 

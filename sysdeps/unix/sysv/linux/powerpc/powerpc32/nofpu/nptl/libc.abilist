@@ -1784,6 +1784,12 @@ GLIBC_2.17
 GLIBC_2.18
  GLIBC_2.18 A
  __cxa_thread_atexit_impl F
+GLIBC_2.19
+ GLIBC_2.19 A
+ __atomic_feclearexcept F
+ __atomic_feholdexcept F
+ __atomic_feupdateenv F
+ __flt_rounds F
 GLIBC_2.2
  GLIBC_2.2 A
  _IO_adjust_wcolumn F

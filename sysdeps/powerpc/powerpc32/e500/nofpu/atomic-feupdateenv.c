@@ -1,7 +1,7 @@
-/* Raise given exceptions.  e500 version for use from soft-fp.
+/* Install given floating-point environment and raise exceptions for
+   atomic compound assignment.  e500 version.
    Copyright (C) 2004-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Aldy Hernandez <aldyh@redhat.com>, 2004.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -14,12 +14,33 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
+   License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
 #include <fenv_libc.h>
-#include <libc-symbols.h>
+#include <stdlib.h>
+#include <sysdep.h>
+#include <sys/prctl.h>
 
-#define __FERAISEEXCEPT_INTERNAL __feraiseexcept_soft
-#include "spe-raise.c"
-libc_hidden_def (__feraiseexcept_soft)
+void
+__atomic_feupdateenv (const fenv_t *envp)
+{
+  int exc;
+  fenv_union_t u;
+  INTERNAL_SYSCALL_DECL (err);
+  int r;
+
+  /* Save the currently set exceptions.  */
+  exc = fegetenv_register () & SPEFSCR_ALL_EXCEPT;
+
+  u.fenv = *envp;
+
+  fesetenv_register (u.l[1]);
+  r = INTERNAL_SYSCALL (prctl, err, 2, PR_SET_FPEXC,
+			u.l[0] | PR_FP_EXC_SW_ENABLE);
+  if (INTERNAL_SYSCALL_ERROR_P (r, err))
+    abort ();
+
+  /* Raise (if appropriate) saved exceptions. */
+  __feraiseexcept_soft (exc);
+}
