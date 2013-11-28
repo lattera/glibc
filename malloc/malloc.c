@@ -3181,7 +3181,7 @@ __libc_calloc(size_t n, size_t elem_size)
   if (chunk_is_mmapped (p))
     {
       if (__builtin_expect (perturb_byte, 0))
-	MALLOC_ZERO (mem, sz);
+	return MALLOC_ZERO (mem, sz);
       return mem;
     }
 
@@ -3203,7 +3203,7 @@ __libc_calloc(size_t n, size_t elem_size)
   assert(nclears >= 3);
 
   if (nclears > 9)
-    MALLOC_ZERO(d, clearsize);
+    return MALLOC_ZERO(d, clearsize);
 
   else {
     *(d+0) = 0;
