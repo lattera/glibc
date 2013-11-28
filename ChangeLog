@@ -1,5 +1,23 @@
 2013-11-28  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #15004]
+	* sysdeps/ieee754/ldbl-96/e_atan2l.c: Remove file.
+	* sysdeps/ieee754/ldbl-96/e_ilogbl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_remainderl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_ceill.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fabsl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_finitel.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_floorl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fpclassifyl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_isinfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_isnanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_logbl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nearbyintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nextafterl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_rintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_scalbnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_truncl.c: Likewise.
+
 	* sysdeps/powerpc/nofpu/atomic-feclearexcept.c: New file.
 	* sysdeps/powerpc/nofpu/atomic-feholdexcept.c: Likewise.
 	* sysdeps/powerpc/nofpu/atomic-feupdateenv.c: Likewise.
