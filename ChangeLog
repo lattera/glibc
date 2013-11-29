@@ -1,5 +1,12 @@
 2013-11-29  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14032]
+	* sysdeps/i386/fpu/e_sqrt.S (__ieee754_sqrt): Do fsqrt with
+	precision control set to double precision.
+	* sysdeps/i386/fpu/w_sqrt.c: New file.
+	* math/auto-libm-test-in: Add more tests.
+	* math/auto-libm-test-out: Update.
+
 	* math/libm-test.inc (sqrt_tonearest_test_data): New variable.
 	(sqrt_test_tonearest): New function.
 	(sqrt_towardzero_test_data): New variable.
