@@ -13770,6 +13770,90 @@ sqrt_test (void)
   END;
 }
 
+static const struct test_f_f_data sqrt_tonearest_test_data[] =
+  {
+    TEST_f_f (sqrt, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
+    TEST_f_f (sqrt, plus_infty, plus_infty, NO_INEXACT_EXCEPTION),
+
+    /* sqrt (x) == qNaN plus invalid exception for x < 0.  */
+    TEST_f_f (sqrt, -1, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (sqrt, -max_value, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (sqrt, minus_infty, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+
+    AUTO_TESTS_f_f (sqrt, tonearest),
+  };
+
+static void
+sqrt_test_tonearest (void)
+{
+  START (sqrt_tonearest);
+  RUN_TEST_LOOP_f_f (sqrt, sqrt_tonearest_test_data, FE_TONEAREST);
+  END;
+}
+
+static const struct test_f_f_data sqrt_towardzero_test_data[] =
+  {
+    TEST_f_f (sqrt, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
+    TEST_f_f (sqrt, plus_infty, plus_infty, NO_INEXACT_EXCEPTION),
+
+    /* sqrt (x) == qNaN plus invalid exception for x < 0.  */
+    TEST_f_f (sqrt, -1, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (sqrt, -max_value, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (sqrt, minus_infty, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+
+    AUTO_TESTS_f_f (sqrt, towardzero),
+  };
+
+static void
+sqrt_test_towardzero (void)
+{
+  START (sqrt_towardzero);
+  RUN_TEST_LOOP_f_f (sqrt, sqrt_towardzero_test_data, FE_TOWARDZERO);
+  END;
+}
+
+static const struct test_f_f_data sqrt_downward_test_data[] =
+  {
+    TEST_f_f (sqrt, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
+    TEST_f_f (sqrt, plus_infty, plus_infty, NO_INEXACT_EXCEPTION),
+
+    /* sqrt (x) == qNaN plus invalid exception for x < 0.  */
+    TEST_f_f (sqrt, -1, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (sqrt, -max_value, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (sqrt, minus_infty, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+
+    AUTO_TESTS_f_f (sqrt, downward),
+  };
+
+static void
+sqrt_test_downward (void)
+{
+  START (sqrt_downward);
+  RUN_TEST_LOOP_f_f (sqrt, sqrt_downward_test_data, FE_DOWNWARD);
+  END;
+}
+
+static const struct test_f_f_data sqrt_upward_test_data[] =
+  {
+    TEST_f_f (sqrt, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
+    TEST_f_f (sqrt, plus_infty, plus_infty, NO_INEXACT_EXCEPTION),
+
+    /* sqrt (x) == qNaN plus invalid exception for x < 0.  */
+    TEST_f_f (sqrt, -1, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (sqrt, -max_value, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (sqrt, minus_infty, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+
+    AUTO_TESTS_f_f (sqrt, upward),
+  };
+
+static void
+sqrt_test_upward (void)
+{
+  START (sqrt_upward);
+  RUN_TEST_LOOP_f_f (sqrt, sqrt_upward_test_data, FE_UPWARD);
+  END;
+}
+
 
 static const struct test_f_f_data tan_test_data[] =
   {
@@ -15089,6 +15173,10 @@ main (int argc, char **argv)
   pow_test_downward ();
   pow_test_upward ();
   sqrt_test ();
+  sqrt_test_tonearest ();
+  sqrt_test_towardzero ();
+  sqrt_test_downward ();
+  sqrt_test_upward ();
 
   /* Error and gamma functions:  */
   erf_test ();
