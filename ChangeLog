@@ -1,3 +1,16 @@
+2013-11-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
+	    Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	[BZ #16214]
+	* sysdeps/s390/dl-tls.h (__TLS_GET_ADDR): Invoke
+	__tls_get_addr_internal instead of __tls_get_offset in order to
+	avoid GOT pointer dependency.  Make rtld export
+	__tls_get_addr_internal@@GLIBC_PRIVATE while still hiding
+	__tls_get_addr since we are a __tls_get_offset platform.
+	* sysdeps/s390/s390-64/tls-macros.h (TLS_IE PIC): Don't rely on
+	GOT pointer being set up before.
+	* sysdeps/s390/s390-32/tls-macros.h (TLS_IE PIC): Likewise.
+
 2013-11-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* manual/math.texi (Errors in Math Functions): Document accuracy

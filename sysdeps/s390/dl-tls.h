@@ -26,11 +26,26 @@ typedef struct
 
 
 #ifdef SHARED
-/* This is the prototype for the GNU version.  */
-extern void *__tls_get_addr (tls_index *ti) attribute_hidden;
+
 extern unsigned long __tls_get_offset (unsigned long got_offset);
 
 # ifdef IS_IN_rtld
+
+#  include <shlib-compat.h>
+
+extern void *__tls_get_addr (tls_index *ti) attribute_hidden;
+/* Make a temporary alias of __tls_get_addr to remove the hidden
+   attribute.  Then export __tls_get_addr as __tls_get_addr_internal
+   for use from libc.  We do not want to export __tls_get_addr, but we
+   do need to use it from libc when looking up the address of a TLS
+   variable. We don't use __tls_get_offset because it requires r12 to
+   be setup and that might not always be true. Either way it's more
+   optimal to use __tls_get_addr directly (that's what
+   __tls_get_offset does anyways).  */
+strong_alias (__tls_get_addr, __tls_get_addr_internal_tmp);
+versioned_symbol (ld, __tls_get_addr_internal_tmp,
+		  __tls_get_addr_internal, GLIBC_PRIVATE);
+
 /* The special thing about the s390 TLS ABI is that we do not have the
    standard __tls_get_addr function but the __tls_get_offset function
    which differs in two important aspects:
@@ -63,15 +78,21 @@ __tls_get_offset:\n\
 1:	.long	__tls_get_addr - 0b\n\
 ");
 #  endif
-# endif
+# else /* IS_IN_rtld */
+extern void *__tls_get_addr_internal (tls_index *ti);
+# endif /* !IS_IN_rtld */
 
 # define GET_ADDR_OFFSET \
   (ti->ti_offset - (unsigned long) __builtin_thread_pointer ())
 
-# define __TLS_GET_ADDR(__ti) \
-  ({ extern char _GLOBAL_OFFSET_TABLE_[] attribute_hidden;		  \
-     (void *) __tls_get_offset ((char *) (__ti) - _GLOBAL_OFFSET_TABLE_)  \
-     + (unsigned long) __builtin_thread_pointer (); })
+/* Use the privately exported __tls_get_addr_internal instead of
+   __tls_get_offset in order to avoid the __tls_get_offset special
+   linkage requiring the GOT pointer to be set up in r12.  The
+   compiler will take care of setting up r12 only if itself issued the
+   __tls_get_offset call.  */
+# define __TLS_GET_ADDR(__ti)					\
+  ({ (void *) __tls_get_addr_internal ((char *) (__ti))		\
+      + (unsigned long) __builtin_thread_pointer (); })
 
 #endif
 

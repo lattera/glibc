@@ -3,4 +3,8 @@ ld {
     # runtime interface to TLS
     __tls_get_offset;
   }
+  GLIBC_PRIVATE {
+    # Exported by ld used by libc.
+    __tls_get_addr_internal;
+  }
 }
