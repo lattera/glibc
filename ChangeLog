@@ -1,3 +1,40 @@
+2013-11-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/gen-auto-libm-tests.c: New file.
+	* math/auto-libm-test-in: Likewise.
+	* math/auto-libm-test-out: New generated file.
+	* math/gen-libm-test.pl ($auto_input, %auto_tests): New global
+	variables.
+	(%beautify): Add generated representations of zero.
+	(top level): Set $auto_input and call parse_auto_input.
+	(beautify): Remove trailing "f" from hex float constants.
+	(parse_args): Handle XFAIL_TEST.
+	(convert_condition): New function.
+	(or_value): Likewise.
+	(or_cond_value): Likewise.
+	(generate_testfile): Handle AUTO_TESTS_* lines.
+	(parse_auto_input): New function.
+	* math/libm-test.inc (XFAIL_TEST): New macro.
+	(ERRNO_UNCHANGED): Update value.
+	(ERRNO_EDOM): Likewise.
+	(ERRNO_ERANGE): Likewise.
+	(IGNORE_RESULT): Likewise.
+	(TEST_COND_flt_32): New macro.
+	(TEST_COND_dbl_64): Likewise.
+	(TEST_COND_ldbl_96_intel): Likewise.
+	(TEST_COND_ldbl_96_m68k): Likewise.
+	(TEST_COND_ldbl_128): Likewise.
+	(TEST_COND_ldbl_128ibm): Likewise.
+	(TEST_COND_long32): Likewise.
+	(TEST_COND_long64): Likewise.
+	(TEST_COND_before_rounding): Likewise.
+	(TEST_COND_after_rounding): Likewise.
+	(enable_test): Handle XFAIL_TEST flag.
+	(sqrt_test_data): Use AUTO_TESTS_f_f for tests of finite inputs
+	with finite results.
+	* math/Makefile ($(objpfx)libm-test.stmp): Depend on
+	auto-libm-test-out.
+
 2013-11-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
 	    Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 

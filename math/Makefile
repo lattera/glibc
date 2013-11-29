@@ -112,7 +112,8 @@ ulps-file = $(firstword $(wildcard $(sysdirs:%=%/libm-test-ulps)))
 
 $(addprefix $(objpfx), $(libm-tests-generated)): $(objpfx)libm-test.stmp
 
-$(objpfx)libm-test.stmp: $(ulps-file) libm-test.inc gen-libm-test.pl
+$(objpfx)libm-test.stmp: $(ulps-file) libm-test.inc gen-libm-test.pl \
+			 auto-libm-test-out
 	$(make-target-directory)
 	$(PERL) gen-libm-test.pl -u $< -o "$(objpfx)"
 	@echo > $@
