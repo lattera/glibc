@@ -1,5 +1,12 @@
 2013-11-29  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #6787]
+	* math/w_exp10.c (__exp10): Handle a zero result as underflow.
+	* math/w_exp10f.c (__exp10f): Likewise.
+	* math/w_exp10l.c (__exp10l): Likewise.
+	* math/libm-test.inc (exp10_test_data): Add more tests and expect
+	errno settings in existing tests.
+
 	[BZ #14032]
 	* sysdeps/i386/fpu/e_sqrt.S (__ieee754_sqrt): Do fsqrt with
 	precision control set to double precision.

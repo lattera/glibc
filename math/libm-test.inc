@@ -8134,10 +8134,12 @@ static const struct test_f_f_data exp10_test_data[] =
     TEST_f_f (exp10, 4932, 1.0e4932L),
     TEST_f_f (exp10, -4932, 1.0e-4932L, UNDERFLOW_EXCEPTION),
 #endif
+    TEST_f_f (exp10, 1e5, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (exp10, -1e5, 0, UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f (exp10, 1e6, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
-    TEST_f_f (exp10, -1e6, 0, UNDERFLOW_EXCEPTION),
+    TEST_f_f (exp10, -1e6, 0, UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f (exp10, max_value, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
-    TEST_f_f (exp10, -max_value, 0, UNDERFLOW_EXCEPTION),
+    TEST_f_f (exp10, -max_value, 0, UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f (exp10, 0.75L, 5.62341325190349080394951039776481231L),
   };
 
