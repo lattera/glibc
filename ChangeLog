@@ -1,3 +1,50 @@
+2013-11-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/gen-auto-libm-tests.c (test_functions): Add more
+	single-argument functions.
+	(special_fill_pi_2): New function.
+	(special_fill_minus_pi_2): Likewise.
+	(special_fill_pi_6): Likewise.
+	(special_fill_minus_pi_6): Likewise.
+	(special_fill_pi_3): Likewise.
+	(special_fill_2pi_3): Likewise.
+	(special_fill_e): Likewise.
+	(special_fill_1_e): Likewise.
+	(special_fill_e_minus_1): Likewise.
+	(special_real_inputs): Add more special inputs.
+	(output_for_one_input_case): Do not require ERANGE on underflow to
+	zero if round-to-nearest result does not underflow to zero, unless
+	exact results required.
+	* math/auto-libm-test-in: Add tests of acos, acosh, asin, asinh,
+	atan, atanh, cbrt, cos and cosh.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (acos_test_data): Use AUTO_TESTS_f_f.
+	(acos_tonearest_test_data): Likewise.
+	(acos_towardzero_test_data): Likewise.
+	(acos_downward_test_data): Likewise.
+	(acos_upward_test_data): Likewise.
+	(acosh_test_data): Likewise.
+	(asin_test_data): Likewise.
+	(asin_tonearest_test_data): Likewise.
+	(asin_towardzero_test_data): Likewise.
+	(asin_upward_test_data): Likewise.
+	(asinh_test_data): Likewise.
+	(atan_test_data): Likewise.
+	(atanh_test_data): Likewise.
+	(cbrt_test_data): Likewise.
+	(cos_test_data): Likewise.
+	(cos_tonearest_test_data): Likewise.
+	(cos_towardzero_test_data): Likewise.
+	(cos_downward_test_data): Likewise.
+	(cos_upward_test_data): Likewise.
+	(cosh_test_data): Likewise.
+	(cosh_tonearest_test_data): Likewise.
+	(cosh_towardzero_test_data): Likewise.
+	(cosh_downward_test_data): Likewise.
+	(cosh_upward_test_data): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2013-11-29  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #6787]

@@ -16,6 +16,117 @@
 # License along with the GNU C Library; if not, see
 # <http://www.gnu.org/licenses/>.  */
 
+acos 0
+acos -0
+acos 1
+acos -1
+acos 0.5
+acos -0.5
+acos 0.75
+acos 2e-17
+acos 0.0625
+acos 0x0.ffffffp0
+acos -0x0.ffffffp0
+acos 0x0.ffffffff8p0
+acos -0x0.ffffffff8p0
+acos 0x0.ffffffffffffp0
+acos -0x0.ffffffffffffp0
+acos 0x0.ffffffffffffffffp0
+acos -0x0.ffffffffffffffffp0
+
+acosh 1
+acosh 7
+
+asin 0
+asin -0
+asin 0.5
+asin -0.5
+asin 1.0
+asin -1.0
+asin 0.75
+asin 0x0.ffffffp0
+asin -0x0.ffffffp0
+asin 0x0.ffffffff8p0
+asin -0x0.ffffffff8p0
+asin 0x0.ffffffffffffp0
+asin -0x0.ffffffffffffp0
+asin 0x0.ffffffffffffffffp0
+asin -0x0.ffffffffffffffffp0
+
+asinh 0
+asinh -0
+asinh 0.75
+
+atan 0
+atan -0
+atan max
+atan -max
+atan 1
+atan -1
+atan 0.75
+# Bug 15319: underflow exception may be missing.
+atan 0x1p-100 missing-underflow
+atan 0x1p-600 missing-underflow
+atan 0x1p-10000 missing-underflow
+
+atanh 0
+atanh -0
+atanh 0.75
+
+cbrt 0.0
+cbrt -0
+cbrt -0.001
+cbrt 8
+cbrt -27.0
+cbrt 0.9921875
+cbrt 0.75
+cbrt 0x1p16383
+cbrt 0x1p-16383
+
+cos 0
+cos -0
+cos pi/3
+cos 2pi/3
+cos pi/2
+cos 0.75
+cos 0x1p65
+cos -0x1p65
+cos 0.80190127184058835
+cos 0x1.442f74p+15
+cos 1e22
+cos 0x1p1023
+cos 0x1p16383
+cos 0x1p+120
+cos 0x1p+127
+cos 0x1.fffff8p+127
+cos 0x1.fffffep+127
+cos 0x1p+50
+cos 0x1p+28
+cos 0x1.000000cf4a2a2p0
+cos 0x1.0000010b239a9p0
+cos 0x1.00000162a932bp0
+cos 0x1.000002d452a10p0
+cos 0x1.000005bc7d86dp0
+cos 1
+cos 2
+cos 3
+cos 4
+cos 5
+cos 6
+cos 7
+cos 8
+cos 9
+cos 10
+
+cosh 0
+cosh -0
+cosh 0.75
+cosh 709.8893558127259666434838436543941497802734375
+cosh -709.8893558127259666434838436543941497802734375
+cosh 22
+cosh 23
+cosh 24
+
 sqrt 0
 sqrt -0
 sqrt 2209

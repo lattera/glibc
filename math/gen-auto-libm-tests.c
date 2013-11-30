@@ -439,7 +439,35 @@ typedef struct
 /* List of functions handled by this program.  */
 static test_function test_functions[] =
   {
+    FUNC_mpfr_f_f ("acos", mpfr_acos, false),
+    FUNC_mpfr_f_f ("acosh", mpfr_acosh, false),
+    FUNC_mpfr_f_f ("asin", mpfr_asin, false),
+    FUNC_mpfr_f_f ("asinh", mpfr_asinh, false),
+    FUNC_mpfr_f_f ("atan", mpfr_atan, false),
+    FUNC_mpfr_f_f ("atanh", mpfr_atanh, false),
+    FUNC_mpfr_f_f ("cbrt", mpfr_cbrt, false),
+    FUNC_mpfr_f_f ("cos", mpfr_cos, false),
+    FUNC_mpfr_f_f ("cosh", mpfr_cosh, false),
+    FUNC_mpfr_f_f ("erf", mpfr_erf, false),
+    FUNC_mpfr_f_f ("erfc", mpfr_erfc, false),
+    FUNC_mpfr_f_f ("exp", mpfr_exp, false),
+    FUNC_mpfr_f_f ("exp10", mpfr_exp10, false),
+    FUNC_mpfr_f_f ("exp2", mpfr_exp2, false),
+    FUNC_mpfr_f_f ("expm1", mpfr_expm1, false),
+    FUNC_mpfr_f_f ("j0", mpfr_j0, false),
+    FUNC_mpfr_f_f ("j1", mpfr_j1, false),
+    FUNC_mpfr_f_f ("log", mpfr_log, false),
+    FUNC_mpfr_f_f ("log10", mpfr_log10, false),
+    FUNC_mpfr_f_f ("log1p", mpfr_log1p, false),
+    FUNC_mpfr_f_f ("log2", mpfr_log2, false),
+    FUNC_mpfr_f_f ("sin", mpfr_sin, false),
+    FUNC_mpfr_f_f ("sinh", mpfr_sinh, false),
     FUNC_mpfr_f_f ("sqrt", mpfr_sqrt, true),
+    FUNC_mpfr_f_f ("tan", mpfr_tan, false),
+    FUNC_mpfr_f_f ("tanh", mpfr_tanh, false),
+    FUNC_mpfr_f_f ("tgamma", mpfr_gamma, false),
+    FUNC_mpfr_f_f ("y0", mpfr_y0, false),
+    FUNC_mpfr_f_f ("y1", mpfr_y1, false),
   };
 
 /* Allocate memory, with error checking.  */
@@ -637,6 +665,116 @@ special_fill_minus_pi (mpfr_t res0, mpfr_t res1, fp_format format)
   return 2;
 }
 
+static size_t
+special_fill_pi_2 (mpfr_t res0, mpfr_t res1, fp_format format)
+{
+  mpfr_init2 (res0, fp_formats[format].mant_dig);
+  mpfr_const_pi (res0, MPFR_RNDU);
+  assert_exact (mpfr_div_ui (res0, res0, 2, MPFR_RNDN));
+  mpfr_init2 (res1, fp_formats[format].mant_dig);
+  mpfr_const_pi (res1, MPFR_RNDD);
+  assert_exact (mpfr_div_ui (res1, res1, 2, MPFR_RNDN));
+  return 2;
+}
+
+static size_t
+special_fill_minus_pi_2 (mpfr_t res0, mpfr_t res1, fp_format format)
+{
+  mpfr_init2 (res0, fp_formats[format].mant_dig);
+  mpfr_const_pi (res0, MPFR_RNDU);
+  assert_exact (mpfr_div_ui (res0, res0, 2, MPFR_RNDN));
+  assert_exact (mpfr_neg (res0, res0, MPFR_RNDN));
+  mpfr_init2 (res1, fp_formats[format].mant_dig);
+  mpfr_const_pi (res1, MPFR_RNDD);
+  assert_exact (mpfr_div_ui (res1, res1, 2, MPFR_RNDN));
+  assert_exact (mpfr_neg (res1, res1, MPFR_RNDN));
+  return 2;
+}
+
+static size_t
+special_fill_pi_6 (mpfr_t res0, mpfr_t res1, fp_format format)
+{
+  mpfr_init2 (res0, fp_formats[format].mant_dig);
+  assert_exact (mpfr_set_si_2exp (res0, 1, -1, MPFR_RNDN));
+  mpfr_asin (res0, res0, MPFR_RNDU);
+  mpfr_init2 (res1, fp_formats[format].mant_dig);
+  assert_exact (mpfr_set_si_2exp (res1, 1, -1, MPFR_RNDN));
+  mpfr_asin (res1, res1, MPFR_RNDD);
+  return 2;
+}
+
+static size_t
+special_fill_minus_pi_6 (mpfr_t res0, mpfr_t res1, fp_format format)
+{
+  mpfr_init2 (res0, fp_formats[format].mant_dig);
+  assert_exact (mpfr_set_si_2exp (res0, -1, -1, MPFR_RNDN));
+  mpfr_asin (res0, res0, MPFR_RNDU);
+  mpfr_init2 (res1, fp_formats[format].mant_dig);
+  assert_exact (mpfr_set_si_2exp (res1, -1, -1, MPFR_RNDN));
+  mpfr_asin (res1, res1, MPFR_RNDD);
+  return 2;
+}
+
+static size_t
+special_fill_pi_3 (mpfr_t res0, mpfr_t res1, fp_format format)
+{
+  mpfr_init2 (res0, fp_formats[format].mant_dig);
+  assert_exact (mpfr_set_si_2exp (res0, 1, -1, MPFR_RNDN));
+  mpfr_acos (res0, res0, MPFR_RNDU);
+  mpfr_init2 (res1, fp_formats[format].mant_dig);
+  assert_exact (mpfr_set_si_2exp (res1, 1, -1, MPFR_RNDN));
+  mpfr_acos (res1, res1, MPFR_RNDD);
+  return 2;
+}
+
+static size_t
+special_fill_2pi_3 (mpfr_t res0, mpfr_t res1, fp_format format)
+{
+  mpfr_init2 (res0, fp_formats[format].mant_dig);
+  assert_exact (mpfr_set_si_2exp (res0, -1, -1, MPFR_RNDN));
+  mpfr_acos (res0, res0, MPFR_RNDU);
+  mpfr_init2 (res1, fp_formats[format].mant_dig);
+  assert_exact (mpfr_set_si_2exp (res1, -1, -1, MPFR_RNDN));
+  mpfr_acos (res1, res1, MPFR_RNDD);
+  return 2;
+}
+
+static size_t
+special_fill_e (mpfr_t res0, mpfr_t res1, fp_format format)
+{
+  mpfr_init2 (res0, fp_formats[format].mant_dig);
+  assert_exact (mpfr_set_si (res0, 1, MPFR_RNDN));
+  mpfr_exp (res0, res0, MPFR_RNDU);
+  mpfr_init2 (res1, fp_formats[format].mant_dig);
+  assert_exact (mpfr_set_si (res1, 1, MPFR_RNDN));
+  mpfr_exp (res1, res1, MPFR_RNDD);
+  return 2;
+}
+
+static size_t
+special_fill_1_e (mpfr_t res0, mpfr_t res1, fp_format format)
+{
+  mpfr_init2 (res0, fp_formats[format].mant_dig);
+  assert_exact (mpfr_set_si (res0, -1, MPFR_RNDN));
+  mpfr_exp (res0, res0, MPFR_RNDU);
+  mpfr_init2 (res1, fp_formats[format].mant_dig);
+  assert_exact (mpfr_set_si (res1, -1, MPFR_RNDN));
+  mpfr_exp (res1, res1, MPFR_RNDD);
+  return 2;
+}
+
+static size_t
+special_fill_e_minus_1 (mpfr_t res0, mpfr_t res1, fp_format format)
+{
+  mpfr_init2 (res0, fp_formats[format].mant_dig);
+  assert_exact (mpfr_set_si (res0, 1, MPFR_RNDN));
+  mpfr_expm1 (res0, res0, MPFR_RNDU);
+  mpfr_init2 (res1, fp_formats[format].mant_dig);
+  assert_exact (mpfr_set_si (res1, 1, MPFR_RNDN));
+  mpfr_expm1 (res1, res1, MPFR_RNDD);
+  return 2;
+}
+
 /* A special string accepted in input arguments.  */
 typedef struct
 {
@@ -656,6 +794,15 @@ static const special_real_input special_real_inputs[] =
     { "-max", special_fill_minus_max },
     { "pi", special_fill_pi },
     { "-pi", special_fill_minus_pi },
+    { "pi/2", special_fill_pi_2 },
+    { "-pi/2", special_fill_minus_pi_2 },
+    { "pi/6", special_fill_pi_6 },
+    { "-pi/6", special_fill_minus_pi_6 },
+    { "pi/3", special_fill_pi_3 },
+    { "2pi/3", special_fill_2pi_3 },
+    { "e", special_fill_e },
+    { "1/e", special_fill_1_e },
+    { "e-1", special_fill_e_minus_1 },
   };
 
 /* Given a real number R computed in round-to-zero mode, set the
@@ -1405,6 +1552,8 @@ output_for_one_input_case (FILE *fp, const char *filename, test_function *tf,
 				  & (1U << exc_overflow)) != 0)
 			    must_erange = true;
 			  if (mpfr_zero_p (all_res[i][m])
+			      && (tf->exact
+				  || mpfr_zero_p (all_res[i][rm_tonearest]))
 			      && (all_exc_before[i][m]
 				  & (1U << exc_underflow)) != 0)
 			    must_erange = true;
