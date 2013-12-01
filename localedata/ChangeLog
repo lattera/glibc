@@ -1,3 +1,24 @@
+2013-12-01  Chris Leonard  <cjl@sugarlabs.org>
+
+	* locales/mag_IN: Add lang_name to various locales.
+	* locales/mai_IN: Likewise.
+	* locales/mg_MG: Likewise.
+	* locales/mi_NZ: Likewise.
+	* locales/mk_MK: Likewise.
+	* locales/ml_IN: Likewise.
+	* locales/mn_MN: Likewise.
+	* locales/mni_IN: Likewise.
+	* locales/mr_IN: Likewise.
+	* locales/ms_MY: Likewise.
+	* locales/mt_MT: Likewise.
+	* locales/nb_NO: Likewise.
+	* locales/ne_NP: Likewise.
+	* locales/nhn_MX: Likewise.
+	* locales/nl_AW: Likewise.
+	* locales/nl_BE: Likewise.
+	* locales/nl_NL: Likewise.
+	* locales/nn_NO: Likewise.
+
 2013-11-26  Chris Leonard  <cjl@sugarlabs.org>
 
 	* locales/ka_GE: Add lang_name to various locales.

@@ -203,6 +203,8 @@ country_ab3 "<U004D><U0059><U0053>"
 country_num 458
 % MAL
 country_car    "<U004D><U0041><U004C>"
+% Bahasa Melayu
+lang_name    "<U0042><U0061><U0068><U0061><U0073><U0061><U0020><U004D><U0065><U006C><U0061><U0079><U0075>"
 % ms
 lang_ab      "<U006D><U0073>"
 % msa

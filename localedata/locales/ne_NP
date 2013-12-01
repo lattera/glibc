@@ -197,6 +197,8 @@ country_ab3 "<U004E><U0050><U004C>"
 country_num 524
 % NEP
 country_car    "<U004E><U0045><U0050>"
+% नेपाली
+lang_name    "<U0928><U0947><U092A><U093E><U0932><U0940>"
 % ne
 lang_ab      "<U006E><U0065>"
 % nep

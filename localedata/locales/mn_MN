@@ -255,7 +255,8 @@ country_ab3   "<U004D><U004E><U0047>"
 country_num   496
 country_car   "<U004D><U0047><U004C>"
 country_isbn  99929
-lang_name     "<U004D><U006F><U006E><U0067><U006F><U006C><U0069><U0061><U006E>"
+% Монгол хэл
+lang_name    "<U041C><U043E><U043D><U0433><U043E><U043B><U0020><U0445><U044D><U043B>"
 lang_ab       "<U006D><U006E>"
 lang_term     "<U006D><U006F><U006E>"
 lang_lib      "<U006D><U006F><U006E>"

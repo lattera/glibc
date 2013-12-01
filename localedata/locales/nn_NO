@@ -161,6 +161,8 @@ country_ab3 "<U004E><U004F><U0052>"
 country_num 578
 % N
 country_car    "<U004E>"
+% Nynorsk
+lang_name    "<U004E><U0079><U006E><U006F><U0072><U0073><U006B>"
 % nn
 lang_ab      "<U006E><U006E>"
 % nno

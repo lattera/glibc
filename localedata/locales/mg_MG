@@ -181,6 +181,8 @@ country_ab3 "<U004D><U0044><U0047>"
 country_num 450
 % RM
 country_car  "<U0052><U004D>"
+% Malagasy
+lang_name    "<U004D><U0061><U006C><U0061><U0067><U0061><U0073><U0079>"
 % mg
 lang_ab      "<U006D><U0067>"
 % mlg
