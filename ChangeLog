@@ -1,3 +1,7 @@
+2013-12-02  Ondřej Bílka  <neleai@seznam.cz>
+
+	* manual/llio.texi (Memory-mapped I/O): Add shm_open and shm_close.
+
 2013-12-02  Steve Ellcey  <sellcey@mips.com>
 
 	* benchtests/Makefile (bench): Add sqrt.

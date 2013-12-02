@@ -1471,6 +1471,33 @@ There is no existing mapping in at least part of the given region.
 @end table
 @end deftypefun
 
+@comment sys/mman.h
+@comment POSIX
+@deftypefn Function int shm_open (const char *@var{name}, int @var{oflag}, mode_t @var{mode})
+
+This function returns a file descriptor that can be used to allocate shared
+memory via mmap. Unrelated processes can use same @var{name} to create or
+open existing shared memory objects.
+
+A @var{name} argument specifies the shared memory object to be opened.
+In @theglibc{} it must be a string smaller than @code{NAME_MAX} bytes starting
+with an optional slash but containing no other slashes.
+
+The semantics of @var{oflag} and @var{mode} arguments is same as in @code{open}.
+
+@code{shm_open} returns the file descriptor on success or @math{-1} on error.
+On failure @code{errno} is set.
+@end deftypefn
+
+@deftypefn Function int shm_unlink (const char *@var{name})
+
+This function is inverse of @code{shm_open} and removes the object with
+the given @var{name} previously created by @code{shm_open}.
+
+@code{shm_unlink} returns @math{0} on success or @math{-1} on error.
+On failure @code{errno} is set.
+@end deftypefn
+
 @node Waiting for I/O
 @section Waiting for Input or Output
 @cindex waiting for input or output
