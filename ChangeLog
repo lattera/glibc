@@ -1,6 +1,6 @@
 2013-12-02  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
-        * sysdeps/powerpc/fpu/libm-test-ulps: Update.
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
 
 2013-11-30  Joseph Myers  <joseph@codesourcery.com>
 
