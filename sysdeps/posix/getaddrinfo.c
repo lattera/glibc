@@ -74,10 +74,6 @@ extern int __idna_to_unicode_lzlz (const char *input, char **output,
 #define GAIH_OKIFUNSPEC 0x0100
 #define GAIH_EAI        ~(GAIH_OKIFUNSPEC)
 
-#ifndef UNIX_PATH_MAX
-# define UNIX_PATH_MAX  108
-#endif
-
 struct gaih_service
   {
     const char *name;
@@ -126,14 +122,6 @@ static const struct gaih_typeproto gaih_inet_typeproto[] =
   { SOCK_RAW, 0, GAI_PROTO_PROTOANY|GAI_PROTO_NOSERVICE, true, "raw" },
   { 0, 0, 0, false, "" }
 };
-
-struct gaih
-  {
-    int family;
-    int (*gaih)(const char *name, const struct gaih_service *service,
-		const struct addrinfo *req, struct addrinfo **pai,
-		unsigned int *naddrs);
-  };
 
 static const struct addrinfo default_hints =
   {
