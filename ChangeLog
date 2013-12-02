@@ -1,5 +1,11 @@
 2013-12-02  Pavel Simerda  <psimerda@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c (GAIH_OKIFUNSPEC): Remove macro.
+	(GAIH_EAI): Likewise.
+	(gaih_inet_serv): Don't use GAIH_OKIFUNSPEC.
+	(gaih_inet): Likewise.
+	(getaddrinfo): Don't use GAIH_EAI.
+
 	* sysdeps/posix/getaddrinfo.c (UNIX_PATH_MAX): Remove macro.
 	(struct gaih): Remove definition.
 
