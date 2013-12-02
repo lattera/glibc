@@ -1,3 +1,8 @@
+2013-12-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* nss/nss_files/files-hosts.c (_nss_files_gethostbyname4_r):
+	Use HERRNOP directly.
+
 2013-12-02  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Update.

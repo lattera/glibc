@@ -399,8 +399,8 @@ _nss_files_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
 	  buflen = buflen > pad ? buflen - pad : 0;
 
 	  struct hostent result;
-	  status = internal_getent (&result, buffer, buflen, errnop
-				    H_ERRNO_ARG, AF_UNSPEC, 0);
+	  status = internal_getent (&result, buffer, buflen, errnop,
+				    herrnop, AF_UNSPEC, 0);
 	  if (status != NSS_STATUS_SUCCESS)
 	    break;
 
