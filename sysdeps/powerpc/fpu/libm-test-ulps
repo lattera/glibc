@@ -7,6 +7,30 @@ ldouble: 1
 Test "acos (-0x0.ffffffp0)":
 ildouble: 1
 ldouble: 1
+Test "acos (-0xf.fffffff8p-4)":
+ildouble: 1
+ldouble: 1
+Test "acos (-0xf.fffffp-4)":
+ildouble: 1
+ldouble: 1
+Test "acos (0x1.70ef54646d496892137dfd73f58p-56)":
+ildouble: 1
+ldouble: 1
+Test "acos (0x1.70ef54646d496892137dfd73f6p-56)":
+ildouble: 1
+ldouble: 1
+Test "acos (0x1.70ef54646d496892p-56)":
+ildouble: 1
+ldouble: 1
+Test "acos (0x1.70ef54646d496894p-56)":
+ildouble: 1
+ldouble: 1
+Test "acos (0x1.70ef54646d496p-56)":
+ildouble: 1
+ldouble: 1
+Test "acos (0x1.70ef54646d497p-56)":
+ildouble: 1
+ldouble: 1
 Test "acos (2e-17)":
 ildouble: 1
 ldouble: 1
@@ -20,6 +44,15 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "acos_downward (-0x8p-4)":
+float: 1
+ifloat: 1
+Test "acos_downward (-0xf.fffffffffffffffp-4)":
+ildouble: 2
+ldouble: 2
+Test "acos_downward (-0xf.fffffffffffp-4)":
+ildouble: 2
+ldouble: 2
 Test "acos_downward (-1)":
 float: 1
 ifloat: 1
@@ -33,6 +66,62 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "acos_downward (0x1.70ef54646d496892137dfd73f58p-56)":
+ildouble: 2
+ldouble: 2
+Test "acos_downward (0x1.70ef54646d496892137dfd73f6p-56)":
+ildouble: 2
+ldouble: 2
+Test "acos_downward (0x1.70ef54646d496892p-56)":
+ildouble: 2
+ldouble: 2
+Test "acos_downward (0x1.70ef54646d496894p-56)":
+ildouble: 2
+ldouble: 2
+Test "acos_downward (0x1.70ef54646d496p-56)":
+ildouble: 2
+ldouble: 2
+Test "acos_downward (0x1.70ef54646d497p-56)":
+ildouble: 2
+ldouble: 2
+Test "acos_downward (0x1.70ef54p-56)":
+ildouble: 3
+ldouble: 3
+Test "acos_downward (0x1.70ef56p-56)":
+ildouble: 3
+ldouble: 3
+Test "acos_downward (0x1p-4)":
+ildouble: 1
+ldouble: 1
+Test "acos_downward (0xcp-4)":
+ildouble: 1
+ldouble: 1
+
+# acos_tonearest
+Test "acos_tonearest (-0xf.fffffff8p-4)":
+ildouble: 1
+ldouble: 1
+Test "acos_tonearest (-0xf.fffffp-4)":
+ildouble: 1
+ldouble: 1
+Test "acos_tonearest (0x1.70ef54646d496892137dfd73f58p-56)":
+ildouble: 1
+ldouble: 1
+Test "acos_tonearest (0x1.70ef54646d496892137dfd73f6p-56)":
+ildouble: 1
+ldouble: 1
+Test "acos_tonearest (0x1.70ef54646d496892p-56)":
+ildouble: 1
+ldouble: 1
+Test "acos_tonearest (0x1.70ef54646d496894p-56)":
+ildouble: 1
+ldouble: 1
+Test "acos_tonearest (0x1.70ef54646d496p-56)":
+ildouble: 1
+ldouble: 1
+Test "acos_tonearest (0x1.70ef54646d497p-56)":
+ildouble: 1
+ldouble: 1
 
 # acos_towardzero
 Test "acos_towardzero (-0)":
@@ -43,6 +132,15 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "acos_towardzero (-0x8p-4)":
+float: 1
+ifloat: 1
+Test "acos_towardzero (-0xf.fffffffffffffffp-4)":
+ildouble: 2
+ldouble: 2
+Test "acos_towardzero (-0xf.fffffffffffp-4)":
+ildouble: 2
+ldouble: 2
 Test "acos_towardzero (-1)":
 float: 1
 ifloat: 1
@@ -56,23 +154,89 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
-
-# acos_upward
-Test "acos_upward (-0)":
+Test "acos_towardzero (0x1.70ef54646d496892137dfd73f58p-56)":
 ildouble: 2
 ldouble: 2
+Test "acos_towardzero (0x1.70ef54646d496892137dfd73f6p-56)":
+ildouble: 2
+ldouble: 2
+Test "acos_towardzero (0x1.70ef54646d496892p-56)":
+ildouble: 2
+ldouble: 2
+Test "acos_towardzero (0x1.70ef54646d496894p-56)":
+ildouble: 2
+ldouble: 2
+Test "acos_towardzero (0x1.70ef54646d496p-56)":
+ildouble: 2
+ldouble: 2
+Test "acos_towardzero (0x1.70ef54646d497p-56)":
+ildouble: 2
+ldouble: 2
+Test "acos_towardzero (0x1.70ef54p-56)":
+ildouble: 3
+ldouble: 3
+Test "acos_towardzero (0x1.70ef56p-56)":
+ildouble: 3
+ldouble: 3
+Test "acos_towardzero (0x1p-4)":
+ildouble: 1
+ldouble: 1
+Test "acos_towardzero (0xcp-4)":
+ildouble: 1
+ldouble: 1
+
+# acos_upward
+Test "acos_upward (+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "acos_upward (-0)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "acos_upward (-0x1p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
 Test "acos_upward (-1)":
 ildouble: 2
 ldouble: 2
 Test "acos_upward (0)":
 ildouble: 2
 ldouble: 2
+Test "acos_upward (0x1.70ef54646d496p-56)":
+double: 1
+idouble: 1
+Test "acos_upward (0x1.70ef54646d497p-56)":
+double: 1
+idouble: 1
+Test "acos_upward (0x1.70ef54p-56)":
+double: 1
+idouble: 1
+Test "acos_upward (0x1.70ef56p-56)":
+double: 1
+idouble: 1
+Test "acos_upward (0x1p-4)":
+ildouble: 1
+ldouble: 1
+Test "acos_upward (0xf.fffffp-4)":
+ildouble: 1
+ldouble: 1
 
 # asin
 Test "asin (-0x0.ffffffff8p0)":
 ildouble: 1
 ldouble: 1
 Test "asin (-0x0.ffffffp0)":
+ildouble: 1
+ldouble: 1
+Test "asin (-0xf.fffffff8p-4)":
+ildouble: 1
+ldouble: 1
+Test "asin (-0xf.fffffp-4)":
 ildouble: 1
 ldouble: 1
 Test "asin (0.75)":
@@ -84,6 +248,15 @@ ldouble: 1
 Test "asin (0x0.ffffffp0)":
 ildouble: 1
 ldouble: 1
+Test "asin (0xcp-4)":
+ildouble: 2
+ldouble: 2
+Test "asin (0xf.fffffff8p-4)":
+ildouble: 1
+ldouble: 1
+Test "asin (0xf.fffffp-4)":
+ildouble: 1
+ldouble: 1
 
 # asin_downward
 Test "asin_downward (-0.5)":
@@ -91,6 +264,39 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "asin_downward (-0x1p+0)":
+double: 1
+idouble: 1
+Test "asin_downward (-0x8p-4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "asin_downward (-0xf.fffffff8p-4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "asin_downward (-0xf.ffffffffffff8p-4)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "asin_downward (-0xf.fffffffffffffffp-4)":
+ildouble: 2
+ldouble: 2
+Test "asin_downward (-0xf.fffffffffffp-4)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "asin_downward (-0xf.fffffp-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
 Test "asin_downward (-1.0)":
 ildouble: 1
 ldouble: 1
@@ -99,14 +305,58 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "asin_downward (0x8p-4)":
+float: 1
+ifloat: 1
+Test "asin_downward (0xcp-4)":
+ildouble: 1
+ldouble: 1
+Test "asin_downward (0xf.fffffffffffffffp-4)":
+ildouble: 1
+ldouble: 1
+Test "asin_downward (0xf.fffffffffffp-4)":
+ildouble: 1
+ldouble: 1
+Test "asin_downward (0xf.fffffp-4)":
+ildouble: 1
+ldouble: 1
 Test "asin_downward (1.0)":
 float: 1
 ifloat: 1
+
+# asin_tonearest
+Test "asin_tonearest (-0xf.fffffff8p-4)":
+ildouble: 1
+ldouble: 1
+Test "asin_tonearest (-0xf.fffffp-4)":
+ildouble: 1
+ldouble: 1
+Test "asin_tonearest (0xcp-4)":
+ildouble: 2
+ldouble: 2
+Test "asin_tonearest (0xf.fffffff8p-4)":
+ildouble: 1
+ldouble: 1
+Test "asin_tonearest (0xf.fffffp-4)":
+ildouble: 1
+ldouble: 1
 
 # asin_towardzero
 Test "asin_towardzero (-0.5)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
+Test "asin_towardzero (-0x8p-4)":
+float: 1
+ifloat: 1
+Test "asin_towardzero (-0xf.fffffffffffffffp-4)":
+ildouble: 1
+ldouble: 1
+Test "asin_towardzero (-0xf.fffffffffffp-4)":
+ildouble: 1
+ldouble: 1
+Test "asin_towardzero (-0xf.fffffp-4)":
 ildouble: 1
 ldouble: 1
 Test "asin_towardzero (-1.0)":
@@ -117,14 +367,61 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "asin_towardzero (0x8p-4)":
+float: 1
+ifloat: 1
+Test "asin_towardzero (0xcp-4)":
+ildouble: 1
+ldouble: 1
+Test "asin_towardzero (0xf.fffffffffffffffp-4)":
+ildouble: 1
+ldouble: 1
+Test "asin_towardzero (0xf.fffffffffffp-4)":
+ildouble: 1
+ldouble: 1
+Test "asin_towardzero (0xf.fffffp-4)":
+ildouble: 1
+ldouble: 1
 Test "asin_towardzero (1.0)":
 float: 1
 ifloat: 1
 
 # asin_upward
+Test "asin_upward (-0x8p-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "asin_upward (-0xf.fffffff8p-4)":
+double: 1
+idouble: 1
+Test "asin_upward (-0xf.ffffffffffff8p-4)":
+double: 1
+idouble: 1
+Test "asin_upward (-0xf.fffffffffffp-4)":
+double: 1
+idouble: 1
+Test "asin_upward (-0xf.fffffp-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "asin_upward (-1.0)":
 float: 1
 ifloat: 1
+Test "asin_upward (0x1p+0)":
+double: 1
+idouble: 1
+Test "asin_upward (0xf.fffffffffffffffp-4)":
+ildouble: 2
+ldouble: 2
+Test "asin_upward (0xf.fffffffffffp-4)":
+ildouble: 1
+ldouble: 1
 Test "asin_upward (1.0)":
 ildouble: 1
 ldouble: 1
@@ -156,6 +453,9 @@ ldouble: 1
 
 # atanh
 Test "atanh (0.75)":
+float: 1
+ifloat: 1
+Test "atanh (0xcp-4)":
 float: 1
 ifloat: 1
 
@@ -4503,10 +4803,19 @@ float: 1
 ifloat: 1
 
 # cbrt
+Test "cbrt (-0x1.bp+4)":
+double: 1
+idouble: 1
+Test "cbrt (-0x4.18937p-12)":
+float: 1
+ifloat: 1
 Test "cbrt (-27.0)":
 double: 1
 idouble: 1
 Test "cbrt (0.9921875)":
+double: 1
+idouble: 1
+Test "cbrt (0xf.ep-4)":
 double: 1
 idouble: 1
 
@@ -5188,6 +5497,24 @@ ifloat: 1
 Test "cos (0x1p+127)":
 float: 1
 ifloat: 1
+Test "cos (0x2.182a4705ae6cb08cb7665c1eacp+0)":
+ildouble: 2
+ldouble: 2
+Test "cos (0x2.182a4705ae6cb08cb7665c1eadp+0)":
+ildouble: 2
+ldouble: 2
+Test "cos (0x2.182a4705ae6cb08cp+0)":
+ildouble: 2
+ldouble: 2
+Test "cos (0x2.182a4705ae6cb09p+0)":
+ildouble: 2
+ldouble: 2
+Test "cos (0x7p+0)":
+float: 1
+ifloat: 1
+Test "cos (0x8p+124)":
+float: 1
+ifloat: 1
 Test "cos (16.0)":
 ildouble: 2
 ldouble: 2
@@ -5210,6 +5537,200 @@ idouble: 1
 ifloat: 1
 
 # cos_downward
+Test "cos_downward (0x1.000000cf4a2a2p+0)":
+double: 1
+idouble: 1
+Test "cos_downward (0x1.0000010b239a9p+0)":
+double: 1
+idouble: 1
+Test "cos_downward (0x1.00000162a932bp+0)":
+double: 1
+idouble: 1
+Test "cos_downward (0x1.000002d452a1p+0)":
+double: 1
+idouble: 1
+Test "cos_downward (0x1.000002p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "cos_downward (0x1.000004p+0)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "cos_downward (0x1.000006p+0)":
+float: 1
+ifloat: 1
+Test "cos_downward (0x1.0c1522p+0)":
+float: 1
+ifloat: 1
+Test "cos_downward (0x1.0c152382d7365p+0)":
+double: 1
+idouble: 1
+Test "cos_downward (0x1.0c1524p+0)":
+float: 1
+ifloat: 1
+Test "cos_downward (0x1.921fb4p+0)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "cos_downward (0x1.921fb54442d18468p+0)":
+ildouble: 1
+ldouble: 1
+Test "cos_downward (0x1.921fb54442d18469898cc517018p+0)":
+ildouble: 1
+ldouble: 1
+Test "cos_downward (0x1.921fb54442d18469898cc51702p+0)":
+ildouble: 1
+ldouble: 1
+Test "cos_downward (0x1.921fb54442d1846ap+0)":
+ildouble: 1
+ldouble: 1
+Test "cos_downward (0x1.921fb54442d18p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "cos_downward (0x1.921fb54442d19p+0)":
+ildouble: 2
+ldouble: 2
+Test "cos_downward (0x1.921fb6p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 3
+ldouble: 3
+Test "cos_downward (0x1p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "cos_downward (0x1p+120)":
+float: 2
+ifloat: 2
+ildouble: 2
+ldouble: 2
+Test "cos_downward (0x1p+28)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "cos_downward (0x2.182a44p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "cos_downward (0x2.182a4705ae6cap+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "cos_downward (0x2.182a4705ae6cb08cb7665c1eacp+0)":
+ildouble: 3
+ldouble: 3
+Test "cos_downward (0x2.182a4705ae6cb08cb7665c1eadp+0)":
+ildouble: 3
+ldouble: 3
+Test "cos_downward (0x2.182a4705ae6cb08cp+0)":
+ildouble: 2
+ldouble: 2
+Test "cos_downward (0x2.182a4705ae6cb09p+0)":
+ildouble: 3
+ldouble: 3
+Test "cos_downward (0x2.182a4705ae6ccp+0)":
+ildouble: 1
+ldouble: 1
+Test "cos_downward (0x2.182a48p+0)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "cos_downward (0x2.1e19e0c9bab24p+72)":
+double: 1
+idouble: 1
+Test "cos_downward (0x2.1e19e4p+72)":
+double: 1
+idouble: 1
+Test "cos_downward (0x2.1e19ep+72)":
+double: 1
+idouble: 1
+Test "cos_downward (0x2p+0)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "cos_downward (0x3p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "cos_downward (0x4p+0)":
+ildouble: 1
+ldouble: 1
+Test "cos_downward (0x4p+48)":
+double: 1
+idouble: 1
+Test "cos_downward (0x8p+0)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "cos_downward (0x8p+1020)":
+ildouble: 1
+ldouble: 1
+Test "cos_downward (0x9p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "cos_downward (0xa.217bap+12)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "cos_downward (0xap+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "cos_downward (0xc.d4966d92d1708p-4)":
+double: 1
+idouble: 1
+Test "cos_downward (0xc.d4966d92d171p-4)":
+double: 1
+idouble: 1
+Test "cos_downward (0xc.d4966p-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "cos_downward (0xc.d4967p-4)":
+float: 1
+ifloat: 1
+Test "cos_downward (0xcp-4)":
+double: 1
+idouble: 1
+Test "cos_downward (0xf.ffffcp+124)":
+ildouble: 1
+ldouble: 1
+Test "cos_downward (0xf.ffffffffffff8p+1020)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "cos_downward (0xf.ffffffffffffbffffffffffffcp+1020)":
+ildouble: 1
+ldouble: 1
+Test "cos_downward (0xf.fffffp+124)":
+double: 1
+idouble: 1
 Test "cos_downward (1)":
 float: 1
 ifloat: 1
@@ -5246,11 +5767,148 @@ ildouble: 1
 ldouble: 1
 
 # cos_tonearest
+Test "cos_tonearest (0x1p+120)":
+float: 1
+ifloat: 1
+Test "cos_tonearest (0x2.182a4705ae6cb08cb7665c1eacp+0)":
+ildouble: 2
+ldouble: 2
+Test "cos_tonearest (0x2.182a4705ae6cb08cb7665c1eadp+0)":
+ildouble: 2
+ldouble: 2
+Test "cos_tonearest (0x2.182a4705ae6cb08cp+0)":
+ildouble: 2
+ldouble: 2
+Test "cos_tonearest (0x2.182a4705ae6cb09p+0)":
+ildouble: 2
+ldouble: 2
+Test "cos_tonearest (0x7p+0)":
+float: 1
+ifloat: 1
+Test "cos_tonearest (0x8p+124)":
+float: 1
+ifloat: 1
 Test "cos_tonearest (7)":
 float: 1
 ifloat: 1
 
 # cos_towardzero
+Test "cos_towardzero (0x1.000000cf4a2a2p+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x1.0000010b239a9p+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x1.00000162a932bp+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x1.000002d452a1p+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x1.000002p+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x1.000004p+0)":
+ildouble: 1
+ldouble: 1
+Test "cos_towardzero (0x1.0c152382d7365p+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x1.921fb4p+0)":
+ildouble: 3
+ldouble: 3
+Test "cos_towardzero (0x1.921fb54442d18p+0)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "cos_towardzero (0x1.921fb54442d19p+0)":
+double: 1
+idouble: 1
+ildouble: 3
+ldouble: 3
+Test "cos_towardzero (0x1.921fb6p+0)":
+ildouble: 2
+ldouble: 2
+Test "cos_towardzero (0x1p+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x1p+120)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "cos_towardzero (0x2.182a4705ae6cb08cb7665c1eacp+0)":
+ildouble: 1
+ldouble: 1
+Test "cos_towardzero (0x2.182a4705ae6cb08cb7665c1eadp+0)":
+ildouble: 1
+ldouble: 1
+Test "cos_towardzero (0x2.182a4705ae6cb08cp+0)":
+ildouble: 2
+ldouble: 2
+Test "cos_towardzero (0x2.182a4705ae6cb09p+0)":
+ildouble: 1
+ldouble: 1
+Test "cos_towardzero (0x2.182a4705ae6ccp+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x2.182a48p+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x2.1e19e0c9bab24p+72)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x2.1e19e4p+72)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x2.1e19ep+72)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x2p+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x4p+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x4p+48)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x5p+0)":
+ildouble: 1
+ldouble: 1
+Test "cos_towardzero (0x8p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "cos_towardzero (0x8p+1020)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0xa.217bap+12)":
+ildouble: 1
+ldouble: 1
+Test "cos_towardzero (0xap+0)":
+ildouble: 1
+ldouble: 1
+Test "cos_towardzero (0xc.d4966d92d1708p-4)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0xc.d4966d92d171p-4)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0xc.d4966p-4)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0xcp-4)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0xf.ffffcp+124)":
+ildouble: 1
+ldouble: 1
+Test "cos_towardzero (0xf.fffffp+124)":
+double: 1
+idouble: 1
 Test "cos_towardzero (1)":
 ildouble: 1
 ldouble: 1
@@ -5279,6 +5937,195 @@ ildouble: 2
 ldouble: 2
 
 # cos_upward
+Test "cos_upward (-0x2p+64)":
+double: 1
+idouble: 1
+Test "cos_upward (0x1.000002p+0)":
+float: 1
+ifloat: 1
+Test "cos_upward (0x1.000004p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "cos_upward (0x1.000005bc7d86dp+0)":
+double: 1
+idouble: 1
+Test "cos_upward (0x1.000006p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "cos_upward (0x1.0c1522p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "cos_upward (0x1.0c152382d7366p+0)":
+double: 1
+idouble: 1
+Test "cos_upward (0x1.0c1524p+0)":
+double: 1
+idouble: 1
+Test "cos_upward (0x1.921fb4p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 4
+ldouble: 4
+Test "cos_upward (0x1.921fb54442d18468p+0)":
+ildouble: 1
+ldouble: 1
+Test "cos_upward (0x1.921fb54442d1846ap+0)":
+ildouble: 1
+ldouble: 1
+Test "cos_upward (0x1.921fb54442d18p+0)":
+ildouble: 3
+ldouble: 3
+Test "cos_upward (0x1.921fb54442d19p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "cos_upward (0x1.921fb6p+0)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "cos_upward (0x1p+0)":
+float: 1
+ifloat: 1
+Test "cos_upward (0x1p+120)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "cos_upward (0x1p+28)":
+ildouble: 1
+ldouble: 1
+Test "cos_upward (0x2.182a44p+0)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "cos_upward (0x2.182a4705ae6cap+0)":
+ildouble: 1
+ldouble: 1
+Test "cos_upward (0x2.182a4705ae6cb08cb7665c1eacp+0)":
+ildouble: 2
+ldouble: 2
+Test "cos_upward (0x2.182a4705ae6cb08cb7665c1eadp+0)":
+ildouble: 2
+ldouble: 2
+Test "cos_upward (0x2.182a4705ae6cb08cp+0)":
+ildouble: 3
+ldouble: 3
+Test "cos_upward (0x2.182a4705ae6cb09p+0)":
+ildouble: 2
+ldouble: 2
+Test "cos_upward (0x2.182a4705ae6ccp+0)":
+double: 1
+idouble: 1
+Test "cos_upward (0x2.182a48p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "cos_upward (0x2.1e19e4p+72)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "cos_upward (0x2p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "cos_upward (0x2p+64)":
+double: 1
+idouble: 1
+Test "cos_upward (0x3p+0)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "cos_upward (0x4p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "cos_upward (0x5p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "cos_upward (0x6p+0)":
+double: 1
+idouble: 1
+Test "cos_upward (0x7p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "cos_upward (0x8p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "cos_upward (0x8p+1020)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "cos_upward (0x8p+124)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "cos_upward (0x9p+0)":
+float: 2
+ifloat: 2
+ildouble: 1
+ldouble: 1
+Test "cos_upward (0xa.217bap+12)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "cos_upward (0xap+0)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "cos_upward (0xc.d4966d92d171p-4)":
+ildouble: 1
+ldouble: 1
+Test "cos_upward (0xc.d4966p-4)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "cos_upward (0xc.d4967p-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "cos_upward (0xf.ffffcp+124)":
+double: 1
+idouble: 1
+Test "cos_upward (0xf.ffffffffffff8p+1020)":
+ildouble: 1
+ldouble: 1
+Test "cos_upward (0xf.ffffffffffffbffffffffffffcp+1020)":
+ildouble: 1
+ldouble: 1
 Test "cos_upward (1)":
 ildouble: 2
 ldouble: 2
@@ -5305,7 +6152,53 @@ Test "cos_upward (9)":
 float: 2
 ifloat: 2
 
+# cosh
+Test "cosh (-0x2.c5e3acp+8)":
+double: 1
+idouble: 1
+Test "cosh (0x1.8p+4)":
+ildouble: 1
+ldouble: 1
+Test "cosh (0x2.c5e3acp+8)":
+double: 1
+idouble: 1
+
 # cosh_downward
+Test "cosh_downward (-0x2.c5e3acd2922a6p+8)":
+ildouble: 1
+ldouble: 1
+Test "cosh_downward (-0x2.c5e3acp+8)":
+ildouble: 2
+ldouble: 2
+Test "cosh_downward (-0x2.c5e3bp+8)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "cosh_downward (0x1.6p+4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "cosh_downward (0x1.7p+4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "cosh_downward (0x2.c5e3acd2922a6p+8)":
+ildouble: 1
+ldouble: 1
+Test "cosh_downward (0x2.c5e3acp+8)":
+ildouble: 2
+ldouble: 2
+Test "cosh_downward (0x2.c5e3bp+8)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "cosh_downward (0xcp-4)":
+ildouble: 2
+ldouble: 2
 Test "cosh_downward (22)":
 float: 1
 ifloat: 1
@@ -5323,11 +6216,55 @@ ildouble: 1
 ldouble: 1
 
 # cosh_tonearest
+Test "cosh_tonearest (-0x2.c5e3acp+8)":
+double: 1
+idouble: 1
+Test "cosh_tonearest (0x1.8p+4)":
+ildouble: 1
+ldouble: 1
+Test "cosh_tonearest (0x2.c5e3acp+8)":
+double: 1
+idouble: 1
 Test "cosh_tonearest (24)":
 ildouble: 1
 ldouble: 1
 
 # cosh_towardzero
+Test "cosh_towardzero (-0x2.c5e3acd2922a6p+8)":
+ildouble: 1
+ldouble: 1
+Test "cosh_towardzero (-0x2.c5e3acp+8)":
+ildouble: 2
+ldouble: 2
+Test "cosh_towardzero (-0x2.c5e3bp+8)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "cosh_towardzero (0x1.6p+4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "cosh_towardzero (0x1.7p+4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "cosh_towardzero (0x2.c5e3acd2922a6p+8)":
+ildouble: 1
+ldouble: 1
+Test "cosh_towardzero (0x2.c5e3acp+8)":
+ildouble: 2
+ldouble: 2
+Test "cosh_towardzero (0x2.c5e3bp+8)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "cosh_towardzero (0xcp-4)":
+ildouble: 2
+ldouble: 2
 Test "cosh_towardzero (22)":
 float: 1
 ifloat: 1
@@ -5345,6 +6282,39 @@ ildouble: 1
 ldouble: 1
 
 # cosh_upward
+Test "cosh_upward (-0x2.c5e3acd2922a6p+8)":
+ildouble: 1
+ldouble: 1
+Test "cosh_upward (-0x2.c5e3acp+8)":
+ildouble: 1
+ldouble: 1
+Test "cosh_upward (-0x2.c5e3bp+8)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "cosh_upward (0x1.6p+4)":
+ildouble: 1
+ldouble: 1
+Test "cosh_upward (0x1.7p+4)":
+ildouble: 1
+ldouble: 1
+Test "cosh_upward (0x1.8p+4)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "cosh_upward (0x2.c5e3acd2922a6p+8)":
+ildouble: 1
+ldouble: 1
+Test "cosh_upward (0x2.c5e3acp+8)":
+ildouble: 1
+ldouble: 1
+Test "cosh_upward (0x2.c5e3bp+8)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
 Test "cosh_upward (22)":
 ildouble: 2
 ldouble: 2
@@ -6532,6 +7502,171 @@ Test "sqrt (2)":
 double: 1
 idouble: 1
 
+# sqrt_downward
+Test "sqrt_downward (0x1.33b43b08p-1016)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_downward (0x4.000000000000cp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_downward (0x4.000000000001cp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_downward (0x4.000000000002cp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_downward (0x4.000000000003cp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_downward (0x4.000000000004cp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_downward (0x4.000000000005cp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_downward (0x4.000000000006cp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_downward (0x4.000000000007cp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_downward (0x4.000000000008cp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_downward (0x4.000000000009cp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_downward (0x4.00000000000acp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_downward (0x4.00000000000bcp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_downward (0x4.00000000000ccp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_downward (0x4.00000000000dcp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_downward (0x5.c59ef8p+4)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_downward (0x5.c59efp+4)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_downward (0x5.f6ba5a510bf98p+4)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_downward (0x5.fe1118p+4)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_downward (0x6.379124f88b718p+4)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_downward (0x6.4920a685e8a2p+4)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_downward (0x6.4920a8p+4)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_downward (0x6.54d82p+4)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_downward (0xd.0ac284p-1020)":
+ildouble: 1
+ldouble: 1
+
+# sqrt_towardzero
+Test "sqrt_towardzero (0x1.33b43b08p-1016)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0x4.000000000000cp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0x4.000000000001cp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0x4.000000000002cp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0x4.000000000003cp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0x4.000000000004cp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0x4.000000000005cp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0x4.000000000006cp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0x4.000000000007cp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0x4.000000000008cp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0x4.000000000009cp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0x4.00000000000acp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0x4.00000000000bcp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0x4.00000000000ccp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0x4.00000000000dcp-1024)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0x5.c59ef8p+4)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0x5.c59efp+4)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0x5.f6ba5a510bf98p+4)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0x5.fe1118p+4)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0x6.379124f88b718p+4)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0x6.4920a685e8a2p+4)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0x6.4920a8p+4)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0x6.54d82p+4)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0xd.0ac284p-1020)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0xf.ffffffffffff8p+1020)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_towardzero (0xf.ffffffffffff8p-4)":
+ildouble: 1
+ldouble: 1
+
+# sqrt_upward
+Test "sqrt_upward (0x5.f6ba6p+4)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_upward (0x6.16fb78p+4)":
+ildouble: 1
+ldouble: 1
+Test "sqrt_upward (0x6.1ce128p+4)":
+ildouble: 1
+ldouble: 1
+
 # tan
 Test "tan (-0xc.908p-4)":
 ildouble: 2
@@ -7425,8 +8560,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 3
+ldouble: 3
 
 Function: "acos_tonearest":
 ildouble: 1
@@ -7437,10 +8572,12 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 3
+ldouble: 3
 
 Function: "acos_upward":
+double: 1
+idouble: 1
 ildouble: 2
 ldouble: 2
 
@@ -7457,12 +8594,12 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "asin_tonearest":
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "asin_towardzero":
 double: 1
@@ -7473,10 +8610,12 @@ ildouble: 1
 ldouble: 1
 
 Function: "asin_upward":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "asinh":
 ildouble: 1
@@ -7557,8 +8696,6 @@ ldouble: 1
 Function: Real part of "catan":
 float: 4
 ifloat: 4
-ildouble: 1
-ldouble: 1
 
 Function: Imaginary part of "catan":
 double: 1
@@ -7579,14 +8716,12 @@ ldouble: 1
 Function: Imaginary part of "catanh":
 float: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
 
 Function: "cbrt":
 double: 1
+float: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
+ifloat: 1
 
 Function: Real part of "ccos":
 double: 1
@@ -7677,50 +8812,66 @@ ildouble: 2
 ldouble: 2
 
 Function: "cos_downward":
-float: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 3
+ldouble: 3
 
 Function: "cos_tonearest":
 float: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
-
-Function: "cos_towardzero":
-float: 1
-ifloat: 1
 ildouble: 2
 ldouble: 2
 
+Function: "cos_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 3
+ldouble: 3
+
 Function: "cos_upward":
+double: 1
 float: 2
+idouble: 1
 ifloat: 2
-ildouble: 1
-ldouble: 1
+ildouble: 4
+ldouble: 4
 
 Function: "cosh":
+double: 1
+idouble: 1
 ildouble: 1
 ldouble: 1
 
 Function: "cosh_downward":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "cosh_tonearest":
+double: 1
+idouble: 1
 ildouble: 1
 ldouble: 1
 
 Function: "cosh_towardzero":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "cosh_upward":
+double: 1
+idouble: 1
 ildouble: 2
 ldouble: 2
 
@@ -7991,8 +9142,6 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
-ildouble: 3
-ldouble: 3
 
 Function: "hypot":
 double: 1
@@ -8031,8 +9180,6 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
-ildouble: 3
-ldouble: 3
 
 Function: "log":
 ildouble: 1
@@ -8149,6 +9296,24 @@ ldouble: 1
 Function: "sqrt":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
+
+Function: "sqrt_downward":
+ildouble: 1
+ldouble: 1
+
+Function: "sqrt_tonearest":
+ildouble: 1
+ldouble: 1
+
+Function: "sqrt_towardzero":
+ildouble: 1
+ldouble: 1
+
+Function: "sqrt_upward":
+ildouble: 1
+ldouble: 1
 
 Function: "tan":
 double: 1
