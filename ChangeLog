@@ -1,3 +1,9 @@
+2013-12-02  Steve Ellcey  <sellcey@mips.com>
+
+	* benchtests/Makefile (bench): Add sqrt.
+	(LDLIBS-bench-sqrt): New.
+	* benchtests/sqrt-input: New.
+
 2013-12-02  Pavel Simerda  <psimerda@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (GAIH_OKIFUNSPEC): Remove macro.
