@@ -203,22 +203,18 @@ exp2 -0
 exp2 10
 exp2 -1
 exp2 1e6
-# Bug 16283: errno may not be set on underflow.
-exp2 -1e6 missing-errno
+exp2 -1e6
 exp2 max
-# Bug 16283: errno may not be set on underflow.
-exp2 -max missing-errno
+exp2 -max
 exp2 0.75
 exp2 100.5
 exp2 127
 exp2 -149
 exp2 1000.25
 exp2 1023
-# Bug 16283: errno may not be set on underflow.
-exp2 -1074 missing-errno
+exp2 -1074
 exp2 16383
-# Bug 16283: errno may not be set on underflow.
-exp2 -16400 missing-errno
+exp2 -16400
 
 expm1 0
 expm1 -0

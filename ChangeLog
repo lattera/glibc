@@ -1,3 +1,13 @@
+2013-12-03  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16283]
+	* math/w_exp2.c (__exp2): Handle a zero result as underflow.
+	* math/w_exp2f.c (__exp2f): Likewise.
+	* math/w_exp2l.c (__exp2l): Likewise.
+	* math/auto-libm-test-in: Do not allow missing errno on exp2
+	underflow.
+	* math/auto-libm-test-out: Regenerated.
+
 2013-12-03  Ondřej Bílka  <neleai@seznam.cz>
 
 	[BZ #16274]
