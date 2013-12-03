@@ -1,3 +1,11 @@
+2013-12-03  Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ #16274]
+	* sysdeps/unix/sysv/linux/shm_open.c (shm_open): Correctly
+	handle filename validation.
+	* rt/tst-shm.c (do_test): Do not skip a test when shm_open fails.
+	(do_open): Delete.
+
 2013-12-03  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #6786]

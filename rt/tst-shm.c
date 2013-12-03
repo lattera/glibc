@@ -34,34 +34,17 @@
 /* We want to see output immediately.  */
 #define STDOUT_UNBUFFERED
 
-
-static int
-do_open (void)
-{
-  int fd;
-
-  /* Create the shared memory object.  */
-  fd = shm_open ("/shm-test", O_RDWR, 0600);
-  if (fd == -1)
-    {
-      /* We don't regard this as a bug.  Simply don't run the test.  It could
-	 means there is no such implementation or the object is already in
-	 use in which case we don't want to disturb.  */
-      perror ("failed to open shared memory object: shm_open");
-      return -1;
-    }
-
-  return fd;
-}
-
-
 static void
 worker (int write_now)
 {
   struct timespec ts;
   struct stat64 st;
   int i;
-  int fd = do_open ();
+  int fd = shm_open ("/glibc-shm-test", O_RDWR, 0600);
+
+  if (fd == -1)
+    error (EXIT_FAILURE, 0, "failed to open shared memory object: shm_open");
+
   char *mem;
 
   if (fd == -1)
@@ -143,14 +126,17 @@ do_test (void)
 
 
   /* Create the shared memory object.  */
-  fd = shm_open ("/shm-test", O_RDWR | O_CREAT | O_TRUNC | O_EXCL, 0600);
+  fd = shm_open ("/glibc-shm-test", O_RDWR | O_CREAT | O_TRUNC | O_EXCL, 0600);
   if (fd == -1)
     {
-      /* We don't regard this as a bug.  Simply don't run the test.  It could
-	 means there is no such implementation or the object is already in
-	 use in which case we don't want to disturb.  */
-      perror ("failed to create a shared memory object: shm_open");
-      return 0;
+      /* If shm_open is unimplemented we skip the test.  */
+      if (errno == ENOSYS)
+        {
+	  perror ("shm_open unimplemented.  Test skipped.");
+          return 0;
+        }
+      else
+        error (EXIT_FAILURE, 0, "failed to create shared memory object: shm_open");
     }
 
   /* Size the object.  We make it 4000 bytes long.  */
@@ -160,18 +146,18 @@ do_test (void)
          shared memory itself.  */
       perror ("failed to size of shared memory object: ftruncate");
       close (fd);
-      shm_unlink ("/shm-test");
+      shm_unlink ("/glibc-shm-test");
       return 0;
     }
 
   if (fstat64 (fd, &st) == -1)
     {
-      shm_unlink ("/shm-test");
+      shm_unlink ("/glibc-shm-test");
       error (EXIT_FAILURE, 0, "initial stat failed");
     }
   if (st.st_size != 4000)
     {
-      shm_unlink ("/shm-test");
+      shm_unlink ("/glibc-shm-test");
       error (EXIT_FAILURE, 0, "initial size not correct");
     }
 
@@ -184,7 +170,7 @@ do_test (void)
       /* Couldn't create a second process.  */
       perror ("fork");
       close (fd);
-      shm_unlink ("/shm-test");
+      shm_unlink ("/glibc-shm-test");
       return 0;
     }
 
@@ -199,7 +185,7 @@ do_test (void)
       kill (pid1, SIGTERM);
       waitpid (pid1, &ignore, 0);
       close (fd);
-      shm_unlink ("/shm-test");
+      shm_unlink ("/glibc-shm-test");
       return 0;
     }
 
@@ -208,14 +194,14 @@ do_test (void)
   waitpid (pid2, &status2, 0);
 
   /* Now we can unlink the shared object.  */
-  shm_unlink ("/shm-test");
+  shm_unlink ("/glibc-shm-test");
 
   return (!WIFEXITED (status1) || WEXITSTATUS (status1) != 0
 	  || !WIFEXITED (status2) || WEXITSTATUS (status2) != 0);
 }
 #define TEST_FUNCTION do_test ()
 
-#define CLEANUP_HANDLER shm_unlink ("/shm-test");
+#define CLEANUP_HANDLER shm_unlink ("/glibc-shm-test");
 
 
 #include "../test-skeleton.c"

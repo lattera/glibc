@@ -151,7 +151,7 @@ shm_open (const char *name, int oflag, mode_t mode)
   namelen = strlen (name);
 
   /* Validate the filename.  */
-  if (name[0] == '\0' || namelen > NAME_MAX || strchr (name, '/') == NULL)
+  if (name[0] == '\0' || namelen > NAME_MAX || strchr (name, '/') != NULL)
     {
       __set_errno (EINVAL);
       return -1;
@@ -241,7 +241,7 @@ shm_unlink (const char *name)
   namelen = strlen (name);
 
   /* Validate the filename.  */
-  if (name[0] == '\0' || namelen > NAME_MAX || strchr (name, '/') == NULL)
+  if (name[0] == '\0' || namelen > NAME_MAX || strchr (name, '/') != NULL)
     {
       __set_errno (ENOENT);
       return -1;
