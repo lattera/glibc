@@ -1,5 +1,6 @@
 2013-12-03  Aurelien Jarno  <aurelien@aurel32.net>
 
+	[BZ #16289]
 	* locale/loadarchive.c (_nl_load_locale_from_archive): Avoid
 	division by 0.
 
