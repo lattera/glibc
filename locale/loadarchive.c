@@ -274,6 +274,10 @@ _nl_load_locale_from_archive (int category, const char **namep)
   namehashtab = (struct namehashent *) ((char *) head
 					+ head->namehash_offset);
 
+  /* Avoid division by 0 if the file is corrupted.  */
+  if (__glibc_unlikely (head->namehash_size == 0))
+    goto close_and_out;
+
   idx = hval % head->namehash_size;
   incr = 1 + hval % (head->namehash_size - 2);
 
