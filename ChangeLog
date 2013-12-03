@@ -1,3 +1,14 @@
+2013-12-03  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #16195]
+	* include/stap-probe.h [!USE_STAP_PROBE && !__ASSEMBLER__]
+	(LIBC_PROBE): Change definition to call STAP_PROBE* macros.
+	(STAP_PROBE0): New macro.
+	(STAP_PROBE1): Likewise.
+	(STAP_PROBE2): Likewise.
+	(STAP_PROBE3): Likewise.
+	(STAP_PROBE4): Likewise.
+
 2013-12-02  Ondřej Bílka  <neleai@seznam.cz>
 
 	* manual/llio.texi (Memory-mapped I/O): Add shm_open and shm_close.
