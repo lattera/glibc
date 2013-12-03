@@ -7714,23 +7714,11 @@ ctanh_test_upward (void)
 
 static const struct test_f_f_data erf_test_data[] =
   {
-    TEST_f_f (erf, 0, 0),
-    TEST_f_f (erf, minus_zero, minus_zero),
     TEST_f_f (erf, plus_infty, 1),
     TEST_f_f (erf, minus_infty, -1),
     TEST_f_f (erf, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
 
-    TEST_f_f (erf, 0.125L, 0.140316204801333817393029446521623398L),
-    TEST_f_f (erf, 0.75L, 0.711155633653515131598937834591410777L),
-    TEST_f_f (erf, 1.25L, 0.922900128256458230136523481197281140L),
-    TEST_f_f (erf, 2.0L, 0.995322265018952734162069256367252929L),
-    TEST_f_f (erf, 4.125L, 0.999999994576599200434933994687765914L),
-    TEST_f_f (erf, 27.0L, 1.0L),
-    TEST_f_f (erf, -27.0L, -1.0L),
-#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 54
-    /* The input is not exactly representable as a double.  */
-    TEST_f_f (erf, -0x1.fffffffffffff8p-2L, -0.5204998778130465132916303345518417673509L),
-#endif
+    AUTO_TESTS_f_f (erf, tonearest),
   };
 
 static void
@@ -7746,31 +7734,9 @@ static const struct test_f_f_data erfc_test_data[] =
   {
     TEST_f_f (erfc, plus_infty, 0.0),
     TEST_f_f (erfc, minus_infty, 2.0),
-    TEST_f_f (erfc, 0.0, 1.0),
-    TEST_f_f (erfc, minus_zero, 1.0),
     TEST_f_f (erfc, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
 
-    TEST_f_f (erfc, 0.125L, 0.859683795198666182606970553478376602L),
-    TEST_f_f (erfc, 0.75L, 0.288844366346484868401062165408589223L),
-    TEST_f_f (erfc, 1.25L, 0.0770998717435417698634765188027188596L),
-    TEST_f_f (erfc, 2.0L, 0.00467773498104726583793074363274707139L),
-    TEST_f_f (erfc, 0x1.f7303cp+1L, 2.705500297238986897105236321218861842255e-8L),
-    TEST_f_f (erfc, 4.125L, 0.542340079956506600531223408575531062e-8L),
-    TEST_f_f (erfc, 0x1.ffa002p+2L, 1.233585992097580296336099501489175967033e-29L),
-    TEST_f_f (erfc, 0x1.ffffc8p+2L, 1.122671365033056305522366683719541099329e-29L),
-#ifdef TEST_LDOUBLE
-# if LDBL_MANT_DIG >= 54
-    /* The input is not exactly representable as a double.  */
-    TEST_f_f (erfc, -0x1.fffffffffffff8p-2L, 1.52049987781304651329163033455184176735L),
-# endif
-    /* The result can only be represented in long double.  */
-# if LDBL_MIN_10_EXP < -319
-    TEST_f_f (erfc, 27.0L, 0.523704892378925568501606768284954709e-318L),
-# endif
-# if LDBL_MANT_DIG >= 106
-    TEST_f_f (erfc, 0x1.ffff56789abcdef0123456789a8p+2L, 1.123161416304655390092138725253789378459e-29L),
-# endif
-#endif
+    AUTO_TESTS_f_f (erfc, tonearest),
   };
 
 static void
@@ -7784,34 +7750,11 @@ erfc_test (void)
 
 static const struct test_f_f_data exp_test_data[] =
   {
-    TEST_f_f (exp, 0, 1),
-    TEST_f_f (exp, minus_zero, 1),
-
     TEST_f_f (exp, plus_infty, plus_infty, NO_TEST_INLINE),
     TEST_f_f (exp, minus_infty, 0, NO_TEST_INLINE),
     TEST_f_f (exp, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
-    TEST_f_f (exp, 1, M_El),
 
-    TEST_f_f (exp, 2, M_E2l),
-    TEST_f_f (exp, 3, M_E3l),
-    TEST_f_f (exp, 0.75L, 2.11700001661267466854536981983709561L),
-    TEST_f_f (exp, 50.0L, 5184705528587072464087.45332293348538L),
-    TEST_f_f (exp, 88.72269439697265625L, 3.40233126623160774937554134772290447915e38L),
-#ifndef TEST_FLOAT
-    TEST_f_f (exp, 709.75L, 1.739836873264160557698252711673830393864768e+308L),
-#endif
-#if defined TEST_LDOUBLE && __LDBL_MAX_EXP__ > 1024
-    /* The result can only be represented in sane long double.  */
-    TEST_f_f (exp, 1000.0L, 0.197007111401704699388887935224332313e435L),
-#endif
-
-#if !(defined TEST_LDOUBLE && LDBL_MAX_EXP > 1024)
-    TEST_f_f (exp, 710, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
-    TEST_f_f (exp, -1234, plus_zero, UNDERFLOW_EXCEPTION),
-#endif
-    TEST_f_f (exp, 1e5, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
-    TEST_f_f (exp, max_value, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
-    TEST_f_f (exp, -max_value, 0, UNDERFLOW_EXCEPTION),
+    AUTO_TESTS_f_f (exp, tonearest),
   };
 
 static void
@@ -7825,9 +7768,7 @@ exp_test (void)
 
 static const struct test_f_f_data exp_tonearest_test_data[] =
   {
-    TEST_f_f (exp, 1, M_El),
-    TEST_f_f (exp, 2, M_E2l),
-    TEST_f_f (exp, 3, M_E3l),
+    AUTO_TESTS_f_f (exp, tonearest),
   };
 
 static void
@@ -7841,9 +7782,7 @@ exp_test_tonearest (void)
 
 static const struct test_f_f_data exp_towardzero_test_data[] =
   {
-    TEST_f_f (exp, 1, M_El),
-    TEST_f_f (exp, 2, M_E2l),
-    TEST_f_f (exp, 3, M_E3l),
+    AUTO_TESTS_f_f (exp, towardzero),
   };
 
 static void
@@ -7857,9 +7796,7 @@ exp_test_towardzero (void)
 
 static const struct test_f_f_data exp_downward_test_data[] =
   {
-    TEST_f_f (exp, 1, M_El),
-    TEST_f_f (exp, 2, M_E2l),
-    TEST_f_f (exp, 3, M_E3l),
+    AUTO_TESTS_f_f (exp, downward),
   };
 
 static void
@@ -7873,9 +7810,7 @@ exp_test_downward (void)
 
 static const struct test_f_f_data exp_upward_test_data[] =
   {
-    TEST_f_f (exp, 1, M_El),
-    TEST_f_f (exp, 2, M_E2l),
-    TEST_f_f (exp, 3, M_E3l),
+    AUTO_TESTS_f_f (exp, upward),
   };
 
 static void
@@ -7889,31 +7824,11 @@ exp_test_upward (void)
 
 static const struct test_f_f_data exp10_test_data[] =
   {
-    TEST_f_f (exp10, 0, 1),
-    TEST_f_f (exp10, minus_zero, 1),
-
     TEST_f_f (exp10, plus_infty, plus_infty),
     TEST_f_f (exp10, minus_infty, 0),
     TEST_f_f (exp10, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
-    TEST_f_f (exp10, 3, 1000),
-    TEST_f_f (exp10, -1, 0.1L),
-    TEST_f_f (exp10, 36, 1.0e36L),
-    TEST_f_f (exp10, -36, 1.0e-36L),
-#ifndef TEST_FLOAT
-    TEST_f_f (exp10, 305, 1.0e305L),
-    TEST_f_f (exp10, -305, 1.0e-305L, UNDERFLOW_EXCEPTION_LDOUBLE_IBM),
-#endif
-#if defined TEST_LDOUBLE && LDBL_MAX_10_EXP >= 4932
-    TEST_f_f (exp10, 4932, 1.0e4932L),
-    TEST_f_f (exp10, -4932, 1.0e-4932L, UNDERFLOW_EXCEPTION),
-#endif
-    TEST_f_f (exp10, 1e5, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
-    TEST_f_f (exp10, -1e5, 0, UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
-    TEST_f_f (exp10, 1e6, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
-    TEST_f_f (exp10, -1e6, 0, UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
-    TEST_f_f (exp10, max_value, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
-    TEST_f_f (exp10, -max_value, 0, UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
-    TEST_f_f (exp10, 0.75L, 5.62341325190349080394951039776481231L),
+
+    AUTO_TESTS_f_f (exp10, tonearest),
   };
 
 static void
@@ -7936,34 +7851,11 @@ pow10_test (void)
 
 static const struct test_f_f_data exp2_test_data[] =
   {
-    TEST_f_f (exp2, 0, 1),
-    TEST_f_f (exp2, minus_zero, 1),
     TEST_f_f (exp2, plus_infty, plus_infty),
     TEST_f_f (exp2, minus_infty, 0),
     TEST_f_f (exp2, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
 
-    TEST_f_f (exp2, 10, 1024),
-    TEST_f_f (exp2, -1, 0.5),
-    TEST_f_f (exp2, 1e6, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
-    TEST_f_f (exp2, -1e6, 0, UNDERFLOW_EXCEPTION),
-    TEST_f_f (exp2, max_value, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
-    TEST_f_f (exp2, -max_value, 0, UNDERFLOW_EXCEPTION),
-    TEST_f_f (exp2, 0.75L, 1.68179283050742908606225095246642979L),
-
-    TEST_f_f (exp2, 100.5, 1.792728671193156477399422023278661496394e+30L),
-    TEST_f_f (exp2, 127, 0x1p127),
-    TEST_f_f (exp2, -149, 0x1p-149),
-
-#ifndef TEST_FLOAT
-    TEST_f_f (exp2, 1000.25, 1.274245659452564874772384918171765416737e+301L),
-    TEST_f_f (exp2, 1023, 0x1p1023),
-    TEST_f_f (exp2, -1074, 0x1p-1074),
-#endif
-
-#if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
-    TEST_f_f (exp2, 16383, 0x1p16383L),
-    TEST_f_f (exp2, -16400, 0x1p-16400L),
-#endif
+    AUTO_TESTS_f_f (exp2, tonearest),
   };
 
 static void
@@ -7977,51 +7869,11 @@ exp2_test (void)
 
 static const struct test_f_f_data expm1_test_data[] =
   {
-    TEST_f_f (expm1, 0, 0),
-    TEST_f_f (expm1, minus_zero, minus_zero),
-
     TEST_f_f (expm1, plus_infty, plus_infty, NO_TEST_INLINE),
     TEST_f_f (expm1, minus_infty, -1, NO_TEST_INLINE),
     TEST_f_f (expm1, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
 
-    TEST_f_f (expm1, 1, M_El - 1.0),
-    TEST_f_f (expm1, 0.75L, 1.11700001661267466854536981983709561L),
-
-    TEST_f_f (expm1, 50.0L, 5.1847055285870724640864533229334853848275e+21L),
-
-#ifndef TEST_FLOAT
-    TEST_f_f (expm1, 127.0L, 1.4302079958348104463583671072905261080748e+55L),
-    TEST_f_f (expm1, 500.0L, 1.4035922178528374107397703328409120821806e+217L),
-#endif
-
-#if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
-    TEST_f_f (expm1, 11356.25L, 9.05128237311923300051376115753226014206e+4931L),
-#endif
-
-    TEST_f_f (expm1, -10.0, -0.9999546000702375151484644084844394493898L),
-    TEST_f_f (expm1, -16.0, -0.9999998874648252807408854862248209398728L),
-    TEST_f_f (expm1, -17.0, -0.9999999586006228121483334034897228104472L),
-    TEST_f_f (expm1, -18.0, -0.9999999847700202552873715638633707664826L),
-    TEST_f_f (expm1, -36.0, -0.9999999999999997680477169756430611687736L),
-    TEST_f_f (expm1, -37.0, -0.9999999999999999146695237425593420572195L),
-    TEST_f_f (expm1, -38.0, -0.9999999999999999686086720795197037129104L),
-    TEST_f_f (expm1, -44.0, -0.9999999999999999999221886775886620348429L),
-    TEST_f_f (expm1, -45.0, -0.9999999999999999999713748141945060635553L),
-    TEST_f_f (expm1, -46.0, -0.9999999999999999999894693826424461876212L),
-    TEST_f_f (expm1, -73.0, -0.9999999999999999999999999999999802074012L),
-    TEST_f_f (expm1, -74.0, -0.9999999999999999999999999999999927187098L),
-    TEST_f_f (expm1, -75.0, -0.9999999999999999999999999999999973213630L),
-    TEST_f_f (expm1, -78.0, -0.9999999999999999999999999999999998666385L),
-    TEST_f_f (expm1, -79.0, -0.9999999999999999999999999999999999509391L),
-    TEST_f_f (expm1, -80.0, -0.9999999999999999999999999999999999819515L),
-    TEST_f_f (expm1, -100.0, -1.0),
-    TEST_f_f (expm1, -1000.0, -1.0),
-    TEST_f_f (expm1, -10000.0, -1.0),
-    TEST_f_f (expm1, -100000.0, -1.0),
-
-    TEST_f_f (expm1, 100000.0, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
-    TEST_f_f (expm1, max_value, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
-    TEST_f_f (expm1, -max_value, -1),
+    AUTO_TESTS_f_f (expm1, tonearest),
   };
 
 static void
@@ -9693,29 +9545,8 @@ static const struct test_f_f_data j0_test_data[] =
     /* j0 is the Bessel function of the first kind of order 0 */
     TEST_f_f (j0, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
     TEST_f_f (j0, plus_infty, 0),
-    TEST_f_f (j0, -1.0, 0.765197686557966551449717526102663221L),
-    TEST_f_f (j0, 0.0, 1.0),
-    TEST_f_f (j0, 0.125L, 0.996097563041985204620768999453174712L),
-    TEST_f_f (j0, 0.75L, 0.864242275166648623555731103820923211L),
-    TEST_f_f (j0, 1.0, 0.765197686557966551449717526102663221L),
-    TEST_f_f (j0, 1.5, 0.511827671735918128749051744283411720L),
-    TEST_f_f (j0, 2.0, 0.223890779141235668051827454649948626L),
-    TEST_f_f (j0, 8.0, 0.171650807137553906090869407851972001L),
-    TEST_f_f (j0, 10.0, -0.245935764451348335197760862485328754L),
-    TEST_f_f (j0, 4.0, -3.9714980986384737228659076845169804197562E-1L),
-    TEST_f_f (j0, -4.0, -3.9714980986384737228659076845169804197562E-1L),
 
-    TEST_f_f (j0, 0x1.d7ce3ap+107L, 2.775523647291230802651040996274861694514e-17L),
-
-#ifndef TEST_FLOAT
-    TEST_f_f (j0, -0x1.001000001p+593L, -3.927269966354206207832593635798954916263e-90L),
-    TEST_f_f (j0, 0x1p1023L, -1.5665258060609012834424478437196679802783e-155L),
-#endif
-
-#if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
-    TEST_f_f (j0, 0x1p16382L, -1.2193782500509000574176799046642541129387e-2466L),
-    TEST_f_f (j0, 0x1p16383L, 9.5859502826270374691362975419147645151233e-2467L),
-#endif
+    AUTO_TESTS_f_f (j0, tonearest),
   };
 
 static void
@@ -9733,27 +9564,7 @@ static const struct test_f_f_data j1_test_data[] =
     TEST_f_f (j1, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
     TEST_f_f (j1, plus_infty, 0),
 
-    TEST_f_f (j1, -1.0, -0.440050585744933515959682203718914913L),
-    TEST_f_f (j1, 0.0, 0.0),
-    TEST_f_f (j1, 0.125L, 0.0623780091344946810942311355879361177L),
-    TEST_f_f (j1, 0.75L, 0.349243602174862192523281016426251335L),
-    TEST_f_f (j1, 1.0, 0.440050585744933515959682203718914913L),
-    TEST_f_f (j1, 1.5, 0.557936507910099641990121213156089400L),
-    TEST_f_f (j1, 2.0, 0.576724807756873387202448242269137087L),
-    TEST_f_f (j1, 8.0, 0.234636346853914624381276651590454612L),
-    TEST_f_f (j1, 10.0, 0.0434727461688614366697487680258592883L),
-
-    TEST_f_f (j1, 0x1.3ffp+74L, 1.818984347516051243459364437186082741567e-12L),
-
-#ifndef TEST_FLOAT
-    TEST_f_f (j1, 0x1.ff00000000002p+840L, 1.846591691699331493194965158699937660696e-127L),
-    TEST_f_f (j1, 0x1p1023L, 8.2687542933709649327986678723012001545638e-155L),
-#endif
-
-#if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
-    TEST_f_f (j1, 0x1p16382L, 8.0839224448726336195866026476176740513439e-2467L),
-    TEST_f_f (j1, 0x1p16383L, -3.8895531955766020648617743624167352352217e-2467L),
-#endif
+    AUTO_TESTS_f_f (j1, tonearest),
   };
 
 static void

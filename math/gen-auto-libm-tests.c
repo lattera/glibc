@@ -85,14 +85,17 @@
 
    The flag "no-test-inline" indicates a test is disabled for inline
    function testing; "xfail" indicates the test is disabled as
-   expected to produce incorrect results.  Otherwise, test flags are
-   of the form "spurious-<exception>" and "missing-<exception>", for
-   any exception ("overflow", "underflow", "inexact", "invalid",
-   "divbyzero"), "spurious-errno" and "missing-errno", to indicate
-   when tests are expected to deviate from the exception and errno
-   settings corresponding to the mathematical results.  "xfail",
-   "spurious-" and "missing-" flags should be accompanied by a comment
-   referring to an open bug in glibc Bugzilla.
+   expected to produce incorrect results, "xfail-rounding" indicates
+   the test is disabled only in rounding modes other than
+   round-to-nearest.  Otherwise, test flags are of the form
+   "spurious-<exception>" and "missing-<exception>", for any exception
+   ("overflow", "underflow", "inexact", "invalid", "divbyzero"),
+   "spurious-errno" and "missing-errno", to indicate when tests are
+   expected to deviate from the exception and errno settings
+   corresponding to the mathematical results.  "xfail",
+   "xfail-rounding", "spurious-" and "missing-" flags should be
+   accompanied by a comment referring to an open bug in glibc
+   Bugzilla.
 
    The output file auto-libm-test-out contains the test lines from
    auto-libm-test-in, and, after the line for a given test, some
@@ -309,6 +312,7 @@ typedef enum
   {
     flag_no_test_inline,
     flag_xfail,
+    flag_xfail_rounding,
     /* The "spurious" and "missing" flags must be in the same order as
        the fp_exception enumeration.  */
     flag_spurious_divbyzero,
@@ -335,6 +339,7 @@ static const char *const input_flags[num_input_flag_types] =
   {
     "no-test-inline",
     "xfail",
+    "xfail-rounding",
     "spurious-divbyzero",
     "spurious-inexact",
     "spurious-invalid",
@@ -815,7 +820,7 @@ adjust_real (mpfr_t r, bool inexact)
   if (!inexact)
     return;
   /* NaNs are exact, as are infinities in round-to-zero mode.  */
-  assert (mpfr_regular_p (r));
+  assert (mpfr_number_p (r));
   if (mpfr_cmpabs (r, global_min) < 0)
     assert_exact (mpfr_copysign (r, global_min, r, MPFR_RNDN));
   else if (mpfr_cmpabs (r, global_max) > 0)
@@ -1590,6 +1595,15 @@ output_for_one_input_case (FILE *fp, const char *filename, test_function *tf,
 				      : "")) < 0)
 			  error (EXIT_FAILURE, errno, "write to '%s'",
 				 filename);
+			break;
+		      case flag_xfail_rounding:
+			if (m != rm_tonearest)
+			  if (fprintf (fp, " xfail%s",
+				       (it->flags[i].cond
+					? it->flags[i].cond
+					: "")) < 0)
+			    error (EXIT_FAILURE, errno, "write to '%s'",
+				   filename);
 			break;
 		      default:
 			break;

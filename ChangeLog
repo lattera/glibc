@@ -1,3 +1,28 @@
+2013-12-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/auto-libm-test-in: Add tests of erf, erfc, exp, exp10,
+	exp2, expm1, j0 and j1.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (erf_test_data): Use AUTO_TESTS_f_f.
+	(erfc_test_data): Likewise.
+	(exp_test_data): Likewise.
+	(exp_tonearest_test_data): Likewise.
+	(exp_towardzero_test_data): Likewise.
+	(exp_downward_test_data): Likewise.
+	(exp_upward_test_data): Likewise.
+	(exp10_test_data): Likewise.
+	(exp2_test_data): Likewise.
+	(expm1_test_data): Likewise.
+	(j0_test_data): Likewise.
+	(j1_test_data): Likewise.
+	* math/gen-auto-libm-tests.c: Mention "xfail-rounding" in comment.
+	(input_flag_type): Add flag_xfail_rounding.
+	(input_flags): Add xfail-rounding.
+	(adjust_real): Assert mpfr_number_p not mpfr_regular_p.
+	(output_for_one_input_case): Handle flag_xfail_rounding.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2013-12-03  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #16289]

@@ -127,6 +127,154 @@ cosh 22
 cosh 23
 cosh 24
 
+erf 0
+erf -0
+erf 0.125
+erf 0.75
+erf 1.25
+erf 2.0
+erf 4.125
+erf 27.0
+erf -27.0
+erf -0x1.fffffffffffff8p-2
+
+erfc 0.0
+erfc -0
+erfc 0.125
+erfc 0.75
+erfc 1.25
+erfc 2.0
+erfc 0x1.f7303cp+1
+erfc 4.125
+erfc 0x1.ffa002p+2
+erfc 0x1.ffffc8p+2
+erfc -0x1.fffffffffffff8p-2
+# Bug 6786: errno may not be set on underflow.
+erfc 27.0 missing-errno
+erfc 0x1.ffff56789abcdef0123456789a8p+2
+
+exp 0
+exp -0
+exp 1
+exp 2
+exp 3
+exp 0.75
+exp 50.0
+exp 88.72269439697265625
+exp 709.75
+# Bug 16284: results on directed rounding may be incorrect.
+exp 1000.0 xfail-rounding:dbl-64
+exp 710 xfail-rounding:dbl-64
+exp -1234
+# Bug 16284: results on directed rounding may be incorrect.
+exp 1e5 xfail-rounding:dbl-64
+exp max xfail-rounding:dbl-64
+exp -max
+
+exp10 0
+exp10 -0
+exp10 3
+exp10 -1
+exp10 36
+exp10 -36
+exp10 305
+exp10 -305
+exp10 4932
+exp10 -4932
+exp10 1e5
+exp10 -1e5
+exp10 1e6
+exp10 -1e6
+exp10 max
+exp10 -max
+exp10 0.75
+
+exp2 0
+exp2 -0
+exp2 10
+exp2 -1
+exp2 1e6
+# Bug 16283: errno may not be set on underflow.
+exp2 -1e6 missing-errno
+exp2 max
+# Bug 16283: errno may not be set on underflow.
+exp2 -max missing-errno
+exp2 0.75
+exp2 100.5
+exp2 127
+exp2 -149
+exp2 1000.25
+exp2 1023
+# Bug 16283: errno may not be set on underflow.
+exp2 -1074 missing-errno
+exp2 16383
+# Bug 16283: errno may not be set on underflow.
+exp2 -16400 missing-errno
+
+expm1 0
+expm1 -0
+expm1 1
+expm1 0.75
+expm1 50.0
+expm1 127.0
+expm1 500.0
+expm1 11356.25
+expm1 -10.0
+expm1 -16.0
+expm1 -17.0
+expm1 -18.0
+expm1 -36.0
+expm1 -37.0
+expm1 -38.0
+expm1 -44.0
+expm1 -45.0
+expm1 -46.0
+expm1 -73.0
+expm1 -74.0
+expm1 -75.0
+expm1 -78.0
+expm1 -79.0
+expm1 -80.0
+expm1 -100.0
+expm1 -1000.0
+expm1 -10000.0
+expm1 -100000.0
+expm1 100000.0
+expm1 max
+expm1 -max
+
+j0 -1.0
+j0 0.0
+j0 0.125
+j0 0.75
+j0 1.0
+j0 1.5
+j0 2.0
+j0 8.0
+j0 10.0
+j0 4.0
+j0 -4.0
+j0 0x1.d7ce3ap+107
+j0 -0x1.001000001p+593
+j0 0x1p1023
+j0 0x1p16382
+j0 0x1p16383
+
+j1 -1.0
+j1 0.0
+j1 0.125
+j1 0.75
+j1 1.0
+j1 1.5
+j1 2.0
+j1 8.0
+j1 10.0
+j1 0x1.3ffp+74
+j1 0x1.ff00000000002p+840
+j1 0x1p1023
+j1 0x1p16382
+j1 0x1p16383
+
 sqrt 0
 sqrt -0
 sqrt 2209

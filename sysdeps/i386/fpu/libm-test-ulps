@@ -5908,11 +5908,20 @@ ildouble: 2
 ldouble: 2
 
 # erf
+Test "erf (-0x8p-4)":
+ildouble: 1
+ldouble: 1
+Test "erf (0x1.4p+0)":
+double: 1
+idouble: 1
 Test "erf (1.25)":
 double: 1
 idouble: 1
 
 # erfc
+Test "erfc (0x1.4p+0)":
+ildouble: 1
+ldouble: 1
 Test "erfc (0x1.f7303cp+1)":
 double: 1
 idouble: 1
@@ -5922,6 +5931,36 @@ Test "erfc (0x1.ffa002p+2)":
 ildouble: 1
 ldouble: 1
 Test "erfc (0x1.ffffc8p+2)":
+double: 1
+idouble: 1
+Test "erfc (0x2p+0)":
+double: 1
+idouble: 1
+Test "erfc (0x3.ee6078p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "erfc (0x4.2p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "erfc (0x7.fe8008p+0)":
+ildouble: 1
+ldouble: 1
+Test "erfc (0x7.fffd58p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "erfc (0x7.fffd59e26af37bc8p+0)":
+ildouble: 1
+ldouble: 1
+Test "erfc (0x7.fffd59e26af37bcp+0)":
+ildouble: 1
+ldouble: 1
+Test "erfc (0x7.ffff2p+0)":
 double: 1
 idouble: 1
 Test "erfc (1.25)":
@@ -5940,8 +5979,22 @@ ldouble: 1
 Test "exp10 (0.75)":
 ildouble: 1
 ldouble: 1
+Test "exp10 (0xcp-4)":
+ildouble: 1
+ldouble: 1
 
 # exp_downward
+Test "exp_downward (0x2.c5cp+8)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "exp_downward (0x2p+0)":
+ildouble: 1
+ldouble: 1
+Test "exp_downward (0x3.e8p+8)":
+ildouble: 1
+ldouble: 1
 Test "exp_downward (1)":
 ildouble: 1
 ldouble: 1
@@ -5961,6 +6014,17 @@ ildouble: 1
 ldouble: 1
 
 # exp_towardzero
+Test "exp_towardzero (0x2.c5cp+8)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "exp_towardzero (0x2p+0)":
+ildouble: 1
+ldouble: 1
+Test "exp_towardzero (0x3.e8p+8)":
+ildouble: 1
+ldouble: 1
 Test "exp_towardzero (1)":
 ildouble: 1
 ldouble: 1
@@ -5987,7 +6051,16 @@ idouble: 1
 ifloat: 1
 
 # expm1
+Test "expm1 (-0x2.dp+4)":
+ildouble: 1
+ldouble: 1
 Test "expm1 (-45.0)":
+ildouble: 1
+ldouble: 1
+Test "expm1 (0x1p+0)":
+ildouble: 1
+ldouble: 1
+Test "expm1 (0x2.c5c4p+12)":
 ildouble: 1
 ldouble: 1
 Test "expm1 (11356.25)":
@@ -6067,6 +6140,23 @@ ifloat: 1
 Test "j0 (-0x1.001000001p+593)":
 ildouble: 2
 ldouble: 2
+Test "j0 (-0x2.002000002p+592)":
+ildouble: 2
+ldouble: 2
+Test "j0 (-0x4p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "j0 (-0xf.fffffp+124)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "j0 (-4.0)":
 double: 1
 float: 1
@@ -6081,6 +6171,43 @@ Test "j0 (0x1p1023)":
 double: 1
 idouble: 1
 Test "j0 (0x1p16382)":
+ildouble: 1
+ldouble: 1
+Test "j0 (0x2p+0)":
+float: 1
+ifloat: 1
+Test "j0 (0x4p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "j0 (0x4p+16380)":
+ildouble: 1
+ldouble: 1
+Test "j0 (0x8p+0)":
+float: 1
+ifloat: 1
+Test "j0 (0x8p+1020)":
+double: 1
+idouble: 1
+Test "j0 (0xap+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "j0 (0xe.be71dp+104)":
+float: 1
+ifloat: 1
+Test "j0 (0xf.ffffffffffff8p+1020)":
+ildouble: 1
+ldouble: 1
+Test "j0 (0xf.fffffp+124)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "j0 (10.0)":
@@ -6114,6 +6241,32 @@ idouble: 1
 Test "j1 (0x1p16382)":
 ildouble: 1
 ldouble: 1
+Test "j1 (0x2p+0)":
+double: 1
+idouble: 1
+Test "j1 (0x4.ffcp+72)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "j1 (0x4p+16380)":
+ildouble: 1
+ldouble: 1
+Test "j1 (0x8p+0)":
+float: 1
+ifloat: 1
+Test "j1 (0xap+0)":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "j1 (0xf.fffffp+124)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 Test "j1 (10.0)":
 double: 2
 float: 1
@@ -6333,6 +6486,9 @@ ldouble: 1
 
 # pow10
 Test "pow10 (0.75)":
+ildouble: 1
+ldouble: 1
+Test "pow10 (0xcp-4)":
 ildouble: 1
 ldouble: 1
 
@@ -7919,6 +8075,8 @@ ldouble: 2
 Function: "erf":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 
 Function: "erfc":
 double: 1
