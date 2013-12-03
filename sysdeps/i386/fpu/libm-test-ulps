@@ -5946,6 +5946,9 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "erfc (0x6.4p+4)":
+ildouble: 1
+ldouble: 1
 Test "erfc (0x7.fe8008p+0)":
 ildouble: 1
 ldouble: 1

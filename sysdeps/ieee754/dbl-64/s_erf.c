@@ -112,6 +112,8 @@ static char rcsid[] = "$NetBSD: s_erf.c,v 1.8 1995/05/10 20:47:05 jtc Exp $";
  */
 
 
+#include <errno.h>
+#include <float.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -391,14 +393,25 @@ __erfc (double x)
       r = __ieee754_exp (-z * z - 0.5625) *
 	  __ieee754_exp ((z - x) * (z + x) + R / S);
       if (hx > 0)
-	return r / x;
+	{
+#if FLT_EVAL_METHOD != 0
+	  volatile
+#endif
+	  double ret = r / x;
+	  if (ret == 0)
+	    __set_errno (ERANGE);
+	  return ret;
+	}
       else
 	return two - r / x;
     }
   else
     {
       if (hx > 0)
-	return tiny * tiny;
+	{
+	  __set_errno (ERANGE);
+	  return tiny * tiny;
+	}
       else
 	return two - tiny;
     }

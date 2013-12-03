@@ -104,6 +104,7 @@
  */
 
 
+#include <errno.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -422,14 +423,22 @@ __erfcl (long double x)
       r = __ieee754_expl (-z * z - 0.5625) *
 	__ieee754_expl ((z - x) * (z + x) + R / S);
       if ((se & 0x8000) == 0)
-	return r / x;
+	{
+	  long double ret = r / x;
+	  if (ret == 0)
+	    __set_errno (ERANGE);
+	  return ret;
+	}
       else
 	return two - r / x;
     }
   else
     {
       if ((se & 0x8000) == 0)
-	return tiny * tiny;
+	{
+	  __set_errno (ERANGE);
+	  return tiny * tiny;
+	}
       else
 	return two - tiny;
     }

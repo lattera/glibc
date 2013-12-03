@@ -149,9 +149,18 @@ erfc 4.125
 erfc 0x1.ffa002p+2
 erfc 0x1.ffffc8p+2
 erfc -0x1.fffffffffffff8p-2
-# Bug 6786: errno may not be set on underflow.
-erfc 27.0 missing-errno
+erfc 26.0
+erfc 27.0
+erfc 28.0
 erfc 0x1.ffff56789abcdef0123456789a8p+2
+erfc 100
+erfc 106
+erfc 106.5
+erfc 106.625
+erfc 107
+erfc 108
+erfc 1000
+erfc max
 
 exp 0
 exp -0

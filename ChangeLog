@@ -1,5 +1,23 @@
 2013-12-03  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #6786]
+	* sysdeps/ieee754/dbl-64/s_erf.c: Include <errno.h> and <float.h>.
+	(__erfc): Set errno to ERANGE when returning 0 or tiny * tiny.
+	* sysdeps/ieee754/flt-32/s_erff.c: Include <errno.h> and
+	<float.h>.
+	(__erfcf): Set errno to ERANGE when returning 0 or tiny * tiny.
+	* sysdeps/ieee754/ldbl-128/s_erfl.c: Include <errno.h>.
+	(__erfcl): Set errno to ERANGE when returning 0 or tiny * tiny.
+	* sysdeps/ieee754/ldbl-128ibm/s_erfl.c: Include <errno.h>.
+	(__erfcl): Set errno to ERANGE when returning 0 or tiny * tiny.
+	* sysdeps/ieee754/ldbl-96/s_erfl.c: Include <errno.h>.
+	(__erfcl): Set errno to ERANGE when returning 0 or tiny * tiny.
+	* math/auto-libm-test-in: Don't allow missing errno from erfc.
+	Add more erfc tests.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	* math/auto-libm-test-in: Add tests of erf, erfc, exp, exp10,
 	exp2, expm1, j0 and j1.
 	* math/auto-libm-test-out: Regenerated.
