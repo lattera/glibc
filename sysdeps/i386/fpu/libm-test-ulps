@@ -6017,6 +6017,30 @@ ildouble: 1
 ldouble: 1
 
 # exp_towardzero
+Test "exp_towardzero (-0x2.e870a4p+8)":
+ildouble: 1
+ldouble: 1
+Test "exp_towardzero (-0x2.e870a7e5e88c1f0cp+8)":
+ildouble: 1
+ldouble: 1
+Test "exp_towardzero (-0x2.e870a7e5e88c1f1p+8)":
+ildouble: 1
+ldouble: 1
+Test "exp_towardzero (-0x2.e870a7e5e88c2p+8)":
+ildouble: 1
+ldouble: 1
+Test "exp_towardzero (-0x2.e870a7e5e88cp+8)":
+ildouble: 1
+ldouble: 1
+Test "exp_towardzero (-0x2.e870a8p+8)":
+ildouble: 1
+ldouble: 1
+Test "exp_towardzero (-0x2.ebe224p+8)":
+ildouble: 1
+ldouble: 1
+Test "exp_towardzero (-0x2.ebe228p+8)":
+ildouble: 1
+ldouble: 1
 Test "exp_towardzero (0x2.c5cp+8)":
 double: 1
 idouble: 1
@@ -6047,6 +6071,12 @@ ildouble: 1
 ldouble: 1
 
 # exp_upward
+Test "exp_upward (-0x2.e870a7e5e88c1f0cp+8)":
+ildouble: 1
+ldouble: 1
+Test "exp_upward (-0x2.e870a7e5e88cp+8)":
+ildouble: 1
+ldouble: 1
 Test "exp_upward (1)":
 double: 1
 float: 1
@@ -8112,6 +8142,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: "expm1":
 ildouble: 1

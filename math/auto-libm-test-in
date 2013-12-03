@@ -178,6 +178,8 @@ exp -1234
 # Bug 16284: results on directed rounding may be incorrect.
 exp 1e5 xfail-rounding:dbl-64
 exp max xfail-rounding:dbl-64
+exp -7.4444006192138124e+02
+exp -0x1.75f113c30b1c8p+9
 exp -max
 
 exp10 0

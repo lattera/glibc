@@ -1,5 +1,15 @@
 2013-12-03  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #15268]
+	[BZ #15425]
+	* sysdeps/ieee754/dbl-64/e_exp.c: Include <float.h>.
+	(__ieee754_exp): For possibly underflowing results, check size of
+	result and force underflow exception if required.
+	* math/auto-libm-test-in: Add more tests of exp.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	[BZ #16283]
 	* math/w_exp2.c (__exp2): Handle a zero result as underflow.
 	* math/w_exp2f.c (__exp2f): Likewise.
