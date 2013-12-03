@@ -113,8 +113,7 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
       /* Print some debugging info if wanted.  */
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_SYMBOLS, 0))
 	_dl_debug_printf ("symbol=%s;  lookup in file=%s [%lu]\n",
-			  undef_name,
-			  DSO_FILENAME (map->l_name),
+			  undef_name, DSO_FILENAME (map->l_name),
 			  map->l_ns);
 
       /* If the hash table is empty there is nothing to do here.  */
@@ -764,7 +763,7 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 	     contain the needed symbol.  This code is never reached
 	     for unversioned lookups.  */
 	  assert (version != NULL);
-	  const char *reference_name = undef_map ? undef_map->l_name : NULL;
+	  const char *reference_name = undef_map ? undef_map->l_name : "";
 
 	  /* XXX We cannot translate the message.  */
 	  _dl_signal_cerror (0, DSO_FILENAME (reference_name),
