@@ -47,3 +47,9 @@
 # undef __ASSUME_PSELECT
 # undef __ASSUME_PPOLL
 #endif
+
+/* No support for PI futexes or robust mutexes before 3.10 for m68k.  */
+#if __LINUX_KERNEL_VERSION < 0x030a00
+# undef __ASSUME_REQUEUE_PI
+# undef __ASSUME_SET_ROBUST_LIST
+#endif
