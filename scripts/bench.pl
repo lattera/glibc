@@ -83,8 +83,8 @@ LINE:while (<INPUTS>) {
     }
   }
 
-  # Skip over comments.
-  if (/^#/) {
+  # Skip over comments and blank lines.
+  if (/^#/ || /^$/) {
     next LINE;
   }
   push (@curvals, $_);

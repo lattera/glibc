@@ -1,3 +1,7 @@
+2013-12-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* scripts/bench.pl: Skip over blank lines.
+
 2013-12-04  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #926]
