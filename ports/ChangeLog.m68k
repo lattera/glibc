@@ -1,5 +1,10 @@
 2013-12-10  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* sysdeps/unix/sysv/linux/m68k/nptl/lowlevellock.h
+	(FUTEX_WAIT_REQEUE_PI, FUTEX_CMP_REQEUE_PI)
+	(lll_futex_wait_requeue_pi, lll_futex_timed_wait_requeue_pi)
+	(lll_futex_cmp_requeue_pi): Define.
+
 	* sysdeps/unix/sysv/linux/m68k/kernel-features.h
 	(__ASSUME_REQUEUE_PI, __ASSUME_SET_ROBUST_LIST): Undefine before
 	3.10.
