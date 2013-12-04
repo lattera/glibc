@@ -1,3 +1,11 @@
+2013-12-04  Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ #4772]
+	* time/strptime_l.c (__strptime_internal): Allow modifiers
+	in strptime.
+	* time/tst-strptime.c (day_tests): Add testcase.
+
+
 2013-12-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* scripts/bench.pl: Skip over blank lines.

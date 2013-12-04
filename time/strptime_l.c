@@ -320,17 +320,14 @@ __strptime_internal (rp, fmt, tmp, statep LOCALE_PARAM)
 	}
 
       ++fmt;
-      if (statep != NULL)
-	{
-	  /* In recursive calls silently discard strftime modifiers.  */
-	  while (*fmt == '-' || *fmt == '_' || *fmt == '0'
-		 || *fmt == '^' || *fmt == '#')
-	    ++fmt;
+      /* We discard strftime modifiers.  */
+      while (*fmt == '-' || *fmt == '_' || *fmt == '0'
+	     || *fmt == '^' || *fmt == '#')
+	++fmt;
 
-	  /* And field width.  */
-	  while (*fmt >= '0' && *fmt <= '9')
-	    ++fmt;
-	}
+      /* And field width.  */
+      while (*fmt >= '0' && *fmt <= '9')
+	++fmt;
 
 #ifndef _NL_CURRENT
       /* We need this for handling the `E' modifier.  */
