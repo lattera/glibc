@@ -1,3 +1,17 @@
+2013-12-04  Alan Modra  <amodra@gmail.com>
+
+	* elf/elf.h (R_PPC64_TLSGD, R_PPC64_TLSLD, R_PPC64_TOCSAVE): Define.
+	(R_PPC64_ADDR16_HIGH, R_PPC64_ADDR16_HIGHA): Likewise.
+	(R_PPC64_TPREL16_HIGH, R_PPC64_TPREL16_HIGHA): Likewise.
+	(R_PPC64_DTPREL16_HIGH, R_PPC64_DTPREL16_HIGHA): Likewise.
+
+	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_rela): Add
+	overflow checking for R_PPC64_ADDR16_HI, R_PPC64_ADDR16_HA,
+	R_PPC64_TPREL16_HI, and R_PPC64_TPREL16_HA.
+	Support new R_PPC64_ADDR16_HIGH, R_PPC64_ADDR16_HIGHA,
+	R_PPC64_TPREL16_HIGH, and R_PPC64_TPREL16_HIGHA relocations.
+	Fix overflow checking for R_PPC64_ADDR30 and R_PPC64_ADDR32.
+
 2013-12-04  Ulrich Weigand  <Ulrich.Weigand@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/makecontext.S

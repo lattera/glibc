@@ -2252,6 +2252,17 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_PPC64_DTPREL16_HIGHERA 104 /* half16	(sym+add)@dtprel@highera */
 #define R_PPC64_DTPREL16_HIGHEST 105 /* half16	(sym+add)@dtprel@highest */
 #define R_PPC64_DTPREL16_HIGHESTA 106 /* half16	(sym+add)@dtprel@highesta */
+#define R_PPC64_TLSGD		107 /* none	(sym+add)@tlsgd */
+#define R_PPC64_TLSLD		108 /* none	(sym+add)@tlsld */
+#define R_PPC64_TOCSAVE		109 /* none */
+
+/* Added when HA and HI relocs were changed to report overflows.  */
+#define R_PPC64_ADDR16_HIGH	110
+#define R_PPC64_ADDR16_HIGHA	111
+#define R_PPC64_TPREL16_HIGH	112
+#define R_PPC64_TPREL16_HIGHA	113
+#define R_PPC64_DTPREL16_HIGH	114
+#define R_PPC64_DTPREL16_HIGHA	115
 
 /* GNU extension to support local ifunc.  */
 #define R_PPC64_JMP_IREL	247

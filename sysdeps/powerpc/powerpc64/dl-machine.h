@@ -669,10 +669,24 @@ elf_machine_rela (struct link_map *map,
 
     case R_PPC64_TPREL16_HI:
       value = elf_machine_tprel (map, sym_map, sym, reloc);
+      if (dont_expect (value + 0x80000000 >= 0x100000000LL))
+	_dl_reloc_overflow (map, "R_PPC64_TPREL16_HI", reloc_addr, refsym);
+      *(Elf64_Half *) reloc_addr = PPC_HI (value);
+      break;
+
+    case R_PPC64_TPREL16_HIGH:
+      value = elf_machine_tprel (map, sym_map, sym, reloc);
       *(Elf64_Half *) reloc_addr = PPC_HI (value);
       break;
 
     case R_PPC64_TPREL16_HA:
+      value = elf_machine_tprel (map, sym_map, sym, reloc);
+      if (dont_expect (value + 0x80008000 >= 0x100000000LL))
+	_dl_reloc_overflow (map, "R_PPC64_TPREL16_HA", reloc_addr, refsym);
+      *(Elf64_Half *) reloc_addr = PPC_HA (value);
+      break;
+
+    case R_PPC64_TPREL16_HIGHA:
       value = elf_machine_tprel (map, sym_map, sym, reloc);
       *(Elf64_Half *) reloc_addr = PPC_HA (value);
       break;
@@ -709,17 +723,23 @@ elf_machine_rela (struct link_map *map,
       break;
 
     case R_PPC64_ADDR16_HI:
+      if (dont_expect (value + 0x80000000 >= 0x100000000LL))
+	_dl_reloc_overflow (map, "R_PPC64_ADDR16_HI", reloc_addr, refsym);
+    case R_PPC64_ADDR16_HIGH:
       *(Elf64_Half *) reloc_addr = PPC_HI (value);
       break;
 
     case R_PPC64_ADDR16_HA:
+      if (dont_expect (value + 0x80008000 >= 0x100000000LL))
+	_dl_reloc_overflow (map, "R_PPC64_ADDR16_HA", reloc_addr, refsym);
+    case R_PPC64_ADDR16_HIGHA:
       *(Elf64_Half *) reloc_addr = PPC_HA (value);
       break;
 
     case R_PPC64_ADDR30:
       {
 	Elf64_Addr delta = value - (Elf64_Xword) reloc_addr;
-	if (dont_expect ((delta + 0x80000000) >= 0x10000000
+	if (dont_expect ((delta + 0x80000000) >= 0x100000000LL
 			 || (delta & 3) != 0))
 	  _dl_reloc_overflow (map, "R_PPC64_ADDR30", reloc_addr, refsym);
 	BIT_INSERT (*(Elf64_Word *) reloc_addr, delta, 0xfffffffc);
@@ -755,7 +775,7 @@ elf_machine_rela (struct link_map *map,
       return;
 
     case R_PPC64_ADDR32:
-      if (dont_expect ((value + 0x80000000) >= 0x10000000))
+      if (dont_expect ((value + 0x80000000) >= 0x100000000LL))
 	_dl_reloc_overflow (map, "R_PPC64_ADDR32", reloc_addr, refsym);
       *(Elf64_Word *) reloc_addr = value;
       return;
