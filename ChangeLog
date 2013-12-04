@@ -1,3 +1,13 @@
+2013-12-04  Ondřej Bílka  <neleai@seznam.cz>
+
+	* debug/memcpy_chk.c (__memcpy_chk): Use call instead of custom
+	implementation.
+	* debug/memmove_chk.c (MEMMOVE_CHK): Likewise.
+	* debug/mempcpy_chk.c (__mempcpy_chk): Likewise.
+	* debug/memset_chk.c (__memset_chk): Likewise.
+	* debug/stpncpy_chk.c (__stpncpy_chk): Likewise.
+	* debug/strncpy_chk.c: Likewise.
+
 2013-12-03  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15268]
