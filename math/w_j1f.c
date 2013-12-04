@@ -49,8 +49,11 @@ y1f (float x)
 	  return __kernel_standard_f (x, x, 111);
 	}
       else if (x == 0.0f)
-	/* d = -one/(x-x) */
-	return __kernel_standard_f (x, x, 110);
+	{
+	  /* d = -one/(x-x) */
+	  feraiseexcept (FE_DIVBYZERO);
+	  return __kernel_standard_f (x, x, 110);
+	}
       else if (_LIB_VERSION != _POSIX_)
 	/* y1(x>X_TLOSS) */
 	return __kernel_standard_f (x, x, 137);

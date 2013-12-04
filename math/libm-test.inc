@@ -14278,9 +14278,11 @@ trunc_test (void)
 static const struct test_f_f_data y0_test_data[] =
   {
     /* y0 is the Bessel function of the second kind of order 0 */
-    TEST_f_f (y0, -1.0, minus_infty, INVALID_EXCEPTION|ERRNO_EDOM),
-    TEST_f_f (y0, -max_value, minus_infty, INVALID_EXCEPTION|ERRNO_EDOM),
-    TEST_f_f (y0, 0.0, minus_infty),
+    TEST_f_f (y0, -1.0, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (y0, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (y0, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (y0, 0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (y0, -0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f (y0, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
     TEST_f_f (y0, plus_infty, 0),
 
@@ -14329,9 +14331,11 @@ y0_test (void)
 static const struct test_f_f_data y1_test_data[] =
   {
     /* y1 is the Bessel function of the second kind of order 1 */
-    TEST_f_f (y1, -1.0, minus_infty, INVALID_EXCEPTION|ERRNO_EDOM),
-    TEST_f_f (y1, -max_value, minus_infty, INVALID_EXCEPTION|ERRNO_EDOM),
-    TEST_f_f (y1, 0.0, minus_infty),
+    TEST_f_f (y1, -1.0, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (y1, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (y1, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (y1, 0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (y1, -0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f (y1, plus_infty, 0),
     TEST_f_f (y1, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
 
@@ -14381,9 +14385,11 @@ static const struct test_if_f_data yn_test_data[] =
   {
     /* yn is the Bessel function of the second kind of order n */
     /* yn (0, x) == y0 (x)  */
-    TEST_if_f (yn, 0, -1.0, minus_infty, INVALID_EXCEPTION|ERRNO_EDOM),
-    TEST_if_f (yn, 0, -max_value, minus_infty, INVALID_EXCEPTION|ERRNO_EDOM),
-    TEST_if_f (yn, 0, 0.0, minus_infty),
+    TEST_if_f (yn, 0, -1.0, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, 0, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, 0, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, 0, 0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_if_f (yn, 0, -0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_if_f (yn, 0, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
     TEST_if_f (yn, 0, plus_infty, 0),
 
@@ -14396,8 +14402,11 @@ static const struct test_if_f_data yn_test_data[] =
     TEST_if_f (yn, 0, 10.0, 0.0556711672835993914244598774101900481L),
 
     /* yn (1, x) == y1 (x)  */
-    TEST_if_f (yn, 1, -1.0, minus_infty, INVALID_EXCEPTION|ERRNO_EDOM),
-    TEST_if_f (yn, 1, 0.0, minus_infty),
+    TEST_if_f (yn, 1, -1.0, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, 1, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, 1, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, 1, 0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_if_f (yn, 1, -0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_if_f (yn, 1, plus_infty, 0),
     TEST_if_f (yn, 1, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
 
@@ -14409,7 +14418,40 @@ static const struct test_if_f_data yn_test_data[] =
     TEST_if_f (yn, 1, 8.0, -0.158060461731247494255555266187483550L),
     TEST_if_f (yn, 1, 10.0, 0.249015424206953883923283474663222803L),
 
+    /* yn (-1, x) == -y1 (x).  */
+    TEST_if_f (yn, -1, -1.0, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, -1, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, -1, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, -1, 0.0, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_if_f (yn, -1, -0.0, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_if_f (yn, -1, plus_infty, minus_zero),
+    TEST_if_f (yn, -1, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
+    TEST_if_f (yn, -1, 1.0, 0.781212821300288716547150000047964821L),
+
+    /* yn (2, x).  */
+    TEST_if_f (yn, 2, -1.0, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, 2, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, 2, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, 2, 0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_if_f (yn, 2, -0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_if_f (yn, 2, plus_infty, 0),
+    TEST_if_f (yn, 2, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
+
+    /* yn (-2, x) == yn (2, x).  */
+    TEST_if_f (yn, -2, -1.0, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, -2, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, -2, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, -2, 0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_if_f (yn, -2, -0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_if_f (yn, -2, plus_infty, 0),
+    TEST_if_f (yn, -2, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
+
     /* yn (3, x)  */
+    TEST_if_f (yn, 3, -1.0, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, 3, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, 3, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, 3, 0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_if_f (yn, 3, -0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_if_f (yn, 3, plus_infty, 0),
     TEST_if_f (yn, 3, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
 
@@ -14428,6 +14470,8 @@ static const struct test_if_f_data yn_test_data[] =
     TEST_if_f (yn, 10, 1.0, -121618014.278689189288130426667971145L),
     TEST_if_f (yn, 10, 2.0, -129184.542208039282635913145923304214L),
     TEST_if_f (yn, 10, 10.0, -0.359814152183402722051986577343560609L),
+
+    TEST_if_f (yn, -10, 1.0, -121618014.278689189288130426667971145L),
 
     /* Check whether yn returns correct value for LDBL_MIN, DBL_MIN,
        and FLT_MIN.  See Bug 14173.  */

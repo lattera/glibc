@@ -51,8 +51,11 @@ yn (int n, double x)
 	  return __kernel_standard (n, x, 13);
 	}
       else if (x == 0.0)
-	/* d = -one/(x-x) */
-	return __kernel_standard (n, x, 12);
+	{
+	  /* d = -one/(x-x) */
+	  feraiseexcept (FE_DIVBYZERO);
+	  return __kernel_standard (n, x, 12);
+	}
       else if (_LIB_VERSION != _POSIX_)
 	/* yn(n,x>X_TLOSS) */
 	return __kernel_standard (n, x, 39);

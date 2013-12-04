@@ -248,7 +248,7 @@ __kernel_standard(double x, double y, int type)
 		else
 		  exc.retval = -HUGE_VAL;
 		if (_LIB_VERSION == _POSIX_)
-		  __set_errno (EDOM);
+		  __set_errno (ERANGE);
 		else if (!matherr(&exc)) {
 		  if (_LIB_VERSION == _SVID_) {
 			(void) WRITE2("y0: DOMAIN error\n", 17);
@@ -265,7 +265,7 @@ __kernel_standard(double x, double y, int type)
 		if (_LIB_VERSION == _SVID_)
 		  exc.retval = -HUGE;
 		else
-		  exc.retval = -HUGE_VAL;
+		  exc.retval = NAN;
 		if (_LIB_VERSION == _POSIX_)
 		  __set_errno (EDOM);
 		else if (!matherr(&exc)) {
@@ -286,7 +286,7 @@ __kernel_standard(double x, double y, int type)
 		else
 		  exc.retval = -HUGE_VAL;
 		if (_LIB_VERSION == _POSIX_)
-		  __set_errno (EDOM);
+		  __set_errno (ERANGE);
 		else if (!matherr(&exc)) {
 		  if (_LIB_VERSION == _SVID_) {
 			(void) WRITE2("y1: DOMAIN error\n", 17);
@@ -303,7 +303,7 @@ __kernel_standard(double x, double y, int type)
 		if (_LIB_VERSION == _SVID_)
 		  exc.retval = -HUGE;
 		else
-		  exc.retval = -HUGE_VAL;
+		  exc.retval = NAN;
 		if (_LIB_VERSION == _POSIX_)
 		  __set_errno (EDOM);
 		else if (!matherr(&exc)) {
@@ -322,9 +322,11 @@ __kernel_standard(double x, double y, int type)
 		if (_LIB_VERSION == _SVID_)
 		  exc.retval = -HUGE;
 		else
-		  exc.retval = -HUGE_VAL;
+		  exc.retval = ((x < 0 && ((int) x & 1) != 0)
+				? HUGE_VAL
+				: -HUGE_VAL);
 		if (_LIB_VERSION == _POSIX_)
-		  __set_errno (EDOM);
+		  __set_errno (ERANGE);
 		else if (!matherr(&exc)) {
 		  if (_LIB_VERSION == _SVID_) {
 			(void) WRITE2("yn: DOMAIN error\n", 17);
@@ -341,7 +343,7 @@ __kernel_standard(double x, double y, int type)
 		if (_LIB_VERSION == _SVID_)
 		  exc.retval = -HUGE;
 		else
-		  exc.retval = -HUGE_VAL;
+		  exc.retval = NAN;
 		if (_LIB_VERSION == _POSIX_)
 		  __set_errno (EDOM);
 		else if (!matherr(&exc)) {

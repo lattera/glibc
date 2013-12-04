@@ -302,7 +302,8 @@ __ieee754_ynl (int n, long double x)
   if (__builtin_expect ((ix == 0x7fff) && ((i0 & 0x7fffffff) != 0), 0))
     return x + x;
   if (__builtin_expect ((ix | i0 | i1) == 0, 0))
-    return -HUGE_VALL + x;  /* -inf and overflow exception.  */
+    /* -inf or inf and divide-by-zero exception.  */
+    return ((n < 0 && (n & 1) != 0) ? 1.0L : -1.0L) / 0.0L;
   if (__builtin_expect (se & 0x8000, 0))
     return zero / (zero * x);
   sign = 1;

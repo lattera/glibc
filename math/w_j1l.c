@@ -49,8 +49,11 @@ __y1l (long double x)
 	  return __kernel_standard_l (x, x, 211);
 	}
       else if (x == 0.0L)
-	/* d = -one/(x-x) */
-	return __kernel_standard_l (x, x, 210);
+	{
+	  /* d = -one/(x-x) */
+	  feraiseexcept (FE_DIVBYZERO);
+	  return __kernel_standard_l (x, x, 210);
+	}
       else if (_LIB_VERSION != _POSIX_)
 	/* y1(x>X_TLOSS) */
 	return __kernel_standard_l (x, x, 237);

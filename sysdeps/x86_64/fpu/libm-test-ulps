@@ -8615,6 +8615,11 @@ idouble: 1
 ifloat: 2
 
 # yn
+Test "yn (-10, 1.0)":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
 Test "yn (0, 0.125)":
 ildouble: 1
 ldouble: 1

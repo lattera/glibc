@@ -51,8 +51,11 @@ y1 (double x)
 	  return __kernel_standard (x, x, 11);
 	}
       else if (x == 0.0)
-	/* d = -one/(x-x) */
-	return __kernel_standard (x, x, 10);
+	{
+	  /* d = -one/(x-x) */
+	  feraiseexcept (FE_DIVBYZERO);
+	  return __kernel_standard (x, x, 10);
+	}
       else if (_LIB_VERSION != _POSIX_)
 	/* y1(x>X_TLOSS) */
 	return __kernel_standard (x, x, 37);
