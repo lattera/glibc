@@ -1,4 +1,23 @@
 2013-11-12  Ulrich Weigand  <Ulrich.Weigand@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/Makefile (abi-variants): Rename
+	"64" to "64-v1".  Add "64-v2".
+	(abi-64-options): Rename to ...
+	(abi-64-v1-options): ... this.   Redefine _CALL_ELF.
+	(abi-64-condition): Rename to ...
+	(abi-64-v1-condition): ... this.  Add _CALL_ELF check.,
+	(abi-64-ld-soname): Rename to ...
+	(abi-64-v1-ld-soname): ... this.
+	(abi-64-v2-options): Define.
+	(abi-64-v2-condition): Likewise.
+	(abi-64-v2-ld-soname): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/ldconfig.h
+	(SYSDEP_KNOWN_INTERPRETER_NAMES): Add "/lib64/ld64.so.2".
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/Makefile: Delete file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/configure.ac: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/configure: Generate.
+
+2013-11-12  Ulrich Weigand  <Ulrich.Weigand@de.ibm.com>
 	    Alan Modra  <amodra@gmail.com>
 
 	* sysdeps/powerpc/bits/link.h (La_ppc64v2_regs, La_ppc64v2_retval):
