@@ -130,7 +130,7 @@ L(no_vmx):
 	ld r14,((JB_GPRS+0)*8)(r3)
 	lfd fp14,((JB_FPRS+0)*8)(r3)
 #if defined SHARED && !defined IS_IN_rtld
-	std r2,40(r1)	/* Restore the callers TOC save area.  */
+	std r2,FRAME_TOC_SAVE(r1)	/* Restore the callers TOC save area.  */
 #endif
 	ld r15,((JB_GPRS+1)*8)(r3)
 	lfd fp15,((JB_FPRS+1)*8)(r3)
@@ -148,7 +148,7 @@ L(no_vmx):
 	PTR_DEMANGLE2 (r0, r25)
 #endif
 	mtlr r0
-/* 	std r2,40(r1)	Restore the TOC save area.  */
+/* 	std r2,FRAME_TOC_SAVE(r1)	Restore the TOC save area.  */
 	ld r21,((JB_GPRS+7)*8)(r3)
 	lfd fp21,((JB_FPRS+7)*8)(r3)
 	ld r22,((JB_GPRS+8)*8)(r3)

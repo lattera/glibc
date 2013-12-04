@@ -26,13 +26,13 @@
    parm1 (r3) and the index (r0) need to be converted to an offset
    (index * 24) in parm2 (r4).  */
 
-#define FRAME_SIZE 176
+#define FRAME_SIZE (FRAME_MIN_SIZE+64)
 /* We need to save the registers used to pass parameters, ie. r3 thru
    r10;  Use local var space rather than the parameter save area,
    because gcc as of 2010/05 doesn't allocate a proper stack frame for
    a function that makes no calls except for __tls_get_addr and we
    might be here resolving the __tls_get_addr call.  */
-#define INT_PARMS 112
+#define INT_PARMS FRAME_MIN_SIZE
 EALIGN(_dl_runtime_resolve, 4, 0)
 	stdu	r1,-FRAME_SIZE(r1)
 	cfi_adjust_cfa_offset (FRAME_SIZE)
@@ -48,25 +48,25 @@ EALIGN(_dl_runtime_resolve, 4, 0)
 	mflr	r0
 	std	r8,INT_PARMS+40(r1)
 /* Store the LR in the LR Save area.  */
-	std	r0,FRAME_SIZE+16(r1)
-	cfi_offset (lr, 16)
+	std	r0,FRAME_SIZE+FRAME_LR_SAVE(r1)
+	cfi_offset (lr, FRAME_LR_SAVE)
 	mfcr	r0
 	std	r9,INT_PARMS+48(r1)
 	std	r10,INT_PARMS+56(r1)
 /* I'm almost certain we don't have to save cr...  be safe.  */
-	std	r0,FRAME_SIZE+8(r1)
+	std	r0,FRAME_SIZE+FRAME_CR_SAVE(r1)
 	bl	JUMPTARGET(_dl_fixup)
 #ifndef SHARED
 	nop
 #endif
 /* Put the registers back.  */
-	ld	r0,FRAME_SIZE+16(r1)
+	ld	r0,FRAME_SIZE+FRAME_LR_SAVE(r1)
 	ld	r10,INT_PARMS+56(r1)
 	ld	r9,INT_PARMS+48(r1)
 	ld	r8,INT_PARMS+40(r1)
 	ld	r7,INT_PARMS+32(r1)
 	mtlr	r0
-	ld	r0,FRAME_SIZE+8(r1)
+	ld	r0,FRAME_SIZE+FRAME_CR_SAVE(r1)
 	ld	r6,INT_PARMS+24(r1)
 	ld	r5,INT_PARMS+16(r1)
 	ld	r4,INT_PARMS+8(r1)
@@ -76,7 +76,7 @@ EALIGN(_dl_runtime_resolve, 4, 0)
 	ld	r3,INT_PARMS+0(r1)
 #if _CALL_ELF == 2
 /* Restore the caller's TOC in case we jump to a local entry point.  */
-	ld	r2,FRAME_SIZE+40(r1)
+	ld	r2,FRAME_SIZE+FRAME_TOC_SAVE(r1)
 #endif
 /* Unwind the stack frame, and jump.  */
 	addi	r1,r1,FRAME_SIZE
@@ -86,6 +86,7 @@ END(_dl_runtime_resolve)
 #undef INT_PARMS
 
 	/* Stack layout:
+	   (Note: some of these are not required for the ELFv2 ABI.)
 	  +592   previous backchain
 	  +584   spill_r31
 	  +576   spill_r30
@@ -147,10 +148,11 @@ END(_dl_runtime_resolve)
 	  +64    parm3
 	  +56    parm2
 	  +48    parm1
-	 * Parameter save area, Allocated by the call, at least 8 double words
-	  +40    TOC save area
-	  +32    Reserved for linker
-	  +24    Reserved for compiler
+	 * Parameter save area
+	 * (v1 ABI: Allocated by the call, at least 8 double words)
+	  +40    v1 ABI: TOC save area
+	  +32    v1 ABI: Reserved for linker
+	  +24    v1 ABI: Reserved for compiler / v2 ABI: TOC save area
 	  +16    LR save area
 	  +8     CR save area
 	r1+0     stack back chain
@@ -206,15 +208,15 @@ EALIGN(_dl_profile_resolve, 4, 0)
 /* Store the LR in the LR Save area of the previous frame.  */
 /* XXX Do we have to do this?  */
 	la	r8,FRAME_SIZE(r1)
-	std	r5,FRAME_SIZE+16(r1)
-	cfi_offset (lr, 16)
+	std	r5,FRAME_SIZE+FRAME_LR_SAVE(r1)
+	cfi_offset (lr, FRAME_LR_SAVE)
 	std	r5,CALLING_LR(r1)
 	mfcr	r0
 	std	r9,INT_PARMS+48(r1)
 	std	r10,INT_PARMS+56(r1)
 	std	r8,CALLING_SP(r1)
 /* I'm almost certain we don't have to save cr...  be safe.  */
-	std	r0,FRAME_SIZE+8(r1)
+	std	r0,FRAME_SIZE+FRAME_CR_SAVE(r1)
 	ld	r12,.LC__dl_hwcap@toc(r2)
 #ifdef SHARED
 	/* Load _rtld_local_ro._dl_hwcap.  */
@@ -311,13 +313,13 @@ L(saveFP):
 	lvx	v12,r11,r10
 	lvx	v13,r11,r9
 L(restoreFXR):
-	ld	r0,FRAME_SIZE+16(r1)
+	ld	r0,FRAME_SIZE+FRAME_LR_SAVE(r1)
 	ld	r10,INT_PARMS+56(r1)
 	ld	r9,INT_PARMS+48(r1)
 	ld	r8,INT_PARMS+40(r1)
 	ld	r7,INT_PARMS+32(r1)
 	mtlr	r0
-	ld	r0,FRAME_SIZE+8(r1)
+	ld	r0,FRAME_SIZE+FRAME_CR_SAVE(r1)
 	ld	r6,INT_PARMS+24(r1)
 	ld	r5,INT_PARMS+16(r1)
 	ld	r4,INT_PARMS+8(r1)
@@ -327,7 +329,7 @@ L(restoreFXR):
 	ld	r3,INT_PARMS+0(r1)
 #if _CALL_ELF == 2
 /* Restore the caller's TOC in case we jump to a local entry point.  */
-	ld	r2,FRAME_SIZE+40(r1)
+	ld	r2,FRAME_SIZE+FRAME_TOC_SAVE(r1)
 #endif
 /* Load the floating point registers.  */
 	lfd	fp1,FPR_PARMS+0(r1)
@@ -375,19 +377,19 @@ L(do_pltexit):
 	lvx	v12,r11,r10
 	lvx	v13,r11,r9
 L(restoreFXR2):
-	ld	r0,FRAME_SIZE+16(r1)
+	ld	r0,FRAME_SIZE+FRAME_LR_SAVE(r1)
 	ld	r10,INT_PARMS+56(r1)
 	ld	r9,INT_PARMS+48(r1)
 	ld	r8,INT_PARMS+40(r1)
 	ld	r7,INT_PARMS+32(r1)
 	mtlr	r0
-	ld	r0,FRAME_SIZE+8(r1)
+	ld	r0,FRAME_SIZE+FRAME_CR_SAVE(r1)
 	ld	r6,INT_PARMS+24(r1)
 	ld	r5,INT_PARMS+16(r1)
 	ld	r4,INT_PARMS+8(r1)
 	mtcrf	0xFF,r0
 /* Prepare for calling the function returned by fixup.  */
-	std	r2,40(r1)
+	std	r2,FRAME_TOC_SAVE(r1)
 	PPC64_LOAD_FUNCPTR r3
 	ld	r3,INT_PARMS+0(r1)
 /* Load the floating point registers.  */
@@ -406,7 +408,7 @@ L(restoreFXR2):
 	lfd	fp13,FPR_PARMS+96(r1)
 /* Call the target function.  */
 	bctrl
-	ld	r2,40(r1)
+	ld	r2,FRAME_TOC_SAVE(r1)
 	lwz	r12,VR_VRSAVE(r1)
 /* But return here and store the return values.  */
 	std	r3,INT_RTN(r1)
@@ -441,7 +443,7 @@ L(callpltexit):
 	beq	L(pltexitreturn)
 	lvx	v2,0,r10
 L(pltexitreturn):
-	ld	r0,FRAME_SIZE+16(r1)
+	ld	r0,FRAME_SIZE+FRAME_LR_SAVE(r1)
 	ld	r31,584(r1)
 	ld	r30,576(r1)
 	mtlr	r0

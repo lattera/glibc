@@ -8,27 +8,6 @@ SIG_BLOCK
 SIG_SETMASK
 
 
--- Offsets of the fields in the powerpc64 ABI stack frame.
--- XXX Do these correspond to some struct?
-
-FRAME_BACKCHAIN		0
-FRAME_CR_SAVE		8
-FRAME_LR_SAVE		16
-FRAME_COMPILER_DW	24
-FRAME_LINKER_DW		32
-FRAME_TOC_SAVE		40
-FRAME_PARM_SAVE		48
-FRAME_PARM1_SAVE	48
-FRAME_PARM2_SAVE	56
-FRAME_PARM3_SAVE	64
-FRAME_PARM4_SAVE	72
-FRAME_PARM5_SAVE	80
-FRAME_PARM6_SAVE	88
-FRAME_PARM7_SAVE	96
-FRAME_PARM8_SAVE	104
-FRAME_PARM9_SAVE	112
-
-
 -- Offsets of the fields in the ucontext_t structure.
 #define ucontext(member)	offsetof (ucontext_t, member)
 #define mcontext(member)	ucontext (uc_mcontext.member)

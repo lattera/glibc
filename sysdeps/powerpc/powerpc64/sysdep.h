@@ -20,25 +20,67 @@
 
 #ifdef __ASSEMBLER__
 
+/* Stack frame offsets.  */
+#if _CALL_ELF != 2
+#define FRAME_MIN_SIZE		112
+#define FRAME_MIN_SIZE_PARM	112
+#define FRAME_BACKCHAIN		0
+#define FRAME_CR_SAVE		8
+#define FRAME_LR_SAVE		16
+#define FRAME_TOC_SAVE		40
+#define FRAME_PARM_SAVE		48
+#define FRAME_PARM1_SAVE	48
+#define FRAME_PARM2_SAVE	56
+#define FRAME_PARM3_SAVE	64
+#define FRAME_PARM4_SAVE	72
+#define FRAME_PARM5_SAVE	80
+#define FRAME_PARM6_SAVE	88
+#define FRAME_PARM7_SAVE	96
+#define FRAME_PARM8_SAVE	104
+#define FRAME_PARM9_SAVE	112
+#else
+#define FRAME_MIN_SIZE		32
+#define FRAME_MIN_SIZE_PARM	96
+#define FRAME_BACKCHAIN		0
+#define FRAME_CR_SAVE		8
+#define FRAME_LR_SAVE		16
+#define FRAME_TOC_SAVE		24
+#define FRAME_PARM_SAVE		32
+#define FRAME_PARM1_SAVE	32
+#define FRAME_PARM2_SAVE	40
+#define FRAME_PARM3_SAVE	48
+#define FRAME_PARM4_SAVE	56
+#define FRAME_PARM5_SAVE	64
+#define FRAME_PARM6_SAVE	72
+#define FRAME_PARM7_SAVE	80
+#define FRAME_PARM8_SAVE	88
+#define FRAME_PARM9_SAVE	96
+#endif
+
 /* Support macros for CALL_MCOUNT.  */
+#if _CALL_ELF == 2
+#define call_mcount_parm_offset (-64)
+#else
+#define call_mcount_parm_offset FRAME_PARM_SAVE
+#endif
 	.macro SAVE_ARG NARG
 	.if \NARG
 	SAVE_ARG \NARG-1
-	std	2+\NARG,40+8*(\NARG)(1)
+	std	2+\NARG,call_mcount_parm_offset-8+8*(\NARG)(1)
 	.endif
 	.endm
 
 	.macro REST_ARG NARG
 	.if \NARG
 	REST_ARG \NARG-1
-	ld	2+\NARG,112+40+8*(\NARG)(1)
+	ld	2+\NARG,FRAME_MIN_SIZE_PARM+call_mcount_parm_offset-8+8*(\NARG)(1)
 	.endif
 	.endm
 
 	.macro CFI_SAVE_ARG NARG
 	.if \NARG
 	CFI_SAVE_ARG \NARG-1
-	cfi_offset(2+\NARG,40+8*(\NARG))
+	cfi_offset(2+\NARG,call_mcount_parm_offset-8+8*(\NARG))
 	.endif
 	.endm
 
@@ -55,20 +97,20 @@
 #ifdef	PROF
 	mflr	r0
 	SAVE_ARG \NARG
-	std	r0,16(r1)
-	stdu	r1,-112(r1)
-	cfi_adjust_cfa_offset(112)
-	cfi_offset(lr,16)
+	std	r0,FRAME_LR_SAVE(r1)
+	stdu	r1,-FRAME_MIN_SIZE_PARM(r1)
+	cfi_adjust_cfa_offset(FRAME_MIN_SIZE_PARM)
+	cfi_offset(lr,FRAME_LR_SAVE)
 	CFI_SAVE_ARG \NARG
 	bl	JUMPTARGET (_mcount)
 #ifndef SHARED
 	nop
 #endif
-	ld	r0,128(r1)
+	ld	r0,FRAME_MIN_SIZE_PARM+FRAME_LR_SAVE(r1)
 	REST_ARG \NARG
 	mtlr	r0
-	addi	r1,r1,112
-	cfi_adjust_cfa_offset(-112)
+	addi	r1,r1,FRAME_MIN_SIZE_PARM
+	cfi_adjust_cfa_offset(-FRAME_MIN_SIZE_PARM)
 	cfi_restore(lr)
 	CFI_REST_ARG \NARG
 #endif
@@ -267,15 +309,15 @@ LT_LABELSUFFIX(name,_name_end): ; \
     .else; \
 .Local_syscall_error: \
     mflr 0; \
-    std 0,16(1); \
-    stdu 1,-112(1); \
-    cfi_adjust_cfa_offset(112); \
-    cfi_offset(lr,16); \
+    std 0,FRAME_LR_SAVE(1); \
+    stdu 1,-FRAME_MIN_SIZE(1); \
+    cfi_adjust_cfa_offset(FRAME_MIN_SIZE); \
+    cfi_offset(lr,FRAME_LR_SAVE); \
     bl JUMPTARGET(__syscall_error); \
     nop; \
-    ld 0,112+16(1); \
-    addi 1,1,112; \
-    cfi_adjust_cfa_offset(-112); \
+    ld 0,FRAME_MIN_SIZE+FRAME_LR_SAVE(1); \
+    addi 1,1,FRAME_MIN_SIZE; \
+    cfi_adjust_cfa_offset(-FRAME_MIN_SIZE); \
     mtlr 0; \
     cfi_restore(lr); \
     blr; \

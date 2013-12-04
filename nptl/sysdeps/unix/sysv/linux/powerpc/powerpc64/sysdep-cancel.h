@@ -31,6 +31,14 @@
 #  define DASHDASHPFX(str) __##str
 # endif
 
+#if _CALL_ELF == 2
+#define CANCEL_FRAMESIZE (FRAME_MIN_SIZE+16+48)
+#define CANCEL_PARM_SAVE (FRAME_MIN_SIZE+16)
+#else
+#define CANCEL_FRAMESIZE (FRAME_MIN_SIZE+16)
+#define CANCEL_PARM_SAVE (CANCEL_FRAMESIZE+FRAME_PARM_SAVE)
+#endif
+
 # undef PSEUDO
 # define PSEUDO(name, syscall_name, args)				\
   .section ".text";							\
@@ -44,52 +52,52 @@
     PSEUDO_RET;								\
   .size DASHDASHPFX(syscall_name##_nocancel),.-DASHDASHPFX(syscall_name##_nocancel);	\
   .Lpseudo_cancel:							\
-    stdu 1,-128(1);							\
-    cfi_adjust_cfa_offset (128);					\
+    stdu 1,-CANCEL_FRAMESIZE(1);					\
+    cfi_adjust_cfa_offset (CANCEL_FRAMESIZE);				\
     mflr 9;								\
-    std  9,128+16(1);							\
-    cfi_offset (lr, 16);						\
+    std  9,CANCEL_FRAMESIZE+FRAME_LR_SAVE(1);				\
+    cfi_offset (lr, FRAME_LR_SAVE);					\
     DOCARGS_##args;	/* save syscall args around CENABLE.  */	\
     CENABLE;								\
-    std  3,112(1);	/* store CENABLE return value (MASK).  */	\
+    std  3,FRAME_MIN_SIZE(1); /* store CENABLE return value (MASK).  */	\
     UNDOCARGS_##args;	/* restore syscall args.  */			\
     DO_CALL (SYS_ify (syscall_name));					\
     mfcr 0;		/* save CR/R3 around CDISABLE.  */		\
-    std  3,120(1);							\
-    std  0,128+8(1);							\
-    cfi_offset (cr, 8);							\
-    ld   3,112(1);	/* pass MASK to CDISABLE.  */			\
+    std  3,FRAME_MIN_SIZE+8(1);						\
+    std  0,CANCEL_FRAMESIZE+FRAME_CR_SAVE(1);				\
+    cfi_offset (cr, FRAME_CR_SAVE);					\
+    ld   3,FRAME_MIN_SIZE(1); /* pass MASK to CDISABLE.  */		\
     CDISABLE;								\
-    ld   9,128+16(1);							\
-    ld   0,128+8(1);	/* restore CR/R3. */				\
-    ld   3,120(1);							\
+    ld   9,CANCEL_FRAMESIZE+FRAME_LR_SAVE(1);				\
+    ld   0,CANCEL_FRAMESIZE+FRAME_CR_SAVE(1); /* restore CR/R3. */	\
+    ld   3,FRAME_MIN_SIZE+8(1);						\
     mtlr 9;								\
     mtcr 0;								\
-    addi 1,1,128;							\
-    cfi_adjust_cfa_offset (-128);					\
+    addi 1,1,CANCEL_FRAMESIZE;						\
+    cfi_adjust_cfa_offset (-CANCEL_FRAMESIZE);				\
     cfi_restore (lr);							\
     cfi_restore (cr)
 
 # define DOCARGS_0
 # define UNDOCARGS_0
 
-# define DOCARGS_1	std 3,128+48(1); DOCARGS_0
-# define UNDOCARGS_1	ld 3,128+48(1); UNDOCARGS_0
+# define DOCARGS_1	std 3,CANCEL_PARM_SAVE(1); DOCARGS_0
+# define UNDOCARGS_1	ld 3,CANCEL_PARM_SAVE(1); UNDOCARGS_0
 
-# define DOCARGS_2	std 4,128+56(1); DOCARGS_1
-# define UNDOCARGS_2	ld 4,128+56(1); UNDOCARGS_1
+# define DOCARGS_2	std 4,CANCEL_PARM_SAVE+8(1); DOCARGS_1
+# define UNDOCARGS_2	ld 4,CANCEL_PARM_SAVE+8(1); UNDOCARGS_1
 
-# define DOCARGS_3	std 5,128+64(1); DOCARGS_2
-# define UNDOCARGS_3	ld 5,128+64(1); UNDOCARGS_2
+# define DOCARGS_3	std 5,CANCEL_PARM_SAVE+16(1); DOCARGS_2
+# define UNDOCARGS_3	ld 5,CANCEL_PARM_SAVE+16(1); UNDOCARGS_2
 
-# define DOCARGS_4	std 6,128+72(1); DOCARGS_3
-# define UNDOCARGS_4	ld 6,128+72(1); UNDOCARGS_3
+# define DOCARGS_4	std 6,CANCEL_PARM_SAVE+24(1); DOCARGS_3
+# define UNDOCARGS_4	ld 6,CANCEL_PARM_SAVE+24(1); UNDOCARGS_3
 
-# define DOCARGS_5	std 7,128+80(1); DOCARGS_4
-# define UNDOCARGS_5	ld 7,128+80(1); UNDOCARGS_4
+# define DOCARGS_5	std 7,CANCEL_PARM_SAVE+32(1); DOCARGS_4
+# define UNDOCARGS_5	ld 7,CANCEL_PARM_SAVE+32(1); UNDOCARGS_4
 
-# define DOCARGS_6	std 8,128+88(1); DOCARGS_5
-# define UNDOCARGS_6	ld 8,128+88(1); UNDOCARGS_5
+# define DOCARGS_6	std 8,CANCEL_PARM_SAVE+40(1); DOCARGS_5
+# define UNDOCARGS_6	ld 8,CANCEL_PARM_SAVE+40(1); UNDOCARGS_5
 
 # ifdef IS_IN_libpthread
 #  ifdef SHARED

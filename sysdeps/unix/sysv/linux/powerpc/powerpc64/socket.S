@@ -46,8 +46,13 @@
 # endif
 #endif
 
-#define FRAMESIZE 128
-#define stackblock FRAMESIZE+48 /* offset to parm save area.  */
+#if _CALL_ELF == 2
+#define FRAMESIZE (FRAME_MIN_SIZE+16+64)
+#define stackblock (FRAME_MIN_SIZE+16)
+#else
+#define FRAMESIZE (FRAME_MIN_SIZE+16)
+#define stackblock (FRAMESIZE+FRAME_PARM_SAVE) /* offset to parm save area.  */
+#endif
 
 	.text
 ENTRY(__socket)
@@ -98,22 +103,22 @@ ENTRY(__socket)
 .Lsocket_cancel:
 	cfi_adjust_cfa_offset(FRAMESIZE)
 	mflr	r9
-	std	r9,FRAMESIZE+16(r1)
-	cfi_offset (lr, 16)
+	std	r9,FRAMESIZE+FRAME_LR_SAVE(r1)
+	cfi_offset (lr, FRAME_LR_SAVE)
 	CENABLE
-	std	r3,120(r1)
+	std	r3,FRAME_MIN_SIZE+8(r1)
 	li	r3,P(SOCKOP_,socket)
 	addi	r4,r1,stackblock
 	DO_CALL(SYS_ify(socketcall))
 	mfcr	r0
-	std	r3,112(r1)
-	std	r0,FRAMESIZE+8(r1)
-	cfi_offset (cr, 8)
-	ld  	r3,120(r1)
+	std	r3,FRAME_MIN_SIZE(r1)
+	std	r0,FRAMESIZE+FRAME_CR_SAVE(r1)
+	cfi_offset (cr, FRAME_CR_SAVE)
+	ld  	r3,FRAME_MIN_SIZE+8(r1)
 	CDISABLE
-	ld	r4,FRAMESIZE+16(r1)
-	ld	r0,FRAMESIZE+8(r1)
-	ld	r3,112(r1)
+	ld	r4,FRAMESIZE+FRAME_LR_SAVE(r1)
+	ld	r0,FRAMESIZE+FRAME_CR_SAVE(r1)
+	ld	r3,FRAME_MIN_SIZE(r1)
 	mtlr	r4
 	mtcr	r0
 	addi	r1,r1,FRAMESIZE

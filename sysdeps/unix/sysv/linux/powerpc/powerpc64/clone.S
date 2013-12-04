@@ -40,22 +40,22 @@ ENTRY (__clone)
 	cror	cr0*4+eq,cr1*4+eq,cr0*4+eq
 	beq-	cr0,L(badargs)
 
-	/* Save some regs in parm save area.  */
+	/* Save some regs in the "red zone".  */
 #ifdef RESET_PID
-	std	r29,48(r1)
+	std	r29,-24(r1)
 #endif
-	std	r30,56(r1)
-	std	r31,64(r1)
+	std	r30,-16(r1)
+	std	r31,-8(r1)
 #ifdef RESET_PID
-	cfi_offset(r29,48)
+	cfi_offset(r29,-24)
 #endif
-	cfi_offset(r30,56)
-	cfi_offset(r31,64)
+	cfi_offset(r30,-16)
+	cfi_offset(r31,-8)
 
 	/* Set up stack frame for child.  */
 	clrrdi	r4,r4,4
 	li	r0,0
-	stdu	r0,-112(r4) /* min stack frame is 112 bytes per ABI */
+	stdu	r0,-FRAME_MIN_SIZE_PARM(r4)
 
 	/* Save fn, args, stack across syscall.  */
 	mr	r30,r3			/* Function in r30.  */
@@ -97,12 +97,12 @@ L(nomoregetpid):
 L(oldpid):
 #endif
 
-	std	r2,40(r1)
+	std	r2,FRAME_TOC_SAVE(r1)
 	/* Call procedure.  */
 	PPC64_LOAD_FUNCPTR r30
 	mr	r3,r31
 	bctrl
-	ld	r2,40(r1)
+	ld	r2,FRAME_TOC_SAVE(r1)
 	/* Call _exit with result from procedure.  */
 #ifdef SHARED
 	b	JUMPTARGET(__GI__exit)
@@ -121,15 +121,15 @@ L(badargs):
 L(parent):
 	/* Parent.  Restore registers & return.  */
 #ifdef RESET_PID
-	cfi_offset(r29,48)
+	cfi_offset(r29,-24)
 #endif
-	cfi_offset(r30,56)
-	cfi_offset(r31,64)
+	cfi_offset(r30,-16)
+	cfi_offset(r31,-8)
 #ifdef RESET_PID
-	ld	r29,48(r1)
+	ld	r29,-24(r1)
 #endif
-	ld	r30,56(r1)
-	ld	r31,64(r1)
+	ld	r30,-16(r1)
+	ld	r31,-8(r1)
 #ifdef RESET_PID
 	cfi_restore(r29)
 #endif

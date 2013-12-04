@@ -66,8 +66,8 @@
 BODY_LABEL (_init):
 	LOCALENTRY(_init)
 	mflr 0
-	std 0, 16(r1)
-	stdu r1, -112(r1)
+	std 0, FRAME_LR_SAVE(r1)
+	stdu r1, -FRAME_MIN_SIZE_PARM(r1)
 #if PREINIT_FUNCTION_WEAK
 	addis r9, r2, .LC0@toc@ha
 	ld r0, .LC0@toc@l(r9)
@@ -84,5 +84,5 @@ BODY_LABEL (_init):
 BODY_LABEL (_fini):
 	LOCALENTRY(_fini)
 	mflr 0
-	std 0, 16(r1)
-	stdu r1, -112(r1)
+	std 0, FRAME_LR_SAVE(r1)
+	stdu r1, -FRAME_MIN_SIZE_PARM(r1)

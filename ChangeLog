@@ -1,4 +1,54 @@
 2013-12-04  Ulrich Weigand  <Ulrich.Weigand@de.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/sysdep.h (FRAME_MIN_SIZE): Define.
+	(FRAME_MIN_SIZE_PARM): Likewise.
+	(FRAME_BACKCHAIN): Likewise.
+	(FRAME_CR_SAVE): Likewise.
+	(FRAME_LR_SAVE): Likewise.
+	(FRAME_TOC_SAVE): Likewise.
+	(FRAME_PARM_SAVE): Likewise.
+	(FRAME_PARM1_SAVE, FRAME_PARM2_SAVE, FRAME_PARM3_SAVE,
+	FRAME_PARM4_SAVE, FRAME_PARM5_SAVE, FRAME_PARM6_SAVE,
+	FRAME_PARM7_SAVE, FRAME_PARM8_SAVE, FRAME_PARM9_SAVE): Likewise.
+	(call_mcount_parm_offset): New macro.
+	(SAVE_ARG, REST_ARG, CFI_SAVE_ARG): Use it.
+	(PROF): Use symbolic stack frame offsets.
+	(TAIL_CALL_SYSCALL_ERROR): Likewise.
+	* sysdeps/powerpc/powerpc64/dl-trampoline.S (FRAME_SIZE, INT_PARMS):
+	Redefine in terms of FRAME_MIN_SIZE.
+	(_dl_runtime_resolve): Use symbolic stack frame offsets.
+	(_dl_profile_resolve): Likewise.  Update comment.
+	* sysdeps/powerpc/powerpc64/setjmp-common.S (__GI__setjmp): Use
+	symbols stack frame offsets.
+	(__sigsetjmp): Likewise.
+	* sysdeps/powerpc/powerpc64/__longjmp-common.S (__longjmp): Likewise.
+	* sysdeps/powerpc/powerpc64/ppc-mcount.S (_mcount): Likewise.
+	* sysdeps/powerpc/powerpc64/crti.S (_init, _fini): Likewise.
+	* sysdeps/powerpc/powerpc64/crtn.S (_init, _fini): Likewise.
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ucontext_i.sym
+	(FRAME_BACKCHAIN): Remove.
+	(FRAME_CR_SAVE): Likewise.
+	(FRAME_LR_SAVE): Likewise.
+	(FRAME_COMPILER_DW): Likewise.
+	(FRAME_LINKER_DW): Likewise.
+	(FRAME_TOC_SAVE): Likewise.
+	(FRAME_PARM_SAVE): Likewise.
+	(FRAME_PARM1_SAVE, FRAME_PARM2_SAVE, FRAME_PARM3_SAVE,
+	FRAME_PARM4_SAVE, FRAME_PARM5_SAVE, FRAME_PARM6_SAVE,
+	FRAME_PARM7_SAVE, FRAME_PARM8_SAVE, FRAME_PARM9_SAVE): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/____longjmp_chk.S
+	(CHECK_SP): Use symbolic stack frame offsets.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/brk.S (__brk): Use "red
+	zone" instead of caller's parameter save area for temp storage.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S (__clone):
+	Likewise.  Also, use symbolic stack frame offsets.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/socket.S (FRAMESIZE,
+	stackblock): Redefine for _CALL_ELF == 2 to save parameters into
+	our own stack frame instead of the caller's.
+	(__socket): Use symbolic stack frame offsets.
+
+2013-12-04  Ulrich Weigand  <Ulrich.Weigand@de.ibm.com>
 	    Alan Modra  <amodra@gmail.com>
 
 	* elf/elf.h (DT_PPC64_OPT, PPC64_OPT_TLS, PPC64_OPT_MULTI_TOC):

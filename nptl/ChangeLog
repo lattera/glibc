@@ -1,3 +1,16 @@
+2013-12-04  Ulrich Weigand  <Ulrich.Weigand@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h
+	(CANCEL_FRAMESIZE, CANCEL_PARM_SAVE): New macros to save parameters
+	into our own stack frame instead of the caller's.
+	(PSEUDO): Use them.  Use symbolic stack frame offsets.
+	(DOCARGS_1, UNDOCARGS_1): Use CANCEL_PARM_SAVE.
+	(DOCARGS_2, UNDOCARGS_2): Likewise.
+	(DOCARGS_3, UNDOCARGS_3): Likewise.
+	(DOCARGS_4, UNDOCARGS_4): Likewise.
+	(DOCARGS_5, UNDOCARGS_5): Likewise.
+	(DOCARGS_6, UNDOCARGS_6): Likewise.
+
 2013-11-26  Ondřej Bílka  <neleai@seznam.cz>
 	* sysdeps/i386/tls.h: Use __glibc_reserved instead __unused.
 	* sysdeps/x86_64/tls.h: Likewise.

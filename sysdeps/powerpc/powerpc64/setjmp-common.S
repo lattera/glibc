@@ -54,7 +54,7 @@ END (setjmp)
    bugz #269.  __GI__setjmp is used in csu/libc-start.c when
    HAVE_CLEANUP_JMP_BUF is defined.  */
 ENTRY (__GI__setjmp)
-	std r2,40(r1)		/* Save the callers TOC in the save area.  */
+	std r2,FRAME_TOC_SAVE(r1)		/* Save the callers TOC in the save area.  */
 	CALL_MCOUNT 1
 	li r4,0			/* Set second argument to 0.  */
 	b JUMPTARGET (GLUE(__sigsetjmp,_ent))
@@ -80,7 +80,7 @@ JUMPTARGET(GLUE(__sigsetjmp,_ent)):
 #endif
 	mflr r0
 #if defined SHARED && !defined IS_IN_rtld
-	ld   r5,40(r1)	/* Retrieve the callers TOC.  */
+	ld   r5,FRAME_TOC_SAVE(r1)	/* Retrieve the callers TOC.  */
 	std  r5,(JB_GPR2*8)(3)
 #else
 	std  r2,(JB_GPR2*8)(3)
@@ -216,14 +216,14 @@ L(no_vmx):
 	b	JUMPTARGET (__sigjmp_save)
 #else
 	mflr	r0
-	std	r0,16(r1)
-	stdu	r1,-112(r1)
-	cfi_adjust_cfa_offset(112)
-	cfi_offset(lr,16)
+	std	r0,FRAME_LR_SAVE(r1)
+	stdu	r1,-FRAME_MIN_SIZE(r1)
+	cfi_adjust_cfa_offset(FRAME_MIN_SIZE)
+	cfi_offset(lr,FRAME_LR_SAVE)
 	bl	JUMPTARGET (__sigjmp_save)
 	nop
-	ld	r0,112+16(r1)
-	addi	r1,r1,112
+	ld	r0,FRAME_MIN_SIZE+FRAME_LR_SAVE(r1)
+	addi	r1,r1,FRAME_MIN_SIZE
 	mtlr	r0
 	blr
 #endif

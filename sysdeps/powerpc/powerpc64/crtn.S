@@ -39,13 +39,13 @@
 #include <sysdep.h>
 
 	.section .init,"ax",@progbits
-	addi r1, r1, 112
-	ld r0, 16(r1)
+	addi r1, r1, FRAME_MIN_SIZE_PARM
+	ld r0, FRAME_LR_SAVE(r1)
 	mtlr r0
 	blr
 
 	.section .fini,"ax",@progbits
-	addi r1, r1, 112
-	ld r0, 16(r1)
+	addi r1, r1, FRAME_MIN_SIZE_PARM
+	ld r0, FRAME_LR_SAVE(r1)
 	mtlr r0
 	blr
