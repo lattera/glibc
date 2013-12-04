@@ -1,5 +1,7 @@
 2013-12-04  Joseph Myers  <joseph@codesourcery.com>
 
+	* stdlib/longlong.h: Update from GCC.
+
 	[BZ #6807]
 	[BZ #15901]
 	* math/w_j0.c (y0): Raise FE_DIVBYZERO on zero argument.
