@@ -71,12 +71,8 @@ EALIGN(_dl_runtime_resolve, 4, 0)
 	ld	r5,INT_PARMS+16(r1)
 	ld	r4,INT_PARMS+8(r1)
 	mtcrf	0xFF,r0
-/* Load the target address, toc and static chain reg from the function
-   descriptor returned by fixup.  */
-	ld	r0,0(r3)
-	ld	r2,8(r3)
-	mtctr	r0
-	ld	r11,16(r3)
+/* Prepare for calling the function returned by fixup.  */
+	PPC64_LOAD_FUNCPTR r3
 	ld	r3,INT_PARMS+0(r1)
 /* Unwind the stack frame, and jump.  */
 	addi	r1,r1,FRAME_SIZE
@@ -322,13 +318,9 @@ L(restoreFXR):
 	ld	r5,INT_PARMS+16(r1)
 	ld	r4,INT_PARMS+8(r1)
 	mtcrf	0xFF,r0
-/* Load the target address, toc and static chain reg from the function
-   descriptor returned by fixup.  */
-	ld	r0,0(r3)
-	ld	r2,8(r3)
-	ld	r11,16(r3)
+/* Prepare for calling the function returned by fixup.  */
+	PPC64_LOAD_FUNCPTR r3
 	ld	r3,INT_PARMS+0(r1)
-	mtctr	r0
 /* Load the floating point registers.  */
 	lfd	fp1,FPR_PARMS+0(r1)
 	lfd	fp2,FPR_PARMS+8(r1)
@@ -386,14 +378,10 @@ L(restoreFXR2):
 	ld	r5,INT_PARMS+16(r1)
 	ld	r4,INT_PARMS+8(r1)
 	mtcrf	0xFF,r0
-/* Load the target address, toc and static chain reg from the function
-   descriptor returned by fixup.  */
-	ld	r0,0(r3)
+/* Prepare for calling the function returned by fixup.  */
 	std	r2,40(r1)
-	ld	r2,8(r3)
-	ld	r11,16(r3)
+	PPC64_LOAD_FUNCPTR r3
 	ld	r3,INT_PARMS+0(r1)
-	mtctr	r0
 /* Load the floating point registers.  */
 	lfd	fp1,FPR_PARMS+0(r1)
 	lfd	fp2,FPR_PARMS+8(r1)

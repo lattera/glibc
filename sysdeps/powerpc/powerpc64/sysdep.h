@@ -74,6 +74,14 @@
 #endif
 	.endm
 
+/* Macro to prepare for calling via a function pointer.  */
+	.macro PPC64_LOAD_FUNCPTR PTR
+	ld      r12,0(\PTR)
+	ld      r2,8(\PTR)
+	mtctr   r12
+	ld      r11,16(\PTR)
+	.endm
+
 #ifdef USE_PPC64_OVERLAPPING_OPD
 # define OPD_ENT(name)	.quad BODY_LABEL (name), .TOC.@tocbase
 #else
@@ -81,7 +89,6 @@
 #endif
 
 #define ENTRY_1(name)	\
-	.section	".text";		\
 	.type BODY_LABEL(name),@function;	\
 	.globl name;				\
 	.section ".opd","aw";			\
@@ -110,6 +117,7 @@ name##: OPD_ENT (name);				\
 #endif
 
 #define ENTRY(name)	\
+	.section	".text";		\
 	ENTRY_2(name)				\
 	.align ALIGNARG(2);			\
 BODY_LABEL(name):				\
@@ -127,6 +135,7 @@ BODY_LABEL(name):				\
 /* EALIGN is like ENTRY, but does alignment to 'words'*4 bytes
    past a 2^alignt boundary.  */
 #define EALIGN(name, alignt, words) \
+	.section	".text";		\
 	ENTRY_2(name)				\
 	.align ALIGNARG(alignt);		\
 	EALIGN_W_##words;			\
@@ -286,24 +295,42 @@ LT_LABELSUFFIX(name,_name_end): ; \
 
 #else /* !__ASSEMBLER__ */
 
+#define PPC64_LOAD_FUNCPTR(ptr) \
+	"ld 	12,0(" #ptr ");\n"					\
+	"ld	2,8(" #ptr ");\n"					\
+	"mtctr	12;\n"							\
+	"ld	11,16(" #ptr ");"
+
 #ifdef USE_PPC64_OVERLAPPING_OPD
 # define OPD_ENT(name)	".quad " BODY_PREFIX #name ", .TOC.@tocbase;"
 #else
 # define OPD_ENT(name)	".quad " BODY_PREFIX #name ", .TOC.@tocbase, 0;"
 #endif
 
+#define ENTRY_1(name)	\
+	".type   " BODY_PREFIX #name ",@function;\n"			\
+	".globl " #name ";\n"						\
+	".pushsection \".opd\",\"aw\";\n"				\
+	".align  3;\n"							\
+#name ":\n"								\
+	OPD_ENT (name) "\n"						\
+	".popsection;"
+
 #ifdef HAVE_ASM_GLOBAL_DOT_NAME
 # define DOT_PREFIX "."
 # define BODY_PREFIX "."
 # define ENTRY_2(name)	\
 	".globl " BODY_PREFIX #name ";\n"				\
+	ENTRY_1(name) "\n"						\
 	".size  " #name ", 24;"
 # define END_2(name)	\
 	".size " BODY_PREFIX #name ",.-" BODY_PREFIX #name ";"
 #else
 # define DOT_PREFIX ""
 # define BODY_PREFIX ".LY"
-# define ENTRY_2(name) ".type " #name ",@function;"
+# define ENTRY_2(name)	\
+	".type " #name ",@function;\n"					\
+	ENTRY_1(name)
 # define END_2(name)	\
 	".size " #name ",.-" BODY_PREFIX #name ";\n"			\
 	".size " BODY_PREFIX #name ",.-" BODY_PREFIX #name ";"

@@ -99,9 +99,7 @@ L(oldpid):
 
 	std	r2,40(r1)
 	/* Call procedure.  */
-	ld	r0,0(r30)
-	ld	r2,8(r30)
-	mtctr	r0
+	PPC64_LOAD_FUNCPTR r30
 	mr	r3,r31
 	bctrl
 	ld	r2,40(r1)

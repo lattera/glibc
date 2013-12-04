@@ -60,18 +60,8 @@
 .LC0:
 	.tc PREINIT_FUNCTION[TC], PREINIT_FUNCTION
 #endif
-	.type BODY_LABEL (_init), @function
-	.globl _init
-	.section ".opd", "aw"
-	.align 3
-_init:	OPD_ENT (_init)
-#ifdef HAVE_ASM_GLOBAL_DOT_NAME
-	.globl BODY_LABEL (_init)
-	.size _init, 24
-#else
-	.type _init, @function
-#endif
 	.section ".init", "ax", @progbits
+	ENTRY_2(_init)
 	.align ALIGNARG (2)
 BODY_LABEL (_init):
 	mflr 0
@@ -87,18 +77,8 @@ BODY_LABEL (_init):
 	nop
 1:
 
-	.type BODY_LABEL (_fini), @function
-	.globl _fini
-	.section ".opd", "aw"
-	.align 3
-_fini:	OPD_ENT (_fini)
-#ifdef HAVE_ASM_GLOBAL_DOT_NAME
-	.globl BODY_LABEL (_fini)
-	.size _fini, 24
-#else
-	.type _fini, @function
-#endif
 	.section ".fini", "ax", @progbits
+	ENTRY_2(_fini)
 	.align ALIGNARG (2)
 BODY_LABEL (_fini):
 	mflr 0

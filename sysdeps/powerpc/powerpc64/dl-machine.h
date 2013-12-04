@@ -122,14 +122,7 @@ elf_machine_dynamic (void)
 #define RTLD_START \
   asm (".pushsection \".text\"\n"					\
 "	.align	2\n"							\
-"	.type	" BODY_PREFIX "_start,@function\n"			\
-"	.pushsection \".opd\",\"aw\"\n"					\
-"	.align	3\n"							\
-"	.globl	_start\n"						\
 "	" ENTRY_2(_start) "\n"						\
-"_start:\n"								\
-"	" OPD_ENT(_start) "\n"						\
-"	.popsection\n"							\
 BODY_PREFIX "_start:\n"							\
 /* We start with the following on the stack, from top:			\
    argc (4 bytes);							\
@@ -154,11 +147,6 @@ BODY_PREFIX "_start:\n"							\
 ".LT__start_name_end:\n"						\
 "	.align 2\n"							\
 "	" END_2(_start) "\n"						\
-"	.globl	_dl_start_user\n"					\
-"	.pushsection \".opd\",\"aw\"\n"					\
-"_dl_start_user:\n"							\
-"	" OPD_ENT(_dl_start_user) "\n"					\
-"	.popsection\n"							\
 "	.pushsection	\".toc\",\"aw\"\n"				\
 DL_STARTING_UP_DEF							\
 ".LC__rtld_local:\n"							\
@@ -170,7 +158,6 @@ DL_STARTING_UP_DEF							\
 ".LC__dl_fini:\n"							\
 "	.tc _dl_fini[TC],_dl_fini\n"					\
 "	.popsection\n"							\
-"	.type	" BODY_PREFIX "_dl_start_user,@function\n"		\
 "	" ENTRY_2(_dl_start_user) "\n"					\
 /* Now, we do our main work of calling initialisation procedures.	\
    The ELF ABI doesn't say anything about parameters for these,		\
@@ -228,10 +215,7 @@ BODY_PREFIX "_dl_start_user:\n"						\
 /* Now, call the start function descriptor at r30...  */		\
 "	.globl	._dl_main_dispatch\n"					\
 "._dl_main_dispatch:\n"							\
-"	ld	0,0(30)\n"						\
-"	ld	2,8(30)\n"						\
-"	mtctr	0\n"							\
-"	ld	11,16(30)\n"						\
+"	" PPC64_LOAD_FUNCPTR(30) "\n"					\
 "	bctr\n"								\
 ".LT__dl_start_user:\n"							\
 "	.long 0\n"							\
