@@ -64,6 +64,7 @@
 	ENTRY_2(_init)
 	.align ALIGNARG (2)
 BODY_LABEL (_init):
+	LOCALENTRY(_init)
 	mflr 0
 	std 0, 16(r1)
 	stdu r1, -112(r1)
@@ -81,6 +82,7 @@ BODY_LABEL (_init):
 	ENTRY_2(_fini)
 	.align ALIGNARG (2)
 BODY_LABEL (_fini):
+	LOCALENTRY(_fini)
 	mflr 0
 	std 0, 16(r1)
 	stdu r1, -112(r1)

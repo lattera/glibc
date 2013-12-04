@@ -41,7 +41,7 @@ extern void *__vdso_sigtramp32;
 extern void *__vdso_sigtramp_rt32;
 #endif
 
-#if defined(__PPC64__) || defined(__powerpc64__)
+#if (defined(__PPC64__) || defined(__powerpc64__)) && _CALL_ELF != 2
 /* The correct solution is for _dl_vdso_vsym to return the address of the OPD
    for the kernel VDSO function.  That address would then be stored in the
    __vdso_* variables and returned as the result of the IFUNC resolver function.

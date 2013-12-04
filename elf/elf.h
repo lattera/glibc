@@ -2272,6 +2272,12 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_PPC64_REL16_HI	251	/* half16   (sym+add-.)@h */
 #define R_PPC64_REL16_HA	252	/* half16   (sym+add-.)@ha */
 
+/* e_flags bits specifying ABI.
+   1 for original function descriptor using ABI,
+   2 for revised ABI without function descriptors,
+   0 for unspecified or not using any features affected by the differences.  */
+#define EF_PPC64_ABI	3
+
 /* PowerPC64 specific values for the Dyn d_tag field.  */
 #define DT_PPC64_GLINK  (DT_LOPROC + 0)
 #define DT_PPC64_OPD	(DT_LOPROC + 1)

@@ -23,6 +23,8 @@
 
 /* Now define our stuff.  */
 
+#if _CALL_ELF != 2
+
 static __always_inline bool
 _dl_ppc64_is_opd_sym (const struct link_map *l, const ElfW(Sym) *sym)
 {
@@ -72,5 +74,7 @@ _dl_ppc64_addr_sym_match (const struct link_map *l, const ElfW(Sym) *sym,
 #undef DL_ADDR_SYM_MATCH
 #define DL_ADDR_SYM_MATCH(L, SYM, MATCHSYM, ADDR) \
   _dl_ppc64_addr_sym_match (L, SYM, MATCHSYM, ADDR)
+
+#endif
 
 #endif /* ldsodefs.h */

@@ -111,6 +111,7 @@ L(parmloop):
 
 L(noparms):
 
+#if _CALL_ELF != 2
   /* Load the function address and TOC from the function descriptor
      and store them in the ucontext as NIP and r2.  Store the 3rd
      field of the function descriptor into the ucontext as r11 in case
@@ -121,6 +122,12 @@ L(noparms):
   std   r0,(SIGCONTEXT_GP_REGS+(PT_NIP*8))(r3)
   std   r10,(SIGCONTEXT_GP_REGS+(PT_R2*8))(r3)
   std   r9,(SIGCONTEXT_GP_REGS+(PT_R11*8))(r3)
+#else
+  /* In the ELFv2 ABI, the function pointer is already the address.
+     Store it as NIP and r12 as required by the ABI.  */
+  std   r4,(SIGCONTEXT_GP_REGS+(PT_NIP*8))(r3)
+  std   r4,(SIGCONTEXT_GP_REGS+(PT_R12*8))(r3)
+#endif
 
   /* If the target function returns we need to do some cleanup.  We use a
      code trick to get the address of our cleanup function into the link

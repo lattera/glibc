@@ -74,6 +74,8 @@
 #endif
 	.endm
 
+#if _CALL_ELF != 2
+
 /* Macro to prepare for calling via a function pointer.  */
 	.macro PPC64_LOAD_FUNCPTR PTR
 	ld      r12,0(\PTR)
@@ -115,13 +117,37 @@ name##: OPD_ENT (name);				\
 	.size name,.-BODY_LABEL(name);		\
 	.size BODY_LABEL(name),.-BODY_LABEL(name);
 #endif
+#define LOCALENTRY(name)
+
+#else /* _CALL_ELF */
+
+/* Macro to prepare for calling via a function pointer.  */
+	.macro PPC64_LOAD_FUNCPTR PTR
+	mr	r12,\PTR
+	mtctr   r12
+	.endm
+
+#define DOT_LABEL(X) X
+#define BODY_LABEL(X) X
+#define ENTRY_2(name)	\
+	.globl name;				\
+	.type name,@function;
+#define END_2(name)	\
+	.size name,.-name;
+#define LOCALENTRY(name)	\
+1:      addis	r2,r12,.TOC.-1b@ha; \
+        addi	r2,r2,.TOC.-1b@l; \
+	.localentry name,.-name;
+
+#endif /* _CALL_ELF */
 
 #define ENTRY(name)	\
 	.section	".text";		\
 	ENTRY_2(name)				\
 	.align ALIGNARG(2);			\
 BODY_LABEL(name):				\
-	cfi_startproc;
+	cfi_startproc;				\
+	LOCALENTRY(name)
 
 #define EALIGN_W_0  /* No words to insert.  */
 #define EALIGN_W_1  nop
@@ -140,7 +166,8 @@ BODY_LABEL(name):				\
 	.align ALIGNARG(alignt);		\
 	EALIGN_W_##words;			\
 BODY_LABEL(name):				\
-	cfi_startproc;
+	cfi_startproc;				\
+	LOCALENTRY(name)
 
 /* Local labels stripped out by the linker.  */
 #undef L
@@ -295,6 +322,8 @@ LT_LABELSUFFIX(name,_name_end): ; \
 
 #else /* !__ASSEMBLER__ */
 
+#if _CALL_ELF != 2
+
 #define PPC64_LOAD_FUNCPTR(ptr) \
 	"ld 	12,0(" #ptr ");\n"					\
 	"ld	2,8(" #ptr ");\n"					\
@@ -335,5 +364,26 @@ LT_LABELSUFFIX(name,_name_end): ; \
 	".size " #name ",.-" BODY_PREFIX #name ";\n"			\
 	".size " BODY_PREFIX #name ",.-" BODY_PREFIX #name ";"
 #endif
+#define LOCALENTRY(name)
+
+#else /* _CALL_ELF */
+
+#define PPC64_LOAD_FUNCPTR(ptr) \
+	"mr	12," #ptr ";\n"						\
+	"mtctr 	12;"
+
+#define DOT_PREFIX ""
+#define BODY_PREFIX ""
+#define ENTRY_2(name)	\
+	".type " #name ",@function;\n"					\
+	".globl " #name ";"
+#define END_2(name)	\
+	".size " #name ",.-" #name ";"
+#define LOCALENTRY(name)	\
+	"1: addis 2,12,.TOC.-1b@ha;\n"					\
+	"addi	2,2,.TOC.-1b@l;\n"					\
+	".localentry " #name ",.-" #name ";"
+
+#endif /* _CALL_ELF */
 
 #endif	/* __ASSEMBLER__ */

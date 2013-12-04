@@ -1,4 +1,37 @@
 2013-12-04  Ulrich Weigand  <Ulrich.Weigand@de.ibm.com>
+	    Alan Modra  <amodra@gmail.com>
+
+	* sysdeps/powerpc/powerpc64/sysdep.h [_CALL_ELF == 2]
+	(PPC64_LOAD_FUNCPTR, DOT_LABEL, BODY_LABEL, ENTRY_2, END_2): New
+	versions of macros to support ELFv2 ABI.
+	(LOCALENTRY): New macro.
+	(ENTRY, EALIGN): Use it.
+	* sysdeps/powerpc/powerpc64/crti.S (_init, _fini): Use LOCALENTRY.
+	* sysdeps/powerpc/powerpc64/setjmp-common.S (__GI__setjmp): Do not
+	fall through into ENTRY entry point.
+	* libc/sysdeps/powerpc/powerpc64/dl-machine.h (Elf64_FuncDesc):
+	Only define if _CALL_ELF != 2.
+
+	(elf_machine_matches_host): Verify ABI version matches.
+	(RTLD_START): Use LOCALENTRY.
+	(elf_machine_type_class): Use SHN_UNDEF PLT handling for ELFv2 ABI.
+	(PLT_INITIAL_ENTRY_WORDS): New version for _CALL_ELF != 2.
+	(PLT_ENTRY_WORDS): New macro.
+	(GLINK_INITIAL_ENTRY_WORDS, GLINK_ENTRY_WORDS): Likewise.
+	(elf_machine_runtime_setup): Support ELFv2 ABI.
+	(elf_machine_fixup_plt): Likewise.
+	(elf_machine_plt_conflict): Likewise.
+	(resolve_ifunc): Likewise.
+	* sysdeps/powerpc/powerpc64/dl-irel.h (elf_irela): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/libc-vdso.h (VDSO_IFUNC_RET):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ldsodefs.h
+	(DL_ADDR_SYM_MATCH): Only define if _CALL_ELF != 2.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/makecontext.S
+	(makecontext): Support ELFv2 ABI.
+	* elf/elf.h (EF_PPC64_ABI): Define.
+
+2013-12-04  Ulrich Weigand  <Ulrich.Weigand@de.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/sysdep.h [ASSEMBLER] (PPC64_LOAD_FUNCPTR):
 	New assembler macro.

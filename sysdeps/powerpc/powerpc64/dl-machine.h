@@ -31,6 +31,7 @@
    in l_info array.  */
 #define DT_PPC64(x) (DT_PPC64_##x - DT_LOPROC + DT_NUM)
 
+#if _CALL_ELF != 2
 /* A PowerPC64 function descriptor.  The .plt (procedure linkage
    table) and .opd (official procedure descriptor) sections are
    arrays of these.  */
@@ -40,6 +41,7 @@ typedef struct
   Elf64_Addr fd_toc;
   Elf64_Addr fd_aux;
 } Elf64_FuncDesc;
+#endif
 
 #define ELF_MULT_MACHINES_SUPPORTED
 
@@ -47,6 +49,18 @@ typedef struct
 static inline int
 elf_machine_matches_host (const Elf64_Ehdr *ehdr)
 {
+  /* Verify that the binary matches our ABI version.  */
+  if ((ehdr->e_flags & EF_PPC64_ABI) != 0)
+    {
+#if _CALL_ELF != 2
+      if ((ehdr->e_flags & EF_PPC64_ABI) != 1)
+        return 0;
+#else
+      if ((ehdr->e_flags & EF_PPC64_ABI) != 2)
+        return 0;
+#endif
+    }
+
   return ehdr->e_machine == EM_PPC64;
 }
 
@@ -124,6 +138,7 @@ elf_machine_dynamic (void)
 "	.align	2\n"							\
 "	" ENTRY_2(_start) "\n"						\
 BODY_PREFIX "_start:\n"							\
+"	" LOCALENTRY(_start) "\n"						\
 /* We start with the following on the stack, from top:			\
    argc (4 bytes);							\
    arguments for program (terminated by NULL);				\
@@ -165,6 +180,7 @@ DL_STARTING_UP_DEF							\
    Changing these is strongly discouraged (not least because argc is	\
    passed by value!).  */						\
 BODY_PREFIX "_dl_start_user:\n"						\
+"	" LOCALENTRY(_dl_start_user) "\n"				\
 /* the address of _start in r30.  */					\
 "	mr	30,3\n"							\
 /* &_dl_argc in 29, &_dl_argv in 27, and _dl_loaded in 28.  */		\
@@ -256,8 +272,22 @@ BODY_PREFIX "_dl_start_user:\n"						\
    relocations behave "normally", ie. always use the real address
    like PLT relocations.  So always set ELF_RTYPE_CLASS_PLT.  */
 
+#if _CALL_ELF != 2
 #define elf_machine_type_class(type) \
   (ELF_RTYPE_CLASS_PLT | (((type) == R_PPC64_COPY) * ELF_RTYPE_CLASS_COPY))
+#else
+/* And now that you have read that large comment, you can disregard it
+   all for ELFv2.  ELFv2 does need the special SHN_UNDEF treatment.  */
+#define IS_PPC64_TLS_RELOC(R)						\
+  (((R) >= R_PPC64_TLS && (R) <= R_PPC64_DTPREL16_HIGHESTA)		\
+   || ((R) >= R_PPC64_TPREL16_HIGH && (R) <= R_PPC64_DTPREL16_HIGHA))
+
+#define elf_machine_type_class(type) \
+  ((((type) == R_PPC64_JMP_SLOT					\
+     || (type) == R_PPC64_ADDR24				\
+     || IS_PPC64_TLS_RELOC (type)) * ELF_RTYPE_CLASS_PLT)	\
+   | (((type) == R_PPC64_COPY) * ELF_RTYPE_CLASS_COPY))
+#endif
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_PPC64_JMP_SLOT
@@ -266,8 +296,19 @@ BODY_PREFIX "_dl_start_user:\n"						\
 #define ELF_MACHINE_NO_REL 1
 
 /* Stuff for the PLT.  */
+#if _CALL_ELF != 2
 #define PLT_INITIAL_ENTRY_WORDS 3
+#define PLT_ENTRY_WORDS 3
 #define GLINK_INITIAL_ENTRY_WORDS 8
+/* The first 32k entries of glink can set an index and branch using two
+   instructions; past that point, glink uses three instructions.  */
+#define GLINK_ENTRY_WORDS(I) (((I) < 0x8000)? 2 : 3)
+#else
+#define PLT_INITIAL_ENTRY_WORDS 2
+#define PLT_ENTRY_WORDS 1
+#define GLINK_INITIAL_ENTRY_WORDS 8
+#define GLINK_ENTRY_WORDS(I) 1
+#endif
 
 #define PPC_DCBST(where) asm volatile ("dcbst 0,%0" : : "r"(where) : "memory")
 #define PPC_DCBT(where) asm volatile ("dcbt 0,%0" : : "r"(where) : "memory")
@@ -312,38 +353,45 @@ elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 
       if (lazy)
 	{
-	  /* The function descriptor of the appropriate trampoline
-	     routine is used to set the 1st and 2nd doubleword of the
-	     plt_reserve.  */
-	  Elf64_FuncDesc *resolve_fd;
 	  Elf64_Word glink_offset;
-	  /* the plt_reserve area is the 1st 3 doublewords of the PLT */
-	  Elf64_FuncDesc *plt_reserve = (Elf64_FuncDesc *) plt;
 	  Elf64_Word offset;
+	  Elf64_Addr dlrr;
 
-	  resolve_fd = (Elf64_FuncDesc *) (profile ? _dl_profile_resolve
-					   : _dl_runtime_resolve);
+	  dlrr = (Elf64_Addr) (profile ? _dl_profile_resolve
+				       : _dl_runtime_resolve);
 	  if (profile && GLRO(dl_profile) != NULL
 	      && _dl_name_match_p (GLRO(dl_profile), map))
 	    /* This is the object we are looking for.  Say that we really
 	       want profiling and the timers are started.  */
 	    GL(dl_profile_map) = map;
 
-
+#if _CALL_ELF != 2
 	  /* We need to stuff the address/TOC of _dl_runtime_resolve
 	     into doublewords 0 and 1 of plt_reserve.  Then we need to
 	     stuff the map address into doubleword 2 of plt_reserve.
 	     This allows the GLINK0 code to transfer control to the
 	     correct trampoline which will transfer control to fixup
 	     in dl-machine.c.  */
-	  plt_reserve->fd_func = resolve_fd->fd_func;
-	  plt_reserve->fd_toc  = resolve_fd->fd_toc;
-	  plt_reserve->fd_aux  = (Elf64_Addr) map;
+	  {
+	    /* The plt_reserve area is the 1st 3 doublewords of the PLT.  */
+	    Elf64_FuncDesc *plt_reserve = (Elf64_FuncDesc *) plt;
+	    Elf64_FuncDesc *resolve_fd = (Elf64_FuncDesc *) dlrr;
+	    plt_reserve->fd_func = resolve_fd->fd_func;
+	    plt_reserve->fd_toc  = resolve_fd->fd_toc;
+	    plt_reserve->fd_aux  = (Elf64_Addr) map;
 #ifdef RTLD_BOOTSTRAP
-	  /* When we're bootstrapping, the opd entry will not have
-	     been relocated yet.  */
-	  plt_reserve->fd_func += l_addr;
-	  plt_reserve->fd_toc  += l_addr;
+	    /* When we're bootstrapping, the opd entry will not have
+	       been relocated yet.  */
+	    plt_reserve->fd_func += l_addr;
+	    plt_reserve->fd_toc  += l_addr;
+#endif
+	  }
+#else
+	  /* When we don't have function descriptors, the first doubleword
+	     of the PLT holds the address of _dl_runtime_resolve, and the
+	     second doubleword holds the map address.  */
+	  plt[0] = dlrr;
+	  plt[1] = (Elf64_Addr) map;
 #endif
 
 	  /* Set up the lazy PLT entries.  */
@@ -354,14 +402,8 @@ elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 	    {
 
 	      plt[offset] = (Elf64_Xword) &glink[glink_offset];
-	      offset += 3;
-	      /* The first 32k entries of glink can set an index and
-		 branch using two instructions;  Past that point,
-		 glink uses three instructions.  */
-	      if (i < 0x8000)
-		glink_offset += 2;
-	      else
-		glink_offset += 3;
+	      offset += PLT_ENTRY_WORDS;
+	      glink_offset += GLINK_ENTRY_WORDS (i);
 	    }
 
 	  /* Now, we've modified data.  We need to write the changes from
@@ -389,6 +431,7 @@ elf_machine_fixup_plt (struct link_map *map, lookup_t sym_map,
 		       const Elf64_Rela *reloc,
 		       Elf64_Addr *reloc_addr, Elf64_Addr finaladdr)
 {
+#if _CALL_ELF != 2
   Elf64_FuncDesc *plt = (Elf64_FuncDesc *) reloc_addr;
   Elf64_FuncDesc *rel = (Elf64_FuncDesc *) finaladdr;
   Elf64_Addr offset = 0;
@@ -426,6 +469,9 @@ elf_machine_fixup_plt (struct link_map *map, lookup_t sym_map,
   plt->fd_func = rel->fd_func + offset;
   PPC_DCBST (&plt->fd_func);
   PPC_ISYNC;
+#else
+  *reloc_addr = finaladdr;
+#endif
 
   return finaladdr;
 }
@@ -433,6 +479,7 @@ elf_machine_fixup_plt (struct link_map *map, lookup_t sym_map,
 static inline void __attribute__ ((always_inline))
 elf_machine_plt_conflict (Elf64_Addr *reloc_addr, Elf64_Addr finaladdr)
 {
+#if _CALL_ELF != 2
   Elf64_FuncDesc *plt = (Elf64_FuncDesc *) reloc_addr;
   Elf64_FuncDesc *rel = (Elf64_FuncDesc *) finaladdr;
 
@@ -443,6 +490,9 @@ elf_machine_plt_conflict (Elf64_Addr *reloc_addr, Elf64_Addr finaladdr)
   PPC_DCBST (&plt->fd_aux);
   PPC_DCBST (&plt->fd_toc);
   PPC_SYNC;
+#else
+  *reloc_addr = finaladdr;
+#endif
 }
 
 /* Return the final value of a plt relocation.  */
@@ -512,6 +562,7 @@ auto inline Elf64_Addr __attribute__ ((always_inline))
 resolve_ifunc (Elf64_Addr value,
 	       const struct link_map *map, const struct link_map *sym_map)
 {
+#if _CALL_ELF != 2
 #ifndef RESOLVE_CONFLICT_FIND_MAP
   /* The function we are calling may not yet have its opd entry relocated.  */
   Elf64_FuncDesc opd;
@@ -528,6 +579,7 @@ resolve_ifunc (Elf64_Addr value,
       opd.fd_aux = func->fd_aux;
       value = (Elf64_Addr) &opd;
     }
+#endif
 #endif
   return ((Elf64_Addr (*) (unsigned long int)) value) (GLRO(dl_hwcap));
 }
