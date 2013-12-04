@@ -18,8 +18,16 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+#if _CALL_ELF != 2
 #define pltenter la_ppc64_gnu_pltenter
 #define pltexit la_ppc64_gnu_pltexit
 #define La_regs La_ppc64_regs
 #define La_retval La_ppc64_retval
 #define int_retval lrv_r3
+#else
+#define pltenter la_ppc64v2_gnu_pltenter
+#define pltexit la_ppc64v2_gnu_pltexit
+#define La_regs La_ppc64v2_regs
+#define La_retval La_ppc64v2_retval
+#define int_retval lrv_r3
+#endif

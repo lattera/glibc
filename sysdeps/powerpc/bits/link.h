@@ -63,7 +63,7 @@ extern unsigned int la_ppc32_gnu_pltexit (Elf32_Sym *__sym,
 
 __END_DECLS
 
-#else
+#elif _CALL_ELF != 2
 
 /* Registers for entry into PLT on PPC64.  */
 typedef struct La_ppc64_regs
@@ -104,6 +104,50 @@ extern unsigned int la_ppc64_gnu_pltexit (Elf64_Sym *__sym,
 					  const La_ppc64_regs *__inregs,
 					  La_ppc64_retval *__outregs,
 					  const char *__symname);
+
+__END_DECLS
+
+#else
+
+/* Registers for entry into PLT on PPC64 in the ELFv2 ABI.  */
+typedef struct La_ppc64v2_regs
+{
+  uint64_t lr_reg[8];
+  double lr_fp[13];
+  uint32_t __padding;
+  uint32_t lr_vrsave;
+  uint32_t lr_vreg[12][4] __attribute__ ((aligned (16)));
+  uint64_t lr_r1;
+  uint64_t lr_lr;
+} La_ppc64v2_regs;
+
+/* Return values for calls from PLT on PPC64 in the ELFv2 ABI.  */
+typedef struct La_ppc64v2_retval
+{
+  uint64_t lrv_r3;
+  uint64_t lrv_r4;
+  double lrv_fp[10];
+  uint32_t lrv_vreg[8][4] __attribute__ ((aligned (16)));
+} La_ppc64v2_retval;
+
+
+__BEGIN_DECLS
+
+extern Elf64_Addr la_ppc64v2_gnu_pltenter (Elf64_Sym *__sym,
+					   unsigned int __ndx,
+					   uintptr_t *__refcook,
+					   uintptr_t *__defcook,
+					   La_ppc64v2_regs *__regs,
+					   unsigned int *__flags,
+					   const char *__symname,
+					   long int *__framesizep);
+extern unsigned int la_ppc64v2_gnu_pltexit (Elf64_Sym *__sym,
+					    unsigned int __ndx,
+					    uintptr_t *__refcook,
+					    uintptr_t *__defcook,
+					    const La_ppc64v2_regs *__inregs,
+					    La_ppc64v2_retval *__outregs,
+					    const char *__symname);
 
 __END_DECLS
 

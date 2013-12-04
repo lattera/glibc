@@ -545,8 +545,13 @@ elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
 
 
 /* Names of the architecture-specific auditing callback functions.  */
+#if _CALL_ELF != 2
 #define ARCH_LA_PLTENTER ppc64_gnu_pltenter
 #define ARCH_LA_PLTEXIT ppc64_gnu_pltexit
+#else
+#define ARCH_LA_PLTENTER ppc64v2_gnu_pltenter
+#define ARCH_LA_PLTEXIT ppc64v2_gnu_pltexit
+#endif
 
 #endif /* dl_machine_h */
 
