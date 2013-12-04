@@ -61,6 +61,8 @@ typedef union dtv
    are private.  */
 typedef struct
 {
+  /* GCC split stack support.  */
+  void *__private_ss;
   /* Reservation for the Event-Based Branching ABI.  */
   uintptr_t ebb_handler;
   uintptr_t ebb_ctx_pointer;
