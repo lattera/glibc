@@ -1,3 +1,12 @@
+2013-12-04  Ulrich Weigand  <Ulrich.Weigand@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/makecontext.S
+	(__makecontext): Fix incorrect CFI when backtracing out of
+	context created via makecontext.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/secontext.S
+	(__setcontext): Fix incorrect CFI during switch to new context.
+	(__novec_setcontext): Likewise.
+
 2013-12-04  Ondřej Bílka  <neleai@seznam.cz>
 
 	[BZ #4772]

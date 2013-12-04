@@ -129,6 +129,10 @@ L(noparms):
      the cpu link stack used to predict blr return addresses.  */
   bcl	20,31,L(gotexitcodeaddr);
 
+  /* End FDE now, because while executing on the context's stack
+     the unwind info would be wrong otherwise.  */
+  cfi_endproc
+
 	/* This is the helper code which gets called if a function which
 	   is registered with 'makecontext' returns.  In this case we
 	   have to install the context listed in the uc_link element of
@@ -156,6 +160,11 @@ L(do_exit):
 	nop
 #endif
 	b    L(do_exit)
+
+  /* Re-establish FDE for the rest of the actual makecontext routine.  */
+  cfi_startproc
+  cfi_offset (lr, FRAME_LR_SAVE)
+  cfi_adjust_cfa_offset (128)
 
   /* The address of the exit code is in the link register.  Store the lr
      in the ucontext as LNK so the target function will return to our

@@ -129,6 +129,10 @@ ENTRY(__novec_setcontext)
   lfd  fp1,(SIGCONTEXT_FP_REGS+(PT_R1*8))(r31)
   lfd  fp0,(SIGCONTEXT_FP_REGS+(PT_R0*8))(r31)
 
+  /* End FDE now, because the unwind info would be wrong while
+     we're reloading registers to switch to the new context.  */
+  cfi_endproc
+
   ld   r0,(SIGCONTEXT_GP_REGS+(PT_LNK*8))(r31)
   ld   r1,(SIGCONTEXT_GP_REGS+(PT_R1*8))(r31)
   mtlr r0
@@ -176,6 +180,11 @@ ENTRY(__novec_setcontext)
   ld   r0,(SIGCONTEXT_GP_REGS+(PT_R0*8))(r31)
   ld   r31,(SIGCONTEXT_GP_REGS+(PT_R31*8))(r31)
   bctr
+
+  /* Re-establish FDE for the rest of the actual setcontext routine.  */
+  cfi_startproc
+  cfi_offset (lr, FRAME_LR_SAVE)
+  cfi_adjust_cfa_offset (128)
 
 L(nv_error_exit):
   ld   r0,128+FRAME_LR_SAVE(r1)
@@ -403,6 +412,10 @@ L(has_no_vec):
   lfd  fp1,(SIGCONTEXT_FP_REGS+(PT_R1*8))(r31)
   lfd  fp0,(SIGCONTEXT_FP_REGS+(PT_R0*8))(r31)
 
+  /* End FDE now, because the unwind info would be wrong while
+     we're reloading registers to switch to the new context.  */
+  cfi_endproc
+
   ld   r0,(SIGCONTEXT_GP_REGS+(PT_LNK*8))(r31)
   ld   r1,(SIGCONTEXT_GP_REGS+(PT_R1*8))(r31)
   mtlr r0
@@ -450,6 +463,11 @@ L(has_no_vec):
   ld   r0,(SIGCONTEXT_GP_REGS+(PT_R0*8))(r31)
   ld   r31,(SIGCONTEXT_GP_REGS+(PT_R31*8))(r31)
   bctr
+
+  /* Re-establish FDE for the rest of the actual setcontext routine.  */
+  cfi_startproc
+  cfi_offset (lr, FRAME_LR_SAVE)
+  cfi_adjust_cfa_offset (128)
 
 L(error_exit):
   ld   r0,128+FRAME_LR_SAVE(r1)
