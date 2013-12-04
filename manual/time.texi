@@ -687,9 +687,8 @@ The return value is the null pointer if @var{time} cannot be represented
 as a broken-down time; typically this is because the year cannot fit into
 an @code{int}.
 
-Calling @code{localtime} has one other effect: it sets the variable
-@code{tzname} with information about the current time zone.  @xref{Time
-Zone Functions}.
+Calling @code{localtime} also sets the current time zone as if
+@code{tzset} were called.  @xref{Time Zone Functions}.
 @end deftypefun
 
 Using the @code{localtime} function is a big problem in multi-threaded
@@ -739,25 +738,28 @@ object the result was written into, i.e., it returns @var{resultp}.
 @comment time.h
 @comment ISO
 @deftypefun time_t mktime (struct tm *@var{brokentime})
-The @code{mktime} function is used to convert a broken-down time structure
-to a simple time representation.  It also ``normalizes'' the contents of
-the broken-down time structure, by filling in the day of week and day of
-year based on the other date and time components.
+The @code{mktime} function converts a broken-down time structure to a
+simple time representation.  It also normalizes the contents of the
+broken-down time structure, and fills in some components based on the
+values of the others.
 
 The @code{mktime} function ignores the specified contents of the
-@code{tm_wday} and @code{tm_yday} members of the broken-down time
+@code{tm_wday}, @code{tm_yday}, @code{tm_gmtoff}, and @code{tm_zone}
+members of the broken-down time
 structure.  It uses the values of the other components to determine the
 calendar time; it's permissible for these components to have
 unnormalized values outside their normal ranges.  The last thing that
 @code{mktime} does is adjust the components of the @var{brokentime}
-structure (including the @code{tm_wday} and @code{tm_yday}).
+structure, including the members that were initally ignored.
 
 If the specified broken-down time cannot be represented as a simple time,
 @code{mktime} returns a value of @code{(time_t)(-1)} and does not modify
 the contents of @var{brokentime}.
 
-Calling @code{mktime} also sets the variable @code{tzname} with
-information about the current time zone.  @xref{Time Zone Functions}.
+Calling @code{mktime} also sets the current time zone as if
+@code{tzset} were called; @code{mktime} uses this information instead
+of @var{brokentime}'s initial @code{tm_gmtoff} and @code{tm_zone}
+members.  @xref{Time Zone Functions}.
 @end deftypefun
 
 @comment time.h
@@ -1053,8 +1055,8 @@ rather than in broken-down local time format.  It is equivalent to
 asctime (localtime (@var{time}))
 @end smallexample
 
-@code{ctime} sets the variable @code{tzname}, because @code{localtime}
-does so.  @xref{Time Zone Functions}.
+Calling @code{ctime} also sets the current time zone as if
+@code{tzset} were called.  @xref{Time Zone Functions}.
 @end deftypefun
 
 @comment time.h
@@ -1081,7 +1083,8 @@ This function is similar to the @code{sprintf} function (@pxref{Formatted
 Input}), but the conversion specifications that can appear in the format
 template @var{template} are specialized for printing components of the date
 and time @var{brokentime} according to the locale currently specified for
-time conversion (@pxref{Locales}).
+time conversion (@pxref{Locales}) and the current time zone
+(@pxref{Time Zone Functions}).
 
 Ordinary characters appearing in the @var{template} are copied to the
 output string @var{s}; this can include multibyte character sequences.
@@ -1392,9 +1395,10 @@ if (len == 0 && buf[0] != '\0')
 If @var{s} is a null pointer, @code{strftime} does not actually write
 anything, but instead returns the number of characters it would have written.
 
-According to POSIX.1 every call to @code{strftime} implies a call to
-@code{tzset}.  So the contents of the environment variable @code{TZ}
-is examined before any output is produced.
+Calling @code{strftime} also sets the current time zone as if
+@code{tzset} were called; @code{strftime} uses this information
+instead of @var{brokentime}'s @code{tm_gmtoff} and @code{tm_zone}
+members.  @xref{Time Zone Functions}.
 
 For an example of @code{strftime}, see @ref{Time Functions Example}.
 @end deftypefun
