@@ -74,6 +74,10 @@ EALIGN(_dl_runtime_resolve, 4, 0)
 /* Prepare for calling the function returned by fixup.  */
 	PPC64_LOAD_FUNCPTR r3
 	ld	r3,INT_PARMS+0(r1)
+#if _CALL_ELF == 2
+/* Restore the caller's TOC in case we jump to a local entry point.  */
+	ld	r2,FRAME_SIZE+40(r1)
+#endif
 /* Unwind the stack frame, and jump.  */
 	addi	r1,r1,FRAME_SIZE
 	bctr
@@ -321,6 +325,10 @@ L(restoreFXR):
 /* Prepare for calling the function returned by fixup.  */
 	PPC64_LOAD_FUNCPTR r3
 	ld	r3,INT_PARMS+0(r1)
+#if _CALL_ELF == 2
+/* Restore the caller's TOC in case we jump to a local entry point.  */
+	ld	r2,FRAME_SIZE+40(r1)
+#endif
 /* Load the floating point registers.  */
 	lfd	fp1,FPR_PARMS+0(r1)
 	lfd	fp2,FPR_PARMS+8(r1)

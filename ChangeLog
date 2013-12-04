@@ -1,6 +1,23 @@
 2013-12-04  Ulrich Weigand  <Ulrich.Weigand@de.ibm.com>
 	    Alan Modra  <amodra@gmail.com>
 
+	* elf/elf.h (DT_PPC64_OPT, PPC64_OPT_TLS, PPC64_OPT_MULTI_TOC):
+	Define.
+	(STO_PPC64_LOCAL_BIT, STO_PPC64_LOCAL_MASK,
+	PPC64_LOCAL_ENTRY_OFFSET): Define.
+	* sysdeps/powerpc/powerpc64/dl-machine.h (ppc64_local_entry_offset):
+	New function.
+	(elf_machine_fixup_plt): Call it.
+	(elf_machine_plt_conflict): Likewise.  Add map, sym_map, and
+	reloc arguments.
+	(elf_machine_rela): Update call to elf_machine_plt_conflict.
+        * sysdeps/powerpc/powerpc64/dl-trampoline.S (_dl_runtime_resolve,
+        _dl_profile_resolve) [_CALL_ELF == 2]: Restore caller's TOC into
+	r2 before calling target.
+
+2013-12-04  Ulrich Weigand  <Ulrich.Weigand@de.ibm.com>
+	    Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/powerpc64/sysdep.h [_CALL_ELF == 2]
 	(PPC64_LOAD_FUNCPTR, DOT_LABEL, BODY_LABEL, ENTRY_2, END_2): New
 	versions of macros to support ELFv2 ABI.

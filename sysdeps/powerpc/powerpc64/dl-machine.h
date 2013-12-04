@@ -424,6 +424,42 @@ elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
   return lazy;
 }
 
+#if _CALL_ELF == 2
+/* If the PLT entry whose reloc is 'reloc' resolves to a function in
+   the same object, return the target function's local entry point
+   offset if usable.  */
+static inline Elf64_Addr __attribute__ ((always_inline))
+ppc64_local_entry_offset (struct link_map *map, lookup_t sym_map,
+			  const Elf64_Rela *reloc)
+{
+  const Elf64_Sym *symtab;
+  const Elf64_Sym *sym;
+
+  /* If the target function is in a different object, we cannot
+     use the local entry point.  */
+  if (sym_map != map)
+    return 0;
+
+  /* If the linker inserted multiple TOCs, we cannot use the
+     local entry point.  */
+  if (map->l_info[DT_PPC64(OPT)]
+      && (map->l_info[DT_PPC64(OPT)]->d_un.d_val & PPC64_OPT_MULTI_TOC))
+    return 0;
+
+  /* Otherwise, we can use the local entry point.  Retrieve its offset
+     from the symbol's ELF st_other field.  */
+  symtab = (const void *) D_PTR (map, l_info[DT_SYMTAB]);
+  sym = &symtab[ELFW(R_SYM) (reloc->r_info)];
+
+  /* If the target function is an ifunc then the local entry offset is
+     for the resolver, not the final destination.  */
+  if (__builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0))
+    return 0;
+
+  return PPC64_LOCAL_ENTRY_OFFSET (sym->st_other);
+}
+#endif
+
 /* Change the PLT entry whose reloc is 'reloc' to call the actual
    routine.  */
 static inline Elf64_Addr __attribute__ ((always_inline))
@@ -470,6 +506,7 @@ elf_machine_fixup_plt (struct link_map *map, lookup_t sym_map,
   PPC_DCBST (&plt->fd_func);
   PPC_ISYNC;
 #else
+  finaladdr += ppc64_local_entry_offset (map, sym_map, reloc);
   *reloc_addr = finaladdr;
 #endif
 
@@ -477,7 +514,9 @@ elf_machine_fixup_plt (struct link_map *map, lookup_t sym_map,
 }
 
 static inline void __attribute__ ((always_inline))
-elf_machine_plt_conflict (Elf64_Addr *reloc_addr, Elf64_Addr finaladdr)
+elf_machine_plt_conflict (struct link_map *map, lookup_t sym_map,
+			  const Elf64_Rela *reloc,
+			  Elf64_Addr *reloc_addr, Elf64_Addr finaladdr)
 {
 #if _CALL_ELF != 2
   Elf64_FuncDesc *plt = (Elf64_FuncDesc *) reloc_addr;
@@ -491,6 +530,7 @@ elf_machine_plt_conflict (Elf64_Addr *reloc_addr, Elf64_Addr finaladdr)
   PPC_DCBST (&plt->fd_toc);
   PPC_SYNC;
 #else
+  finaladdr += ppc64_local_entry_offset (map, sym_map, reloc);
   *reloc_addr = finaladdr;
 #endif
 }
@@ -646,7 +686,7 @@ elf_machine_rela (struct link_map *map,
       /* Fall thru */
     case R_PPC64_JMP_SLOT:
 #ifdef RESOLVE_CONFLICT_FIND_MAP
-      elf_machine_plt_conflict (reloc_addr, value);
+      elf_machine_plt_conflict (map, sym_map, reloc, reloc_addr, value);
 #else
       elf_machine_fixup_plt (map, sym_map, reloc, reloc_addr, value);
 #endif

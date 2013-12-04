@@ -2282,7 +2282,18 @@ typedef Elf32_Addr Elf32_Conflict;
 #define DT_PPC64_GLINK  (DT_LOPROC + 0)
 #define DT_PPC64_OPD	(DT_LOPROC + 1)
 #define DT_PPC64_OPDSZ	(DT_LOPROC + 2)
+#define DT_PPC64_OPT	(DT_LOPROC + 3)
 #define DT_PPC64_NUM    3
+
+/* PowerPC64 specific values for the DT_PPC64_OPT Dyn entry.  */
+#define PPC64_OPT_TLS		1
+#define PPC64_OPT_MULTI_TOC	2
+
+/* PowerPC64 specific values for the Elf64_Sym st_other field.  */
+#define STO_PPC64_LOCAL_BIT	5
+#define STO_PPC64_LOCAL_MASK	(7 << STO_PPC64_LOCAL_BIT)
+#define PPC64_LOCAL_ENTRY_OFFSET(other)				\
+ (((1 << (((other) & STO_PPC64_LOCAL_MASK) >> STO_PPC64_LOCAL_BIT)) >> 2) << 2)
 
 
 /* ARM specific declarations */
