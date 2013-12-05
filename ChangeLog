@@ -142,8 +142,8 @@
 	(elf_machine_plt_conflict): Likewise.  Add map, sym_map, and
 	reloc arguments.
 	(elf_machine_rela): Update call to elf_machine_plt_conflict.
-        * sysdeps/powerpc/powerpc64/dl-trampoline.S (_dl_runtime_resolve,
-        _dl_profile_resolve) [_CALL_ELF == 2]: Restore caller's TOC into
+	* sysdeps/powerpc/powerpc64/dl-trampoline.S (_dl_runtime_resolve,
+	_dl_profile_resolve) [_CALL_ELF == 2]: Restore caller's TOC into
 	r2 before calling target.
 
 2013-12-04  Ulrich Weigand  <Ulrich.Weigand@de.ibm.com>
