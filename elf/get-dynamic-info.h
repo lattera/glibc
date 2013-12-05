@@ -130,8 +130,8 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
   assert (info[DT_FLAGS] == NULL
 	  || (info[DT_FLAGS]->d_un.d_val & ~DF_BIND_NOW) == 0);
   /* Flags must not be set for ld.so.  */
-  //assert (info[DT_RUNPATH] == NULL);
-  //assert (info[DT_RPATH] == NULL);
+  assert (info[DT_RUNPATH] == NULL);
+  assert (info[DT_RPATH] == NULL);
 #else
   if (info[DT_FLAGS] != NULL)
     {
