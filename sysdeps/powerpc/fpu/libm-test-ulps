@@ -7492,8 +7492,21 @@ ifloat: 2
 ildouble: 3
 ldouble: 3
 
+# log
+Test "log (0x2.b7e15p+0)":
+float: 1
+ifloat: 1
+
 # log10
 Test "log10 (0.75)":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+Test "log10 (0x2.b7e154p+0)":
+float: 1
+ifloat: 1
+Test "log10 (0xcp-4)":
 double: 1
 float: 2
 idouble: 1
@@ -7504,6 +7517,9 @@ ifloat: 1
 
 # log1p
 Test "log1p (-0.25)":
+float: 1
+ifloat: 1
+Test "log1p (0x1.b7e15p+0)":
 float: 1
 ifloat: 1
 
@@ -7584,11 +7600,319 @@ ildouble: 1
 ldouble: 1
 
 # sin
+Test "sin (0x1p+0)":
+float: 1
+ifloat: 1
+Test "sin (0x4.1237e153f7080008p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin (0xc.d4967p-4)":
+float: 1
+ifloat: 1
+Test "sin (0xf.ffffffffffff8p+1020)":
+ildouble: 1
+ldouble: 1
 Test "sin (16.0)":
 ildouble: 2
 ldouble: 2
 
 # sin_downward
+Test "sin_downward (-0x1.921fb4p+0)":
+double: 1
+idouble: 1
+Test "sin_downward (-0x1.921fb6p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "sin_downward (-0x2p+64)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "sin_downward (-0x8.60a91c16b9b28p-4)":
+ildouble: 2
+ldouble: 2
+Test "sin_downward (-0x8.60a91c16b9b2c232dd99707ab4p-4)":
+ildouble: 1
+ldouble: 1
+Test "sin_downward (-0x8.60a91c16b9b2c24p-4)":
+ildouble: 1
+ldouble: 1
+Test "sin_downward (-0x8.60a91c16b9b3p-4)":
+double: 1
+idouble: 1
+Test "sin_downward (-0x8.60a91p-4)":
+double: 1
+idouble: 1
+Test "sin_downward (-0x8.60a92p-4)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "sin_downward (0x1.921fb54442d18p+0)":
+double: 1
+idouble: 1
+Test "sin_downward (0x1.921fb54442d19p+0)":
+double: 1
+idouble: 1
+Test "sin_downward (0x1p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x1p+120)":
+float: 1
+ifloat: 1
+Test "sin_downward (0x1p+28)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x2.1e19e0c9bab24p+72)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x2.1e19e4p+72)":
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x2.1e19ep+72)":
+float: 2
+ifloat: 2
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x2.553534p+0)":
+double: 1
+idouble: 1
+Test "sin_downward (0x2.5535376715b9ep+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x2.5535376715bap+0)":
+double: 1
+idouble: 1
+Test "sin_downward (0x2p+0)":
+double: 1
+idouble: 1
+Test "sin_downward (0x3.be735c19be9fep+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x3.be735c19be9fffffffffffffffp+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x3.be735c19beap+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x3.be735cp+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x3.be736p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "sin_downward (0x3.ec2a0250032a00000000000001p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x3.ec2a0250032a0004p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x3.ec2a0250032a2p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x3.ec2a0250032ap+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x3.ec2a04p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x3.ec2ap+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "sin_downward (0x3p+0)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "sin_downward (0x4.093385688a2d150c00bf42a09p-4)":
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x4.093388p-4)":
+double: 1
+idouble: 1
+Test "sin_downward (0x4.1237e153f70800000000000002p+0)":
+ildouble: 2
+ldouble: 2
+Test "sin_downward (0x4.1237e153f7080008p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x4.1237e153f7084p+0)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "sin_downward (0x4.1237e153f708p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x4.1237e8p+0)":
+ildouble: 2
+ldouble: 2
+Test "sin_downward (0x4.1237ep+0)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "sin_downward (0x4.c92d08p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x4.c92d0ffa4bf000000000000002p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x4.c92d0ffa4bf00008p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x4.c92d0ffa4bf04p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x4.c92d0ffa4bfp+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x4.c92d1p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x4p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x4p+48)":
+double: 1
+idouble: 1
+Test "sin_downward (0x5.fbec7477d4a800000000000002p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x5.fbec7477d4a84p+0)":
+double: 1
+idouble: 1
+Test "sin_downward (0x5.fbec7477d4a8p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x5.fbec78p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x5.fbec7p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x5p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "sin_downward (0x6p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x8.60a91c16b9b28p-4)":
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x8.60a92p-4)":
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x8p+0)":
+double: 1
+idouble: 1
+Test "sin_downward (0x8p+1020)":
+double: 1
+idouble: 1
+Test "sin_downward (0x9p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "sin_downward (0xap+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "sin_downward (0xb.fa09ap+100)":
+ildouble: 2
+ldouble: 2
+Test "sin_downward (0xc.d4966d92d17082980965c1a66p-4)":
+ildouble: 2
+ldouble: 2
+Test "sin_downward (0xc.d4966d92d170829p-4)":
+ildouble: 2
+ldouble: 2
+Test "sin_downward (0xc.d4966d92d17082ap-4)":
+ildouble: 2
+ldouble: 2
+Test "sin_downward (0xc.d4966d92d1708p-4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0xc.d4966d92d171p-4)":
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0xc.d4966p-4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0xc.d4967p-4)":
+ildouble: 2
+ldouble: 2
+Test "sin_downward (0xe.ef3af1b5d800001p-4)":
+ildouble: 2
+ldouble: 2
+Test "sin_downward (0xe.ef3af1b5d8008p-4)":
+ildouble: 2
+ldouble: 2
+Test "sin_downward (0xe.ef3af1b5d8p-4)":
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0xe.ef3afp-4)":
+ildouble: 3
+ldouble: 3
+Test "sin_downward (0xe.ef3bp-4)":
+ildouble: 2
+ldouble: 2
+Test "sin_downward (0xf.ffffcp+124)":
+double: 1
+idouble: 1
+Test "sin_downward (0xf.ffffffffffff8p+1020)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "sin_downward (0xf.fffffp+124)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
 Test "sin_downward (1)":
 ildouble: 4
 ldouble: 4
@@ -7619,11 +7943,208 @@ ildouble: 1
 ldouble: 1
 
 # sin_tonearest
+Test "sin_tonearest (0x1p+0)":
+float: 1
+ifloat: 1
+Test "sin_tonearest (0x4.1237e153f7080008p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_tonearest (0xc.d4967p-4)":
+float: 1
+ifloat: 1
+Test "sin_tonearest (0xf.ffffffffffff8p+1020)":
+ildouble: 1
+ldouble: 1
 Test "sin_tonearest (1)":
 float: 1
 ifloat: 1
 
 # sin_towardzero
+Test "sin_towardzero (-0x1.921fb54442d18p+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (-0x1.921fb54442d19p+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (-0x2p+64)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "sin_towardzero (-0x8.60a91c16b9b28p-4)":
+ildouble: 1
+ldouble: 1
+Test "sin_towardzero (-0x8.60a92p-4)":
+ildouble: 1
+ldouble: 1
+Test "sin_towardzero (0x1.921fb54442d18p+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x1.921fb54442d19p+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x1p+0)":
+float: 1
+ifloat: 1
+ildouble: 3
+ldouble: 3
+Test "sin_towardzero (0x2.1e19e4p+72)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x2.1e19ep+72)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "sin_towardzero (0x2.553534p+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x2.5535376715b9ep+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_towardzero (0x2.5535376715b9ffffffffffffffp+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_towardzero (0x2.5535376715bap+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x2p+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x2p+64)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "sin_towardzero (0x3.be735c19beap+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x3.be735cp+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "sin_towardzero (0x3.be736p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_towardzero (0x3.ec2a04p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "sin_towardzero (0x3p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_towardzero (0x4.093385688a2d150c00bf42a09p-4)":
+ildouble: 1
+ldouble: 1
+Test "sin_towardzero (0x4.093388p-4)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x4.1237e153f70800000000000002p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_towardzero (0x4.1237e153f7084p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_towardzero (0x4.1237e153f708p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_towardzero (0x4.1237e8p+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x4.1237ep+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x4.c92d0ffa4bf04p+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x4.c92d0ffa4bfp+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x4p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_towardzero (0x4p+48)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x5.fbec7p+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x8.60a91c16b9b28p-4)":
+ildouble: 1
+ldouble: 1
+Test "sin_towardzero (0x8.60a92p-4)":
+ildouble: 1
+ldouble: 1
+Test "sin_towardzero (0x8p+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x8p+1020)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x9p+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0xb.fa09ap+100)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0xc.d4966d92d17082980965c1a664p-4)":
+ildouble: 2
+ldouble: 2
+Test "sin_towardzero (0xc.d4966d92d17082980965c1a66p-4)":
+ildouble: 2
+ldouble: 2
+Test "sin_towardzero (0xc.d4966d92d170829p-4)":
+ildouble: 2
+ldouble: 2
+Test "sin_towardzero (0xc.d4966d92d17082ap-4)":
+ildouble: 2
+ldouble: 2
+Test "sin_towardzero (0xc.d4966d92d1708p-4)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "sin_towardzero (0xc.d4966d92d171p-4)":
+ildouble: 4
+ldouble: 4
+Test "sin_towardzero (0xc.d4966p-4)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "sin_towardzero (0xc.d4967p-4)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "sin_towardzero (0xe.ef3af1b5d80000000000000004p-4)":
+ildouble: 3
+ldouble: 3
+Test "sin_towardzero (0xe.ef3af1b5d800001p-4)":
+ildouble: 2
+ldouble: 2
+Test "sin_towardzero (0xe.ef3af1b5d8008p-4)":
+ildouble: 2
+ldouble: 2
+Test "sin_towardzero (0xe.ef3af1b5d8p-4)":
+ildouble: 3
+ldouble: 3
+Test "sin_towardzero (0xe.ef3afp-4)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "sin_towardzero (0xe.ef3bp-4)":
+ildouble: 2
+ldouble: 2
+Test "sin_towardzero (0xf.ffffcp+124)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0xf.ffffffffffff8p+1020)":
+double: 1
+idouble: 1
 Test "sin_towardzero (1)":
 float: 1
 ifloat: 1
@@ -7654,6 +8175,343 @@ ildouble: 1
 ldouble: 1
 
 # sin_upward
+Test "sin_upward (-0x1.921fb4p+0)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "sin_upward (-0x1.921fb54442d18p+0)":
+double: 1
+idouble: 1
+Test "sin_upward (-0x1.921fb54442d19p+0)":
+double: 1
+idouble: 1
+Test "sin_upward (-0x1.921fb6p+0)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "sin_upward (-0x2p+64)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (-0x8.60a91c16b9b28p-4)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (-0x8.60a91c16b9b2c232dd99707ab4p-4)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (-0x8.60a91c16b9b2c24p-4)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (-0x8.60a91c16b9b3p-4)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (-0x8.60a91p-4)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (-0x8.60a92p-4)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x1.921fb4p+0)":
+double: 1
+idouble: 1
+Test "sin_upward (0x1.921fb6p+0)":
+double: 1
+idouble: 1
+Test "sin_upward (0x1p+0)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "sin_upward (0x1p+120)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "sin_upward (0x1p+28)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x2.1e19e0c9bab24p+72)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x2.1e19e4p+72)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x2.1e19ep+72)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x2.5535376715b9ep+0)":
+double: 1
+idouble: 1
+Test "sin_upward (0x2.5535376715b9ffffffffffffffp+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x2.553538p+0)":
+double: 1
+idouble: 1
+Test "sin_upward (0x2p+0)":
+float: 1
+ifloat: 1
+Test "sin_upward (0x2p+64)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x3.be735c19be9fep+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x3.be735c19be9ffffcp+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x3.be735c19be9fffffffffffffffp+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x3.be735c19beap+0)":
+double: 1
+idouble: 1
+Test "sin_upward (0x3.be735cp+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "sin_upward (0x3.be736p+0)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x3.ec2a0250032a00000000000001p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x3.ec2a0250032a0004p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x3.ec2a0250032a2p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x3.ec2a0250032ap+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x3.ec2a04p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "sin_upward (0x3.ec2ap+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x3p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "sin_upward (0x4.093385688a2d4p-4)":
+double: 1
+idouble: 1
+Test "sin_upward (0x4.093385688a2dp-4)":
+double: 1
+idouble: 1
+Test "sin_upward (0x4.09338p-4)":
+double: 1
+idouble: 1
+Test "sin_upward (0x4.1237e153f70800000000000002p+0)":
+ildouble: 2
+ldouble: 2
+Test "sin_upward (0x4.1237e153f7080008p+0)":
+ildouble: 2
+ldouble: 2
+Test "sin_upward (0x4.1237e153f7084p+0)":
+ildouble: 2
+ldouble: 2
+Test "sin_upward (0x4.1237e153f708p+0)":
+ildouble: 2
+ldouble: 2
+Test "sin_upward (0x4.1237e8p+0)":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x4.1237ep+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "sin_upward (0x4.c92d08p+0)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x4.c92d0ffa4bf000000000000002p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x4.c92d0ffa4bf00008p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x4.c92d0ffa4bf04p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x4.c92d0ffa4bfp+0)":
+double: 1
+idouble: 1
+Test "sin_upward (0x4.c92d1p+0)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x4p+0)":
+float: 2
+ifloat: 2
+ildouble: 2
+ldouble: 2
+Test "sin_upward (0x4p+48)":
+float: 1
+ifloat: 1
+Test "sin_upward (0x5.fbec7477d4a800000000000002p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x5.fbec7477d4a80008p+0)":
+ildouble: 2
+ldouble: 2
+Test "sin_upward (0x5.fbec7477d4a84p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x5.fbec7477d4a8p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x5.fbec78p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x5.fbec7p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x5p+0)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x6p+0)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x7p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "sin_upward (0x8.60a91c16b9b3p-4)":
+double: 1
+idouble: 1
+Test "sin_upward (0x8.60a91p-4)":
+double: 1
+idouble: 1
+Test "sin_upward (0x8.60a92p-4)":
+double: 1
+idouble: 1
+Test "sin_upward (0x8p+0)":
+float: 1
+ifloat: 1
+Test "sin_upward (0x8p+1020)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x8p+124)":
+double: 1
+idouble: 1
+Test "sin_upward (0x9p+0)":
+float: 1
+ifloat: 1
+Test "sin_upward (0xap+0)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0xb.fa09ap+100)":
+double: 1
+idouble: 1
+Test "sin_upward (0xc.d4966d92d17082980965c1a664p-4)":
+ildouble: 3
+ldouble: 3
+Test "sin_upward (0xc.d4966d92d17082980965c1a66p-4)":
+ildouble: 2
+ldouble: 2
+Test "sin_upward (0xc.d4966d92d170829p-4)":
+ildouble: 2
+ldouble: 2
+Test "sin_upward (0xc.d4966d92d17082ap-4)":
+ildouble: 2
+ldouble: 2
+Test "sin_upward (0xc.d4966d92d1708p-4)":
+ildouble: 3
+ldouble: 3
+Test "sin_upward (0xc.d4966d92d171p-4)":
+double: 1
+idouble: 1
+ildouble: 3
+ldouble: 3
+Test "sin_upward (0xc.d4966p-4)":
+ildouble: 3
+ldouble: 3
+Test "sin_upward (0xc.d4967p-4)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "sin_upward (0xcp-4)":
+double: 1
+idouble: 1
+Test "sin_upward (0xe.ef3af1b5d80000000000000004p-4)":
+ildouble: 3
+ldouble: 3
+Test "sin_upward (0xe.ef3af1b5d800001p-4)":
+ildouble: 2
+ldouble: 2
+Test "sin_upward (0xe.ef3af1b5d8008p-4)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "sin_upward (0xe.ef3af1b5d8p-4)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "sin_upward (0xe.ef3afp-4)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "sin_upward (0xe.ef3bp-4)":
+double: 1
+idouble: 1
+ildouble: 3
+ldouble: 3
+Test "sin_upward (0xf.ffffcp+124)":
+ildouble: 2
+ldouble: 2
+Test "sin_upward (0xf.ffffffffffff8p+1020)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0xf.ffffffffffffbffffffffffffcp+1020)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0xf.fffffp+124)":
+ildouble: 1
+ldouble: 1
 Test "sin_upward (1)":
 float: 1
 ifloat: 1
@@ -7707,8 +8565,22 @@ ifloat: 1
 Test "sinh (0.75)":
 ildouble: 1
 ldouble: 1
+Test "sinh (0xcp-4)":
+ildouble: 1
+ldouble: 1
 
 # sinh_downward
+Test "sinh_downward (0x1.6p+4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "sinh_downward (0x1.7p+4)":
+double: 1
+idouble: 1
+Test "sinh_downward (0x1.8p+4)":
+ildouble: 1
+ldouble: 1
 Test "sinh_downward (22)":
 float: 1
 ifloat: 1
@@ -7723,7 +8595,23 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
+# sinh_tonearest
+Test "sinh_tonearest (0xcp-4)":
+ildouble: 1
+ldouble: 1
+
 # sinh_towardzero
+Test "sinh_towardzero (0x1.6p+4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "sinh_towardzero (0x1.7p+4)":
+double: 1
+idouble: 1
+Test "sinh_towardzero (0x1.8p+4)":
+ildouble: 1
+ldouble: 1
 Test "sinh_towardzero (22)":
 float: 1
 ifloat: 1
@@ -7739,6 +8627,19 @@ ildouble: 1
 ldouble: 1
 
 # sinh_upward
+Test "sinh_upward (0x1.8p+4)":
+double: 1
+idouble: 1
+Test "sinh_upward (0x8p-32)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "sinh_upward (0xcp-4)":
+ildouble: 1
+ldouble: 1
 Test "sinh_upward (23)":
 ildouble: 1
 ldouble: 1
@@ -7947,6 +8848,18 @@ ldouble: 1
 Test "tan (-0xc.9p-4)":
 ildouble: 1
 ldouble: 1
+Test "tan (0x2.1e19ep+72)":
+ildouble: 1
+ldouble: 1
+Test "tan (0x4p+0)":
+ildouble: 1
+ldouble: 1
+Test "tan (0x7p+0)":
+ildouble: 1
+ldouble: 1
+Test "tan (0xap+0)":
+ildouble: 1
+ldouble: 1
 Test "tan (0xc.908p-4)":
 ildouble: 2
 ldouble: 2
@@ -7965,6 +8878,12 @@ ldouble: 1
 Test "tan (0xc.90fd8p-4)":
 ildouble: 1
 ldouble: 1
+Test "tan (0xc.90fdaa22168c234c4c6628b81p-4)":
+ildouble: 1
+ldouble: 1
+Test "tan (0xc.90fdaa22168c235p-4)":
+ildouble: 1
+ldouble: 1
 Test "tan (0xc.90fdap-4)":
 ildouble: 1
 ldouble: 1
@@ -7981,6 +8900,190 @@ ildouble: 1
 ldouble: 1
 
 # tan_downward
+Test "tan_downward (-0x2p+64)":
+double: 1
+idouble: 1
+Test "tan_downward (-0xc.908p-4)":
+float: 2
+ifloat: 2
+Test "tan_downward (-0xc.90cp-4)":
+float: 1
+ifloat: 1
+Test "tan_downward (-0xc.90ep-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tan_downward (-0xc.90f8p-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tan_downward (-0xc.90fcp-4)":
+float: 1
+ifloat: 1
+Test "tan_downward (-0xc.90fd8p-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tan_downward (-0xc.90fdap-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tan_downward (-0xc.90fdbp-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tan_downward (-0xc.90fdcp-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tan_downward (-0xc.90fdp-4)":
+float: 1
+ifloat: 1
+Test "tan_downward (-0xc.90fep-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tan_downward (-0xc.90fp-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tan_downward (-0xc.91p-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tan_downward (-0xc.92p-4)":
+double: 1
+idouble: 1
+Test "tan_downward (-0xc.94p-4)":
+ildouble: 2
+ldouble: 2
+Test "tan_downward (-0xc.98p-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_downward (-0xc.9p-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tan_downward (-0xc.ap-4)":
+double: 1
+idouble: 1
+Test "tan_downward (0x1p+0)":
+double: 1
+idouble: 1
+Test "tan_downward (0x2.1e19e0c9bab24p+72)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tan_downward (0x2.1e19ep+72)":
+ildouble: 1
+ldouble: 1
+Test "tan_downward (0x2p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tan_downward (0x3p+0)":
+double: 1
+idouble: 1
+Test "tan_downward (0x4p+0)":
+float: 1
+ifloat: 1
+Test "tan_downward (0x6p+0)":
+double: 1
+idouble: 1
+Test "tan_downward (0x7p+0)":
+double: 1
+idouble: 1
+Test "tan_downward (0x8p+1020)":
+double: 1
+idouble: 1
+Test "tan_downward (0x9p+0)":
+ildouble: 1
+ldouble: 1
+Test "tan_downward (0xap+0)":
+ildouble: 1
+ldouble: 1
+Test "tan_downward (0xc.908p-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tan_downward (0xc.90cp-4)":
+double: 1
+idouble: 1
+Test "tan_downward (0xc.90ep-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_downward (0xc.90f8p-4)":
+ildouble: 2
+ldouble: 2
+Test "tan_downward (0xc.90fcp-4)":
+double: 1
+idouble: 1
+Test "tan_downward (0xc.90fd8p-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_downward (0xc.90fdaa22168c234c4c6628b81p-4)":
+ildouble: 2
+ldouble: 2
+Test "tan_downward (0xc.90fdaa22168c235p-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_downward (0xc.90fdaa22168c8p-4)":
+double: 1
+idouble: 1
+Test "tan_downward (0xc.90fdap-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_downward (0xc.90fdp-4)":
+double: 1
+idouble: 1
+Test "tan_downward (0xc.90fep-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_downward (0xc.90fp-4)":
+ildouble: 2
+ldouble: 2
+Test "tan_downward (0xc.92p-4)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tan_downward (0xc.94p-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tan_downward (0xc.98p-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tan_downward (0xc.9p-4)":
+ildouble: 2
+ldouble: 2
+Test "tan_downward (0xc.ap-4)":
+float: 1
+ifloat: 1
+Test "tan_downward (0xcp-4)":
+double: 1
+idouble: 1
+Test "tan_downward (0xf.fffffp+124)":
+ildouble: 2
+ldouble: 2
 Test "tan_downward (1)":
 float: 1
 ifloat: 1
@@ -8011,6 +9114,78 @@ ildouble: 1
 ldouble: 1
 
 # tan_tonearest
+Test "tan_tonearest (-0xc.908p-4)":
+ildouble: 2
+ldouble: 2
+Test "tan_tonearest (-0xc.90cp-4)":
+ildouble: 2
+ldouble: 2
+Test "tan_tonearest (-0xc.90ep-4)":
+ildouble: 2
+ldouble: 2
+Test "tan_tonearest (-0xc.90f8p-4)":
+ildouble: 2
+ldouble: 2
+Test "tan_tonearest (-0xc.90fcp-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_tonearest (-0xc.90fd8p-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_tonearest (-0xc.90fdap-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_tonearest (-0xc.92p-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_tonearest (-0xc.9p-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_tonearest (0x2.1e19ep+72)":
+ildouble: 1
+ldouble: 1
+Test "tan_tonearest (0x4p+0)":
+ildouble: 1
+ldouble: 1
+Test "tan_tonearest (0x7p+0)":
+ildouble: 1
+ldouble: 1
+Test "tan_tonearest (0xap+0)":
+ildouble: 1
+ldouble: 1
+Test "tan_tonearest (0xc.908p-4)":
+ildouble: 2
+ldouble: 2
+Test "tan_tonearest (0xc.90cp-4)":
+ildouble: 2
+ldouble: 2
+Test "tan_tonearest (0xc.90ep-4)":
+ildouble: 2
+ldouble: 2
+Test "tan_tonearest (0xc.90f8p-4)":
+ildouble: 2
+ldouble: 2
+Test "tan_tonearest (0xc.90fcp-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_tonearest (0xc.90fd8p-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_tonearest (0xc.90fdaa22168c234c4c6628b81p-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_tonearest (0xc.90fdaa22168c235p-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_tonearest (0xc.90fdap-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_tonearest (0xc.92p-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_tonearest (0xc.9p-4)":
+ildouble: 1
+ldouble: 1
 Test "tan_tonearest (10)":
 ildouble: 1
 ldouble: 1
@@ -8022,6 +9197,178 @@ ildouble: 1
 ldouble: 1
 
 # tan_towardzero
+Test "tan_towardzero (-0x2p+64)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "tan_towardzero (-0xc.908p-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tan_towardzero (-0xc.90cp-4)":
+double: 1
+idouble: 1
+Test "tan_towardzero (-0xc.90ep-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_towardzero (-0xc.90f8p-4)":
+ildouble: 2
+ldouble: 2
+Test "tan_towardzero (-0xc.90fcp-4)":
+double: 1
+idouble: 1
+Test "tan_towardzero (-0xc.90fd8p-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_towardzero (-0xc.90fdap-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_towardzero (-0xc.90fdp-4)":
+double: 1
+idouble: 1
+Test "tan_towardzero (-0xc.90fp-4)":
+ildouble: 2
+ldouble: 2
+Test "tan_towardzero (-0xc.94p-4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tan_towardzero (-0xc.98p-4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tan_towardzero (-0xc.9p-4)":
+ildouble: 2
+ldouble: 2
+Test "tan_towardzero (0x1p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tan_towardzero (0x2.1e19e0c9bab24p+72)":
+ildouble: 2
+ldouble: 2
+Test "tan_towardzero (0x2.1e19e4p+72)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "tan_towardzero (0x2.1e19ep+72)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tan_towardzero (0x2p+0)":
+ildouble: 2
+ldouble: 2
+Test "tan_towardzero (0x2p+64)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "tan_towardzero (0x3p+0)":
+ildouble: 2
+ldouble: 2
+Test "tan_towardzero (0x4p+0)":
+ildouble: 1
+ldouble: 1
+Test "tan_towardzero (0x5p+0)":
+double: 1
+idouble: 1
+Test "tan_towardzero (0x6p+0)":
+ildouble: 1
+ldouble: 1
+Test "tan_towardzero (0x7p+0)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "tan_towardzero (0x8p+0)":
+double: 1
+idouble: 1
+Test "tan_towardzero (0x8p+1020)":
+ildouble: 2
+ldouble: 2
+Test "tan_towardzero (0x9p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tan_towardzero (0xap+0)":
+ildouble: 1
+ldouble: 1
+Test "tan_towardzero (0xc.908p-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tan_towardzero (0xc.90cp-4)":
+double: 1
+idouble: 1
+Test "tan_towardzero (0xc.90ep-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_towardzero (0xc.90f8p-4)":
+ildouble: 2
+ldouble: 2
+Test "tan_towardzero (0xc.90fcp-4)":
+double: 1
+idouble: 1
+Test "tan_towardzero (0xc.90fd8p-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_towardzero (0xc.90fdaa22168c234c4c6628b80cp-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_towardzero (0xc.90fdaa22168c234p-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_towardzero (0xc.90fdaa22168c8p-4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tan_towardzero (0xc.90fdaa22168cp-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_towardzero (0xc.90fdap-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_towardzero (0xc.90fdp-4)":
+double: 1
+idouble: 1
+Test "tan_towardzero (0xc.90fp-4)":
+ildouble: 2
+ldouble: 2
+Test "tan_towardzero (0xc.94p-4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tan_towardzero (0xc.98p-4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tan_towardzero (0xc.9p-4)":
+ildouble: 2
+ldouble: 2
+Test "tan_towardzero (0xcp-4)":
+double: 1
+idouble: 1
+Test "tan_towardzero (0xf.ffffffffffff8p+1020)":
+double: 1
+idouble: 1
+Test "tan_towardzero (0xf.ffffffffffffbffffffffffffcp+1020)":
+ildouble: 1
+ldouble: 1
+Test "tan_towardzero (0xf.fffffp+124)":
+double: 1
+idouble: 1
 Test "tan_towardzero (10)":
 float: 1
 ifloat: 1
@@ -8056,6 +9403,238 @@ ildouble: 1
 ldouble: 1
 
 # tan_upward
+Test "tan_upward (-0xc.908p-4)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "tan_upward (-0xc.90cp-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "tan_upward (-0xc.90ep-4)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "tan_upward (-0xc.90f8p-4)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "tan_upward (-0xc.90fcp-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "tan_upward (-0xc.90fd8p-4)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "tan_upward (-0xc.90fdap-4)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tan_upward (-0xc.90fdbp-4)":
+float: 1
+ifloat: 1
+Test "tan_upward (-0xc.90fdcp-4)":
+float: 1
+ifloat: 1
+Test "tan_upward (-0xc.90fdp-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "tan_upward (-0xc.90fep-4)":
+float: 1
+ifloat: 1
+Test "tan_upward (-0xc.90fp-4)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "tan_upward (-0xc.91p-4)":
+float: 1
+ifloat: 1
+Test "tan_upward (-0xc.94p-4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tan_upward (-0xc.98p-4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tan_upward (-0xc.9p-4)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "tan_upward (0x2.1e19e4p+72)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "tan_upward (0x2.1e19ep+72)":
+double: 1
+idouble: 1
+Test "tan_upward (0x2p+0)":
+ildouble: 1
+ldouble: 1
+Test "tan_upward (0x2p+64)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "tan_upward (0x3p+0)":
+ildouble: 2
+ldouble: 2
+Test "tan_upward (0x4p+0)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "tan_upward (0x5p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tan_upward (0x6p+0)":
+ildouble: 1
+ldouble: 1
+Test "tan_upward (0x7p+0)":
+float: 1
+ifloat: 1
+Test "tan_upward (0x8p+0)":
+double: 1
+idouble: 1
+Test "tan_upward (0x8p+1020)":
+ildouble: 2
+ldouble: 2
+Test "tan_upward (0x9p+0)":
+double: 1
+idouble: 1
+Test "tan_upward (0xap+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tan_upward (0xc.908p-4)":
+float: 1
+ifloat: 1
+Test "tan_upward (0xc.90ep-4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tan_upward (0xc.90f8p-4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tan_upward (0xc.90fcp-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_upward (0xc.90fd8p-4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tan_upward (0xc.90fdaa22168c234c4c6628b80cp-4)":
+ildouble: 2
+ldouble: 2
+Test "tan_upward (0xc.90fdaa22168c234c4c6628b81p-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_upward (0xc.90fdaa22168c234p-4)":
+ildouble: 2
+ldouble: 2
+Test "tan_upward (0xc.90fdaa22168c235p-4)":
+ildouble: 1
+ldouble: 1
+Test "tan_upward (0xc.90fdaa22168c8p-4)":
+ildouble: 2
+ldouble: 2
+Test "tan_upward (0xc.90fdaa22168cp-4)":
+ildouble: 2
+ldouble: 2
+Test "tan_upward (0xc.90fdap-4)":
+double: 1
+idouble: 1
+Test "tan_upward (0xc.90fdbp-4)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "tan_upward (0xc.90fdcp-4)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "tan_upward (0xc.90fep-4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tan_upward (0xc.90fp-4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tan_upward (0xc.91p-4)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "tan_upward (0xc.92p-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tan_upward (0xc.94p-4)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "tan_upward (0xc.98p-4)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "tan_upward (0xc.9p-4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tan_upward (0xc.ap-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "tan_upward (0xcp-4)":
+float: 1
+ifloat: 1
+Test "tan_upward (0xf.ffffffffffff8p+1020)":
+double: 1
+idouble: 1
+Test "tan_upward (0xf.fffffp+124)":
+double: 1
+idouble: 1
 Test "tan_upward (10)":
 ildouble: 1
 ldouble: 1
@@ -8083,7 +9662,13 @@ ldouble: 1
 Test "tanh (-0.75)":
 ildouble: 1
 ldouble: 1
+Test "tanh (-0xcp-4)":
+ildouble: 1
+ldouble: 1
 Test "tanh (0.75)":
+ildouble: 1
+ldouble: 1
+Test "tanh (0xcp-4)":
 ildouble: 1
 ldouble: 1
 
@@ -8101,6 +9686,9 @@ ldouble: 1
 Test "tgamma (-0x0.ffffffp0)":
 float: 1
 ifloat: 1
+Test "tgamma (-0x1.000002p+0)":
+double: 2
+idouble: 2
 Test "tgamma (-0x1.000002p0)":
 double: 2
 idouble: 2
@@ -8109,6 +9697,58 @@ ldouble: 1
 Test "tgamma (-0x1.0a32a2p+5)":
 float: 2
 ifloat: 2
+Test "tgamma (-0x1.3ffffep+4)":
+float: 1
+ifloat: 1
+Test "tgamma (-0x1.3ffffffffffffffep+4)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x1.3fffffffffffffffffffffffff8p+4)":
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0x1.3ffffffffffffp+4)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x1.4000000000000002p+4)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x1.4000000000001p+4)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0x1.400002p+4)":
+float: 1
+ifloat: 1
+Test "tgamma (-0x1.dffffep+4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x1.dffffffffffffffep+4)":
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0x1.dfffffffffffffffffffffffff8p+4)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x1.dffffffffffffp+4)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x1.e00000000000000000000000008p+4)":
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0x1.e000000000001p+4)":
+double: 3
+idouble: 3
+ildouble: 3
+ldouble: 3
+Test "tgamma (-0x1.e00002p+4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 Test "tgamma (-0x13.ffffep0)":
 float: 2
 ifloat: 2
@@ -8152,13 +9792,77 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "tgamma (-0x2.0000000000002p+0)":
+double: 1
+idouble: 1
 Test "tgamma (-0x2.0000000000002p0)":
 double: 1
 idouble: 1
+Test "tgamma (-0x2.000004p+0)":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "tgamma (-0x2.000004p0)":
 double: 2
 float: 1
 idouble: 2
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x2.146544p+4)":
+float: 2
+ifloat: 2
+Test "tgamma (-0x2.7fffffffffffep+4)":
+double: 1
+idouble: 1
+Test "tgamma (-0x2.7fffffffffffffffffffffffffp+4)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x2.8000000000002p+4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x2.800004p+4)":
+double: 2
+idouble: 2
+Test "tgamma (-0x2.8ffffffffffffffcp+4)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x2.8p+0)":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x2.90000000000000000000000001p+4)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x2.9000000000000004p+4)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x2.900004p+4)":
+double: 1
+idouble: 1
+Test "tgamma (-0x2.9ffffcp+4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x2.9fffffffffffep+4)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x2.a0000000000000000000000001p+4)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x2.fffffcp+0)":
+double: 1
+float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
@@ -8203,16 +9907,54 @@ ldouble: 1
 Test "tgamma (-0x2a.0000000000000000000000001p0)":
 ildouble: 1
 ldouble: 1
+Test "tgamma (-0x3.000004p+0)":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
 Test "tgamma (-0x3.000004p0)":
 double: 2
 float: 1
 idouble: 2
+ifloat: 1
+Test "tgamma (-0x3.1ffffcp+4)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0x3.1fffffffffffep+4)":
+double: 3
+idouble: 3
+Test "tgamma (-0x3.1ffffffffffffffcp+4)":
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0x3.20000000000000000000000001p+4)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x3.2000000000002p+4)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x3.200004p+4)":
+ildouble: 2
+ldouble: 2
+Test "tgamma (-0x3.8p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tgamma (-0x3.fffffcp+0)":
+double: 1
+float: 1
+idouble: 1
 ifloat: 1
 Test "tgamma (-0x3.fffffcp0)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "tgamma (-0x3.ffffffffffffep+0)":
+double: 2
+idouble: 2
 Test "tgamma (-0x3.ffffffffffffep0)":
 double: 2
 idouble: 2
@@ -8225,33 +9967,104 @@ ldouble: 1
 Test "tgamma (-0x32.000000000002p0)":
 ildouble: 1
 ldouble: 1
+Test "tgamma (-0x4.000008p+0)":
+float: 1
+ifloat: 1
 Test "tgamma (-0x4.000008p0)":
 float: 1
+ifloat: 1
+Test "tgamma (-0x4.8p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x4.fffff8p+0)":
+double: 1
+float: 1
+idouble: 1
 ifloat: 1
 Test "tgamma (-0x4.fffff8p0)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "tgamma (-0x4.ffffffffffffcp+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
 Test "tgamma (-0x4.ffffffffffffcp0)":
 double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "tgamma (-0x5.0000000000004p+0)":
+ildouble: 1
+ldouble: 1
 Test "tgamma (-0x5.0000000000004p0)":
 ildouble: 1
 ldouble: 1
+Test "tgamma (-0x5.000008p+0)":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
 Test "tgamma (-0x5.000008p0)":
 double: 1
 float: 2
 idouble: 1
 ifloat: 2
+Test "tgamma (-0x5.8p+0)":
+double: 1
+idouble: 1
+Test "tgamma (-0x5.ffffffffffffcp+0)":
+double: 1
+idouble: 1
 Test "tgamma (-0x5.ffffffffffffcp0)":
 double: 1
 idouble: 1
+Test "tgamma (-0x5.fffffffffffffff8p+0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x6.000008p+0)":
+float: 2
+ifloat: 2
+ildouble: 1
+ldouble: 1
 Test "tgamma (-0x6.000008p0)":
 float: 2
 ifloat: 2
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x6.3fffffffffffcp+4)":
+double: 2
+idouble: 2
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x6.3ffffffffffffffffffffffffep+4)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x6.4000000000000008p+4)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x6.4000000000004p+4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x6.400008p+4)":
+double: 1
+idouble: 1
+Test "tgamma (-0x6.8p+0)":
+float: 1
+ifloat: 1
+Test "tgamma (-0x6.fffff8p+0)":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "tgamma (-0x6.fffff8p0)":
@@ -8261,6 +10074,11 @@ idouble: 2
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "tgamma (-0x6.ffffffffffffcp+0)":
+double: 4
+idouble: 4
+ildouble: 2
+ldouble: 2
 Test "tgamma (-0x6.ffffffffffffcp0)":
 double: 4
 idouble: 4
@@ -8279,37 +10097,104 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "tgamma (-0x7.0000000000004p+0)":
+double: 3
+idouble: 3
+ildouble: 1
+ldouble: 1
 Test "tgamma (-0x7.0000000000004p0)":
 double: 3
 idouble: 3
 ildouble: 2
 ldouble: 2
+Test "tgamma (-0x7.000008p+0)":
+double: 1
+idouble: 1
 Test "tgamma (-0x7.000008p0)":
 double: 1
 float: 1
 idouble: 1
+ifloat: 1
+Test "tgamma (-0x7.8p+0)":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+Test "tgamma (-0x7.fffff8p+0)":
+double: 3
+float: 1
+idouble: 3
 ifloat: 1
 Test "tgamma (-0x7.fffff8p0)":
 double: 3
 float: 1
 idouble: 3
 ifloat: 1
+Test "tgamma (-0x7.ffffffffffffcp+0)":
+double: 3
+idouble: 3
+ildouble: 3
+ldouble: 3
 Test "tgamma (-0x7.ffffffffffffcp0)":
 double: 3
 idouble: 3
 ildouble: 3
 ldouble: 3
+Test "tgamma (-0x7.fffffffffffffff8p+0)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x8.00000000000000000000000004p+0)":
+ildouble: 1
+ldouble: 1
 Test "tgamma (-0x8.00000000000000000000000004p0)":
 ildouble: 1
 ldouble: 1
+Test "tgamma (-0x8.00001p+0)":
+double: 2
+idouble: 2
 Test "tgamma (-0x8.00001p0)":
 double: 2
 idouble: 2
+Test "tgamma (-0x8.8p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tgamma (-0x8p-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tgamma (-0x9.5ffffffffffffffp+4)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x9.600000000000001p+4)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x9.6000000000008p+4)":
+double: 1
+idouble: 1
+Test "tgamma (-0x9.60001p+4)":
+double: 1
+idouble: 1
+Test "tgamma (-0x9.8p+0)":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+Test "tgamma (-0x9.ffffffffffff8p+0)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
 Test "tgamma (-0x9.ffffffffffff8p0)":
 double: 1
 idouble: 1
 ildouble: 2
 ldouble: 2
+Test "tgamma (-0x9.fffffp+0)":
+ildouble: 1
+ldouble: 1
 Test "tgamma (-0x9.fffffp0)":
 float: 1
 ifloat: 1
@@ -8318,11 +10203,27 @@ ldouble: 1
 Test "tgamma (-0x96.000000000008p0)":
 double: 1
 idouble: 1
+Test "tgamma (-0xa.00001p+0)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
 Test "tgamma (-0xa.00001p0)":
 double: 1
 idouble: 1
 ildouble: 2
 ldouble: 2
+Test "tgamma (-0xa.c0001p+4)":
+double: 1
+idouble: 1
+Test "tgamma (-0xf.ffffffffffff8p-4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0xf.fffffp-4)":
+float: 1
+ifloat: 1
 Test "tgamma (-2.5)":
 double: 1
 float: 2
@@ -8371,9 +10272,33 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "tgamma (0x1.28p+4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x1.38p+4)":
+double: 2
+idouble: 2
+Test "tgamma (0x1.78p+4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tgamma (0x1.d8p+4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tgamma (0x1.fffffep+0)":
+float: 1
+ifloat: 1
 Test "tgamma (0x1.fffffep0)":
 float: 1
 ifloat: 1
+Test "tgamma (0x1.fffffffffffffp+0)":
+double: 1
+idouble: 1
 Test "tgamma (0x1.fffffffffffffp0)":
 double: 1
 idouble: 1
@@ -8383,85 +10308,232 @@ ifloat: 1
 Test "tgamma (0x1p-53)":
 double: 1
 idouble: 1
+Test "tgamma (0x2.18p+4)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x2.28p+4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
 Test "tgamma (0x2.30a43cp+4)":
 double: 1
 float: 2
 idouble: 1
 ifloat: 2
+Test "tgamma (0x2.8p+0)":
+float: 2
+ifloat: 2
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x2.fffffcp+0)":
+float: 3
+ifloat: 3
 Test "tgamma (0x2.fffffcp0)":
 float: 3
 ifloat: 3
+Test "tgamma (0x3.8p+0)":
+float: 2
+ifloat: 2
+Test "tgamma (0x3.fffffcp+0)":
+float: 1
+ifloat: 1
 Test "tgamma (0x3.fffffcp0)":
 float: 1
 ifloat: 1
+Test "tgamma (0x3.ffffffffffffep+0)":
+double: 1
+idouble: 1
 Test "tgamma (0x3.ffffffffffffep0)":
+double: 1
+idouble: 1
+Test "tgamma (0x3p+0)":
+float: 1
+ifloat: 1
+Test "tgamma (0x4.0000000000004p+0)":
 double: 1
 idouble: 1
 Test "tgamma (0x4.0000000000004p0)":
 double: 1
 idouble: 1
+Test "tgamma (0x4.8p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tgamma (0x4.fffff8p+0)":
+float: 1
+ifloat: 1
 Test "tgamma (0x4.fffff8p0)":
 float: 1
 ifloat: 1
+Test "tgamma (0x4.ffffffffffffcp+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
 Test "tgamma (0x4.ffffffffffffcp0)":
 double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "tgamma (0x4p+0)":
+float: 1
+ifloat: 1
+Test "tgamma (0x5.0000000000004p+0)":
+double: 1
+idouble: 1
 Test "tgamma (0x5.0000000000004p0)":
 double: 1
 idouble: 1
+Test "tgamma (0x5.000008p+0)":
+float: 3
+ifloat: 3
 Test "tgamma (0x5.000008p0)":
 float: 3
 ifloat: 3
+Test "tgamma (0x5.fffff8p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 Test "tgamma (0x5.fffff8p0)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "tgamma (0x6.0000000000004p+0)":
+double: 1
+idouble: 1
 Test "tgamma (0x6.0000000000004p0)":
 double: 1
 idouble: 1
+Test "tgamma (0x6.000008p+0)":
+float: 2
+ifloat: 2
 Test "tgamma (0x6.000008p0)":
 float: 2
 ifloat: 2
+Test "tgamma (0x6.8p+0)":
+float: 1
+ifloat: 1
+Test "tgamma (0x6.fffff8p+0)":
+double: 1
+idouble: 1
 Test "tgamma (0x6.fffff8p0)":
 double: 1
 idouble: 1
+Test "tgamma (0x6.ffffffffffffcp+0)":
+double: 4
+idouble: 4
+ildouble: 1
+ldouble: 1
 Test "tgamma (0x6.ffffffffffffcp0)":
 double: 4
 idouble: 4
 ildouble: 1
 ldouble: 1
+Test "tgamma (0x6p+0)":
+float: 1
+ifloat: 1
+Test "tgamma (0x7.0000000000004p+0)":
+double: 4
+idouble: 4
 Test "tgamma (0x7.0000000000004p0)":
 double: 4
 idouble: 4
 ildouble: 1
 ldouble: 1
+Test "tgamma (0x7.000008p+0)":
+double: 1
+idouble: 1
 Test "tgamma (0x7.000008p0)":
 double: 1
 float: 1
 idouble: 1
+ifloat: 1
+Test "tgamma (0x7.8p+0)":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x7.fffff8p+0)":
+double: 2
+float: 1
+idouble: 2
 ifloat: 1
 Test "tgamma (0x7.fffff8p0)":
 double: 2
 float: 1
 idouble: 2
 ifloat: 1
+Test "tgamma (0x7.ffffffffffffcp+0)":
+double: 2
+idouble: 2
+ildouble: 1
+ldouble: 1
 Test "tgamma (0x7.ffffffffffffcp0)":
 double: 2
 idouble: 2
 ildouble: 1
 ldouble: 1
+Test "tgamma (0x7p+0)":
+double: 1
+idouble: 1
+Test "tgamma (0x8.00001p+0)":
+double: 2
+idouble: 2
 Test "tgamma (0x8.00001p0)":
 double: 2
 idouble: 2
+Test "tgamma (0x8.8p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tgamma (0x8p+0)":
+double: 1
+idouble: 1
+Test "tgamma (0x8p-4)":
+float: 1
+ifloat: 1
+Test "tgamma (0x8p-56)":
+double: 1
+idouble: 1
+Test "tgamma (0x9.8p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "tgamma (0x9p+0)":
+double: 1
+idouble: 1
 Test "tgamma (0xa.b9fd72b0fb238p+4)":
 double: 1
 idouble: 1
 ildouble: 2
 ldouble: 2
 Test "tgamma (0xa.b9fd72b0fb23a9ddbf0d3804f4p+4)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (0xa.b9fd7p+4)":
+double: 2
+idouble: 2
+ildouble: 2
+ldouble: 2
+Test "tgamma (0xap+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tgamma (0xb.333333333333333p-4)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (0xb.33334p-4)":
 ildouble: 1
 ldouble: 1
 Test "tgamma (10)":
@@ -8570,9 +10642,21 @@ ldouble: 1
 Test "y0 (0x1.3ffp+74)":
 double: 1
 idouble: 1
+Test "y0 (0x1.8p+0)":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
 Test "y0 (0x1.ff00000000002p+840)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
+Test "y0 (0x1p+0)":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "y0 (0x1p-100)":
@@ -8608,6 +10692,60 @@ Test "y0 (0x1p-80)":
 double: 1
 idouble: 1
 Test "y0 (0x1p1023)":
+ildouble: 1
+ldouble: 1
+Test "y0 (0x2p+0)":
+double: 1
+idouble: 1
+Test "y0 (0x2p-4)":
+ildouble: 1
+ldouble: 1
+Test "y0 (0x4.ffcp+72)":
+double: 1
+idouble: 1
+Test "y0 (0x4p-112)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "y0 (0x4p-32)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "y0 (0x4p-72)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "y0 (0x8p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "y0 (0x8p+1020)":
+ildouble: 1
+ldouble: 1
+Test "y0 (0xap+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "y0 (0xf.ffffffffffff8p+1020)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "y0 (0xf.ffffffffffffbffffffffffffcp+1020)":
+ildouble: 1
+ldouble: 1
+Test "y0 (0xf.fffffp+124)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "y0 (1.0)":
@@ -8654,6 +10792,9 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "y1 (0x1.8p+0)":
+float: 1
+ifloat: 1
 Test "y1 (0x1p-10)":
 double: 1
 idouble: 1
@@ -8663,6 +10804,47 @@ ldouble: 1
 Test "y1 (0x1p1023)":
 ildouble: 1
 ldouble: 1
+Test "y1 (0x2.002000002p+592)":
+ildouble: 2
+ldouble: 2
+Test "y1 (0x2p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "y1 (0x2p-4)":
+double: 1
+idouble: 1
+Test "y1 (0x4p-12)":
+double: 1
+idouble: 1
+Test "y1 (0x8p+0)":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 1
+ldouble: 1
+Test "y1 (0x8p+1020)":
+ildouble: 1
+ldouble: 1
+Test "y1 (0x9.3f102p+96)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "y1 (0xap+0)":
+double: 3
+float: 1
+idouble: 3
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "y1 (0xf.fffffp+124)":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
 Test "y1 (1.5)":
 float: 1
 ifloat: 1
@@ -8687,6 +10869,9 @@ ildouble: 1
 ldouble: 1
 
 # yn
+Test "yn (-10, 1.0)":
+float: 2
+ifloat: 2
 Test "yn (0, 0.125)":
 ildouble: 1
 ldouble: 1
@@ -9440,6 +11625,8 @@ idouble: 1
 ifloat: 2
 
 Function: "log":
+float: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
@@ -9492,12 +11679,16 @@ ildouble: 1
 ldouble: 1
 
 Function: "sin":
+float: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "sin_downward":
-float: 1
-ifloat: 1
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
 ildouble: 4
 ldouble: 4
 
@@ -9508,13 +11699,17 @@ ildouble: 1
 ldouble: 1
 
 Function: "sin_towardzero":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
-ildouble: 3
-ldouble: 3
+ildouble: 4
+ldouble: 4
 
 Function: "sin_upward":
+double: 1
 float: 2
+idouble: 1
 ifloat: 2
 ildouble: 3
 ldouble: 3
@@ -9532,7 +11727,9 @@ ildouble: 1
 ldouble: 1
 
 Function: "sinh_downward":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 2
 ldouble: 2
@@ -9542,12 +11739,18 @@ ildouble: 1
 ldouble: 1
 
 Function: "sinh_towardzero":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 2
 ldouble: 2
 
 Function: "sinh_upward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
@@ -9580,23 +11783,29 @@ ildouble: 2
 ldouble: 2
 
 Function: "tan_downward":
-float: 1
-ifloat: 1
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
 ildouble: 2
 ldouble: 2
 
 Function: "tan_tonearest":
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "tan_towardzero":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 3
 ldouble: 3
 
 Function: "tan_upward":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 3
 ldouble: 3
