@@ -697,6 +697,18 @@ special_fill_minus_pi_2 (mpfr_t res0, mpfr_t res1, fp_format format)
 }
 
 static size_t
+special_fill_pi_4 (mpfr_t res0, mpfr_t res1, fp_format format)
+{
+  mpfr_init2 (res0, fp_formats[format].mant_dig);
+  assert_exact (mpfr_set_si (res0, 1, MPFR_RNDN));
+  mpfr_atan (res0, res0, MPFR_RNDU);
+  mpfr_init2 (res1, fp_formats[format].mant_dig);
+  assert_exact (mpfr_set_si (res1, 1, MPFR_RNDN));
+  mpfr_atan (res1, res1, MPFR_RNDD);
+  return 2;
+}
+
+static size_t
 special_fill_pi_6 (mpfr_t res0, mpfr_t res1, fp_format format)
 {
   mpfr_init2 (res0, fp_formats[format].mant_dig);
@@ -801,6 +813,7 @@ static const special_real_input special_real_inputs[] =
     { "-pi", special_fill_minus_pi },
     { "pi/2", special_fill_pi_2 },
     { "-pi/2", special_fill_minus_pi_2 },
+    { "pi/4", special_fill_pi_4 },
     { "pi/6", special_fill_pi_6 },
     { "-pi/6", special_fill_minus_pi_6 },
     { "pi/3", special_fill_pi_3 },

@@ -1,3 +1,43 @@
+2013-12-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/auto-libm-test-in: Add tests of log, log10, log1p, log2,
+	sin, sinh, tan, tanh, tgamma, y0 and y1.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (TEST_COND_x86_64): New macro.
+	(TEST_COND_x86): Likewise.
+	(M_E2l): Remove macro.
+	(M_E3l): Likewise.
+	(M_2_SQRT_PIl): Likewise.
+	(M_SQRT_PIl): Likewise.
+	(M_1_DIV_El): Likewise.
+	(log_test_data): Use AUTO_TESTS_f_f.
+	(log10_test_data): Likewise.
+	(log1p_test_data): Likewise.
+	(log2_test_data): Likewise.
+	(sin_test_data): Likewise.
+	(sin_tonearest_test_data): Likewise.
+	(sin_towardzero_test_data): Likewise.
+	(sin_downward_test_data): Likewise.
+	(sin_upward_test_data): Likewise.
+	(sinh_test_data): Likewise.
+	(sinh_tonearest_test_data): Likewise.
+	(sinh_towardzero_test_data): Likewise.
+	(sinh_downward_test_data): Likewise.
+	(sinh_upward_test_data): Likewise.
+	(tan_test_data): Likewise.
+	(tan_tonearest_test_data): Likewise.
+	(tan_towardzero_test_data): Likewise.
+	(tan_downward_test_data): Likewise.
+	(tan_upward_test_data): Likewise.
+	(tanh_test_data): Likewise.
+	(tgamma_test_data): Likewise.
+	(y0_test_data): Likewise.
+	(y1_test_data): Likewise.
+	* math/gen-auto-libm-tests.c (special_fill_pi_4): New function.
+	(special_real_inputs): Add pi/4.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2013-12-05  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/__longjmp-common.S: Add "longjmp" and
