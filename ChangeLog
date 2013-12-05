@@ -1,3 +1,8 @@
+2013-12-05  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/sotruss-lib.c: New file.
+	* sysdeps/unix/sysv/linux/sh/nptl/c++-types.data: New file.
+
 2013-12-05  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
