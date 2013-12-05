@@ -25,9 +25,6 @@
 char *
 __stpncpy_chk (char *dest, const char *src, size_t n, size_t destlen)
 {
-  char c;
-  char *s = dest;
-
   if (__builtin_expect (destlen < n, 0))
     __chk_fail ();
 

@@ -1,5 +1,7 @@
 2013-12-05  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* debug/stpncpy_chk.c (__stpncpy_chk): Remove unused variables.
+
 	[BZ #15941]
 	* Makefile (INSTALL): Add install-plain.texi as the primary
 	dependency.
