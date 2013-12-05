@@ -1,3 +1,12 @@
+2013-12-05  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #15941]
+	* Makefile (INSTALL): Add install-plain.texi as the primary
+	dependency.
+	* manual/install-plain.texi: New file.
+	* manual/install.texi: Include node directive only for
+	non-plaintext output.
+
 2013-12-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* stdlib/longlong.h: Update from GCC.
