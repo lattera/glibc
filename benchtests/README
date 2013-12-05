@@ -48,7 +48,8 @@ one to add `foo' to the bench tests:
 
   - args: This should be assigned a colon separated list of types of the input
     arguments.  This directive may be skipped if the function does not take any
-    inputs.
+    inputs.  One may identify output arguments by nesting them in <>.  The
+    generator will create variables to get outputs from the calling function.
   - ret: This should be assigned the type that the function returns.  This
     directive may be skipped if the function does not return a value.
   - includes: This should be assigned a comma-separated list of headers that
