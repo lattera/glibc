@@ -8986,6 +8986,9 @@ ldouble: 1
 Test "tgamma (0x3.8p+0)":
 float: 1
 ifloat: 1
+Test "tgamma (0x3.e8p+8)":
+ildouble: 1
+ldouble: 1
 Test "tgamma (0x3.fffffcp+0)":
 float: 1
 ifloat: 1

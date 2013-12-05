@@ -18,6 +18,7 @@
  * Return the Gamma function of x.
  */
 
+#include <errno.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -27,13 +28,15 @@ __tgammal(long double x)
 	int local_signgam;
 	long double y = __ieee754_gammal_r(x,&local_signgam);
 
-	if(__builtin_expect(!__finitel(y), 0)
+	if(__glibc_unlikely (!__finitel (y) || y == 0)
 	   && (__finitel (x) || __isinfl (x) < 0)
 	   && _LIB_VERSION != _IEEE_) {
 	  if(x==0.0)
 	    return __kernel_standard_l(x,x,250); /* tgamma pole */
 	  else if(__floorl(x)==x&&x<0.0L)
 	    return __kernel_standard_l(x,x,241); /* tgamma domain */
+	  else if (y == 0)
+	    __set_errno (ERANGE); /* tgamma underflow */
 	  else
 	    return __kernel_standard_l(x,x,240); /* tgamma overflow */
 	}

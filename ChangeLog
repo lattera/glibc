@@ -1,5 +1,18 @@
 2013-12-05  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #6810]
+	* math/w_tgamma.c: Include <errno.h>.
+	(__tgamma): Use __glibc_unlikely.  Set errno on underflow to 0.
+	* math/w_tgammaf.c: Include <errno.h>.
+	(__tgammaf): Use __glibc_unlikely.  Set errno on underflow to 0.
+	* math/w_tgammal.c: Include <errno.h>.
+	(__tgammal): Use __glibc_unlikely.  Set errno on underflow to 0.
+	* math/auto-libm-test-in: Do not allow missing errno on tgamma
+	underflow.  Add more tgamma tests.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	* math/auto-libm-test-in: Add tests of log, log10, log1p, log2,
 	sin, sinh, tan, tanh, tgamma, y0 and y1.
 	* math/auto-libm-test-out: Regenerated.

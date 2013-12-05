@@ -13,6 +13,7 @@
  * ====================================================
  */
 
+#include <errno.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -22,7 +23,7 @@ __tgammaf(float x)
 	int local_signgam;
 	float y = __ieee754_gammaf_r(x,&local_signgam);
 
-	if(__builtin_expect(!__finitef(y), 0)
+	if(__glibc_unlikely (!__finitef (y) || y == 0)
 	   && (__finitef (x) || __isinff (x) < 0)
 	   && _LIB_VERSION != _IEEE_) {
 	  if (x == (float)0.0)
@@ -31,6 +32,9 @@ __tgammaf(float x)
 	  else if(__floorf(x)==x&&x<0.0f)
 	    /* tgammaf domain */
 	    return __kernel_standard_f(x, x, 141);
+	  else if (y == 0)
+	    /* tgammaf underflow */
+	    __set_errno (ERANGE);
 	  else
 	    /* tgammaf overflow */
 	    return __kernel_standard_f(x, x, 140);

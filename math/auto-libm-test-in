@@ -596,9 +596,8 @@ tgamma -0x27.ffffcp0
 tgamma -0x28.00004p0
 tgamma -0x28.ffffcp0
 tgamma -0x29.00004p0
-# Bug 6810: errno may not be set on underflow.
-tgamma -0x29.ffffcp0 missing-errno
-tgamma -0x2a.00004p0 missing-errno
+tgamma -0x29.ffffcp0
+tgamma -0x2a.00004p0
 tgamma 0x8.0000000000008p0
 tgamma 0x7.ffffffffffffcp0
 tgamma 0x7.0000000000004p0
@@ -641,23 +640,22 @@ tgamma -0x27.fffffffffffep0
 tgamma -0x28.000000000002p0
 tgamma -0x28.fffffffffffep0
 tgamma -0x29.000000000002p0
-# Bug 6810: errno may not be set on underflow.
-tgamma -0x29.fffffffffffep0 missing-errno
-tgamma -0x2a.000000000002p0 missing-errno
-tgamma -0x31.fffffffffffep0 missing-errno
-tgamma -0x32.000000000002p0 missing-errno
-tgamma -0x63.fffffffffffcp0 missing-errno
-tgamma -0x64.000000000004p0 missing-errno
-tgamma -0x95.fffffffffff8p0 missing-errno
-tgamma -0x96.000000000008p0 missing-errno
-tgamma -0xb4.fffffffffff8p0 missing-errno
-tgamma -0xb5.000000000008p0 missing-errno
-tgamma -0xb5.fffffffffff8p0 missing-errno
-tgamma -0xb6.000000000008p0 missing-errno
-tgamma -0xb6.fffffffffff8p0 missing-errno
-tgamma -0xb7.000000000008p0 missing-errno
-tgamma -0xb7.fffffffffff8p0 missing-errno
-tgamma -0xb8.000000000008p0 missing-errno
+tgamma -0x29.fffffffffffep0
+tgamma -0x2a.000000000002p0
+tgamma -0x31.fffffffffffep0
+tgamma -0x32.000000000002p0
+tgamma -0x63.fffffffffffcp0
+tgamma -0x64.000000000004p0
+tgamma -0x95.fffffffffff8p0
+tgamma -0x96.000000000008p0
+tgamma -0xb4.fffffffffff8p0
+tgamma -0xb5.000000000008p0
+tgamma -0xb5.fffffffffff8p0
+tgamma -0xb6.000000000008p0
+tgamma -0xb6.fffffffffff8p0
+tgamma -0xb7.000000000008p0
+tgamma -0xb7.fffffffffff8p0
+tgamma -0xb8.000000000008p0
 tgamma 0x8.00000000000000000000000004p0
 tgamma 0x7.fffffffffffffffffffffffffep0
 tgamma 0x7.00000000000000000000000002p0
@@ -700,31 +698,30 @@ tgamma -0x27.fffffffffffffffffffffffffp0
 tgamma -0x28.0000000000000000000000001p0
 tgamma -0x28.fffffffffffffffffffffffffp0
 tgamma -0x29.0000000000000000000000001p0
-# Bug 6810: errno may not be set on underflow.
-tgamma -0x29.fffffffffffffffffffffffffp0 missing-errno
-tgamma -0x2a.0000000000000000000000001p0 missing-errno
-tgamma -0x31.fffffffffffffffffffffffffp0 missing-errno
-tgamma -0x32.0000000000000000000000001p0 missing-errno
-tgamma -0x63.ffffffffffffffffffffffffep0 missing-errno
-tgamma -0x64.0000000000000000000000002p0 missing-errno
-tgamma -0x95.ffffffffffffffffffffffffcp0 missing-errno
-tgamma -0x96.0000000000000000000000004p0 missing-errno
-tgamma -0xb4.ffffffffffffffffffffffffcp0 missing-errno
-tgamma -0xb5.0000000000000000000000004p0 missing-errno
-tgamma -0xb5.ffffffffffffffffffffffffcp0 missing-errno
-tgamma -0xb6.0000000000000000000000004p0 missing-errno
-tgamma -0xb6.ffffffffffffffffffffffffcp0 missing-errno
-tgamma -0xb7.0000000000000000000000004p0 missing-errno
-tgamma -0xb7.ffffffffffffffffffffffffcp0 missing-errno
-tgamma -0xb8.0000000000000000000000004p0 missing-errno
-tgamma -0xbb.ffffffffffffffffffffffffcp0 missing-errno
-tgamma -0xbc.0000000000000000000000004p0 missing-errno
-tgamma -0xbc.ffffffffffffffffffffffffcp0 missing-errno
-tgamma -0xbd.0000000000000000000000004p0 missing-errno
-tgamma -0xbd.ffffffffffffffffffffffffcp0 missing-errno
-tgamma -0xbe.0000000000000000000000004p0 missing-errno
-tgamma -0xbe.ffffffffffffffffffffffffcp0 missing-errno
-tgamma -0xbf.0000000000000000000000004p0 missing-errno
+tgamma -0x29.fffffffffffffffffffffffffp0
+tgamma -0x2a.0000000000000000000000001p0
+tgamma -0x31.fffffffffffffffffffffffffp0
+tgamma -0x32.0000000000000000000000001p0
+tgamma -0x63.ffffffffffffffffffffffffep0
+tgamma -0x64.0000000000000000000000002p0
+tgamma -0x95.ffffffffffffffffffffffffcp0
+tgamma -0x96.0000000000000000000000004p0
+tgamma -0xb4.ffffffffffffffffffffffffcp0
+tgamma -0xb5.0000000000000000000000004p0
+tgamma -0xb5.ffffffffffffffffffffffffcp0
+tgamma -0xb6.0000000000000000000000004p0
+tgamma -0xb6.ffffffffffffffffffffffffcp0
+tgamma -0xb7.0000000000000000000000004p0
+tgamma -0xb7.ffffffffffffffffffffffffcp0
+tgamma -0xb8.0000000000000000000000004p0
+tgamma -0xbb.ffffffffffffffffffffffffcp0
+tgamma -0xbc.0000000000000000000000004p0
+tgamma -0xbc.ffffffffffffffffffffffffcp0
+tgamma -0xbd.0000000000000000000000004p0
+tgamma -0xbd.ffffffffffffffffffffffffcp0
+tgamma -0xbe.0000000000000000000000004p0
+tgamma -0xbe.ffffffffffffffffffffffffcp0
+tgamma -0xbf.0000000000000000000000004p0
 tgamma 0x8.000000000000001p0
 tgamma 0x7.fffffffffffffff8p0
 tgamma 0x7.0000000000000008p0
@@ -767,53 +764,52 @@ tgamma -0x27.ffffffffffffffcp0
 tgamma -0x28.000000000000004p0
 tgamma -0x28.ffffffffffffffcp0
 tgamma -0x29.000000000000004p0
-# Bug 6810: errno may not be set on underflow.
-tgamma -0x29.ffffffffffffffcp0 missing-errno
-tgamma -0x2a.000000000000004p0 missing-errno
-tgamma -0x31.ffffffffffffffcp0 missing-errno
-tgamma -0x32.000000000000004p0 missing-errno
-tgamma -0x63.ffffffffffffff8p0 missing-errno
-tgamma -0x64.000000000000008p0 missing-errno
-tgamma -0x95.ffffffffffffffp0 missing-errno
-tgamma -0x96.00000000000001p0 missing-errno
-tgamma -0xb4.ffffffffffffffp0 missing-errno
-tgamma -0xb5.00000000000001p0 missing-errno
-tgamma -0xb5.ffffffffffffffp0 missing-errno
-tgamma -0xb6.00000000000001p0 missing-errno
-tgamma -0xb6.ffffffffffffffp0 missing-errno
-tgamma -0xb7.00000000000001p0 missing-errno
-tgamma -0xb7.ffffffffffffffp0 missing-errno
-tgamma -0xb8.00000000000001p0 missing-errno
-tgamma -0xbb.ffffffffffffffp0 missing-errno
-tgamma -0xbc.00000000000001p0 missing-errno
-tgamma -0xbc.ffffffffffffffp0 missing-errno
-tgamma -0xbd.00000000000001p0 missing-errno
-tgamma -0xbd.ffffffffffffffp0 missing-errno
-tgamma -0xbe.00000000000001p0 missing-errno
-tgamma -0xbe.ffffffffffffffp0 missing-errno
-tgamma -0xbf.00000000000001p0 missing-errno
-tgamma -0xf9.ffffffffffffffp0 missing-errno
-tgamma -0xfa.00000000000001p0 missing-errno
-tgamma -0x1f3.fffffffffffffep0 missing-errno
-tgamma -0x1f4.00000000000002p0 missing-errno
-tgamma -0x2ed.fffffffffffffcp0 missing-errno
-tgamma -0x2ee.00000000000004p0 missing-errno
-tgamma -0x3e7.fffffffffffffcp0 missing-errno
-tgamma -0x3e8.00000000000004p0 missing-errno
-tgamma -0x4e1.fffffffffffff8p0 missing-errno
-tgamma -0x4e2.00000000000008p0 missing-errno
-tgamma -0x5db.fffffffffffff8p0 missing-errno
-tgamma -0x5dc.00000000000008p0 missing-errno
-tgamma -0x6d5.fffffffffffff8p0 missing-errno
-tgamma -0x6d6.00000000000008p0 missing-errno
-tgamma -0x6e2.fffffffffffff8p0 missing-errno
-tgamma -0x6e3.00000000000008p0 missing-errno
-tgamma -0x6e3.fffffffffffff8p0 missing-errno
-tgamma -0x6e4.00000000000008p0 missing-errno
-tgamma -0x6e4.fffffffffffff8p0 missing-errno
-tgamma -0x6e5.00000000000008p0 missing-errno
-tgamma -0x6e5.fffffffffffff8p0 missing-errno
-tgamma -0x6e6.00000000000008p0 missing-errno
+tgamma -0x29.ffffffffffffffcp0
+tgamma -0x2a.000000000000004p0
+tgamma -0x31.ffffffffffffffcp0
+tgamma -0x32.000000000000004p0
+tgamma -0x63.ffffffffffffff8p0
+tgamma -0x64.000000000000008p0
+tgamma -0x95.ffffffffffffffp0
+tgamma -0x96.00000000000001p0
+tgamma -0xb4.ffffffffffffffp0
+tgamma -0xb5.00000000000001p0
+tgamma -0xb5.ffffffffffffffp0
+tgamma -0xb6.00000000000001p0
+tgamma -0xb6.ffffffffffffffp0
+tgamma -0xb7.00000000000001p0
+tgamma -0xb7.ffffffffffffffp0
+tgamma -0xb8.00000000000001p0
+tgamma -0xbb.ffffffffffffffp0
+tgamma -0xbc.00000000000001p0
+tgamma -0xbc.ffffffffffffffp0
+tgamma -0xbd.00000000000001p0
+tgamma -0xbd.ffffffffffffffp0
+tgamma -0xbe.00000000000001p0
+tgamma -0xbe.ffffffffffffffp0
+tgamma -0xbf.00000000000001p0
+tgamma -0xf9.ffffffffffffffp0
+tgamma -0xfa.00000000000001p0
+tgamma -0x1f3.fffffffffffffep0
+tgamma -0x1f4.00000000000002p0
+tgamma -0x2ed.fffffffffffffcp0
+tgamma -0x2ee.00000000000004p0
+tgamma -0x3e7.fffffffffffffcp0
+tgamma -0x3e8.00000000000004p0
+tgamma -0x4e1.fffffffffffff8p0
+tgamma -0x4e2.00000000000008p0
+tgamma -0x5db.fffffffffffff8p0
+tgamma -0x5dc.00000000000008p0
+tgamma -0x6d5.fffffffffffff8p0
+tgamma -0x6d6.00000000000008p0
+tgamma -0x6e2.fffffffffffff8p0
+tgamma -0x6e3.00000000000008p0
+tgamma -0x6e3.fffffffffffff8p0
+tgamma -0x6e4.00000000000008p0
+tgamma -0x6e4.fffffffffffff8p0
+tgamma -0x6e5.00000000000008p0
+tgamma -0x6e5.fffffffffffff8p0
+tgamma -0x6e6.00000000000008p0
 tgamma 0x8.0000000000000000000000000008p0
 tgamma 0x7.fffffffffffffffffffffffffffcp0
 tgamma 0x7.0000000000000000000000000004p0
@@ -856,64 +852,62 @@ tgamma -0x27.ffffffffffffffffffffffffffep0
 tgamma -0x28.000000000000000000000000002p0
 tgamma -0x28.ffffffffffffffffffffffffffep0
 tgamma -0x29.000000000000000000000000002p0
-# Bug 6810: errno may not be set on underflow.
-tgamma -0x29.ffffffffffffffffffffffffffep0 missing-errno
-tgamma -0x2a.000000000000000000000000002p0 missing-errno
-tgamma -0x31.ffffffffffffffffffffffffffep0 missing-errno
-tgamma -0x32.000000000000000000000000002p0 missing-errno
-tgamma -0x63.ffffffffffffffffffffffffffcp0 missing-errno
-tgamma -0x64.000000000000000000000000004p0 missing-errno
-tgamma -0x95.ffffffffffffffffffffffffff8p0 missing-errno
-tgamma -0x96.000000000000000000000000008p0 missing-errno
-tgamma -0xb4.ffffffffffffffffffffffffff8p0 missing-errno
-tgamma -0xb5.000000000000000000000000008p0 missing-errno
-tgamma -0xb5.ffffffffffffffffffffffffff8p0 missing-errno
-tgamma -0xb6.000000000000000000000000008p0 missing-errno
-tgamma -0xb6.ffffffffffffffffffffffffff8p0 missing-errno
-tgamma -0xb7.000000000000000000000000008p0 missing-errno
-tgamma -0xb7.ffffffffffffffffffffffffff8p0 missing-errno
-tgamma -0xb8.000000000000000000000000008p0 missing-errno
-tgamma -0xbb.ffffffffffffffffffffffffff8p0 missing-errno
-tgamma -0xbc.000000000000000000000000008p0 missing-errno
-tgamma -0xbc.ffffffffffffffffffffffffff8p0 missing-errno
-tgamma -0xbd.000000000000000000000000008p0 missing-errno
-tgamma -0xbd.ffffffffffffffffffffffffff8p0 missing-errno
-tgamma -0xbe.000000000000000000000000008p0 missing-errno
-tgamma -0xbe.ffffffffffffffffffffffffff8p0 missing-errno
-tgamma -0xbf.000000000000000000000000008p0 missing-errno
-tgamma -0xf9.ffffffffffffffffffffffffff8p0 missing-errno
-tgamma -0xfa.000000000000000000000000008p0 missing-errno
-tgamma -0x1f3.ffffffffffffffffffffffffffp0 missing-errno
-tgamma -0x1f4.00000000000000000000000001p0 missing-errno
-tgamma -0x2ed.fffffffffffffffffffffffffep0 missing-errno
-tgamma -0x2ee.00000000000000000000000002p0 missing-errno
-tgamma -0x3e7.fffffffffffffffffffffffffep0 missing-errno
-tgamma -0x3e8.00000000000000000000000002p0 missing-errno
-tgamma -0x4e1.fffffffffffffffffffffffffcp0 missing-errno
-tgamma -0x4e2.00000000000000000000000004p0 missing-errno
-tgamma -0x5db.fffffffffffffffffffffffffcp0 missing-errno
-tgamma -0x5dc.00000000000000000000000004p0 missing-errno
-tgamma -0x6d5.fffffffffffffffffffffffffcp0 missing-errno
-tgamma -0x6d6.00000000000000000000000004p0 missing-errno
-tgamma -0x6e2.fffffffffffffffffffffffffcp0 missing-errno
-tgamma -0x6e3.00000000000000000000000004p0 missing-errno
-tgamma -0x6e3.fffffffffffffffffffffffffcp0 missing-errno
-tgamma -0x6e4.00000000000000000000000004p0 missing-errno
-tgamma -0x6e4.fffffffffffffffffffffffffcp0 missing-errno
-tgamma -0x6e5.00000000000000000000000004p0 missing-errno
-tgamma -0x6e5.fffffffffffffffffffffffffcp0 missing-errno
-tgamma -0x6e6.00000000000000000000000004p0 missing-errno
-tgamma -0x6eb.fffffffffffffffffffffffffcp0 missing-errno
-tgamma -0x6ec.00000000000000000000000004p0 missing-errno
-tgamma -0x6ec.fffffffffffffffffffffffffcp0 missing-errno
-tgamma -0x6ed.00000000000000000000000004p0 missing-errno
-tgamma -0x6ed.fffffffffffffffffffffffffcp0 missing-errno
-tgamma -0x6ee.00000000000000000000000004p0 missing-errno
-tgamma -0x6ee.fffffffffffffffffffffffffcp0 missing-errno
-tgamma -0x6ef.00000000000000000000000004p0 missing-errno
+tgamma -0x29.ffffffffffffffffffffffffffep0
+tgamma -0x2a.000000000000000000000000002p0
+tgamma -0x31.ffffffffffffffffffffffffffep0
+tgamma -0x32.000000000000000000000000002p0
+tgamma -0x63.ffffffffffffffffffffffffffcp0
+tgamma -0x64.000000000000000000000000004p0
+tgamma -0x95.ffffffffffffffffffffffffff8p0
+tgamma -0x96.000000000000000000000000008p0
+tgamma -0xb4.ffffffffffffffffffffffffff8p0
+tgamma -0xb5.000000000000000000000000008p0
+tgamma -0xb5.ffffffffffffffffffffffffff8p0
+tgamma -0xb6.000000000000000000000000008p0
+tgamma -0xb6.ffffffffffffffffffffffffff8p0
+tgamma -0xb7.000000000000000000000000008p0
+tgamma -0xb7.ffffffffffffffffffffffffff8p0
+tgamma -0xb8.000000000000000000000000008p0
+tgamma -0xbb.ffffffffffffffffffffffffff8p0
+tgamma -0xbc.000000000000000000000000008p0
+tgamma -0xbc.ffffffffffffffffffffffffff8p0
+tgamma -0xbd.000000000000000000000000008p0
+tgamma -0xbd.ffffffffffffffffffffffffff8p0
+tgamma -0xbe.000000000000000000000000008p0
+tgamma -0xbe.ffffffffffffffffffffffffff8p0
+tgamma -0xbf.000000000000000000000000008p0
+tgamma -0xf9.ffffffffffffffffffffffffff8p0
+tgamma -0xfa.000000000000000000000000008p0
+tgamma -0x1f3.ffffffffffffffffffffffffffp0
+tgamma -0x1f4.00000000000000000000000001p0
+tgamma -0x2ed.fffffffffffffffffffffffffep0
+tgamma -0x2ee.00000000000000000000000002p0
+tgamma -0x3e7.fffffffffffffffffffffffffep0
+tgamma -0x3e8.00000000000000000000000002p0
+tgamma -0x4e1.fffffffffffffffffffffffffcp0
+tgamma -0x4e2.00000000000000000000000004p0
+tgamma -0x5db.fffffffffffffffffffffffffcp0
+tgamma -0x5dc.00000000000000000000000004p0
+tgamma -0x6d5.fffffffffffffffffffffffffcp0
+tgamma -0x6d6.00000000000000000000000004p0
+tgamma -0x6e2.fffffffffffffffffffffffffcp0
+tgamma -0x6e3.00000000000000000000000004p0
+tgamma -0x6e3.fffffffffffffffffffffffffcp0
+tgamma -0x6e4.00000000000000000000000004p0
+tgamma -0x6e4.fffffffffffffffffffffffffcp0
+tgamma -0x6e5.00000000000000000000000004p0
+tgamma -0x6e5.fffffffffffffffffffffffffcp0
+tgamma -0x6e6.00000000000000000000000004p0
+tgamma -0x6eb.fffffffffffffffffffffffffcp0
+tgamma -0x6ec.00000000000000000000000004p0
+tgamma -0x6ec.fffffffffffffffffffffffffcp0
+tgamma -0x6ed.00000000000000000000000004p0
+tgamma -0x6ed.fffffffffffffffffffffffffcp0
+tgamma -0x6ee.00000000000000000000000004p0
+tgamma -0x6ee.fffffffffffffffffffffffffcp0
+tgamma -0x6ef.00000000000000000000000004p0
 tgamma -0x1.0a32a2p+5
-# Bug 6810: errno may not be set on underflow.
-tgamma -0x1.5800000080001p+7 missing-errno
+tgamma -0x1.5800000080001p+7
 tgamma 18.5
 tgamma 19.5
 tgamma 23.5
@@ -933,6 +927,8 @@ tgamma 0x6.db8c603359a97108p+8
 tgamma 0x6.db8c603359a9711p+8
 tgamma 0x6.db8c603359a971081bc4a2e9dfdp+8
 tgamma 0x6.db8c603359a971081bc4a2e9dfd4p+8
+tgamma 1e3
+tgamma -100000.5
 
 y0 0.125
 y0 0.75
