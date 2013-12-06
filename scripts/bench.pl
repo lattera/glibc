@@ -98,7 +98,7 @@ my $bench_func = "#define CALL_BENCH_FUNC(v, i) $func (";
 my $outvars = "";
 
 if ($ret ne "void") {
-  $outvars = "static volatile $ret ret;\n";
+  $outvars = "static $ret volatile ret;\n";
 }
 
 # Print the definitions and macros.
@@ -139,7 +139,7 @@ if (@args > 0) {
       $bench_func = "$bench_func &out$num";
     }
     else {
-      $arg_struct = "$arg_struct volatile $arg arg$num;";
+      $arg_struct = "$arg_struct $arg volatile arg$num;";
       $bench_func = "$bench_func variants[v].in[i].arg$num";
     }
 

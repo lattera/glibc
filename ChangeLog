@@ -1,3 +1,7 @@
+2013-12-06  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* scripts/bench.pl: Append volatile keyword to type.
+
 2013-12-05  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/sotruss-lib.c: New file.
