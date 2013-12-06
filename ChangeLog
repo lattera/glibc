@@ -1,3 +1,8 @@
+2013-12-06  Fernando J. V. da Silva  <fernandojvdasilva@gmail.com>
+
+	[BZ #15089]
+	* malloc/malloc.c: Exit systrim() if pad is bigger than heap top size.
+
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* NEWS: Mention ppc32/power4+ STT_GNU_IFUNC support.

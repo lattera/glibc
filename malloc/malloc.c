@@ -2709,52 +2709,54 @@ static int systrim(size_t pad, mstate av)
   char* current_brk;     /* address returned by pre-check sbrk call */
   char* new_brk;         /* address returned by post-check sbrk call */
   size_t pagesz;
+  long  top_area;
 
   pagesz = GLRO(dl_pagesize);
   top_size = chunksize(av->top);
 
-  /* Release in pagesize units, keeping at least one page */
-  extra = (top_size - pad - MINSIZE - 1) & ~(pagesz - 1);
+  top_area = top_size - MINSIZE - 1;
+  if (top_area <= pad)
+    return 0;
 
-  if (extra > 0) {
+  /* Release in pagesize units, keeping at least one page */
+  extra = (top_area - pad) & ~(pagesz - 1);
+
+  /*
+    Only proceed if end of memory is where we last set it.
+    This avoids problems if there were foreign sbrk calls.
+  */
+  current_brk = (char*)(MORECORE(0));
+  if (current_brk == (char*)(av->top) + top_size) {
 
     /*
-      Only proceed if end of memory is where we last set it.
-      This avoids problems if there were foreign sbrk calls.
+      Attempt to release memory. We ignore MORECORE return value,
+      and instead call again to find out where new end of memory is.
+      This avoids problems if first call releases less than we asked,
+      of if failure somehow altered brk value. (We could still
+      encounter problems if it altered brk in some very bad way,
+      but the only thing we can do is adjust anyway, which will cause
+      some downstream failure.)
     */
-    current_brk = (char*)(MORECORE(0));
-    if (current_brk == (char*)(av->top) + top_size) {
 
-      /*
-	Attempt to release memory. We ignore MORECORE return value,
-	and instead call again to find out where new end of memory is.
-	This avoids problems if first call releases less than we asked,
-	of if failure somehow altered brk value. (We could still
-	encounter problems if it altered brk in some very bad way,
-	but the only thing we can do is adjust anyway, which will cause
-	some downstream failure.)
-      */
+    MORECORE(-extra);
+    /* Call the `morecore' hook if necessary.  */
+    void (*hook) (void) = force_reg (__after_morecore_hook);
+    if (__builtin_expect (hook != NULL, 0))
+      (*hook) ();
+    new_brk = (char*)(MORECORE(0));
 
-      MORECORE(-extra);
-      /* Call the `morecore' hook if necessary.  */
-      void (*hook) (void) = force_reg (__after_morecore_hook);
-      if (__builtin_expect (hook != NULL, 0))
-	(*hook) ();
-      new_brk = (char*)(MORECORE(0));
+    LIBC_PROBE (memory_sbrk_less, 2, new_brk, extra);
 
-      LIBC_PROBE (memory_sbrk_less, 2, new_brk, extra);
+    if (new_brk != (char*)MORECORE_FAILURE) {
+      released = (long)(current_brk - new_brk);
 
-      if (new_brk != (char*)MORECORE_FAILURE) {
-	released = (long)(current_brk - new_brk);
-
-	if (released != 0) {
-	  /* Success. Adjust top. */
-	  av->system_mem -= released;
-	  set_head(av->top, (top_size - released) | PREV_INUSE);
-	  check_malloc_state(av);
-	  return 1;
-	}
-      }
+      if (released != 0) {
+	/* Success. Adjust top. */
+	av->system_mem -= released;
+	set_head(av->top, (top_size - released) | PREV_INUSE);
+	check_malloc_state(av);
+	return 1;
+       }
     }
   }
   return 0;
