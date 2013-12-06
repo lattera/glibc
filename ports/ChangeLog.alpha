@@ -1,3 +1,8 @@
+2013-12-07  Richard Henderson <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/mman.h: Use <bits/mman-linux.h>,
+	dropping common values and overriding different values.
+
 2013-11-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/alpha/fpu/fegetround.c (fegetround): Use

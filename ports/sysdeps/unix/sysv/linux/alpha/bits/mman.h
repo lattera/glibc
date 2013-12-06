@@ -23,46 +23,7 @@
 /* The following definitions basically come from the kernel headers.
    But the kernel header is not namespace clean.  */
 
-
-/* Protections are chosen from these bits, OR'd together.  The
-   implementation does not necessarily support PROT_EXEC or PROT_WRITE
-   without PROT_READ.  The only guarantees are that no writing will be
-   allowed without PROT_WRITE and no access will be allowed for PROT_NONE. */
-
-#define PROT_READ	  0x1		/* Page can be read.  */
-#define PROT_WRITE	  0x2		/* Page can be written.  */
-#define PROT_EXEC	  0x4		/* Page can be executed.  */
-#define PROT_NONE	  0x0		/* Page can not be accessed.  */
-#define PROT_GROWSDOWN	  0x01000000	/* Extend change to start of
-					   growsdown vma (mprotect only).  */
-#define PROT_GROWSUP	  0x02000000	/* Extend change to start of
-					   growsup vma (mprotect only).  */
-
-/* Sharing types (must choose one and only one of these).  */
-#define MAP_SHARED	  0x01		/* Share changes.  */
-#define MAP_PRIVATE	  0x02		/* Changes are private.  */
-#ifdef __USE_MISC
-# define MAP_TYPE	  0x0f		/* Mask for type of mapping.  */
-#endif
-
-/* Other flags.  */
-#define MAP_FIXED	  0x100		/* Interpret addr exactly.  */
-#ifdef __USE_MISC
-# define MAP_FILE	  0
-# define MAP_ANONYMOUS	  0x10		/* Don't use a file.  */
-# define MAP_ANON	  MAP_ANONYMOUS
-/* When MAP_HUGETLB is set bits [26:31] encode the log2 of the huge page size.  */
-# define MAP_HUGE_SHIFT	  26
-# define MAP_HUGE_MASK	  0x3f
-#endif
-
-/* Not used by Linux, but here to make sure we don't clash with
-   OSF/1 defines.  */
-#if 0 && defined __USE_BSD
-# define MAP_HASSEMAPHORE 0x0200
-# define MAP_INHERIT	  0x0400
-# define MAP_UNALIGNED	  0x0800
-#endif
+#define __MAP_ANONYMOUS	  0x10		/* Don't use a file.  */
 
 /* These are Linux-specific.  */
 #ifdef __USE_MISC
@@ -77,53 +38,28 @@
 # define MAP_HUGETLB	  0x100000	/* Create huge page mapping.  */
 #endif
 
-/* Flags to `msync'.  */
-#define MS_ASYNC	  1		/* Sync memory asynchronously.  */
-#define MS_SYNC		  2		/* Synchronous memory sync.  */
-#define MS_INVALIDATE	  4		/* Invalidate the caches.  */
-
 /* Flags for `mlockall'.  */
-#define MCL_CURRENT	  8192		/* Lock all currently mapped pages.  */
-#define MCL_FUTURE	  16384		/* Lock all additions to address
-					   space.  */
+#define MCL_CURRENT	  8192
+#define MCL_FUTURE	  16384
 
-/* Flags for `mremap'.  */
-#ifdef __USE_GNU
-# define MREMAP_MAYMOVE	1
-# define MREMAP_FIXED	2
-#endif
+#include <bits/mman-linux.h>
 
-/* Advice to `madvise'.  */
+/* Values that differ from standard <mman-linux.h>.  For the most part newer
+   values are shared, but older values are skewed.  */
+
+#undef  MAP_FIXED
+#define MAP_FIXED	  0x100
+
+#undef  MS_SYNC
+#define MS_SYNC		  2
+#undef  MS_INVALIDATE
+#define MS_INVALIDATE	  4
+
 #ifdef __USE_BSD
-# define MADV_NORMAL      0  /* No further special treatment.  */
-# define MADV_RANDOM      1  /* Expect random page references.  */
-# define MADV_SEQUENTIAL  2  /* Expect sequential page references.  */
-# define MADV_WILLNEED    3  /* Will need these pages.  */
-# define MADV_DONTNEED    6  /* Don't need these pages.  */
-# define MADV_REMOVE      9  /* Remove these pages and resources.  */
-# define MADV_DONTFORK    10 /* Do not inherit across fork.  */
-# define MADV_DOFORK      11 /* Do inherit across fork.  */
-# define MADV_MERGEABLE   12 /* KSM may merge identical pages.  */
-# define MADV_UNMERGEABLE 13 /* KSM may not merge identical pages.  */
-# define MADV_HUGEPAGE    14 /* Worth backing with hugepages.  */
-# define MADV_NOHUGEPAGE  15 /* Not worth backing with hugepages.  */
-# define MADV_DONTDUMP    16 /* Exclude from the core dump.  */
-# define MADV_DODUMP      17 /* Clear MADV_DONTDUMP.  */
-# define MADV_HWPOISON   100 /* Poison a page for testing.  */
+# undef  MADV_DONTNEED
+# define MADV_DONTNEED    6
 #endif
-
-/* The POSIX people had to invent similar names for the same things.  */
 #ifdef __USE_XOPEN2K
-# define POSIX_MADV_NORMAL	0 /* No further special treatment.  */
-# define POSIX_MADV_RANDOM	1 /* Expect random page references.  */
-# define POSIX_MADV_SEQUENTIAL	2 /* Expect sequential page references.  */
-# define POSIX_MADV_WILLNEED	3 /* Will need these pages.  */
-# define POSIX_MADV_DONTNEED	6 /* Don't need these pages.  */
-#endif
-
-/* Not used by Linux, but here to make sure we don't clash with
-   OSF/1 defines.  */
-#if 0 && defined __USE_BSD
-# define MADV_DONTNEED_COMPAT 4	/* Old version?  */
-# define MADV_SPACEAVAIL 5	/* Ensure resources are available.  */
+# undef  POSIX_MADV_DONTNEED
+# define POSIX_MADV_DONTNEED	6
 #endif
