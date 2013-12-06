@@ -8,7 +8,9 @@ basic performance properties of the function.
 Running the benchmark:
 =====================
 
-The benchmark can be executed by invoking make as follows:
+The benchmark needs python 2.7 or later in addition to the
+dependencies required to build the GNU C Library.  One may run the
+benchmark by invoking make as follows:
 
   $ make bench
 

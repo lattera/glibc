@@ -1,5 +1,12 @@
 2014-03-21  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* scripts/bench.pl: Remove file.
+	* scripts/bench.py: New benchmark script.
+	* benchtests/Makefile ($(objpfx)bench-%.c): Use it.
+	* benchtests/README: Mention python dependency.
+	* scripts/pylintrc: New file.
+	* scripts/pylint: New file.
+
 	* bits/mathdef.h: Use #ifdef instead of #if.
 	* sysdeps/arm/bits/mathdef.h [defined __USE_ISOC99 && defined
 	_MATH_H && !defined _MATH_H_MATHDEF]: Likewise.
