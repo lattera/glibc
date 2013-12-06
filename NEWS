@@ -97,6 +97,8 @@ Version 2.19
 * Support for powerpc64le has been added.
 
 * The soft-float powerpc port now supports e500 processors.
+
+* Support for STT_GNU_IFUNC symbols added for ppc32/power4+.
 
 Version 2.18
 
