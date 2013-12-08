@@ -1,3 +1,27 @@
+2013-12-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/auto-libm-test-in: Add tests of lgamma.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (M_LOG_SQRT_PIl): Remove macro.
+	(M_LOG_2_SQRT_PIl): Likewise.
+	(lgamma_test_data): Use AUTO_TESTS_f_f1.
+	* math/gen-auto-libm-tests.c (func_calc_method): Add value
+	mpfr_f_f1.
+	(func_calc_desc): Add mpfr_f_f1 union field.
+	(ARGS1): New macro.
+	(ARGS2): Likewise.
+	(ARGS3): Likewise.
+	(ARGS4): Likewise.
+	(RET1): Likewise.
+	(RET2): Likewise.
+	(CALC): Likewise.
+	(FUNC): Likewise.
+	(FUNC_mpfr_f_f): Use new macros FUNC, ARGS1, RET1 and CALC.
+	(test_functions): Add lgamma.
+	(calc_generic_results): Handle mpfr_f_f1.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2013-12-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power7/add_n.S: New file: optimized

@@ -392,6 +392,9 @@ typedef enum
   {
     /* MPFR function with a single argument and result.  */
     mpfr_f_f,
+    /* MPFR function with a single argument and floating-point and
+       integer results.  */
+    mpfr_f_f1,
   } func_calc_method;
 
 /* Description of how to calculate a function.  */
@@ -403,6 +406,7 @@ typedef struct
   union
   {
     int (*mpfr_f_f) (mpfr_t, const mpfr_t, mpfr_rnd_t);
+    int (*mpfr_f_f1) (mpfr_t, int *, const mpfr_t, mpfr_rnd_t);
   } func;
 } func_calc_desc;
 
@@ -435,11 +439,21 @@ typedef struct
   input_test *tests;
 } test_function;
 
-#define FUNC_mpfr_f_f(NAME, MPFR_FUNC, EXACT)		\
-  {							\
-    NAME, 1, { type_fp }, 1, { type_fp }, EXACT, false,	\
-    { mpfr_f_f, { .mpfr_f_f = MPFR_FUNC } }, 0, 0, NULL \
+#define ARGS1(T1) 1, { T1 }
+#define ARGS2(T1, T2) 2, { T1, T2 }
+#define ARGS3(T1, T2, T3) 3, { T1, T2, T3 }
+#define ARGS4(T1, T2, T3, T4) 4, { T1, T2, T3, T4 }
+#define RET1(T1) 1, { T1 }
+#define RET2(T1, T2) 2, { T1, T2 }
+#define CALC(TYPE, FN) { TYPE, { .TYPE = FN } }
+#define FUNC(NAME, ARGS, RET, EXACT, COMPLEX_FN, CALC)		\
+  {								\
+    NAME, ARGS, RET, EXACT, COMPLEX_FN, CALC, 0, 0, NULL	\
   }
+
+#define FUNC_mpfr_f_f(NAME, MPFR_FUNC, EXACT)			\
+  FUNC (NAME, ARGS1 (type_fp), RET1 (type_fp), EXACT, false,	\
+	CALC (mpfr_f_f, MPFR_FUNC))
 
 /* List of functions handled by this program.  */
 static test_function test_functions[] =
@@ -461,6 +475,8 @@ static test_function test_functions[] =
     FUNC_mpfr_f_f ("expm1", mpfr_expm1, false),
     FUNC_mpfr_f_f ("j0", mpfr_j0, false),
     FUNC_mpfr_f_f ("j1", mpfr_j1, false),
+    FUNC ("lgamma", ARGS1 (type_fp), RET2 (type_fp, type_int), false, false,
+	  CALC (mpfr_f_f1, mpfr_lgamma)),
     FUNC_mpfr_f_f ("log", mpfr_log, false),
     FUNC_mpfr_f_f ("log10", mpfr_log10, false),
     FUNC_mpfr_f_f ("log1p", mpfr_log1p, false),
@@ -1248,6 +1264,18 @@ calc_generic_results (generic_value *outputs, generic_value *inputs,
       inexact = calc->func.mpfr_f_f (outputs[0].value.f, inputs[0].value.f,
 				     MPFR_RNDZ);
       adjust_real (outputs[0].value.f, inexact);
+      break;
+
+    case mpfr_f_f1:
+      assert (inputs[0].type == gtype_fp);
+      outputs[0].type = gtype_fp;
+      outputs[1].type = gtype_int;
+      mpfr_init (outputs[0].value.f);
+      int i = 0;
+      inexact = calc->func.mpfr_f_f1 (outputs[0].value.f, &i,
+				      inputs[0].value.f, MPFR_RNDZ);
+      adjust_real (outputs[0].value.f, inexact);
+      mpz_init_set_si (outputs[1].value.i, i);
       break;
 
     default:
