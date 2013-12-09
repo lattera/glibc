@@ -1,5 +1,11 @@
 2013-12-09  Ondřej Bílka  <neleai@seznam.cz>
 
+	* malloc/malloc.c (alloc_perturb, free_perturb): Convert from
+	macro to a function.  Check for zero perturb_byte.
+	(_int_malloc, _int_free): Remove zero perturb_byte checks.
+
+2013-12-09  Ondřej Bílka  <neleai@seznam.cz>
+
 	* malloc/malloc.c: (force_reg): Remove.
 	(__malloc_assert, __libc_malloc, __libc_free, __libc_realloc,
 	_mid_memalign, __libc_calloc, sysmalloc, systrim): Replace

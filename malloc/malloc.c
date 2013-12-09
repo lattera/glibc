@@ -1870,8 +1870,20 @@ static int check_action = DEFAULT_CHECK_ACTION;
 
 static int perturb_byte;
 
-#define alloc_perturb(p, n) memset (p, (perturb_byte ^ 0xff) & 0xff, n)
-#define free_perturb(p, n) memset (p, perturb_byte & 0xff, n)
+static inline void
+alloc_perturb (char *p, size_t n)
+{
+  if (__glibc_unlikely (perturb_byte))
+    memset (p, perturb_byte ^ 0xff, n);
+}
+
+static inline void
+free_perturb (char *p, size_t n)
+{
+  if (__glibc_unlikely (perturb_byte))
+    memset (p, perturb_byte, n);
+}
+
 
 
 #include <stap-probe.h>
@@ -3287,8 +3299,7 @@ _int_malloc(mstate av, size_t bytes)
 	}
       check_remalloced_chunk(av, victim, nb);
       void *p = chunk2mem(victim);
-      if (__builtin_expect (perturb_byte, 0))
-	alloc_perturb (p, bytes);
+      alloc_perturb (p, bytes);
       return p;
     }
   }
@@ -3323,8 +3334,7 @@ _int_malloc(mstate av, size_t bytes)
 	  victim->size |= NON_MAIN_ARENA;
 	check_malloced_chunk(av, victim, nb);
 	void *p = chunk2mem(victim);
-	if (__builtin_expect (perturb_byte, 0))
-	  alloc_perturb (p, bytes);
+	alloc_perturb (p, bytes);
 	return p;
       }
     }
@@ -3403,8 +3413,7 @@ _int_malloc(mstate av, size_t bytes)
 
 	check_malloced_chunk(av, victim, nb);
 	void *p = chunk2mem(victim);
-	if (__builtin_expect (perturb_byte, 0))
-	  alloc_perturb (p, bytes);
+	alloc_perturb (p, bytes);
 	return p;
       }
 
@@ -3420,8 +3429,7 @@ _int_malloc(mstate av, size_t bytes)
 	  victim->size |= NON_MAIN_ARENA;
 	check_malloced_chunk(av, victim, nb);
 	void *p = chunk2mem(victim);
-	if (__builtin_expect (perturb_byte, 0))
-	  alloc_perturb (p, bytes);
+	alloc_perturb (p, bytes);
 	return p;
       }
 
@@ -3545,8 +3553,7 @@ _int_malloc(mstate av, size_t bytes)
 	}
 	check_malloced_chunk(av, victim, nb);
 	void *p = chunk2mem(victim);
-	if (__builtin_expect (perturb_byte, 0))
-	  alloc_perturb (p, bytes);
+	alloc_perturb (p, bytes);
 	return p;
       }
     }
@@ -3649,8 +3656,7 @@ _int_malloc(mstate av, size_t bytes)
 	}
 	check_malloced_chunk(av, victim, nb);
 	void *p = chunk2mem(victim);
-	if (__builtin_expect (perturb_byte, 0))
-	  alloc_perturb (p, bytes);
+	alloc_perturb (p, bytes);
 	return p;
       }
     }
@@ -3684,8 +3690,7 @@ _int_malloc(mstate av, size_t bytes)
 
       check_malloced_chunk(av, victim, nb);
       void *p = chunk2mem(victim);
-      if (__builtin_expect (perturb_byte, 0))
-	alloc_perturb (p, bytes);
+      alloc_perturb (p, bytes);
       return p;
     }
 
@@ -3705,7 +3710,7 @@ _int_malloc(mstate av, size_t bytes)
     */
     else {
       void *p = sysmalloc(nb, av);
-      if (p != NULL && __builtin_expect (perturb_byte, 0))
+      if (p != NULL)
 	alloc_perturb (p, bytes);
       return p;
     }
@@ -3798,8 +3803,7 @@ _int_free(mstate av, mchunkptr p, int have_lock)
 	  }
       }
 
-    if (__builtin_expect (perturb_byte, 0))
-      free_perturb (chunk2mem(p), size - 2 * SIZE_SZ);
+    free_perturb (chunk2mem(p), size - 2 * SIZE_SZ);
 
     set_fastchunks(av);
     unsigned int idx = fastbin_index(size);
@@ -3881,8 +3885,7 @@ _int_free(mstate av, mchunkptr p, int have_lock)
 	goto errout;
       }
 
-    if (__builtin_expect (perturb_byte, 0))
-      free_perturb (chunk2mem(p), size - 2 * SIZE_SZ);
+    free_perturb (chunk2mem(p), size - 2 * SIZE_SZ);
 
     /* consolidate backward */
     if (!prev_inuse(p)) {
