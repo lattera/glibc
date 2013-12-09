@@ -7531,9 +7531,15 @@ ildouble: 1
 ldouble: 1
 
 # log
+Test "log (0x2.b7e154p+0)":
+ildouble: 1
+ldouble: 1
 Test "log (0x2.b7e15p+0)":
 float: 1
 ifloat: 1
+Test "log (0x5.e2d58d8b3bcdf1bp-4)":
+ildouble: 1
+ldouble: 1
 Test "log (0x5.e2d59p-4)":
 ildouble: 1
 ldouble: 1
@@ -9150,8 +9156,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 Test "tgamma (-0x1.f3fffep+8)":
 ildouble: 1
 ldouble: 1

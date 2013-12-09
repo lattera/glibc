@@ -1,3 +1,7 @@
+2013-12-09  Markus Trippelsdorf  <markus@trippelsdorf.de>
+
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
+
 2013-12-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Add tests of lgamma.
