@@ -457,7 +457,7 @@ ptmalloc_init (void)
     if (check_action != 0)
       __malloc_check_init();
   }
-  void (*hook) (void) = force_reg (__malloc_initialize_hook);
+  void (*hook) (void) = atomic_forced_read (__malloc_initialize_hook);
   if (hook != NULL)
     (*hook)();
   __malloc_initialized = 1;
