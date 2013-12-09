@@ -3,7 +3,9 @@
 	* sysdeps/m68k/fpu/fegetround.c (fegetround): Use libm_hidden_def.
 
 2013-11-26  Ondřej Bílka  <neleai@seznam.cz>
-	* sysdeps/unix/sysv/linux/m68k/bits/stat.h: Use __glibc_reserved instead __unused.
+
+	* sysdeps/unix/sysv/linux/m68k/bits/stat.h: Use __glibc_reserved
+	instead of __unused.
 
 2013-10-30  Mike Frysinger  <vapier@gentoo.org>
 
