@@ -1,5 +1,8 @@
 2013-12-10  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* sysdeps/m68k/m680x0/fpu/s_nextafterl.c (__nextafterl): Use
+	math_force_eval.
+
 	* sysdeps/unix/sysv/linux/m68k/nptl/lowlevellock.h
 	(FUTEX_WAIT_REQEUE_PI, FUTEX_CMP_REQEUE_PI)
 	(lll_futex_wait_requeue_pi, lll_futex_timed_wait_requeue_pi)

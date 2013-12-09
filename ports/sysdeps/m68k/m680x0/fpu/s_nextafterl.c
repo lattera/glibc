@@ -46,7 +46,8 @@ long double __nextafterl(long double x, long double y)
 	if((ix|hx|lx)==0) {			/* x == 0 */
 	    SET_LDOUBLE_WORDS(x,esy&0x8000,0,1);/* return +-minsubnormal */
 	    y = x*x;
-	    if(y==x) return y; else return x;	/* raise underflow flag */
+	    math_force_eval (y);		/* raise underflow flag */
+	    return x;
 	}
 	if(esx>=0) {			/* x > 0 */
 	    if(esx>esy||((esx==esy) && (hx>hy||((hx==hy)&&(lx>ly))))) {
@@ -91,10 +92,7 @@ long double __nextafterl(long double x, long double y)
 	if(esy==0x7fff) return x+x;	/* overflow  */
 	if(esy==0 && (hx & 0x80000000) == 0) { /* underflow */
 	    y = x*x;
-	    if(y!=x) {		/* raise underflow flag */
-	        SET_LDOUBLE_WORDS(y,esx,hx,lx);
-		return y;
-	    }
+	    math_force_eval (y);		/* raise underflow flag */
 	}
 	SET_LDOUBLE_WORDS(x,esx,hx,lx);
 	return x;
