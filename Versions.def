@@ -56,10 +56,12 @@ libm {
   GLIBC_2.1
   GLIBC_2.2
   GLIBC_2.2.3
+  GLIBC_2.3
   GLIBC_2.3.4
   GLIBC_2.4
   GLIBC_2.15
   GLIBC_2.18
+  GLIBC_2.19
 }
 libnsl {
   GLIBC_2.0

@@ -1,3 +1,7 @@
+2013-12-09  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* Versions.def (libm): Add GLIBC_2.3 and GLIBC_2.19.
+
 2013-12-09  Ondřej Bílka  <neleai@seznam.cz>
 
 	* malloc/malloc.c (alloc_perturb, free_perturb): Convert from
