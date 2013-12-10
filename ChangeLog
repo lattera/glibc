@@ -1,3 +1,20 @@
+2013-12-10  Ondřej Bílka  <neleai@seznam.cz>
+
+	* malloc/Makefile (CPPFLAGS-malloc.c): Remove -DPER_THREAD flag.
+	* malloc/arena.c: Remove PER_THREAD conditional.
+	[!PER_THREAD]: Remove code.
+	(ptmalloc_unlock_all2): Likewise.
+	(ptmalloc_init): Likewise.
+	(_int_new_arena): Likewise.
+	(arena_get2): Likewise.
+	* malloc/hooks.c (__malloc_get_state): Likewise.
+	(__malloc_set_state): Likewise.
+	* malloc/malloc.c: Likewise.
+	(struct malloc_state): Likewise.
+	(struct malloc_par): Likewise.
+	(__libc_realloc): Likewise.
+	(__libc_mallopt): Likewise.
+
 2013-12-09  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* Versions.def (libm): Add GLIBC_2.3 and GLIBC_2.19.

@@ -1707,10 +1707,8 @@ struct malloc_state {
   /* Linked list */
   struct malloc_state *next;
 
-#ifdef PER_THREAD
   /* Linked list for free arenas.  */
   struct malloc_state *next_free;
-#endif
 
   /* Memory allocated from the system in this arena.  */
   INTERNAL_SIZE_T system_mem;
@@ -1722,10 +1720,8 @@ struct malloc_par {
   unsigned long    trim_threshold;
   INTERNAL_SIZE_T  top_pad;
   INTERNAL_SIZE_T  mmap_threshold;
-#ifdef PER_THREAD
   INTERNAL_SIZE_T  arena_test;
   INTERNAL_SIZE_T  arena_max;
-#endif
 
   /* Memory map support */
   int              n_mmaps;
@@ -1767,18 +1763,14 @@ static struct malloc_par mp_ =
     .n_mmaps_max    = DEFAULT_MMAP_MAX,
     .mmap_threshold = DEFAULT_MMAP_THRESHOLD,
     .trim_threshold = DEFAULT_TRIM_THRESHOLD,
-#ifdef PER_THREAD
 # define NARENAS_FROM_NCORES(n) ((n) * (sizeof(long) == 4 ? 2 : 8))
     .arena_test     = NARENAS_FROM_NCORES (1)
-#endif
   };
 
 
-#ifdef PER_THREAD
 /*  Non public mallopt parameters.  */
 #define M_ARENA_TEST -7
 #define M_ARENA_MAX  -8
-#endif
 
 
 /* Maximum size of memory handled in fastbins.  */
@@ -2981,11 +2973,6 @@ __libc_realloc(void* oldmem, size_t bytes)
   (void)mutex_lock(&ar_ptr->mutex);
 #endif
 
-#if !defined PER_THREAD
-  LIBC_PROBE (memory_arena_reuse_realloc, 1, ar_ptr);
-  /* As in malloc(), remember this arena for the next allocation. */
-  tsd_setspecific(arena_key, (void *)ar_ptr);
-#endif
 
   newp = _int_realloc(ar_ptr, oldp, oldsize, nb);
 
@@ -4688,7 +4675,6 @@ int __libc_mallopt(int param_number, int value)
     perturb_byte = value;
     break;
 
-#ifdef PER_THREAD
   case M_ARENA_TEST:
     if (value > 0)
       {
@@ -4704,7 +4690,6 @@ int __libc_mallopt(int param_number, int value)
 	mp_.arena_max = value;
       }
     break;
-#endif
   }
   (void)mutex_unlock(&av->mutex);
   return res;

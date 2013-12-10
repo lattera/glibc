@@ -75,10 +75,8 @@ extern int sanity_check_heap_info_alignment[(sizeof (heap_info)
 
 static tsd_key_t arena_key;
 static mutex_t list_lock = MUTEX_INITIALIZER;
-#ifdef PER_THREAD
 static size_t narenas = 1;
 static mstate free_list;
-#endif
 
 #if THREAD_STATS
 static int stat_n_heaps;
@@ -114,21 +112,12 @@ int __malloc_initialized = -1;
   ptr = (mstate)tsd_getspecific(arena_key, vptr); \
 } while(0)
 
-#ifdef PER_THREAD
 # define arena_lock(ptr, size) do { \
   if(ptr) \
     (void)mutex_lock(&ptr->mutex); \
   else \
     ptr = arena_get2(ptr, (size), NULL); \
 } while(0)
-#else
-# define arena_lock(ptr, size) do { \
-  if(ptr && !mutex_trylock(&ptr->mutex)) { \
-    THREAD_STAT(++(ptr->stat_lock_direct)); \
-  } else \
-    ptr = arena_get2(ptr, (size), NULL); \
-} while(0)
-#endif
 
 /* find the heap and corresponding arena for a given ptr */
 
@@ -292,17 +281,13 @@ ptmalloc_unlock_all2 (void)
   tsd_setspecific(arena_key, save_arena);
   __malloc_hook = save_malloc_hook;
   __free_hook = save_free_hook;
-#ifdef PER_THREAD
   free_list = NULL;
-#endif
   for(ar_ptr = &main_arena;;) {
     mutex_init(&ar_ptr->mutex);
-#ifdef PER_THREAD
     if (ar_ptr != save_arena) {
       ar_ptr->next_free = free_list;
       free_list = ar_ptr;
     }
-#endif
     ar_ptr = ar_ptr->next;
     if(ar_ptr == &main_arena) break;
   }
@@ -423,13 +408,10 @@ ptmalloc_init (void)
 		{
 		  if (memcmp (envline, "MMAP_MAX_", 9) == 0)
 		    __libc_mallopt(M_MMAP_MAX, atoi(&envline[10]));
-#ifdef PER_THREAD
 		  else if (memcmp (envline, "ARENA_MAX", 9) == 0)
 		    __libc_mallopt(M_ARENA_MAX, atoi(&envline[10]));
-#endif
 		}
 	      break;
-#ifdef PER_THREAD
 	    case 10:
 	      if (! __builtin_expect (__libc_enable_secure, 0))
 		{
@@ -437,7 +419,6 @@ ptmalloc_init (void)
 		    __libc_mallopt(M_ARENA_TEST, atoi(&envline[11]));
 		}
 	      break;
-#endif
 	    case 15:
 	      if (! __builtin_expect (__libc_enable_secure, 0))
 		{
@@ -745,18 +726,14 @@ _int_new_arena(size_t size)
   mutex_init(&a->mutex);
   (void)mutex_lock(&a->mutex);
 
-#ifdef PER_THREAD
   (void)mutex_lock(&list_lock);
-#endif
 
   /* Add the new arena to the global list.  */
   a->next = main_arena.next;
   atomic_write_barrier ();
   main_arena.next = a;
 
-#ifdef PER_THREAD
   (void)mutex_unlock(&list_lock);
-#endif
 
   THREAD_STAT(++(a->stat_lock_loop));
 
@@ -764,7 +741,6 @@ _int_new_arena(size_t size)
 }
 
 
-#ifdef PER_THREAD
 static mstate
 get_free_list (void)
 {
@@ -827,7 +803,6 @@ reused_arena (mstate avoid_arena)
 
   return result;
 }
-#endif
 
 static mstate
 internal_function
@@ -835,7 +810,6 @@ arena_get2(mstate a_tsd, size_t size, mstate avoid_arena)
 {
   mstate a;
 
-#ifdef PER_THREAD
   static size_t narenas_limit;
 
   a = get_free_list ();
@@ -878,54 +852,6 @@ arena_get2(mstate a_tsd, size_t size, mstate avoid_arena)
       else
 	a = reused_arena (avoid_arena);
     }
-#else
-  if(!a_tsd)
-    a = a_tsd = &main_arena;
-  else {
-    a = a_tsd->next;
-    if(!a) {
-      /* This can only happen while initializing the new arena. */
-      (void)mutex_lock(&main_arena.mutex);
-      THREAD_STAT(++(main_arena.stat_lock_wait));
-      return &main_arena;
-    }
-  }
-
-  /* Check the global, circularly linked list for available arenas. */
-  bool retried = false;
- repeat:
-  do {
-    if(!mutex_trylock(&a->mutex)) {
-      if (retried)
-	(void)mutex_unlock(&list_lock);
-      THREAD_STAT(++(a->stat_lock_loop));
-      LIBC_PROBE (memory_arena_reuse, 2, a, a_tsd);
-      tsd_setspecific(arena_key, (void *)a);
-      return a;
-    }
-    a = a->next;
-  } while(a != a_tsd);
-
-  /* If not even the list_lock can be obtained, try again.  This can
-     happen during `atfork', or for example on systems where thread
-     creation makes it temporarily impossible to obtain _any_
-     locks. */
-  if(!retried && mutex_trylock(&list_lock)) {
-    /* We will block to not run in a busy loop.  */
-    LIBC_PROBE (memory_arena_reuse_wait, 3, &list_lock, NULL, a_tsd);
-    (void)mutex_lock(&list_lock);
-
-    /* Since we blocked there might be an arena available now.  */
-    retried = true;
-    a = a_tsd;
-    goto repeat;
-  }
-
-  /* Nothing immediately available, so generate a new arena.  */
-  a = _int_new_arena(size);
-  (void)mutex_unlock(&list_lock);
-#endif
-
   return a;
 }
 
@@ -951,7 +877,6 @@ arena_get_retry (mstate ar_ptr, size_t bytes)
   return ar_ptr;
 }
 
-#ifdef PER_THREAD
 static void __attribute__ ((section ("__libc_thread_freeres_fn")))
 arena_thread_freeres (void)
 {
@@ -968,7 +893,6 @@ arena_thread_freeres (void)
     }
 }
 text_set_element (__libc_thread_subfreeres, arena_thread_freeres);
-#endif
 
 /*
  * Local variables:
