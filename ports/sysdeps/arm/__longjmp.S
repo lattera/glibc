@@ -41,14 +41,12 @@ ENTRY (__longjmp)
 	sfi_sp sfi_breg ip, \
 	ldmia	\B!, JMP_BUF_REGLIST
 #ifdef PTR_DEMANGLE
-	PTR_DEMANGLE (fp, a4, a3, a2)
 	ldr	a4, [ip], #4
-	PTR_DEMANGLE2 (a4, a4, a3)
+	PTR_DEMANGLE (a4, a4, a3, a2)
 	mov	sp, a4
 	ldr	a4, [ip], #4
 	PTR_DEMANGLE2 (lr, a4, a3)
 #else
-	mov	fp, a4
 	ldr	sp, [ip], #4
 	ldr	lr, [ip], #4
 #endif

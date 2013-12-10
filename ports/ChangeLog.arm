@@ -1,3 +1,13 @@
+2014-01-14  Will Newton  <will.newton@linaro.org>
+
+	* sysdeps/arm/__longjmp.S: Don't apply pointer encryption
+	to fp register.
+	* sysdeps/arm/setjmp.S: Likewise.
+	* sysdeps/arm/include/bits/setjmp.h (JMP_BUF_REGLIST): Add
+	fp to register list, remove a4.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (PTR_MANGLE_LOAD):
+	New macro.
+
 2014-01-10  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/arm-mcount.S:

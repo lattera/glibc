@@ -23,9 +23,7 @@
 
 ENTRY (__sigsetjmp)
 #ifdef PTR_MANGLE
-	PTR_MANGLE (a4, fp, a3, ip)
-#else
-	mov	a4, fp
+	PTR_MANGLE_LOAD (a3, ip)
 #endif
 	mov	ip, r0
 
