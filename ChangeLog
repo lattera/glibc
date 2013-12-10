@@ -1,5 +1,13 @@
 2013-12-10  Ondřej Bílka  <neleai@seznam.cz>
 
+	* malloc/malloc.c (MALLOC_COPY, MALLOC_ZERO): Delete.
+	(__malloc_assert, __libc_realloc, __libc_calloc,
+	_int_realloc): Expand MALLOC_COPY and MALLOC_ZERO to
+	memcpy and memset.
+	* malloc/hooks.c (realloc_check): Likewise.
+
+2013-12-10  Ondřej Bílka  <neleai@seznam.cz>
+
 	* malloc/Makefile (CPPFLAGS-malloc.c): Remove -DPER_THREAD flag.
 	* malloc/arena.c: Remove PER_THREAD conditional.
 	[!PER_THREAD]: Remove code.

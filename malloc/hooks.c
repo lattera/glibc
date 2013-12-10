@@ -330,7 +330,7 @@ realloc_check(void* oldmem, size_t bytes, const void *caller)
 	if (top_check() >= 0)
 	  newmem = _int_malloc(&main_arena, bytes+1);
 	if (newmem) {
-	  MALLOC_COPY(newmem, oldmem, oldsize - 2*SIZE_SZ);
+	  memcpy(newmem, oldmem, oldsize - 2*SIZE_SZ);
 	  munmap_chunk(oldp);
 	}
       }

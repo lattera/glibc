@@ -1072,19 +1072,6 @@ static void*   malloc_atfork(size_t sz, const void *caller);
 static void      free_atfork(void* mem, const void *caller);
 #endif
 
-
-/* ------------- Optional versions of memcopy ---------------- */
-
-
-/*
-  Note: memcpy is ONLY invoked with non-overlapping regions,
-  so the (usually slower) memmove is not needed.
-*/
-
-#define MALLOC_COPY(dest, src, nbytes)  memcpy(dest, src, nbytes)
-#define MALLOC_ZERO(dest, nbytes)       memset(dest, 0,   nbytes)
-
-
 /* ------------------ MMAP support ------------------  */
 
 
@@ -2956,7 +2943,7 @@ __libc_realloc(void* oldmem, size_t bytes)
     /* Must alloc, copy, free. */
     newmem = __libc_malloc(bytes);
     if (newmem == 0) return 0; /* propagate failure */
-    MALLOC_COPY(newmem, oldmem, oldsize - 2*SIZE_SZ);
+    memcpy(newmem, oldmem, oldsize - 2*SIZE_SZ);
     munmap_chunk(oldp);
     return newmem;
   }
@@ -2987,7 +2974,7 @@ __libc_realloc(void* oldmem, size_t bytes)
       newp = __libc_malloc(bytes);
       if (newp != NULL)
 	{
-	  MALLOC_COPY (newp, oldmem, oldsize - SIZE_SZ);
+	  memcpy (newp, oldmem, oldsize - SIZE_SZ);
 	  _int_free(ar_ptr, oldp, 0);
 	}
     }
@@ -3175,7 +3162,7 @@ __libc_calloc(size_t n, size_t elem_size)
   if (chunk_is_mmapped (p))
     {
       if (__builtin_expect (perturb_byte, 0))
-	return MALLOC_ZERO (mem, sz);
+	return memset (mem, 0, sz);
       return mem;
     }
 
@@ -3197,7 +3184,7 @@ __libc_calloc(size_t n, size_t elem_size)
   assert(nclears >= 3);
 
   if (nclears > 9)
-    return MALLOC_ZERO(d, clearsize);
+    return memset(d, 0, clearsize);
 
   else {
     *(d+0) = 0;
@@ -4201,7 +4188,7 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
 	assert(ncopies >= 3);
 
 	if (ncopies > 9)
-	  MALLOC_COPY(d, s, copysize);
+	  memcpy(d, s, copysize);
 
 	else {
 	  *(d+0) = *(s+0);
