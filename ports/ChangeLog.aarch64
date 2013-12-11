@@ -1,3 +1,7 @@
+2013-12-11  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* sysdeps/aarch64/libm-test-ulps: Regenerate.
+
 2013-11-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/aarch64/fpu/fegetround.c (fegetround): Use
