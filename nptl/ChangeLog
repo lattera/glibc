@@ -1,3 +1,8 @@
+2011-12-12  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/tls.h (struct tcbhead_t): Add DSO and TAR fields.
+	* nptl/sysdeps/powerpc/tcb-offsets.sym: Likewise.
+
 2013-12-09  Carlos O'Donell  <carlos@redhat.com>
 
 	* sysdeps/unix/sysv/linux/tst-setgetname.c: New file.
