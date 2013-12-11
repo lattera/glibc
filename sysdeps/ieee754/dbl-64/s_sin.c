@@ -56,10 +56,9 @@
 #include <fenv.h>
 
 /* Helper macros to compute sin of the input values.  */
-#define POLYNOMIAL2(xx) ((((s5.x * (xx) + s4.x) * (xx) + s3.x) * (xx) + s2.x) \
-			 * (xx))
+#define POLYNOMIAL2(xx) ((((s5 * (xx) + s4) * (xx) + s3) * (xx) + s2) * (xx))
 
-#define POLYNOMIAL(xx) (POLYNOMIAL2 (xx) + s1.x)
+#define POLYNOMIAL(xx) (POLYNOMIAL2 (xx) + s1)
 
 /* The computed polynomial is a variation of the Taylor series expansion for
    sin(a):
@@ -88,11 +87,11 @@
   static const double th2_36 = 206158430208.0;	/*    1.5*2**37   */	      \
   double xx = (x0) * (x0);						      \
   double x1 = ((x0) + th2_36) - th2_36;					      \
-  double y = aa.x * x1 * x1 * x1;					      \
+  double y = aa * x1 * x1 * x1;						      \
   double r = (x0) + y;							      \
   double x2 = ((x0) - x1) + (dx);					      \
-  double t = (((POLYNOMIAL2 (xx) + bb.x) * xx + 3.0 * aa.x * x1 * x2)	      \
-	      * (x0)  + aa.x * x2 * x2 * x2 + (dx));			      \
+  double t = (((POLYNOMIAL2 (xx) + bb) * xx + 3.0 * aa * x1 * x2)	      \
+	      * (x0)  + aa * x2 * x2 * x2 + (dx));			      \
   t = (((x0) - r) + y) + t;						      \
   double res = r + t;							      \
   (cor) = (r - res) + t;						      \
@@ -211,8 +210,8 @@ __sin (double x)
 /*---------------------------- 0.25<|x|< 0.855469---------------------- */
   else if (k < 0x3feb6000)
     {
-      u.x = (m > 0) ? big.x + x : big.x - x;
-      y = (m > 0) ? x - (u.x - big.x) : x + (u.x - big.x);
+      u.x = (m > 0) ? big + x : big - x;
+      y = (m > 0) ? x - (u.x - big) : x + (u.x - big);
       xx = y * y;
       s = y + y * xx * (sn3 + xx * sn5);
       c = xx * (cs2 + xx * (cs4 + xx * cs6));
@@ -232,16 +231,16 @@ __sin (double x)
   else if (k < 0x400368fd)
     {
 
-      y = (m > 0) ? hp0.x - x : hp0.x + x;
+      y = (m > 0) ? hp0 - x : hp0 + x;
       if (y >= 0)
 	{
-	  u.x = big.x + y;
-	  y = (y - (u.x - big.x)) + hp1.x;
+	  u.x = big + y;
+	  y = (y - (u.x - big)) + hp1;
 	}
       else
 	{
-	  u.x = big.x - y;
-	  y = (-hp1.x) - (y + (u.x - big.x));
+	  u.x = big - y;
+	  y = (-hp1) - (y + (u.x - big));
 	}
       xx = y * y;
       s = y + y * xx * (sn3 + xx * sn5);
@@ -256,12 +255,12 @@ __sin (double x)
 /*-------------------------- 2.426265<|x|< 105414350 ----------------------*/
   else if (k < 0x419921FB)
     {
-      t = (x * hpinv.x + toint.x);
-      xn = t - toint.x;
+      t = (x * hpinv + toint);
+      xn = t - toint;
       v.x = t;
-      y = (x - xn * mp1.x) - xn * mp2.x;
+      y = (x - xn * mp1) - xn * mp2;
       n = v.i[LOW_HALF] & 3;
-      da = xn * mp3.x;
+      da = xn * mp3;
       a = y - da;
       da = (y - a) - da;
       eps = ABS (x) * 1.2e-30;
@@ -297,8 +296,8 @@ __sin (double x)
 		  t = -a;
 		  db = -da;
 		}
-	      u.x = big.x + t;
-	      y = t - (u.x - big.x);
+	      u.x = big + t;
+	      y = t - (u.x - big);
 	      xx = y * y;
 	      s = y + (db + y * xx * (sn3 + xx * sn5));
 	      c = y * db + xx * (cs2 + xx * (cs4 + xx * cs6));
@@ -319,8 +318,8 @@ __sin (double x)
 	      a = -a;
 	      da = -da;
 	    }
-	  u.x = big.x + a;
-	  y = a - (u.x - big.x) + da;
+	  u.x = big + a;
+	  y = a - (u.x - big) + da;
 	  xx = y * y;
 	  SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
 	  s = y + y * xx * (sn3 + xx * sn5);
@@ -338,17 +337,17 @@ __sin (double x)
 /*---------------------105414350 <|x|< 281474976710656 --------------------*/
   else if (k < 0x42F00000)
     {
-      t = (x * hpinv.x + toint.x);
-      xn = t - toint.x;
+      t = (x * hpinv + toint);
+      xn = t - toint;
       v.x = t;
       xn1 = (xn + 8.0e22) - 8.0e22;
       xn2 = xn - xn1;
-      y = ((((x - xn1 * mp1.x) - xn1 * mp2.x) - xn2 * mp1.x) - xn2 * mp2.x);
+      y = ((((x - xn1 * mp1) - xn1 * mp2) - xn2 * mp1) - xn2 * mp2);
       n = v.i[LOW_HALF] & 3;
-      da = xn1 * pp3.x;
+      da = xn1 * pp3;
       t = y - da;
       da = (y - t) - da;
-      da = (da - xn2 * pp3.x) - xn * pp4.x;
+      da = (da - xn2 * pp3) - xn * pp4;
       a = t + da;
       da = (t - a) + da;
       eps = 1.0e-24;
@@ -384,8 +383,8 @@ __sin (double x)
 		  t = -a;
 		  db = -da;
 		}
-	      u.x = big.x + t;
-	      y = t - (u.x - big.x);
+	      u.x = big + t;
+	      y = t - (u.x - big);
 	      xx = y * y;
 	      s = y + (db + y * xx * (sn3 + xx * sn5));
 	      c = y * db + xx * (cs2 + xx * (cs4 + xx * cs6));
@@ -406,8 +405,8 @@ __sin (double x)
 	      a = -a;
 	      da = -da;
 	    }
-	  u.x = big.x + a;
-	  y = a - (u.x - big.x) + da;
+	  u.x = big + a;
+	  y = a - (u.x - big) + da;
 	  xx = y * y;
 	  SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
 	  s = y + y * xx * (sn3 + xx * sn5);
@@ -467,8 +466,8 @@ __cos (double x)
   else if (k < 0x3feb6000)
     {				/* 2^-27 < |x| < 0.855469 */
       y = ABS (x);
-      u.x = big.x + y;
-      y = y - (u.x - big.x);
+      u.x = big + y;
+      y = y - (u.x - big);
       xx = y * y;
       s = y + y * xx * (sn3 + xx * sn5);
       c = xx * (cs2 + xx * (cs4 + xx * cs6));
@@ -481,9 +480,9 @@ __cos (double x)
 
   else if (k < 0x400368fd)
     { /* 0.855469  <|x|<2.426265  */ ;
-      y = hp0.x - ABS (x);
-      a = y + hp1.x;
-      da = (y - a) + hp1.x;
+      y = hp0 - ABS (x);
+      a = y + hp1;
+      da = (y - a) + hp1;
       xx = a * a;
       if (xx < 0.01588)
 	{
@@ -505,8 +504,8 @@ __cos (double x)
 	      t = -a;
 	      db = -da;
 	    }
-	  u.x = big.x + t;
-	  y = t - (u.x - big.x);
+	  u.x = big + t;
+	  y = t - (u.x - big);
 	  xx = y * y;
 	  s = y + (db + y * xx * (sn3 + xx * sn5));
 	  c = y * db + xx * (cs2 + xx * (cs4 + xx * cs6));
@@ -524,12 +523,12 @@ __cos (double x)
 
   else if (k < 0x419921FB)
     {				/* 2.426265<|x|< 105414350 */
-      t = (x * hpinv.x + toint.x);
-      xn = t - toint.x;
+      t = (x * hpinv + toint);
+      xn = t - toint;
       v.x = t;
-      y = (x - xn * mp1.x) - xn * mp2.x;
+      y = (x - xn * mp1) - xn * mp2;
       n = v.i[LOW_HALF] & 3;
-      da = xn * mp3.x;
+      da = xn * mp3;
       a = y - da;
       da = (y - a) - da;
       eps = ABS (x) * 1.2e-30;
@@ -564,8 +563,8 @@ __cos (double x)
 		  t = -a;
 		  db = -da;
 		}
-	      u.x = big.x + t;
-	      y = t - (u.x - big.x);
+	      u.x = big + t;
+	      y = t - (u.x - big);
 	      xx = y * y;
 	      s = y + (db + y * xx * (sn3 + xx * sn5));
 	      c = y * db + xx * (cs2 + xx * (cs4 + xx * cs6));
@@ -586,8 +585,8 @@ __cos (double x)
 	      a = -a;
 	      da = -da;
 	    }
-	  u.x = big.x + a;
-	  y = a - (u.x - big.x) + da;
+	  u.x = big + a;
+	  y = a - (u.x - big) + da;
 	  xx = y * y;
 	  SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
 	  s = y + y * xx * (sn3 + xx * sn5);
@@ -604,17 +603,17 @@ __cos (double x)
 
   else if (k < 0x42F00000)
     {
-      t = (x * hpinv.x + toint.x);
-      xn = t - toint.x;
+      t = (x * hpinv + toint);
+      xn = t - toint;
       v.x = t;
       xn1 = (xn + 8.0e22) - 8.0e22;
       xn2 = xn - xn1;
-      y = ((((x - xn1 * mp1.x) - xn1 * mp2.x) - xn2 * mp1.x) - xn2 * mp2.x);
+      y = ((((x - xn1 * mp1) - xn1 * mp2) - xn2 * mp1) - xn2 * mp2);
       n = v.i[LOW_HALF] & 3;
-      da = xn1 * pp3.x;
+      da = xn1 * pp3;
       t = y - da;
       da = (y - t) - da;
-      da = (da - xn2 * pp3.x) - xn * pp4.x;
+      da = (da - xn2 * pp3) - xn * pp4;
       a = t + da;
       da = (t - a) + da;
       eps = 1.0e-24;
@@ -649,8 +648,8 @@ __cos (double x)
 		  t = -a;
 		  db = -da;
 		}
-	      u.x = big.x + t;
-	      y = t - (u.x - big.x);
+	      u.x = big + t;
+	      y = t - (u.x - big);
 	      xx = y * y;
 	      s = y + (db + y * xx * (sn3 + xx * sn5));
 	      c = y * db + xx * (cs2 + xx * (cs4 + xx * cs6));
@@ -671,8 +670,8 @@ __cos (double x)
 	      a = -a;
 	      da = -da;
 	    }
-	  u.x = big.x + a;
-	  y = a - (u.x - big.x) + da;
+	  u.x = big + a;
+	  y = a - (u.x - big) + da;
 	  xx = y * y;
 	  SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
 	  s = y + y * xx * (sn3 + xx * sn5);
@@ -737,8 +736,8 @@ slow1 (double x)
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, c1, c2, xx, cor, res;
   static const double t22 = 6291456.0;
   y = ABS (x);
-  u.x = big.x + y;
-  y = y - (u.x - big.x);
+  u.x = big + y;
+  y = y - (u.x - big);
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);
   c = xx * (cs2 + xx * (cs4 + xx * cs6));
@@ -776,18 +775,18 @@ slow2 (double x)
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, e1, e2, xx, cor, res, del;
   static const double t22 = 6291456.0;
   y = ABS (x);
-  y = hp0.x - y;
+  y = hp0 - y;
   if (y >= 0)
     {
-      u.x = big.x + y;
-      y = y - (u.x - big.x);
-      del = hp1.x;
+      u.x = big + y;
+      y = y - (u.x - big);
+      del = hp1;
     }
   else
     {
-      u.x = big.x - y;
-      y = -(y + (u.x - big.x));
-      del = -hp1.x;
+      u.x = big - y;
+      y = -(y + (u.x - big));
+      del = -hp1;
     }
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);
@@ -806,9 +805,9 @@ slow2 (double x)
     return (x > 0) ? res : -res;
   else
     {
-      y = ABS (x) - hp0.x;
-      y1 = y - hp1.x;
-      y2 = (y - y1) - hp1.x;
+      y = ABS (x) - hp0;
+      y1 = y - hp1;
+      y2 = (y - y1) - hp1;
       __docos (y1, y2, w);
       if (w[0] == w[0] + 1.000000005 * w[1])
 	return (x > 0) ? w[0] : -w[0];
@@ -855,15 +854,15 @@ sloww (double x, double dx, double orig)
 	return (x > 0) ? w[0] : -w[0];
       else
 	{
-	  t = (orig * hpinv.x + toint.x);
-	  xn = t - toint.x;
+	  t = (orig * hpinv + toint);
+	  xn = t - toint;
 	  v.x = t;
-	  y = (orig - xn * mp1.x) - xn * mp2.x;
+	  y = (orig - xn * mp1) - xn * mp2;
 	  n = v.i[LOW_HALF] & 3;
-	  da = xn * pp3.x;
+	  da = xn * pp3;
 	  t = y - da;
 	  da = (y - t) - da;
-	  y = xn * pp4.x;
+	  y = xn * pp4;
 	  a = t - y;
 	  da = ((t - a) - y) + da;
 	  if (n & 2)
@@ -901,8 +900,8 @@ sloww1 (double x, double dx, double orig)
   static const double t22 = 6291456.0;
 
   y = ABS (x);
-  u.x = big.x + y;
-  y = y - (u.x - big.x);
+  u.x = big + y;
+  y = y - (u.x - big);
   dx = (x > 0) ? dx : -dx;
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);
@@ -957,8 +956,8 @@ sloww2 (double x, double dx, double orig, int n)
   static const double t22 = 6291456.0;
 
   y = ABS (x);
-  u.x = big.x + y;
-  y = y - (u.x - big.x);
+  u.x = big + y;
+  y = y - (u.x - big);
   dx = (x > 0) ? dx : -dx;
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);
@@ -1046,8 +1045,8 @@ bsloww1 (double x, double dx, double orig, int n)
   static const double t22 = 6291456.0;
 
   y = ABS (x);
-  u.x = big.x + y;
-  y = y - (u.x - big.x);
+  u.x = big + y;
+  y = y - (u.x - big);
   dx = (x > 0) ? dx : -dx;
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);
@@ -1097,8 +1096,8 @@ bsloww2 (double x, double dx, double orig, int n)
   static const double t22 = 6291456.0;
 
   y = ABS (x);
-  u.x = big.x + y;
-  y = y - (u.x - big.x);
+  u.x = big + y;
+  y = y - (u.x - big);
   dx = (x > 0) ? dx : -dx;
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);
@@ -1147,8 +1146,8 @@ cslow2 (double x)
   static const double t22 = 6291456.0;
 
   y = ABS (x);
-  u.x = big.x + y;
-  y = y - (u.x - big.x);
+  u.x = big + y;
+  y = y - (u.x - big);
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);
   c = xx * (cs2 + xx * (cs4 + xx * cs6));
@@ -1218,15 +1217,15 @@ csloww (double x, double dx, double orig)
 	return (x > 0) ? w[0] : -w[0];
       else
 	{
-	  t = (orig * hpinv.x + toint.x);
-	  xn = t - toint.x;
+	  t = (orig * hpinv + toint);
+	  xn = t - toint;
 	  v.x = t;
-	  y = (orig - xn * mp1.x) - xn * mp2.x;
+	  y = (orig - xn * mp1) - xn * mp2;
 	  n = v.i[LOW_HALF] & 3;
-	  da = xn * pp3.x;
+	  da = xn * pp3;
 	  t = y - da;
 	  da = (y - t) - da;
-	  y = xn * pp4.x;
+	  y = xn * pp4;
 	  a = t - y;
 	  da = ((t - a) - y) + da;
 	  if (n == 1)
@@ -1265,8 +1264,8 @@ csloww1 (double x, double dx, double orig)
   static const double t22 = 6291456.0;
 
   y = ABS (x);
-  u.x = big.x + y;
-  y = y - (u.x - big.x);
+  u.x = big + y;
+  y = y - (u.x - big);
   dx = (x > 0) ? dx : -dx;
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);
@@ -1320,8 +1319,8 @@ csloww2 (double x, double dx, double orig, int n)
   static const double t22 = 6291456.0;
 
   y = ABS (x);
-  u.x = big.x + y;
-  y = y - (u.x - big.x);
+  u.x = big + y;
+  y = y - (u.x - big);
   dx = (x > 0) ? dx : -dx;
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);

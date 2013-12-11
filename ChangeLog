@@ -1,3 +1,24 @@
+2013-12-11  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/usncs.h: Define constants as double
+	instead of structures.
+	* sysdeps/ieee754/dbl-64/s_sin.c (POLYNOMIAL2): Adjust.
+	(POLYNOMIAL): Likewise.
+	(TAYLOR_SLOW): Likewise.
+	(__sin): Likewise.
+	(__cos): Likewise.
+	(slow1): Likewise.
+	(slow2): Likewise.
+	(sloww): Likewise.
+	(sloww1); Likewise.
+	(sloww2): Likewise.
+	(bsloww1): Likewise.
+	(bsloww2): Likewise.
+	(cslow2): Likewise.
+	(csloww): Likewise.
+	(csloww1): Likewise.
+	(csloww2): Likewise.
+
 2013-12-10  Ondřej Bílka  <neleai@seznam.cz>
 
 	* malloc/malloc.c (MALLOC_COPY, MALLOC_ZERO): Delete.
