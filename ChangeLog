@@ -1,5 +1,10 @@
 2013-12-11  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/s_sin.c (t22): Consolidate const
+	definition...
+	(slow1, slow2, sloww1, sloww2, bsloww1, bsloww2, cslow2,
+	csloww1, csloww2): ... from here.
+
 	* sysdeps/ieee754/dbl-64/usncs.h: Define constants as double
 	instead of structures.
 	* sysdeps/ieee754/dbl-64/s_sin.c (POLYNOMIAL2): Adjust.

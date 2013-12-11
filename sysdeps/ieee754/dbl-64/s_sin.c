@@ -124,6 +124,8 @@ static const double
   cs4 = -4.16666666666664434524222570944589E-02,
   cs6 = 1.38888874007937613028114285595617E-03;
 
+static const double t22 = 0x1.8p22;
+
 void __dubsin (double x, double dx, double w[]);
 void __docos (double x, double dx, double w[]);
 double __mpsin (double x, double dx, bool reduce_range);
@@ -734,7 +736,6 @@ slow1 (double x)
 {
   mynumber u;
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, c1, c2, xx, cor, res;
-  static const double t22 = 6291456.0;
   y = ABS (x);
   u.x = big + y;
   y = y - (u.x - big);
@@ -773,7 +774,7 @@ slow2 (double x)
 {
   mynumber u;
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, e1, e2, xx, cor, res, del;
-  static const double t22 = 6291456.0;
+
   y = ABS (x);
   y = hp0 - y;
   if (y >= 0)
@@ -897,7 +898,6 @@ sloww1 (double x, double dx, double orig)
 {
   mynumber u;
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, c1, c2, xx, cor, res;
-  static const double t22 = 6291456.0;
 
   y = ABS (x);
   u.x = big + y;
@@ -953,7 +953,6 @@ sloww2 (double x, double dx, double orig, int n)
 {
   mynumber u;
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, e1, e2, xx, cor, res;
-  static const double t22 = 6291456.0;
 
   y = ABS (x);
   u.x = big + y;
@@ -1042,7 +1041,6 @@ bsloww1 (double x, double dx, double orig, int n)
 {
   mynumber u;
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, c1, c2, xx, cor, res;
-  static const double t22 = 6291456.0;
 
   y = ABS (x);
   u.x = big + y;
@@ -1093,7 +1091,6 @@ bsloww2 (double x, double dx, double orig, int n)
 {
   mynumber u;
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, e1, e2, xx, cor, res;
-  static const double t22 = 6291456.0;
 
   y = ABS (x);
   u.x = big + y;
@@ -1143,7 +1140,6 @@ cslow2 (double x)
 {
   mynumber u;
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, e1, e2, xx, cor, res;
-  static const double t22 = 6291456.0;
 
   y = ABS (x);
   u.x = big + y;
@@ -1261,7 +1257,6 @@ csloww1 (double x, double dx, double orig)
 {
   mynumber u;
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, c1, c2, xx, cor, res;
-  static const double t22 = 6291456.0;
 
   y = ABS (x);
   u.x = big + y;
@@ -1316,7 +1311,6 @@ csloww2 (double x, double dx, double orig, int n)
 {
   mynumber u;
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, e1, e2, xx, cor, res;
-  static const double t22 = 6291456.0;
 
   y = ABS (x);
   u.x = big + y;
