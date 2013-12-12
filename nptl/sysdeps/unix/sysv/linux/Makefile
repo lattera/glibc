@@ -26,6 +26,7 @@ gen-as-const-headers += lowlevelcond.sym lowlevelrwlock.sym \
 			lowlevelbarrier.sym unwindbuf.sym \
 			lowlevelrobustlock.sym pthread-pi-defines.sym \
 			structsem.sym
+tests += tst-setgetname
 endif
 
 ifeq ($(subdir),posix)

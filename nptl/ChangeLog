@@ -1,3 +1,8 @@
+2013-12-09  Carlos O'Donell  <carlos@redhat.com>
+
+	* sysdeps/unix/sysv/linux/tst-setgetname.c: New file.
+	* sysdeps/unix/sysv/linux/Makefile (tests): Add tst-setgetname.
+
 2013-12-09  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #15843]
