@@ -31,8 +31,12 @@ __BEGIN_DECLS
 #define	__need_NULL
 #include <stddef.h>
 
-/* Tell the caller that we provide correct C++ prototypes.  */
-#if defined __cplusplus && __GNUC_PREREQ (4, 4)
+/* Provide correct C++ prototypes, and indicate this to the caller.  This
+   requires a compatible C++ standard library.  As a heuristic, we provide
+   these when the compiler indicates full conformance with C++98 or later,
+   and for older GCC versions that are known to provide a compatible
+   libstdc++.  */
+#if defined __cplusplus && (__cplusplus >= 199711L || __GNUC_PREREQ (4, 4))
 # define __CORRECT_ISO_CPP_STRING_H_PROTO
 #endif
 
