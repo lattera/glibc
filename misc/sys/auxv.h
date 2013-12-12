@@ -27,9 +27,9 @@ __BEGIN_DECLS
 
 /* Return the value associated with an Elf*_auxv_t type from the auxv list
    passed to the program on startup.  If TYPE was not present in the auxv
-   list, returns zero.  */
+   list, returns zero and sets errno to ENOENT.  */
 extern unsigned long int getauxval (unsigned long int __type)
-  __THROW __attribute_const__;
+  __THROW;
 
 __END_DECLS
 

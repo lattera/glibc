@@ -625,7 +625,8 @@ basis there may be information that is not available any other way.
 This function is used to inquire about the entries in the auxiliary
 vector.  The @var{type} argument should be one of the @samp{AT_} symbols
 defined in @file{elf.h}.  If a matching entry is found, the value is
-returned; if the entry is not found, zero is returned.
+returned; if the entry is not found, zero is returned and @code{errno} is
+set to @code{ENOENT}.
 @end deftypefun
 
 For some platforms, the key @code{AT_HWCAP} is the easiest way to inquire

@@ -1,3 +1,14 @@
+2013-12-18  Brooks Moses  <bmoses@google.com>
+
+	[BZ #15846]
+	* misc/getauxval.c: Include errno.h.
+	(__getauxval): Set errno to ENOENT if the requested type is not
+	found.
+	* misc/sys/auxv.h (getauxval): Document that it may set errno;
+	don't declare with __attribute_const__.
+	* elf/tst-auxv.c: Add tests for errno and type-not-found case.
+	* manual/startup.texi: Document that getauxval sets errno.
+
 2013-12-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Add tests of jn and yn.

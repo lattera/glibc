@@ -16,6 +16,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sys/auxv.h>
+#include <errno.h>
 #include <ldsodefs.h>
 
 
@@ -32,6 +33,8 @@ __getauxval (unsigned long int type)
   for (p = GLRO(dl_auxv); p->a_type != AT_NULL; p++)
     if (p->a_type == type)
       return p->a_un.a_val;
+
+  __set_errno (ENOENT);
   return 0;
 }
 
