@@ -1,3 +1,13 @@
+2013-12-12  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* benchtests/Makefile (bench): Add exp2 and log2.
+	(LDLIBS-bench-exp2): Add -lm.
+	(LDLIBS-bench-log2): Likewise.
+	* benchtests/exp2-inputs: New inputs file.
+	* benchtests/log2-inputs: New inputs file.
+	* benchtests/log-inputs: Add new inputs.
+	* benchtests/tan-inputs: Likewise.
+
 2013-12-11  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/s_sin.c (t22): Consolidate const

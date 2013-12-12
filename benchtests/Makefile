@@ -20,8 +20,8 @@
 # Add benchmark functions in alphabetical order.
 
 subdir := benchtests
-bench := acos acosh asin asinh atan atanh cos cosh exp log modf pow rint sin \
-	 sincos sinh sqrt tan tanh
+bench := acos acosh asin asinh atan atanh cos cosh exp exp2 log log2 modf pow \
+	 rint sin sincos sinh sqrt tan tanh
 
 # String function benchmarks.
 string-bench := bcopy bzero memccpy memchr memcmp memcpy memmem memmove \
@@ -44,7 +44,9 @@ LDLIBS-bench-atanh = -lm
 LDLIBS-bench-cos = -lm
 LDLIBS-bench-cosh = -lm
 LDLIBS-bench-exp = -lm
+LDLIBS-bench-exp2 = -lm
 LDLIBS-bench-log = -lm
+LDLIBS-bench-log2 = -lm
 LDLIBS-bench-pow = -lm
 LDLIBS-bench-rint = -lm
 LDLIBS-bench-sin = -lm
