@@ -1,3 +1,7 @@
+2013-12-12  Toke Høiland-Jørgensen <toke@toke.dk>
+	[BZ #15593]
+	* locales/translit_neutral: Add entries for U00D8 and U00F8.
+
 2013-12-12  Marko Myllynen  <myllynen@redhat.com>
 
 	* locales/fi_FI: Fix Charset comment.
