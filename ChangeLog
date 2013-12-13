@@ -1,5 +1,20 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: New file to support
+	multiarch for POWER/PPC64.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/init-arch.h: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memcpy-a2.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/memcpy-cell.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/memcpy-power4.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/memcpy-power6.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/memcpy-power7.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/memcpy-ppc64.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/memcpy.c: New file: multiarch
+	memcpy for PPC64.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/power4/fpu/Implies: New file.
 	* sysdeps/powerpc/powerpc64/power4/fpu/multiarch/Implies: New File.
 	* sysdeps/powerpc/powerpc64/power4/multiarch/Implies: New File.
