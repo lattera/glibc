@@ -1,5 +1,16 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add strcpy
+	multiarch implementations.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcpy-power7.c: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strcpy-ppc64.c: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strcpy.c : New file:
+	multiarch strcpy for PPC64.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* string/wordcopy.c (_wordcopy_fwd_aligned): Add define to
 	redefine function name.
 	(_wordcopy_fwd_dest_aligned): Likewise.
