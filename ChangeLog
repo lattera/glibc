@@ -1,5 +1,9 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* NEWS: Mention ppc64 STT_GNU_IFUNC support.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add hypot and
 	hypotf multiarch implementations.
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_hypot-power7.c: New file.
