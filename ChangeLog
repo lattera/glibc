@@ -1,5 +1,19 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add isinf and
+	isinff multiarch implementation.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinf-power7.S: New
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinf-ppc64.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinf.c: New file:
+	multiarch isinf for PPC64.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinff-ppc64.c: New
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinff.c: New file:
+	multiarch isinff for PPC64.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add finite and
 	finitef multiarch implementation.
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_finite-power7.S: New
