@@ -1,5 +1,23 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add round/roundf
+	multiarch implementation.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_round-power5+.S: New
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_round-ppc64.S: New
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_roundf-power5+.S: New
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_roundf-ppc64.S: New
+	file.
+	multiarch llround for PPC64.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_round.c: New file:
+	multiarch round for PPC64.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_roundf.c: New file:
+	multiarch roundf for PPC64.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add floor/floorf
 	multiarch implementation.
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_floor-power5+.S: New
