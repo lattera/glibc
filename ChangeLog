@@ -1,5 +1,17 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add strncmp multiarch
+	implementations.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncmp-power4.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strncmp-power7.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strncmp-ppc64.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strncmp.c: New file: multiarch
+	strncmp for PPC64.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add strncasecmp
 	multiarch implementations.
 	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
