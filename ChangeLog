@@ -1,5 +1,32 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/memset.S (NO_BZERO_IMPL): Add macro to
+	avoid cretion of __bzero symbol.
+	* sysdeps/powerpc/powerpc64/power4/memset.S (NO_BZERO_IMPL):
+	Likewise.
+	* sysdeps/powerpc/powerpc64/power6/memset.S (NO_BZERO_IMPL):
+	Likewise.
+	* sysdeps/powerpc/powerpc64/power7/memset.S (NO_BZERO_IMPL):
+	Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add memset/bzero
+	multiarch implementations.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/bzero-power4.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/bzero-power6.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/bzero-power7.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/bzero.c: New file: multiarch
+	bzero for PPC32.
+	* sysdeps/powerpc/powerpc64/multiarch/memset-power4.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/memset-power6.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/memset-power7.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/memset-ppc64.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/memset.c: New file: multiarch
+	memset for PPC64.
+	* sysdeps/powerpc/powerpc64/multiarch/rtld-memset.c: New file.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* string/memcmp.c (memcmp): Using macro to redefine symbol name.
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add memcpy multiarch
 	implementations.
