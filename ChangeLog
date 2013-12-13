@@ -1,5 +1,14 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/power5+/fpu/multiarch/Implies: New file.
+	* sysdeps/powerpc/powerpc64/power5/fpu/multiarch/Implies: New file.
+	* sysdeps/powerpc/powerpc64/power6/fpu/multiarch/Implies: New file.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/multiarch/Implies: New file.
+	* sysdeps/powerpc/powerpc64/power7/fpu/multiarch/Implies: New file
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fpu/Implies: Remove.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/fpu/w_sqrt.c: Remove file
 	* sysdeps/powerpc/fpu/w_sqrtf.c: Likewise.
 	* sysdeps/powerpc/powerpc64/power4/fpu/w_sqrt.c: Likewise.
