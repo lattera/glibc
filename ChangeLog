@@ -1,5 +1,16 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add mempcpy multiarch
+	implementation.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/mempcpy-power7.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/mempcpy-ppc64.c: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/mempcpy.c: New file: multiarch
+	mempcpy for PPC64.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/memset.S (NO_BZERO_IMPL): Add macro to
 	avoid cretion of __bzero symbol.
 	* sysdeps/powerpc/powerpc64/power4/memset.S (NO_BZERO_IMPL):
