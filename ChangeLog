@@ -1,5 +1,17 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add strchr multiarch
+	implementations.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/rtld-strchr.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strchr-power7.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strchr-ppc64.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strchr.c: New file: multiarch
+	strchr for PPC64.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add strncmp multiarch
 	implementations.
 	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c

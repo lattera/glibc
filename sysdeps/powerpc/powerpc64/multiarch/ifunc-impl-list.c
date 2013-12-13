@@ -86,6 +86,14 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __strncmp_power4)
 	      IFUNC_IMPL_ADD (array, i, strncmp, 1,
 			      __strncmp_ppc))
+
+  /* Support sysdeps/powerpc/powerpc64/multiarch/strchr.c.  */
+  IFUNC_IMPL (i, name, strchr,
+	      IFUNC_IMPL_ADD (array, i, strchr,
+			      hwcap & PPC_FEATURE_HAS_VSX,
+			      __strchr_power7)
+	      IFUNC_IMPL_ADD (array, i, strchr, 1,
+			      __strchr_ppc))
 #endif
 
   /* Support sysdeps/powerpc/powerpc64/multiarch/memcmp.c.  */
