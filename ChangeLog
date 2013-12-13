@@ -1,5 +1,22 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add logb, logbf,
+	and logl multiarch implementations.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_logb-power7.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_logb-ppc64.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_logb.c: New file:
+	multiarch logb for PPC64.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_logbf-power7.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_logbf-ppc64.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_logbf.c: New file:
+	multiarch logb for PPC64.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_logbl-power7.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_logbl-ppc64.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_logbl.c: New file:
+	multiarch logb for PPC64.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add isinf and
 	isinff multiarch implementation.
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinf-power7.S: New
