@@ -1,5 +1,23 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add ceil/ceilf
+	multiarch implementation.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_ceil-power5+.S: New
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_ceil-ppc64.S: New
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_ceilf-power5+.S: New
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_ceilf-ppc64.S: New
+	file.
+	multiarch llround for PPC64.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_ceil.c: New file:
+	multiarch ceil for PPC64.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_ceilf.c: New file:
+	multiarch ceilf for PPC64.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add llround
 	multiarch implementation.
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llround-power5+.S: New
