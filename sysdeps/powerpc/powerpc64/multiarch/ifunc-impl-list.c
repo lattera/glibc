@@ -136,5 +136,20 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strnlen, 1,
 			      __strnlen_ppc))
 
+  /* Support sysdeps/powerpc/powerpc64/multiarch/strcasecmp.c.  */
+  IFUNC_IMPL (i, name, strcasecmp,
+	      IFUNC_IMPL_ADD (array, i, strcasecmp,
+			      hwcap & PPC_FEATURE_HAS_VSX,
+			      __strcasecmp_power7)
+	      IFUNC_IMPL_ADD (array, i, strcasecmp, 1, __strcasecmp_ppc))
+
+  /* Support sysdeps/powerpc/powerpc64/multiarch/strcasecmp_l.c.  */
+  IFUNC_IMPL (i, name, strcasecmp_l,
+	      IFUNC_IMPL_ADD (array, i, strcasecmp_l,
+			      hwcap & PPC_FEATURE_HAS_VSX,
+			      __strcasecmp_l_power7)
+	      IFUNC_IMPL_ADD (array, i, strcasecmp_l, 1,
+			      __strcasecmp_l_ppc))
+
   return i;
 }
