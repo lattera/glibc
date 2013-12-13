@@ -1,5 +1,22 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* string/wordcopy.c (_wordcopy_fwd_aligned): Add define to
+	redefine function name.
+	(_wordcopy_fwd_dest_aligned): Likewise.
+	(_wordcopy_bwd_aligned): Likewise.
+	(_wordcopy_bwd_dest_aligned): Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add wordcopy
+	multiarch implementations.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/wordcopy-power6.c: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/wordcopy-power7.c: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/wordcopy-ppc64.c: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/wordcopy.c : New file:
+	multiarch wcscpy for PPC64.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add wcscpy
 	multiarch implementations.
 	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
