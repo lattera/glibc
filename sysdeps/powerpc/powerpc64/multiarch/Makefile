@@ -10,10 +10,13 @@ sysdep_routines += memcpy-power7 memcpy-a2 memcpy-power6 memcpy-cell \
 		   strncase-power7 strncase_l-power7 strncmp-power7 \
 		   strncmp-power4 strncmp-ppc64 strchr-power7 strchr-ppc64 \
 		   strchrnul-power7 strchrnul-ppc64 wcschr-power7 \
-		   wcschr-power6 wcschr-ppc64
+		   wcschr-power6 wcschr-ppc64 wcsrchr-power7 wcsrchr-power6 \
+		   wcsrchr-ppc64
 
 CFLAGS-strncase-power7.c += -mcpu=power7 -funroll-loops
 CFLAGS-strncase_l-power7.c += -mcpu=power7 -funroll-loops
 CFLAGS-wcschr-power7.c += -mcpu=power7
 CFLAGS-wcschr-power6.c += -mcpu=power6
+CFLAGS-wcsrchr-power7.c += -mcpu=power7
+CFLAGS-wcsrchr-power6.c += -mcpu=power6
 endif
