@@ -29,6 +29,10 @@
 
 #undef memcmp
 
+#ifndef MEMCMP
+# define MEMCMP memcmp
+#endif
+
 #ifdef _LIBC
 
 # include <memcopy.h>
@@ -304,7 +308,7 @@ memcmp_not_common_alignment (srcp1, srcp2, len)
 }
 
 int
-memcmp (s1, s2, len)
+MEMCMP (s1, s2, len)
      const __ptr_t s1;
      const __ptr_t s2;
      size_t len;

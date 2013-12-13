@@ -1,5 +1,18 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* string/memcmp.c (memcmp): Using macro to redefine symbol name.
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add memcpy multiarch
+	implementations.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memcmp-power4.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/memcmp-power7.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/memcmp-ppc64.c: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/memcmp.c: New file: multiarch
+	memcmp for PPC64.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile: New file to support
 	multiarch for POWER/PPC64.
 	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c: Likewise.
