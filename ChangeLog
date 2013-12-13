@@ -1,5 +1,16 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add strnlen multiarch
+	implementations.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strnlen-power7.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strnlen-ppc64.c: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strnlen.c: New file: multiarch
+	strnlen for PPC64.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add strlen multiarch
 	implementations.
 	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
