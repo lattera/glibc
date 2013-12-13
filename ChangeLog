@@ -1,5 +1,17 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add wcscpy
+	multiarch implementations.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/wcscpy-power6.c: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/wcscpy-power7.c: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/wcscpy-ppc64.c: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/wcscpy.c : New file:
+	multiarch wcscpy for PPC64.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add wcsrchr
 	multiarch implementations.
 	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
