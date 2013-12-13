@@ -1,3 +1,28 @@
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power4/fpu/Implies: New file.
+	* sysdeps/powerpc/powerpc64/power4/fpu/multiarch/Implies: New File.
+	* sysdeps/powerpc/powerpc64/power4/multiarch/Implies: New File.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/Implies: New File.
+	* sysdeps/powerpc/powerpc64/power5+/multiarch/Implies: New File.
+	* sysdeps/powerpc/powerpc64/power5/Implies: New File.
+	* sysdeps/powerpc/powerpc64/power5/fpu/Implies: New File.
+	* sysdeps/powerpc/powerpc64/power5/multiarch/Implies: New File.
+	* sysdeps/powerpc/powerpc64/power6/fpu/Implies: New File.
+	* sysdeps/powerpc/powerpc64/power6/multiarch/Implies: New File.
+	* sysdeps/powerpc/powerpc64/power7/fpu/Implies: New File.
+	* sysdeps/powerpc/powerpc64/power7/multiarch/Implies: New File.
+	* sysdeps/powerpc/powerpc64/power8/fpu/Implies: New File.
+	* sysdeps/powerpc/powerpc64/power8/fpu/multiarch/Implies: New File.
+	* sysdeps/powerpc/powerpc64/power8/multiarch/Implies: New File.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power4/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power5+/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power5/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power6/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power6x/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power7/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power8/Implies: Remove.
+
 2013-12-12  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/Makefile ($(objpfx)stub-syscalls.c): Use $$ver.
