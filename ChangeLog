@@ -1,5 +1,18 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add strncasecmp
+	multiarch implementations.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncase-power7.c: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strncase.c: New file: multiarch
+	strncasecmp for PPC64.
+	* sysdeps/powerpc/powerpc64/multiarch/strncase_l-power7.c: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strncase_l.c: New file:
+	multiarch strncasecmp_l for PPC64.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add strcasecmp
 	multiarch implementations.
 	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c:
