@@ -114,5 +114,13 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memrchr, 1,
 			      __memrchr_ppc))
 
+  /* Support sysdeps/powerpc/powerpc64/multiarch/rawmemchr.c.  */
+  IFUNC_IMPL (i, name, rawmemchr,
+	      IFUNC_IMPL_ADD (array, i, rawmemchr,
+			      hwcap & PPC_FEATURE_HAS_VSX,
+			      __rawmemchr_power7)
+	      IFUNC_IMPL_ADD (array, i, rawmemchr, 1,
+			      __rawmemchr_ppc))
+
   return i;
 }

@@ -1,5 +1,16 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add rawmemch multiarch
+	implementations.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/rawmemchr-power7.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/rawmemchr-ppc64.c: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/rawmemchr.c: New file: multiarch
+	rawmemrchr for PPC64.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add memrchr multiarch
 	implementation.
 	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c

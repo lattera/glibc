@@ -4,5 +4,6 @@ sysdep_routines += memcpy-power7 memcpy-a2 memcpy-power6 memcpy-cell \
 		   memcmp-ppc64 memset-power7 memset-power6 memset-power4 \
 		   memset-ppc64 bzero-power4 bzero-power6 bzero-power7 \
 		   mempcpy-power7 mempcpy-ppc64 memchr-power7 memchr-ppc64 \
-		   memrchr-power7 memrchr-ppc64
+		   memrchr-power7 memrchr-ppc64 rawmemchr-power7 \
+		   rawmemchr-ppc64
 endif
