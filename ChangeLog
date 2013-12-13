@@ -1,5 +1,18 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add hypot and
+	hypotf multiarch implementations.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_hypot-power7.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_hypot-ppc64.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_hypot.c: New file:
+	multiarch hypot for PPC64.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_hypotf-power7.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_hypotf-ppc64.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_hypotf.c : New file:
+	multiarch hypotf for PPC64.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add modf and
 	modff multiarch implementations.
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_modf-power5+.c: New file.
