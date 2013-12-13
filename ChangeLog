@@ -1,5 +1,18 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add modf and
+	modff multiarch implementations.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_modf-power5+.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_modf-ppc64.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_modf.c: New file:
+	multiarch modf for PPC64.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_modff-power5+.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_modff-ppc64.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_modff.c : New file:
+	multiarch modff for PPC64.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add logb, logbf,
 	and logl multiarch implementations.
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_logb-power7.c: New file.
