@@ -1,5 +1,23 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add floor/floorf
+	multiarch implementation.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_floor-power5+.S: New
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_floor-ppc64.S: New
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_floorf-power5+.S: New
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_floorf-ppc64.S: New
+	file.
+	multiarch llround for PPC64.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_floor.c: New file:
+	multiarch floor for PPC64.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_floorf.c: New file:
+	multiarch floorf for PPC64.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add ceil/ceilf
 	multiarch implementation.
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_ceil-power5+.S: New
