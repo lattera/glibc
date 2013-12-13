@@ -1,5 +1,17 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add llrint and
+	lrint multiarch implementation.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llrint-power6x.S: New
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llrint-ppc64.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llrint.c: New file:
+	multiarch llrint for PPC64.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_lrint.c: New file:
+	multiarch lrint for PPC64.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add copysign/
 	copysignf multiarch implementation.
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_copysign-power6.S: New
