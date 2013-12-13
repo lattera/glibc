@@ -1,5 +1,20 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add llround
+	multiarch implementation.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llround-power5+.S: New
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llround-power6x.S: New
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llround-ppc64.S: New
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llround.c: New file:
+	multiarch llround for PPC64.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_lround.c: New file:
+	multiarch lround for PPC64.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add isnan
 	multiarch implementation.
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isnan-power5.S: New file.
