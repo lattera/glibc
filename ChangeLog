@@ -1,5 +1,23 @@
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add trunc/truncf
+	multiarch implementation.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_trunc-power5+.S: New
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_trunc-ppc64.S: New
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_truncf-power5+.S: New
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_truncf-ppc64.S: New
+	file.
+	multiarch llround for PPC64.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_trunc.c: New file:
+	multiarch trunc for PPC64.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_truncf.c: New file:
+	multiarch truncf for PPC64.
+
+2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add round/roundf
 	multiarch implementation.
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_round-power5+.S: New

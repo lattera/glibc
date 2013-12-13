@@ -8,5 +8,6 @@ libm-sysdep_routines += s_isnan-power7 s_isnan-power6x s_isnan-power6 \
 			s_ceil-ppc64 s_ceilf-power5+ s_ceilf-ppc64 \
 			s_floor-power5+ s_floor-ppc64 s_floorf-power5+ \
 			s_floorf-ppc64 s_round-power5+ s_round-ppc64 \
-			s_roundf-power5+ s_roundf-ppc64
+			s_roundf-power5+ s_roundf-ppc64 s_trunc-power5+ \
+			s_trunc-ppc64 s_truncf-power5+ s_truncf-ppc64
 endif
