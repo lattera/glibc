@@ -1,3 +1,17 @@
+2013-12-14  Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ #12100]
+	* sysdeps/x86_64/multiarch/strstr-sse2-unaligned.S: New file
+	* sysdeps/x86_64/multiarch/strstr-c.c: Moved to ...
+	* sysdeps/x86_64/multiarch/strstr.c: ... here.
+	(strstr): Add __strstr_sse2_unaligned ifunc.
+	* sysdeps/x86_64/multiarch/strcasestr-c.c: Moved to ...
+	* sysdeps/x86_64/multiarch/strcasestr.c ... here.
+	(strcasestr): Remove __strcasestr_sse42 ifunc.
+	* sysdeps/x86_64/multiarch/strcasestr-nonascii.c: Remove.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c: Update.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Update.
+
 2013-12-14  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/sh4/fpu/bits/fenv.h: Move to ...

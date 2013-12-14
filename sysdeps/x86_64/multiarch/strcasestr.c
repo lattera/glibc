@@ -1,7 +1,13 @@
-extern char *__strcasestr_sse42_nonascii (const unsigned char *s1,
-					  const unsigned char *s2)
-  attribute_hidden;
+/* Multiple versions of strcasestr
+   All versions must be listed in ifunc-impl-list.c.  */
 
-#define USE_AS_STRCASESTR
-#define STRSTR_SSE42 __strcasestr_sse42
-#include "strstr.c"
+#include "init-arch.h"
+
+#define STRCASESTR __strcasestr_sse2
+
+#include "string/strcasestr.c"
+
+extern __typeof (__strcasestr_sse2) __strcasestr_sse2 attribute_hidden;
+
+libc_ifunc (__strcasestr,
+	    __strcasestr_sse2);
