@@ -1,3 +1,9 @@
+2013-12-14  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/sh4/fpu/bits/fenv.h: Move to ...
+	* sysdeps/sh/bits/fenv.h: ... here.
+	* sysdeps/sh/sh4/fpu/bits: Remove directory.
+
 2013-12-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* NEWS: Mention ppc64 STT_GNU_IFUNC support.
