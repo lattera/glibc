@@ -1,3 +1,13 @@
+2013-12-16  Roland McGrath  <roland@hack.frob.com>
+
+	* elf/dl-error.c (struct catch): Add new member `errcode'.  Add a
+	level of indirection to members `objname', `errstring', `malloced'.
+	(_dl_signal_error): Store through pointers in *LCATCH rather modifying
+	*LCATCH itself.  Set *LCATCH->errcode to ERRCODE rather than passing
+	it as the __longjmp argument (just pass 1 instead).
+	(_dl_catch_error): Initialize C with argument pointers and address of
+	volatile local ERRCODE rather than copying values out of C at return.
+
 2013-12-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Add tests of atan2, hypot and pow.

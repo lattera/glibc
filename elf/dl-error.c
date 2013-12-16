@@ -28,10 +28,11 @@
    _dl_signal_error.  */
 struct catch
   {
-    const char *objname;	/* Object/File name.  */
-    const char *errstring;	/* Error detail filled in here.  */
-    bool malloced;		/* Nonzero if the string is malloced
+    const char **objname;	/* Object/File name.  */
+    const char **errstring;	/* Error detail filled in here.  */
+    bool *malloced;		/* Nonzero if the string is malloced
 				   by the libc malloc.  */
+    volatile int *errcode;	/* Return value of _dl_signal_error.  */
     jmp_buf env;		/* longjmp here on error.  */
   };
 
@@ -86,33 +87,36 @@ _dl_signal_error (int errcode, const char *objname, const char *occation,
       size_t len_objname = strlen (objname) + 1;
       size_t len_errstring = strlen (errstring) + 1;
 
-      lcatch->errstring = (char *) malloc (len_objname + len_errstring);
-      if (lcatch->errstring != NULL)
+      char *errstring_copy = malloc (len_objname + len_errstring);
+      if (errstring_copy != NULL)
 	{
 	  /* Make a copy of the object file name and the error string.  */
-	  lcatch->objname = memcpy (__mempcpy ((char *) lcatch->errstring,
-					       errstring, len_errstring),
-				    objname, len_objname);
+	  *lcatch->objname = memcpy (__mempcpy (errstring_copy,
+						errstring, len_errstring),
+				     objname, len_objname);
+	  *lcatch->errstring = errstring_copy;
 
 	  /* If the main executable is relocated it means the libc's malloc
 	     is used.  */
+          bool malloced = true;
 #ifdef SHARED
-	  lcatch->malloced = (GL(dl_ns)[LM_ID_BASE]._ns_loaded != NULL
-			      && (GL(dl_ns)[LM_ID_BASE]._ns_loaded->l_relocated
-				  != 0));
-#else
-	  lcatch->malloced = true;
+	  malloced = (GL(dl_ns)[LM_ID_BASE]._ns_loaded != NULL
+                      && (GL(dl_ns)[LM_ID_BASE]._ns_loaded->l_relocated != 0));
 #endif
+	  *lcatch->malloced = malloced;
 	}
       else
 	{
 	  /* This is better than nothing.  */
-	  lcatch->objname = "";
-	  lcatch->errstring = _dl_out_of_memory;
-	  lcatch->malloced = false;
+	  *lcatch->objname = "";
+	  *lcatch->errstring = _dl_out_of_memory;
+	  *lcatch->malloced = false;
 	}
+
+      *lcatch->errcode = errcode;
+
       /* We do not restore the signal mask because none was saved.  */
-      __longjmp (lcatch->env[0].__jmpbuf, errcode ?: -1);
+      __longjmp (lcatch->env[0].__jmpbuf, 1);
     }
   else
     {
@@ -157,23 +161,29 @@ internal_function
 _dl_catch_error (const char **objname, const char **errstring,
 		 bool *mallocedp, void (*operate) (void *), void *args)
 {
-  int errcode;
-  struct catch *volatile old;
-  struct catch c;
   /* We need not handle `receiver' since setting a `catch' is handled
      before it.  */
 
-  /* Some systems (e.g., SPARC) handle constructors to local variables
-     inefficient.  So we initialize `c' by hand.  */
-  c.errstring = NULL;
+  /* Only this needs to be marked volatile, because it is the only local
+     variable that gets changed between the setjmp invocation and the
+     longjmp call.  All others are just set here (before setjmp) and read
+     in _dl_signal_error (before longjmp).  */
+  volatile int errcode;
+
+  struct catch c;
+  /* Don't use an initializer since we don't need to clear C.env.  */
+  c.objname = objname;
+  c.errstring = errstring;
+  c.malloced = mallocedp;
+  c.errcode = &errcode;
 
   struct catch **const catchp = &CATCH_HOOK;
-  old = *catchp;
+  struct catch *const old = *catchp;
+  *catchp = &c;
+
   /* Do not save the signal mask.  */
-  errcode = __sigsetjmp (c.env, 0);
-  if (__builtin_expect (errcode, 0) == 0)
+  if (__builtin_expect (__sigsetjmp (c.env, 0), 0) == 0)
     {
-      *catchp = &c;
       (*operate) (args);
       *catchp = old;
       *objname = NULL;
@@ -182,12 +192,10 @@ _dl_catch_error (const char **objname, const char **errstring,
       return 0;
     }
 
-  /* We get here only if we longjmp'd out of OPERATE.  */
+  /* We get here only if we longjmp'd out of OPERATE.  _dl_signal_error has
+     already stored values into *OBJNAME, *ERRSTRING, and *MALLOCEDP.  */
   *catchp = old;
-  *objname = c.objname;
-  *errstring = c.errstring;
-  *mallocedp = c.malloced;
-  return errcode == -1 ? 0 : errcode;
+  return errcode;
 }
 
 
