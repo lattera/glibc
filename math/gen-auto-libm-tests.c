@@ -392,6 +392,8 @@ typedef enum
   {
     /* MPFR function with a single argument and result.  */
     mpfr_f_f,
+    /* MPFR function with two arguments and one result.  */
+    mpfr_ff_f,
     /* MPFR function with a single argument and floating-point and
        integer results.  */
     mpfr_f_f1,
@@ -406,6 +408,7 @@ typedef struct
   union
   {
     int (*mpfr_f_f) (mpfr_t, const mpfr_t, mpfr_rnd_t);
+    int (*mpfr_ff_f) (mpfr_t, const mpfr_t, const mpfr_t, mpfr_rnd_t);
     int (*mpfr_f_f1) (mpfr_t, int *, const mpfr_t, mpfr_rnd_t);
   } func;
 } func_calc_desc;
@@ -454,6 +457,9 @@ typedef struct
 #define FUNC_mpfr_f_f(NAME, MPFR_FUNC, EXACT)			\
   FUNC (NAME, ARGS1 (type_fp), RET1 (type_fp), EXACT, false,	\
 	CALC (mpfr_f_f, MPFR_FUNC))
+#define FUNC_mpfr_ff_f(NAME, MPFR_FUNC, EXACT)				\
+  FUNC (NAME, ARGS2 (type_fp, type_fp), RET1 (type_fp), EXACT, false,	\
+	CALC (mpfr_ff_f, MPFR_FUNC))
 
 /* List of functions handled by this program.  */
 static test_function test_functions[] =
@@ -463,6 +469,7 @@ static test_function test_functions[] =
     FUNC_mpfr_f_f ("asin", mpfr_asin, false),
     FUNC_mpfr_f_f ("asinh", mpfr_asinh, false),
     FUNC_mpfr_f_f ("atan", mpfr_atan, false),
+    FUNC_mpfr_ff_f ("atan2", mpfr_atan2, false),
     FUNC_mpfr_f_f ("atanh", mpfr_atanh, false),
     FUNC_mpfr_f_f ("cbrt", mpfr_cbrt, false),
     FUNC_mpfr_f_f ("cos", mpfr_cos, false),
@@ -473,6 +480,7 @@ static test_function test_functions[] =
     FUNC_mpfr_f_f ("exp10", mpfr_exp10, false),
     FUNC_mpfr_f_f ("exp2", mpfr_exp2, false),
     FUNC_mpfr_f_f ("expm1", mpfr_expm1, false),
+    FUNC_mpfr_ff_f ("hypot", mpfr_hypot, false),
     FUNC_mpfr_f_f ("j0", mpfr_j0, false),
     FUNC_mpfr_f_f ("j1", mpfr_j1, false),
     FUNC ("lgamma", ARGS1 (type_fp), RET2 (type_fp, type_int), false, false,
@@ -481,6 +489,7 @@ static test_function test_functions[] =
     FUNC_mpfr_f_f ("log10", mpfr_log10, false),
     FUNC_mpfr_f_f ("log1p", mpfr_log1p, false),
     FUNC_mpfr_f_f ("log2", mpfr_log2, false),
+    FUNC_mpfr_ff_f ("pow", mpfr_pow, false),
     FUNC_mpfr_f_f ("sin", mpfr_sin, false),
     FUNC_mpfr_f_f ("sinh", mpfr_sinh, false),
     FUNC_mpfr_f_f ("sqrt", mpfr_sqrt, true),
@@ -665,6 +674,43 @@ special_fill_minus_max (mpfr_t res0, mpfr_t res1 __attribute__ ((unused)),
 }
 
 static size_t
+special_fill_min (mpfr_t res0, mpfr_t res1 __attribute__ ((unused)),
+		  fp_format format)
+{
+  mpfr_init2 (res0, fp_formats[format].mant_dig);
+  assert_exact (mpfr_set (res0, fp_formats[format].min, MPFR_RNDN));
+  return 1;
+}
+
+static size_t
+special_fill_minus_min (mpfr_t res0, mpfr_t res1 __attribute__ ((unused)),
+			fp_format format)
+{
+  mpfr_init2 (res0, fp_formats[format].mant_dig);
+  assert_exact (mpfr_neg (res0, fp_formats[format].min, MPFR_RNDN));
+  return 1;
+}
+
+static size_t
+special_fill_min_subnorm (mpfr_t res0, mpfr_t res1 __attribute__ ((unused)),
+			  fp_format format)
+{
+  mpfr_init2 (res0, fp_formats[format].mant_dig);
+  assert_exact (mpfr_set (res0, fp_formats[format].subnorm_min, MPFR_RNDN));
+  return 1;
+}
+
+static size_t
+special_fill_minus_min_subnorm (mpfr_t res0,
+				mpfr_t res1 __attribute__ ((unused)),
+				fp_format format)
+{
+  mpfr_init2 (res0, fp_formats[format].mant_dig);
+  assert_exact (mpfr_neg (res0, fp_formats[format].subnorm_min, MPFR_RNDN));
+  return 1;
+}
+
+static size_t
 special_fill_pi (mpfr_t res0, mpfr_t res1, fp_format format)
 {
   mpfr_init2 (res0, fp_formats[format].mant_dig);
@@ -825,6 +871,10 @@ static const special_real_input special_real_inputs[] =
   {
     { "max", special_fill_max },
     { "-max", special_fill_minus_max },
+    { "min", special_fill_min },
+    { "-min", special_fill_minus_min },
+    { "min_subnorm", special_fill_min_subnorm },
+    { "-min_subnorm", special_fill_minus_min_subnorm },
     { "pi", special_fill_pi },
     { "-pi", special_fill_minus_pi },
     { "pi/2", special_fill_pi_2 },
@@ -1263,6 +1313,15 @@ calc_generic_results (generic_value *outputs, generic_value *inputs,
       mpfr_init (outputs[0].value.f);
       inexact = calc->func.mpfr_f_f (outputs[0].value.f, inputs[0].value.f,
 				     MPFR_RNDZ);
+      adjust_real (outputs[0].value.f, inexact);
+      break;
+
+    case mpfr_ff_f:
+      assert (inputs[0].type == gtype_fp);
+      outputs[0].type = gtype_fp;
+      mpfr_init (outputs[0].value.f);
+      inexact = calc->func.mpfr_ff_f (outputs[0].value.f, inputs[0].value.f,
+				      inputs[1].value.f, MPFR_RNDZ);
       adjust_real (outputs[0].value.f, inexact);
       break;
 

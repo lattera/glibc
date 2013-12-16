@@ -69,6 +69,38 @@ atan 0x1p-100 missing-underflow
 atan 0x1p-600 missing-underflow
 atan 0x1p-10000 missing-underflow
 
+# atan2 (0,x) == 0 for x > 0.
+atan2 0 1
+# atan2 (-0,x) == -0 for x > 0.
+atan2 -0 1
+atan2 0 0
+atan2 -0 0
+# atan2 (+0,x) == +pi for x < 0.
+atan2 0 -1
+# atan2 (-0,x) == -pi for x < 0.
+atan2 -0 -1
+atan2 0 -0
+atan2 -0 -0
+# atan2 (y,+0) == pi/2 for y > 0.
+atan2 1 0
+# atan2 (y,-0) == pi/2 for y > 0.
+atan2 1 -0
+# atan2 (y,+0) == -pi/2 for y < 0.
+atan2 -1 0
+# atan2 (y,-0) == -pi/2 for y < 0.
+atan2 -1 -0
+atan2 max max
+atan2 max min
+atan2 -max -min
+atan2 0.75 1
+atan2 -0.75 1.0
+atan2 0.75 -1.0
+atan2 -0.75 -1.0
+atan2 0.390625 .00029
+atan2 1.390625 0.9296875
+atan2 -0.00756827042671106339 -.001792735857538728036
+atan2 0x1.00000000000001p0 0x1.00000000000001p0
+
 atanh 0
 atanh -0
 atanh 0.75
@@ -250,6 +282,35 @@ expm1 100000.0
 expm1 max
 expm1 -max
 
+# hypot (x,y) == hypot (+-x, +-y).
+hypot 0.7 12.4
+hypot -0.7 12.4
+hypot 0.7 -12.4
+hypot -0.7 -12.4
+hypot 12.4 0.7
+hypot -12.4 0.7
+hypot 12.4 -0.7
+hypot -12.4 -0.7
+# hypot (x,0) == fabs (x).
+hypot 0.75 0
+hypot -0.75 0
+hypot -5.7e7 0
+hypot 0.75 1.25
+hypot 1.0 0x1p-61
+hypot 0x1p+0 0x1.fp-129
+# Bug 16314: spurious underflow exception may occur.
+hypot 0x1.23456789abcdef0123456789ab8p-500 0x1.23456789abcdef0123456789ab8p-500 spurious-underflow:dbl-64
+hypot 0x3p125 0x4p125 no-test-inline:flt-32
+hypot 0x1.234566p-126 0x1.234566p-126 no-test-inline:flt-32
+hypot 0x3p1021 0x4p1021 no-test-inline:dbl-64
+hypot 0x1p+0 0x0.3ep-1022 no-test-inline:dbl-64
+hypot 0x3p16381 0x4p16381 no-test-inline
+hypot 0x1p-149 0x1p-149
+hypot 0x1p-1074 0x1p-1074
+# Bug 16316: hypot broken for some subnormal arguments.
+hypot 0x1p-16445 0x1p-16445 no-test-inline xfail:ldbl-96-intel xfail:ldbl-96-m68k
+hypot 0x1p-16494 0x1p-16494 no-test-inline xfail:ldbl-96-intel xfail:ldbl-96-m68k
+
 j0 -1.0
 j0 0.0
 j0 0.125
@@ -365,6 +426,298 @@ log2 2.0
 log2 16.0
 log2 256.0
 log2 0.75
+
+pow 0 0
+pow 0 -0
+pow -0 0
+pow -0 -0
+
+pow 10 0
+pow 10 -0
+pow -10 0
+pow -10 -0
+
+pow 1 1
+pow 1 -1
+pow 1 1.25
+pow 1 -1.25
+pow 1 0x1p62
+pow 1 0x1p63
+pow 1 0x1p64
+pow 1 0x1p72
+pow 1 min_subnorm
+pow 1 -min_subnorm
+
+# pow (x, +-0) == 1.
+pow 32.75 0
+pow 32.75 -0
+pow -32.75 0
+pow -32.75 -0
+pow 0x1p72 0
+pow 0x1p72 -0
+pow 0x1p-72 0
+pow 0x1p-72 -0
+
+pow 0x1p72 0x1p72
+pow 10 -0x1p72
+pow max max
+pow 10 -max
+
+pow 0 1
+pow 0 11
+
+pow -0 1
+pow -0 11
+
+pow 0 2
+pow 0 11.1
+
+pow -0 2
+pow -0 11.1
+
+# pow (+0, y) == +0 for y an odd integer > 0.
+pow 0.0 27
+pow 0.0 0xffffff
+pow 0.0 0x1.fffffffffffffp+52
+pow 0.0 0x1.fffffffffffffffep+63
+pow 0.0 0x1.ffffffffffffffffffffffffff8p+105
+pow 0.0 0x1.ffffffffffffffffffffffffffffp+112
+
+# pow (-0, y) == -0 for y an odd integer > 0.
+pow -0 27
+pow -0 0xffffff
+pow -0 0x1fffffe
+pow -0 0x1.fffffffffffffp+52
+pow -0 0x1.fffffffffffffp+53
+pow -0 0x1.fffffffffffffffep+63
+pow -0 0x1.fffffffffffffffep+64
+pow -0 0x1.ffffffffffffffffffffffffff8p+105
+pow -0 0x1.ffffffffffffffffffffffffff8p+106
+pow -0 0x1.ffffffffffffffffffffffffffffp+112
+pow -0 0x1.ffffffffffffffffffffffffffffp+113
+
+# pow (+0, y) == +0 for y > 0 and not an odd integer.
+pow 0.0 4
+pow 0.0 0x1p24
+pow 0.0 0x1p127
+pow 0.0 max
+pow 0.0 min_subnorm
+
+# pow (-0, y) == +0 for y > 0 and not an odd integer.
+pow -0 4
+pow -0 0x1p24
+pow -0 0x1p127
+pow -0 max
+pow -0 min_subnorm
+
+pow 16 0.25
+pow 0x1p64 0.125
+pow 2 4
+pow 256 8
+
+pow 0.75 1.25
+
+pow -7.49321e+133 -9.80818e+16
+
+pow -1.0 -0xffffff
+pow -1.0 -0x1fffffe
+pow -1.0 -0x1.fffffffffffffp+52
+pow -1.0 -0x1.fffffffffffffp+53
+pow -1.0 -0x1.fffffffffffffffep+63
+pow -1.0 -0x1.fffffffffffffffep+64
+pow -1.0 -0x1.ffffffffffffffffffffffffff8p+105
+pow -1.0 -0x1.ffffffffffffffffffffffffff8p+106
+pow -1.0 -0x1.ffffffffffffffffffffffffffffp+112
+pow -1.0 -0x1.ffffffffffffffffffffffffffffp+113
+pow -1.0 -max
+
+pow -1.0 0xffffff
+pow -1.0 0x1fffffe
+pow -1.0 0x1.fffffffffffffp+52
+pow -1.0 0x1.fffffffffffffp+53
+pow -1.0 0x1.fffffffffffffffep+63
+pow -1.0 0x1.fffffffffffffffep+64
+pow -1.0 0x1.ffffffffffffffffffffffffff8p+105
+pow -1.0 0x1.ffffffffffffffffffffffffff8p+106
+pow -1.0 0x1.ffffffffffffffffffffffffffffp+112
+pow -1.0 0x1.ffffffffffffffffffffffffffffp+113
+pow -1.0 max
+
+pow -2.0 126
+pow -2.0 127
+pow -2.0 -126
+pow -2.0 -127
+
+pow -2.0 -0xffffff
+pow -2.0 -0x1fffffe
+pow -2.0 -0x1.fffffffffffffp+52
+pow -2.0 -0x1.fffffffffffffp+53
+pow -2.0 -0x1.fffffffffffffffep+63
+pow -2.0 -0x1.fffffffffffffffep+64
+pow -2.0 -0x1.ffffffffffffffffffffffffff8p+105
+pow -2.0 -0x1.ffffffffffffffffffffffffff8p+106
+pow -2.0 -0x1.ffffffffffffffffffffffffffffp+112
+pow -2.0 -0x1.ffffffffffffffffffffffffffffp+113
+pow -2.0 -max
+
+pow -2.0 0xffffff
+pow -2.0 0x1fffffe
+pow -2.0 0x1.fffffffffffffp+52
+pow -2.0 0x1.fffffffffffffp+53
+pow -2.0 0x1.fffffffffffffffep+63
+pow -2.0 0x1.fffffffffffffffep+64
+pow -2.0 0x1.ffffffffffffffffffffffffff8p+105
+pow -2.0 0x1.ffffffffffffffffffffffffff8p+106
+pow -2.0 0x1.ffffffffffffffffffffffffffffp+112
+pow -2.0 0x1.ffffffffffffffffffffffffffffp+113
+pow -2.0 max
+
+pow -max -2
+pow -max -3
+pow -max 2
+pow -max 3
+
+pow -max -0xffffff
+pow -max -0x1fffffe
+pow -max -0x1.fffffffffffffp+52
+pow -max -0x1.fffffffffffffp+53
+pow -max -0x1.fffffffffffffffep+63
+pow -max -0x1.fffffffffffffffep+64
+pow -max -0x1.ffffffffffffffffffffffffff8p+105
+pow -max -0x1.ffffffffffffffffffffffffff8p+106
+pow -max -0x1.ffffffffffffffffffffffffffffp+112
+pow -max -0x1.ffffffffffffffffffffffffffffp+113
+pow -max -max
+
+pow -max 0xffffff
+pow -max 0x1fffffe
+pow -max 0x1.fffffffffffffp+52
+pow -max 0x1.fffffffffffffp+53
+pow -max 0x1.fffffffffffffffep+63
+pow -max 0x1.fffffffffffffffep+64
+pow -max 0x1.ffffffffffffffffffffffffff8p+105
+pow -max 0x1.ffffffffffffffffffffffffff8p+106
+pow -max 0x1.ffffffffffffffffffffffffffffp+112
+pow -max 0x1.ffffffffffffffffffffffffffffp+113
+pow -max max
+
+pow -0.5 126
+pow -0.5 127
+pow -0.5 -126
+pow -0.5 -127
+
+pow -0.5 -0xffffff
+pow -0.5 -0x1fffffe
+pow -0.5 -0x1.fffffffffffffp+52
+pow -0.5 -0x1.fffffffffffffp+53
+pow -0.5 -0x1.fffffffffffffffep+63
+pow -0.5 -0x1.fffffffffffffffep+64
+pow -0.5 -0x1.ffffffffffffffffffffffffff8p+105
+pow -0.5 -0x1.ffffffffffffffffffffffffff8p+106
+pow -0.5 -0x1.ffffffffffffffffffffffffffffp+112
+pow -0.5 -0x1.ffffffffffffffffffffffffffffp+113
+pow -0.5 -max
+
+pow -0.5 0xffffff
+pow -0.5 0x1fffffe
+pow -0.5 0x1.fffffffffffffp+52
+pow -0.5 0x1.fffffffffffffp+53
+pow -0.5 0x1.fffffffffffffffep+63
+pow -0.5 0x1.fffffffffffffffep+64
+pow -0.5 0x1.ffffffffffffffffffffffffff8p+105
+pow -0.5 0x1.ffffffffffffffffffffffffff8p+106
+pow -0.5 0x1.ffffffffffffffffffffffffffffp+112
+pow -0.5 0x1.ffffffffffffffffffffffffffffp+113
+pow -0.5 max
+
+pow -min -2
+pow -min -3
+pow -min 1
+pow -min 2
+pow -min 3
+
+pow -min -0xffffff
+pow -min -0x1fffffe
+pow -min -0x1.fffffffffffffp+52
+pow -min -0x1.fffffffffffffp+53
+pow -min -0x1.fffffffffffffffep+63
+pow -min -0x1.fffffffffffffffep+64
+pow -min -0x1.ffffffffffffffffffffffffff8p+105
+pow -min -0x1.ffffffffffffffffffffffffff8p+106
+pow -min -0x1.ffffffffffffffffffffffffffffp+112
+pow -min -0x1.ffffffffffffffffffffffffffffp+113
+pow -min -max
+
+pow -min 0xffffff
+pow -min 0x1fffffe
+pow -min 0x1.fffffffffffffp+52
+pow -min 0x1.fffffffffffffp+53
+pow -min 0x1.fffffffffffffffep+63
+pow -min 0x1.fffffffffffffffep+64
+pow -min 0x1.ffffffffffffffffffffffffff8p+105
+pow -min 0x1.ffffffffffffffffffffffffff8p+106
+pow -min 0x1.ffffffffffffffffffffffffffffp+112
+pow -min 0x1.ffffffffffffffffffffffffffffp+113
+pow -min max
+
+pow 0x0.ffffffp0 10
+pow 0x0.ffffffp0 100
+pow 0x0.ffffffp0 1000
+pow 0x0.ffffffp0 0x1p24
+pow 0x0.ffffffp0 0x1p30
+pow 0x0.ffffffp0 0x1.234566p30
+pow 0x0.ffffffp0 -10
+pow 0x0.ffffffp0 -100
+pow 0x0.ffffffp0 -1000
+pow 0x0.ffffffp0 -0x1p24
+pow 0x0.ffffffp0 -0x1p30
+pow 0x0.ffffffp0 -0x1.234566p30
+pow 0x1.000002p0 0x1p24
+pow 0x1.000002p0 0x1.234566p29
+pow 0x1.000002p0 -0x1.234566p29
+
+pow 0x0.fffffffffffff8p0 0x1.23456789abcdfp62
+pow 0x0.fffffffffffff8p0 -0x1.23456789abcdfp62
+pow 0x1.0000000000001p0 0x1.23456789abcdfp61
+pow 0x1.0000000000001p0 -0x1.23456789abcdfp61
+
+pow 0x0.ffffffffffffffffp0 0x1.23456789abcdef0ep77
+pow 0x0.ffffffffffffffffp0 -0x1.23456789abcdef0ep77
+pow 0x1.0000000000000002p0 0x1.23456789abcdef0ep76
+pow 0x1.0000000000000002p0 -0x1.23456789abcdef0ep76
+
+pow 0x0.ffffffffffffffffffffffffffff8p0 0x1.23456789abcdef0123456789abcdp126
+pow 0x0.ffffffffffffffffffffffffffff8p0 -0x1.23456789abcdef0123456789abcdp126
+pow 0x1.0000000000000000000000000001p0 0x1.23456789abcdef0123456789abcdp125
+pow 0x1.0000000000000000000000000001p0 -0x1.23456789abcdef0123456789abcdp125
+
+pow 1e4932 0.75
+pow 1e4928 0.75
+pow 1e4924 0.75
+pow 1e4920 0.75
+pow 10.0 4932.0
+pow 10.0 4931.0
+pow 10.0 4930.0
+pow 10.0 4929.0
+pow 10.0 -4931.0
+pow 10.0 -4930.0
+pow 10.0 -4929.0
+pow 1e27 182.0
+pow 1e27 -182.0
+
+pow min_subnorm min_subnorm
+pow min_subnorm -min_subnorm
+pow max min_subnorm
+pow max -min_subnorm
+pow 0.99 min_subnorm
+pow 0.99 -min_subnorm
+pow 1.01 min_subnorm
+pow 1.01 -min_subnorm
+
+pow 2.0 -100000.0
+
+pow 1.0625 1.125
+pow 1.5 1.03125
 
 sin 0
 sin -0

@@ -254,10 +254,31 @@ ldouble: 1
 Test "atan2 (-0.75, -1.0)":
 float: 1
 ifloat: 1
+Test "atan2 (-0x1.effe81f852716ffep-8, -0x7.57d1de0e5124664p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852717p-8, -0x7.57d1ep-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe82p-8, -0x7.57d1d8p-12)":
+float: 1
+ifloat: 1
+Test "atan2 (-0xcp-4, -0x1p+0)":
+float: 1
+ifloat: 1
+Test "atan2 (-0xf.fffffp+124, -0x4p-128)":
+float: 1
+ifloat: 1
 Test "atan2 (-max_value, -min_value)":
 float: 1
 ifloat: 1
 Test "atan2 (0.75, -1.0)":
+float: 1
+ifloat: 1
+Test "atan2 (0x1.64p+0, 0xe.ep-4)":
+float: 1
+ifloat: 1
+Test "atan2 (0xcp-4, -0x1p+0)":
 float: 1
 ifloat: 1
 Test "atan2 (1.390625, 0.9296875)":
@@ -7119,6 +7140,42 @@ ifloat: 1
 Test "hypot (-0.7, 12.4)":
 float: 1
 ifloat: 1
+Test "hypot (-0xb.3333333333338p-4, -0xc.6666666666668p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xb.3333333333338p-4, 0xc.6666666666668p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xb.33333p-4, -0xc.666666666666p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xb.33333p-4, 0xc.666666666666p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xb.33334p-4, -0xc.6666666666668p+0)":
+double: 1
+idouble: 1
+Test "hypot (-0xb.33334p-4, 0xc.6666666666668p+0)":
+double: 1
+idouble: 1
+Test "hypot (-0xc.6666666666668p+0, -0xb.3333333333338p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xc.6666666666668p+0, -0xb.33334p-4)":
+double: 1
+idouble: 1
+Test "hypot (-0xc.6666666666668p+0, 0xb.3333333333338p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xc.6666666666668p+0, 0xb.33334p-4)":
+double: 1
+idouble: 1
+Test "hypot (-0xc.666666666666p+0, -0xb.33333p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xc.666666666666p+0, 0xb.33333p-4)":
+ildouble: 1
+ldouble: 1
 Test "hypot (-12.4, -0.7)":
 float: 1
 ifloat: 1
@@ -7131,6 +7188,54 @@ ifloat: 1
 Test "hypot (0.7, 12.4)":
 float: 1
 ifloat: 1
+Test "hypot (0x1.23456789abcdef02p-500, 0x1.23456789abcdefp-500)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0x1.23456789abcdefp-500, 0x1.23456789abcdef02p-500)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0x1.23456789abcdefp-500, 0x1.23456789abcdfp-500)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0x1.23456789abcdfp-500, 0x1.23456789abcdefp-500)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xb.3333333333338p-4, -0xc.6666666666668p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xb.3333333333338p-4, 0xc.6666666666668p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xb.33333p-4, -0xc.666666666666p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xb.33333p-4, 0xc.666666666666p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xb.33334p-4, -0xc.6666666666668p+0)":
+double: 1
+idouble: 1
+Test "hypot (0xb.33334p-4, 0xc.6666666666668p+0)":
+double: 1
+idouble: 1
+Test "hypot (0xc.6666666666668p+0, -0xb.3333333333338p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xc.6666666666668p+0, -0xb.33334p-4)":
+double: 1
+idouble: 1
+Test "hypot (0xc.6666666666668p+0, 0xb.3333333333338p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xc.6666666666668p+0, 0xb.33334p-4)":
+double: 1
+idouble: 1
+Test "hypot (0xc.666666666666p+0, -0xb.33333p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xc.666666666666p+0, 0xb.33333p-4)":
+ildouble: 1
+ldouble: 1
 Test "hypot (12.4, -0.7)":
 float: 1
 ifloat: 1
@@ -7603,7 +7708,24 @@ ldouble: 1
 Test "pow (0x0.ffffffp0, 0x1p24)":
 float: 1
 ifloat: 1
+Test "pow (0x1.0000000000001p+0, 0x2.468adp+60)":
+ildouble: 1
+ldouble: 1
+Test "pow (0x1.000002p+0, 0x1p+24)":
+float: 1
+ifloat: 1
 Test "pow (0x1.000002p0, 0x1p24)":
+float: 1
+ifloat: 1
+Test "pow (0xf.ffffffffffff8p-4, 0x4.8d15ap+60)":
+ildouble: 1
+ldouble: 1
+Test "pow (0xf.fffffp-4, -0x1p+24)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "pow (0xf.fffffp-4, 0x1p+24)":
 float: 1
 ifloat: 1
 
@@ -7647,6 +7769,25 @@ idouble: 1
 
 # pow_downward
 Test "pow_downward (1.5, 1.03125)":
+float: 1
+ifloat: 1
+
+# pow_tonearest
+Test "pow_tonearest (0x1.0000000000001p+0, 0x2.468adp+60)":
+ildouble: 1
+ldouble: 1
+Test "pow_tonearest (0x1.000002p+0, 0x1p+24)":
+float: 1
+ifloat: 1
+Test "pow_tonearest (0xf.ffffffffffff8p-4, 0x4.8d15ap+60)":
+ildouble: 1
+ldouble: 1
+Test "pow_tonearest (0xf.fffffp-4, -0x1p+24)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "pow_tonearest (0xf.fffffp-4, 0x1p+24)":
 float: 1
 ifloat: 1
 
@@ -10944,6 +11085,8 @@ ldouble: 1
 Function: "atan2":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: "atanh":
 float: 1
@@ -11436,8 +11579,12 @@ ildouble: 1
 ldouble: 1
 
 Function: "hypot":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: "j0":
 double: 2
@@ -11506,6 +11653,12 @@ ldouble: 1
 Function: "pow_downward":
 float: 1
 ifloat: 1
+
+Function: "pow_tonearest":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: "pow_towardzero":
 float: 1

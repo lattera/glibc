@@ -1,3 +1,26 @@
+2013-12-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/auto-libm-test-in: Add tests of atan2, hypot and pow.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (atan2_test_data): Use AUTO_TESTS_ff_f.
+	(hypot_test_data): Likewise.
+	(pow_test_data): Likewise.
+	(pow_tonearest_test_data): Likewise.
+	* math/gen-auto-libm-tests.c (func_calc_method): Add value
+	mpfr_ff_f.
+	(func_calc_desc): Add mpfr_ff_f union field.
+	(FUNC_mpfr_ff_f): New macro.
+	(test_functions): Add atan2, hypot and pow.
+	(special_fill_min): New function.
+	(special_fill_minus_min): Likewise.
+	(special_fill_min_subnorm): Likewise.
+	(special_fill_minus_min_subnorm): Likewise.
+	(special_real_inputs): Add min, -min, min_subnorm and
+	-min_subnorm.
+	(calc_generic_results): Handle mpfr_ff_f.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2013-12-16  Will Newton  <will.newton@linaro.org>
 
 	* manual/memory.texi (Malloc Examples): Mention aligned_alloc.
