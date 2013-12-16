@@ -1,3 +1,8 @@
+2013-12-16  Allan McRae  <allan@archlinux.org>
+
+	* nscd/nscd.service: New file.
+	* nscd/nscd.tmpfiles: New file.
+
 2013-12-14  Ondřej Bílka  <neleai@seznam.cz>
 
 	[BZ #12100]
