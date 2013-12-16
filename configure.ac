@@ -231,6 +231,12 @@ AC_ARG_ENABLE([force-install],
 	      [force_install=yes])
 AC_SUBST(force_install)
 
+AC_ARG_ENABLE([maintainer-mode],
+	      AC_HELP_STRING([--enable-maintainer-mode],
+			     [enable make rules and dependencies not useful (and sometimes confusing) to the casual installer]),
+	      [maintainer=$enableval],
+	      [maintainer=no])
+
 dnl On some platforms we allow dropping compatibility with all kernel
 dnl versions.
 AC_ARG_ENABLE([kernel],
@@ -1004,22 +1010,24 @@ AC_CHECK_PROG_VER(AWK, gawk, --version,
 
 AC_CHECK_TOOL(NM, nm, false)
 
-AC_CHECK_PROGS(AUTOCONF, autoconf, no)
-case "x$AUTOCONF" in
-xno|x|x:) AUTOCONF=no ;;
-*)
-  AC_CACHE_CHECK(dnl
-whether $AUTOCONF${ACFLAGS:+ }$ACFLAGS works, libc_cv_autoconf_works, [dnl
-  if (cd $srcdir; $AUTOCONF $ACFLAGS configure.ac > /dev/null 2>&1); then
-    libc_cv_autoconf_works=yes
-  else
-    libc_cv_autoconf_works=no
-  fi])
-  test $libc_cv_autoconf_works = yes || AUTOCONF=no
-  ;;
-esac
-if test "x$AUTOCONF" = xno; then
-  aux_missing="$aux_missing autoconf"
+if test "x$maintainer" = "xyes"; then
+  AC_CHECK_PROGS(AUTOCONF, autoconf, no)
+  case "x$AUTOCONF" in
+  xno|x|x:) AUTOCONF=no ;;
+  *)
+    AC_CACHE_CHECK(dnl
+  whether $AUTOCONF${ACFLAGS:+ }$ACFLAGS works, libc_cv_autoconf_works, [dnl
+    if (cd $srcdir; $AUTOCONF $ACFLAGS configure.ac > /dev/null 2>&1); then
+      libc_cv_autoconf_works=yes
+    else
+      libc_cv_autoconf_works=no
+    fi])
+    test $libc_cv_autoconf_works = yes || AUTOCONF=no
+    ;;
+  esac
+  if test "x$AUTOCONF" = xno; then
+    aux_missing="$aux_missing autoconf"
+  fi
 fi
 
 test -n "$critic_missing" && AC_MSG_ERROR([

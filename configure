@@ -747,6 +747,7 @@ enable_hidden_plt
 enable_bind_now
 enable_static_nss
 enable_force_install
+enable_maintainer_mode
 enable_kernel
 enable_all_warnings
 enable_multi_arch
@@ -1408,6 +1409,9 @@ Optional Features:
   --enable-static-nss     build static NSS modules [default=no]
   --disable-force-install don't force installation of files from this package,
                           even if they are older than the installed files
+  --enable-maintainer-mode
+                          enable make rules and dependencies not useful (and
+                          sometimes confusing) to the casual installer
   --enable-kernel=VERSION compile for compatibility with kernel not older than
                           VERSION
   --enable-all-warnings   enable all useful warnings gcc can issue
@@ -3530,6 +3534,14 @@ fi
 
 
 
+# Check whether --enable-maintainer-mode was given.
+if test "${enable_maintainer_mode+set}" = set; then :
+  enableval=$enable_maintainer_mode; maintainer=$enableval
+else
+  maintainer=no
+fi
+
+
 # Check whether --enable-kernel was given.
 if test "${enable_kernel+set}" = set; then :
   enableval=$enable_kernel; minimum_kernel=$enableval
@@ -5120,7 +5132,8 @@ else
 fi
 
 
-for ac_prog in autoconf
+if test "x$maintainer" = "xyes"; then
+  for ac_prog in autoconf
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -5163,27 +5176,28 @@ fi
 done
 test -n "$AUTOCONF" || AUTOCONF="no"
 
-case "x$AUTOCONF" in
-xno|x|x:) AUTOCONF=no ;;
-*)
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $AUTOCONF${ACFLAGS:+ }$ACFLAGS works" >&5
-$as_echo_n "checking whether $AUTOCONF${ACFLAGS:+ }$ACFLAGS works... " >&6; }
+  case "x$AUTOCONF" in
+  xno|x|x:) AUTOCONF=no ;;
+  *)
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking   whether $AUTOCONF${ACFLAGS:+ }$ACFLAGS works" >&5
+$as_echo_n "checking   whether $AUTOCONF${ACFLAGS:+ }$ACFLAGS works... " >&6; }
 if ${libc_cv_autoconf_works+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-    if (cd $srcdir; $AUTOCONF $ACFLAGS configure.ac > /dev/null 2>&1); then
-    libc_cv_autoconf_works=yes
-  else
-    libc_cv_autoconf_works=no
-  fi
+      if (cd $srcdir; $AUTOCONF $ACFLAGS configure.ac > /dev/null 2>&1); then
+      libc_cv_autoconf_works=yes
+    else
+      libc_cv_autoconf_works=no
+    fi
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_autoconf_works" >&5
 $as_echo "$libc_cv_autoconf_works" >&6; }
-  test $libc_cv_autoconf_works = yes || AUTOCONF=no
-  ;;
-esac
-if test "x$AUTOCONF" = xno; then
-  aux_missing="$aux_missing autoconf"
+    test $libc_cv_autoconf_works = yes || AUTOCONF=no
+    ;;
+  esac
+  if test "x$AUTOCONF" = xno; then
+    aux_missing="$aux_missing autoconf"
+  fi
 fi
 
 test -n "$critic_missing" && as_fn_error $? "

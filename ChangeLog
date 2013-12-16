@@ -1,5 +1,10 @@
 2013-12-16  Allan McRae  <allan@archlinux.org>
 
+	[BZ #14120]
+	* configure.ac: Added --enable-maintainer-mode. Check for
+	autoconf when enabled.
+	* configure: Regenerated.
+
 	* nscd/nscd.service: New file.
 	* nscd/nscd.tmpfiles: New file.
 
