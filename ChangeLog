@@ -1,5 +1,8 @@
 2013-12-16  Allan McRae  <allan@archlinux.org>
 
+	* configure.ac: Set AUTOCONF when maintainer-mode is not used.
+	* configure: Regenerated.
+
 	* sysdeps/x86_64/multiarch/ifunc-impl-list.c: Update file name.
 
 	[BZ #14120]

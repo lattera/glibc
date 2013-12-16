@@ -5198,6 +5198,8 @@ $as_echo "$libc_cv_autoconf_works" >&6; }
   if test "x$AUTOCONF" = xno; then
     aux_missing="$aux_missing autoconf"
   fi
+else
+  AUTOCONF=no
 fi
 
 test -n "$critic_missing" && as_fn_error $? "

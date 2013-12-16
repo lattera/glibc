@@ -1028,6 +1028,8 @@ if test "x$maintainer" = "xyes"; then
   if test "x$AUTOCONF" = xno; then
     aux_missing="$aux_missing autoconf"
   fi
+else
+  AUTOCONF=no
 fi
 
 test -n "$critic_missing" && AC_MSG_ERROR([
