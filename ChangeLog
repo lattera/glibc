@@ -1,3 +1,13 @@
+2013-12-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (TAYLOR_SINCOS): Rename to
+	TAYLOR_SIN.
+	(__sin): Adjust.
+	(__cos): Likewise.
+	(sloww): Use mynumber union.  Expand ternary operator into
+	if-else statements.
+	(cslow): use mynumber union.
+
 2013-12-16  Allan McRae  <allan@archlinux.org>
 
 	* configure.ac: Set AUTOCONF when maintainer-mode is not used.

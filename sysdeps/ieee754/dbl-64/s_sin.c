@@ -67,7 +67,7 @@
 
    The constants s1, s2, s3, etc. are pre-computed values of 1/3!, 1/5! and so
    on.  The result is returned to LHS and correction in COR.  */
-#define TAYLOR_SINCOS(xx, a, da, cor) \
+#define TAYLOR_SIN(xx, a, da, cor) \
 ({									      \
   double t = ((POLYNOMIAL (xx)  * (a) - 0.5 * (da))  * (xx) + (da));	      \
   double res = (a) + t;							      \
@@ -280,7 +280,7 @@ __sin (double x)
 	  if (xx < 0.01588)
 	    {
 	      /* Taylor series.  */
-	      res = TAYLOR_SINCOS (xx, a, da, cor);
+	      res = TAYLOR_SIN (xx, a, da, cor);
 	      cor = (cor > 0) ? 1.02 * cor + eps : 1.02 * cor - eps;
 	      retval = (res == res + cor) ? res : sloww (a, da, x);
 	    }
@@ -367,7 +367,7 @@ __sin (double x)
 	  if (xx < 0.01588)
 	    {
 	      /* Taylor series.  */
-	      res = TAYLOR_SINCOS (xx, a, da, cor);
+	      res = TAYLOR_SIN (xx, a, da, cor);
 	      cor = (cor > 0) ? 1.02 * cor + eps : 1.02 * cor - eps;
 	      retval = (res == res + cor) ? res : bsloww (a, da, x, n);
 	    }
@@ -488,7 +488,7 @@ __cos (double x)
       xx = a * a;
       if (xx < 0.01588)
 	{
-	  res = TAYLOR_SINCOS (xx, a, da, cor);
+	  res = TAYLOR_SIN (xx, a, da, cor);
 	  cor = (cor > 0) ? 1.02 * cor + 1.0e-31 : 1.02 * cor - 1.0e-31;
 	  retval = (res == res + cor) ? res : csloww (a, da, x);
 	}
@@ -547,7 +547,7 @@ __cos (double x)
 	    }
 	  if (xx < 0.01588)
 	    {
-	      res = TAYLOR_SINCOS (xx, a, da, cor);
+	      res = TAYLOR_SIN (xx, a, da, cor);
 	      cor = (cor > 0) ? 1.02 * cor + eps : 1.02 * cor - eps;
 	      retval = (res == res + cor) ? res : csloww (a, da, x);
 	    }
@@ -632,7 +632,7 @@ __cos (double x)
 	    }
 	  if (xx < 0.01588)
 	    {
-	      res = TAYLOR_SINCOS (xx, a, da, cor);
+	      res = TAYLOR_SIN (xx, a, da, cor);
 	      cor = (cor > 0) ? 1.02 * cor + eps : 1.02 * cor - eps;
 	      retval = (res == res + cor) ? res : bsloww (a, da, x, n);
 	    }
@@ -830,17 +830,14 @@ SECTION
 sloww (double x, double dx, double orig)
 {
   double y, t, res, cor, w[2], a, da, xn;
-  union
-  {
-    int4 i[2];
-    double x;
-  } v;
+  mynumber v;
   int4 n;
   res = TAYLOR_SLOW (x, dx, cor);
-  cor =
-    (cor >
-     0) ? 1.0005 * cor + ABS (orig) * 3.1e-30 : 1.0005 * cor -
-    ABS (orig) * 3.1e-30;
+  if (cor > 0)
+    cor = 1.0005 * cor + ABS (orig) * 3.1e-30;
+  else
+    cor = 1.0005 * cor - ABS (orig) * 3.1e-30;
+
   if (res == res + cor)
     return res;
   else
@@ -1183,11 +1180,7 @@ SECTION
 csloww (double x, double dx, double orig)
 {
   double y, t, res, cor, w[2], a, da, xn;
-  union
-  {
-    int4 i[2];
-    double x;
-  } v;
+  mynumber v;
   int4 n;
 
   /* Taylor series */
