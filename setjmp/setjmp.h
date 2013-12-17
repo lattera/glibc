@@ -58,20 +58,13 @@ __END_NAMESPACE_STD
    This is the internal name for `sigsetjmp'.  */
 extern int __sigsetjmp (struct __jmp_buf_tag __env[1], int __savemask) __THROWNL;
 
-#ifndef	__FAVOR_BSD
 /* Store the calling environment in ENV, not saving the signal mask.
    Return 0.  */
 extern int _setjmp (struct __jmp_buf_tag __env[1]) __THROWNL;
 
 /* Do not save the signal mask.  This is equivalent to the `_setjmp'
    BSD function.  */
-# define setjmp(env)	_setjmp (env)
-#else
-/* We are in 4.3 BSD-compatibility mode in which `setjmp'
-   saves the signal mask like `sigsetjmp (ENV, 1)'.  We have to
-   define a macro since ISO C says `setjmp' is one.  */
-# define setjmp(env)	setjmp (env)
-#endif /* Favor BSD.  */
+#define setjmp(env)	_setjmp (env)
 
 
 __BEGIN_NAMESPACE_STD

@@ -80,7 +80,6 @@
    __USE_GNU		Define GNU extensions.
    __USE_REENTRANT	Define reentrant/thread-safe *_r functions.
    __USE_FORTIFY_LEVEL	Additional security measures used, according to level.
-   __FAVOR_BSD		Favor 4.3BSD things in cases of conflict.
 
    The macros `__GNU_LIBRARY__', `__GLIBC__', and `__GLIBC_MINOR__' are
    defined by this file unconditionally.  `__GNU_LIBRARY__' is provided
@@ -120,7 +119,6 @@
 #undef	__USE_GNU
 #undef	__USE_REENTRANT
 #undef	__USE_FORTIFY_LEVEL
-#undef	__FAVOR_BSD
 #undef	__KERNEL_STRICT_NAMES
 
 /* Suppress kernel-name space pollution unless user expressedly asks
@@ -143,13 +141,6 @@
 # define __GNUC_PREREQ(maj, min) 0
 #endif
 
-
-/* If _BSD_SOURCE was defined by the user, favor BSD over POSIX.  */
-#if defined _BSD_SOURCE && \
-    !(defined _POSIX_SOURCE || defined _POSIX_C_SOURCE || \
-      defined _XOPEN_SOURCE || defined _GNU_SOURCE || defined _SVID_SOURCE)
-# define __FAVOR_BSD	1
-#endif
 
 /* If _GNU_SOURCE was defined by the user, turn on all the other features.  */
 #ifdef _GNU_SOURCE

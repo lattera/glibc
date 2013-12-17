@@ -52,26 +52,27 @@
 
 
 /* UDP header as specified by RFC 768, August 1980. */
-#ifdef __FAVOR_BSD
 
 struct udphdr
 {
-  u_int16_t uh_sport;		/* source port */
-  u_int16_t uh_dport;		/* destination port */
-  u_int16_t uh_ulen;		/* udp length */
-  u_int16_t uh_sum;		/* udp checksum */
+  __extension__ union
+  {
+    struct
+    {
+      u_int16_t uh_sport;		/* source port */
+      u_int16_t uh_dport;		/* destination port */
+      u_int16_t uh_ulen;		/* udp length */
+      u_int16_t uh_sum;		/* udp checksum */
+    };
+    struct
+    {
+      u_int16_t source;
+      u_int16_t dest;
+      u_int16_t len;
+      u_int16_t check;
+    };
+  };
 };
-
-#else
-
-struct udphdr
-{
-  u_int16_t source;
-  u_int16_t dest;
-  u_int16_t len;
-  u_int16_t check;
-};
-#endif
 
 /* UDP socket options */
 #define UDP_CORK	1	/* Never send partially complete segments.  */

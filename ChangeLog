@@ -1,3 +1,20 @@
+2013-12-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/features.h (__FAVOR_BSD): Do not define.
+	* manual/creature.texi (_BSD_SOURCE): Do not document as enabling
+	features conflicting with POSIX.
+	(_GNU_SOURCE): Do not mention interaction with _BSD_SOURCE.
+	(_BSD_SOURCE): Remove description of not being a subset of other
+	feature test macros.
+	* manual/job.texi (getpgrp): Do not document BSD version.
+	(getpgid): Do not document by reference to BSD getpgrp.
+	* posix/unistd.h [__FAVOR_BSD]: Remove conditional code.
+	* setjmp/setjmp.h [__FAVOR_BSD]: Likewise.
+	* signal/signal.h [__FAVOR_BSD]: Likewise.
+	* sysdeps/gnu/netinet/tcp.h (struct tcphdr): Use anonymous unions
+	instead of making contents conditional on [__FAVOR_BSD].
+	* sysdeps/gnu/netinet/udp.h (struct udphdr): Likewise.
+
 2013-12-17  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Update.

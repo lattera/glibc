@@ -100,6 +100,9 @@ Version 2.19
 * The soft-float powerpc port now supports e500 processors.
 
 * Support for STT_GNU_IFUNC symbols added for ppc32/power4+ and ppc64.
+
+* The _BSD_SOURCE feature test macro no longer enables BSD interfaces that
+  conflict with POSIX.
 
 Version 2.18
 

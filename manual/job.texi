@@ -1118,39 +1118,18 @@ from the calling process.
 @end table
 @end deftypefun
 
-The @code{getpgrp} function has two definitions: one derived from BSD
-Unix, and one from the POSIX.1 standard.  The feature test macros you
-have selected (@pxref{Feature Test Macros}) determine which definition
-you get.  Specifically, you get the BSD version if you define
-@code{_BSD_SOURCE}; otherwise, you get the POSIX version if you define
-@code{_POSIX_SOURCE} or @code{_GNU_SOURCE}.  Programs written for old
-BSD systems will not include @file{unistd.h}, which defines
-@code{getpgrp} specially under @code{_BSD_SOURCE}.  You must link such
-programs with the @code{-lbsd-compat} option to get the BSD definition.@refill
-@pindex -lbsd-compat
-@pindex bsd-compat
-@cindex BSD compatibility library
+@comment unistd.h
+@comment POSIX.1
+@deftypefun pid_t getpgrp (void)
+The @code{getpgrp} function returns the process group ID of
+the calling process.
+@end deftypefun
 
 @comment unistd.h
 @comment POSIX.1
-@deftypefn {POSIX.1 Function} pid_t getpgrp (void)
-The POSIX.1 definition of @code{getpgrp} returns the process group ID of
-the calling process.
-@end deftypefn
+@deftypefun int getpgid (pid_t @var{pid})
 
-@comment unistd.h
-@comment BSD
-@deftypefn {BSD Function} pid_t getpgrp (pid_t @var{pid})
-The BSD definition of @code{getpgrp} returns the process group ID of the
-process @var{pid}.  You can supply a value of @code{0} for the @var{pid}
-argument to get information about the calling process.
-@end deftypefn
-
-@comment unistd.h
-@comment SVID
-@deftypefn {System V Function} int getpgid (pid_t @var{pid})
-
-@code{getpgid} is the same as the BSD function @code{getpgrp}.  It
+The @code{getpgid} function
 returns the process group ID of the process @var{pid}.  You can supply a
 value of @code{0} for the @var{pid} argument to get information about
 the calling process.
@@ -1166,7 +1145,7 @@ different sessions, and the implementation doesn't allow to access the
 process group ID of the process with ID @var{pid} from the calling
 process.
 @end table
-@end deftypefn
+@end deftypefun
 
 @comment unistd.h
 @comment POSIX.1

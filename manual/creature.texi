@@ -77,24 +77,6 @@ edition is made available.
 @defvr Macro _BSD_SOURCE
 If you define this macro, functionality derived from 4.3 BSD Unix is
 included as well as the @w{ISO C}, POSIX.1, and POSIX.2 material.
-
-Some of the features derived from 4.3 BSD Unix conflict with the
-corresponding features specified by the POSIX.1 standard.  If this
-macro is defined, the 4.3 BSD definitions take precedence over the
-POSIX definitions.
-
-Due to the nature of some of the conflicts between 4.3 BSD and POSIX.1,
-you need to use a special @dfn{BSD compatibility library} when linking
-programs compiled for BSD compatibility.  This is because some functions
-must be defined in two different ways, one of them in the normal C
-library, and one of them in the compatibility library.  If your program
-defines @code{_BSD_SOURCE}, you must give the option @samp{-lbsd-compat}
-to the compiler or linker when linking the program, to tell it to find
-functions in this special compatibility library before looking for them in
-the normal C library.
-@pindex -lbsd-compat
-@pindex bsd-compat
-@cindex BSD compatibility library.
 @end defvr
 
 @comment (none)
@@ -204,21 +186,6 @@ If you define this macro, everything is included: @w{ISO C89}, @w{ISO
 C99}, POSIX.1, POSIX.2, BSD, SVID, X/Open, LFS, and GNU extensions.  In
 the cases where POSIX.1 conflicts with BSD, the POSIX definitions take
 precedence.
-
-If you want to get the full effect of @code{_GNU_SOURCE} but make the
-BSD definitions take precedence over the POSIX definitions, use this
-sequence of definitions:
-
-@smallexample
-#define _GNU_SOURCE
-#define _BSD_SOURCE
-#define _SVID_SOURCE
-@end smallexample
-
-Note that if you do this, you must link your program with the BSD
-compatibility library by passing the @samp{-lbsd-compat} option to the
-compiler or linker.  @strong{NB:} If you forget to do this, you may
-get very strange errors at run time.
 @end defvr
 
 @comment (none)
@@ -248,11 +215,3 @@ those features.  For example, if you define @code{_POSIX_C_SOURCE}, then
 defining @code{_POSIX_SOURCE} as well has no effect.  Likewise, if you
 define @code{_GNU_SOURCE}, then defining either @code{_POSIX_SOURCE} or
 @code{_POSIX_C_SOURCE} or @code{_SVID_SOURCE} as well has no effect.
-
-Note, however, that the features of @code{_BSD_SOURCE} are not a subset of
-any of the other feature test macros supported.  This is because it defines
-BSD features that take precedence over the POSIX features that are
-requested by the other macros.  For this reason, defining
-@code{_BSD_SOURCE} in addition to the other feature test macros does have
-an effect: it causes the BSD features to take priority over the conflicting
-POSIX features.
