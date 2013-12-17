@@ -1,3 +1,8 @@
+2013-12-17  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* sysdeps/ieee754/dbl-64/Makefile (CFLAGS-e_sqrt.c): Add
+	$(config-cflags-nofma).
+
 2013-12-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Mark some hypot tests no-test-inline.
