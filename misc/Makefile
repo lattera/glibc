@@ -72,7 +72,7 @@ generated := tst-error1.mtrace tst-error1-mem
 include ../Makeconfig
 
 aux := init-misc
-install-lib := libbsd-compat.a libg.a
+install-lib := libg.a
 gpl2lgpl := error.c error.h
 
 tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt tst-mntent tst-hsearch \
@@ -100,7 +100,6 @@ CFLAGS-tst-tsearch.c = $(stack-align-test-flags)
 
 include ../Rules
 
-$(objpfx)libbsd-compat.a: $(dep-dummy-lib); $(make-dummy-lib)
 $(objpfx)libg.a: $(dep-dummy-lib); $(make-dummy-lib)
 
 ifeq ($(build-shared),yes)

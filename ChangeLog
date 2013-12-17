@@ -1,5 +1,8 @@
 2013-12-17  Joseph Myers  <joseph@codesourcery.com>
 
+	* misc/Makefile (install-lib): Remove libbsd-compat.a.
+	($(objpfx)libbsd-compat.a): Remove rule.
+
 	* include/features.h (__FAVOR_BSD): Do not define.
 	* manual/creature.texi (_BSD_SOURCE): Do not document as enabling
 	features conflicting with POSIX.
