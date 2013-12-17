@@ -1,3 +1,7 @@
+2013-12-17  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* sysdeps/aarch64/libm-test-ulps: Remove sqrt.
+
 2013-12-11  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
 	* sysdeps/aarch64/libm-test-ulps: Regenerate.
