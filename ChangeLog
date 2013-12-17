@@ -1,3 +1,19 @@
+2013-12-17  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16316]
+	[BZ #16330]
+	* sysdeps/ieee754/dbl-64/e_hypot.c (__ieee754_hypot): Update
+	values of ha and hb and sort them after adjusting subnormal
+	arguments.
+	* sysdeps/ieee754/ldbl-128/e_hypotl.c (__ieee754_hypotl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-96/e_hypotl.c (__ieee754_hypotl): Update
+	values of ea and eb and sort them after adjusting subnormal
+	arguments.
+	* math/auto-libm-test-in: Do not expect some hypot tests of
+	subnormals to fail.  Add more hypot tests.
+	* math/auto-libm-test-out: Regenerated.
+
 2013-12-16  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	[BZ #13304]

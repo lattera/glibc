@@ -282,6 +282,10 @@ expm1 100000.0
 expm1 max
 expm1 -max
 
+hypot 0 0
+hypot 0 -0
+hypot -0 0
+hypot -0 -0
 # hypot (x,y) == hypot (+-x, +-y).
 hypot 0.7 12.4
 hypot -0.7 12.4
@@ -307,9 +311,15 @@ hypot 0x1p+0 0x0.3ep-1022 no-test-inline:dbl-64
 hypot 0x3p16381 0x4p16381 no-test-inline
 hypot 0x1p-149 0x1p-149
 hypot 0x1p-1074 0x1p-1074
-# Bug 16316: hypot broken for some subnormal arguments.
-hypot 0x1p-16445 0x1p-16445 no-test-inline xfail:ldbl-96-intel xfail:ldbl-96-m68k
-hypot 0x1p-16494 0x1p-16494 no-test-inline xfail:ldbl-96-intel xfail:ldbl-96-m68k
+hypot 0x1p-16445 0x1p-16445 no-test-inline
+hypot 0x1p-16494 0x1p-16494 no-test-inline
+hypot 0x0.fffffep-126 0x0.fp-127
+hypot 0x0.fffffep-126 0x0.fp-130
+hypot 0x0.fffffffffffffp-1022 0x0.fp-1023
+hypot 0x0.fffffffffffffp-1022 0x0.fp-1026
+hypot 0x0.ffffffp-16382 0x0.fp-16383
+hypot 0x0.ffffffp-16382 0x0.fp-16386
+hypot 0 min_subnorm
 
 j0 -1.0
 j0 0.0

@@ -102,6 +102,17 @@ __ieee754_hypot (double x, double y)
 	  b *= t1;
 	  a *= t1;
 	  k -= 1022;
+	  GET_HIGH_WORD (ha, a);
+	  GET_HIGH_WORD (hb, b);
+	  if (hb > ha)
+	    {
+	      t1 = a;
+	      a = b;
+	      b = t1;
+	      j = ha;
+	      ha = hb;
+	      hb = j;
+	    }
 	}
       else                      /* scale a and b by 2^600 */
 	{

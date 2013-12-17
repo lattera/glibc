@@ -89,6 +89,17 @@ __ieee754_hypotl(long double x, long double y)
 		b *= t1;
 		a *= t1;
 		k -= 16382;
+		GET_LDOUBLE_MSW64 (ha, a);
+		GET_LDOUBLE_MSW64 (hb, b);
+		if (hb > ha)
+		  {
+		    t1 = a;
+		    a = b;
+		    b = t1;
+		    j = ha;
+		    ha = hb;
+		    hb = j;
+		  }
 	    } else {		/* scale a and b by 2^9600 */
 		ha += 0x2580000000000000LL;	/* a *= 2^9600 */
 		hb += 0x2580000000000000LL;	/* b *= 2^9600 */

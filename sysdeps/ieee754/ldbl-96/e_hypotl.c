@@ -89,6 +89,17 @@ long double __ieee754_hypotl(long double x, long double y)
 		b *= t1;
 		a *= t1;
 		k -= 16382;
+		GET_LDOUBLE_EXP (ea, a);
+		GET_LDOUBLE_EXP (eb, b);
+		if (eb > ea)
+		  {
+		    t1 = a;
+		    a = b;
+		    b = t1;
+		    j = ea;
+		    ea = eb;
+		    eb = j;
+		  }
 	    } else {		/* scale a and b by 2^9600 */
 		ea += 0x2580;	/* a *= 2^9600 */
 		eb += 0x2580;	/* b *= 2^9600 */
