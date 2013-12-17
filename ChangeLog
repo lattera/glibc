@@ -1,3 +1,8 @@
+2013-12-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/bsd/bsd4.4/bits/errno.h: Remove file.
+	* sysdeps/unix/bsd/bsd4.4/bits/ioctls.h: Likewise.
+
 2013-12-17  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Support TZ transition times < 00:00:00.
