@@ -1,5 +1,33 @@
 2013-12-17  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/bsd/bits/posix_opt.h: Remove file.
+	* sysdeps/unix/bsd/bits/stat.h: Likewise.
+	* sysdeps/unix/bsd/bsd4.4/freebsd/bits/environments.h: Likewise.
+	* sysdeps/unix/bsd/bsd4.4/freebsd/bits/typesizes.h: Likewise.
+	* sysdeps/unix/bsd/bsd4.4/freebsd/sys/sysmacros.h: Likewise.
+	* sysdeps/unix/bsd/bsdstat.h: Likewise.
+	* sysdeps/unix/bsd/clock.c: Likewise.
+	* sysdeps/unix/bsd/i386/vfork.S: Likewise.
+	* sysdeps/unix/bsd/i386/wait3.S: Likewise.
+	* sysdeps/unix/bsd/init-posix.c: Likewise.
+	* sysdeps/unix/bsd/poll.c: Likewise.
+	* sysdeps/unix/bsd/ptsname.c: Likewise.
+	* sysdeps/unix/bsd/seekdir.c: Likewise.
+	* sysdeps/unix/bsd/setegid.c: Likewise.
+	* sysdeps/unix/bsd/seteuid.c: Likewise.
+	* sysdeps/unix/bsd/setgid.c: Likewise.
+	* sysdeps/unix/bsd/setrgid.c: Likewise.
+	* sysdeps/unix/bsd/setruid.c: Likewise.
+	* sysdeps/unix/bsd/setsid.c: Likewise.
+	* sysdeps/unix/bsd/setuid.c: Likewise.
+	* sysdeps/unix/bsd/sigaction.c: Likewise.
+	* sysdeps/unix/bsd/sigprocmask.c: Likewise.
+	* sysdeps/unix/bsd/sigsuspend.c: Likewise.
+	* sysdeps/unix/bsd/sys/reboot.h: Likewise.
+	* sysdeps/unix/bsd/telldir.c: Likewise.
+	* sysdeps/unix/bsd/times.c: Likewise.
+	* sysdeps/unix/bsd/usleep.c: Likewise.
+
 	* misc/Makefile (install-lib): Remove libbsd-compat.a.
 	($(objpfx)libbsd-compat.a): Remove rule.
 
