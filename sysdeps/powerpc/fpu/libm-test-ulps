@@ -433,6 +433,203 @@ ldouble: 1
 Test "atan2 (-0.75, -1.0)":
 float: 1
 ifloat: 1
+Test "atan2 (-0x1.effe81f852716ffc0f3eeb1ac28p-8, -0x7.57d1d8p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716ffc0f3eeb1ac28p-8, -0x7.57d1de0e51244p-12)":
+ildouble: 2
+ldouble: 2
+Test "atan2 (-0x1.effe81f852716ffc0f3eeb1ac28p-8, -0x7.57d1de0e51246640cc2340ca48p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716ffc0f3eeb1ac28p-8, -0x7.57d1de0e51246640cc2340ca4ap-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716ffc0f3eeb1ac28p-8, -0x7.57d1de0e51246648p-12)":
+ildouble: 2
+ldouble: 2
+Test "atan2 (-0x1.effe81f852716ffc0f3eeb1ac28p-8, -0x7.57d1de0e5124664p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716ffc0f3eeb1ac28p-8, -0x7.57d1de0e51248p-12)":
+ildouble: 2
+ldouble: 2
+Test "atan2 (-0x1.effe81f852716ffc0f3eeb1ac28p-8, -0x7.57d1ep-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716ffc0f3eeb1ac3p-8, -0x7.57d1d8p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716ffc0f3eeb1ac3p-8, -0x7.57d1de0e51244p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716ffc0f3eeb1ac3p-8, -0x7.57d1de0e51246640cc2340ca48p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716ffc0f3eeb1ac3p-8, -0x7.57d1de0e51246640cc2340ca4ap-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716ffc0f3eeb1ac3p-8, -0x7.57d1de0e51246648p-12)":
+ildouble: 2
+ldouble: 2
+Test "atan2 (-0x1.effe81f852716ffc0f3eeb1ac3p-8, -0x7.57d1de0e5124664p-12)":
+ildouble: 2
+ldouble: 2
+Test "atan2 (-0x1.effe81f852716ffc0f3eeb1ac3p-8, -0x7.57d1de0e51248p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716ffc0f3eeb1ac3p-8, -0x7.57d1ep-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716ffcp-8, -0x7.57d1d8p-12)":
+ildouble: 2
+ldouble: 2
+Test "atan2 (-0x1.effe81f852716ffcp-8, -0x7.57d1de0e51244p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716ffcp-8, -0x7.57d1de0e51246640cc2340ca48p-12)":
+ildouble: 2
+ldouble: 2
+Test "atan2 (-0x1.effe81f852716ffcp-8, -0x7.57d1de0e51246640cc2340ca4ap-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716ffcp-8, -0x7.57d1de0e51246648p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716ffcp-8, -0x7.57d1de0e5124664p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716ffcp-8, -0x7.57d1de0e51248p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716ffcp-8, -0x7.57d1ep-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716ffep-8, -0x7.57d1d8p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716ffep-8, -0x7.57d1de0e51244p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716ffep-8, -0x7.57d1de0e51246640cc2340ca48p-12)":
+ildouble: 2
+ldouble: 2
+Test "atan2 (-0x1.effe81f852716ffep-8, -0x7.57d1de0e51246640cc2340ca4ap-12)":
+ildouble: 2
+ldouble: 2
+Test "atan2 (-0x1.effe81f852716ffep-8, -0x7.57d1de0e51246648p-12)":
+ildouble: 2
+ldouble: 2
+Test "atan2 (-0x1.effe81f852716ffep-8, -0x7.57d1de0e5124664p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716ffep-8, -0x7.57d1de0e51248p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716ffep-8, -0x7.57d1ep-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716p-8, -0x7.57d1d8p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716p-8, -0x7.57d1de0e51244p-12)":
+ildouble: 2
+ldouble: 2
+Test "atan2 (-0x1.effe81f852716p-8, -0x7.57d1de0e51246640cc2340ca48p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716p-8, -0x7.57d1de0e51246640cc2340ca4ap-12)":
+ildouble: 2
+ldouble: 2
+Test "atan2 (-0x1.effe81f852716p-8, -0x7.57d1de0e51246648p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716p-8, -0x7.57d1de0e5124664p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852716p-8, -0x7.57d1de0e51248p-12)":
+ildouble: 2
+ldouble: 2
+Test "atan2 (-0x1.effe81f852716p-8, -0x7.57d1ep-12)":
+ildouble: 2
+ldouble: 2
+Test "atan2 (-0x1.effe81f852717p-8, -0x7.57d1d8p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852717p-8, -0x7.57d1de0e51244p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852717p-8, -0x7.57d1de0e51246640cc2340ca48p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852717p-8, -0x7.57d1de0e51246640cc2340ca4ap-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852717p-8, -0x7.57d1de0e51246648p-12)":
+ildouble: 2
+ldouble: 2
+Test "atan2 (-0x1.effe81f852717p-8, -0x7.57d1de0e5124664p-12)":
+ildouble: 2
+ldouble: 2
+Test "atan2 (-0x1.effe81f852717p-8, -0x7.57d1de0e51248p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe81f852717p-8, -0x7.57d1ep-12)":
+ildouble: 2
+ldouble: 2
+Test "atan2 (-0x1.effe82p-8, -0x7.57d1d8p-12)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "atan2 (-0x1.effe82p-8, -0x7.57d1de0e51244p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe82p-8, -0x7.57d1de0e51246640cc2340ca48p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe82p-8, -0x7.57d1de0e51246640cc2340ca4ap-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe82p-8, -0x7.57d1de0e5124664p-12)":
+ildouble: 2
+ldouble: 2
+Test "atan2 (-0x1.effe82p-8, -0x7.57d1de0e51248p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe82p-8, -0x7.57d1ep-12)":
+ildouble: 2
+ldouble: 2
+Test "atan2 (-0x1.effe8p-8, -0x7.57d1d8p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe8p-8, -0x7.57d1de0e51244p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe8p-8, -0x7.57d1de0e51246640cc2340ca48p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe8p-8, -0x7.57d1de0e51246640cc2340ca4ap-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe8p-8, -0x7.57d1de0e51246648p-12)":
+ildouble: 2
+ldouble: 2
+Test "atan2 (-0x1.effe8p-8, -0x7.57d1de0e5124664p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe8p-8, -0x7.57d1de0e51248p-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0x1.effe8p-8, -0x7.57d1ep-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (-0xcp-4, -0x1p+0)":
+float: 1
+ifloat: 1
+Test "atan2 (-0xf.fffffp+124, -0x4p-128)":
+float: 1
+ifloat: 1
 Test "atan2 (-inf, -inf)":
 ildouble: 1
 ldouble: 1
@@ -442,6 +639,23 @@ ifloat: 1
 Test "atan2 (0.75, -1.0)":
 float: 1
 ifloat: 1
+Test "atan2 (0x1.64p+0, 0xe.ep-4)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "atan2 (0x6.4p-4, 0x1.30164840e1719f7ep-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (0x6.4p-4, 0x1.30164ap-12)":
+ildouble: 1
+ldouble: 1
+Test "atan2 (0xcp-4, -0x1p+0)":
+float: 1
+ifloat: 1
+Test "atan2 (0xf.ffffffffffff8p+1020, 0xf.ffffffffffffbffffffffffffcp+1020)":
+ildouble: 1
+ldouble: 1
 Test "atan2 (1.390625, 0.9296875)":
 float: 1
 ifloat: 1
@@ -7128,6 +7342,78 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "hypot (-0xb.33333333333333333333333334p-4, -0xc.66666666666666666666666668p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xb.33333333333333333333333334p-4, 0xc.66666666666666666666666668p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xb.3333333333333333333333333p-4, -0xc.66666666666666666666666668p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xb.3333333333333333333333333p-4, 0xc.66666666666666666666666668p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xb.333333333333334p-4, -0xc.666666666666667p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xb.333333333333334p-4, -0xc.66666p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xb.333333333333334p-4, 0xc.666666666666667p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xb.333333333333334p-4, 0xc.66666p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xb.333333333333p-4, -0xc.6666666666668p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xb.333333333333p-4, 0xc.6666666666668p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xb.33334p-4, -0xc.6666666666668p+0)":
+double: 1
+idouble: 1
+Test "hypot (-0xb.33334p-4, 0xc.6666666666668p+0)":
+double: 1
+idouble: 1
+Test "hypot (-0xc.66666666666666666666666668p+0, -0xb.33333333333333333333333334p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xc.66666666666666666666666668p+0, -0xb.3333333333333333333333333p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xc.66666666666666666666666668p+0, 0xb.33333333333333333333333334p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xc.66666666666666666666666668p+0, 0xb.3333333333333333333333333p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xc.666666666666667p+0, -0xb.333333333333334p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xc.666666666666667p+0, 0xb.333333333333334p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xc.6666666666668p+0, -0xb.333333333333p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xc.6666666666668p+0, -0xb.33334p-4)":
+double: 1
+idouble: 1
+Test "hypot (-0xc.6666666666668p+0, 0xb.333333333333p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xc.6666666666668p+0, 0xb.33334p-4)":
+double: 1
+idouble: 1
+Test "hypot (-0xc.66666p+0, -0xb.333333333333334p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (-0xc.66666p+0, 0xb.333333333333334p-4)":
+ildouble: 1
+ldouble: 1
 Test "hypot (-12.4, -0.7)":
 double: 1
 float: 1
@@ -7156,6 +7442,84 @@ ldouble: 1
 Test "hypot (0x1.234566p-126, 0x1.234566p-126)":
 double: 1
 idouble: 1
+Test "hypot (0x1.23456789abcdefp-500, 0x1.23456789abcdefp-500)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xb.33333333333333333333333334p-4, -0xc.66666666666666666666666668p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xb.33333333333333333333333334p-4, 0xc.66666666666666666666666668p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xb.3333333333333333333333333p-4, -0xc.66666666666666666666666668p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xb.3333333333333333333333333p-4, 0xc.66666666666666666666666668p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xb.333333333333334p-4, -0xc.666666666666667p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xb.333333333333334p-4, -0xc.66666p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xb.333333333333334p-4, 0xc.666666666666667p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xb.333333333333334p-4, 0xc.66666p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xb.333333333333p-4, -0xc.6666666666668p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xb.333333333333p-4, 0xc.6666666666668p+0)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xb.33334p-4, -0xc.6666666666668p+0)":
+double: 1
+idouble: 1
+Test "hypot (0xb.33334p-4, 0xc.6666666666668p+0)":
+double: 1
+idouble: 1
+Test "hypot (0xc.66666666666666666666666668p+0, -0xb.33333333333333333333333334p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xc.66666666666666666666666668p+0, -0xb.3333333333333333333333333p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xc.66666666666666666666666668p+0, 0xb.33333333333333333333333334p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xc.66666666666666666666666668p+0, 0xb.3333333333333333333333333p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xc.666666666666667p+0, -0xb.333333333333334p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xc.666666666666667p+0, 0xb.333333333333334p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xc.6666666666668p+0, -0xb.333333333333p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xc.6666666666668p+0, -0xb.33334p-4)":
+double: 1
+idouble: 1
+Test "hypot (0xc.6666666666668p+0, 0xb.333333333333p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xc.6666666666668p+0, 0xb.33334p-4)":
+double: 1
+idouble: 1
+Test "hypot (0xc.66666p+0, -0xb.333333333333334p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xc.66666p+0, 0xb.333333333333334p-4)":
+ildouble: 1
+ldouble: 1
+Test "hypot (0xcp-4, 0x1.4p+0)":
+ildouble: 1
+ldouble: 1
 Test "hypot (12.4, -0.7)":
 double: 1
 float: 1
@@ -7584,6 +7948,9 @@ ifloat: 1
 Test "pow (0x1.000002p0, 0x1p24)":
 float: 1
 ifloat: 1
+Test "pow (0xf.fffffp-4, 0x1p+24)":
+float: 1
+ifloat: 1
 
 # pow10
 Test "pow10 (-0x1.31p+8)":
@@ -7626,6 +7993,11 @@ Test "pow_downward (1.0625, 1.125)":
 ildouble: 1
 ldouble: 1
 Test "pow_downward (1.5, 1.03125)":
+float: 1
+ifloat: 1
+
+# pow_tonearest
+Test "pow_tonearest (0xf.fffffp-4, 0x1p+24)":
 float: 1
 ifloat: 1
 
@@ -11107,8 +11479,8 @@ ldouble: 1
 Function: "atan2":
 float: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "atanh":
 float: 1
@@ -11707,6 +12079,12 @@ ildouble: 1
 ldouble: 1
 
 Function: "pow_downward":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "pow_tonearest":
 float: 1
 ifloat: 1
 ildouble: 1
