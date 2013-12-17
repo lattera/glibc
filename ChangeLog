@@ -1,5 +1,12 @@
 2013-12-17  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16314]
+	* sysdeps/ieee754/dbl-64/e_hypot.c (__ieee754_hypot): Adjust up
+	values below 2**-450, not 2**-500.
+	* math/auto-libm-test-in: Don't allow spurious underflow from
+	hypot.
+	* math/auto-libm-test-out: Regenerated.
+
 	[BZ #16316]
 	[BZ #16330]
 	* sysdeps/ieee754/dbl-64/e_hypot.c (__ieee754_hypot): Update

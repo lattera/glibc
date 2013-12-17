@@ -302,8 +302,7 @@ hypot -5.7e7 0
 hypot 0.75 1.25
 hypot 1.0 0x1p-61
 hypot 0x1p+0 0x1.fp-129
-# Bug 16314: spurious underflow exception may occur.
-hypot 0x1.23456789abcdef0123456789ab8p-500 0x1.23456789abcdef0123456789ab8p-500 spurious-underflow:dbl-64
+hypot 0x1.23456789abcdef0123456789ab8p-500 0x1.23456789abcdef0123456789ab8p-500
 hypot 0x3p125 0x4p125 no-test-inline:flt-32
 hypot 0x1.234566p-126 0x1.234566p-126 no-test-inline:flt-32
 hypot 0x3p1021 0x4p1021 no-test-inline:dbl-64

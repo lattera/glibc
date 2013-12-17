@@ -89,7 +89,7 @@ __ieee754_hypot (double x, double y)
       SET_HIGH_WORD (a, ha);
       SET_HIGH_WORD (b, hb);
     }
-  if (__builtin_expect (hb < 0x20b00000, 0))            /* b < 2**-500 */
+  if (__builtin_expect (hb < 0x23d00000, 0))            /* b < 2**-450 */
     {
       if (hb <= 0x000fffff)             /* subnormal b or 0 */
 	{
