@@ -1,3 +1,12 @@
+2013-12-16  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	[BZ #13304]
+	* sysdeps/sh/s_fma.c: New file.
+	* sysdeps/sh/s_fmaf.c: New file.
+	* sysdeps/sh/soft-fp/sfp-machine.h: New file.  Based on arm
+	version.
+	* sysdeps/sh/Implies: Add sh/soft-fp.
+
 2013-12-16  Roland McGrath  <roland@hack.frob.com>
 
 	* elf/dl-error.c (struct catch): Add new member `errcode'.  Add a
