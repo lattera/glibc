@@ -1,3 +1,14 @@
+2013-12-18  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16338]
+	* sysdeps/ieee754/ldbl-128/e_logl.c (__ieee754_logl): Use __frexpl
+	to determine exponent and adjust argument to have exponent of -1.
+	* math/auto-libm-test-in: Add more tests of log, log10, log1p and
+	log2.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2013-12-18  Ondřej Bílka  <neleai@seznam.cz>
 
 	* manual/probes.texi: Remove cases when per-thread arenas are

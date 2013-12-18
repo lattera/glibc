@@ -212,9 +212,8 @@ __ieee754_logl(long double x)
     }
 
   /* Extract exponent and reduce domain to 0.703125 <= u < 1.40625  */
-  e = (int) (m >> 16) - (int) 0x3ffe;
-  m &= 0xffff;
-  u.parts32.w0 = m | 0x3ffe0000;
+  u.value = __frexpl (x, &e);
+  m = u.parts32.w0 & 0xffff;
   m |= 0x10000;
   /* Find lookup table index k from high order bits of the significand. */
   if (m < 0x16800)

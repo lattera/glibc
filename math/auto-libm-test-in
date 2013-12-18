@@ -414,6 +414,8 @@ log 1/e
 log 2
 log 10
 log 0.75
+log min
+log min_subnorm
 
 log10 1
 log10 0.1
@@ -422,12 +424,19 @@ log10 100.0
 log10 10000.0
 log10 e
 log10 0.75
+log10 min
+log10 min_subnorm
 
 log1p 0
 log1p -0
 log1p e-1
 log1p -0.25
 log1p -0.875
+# Bug 16339: underflow exception may be missing.
+log1p min missing-underflow
+log1p min_subnorm missing-underflow
+log1p -min missing-underflow
+log1p -min_subnorm missing-underflow
 
 log2 1
 log2 e
@@ -435,6 +444,8 @@ log2 2.0
 log2 16.0
 log2 256.0
 log2 0.75
+log2 min
+log2 min_subnorm
 
 pow 0 0
 pow 0 -0

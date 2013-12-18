@@ -7675,6 +7675,9 @@ ldouble: 1
 Test "log10 (0x2.b7e154p+0)":
 float: 1
 ifloat: 1
+Test "log10 (0x4p-128)":
+ildouble: 1
+ldouble: 1
 Test "log10 (0xcp-4)":
 double: 1
 float: 2
