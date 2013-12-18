@@ -122,6 +122,7 @@ occur once per thread.  The exception is when a thread first selected
 the main arena, but a subsequent allocation from it fails: then, and
 only then, may we switch to another arena to retry that allocations, and
 for further allocations within that thread.
+@end deftp
 
 @deftp Probe memory_arena_reuse_wait (void *@var{$arg1}, void *@var{$arg2}, void *@var{$arg3})
 This probe is triggered when @code{malloc} is about to wait for an arena
@@ -137,6 +138,7 @@ isn't any free arena, the maximum number of arenas has been reached, and
 an existing arena was chosen for reuse, but its mutex could not be
 immediately acquired.  The mutex in @var{$arg1} is the mutex of the
 selected arena.
+@end deftp
 
 @deftp Probe memory_arena_reuse_free_list (void *@var{$arg1})
 This probe is triggered when @code{malloc} has chosen an arena that is
