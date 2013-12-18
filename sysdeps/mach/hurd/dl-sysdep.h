@@ -29,3 +29,10 @@
 # define DL_ARGV_NOT_RELRO 1
 # define LIBC_STACK_END_NOT_RELRO 1
 #endif
+
+#include <signal.h>
+inline void _dl_mask_all_signals (sigset_t *) internal_function;
+inline void _dl_mask_all_signals (sigset_t *) { }
+
+inline void _dl_unmask_all_signals (sigset_t *) internal_function;
+inline void _dl_unmask_all_signals (sigset_t *) { }

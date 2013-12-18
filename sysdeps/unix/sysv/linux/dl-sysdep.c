@@ -19,6 +19,7 @@
 /* Linux needs some special initialization, but otherwise uses
    the generic dynamic linker system interface code.  */
 
+#include <assert.h>
 #include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -129,4 +130,49 @@ _dl_discover_osversion (void)
     version <<= 8 * (3 - parts);
 
   return version;
+}
+
+/* Mask every signal, returning the previous sigmask in OLD.  */
+void
+internal_function
+_dl_mask_all_signals (sigset_t *old)
+{
+  int ret;
+  sigset_t new;
+
+  sigfillset (&new);
+
+  /* This function serves as a replacement to pthread_sigmask, which
+     isn't available from within the dynamic linker since it would require
+     linking with libpthread. We duplicate some of the functionality here
+     to avoid requiring libpthread.  This isn't quite identical to
+     pthread_sigmask in that we do not mask internal signals used for
+     cancellation and setxid handling. This disables asynchronous
+     cancellation for the duration the signals are disabled, but it's a
+     small window, and prevents any problems with the use of TLS variables
+     in the signal handlers that would have executed.  */
+
+  /* It's very important we don't touch errno here, as that's TLS; since this
+     gets called from get_tls_addr we might end up recursing.  */
+
+  INTERNAL_SYSCALL_DECL (err);
+
+  ret = INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_SETMASK, &new, old,
+			  _NSIG / 8);
+
+  assert (ret == 0);
+}
+
+/* Return sigmask to what it was before a call to _dl_mask_all_signals.  */
+void
+internal_function
+_dl_unmask_signals (sigset_t *old)
+{
+  int ret;
+  INTERNAL_SYSCALL_DECL (err);
+
+  ret = INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_SETMASK, old, NULL,
+			  _NSIG / 8);
+
+  assert (ret == 0);
 }

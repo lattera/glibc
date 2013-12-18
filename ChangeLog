@@ -1,3 +1,14 @@
+2013-12-18  Andrew Hunter  <ahh@google.com>
+
+	* sysdeps/generic/ldsodefs.h (_dl_mask_all_signals): New prototype.
+	(_dl_unmask_signals): Likewise.
+	* sysdeps/mach/hurd/dl-sysdep.h (_dl_mask_all_signals): New stub.
+	(_dl_unmask_all_signals): Likewise.
+	* sysdeps/unix/sysv/linux/dl-sysdep.h (_dl_mask_all_signals): New prototype.
+	(_dl_unmask_all_signals): Likewise.
+	* sysdeps/unix/sysv/linux/dl-sysdep.c (_dl_mask_all_signals): New function.
+	(_dl_unmask_signals): Likewise.
+
 2013-12-18  Brooks Moses  <bmoses@google.com>
 
 	[BZ #15846]

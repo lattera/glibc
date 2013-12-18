@@ -30,4 +30,8 @@
 /* Get version of the OS.  */
 extern int _dl_discover_osversion (void) attribute_hidden;
 # define HAVE_DL_DISCOVER_OSVERSION	1
+
+#include <signal.h>
+void _dl_mask_all_signals (sigset_t *) internal_function;
+void _dl_unmask_all_signals (sigset_t *) internal_function;
 #endif
