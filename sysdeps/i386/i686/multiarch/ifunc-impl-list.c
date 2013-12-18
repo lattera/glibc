@@ -141,12 +141,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strcasecmp_l, 1,
 			      __strcasecmp_l_ia32))
 
-  /* Support sysdeps/i386/i686/multiarch/strcasestr.c.  */
-  IFUNC_IMPL (i, name, strcasestr,
-	      IFUNC_IMPL_ADD (array, i, strcasestr, HAS_SSE4_2,
-			      __strcasestr_sse42)
-	      IFUNC_IMPL_ADD (array, i, strcasestr, 1, __strcasestr_ia32))
-
   /* Support sysdeps/i386/i686/multiarch/strcat.S.  */
   IFUNC_IMPL (i, name, strcat,
 	      IFUNC_IMPL_ADD (array, i, strcat, HAS_SSSE3, __strcat_ssse3)
@@ -233,11 +227,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   IFUNC_IMPL (i, name, strspn,
 	      IFUNC_IMPL_ADD (array, i, strspn, HAS_SSE4_2, __strspn_sse42)
 	      IFUNC_IMPL_ADD (array, i, strspn, 1, __strspn_ia32))
-
-  /* Support sysdeps/i386/i686/multiarch/strstr-c.c.  */
-  IFUNC_IMPL (i, name, strstr,
-	      IFUNC_IMPL_ADD (array, i, strstr, HAS_SSE4_2, __strstr_sse42)
-	      IFUNC_IMPL_ADD (array, i, strstr, 1, __strstr_ia32))
 
   /* Support sysdeps/i386/i686/multiarch/wcschr.S.  */
   IFUNC_IMPL (i, name, wcschr,

@@ -11,7 +11,7 @@ sysdep_routines += bzero-sse2 memset-sse2 memcpy-ssse3 mempcpy-ssse3 \
 		   memmove-ssse3-rep bcopy-ssse3 bcopy-ssse3-rep \
 		   memset-sse2-rep bzero-sse2-rep strcmp-ssse3 \
 		   strcmp-sse4 strncmp-c strncmp-ssse3 strncmp-sse4 \
-		   memcmp-ssse3 memcmp-sse4 strcasestr-nonascii varshift \
+		   memcmp-ssse3 memcmp-sse4 varshift \
 		   strlen-sse2 strlen-sse2-bsf strncpy-c strcpy-ssse3 \
 		   strncpy-ssse3 stpcpy-ssse3 stpncpy-ssse3 strcpy-sse2 \
 		   strncpy-sse2 stpcpy-sse2 stpncpy-sse2 strcat-ssse3 \
@@ -25,14 +25,11 @@ sysdep_routines += bzero-sse2 memset-sse2 memcpy-ssse3 mempcpy-ssse3 \
 		   strncase_l-c strncase-c strncase_l-ssse3 \
 		   strcasecmp_l-sse4 strncase_l-sse4
 ifeq (yes,$(config-cflags-sse4))
-sysdep_routines += strcspn-c strpbrk-c strspn-c strstr-c strcasestr-c
+sysdep_routines += strcspn-c strpbrk-c strspn-c
 CFLAGS-varshift.c += -msse4
 CFLAGS-strcspn-c.c += -msse4
 CFLAGS-strpbrk-c.c += -msse4
 CFLAGS-strspn-c.c += -msse4
-CFLAGS-strstr.c += -msse4
-CFLAGS-strcasestr.c += -msse4
-CFLAGS-strcasestr-nonascii.c += -msse4
 endif
 endif
 

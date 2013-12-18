@@ -1,3 +1,12 @@
+2013-12-18  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/i386/i686/multiarch/strstr.c: Remove.
+	* sysdeps/i386/i686/multiarch/strstr-c.c: Remove.
+	* sysdeps/i386/i686/multiarch/strcasestr.c: Remove.
+	* sysdeps/i386/i686/multiarch/strcasestr-nonascii.c: Remove.
+	* sysdeps/i386/i686/multiarch/Makefile: Update.
+	* sysdeps/i386/i686/multiarch/ifunc-impl-list.c: Update.
+
 2013-12-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/bsd/bsd4.4/bits/errno.h: Remove file.
