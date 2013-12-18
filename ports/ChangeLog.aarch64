@@ -1,3 +1,9 @@
+2013-12-18  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	[BZ #15128]
+	* sysdeps/aarch64/dl-trampoline.S (_dl_runtime_resolve): Save and
+	restore q0-q7.
+
 2013-12-17  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
 	* sysdeps/unix/sysv/linux/aarch64/nptl/lowlevellock.h

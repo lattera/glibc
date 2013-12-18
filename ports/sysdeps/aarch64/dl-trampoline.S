@@ -41,7 +41,7 @@ _dl_runtime_resolve:
 	cfi_rel_offset (lr, 8)
 
 	/* Save arguments.  */
-	stp	x8, x9, [sp, #-80]!
+	stp	x8, x9, [sp, #-(80+8*16)]!
 	cfi_adjust_cfa_offset (80)
 	cfi_rel_offset (x8, 0)
 	cfi_rel_offset (x9, 8)
@@ -62,11 +62,27 @@ _dl_runtime_resolve:
 	cfi_rel_offset (x0, 64)
 	cfi_rel_offset (x1, 72)
 
+	stp	q0, q1, [sp, #(80+0*16)]
+	cfi_rel_offset (q0, 80+0*16)
+	cfi_rel_offset (q1, 80+1*16)
+
+	stp	q2, q3, [sp, #(80+2*16)]
+	cfi_rel_offset (q0, 80+2*16)
+	cfi_rel_offset (q1, 80+3*16)
+
+	stp	q4, q5, [sp, #(80+4*16)]
+	cfi_rel_offset (q0, 80+4*16)
+	cfi_rel_offset (q1, 80+5*16)
+
+	stp	q6, q7, [sp, #(80+6*16)]
+	cfi_rel_offset (q0, 80+6*16)
+	cfi_rel_offset (q1, 80+7*16)
+
 	/* Get pointer to linker struct.  */
 	ldr	x0, [ip0, #-8]
 
 	/* Prepare to call _dl_fixup().  */
-	ldr	x1, [sp, 80]	/* Recover &PLTGOT[n] */
+	ldr	x1, [sp, 80+8*16]	/* Recover &PLTGOT[n] */
 
 	sub     x1, x1, ip0
 	add     x1, x1, x1, lsl #1
@@ -81,12 +97,16 @@ _dl_runtime_resolve:
 	mov	ip0, x0
 
 	/* Get arguments and return address back.  */
+	ldp	q0, q1, [sp, #(80+0*16)]
+	ldp	q2, q3, [sp, #(80+2*16)]
+	ldp	q4, q5, [sp, #(80+4*16)]
+	ldp	q6, q7, [sp, #(80+6*16)]
 	ldp	x0, x1, [sp, #64]
 	ldp	x2, x3, [sp, #48]
 	ldp	x4, x5, [sp, #32]
 	ldp	x6, x7, [sp, #16]
-	ldp	x8, x9, [sp], #80
-	cfi_adjust_cfa_offset (-80)
+	ldp	x8, x9, [sp], #(80+8*16)
+	cfi_adjust_cfa_offset (-(80+8*16))
 
 	ldp	ip1, lr, [sp], #16
 	cfi_adjust_cfa_offset (-16)
