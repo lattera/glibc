@@ -316,9 +316,9 @@ hypot 0x0.fffffep-126 0x0.fp-127
 hypot 0x0.fffffep-126 0x0.fp-130
 hypot 0x0.fffffffffffffp-1022 0x0.fp-1023
 hypot 0x0.fffffffffffffp-1022 0x0.fp-1026
-hypot 0x0.ffffffp-16382 0x0.fp-16383
-hypot 0x0.ffffffp-16382 0x0.fp-16386
-hypot 0 min_subnorm
+hypot 0x0.ffffffp-16382 0x0.fp-16383 no-test-inline
+hypot 0x0.ffffffp-16382 0x0.fp-16386 no-test-inline
+hypot 0 min_subnorm no-test-inline
 
 j0 -1.0
 j0 0.0

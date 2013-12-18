@@ -1,5 +1,8 @@
 2013-12-18  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/auto-libm-test-in: Mark some hypot tests no-test-inline.
+	* math/auto-libm-test-out: Regenerated.
+
 	[BZ #16338]
 	* sysdeps/ieee754/ldbl-128/e_logl.c (__ieee754_logl): Use __frexpl
 	to determine exponent and adjust argument to have exponent of -1.
