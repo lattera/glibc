@@ -397,6 +397,9 @@ typedef enum
     /* MPFR function with a single argument and floating-point and
        integer results.  */
     mpfr_f_f1,
+    /* MPFR function with integer and floating-point arguments and one
+       result.  */
+    mpfr_if_f,
   } func_calc_method;
 
 /* Description of how to calculate a function.  */
@@ -410,6 +413,7 @@ typedef struct
     int (*mpfr_f_f) (mpfr_t, const mpfr_t, mpfr_rnd_t);
     int (*mpfr_ff_f) (mpfr_t, const mpfr_t, const mpfr_t, mpfr_rnd_t);
     int (*mpfr_f_f1) (mpfr_t, int *, const mpfr_t, mpfr_rnd_t);
+    int (*mpfr_if_f) (mpfr_t, long, const mpfr_t, mpfr_rnd_t);
   } func;
 } func_calc_desc;
 
@@ -460,6 +464,9 @@ typedef struct
 #define FUNC_mpfr_ff_f(NAME, MPFR_FUNC, EXACT)				\
   FUNC (NAME, ARGS2 (type_fp, type_fp), RET1 (type_fp), EXACT, false,	\
 	CALC (mpfr_ff_f, MPFR_FUNC))
+#define FUNC_mpfr_if_f(NAME, MPFR_FUNC, EXACT)				\
+  FUNC (NAME, ARGS2 (type_int, type_fp), RET1 (type_fp), EXACT, false,	\
+	CALC (mpfr_if_f, MPFR_FUNC))
 
 /* List of functions handled by this program.  */
 static test_function test_functions[] =
@@ -483,6 +490,7 @@ static test_function test_functions[] =
     FUNC_mpfr_ff_f ("hypot", mpfr_hypot, false),
     FUNC_mpfr_f_f ("j0", mpfr_j0, false),
     FUNC_mpfr_f_f ("j1", mpfr_j1, false),
+    FUNC_mpfr_if_f ("jn", mpfr_jn, false),
     FUNC ("lgamma", ARGS1 (type_fp), RET2 (type_fp, type_int), false, false,
 	  CALC (mpfr_f_f1, mpfr_lgamma)),
     FUNC_mpfr_f_f ("log", mpfr_log, false),
@@ -498,6 +506,7 @@ static test_function test_functions[] =
     FUNC_mpfr_f_f ("tgamma", mpfr_gamma, false),
     FUNC_mpfr_f_f ("y0", mpfr_y0, false),
     FUNC_mpfr_f_f ("y1", mpfr_y1, false),
+    FUNC_mpfr_if_f ("yn", mpfr_yn, false),
   };
 
 /* Allocate memory, with error checking.  */
@@ -1318,6 +1327,7 @@ calc_generic_results (generic_value *outputs, generic_value *inputs,
 
     case mpfr_ff_f:
       assert (inputs[0].type == gtype_fp);
+      assert (inputs[1].type == gtype_fp);
       outputs[0].type = gtype_fp;
       mpfr_init (outputs[0].value.f);
       inexact = calc->func.mpfr_ff_f (outputs[0].value.f, inputs[0].value.f,
@@ -1335,6 +1345,18 @@ calc_generic_results (generic_value *outputs, generic_value *inputs,
 				      inputs[0].value.f, MPFR_RNDZ);
       adjust_real (outputs[0].value.f, inexact);
       mpz_init_set_si (outputs[1].value.i, i);
+      break;
+
+    case mpfr_if_f:
+      assert (inputs[0].type == gtype_int);
+      assert (inputs[1].type == gtype_fp);
+      outputs[0].type = gtype_fp;
+      mpfr_init (outputs[0].value.f);
+      assert (mpz_fits_slong_p (inputs[0].value.i));
+      long l = mpz_get_si (inputs[0].value.i);
+      inexact = calc->func.mpfr_if_f (outputs[0].value.f, l,
+				      inputs[1].value.f, MPFR_RNDZ);
+      adjust_real (outputs[0].value.f, inexact);
       break;
 
     default:
@@ -1547,13 +1569,16 @@ output_for_one_input_case (FILE *fp, const char *filename, test_function *tf,
 	  for (size_t i = 0; i < tf->num_args; i++)
 	    {
 	      if (inputs[i].type == gtype_fp)
-		round_real (res, exc_before, exc_after, inputs[i].value.f, f);
-	      if (!mpfr_equal_p (res[rm_tonearest], inputs[i].value.f))
-		fits = false;
-	      for (rounding_mode m = rm_first_mode; m < rm_num_modes; m++)
-		mpfr_clear (res[m]);
-	      if (!fits)
-		break;
+		{
+		  round_real (res, exc_before, exc_after, inputs[i].value.f,
+			      f);
+		  if (!mpfr_equal_p (res[rm_tonearest], inputs[i].value.f))
+		    fits = false;
+		  for (rounding_mode m = rm_first_mode; m < rm_num_modes; m++)
+		    mpfr_clear (res[m]);
+		  if (!fits)
+		    break;
+		}
 	    }
 	  if (!fits)
 	    continue;

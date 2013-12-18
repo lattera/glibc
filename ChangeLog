@@ -1,5 +1,21 @@
 2013-12-18  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/auto-libm-test-in: Add tests of jn and yn.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (jn_test_data): Use AUTO_TESTS_if_f.
+	(yn_test_data): Likewise.
+	* math/gen-auto-libm-tests.c (func_calc_method): Add value
+	mpfr_if_f.
+	(func_calc_desc): Add mpfr_if_f union field.
+	(FUNC_mpfr_if_f): New macro.
+	(test_functions): Add jn and yn.
+	(calc_generic_results): Assert type of second input for
+	mpfr_ff_f.  Handle mpfr_if_f.
+	(output_for_one_input_case): Disable all checking for arguments
+	fitting floating-point types in case of an integer argument.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/localplt.data:
 	Don't expect fegetround reference in libm.so.
 

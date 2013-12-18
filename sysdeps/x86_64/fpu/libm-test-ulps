@@ -7388,6 +7388,13 @@ double: 1
 idouble: 1
 
 # jn
+Test "jn (0, -0x4p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
 Test "jn (0, -4.0)":
 double: 1
 float: 1
@@ -7396,6 +7403,27 @@ ifloat: 1
 ildouble: 2
 ldouble: 2
 Test "jn (0, 0.75)":
+float: 1
+ifloat: 1
+Test "jn (0, 0x2p+0)":
+float: 2
+ifloat: 2
+Test "jn (0, 0x4p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "jn (0, 0x8p+0)":
+float: 1
+ifloat: 1
+Test "jn (0, 0xap+0)":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+Test "jn (0, 0xcp-4)":
 float: 1
 ifloat: 1
 Test "jn (0, 10.0)":
@@ -7416,6 +7444,17 @@ ldouble: 2
 Test "jn (0, 8.0)":
 float: 1
 ifloat: 1
+Test "jn (1, 0x2p+0)":
+double: 1
+idouble: 1
+Test "jn (1, 0x8p+0)":
+double: 1
+idouble: 1
+Test "jn (1, 0xap+0)":
+float: 2
+ifloat: 2
+ildouble: 1
+ldouble: 1
 Test "jn (1, 10.0)":
 float: 2
 ifloat: 2
@@ -7427,6 +7466,9 @@ idouble: 1
 Test "jn (1, 8.0)":
 double: 1
 idouble: 1
+Test "jn (10, -0x1p+0)":
+ildouble: 1
+ldouble: 1
 Test "jn (10, -1.0)":
 ildouble: 1
 ldouble: 1
@@ -7436,6 +7478,35 @@ float: 1
 idouble: 1
 ifloat: 1
 Test "jn (10, 0.75)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "jn (10, 0x1p+0)":
+ildouble: 1
+ldouble: 1
+Test "jn (10, 0x2p+0)":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 1
+ldouble: 1
+Test "jn (10, 0x2p-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "jn (10, 0xap+0)":
+double: 4
+float: 2
+idouble: 4
+ifloat: 2
+ildouble: 2
+ldouble: 2
+Test "jn (10, 0xcp-4)":
 double: 1
 float: 1
 idouble: 1
@@ -7471,11 +7542,64 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "jn (2, 0x2.67a2a4p+0)":
+float: 1
+ifloat: 1
+ildouble: 3
+ldouble: 3
+Test "jn (2, 0x2.67a2a5d2e36800fcp+0)":
+ildouble: 1
+ldouble: 1
+Test "jn (2, 0x2.67a2a5d2e36801p+0)":
+ildouble: 2
+ldouble: 2
+Test "jn (2, 0x2.67a2a5d2e3682p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "jn (2, 0x2.67a2a5d2e368p+0)":
+double: 2
+idouble: 2
+ildouble: 1
+ldouble: 1
+Test "jn (2, 0x2.67a2a8p+0)":
+double: 1
+float: 3
+idouble: 1
+ifloat: 3
+ildouble: 2
+ldouble: 2
+Test "jn (2, 0x8p+124)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "jn (2, 0xf.fffb1p+96)":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 1
+ldouble: 1
+Test "jn (2, 0xf.ffffffffffff8p+1020)":
+ildouble: 1
+ldouble: 1
+Test "jn (2, 0xf.fffffp+124)":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 1
+ldouble: 1
 Test "jn (2, 2.4048255576957729)":
 double: 2
 float: 1
 idouble: 2
 ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "jn (3, -0x1p+0)":
 ildouble: 1
 ldouble: 1
 Test "jn (3, -1.0)":
@@ -7487,6 +7611,54 @@ float: 1
 idouble: 1
 ifloat: 1
 Test "jn (3, 0.75)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "jn (3, 0x1p+0)":
+ildouble: 1
+ldouble: 1
+Test "jn (3, 0x2.67a2a4p+0)":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 1
+ldouble: 1
+Test "jn (3, 0x2.67a2a5d2e36801p+0)":
+ildouble: 3
+ldouble: 3
+Test "jn (3, 0x2.67a2a5d2e3682p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "jn (3, 0x2.67a2a5d2e368p+0)":
+double: 3
+idouble: 3
+Test "jn (3, 0x2.67a2a8p+0)":
+double: 1
+float: 3
+idouble: 1
+ifloat: 3
+ildouble: 1
+ldouble: 1
+Test "jn (3, 0x2p+0)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "jn (3, 0x2p-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "jn (3, 0xap+0)":
+double: 3
+idouble: 3
+ildouble: 1
+ldouble: 1
+Test "jn (3, 0xcp-4)":
 double: 1
 float: 1
 idouble: 1
@@ -7511,11 +7683,59 @@ double: 3
 idouble: 3
 ildouble: 1
 ldouble: 1
+Test "jn (4, 0x2.67a2a4p+0)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "jn (4, 0x2.67a2a5d2e36800fcp+0)":
+ildouble: 2
+ldouble: 2
+Test "jn (4, 0x2.67a2a5d2e36801p+0)":
+ildouble: 1
+ldouble: 1
+Test "jn (4, 0x2.67a2a5d2e3682p+0)":
+double: 1
+idouble: 1
+Test "jn (4, 0x2.67a2a5d2e368p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "jn (4, 0x2.67a2a8p+0)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "jn (4, 2.4048255576957729)":
 double: 1
 idouble: 1
 ildouble: 2
 ldouble: 2
+Test "jn (5, 0x2.67a2a4p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "jn (5, 0x2.67a2a5d2e36800fcp+0)":
+ildouble: 2
+ldouble: 2
+Test "jn (5, 0x2.67a2a5d2e36801p+0)":
+ildouble: 1
+ldouble: 1
+Test "jn (5, 0x2.67a2a5d2e3682p+0)":
+double: 1
+idouble: 1
+Test "jn (5, 0x2.67a2a5d2e368p+0)":
+double: 2
+idouble: 2
+ildouble: 1
+ldouble: 1
+Test "jn (5, 0x2.67a2a8p+0)":
+float: 2
+ifloat: 2
 Test "jn (5, 2.4048255576957729)":
 double: 3
 float: 1
@@ -7523,6 +7743,34 @@ idouble: 3
 ifloat: 1
 ildouble: 3
 ldouble: 3
+Test "jn (6, 0x2.67a2a4p+0)":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "jn (6, 0x2.67a2a5d2e36800fcp+0)":
+ildouble: 1
+ldouble: 1
+Test "jn (6, 0x2.67a2a5d2e36801p+0)":
+ildouble: 1
+ldouble: 1
+Test "jn (6, 0x2.67a2a5d2e3682p+0)":
+double: 2
+idouble: 2
+ildouble: 1
+ldouble: 1
+Test "jn (6, 0x2.67a2a5d2e368p+0)":
+double: 4
+idouble: 4
+Test "jn (6, 0x2.67a2a8p+0)":
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
+ildouble: 1
+ldouble: 1
 Test "jn (6, 2.4048255576957729)":
 double: 4
 float: 3
@@ -7530,11 +7778,55 @@ idouble: 4
 ifloat: 3
 ildouble: 1
 ldouble: 1
+Test "jn (7, 0x2.67a2a4p+0)":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+Test "jn (7, 0x2.67a2a5d2e36800fcp+0)":
+ildouble: 2
+ldouble: 2
+Test "jn (7, 0x2.67a2a5d2e36801p+0)":
+ildouble: 1
+ldouble: 1
+Test "jn (7, 0x2.67a2a5d2e3682p+0)":
+ildouble: 4
+ldouble: 4
+Test "jn (7, 0x2.67a2a5d2e368p+0)":
+double: 3
+idouble: 3
+ildouble: 1
+ldouble: 1
+Test "jn (7, 0x2.67a2a8p+0)":
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
 Test "jn (7, 2.4048255576957729)":
 double: 3
 float: 5
 idouble: 3
 ifloat: 5
+Test "jn (8, 0x2.67a2a4p+0)":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 1
+ldouble: 1
+Test "jn (8, 0x2.67a2a5d2e3682p+0)":
+double: 1
+idouble: 1
+Test "jn (8, 0x2.67a2a5d2e368p+0)":
+double: 3
+idouble: 3
+Test "jn (8, 0x2.67a2a8p+0)":
+double: 2
+float: 4
+idouble: 2
+ifloat: 4
+ildouble: 1
+ldouble: 1
 Test "jn (8, 2.4048255576957729)":
 double: 3
 float: 2
@@ -7542,6 +7834,28 @@ idouble: 3
 ifloat: 2
 ildouble: 2
 ldouble: 2
+Test "jn (9, 0x2.67a2a4p+0)":
+double: 3
+float: 3
+idouble: 3
+ifloat: 3
+ildouble: 2
+ldouble: 2
+Test "jn (9, 0x2.67a2a5d2e3682p+0)":
+double: 4
+idouble: 4
+Test "jn (9, 0x2.67a2a5d2e368p+0)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "jn (9, 0x2.67a2a8p+0)":
+double: 3
+float: 3
+idouble: 3
+ifloat: 3
+ildouble: 3
+ldouble: 3
 Test "jn (9, 2.4048255576957729)":
 double: 1
 float: 2
@@ -10912,6 +11226,11 @@ idouble: 1
 ifloat: 2
 
 # yn
+Test "yn (-10, 0x1p+0)":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
 Test "yn (-10, 1.0)":
 double: 1
 float: 2
@@ -10920,6 +11239,31 @@ ifloat: 2
 Test "yn (0, 0.125)":
 ildouble: 1
 ldouble: 1
+Test "yn (0, 0x1.8p+0)":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+Test "yn (0, 0x1p+0)":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "yn (0, 0x2p-4)":
+ildouble: 1
+ldouble: 1
+Test "yn (0, 0x8p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "yn (0, 0xap+0)":
+float: 1
+ifloat: 1
 Test "yn (0, 1.0)":
 double: 2
 float: 1
@@ -10952,6 +11296,31 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "yn (1, 0x1.8p+0)":
+float: 1
+ifloat: 1
+Test "yn (1, 0x2p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "yn (1, 0x2p-4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "yn (1, 0x8p+0)":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+Test "yn (1, 0xap+0)":
+double: 3
+float: 1
+idouble: 3
+ifloat: 1
 Test "yn (1, 1.5)":
 float: 1
 ifloat: 1
@@ -10984,6 +11353,42 @@ idouble: 1
 ifloat: 2
 ildouble: 4
 ldouble: 4
+Test "yn (10, 0x1p+0)":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+Test "yn (10, 0x2p+0)":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+Test "yn (10, 0x2p-4)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "yn (10, 0x4p-1024)":
+ildouble: 1
+ldouble: 1
+Test "yn (10, 0x4p-128)":
+ildouble: 1
+ldouble: 1
+Test "yn (10, 0x8p-972)":
+ildouble: 1
+ldouble: 1
+Test "yn (10, 0xap+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "yn (10, 0xcp-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 4
+ldouble: 4
 Test "yn (10, 1.0)":
 double: 1
 float: 2
@@ -11009,6 +11414,24 @@ double: 1
 float: 3
 idouble: 1
 ifloat: 3
+Test "yn (2, 0x8p+124)":
+double: 1
+float: 3
+idouble: 1
+ifloat: 3
+Test "yn (2, 0xf.fffb1p+96)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "yn (2, 0xf.ffffffffffff8p+1020)":
+double: 1
+idouble: 1
+Test "yn (2, 0xf.fffffp+124)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 Test "yn (3, 0.125)":
 double: 1
 idouble: 1
@@ -11019,6 +11442,24 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "yn (3, 0x2p+0)":
+double: 1
+idouble: 1
+Test "yn (3, 0x2p-4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "yn (3, 0xap+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "yn (3, 0xcp-4)":
+double: 1
+idouble: 1
 ildouble: 2
 ldouble: 2
 Test "yn (3, 10.0)":
@@ -11610,8 +12051,8 @@ double: 4
 float: 5
 idouble: 4
 ifloat: 5
-ildouble: 3
-ldouble: 3
+ildouble: 4
+ldouble: 4
 
 Function: "lgamma":
 double: 1
