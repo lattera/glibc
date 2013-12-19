@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2013-06-21.17}
+\def\texinfoversion{2013-11-26.10}
 %
 % Copyright 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006,
@@ -281,9 +281,9 @@
   \toks6=\expandafter{\prevsectiondefs}%
   \toks8=\expandafter{\lastcolordefs}%
   \mark{%
-                   \the\toks0 \the\toks2
-      \noexpand\or \the\toks4 \the\toks6
-    \noexpand\else \the\toks8
+                   \the\toks0 \the\toks2  % 0: top marks (\last...)
+      \noexpand\or \the\toks4 \the\toks6  % 1: bottom marks (default, \prev...)
+    \noexpand\else \the\toks8             % 2: color marks
   }%
 }
 % \topmark doesn't work for the very first chapter (after the title
@@ -322,10 +322,13 @@
   %
   % Do this outside of the \shipout so @code etc. will be expanded in
   % the headline as they should be, not taken literally (outputting ''code).
+  \def\commmonheadfootline{\let\hsize=\pagewidth \texinfochars}
+  %
   \ifodd\pageno \getoddheadingmarks \else \getevenheadingmarks \fi
-  \setbox\headlinebox = \vbox{\let\hsize=\pagewidth \makeheadline}%
+  \global\setbox\headlinebox = \vbox{\commmonheadfootline \makeheadline}%
+  %
   \ifodd\pageno \getoddfootingmarks \else \getevenfootingmarks \fi
-  \setbox\footlinebox = \vbox{\let\hsize=\pagewidth \makefootline}%
+  \global\setbox\footlinebox = \vbox{\commmonheadfootline \makefootline}%
   %
   {%
     % Have to do this stuff outside the \shipout because we want it to
@@ -1138,7 +1141,9 @@ output) for that.)}
   % Color manipulation macros based on pdfcolor.tex,
   % except using rgb instead of cmyk; the latter is said to render as a
   % very dark gray on-screen and a very dark halftone in print, instead
-  % of actual black.
+  % of actual black. The dark red here  is dark enough to print on paper as
+  % nearly black, but still distinguishable for online viewing.  We use
+  % black by default, though.
   \def\rgbDarkRed{0.50 0.09 0.12}
   \def\rgbBlack{0 0 0}
   %
@@ -1248,10 +1253,9 @@ output) for that.)}
   % used to mark target names; must be expandable.
   \def\pdfmkpgn#1{#1}
   %
-  % by default, use a color that is dark enough to print on paper as
-  % nearly black, but still distinguishable for online viewing.
-  \def\urlcolor{\rgbDarkRed}
-  \def\linkcolor{\rgbDarkRed}
+  % by default, use black for everything.
+  \def\urlcolor{\rgbBlack}
+  \def\linkcolor{\rgbBlack}
   \def\endlink{\setcolor{\maincolor}\pdfendlink}
   %
   % Adding outlines to PDF; macros for calculating structure of outlines
@@ -2377,8 +2381,10 @@ end
   \ifx\next,%
   \else\ifx\next-%
   \else\ifx\next.%
+  \else\ifx\next\.%
+  \else\ifx\next\comma%
   \else\ptexslash
-  \fi\fi\fi
+  \fi\fi\fi\fi\fi
   \aftersmartic
 }
 
@@ -2519,7 +2525,9 @@ end
       \ifx\codedashprev\codedash
       \else \discretionary{}{}{}\fi
     \fi
-    \global\let\codedashprev=\next
+    % we need the space after the = for the case when \next itself is a
+    % space token; it would get swallowed otherwise.  As in @code{- a}.
+    \global\let\codedashprev= \next
   }
 }
 \def\normaldash{-}
@@ -2571,33 +2579,17 @@ end
 % second argument specifying the text to display and an optional third
 % arg as text to display instead of (rather than in addition to) the url
 % itself.  First (mandatory) arg is the url.
-% (This \urefnobreak definition isn't used now, leaving it for a while
-% for comparison.)
-\def\urefnobreak#1{\dourefnobreak #1,,,\finish}
-\def\dourefnobreak#1,#2,#3,#4\finish{\begingroup
-  \unsepspaces
-  \pdfurl{#1}%
-  \setbox0 = \hbox{\ignorespaces #3}%
-  \ifdim\wd0 > 0pt
-    \unhbox0 % third arg given, show only that
-  \else
-    \setbox0 = \hbox{\ignorespaces #2}%
-    \ifdim\wd0 > 0pt
-      \ifpdf
-        \unhbox0             % PDF: 2nd arg given, show only it
-      \else
-        \unhbox0\ (\code{#1})% DVI: 2nd arg given, show both it and url
-      \fi
-    \else
-      \code{#1}% only url given, so show it
-    \fi
-  \fi
-  \endlink
-\endgroup}
 
-% This \urefbreak definition is the active one.
+% secret option to allow changing PDF output to show only the second
+% arg (if given), and not the url (which is then just the link target).
+\newif\ifurefurlonlylink
+
+% The main macro is \urefbreak, which allows breaking at expected
+% places within the url.  (There used to be another version, which
+% didn't support automatic breaking.)
 \def\urefbreak{\begingroup \urefcatcodes \dourefbreak}
 \let\uref=\urefbreak
+%
 \def\dourefbreak#1{\urefbreakfinish #1,,,\finish}
 \def\urefbreakfinish#1,#2,#3,#4\finish{% doesn't work in @example
   \unsepspaces
@@ -2606,12 +2598,19 @@ end
   \ifdim\wd0 > 0pt
     \unhbox0 % third arg given, show only that
   \else
-    \setbox0 = \hbox{\ignorespaces #2}%
+    \setbox0 = \hbox{\ignorespaces #2}% look for second arg
     \ifdim\wd0 > 0pt
       \ifpdf
-        \unhbox0             % PDF: 2nd arg given, show only it
+        \ifurefurlonlylink
+          % PDF plus option to not display url, show just arg
+          \unhbox0
+        \else
+          % PDF, normally display both arg and url for consistency,
+          % visibility, if the pdf is eventually used to print, etc.
+          \unhbox0\ (\urefcode{#1})%
+        \fi
       \else
-        \unhbox0\ (\urefcode{#1})% DVI: 2nd arg given, show both it and url
+        \unhbox0\ (\urefcode{#1})% DVI, always show arg and url
       \fi
     \else
       \urefcode{#1}% only url given, so show it
@@ -2887,6 +2886,15 @@ end
   \def\inlinefmtname{#1}%
   \ifx\inlinefmtname\outfmtnametex \ignorespaces #2\fi
 }
+%
+% @inlinefmtifelse{FMTNAME,THEN-TEXT,ELSE-TEXT} expands THEN-TEXT if
+% FMTNAME is tex, else ELSE-TEXT.
+\long\def\inlinefmtifelse#1{\doinlinefmtifelse #1,,,\finish}
+\long\def\doinlinefmtifelse#1,#2,#3,#4,\finish{%
+  \def\inlinefmtname{#1}%
+  \ifx\inlinefmtname\outfmtnametex \ignorespaces #2\else \ignorespaces #3\fi
+}
+%
 % For raw, must switch into @tex before parsing the argument, to avoid
 % setting catcodes prematurely.  Doing it this way means that, for
 % example, @inlineraw{html, foo{bar} gets a parse error instead of being
@@ -2901,6 +2909,23 @@ end
   \def\inlinerawname{#1}%
   \ifx\inlinerawname\outfmtnametex \ignorespaces #2\fi
   \endgroup % close group opened by \tex.
+}
+
+% @inlineifset{VAR, TEXT} expands TEXT if VAR is @set.
+%
+\long\def\inlineifset#1{\doinlineifset #1,\finish}
+\long\def\doinlineifset#1,#2,\finish{%
+  \def\inlinevarname{#1}%
+  \expandafter\ifx\csname SET\inlinevarname\endcsname\relax
+  \else\ignorespaces#2\fi
+}
+
+% @inlineifclear{VAR, TEXT} expands TEXT if VAR is not @set.
+%
+\long\def\inlineifclear#1{\doinlineifclear #1,\finish}
+\long\def\doinlineifclear#1,#2,\finish{%
+  \def\inlinevarname{#1}%
+  \expandafter\ifx\csname SET\inlinevarname\endcsname\relax \ignorespaces#2\fi
 }
 
 
@@ -3658,7 +3683,7 @@ end
   \parskip=\smallskipamount
   \ifdim\parskip=0pt \parskip=2pt \fi
   %
-  % Try typesetting the item mark that if the document erroneously says
+  % Try typesetting the item mark so that if the document erroneously says
   % something like @itemize @samp (intending @table), there's an error
   % right away at the @itemize.  It's not the best error message in the
   % world, but it's better than leaving it to the @item.  This means if
@@ -4198,7 +4223,7 @@ end
 \def\value{\begingroup\makevalueexpandable\valuexxx}
 \def\valuexxx#1{\expandablevalue{#1}\endgroup}
 {
-  \catcode`\- = \active \catcode`\_ = \active
+  \catcode`\-=\active \catcode`\_=\active
   %
   \gdef\makevalueexpandable{%
     \let\value = \expandablevalue
@@ -4218,6 +4243,11 @@ end
 % variable's value contains other Texinfo commands, it's almost certain
 % it will fail (although perhaps we could fix that with sufficient work
 % to do a one-level expansion on the result, instead of complete).
+%
+% Unfortunately, this has the consequence that when _ is in the *value*
+% of an @set, it does not print properly in the roman fonts (get the cmr
+% dot accent at position 126 instead).  No fix comes to mind, and it's
+% been this way since 2003 or earlier, so just ignore it.
 %
 \def\expandablevalue#1{%
   \expandafter\ifx\csname SET#1\endcsname\relax
@@ -5905,7 +5935,7 @@ end
     %
     % Now the second mark, after the heading break.  No break points
     % between here and the heading.
-    \let\prevsectiondefs=\lastsectiondefs
+    \global\let\prevsectiondefs=\lastsectiondefs
     \domark
     %
     % Only insert the space after the number if we have a section number.
@@ -6272,8 +6302,8 @@ end
   \catcode `\|=\other
   \catcode `\<=\other
   \catcode `\>=\other
-  \catcode`\`=\other
-  \catcode`\'=\other
+  \catcode `\`=\other
+  \catcode `\'=\other
   \escapechar=`\\
   %
   % ' is active in math mode (mathcode"8000).  So reset it, and all our
@@ -6297,7 +6327,7 @@ end
   \let\/=\ptexslash
   \let\*=\ptexstar
   \let\t=\ptext
-  \expandafter \let\csname top\endcsname=\ptextop  % outer
+  \expandafter \let\csname top\endcsname=\ptextop  % we've made it outer
   \let\frenchspacing=\plainfrenchspacing
   %
   \def\endldots{\mathinner{\ldots\ldots\ldots\ldots}}%
@@ -9940,11 +9970,9 @@ directory should work if nowhere else does.}
 \catcode`\"=\active
 \def\activedoublequote{{\tt\char34}}
 \let"=\activedoublequote
-\catcode`\~=\active
-\def~{{\tt\char126}}
+\catcode`\~=\active \def\activetilde{{\tt\char126}} \let~ = \activetilde
 \chardef\hat=`\^
-\catcode`\^=\active
-\def^{{\tt \hat}}
+\catcode`\^=\active \def\activehat{{\tt \hat}} \let^ = \activehat
 
 \catcode`\_=\active
 \def_{\ifusingtt\normalunderscore\_}
@@ -9954,16 +9982,26 @@ directory should work if nowhere else does.}
 
 \catcode`\|=\active
 \def|{{\tt\char124}}
+
 \chardef \less=`\<
-\catcode`\<=\active
-\def<{{\tt \less}}
+\catcode`\<=\active \def\activeless{{\tt \less}}\let< = \activeless
 \chardef \gtr=`\>
-\catcode`\>=\active
-\def>{{\tt \gtr}}
-\catcode`\+=\active
-\def+{{\tt \char 43}}
-\catcode`\$=\active
-\def${\ifusingit{{\sl\$}}\normaldollar}%$ font-lock fix
+\catcode`\>=\active \def\activegtr{{\tt \gtr}}\let> = \activegtr
+\catcode`\+=\active \def+{{\tt \char 43}}
+\catcode`\$=\active \def${\ifusingit{{\sl\$}}\normaldollar}%$ font-lock fix
+
+% used for headline/footline in the output routine, in case the page
+% breaks in the middle of an @tex block.
+\def\texinfochars{%
+  \let< = \activeless
+  \let> = \activegtr
+  \let~ = \activetilde
+  \let^ = \activehat
+  \markupsetuplqdefault \markupsetuprqdefault
+  \let\b = \strong
+  \let\i = \smartitalic
+  % in principle, all other definitions in \tex have to be undone too.
+}
 
 % If a .fmt file is being used, characters that might appear in a file
 % name cannot be active until we have parsed the command line.

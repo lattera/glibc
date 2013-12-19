@@ -1,5 +1,10 @@
 2013-12-19  Joseph Myers  <joseph@codesourcery.com>
 
+	* manual/texinfo.tex: Update to version 2013-11-26.10 with
+	trailing whitespace removed.
+	* scripts/config.guess: Update to version 2013-11-29.
+	* scripts/config.sub: Update to version 2013-10-01.
+
 	* math/auto-libm-test-in: Add tests of sincos.
 	* math/auto-libm-test-out: Regenerated.
 	* math/libm-test.inc (sincos_test_data): Use AUTO_TESTS_fFF_11.
