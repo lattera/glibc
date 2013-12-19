@@ -53,6 +53,7 @@ ld {
     _dl_allocate_tls; _dl_allocate_tls_init;
     _dl_argv; _dl_find_dso_for_object; _dl_get_tls_static_info;
     _dl_deallocate_tls; _dl_make_stack_executable; _dl_out_of_memory;
+    _dl_clear_dtv;
     _dl_rtld_di_serinfo; _dl_starting_up; _dl_tls_setup;
     _rtld_global; _rtld_global_ro;
 
