@@ -380,15 +380,23 @@ struct __signal_safe_allocator_header
   void *start;
 };
 
+static inline struct __signal_safe_allocator_header *
+ptr_to_signal_safe_allocator_header (void *ptr)
+{
+  return (struct __signal_safe_allocator_header *)
+    ((char *) (ptr) - sizeof (struct __signal_safe_allocator_header));
+}
+
 void *weak_function
 __signal_safe_memalign (size_t boundary, size_t size)
 {
   struct __signal_safe_allocator_header *header;
+
   if (boundary < sizeof (*header))
     boundary = sizeof (*header);
 
   /* Boundary must be a power of two.  */
-  if (boundary & (boundary - 1) == 0)
+  if ((boundary & (boundary - 1)) == 0)
     return NULL;
 
   size_t pg = GLRO (dl_pagesize);
@@ -432,9 +440,9 @@ __signal_safe_memalign (size_t boundary, size_t size)
 	  actual = (void *) ((start_pg - 1) * pg);
 	}
       char *start = (void *) (start_pg * pg);
-      header = start - sizeof (*header);
-
+      header = ptr_to_signal_safe_allocator_header (start);
     }
+
   header->size = actual_size;
   header->start = actual;
   void *ptr = header;
@@ -456,7 +464,8 @@ __signal_safe_free (void *ptr)
   if (ptr == NULL)
     return;
 
-  struct __signal_safe_allocator_header *header = ((char *) ptr) - sizeof (*header);
+  struct __signal_safe_allocator_header *header
+    = ptr_to_signal_safe_allocator_header (ptr);
   int ret = munmap (header->start, header->size);
 
   assert (ret == 0);
@@ -473,7 +482,8 @@ __signal_safe_realloc (void *ptr, size_t size)
   if (ptr == NULL)
     return __signal_safe_malloc (size);
 
-  struct __signal_safe_allocator_header *header = ((char *) ptr) - sizeof (*header);
+  struct __signal_safe_allocator_header *header
+    = ptr_to_signal_safe_allocator_header (ptr);
   size_t old_size = header->size;
   if (old_size - sizeof (*header) >= size)
     return ptr;
