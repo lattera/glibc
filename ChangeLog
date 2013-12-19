@@ -1,5 +1,9 @@
 2013-12-19  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/gen-libm-test.pl (%beautify): Remove M_* constants.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	[BZ #16293]
 	* sysdeps/i386/fpu/e_expl.S (IEEE754_EXPL) [USE_AS_EXPM1L]: Set
 	round-to-nearest mode when using frndint.

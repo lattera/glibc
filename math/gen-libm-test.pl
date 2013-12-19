@@ -61,23 +61,6 @@ use vars qw (%auto_tests);
     "minus_infty" => "-inf",
     "plus_infty" => "inf",
     "qnan_value" => "qNaN",
-    "M_El" => "e",
-    "M_E2l" => "e^2",
-    "M_E3l" => "e^3",
-    "M_LOG10El", "log10(e)",
-    "M_PIl" => "pi",
-    "M_PI_34l" => "3/4 pi",
-    "M_PI_2l" => "pi/2",
-    "M_PI_4l" => "pi/4",
-    "M_PI_6l" => "pi/6",
-    "M_PI_34_LOG10El" => "3/4 pi*log10(e)",
-    "M_PI_LOG10El" => "pi*log10(e)",
-    "M_PI2_LOG10El" => "pi/2*log10(e)",
-    "M_PI4_LOG10El" => "pi/4*log10(e)",
-    "M_LOG_SQRT_PIl" => "log(sqrt(pi))",
-    "M_LOG_2_SQRT_PIl" => "log(2*sqrt(pi))",
-    "M_2_SQRT_PIl" => "2 sqrt (pi)",
-    "M_SQRT_PIl" => "sqrt (pi)",
   );
 
 

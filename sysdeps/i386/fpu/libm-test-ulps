@@ -5807,6 +5807,9 @@ ldouble: 1
 Test "Imaginary part of: ctanh (0 + 0x3.243f6cp-1 i)":
 float: 1
 ifloat: 1
+Test "Imaginary part of: ctanh (0 + M_PI_4l i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: ctanh (0 + pi/4 i)":
 ildouble: 1
 ldouble: 1
