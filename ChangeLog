@@ -1,5 +1,15 @@
 2013-12-19  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/auto-libm-test-in: Add tests of cabs and carg.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (cabs_test_data): Use AUTO_TESTS_c_f.
+	(carg_test_data): Likewise.
+	* math/gen-auto-libm-tests.c (func_calc_method): Add value
+	mpc_c_f.
+	(func_calc_desc): Add mpc_c_f union field.
+	(test_functions): Add cabs and carg.
+	(calc_generic_results): Handle mpc_c_f.
+
 	* sysdeps/powerpc/powerpc32/libgcc-compat.S
 	[_SOFT_FLOAT || __NO_FPRS__] (__fixdfdi_v_glibc20): Do not define
 	as a macro and a compat symbol.

@@ -105,6 +105,46 @@ atanh 0
 atanh -0
 atanh 0.75
 
+# cabs (x,y) == cabs (y,x).
+cabs 0.75 12.390625
+# cabs (x,y) == cabs (-x,y).
+cabs -12.390625 0.75
+# cabs (x,y) == cabs (-y,x).
+cabs -0.75 12.390625
+# cabs (x,y) == cabs (-x,-y).
+cabs -12.390625 -0.75
+# cabs (x,y) == cabs (-y,-x).
+cabs -0.75 -12.390625
+# cabs (x,0) == fabs (x).
+cabs -0.75 0
+cabs 0.75 0
+cabs -1.0 0
+cabs 1.0 0
+cabs -5.7e7 0
+cabs 5.7e7 0
+cabs 0.75 1.25
+
+# carg (x + i 0) == 0 for x > 0.
+carg 2.0 0
+# carg (x - i 0) == -0 for x > 0.
+carg 2.0 -0
+carg 0 0
+carg 0 -0
+# carg (x + i 0) == +pi for x < 0.
+carg -2.0 0
+# carg (x - i 0) == -pi for x < 0.
+carg -2.0 -0
+carg -0 0
+carg -0 -0
+# carg (+0 + i y) == pi/2 for y > 0.
+carg 0 2.0
+# carg (-0 + i y) == pi/2 for y > 0.
+carg -0 2.0
+# carg (+0 + i y) == -pi/2 for y < 0.
+carg 0 -2.0
+# carg (-0 + i y) == -pi/2 for y < 0.
+carg -0 -2.0
+
 cbrt 0.0
 cbrt -0
 cbrt -0.001

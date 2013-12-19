@@ -1917,25 +1917,7 @@ static const struct test_c_f_data cabs_test_data[] =
 
     TEST_c_f (cabs, qnan_value, qnan_value, qnan_value),
 
-    /* cabs (x,y) == cabs (y,x).  */
-    TEST_c_f (cabs, 0.75L, 12.390625L, 12.4133028598606664302388810868156657L),
-    /* cabs (x,y) == cabs (-x,y).  */
-    TEST_c_f (cabs, -12.390625L, 0.75L, 12.4133028598606664302388810868156657L),
-    /* cabs (x,y) == cabs (-y,x).  */
-    TEST_c_f (cabs, -0.75L, 12.390625L, 12.4133028598606664302388810868156657L),
-    /* cabs (x,y) == cabs (-x,-y).  */
-    TEST_c_f (cabs, -12.390625L, -0.75L, 12.4133028598606664302388810868156657L),
-    /* cabs (x,y) == cabs (-y,-x).  */
-    TEST_c_f (cabs, -0.75L, -12.390625L, 12.4133028598606664302388810868156657L),
-    /* cabs (x,0) == fabs (x).  */
-    TEST_c_f (cabs, -0.75L, 0, 0.75L),
-    TEST_c_f (cabs, 0.75L, 0, 0.75L),
-    TEST_c_f (cabs, -1.0L, 0, 1.0L),
-    TEST_c_f (cabs, 1.0L, 0, 1.0L),
-    TEST_c_f (cabs, -5.7e7L, 0, 5.7e7L),
-    TEST_c_f (cabs, 5.7e7L, 0, 5.7e7L),
-
-    TEST_c_f (cabs, 0.75L, 1.25L, 1.45773797371132511771853821938639577L),
+    AUTO_TESTS_c_f (cabs, tonearest),
   };
 
 static void
@@ -3326,35 +3308,6 @@ static const struct test_c_f_data carg_test_data[] =
   {
     /* carg (x + iy) is specified as atan2 (y, x) */
 
-    /* carg (x + i 0) == 0 for x > 0.  */
-    TEST_c_f (carg, 2.0, 0, 0),
-    /* carg (x - i 0) == -0 for x > 0.  */
-    TEST_c_f (carg, 2.0, minus_zero, minus_zero),
-
-    TEST_c_f (carg, 0, 0, 0),
-    TEST_c_f (carg, 0, minus_zero, minus_zero),
-
-    /* carg (x + i 0) == +pi for x < 0.  */
-    TEST_c_f (carg, -2.0, 0, M_PIl),
-
-    /* carg (x - i 0) == -pi for x < 0.  */
-    TEST_c_f (carg, -2.0, minus_zero, -M_PIl),
-
-    TEST_c_f (carg, minus_zero, 0, M_PIl),
-    TEST_c_f (carg, minus_zero, minus_zero, -M_PIl),
-
-    /* carg (+0 + i y) == pi/2 for y > 0.  */
-    TEST_c_f (carg, 0, 2.0, M_PI_2l),
-
-    /* carg (-0 + i y) == pi/2 for y > 0.  */
-    TEST_c_f (carg, minus_zero, 2.0, M_PI_2l),
-
-    /* carg (+0 + i y) == -pi/2 for y < 0.  */
-    TEST_c_f (carg, 0, -2.0, -M_PI_2l),
-
-    /* carg (-0 + i y) == -pi/2 for y < 0.  */
-    TEST_c_f (carg, minus_zero, -2.0, -M_PI_2l),
-
     /* carg (inf + i y) == +0 for finite y > 0.  */
     TEST_c_f (carg, plus_infty, 2.0, 0),
 
@@ -3382,6 +3335,8 @@ static const struct test_c_f_data carg_test_data[] =
     TEST_c_f (carg, minus_infty, minus_infty, -M_PI_34l),
 
     TEST_c_f (carg, qnan_value, qnan_value, qnan_value),
+
+    AUTO_TESTS_c_f (carg, tonearest),
   };
 
 static void
