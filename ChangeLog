@@ -1,3 +1,11 @@
+2013-12-19  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/powerpc/powerpc64/power7/memchr.S: Fix argument of
+	CALL_MCOUNT.
+	* sysdeps/powerpc/powerpc64/power7/memrchr.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strcasecmp.S
+	[USE_IN_EXTENDED_LOCALE_MODEL]: Likewise.
+
 2013-12-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/gen-libm-test.pl (%beautify): Remove M_* constants.

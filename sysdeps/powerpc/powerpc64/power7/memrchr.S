@@ -22,7 +22,7 @@
 /* int [r3] memrchr (char *s [r3], int byte [r4], int size [r5])  */
 	.machine  power7
 ENTRY (__memrchr)
-	CALL_MCOUNT
+	CALL_MCOUNT 3
 	add	r7,r3,r5      /* Calculate the last acceptable address.  */
 	neg	r0,r7
 	addi	r7,r7,-1

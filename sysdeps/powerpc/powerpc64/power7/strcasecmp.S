@@ -32,7 +32,11 @@
 #endif
 
 ENTRY (__STRCMP)
+#ifndef USE_IN_EXTENDED_LOCALE_MODEL
 	CALL_MCOUNT 2
+#else
+	CALL_MCOUNT 3
+#endif
 
 #define rRTN	r3	/* Return value */
 #define rSTR1	r5	/* 1st string */
