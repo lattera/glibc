@@ -400,6 +400,9 @@ typedef enum
     /* MPFR function with integer and floating-point arguments and one
        result.  */
     mpfr_if_f,
+    /* MPFR function with a single argument and two floating-point
+       results.  */
+    mpfr_f_11,
   } func_calc_method;
 
 /* Description of how to calculate a function.  */
@@ -414,6 +417,7 @@ typedef struct
     int (*mpfr_ff_f) (mpfr_t, const mpfr_t, const mpfr_t, mpfr_rnd_t);
     int (*mpfr_f_f1) (mpfr_t, int *, const mpfr_t, mpfr_rnd_t);
     int (*mpfr_if_f) (mpfr_t, long, const mpfr_t, mpfr_rnd_t);
+    int (*mpfr_f_11) (mpfr_t, mpfr_t, const mpfr_t, mpfr_rnd_t);
   } func;
 } func_calc_desc;
 
@@ -499,6 +503,8 @@ static test_function test_functions[] =
     FUNC_mpfr_f_f ("log2", mpfr_log2, false),
     FUNC_mpfr_ff_f ("pow", mpfr_pow, false),
     FUNC_mpfr_f_f ("sin", mpfr_sin, false),
+    FUNC ("sincos", ARGS1 (type_fp), RET2 (type_fp, type_fp), false, false,
+	  CALC (mpfr_f_11, mpfr_sin_cos)),
     FUNC_mpfr_f_f ("sinh", mpfr_sinh, false),
     FUNC_mpfr_f_f ("sqrt", mpfr_sqrt, true),
     FUNC_mpfr_f_f ("tan", mpfr_tan, false),
@@ -1357,6 +1363,20 @@ calc_generic_results (generic_value *outputs, generic_value *inputs,
       inexact = calc->func.mpfr_if_f (outputs[0].value.f, l,
 				      inputs[1].value.f, MPFR_RNDZ);
       adjust_real (outputs[0].value.f, inexact);
+      break;
+
+    case mpfr_f_11:
+      assert (inputs[0].type == gtype_fp);
+      outputs[0].type = gtype_fp;
+      mpfr_init (outputs[0].value.f);
+      outputs[1].type = gtype_fp;
+      mpfr_init (outputs[1].value.f);
+      int comb_ternary = calc->func.mpfr_f_11 (outputs[0].value.f,
+					       outputs[1].value.f,
+					       inputs[0].value.f,
+					       MPFR_RNDZ);
+      adjust_real (outputs[0].value.f, (comb_ternary & 0x3) != 0);
+      adjust_real (outputs[1].value.f, (comb_ternary & 0xc) != 0);
       break;
 
     default:

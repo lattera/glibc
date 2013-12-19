@@ -848,6 +848,25 @@ sin 8
 sin 9
 sin 10
 
+sincos 0
+sincos -0
+sincos pi/2
+sincos pi/6
+sincos pi/3
+sincos 0.75
+sincos 0x1p65
+sincos -0x1p65
+sincos 0.80190127184058835
+sincos 1e22
+sincos 0x1p1023
+sincos 0x1p16383
+sincos 0x1p+120
+sincos 0x1p+127
+sincos 0x1.fffff8p+127
+sincos 0x1.fffffep+127
+sincos 0x1p+50
+sincos 0x1p+28
+
 sinh 0
 sinh -0
 sinh 0.75

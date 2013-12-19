@@ -1,3 +1,16 @@
+2013-12-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/auto-libm-test-in: Add tests of sincos.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (sincos_test_data): Use AUTO_TESTS_fFF_11.
+	* math/gen-auto-libm-tests.c (func_calc_method): Add value
+	mpfr_f_11.
+	(func_calc_desc): Add mpfr_f_11 union field.
+	(test_functions): Add sincos.
+	(calc_generic_results): Handle mpfr_f_11.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2013-12-19  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/powerpc/powerpc64/power7/memchr.S: Fix argument of

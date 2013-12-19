@@ -8084,6 +8084,12 @@ float: 1
 ifloat: 1
 
 # sincos
+Test "sincos (0x1.921fb4p+0) extra output 2":
+ildouble: 1
+ldouble: 1
+Test "sincos (0xf.ffffffffffff8p+1020) extra output 1":
+ildouble: 1
+ldouble: 1
 Test "sincos (M_PI_6l*2.0) extra output 1":
 double: 1
 float: 1
