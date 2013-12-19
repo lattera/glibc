@@ -7011,7 +7011,13 @@ float: 1
 ifloat: 1
 
 # expm1
+Test "expm1 (-0x1p-64)":
+ildouble: 1
+ldouble: 1
 Test "expm1 (-0x2.dp+4)":
+ildouble: 1
+ldouble: 1
+Test "expm1 (-0x4p-12)":
 ildouble: 1
 ldouble: 1
 Test "expm1 (-45.0)":
@@ -7047,6 +7053,281 @@ ldouble: 1
 Test "expm1 (500.0)":
 double: 1
 idouble: 1
+
+# expm1_downward
+Test "expm1_downward (-0x1p-100)":
+ildouble: 1
+ldouble: 1
+Test "expm1_downward (-0x2.ep+4)":
+ildouble: 1
+ldouble: 1
+Test "expm1_downward (-0x4.9p+4)":
+ildouble: 1
+ldouble: 1
+Test "expm1_downward (-0x4.bp+4)":
+ildouble: 1
+ldouble: 1
+Test "expm1_downward (-0x4p-4)":
+ildouble: 1
+ldouble: 1
+Test "expm1_downward (-0x5p+4)":
+ildouble: 1
+ldouble: 1
+Test "expm1_downward (-0x6.4p+4)":
+ildouble: 1
+ldouble: 1
+Test "expm1_downward (0x1.f4p+8)":
+double: 1
+idouble: 1
+Test "expm1_downward (0x1p+0)":
+ildouble: 1
+ldouble: 1
+Test "expm1_downward (0x1p-100)":
+ildouble: 1
+ldouble: 1
+Test "expm1_downward (0x1p-32)":
+ildouble: 1
+ldouble: 1
+Test "expm1_downward (0x3.2p+4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "expm1_downward (0x4p-12)":
+ildouble: 1
+ldouble: 1
+Test "expm1_downward (0x4p-52)":
+ildouble: 1
+ldouble: 1
+Test "expm1_downward (0x7.fp+4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "expm1_downward (0x8p-32)":
+ildouble: 1
+ldouble: 1
+
+# expm1_tonearest
+Test "expm1_tonearest (-0x1p-64)":
+ildouble: 1
+ldouble: 1
+Test "expm1_tonearest (-0x2.dp+4)":
+ildouble: 1
+ldouble: 1
+Test "expm1_tonearest (-0x4p-12)":
+ildouble: 1
+ldouble: 1
+Test "expm1_tonearest (0x1.f4p+8)":
+double: 1
+idouble: 1
+Test "expm1_tonearest (0x1p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "expm1_tonearest (0x2.c5c4p+12)":
+ildouble: 1
+ldouble: 1
+Test "expm1_tonearest (0xcp-4)":
+double: 1
+idouble: 1
+
+# expm1_towardzero
+Test "expm1_towardzero (-0x1.86ap+16)":
+ildouble: 1
+ldouble: 1
+Test "expm1_towardzero (-0x1p-100)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "expm1_towardzero (-0x1p-20)":
+ildouble: 2
+ldouble: 2
+Test "expm1_towardzero (-0x1p-32)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "expm1_towardzero (-0x1p-64)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "expm1_towardzero (-0x2.71p+12)":
+ildouble: 1
+ldouble: 1
+Test "expm1_towardzero (-0x2.dp+4)":
+ildouble: 1
+ldouble: 1
+Test "expm1_towardzero (-0x3.e8p+8)":
+ildouble: 1
+ldouble: 1
+Test "expm1_towardzero (-0x4.ap+4)":
+ildouble: 1
+ldouble: 1
+Test "expm1_towardzero (-0x4.ep+4)":
+ildouble: 1
+ldouble: 1
+Test "expm1_towardzero (-0x4.fp+4)":
+ildouble: 1
+ldouble: 1
+Test "expm1_towardzero (-0x4p-12)":
+ildouble: 1
+ldouble: 1
+Test "expm1_towardzero (-0x4p-52)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "expm1_towardzero (-0x8p-32)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "expm1_towardzero (-0xf.ffffffffffff8p+1020)":
+ildouble: 1
+ldouble: 1
+Test "expm1_towardzero (-0xf.fffffffffffffffp+16380)":
+ildouble: 1
+ldouble: 1
+Test "expm1_towardzero (-0xf.fffffp+124)":
+ildouble: 1
+ldouble: 1
+Test "expm1_towardzero (0x1.f4p+8)":
+double: 1
+idouble: 1
+Test "expm1_towardzero (0x1p+0)":
+ildouble: 1
+ldouble: 1
+Test "expm1_towardzero (0x1p-100)":
+ildouble: 1
+ldouble: 1
+Test "expm1_towardzero (0x1p-32)":
+ildouble: 1
+ldouble: 1
+Test "expm1_towardzero (0x3.2p+4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "expm1_towardzero (0x4p-12)":
+ildouble: 1
+ldouble: 1
+Test "expm1_towardzero (0x4p-52)":
+ildouble: 1
+ldouble: 1
+Test "expm1_towardzero (0x7.fp+4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "expm1_towardzero (0x8p-32)":
+ildouble: 1
+ldouble: 1
+
+# expm1_upward
+Test "expm1_upward (-0x1.86ap+16)":
+ildouble: 1
+ldouble: 1
+Test "expm1_upward (-0x1p-100)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "expm1_upward (-0x1p-20)":
+ildouble: 2
+ldouble: 2
+Test "expm1_upward (-0x1p-32)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "expm1_upward (-0x1p-64)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "expm1_upward (-0x2.71p+12)":
+ildouble: 1
+ldouble: 1
+Test "expm1_upward (-0x2.dp+4)":
+ildouble: 1
+ldouble: 1
+Test "expm1_upward (-0x3.e8p+8)":
+ildouble: 1
+ldouble: 1
+Test "expm1_upward (-0x4.ap+4)":
+ildouble: 1
+ldouble: 1
+Test "expm1_upward (-0x4.ep+4)":
+ildouble: 1
+ldouble: 1
+Test "expm1_upward (-0x4.fp+4)":
+ildouble: 1
+ldouble: 1
+Test "expm1_upward (-0x4p-12)":
+ildouble: 1
+ldouble: 1
+Test "expm1_upward (-0x4p-52)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "expm1_upward (-0x8p-32)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "expm1_upward (-0xf.ffffffffffff8p+1020)":
+ildouble: 1
+ldouble: 1
+Test "expm1_upward (-0xf.fffffffffffffffp+16380)":
+ildouble: 1
+ldouble: 1
+Test "expm1_upward (-0xf.fffffp+124)":
+ildouble: 1
+ldouble: 1
+Test "expm1_upward (0x1.f4p+8)":
+ildouble: 1
+ldouble: 1
+Test "expm1_upward (0x1p-100)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "expm1_upward (0x1p-32)":
+float: 1
+ifloat: 1
+Test "expm1_upward (0x1p-64)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "expm1_upward (0x4p-4)":
+ildouble: 1
+ldouble: 1
+Test "expm1_upward (0x4p-52)":
+float: 1
+ifloat: 1
+Test "expm1_upward (0x8p-32)":
+float: 1
+ifloat: 1
 
 # gamma
 Test "gamma (-0.5)":
@@ -8864,6 +9145,9 @@ ldouble: 1
 Test "sinh_downward (0x1.8p+4)":
 ildouble: 1
 ldouble: 1
+Test "sinh_downward (0x8p-32)":
+ildouble: 1
+ldouble: 1
 Test "sinh_downward (22)":
 float: 1
 ifloat: 1
@@ -8892,6 +9176,9 @@ idouble: 1
 ildouble: 1
 ldouble: 1
 Test "sinh_towardzero (0x1.8p+4)":
+ildouble: 1
+ldouble: 1
+Test "sinh_towardzero (0x8p-32)":
 ildouble: 1
 ldouble: 1
 Test "sinh_towardzero (22)":
@@ -12013,6 +12300,38 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+
+Function: "expm1_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "expm1_tonearest":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "expm1_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: "expm1_upward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
 
 Function: "gamma":
 double: 1

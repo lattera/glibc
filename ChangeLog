@@ -1,5 +1,29 @@
 2013-12-19  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16293]
+	* sysdeps/i386/fpu/e_expl.S (IEEE754_EXPL) [USE_AS_EXPM1L]: Set
+	round-to-nearest mode when using frndint.
+	* sysdeps/i386/fpu/s_expm1.S (__expm1): Likewise.
+	* sysdeps/i386/fpu/s_expm1f.S (__expm1f): Likewise.
+	* sysdeps/x86_64/fpu/e_expl.S (IEEE754_EXPL) [USE_AS_EXPM1L]:
+	Likewise.
+	* math/auto-libm-test-in: Add more tests of expm1.  Do not expect
+	sinh test to fail.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (TEST_COND_x86_64): Remove macro.
+	(TEST_COND_x86): Likewise.
+	(expm1_tonearest_test_data): New array.
+	(expm1_test_tonearest): New function.
+	(expm1_towardzero_test_data): New array.
+	(expm1_test_towardzero): New function.
+	(expm1_downward_test_data): New array.
+	(expm1_test_downward): New function.
+	(expm1_upward_test_data): New array.
+	(expm1_test_upward): New function.
+	(main): Run the new test functions.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	* include/features.h: Update comment documenting feature test
 	macros.  Mention _DEFAULT_SOURCE in comment.
 	[_GNU_SOURCE] (_DEFAULT_SOURCE): Undefine and redefine.

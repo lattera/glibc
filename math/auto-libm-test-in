@@ -281,6 +281,22 @@ expm1 -100000.0
 expm1 100000.0
 expm1 max
 expm1 -max
+expm1 0x1p-2
+expm1 -0x1p-2
+expm1 0x1p-10
+expm1 -0x1p-10
+expm1 0x1p-20
+expm1 -0x1p-20
+expm1 0x1p-29
+expm1 -0x1p-29
+expm1 0x1p-32
+expm1 -0x1p-32
+expm1 0x1p-50
+expm1 -0x1p-50
+expm1 0x1p-64
+expm1 -0x1p-64
+expm1 0x1p-100
+expm1 -0x1p-100
 
 hypot 0 0
 hypot 0 -0
@@ -835,8 +851,7 @@ sin 10
 sinh 0
 sinh -0
 sinh 0.75
-# Bug 16293: expm1 inaccurate in directed rounding modes.
-sinh 0x8p-32 xfail:x86_64:ldbl-96-intel xfail:x86
+sinh 0x8p-32
 sinh 22
 sinh 23
 sinh 24

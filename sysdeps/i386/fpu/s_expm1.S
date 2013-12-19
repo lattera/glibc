@@ -78,7 +78,18 @@ ENTRY(__expm1)
 5:	fldt	MO(l2e)		// log2(e) : x
 	fmulp			// log2(e)*x
 	fld	%st		// log2(e)*x : log2(e)*x
+	// Set round-to-nearest temporarily.
+	subl	$8, %esp
+	cfi_adjust_cfa_offset (8)
+	fstcw	4(%esp)
+	movl	$0xf3ff, %ecx
+	andl	4(%esp), %ecx
+	movl	%ecx, (%esp)
+	fldcw	(%esp)
 	frndint			// int(log2(e)*x) : log2(e)*x
+	fldcw	4(%esp)
+	addl	$8, %esp
+	cfi_adjust_cfa_offset (-8)
 	fsubr	%st, %st(1)	// int(log2(e)*x) : fract(log2(e)*x)
 	fxch			// fract(log2(e)*x) : int(log2(e)*x)
 	f2xm1			// 2^fract(log2(e)*x)-1 : int(log2(e)*x)

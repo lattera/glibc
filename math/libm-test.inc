@@ -267,18 +267,6 @@ struct ulp_data
 #define TEST_COND_before_rounding	(!TININESS_AFTER_ROUNDING)
 #define TEST_COND_after_rounding	TININESS_AFTER_ROUNDING
 
-#ifdef __x86_64__
-# define TEST_COND_x86_64	1
-#else
-# define TEST_COND_x86_64	0
-#endif
-
-#ifdef __i386__
-# define TEST_COND_x86		1
-#else
-# define TEST_COND_x86		0
-#endif
-
 /* Various constants (we must supply them precalculated for accuracy).  */
 #define M_PI_6l			.52359877559829887307710723054658383L
 #define M_PI_34l		2.356194490192344928846982537459627163L	/* 3*pi/4 */
@@ -7845,6 +7833,62 @@ expm1_test (void)
 }
 
 
+static const struct test_f_f_data expm1_tonearest_test_data[] =
+  {
+    AUTO_TESTS_f_f (expm1, tonearest),
+  };
+
+static void
+expm1_test_tonearest (void)
+{
+  START (expm1_tonearest);
+  RUN_TEST_LOOP_f_f (expm1, expm1_tonearest_test_data, FE_TONEAREST);
+  END;
+}
+
+
+static const struct test_f_f_data expm1_towardzero_test_data[] =
+  {
+    AUTO_TESTS_f_f (expm1, towardzero),
+  };
+
+static void
+expm1_test_towardzero (void)
+{
+  START (expm1_towardzero);
+  RUN_TEST_LOOP_f_f (expm1, expm1_towardzero_test_data, FE_TOWARDZERO);
+  END;
+}
+
+
+static const struct test_f_f_data expm1_downward_test_data[] =
+  {
+    AUTO_TESTS_f_f (expm1, downward),
+  };
+
+static void
+expm1_test_downward (void)
+{
+  START (expm1_downward);
+  RUN_TEST_LOOP_f_f (expm1, expm1_downward_test_data, FE_DOWNWARD);
+  END;
+}
+
+
+static const struct test_f_f_data expm1_upward_test_data[] =
+  {
+    AUTO_TESTS_f_f (expm1, upward),
+  };
+
+static void
+expm1_test_upward (void)
+{
+  START (expm1_upward);
+  RUN_TEST_LOOP_f_f (expm1, expm1_upward_test_data, FE_UPWARD);
+  END;
+}
+
+
 static const struct test_f_f_data fabs_test_data[] =
   {
     TEST_f_f (fabs, 0, 0, NO_INEXACT_EXCEPTION),
@@ -13337,6 +13381,10 @@ main (int argc, char **argv)
   exp10_test ();
   exp2_test ();
   expm1_test ();
+  expm1_test_tonearest ();
+  expm1_test_towardzero ();
+  expm1_test_downward ();
+  expm1_test_upward ();
   frexp_test ();
   ldexp_test ();
   log_test ();
