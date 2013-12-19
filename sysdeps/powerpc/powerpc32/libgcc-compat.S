@@ -27,24 +27,28 @@
 #define __lshrdi3_v_glibc20	INTUSE (__lshrdi3)
 #define __cmpdi2_v_glibc20	INTUSE (__cmpdi2)
 #define __ucmpdi2_v_glibc20	INTUSE (__ucmpdi2)
-#define __fixdfdi_v_glibc20	INTUSE (__fixdfdi)
-#define __fixsfdi_v_glibc20	INTUSE (__fixsfdi)
-#define __fixunsdfdi_v_glibc20	INTUSE (__fixunsdfdi)
-#define __fixunssfdi_v_glibc20	INTUSE (__fixunssfdi)
-#define __floatdidf_v_glibc20	INTUSE (__floatdidf)
-#define __floatdisf_v_glibc20	INTUSE (__floatdisf)
+#if !defined _SOFT_FLOAT && !defined __NO_FPRS__
+# define __fixdfdi_v_glibc20	INTUSE (__fixdfdi)
+# define __fixsfdi_v_glibc20	INTUSE (__fixsfdi)
+# define __fixunsdfdi_v_glibc20	INTUSE (__fixunsdfdi)
+# define __fixunssfdi_v_glibc20	INTUSE (__fixunssfdi)
+# define __floatdidf_v_glibc20	INTUSE (__floatdidf)
+# define __floatdisf_v_glibc20	INTUSE (__floatdisf)
+#endif
 
 	.symver __ashldi3_v_glibc20,__ashldi3@GLIBC_2.0
 	.symver __ashrdi3_v_glibc20,__ashrdi3@GLIBC_2.0
 	.symver __lshrdi3_v_glibc20,__lshrdi3@GLIBC_2.0
 	.symver __cmpdi2_v_glibc20,__cmpdi2@GLIBC_2.0
 	.symver __ucmpdi2_v_glibc20,__ucmpdi2@GLIBC_2.0
+#if !defined _SOFT_FLOAT && !defined __NO_FPRS__
 	.symver __fixdfdi_v_glibc20,__fixdfdi@GLIBC_2.0
 	.symver __fixunsdfdi_v_glibc20,__fixunsdfdi@GLIBC_2.0
 	.symver __fixsfdi_v_glibc20,__fixsfdi@GLIBC_2.0
 	.symver __fixunssfdi_v_glibc20,__fixunssfdi@GLIBC_2.0
 	.symver __floatdidf_v_glibc20,__floatdidf@GLIBC_2.0
 	.symver __floatdisf_v_glibc20,__floatdisf@GLIBC_2.0
+#endif
 
 #ifdef HAVE_DOT_HIDDEN
 	.hidden __ashldi3
@@ -52,12 +56,14 @@
 	.hidden __lshrdi3
 	.hidden __cmpdi2
 	.hidden __ucmpdi2
+# if !defined _SOFT_FLOAT && !defined __NO_FPRS__
 	.hidden __fixdfdi
 	.hidden __fixsfdi
 	.hidden __fixunsdfdi
 	.hidden __fixunssfdi
 	.hidden __floatdidf
 	.hidden __floatdisf
+# endif
 #endif
 
 	.section	".text"
@@ -97,6 +103,7 @@ __ucmpdi2_v_glibc20:
 	b __ucmpdi2@local
 .Lfe9:
 	.size	__ucmpdi2_v_glibc20,.Lfe9-__ucmpdi2_v_glibc20
+#if !defined _SOFT_FLOAT && !defined __NO_FPRS__
 	.align 2
 	.globl __fixdfdi_v_glibc20
 	.type	__fixdfdi_v_glibc20,@function
@@ -139,5 +146,6 @@ __floatdisf_v_glibc20:
 	b __floatdisf@local
 .Lfe15:
 	.size	__floatdisf_v_glibc20,.Lfe15-__floatdisf_v_glibc20
+#endif
 
 #endif
