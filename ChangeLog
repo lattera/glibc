@@ -1,3 +1,8 @@
+2013-12-19  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* benchtests/Makefile: Add bench-strtok.
+	* benchtests/bench-strtok.c: New file: strtok benchtest.
+
 2013-12-19  Allan McRae  <allan@archlinux.org>
 
 	* manual/install.texi: Suppress menu for plain text output.
