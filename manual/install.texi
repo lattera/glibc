@@ -21,6 +21,7 @@ to activate them, and they will be compiled into the library.
 You will need recent versions of several GNU tools: definitely GCC and
 GNU Make, and possibly others.  @xref{Tools for Compilation}, below.
 
+@ifclear plain
 @menu
 * Configuring and compiling::   How to compile and test GNU libc.
 * Running make install::        How to install it once you've got it
@@ -29,6 +30,7 @@ GNU Make, and possibly others.  @xref{Tools for Compilation}, below.
 * Linux::                       Specific advice for GNU/Linux systems.
 * Reporting Bugs::              So they'll get fixed.
 @end menu
+@end ifclear
 
 @node Configuring and compiling
 @appendixsec Configuring and compiling @theglibc{}

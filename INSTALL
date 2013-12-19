@@ -6,10 +6,10 @@ Before you do anything else, you should read the FAQ at
 and describes problems you may experience with compilation and
 installation.
 
-   Features can be added to the GNU C Library via "add-on" bundles.
-These are separate tar files, which you unpack into the top level of
-the source tree.  Then you give `configure' the `--enable-add-ons'
-option to activate them, and they will be compiled into the library.
+Features can be added to the GNU C Library via "add-on" bundles.  These
+are separate tar files, which you unpack into the top level of the
+source tree.  Then you give `configure' the `--enable-add-ons' option
+to activate them, and they will be compiled into the library.
 
    You will need recent versions of several GNU tools: definitely GCC
 and GNU Make, and possibly others.  *Note Tools for Compilation::,

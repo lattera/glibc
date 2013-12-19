@@ -1,3 +1,8 @@
+2013-12-19  Allan McRae  <allan@archlinux.org>
+
+	* manual/install.texi: Suppress menu for plain text output.
+	* INSTALL: Regenerated.
+
 2013-12-18  Andrew Hunter  <ahh@google.com>
 
 	* sysdeps/generic/ldsodefs.h (__signal_safe_memalign): New prototype.
