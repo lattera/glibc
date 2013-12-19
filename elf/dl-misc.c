@@ -396,7 +396,7 @@ __signal_safe_memalign (size_t boundary, size_t size)
     boundary = sizeof (*header);
 
   /* Boundary must be a power of two.  */
-  if ((boundary & (boundary - 1)) == 0)
+  if (!powerof2(boundary))
     return NULL;
 
   size_t pg = GLRO (dl_pagesize);
