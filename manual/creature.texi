@@ -190,6 +190,21 @@ precedence.
 
 @comment (none)
 @comment GNU
+@defvr Macro _DEFAULT_SOURCE
+If you define this macro, most features are included apart from
+X/Open, LFS and GNU extensions; the effect is similar to defining
+@code{_POSIX_C_SOURCE} to @code{200809L} and @code{_POSIX_SOURCE},
+@code{_SVID_SOURCE}, and @code{_BSD_SOURCE} to 1.  Defining this
+macro, on its own and without using compiler options such as
+@option{-ansi} or @option{-std=c99}, has the same effect as not
+defining any feature test macros; defining it together with other
+feature test macros, or when options such as @option{-ansi} are used,
+enables those features even when the other options would otherwise
+cause them to be disabled.
+@end defvr
+
+@comment (none)
+@comment GNU
 @defvr Macro _REENTRANT
 @defvrx Macro _THREAD_SAFE
 If you define one of these macros, reentrant versions of several functions get
@@ -204,10 +219,10 @@ it must have been specified to compile as thread safe.
 @end defvr
 
 We recommend you use @code{_GNU_SOURCE} in new programs.  If you don't
-specify the @samp{-ansi} option to GCC and don't define any of these
-macros explicitly, the effect is the same as defining
-@code{_POSIX_C_SOURCE} to 2 and @code{_POSIX_SOURCE},
-@code{_SVID_SOURCE}, and @code{_BSD_SOURCE} to 1.
+specify the @samp{-ansi} option to GCC, or other conformance options
+such as @option{-std=c99}, and don't define any of these macros
+explicitly, the effect is the same as defining @code{_DEFAULT_SOURCE}
+to 1.
 
 When you define a feature test macro to request a larger class of features,
 it is harmless to define in addition a feature test macro for a subset of

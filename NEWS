@@ -101,6 +101,11 @@ Version 2.19
 
 * Support for STT_GNU_IFUNC symbols added for ppc32/power4+ and ppc64.
 
+* A new feature test macro _DEFAULT_SOURCE is available to enable the same
+  set of header declarations that are enabled by default, even when other
+  feature test macros or compiler options such as -std=c99 would otherwise
+  disable some of those declarations.
+
 * The _BSD_SOURCE feature test macro no longer enables BSD interfaces that
   conflict with POSIX.  The libbsd-compat library (which was a dummy library
   that did nothing) has also been removed.

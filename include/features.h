@@ -41,17 +41,21 @@
    _SVID_SOURCE		ISO C, POSIX, and SVID things.
    _ATFILE_SOURCE	Additional *at interfaces.
    _GNU_SOURCE		All of the above, plus GNU extensions.
+   _DEFAULT_SOURCE	The default set of features (taking precedence over
+			__STRICT_ANSI__).
    _REENTRANT		Select additionally reentrant object.
    _THREAD_SAFE		Same as _REENTRANT, often used by other systems.
    _FORTIFY_SOURCE	If set to numeric value > 0 additional security
 			measures are defined, according to level.
 
-   The `-ansi' switch to the GNU C compiler defines __STRICT_ANSI__.
-   If none of these are defined, the default is to have _SVID_SOURCE,
-   _BSD_SOURCE, and _POSIX_SOURCE set to one and _POSIX_C_SOURCE set to
-   200112L.  If more than one of these are defined, they accumulate.
-   For example __STRICT_ANSI__, _POSIX_SOURCE and _POSIX_C_SOURCE
-   together give you ISO C, 1003.1, and 1003.2, but nothing else.
+   The `-ansi' switch to the GNU C compiler, and standards conformance
+   options such as `-std=c99', define __STRICT_ANSI__.  If none of
+   these are defined, or if _DEFAULT_SOURCE is defined, the default is
+   to have _SVID_SOURCE, _BSD_SOURCE, and _POSIX_SOURCE set to one and
+   _POSIX_C_SOURCE set to 200809L.  If more than one of these are
+   defined, they accumulate.  For example __STRICT_ANSI__,
+   _POSIX_SOURCE and _POSIX_C_SOURCE together give you ISO C, 1003.1,
+   and 1003.2, but nothing else.
 
    These are defined by this file and are used by the
    header files to decide what to declare or define:
@@ -160,6 +164,8 @@
 # define _XOPEN_SOURCE_EXTENDED	1
 # undef	 _LARGEFILE64_SOURCE
 # define _LARGEFILE64_SOURCE	1
+# undef  _DEFAULT_SOURCE
+# define _DEFAULT_SOURCE	1
 # undef  _BSD_SOURCE
 # define _BSD_SOURCE	1
 # undef  _SVID_SOURCE
@@ -168,12 +174,19 @@
 # define _ATFILE_SOURCE	1
 #endif
 
-/* If nothing (other than _GNU_SOURCE) is defined,
-   define _BSD_SOURCE and _SVID_SOURCE.  */
-#if (!defined __STRICT_ANSI__ && !defined _ISOC99_SOURCE && \
-     !defined _POSIX_SOURCE && !defined _POSIX_C_SOURCE && \
-     !defined _XOPEN_SOURCE && !defined _BSD_SOURCE && !defined _SVID_SOURCE)
+/* If nothing (other than _GNU_SOURCE and _DEFAULT_SOURCE) is defined,
+   define _DEFAULT_SOURCE, _BSD_SOURCE and _SVID_SOURCE.  */
+#if (defined _DEFAULT_SOURCE					\
+     || (!defined __STRICT_ANSI__				\
+	 && !defined _ISOC99_SOURCE				\
+	 && !defined _POSIX_SOURCE && !defined _POSIX_C_SOURCE	\
+	 && !defined _XOPEN_SOURCE				\
+	 && !defined _BSD_SOURCE && !defined _SVID_SOURCE))
+# undef  _DEFAULT_SOURCE
+# define _DEFAULT_SOURCE	1
+# undef  _BSD_SOURCE
 # define _BSD_SOURCE	1
+# undef  _SVID_SOURCE
 # define _SVID_SOURCE	1
 #endif
 
@@ -204,8 +217,18 @@
 # define __USE_ISOCXX11	1
 #endif
 
-/* If none of the ANSI/POSIX macros are defined, use POSIX.1 and POSIX.2
-   (and IEEE Std 1003.1b-1993 unless _XOPEN_SOURCE is defined).  */
+/* If none of the ANSI/POSIX macros are defined, or if _DEFAULT_SOURCE
+   is defined, use POSIX.1-2008 (or another version depending on
+   _XOPEN_SOURCE).  */
+#ifdef _DEFAULT_SOURCE
+# if !defined _POSIX_SOURCE && !defined _POSIX_C_SOURCE
+#  define __USE_POSIX_IMPLICITLY	1
+# endif
+# undef  _POSIX_SOURCE
+# define _POSIX_SOURCE	1
+# undef  _POSIX_C_SOURCE
+# define _POSIX_C_SOURCE	200809L
+#endif
 #if ((!defined __STRICT_ANSI__ || (_XOPEN_SOURCE - 0) >= 500) && \
      !defined _POSIX_SOURCE && !defined _POSIX_C_SOURCE)
 # define _POSIX_SOURCE	1

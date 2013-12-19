@@ -1,3 +1,22 @@
+2013-12-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/features.h: Update comment documenting feature test
+	macros.  Mention _DEFAULT_SOURCE in comment.
+	[_GNU_SOURCE] (_DEFAULT_SOURCE): Undefine and redefine.
+	[_DEFAULT_SOURCE]: Undefine and redefine _DEFAULT_SOURCE,
+	_BSD_SOURCE and _SVID_SOURCE.
+	[!__STRICT_ANSI__ && !_ISOC99_SOURCE && !_POSIX_SOURCE &&
+	!_POSIX_C_SOURCE && !_XOPEN_SOURCE && !_BSD_SOURCE &&
+	!_SVID_SOURCE]: Likewise.
+	[_DEFAULT_SOURCE && !_POSIX_SOURCE && !_POSIX_C_SOURCE]
+	(__USE_POSIX_IMPLICITLY): Define.
+	[_DEFAULT_SOURCE && !_POSIX_SOURCE && !_POSIX_C_SOURCE]
+	(_POSIX_SOURCE): Undefine and redefine.
+	[_DEFAULT_SOURCE && !_POSIX_SOURCE && !_POSIX_C_SOURCE]
+	(_POSIX_C_SOURCE): Likewise.
+	* manual/creature.texi (_DEFAULT_SOURCE): Document.
+	(Feature Test Macros): Update documentation of default features.
+
 2013-12-19  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* benchtests/Makefile: Add bench-strtok.
