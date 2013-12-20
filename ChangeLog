@@ -1,5 +1,10 @@
 2013-12-20  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/s_sin.c (do_cos, do_cos_slow, do_sin,
+	do_sin_slow): New functions.
+	(__sin, __cos, slow1, slow2, sloww1, sloww2, bsloww1, bsloww2,
+	cslow2, csloww1, csloww2): Use the new functions.
+
 	* sysdeps/ieee754/dbl-64/s_sin.c (sloww1): Add new argument M.
 	Use M to change sign of result instead of X.  Assume X is
 	positive.
