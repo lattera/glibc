@@ -7759,6 +7759,46 @@ idouble: 2
 ifloat: 3
 ildouble: 3
 ldouble: 3
+Test "Real part of: cpow (0x2p+0 + +0 i, 0xap+0 + +0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: cpow (0x2p+0 + 0x3p+0 i, 0x4p+0 + +0 i)":
+double: 1
+float: 5
+idouble: 1
+ifloat: 5
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: cpow (0x2p+0 + 0x3p+0 i, 0x4p+0 + +0 i)":
+float: 2
+ifloat: 2
+ildouble: 4
+ldouble: 4
+Test "Real part of: cpow (0xcp-4 + 0x1.4p+0 i, +0 + 0x1p+0 i)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: cpow (0xcp-4 + 0x1.4p+0 i, 0x1p+0 + +0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: cpow (0xcp-4 + 0x1.4p+0 i, 0x1p+0 + 0x1p+0 i)":
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
+ildouble: 3
+ldouble: 3
+Test "Real part of: cpow (0xcp-4 + 0x1.4p+0 i, 0xcp-4 + 0x1.4p+0 i)":
+double: 1
+float: 4
+idouble: 1
+ifloat: 4
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: cpow (0xcp-4 + 0x1.4p+0 i, 0xcp-4 + 0x1.4p+0 i)":
+ildouble: 2
+ldouble: 2
 Test "Real part of: cpow (2 + 0 i, 10 + 0 i)":
 ildouble: 1
 ldouble: 1

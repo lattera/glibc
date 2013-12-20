@@ -1,5 +1,18 @@
 2013-12-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/auto-libm-test-in: Add tests of cpow.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (cpow_test_data): Use AUTO_TESTS_cc_c.
+	* * math/gen-auto-libm-tests.c (func_calc_method): Add value
+	mpc_cc_c.
+	(func_calc_desc): Add mpc_cc_c union field.
+	(test_functions): Add cpow.
+	(special_fill_2pi): New function.
+	(special_real_inputs): Add 2pi.
+	(calc_generic_results): Handle mpc_cc_c.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	* math/auto-libm-test-in: Add tests of ccos, ccosh, cexp, clog,
 	csqrt, ctan and ctanh.
 	* math/auto-libm-test-out: Regenerated.

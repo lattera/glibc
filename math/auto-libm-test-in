@@ -412,6 +412,17 @@ cosh 22
 cosh 23
 cosh 24
 
+cpow 1 0 0 0
+cpow 2 0 10 0
+# Bug 14473: cpow results inaccurate.
+cpow e 0 0 2pi xfail
+cpow 2 3 4 0
+
+cpow 0.75 1.25 0.75 1.25
+cpow 0.75 1.25 1.0 1.0
+cpow 0.75 1.25 1.0 0.0
+cpow 0.75 1.25 0.0 1.0
+
 csqrt 0 0
 csqrt 0 -0
 csqrt -0 0

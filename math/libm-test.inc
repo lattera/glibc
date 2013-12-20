@@ -6564,20 +6564,9 @@ cosh_test_upward (void)
 
 static const struct test_cc_c_data cpow_test_data[] =
   {
-    TEST_cc_c (cpow, 1, 0, 0, 0, 1.0, 0.0),
-    TEST_cc_c (cpow, 2, 0, 10, 0, 1024.0, 0.0),
-#if 0
-    /* Disabled until we fix bug 14473.  */
-    TEST_cc_c (cpow, M_El, 0, 0, 2 * M_PIl, 1.0, 0.0),
-#endif
-    TEST_cc_c (cpow, 2, 3, 4, 0, -119.0, -120.0),
-
     TEST_cc_c (cpow, qnan_value, qnan_value, qnan_value, qnan_value, qnan_value, qnan_value),
 
-    TEST_cc_c (cpow, 0.75L, 1.25L, 0.75L, 1.25L, 0.117506293914473555420279832210420483L, 0.346552747708338676483025352060418001L),
-    TEST_cc_c (cpow, 0.75L, 1.25L, 1.0L, 1.0L, 0.0846958290317209430433805274189191353L, 0.513285749182902449043287190519090481L),
-    TEST_cc_c (cpow, 0.75L, 1.25L, 1.0L, 0.0L, 0.75L, 1.25L),
-    TEST_cc_c (cpow, 0.75L, 1.25L, 0.0L, 1.0L, 0.331825439177608832276067945276730566L, 0.131338600281188544930936345230903032L),
+    AUTO_TESTS_cc_c (cpow, tonearest),
   };
 
 static void

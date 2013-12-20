@@ -409,6 +409,9 @@ typedef enum
     /* MPC function with a single complex argument and one complex
        result.  */
     mpc_c_c,
+    /* MPC function with two complex arguments and one complex
+       result.  */
+    mpc_cc_c,
   } func_calc_method;
 
 /* Description of how to calculate a function.  */
@@ -426,6 +429,7 @@ typedef struct
     int (*mpfr_f_11) (mpfr_t, mpfr_t, const mpfr_t, mpfr_rnd_t);
     int (*mpc_c_f) (mpfr_t, const mpc_t, mpfr_rnd_t);
     int (*mpc_c_c) (mpc_t, const mpc_t, mpc_rnd_t);
+    int (*mpc_cc_c) (mpc_t, const mpc_t, const mpc_t, mpc_rnd_t);
   } func;
 } func_calc_desc;
 
@@ -512,6 +516,8 @@ static test_function test_functions[] =
     FUNC_mpc_c_c ("clog10", mpc_log10, false),
     FUNC_mpfr_f_f ("cos", mpfr_cos, false),
     FUNC_mpfr_f_f ("cosh", mpfr_cosh, false),
+    FUNC ("cpow", ARGS4 (type_fp, type_fp, type_fp, type_fp),
+	  RET2 (type_fp, type_fp), false, true, CALC (mpc_cc_c, mpc_pow)),
     FUNC_mpc_c_c ("csin", mpc_sin, false),
     FUNC_mpc_c_c ("csinh", mpc_sinh, false),
     FUNC_mpc_c_c ("csqrt", mpc_sqrt, false),
@@ -877,6 +883,18 @@ special_fill_2pi_3 (mpfr_t res0, mpfr_t res1, fp_format format)
 }
 
 static size_t
+special_fill_2pi (mpfr_t res0, mpfr_t res1, fp_format format)
+{
+  mpfr_init2 (res0, fp_formats[format].mant_dig);
+  mpfr_const_pi (res0, MPFR_RNDU);
+  assert_exact (mpfr_mul_ui (res0, res0, 2, MPFR_RNDN));
+  mpfr_init2 (res1, fp_formats[format].mant_dig);
+  mpfr_const_pi (res1, MPFR_RNDD);
+  assert_exact (mpfr_mul_ui (res1, res1, 2, MPFR_RNDN));
+  return 2;
+}
+
+static size_t
 special_fill_e (mpfr_t res0, mpfr_t res1, fp_format format)
 {
   mpfr_init2 (res0, fp_formats[format].mant_dig);
@@ -943,6 +961,7 @@ static const special_real_input special_real_inputs[] =
     { "-pi/6", special_fill_minus_pi_6 },
     { "pi/3", special_fill_pi_3 },
     { "2pi/3", special_fill_2pi_3 },
+    { "2pi", special_fill_2pi },
     { "e", special_fill_e },
     { "1/e", special_fill_1_e },
     { "e-1", special_fill_e_minus_1 },
@@ -1364,6 +1383,9 @@ calc_generic_results (generic_value *outputs, generic_value *inputs,
 		      const func_calc_desc *calc)
 {
   bool inexact;
+  int mpc_ternary;
+  mpc_t ci1, ci2, co;
+
   switch (calc->method)
     {
     case mpfr_f_f:
@@ -1428,13 +1450,12 @@ calc_generic_results (generic_value *outputs, generic_value *inputs,
       assert (inputs[1].type == gtype_fp);
       outputs[0].type = gtype_fp;
       mpfr_init (outputs[0].value.f);
-      mpc_t ci;
-      mpc_init2 (ci, internal_precision);
-      assert_exact (mpc_set_fr_fr (ci, inputs[0].value.f, inputs[1].value.f,
+      mpc_init2 (ci1, internal_precision);
+      assert_exact (mpc_set_fr_fr (ci1, inputs[0].value.f, inputs[1].value.f,
 				   MPC_RNDNN));
-      inexact = calc->func.mpc_c_f (outputs[0].value.f, ci, MPFR_RNDZ);
+      inexact = calc->func.mpc_c_f (outputs[0].value.f, ci1, MPFR_RNDZ);
       adjust_real (outputs[0].value.f, inexact);
-      mpc_clear (ci);
+      mpc_clear (ci1);
       break;
 
     case mpc_c_c:
@@ -1444,19 +1465,46 @@ calc_generic_results (generic_value *outputs, generic_value *inputs,
       mpfr_init (outputs[0].value.f);
       outputs[1].type = gtype_fp;
       mpfr_init (outputs[1].value.f);
-      mpc_t co;
-      mpc_init2 (ci, internal_precision);
+      mpc_init2 (ci1, internal_precision);
       mpc_init2 (co, internal_precision);
-      assert_exact (mpc_set_fr_fr (ci, inputs[0].value.f, inputs[1].value.f,
+      assert_exact (mpc_set_fr_fr (ci1, inputs[0].value.f, inputs[1].value.f,
 				   MPC_RNDNN));
-      int mpc_ternary = calc->func.mpc_c_c (co, ci, MPC_RNDZZ);
+      mpc_ternary = calc->func.mpc_c_c (co, ci1, MPC_RNDZZ);
       assert_exact (mpfr_set (outputs[0].value.f, mpc_realref (co),
 			      MPFR_RNDN));
       assert_exact (mpfr_set (outputs[1].value.f, mpc_imagref (co),
 			      MPFR_RNDN));
       adjust_real (outputs[0].value.f, MPC_INEX_RE (mpc_ternary));
       adjust_real (outputs[1].value.f, MPC_INEX_IM (mpc_ternary));
-      mpc_clear (ci);
+      mpc_clear (ci1);
+      mpc_clear (co);
+      break;
+
+    case mpc_cc_c:
+      assert (inputs[0].type == gtype_fp);
+      assert (inputs[1].type == gtype_fp);
+      assert (inputs[2].type == gtype_fp);
+      assert (inputs[3].type == gtype_fp);
+      outputs[0].type = gtype_fp;
+      mpfr_init (outputs[0].value.f);
+      outputs[1].type = gtype_fp;
+      mpfr_init (outputs[1].value.f);
+      mpc_init2 (ci1, internal_precision);
+      mpc_init2 (ci2, internal_precision);
+      mpc_init2 (co, internal_precision);
+      assert_exact (mpc_set_fr_fr (ci1, inputs[0].value.f, inputs[1].value.f,
+				   MPC_RNDNN));
+      assert_exact (mpc_set_fr_fr (ci2, inputs[2].value.f, inputs[3].value.f,
+				   MPC_RNDNN));
+      mpc_ternary = calc->func.mpc_cc_c (co, ci1, ci2, MPC_RNDZZ);
+      assert_exact (mpfr_set (outputs[0].value.f, mpc_realref (co),
+			      MPFR_RNDN));
+      assert_exact (mpfr_set (outputs[1].value.f, mpc_imagref (co),
+			      MPFR_RNDN));
+      adjust_real (outputs[0].value.f, MPC_INEX_RE (mpc_ternary));
+      adjust_real (outputs[1].value.f, MPC_INEX_IM (mpc_ternary));
+      mpc_clear (ci1);
+      mpc_clear (ci2);
       mpc_clear (co);
       break;
 
