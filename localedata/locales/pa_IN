@@ -210,6 +210,8 @@ country_ab3 "<U0049><U004E><U0044>"
 country_num 356
 % IND
 country_car    "<U0049><U004E><U0044>"
+% ਪੰਜਾਬੀ
+lang_name    "<U0A2A><U0A70><U0A1C><U0A3E><U0A2C><U0A40>"
 % pa
 lang_ab      "<U0070><U0061>"
 % pan

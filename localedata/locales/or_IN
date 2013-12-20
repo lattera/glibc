@@ -816,6 +816,8 @@ country_ab3 "<U0049><U004E><U0044>"
 country_num 356
 % IND
 country_car    "<U0049><U004E><U0044>"
+% ଓଡ଼ିଆ
+lang_name    "<U0B13><U0B21><U0B3C><U0B3F><U0B06>"
 % or
 lang_ab      "<U006F><U0072>"
 % ori

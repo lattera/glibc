@@ -157,6 +157,8 @@ country_ab3 "<U0042><U0052><U0041>"
 country_num 076
 % BR
 country_car    "<U0042><U0052>"
+% português
+lang_name    "<U0070><U006F><U0072><U0074><U0075><U0067><U0075><U00EA><U0073>"
 % pt
 lang_ab      "<U0070><U0074>"
 % por
