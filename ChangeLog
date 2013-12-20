@@ -1,5 +1,10 @@
 2013-12-20  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/s_sin.c (reduce_and_compute): Remove
+	arguments A and DA.
+	(__sin): Adjust.
+	(__cos): Likewise.
+
 	* sysdeps/ieee754/dbl-64/s_sin.c (__sin): Use DA directly.
 	(__cos): Likewise.
 	(sloww1): Don't adjust sign of DX.

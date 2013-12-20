@@ -150,9 +150,9 @@ static double csloww2 (double x, double dx, double orig, int n);
    by simply rotating the quadrants by 1.  */
 static inline double
 __always_inline
-reduce_and_compute (double x, double a, double da, unsigned int k)
+reduce_and_compute (double x, unsigned int k)
 {
-  double retval = 0;
+  double retval = 0, a, da;
   unsigned int n = __branred (x, &a, &da);
   k = (n + k) % 4;
   switch (k)
@@ -424,7 +424,7 @@ __sin (double x)
 
 /* -----------------281474976710656 <|x| <2^1024----------------------------*/
   else if (k < 0x7ff00000)
-    retval = reduce_and_compute (x, a, da, 0);
+    retval = reduce_and_compute (x, 0);
 
 /*--------------------- |x| > 2^1024 ----------------------------------*/
   else
@@ -687,7 +687,7 @@ __cos (double x)
 
   /* 281474976710656 <|x| <2^1024 */
   else if (k < 0x7ff00000)
-    retval = reduce_and_compute (x, a, da, 1);
+    retval = reduce_and_compute (x, 1);
 
   else
     {
