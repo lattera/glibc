@@ -1,3 +1,15 @@
+2013-12-20  Chris Leonard  <cjl@sugarlabs.org>
+	* locales/oc_FR: Add lang_name
+	* locales/or_IN: Likewise.
+	* locales/pa_IN: Likewise.
+	* locales/pa_PK: Likewise.
+	* locales/pap_AW: Likewise.
+	* locales/pap_CW: Likewise.
+	* locales/pl_PL: Likewise.
+	* locales/pt_BR: Likewise.
+	* locales/pt_PT: Likewise.
+	* locales/quz_PE: Likewise.
+
 2013-12-12  Toke Høiland-Jørgensen <toke@toke.dk>
 	[BZ #15593]
 	* locales/translit_neutral: Add entries for U00D8 and U00F8.
@@ -9,7 +21,7 @@
 
 2013-12-01  Chris Leonard  <cjl@sugarlabs.org>
 
-	* locales/mag_IN: Add lang_name to various locales.
+	* locales/mag_IN: Add lang_name.
 	* locales/mai_IN: Likewise.
 	* locales/mg_MG: Likewise.
 	* locales/mi_NZ: Likewise.
@@ -30,7 +42,7 @@
 
 2013-11-26  Chris Leonard  <cjl@sugarlabs.org>
 
-	* locales/ka_GE: Add lang_name to various locales.
+	* locales/ka_GE: Add lang_name.
 	* locales/kl_GL: Likewise.
 	* locales/kn_IN: Likewise.
 	* locales/ko_KR: Likewise.
@@ -48,7 +60,7 @@
 
 2013-11-25  Chris Leonard  <cjl@sugarlabs.org>
 
-	* locales/ga_IE: Add lang_name to various locales.
+	* locales/ga_IE: Add lang_name.
 	* locales/gl_ES: Likewise.
 	* locales/gu_IN: Likewise.
 	* locales/gv_GB: Likewise.
@@ -65,7 +77,7 @@
 
 2013-11-24  Chris Leonard  <cjl@sugarlabs.org>
 
-	* locales/bs_BA: Add lang_name to various locales.
+	* locales/bs_BA: Add lang_name.
 	* locales/ca_AD: Likewise.
 	* locales/ca_ES: Likewise.
 	* locales/ca_FR: Likewise.
@@ -89,7 +101,7 @@
 
 2013-11-23  Chris Leonard  <cjl@sugarlabs.org>
 
-	* locales/be_BY: Add lang_name to various locales.
+	* locales/be_BY: Add lang_name.
 	* locales/be_BY@latin: Likewise.
 	* locales/ber_DZ: Likewise.
 	* locales/ber_MA: Likewise.
@@ -101,7 +113,7 @@
 
 2013-11-23  Chris Leonard  <cjl@sugarlabs.org>
 
-	* locales/an_ES: Add lang_name to various locales.
+	* locales/an_ES: Add lang_name.
 	* locales/anp_IN: Likewise.
 	* locales/as_IN: Likewise.
 	* locales/ast_ES: Likewise.
