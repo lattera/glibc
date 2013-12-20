@@ -290,19 +290,18 @@ __sin (double x)
 		{
 		  m = 1;
 		  t = a;
-		  db = da;
 		}
 	      else
 		{
 		  m = 0;
 		  t = -a;
-		  db = -da;
+		  da = -da;
 		}
 	      u.x = big + t;
 	      y = t - (u.x - big);
 	      xx = y * y;
-	      s = y + (db + y * xx * (sn3 + xx * sn5));
-	      c = y * db + xx * (cs2 + xx * (cs4 + xx * cs6));
+	      s = y + (da + y * xx * (sn3 + xx * sn5));
+	      c = y * da + xx * (cs2 + xx * (cs4 + xx * cs6));
 	      SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
 	      cor = (ssn + s * ccs - sn * c) + cs * s;
 	      res = sn + cor;
@@ -498,19 +497,18 @@ __cos (double x)
 	    {
 	      m = 1;
 	      t = a;
-	      db = da;
 	    }
 	  else
 	    {
 	      m = 0;
 	      t = -a;
-	      db = -da;
+	      da = -da;
 	    }
 	  u.x = big + t;
 	  y = t - (u.x - big);
 	  xx = y * y;
-	  s = y + (db + y * xx * (sn3 + xx * sn5));
-	  c = y * db + xx * (cs2 + xx * (cs4 + xx * cs6));
+	  s = y + (da + y * xx * (sn3 + xx * sn5));
+	  c = y * da + xx * (cs2 + xx * (cs4 + xx * cs6));
 	  SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
 	  cor = (ssn + s * ccs - sn * c) + cs * s;
 	  res = sn + cor;
@@ -557,19 +555,18 @@ __cos (double x)
 		{
 		  m = 1;
 		  t = a;
-		  db = da;
 		}
 	      else
 		{
 		  m = 0;
 		  t = -a;
-		  db = -da;
+		  da = -da;
 		}
 	      u.x = big + t;
 	      y = t - (u.x - big);
 	      xx = y * y;
-	      s = y + (db + y * xx * (sn3 + xx * sn5));
-	      c = y * db + xx * (cs2 + xx * (cs4 + xx * cs6));
+	      s = y + (da + y * xx * (sn3 + xx * sn5));
+	      c = y * da + xx * (cs2 + xx * (cs4 + xx * cs6));
 	      SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
 	      cor = (ssn + s * ccs - sn * c) + cs * s;
 	      res = sn + cor;
@@ -899,7 +896,6 @@ sloww1 (double x, double dx, double orig)
   y = ABS (x);
   u.x = big + y;
   y = y - (u.x - big);
-  dx = (x > 0) ? dx : -dx;
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);
   c = xx * (cs2 + xx * (cs4 + xx * cs6));
@@ -951,10 +947,8 @@ sloww2 (double x, double dx, double orig, int n)
   mynumber u;
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, e1, e2, xx, cor, res;
 
-  y = ABS (x);
-  u.x = big + y;
-  y = y - (u.x - big);
-  dx = (x > 0) ? dx : -dx;
+  u.x = big + x;
+  y = x - (u.x - big);
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);
   c = y * dx + xx * (cs2 + xx * (cs4 + xx * cs6));
@@ -979,7 +973,7 @@ sloww2 (double x, double dx, double orig, int n)
     return (n & 2) ? -res : res;
   else
     {
-      __docos (ABS (x), dx, w);
+      __docos (x, dx, w);
 
       if (w[1] > 0)
 	cor = 1.000000005 * w[1] + 1.1e-30 * ABS (orig);
@@ -1254,7 +1248,6 @@ csloww1 (double x, double dx, double orig)
   y = ABS (x);
   u.x = big + y;
   y = y - (u.x - big);
-  dx = (x > 0) ? dx : -dx;
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);
   c = xx * (cs2 + xx * (cs4 + xx * cs6));
@@ -1305,10 +1298,8 @@ csloww2 (double x, double dx, double orig, int n)
   mynumber u;
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, e1, e2, xx, cor, res;
 
-  y = ABS (x);
-  u.x = big + y;
-  y = y - (u.x - big);
-  dx = (x > 0) ? dx : -dx;
+  u.x = big + x;
+  y = x - (u.x - big);
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);
   c = y * dx + xx * (cs2 + xx * (cs4 + xx * cs6));
@@ -1333,7 +1324,7 @@ csloww2 (double x, double dx, double orig, int n)
     return (n) ? -res : res;
   else
     {
-      __docos (ABS (x), dx, w);
+      __docos (x, dx, w);
       if (w[1] > 0)
 	cor = 1.000000005 * w[1] + 1.1e-30 * ABS (orig);
       else

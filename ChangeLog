@@ -1,3 +1,12 @@
+2013-12-20  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (__sin): Use DA directly.
+	(__cos): Likewise.
+	(sloww1): Don't adjust sign of DX.
+	(csloww1): Likewise.
+	(sloww2): Use X directly and don't adjust sign of DX.
+	(csloww2): Likewise.
+
 2013-12-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Add tests of cabs and carg.
