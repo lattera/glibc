@@ -33,9 +33,17 @@ acos 0x0.ffffffffffffp0
 acos -0x0.ffffffffffffp0
 acos 0x0.ffffffffffffffffp0
 acos -0x0.ffffffffffffffffp0
+acos min
+acos -min
+acos min_subnorm
+acos -min_subnorm
 
 acosh 1
+acosh 1.625
 acosh 7
+acosh 100
+acosh 1e5
+acosh max no-test-inline
 
 asin 0
 asin -0
@@ -52,10 +60,27 @@ asin 0x0.ffffffffffffp0
 asin -0x0.ffffffffffffp0
 asin 0x0.ffffffffffffffffp0
 asin -0x0.ffffffffffffffffp0
+# Bug 16351: underflow exception may be missing.
+asin min missing-underflow
+asin -min missing-underflow
+asin min_subnorm missing-underflow
+asin -min_subnorm missing-underflow
 
 asinh 0
 asinh -0
 asinh 0.75
+asinh 1
+asinh 10
+asinh 100
+asinh 1e6
+asinh 0x1p100
+# Bug 16350: underflow exception may be missing.
+asinh min missing-underflow
+asinh -min missing-underflow
+asinh min_subnorm missing-underflow
+asinh -min_subnorm missing-underflow
+asinh max no-test-inline
+asinh -max no-test-inline
 
 atan 0
 atan -0
@@ -64,10 +89,18 @@ atan -max
 atan 1
 atan -1
 atan 0.75
+atan 0x1p-5
+atan 2.5
+atan 10
+atan 1e6
 # Bug 15319: underflow exception may be missing.
 atan 0x1p-100 missing-underflow
 atan 0x1p-600 missing-underflow
 atan 0x1p-10000 missing-underflow
+atan min missing-underflow
+atan -min missing-underflow
+atan min_subnorm missing-underflow
+atan -min_subnorm missing-underflow
 
 # atan2 (0,x) == 0 for x > 0.
 atan2 0 1
@@ -90,8 +123,17 @@ atan2 -1 0
 # atan2 (y,-0) == -pi/2 for y < 0.
 atan2 -1 -0
 atan2 max max
+atan2 max -max
+atan2 -max max
+atan2 -max -max
 atan2 max min
 atan2 -max -min
+atan2 -max min
+atan2 max -min
+atan2 max min_subnorm
+atan2 -max -min_subnorm
+atan2 -max min_subnorm
+atan2 max -min_subnorm
 atan2 0.75 1
 atan2 -0.75 1.0
 atan2 0.75 -1.0
@@ -100,10 +142,43 @@ atan2 0.390625 .00029
 atan2 1.390625 0.9296875
 atan2 -0.00756827042671106339 -.001792735857538728036
 atan2 0x1.00000000000001p0 0x1.00000000000001p0
+atan2 min min
+atan2 min -min
+atan2 -min min
+atan2 -min -min
+atan2 min_subnorm min_subnorm
+atan2 min_subnorm -min_subnorm
+atan2 -min_subnorm min_subnorm
+atan2 -min_subnorm -min_subnorm
+atan2 1 -max
+atan2 -1 -max
+atan2 min -max
+atan2 -min -max
+atan2 min_subnorm -max
+atan2 -min_subnorm -max
+# Bug 15319: underflow exception may be missing.
+# Bug 16349: errno setting may be missing.
+atan2 1 max missing-underflow
+atan2 -1 max missing-underflow
+atan2 min max missing-underflow missing-errno
+atan2 -min max missing-underflow missing-errno
+atan2 min_subnorm max missing-underflow missing-errno
+atan2 -min_subnorm max missing-underflow missing-errno
 
 atanh 0
 atanh -0
 atanh 0.75
+atanh -0.75
+atanh 0.25
+atanh 0x1p-5
+atanh 0x1p-10
+atanh 0x1.2345p-20
+# Bug 16352: underflow exception may be missing.
+# Bug 16357: spurious underflow may occur.
+atanh min missing-underflow spurious-underflow:ldbl-96-intel:x86
+atanh -min missing-underflow spurious-underflow:ldbl-96-intel:x86
+atanh min_subnorm missing-underflow
+atanh -min_subnorm missing-underflow
 
 # cabs (x,y) == cabs (y,x).
 cabs 0.75 12.390625
@@ -154,6 +229,13 @@ cbrt 0.9921875
 cbrt 0.75
 cbrt 0x1p16383
 cbrt 0x1p-16383
+cbrt 1e5
+cbrt max
+cbrt -max
+cbrt min
+cbrt -min
+cbrt min_subnorm
+cbrt -min_subnorm
 
 ccos 0.0 0.0
 ccos -0 0.0
@@ -402,6 +484,12 @@ cos 7
 cos 8
 cos 9
 cos 10
+cos max
+cos -max
+cos min
+cos -min
+cos min_subnorm
+cos -min_subnorm
 
 cosh 0
 cosh -0
@@ -411,6 +499,39 @@ cosh -709.8893558127259666434838436543941497802734375
 cosh 22
 cosh 23
 cosh 24
+cosh 0x1p-5
+cosh 0x1p-20
+cosh -1
+cosh 50
+cosh max no-test-inline
+cosh -max no-test-inline
+# Bug 16354: spurious underflow may occur.
+cosh min spurious-underflow
+cosh -min spurious-underflow
+cosh min_subnorm spurious-underflow
+cosh -min_subnorm spurious-underflow
+# Test values either side of overflow for each floating-point format.
+cosh 0x5.96a7ep+4
+cosh 0x5.96a7e8p+4
+cosh -0x5.96a7ep+4
+cosh -0x5.96a7e8p+4
+cosh 0x2.c679d1f73f0fap+8
+cosh 0x2.c679d1f73f0fcp+8
+cosh -0x2.c679d1f73f0fap+8
+cosh -0x2.c679d1f73f0fcp+8
+# Bug 16356: bad results from expl (and so coshl) in round-upward mode.
+cosh 0x2.c679d1f73f0fb624d358b213a7p+8 xfail-rounding:ldbl-96-intel:x86 xfail-rounding:ldbl-96-intel:x86_64
+cosh 0x2.c679d1f73f0fb624d358b213a8p+8 xfail-rounding:ldbl-96-intel:x86 xfail-rounding:ldbl-96-intel:x86_64
+cosh -0x2.c679d1f73f0fb624d358b213a7p+8 xfail-rounding:ldbl-96-intel:x86 xfail-rounding:ldbl-96-intel:x86_64
+cosh -0x2.c679d1f73f0fb624d358b213a8p+8 xfail-rounding:ldbl-96-intel:x86 xfail-rounding:ldbl-96-intel:x86_64
+cosh 0x2.c5d37700c6bb03a4p+12 no-test-inline
+cosh 0x2.c5d37700c6bb03a8p+12 no-test-inline
+cosh -0x2.c5d37700c6bb03a4p+12 no-test-inline
+cosh -0x2.c5d37700c6bb03a8p+12 no-test-inline
+cosh 0x2.c5d37700c6bb03a6c24b6c9b494cp+12 no-test-inline
+cosh 0x2.c5d37700c6bb03a6c24b6c9b494ep+12 no-test-inline
+cosh -0x2.c5d37700c6bb03a6c24b6c9b494cp+12 no-test-inline
+cosh -0x2.c5d37700c6bb03a6c24b6c9b494ep+12 no-test-inline
 
 cpow 1 0 0 0
 cpow 2 0 10 0

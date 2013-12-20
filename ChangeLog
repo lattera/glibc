@@ -1,5 +1,15 @@
 2013-12-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/auto-libm-test-in: Add more tests of acos, acosh, asin,
+	asinh, atan, atan2, atanh, cbrt, cos and cosh.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (acosh_test_data): Add more tests.
+	(atanh_test_data): Likewise.
+	(ceil_test_data): Likewise.
+	(copysign_test_data): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	* timezone/checktab.awk: Update from tzcode 2013i.
 	* timezone/private.h: Likewise.
 	* timezone/scheck.c: Likewise.

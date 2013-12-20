@@ -1727,6 +1727,13 @@ static const struct test_f_f_data acosh_test_data[] =
     TEST_f_f (acosh, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
 
     /* x < 1:  */
+    TEST_f_f (acosh, 0.75L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (acosh, min_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (acosh, min_subnorm_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (acosh, plus_zero, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (acosh, minus_zero, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (acosh, -min_subnorm_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (acosh, -min_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (acosh, -1.125L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (acosh, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
 
@@ -1866,6 +1873,8 @@ static const struct test_f_f_data atanh_test_data[] =
     TEST_f_f (atanh, -1.125L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (atanh, max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (atanh, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (atanh, plus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (atanh, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
 
     AUTO_TESTS_f_f (atanh, tonearest),
   };
@@ -5915,12 +5924,18 @@ static const struct test_f_f_data ceil_test_data[] =
     /* Bug 15479: spurious "inexact" exception may occur.  */
     TEST_f_f (ceil, M_PIl, 4.0),
     TEST_f_f (ceil, -M_PIl, -3.0),
+    TEST_f_f (ceil, min_subnorm_value, 1.0),
+    TEST_f_f (ceil, min_value, 1.0),
     TEST_f_f (ceil, 0.1, 1.0),
     TEST_f_f (ceil, 0.25, 1.0),
     TEST_f_f (ceil, 0.625, 1.0),
+    TEST_f_f (ceil, max_value, max_value),
+    TEST_f_f (ceil, -min_subnorm_value, minus_zero),
+    TEST_f_f (ceil, -min_value, minus_zero),
     TEST_f_f (ceil, -0.1, minus_zero),
     TEST_f_f (ceil, -0.25, minus_zero),
     TEST_f_f (ceil, -0.625, minus_zero),
+    TEST_f_f (ceil, -max_value, -max_value),
 
 #ifdef TEST_LDOUBLE
     /* The result can only be represented in long double.  */
@@ -6403,6 +6418,21 @@ static const struct test_ff_f_data copysign_test_data[] =
     TEST_ff_f (copysign, qnan_value, minus_zero, -qnan_value, NO_INEXACT_EXCEPTION|TEST_NAN_SIGN),
     TEST_ff_f (copysign, -qnan_value, 0, qnan_value, NO_INEXACT_EXCEPTION|TEST_NAN_SIGN),
     TEST_ff_f (copysign, -qnan_value, minus_zero, -qnan_value, NO_INEXACT_EXCEPTION|TEST_NAN_SIGN),
+
+    TEST_ff_f (copysign, min_value, min_subnorm_value, min_value, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (copysign, min_value, -min_subnorm_value, -min_value, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (copysign, -min_value, min_subnorm_value, min_value, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (copysign, -min_value, -min_subnorm_value, -min_value, NO_INEXACT_EXCEPTION),
+
+    TEST_ff_f (copysign, min_subnorm_value, max_value, min_subnorm_value, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (copysign, min_subnorm_value, -max_value, -min_subnorm_value, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (copysign, -min_subnorm_value, max_value, min_subnorm_value, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (copysign, -min_subnorm_value, -max_value, -min_subnorm_value, NO_INEXACT_EXCEPTION),
+
+    TEST_ff_f (copysign, max_value, min_value, max_value, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (copysign, max_value, -min_value, -max_value, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (copysign, -max_value, min_value, max_value, NO_INEXACT_EXCEPTION),
+    TEST_ff_f (copysign, -max_value, -min_value, -max_value, NO_INEXACT_EXCEPTION),
   };
 
 static void
