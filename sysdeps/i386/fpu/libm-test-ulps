@@ -4241,6 +4241,33 @@ ifloat: 1
 Test "Imaginary part of: ccos (-0.75 - 89.5 i)":
 float: 1
 ifloat: 1
+Test "Imaginary part of: ccos (-0x2p+0 - 0x3p+0 i)":
+float: 1
+ifloat: 1
+Test "Real part of: ccos (-0xcp-4 + 0x2.c68p+8 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: ccos (-0xcp-4 + 0x2.c68p+8 i)":
+double: 1
+idouble: 1
+Test "Real part of: ccos (-0xcp-4 + 0x5.98p+4 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ccos (-0xcp-4 + 0x5.98p+4 i)":
+float: 1
+ifloat: 1
+Test "Real part of: ccos (-0xcp-4 - 0x2.c68p+8 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: ccos (-0xcp-4 - 0x2.c68p+8 i)":
+double: 1
+idouble: 1
+Test "Real part of: ccos (-0xcp-4 - 0x5.98p+4 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ccos (-0xcp-4 - 0x5.98p+4 i)":
+float: 1
+ifloat: 1
 Test "Imaginary part of: ccos (-2 - 3 i)":
 float: 1
 ifloat: 1
@@ -4281,8 +4308,74 @@ ifloat: 1
 Test "Imaginary part of: ccos (0x1p-1074 + 1440 i)":
 double: 1
 idouble: 1
+Test "Imaginary part of: ccos (0x4p-1076 + 0x5.ap+8 i)":
+double: 1
+idouble: 1
+Test "Real part of: ccos (0xcp-4 + 0x1.4p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ccos (0xcp-4 + 0x1.4p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ccos (0xcp-4 + 0x2.c68p+8 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: ccos (0xcp-4 + 0x2.c68p+8 i)":
+double: 1
+idouble: 1
+Test "Real part of: ccos (0xcp-4 + 0x5.98p+4 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ccos (0xcp-4 + 0x5.98p+4 i)":
+float: 1
+ifloat: 1
+Test "Real part of: ccos (0xcp-4 - 0x2.c68p+8 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: ccos (0xcp-4 - 0x2.c68p+8 i)":
+double: 1
+idouble: 1
+Test "Real part of: ccos (0xcp-4 - 0x5.98p+4 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ccos (0xcp-4 - 0x5.98p+4 i)":
+float: 1
+ifloat: 1
 
 # ccosh
+Test "Real part of: ccosh (-0x2.c68p+8 + 0xcp-4 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: ccosh (-0x2.c68p+8 + 0xcp-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: ccosh (-0x2.c68p+8 - 0xcp-4 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: ccosh (-0x2.c68p+8 - 0xcp-4 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: ccosh (-0x2p+0 - 0x3p+0 i)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ccosh (-0x5.98p+4 + 0xcp-4 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ccosh (-0x5.98p+4 + 0xcp-4 i)":
+float: 1
+ifloat: 1
+Test "Real part of: ccosh (-0x5.98p+4 - 0xcp-4 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ccosh (-0x5.98p+4 - 0xcp-4 i)":
+float: 1
+ifloat: 1
 Test "Imaginary part of: ccosh (-2 - 3 i)":
 float: 1
 ifloat: 1
@@ -4318,6 +4411,42 @@ ifloat: 1
 Test "Imaginary part of: ccosh (0.75 + 1.25 i)":
 float: 1
 ifloat: 1
+Test "Imaginary part of: ccosh (0x1p-120 + 0x4p-16328 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ccosh (0x2.c68p+8 + 0xcp-4 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: ccosh (0x2.c68p+8 + 0xcp-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: ccosh (0x2.c68p+8 - 0xcp-4 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: ccosh (0x2.c68p+8 - 0xcp-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: ccosh (0x5.98p+4 + 0xcp-4 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ccosh (0x5.98p+4 + 0xcp-4 i)":
+float: 1
+ifloat: 1
+Test "Real part of: ccosh (0x5.98p+4 - 0xcp-4 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ccosh (0x5.98p+4 - 0xcp-4 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ccosh (0x5.ap+8 + 0x4p-1076 i)":
+double: 1
+idouble: 1
+Test "Real part of: ccosh (0xcp-4 + 0x1.4p+0 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ccosh (0xcp-4 + 0x1.4p+0 i)":
+float: 1
+ifloat: 1
 Test "Imaginary part of: ccosh (1440 + 0x1p-1074 i)":
 double: 1
 idouble: 1
@@ -4347,6 +4476,29 @@ float: 1
 ifloat: 1
 
 # cexp
+Test "Imaginary part of: cexp (+0 + 0xf.ffffffffffff8p+1020 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: cexp (-0x2.71p+12 + 0x8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: cexp (-0x2.71p+12 + 0xf.ffffffffffff8p+1020 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: cexp (-0x2.71p+12 + 0xf.fffffp+124 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: cexp (-0x2p+0 - 0x3p+0 i)":
+float: 1
+ifloat: 1
+Test "Real part of: cexp (-0x5.fp+4 + 0xcp-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: cexp (-0x5.fp+4 + 0xcp-4 i)":
+double: 1
+idouble: 1
 Test "Real part of: cexp (-10000 + 0x1p16383 i)":
 ildouble: 1
 ldouble: 1
@@ -4362,6 +4514,41 @@ Test "Imaginary part of: cexp (-95 + 0.75 i)":
 double: 1
 idouble: 1
 Test "Imaginary part of: cexp (0.75 + 1.25 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: cexp (0x2.c5c9p+12 + 0xcp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: cexp (0x2.c5dp+8 + 0xcp-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: cexp (0x2.c5dp+8 + 0xcp-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: cexp (0x3.2p+4 + 0x8p+124 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: cexp (0x3.2p+4 + 0x8p+124 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: cexp (0x5.8cp+4 + 0xcp-4 i)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: cexp (0x5.8cp+4 + 0xcp-4 i)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: cexp (0x5.ap+8 + 0x4p-1076 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: cexp (0xcp-4 + 0x1.4p+0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: cexp (11356.5625 + 0.75 i)":
@@ -4398,12 +4585,60 @@ ildouble: 1
 ldouble: 1
 
 # clog
+Test "Real part of: clog (+0 + 0x8p-16444 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (+0 + 0xf.8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (+0 - 0xf.8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (-0 + 0xf.8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (-0 - 0xf.8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (-0x1.0000000123456p+0 + +0 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (-0x1.0000000123456p+0 + 0x1.2345678p-1000 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (-0x1.0000000123456p+0 + 0x4.8d159ep-32 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (-0x1.0000000123456p+0 + 0x8p-152 i)":
+double: 1
+idouble: 1
 Test "Real part of: clog (-0x1.0000000123456p0 + 0x1.2345678p-1000 i)":
 double: 1
 idouble: 1
 Test "Real part of: clog (-0x1.0000000123456p0 + 0x1.2345678p-30 i)":
 double: 1
 idouble: 1
+Test "Real part of: clog (-0x1.000002p+0 + +0 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (-0x1.000002p+0 + 0x4.8d1598p-32 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Real part of: clog (-0x1.000002p+0 + 0x4.8d159ep-32 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (-0x1.000002p+0 + 0x4.8d15ap-32 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (-0x1.000002p+0 + 0x8p-152 i)":
+float: 1
+ifloat: 1
 Test "Real part of: clog (-0x1.fp+127 + 0x1p-149 i)":
 ildouble: 1
 ldouble: 1
@@ -4414,6 +4649,9 @@ Test "Real part of: clog (-0x1.fp+16383 + 0x1p-16445 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: clog (-0x1.fp+16383 - 0x1p-16445 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (-0x1p+0 + 0x4.8d15ap-32 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: clog (-0x1p-149 + 0x1.fp+127 i)":
@@ -4428,18 +4666,246 @@ ldouble: 1
 Test "Real part of: clog (-0x1p-16445 - 0x1.fp+16383 i)":
 ildouble: 1
 ldouble: 1
+Test "Real part of: clog (-0x4p-1076 + 0xf.8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (-0x4p-1076 - 0xf.8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (-0x8p-152 + 0xf.8p+124 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (-0x8p-152 + 0xf.8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (-0x8p-152 - 0xf.8p+124 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (-0x8p-152 - 0xf.8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (-0x8p-16448 + 0xf.8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (-0x8p-16448 - 0xf.8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (-0xf.8p+124 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (-0xf.8p+124 - 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (-0xf.8p+16380 + +0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (-0xf.8p+16380 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (-0xf.8p+16380 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (-0xf.8p+16380 + 0x8p-16448 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (-0xf.8p+16380 - 0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (-0xf.8p+16380 - 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (-0xf.8p+16380 - 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (-0xf.8p+16380 - 0x8p-16448 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: clog (0x0.ffffffffffffffffp0 + 0x0.ffffffffffffffffp-15000 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: clog (0x0.ffffffp0 + 0x0.ffffffp-100 i)":
 float: 1
 ifloat: 1
+Test "Real part of: clog (0x1.0000000000000012p+0 + +0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.0000000000000012p+0 + 0x1.234566p-60 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.0000000000000012p+0 + 0x1.23456789p-1000 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.0000000000000012p+0 + 0x1.23456789p-60 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.0000000000000012p+0 + 0x1.234568p-60 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.0000000000000012p+0 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0x1.0000000000000014p+0 + 0x1.234566p-60 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0x1.0000000000000014p+0 + 0x1.23456789p-1000 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0x1.0000000000000014p+0 + 0x1.23456789p-60 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0x1.0000000000000014p+0 + 0x1.234568p-60 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.0000000000001p+0 + +0 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x1.0000000000001p+0 + 0x1.234566p-60 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x1.0000000000001p+0 + 0x1.23456789p-1000 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x1.0000000000001p+0 + 0x1.23456789p-60 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x1.0000000000001p+0 + 0x1.234568p-60 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x1.0000000000001p+0 + 0x8p-152 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x1.000002p+0 + +0 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0x1.000002p+0 + 0x1.234566p-60 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0x1.000002p+0 + 0x1.234568p-60 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0x1.000002p+0 + 0x8p-152 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0x1.000566p+0 + 0x1.234p-100 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0x1.000566p+0 + 0x4.8dp-12 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: clog (0x1.000566p0 + 0x1.234p-10 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: clog (0x1.000566p0 + 0x1.234p-100 i)":
 float: 1
 ifloat: 1
+Test "Real part of: clog (0x1.48e45e3268d8p-4 + 0xf.f2c64p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x1.48e45ep-4 + 0xf.f2c63p-4 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: clog (0x1.48e45ep-4 + 0xf.f2c63p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.48e45ep-4 + 0xf.f2c64p-4 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0x1.8907bc3694fd4e7cp-4 + 0xf.ed1990460bdfbf6p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.8907bc3694fd4e7cp-4 + 0xf.ed1990460bep-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.8907bc3694fd4e7ep-4 + 0xf.ed1990460bdfbf7p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.8907bc3694fd4e7ep-4 + 0xf.ed19ap-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.8907bc3694fd4p-4 + 0xf.ed1990460bdf8p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x1.8907bc3694fd4p-4 + 0xf.ed1990460bdfbf6p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.8907bc3694fd4p-4 + 0xf.ed1990460bdfbf7p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.8907bc3694fd5p-4 + 0xf.ed1990460bdf8p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x1.8907bc3694fd5p-4 + 0xf.ed1990460bdfbf6p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.8907bcp-4 + 0xf.ed1990460bdf8p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.8907bcp-4 + 0xf.ed1990460bdfbf6p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.8907bcp-4 + 0xf.ed1990460bdfbf7p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.8907bep-4 + 0xf.ed1990460bdfbf6p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.c67eccp-4 + 0xf.e6b4d1d7a6e08p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x1.c67eccp-4 + 0xf.e6b4d1d7a6e0948p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.c67eccp-4 + 0xf.e6b4d1d7a6e1p-4 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: clog (0x1.c67eccp-4 + 0xf.e6b4dp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.c67eccp-4 + 0xf.e6b4ep-4 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: clog (0x1.c67eccp-4 + 0xf.e6b4ep-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.c67ecd92a85944b8p-4 + 0xf.e6b4d1d7a6e08p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.c67ecd92a85944b8p-4 + 0xf.e6b4d1d7a6e0948p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.c67ecd92a85944b8p-4 + 0xf.e6b4d1d7a6e0949p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.c67ecd92a85944bap-4 + 0xf.e6b4d1d7a6e0948p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.c67ecd92a85944bap-4 + 0xf.e6b4ep-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.c67ecd92a8594p-4 + 0xf.e6b4dp-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.c67ecd92a8594p-4 + 0xf.e6b4ep-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.c67ecd92a8595p-4 + 0xf.e6b4d1d7a6e08p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.c67ecd92a8595p-4 + 0xf.e6b4d1d7a6e1p-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.c67ecd92a8595p-4 + 0xf.e6b4ep-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1.c67ecep-4 + 0xf.e6b4d1d7a6e1p-4 i)":
+double: 1
+idouble: 1
 Test "Real part of: clog (0x1.fffffep+127 + 0x1.fffffep+127 i)":
 ildouble: 1
 ldouble: 1
@@ -4455,6 +4921,9 @@ ldouble: 1
 Test "Real part of: clog (0x1.fp+16383 - 0x1p-16445 i)":
 ildouble: 1
 ldouble: 1
+Test "Real part of: clog (0x1p+0 + 0x4.8d1598p-12 i)":
+float: 1
+ifloat: 1
 Test "Real part of: clog (0x1p-1074 + 0x1p-1074 i)":
 ildouble: 1
 ldouble: 1
@@ -4467,15 +4936,940 @@ ldouble: 1
 Test "Real part of: clog (0x1p-149 - 0x1.fp+127 i)":
 ildouble: 1
 ldouble: 1
+Test "Real part of: clog (0x1p-16440 + +0 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: clog (0x1p-16445 + 0x1.fp+16383 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: clog (0x1p-16445 - 0x1.fp+16383 i)":
 ildouble: 1
 ldouble: 1
+Test "Real part of: clog (0x2.0ce7ba1e4902p-4 + 0xf.de3a3p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x2.82b794p-4 + 0xf.cd42a15bf9a3612p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x2.82b794p-4 + 0xf.cd42a15bf9a3613p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x2.82b794p-4 + 0xf.cd42a15bf9a38p-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x2.82b794p-4 + 0xf.cd42a15bf9a3p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x2.82b794p-4 + 0xf.cd42ap-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x2.82b795e420b281a8p-4 + 0xf.cd42a15bf9a3613p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x2.82b795e420b281a8p-4 + 0xf.cd42a15bf9a38p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x2.82b795e420b281a8p-4 + 0xf.cd42bp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x2.82b795e420b281acp-4 + 0xf.cd42a15bf9a3613p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x2.82b795e420b281acp-4 + 0xf.cd42a15bf9a38p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x2.82b795e420b28p-4 + 0xf.cd42a15bf9a3612p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x2.82b795e420b28p-4 + 0xf.cd42a15bf9a3p-4 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: clog (0x2.82b795e420b28p-4 + 0xf.cd42ap-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x2.82b795e420b2ap-4 + 0xf.cd42a15bf9a38p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x2.82b795e420b2ap-4 + 0xf.cd42ap-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x2.82b798p-4 + 0xf.cd42a15bf9a3613p-4 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: clog (0x2dd46725bp-35 + 0x7783a1284p-35 i)":
 ildouble: 1
 ldouble: 1
+Test "Real part of: clog (0x3.2cdb84p-4 + 0xf.ae888f0455f6p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.3b8f9163276aap-4 + 0xf.ab873d09e61e797p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.3b8f9163276aap-4 + 0xf.ab873p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.3b8f9163276acp-4 + 0xf.ab874p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0x3.3b8f9163276acp-4 + 0xf.ab874p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.3b8f94p-4 + 0xf.ab873d09e61e797p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.3b8f94p-4 + 0xf.ab873d09e61e8p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.3b8f94p-4 + 0xf.ab873d09e61ep-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.3b8f94p-4 + 0xf.ab873p-4 i)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.6e17119fb8aaap-4 + 0xf.a0c58a83e57c772p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.6e17119fb8aaap-4 + 0xf.a0c58p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.6e17119fb8aab754p-4 + 0xf.a0c58a83e57cp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.6e17119fb8aab754p-4 + 0xf.a0c58p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.6e17119fb8aab754p-4 + 0xf.a0c59p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.6e17119fb8aacp-4 + 0xf.a0c58a83e57c773p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.6e17119fb8aacp-4 + 0xf.a0c58p-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.6e1714p-4 + 0xf.a0c58a83e57c772p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.6e1714p-4 + 0xf.a0c58a83e57c8p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.6e1714p-4 + 0xf.a0c58a83e57cp-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x3.6e1714p-4 + 0xf.a0c58p-4 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0x3.6e1714p-4 + 0xf.a0c59p-4 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0x3.6e171p-4 + 0xf.a0c58a83e57c773p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.6e171p-4 + 0xf.a0c58p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.6e171p-4 + 0xf.a0c59p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0x3.6e171p-4 + 0xf.a0c59p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.bea2bcp-4 + 0xf.8e3d619a8d118p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x3.bea2bcp-4 + 0xf.8e3d619a8d11bfdp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.bea2bd62e3501174p-4 + 0xf.8e3d619a8d11bfep-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.bea2bd62e3501174p-4 + 0xf.8e3d7p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.bea2bd62e350117p-4 + 0xf.8e3d7p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.bea2bd62e35p-4 + 0xf.8e3d6p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x3.bea2cp-4 + 0xf.8e3d619a8d12p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.bea2cp-4 + 0xf.8e3d6p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.bea2cp-4 + 0xf.8e3d7p-4 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0x3.e1d0a105ac4eap-4 + 0xf.859b3d1b06d08p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x3.e1d0a105ac4eap-4 + 0xf.859b3d1b06dp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.e1d0a105ac4ebeacp-4 + 0xf.859b3d1b06d005dp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.e1d0a105ac4ebebp-4 + 0xf.859b3p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.e1d0a105ac4ecp-4 + 0xf.859b3d1b06d005dp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0x3.e1d0a105ac4ecp-4 + 0xf.859b3d1b06d005ep-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.e1d0a4p-4 + 0xf.859b3d1b06d08p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.e1d0ap-4 + 0xf.859b3d1b06d005dp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.e1d0ap-4 + 0xf.859b3d1b06d08p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x3.e1d0ap-4 + 0xf.859b3d1b06dp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.e1d0ap-4 + 0xf.859b3p-4 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0x4.0dbf78p-4 + 0xf.7a5c1af8e3ce8p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x4.0dbf78p-4 + 0xf.7a5c1af8e3cec09p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x4.0dbf78p-4 + 0xf.7a5c1af8e3cfp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x4.0dbf7d40fe1acp-4 + 0xf.7a5c1af8e3ce8p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x4.0dbf7d40fe1acp-4 + 0xf.7a5c1p-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x4.0dbf7d40fe1ad688p-4 + 0xf.7a5c1af8e3ce8p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x4.0dbf7d40fe1ad688p-4 + 0xf.7a5c1af8e3cfp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x4.0dbf7d40fe1bp-4 + 0xf.7a5c2p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0x4.0dbf8p-4 + 0xf.7a5c1af8e3cfp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x4.0dbf8p-4 + 0xf.7a5c2p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0x4.7017a2e368078p-4 + 0xf.5f4a550c9d75e3bp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x4.7017a2e36807acb8p-4 + 0xf.5f4a550c9d758p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x4.7017a2e36807acb8p-4 + 0xf.5f4a550c9d75e3bp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x4.7017a2e36807acb8p-4 + 0xf.5f4a6p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x4.7017a2e36807acbp-4 + 0xf.5f4a550c9d75e3bp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x4.7017a2e36807acbp-4 + 0xf.5f4a5p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x4.7017a2e36807acbp-4 + 0xf.5f4a6p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x4.7017a2e36807cp-4 + 0xf.5f4a550c9d758p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x4.7017a2e36807cp-4 + 0xf.5f4a550c9d75e3bp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x4.7017a2e36807cp-4 + 0xf.5f4a550c9d75e3cp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x4.7017a8p-4 + 0xf.5f4a550c9d75e3cp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x4.7017a8p-4 + 0xf.5f4a550c9d76p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x4.7017a8p-4 + 0xf.5f4a6p-4 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0x4.d9e8c415d5644p-4 + 0xf.3f302p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x4.d9e8c8p-4 + 0xf.3f303p-4 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0x4.d9e8cp-4 + 0xf.3f30281507d8p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x4p-1076 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x4p-1076 + 0xf.8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x4p-1076 - 0xf.8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x5.318c58p-4 + 0xf.22363p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0x5.318c58p-4 + 0xf.22364p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x5.318c596a8cb114ep-4 + 0xf.22363p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x5.318c596a8cb114ep-4 + 0xf.22364p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x5.318c596a8cb1p-4 + 0xf.22363bf989dap-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x5.318c596a8cb1p-4 + 0xf.22364p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x5.b06b68p-4 + 0xe.f452b965da9fp-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x5.b06b68p-4 + 0xe.f452bp-4 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0x5.b06b7p-4 + 0xe.f452b965da9fp-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x5.b06b7p-4 + 0xe.f452cp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x5.ba8ce4b6p-4 + 0xe.f0742508p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x5.ba8cep-4 + 0xe.f0742p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.02fd5037c4792efp-4 + 0xe.d3e21p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.02fd5037c4794p-4 + 0xe.d3e21p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.02fd5037c479p-4 + 0xe.d3e2086dcca80b8p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.02fd5037c479p-4 + 0xe.d3e21p-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.02fd5037c479p-4 + 0xe.d3e2p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x6.02fd58p-4 + 0xe.d3e2086dcca80b8p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.02fd58p-4 + 0xe.d3e2086dcca8p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x6.02fd58p-4 + 0xe.d3e21p-4 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: clog (0x6.02fd5p-4 + 0xe.d3e2086dcca80b8p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.1c643068cd124p-4 + 0xe.c97c2018b428258p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.1c643068cd124p-4 + 0xe.c97c2018b4288p-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.1c643068cd125ef8p-4 + 0xe.c97c2018b4288p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.1c643068cd125ef8p-4 + 0xe.c97c3p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.1c643068cd125efp-4 + 0xe.c97c3p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.1c643068cd128p-4 + 0xe.c97c2p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x6.1c6438p-4 + 0xe.c97c2018b4288p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x6.1c6438p-4 + 0xe.c97c2018b428p-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.1c6438p-4 + 0xe.c97c3p-4 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0x6.1c643p-4 + 0xe.c97c2018b428258p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.1c643p-4 + 0xe.c97c2018b4288p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.2aff83ae6467cb08p-4 + 0xe.c36a599a86ba8p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.2aff83ae6467cb08p-4 + 0xe.c36a599a86baf8fp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.2aff83ae6467cb08p-4 + 0xe.c36a6p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.2aff83ae6467cbp-4 + 0xe.c36a599a86ba8p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.2aff83ae6467cbp-4 + 0xe.c36a599a86baf8fp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.2aff83ae6467cbp-4 + 0xe.c36a5p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.2aff83ae6467cp-4 + 0xe.c36a5p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.2aff83ae6467cp-4 + 0xe.c36a6p-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.2aff83ae6468p-4 + 0xe.c36a599a86ba8p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x6.2aff83ae6468p-4 + 0xe.c36a599a86bbp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.2aff83ae6468p-4 + 0xe.c36a5p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x6.2aff88p-4 + 0xe.c36a599a86ba8p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x6.2aff8p-4 + 0xe.c36a599a86baf8fp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.2aff8p-4 + 0xe.c36a599a86baf9p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.b10b48p-4 + 0xe.8893cbb449253a1p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.b10b48p-4 + 0xe.8893cbb44925p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x6.b10b48p-4 + 0xe.8893dp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.b10b4f3520214p-4 + 0xe.8893cbb449253a1p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.b10b4f3520214p-4 + 0xe.8893cp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.b10b4f3520217b6p-4 + 0xe.8893cp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.b10b4f3520218p-4 + 0xe.8893cbb44925p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.b10b4f3520218p-4 + 0xe.8893dp-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x6.b10b5p-4 + 0xe.8893cbb449258p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x6.b10b5p-4 + 0xe.8893cbb44925p-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.eca921b40e028p-4 + 0xd.e655e694e5108p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.eca921b40e028p-4 + 0xd.e655e694e510a94p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.eca921b40e028p-4 + 0xd.e655fp-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.eca921b40e02ae18p-4 + 0xd.e655fp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.eca921b40e02cp-4 + 0xd.e655e694e510a94p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.eca928p-4 + 0xd.e655e694e5108p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x7.eca928p-4 + 0xd.e655e694e511p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.eca928p-4 + 0xd.e655fp-4 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0x7.eca92p-4 + 0xd.e655e694e510a95p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.eca92p-4 + 0xd.e655e694e511p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0x7.eca92p-4 + 0xd.e655fp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.f2c8d20a1eca10d8p-4 + 0xd.e2d65939160b311p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.f2c8d20a1eca10d8p-4 + 0xd.e2d65939160b8p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.f2c8d20a1eca10d8p-4 + 0xd.e2d65939160bp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.f2c8d20a1eca10d8p-4 + 0xd.e2d66p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.f2c8d20a1eca10dp-4 + 0xd.e2d65939160b31p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.f2c8d20a1eca10dp-4 + 0xd.e2d65939160bp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.f2c8d20a1eca10dp-4 + 0xd.e2d66p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.f2c8d20a1eca4p-4 + 0xd.e2d65939160b311p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0x7.f2c8d20a1eca4p-4 + 0xd.e2d65939160b311p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.f2c8d20a1eca4p-4 + 0xd.e2d66p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x7.f2c8d20a1ecap-4 + 0xd.e2d65939160b311p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.f2c8d20a1ecap-4 + 0xd.e2d65p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x7.f2c8d8p-4 + 0xd.e2d65939160b31p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.f2c8d8p-4 + 0xd.e2d65939160b8p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x7.f2c8d8p-4 + 0xd.e2d65939160bp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.f2c8dp-4 + 0xd.e2d65939160bp-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.f4b083cb0bp-4 + 0xd.e1bf1p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.f4b088p-4 + 0xd.e1bf04f3688p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x7.f4b088p-4 + 0xd.e1bfp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.f4b08p-4 + 0xd.e1bf04f3688p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x8.88faep-4 + 0xd.888bdp-4 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0x8.88fafp-4 + 0xd.888bdp-4 i)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x8.ecbf810c4ae6p-4 + 0xd.47946p-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x8.ecbf8p-4 + 0xd.479468b09a37p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x8.ecbf9p-4 + 0xd.479468b09a37p-4 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: clog (0x8.ecbf9p-4 + 0xd.47947p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x8p-152 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x8p-152 + 0xf.8p+124 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x8p-152 + 0xf.8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x8p-152 - 0xf.8p+124 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x8p-152 - 0xf.8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x8p-16448 + 0xf.8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x8p-16448 - 0xf.8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x9.b386fc56b9688p-4 + 0xc.b9317c470b4085cp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x9.b386fc56b9688p-4 + 0xc.b9317c470b41p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x9.b386fc56b9688p-4 + 0xc.b9317p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x9.b386fc56b968a66p-4 + 0xc.b9317p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x9.b386fc56b969p-4 + 0xc.b9317c470b41p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x9.b386fp-4 + 0xc.b9317c470b408p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x9.b386fp-4 + 0xc.b9317c470b41p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x9.b386fp-4 + 0xc.b9317p-4 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0x9.b387p-4 + 0xc.b9317c470b4085cp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x9.b387p-4 + 0xc.b9317c470b41p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x9.b387p-4 + 0xc.b9317p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x9.c1b6ac509a246bap-4 + 0xc.ae53de1d5a7c8p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x9.c1b6ac509a246bap-4 + 0xc.ae53ep-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x9.c1b6ac509a246bbp-4 + 0xc.ae53de1d5a7c8bp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x9.c1b6ac509a246bbp-4 + 0xc.ae53de1d5a7c8p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x9.c1b6ac509a248p-4 + 0xc.ae53de1d5a7dp-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x9.c1b6ac509a248p-4 + 0xc.ae53ep-4 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: clog (0x9.c1b6ac509a24p-4 + 0xc.ae53de1d5a7c8bp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x9.c1b6ac509a24p-4 + 0xc.ae53dp-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x9.c1b6ac509a24p-4 + 0xc.ae53ep-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x9.c1b6ap-4 + 0xc.ae53de1d5a7dp-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x9.c1b6ap-4 + 0xc.ae53dp-4 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: clog (0x9.c1b6bp-4 + 0xc.ae53de1d5a7c8b1p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x9.c1b6bp-4 + 0xc.ae53de1d5a7c8p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0x9.c1b6bp-4 + 0xc.ae53de1d5a7c8p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.47c0c65bd4928p-4 + 0xc.42a51a3c05c19ap-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.47c0c65bd4928p-4 + 0xc.42a51p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0xa.47c0c65bd492c7ep-4 + 0xc.42a51a3c05c18p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0xa.47c0c65bd492c7ep-4 + 0xc.42a51a3c05c2p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.47c0c65bd492c7fp-4 + 0xc.42a51a3c05c18p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0xa.47c0c65bd492c7fp-4 + 0xc.42a51a3c05c199fp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.47c0c65bd492c7fp-4 + 0xc.42a51a3c05c19ap-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0xa.47c0c65bd493p-4 + 0xc.42a51a3c05c18p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.47c0cp-4 + 0xc.42a51a3c05c199fp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.47c0cp-4 + 0xc.42a51a3c05c19ap-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.47c0cp-4 + 0xc.42a51p-4 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0xa.47c0dp-4 + 0xc.42a51a3c05c18p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.afc57e2624342dfp-4 + 0xb.e867932966df589p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.afc57e2624342dfp-4 + 0xb.e867932966df8p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.afc57e2624342ep-4 + 0xb.e867932966df58ap-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.afc57e2624342ep-4 + 0xb.e867ap-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0xa.afc57e2624342ep-4 + 0xb.e867ap-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.afc57e2624348p-4 + 0xb.e867932966df589p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.afc57e2624348p-4 + 0xb.e867932966df8p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0xa.afc57e262434p-4 + 0xb.e867932966df589p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.afc57p-4 + 0xb.e867932966df589p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0xa.afc57p-4 + 0xb.e867932966df589p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.afc57p-4 + 0xb.e867932966df58ap-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.afc57p-4 + 0xb.e867932966df8p-4 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: clog (0xa.afc57p-4 + 0xb.e8679p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0xa.afc58p-4 + 0xb.e867932966df589p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.afc58p-4 + 0xb.e8679p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.b96da19075eap-8 + 0xf.fc679p-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.b96dap-8 + 0xf.fc67818f89d2p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0xa.b96dap-8 + 0xf.fc678p-4 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0xa.b96dap-8 + 0xf.fc679p-4 i)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.e7de8cc868ff8p-4 + 0xb.b51cbp-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.e7de8p-4 + 0xb.b51cbp-4 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0xa.e7de9p-4 + 0xb.b51cb9f04d4dp-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0xa.ec55b7682e528a1p-4 + 0xb.b0f2405504a6059p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.ec55b7682e528a1p-4 + 0xb.b0f2405504a68p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0xa.ec55b7682e528a1p-4 + 0xb.b0f25p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.ec55b7682e528ap-4 + 0xb.b0f2405504a68p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.ec55b7682e528p-4 + 0xb.b0f24p-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0xa.ec55b7682e528p-4 + 0xb.b0f25p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.ec55b7682e53p-4 + 0xb.b0f2405504a6058p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0xa.ec55b7682e53p-4 + 0xb.b0f2405504a68p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.ec55b7682e53p-4 + 0xb.b0f2405504a6p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.ec55b7682e53p-4 + 0xb.b0f25p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0xa.ec55bp-4 + 0xb.b0f2405504a68p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.ec55bp-4 + 0xb.b0f2405504a6p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.ec55cp-4 + 0xb.b0f2405504a68p-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.ec55cp-4 + 0xb.b0f2405504a6p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xa.ec55cp-4 + 0xb.b0f25p-4 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0xb.263a77543bp-4 + 0xb.79c9ap-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0xb.263a8p-4 + 0xb.79c9bp-4 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0xf.8p+124 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xf.8p+124 - 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xf.8p+16380 + +0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xf.8p+16380 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xf.8p+16380 + 0x8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xf.8p+16380 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xf.8p+16380 + 0x8p-16448 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xf.8p+16380 + 0xf.ffffffffffff8p+1020 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xf.8p+16380 + 0xf.fffffp+124 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xf.8p+16380 - 0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xf.8p+16380 - 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xf.8p+16380 - 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xf.8p+16380 - 0x8p-16448 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xf.ffffffffffff8p+1020 + 0xf.8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0xf.ffffffffffff8p-4 + 0x8p-152 i)":
+double: 1
+idouble: 1
+Test "Real part of: clog (0xf.fffffffffffffffp-4 + +0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xf.fffffffffffffffp-4 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0xf.fffffffffffffffp-4 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xf.fffffffffffffffp-4 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0xf.fffffffffffffffp-4 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xf.fffffffffffffffp-4 + 0xf.fffffffffffffffp-15004 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xf.fffffp+124 + 0x8p+1020 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xf.fffffp+124 + 0xf.8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xf.fffffp+124 + 0xf.fffffp+124 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0xf.fffffp-4 + +0 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0xf.fffffp-4 + 0x8p-152 i)":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0xf.fffffp-4 + 0xf.fffffp-104 i)":
+float: 1
+ifloat: 1
 Test "Real part of: clog (1.0 + 0x1.234566p-10 i)":
 float: 1
 ifloat: 1
@@ -5645,6 +7039,39 @@ ldouble: 1
 Test "Real part of: csqrt (-0x1.000002p-126 - 0x1.000002p-126 i)":
 ildouble: 1
 ldouble: 1
+Test "Real part of: csqrt (-0x4.0000000000000008p-16384 - 0x4.0000000000000008p-16384 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (-0x4.0000000000000008p-16384 - 0x4.0000000000000008p-16384 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: csqrt (-0x4.0000000000000008p-16384 - 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: csqrt (-0x4.0000000000004p-1024 - 0x4.0000000000004p-1024 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: csqrt (-0x4.000008p-128 - 0x4.000008p-128 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: csqrt (-0x4p-1076 - 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: csqrt (-0x4p-16384 - 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: csqrt (-0x4p-16384 - 0x4p-16384 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: csqrt (-0x8p-152 - 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: csqrt (-0x8p-152 - 0x4p-16384 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: csqrt (-0x8p-152 - 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: csqrt (0x1.0000000000000002p-16382 + 0x1.0000000000000002p-16382 i)":
 ildouble: 1
 ldouble: 1
@@ -5675,8 +7102,117 @@ ldouble: 1
 Test "Imaginary part of: csqrt (0x1p-149 + 0x1p-149 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: csqrt (0x1p-16440 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x1p-5000 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x2p-148 + 0x2p-148 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: csqrt (0x4.0000000000000008p-16384 + 0x4.0000000000000008p-16384 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x4.0000000000000008p-16384 + 0x4.0000000000000008p-16384 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x4.0000000000000008p-16384 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x4.0000000000004p-1024 + 0x4.0000000000004p-1024 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x4.000008p-128 + 0x4.000008p-128 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x4p-1076 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x4p-1076 + 0xf.ffffffffffff8p+1020 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x4p-16384 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x4p-16384 + 0x4p-16384 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x8p+1020 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x8p+1020 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x8p+124 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x8p+16380 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x8p+16380 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x8p-1076 + 0x8p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x8p-152 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x8p-152 + 0x4p-16384 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x8p-152 + 0x8p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x8p-152 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x8p-152 + 0x8p-16444 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x8p-152 + 0x8p-16448 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x8p-152 + 0xf.ffffffffffff8p+1020 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0x8p-16448 + 0xf.ffffffffffff8p+1020 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csqrt (0xf.8p+16380 + 0xf.8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: csqrt (0xf.ffffffffffff8p+1020 + +0 i)":
+double: 1
+idouble: 1
+Test "Real part of: csqrt (0xf.ffffffffffff8p+1020 + 0x4p-1076 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: csqrt (0xf.ffffffffffff8p+1020 + 0x8p+1020 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: csqrt (0xf.ffffffffffff8p+1020 + 0x8p-152 i)":
+double: 1
+idouble: 1
+Test "Real part of: csqrt (0xf.ffffffffffff8p+1020 + 0xf.fffffp+124 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: csqrt (0xf.fffffp+124 + 0xf.ffffffffffff8p+1020 i)":
+ildouble: 1
+ldouble: 1
 
 # ctan
+Test "Real part of: ctan (-0x2p+0 - 0x3p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan (-0x2p+0 - 0x3p+0 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: ctan (-2 - 3 i)":
 double: 1
 float: 1
@@ -5690,6 +7226,85 @@ ldouble: 1
 Test "Imaginary part of: ctan (0.75 + 1.25 i)":
 ildouble: 1
 ldouble: 1
+Test "Real part of: ctan (0x1.921fb4p+0 + +0 i)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctan (0x1.921fb4p+0 + 0x4p-1076 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan (0x1.921fb4p+0 + 0x4p-1076 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan (0x1.921fb4p+0 + 0x8p-152 i)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan (0x1.921fb4p+0 + 0x8p-152 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan (0x1.921fb4p+0 + 0x8p-16448 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan (0x1.921fb54442d1846ap+0 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan (0x1.921fb54442d1846ap+0 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan (0x1.921fb54442d1846ap+0 + 0x8p-16448 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan (0x1.921fb54442d18p+0 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan (0x1.921fb54442d18p+0 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan (0x1.921fb54442d18p+0 + 0x8p-16448 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan (0x1.921fb54442d19p+0 + 0x4p-1076 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan (0x1.921fb54442d19p+0 + 0x8p-152 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan (0x1.921fb54442d19p+0 + 0x8p-16448 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan (0x1.921fb6p+0 + +0 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ctan (0x1.921fb6p+0 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan (0x1.921fb6p+0 + 0x8p-152 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ctan (0x1.921fb6p+0 + 0x8p-152 i)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan (0x1p+0 + 0x2.dp+4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan (0x1p+0 + 0x2.fp+4 i)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
 Test "Real part of: ctan (0x1p1023 + 1 i)":
 double: 1
 idouble: 1
@@ -5701,6 +7316,23 @@ ldouble: 1
 Test "Real part of: ctan (0x3.243f6cp-1 + 0 i)":
 float: 1
 ifloat: 1
+Test "Real part of: ctan (0x8p+1020 + 0x1p+0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan (0x8p+1020 + 0x1p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan (0xcp-4 + 0x1.4p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan (0xf.ffffffffffff8p+1020 + 0x1p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan (0xf.fffffp+124 + 0x1p+0 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: ctan (1 + 45 i)":
 ildouble: 1
 ldouble: 1
@@ -5711,9 +7343,56 @@ ildouble: 2
 ldouble: 2
 
 # ctan_downward
+Test "Real part of: ctan_downward (-0x2p+0 - 0x3p+0 i)":
+float: 2
+ifloat: 2
+ildouble: 5
+ldouble: 5
+Test "Imaginary part of: ctan_downward (-0x2p+0 - 0x3p+0 i)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctan_downward (0x1.921fb4p+0 + +0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_downward (0x1.921fb4p+0 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_downward (0x1.921fb4p+0 + 0x4p-1076 i)":
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctan_downward (0x1.921fb4p+0 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_downward (0x1.921fb4p+0 + 0x8p-152 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctan_downward (0x1.921fb4p+0 + 0x8p-16448 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_downward (0x1.921fb54442d1846ap+0 + +0 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: ctan_downward (0x1.921fb54442d1846ap+0 + 0x1p-16445 i)":
 ildouble: 1
 ldouble: 1
+Test "Real part of: ctan_downward (0x1.921fb54442d1846ap+0 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_downward (0x1.921fb54442d1846ap+0 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_downward (0x1.921fb54442d1846ap+0 + 0x8p-16448 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_downward (0x1.921fb54442d18p+0 + +0 i)":
+ildouble: 2
+ldouble: 2
 Test "Real part of: ctan_downward (0x1.921fb54442d18p+0 + 0x1p-1074 i)":
 double: 1
 idouble: 1
@@ -5722,6 +7401,60 @@ ldouble: 2
 Test "Imaginary part of: ctan_downward (0x1.921fb54442d18p+0 + 0x1p-1074 i)":
 ildouble: 3
 ldouble: 3
+Test "Real part of: ctan_downward (0x1.921fb54442d18p+0 + 0x4p-1076 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan_downward (0x1.921fb54442d18p+0 + 0x4p-1076 i)":
+ildouble: 3
+ldouble: 3
+Test "Real part of: ctan_downward (0x1.921fb54442d18p+0 + 0x8p-152 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan_downward (0x1.921fb54442d18p+0 + 0x8p-152 i)":
+ildouble: 3
+ldouble: 3
+Test "Real part of: ctan_downward (0x1.921fb54442d18p+0 + 0x8p-16448 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan_downward (0x1.921fb54442d18p+0 + 0x8p-16448 i)":
+ildouble: 3
+ldouble: 3
+Test "Real part of: ctan_downward (0x1.921fb54442d19p+0 + +0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_downward (0x1.921fb54442d19p+0 + 0x4p-1076 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_downward (0x1.921fb54442d19p+0 + 0x4p-1076 i)":
+double: 2
+idouble: 2
+ildouble: 3
+ldouble: 3
+Test "Real part of: ctan_downward (0x1.921fb54442d19p+0 + 0x8p-152 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_downward (0x1.921fb54442d19p+0 + 0x8p-152 i)":
+double: 2
+idouble: 2
+ildouble: 3
+ldouble: 3
+Test "Real part of: ctan_downward (0x1.921fb54442d19p+0 + 0x8p-16448 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_downward (0x1.921fb54442d19p+0 + 0x8p-16448 i)":
+ildouble: 3
+ldouble: 3
+Test "Real part of: ctan_downward (0x1.921fb6p+0 + +0 i)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
 Test "Real part of: ctan_downward (0x1.921fb6p+0 + 0x1p-149 i)":
 double: 1
 idouble: 1
@@ -5732,14 +7465,152 @@ float: 2
 ifloat: 2
 ildouble: 4
 ldouble: 4
+Test "Real part of: ctan_downward (0x1.921fb6p+0 + 0x4p-1076 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan_downward (0x1.921fb6p+0 + 0x4p-1076 i)":
+ildouble: 4
+ldouble: 4
+Test "Real part of: ctan_downward (0x1.921fb6p+0 + 0x8p-152 i)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan_downward (0x1.921fb6p+0 + 0x8p-152 i)":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 4
+ldouble: 4
+Test "Real part of: ctan_downward (0x1.921fb6p+0 + 0x8p-16448 i)":
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctan_downward (0x1p+0 + 0x1.63p+8 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_downward (0x1p+0 + 0x1.6dp+8 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_downward (0x1p+0 + 0x2.dp+4 i)":
+double: 1
+idouble: 1
+Test "Real part of: ctan_downward (0x1p+0 + 0x2.fp+4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_downward (0x8p+1020 + 0x1p+0 i)":
+double: 1
+idouble: 1
+ildouble: 4
+ldouble: 4
+Test "Real part of: ctan_downward (0x8p+124 + 0x1p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan_downward (0x8p+124 + 0x1p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Imaginary part of: ctan_downward (0x8p+16380 + 0x1p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_downward (0xcp-4 + 0x1.4p+0 i)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctan_downward (0xf.ffffffffffff8p+1020 + 0x1p+0 i)":
+double: 1
+idouble: 1
+ildouble: 4
+ldouble: 4
+Test "Real part of: ctan_downward (0xf.fffffp+124 + 0x1p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 
 # ctan_tonearest
+Test "Real part of: ctan_tonearest (-0x2p+0 - 0x3p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_tonearest (-0x2p+0 - 0x3p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_tonearest (0x1.921fb4p+0 + +0 i)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctan_tonearest (0x1.921fb4p+0 + 0x4p-1076 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan_tonearest (0x1.921fb4p+0 + 0x4p-1076 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_tonearest (0x1.921fb4p+0 + 0x8p-152 i)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan_tonearest (0x1.921fb4p+0 + 0x8p-152 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_tonearest (0x1.921fb4p+0 + 0x8p-16448 i)":
+ildouble: 2
+ldouble: 2
 Test "Imaginary part of: ctan_tonearest (0x1.921fb54442d1846ap+0 + 0x1p-16445 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_tonearest (0x1.921fb54442d1846ap+0 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_tonearest (0x1.921fb54442d1846ap+0 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_tonearest (0x1.921fb54442d1846ap+0 + 0x8p-16448 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: ctan_tonearest (0x1.921fb54442d18p+0 + 0x1p-1074 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: ctan_tonearest (0x1.921fb54442d18p+0 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_tonearest (0x1.921fb54442d18p+0 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_tonearest (0x1.921fb54442d18p+0 + 0x8p-16448 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_tonearest (0x1.921fb54442d19p+0 + 0x4p-1076 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_tonearest (0x1.921fb54442d19p+0 + 0x8p-152 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_tonearest (0x1.921fb54442d19p+0 + 0x8p-16448 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_tonearest (0x1.921fb6p+0 + +0 i)":
+float: 1
+ifloat: 1
 Test "Real part of: ctan_tonearest (0x1.921fb6p+0 + 0x1p-149 i)":
 float: 1
 ifloat: 1
@@ -5748,14 +7619,160 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: ctan_tonearest (0x1.921fb6p+0 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_tonearest (0x1.921fb6p+0 + 0x8p-152 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ctan_tonearest (0x1.921fb6p+0 + 0x8p-152 i)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_tonearest (0x1p+0 + 0x2.dp+4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_tonearest (0x1p+0 + 0x2.fp+4 i)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctan_tonearest (0x8p+1020 + 0x1p+0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_tonearest (0x8p+1020 + 0x1p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_tonearest (0xcp-4 + 0x1.4p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_tonearest (0xf.ffffffffffff8p+1020 + 0x1p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_tonearest (0xf.fffffp+124 + 0x1p+0 i)":
+ildouble: 1
+ldouble: 1
 
 # ctan_towardzero
+Test "Real part of: ctan_towardzero (-0x2p+0 - 0x3p+0 i)":
+double: 3
+float: 1
+idouble: 3
+ifloat: 1
+ildouble: 5
+ldouble: 5
+Test "Imaginary part of: ctan_towardzero (-0x2p+0 - 0x3p+0 i)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan_towardzero (-0xc.35p+12 - 0xc.35p+12 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_towardzero (0x1.921fb4p+0 + +0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_towardzero (0x1.921fb4p+0 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_towardzero (0x1.921fb4p+0 + 0x4p-1076 i)":
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctan_towardzero (0x1.921fb4p+0 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_towardzero (0x1.921fb4p+0 + 0x8p-152 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctan_towardzero (0x1.921fb4p+0 + 0x8p-16448 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_towardzero (0x1.921fb54442d1846ap+0 + +0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_towardzero (0x1.921fb54442d1846ap+0 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_towardzero (0x1.921fb54442d1846ap+0 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_towardzero (0x1.921fb54442d1846ap+0 + 0x8p-16448 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_towardzero (0x1.921fb54442d18p+0 + +0 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: ctan_towardzero (0x1.921fb54442d18p+0 + 0x1p-1074 i)":
 double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: ctan_towardzero (0x1.921fb54442d18p+0 + 0x1p-1074 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_towardzero (0x1.921fb54442d18p+0 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_towardzero (0x1.921fb54442d18p+0 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_towardzero (0x1.921fb54442d18p+0 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_towardzero (0x1.921fb54442d18p+0 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_towardzero (0x1.921fb54442d18p+0 + 0x8p-16448 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_towardzero (0x1.921fb54442d18p+0 + 0x8p-16448 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_towardzero (0x1.921fb54442d19p+0 + +0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_towardzero (0x1.921fb54442d19p+0 + 0x4p-1076 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_towardzero (0x1.921fb54442d19p+0 + 0x4p-1076 i)":
+double: 2
+idouble: 2
+ildouble: 3
+ldouble: 3
+Test "Real part of: ctan_towardzero (0x1.921fb54442d19p+0 + 0x8p-152 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_towardzero (0x1.921fb54442d19p+0 + 0x8p-152 i)":
+double: 2
+idouble: 2
+ildouble: 3
+ldouble: 3
+Test "Real part of: ctan_towardzero (0x1.921fb54442d19p+0 + 0x8p-16448 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_towardzero (0x1.921fb54442d19p+0 + 0x8p-16448 i)":
+ildouble: 3
+ldouble: 3
+Test "Real part of: ctan_towardzero (0x1.921fb6p+0 + +0 i)":
+float: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "Real part of: ctan_towardzero (0x1.921fb6p+0 + 0x1p-149 i)":
@@ -5768,14 +7785,150 @@ float: 1
 ifloat: 1
 ildouble: 4
 ldouble: 4
+Test "Real part of: ctan_towardzero (0x1.921fb6p+0 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_towardzero (0x1.921fb6p+0 + 0x4p-1076 i)":
+ildouble: 4
+ldouble: 4
+Test "Real part of: ctan_towardzero (0x1.921fb6p+0 + 0x8p-152 i)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_towardzero (0x1.921fb6p+0 + 0x8p-152 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 4
+ldouble: 4
+Test "Real part of: ctan_towardzero (0x1.921fb6p+0 + 0x8p-16448 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_towardzero (0x1p+0 + 0x1.63p+8 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_towardzero (0x1p+0 + 0x1.6dp+8 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_towardzero (0x1p+0 + 0x2.dp+4 i)":
+double: 1
+idouble: 1
+Test "Real part of: ctan_towardzero (0x1p+0 + 0x2.fp+4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_towardzero (0x8p+1020 + 0x1p+0 i)":
+double: 1
+idouble: 1
+ildouble: 3
+ldouble: 3
+Test "Real part of: ctan_towardzero (0x8p+124 + 0x1p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan_towardzero (0x8p+124 + 0x1p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Imaginary part of: ctan_towardzero (0x8p+16380 + 0x1p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_towardzero (0xc.35p+12 - 0xc.35p+12 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_towardzero (0xcp-4 + 0x1.4p+0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_towardzero (0xf.ffffffffffff8p+1020 + 0x1p+0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_towardzero (0xf.fffffp+124 + 0x1p+0 i)":
+double: 1
+idouble: 1
 
 # ctan_upward
+Test "Real part of: ctan_upward (-0x2p+0 - 0x3p+0 i)":
+double: 3
+float: 1
+idouble: 3
+ifloat: 1
+Test "Imaginary part of: ctan_upward (-0x2p+0 - 0x3p+0 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: ctan_upward (-0xc.35p+12 + 0xc.35p+12 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_upward (-0xc.35p+12 - 0xc.35p+12 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_upward (0x1.921fb4p+0 + +0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_upward (0x1.921fb4p+0 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_upward (0x1.921fb4p+0 + 0x4p-1076 i)":
+ildouble: 3
+ldouble: 3
+Test "Real part of: ctan_upward (0x1.921fb4p+0 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_upward (0x1.921fb4p+0 + 0x8p-152 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 3
+ldouble: 3
+Test "Real part of: ctan_upward (0x1.921fb4p+0 + 0x8p-16448 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_upward (0x1.921fb54442d1846ap+0 + +0 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: ctan_upward (0x1.921fb54442d1846ap+0 + 0x1p-16445 i)":
 ildouble: 2
 ldouble: 2
 Test "Imaginary part of: ctan_upward (0x1.921fb54442d1846ap+0 + 0x1p-16445 i)":
 ildouble: 1
 ldouble: 1
+Test "Real part of: ctan_upward (0x1.921fb54442d1846ap+0 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_upward (0x1.921fb54442d1846ap+0 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_upward (0x1.921fb54442d1846ap+0 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_upward (0x1.921fb54442d1846ap+0 + 0x8p-152 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_upward (0x1.921fb54442d1846ap+0 + 0x8p-16448 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_upward (0x1.921fb54442d1846ap+0 + 0x8p-16448 i)":
+ildouble: 2
+ldouble: 2
 Test "Real part of: ctan_upward (0x1.921fb54442d18p+0 + 0x1p-1074 i)":
 ildouble: 1
 ldouble: 1
@@ -5784,6 +7937,46 @@ double: 1
 idouble: 1
 ildouble: 4
 ldouble: 4
+Test "Imaginary part of: ctan_upward (0x1.921fb54442d18p+0 + 0x4p-1076 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan_upward (0x1.921fb54442d18p+0 + 0x8p-152 i)":
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctan_upward (0x1.921fb54442d19p+0 + +0 i)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctan_upward (0x1.921fb54442d19p+0 + 0x4p-1076 i)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan_upward (0x1.921fb54442d19p+0 + 0x4p-1076 i)":
+double: 2
+idouble: 2
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_upward (0x1.921fb54442d19p+0 + 0x8p-152 i)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan_upward (0x1.921fb54442d19p+0 + 0x8p-152 i)":
+double: 2
+idouble: 2
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_upward (0x1.921fb54442d19p+0 + 0x8p-16448 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan_upward (0x1.921fb54442d19p+0 + 0x8p-16448 i)":
+ildouble: 3
+ldouble: 3
+Test "Real part of: ctan_upward (0x1.921fb6p+0 + +0 i)":
+ildouble: 2
+ldouble: 2
 Test "Real part of: ctan_upward (0x1.921fb6p+0 + 0x1p-149 i)":
 ildouble: 2
 ldouble: 2
@@ -5794,8 +7987,170 @@ idouble: 1
 ifloat: 2
 ildouble: 1
 ldouble: 1
+Test "Real part of: ctan_upward (0x1.921fb6p+0 + 0x4p-1076 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan_upward (0x1.921fb6p+0 + 0x4p-1076 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_upward (0x1.921fb6p+0 + 0x8p-152 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan_upward (0x1.921fb6p+0 + 0x8p-152 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_upward (0x1.921fb6p+0 + 0x8p-16448 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan_upward (0x1p+0 + 0x1.63ap+12 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_upward (0x1p+0 + 0x1.63p+12 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_upward (0x1p+0 + 0x1.63p+8 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan_upward (0x1p+0 + 0x1.63p+8 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctan_upward (0x1p+0 + 0x1.6dp+8 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_upward (0x1p+0 + 0x1.6dp+8 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctan_upward (0x1p+0 + 0x2.dp+4 i)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_upward (0x1p+0 + 0x2.dp+4 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctan_upward (0x1p+0 + 0x2.fp+4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_upward (0x1p+0 + 0x2.fp+4 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctan_upward (0x8p+1020 + 0x1p+0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_upward (0x8p+1020 + 0x1p+0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_upward (0x8p+124 + 0x1p+0 i)":
+double: 3
+idouble: 3
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_upward (0x8p+16380 + 0x1p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan_upward (0x8p+16380 + 0x1p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_upward (0xc.35p+12 + 0xc.35p+12 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_upward (0xc.35p+12 - 0xc.35p+12 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan_upward (0xcp-4 + 0x1.4p+0 i)":
+double: 2
+idouble: 2
+Test "Imaginary part of: ctan_upward (0xcp-4 + 0x1.4p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Real part of: ctan_upward (0xf.ffffffffffff8p+1020 + 0x1p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctan_upward (0xf.fffffp+124 + 0x1p+0 i)":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 3
+ldouble: 3
+Test "Imaginary part of: ctan_upward (0xf.fffffp+124 + 0x1p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 
 # ctanh
+Test "Imaginary part of: ctanh (+0 + 0x1.921fb4p+0 i)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctanh (+0 + 0x1.921fb6p+0 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ctanh (+0 + 0xc.90fdaa22168c235p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh (+0 + 0xc.90fdap-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh (+0 + 0xc.90fdbp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh (-0x2p+0 - 0x3p+0 i)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh (-0x2p+0 - 0x3p+0 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: ctanh (-2 - 3 i)":
 float: 1
 ifloat: 1
@@ -5816,6 +8171,96 @@ ldouble: 1
 Test "Imaginary part of: ctanh (0.75 + 1.25 i)":
 float: 1
 ifloat: 1
+Test "Real part of: ctanh (0x1p+0 + 0x8p+1020 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh (0x1p+0 + 0x8p+1020 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh (0x1p+0 + 0xf.ffffffffffff8p+1020 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh (0x1p+0 + 0xf.fffffp+124 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh (0x2.dp+4 + 0x1p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh (0x2.fp+4 + 0x1p+0 i)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctanh (0x4p-1076 + 0x1.921fb4p+0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh (0x4p-1076 + 0x1.921fb4p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctanh (0x4p-1076 + 0x1.921fb54442d1846ap+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh (0x4p-1076 + 0x1.921fb54442d18p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh (0x4p-1076 + 0x1.921fb54442d19p+0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh (0x4p-1076 + 0x1.921fb6p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh (0x8p-152 + 0x1.921fb4p+0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh (0x8p-152 + 0x1.921fb4p+0 i)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctanh (0x8p-152 + 0x1.921fb54442d1846ap+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh (0x8p-152 + 0x1.921fb54442d18p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh (0x8p-152 + 0x1.921fb54442d19p+0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh (0x8p-152 + 0x1.921fb6p+0 i)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh (0x8p-152 + 0x1.921fb6p+0 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ctanh (0x8p-16448 + 0x1.921fb4p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctanh (0x8p-16448 + 0x1.921fb54442d1846ap+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh (0x8p-16448 + 0x1.921fb54442d18p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh (0x8p-16448 + 0x1.921fb54442d19p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh (0xcp-4 + 0x1.4p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 Test "Real part of: ctanh (1 + 0x1p1023 i)":
 ildouble: 1
 ldouble: 1
@@ -5834,6 +8279,83 @@ ildouble: 2
 ldouble: 2
 
 # ctanh_downward
+Test "Imaginary part of: ctanh_downward (+0 + 0x1.921fb4p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_downward (+0 + 0x1.921fb54442d1846ap+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_downward (+0 + 0x1.921fb54442d18p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctanh_downward (+0 + 0x1.921fb54442d19p+0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_downward (+0 + 0x1.921fb6p+0 i)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctanh_downward (+0 + 0xc.90fdaa22168c234p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_downward (+0 + 0xc.90fdaa22168c8p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_downward (+0 + 0xc.90fdaa22168cp-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_downward (+0 + 0xc.90fdap-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: ctanh_downward (-0x2p+0 - 0x3p+0 i)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_downward (-0x2p+0 - 0x3p+0 i)":
+double: 2
+idouble: 2
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_downward (0x1.63p+8 + 0x1p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_downward (0x1.6dp+8 + 0x1p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_downward (0x1p+0 + 0x8p+1020 i)":
+double: 1
+idouble: 1
+ildouble: 4
+ldouble: 4
+Test "Real part of: ctanh_downward (0x1p+0 + 0x8p+124 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Imaginary part of: ctanh_downward (0x1p+0 + 0x8p+124 i)":
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctanh_downward (0x1p+0 + 0x8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_downward (0x1p+0 + 0xf.ffffffffffff8p+1020 i)":
+double: 1
+idouble: 1
+ildouble: 4
+ldouble: 4
+Test "Imaginary part of: ctanh_downward (0x1p+0 + 0xf.fffffp+124 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "Real part of: ctanh_downward (0x1p-1074 + 0x1.921fb54442d18p+0 i)":
 ildouble: 3
 ldouble: 3
@@ -5855,8 +8377,158 @@ ldouble: 3
 Test "Imaginary part of: ctanh_downward (0x1p-16445 + 0x1.921fb54442d1846ap+0 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: ctanh_downward (0x2.dp+4 + 0x1p+0 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: ctanh_downward (0x2.fp+4 + 0x1p+0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_downward (0x4p-1076 + 0x1.921fb4p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctanh_downward (0x4p-1076 + 0x1.921fb4p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_downward (0x4p-1076 + 0x1.921fb54442d1846ap+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_downward (0x4p-1076 + 0x1.921fb54442d18p+0 i)":
+ildouble: 3
+ldouble: 3
+Test "Imaginary part of: ctanh_downward (0x4p-1076 + 0x1.921fb54442d18p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctanh_downward (0x4p-1076 + 0x1.921fb54442d19p+0 i)":
+double: 2
+idouble: 2
+ildouble: 3
+ldouble: 3
+Test "Imaginary part of: ctanh_downward (0x4p-1076 + 0x1.921fb54442d19p+0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_downward (0x4p-1076 + 0x1.921fb6p+0 i)":
+ildouble: 4
+ldouble: 4
+Test "Imaginary part of: ctanh_downward (0x4p-1076 + 0x1.921fb6p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctanh_downward (0x8p-152 + 0x1.921fb4p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctanh_downward (0x8p-152 + 0x1.921fb4p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_downward (0x8p-152 + 0x1.921fb54442d1846ap+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_downward (0x8p-152 + 0x1.921fb54442d18p+0 i)":
+ildouble: 3
+ldouble: 3
+Test "Imaginary part of: ctanh_downward (0x8p-152 + 0x1.921fb54442d18p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctanh_downward (0x8p-152 + 0x1.921fb54442d19p+0 i)":
+double: 2
+idouble: 2
+ildouble: 3
+ldouble: 3
+Test "Imaginary part of: ctanh_downward (0x8p-152 + 0x1.921fb54442d19p+0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_downward (0x8p-152 + 0x1.921fb6p+0 i)":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 4
+ldouble: 4
+Test "Imaginary part of: ctanh_downward (0x8p-152 + 0x1.921fb6p+0 i)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctanh_downward (0x8p-16448 + 0x1.921fb4p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_downward (0x8p-16448 + 0x1.921fb54442d1846ap+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_downward (0x8p-16448 + 0x1.921fb54442d18p+0 i)":
+ildouble: 3
+ldouble: 3
+Test "Imaginary part of: ctanh_downward (0x8p-16448 + 0x1.921fb54442d18p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctanh_downward (0x8p-16448 + 0x1.921fb54442d19p+0 i)":
+ildouble: 3
+ldouble: 3
+Test "Imaginary part of: ctanh_downward (0x8p-16448 + 0x1.921fb54442d19p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_downward (0x8p-16448 + 0x1.921fb6p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctanh_downward (0xcp-4 + 0x1.4p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Imaginary part of: ctanh_downward (0xcp-4 + 0x1.4p+0 i)":
+double: 2
+idouble: 2
 
 # ctanh_tonearest
+Test "Imaginary part of: ctanh_tonearest (+0 + 0x1.921fb4p+0 i)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctanh_tonearest (+0 + 0x1.921fb6p+0 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ctanh_tonearest (+0 + 0xc.90fdaa22168c235p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_tonearest (+0 + 0xc.90fdap-4 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_tonearest (+0 + 0xc.90fdbp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_tonearest (-0x2p+0 - 0x3p+0 i)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_tonearest (-0x2p+0 - 0x3p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_tonearest (0x1p+0 + 0x8p+1020 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_tonearest (0x1p+0 + 0x8p+1020 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_tonearest (0x1p+0 + 0xf.ffffffffffff8p+1020 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_tonearest (0x1p+0 + 0xf.fffffp+124 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: ctanh_tonearest (0x1p-1074 + 0x1.921fb54442d18p+0 i)":
 ildouble: 1
 ldouble: 1
@@ -5871,8 +8543,164 @@ ifloat: 1
 Test "Real part of: ctanh_tonearest (0x1p-16445 + 0x1.921fb54442d1846ap+0 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: ctanh_tonearest (0x2.dp+4 + 0x1p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_tonearest (0x2.fp+4 + 0x1p+0 i)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctanh_tonearest (0x4p-1076 + 0x1.921fb4p+0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_tonearest (0x4p-1076 + 0x1.921fb4p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctanh_tonearest (0x4p-1076 + 0x1.921fb54442d1846ap+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_tonearest (0x4p-1076 + 0x1.921fb54442d18p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_tonearest (0x4p-1076 + 0x1.921fb54442d19p+0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_tonearest (0x4p-1076 + 0x1.921fb6p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_tonearest (0x8p-152 + 0x1.921fb4p+0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_tonearest (0x8p-152 + 0x1.921fb4p+0 i)":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctanh_tonearest (0x8p-152 + 0x1.921fb54442d1846ap+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_tonearest (0x8p-152 + 0x1.921fb54442d18p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_tonearest (0x8p-152 + 0x1.921fb54442d19p+0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_tonearest (0x8p-152 + 0x1.921fb6p+0 i)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_tonearest (0x8p-152 + 0x1.921fb6p+0 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ctanh_tonearest (0x8p-16448 + 0x1.921fb4p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctanh_tonearest (0x8p-16448 + 0x1.921fb54442d1846ap+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_tonearest (0x8p-16448 + 0x1.921fb54442d18p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_tonearest (0x8p-16448 + 0x1.921fb54442d19p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_tonearest (0xcp-4 + 0x1.4p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 
 # ctanh_towardzero
+Test "Imaginary part of: ctanh_towardzero (+0 + 0x1.921fb4p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_towardzero (+0 + 0x1.921fb54442d1846ap+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_towardzero (+0 + 0x1.921fb54442d18p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_towardzero (+0 + 0x1.921fb54442d19p+0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_towardzero (+0 + 0x1.921fb6p+0 i)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_towardzero (+0 + 0xc.90fdaa22168c234p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_towardzero (+0 + 0xc.90fdaa22168c8p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_towardzero (+0 + 0xc.90fdaa22168cp-4 i)":
+double: 1
+idouble: 1
+ildouble: 3
+ldouble: 3
+Test "Imaginary part of: ctanh_towardzero (+0 + 0xc.90fdap-4 i)":
+double: 1
+idouble: 1
+Test "Real part of: ctanh_towardzero (-0x2p+0 - 0x3p+0 i)":
+double: 1
+idouble: 1
+Test "Real part of: ctanh_towardzero (-0xc.35p+12 + 0xc.35p+12 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_towardzero (-0xc.35p+12 - 0xc.35p+12 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_towardzero (0x1.63p+8 + 0x1p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_towardzero (0x1.6dp+8 + 0x1p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_towardzero (0x1p+0 + 0x8p+1020 i)":
+double: 1
+idouble: 1
+ildouble: 3
+ldouble: 3
+Test "Real part of: ctanh_towardzero (0x1p+0 + 0x8p+124 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Imaginary part of: ctanh_towardzero (0x1p+0 + 0x8p+124 i)":
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctanh_towardzero (0x1p+0 + 0x8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_towardzero (0x1p+0 + 0xf.ffffffffffff8p+1020 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_towardzero (0x1p+0 + 0xf.fffffp+124 i)":
+double: 1
+idouble: 1
 Test "Real part of: ctanh_towardzero (0x1p-1074 + 0x1.921fb54442d18p+0 i)":
 ildouble: 1
 ldouble: 1
@@ -5891,8 +8719,237 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: ctanh_towardzero (0x2.dp+4 + 0x1p+0 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: ctanh_towardzero (0x2.fp+4 + 0x1p+0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_towardzero (0x4p-1076 + 0x1.921fb4p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctanh_towardzero (0x4p-1076 + 0x1.921fb4p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_towardzero (0x4p-1076 + 0x1.921fb54442d1846ap+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_towardzero (0x4p-1076 + 0x1.921fb54442d18p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_towardzero (0x4p-1076 + 0x1.921fb54442d18p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_towardzero (0x4p-1076 + 0x1.921fb54442d19p+0 i)":
+double: 2
+idouble: 2
+ildouble: 3
+ldouble: 3
+Test "Imaginary part of: ctanh_towardzero (0x4p-1076 + 0x1.921fb54442d19p+0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_towardzero (0x4p-1076 + 0x1.921fb6p+0 i)":
+ildouble: 4
+ldouble: 4
+Test "Imaginary part of: ctanh_towardzero (0x4p-1076 + 0x1.921fb6p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_towardzero (0x8p-152 + 0x1.921fb4p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctanh_towardzero (0x8p-152 + 0x1.921fb4p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_towardzero (0x8p-152 + 0x1.921fb54442d1846ap+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_towardzero (0x8p-152 + 0x1.921fb54442d18p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_towardzero (0x8p-152 + 0x1.921fb54442d18p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_towardzero (0x8p-152 + 0x1.921fb54442d19p+0 i)":
+double: 2
+idouble: 2
+ildouble: 3
+ldouble: 3
+Test "Imaginary part of: ctanh_towardzero (0x8p-152 + 0x1.921fb54442d19p+0 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_towardzero (0x8p-152 + 0x1.921fb6p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 4
+ldouble: 4
+Test "Imaginary part of: ctanh_towardzero (0x8p-152 + 0x1.921fb6p+0 i)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_towardzero (0x8p-16448 + 0x1.921fb4p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_towardzero (0x8p-16448 + 0x1.921fb54442d1846ap+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_towardzero (0x8p-16448 + 0x1.921fb54442d18p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_towardzero (0x8p-16448 + 0x1.921fb54442d18p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_towardzero (0x8p-16448 + 0x1.921fb54442d19p+0 i)":
+ildouble: 3
+ldouble: 3
+Test "Imaginary part of: ctanh_towardzero (0x8p-16448 + 0x1.921fb54442d19p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_towardzero (0x8p-16448 + 0x1.921fb6p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_towardzero (0xcp-4 + 0x1.4p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Imaginary part of: ctanh_towardzero (0xcp-4 + 0x1.4p+0 i)":
+double: 2
+idouble: 2
 
 # ctanh_upward
+Test "Imaginary part of: ctanh_upward (+0 + 0x1.921fb4p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_upward (+0 + 0x1.921fb54442d1846ap+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_upward (+0 + 0x1.921fb54442d19p+0 i)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctanh_upward (+0 + 0x1.921fb6p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctanh_upward (+0 + 0xc.90fdaa22168c234p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_upward (+0 + 0xc.90fdaa22168c235p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_upward (+0 + 0xc.90fdap-4 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: ctanh_upward (+0 + 0xc.90fdbp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_upward (-0x2p+0 - 0x3p+0 i)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctanh_upward (-0x2p+0 - 0x3p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_upward (-0xc.35p+12 + 0xc.35p+12 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_upward (-0xc.35p+12 - 0xc.35p+12 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_upward (0x1.63ap+12 + 0x1p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_upward (0x1.63p+12 + 0x1p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_upward (0x1.63p+8 + 0x1p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctanh_upward (0x1.63p+8 + 0x1p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctanh_upward (0x1.6dp+8 + 0x1p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctanh_upward (0x1.6dp+8 + 0x1p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_upward (0x1p+0 + 0x8p+1020 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_upward (0x1p+0 + 0x8p+1020 i)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_upward (0x1p+0 + 0x8p+124 i)":
+double: 3
+idouble: 3
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_upward (0x1p+0 + 0x8p+16380 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_upward (0x1p+0 + 0x8p+16380 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctanh_upward (0x1p+0 + 0xf.ffffffffffff8p+1020 i)":
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctanh_upward (0x1p+0 + 0xf.fffffp+124 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_upward (0x1p+0 + 0xf.fffffp+124 i)":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 3
+ldouble: 3
 Test "Real part of: ctanh_upward (0x1p-1074 + 0x1.921fb54442d18p+0 i)":
 double: 1
 idouble: 1
@@ -5917,6 +8974,136 @@ ldouble: 1
 Test "Imaginary part of: ctanh_upward (0x1p-16445 + 0x1.921fb54442d1846ap+0 i)":
 ildouble: 2
 ldouble: 2
+Test "Real part of: ctanh_upward (0x2.dp+4 + 0x1p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctanh_upward (0x2.dp+4 + 0x1p+0 i)":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_upward (0x2.fp+4 + 0x1p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctanh_upward (0x2.fp+4 + 0x1p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_upward (0x4p-1076 + 0x1.921fb4p+0 i)":
+ildouble: 3
+ldouble: 3
+Test "Imaginary part of: ctanh_upward (0x4p-1076 + 0x1.921fb4p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_upward (0x4p-1076 + 0x1.921fb54442d1846ap+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_upward (0x4p-1076 + 0x1.921fb54442d1846ap+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_upward (0x4p-1076 + 0x1.921fb54442d18p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctanh_upward (0x4p-1076 + 0x1.921fb54442d19p+0 i)":
+double: 2
+idouble: 2
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_upward (0x4p-1076 + 0x1.921fb54442d19p+0 i)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctanh_upward (0x4p-1076 + 0x1.921fb6p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_upward (0x4p-1076 + 0x1.921fb6p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctanh_upward (0x8p-152 + 0x1.921fb4p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 3
+ldouble: 3
+Test "Imaginary part of: ctanh_upward (0x8p-152 + 0x1.921fb4p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_upward (0x8p-152 + 0x1.921fb54442d1846ap+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_upward (0x8p-152 + 0x1.921fb54442d1846ap+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_upward (0x8p-152 + 0x1.921fb54442d18p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctanh_upward (0x8p-152 + 0x1.921fb54442d19p+0 i)":
+double: 2
+idouble: 2
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_upward (0x8p-152 + 0x1.921fb54442d19p+0 i)":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctanh_upward (0x8p-152 + 0x1.921fb6p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_upward (0x8p-152 + 0x1.921fb6p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctanh_upward (0x8p-16448 + 0x1.921fb4p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_upward (0x8p-16448 + 0x1.921fb54442d1846ap+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctanh_upward (0x8p-16448 + 0x1.921fb54442d1846ap+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_upward (0x8p-16448 + 0x1.921fb54442d19p+0 i)":
+ildouble: 3
+ldouble: 3
+Test "Imaginary part of: ctanh_upward (0x8p-16448 + 0x1.921fb54442d19p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctanh_upward (0x8p-16448 + 0x1.921fb6p+0 i)":
+ildouble: 2
+ldouble: 2
+Test "Real part of: ctanh_upward (0xc.35p+12 + 0xc.35p+12 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_upward (0xc.35p+12 - 0xc.35p+12 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_upward (0xcp-4 + 0x1.4p+0 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ctanh_upward (0xcp-4 + 0x1.4p+0 i)":
+float: 3
+ifloat: 3
 
 # erf
 Test "erf (-0x8p-4)":
@@ -10715,6 +13902,12 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
+Function: Imaginary part of "clog":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+
 Function: Real part of "clog10":
 double: 1
 float: 1
@@ -10842,6 +14035,8 @@ idouble: 1
 ifloat: 1
 
 Function: Real part of "csqrt":
+double: 1
+idouble: 1
 ildouble: 1
 ldouble: 1
 
@@ -10859,57 +14054,75 @@ ldouble: 2
 
 Function: Imaginary part of "ctan":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: Real part of "ctan_downward":
 double: 1
+float: 2
 idouble: 1
-ildouble: 3
-ldouble: 3
+ifloat: 2
+ildouble: 5
+ldouble: 5
 
 Function: Imaginary part of "ctan_downward":
+double: 2
 float: 2
+idouble: 2
 ifloat: 2
 ildouble: 4
 ldouble: 4
 
 Function: Real part of "ctan_tonearest":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
+ildouble: 2
+ldouble: 2
 
 Function: Imaginary part of "ctan_tonearest":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: Real part of "ctan_towardzero":
-double: 1
+double: 3
 float: 1
-idouble: 1
+idouble: 3
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 5
+ldouble: 5
 
 Function: Imaginary part of "ctan_towardzero":
+double: 2
 float: 1
+idouble: 2
 ifloat: 1
 ildouble: 4
 ldouble: 4
 
 Function: Real part of "ctan_upward":
-ildouble: 2
-ldouble: 2
+double: 3
+float: 2
+idouble: 3
+ifloat: 2
+ildouble: 3
+ldouble: 3
 
 Function: Imaginary part of "ctan_upward":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
-ildouble: 4
-ldouble: 4
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 3
+ldouble: 3
 
 Function: Real part of "ctanh":
 double: 1
@@ -10928,52 +14141,68 @@ ildouble: 2
 ldouble: 2
 
 Function: Real part of "ctanh_downward":
+double: 2
 float: 2
+idouble: 2
 ifloat: 2
 ildouble: 4
 ldouble: 4
 
 Function: Imaginary part of "ctanh_downward":
-double: 1
-idouble: 1
-ildouble: 3
-ldouble: 3
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 4
+ldouble: 4
 
 Function: Real part of "ctanh_tonearest":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: Imaginary part of "ctanh_tonearest":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
+ildouble: 2
+ldouble: 2
 
 Function: Real part of "ctanh_towardzero":
+double: 2
 float: 1
+idouble: 2
 ifloat: 1
 ildouble: 4
 ldouble: 4
 
 Function: Imaginary part of "ctanh_towardzero":
-double: 1
+double: 2
 float: 1
-idouble: 1
+idouble: 2
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 3
+ldouble: 3
 
 Function: Real part of "ctanh_upward":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
-ildouble: 4
-ldouble: 4
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 3
+ldouble: 3
 
 Function: Imaginary part of "ctanh_upward":
-ildouble: 2
-ldouble: 2
+double: 3
+float: 3
+idouble: 3
+ifloat: 3
+ildouble: 3
+ldouble: 3
 
 Function: "erf":
 double: 1

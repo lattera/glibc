@@ -406,6 +406,9 @@ typedef enum
     /* MPC function with a single complex argument and one real
        result.  */
     mpc_c_f,
+    /* MPC function with a single complex argument and one complex
+       result.  */
+    mpc_c_c,
   } func_calc_method;
 
 /* Description of how to calculate a function.  */
@@ -422,6 +425,7 @@ typedef struct
     int (*mpfr_if_f) (mpfr_t, long, const mpfr_t, mpfr_rnd_t);
     int (*mpfr_f_11) (mpfr_t, mpfr_t, const mpfr_t, mpfr_rnd_t);
     int (*mpc_c_f) (mpfr_t, const mpc_t, mpfr_rnd_t);
+    int (*mpc_c_c) (mpc_t, const mpc_t, mpc_rnd_t);
   } func;
 } func_calc_desc;
 
@@ -478,6 +482,9 @@ typedef struct
 #define FUNC_mpc_c_f(NAME, MPFR_FUNC, EXACT)				\
   FUNC (NAME, ARGS2 (type_fp, type_fp), RET1 (type_fp), EXACT, true,	\
 	CALC (mpc_c_f, MPFR_FUNC))
+#define FUNC_mpc_c_c(NAME, MPFR_FUNC, EXACT)				\
+  FUNC (NAME, ARGS2 (type_fp, type_fp), RET2 (type_fp, type_fp), EXACT, \
+	true, CALC (mpc_c_c, MPFR_FUNC))
 
 /* List of functions handled by this program.  */
 static test_function test_functions[] =
@@ -490,10 +497,26 @@ static test_function test_functions[] =
     FUNC_mpfr_ff_f ("atan2", mpfr_atan2, false),
     FUNC_mpfr_f_f ("atanh", mpfr_atanh, false),
     FUNC_mpc_c_f ("cabs", mpc_abs, false),
+    FUNC_mpc_c_c ("cacos", mpc_acos, false),
+    FUNC_mpc_c_c ("cacosh", mpc_acosh, false),
     FUNC_mpc_c_f ("carg", mpc_arg, false),
+    FUNC_mpc_c_c ("casin", mpc_asin, false),
+    FUNC_mpc_c_c ("casinh", mpc_asinh, false),
+    FUNC_mpc_c_c ("catan", mpc_atan, false),
+    FUNC_mpc_c_c ("catanh", mpc_atanh, false),
     FUNC_mpfr_f_f ("cbrt", mpfr_cbrt, false),
+    FUNC_mpc_c_c ("ccos", mpc_cos, false),
+    FUNC_mpc_c_c ("ccosh", mpc_cosh, false),
+    FUNC_mpc_c_c ("cexp", mpc_exp, false),
+    FUNC_mpc_c_c ("clog", mpc_log, false),
+    FUNC_mpc_c_c ("clog10", mpc_log10, false),
     FUNC_mpfr_f_f ("cos", mpfr_cos, false),
     FUNC_mpfr_f_f ("cosh", mpfr_cosh, false),
+    FUNC_mpc_c_c ("csin", mpc_sin, false),
+    FUNC_mpc_c_c ("csinh", mpc_sinh, false),
+    FUNC_mpc_c_c ("csqrt", mpc_sqrt, false),
+    FUNC_mpc_c_c ("ctan", mpc_tan, false),
+    FUNC_mpc_c_c ("ctanh", mpc_tanh, false),
     FUNC_mpfr_f_f ("erf", mpfr_erf, false),
     FUNC_mpfr_f_f ("erfc", mpfr_erfc, false),
     FUNC_mpfr_f_f ("exp", mpfr_exp, false),
@@ -735,6 +758,17 @@ special_fill_minus_min_subnorm (mpfr_t res0,
 }
 
 static size_t
+special_fill_min_subnorm_p120 (mpfr_t res0,
+			       mpfr_t res1 __attribute__ ((unused)),
+			       fp_format format)
+{
+  mpfr_init2 (res0, fp_formats[format].mant_dig);
+  assert_exact (mpfr_mul_2ui (res0, fp_formats[format].subnorm_min,
+			      120, MPFR_RNDN));
+  return 1;
+}
+
+static size_t
 special_fill_pi (mpfr_t res0, mpfr_t res1, fp_format format)
 {
   mpfr_init2 (res0, fp_formats[format].mant_dig);
@@ -899,6 +933,7 @@ static const special_real_input special_real_inputs[] =
     { "-min", special_fill_minus_min },
     { "min_subnorm", special_fill_min_subnorm },
     { "-min_subnorm", special_fill_minus_min_subnorm },
+    { "min_subnorm_p120", special_fill_min_subnorm_p120 },
     { "pi", special_fill_pi },
     { "-pi", special_fill_minus_pi },
     { "pi/2", special_fill_pi_2 },
@@ -1400,6 +1435,29 @@ calc_generic_results (generic_value *outputs, generic_value *inputs,
       inexact = calc->func.mpc_c_f (outputs[0].value.f, ci, MPFR_RNDZ);
       adjust_real (outputs[0].value.f, inexact);
       mpc_clear (ci);
+      break;
+
+    case mpc_c_c:
+      assert (inputs[0].type == gtype_fp);
+      assert (inputs[1].type == gtype_fp);
+      outputs[0].type = gtype_fp;
+      mpfr_init (outputs[0].value.f);
+      outputs[1].type = gtype_fp;
+      mpfr_init (outputs[1].value.f);
+      mpc_t co;
+      mpc_init2 (ci, internal_precision);
+      mpc_init2 (co, internal_precision);
+      assert_exact (mpc_set_fr_fr (ci, inputs[0].value.f, inputs[1].value.f,
+				   MPC_RNDNN));
+      int mpc_ternary = calc->func.mpc_c_c (co, ci, MPC_RNDZZ);
+      assert_exact (mpfr_set (outputs[0].value.f, mpc_realref (co),
+			      MPFR_RNDN));
+      assert_exact (mpfr_set (outputs[1].value.f, mpc_imagref (co),
+			      MPFR_RNDN));
+      adjust_real (outputs[0].value.f, MPC_INEX_RE (mpc_ternary));
+      adjust_real (outputs[1].value.f, MPC_INEX_IM (mpc_ternary));
+      mpc_clear (ci);
+      mpc_clear (co);
       break;
 
     default:

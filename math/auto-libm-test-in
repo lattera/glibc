@@ -155,6 +155,219 @@ cbrt 0.75
 cbrt 0x1p16383
 cbrt 0x1p-16383
 
+ccos 0.0 0.0
+ccos -0 0.0
+ccos 0.0 -0
+ccos -0 -0
+
+ccos 0.75 1.25
+ccos -2 -3
+
+ccos 0.75 89.5
+ccos 0.75 -89.5
+ccos -0.75 89.5
+ccos -0.75 -89.5
+ccos 0.75 710.5
+ccos 0.75 -710.5
+ccos -0.75 710.5
+ccos -0.75 -710.5
+ccos 0.75 11357.25
+ccos 0.75 -11357.25
+ccos -0.75 11357.25
+ccos -0.75 -11357.25
+
+ccos 0x1p-149 180
+ccos 0x1p-1074 1440
+ccos 0x1p-16434 22730
+
+ccos min_subnorm_p120 0x1p-120
+ccos 0x1p-120 min_subnorm_p120
+
+ccosh 0.0 0.0
+ccosh -0 0.0
+ccosh 0.0 -0
+ccosh -0 -0
+
+ccosh 0.75 1.25
+ccosh -2 -3
+
+ccosh 89.5 0.75
+ccosh -89.5 0.75
+ccosh 89.5 -0.75
+ccosh -89.5 -0.75
+ccosh 710.5 0.75
+ccosh -710.5 0.75
+ccosh 710.5 -0.75
+ccosh -710.5 -0.75
+ccosh 11357.25 0.75
+ccosh -11357.25 0.75
+ccosh 11357.25 -0.75
+ccosh -11357.25 -0.75
+
+ccosh 180 0x1p-149
+ccosh 1440 0x1p-1074
+ccosh 22730 0x1p-16434
+
+ccosh min_subnorm_p120 0x1p-120
+ccosh 0x1p-120 min_subnorm_p120
+
+cexp 0 0
+cexp -0 0
+cexp 0 -0
+cexp -0 -0
+
+cexp 0.75 1.25
+cexp -2.0 -3.0
+
+cexp 0 0x1p65
+cexp 0 -0x1p65
+cexp 50 0x1p127
+
+cexp 0 1e22
+cexp 0 0x1p1023
+cexp 500 0x1p1023
+
+cexp 0 0x1p16383
+cexp -10000 0x1p16383
+
+cexp 88.75 0.75
+cexp -95 0.75
+cexp 709.8125 0.75
+cexp -720 0.75
+cexp 11356.5625 0.75
+cexp -11370 0.75
+
+cexp 180 0x1p-149
+cexp 1440 0x1p-1074
+cexp 22730 0x1p-16434
+
+cexp 1e6 0
+cexp 1e6 min
+cexp 1e6 -min
+
+# Bug 16348: spurious underflow may occur.
+cexp min min_subnorm spurious-underflow:ldbl-96-intel:x86 spurious-underflow:ldbl-96-intel:x86_64
+cexp min -min_subnorm spurious-underflow:ldbl-96-intel:x86 spurious-underflow:ldbl-96-intel:x86_64
+
+clog 0.75 1.25
+clog -2 -3
+
+clog 0x1.fffffep+127 0x1.fffffep+127
+clog 0x1.fffffep+127 1.0
+clog 0x1p-149 0x1p-149
+clog 0x1p-147 0x1p-147
+clog 0x1.fffffffffffffp+1023 0x1.fffffffffffffp+1023
+clog 0x1.fffffffffffffp+1023 0x1p+1023
+clog 0x1p-1074 0x1p-1074
+clog 0x1p-1073 0x1p-1073
+clog 0x1.fp+16383 0x1.fp+16383
+clog 0x1.fp+16383 0x1p+16383
+clog 0x1p-16440 0x1p-16441
+
+clog 0x1p-149 0x1.fp+127
+clog -0x1p-149 0x1.fp+127
+clog 0x1p-149 -0x1.fp+127
+clog -0x1p-149 -0x1.fp+127
+clog -0x1.fp+127 0x1p-149
+clog -0x1.fp+127 -0x1p-149
+clog 0x1.fp+127 0x1p-149
+clog 0x1.fp+127 -0x1p-149
+clog 0x1p-1074 0x1.fp+1023
+clog -0x1p-1074 0x1.fp+1023
+clog 0x1p-1074 -0x1.fp+1023
+clog -0x1p-1074 -0x1.fp+1023
+clog -0x1.fp+1023 0x1p-1074
+clog -0x1.fp+1023 -0x1p-1074
+clog 0x1.fp+1023 0x1p-1074
+clog 0x1.fp+1023 -0x1p-1074
+clog 0x1p-16445 0x1.fp+16383
+clog -0x1p-16445 0x1.fp+16383
+clog 0x1p-16445 -0x1.fp+16383
+clog -0x1p-16445 -0x1.fp+16383
+clog -0x1.fp+16383 0x1p-16445
+clog -0x1.fp+16383 -0x1p-16445
+clog 0x1.fp+16383 0x1p-16445
+clog 0x1.fp+16383 -0x1p-16445
+clog 0x1p-16494 0x1.fp+16383
+clog -0x1p-16494 0x1.fp+16383
+clog 0x1p-16494 -0x1.fp+16383
+clog -0x1p-16494 -0x1.fp+16383
+clog -0x1.fp+16383 0x1p-16494
+clog -0x1.fp+16383 -0x1p-16494
+clog 0x1.fp+16383 0x1p-16494
+clog 0x1.fp+16383 -0x1p-16494
+
+clog 1.0 0x1.234566p-10
+clog -1.0 0x1.234566p-20
+clog 0x1.234566p-30 1.0
+clog -0x1.234566p-40 -1.0
+clog 0x1.234566p-50 1.0
+clog 0x1.234566p-60 1.0
+clog 0x1p-62 1.0
+clog 0x1p-63 1.0
+clog 0x1p-64 1.0
+clog 0x1p-510 1.0
+clog 0x1p-511 1.0
+clog 0x1p-512 1.0
+clog 0x1p-8190 1.0
+clog 0x1p-8191 1.0
+clog 0x1p-8192 1.0
+
+clog 0x1.000566p0 0x1.234p-10
+clog 0x1.000566p0 0x1.234p-100
+clog -0x1.0000000123456p0 0x1.2345678p-30
+clog -0x1.0000000123456p0 0x1.2345678p-1000
+clog 0x1.00000000000000123456789abcp0 0x1.23456789p-60
+clog 0x1.00000000000000123456789abcp0 0x1.23456789p-1000
+
+clog 0x0.ffffffp0 0x0.ffffffp-100
+clog 0x0.fffffffffffff8p0 0x0.fffffffffffff8p-1000
+clog 0x0.ffffffffffffffffp0 0x0.ffffffffffffffffp-15000
+
+clog 0x1a6p-10 0x3a5p-10
+clog 0xf2p-10 0x3e3p-10
+clog 0x4d4ep-15 0x6605p-15
+clog 0x2818p-15 0x798fp-15
+clog 0x9b57bp-20 0xcb7b4p-20
+clog 0x2731p-20 0xfffd0p-20
+clog 0x2ede88p-23 0x771c3fp-23
+clog 0x11682p-23 0x7ffed1p-23
+clog 0xa1f2c1p-24 0xc643aep-24
+clog 0x659feap-24 0xeaf6f9p-24
+clog 0x4447d7175p-35 0x6c445e00ap-35
+clog 0x2dd46725bp-35 0x7783a1284p-35
+clog 0x164c74eea876p-45 0x16f393482f77p-45
+clog 0xfe961079616p-45 0x1bc37e09e6d1p-45
+clog 0xa4722f19346cp-51 0x7f9631c5e7f07p-51
+clog 0x10673dd0f2481p-51 0x7ef1d17cefbd2p-51
+clog 0x8ecbf810c4ae6p-52 0xd479468b09a37p-52
+clog 0x5b06b680ea2ccp-52 0xef452b965da9fp-52
+clog 0x659b70ab7971bp-53 0x1f5d111e08abecp-53
+clog 0x15cfbd1990d1ffp-53 0x176a3973e09a9ap-53
+clog 0x1367a310575591p-54 0x3cfcc0a0541f60p-54
+clog 0x55cb6d0c83af5p-55 0x7fe33c0c7c4e90p-55
+clog 0x298c62cb546588a7p-63 0x7911b1dfcc4ecdaep-63
+clog 0x4d9c37e2b5cb4533p-63 0x65c98be2385a042ep-63
+clog 0x602fd5037c4792efp-64 0xed3e2086dcca80b8p-64
+clog 0x6b10b4f3520217b6p-64 0xe8893cbb449253a1p-64
+clog 0x81b7efa81fc35ad1p-65 0x1ef4b835f1c79d812p-65
+clog 0x3f96469050f650869c2p-75 0x6f16b2c9c8b05988335p-75
+clog 0x3157fc1d73233e580c8p-75 0x761b52ccd435d7c7f5fp-75
+clog 0x155f8afc4c48685bf63610p-85 0x17d0cf2652cdbeb1294e19p-85
+clog 0x13836d58a13448d750b4b9p-85 0x195ca7bc3ab4f9161edbe6p-85
+clog 0x1df515eb171a808b9e400266p-95 0x7c71eb0cd4688dfe98581c77p-95
+clog 0xe33f66c9542ca25cc43c867p-95 0x7f35a68ebd3704a43c465864p-95
+clog 0x6771f22c64ed551b857c128b4cp-105 0x1f570e7a13cc3cf2f44fd793ea1p-105
+clog 0x15d8ab6ed05ca514086ac3a1e84p-105 0x1761e480aa094c0b10b34b09ce9p-105
+clog 0x187190c1a334497bdbde5a95f48p-106 0x3b25f08062d0a095c4cfbbc338dp-106
+clog 0x6241ef0da53f539f02fad67dabp-106 0x3fb46641182f7efd9caa769dac0p-106
+clog 0x3e1d0a105ac4ebeacd9c6952d34cp-112 0xf859b3d1b06d005dcbb5516d5479p-112
+clog 0x47017a2e36807acb1e5214b209dep-112 0xf5f4a550c9d75e3bb1839d865f0dp-112
+clog 0x148f818cb7a9258fca942ade2a0cap-113 0x18854a34780b8333ec53310ad7001p-113
+clog 0xfd95243681c055c2632286921092p-113 0x1bccabcd29ca2152860ec29e34ef7p-113
+clog 0xdb85c467ee2aadd5f425fe0f4b8dp-114 0x3e83162a0f95f1dcbf97dddf410eap-114
+clog 0x1415bcaf2105940d49a636e98ae59p-115 0x7e6a150adfcd1b0921d44b31f40f4p-115
+
 cos 0
 cos -0
 cos pi/3
@@ -198,6 +411,125 @@ cosh -709.8893558127259666434838436543941497802734375
 cosh 22
 cosh 23
 cosh 24
+
+csqrt 0 0
+csqrt 0 -0
+csqrt -0 0
+csqrt -0 -0
+
+csqrt 16.0 -30.0
+csqrt -1 0
+csqrt 0 2
+csqrt 119 120
+csqrt 0.75 1.25
+csqrt -2 -3
+csqrt -2 3
+# Principal square root should be returned (i.e., non-negative real part).
+csqrt 0 -1
+
+csqrt 0x1.fffffep+127 0x1.fffffep+127
+csqrt 0x1.fffffep+127 1.0
+csqrt 0x1p-149 0x1p-149
+csqrt 0x1p-147 0x1p-147
+
+csqrt 0 0x1p-149
+csqrt 0x1p-50 0x1p-149
+csqrt 0x1p+127 0x1p-149
+csqrt 0x1p-149 0x1p+127
+csqrt 0x1.000002p-126 0x1.000002p-126
+csqrt -0x1.000002p-126 -0x1.000002p-126
+
+csqrt 0x1.fffffffffffffp+1023 0x1.fffffffffffffp+1023
+csqrt 0x1.fffffffffffffp+1023 0x1p+1023
+csqrt 0x1p-1074 0x1p-1074
+csqrt 0x1p-1073 0x1p-1073
+
+csqrt 0 0x1p-1074
+csqrt 0x1p-500 0x1p-1074
+csqrt 0x1p+1023 0x1p-1074
+csqrt 0x1p-1074 0x1p+1023
+csqrt 0x1.0000000000001p-1022 0x1.0000000000001p-1022
+csqrt -0x1.0000000000001p-1022 -0x1.0000000000001p-1022
+
+csqrt 0x1.fp+16383 0x1.fp+16383
+csqrt 0x1.fp+16383 0x1p+16383
+csqrt 0x1p-16440 0x1p-16441
+
+csqrt 0 0x1p-16445
+csqrt 0x1p-5000 0x1p-16445
+csqrt 0x1p+16383 0x1p-16445
+csqrt 0x1p-16445 0x1p+16383
+csqrt 0x1.0000000000000002p-16382 0x1.0000000000000002p-16382
+csqrt -0x1.0000000000000002p-16382 -0x1.0000000000000002p-16382
+
+csqrt 0 0x1p-16494
+csqrt 0x1p-5000 0x1p-16494
+csqrt 0x1p+16383 0x1p-16494
+csqrt 0x1p-16494 0x1p+16383
+csqrt 0x1.0000000000000000000000000001p-16382 0x1.0000000000000000000000000001p-16382
+csqrt -0x1.0000000000000000000000000001p-16382 -0x1.0000000000000000000000000001p-16382
+
+ctan 0 0
+ctan 0 -0
+ctan -0 0
+ctan -0 -0
+
+ctan 0.75 1.25
+ctan -2 -3
+
+ctan 1 45
+ctan 1 47
+ctan 1 355
+ctan 1 365
+ctan 1 5680
+ctan 1 5690
+
+ctan 0x3.243f6cp-1 0
+
+ctan 0x1p127 1
+ctan 0x1p1023 1
+ctan 0x1p16383 1
+
+ctan 50000 50000
+ctan 50000 -50000
+ctan -50000 50000
+ctan -50000 -50000
+
+ctan 0x1.921fb6p+0 0x1p-149
+ctan 0x1.921fb54442d18p+0 0x1p-1074
+ctan 0x1.921fb54442d1846ap+0 0x1p-16445
+
+ctanh 0 0
+ctanh 0 -0
+ctanh -0 0
+ctanh -0 -0
+
+ctanh 0 pi/4
+
+ctanh 0.75 1.25
+ctanh -2 -3
+
+ctanh 45 1
+ctanh 47 1
+ctanh 355 1
+ctanh 365 1
+ctanh 5680 1
+ctanh 5690 1
+
+ctanh 0 0x3.243f6cp-1
+
+ctanh 1 0x1p127
+ctanh 1 0x1p1023
+ctanh 1 0x1p16383
+
+ctanh 50000 50000
+ctanh 50000 -50000
+ctanh -50000 50000
+ctanh -50000 -50000
+
+ctanh 0x1p-149 0x1.921fb6p+0
+ctanh 0x1p-1074 0x1.921fb54442d18p+0
+ctanh 0x1p-16445 0x1.921fb54442d1846ap+0
 
 erf 0
 erf -0

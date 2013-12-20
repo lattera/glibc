@@ -1,3 +1,38 @@
+2013-12-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/auto-libm-test-in: Add tests of ccos, ccosh, cexp, clog,
+	csqrt, ctan and ctanh.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (TEST_COND_x86_64): New macro.
+	(TEST_COND_x86): Likewise.
+	(ccos_test_data): Use AUTO_TESTS_c_c.
+	(ccosh_test_data): Likewise.
+	(cexp_test_data): Likewise.
+	(clog_test_data): Likewise.
+	(csqrt_test_data): Likewise.
+	(ctan_test_data): Likewise.
+	(ctan_tonearest_test_data): Likewise.
+	(ctan_towardzero_test_data): Likewise.
+	(ctan_downward_test_data): Likewise.
+	(ctan_upward_test_data): Likewise.
+	(ctanh_test_data): Likewise.
+	(ctanh_tonearest_test_data): Likewise.
+	(ctanh_towardzero_test_data): Likewise.
+	(ctanh_downward_test_data): Likewise.
+	(ctanh_upward_test_data): Likewise.
+	* math/gen-auto-libm-tests.c (func_calc_method): Add value
+	mpc_c_c.
+	(func_calc_desc): Add mpc_c_c union field.
+	(FUNC_mpc_c_c): New macro.
+	(test_functions): Add cacos, cacosh, casin, casinh, catan, catanh,
+	ccos, ccosh, cexp, clog, clog10, csin, csinh, csqrt, ctan and
+	ctanh.
+	(special_fill_min_subnorm_p120): New function.
+	(special_real_inputs): Add min_subnorm_p120.
+	(calc_generic_results): Handle mpc_c_c.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2013-12-20  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/s_sin.c (do_cos, do_cos_slow, do_sin,
