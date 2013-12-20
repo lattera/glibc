@@ -134,7 +134,7 @@ static double slow (double x);
 static double slow1 (double x);
 static double slow2 (double x);
 static double sloww (double x, double dx, double orig);
-static double sloww1 (double x, double dx, double orig);
+static double sloww1 (double x, double dx, double orig, int m);
 static double sloww2 (double x, double dx, double orig, int n);
 static double bsloww (double x, double dx, double orig, int n);
 static double bsloww1 (double x, double dx, double orig, int n);
@@ -142,7 +142,7 @@ static double bsloww2 (double x, double dx, double orig, int n);
 int __branred (double x, double *a, double *aa);
 static double cslow2 (double x);
 static double csloww (double x, double dx, double orig);
-static double csloww1 (double x, double dx, double orig);
+static double csloww1 (double x, double dx, double orig, int m);
 static double csloww2 (double x, double dx, double orig, int n);
 
 /* Reduce range of X and compute sin of a + da.  K is the amount by which to
@@ -287,18 +287,15 @@ __sin (double x)
 	  else
 	    {
 	      if (a > 0)
-		{
-		  m = 1;
-		  t = a;
-		}
+		m = 1;
 	      else
 		{
 		  m = 0;
-		  t = -a;
+		  a = -a;
 		  da = -da;
 		}
-	      u.x = big + t;
-	      y = t - (u.x - big);
+	      u.x = big + a;
+	      y = a - (u.x - big);
 	      xx = y * y;
 	      s = y + (da + y * xx * (sn3 + xx * sn5));
 	      c = y * da + xx * (cs2 + xx * (cs4 + xx * cs6));
@@ -308,7 +305,7 @@ __sin (double x)
 	      cor = (sn - res) + cor;
 	      cor = (cor > 0) ? 1.035 * cor + eps : 1.035 * cor - eps;
 	      retval = ((res == res + cor) ? ((m) ? res : -res)
-			: sloww1 (a, da, x));
+			: sloww1 (a, da, x, m));
 	    }
 	  break;
 
@@ -375,17 +372,16 @@ __sin (double x)
 	      if (a > 0)
 		{
 		  m = 1;
-		  t = a;
 		  db = da;
 		}
 	      else
 		{
 		  m = 0;
-		  t = -a;
+		  a = -a;
 		  db = -da;
 		}
-	      u.x = big + t;
-	      y = t - (u.x - big);
+	      u.x = big + a;
+	      y = a - (u.x - big);
 	      xx = y * y;
 	      s = y + (db + y * xx * (sn3 + xx * sn5));
 	      c = y * db + xx * (cs2 + xx * (cs4 + xx * cs6));
@@ -496,16 +492,15 @@ __cos (double x)
 	  if (a > 0)
 	    {
 	      m = 1;
-	      t = a;
 	    }
 	  else
 	    {
 	      m = 0;
-	      t = -a;
+	      a = -a;
 	      da = -da;
 	    }
-	  u.x = big + t;
-	  y = t - (u.x - big);
+	  u.x = big + a;
+	  y = a - (u.x - big);
 	  xx = y * y;
 	  s = y + (da + y * xx * (sn3 + xx * sn5));
 	  c = y * da + xx * (cs2 + xx * (cs4 + xx * cs6));
@@ -515,7 +510,7 @@ __cos (double x)
 	  cor = (sn - res) + cor;
 	  cor = (cor > 0) ? 1.035 * cor + 1.0e-31 : 1.035 * cor - 1.0e-31;
 	  retval = ((res == res + cor) ? ((m) ? res : -res)
-		    : csloww1 (a, da, x));
+		    : csloww1 (a, da, x, m));
 	}
 
     }				/*   else  if (k < 0x400368fd)    */
@@ -554,16 +549,15 @@ __cos (double x)
 	      if (a > 0)
 		{
 		  m = 1;
-		  t = a;
 		}
 	      else
 		{
 		  m = 0;
-		  t = -a;
+		  a = -a;
 		  da = -da;
 		}
-	      u.x = big + t;
-	      y = t - (u.x - big);
+	      u.x = big + a;
+	      y = a - (u.x - big);
 	      xx = y * y;
 	      s = y + (da + y * xx * (sn3 + xx * sn5));
 	      c = y * da + xx * (cs2 + xx * (cs4 + xx * cs6));
@@ -573,7 +567,7 @@ __cos (double x)
 	      cor = (sn - res) + cor;
 	      cor = (cor > 0) ? 1.035 * cor + eps : 1.035 * cor - eps;
 	      retval = ((res == res + cor) ? ((m) ? res : -res)
-			: csloww1 (a, da, x));
+			: csloww1 (a, da, x, m));
 	    }
 	  break;
 
@@ -638,17 +632,16 @@ __cos (double x)
 	      if (a > 0)
 		{
 		  m = 1;
-		  t = a;
 		  db = da;
 		}
 	      else
 		{
 		  m = 0;
-		  t = -a;
+		  a = -a;
 		  db = -da;
 		}
-	      u.x = big + t;
-	      y = t - (u.x - big);
+	      u.x = big + a;
+	      y = a - (u.x - big);
 	      xx = y * y;
 	      s = y + (db + y * xx * (sn3 + xx * sn5));
 	      c = y * db + xx * (cs2 + xx * (cs4 + xx * cs6));
@@ -888,14 +881,13 @@ sloww (double x, double dx, double orig)
 
 static double
 SECTION
-sloww1 (double x, double dx, double orig)
+sloww1 (double x, double dx, double orig, int m)
 {
   mynumber u;
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, c1, c2, xx, cor, res;
 
-  y = ABS (x);
-  u.x = big + y;
-  y = y - (u.x - big);
+  u.x = big + x;
+  y = x - (u.x - big);
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);
   c = xx * (cs2 + xx * (cs4 + xx * cs6));
@@ -916,10 +908,10 @@ sloww1 (double x, double dx, double orig)
     cor = 1.0005 * cor - 3.1e-30 * ABS (orig);
 
   if (res == res + cor)
-    return (x > 0) ? res : -res;
+    return (m > 0) ? res : -res;
   else
     {
-      __dubsin (ABS (x), dx, w);
+      __dubsin (x, dx, w);
 
       if (w[1] > 0)
 	cor = 1.000000005 * w[1] + 1.1e-30 * ABS (orig);
@@ -927,7 +919,7 @@ sloww1 (double x, double dx, double orig)
 	cor = 1.000000005 * w[1] - 1.1e-30 * ABS (orig);
 
       if (w[0] == w[0] + cor)
-	return (x > 0) ? w[0] : -w[0];
+	return (m > 0) ? w[0] : -w[0];
       else
 	return __mpsin (orig, 0, true);
     }
@@ -1240,14 +1232,13 @@ csloww (double x, double dx, double orig)
 
 static double
 SECTION
-csloww1 (double x, double dx, double orig)
+csloww1 (double x, double dx, double orig, int m)
 {
   mynumber u;
   double sn, ssn, cs, ccs, s, c, w[2], y, y1, y2, c1, c2, xx, cor, res;
 
-  y = ABS (x);
-  u.x = big + y;
-  y = y - (u.x - big);
+  u.x = big + x;
+  y = x - (u.x - big);
   xx = y * y;
   s = y * xx * (sn3 + xx * sn5);
   c = xx * (cs2 + xx * (cs4 + xx * cs6));
@@ -1268,16 +1259,16 @@ csloww1 (double x, double dx, double orig)
     cor = 1.0005 * cor - 3.1e-30 * ABS (orig);
 
   if (res == res + cor)
-    return (x > 0) ? res : -res;
+    return (m > 0) ? res : -res;
   else
     {
-      __dubsin (ABS (x), dx, w);
+      __dubsin (x, dx, w);
       if (w[1] > 0)
 	cor = 1.000000005 * w[1] + 1.1e-30 * ABS (orig);
       else
 	cor = 1.000000005 * w[1] - 1.1e-30 * ABS (orig);
       if (w[0] == w[0] + cor)
-	return (x > 0) ? w[0] : -w[0];
+	return (m > 0) ? w[0] : -w[0];
       else
 	return __mpcos (orig, 0, true);
     }

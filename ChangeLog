@@ -1,5 +1,12 @@
 2013-12-20  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/s_sin.c (sloww1): Add new argument M.
+	Use M to change sign of result instead of X.  Assume X is
+	positive.
+	(csloww1): Likewise.
+	(__sin): Adjust.
+	(__cos): Adjust.
+
 	* sysdeps/ieee754/dbl-64/s_sin.c (reduce_and_compute): Remove
 	arguments A and DA.
 	(__sin): Adjust.
