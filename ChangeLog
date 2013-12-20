@@ -1,5 +1,13 @@
 2013-12-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* timezone/checktab.awk: Update from tzcode 2013i.
+	* timezone/private.h: Likewise.
+	* timezone/scheck.c: Likewise.
+	* timezone/tzfile.h: Likewise.
+	* timezone/tzselect.ksh: Likewise.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
+
 	* math/auto-libm-test-in: Add tests of cpow.
 	* math/auto-libm-test-out: Regenerated.
 	* math/libm-test.inc (cpow_test_data): Use AUTO_TESTS_cc_c.
