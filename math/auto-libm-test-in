@@ -519,11 +519,10 @@ cosh 0x2.c679d1f73f0fap+8
 cosh 0x2.c679d1f73f0fcp+8
 cosh -0x2.c679d1f73f0fap+8
 cosh -0x2.c679d1f73f0fcp+8
-# Bug 16356: bad results from expl (and so coshl) in round-upward mode.
-cosh 0x2.c679d1f73f0fb624d358b213a7p+8 xfail-rounding:ldbl-96-intel:x86 xfail-rounding:ldbl-96-intel:x86_64
-cosh 0x2.c679d1f73f0fb624d358b213a8p+8 xfail-rounding:ldbl-96-intel:x86 xfail-rounding:ldbl-96-intel:x86_64
-cosh -0x2.c679d1f73f0fb624d358b213a7p+8 xfail-rounding:ldbl-96-intel:x86 xfail-rounding:ldbl-96-intel:x86_64
-cosh -0x2.c679d1f73f0fb624d358b213a8p+8 xfail-rounding:ldbl-96-intel:x86 xfail-rounding:ldbl-96-intel:x86_64
+cosh 0x2.c679d1f73f0fb624d358b213a7p+8
+cosh 0x2.c679d1f73f0fb624d358b213a8p+8
+cosh -0x2.c679d1f73f0fb624d358b213a7p+8
+cosh -0x2.c679d1f73f0fb624d358b213a8p+8
 cosh 0x2.c5d37700c6bb03a4p+12 no-test-inline
 cosh 0x2.c5d37700c6bb03a8p+12 no-test-inline
 cosh -0x2.c5d37700c6bb03a4p+12 no-test-inline
@@ -712,6 +711,7 @@ exp 1000.0 xfail-rounding:dbl-64
 exp 710 xfail-rounding:dbl-64
 exp -1234
 # Bug 16284: results on directed rounding may be incorrect.
+exp 0x2.c679d1f73f0fb628p+8 xfail-rounding:dbl-64
 exp 1e5 xfail-rounding:dbl-64
 exp max xfail-rounding:dbl-64
 exp -7.4444006192138124e+02
@@ -726,15 +726,22 @@ exp10 36
 exp10 -36
 exp10 305
 exp10 -305
-exp10 4932
-exp10 -4932
-exp10 1e5
+# Bug 16284: results on directed rounding may be incorrect.
+exp10 4932 xfail-rounding:flt-32
+# Bug 16361: underflow exception may be misssing
+exp10 -4932 missing-underflow:ldbl-96-intel:x86 missing-underflow:ldbl-96-intel:x86_64
+# Bug 16284: results on directed rounding may be incorrect.
+exp10 1e5 xfail-rounding:flt-32
 exp10 -1e5
-exp10 1e6
+# Bug 16284: results on directed rounding may be incorrect.
+exp10 1e6 xfail-rounding:flt-32
 exp10 -1e6
-exp10 max
+# Bug 16284: results on directed rounding may be incorrect.
+exp10 max xfail-rounding:flt-32
 exp10 -max
 exp10 0.75
+# Bug 16284: results on directed rounding may be incorrect.
+exp10 0x1.348e45573a1dd72cp+8 xfail-rounding:flt-32 xfail-rounding:dbl-64
 
 exp2 0
 exp2 -0

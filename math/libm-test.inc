@@ -7280,6 +7280,62 @@ exp10_test (void)
   END;
 }
 
+
+static const struct test_f_f_data exp10_tonearest_test_data[] =
+  {
+    AUTO_TESTS_f_f (exp10, tonearest),
+  };
+
+static void
+exp10_test_tonearest (void)
+{
+  START (exp10_tonearest);
+  RUN_TEST_LOOP_f_f (exp10, exp10_tonearest_test_data, FE_TONEAREST);
+  END;
+}
+
+
+static const struct test_f_f_data exp10_towardzero_test_data[] =
+  {
+    AUTO_TESTS_f_f (exp10, towardzero),
+  };
+
+static void
+exp10_test_towardzero (void)
+{
+  START (exp10_towardzero);
+  RUN_TEST_LOOP_f_f (exp10, exp10_towardzero_test_data, FE_TOWARDZERO);
+  END;
+}
+
+
+static const struct test_f_f_data exp10_downward_test_data[] =
+  {
+    AUTO_TESTS_f_f (exp10, downward),
+  };
+
+static void
+exp10_test_downward (void)
+{
+  START (exp10_downward);
+  RUN_TEST_LOOP_f_f (exp10, exp10_downward_test_data, FE_DOWNWARD);
+  END;
+}
+
+
+static const struct test_f_f_data exp10_upward_test_data[] =
+  {
+    AUTO_TESTS_f_f (exp10, upward),
+  };
+
+static void
+exp10_test_upward (void)
+{
+  START (exp10_upward);
+  RUN_TEST_LOOP_f_f (exp10, exp10_upward_test_data, FE_UPWARD);
+  END;
+}
+
 static void
 pow10_test (void)
 {
@@ -12819,6 +12875,10 @@ main (int argc, char **argv)
   exp_test_downward ();
   exp_test_upward ();
   exp10_test ();
+  exp10_test_tonearest ();
+  exp10_test_towardzero ();
+  exp10_test_downward ();
+  exp10_test_upward ();
   exp2_test ();
   expm1_test ();
   expm1_test_tonearest ();

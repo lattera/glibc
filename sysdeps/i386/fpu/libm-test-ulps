@@ -7095,6 +7095,10 @@ Test "cosh_downward (-0x2.c5e3bp+8)":
 ildouble: 1
 Test "cosh_downward (-0x2.c679d1f73f0fap+8)":
 ildouble: 2
+Test "cosh_downward (-0x2.c679d1f73f0fb624p+8)":
+ildouble: 2
+Test "cosh_downward (-0x2.c679d1f73f0fb628p+8)":
+ildouble: 2
 Test "cosh_downward (-0x2.c679d1f73f0fcp+8)":
 ildouble: 1
 Test "cosh_downward (-0x2.c679dp+8)":
@@ -7181,15 +7185,25 @@ Test "cosh_towardzero (-0x2.c5d37700c6bbp+12)":
 ldouble: 2
 Test "cosh_towardzero (-0x2.c5e3acd2922a6p+8)":
 ildouble: 1
+Test "cosh_towardzero (-0x2.c679d1f73f0fap+8)":
+ildouble: 2
+Test "cosh_towardzero (-0x2.c679d1f73f0fb624p+8)":
+ildouble: 2
+Test "cosh_towardzero (-0x2.c679d1f73f0fb628p+8)":
+ildouble: 2
 Test "cosh_towardzero (-0x2.c679dp+8)":
 double: 1
 ildouble: 1
 Test "cosh_towardzero (-0x5.96a7ep+4)":
 double: 1
+ildouble: 2
 ldouble: 1
 Test "cosh_towardzero (0x1.6p+4)":
 ildouble: 1
 ldouble: 2
+Test "cosh_towardzero (0x1.8p+4)":
+ildouble: 1
+ldouble: 1
 Test "cosh_towardzero (0x2.c5d374p+12)":
 ldouble: 1
 Test "cosh_towardzero (0x2.c5d37700c6bb03a4p+12)":
@@ -7240,6 +7254,11 @@ ildouble: 1
 Test "cosh_upward (-0x2.c679d1f73f0fap+8)":
 double: 1
 ildouble: 1
+Test "cosh_upward (-0x2.c679d1f73f0fb624p+8)":
+ildouble: 1
+Test "cosh_upward (-0x2.c679d1f73f0fb628p+8)":
+ildouble: 1
+ldouble: 1
 Test "cosh_upward (-0x2.c679d1f73f0fcp+8)":
 ildouble: 1
 Test "cosh_upward (-0x2p-16384)":
@@ -7292,6 +7311,11 @@ ildouble: 1
 Test "cosh_upward (0x2.c679d1f73f0fap+8)":
 double: 1
 ildouble: 1
+Test "cosh_upward (0x2.c679d1f73f0fb624p+8)":
+ildouble: 1
+Test "cosh_upward (0x2.c679d1f73f0fb628p+8)":
+ildouble: 2
+ldouble: 1
 Test "cosh_upward (0x2.c679d1f73f0fcp+8)":
 ildouble: 1
 Test "cosh_upward (0x2.c679d4p+8)":
@@ -8323,11 +8347,13 @@ Test "Real part of: ctan_towardzero (0x1p+0 + 0x1.63p+8 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: ctan_towardzero (0x1p+0 + 0x1.6dp+8 i)":
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 Test "Real part of: ctan_towardzero (0x1p+0 + 0x2.dp+4 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "Real part of: ctan_towardzero (0x1p+0 + 0x2.fp+4 i)":
 double: 1
 idouble: 1
@@ -8361,6 +8387,9 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: ctan_towardzero (0xcp-4 + 0x1.4p+0 i)":
+ildouble: 2
+ldouble: 2
 Test "Real part of: ctan_towardzero (0xf.ffffffffffff8p+1020 + 0x1p+0 i)":
 double: 1
 idouble: 1
@@ -9188,8 +9217,8 @@ Test "Imaginary part of: ctanh_towardzero (0x1.63p+8 + 0x1p+0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: ctanh_towardzero (0x1.6dp+8 + 0x1p+0 i)":
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 Test "Imaginary part of: ctanh_towardzero (0x1p+0 + 0x8p+1020 i)":
 double: 1
 idouble: 1
@@ -9235,6 +9264,8 @@ ldouble: 1
 Test "Imaginary part of: ctanh_towardzero (0x2.dp+4 + 0x1p+0 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: ctanh_towardzero (0x2.fp+4 + 0x1p+0 i)":
 double: 1
 idouble: 1
@@ -9697,6 +9728,48 @@ Test "exp10 (0xcp-4)":
 ildouble: 1
 ldouble: 1
 
+# exp10_downward
+Test "exp10_downward (0x1.348e45573a1dd72cp+8)":
+ildouble: 2
+ldouble: 2
+Test "exp10_downward (0x3p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+# exp10_tonearest
+Test "exp10_tonearest (0xcp-4)":
+ildouble: 1
+ldouble: 1
+
+# exp10_towardzero
+Test "exp10_towardzero (-0x1p+0)":
+ildouble: 1
+ldouble: 1
+Test "exp10_towardzero (0x1.344p+12)":
+ildouble: 1
+ldouble: 1
+Test "exp10_towardzero (0x3p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+# exp10_upward
+Test "exp10_upward (0x1.344p+12)":
+ildouble: 1
+ldouble: 1
+Test "exp10_upward (0x3p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
 # exp_downward
 Test "exp_downward (0x2.c5cp+8)":
 double: 1
@@ -9786,6 +9859,9 @@ Test "exp_upward (-0x2.e870a7e5e88c1f0cp+8)":
 ildouble: 1
 ldouble: 1
 Test "exp_upward (-0x2.e870a7e5e88cp+8)":
+ildouble: 1
+ldouble: 1
+Test "exp_upward (0x2.c679d1f73f0fb628p+8)":
 ildouble: 1
 ldouble: 1
 Test "exp_upward (1)":
@@ -14500,7 +14576,7 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
+ildouble: 2
 ldouble: 3
 
 Function: "cosh_upward":
@@ -14737,6 +14813,34 @@ ildouble: 1
 ldouble: 1
 
 Function: "exp10":
+ildouble: 1
+ldouble: 1
+
+Function: "exp10_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: "exp10_tonearest":
+ildouble: 1
+ldouble: 1
+
+Function: "exp10_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "exp10_upward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 

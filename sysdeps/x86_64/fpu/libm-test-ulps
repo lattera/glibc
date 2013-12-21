@@ -8125,6 +8125,9 @@ ldouble: 2
 Test "cosh_towardzero (0x1.7p+4)":
 double: 1
 idouble: 1
+Test "cosh_towardzero (0x1.8p+4)":
+ildouble: 1
+ldouble: 1
 Test "cosh_towardzero (0x2.c5d374p+12)":
 ldouble: 1
 Test "cosh_towardzero (0x2.c5d37700c6bb03a4p+12)":
@@ -8180,6 +8183,9 @@ idouble: 1
 Test "cosh_upward (-0x2.c679d1f73f0fap+8)":
 double: 1
 idouble: 1
+Test "cosh_upward (-0x2.c679d1f73f0fb628p+8)":
+ildouble: 1
+ldouble: 1
 Test "cosh_upward (-0x2.c679dp+8)":
 double: 1
 idouble: 1
@@ -8215,6 +8221,9 @@ idouble: 1
 Test "cosh_upward (0x2.c679d1f73f0fap+8)":
 double: 1
 idouble: 1
+Test "cosh_upward (0x2.c679d1f73f0fb628p+8)":
+ildouble: 1
+ldouble: 1
 Test "cosh_upward (0x2.c679dp+8)":
 double: 1
 idouble: 1
@@ -9312,11 +9321,13 @@ Test "Real part of: ctan_towardzero (0x1p+0 + 0x1.63p+8 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: ctan_towardzero (0x1p+0 + 0x1.6dp+8 i)":
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 Test "Real part of: ctan_towardzero (0x1p+0 + 0x2.dp+4 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "Real part of: ctan_towardzero (0x1p+0 + 0x2.fp+4 i)":
 ildouble: 1
 ldouble: 1
@@ -9352,6 +9363,9 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: ctan_towardzero (0xcp-4 + 0x1.4p+0 i)":
+ildouble: 2
+ldouble: 2
 Test "Real part of: ctan_towardzero (0xf.ffffffffffff8p+1020 + 0x1p+0 i)":
 double: 2
 idouble: 2
@@ -10342,8 +10356,8 @@ Test "Imaginary part of: ctanh_towardzero (0x1.63p+8 + 0x1p+0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: ctanh_towardzero (0x1.6dp+8 + 0x1p+0 i)":
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 Test "Imaginary part of: ctanh_towardzero (0x1p+0 + 0x8p+1020 i)":
 double: 5
 idouble: 5
@@ -10396,6 +10410,8 @@ ldouble: 1
 Test "Imaginary part of: ctanh_towardzero (0x2.dp+4 + 0x1p+0 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: ctanh_towardzero (0x2.fp+4 + 0x1p+0 i)":
 ildouble: 1
 ldouble: 1
@@ -10921,6 +10937,75 @@ Test "exp10 (36)":
 double: 1
 idouble: 1
 
+# exp10_downward
+Test "exp10_downward (0x1.348e45573a1dd72cp+8)":
+ildouble: 2
+ldouble: 2
+Test "exp10_downward (0x2.4p+4)":
+double: 1
+idouble: 1
+Test "exp10_downward (0x3p+0)":
+ildouble: 1
+ldouble: 1
+
+# exp10_tonearest
+Test "exp10_tonearest (-0x1.31p+8)":
+double: 1
+idouble: 1
+Test "exp10_tonearest (-0x1p+0)":
+double: 1
+idouble: 1
+Test "exp10_tonearest (-0x2.4p+4)":
+double: 1
+idouble: 1
+Test "exp10_tonearest (0x2.4p+4)":
+double: 1
+idouble: 1
+Test "exp10_tonearest (0x3p+0)":
+double: 1
+idouble: 1
+Test "exp10_tonearest (0xcp-4)":
+ildouble: 1
+ldouble: 1
+
+# exp10_towardzero
+Test "exp10_towardzero (-0x1p+0)":
+ildouble: 1
+ldouble: 1
+Test "exp10_towardzero (0x1.344p+12)":
+ildouble: 1
+ldouble: 1
+Test "exp10_towardzero (0x2.4p+4)":
+double: 1
+idouble: 1
+
+# exp10_upward
+Test "exp10_upward (-0x1.344p+12)":
+float: 1
+ifloat: 1
+Test "exp10_upward (-0x1.86ap+16)":
+float: 1
+ifloat: 1
+Test "exp10_upward (-0xf.424p+16)":
+float: 1
+ifloat: 1
+Test "exp10_upward (-0xf.fffffp+124)":
+float: 1
+ifloat: 1
+Test "exp10_upward (0x1.344p+12)":
+ildouble: 1
+ldouble: 1
+Test "exp10_upward (0x2.4p+4)":
+double: 1
+idouble: 1
+Test "exp10_upward (0x3p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
 # exp_downward
 Test "exp_downward (0x2.c5cp+8)":
 ildouble: 1
@@ -11057,6 +11142,9 @@ idouble: 1
 Test "exp_upward (0x2.c5cp+8)":
 double: 1
 idouble: 1
+Test "exp_upward (0x2.c679d1f73f0fb628p+8)":
+ildouble: 1
+ldouble: 1
 Test "exp_upward (0x3.2p+4)":
 double: 1
 idouble: 1
@@ -16372,6 +16460,32 @@ ldouble: 1
 Function: "exp10":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
+
+Function: "exp10_downward":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+
+Function: "exp10_tonearest":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+
+Function: "exp10_towardzero":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+
+Function: "exp10_upward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 

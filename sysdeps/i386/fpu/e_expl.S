@@ -130,7 +130,6 @@ ENTRY(IEEE754_EXPL)
 #endif
 3:	FLDLOG			/* 1  log2(base)      */
 	fmul	%st(1), %st	/* 1  x log2(base)    */
-#ifdef USE_AS_EXPM1L
 	/* Set round-to-nearest temporarily.  */
 	subl	$8, %esp
 	cfi_adjust_cfa_offset (8)
@@ -139,15 +138,12 @@ ENTRY(IEEE754_EXPL)
 	andl	4(%esp), %edx
 	movl	%edx, (%esp)
 	fldcw	(%esp)
-#endif
 	frndint			/* 1  i               */
 	fld	%st(1)		/* 2  x               */
 	frndint			/* 2  xi              */
-#ifdef USE_AS_EXPM1L
 	fldcw	4(%esp)
 	addl	$8, %esp
 	cfi_adjust_cfa_offset (-8)
-#endif
 	fld	%st(1)		/* 3  i               */
 	fldt	MO(c0)		/* 4  c0              */
 	fld	%st(2)		/* 5  xi              */

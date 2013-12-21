@@ -1,3 +1,25 @@
+2013-12-21  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16356]
+	* sysdeps/i386/fpu/e_expl.S (IEEE754_EXPL): Also set
+	round-to-nearest for [!USE_AS_EXPM1L].
+	* sysdeps/x86_64/fpu/e_expl.S (IEEE754_EXPL): Likewise.
+	* math/auto-libm-test-in: Do not expect cosh tests to fail.  Add
+	more tests of exp and exp10.  Expect some exp10 tests to miss
+	exceptions or fail in directed rounding modes.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (exp10_tonearest_test_data): New array.
+	(exp10_test_tonearest): New function.
+	(exp10_towardzero_test_data): New array.
+	(exp10_test_towardzero): New function.
+	(exp10_downward_test_data): New array.
+	(exp10_test_downward): New function.
+	(exp10_upward_test_data): New array.
+	(exp10_test_upward): New function.
+	(main): Call the new functions.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2013-12-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Add more tests of acos, acosh, asin,
