@@ -1,3 +1,47 @@
+2013-12-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mach/hurd/Implies: Change unix/bsd/bsd4.4 to unix/bsd.
+	* sysdeps/unix/bsd/syscalls.list (chflags): Add entry from
+	sysdeps/unix/bsd/bsd4.4/syscalls.list.
+	(fchflags): Likewise.
+	(revoke): Likewise.
+	(setlogin): Likewise.
+	(sigaltstack): Likewise.
+	(wait4): Likewise.
+	(sigblock): Remove.
+	(sigsetmask): Likewise.
+	(wait3): Likewise.
+	(waitpid): Likewise.
+	* sysdeps/unix/bsd/bsd4.4/syscalls.list: Remove file.
+	* sysdeps/unix/sysv/linux/wait3.c: Update directory of included
+	file.
+	* sysdeps/unix/bsd/bsd4.4/Makefile: Move to ...
+	* sysdeps/unix/bsd/Makefile: ... here.
+	* sysdeps/unix/bsd/bsd4.4/Versions: Move to ...
+	* sysdeps/unix/bsd/Versions: ... here.
+	* sysdeps/unix/bsd/bsd4.4/bits/sockaddr.h: Move to ...
+	* sysdeps/unix/bsd/bits/sockaddr.h: ... here.
+	* sysdeps/unix/bsd/bsd4.4/cmsg_nxthdr.c: Move to ...
+	* sysdeps/unix/bsd/cmsg_nxthdr.c: ... here.
+	* sysdeps/unix/bsd/bsd4.4/sigblock.c: Move to ...
+	* sysdeps/unix/bsd/sigblock.c: ... here.
+	* sysdeps/unix/bsd/bsd4.4/sigsetmask.c: Move to ...
+	* sysdeps/unix/bsd/sigsetmask.c: ... here.
+	* sysdeps/unix/bsd/bsd4.4/sigvec.c: Move to ...
+	* sysdeps/unix/bsd/sigvec.c: ... here.
+	* sysdeps/unix/bsd/bsd4.4/tcdrain.c: Move to ...
+	* sysdeps/unix/bsd/tcdrain.c: ... here.
+	* sysdeps/unix/bsd/bsd4.4/tcgetattr.c: Move to ...
+	* sysdeps/unix/bsd/tcgetattr.c: ... here.
+	* sysdeps/unix/bsd/bsd4.4/tcsetattr.c: Move to ...
+	* sysdeps/unix/bsd/tcsetattr.c: ... here.
+	* sysdeps/unix/bsd/bsd4.4/wait.c: Move to ...
+	* sysdeps/unix/bsd/wait.c: ... here.
+	* sysdeps/unix/bsd/bsd4.4/wait3.c: Move to ...
+	* sysdeps/unix/bsd/wait3.c: ... here.
+	* sysdeps/unix/bsd/bsd4.4/waitpid.c: Move to ...
+	* sysdeps/unix/bsd/waitpid.c: ... here.
+
 2013-12-21  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16356]

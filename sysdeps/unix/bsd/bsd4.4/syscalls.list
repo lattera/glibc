@@ -1,8 +1,0 @@
-# File name	Caller	Syscall name	# args	Strong name	Weak names
-
-chflags		-	chflags		2	chflags
-fchflags	-	fchflags	2	fchflags
-revoke		-	revoke		1	revoke
-setlogin	-	setlogin	2	setlogin
-sigaltstack	-	sigaltstack	2	__sigaltstack	sigaltstack
-wait4		-	wait4		4	__wait4		wait4
