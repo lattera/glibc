@@ -1,5 +1,10 @@
 2013-12-22  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16337]
+	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c (__ieee754_lgammal_r):
+	Calculate results for small negative arguments directly rather
+	than using reflection formula with special underflow handling.
+
 	* sysdeps/mach/hurd/Implies: Change unix/bsd/bsd4.4 to unix/bsd.
 	* sysdeps/unix/bsd/syscalls.list (chflags): Add entry from
 	sysdeps/unix/bsd/bsd4.4/syscalls.list.
