@@ -3672,7 +3672,7 @@ of the width or precision by @code{MB_CUR_MAX}.
 To read in characters that belong to an arbitrary set of your choice,
 use the @samp{%[} conversion.  You specify the set between the @samp{[}
 character and a following @samp{]} character, using the same syntax used
-in regular expressions.  As special cases:
+in regular expressions for explicit sets of characters.  As special cases:
 
 @itemize @bullet
 @item
@@ -3691,6 +3691,10 @@ the characters listed.
 
 The @samp{%[} conversion does not skip over initial whitespace
 characters.
+
+Note that the @dfn{character class} syntax available in character sets
+that appear inside regular expressions (such as @samp{[:alpha:]}) is
+@emph{not} available in the @samp{%[} conversion.
 
 Here are some examples of @samp{%[} conversions and what they mean:
 
