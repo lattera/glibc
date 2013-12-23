@@ -1,4 +1,8 @@
 2013-12-24  Maxim Kuvyrkov  <maxim@kugelworks.com>
+
+	* NEWS: Restore accidentally deleted bug-fix entries.
+
+2013-12-24  Maxim Kuvyrkov  <maxim@kugelworks.com>
 	    Ondřej Bílka  <neleai@seznam.cz>
 
 	[BZ #15073]
