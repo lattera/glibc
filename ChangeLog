@@ -1,3 +1,9 @@
+2013-12-23  Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ #12986]
+	* manual/stdio.texi (String Input Conversions): Clarify that character
+	classes are not supported.
+
 2013-12-23  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
