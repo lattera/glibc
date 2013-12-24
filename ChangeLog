@@ -1,3 +1,7 @@
+2014-01-16  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/s390/sotruss-lib.c: New file.
+
 2014-01-16  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ#16430]
