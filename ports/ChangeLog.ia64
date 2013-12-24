@@ -1,6 +1,15 @@
 2013-12-25  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/ia64/nptl/lowlevellock.h
+	(FUTEX_WAIT_REQUEUE_PI): Define.
+	(FUTEX_CMP_REQUEUE_PI): Likewise.
+	(lll_futex_wait_requeue_pi): Likewise.
+	(lll_futex_timed_wait_requeue_pi): Likewise.
+	(lll_futex_cmp_requeue_pi): Likewise.
+
+2013-12-25  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/ia64/nptl/lowlevellock.h
 	(lll_futex_timed_wait_bitset): Define.
 
 2013-12-24  Mike Frysinger  <vapier@gentoo.org>

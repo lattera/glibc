@@ -38,6 +38,8 @@
 #define FUTEX_TRYLOCK_PI	8
 #define FUTEX_WAIT_BITSET	9
 #define FUTEX_WAKE_BITSET	10
+#define FUTEX_WAIT_REQUEUE_PI	11
+#define FUTEX_CMP_REQUEUE_PI	12
 #define FUTEX_PRIVATE_FLAG	128
 #define FUTEX_CLOCK_REALTIME	256
 
@@ -136,6 +138,29 @@ while (0)
 		     (int) (nr_wake), (int) (nr_wake2), (long) (ftx2),	     \
 		     FUTEX_OP_CLEAR_WAKE_IF_GT_ONE);			     \
    _r10 == -1;								     \
+})
+
+/* Priority Inheritance support.  */
+#define lll_futex_wait_requeue_pi(futexp, val, mutex, private) \
+  lll_futex_timed_wait_requeue_pi (futexp, val, NULL, 0, mutex, private)
+
+#define lll_futex_timed_wait_requeue_pi(futexp, val, timespec, clockbit,      \
+					mutex, private)			      \
+({									      \
+   int __op = FUTEX_WAIT_REQUEUE_PI | (clockbit);			      \
+									      \
+   DO_INLINE_SYSCALL(futex, 5, (long) (futexp),				      \
+		     __lll_private_flag (__op, private),		      \
+		     (val), (timespec), mutex); 			      \
+   _r10 == -1;								      \
+})
+
+#define lll_futex_cmp_requeue_pi(futexp, nr_wake, nr_move, mutex, val, priv)  \
+({									      \
+   DO_INLINE_SYSCALL(futex, 6, (long) (futexp),				      \
+		     __lll_private_flag (FUTEX_CMP_REQUEUE_PI, priv),	      \
+		    (nr_wake), (nr_move), (mutex), (val));		      \
+   _r10 == -1 ? -_retval : _retval;					      \
 })
 
 
