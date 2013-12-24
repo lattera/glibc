@@ -89,6 +89,17 @@
    _r10 == -1 ? -_retval : _retval;					\
 })
 
+#define lll_futex_timed_wait_bitset(ftx, val, timespec, clockbit, private) \
+({									   \
+   int __op = FUTEX_WAIT_BITSET | (clockbit);				   \
+									   \
+   DO_INLINE_SYSCALL(futex, 4, (long) (ftx),				   \
+		     __lll_private_flag (__op, private),		   \
+		     (int) (val), (long) (timespec), NULL /* Unused.  */,  \
+		     FUTEX_BITSET_MATCH_ANY);				   \
+   _r10 == -1 ? -_retval : _retval;					   \
+})
+
 #define lll_futex_wake(ftx, nr, private)				\
 ({									\
    DO_INLINE_SYSCALL(futex, 3, (long) (ftx),				\

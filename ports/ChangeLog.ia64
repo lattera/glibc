@@ -1,3 +1,8 @@
+2013-12-25  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/ia64/nptl/lowlevellock.h
+	(lll_futex_timed_wait_bitset): Define.
+
 2013-12-24  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/ia64/ioperm.c: Delete code behind #if 0.
