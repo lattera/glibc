@@ -1,3 +1,7 @@
+2013-12-24  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/ia64/bits/link.h: Fix whitespace.
+
 2013-11-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ia64/fpu/fegetround.c (fegetround): Use libm_hidden_def.
