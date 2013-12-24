@@ -1,5 +1,9 @@
 2013-12-24  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/unix/sysv/linux/ia64/ioperm.c: Delete code behind #if 0.
+
+2013-12-24  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/ia64/sotruss-lib.c: New file.
 
 2013-12-24  Mike Frysinger  <vapier@gentoo.org>

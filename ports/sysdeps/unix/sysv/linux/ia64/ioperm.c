@@ -59,11 +59,7 @@ io_offset (unsigned long int port)
 int
 _ioperm (unsigned long int from, unsigned long int num, int turn_on)
 {
-#if 0
-  unsigned long int addr, len, base;
-#endif
   unsigned long int base;
-  int prot;
 
   /* this test isn't as silly as it may look like; consider overflows! */
   if (from >= MAX_PORT || from + num > MAX_PORT)
@@ -91,14 +87,9 @@ _ioperm (unsigned long int from, unsigned long int num, int turn_on)
 	    return -1;
 
 	  len = io_offset (MAX_PORT);
-#if 1
 	  /* see comment below */
 	  base = (unsigned long int) __mmap (0, len, PROT_READ | PROT_WRITE, MAP_SHARED,
 						fd, phys_io_base);
-#else
-	  base = (unsigned long int) __mmap (0, len, PROT_NONE, MAP_SHARED,
-						fd, phys_io_base);
-#endif
 	  __close (fd);
 
 	  if ((long) base == -1)
@@ -106,25 +97,19 @@ _ioperm (unsigned long int from, unsigned long int num, int turn_on)
 
 	  io.base = base;
 	}
-      prot = PROT_READ | PROT_WRITE;
     }
   else
     {
       if (!io.base)
 	return 0;	/* never was turned on... */
-
-      prot = PROT_NONE;
     }
-#if 0
+
   /* We can't do mprotect because that would cause us to lose the
      uncached flag that the /dev/mem driver turned on.  A MAP_UNCACHED
-     flag seems so much cleaner...  */
-  addr = (io.base + io_offset (from)) & io.page_mask;
-  len  = io.base + io_offset (from + num) - addr;
-  return mprotect ((void *) addr, len, prot);
-#else
+     flag seems so much cleaner...
+
+     See the history of this file for a version that tried mprotect.  */
   return 0;
-#endif
 }
 
 int
