@@ -1102,7 +1102,7 @@ csloww (double x, double dx, double orig)
   int4 n;
 
   /* Taylor series */
-  t = TAYLOR_SLOW (x, dx, cor);
+  res = TAYLOR_SLOW (x, dx, cor);
 
   if (cor > 0)
     cor = 1.0005 * cor + ABS (orig) * 3.1e-30;

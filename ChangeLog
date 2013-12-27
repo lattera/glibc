@@ -1,3 +1,9 @@
+2013-12-27  Allan McRae  <allan@archlinux.org>
+
+	[BZ #16369]
+	* sysdeps/ieee754/dbl-64/s_sin.c (csloww): Fix variable name.
+	Reported by Il'ya Malakhov <ilmalakhov@yandex.ru>
+
 2013-12-24  Brooks Moses  <bmoses@google.com>
 
 	* string/string.h (__CORRECT_ISO_CPP_STRING_H_PROTO): Define for
