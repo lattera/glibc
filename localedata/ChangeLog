@@ -1,5 +1,20 @@
+2013-12-26  Chris Leonard  <cjl@sugarlabs.org>
+
+	* locales/sa_IN: Add lang_name.
+	* locales/sat_IN: Likewise.
+	* locales/sc_IT: Likewise.
+	* locales/se_NO: Likewise.
+	* locales/si_LK: Likewise.
+	* locales/sl_SI: Likewise.
+	* locales/sq_AL: Likewise.
+	* locales/sq_MK: Likewise.
+	* locales/sv_FI: Likewise.
+	* locales/sv_SE: Likewise.
+	* locales/szl_PL: Likewise.
+
 2013-12-20  Chris Leonard  <cjl@sugarlabs.org>
-	* locales/oc_FR: Add lang_name
+
+	* locales/oc_FR: Add lang_name.
 	* locales/or_IN: Likewise.
 	* locales/pa_IN: Likewise.
 	* locales/pa_PK: Likewise.
@@ -11,6 +26,7 @@
 	* locales/quz_PE: Likewise.
 
 2013-12-12  Toke Høiland-Jørgensen <toke@toke.dk>
+
 	[BZ #15593]
 	* locales/translit_neutral: Add entries for U00D8 and U00F8.
 

@@ -2225,6 +2225,8 @@ country_ab3 "<U0053><U0056><U004E>"
 country_num 705
 % SLO
 country_car    "<U0053><U004C><U004F>"
+% slovenščina
+lang_name    "<U0073><U006C><U006F><U0076><U0065><U006E><U0161><U010D><U0069><U006E><U0061>"
 % sl
 lang_ab      "<U0073><U006C>"
 % slv

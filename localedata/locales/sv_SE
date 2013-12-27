@@ -220,6 +220,8 @@ country_ab3 "<U0053><U0057><U0045>"
 country_num 752
 % S
 country_car    "<U0053>"
+% svenska
+lang_name    "<U0073><U0076><U0065><U006E><U0073><U006B><U0061>"
 lang_ab      "<U0073><U0076>"
 lang_term    "<U0073><U0077><U0065>"
 lang_lib     "<U0073><U0077><U0065>"

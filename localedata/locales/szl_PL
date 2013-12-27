@@ -218,6 +218,8 @@ country_ab3 "<U0050><U004F><U004C>"
 country_num 616
 % PL
 country_car    "<U0050><U004C>"
+% ślōnskŏ gŏdka
+lang_name    "<U015B><U006C><U014D><U006E><U0073><U006B><U014F><U0020><U0067><U014F><U0064><U006B><U0061>"
 % szl
 lang_term    "<U0073><U007A><U006C>"
 % szl
