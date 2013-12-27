@@ -1,3 +1,7 @@
+2013-12-27  Mike Frysinger  <vapier@gentoo.org>
+
+	* .gitignore: Add core/.gdbinit/.gdb_history.
+
 2013-12-27  Allan McRae  <allan@archlinux.org>
 
 	[BZ #16369]
