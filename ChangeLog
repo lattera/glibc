@@ -1,3 +1,7 @@
+2013-12-27  Carlos O'Donell  <carlos@redhat.com>
+
+	* po/sl.po: New file.
+
 2013-12-27  Mike Frysinger  <vapier@gentoo.org>
 
 	* .gitignore: Add core/.gdbinit/.gdb_history.
@@ -24,7 +28,7 @@
 
 	[BZ #15073]
 	* malloc/malloc.c (_int_free): Perform sanity check only if we
-        have_lock.
+	have_lock.
 
 2013-12-23  Ondřej Bílka  <neleai@seznam.cz>
 

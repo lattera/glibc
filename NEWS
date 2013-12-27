@@ -25,6 +25,9 @@ Version 2.19
   16245, 16271, 16274, 16283, 16289, 16293, 16314, 16316, 16330, 16337,
   16338, 16356, 16369.
 
+* Slovenian translations for glibc messages have been contributed by the
+  Translation Project's Slovenian team of translators.
+
 * The public headers no longer use __unused nor __block.  This change is to
   support compiling programs that are derived from BSD sources and use
   __unused internally, and to support compiling with Clang's -fblock
