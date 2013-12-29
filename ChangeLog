@@ -1,5 +1,11 @@
 2014-02-08  Mike Frysinger  <vapier@gentoo.org>
 
+	* debug/Makefile (CFLAGS-tst-longjmp_chk3.c): Define.
+	(CPPFLAGS-tst-longjmp_chk3.c): Likewise.
+	* debug/tst-longjmp_chk3.c: New file.
+
+2014-02-08  Mike Frysinger  <vapier@gentoo.org>
+
 	* benchtests/bench-strcpy_chk.c: Move test-skeleton.c to top.
 	(test_main): Replace code with set_fortify_handler call.
 	* debug/test-strcpy_chk.c: Likewise.
