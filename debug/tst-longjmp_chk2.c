@@ -1,4 +1,6 @@
-/* Test case mostly written by Paolo Bonzini <pbonzini@redhat.com>.  */
+/* Verify longjmp fortify checking does not reject signal stacks.
+
+   Test case mostly written by Paolo Bonzini <pbonzini@redhat.com>.  */
 #include <assert.h>
 #include <setjmp.h>
 #include <signal.h>
@@ -18,7 +20,10 @@ static void
 stackoverflow_handler (int sig)
 {
   stack_t altstack;
+  /* Sanity check to keep test from looping forever (in case the longjmp
+     chk code is slightly broken).  */
   pass++;
+  assert (pass < 5);
   sigaltstack (NULL, &altstack);
   /* Using printf is not really kosher in signal handlers but we know
      it will work.  */

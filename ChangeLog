@@ -1,3 +1,8 @@
+2014-03-13  Mike Frysinger  <vapier@gentoo.org>
+
+	* debug/tst-longjmp_chk2.c: Update header comment.
+	(stackoverflow_handler): Add comment.  Call assert on pass value.
+
 2014-03-13  Igor Zamyatin  <igor.zamyatin@intel.com>
 
 	* config.h.in (HAVE_AVX512_SUPPORT): New #undef.
