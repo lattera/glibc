@@ -19,6 +19,10 @@
 #include <sysdep.h>
 
 ENTRY(syscall)
+	/* We are called like so:
+	   {out0,out1,...,out6} registers -> {NR, arg1, ..., arg6}
+	   Shift the register window so that {out1...out6} are available
+	   in {out0...out5} like the kernel syscall handler expects.  */
 	alloc r2=ar.pfs,1,0,8,0
 	mov r15=r32		/* syscall number */
 	break __BREAK_SYSCALL

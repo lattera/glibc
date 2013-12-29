@@ -1,3 +1,7 @@
+2013-12-29  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/ia64/syscall.S: Add a comment.
+
 2013-12-25  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/ia64/nptl/lowlevellock.h
