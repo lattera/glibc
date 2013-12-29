@@ -1,5 +1,16 @@
 2013-12-30  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/unix/sysv/linux/ia64/Makefile (gen-as-const-headers): Add
+	sigaltstack-offsets.sym.
+	* sysdeps/unix/sysv/linux/ia64/____longjmp_chk.S: Include new
+	sigaltstack-offsets.h header.
+	(STACK_SPACE): Define.
+	(CHECK_RSP): Rewrite to support sigaltstack.
+	* sysdeps/unix/sysv/linux/ia64/__longjmp.S: Move CHECK_RSP to top.
+	* sysdeps/unix/sysv/linux/ia64/sigaltstack-offsets.sym: New file.
+
+2013-12-30  Mike Frysinger  <vapier@gentoo.org>
+
 	[BZ #16379]
 	* sysdeps/unix/sysv/linux/ia64/__longjmp.S: Comment out loading of
 	fpsr.  Update offsets accordingly.

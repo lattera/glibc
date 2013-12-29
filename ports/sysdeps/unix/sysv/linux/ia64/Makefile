@@ -10,6 +10,7 @@ endif
 ifeq ($(subdir),misc)
 sysdep_headers += sys/io.h
 sysdep_routines += ioperm clone2
+gen-as-const-headers += sigaltstack-offsets.sym
 endif
 
 ifeq ($(subdir),elf)
