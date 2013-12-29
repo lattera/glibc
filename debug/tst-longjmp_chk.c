@@ -1,3 +1,5 @@
+/* Basic test to make sure doing a longjmp to a jmpbuf with an invalid sp
+   is caught by the fortification code.  */
 #include <errno.h>
 #include <fcntl.h>
 #include <paths.h>
@@ -43,8 +45,8 @@ handler (int sig)
 }
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   struct sigaction sa;
   sa.sa_handler = handler;
@@ -84,3 +86,6 @@ main (void)
   puts ("second longjmp returned");
   return 1;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
