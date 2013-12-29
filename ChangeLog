@@ -1,5 +1,15 @@
 2014-02-08  Mike Frysinger  <vapier@gentoo.org>
 
+	* benchtests/bench-strcpy_chk.c: Move test-skeleton.c to top.
+	(test_main): Replace code with set_fortify_handler call.
+	* debug/test-strcpy_chk.c: Likewise.
+	* debug/tst-chk1.c: Likewise.
+	* debug/tst-longjmp_chk.c: Likewise.
+	* test-skeleton.c: Include fcntl.h & paths.h
+	(set_fortify_handler): Define.
+
+2014-02-08  Mike Frysinger  <vapier@gentoo.org>
+
 	* debug/tst-longjmp_chk.c: Add header comment and include
 	../test-skeleton.c.
 	(do_test): Mark static.

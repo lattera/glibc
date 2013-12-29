@@ -20,7 +20,6 @@
 #include <fcntl.h>
 #include <locale.h>
 #include <obstack.h>
-#include <paths.h>
 #include <setjmp.h>
 #include <signal.h>
 #include <stdio.h>
@@ -119,23 +118,7 @@ int num2 = 987654;
 static int
 do_test (void)
 {
-  struct sigaction sa;
-  sa.sa_handler = handler;
-  sa.sa_flags = 0;
-  sigemptyset (&sa.sa_mask);
-
-  sigaction (SIGABRT, &sa, NULL);
-
-  /* Avoid all the buffer overflow messages on stderr.  */
-  int fd = open (_PATH_DEVNULL, O_WRONLY);
-  if (fd == -1)
-    close (STDERR_FILENO);
-  else
-    {
-      dup2 (fd, STDERR_FILENO);
-      close (fd);
-    }
-  setenv ("LIBC_FATAL_STDERR_", "1", 1);
+  set_fortify_handler (handler);
 
   struct A { char buf1[9]; char buf2[1]; } a;
   struct wA { wchar_t buf1[9]; wchar_t buf2[1]; } wa;
@@ -1366,7 +1349,7 @@ do_test (void)
       ret = 1;
     }
 
-  fd = posix_openpt (O_RDWR);
+  int fd = posix_openpt (O_RDWR);
   if (fd != -1)
     {
       char enough[1000];

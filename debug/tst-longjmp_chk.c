@@ -10,6 +10,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+
+static int do_test(void);
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
+
+
 static jmp_buf b;
 
 
@@ -48,23 +54,7 @@ handler (int sig)
 static int
 do_test (void)
 {
-  struct sigaction sa;
-  sa.sa_handler = handler;
-  sa.sa_flags = 0;
-  sigemptyset (&sa.sa_mask);
-
-  sigaction (SIGABRT, &sa, NULL);
-
-  /* Avoid all the buffer overflow messages on stderr.  */
-  int fd = open (_PATH_DEVNULL, O_WRONLY);
-  if (fd == -1)
-    close (STDERR_FILENO);
-  else
-    {
-      dup2 (fd, STDERR_FILENO);
-      close (fd);
-    }
-  setenv ("LIBC_FATAL_STDERR_", "1", 1);
+  set_fortify_handler (handler);
 
 
   expected_to_fail = false;
@@ -86,6 +76,3 @@ do_test (void)
   puts ("second longjmp returned");
   return 1;
 }
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"

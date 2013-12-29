@@ -18,8 +18,10 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
+#include <fcntl.h>
 #include <getopt.h>
 #include <malloc.h>
+#include <paths.h>
 #include <search.h>
 #include <signal.h>
 #include <stdio.h>
@@ -192,6 +194,32 @@ signal_handler (int sig __attribute__ ((unused)))
 
   /* Exit with an error.  */
   exit (1);
+}
+
+/* Set fortification error handler.  Used when tests want to verify that bad
+   code is caught by the library.  */
+static void
+__attribute__ ((unused))
+set_fortify_handler (void (*handler) (int sig))
+{
+  struct sigaction sa;
+
+  sa.sa_handler = handler;
+  sa.sa_flags = 0;
+  sigemptyset (&sa.sa_mask);
+
+  sigaction (SIGABRT, &sa, NULL);
+
+  /* Avoid all the buffer overflow messages on stderr.  */
+  int fd = open (_PATH_DEVNULL, O_WRONLY);
+  if (fd == -1)
+    close (STDERR_FILENO);
+  else
+    {
+      dup2 (fd, STDERR_FILENO);
+      close (fd);
+    }
+  setenv ("LIBC_FATAL_STDERR_", "1", 1);
 }
 
 /* We provide the entry point here.  */
