@@ -1,5 +1,6 @@
-2013-12-30  Ondřej Bílka  <neleai@seznam.cz>
+2013-12-30  Ville Skytta  <ville.skytta@iki.fi>
 
+	[BZ #16375]
 	* manual/arith.texi: Fix spelling.
 	* manual/charset.texi: Likewise.
 	* manual/errno.texi: Likewise.
