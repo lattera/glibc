@@ -141,7 +141,7 @@ As the test expression of a selection or iteration
 statement (such as @samp{if}, @samp{switch}, or @samp{while}).
 
 @item
-As one operand of a equality or comparison operator that appears as the
+As one operand of an equality or comparison operator that appears as the
 test expression of a selection or iteration statement.  The other
 operand must be an integer constant expression.
 

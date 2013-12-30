@@ -956,7 +956,7 @@ extensions that can help in some important situations.
 @comment ISO
 @deftypefun size_t mbsrtowcs (wchar_t *restrict @var{dst}, const char **restrict @var{src}, size_t @var{len}, mbstate_t *restrict @var{ps})
 The @code{mbsrtowcs} function (``multibyte string restartable to wide
-character string'') converts an NUL-terminated multibyte character
+character string'') converts a NUL-terminated multibyte character
 string at @code{*@var{src}} into an equivalent wide character string,
 including the NUL wide character at the end.  The conversion is started
 using the state information from the object pointed to by @var{ps} or
@@ -2485,7 +2485,7 @@ destination character sets, respectively.  If the characters all have the
 same size, the minimum and maximum values are the same.
 
 @item __stateful
-This element must be initialized to an nonzero value if the source
+This element must be initialized to a nonzero value if the source
 character set is stateful.  Otherwise it must be zero.
 @end table
 

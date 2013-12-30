@@ -2039,7 +2039,7 @@ this happens an error was encountered.
 
 The first @code{aiocbp->aio_nbytes} bytes from the buffer starting at
 @code{aiocbp->aio_buf} are written to the file for which
-@code{aiocbp->aio_fildes} is an descriptor, starting at the absolute
+@code{aiocbp->aio_fildes} is a descriptor, starting at the absolute
 position @code{aiocbp->aio_offset} in the file.
 
 If prioritized I/O is supported by the platform, the

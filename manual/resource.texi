@@ -1045,7 +1045,7 @@ describes the only scheduling many programmers need to be concerned
 about.
 
 But just to be clear about the scope of this scheduling: Any time a
-process with a absolute priority of 0 and a process with an absolute
+process with an absolute priority of 0 and a process with an absolute
 priority higher than 0 are ready to run at the same time, the one with
 absolute priority 0 does not run.  If it's already running when the
 higher priority ready-to-run process comes into existence, it stops

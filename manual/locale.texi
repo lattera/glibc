@@ -1236,5 +1236,5 @@ This function would normally be used like this:
   free (line);
 @end smallexample
 
-Note that the loop continues until an read error is detected or until a
+Note that the loop continues until a read error is detected or until a
 definitive (positive or negative) answer is read.

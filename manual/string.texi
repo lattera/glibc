@@ -200,7 +200,7 @@ known size.
 @cindex parameter promotion
 Some of the memory and string functions take single characters as
 arguments.  Since a value of type @code{char} is automatically promoted
-into an value of type @code{int} when used as a parameter, the functions
+into a value of type @code{int} when used as a parameter, the functions
 are declared with @code{int} as the type of the parameter in question.
 In case of the wide character function the situation is similarly: the
 parameter type for a single wide character is @code{wint_t} and not
@@ -1773,7 +1773,7 @@ character of the substring, or a null pointer if no match was found.  If
 @comment wchar.h
 @comment XPG
 @deftypefun {wchar_t *} wcswcs (const wchar_t *@var{haystack}, const wchar_t *@var{needle})
-@code{wcswcs} is an deprecated alias for @code{wcsstr}.  This is the
+@code{wcswcs} is a deprecated alias for @code{wcsstr}.  This is the
 name originally used in the X/Open Portability Guide before the
 @w{Amendment 1} to @w{ISO C90} was published.
 @end deftypefun
@@ -2291,7 +2291,7 @@ that described in @xref{Cryptographic Functions}.
 
 To store or transfer binary data in environments which only support text
 one has to encode the binary data by mapping the input bytes to
-characters in the range allowed for storing or transfering.  SVID
+characters in the range allowed for storing or transferring.  SVID
 systems (and nowadays XPG compliant systems) provide minimal support for
 this task.
 

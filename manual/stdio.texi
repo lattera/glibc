@@ -1670,7 +1670,7 @@ limit can be retrieved by the following constant.
 
 @defvr Macro NL_ARGMAX
 The value of @code{NL_ARGMAX} is the maximum value allowed for the
-specification of an positional parameter in a @code{printf} call.  The
+specification of a positional parameter in a @code{printf} call.  The
 actual value in effect at runtime can be retrieved by using
 @code{sysconf} using the @code{_SC_NL_ARGMAX} parameter @pxref{Sysconf
 Definition}.
@@ -2330,7 +2330,7 @@ Note that the corresponding narrow stream function takes fewer
 parameters.  @code{swprintf} in fact corresponds to the @code{snprintf}
 function.  Since the @code{sprintf} function can be dangerous and should
 be avoided the @w{ISO C} committee refused to make the same mistake
-again and decided to not define an function exactly corresponding to
+again and decided to not define a function exactly corresponding to
 @code{sprintf}.
 @end deftypefun
 

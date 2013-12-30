@@ -270,7 +270,7 @@ information.
 The weakest aspect of this function is that there can be at most one
 hashing table used through the whole program.  The table is allocated
 in local memory out of control of the programmer.  As an extension @theglibc{}
-provides an additional set of functions with an reentrant
+provides an additional set of functions with a reentrant
 interface which provide a similar interface but which allow to keep
 arbitrarily many hashing tables.
 
@@ -401,7 +401,7 @@ the failure.
 
 @table @code
 @item ENOMEM
-The table is filled and @code{hsearch_r} was called with an so far
+The table is filled and @code{hsearch_r} was called with a so far
 unknown key and @var{action} set to @code{ENTER}.
 @item ESRCH
 The @var{action} parameter is @code{FIND} and no corresponding element

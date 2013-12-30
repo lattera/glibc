@@ -2146,7 +2146,7 @@ In all other cases the result is zero.
 @comment POSIX
 @deftypefn Macro int S_TYPEISSHM (struct stat *@var{s})
 If the system implement POSIX shared memory objects as distinct objects
-and the file is an shared memory object, this macro returns a non-zero
+and the file is a shared memory object, this macro returns a non-zero
 value.  In all other cases the result is zero.
 @end deftypefn
 

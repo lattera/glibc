@@ -226,7 +226,7 @@ associated data type are declared in the header file
 
 As a bonus, @code{uname} also gives some information identifying the
 particular system your program is running on.  This is the same information
-which you can get with functions targetted to this purpose described in
+which you can get with functions targeted to this purpose described in
 @ref{Host Identification}.
 
 

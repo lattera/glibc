@@ -967,7 +967,7 @@ If a catalog for a wanted language is not available it is not always the
 second best choice to fall back on the language of the developer and
 simply not translate any message.  Instead a user might be better able
 to read the messages in another language and so the user of the program
-should be able to define an precedence order of languages.
+should be able to define a precedence order of languages.
 @end itemize
 
 We can divide the configuration actions in two parts: the one is
@@ -1114,7 +1114,7 @@ only usable for certain, hardcoded language environments.  Instead the
 extended @code{gettext} interface should be used.
 
 These extra functions are taking instead of the one key string two
-strings and an numerical argument.  The idea behind this is that using
+strings and a numerical argument.  The idea behind this is that using
 the numerical argument and the first string as a key, the implementation
 can select using rules specified by the translator the right plural
 form.  The two string arguments then will be used to provide a return

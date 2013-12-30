@@ -750,7 +750,7 @@ structure.  It uses the values of the other components to determine the
 calendar time; it's permissible for these components to have
 unnormalized values outside their normal ranges.  The last thing that
 @code{mktime} does is adjust the components of the @var{brokentime}
-structure, including the members that were initally ignored.
+structure, including the members that were initially ignored.
 
 If the specified broken-down time cannot be represented as a simple time,
 @code{mktime} returns a value of @code{(time_t)(-1)} and does not modify

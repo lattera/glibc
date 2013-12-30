@@ -1212,7 +1212,7 @@ type of a particular structure member.
 @comment stddef.h
 @comment ISO
 @deftypefn {Macro} size_t offsetof (@var{type}, @var{member})
-This expands to a integer constant expression that is the offset of the
+This expands to an integer constant expression that is the offset of the
 structure member named @var{member} in the structure type @var{type}.
 For example, @code{offsetof (struct s, elem)} is the offset, in bytes,
 of the member @code{elem} in a @code{struct s}.

@@ -2001,7 +2001,7 @@ number.  This angle is measured in the usual fashion and ranges from
 @comment ISO
 @deftypefunx {complex long double} cprojl (complex long double @var{z})
 These functions return the projection of the complex value @var{z} onto
-the Riemann sphere.  Values with a infinite imaginary part are projected
+the Riemann sphere.  Values with an infinite imaginary part are projected
 to positive infinity on the real axis, even if the real part is NaN.  If
 the real part is infinite, the result is equivalent to
 
