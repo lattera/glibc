@@ -71,13 +71,13 @@
 LEAF(setjmp)
 	alloc r8=ar.pfs,2,0,0,0
 	mov in1=1
-	br.cond.sptk.many _GI___sigsetjmp
+	br.cond.sptk.many HIDDEN_JUMPTARGET(__sigsetjmp)
 END(setjmp)
 
 LEAF(_setjmp)
 	alloc r8=ar.pfs,2,0,0,0
 	mov in1=0
-	br.cond.sptk.many _GI___sigsetjmp
+	br.cond.sptk.many HIDDEN_JUMPTARGET(__sigsetjmp)
 END(_setjmp)
 libc_hidden_def (_setjmp)
 
@@ -191,7 +191,8 @@ ENTRY(__sigsetjmp)
 	mov r8=0
 	ret
 END(__sigsetjmp)
-strong_alias(__sigsetjmp, _GI___sigsetjmp)
+libc_hidden_def (__sigsetjmp)
+rtld_hidden_def (__sigsetjmp)
 
 weak_extern(_setjmp)
 weak_extern(setjmp)
