@@ -49,12 +49,16 @@ handle_signal (int signum)
 
   /* Get the backtrace addresses.  */
   n = backtrace (addresses, sizeof (addresses) / sizeof (addresses[0]));
-  printf ("Obtained backtrace with %d functions\n", n);
-  /*  Check that there are at least six functions.  */
+  printf ("Obtained backtrace with %d functions (but wanted at least %d)\n",
+	  n, NUM_FUNCTIONS);
+  /* Check that there are at least six functions.  */
   if (n < NUM_FUNCTIONS)
     {
       FAIL ();
-      return;
+      /* Only return if we got no symbols at all.  The partial output is
+	 still useful for debugging failures.  */
+      if (n <= 0)
+	return;
     }
   /* Convert them to symbols.  */
   symbols = backtrace_symbols (addresses, n);
@@ -68,10 +72,7 @@ handle_signal (int signum)
     printf ("Function %d: %s\n", i, symbols[i]);
   /* Check that the function names obtained are accurate.  */
   if (!match (symbols[0], "handle_signal"))
-    {
-      FAIL ();
-      return;
-    }
+    FAIL ();
   /* Do not check name for signal trampoline.  */
   for (i = 2; i < n - 1; i++)
     if (!match (symbols[i], "fn"))

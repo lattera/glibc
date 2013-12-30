@@ -1,5 +1,10 @@
 2014-02-08  Mike Frysinger  <vapier@gentoo.org>
 
+	* debug/tst-backtrace4.c (handle_signal): Add NUM_FUNCTIONS to output.
+	Only return early when n is <= 0.  Delete unused return statement.
+
+2014-02-08  Mike Frysinger  <vapier@gentoo.org>
+
 	* debug/Makefile (CFLAGS-tst-longjmp_chk3.c): Define.
 	(CPPFLAGS-tst-longjmp_chk3.c): Likewise.
 	* debug/tst-longjmp_chk3.c: New file.
