@@ -1,5 +1,14 @@
 2013-12-30  Mike Frysinger  <vapier@gentoo.org>
 
+	[BZ #16379]
+	* sysdeps/unix/sysv/linux/ia64/__longjmp.S: Comment out loading of
+	fpsr.  Update offsets accordingly.
+	* sysdeps/unix/sysv/linux/ia64/nptl/__ia64_longjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/setjmp.S: Comment out saving of
+	fpsr.  Update offsets accordingly.
+
+2013-12-30  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/unix/sysv/linux/ia64/setjmp.S (setjmp): Call __sigsetjmp
 	via HIDDEN_JUMPTARGET.
 	(_setjmp): Likewise.
@@ -304,9 +313,9 @@
 
 2012-09-24  Mike Frysinger  <vapier@gentoo.org>
 
-	* ports/sysdeps/ia64/fpu/fegetround.c (fegetround): Move contents
+	* sysdeps/ia64/fpu/fegetround.c (fegetround): Move contents
 	of function to ...
-	* ports/sysdeps/ia64/fpu/get-rounding-mode.h: ... here.
+	* sysdeps/ia64/fpu/get-rounding-mode.h: ... here.
 
 2012-09-24  Mike Frysinger  <vapier@gentoo.org>
 

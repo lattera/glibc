@@ -75,11 +75,11 @@ LEAF(__ia64_longjmp)
 	mov ar.unat=r25 // setup ar.unat (NaT bits for r1, r4-r7, and r12)
 	;;
 	ld8.fill.nta sp=[r2],16	// r12 (sp)
-	ld8.fill.nta gp=[r3],16 // r1 (gp)
+	ld8.fill.nta gp=[r3],32 // r1 (gp)
 	dep r11=-1,r23,3,6	// r11 <- ia64_rse_rnat_addr(jmpbuf.ar_bsp)
 	;;
 	ld8.nta r16=[r2],16		// caller's unat
-	ld8.nta r17=[r3],16		// fpsr
+//	ld8.nta r17=[r3],16		// fpsr
 	;;
 	ld8.fill.nta r4=[r2],16		// r4
 	ld8.fill.nta r5=[r3],16		// r5 (gp)
@@ -88,7 +88,7 @@ LEAF(__ia64_longjmp)
 	ld8.fill.nta r7=[r3],16		// r7
 	;;
 	mov ar.unat=r16			// restore caller's unat
-	mov ar.fpsr=r17			// restore fpsr
+//	mov ar.fpsr=r17			// restore fpsr
 	;;
 	ld8.nta r16=[r2],16		// b0
 	ld8.nta r17=[r3],16		// b1

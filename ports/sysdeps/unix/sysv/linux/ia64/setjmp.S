@@ -25,7 +25,7 @@
   	0x000	stack pointer (r12)	; unchangeable (see _JMPBUF_UNWINDS)
   	0x008	r1 (gp)
 	0x010	caller's unat
-	0x018	fpsr
+	0x018	fpsr			; disabled per the C standard; BZ 16379
   	0x020	r4
   	0x028	r5
   	0x030	r6
@@ -89,15 +89,15 @@ ENTRY(__sigsetjmp)
 	.save ar.unat, loc2
 	mov loc2=ar.unat
 	;;
-	mov r17=ar.fpsr
+//	mov r17=ar.fpsr
 	mov r2=in0
 	add r3=8,in0
 	;;
 .mem.offset 8,0;	st8.spill.nta [r2]=sp,16	// r12 (sp)
-.mem.offset 0,0;	st8.spill.nta [r3]=gp,16	// r1 (gp)
+.mem.offset 0,0;	st8.spill.nta [r3]=gp,32	// r1 (gp)
 	;;
 	st8.nta [r2]=loc2,16		// save caller's unat
-	st8.nta [r3]=r17,16		// save fpsr
+//	st8.nta [r3]=r17,16		// save fpsr
 	add r8=0xa0,in0
 	;;
 .mem.offset 8,0;	st8.spill.nta [r2]=r4,16	// r4
