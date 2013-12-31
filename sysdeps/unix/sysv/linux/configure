@@ -1,3 +1,34 @@
+
+# ac_fn_c_check_header_compile LINENO HEADER VAR INCLUDES
+# -------------------------------------------------------
+# Tests whether HEADER exists and can be compiled using the include files in
+# INCLUDES, setting the cache variable VAR accordingly.
+ac_fn_c_check_header_compile ()
+{
+  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
+$as_echo_n "checking for $2... " >&6; }
+if eval \${$3+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$4
+#include <$2>
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  eval "$3=yes"
+else
+  eval "$3=no"
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+eval ac_res=\$$3
+	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+$as_echo "$ac_res" >&6; }
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
+
+} # ac_fn_c_check_header_compile
 # This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
  # Local configure fragment for sysdeps/unix/sysv/linux.
 
@@ -266,6 +297,16 @@ else
   as_fn_error $? "*** The available kernel headers are older than the requested
 *** compatible kernel version" "$LINENO" 5
 fi
+
+# Until we start requiring 2.6.37+ headers, we need to check for the
+# availability of linux/fanotify.h for testing purposes.
+ac_fn_c_check_header_compile "$LINENO" "linux/fanotify.h" "ac_cv_header_linux_fanotify_h" "/* No default includes.  */
+"
+if test "x$ac_cv_header_linux_fanotify_h" = xyes; then :
+  DEFINES="$DEFINES -DHAVE_LINUX_FANOTIFY_H=1"
+fi
+
+
 
 # The result of the above test for the use of the FDE code is invalid if
 # the user overrides the decision about the minimum ABI.

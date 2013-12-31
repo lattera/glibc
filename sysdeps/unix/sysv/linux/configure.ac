@@ -105,6 +105,12 @@ else
 *** compatible kernel version])
 fi
 
+# Until we start requiring 2.6.37+ headers, we need to check for the
+# availability of linux/fanotify.h for testing purposes.
+AC_CHECK_HEADER(linux/fanotify.h,
+  [DEFINES="$DEFINES -DHAVE_LINUX_FANOTIFY_H=1"], ,
+  [/* No default includes.  */])
+
 # The result of the above test for the use of the FDE code is invalid if
 # the user overrides the decision about the minimum ABI.
 if test "$oldest_abi" != default && test "2.2.4" \< "$oldest_abi"; then

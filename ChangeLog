@@ -1,3 +1,11 @@
+2013-12-31  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/configure.ac: Call AC_CHECK_HEADER on
+	the linux/fanotify.h header.
+	* sysdeps/unix/sysv/linux/tst-fanotify.c: Check if
+	HAVE_LINUX_FANOTIFY_H is defined.
+
 2013-12-31  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* benchtests/cos-inputs: New inputs.
