@@ -1,5 +1,8 @@
 2013-12-31  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* benchtests/atan-inputs: New inputs. Fix name of multiple
+	precision fallback inputs.
+
 	* benchtests/atanh-inputs: New inputs.
 	* benchtests/tanh-inputs: Likewise.
 
