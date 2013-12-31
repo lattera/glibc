@@ -1,3 +1,8 @@
+2013-12-31  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* benchtests/acos-inputs: Add more inputs.
+	* benchtests/asin-inputs: Likewise.
+
 2013-12-30  Ville Skytta  <ville.skytta@iki.fi>
 
 	[BZ #16375]
