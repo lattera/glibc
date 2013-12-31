@@ -303,7 +303,8 @@ fi
 ac_fn_c_check_header_compile "$LINENO" "linux/fanotify.h" "ac_cv_header_linux_fanotify_h" "/* No default includes.  */
 "
 if test "x$ac_cv_header_linux_fanotify_h" = xyes; then :
-  DEFINES="$DEFINES -DHAVE_LINUX_FANOTIFY_H=1"
+  $as_echo "#define HAVE_LINUX_FANOTIFY_H 1" >>confdefs.h
+
 fi
 
 

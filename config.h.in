@@ -192,6 +192,9 @@
 /* Define if STT_GNU_IFUNC support actually works.  */
 #undef HAVE_IFUNC
 
+/* Define if linux/fanotify.h is available.  */
+#undef HAVE_LINUX_FANOTIFY_H
+
 /*
  */
 

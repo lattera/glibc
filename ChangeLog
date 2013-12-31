@@ -1,3 +1,10 @@
+2014-01-04  Mike Frysinger  <vapier@gentoo.org>
+
+	* config.h.in: Add HAVE_LINUX_FANOTIFY_H template.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/configure.ac: Call AC_DEFINE.
+	* sysdeps/unix/sysv/linux/tst-fanotify.c: Include config.h.
+
 2014-01-03  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16390]
