@@ -1,5 +1,8 @@
 2013-12-31  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* benchtests/atanh-inputs: New inputs.
+	* benchtests/tanh-inputs: Likewise.
+
 	* benchtests/acosh-inputs: New inputs.
 	* benchtests/asinh-inputs: Likewise.
 
