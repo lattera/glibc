@@ -1,5 +1,8 @@
 2013-12-31  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* benchtests/cos-inputs: New inputs.
+	* benchtests/sin-inputs: Likewise.
+
 	* benchtests/atan-inputs: New inputs. Fix name of multiple
 	precision fallback inputs.
 
