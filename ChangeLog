@@ -1,5 +1,8 @@
 2013-12-31  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* benchtests/cosh-inputs: New inputs.
+	* benchtests/sinh-inputs: Likewise.
+
 	* benchtests/acos-inputs: Add more inputs.
 	* benchtests/asin-inputs: Likewise.
 
