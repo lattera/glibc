@@ -262,7 +262,7 @@ declared respectively in the @file{ucontext.h} header file.
 @comment SVID
 @deftp {Data Type} ucontext_t
 
-The @code{ucontext_t} type is defined as a structure with as least the
+The @code{ucontext_t} type is defined as a structure with at least the
 following elements:
 
 @table @code
@@ -309,14 +309,14 @@ The function returns @code{0} if successful.  Otherwise it returns
 The @code{getcontext} function is similar to @code{setjmp} but it does
 not provide an indication of whether the function returns for the first
 time or whether the initialized context was used and the execution is
-resumed at just that point.  If this is necessary the user has to take
+resumed at just that point.  If this is necessary the user has to
 determine this herself.  This must be done carefully since the context
 contains registers which might contain register variables.  This is a
 good situation to define variables with @code{volatile}.
 
 Once the context variable is initialized it can be used as is or it can
 be modified.  The latter is normally done to implement co-routines or
-similar constructs.  The @code{makecontext} function is what has to be
+similar constructs.  The @code{makecontext} function has to be
 used to do that.
 
 @comment ucontext.h
@@ -327,7 +327,7 @@ used to do that.
 
 The @var{ucp} parameter passed to the @code{makecontext} shall be
 initialized by a call to @code{getcontext}.  The context will be
-modified to in a way so that if the context is resumed it will start by
+modified in a way such that if the context is resumed it will start by
 calling the function @code{func} which gets @var{argc} integer arguments
 passed.  The integer arguments which are to be passed should follow the
 @var{argc} parameter in the call to @code{makecontext}.
@@ -347,7 +347,7 @@ information about the exact use.
 While allocating the memory for the stack one has to be careful.  Most
 modern processors keep track of whether a certain memory region is
 allowed to contain code which is executed or not.  Data segments and
-heap memory is normally not tagged to allow this.  The result is that
+heap memory are normally not tagged to allow this.  The result is that
 programs would fail.  Examples for such code include the calling
 sequences the GNU C compiler generates for calls to nested functions.
 Safe ways to allocate stacks correctly include using memory on the
@@ -363,7 +363,7 @@ the @code{uc_stack} element to point to the base of the memory region
 allocated for the stack and the size of the memory region is stored in
 @code{ss_size}.  There are implements out there which require
 @code{ss_sp} to be set to the value the stack pointer will have (which
-can depending on the direction the stack grows be different).  This
+can, depending on the direction the stack grows, be different).  This
 difference makes the @code{makecontext} function hard to use and it
 requires detection of the platform at compile time.
 
@@ -429,7 +429,7 @@ installed and execution continues as described in this context.
 If @code{swapcontext} succeeds the function does not return unless the
 context @var{oucp} is used without prior modification by
 @code{makecontext}.  The return value in this case is @code{0}.  If the
-function fails it returns @code{-1} and set @var{errno} accordingly.
+function fails it returns @code{-1} and sets @var{errno} accordingly.
 @end deftypefun
 
 @heading Example for SVID Context Handling
@@ -437,7 +437,7 @@ function fails it returns @code{-1} and set @var{errno} accordingly.
 The easiest way to use the context handling functions is as a
 replacement for @code{setjmp} and @code{longjmp}.  The context contains
 on most platforms more information which might lead to less surprises
-but this also means using these functions is more expensive (beside
+but this also means using these functions is more expensive (besides
 being less portable).
 
 @smallexample
@@ -488,7 +488,7 @@ different context.  It is not allowed to do the context switching from
 the signal handler directly since neither @code{setcontext} nor
 @code{swapcontext} are functions which can be called from a signal
 handler.  But setting a variable in the signal handler and checking it
-in the body of the functions which are executed.  Since
+in the body of the functions which are executed is OK.  Since
 @code{swapcontext} is saving the current context it is possible to have
 multiple different scheduling points in the code.  Execution will always
 resume where it was left.
