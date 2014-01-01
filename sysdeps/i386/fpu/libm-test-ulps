@@ -1,39 +1,11 @@
 # Begin of automatic generation
 
 # acos
-Test "acos (0.75)":
-ildouble: 1
-ldouble: 1
 Test "acos (0xcp-4)":
 ildouble: 1
 ldouble: 1
 
 # acos_downward
-Test "acos_downward (-0)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "acos_downward (-0.5)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-Test "acos_downward (-1)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "acos_downward (0)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "acos_downward (0.5)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
 Test "acos_downward (0xf.fffffff8p-4)":
 ildouble: 1
 ldouble: 1
@@ -56,31 +28,6 @@ ildouble: 1
 ldouble: 1
 
 # acos_towardzero
-Test "acos_towardzero (-0)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "acos_towardzero (-0.5)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-Test "acos_towardzero (-1)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "acos_towardzero (0)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "acos_towardzero (0.5)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
 Test "acos_towardzero (0xf.fffffff8p-4)":
 ildouble: 1
 ldouble: 1
@@ -98,21 +45,6 @@ ildouble: 1
 ldouble: 1
 
 # acos_upward
-Test "acos_upward (-0)":
-double: 1
-idouble: 1
-Test "acos_upward (-0.5)":
-ildouble: 1
-ldouble: 1
-Test "acos_upward (-1)":
-double: 1
-idouble: 1
-Test "acos_upward (0)":
-double: 1
-idouble: 1
-Test "acos_upward (0.5)":
-ildouble: 1
-ldouble: 1
 Test "acos_upward (0xcp-4)":
 ildouble: 1
 ldouble: 1
@@ -158,26 +90,8 @@ ldouble: 1
 Test "asin_downward (-0xf.fffffp-4)":
 ildouble: 1
 ldouble: 1
-Test "asin_downward (-1.0)":
-double: 1
-idouble: 1
-Test "asin_downward (0.5)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-Test "asin_downward (1.0)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 
 # asin_towardzero
-Test "asin_towardzero (-0.5)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
 Test "asin_towardzero (-0x2p-16384)":
 ildouble: 1
 ldouble: 1
@@ -216,28 +130,8 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
-Test "asin_towardzero (-1.0)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "asin_towardzero (0.5)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-Test "asin_towardzero (1.0)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 
 # asin_upward
-Test "asin_upward (-0.5)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
 Test "asin_upward (-0x2p-16384)":
 ildouble: 1
 ldouble: 1
@@ -281,11 +175,6 @@ ldouble: 1
 Test "asin_upward (-0xf.fffffp-4)":
 ildouble: 1
 ldouble: 1
-Test "asin_upward (-1.0)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "asin_upward (0x2p-16384)":
 ildouble: 1
 ldouble: 1
@@ -327,9 +216,6 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
-Test "asin_upward (1.0)":
-double: 1
-idouble: 1
 
 # asinh
 Test "asinh (0x1p+100)":
@@ -348,9 +234,6 @@ ldouble: 1
 
 # atanh
 Test "atanh (-0xcp-4)":
-ildouble: 2
-ldouble: 1
-Test "atanh (0.75)":
 ildouble: 2
 ldouble: 1
 Test "atanh (0x4p-12)":
@@ -449,9 +332,7 @@ ildouble: 1
 ldouble: 1
 Test "Imaginary part of: cacos (-0.5 + 0x1p-23 i)":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 Test "Imaginary part of: cacos (-0.5 + 0x1p-52 i)":
 double: 1
 idouble: 1
@@ -475,9 +356,7 @@ ildouble: 1
 ldouble: 1
 Test "Imaginary part of: cacos (-0.5 - 0x1p-23 i)":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 Test "Imaginary part of: cacos (-0.5 - 0x1p-52 i)":
 double: 1
 idouble: 1
@@ -493,13 +372,9 @@ ldouble: 1
 Test "Imaginary part of: cacos (-0x0.fffffffffffff8p0 + 0x1p-52 i)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: cacos (-0x0.fffffffffffff8p0 - 0x1p-52 i)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: cacos (-0x0.ffffffffffffffffp0 + 0x1.fp-16385 i)":
 ildouble: 1
 ldouble: 1
@@ -512,12 +387,6 @@ ldouble: 1
 Test "Imaginary part of: cacos (-0x0.ffffffffffffffffp0 - 0x1p-63 i)":
 ildouble: 1
 ldouble: 1
-Test "Imaginary part of: cacos (-0x0.ffffffp0 + 0x1p-23 i)":
-double: 1
-idouble: 1
-Test "Imaginary part of: cacos (-0x0.ffffffp0 - 0x1p-23 i)":
-double: 1
-idouble: 1
 Test "Imaginary part of: cacos (-0x1.0000000000000002p0 + 0x1p-63 i)":
 ildouble: 2
 ldouble: 2
@@ -656,9 +525,6 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
-Test "Imaginary part of: cacos (-0x1p-23 + 0x1.000002p0 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: cacos (-0x1p-23 - 0.5 i)":
 double: 1
 float: 1
@@ -667,9 +533,6 @@ ifloat: 1
 Test "Imaginary part of: cacos (-0x1p-23 - 0x0.ffffffp0 i)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: cacos (-0x1p-23 - 0x1.000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: cacos (-0x1p-52 + 0.5 i)":
@@ -710,9 +573,6 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
-Test "Imaginary part of: cacos (-1.0 + 0x1.fp-10 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: cacos (-1.0 + 0x1.fp-30 i)":
 ildouble: 1
 ldouble: 1
@@ -722,9 +582,6 @@ ifloat: 1
 Test "Imaginary part of: cacos (-1.0 - 0.5 i)":
 float: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: cacos (-1.0 - 0x1.fp-10 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: cacos (-1.0 - 0x1.fp-30 i)":
@@ -804,9 +661,7 @@ double: 1
 idouble: 1
 Test "Imaginary part of: cacos (0.5 + 0x1p-23 i)":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 Test "Real part of: cacos (0.5 + 0x1p-52 i)":
 double: 1
 idouble: 1
@@ -851,9 +706,7 @@ double: 1
 idouble: 1
 Test "Imaginary part of: cacos (0.5 - 0x1p-23 i)":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 Test "Real part of: cacos (0.5 - 0x1p-52 i)":
 double: 1
 idouble: 1
@@ -881,16 +734,12 @@ ldouble: 1
 Test "Imaginary part of: cacos (0x0.fffffffffffff8p0 + 0x1p-52 i)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
 Test "Real part of: cacos (0x0.fffffffffffff8p0 - 0x1p-52 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: cacos (0x0.fffffffffffff8p0 - 0x1p-52 i)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: cacos (0x0.ffffffffffffffffp0 + 0x1.fp-16385 i)":
 ildouble: 1
 ldouble: 1
@@ -909,12 +758,6 @@ ldouble: 1
 Test "Imaginary part of: cacos (0x0.ffffffffffffffffp0 - 0x1p-63 i)":
 ildouble: 1
 ldouble: 1
-Test "Imaginary part of: cacos (0x0.ffffffp0 + 0x1p-23 i)":
-double: 1
-idouble: 1
-Test "Imaginary part of: cacos (0x0.ffffffp0 - 0x1p-23 i)":
-double: 1
-idouble: 1
 Test "Real part of: cacos (0x1.0000000000000002p0 + 0x1p-63 i)":
 ildouble: 1
 ldouble: 1
@@ -1049,9 +892,6 @@ idouble: 1
 Test "Imaginary part of: cacos (0x1.fp127 + 0x1.fp127 i)":
 double: 1
 idouble: 1
-Test "Imaginary part of: cacos (0x1.fp16383 + 0x1.fp16383 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: cacos (0x1p-105 + 0.5 i)":
 float: 1
 ifloat: 1
@@ -1074,9 +914,6 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
-Test "Imaginary part of: cacos (0x1p-23 + 0x1.000002p0 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: cacos (0x1p-23 - 0.5 i)":
 double: 1
 float: 1
@@ -1085,9 +922,6 @@ ifloat: 1
 Test "Imaginary part of: cacos (0x1p-23 - 0x0.ffffffp0 i)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: cacos (0x1p-23 - 0x1.000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: cacos (0x1p-52 + 0.5 i)":
@@ -1135,9 +969,6 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
-Test "Imaginary part of: cacos (1.0 + 0x1.fp-10 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: cacos (1.0 + 0x1.fp-30 i)":
 double: 1
 idouble: 1
@@ -1157,9 +988,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: cacos (1.0 - 0x1.fp-10 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: cacos (1.0 - 0x1.fp-30 i)":
@@ -1279,9 +1107,7 @@ ildouble: 1
 ldouble: 1
 Test "Real part of: cacosh (-0.5 + 0x1p-23 i)":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 Test "Real part of: cacosh (-0.5 + 0x1p-52 i)":
 double: 1
 idouble: 1
@@ -1305,9 +1131,7 @@ ildouble: 1
 ldouble: 1
 Test "Real part of: cacosh (-0.5 - 0x1p-23 i)":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 Test "Real part of: cacosh (-0.5 - 0x1p-52 i)":
 double: 1
 idouble: 1
@@ -1323,13 +1147,9 @@ ldouble: 1
 Test "Real part of: cacosh (-0x0.fffffffffffff8p0 + 0x1p-52 i)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
 Test "Real part of: cacosh (-0x0.fffffffffffff8p0 - 0x1p-52 i)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
 Test "Real part of: cacosh (-0x0.ffffffffffffffffp0 + 0x1.fp-16385 i)":
 ildouble: 1
 ldouble: 1
@@ -1342,12 +1162,6 @@ ldouble: 1
 Test "Real part of: cacosh (-0x0.ffffffffffffffffp0 - 0x1p-63 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: cacosh (-0x0.ffffffp0 + 0x1p-23 i)":
-double: 1
-idouble: 1
-Test "Real part of: cacosh (-0x0.ffffffp0 - 0x1p-23 i)":
-double: 1
-idouble: 1
 Test "Real part of: cacosh (-0x1.0000000000000002p0 + 0x1p-63 i)":
 ildouble: 2
 ldouble: 2
@@ -1486,9 +1300,6 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
-Test "Real part of: cacosh (-0x1p-23 + 0x1.000002p0 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: cacosh (-0x1p-23 - 0.5 i)":
 double: 1
 float: 1
@@ -1497,9 +1308,6 @@ ifloat: 1
 Test "Real part of: cacosh (-0x1p-23 - 0x0.ffffffp0 i)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
-Test "Real part of: cacosh (-0x1p-23 - 0x1.000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: cacosh (-0x1p-52 + 0.5 i)":
@@ -1540,9 +1348,6 @@ ldouble: 1
 Test "Imaginary part of: cacosh (-1.0 + 0.5 i)":
 float: 1
 ifloat: 1
-Test "Real part of: cacosh (-1.0 + 0x1.fp-10 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: cacosh (-1.0 + 0x1.fp-30 i)":
 ildouble: 1
 ldouble: 1
@@ -1554,9 +1359,6 @@ ldouble: 1
 Test "Imaginary part of: cacosh (-1.0 - 0.5 i)":
 float: 1
 ifloat: 1
-Test "Real part of: cacosh (-1.0 - 0x1.fp-10 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: cacosh (-1.0 - 0x1.fp-30 i)":
 ildouble: 1
 ldouble: 1
@@ -1634,9 +1436,7 @@ double: 1
 idouble: 1
 Test "Real part of: cacosh (0.5 + 0x1p-23 i)":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 Test "Real part of: cacosh (0.5 + 0x1p-52 i)":
 double: 1
 idouble: 1
@@ -1681,9 +1481,7 @@ double: 1
 idouble: 1
 Test "Real part of: cacosh (0.5 - 0x1p-23 i)":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 Test "Real part of: cacosh (0.5 - 0x1p-52 i)":
 double: 1
 idouble: 1
@@ -1708,16 +1506,12 @@ ldouble: 1
 Test "Real part of: cacosh (0x0.fffffffffffff8p0 + 0x1p-52 i)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: cacosh (0x0.fffffffffffff8p0 + 0x1p-52 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: cacosh (0x0.fffffffffffff8p0 - 0x1p-52 i)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: cacosh (0x0.fffffffffffff8p0 - 0x1p-52 i)":
 ildouble: 1
 ldouble: 1
@@ -1739,12 +1533,6 @@ ldouble: 1
 Test "Imaginary part of: cacosh (0x0.ffffffffffffffffp0 - 0x1p-63 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: cacosh (0x0.ffffffp0 + 0x1p-23 i)":
-double: 1
-idouble: 1
-Test "Real part of: cacosh (0x0.ffffffp0 - 0x1p-23 i)":
-double: 1
-idouble: 1
 Test "Real part of: cacosh (0x1.0000000000000002p0 + 0x1p-63 i)":
 ildouble: 2
 ldouble: 2
@@ -1879,9 +1667,6 @@ idouble: 1
 Test "Real part of: cacosh (0x1.fp127 + 0x1.fp127 i)":
 double: 1
 idouble: 1
-Test "Real part of: cacosh (0x1.fp16383 + 0x1.fp16383 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: cacosh (0x1p-105 + 0.5 i)":
 float: 1
 ifloat: 1
@@ -1904,9 +1689,6 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
-Test "Real part of: cacosh (0x1p-23 + 0x1.000002p0 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: cacosh (0x1p-23 - 0.5 i)":
 double: 1
 float: 1
@@ -1915,9 +1697,6 @@ ifloat: 1
 Test "Real part of: cacosh (0x1p-23 - 0x0.ffffffp0 i)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
-Test "Real part of: cacosh (0x1p-23 - 0x1.000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: cacosh (0x1p-52 + 0.5 i)":
@@ -1958,9 +1737,6 @@ ldouble: 1
 Test "Imaginary part of: cacosh (1.0 + 0.5 i)":
 float: 1
 ifloat: 1
-Test "Real part of: cacosh (1.0 + 0x1.fp-10 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: cacosh (1.0 + 0x1.fp-10 i)":
 double: 1
 float: 1
@@ -1982,9 +1758,6 @@ ldouble: 1
 Test "Imaginary part of: cacosh (1.0 - 0.5 i)":
 float: 1
 ifloat: 1
-Test "Real part of: cacosh (1.0 - 0x1.fp-10 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: cacosh (1.0 - 0x1.fp-10 i)":
 double: 1
 float: 1
@@ -2106,9 +1879,7 @@ ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (-0.5 + 0x1p-23 i)":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 Test "Imaginary part of: casin (-0.5 + 0x1p-52 i)":
 double: 1
 idouble: 1
@@ -2138,9 +1909,7 @@ ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (-0.5 - 0x1p-23 i)":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 Test "Imaginary part of: casin (-0.5 - 0x1p-52 i)":
 double: 1
 idouble: 1
@@ -2159,13 +1928,9 @@ ldouble: 1
 Test "Imaginary part of: casin (-0x0.fffffffffffff8p0 + 0x1p-52 i)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casin (-0x0.fffffffffffff8p0 - 0x1p-52 i)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casin (-0x0.ffffffffffffffffp0 + 0x1.fp-16385 i)":
 ildouble: 1
 ldouble: 1
@@ -2178,12 +1943,6 @@ ldouble: 1
 Test "Imaginary part of: casin (-0x0.ffffffffffffffffp0 - 0x1p-63 i)":
 ildouble: 1
 ldouble: 1
-Test "Imaginary part of: casin (-0x0.ffffffp0 + 0x1p-23 i)":
-double: 1
-idouble: 1
-Test "Imaginary part of: casin (-0x0.ffffffp0 - 0x1p-23 i)":
-double: 1
-idouble: 1
 Test "Imaginary part of: casin (-0x1.0000000000000002p0 + 0x1p-63 i)":
 ildouble: 2
 ldouble: 2
@@ -2218,52 +1977,28 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
-Test "Real part of: casin (-0x1.fp-100 + 1.0 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casin (-0x1.fp-100 + 1.0 i)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "Real part of: casin (-0x1.fp-100 - 1.0 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casin (-0x1.fp-100 - 1.0 i)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "Real part of: casin (-0x1.fp-1000 + 1.0 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casin (-0x1.fp-1000 + 1.0 i)":
 double: 1
 idouble: 1
-Test "Real part of: casin (-0x1.fp-1000 - 1.0 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casin (-0x1.fp-1000 - 1.0 i)":
 double: 1
 idouble: 1
-Test "Real part of: casin (-0x1.fp-10000 + 1.0 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: casin (-0x1.fp-10000 - 1.0 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: casin (-0x1.fp-1025 + 1.0 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casin (-0x1.fp-1025 + 1.0 i)":
 double: 1
 idouble: 1
 Test "Imaginary part of: casin (-0x1.fp-1025 + 1.5 i)":
 double: 1
 idouble: 1
-Test "Real part of: casin (-0x1.fp-1025 - 1.0 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casin (-0x1.fp-1025 - 1.0 i)":
 double: 1
 idouble: 1
@@ -2280,9 +2015,6 @@ Test "Imaginary part of: casin (-0x1.fp-129 + 0x1.000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (-0x1.fp-129 + 0x1p-23 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: casin (-0x1.fp-129 + 1.0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (-0x1.fp-129 + 1.0 i)":
@@ -2303,9 +2035,6 @@ Test "Imaginary part of: casin (-0x1.fp-129 - 0x1.000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (-0x1.fp-129 - 0x1p-23 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: casin (-0x1.fp-129 - 1.0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (-0x1.fp-129 - 1.0 i)":
@@ -2374,9 +2103,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "Imaginary part of: casin (-0x1p-23 + 0x1.000002p0 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: casin (-0x1p-23 - 0.5 i)":
 double: 1
 float: 1
@@ -2397,9 +2123,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "Imaginary part of: casin (-0x1p-23 - 0x1.000002p0 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casin (-0x1p-52 + 0.5 i)":
 double: 1
 float: 1
@@ -2458,9 +2181,6 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
-Test "Imaginary part of: casin (-1.0 + 0x1.fp-10 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casin (-1.0 + 0x1.fp-30 i)":
 ildouble: 1
 ldouble: 1
@@ -2472,9 +2192,6 @@ ldouble: 1
 Test "Imaginary part of: casin (-1.0 - 0.5 i)":
 float: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: casin (-1.0 - 0x1.fp-10 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (-1.0 - 0x1.fp-30 i)":
@@ -2542,9 +2259,7 @@ ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (0.5 + 0x1p-23 i)":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 Test "Imaginary part of: casin (0.5 + 0x1p-52 i)":
 double: 1
 idouble: 1
@@ -2574,9 +2289,7 @@ ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (0.5 - 0x1p-23 i)":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 Test "Imaginary part of: casin (0.5 - 0x1p-52 i)":
 double: 1
 idouble: 1
@@ -2601,13 +2314,9 @@ ldouble: 1
 Test "Imaginary part of: casin (0x0.fffffffffffff8p0 + 0x1p-52 i)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casin (0x0.fffffffffffff8p0 - 0x1p-52 i)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casin (0x0.ffffffffffffffffp0 + 0x1.fp-16385 i)":
 ildouble: 1
 ldouble: 1
@@ -2620,12 +2329,6 @@ ldouble: 1
 Test "Imaginary part of: casin (0x0.ffffffffffffffffp0 - 0x1p-63 i)":
 ildouble: 1
 ldouble: 1
-Test "Imaginary part of: casin (0x0.ffffffp0 + 0x1p-23 i)":
-double: 1
-idouble: 1
-Test "Imaginary part of: casin (0x0.ffffffp0 - 0x1p-23 i)":
-double: 1
-idouble: 1
 Test "Imaginary part of: casin (0x1.0000000000000002p0 + 0x1p-63 i)":
 ildouble: 2
 ldouble: 2
@@ -2660,52 +2363,28 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
-Test "Real part of: casin (0x1.fp-100 + 1.0 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casin (0x1.fp-100 + 1.0 i)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "Real part of: casin (0x1.fp-100 - 1.0 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casin (0x1.fp-100 - 1.0 i)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "Real part of: casin (0x1.fp-1000 + 1.0 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casin (0x1.fp-1000 + 1.0 i)":
 double: 1
 idouble: 1
-Test "Real part of: casin (0x1.fp-1000 - 1.0 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casin (0x1.fp-1000 - 1.0 i)":
 double: 1
 idouble: 1
-Test "Real part of: casin (0x1.fp-10000 + 1.0 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: casin (0x1.fp-10000 - 1.0 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: casin (0x1.fp-1025 + 1.0 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casin (0x1.fp-1025 + 1.0 i)":
 double: 1
 idouble: 1
 Test "Imaginary part of: casin (0x1.fp-1025 + 1.5 i)":
 double: 1
 idouble: 1
-Test "Real part of: casin (0x1.fp-1025 - 1.0 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casin (0x1.fp-1025 - 1.0 i)":
 double: 1
 idouble: 1
@@ -2722,9 +2401,6 @@ Test "Imaginary part of: casin (0x1.fp-129 + 0x1.000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (0x1.fp-129 + 0x1p-23 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: casin (0x1.fp-129 + 1.0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (0x1.fp-129 + 1.0 i)":
@@ -2745,9 +2421,6 @@ Test "Imaginary part of: casin (0x1.fp-129 - 0x1.000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (0x1.fp-129 - 0x1p-23 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: casin (0x1.fp-129 - 1.0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (0x1.fp-129 - 1.0 i)":
@@ -2790,9 +2463,6 @@ idouble: 1
 Test "Imaginary part of: casin (0x1.fp127 + 0x1.fp127 i)":
 double: 1
 idouble: 1
-Test "Imaginary part of: casin (0x1.fp16383 + 0x1.fp16383 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casin (0x1p-105 + 0.5 i)":
 float: 1
 ifloat: 1
@@ -2825,9 +2495,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "Imaginary part of: casin (0x1p-23 + 0x1.000002p0 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: casin (0x1p-23 - 0.5 i)":
 double: 1
 float: 1
@@ -2848,9 +2515,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "Imaginary part of: casin (0x1p-23 - 0x1.000002p0 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casin (0x1p-52 + 0.5 i)":
 double: 1
 float: 1
@@ -2909,9 +2573,6 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
-Test "Imaginary part of: casin (1.0 + 0x1.fp-10 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casin (1.0 + 0x1.fp-30 i)":
 ildouble: 1
 ldouble: 1
@@ -2923,9 +2584,6 @@ ldouble: 1
 Test "Imaginary part of: casin (1.0 - 0.5 i)":
 float: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: casin (1.0 - 0x1.fp-10 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: casin (1.0 - 0x1.fp-30 i)":
@@ -3118,9 +2776,6 @@ ldouble: 1
 Test "Imaginary part of: casinh (-0x1.000002p0 + 0x1.fp-129 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: casinh (-0x1.000002p0 + 0x1p-23 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casinh (-0x1.000002p0 + 0x1p-23 i)":
 double: 1
 float: 1
@@ -3135,20 +2790,11 @@ ldouble: 1
 Test "Imaginary part of: casinh (-0x1.000002p0 - 0x1.fp-129 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: casinh (-0x1.000002p0 - 0x1p-23 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casinh (-0x1.000002p0 - 0x1p-23 i)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "Real part of: casinh (-0x1.fp-10 + 1.0 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: casinh (-0x1.fp-10 - 1.0 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: casinh (-0x1.fp-1025 + 0.5 i)":
 ildouble: 1
 ldouble: 1
@@ -3208,15 +2854,10 @@ ildouble: 1
 ldouble: 1
 Test "Real part of: casinh (-0x1p-23 + 0.5 i)":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 Test "Imaginary part of: casinh (-0x1p-23 + 0.5 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: casinh (-0x1p-23 + 0x0.ffffffp0 i)":
-double: 1
-idouble: 1
 Test "Real part of: casinh (-0x1p-23 + 0x1.fp-129 i)":
 ildouble: 1
 ldouble: 1
@@ -3225,15 +2866,10 @@ ildouble: 1
 ldouble: 1
 Test "Real part of: casinh (-0x1p-23 - 0.5 i)":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 Test "Imaginary part of: casinh (-0x1p-23 - 0.5 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: casinh (-0x1p-23 - 0x0.ffffffp0 i)":
-double: 1
-idouble: 1
 Test "Real part of: casinh (-0x1p-23 - 0x1.fp-129 i)":
 ildouble: 1
 ldouble: 1
@@ -3245,8 +2881,6 @@ ldouble: 1
 Test "Real part of: casinh (-0x1p-52 + 0x0.fffffffffffff8p0 i)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
 Test "Real part of: casinh (-0x1p-52 + 0x1.0000000000001p0 i)":
 ildouble: 1
 ldouble: 1
@@ -3258,8 +2892,6 @@ ldouble: 1
 Test "Real part of: casinh (-0x1p-52 - 0x0.fffffffffffff8p0 i)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
 Test "Real part of: casinh (-0x1p-52 - 0x1.0000000000001p0 i)":
 ildouble: 1
 ldouble: 1
@@ -3303,32 +2935,17 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "Imaginary part of: casinh (-1.0 + 0x1.fp-100 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: casinh (-1.0 + 0x1.fp-1000 i)":
 double: 1
 idouble: 1
-Test "Imaginary part of: casinh (-1.0 + 0x1.fp-1000 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: casinh (-1.0 + 0x1.fp-10000 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: casinh (-1.0 + 0x1.fp-1025 i)":
 double: 1
 idouble: 1
-Test "Imaginary part of: casinh (-1.0 + 0x1.fp-1025 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: casinh (-1.0 + 0x1.fp-129 i)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "Imaginary part of: casinh (-1.0 + 0x1.fp-129 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: casinh (-1.0 + 0x1.fp-30 i)":
 double: 1
 float: 1
@@ -3367,32 +2984,17 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "Imaginary part of: casinh (-1.0 - 0x1.fp-100 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: casinh (-1.0 - 0x1.fp-1000 i)":
 double: 1
 idouble: 1
-Test "Imaginary part of: casinh (-1.0 - 0x1.fp-1000 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: casinh (-1.0 - 0x1.fp-10000 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: casinh (-1.0 - 0x1.fp-1025 i)":
 double: 1
 idouble: 1
-Test "Imaginary part of: casinh (-1.0 - 0x1.fp-1025 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: casinh (-1.0 - 0x1.fp-129 i)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "Imaginary part of: casinh (-1.0 - 0x1.fp-129 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: casinh (-1.0 - 0x1.fp-30 i)":
 double: 1
 float: 1
@@ -3583,9 +3185,6 @@ ldouble: 1
 Test "Imaginary part of: casinh (0x1.000002p0 + 0x1.fp-129 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: casinh (0x1.000002p0 + 0x1p-23 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casinh (0x1.000002p0 + 0x1p-23 i)":
 double: 1
 float: 1
@@ -3600,20 +3199,11 @@ ldouble: 1
 Test "Imaginary part of: casinh (0x1.000002p0 - 0x1.fp-129 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: casinh (0x1.000002p0 - 0x1p-23 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casinh (0x1.000002p0 - 0x1p-23 i)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "Real part of: casinh (0x1.fp-10 + 1.0 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: casinh (0x1.fp-10 - 1.0 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: casinh (0x1.fp-1025 + 0.5 i)":
 ildouble: 1
 ldouble: 1
@@ -3674,23 +3264,15 @@ idouble: 1
 Test "Real part of: casinh (0x1.fp127 + 0x1.fp127 i)":
 double: 1
 idouble: 1
-Test "Real part of: casinh (0x1.fp16383 + 0x1.fp16383 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: casinh (0x1p-23 + 0.0 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: casinh (0x1p-23 + 0.5 i)":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 Test "Imaginary part of: casinh (0x1p-23 + 0.5 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: casinh (0x1p-23 + 0x0.ffffffp0 i)":
-double: 1
-idouble: 1
 Test "Real part of: casinh (0x1p-23 + 0x1.fp-129 i)":
 ildouble: 1
 ldouble: 1
@@ -3699,15 +3281,10 @@ ildouble: 1
 ldouble: 1
 Test "Real part of: casinh (0x1p-23 - 0.5 i)":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 Test "Imaginary part of: casinh (0x1p-23 - 0.5 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: casinh (0x1p-23 - 0x0.ffffffp0 i)":
-double: 1
-idouble: 1
 Test "Real part of: casinh (0x1p-23 - 0x1.fp-129 i)":
 ildouble: 1
 ldouble: 1
@@ -3719,8 +3296,6 @@ ldouble: 1
 Test "Real part of: casinh (0x1p-52 + 0x0.fffffffffffff8p0 i)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
 Test "Real part of: casinh (0x1p-52 + 0x1.0000000000001p0 i)":
 ildouble: 1
 ldouble: 1
@@ -3732,8 +3307,6 @@ ldouble: 1
 Test "Real part of: casinh (0x1p-52 - 0x0.fffffffffffff8p0 i)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
 Test "Real part of: casinh (0x1p-52 - 0x1.0000000000001p0 i)":
 ildouble: 1
 ldouble: 1
@@ -3777,32 +3350,17 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "Imaginary part of: casinh (1.0 + 0x1.fp-100 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: casinh (1.0 + 0x1.fp-1000 i)":
 double: 1
 idouble: 1
-Test "Imaginary part of: casinh (1.0 + 0x1.fp-1000 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: casinh (1.0 + 0x1.fp-10000 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: casinh (1.0 + 0x1.fp-1025 i)":
 double: 1
 idouble: 1
-Test "Imaginary part of: casinh (1.0 + 0x1.fp-1025 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: casinh (1.0 + 0x1.fp-129 i)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "Imaginary part of: casinh (1.0 + 0x1.fp-129 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: casinh (1.0 + 0x1.fp-30 i)":
 double: 1
 float: 1
@@ -3841,32 +3399,17 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "Imaginary part of: casinh (1.0 - 0x1.fp-100 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: casinh (1.0 - 0x1.fp-1000 i)":
 double: 1
 idouble: 1
-Test "Imaginary part of: casinh (1.0 - 0x1.fp-1000 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: casinh (1.0 - 0x1.fp-10000 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: casinh (1.0 - 0x1.fp-1025 i)":
 double: 1
 idouble: 1
-Test "Imaginary part of: casinh (1.0 - 0x1.fp-1025 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: casinh (1.0 - 0x1.fp-129 i)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "Imaginary part of: casinh (1.0 - 0x1.fp-129 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: casinh (1.0 - 0x1.fp-30 i)":
 double: 1
 float: 1
@@ -3911,9 +3454,6 @@ ifloat: 1
 Test "Imaginary part of: catan (-0x1.0000000000001p0 + 0x1p-27 i)":
 ildouble: 1
 ldouble: 1
-Test "Imaginary part of: catan (-0x1.0000000000001p0 - 0x1p-27 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: catan (-0x1.000002p0 - 0x1p-13 i)":
 double: 1
 idouble: 1
@@ -3947,37 +3487,16 @@ ldouble: 1
 Test "Imaginary part of: catan (-0x1p-1022 - 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
-Test "Imaginary part of: catan (-0x1p-13 + 0x0.ffffffp0 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: catan (-0x1p-13 + 1.0 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: catan (-0x1p-16382 + 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catan (-0x1p-16382 - 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
-Test "Imaginary part of: catan (-0x1p-27 - 0x0.fffffffffffff8p0 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: catan (-0x1p-27 - 0x1.0000000000001p0 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: catan (-0x1p-27 - 1.0 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: catan (-0x1p-33 + 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
-Test "Imaginary part of: catan (-0x1p-33 + 0x1.0000000000000002p0 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: catan (-0x1p-33 - 0x0.ffffffffffffffffp0 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: catan (-0x1p-33 - 0x1.0000000000000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catan (-0x1p-64 + 1.0 i)":
@@ -3986,16 +3505,10 @@ ldouble: 1
 Test "Imaginary part of: catan (-0x1p-64 - 1.0 i)":
 ildouble: 1
 ldouble: 1
-Test "Imaginary part of: catan (-1.0 + 0x1p-27 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: catan (-1.0 + 0x1p-64 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catan (-1.0 - 0x1p-13 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: catan (-1.0 - 0x1p-27 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catan (-1.0 - 0x1p-64 i)":
@@ -4018,9 +3531,6 @@ float: 1
 idouble: 1
 ifloat: 1
 Test "Imaginary part of: catan (0x1.0000000000001p0 + 0x1p-27 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: catan (0x1.0000000000001p0 - 0x1p-27 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catan (0x1.000002p0 - 0x1p-13 i)":
@@ -4056,37 +3566,16 @@ ldouble: 1
 Test "Imaginary part of: catan (0x1p-1022 - 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
-Test "Imaginary part of: catan (0x1p-13 + 0x0.ffffffp0 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: catan (0x1p-13 + 1.0 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: catan (0x1p-16382 + 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catan (0x1p-16382 - 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
-Test "Imaginary part of: catan (0x1p-27 - 0x0.fffffffffffff8p0 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: catan (0x1p-27 - 0x1.0000000000001p0 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: catan (0x1p-27 - 1.0 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: catan (0x1p-33 + 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
-Test "Imaginary part of: catan (0x1p-33 + 0x1.0000000000000002p0 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: catan (0x1p-33 - 0x0.ffffffffffffffffp0 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: catan (0x1p-33 - 0x1.0000000000000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catan (0x1p-64 + 1.0 i)":
@@ -4095,16 +3584,10 @@ ldouble: 1
 Test "Imaginary part of: catan (0x1p-64 - 1.0 i)":
 ildouble: 1
 ldouble: 1
-Test "Imaginary part of: catan (1.0 + 0x1p-27 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: catan (1.0 + 0x1p-64 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catan (1.0 - 0x1p-13 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: catan (1.0 - 0x1p-27 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catan (1.0 - 0x1p-64 i)":
@@ -4112,12 +3595,6 @@ ildouble: 1
 ldouble: 1
 
 # catanh
-Test "Real part of: catanh (-0x0.fffffffffffff8p0 + 0x1p-27 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: catanh (-0x0.fffffffffffff8p0 - 0x1p-27 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: catanh (-0x0.ffffffffffffffffp0 + 0x1p-1022 i)":
 ildouble: 1
 ldouble: 1
@@ -4134,18 +3611,6 @@ Test "Real part of: catanh (-0x0.ffffffffffffffffp0 - 0x1p-16382 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: catanh (-0x0.ffffffffffffffffp0 - 0x1p-33 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: catanh (-0x1.0000000000000002p0 + 0x1p-33 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: catanh (-0x1.0000000000000002p0 - 0x1p-33 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: catanh (-0x1.0000000000001p0 + 0x1p-27 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: catanh (-0x1.0000000000001p0 - 0x1p-27 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: catanh (-0x1.fp1023 + 0x1.fp1023 i)":
@@ -4172,18 +3637,6 @@ idouble: 1
 Test "Real part of: catanh (-0x1p-13 - 1.0 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: catanh (-0x1p-27 + 0x1.0000000000001p0 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: catanh (-0x1p-27 + 1.0 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: catanh (-0x1p-27 - 0x1.0000000000001p0 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: catanh (-0x1p-27 - 1.0 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: catanh (-0x1p-64 + 1.0 i)":
 ildouble: 1
 ldouble: 1
@@ -4196,9 +3649,6 @@ ldouble: 1
 Test "Real part of: catanh (-1.0 + 0x1p-1020 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: catanh (-1.0 + 0x1p-27 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: catanh (-1.0 + 0x1p-64 i)":
 ildouble: 1
 ldouble: 1
@@ -4206,9 +3656,6 @@ Test "Real part of: catanh (-1.0 - 0x1.3p-73 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: catanh (-1.0 - 0x1p-1020 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: catanh (-1.0 - 0x1p-27 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: catanh (-1.0 - 0x1p-64 i)":
@@ -4240,18 +3687,6 @@ ldouble: 1
 Test "Real part of: catanh (0x0.ffffffffffffffffp0 - 0x1p-33 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: catanh (0x0.ffffffp0 + 0x1p-13 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: catanh (0x0.ffffffp0 - 0x1p-13 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: catanh (0x1.0000000000000002p0 + 0x1p-33 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: catanh (0x1.0000000000000002p0 - 0x1p-33 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: catanh (0x1.fp1023 + 0x1.fp1023 i)":
 ildouble: 1
 ldouble: 1
@@ -4280,16 +3715,10 @@ idouble: 1
 Test "Real part of: catanh (0x1p-27 + 0x1.0000000000001p0 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: catanh (0x1p-27 + 1.0 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: catanh (0x1p-27 - 0x0.fffffffffffff8p0 i)":
 double: 1
 idouble: 1
 Test "Real part of: catanh (0x1p-27 - 0x1.0000000000001p0 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: catanh (0x1p-27 - 1.0 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: catanh (0x1p-33 + 0x0.ffffffffffffffffp0 i)":
@@ -4310,9 +3739,6 @@ ldouble: 1
 Test "Real part of: catanh (1.0 + 0x1p-1020 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: catanh (1.0 + 0x1p-13 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: catanh (1.0 + 0x1p-64 i)":
 ildouble: 1
 ldouble: 1
@@ -4320,9 +3746,6 @@ Test "Real part of: catanh (1.0 - 0x1.3p-73 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: catanh (1.0 - 0x1p-1020 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: catanh (1.0 - 0x1p-13 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: catanh (1.0 - 0x1p-64 i)":
@@ -4348,12 +3771,6 @@ ldouble: 1
 Test "cbrt (-0xf.fffffffffffffffp+16380)":
 ildouble: 1
 ldouble: 1
-Test "cbrt (-27.0)":
-ildouble: 1
-ldouble: 1
-Test "cbrt (0.75)":
-ildouble: 1
-ldouble: 1
 Test "cbrt (0x1.86ap+16)":
 double: 1
 idouble: 1
@@ -4367,30 +3784,6 @@ ildouble: 1
 ldouble: 1
 
 # ccos
-Test "Real part of: ccos (-0.75 + 710.5 i)":
-double: 1
-idouble: 1
-Test "Imaginary part of: ccos (-0.75 + 710.5 i)":
-double: 1
-idouble: 1
-Test "Real part of: ccos (-0.75 + 89.5 i)":
-float: 1
-ifloat: 1
-Test "Imaginary part of: ccos (-0.75 + 89.5 i)":
-float: 1
-ifloat: 1
-Test "Real part of: ccos (-0.75 - 710.5 i)":
-double: 1
-idouble: 1
-Test "Imaginary part of: ccos (-0.75 - 710.5 i)":
-double: 1
-idouble: 1
-Test "Real part of: ccos (-0.75 - 89.5 i)":
-float: 1
-ifloat: 1
-Test "Imaginary part of: ccos (-0.75 - 89.5 i)":
-float: 1
-ifloat: 1
 Test "Imaginary part of: ccos (-0x2p+0 - 0x3p+0 i)":
 float: 1
 ifloat: 1
@@ -4418,46 +3811,6 @@ ifloat: 1
 Test "Imaginary part of: ccos (-0xcp-4 - 0x5.98p+4 i)":
 float: 1
 ifloat: 1
-Test "Imaginary part of: ccos (-2 - 3 i)":
-float: 1
-ifloat: 1
-Test "Real part of: ccos (0.75 + 1.25 i)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: ccos (0.75 + 1.25 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: ccos (0.75 + 710.5 i)":
-double: 1
-idouble: 1
-Test "Imaginary part of: ccos (0.75 + 710.5 i)":
-double: 1
-idouble: 1
-Test "Real part of: ccos (0.75 + 89.5 i)":
-float: 1
-ifloat: 1
-Test "Imaginary part of: ccos (0.75 + 89.5 i)":
-float: 1
-ifloat: 1
-Test "Real part of: ccos (0.75 - 710.5 i)":
-double: 1
-idouble: 1
-Test "Imaginary part of: ccos (0.75 - 710.5 i)":
-double: 1
-idouble: 1
-Test "Real part of: ccos (0.75 - 89.5 i)":
-float: 1
-ifloat: 1
-Test "Imaginary part of: ccos (0.75 - 89.5 i)":
-float: 1
-ifloat: 1
-Test "Imaginary part of: ccos (0x1p-1074 + 1440 i)":
-double: 1
-idouble: 1
 Test "Imaginary part of: ccos (0x4p-1076 + 0x5.ap+8 i)":
 double: 1
 idouble: 1
@@ -4526,41 +3879,6 @@ ifloat: 1
 Test "Imaginary part of: ccosh (-0x5.98p+4 - 0xcp-4 i)":
 float: 1
 ifloat: 1
-Test "Imaginary part of: ccosh (-2 - 3 i)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "Real part of: ccosh (-710.5 + 0.75 i)":
-double: 1
-idouble: 1
-Test "Imaginary part of: ccosh (-710.5 + 0.75 i)":
-double: 1
-idouble: 1
-Test "Real part of: ccosh (-710.5 - 0.75 i)":
-double: 1
-idouble: 1
-Test "Imaginary part of: ccosh (-710.5 - 0.75 i)":
-double: 1
-idouble: 1
-Test "Real part of: ccosh (-89.5 + 0.75 i)":
-float: 1
-ifloat: 1
-Test "Imaginary part of: ccosh (-89.5 + 0.75 i)":
-float: 1
-ifloat: 1
-Test "Real part of: ccosh (-89.5 - 0.75 i)":
-float: 1
-ifloat: 1
-Test "Imaginary part of: ccosh (-89.5 - 0.75 i)":
-float: 1
-ifloat: 1
-Test "Real part of: ccosh (0.75 + 1.25 i)":
-float: 1
-ifloat: 1
-Test "Imaginary part of: ccosh (0.75 + 1.25 i)":
-float: 1
-ifloat: 1
 Test "Imaginary part of: ccosh (0x1p-120 + 0x4p-16328 i)":
 ildouble: 1
 ldouble: 1
@@ -4597,33 +3915,6 @@ ifloat: 1
 Test "Imaginary part of: ccosh (0xcp-4 + 0x1.4p+0 i)":
 float: 1
 ifloat: 1
-Test "Imaginary part of: ccosh (1440 + 0x1p-1074 i)":
-double: 1
-idouble: 1
-Test "Real part of: ccosh (710.5 + 0.75 i)":
-double: 1
-idouble: 1
-Test "Imaginary part of: ccosh (710.5 + 0.75 i)":
-double: 1
-idouble: 1
-Test "Real part of: ccosh (710.5 - 0.75 i)":
-double: 1
-idouble: 1
-Test "Imaginary part of: ccosh (710.5 - 0.75 i)":
-double: 1
-idouble: 1
-Test "Real part of: ccosh (89.5 + 0.75 i)":
-float: 1
-ifloat: 1
-Test "Imaginary part of: ccosh (89.5 + 0.75 i)":
-float: 1
-ifloat: 1
-Test "Real part of: ccosh (89.5 - 0.75 i)":
-float: 1
-ifloat: 1
-Test "Imaginary part of: ccosh (89.5 - 0.75 i)":
-float: 1
-ifloat: 1
 
 # cexp
 Test "Imaginary part of: cexp (+0 + 0xf.ffffffffffff8p+1020 i)":
@@ -4649,23 +3940,6 @@ ldouble: 1
 Test "Imaginary part of: cexp (-0x5.fp+4 + 0xcp-4 i)":
 double: 1
 idouble: 1
-Test "Real part of: cexp (-10000 + 0x1p16383 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: cexp (-2.0 - 3.0 i)":
-float: 1
-ifloat: 1
-Test "Real part of: cexp (-95 + 0.75 i)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: cexp (-95 + 0.75 i)":
-double: 1
-idouble: 1
-Test "Imaginary part of: cexp (0.75 + 1.25 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: cexp (0x2.c5c9p+12 + 0xcp-4 i)":
 ildouble: 1
 ldouble: 1
@@ -4701,38 +3975,6 @@ idouble: 1
 Test "Imaginary part of: cexp (0xcp-4 + 0x1.4p+0 i)":
 ildouble: 1
 ldouble: 1
-Test "Imaginary part of: cexp (11356.5625 + 0.75 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: cexp (1440 + 0x1p-1074 i)":
-double: 1
-idouble: 1
-Test "Real part of: cexp (50 + 0x1p127 i)":
-double: 1
-idouble: 1
-Test "Imaginary part of: cexp (50 + 0x1p127 i)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "Real part of: cexp (709.8125 + 0.75 i)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: cexp (709.8125 + 0.75 i)":
-double: 1
-idouble: 1
-Test "Real part of: cexp (88.75 + 0.75 i)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: cexp (88.75 + 0.75 i)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 
 # clog
 Test "Real part of: clog (+0 + 0x8p-16444 i)":
@@ -4762,12 +4004,6 @@ idouble: 1
 Test "Real part of: clog (-0x1.0000000123456p+0 + 0x8p-152 i)":
 double: 1
 idouble: 1
-Test "Real part of: clog (-0x1.0000000123456p0 + 0x1.2345678p-1000 i)":
-double: 1
-idouble: 1
-Test "Real part of: clog (-0x1.0000000123456p0 + 0x1.2345678p-30 i)":
-double: 1
-idouble: 1
 Test "Real part of: clog (-0x1.000002p+0 + +0 i)":
 float: 1
 ifloat: 1
@@ -4789,31 +4025,7 @@ ldouble: 1
 Test "Real part of: clog (-0x1.000002p+0 + 0x8p-152 i)":
 float: 1
 ifloat: 1
-Test "Real part of: clog (-0x1.fp+127 + 0x1p-149 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: clog (-0x1.fp+127 - 0x1p-149 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: clog (-0x1.fp+16383 + 0x1p-16445 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: clog (-0x1.fp+16383 - 0x1p-16445 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: clog (-0x1p+0 + 0x4.8d15ap-32 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: clog (-0x1p-149 + 0x1.fp+127 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: clog (-0x1p-149 - 0x1.fp+127 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: clog (-0x1p-16445 + 0x1.fp+16383 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: clog (-0x1p-16445 - 0x1.fp+16383 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: clog (-0x4p-1076 + 0xf.8p+16380 i)":
@@ -4870,12 +4082,6 @@ ldouble: 1
 Test "Real part of: clog (-0xf.8p+16380 - 0x8p-16448 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: clog (0x0.ffffffffffffffffp0 + 0x0.ffffffffffffffffp-15000 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: clog (0x0.ffffffp0 + 0x0.ffffffp-100 i)":
-float: 1
-ifloat: 1
 Test "Real part of: clog (0x1.0000000000000012p+0 + +0 i)":
 ildouble: 1
 ldouble: 1
@@ -4942,12 +4148,6 @@ ifloat: 1
 Test "Real part of: clog (0x1.000566p+0 + 0x4.8dp-12 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: clog (0x1.000566p0 + 0x1.234p-10 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: clog (0x1.000566p0 + 0x1.234p-100 i)":
-float: 1
-ifloat: 1
 Test "Real part of: clog (0x1.48e45e3268d8p-4 + 0xf.f2c64p-4 i)":
 double: 1
 idouble: 1
@@ -5056,43 +4256,10 @@ ldouble: 1
 Test "Real part of: clog (0x1.c67ecep-4 + 0xf.e6b4d1d7a6e1p-4 i)":
 double: 1
 idouble: 1
-Test "Real part of: clog (0x1.fffffep+127 + 0x1.fffffep+127 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: clog (0x1.fp+16383 + 0x1.fp+16383 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: clog (0x1.fp+16383 + 0x1p+16383 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: clog (0x1.fp+16383 + 0x1p-16445 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: clog (0x1.fp+16383 - 0x1p-16445 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: clog (0x1p+0 + 0x4.8d1598p-12 i)":
 float: 1
 ifloat: 1
-Test "Real part of: clog (0x1p-1074 + 0x1p-1074 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: clog (0x1p-149 + 0x1.fp+127 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: clog (0x1p-149 + 0x1p-149 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: clog (0x1p-149 - 0x1.fp+127 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: clog (0x1p-16440 + +0 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: clog (0x1p-16445 + 0x1.fp+16383 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: clog (0x1p-16445 - 0x1.fp+16383 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: clog (0x2.0ce7ba1e4902p-4 + 0xf.de3a3p-4 i)":
@@ -5146,9 +4313,6 @@ Test "Real part of: clog (0x2.82b795e420b2ap-4 + 0xf.cd42ap-4 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: clog (0x2.82b798p-4 + 0xf.cd42a15bf9a3613p-4 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: clog (0x2dd46725bp-35 + 0x7783a1284p-35 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: clog (0x3.2cdb84p-4 + 0xf.ae888f0455f6p-4 i)":
@@ -6020,9 +5184,6 @@ ifloat: 1
 Test "Real part of: clog (0xf.fffffp-4 + 0xf.fffffp-104 i)":
 float: 1
 ifloat: 1
-Test "Real part of: clog (1.0 + 0x1.234566p-10 i)":
-float: 1
-ifloat: 1
 
 # clog10
 Test "Imaginary part of: clog10 (-0 + inf i)":
@@ -6414,14 +5575,6 @@ ifloat: 1
 Test "cos (0x1.921fb4p+0)":
 ildouble: 1
 ldouble: 1
-Test "cos (M_PI_6l * 2.0)":
-double: 1
-idouble: 1
-Test "cos (M_PI_6l * 4.0)":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
 
 # cos_downward
 Test "cos_downward (-0x2p-16384)":
@@ -6648,37 +5801,6 @@ ldouble: 1
 Test "cos_downward (0xf.fffffp+124)":
 double: 1
 idouble: 1
-Test "cos_downward (1)":
-ildouble: 1
-ldouble: 1
-Test "cos_downward (10)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "cos_downward (2)":
-ildouble: 1
-ldouble: 1
-Test "cos_downward (3)":
-ildouble: 1
-ldouble: 1
-Test "cos_downward (4)":
-float: 1
-ifloat: 1
-Test "cos_downward (5)":
-float: 1
-ifloat: 1
-Test "cos_downward (7)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "cos_downward (8)":
-ildouble: 1
-ldouble: 1
-Test "cos_downward (9)":
-float: 1
-ifloat: 1
 
 # cos_tonearest
 Test "cos_tonearest (0x1.921fb4p+0)":
@@ -6850,35 +5972,6 @@ idouble: 1
 Test "cos_towardzero (0xf.fffffp+124)":
 double: 1
 idouble: 1
-Test "cos_towardzero (1)":
-ildouble: 1
-ldouble: 1
-Test "cos_towardzero (10)":
-ildouble: 1
-ldouble: 1
-Test "cos_towardzero (2)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "cos_towardzero (3)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "cos_towardzero (5)":
-float: 1
-ifloat: 1
-Test "cos_towardzero (7)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "cos_towardzero (8)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 
 # cos_upward
 Test "cos_upward (-0x2p+64)":
@@ -7023,34 +6116,6 @@ ldouble: 1
 Test "cos_upward (0xf.fffffffffffffffp+16380)":
 ildouble: 2
 ldouble: 2
-Test "cos_upward (1)":
-float: 1
-ifloat: 1
-Test "cos_upward (2)":
-float: 1
-ifloat: 1
-Test "cos_upward (3)":
-float: 1
-ifloat: 1
-Test "cos_upward (4)":
-ildouble: 1
-ldouble: 1
-Test "cos_upward (5)":
-ildouble: 1
-ldouble: 1
-Test "cos_upward (6)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "cos_upward (8)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "cos_upward (9)":
-ildouble: 1
-ldouble: 1
 
 # cosh
 Test "cosh (-0x1p+0)":
@@ -7091,23 +6156,18 @@ Test "cosh_downward (-0x2.c5d37700c6bbp+12)":
 ldouble: 2
 Test "cosh_downward (-0x2.c5e3acd2922a6p+8)":
 ildouble: 1
-Test "cosh_downward (-0x2.c5e3bp+8)":
-ildouble: 1
 Test "cosh_downward (-0x2.c679d1f73f0fap+8)":
 ildouble: 2
 Test "cosh_downward (-0x2.c679d1f73f0fb624p+8)":
 ildouble: 2
 Test "cosh_downward (-0x2.c679d1f73f0fb628p+8)":
 ildouble: 2
-Test "cosh_downward (-0x2.c679d1f73f0fcp+8)":
-ildouble: 1
 Test "cosh_downward (-0x2.c679dp+8)":
 double: 1
 ildouble: 1
 Test "cosh_downward (-0x5.96a7ep+4)":
 double: 1
 ildouble: 2
-ldouble: 1
 Test "cosh_downward (0x1.6p+4)":
 ildouble: 1
 ldouble: 2
@@ -7121,27 +6181,6 @@ Test "cosh_downward (0x2.c679dp+8)":
 double: 1
 Test "cosh_downward (0x5.96a7ep+4)":
 double: 1
-ildouble: 1
-ldouble: 1
-Test "cosh_downward (22)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 2
-Test "cosh_downward (23)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "cosh_downward (24)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 
 # cosh_tonearest
 Test "cosh_tonearest (-0x1p+0)":
@@ -7170,8 +6209,6 @@ Test "cosh_tonearest (0x2.c5d374p+12)":
 ldouble: 2
 Test "cosh_tonearest (0x2.c5d37700c6bbp+12)":
 ldouble: 1
-Test "cosh_tonearest (22)":
-ldouble: 1
 
 # cosh_towardzero
 Test "cosh_towardzero (-0x1p+0)":
@@ -7179,8 +6216,6 @@ ildouble: 1
 ldouble: 1
 Test "cosh_towardzero (-0x2.c5d374p+12)":
 ldouble: 1
-Test "cosh_towardzero (-0x2.c5d37700c6bb03a4p+12)":
-ldouble: 3
 Test "cosh_towardzero (-0x2.c5d37700c6bbp+12)":
 ldouble: 2
 Test "cosh_towardzero (-0x2.c5e3acd2922a6p+8)":
@@ -7197,56 +6232,28 @@ ildouble: 1
 Test "cosh_towardzero (-0x5.96a7ep+4)":
 double: 1
 ildouble: 2
-ldouble: 1
 Test "cosh_towardzero (0x1.6p+4)":
-ildouble: 1
-ldouble: 2
+ldouble: 1
 Test "cosh_towardzero (0x1.8p+4)":
 ildouble: 1
 ldouble: 1
 Test "cosh_towardzero (0x2.c5d374p+12)":
 ldouble: 1
-Test "cosh_towardzero (0x2.c5d37700c6bb03a4p+12)":
-ldouble: 3
 Test "cosh_towardzero (0x2.c5d37700c6bbp+12)":
 ldouble: 2
 Test "cosh_towardzero (0x2.c679dp+8)":
 double: 1
 Test "cosh_towardzero (0x5.96a7ep+4)":
 double: 1
-ildouble: 1
-ldouble: 1
-Test "cosh_towardzero (22)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 2
-Test "cosh_towardzero (23)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "cosh_towardzero (24)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 
 # cosh_upward
 Test "cosh_upward (-0x2.c5d374p+12)":
 ldouble: 2
 Test "cosh_upward (-0x2.c5d37700c6bb03a4p+12)":
 ldouble: 3
-Test "cosh_upward (-0x2.c5d37700c6bbp+12)":
-ldouble: 3
 Test "cosh_upward (-0x2.c5e3acd2922a6p+8)":
 double: 1
 ildouble: 1
-ldouble: 1
 Test "cosh_upward (-0x2.c5e3acp+8)":
 ildouble: 1
 Test "cosh_upward (-0x2.c5e3bp+8)":
@@ -7290,20 +6297,16 @@ Test "cosh_upward (0x1.6p+4)":
 ildouble: 1
 ldouble: 1
 Test "cosh_upward (0x1.7p+4)":
-ildouble: 2
-ldouble: 1
+ildouble: 1
 Test "cosh_upward (0x1.8p+4)":
 ildouble: 1
 Test "cosh_upward (0x2.c5d374p+12)":
 ldouble: 2
 Test "cosh_upward (0x2.c5d37700c6bb03a4p+12)":
 ldouble: 3
-Test "cosh_upward (0x2.c5d37700c6bbp+12)":
-ldouble: 3
 Test "cosh_upward (0x2.c5e3acd2922a6p+8)":
 double: 1
-ildouble: 2
-ldouble: 1
+ildouble: 1
 Test "cosh_upward (0x2.c5e3acp+8)":
 ildouble: 1
 Test "cosh_upward (0x2.c5e3bp+8)":
@@ -7328,52 +6331,8 @@ Test "cosh_upward (0x5.96a7e8p+4)":
 ildouble: 1
 Test "cosh_upward (0x5.96a7ep+4)":
 ildouble: 1
-Test "cosh_upward (22)":
-ildouble: 2
-ldouble: 1
-Test "cosh_upward (23)":
-ildouble: 2
-ldouble: 1
-Test "cosh_upward (24)":
-double: 1
-idouble: 1
-ildouble: 1
 
 # cpow
-Test "Real part of: cpow (0.75 + 1.25 i, 0.0 + 1.0 i)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "Real part of: cpow (0.75 + 1.25 i, 0.75 + 1.25 i)":
-double: 1
-float: 3
-idouble: 1
-ifloat: 3
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: cpow (0.75 + 1.25 i, 0.75 + 1.25 i)":
-float: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
-Test "Real part of: cpow (0.75 + 1.25 i, 1.0 + 0.0 i)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "Real part of: cpow (0.75 + 1.25 i, 1.0 + 1.0 i)":
-double: 2
-float: 4
-idouble: 2
-ifloat: 4
-ildouble: 3
-ldouble: 3
-Test "Imaginary part of: cpow (0.75 + 1.25 i, 1.0 + 1.0 i)":
-double: 1
-idouble: 1
 Test "Real part of: cpow (0x2p+0 + +0 i, 0xap+0 + +0 i)":
 ildouble: 1
 ldouble: 1
@@ -7423,21 +6382,6 @@ float: 1
 ifloat: 1
 ildouble: 2
 ldouble: 2
-Test "Real part of: cpow (2 + 0 i, 10 + 0 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: cpow (2 + 3 i, 4 + 0 i)":
-double: 1
-float: 5
-idouble: 1
-ifloat: 5
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: cpow (2 + 3 i, 4 + 0 i)":
-float: 1
-ifloat: 1
-ildouble: 4
-ldouble: 4
 
 # csin
 Test "Real part of: csin (-0.75 + 710.5 i)":
@@ -7564,18 +6508,6 @@ float: 1
 ifloat: 1
 
 # csqrt
-Test "Real part of: csqrt (-0x1.0000000000000002p-16382 - 0x1.0000000000000002p-16382 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: csqrt (-0x1.0000000000000002p-16382 - 0x1.0000000000000002p-16382 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: csqrt (-0x1.0000000000001p-1022 - 0x1.0000000000001p-1022 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: csqrt (-0x1.000002p-126 - 0x1.000002p-126 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: csqrt (-0x4.0000000000000008p-16384 - 0x4.0000000000000008p-16384 i)":
 ildouble: 1
 ldouble: 1
@@ -7607,36 +6539,6 @@ Test "Real part of: csqrt (-0x8p-152 - 0x4p-16384 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: csqrt (-0x8p-152 - 0x8p-152 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: csqrt (0x1.0000000000000002p-16382 + 0x1.0000000000000002p-16382 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: csqrt (0x1.0000000000000002p-16382 + 0x1.0000000000000002p-16382 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: csqrt (0x1.0000000000001p-1022 + 0x1.0000000000001p-1022 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: csqrt (0x1.000002p-126 + 0x1.000002p-126 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: csqrt (0x1.fffffffffffffp+1023 + 0x1p+1023 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: csqrt (0x1.fp+16383 + 0x1.fp+16383 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: csqrt (0x1p-1073 + 0x1p-1073 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: csqrt (0x1p-1074 + 0x1p-1074 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: csqrt (0x1p-147 + 0x1p-147 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: csqrt (0x1p-149 + 0x1p-149 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: csqrt (0x1p-16440 + 0x4p-1076 i)":
@@ -7750,19 +6652,6 @@ ldouble: 1
 Test "Imaginary part of: ctan (-0x2p+0 - 0x3p+0 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: ctan (-2 - 3 i)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: ctan (-2 - 3 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: ctan (0.75 + 1.25 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: ctan (0x1.921fb4p+0 + +0 i)":
 float: 1
 ifloat: 1
@@ -7842,17 +6731,6 @@ double: 1
 idouble: 1
 ildouble: 2
 ldouble: 2
-Test "Real part of: ctan (0x1p1023 + 1 i)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: ctan (0x1p1023 + 1 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: ctan (0x3.243f6cp-1 + 0 i)":
-float: 1
-ifloat: 1
 Test "Real part of: ctan (0x8p+1020 + 0x1p+0 i)":
 double: 1
 idouble: 1
@@ -7870,14 +6748,6 @@ ldouble: 1
 Test "Imaginary part of: ctan (0xf.fffffp+124 + 0x1p+0 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: ctan (1 + 45 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: ctan (1 + 47 i)":
-double: 1
-idouble: 1
-ildouble: 2
-ldouble: 2
 
 # ctan_downward
 Test "Real part of: ctan_downward (-0x2p+0 - 0x3p+0 i)":
@@ -7915,9 +6785,6 @@ ldouble: 1
 Test "Real part of: ctan_downward (0x1.921fb54442d1846ap+0 + +0 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: ctan_downward (0x1.921fb54442d1846ap+0 + 0x1p-16445 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: ctan_downward (0x1.921fb54442d1846ap+0 + 0x4p-1076 i)":
 ildouble: 1
 ldouble: 1
@@ -7930,14 +6797,6 @@ ldouble: 1
 Test "Real part of: ctan_downward (0x1.921fb54442d18p+0 + +0 i)":
 ildouble: 2
 ldouble: 2
-Test "Real part of: ctan_downward (0x1.921fb54442d18p+0 + 0x1p-1074 i)":
-double: 1
-idouble: 1
-ildouble: 2
-ldouble: 2
-Test "Imaginary part of: ctan_downward (0x1.921fb54442d18p+0 + 0x1p-1074 i)":
-ildouble: 3
-ldouble: 3
 Test "Real part of: ctan_downward (0x1.921fb54442d18p+0 + 0x4p-1076 i)":
 ildouble: 2
 ldouble: 2
@@ -7992,16 +6851,6 @@ float: 1
 ifloat: 1
 ildouble: 2
 ldouble: 2
-Test "Real part of: ctan_downward (0x1.921fb6p+0 + 0x1p-149 i)":
-double: 1
-idouble: 1
-ildouble: 3
-ldouble: 3
-Test "Imaginary part of: ctan_downward (0x1.921fb6p+0 + 0x1p-149 i)":
-float: 2
-ifloat: 2
-ildouble: 4
-ldouble: 4
 Test "Real part of: ctan_downward (0x1.921fb6p+0 + 0x4p-1076 i)":
 ildouble: 2
 ldouble: 2
@@ -8108,9 +6957,6 @@ ldouble: 1
 Test "Real part of: ctan_tonearest (0x1.921fb4p+0 + 0x8p-16448 i)":
 ildouble: 2
 ldouble: 2
-Test "Imaginary part of: ctan_tonearest (0x1.921fb54442d1846ap+0 + 0x1p-16445 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: ctan_tonearest (0x1.921fb54442d1846ap+0 + 0x4p-1076 i)":
 ildouble: 1
 ldouble: 1
@@ -8118,9 +6964,6 @@ Test "Imaginary part of: ctan_tonearest (0x1.921fb54442d1846ap+0 + 0x8p-152 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: ctan_tonearest (0x1.921fb54442d1846ap+0 + 0x8p-16448 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: ctan_tonearest (0x1.921fb54442d18p+0 + 0x1p-1074 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: ctan_tonearest (0x1.921fb54442d18p+0 + 0x4p-1076 i)":
@@ -8148,14 +6991,6 @@ ldouble: 1
 Test "Real part of: ctan_tonearest (0x1.921fb6p+0 + +0 i)":
 float: 1
 ifloat: 1
-Test "Real part of: ctan_tonearest (0x1.921fb6p+0 + 0x1p-149 i)":
-float: 1
-ifloat: 1
-Test "Imaginary part of: ctan_tonearest (0x1.921fb6p+0 + 0x1p-149 i)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: ctan_tonearest (0x1.921fb6p+0 + 0x4p-1076 i)":
 ildouble: 1
 ldouble: 1
@@ -8250,14 +7085,6 @@ ldouble: 1
 Test "Real part of: ctan_towardzero (0x1.921fb54442d18p+0 + +0 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: ctan_towardzero (0x1.921fb54442d18p+0 + 0x1p-1074 i)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: ctan_towardzero (0x1.921fb54442d18p+0 + 0x1p-1074 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: ctan_towardzero (0x1.921fb54442d18p+0 + 0x4p-1076 i)":
 ildouble: 1
 ldouble: 1
@@ -8312,16 +7139,6 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
-Test "Real part of: ctan_towardzero (0x1.921fb6p+0 + 0x1p-149 i)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: ctan_towardzero (0x1.921fb6p+0 + 0x1p-149 i)":
-float: 1
-ifloat: 1
-ildouble: 4
-ldouble: 4
 Test "Real part of: ctan_towardzero (0x1.921fb6p+0 + 0x4p-1076 i)":
 ildouble: 1
 ldouble: 1
@@ -8447,12 +7264,6 @@ ldouble: 1
 Test "Real part of: ctan_upward (0x1.921fb54442d1846ap+0 + +0 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: ctan_upward (0x1.921fb54442d1846ap+0 + 0x1p-16445 i)":
-ildouble: 2
-ldouble: 2
-Test "Imaginary part of: ctan_upward (0x1.921fb54442d1846ap+0 + 0x1p-16445 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: ctan_upward (0x1.921fb54442d1846ap+0 + 0x4p-1076 i)":
 ildouble: 1
 ldouble: 1
@@ -8471,14 +7282,6 @@ ldouble: 1
 Test "Imaginary part of: ctan_upward (0x1.921fb54442d1846ap+0 + 0x8p-16448 i)":
 ildouble: 2
 ldouble: 2
-Test "Real part of: ctan_upward (0x1.921fb54442d18p+0 + 0x1p-1074 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: ctan_upward (0x1.921fb54442d18p+0 + 0x1p-1074 i)":
-double: 1
-idouble: 1
-ildouble: 4
-ldouble: 4
 Test "Imaginary part of: ctan_upward (0x1.921fb54442d18p+0 + 0x4p-1076 i)":
 ildouble: 2
 ldouble: 2
@@ -8519,16 +7322,6 @@ ldouble: 3
 Test "Real part of: ctan_upward (0x1.921fb6p+0 + +0 i)":
 ildouble: 2
 ldouble: 2
-Test "Real part of: ctan_upward (0x1.921fb6p+0 + 0x1p-149 i)":
-ildouble: 2
-ldouble: 2
-Test "Imaginary part of: ctan_upward (0x1.921fb6p+0 + 0x1p-149 i)":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
-ildouble: 1
-ldouble: 1
 Test "Real part of: ctan_upward (0x1.921fb6p+0 + 0x4p-1076 i)":
 ildouble: 2
 ldouble: 2
@@ -8693,26 +7486,6 @@ ldouble: 1
 Test "Imaginary part of: ctanh (-0x2p+0 - 0x3p+0 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: ctanh (-2 - 3 i)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: ctanh (-2 - 3 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: ctanh (0 + 0x3.243f6cp-1 i)":
-float: 1
-ifloat: 1
-Test "Imaginary part of: ctanh (0 + M_PI_4l i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: ctanh (0 + pi/4 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: ctanh (0.75 + 1.25 i)":
-float: 1
-ifloat: 1
 Test "Real part of: ctanh (0x1p+0 + 0x8p+1020 i)":
 ildouble: 1
 ldouble: 1
@@ -8803,22 +7576,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "Real part of: ctanh (1 + 0x1p1023 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: ctanh (1 + 0x1p1023 i)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: ctanh (45 + 1 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: ctanh (47 + 1 i)":
-double: 1
-idouble: 1
-ildouble: 2
-ldouble: 2
 
 # ctanh_downward
 Test "Imaginary part of: ctanh_downward (+0 + 0x1.921fb4p+0 i)":
@@ -8896,27 +7653,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "Real part of: ctanh_downward (0x1p-1074 + 0x1.921fb54442d18p+0 i)":
-ildouble: 3
-ldouble: 3
-Test "Imaginary part of: ctanh_downward (0x1p-1074 + 0x1.921fb54442d18p+0 i)":
-double: 1
-idouble: 1
-ildouble: 2
-ldouble: 2
-Test "Real part of: ctanh_downward (0x1p-149 + 0x1.921fb6p+0 i)":
-float: 2
-ifloat: 2
-ildouble: 4
-ldouble: 4
-Test "Imaginary part of: ctanh_downward (0x1p-149 + 0x1.921fb6p+0 i)":
-double: 1
-idouble: 1
-ildouble: 3
-ldouble: 3
-Test "Imaginary part of: ctanh_downward (0x1p-16445 + 0x1.921fb54442d1846ap+0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: ctanh_downward (0x2.dp+4 + 0x1p+0 i)":
@@ -9069,20 +7805,6 @@ Test "Real part of: ctanh_tonearest (0x1p+0 + 0xf.ffffffffffff8p+1020 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: ctanh_tonearest (0x1p+0 + 0xf.fffffp+124 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: ctanh_tonearest (0x1p-1074 + 0x1.921fb54442d18p+0 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: ctanh_tonearest (0x1p-149 + 0x1.921fb6p+0 i)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: ctanh_tonearest (0x1p-149 + 0x1.921fb6p+0 i)":
-float: 1
-ifloat: 1
-Test "Real part of: ctanh_tonearest (0x1p-16445 + 0x1.921fb54442d1846ap+0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: ctanh_tonearest (0x2.dp+4 + 0x1p+0 i)":
@@ -9243,24 +7965,6 @@ ldouble: 1
 Test "Imaginary part of: ctanh_towardzero (0x1p+0 + 0xf.fffffp+124 i)":
 double: 1
 idouble: 1
-Test "Real part of: ctanh_towardzero (0x1p-1074 + 0x1.921fb54442d18p+0 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: ctanh_towardzero (0x1p-1074 + 0x1.921fb54442d18p+0 i)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "Real part of: ctanh_towardzero (0x1p-149 + 0x1.921fb6p+0 i)":
-float: 1
-ifloat: 1
-ildouble: 4
-ldouble: 4
-Test "Imaginary part of: ctanh_towardzero (0x1p-149 + 0x1.921fb6p+0 i)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: ctanh_towardzero (0x2.dp+4 + 0x1p+0 i)":
 double: 1
 idouble: 1
@@ -9494,30 +8198,6 @@ idouble: 1
 ifloat: 2
 ildouble: 3
 ldouble: 3
-Test "Real part of: ctanh_upward (0x1p-1074 + 0x1.921fb54442d18p+0 i)":
-double: 1
-idouble: 1
-ildouble: 4
-ldouble: 4
-Test "Imaginary part of: ctanh_upward (0x1p-1074 + 0x1.921fb54442d18p+0 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: ctanh_upward (0x1p-149 + 0x1.921fb6p+0 i)":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: ctanh_upward (0x1p-149 + 0x1.921fb6p+0 i)":
-ildouble: 2
-ldouble: 2
-Test "Real part of: ctanh_upward (0x1p-16445 + 0x1.921fb54442d1846ap+0 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: ctanh_upward (0x1p-16445 + 0x1.921fb54442d1846ap+0 i)":
-ildouble: 2
-ldouble: 2
 Test "Real part of: ctanh_upward (0x2.dp+4 + 0x1p+0 i)":
 double: 1
 float: 1
@@ -9656,25 +8336,11 @@ ldouble: 1
 Test "erf (0x1.4p+0)":
 double: 1
 idouble: 1
-Test "erf (1.25)":
-double: 1
-idouble: 1
 
 # erfc
 Test "erfc (0x1.4p+0)":
 ildouble: 1
 ldouble: 1
-Test "erfc (0x1.f7303cp+1)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "erfc (0x1.ffa002p+2)":
-ildouble: 1
-ldouble: 1
-Test "erfc (0x1.ffffc8p+2)":
-double: 1
-idouble: 1
 Test "erfc (0x2p+0)":
 double: 1
 idouble: 1
@@ -9708,22 +8374,8 @@ ldouble: 1
 Test "erfc (0x7.ffff2p+0)":
 double: 1
 idouble: 1
-Test "erfc (1.25)":
-ildouble: 1
-ldouble: 1
-Test "erfc (2.0)":
-double: 1
-idouble: 1
-Test "erfc (4.125)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
 
 # exp10
-Test "exp10 (0.75)":
-ildouble: 1
-ldouble: 1
 Test "exp10 (0xcp-4)":
 ildouble: 1
 ldouble: 1
@@ -9774,101 +8426,16 @@ ldouble: 1
 Test "exp_downward (0x2.c5cp+8)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
-Test "exp_downward (0x2p+0)":
-ildouble: 1
-ldouble: 1
-Test "exp_downward (0x3.e8p+8)":
-ildouble: 1
-ldouble: 1
-Test "exp_downward (1)":
-ildouble: 1
-ldouble: 1
-Test "exp_downward (2)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
-Test "exp_downward (3)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 
 # exp_towardzero
-Test "exp_towardzero (-0x2.e870a4p+8)":
-ildouble: 1
-ldouble: 1
-Test "exp_towardzero (-0x2.e870a7e5e88c1f0cp+8)":
-ildouble: 1
-ldouble: 1
-Test "exp_towardzero (-0x2.e870a7e5e88c1f1p+8)":
-ildouble: 1
-ldouble: 1
-Test "exp_towardzero (-0x2.e870a7e5e88c2p+8)":
-ildouble: 1
-ldouble: 1
-Test "exp_towardzero (-0x2.e870a7e5e88cp+8)":
-ildouble: 1
-ldouble: 1
-Test "exp_towardzero (-0x2.e870a8p+8)":
-ildouble: 1
-ldouble: 1
-Test "exp_towardzero (-0x2.ebe224p+8)":
-ildouble: 1
-ldouble: 1
-Test "exp_towardzero (-0x2.ebe228p+8)":
-ildouble: 1
-ldouble: 1
 Test "exp_towardzero (0x2.c5cp+8)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
-Test "exp_towardzero (0x2p+0)":
-ildouble: 1
-ldouble: 1
-Test "exp_towardzero (0x3.e8p+8)":
-ildouble: 1
-ldouble: 1
-Test "exp_towardzero (1)":
-ildouble: 1
-ldouble: 1
-Test "exp_towardzero (2)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
-Test "exp_towardzero (3)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 
 # exp_upward
-Test "exp_upward (-0x2.e870a7e5e88c1f0cp+8)":
-ildouble: 1
-ldouble: 1
-Test "exp_upward (-0x2.e870a7e5e88cp+8)":
-ildouble: 1
-ldouble: 1
 Test "exp_upward (0x2.c679d1f73f0fb628p+8)":
 ildouble: 1
 ldouble: 1
-Test "exp_upward (1)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
 
 # expm1
 Test "expm1 (-0x1p-64)":
@@ -9880,16 +8447,10 @@ ldouble: 1
 Test "expm1 (-0x4p-12)":
 ildouble: 1
 ldouble: 1
-Test "expm1 (-45.0)":
-ildouble: 1
-ldouble: 1
 Test "expm1 (0x1p+0)":
 ildouble: 1
 ldouble: 1
 Test "expm1 (0x2.c5c4p+12)":
-ildouble: 1
-ldouble: 1
-Test "expm1 (11356.25)":
 ildouble: 1
 ldouble: 1
 
@@ -10226,32 +8787,7 @@ ildouble: 1
 ldouble: 1
 
 # gamma
-Test "gamma (-0.5)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "gamma (-0x1p-10)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "gamma (-0x1p-15)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
 Test "gamma (-0x1p-20)":
-double: 1
-idouble: 1
-Test "gamma (-0x1p-30)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "gamma (-0x1p-5)":
 double: 1
 idouble: 1
 Test "gamma (-0x2p-16)":
@@ -10279,9 +8815,6 @@ ldouble: 1
 Test "gamma (-0x8p-8)":
 double: 1
 idouble: 1
-Test "gamma (0.7)":
-float: 1
-ifloat: 1
 Test "gamma (0x1.3333333333334p+0)":
 ildouble: 1
 ldouble: 1
@@ -10294,21 +8827,8 @@ ldouble: 1
 Test "gamma (0xb.3333333333338p-4)":
 ildouble: 1
 ldouble: 1
-Test "gamma (1.2)":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
-ildouble: 1
-ldouble: 1
 
 # hypot
-Test "hypot (-0.7, -12.4)":
-float: 1
-ifloat: 1
-Test "hypot (-0.7, 12.4)":
-float: 1
-ifloat: 1
 Test "hypot (-0xb.333333333333333p-4, -0xc.666666666666p+0)":
 ildouble: 1
 Test "hypot (-0xb.333333333333333p-4, 0xc.666666666666p+0)":
@@ -10345,18 +8865,6 @@ ildouble: 1
 Test "hypot (-0xc.666666666666p+0, 0xb.33333p-4)":
 ildouble: 1
 ldouble: 1
-Test "hypot (-12.4, -0.7)":
-float: 1
-ifloat: 1
-Test "hypot (-12.4, 0.7)":
-float: 1
-ifloat: 1
-Test "hypot (0.7, -12.4)":
-float: 1
-ifloat: 1
-Test "hypot (0.7, 12.4)":
-float: 1
-ifloat: 1
 Test "hypot (0x1.23456789abcdef02p-500, 0x1.23456789abcdefp-500)":
 ildouble: 1
 ldouble: 1
@@ -10403,17 +8911,8 @@ ildouble: 1
 Test "hypot (0xc.666666666666p+0, 0xb.33333p-4)":
 ildouble: 1
 ldouble: 1
-Test "hypot (12.4, -0.7)":
-float: 1
-ifloat: 1
-Test "hypot (12.4, 0.7)":
-float: 1
-ifloat: 1
 
 # j0
-Test "j0 (-0x1.001000001p+593)":
-ildouble: 2
-ldouble: 2
 Test "j0 (-0x2.002000002p+592)":
 ildouble: 2
 ldouble: 2
@@ -10429,22 +8928,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "j0 (-4.0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
-Test "j0 (0x1.d7ce3ap+107)":
-float: 1
-ifloat: 1
-Test "j0 (0x1p1023)":
-double: 1
-idouble: 1
-Test "j0 (0x1p16382)":
 ildouble: 1
 ldouble: 1
 Test "j0 (0x2p+0)":
@@ -10484,37 +8967,11 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
-Test "j0 (10.0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-Test "j0 (2.0)":
-float: 1
-ifloat: 1
-Test "j0 (4.0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
-Test "j0 (8.0)":
-float: 1
-ifloat: 1
 
 # j1
-Test "j1 (0x1.3ffp+74)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "j1 (0x1.ff00000000002p+840)":
 double: 1
 idouble: 1
-Test "j1 (0x1p16382)":
-ildouble: 1
-ldouble: 1
 Test "j1 (0x2p+0)":
 double: 1
 idouble: 1
@@ -10541,29 +8998,9 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "j1 (10.0)":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "j1 (2.0)":
-double: 1
-idouble: 1
-Test "j1 (8.0)":
-float: 1
-ifloat: 1
 
 # jn
 Test "jn (0, -0x4p+0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
-Test "jn (0, -4.0)":
 double: 1
 float: 1
 idouble: 1
@@ -10588,24 +9025,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "jn (0, 10.0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-Test "jn (0, 2.0)":
-float: 1
-ifloat: 1
-Test "jn (0, 4.0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
-Test "jn (0, 8.0)":
-float: 1
-ifloat: 1
 Test "jn (1, 0x2p+0)":
 double: 1
 idouble: 1
@@ -10619,19 +9038,6 @@ idouble: 2
 ifloat: 1
 ildouble: 1
 ldouble: 1
-Test "jn (1, 10.0)":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "jn (1, 2.0)":
-double: 1
-idouble: 1
-Test "jn (1, 8.0)":
-float: 1
-ifloat: 1
 Test "jn (10, -0x1p+0)":
 double: 1
 float: 1
@@ -10639,21 +9045,6 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
-Test "jn (10, -1.0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "jn (10, 0.125)":
-float: 1
-ifloat: 1
-Test "jn (10, 0.75)":
-float: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
 Test "jn (10, 0x1p+0)":
 double: 1
 float: 1
@@ -10679,36 +9070,6 @@ float: 1
 ifloat: 1
 ildouble: 2
 ldouble: 2
-Test "jn (10, 1.0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "jn (10, 10.0)":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
-ildouble: 2
-ldouble: 2
-Test "jn (10, 2.0)":
-ildouble: 1
-ldouble: 1
-Test "jn (2, 0x1.ffff62p+99)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "jn (2, 0x1p1023)":
-double: 1
-idouble: 1
-Test "jn (2, 0x1p127)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
 Test "jn (2, 0x2.67a2a4p+0)":
 float: 1
 ifloat: 1
@@ -10758,17 +9119,7 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
-Test "jn (2, 2.4048255576957729)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "jn (3, -0x1p+0)":
-ildouble: 1
-ldouble: 1
-Test "jn (3, -1.0)":
 ildouble: 1
 ldouble: 1
 Test "jn (3, 0x1p+0)":
@@ -10804,22 +9155,6 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
-Test "jn (3, 1.0)":
-ildouble: 1
-ldouble: 1
-Test "jn (3, 10.0)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "jn (3, 2.0)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "jn (3, 2.4048255576957729)":
-ildouble: 1
-ldouble: 1
 Test "jn (4, 0x2.67a2a4p+0)":
 float: 1
 ifloat: 1
@@ -10840,9 +9175,6 @@ ldouble: 1
 Test "jn (4, 0x2.67a2a8p+0)":
 ildouble: 1
 ldouble: 1
-Test "jn (4, 2.4048255576957729)":
-ildouble: 2
-ldouble: 2
 Test "jn (5, 0x2.67a2a4p+0)":
 double: 1
 float: 1
@@ -10859,13 +9191,6 @@ ldouble: 1
 Test "jn (5, 0x2.67a2a5d2e368p+0)":
 ildouble: 1
 ldouble: 1
-Test "jn (5, 2.4048255576957729)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 3
-ldouble: 3
 Test "jn (6, 0x2.67a2a4p+0)":
 float: 2
 ifloat: 2
@@ -10886,13 +9211,6 @@ Test "jn (6, 0x2.67a2a5d2e368p+0)":
 double: 1
 idouble: 1
 Test "jn (6, 0x2.67a2a8p+0)":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
-ildouble: 1
-ldouble: 1
-Test "jn (6, 2.4048255576957729)":
 double: 1
 float: 2
 idouble: 1
@@ -10923,11 +9241,6 @@ ldouble: 1
 Test "jn (7, 0x2.67a2a8p+0)":
 float: 1
 ifloat: 1
-Test "jn (7, 2.4048255576957729)":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
 Test "jn (8, 0x2.67a2a4p+0)":
 double: 1
 float: 1
@@ -10946,13 +9259,6 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
-Test "jn (8, 2.4048255576957729)":
-double: 1
-float: 3
-idouble: 1
-ifloat: 3
-ildouble: 2
-ldouble: 2
 Test "jn (9, 0x2.67a2a4p+0)":
 float: 1
 ifloat: 1
@@ -10969,39 +9275,9 @@ float: 3
 ifloat: 3
 ildouble: 3
 ldouble: 3
-Test "jn (9, 2.4048255576957729)":
-float: 4
-ifloat: 4
-ildouble: 2
-ldouble: 2
 
 # lgamma
-Test "lgamma (-0.5)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "lgamma (-0x1p-10)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "lgamma (-0x1p-15)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
 Test "lgamma (-0x1p-20)":
-double: 1
-idouble: 1
-Test "lgamma (-0x1p-30)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "lgamma (-0x1p-5)":
 double: 1
 idouble: 1
 Test "lgamma (-0x2p-16)":
@@ -11029,9 +9305,6 @@ ldouble: 1
 Test "lgamma (-0x8p-8)":
 double: 1
 idouble: 1
-Test "lgamma (0.7)":
-float: 1
-ifloat: 1
 Test "lgamma (0x1.3333333333334p+0)":
 ildouble: 1
 ldouble: 1
@@ -11044,13 +9317,6 @@ ldouble: 1
 Test "lgamma (0xb.3333333333338p-4)":
 ildouble: 1
 ldouble: 1
-Test "lgamma (1.2)":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
-ildouble: 1
-ldouble: 1
 
 # log
 Test "log (0x5.e2d59p-4)":
@@ -11058,9 +9324,6 @@ ildouble: 1
 ldouble: 1
 
 # log10
-Test "log10 (0.75)":
-ildouble: 1
-ldouble: 1
 Test "log10 (0x1.999998p-4)":
 ildouble: 1
 ldouble: 1
@@ -11082,16 +9345,8 @@ ldouble: 1
 Test "log10 (0xcp-4)":
 ildouble: 1
 ldouble: 1
-Test "log10 (e)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 
 # pow
-Test "pow (0x0.ffffffp0, -0x1p24)":
-ildouble: 1
-ldouble: 1
 Test "pow (0x1.0000000000001p+0, 0x2.468adp+60)":
 ildouble: 1
 ldouble: 1
@@ -11103,9 +9358,6 @@ ildouble: 1
 ldouble: 1
 
 # pow10
-Test "pow10 (0.75)":
-ildouble: 1
-ldouble: 1
 Test "pow10 (0xcp-4)":
 ildouble: 1
 ldouble: 1
@@ -11389,26 +9641,6 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
-Test "sin_downward (1)":
-ildouble: 1
-ldouble: 1
-Test "sin_downward (3)":
-ildouble: 1
-ldouble: 1
-Test "sin_downward (6)":
-float: 1
-ifloat: 1
-Test "sin_downward (7)":
-ildouble: 1
-ldouble: 1
-Test "sin_downward (8)":
-ildouble: 1
-ldouble: 1
-Test "sin_downward (9)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 
 # sin_tonearest
 Test "sin_tonearest (0xf.ffffffffffff8p+1020)":
@@ -11541,32 +9773,6 @@ ldouble: 1
 Test "sin_towardzero (0xf.ffffffffffff8p+1020)":
 double: 1
 idouble: 1
-Test "sin_towardzero (1)":
-ildouble: 1
-ldouble: 1
-Test "sin_towardzero (10)":
-float: 1
-ifloat: 1
-Test "sin_towardzero (3)":
-ildouble: 1
-ldouble: 1
-Test "sin_towardzero (4)":
-float: 1
-ifloat: 1
-Test "sin_towardzero (5)":
-float: 1
-ifloat: 1
-Test "sin_towardzero (7)":
-ildouble: 1
-ldouble: 1
-Test "sin_towardzero (8)":
-ildouble: 1
-ldouble: 1
-Test "sin_towardzero (9)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 
 # sin_upward
 Test "sin_upward (-0x1.921fb4p+0)":
@@ -11821,43 +10027,6 @@ ldouble: 1
 Test "sin_upward (0xf.fffffp+124)":
 ildouble: 1
 ldouble: 1
-Test "sin_upward (1)":
-float: 1
-ifloat: 1
-Test "sin_upward (10)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "sin_upward (2)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "sin_upward (3)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "sin_upward (4)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "sin_upward (5)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "sin_upward (6)":
-ildouble: 1
-ldouble: 1
-Test "sin_upward (7)":
-float: 1
-ifloat: 1
-Test "sin_upward (8)":
-float: 1
-ifloat: 1
 
 # sincos
 Test "sincos (0x1.921fb4p+0) extra output 2":
@@ -11866,23 +10035,8 @@ ldouble: 1
 Test "sincos (0xf.ffffffffffff8p+1020) extra output 1":
 ildouble: 1
 ldouble: 1
-Test "sincos (M_PI_6l*2.0) extra output 1":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "sincos (M_PI_6l*2.0) extra output 2":
-double: 1
-idouble: 1
 
 # sinh
-Test "sinh (0.75)":
-ildouble: 1
-Test "sinh (0x8p-32)":
-ildouble: 1
-ldouble: 1
 Test "sinh (0xcp-4)":
 ildouble: 1
 
@@ -11902,38 +10056,13 @@ ldouble: 1
 Test "sinh_downward (0xcp-4)":
 float: 1
 ildouble: 1
-Test "sinh_downward (22)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
-Test "sinh_downward (23)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
-Test "sinh_downward (24)":
-float: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
 
 # sinh_tonearest
 Test "sinh_tonearest (0xcp-4)":
 ildouble: 1
 
 # sinh_towardzero
-Test "sinh_towardzero (0x1.6p+4)":
-ildouble: 1
-ldouble: 1
 Test "sinh_towardzero (0x1.7p+4)":
-ildouble: 1
-ldouble: 1
-Test "sinh_towardzero (0x1.8p+4)":
 ildouble: 1
 ldouble: 1
 Test "sinh_towardzero (0x8p-32)":
@@ -11942,31 +10071,9 @@ ldouble: 1
 Test "sinh_towardzero (0xcp-4)":
 float: 1
 ildouble: 1
-Test "sinh_towardzero (22)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
-Test "sinh_towardzero (23)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
-Test "sinh_towardzero (24)":
-float: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
 
 # sinh_upward
 Test "sinh_upward (0x1.6p+4)":
-ildouble: 1
-ldouble: 1
-Test "sinh_upward (0x1.7p+4)":
 ildouble: 1
 ldouble: 1
 Test "sinh_upward (0x8p-32)":
@@ -11974,17 +10081,6 @@ double: 1
 float: 1
 Test "sinh_upward (0xcp-4)":
 float: 1
-ildouble: 2
-ldouble: 1
-Test "sinh_upward (22)":
-ildouble: 1
-ldouble: 1
-Test "sinh_upward (23)":
-ildouble: 1
-ldouble: 1
-Test "sinh_upward (24)":
-double: 1
-idouble: 1
 
 # tan
 Test "tan (-0xc.90fdbp-4)":
@@ -12006,9 +10102,6 @@ Test "tan (-0xc.94p-4)":
 float: 1
 ifloat: 1
 Test "tan (0x1p+0)":
-ildouble: 1
-ldouble: 1
-Test "tan (0x1p16383)":
 ildouble: 1
 ldouble: 1
 Test "tan (0x2.1e19e0c9bab24p+72)":
@@ -12041,12 +10134,6 @@ Test "tan (0xc.92p-4)":
 float: 1
 ifloat: 1
 Test "tan (0xc.94p-4)":
-float: 1
-ifloat: 1
-Test "tan (1e22)":
-ildouble: 1
-ldouble: 1
-Test "tan (pi/4)":
 float: 1
 ifloat: 1
 
@@ -12213,39 +10300,6 @@ ifloat: 1
 Test "tan_downward (0xcp-4)":
 double: 1
 idouble: 1
-Test "tan_downward (1)":
-float: 2
-ifloat: 2
-ildouble: 1
-ldouble: 1
-Test "tan_downward (10)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "tan_downward (2)":
-float: 1
-ifloat: 1
-Test "tan_downward (3)":
-ildouble: 1
-ldouble: 1
-Test "tan_downward (4)":
-float: 1
-ifloat: 1
-Test "tan_downward (5)":
-ildouble: 1
-ldouble: 1
-Test "tan_downward (6)":
-float: 1
-ifloat: 1
-Test "tan_downward (8)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "tan_downward (9)":
-float: 1
-ifloat: 1
 
 # tan_tonearest
 Test "tan_tonearest (-0xc.90fdbp-4)":
@@ -12301,17 +10355,6 @@ ifloat: 1
 Test "tan_tonearest (0xc.94p-4)":
 float: 1
 ifloat: 1
-Test "tan_tonearest (1)":
-ildouble: 1
-ldouble: 1
-Test "tan_tonearest (2)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "tan_tonearest (8)":
-ildouble: 1
-ldouble: 1
 
 # tan_towardzero
 Test "tan_towardzero (-0x2p+64)":
@@ -12408,34 +10451,6 @@ idouble: 1
 Test "tan_towardzero (0xf.fffffp+124)":
 double: 1
 idouble: 1
-Test "tan_towardzero (1)":
-ildouble: 1
-ldouble: 1
-Test "tan_towardzero (10)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "tan_towardzero (2)":
-ildouble: 1
-ldouble: 1
-Test "tan_towardzero (3)":
-float: 1
-ifloat: 1
-Test "tan_towardzero (4)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "tan_towardzero (5)":
-float: 1
-ifloat: 1
-Test "tan_towardzero (6)":
-ildouble: 1
-ldouble: 1
-Test "tan_towardzero (9)":
-ildouble: 1
-ldouble: 1
 
 # tan_upward
 Test "tan_upward (-0xc.908p-4)":
@@ -12606,53 +10621,11 @@ idouble: 1
 Test "tan_upward (0xf.fffffp+124)":
 double: 1
 idouble: 1
-Test "tan_upward (1)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "tan_upward (10)":
-ildouble: 1
-ldouble: 1
-Test "tan_upward (2)":
-ildouble: 1
-ldouble: 1
-Test "tan_upward (3)":
-float: 1
-ifloat: 1
-Test "tan_upward (5)":
-float: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
-Test "tan_upward (6)":
-ildouble: 1
-ldouble: 1
-Test "tan_upward (8)":
-ildouble: 1
-ldouble: 1
-Test "tan_upward (9)":
-ildouble: 1
-ldouble: 1
 
 # tgamma
-Test "tgamma (-0.5)":
-double: 1
-idouble: 1
-Test "tgamma (-0x0.ffffffffffffffffp0)":
-ildouble: 1
-ldouble: 1
 Test "tgamma (-0x1.000002p+0)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x1.000002p0)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x1.0a32a2p+5)":
 ildouble: 1
 ldouble: 1
 Test "tgamma (-0x1.3ffffep+4)":
@@ -12667,11 +10640,6 @@ idouble: 1
 ildouble: 1
 ldouble: 1
 Test "tgamma (-0x1.4000000000001p+4)":
-ildouble: 2
-ldouble: 2
-Test "tgamma (-0x1.5800000080001p+7)":
-double: 1
-idouble: 1
 ildouble: 2
 ldouble: 2
 Test "tgamma (-0x1.8p+0)":
@@ -12710,63 +10678,16 @@ ldouble: 1
 Test "tgamma (-0x1.fffffffffffffp+0)":
 ildouble: 1
 ldouble: 1
-Test "tgamma (-0x1.fffffffffffffp0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x13.ffffep0)":
-float: 1
-ifloat: 1
-Test "tgamma (-0x13.ffffffffffffffep0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x13.ffffffffffffp0)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x14.000000000001p0)":
-ildouble: 2
-ldouble: 2
-Test "tgamma (-0x1d.ffffep0)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x1d.ffffffffffffffep0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x1e.000000000000002p0)":
-ildouble: 2
-ldouble: 2
-Test "tgamma (-0x1e.00002p0)":
-float: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
-Test "tgamma (-0x1f4.00000000000002p0)":
-ildouble: 3
-ldouble: 3
 Test "tgamma (-0x1p-24)":
 ildouble: 1
 ldouble: 1
 Test "tgamma (-0x2.0000000000000004p+0)":
 ildouble: 1
 ldouble: 1
-Test "tgamma (-0x2.0000000000000004p0)":
-ildouble: 1
-ldouble: 1
 Test "tgamma (-0x2.0000000000002p+0)":
 ildouble: 1
 ldouble: 1
-Test "tgamma (-0x2.0000000000002p0)":
-ildouble: 1
-ldouble: 1
 Test "tgamma (-0x2.000004p+0)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x2.000004p0)":
 double: 1
 idouble: 1
 ildouble: 1
@@ -12832,68 +10753,10 @@ ldouble: 1
 Test "tgamma (-0x2.fffffcp+0)":
 double: 1
 idouble: 1
-Test "tgamma (-0x2.fffffcp0)":
-double: 1
-idouble: 1
-Test "tgamma (-0x27.ffffcp0)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x27.fffffffffffep0)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x28.000000000002p0)":
-double: 1
-idouble: 1
-Test "tgamma (-0x28.00004p0)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x28.ffffcp0)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x28.fffffffffffep0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x28.ffffffffffffffcp0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x29.000000000000004p0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x29.000000000002p0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x29.00004p0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x29.ffffcp0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x2a.00004p0)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x2ed.fffffffffffffcp0)":
-ildouble: 1
-ldouble: 1
 Test "tgamma (-0x3.0000000000002p+0)":
 ildouble: 1
 ldouble: 1
-Test "tgamma (-0x3.0000000000002p0)":
-ildouble: 1
-ldouble: 1
 Test "tgamma (-0x3.000004p+0)":
-double: 1
-idouble: 1
-Test "tgamma (-0x3.000004p0)":
 double: 1
 idouble: 1
 Test "tgamma (-0x3.1fffffffffffep+4)":
@@ -12928,48 +10791,16 @@ ldouble: 1
 Test "tgamma (-0x3.fffffcp+0)":
 float: 1
 ifloat: 1
-Test "tgamma (-0x3.fffffcp0)":
-float: 1
-ifloat: 1
 Test "tgamma (-0x3.ffffffffffffep+0)":
-double: 1
-idouble: 1
-Test "tgamma (-0x3.ffffffffffffep0)":
 double: 1
 idouble: 1
 Test "tgamma (-0x3.fffffffffffffffcp+0)":
 ildouble: 1
 ldouble: 1
-Test "tgamma (-0x3.fffffffffffffffcp0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x31.fffffffffffep0)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x32.000000000000004p0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x32.000000000002p0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x3e7.fffffffffffffcp0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x3e8.00000000000004p0)":
-ildouble: 1
-ldouble: 1
 Test "tgamma (-0x4.0000000000000008p+0)":
 ildouble: 1
 ldouble: 1
-Test "tgamma (-0x4.0000000000000008p0)":
-ildouble: 1
-ldouble: 1
 Test "tgamma (-0x4.000008p+0)":
-float: 2
-ifloat: 2
-Test "tgamma (-0x4.000008p0)":
 float: 2
 ifloat: 2
 Test "tgamma (-0x4.8p+0)":
@@ -12989,38 +10820,16 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
-Test "tgamma (-0x4.fffff8p0)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "tgamma (-0x4.ffffffffffffcp+0)":
 double: 1
 idouble: 1
-Test "tgamma (-0x4.ffffffffffffcp0)":
-double: 1
-idouble: 1
-Test "tgamma (-0x4e2.00000000000008p0)":
-ildouble: 1
-ldouble: 1
 Test "tgamma (-0x5.0000000000000008p+0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x5.0000000000000008p0)":
 ildouble: 1
 ldouble: 1
 Test "tgamma (-0x5.0000000000004p+0)":
 ildouble: 1
 ldouble: 1
-Test "tgamma (-0x5.0000000000004p0)":
-ildouble: 1
-ldouble: 1
 Test "tgamma (-0x5.000008p+0)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x5.000008p0)":
 float: 1
 ifloat: 1
 ildouble: 1
@@ -13045,30 +10854,13 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "tgamma (-0x5.fffff8p0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
 Test "tgamma (-0x5.ffffffffffffcp+0)":
 double: 1
 idouble: 1
-Test "tgamma (-0x5.ffffffffffffcp0)":
-double: 1
-idouble: 1
-Test "tgamma (-0x5db.fffffffffffff8p0)":
-ildouble: 1
-ldouble: 1
 Test "tgamma (-0x6.0000000000000008p+0)":
 ildouble: 1
 ldouble: 1
-Test "tgamma (-0x6.0000000000000008p0)":
-ildouble: 1
-ldouble: 1
 Test "tgamma (-0x6.000008p+0)":
-double: 1
-idouble: 1
-Test "tgamma (-0x6.000008p0)":
 double: 1
 idouble: 1
 Test "tgamma (-0x6.3ffff8p+4)":
@@ -13106,44 +10898,12 @@ idouble: 2
 ifloat: 1
 ildouble: 2
 ldouble: 2
-Test "tgamma (-0x6.fffff8p0)":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-ildouble: 2
-ldouble: 2
 Test "tgamma (-0x6.ffffffffffffcp+0)":
 double: 3
 idouble: 3
 ildouble: 1
 ldouble: 1
-Test "tgamma (-0x6.ffffffffffffcp0)":
-double: 3
-idouble: 3
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x63.fffffffffffcp0)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x63.ffffffffffffff8p0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x64.000000000000008p0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x64.000000000004p0)":
-ildouble: 2
-ldouble: 2
-Test "tgamma (-0x6d6.00000000000008p0)":
-ildouble: 1
-ldouble: 1
 Test "tgamma (-0x7.0000000000000008p+0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x7.0000000000000008p0)":
 ildouble: 1
 ldouble: 1
 Test "tgamma (-0x7.0000000000004p+0)":
@@ -13151,19 +10911,7 @@ double: 4
 idouble: 4
 ildouble: 1
 ldouble: 1
-Test "tgamma (-0x7.0000000000004p0)":
-double: 4
-idouble: 4
-ildouble: 1
-ldouble: 1
 Test "tgamma (-0x7.000008p+0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x7.000008p0)":
 double: 1
 float: 1
 idouble: 1
@@ -13180,35 +10928,16 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
-Test "tgamma (-0x7.fffff8p0)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
 Test "tgamma (-0x7.ffffffffffffcp+0)":
-double: 2
-idouble: 2
-Test "tgamma (-0x7.ffffffffffffcp0)":
 double: 2
 idouble: 2
 Test "tgamma (-0x7.fffffffffffffff8p+0)":
 ildouble: 4
 ldouble: 4
-Test "tgamma (-0x7.fffffffffffffff8p0)":
-ildouble: 4
-ldouble: 4
 Test "tgamma (-0x8.000000000000001p+0)":
 ildouble: 2
 ldouble: 2
-Test "tgamma (-0x8.000000000000001p0)":
-ildouble: 2
-ldouble: 2
 Test "tgamma (-0x8.00001p+0)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x8.00001p0)":
 float: 1
 ifloat: 1
 ildouble: 1
@@ -13245,42 +10974,13 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
-Test "tgamma (-0x9.ffffffffffff8p0)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x95.fffffffffff8p0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x95.ffffffffffffffp0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0x96.000000000008p0)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
 Test "tgamma (-0xa.000000000000001p+0)":
-ildouble: 2
-ldouble: 2
-Test "tgamma (-0xa.000000000000001p0)":
 ildouble: 2
 ldouble: 2
 Test "tgamma (-0xa.0000000000008p+0)":
 double: 1
 idouble: 1
-Test "tgamma (-0xa.0000000000008p0)":
-double: 1
-idouble: 1
 Test "tgamma (-0xa.00001p+0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0xa.00001p0)":
 double: 1
 float: 1
 idouble: 1
@@ -13366,54 +11066,6 @@ ldouble: 1
 Test "tgamma (-0xb.f000000000008p+4)":
 ildouble: 1
 ldouble: 1
-Test "tgamma (-0xb4.ffffffffffffffp0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0xb5.00000000000001p0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0xb5.000000000008p0)":
-ildouble: 2
-ldouble: 2
-Test "tgamma (-0xb5.ffffffffffffffp0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0xb6.00000000000001p0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0xb6.fffffffffff8p0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0xb6.ffffffffffffffp0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0xb7.fffffffffff8p0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0xb7.ffffffffffffffp0)":
-ildouble: 2
-ldouble: 2
-Test "tgamma (-0xb8.000000000008p0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0xbb.ffffffffffffffp0)":
-ildouble: 2
-ldouble: 2
-Test "tgamma (-0xbc.00000000000001p0)":
-ildouble: 3
-ldouble: 3
-Test "tgamma (-0xbd.00000000000001p0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0xbe.00000000000001p0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0xbe.ffffffffffffffp0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0xbf.00000000000001p0)":
-ildouble: 1
-ldouble: 1
 Test "tgamma (-0xf.9fffffffffff8p+4)":
 ildouble: 1
 ldouble: 1
@@ -13432,52 +11084,6 @@ ldouble: 1
 Test "tgamma (-0xf.fffffffffffffffp-4)":
 ildouble: 1
 ldouble: 1
-Test "tgamma (-0xf9.ffffffffffffffp0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-0xfa.00000000000001p0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-1.5)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (-2.5)":
-double: 1
-idouble: 1
-Test "tgamma (-4.5)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (-5.5)":
-float: 1
-ifloat: 1
-Test "tgamma (-6.5)":
-float: 1
-ifloat: 1
-Test "tgamma (-7.5)":
-double: 2
-idouble: 2
-ildouble: 1
-ldouble: 1
-Test "tgamma (-8.5)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (-9.5)":
-ildouble: 2
-ldouble: 2
-Test "tgamma (0.5)":
-float: 1
-ifloat: 1
-Test "tgamma (0.7)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
 Test "tgamma (0x1.28p+4)":
 ildouble: 1
 ldouble: 1
@@ -13507,34 +11113,19 @@ ifloat: 1
 Test "tgamma (0x1.fffffep+0)":
 ildouble: 1
 ldouble: 1
-Test "tgamma (0x1.fffffep0)":
-ildouble: 1
-ldouble: 1
 Test "tgamma (0x1.fffffffffffffffep+0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (0x1.fffffffffffffffep0)":
 ildouble: 1
 ldouble: 1
 Test "tgamma (0x1p-24)":
 float: 1
 ifloat: 1
-Test "tgamma (0x1p-53)":
-double: 1
-idouble: 1
 Test "tgamma (0x1p-64)":
 ildouble: 1
 ldouble: 1
 Test "tgamma (0x2.0000000000002p+0)":
 ildouble: 1
 ldouble: 1
-Test "tgamma (0x2.0000000000002p0)":
-ildouble: 1
-ldouble: 1
 Test "tgamma (0x2.000004p+0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (0x2.000004p0)":
 ildouble: 1
 ldouble: 1
 Test "tgamma (0x2.08p+4)":
@@ -13554,21 +11145,10 @@ float: 2
 ifloat: 2
 ildouble: 1
 ldouble: 1
-Test "tgamma (0x2.fffffcp0)":
-float: 2
-ifloat: 2
-ildouble: 1
-ldouble: 1
 Test "tgamma (0x2.ffffffffffffep+0)":
 ildouble: 1
 ldouble: 1
-Test "tgamma (0x2.ffffffffffffep0)":
-ildouble: 1
-ldouble: 1
 Test "tgamma (0x3.0000000000002p+0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (0x3.0000000000002p0)":
 ildouble: 1
 ldouble: 1
 Test "tgamma (0x3.8p+0)":
@@ -13582,15 +11162,7 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
-Test "tgamma (0x3.fffffcp0)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "tgamma (0x3.fffffffffffffffcp+0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (0x3.fffffffffffffffcp0)":
 ildouble: 1
 ldouble: 1
 Test "tgamma (0x3p+0)":
@@ -13599,13 +11171,7 @@ ifloat: 1
 Test "tgamma (0x4.0000000000000008p+0)":
 ildouble: 1
 ldouble: 1
-Test "tgamma (0x4.0000000000000008p0)":
-ildouble: 1
-ldouble: 1
 Test "tgamma (0x4.000008p+0)":
-float: 1
-ifloat: 1
-Test "tgamma (0x4.000008p0)":
 float: 1
 ifloat: 1
 Test "tgamma (0x4.8p+0)":
@@ -13616,15 +11182,7 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
-Test "tgamma (0x4.fffff8p0)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "tgamma (0x4.fffffffffffffff8p+0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (0x4.fffffffffffffff8p0)":
 ildouble: 1
 ldouble: 1
 Test "tgamma (0x4p+0)":
@@ -13633,13 +11191,7 @@ ifloat: 1
 Test "tgamma (0x5.0000000000000008p+0)":
 ildouble: 1
 ldouble: 1
-Test "tgamma (0x5.0000000000000008p0)":
-ildouble: 1
-ldouble: 1
 Test "tgamma (0x5.000008p+0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (0x5.000008p0)":
 ildouble: 1
 ldouble: 1
 Test "tgamma (0x5.8p+0)":
@@ -13648,27 +11200,13 @@ ldouble: 1
 Test "tgamma (0x5.fffff8p+0)":
 ildouble: 1
 ldouble: 1
-Test "tgamma (0x5.fffff8p0)":
-ildouble: 1
-ldouble: 1
 Test "tgamma (0x5.ffffffffffffcp+0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (0x5.ffffffffffffcp0)":
 ildouble: 1
 ldouble: 1
 Test "tgamma (0x6.0000000000000008p+0)":
 ildouble: 1
 ldouble: 1
-Test "tgamma (0x6.0000000000000008p0)":
-ildouble: 1
-ldouble: 1
 Test "tgamma (0x6.000008p+0)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (0x6.000008p0)":
 float: 1
 ifloat: 1
 ildouble: 1
@@ -13686,23 +11224,10 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
-Test "tgamma (0x6.fffff8p0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "tgamma (0x6.ffffffffffffcp+0)":
 double: 3
 idouble: 3
-Test "tgamma (0x6.ffffffffffffcp0)":
-double: 3
-idouble: 3
 Test "tgamma (0x7.0000000000000008p+0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (0x7.0000000000000008p0)":
 ildouble: 1
 ldouble: 1
 Test "tgamma (0x7.0000000000004p+0)":
@@ -13710,19 +11235,7 @@ double: 4
 idouble: 4
 ildouble: 1
 ldouble: 1
-Test "tgamma (0x7.0000000000004p0)":
-double: 4
-idouble: 4
-ildouble: 1
-ldouble: 1
 Test "tgamma (0x7.000008p+0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (0x7.000008p0)":
 double: 1
 float: 1
 idouble: 1
@@ -13741,41 +11254,19 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
-Test "tgamma (0x7.fffff8p0)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
 Test "tgamma (0x7.ffffffffffffcp+0)":
-double: 2
-idouble: 2
-Test "tgamma (0x7.ffffffffffffcp0)":
 double: 2
 idouble: 2
 Test "tgamma (0x7.fffffffffffffff8p+0)":
 ildouble: 3
 ldouble: 3
-Test "tgamma (0x7.fffffffffffffff8p0)":
-ildouble: 3
-ldouble: 3
 Test "tgamma (0x8.000000000000001p+0)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (0x8.000000000000001p0)":
 ildouble: 1
 ldouble: 1
 Test "tgamma (0x8.0000000000008p+0)":
 double: 1
 idouble: 1
-Test "tgamma (0x8.0000000000008p0)":
-double: 1
-idouble: 1
 Test "tgamma (0x8.00001p+0)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (0x8.00001p0)":
 double: 1
 idouble: 1
 ildouble: 1
@@ -13829,116 +11320,12 @@ idouble: 1
 Test "tgamma (0xb.333333333333p-4)":
 ildouble: 1
 ldouble: 1
-Test "tgamma (10)":
-double: 1
-idouble: 1
-Test "tgamma (18.5)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (19.5)":
-double: 1
-idouble: 1
-Test "tgamma (2.5)":
-float: 1
-ifloat: 1
-Test "tgamma (23.5)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (29.5)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (3)":
-float: 1
-ifloat: 1
-Test "tgamma (3.5)":
-float: 1
-ifloat: 1
-Test "tgamma (30.5)":
-float: 1
-ifloat: 1
-Test "tgamma (31.5)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-Test "tgamma (32.5)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (34.5)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (4)":
-float: 1
-ifloat: 1
-Test "tgamma (4.5)":
-double: 1
-idouble: 1
-Test "tgamma (5.5)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (6.5)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (7.5)":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (8)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (8.5)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
-Test "tgamma (9)":
-ildouble: 1
-ldouble: 1
-Test "tgamma (9.5)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 
 # y0
-Test "y0 (0.125)":
-ildouble: 1
-ldouble: 1
-Test "y0 (0.75)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-Test "y0 (0x1.3ffp+74)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "y0 (0x1.ff00000000002p+840)":
 double: 1
 idouble: 1
 Test "y0 (0x1p+0)":
-ildouble: 1
-ldouble: 1
-Test "y0 (0x1p-10)":
-ildouble: 1
-ldouble: 1
-Test "y0 (0x1p-30)":
-double: 1
-idouble: 1
 ildouble: 1
 ldouble: 1
 Test "y0 (0x1p-40)":
@@ -13949,15 +11336,9 @@ ifloat: 1
 Test "y0 (0x1p-60)":
 double: 1
 idouble: 1
-Test "y0 (0x1p-70)":
-double: 1
-idouble: 1
 Test "y0 (0x1p-80)":
 double: 1
 idouble: 1
-Test "y0 (0x1p16382)":
-ildouble: 1
-ldouble: 1
 Test "y0 (0x2p-4)":
 ildouble: 1
 ldouble: 1
@@ -14000,43 +11381,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "y0 (1.0)":
-ildouble: 1
-ldouble: 1
-Test "y0 (10.0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-Test "y0 (8.0)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 
 # y1
-Test "y1 (0.125)":
-ildouble: 1
-ldouble: 1
-Test "y1 (0x1.001000001p+593)":
-ildouble: 2
-ldouble: 2
-Test "y1 (0x1.27e204p+99)":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
-ildouble: 1
-ldouble: 1
-Test "y1 (0x1p-10)":
-float: 1
-ifloat: 1
-Test "y1 (0x1p1023)":
-double: 1
-idouble: 1
-Test "y1 (0x1p16382)":
-ildouble: 1
-ldouble: 1
 Test "y1 (0x2.002000002p+592)":
 ildouble: 2
 ldouble: 2
@@ -14084,37 +11430,11 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
-Test "y1 (10.0)":
-double: 2
-float: 2
-idouble: 2
-ifloat: 2
-Test "y1 (2.0)":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
-ildouble: 1
-ldouble: 1
-Test "y1 (8.0)":
-float: 2
-ifloat: 2
 
 # yn
 Test "yn (-10, 0x1p+0)":
 float: 2
 ifloat: 2
-Test "yn (-10, 1.0)":
-float: 2
-ifloat: 2
-Test "yn (0, 0.125)":
-ildouble: 1
-ldouble: 1
-Test "yn (0, 0.75)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
 Test "yn (0, 0x1p+0)":
 ildouble: 1
 ldouble: 1
@@ -14136,22 +11456,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "yn (0, 1.0)":
-ildouble: 1
-ldouble: 1
-Test "yn (0, 10.0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-Test "yn (0, 8.0)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "yn (1, 0.125)":
-ildouble: 1
-ldouble: 1
 Test "yn (1, 0x2p+0)":
 double: 1
 float: 2
@@ -14170,31 +11474,6 @@ double: 2
 float: 2
 idouble: 2
 ifloat: 2
-Test "yn (1, 10.0)":
-double: 2
-float: 2
-idouble: 2
-ifloat: 2
-Test "yn (1, 2.0)":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
-ildouble: 1
-ldouble: 1
-Test "yn (1, 8.0)":
-float: 2
-ifloat: 2
-Test "yn (10, 0.125)":
-double: 1
-idouble: 1
-ildouble: 2
-ldouble: 2
-Test "yn (10, 0.75)":
-float: 1
-ifloat: 1
-ildouble: 4
-ldouble: 4
 Test "yn (10, 0x1p+0)":
 float: 2
 ifloat: 2
@@ -14225,25 +11504,6 @@ float: 1
 ifloat: 1
 ildouble: 4
 ldouble: 4
-Test "yn (10, 1.0)":
-float: 2
-ifloat: 2
-Test "yn (10, 10.0)":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-Test "yn (10, 2.0)":
-float: 3
-ifloat: 3
-Test "yn (2, 0x1.ffff62p+99)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "yn (2, 0x1p127)":
-float: 2
-ifloat: 2
 Test "yn (2, 0x8p+124)":
 float: 2
 ifloat: 2
@@ -14257,14 +11517,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "yn (3, 0.125)":
-ildouble: 1
-ldouble: 1
-Test "yn (3, 0.75)":
-double: 1
-idouble: 1
-ildouble: 2
-ldouble: 2
 Test "yn (3, 0x2p+0)":
 float: 1
 ifloat: 1
@@ -14281,14 +11533,6 @@ double: 1
 idouble: 1
 ildouble: 2
 ldouble: 2
-Test "yn (3, 10.0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-Test "yn (3, 2.0)":
-float: 1
-ifloat: 1
 
 # Maximal error of functions:
 Function: "acos":
@@ -14296,10 +11540,6 @@ ildouble: 1
 ldouble: 1
 
 Function: "acos_downward":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
 ildouble: 1
 ldouble: 1
 
@@ -14308,16 +11548,10 @@ ildouble: 1
 ldouble: 1
 
 Function: "acos_towardzero":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "acos_upward":
-double: 1
-idouble: 1
 ildouble: 1
 ldouble: 1
 
@@ -14520,18 +11754,12 @@ ildouble: 1
 ldouble: 1
 
 Function: "cos":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "cos_downward":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 ildouble: 2
 ldouble: 2
 
@@ -14541,17 +11769,13 @@ ldouble: 1
 
 Function: "cos_towardzero":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "cos_upward":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 ildouble: 2
 ldouble: 2
 
@@ -14561,7 +11785,6 @@ ldouble: 2
 
 Function: "cosh_downward":
 double: 1
-float: 1
 idouble: 1
 ifloat: 1
 ildouble: 2
@@ -14573,11 +11796,10 @@ ldouble: 2
 
 Function: "cosh_towardzero":
 double: 1
-float: 1
 idouble: 1
 ifloat: 1
 ildouble: 2
-ldouble: 3
+ldouble: 2
 
 Function: "cosh_upward":
 double: 1
@@ -14846,25 +12068,13 @@ ldouble: 1
 
 Function: "exp_downward":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
 
 Function: "exp_towardzero":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
 
 Function: "exp_upward":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
 ildouble: 1
 ldouble: 1
 
@@ -14902,15 +12112,13 @@ ldouble: 2
 
 Function: "gamma":
 double: 1
-float: 2
+float: 1
 idouble: 1
-ifloat: 2
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "hypot":
-float: 1
-ifloat: 1
 ildouble: 1
 ldouble: 1
 
@@ -14932,29 +12140,25 @@ ldouble: 1
 
 Function: "jn":
 double: 2
-float: 4
+float: 3
 idouble: 2
-ifloat: 4
+ifloat: 3
 ildouble: 4
 ldouble: 4
 
 Function: "lgamma":
 double: 1
-float: 2
+float: 1
 idouble: 1
-ifloat: 2
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "log":
-float: 1
-ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "log10":
-float: 1
-ifloat: 1
 ildouble: 1
 ldouble: 1
 
@@ -15000,9 +12204,7 @@ ldouble: 1
 
 Function: "sin_downward":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 ildouble: 2
 ldouble: 2
 
@@ -15012,71 +12214,53 @@ ldouble: 1
 
 Function: "sin_towardzero":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "sin_upward":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 ildouble: 2
 ldouble: 2
 
 Function: "sincos":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "sinh":
 ildouble: 1
-ldouble: 1
 
 Function: "sinh_downward":
-double: 1
 float: 1
-idouble: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
+ildouble: 1
+ldouble: 1
 
 Function: "sinh_tonearest":
 ildouble: 1
 
 Function: "sinh_towardzero":
-double: 1
 float: 1
-idouble: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
+ildouble: 1
+ldouble: 1
 
 Function: "sinh_upward":
 double: 1
 float: 1
-idouble: 1
-ildouble: 2
+ildouble: 1
 ldouble: 1
 
 Function: "tan":
-double: 1
 float: 1
-idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "tan_downward":
 double: 1
-float: 2
+float: 1
 idouble: 1
-ifloat: 2
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
