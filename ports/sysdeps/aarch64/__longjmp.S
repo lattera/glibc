@@ -50,8 +50,12 @@ ENTRY (__longjmp)
 	ldp	x23, x24, [x0, #JB_X23<<3]
 	ldp	x25, x26, [x0, #JB_X25<<3]
 	ldp	x27, x28, [x0, #JB_X27<<3]
+#ifdef PTR_DEMANGLE
+	ldp	x29,  x4, [x0, #JB_X29<<3]
+	PTR_DEMANGLE (x30, x4, x3, x2)
+#else
 	ldp	x29, x30, [x0, #JB_X29<<3]
-
+#endif
 	ldp	 d8,  d9, [x0, #JB_D8<<3]
 	ldp	d10, d11, [x0, #JB_D10<<3]
 	ldp	d12, d13, [x0, #JB_D12<<3]
@@ -87,8 +91,12 @@ ENTRY (__longjmp)
 	cfi_same_value(d13)
 	cfi_same_value(d14)
 	cfi_same_value(d15)
-
-	ldr	x5,  [x0, #JB_SP<<3]
+#ifdef PTR_DEMANGLE
+	ldr	x4, [x0, #JB_SP<<3]
+	PTR_DEMANGLE (x5, x4, x3, x2)
+#else
+	ldr	x5, [x0, #JB_SP<<3]
+#endif
 	mov	sp, x5
 	cmp	x1, #0
 	mov	x0, #1

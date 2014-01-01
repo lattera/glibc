@@ -39,6 +39,22 @@
 #define JB_D14		 20
 #define JB_D15		 21
 
+#ifndef  __ASSEMBLER__
+#include <setjmp.h>
+#include <stdint.h>
+#include <sysdep.h>
+
+static inline uintptr_t __attribute__ ((unused))
+_jmpbuf_sp (__jmp_buf jmpbuf)
+{
+  uintptr_t sp = jmpbuf[JB_SP];
+#ifdef PTR_DEMANGLE
+  PTR_DEMANGLE (sp);
+#endif
+  return sp;
+}
+#endif
+
 /* Helper for generic ____longjmp_chk(). */
 #define JB_FRAME_ADDRESS(buf) \
-  ((void *) (buf[JB_SP]))
+  ((void *) _jmpbuf_sp (buf))

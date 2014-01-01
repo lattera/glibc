@@ -39,13 +39,25 @@ ENTRY (__sigsetjmp)
 	stp	x23, x24, [x0, #JB_X23<<3]
 	stp	x25, x26, [x0, #JB_X25<<3]
 	stp	x27, x28, [x0, #JB_X27<<3]
+
+#ifdef PTR_MANGLE
+	PTR_MANGLE (x4, x30, x3, x2)
+	stp	x29,  x4, [x0, #JB_X29<<3]
+#else
 	stp	x29, x30, [x0, #JB_X29<<3]
+#endif
 	stp	 d8,  d9, [x0, #JB_D8<<3]
 	stp	d10, d11, [x0, #JB_D10<<3]
 	stp	d12, d13, [x0, #JB_D12<<3]
 	stp	d14, d15, [x0, #JB_D14<<3]
+#ifdef PTR_MANGLE
+	mov	x4, sp
+	PTR_MANGLE (x5, x4, x3, x2)
+	str	x5, [x0, #JB_SP<<3]
+#else
 	mov	x2,  sp
 	str	x2,  [x0, #JB_SP<<3]
+#endif
 #if defined NOT_IN_libc && defined IS_IN_rtld
 	/* In ld.so we never save the signal mask */
 	mov	w0, #0

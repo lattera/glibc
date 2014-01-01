@@ -1,3 +1,19 @@
+2014-01-01  Venkataramanan Kumar  <venkataramanan.kumar@linaro.org>
+
+	* sysdeps/aarch64/__longjmp.S (__longjmp): Demangle sp and lr when
+	restoring register values.
+	* sysdeps/aarch64/setjmp.S (__sigsetjmp): Mangle sp and lr
+	before storing register values.
+	* sysdeps/arm/jmpbuf-unwind.h (_jmpbuf_sp): Remove.
+	* sysdeps/aarch64/jmpbuf-offsets.h (_jmpbuf_sp): Add.
+	(JB_FRAME_ADDRESS): call  _jmpbuf_sp.
+	* sysdeps/aarch64/sysdep.h (LDST_PCREL) : New macros.
+	(LDST_GLOBAL): Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/sysdep.h (PTR_MANGLE): New macro.
+	(PTR_DEMANGLE): Likewise.
+	(PTR_MANGLE2): Likewise.
+	(PTR_DEMANGLE2): Likewise.
+
 2013-12-18  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
 	[BZ #15128]
