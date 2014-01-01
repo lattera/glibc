@@ -61,7 +61,7 @@ for f in $files; do
       ;;
     configure | */configure | preconfigure | */preconfigure)
       # Possibly generated files.
-      if ! [ -f "$f.in" ]; then
+      if ! [ -f "$f.ac" ]; then
 	"$update_script" "$f"
       fi
       ;;

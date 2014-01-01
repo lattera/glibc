@@ -1,5 +1,7 @@
 2014-01-01  Allan McRae  <allan@archlinux.org>
 
+	* scripts/update-copyrights: Update configure input file suffix.
+
 	* NEWS: Update copyright year.
 	* catgets/gencat.c: Likewise.
 	* csu/version.c: Likewise.
