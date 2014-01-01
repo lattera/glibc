@@ -1,3 +1,8 @@
+2014-01-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/mips32/libm-test-ulps: Regenerated.
+	* sysdeps/mips/mips64/libm-test-ulps: Likewise.
+
 2013-12-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/dl-lookup.c: Update from generic version.
