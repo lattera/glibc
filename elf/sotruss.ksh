@@ -75,7 +75,7 @@ while test $# -gt 0; do
     printf $"Copyright (C) %s Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-" "2013"
+" "2014"
     printf $"Written by %s.\n" "Ulrich Drepper"
     exit 0
     ;;

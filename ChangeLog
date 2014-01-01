@@ -1,5 +1,31 @@
 2014-01-01  Allan McRae  <allan@archlinux.org>
 
+	* NEWS: Update copyright year.
+	* catgets/gencat.c: Likewise.
+	* csu/version.c: Likewise.
+	* debug/catchsegv.sh: Likewise.
+	* debug/pcprofiledump.c: Likewise.
+	* debug/xtrace.sh: Likewise.
+	* elf/ldconfig.c: Likewise.
+	* elf/ldd.bash.in: Likewise.
+	* elf/pldd.c: Likewise.
+	* elf/sotruss.ksh: Likewise.
+	* elf/sprof.c: Likewise.
+	* iconv/iconv_prog.c: Likewise.
+	* iconv/iconvconfig.c: Likewise.
+	* locale/programs/locale.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+	* login/programs/pt_chown.c: Likewise.
+	* malloc/memusage.sh: Likewise.
+	* malloc/memusagestat.c: Likewise.
+	* malloc/mtrace.pl: Likewise.
+	* manual/libc.texinfo: Likewise.
+	* nscd/nscd.c: Likewise.
+	* nss/getent.c: Likewise.
+	* nss/makedb.c: Likewise.
+	* posix/getconf.c: Likewise.
+	* scripts/test-installation.pl: Likewise.
+
 	* All files with FSF copyright notices: Update copyright dates
 	using scripts/update-copyrights.
 	* intl/plural.c: Regenerated.
