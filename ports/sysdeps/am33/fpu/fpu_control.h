@@ -1,5 +1,5 @@
 /* FPU control word bits.  AM33/2.0 version.
-   Copyright (C) 1996-2013 Free Software Foundation, Inc.
+   Copyright (C) 1996-2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Alexandre Oliva <aoliva@redhat.com>
    based on the corresponding file in the mips port.

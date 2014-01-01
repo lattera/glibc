@@ -1,6 +1,6 @@
 #! /usr/bin/awk -f
 # Generate topologically sorted list of manual chapters.
-# Copyright (C) 1998-2013 Free Software Foundation, Inc.
+# Copyright (C) 1998-2014 Free Software Foundation, Inc.
 # Written by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
 BEGIN {

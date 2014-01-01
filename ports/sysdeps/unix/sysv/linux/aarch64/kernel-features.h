@@ -1,7 +1,7 @@
 /* Set flags signalling availability of kernel features based on given
    kernel version number.
 
-   Copyright (C) 2009-2013 Free Software Foundation, Inc.
+   Copyright (C) 2009-2014 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 

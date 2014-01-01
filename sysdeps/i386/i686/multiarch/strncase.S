@@ -1,6 +1,6 @@
 /* Entry point for multi-version x86 strncasecmp.
    All versions must be listed in ifunc-impl-list.c.
-   Copyright (C) 2011-2013 Free Software Foundation, Inc.
+   Copyright (C) 2011-2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

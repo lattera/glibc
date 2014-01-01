@@ -1,5 +1,5 @@
 /* Uncancelable versions of cancelable interfaces.  Linux asm-generic version.
-   Copyright (C) 2012-2013 Free Software Foundation, Inc.
+   Copyright (C) 2012-2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2012.
 
