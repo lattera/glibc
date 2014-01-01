@@ -1,5 +1,9 @@
 2014-01-07  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
+	* sysdeps/aarch64/libm-test-ulps: Drop sqrt ULPs.
+
+2014-01-07  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
 	* sysdeps/aarch64/dl-trampoline.S (_dl_runtime_resolve): Correct
 	cfi_adjust_cfa_offset offset.
 
