@@ -1,3 +1,7 @@
+2014-01-01  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* sysdeps/aarch64/abort-instr.h: New file.
+
 2014-01-01  Venkataramanan Kumar  <venkataramanan.kumar@linaro.org>
 
 	* sysdeps/aarch64/__longjmp.S (__longjmp): Demangle sp and lr when
