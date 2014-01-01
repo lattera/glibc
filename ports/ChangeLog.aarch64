@@ -1,3 +1,15 @@
+2014-01-20  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* sysdeps/aarch64/configure.ac: New file.
+	* sysdeps/aarch64/configure: New file.
+	* sysdeps/aarch64/shlib-versions: Define ld-linux-aarch64_be.so.1
+	* sysdeps/unix/sysv/linux/aarch64/Makefile (abi-variants)
+	(abi-lp64-options, abi-lp64-condition, abi-lp64-ld-soname)
+	(abi-lp64_be-options, abi-lp64_be-condition)
+	(abi-lp64_be-ld-soname) Define.
+	* sysdeps/unix/sysv/linux/aarch64/ldconfig.h
+	(SYSDEP_KNOWN_INTERPRETER_NAMES): Add ld-linux-aarch64_be.so.1
+
 2014-01-07  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
 	[BZ #16387]

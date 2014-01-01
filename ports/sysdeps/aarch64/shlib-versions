@@ -1,2 +1,7 @@
 aarch64.*-.*-linux.*	DEFAULT			GLIBC_2.17
+
+%ifdef HAVE_AARCH64_BE
+aarch64.*-.*-linux.*	ld=ld-linux-aarch64_be.so.1
+%else
 aarch64.*-.*-linux.*	ld=ld-linux-aarch64.so.1
+%endif

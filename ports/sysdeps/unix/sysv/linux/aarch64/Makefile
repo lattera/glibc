@@ -22,3 +22,18 @@ endif
 ifeq ($(subdir),stdlib)
 gen-as-const-headers += ucontext_i.sym
 endif
+
+abi-variants := lp64
+abi-variants += lp64_be
+
+ifeq (,$(filter $(default-abi),$(abi-variants)))
+Unknown ABI, must be one of $(abi-variants)
+endif
+
+abi-lp64-options := -U__AARCH64EB__
+abi-lp64-condition := !defined __AARCH64EB__
+abi-lp64-ld-soname := ld-linux-aarch64.so.1
+
+abi-lp64_be-options := -D__AARCH6464EB__
+abi-lp64_be-condition := defined __AARCH64EB__
+abi-lp64_be-ld-soname := ld-linux-aarch64_be.so.1

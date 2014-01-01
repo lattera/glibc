@@ -20,6 +20,7 @@
 
 #define SYSDEP_KNOWN_INTERPRETER_NAMES \
   { "/lib/ld-linux-aarch64.so.1", FLAG_ELF_LIBC6 }, \
+  { "/lib/ld-linux-aarch64_be.so.1", FLAG_ELF_LIBC6 }, \
   { "/lib/ld-linux.so.3", FLAG_ELF_LIBC6 }, \
   { "/lib/ld-linux-armhf.so.3", FLAG_ELF_LIBC6 },
 #define SYSDEP_KNOWN_LIBRARY_NAMES \
