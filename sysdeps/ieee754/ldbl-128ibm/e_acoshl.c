@@ -29,7 +29,7 @@
 
 static const long double
 one	= 1.0L,
-ln2	= 6.93147180559945286227e-01L;  /* 0x3FE62E42, 0xFEFA39EF */
+ln2	= M_LN2l;
 
 long double
 __ieee754_acoshl(long double x)
@@ -56,7 +56,7 @@ __ieee754_acoshl(long double x)
 	    return __ieee754_logl(2.0*x-one/(x+__ieee754_sqrtl(t-one)));
 	} else {			/* 1<x<2 */
 	    t = x-one;
-	    return __log1p(t+__ieee754_sqrtl(2.0*t+t*t));
+	    return __log1pl(t+__ieee754_sqrtl(2.0*t+t*t));
 	}
 }
 strong_alias (__ieee754_acoshl, __acoshl_finite)

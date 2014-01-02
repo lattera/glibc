@@ -1,3 +1,10 @@
+2014-01-02  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16384]
+	* sysdeps/ieee754/ldbl-128ibm/e_acoshl.c (ln2): Initialize with
+	M_LN2l.
+	(__ieee754_acoshl): Use __log1pl not __log1p.
+
 2013-01-02  Ondřej Bílka  <neleai@seznam.cz>
 
 	* malloc/arena.c (malloc_atfork, free_atfork, ptmalloc_lock_all,
