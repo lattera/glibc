@@ -39,7 +39,7 @@ extern void *malloc (size_t __size) __THROW __attribute_malloc__ __wur;
 
 /* Allocate NMEMB elements of SIZE bytes each, all initialized to 0.  */
 extern void *calloc (size_t __nmemb, size_t __size)
-     __THROW __attribute_malloc__ __wur;
+__THROW __attribute_malloc__ __wur;
 
 /* Re-allocate the previously allocated block in __ptr, making the new
    block SIZE bytes long.  */
@@ -47,7 +47,7 @@ extern void *calloc (size_t __nmemb, size_t __size)
    the same pointer that was passed to it, aliasing needs to be allowed
    between objects pointed by the old and new pointers.  */
 extern void *realloc (void *__ptr, size_t __size)
-     __THROW __attribute_warn_unused_result__;
+__THROW __attribute_warn_unused_result__;
 
 /* Free a block allocated by `malloc', `realloc' or `calloc'.  */
 extern void free (void *__ptr) __THROW;
@@ -57,14 +57,14 @@ extern void cfree (void *__ptr) __THROW;
 
 /* Allocate SIZE bytes allocated to ALIGNMENT bytes.  */
 extern void *memalign (size_t __alignment, size_t __size)
-     __THROW __attribute_malloc__ __wur;
+__THROW __attribute_malloc__ __wur;
 
 /* Allocate SIZE bytes on a page boundary.  */
 extern void *valloc (size_t __size) __THROW __attribute_malloc__ __wur;
 
 /* Equivalent to valloc(minimum-page-that-holds(n)), that is, round up
    __size to nearest pagesize. */
-extern void * pvalloc (size_t __size) __THROW __attribute_malloc__ __wur;
+extern void *pvalloc (size_t __size) __THROW __attribute_malloc__ __wur;
 
 /* Underlying allocation function; successive calls should return
    contiguous pieces of memory.  */
@@ -72,7 +72,7 @@ extern void *(*__morecore) (ptrdiff_t __size);
 
 /* Default value of `__morecore'.  */
 extern void *__default_morecore (ptrdiff_t __size)
-     __THROW __attribute_malloc__;
+__THROW __attribute_malloc__;
 
 /* SVID2/XPG mallinfo structure */
 
@@ -95,16 +95,16 @@ extern struct mallinfo mallinfo (void) __THROW;
 
 /* SVID2/XPG mallopt options */
 #ifndef M_MXFAST
-# define M_MXFAST  1	/* maximum request size for "fastbins" */
+# define M_MXFAST  1    /* maximum request size for "fastbins" */
 #endif
 #ifndef M_NLBLKS
-# define M_NLBLKS  2	/* UNUSED in this malloc */
+# define M_NLBLKS  2    /* UNUSED in this malloc */
 #endif
 #ifndef M_GRAIN
-# define M_GRAIN   3	/* UNUSED in this malloc */
+# define M_GRAIN   3    /* UNUSED in this malloc */
 #endif
 #ifndef M_KEEP
-# define M_KEEP    4	/* UNUSED in this malloc */
+# define M_KEEP    4    /* UNUSED in this malloc */
 #endif
 
 /* mallopt options that actually do something */
@@ -113,9 +113,9 @@ extern struct mallinfo mallinfo (void) __THROW;
 #define M_MMAP_THRESHOLD    -3
 #define M_MMAP_MAX          -4
 #define M_CHECK_ACTION      -5
-#define M_PERTURB	    -6
-#define M_ARENA_TEST	    -7
-#define M_ARENA_MAX	    -8
+#define M_PERTURB           -6
+#define M_ARENA_TEST        -7
+#define M_ARENA_MAX         -8
 
 /* General SVID/XPG interface to tunable parameters. */
 extern int mallopt (int __param, int __val) __THROW;
@@ -145,22 +145,22 @@ extern int malloc_set_state (void *__ptr) __THROW;
    the application provides the preferred way to set up the hook
    pointers. */
 extern void (*__MALLOC_HOOK_VOLATILE __malloc_initialize_hook) (void)
-     __MALLOC_DEPRECATED;
+__MALLOC_DEPRECATED;
 /* Hooks for debugging and user-defined versions. */
 extern void (*__MALLOC_HOOK_VOLATILE __free_hook) (void *__ptr,
-						   const void *)
-     __MALLOC_DEPRECATED;
-extern void *(*__MALLOC_HOOK_VOLATILE __malloc_hook) (size_t __size,
-						      const void *)
-     __MALLOC_DEPRECATED;
-extern void *(*__MALLOC_HOOK_VOLATILE __realloc_hook) (void *__ptr,
-						       size_t __size,
-						       const void *)
-     __MALLOC_DEPRECATED;
-extern void *(*__MALLOC_HOOK_VOLATILE __memalign_hook) (size_t __alignment,
-							size_t __size,
-							const void *)
-     __MALLOC_DEPRECATED;
+                                                   const void *)
+__MALLOC_DEPRECATED;
+extern void *(*__MALLOC_HOOK_VOLATILE __malloc_hook)(size_t __size,
+                                                     const void *)
+__MALLOC_DEPRECATED;
+extern void *(*__MALLOC_HOOK_VOLATILE __realloc_hook)(void *__ptr,
+                                                      size_t __size,
+                                                      const void *)
+__MALLOC_DEPRECATED;
+extern void *(*__MALLOC_HOOK_VOLATILE __memalign_hook)(size_t __alignment,
+                                                       size_t __size,
+                                                       const void *)
+__MALLOC_DEPRECATED;
 extern void (*__MALLOC_HOOK_VOLATILE __after_morecore_hook) (void);
 
 /* Activate a standard set of debugging hooks. */
@@ -168,5 +168,4 @@ extern void __malloc_check_init (void) __THROW __MALLOC_DEPRECATED;
 
 
 __END_DECLS
-
 #endif /* malloc.h */

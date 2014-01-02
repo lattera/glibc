@@ -48,19 +48,19 @@ main (void)
 
   free (malloc (10));
 
-  for (i=0; i<100; ++i)
+  for (i = 0; i < 100; ++i)
     {
       save_state = malloc_get_state ();
       if (save_state == NULL)
-	{
-	  merror ("malloc_get_state () failed.");
-	  break;
-	}
+        {
+          merror ("malloc_get_state () failed.");
+          break;
+        }
       /*free (malloc (10)); This could change the top chunk! */
       malloc_set_state (save_state);
-      p1 = realloc (p1, i*4 + 4);
+      p1 = realloc (p1, i * 4 + 4);
       if (p1 == NULL)
-	merror ("realloc (i*4) failed.");
+        merror ("realloc (i*4) failed.");
       free (save_state);
     }
 

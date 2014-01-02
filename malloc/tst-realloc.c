@@ -79,11 +79,11 @@ do_test (void)
   for (i = 0; i < 20; i++)
     {
       if (c[i] != 0)
-	ok = 0;
+        ok = 0;
     }
 
   if (ok == 0)
-	merror ("first 20 bytes were not cleared");
+    merror ("first 20 bytes were not cleared");
 
   free (p);
 
@@ -104,11 +104,11 @@ do_test (void)
   for (i = 0; i < 16; i++)
     {
       if (c[i] != 0xff)
-	ok = 0;
+        ok = 0;
     }
 
   if (ok == 0)
-	merror ("first 16 bytes were not correct");
+    merror ("first 16 bytes were not correct");
 
   /* Check failed realloc leaves original untouched (C89).  */
   c = realloc (p, -1);
@@ -121,11 +121,11 @@ do_test (void)
   for (i = 0; i < 16; i++)
     {
       if (c[i] != 0xff)
-	ok = 0;
+        ok = 0;
     }
 
   if (ok == 0)
-	merror ("first 16 bytes were not correct after failed realloc");
+    merror ("first 16 bytes were not correct after failed realloc");
 
   /* realloc (p, 0) frees p (C89) and returns NULL (glibc).  */
   p = realloc (p, 0);

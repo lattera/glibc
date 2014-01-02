@@ -17,7 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef	_MALLOC_INTERNAL
+#ifndef _MALLOC_INTERNAL
 # define _MALLOC_INTERNAL
 # include <malloc.h>
 # include <mcheck.h>
@@ -28,32 +28,32 @@
 #endif
 
 /* Old hook values.  */
-static void (*old_free_hook) (__ptr_t ptr, const __ptr_t);
+static void (*old_free_hook)(__ptr_t ptr, const __ptr_t);
 static __ptr_t (*old_malloc_hook) (size_t size, const __ptr_t);
 static __ptr_t (*old_memalign_hook) (size_t alignment, size_t size,
-				     const __ptr_t);
+                                     const __ptr_t);
 static __ptr_t (*old_realloc_hook) (__ptr_t ptr, size_t size,
-				    const __ptr_t);
+                                    const __ptr_t);
 
 /* Function to call when something awful happens.  */
 static void (*abortfunc) (enum mcheck_status);
 
 /* Arbitrary magical numbers.  */
-#define MAGICWORD	0xfedabeeb
-#define MAGICFREE	0xd8675309
-#define MAGICBYTE	((char) 0xd7)
-#define MALLOCFLOOD	((char) 0x93)
-#define FREEFLOOD	((char) 0x95)
+#define MAGICWORD       0xfedabeeb
+#define MAGICFREE       0xd8675309
+#define MAGICBYTE       ((char) 0xd7)
+#define MALLOCFLOOD     ((char) 0x93)
+#define FREEFLOOD       ((char) 0x95)
 
 struct hdr
-  {
-    size_t size;		/* Exact size requested by user.  */
-    unsigned long int magic;	/* Magic number to check header integrity.  */
-    struct hdr *prev;
-    struct hdr *next;
-    __ptr_t block;		/* Real block allocated, for memalign.  */
-    unsigned long int magic2;	/* Extra, keeps us doubleword aligned.  */
-  };
+{
+  size_t size;                  /* Exact size requested by user.  */
+  unsigned long int magic;      /* Magic number to check header integrity.  */
+  struct hdr *prev;
+  struct hdr *next;
+  __ptr_t block;                /* Real block allocated, for memalign.  */
+  unsigned long int magic2;     /* Extra, keeps us doubleword aligned.  */
+};
 
 /* This is the beginning of the list of all memory blocks allocated.
    It is only constructed if the pedantic testing is requested.  */
@@ -69,11 +69,10 @@ static int pedantic;
 # define flood memset
 #else
 static void flood (__ptr_t, int, size_t);
-static void
-flood (ptr, val, size)
-     __ptr_t ptr;
-     int val;
-     size_t size;
+static void flood (ptr, val, size)
+__ptr_t ptr;
+int val;
+size_t size;
 {
   char *cp = ptr;
   while (size--)
@@ -101,11 +100,11 @@ checkhdr (const struct hdr *hdr)
       break;
     case MAGICWORD:
       if (((char *) &hdr[1])[hdr->size] != MAGICBYTE)
-	status = MCHECK_TAIL;
+        status = MCHECK_TAIL;
       else if ((hdr->magic2 ^ (uintptr_t) hdr->block) != MAGICWORD)
-	status = MCHECK_HEAD;
+        status = MCHECK_HEAD;
       else
-	status = MCHECK_OK;
+        status = MCHECK_OK;
       break;
     }
   if (status != MCHECK_OK)
@@ -148,13 +147,13 @@ unlink_blk (struct hdr *ptr)
     {
       ptr->next->prev = ptr->prev;
       ptr->next->magic = MAGICWORD ^ ((uintptr_t) ptr->next->prev
-				      + (uintptr_t) ptr->next->next);
+                                      + (uintptr_t) ptr->next->next);
     }
   if (ptr->prev != NULL)
     {
       ptr->prev->next = ptr->next;
       ptr->prev->magic = MAGICWORD ^ ((uintptr_t) ptr->prev->prev
-				      + (uintptr_t) ptr->prev->next);
+                                      + (uintptr_t) ptr->prev->next);
     }
   else
     root = ptr->next;
@@ -173,7 +172,7 @@ link_blk (struct hdr *hdr)
     {
       hdr->next->prev = hdr;
       hdr->next->magic = MAGICWORD ^ ((uintptr_t) hdr
-				      + (uintptr_t) hdr->next->next);
+                                      + (uintptr_t) hdr->next->next);
     }
 }
 static void
@@ -194,7 +193,7 @@ freehook (__ptr_t ptr, const __ptr_t caller)
     }
   __free_hook = old_free_hook;
   if (old_free_hook != NULL)
-    (*old_free_hook) (ptr, caller);
+    (*old_free_hook)(ptr, caller);
   else
     free (ptr);
   __free_hook = freehook;
@@ -216,8 +215,8 @@ mallochook (size_t size, const __ptr_t caller)
 
   __malloc_hook = old_malloc_hook;
   if (old_malloc_hook != NULL)
-    hdr = (struct hdr *) (*old_malloc_hook) (sizeof (struct hdr) + size + 1,
-					     caller);
+    hdr = (struct hdr *) (*old_malloc_hook)(sizeof (struct hdr) + size + 1,
+                                            caller);
   else
     hdr = (struct hdr *) malloc (sizeof (struct hdr) + size + 1);
   __malloc_hook = mallochook;
@@ -235,7 +234,7 @@ mallochook (size_t size, const __ptr_t caller)
 
 static __ptr_t
 memalignhook (size_t alignment, size_t size,
-	      const __ptr_t caller)
+              const __ptr_t caller)
 {
   struct hdr *hdr;
   size_t slop;
@@ -244,7 +243,7 @@ memalignhook (size_t alignment, size_t size,
   if (pedantic)
     mcheck_check_all ();
 
-  slop = (sizeof *hdr + alignment - 1) & -alignment;
+  slop = (sizeof *hdr + alignment - 1) & - alignment;
 
   if (size > ~((size_t) 0) - (slop + 1))
     {
@@ -254,7 +253,7 @@ memalignhook (size_t alignment, size_t size,
 
   __memalign_hook = old_memalign_hook;
   if (old_memalign_hook != NULL)
-    block = (*old_memalign_hook) (alignment, slop + size + 1, caller);
+    block = (*old_memalign_hook)(alignment, slop + size + 1, caller);
   else
     block = memalign (alignment, slop + size + 1);
   __memalign_hook = memalignhook;
@@ -301,7 +300,7 @@ reallochook (__ptr_t ptr, size_t size, const __ptr_t caller)
       checkhdr (hdr);
       unlink_blk (hdr);
       if (size < osize)
-	flood ((char *) ptr + size, FREEFLOOD, osize - size);
+        flood ((char *) ptr + size, FREEFLOOD, osize - size);
     }
   else
     {
@@ -313,12 +312,12 @@ reallochook (__ptr_t ptr, size_t size, const __ptr_t caller)
   __memalign_hook = old_memalign_hook;
   __realloc_hook = old_realloc_hook;
   if (old_realloc_hook != NULL)
-    hdr = (struct hdr *) (*old_realloc_hook) ((__ptr_t) hdr,
-					      sizeof (struct hdr) + size + 1,
-					      caller);
+    hdr = (struct hdr *) (*old_realloc_hook)((__ptr_t) hdr,
+                                             sizeof (struct hdr) + size + 1,
+                                             caller);
   else
     hdr = (struct hdr *) realloc ((__ptr_t) hdr,
-				  sizeof (struct hdr) + size + 1);
+                                  sizeof (struct hdr) + size + 1);
   __free_hook = freehook;
   __malloc_hook = mallochook;
   __memalign_hook = memalignhook;
@@ -344,19 +343,19 @@ mabort (enum mcheck_status status)
   switch (status)
     {
     case MCHECK_OK:
-      msg = _("memory is consistent, library is buggy\n");
+      msg = _ ("memory is consistent, library is buggy\n");
       break;
     case MCHECK_HEAD:
-      msg = _("memory clobbered before allocated block\n");
+      msg = _ ("memory clobbered before allocated block\n");
       break;
     case MCHECK_TAIL:
-      msg = _("memory clobbered past end of allocated block\n");
+      msg = _ ("memory clobbered past end of allocated block\n");
       break;
     case MCHECK_FREE:
-      msg = _("block freed twice\n");
+      msg = _ ("block freed twice\n");
       break;
     default:
-      msg = _("bogus mcheck_status, library is buggy\n");
+      msg = _ ("bogus mcheck_status, library is buggy\n");
       break;
     }
 #ifdef _LIBC
@@ -370,11 +369,10 @@ mabort (enum mcheck_status status)
 
 /* Memory barrier so that GCC does not optimize out the argument.  */
 #define malloc_opt_barrier(x) \
-({ __typeof (x) __x = x; __asm ("" : "+m" (__x)); __x; })
+  ({ __typeof (x) __x = x; __asm ("" : "+m" (__x)); __x; })
 
-int
-mcheck (func)
-     void (*func) (enum mcheck_status);
+int mcheck (func)
+void (*func)(enum mcheck_status);
 {
   abortfunc = (func != NULL) ? func : &mabort;
 
@@ -404,9 +402,8 @@ mcheck (func)
 libc_hidden_def (mcheck)
 #endif
 
-int
-mcheck_pedantic (func)
-      void (*func) (enum mcheck_status);
+int mcheck_pedantic (func)
+void (*func)(enum mcheck_status);
 {
   int res = mcheck (func);
   if (res == 0)

@@ -1,3 +1,37 @@
+2013-01-02  Ondřej Bílka  <neleai@seznam.cz>
+
+	* malloc/arena.c (malloc_atfork, free_atfork, ptmalloc_lock_all,
+	ptmalloc_unlock_all, ptmalloc_unlock_all2, next_env_entry,
+	__failing_morecore, ptmalloc_init, dump_heap, new_heap, grow_heap,
+	heap_trim, _int_new_arena, get_free_list, reused_arena, arena_get2):
+	Convert to GNU style.
+	* malloc/hooks.c (memalign_hook_ini, __malloc_check_init,
+	mem2mem_check, mem2chunk_check, top_check, realloc_check,
+	memalign_check, __malloc_set_state): Likewise.
+	* malloc/mallocbug.c (main): Likewise.
+	* malloc/malloc.c (__malloc_assert, malloc_init_state, free_perturb,
+	do_check_malloced_chunk, do_check_malloc_state, sysmalloc, systrim,
+	mremap_chunk, __libc_malloc, __libc_free, __libc_realloc, _mid_memalign,
+	_int_malloc, malloc_consolidate, _int_realloc, _int_memalign, mtrim,
+	musable, __libc_mallopt, __posix_memalign, malloc_info): Likewise.
+	* malloc/malloc.h: Likewise.
+	* malloc/mcheck.c (checkhdr, unlink_blk, link_blk, freehook, mallochook,
+	memalignhook, reallochook, mabort): Likewise.
+	* malloc/mcheck.h: Likewise.
+	* malloc/memusage.c (update_data, me, malloc, realloc, calloc, free, mmap,
+	mmap64, mremap, munmap, dest): Likewise.
+	* malloc/memusagestat.c (main, parse_opt, more_help): Likewise.
+	* malloc/morecore.c (__default_morecore): Likewise.
+	* malloc/mtrace.c (tr_break, lock_and_info, mtrace): Likewise.
+	* malloc/obstack.c (_obstack_begin, _obstack_newchunk,
+	_obstack_allocated_p, obstack_free, _obstack_memory_used,
+	print_and_abort): Likewise.
+	* malloc/obstack.h: Likewise.
+	* malloc/set-freeres.c (__libc_freeres): Likewise.
+	* malloc/tst-mallocstate.c (main): Likewise.
+	* malloc/tst-mtrace.c (main): Likewise.
+	* malloc/tst-realloc.c (do_test): Likewise.
+
 2013-01-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #16366]

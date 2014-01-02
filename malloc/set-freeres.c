@@ -33,17 +33,17 @@ __libc_freeres (void)
      protect for multiple executions since these are fatal.  */
   static long int already_called;
 
-  if (! atomic_compare_and_exchange_bool_acq (&already_called, 1, 0))
+  if (!atomic_compare_and_exchange_bool_acq (&already_called, 1, 0))
     {
-      void * const *p;
+      void *const *p;
 
       _IO_cleanup ();
 
       RUN_HOOK (__libc_subfreeres, ());
 
       for (p = symbol_set_first_element (__libc_freeres_ptrs);
-	   ! symbol_set_end_p (__libc_freeres_ptrs, p); ++p)
-	free (*p);
+           !symbol_set_end_p (__libc_freeres_ptrs, p); ++p)
+        free (*p);
     }
 }
 libc_hidden_def (__libc_freeres)

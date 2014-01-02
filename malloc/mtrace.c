@@ -1,8 +1,8 @@
 /* More debugging hooks for `malloc'.
    Copyright (C) 1991-2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-		 Written April 2, 1991 by John Gilmore of Cygnus Support.
-		 Based on mcheck.c by Mike Haertel.
+                 Written April 2, 1991 by John Gilmore of Cygnus Support.
+                 Based on mcheck.c by Mike Haertel.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -18,11 +18,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef	_MALLOC_INTERNAL
-#define	_MALLOC_INTERNAL
-#include <malloc.h>
-#include <mcheck.h>
-#include <bits/libc-lock.h>
+#ifndef _MALLOC_INTERNAL
+# define _MALLOC_INTERNAL
+# include <malloc.h>
+# include <mcheck.h>
+# include <bits/libc-lock.h>
 #endif
 
 #include <dlfcn.h>
@@ -48,7 +48,7 @@
 #define TRACE_BUFFER_SIZE 512
 
 static FILE *mallstream;
-static const char mallenv[]= "MALLOC_TRACE";
+static const char mallenv[] = "MALLOC_TRACE";
 static char *malloc_trace_buffer;
 
 __libc_lock_define_initialized (static, lock);
@@ -60,9 +60,9 @@ __ptr_t mallwatch;
 static void (*tr_old_free_hook) (__ptr_t ptr, const __ptr_t);
 static __ptr_t (*tr_old_malloc_hook) (size_t size, const __ptr_t);
 static __ptr_t (*tr_old_realloc_hook) (__ptr_t ptr, size_t size,
-				       const __ptr_t);
+                                       const __ptr_t);
 static __ptr_t (*tr_old_memalign_hook) (size_t __alignment, size_t __size,
-					const __ptr_t);
+                                        const __ptr_t);
 
 /* This function is called when the block being alloc'd, realloc'd, or
    freed has an address matching the variable "mallwatch".  In a debugger,
@@ -79,39 +79,38 @@ libc_hidden_def (tr_break)
 
 static void tr_where (const __ptr_t, Dl_info *) __THROW internal_function;
 static void
-internal_function
-tr_where (caller, info)
-     const __ptr_t caller;
-     Dl_info *info;
+internal_function tr_where (caller, info)
+const __ptr_t caller;
+Dl_info *info;
 {
   if (caller != NULL)
     {
       if (info != NULL)
-	{
-	  char *buf = (char *) "";
-	  if (info->dli_sname != NULL)
-	    {
-	      size_t len = strlen (info->dli_sname);
-	      buf = alloca (len + 6 + 2 * sizeof (void *));
+        {
+          char *buf = (char *) "";
+          if (info->dli_sname != NULL)
+            {
+              size_t len = strlen (info->dli_sname);
+              buf = alloca (len + 6 + 2 * sizeof (void *));
 
-	      buf[0] = '(';
-	      __stpcpy (_fitoa (caller >= (const __ptr_t) info->dli_saddr
-				? caller - (const __ptr_t) info->dli_saddr
-				: (const __ptr_t) info->dli_saddr - caller,
-				__stpcpy (__mempcpy (buf + 1, info->dli_sname,
-						     len),
-					  caller >= (__ptr_t) info->dli_saddr
-					  ? "+0x" : "-0x"),
-				16, 0),
-			")");
-	    }
+              buf[0] = '(';
+              __stpcpy (_fitoa (caller >= (const __ptr_t) info->dli_saddr
+                                ? caller - (const __ptr_t) info->dli_saddr
+                                : (const __ptr_t) info->dli_saddr - caller,
+                                __stpcpy (__mempcpy (buf + 1, info->dli_sname,
+                                                     len),
+                                          caller >= (__ptr_t) info->dli_saddr
+                                          ? "+0x" : "-0x"),
+                                16, 0),
+                        ")");
+            }
 
-	  fprintf (mallstream, "@ %s%s%s[%p] ",
-		   info->dli_fname ?: "", info->dli_fname ? ":" : "",
-		   buf, caller);
-	}
+          fprintf (mallstream, "@ %s%s%s[%p] ",
+                   info->dli_fname ? : "", info->dli_fname ? ":" : "",
+                   buf, caller);
+        }
       else
-	fprintf (mallstream, "@ [%p] ", caller);
+        fprintf (mallstream, "@ [%p] ", caller);
     }
 }
 
@@ -131,10 +130,9 @@ lock_and_info (const __ptr_t caller, Dl_info *mem)
 
 
 static void tr_freehook (__ptr_t, const __ptr_t) __THROW;
-static void
-tr_freehook (ptr, caller)
-     __ptr_t ptr;
-     const __ptr_t caller;
+static void tr_freehook (ptr, caller)
+__ptr_t ptr;
+const __ptr_t caller;
 {
   if (ptr == NULL)
     return;
@@ -152,7 +150,7 @@ tr_freehook (ptr, caller)
     }
   __free_hook = tr_old_free_hook;
   if (tr_old_free_hook != NULL)
-    (*tr_old_free_hook) (ptr, caller);
+    (*tr_old_free_hook)(ptr, caller);
   else
     free (ptr);
   __free_hook = tr_freehook;
@@ -160,10 +158,9 @@ tr_freehook (ptr, caller)
 }
 
 static __ptr_t tr_mallochook (size_t, const __ptr_t) __THROW;
-static __ptr_t
-tr_mallochook (size, caller)
-     size_t size;
-     const __ptr_t caller;
+static __ptr_t tr_mallochook (size, caller)
+size_t size;
+const __ptr_t caller;
 {
   __ptr_t hdr;
 
@@ -172,7 +169,7 @@ tr_mallochook (size, caller)
 
   __malloc_hook = tr_old_malloc_hook;
   if (tr_old_malloc_hook != NULL)
-    hdr = (__ptr_t) (*tr_old_malloc_hook) (size, caller);
+    hdr = (__ptr_t) (*tr_old_malloc_hook)(size, caller);
   else
     hdr = (__ptr_t) malloc (size);
   __malloc_hook = tr_mallochook;
@@ -190,12 +187,11 @@ tr_mallochook (size, caller)
 }
 
 static __ptr_t tr_reallochook (__ptr_t, size_t, const __ptr_t)
-     __THROW;
-static __ptr_t
-tr_reallochook (ptr, size, caller)
-     __ptr_t ptr;
-     size_t size;
-     const __ptr_t caller;
+__THROW;
+static __ptr_t tr_reallochook (ptr, size, caller)
+__ptr_t ptr;
+size_t size;
+const __ptr_t caller;
 {
   __ptr_t hdr;
 
@@ -209,7 +205,7 @@ tr_reallochook (ptr, size, caller)
   __malloc_hook = tr_old_malloc_hook;
   __realloc_hook = tr_old_realloc_hook;
   if (tr_old_realloc_hook != NULL)
-    hdr = (__ptr_t) (*tr_old_realloc_hook) (ptr, size, caller);
+    hdr = (__ptr_t) (*tr_old_realloc_hook)(ptr, size, caller);
   else
     hdr = (__ptr_t) realloc (ptr, size);
   __free_hook = tr_freehook;
@@ -220,10 +216,10 @@ tr_reallochook (ptr, size, caller)
   if (hdr == NULL)
     {
       if (size != 0)
-	/* Failed realloc.  */
-	fprintf (mallstream, "! %p %#lx\n", ptr, (unsigned long int) size);
+        /* Failed realloc.  */
+        fprintf (mallstream, "! %p %#lx\n", ptr, (unsigned long int) size);
       else
-	fprintf (mallstream, "- %p\n", ptr);
+        fprintf (mallstream, "- %p\n", ptr);
     }
   else if (ptr == NULL)
     fprintf (mallstream, "+ %p %#lx\n", hdr, (unsigned long int) size);
@@ -243,11 +239,10 @@ tr_reallochook (ptr, size, caller)
 }
 
 static __ptr_t tr_memalignhook (size_t, size_t,
-				const __ptr_t) __THROW;
-static __ptr_t
-tr_memalignhook (alignment, size, caller)
-     size_t alignment, size;
-     const __ptr_t caller;
+                                const __ptr_t) __THROW;
+static __ptr_t tr_memalignhook (alignment, size, caller)
+size_t alignment, size;
+const __ptr_t caller;
 {
   __ptr_t hdr;
 
@@ -257,7 +252,7 @@ tr_memalignhook (alignment, size, caller)
   __memalign_hook = tr_old_memalign_hook;
   __malloc_hook = tr_old_malloc_hook;
   if (tr_old_memalign_hook != NULL)
-    hdr = (__ptr_t) (*tr_old_memalign_hook) (alignment, size, caller);
+    hdr = (__ptr_t) (*tr_old_memalign_hook)(alignment, size, caller);
   else
     hdr = (__ptr_t) memalign (alignment, size);
   __memalign_hook = tr_memalignhook;
@@ -321,44 +316,44 @@ mtrace (void)
     {
       char *mtb = malloc (TRACE_BUFFER_SIZE);
       if (mtb == NULL)
-	return;
+        return;
 
       mallstream = fopen (mallfile != NULL ? mallfile : "/dev/null", "wce");
       if (mallstream != NULL)
-	{
+        {
 #ifndef __ASSUME_O_CLOEXEC
-	  /* Make sure we close the file descriptor on exec.  */
-	  int flags = __fcntl (fileno (mallstream), F_GETFD, 0);
-	  if (flags >= 0)
-	    {
-	      flags |= FD_CLOEXEC;
-	      __fcntl (fileno (mallstream), F_SETFD, flags);
-	    }
+          /* Make sure we close the file descriptor on exec.  */
+          int flags = __fcntl (fileno (mallstream), F_GETFD, 0);
+          if (flags >= 0)
+            {
+              flags |= FD_CLOEXEC;
+              __fcntl (fileno (mallstream), F_SETFD, flags);
+            }
 #endif
-	  /* Be sure it doesn't malloc its buffer!  */
-	  malloc_trace_buffer = mtb;
-	  setvbuf (mallstream, malloc_trace_buffer, _IOFBF, TRACE_BUFFER_SIZE);
-	  fprintf (mallstream, "= Start\n");
-	  tr_old_free_hook = __free_hook;
-	  __free_hook = tr_freehook;
-	  tr_old_malloc_hook = __malloc_hook;
-	  __malloc_hook = tr_mallochook;
-	  tr_old_realloc_hook = __realloc_hook;
-	  __realloc_hook = tr_reallochook;
-	  tr_old_memalign_hook = __memalign_hook;
-	  __memalign_hook = tr_memalignhook;
+          /* Be sure it doesn't malloc its buffer!  */
+          malloc_trace_buffer = mtb;
+          setvbuf (mallstream, malloc_trace_buffer, _IOFBF, TRACE_BUFFER_SIZE);
+          fprintf (mallstream, "= Start\n");
+          tr_old_free_hook = __free_hook;
+          __free_hook = tr_freehook;
+          tr_old_malloc_hook = __malloc_hook;
+          __malloc_hook = tr_mallochook;
+          tr_old_realloc_hook = __realloc_hook;
+          __realloc_hook = tr_reallochook;
+          tr_old_memalign_hook = __memalign_hook;
+          __memalign_hook = tr_memalignhook;
 #ifdef _LIBC
-	  if (!added_atexit_handler)
-	    {
-	      extern void *__dso_handle __attribute__ ((__weak__));
-	      added_atexit_handler = 1;
-	      __cxa_atexit ((void (*) (void *)) release_libc_mem, NULL,
-			     &__dso_handle ? __dso_handle : NULL);
-	    }
+          if (!added_atexit_handler)
+            {
+              extern void *__dso_handle __attribute__ ((__weak__));
+              added_atexit_handler = 1;
+              __cxa_atexit ((void (*)(void *))release_libc_mem, NULL,
+                            &__dso_handle ? __dso_handle : NULL);
+            }
 #endif
-	}
+        }
       else
-	free (mtb);
+        free (mtb);
     }
 }
 
