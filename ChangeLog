@@ -1,3 +1,9 @@
+2013-01-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ # 16365]
+	* nscd/netgroupcache.c (addgetnetgrentX): Break if status is
+	NSS_STATUS_NOTFOUND.
+
 2014-01-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Regenerated.

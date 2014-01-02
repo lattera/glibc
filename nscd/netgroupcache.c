@@ -180,9 +180,10 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
 		    int e;
 		    status = getfct.f (&data, buffer + buffilled,
 				       buflen - buffilled, &e);
-		    if (status == NSS_STATUS_RETURN)
-		      /* This was the last one for this group.  Look
-			 at next group if available.  */
+		    if (status == NSS_STATUS_RETURN
+			|| status == NSS_STATUS_NOTFOUND)
+		      /* This was either the last one for this group or the
+			 group was empty.  Look at next group if available.  */
 		      break;
 		    if (status == NSS_STATUS_SUCCESS)
 		      {
