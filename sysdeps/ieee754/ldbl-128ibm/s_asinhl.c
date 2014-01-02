@@ -48,7 +48,7 @@ long double __asinhl(long double x)
 	    if(huge+x>one) return x;	/* return x inexact except 0 */
 	}
 	if(ix>0x41b0000000000000LL) {	/* |x| > 2**28 */
-	    w = __ieee754_logl(fabs(x))+ln2;
+	    w = __ieee754_logl(fabsl(x))+ln2;
 	} else if (ix>0x4000000000000000LL) {	/* 2**28 > |x| > 2.0 */
 	    t = fabs(x);
 	    w = __ieee754_logl(2.0*t+one/(__ieee754_sqrtl(x*x+one)+t));

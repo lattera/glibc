@@ -1,5 +1,9 @@
 2014-01-02  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16385]
+	* sysdeps/ieee754/ldbl-128ibm/s_asinhl.c (__asinhl): Use fabsl not
+	fabs.
+
 	[BZ #16384]
 	* sysdeps/ieee754/ldbl-128ibm/e_acoshl.c (ln2): Initialize with
 	M_LN2l.
