@@ -229,6 +229,14 @@ __ieee754_logl(long double x)
       /* Extract exponent and reduce domain to 0.703125 <= u < 1.40625  */
       unsigned int w0;
       e = (int) (m >> 20) - (int) 0x3fe;
+      if (e == -1022)
+	{
+	  x *= 0x1p106L;
+	  xhi = ldbl_high (x);
+	  EXTRACT_WORDS (hx, lx, xhi);
+	  m = hx;
+	  e = (int) (m >> 20) - (int) 0x3fe - 106;
+	}
       m &= 0xfffff;
       w0 = m | 0x3fe00000;
       m |= 0x100000;
