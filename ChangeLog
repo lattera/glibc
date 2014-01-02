@@ -1,5 +1,9 @@
 2013-01-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	[BZ #16366]
+	* nscd/netgroupcache.c (do_notfound): New function.
+	(addgetnetgrentX): Use it.
+
 	[BZ # 16365]
 	* nscd/netgroupcache.c (addgetnetgrentX): Break if status is
 	NSS_STATUS_NOTFOUND.

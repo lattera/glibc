@@ -65,6 +65,55 @@ struct dataset
   char strdata[0];
 };
 
+/* Sends a notfound message and prepares a notfound dataset to write to the
+   cache.  Returns true if there was enough memory to allocate the dataset and
+   returns the dataset in DATASETP, total bytes to write in TOTALP and the
+   timeout in TIMEOUTP.  KEY_COPY is set to point to the copy of the key in the
+   dataset. */
+static bool
+do_notfound (struct database_dyn *db, int fd, request_header *req,
+	       const char *key, struct dataset **datasetp, ssize_t *totalp,
+	       time_t *timeoutp, char **key_copy)
+{
+  struct dataset *dataset;
+  ssize_t total;
+  time_t timeout;
+  bool cacheable = false;
+
+  total = sizeof (notfound);
+  timeout = time (NULL) + db->negtimeout;
+
+  if (fd != -1)
+    TEMP_FAILURE_RETRY (send (fd, &notfound, total, MSG_NOSIGNAL));
+
+  dataset = mempool_alloc (db, sizeof (struct dataset) + req->key_len, 1);
+  /* If we cannot permanently store the result, so be it.  */
+  if (dataset != NULL)
+    {
+      dataset->head.allocsize = sizeof (struct dataset) + req->key_len;
+      dataset->head.recsize = total;
+      dataset->head.notfound = true;
+      dataset->head.nreloads = 0;
+      dataset->head.usable = true;
+
+      /* Compute the timeout time.  */
+      timeout = dataset->head.timeout = time (NULL) + db->negtimeout;
+      dataset->head.ttl = db->negtimeout;
+
+      /* This is the reply.  */
+      memcpy (&dataset->resp, &notfound, total);
+
+      /* Copy the key data.  */
+      memcpy (dataset->strdata, key, req->key_len);
+      *key_copy = dataset->strdata;
+
+      cacheable = true;
+    }
+  *timeoutp = timeout;
+  *totalp = total;
+  *datasetp = dataset;
+  return cacheable;
+}
 
 static time_t
 addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
@@ -84,6 +133,7 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
   struct dataset *dataset;
   bool cacheable = false;
   ssize_t total;
+  bool found = false;
 
   char *key_copy = NULL;
   struct __netgrent data;
@@ -103,35 +153,8 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
       && __nss_database_lookup ("netgroup", NULL, NULL, &netgroup_database))
     {
       /* No such service.  */
-      total = sizeof (notfound);
-      timeout = time (NULL) + db->negtimeout;
-
-      if (fd != -1)
-	TEMP_FAILURE_RETRY (send (fd, &notfound, total, MSG_NOSIGNAL));
-
-      dataset = mempool_alloc (db, sizeof (struct dataset) + req->key_len, 1);
-      /* If we cannot permanently store the result, so be it.  */
-      if (dataset != NULL)
-	{
-	  dataset->head.allocsize = sizeof (struct dataset) + req->key_len;
-	  dataset->head.recsize = total;
-	  dataset->head.notfound = true;
-	  dataset->head.nreloads = 0;
-	  dataset->head.usable = true;
-
-	  /* Compute the timeout time.  */
-	  timeout = dataset->head.timeout = time (NULL) + db->negtimeout;
-	  dataset->head.ttl = db->negtimeout;
-
-	  /* This is the reply.  */
-	  memcpy (&dataset->resp, &notfound, total);
-
-	  /* Copy the key data.  */
-	  memcpy (dataset->strdata, key, req->key_len);
-
-	  cacheable = true;
-	}
-
+      cacheable = do_notfound (db, fd, req, key, &dataset, &total, &timeout,
+			       &key_copy);
       goto writeout;
     }
 
@@ -167,6 +190,7 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
 
 	  if (status == NSS_STATUS_SUCCESS)
 	    {
+	      found = true;
 	      union
 	      {
 		enum nss_status (*f) (struct __netgrent *, char *, size_t,
@@ -324,6 +348,15 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
 	  no_more = __nss_next2 (&nip, "setnetgrent", NULL, &setfct.ptr,
 				 status, 0);
 	}
+    }
+
+  /* No results.  Return a failure and write out a notfound record in the
+     cache.  */
+  if (!found)
+    {
+      cacheable = do_notfound (db, fd, req, key, &dataset, &total, &timeout,
+			       &key_copy);
+      goto writeout;
     }
 
   total = buffilled;
