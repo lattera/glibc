@@ -1,3 +1,9 @@
+2014-01-03  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16390]
+	* sysdeps/powerpc/nofpu/Makefile [$(subdir) = math]
+	(CFLAGS-e_atan2l.c): Use -fno-builtin-fabsl.
+
 2014-01-03  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/strcasecmp-power7.S: Remove

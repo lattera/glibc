@@ -15,6 +15,7 @@ CPPFLAGS += -I../soft-fp/
 # gcc-4.1.1 and may be too late for gcc-4.2.  So we need these flags
 # until the fix in a gcc release and glibc drops support for earlier
 # versions of gcc.
+CFLAGS-e_atan2l.c += -fno-builtin-fabsl
 CFLAGS-e_hypotl.c += -fno-builtin-fabsl
 CFLAGS-e_powl.c += -fno-builtin-fabsl
 CFLAGS-s_ccoshl.c += -fno-builtin-fabsl
