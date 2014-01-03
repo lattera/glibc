@@ -1,3 +1,11 @@
+2014-01-03  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/strcasecmp-power7.S: Remove
+	extra tokens at end of #undef directive.
+	* sysdeps/powerpc/powerpc64/multiarch/strcasecmp_l-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strnlen-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/wcscpy.c: Likewise.
+
 2014-01-03  Andrew Hunter  <ahh@google.com>
 
 	* elf/dl-open.c (): New comment.

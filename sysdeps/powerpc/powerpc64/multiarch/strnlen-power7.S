@@ -35,7 +35,7 @@
 
 #undef libc_hidden_builtin_def
 #define libc_hidden_builtin_def(name)
-#undef weak_alias(name, alias)
+#undef weak_alias
 #define weak_alias(name, alias)
 
 #include <sysdeps/powerpc/powerpc64/power7/strnlen.S>

@@ -33,4 +33,4 @@ libc_ifunc (wcscpy,
              : __wcscpy_ppc);
 #else
 #include <wcsmbs/wcscpy.c>
-#endif:
+#endif
