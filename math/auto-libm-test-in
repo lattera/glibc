@@ -503,8 +503,9 @@ cosh 0x1p-5
 cosh 0x1p-20
 cosh -1
 cosh 50
-cosh max no-test-inline
-cosh -max no-test-inline
+# GCC bug 59666: results on directed rounding may be incorrect.
+cosh max no-test-inline xfail-rounding:ldbl-128ibm
+cosh -max no-test-inline xfail-rounding:ldbl-128ibm
 # Bug 16354: spurious underflow may occur.
 cosh min spurious-underflow
 cosh -min spurious-underflow
@@ -515,22 +516,23 @@ cosh 0x5.96a7ep+4
 cosh 0x5.96a7e8p+4
 cosh -0x5.96a7ep+4
 cosh -0x5.96a7e8p+4
-cosh 0x2.c679d1f73f0fap+8
-cosh 0x2.c679d1f73f0fcp+8
-cosh -0x2.c679d1f73f0fap+8
-cosh -0x2.c679d1f73f0fcp+8
-cosh 0x2.c679d1f73f0fb624d358b213a7p+8
-cosh 0x2.c679d1f73f0fb624d358b213a8p+8
-cosh -0x2.c679d1f73f0fb624d358b213a7p+8
-cosh -0x2.c679d1f73f0fb624d358b213a8p+8
-cosh 0x2.c5d37700c6bb03a4p+12 no-test-inline
-cosh 0x2.c5d37700c6bb03a8p+12 no-test-inline
-cosh -0x2.c5d37700c6bb03a4p+12 no-test-inline
-cosh -0x2.c5d37700c6bb03a8p+12 no-test-inline
-cosh 0x2.c5d37700c6bb03a6c24b6c9b494cp+12 no-test-inline
-cosh 0x2.c5d37700c6bb03a6c24b6c9b494ep+12 no-test-inline
-cosh -0x2.c5d37700c6bb03a6c24b6c9b494cp+12 no-test-inline
-cosh -0x2.c5d37700c6bb03a6c24b6c9b494ep+12 no-test-inline
+# GCC bug 59666: results on directed rounding may be incorrect.
+cosh 0x2.c679d1f73f0fap+8 xfail-rounding:ldbl-128ibm
+cosh 0x2.c679d1f73f0fcp+8 xfail-rounding:ldbl-128ibm
+cosh -0x2.c679d1f73f0fap+8 xfail-rounding:ldbl-128ibm
+cosh -0x2.c679d1f73f0fcp+8 xfail-rounding:ldbl-128ibm
+cosh 0x2.c679d1f73f0fb624d358b213a7p+8 xfail-rounding:ldbl-128ibm
+cosh 0x2.c679d1f73f0fb624d358b213a8p+8 xfail-rounding:ldbl-128ibm
+cosh -0x2.c679d1f73f0fb624d358b213a7p+8 xfail-rounding:ldbl-128ibm
+cosh -0x2.c679d1f73f0fb624d358b213a8p+8 xfail-rounding:ldbl-128ibm
+cosh 0x2.c5d37700c6bb03a4p+12 no-test-inline xfail-rounding:ldbl-128ibm
+cosh 0x2.c5d37700c6bb03a8p+12 no-test-inline xfail-rounding:ldbl-128ibm
+cosh -0x2.c5d37700c6bb03a4p+12 no-test-inline xfail-rounding:ldbl-128ibm
+cosh -0x2.c5d37700c6bb03a8p+12 no-test-inline xfail-rounding:ldbl-128ibm
+cosh 0x2.c5d37700c6bb03a6c24b6c9b494cp+12 no-test-inline xfail-rounding:ldbl-128ibm
+cosh 0x2.c5d37700c6bb03a6c24b6c9b494ep+12 no-test-inline xfail-rounding:ldbl-128ibm
+cosh -0x2.c5d37700c6bb03a6c24b6c9b494cp+12 no-test-inline xfail-rounding:ldbl-128ibm
+cosh -0x2.c5d37700c6bb03a6c24b6c9b494ep+12 no-test-inline xfail-rounding:ldbl-128ibm
 
 cpow 1 0 0 0
 cpow 2 0 10 0
@@ -727,21 +729,26 @@ exp10 -36
 exp10 305
 exp10 -305
 # Bug 16284: results on directed rounding may be incorrect.
-exp10 4932 xfail-rounding:flt-32
+# GCC bug 59666: results on directed rounding may be incorrect.
+exp10 4932 xfail-rounding:flt-32 xfail-rounding:ldbl-128ibm
 # Bug 16361: underflow exception may be misssing
 exp10 -4932 missing-underflow:ldbl-96-intel:x86 missing-underflow:ldbl-96-intel:x86_64
 # Bug 16284: results on directed rounding may be incorrect.
-exp10 1e5 xfail-rounding:flt-32
+# GCC bug 59666: results on directed rounding may be incorrect.
+exp10 1e5 xfail-rounding:flt-32 xfail-rounding:ldbl-128ibm
 exp10 -1e5
 # Bug 16284: results on directed rounding may be incorrect.
-exp10 1e6 xfail-rounding:flt-32
+# GCC bug 59666: results on directed rounding may be incorrect.
+exp10 1e6 xfail-rounding:flt-32 xfail-rounding:ldbl-128ibm
 exp10 -1e6
 # Bug 16284: results on directed rounding may be incorrect.
-exp10 max xfail-rounding:flt-32
+# GCC bug 59666: results on directed rounding may be incorrect.
+exp10 max xfail-rounding:flt-32 xfail-rounding:ldbl-128ibm
 exp10 -max
 exp10 0.75
 # Bug 16284: results on directed rounding may be incorrect.
-exp10 0x1.348e45573a1dd72cp+8 xfail-rounding:flt-32 xfail-rounding:dbl-64
+# GCC bug 59666: results on directed rounding may be incorrect.
+exp10 0x1.348e45573a1dd72cp+8 xfail-rounding:flt-32 xfail-rounding:dbl-64 xfail-rounding:ldbl-128ibm
 
 exp2 0
 exp2 -0
@@ -768,7 +775,8 @@ expm1 0.75
 expm1 50.0
 expm1 127.0
 expm1 500.0
-expm1 11356.25
+# GCC bug 59666: results on directed rounding may be incorrect.
+expm1 11356.25 xfail-rounding:ldbl-128ibm
 expm1 -10.0
 expm1 -16.0
 expm1 -17.0
@@ -789,8 +797,9 @@ expm1 -100.0
 expm1 -1000.0
 expm1 -10000.0
 expm1 -100000.0
-expm1 100000.0
-expm1 max
+# GCC bug 59666: results on directed rounding may be incorrect.
+expm1 100000.0 xfail-rounding:ldbl-128ibm
+expm1 max xfail-rounding:ldbl-128ibm
 expm1 -max
 expm1 0x1p-2
 expm1 -0x1p-2

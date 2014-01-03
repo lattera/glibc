@@ -1,3 +1,9 @@
+2014-01-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/auto-libm-test-in: Mark various tests with
+	xfail-rounding:ldbl-128ibm.
+	* math/auto-libm-test-out: Regenerated.
+
 2014-01-02  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16386]
