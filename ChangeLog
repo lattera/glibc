@@ -8,7 +8,7 @@
 
 2014-01-03  Andrew Hunter  <ahh@google.com>
 
-	* elf/dl-open.c (): New comment.
+	* elf/dl-open.c (dl_open_worker): New comment.
 	* elf/dl-reloc.c (_dl_try_allocate_static_tls): Use
 	atomic_compare_and_exchange_bool_acq
 	(_dl_allocate_static_tls): Block signals.
