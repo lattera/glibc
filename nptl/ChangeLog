@@ -1,4 +1,11 @@
-2011-12-12  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+2014-01-03  Andrew Hunter  <ahh@google.com>
+
+	* nptl/Makefile (tst-tls7): New test.
+	* nptl/tst-tls7.c: New file.
+	* nptl/tst-tls7mod.c: New file.
+	* nptl/allocatestack.c (init_one_static_tls): Use atomic barrier.
+
+2013-12-12  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/tls.h (struct tcbhead_t): Add DSO and TAR fields.
 	* nptl/sysdeps/powerpc/tcb-offsets.sym: Likewise.

@@ -16,8 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <atomic.h>
 #include <errno.h>
 #include <libintl.h>
+#include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <ldsodefs.h>
@@ -70,8 +72,6 @@ _dl_try_allocate_static_tls (struct link_map *map)
 
   size_t offset = GL(dl_tls_static_used) + (freebytes - n * map->l_tls_align
 					    - map->l_tls_firstbyte_offset);
-
-  map->l_tls_offset = GL(dl_tls_static_used) = offset;
 #elif TLS_DTV_AT_TP
   /* dl_tls_static_used includes the TCB at the beginning.  */
   size_t offset = (((GL(dl_tls_static_used)
@@ -83,7 +83,36 @@ _dl_try_allocate_static_tls (struct link_map *map)
   if (used > GL(dl_tls_static_size))
     goto fail;
 
-  map->l_tls_offset = offset;
+#else
+# error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+#endif
+  /* We've computed the new value we want, now try to install it.  */
+  ptrdiff_t val;
+  if ((val = map->l_tls_offset) == NO_TLS_OFFSET)
+    {
+      /* l_tls_offset starts out at NO_TLS_OFFSET, and all attempts to
+	 change it go from NO_TLS_OFFSET to some other value.  We use
+	 compare_and_exchange to ensure only one attempt succeeds.  We
+	 don't actually need any memory ordering here, but _acq is the
+	 weakest available.  */
+      (void ) atomic_compare_and_exchange_bool_acq (&map->l_tls_offset,
+						    offset,
+						    NO_TLS_OFFSET);
+      val = map->l_tls_offset;
+      assert (val != NO_TLS_OFFSET);
+    }
+  if (val != offset)
+    {
+      /* We'd like to set a static offset for this section, but another
+	 thread has already used a dynamic TLS block for it.  Since we can
+	 only use static offsets if everyone does (and it's not practical
+	 to move that thread's dynamic block), we have to fail.  */
+      goto fail;
+    }
+  /* We installed the value; now update the globals.  */
+#if TLS_TCB_AT_TP
+  GL(dl_tls_static_used) = offset;
+#elif TLS_DTV_AT_TP
   map->l_tls_firstbyte_offset = GL(dl_tls_static_used);
   GL(dl_tls_static_used) = used;
 #else
@@ -114,8 +143,17 @@ void
 internal_function __attribute_noinline__
 _dl_allocate_static_tls (struct link_map *map)
 {
-  if (map->l_tls_offset == FORCED_DYNAMIC_TLS_OFFSET
-      || _dl_try_allocate_static_tls (map))
+  /* We wrap this in a signal mask because it has to iterate all threads
+     (including this one) and update this map's TLS entry. A signal handler
+     accessing TLS would try to do the same update and break.  */
+  sigset_t old;
+  _dl_mask_all_signals (&old);
+  int err = -1;
+  if (map->l_tls_offset != FORCED_DYNAMIC_TLS_OFFSET)
+    err = _dl_try_allocate_static_tls (map);
+
+  _dl_unmask_signals (&old);
+  if (err != 0)
     {
       _dl_signal_error (0, map->l_name, NULL, N_("\
 cannot allocate memory in static TLS block"));

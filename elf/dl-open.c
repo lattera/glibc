@@ -548,7 +548,10 @@ cannot load any more object with static TLS"));
 	     generation of the DSO we are allocating data for.  */
 	  _dl_update_slotinfo (imap->l_tls_modid);
 #endif
-
+	  /* We do this iteration under a signal mask in dl-reloc; why not
+	     here?  Because these symbols are new and dlopen hasn't
+	     returned yet.  So we can't possibly be racing with a TLS
+	     access to them from another thread.  */
 	  GL(dl_init_static_tls) (imap);
 	  assert (imap->l_need_tls_init == 0);
 	}
