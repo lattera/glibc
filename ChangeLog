@@ -1,3 +1,7 @@
+2014-01-04  Sami Kerola  <kerolasa@iki.fi>
+
+	* nscd/nscd.c: Improve usage() output.
+
 2014-01-04  Mike Frysinger  <vapier@gentoo.org>
 
 	* config.h.in: Add HAVE_LINUX_FANOTIFY_H template.
