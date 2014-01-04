@@ -19,10 +19,10 @@
 
 /* On IA-64 the __tls_get_addr function take the module ID and the
    offset as parameters.  */
-#define GET_ADDR_ARGS		size_t m, size_t offset
-#define GET_ADDR_PARAM		m, offset
-#define GET_ADDR_MODULE		m
-#define GET_ADDR_OFFSET		offset
+#define GET_ADDR_ARGS		size_t tls_ia64_m, size_t tls_ia64_offset
+#define GET_ADDR_PARAM		tls_ia64_m, tls_ia64_offset
+#define GET_ADDR_MODULE		tls_ia64_m
+#define GET_ADDR_OFFSET		tls_ia64_offset
 
 /* We have no tls_index type.  */
 #define DONT_USE_TLS_INDEX	1

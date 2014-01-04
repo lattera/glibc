@@ -1,3 +1,10 @@
+2014-01-04  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/ia64/dl-tls.h (GET_ADDR_ARGS): Add "tls_ia64_" prefix to vars.
+	(GET_ADDR_PARAM): Likewise.
+	(GET_ADDR_MODULE): Likewise.
+	(GET_ADDR_OFFSET): Likewise.
+
 2013-12-30  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/ia64/Makefile (gen-as-const-headers): Add
