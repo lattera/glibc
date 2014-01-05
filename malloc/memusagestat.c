@@ -55,7 +55,7 @@ static const struct argp_option options[] =
 {
   { "output", 'o', N_ ("FILE"), 0, N_ ("Name output file") },
   { "string", 's', N_ ("STRING"), 0, N_ ("Title string used in output graphic") },
-  { "time", 't', NULL, 0, N_ ("						      \
+  { "time", 't', NULL, 0, N_ ("\
 Generate output linear to time (default is linear to number of function calls)\
 ") },
   { "total", 'T', NULL, 0,
