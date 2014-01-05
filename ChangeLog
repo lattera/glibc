@@ -1,5 +1,7 @@
 2014-01-05  Allan McRae  <allan@archlinux.org>
 
+	* po/libc.pot: Regenerated.
+
 	* malloc/memusagestat.c: Fix gettext call formatting.
 
 2014-01-04  Sami Kerola  <kerolasa@iki.fi>
