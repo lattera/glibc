@@ -46,7 +46,7 @@ struct elf_siginfo
 typedef unsigned long elf_greg_t;
 typedef elf_greg_t elf_gregset_t[ELF_NGREG];
 
-typedef struct ia64_fpreg elf_fpreg_t;
+typedef struct __ia64_fpreg elf_fpreg_t;
 typedef elf_fpreg_t elf_fpregset_t[ELF_NFPREG];
 
 typedef elf_greg_t greg_t;

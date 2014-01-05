@@ -27,7 +27,7 @@
 #include <stddef.h>
 #include <bits/sigstack.h>
 
-struct ia64_fpreg
+struct __ia64_fpreg
   {
     union
       {
@@ -55,7 +55,7 @@ struct sigcontext
   unsigned long int sc_pr;	/* predicate registers */
   unsigned long int sc_br[8];	/* branch registers */
   unsigned long int sc_gr[32];	/* general registers (static partition) */
-  struct ia64_fpreg sc_fr[128];	/* floating-point registers */
+  struct __ia64_fpreg sc_fr[128];	/* floating-point registers */
   unsigned long int sc_rbs_base;/* NULL or new base of sighandler's rbs */
   unsigned long int sc_loadrs;	/* see description above */
   unsigned long int sc_ar25;	/* cmp8xchg16 uses this */

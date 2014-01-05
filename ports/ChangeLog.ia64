@@ -1,5 +1,18 @@
 2014-01-06  Mike Frysinger  <vapier@gentoo.org>
 
+	[BZ #762]
+	* sysdeps/unix/sysv/linux/ia64/bits/sigcontext.h (ia64_fpreg):
+	Rename to ...
+	(__ia64_fpreg): ... this.
+	(sigcontext): Use __ia64_fpreg.
+	* sysdeps/unix/sysv/linux/ia64/sys/procfs.h (elf_fpreg_t): Use
+	__ia64_fpreg.
+	* sysdeps/unix/sysv/linux/ia64/sys/ptrace.h (pt_all_user_regs):
+	Rename to ...
+	(__pt_all_user_regs): ... this.  Use __ia64_fpreg.
+
+2014-01-06  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/unix/sysv/linux/ia64/sys/ptrace.h (ptrace_peeksiginfo_args):
 	Rename to ...
 	(__ptrace_peeksiginfo_args): ... this.
