@@ -154,7 +154,7 @@ enum __ptrace_eventcodes
 };
 
 /* Arguments for PTRACE_PEEKSIGINFO.  */
-struct ptrace_peeksiginfo_args
+struct __ptrace_peeksiginfo_args
 {
   __uint64_t off;	/* From which siginfo to start.  */
   __uint32_t flags;	/* Flags for peeksiginfo.  */

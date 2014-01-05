@@ -1,3 +1,9 @@
+2014-01-06  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/tile/sys/ptrace.h (ptrace_peeksiginfo_args):
+	Rename to ...
+	(__ptrace_peeksiginfo_args): ... this.
+
 2013-10-30  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/tile/configure.in: Moved to ...
