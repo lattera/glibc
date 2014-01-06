@@ -1,5 +1,9 @@
 2014-01-06  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/ia64/fpu/libm-test-ulps: Update.
+
+2014-01-06  Mike Frysinger  <vapier@gentoo.org>
+
 	[BZ #762]
 	* sysdeps/unix/sysv/linux/ia64/bits/sigcontext.h (ia64_fpreg):
 	Rename to ...
