@@ -1,3 +1,10 @@
+2014-01-06  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16400]
+	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c (__ieee754_lgammal_r):
+	Return -__logl (x) for small positive arguments without evaluating
+	a polynomial.
+
 2014-01-06  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/sys/ptrace.h (ptrace_peeksiginfo_args):

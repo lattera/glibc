@@ -805,7 +805,9 @@ __ieee754_lgammal_r (long double x, int *signgamp)
 	{
 	case 0:
 	  /* log gamma (x + 1) = log(x) + log gamma(x) */
-	  if (x <= 0.125)
+	  if (x < 0x1p-120L)
+	    return -__logl (x);
+	  else if (x <= 0.125)
 	    {
 	      p = x * neval (x, RN1, NRN1) / deval (x, RD1, NRD1);
 	    }
