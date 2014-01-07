@@ -1,5 +1,10 @@
 2014-01-07  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
+	* sysdeps/s390/dl-tls.h: sysdeps/s390/dl-tls.h: Remove casts for
+	the first argument and return value of __tls_get_addr_internal.
+
+2014-01-07  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
 	* sysdeps/s390/s390-32/dl-machine.h: Gate the definition of refsym
 	also with !RTLD_BOOTSTRAP to get rid of unused variable warning.
 
