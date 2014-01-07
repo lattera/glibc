@@ -1,5 +1,9 @@
 2014-01-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/auto-libm-test-in: Mark various tests with
+	xfail-rounding:ldbl-128ibm.
+	* math/auto-libm-test-out: Regenerated.
+
 	[BZ #16407]
 	* sysdeps/ieee754/ldbl-128ibm/e_coshl.c (__ieee754_coshl):
 	Increase overflow threshold.

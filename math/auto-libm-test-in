@@ -614,8 +614,9 @@ ctan 1 45
 ctan 1 47
 ctan 1 355
 ctan 1 365
-ctan 1 5680
-ctan 1 5690
+# GCC bug 59666: results on directed rounding may be incorrect.
+ctan 1 5680 xfail-rounding:ldbl-128ibm
+ctan 1 5690 xfail-rounding:ldbl-128ibm
 
 ctan 0x3.243f6cp-1 0
 
@@ -623,10 +624,11 @@ ctan 0x1p127 1
 ctan 0x1p1023 1
 ctan 0x1p16383 1
 
-ctan 50000 50000
-ctan 50000 -50000
-ctan -50000 50000
-ctan -50000 -50000
+# GCC bug 59666: results on directed rounding may be incorrect.
+ctan 50000 50000 xfail-rounding:ldbl-128ibm
+ctan 50000 -50000 xfail-rounding:ldbl-128ibm
+ctan -50000 50000 xfail-rounding:ldbl-128ibm
+ctan -50000 -50000 xfail-rounding:ldbl-128ibm
 
 ctan 0x1.921fb6p+0 0x1p-149
 ctan 0x1.921fb54442d18p+0 0x1p-1074
@@ -646,8 +648,9 @@ ctanh 45 1
 ctanh 47 1
 ctanh 355 1
 ctanh 365 1
-ctanh 5680 1
-ctanh 5690 1
+# GCC bug 59666: results on directed rounding may be incorrect.
+ctanh 5680 1 xfail-rounding:ldbl-128ibm
+ctanh 5690 1 xfail-rounding:ldbl-128ibm
 
 ctanh 0 0x3.243f6cp-1
 
@@ -655,10 +658,11 @@ ctanh 1 0x1p127
 ctanh 1 0x1p1023
 ctanh 1 0x1p16383
 
-ctanh 50000 50000
-ctanh 50000 -50000
-ctanh -50000 50000
-ctanh -50000 -50000
+# GCC bug 59666: results on directed rounding may be incorrect.
+ctanh 50000 50000 xfail-rounding:ldbl-128ibm
+ctanh 50000 -50000 xfail-rounding:ldbl-128ibm
+ctanh -50000 50000 xfail-rounding:ldbl-128ibm
+ctanh -50000 -50000 xfail-rounding:ldbl-128ibm
 
 ctanh 0x1p-149 0x1.921fb6p+0
 ctanh 0x1p-1074 0x1.921fb54442d18p+0
@@ -709,13 +713,15 @@ exp 50.0
 exp 88.72269439697265625
 exp 709.75
 # Bug 16284: results on directed rounding may be incorrect.
-exp 1000.0 xfail-rounding:dbl-64
-exp 710 xfail-rounding:dbl-64
+# GCC bug 59666: results on directed rounding may be incorrect.
+exp 1000.0 xfail-rounding:dbl-64 xfail-rounding:ldbl-128ibm
+exp 710 xfail-rounding:dbl-64 xfail-rounding:ldbl-128ibm
 exp -1234
 # Bug 16284: results on directed rounding may be incorrect.
-exp 0x2.c679d1f73f0fb628p+8 xfail-rounding:dbl-64
-exp 1e5 xfail-rounding:dbl-64
-exp max xfail-rounding:dbl-64
+# GCC bug 59666: results on directed rounding may be incorrect.
+exp 0x2.c679d1f73f0fb628p+8 xfail-rounding:dbl-64 xfail-rounding:ldbl-128ibm
+exp 1e5 xfail-rounding:dbl-64 xfail-rounding:ldbl-128ibm
+exp max xfail-rounding:dbl-64 xfail-rounding:ldbl-128ibm
 exp -7.4444006192138124e+02
 exp -0x1.75f113c30b1c8p+9
 exp -max
