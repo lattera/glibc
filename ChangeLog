@@ -1,5 +1,7 @@
 2014-01-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/powerpc/nofpu/libm-test-ulps: Regenerated.
+
 	* math/auto-libm-test-in: Mark various tests with
 	xfail-rounding:ldbl-128ibm.
 	* math/auto-libm-test-out: Regenerated.

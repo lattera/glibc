@@ -6697,8 +6697,8 @@ ldouble: 3
 Test "cos_towardzero (0x1.921fb54442d18p+0)":
 double: 1
 idouble: 1
-ildouble: 4
-ldouble: 4
+ildouble: 2
+ldouble: 2
 Test "cos_towardzero (0x1.921fb54442d19p+0)":
 double: 1
 idouble: 1
@@ -6782,8 +6782,8 @@ Test "cos_towardzero (0x8p-972)":
 double: 1
 idouble: 1
 Test "cos_towardzero (0xa.217bap+12)":
-ildouble: 3
-ldouble: 3
+ildouble: 1
+ldouble: 1
 Test "cos_towardzero (0xap+0)":
 ildouble: 1
 ldouble: 1
@@ -6973,8 +6973,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 4
-ldouble: 4
+ildouble: 2
+ldouble: 2
 Test "cos_upward (0xap+0)":
 float: 1
 ifloat: 1
@@ -7012,6 +7012,15 @@ ldouble: 1
 Test "cosh (-0x2.c5e3acp+8)":
 double: 1
 idouble: 1
+Test "cosh (-0x2.c679d1f73f0fap+8)":
+ildouble: 1
+ldouble: 1
+Test "cosh (-0x2.c679d1f73f0fb624d358b213a7p+8)":
+ildouble: 3
+ldouble: 3
+Test "cosh (-0x2.c679d1f73f0fb624p+8)":
+ildouble: 1
+ldouble: 1
 Test "cosh (-0x2.c679dp+8)":
 double: 1
 idouble: 1
@@ -7021,6 +7030,15 @@ ldouble: 1
 Test "cosh (0x2.c5e3acp+8)":
 double: 1
 idouble: 1
+Test "cosh (0x2.c679d1f73f0fap+8)":
+ildouble: 1
+ldouble: 1
+Test "cosh (0x2.c679d1f73f0fb624d358b213a7p+8)":
+ildouble: 3
+ldouble: 3
+Test "cosh (0x2.c679d1f73f0fb624p+8)":
+ildouble: 1
+ldouble: 1
 Test "cosh (0x2.c679dp+8)":
 double: 1
 idouble: 1
@@ -7095,6 +7113,15 @@ ldouble: 1
 Test "cosh_tonearest (-0x2.c5e3acp+8)":
 double: 1
 idouble: 1
+Test "cosh_tonearest (-0x2.c679d1f73f0fap+8)":
+ildouble: 1
+ldouble: 1
+Test "cosh_tonearest (-0x2.c679d1f73f0fb624d358b213a7p+8)":
+ildouble: 3
+ldouble: 3
+Test "cosh_tonearest (-0x2.c679d1f73f0fb624p+8)":
+ildouble: 1
+ldouble: 1
 Test "cosh_tonearest (-0x2.c679dp+8)":
 double: 1
 idouble: 1
@@ -7104,6 +7131,15 @@ ldouble: 1
 Test "cosh_tonearest (0x2.c5e3acp+8)":
 double: 1
 idouble: 1
+Test "cosh_tonearest (0x2.c679d1f73f0fap+8)":
+ildouble: 1
+ldouble: 1
+Test "cosh_tonearest (0x2.c679d1f73f0fb624d358b213a7p+8)":
+ildouble: 3
+ldouble: 3
+Test "cosh_tonearest (0x2.c679d1f73f0fb624p+8)":
+ildouble: 1
+ldouble: 1
 Test "cosh_tonearest (0x2.c679dp+8)":
 double: 1
 idouble: 1
@@ -7583,12 +7619,6 @@ double: 2
 idouble: 2
 ildouble: 1
 ldouble: 1
-Test "Real part of: ctan_downward (-0xc.35p+12 + 0xc.35p+12 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: ctan_downward (-0xc.35p+12 - 0xc.35p+12 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: ctan_downward (0x1.921fb4p+0 + +0 i)":
 float: 1
 ifloat: 1
@@ -8050,8 +8080,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: ctan_upward (-0xc.35p+12 - 0xc.35p+12 i)":
 double: 1
 float: 1
@@ -8163,15 +8191,11 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: ctan_upward (0x1p+0 + 0x1.63p+12 i)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: ctan_upward (0x1p+0 + 0x1.63p+8 i)":
 double: 1
 float: 1
@@ -8229,8 +8253,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: ctan_upward (0xc.35p+12 - 0xc.35p+12 i)":
 double: 1
 float: 1
@@ -8487,9 +8509,6 @@ idouble: 1
 ifloat: 1
 ildouble: 5
 ldouble: 5
-Test "Imaginary part of: ctanh_downward (-0xc.35p+12 - 0xc.35p+12 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: ctanh_downward (0x1p+0 + 0x8p+1020 i)":
 double: 6
 idouble: 6
@@ -8610,9 +8629,6 @@ double: 1
 idouble: 1
 ildouble: 2
 ldouble: 2
-Test "Imaginary part of: ctanh_downward (0xc.35p+12 - 0xc.35p+12 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: ctanh_downward (0xcp-4 + 0x1.4p+0 i)":
 ildouble: 3
 ldouble: 3
@@ -9040,15 +9056,11 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "Real part of: ctanh_upward (0x1.63p+12 + 0x1p+0 i)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "Real part of: ctanh_upward (0x1.63p+8 + 0x1p+0 i)":
 double: 1
 float: 1
@@ -9209,15 +9221,11 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "Real part of: ctanh_upward (0xc.35p+12 - 0xc.35p+12 i)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "Real part of: ctanh_upward (0xcp-4 + 0x1.4p+0 i)":
 ildouble: 2
 ldouble: 2
@@ -10444,6 +10452,9 @@ ifloat: 1
 Test "sin (0x4.1237e153f7080008p+0)":
 ildouble: 1
 ldouble: 1
+Test "sin (0xf.ffffffffffff8p+1020)":
+ildouble: 1
+ldouble: 1
 
 # sin_downward
 Test "sin_downward (-0x1.921fb4p+0)":
@@ -10750,6 +10761,9 @@ ifloat: 1
 Test "sin_tonearest (0x4.1237e153f7080008p+0)":
 ildouble: 1
 ldouble: 1
+Test "sin_tonearest (0xf.ffffffffffff8p+1020)":
+ildouble: 1
+ldouble: 1
 
 # sin_towardzero
 Test "sin_towardzero (-0x1.921fb54442d18p+0)":
@@ -10761,8 +10775,8 @@ idouble: 1
 Test "sin_towardzero (-0x2p+64)":
 double: 1
 idouble: 1
-ildouble: 3
-ldouble: 3
+ildouble: 1
+ldouble: 1
 Test "sin_towardzero (-0x8.60a91c16b9b28p-4)":
 ildouble: 1
 ldouble: 1
@@ -10806,8 +10820,8 @@ idouble: 1
 Test "sin_towardzero (0x2p+64)":
 double: 1
 idouble: 1
-ildouble: 3
-ldouble: 3
+ildouble: 1
+ldouble: 1
 Test "sin_towardzero (0x3.be735c19beap+0)":
 double: 1
 idouble: 1
@@ -10937,8 +10951,6 @@ idouble: 1
 Test "sin_towardzero (0xf.ffffffffffff8p+1020)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
 
 # sin_upward
 Test "sin_upward (-0x1.921fb4p+0)":
@@ -11029,8 +11041,8 @@ ifloat: 1
 Test "sin_upward (0x2p+64)":
 double: 1
 idouble: 1
-ildouble: 3
-ldouble: 3
+ildouble: 1
+ldouble: 1
 Test "sin_upward (0x3.be735c19be9fep+0)":
 ildouble: 1
 ldouble: 1
@@ -11270,8 +11282,8 @@ Test "sin_upward (0xf.ffffcp+124)":
 ildouble: 2
 ldouble: 2
 Test "sin_upward (0xf.ffffffffffff8p+1020)":
-ildouble: 2
-ldouble: 2
+ildouble: 1
+ldouble: 1
 Test "sin_upward (0xf.ffffffffffffbffffffffffffcp+1020)":
 ildouble: 1
 ldouble: 1
@@ -12117,8 +12129,6 @@ ldouble: 1
 Test "tgamma (-0x1.000002p+0)":
 double: 2
 idouble: 2
-ildouble: 1
-ldouble: 1
 Test "tgamma (-0x1.3ffffep+4)":
 float: 2
 ifloat: 2
@@ -12243,6 +12253,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "tgamma (-0x3.000004p+0)":
 double: 2
 float: 1
@@ -13209,8 +13221,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 4
-ldouble: 4
+ildouble: 3
+ldouble: 3
 
 Function: "cos_upward":
 double: 1
@@ -13225,8 +13237,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 3
+ldouble: 3
 
 Function: "cosh_downward":
 double: 1
@@ -13241,8 +13253,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 3
+ldouble: 3
 
 Function: "cosh_towardzero":
 double: 1
