@@ -1,5 +1,9 @@
 2014-01-06  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/ia64/fpu/libm-test-ulps: Update after truncating.
+
+2014-01-06  Mike Frysinger  <vapier@gentoo.org>
+
 	[BZ #16401]
 	* sysdeps/ia64/fpu/libm-test-ulps: Delete large pow entries.
 

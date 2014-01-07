@@ -629,11 +629,6 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
-Test "Imaginary part of: cacos (0.75 + 1.25 i)":
-float: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
 Test "Real part of: cacos (0x0.fffffffffffff8p0 + 0x1p-52 i)":
 ildouble: 1
 ldouble: 1
@@ -1364,18 +1359,6 @@ Test "Real part of: cacosh (-1.5 - 0x1.fp-129 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: cacosh (-1.5 - 0x1.fp-16385 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: cacosh (-2 - 3 i)":
-double: 1
-float: 7
-idouble: 1
-ifloat: 7
-ildouble: 7
-ldouble: 7
-Test "Imaginary part of: cacosh (-2 - 3 i)":
-double: 1
-idouble: 1
 ildouble: 1
 ldouble: 1
 Test "Real part of: cacosh (0.0 + 0x0.fffffffffffff8p0 i)":
@@ -2400,16 +2383,7 @@ ildouble: 1
 ldouble: 1
 Test "Real part of: casin (0.75 + 1.25 i)":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
-Test "Imaginary part of: casin (0.75 + 1.25 i)":
-float: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
 Test "Imaginary part of: casin (0x0.fffffffffffff8p0 + 0x1p-52 i)":
 double: 1
 idouble: 1
@@ -3244,20 +3218,6 @@ idouble: 1
 Test "Real part of: casinh (-1.5 - 0x1.fp-129 i)":
 double: 1
 idouble: 1
-Test "Real part of: casinh (-2 - 3 i)":
-double: 5
-float: 1
-idouble: 5
-ifloat: 1
-ildouble: 5
-ldouble: 5
-Test "Imaginary part of: casinh (-2 - 3 i)":
-double: 3
-float: 6
-idouble: 3
-ifloat: 6
-ildouble: 5
-ldouble: 5
 Test "Real part of: casinh (0.0 + 0x1.0000000000001p0 i)":
 ildouble: 1
 ldouble: 1
@@ -3946,10 +3906,8 @@ Test "Real part of: catanh (-1.0 - 0x1p-57 i)":
 float: 1
 ifloat: 1
 Test "Real part of: catanh (-2 - 3 i)":
-double: 4
-idouble: 4
-ildouble: 1
-ldouble: 1
+double: 1
+idouble: 1
 Test "Real part of: catanh (0.75 + 1.25 i)":
 double: 1
 idouble: 1
@@ -4034,19 +3992,6 @@ idouble: 1
 Test "Imaginary part of: ccos (-0xcp-4 - 0x5.98p+4 i)":
 float: 1
 ifloat: 1
-Test "Imaginary part of: ccos (-2 - 3 i)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "Real part of: ccos (0.75 + 1.25 i)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: ccos (0.75 + 1.25 i)":
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: ccos (0x4p-1076 + 0x5.ap+8 i)":
 double: 1
 idouble: 1
@@ -4089,21 +4034,6 @@ Test "Imaginary part of: ccosh (-0x5.98p+4 + 0xcp-4 i)":
 float: 1
 ifloat: 1
 Test "Imaginary part of: ccosh (-0x5.98p+4 - 0xcp-4 i)":
-float: 1
-ifloat: 1
-Test "Imaginary part of: ccosh (-2 - 3 i)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "Real part of: ccosh (0.75 + 1.25 i)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-Test "Imaginary part of: ccosh (0.75 + 1.25 i)":
 float: 1
 ifloat: 1
 Test "Imaginary part of: ccosh (0x1p-120 + 0x4p-16328 i)":
@@ -4149,15 +4079,6 @@ ldouble: 1
 Test "Imaginary part of: cexp (-0x5.fp+4 + 0xcp-4 i)":
 double: 1
 idouble: 1
-Test "Imaginary part of: cexp (-2.0 - 3.0 i)":
-float: 1
-ifloat: 1
-Test "Real part of: cexp (0.75 + 1.25 i)":
-float: 1
-ifloat: 1
-Test "Imaginary part of: cexp (0.75 + 1.25 i)":
-ildouble: 1
-ldouble: 1
 Test "Real part of: cexp (0x1.f4p+8 + 0x8p+1020 i)":
 double: 1
 idouble: 1
@@ -4252,11 +4173,6 @@ ifloat: 1
 Test "Real part of: clog (-0xf.8p+124 - 0x8p-152 i)":
 float: 1
 ifloat: 1
-Test "Real part of: clog (0.75 + 1.25 i)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "Real part of: clog (0x1.0000000000000012p+0 + +0 i)":
 ildouble: 1
 ldouble: 1
@@ -5135,8 +5051,6 @@ idouble: 1
 Test "Imaginary part of: clog10 (-2 - 3 i)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: clog10 (-3 + inf i)":
 double: 1
 float: 1
@@ -5180,13 +5094,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "Real part of: clog10 (0.75 + 1.25 i)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "Real part of: clog10 (0x0.fffffffffffff8p0 + 0x0.fffffffffffff8p-1000 i)":
 double: 1
 idouble: 1
@@ -5426,9 +5333,6 @@ idouble: 1
 ifloat: 1
 
 # cos
-Test "cos (0.80190127184058835)":
-double: 1
-idouble: 1
 Test "cos (0x1.000000cf4a2a2p+0)":
 double: 1
 idouble: 1
@@ -5441,25 +5345,6 @@ idouble: 1
 Test "cos (0xc.d4966d92d1708p-4)":
 double: 1
 idouble: 1
-Test "cos (M_PI_6l * 2.0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-Test "cos (M_PI_6l * 4.0)":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "cos (pi/2)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 
 # cos_downward
 Test "cos_downward (-0x4p-1024)":
@@ -5567,34 +5452,6 @@ ildouble: 1
 ldouble: 1
 
 # cpow
-Test "Real part of: cpow (0.75 + 1.25 i, 0.0 + 1.0 i)":
-float: 1
-ifloat: 1
-Test "Imaginary part of: cpow (0.75 + 1.25 i, 0.0 + 1.0 i)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "Real part of: cpow (0.75 + 1.25 i, 0.75 + 1.25 i)":
-double: 1
-float: 4
-idouble: 1
-ifloat: 4
-ildouble: 6
-ldouble: 6
-Test "Imaginary part of: cpow (0.75 + 1.25 i, 0.75 + 1.25 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: cpow (0.75 + 1.25 i, 1.0 + 0.0 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: cpow (0.75 + 1.25 i, 1.0 + 1.0 i)":
-double: 2
-float: 3
-idouble: 2
-ifloat: 3
-ildouble: 3
-ldouble: 3
 Test "Real part of: cpow (0x2p+0 + +0 i, 0xap+0 + +0 i)":
 ildouble: 1
 ldouble: 1
@@ -5633,28 +5490,6 @@ ifloat: 4
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: cpow (0xcp-4 + 0x1.4p+0 i, 0xcp-4 + 0x1.4p+0 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: cpow (2 + 0 i, 10 + 0 i)":
-ildouble: 1
-ldouble: 1
-Test "Real part of: cpow (2 + 3 i, 4 + 0 i)":
-double: 1
-float: 5
-idouble: 1
-ifloat: 5
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: cpow (2 + 3 i, 4 + 0 i)":
-float: 2
-ifloat: 2
-ildouble: 4
-ldouble: 4
-Test "Imaginary part of: cpow (e + 0 i, 0 + 2 * M_PIl i)":
-double: 2
-float: 3
-idouble: 2
-ifloat: 3
 ildouble: 1
 ldouble: 1
 
@@ -5704,8 +5539,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 2
-ldouble: 2
 Test "Imaginary part of: csinh (-710.5 + 0.75 i)":
 double: 1
 idouble: 1
@@ -5786,12 +5619,6 @@ ldouble: 1
 Test "Real part of: csqrt (-0x8p-152 - 0x8p-152 i)":
 ildouble: 1
 ldouble: 1
-Test "Real part of: csqrt (-2 + 3 i)":
-float: 1
-ifloat: 1
-Test "Real part of: csqrt (-2 - 3 i)":
-float: 1
-ifloat: 1
 Test "Imaginary part of: csqrt (0x1p-16440 + 0x4p-1076 i)":
 ildouble: 1
 ldouble: 1
@@ -5924,24 +5751,6 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
-Test "Real part of: ctan (-2 - 3 i)":
-double: 1
-idouble: 1
-ildouble: 2
-ldouble: 2
-Test "Imaginary part of: ctan (-2 - 3 i)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "Real part of: ctan (0.75 + 1.25 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: ctan (0.75 + 1.25 i)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
 Test "Real part of: ctan (0x1.921fb4p+0 + +0 i)":
 double: 1
 float: 1
@@ -6794,25 +6603,6 @@ ldouble: 1
 Test "Real part of: ctanh (-0x2p+0 - 0x3p+0 i)":
 float: 1
 ifloat: 1
-Test "Real part of: ctanh (-2 - 3 i)":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: ctanh (-2 - 3 i)":
-float: 1
-ifloat: 1
-ildouble: 24
-ldouble: 24
-Test "Imaginary part of: ctanh (0 + pi/4 i)":
-float: 1
-ifloat: 1
-Test "Real part of: ctanh (0.75 + 1.25 i)":
-double: 1
-idouble: 1
-Test "Imaginary part of: ctanh (0.75 + 1.25 i)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: ctanh (0x1p+0 + 0x8p+1020 i)":
 double: 1
 idouble: 1
@@ -7662,53 +7452,8 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
-# erf
-Test "erf (1.25)":
-double: 1
-idouble: 1
-
-# erfc
-Test "erfc (0.75)":
-float: 1
-ifloat: 1
-Test "erfc (1.25)":
-ildouble: 1
-ldouble: 1
-Test "erfc (2.0)":
-double: 1
-idouble: 1
-Test "erfc (4.125)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-
-# exp10
-Test "exp10 (-1)":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-Test "exp10 (0.75)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "exp10 (3)":
-double: 6
-float: 2
-idouble: 6
-ifloat: 2
-ildouble: 3
-ldouble: 3
-
 # expm1
 Test "expm1 (-0x1p-64)":
-ildouble: 1
-ldouble: 1
-Test "expm1 (1)":
 ildouble: 1
 ldouble: 1
 
@@ -7721,37 +7466,6 @@ ldouble: 1
 Test "expm1_tonearest (-0x1p-64)":
 ildouble: 1
 ldouble: 1
-
-# gamma
-Test "gamma (-0.5)":
-ildouble: 1
-ldouble: 1
-
-# hypot
-Test "hypot (-0.7, -12.4)":
-float: 1
-ifloat: 1
-Test "hypot (-0.7, 12.4)":
-float: 1
-ifloat: 1
-Test "hypot (-12.4, -0.7)":
-float: 1
-ifloat: 1
-Test "hypot (-12.4, 0.7)":
-float: 1
-ifloat: 1
-Test "hypot (0.7, -12.4)":
-float: 1
-ifloat: 1
-Test "hypot (0.7, 12.4)":
-float: 1
-ifloat: 1
-Test "hypot (12.4, -0.7)":
-float: 1
-ifloat: 1
-Test "hypot (12.4, 0.7)":
-float: 1
-ifloat: 1
 
 # j0
 Test "j0 (-0x2.002000002p+592)":
@@ -7771,13 +7485,6 @@ idouble: 2
 ifloat: 2
 ildouble: 1
 ldouble: 1
-Test "j0 (-4.0)":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
-ildouble: 2
-ldouble: 2
 Test "j0 (0x4p+0)":
 double: 1
 float: 1
@@ -7809,26 +7516,6 @@ idouble: 2
 ifloat: 2
 ildouble: 1
 ldouble: 1
-Test "j0 (10.0)":
-double: 3
-float: 1
-idouble: 3
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "j0 (2.0)":
-float: 2
-ifloat: 2
-Test "j0 (4.0)":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
-ildouble: 2
-ldouble: 2
-Test "j0 (8.0)":
-float: 1
-ifloat: 1
 
 # j1
 Test "j1 (0x1.ff00000000002p+840)":
@@ -7861,17 +7548,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "j1 (10.0)":
-float: 2
-ifloat: 2
-ildouble: 1
-ldouble: 1
-Test "j1 (2.0)":
-double: 1
-idouble: 1
-Test "j1 (8.0)":
-double: 1
-idouble: 1
 
 # jn
 Test "jn (0, -0x4p+0)":
@@ -7879,13 +7555,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 2
-ldouble: 2
-Test "jn (0, -4.0)":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
 ildouble: 2
 ldouble: 2
 Test "jn (0, 0x4p+0)":
@@ -7903,26 +7572,6 @@ double: 2
 float: 1
 idouble: 2
 ifloat: 1
-Test "jn (0, 10.0)":
-double: 3
-float: 1
-idouble: 3
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "jn (0, 2.0)":
-float: 2
-ifloat: 2
-Test "jn (0, 4.0)":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
-ildouble: 2
-ldouble: 2
-Test "jn (0, 8.0)":
-float: 1
-ifloat: 1
 Test "jn (1, 0x2p+0)":
 double: 1
 idouble: 1
@@ -7934,35 +7583,9 @@ float: 2
 ifloat: 2
 ildouble: 1
 ldouble: 1
-Test "jn (1, 10.0)":
-float: 2
-ifloat: 2
-ildouble: 1
-ldouble: 1
-Test "jn (1, 2.0)":
-double: 1
-idouble: 1
-Test "jn (1, 8.0)":
-double: 1
-idouble: 1
 Test "jn (10, -0x1p+0)":
 ildouble: 1
 ldouble: 1
-Test "jn (10, -1.0)":
-ildouble: 1
-ldouble: 1
-Test "jn (10, 0.125)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-Test "jn (10, 0.75)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
 Test "jn (10, 0x1p+0)":
 ildouble: 1
 ldouble: 1
@@ -7988,19 +7611,6 @@ idouble: 1
 ifloat: 1
 ildouble: 2
 ldouble: 2
-Test "jn (10, 1.0)":
-ildouble: 1
-ldouble: 1
-Test "jn (10, 10.0)":
-float: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
-Test "jn (10, 2.0)":
-float: 4
-ifloat: 4
-ildouble: 1
-ldouble: 1
 Test "jn (2, 0x2.67a2a4p+0)":
 float: 1
 ifloat: 1
@@ -8051,17 +7661,6 @@ ldouble: 1
 Test "jn (3, -0x1p+0)":
 ildouble: 1
 ldouble: 1
-Test "jn (3, -1.0)":
-ildouble: 1
-ldouble: 1
-Test "jn (3, 0.125)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-Test "jn (3, 0.75)":
-double: 1
-idouble: 1
 Test "jn (3, 0x1p+0)":
 ildouble: 1
 ldouble: 1
@@ -8108,23 +7707,6 @@ ldouble: 1
 Test "jn (3, 0xcp-4)":
 double: 1
 idouble: 1
-Test "jn (3, 1.0)":
-ildouble: 1
-ldouble: 1
-Test "jn (3, 10.0)":
-double: 3
-float: 2
-idouble: 3
-ifloat: 2
-ildouble: 1
-ldouble: 1
-Test "jn (3, 2.0)":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
-ildouble: 1
-ldouble: 1
 Test "jn (4, 0x2.67a2a4p+0)":
 float: 1
 ifloat: 1
@@ -8268,35 +7850,6 @@ ifloat: 3
 ildouble: 3
 ldouble: 3
 
-# lgamma
-Test "lgamma (-0.5)":
-ildouble: 1
-ldouble: 1
-Test "lgamma (0.7)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-Test "lgamma (1.2)":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
-ildouble: 1
-ldouble: 1
-
-# log
-Test "log (e)":
-float: 1
-ifloat: 1
-
-# log10
-Test "log10 (e)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-
 # pow_downward
 Test "pow_downward (1.0625, 1.125)":
 double: 1
@@ -8417,34 +7970,7 @@ ildouble: 1
 ldouble: 1
 
 # sincos
-Test "sincos (0.80190127184058835) extra output 2":
-double: 1
-idouble: 1
 Test "sincos (0xc.d4966d92d1708p-4) extra output 2":
-double: 1
-idouble: 1
-Test "sincos (M_PI_6l*2.0) extra output 1":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "sincos (M_PI_6l*2.0) extra output 2":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-Test "sincos (pi/2) extra output 2":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-
-# tan
-Test "tan (pi/4)":
 double: 1
 idouble: 1
 
@@ -8467,29 +7993,11 @@ ildouble: 1
 ldouble: 1
 
 # tgamma
-Test "tgamma (-0.5)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "tgamma (0.5)":
-float: 1
-ifloat: 1
-Test "tgamma (0.7)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
 Test "tgamma (0x1.28p+4)":
 ildouble: 1
 ldouble: 1
 
 # y0
-Test "y0 (0.125)":
-ildouble: 1
-ldouble: 1
 Test "y0 (0x1.8p+0)":
 double: 2
 float: 1
@@ -8568,40 +8076,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "y0 (1.0)":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "y0 (1.5)":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-Test "y0 (10.0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-Test "y0 (2.0)":
-double: 1
-idouble: 1
-Test "y0 (8.0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 
 # y1
-Test "y1 (0.125)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
 Test "y1 (0x1.8p+0)":
 float: 1
 ifloat: 1
@@ -8655,36 +8131,11 @@ idouble: 2
 ifloat: 2
 ildouble: 1
 ldouble: 1
-Test "y1 (1.5)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "y1 (10.0)":
-double: 3
-float: 1
-idouble: 3
-ifloat: 1
-Test "y1 (2.0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "y1 (8.0)":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
 
 # yn
 Test "yn (-10, 0x1p+0)":
 float: 2
 ifloat: 2
-Test "yn (0, 0.125)":
-ildouble: 1
-ldouble: 1
 Test "yn (0, 0x1.8p+0)":
 double: 2
 float: 1
@@ -8715,38 +8166,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "yn (0, 1.0)":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "yn (0, 1.5)":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-Test "yn (0, 10.0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-Test "yn (0, 2.0)":
-double: 1
-idouble: 1
-Test "yn (0, 8.0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "yn (1, 0.125)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
 Test "yn (1, 0x1.8p+0)":
 float: 1
 ifloat: 1
@@ -8774,38 +8193,6 @@ double: 3
 float: 1
 idouble: 3
 ifloat: 1
-Test "yn (1, 1.5)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "yn (1, 10.0)":
-double: 3
-float: 1
-idouble: 3
-ifloat: 1
-Test "yn (1, 2.0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "yn (1, 8.0)":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
-Test "yn (10, 0.125)":
-double: 1
-idouble: 1
-ildouble: 2
-ldouble: 2
-Test "yn (10, 0.75)":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
 Test "yn (10, 0x1p+0)":
 float: 2
 ifloat: 2
@@ -8838,19 +8225,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "yn (10, 1.0)":
-float: 2
-ifloat: 2
-Test "yn (10, 10.0)":
-double: 2
-float: 2
-idouble: 2
-ifloat: 2
-Test "yn (10, 2.0)":
-double: 3
-float: 1
-idouble: 3
-ifloat: 1
 Test "yn (2, 0x8p+124)":
 double: 1
 float: 3
@@ -8869,16 +8243,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "yn (3, 0.125)":
-double: 1
-idouble: 1
-ildouble: 1
-ldouble: 1
-Test "yn (3, 0.75)":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "yn (3, 0x2p+0)":
 double: 1
 idouble: 1
@@ -8895,14 +8259,6 @@ ifloat: 1
 Test "yn (3, 0xcp-4)":
 ildouble: 1
 ldouble: 1
-Test "yn (3, 10.0)":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-Test "yn (3, 2.0)":
-double: 1
-idouble: 1
 
 # Maximal error of functions:
 Function: "asin_downward":
@@ -8950,8 +8306,8 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
-ildouble: 7
-ldouble: 7
+ildouble: 2
+ldouble: 2
 
 Function: Imaginary part of "cacosh":
 double: 1
@@ -8966,8 +8322,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 2
-ldouble: 2
+ildouble: 1
+ldouble: 1
 
 Function: Imaginary part of "casin":
 double: 1
@@ -8978,20 +8334,20 @@ ildouble: 2
 ldouble: 2
 
 Function: Real part of "casinh":
-double: 5
+double: 1
 float: 2
-idouble: 5
+idouble: 1
 ifloat: 2
-ildouble: 5
-ldouble: 5
+ildouble: 2
+ldouble: 2
 
 Function: Imaginary part of "casinh":
-double: 3
+double: 1
 float: 1
-idouble: 3
+idouble: 1
 ifloat: 1
-ildouble: 5
-ldouble: 5
+ildouble: 1
+ldouble: 1
 
 Function: Imaginary part of "catan":
 double: 1
@@ -9002,9 +8358,9 @@ ildouble: 1
 ldouble: 1
 
 Function: Real part of "catanh":
-double: 4
+double: 1
 float: 1
-idouble: 4
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
@@ -9084,12 +8440,8 @@ ildouble: 1
 ldouble: 1
 
 Function: "cos":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-ildouble: 1
-ldouble: 1
+double: 1
+idouble: 1
 
 Function: "cos_downward":
 double: 1
@@ -9120,14 +8472,12 @@ double: 2
 float: 5
 idouble: 2
 ifloat: 5
-ildouble: 6
-ldouble: 6
+ildouble: 3
+ldouble: 3
 
 Function: Imaginary part of "cpow":
-double: 2
-float: 3
-idouble: 2
-ifloat: 3
+float: 2
+ifloat: 2
 ildouble: 4
 ldouble: 4
 
@@ -9156,8 +8506,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 2
-ldouble: 2
 
 Function: Real part of "csqrt":
 double: 1
@@ -9268,8 +8616,8 @@ double: 2
 float: 1
 idouble: 2
 ifloat: 1
-ildouble: 24
-ldouble: 24
+ildouble: 2
+ldouble: 2
 
 Function: Real part of "ctanh_downward":
 double: 3
@@ -9335,26 +8683,6 @@ ifloat: 3
 ildouble: 5
 ldouble: 5
 
-Function: "erf":
-double: 1
-idouble: 1
-
-Function: "erfc":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-
-Function: "exp10":
-double: 6
-float: 2
-idouble: 6
-ifloat: 2
-ildouble: 3
-ldouble: 3
-
 Function: "expm1":
 ildouble: 1
 ldouble: 1
@@ -9367,18 +8695,10 @@ Function: "expm1_tonearest":
 ildouble: 1
 ldouble: 1
 
-Function: "gamma":
-ildouble: 1
-ldouble: 1
-
-Function: "hypot":
-float: 1
-ifloat: 1
-
 Function: "j0":
-double: 3
+double: 2
 float: 2
-idouble: 3
+idouble: 2
 ifloat: 2
 ildouble: 2
 ldouble: 2
@@ -9398,24 +8718,6 @@ idouble: 4
 ifloat: 4
 ildouble: 4
 ldouble: 4
-
-Function: "lgamma":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
-ildouble: 1
-ldouble: 1
-
-Function: "log":
-float: 1
-ifloat: 1
-
-Function: "log10":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
 
 Function: "pow_downward":
 double: 1
@@ -9465,14 +8767,6 @@ ldouble: 1
 
 Function: "sincos":
 double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
-
-Function: "tan":
-double: 1
 idouble: 1
 
 Function: "tan_downward":
@@ -9488,10 +8782,6 @@ ildouble: 1
 ldouble: 1
 
 Function: "tgamma":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
 ildouble: 1
 ldouble: 1
 
