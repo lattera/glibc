@@ -69,7 +69,7 @@ __ieee754_coshl (long double x)
 	if (ix < 0x40862e42fefa39efLL)  return half*__ieee754_expl(fabsl(x));
 
     /* |x| in [log(maxdouble), overflowthresold] */
-	if (ix < 0x408633ce8fb9f87dLL) {
+	if (ix < 0x408633ce8fb9f87fLL) {
 	    w = __ieee754_expl(half*fabsl(x));
 	    t = half*w;
 	    return t*w;

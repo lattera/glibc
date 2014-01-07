@@ -1,3 +1,9 @@
+2014-01-07  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16407]
+	* sysdeps/ieee754/ldbl-128ibm/e_coshl.c (__ieee754_coshl):
+	Increase overflow threshold.
+
 2014-01-07  Ondřej Bílka  <neleai@seznam.cz>
 
 	[BZ #14286]
