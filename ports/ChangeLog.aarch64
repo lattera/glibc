@@ -1,5 +1,12 @@
 2014-01-07  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
+	[BZ #16387]
+	* sysdeps/aarch64/fpu/fpu_control.h (_FPU_FPCR_RM_MASK): Define.
+	* sysdeps/aarch64/soft-fp/sfp-machine.h (FP_ROUNDMODE): Adjust
+	rounding mode mask.
+
+2014-01-07  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
 	* sysdeps/aarch64/libm-test-ulps: Drop sqrt ULPs.
 
 2014-01-07  Marcus Shawcroft  <marcus.shawcroft@linaro.org>

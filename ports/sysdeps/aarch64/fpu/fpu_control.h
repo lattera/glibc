@@ -59,6 +59,9 @@
                    E E D D
                        E E
  */
+
+#define _FPU_FPCR_RM_MASK  0xc00000
+
 #define _FPU_FPCR_MASK_IXE 0x1000
 #define _FPU_FPCR_MASK_UFE 0x0800
 #define _FPU_FPCR_MASK_OFE 0x0400

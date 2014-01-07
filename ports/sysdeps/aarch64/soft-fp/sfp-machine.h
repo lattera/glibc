@@ -47,7 +47,7 @@
 
 #define _FP_DECL_EX		fpu_control_t _fcw
 
-#define FP_ROUNDMODE		(_fcw & 0x3)
+#define FP_ROUNDMODE		(_fcw & _FPU_FPCR_RM_MASK)
 
 #define FP_RND_NEAREST		FE_TONEAREST
 #define FP_RND_ZERO		FE_TOWARDZERO
