@@ -1067,7 +1067,13 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    /* Allocate dynamically an array which definitely is long	      \
 	       enough for the wide character version.  Each byte in the	      \
 	       multi-byte string can produce at most one wide character.  */  \
-	    if (__libc_use_alloca (len * sizeof (wchar_t)))		      \
+	    if (__glibc_unlikely (len > SIZE_MAX / sizeof (wchar_t)))	      \
+	      {								      \
+		__set_errno (EOVERFLOW);				      \
+		done = -1;						      \
+		goto all_done;						      \
+	      }								      \
+	    else if (__libc_use_alloca (len * sizeof (wchar_t)))	      \
 	      string = (CHAR_T *) alloca (len * sizeof (wchar_t));	      \
 	    else if ((string = (CHAR_T *) malloc (len * sizeof (wchar_t)))    \
 		     == NULL)						      \

@@ -1,3 +1,8 @@
+2014-01-07  Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ #14286]
+	* stdio-common/vfprintf.c: Check for integer overflow.
+
 2014-01-07  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
 	* sysdeps/s390/dl-tls.h: sysdeps/s390/dl-tls.h: Remove casts for
