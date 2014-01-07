@@ -27,24 +27,24 @@
 ENTRY (setjmp)
 	.weak C_SYMBOL_NAME (setjmp)
         lghi   %r3,1                /* Second argument of one.  */
-        j      .Linternal_sigsetjmp /* Branch relativ to __sigsetjmp.  */
+        j      0f                   /* Branch relativ to __sigsetjmp.  */
 END (setjmp)
 
 	/* Binary compatibility entry point.  */
 ENTRY(_setjmp)
         .weak  C_SYMBOL_NAME (_setjmp)
         slgr   %r3,%r3              /* Second argument of zero.  */
-        j      .Linternal_sigsetjmp /* Branch relativ to __sigsetjmp.  */
-END (setjmp)
+        j      0f                   /* Branch relativ to __sigsetjmp.  */
+END (_setjmp)
 libc_hidden_def (_setjmp)
 
 ENTRY(__setjmp)
         slgr   %r3,%r3              /* Second argument of zero.  */
-        j      .Linternal_sigsetjmp /* Branch relativ to __sigsetjmp.  */
-END (setjmp)
+        j      0f                   /* Branch relativ to __sigsetjmp.  */
+END (__setjmp)
 
 ENTRY(__sigsetjmp)
-.Linternal_sigsetjmp:
+0:
 #ifdef PTR_MANGLE
 	stmg   %r6,%r13,0(%r2)      /* Store registers in jmp_buf.  */
 	lgr    %r4,%r14
@@ -54,6 +54,10 @@ ENTRY(__sigsetjmp)
 	stmg   %r4,%r5,64(%r2)
 #else
         stmg   %r6,%r15,0(%r2)      /* Store registers in jmp_buf.  */
+#endif
+#ifndef __V1_JMPBUF
+	lghi   %r4,0
+	stg    %r4,144(%r2)         /* Set __flags to 0.  */
 #endif
 	std    %f8,80(%r2)
 	std    %f9,88(%r2)

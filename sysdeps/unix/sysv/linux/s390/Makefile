@@ -16,3 +16,9 @@ endif
 ifeq ($(subdir),elf)
 sysdep_routines += dl-vdso
 endif
+
+ifeq ($(subdir),debug)
+ifeq (yes,$(build-shared))
+sysdep_routines += v1-longjmp_chk
+endif
+endif

@@ -27,24 +27,24 @@
 ENTRY (setjmp)
 	.weak C_SYMBOL_NAME (setjmp)
 	lhi    %r3,1                /* second argument of one */
-	j      .Linternal_sigsetjmp /* branch relativ to __sigsetjmp */
+	j      0f                   /* branch relativ to __sigsetjmp */
 END (setjmp)
 
 	/* Binary compatibility entry point.  */
 ENTRY(_setjmp)
 	.weak  C_SYMBOL_NAME (_setjmp)
 	lhi    %r3,0                /* second argument of zero */
-	j      .Linternal_sigsetjmp /* branch relativ to __sigsetjmp */
+	j      0f                   /* branch relativ to __sigsetjmp */
 END (_setjmp)
 libc_hidden_def (_setjmp)
 
 ENTRY(__setjmp)
 	lhi    %r3,0                /* second argument of zero */
-	j      .Linternal_sigsetjmp /* branch relativ to __sigsetjmp */
+	j      0f                   /* branch relativ to __sigsetjmp */
 END (__setjmp)
 
 ENTRY(__sigsetjmp)
-.Linternal_sigsetjmp:
+0:
 #ifdef PTR_MANGLE
 	stm    %r6,%r13,0(%r2)      /* store registers in jmp_buf */
 	lr     %r4,%r14
@@ -54,6 +54,10 @@ ENTRY(__sigsetjmp)
 	stm    %r4,%r5,32(%r2)
 #else
 	stm    %r6,%r15,0(%r2)      /* store registers in jmp_buf */
+#endif
+#ifndef __V1_JMPBUF
+	lhi    %r4,0
+	st     %r4,56(%r2)         /* Set __flags to 0.  */
 #endif
 	std    %f4,40(%r2)
 	std    %f6,48(%r2)
@@ -66,15 +70,15 @@ ENTRY(__sigsetjmp)
 	   we can't save and restore our caller's value.  Instead, we do an
 	   indirect jump through the GOT. */
 	basr   %r1,0
-.L0:    al     %r1,.L1 - .L0(0,%r1) /* get address of global offset table */
-				    /* get address of __sigjmp_save from got */
+0:      al     %r1,1f-0b(0,%r1) /* get address of global offset table */
+				/* get address of __sigjmp_save from got */
 	l      %r1,__sigjmp_save@GOT12(0,%r1)
 	br     %r1
-.L1:    .long  _GLOBAL_OFFSET_TABLE_ - .L0
+1:      .long  _GLOBAL_OFFSET_TABLE_ - 0b
 #else
 	basr   %r1,0
-.L0:    l      %r1,.L1-.L0(0,%r1)   /* load address of __sigjmp_save */
-	br     %r1                  /* tail-call __sigjmp_save */
-.L1:    .long  __sigjmp_save
+0:      l      %r1,1f-0b(0,%r1)   /* load address of __sigjmp_save */
+	br     %r1                /* tail-call __sigjmp_save */
+1:      .long  __sigjmp_save
 #endif
 END (__sigsetjmp)

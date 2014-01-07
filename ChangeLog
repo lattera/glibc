@@ -1,3 +1,47 @@
+2014-01-07  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* Versions.def: Add GLIBC_2.19 for libpthread.
+	* nptl/sysdeps/unix/sysv/linux/s390/Versions: Add longjmp and
+	siglongjmp for libpthread with GLIBC_2.19 symver.
+	* nptl/sysdeps/unix/sysv/linux/s390/pt-longjmp.c: New file.
+	* sysdeps/s390/Makefile: Build v1-longjmp.c and v1-sigjmp.c.
+	* sysdeps/s390/Versions: New GLIBC_2.19 and GLIBC_PRIVATE symbols.
+	* sysdeps/s390/__longjmp.c: New file.
+	* sysdeps/s390/bits/setjmp.h: Add new fields to __s390_jmp_buf.
+	* sysdeps/s390/longjmp.c: New file.
+	* sysdeps/s390/setjmp.S: New file.
+	* sysdeps/s390/sigjmp.S: New file.
+	* sysdeps/s390/v1-longjmp.c: New file.
+	* sysdeps/s390/v1-setjmp.h: New file.
+	* sysdeps/s390/v1-sigjmp.c: New file.
+	* sysdeps/unix/sysv/linux/s390/Makefile: Build __longjmp_chk.
+	* sysdeps/unix/sysv/linux/s390/Versions: Add __longjmp_chk with
+	GLIBC_2.19 version.
+	* sysdeps/unix/sysv/linux/s390/longjmp_chk.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/____longjmp_chk.c: Provide
+	versioned symbols for ____longjmp_chk.
+	* sysdeps/unix/sysv/linux/s390/s390-64/____longjmp_chk.c:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libc.abilist:
+	Regenerate.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libpthread.abilist:
+	Regenerate.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/libc.abilist:
+	Regenerate.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/libpthread.abilist:
+	Regenerate.
+	* sysdeps/unix/sysv/linux/s390/v1-longjmp_chk.c: New file.
+	* sysdeps/s390/s390-32/__longjmp.c: Rename to ...
+	* sysdeps/s390/s390-32/__longjmp-common.c: ... this.
+	* sysdeps/s390/s390-32/setjmp.S: Rename and adjust to ...
+	* sysdeps/s390/s390-32/setjmp-common.S: ... this.
+	* sysdeps/s390/s390-64/__longjmp.c: Rename to ...
+	* sysdeps/s390/s390-64/__longjmp-common.c: ... this.
+	* sysdeps/s390/s390-64/setjmp.S: Rename and adjust to ...
+	* sysdeps/s390/s390-64/setjmp-common.S: ... this.
+	* sysdeps/s390/rtld-__longjmp.c: New file.
+	* sysdeps/s390/rtld-setjmp.S: New file.
+
 2014-01-06  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16400]

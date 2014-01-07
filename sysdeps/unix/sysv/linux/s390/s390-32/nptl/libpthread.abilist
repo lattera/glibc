@@ -178,6 +178,10 @@ GLIBC_2.18
  GLIBC_2.18 A
  pthread_getattr_default_np F
  pthread_setattr_default_np F
+GLIBC_2.19
+ GLIBC_2.19 A
+ longjmp F
+ siglongjmp F
 GLIBC_2.2
  GLIBC_2.2 A
  __open64 F

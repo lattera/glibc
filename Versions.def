@@ -106,6 +106,7 @@ libpthread {
   GLIBC_2.11
   GLIBC_2.12
   GLIBC_2.18
+  GLIBC_2.19
   GLIBC_PRIVATE
 }
 libresolv {
