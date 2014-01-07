@@ -8297,14 +8297,6 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
-# pow
-Test "pow (-0x2p+0, -0x7.fp+4)":
-float: 4194304
-ifloat: 4194304
-Test "pow (-0x8p-4, 0x7.fp+4)":
-float: 4194304
-ifloat: 4194304
-
 # pow_downward
 Test "pow_downward (1.0625, 1.125)":
 double: 1
@@ -8312,14 +8304,6 @@ idouble: 1
 Test "pow_downward (1.5, 1.03125)":
 float: 1
 ifloat: 1
-
-# pow_tonearest
-Test "pow_tonearest (-0x2p+0, -0x7.fp+4)":
-float: 4194304
-ifloat: 4194304
-Test "pow_tonearest (-0x8p-4, 0x7.fp+4)":
-float: 4194304
-ifloat: 4194304
 
 # pow_towardzero
 Test "pow_towardzero (1.0625, 1.125)":
@@ -9433,19 +9417,11 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
-Function: "pow":
-float: 4194304
-ifloat: 4194304
-
 Function: "pow_downward":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-
-Function: "pow_tonearest":
-float: 4194304
-ifloat: 4194304
 
 Function: "pow_towardzero":
 double: 1
