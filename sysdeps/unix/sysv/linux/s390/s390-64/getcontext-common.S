@@ -31,13 +31,13 @@
   other than the PRESERVED state.  */
 
 ENTRY(__getcontext)
-	lr      %r1,%r2
+	lgr     %r1,%r2
 
-	/* sigprocmask (SIG_BLOCK, NULL, &sc->sc_mask).  */
+	/* rt_sigprocmask (SIG_BLOCK, NULL, &sc->sc_mask, sigsetsize).  */
 	la      %r2,SIG_BLOCK
-	slr	%r3,%r3
+	slgr	%r3,%r3
 	la	%r4,SC_MASK(%r1)
-	lhi	%r5,_NSIG8
+	lghi	%r5,_NSIG8
 	svc	SYS_ify(rt_sigprocmask)
 
 	/* Store fpu context.  */
@@ -60,13 +60,17 @@ ENTRY(__getcontext)
 	std     %f15,SC_FPRS+120(%r1)
 
 	/* Set __getcontext return value to 0.  */
-	slr     %r2,%r2
+	slgr    %r2,%r2
+
+	/* Store the version number into the uc_flags field.  So far
+	   we do not make use of the reserved bytes so we store a zero.  */
+	stg	%r2,SC_FLGS(%r1)
 
 	/* Store access registers.  */
 	stam    %a0,%a15,SC_ACRS(%r1)
 
 	/* Store general purpose registers.  */
-	stm     %r0,%r15,SC_GPRS(%r1)
+	stmg    %r0,%r15,SC_GPRS(%r1)
 
 	/* Return.  */
 	br	%r14

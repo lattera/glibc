@@ -1,5 +1,43 @@
 2014-01-07  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
+	* sysdeps/s390/Makefile: Build rtld-global-offsets.sym.
+	* sysdeps/s390/rtld-global-offsets.sym: New file.
+	* sysdeps/unix/sysv/linux/s390/Versions: Add getcontext as new
+	GLIBC_2.19 symbol.
+	* sysdeps/unix/sysv/linux/s390/getcontext.S: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getcontext.S: Rename to ...
+	* sysdeps/unix/sysv/linux/s390/s390-32/getcontext-common.S:
+	... this.
+	* sysdeps/unix/sysv/linux/s390/s390-64/getcontext.S: Rename to ...
+	* sysdeps/unix/sysv/linux/s390/s390-64/getcontext-common.S:
+	... this.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libc.abilist:
+	Regenerate.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/libc.abilist:
+	Regenerate.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setcontext.S: Restore upper
+	halfs of GPRs for high_gprs contexts.
+	* sysdeps/unix/sysv/linux/s390/s390-32/swapcontext.S: Save and
+	restore upper halfs of GPRs for high_gprs contexts.  Copy uc_flags
+	field.
+	* sysdeps/unix/sysv/linux/s390/s390-64/swapcontext.S: Copy
+	uc_flags field.
+	* sysdeps/unix/sysv/linux/s390/sys/ucontext.h: Split into 32 and
+	64 bit versions:
+	* sysdeps/unix/sysv/linux/s390/s390-32/sys/ucontext.h: Add field
+	for high GPRs (uc_high_gprs) and for future extensions
+	(__reserved).
+	* sysdeps/unix/sysv/linux/s390/s390-64/sys/ucontext.h: Add field
+	for future extensions (__reserved).
+	* sysdeps/unix/sysv/linux/s390/ucontext_i.sym: Split into 32 and
+	64 bit versions:
+	* sysdeps/unix/sysv/linux/s390/s390-32/ucontext_i.sym: Add
+	SC_HIGHGPRS offset definition.
+	* sysdeps/unix/sysv/linux/s390/s390-64/ucontext_i.sym: New file.
+	* sysdeps/unix/sysv/linux/s390/rtld-getcontext.S: New file.
+
+2014-01-07  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
 	* Versions.def: Add GLIBC_2.19 for libpthread.
 	* nptl/sysdeps/unix/sysv/linux/s390/Versions: Add longjmp and
 	siglongjmp for libpthread with GLIBC_2.19 symver.

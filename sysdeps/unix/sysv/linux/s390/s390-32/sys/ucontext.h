@@ -1,4 +1,4 @@
-/* Copyright (C) 2000-2014 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2013 Free Software Foundation, Inc.
    Contributed by Denis Joseph Barrow (djbarrow@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -64,6 +64,13 @@ typedef struct
     fpreg_t fprs[16];
   } fpregset_t;
 
+/* Bit is set if the uc_high_gprs field contains the upper halfs of
+   the 64 bit general purpose registers.  */
+#define UCONTEXT_UC_FLAGS_HIGH_GPRS (1UL << 0)
+
+/* A new uc_flags constant will be defined when actually making use of
+   the reserved space: UCONTEXT_UCFLAGS_RESERVED (1UL << 1).  */
+
 /* Context to describe whole processor state.  */
 typedef struct
   {
@@ -81,6 +88,8 @@ struct ucontext
     stack_t uc_stack;
     mcontext_t uc_mcontext;
     __sigset_t uc_sigmask;
+    unsigned long uc_high_gprs[16];
+    char __reserved[512];
   };
 
 

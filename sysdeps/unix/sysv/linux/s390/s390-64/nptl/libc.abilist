@@ -102,6 +102,7 @@ GLIBC_2.19
  __sigsetjmp F
  _longjmp F
  _setjmp F
+ getcontext F
  longjmp F
  setjmp F
  siglongjmp F
