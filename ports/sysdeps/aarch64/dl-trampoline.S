@@ -42,7 +42,7 @@ _dl_runtime_resolve:
 
 	/* Save arguments.  */
 	stp	x8, x9, [sp, #-(80+8*16)]!
-	cfi_adjust_cfa_offset (80)
+	cfi_adjust_cfa_offset (80+8*16)
 	cfi_rel_offset (x8, 0)
 	cfi_rel_offset (x9, 8)
 
