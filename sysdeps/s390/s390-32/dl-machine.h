@@ -299,7 +299,8 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     return;
   else
     {
-#ifndef RESOLVE_CONFLICT_FIND_MAP
+#if !defined RTLD_BOOTSTRAP && !defined RESOLVE_CONFLICT_FIND_MAP
+      /* Only needed for R_390_COPY below.  */
       const Elf32_Sym *const refsym = sym;
 #endif
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
