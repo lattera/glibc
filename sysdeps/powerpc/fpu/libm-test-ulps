@@ -8242,6 +8242,15 @@ ldouble: 1
 Test "cosh (-0x2.c5e3acp+8)":
 double: 1
 idouble: 1
+Test "cosh (-0x2.c679d1f73f0fap+8)":
+ildouble: 3
+ldouble: 3
+Test "cosh (-0x2.c679d1f73f0fb624d358b213a7p+8)":
+ildouble: 3
+ldouble: 3
+Test "cosh (-0x2.c679d1f73f0fb624p+8)":
+ildouble: 1
+ldouble: 1
 Test "cosh (-0x2.c679dp+8)":
 double: 1
 idouble: 1
@@ -8251,6 +8260,15 @@ ldouble: 1
 Test "cosh (0x2.c5e3acp+8)":
 double: 1
 idouble: 1
+Test "cosh (0x2.c679d1f73f0fap+8)":
+ildouble: 3
+ldouble: 3
+Test "cosh (0x2.c679d1f73f0fb624d358b213a7p+8)":
+ildouble: 3
+ldouble: 3
+Test "cosh (0x2.c679d1f73f0fb624p+8)":
+ildouble: 1
+ldouble: 1
 Test "cosh (0x2.c679dp+8)":
 double: 1
 idouble: 1
@@ -8344,6 +8362,15 @@ ldouble: 1
 Test "cosh_tonearest (-0x2.c5e3acp+8)":
 double: 1
 idouble: 1
+Test "cosh_tonearest (-0x2.c679d1f73f0fap+8)":
+ildouble: 3
+ldouble: 3
+Test "cosh_tonearest (-0x2.c679d1f73f0fb624d358b213a7p+8)":
+ildouble: 3
+ldouble: 3
+Test "cosh_tonearest (-0x2.c679d1f73f0fb624p+8)":
+ildouble: 1
+ldouble: 1
 Test "cosh_tonearest (-0x2.c679dp+8)":
 double: 1
 idouble: 1
@@ -8353,6 +8380,15 @@ ldouble: 1
 Test "cosh_tonearest (0x2.c5e3acp+8)":
 double: 1
 idouble: 1
+Test "cosh_tonearest (0x2.c679d1f73f0fap+8)":
+ildouble: 3
+ldouble: 3
+Test "cosh_tonearest (0x2.c679d1f73f0fb624d358b213a7p+8)":
+ildouble: 3
+ldouble: 3
+Test "cosh_tonearest (0x2.c679d1f73f0fb624p+8)":
+ildouble: 1
+ldouble: 1
 Test "cosh_tonearest (0x2.c679dp+8)":
 double: 1
 idouble: 1
@@ -14674,6 +14710,12 @@ idouble: 1
 Test "tgamma (-0x2.7fffffffffffffffffffffffffp+4)":
 ildouble: 1
 ldouble: 1
+Test "tgamma (-0x2.80000000000000000000000001p+4)":
+ildouble: 1
+ldouble: 1
+Test "tgamma (-0x2.8000000000000004p+4)":
+ildouble: 2
+ldouble: 2
 Test "tgamma (-0x2.8000000000002p+4)":
 double: 1
 idouble: 1
@@ -14953,8 +14995,8 @@ ldouble: 1
 Test "tgamma (-0x7.0000000000004p+0)":
 double: 3
 idouble: 3
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 Test "tgamma (-0x7.0000000000004p0)":
 double: 3
 idouble: 3
@@ -15133,6 +15175,8 @@ ldouble: 1
 Test "tgamma (0x1.38p+4)":
 double: 2
 idouble: 2
+ildouble: 1
+ldouble: 1
 Test "tgamma (0x1.78p+4)":
 double: 1
 float: 1
@@ -15292,6 +15336,8 @@ ifloat: 1
 Test "tgamma (0x7.0000000000004p+0)":
 double: 4
 idouble: 4
+ildouble: 1
+ldouble: 1
 Test "tgamma (0x7.0000000000004p0)":
 double: 4
 idouble: 4
@@ -15996,6 +16042,8 @@ ldouble: 2
 Function: "acosh":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 
 Function: "asin":
 ildouble: 2
@@ -16034,6 +16082,7 @@ double: 1
 float: 1
 ifloat: 1
 ildouble: 1
+ldouble: 1
 
 Function: "atan":
 double: 1
@@ -16062,24 +16111,32 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
+ildouble: 1
+ldouble: 1
 
 Function: Imaginary part of "cacos":
 double: 3
 float: 2
 idouble: 3
 ifloat: 2
+ildouble: 2
+ldouble: 2
 
 Function: Real part of "cacosh":
 double: 1
 float: 7
 idouble: 1
 ifloat: 7
+ildouble: 2
+ldouble: 2
 
 Function: Imaginary part of "cacosh":
 double: 1
 float: 3
 idouble: 1
 ifloat: 3
+ildouble: 1
+ldouble: 1
 
 Function: "carg":
 ildouble: 1
@@ -16098,12 +16155,16 @@ double: 3
 float: 2
 idouble: 3
 ifloat: 2
+ildouble: 2
+ldouble: 2
 
 Function: Real part of "casinh":
 double: 5
 float: 2
 idouble: 5
 ifloat: 2
+ildouble: 2
+ldouble: 2
 
 Function: Imaginary part of "casinh":
 double: 3
@@ -16116,6 +16177,8 @@ ldouble: 1
 Function: Real part of "catan":
 float: 4
 ifloat: 4
+ildouble: 1
+ldouble: 1
 
 Function: Imaginary part of "catan":
 double: 1
@@ -16136,12 +16199,16 @@ ldouble: 1
 Function: Imaginary part of "catanh":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: "cbrt":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: Real part of "ccos":
 double: 1
@@ -16266,8 +16333,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 3
+ldouble: 3
 
 Function: "cosh_downward":
 double: 1
@@ -16282,14 +16349,16 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 3
+ldouble: 3
 
 Function: "cosh_towardzero":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 2
+ldouble: 2
 
 Function: "cosh_upward":
 double: 1
@@ -16350,12 +16419,16 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
+ildouble: 1
+ldouble: 1
 
 Function: Imaginary part of "csqrt":
 double: 1
 float: 2
 idouble: 1
 ifloat: 2
+ildouble: 1
+ldouble: 1
 
 Function: Real part of "ctan":
 double: 1
@@ -16546,6 +16619,8 @@ ldouble: 1
 Function: "exp10_downward":
 double: 1
 idouble: 1
+ildouble: 4
+ldouble: 4
 
 Function: "exp10_tonearest":
 double: 1
@@ -16556,6 +16631,8 @@ ldouble: 1
 Function: "exp10_towardzero":
 double: 1
 idouble: 1
+ildouble: 4
+ldouble: 4
 
 Function: "exp10_upward":
 double: 1
@@ -16626,6 +16703,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 2
+ldouble: 2
 
 Function: "expm1_upward":
 double: 1
@@ -16640,6 +16719,8 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
+ildouble: 1
+ldouble: 1
 
 Function: "hypot":
 double: 1
@@ -16678,10 +16759,14 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
+ildouble: 1
+ldouble: 1
 
 Function: "log":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: "log10":
 double: 1
