@@ -17,9 +17,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* This has been coded in assembler because GCC makes such a mess of it
-   when it's coded in C.  */
-
 #include <math.h>
 #include <math_ldbl_opt.h>
 #include <float.h>

@@ -1,4 +1,11 @@
-2013-01-08  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+2014-01-08  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	[BZ #16414]
+	* sysdeps/powerpc/powerpc64/fpu/s_truncl.S: Remove wrong
+	implementation.
+	* sysdeps/ieee754/ldbl-128ibm/s_truncl.c: Remove bogus comment.
+
+2014-01-08  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
 
