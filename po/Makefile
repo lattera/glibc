@@ -50,7 +50,7 @@ install-others = $(LINGUAS:%=$(mo-installed))
 include ../Rules
 
 # Generate the translation template from all the source files.
-libc.pot: header.pot libc.pot.files
+libc.pot: pot.header libc.pot.files
 	@rm -f $@.new
 	set `date -R`; disp="$$6"; \
 	sed -e 's/VERSION/$(version)/' \
