@@ -58,8 +58,8 @@ ENTRY (memmove)
 
 	movl	%edi, %eax
 	subl	%esi, %eax
-	cmpl	%eax, %edi
-	jae	3f
+	cmpl	%eax, %ecx
+	ja	3f
 
 	cld
 	shrl	$1, %ecx

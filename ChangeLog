@@ -1,3 +1,10 @@
+2014-01-08  Yuriy Kaminskiy  <yumkam@gmail.com>
+	    Maxim Kuvyrkov  <maxim@kugelworks.com>
+
+	[BZ #16394]
+        * sysdeps/i386/i686/memmove.S (memmove): Compare distance between
+        SRC and DEST against LEN.
+
 2014-01-08  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ #16414]
