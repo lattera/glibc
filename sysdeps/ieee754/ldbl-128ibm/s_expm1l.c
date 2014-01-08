@@ -101,6 +101,8 @@ __expm1l (long double x)
   EXTRACT_WORDS (ix, lx, xhi);
   sign = ix & 0x80000000;
   ix &= 0x7fffffff;
+  if (!sign && ix >= 0x40600000)
+    return __expl (x);
   if (ix >= 0x7ff00000)
     {
       /* Infinity. */

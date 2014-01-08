@@ -1,3 +1,9 @@
+2014-01-08  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16408]
+	* sysdeps/ieee754/ldbl-128ibm/s_expm1l.c (__expm1l): Use __expl
+	for large positive arguments.
+
 2014-01-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/nofpu/libm-test-ulps: Regenerated.
