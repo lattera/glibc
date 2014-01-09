@@ -1,3 +1,7 @@
+2014-01-08  Brooks Moses  <bmoses@google.com>
+
+	* elf/dl-load.c: Fix comment typo.
+
 2014-01-08  Carlos O'Donell  <carlos@redhat.com>
 
 	* po/header.pot: Rename to...
