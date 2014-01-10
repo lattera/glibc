@@ -2504,20 +2504,8 @@
 # asin multiple precision fallback path
 # Implemented in __sin32 in sysdeps/ieee754/dbl-64/sincos32.c
 ## name: slow
-0x1.e010a7d04711cp-16
-0x1.a7601192f9094p-10
-0x1.4987361088586p-14
-0x1.0b263bc6fc966p-4
-0x1.259e505cf0504p-15
 0x1.c88b2415431cbp-23
-0x1.447197964af33p-4
-0x1.efad46d44e2d1p-18
-0x1.6fc4b0eb33b13p-16
 0x1.84a360ccf288dp-20
-0x1.92ace49380c10p-13
-0x1.1552272e0f268p-16
-0x1.d529ca96edee6p-7
-0x1.3f39d47a33d9bp-13
 0x1.7eff5496b7ed2p-21
 0x1.4360a7a7b5c14p-23
 0x1.71374498ed714p-26
