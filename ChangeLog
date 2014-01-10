@@ -1,3 +1,7 @@
+2014-01-10  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/generic/gcc-compat.h: New file.
+
 2014-01-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* benchtests/asin-inputs: Correct slow inputs.
