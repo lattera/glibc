@@ -5789,6 +5789,7 @@
 2013-09-05  Carlos O'Donell  <carlos@redhat.com>
 	    Cong Wang  <amwang@redhat.com>
 
+	[BZ #15850]
 	* sysdeps/unix/sysv/linux/bits/in.h
 	[_UAPI_LINUX_IN6_H]: Define __USE_KERNEL_IPV6_DEFS.
 	* inet/netinet/in.h: Move in_addr definition and bits/in.h inclusion
