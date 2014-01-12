@@ -29,7 +29,6 @@ static __thread intptr_t tls_data = 0xdeadbeef;
 void
 action (int signo, siginfo_t *info, void *ignored)
 {
-  sem_t *sem = info->si_value.sival_ptr;
   if (tls_data != 0xdeadbeef)
     {
       write (STDOUT_FILENO, "wrong TLS value\n", 17);
@@ -38,6 +37,4 @@ action (int signo, siginfo_t *info, void *ignored)
 
   /* arbitrary choice, just write something unique-ish. */
   tls_data = (intptr_t) info;
-
-  sem_post (sem);
 }

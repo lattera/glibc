@@ -19,6 +19,8 @@
 /* This test checks that TLS in a dlopened object works when first accessed
    from a signal handler.  */
 
+#include <assert.h>
+#include <atomic.h>
 #include <dlfcn.h>
 #include <pthread.h>
 #include <semaphore.h>
@@ -37,6 +39,23 @@ spin (void *ignored)
 
   /* never reached */
   return NULL;
+}
+
+static void (*tls7mod_action) (int, siginfo_t *, void *);
+
+static void
+action (int signo, siginfo_t *info, void *ignored)
+{
+  sem_t *sem = info->si_value.sival_ptr;
+
+  atomic_read_barrier ();
+  assert (tls7mod_action != NULL);
+  (*tls7mod_action) (signo, info, ignored);
+
+  /* This sem_post may trigger dlclose, which will invalidate tls7mod_action.
+     It is important to do that only after tls7mod_action is no longer
+     active.  */
+  sem_post (sem);
 }
 
 int
@@ -63,12 +82,13 @@ do_test (void)
           exit (1);
         }
 
-      void (*action) (int, siginfo_t *, void *) = dlsym (h, "action");
-      if (action == NULL)
+      tls7mod_action = dlsym (h, "action");
+      if (tls7mod_action == NULL)
         {
           puts ("dlsym for action failed");
           exit (1);
         }
+      atomic_write_barrier ();
 
       struct sigaction sa;
       sa.sa_sigaction = action;
@@ -104,6 +124,9 @@ do_test (void)
             puts ("sem_wait failed");
           }
         }
+
+      /* Paranoia.  */
+      tls7mod_action = NULL;
 
       if (dlclose (h))
         {

@@ -1,3 +1,9 @@
+2014-01-11  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* tst-tls7.c (action): New function.
+	(do_test): Call it.
+	* tst-tls7mod.c (action): Move sem_post to caller.
+
 2014-01-03  Andrew Hunter  <ahh@google.com>
 
 	* nptl/Makefile (tst-tls7): New test.
