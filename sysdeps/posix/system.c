@@ -181,15 +181,6 @@ __libc_system (const char *line)
        not be available after a chroot(), for example.  */
     return do_system ("exit 0") == 0;
 
-  if (SINGLE_THREAD_P)
-    return do_system (line);
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  int result = do_system (line);
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
+  return do_system (line);
 }
 weak_alias (__libc_system, system)
