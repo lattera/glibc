@@ -1,5 +1,11 @@
 2014-01-15  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
+	[BZ #16427]
+	* sysdeps/ieee754/ldbl-128/w_expl.c (__expl): Invoke the non-IEEE
+	handling only for numbers special also in the IEEE case.
+
+2014-01-15  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
 	* sysdeps/s390/fpu/libm-test-ulps: Regenerate.
 
 2014-01-11  Allan McRae  <allan@archlinux.org>
