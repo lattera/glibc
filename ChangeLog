@@ -1,3 +1,8 @@
+2014-01-15  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/sotruss-lib.c: New file: sotruss-lib.so
+	implementation for powerpc.
+
 2014-01-15  Ondřej Bílka  <neleai@seznam.cz>
 
 	[BZ #14782]
