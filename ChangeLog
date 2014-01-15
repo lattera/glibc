@@ -1,3 +1,9 @@
+2014-01-15  Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ #14782]
+	* sysdeps/posix/system.c (__libc_system): Do not enable
+	asynchronous cancellation.
+
 2014-01-15  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
 	[BZ #16427]
