@@ -1,3 +1,7 @@
+2014-01-15  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* sysdeps/s390/fpu/libm-test-ulps: Regenerate.
+
 2014-01-11  Allan McRae  <allan@archlinux.org>
 
 	* po/bg.po: Update Bulgarian translation from translation project.
