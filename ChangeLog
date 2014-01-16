@@ -1,3 +1,8 @@
+2014-01-16 Joseph Myers  <joseph@codesourcery.com>
+
+	* math/test-fpucw-ieee.c: Use <> in #include of test-fpucw.c.
+	* math/test-fpucw-static.c: Likewise.
+
 2013-01-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #16453]
