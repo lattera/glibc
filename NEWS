@@ -101,6 +101,9 @@ Version 2.19
 
 * SystemTap probes for malloc have been introduced.
 
+* SystemTap probes for slow multiple precision fallback paths of
+  transcendental functions have been introduced.
+
 * Support for powerpc64le has been added.
 
 * The soft-float powerpc port now supports e500 processors.
