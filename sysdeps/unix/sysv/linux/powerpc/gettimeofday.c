@@ -44,8 +44,24 @@ asm (".type __gettimeofday, %gnu_indirect_function");
 /* This is doing "libc_hidden_def (__gettimeofday)" but the compiler won't
    let us do it in C because it doesn't know we're defining __gettimeofday
    here in this file.  */
-asm (".globl __GI___gettimeofday\n"
-     "__GI___gettimeofday = __gettimeofday");
+asm (".globl __GI___gettimeofday");
+
+/* __GI___gettimeofday is defined as hidden and for ppc32 it enables the
+   compiler make a local call (symbol@local) for internal GLIBC usage. It
+   means the PLT won't be used and the ifunc resolver will be called directly.
+   For ppc64 a call to a function in another translation unit might use a
+   different toc pointer thus disallowing direct branchess and making internal
+   ifuncs calls safe.  */
+#ifdef __powerpc64__
+asm ("__GI___gettimeofday = __gettimeofday");
+#else
+int
+__gettimeofday_vsyscall (struct timeval *tv, struct timezone *tz)
+{
+  return INLINE_VSYSCALL (gettimeofday, 2, tv, tz);
+}
+asm ("__GI___gettimeofday = __gettimeofday_vsyscall");
+#endif
 
 #else
 

@@ -54,8 +54,24 @@ asm (".type time, %gnu_indirect_function");
 /* This is doing "libc_hidden_def (time)" but the compiler won't
  * let us do it in C because it doesn't know we're defining time
  * here in this file.  */
-asm (".globl __GI_time\n"
-     "__GI_time = time");
+asm (".globl __GI_time");
+
+/* __GI_time is defined as hidden and for ppc32 it enables the
+   compiler make a local call (symbol@local) for internal GLIBC usage. It
+   means the PLT won't be used and the ifunc resolver will be called directly.
+   For ppc64 a call to a function in another translation unit might use a
+   different toc pointer thus disallowing direct branchess and making internal
+   ifuncs calls safe.  */
+#ifdef __powerpc64__
+asm ("__GI_time = time");
+#else
+time_t
+__time_vsyscall (time_t *t)
+{
+  return INLINE_VSYSCALL (time, 1, t);
+}
+asm ("__GI_time = __time_vsyscall");
+#endif
 
 #else
 
