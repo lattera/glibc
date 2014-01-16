@@ -1,3 +1,8 @@
+2013-01-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #16453]
+	* nscd/netgroupcache.c (addgetnetgrentX): Don't use alloca.
+
 2014-01-15  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/sotruss-lib.c: New file: sotruss-lib.so
