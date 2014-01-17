@@ -5,7 +5,7 @@
 2014-01-16  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ#16430]
-        * sysdeps/unix/sysv/linux/powerpc/gettimeofday.c
+	* sysdeps/unix/sysv/linux/powerpc/gettimeofday.c
 	(__GI___gettimeofday): Alias for a different internal symbol to avoid
 	local calls issues by not having a PLT stub required for IFUNC calls.
 	* sysdeps/unix/sysv/linux/powerpc/time.c (__GI_time): Likewise.
