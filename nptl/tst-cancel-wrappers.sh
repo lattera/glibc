@@ -54,7 +54,6 @@ C["sigpause"]=1
 C["sigsuspend"]=1
 C["sigwait"]=1
 C["sigwaitinfo"]=1
-C["system"]=1
 C["tcdrain"]=1
 C["wait"]=1
 C["waitid"]=1

@@ -1,3 +1,8 @@
+2014-01-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14782]
+	* tst-cancel-wrappers.sh: Remove system.
+
 2014-01-11  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* tst-tls7.c (action): New function.
