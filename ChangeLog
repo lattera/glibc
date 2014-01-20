@@ -1,3 +1,7 @@
+2014-01-20  Allan McRae  <allan@archlinux.org>
+
+	* po/ca.po: Update Catalan translation from translation project.
+
 2014-01-16  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/s390/sotruss-lib.c: New file.
