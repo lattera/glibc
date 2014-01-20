@@ -1,3 +1,10 @@
+2014-01-20  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	[BZ#16431]
+	* sysdeps/unix/sysv/linux/powerpc/gettimeofday.c (__gettimeofday):
+	Adjust the vDSO correctly for internal calls.
+	* sysdeps/unix/sysv/linux/powerpc/time.c (time): Likewise.
+
 2014-01-20  Allan McRae  <allan@archlinux.org>
 
 	* po/ca.po: Update Catalan translation from translation project.

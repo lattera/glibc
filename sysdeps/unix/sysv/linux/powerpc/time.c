@@ -45,9 +45,12 @@ time_syscall (time_t *t)
 void *
 time_ifunc (void)
 {
+  PREPARE_VERSION (linux2615, "LINUX_2.6.15", 123718565);
+
   /* If the vDSO is not available we fall back to the syscall.  */
-  return (__vdso_time ? VDSO_IFUNC_RET (__vdso_time)
-	  : time_syscall);
+  void *vdso_time = _dl_vdso_vsym ("__kernel_time", &linux2615);
+  return (vdso_time ? VDSO_IFUNC_RET (vdso_time)
+	  : (void*)time_syscall);
 }
 asm (".type time, %gnu_indirect_function");
 

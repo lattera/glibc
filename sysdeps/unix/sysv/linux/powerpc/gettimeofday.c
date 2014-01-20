@@ -35,9 +35,12 @@ __gettimeofday_syscall (struct timeval *tv, struct timezone *tz)
 void *
 gettimeofday_ifunc (void)
 {
+  PREPARE_VERSION (linux2615, "LINUX_2.6.15", 123718565);
+
   /* If the vDSO is not available we fall back syscall.  */
-  return (__vdso_gettimeofday ? VDSO_IFUNC_RET (__vdso_gettimeofday)
-	  : __gettimeofday_syscall);
+  void *vdso_gettimeofday = _dl_vdso_vsym ("__kernel_gettimeofday", &linux2615);
+  return (vdso_gettimeofday ? VDSO_IFUNC_RET (vdso_gettimeofday)
+	  : (void*)__gettimeofday_syscall);
 }
 asm (".type __gettimeofday, %gnu_indirect_function");
 
