@@ -1,1 +1,1 @@
-/* Fortunately nothing to do.  */
+#include <sysdeps/generic/symbol-hacks.h>

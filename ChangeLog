@@ -1,3 +1,8 @@
+2014-01-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #15605]
+	* sysdeps/x86_64/x32/symbol-hacks.h: Include generic symbol-hacks.h.
+
 2014-01-20  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ#16431]
