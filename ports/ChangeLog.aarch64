@@ -1,3 +1,8 @@
+2014-01-20  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* sysdeps/unix/sysv/linux/aarch64/Makefile (abi-lp64_be-options): Fix
+	type in define.
+
 2014-01-20  Tom Tromey  <tromey@redhat.com>
 
 	[BZ #16169]
