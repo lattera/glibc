@@ -13401,22 +13401,9 @@ idouble: 1
 Test "exp_upward (-0xf.ffffffffffff8p+1020)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
-Test "exp_upward (-0xf.ffffffffffffbffffffffffffcp+1020)":
-ildouble: 1
-ldouble: 1
-Test "exp_upward (-0xf.fffffffffffffffffffffffffff8p+16380)":
-ildouble: 1
-ldouble: 1
-Test "exp_upward (-0xf.fffffffffffffffp+16380)":
-ildouble: 1
-ldouble: 1
 Test "exp_upward (-0xf.fffffp+124)":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
 Test "exp_upward (0x1p+0)":
 double: 1
 idouble: 1
@@ -18595,8 +18582,6 @@ idouble: 1
 Function: "exp_upward":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
 
 Function: "expm1":
 double: 1
