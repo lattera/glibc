@@ -1,3 +1,10 @@
+2014-01-22  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/sys/ucontext.h: Merge into
+	s390/sys/ucontext.h.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sys/ucontext.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/sys/ucontext.h: New file.
+
 2014-01-20  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #15605]
