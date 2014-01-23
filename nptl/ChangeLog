@@ -1,3 +1,7 @@
+2014-01-23  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* tst-tls7.c: Adjust testcase timeout
+
 2014-01-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14782]
