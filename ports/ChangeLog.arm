@@ -1,3 +1,9 @@
+2014-01-24  Will Newton  <will.newton@linaro.org>
+
+	[BZ #16499]
+	* sysdeps/unix/sysv/linux/arm/clone.S: Use BLX macro instead
+	of blx instruction directly.
+
 2014-01-14  Will Newton  <will.newton@linaro.org>
 
 	* sysdeps/arm/__longjmp.S: Don't apply pointer encryption

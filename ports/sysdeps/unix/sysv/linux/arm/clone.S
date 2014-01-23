@@ -88,14 +88,8 @@ PSEUDO_END (__clone)
 #endif
 	@ pick the function arg and call address off the stack and execute
 	ldr	r0, [sp, #4]
-#if defined(__ARM_ARCH_4T__) && defined(__THUMB_INTERWORK__)
 	ldr 	ip, [sp], #8
-	mov	lr, pc
-	bx      ip
-#else
-	ldr 	lr, [sp], #8
-	blx	lr
-#endif
+	BLX (ip)
 
 	@ and we are done, passing the return value through r0
 	b	PLTJMP(HIDDEN_JUMPTARGET(_exit))
