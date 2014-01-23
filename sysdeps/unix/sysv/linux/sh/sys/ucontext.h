@@ -31,10 +31,10 @@
 typedef int greg_t;
 
 /* Number of general registers.  */
-#define NFPREG	16
+#define NGPREG	16
 
 /* Container for all general registers.  */
-typedef greg_t gregset_t[NFPREG];
+typedef greg_t gregset_t[NGPREG];
 
 #ifdef __USE_GNU
 /* Number of each register is the `gregset_t' array.  */
@@ -75,6 +75,7 @@ enum
 };
 #endif
 
+#ifdef __SH_FPU_ANY__
 typedef int freg_t;
 
 /* Number of FPU registers.  */
@@ -100,6 +101,20 @@ typedef struct
     unsigned int fpul;
     unsigned int ownedfp;
   } mcontext_t;
+#else
+/* Context to describe whole processor state.  */
+typedef struct
+  {
+    unsigned int oldmask;
+    gregset_t gregs;
+    unsigned int pc;
+    unsigned int pr;
+    unsigned int sr;
+    unsigned int gbr;
+    unsigned int mach;
+    unsigned int macl;
+  } mcontext_t;
+#endif /* __SH_FPU_ANY__ */
 
 /* Userlevel context.  */
 typedef struct ucontext

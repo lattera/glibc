@@ -19,6 +19,17 @@
 #ifndef _FPU_CONTROL_H
 #define _FPU_CONTROL_H
 
+#if !defined(__SH_FPU_ANY__)
+
+#define _FPU_RESERVED 0xffffffff
+#define _FPU_DEFAULT  0x00000000
+typedef unsigned int fpu_control_t;
+#define _FPU_GETCW(cw) (cw) = 0
+#define _FPU_SETCW(cw) (void) (cw)
+extern fpu_control_t __fpu_control;
+
+#else
+
 #include <features.h>
 
 /* masking of interrupts */
@@ -59,4 +70,7 @@ extern void __set_fpscr (unsigned long);
 extern fpu_control_t __fpu_control;
 
 __END_DECLS
+
+#endif /* __SH_FPU_ANY__ */
+
 #endif /* _FPU_CONTROL_H */
