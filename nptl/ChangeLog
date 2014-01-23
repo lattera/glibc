@@ -1,3 +1,7 @@
+2014-02-08  Mike Frysinger  <vapier@gentoo.org>
+
+	* sem_open.c (__where_is_shmfs): Compare f.f_type to RAMFS_MAGIC too.
+
 2014-02-05  Carlos O'Donell  <carlos@redhat.com>
 
 	* sysdeps/unix/sysv/linux/tst-setgetname.c (do_test): Skip the
