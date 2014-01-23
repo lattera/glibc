@@ -1,3 +1,43 @@
+2014-02-08  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/linux_fsinfo.h (AFS_SUPER_MAGIC): Define.
+	(ANON_INODE_FS_MAGIC): Likewise.
+	(BDEVFS_MAGIC): Likewise.
+	(BINFMTFS_MAGIC): Likewise.
+	(BTRFS_TEST_MAGIC): Likewise.
+	(CRAMFS_MAGIC_WEND): Likewise.
+	(DEBUGFS_MAGIC): Likewise.
+	(ECRYPTFS_SUPER_MAGIC): Likewise.
+	(EXT3_SUPER_MAGIC): Likewise.
+	(EXT4_SUPER_MAGIC): Likewise.
+	(FUTEXFS_SUPER_MAGIC): Likewise.
+	(HOSTFS_SUPER_MAGIC): Likewise.
+	(HUGETLBFS_MAGIC): Likewise.
+	(MINIX3_SUPER_MAGIC): Likewise.
+	(MTD_INODE_FS_MAGIC): Likewise.
+	(NILFS_SUPER_MAGIC): Likewise.
+	(OPENPROM_SUPER_MAGIC): Likewise.
+	(PIPEFS_MAGIC): Likewise.
+	(PSTOREFS_MAGIC): Likewise.
+	(QNX6_SUPER_MAGIC): Likewise.
+	(RAMFS_MAGIC): Likewise.
+	(REISERFS_SUPER_MAGIC_STRING): Likewise.
+	(REISER2FS_SUPER_MAGIC_STRING): Likewise.
+	(REISER2FS_JR_SUPER_MAGIC_STRING): Likewise.
+	(SECURITYFS_MAGIC): Likewise.
+	(SELINUX_MAGIC): Likewise.
+	(SMACK_MAGIC): Likewise.
+	(SOCKFS_MAGIC): Likewise.
+	(SQUASHFS_MAGIC): Likewise.
+	(STACK_END_MAGIC): Likewise.
+	(TMPFS_MAGIC): Likewise.
+	(USBDEVICE_SUPER_MAGIC): Likewise.
+	(V9FS_MAGIC): Likewise.
+	(XENFS_SUPER_MAGIC): Likewise.
+	(CRAMFS_MAGIC): Fix typo in comment.
+	(EXT2_SUPER_MAGIC): Update comment.
+	(USBDEVFS_SUPER_MAGIC): Fix sorting order by moving further down.
+
 2014-02-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm: Move directory from ports/sysdeps/arm.
