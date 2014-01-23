@@ -1,5 +1,10 @@
 2014-02-08  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/unix/sysv/linux/shm_open.c (where_is_shmfs): Compare
+	f.f_type to RAMFS_MAGIC too.  Compare mp->mnt_type to shm too.
+
+2014-02-08  Mike Frysinger  <vapier@gentoo.org>
+
 	* manual/setjmp.texi: Fix typos/grammar errors.
 
 2014-02-08  Mike Frysinger  <vapier@gentoo.org>

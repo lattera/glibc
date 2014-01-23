@@ -62,7 +62,8 @@ where_is_shmfs (void)
 
   /* The canonical place is /dev/shm.  This is at least what the
      documentation tells everybody to do.  */
-  if (__statfs (defaultdir, &f) == 0 && f.f_type == SHMFS_SUPER_MAGIC)
+  if (__statfs (defaultdir, &f) == 0 && (f.f_type == SHMFS_SUPER_MAGIC
+					 || f.f_type == RAMFS_MAGIC))
     {
       /* It is in the normal place.  */
       mountpoint.dir = (char *) defaultdir;
@@ -86,7 +87,8 @@ where_is_shmfs (void)
   while ((mp = __getmntent_r (fp, &resmem, buf, sizeof buf)) != NULL)
     /* The original name is "shm" but this got changed in early Linux
        2.4.x to "tmpfs".  */
-    if (strcmp (mp->mnt_type, "tmpfs") == 0)
+    if (strcmp (mp->mnt_type, "tmpfs") == 0
+	|| strcmp (mp->mnt_type, "shm") == 0)
       {
 	/* Found it.  There might be more than one place where the
            filesystem is mounted but one is enough for us.  */
@@ -95,7 +97,8 @@ where_is_shmfs (void)
 	/* First make sure this really is the correct entry.  At least
 	   some versions of the kernel give wrong information because
 	   of the implicit mount of the shmfs for SysV IPC.  */
-	if (__statfs (mp->mnt_dir, &f) != 0 || f.f_type != SHMFS_SUPER_MAGIC)
+	if (__statfs (mp->mnt_dir, &f) != 0 || (f.f_type != SHMFS_SUPER_MAGIC
+						&& f.f_type != RAMFS_MAGIC))
 	  continue;
 
 	namelen = strlen (mp->mnt_dir);
