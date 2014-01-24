@@ -241,7 +241,17 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
 				if (buflen - req->key_len - bufused < needed)
 				  {
 				    buflen += MAX (buflen, 2 * needed);
-				    buffer = xrealloc (buffer, buflen);
+				    char *newbuf = xrealloc (buffer, buflen);
+				    /* Adjust the pointers in the new
+				       buffer.  */
+				    nhost = (nhost ? newbuf + (nhost - buffer)
+					     : NULL);
+				    nuser = (nuser ? newbuf + (nuser - buffer)
+					     : NULL);
+				    ndomain = (ndomain
+					       ? newbuf + (ndomain - buffer)
+					       : NULL);
+				    buffer = newbuf;
 				  }
 
 				nhost = memcpy (buffer + bufused,

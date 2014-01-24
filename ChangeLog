@@ -1,3 +1,9 @@
+2013-01-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #16474]
+	* nscd/netgroupcache.c (addgetnetgrentX): Adjust triplet
+	string pointers after reallocation.
+
 2014-01-24  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/sys/ucontext.h: Use __SH4__ and
