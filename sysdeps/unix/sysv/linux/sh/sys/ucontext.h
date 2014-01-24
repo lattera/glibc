@@ -75,7 +75,7 @@ enum
 };
 #endif
 
-#ifdef __SH_FPU_ANY__
+#if (defined(__SH4__) || defined(__SH4A__))
 typedef int freg_t;
 
 /* Number of FPU registers.  */

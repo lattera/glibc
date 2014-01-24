@@ -1,3 +1,8 @@
+2014-01-24  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/sys/ucontext.h: Use __SH4__ and
+	__SH4A__ instead of __SH_FPU_ANY__.
+
 2014-01-23  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/fpu_control.h: New file.
