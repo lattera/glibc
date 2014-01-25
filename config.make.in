@@ -74,7 +74,6 @@ multi-arch = @multi_arch@
 mach-interface-list = @mach_interface_list@
 
 have-bash2 = @libc_cv_have_bash2@
-have-ksh = @libc_cv_have_ksh@
 
 sizeof-long-double = @sizeof_long_double@
 
@@ -125,7 +124,6 @@ MSGFMT = @MSGFMT@
 
 # Script execution tools.
 BASH = @BASH_SHELL@
-KSH = @KSH@
 AWK = @AWK@
 PERL = @PERL@
 

@@ -1108,21 +1108,6 @@ else
 fi
 AC_SUBST(libc_cv_have_bash2)
 
-dnl We need a ksh compatible shell for tzselect.
-if test "$BASH_SHELL" = no; then
-  AC_PATH_PROG(KSH, ksh, no)
-  if test "$KSH" = no; then
-    libc_cv_have_ksh=no
-  else
-    libc_cv_have_ksh=yes
-  fi
-else
-  KSH="$BASH_SHELL"
-  AC_SUBST(KSH)
-  libc_cv_have_ksh=yes
-fi
-AC_SUBST(libc_cv_have_ksh)
-
 AC_PATH_PROG(PERL, perl, no)
 if test "$PERL" != no &&
    (eval `$PERL -V:apiversion`; test `expr "$apiversion" \< 5` -ne 0); then

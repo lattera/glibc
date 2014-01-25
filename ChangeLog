@@ -1,5 +1,12 @@
 2014-03-13  Mike Frysinger  <vapier@gentoo.org>
 
+	* config.make.in (have-ksh): Delete.
+	(KSH): Delete.
+	* configure.ac (libc_cv_have_ksh): Delete.
+	* configure: Regenerate.
+
+2014-03-13  Mike Frysinger  <vapier@gentoo.org>
+
 	* elf/Makefile: Delete $(have-ksh) check.
 	($(objpfx)sotruss): Change KSH to BASH.
 	* elf/sotruss.ksh: Rename to ...
