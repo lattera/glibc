@@ -73,8 +73,6 @@ multi-arch = @multi_arch@
 
 mach-interface-list = @mach_interface_list@
 
-have-bash2 = @libc_cv_have_bash2@
-
 sizeof-long-double = @sizeof_long_double@
 
 nss-crypt = @libc_cv_nss_crypt@

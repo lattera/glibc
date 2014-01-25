@@ -397,27 +397,20 @@ ldso_install: $(inst_rtlddir)/$(rtld-installed-name)
 endif
 
 
-common-ldd-rewrite = -e 's%@RTLD@%$(rtlddir)/$(rtld-installed-name)%g' \
-		     -e 's%@VERSION@%$(version)%g' \
-		     -e 's|@PKGVERSION@|$(PKGVERSION)|g' \
-		     -e 's|@REPORT_BUGS_TO@|$(REPORT_BUGS_TO)|g'
-sh-ldd-rewrite = $(common-ldd-rewrite) -e 's%@BASH@%/bin/sh%g;s/\$$"/"/g'
-bash-ldd-rewrite = $(common-ldd-rewrite) -e 's%@BASH@%$(BASH)%g' \
-		   -e 's%@TEXTDOMAINDIR@%$(msgcatdir)%g'
-
-ifneq ($(have-bash2),yes)
-ldd-shell = sh
-else
-ldd-shell = bash
-endif
+ldd-rewrite = -e 's%@RTLD@%$(rtlddir)/$(rtld-installed-name)%g' \
+	      -e 's%@VERSION@%$(version)%g' \
+	      -e 's|@PKGVERSION@|$(PKGVERSION)|g' \
+	      -e 's|@REPORT_BUGS_TO@|$(REPORT_BUGS_TO)|g' \
+	      -e 's%@BASH@%$(BASH)%g' \
+	      -e 's%@TEXTDOMAINDIR@%$(msgcatdir)%g'
 
 ifeq ($(ldd-rewrite-script),no)
 define gen-ldd
-LC_ALL=C sed $($(ldd-shell)-ldd-rewrite) < $< > $@.new
+LC_ALL=C sed $(ldd-rewrite) < $< > $@.new
 endef
 else
 define gen-ldd
-LC_ALL=C sed $($(ldd-shell)-ldd-rewrite) < $< \
+LC_ALL=C sed $(ldd-rewrite) < $< \
 | LC_ALL=C sed -f $(patsubst $(..)/%,/%,$(..)$(ldd-rewrite-script)) > $@.new
 endef
 endif

@@ -1099,14 +1099,6 @@ fi])
 AC_SUBST(libc_cv_gcc_static_libgcc)
 
 AC_PATH_PROG(BASH_SHELL, bash, no)
-if test "$BASH_SHELL" != no &&
-   $BASH_SHELL -c 'test "$BASH_VERSINFO" \
-	     && test "$BASH_VERSINFO" -ge 2 >&/dev/null'; then
-  libc_cv_have_bash2=yes
-else
-  libc_cv_have_bash2=no
-fi
-AC_SUBST(libc_cv_have_bash2)
 
 AC_PATH_PROG(PERL, perl, no)
 if test "$PERL" != no &&

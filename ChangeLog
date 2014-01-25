@@ -1,5 +1,17 @@
 2014-03-13  Mike Frysinger  <vapier@gentoo.org>
 
+	* config.make.in (have-bash2): Delete.
+	* configure.ac (libc_cv_have_bash2): Delete.
+	* configure: Regenerate.
+	* elf/Makefile (common-ldd-rewrite): Rename to ...
+	(ldd-rewrite): ... this.  Move bash-ldd-rewrite content to end.
+	(sh-ldd-rewrite): Delete.
+	(bash-ldd-rewrite): Delete.
+	(have-bash2): Delete checks.
+	[ldd-rewrite-script]: Change $(ldd-shell)-ldd-rewrite to ldd-rewrite.
+
+2014-03-13  Mike Frysinger  <vapier@gentoo.org>
+
 	* config.make.in (have-ksh): Delete.
 	(KSH): Delete.
 	* configure.ac (libc_cv_have_ksh): Delete.
