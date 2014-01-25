@@ -93,7 +93,7 @@ pldd-modules := xmalloc
 # To find xmalloc.c and xstrdup.c
 vpath %.c ../locale/programs
 
-ifeq ($(have-ksh)$(build-shared),yesyes)
+ifeq ($(build-shared),yes)
 extra-objs += sotruss-lib.os sotruss-lib.so
 install-others += $(inst_auditdir)/sotruss-lib.so
 install-bin-script += sotruss
@@ -104,8 +104,8 @@ $(objpfx)sotruss-lib.so: $(objpfx)sotruss-lib.os
 $(objpfx)sotruss-lib.so: $(common-objpfx)libc.so $(objpfx)ld.so \
 	$(common-objpfx)libc_nonshared.a
 
-$(objpfx)sotruss: sotruss.ksh $(common-objpfx)config.make
-	sed -e 's%@KSH@%$(KSH)%g' \
+$(objpfx)sotruss: sotruss.sh $(common-objpfx)config.make
+	sed -e 's%@BASH@%$(BASH)%g' \
 	    -e 's%@VERSION@%$(version)%g' \
 	    -e 's%@TEXTDOMAINDIR@%$(msgcatdir)%g' \
 	    -e 's%@PREFIX@%$(prefix)%g' \

@@ -1,4 +1,4 @@
-#! @KSH@
+#! @BASH@
 # Copyright (C) 2011-2014 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -28,7 +28,7 @@ unset SOTRUSS_NOINDENT
 SOTRUSS_WHICH=$$
 lib='@PREFIX@/$LIB/audit/sotruss-lib.so'
 
-function do_help {
+do_help() {
   echo $"Usage: sotruss [OPTION...] [--] EXECUTABLE [EXECUTABLE-OPTION...]
   -F, --from FROMLIST     Trace calls from objects on FROMLIST
   -T, --to TOLIST         Trace calls to objects on TOLIST
@@ -51,13 +51,13 @@ function do_help {
   exit 0
 }
 
-function do_missing_arg {
+do_missing_arg() {
   printf >&2 $"%s: option requires an argument -- '%s'\n" sotruss "$1"
   printf >&2 $"Try \`%s --help' or \`%s --usage' for more information.\n" sotruss sotruss
   exit 1
 }
 
-function do_ambiguous {
+do_ambiguous() {
   printf >&2 $"%s: option is ambiguous; possibilities:"
   while test $# -gt 0; do
     printf >&2 " '%s'" $1
@@ -150,6 +150,3 @@ export SOTRUSS_EXIT
 export LD_AUDIT="$lib"
 
 exec "$@"
-# Local Variables:
-#  mode:ksh
-# End:

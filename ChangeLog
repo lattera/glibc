@@ -1,5 +1,13 @@
 2014-03-13  Mike Frysinger  <vapier@gentoo.org>
 
+	* elf/Makefile: Delete $(have-ksh) check.
+	($(objpfx)sotruss): Change KSH to BASH.
+	* elf/sotruss.ksh: Rename to ...
+	* elf/sotruss.sh: ... this.  Change @KSH@ to @BASH@.  Change
+	function style to match POSIX.  Drop ksh vim mode setting.
+
+2014-03-13  Mike Frysinger  <vapier@gentoo.org>
+
 	* manual/time.texi (Specifying the Time Zone with TZ): Change
 	Tuesday to Thursday.
 
