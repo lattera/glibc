@@ -44,10 +44,8 @@ include ../Makeconfig	# Get objpfx defined so we can use it below.
 
 CPPFLAGS-zic = -DNOT_IN_libc
 
-ifeq ($(have-ksh),yes)
 install-bin-script = tzselect
 generated += tzselect
-endif
 
 include ../Rules
 
@@ -113,7 +111,7 @@ $(testdata)/Asia/Tokyo: asia $(zic-deps)
 
 
 $(objpfx)tzselect: tzselect.ksh $(common-objpfx)config.make
-	sed -e 's|/bin/bash|$(KSH)|g' \
+	sed -e 's|/bin/bash|$(BASH)|' \
 	    -e '/TZDIR=/s|\$$(pwd)|$(zonedir)|' \
 	    -e '/TZVERSION=/s|see_Makefile|"$(version)"|' \
 	    -e '/PKGVERSION=/s|=.*|="$(PKGVERSION)"|' \
