@@ -1,11 +1,43 @@
 # Begin of automatic generation
 
+# acos_towardzero
+Test "acos_towardzero (-0x8p-4)":
+float: 1
+ifloat: 1
+
 # acosh
 Test "acosh (0x6.4p+4)":
 double: 1
 idouble: 1
 Test "acosh (0xf.ffffffffffff8p+1020)":
 double: 1
+
+# asin_towardzero
+Test "asin_towardzero (-0x4p-1024)":
+double: 1
+idouble: 1
+Test "asin_towardzero (-0x4p-1076)":
+double: 1
+idouble: 1
+Test "asin_towardzero (-0x4p-128)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "asin_towardzero (-0x8p-152)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "asin_towardzero (-0x8p-4)":
+float: 1
+ifloat: 1
+Test "asin_towardzero (-0x8p-972)":
+double: 1
+idouble: 1
+Test "asin_towardzero (0x8p-4)":
+float: 1
+ifloat: 1
 
 # asinh
 Test "asinh (-0xf.ffffffffffff8p+1020)":
@@ -3498,6 +3530,126 @@ Test "cos_tonearest (0xc.d4967p-4)":
 float: 1
 ifloat: 1
 
+# cos_towardzero
+Test "cos_towardzero (-0x4p-1024)":
+double: 1
+idouble: 1
+Test "cos_towardzero (-0x4p-1076)":
+double: 1
+idouble: 1
+Test "cos_towardzero (-0x4p-128)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "cos_towardzero (-0x8p-152)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "cos_towardzero (-0x8p-972)":
+double: 1
+idouble: 1
+Test "cos_towardzero (-0xf.fffffp+124)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x1.000000cf4a2a2p+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x1.0000010b239a9p+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x1.00000162a932bp+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x1.000002d452a1p+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x1.000002p+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x1.0c152382d7365p+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x1.921fb54442d18p+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x1.921fb54442d19p+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x1p+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x1p+120)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "cos_towardzero (0x2.182a4705ae6ccp+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x2.182a48p+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x2.1e19e0c9bab24p+72)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x2.1e19e4p+72)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x2.1e19ep+72)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x2p+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x4p+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x4p+48)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x4p-1024)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x4p-1076)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x4p-128)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "cos_towardzero (0x8p+0)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x8p+1020)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0x8p-152)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "cos_towardzero (0x8p-972)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0xc.d4966d92d1708p-4)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0xc.d4966d92d171p-4)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0xc.d4966p-4)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0xcp-4)":
+double: 1
+idouble: 1
+Test "cos_towardzero (0xf.fffffp+124)":
+double: 1
+idouble: 1
+
 # cosh
 Test "cosh (-0x1p+0)":
 float: 1
@@ -3531,6 +3683,38 @@ idouble: 1
 Test "cosh_tonearest (0x2.c679dp+8)":
 double: 1
 idouble: 1
+
+# cosh_towardzero
+Test "cosh_towardzero (-0x2.c5e3bp+8)":
+double: 1
+idouble: 1
+Test "cosh_towardzero (-0x2.c679d1f73f0fap+8)":
+double: 1
+idouble: 1
+Test "cosh_towardzero (-0x2.c679dp+8)":
+double: 1
+idouble: 1
+Test "cosh_towardzero (-0x5.96a7ep+4)":
+float: 1
+ifloat: 1
+Test "cosh_towardzero (0x1.6p+4)":
+double: 1
+idouble: 1
+Test "cosh_towardzero (0x1.7p+4)":
+double: 1
+idouble: 1
+Test "cosh_towardzero (0x2.c5e3bp+8)":
+double: 1
+idouble: 1
+Test "cosh_towardzero (0x2.c679d1f73f0fap+8)":
+double: 1
+idouble: 1
+Test "cosh_towardzero (0x2.c679dp+8)":
+double: 1
+idouble: 1
+Test "cosh_towardzero (0x5.96a7ep+4)":
+float: 1
+ifloat: 1
 
 # cpow
 Test "Real part of: cpow (0x2p+0 + 0x3p+0 i, 0x4p+0 + +0 i)":
@@ -3817,6 +4001,92 @@ float: 1
 idouble: 1
 ifloat: 1
 
+# ctan_towardzero
+Test "Real part of: ctan_towardzero (-0x2p+0 - 0x3p+0 i)":
+double: 5
+float: 3
+idouble: 5
+ifloat: 3
+Test "Imaginary part of: ctan_towardzero (-0x2p+0 - 0x3p+0 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: ctan_towardzero (-0xc.35p+12 - 0xc.35p+12 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Real part of: ctan_towardzero (0x1.921fb4p+0 + +0 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ctan_towardzero (0x1.921fb4p+0 + 0x4p-1076 i)":
+double: 1
+idouble: 1
+Test "Real part of: ctan_towardzero (0x1.921fb4p+0 + 0x8p-152 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ctan_towardzero (0x1.921fb4p+0 + 0x8p-152 i)":
+double: 1
+float: 3
+idouble: 1
+ifloat: 3
+Test "Real part of: ctan_towardzero (0x1.921fb54442d18p+0 + +0 i)":
+double: 1
+idouble: 1
+Test "Real part of: ctan_towardzero (0x1.921fb54442d18p+0 + 0x4p-1076 i)":
+double: 1
+idouble: 1
+Test "Real part of: ctan_towardzero (0x1.921fb54442d18p+0 + 0x8p-152 i)":
+double: 1
+idouble: 1
+Test "Real part of: ctan_towardzero (0x1.921fb6p+0 + +0 i)":
+float: 1
+ifloat: 1
+Test "Real part of: ctan_towardzero (0x1.921fb6p+0 + 0x8p-152 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ctan_towardzero (0x1.921fb6p+0 + 0x8p-152 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Real part of: ctan_towardzero (0x1p+0 + 0x2.dp+4 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Real part of: ctan_towardzero (0x8p+1020 + 0x1p+0 i)":
+double: 5
+idouble: 5
+Test "Real part of: ctan_towardzero (0x8p+124 + 0x1p+0 i)":
+double: 4
+float: 3
+idouble: 4
+ifloat: 3
+Test "Imaginary part of: ctan_towardzero (0x8p+124 + 0x1p+0 i)":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+Test "Imaginary part of: ctan_towardzero (0xc.35p+12 - 0xc.35p+12 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Real part of: ctan_towardzero (0xcp-4 + 0x1.4p+0 i)":
+float: 1
+ifloat: 1
+Test "Real part of: ctan_towardzero (0xf.ffffffffffff8p+1020 + 0x1p+0 i)":
+double: 2
+idouble: 2
+Test "Real part of: ctan_towardzero (0xf.fffffp+124 + 0x1p+0 i)":
+double: 4
+float: 2
+idouble: 4
+ifloat: 2
+Test "Imaginary part of: ctan_towardzero (0xf.fffffp+124 + 0x1p+0 i)":
+double: 1
+idouble: 1
+
 # ctanh
 Test "Imaginary part of: ctanh (+0 + 0x1.921fb4p+0 i)":
 double: 1
@@ -3999,6 +4269,94 @@ Test "Imaginary part of: ctanh_tonearest (0xcp-4 + 0x1.4p+0 i)":
 float: 2
 ifloat: 2
 
+# ctanh_towardzero
+Test "Imaginary part of: ctanh_towardzero (+0 + 0x1.921fb4p+0 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ctanh_towardzero (+0 + 0x1.921fb54442d18p+0 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: ctanh_towardzero (+0 + 0x1.921fb6p+0 i)":
+float: 1
+ifloat: 1
+Test "Real part of: ctanh_towardzero (-0x2p+0 - 0x3p+0 i)":
+double: 2
+idouble: 2
+Test "Imaginary part of: ctanh_towardzero (-0x2p+0 - 0x3p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Real part of: ctanh_towardzero (-0xc.35p+12 + 0xc.35p+12 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Real part of: ctanh_towardzero (-0xc.35p+12 - 0xc.35p+12 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Imaginary part of: ctanh_towardzero (0x1p+0 + 0x8p+1020 i)":
+double: 5
+idouble: 5
+Test "Real part of: ctanh_towardzero (0x1p+0 + 0x8p+124 i)":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+Test "Imaginary part of: ctanh_towardzero (0x1p+0 + 0x8p+124 i)":
+double: 4
+float: 3
+idouble: 4
+ifloat: 3
+Test "Imaginary part of: ctanh_towardzero (0x1p+0 + 0xf.ffffffffffff8p+1020 i)":
+double: 2
+idouble: 2
+Test "Real part of: ctanh_towardzero (0x1p+0 + 0xf.fffffp+124 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: ctanh_towardzero (0x1p+0 + 0xf.fffffp+124 i)":
+double: 4
+float: 2
+idouble: 4
+ifloat: 2
+Test "Imaginary part of: ctanh_towardzero (0x2.dp+4 + 0x1p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Real part of: ctanh_towardzero (0x4p-1076 + 0x1.921fb4p+0 i)":
+double: 1
+idouble: 1
+Test "Imaginary part of: ctanh_towardzero (0x4p-1076 + 0x1.921fb54442d18p+0 i)":
+double: 1
+idouble: 1
+Test "Real part of: ctanh_towardzero (0x8p-152 + 0x1.921fb4p+0 i)":
+double: 1
+float: 3
+idouble: 1
+ifloat: 3
+Test "Imaginary part of: ctanh_towardzero (0x8p-152 + 0x1.921fb4p+0 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ctanh_towardzero (0x8p-152 + 0x1.921fb54442d18p+0 i)":
+double: 1
+idouble: 1
+Test "Real part of: ctanh_towardzero (0x8p-152 + 0x1.921fb6p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Imaginary part of: ctanh_towardzero (0x8p-152 + 0x1.921fb6p+0 i)":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ctanh_towardzero (0xcp-4 + 0x1.4p+0 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
 # erf
 Test "erf (0x1.4p+0)":
 double: 1
@@ -4058,6 +4416,25 @@ Test "exp10_tonearest (0x3p+0)":
 double: 1
 idouble: 1
 
+# exp10_towardzero
+Test "exp10_towardzero (0x2.4p+4)":
+double: 1
+idouble: 1
+
+# exp_towardzero
+Test "exp_towardzero (0x2p+0)":
+double: 1
+idouble: 1
+Test "exp_towardzero (0x3p+0)":
+double: 1
+idouble: 1
+Test "exp_towardzero (0x5.8b9028p+4)":
+double: 1
+idouble: 1
+Test "exp_towardzero (0xcp-4)":
+double: 1
+idouble: 1
+
 # expm1
 Test "expm1 (0x1.f4p+8)":
 double: 1
@@ -4084,23 +4461,73 @@ Test "expm1_tonearest (0xcp-4)":
 double: 1
 idouble: 1
 
-# fma
-Test "fma (-0x1.fffffffffffffp-711, 0x1.fffffffffffffp-275, 0x1.fffffe00007ffp-983)":
+# expm1_towardzero
+Test "expm1_towardzero (-0x1p-100)":
 double: 1
+float: 1
 idouble: 1
-Test "fma (0x1.0000002p+0, 0x1.ffffffcp-1, -0x1p-300)":
-double: 1
-idouble: 1
-Test "fma (0x1.153d650bb9f06p-907, 0x1.2d01230d48407p-125, -0x0.b278d5acfc3cp-1022)":
-double: 1
-idouble: 1
-Test "fma (0x1.4000004p-967, 0x1p-106, 0x0.000001p-1022)":
-double: 1
-idouble: 1
-Test "fma (0x1.7ff8p+13, 0x1.000002p+0, 0x1.ffffp-24)":
+ifloat: 1
+Test "expm1_towardzero (-0x1p-32)":
 float: 1
 ifloat: 1
-Test "fma (0x1.7fffff8p-968, 0x1p-106, 0x0.000001p-1022)":
+Test "expm1_towardzero (-0x1p-64)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "expm1_towardzero (-0x4p-52)":
+float: 1
+ifloat: 1
+Test "expm1_towardzero (-0x8p-32)":
+float: 1
+ifloat: 1
+Test "expm1_towardzero (0x1.f4p+8)":
+double: 1
+idouble: 1
+Test "expm1_towardzero (0x3.2p+4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "expm1_towardzero (0x7.fp+4)":
+double: 1
+idouble: 1
+
+# fma_towardzero
+Test "fma_towardzero (-0x1.ffffffffffffcp-1022, 0x1.0000000000001p-1, -0x1p-1074)":
+double: 1
+idouble: 1
+Test "fma_towardzero (-0x1p-1074, 0x1.1p-1, -0x0.fffffffffffffp-1022)":
+double: 1
+idouble: 1
+Test "fma_towardzero (0x1.ffffffffffffcp-1022, 0x1.0000000000001p-1, 0x1p-1074)":
+double: 1
+idouble: 1
+Test "fma_towardzero (0x1p-1074, -0x1p-1074, 0x0.fffffffffffffp-1022)":
+double: 1
+idouble: 1
+Test "fma_towardzero (0x1p-1074, -0x1p-1074, 0x1p-1022)":
+double: 1
+idouble: 1
+Test "fma_towardzero (0x1p-1074, -0x1p-1074, 0x1p-1074)":
+double: 1
+idouble: 1
+Test "fma_towardzero (0x1p-1074, -0x1p-1074, 0x1p1023)":
+double: 1
+idouble: 1
+Test "fma_towardzero (0x1p-1074, 0x1.1p-1, 0x0.fffffffffffffp-1022)":
+double: 1
+idouble: 1
+Test "fma_towardzero (0x1p-1074, 0x1p-1074, -0x0.fffffffffffffp-1022)":
+double: 1
+idouble: 1
+Test "fma_towardzero (0x1p-1074, 0x1p-1074, -0x1p-1022)":
+double: 1
+idouble: 1
+Test "fma_towardzero (0x1p-1074, 0x1p-1074, -0x1p-1074)":
+double: 1
+idouble: 1
+Test "fma_towardzero (0x1p-1074, 0x1p-1074, -0x1p1023)":
 double: 1
 idouble: 1
 
@@ -4513,6 +4940,11 @@ Test "pow_tonearest (0xf.fffffp-4, 0x1p+24)":
 float: 1
 ifloat: 1
 
+# pow_towardzero
+Test "pow_towardzero (1.5, 1.03125)":
+float: 1
+ifloat: 1
+
 # sin
 Test "sin (0x1p+0)":
 float: 1
@@ -4522,6 +4954,110 @@ ifloat: 1
 Test "sin_tonearest (0x1p+0)":
 float: 1
 ifloat: 1
+
+# sin_towardzero
+Test "sin_towardzero (-0x1.921fb54442d18p+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (-0x1.921fb54442d19p+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (-0x2p+64)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x1.921fb54442d18p+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x1.921fb54442d19p+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x1p+0)":
+float: 1
+ifloat: 1
+Test "sin_towardzero (0x2.1e19e4p+72)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x2.1e19ep+72)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "sin_towardzero (0x2.553534p+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x2.5535376715bap+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x2p+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x2p+64)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x3.be735c19beap+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x3.be735cp+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "sin_towardzero (0x3.ec2a04p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "sin_towardzero (0x4.093388p-4)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x4.1237e8p+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x4.1237ep+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x4.c92d0ffa4bf04p+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x4.c92d0ffa4bfp+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x4p+48)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x5.fbec7p+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x8p+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x8p+1020)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0x9p+0)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0xb.fa09ap+100)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0xc.d4966d92d1708p-4)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0xc.d4966p-4)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0xc.d4967p-4)":
+float: 1
+ifloat: 1
+Test "sin_towardzero (0xe.ef3afp-4)":
+float: 1
+ifloat: 1
+Test "sin_towardzero (0xf.ffffcp+124)":
+double: 1
+idouble: 1
+Test "sin_towardzero (0xf.ffffffffffff8p+1020)":
+double: 1
+idouble: 1
 
 # sincos
 Test "sincos (0x1.0c1522p+0) extra output 1":
@@ -4539,6 +5075,99 @@ ifloat: 1
 Test "sincos (0xc.d4967p-4) extra output 2":
 float: 1
 ifloat: 1
+
+# sinh_towardzero
+Test "sinh_towardzero (0x1.6p+4)":
+double: 1
+idouble: 1
+Test "sinh_towardzero (0x1.7p+4)":
+double: 1
+idouble: 1
+
+# tan_towardzero
+Test "tan_towardzero (-0x2p+64)":
+double: 1
+idouble: 1
+Test "tan_towardzero (-0xc.908p-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tan_towardzero (-0xc.90cp-4)":
+double: 1
+idouble: 1
+Test "tan_towardzero (-0xc.90fcp-4)":
+double: 1
+idouble: 1
+Test "tan_towardzero (-0xc.90fdp-4)":
+double: 1
+idouble: 1
+Test "tan_towardzero (-0xc.94p-4)":
+double: 1
+idouble: 1
+Test "tan_towardzero (-0xc.98p-4)":
+double: 1
+idouble: 1
+Test "tan_towardzero (0x1p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tan_towardzero (0x2.1e19e4p+72)":
+double: 1
+idouble: 1
+Test "tan_towardzero (0x2.1e19ep+72)":
+double: 1
+idouble: 1
+Test "tan_towardzero (0x2p+64)":
+double: 1
+idouble: 1
+Test "tan_towardzero (0x5p+0)":
+double: 1
+idouble: 1
+Test "tan_towardzero (0x7p+0)":
+double: 1
+idouble: 1
+Test "tan_towardzero (0x8p+0)":
+double: 1
+idouble: 1
+Test "tan_towardzero (0x9p+0)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tan_towardzero (0xc.908p-4)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tan_towardzero (0xc.90cp-4)":
+double: 1
+idouble: 1
+Test "tan_towardzero (0xc.90fcp-4)":
+double: 1
+idouble: 1
+Test "tan_towardzero (0xc.90fdaa22168c8p-4)":
+double: 1
+idouble: 1
+Test "tan_towardzero (0xc.90fdp-4)":
+double: 1
+idouble: 1
+Test "tan_towardzero (0xc.94p-4)":
+double: 1
+idouble: 1
+Test "tan_towardzero (0xc.98p-4)":
+double: 1
+idouble: 1
+Test "tan_towardzero (0xcp-4)":
+double: 1
+idouble: 1
+Test "tan_towardzero (0xf.ffffffffffff8p+1020)":
+double: 1
+idouble: 1
+Test "tan_towardzero (0xf.fffffp+124)":
+double: 1
+idouble: 1
 
 # tgamma
 Test "tgamma (-0x1.000002p+0)":
@@ -5096,9 +5725,19 @@ double: 1
 idouble: 1
 
 # Maximal error of functions:
+Function: "acos_towardzero":
+float: 1
+ifloat: 1
+
 Function: "acosh":
 double: 1
 idouble: 1
+
+Function: "asin_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 
 Function: "asinh":
 double: 1
@@ -5253,6 +5892,12 @@ Function: "cos_tonearest":
 float: 1
 ifloat: 1
 
+Function: "cos_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
 Function: "cosh":
 double: 1
 float: 1
@@ -5260,6 +5905,12 @@ idouble: 1
 ifloat: 1
 
 Function: "cosh_tonearest":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: "cosh_towardzero":
 double: 1
 float: 1
 idouble: 1
@@ -5327,6 +5978,18 @@ float: 1
 idouble: 2
 ifloat: 1
 
+Function: Real part of "ctan_towardzero":
+double: 5
+float: 3
+idouble: 5
+ifloat: 3
+
+Function: Imaginary part of "ctan_towardzero":
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
+
 Function: Real part of "ctanh":
 double: 2
 float: 1
@@ -5351,6 +6014,18 @@ float: 2
 idouble: 2
 ifloat: 2
 
+Function: Real part of "ctanh_towardzero":
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
+
+Function: Imaginary part of "ctanh_towardzero":
+double: 5
+float: 3
+idouble: 5
+ifloat: 3
+
 Function: "erf":
 double: 1
 idouble: 1
@@ -5369,6 +6044,14 @@ Function: "exp10_tonearest":
 double: 1
 idouble: 1
 
+Function: "exp10_towardzero":
+double: 1
+idouble: 1
+
+Function: "exp_towardzero":
+double: 1
+idouble: 1
+
 Function: "expm1":
 double: 1
 float: 1
@@ -5381,11 +6064,15 @@ float: 1
 idouble: 1
 ifloat: 1
 
-Function: "fma":
+Function: "expm1_towardzero":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+
+Function: "fma_towardzero":
+double: 1
+idouble: 1
 
 Function: "gamma":
 double: 1
@@ -5447,6 +6134,10 @@ Function: "pow_tonearest":
 float: 1
 ifloat: 1
 
+Function: "pow_towardzero":
+float: 1
+ifloat: 1
+
 Function: "sin":
 float: 1
 ifloat: 1
@@ -5455,8 +6146,24 @@ Function: "sin_tonearest":
 float: 1
 ifloat: 1
 
+Function: "sin_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
 Function: "sincos":
 float: 1
+ifloat: 1
+
+Function: "sinh_towardzero":
+double: 1
+idouble: 1
+
+Function: "tan_towardzero":
+double: 1
+float: 1
+idouble: 1
 ifloat: 1
 
 Function: "tgamma":
