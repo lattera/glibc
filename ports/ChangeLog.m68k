@@ -1,3 +1,7 @@
+2014-01-27  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/m680x0/fpu/libm-test-ulps: Regenerate.
+
 2013-12-10  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/m680x0/fpu/s_nextafterl.c (__nextafterl): Use
