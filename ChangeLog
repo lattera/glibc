@@ -1,3 +1,8 @@
+2014-01-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* nscd/netgroupcache.c (addgetnetgrentX): Compute offset from
+	the old buffer before realloc.
+
 2014-01-27  Allan McRae  <allan@archlinux.org>
 
 	* po/fr.po: Update French translation from translation project.
