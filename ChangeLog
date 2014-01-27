@@ -1,5 +1,9 @@
 2014-01-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	[BZ #16506]
+	* nss/nss_files/files-netgrp.c (_nss_files_setnetgrent): Avoid
+	access beyond array bounds when parsing netgroups file.
+
 	* nscd/netgroupcache.c (addgetnetgrentX): Compute offset from
 	the old buffer before realloc.
 

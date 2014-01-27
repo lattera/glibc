@@ -103,7 +103,8 @@ _nss_files_setnetgrent (const char *group, struct __netgrent *result)
 	      result->cursor += (curlen - group_len) - 1;
 	    }
 
-	  while (line[curlen - 1] == '\n' && line[curlen - 2] == '\\')
+	  while (curlen > 1 && line[curlen - 1] == '\n'
+		 && line[curlen - 2] == '\\')
 	    {
 	      /* Yes, we have a continuation line.  */
 	      if (found)
