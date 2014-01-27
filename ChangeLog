@@ -1,3 +1,8 @@
+2014-01-27  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* math/gen-libm-test.pl ($srcdir): New variable.
+	($auto_input): Use it.
+
 2014-01-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #16506]

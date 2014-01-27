@@ -42,7 +42,7 @@ use strict;
 use vars qw ($input $output $auto_input);
 use vars qw (%results);
 use vars qw (%beautify @all_floats);
-use vars qw ($output_dir $ulps_file);
+use vars qw ($output_dir $ulps_file $srcdir);
 use vars qw (%auto_tests);
 
 # all_floats is sorted and contains all recognised float types
@@ -75,6 +75,7 @@ getopts('u:o:nh');
 
 $ulps_file = 'libm-test-ulps';
 $output_dir = '';
+($srcdir = $0) =~ s{[^/]*$}{};
 
 if ($opt_h) {
   print "Usage: gen-libm-test.pl [OPTIONS]\n";
@@ -89,7 +90,7 @@ $ulps_file = $opt_u if ($opt_u);
 $output_dir = $opt_o if ($opt_o);
 
 $input = "libm-test.inc";
-$auto_input = "auto-libm-test-out";
+$auto_input = "${srcdir}auto-libm-test-out";
 $output = "${output_dir}libm-test.c";
 
 &parse_ulps ($ulps_file);
