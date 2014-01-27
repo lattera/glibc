@@ -28,9 +28,8 @@
 /* The exact set of registers saved may depend on the particular core
    in use, as some coprocessor registers may need to be saved.  The C
    Library ABI requires that the buffer be 8-byte aligned, and
-   recommends that the buffer contain 64 words.  The first 27 words
-   are occupied by v1-v6, sl, fp, sp, pc, and d8-d15.  (Note that
-   d8-15 require 17 words, due to the use of fstmx.)  */
+   recommends that the buffer contain 64 words.  The first 26 words
+   are occupied by sp, lr, v1-v6, sl, fp, and d8-d15.  */
 typedef int __jmp_buf[64] __attribute__((__aligned__ (8)));
 #endif
 

@@ -30,7 +30,7 @@
 # define JMP_BUF_REGLIST	{v1-v6, sl, fp}
 
 /* Index of __jmp_buf where the sp register resides.  */
-# define __JMP_BUF_SP		8
+# define __JMP_BUF_SP		0
 #endif
 
 #endif  /* include/bits/setjmp.h */

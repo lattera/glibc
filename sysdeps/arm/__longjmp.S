@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <stap-probe.h>
 #include <bits/setjmp.h>
 #include <rtld-global-offsets.h>
 #include <arm-features.h>
@@ -25,31 +26,35 @@
 
 ENTRY (__longjmp)
 	mov	ip, r0
-	movs	r0, r1		/* get the return value in place */
-	it	eq
-	moveq	r0, #1		/* can't let setjmp() return zero! */
 
 #ifdef CHECK_SP
 	sfi_breg ip, \
-	ldr	r4, [\B, #32]	/* jmpbuf's sp */
+	ldr	r4, [\B]	/* jmpbuf's sp */
 	cfi_undefined (r4)
 #ifdef PTR_DEMANGLE
 	PTR_DEMANGLE (r4, r4, a3, a4)
 #endif
 	CHECK_SP (r4)
 #endif
-	sfi_sp sfi_breg ip, \
-	ldmia	\B!, JMP_BUF_REGLIST
+
 #ifdef PTR_DEMANGLE
 	ldr	a4, [ip], #4
-	PTR_DEMANGLE (a4, a4, a3, a2)
-	mov	sp, a4
-	ldr	a4, [ip], #4
-	PTR_DEMANGLE2 (lr, a4, a3)
+	PTR_DEMANGLE (a4, a4, a3, r4)
+	cfi_undefined (r4)
+	ldr	r4, [ip], #4
+	PTR_DEMANGLE2 (r4, r4, a3)
 #else
-	ldr	sp, [ip], #4
-	ldr	lr, [ip], #4
+	ldr	a4, [ip], #4
+	ldr	r4, [ip], #4
+	cfi_undefined (r4)
 #endif
+	/* longjmp probe expects longjmp first argument (4@r0), second
+	   argument (-4@r1), and target address (4@r4), respectively.  */
+	LIBC_PROBE (longjmp, 3, 4@r0, -4@r1, 4@r4)
+	mov	sp, a4
+	mov	lr, r4
+	sfi_sp sfi_breg ip, \
+	ldmia	\B!, JMP_BUF_REGLIST
 	cfi_restore (v1)
 	cfi_restore (v2)
 	cfi_restore (v3)
@@ -67,27 +72,27 @@ ENTRY (__longjmp)
 
 #ifdef NEED_HWCAP
 # ifdef IS_IN_rtld
-	ldr	a2, 1f
+	ldr	a4, 1f
 	ldr	a3, .Lrtld_local_ro
-0:	add	a2, pc, a2
-	add	a2, a2, a3
-	ldr	a2, [a2, #RTLD_GLOBAL_RO_DL_HWCAP_OFFSET]
+0:	add	a4, pc, a4
+	add	a4, a4, a3
+	ldr	a4, [a4, #RTLD_GLOBAL_RO_DL_HWCAP_OFFSET]
 # else
 #  ifdef PIC
-	ldr	a2, 1f
+	ldr	a4, 1f
 	ldr	a3, .Lrtld_global_ro
-0:	add	a2, pc, a2
-	ldr	a2, [a2, a3]
-	ldr	a2, [a2, #RTLD_GLOBAL_RO_DL_HWCAP_OFFSET]
+0:	add	a4, pc, a4
+	ldr	a4, [a4, a3]
+	ldr	a4, [a4, #RTLD_GLOBAL_RO_DL_HWCAP_OFFSET]
 #  else
-	ldr	a2, .Lhwcap
-	ldr	a2, [a2, #0]
+	ldr	a4, .Lhwcap
+	ldr	a4, [a4, #0]
 #  endif
 # endif
 #endif
 
 #ifdef __SOFTFP__
-	tst	a2, #HWCAP_ARM_VFP
+	tst	a4, #HWCAP_ARM_VFP
 	beq	.Lno_vfp
 #endif
 
@@ -98,7 +103,7 @@ ENTRY (__longjmp)
 .Lno_vfp:
 
 #ifndef ARM_ASSUME_NO_IWMMXT
-	tst	a2, #HWCAP_ARM_IWMMXT
+	tst	a4, #HWCAP_ARM_IWMMXT
 	beq	.Lno_iwmmxt
 
 	/* Restore the call-preserved iWMMXt registers.  */
@@ -117,6 +122,14 @@ ENTRY (__longjmp)
 	ldcl	p1, cr15, [\B], #8
 .Lno_iwmmxt:
 #endif
+
+	/* longjmp_target probe expects longjmp first argument (4@r0), second
+	   argument (-4@r1), and target address (4@r14), respectively.  */
+	LIBC_PROBE (longjmp_target, 3, 4@r0, -4@r1, 4@r14)
+
+	movs	r0, r1		/* get the return value in place */
+	it	eq
+	moveq	r0, #1		/* can't let setjmp() return zero! */
 
 	DO_RET(lr)
 

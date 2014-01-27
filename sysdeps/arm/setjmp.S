@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <stap-probe.h>
 #include <bits/setjmp.h>
 #include <rtld-global-offsets.h>
 #include <arm-features.h>
@@ -27,9 +28,11 @@ ENTRY (__sigsetjmp)
 #endif
 	mov	ip, r0
 
-	/* Save registers */
-	sfi_breg ip, \
-	stmia	\B!, JMP_BUF_REGLIST
+	/* setjmp probe expects sigsetjmp first argument (4@r0), second
+	   argument (-4@r1), and target address (4@r14), respectively.  */
+	LIBC_PROBE (setjmp, 3, 4@r0, -4@r1, 4@r14)
+
+	/* Save sp and lr */
 #ifdef PTR_MANGLE
 	mov	a4, sp
 	PTR_MANGLE2 (a4, a4, a3)
@@ -40,6 +43,9 @@ ENTRY (__sigsetjmp)
 	str	sp, [ip], #4
 	str	lr, [ip], #4
 #endif
+	/* Save registers */
+	sfi_breg ip, \
+	stmia	\B!, JMP_BUF_REGLIST
 
 #if !defined ARM_ASSUME_NO_IWMMXT || defined __SOFTFP__
 # define NEED_HWCAP 1

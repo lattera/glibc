@@ -1,3 +1,16 @@
+2014-02-25  Will Newton  <will.newton@linaro.org>
+
+	* sysdeps/arm/__longjmp.S: Include stap-probe.h.
+	(__longjmp): Restore sp and lr before restoring callee
+	saved registers.  Add longjmp and longjmp_target
+	SystemTap probe point.
+	* sysdeps/arm/bits/setjmp.h (__jmp_buf): Update comment.
+	* sysdeps/arm/include/bits/setjmp.h (__JMP_BUF_SP):
+	Define to zero to match jmpbuf layout.
+	* sysdeps/arm/setjmp.S: Include stap-probe.h.
+	(__sigsetjmp): Save sp and lr before saving callee
+	saved registers.  Add setjmp SystemTap probe point.
+
 2014-02-24  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/fpu/libm-test-ulps: Regenerate.
