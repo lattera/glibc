@@ -1,5 +1,10 @@
 2014-02-11  Will Newton  <will.newton@linaro.org>
 
+	* manual/probes.texi (Internal Probes): Add documentation
+	of setjmp, longjmp and longjmp_target probes.
+
+2014-02-11  Will Newton  <will.newton@linaro.org>
+
 	* include/stap-probe.h: Add comment about probe argument
 	format.
 

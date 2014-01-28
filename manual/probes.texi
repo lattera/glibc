@@ -17,6 +17,7 @@ arguments.
 @menu
 * Memory Allocation Probes::  Probes in the memory allocation subsystem
 * Mathematical Function Probes::  Probes in mathematical functions
+* Non-local Goto Probes::  Probes in setjmp and longjmp
 @end menu
 
 @node Memory Allocation Probes
@@ -367,4 +368,43 @@ This probe is hit when the @code{cos} function is called with an input that
 results in multiple precision computation with precision 32.  Argument
 @var{$arg1} is the input to the function, @var{$arg2} is the error bound of
 @var{$arg1} and @var{$arg3} is the computed result.
+@end deftp
+
+@node Non-local Goto Probes
+@section Non-local Goto Probes
+
+These probes are used to signal calls to @code{setjmp}, @code{sigsetjmp},
+@code{longjmp} or @code{siglongjmp}.
+
+@deftp Probe setjmp (void *@var{$arg1}, int @var{$arg2}, void *@var{$arg3})
+This probe is triggered whenever @code{setjmp} or @code{sigsetjmp} is
+called.  Argument @var{$arg1} is a pointer to the @code{jmp_buf}
+passed as the first argument of @code{setjmp} or @code{sigsetjmp},
+@var{$arg2} is the second argument of @code{sigsetjmp} or zero if this
+is a call to @code{setjmp} and @var{$arg3} is a pointer to the return
+address that will be stored in the @code{jmp_buf}.
+@end deftp
+
+@deftp Probe longjmp (void *@var{$arg1}, int @var{$arg2}, void *@var{$arg3})
+This probe is triggered whenever @code{longjmp} or @code{siglongjmp}
+is called. Argument @var{$arg1} is a pointer to the @code{jmp_buf}
+passed as the first argument of @code{longjmp} or @code{siglongjmp},
+@var{$arg2} is the return value passed as the second argument of
+@code{longjmp} or @code{siglongjmp} and @var{$arg3} is a pointer to
+the return address @code{longjmp} or @code{siglongjmp} will return to.
+
+The @code{longjmp} probe is triggered at a point where the registers
+have not yet been restored to the values in the @code{jmp_buf} and
+unwinding will show a call stack including the caller of
+@code{longjmp} or @code{siglongjmp}.
+@end deftp
+
+@deftp Probe longjmp_target (void *@var{$arg1}, int @var{$arg2}, void *@var{$arg3})
+This probe is triggered under the same conditions and with the same
+arguments as the @code{longjmp} probe.
+
+The @code{longjmp_target} probe is triggered at a point where the
+registers have been restored to the values in the @code{jmp_buf} and
+unwinding will show a call stack including the caller of @code{setjmp}
+or @code{sigsetjmp}.
 @end deftp
