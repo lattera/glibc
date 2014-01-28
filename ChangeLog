@@ -1,3 +1,7 @@
+2014-01-27  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/sh4/Makefile: New file.
+
 2014-01-27  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* math/gen-libm-test.pl ($srcdir): New variable.
