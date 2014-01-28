@@ -30,7 +30,15 @@
 
    Systemtap's header defines the macros STAP_PROBE (provider, name) and
    STAP_PROBEn (provider, name, arg1, ..., argn).  For "provider" we paste
-   in the IN_LIB name (libc, libpthread, etc.) automagically.  */
+   in the IN_LIB name (libc, libpthread, etc.) automagically.
+
+   The format of the arg parameters is discussed here:
+
+   https://sourceware.org/systemtap/wiki/UserSpaceProbeImplementation
+
+   The precise details of how register names are specified is
+   architecture specific and can be found in the gdb and SystemTap
+   source code.  */
 
 # ifndef NOT_IN_libc
 #  define IN_LIB	libc

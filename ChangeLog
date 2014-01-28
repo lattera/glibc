@@ -1,5 +1,10 @@
 2014-02-11  Will Newton  <will.newton@linaro.org>
 
+	* include/stap-probe.h: Add comment about probe argument
+	format.
+
+2014-02-11  Will Newton  <will.newton@linaro.org>
+
 	* malloc/mtrace.c (attribute_hidden): Remove unused macro
 	definition.  (tr_where, tr_freehook, tr_mallochook,
 	tr_reallochook, tr_memalignhook): Use ANSI protoype.
