@@ -1,5 +1,9 @@
 2014-01-29  Alexandre Oliva <aoliva@redhat.com>
 
+	* manual/charset.texi: Document MTASC-safety properties.
+
+2014-01-29  Alexandre Oliva <aoliva@redhat.com>
+
 	* manual/crypt.texi: Document MTASC-safety properties.
 
 2014-01-29  Alexandre Oliva <aoliva@redhat.com>
