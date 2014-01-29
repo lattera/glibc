@@ -1,3 +1,8 @@
+2013-01-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/setjmp.S: Remove spaces before
+	tabs.
+
 2014-01-06  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/ia64/fpu/libm-test-ulps: Update after truncating.
