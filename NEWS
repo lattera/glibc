@@ -118,6 +118,9 @@ Version 2.19
 * The _BSD_SOURCE feature test macro no longer enables BSD interfaces that
   conflict with POSIX.  The libbsd-compat library (which was a dummy library
   that did nothing) has also been removed.
+
+* Preliminary documentation about Multi-Thread, Async-Signal and
+  Async-Cancel Safety has been added.
 
 Version 2.18
 

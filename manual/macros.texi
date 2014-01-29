@@ -47,4 +47,169 @@ GNU/Hurd systems
 GNU/Linux systems
 @end macro
 
+@c Document the safety functions as preliminary.  It does NOT expand its
+@c comments.
+@macro prelim {comments}
+Preliminary:
+
+@end macro
+@c Document a function as thread safe.
+@macro mtsafe {comments}
+| MT-Safe \comments\
+
+@end macro
+@c Document a function as thread unsafe.
+@macro mtunsafe {comments}
+| MT-Unsafe \comments\
+
+@end macro
+@c Document a function as safe for use in asynchronous signal handlers.
+@macro assafe {comments}
+| AS-Safe \comments\
+
+@end macro
+@c Document a function as unsafe for use in asynchronous signal
+@c handlers.  This distinguishes unmarked functions, for which this
+@c property has not been assessed, from those that have been analyzed.
+@macro asunsafe {comments}
+| AS-Unsafe \comments\
+
+@end macro
+@c Document a function as safe for use when asynchronous cancellation is
+@c enabled.
+@macro acsafe {comments}
+| AC-Safe \comments\
+
+@end macro
+@c Document a function as unsafe for use when asynchronous cancellation
+@c is enabled.  This distinguishes unmarked functions, for which this
+@c property has not been assessed, from those that have been analyzed.
+@macro acunsafe {comments}
+| AC-Unsafe \comments\
+
+@end macro
+@c Format safety properties without referencing the section of the
+@c definitions.  To be used in the definitions of the properties
+@c themselves.
+@macro sampsafety {notes}
+@noindent
+\notes\|
+
+
+@end macro
+@c Format the safety properties of a function.
+@macro safety {notes}
+\notes\| @xref{POSIX Safety Concepts}.
+
+
+@end macro
+@macro mtasurace {comments}
+race\comments\
+@end macro
+@macro asurace {comments}
+race\comments\
+@end macro
+@macro mtsrace {comments}
+race\comments\
+@end macro
+@macro mtasuconst {comments}
+const\comments\
+@end macro
+@macro mtslocale {comments}
+locale\comments\
+@end macro
+@macro mtsenv {comments}
+env\comments\
+@end macro
+@macro mtshostid {comments}
+hostid\comments\
+@end macro
+@macro mtssigintr {comments}
+sigintr\comments\
+@end macro
+@macro mtuinit {comments}
+init\comments\
+@end macro
+@macro asuinit {comments}
+init\comments\
+@end macro
+@macro acuinit {comments}
+init\comments\
+@end macro
+@macro asulock {comments}
+lock\comments\
+@end macro
+@macro aculock {comments}
+lock\comments\
+@end macro
+@macro asucorrupt {comments}
+corrupt\comments\
+@end macro
+@macro acucorrupt {comments}
+corrupt\comments\
+@end macro
+@macro ascuheap {comments}
+heap\comments\
+@end macro
+@macro asuheap {comments}
+heap\comments\
+@end macro
+@macro ascudlopen {comments}
+dlopen\comments\
+@end macro
+@macro ascuplugin {comments}
+plugin\comments\
+@end macro
+@macro ascuintl {comments}
+i18n\comments\
+@end macro
+@macro asuintl {comments}
+i18n\comments\
+@end macro
+@macro acsfd {comments}
+fd\comments\
+@end macro
+@macro acsmem {comments}
+mem\comments\
+@end macro
+@macro mtascusig {comments}
+sig\comments\
+@end macro
+@macro mtasuterm {comments}
+term\comments\
+@end macro
+@macro acuterm {comments}
+term\comments\
+@end macro
+@macro mtstimer {comments}
+timer\comments\
+@end macro
+@macro mtascutimer {comments}
+timer\comments\
+@end macro
+@macro mtasscwd {comments}
+cwd\comments\
+@end macro
+@macro acscwd {comments}
+cwd\comments\
+@end macro
+@macro mtsposix {comments}
+!posix\comments\
+@end macro
+@macro mtuposix {comments}
+!posix\comments\
+@end macro
+@macro assposix {comments}
+!posix\comments\
+@end macro
+@macro asuposix {comments}
+!posix\comments\
+@end macro
+@macro acsposix {comments}
+!posix\comments\
+@end macro
+@macro acuposix {comments}
+!posix\comments\
+@end macro
+
 @end ifclear
