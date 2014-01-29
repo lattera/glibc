@@ -1,3 +1,9 @@
+2014-01-29  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #16510]
+	* sysdeps/x86/fpu/bits/mathinline.h: Check __SSE2_MATH__ instead
+	of __x86_64__ when disabling x87 inline functions.
+
 2014-01-29  Alexandre Oliva <aoliva@redhat.com>
 
 	* manual/charset.texi: Document MTASC-safety properties.
