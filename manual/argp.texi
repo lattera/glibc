@@ -36,6 +36,35 @@ needed in @code{main}.
 @comment argp.h
 @comment GNU
 @deftypefun {error_t} argp_parse (const struct argp *@var{argp}, int @var{argc}, char **@var{argv}, unsigned @var{flags}, int *@var{arg_index}, void *@var{input})
+@safety{@prelim{}@mtunsafe{@mtasurace{:argpbuf} @mtslocale{} @mtsenv{}}@asunsafe{@ascuheap{} @ascuintl{} @asulock{} @asucorrupt{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
+@c Optionally alloca()tes standard help options, initializes the parser,
+@c then parses individual args in a loop, and then finalizes.
+@c  parser_init
+@c   calc_sizes ok
+@c    option_is_end ok
+@c   malloc @ascuheap @acsmem
+@c   parser_convert @mtslocale
+@c    convert_options @mtslocale
+@c     option_is_end ok
+@c     option_is_short ok
+@c      isprint, but locale may change within the loop
+@c     find_long_option ok
+@c   group_parse
+@c    group->parser (from argp->parser)
+@c  parser_parse_next
+@c   getopt_long(_only)_r many issues, same as non_r minus @mtasurace
+@c   parser_parse_arg
+@c    group_parse dup
+@c   parser_parse_opt
+@c    group_parse dup
+@c    argp_error dup @mtasurace:argpbuf @mtsenv @mtslocale @ascuheap @ascuintl @asucorrupt @acsmem @acucorrupt @aculock
+@c    dgettext (bad key error) dup @mtsenv @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsfd @acsmem
+@c  parser_finalize
+@c   group_parse
+@c   fprintf dup @mtslocale @asucorrupt @aculock @acucorrupt [no @ascuheap @acsmem]
+@c   dgettext dup @mtsenv @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsfd @acsmem
+@c   arg_state_help
+@c   free dup @ascuhelp @acsmem
 The @code{argp_parse} function parses the arguments in @var{argv}, of
 length @var{argc}, using the argp parser @var{argp}.  @xref{Argp
 Parsers}.  Passing a null pointer for @var{argp} is the same as using
@@ -660,6 +689,8 @@ parser function.  @xref{Argp Parsing State}.
 @comment argp.h
 @comment GNU
 @deftypefun void argp_usage (const struct argp_state *@var{state})
+@safety{@prelim{}@mtunsafe{@mtasurace{:argpbuf} @mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @ascuintl{} @asucorrupt{}}@acunsafe{@acsmem{} @acucorrupt{} @aculock{}}}
+@c Just calls argp_state_help with stderr and ARGP_HELP_STD_USAGE.
 Outputs the standard usage message for the argp parser referred to by
 @var{state} to @code{@var{state}->err_stream} and terminate the program
 with @code{exit (argp_err_exit_status)}.  @xref{Argp Global Variables}.
@@ -669,6 +700,13 @@ with @code{exit (argp_err_exit_status)}.  @xref{Argp Global Variables}.
 @comment argp.h
 @comment GNU
 @deftypefun void argp_error (const struct argp_state *@var{state}, const char *@var{fmt}, @dots{})
+@safety{@prelim{}@mtunsafe{@mtasurace{:argpbuf} @mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @ascuintl{} @asucorrupt{}}@acunsafe{@acsmem{} @acucorrupt{} @aculock{}}}
+@c Lock stream, vasprintf the formatted message into a buffer, print the
+@c buffer prefixed by the short program name (in libc,
+@c argp_short_program_name is a macro that expands to
+@c program_invocation_short_name), releases the buffer, then call
+@c argp_state_help with stream and ARGP_HELP_STD_ERR, unlocking the
+@c stream at the end.
 Prints the printf format string @var{fmt} and following args, preceded
 by the program name and @samp{:}, and followed by a @w{@samp{Try @dots{}
 --help}} message, and terminates the program with an exit status of
@@ -679,6 +717,12 @@ by the program name and @samp{:}, and followed by a @w{@samp{Try @dots{}
 @comment argp.h
 @comment GNU
 @deftypefun void argp_failure (const struct argp_state *@var{state}, int @var{status}, int @var{errnum}, const char *@var{fmt}, @dots{})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@aculock{} @acucorrupt{} @acsmem{}}}
+@c Lock stream, write out the short program name, vasprintf the optional
+@c formatted message to a buffer, print the buffer prefixed by colon and
+@c blank, release the buffer, call strerror_r with an automatic buffer,
+@c print it out after colon and blank, put[w]c a line break, unlock the
+@c stream, then exit unless ARGP_NO_EXIT.
 Similar to the standard gnu error-reporting function @code{error}, this
 prints the program name and @samp{:}, the printf format string
 @var{fmt}, and the appropriate following args.  If it is non-zero, the
@@ -695,6 +739,142 @@ for options, bad phase of the moon, etc.
 @comment argp.h
 @comment GNU
 @deftypefun void argp_state_help (const struct argp_state *@var{state}, FILE *@var{stream}, unsigned @var{flags})
+@safety{@prelim{}@mtunsafe{@mtasurace{:argpbuf} @mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @ascuintl{} @asucorrupt{}}@acunsafe{@acsmem{} @acucorrupt{} @aculock{}}}
+@c Just calls _help with the short program name and optionally exit.
+@c The main problems in _help, besides the usual issues with stream I/O
+@c and translation, are the use of a static buffer (uparams, thus
+@c @mtasurace:argpbuf) that makes the whole thing thread-unsafe, reading
+@c from the environment for ARGP_HELP_FMT, accessing the locale object
+@c multiple times.
+
+@c _help @mtsenv @mtasurace:argpbuf @mtslocale @ascuheap @ascuintl @asucorrupt @acsmem @acucorrupt @aculock
+@c  dgettext @ascuintl
+@c  flockfile @aculock
+@c  funlockfile @aculock
+@c  fill_in_uparams @mtsenv @mtasurace:argpbuf @mtslocale @asucorrupt @ascuheap @aculock @acucorrupt @acsmem
+@c   argp_failure dup (status = errnum = 0)
+@c   atoi dup @mtslocale
+@c  argp_hol @ascuheap @acsmem
+@c   make_hol @ascuheap @acsmem
+@c   hol_add_cluster @ascuheap @acsmem
+@c   hol_append @ascuheap @acsmem
+@c  hol_set_group ok
+@c   hol_find_entry ok
+@c  hol_sort @mtslocale @acucorrupt
+@c   qsort dup @acucorrupt
+@c    hol_entry_qcmp @mtslocale
+@c     hol_entry_cmp @mtslocale
+@c      group_cmp ok
+@c      hol_cluster_cmp ok
+@c       group_cmp ok
+@c      hol_entry_first_short @mtslocale
+@c       hol_entry_short_iterate [@mtslocale]
+@c        until_short ok
+@c         oshort ok
+@c          isprint ok
+@c      odoc ok
+@c      hol_entry_first_long ok
+@c      canon_doc_option @mtslocale
+@c      tolower dup
+@c  hol_usage @mtslocale @ascuintl @ascuheap @acsmem
+@c   hol_entry_short_iterate ok
+@c    add_argless_short_opt ok
+@c   argp_fmtstream_printf dup
+@c   hol_entry_short_iterate @mtslocale @ascuintl @ascuheap @acsmem
+@c    usage_argful_short_opt @mtslocale @ascuintl @ascuheap @acsmem
+@c     dgettext dup
+@c     argp_fmtstream_printf dup
+@c   hol_entry_long_iterate @mtslocale @ascuintl @ascuheap @acsmem
+@c    usage_long_opt @mtslocale @ascuintl @ascuheap @acsmem
+@c     dgettext dup
+@c     argp_fmtstream_printf dup
+@c  hol_help @mtslocale @mtasurace:argpbuf @ascuheap @ascuintl @asucorrupt @acsmem @acucorrupt @aculock
+@c   hol_entry_help @mtslocale @mtasurace:argpbuf @ascuheap @ascuintl @asucorrupt @acsmem @acucorrupt @aculock
+@c    argp_fmtstream_set_lmargin dup
+@c    argp_fmtstream_wmargin dup
+@c    argp_fmtstream_set_wmargin dup
+@c    comma @mtslocale @ascuheap @ascuintl @asucorrupt @acsmem @acucorrupt @aculock
+@c     argp_fmtstream_putc dup
+@c     hol_cluster_is_child ok
+@c     argp_fmtstream_wmargin dup
+@c     print_header dup
+@c     argp_fmtstream_set_wmargin dup
+@c     argp_fmtstream_puts dup
+@c     indent_to dup
+@c    argp_fmtstream_putc dup
+@c    arg @mtslocale @ascuheap @acsmem
+@c     argp_fmtstream_printf dup
+@c    odoc dup
+@c    argp_fmtstream_puts dup
+@c    argp_fmtstream_printf dup
+@c    print_header @mtslocale @mtasurace:argpbuf @ascuheap @ascuintl @asucorrupt @acsmem @acucorrupt @aculock
+@c     dgettext dup
+@c     filter_doc dup
+@c     argp_fmtstream_putc dup
+@c     indent_to dup
+@c     argp_fmtstream_set_lmargin dup
+@c     argp_fmtstream_set_wmargin dup
+@c     argp_fmtstream_puts dup
+@c     free dup
+@c    filter_doc dup
+@c    argp_fmtstream_point dup
+@c    indent_to @mtslocale @ascuheap @asucorrupt @acsmem @acucorrupt @aculock
+@c     argp_fmtstream_point dup
+@c     argp_fmtstream_putc dup
+@c   dgettext dup
+@c   filter_doc dup
+@c   argp_fmtstream_putc dup
+@c   argp_fmtstream_puts dup
+@c   free dup
+@c  hol_free @ascuheap @acsmem
+@c   free dup
+@c  argp_args_levels ok
+@c  argp_args_usage @mtslocale @ascuintl @ascuheap @asucorrupt @acsmem @acucorrupt @aculock
+@c   dgettext dup
+@c   filter_doc ok
+@c    argp_input ok
+@c    argp->help_filter
+@c   space @mtslocale @ascuheap @asucorrupt @acsmem @acucorrupt @aculock
+@c    argp_fmtstream_point dup
+@c    argp_fmtstream_rmargin @mtslocale @asucorrupt @acucorrupt @aculock
+@c     argp_fmtstream_update dup
+@c    argp_fmtstream_putc dup
+@c   argp_fmtstream_write dup
+@c   free dup
+@c  argp_doc @mtslocale @ascuheap @ascuintl @asucorrupt @acsmem @acucorrupt @aculock
+@c   dgettext @ascuintl
+@c   strndup @ascuheap @acsmem
+@c   argp_input dup
+@c   argp->help_filter
+@c   argp_fmtstream_putc @mtslocale @ascuheap @asucorrupt @acsmem @acucorrupt @aculock
+@c    argp_fmtstream_ensure dup
+@c   argp_fmtstream_write dup
+@c   argp_fmtstream_puts dup
+@c   argp_fmtstream_point @mtslocale @asucorrupt @acucorrupt @aculock
+@c    argp_fmtstream_update dup
+@c   argp_fmtstream_lmargin dup
+@c   free dup
+@c  argp_make_fmtstream @ascuheap @acsmem
+@c  argp_fmtstream_free @mtslocale @ascuheap @asucorrupt @acsmem @acucorrupt @aculock
+@c   argp_fmtstream_update @mtslocale @asucorrupt @acucorrupt @aculock
+@c    put[w]c_unlocked dup
+@c    isblank in loop @mtslocale
+@c    fxprintf @aculock
+@c   fxprintf @aculock
+@c   free dup
+@c  argp_fmtstream_set_wmargin @mtslocale @asucorrupt @acucorrupt @aculock
+@c   argp_fmtstream_update dup
+@c  argp_fmtstream_printf @mtslocale @ascuheap @acsmem
+@c   argp_fmtstream_ensure dup
+@c   vsnprintf dup
+@c  argp_fmtstream_set_lmargin @mtslocale @asucorrupt @acucorrupt @aculock
+@c   argp_fmtstream_update dup
+@c  argp_fmtstream_puts @mtslocale @ascuheap @asucorrupt @acsmem @acucorrupt @aculock
+@c   argp_fmtstream_write @mtslocale @ascuheap @asucorrupt @acsmem @acucorrupt @aculock
+@c    argp_fmtstream_ensure @mtslocale @ascuheap @asucorrupt @acsmem @acucorrupt @aculock
+@c     argp_fmtstream_update dup
+@c     fxprintf @aculock
+@c     realloc @ascuheap @acsmem
 Outputs a help message for the argp parser referred to by @var{state},
 to @var{stream}.  The @var{flags} argument determines what sort of help
 message is produced.  @xref{Argp Help Flags}.
@@ -928,6 +1108,8 @@ program options, argp offers the @code{argp_help} interface.
 @comment argp.h
 @comment GNU
 @deftypefun void argp_help (const struct argp *@var{argp}, FILE *@var{stream}, unsigned @var{flags}, char *@var{name})
+@safety{@prelim{}@mtunsafe{@mtasurace{:argpbuf} @mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @ascuintl{} @asucorrupt{}}@acunsafe{@acsmem{} @acucorrupt{} @aculock{}}}
+@c Just calls _help.
 This outputs a help message for the argp parser @var{argp} to
 @var{stream}.  The type of messages printed will be determined by
 @var{flags}.

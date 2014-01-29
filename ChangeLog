@@ -1,5 +1,9 @@
 2014-01-29  Alexandre Oliva <aoliva@redhat.com>
 
+	* manual/argp.texi: Document MTASC-safety properties.
+
+2014-01-29  Alexandre Oliva <aoliva@redhat.com>
+
 	* manual/macros.texi: Introduce macros to document multi
 	thread, asynchronous signal and asynchronous cancellation
 	safety properties.
