@@ -36,6 +36,16 @@ and manipulate backtraces of the current thread.
 @comment execinfo.h
 @comment GNU
 @deftypefun int backtrace (void **@var{buffer}, int @var{size})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asuinit{} @ascuheap{} @ascudlopen{} @ascuplugin{} @asulock{}}@acunsafe{@acuinit{} @acsmem{} @aculock{} @acsfd{}}}
+@c The generic implementation just does pointer chasing within the local
+@c stack, without any guarantees that this will handle signal frames
+@c correctly, so it's AS-Unsafe to begin with.  However, most (all?)
+@c arches defer to libgcc_s's _Unwind_* implementation, dlopening
+@c libgcc_s.so to that end except in a static version of libc.
+@c libgcc_s's implementation may in turn defer to libunwind.  We can't
+@c assume those implementations are AS- or AC-safe, but even if we
+@c could, our own initialization path isn't, and libgcc's implementation
+@c calls malloc and performs internal locking, so...
 The @code{backtrace} function obtains a backtrace for the current
 thread, as a list of pointers, and places the information into
 @var{buffer}.  The argument @var{size} should be the number of
@@ -56,6 +66,17 @@ interpreting the stack contents correctly.
 @comment execinfo.h
 @comment GNU
 @deftypefun {char **} backtrace_symbols (void *const *@var{buffer}, int @var{size})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{} @aculock{}}}
+@c Collects info returned by _dl_addr in an auto array, allocates memory
+@c for the whole return buffer with malloc then sprintfs into it storing
+@c pointers to the strings into the array entries in the buffer.
+@c _dl_addr takes the recursive dl_load_lock then calls
+@c _dl_find_dso_for_object and determine_info.
+@c _dl_find_dso_for_object calls _dl-addr_inside_object.
+@c All of them are safe as long as the lock is held.
+@c @asucorrupt?  It doesn't look like the dynamic loader's data
+@c structures could be in an inconsistent state that would cause
+@c malfunction here.
 The @code{backtrace_symbols} function translates the information
 obtained from the @code{backtrace} function into an array of strings.
 The argument @var{buffer} should be a pointer to an array of addresses
@@ -88,6 +109,11 @@ cannot be obtained.
 @comment execinfo.h
 @comment GNU
 @deftypefun void backtrace_symbols_fd (void *const *@var{buffer}, int @var{size}, int @var{fd})
+@safety{@prelim{}@mtsafe{}@assafe{}@acunsafe{@aculock{}}}
+@c Single loop of _dl_addr over addresses, collecting info into an iovec
+@c written out with a writev call per iteration.  Addresses and offsets
+@c are converted to hex in auto buffers, so the only potential issue
+@c here is leaking the dl lock in case of cancellation.
 The @code{backtrace_symbols_fd} function performs the same translation
 as the function @code{backtrace_symbols} function.  Instead of returning
 the strings to the caller, it writes the strings to the file descriptor

@@ -1,3 +1,7 @@
+2014-01-30  Alexandre Oliva <aoliva@redhat.com>
+
+	* manual/debug.texi: Document MTASC-safety properties.
+
 2014-01-29  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #16510]
