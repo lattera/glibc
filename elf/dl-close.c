@@ -643,9 +643,7 @@ _dl_close_worker (struct link_map *map)
 	    imap->l_prev->l_next = imap->l_next;
 	  else
 	    {
-#ifdef SHARED
 	      assert (nsid != LM_ID_BASE);
-#endif
 	      ns->_ns_loaded = imap->l_next;
 
 	      /* Update the pointer to the head of the list
@@ -736,13 +734,7 @@ _dl_close_worker (struct link_map *map)
   if (__builtin_expect (ns->_ns_loaded == NULL, 0)
       && nsid == GL(dl_nns) - 1)
     do
-      {
-	--GL(dl_nns);
-#ifndef SHARED
-	if (GL(dl_nns) == 0)
-	  break;
-#endif
-      }
+      --GL(dl_nns);
     while (GL(dl_ns)[GL(dl_nns) - 1]._ns_loaded == NULL);
 
   /* Notify the debugger those objects are finalized and gone.  */

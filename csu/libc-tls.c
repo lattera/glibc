@@ -42,9 +42,6 @@ static struct
   struct dtv_slotinfo info[2 + TLS_SLOTINFO_SURPLUS];
 } static_slotinfo;
 
-/* Fake link map for the application.  */
-static struct link_map static_map;
-
 
 /* Highest dtv index currently needed.  */
 size_t _dl_tls_max_dtv_idx;
@@ -162,14 +159,16 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
   _dl_static_dtv[0].counter = (sizeof (_dl_static_dtv) / sizeof (_dl_static_dtv[0])) - 2;
   // _dl_static_dtv[1].counter = 0;		would be needed if not already done
 
+  struct link_map *main_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
+
   /* Initialize the TLS block.  */
 #if TLS_TCB_AT_TP
   _dl_static_dtv[2].pointer.val = ((char *) tlsblock + tcb_offset
 			       - roundup (memsz, align ?: 1));
-  static_map.l_tls_offset = roundup (memsz, align ?: 1);
+  main_map->l_tls_offset = roundup (memsz, align ?: 1);
 #elif TLS_DTV_AT_TP
   _dl_static_dtv[2].pointer.val = (char *) tlsblock + tcb_offset;
-  static_map.l_tls_offset = tcb_offset;
+  main_map->l_tls_offset = tcb_offset;
 #else
 # error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 #endif
@@ -193,19 +192,17 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
   if (__builtin_expect (lossage != NULL, 0))
     __libc_fatal (lossage);
 
-  /* We have to create a fake link map which normally would be created
-     by the dynamic linker.  It just has to have enough information to
-     make the TLS routines happy.  */
-  static_map.l_tls_align = align;
-  static_map.l_tls_blocksize = memsz;
-  static_map.l_tls_initimage = initimage;
-  static_map.l_tls_initimage_size = filesz;
-  static_map.l_type = lt_executable;
-  static_map.l_tls_modid = 1;
+  /* Update the executable's link map with enough information to make
+     the TLS routines happy.  */
+  main_map->l_tls_align = align;
+  main_map->l_tls_blocksize = memsz;
+  main_map->l_tls_initimage = initimage;
+  main_map->l_tls_initimage_size = filesz;
+  main_map->l_tls_modid = 1;
 
   init_slotinfo ();
   // static_slotinfo.si.slotinfo[1].gen = 0; already zero
-  static_slotinfo.si.slotinfo[1].map = &static_map;
+  static_slotinfo.si.slotinfo[1].map = main_map;
 
   memsz = roundup (memsz, align ?: 1);
 

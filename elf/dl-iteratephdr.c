@@ -86,34 +86,4 @@ __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
 }
 hidden_def (__dl_iterate_phdr)
 
-#ifdef SHARED
-
 weak_alias (__dl_iterate_phdr, dl_iterate_phdr);
-
-#else
-
-int
-dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
-				  size_t size, void *data), void *data)
-{
-  if (_dl_phnum != 0)
-    {
-      /* This entry describes this statically-linked program itself.  */
-      struct dl_phdr_info info;
-      int ret;
-      info.dlpi_addr = 0;
-      info.dlpi_name = "";
-      info.dlpi_phdr = _dl_phdr;
-      info.dlpi_phnum = _dl_phnum;
-      info.dlpi_adds = GL(dl_load_adds);
-      info.dlpi_subs = GL(dl_load_adds) - GL(dl_ns)[LM_ID_BASE]._ns_nloaded;
-      ret = (*callback) (&info, sizeof (struct dl_phdr_info), data);
-      if (ret)
-	return ret;
-    }
-
-  return __dl_iterate_phdr (callback, data);
-}
-
-
-#endif
