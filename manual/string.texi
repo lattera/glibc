@@ -219,6 +219,7 @@ This function is declared in the header file @file{string.h}.
 @comment string.h
 @comment ISO
 @deftypefun size_t strlen (const char *@var{s})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{strlen} function returns the length of the null-terminated
 string @var{s} in bytes.  (In other words, it returns the offset of the
 terminating null character within the array.)
@@ -285,6 +286,7 @@ The wide character equivalent is declared in @file{wchar.h}.
 @comment wchar.h
 @comment ISO
 @deftypefun size_t wcslen (const wchar_t *@var{ws})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{wcslen} function is the wide character equivalent to
 @code{strlen}.  The return value is the number of wide characters in the
 wide character string pointed to by @var{ws} (this is also the offset of
@@ -300,6 +302,7 @@ This function was introduced in @w{Amendment 1} to @w{ISO C90}.
 @comment string.h
 @comment GNU
 @deftypefun size_t strnlen (const char *@var{s}, size_t @var{maxlen})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{strnlen} function returns the length of the string @var{s} in
 bytes if this length is smaller than @var{maxlen} bytes.  Otherwise it
 returns @var{maxlen}.  Therefore this function is equivalent to
@@ -322,6 +325,7 @@ This function is a GNU extension and is declared in @file{string.h}.
 @comment wchar.h
 @comment GNU
 @deftypefun size_t wcsnlen (const wchar_t *@var{ws}, size_t @var{maxlen})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{wcsnlen} is the wide character equivalent to @code{strnlen}.  The
 @var{maxlen} parameter specifies the maximum number of wide characters.
 
@@ -367,6 +371,7 @@ Functions}).
 @comment string.h
 @comment ISO
 @deftypefun {void *} memcpy (void *restrict @var{to}, const void *restrict @var{from}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{memcpy} function copies @var{size} bytes from the object
 beginning at @var{from} into the object beginning at @var{to}.  The
 behavior of this function is undefined if the two arrays @var{to} and
@@ -388,6 +393,7 @@ memcpy (new, old, arraysize * sizeof (struct foo));
 @comment wchar.h
 @comment ISO
 @deftypefun {wchar_t *} wmemcpy (wchar_t *restrict @var{wto}, const wchar_t *restrict @var{wfrom}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{wmemcpy} function copies @var{size} wide characters from the object
 beginning at @var{wfrom} into the object beginning at @var{wto}.  The
 behavior of this function is undefined if the two arrays @var{wto} and
@@ -413,6 +419,7 @@ This function was introduced in @w{Amendment 1} to @w{ISO C90}.
 @comment string.h
 @comment GNU
 @deftypefun {void *} mempcpy (void *restrict @var{to}, const void *restrict @var{from}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{mempcpy} function is nearly identical to the @code{memcpy}
 function.  It copies @var{size} bytes from the object beginning at
 @code{from} into the object pointed to by @var{to}.  But instead of
@@ -440,6 +447,7 @@ This function is a GNU extension.
 @comment wchar.h
 @comment GNU
 @deftypefun {wchar_t *} wmempcpy (wchar_t *restrict @var{wto}, const wchar_t *restrict @var{wfrom}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{wmempcpy} function is nearly identical to the @code{wmemcpy}
 function.  It copies @var{size} wide characters from the object
 beginning at @code{wfrom} into the object pointed to by @var{wto}.  But
@@ -468,6 +476,7 @@ This function is a GNU extension.
 @comment string.h
 @comment ISO
 @deftypefun {void *} memmove (void *@var{to}, const void *@var{from}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{memmove} copies the @var{size} bytes at @var{from} into the
 @var{size} bytes at @var{to}, even if those two blocks of space
 overlap.  In the case of overlap, @code{memmove} is careful to copy the
@@ -480,6 +489,7 @@ The value returned by @code{memmove} is the value of @var{to}.
 @comment wchar.h
 @comment ISO
 @deftypefun {wchar_t *} wmemmove (wchar_t *@var{wto}, const wchar_t *@var{wfrom}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{wmemmove} copies the @var{size} wide characters at @var{wfrom}
 into the @var{size} wide characters at @var{wto}, even if those two
 blocks of space overlap.  In the case of overlap, @code{memmove} is
@@ -507,6 +517,7 @@ This function is a GNU extension.
 @comment string.h
 @comment SVID
 @deftypefun {void *} memccpy (void *restrict @var{to}, const void *restrict @var{from}, int @var{c}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function copies no more than @var{size} bytes from @var{from} to
 @var{to}, stopping if a byte matching @var{c} is found.  The return
 value is a pointer into @var{to} one byte past where @var{c} was copied,
@@ -517,6 +528,7 @@ or a null pointer if no byte matching @var{c} appeared in the first
 @comment string.h
 @comment ISO
 @deftypefun {void *} memset (void *@var{block}, int @var{c}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function copies the value of @var{c} (converted to an
 @code{unsigned char}) into each of the first @var{size} bytes of the
 object beginning at @var{block}.  It returns the value of @var{block}.
@@ -525,6 +537,7 @@ object beginning at @var{block}.  It returns the value of @var{block}.
 @comment wchar.h
 @comment ISO
 @deftypefun {wchar_t *} wmemset (wchar_t *@var{block}, wchar_t @var{wc}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function copies the value of @var{wc} into each of the first
 @var{size} wide characters of the object beginning at @var{block}.  It
 returns the value of @var{block}.
@@ -533,6 +546,7 @@ returns the value of @var{block}.
 @comment string.h
 @comment ISO
 @deftypefun {char *} strcpy (char *restrict @var{to}, const char *restrict @var{from})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This copies characters from the string @var{from} (up to and including
 the terminating null character) into the string @var{to}.  Like
 @code{memcpy}, this function has undefined results if the strings
@@ -542,6 +556,7 @@ overlap.  The return value is the value of @var{to}.
 @comment wchar.h
 @comment ISO
 @deftypefun {wchar_t *} wcscpy (wchar_t *restrict @var{wto}, const wchar_t *restrict @var{wfrom})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This copies wide characters from the string @var{wfrom} (up to and
 including the terminating null wide character) into the string
 @var{wto}.  Like @code{wmemcpy}, this function has undefined results if
@@ -551,6 +566,7 @@ the strings overlap.  The return value is the value of @var{wto}.
 @comment string.h
 @comment ISO
 @deftypefun {char *} strncpy (char *restrict @var{to}, const char *restrict @var{from}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is similar to @code{strcpy} but always copies exactly
 @var{size} characters into @var{to}.
 
@@ -576,6 +592,7 @@ waste a considerable amount of time copying null characters.
 @comment wchar.h
 @comment ISO
 @deftypefun {wchar_t *} wcsncpy (wchar_t *restrict @var{wto}, const wchar_t *restrict @var{wfrom}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is similar to @code{wcscpy} but always copies exactly
 @var{size} wide characters into @var{wto}.
 
@@ -602,6 +619,7 @@ waste a considerable amount of time copying null wide characters.
 @comment string.h
 @comment SVID
 @deftypefun {char *} strdup (const char *@var{s})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 This function copies the null-terminated string @var{s} into a newly
 allocated string.  The string is allocated using @code{malloc}; see
 @ref{Unconstrained Allocation}.  If @code{malloc} cannot allocate space
@@ -612,6 +630,7 @@ returns a pointer to the new string.
 @comment wchar.h
 @comment GNU
 @deftypefun {wchar_t *} wcsdup (const wchar_t *@var{ws})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 This function copies the null-terminated wide character string @var{ws}
 into a newly allocated string.  The string is allocated using
 @code{malloc}; see @ref{Unconstrained Allocation}.  If @code{malloc}
@@ -625,6 +644,7 @@ This function is a GNU extension.
 @comment string.h
 @comment GNU
 @deftypefun {char *} strndup (const char *@var{s}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 This function is similar to @code{strdup} but always copies at most
 @var{size} characters into the newly allocated string.
 
@@ -642,6 +662,7 @@ terminates the destination string.
 @comment string.h
 @comment Unknown origin
 @deftypefun {char *} stpcpy (char *restrict @var{to}, const char *restrict @var{from})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is like @code{strcpy}, except that it returns a pointer to
 the end of the string @var{to} (that is, the address of the terminating
 null character @code{to + strlen (from)}) rather than the beginning.
@@ -664,6 +685,7 @@ declared in @file{string.h}.
 @comment wchar.h
 @comment GNU
 @deftypefun {wchar_t *} wcpcpy (wchar_t *restrict @var{wto}, const wchar_t *restrict @var{wfrom})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is like @code{wcscpy}, except that it returns a pointer to
 the end of the string @var{wto} (that is, the address of the terminating
 null character @code{wto + strlen (wfrom)}) rather than the beginning.
@@ -679,6 +701,7 @@ The behavior of @code{wcpcpy} is undefined if the strings overlap.
 @comment string.h
 @comment GNU
 @deftypefun {char *} stpncpy (char *restrict @var{to}, const char *restrict @var{from}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is similar to @code{stpcpy} but copies always exactly
 @var{size} characters into @var{to}.
 
@@ -704,6 +727,7 @@ declared in @file{string.h}.
 @comment wchar.h
 @comment GNU
 @deftypefun {wchar_t *} wcpncpy (wchar_t *restrict @var{wto}, const wchar_t *restrict @var{wfrom}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is similar to @code{wcpcpy} but copies always exactly
 @var{wsize} characters into @var{wto}.
 
@@ -731,6 +755,7 @@ Its behavior is undefined if the strings overlap.
 @comment string.h
 @comment GNU
 @deftypefn {Macro} {char *} strdupa (const char *@var{s})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This macro is similar to @code{strdup} but allocates the new string
 using @code{alloca} instead of @code{malloc} (@pxref{Variable Size
 Automatic}).  This means of course the returned string has the same
@@ -757,6 +782,7 @@ This function is only available if GNU CC is used.
 @comment string.h
 @comment GNU
 @deftypefn {Macro} {char *} strndupa (const char *@var{s}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is similar to @code{strndup} but like @code{strdupa} it
 allocates the new string using @code{alloca}
 @pxref{Variable Size Automatic}.  The same advantages and limitations
@@ -772,6 +798,7 @@ parameter list in a function call.
 @comment string.h
 @comment ISO
 @deftypefun {char *} strcat (char *restrict @var{to}, const char *restrict @var{from})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{strcat} function is similar to @code{strcpy}, except that the
 characters from @var{from} are concatenated or appended to the end of
 @var{to}, instead of overwriting it.  That is, the first character from
@@ -794,6 +821,7 @@ This function has undefined results if the strings overlap.
 @comment wchar.h
 @comment ISO
 @deftypefun {wchar_t *} wcscat (wchar_t *restrict @var{wto}, const wchar_t *restrict @var{wfrom})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{wcscat} function is similar to @code{wcscpy}, except that the
 characters from @var{wfrom} are concatenated or appended to the end of
 @var{wto}, instead of overwriting it.  That is, the first character from
@@ -942,6 +970,7 @@ is almost always unnecessary to use @code{strcat}.
 @comment string.h
 @comment ISO
 @deftypefun {char *} strncat (char *restrict @var{to}, const char *restrict @var{from}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is like @code{strcat} except that not more than @var{size}
 characters from @var{from} are appended to the end of @var{to}.  A
 single null character is also always appended to @var{to}, so the total
@@ -968,6 +997,7 @@ The behavior of @code{strncat} is undefined if the strings overlap.
 @comment wchar.h
 @comment ISO
 @deftypefun {wchar_t *} wcsncat (wchar_t *restrict @var{wto}, const wchar_t *restrict @var{wfrom}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is like @code{wcscat} except that not more than @var{size}
 characters from @var{from} are appended to the end of @var{to}.  A
 single null character is also always appended to @var{to}, so the total
@@ -1012,6 +1042,7 @@ hello, wo
 @comment string.h
 @comment BSD
 @deftypefun void bcopy (const void *@var{from}, void *@var{to}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This is a partially obsolete alternative for @code{memmove}, derived from
 BSD.  Note that it is not quite equivalent to @code{memmove}, because the
 arguments are not in the same order and there is no return value.
@@ -1020,6 +1051,7 @@ arguments are not in the same order and there is no return value.
 @comment string.h
 @comment BSD
 @deftypefun void bzero (void *@var{block}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This is a partially obsolete alternative for @code{memset}, derived from
 BSD.  Note that it is not as general as @code{memset}, because the only
 value it can store is zero.
@@ -1055,6 +1087,7 @@ All of these functions are declared in the header file @file{string.h}.
 @comment string.h
 @comment ISO
 @deftypefun int memcmp (const void *@var{a1}, const void *@var{a2}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The function @code{memcmp} compares the @var{size} bytes of memory
 beginning at @var{a1} against the @var{size} bytes of memory beginning
 at @var{a2}.  The value returned has the same sign as the difference
@@ -1068,6 +1101,7 @@ If the contents of the two blocks are equal, @code{memcmp} returns
 @comment wchar.h
 @comment ISO
 @deftypefun int wmemcmp (const wchar_t *@var{a1}, const wchar_t *@var{a2}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The function @code{wmemcmp} compares the @var{size} wide characters
 beginning at @var{a1} against the @var{size} wide characters beginning
 at @var{a2}.  The value returned is smaller than or larger than zero
@@ -1120,6 +1154,7 @@ you are better off writing a specialized comparison function to compare
 @comment string.h
 @comment ISO
 @deftypefun int strcmp (const char *@var{s1}, const char *@var{s2})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{strcmp} function compares the string @var{s1} against
 @var{s2}, returning a value that has the same sign as the difference
 between the first differing pair of characters (interpreted as
@@ -1139,6 +1174,7 @@ strings are written in into account.  To get that one has to use
 @comment wchar.h
 @comment ISO
 @deftypefun int wcscmp (const wchar_t *@var{ws1}, const wchar_t *@var{ws2})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 The @code{wcscmp} function compares the wide character string @var{ws1}
 against @var{ws2}.  The value returned is smaller than or larger than zero
@@ -1159,6 +1195,11 @@ strings are written in into account.  To get that one has to use
 @comment string.h
 @comment BSD
 @deftypefun int strcasecmp (const char *@var{s1}, const char *@var{s2})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
+@c Although this calls tolower multiple times, it's a macro, and
+@c strcasecmp is optimized so that the locale pointer is read only once.
+@c There are some asm implementations too, for which the single-read
+@c from locale TLS pointers also applies.
 This function is like @code{strcmp}, except that differences in case are
 ignored.  How uppercase and lowercase characters are related is
 determined by the currently selected locale.  In the standard @code{"C"}
@@ -1172,6 +1213,9 @@ regards these characters as parts of the alphabet they do match.
 @comment wchar.h
 @comment GNU
 @deftypefun int wcscasecmp (const wchar_t *@var{ws1}, const wchar_t *@var{ws2})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
+@c Since towlower is not a macro, the locale object may be read multiple
+@c times.
 This function is like @code{wcscmp}, except that differences in case are
 ignored.  How uppercase and lowercase characters are related is
 determined by the currently selected locale.  In the standard @code{"C"}
@@ -1185,6 +1229,7 @@ regards these characters as parts of the alphabet they do match.
 @comment string.h
 @comment ISO
 @deftypefun int strncmp (const char *@var{s1}, const char *@var{s2}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is the similar to @code{strcmp}, except that no more than
 @var{size} characters are compared.  In other words, if the two
 strings are the same in their first @var{size} characters, the
@@ -1194,6 +1239,7 @@ return value is zero.
 @comment wchar.h
 @comment ISO
 @deftypefun int wcsncmp (const wchar_t *@var{ws1}, const wchar_t *@var{ws2}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is the similar to @code{wcscmp}, except that no more than
 @var{size} wide characters are compared.  In other words, if the two
 strings are the same in their first @var{size} wide characters, the
@@ -1203,6 +1249,7 @@ return value is zero.
 @comment string.h
 @comment BSD
 @deftypefun int strncasecmp (const char *@var{s1}, const char *@var{s2}, size_t @var{n})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
 This function is like @code{strncmp}, except that differences in case
 are ignored.  Like @code{strcasecmp}, it is locale dependent how
 uppercase and lowercase characters are related.
@@ -1214,6 +1261,7 @@ uppercase and lowercase characters are related.
 @comment wchar.h
 @comment GNU
 @deftypefun int wcsncasecmp (const wchar_t *@var{ws1}, const wchar_t *@var{s2}, size_t @var{n})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
 This function is like @code{wcsncmp}, except that differences in case
 are ignored.  Like @code{wcscasecmp}, it is locale dependent how
 uppercase and lowercase characters are related.
@@ -1247,6 +1295,8 @@ strncmp ("hello, world", "hello, stupid world!!!", 5)
 @comment string.h
 @comment GNU
 @deftypefun int strverscmp (const char *@var{s1}, const char *@var{s2})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
+@c Calls isdigit multiple times, locale may change in between.
 The @code{strverscmp} function compares the string @var{s1} against
 @var{s2}, considering them as holding indices/version numbers.  The
 return value follows the same conventions as found in the
@@ -1297,6 +1347,7 @@ because filenames frequently hold indices/version numbers.
 @comment string.h
 @comment BSD
 @deftypefun int bcmp (const void *@var{a1}, const void *@var{a2}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This is an obsolete alias for @code{memcmp}, derived from BSD.
 @end deftypefun
 
@@ -1343,6 +1394,9 @@ transformed strings with @code{strcmp} or @code{wcscmp}.
 @comment string.h
 @comment ISO
 @deftypefun int strcoll (const char *@var{s1}, const char *@var{s2})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+@c Calls strcoll_l with the current locale, which dereferences only the
+@c LC_COLLATE data pointer.
 The @code{strcoll} function is similar to @code{strcmp} but uses the
 collating sequence of the current locale for collation (the
 @code{LC_COLLATE} locale).
@@ -1351,6 +1405,8 @@ collating sequence of the current locale for collation (the
 @comment wchar.h
 @comment ISO
 @deftypefun int wcscoll (const wchar_t *@var{ws1}, const wchar_t *@var{ws2})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+@c Same as strcoll, but calling wcscoll_l.
 The @code{wcscoll} function is similar to @code{wcscmp} but uses the
 collating sequence of the current locale for collation (the
 @code{LC_COLLATE} locale).
@@ -1391,6 +1447,7 @@ sort_strings (char **array, int nstrings)
 @comment string.h
 @comment ISO
 @deftypefun size_t strxfrm (char *restrict @var{to}, const char *restrict @var{from}, size_t @var{size})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 The function @code{strxfrm} transforms the string @var{from} using the
 collation transformation determined by the locale currently selected for
 collation, and stores the transformed string in the array @var{to}.  Up
@@ -1420,6 +1477,7 @@ what size the allocated array should be.  It does not matter what
 @comment wchar.h
 @comment ISO
 @deftypefun size_t wcsxfrm (wchar_t *restrict @var{wto}, const wchar_t *@var{wfrom}, size_t @var{size})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 The function @code{wcsxfrm} transforms wide character string @var{wfrom}
 using the collation transformation determined by the locale currently
 selected for collation, and stores the transformed string in the array
@@ -1579,6 +1637,7 @@ declared in the header file @file{string.h}.
 @comment string.h
 @comment ISO
 @deftypefun {void *} memchr (const void *@var{block}, int @var{c}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function finds the first occurrence of the byte @var{c} (converted
 to an @code{unsigned char}) in the initial @var{size} bytes of the
 object beginning at @var{block}.  The return value is a pointer to the
@@ -1588,6 +1647,7 @@ located byte, or a null pointer if no match was found.
 @comment wchar.h
 @comment ISO
 @deftypefun {wchar_t *} wmemchr (const wchar_t *@var{block}, wchar_t @var{wc}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function finds the first occurrence of the wide character @var{wc}
 in the initial @var{size} wide characters of the object beginning at
 @var{block}.  The return value is a pointer to the located wide
@@ -1597,6 +1657,7 @@ character, or a null pointer if no match was found.
 @comment string.h
 @comment GNU
 @deftypefun {void *} rawmemchr (const void *@var{block}, int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Often the @code{memchr} function is used with the knowledge that the
 byte @var{c} is available in the memory block specified by the
 parameters.  But this means that the @var{size} parameter is not really
@@ -1627,6 +1688,7 @@ This function is a GNU extension.
 @comment string.h
 @comment GNU
 @deftypefun {void *} memrchr (const void *@var{block}, int @var{c}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The function @code{memrchr} is like @code{memchr}, except that it searches
 backwards from the end of the block defined by @var{block} and @var{size}
 (instead of forwards from the front).
@@ -1637,6 +1699,7 @@ This function is a GNU extension.
 @comment string.h
 @comment ISO
 @deftypefun {char *} strchr (const char *@var{string}, int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{strchr} function finds the first occurrence of the character
 @var{c} (converted to a @code{char}) in the null-terminated string
 beginning at @var{string}.  The return value is a pointer to the located
@@ -1663,6 +1726,7 @@ need that information, it is better (but less portable) to use
 @comment wchar.h
 @comment ISO
 @deftypefun {wchar_t *} wcschr (const wchar_t *@var{wstring}, int @var{wc})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{wcschr} function finds the first occurrence of the wide
 character @var{wc} in the null-terminated wide character string
 beginning at @var{wstring}.  The return value is a pointer to the
@@ -1678,6 +1742,7 @@ to use @code{wcschrnul} in this case, though.
 @comment string.h
 @comment GNU
 @deftypefun {char *} strchrnul (const char *@var{string}, int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{strchrnul} is the same as @code{strchr} except that if it does
 not find the character, it returns a pointer to string's terminating
 null character rather than a null pointer.
@@ -1688,6 +1753,7 @@ This function is a GNU extension.
 @comment wchar.h
 @comment GNU
 @deftypefun {wchar_t *} wcschrnul (const wchar_t *@var{wstring}, wchar_t @var{wc})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{wcschrnul} is the same as @code{wcschr} except that if it does not
 find the wide character, it returns a pointer to wide character string's
 terminating null wide character rather than a null pointer.
@@ -1723,6 +1789,7 @@ actually is faster.
 @comment string.h
 @comment ISO
 @deftypefun {char *} strrchr (const char *@var{string}, int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The function @code{strrchr} is like @code{strchr}, except that it searches
 backwards from the end of the string @var{string} (instead of forwards
 from the front).
@@ -1737,6 +1804,7 @@ strrchr ("hello, world", 'l')
 @comment wchar.h
 @comment ISO
 @deftypefun {wchar_t *} wcsrchr (const wchar_t *@var{wstring}, wchar_t @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The function @code{wcsrchr} is like @code{wcschr}, except that it searches
 backwards from the end of the string @var{wstring} (instead of forwards
 from the front).
@@ -1745,6 +1813,7 @@ from the front).
 @comment string.h
 @comment ISO
 @deftypefun {char *} strstr (const char *@var{haystack}, const char *@var{needle})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This is like @code{strchr}, except that it searches @var{haystack} for a
 substring @var{needle} rather than just a single character.  It
 returns a pointer into the string @var{haystack} that is the first
@@ -1763,6 +1832,7 @@ strstr ("hello, world", "wo")
 @comment wchar.h
 @comment ISO
 @deftypefun {wchar_t *} wcsstr (const wchar_t *@var{haystack}, const wchar_t *@var{needle})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This is like @code{wcschr}, except that it searches @var{haystack} for a
 substring @var{needle} rather than just a single wide character.  It
 returns a pointer into the string @var{haystack} that is the first wide
@@ -1773,6 +1843,7 @@ character of the substring, or a null pointer if no match was found.  If
 @comment wchar.h
 @comment XPG
 @deftypefun {wchar_t *} wcswcs (const wchar_t *@var{haystack}, const wchar_t *@var{needle})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{wcswcs} is a deprecated alias for @code{wcsstr}.  This is the
 name originally used in the X/Open Portability Guide before the
 @w{Amendment 1} to @w{ISO C90} was published.
@@ -1782,6 +1853,9 @@ name originally used in the X/Open Portability Guide before the
 @comment string.h
 @comment GNU
 @deftypefun {char *} strcasestr (const char *@var{haystack}, const char *@var{needle})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
+@c There may be multiple calls of strncasecmp, each accessing the locale
+@c object independently.
 This is like @code{strstr}, except that it ignores case in searching for
 the substring.   Like @code{strcasecmp}, it is locale dependent how
 uppercase and lowercase characters are related.
@@ -1800,6 +1874,7 @@ strcasestr ("hello, World", "wo")
 @comment string.h
 @comment GNU
 @deftypefun {void *} memmem (const void *@var{haystack}, size_t @var{haystack-len},@*const void *@var{needle}, size_t @var{needle-len})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This is like @code{strstr}, but @var{needle} and @var{haystack} are byte
 arrays rather than null-terminated strings.  @var{needle-len} is the
 length of @var{needle} and @var{haystack-len} is the length of
@@ -1811,6 +1886,7 @@ This function is a GNU extension.
 @comment string.h
 @comment ISO
 @deftypefun size_t strspn (const char *@var{string}, const char *@var{skipset})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{strspn} (``string span'') function returns the length of the
 initial substring of @var{string} that consists entirely of characters that
 are members of the set specified by the string @var{skipset}.  The order
@@ -1831,6 +1907,7 @@ separately.  The function is not locale-dependent.
 @comment wchar.h
 @comment ISO
 @deftypefun size_t wcsspn (const wchar_t *@var{wstring}, const wchar_t *@var{skipset})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{wcsspn} (``wide character string span'') function returns the
 length of the initial substring of @var{wstring} that consists entirely
 of wide characters that are members of the set specified by the string
@@ -1841,6 +1918,7 @@ important.
 @comment string.h
 @comment ISO
 @deftypefun size_t strcspn (const char *@var{string}, const char *@var{stopset})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{strcspn} (``string complement span'') function returns the length
 of the initial substring of @var{string} that consists entirely of characters
 that are @emph{not} members of the set specified by the string @var{stopset}.
@@ -1862,6 +1940,7 @@ separately.  The function is not locale-dependent.
 @comment wchar.h
 @comment ISO
 @deftypefun size_t wcscspn (const wchar_t *@var{wstring}, const wchar_t *@var{stopset})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{wcscspn} (``wide character string complement span'') function
 returns the length of the initial substring of @var{wstring} that
 consists entirely of wide characters that are @emph{not} members of the
@@ -1873,6 +1952,7 @@ the set @var{stopset}.)
 @comment string.h
 @comment ISO
 @deftypefun {char *} strpbrk (const char *@var{string}, const char *@var{stopset})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{strpbrk} (``string pointer break'') function is related to
 @code{strcspn}, except that it returns a pointer to the first character
 in @var{string} that is a member of the set @var{stopset} instead of the
@@ -1897,6 +1977,7 @@ separately.  The function is not locale-dependent.
 @comment wchar.h
 @comment ISO
 @deftypefun {wchar_t *} wcspbrk (const wchar_t *@var{wstring}, const wchar_t *@var{stopset})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{wcspbrk} (``wide character string pointer break'') function is
 related to @code{wcscspn}, except that it returns a pointer to the first
 wide character in @var{wstring} that is a member of the set
@@ -1910,6 +1991,7 @@ returns a null pointer if no such character from @var{stopset} is found.
 @comment string.h
 @comment BSD
 @deftypefun {char *} index (const char *@var{string}, int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{index} is another name for @code{strchr}; they are exactly the same.
 New code should always use @code{strchr} since this name is defined in
 @w{ISO C} while @code{index} is a BSD invention which never was available
@@ -1919,6 +2001,7 @@ on @w{System V} derived systems.
 @comment string.h
 @comment BSD
 @deftypefun {char *} rindex (const char *@var{string}, int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{rindex} is another name for @code{strrchr}; they are exactly the same.
 New code should always use @code{strrchr} since this name is defined in
 @w{ISO C} while @code{rindex} is a BSD invention which never was available
@@ -1940,6 +2023,7 @@ in the header file @file{string.h}.
 @comment string.h
 @comment ISO
 @deftypefun {char *} strtok (char *restrict @var{newstring}, const char *restrict @var{delimiters})
+@safety{@prelim{}@mtunsafe{@mtasurace{:strtok}}@asunsafe{}@acsafe{}}
 A string can be split into tokens by making a series of calls to the
 function @code{strtok}.
 
@@ -1979,6 +2063,7 @@ separately.  The function is not locale-dependent.
 @comment wchar.h
 @comment ISO
 @deftypefun {wchar_t *} wcstok (wchar_t *@var{newstring}, const wchar_t *@var{delimiters})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 A string can be split into tokens by making a series of calls to the
 function @code{wcstok}.
 
@@ -2075,6 +2160,7 @@ available for multibyte character strings.
 @comment string.h
 @comment POSIX
 @deftypefun {char *} strtok_r (char *@var{newstring}, const char *@var{delimiters}, char **@var{save_ptr})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Just like @code{strtok}, this function splits the string into several
 tokens which can be accessed by successive calls to @code{strtok_r}.
 The difference is that the information about the next token is stored in
@@ -2090,6 +2176,7 @@ which support multi-threading.
 @comment string.h
 @comment BSD
 @deftypefun {char *} strsep (char **@var{string_ptr}, const char *@var{delimiter})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function has a similar functionality as @code{strtok_r} with the
 @var{newstring} argument replaced by the @var{save_ptr} argument.  The
 initialization of the moving pointer has to be done by the user.
@@ -2141,6 +2228,7 @@ token = strsep (&running, delimiters);    /* token => NULL */
 @comment string.h
 @comment GNU
 @deftypefun {char *} basename (const char *@var{filename})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The GNU version of the @code{basename} function returns the last
 component of the path in @var{filename}.  This function is the preferred
 usage, since it does not modify the argument, @var{filename}, and
@@ -2176,6 +2264,7 @@ on different systems.
 @comment libgen.h
 @comment XPG
 @deftypefun {char *} basename (const char *@var{path})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This is the standard XPG defined @code{basename}. It is similar in
 spirit to the GNU version, but may modify the @var{path} by removing
 trailing '/' characters.  If the @var{path} is made up entirely of '/'
@@ -2211,6 +2300,7 @@ main (int argc, char *argv[])
 @comment libgen.h
 @comment XPG
 @deftypefun {char *} dirname (char *@var{path})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{dirname} function is the compliment to the XPG version of
 @code{basename}.  It returns the parent directory of the file specified
 by @var{path}.  If @var{path} is @code{NULL}, an empty string, or
@@ -2233,6 +2323,8 @@ The prototype for this function is in @file{string.h}.
 @comment string.h
 @comment GNU
 @deftypefun {char *} strfry (char *@var{string})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Calls initstate_r, time, getpid, strlen, and random_r.
 
 @code{strfry} creates a pseudorandom anagram of a string, replacing the
 input with the anagram in place.  For each position in the string,
@@ -2268,6 +2360,7 @@ This function is declared in @file{string.h}.
 @comment string.h
 @comment GNU
 @deftypefun {void *} memfrob (void *@var{mem}, size_t @var{length})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 @code{memfrob} transforms (frobnicates) each byte of the data structure
 at @var{mem}, which is @var{length} bytes long, by bitwise exclusive
@@ -2298,6 +2391,7 @@ this task.
 @comment stdlib.h
 @comment XPG
 @deftypefun {char *} l64a (long int @var{n})
+@safety{@prelim{}@mtunsafe{@mtasurace{:l64a}}@asunsafe{}@acsafe{}}
 This function encodes a 32-bit input value using characters from the
 basic character set.  It returns a pointer to a 7 character buffer which
 contains an encoded version of @var{n}.  To encode a series of bytes the
@@ -2373,6 +2467,7 @@ used.
 @comment stdlib.h
 @comment XPG
 @deftypefun {long int} a64l (const char *@var{string})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The parameter @var{string} should contain a string which was produced by
 a call to @code{l64a}.  The function processes at least 6 characters of
 this string, and decodes the characters it finds according to the table
@@ -2459,6 +2554,7 @@ These functions are declared in the standard include file @file{argz.h}.
 @comment argz.h
 @comment GNU
 @deftypefun {error_t} argz_create (char *const @var{argv}[], char **@var{argz}, size_t *@var{argz_len})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 The @code{argz_create} function converts the Unix-style argument vector
 @var{argv} (a vector of pointers to normal C strings, terminated by
 @code{(char *)0}; @pxref{Program Arguments}) into an argz vector with
@@ -2468,6 +2564,7 @@ the same elements, which is returned in @var{argz} and @var{argz_len}.
 @comment argz.h
 @comment GNU
 @deftypefun {error_t} argz_create_sep (const char *@var{string}, int @var{sep}, char **@var{argz}, size_t *@var{argz_len})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 The @code{argz_create_sep} function converts the null-terminated string
 @var{string} into an argz vector (returned in @var{argz} and
 @var{argz_len}) by splitting it into elements at every occurrence of the
@@ -2477,6 +2574,7 @@ character @var{sep}.
 @comment argz.h
 @comment GNU
 @deftypefun {size_t} argz_count (const char *@var{argz}, size_t @var{arg_len})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Returns the number of elements in the argz vector @var{argz} and
 @var{argz_len}.
 @end deftypefun
@@ -2484,6 +2582,7 @@ Returns the number of elements in the argz vector @var{argz} and
 @comment argz.h
 @comment GNU
 @deftypefun {void} argz_extract (const char *@var{argz}, size_t @var{argz_len}, char **@var{argv})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{argz_extract} function converts the argz vector @var{argz} and
 @var{argz_len} into a Unix-style argument vector stored in @var{argv},
 by putting pointers to every element in @var{argz} into successive
@@ -2501,6 +2600,7 @@ still active.  This function is useful for passing the elements in
 @comment argz.h
 @comment GNU
 @deftypefun {void} argz_stringify (char *@var{argz}, size_t @var{len}, int @var{sep})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{argz_stringify} converts @var{argz} into a normal string with
 the elements separated by the character @var{sep}, by replacing each
 @code{'\0'} inside @var{argz} (except the last one, which terminates the
@@ -2511,6 +2611,8 @@ readable manner.
 @comment argz.h
 @comment GNU
 @deftypefun {error_t} argz_add (char **@var{argz}, size_t *@var{argz_len}, const char *@var{str})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+@c Calls strlen and argz_append.
 The @code{argz_add} function adds the string @var{str} to the end of the
 argz vector @code{*@var{argz}}, and updates @code{*@var{argz}} and
 @code{*@var{argz_len}} accordingly.
@@ -2519,6 +2621,7 @@ argz vector @code{*@var{argz}}, and updates @code{*@var{argz}} and
 @comment argz.h
 @comment GNU
 @deftypefun {error_t} argz_add_sep (char **@var{argz}, size_t *@var{argz_len}, const char *@var{str}, int @var{delim})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 The @code{argz_add_sep} function is similar to @code{argz_add}, but
 @var{str} is split into separate elements in the result at occurrences of
 the character @var{delim}.  This is useful, for instance, for
@@ -2529,6 +2632,7 @@ a value of @code{':'} for @var{delim}.
 @comment argz.h
 @comment GNU
 @deftypefun {error_t} argz_append (char **@var{argz}, size_t *@var{argz_len}, const char *@var{buf}, size_t @var{buf_len})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 The @code{argz_append} function appends @var{buf_len} bytes starting at
 @var{buf} to the argz vector @code{*@var{argz}}, reallocating
 @code{*@var{argz}} to accommodate it, and adding @var{buf_len} to
@@ -2538,6 +2642,8 @@ The @code{argz_append} function appends @var{buf_len} bytes starting at
 @comment argz.h
 @comment GNU
 @deftypefun {void} argz_delete (char **@var{argz}, size_t *@var{argz_len}, char *@var{entry})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+@c Calls free if no argument is left.
 If @var{entry} points to the beginning of one of the elements in the
 argz vector @code{*@var{argz}}, the @code{argz_delete} function will
 remove this entry and reallocate @code{*@var{argz}}, modifying
@@ -2549,6 +2655,8 @@ pointers into argz vectors such as @var{entry} will then become invalid.
 @comment argz.h
 @comment GNU
 @deftypefun {error_t} argz_insert (char **@var{argz}, size_t *@var{argz_len}, char *@var{before}, const char *@var{entry})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+@c Calls argz_add or realloc and memmove.
 The @code{argz_insert} function inserts the string @var{entry} into the
 argz vector @code{*@var{argz}} at a point just before the existing
 element pointed to by @var{before}, reallocating @code{*@var{argz}} and
@@ -2562,6 +2670,7 @@ is @code{0}, @var{entry} is added to the end instead (as if by
 @comment argz.h
 @comment GNU
 @deftypefun {char *} argz_next (const char *@var{argz}, size_t @var{argz_len}, const char *@var{entry})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{argz_next} function provides a convenient way of iterating
 over the elements in the argz vector @var{argz}.  It returns a pointer
 to the next element in @var{argz} after the element @var{entry}, or
@@ -2595,6 +2704,7 @@ invariant is maintained for argz vectors created by the functions here.
 @comment argz.h
 @comment GNU
 @deftypefun error_t argz_replace (@w{char **@var{argz}, size_t *@var{argz_len}}, @w{const char *@var{str}, const char *@var{with}}, @w{unsigned *@var{replace_count}})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 Replace any occurrences of the string @var{str} in @var{argz} with
 @var{with}, reallocating @var{argz} as necessary.  If
 @var{replace_count} is non-zero, @code{*@var{replace_count}} will be
@@ -2630,6 +2740,7 @@ These functions are declared in the standard include file @file{envz.h}.
 @comment envz.h
 @comment GNU
 @deftypefun {char *} envz_entry (const char *@var{envz}, size_t @var{envz_len}, const char *@var{name})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{envz_entry} function finds the entry in @var{envz} with the name
 @var{name}, and returns a pointer to the whole entry---that is, the argz
 element which begins with @var{name} followed by a @code{'='} character.  If
@@ -2639,6 +2750,7 @@ there is no entry with that name, @code{0} is returned.
 @comment envz.h
 @comment GNU
 @deftypefun {char *} envz_get (const char *@var{envz}, size_t @var{envz_len}, const char *@var{name})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{envz_get} function finds the entry in @var{envz} with the name
 @var{name} (like @code{envz_entry}), and returns a pointer to the value
 portion of that entry (following the @code{'='}).  If there is no entry with
@@ -2648,6 +2760,9 @@ that name (or only a null entry), @code{0} is returned.
 @comment envz.h
 @comment GNU
 @deftypefun {error_t} envz_add (char **@var{envz}, size_t *@var{envz_len}, const char *@var{name}, const char *@var{value})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+@c Calls envz_remove, which calls enz_entry and argz_delete, and then
+@c argz_add or equivalent code that reallocs and appends name=value.
 The @code{envz_add} function adds an entry to @code{*@var{envz}}
 (updating @code{*@var{envz}} and @code{*@var{envz_len}}) with the name
 @var{name}, and value @var{value}.  If an entry with the same name
@@ -2659,6 +2774,7 @@ already exists in @var{envz}, it is removed first.  If @var{value} is
 @comment envz.h
 @comment GNU
 @deftypefun {error_t} envz_merge (char **@var{envz}, size_t *@var{envz_len}, const char *@var{envz2}, size_t @var{envz2_len}, int @var{override})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 The @code{envz_merge} function adds each entry in @var{envz2} to @var{envz},
 as if with @code{envz_add}, updating @code{*@var{envz}} and
 @code{*@var{envz_len}}.  If @var{override} is true, then values in @var{envz2}
@@ -2672,6 +2788,10 @@ being added to @var{envz}, if @var{override} is false.
 @comment envz.h
 @comment GNU
 @deftypefun {void} envz_strip (char **@var{envz}, size_t *@var{envz_len})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{envz_strip} function removes any null entries from @var{envz},
 updating @code{*@var{envz}} and @code{*@var{envz_len}}.
 @end deftypefun
+
+@c FIXME this are undocumented:
+@c strcasecmp_l @safety{@mtsafe{}@assafe{}@acsafe{}} see strcasecmp
