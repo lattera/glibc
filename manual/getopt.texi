@@ -60,6 +60,28 @@ option argument, for those options that accept arguments.
 @comment unistd.h
 @comment POSIX.2
 @deftypefun int getopt (int @var{argc}, char *const *@var{argv}, const char *@var{options})
+@safety{@prelim{}@mtunsafe{@mtasurace{:getopt} @mtsenv{}}@asunsafe{@ascuheap{} @ascuintl{} @asulock{} @asucorrupt{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
+@c Swapping elements of passed-in argv may be partial in case of
+@c cancellation.  Gettext brings about a whole lot of AS and AC safety
+@c issues.  The getopt API involves returning values in the
+@c non-thread-specific optarg variable, which adds another thread-safety
+@c issue.  Given print_errors, it may output errors to stderr, which may
+@c self-deadlock, leak locks, or encounter (in a signal handler) or
+@c leave (in case of cancellation) stderr in an inconsistent state.
+@c Various implicit, indirect uses of malloc, in uses of memstream and
+@c asprintf for error-printing, bring about the usual malloc issues.
+@c (The explicit use of malloc in a conditional situation in
+@c _getopt_initialize is never exercised in glibc.)
+@c
+@c _getopt_internal
+@c  _getopt_internal_r
+@c   gettext
+@c   _getopt_initialize
+@c    getenv
+@c    malloc if USE_NONOPTION_FLAGS, never defined in libc
+@c   open_memstream
+@c   lockfile, unlockfile, __fxprintf -> stderr
+@c   asprintf
 The @code{getopt} function gets the next option argument from the
 argument list specified by the @var{argv} and @var{argc} arguments.
 Normally these values come directly from the arguments received by
@@ -225,6 +247,8 @@ was seen.
 @comment getopt.h
 @comment GNU
 @deftypefun int getopt_long (int @var{argc}, char *const *@var{argv}, const char *@var{shortopts}, const struct option *@var{longopts}, int *@var{indexptr})
+@safety{@prelim{}@mtunsafe{@mtasurace{:getopt} @mtsenv{}}@asunsafe{@ascuheap{} @ascuintl{} @asulock{} @asucorrupt{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
+@c Same issues as getopt.
 Decode options from the vector @var{argv} (whose length is @var{argc}).
 The argument @var{shortopts} describes the short options to accept, just as
 it does in @code{getopt}.  The argument @var{longopts} describes the long
@@ -278,6 +302,8 @@ getopt functionality there is one more function available.
 @comment getopt.h
 @comment GNU
 @deftypefun int getopt_long_only (int @var{argc}, char *const *@var{argv}, const char *@var{shortopts}, const struct option *@var{longopts}, int *@var{indexptr})
+@safety{@prelim{}@mtunsafe{@mtasurace{:getopt} @mtsenv{}}@asunsafe{@ascuheap{} @ascuintl{} @asulock{} @asucorrupt{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
+@c Same issues as getopt.
 
 The @code{getopt_long_only} function is equivalent to the
 @code{getopt_long} function but it allows to specify the user of the
