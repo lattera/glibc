@@ -58,6 +58,25 @@ Prototypes for these functions are declared in the header file
 @comment unistd.h
 @comment POSIX.1
 @deftypefun {char *} getcwd (char *@var{buffer}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{} @acsfd{}}}
+@c If buffer is NULL, this function calls malloc and realloc, and, in
+@c case of error, free.  Linux offers a getcwd syscall that we use on
+@c GNU/Linux systems, but it may fail if the pathname is too long.  As a
+@c fallback, and on other systems, the generic implementation opens each
+@c parent directory with opendir, which allocates memory for the
+@c directory stream with malloc.  If a fstatat64 syscall is not
+@c available, very deep directory trees may also have to malloc to build
+@c longer sequences of ../../../... than those supported by a global
+@c const read-only string.
+
+@c linux/__getcwd
+@c  posix/__getcwd
+@c   malloc/realloc/free if buffer is NULL, or if dir is too deep
+@c   lstat64 -> see its own entry
+@c   fstatat64
+@c     direct syscall if possible, alloca+snprintf+*stat64 otherwise
+@c   openat64_not_cancel_3, close_not_cancel_no_status
+@c   __fdopendir, __opendir, __readdir, rewinddir
 The @code{getcwd} function returns an absolute file name representing
 the current working directory, storing it in the character array
 @var{buffer} that you provide.  The @var{size} argument is how you tell
@@ -116,6 +135,9 @@ software.
 @comment unistd.h
 @comment BSD
 @deftypefn {Deprecated Function} {char *} getwd (char *@var{buffer})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @ascuintl{}}@acunsafe{@acsmem{} @acsfd{}}}
+@c Besides the getcwd safety issues, it calls strerror_r on error, which
+@c brings in all of the i18n issues.
 This is similar to @code{getcwd}, but has no way to specify the size of
 the buffer.  @Theglibc{} provides @code{getwd} only
 for backwards compatibility with BSD.
@@ -130,6 +152,9 @@ this function is deprecated.
 @comment unistd.h
 @comment GNU
 @deftypefun {char *} get_current_dir_name (void)
+@safety{@prelim{}@mtsafe{@mtsenv{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{} @acsfd{}}}
+@c Besides getcwd, which this function calls as a fallback, it calls
+@c getenv, with the potential thread-safety issues that brings about.
 @vindex PWD
 This @code{get_current_dir_name} function is basically equivalent to
 @w{@code{getcwd (NULL, 0)}}.  The only difference is that the value of
@@ -145,6 +170,7 @@ This function is a GNU extension.
 @comment unistd.h
 @comment POSIX.1
 @deftypefun int chdir (const char *@var{filename})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is used to set the process's working directory to
 @var{filename}.
 
@@ -158,6 +184,7 @@ file @var{filename} is not a directory.
 @comment unistd.h
 @comment XPG
 @deftypefun int fchdir (int @var{filedes})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is used to set the process's working directory to
 directory associated with the file descriptor @var{filedes}.
 
@@ -294,12 +321,14 @@ values and @code{st_mode} values:
 @comment dirent.h
 @comment BSD
 @deftypefun int IFTODT (mode_t @var{mode})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This returns the @code{d_type} value corresponding to @var{mode}.
 @end deftypefun
 
 @comment dirent.h
 @comment BSD
 @deftypefun mode_t DTTOIF (int @var{dtype})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This returns the @code{st_mode} value corresponding to @var{dtype}.
 @end deftypefun
 @end table
@@ -342,6 +371,9 @@ the following functions.
 @comment dirent.h
 @comment POSIX.1
 @deftypefun {DIR *} opendir (const char *@var{dirname})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{} @acsfd{}}}
+@c Besides the safe syscall, we have to allocate the DIR object with
+@c __alloc_dir, that calls malloc.
 The @code{opendir} function opens and returns a directory stream for
 reading the directory whose file name is @var{dirname}.  The stream has
 type @code{DIR *}.
@@ -381,6 +413,8 @@ alternative interface can be used.
 @comment dirent.h
 @comment GNU
 @deftypefun {DIR *} fdopendir (int @var{fd})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{} @acsfd{}}}
+@c The DIR object is allocated with __alloc_dir, that calls malloc.
 The @code{fdopendir} function works just like @code{opendir} but
 instead of taking a file name and opening a file descriptor for the
 directory the caller is required to provide a file descriptor.  This
@@ -425,6 +459,7 @@ access.
 @comment dirent.h
 @comment GNU
 @deftypefun int dirfd (DIR *@var{dirstream})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The function @code{dirfd} returns the file descriptor associated with
 the directory stream @var{dirstream}.  This descriptor can be used until
 the directory is closed with @code{closedir}.  If the directory stream
@@ -443,6 +478,12 @@ symbols are declared in the header file @file{dirent.h}.
 @comment dirent.h
 @comment POSIX.1
 @deftypefun {struct dirent *} readdir (DIR *@var{dirstream})
+@safety{@prelim{}@mtunsafe{@mtasurace{:dirstream}}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
+@c This function holds dirstream's non-recursive lock, which brings
+@c about the usual issues with locks and async signals and cancellation,
+@c but the lock taking is not enough to make the returned value safe to
+@c use, since it points to a stream's internal buffer that can be
+@c overwritten by subsequent calls or even released by closedir.
 This function reads the next entry from the directory.  It normally
 returns a pointer to a structure containing information about the
 file.  This structure is associated with the @var{dirstream} handle
@@ -478,6 +519,7 @@ locking if multiple threads access the same @var{dirstream}.
 @comment dirent.h
 @comment GNU
 @deftypefun int readdir_r (DIR *@var{dirstream}, struct dirent *@var{entry}, struct dirent **@var{result})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 This function is a version of @code{readdir} which performs internal
 locking.  Like @code{readdir} it returns the next entry from the
 directory.  To prevent conflicts between simultaneously running
@@ -549,6 +591,7 @@ of the last two functions.
 @comment dirent.h
 @comment LFS
 @deftypefun {struct dirent64 *} readdir64 (DIR *@var{dirstream})
+@safety{@prelim{}@mtunsafe{@mtasurace{:dirstream}}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 The @code{readdir64} function is just like the @code{readdir} function
 except that it returns a pointer to a record of type @code{struct
 dirent64}.  Some of the members of this data type (notably @code{d_ino})
@@ -560,6 +603,7 @@ In all other aspects this function is equivalent to @code{readdir}.
 @comment dirent.h
 @comment LFS
 @deftypefun int readdir64_r (DIR *@var{dirstream}, struct dirent64 *@var{entry}, struct dirent64 **@var{result})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 The @code{readdir64_r} function is equivalent to the @code{readdir_r}
 function except that it takes parameters of base type @code{struct
 dirent64} instead of @code{struct dirent} in the second and third
@@ -570,6 +614,10 @@ position.  The same precautions mentioned in the documentation of
 @comment dirent.h
 @comment POSIX.1
 @deftypefun int closedir (DIR *@var{dirstream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asulock{/hurd}}@acunsafe{@acsmem{} @acsfd{} @aculock{/hurd}}}
+@c No synchronization in the posix implementation, only in the hurd
+@c one.  This is regarded as safe because it is undefined behavior if
+@c other threads could still be using the dir stream while it's closed.
 This function closes the directory stream @var{dirstream}.  It returns
 @code{0} on success and @code{-1} on failure.
 
@@ -609,6 +657,7 @@ declared in the header file @file{dirent.h}.
 @comment dirent.h
 @comment POSIX.1
 @deftypefun void rewinddir (DIR *@var{dirstream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 The @code{rewinddir} function is used to reinitialize the directory
 stream @var{dirstream}, so that if you call @code{readdir} it
 returns information about the first entry in the directory again.  This
@@ -622,6 +671,10 @@ added or removed since you last called @code{opendir} or
 @comment dirent.h
 @comment BSD
 @deftypefun {long int} telldir (DIR *@var{dirstream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{/bsd} @asulock{/bsd}}@acunsafe{@acsmem{/bsd} @aculock{/bsd}}}
+@c The implementation is safe on most platforms, but on BSD it uses
+@c cookies, buckets and records, and the global array of pointers to
+@c dynamically allocated records is guarded by a non-recursive lock.
 The @code{telldir} function returns the file position of the directory
 stream @var{dirstream}.  You can use this value with @code{seekdir} to
 restore the directory stream to that position.
@@ -630,6 +683,10 @@ restore the directory stream to that position.
 @comment dirent.h
 @comment BSD
 @deftypefun void seekdir (DIR *@var{dirstream}, long int @var{pos})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{/bsd} @asulock{/bsd}}@acunsafe{@acsmem{/bsd} @aculock{/bsd}}}
+@c The implementation is safe on most platforms, but on BSD it uses
+@c cookies, buckets and records, and the global array of pointers to
+@c dynamically allocated records is guarded by a non-recursive lock.
 The @code{seekdir} function sets the file position of the directory
 stream @var{dirstream} to @var{pos}.  The value @var{pos} must be the
 result of a previous call to @code{telldir} on this particular stream;
@@ -649,6 +706,19 @@ the result.
 @comment dirent.h
 @comment BSD/SVID
 @deftypefun int scandir (const char *@var{dir}, struct dirent ***@var{namelist}, int (*@var{selector}) (const struct dirent *), int (*@var{cmp}) (const struct dirent **, const struct dirent **))
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{} @acsfd{}}}
+@c The scandir function calls __opendirat, __readdir, and __closedir to
+@c go over the named dir; malloc and realloc to allocate the namelist
+@c and copies of each selected dirent, besides the selector, if given,
+@c and qsort and the cmp functions if the latter is given.  In spite of
+@c the cleanup handler that releases memory and the file descriptor in
+@c case of synchronous cancellation, an asynchronous cancellation may
+@c still leak memory and a file descriptor.  Although readdir is unsafe
+@c in general, the use of an internal dir stream for sequential scanning
+@c of the directory with copying of dirents before subsequent calls
+@c makes the use safe, and the fact that the dir stream is private to
+@c each scandir call does away with the lock issues in readdir and
+@c closedir.
 
 The @code{scandir} function scans the contents of the directory selected
 by @var{dir}.  The result in *@var{namelist} is an array of pointers to
@@ -679,6 +749,8 @@ are very helpful for this purpose.
 @comment dirent.h
 @comment BSD/SVID
 @deftypefun int alphasort (const void *@var{a}, const void *@var{b})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+@c Calls strcoll.
 The @code{alphasort} function behaves like the @code{strcoll} function
 (@pxref{String/Array Comparison}).  The difference is that the arguments
 are not string pointers but instead they are of type
@@ -691,6 +763,9 @@ than zero depending on the order of the two entries @var{a} and @var{b}.
 @comment dirent.h
 @comment GNU
 @deftypefun int versionsort (const void *@var{a}, const void *@var{b})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
+@c Calls strverscmp, which will accesses the locale object multiple
+@c times.
 The @code{versionsort} function is like @code{alphasort} except that it
 uses the @code{strverscmp} function internally.
 @end deftypefun
@@ -703,6 +778,8 @@ dirent64}}.  To use this we need a new function.
 @comment dirent.h
 @comment GNU
 @deftypefun int scandir64 (const char *@var{dir}, struct dirent64 ***@var{namelist}, int (*@var{selector}) (const struct dirent64 *), int (*@var{cmp}) (const struct dirent64 **, const struct dirent64 **))
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{} @acsfd{}}}
+@c See scandir.
 The @code{scandir64} function works like the @code{scandir} function
 except that the directory entries it returns are described by elements
 of type @w{@code{struct dirent64}}.  The function pointed to by
@@ -721,6 +798,8 @@ argument.  Instead we provide the two replacement functions below.
 @comment dirent.h
 @comment GNU
 @deftypefun int alphasort64 (const void *@var{a}, const void *@var{b})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+@c See alphasort.
 The @code{alphasort64} function behaves like the @code{strcoll} function
 (@pxref{String/Array Comparison}).  The difference is that the arguments
 are not string pointers but instead they are of type
@@ -733,6 +812,8 @@ than zero depending on the order of the two entries @var{a} and @var{b}.
 @comment dirent.h
 @comment GNU
 @deftypefun int versionsort64 (const void *@var{a}, const void *@var{b})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
+@c See versionsort.
 The @code{versionsort64} function is like @code{alphasort64}, excepted that it
 uses the @code{strverscmp} function internally.
 @end deftypefun
@@ -913,6 +994,8 @@ file was passed).
 @comment ftw.h
 @comment SVID
 @deftypefun int ftw (const char *@var{filename}, __ftw_func_t @var{func}, int @var{descriptors})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{} @acsfd{}}}
+@c see nftw for safety details
 The @code{ftw} function calls the callback function given in the
 parameter @var{func} for every item which is found in the directory
 specified by @var{filename} and all directories below.  The function
@@ -963,6 +1046,7 @@ interface transparently replaces the old interface.
 @comment ftw.h
 @comment Unix98
 @deftypefun int ftw64 (const char *@var{filename}, __ftw64_func_t @var{func}, int @var{descriptors})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{} @acsfd{}}}
 This function is similar to @code{ftw} but it can work on filesystems
 with large files.  File information is reported using a variable of type
 @code{struct stat64} which is passed by reference to the callback
@@ -976,6 +1060,17 @@ transparently replaces the old implementation.
 @comment ftw.h
 @comment XPG4.2
 @deftypefun int nftw (const char *@var{filename}, __nftw_func_t @var{func}, int @var{descriptors}, int @var{flag})
+@safety{@prelim{}@mtsafe{@mtasscwd{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{} @acsfd{} @acscwd{}}}
+@c ftw_startup calls alloca, malloc, free, xstat/lxstat, tdestroy, and ftw_dir
+@c  if FTW_CHDIR, call open, and fchdir, or chdir and getcwd
+@c ftw_dir calls open_dir_stream, readdir64, process_entry, closedir
+@c  if FTW_CHDIR, also calls fchdir
+@c open_dir_stream calls malloc, realloc, readdir64, free, closedir,
+@c  then openat64_not_cancel_3 and fdopendir or opendir, then dirfd.
+@c process_entry may cal realloc, fxstatat/lxstat/xstat, ftw_dir, and
+@c  find_object (tsearch) and add_object (tfind).
+@c Since each invocation of *ftw uses its own private search tree, none
+@c  of the search tree concurrency issues apply.
 The @code{nftw} function works like the @code{ftw} functions.  They call
 the callback function @var{func} for all items found in the directory
 @var{filename} and below.  At most @var{descriptors} file descriptors
@@ -1036,6 +1131,7 @@ interface transparently replaces the old interface.
 @comment ftw.h
 @comment Unix98
 @deftypefun int nftw64 (const char *@var{filename}, __nftw64_func_t @var{func}, int @var{descriptors}, int @var{flag})
+@safety{@prelim{}@mtsafe{@mtasscwd{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{} @acsfd{} @acscwd{}}}
 This function is similar to @code{nftw} but it can work on filesystems
 with large files.  File information is reported using a variable of type
 @code{struct stat64} which is passed by reference to the callback
@@ -1079,6 +1175,7 @@ file @file{unistd.h}.
 @comment unistd.h
 @comment POSIX.1
 @deftypefun int link (const char *@var{oldname}, const char *@var{newname})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{link} function makes a new link to the existing file named by
 @var{oldname}, under the new name @var{newname}.
 
@@ -1186,6 +1283,7 @@ Prototypes for most of the functions listed in this section are in
 @comment unistd.h
 @comment BSD
 @deftypefun int symlink (const char *@var{oldname}, const char *@var{newname})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{symlink} function makes a symbolic link to @var{oldname} named
 @var{newname}.
 
@@ -1223,6 +1321,7 @@ exceeded.
 @comment unistd.h
 @comment BSD
 @deftypefun ssize_t readlink (const char *@var{filename}, char *@var{buffer}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{readlink} function gets the value of the symbolic link
 @var{filename}.  The file name that the link points to is copied into
 @var{buffer}.  This file name string is @emph{not} null-terminated;
@@ -1282,6 +1381,8 @@ names can refer to the same inode.
 @comment stdlib.h
 @comment GNU
 @deftypefun {char *} canonicalize_file_name (const char *@var{name})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{} @acsfd{}}}
+@c Calls realpath.
 
 The @code{canonicalize_file_name} function returns the absolute name of
 the file named by @var{name} which contains no @code{.}, @code{..}
@@ -1323,6 +1424,8 @@ where the result is placed in.
 @comment stdlib.h
 @comment XPG
 @deftypefun {char *} realpath (const char *restrict @var{name}, char *restrict @var{resolved})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{} @acsfd{}}}
+@c Calls malloc, realloc, getcwd, lxstat64, readlink, alloca.
 
 A call to @code{realpath} where the @var{resolved} parameter is
 @code{NULL} behaves exactly like @code{canonicalize_file_name}.  The
@@ -1362,6 +1465,7 @@ then the file is deleted as well.  If the file has other remaining names
 @comment unistd.h
 @comment POSIX.1
 @deftypefun int unlink (const char *@var{filename})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{unlink} function deletes the file name @var{filename}.  If
 this is a file's sole name, the file itself is also deleted.  (Actually,
 if any process has the file open when this happens, deletion is
@@ -1404,6 +1508,7 @@ file system and can't be modified.
 @comment unistd.h
 @comment POSIX.1
 @deftypefun int rmdir (const char *@var{filename})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @cindex directories, deleting
 @cindex deleting a directory
 The @code{rmdir} function deletes a directory.  The directory must be
@@ -1431,6 +1536,8 @@ The prototype for this function is declared in the header file
 @comment stdio.h
 @comment ISO
 @deftypefun int remove (const char *@var{filename})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Calls unlink and rmdir.
 This is the @w{ISO C} function to remove a file.  It works like
 @code{unlink} for files and like @code{rmdir} for directories.
 @code{remove} is declared in @file{stdio.h}.
@@ -1446,6 +1553,10 @@ The @code{rename} function is used to change a file's name.
 @comment stdio.h
 @comment ISO
 @deftypefun int rename (const char *@var{oldname}, const char *@var{newname})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c In the absence of a rename syscall, there's an emulation with link
+@c and unlink, but it's racy, even more so if newname exists and is
+@c unlinked first.
 The @code{rename} function renames the file @var{oldname} to
 @var{newname}.  The file formerly accessible under the name
 @var{oldname} is afterwards accessible as @var{newname} instead.  (If
@@ -1541,6 +1652,7 @@ a shell command @code{mkdir} which does the same thing.)
 @comment sys/stat.h
 @comment POSIX.1
 @deftypefun int mkdir (const char *@var{filename}, mode_t @var{mode})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{mkdir} function creates a new, empty directory with name
 @var{filename}.
 
@@ -1882,6 +1994,7 @@ header file @file{sys/stat.h}.
 @comment sys/stat.h
 @comment POSIX.1
 @deftypefun int stat (const char *@var{filename}, struct stat *@var{buf})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{stat} function returns information about the attributes of the
 file named by @w{@var{filename}} in the structure pointed to by @var{buf}.
 
@@ -1908,6 +2021,7 @@ replaces the normal implementation.
 @comment sys/stat.h
 @comment Unix98
 @deftypefun int stat64 (const char *@var{filename}, struct stat64 *@var{buf})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is similar to @code{stat} but it is also able to work on
 files larger than @math{2^31} bytes on 32-bit systems.  To be able to do
 this the result is stored in a variable of type @code{struct stat64} to
@@ -1921,6 +2035,7 @@ replaces the interface for small files on 32-bit machines.
 @comment sys/stat.h
 @comment POSIX.1
 @deftypefun int fstat (int @var{filedes}, struct stat *@var{buf})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{fstat} function is like @code{stat}, except that it takes an
 open file descriptor as an argument instead of a file name.
 @xref{Low-Level I/O}.
@@ -1942,6 +2057,7 @@ replaces the normal implementation.
 @comment sys/stat.h
 @comment Unix98
 @deftypefun int fstat64 (int @var{filedes}, struct stat64 *@var{buf})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is similar to @code{fstat} but is able to work on large
 files on 32-bit platforms.  For large files the file descriptor
 @var{filedes} should be obtained by @code{open64} or @code{creat64}.
@@ -1953,9 +2069,16 @@ function is available under the name @code{fstat} and so transparently
 replaces the interface for small files on 32-bit machines.
 @end deftypefun
 
+@c fstatat will call alloca and snprintf if the syscall is not
+@c available.
+@c @safety{@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+
 @comment sys/stat.h
 @comment BSD
 @deftypefun int lstat (const char *@var{filename}, struct stat *@var{buf})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Direct system call through lxstat, sometimes with an xstat conv call
+@c afterwards.
 The @code{lstat} function is like @code{stat}, except that it does not
 follow symbolic links.  If @var{filename} is the name of a symbolic
 link, @code{lstat} returns information about the link itself; otherwise
@@ -1969,6 +2092,9 @@ replaces the normal implementation.
 @comment sys/stat.h
 @comment Unix98
 @deftypefun int lstat64 (const char *@var{filename}, struct stat64 *@var{buf})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Direct system call through lxstat64, sometimes with an xstat conv
+@c call afterwards.
 This function is similar to @code{lstat} but it is also able to work on
 files larger than @math{2^31} bytes on 32-bit systems.  To be able to do
 this the result is stored in a variable of type @code{struct stat64} to
@@ -2007,12 +2133,14 @@ that file:
 @comment sys/stat.h
 @comment POSIX
 @deftypefn Macro int S_ISDIR (mode_t @var{m})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This macro returns non-zero if the file is a directory.
 @end deftypefn
 
 @comment sys/stat.h
 @comment POSIX
 @deftypefn Macro int S_ISCHR (mode_t @var{m})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This macro returns non-zero if the file is a character special file (a
 device like a terminal).
 @end deftypefn
@@ -2020,6 +2148,7 @@ device like a terminal).
 @comment sys/stat.h
 @comment POSIX
 @deftypefn Macro int S_ISBLK (mode_t @var{m})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This macro returns non-zero if the file is a block special file (a device
 like a disk).
 @end deftypefn
@@ -2027,12 +2156,14 @@ like a disk).
 @comment sys/stat.h
 @comment POSIX
 @deftypefn Macro int S_ISREG (mode_t @var{m})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This macro returns non-zero if the file is a regular file.
 @end deftypefn
 
 @comment sys/stat.h
 @comment POSIX
 @deftypefn Macro int S_ISFIFO (mode_t @var{m})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This macro returns non-zero if the file is a FIFO special file, or a
 pipe.  @xref{Pipes and FIFOs}.
 @end deftypefn
@@ -2040,6 +2171,7 @@ pipe.  @xref{Pipes and FIFOs}.
 @comment sys/stat.h
 @comment GNU
 @deftypefn Macro int S_ISLNK (mode_t @var{m})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This macro returns non-zero if the file is a symbolic link.
 @xref{Symbolic Links}.
 @end deftypefn
@@ -2047,6 +2179,7 @@ This macro returns non-zero if the file is a symbolic link.
 @comment sys/stat.h
 @comment GNU
 @deftypefn Macro int S_ISSOCK (mode_t @var{m})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This macro returns non-zero if the file is a socket.  @xref{Sockets}.
 @end deftypefn
 
@@ -2129,6 +2262,7 @@ the whole @code{struct stat} structure.
 @comment sys/stat.h
 @comment POSIX
 @deftypefn Macro int S_TYPEISMQ (struct stat *@var{s})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 If the system implement POSIX message queues as distinct objects and the
 file is a message queue object, this macro returns a non-zero value.
 In all other cases the result is zero.
@@ -2137,6 +2271,7 @@ In all other cases the result is zero.
 @comment sys/stat.h
 @comment POSIX
 @deftypefn Macro int S_TYPEISSEM (struct stat *@var{s})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 If the system implement POSIX semaphores as distinct objects and the
 file is a semaphore object, this macro returns a non-zero value.
 In all other cases the result is zero.
@@ -2145,6 +2280,7 @@ In all other cases the result is zero.
 @comment sys/stat.h
 @comment POSIX
 @deftypefn Macro int S_TYPEISSHM (struct stat *@var{s})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 If the system implement POSIX shared memory objects as distinct objects
 and the file is a shared memory object, this macro returns a non-zero
 value.  In all other cases the result is zero.
@@ -2189,6 +2325,7 @@ The prototype for this function is declared in @file{unistd.h}.
 @comment unistd.h
 @comment POSIX.1
 @deftypefun int chown (const char *@var{filename}, uid_t @var{owner}, gid_t @var{group})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{chown} function changes the owner of the file @var{filename} to
 @var{owner}, and its group owner to @var{group}.
 
@@ -2223,6 +2360,7 @@ The file is on a read-only file system.
 @comment unistd.h
 @comment BSD
 @deftypefun int fchown (int @var{filedes}, uid_t @var{owner}, gid_t @var{group})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This is like @code{chown}, except that it changes the owner of the open
 file with descriptor @var{filedes}.
 
@@ -2502,6 +2640,7 @@ The functions in this section are declared in @file{sys/stat.h}.
 @comment sys/stat.h
 @comment POSIX.1
 @deftypefun mode_t umask (mode_t @var{mask})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{umask} function sets the file creation mask of the current
 process to @var{mask}, and returns the previous value of the file
 creation mask.
@@ -2527,6 +2666,7 @@ you just want to read the mask value, because it is reentrant.
 @comment sys/stat.h
 @comment GNU
 @deftypefun mode_t getumask (void)
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Return the current value of the file creation mask for the current
 process.  This function is a GNU extension and is only available on
 @gnuhurdsystems{}.
@@ -2535,6 +2675,7 @@ process.  This function is a GNU extension and is only available on
 @comment sys/stat.h
 @comment POSIX.1
 @deftypefun int chmod (const char *@var{filename}, mode_t @var{mode})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{chmod} function sets the access permission bits for the file
 named by @var{filename} to @var{mode}.
 
@@ -2575,6 +2716,7 @@ for full details on the sticky bit.
 @comment sys/stat.h
 @comment BSD
 @deftypefun int fchmod (int @var{filedes}, mode_t @var{mode})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This is like @code{chmod}, except that it changes the permissions of the
 currently open file given by @var{filedes}.
 
@@ -2645,6 +2787,7 @@ The symbols in this section are declared in @file{unistd.h}.
 @comment unistd.h
 @comment POSIX.1
 @deftypefun int access (const char *@var{filename}, int @var{how})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{access} function checks to see whether the file named by
 @var{filename} can be accessed in the way specified by the @var{how}
 argument.  The @var{how} argument either can be the bitwise OR of the
@@ -2765,6 +2908,9 @@ This is the modification time for the file.
 @comment utime.h
 @comment POSIX.1
 @deftypefun int utime (const char *@var{filename}, const struct utimbuf *@var{times})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c In the absence of a utime syscall, it non-atomically converts times
+@c to a struct timeval and calls utimes.
 This function is used to modify the file times associated with the file
 named @var{filename}.
 
@@ -2816,6 +2962,10 @@ in the header file @file{sys/time.h}.
 @comment sys/time.h
 @comment BSD
 @deftypefun int utimes (const char *@var{filename}, const struct timeval @var{tvp}@t{[2]})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c In the absence of a utimes syscall, it non-atomically converts tvp
+@c to struct timespec array and issues a utimensat syscall, or to
+@c struct utimbuf and calls utime.
 This function sets the file access and modification times of the file
 @var{filename}.  The new file access time is specified by
 @code{@var{tvp}[0]}, and the new modification time by
@@ -2830,6 +2980,9 @@ function.
 @comment sys/time.h
 @comment BSD
 @deftypefun int lutimes (const char *@var{filename}, const struct timeval @var{tvp}@t{[2]})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Since there's no lutimes syscall, it non-atomically converts tvp
+@c to struct timespec array and issues a utimensat syscall.
 This function is like @code{utimes}, except that it does not follow
 symbolic links.  If @var{filename} is the name of a symbolic link,
 @code{lutimes} sets the file access and modification times of the
@@ -2846,6 +2999,10 @@ function.
 @comment sys/time.h
 @comment BSD
 @deftypefun int futimes (int @var{fd}, const struct timeval @var{tvp}@t{[2]})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Since there's no futimes syscall, it non-atomically converts tvp
+@c to struct timespec array and issues a utimensat syscall, falling back
+@c to utimes on a /proc/self/fd symlink.
 This function is like @code{utimes}, except that it takes an open file
 descriptor as an argument instead of a file name.  @xref{Low-Level
 I/O}.  This function comes from FreeBSD, and is not available on all
@@ -2900,6 +3057,8 @@ succeed, without actually accomplishing anything.
 @comment unistd.h
 @comment X/Open
 @deftypefun int truncate (const char *@var{filename}, off_t @var{length})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c In the absence of a truncate syscall, we use open and ftruncate.
 
 The @code{truncate} function changes the size of @var{filename} to
 @var{length}.  If @var{length} is shorter than the previous length, data
@@ -2944,6 +3103,8 @@ The operation was interrupted by a signal.
 @comment unistd.h
 @comment Unix98
 @deftypefun int truncate64 (const char *@var{name}, off64_t @var{length})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c In the absence of a syscall, try truncate if length fits.
 This function is similar to the @code{truncate} function.  The
 difference is that the @var{length} argument is 64 bits wide even on 32
 bits machines, which allows the handling of files with sizes up to
@@ -2957,6 +3118,7 @@ When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} on a
 @comment unistd.h
 @comment POSIX
 @deftypefun int ftruncate (int @var{fd}, off_t @var{length})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 This is like @code{truncate}, but it works on a file descriptor @var{fd}
 for an opened file instead of a file name to identify the object.  The
@@ -3021,6 +3183,8 @@ The operation was interrupted by a signal.
 @comment unistd.h
 @comment Unix98
 @deftypefun int ftruncate64 (int @var{id}, off64_t @var{length})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c In the absence of a syscall, try ftruncate if length fits.
 This function is similar to the @code{ftruncate} function.  The
 difference is that the @var{length} argument is 64 bits wide even on 32
 bits machines which allows the handling of files with sizes up to
@@ -3083,6 +3247,10 @@ The prototype for @code{mknod} is declared in @file{sys/stat.h}.
 @comment sys/stat.h
 @comment BSD
 @deftypefun int mknod (const char *@var{filename}, mode_t @var{mode}, dev_t @var{dev})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Instead of issuing the syscall directly, we go through xmknod.
+@c Although the internal xmknod takes a dev_t*, that could lead to
+@c @mtsrace races, it's passed a pointer to mknod's dev.
 The @code{mknod} function makes a special file with name @var{filename}.
 The @var{mode} specifies the mode of the file, and may include the various
 special file bits, such as @code{S_IFCHR} (for a character special file)
@@ -3134,6 +3302,20 @@ These facilities are declared in the header file @file{stdio.h}.
 @comment stdio.h
 @comment ISO
 @deftypefun {FILE *} tmpfile (void)
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@acsmem{} @acsfd{} @aculock{}}}
+@c The unsafety issues are those of fdopen, plus @acsfd because of the
+@c open.
+@c __path_search (internal buf, !dir, const pfx, !try_tmpdir) ok
+@c  libc_secure_genenv only if try_tmpdir
+@c  xstat64, strlen, strcmp, sprintf
+@c __gen_tempname (internal tmpl, __GT_FILE) ok
+@c  strlen, memcmp, getpid, open/mkdir/lxstat64 ok
+@c  HP_TIMING_NOW if available ok
+@c  gettimeofday (!tz) first time, or every time if no HP_TIMING_NOW ok
+@c  static value is used and modified without synchronization ok
+@c   but the use is as a source of non-cryptographic randomness
+@c   with retries in case of collision, so it should be safe
+@c unlink, fdopen
 This function creates a temporary binary file for update mode, as if by
 calling @code{fopen} with mode @code{"wb+"}.  The file is deleted
 automatically when it is closed or when the program terminates.  (On
@@ -3150,6 +3332,7 @@ interface transparently replaces the old interface.
 @comment stdio.h
 @comment Unix98
 @deftypefun {FILE *} tmpfile64 (void)
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@acsmem{} @acsfd{} @aculock{}}}
 This function is similar to @code{tmpfile}, but the stream it returns a
 pointer to was opened using @code{tmpfile64}.  Therefore this stream can
 be used for files larger than @math{2^31} bytes on 32-bit machines.
@@ -3165,6 +3348,11 @@ and so transparently replaces the old interface.
 @comment stdio.h
 @comment ISO
 @deftypefun {char *} tmpnam (char *@var{result})
+@safety{@prelim{}@mtunsafe{@mtasurace{:tmpnam/!result}}@asunsafe{}@acsafe{}}
+@c The passed-in buffer should not be modified concurrently with the
+@c call.
+@c __path_search (static or passed-in buf, !dir, !pfx, !try_tmpdir) ok
+@c __gen_tempname (internal tmpl, __GT_NOCREATE) ok
 This function constructs and returns a valid file name that does not
 refer to any existing file.  If the @var{result} argument is a null
 pointer, the return value is a pointer to an internal static string,
@@ -3189,6 +3377,7 @@ opening the file you should use the @code{O_EXCL} flag.  Using
 @comment stdio.h
 @comment GNU
 @deftypefun {char *} tmpnam_r (char *@var{result})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is nearly identical to the @code{tmpnam} function, except
 that if @var{result} is a null pointer it returns a null pointer.
 
@@ -3225,6 +3414,13 @@ never less than @code{25}.
 @comment stdio.h
 @comment SVID
 @deftypefun {char *} tempnam (const char *@var{dir}, const char *@var{prefix})
+@safety{@prelim{}@mtsafe{@mtsenv{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+@c There's no way (short of being setuid) to avoid getenv("TMPDIR"),
+@c even with a non-NULL dir.
+@c
+@c __path_search (internal buf, dir, pfx, try_tmpdir) unsafe getenv
+@c __gen_tempname (internal tmpl, __GT_NOCREATE) ok
+@c strdup
 This function generates a unique temporary file name.  If @var{prefix}
 is not a null pointer, up to five characters of this string are used as
 a prefix for the file name.  The return value is a string newly
@@ -3288,6 +3484,8 @@ string.  These functions are declared in the header file @file{stdlib.h}.
 @comment stdlib.h
 @comment Unix
 @deftypefun {char *} mktemp (char *@var{template})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c __gen_tempname (caller tmpl, __GT_NOCREATE) ok
 The @code{mktemp} function generates a unique file name by modifying
 @var{template} as described above.  If successful, it returns
 @var{template} as modified.  If @code{mktemp} cannot find a unique file
@@ -3306,6 +3504,8 @@ opening the file you should use the @code{O_EXCL} flag.  Using
 @comment stdlib.h
 @comment BSD
 @deftypefun int mkstemp (char *@var{template})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{@acsfd{}}}
+@c __gen_tempname (caller tmpl, __GT_FILE) ok
 The @code{mkstemp} function generates a unique file name just as
 @code{mktemp} does, but it also opens the file for you with @code{open}
 (@pxref{Opening and Closing Files}).  If successful, it modifies
@@ -3328,6 +3528,8 @@ new file and get an error if the file already exists.
 @comment stdlib.h
 @comment BSD
 @deftypefun {char *} mkdtemp (char *@var{template})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c __gen_tempname (caller tmpl, __GT_DIR) ok
 The @code{mkdtemp} function creates a directory with a unique name.  If
 it succeeds, it overwrites @var{template} with the name of the
 directory, and returns @var{template}.  As with @code{mktemp} and
@@ -3349,3 +3551,23 @@ creation always works like @code{open} with @code{O_EXCL}.
 @xref{Creating Directories}.
 
 The @code{mkdtemp} function comes from OpenBSD.
+
+@c FIXME these are undocumented:
+@c faccessat
+@c fchmodat
+@c fchownat
+@c futimesat
+@c fstatat (there's a commented-out safety assessment for this one)
+@c linkat
+@c mkdirat
+@c mkfifoat
+@c name_to_handle_at
+@c openat
+@c open_by_handle_at
+@c readlinkat
+@c renameat
+@c scandirat
+@c symlinkat
+@c unlinkat
+@c utimensat
+@c mknodat
