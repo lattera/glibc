@@ -31,6 +31,7 @@ before thread-specific data, so they should not be used in thread-specific
 data destructors or even as members of the thread-specific data, since the
 latter is passed as an argument to the destructor function.
 
+@c FIXME: use @deftypefun for these.
 @item int pthread_key_delete (pthread_key_t @var{key})
 Destroy the thread-specific data @var{key} in the calling thread.  The
 destructor for the thread-specific data is not called during destruction, nor
@@ -64,12 +65,28 @@ the standard.
 attributes used in the creation of threads in a process.
 
 @deftypefun int pthread_getattr_default_np (pthread_attr_t *@var{attr})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
+@c Takes lock around read from default_pthread_attr.
 Get the default attribute values and set @var{attr} to match.  This
 function returns @math{0} on success and a non-zero error code on
 failure.
 @end deftypefun
 
 @deftypefun int pthread_setattr_default_np (pthread_attr_t *@var{attr})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{}}}
+@c pthread_setattr_default_np @ascuheap @asulock @aculock @acsmem
+@c  check_sched_policy_attr ok
+@c  check_sched_priority_attr ok
+@c   sched_get_priority_min dup ok
+@c   sched_get_priority_max dup ok
+@c  check_cpuset_attr ok
+@c   determine_cpumask_size ok
+@c  check_stacksize_attr ok
+@c  lll_lock @asulock @aculock
+@c  free dup @ascuheap @acsmem
+@c  realloc dup @ascuheap @acsmem
+@c  memcpy dup ok
+@c  lll_unlock @asulock @aculock
 Set the default attribute values to match the values in @var{attr}.  The
 function returns @math{0} on success and a non-zero error code on failure.
 The following error codes are defined for this function:
@@ -82,3 +99,124 @@ attributes or the stack address is set in the attribute.
 The system does not have sufficient memory.
 @end table
 @end deftypefun
+
+@c FIXME these are undocumented:
+@c pthread_atfork
+@c pthread_attr_destroy
+@c pthread_attr_getaffinity_np
+@c pthread_attr_getdetachstate
+@c pthread_attr_getguardsize
+@c pthread_attr_getinheritsched
+@c pthread_attr_getschedparam
+@c pthread_attr_getschedpolicy
+@c pthread_attr_getscope
+@c pthread_attr_getstack
+@c pthread_attr_getstackaddr
+@c pthread_attr_getstacksize
+@c pthread_attr_init
+@c pthread_attr_setaffinity_np
+@c pthread_attr_setdetachstate
+@c pthread_attr_setguardsize
+@c pthread_attr_setinheritsched
+@c pthread_attr_setschedparam
+@c pthread_attr_setschedpolicy
+@c pthread_attr_setscope
+@c pthread_attr_setstack
+@c pthread_attr_setstackaddr
+@c pthread_attr_setstacksize
+@c pthread_barrierattr_destroy
+@c pthread_barrierattr_getpshared
+@c pthread_barrierattr_init
+@c pthread_barrierattr_setpshared
+@c pthread_barrier_destroy
+@c pthread_barrier_init
+@c pthread_barrier_wait
+@c pthread_cancel
+@c pthread_cleanup_push
+@c pthread_cleanup_pop
+@c pthread_condattr_destroy
+@c pthread_condattr_getclock
+@c pthread_condattr_getpshared
+@c pthread_condattr_init
+@c pthread_condattr_setclock
+@c pthread_condattr_setpshared
+@c pthread_cond_broadcast
+@c pthread_cond_destroy
+@c pthread_cond_init
+@c pthread_cond_signal
+@c pthread_cond_timedwait
+@c pthread_cond_wait
+@c pthread_create
+@c pthread_detach
+@c pthread_equal
+@c pthread_exit
+@c pthread_getaffinity_np
+@c pthread_getattr_np
+@c pthread_getconcurrency
+@c pthread_getcpuclockid
+@c pthread_getname_np
+@c pthread_getschedparam
+@c pthread_join
+@c pthread_kill
+@c pthread_kill_other_threads_np
+@c pthread_mutexattr_destroy
+@c pthread_mutexattr_getkind_np
+@c pthread_mutexattr_getprioceiling
+@c pthread_mutexattr_getprotocol
+@c pthread_mutexattr_getpshared
+@c pthread_mutexattr_getrobust
+@c pthread_mutexattr_getrobust_np
+@c pthread_mutexattr_gettype
+@c pthread_mutexattr_init
+@c pthread_mutexattr_setkind_np
+@c pthread_mutexattr_setprioceiling
+@c pthread_mutexattr_setprotocol
+@c pthread_mutexattr_setpshared
+@c pthread_mutexattr_setrobust
+@c pthread_mutexattr_setrobust_np
+@c pthread_mutexattr_settype
+@c pthread_mutex_consistent
+@c pthread_mutex_consistent_np
+@c pthread_mutex_destroy
+@c pthread_mutex_getprioceiling
+@c pthread_mutex_init
+@c pthread_mutex_lock
+@c pthread_mutex_setprioceiling
+@c pthread_mutex_timedlock
+@c pthread_mutex_trylock
+@c pthread_mutex_unlock
+@c pthread_once
+@c pthread_rwlockattr_destroy
+@c pthread_rwlockattr_getkind_np
+@c pthread_rwlockattr_getpshared
+@c pthread_rwlockattr_init
+@c pthread_rwlockattr_setkind_np
+@c pthread_rwlockattr_setpshared
+@c pthread_rwlock_destroy
+@c pthread_rwlock_init
+@c pthread_rwlock_rdlock
+@c pthread_rwlock_timedrdlock
+@c pthread_rwlock_timedwrlock
+@c pthread_rwlock_tryrdlock
+@c pthread_rwlock_trywrlock
+@c pthread_rwlock_unlock
+@c pthread_rwlock_wrlock
+@c pthread_self
+@c pthread_setaffinity_np
+@c pthread_setcancelstate
+@c pthread_setcanceltype
+@c pthread_setconcurrency
+@c pthread_setname_np
+@c pthread_setschedparam
+@c pthread_setschedprio
+@c pthread_sigmask
+@c pthread_sigqueue
+@c pthread_spin_destroy
+@c pthread_spin_init
+@c pthread_spin_lock
+@c pthread_spin_trylock
+@c pthread_spin_unlock
+@c pthread_testcancel
+@c pthread_timedjoin_np
+@c pthread_tryjoin_np
+@c pthread_yield
