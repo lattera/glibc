@@ -889,6 +889,29 @@ may come from a signal handler in the same process.
 @comment string.h
 @comment GNU
 @deftypefun {char *} strsignal (int @var{signum})
+@safety{@prelim{}@mtunsafe{@mtasurace{:strsignal} @mtslocale{}}@asunsafe{@asuinit{} @ascuintl{} @asucorrupt{} @ascuheap{}}@acunsafe{@acuinit{} @acucorrupt{} @acsmem{}}}
+@c strsignal @mtasurace:strsignal @mtslocale @asuinit @ascuintl @asucorrupt @ascuheap @acucorrupt @acsmem
+@c   uses a static buffer if tsd key creation fails
+@c  [once] init
+@c   libc_key_create ok
+@c    pthread_key_create ok
+@c     KEY_UNUSED ok
+@c     KEY_USABLE ok
+@c  getbuffer @asucorrupt @ascuheap @acsmem
+@c   libc_getspecific ok
+@c    pthread_getspecific ok
+@c   malloc dup @ascuheap @acsmem
+@c   libc_setspecific @asucorrupt @ascuheap @acucorrupt @acsmem
+@c    pthread_setspecific @asucorrupt @ascuheap @acucorrupt @acsmem
+@c      a level2 block may be allocated by a signal handler after
+@c      another call already made a decision to allocate it, thus losing
+@c      the allocated value.  the seq number is updated before the
+@c      value, which might cause an earlier-generation value to seem
+@c      current if setspecific is cancelled or interrupted by a signal
+@c     KEY_UNUSED ok
+@c     calloc dup @ascuheap @acsmem
+@c  snprintf dup @mtslocale @ascuheap @acsmem
+@c  _ @ascuintl
 This function returns a pointer to a statically-allocated string
 containing a message describing the signal @var{signum}.  You
 should not modify the contents of this string; and, since it can be
@@ -903,6 +926,12 @@ This function is a GNU extension, declared in the header file
 @comment signal.h
 @comment BSD
 @deftypefun void psignal (int @var{signum}, const char *@var{message})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuintl{} @ascuheap{}}@acunsafe{@aculock{} @acucorrupt{} @acsmem{}}}
+@c psignal @mtslocale @asucorrupt @ascuintl @ascuheap @aculock @acucorrupt @acsmem
+@c  _ @ascuintl
+@c  fxprintf @asucorrupt @aculock @acucorrupt
+@c  asprintf @mtslocale @ascuheap @acsmem
+@c  free dup @ascuheap @acsmem
 This function prints a message describing the signal @var{signum} to the
 standard error output stream @code{stderr}; see @ref{Standard Streams}.
 
@@ -972,6 +1001,12 @@ The name @code{sighandler_t} for this data type is a GNU extension.
 @comment signal.h
 @comment ISO
 @deftypefun sighandler_t signal (int @var{signum}, sighandler_t @var{action})
+@safety{@prelim{}@mtsafe{@mtssigintr{}}@assafe{}@acsafe{}}
+@c signal ok
+@c  sigemptyset dup ok
+@c  sigaddset dup ok
+@c  sigismember dup ok
+@c  sigaction dup ok
 The @code{signal} function establishes @var{action} as the action for
 the signal @var{signum}.
 
@@ -1094,6 +1129,10 @@ example because these are designed to provide information for debugging
 @comment signal.h
 @comment GNU
 @deftypefun sighandler_t sysv_signal (int @var{signum}, sighandler_t @var{action})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c sysv_signal ok
+@c  sigemptyset dup ok
+@c  sigaction dup ok
 The @code{sysv_signal} implements the behavior of the standard
 @code{signal} function as found on SVID systems.  The difference to BSD
 systems is that the handler is deinstalled after a delivery of a signal.
@@ -1106,6 +1145,8 @@ preferred method.
 @comment signal.h
 @comment SVID
 @deftypefun sighandler_t ssignal (int @var{signum}, sighandler_t @var{action})
+@safety{@prelim{}@mtsafe{@mtssigintr{}}@assafe{}@acsafe{}}
+@c Aliases signal and bsd_signal.
 The @code{ssignal} function does the same thing as @code{signal}; it is
 provided only for compatibility with SVID.
 @end deftypefun
@@ -1172,6 +1213,7 @@ the signal.  These are described in more detail in @ref{Flags for Sigaction}.
 @comment signal.h
 @comment POSIX.1
 @deftypefun int sigaction (int @var{signum}, const struct sigaction *restrict @var{action}, struct sigaction *restrict @var{old-action})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @var{action} argument is used to set up a new action for the signal
 @var{signum}, while the @var{old-action} argument is used to return
 information about the action previously associated with this symbol.
@@ -2168,6 +2210,14 @@ function is declared in @file{signal.h}.
 @comment signal.h
 @comment ISO
 @deftypefun int raise (int @var{signum})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c raise ok
+@c [posix]
+@c  getpid dup ok
+@c  kill dup ok
+@c [linux]
+@c  syscall(gettid) ok
+@c  syscall(tgkill) ok
 The @code{raise} function sends the signal @var{signum} to the calling
 process.  It returns zero if successful and a nonzero value if it fails.
 About the only reason for failure would be if the value of @var{signum}
@@ -2177,6 +2227,8 @@ is invalid.
 @comment signal.h
 @comment SVID
 @deftypefun int gsignal (int @var{signum})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Aliases raise.
 The @code{gsignal} function does the same thing as @code{raise}; it is
 provided only for compatibility with SVID.
 @end deftypefun
@@ -2269,6 +2321,11 @@ The @code{kill} function is declared in @file{signal.h}.
 @comment signal.h
 @comment POSIX.1
 @deftypefun int kill (pid_t @var{pid}, int @var{signum})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c The hurd implementation is not a critical section, so it's not
+@c immediately obvious that, in case of cancellation, it won't leak
+@c ports or the memory allocated by proc_getpgrppids when pid <= 0.
+@c Since none of these make it AC-Unsafe, I'm leaving them out.
 The @code{kill} function sends the signal @var{signum} to the process
 or process group specified by @var{pid}.  Besides the signals listed in
 @ref{Standard Signals}, @var{signum} can also have a value of zero to
@@ -2325,6 +2382,8 @@ The @var{pid} argument does not refer to an existing process or group.
 @comment signal.h
 @comment BSD
 @deftypefun int killpg (int @var{pgid}, int @var{signum})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Calls kill with -pgid.
 This is similar to @code{kill}, but sends signal @var{signum} to the
 process group @var{pgid}.  This function is provided for compatibility
 with BSD; using @code{kill} to do this is more portable.
@@ -2497,6 +2556,8 @@ about.)
 @comment signal.h
 @comment POSIX.1
 @deftypefun int sigemptyset (sigset_t *@var{set})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Just memsets all of set to zero.
 This function initializes the signal set @var{set} to exclude all of the
 defined signals.  It always returns @code{0}.
 @end deftypefun
@@ -2504,6 +2565,7 @@ defined signals.  It always returns @code{0}.
 @comment signal.h
 @comment POSIX.1
 @deftypefun int sigfillset (sigset_t *@var{set})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function initializes the signal set @var{set} to include
 all of the defined signals.  Again, the return value is @code{0}.
 @end deftypefun
@@ -2511,6 +2573,7 @@ all of the defined signals.  Again, the return value is @code{0}.
 @comment signal.h
 @comment POSIX.1
 @deftypefun int sigaddset (sigset_t *@var{set}, int @var{signum})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function adds the signal @var{signum} to the signal set @var{set}.
 All @code{sigaddset} does is modify @var{set}; it does not block or
 unblock any signals.
@@ -2527,6 +2590,7 @@ The @var{signum} argument doesn't specify a valid signal.
 @comment signal.h
 @comment POSIX.1
 @deftypefun int sigdelset (sigset_t *@var{set}, int @var{signum})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function removes the signal @var{signum} from the signal set
 @var{set}.  All @code{sigdelset} does is modify @var{set}; it does not
 block or unblock any signals.  The return value and error conditions are
@@ -2538,6 +2602,7 @@ Finally, there is a function to test what signals are in a signal set:
 @comment signal.h
 @comment POSIX.1
 @deftypefun int sigismember (const sigset_t *@var{set}, int @var{signum})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{sigismember} function tests whether the signal @var{signum} is
 a member of the signal set @var{set}.  It returns @code{1} if the signal
 is in the set, @code{0} if not, and @code{-1} if there is an error.
@@ -2576,6 +2641,10 @@ Instead, use @code{pthread_sigmask}.
 @comment signal.h
 @comment POSIX.1
 @deftypefun int sigprocmask (int @var{how}, const sigset_t *restrict @var{set}, sigset_t *restrict @var{oldset})
+@safety{@prelim{}@mtunsafe{@mtasurace{:sigprocmask/bsd(SIG_UNBLOCK)}}@asunsafe{@asulock{/hurd}}@acunsafe{@aculock{/hurd}}}
+@c This takes the hurd_self_sigstate-returned object's lock on HURD.  On
+@c BSD, SIG_UNBLOCK is emulated with two sigblock calls, which
+@c introduces a race window.
 The @code{sigprocmask} function is used to examine or change the calling
 process's signal mask.  The @var{how} argument determines how the signal
 mask is changed, and must be one of the following values:
@@ -2759,6 +2828,10 @@ You can find out which signals are pending at any time by calling
 @comment signal.h
 @comment POSIX.1
 @deftypefun int sigpending (sigset_t *@var{set})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{/hurd}}@acunsafe{@aculock{/hurd}}}
+@c Direct rt_sigpending syscall on most systems.  On hurd, calls
+@c hurd_self_sigstate, it copies the sigstate's pending while holding
+@c its lock.
 The @code{sigpending} function stores information about pending signals
 in @var{set}.  If there is a pending signal that is blocked from
 delivery, then that signal is a member of the returned set.  (You can
@@ -2922,6 +2995,17 @@ you use it.
 @comment unistd.h
 @comment POSIX.1
 @deftypefun int pause (void)
+@safety{@prelim{}@mtunsafe{@mtasurace{:sigprocmask/!bsd!linux}}@asunsafe{@asulock{/hurd}}@acunsafe{@aculock{/hurd}}}
+@c  The signal mask read by sigprocmask may be overridden by another
+@c  thread or by a signal handler before we call sigsuspend.  Is this a
+@c  safety issue?  Probably not.
+@c pause @mtasurace:sigprocmask/!bsd!linux @asulock/hurd @aculock/hurd
+@c [ports/linux/generic]
+@c  syscall_pause ok
+@c [posix]
+@c  sigemptyset dup ok
+@c  sigprocmask(SIG_BLOCK) dup @asulock/hurd @aculock/hurd [no @mtasurace:sigprocmask/bsd(SIG_UNBLOCK)]
+@c  sigsuspend dup @mtasurace:sigprocmask/!bsd!linux @asulock/hurd @aculock/hurd
 The @code{pause} function suspends program execution until a signal
 arrives whose action is either to execute a handler function, or to
 terminate the process.
@@ -3017,6 +3101,18 @@ signals be handled by their handlers.
 @comment signal.h
 @comment POSIX.1
 @deftypefun int sigsuspend (const sigset_t *@var{set})
+@safety{@prelim{}@mtunsafe{@mtasurace{:sigprocmask/!bsd!linux}}@asunsafe{@asulock{/hurd}}@acunsafe{@aculock{/hurd}}}
+@c sigsuspend @mtasurace:sigprocmask/!bsd!linux @asulock/hurd @aculock/hurd
+@c [posix] @mtasurace:sigprocmask/!bsd!linux
+@c   saving and restoring the procmask is racy
+@c  sigprocmask(SIG_SETMASK) dup @asulock/hurd @aculock/hurd [no @mtasurace:sigprocmask/bsd(SIG_UNBLOCK)]
+@c  pause @asulock/hurd @aculock/hurd
+@c [bsd]
+@c  sigismember dup ok
+@c  sigmask dup ok
+@c  sigpause dup ok [no @mtasurace:sigprocmask/!bsd!linux @asulock/hurd @aculock/hurd]
+@c [linux]
+@c  do_sigsuspend ok
 This function replaces the process's signal mask with @var{set} and then
 suspends the process until a signal is delivered whose action is either
 to terminate the process or invoke a signal handling function.  In other
@@ -3150,6 +3246,9 @@ delivered on the normal user stack.
 @comment signal.h
 @comment XPG
 @deftypefun int sigaltstack (const stack_t *restrict @var{stack}, stack_t *restrict @var{oldstack})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{/hurd}}@acunsafe{@aculock{/hurd}}}
+@c Syscall on Linux and BSD; the HURD implementation takes a lock on
+@c the hurd_self_sigstate-returned struct.
 The @code{sigaltstack} function specifies an alternate stack for use
 during signal handling.  When a signal is received by the process and
 its action indicates that the signal stack is used, the system arranges
@@ -3196,6 +3295,8 @@ This field is true if the process is currently using this stack.
 @comment signal.h
 @comment BSD
 @deftypefun int sigstack (struct sigstack *@var{stack}, struct sigstack *@var{oldstack})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{/hurd}}@acunsafe{@aculock{/hurd}}}
+@c Lossy and dangerous (no size limit) wrapper for sigaltstack.
 The @code{sigstack} function specifies an alternate stack for use during
 signal handling.  When a signal is received by the process and its
 action indicates that the signal stack is used, the system arranges a
@@ -3301,6 +3402,13 @@ structure, it means to reset the action for the signal back to
 @comment signal.h
 @comment BSD
 @deftypefun int sigvec (int @var{signum}, const struct sigvec *@var{action}, struct sigvec *@var{old-action})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c This is mostly a safe wrapper for sigaction.  The exception are
+@c systems that lack SA_RESETHAND, in which a signal handler wrapper is
+@c used that calls sigaction to reset the handler before calling the
+@c user-supplied handler; it's unlikely that this emulation is used
+@c anywhere, for user-supplied flags and mask don't seem to be used
+@c the way one would expect.
 This function is the equivalent of @code{sigaction} (@pxref{Advanced Signal
 Handling}); it installs the action @var{action} for the signal @var{signum},
 returning information about the previous action in effect for that signal
@@ -3310,6 +3418,14 @@ in @var{old-action}.
 @comment signal.h
 @comment BSD
 @deftypefun int siginterrupt (int @var{signum}, int @var{failflag})
+@safety{@prelim{}@mtunsafe{@mtasuconst{:@mtssigintr{}}}@asunsafe{}@acunsafe{@acucorrupt{}}}
+@c This calls sigaction twice, once to get the current sigaction for the
+@c specified signal, another to apply the flags change.  This could
+@c override the effects of a concurrent sigaction call.  It also
+@c modifies without any guards the global _sigintr variable, that
+@c bsd_signal reads from, and it may leave _sigintr modified without
+@c overriding the active handler if cancelled between the two
+@c operations.
 This function specifies which approach to use when certain primitives
 are interrupted by handling signal @var{signum}.  If @var{failflag} is
 false, signal @var{signum} restarts primitives.  If @var{failflag} is
@@ -3323,6 +3439,8 @@ code @code{EINTR}.  @xref{Interrupted Primitives}.
 @comment signal.h
 @comment BSD
 @deftypefn Macro int sigmask (int @var{signum})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c This just shifts signum.
 This macro returns a signal mask that has the bit for signal @var{signum}
 set.  You can bitwise-OR the results of several calls to @code{sigmask}
 together to specify more than one signal.  For example,
@@ -3339,6 +3457,11 @@ specifies a mask that includes all the job-control stop signals.
 @comment signal.h
 @comment BSD
 @deftypefun int sigblock (int @var{mask})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{/hurd}}@acunsafe{@aculock{/hurd}}}
+@c On most POSIX systems, this is a wrapper for sigprocmask(SIG_BLOCK).
+@c The exception are BSD systems other than 4.4, where it is a syscall.
+@c sigblock @asulock/hurd @aculock/hurd
+@c  sigprocmask(SIG_BLOCK) dup @asulock/hurd @aculock/hurd [no @mtasurace:sigprocmask/bsd(SIG_UNBLOCK)]
 This function is equivalent to @code{sigprocmask} (@pxref{Process Signal
 Mask}) with a @var{how} argument of @code{SIG_BLOCK}: it adds the
 signals specified by @var{mask} to the calling process's set of blocked
@@ -3348,6 +3471,11 @@ signals.  The return value is the previous set of blocked signals.
 @comment signal.h
 @comment BSD
 @deftypefun int sigsetmask (int @var{mask})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{/hurd}}@acunsafe{@aculock{/hurd}}}
+@c On most POSIX systems, this is a wrapper for sigprocmask(SIG_SETMASK).
+@c The exception are BSD systems other than 4.4, where it is a syscall.
+@c sigsetmask @asulock/hurd @aculock/hurd
+@c  sigprocmask(SIG_SETMASK) dup @asulock/hurd @aculock/hurd [no @mtasurace:sigprocmask/bsd(SIG_UNBLOCK)]
 This function equivalent to @code{sigprocmask} (@pxref{Process
 Signal Mask}) with a @var{how} argument of @code{SIG_SETMASK}: it sets
 the calling process's signal mask to @var{mask}.  The return value is
@@ -3357,6 +3485,15 @@ the previous set of blocked signals.
 @comment signal.h
 @comment BSD
 @deftypefun int sigpause (int @var{mask})
+@safety{@prelim{}@mtunsafe{@mtasurace{:sigprocmask/!bsd!linux}}@asunsafe{@asulock{/hurd}}@acunsafe{@aculock{/hurd}}}
+@c sigpause @mtasurace:sigprocmask/!bsd!linux @asulock/hurd @aculock/hurd
+@c [posix]
+@c  __sigpause @mtasurace:sigprocmask/!bsd!linux @asulock/hurd @aculock/hurd
+@c   do_sigpause @mtasurace:sigprocmask/!bsd!linux @asulock/hurd @aculock/hurd
+@c    sigprocmask(0) dup @asulock/hurd @aculock/hurd [no @mtasurace:sigprocmask/bsd(SIG_UNBLOCK)]
+@c    sigdelset dup ok
+@c    sigset_set_old_mask dup ok
+@c    sigsuspend dup @mtasurace:sigprocmask/!bsd!linux @asulock/hurd @aculock/hurd
 This function is the equivalent of @code{sigsuspend} (@pxref{Waiting
 for a Signal}):  it sets the calling process's signal mask to @var{mask},
 and waits for a signal to arrive.  On return the previous set of blocked
