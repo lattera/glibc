@@ -15,6 +15,7 @@ Facilities specific to PowerPC that are not specific to a particular
 operating system are declared in @file{sys/platform/ppc.h}.
 
 @deftypefun {uint64_t} __ppc_get_timebase (void)
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Read the current value of the Time Base Register.
 
 The @dfn{Time Base Register} is a 64-bit register that stores a monotonically
@@ -28,6 +29,17 @@ efficient.
 @end deftypefun
 
 @deftypefun {uint64_t} __ppc_get_timebase_freq (void)
+@safety{@prelim{}@mtunsafe{@mtuinit{}}@asunsafe{@asucorrupt{:init}}@acunsafe{@acucorrupt{:init}}}
+@c __ppc_get_timebase_freq=__get_timebase_freq @mtuinit @acsfd
+@c  __get_clockfreq @mtuinit @asucorrupt:init @acucorrupt:init @acsfd
+@c    the initialization of the static timebase_freq is not exactly
+@c    safe, because hp_timing_t cannot be atomically set up.
+@c   syscall:get_tbfreq ok
+@c   open dup @acsfd
+@c   read dup ok
+@c   memcpy dup ok
+@c   memmem dup ok
+@c   close dup @acsfd
 Read the current frequency at which the Time Base Register is updated.
 
 This frequency is not related to the processor clock or the bus clock.
@@ -42,17 +54,20 @@ processors.  More information is available in @cite{Power ISA 2.06b - Book II -
 Section 3.2}.
 
 @deftypefun {void} __ppc_yield (void)
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Provide a hint that performance will probably be improved if shared resources
 dedicated to the executing processor are released for use by other processors.
 @end deftypefun
 
 @deftypefun {void} __ppc_mdoio (void)
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Provide a hint that performance will probably be improved if shared resources
 dedicated to the executing processor are released until all outstanding storage
 accesses to caching-inhibited storage have been completed.
 @end deftypefun
 
 @deftypefun {void} __ppc_mdoom (void)
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Provide a hint that performance will probably be improved if shared resources
 dedicated to the executing processor are released until all outstanding storage
 accesses to cacheable storage for which the data is not in the cache have been
@@ -60,6 +75,7 @@ completed.
 @end deftypefun
 
 @deftypefun {void} __ppc_set_ppr_med (void)
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Set the Program Priority Register to medium value (default).
 
 The @dfn{Program Priority Register} (PPR) is a 64-bit register that controls
@@ -73,9 +89,11 @@ available in @cite{Power ISA 2.06b - Book II - Section 3.1}.
 @end deftypefun
 
 @deftypefun {void} __ppc_set_ppr_low (void)
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Set the Program Priority Register to low value.
 @end deftypefun
 
 @deftypefun {void} __ppc_set_ppr_med_low (void)
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Set the Program Priority Register to medium low value.
 @end deftypefun
