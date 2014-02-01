@@ -1,5 +1,10 @@
 2014-02-01  Alexandre Oliva <aoliva@redhat.com>
 
+	* manual/check-safety.sh: New.
+	* manual/Makefile ($(objpfx)stamp-summary): Run it.
+
+2014-02-01  Alexandre Oliva <aoliva@redhat.com>
+
 	* manual/terminal.texi: Document MTASC-safety properties.
 
 2014-02-01  Alexandre Oliva <aoliva@redhat.com>
