@@ -107,6 +107,10 @@ identify a specific place to return to.
 @comment setjmp.h
 @comment ISO
 @deftypefn Macro int setjmp (jmp_buf @var{state})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c _setjmp ok
+@c  __sigsetjmp(!savemask) ok
+@c   __sigjmp_save(!savemask) ok, does not call sigprocmask
 When called normally, @code{setjmp} stores information about the
 execution state of the program in @var{state} and returns zero.  If
 @code{longjmp} is later used to perform a non-local exit to this
@@ -116,6 +120,20 @@ execution state of the program in @var{state} and returns zero.  If
 @comment setjmp.h
 @comment ISO
 @deftypefun void longjmp (jmp_buf @var{state}, int @var{value})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuplugin{} @asucorrupt{} @asulock{/hurd}}@acunsafe{@acucorrupt{} @aculock{/hurd}}}
+@c __libc_siglongjmp @ascuplugin @asucorrupt @asulock/hurd @acucorrupt @aculock/hurd
+@c  _longjmp_unwind @ascuplugin @asucorrupt @acucorrupt
+@c   __pthread_cleanup_upto @ascuplugin @asucorrupt @acucorrupt
+@c     plugins may be unsafe themselves, but even if they weren't, this
+@c     function isn't robust WRT async signals and cancellation:
+@c     cleanups aren't taken off the stack right away, only after all
+@c     cleanups have been run.  This means that async-cancelling
+@c     longjmp, or interrupting longjmp with an async signal handler
+@c     that calls longjmp may run the same cleanups multiple times.
+@c    _JMPBUF_UNWINDS_ADJ ok
+@c    *cleanup_buf->__routine @ascuplugin
+@c  sigprocmask(SIG_SETMASK) dup @asulock/hurd @aculock/hurd
+@c  __longjmp ok
 This function restores current execution to the state saved in
 @var{state}, and continues execution from the call to @code{setjmp} that
 established that return point.  Returning from @code{setjmp} by means of
@@ -199,6 +217,11 @@ information about the set of blocked signals.
 @comment setjmp.h
 @comment POSIX.1
 @deftypefun int sigsetjmp (sigjmp_buf @var{state}, int @var{savesigs})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{/hurd}}@acunsafe{@aculock{/hurd}}}
+@c sigsetjmp @asulock/hurd @aculock/hurd
+@c  __sigsetjmp(savemask) @asulock/hurd @aculock/hurd
+@c   __sigjmp_save(savemask) @asulock/hurd @aculock/hurd
+@c    sigprocmask(SIG_BLOCK probe) dup @asulock/hurd @aculock/hurd
 This is similar to @code{setjmp}.  If @var{savesigs} is nonzero, the set
 of blocked signals is saved in @var{state} and will be restored if a
 @code{siglongjmp} is later performed with this @var{state}.
@@ -207,6 +230,8 @@ of blocked signals is saved in @var{state} and will be restored if a
 @comment setjmp.h
 @comment POSIX.1
 @deftypefun void siglongjmp (sigjmp_buf @var{state}, int @var{value})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuplugin{} @asucorrupt{} @asulock{/hurd}}@acunsafe{@acucorrupt{} @aculock{/hurd}}}
+@c Alias to longjmp.
 This is similar to @code{longjmp} except for the type of its @var{state}
 argument.  If the @code{sigsetjmp} call that set this @var{state} used a
 nonzero @var{savesigs} flag, @code{siglongjmp} also restores the set of
@@ -267,6 +292,10 @@ and modification happens through one of the following functions:
 @comment ucontext.h
 @comment SVID
 @deftypefun int getcontext (ucontext_t *@var{ucp})
+@safety{@prelim{}@mtsafe{@mtsrace{:ucp}}@assafe{}@acsafe{}}
+@c Linux-only implementations in assembly, including sigprocmask
+@c syscall.  A few cases call the sigprocmask function, but that's safe
+@c too.  The ppc case is implemented in terms of a swapcontext syscall.
 The @code{getcontext} function initializes the variable pointed to by
 @var{ucp} with the context of the calling thread.  The context contains
 the content of the registers, the signal mask, and the current stack.
@@ -293,6 +322,8 @@ used to do that.
 @comment ucontext.h
 @comment SVID
 @deftypefun void makecontext (ucontext_t *@var{ucp}, void (*@var{func}) (void), int @var{argc}, @dots{})
+@safety{@prelim{}@mtsafe{@mtsrace{:ucp}}@assafe{}@acsafe{}}
+@c Linux-only implementations mostly in assembly, nothing unsafe.
 
 The @var{ucp} parameter passed to the @code{makecontext} shall be
 initialized by a call to @code{getcontext}.  The context will be
@@ -339,6 +370,15 @@ requires detection of the platform at compile time.
 @comment ucontext.h
 @comment SVID
 @deftypefun int setcontext (const ucontext_t *@var{ucp})
+@safety{@prelim{}@mtsafe{@mtsrace{:ucp}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
+@c Linux-only implementations mostly in assembly.  Some ports use
+@c sigreturn or swapcontext syscalls; others restore the signal mask
+@c first and then proceed restore other registers in userland, which
+@c leaves a window for cancellation or async signals with misaligned or
+@c otherwise corrupt stack.  ??? Switching to a different stack, or even
+@c to an earlier state on the same stack, may conflict with pthread
+@c cleanups.  This is not quite MT-Unsafe, it's a different kind of
+@c safety issue.
 
 The @code{setcontext} function restores the context described by
 @var{ucp}.  The context is not modified and can be reused as often as
@@ -372,6 +412,10 @@ there are situations where the current context has to be preserved.
 @comment ucontext.h
 @comment SVID
 @deftypefun int swapcontext (ucontext_t *restrict @var{oucp}, const ucontext_t *restrict @var{ucp})
+@safety{@prelim{}@mtsafe{@mtsrace{:oucp} @mtsrace{:ucp}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
+@c Linux-only implementations mostly in assembly.  Some ports call or
+@c inline getcontext and/or setcontext, adjusting the saved context in
+@c between, so we inherit the potential issues of both.
 
 The @code{swapcontext} function is similar to @code{setcontext} but
 instead of just replacing the current context the latter is first saved
