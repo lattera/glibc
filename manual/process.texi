@@ -55,6 +55,43 @@ until the subprogram terminates before you can do anything else.
 @comment ISO
 @deftypefun int system (const char *@var{command})
 @pindex sh
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{}}}
+@c system @ascuplugin @ascuheap @asulock @aculock @acsmem
+@c  do_system @ascuplugin @ascuheap @asulock @aculock @acsmem
+@c   sigemptyset dup ok
+@c   libc_lock_lock @asulock @aculock
+@c   ADD_REF ok
+@c   sigaction dup ok
+@c   SUB_REF ok
+@c   libc_lock_unlock @aculock
+@c   sigaddset dup ok
+@c   sigprocmask dup ok
+@c   CLEANUP_HANDLER @ascuplugin @ascuheap @acsmem
+@c    libc_cleanup_region_start @ascuplugin @ascuheap @acsmem
+@c     pthread_cleanup_push_defer @ascuplugin @ascuheap @acsmem
+@c      CANCELLATION_P @ascuplugin @ascuheap @acsmem
+@c       CANCEL_ENABLED_AND_CANCELED ok
+@c       do_cancel @ascuplugin @ascuheap @acsmem
+@c    cancel_handler ok
+@c     kill syscall ok
+@c     waitpid dup ok
+@c     libc_lock_lock ok
+@c     sigaction dup ok
+@c     libc_lock_unlock ok
+@c   FORK ok
+@c    clone syscall ok
+@c   waitpid dup ok
+@c   CLEANUP_RESET ok
+@c    libc_cleanup_region_end ok
+@c     pthread_cleanup_pop_restore ok
+@c  SINGLE_THREAD_P ok
+@c  LIBC_CANCEL_ASYNC @ascuplugin @ascuheap @acsmem
+@c   libc_enable_asynccancel @ascuplugin @ascuheap @acsmem
+@c    CANCEL_ENABLED_AND_CANCELED_AND_ASYNCHRONOUS dup ok
+@c    do_cancel dup @ascuplugin @ascuheap @acsmem
+@c  LIBC_CANCEL_RESET ok
+@c   libc_disable_asynccancel ok
+@c    lll_futex_wait dup ok
 This function executes @var{command} as a shell command.  In @theglibc{},
 it always uses the default shell @code{sh} to run the command.
 In particular, it searches the directories in @code{PATH} to find
@@ -157,12 +194,14 @@ of representing a process ID.  In @theglibc{}, this is an @code{int}.
 @comment unistd.h
 @comment POSIX.1
 @deftypefun pid_t getpid (void)
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{getpid} function returns the process ID of the current process.
 @end deftypefun
 
 @comment unistd.h
 @comment POSIX.1
 @deftypefun pid_t getppid (void)
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{getppid} function returns the process ID of the parent of the
 current process.
 @end deftypefun
@@ -177,6 +216,19 @@ It is declared in the header file @file{unistd.h}.
 @comment unistd.h
 @comment POSIX.1
 @deftypefun pid_t fork (void)
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuplugin{}}@acunsafe{@aculock{}}}
+@c The nptl/.../linux implementation safely collects fork_handlers into
+@c an alloca()ed linked list and increments ref counters; it uses atomic
+@c ops and retries, avoiding locking altogether.  It then takes the
+@c IO_list lock, resets the thread-local pid, and runs fork.  The parent
+@c restores the thread-local pid, releases the lock, and runs parent
+@c handlers, decrementing the ref count and signaling futex wait if
+@c requested by unregister_atfork.  The child bumps the fork generation,
+@c sets the thread-local pid, resets cpu clocks, initializes the robust
+@c mutex list, the stream locks, the IO_list lock, the dynamic loader
+@c lock, runs the child handlers, reseting ref counters to 1, and
+@c initializes the fork lock.  These are all safe, unless atfork
+@c handlers themselves are unsafe.
 The @code{fork} function creates a new process.
 
 If the operation is successful, there are then both parent and child
@@ -242,6 +294,9 @@ signals and signal actions from the parent process.)
 @comment unistd.h
 @comment BSD
 @deftypefun pid_t vfork (void)
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuplugin{}}@acunsafe{@aculock{}}}
+@c The vfork implementation proper is a safe syscall, but it may fall
+@c back to fork if the vfork syscall is not available.
 The @code{vfork} function is similar to @code{fork} but on some systems
 it is more efficient; however, there are restrictions you must follow to
 use it safely.
@@ -287,6 +342,7 @@ header file @file{unistd.h}.
 @comment unistd.h
 @comment POSIX.1
 @deftypefun int execv (const char *@var{filename}, char *const @var{argv}@t{[]})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{execv} function executes the file named by @var{filename} as a
 new process image.
 
@@ -305,6 +361,7 @@ The environment for the new process image is taken from the
 @comment unistd.h
 @comment POSIX.1
 @deftypefun int execl (const char *@var{filename}, const char *@var{arg0}, @dots{})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 This is similar to @code{execv}, but the @var{argv} strings are
 specified individually instead of as an array.  A null pointer must be
 passed as the last such argument.
@@ -313,6 +370,7 @@ passed as the last such argument.
 @comment unistd.h
 @comment POSIX.1
 @deftypefun int execve (const char *@var{filename}, char *const @var{argv}@t{[]}, char *const @var{env}@t{[]})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This is similar to @code{execv}, but permits you to specify the environment
 for the new program explicitly as the @var{env} argument.  This should
 be an array of strings in the same format as for the @code{environ}
@@ -322,6 +380,7 @@ variable; see @ref{Environment Access}.
 @comment unistd.h
 @comment POSIX.1
 @deftypefun int execle (const char *@var{filename}, const char *@var{arg0}, @dots{}, char *const @var{env}@t{[]})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 This is similar to @code{execl}, but permits you to specify the
 environment for the new program explicitly.  The environment argument is
 passed following the null pointer that marks the last @var{argv}
@@ -332,6 +391,7 @@ the @code{environ} variable.
 @comment unistd.h
 @comment POSIX.1
 @deftypefun int execvp (const char *@var{filename}, char *const @var{argv}@t{[]})
+@safety{@prelim{}@mtsafe{@mtsenv{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 The @code{execvp} function is similar to @code{execv}, except that it
 searches the directories listed in the @code{PATH} environment variable
 (@pxref{Standard Environment}) to find the full file name of a
@@ -345,6 +405,7 @@ to run the commands that users type.
 @comment unistd.h
 @comment POSIX.1
 @deftypefun int execlp (const char *@var{filename}, const char *@var{arg0}, @dots{})
+@safety{@prelim{}@mtsafe{@mtsenv{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 This function is like @code{execl}, except that it performs the same
 file name searching as the @code{execvp} function.
 @end deftypefun
@@ -462,6 +523,7 @@ are declared in the header file @file{sys/wait.h}.
 @comment sys/wait.h
 @comment POSIX.1
 @deftypefun pid_t waitpid (pid_t @var{pid}, int *@var{status-ptr}, int @var{options})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{waitpid} function is used to request status information from a
 child process whose process ID is @var{pid}.  Normally, the calling
 process is suspended until the child process makes status information
@@ -565,6 +627,7 @@ terminated.
 @comment sys/wait.h
 @comment POSIX.1
 @deftypefun pid_t wait (int *@var{status-ptr})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This is a simplified version of @code{waitpid}, and is used to wait
 until any one child process terminates.  The call:
 
@@ -591,6 +654,7 @@ protected using cancellation handlers.
 @comment sys/wait.h
 @comment BSD
 @deftypefun pid_t wait4 (pid_t @var{pid}, int *@var{status-ptr}, int @var{options}, struct rusage *@var{usage})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 If @var{usage} is a null pointer, @code{wait4} is equivalent to
 @code{waitpid (@var{pid}, @var{status-ptr}, @var{options})}.
 
@@ -643,6 +707,7 @@ These macros are defined in the header file @file{sys/wait.h}.
 @comment sys/wait.h
 @comment POSIX.1
 @deftypefn Macro int WIFEXITED (int @var{status})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This macro returns a nonzero value if the child process terminated
 normally with @code{exit} or @code{_exit}.
 @end deftypefn
@@ -650,6 +715,7 @@ normally with @code{exit} or @code{_exit}.
 @comment sys/wait.h
 @comment POSIX.1
 @deftypefn Macro int WEXITSTATUS (int @var{status})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 If @code{WIFEXITED} is true of @var{status}, this macro returns the
 low-order 8 bits of the exit status value from the child process.
 @xref{Exit Status}.
@@ -658,6 +724,7 @@ low-order 8 bits of the exit status value from the child process.
 @comment sys/wait.h
 @comment POSIX.1
 @deftypefn Macro int WIFSIGNALED (int @var{status})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This macro returns a nonzero value if the child process terminated
 because it received a signal that was not handled.
 @xref{Signal Handling}.
@@ -666,6 +733,7 @@ because it received a signal that was not handled.
 @comment sys/wait.h
 @comment POSIX.1
 @deftypefn Macro int WTERMSIG (int @var{status})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 If @code{WIFSIGNALED} is true of @var{status}, this macro returns the
 signal number of the signal that terminated the child process.
 @end deftypefn
@@ -673,6 +741,7 @@ signal number of the signal that terminated the child process.
 @comment sys/wait.h
 @comment BSD
 @deftypefn Macro int WCOREDUMP (int @var{status})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This macro returns a nonzero value if the child process terminated
 and produced a core dump.
 @end deftypefn
@@ -680,12 +749,14 @@ and produced a core dump.
 @comment sys/wait.h
 @comment POSIX.1
 @deftypefn Macro int WIFSTOPPED (int @var{status})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This macro returns a nonzero value if the child process is stopped.
 @end deftypefn
 
 @comment sys/wait.h
 @comment POSIX.1
 @deftypefn Macro int WSTOPSIG (int @var{status})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 If @code{WIFSTOPPED} is true of @var{status}, this macro returns the
 signal number of the signal that caused the child process to stop.
 @end deftypefn
@@ -739,6 +810,7 @@ more flexible.  @code{wait3} is now obsolete.
 @comment sys/wait.h
 @comment BSD
 @deftypefun pid_t wait3 (union wait *@var{status-ptr}, int @var{options}, struct rusage *@var{usage})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 If @var{usage} is a null pointer, @code{wait3} is equivalent to
 @code{waitpid (-1, @var{status-ptr}, @var{options})}.
 
