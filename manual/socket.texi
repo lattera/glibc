@@ -394,6 +394,8 @@ For examples of use, see @ref{Local Socket Example}, or see @ref{Inet Example}.
 @comment sys/socket.h
 @comment BSD
 @deftypefun int bind (int @var{socket}, struct sockaddr *@var{addr}, socklen_t @var{length})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Direct syscall, except on Hurd.
 The @code{bind} function assigns an address to the socket
 @var{socket}.  The @var{addr} and @var{length} arguments specify the
 address; the detailed format of the address depends on the namespace.
@@ -442,6 +444,9 @@ Internet socket.  The prototype for this function is in the header file
 @comment sys/socket.h
 @comment BSD
 @deftypefun int getsockname (int @var{socket}, struct sockaddr *@var{addr}, socklen_t *@var{length-ptr})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{@acsmem{/hurd}}}
+@c Direct syscall, except on Hurd, where it seems like it might leak
+@c VM if cancelled.
 The @code{getsockname} function returns information about the
 address of the socket @var{socket} in the locations specified by the
 @var{addr} and @var{length-ptr} arguments.  Note that the
@@ -501,6 +506,14 @@ interface name, including its terminating zero byte.
 @comment net/if.h
 @comment IPv6 basic API
 @deftypefun {unsigned int} if_nametoindex (const char *@var{ifname})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{}}}
+@c It opens a socket to use ioctl on the fd to get the index.
+@c opensock may call socket and access multiple times until it finds a
+@c socket family that works.  The Linux implementation has a potential
+@c concurrency issue WRT last_type and last_family not being updated
+@c atomically, but it is harmless; the generic implementation, OTOH,
+@c takes a lock, which makes all callers AS- and AC-Unsafe.
+@c  opensock @asulock @aculock @acsfd
 This function yields the interface index corresponding to a particular
 name.  If no interface exists with the name given, it returns 0.
 @end deftypefun
@@ -508,6 +521,9 @@ name.  If no interface exists with the name given, it returns 0.
 @comment net/if.h
 @comment IPv6 basic API
 @deftypefun {char *} if_indextoname (unsigned int @var{ifindex}, char *@var{ifname})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{}}}
+@c It opens a socket with opensock to use ioctl on the fd to get the
+@c name from the index.
 This function maps an interface index to its corresponding name.  The
 returned name is placed in the buffer pointed to by @code{ifname}, which
 must be at least @code{IFNAMSIZ} bytes in length.  If the index was
@@ -534,6 +550,39 @@ This is the null-terminated index name.
 @comment net/if.h
 @comment IPv6 basic API
 @deftypefun {struct if_nameindex *} if_nameindex (void)
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asulock{/hurd}}@acunsafe{@aculock{/hurd} @acsfd{} @acsmem{}}}
+@c if_nameindex @ascuheap @asulock/hurd @aculock/hurd @acsfd @acsmem
+@c  [linux]
+@c   netlink_open @acsfd @acsmem/hurd
+@c    socket dup @acsfd
+@c    memset dup ok
+@c    bind dup ok
+@c    netlink_close dup @acsfd
+@c    getsockname dup @acsmem/hurd
+@c   netlink_request @ascuheap @acsmem
+@c    getpagesize dup ok
+@c    malloc dup @ascuheap @acsmem
+@c    netlink_sendreq ok
+@c     memset dup ok
+@c     sendto dup ok
+@c    recvmsg dup ok
+@c    memcpy dup ok
+@c    free dup @ascuheap @acsmem
+@c   netlink_free_handle @ascuheap @acsmem
+@c    free dup @ascuheap @acsmem
+@c   netlink_close @acsfd
+@c    close dup @acsfd
+@c   malloc dup @asuheap @acsmem
+@c   strndup @ascuheap @acsmem
+@c   if_freenameindex @ascuheap @acsmem
+@c  [hurd]
+@c   opensock dup @asulock @aculock @acsfd
+@c   hurd_socket_server ok
+@c   pfinet_siocgifconf ok
+@c   malloc @ascuheap @acsmem
+@c   strdup @ascuheap @acsmem
+@c   ioctl dup ok
+@c   free @ascuheap @acsmem
 This function returns an array of @code{if_nameindex} structures, one
 for every interface that is present.  The end of the list is indicated
 by a structure with an interface of 0 and a null name pointer.  If an
@@ -546,6 +595,9 @@ use.
 @comment net/if.h
 @comment IPv6 basic API
 @deftypefun void if_freenameindex (struct if_nameindex *@var{ptr})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+@c if_freenameindex @ascuheap @acsmem
+@c  free dup @ascuheap @acsmem
 This function frees the structure returned by an earlier call to
 @code{if_nameindex}.
 @end deftypefun
@@ -660,6 +712,7 @@ the file name string.  This can be done using the macro @code{SUN_LEN}:
 @comment sys/un.h
 @comment BSD
 @deftypefn {Macro} int SUN_LEN (@emph{struct sockaddr_un *} @var{ptr})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The macro computes the length of socket address in the local namespace.
 @end deftypefn
 
@@ -1035,6 +1088,13 @@ Order}, for an explanation of network and host byte order.
 @comment arpa/inet.h
 @comment BSD
 @deftypefun int inet_aton (const char *@var{name}, struct in_addr *@var{addr})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
+@c inet_aton @mtslocale
+@c  isdigit dup @mtslocale
+@c  strtoul dup @mtslocale
+@c  isascii dup @mtslocale
+@c  isspace dup @mtslocale
+@c  htonl dup ok
 This function converts the IPv4 Internet host address @var{name}
 from the standard numbers-and-dots notation into binary data and stores
 it in the @code{struct in_addr} that @var{addr} points to.
@@ -1044,6 +1104,9 @@ it in the @code{struct in_addr} that @var{addr} points to.
 @comment arpa/inet.h
 @comment BSD
 @deftypefun {uint32_t} inet_addr (const char *@var{name})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
+@c inet_addr @mtslocale
+@c  inet_aton dup @mtslocale
 This function converts the IPv4 Internet host address @var{name} from the
 standard numbers-and-dots notation into binary data.  If the input is
 not valid, @code{inet_addr} returns @code{INADDR_NONE}.  This is an
@@ -1056,6 +1119,12 @@ indicate error return.
 @comment arpa/inet.h
 @comment BSD
 @deftypefun {uint32_t} inet_network (const char *@var{name})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
+@c inet_network @mtslocale
+@c  isdigit dup @mtslocale
+@c  isxdigit dup @mtslocale
+@c  tolower dup @mtslocale
+@c  isspace dup @mtslocale
 This function extracts the network number from the address @var{name},
 given in the standard numbers-and-dots notation. The returned address is
 in host order. If the input is not valid, @code{inet_network} returns
@@ -1069,6 +1138,10 @@ anymore.
 @comment arpa/inet.h
 @comment BSD
 @deftypefun {char *} inet_ntoa (struct in_addr @var{addr})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asurace{}}@acsafe{}}
+@c inet_ntoa @mtslocale @asurace
+@c   writes to a thread-local static buffer
+@c  snprintf @mtslocale [no @ascuheap or @acsmem]
 This function converts the IPv4 Internet host address @var{addr} to a
 string in the standard numbers-and-dots notation.  The return value is
 a pointer into a statically-allocated buffer.  Subsequent calls will
@@ -1087,6 +1160,9 @@ addresses.
 @comment arpa/inet.h
 @comment BSD
 @deftypefun {struct in_addr} inet_makeaddr (uint32_t @var{net}, uint32_t @var{local})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c inet_makeaddr ok
+@c  htonl dup ok
 This function makes an IPv4 Internet host address by combining the network
 number @var{net} with the local-address-within-network number
 @var{local}.
@@ -1095,6 +1171,11 @@ number @var{net} with the local-address-within-network number
 @comment arpa/inet.h
 @comment BSD
 @deftypefun uint32_t inet_lnaof (struct in_addr @var{addr})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c inet_lnaof ok
+@c  ntohl dup ok
+@c  IN_CLASSA ok
+@c  IN_CLASSB ok
 This function returns the local-address-within-network part of the
 Internet host address @var{addr}.
 
@@ -1106,6 +1187,11 @@ anymore.
 @comment arpa/inet.h
 @comment BSD
 @deftypefun uint32_t inet_netof (struct in_addr @var{addr})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c inet_netof ok
+@c  ntohl dup ok
+@c  IN_CLASSA ok
+@c  IN_CLASSB ok
 This function returns the network number part of the Internet host
 address @var{addr}.
 
@@ -1117,6 +1203,16 @@ anymore.
 @comment arpa/inet.h
 @comment IPv6 basic API
 @deftypefun int inet_pton (int @var{af}, const char *@var{cp}, void *@var{buf})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
+@c inet_pton @mtslocale
+@c  inet_pton4 ok
+@c   memcpy dup ok
+@c  inet_pton6 @mtslocale
+@c   memset dup ok
+@c   tolower dup @mtslocale
+@c   strchr dup ok
+@c   inet_pton4 dup ok
+@c   memcpy dup ok
 This function converts an Internet address (either IPv4 or IPv6) from
 presentation (textual) to network (binary) format.  @var{af} should be
 either @code{AF_INET} or @code{AF_INET6}, as appropriate for the type of
@@ -1128,6 +1224,16 @@ responsibility to make sure the buffer is large enough.
 @comment arpa/inet.h
 @comment IPv6 basic API
 @deftypefun {const char *} inet_ntop (int @var{af}, const void *@var{cp}, char *@var{buf}, socklen_t @var{len})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
+@c inet_ntop @mtslocale
+@c  inet_ntop4 @mtslocale
+@c   sprintf dup @mtslocale [no @ascuheap or @acsmem]
+@c   strcpy dup ok
+@c  inet_ntop6 @mtslocale
+@c   memset dup ok
+@c   inet_ntop4 dup @mtslocale
+@c   sprintf dup @mtslocale [no @ascuheap or @acsmem]
+@c   strcpy dup ok
 This function converts an Internet address (either IPv4 or IPv6) from
 network (binary) to presentation (textual) form.  @var{af} should be
 either @code{AF_INET} or @code{AF_INET6}, as appropriate.  @var{cp} is a
@@ -1211,6 +1317,71 @@ need to save it across calls.  You can also use @code{getaddrinfo} and
 @comment netdb.h
 @comment BSD
 @deftypefun {struct hostent *} gethostbyname (const char *@var{name})
+@safety{@prelim{}@mtunsafe{@mtasurace{:hostbyname} @mtsenv{} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @asucorrupt{} @ascuheap{} @asulock{}}@acunsafe{@aculock{} @acucorrupt{} @acsmem{} @acsfd{}}}
+@c gethostbyname @mtasurace:hostbyname @mtsenv @mtslocale @ascudlopen @ascuplugin @asucorrupt @ascuheap @asulock @aculock @acucorrupt @acsmem @acsfd
+@c  libc_lock_lock dup @asulock @aculock
+@c  malloc dup @ascuheap @acsmem
+@c  nss_hostname_digits_dots @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
+@c   res_maybe_init(!preinit) @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
+@c    res_iclose @acsuheap @acsmem @acsfd
+@c     close_not_cancel_no_status dup @acsfd
+@c     free dup @acsuheap @acsmem
+@c    res_vinit @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
+@c     res_randomid ok
+@c      getpid dup ok
+@c     getenv dup @mtsenv
+@c     strncpy dup ok
+@c     fopen dup @ascuheap @asulock @acsmem @acsfd @aculock
+@c     fsetlocking dup ok [no concurrent uses]
+@c     fgets_unlocked dup ok [no concurrent uses]
+@c     MATCH ok
+@c      strncmp dup ok
+@c     strpbrk dup ok
+@c     strchr dup ok
+@c     inet_aton dup @mtslocale
+@c     htons dup
+@c     inet_pton dup @mtslocale
+@c     malloc dup @ascuheap @acsmem
+@c     IN6_IS_ADDR_LINKLOCAL ok
+@c      htonl dup ok
+@c     IN6_IS_ADDR_MC_LINKLOCAL ok
+@c     if_nametoindex dup @asulock @aculock @acsfd
+@c     strtoul dup @mtslocale
+@c     ISSORTMASK ok
+@c      strchr dup ok
+@c     isascii dup @mtslocale
+@c     isspace dup @mtslocale
+@c     net_mask ok
+@c      ntohl dup ok
+@c      IN_CLASSA dup ok
+@c      htonl dup ok
+@c      IN_CLASSB dup ok
+@c     res_setoptions @mtslocale
+@c      strncmp dup ok
+@c      atoi dup @mtslocale
+@c     fclose dup @ascuheap @asulock @aculock @acsmem @acsfd
+@c     inet_makeaddr dup ok
+@c     gethostname dup ok
+@c     strcpy dup ok
+@c     rawmemchr dup ok
+@c    res_ninit @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
+@c     res_vinit dup @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
+@c   isdigit dup @mtslocale
+@c   isxdigit dup @mtslocale
+@c   strlen dup ok
+@c   realloc dup @ascuheap @acsmem
+@c   free dup @ascuheap @acsmem
+@c   memset dup ok
+@c   inet_aton dup @mtslocale
+@c   inet_pton dup @mtslocale
+@c   strcpy dup ok
+@c   memcpy dup ok
+@c   strchr dup ok
+@c  gethostbyname_r dup @mtsenv @mtslocale @ascudlopen @ascuplugin @asucorrupt @ascuheap @asulock @aculock @acucorrupt @acsmem @acsfd
+@c  realloc dup @ascuheap @acsmem
+@c  free dup @ascuheap @acsmem
+@c  libc_lock_unlock dup @aculock
+@c  set_h_errno ok
 The @code{gethostbyname} function returns information about the host
 named @var{name}.  If the lookup fails, it returns a null pointer.
 @end deftypefun
@@ -1218,6 +1389,16 @@ named @var{name}.  If the lookup fails, it returns a null pointer.
 @comment netdb.h
 @comment IPv6 Basic API
 @deftypefun {struct hostent *} gethostbyname2 (const char *@var{name}, int @var{af})
+@safety{@prelim{}@mtunsafe{@mtasurace{:hostbyname2} @mtsenv{} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @asucorrupt{} @ascuheap{} @asulock{}}@acunsafe{@aculock{} @acucorrupt{} @acsmem{} @acsfd{}}}
+@c gethostbyname2 @mtasurace:hostbyname2 @mtsenv @mtslocale @ascudlopen @ascuplugin @asucorrupt @ascuheap @asulock @aculock @acucorrupt @acsmem @acsfd
+@c  libc_lock_lock dup @asulock @aculock
+@c  malloc dup @ascuheap @acsmem
+@c  nss_hostname_digits_dots dup @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
+@c  gethostbyname2_r dup @mtsenv @mtslocale @ascudlopen @ascuplugin @asucorrupt @ascuheap @asulock @aculock @acucorrupt @acsmem @acsfd
+@c  realloc dup @ascuheap @acsmem
+@c  free dup @ascuheap @acsmem
+@c  libc_lock_unlock dup @aculock
+@c  set_h_errno dup ok
 The @code{gethostbyname2} function is like @code{gethostbyname}, but
 allows the caller to specify the desired address family (e.g.@:
 @code{AF_INET} or @code{AF_INET6}) of the result.
@@ -1226,6 +1407,15 @@ allows the caller to specify the desired address family (e.g.@:
 @comment netdb.h
 @comment BSD
 @deftypefun {struct hostent *} gethostbyaddr (const void *@var{addr}, socklen_t @var{length}, int @var{format})
+@safety{@prelim{}@mtunsafe{@mtasurace{:hostbyaddr} @mtsenv{} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @asucorrupt{} @ascuheap{} @asulock{}}@acunsafe{@aculock{} @acucorrupt{} @acsmem{} @acsfd{}}}
+@c gethostbyaddr @mtasurace:hostbyaddr @mtsenv @mtslocale @ascudlopen @ascuplugin @asucorrupt @ascuheap @asulock @aculock @acucorrupt @acsmem @acsfd
+@c  libc_lock_lock dup @asulock @aculock
+@c  malloc dup @ascuheap @acsmem
+@c  gethostbyaddr_r dup @mtsenv @mtslocale @ascudlopen @ascuplugin @asucorrupt @ascuheap @asulock @aculock @acucorrupt @acsmem @acsfd
+@c  realloc dup @ascuheap @acsmem
+@c  free dup @ascuheap @acsmem
+@c  libc_lock_unlock dup @aculock
+@c  set_h_errno dup ok
 The @code{gethostbyaddr} function returns information about the host
 with Internet address @var{addr}.  The parameter @var{addr} is not
 really a pointer to char - it can be a pointer to an IPv4 or an IPv6
@@ -1282,6 +1472,76 @@ used in this context.
 @comment netdb.h
 @comment GNU
 @deftypefun int gethostbyname_r (const char *restrict @var{name}, struct hostent *restrict @var{result_buf}, char *restrict @var{buf}, size_t @var{buflen}, struct hostent **restrict @var{result}, int *restrict @var{h_errnop})
+@safety{@prelim{}@mtsafe{@mtsenv{} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @asucorrupt{} @ascuheap{} @asulock{}}@acunsafe{@aculock{} @acucorrupt{} @acsmem{} @acsfd{}}}
+@c gethostbyname_r @mtsenv @mtslocale @ascudlopen @ascuplugin @asucorrupt @ascuheap @asulock @aculock @acucorrupt @acsmem @acsfd
+@c  nss_hostname_digits_dots dup @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
+@c  nscd_gethostbyname_r @mtsenv @ascuheap @acsfd @acsmem
+@c   nscd_gethst_r @mtsenv @ascuheap @acsfd @acsmem
+@c    getenv dup @mtsenv
+@c    nscd_get_map_ref dup @ascuheap @acsfd @acsmem
+@c    nscd_cache_search dup ok
+@c    memcpy dup ok
+@c    nscd_open_socket dup @acsfd
+@c    readvall dup ok
+@c    readall dup ok
+@c    close_not_cancel_no_status dup @acsfd
+@c    nscd_drop_map_ref dup @ascuheap @acsmem
+@c    nscd_unmap dup @ascuheap @acsmem
+@c  res_maybe_init(!preinit) dup @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
+@c  res_hconf_init @mtsenv @mtslocale @asucorrupt @ascuheap @aculock @acucorrupt @acsmem [no @asuinit:reshconf @acuinit:reshconf, conditionally called]
+@c   res_hconf.c:do_init @mtsenv @mtslocale @asucorrupt @ascuheap @aculock @acucorrupt @acsmem
+@c    memset dup ok
+@c    getenv dup @mtsenv
+@c    fopen dup @ascuheap @asulock @acsmem @acsfd @aculock
+@c    fsetlocking dup ok [no concurrent uses]
+@c    fgets_unlocked dup ok [no concurrent uses]
+@c    strchrnul dup ok
+@c    res_hconf.c:parse_line @mtslocale @asucorrupt @ascuheap @aculock @acucorrupt @acsmem
+@c     skip_ws dup @mtslocale
+@c     skip_string dup @mtslocale
+@c     strncasecmp dup @mtslocale
+@c     strlen dup ok
+@c     asprintf dup @mtslocale @ascuheap @acsmem
+@c     fxprintf dup @asucorrupt @aculock @acucorrupt
+@c     free dup @ascuheap @acsmem
+@c     arg_trimdomain_list dup @mtslocale @asucorrupt @ascuheap @aculock @acucorrupt @acsmem
+@c     arg_spoof dup @mtslocale
+@c     arg_bool dup @mtslocale @asucorrupt @ascuheap @aculock @acucorrupt @acsmem
+@c     isspace dup @mtslocale
+@c    fclose dup @ascuheap @asulock @acsmem @acsfd @aculock
+@c    arg_spoof @mtslocale
+@c     skip_string @mtslocale
+@c      isspace dup @mtslocale
+@c     strncasecmp dup @mtslocale
+@c    arg_bool @mtslocale @asucorrupt @ascuheap @aculock @acucorrupt @acsmem
+@c     strncasecmp dup @mtslocale
+@c     asprintf dup @mtslocale @ascuheap @acsmem
+@c     fxprintf dup @asucorrupt @aculock @acucorrupt
+@c     free dup @ascuheap @acsmem
+@c    arg_trimdomain_list @mtslocale @asucorrupt @ascuheap @aculock @acucorrupt @acsmem
+@c     skip_string dup @mtslocale
+@c     asprintf dup @mtslocale @ascuheap @acsmem
+@c     fxprintf dup @asucorrupt @aculock @acucorrupt
+@c     free dup @ascuheap @acsmem
+@c     strndup dup @ascuheap @acsmem
+@c     skip_ws @mtslocale
+@c      isspace dup @mtslocale
+@c  nss_hosts_lookup2 @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   nss_database_lookup dup @mtslocale @ascuheap @asulock @acucorrupt @acsmem @acsfd @aculock
+@c   nss_lookup dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  *fct.l -> _nss_*_gethostbyname_r @ascuplugin
+@c  nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  res_hconf_reorder_addrs @asulock @ascuheap @aculock @acsmem @acsfd
+@c   socket dup @acsfd
+@c   libc_lock_lock dup @asulock @aculock
+@c   ifreq @ascuheap @acsmem
+@c   malloc dup @ascuheap @acsmem
+@c   if_nextreq dup ok
+@c   ioctl dup ok
+@c   realloc dup @ascuheap @acsmem
+@c   if_freereq dup @acsmem
+@c   libc_lock_unlock dup @aculock
+@c   close dup @acsfd
 The @code{gethostbyname_r} function returns information about the host
 named @var{name}.  The caller must pass a pointer to an object of type
 @code{struct hostent} in the @var{result_buf} parameter.  In addition
@@ -1337,6 +1597,17 @@ gethostname (char *host)
 @comment netdb.h
 @comment GNU
 @deftypefun int gethostbyname2_r (const char *@var{name}, int @var{af}, struct hostent *restrict @var{result_buf}, char *restrict @var{buf}, size_t @var{buflen}, struct hostent **restrict @var{result}, int *restrict @var{h_errnop})
+@safety{@prelim{}@mtsafe{@mtsenv{} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @asucorrupt{} @ascuheap{} @asulock{}}@acunsafe{@aculock{} @acucorrupt{} @acsmem{} @acsfd{}}}
+@c gethostbyname2_r @mtsenv @mtslocale @ascudlopen @ascuplugin @asucorrupt @ascuheap @asulock @aculock @acucorrupt @acsmem @acsfd
+@c  nss_hostname_digits_dots dup @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
+@c  nscd_gethostbyname2_r @mtsenv @ascuheap @asulock @aculock @acsfd @acsmem
+@c   nscd_gethst_r dup @mtsenv @ascuheap @asulock @aculock @acsfd @acsmem
+@c  res_maybe_init(!preinit) dup @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
+@c  res_hconf_init dup @mtsenv @mtslocale @asucorrupt @ascuheap @aculock @acucorrupt @acsmem [no @asuinit:reshconf @acuinit:reshconf, conditionally called]
+@c  nss_hosts_lookup2 dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  *fct.l -> _nss_*_gethostbyname2_r @ascuplugin
+@c  nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  res_hconf_reorder_addrs dup @asulock @ascuheap @aculock @acsmem @acsfd
 The @code{gethostbyname2_r} function is like @code{gethostbyname_r}, but
 allows the caller to specify the desired address family (e.g.@:
 @code{AF_INET} or @code{AF_INET6}) for the result.
@@ -1345,6 +1616,21 @@ allows the caller to specify the desired address family (e.g.@:
 @comment netdb.h
 @comment GNU
 @deftypefun int gethostbyaddr_r (const void *@var{addr}, socklen_t @var{length}, int @var{format}, struct hostent *restrict @var{result_buf}, char *restrict @var{buf}, size_t @var{buflen}, struct hostent **restrict @var{result}, int *restrict @var{h_errnop})
+@safety{@prelim{}@mtsafe{@mtsenv{} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @asucorrupt{} @ascuheap{} @asulock{}}@acunsafe{@aculock{} @acucorrupt{} @acsmem{} @acsfd{}}}
+@c gethostbyaddr_r @mtsenv @mtslocale @ascudlopen @ascuplugin @asucorrupt @ascuheap @asulock @aculock @acucorrupt @acsmem @acsfd
+@c  memcmp dup ok
+@c  nscd_gethostbyaddr_r @mtsenv @ascuheap @asulock @aculock @acsfd @acsmem
+@c   nscd_gethst_r dup @mtsenv @ascuheap @asulock @aculock @acsfd @acsmem
+@c  res_maybe_init(!preinit) dup @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
+@c  res_hconf_init dup @mtsenv @mtslocale @asucorrupt @ascuheap @aculock @acucorrupt @acsmem [no @asuinit:reshconf @acuinit:reshconf, conditionally called]
+@c  nss_hosts_lookup2 dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  *fct.l -> _nss_*_gethostbyaddr_r @ascuplugin
+@c  nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  res_hconf_reorder_addrs dup @asulock @ascuheap @aculock @acsmem @acsfd
+@c  res_hconf_trim_domains @mtslocale
+@c   res_hconf_trim_domain @mtslocale
+@c    strlen dup ok
+@c    strcasecmp dup @mtslocale
 The @code{gethostbyaddr_r} function returns information about the host
 with Internet address @var{addr}.  The parameter @var{addr} is not
 really a pointer to char - it can be a pointer to an IPv4 or an IPv6
@@ -1367,6 +1653,18 @@ when using these functions because they are not reentrant.
 @comment netdb.h
 @comment BSD
 @deftypefun void sethostent (int @var{stayopen})
+@safety{@prelim{}@mtunsafe{@mtasurace{:hostent} @mtsenv{} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c sethostent @mtasurace:hostent @mtsenv @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_lock dup @asulock @aculock
+@c  nss_setent(nss_hosts_lookup2) @mtasurace:hostent @mtsenv @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   res_maybe_init(!preinit) dup @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
+@c   set_h_errno dup ok
+@c   setup(nss_hosts_lookup2) @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c    *lookup_fct = nss_hosts_lookup2 dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c    nss_lookup dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   *fct.f @mtasurace:hostent @ascuplugin
+@c   nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_unlock dup @aculock
 This function opens the hosts database to begin scanning it.  You can
 then call @code{gethostent} to read the entries.
 
@@ -1382,6 +1680,27 @@ reopening the database for each call.
 @comment netdb.h
 @comment BSD
 @deftypefun {struct hostent *} gethostent (void)
+@safety{@prelim{}@mtunsafe{@mtasurace{:hostent} @mtasurace{:hostentbuf} @mtsenv{} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c gethostent @mtasurace:hostent @mtasurace:hostentbuf @mtsenv @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_lock dup @asulock @aculock
+@c  nss_getent(gethostent_r) @mtasurace:hostent @mtsenv @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   malloc dup @ascuheap @acsmem
+@c   *func = gethostent_r dup @mtasurace:hostent @mtsenv @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   realloc dup @ascuheap @acsmem
+@c   free dup @ascuheap @acsmem
+@c  libc_lock_unlock dup @aculock
+@c
+@c gethostent_r @mtasurace:hostent @mtsenv @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_lock dup @asulock @aculock
+@c  nss_getent_r(nss_hosts_lookup2) @mtasurace:hostent @mtsenv @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   res_maybe_init(!preinit) dup @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
+@c   setup(nss_hosts_lookup2) dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   *fct.f @mtasurace:hostent @ascuplugin
+@c   nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   nss_lookup dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   *sfct.f @mtasurace:hostent @ascuplugin
+@c  libc_lock_unlock dup @aculock
+
 This function returns the next entry in the hosts database.  It
 returns a null pointer if there are no more entries.
 @end deftypefun
@@ -1389,6 +1708,15 @@ returns a null pointer if there are no more entries.
 @comment netdb.h
 @comment BSD
 @deftypefun void endhostent (void)
+@safety{@prelim{}@mtunsafe{@mtasurace{:hostent} @mtsenv{} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c endhostent @mtasurace:hostent @mtsenv @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_lock @asulock @aculock
+@c  nss_endent(nss_hosts_lookup2) @mtasurace:hostent @mtsenv @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   res_maybe_init(!preinit) dup @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
+@c   setup(nss_passwd_lookup2) dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   *fct.f @mtasurace:hostent @ascuplugin
+@c   nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_unlock @aculock
 This function closes the hosts database.
 @end deftypefun
 
@@ -1488,6 +1816,34 @@ information if you need to save it across calls.
 @comment netdb.h
 @comment BSD
 @deftypefun {struct servent *} getservbyname (const char *@var{name}, const char *@var{proto})
+@safety{@prelim{}@mtunsafe{@mtasurace{:servbyname} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c getservbyname =~ getpwuid @mtasurace:servbyname @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_lock dup @asulock @aculock
+@c  malloc dup @ascuheap @acsmem
+@c  getservbyname_r dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  realloc dup @ascuheap @acsmem
+@c  free dup @ascuheap @acsmem
+@c  libc_lock_unlock dup @aculock
+@c
+@c getservbyname_r =~ getpwuid_r @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  nscd_getservbyname_r @ascuheap @acsfd @acsmem
+@c   nscd_getserv_r @ascuheap @acsfd @acsmem
+@c    nscd_get_map_ref dup @ascuheap @acsfd @acsmem
+@c    strlen dup ok
+@c    malloc dup @ascuheap @acsmem
+@c    mempcpy dup ok
+@c    memcpy dup ok
+@c    nscd_cache_search dup ok
+@c    nscd_open_socket dup @acsfd
+@c    readvall dup ok
+@c    readall dup ok
+@c    close_not_cancel_no_status dup @acsfd
+@c    nscd_drop_map_ref dup @ascuheap @acsmem
+@c    nscd_unmap dup @ascuheap @acsmem
+@c    free dup @ascuheap @acsmem
+@c  nss_services_lookup2 =~ nss_passwd_lookup2 @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  *fct.l -> _nss_*_getservbyname_r @ascuplugin
+@c  nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 The @code{getservbyname} function returns information about the
 service named @var{name} using protocol @var{proto}.  If it can't find
 such a service, it returns a null pointer.
@@ -1499,6 +1855,21 @@ use it to determine which port they should listen on (@pxref{Listening}).
 @comment netdb.h
 @comment BSD
 @deftypefun {struct servent *} getservbyport (int @var{port}, const char *@var{proto})
+@safety{@prelim{}@mtunsafe{@mtasurace{:servbyport} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c getservbyport =~ getservbyname @mtasurace:servbyport @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_lock dup @asulock @aculock
+@c  malloc dup @ascuheap @acsmem
+@c  getservbyport_r dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  realloc dup @ascuheap @acsmem
+@c  free dup @ascuheap @acsmem
+@c  libc_lock_unlock dup @aculock
+@c
+@c getservbyport_r =~ getservbyname_r @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  nscd_getservbyport_r @ascuheap @acsfd @acsmem
+@c   nscd_getserv_r dup @ascuheap @acsfd @acsmem
+@c  nss_services_lookup2 =~ nss_passwd_lookup2 @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  *fct.l -> _nss_*_getservbyport_r @ascuplugin
+@c  nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 The @code{getservbyport} function returns information about the
 service at port @var{port} using protocol @var{proto}.  If it can't
 find such a service, it returns a null pointer.
@@ -1512,6 +1883,16 @@ functions because they are not reentrant.
 @comment netdb.h
 @comment BSD
 @deftypefun void setservent (int @var{stayopen})
+@safety{@prelim{}@mtunsafe{@mtasurace{:servent} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c setservent @mtasurace:servent @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_lock dup @asulock @aculock
+@c  nss_setent(nss_services_lookup2) @mtasurace:servenv @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   setup(nss_services_lookup2) @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c    *lookup_fct = nss_services_lookup2 dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c    nss_lookup dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   *fct.f @mtasurace:servent @ascuplugin
+@c   nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_unlock dup @aculock
 This function opens the services database to begin scanning it.
 
 If the @var{stayopen} argument is nonzero, this sets a flag so that
@@ -1524,6 +1905,25 @@ reopening the database for each call.
 @comment netdb.h
 @comment BSD
 @deftypefun {struct servent *} getservent (void)
+@safety{@prelim{}@mtunsafe{@mtasurace{:servent} @mtasurace{:serventbuf} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c getservent @mtasurace:servent @mtasurace:serventbuf @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_lock dup @asulock @aculock
+@c  nss_getent(getservent_r) @mtasurace:servent @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   malloc dup @ascuheap @acsmem
+@c   *func = getservent_r dup @mtasurace:servent @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   realloc dup @ascuheap @acsmem
+@c   free dup @ascuheap @acsmem
+@c  libc_lock_unlock dup @aculock
+@c
+@c getservent_r @mtasurace:servent @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_lock dup @asulock @aculock
+@c  nss_getent_r(nss_services_lookup2) @mtasurace:servent @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   setup(nss_services_lookup2) dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   *fct.f @mtasurace:servent @ascuplugin
+@c   nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   nss_lookup dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   *sfct.f @mtasurace:servent @ascuplugin
+@c  libc_lock_unlock dup @aculock
 This function returns the next entry in the services database.  If
 there are no more entries, it returns a null pointer.
 @end deftypefun
@@ -1531,6 +1931,14 @@ there are no more entries, it returns a null pointer.
 @comment netdb.h
 @comment BSD
 @deftypefun void endservent (void)
+@safety{@prelim{}@mtunsafe{@mtasurace{:servent} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c endservent @mtasurace:servent @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_lock @asulock @aculock
+@c  nss_endent(nss_services_lookup2) @mtasurace:servent @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   setup(nss_services_lookup2) dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   *fct.f @mtasurace:servent @ascuplugin
+@c   nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_unlock @aculock
 This function closes the services database.
 @end deftypefun
 
@@ -1576,6 +1984,11 @@ to @code{uint32_t}.)  These functions are declared in
 @comment netinet/in.h
 @comment BSD
 @deftypefun {uint16_t} htons (uint16_t @var{hostshort})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c htons ok
+@c  bswap_16 ok
+@c   bswap_constant_16 ok
+
 This function converts the @code{uint16_t} integer @var{hostshort} from
 host byte order to network byte order.
 @end deftypefun
@@ -1583,6 +1996,8 @@ host byte order to network byte order.
 @comment netinet/in.h
 @comment BSD
 @deftypefun {uint16_t} ntohs (uint16_t @var{netshort})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Alias to htons.
 This function converts the @code{uint16_t} integer @var{netshort} from
 network byte order to host byte order.
 @end deftypefun
@@ -1590,6 +2005,9 @@ network byte order to host byte order.
 @comment netinet/in.h
 @comment BSD
 @deftypefun {uint32_t} htonl (uint32_t @var{hostlong})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c htonl ok
+@c  bswap_32 dup ok
 This function converts the @code{uint32_t} integer @var{hostlong} from
 host byte order to network byte order.
 
@@ -1599,6 +2017,8 @@ This is used for IPv4 Internet addresses.
 @comment netinet/in.h
 @comment BSD
 @deftypefun {uint32_t} ntohl (uint32_t @var{netlong})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Alias to htonl.
 This function converts the @code{uint32_t} integer @var{netlong} from
 network byte order to host byte order.
 
@@ -1663,6 +2083,20 @@ information if you need to save it across calls.
 @comment netdb.h
 @comment BSD
 @deftypefun {struct protoent *} getprotobyname (const char *@var{name})
+@safety{@prelim{}@mtunsafe{@mtasurace{:protobyname} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c getprotobyname =~ getpwuid @mtasurace:protobyname @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_lock dup @asulock @aculock
+@c  malloc dup @ascuheap @acsmem
+@c  getprotobyname_r dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  realloc dup @ascuheap @acsmem
+@c  free dup @ascuheap @acsmem
+@c  libc_lock_unlock dup @aculock
+@c
+@c getprotobyname_r =~ getpwuid_r @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   no nscd support
+@c  nss_protocols_lookup2 =~ nss_passwd_lookup2 @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  *fct.l -> _nss_*_getprotobyname_r @ascuplugin
+@c  nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 The @code{getprotobyname} function returns information about the
 network protocol named @var{name}.  If there is no such protocol, it
 returns a null pointer.
@@ -1671,6 +2105,20 @@ returns a null pointer.
 @comment netdb.h
 @comment BSD
 @deftypefun {struct protoent *} getprotobynumber (int @var{protocol})
+@safety{@prelim{}@mtunsafe{@mtasurace{:protobynumber} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c getprotobynumber =~ getpwuid @mtasurace:protobynumber @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_lock dup @asulock @aculock
+@c  malloc dup @ascuheap @acsmem
+@c  getprotobynumber_r dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  realloc dup @ascuheap @acsmem
+@c  free dup @ascuheap @acsmem
+@c  libc_lock_unlock dup @aculock
+@c
+@c getprotobynumber_r =~ getpwuid_r @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   no nscd support
+@c  nss_protocols_lookup2 =~ nss_passwd_lookup2 @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  *fct.l -> _nss_*_getprotobynumber_r @ascuplugin
+@c  nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 The @code{getprotobynumber} function returns information about the
 network protocol with number @var{protocol}.  If there is no such
 protocol, it returns a null pointer.
@@ -1683,6 +2131,16 @@ Be careful when using these functions because they are not reentrant.
 @comment netdb.h
 @comment BSD
 @deftypefun void setprotoent (int @var{stayopen})
+@safety{@prelim{}@mtunsafe{@mtasurace{:protoent} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c setprotoent @mtasurace:protoent @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_lock dup @asulock @aculock
+@c  nss_setent(nss_protocols_lookup2) @mtasurace:protoent @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   setup(nss_protocols_lookup2) @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c    *lookup_fct = nss_protocols_lookup2 dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c    nss_lookup dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   *fct.f @mtasurace:protoent @ascuplugin
+@c   nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_unlock dup @aculock
 This function opens the protocols database to begin scanning it.
 
 If the @var{stayopen} argument is nonzero, this sets a flag so that
@@ -1695,6 +2153,25 @@ reopening the database for each call.
 @comment netdb.h
 @comment BSD
 @deftypefun {struct protoent *} getprotoent (void)
+@safety{@prelim{}@mtunsafe{@mtasurace{:protoent} @mtasurace{:protoentbuf} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c getprotoent @mtasurace:protoent @mtasurace:protoentbuf @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_lock dup @asulock @aculock
+@c  nss_getent(getprotoent_r) @mtasurace:protoent @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   malloc dup @ascuheap @acsmem
+@c   *func = getprotoent_r dup @mtasurace:protoent @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   realloc dup @ascuheap @acsmem
+@c   free dup @ascuheap @acsmem
+@c  libc_lock_unlock dup @aculock
+@c
+@c getprotoent_r @mtasurace:protoent @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_lock dup @asulock @aculock
+@c  nss_getent_r(nss_protocols_lookup2) @mtasurace:protoent @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   setup(nss_protocols_lookup2) dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   *fct.f @mtasurace:servent @ascuplugin
+@c   nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   nss_lookup dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   *sfct.f @mtasurace:protoent @ascuplugin
+@c  libc_lock_unlock dup @aculock
 This function returns the next entry in the protocols database.  It
 returns a null pointer if there are no more entries.
 @end deftypefun
@@ -1702,6 +2179,14 @@ returns a null pointer if there are no more entries.
 @comment netdb.h
 @comment BSD
 @deftypefun void endprotoent (void)
+@safety{@prelim{}@mtunsafe{@mtasurace{:protoent} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c endprotoent @mtasurace:protoent @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_lock @asulock @aculock
+@c  nss_endent(nss_protocols_lookup2) @mtasurace:protoent @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   setup(nss_protocols_lookup2) dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   *fct.f @mtasurace:protoent @ascuplugin
+@c   nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_unlock @aculock
 This function closes the protocols database.
 @end deftypefun
 
@@ -1771,6 +2256,7 @@ declared in @file{sys/socket.h}.
 @comment sys/socket.h
 @comment BSD
 @deftypefun int socket (int @var{namespace}, int @var{style}, int @var{protocol})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{@acsfd{}}}
 This function creates a socket and specifies communication style
 @var{style}, which should be one of the socket styles listed in
 @ref{Communication Styles}.  The @var{namespace} argument specifies
@@ -1833,6 +2319,7 @@ connection by calling @code{shutdown}, which is declared in
 @comment sys/socket.h
 @comment BSD
 @deftypefun int shutdown (int @var{socket}, int @var{how})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{shutdown} function shuts down the connection of socket
 @var{socket}.  The argument @var{how} specifies what action to
 perform:
@@ -1884,6 +2371,7 @@ FIFOs}).
 @comment sys/socket.h
 @comment BSD
 @deftypefun int socketpair (int @var{namespace}, int @var{style}, int @var{protocol}, int @var{filedes}@t{[2]})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{@acsfd{}}}
 This function creates a socket pair, returning the file descriptors in
 @code{@var{filedes}[0]} and @code{@var{filedes}[1]}.  The socket pair
 is a full-duplex communications channel, so that both reading and writing
@@ -1977,6 +2465,7 @@ program must do with the @code{connect} function, which is declared in
 @comment sys/socket.h
 @comment BSD
 @deftypefun int connect (int @var{socket}, struct sockaddr *@var{addr}, socklen_t @var{length})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{connect} function initiates a connection from the socket
 with file descriptor @var{socket} to the socket whose address is
 specified by the @var{addr} and @var{length} arguments.  (This socket
@@ -2076,6 +2565,7 @@ access to connect to the socket.
 @comment sys/socket.h
 @comment BSD
 @deftypefun int listen (int @var{socket}, int @var{n})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{@acsfd{}}}
 The @code{listen} function enables the socket @var{socket} to accept
 connections, thus making it a server socket.
 
@@ -2128,6 +2618,7 @@ queue.
 @comment sys/socket.h
 @comment BSD
 @deftypefun int accept (int @var{socket}, struct sockaddr *@var{addr}, socklen_t *@var{length_ptr})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{@acsfd{}}}
 This function is used to accept a connection request on the server
 socket @var{socket}.
 
@@ -2186,6 +2677,7 @@ connectionless communication styles.
 @comment sys/socket.h
 @comment BSD
 @deftypefun int getpeername (int @var{socket}, struct sockaddr *@var{addr}, socklen_t *@var{length-ptr})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{getpeername} function returns the address of the socket that
 @var{socket} is connected to; it stores the address in the memory space
 specified by @var{addr} and @var{length-ptr}.  It stores the length of
@@ -2254,6 +2746,7 @@ you get a @code{SIGPIPE} signal for any use of @code{send} or
 @comment sys/socket.h
 @comment BSD
 @deftypefun ssize_t send (int @var{socket}, const void *@var{buffer}, size_t @var{size}, int @var{flags})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{send} function is like @code{write}, but with the additional
 flags @var{flags}.  The possible values of @var{flags} are described
 in @ref{Socket Data Options}.
@@ -2321,6 +2814,7 @@ Primitives}.
 @comment sys/socket.h
 @comment BSD
 @deftypefun ssize_t recv (int @var{socket}, void *@var{buffer}, size_t @var{size}, int @var{flags})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{recv} function is like @code{read}, but with the additional
 flags @var{flags}.  The possible values of @var{flags} are described
 in @ref{Socket Data Options}.
@@ -2649,6 +3143,7 @@ more information about the @code{connect} function.
 @comment sys/socket.h
 @comment BSD
 @deftypefun ssize_t sendto (int @var{socket}, const void *@var{buffer}, size_t @var{size}, int @var{flags}, struct sockaddr *@var{addr}, socklen_t @var{length})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{sendto} function transmits the data in the @var{buffer}
 through the socket @var{socket} to the destination address specified
 by the @var{addr} and @var{length} arguments.  The @var{size} argument
@@ -2684,6 +3179,7 @@ also tells you where it was sent from.  This function is declared in
 @comment sys/socket.h
 @comment BSD
 @deftypefun ssize_t recvfrom (int @var{socket}, void *@var{buffer}, size_t @var{size}, int @var{flags}, struct sockaddr *@var{addr}, socklen_t *@var{length-ptr})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{recvfrom} function reads one packet from the socket
 @var{socket} into the buffer @var{buffer}.  The @var{size} argument
 specifies the maximum number of bytes to be read.
@@ -2731,6 +3227,7 @@ you don't want to specify @var{flags} (@pxref{I/O Primitives}).
 @comment sys/socket.h
 @comment BSD
 @deftypefun ssize_t sendmsg (int @var{socket}, const struct msghdr *@var{message}, int @var{flags})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 This function is defined as a cancellation point in multi-threaded
 programs, so one has to be prepared for this and make sure that
@@ -2742,6 +3239,7 @@ whatever) are freed even if the thread is cancel.
 @comment sys/socket.h
 @comment BSD
 @deftypefun ssize_t recvmsg (int @var{socket}, struct msghdr *@var{message}, int @var{flags})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 This function is defined as a cancellation point in multi-threaded
 programs, so one has to be prepared for this and make sure that
@@ -2929,6 +3427,7 @@ They are declared in @file{sys/socket.h}.
 @comment sys/socket.h
 @comment BSD
 @deftypefun int getsockopt (int @var{socket}, int @var{level}, int @var{optname}, void *@var{optval}, socklen_t *@var{optlen-ptr})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{getsockopt} function gets information about the value of
 option @var{optname} at level @var{level} for socket @var{socket}.
 
@@ -2959,6 +3458,7 @@ The @var{optname} doesn't make sense for the given @var{level}.
 @comment sys/socket.h
 @comment BSD
 @deftypefun int setsockopt (int @var{socket}, int @var{level}, int @var{optname}, const void *@var{optval}, socklen_t @var{optlen})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is used to set the socket option @var{optname} at level
 @var{level} for socket @var{socket}.  The value of the option is passed
 in the buffer @var{optval} of size @var{optlen}.
@@ -3155,6 +3655,21 @@ copy the information if you need to save it.
 @comment netdb.h
 @comment BSD
 @deftypefun {struct netent *} getnetbyname (const char *@var{name})
+@safety{@prelim{}@mtunsafe{@mtasurace{:netbyname} @mtsenv{} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c getnetbyname =~ getpwuid @mtasurace:netbyname @mtsenv @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_lock dup @asulock @aculock
+@c  malloc dup @ascuheap @acsmem
+@c  getnetbyname_r dup @mtsenv @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  realloc dup @ascuheap @acsmem
+@c  free dup @ascuheap @acsmem
+@c  libc_lock_unlock dup @aculock
+@c
+@c getnetbyname_r =~ getpwuid_r @mtsenv @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   no nscd support
+@c  res_maybe_init(!preinit) dup @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
+@c  nss_networks_lookup2 =~ nss_passwd_lookup2 @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  *fct.l -> _nss_*_getnetbyname_r @ascuplugin
+@c  nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 The @code{getnetbyname} function returns information about the network
 named @var{name}.  It returns a null pointer if there is no such
 network.
@@ -3163,6 +3678,20 @@ network.
 @comment netdb.h
 @comment BSD
 @deftypefun {struct netent *} getnetbyaddr (uint32_t @var{net}, int @var{type})
+@safety{@prelim{}@mtunsafe{@mtasurace{:netbyaddr} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c getnetbyaddr =~ getpwuid @mtasurace:netbyaddr @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_lock dup @asulock @aculock
+@c  malloc dup @ascuheap @acsmem
+@c  getnetbyaddr_r dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  realloc dup @ascuheap @acsmem
+@c  free dup @ascuheap @acsmem
+@c  libc_lock_unlock dup @aculock
+@c
+@c getnetbyaddr_r =~ getpwuid_r @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   no nscd support
+@c  nss_networks_lookup2 =~ nss_passwd_lookup2 @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  *fct.l -> _nss_*_getnetbyaddr_r @ascuplugin
+@c  nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 The @code{getnetbyaddr} function returns information about the network
 of type @var{type} with number @var{net}.  You should specify a value of
 @code{AF_INET} for the @var{type} argument for Internet networks.
@@ -3178,6 +3707,17 @@ functions because they are not reentrant.
 @comment netdb.h
 @comment BSD
 @deftypefun void setnetent (int @var{stayopen})
+@safety{@prelim{}@mtunsafe{@mtasurace{:netent} @mtsenv{} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c setnetent @mtasurace:netent @mtsenv @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_lock dup @asulock @aculock
+@c  nss_setent(nss_networks_lookup2) @mtasurace:netent @mtsenv @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   res_maybe_init(!preinit) dup @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
+@c   setup(nss_networks_lookup2) @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c    *lookup_fct = nss_networks_lookup2 dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c    nss_lookup dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   *fct.f @mtasurace:netent @ascuplugin
+@c   nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_unlock dup @aculock
 This function opens and rewinds the networks database.
 
 If the @var{stayopen} argument is nonzero, this sets a flag so that
@@ -3190,6 +3730,26 @@ reopening the database for each call.
 @comment netdb.h
 @comment BSD
 @deftypefun {struct netent *} getnetent (void)
+@safety{@prelim{}@mtunsafe{@mtasurace{:netent} @mtasurace{:netentbuf} @mtsenv{} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c getnetent @mtasurace:netent @mtasurace:netentbuf @mtsenv @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_lock dup @asulock @aculock
+@c  nss_getent(getnetent_r) @mtasurace:netent @mtsenv @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   malloc dup @ascuheap @acsmem
+@c   *func = getnetent_r dup @mtasurace:netent @mtsenv @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   realloc dup @ascuheap @acsmem
+@c   free dup @ascuheap @acsmem
+@c  libc_lock_unlock dup @aculock
+@c
+@c getnetent_r @mtasurace:netent @mtsenv @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_lock dup @asulock @aculock
+@c  nss_getent_r(nss_networks_lookup2) @mtasurace:netent @mtsenv @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   res_maybe_init(!preinit) dup @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
+@c   setup(nss_networks_lookup2) dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   *fct.f @mtasurace:servent @ascuplugin
+@c   nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   nss_lookup dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   *sfct.f @mtasurace:netent @ascuplugin
+@c  libc_lock_unlock dup @aculock
 This function returns the next entry in the networks database.  It
 returns a null pointer if there are no more entries.
 @end deftypefun
@@ -3197,5 +3757,14 @@ returns a null pointer if there are no more entries.
 @comment netdb.h
 @comment BSD
 @deftypefun void endnetent (void)
+@safety{@prelim{}@mtunsafe{@mtasurace{:netent} @mtsenv{} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c endnetent @mtasurace:netent @mtsenv @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_lock @asulock @aculock
+@c  nss_endent(nss_networks_lookup2) @mtasurace:netent @mtsenv @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   res_maybe_init(!preinit) dup @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
+@c   setup(nss_networks_lookup2) dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   *fct.f @mtasurace:netent @ascuplugin
+@c   nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  libc_lock_unlock @aculock
 This function closes the networks database.
 @end deftypefun
