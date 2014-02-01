@@ -72,6 +72,7 @@ two functions can be found in @file{search.h}.
 @comment search.h
 @comment SVID
 @deftypefun {void *} lfind (const void *@var{key}, const void *@var{base}, size_t *@var{nmemb}, size_t @var{size}, comparison_fn_t @var{compar})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{lfind} function searches in the array with @code{*@var{nmemb}}
 elements of @var{size} bytes pointed to by @var{base} for an element
 which matches the one pointed to by @var{key}.  The function pointed to
@@ -90,6 +91,21 @@ searching.
 @comment search.h
 @comment SVID
 @deftypefun {void *} lsearch (const void *@var{key}, void *@var{base}, size_t *@var{nmemb}, size_t @var{size}, comparison_fn_t @var{compar})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c A signal handler that interrupted an insertion and performed an
+@c insertion itself would leave the array in a corrupt state (e.g. one
+@c new element initialized twice, with parts of both initializations
+@c prevailing, and another uninitialized element), but this is just a
+@c special case of races on user-controlled objects, that have to be
+@c avoided by users.
+
+@c In case of cancellation, we know the array won't be left in a corrupt
+@c state; the new element is initialized before the element count is
+@c incremented, and the compiler can't reorder these operations because
+@c it can't know that they don't alias.  So, we'll either cancel after
+@c the increment and the initialization are both complete, or the
+@c increment won't have taken place, and so how far the initialization
+@c got doesn't matter.
 The @code{lsearch} function is similar to the @code{lfind} function.  It
 searches the given array for an element and returns it if found.  The
 difference is that if no matching element is found the @code{lsearch}
@@ -113,6 +129,7 @@ the header file @file{stdlib.h}.
 @comment stdlib.h
 @comment ISO
 @deftypefun {void *} bsearch (const void *@var{key}, const void *@var{array}, size_t @var{count}, size_t @var{size}, comparison_fn_t @var{compare})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{bsearch} function searches the sorted array @var{array} for an object
 that is equivalent to @var{key}.  The array contains @var{count} elements,
 each of which is of size @var{size} bytes.
@@ -146,6 +163,7 @@ To sort an array using an arbitrary comparison function, use the
 @comment stdlib.h
 @comment ISO
 @deftypefun void qsort (void *@var{array}, size_t @var{count}, size_t @var{size}, comparison_fn_t @var{compare})
+@safety{@prelim{}@mtsafe{}@assafe{}@acunsafe{@acucorrupt{}}}
 The @var{qsort} function sorts the array @var{array}.  The array contains
 @var{count} elements, each of which is of size @var{size}.
 
@@ -256,6 +274,9 @@ The following functions are declared in the header file @file{search.h}.
 @comment search.h
 @comment SVID
 @deftypefun int hcreate (size_t @var{nel})
+@safety{@prelim{}@mtunsafe{@mtasurace{:hsearch}}@asunsafe{@ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{}}}
+@c hcreate @mtasurace:hsearch @ascuheap @acucorrupt @acsmem
+@c  hcreate_r dup @mtsrace:htab @ascuheap @acucorrupt @acsmem
 The @code{hcreate} function creates a hashing table which can contain at
 least @var{nel} elements.  There is no possibility to grow this table so
 it is necessary to choose the value for @var{nel} wisely.  The method
@@ -285,6 +306,9 @@ table in use or the program runs out of memory.
 @comment search.h
 @comment SVID
 @deftypefun void hdestroy (void)
+@safety{@prelim{}@mtunsafe{@mtasurace{:hsearch}}@asunsafe{@ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{}}}
+@c hdestroy @mtasurace:hsearch @ascuheap @acucorrupt @acsmem
+@c  hdestroy_r dup @mtsrace:htab @ascuheap @acucorrupt @acsmem
 The @code{hdestroy} function can be used to free all the resources
 allocated in a previous call of @code{hcreate}.  After a call to this
 function it is again possible to call @code{hcreate} and allocate a new
@@ -328,6 +352,9 @@ this element might stay undefined since it is not used.
 @comment search.h
 @comment SVID
 @deftypefun {ENTRY *} hsearch (ENTRY @var{item}, ACTION @var{action})
+@safety{@prelim{}@mtunsafe{@mtasurace{:hsearch}}@asunsafe{}@acunsafe{@acucorrupt{/action==ENTER}}}
+@c hsearch @mtasurace:hsearch @acucorrupt/action==ENTER
+@c  hsearch_r dup @mtsrace:htab @acucorrupt/action==ENTER
 To search in a hashing table created using @code{hcreate} the
 @code{hsearch} function must be used.  This function can perform simple
 search for an element (if @var{action} has the @code{FIND}) or it can
@@ -358,6 +385,24 @@ members should be changed directly.
 @comment search.h
 @comment GNU
 @deftypefun int hcreate_r (size_t @var{nel}, struct hsearch_data *@var{htab})
+@safety{@prelim{}@mtsafe{@mtsrace{:htab}}@asunsafe{@ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{}}}
+@c Unlike the lsearch array, the htab is (at least in part) opaque, so
+@c let's make it absolutely clear that ensuring exclusive access is a
+@c caller responsibility.
+
+@c Cancellation is unlikely to leave the htab in a corrupt state: the
+@c last field to be initialized is the one that tells whether the entire
+@c data structure was initialized, and there's a function call (calloc)
+@c in between that will often ensure all other fields are written before
+@c the table.  However, should this call be inlined (say with LTO), this
+@c assumption may not hold.  The calloc call doesn't cross our library
+@c interface barrier, so let's consider this could happen and mark this
+@c with @acucorrupt.  It's no safety loss, since we already have
+@c @ascuheap anyway...
+
+@c hcreate_r @mtsrace:htab @ascuheap @acucorrupt @acsmem
+@c  isprime ok
+@c  calloc dup @ascuheap @acsmem
 The @code{hcreate_r} function initializes the object pointed to by
 @var{htab} to contain a hashing table with at least @var{nel} elements.
 So this function is equivalent to the @code{hcreate} function except
@@ -376,6 +421,16 @@ programs ran out of memory.
 @comment search.h
 @comment GNU
 @deftypefun void hdestroy_r (struct hsearch_data *@var{htab})
+@safety{@prelim{}@mtsafe{@mtsrace{:htab}}@asunsafe{@ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{}}}
+@c The table is released while the table pointer still points to it.
+@c Async cancellation is thus unsafe, but it already was because we call
+@c free().  Using the table in a handler while it's being released would
+@c also be dangerous, but calling free() already makes it unsafe, and
+@c the requirement on the caller to ensure exclusive access already
+@c guarantees this doesn't happen, so we don't get @asucorrupt.
+
+@c hdestroy_r @mtsrace:htab @ascuheap @acucorrupt @acsmem
+@c  free dup @ascuheap @acsmem
 The @code{hdestroy_r} function frees all resources allocated by the
 @code{hcreate_r} function for this very same object @var{htab}.  As for
 @code{hdestroy} it is the programs responsibility to free the strings
@@ -385,6 +440,13 @@ for the elements of the table.
 @comment search.h
 @comment GNU
 @deftypefun int hsearch_r (ENTRY @var{item}, ACTION @var{action}, ENTRY **@var{retval}, struct hsearch_data *@var{htab})
+@safety{@prelim{}@mtsafe{@mtsrace{:htab}}@assafe{}@acunsafe{@acucorrupt{/action==ENTER}}}
+@c Callers have to ensure mutual exclusion; insertion, if cancelled,
+@c leaves the table in a corrupt state.
+
+@c hsearch_r @mtsrace:htab @acucorrupt/action==ENTER
+@c  strlen dup ok
+@c  strcmp dup ok
 The @code{hsearch_r} function is equivalent to @code{hsearch}.  The
 meaning of the first two arguments is identical.  But instead of
 operating on a single global hashing table the function works on the
@@ -436,6 +498,12 @@ in the header file @file{search.h}.
 @comment search.h
 @comment SVID
 @deftypefun {void *} tsearch (const void *@var{key}, void **@var{rootp}, comparison_fn_t @var{compar})
+@safety{@prelim{}@mtsafe{@mtsrace{:rootp}}@asunsafe{@ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{}}}
+@c The tree is not modified in a thread-safe manner, and rotations may
+@c leave the tree in an inconsistent state that could be observed in an
+@c asynchronous signal handler (except for the caller-synchronization
+@c requirement) or after asynchronous cancellation of the thread
+@c performing the rotation or the insertion.
 The @code{tsearch} function searches in the tree pointed to by
 @code{*@var{rootp}} for an element matching @var{key}.  The function
 pointed to by @var{compar} is used to determine whether two elements
@@ -465,6 +533,7 @@ of space @code{NULL} is returned.
 @comment search.h
 @comment SVID
 @deftypefun {void *} tfind (const void *@var{key}, void *const *@var{rootp}, comparison_fn_t @var{compar})
+@safety{@prelim{}@mtsafe{@mtsrace{:rootp}}@assafe{}@acsafe{}}
 The @code{tfind} function is similar to the @code{tsearch} function.  It
 locates an element matching the one pointed to by @var{key} and returns
 a pointer to this element.  But if no matching element is available no
@@ -479,6 +548,7 @@ elements.
 @comment search.h
 @comment SVID
 @deftypefun {void *} tdelete (const void *@var{key}, void **@var{rootp}, comparison_fn_t @var{compar})
+@safety{@prelim{}@mtsafe{@mtsrace{:rootp}}@asunsafe{@ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{}}}
 To remove a specific element matching @var{key} from the tree
 @code{tdelete} can be used.  It locates the matching element using the
 same method as @code{tfind}.  The corresponding element is then removed
@@ -492,6 +562,7 @@ is deleted @code{tdelete} returns some unspecified value not equal to
 @comment search.h
 @comment GNU
 @deftypefun void tdestroy (void *@var{vroot}, __free_fn_t @var{freefct})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 If the complete search tree has to be removed one can use
 @code{tdestroy}.  It frees all resources allocated by the @code{tsearch}
 function to generate the tree pointed to by @var{vroot}.
@@ -546,6 +617,7 @@ The current node is a leaf.
 @comment search.h
 @comment SVID
 @deftypefun void twalk (const void *@var{root}, __action_fn_t @var{action})
+@safety{@prelim{}@mtsafe{@mtsrace{:root}}@assafe{}@acsafe{}}
 For each node in the tree with a node pointed to by @var{root}, the
 @code{twalk} function calls the function provided by the parameter
 @var{action}.  For leaf nodes the function is called exactly once with

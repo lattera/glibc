@@ -1,5 +1,9 @@
 2014-01-31  Alexandre Oliva <aoliva@redhat.com>
 
+	* manual/search.texi: Document MTASC-safety properties.
+
+2014-01-31  Alexandre Oliva <aoliva@redhat.com>
+
 	* manual/resource.texi: Document MTASC-safety properties.
 
 2014-01-31  Alexandre Oliva <aoliva@redhat.com>
