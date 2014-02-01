@@ -669,7 +669,10 @@ concurrent and reentrant interactions with it, by not using it in signal
 handlers or blocking signals that might use it, and holding a lock while
 calling these functions and interacting with the terminal.  This lock
 should also be used for mutual exclusion with functions marked with
-@code{@mtasurace{:tcattr}}.
+@code{@mtasurace{:tcattr(fd)}}, where @var{fd} is a file descriptor for
+the controlling terminal.  The caller may use a single mutex for
+simplicity, or use one mutex per terminal, even if referenced by
+different file descriptors.
 
 Functions marked with @code{term} as an AC-Safety issue are supposed to
 restore terminal settings to their original state, after temporarily
@@ -698,7 +701,6 @@ taken into account in certain classes of programs:
 
 @itemize @bullet
 
-@c revisit: uses are mt-safe, distinguish from const:locale
 @item @code{locale}
 @cindex locale
 
@@ -729,7 +731,6 @@ constant in these contexts, which makes the former safe.
 @c because of the unexpected locale changes.
 
 
-@c revisit: this was incorrectly used as an mt-unsafe marker.
 @item @code{env}
 @cindex env
 
@@ -853,6 +854,47 @@ function to be Safe, but our implementation is, or vice-versa.
 For the time being, the absence of this remark does not imply the safety
 properties we documented are identical to those mandated by POSIX for
 the corresponding functions.
+
+
+@item @code{:identifier}
+@cindex :identifier
+
+Annotations may sometimes be followed by identifiers, intended to group
+several functions that e.g. access the data structures in an unsafe way,
+as in @code{race} and @code{const}, or to provide more specific
+information, such as naming a signal in a function marked with
+@code{sig}.  It is envisioned that it may be applied to @code{lock} and
+@code{corrupt} as well in the future.
+
+In most cases, the identifier will name a set of functions, but it may
+name global objects or function arguments, or identifiable properties or
+logical components associated with them, with a notation such as
+e.g. @code{:buf(arg)} to denote a buffer associated with the argument
+@var{arg}, or @code{:tcattr(fd)} to denote the terminal attributes of a
+file descriptor @var{fd}.
+
+The most common use for identifiers is to provide logical groups of
+functions and arguments that need to be protected by the same
+synchronization primitive in order to ensure safe operation in a given
+context.
+
+
+@item @code{/condition}
+@cindex /condition
+
+Some safety annotations may be conditional, in that they only apply if a
+boolean expression involving arguments, global variables or even the
+underlying kernel evaluates evaluates to true.  Such conditions as
+@code{/hurd} or @code{/!linux!bsd} indicate the preceding marker only
+applies when the underlying kernel is the HURD, or when it is neither
+Linux nor a BSD kernel, respectively.  @code{/!ps} and
+@code{/one_per_line} indicate the preceding marker only applies when
+argument @var{ps} is NULL, or global variable @var{one_per_line} is
+nonzero.
+
+When all marks that render a function unsafe are adorned with such
+conditions, and none of the named conditions hold, then the function can
+be regarded as safe.
 
 
 @end itemize
