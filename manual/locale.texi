@@ -224,6 +224,136 @@ The symbols in this section are defined in the header file @file{locale.h}.
 @comment locale.h
 @comment ISO
 @deftypefun {char *} setlocale (int @var{category}, const char *@var{locale})
+@safety{@prelim{}@mtunsafe{@mtasuconst{:@mtslocale{}} @mtsenv{}}@asunsafe{@asuinit{} @asulock{} @ascuheap{} @asucorrupt{}}@acunsafe{@acuinit{} @acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
+@c Uses of the global locale object are unguarded in functions that
+@c ought to be MT-Safe, so we're ruling out the use of this function
+@c once threads are started.  It takes a write lock itself, but it may
+@c return a pointer loaded from the global locale object after releasing
+@c the lock, or before taking it.
+@c setlocale @mtasuconst:@mtslocale @mtsenv @asuinit @ascuheap @asulock @asucorrupt @acucorrupt @acsmem @acsfd @aculock
+@c  libc_rwlock_wrlock @asulock @aculock
+@c  libc_rwlock_unlock @aculock
+@c  getenv LOCPATH @mtsenv
+@c  malloc @ascuheap @acsmem
+@c  free @ascuheap @acsmem
+@c  new_composite_name ok
+@c  setdata ok
+@c  setname ok
+@c  _nl_find_locale @mtsenv @asuinit @ascuheap @asulock @asucorrupt @acucorrupt @acsmem @acsfd @aculock
+@c   getenv LC_ALL and LANG @mtsenv
+@c   _nl_load_locale_from_archive @ascuheap @acucorrupt @acsmem @acsfd
+@c    sysconf _SC_PAGE_SIZE ok
+@c    _nl_normalize_codeset @ascuheap @acsmem
+@c     isalnum_l ok (C locale)
+@c     isdigit_l ok (C locale)
+@c     malloc @ascuheap @acsmem
+@c     tolower_l ok (C locale)
+@c    open_not_cancel_2 @acsfd
+@c    fxstat64 ok
+@c    close_not_cancel_no_status ok
+@c    __mmap64 @acsmem
+@c    calculate_head_size ok
+@c    __munmap ok
+@c    compute_hashval ok
+@c    qsort dup @acucorrupt
+@c     rangecmp ok
+@c    malloc @ascuheap @acsmem
+@c    strdup @ascuheap @acsmem
+@c    _nl_intern_locale_data @ascuheap @acsmem
+@c     malloc @ascuheap @acsmem
+@c     free @ascuheap @acsmem
+@c   _nl_expand_alias @ascuheap @asulock @acsmem @acsfd @aculock
+@c    libc_lock_lock @asulock @aculock
+@c    bsearch ok
+@c     alias_compare ok
+@c      strcasecmp ok
+@c    read_alias_file @ascuheap @asulock @acsmem @acsfd @aculock
+@c     fopen @ascuheap @asulock @acsmem @acsfd @aculock
+@c     fsetlocking ok
+@c     feof_unlocked ok
+@c     fgets_unlocked ok
+@c     isspace ok (locale mutex is locked)
+@c     extend_alias_table @ascuheap @acsmem
+@c      realloc @ascuheap @acsmem
+@c     realloc @ascuheap @acsmem
+@c     fclose @ascuheap @asulock @acsmem @acsfd @aculock
+@c     qsort @ascuheap @acsmem
+@c      alias_compare dup
+@c    libc_lock_unlock @aculock
+@c   _nl_explode_name @ascuheap @acsmem
+@c    _nl_find_language ok
+@c    _nl_normalize_codeset dup @ascuheap @acsmem
+@c   _nl_make_l10nflist @ascuheap @acsmem
+@c    malloc @ascuheap @acsmem
+@c    free @ascuheap @acsmem
+@c    __argz_stringify ok
+@c    __argz_count ok
+@c    __argz_next ok
+@c   _nl_load_locale @ascuheap @acsmem @acsfd
+@c    open_not_cancel_2 @acsfd
+@c    __fxstat64 ok
+@c    close_not_cancel_no_status ok
+@c    mmap @acsmem
+@c    malloc @ascuheap @acsmem
+@c    read_not_cancel ok
+@c    free @ascuheap @acsmem
+@c    _nl_intern_locale_data dup @ascuheap @acsmem
+@c    munmap ok
+@c   __gconv_compare_alias @asuinit @ascuheap @asucorrupt @asulock @acsmem@acucorrupt @acsfd @aculock
+@c    __gconv_read_conf @asuinit @ascuheap @asucorrupt @asulock @acsmem@acucorrupt @acsfd @aculock
+@c     (libc_once-initializes gconv_cache and gconv_path_envvar; they're
+@c      never modified afterwards)
+@c     __gconv_load_cache @ascuheap @acsmem @acsfd
+@c      getenv GCONV_PATH @mtsenv
+@c      open_not_cancel @acsfd
+@c      __fxstat64 ok
+@c      close_not_cancel_no_status ok
+@c      mmap @acsmem
+@c      malloc @ascuheap @acsmem
+@c      __read ok
+@c      free @ascuheap @acsmem
+@c      munmap ok
+@c     __gconv_get_path @asulock @ascuheap @aculock @acsmem @acsfd
+@c      getcwd @ascuheap @acsmem @acsfd
+@c      libc_lock_lock @asulock @aculock
+@c      malloc @ascuheap @acsmem
+@c      strtok_r ok
+@c      libc_lock_unlock @aculock
+@c     read_conf_file @ascuheap @asucorrupt @asulock @acsmem @acucorrupt @acsfd @aculock
+@c      fopen @ascuheap @asulock @acsmem @acsfd @aculock
+@c      fsetlocking ok
+@c      feof_unlocked ok
+@c      getdelim @ascuheap @asucorrupt @acsmem @acucorrupt
+@c      isspace_l ok (C locale)
+@c      add_alias
+@c       isspace_l ok (C locale)
+@c       toupper_l ok (C locale)
+@c       add_alias2 dup @ascuheap @acucorrupt @acsmem
+@c      add_module @ascuheap @acsmem
+@c       isspace_l ok (C locale)
+@c       toupper_l ok (C locale)
+@c       strtol ok (@mtslocale but we hold the locale lock)
+@c       tfind __gconv_alias_db ok
+@c        __gconv_alias_compare dup ok
+@c       calloc @ascuheap @acsmem
+@c       insert_module dup @ascuheap
+@c     __tfind ok (because the tree is read only by then)
+@c      __gconv_alias_compare dup ok
+@c     insert_module @ascuheap
+@c      free @ascuheap
+@c     add_alias2 @ascuheap @acucorrupt @acsmem
+@c      detect_conflict ok, reads __gconv_modules_db
+@c      malloc @ascuheap @acsmem
+@c      tsearch __gconv_alias_db @ascuheap @acucorrupt @acsmem [exclusive tree, no @mtsrace]
+@c       __gconv_alias_compare ok
+@c      free @ascuheap
+@c    __gconv_compare_alias_cache ok
+@c     find_module_idx ok
+@c    do_lookup_alias ok
+@c     __tfind ok (because the tree is read only by then)
+@c      __gconv_alias_compare ok
+@c   strndup @ascuheap @acsmem
+@c   strcasecmp_l ok (C locale)
 The function @code{setlocale} sets the current locale for category
 @var{category} to @var{locale}.  A list of all the locales the system
 provides can be created by running
@@ -414,6 +544,10 @@ according to the selected locale using this information.
 @comment locale.h
 @comment ISO
 @deftypefun {struct lconv *} localeconv (void)
+@safety{@prelim{}@mtunsafe{@mtasurace{:localeconv} @mtslocale{}}@asunsafe{}@acsafe{}}
+@c This function reads from multiple components of the locale object,
+@c without synchronization, while writing to the static buffer it uses
+@c as the return value.
 The @code{localeconv} function returns a pointer to a structure whose
 components contain information about how numeric and monetary values
 should be formatted in the current locale.
@@ -680,6 +814,9 @@ was introduced.
 @comment langinfo.h
 @comment XOPEN
 @deftypefun {char *} nl_langinfo (nl_item @var{item})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
+@c It calls _nl_langinfo_l with the current locale, which returns a
+@c pointer into constant strings defined in locale data structures.
 The @code{nl_langinfo} function can be used to access individual
 elements of the locale categories.  Unlike the @code{localeconv}
 function, which returns all the information, @code{nl_langinfo}
@@ -974,6 +1111,11 @@ locale information, making it easier for the user to format
 numbers according to these rules.
 
 @deftypefun ssize_t strfmon (char *@var{s}, size_t @var{maxsize}, const char *@var{format}, @dots{})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+@c It (and strfmon_l) both call vstrfmon_l, which, besides accessing the
+@c locale object passed to it, accesses the active locale through
+@c isdigit (but to_digit assumes ASCII digits only).  It may call
+@c __printf_fp (@mtslocale @ascuheap @acsmem) and guess_grouping (safe).
 The @code{strfmon} function is similar to the @code{strftime} function
 in that it takes a buffer, its size, a format string,
 and values to write into the buffer as text in a form specified
@@ -1185,6 +1327,10 @@ access to the corresponding locale definitions.
 @comment GNU
 @comment stdlib.h
 @deftypefun int rpmatch (const char *@var{response})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
+@c Calls nl_langinfo with YESEXPR and NOEXPR, triggering @mtslocale but
+@c it's regcomp and regexec that bring in all of the safety issues.
+@c regfree is also called, but it doesn't introduce any further issues.
 The function @code{rpmatch} checks the string in @var{response} whether
 or not it is a correct yes-or-no answer and if yes, which one.  The
 check uses the @code{YESEXPR} and @code{NOEXPR} data in the
