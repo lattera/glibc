@@ -148,6 +148,8 @@ Everything described in this section is declared in the header file
 @comment stdio.h
 @comment ISO
 @deftypefun {FILE *} fopen (const char *@var{filename}, const char *@var{opentype})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@acsmem{} @acsfd{} @aculock{}}}
+@c fopen may leak the list lock if cancelled within _IO_link_in.
 The @code{fopen} function opens a stream for I/O to the file
 @var{filename}, and returns a pointer to the stream.
 
@@ -265,6 +267,7 @@ Locks}.
 @comment stdio.h
 @comment Unix98
 @deftypefun {FILE *} fopen64 (const char *@var{filename}, const char *@var{opentype})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@acsmem{} @acsfd{} @aculock{}}}
 This function is similar to @code{fopen} but the stream it returns a
 pointer for is opened using @code{open64}.  Therefore this stream can be
 used even on files larger than @math{2^31} bytes on 32 bit machines.
@@ -294,6 +297,16 @@ resource limit; @pxref{Limits on Resources}.
 @comment stdio.h
 @comment ISO
 @deftypefun {FILE *} freopen (const char *@var{filename}, const char *@var{opentype}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{} @acsfd{}}}
+@c Like most I/O operations, this one is guarded by a recursive lock,
+@c released even upon cancellation, but cancellation may leak file
+@c descriptors and leave the stream in an inconsistent state (e.g.,
+@c still bound to the closed descriptor).  Also, if the stream is
+@c part-way through a significant update (say running freopen) when a
+@c signal handler calls freopen again on the same stream, the result is
+@c likely to be an inconsistent stream, and the possibility of closing
+@c twice file descriptor number that the stream used to use, the second
+@c time when it might have already been reused by another thread.
 This function is like a combination of @code{fclose} and @code{fopen}.
 It first closes the stream referred to by @var{stream}, ignoring any
 errors that are detected in the process.  (Because errors are ignored,
@@ -320,6 +333,7 @@ interface replaces transparently the old interface.
 @comment stdio.h
 @comment Unix98
 @deftypefun {FILE *} freopen64 (const char *@var{filename}, const char *@var{opentype}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{} @acsfd{}}}
 This function is similar to @code{freopen}.  The only difference is that
 on 32 bit machine the stream returned is able to read beyond the
 @math{2^31} bytes limits imposed by the normal interface.  It should be
@@ -341,6 +355,7 @@ descriptor and these functions are also available in @theglibc{}.
 @comment stdio_ext.h
 @comment GNU
 @deftypefun int __freadable (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{__freadable} function determines whether the stream
 @var{stream} was opened to allow reading.  In this case the return value
 is nonzero.  For write-only streams the function returns zero.
@@ -351,6 +366,7 @@ This function is declared in @file{stdio_ext.h}.
 @comment stdio_ext.h
 @comment GNU
 @deftypefun int __fwritable (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{__fwritable} function determines whether the stream
 @var{stream} was opened to allow writing.  In this case the return value
 is nonzero.  For read-only streams the function returns zero.
@@ -364,6 +380,7 @@ They provide even finer-grained information.
 @comment stdio_ext.h
 @comment GNU
 @deftypefun int __freading (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{__freading} function determines whether the stream
 @var{stream} was last read from or whether it is opened read-only.  In
 this case the return value is nonzero, otherwise it is zero.
@@ -377,6 +394,7 @@ This function is declared in @file{stdio_ext.h}.
 @comment stdio_ext.h
 @comment GNU
 @deftypefun int __fwriting (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{__fwriting} function determines whether the stream
 @var{stream} was last written to or whether it is opened write-only.  In
 this case the return value is nonzero, otherwise it is zero.
@@ -396,6 +414,21 @@ cannot perform any additional operations on it.
 @comment stdio.h
 @comment ISO
 @deftypefun int fclose (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{} @acsfd{}}}
+@c After fclose, it is undefined behavior to use the stream it points
+@c to.  Therefore, one must only call fclose when the stream is
+@c otherwise unused.  Concurrent uses started before will complete
+@c successfully because of the lock, which makes it MT-Safe.  Calling it
+@c from a signal handler is perfectly safe if the stream is known to be
+@c no longer used, which is a precondition for fclose to be safe in the
+@c first place; since this is no further requirement, fclose is safe for
+@c use in async signals too.  After calling fclose, you can no longer
+@c use the stream, not even to fclose it again, so its memory and file
+@c descriptor may leak if fclose is canceled before @c releasing them.
+@c That the stream must be unused and it becomes unused after the call
+@c is what would enable fclose to be AS- and AC-Safe while freopen
+@c isn't.  However, because of the possibility of leaving __gconv_lock
+@c taken upon cancellation, AC-Safety is lost.
 This function causes @var{stream} to be closed and the connection to
 the corresponding file to be broken.  Any buffered output is written
 and any buffered input is discarded.  The @code{fclose} function returns
@@ -418,6 +451,12 @@ another function.
 @comment stdio.h
 @comment GNU
 @deftypefun int fcloseall (void)
+@safety{@prelim{}@mtunsafe{@mtasurace{:streams}}@asunsafe{}@acsafe{}}
+@c Like fclose, using any previously-opened streams after fcloseall is
+@c undefined.  However, the implementation of fcloseall isn't equivalent
+@c to calling fclose for all streams: it just flushes and unbuffers all
+@c streams, without any locking.  It's the flushing without locking that
+@c makes it unsafe.
 This function causes all open streams of the process to be closed and
 the connection to corresponding files to be broken.  All buffered data
 is written and any buffered input is discarded.  The @code{fcloseall}
@@ -474,6 +513,9 @@ perform the stream locking in the application code.
 @comment stdio.h
 @comment POSIX
 @deftypefun void flockfile (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@assafe{}@acunsafe{@aculock{}}}
+@c There's no way to tell whether the lock was acquired before or after
+@c cancellation so as to unlock only when appropriate.
 The @code{flockfile} function acquires the internal locking object
 associated with the stream @var{stream}.  This ensures that no other
 thread can explicitly through @code{flockfile}/@code{ftrylockfile} or
@@ -485,6 +527,7 @@ thread will block until the lock is acquired.  An explicit call to
 @comment stdio.h
 @comment POSIX
 @deftypefun int ftrylockfile (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@assafe{}@acunsafe{@aculock{}}}
 The @code{ftrylockfile} function tries to acquire the internal locking
 object associated with the stream @var{stream} just like
 @code{flockfile}.  But unlike @code{flockfile} this function does not
@@ -496,6 +539,7 @@ another thread.
 @comment stdio.h
 @comment POSIX
 @deftypefun void funlockfile (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@assafe{}@acunsafe{@aculock{}}}
 The @code{funlockfile} function releases the internal locking object of
 the stream @var{stream}. The stream must have been locked before by a
 call to @code{flockfile} or a successful call of @code{ftrylockfile}.
@@ -621,6 +665,15 @@ was introduced in Solaris and is available in @theglibc{} as well.
 @comment stdio_ext.h
 @comment GNU
 @deftypefun int __fsetlocking (FILE *@var{stream}, int @var{type})
+@safety{@prelim{}@mtsafe{@mtsrace{:stream}}@asunsafe{@asulock{}}@acsafe{}}
+@c Changing the implicit-locking status of a stream while it's in use by
+@c another thread may cause a lock to be implicitly acquired and not
+@c released, or vice-versa.  This function should probably hold the lock
+@c while changing this setting, to make sure we don't change it while
+@c there are any concurrent uses.  Meanwhile, callers should acquire the
+@c lock themselves to be safe, and even concurrent uses with external
+@c locking will be fine, as long as functions that require external
+@c locking are not called without holding locks.
 
 The @code{__fsetlocking} function can be used to select whether the
 stream operations will implicitly acquire the locking object of the
@@ -725,6 +778,10 @@ will simply be strange or the application will simply crash.  The
 @comment wchar.h
 @comment ISO
 @deftypefun int fwide (FILE *@var{stream}, int @var{mode})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{}}}
+@c Querying is always safe, but changing the stream when it's in use
+@c upthread may be problematic.  Like most lock-acquiring functions,
+@c this one may leak the lock if canceled.
 
 The @code{fwide} function can be used to set and query the state of the
 orientation of the stream @var{stream}.  If the @var{mode} parameter has
@@ -811,6 +868,16 @@ These narrow streams functions are declared in the header file
 @comment stdio.h
 @comment ISO
 @deftypefun int fputc (int @var{c}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{} @aculock{}}}
+@c If the stream is in use when interrupted by a signal, the recursive
+@c lock won't help ensure the stream is consistent; indeed, if fputc
+@c gets a signal precisely before the post-incremented _IO_write_ptr
+@c value is stored, we may overwrite the interrupted write.  Conversely,
+@c depending on compiler optimizations, the incremented _IO_write_ptr
+@c may be stored before the character is stored in the buffer,
+@c corrupting the stream if async cancel hits between the two stores.
+@c There may be other reasons for AS- and AC-unsafety in the overflow
+@c cases.
 The @code{fputc} function converts the character @var{c} to type
 @code{unsigned char}, and writes it to the stream @var{stream}.
 @code{EOF} is returned if a write error occurs; otherwise the
@@ -820,6 +887,7 @@ character @var{c} is returned.
 @comment wchar.h
 @comment ISO
 @deftypefun wint_t fputwc (wchar_t @var{wc}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{} @aculock{}}}
 The @code{fputwc} function writes the wide character @var{wc} to the
 stream @var{stream}.  @code{WEOF} is returned if a write error occurs;
 otherwise the character @var{wc} is returned.
@@ -828,6 +896,10 @@ otherwise the character @var{wc} is returned.
 @comment stdio.h
 @comment POSIX
 @deftypefun int fputc_unlocked (int @var{c}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{@mtsrace{:stream}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
+@c The unlocked functions can't possibly satisfy the MT-Safety
+@c requirements on their own, because they require external locking for
+@c safety.
 The @code{fputc_unlocked} function is equivalent to the @code{fputc}
 function except that it does not implicitly lock the stream.
 @end deftypefun
@@ -835,6 +907,7 @@ function except that it does not implicitly lock the stream.
 @comment wchar.h
 @comment POSIX
 @deftypefun wint_t fputwc_unlocked (wchar_t @var{wc}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{@mtsrace{:stream}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 The @code{fputwc_unlocked} function is equivalent to the @code{fputwc}
 function except that it does not implicitly lock the stream.
 
@@ -844,6 +917,7 @@ This function is a GNU extension.
 @comment stdio.h
 @comment ISO
 @deftypefun int putc (int @var{c}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{} @aculock{}}}
 This is just like @code{fputc}, except that most systems implement it as
 a macro, making it faster.  One consequence is that it may evaluate the
 @var{stream} argument more than once, which is an exception to the
@@ -854,6 +928,7 @@ use for writing a single character.
 @comment wchar.h
 @comment ISO
 @deftypefun wint_t putwc (wchar_t @var{wc}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{} @aculock{}}}
 This is just like @code{fputwc}, except that it can be implement as
 a macro, making it faster.  One consequence is that it may evaluate the
 @var{stream} argument more than once, which is an exception to the
@@ -864,6 +939,7 @@ use for writing a single wide character.
 @comment stdio.h
 @comment POSIX
 @deftypefun int putc_unlocked (int @var{c}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{@mtsrace{:stream}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 The @code{putc_unlocked} function is equivalent to the @code{putc}
 function except that it does not implicitly lock the stream.
 @end deftypefun
@@ -871,6 +947,7 @@ function except that it does not implicitly lock the stream.
 @comment wchar.h
 @comment GNU
 @deftypefun wint_t putwc_unlocked (wchar_t @var{wc}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{@mtsrace{:stream}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 The @code{putwc_unlocked} function is equivalent to the @code{putwc}
 function except that it does not implicitly lock the stream.
 
@@ -880,6 +957,7 @@ This function is a GNU extension.
 @comment stdio.h
 @comment ISO
 @deftypefun int putchar (int @var{c})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{} @aculock{}}}
 The @code{putchar} function is equivalent to @code{putc} with
 @code{stdout} as the value of the @var{stream} argument.
 @end deftypefun
@@ -887,6 +965,7 @@ The @code{putchar} function is equivalent to @code{putc} with
 @comment wchar.h
 @comment ISO
 @deftypefun wint_t putwchar (wchar_t @var{wc})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{} @aculock{}}}
 The @code{putwchar} function is equivalent to @code{putwc} with
 @code{stdout} as the value of the @var{stream} argument.
 @end deftypefun
@@ -894,6 +973,7 @@ The @code{putwchar} function is equivalent to @code{putwc} with
 @comment stdio.h
 @comment POSIX
 @deftypefun int putchar_unlocked (int @var{c})
+@safety{@prelim{}@mtunsafe{@mtasurace{:stdout}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 The @code{putchar_unlocked} function is equivalent to the @code{putchar}
 function except that it does not implicitly lock the stream.
 @end deftypefun
@@ -901,6 +981,7 @@ function except that it does not implicitly lock the stream.
 @comment wchar.h
 @comment GNU
 @deftypefun wint_t putwchar_unlocked (wchar_t @var{wc})
+@safety{@prelim{}@mtunsafe{@mtasurace{:stdout}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 The @code{putwchar_unlocked} function is equivalent to the @code{putwchar}
 function except that it does not implicitly lock the stream.
 
@@ -910,6 +991,7 @@ This function is a GNU extension.
 @comment stdio.h
 @comment ISO
 @deftypefun int fputs (const char *@var{s}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{} @aculock{}}}
 The function @code{fputs} writes the string @var{s} to the stream
 @var{stream}.  The terminating null character is not written.
 This function does @emph{not} add a newline character, either.
@@ -933,6 +1015,7 @@ outputs the text @samp{Are you hungry?} followed by a newline.
 @comment wchar.h
 @comment ISO
 @deftypefun int fputws (const wchar_t *@var{ws}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{} @aculock{}}}
 The function @code{fputws} writes the wide character string @var{ws} to
 the stream @var{stream}.  The terminating null character is not written.
 This function does @emph{not} add a newline character, either.  It
@@ -945,6 +1028,7 @@ a non-negative value.
 @comment stdio.h
 @comment GNU
 @deftypefun int fputs_unlocked (const char *@var{s}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{@mtsrace{:stream}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 The @code{fputs_unlocked} function is equivalent to the @code{fputs}
 function except that it does not implicitly lock the stream.
 
@@ -954,6 +1038,7 @@ This function is a GNU extension.
 @comment wchar.h
 @comment GNU
 @deftypefun int fputws_unlocked (const wchar_t *@var{ws}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{@mtsrace{:stream}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 The @code{fputws_unlocked} function is equivalent to the @code{fputws}
 function except that it does not implicitly lock the stream.
 
@@ -963,6 +1048,7 @@ This function is a GNU extension.
 @comment stdio.h
 @comment ISO
 @deftypefun int puts (const char *@var{s})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 The @code{puts} function writes the string @var{s} to the stream
 @code{stdout} followed by a newline.  The terminating null character of
 the string is not written.  (Note that @code{fputs} does @emph{not}
@@ -982,6 +1068,7 @@ outputs the text @samp{This is a message.} followed by a newline.
 @comment stdio.h
 @comment SVID
 @deftypefun int putw (int @var{w}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 This function writes the word @var{w} (that is, an @code{int}) to
 @var{stream}.  It is provided for compatibility with SVID, but we
 recommend you use @code{fwrite} instead (@pxref{Block Input/Output}).
@@ -1014,6 +1101,11 @@ it will fit in a @samp{char} variable without loss of information.
 @comment stdio.h
 @comment ISO
 @deftypefun int fgetc (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
+@c Same caveats as fputc, but instead of losing a write in case of async
+@c signals, we may read the same character more than once, and the
+@c stream may be left in odd states due to cancellation in the underflow
+@c cases.
 This function reads the next character as an @code{unsigned char} from
 the stream @var{stream} and returns its value, converted to an
 @code{int}.  If an end-of-file condition or read error occurs,
@@ -1023,6 +1115,7 @@ the stream @var{stream} and returns its value, converted to an
 @comment wchar.h
 @comment ISO
 @deftypefun wint_t fgetwc (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 This function reads the next wide character from the stream @var{stream}
 and returns its value.  If an end-of-file condition or read error
 occurs, @code{WEOF} is returned instead.
@@ -1031,6 +1124,7 @@ occurs, @code{WEOF} is returned instead.
 @comment stdio.h
 @comment POSIX
 @deftypefun int fgetc_unlocked (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{@mtsrace{:stream}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 The @code{fgetc_unlocked} function is equivalent to the @code{fgetc}
 function except that it does not implicitly lock the stream.
 @end deftypefun
@@ -1038,6 +1132,7 @@ function except that it does not implicitly lock the stream.
 @comment wchar.h
 @comment GNU
 @deftypefun wint_t fgetwc_unlocked (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{@mtsrace{:stream}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 The @code{fgetwc_unlocked} function is equivalent to the @code{fgetwc}
 function except that it does not implicitly lock the stream.
 
@@ -1047,6 +1142,7 @@ This function is a GNU extension.
 @comment stdio.h
 @comment ISO
 @deftypefun int getc (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 This is just like @code{fgetc}, except that it is permissible (and
 typical) for it to be implemented as a macro that evaluates the
 @var{stream} argument more than once.  @code{getc} is often highly
@@ -1057,6 +1153,7 @@ character.
 @comment wchar.h
 @comment ISO
 @deftypefun wint_t getwc (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 This is just like @code{fgetwc}, except that it is permissible for it to
 be implemented as a macro that evaluates the @var{stream} argument more
 than once.  @code{getwc} can be highly optimized, so it is usually the
@@ -1066,6 +1163,7 @@ best function to use to read a single wide character.
 @comment stdio.h
 @comment POSIX
 @deftypefun int getc_unlocked (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{@mtsrace{:stream}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 The @code{getc_unlocked} function is equivalent to the @code{getc}
 function except that it does not implicitly lock the stream.
 @end deftypefun
@@ -1073,6 +1171,7 @@ function except that it does not implicitly lock the stream.
 @comment wchar.h
 @comment GNU
 @deftypefun wint_t getwc_unlocked (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{@mtsrace{:stream}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 The @code{getwc_unlocked} function is equivalent to the @code{getwc}
 function except that it does not implicitly lock the stream.
 
@@ -1082,6 +1181,7 @@ This function is a GNU extension.
 @comment stdio.h
 @comment ISO
 @deftypefun int getchar (void)
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 The @code{getchar} function is equivalent to @code{getc} with @code{stdin}
 as the value of the @var{stream} argument.
 @end deftypefun
@@ -1089,6 +1189,7 @@ as the value of the @var{stream} argument.
 @comment wchar.h
 @comment ISO
 @deftypefun wint_t getwchar (void)
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 The @code{getwchar} function is equivalent to @code{getwc} with @code{stdin}
 as the value of the @var{stream} argument.
 @end deftypefun
@@ -1096,6 +1197,7 @@ as the value of the @var{stream} argument.
 @comment stdio.h
 @comment POSIX
 @deftypefun int getchar_unlocked (void)
+@safety{@prelim{}@mtunsafe{@mtasurace{:stdin}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 The @code{getchar_unlocked} function is equivalent to the @code{getchar}
 function except that it does not implicitly lock the stream.
 @end deftypefun
@@ -1103,6 +1205,7 @@ function except that it does not implicitly lock the stream.
 @comment wchar.h
 @comment GNU
 @deftypefun wint_t getwchar_unlocked (void)
+@safety{@prelim{}@mtunsafe{@mtasurace{:stdin}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 The @code{getwchar_unlocked} function is equivalent to the @code{getwchar}
 function except that it does not implicitly lock the stream.
 
@@ -1145,6 +1248,7 @@ y_or_n_p (const char *question)
 @comment stdio.h
 @comment SVID
 @deftypefun int getw (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 This function reads a word (that is, an @code{int}) from @var{stream}.
 It's provided for compatibility with SVID.  We recommend you use
 @code{fread} instead (@pxref{Block Input/Output}).  Unlike @code{getc},
@@ -1173,6 +1277,12 @@ All these functions are declared in @file{stdio.h}.
 @comment stdio.h
 @comment GNU
 @deftypefun ssize_t getline (char **@var{lineptr}, size_t *@var{n}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@aculock{} @acucorrupt{} @acsmem{}}}
+@c Besides the usual possibility of getting an inconsistent stream in a
+@c signal handler or leaving it inconsistent in case of cancellation,
+@c the possibility of leaving a dangling pointer upon cancellation
+@c between reallocing the buffer at *lineptr and updating the pointer
+@c brings about another case of @acucorrupt.
 This function reads an entire line from @var{stream}, storing the text
 (including the newline and a terminating null character) in a buffer
 and storing the buffer address in @code{*@var{lineptr}}.
@@ -1208,6 +1318,8 @@ If an error occurs or end of file is reached without any bytes read,
 @comment stdio.h
 @comment GNU
 @deftypefun ssize_t getdelim (char **@var{lineptr}, size_t *@var{n}, int @var{delimiter}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@aculock{} @acucorrupt{} @acsmem{}}}
+@c See the getline @acucorrupt note.
 This function is like @code{getline} except that the character which
 tells it to stop reading is not necessarily newline.  The argument
 @var{delimiter} specifies the delimiter character; @code{getdelim} keeps
@@ -1232,6 +1344,7 @@ getline (char **lineptr, size_t *n, FILE *stream)
 @comment stdio.h
 @comment ISO
 @deftypefun {char *} fgets (char *@var{s}, int @var{count}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 The @code{fgets} function reads characters from the stream @var{stream}
 up to and including a newline character and stores them in the string
 @var{s}, adding a null character to mark the end of the string.  You
@@ -1255,6 +1368,7 @@ error message.  We recommend using @code{getline} instead of @code{fgets}.
 @comment wchar.h
 @comment ISO
 @deftypefun {wchar_t *} fgetws (wchar_t *@var{ws}, int @var{count}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 The @code{fgetws} function reads wide characters from the stream
 @var{stream} up to and including a newline character and stores them in
 the string @var{ws}, adding a null wide character to mark the end of the
@@ -1280,6 +1394,7 @@ message.
 @comment stdio.h
 @comment GNU
 @deftypefun {char *} fgets_unlocked (char *@var{s}, int @var{count}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{@mtsrace{:stream}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 The @code{fgets_unlocked} function is equivalent to the @code{fgets}
 function except that it does not implicitly lock the stream.
 
@@ -1289,6 +1404,7 @@ This function is a GNU extension.
 @comment wchar.h
 @comment GNU
 @deftypefun {wchar_t *} fgetws_unlocked (wchar_t *@var{ws}, int @var{count}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{@mtsrace{:stream}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 The @code{fgetws_unlocked} function is equivalent to the @code{fgetws}
 function except that it does not implicitly lock the stream.
 
@@ -1298,6 +1414,7 @@ This function is a GNU extension.
 @comment stdio.h
 @comment ISO
 @deftypefn {Deprecated function} {char *} gets (char *@var{s})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 The function @code{gets} reads characters from the stream @code{stdin}
 up to the next newline character, and stores them in the string @var{s}.
 The newline character is discarded (note that this differs from the
@@ -1388,6 +1505,7 @@ reverses the action of @code{getc}.
 @comment stdio.h
 @comment ISO
 @deftypefun int ungetc (int @var{c}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 The @code{ungetc} function pushes back the character @var{c} onto the
 input stream @var{stream}.  So the next input from @var{stream} will
 read @var{c} before anything else.
@@ -1425,6 +1543,7 @@ will encounter end of file.
 @comment wchar.h
 @comment ISO
 @deftypefun wint_t ungetwc (wint_t @var{wc}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 The @code{ungetwc} function behaves just like @code{ungetc} just that it
 pushes back a wide character.
 @end deftypefun
@@ -1483,6 +1602,7 @@ These functions are declared in @file{stdio.h}.
 @comment stdio.h
 @comment ISO
 @deftypefun size_t fread (void *@var{data}, size_t @var{size}, size_t @var{count}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 This function reads up to @var{count} objects of size @var{size} into
 the array @var{data}, from the stream @var{stream}.  It returns the
 number of objects actually read, which might be less than @var{count} if
@@ -1498,6 +1618,7 @@ object.  Therefore, the stream remains at the actual end of the file.
 @comment stdio.h
 @comment GNU
 @deftypefun size_t fread_unlocked (void *@var{data}, size_t @var{size}, size_t @var{count}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{@mtsrace{:stream}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 The @code{fread_unlocked} function is equivalent to the @code{fread}
 function except that it does not implicitly lock the stream.
 
@@ -1507,6 +1628,7 @@ This function is a GNU extension.
 @comment stdio.h
 @comment ISO
 @deftypefun size_t fwrite (const void *@var{data}, size_t @var{size}, size_t @var{count}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 This function writes up to @var{count} objects of size @var{size} from
 the array @var{data}, to the stream @var{stream}.  The return value is
 normally @var{count}, if the call succeeds.  Any other value indicates
@@ -1516,6 +1638,7 @@ some sort of error, such as running out of space.
 @comment stdio.h
 @comment GNU
 @deftypefun size_t fwrite_unlocked (const void *@var{data}, size_t @var{size}, size_t @var{count}, FILE *@var{stream})
+@safety{@prelim{}@mtsafe{@mtsrace{:stream}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 The @code{fwrite_unlocked} function is equivalent to the @code{fwrite}
 function except that it does not implicitly lock the stream.
 
@@ -2257,6 +2380,7 @@ just include @file{stdio.h}.
 @comment stdio.h
 @comment ISO
 @deftypefun int printf (const char *@var{template}, @dots{})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
 The @code{printf} function prints the optional arguments under the
 control of the template string @var{template} to the stream
 @code{stdout}.  It returns the number of characters printed, or a
@@ -2266,6 +2390,7 @@ negative value if there was an output error.
 @comment wchar.h
 @comment ISO
 @deftypefun int wprintf (const wchar_t *@var{template}, @dots{})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
 The @code{wprintf} function prints the optional arguments under the
 control of the wide template string @var{template} to the stream
 @code{stdout}.  It returns the number of wide characters printed, or a
@@ -2275,6 +2400,7 @@ negative value if there was an output error.
 @comment stdio.h
 @comment ISO
 @deftypefun int fprintf (FILE *@var{stream}, const char *@var{template}, @dots{})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
 This function is just like @code{printf}, except that the output is
 written to the stream @var{stream} instead of @code{stdout}.
 @end deftypefun
@@ -2282,6 +2408,7 @@ written to the stream @var{stream} instead of @code{stdout}.
 @comment wchar.h
 @comment ISO
 @deftypefun int fwprintf (FILE *@var{stream}, const wchar_t *@var{template}, @dots{})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
 This function is just like @code{wprintf}, except that the output is
 written to the stream @var{stream} instead of @code{stdout}.
 @end deftypefun
@@ -2289,6 +2416,7 @@ written to the stream @var{stream} instead of @code{stdout}.
 @comment stdio.h
 @comment ISO
 @deftypefun int sprintf (char *@var{s}, const char *@var{template}, @dots{})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 This is like @code{printf}, except that the output is stored in the character
 array @var{s} instead of written to a stream.  A null character is written
 to mark the end of the string.
@@ -2313,6 +2441,7 @@ described below.
 @comment wchar.h
 @comment GNU
 @deftypefun int swprintf (wchar_t *@var{s}, size_t @var{size}, const wchar_t *@var{template}, @dots{})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 This is like @code{wprintf}, except that the output is stored in the
 wide character array @var{ws} instead of written to a stream.  A null
 wide character is written to mark the end of the string.  The @var{size}
@@ -2337,6 +2466,7 @@ again and decided to not define a function exactly corresponding to
 @comment stdio.h
 @comment GNU
 @deftypefun int snprintf (char *@var{s}, size_t @var{size}, const char *@var{template}, @dots{})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 The @code{snprintf} function is similar to @code{sprintf}, except that
 the @var{size} argument specifies the maximum number of characters to
 produce.  The trailing null character is counted towards this limit, so
@@ -2407,6 +2537,7 @@ in dynamically allocated memory.
 @comment stdio.h
 @comment GNU
 @deftypefun int asprintf (char **@var{ptr}, const char *@var{template}, @dots{})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 This function is similar to @code{sprintf}, except that it dynamically
 allocates a string (as with @code{malloc}; @pxref{Unconstrained
 Allocation}) to hold the output, instead of putting the output in a
@@ -2439,6 +2570,7 @@ make_message (char *name, char *value)
 @comment stdio.h
 @comment GNU
 @deftypefun int obstack_printf (struct obstack *@var{obstack}, const char *@var{template}, @dots{})
+@safety{@prelim{}@mtsafe{@mtsrace{:obstack} @mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{}}}
 This function is similar to @code{asprintf}, except that it uses the
 obstack @var{obstack} to allocate the space.  @xref{Obstacks}.
 
@@ -2509,6 +2641,7 @@ Prototypes for these functions are declared in @file{stdio.h}.
 @comment stdio.h
 @comment ISO
 @deftypefun int vprintf (const char *@var{template}, va_list @var{ap})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
 This function is similar to @code{printf} except that, instead of taking
 a variable number of arguments directly, it takes an argument list
 pointer @var{ap}.
@@ -2517,6 +2650,7 @@ pointer @var{ap}.
 @comment wchar.h
 @comment ISO
 @deftypefun int vwprintf (const wchar_t *@var{template}, va_list @var{ap})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
 This function is similar to @code{wprintf} except that, instead of taking
 a variable number of arguments directly, it takes an argument list
 pointer @var{ap}.
@@ -2525,6 +2659,48 @@ pointer @var{ap}.
 @comment stdio.h
 @comment ISO
 @deftypefun int vfprintf (FILE *@var{stream}, const char *@var{template}, va_list @var{ap})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
+@c Although vfprintf sets up a cleanup region to release the lock on the
+@c output stream, it doesn't use it to release args_value or string in
+@c case of cancellation.  This doesn't make it unsafe, but cancelling it
+@c may leak memory.  The unguarded use of __printf_function_table is
+@c also of concern for all callers.
+@c _itoa ok
+@c   _udiv_qrnnd_preinv ok
+@c group_number ok
+@c _i18n_number_rewrite
+@c   __wctrans ok
+@c   __towctrans @mtslocale
+@c   __wcrtomb ok? dup below
+@c   outdigit_value ok
+@c   outdigitwc_value ok
+@c outchar ok
+@c outstring ok
+@c PAD ok
+@c __printf_fp @mtslocale @ascuheap @acsmem
+@c __printf_fphex @mtslocale
+@c __readonly_area
+@c   [GNU/Linux] fopen, strtoul, free
+@c __strerror_r ok if no translation, check otherwise
+@c __btowc ? gconv-modules
+@c __wcrtomb ok (not using internal state) gconv-modules
+@c ARGCHECK
+@c UNBUFFERED_P (tested before taking the stream lock)
+@c buffered_vfprintf ok
+@c __find_spec(wc|mb)
+@c read_int
+@c __libc_use_alloca
+@c process_arg
+@c process_string_arg
+@c extend_alloca
+@c __parse_one_spec(wc|mb)
+@c *__printf_arginfo_table unguarded
+@c __printf_va_arg_table-> unguarded
+@c *__printf_function_table unguarded
+@c done_add
+@c printf_unknown
+@c   outchar
+@c   _itoa_word
 This is the equivalent of @code{fprintf} with the variable argument list
 specified directly as for @code{vprintf}.
 @end deftypefun
@@ -2532,6 +2708,7 @@ specified directly as for @code{vprintf}.
 @comment wchar.h
 @comment ISO
 @deftypefun int vfwprintf (FILE *@var{stream}, const wchar_t *@var{template}, va_list @var{ap})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
 This is the equivalent of @code{fwprintf} with the variable argument list
 specified directly as for @code{vwprintf}.
 @end deftypefun
@@ -2539,6 +2716,7 @@ specified directly as for @code{vwprintf}.
 @comment stdio.h
 @comment ISO
 @deftypefun int vsprintf (char *@var{s}, const char *@var{template}, va_list @var{ap})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 This is the equivalent of @code{sprintf} with the variable argument list
 specified directly as for @code{vprintf}.
 @end deftypefun
@@ -2546,6 +2724,7 @@ specified directly as for @code{vprintf}.
 @comment wchar.h
 @comment GNU
 @deftypefun int vswprintf (wchar_t *@var{s}, size_t @var{size}, const wchar_t *@var{template}, va_list @var{ap})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 This is the equivalent of @code{swprintf} with the variable argument list
 specified directly as for @code{vwprintf}.
 @end deftypefun
@@ -2553,6 +2732,7 @@ specified directly as for @code{vwprintf}.
 @comment stdio.h
 @comment GNU
 @deftypefun int vsnprintf (char *@var{s}, size_t @var{size}, const char *@var{template}, va_list @var{ap})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 This is the equivalent of @code{snprintf} with the variable argument list
 specified directly as for @code{vprintf}.
 @end deftypefun
@@ -2560,6 +2740,7 @@ specified directly as for @code{vprintf}.
 @comment stdio.h
 @comment GNU
 @deftypefun int vasprintf (char **@var{ptr}, const char *@var{template}, va_list @var{ap})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 The @code{vasprintf} function is the equivalent of @code{asprintf} with the
 variable argument list specified directly as for @code{vprintf}.
 @end deftypefun
@@ -2567,6 +2748,10 @@ variable argument list specified directly as for @code{vprintf}.
 @comment stdio.h
 @comment GNU
 @deftypefun int obstack_vprintf (struct obstack *@var{obstack}, const char *@var{template}, va_list @var{ap})
+@safety{@prelim{}@mtsafe{@mtsrace{:obstack} @mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{}}}
+@c The obstack is not guarded by mutexes, it might be at an inconsistent
+@c state within a signal handler, and it could be left at an
+@c inconsistent state in case of cancellation.
 The @code{obstack_vprintf} function is the equivalent of
 @code{obstack_printf} with the variable argument list specified directly
 as for @code{vprintf}.@refill
@@ -2639,6 +2824,7 @@ file @file{printf.h}.
 @comment printf.h
 @comment GNU
 @deftypefun size_t parse_printf_format (const char *@var{template}, size_t @var{n}, int *@var{argtypes})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
 This function returns information about the number and types of
 arguments expected by the @code{printf} template string @var{template}.
 The information is stored in the array @var{argtypes}; each element of
@@ -2879,6 +3065,12 @@ The function to register a new output conversion is
 @comment printf.h
 @comment GNU
 @deftypefun int register_printf_function (int @var{spec}, printf_function @var{handler-function}, printf_arginfo_function @var{arginfo-function})
+@safety{@prelim{}@mtunsafe{@mtasuconst{:printfext}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@acsmem{} @aculock{}}}
+@c This function is guarded by the global non-recursive libc lock, but
+@c users of the variables it sets aren't, and those should be MT-Safe,
+@c so we're ruling out the use of this extension with threads.  Calling
+@c it from a signal handler may self-deadlock, and cancellation may
+@c leave the lock held, besides leaking allocated memory.
 This function defines the conversion specifier character @var{spec}.
 Thus, if @var{spec} is @code{'Y'}, it defines the conversion @samp{%Y}.
 You can redefine the built-in conversions like @samp{%s}, but flag
@@ -3125,6 +3317,12 @@ which implement a special way to print floating-point numbers.
 @comment printf.h
 @comment GNU
 @deftypefun int printf_size (FILE *@var{fp}, const struct printf_info *@var{info}, const void *const *@var{args})
+@safety{@prelim{}@mtsafe{@mtsrace{:fp} @mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acsmem{} @acucorrupt{}}}
+@c This is meant to be called by vfprintf, that should hold the lock on
+@c the stream, but if this function is called directly, output will be
+@c racy, besides the uses of the global locale object while other
+@c threads may be changing it and the possbility of leaving the stream
+@c object in an inconsistent state in case of cancellation.
 Print a given floating point number as for the format @code{%f} except
 that there is a postfix character indicating the divisor for the
 number to make this less than 1000.  There are two possible divisors:
@@ -3183,6 +3381,7 @@ provide the function which returns information about the arguments.
 @comment printf.h
 @comment GNU
 @deftypefun int printf_size_info (const struct printf_info *@var{info}, size_t @var{n}, int *@var{argtypes})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function will return in @var{argtypes} the information about the
 used parameters in the way the @code{vfprintf} implementation expects
 it.  The format always takes one argument.
@@ -3803,6 +4002,7 @@ Prototypes for these functions are in the header file @file{stdio.h}.
 @comment stdio.h
 @comment ISO
 @deftypefun int scanf (const char *@var{template}, @dots{})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
 The @code{scanf} function reads formatted input from the stream
 @code{stdin} under the control of the template string @var{template}.
 The optional arguments are pointers to the places which receive the
@@ -3817,6 +4017,7 @@ template, then @code{EOF} is returned.
 @comment wchar.h
 @comment ISO
 @deftypefun int wscanf (const wchar_t *@var{template}, @dots{})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
 The @code{wscanf} function reads formatted input from the stream
 @code{stdin} under the control of the template string @var{template}.
 The optional arguments are pointers to the places which receive the
@@ -3831,6 +4032,7 @@ template, then @code{WEOF} is returned.
 @comment stdio.h
 @comment ISO
 @deftypefun int fscanf (FILE *@var{stream}, const char *@var{template}, @dots{})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
 This function is just like @code{scanf}, except that the input is read
 from the stream @var{stream} instead of @code{stdin}.
 @end deftypefun
@@ -3838,6 +4040,7 @@ from the stream @var{stream} instead of @code{stdin}.
 @comment wchar.h
 @comment ISO
 @deftypefun int fwscanf (FILE *@var{stream}, const wchar_t *@var{template}, @dots{})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
 This function is just like @code{wscanf}, except that the input is read
 from the stream @var{stream} instead of @code{stdin}.
 @end deftypefun
@@ -3845,6 +4048,7 @@ from the stream @var{stream} instead of @code{stdin}.
 @comment stdio.h
 @comment ISO
 @deftypefun int sscanf (const char *@var{s}, const char *@var{template}, @dots{})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 This is like @code{scanf}, except that the characters are taken from the
 null-terminated string @var{s} instead of from a stream.  Reaching the
 end of the string is treated as an end-of-file condition.
@@ -3858,6 +4062,7 @@ as an argument to receive a string read under control of the @samp{%s},
 @comment wchar.h
 @comment ISO
 @deftypefun int swscanf (const wchar_t *@var{ws}, const wchar_t *@var{template}, @dots{})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 This is like @code{wscanf}, except that the characters are taken from the
 null-terminated string @var{ws} instead of from a stream.  Reaching the
 end of the string is treated as an end-of-file condition.
@@ -3884,6 +4089,7 @@ introduced in @w{ISO C99} and were before available as GNU extensions.
 @comment stdio.h
 @comment ISO
 @deftypefun int vscanf (const char *@var{template}, va_list @var{ap})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
 This function is similar to @code{scanf}, but instead of taking
 a variable number of arguments directly, it takes an argument list
 pointer @var{ap} of type @code{va_list} (@pxref{Variadic Functions}).
@@ -3892,6 +4098,7 @@ pointer @var{ap} of type @code{va_list} (@pxref{Variadic Functions}).
 @comment wchar.h
 @comment ISO
 @deftypefun int vwscanf (const wchar_t *@var{template}, va_list @var{ap})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
 This function is similar to @code{wscanf}, but instead of taking
 a variable number of arguments directly, it takes an argument list
 pointer @var{ap} of type @code{va_list} (@pxref{Variadic Functions}).
@@ -3900,6 +4107,7 @@ pointer @var{ap} of type @code{va_list} (@pxref{Variadic Functions}).
 @comment stdio.h
 @comment ISO
 @deftypefun int vfscanf (FILE *@var{stream}, const char *@var{template}, va_list @var{ap})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
 This is the equivalent of @code{fscanf} with the variable argument list
 specified directly as for @code{vscanf}.
 @end deftypefun
@@ -3907,6 +4115,7 @@ specified directly as for @code{vscanf}.
 @comment wchar.h
 @comment ISO
 @deftypefun int vfwscanf (FILE *@var{stream}, const wchar_t *@var{template}, va_list @var{ap})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
 This is the equivalent of @code{fwscanf} with the variable argument list
 specified directly as for @code{vwscanf}.
 @end deftypefun
@@ -3914,6 +4123,7 @@ specified directly as for @code{vwscanf}.
 @comment stdio.h
 @comment ISO
 @deftypefun int vsscanf (const char *@var{s}, const char *@var{template}, va_list @var{ap})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 This is the equivalent of @code{sscanf} with the variable argument list
 specified directly as for @code{vscanf}.
 @end deftypefun
@@ -3921,6 +4131,7 @@ specified directly as for @code{vscanf}.
 @comment wchar.h
 @comment ISO
 @deftypefun int vswscanf (const wchar_t *@var{s}, const wchar_t *@var{template}, va_list @var{ap})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 This is the equivalent of @code{swscanf} with the variable argument list
 specified directly as for @code{vwscanf}.
 @end deftypefun
@@ -3970,6 +4181,7 @@ This symbol is declared in @file{wchar.h}.
 @comment stdio.h
 @comment ISO
 @deftypefun int feof (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@assafe{}@acunsafe{@aculock{}}}
 The @code{feof} function returns nonzero if and only if the end-of-file
 indicator for the stream @var{stream} is set.
 
@@ -3979,6 +4191,9 @@ This symbol is declared in @file{stdio.h}.
 @comment stdio.h
 @comment GNU
 @deftypefun int feof_unlocked (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c There isn't much of a thread unsafety risk in reading a flag word and
+@c testing a bit in it.
 The @code{feof_unlocked} function is equivalent to the @code{feof}
 function except that it does not implicitly lock the stream.
 
@@ -3990,6 +4205,7 @@ This symbol is declared in @file{stdio.h}.
 @comment stdio.h
 @comment ISO
 @deftypefun int ferror (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@assafe{}@acunsafe{@aculock{}}}
 The @code{ferror} function returns nonzero if and only if the error
 indicator for the stream @var{stream} is set, indicating that an error
 has occurred on a previous operation on the stream.
@@ -4000,6 +4216,7 @@ This symbol is declared in @file{stdio.h}.
 @comment stdio.h
 @comment GNU
 @deftypefun int ferror_unlocked (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{ferror_unlocked} function is equivalent to the @code{ferror}
 function except that it does not implicitly lock the stream.
 
@@ -4027,6 +4244,7 @@ function.
 @comment stdio.h
 @comment ISO
 @deftypefun void clearerr (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@assafe{}@acunsafe{@aculock{}}}
 This function clears the end-of-file and error indicators for the
 stream @var{stream}.
 
@@ -4037,6 +4255,7 @@ end-of-file indicator for the stream.
 @comment stdio.h
 @comment GNU
 @deftypefun void clearerr_unlocked (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{@mtsrace{:stream}}@assafe{}@acsafe{}}
 The @code{clearerr_unlocked} function is equivalent to the @code{clearerr}
 function except that it does not implicitly lock the stream.
 
@@ -4150,6 +4369,7 @@ are declared in the header file @file{stdio.h}.
 @comment stdio.h
 @comment ISO
 @deftypefun {long int} ftell (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 This function returns the current file position of the stream
 @var{stream}.
 
@@ -4162,6 +4382,7 @@ possibly for other reasons as well.  If a failure occurs, a value of
 @comment stdio.h
 @comment Unix98
 @deftypefun off_t ftello (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 The @code{ftello} function is similar to @code{ftell}, except that it
 returns a value of type @code{off_t}.  Systems which support this type
 use it to describe all file positions, unlike the POSIX specification
@@ -4185,6 +4406,7 @@ LFS interface transparently replaces the old interface.
 @comment stdio.h
 @comment Unix98
 @deftypefun off64_t ftello64 (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 This function is similar to @code{ftello} with the only difference that
 the return value is of type @code{off64_t}.  This also requires that the
 stream @var{stream} was opened using either @code{fopen64},
@@ -4200,6 +4422,7 @@ and so transparently replaces the old interface.
 @comment stdio.h
 @comment ISO
 @deftypefun int fseek (FILE *@var{stream}, long int @var{offset}, int @var{whence})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 The @code{fseek} function is used to change the file position of the
 stream @var{stream}.  The value of @var{whence} must be one of the
 constants @code{SEEK_SET}, @code{SEEK_CUR}, or @code{SEEK_END}, to
@@ -4219,6 +4442,7 @@ place in the file.
 @comment stdio.h
 @comment Unix98
 @deftypefun int fseeko (FILE *@var{stream}, off_t @var{offset}, int @var{whence})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 This function is similar to @code{fseek} but it corrects a problem with
 @code{fseek} in a system with POSIX types.  Using a value of type
 @code{long int} for the offset is not compatible with POSIX.
@@ -4242,6 +4466,7 @@ LFS interface transparently replaces the old interface.
 @comment stdio.h
 @comment Unix98
 @deftypefun int fseeko64 (FILE *@var{stream}, off64_t @var{offset}, int @var{whence})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 This function is similar to @code{fseeko} with the only difference that
 the @var{offset} parameter is of type @code{off64_t}.  This also
 requires that the stream @var{stream} was opened using either
@@ -4290,6 +4515,7 @@ the offset provided is relative to the end of the file.
 @comment stdio.h
 @comment ISO
 @deftypefun void rewind (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 The @code{rewind} function positions the stream @var{stream} at the
 beginning of the file.  It is equivalent to calling @code{fseek} or
 @code{fseeko} on the @var{stream} with an @var{offset} argument of
@@ -4411,6 +4637,7 @@ representation.
 @comment stdio.h
 @comment ISO
 @deftypefun int fgetpos (FILE *@var{stream}, fpos_t *@var{position})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 This function stores the value of the file position indicator for the
 stream @var{stream} in the @code{fpos_t} object pointed to by
 @var{position}.  If successful, @code{fgetpos} returns zero; otherwise
@@ -4425,6 +4652,7 @@ interface transparently replaces the old interface.
 @comment stdio.h
 @comment Unix98
 @deftypefun int fgetpos64 (FILE *@var{stream}, fpos64_t *@var{position})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 This function is similar to @code{fgetpos} but the file position is
 returned in a variable of type @code{fpos64_t} to which @var{position}
 points.
@@ -4437,6 +4665,7 @@ and so transparently replaces the old interface.
 @comment stdio.h
 @comment ISO
 @deftypefun int fsetpos (FILE *@var{stream}, const fpos_t *@var{position})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 This function sets the file position indicator for the stream @var{stream}
 to the position @var{position}, which must have been set by a previous
 call to @code{fgetpos} on the same stream.  If successful, @code{fsetpos}
@@ -4453,6 +4682,7 @@ interface transparently replaces the old interface.
 @comment stdio.h
 @comment Unix98
 @deftypefun int fsetpos64 (FILE *@var{stream}, const fpos64_t *@var{position})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 This function is similar to @code{fsetpos} but the file position used
 for positioning is provided in a variable of type @code{fpos64_t} to
 which @var{position} points.
@@ -4564,6 +4794,7 @@ If you want to flush the buffered output at another time, call
 @comment stdio.h
 @comment ISO
 @deftypefun int fflush (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 This function causes any buffered output on @var{stream} to be delivered
 to the file.  If @var{stream} is a null pointer, then
 @code{fflush} causes buffered output on @emph{all} open output streams
@@ -4576,6 +4807,7 @@ otherwise.
 @comment stdio.h
 @comment POSIX
 @deftypefun int fflush_unlocked (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{@mtsrace{:stream}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 The @code{fflush_unlocked} function is equivalent to the @code{fflush}
 function except that it does not implicitly lock the stream.
 @end deftypefun
@@ -4592,6 +4824,7 @@ exported.
 @comment stdio_ext.h
 @comment GNU
 @deftypefun void _flushlbf (void)
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 The @code{_flushlbf} function flushes all line buffered streams
 currently opened.
 
@@ -4613,6 +4846,7 @@ situation a non-standard function introduced in Solaris and available in
 @comment stdio_ext.h
 @comment GNU
 @deftypefun void __fpurge (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{@mtsrace{:stream}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 The @code{__fpurge} function causes the buffer of the stream
 @var{stream} to be emptied.  If the stream is currently in read mode all
 input in the buffer is lost.  If the stream is in output mode the
@@ -4637,6 +4871,7 @@ file @file{stdio.h}.
 @comment stdio.h
 @comment ISO
 @deftypefun int setvbuf (FILE *@var{stream}, char *@var{buf}, int @var{mode}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 This function is used to specify that the stream @var{stream} should
 have the buffering mode @var{mode}, which can be either @code{_IOFBF}
 (for full buffering), @code{_IOLBF} (for line buffering), or
@@ -4714,6 +4949,7 @@ efficient size.
 @comment stdio.h
 @comment ISO
 @deftypefun void setbuf (FILE *@var{stream}, char *@var{buf})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 If @var{buf} is a null pointer, the effect of this function is
 equivalent to calling @code{setvbuf} with a @var{mode} argument of
 @code{_IONBF}.  Otherwise, it is equivalent to calling @code{setvbuf}
@@ -4727,6 +4963,7 @@ use @code{setvbuf} in all new programs.
 @comment stdio.h
 @comment BSD
 @deftypefun void setbuffer (FILE *@var{stream}, char *@var{buf}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 If @var{buf} is a null pointer, this function makes @var{stream} unbuffered.
 Otherwise, it makes @var{stream} fully buffered using @var{buf} as the
 buffer.  The @var{size} argument specifies the length of @var{buf}.
@@ -4738,6 +4975,7 @@ This function is provided for compatibility with old BSD code.  Use
 @comment stdio.h
 @comment BSD
 @deftypefun void setlinebuf (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 This function makes @var{stream} be line buffered, and allocates the
 buffer for you.
 
@@ -4752,6 +4990,7 @@ using a non-standard function introduced in Solaris and available in
 @comment stdio_ext.h
 @comment GNU
 @deftypefun int __flbf (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{__flbf} function will return a nonzero value in case the
 stream @var{stream} is line buffered.  Otherwise the return value is
 zero.
@@ -4765,6 +5004,7 @@ much of it is used.  These functions were also introduced in Solaris.
 @comment stdio_ext.h
 @comment GNU
 @deftypefun size_t __fbufsize (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{@mtsrace{:stream}}@asunsafe{@asucorrupt{}}@acsafe{}}
 The @code{__fbufsize} function return the size of the buffer in the
 stream @var{stream}.  This value can be used to optimize the use of the
 stream.
@@ -4775,6 +5015,7 @@ This function is declared in the @file{stdio_ext.h} header.
 @comment stdio_ext.h
 @comment GNU
 @deftypefun size_t __fpending (FILE *@var{stream})
+@safety{@prelim{}@mtsafe{@mtsrace{:stream}}@asunsafe{@asucorrupt{}}@acsafe{}}
 The @code{__fpending}
 function returns the number of bytes currently in the output buffer.
 For wide-oriented stream the measuring unit is wide characters.  This
@@ -4822,6 +5063,10 @@ I/O to a string or memory buffer.  These facilities are declared in
 @comment stdio.h
 @comment GNU
 @deftypefun {FILE *} fmemopen (void *@var{buf}, size_t @var{size}, const char *@var{opentype})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@acsmem{} @aculock{}}}
+@c Unlike open_memstream, fmemopen does (indirectly) call _IO_link_in,
+@c bringing with it additional potential for async trouble with
+@c list_all_lock.
 This function opens a stream that allows the access specified by the
 @var{opentype} argument, that reads from or writes to the buffer specified
 by the argument @var{buf}.  This array must be at least @var{size} bytes long.
@@ -4874,6 +5119,7 @@ Got r
 @comment stdio.h
 @comment GNU
 @deftypefun {FILE *} open_memstream (char **@var{ptr}, size_t *@var{sizeloc})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 This function opens a stream for writing to a buffer.  The buffer is
 allocated dynamically and grown as necessary, using @code{malloc}.
 After you've closed the stream, this buffer is your responsibility to
@@ -4989,6 +5235,7 @@ closed.
 @comment stdio.h
 @comment GNU
 @deftypefun {FILE *} fopencookie (void *@var{cookie}, const char *@var{opentype}, cookie_io_functions_t @var{io-functions})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@acsmem{} @aculock{}}}
 This function actually creates the stream for communicating with the
 @var{cookie} using the functions in the @var{io-functions} argument.
 The @var{opentype} argument is interpreted as for @code{fopen};
@@ -5170,6 +5417,7 @@ It is a non-recoverable error.
 @comment fmtmsg.h
 @comment XPG
 @deftypefun int fmtmsg (long int @var{classification}, const char *@var{label}, int @var{severity}, const char *@var{text}, const char *@var{action}, const char *@var{tag})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acsafe{}}
 Display a message described by its parameters on the device(s) specified
 in the @var{classification} parameter.  The @var{label} parameter
 identifies the source of the message.  The string should consist of two
@@ -5310,6 +5558,7 @@ introducing new classes in a running program.  One could use the
 but this is toilsome.
 
 @deftypefun int addseverity (int @var{severity}, const char *@var{string})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{}}}
 This function allows the introduction of new severity classes which can be
 addressed by the @var{severity} parameter of the @code{fmtmsg} function.
 The @var{severity} parameter of @code{addseverity} must match the value
