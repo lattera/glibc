@@ -147,6 +147,17 @@ The symbols referred to in this section are declared in the file
 @comment syslog.h
 @comment BSD
 @deftypefun void openlog (const char *@var{ident}, int @var{option}, int @var{facility})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{}}}
+@c openlog @asulock @aculock @acsfd
+@c  libc_lock_lock @asulock @aculock
+@c  openlog_internal @acsfd [always guarded by syslog_lock, so no race]
+@c   strncpy dup ok
+@c   socket dup @acsfd
+@c   fcntl dup ok
+@c   connect dup ok
+@c   close dup @acsfd
+@c  cancel_handler(NULL) @aculock
+@c   libc_lock_unlock @aculock
 
 @code{openlog} opens or reopens a connection to Syslog in preparation
 for submitting messages.
@@ -276,6 +287,38 @@ The symbols referred to in this section are declared in the file
 @comment syslog.h
 @comment BSD
 @deftypefun void syslog (int @var{facility_priority}, const char *@var{format}, @dots{})
+@safety{@prelim{}@mtsafe{@mtsenv{} @mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
+@c syslog @mtsenv @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c  va_start dup ok
+@c  vsyslog_chk @mtsenv @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c   syslog(INTERNALLOG) dup @mtsenv @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c   open_memstream @ascuheap @acsmem
+@c   stpcpy dup ok
+@c   getpid dup ok
+@c   mempcpy dup ok
+@c   fsetlocking [no @mtasurace:stream @asulock for exclusive stream]
+@c   fprintf @mtslocale @ascuheap @acsmem [no @asucorrupt @aculock @acucorrupt on temp memstream]
+@c   time dup ok
+@c   localtime_r dup @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
+@c   strftime_l(C) dup @mtsenv @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c   ftell dup ok [no @asucorrupt @aculock @acucorrupt on temp memstream]
+@c   fputs_unlocked dup ok [no @mtasurace:stream @asucorrupt @acucorrupt on temp memstream]
+@c   putc_unlocked dup ok [no @mtasurace:stream @asucorrupt @acucorrupt on temp memstream]
+@c   vfprintf/vfprintf_chk dup @mtslocale @ascuheap @acsmem [no @mtasurace:stream @asucorrupt @acucorrupt on temp memstream]
+@c   fclose dup @ascuheap @acsmem [no @asulock @aculock @acsfd on caller-locked memstream]
+@c   writev dup ok
+@c   libc_lock_lock dup @asulock @aculock
+@c   memset dup ok
+@c   sigemptyset dup ok
+@c   sigaction(SIGPIPE) dup @mtasusig:PIPE @acusig:PIPE
+@c   openlog_internal dup @acsfd
+@c   send dup ok
+@c   closelog_internal dup @acsfd
+@c   open dup @acsfd
+@c   dprintf dup ok
+@c   libc_lock_unlock @asulock @aculock
+@c   free dup @acsuheap @acsmem
+@c  va_end dup ok
 
 @code{syslog} submits a message to the Syslog facility.  It does this by
 writing to the Unix domain socket @code{/dev/log}.
@@ -404,6 +447,9 @@ syslog (LOG_MAKEPRI(LOG_LOCAL1, LOG_ERROR),
 @comment syslog.h
 @comment BSD
 @deftypefun void vsyslog (int @var{facility_priority}, const char *@var{format}, va_list @var{arglist})
+@safety{@prelim{}@mtsafe{@mtsenv{} @mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
+@c vsyslog @mtsenv @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c  vsyslog_chk dup @mtsenv @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
 
 This is functionally identical to @code{syslog}, with the BSD style variable
 length argument.
@@ -420,6 +466,13 @@ The symbols referred to in this section are declared in the file
 @comment syslog.h
 @comment BSD
 @deftypefun void closelog (void)
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{}}}
+@c closelog @asulock @aculock @acsfd
+@c  libc_lock_lock @asulock @aculock
+@c  closelog_internal @acsfd [always guarded by syslog_lock, so no race]
+@c   close dup@acsfd
+@c  cancel_handler(NULL) @aculock
+@c   libc_lock_unlock @aculock
 
 @code{closelog} closes the current Syslog connection, if there is one.
 This includes closing the @file{/dev/log} socket, if it is open.
@@ -450,6 +503,10 @@ The symbols referred to in this section are declared in the file
 @comment syslog.h
 @comment BSD
 @deftypefun int setlogmask (int @var{mask})
+@safety{@prelim{}@mtunsafe{@mtasurace{:LogMask}}@asunsafe{}@acsafe{}}
+@c Read and modify are not guarded by syslog_lock, so concurrent changes
+@c or even uses are undefined.  This should use an atomic swap instead,
+@c at least for modifications.
 
 @code{setlogmask} sets a mask (the ``logmask'') that determines which
 future @code{syslog} calls shall be ignored.  If a program has not
