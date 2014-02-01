@@ -1039,6 +1039,10 @@ The function @code{ctermid} is declared in the header file
 @comment stdio.h
 @comment POSIX.1
 @deftypefun {char *} ctermid (char *@var{string})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c This function is a stub by default; the actual implementation, for
+@c posix systems, returns an internal buffer if passed a NULL string,
+@c but the internal buffer is always set to /dev/tty.
 The @code{ctermid} function returns a string containing the file name of
 the controlling terminal for the current process.  If @var{string} is
 not a null pointer, it should be an array that can hold at least
@@ -1075,6 +1079,12 @@ Your program should include the header files @file{sys/types.h} and
 @comment unistd.h
 @comment POSIX.1
 @deftypefun pid_t setsid (void)
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c This is usually a direct syscall, but if a syscall is not available,
+@c we use a stub, or Hurd- and BSD-specific implementations.  The former
+@c uses a mutex and a hurd critical section, and the latter issues a few
+@c syscalls, so both seem safe, the locking on Hurd is safe because of
+@c the critical section.
 The @code{setsid} function creates a new session.  The calling process
 becomes the session leader, and is put in a new process group whose
 process group ID is the same as the process ID of that process.  There
@@ -1098,6 +1108,8 @@ already another process group around that has the same process group ID.
 @comment unistd.h
 @comment SVID
 @deftypefun pid_t getsid (pid_t @var{pid})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Stub or direct syscall, except on hurd, where it is equally safe.
 
 The @code{getsid} function returns the process group ID of the session
 leader of the specified process.  If a @var{pid} is @code{0}, the
@@ -1121,6 +1133,7 @@ from the calling process.
 @comment unistd.h
 @comment POSIX.1
 @deftypefun pid_t getpgrp (void)
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{getpgrp} function returns the process group ID of
 the calling process.
 @end deftypefun
@@ -1128,6 +1141,8 @@ the calling process.
 @comment unistd.h
 @comment POSIX.1
 @deftypefun int getpgid (pid_t @var{pid})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Stub or direct syscall, except on hurd, where it is equally safe.
 
 The @code{getpgid} function
 returns the process group ID of the process @var{pid}.  You can supply a
@@ -1150,6 +1165,8 @@ process.
 @comment unistd.h
 @comment POSIX.1
 @deftypefun int setpgid (pid_t @var{pid}, pid_t @var{pgid})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Stub or direct syscall, except on hurd, where it is equally safe.
 The @code{setpgid} function puts the process @var{pid} into the process
 group @var{pgid}.  As a special case, either @var{pid} or @var{pgid} can
 be zero to indicate the process ID of the calling process.
@@ -1187,6 +1204,8 @@ process or a child of the calling process.
 @comment unistd.h
 @comment BSD
 @deftypefun int setpgrp (pid_t @var{pid}, pid_t @var{pgid})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Direct syscall or setpgid wrapper.
 This is the BSD Unix name for @code{setpgid}.  Both functions do exactly
 the same thing.
 @end deftypefun
@@ -1209,6 +1228,8 @@ file itself and not a particular open file descriptor.
 @comment unistd.h
 @comment POSIX.1
 @deftypefun pid_t tcgetpgrp (int @var{filedes})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Stub, or ioctl on BSD and GNU/Linux.
 This function returns the process group ID of the foreground process
 group associated with the terminal open on descriptor @var{filedes}.
 
@@ -1237,6 +1258,8 @@ controlling terminal of the calling process.
 @comment unistd.h
 @comment POSIX.1
 @deftypefun int tcsetpgrp (int @var{filedes}, pid_t @var{pgid})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Stub, or ioctl on BSD and GNU/Linux.
 This function is used to set a terminal's foreground process group ID.
 The argument @var{filedes} is a descriptor which specifies the terminal;
 @var{pgid} specifies the process group.  The calling process must be a
@@ -1276,6 +1299,8 @@ process.
 @comment termios.h
 @comment Unix98
 @deftypefun pid_t tcgetsid (int @var{fildes})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Ioctl call, if available, or tcgetpgrp followed by getsid.
 This function is used to obtain the process group ID of the session
 for which the terminal specified by @var{fildes} is the controlling terminal.
 If the call is successful the group ID is returned.  Otherwise the
