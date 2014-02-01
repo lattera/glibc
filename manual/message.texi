@@ -86,7 +86,32 @@ are defined/declared in the @file{nl_types.h} header file.
 @comment nl_types.h
 @comment X/Open
 @deftypefun nl_catd catopen (const char *@var{cat_name}, int @var{flag})
-The @code{catgets} function tries to locate the message data file names
+@safety{@prelim{}@mtsafe{@mtsenv{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+@c catopen @mtsenv @ascuheap @acsmem
+@c  strchr ok
+@c  setlocale(,NULL) ok
+@c  getenv @mtsenv
+@c  strlen ok
+@c  alloca ok
+@c  stpcpy ok
+@c  malloc @ascuheap @acsmem
+@c  __open_catalog @ascuheap @acsmem
+@c   strchr ok
+@c   open_not_cancel_2 @acsfd
+@c   strlen ok
+@c   ENOUGH ok
+@c    alloca ok
+@c    memcpy ok
+@c   fxstat64 ok
+@c   __set_errno ok
+@c   mmap @acsmem
+@c   malloc dup @ascuheap @acsmem
+@c   read_not_cancel ok
+@c   free dup @ascuheap @acsmem
+@c   munmap ok
+@c   close_not_cancel_no_status ok
+@c  free @ascuheap @acsmem
+The @code{catopen} function tries to locate the message data file names
 @var{cat_name} and loads it when found.  The return value is of an
 opaque type and can be used in calls to the other functions to refer to
 this loaded catalog.
@@ -243,6 +268,7 @@ variables.
 
 
 @deftypefun {char *} catgets (nl_catd @var{catalog_desc}, int @var{set}, int @var{message}, const char *@var{string})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The function @code{catgets} has to be used to access the massage catalog
 previously opened using the @code{catopen} function.  The
 @var{catalog_desc} parameter must be a value previously returned by
@@ -281,6 +307,11 @@ We will see some how these problems can be relaxed a bit (@pxref{Common
 Usage}).
 
 @deftypefun int catclose (nl_catd @var{catalog_desc})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{}}}
+@c catclose @ascuheap @acucorrupt @acsmem
+@c  __set_errno ok
+@c  munmap ok
+@c  free @ascuheap @acsmem
 The @code{catclose} function can be used to free the resources
 associated with a message catalog which previously was opened by a call
 to @code{catopen}.  If the resources can be successfully freed the
@@ -803,12 +834,14 @@ not part of the C library they can be found in a separate library named
 @comment libintl.h
 @comment GNU
 @deftypefun {char *} gettext (const char *@var{msgid})
+@safety{@prelim{}@mtsafe{@mtsenv{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c Wrapper for dcgettext.
 The @code{gettext} function searches the currently selected message
 catalogs for a string which is equal to @var{msgid}.  If there is such a
 string available it is returned.  Otherwise the argument string
 @var{msgid} is returned.
 
-Please note that all though the return value is @code{char *} the
+Please note that although the return value is @code{char *} the
 returned string must not be changed.  This broken type results from the
 history of the function and does not reflect the way the function should
 be used.
@@ -850,6 +883,8 @@ information.
 @comment libintl.h
 @comment GNU
 @deftypefun {char *} dgettext (const char *@var{domainname}, const char *@var{msgid})
+@safety{@prelim{}@mtsafe{@mtsenv{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c Wrapper for dcgettext.
 The @code{dgettext} functions acts just like the @code{gettext}
 function.  It only takes an additional first argument @var{domainname}
 which guides the selection of the message catalogs which are searched
@@ -864,6 +899,102 @@ anachronism.  The returned string must never be modified.
 @comment libintl.h
 @comment GNU
 @deftypefun {char *} dcgettext (const char *@var{domainname}, const char *@var{msgid}, int @var{category})
+@safety{@prelim{}@mtsafe{@mtsenv{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c dcgettext @mtsenv @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsfd @acsmem
+@c  dcigettext @mtsenv @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsfd @acsmem
+@c   libc_rwlock_rdlock @asulock @aculock
+@c   current_locale_name ok [protected from @mtslocale]
+@c   tfind ok
+@c   libc_rwlock_unlock ok
+@c   plural_lookup ok
+@c    plural_eval ok
+@c    rawmemchr ok
+@c   DETERMINE_SECURE ok, nothing
+@c   strcmp ok
+@c   strlen ok
+@c   getcwd @ascuheap @acsmem @acsfd
+@c   strchr ok
+@c   stpcpy ok
+@c   category_to_name ok
+@c   guess_category_value @mtsenv
+@c    getenv @mtsenv
+@c    current_locale_name dup ok [protected from @mtslocale by dcigettext]
+@c    strcmp ok
+@c   ENABLE_SECURE ok
+@c   _nl_find_domain @mtsenv @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsfd @acsmem
+@c    libc_rwlock_rdlock dup @asulock @aculock
+@c    _nl_make_l10nflist dup @ascuheap @acsmem
+@c    libc_rwlock_unlock dup ok
+@c    _nl_load_domain @mtsenv @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsfd @acsmem
+@c     libc_lock_lock_recursive @aculock
+@c     libc_lock_unlock_recursive @aculock
+@c     open->open_not_cancel_2 @acsfd
+@c     fstat ok
+@c     mmap dup @acsmem
+@c     close->close_not_cancel_no_status @acsfd
+@c     malloc dup @ascuheap @acsmem
+@c     read->read_not_cancel ok
+@c     munmap dup @acsmem
+@c     W dup ok
+@c     strlen dup ok
+@c     get_sysdep_segment_value ok
+@c     memcpy dup ok
+@c     hash_string dup ok
+@c     free dup @ascuheap @acsmem
+@c     libc_rwlock_init ok
+@c     _nl_find_msg dup @mtsenv @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsfd @acsmem
+@c     libc_rwlock_fini ok
+@c     EXTRACT_PLURAL_EXPRESSION @ascuheap @acsmem
+@c      strstr dup ok
+@c      isspace ok
+@c      strtoul ok
+@c      PLURAL_PARSE @ascuheap @acsmem
+@c       malloc dup @ascuheap @acsmem
+@c       free dup @ascuheap @acsmem
+@c      INIT_GERMANIC_PLURAL ok, nothing
+@c        the pre-C99 variant is @acucorrupt [protected from @mtuinit by dcigettext]
+@c    _nl_expand_alias dup @ascuheap @asulock @acsmem @acsfd @aculock
+@c    _nl_explode_name dup @ascuheap @acsmem
+@c    libc_rwlock_wrlock dup @asulock @aculock
+@c    free dup @asulock @aculock @acsfd @acsmem
+@c   _nl_find_msg @mtsenv @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsfd @acsmem
+@c    _nl_load_domain dup @mtsenv @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsfd @acsmem
+@c    strlen ok
+@c    hash_string ok
+@c    W ok
+@c     SWAP ok
+@c      bswap_32 ok
+@c    strcmp ok
+@c    get_output_charset @mtsenv @ascuheap @acsmem
+@c     getenv dup @mtsenv
+@c     strlen dup ok
+@c     malloc dup @ascuheap @acsmem
+@c     memcpy dup ok
+@c    libc_rwlock_rdlock dup @asulock @aculock
+@c    libc_rwlock_unlock dup ok
+@c    libc_rwlock_wrlock dup @asulock @aculock
+@c    realloc @ascuheap @acsmem
+@c    strdup @ascuheap @acsmem
+@c    strstr ok
+@c    strcspn ok
+@c    mempcpy dup ok
+@c    norm_add_slashes dup ok
+@c    gconv_open @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c     [protected from @mtslocale by dcigettext locale lock]
+@c    free dup @ascuheap @acsmem
+@c    libc_lock_lock @asulock @aculock
+@c    calloc @ascuheap @acsmem
+@c    gconv dup @acucorrupt [protected from @mtsrace and @asucorrupt by lock]
+@c    libc_lock_unlock ok
+@c   malloc @ascuheap @acsmem
+@c   mempcpy ok
+@c   memcpy ok
+@c   strcpy ok
+@c   libc_rwlock_wrlock @asulock @aculock
+@c   tsearch @ascuheap @acucorrupt @acsmem [protected from @mtsrace and @asucorrupt]
+@c    transcmp ok
+@c     strmp dup ok
+@c   free @ascuheap @acsmem
 The @code{dcgettext} adds another argument to those which
 @code{dgettext} takes.  This argument @var{category} specifies the last
 piece of information needed to localize the message catalog.  I.e., the
@@ -988,6 +1119,13 @@ function.
 @comment libintl.h
 @comment GNU
 @deftypefun {char *} textdomain (const char *@var{domainname})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{} @ascuheap{}}@acunsafe{@aculock{} @acsmem{}}}
+@c textdomain @asulock @ascuheap @aculock @acsmem
+@c  libc_rwlock_wrlock @asulock @aculock
+@c  strcmp ok
+@c  strdup @ascuheap @acsmem
+@c  free @ascuheap @acsmem
+@c  libc_rwlock_unlock ok
 The @code{textdomain} function sets the default domain, which is used in
 all future @code{gettext} calls, to @var{domainname}.  Please note that
 @code{dgettext} and @code{dcgettext} calls are not influenced if the
@@ -1019,6 +1157,14 @@ really never should be used.
 @comment libintl.h
 @comment GNU
 @deftypefun {char *} bindtextdomain (const char *@var{domainname}, const char *@var{dirname})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+@c bindtextdomain @ascuheap @acsmem
+@c  set_binding_values @ascuheap @acsmem
+@c   libc_rwlock_wrlock dup @asulock @aculock
+@c   strcmp dup ok
+@c   strdup dup @ascuheap @acsmem
+@c   free dup @ascuheap @acsmem
+@c   malloc dup @ascuheap @acsmem
 The @code{bindtextdomain} function can be used to specify the directory
 which contains the message catalogs for domain @var{domainname} for the
 different languages.  To be correct, this is the directory where the
@@ -1134,6 +1280,8 @@ purpose.
 @comment libintl.h
 @comment GNU
 @deftypefun {char *} ngettext (const char *@var{msgid1}, const char *@var{msgid2}, unsigned long int @var{n})
+@safety{@prelim{}@mtsafe{@mtsenv{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c Wrapper for dcngettext.
 The @code{ngettext} function is similar to the @code{gettext} function
 as it finds the message catalogs in the same way.  But it takes two
 extra arguments.  The @var{msgid1} parameter must contain the singular
@@ -1157,6 +1305,8 @@ Please note that the numeric value @var{n} has to be passed to the
 @comment libintl.h
 @comment GNU
 @deftypefun {char *} dngettext (const char *@var{domain}, const char *@var{msgid1}, const char *@var{msgid2}, unsigned long int @var{n})
+@safety{@prelim{}@mtsafe{@mtsenv{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c Wrapper for dcngettext.
 The @code{dngettext} is similar to the @code{dgettext} function in the
 way the message catalog is selected.  The difference is that it takes
 two extra parameter to provide the correct plural form.  These two
@@ -1166,6 +1316,8 @@ parameters are handled in the same way @code{ngettext} handles them.
 @comment libintl.h
 @comment GNU
 @deftypefun {char *} dcngettext (const char *@var{domain}, const char *@var{msgid1}, const char *@var{msgid2}, unsigned long int @var{n}, int @var{category})
+@safety{@prelim{}@mtsafe{@mtsenv{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c Wrapper for dcigettext.
 The @code{dcngettext} is similar to the @code{dcgettext} function in the
 way the message catalog is selected.  The difference is that it takes
 two extra parameter to provide the correct plural form.  These two
@@ -1422,6 +1574,9 @@ recommended that all @var{msgid}s be US-ASCII strings.
 @comment libintl.h
 @comment GNU
 @deftypefun {char *} bind_textdomain_codeset (const char *@var{domainname}, const char *@var{codeset})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+@c bind_textdomain_codeset @ascuheap @acsmem
+@c  set_binding_values dup @ascuheap @acsmem
 The @code{bind_textdomain_codeset} function can be used to specify the
 output character set for message catalogs for domain @var{domainname}.
 The @var{codeset} argument must be a valid codeset name which can be used
