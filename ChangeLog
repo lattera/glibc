@@ -1,5 +1,10 @@
 2014-02-01  Alexandre Oliva <aoliva@redhat.com>
 
+	* manual/string.texi (wcstok): Fix prototype.
+	(wcstok, strtok, strtok_r): Adjust reentrancy remarks.
+
+2014-02-01  Alexandre Oliva <aoliva@redhat.com>
+
 	* manual/time.texi: Document MTASC-safety properties.
 
 2014-02-01  Alexandre Oliva <aoliva@redhat.com>

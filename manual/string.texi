@@ -2062,7 +2062,7 @@ separately.  The function is not locale-dependent.
 
 @comment wchar.h
 @comment ISO
-@deftypefun {wchar_t *} wcstok (wchar_t *@var{newstring}, const wchar_t *@var{delimiters})
+@deftypefun {wchar_t *} wcstok (wchar_t *@var{newstring}, const wchar_t *@var{delimiters}, wchar_t **@var{save_ptr})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 A string can be split into tokens by making a series of calls to the
 function @code{wcstok}.
@@ -2071,11 +2071,8 @@ The string to be split up is passed as the @var{newstring} argument on
 the first call only.  The @code{wcstok} function uses this to set up
 some internal state information.  Subsequent calls to get additional
 tokens from the same wide character string are indicated by passing a
-null pointer as the @var{newstring} argument.  Calling @code{wcstok}
-with another non-null @var{newstring} argument reinitializes the state
-information.  It is guaranteed that no other library function ever calls
-@code{wcstok} behind your back (which would mess up this internal state
-information).
+null pointer as the @var{newstring} argument, which causes the pointer
+previously stored in @var{save_ptr} to be used instead.
 
 The @var{delimiters} argument is a wide character string that specifies
 a set of delimiters that may surround the token being extracted.  All
@@ -2084,8 +2081,10 @@ The first wide character that is @emph{not} a member of this set of
 delimiters marks the beginning of the next token.  The end of the token
 is found by looking for the next wide character that is a member of the
 delimiter set.  This wide character in the original wide character
-string @var{newstring} is overwritten by a null wide character, and the
-pointer to the beginning of the token in @var{newstring} is returned.
+string @var{newstring} is overwritten by a null wide character, the
+pointer past the overwritten wide character is saved in @var{save_ptr},
+and the pointer to the beginning of the token in @var{newstring} is
+returned.
 
 On the next call to @code{wcstok}, the searching begins at the next
 wide character beyond the one that marked the end of the previous token.
@@ -2095,11 +2094,6 @@ same on every call in a series of calls to @code{wcstok}.
 If the end of the wide character string @var{newstring} is reached, or
 if the remainder of string consists only of delimiter wide characters,
 @code{wcstok} returns a null pointer.
-
-Note that ``character'' is here used in the sense of byte.  In a string
-using a multibyte character encoding (abstract) character consisting of
-more than one byte are not treated as an entity.  Each byte is treated
-separately.  The function is not locale-dependent.
 @end deftypefun
 
 @strong{Warning:} Since @code{strtok} and @code{wcstok} alter the string
@@ -2124,7 +2118,7 @@ does not have as its purpose the modification of a certain data
 structure, then it is error-prone to modify the data structure
 temporarily.
 
-The functions @code{strtok} and @code{wcstok} are not reentrant.
+The function @code{strtok} is not reentrant, whereas @code{wcstok} is.
 @xref{Nonreentrancy}, for a discussion of where and why reentrancy is
 important.
 
@@ -2163,11 +2157,12 @@ available for multibyte character strings.
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Just like @code{strtok}, this function splits the string into several
 tokens which can be accessed by successive calls to @code{strtok_r}.
-The difference is that the information about the next token is stored in
-the space pointed to by the third argument, @var{save_ptr}, which is a
-pointer to a string pointer.  Calling @code{strtok_r} with a null
-pointer for @var{newstring} and leaving @var{save_ptr} between the calls
-unchanged does the job without hindering reentrancy.
+The difference is that, as in @code{wcstok}, the information about the
+next token is stored in the space pointed to by the third argument,
+@var{save_ptr}, which is a pointer to a string pointer.  Calling
+@code{strtok_r} with a null pointer for @var{newstring} and leaving
+@var{save_ptr} between the calls unchanged does the job without
+hindering reentrancy.
 
 This function is defined in POSIX.1 and can be found on many systems
 which support multi-threading.
