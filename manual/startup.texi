@@ -221,6 +221,11 @@ available.
 
 @comment stdlib.h
 @deftypefun int getsubopt (char **@var{optionp}, char *const *@var{tokens}, char **@var{valuep})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c getsubopt ok
+@c  strchrnul dup ok
+@c  memchr dup ok
+@c  strncmp dup ok
 
 The @var{optionp} parameter must be a pointer to a variable containing
 the address of the string to process.  When the function returns the
@@ -322,6 +327,8 @@ functions can be safely used in multi-threaded programs.
 @comment stdlib.h
 @comment ISO
 @deftypefun {char *} getenv (const char *@var{name})
+@safety{@prelim{}@mtsafe{@mtsenv{}}@assafe{}@acsafe{}}
+@c Unguarded access to __environ.
 This function returns a string that is the value of the environment
 variable @var{name}.  You must not modify this string.  In some non-Unix
 systems not using @theglibc{}, it might be overwritten by subsequent
@@ -333,6 +340,8 @@ pointer.
 @comment stdlib.h
 @comment GNU
 @deftypefun {char *} secure_getenv (const char *@var{name})
+@safety{@prelim{}@mtsafe{@mtsenv{}}@assafe{}@acsafe{}}
+@c Calls getenv unless secure mode is enabled.
 This function is similar to @code{getenv}, but it returns a null
 pointer if the environment is untrusted.  This happens when the
 program file has SUID or SGID bits set.  General-purpose libraries
@@ -346,6 +355,13 @@ This function is a GNU extension.
 @comment stdlib.h
 @comment SVID
 @deftypefun int putenv (char *@var{string})
+@safety{@prelim{}@mtunsafe{@mtasuconst{:@mtsenv{}}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{}}}
+@c putenv @mtasuconst:@mtsenv @ascuheap @asulock @acucorrupt @aculock @acsmem
+@c  strchr dup ok
+@c  strndup dup @ascuheap @acsmem
+@c  add_to_environ dup @mtasuconst:@mtsenv @ascuheap @asulock @acucorrupt @aculock @acsmem
+@c  free dup @ascuheap @acsmem
+@c  unsetenv dup @mtasuconst:@mtsenv @asulock @aculock
 The @code{putenv} function adds or removes definitions from the environment.
 If the @var{string} is of the form @samp{@var{name}=@var{value}}, the
 definition is added to the environment.  Otherwise, the @var{string} is
@@ -358,8 +374,8 @@ value is nonzero and @code{errno} is set to indicate the error.
 The difference to the @code{setenv} function is that the exact string
 given as the parameter @var{string} is put into the environment.  If the
 user should change the string after the @code{putenv} call this will
-reflect in automatically in the environment.  This also requires that
-@var{string} is no automatic variable which scope is left before the
+reflect automatically in the environment.  This also requires that
+@var{string} not be an automatic variable whose scope is left before the
 variable is removed from the environment.  The same applies of course to
 dynamically allocated variables which are freed later.
 
@@ -372,6 +388,24 @@ available in old SVID libraries you should define either
 @comment stdlib.h
 @comment BSD
 @deftypefun int setenv (const char *@var{name}, const char *@var{value}, int @var{replace})
+@safety{@prelim{}@mtunsafe{@mtasuconst{:@mtsenv{}}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{}}}
+@c setenv @mtasuconst:@mtsenv @ascuheap @asulock @acucorrupt @aculock @acsmem
+@c  add_to_environ @mtasuconst:@mtsenv @ascuheap @asulock @acucorrupt @aculock @acsmem
+@c   strlen dup ok
+@c   libc_lock_lock @asulock @aculock
+@c   strncmp dup ok
+@c   realloc dup @ascuheap @acsmem
+@c   libc_lock_unlock @aculock
+@c   malloc dup @ascuheap @acsmem
+@c   free dup @ascuheap @acsmem
+@c   mempcpy dup ok
+@c   memcpy dup ok
+@c   KNOWN_VALUE ok
+@c    tfind(strcmp) [no @mtsrace guarded access]
+@c     strcmp dup ok
+@c   STORE_VALUE @ascuheap @acucorrupt @acsmem
+@c    tsearch(strcmp) @ascuheap @acucorrupt @acsmem [no @mtsrace or @asucorrupt guarded access makes for mtsafe and @asulock]
+@c     strcmp dup ok
 The @code{setenv} function can be used to add a new definition to the
 environment.  The entry with the name @var{name} is replaced by the
 value @samp{@var{name}=@var{value}}.  Please note that this is also true
@@ -395,6 +429,13 @@ the Unix standard.
 @comment stdlib.h
 @comment BSD
 @deftypefun int unsetenv (const char *@var{name})
+@safety{@prelim{}@mtunsafe{@mtasuconst{:@mtsenv{}}}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
+@c unsetenv @mtasuconst:@mtsenv @asulock @aculock
+@c  strchr dup ok
+@c  strlen dup ok
+@c  libc_lock_lock @asulock @aculock
+@c  strncmp dup ok
+@c  libc_lock_unlock @aculock
 Using this function one can remove an entry completely from the
 environment.  If the environment contains an entry with the key
 @var{name} this whole entry is removed.  A call to this function is
@@ -418,6 +459,11 @@ to enable writing standard compliant Fortran environments.
 @comment stdlib.h
 @comment GNU
 @deftypefun int clearenv (void)
+@safety{@prelim{}@mtunsafe{@mtasuconst{:@mtsenv{}}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{}}}
+@c clearenv @mtasuconst:@mtsenv @ascuheap @asulock @aculock @acsmem
+@c  libc_lock_lock @asulock @aculock
+@c  free dup @ascuheap @acsmem
+@c  libc_lock_unlock @aculock
 The @code{clearenv} function removes all entries from the environment.
 Using @code{putenv} and @code{setenv} new entries can be added again
 later.
@@ -622,6 +668,8 @@ basis there may be information that is not available any other way.
 @subsection Definition of @code{getauxval}
 @comment sys/auxv.h
 @deftypefun {unsigned long int} getauxval (unsigned long int @var{type})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Reads from hwcap or iterates over constant auxv.
 This function is used to inquire about the entries in the auxiliary
 vector.  The @var{type} argument should be one of the @samp{AT_} symbols
 defined in @file{elf.h}.  If a matching entry is found, the value is
@@ -678,6 +726,7 @@ anyway.
 @comment unistd.h
 @comment ???
 @deftypefun {long int} syscall (long int @var{sysno}, @dots{})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 @code{syscall} performs a generic system call.
 
@@ -783,6 +832,10 @@ the argument to @code{exit}.
 @comment stdlib.h
 @comment ISO
 @deftypefun void exit (int @var{status})
+@safety{@prelim{}@mtunsafe{@mtasurace{:exit}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{} @aculock{}}}
+@c Access to the atexit/on_exit list, the libc_atexit hook and tls dtors
+@c is not guarded.  Streams must be flushed, and that triggers the usual
+@c AS and AC issues with streams.
 The @code{exit} function tells the system that the program is done, which
 causes it to terminate the process.
 
@@ -899,6 +952,15 @@ using @code{atexit} or @code{on_exit}.
 @comment stdlib.h
 @comment ISO
 @deftypefun int atexit (void (*@var{function}) (void))
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{}}}
+@c atexit @ascuheap @asulock @aculock @acsmem
+@c  cxa_atexit @ascuheap @asulock @aculock @acsmem
+@c   __internal_atexit @ascuheap @asulock @aculock @acsmem
+@c    __new_exitfn @ascuheap @asulock @aculock @acsmem
+@c     __libc_lock_lock @asulock @aculock
+@c     calloc dup @ascuheap @acsmem
+@c     __libc_lock_unlock @aculock
+@c    atomic_write_barrier dup ok
 The @code{atexit} function registers the function @var{function} to be
 called at normal program termination.  The @var{function} is called with
 no arguments.
@@ -910,6 +972,10 @@ the function cannot be registered.
 @comment stdlib.h
 @comment SunOS
 @deftypefun int on_exit (void (*@var{function})(int @var{status}, void *@var{arg}), void *@var{arg})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{}}}
+@c on_exit @ascuheap @asulock @aculock @acsmem
+@c  new_exitfn dup @ascuheap @asulock @aculock @acsmem
+@c  atomic_write_barrier dup ok
 This function is a somewhat more powerful variant of @code{atexit}.  It
 accepts two arguments, a function @var{function} and an arbitrary
 pointer @var{arg}.  At normal program termination, the @var{function} is
@@ -941,6 +1007,10 @@ for this function is in @file{stdlib.h}.
 @comment stdlib.h
 @comment ISO
 @deftypefun void abort (void)
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
+@c The implementation takes a recursive lock and attempts to support
+@c calls from signal handlers, but if we're in the middle of flushing or
+@c using streams, we may encounter them in inconsistent states.
 The @code{abort} function causes abnormal program termination.  This
 does not execute cleanup functions registered with @code{atexit} or
 @code{on_exit}.
@@ -968,6 +1038,9 @@ by @code{exit}.  It is declared in the header file @file{unistd.h}.
 @comment unistd.h
 @comment POSIX.1
 @deftypefun void _exit (int @var{status})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Direct syscall (exit_group or exit); calls __task_terminate on hurd,
+@c and abort in the generic posix implementation.
 The @code{_exit} function is the primitive for causing a process to
 terminate with status @var{status}.  Calling this function does not
 execute cleanup functions registered with @code{atexit} or
@@ -977,6 +1050,8 @@ execute cleanup functions registered with @code{atexit} or
 @comment stdlib.h
 @comment ISO
 @deftypefun void _Exit (int @var{status})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Alias for _exit.
 The @code{_Exit} function is the @w{ISO C} equivalent to @code{_exit}.
 The @w{ISO C} committee members were not sure whether the definitions of
 @code{_exit} and @code{_Exit} were compatible so they have not used the
