@@ -28,6 +28,38 @@ declared in @file{fnmatch.h}.
 @comment fnmatch.h
 @comment POSIX.2
 @deftypefun int fnmatch (const char *@var{pattern}, const char *@var{string}, int @var{flags})
+@safety{@prelim{}@mtsafe{@mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+@c fnmatch @mtsenv @mtslocale @ascuheap @acsmem
+@c  strnlen dup ok
+@c  mbsrtowcs
+@c  memset dup ok
+@c  malloc dup @ascuheap @acsmem
+@c  mbsinit dup ok
+@c  free dup @ascuheap @acsmem
+@c  FCT = internal_fnwmatch @mtsenv @mtslocale @ascuheap @acsmem
+@c   FOLD @mtslocale
+@c    towlower @mtslocale
+@c   EXT @mtsenv @mtslocale @ascuheap @acsmem
+@c    STRLEN = wcslen dup ok
+@c    getenv @mtsenv
+@c    malloc dup @ascuheap @acsmem
+@c    MEMPCPY = wmempcpy dup ok
+@c    FCT dup @mtsenv @mtslocale @ascuheap @acsmem
+@c    STRCAT = wcscat dup ok
+@c    free dup @ascuheap @acsmem
+@c   END @mtsenv
+@c    getenv @mtsenv
+@c   MEMCHR = wmemchr dup ok
+@c   getenv @mtsenv
+@c   IS_CHAR_CLASS = is_char_class @mtslocale
+@c    wctype @mtslocale
+@c   BTOWC ok
+@c   ISWCTYPE ok
+@c   auto findidx dup ok
+@c   elem_hash dup ok
+@c   memcmp dup ok
+@c   collseq_table_lookup dup ok
+@c   NO_LEADING_PERIOD ok
 This function tests whether the string @var{string} matches the pattern
 @var{pattern}.  It returns @code{0} if they do match; otherwise, it
 returns the nonzero value @code{FNM_NOMATCH}.  The arguments
@@ -327,6 +359,63 @@ This is a GNU extension.
 @comment glob.h
 @comment POSIX.2
 @deftypefun int glob (const char *@var{pattern}, int @var{flags}, int (*@var{errfunc}) (const char *@var{filename}, int @var{error-code}), glob_t *@var{vector-ptr})
+@safety{@prelim{}@mtunsafe{@mtasurace{:utent} @mtsenv{} @mtascusig{:ALRM} @mtascutimer{} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @asucorrupt{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c glob @mtasurace:utent @mtsenv @mtascusig:ALRM @mtascutimer @mtslocale @ascudlopen @ascuplugin @asucorrupt @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  strlen dup ok
+@c  strchr dup ok
+@c  malloc dup @ascuheap @acsmem
+@c  mempcpy dup ok
+@c  next_brace_sub ok
+@c  free dup @ascuheap @acsmem
+@c  globfree dup @asucorrupt @ascuheap @acucorrupt @acsmem
+@c  glob_pattern_p ok
+@c   glob_pattern_type dup ok
+@c  getenv dup @mtsenv
+@c  GET_LOGIN_NAME_MAX ok
+@c  getlogin_r dup @mtasurace:utent @mtascusig:ALRM @mtascutimer @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  GETPW_R_SIZE_MAX ok
+@c  getpwnam_r dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  realloc dup @ascuheap @acsmem
+@c  memcpy dup ok
+@c  memchr dup ok
+@c  *pglob->gl_stat user-supplied
+@c  stat64 dup ok
+@c  S_ISDIR dup ok
+@c  strdup dup @ascuheap @acsmem
+@c  glob_pattern_type ok
+@c  glob_in_dir @mtsenv @mtslocale @asucorrupt @ascuheap @acucorrupt @acsfd @acsmem
+@c   strlen dup ok
+@c   glob_pattern_type dup ok
+@c   malloc dup @ascuheap @acsmem
+@c   mempcpy dup ok
+@c   *pglob->gl_stat user-supplied
+@c   stat64 dup ok
+@c   free dup @ascuheap @acsmem
+@c   *pglob->gl_opendir user-supplied
+@c   opendir dup @ascuheap @acsmem @acsfd
+@c   dirfd dup ok
+@c   *pglob->gl_readdir user-supplied
+@c   CONVERT_DIRENT_DIRENT64 ok
+@c   readdir64 ok [protected by exclusive use of the stream]
+@c   REAL_DIR_ENTRY ok
+@c   DIRENT_MIGHT_BE_DIR ok
+@c   fnmatch dup @mtsenv @mtslocale @ascuheap @acsmem
+@c   DIRENT_MIGHT_BE_SYMLINK ok
+@c   link_exists_p ok
+@c    link_exists2_p ok
+@c     strlen dup ok
+@c     mempcpy dup ok
+@c     *pglob->gl_stat user-supplied
+@c    fxstatat64 dup ok
+@c   realloc dup @ascuheap @acsmem
+@c   pglob->gl_closedir user-supplied
+@c   closedir @ascuheap @acsmem @acsfd
+@c  prefix_array dup @asucorrupt @ascuheap @acucorrupt @acsmem
+@c   strlen dup ok
+@c   malloc dup @ascuheap @acsmem
+@c   free dup @ascuheap @acsmem
+@c   mempcpy dup ok
+@c  strcpy dup ok
 The function @code{glob} does globbing using the pattern @var{pattern}
 in the current directory.  It puts the result in a newly allocated
 vector, and stores the size and address of this vector into
@@ -398,6 +487,8 @@ is encountered @code{glob} @emph{can} fail.
 @comment glob.h
 @comment GNU
 @deftypefun int glob64 (const char *@var{pattern}, int @var{flags}, int (*@var{errfunc}) (const char *@var{filename}, int @var{error-code}), glob64_t *@var{vector-ptr})
+@safety{@prelim{}@mtunsafe{@mtasurace{:utent} @mtsenv{} @mtascusig{:ALRM} @mtascutimer{} @mtslocale{}}@asunsafe{@ascudlopen{} @asucorrupt{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c Same code as glob, but with glob64_t #defined as glob_t.
 The @code{glob64} function was added as part of the Large File Summit
 extensions but is not part of the original LFS proposal.  The reason for
 this is simple: it is not necessary.  The necessity for a @code{glob64}
@@ -662,6 +753,9 @@ the time when all @code{glob} calls are done.
 @comment glob.h
 @comment POSIX.2
 @deftypefun void globfree (glob_t *@var{pglob})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{}}}
+@c globfree dup @asucorrupt @ascuheap @acucorrupt @acsmem
+@c  free dup @ascuheap @acsmem
 The @code{globfree} function frees all resources allocated by previous
 calls to @code{glob} associated with the object pointed to by
 @var{pglob}.  This function should be called whenever the currently used
@@ -671,6 +765,7 @@ calls to @code{glob} associated with the object pointed to by
 @comment glob.h
 @comment GNU
 @deftypefun void globfree64 (glob64_t *@var{pglob})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 This function is equivalent to @code{globfree} but it frees records of
 type @code{glob64_t} which were allocated by @code{glob64}.
 @end deftypefun
@@ -733,6 +828,250 @@ expression into it by calling @code{regcomp}.
 @comment regex.h
 @comment POSIX.2
 @deftypefun int regcomp (regex_t *restrict @var{compiled}, const char *restrict @var{pattern}, int @var{cflags})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
+@c All of the issues have to do with memory allocation and multi-byte
+@c character handling present in the input string, or implied by ranges
+@c or inverted character classes.
+@c (re_)malloc @ascuheap @acsmem
+@c re_compile_internal @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c  (re_)realloc @ascuheap @acsmem [no @asucorrupt @acucorrupt for we zero the buffer]
+@c  init_dfa @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c   (re_)malloc @ascuheap @acsmem
+@c   calloc @ascuheap @acsmem
+@c   _NL_CURRENT ok
+@c   _NL_CURRENT_WORD ok
+@c   btowc @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c  libc_lock_init ok
+@c  re_string_construct @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c   re_string_construct_common ok
+@c   re_string_realloc_buffers @ascuheap @acsmem
+@c    (re_)realloc dup @ascuheap @acsmem
+@c   build_wcs_upper_buffer @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c    isascii ok
+@c    mbsinit ok
+@c    toupper ok
+@c    mbrtowc dup @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c    iswlower @mtslocale
+@c    towupper @mtslocale
+@c    wcrtomb dup @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c    (re_)malloc dup @ascuheap @acsmem
+@c   build_upper_buffer ok (@mtslocale but optimized)
+@c    islower ok
+@c    toupper ok
+@c   build_wcs_buffer @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c    mbrtowc dup @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c   re_string_translate_buffer ok
+@c  parse @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c   fetch_token @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c    peek_token @mtslocale
+@c     re_string_eoi ok
+@c     re_string_peek_byte ok
+@c     re_string_cur_idx ok
+@c     re_string_length ok
+@c     re_string_peek_byte_case @mtslocale
+@c      re_string_peek_byte dup ok
+@c      re_string_is_single_byte_char ok
+@c      isascii ok
+@c      re_string_peek_byte dup ok
+@c     re_string_wchar_at ok
+@c     re_string_skip_bytes ok
+@c    re_string_skip_bytes dup ok
+@c   parse_reg_exp @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c    parse_branch @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c     parse_expression @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c      create_token_tree dup @ascuheap @acsmem
+@c      re_string_eoi dup ok
+@c      re_string_first_byte ok
+@c      fetch_token dup @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c      create_tree dup @ascuheap @acsmem
+@c      parse_sub_exp @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c       fetch_token dup @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c       parse_reg_exp dup @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c       postorder() @ascuheap @acsmem
+@c        free_tree @ascuheap @acsmem
+@c         free_token dup @ascuheap @acsmem
+@c       create_tree dup @ascuheap @acsmem
+@c      parse_bracket_exp @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c       _NL_CURRENT dup ok
+@c       _NL_CURRENT_WORD dup ok
+@c       calloc dup @ascuheap @acsmem
+@c       (re_)free dup @ascuheap @acsmem
+@c       peek_token_bracket ok
+@c        re_string_eoi dup ok
+@c        re_string_peek_byte dup ok
+@c        re_string_first_byte dup ok
+@c        re_string_cur_idx dup ok
+@c        re_string_length dup ok
+@c        re_string_skip_bytes dup ok
+@c       bitset_set ok
+@c       re_string_skip_bytes ok
+@c       parse_bracket_element @mtslocale
+@c        re_string_char_size_at ok
+@c        re_string_wchar_at dup ok
+@c        re_string_skip_bytes dup ok
+@c        parse_bracket_symbol @mtslocale
+@c         re_string_eoi dup ok
+@c         re_string_fetch_byte_case @mtslocale
+@c          re_string_fetch_byte ok
+@c          re_string_first_byte dup ok
+@c          isascii ok
+@c          re_string_char_size_at dup ok
+@c          re_string_skip_bytes dup ok
+@c         re_string_fetch_byte dup ok
+@c         re_string_peek_byte dup ok
+@c         re_string_skip_bytes dup ok
+@c        peek_token_bracket dup ok
+@c       auto build_range_exp @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c        auto lookup_collation_sequence_value @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c         btowc dup @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c         collseq_table_lookup ok
+@c         auto seek_collating_symbol_entry dup ok
+@c        (re_)realloc dup @ascuheap @acsmem
+@c        collseq_table_lookup dup ok
+@c       bitset_set dup ok
+@c       (re_)realloc dup @ascuheap @acsmem
+@c       build_equiv_class @mtslocale @ascuheap @acsmem
+@c        _NL_CURRENT ok
+@c        auto findidx ok
+@c        bitset_set dup ok
+@c        (re_)realloc dup @ascuheap @acsmem
+@c       auto build_collating_symbol @ascuheap @acsmem
+@c        auto seek_collating_symbol_entry ok
+@c        bitset_set dup ok
+@c        (re_)realloc dup @ascuheap @acsmem
+@c       build_charclass @mtslocale @ascuheap @acsmem
+@c        (re_)realloc dup @ascuheap @acsmem
+@c        bitset_set dup ok
+@c        isalnum ok
+@c        iscntrl ok
+@c        isspace ok
+@c        isalpha ok
+@c        isdigit ok
+@c        isprint ok
+@c        isupper ok
+@c        isblank ok
+@c        isgraph ok
+@c        ispunct ok
+@c        isxdigit ok
+@c       bitset_not ok
+@c       bitset_mask ok
+@c       create_token_tree dup @ascuheap @acsmem
+@c       create_tree dup @ascuheap @acsmem
+@c       free_charset dup @ascuheap @acsmem
+@c      init_word_char @mtslocale
+@c       isalnum ok
+@c      build_charclass_op @mtslocale @ascuheap @acsmem
+@c       calloc dup @ascuheap @acsmem
+@c       build_charclass dup @mtslocale @ascuheap @acsmem
+@c       (re_)free dup @ascuheap @acsmem
+@c       free_charset dup @ascuheap @acsmem
+@c       bitset_set dup ok
+@c       bitset_not dup ok
+@c       bitset_mask dup ok
+@c       create_token_tree dup @ascuheap @acsmem
+@c       create_tree dup @ascuheap @acsmem
+@c      parse_dup_op @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c       re_string_cur_idx dup ok
+@c       fetch_number @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c        fetch_token dup @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c       re_string_set_index ok
+@c       postorder() @ascuheap @acsmem
+@c        free_tree dup @ascuheap @acsmem
+@c        mark_opt_subexp ok
+@c       duplicate_tree @ascuheap @acsmem
+@c        create_token_tree dup @ascuheap @acsmem
+@c       create_tree dup @ascuheap @acsmem
+@c     postorder() @ascuheap @acsmem
+@c      free_tree dup @ascuheap @acsmem
+@c    fetch_token dup @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c    parse_branch dup @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c    create_tree dup @ascuheap @acsmem
+@c   create_tree @ascuheap @acsmem
+@c    create_token_tree @ascuheap @acsmem
+@c     (re_)malloc dup @ascuheap @acsmem
+@c  analyze @ascuheap @acsmem
+@c   (re_)malloc dup @ascuheap @acsmem
+@c   preorder() @ascuheap @acsmem
+@c    optimize_subexps ok
+@c    calc_next ok
+@c    link_nfa_nodes @ascuheap @acsmem
+@c     re_node_set_init_1 @ascuheap @acsmem
+@c      (re_)malloc dup @ascuheap @acsmem
+@c     re_node_set_init_2 @ascuheap @acsmem
+@c      (re_)malloc dup @ascuheap @acsmem
+@c   postorder() @ascuheap @acsmem
+@c    lower_subexps @ascuheap @acsmem
+@c     lower_subexp @ascuheap @acsmem
+@c      create_tree dup @ascuheap @acsmem
+@c    calc_first @ascuheap @acsmem
+@c     re_dfa_add_node @ascuheap @acsmem
+@c      (re_)realloc dup @ascuheap @acsmem
+@c      re_node_set_init_empty ok
+@c   calc_eclosure @ascuheap @acsmem
+@c    calc_eclosure_iter @ascuheap @acsmem
+@c     re_node_set_alloc @ascuheap @acsmem
+@c      (re_)malloc dup @ascuheap @acsmem
+@c     duplicate_node_closure @ascuheap @acsmem
+@c      re_node_set_empty ok
+@c      duplicate_node @ascuheap @acsmem
+@c       re_dfa_add_node dup @ascuheap @acsmem
+@c      re_node_set_insert @ascuheap @acsmem
+@c       (re_)realloc dup @ascuheap @acsmem
+@c      search_duplicated_node ok
+@c     re_node_set_merge @ascuheap @acsmem
+@c      (re_)realloc dup @ascuheap @acsmem
+@c     re_node_set_free @ascuheap @acsmem
+@c      (re_)free dup @ascuheap @acsmem
+@c     re_node_set_insert dup @ascuheap @acsmem
+@c    re_node_set_free dup @ascuheap @acsmem
+@c   calc_inveclosure @ascuheap @acsmem
+@c    re_node_set_init_empty dup ok
+@c    re_node_set_insert_last @ascuheap @acsmem
+@c     (re_)realloc dup @ascuheap @acsmem
+@c  optimize_utf8 ok
+@c  create_initial_state @ascuheap @acsmem
+@c   re_node_set_init_copy @ascuheap @acsmem
+@c    (re_)malloc dup @ascuheap @acsmem
+@c    re_node_set_init_empty dup ok
+@c   re_node_set_contains ok
+@c   re_node_set_merge dup @ascuheap @acsmem
+@c   re_acquire_state_context @ascuheap @acsmem
+@c    calc_state_hash ok
+@c    re_node_set_compare ok
+@c    create_cd_newstate @ascuheap @acsmem
+@c     calloc dup @ascuheap @acsmem
+@c     re_node_set_init_copy dup @ascuheap @acsmem
+@c     (re_)free dup @ascuheap @acsmem
+@c     free_state @ascuheap @acsmem
+@c      re_node_set_free dup @ascuheap @acsmem
+@c      (re_)free dup @ascuheap @acsmem
+@c     NOT_SATISFY_PREV_CONSTRAINT ok
+@c     re_node_set_remove_at ok
+@c     register_state @ascuheap @acsmem
+@c      re_node_set_alloc dup @ascuheap @acsmem
+@c      re_node_set_insert_last dup @ascuheap @acsmem
+@c      (re_)realloc dup @ascuheap @acsmem
+@c   re_node_set_free dup @ascuheap @acsmem
+@c  free_workarea_compile @ascuheap @acsmem
+@c   (re_)free dup @ascuheap @acsmem
+@c  re_string_destruct @ascuheap @acsmem
+@c   (re_)free dup @ascuheap @acsmem
+@c  free_dfa_content @ascuheap @acsmem
+@c   free_token @ascuheap @acsmem
+@c    free_charset @ascuheap @acsmem
+@c     (re_)free dup @ascuheap @acsmem
+@c    (re_)free dup @ascuheap @acsmem
+@c   (re_)free dup @ascuheap @acsmem
+@c   re_node_set_free dup @ascuheap @acsmem
+@c re_compile_fastmap @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c  re_compile_fastmap_iter @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c   re_set_fastmap ok
+@c    tolower ok
+@c   mbrtowc dup @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c   wcrtomb dup @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c   towlower @mtslocale
+@c   _NL_CURRENT ok
+@c (re_)free @ascuheap @acsmem
 The function @code{regcomp} ``compiles'' a regular expression into a
 data structure that you can use with @code{regexec} to match against a
 string.  The compiled regular expression format is designed for
@@ -882,6 +1221,247 @@ unless the regular expression contains anchor characters (@samp{^} or
 @comment regex.h
 @comment POSIX.2
 @deftypefun int regexec (const regex_t *restrict @var{compiled}, const char *restrict @var{string}, size_t @var{nmatch}, regmatch_t @var{matchptr}[restrict], int @var{eflags})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
+@c libc_lock_lock @asulock @aculock
+@c re_search_internal @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c  re_string_allocate @ascuheap @acsmem
+@c   re_string_construct_common dup ok
+@c   re_string_realloc_buffers dup @ascuheap @acsmem
+@c  match_ctx_init @ascuheap @acsmem
+@c   (re_)malloc dup @ascuheap @acsmem
+@c  re_string_byte_at ok
+@c  re_string_first_byte dup ok
+@c  check_matching @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c   re_string_cur_idx dup ok
+@c   acquire_init_state_context dup @ascuheap @acsmem
+@c    re_string_context_at ok
+@c     re_string_byte_at dup ok
+@c     bitset_contain ok
+@c    re_acquire_state_context dup @ascuheap @acsmem
+@c   check_subexp_matching_top @ascuheap @acsmem
+@c    match_ctx_add_subtop @ascuheap @acsmem
+@c     (re_)realloc dup @ascuheap @acsmem
+@c     calloc dup @ascuheap @acsmem
+@c   transit_state_bkref @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c    re_string_cur_idx dup ok
+@c    re_string_context_at dup ok
+@c    NOT_SATISFY_NEXT_CONSTRAINT ok
+@c    get_subexp @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c     re_string_get_buffer ok
+@c     search_cur_bkref_entry ok
+@c     clean_state_log_if_needed @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c      extend_buffers @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c       re_string_realloc_buffers dup @ascuheap @acsmem
+@c       (re_)realloc dup @ascuheap @acsmem
+@c       build_wcs_upper_buffer dup @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c       build_upper_buffer dup ok (@mtslocale but optimized)
+@c       build_wcs_buffer dup @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c       re_string_translate_buffer dup ok
+@c     get_subexp_sub @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c      check_arrival @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c       (re_)realloc dup @ascuheap @acsmem
+@c       re_string_context_at dup ok
+@c       re_node_set_init_1 dup @ascuheap @acsmem
+@c       check_arrival_expand_ecl @ascuheap @acsmem
+@c        re_node_set_alloc dup @ascuheap @acsmem
+@c        find_subexp_node ok
+@c        re_node_set_merge dup @ascuheap @acsmem
+@c        re_node_set_free dup @ascuheap @acsmem
+@c        check_arrival_expand_ecl_sub @ascuheap @acsmem
+@c         re_node_set_contains dup ok
+@c         re_node_set_insert dup @ascuheap @acsmem
+@c       re_node_set_free dup @ascuheap @acsmem
+@c       re_node_set_init_copy dup @ascuheap @acsmem
+@c       re_node_set_init_empty dup ok
+@c       expand_bkref_cache @ascuheap @acsmem
+@c        search_cur_bkref_entry dup ok
+@c        re_node_set_contains dup ok
+@c        re_node_set_init_1 dup @ascuheap @acsmem
+@c        check_arrival_expand_ecl dup @ascuheap @acsmem
+@c        re_node_set_merge dup @ascuheap @acsmem
+@c        re_node_set_init_copy dup @ascuheap @acsmem
+@c        re_node_set_insert dup @ascuheap @acsmem
+@c        re_node_set_free dup @ascuheap @acsmem
+@c        re_acquire_state @ascuheap @acsmem
+@c         calc_state_hash dup ok
+@c         re_node_set_compare dup ok
+@c         create_ci_newstate @ascuheap @acsmem
+@c          calloc dup @ascuheap @acsmem
+@c          re_node_set_init_copy dup @ascuheap @acsmem
+@c          (re_)free dup @ascuheap @acsmem
+@c          register_state dup @ascuheap @acsmem
+@c          free_state dup @ascuheap @acsmem
+@c       re_acquire_state_context dup @ascuheap @acsmem
+@c       re_node_set_merge dup @ascuheap @acsmem
+@c       check_arrival_add_next_nodes @mtslocale @ascuheap @acsmem
+@c        re_node_set_init_empty dup ok
+@c        check_node_accept_bytes @mtslocale @ascuheap @acsmem
+@c         re_string_byte_at dup ok
+@c         re_string_char_size_at dup ok
+@c         re_string_elem_size_at @mtslocale
+@c          _NL_CURRENT_WORD dup ok
+@c          _NL_CURRENT dup ok
+@c          auto findidx dup ok
+@c         _NL_CURRENT_WORD dup ok
+@c         _NL_CURRENT dup ok
+@c         collseq_table_lookup dup ok
+@c         find_collation_sequence_value @mtslocale
+@c          _NL_CURRENT_WORD dup ok
+@c          _NL_CURRENT dup ok
+@c         auto findidx dup ok
+@c         wcscoll @mtslocale @ascuheap @acsmem
+@c        re_node_set_empty dup ok
+@c        re_node_set_merge dup @ascuheap @acsmem
+@c        re_node_set_free dup @ascuheap @acsmem
+@c        re_node_set_insert dup @ascuheap @acsmem
+@c        re_acquire_state dup @ascuheap @acsmem
+@c        check_node_accept ok
+@c         re_string_byte_at dup ok
+@c         bitset_contain dup ok
+@c         re_string_context_at dup ok
+@c         NOT_SATISFY_NEXT_CONSTRAINT dup ok
+@c      match_ctx_add_entry @ascuheap @acsmem
+@c       (re_)realloc dup @ascuheap @acsmem
+@c       (re_)free dup @ascuheap @acsmem
+@c      clean_state_log_if_needed dup @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c     extend_buffers dup @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c     find_subexp_node dup ok
+@c     calloc dup @ascuheap @acsmem
+@c     check_arrival dup ***
+@c     match_ctx_add_sublast @ascuheap @acsmem
+@c      (re_)realloc dup @ascuheap @acsmem
+@c    re_acquire_state_context dup @ascuheap @acsmem
+@c    re_node_set_init_union @ascuheap @acsmem
+@c     (re_)malloc dup @ascuheap @acsmem
+@c     re_node_set_init_copy dup @ascuheap @acsmem
+@c     re_node_set_init_empty dup ok
+@c    re_node_set_free dup @ascuheap @acsmem
+@c    check_subexp_matching_top dup @ascuheap @acsmem
+@c   check_halt_state_context ok
+@c    re_string_context_at dup ok
+@c    check_halt_node_context ok
+@c     NOT_SATISFY_NEXT_CONSTRAINT dup ok
+@c   re_string_eoi dup ok
+@c   extend_buffers dup @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c   transit_state @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c    transit_state_mb @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c     re_string_context_at dup ok
+@c     NOT_SATISFY_NEXT_CONSTRAINT dup ok
+@c     check_node_accept_bytes dup @mtslocale @ascuheap @acsmem
+@c     re_string_cur_idx dup ok
+@c     clean_state_log_if_needed @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c     re_node_set_init_union dup @ascuheap @acsmem
+@c     re_acquire_state_context dup @ascuheap @acsmem
+@c    re_string_fetch_byte dup ok
+@c    re_string_context_at dup ok
+@c    build_trtable @ascuheap @acsmem
+@c     (re_)malloc dup @ascuheap @acsmem
+@c     group_nodes_into_DFAstates @ascuheap @acsmem
+@c      bitset_empty dup ok
+@c      bitset_set dup ok
+@c      bitset_merge dup ok
+@c      bitset_set_all ok
+@c      bitset_clear ok
+@c      bitset_contain dup ok
+@c      bitset_copy ok
+@c      re_node_set_init_copy dup @ascuheap @acsmem
+@c      re_node_set_insert dup @ascuheap @acsmem
+@c      re_node_set_init_1 dup @ascuheap @acsmem
+@c      re_node_set_free dup @ascuheap @acsmem
+@c     re_node_set_alloc dup @ascuheap @acsmem
+@c     malloc dup @ascuheap @acsmem
+@c     free dup @ascuheap @acsmem
+@c     re_node_set_free dup @ascuheap @acsmem
+@c     bitset_empty ok
+@c     re_node_set_empty dup ok
+@c     re_node_set_merge dup @ascuheap @acsmem
+@c     re_acquire_state_context dup @ascuheap @acsmem
+@c     bitset_merge ok
+@c     calloc dup @ascuheap @acsmem
+@c     bitset_contain dup ok
+@c   merge_state_with_log @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c    re_string_cur_idx dup ok
+@c    re_node_set_init_union dup @ascuheap @acsmem
+@c    re_string_context_at dup ok
+@c    re_node_set_free dup @ascuheap @acsmem
+@c    check_subexp_matching_top @ascuheap @acsmem
+@c     match_ctx_add_subtop dup @ascuheap @acsmem
+@c    transit_state_bkref dup @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c   find_recover_state
+@c    re_string_cur_idx dup ok
+@c    re_string_skip_bytes dup ok
+@c    merge_state_with_log dup @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
+@c  check_halt_state_context dup ok
+@c  prune_impossible_nodes @mtslocale @ascuheap @acsmem
+@c   (re_)malloc dup @ascuheap @acsmem
+@c   sift_ctx_init ok
+@c    re_node_set_init_empty dup ok
+@c   sift_states_backward @mtslocale @ascuheap @acsmem
+@c    re_node_set_init_1 dup @ascuheap @acsmem
+@c    update_cur_sifted_state @mtslocale @ascuheap @acsmem
+@c     add_epsilon_src_nodes @ascuheap @acsmem
+@c      re_acquire_state dup @ascuheap @acsmem
+@c      re_node_set_alloc dup @ascuheap @acsmem
+@c      re_node_set_merge dup @ascuheap @acsmem
+@c      re_node_set_add_intersect @ascuheap @acsmem
+@c       (re_)realloc dup @ascuheap @acsmem
+@c     check_subexp_limits @ascuheap @acsmem
+@c      sub_epsilon_src_nodes @ascuheap @acsmem
+@c       re_node_set_init_empty dup ok
+@c       re_node_set_contains dup ok
+@c       re_node_set_add_intersect dup @ascuheap @acsmem
+@c       re_node_set_free dup @ascuheap @acsmem
+@c       re_node_set_remove_at dup ok
+@c      re_node_set_contains dup ok
+@c     re_acquire_state dup @ascuheap @acsmem
+@c     sift_states_bkref @mtslocale @ascuheap @acsmem
+@c      search_cur_bkref_entry dup ok
+@c      check_dst_limits ok
+@c       search_cur_bkref_entry dup ok
+@c       check_dst_limits_calc_pos ok
+@c        check_dst_limits_calc_pos_1 ok
+@c      re_node_set_init_copy dup @ascuheap @acsmem
+@c      re_node_set_insert dup @ascuheap @acsmem
+@c      sift_states_backward dup @mtslocale @ascuheap @acsmem
+@c      merge_state_array dup @ascuheap @acsmem
+@c      re_node_set_remove ok
+@c       re_node_set_contains dup ok
+@c       re_node_set_remove_at dup ok
+@c      re_node_set_free dup @ascuheap @acsmem
+@c    re_node_set_free dup @ascuheap @acsmem
+@c    re_node_set_empty dup ok
+@c    build_sifted_states @mtslocale @ascuheap @acsmem
+@c     sift_states_iter_mb @mtslocale @ascuheap @acsmem
+@c      check_node_accept_bytes dup @mtslocale @ascuheap @acsmem
+@c     check_node_accept dup ok
+@c     check_dst_limits dup ok
+@c     re_node_set_insert dup @ascuheap @acsmem
+@c   re_node_set_free dup @ascuheap @acsmem
+@c   check_halt_state_context dup ok
+@c   merge_state_array @ascuheap @acsmem
+@c    re_node_set_init_union dup @ascuheap @acsmem
+@c    re_acquire_state dup @ascuheap @acsmem
+@c    re_node_set_free dup @ascuheap @acsmem
+@c   (re_)free dup @ascuheap @acsmem
+@c  set_regs @ascuheap @acsmem
+@c   (re_)malloc dup @ascuheap @acsmem
+@c   re_node_set_init_empty dup ok
+@c   free_fail_stack_return @ascuheap @acsmem
+@c    re_node_set_free dup @ascuheap @acsmem
+@c    (re_)free dup @ascuheap @acsmem
+@c   update_regs ok
+@c   re_node_set_free dup @ascuheap @acsmem
+@c   pop_fail_stack @ascuheap @acsmem
+@c    re_node_set_free dup @ascuheap @acsmem
+@c    (re_)free dup @ascuheap @acsmem
+@c   (re_)free dup @ascuheap @acsmem
+@c  (re_)free dup @ascuheap @acsmem
+@c  match_ctx_free @ascuheap @acsmem
+@c   match_ctx_clean @ascuheap @acsmem
+@c    (re_)free dup @ascuheap @acsmem
+@c   (re_)free dup @ascuheap @acsmem
+@c  re_string_destruct dup @ascuheap @acsmem
+@c libc_lock_unlock @aculock
 This function tries to match the compiled regular expression
 @code{*@var{compiled}} against @var{string}.
 
@@ -1044,6 +1624,9 @@ free the storage it uses by calling @code{regfree}.
 @comment regex.h
 @comment POSIX.2
 @deftypefun void regfree (regex_t *@var{compiled})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+@c (re_)free dup @ascuheap @acsmem
+@c free_dfa_content dup @ascuheap @acsmem
 Calling @code{regfree} frees all the storage that @code{*@var{compiled}}
 points to.  This includes various internal fields of the @code{regex_t}
 structure that aren't documented in this manual.
@@ -1061,6 +1644,8 @@ the function @code{regerror} to turn it into an error message string.
 @comment regex.h
 @comment POSIX.2
 @deftypefun size_t regerror (int @var{errcode}, const regex_t *restrict @var{compiled}, char *restrict @var{buffer}, size_t @var{length})
+@safety{@prelim{}@mtsafe{@mtsenv{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c regerror calls gettext, strcmp and mempcpy or memcpy.
 This function produces an error message string for the error code
 @var{errcode}, and stores the string in @var{length} bytes of memory
 starting at @var{buffer}.  For the @var{compiled} argument, supply the
@@ -1226,6 +1811,145 @@ the beginning of the vector.
 @comment wordexp.h
 @comment POSIX.2
 @deftypefun int wordexp (const char *@var{words}, wordexp_t *@var{word-vector-ptr}, int @var{flags})
+@safety{@prelim{}@mtunsafe{@mtasurace{:utent} @mtasuconst{:@mtsenv{}} @mtsenv{} @mtascusig{:ALRM} @mtascutimer{} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuintl{} @ascuheap{} @asucorrupt{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c wordexp @mtasurace:utent @mtasuconst:@mtsenv @mtsenv @mtascusig:ALRM @mtascutimer @mtslocale @ascudlopen @ascuplugin @ascuintl @ascuheap @asucorrupt @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  w_newword ok
+@c  wordfree dup @asucorrupt @ascuheap @acucorrupt @acsmem
+@c  calloc dup @ascuheap @acsmem
+@c  getenv dup @mtsenv
+@c  strcpy dup ok
+@c  parse_backslash @ascuheap @acsmem
+@c   w_addchar dup @ascuheap @acsmem
+@c  parse_dollars @mtasuconst:@mtsenv @mtslocale @mtsenv @ascudlopen @ascuplugin @ascuintl @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   w_addchar dup @ascuheap @acsmem
+@c   parse_arith @mtasuconst:@mtsenv @mtslocale @mtsenv @ascudlopen @ascuplugin @ascuintl @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c    w_newword dup ok
+@c    parse_dollars dup @mtasuconst:@mtsenv @mtslocale @mtsenv @ascudlopen @ascuplugin @ascuintl @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c    parse_backtick dup @ascuplugin @ascuheap @aculock @acsfd @acsmem
+@c    parse_qtd_backslash dup @ascuheap @acsmem
+@c    eval_expr @mtslocale
+@c     eval_expr_multidiv @mtslocale
+@c      eval_expr_val @mtslocale
+@c       isspace dup @mtslocale
+@c       eval_expr dup @mtslocale
+@c      isspace dup @mtslocale
+@c     isspace dup @mtslocale
+@c    free dup @ascuheap @acsmem
+@c    w_addchar dup @ascuheap @acsmem
+@c    w_addstr dup @ascuheap @acsmem
+@c    itoa_word dup ok
+@c   parse_comm @ascuplugin @ascuheap @aculock @acsfd @acsmem
+@c    w_newword dup ok
+@c    pthread_setcancelstate @ascuplugin @ascuheap @acsmem
+@c      (disable cancellation around exec_comm; it may do_cancel the
+@c       second time, if async cancel is enabled)
+@c     THREAD_ATOMIC_CMPXCHG_VAL dup ok
+@c     CANCEL_ENABLED_AND_CANCELED_AND_ASYNCHRONOUS dup ok
+@c     do_cancel @ascuplugin @ascuheap @acsmem
+@c      THREAD_ATOMIC_BIT_SET dup ok
+@c      pthread_unwind @ascuplugin @ascuheap @acsmem
+@c       Unwind_ForcedUnwind if available @ascuplugin @ascuheap @acsmem
+@c       libc_unwind_longjmp otherwise
+@c       cleanups
+@c    exec_comm @ascuplugin @ascuheap @aculock @acsfd @acsmem
+@c     pipe2 dup ok
+@c     pipe dup ok
+@c     fork dup @ascuplugin @aculock
+@c     close dup @acsfd
+@c     on child: exec_comm_child -> exec or abort
+@c     waitpid dup ok
+@c     read dup ok
+@c     w_addmem dup @ascuheap @acsmem
+@c     strchr dup ok
+@c     w_addword dup @ascuheap @acsmem
+@c     w_newword dup ok
+@c     w_addchar dup @ascuheap @acsmem
+@c     free dup @ascuheap @acsmem
+@c     kill dup ok
+@c    free dup @ascuheap @acsmem
+@c   parse_param @mtasuconst:@mtsenv @mtslocale @mtsenv @ascudlopen @ascuplugin @ascuintl @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c     reads from __libc_argc and __libc_argv without guards
+@c    w_newword dup ok
+@c    isalpha dup @mtslocale^^
+@c    w_addchar dup @ascuheap @acsmem
+@c    isalnum dup @mtslocale^^
+@c    isdigit dup @mtslocale^^
+@c    strchr dup ok
+@c    itoa_word dup ok
+@c    atoi dup @mtslocale
+@c    getpid dup ok
+@c    w_addstr dup @ascuheap @acsmem
+@c    free dup @ascuheap @acsmem
+@c    strlen dup ok
+@c    malloc dup @ascuheap @acsmem
+@c    stpcpy dup ok
+@c    w_addword dup @ascuheap @acsmem
+@c    strdup dup @ascuheap @acsmem
+@c    getenv dup @mtsenv
+@c    parse_dollars dup @mtasuconst:@mtsenv @mtslocale @mtsenv @ascudlopen @ascuplugin @ascuintl @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c    parse_tilde dup @mtslocale @mtsenv @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c    fnmatch dup @mtsenv @mtslocale @ascuheap @acsmem
+@c    mempcpy dup ok
+@c    _ dup @ascuintl
+@c    fxprintf dup @aculock
+@c    setenv dup @mtasuconst:@mtsenv @ascuheap @asulock @acucorrupt @aculock @acsmem
+@c    strspn dup ok
+@c    strcspn dup ok
+@c  parse_backtick @ascuplugin @ascuheap @aculock @acsfd @acsmem
+@c   w_newword dup ok
+@c   exec_comm dup @ascuplugin @ascuheap @aculock @acsfd @acsmem
+@c   free dup @ascuheap @acsmem
+@c   parse_qtd_backslash dup @ascuheap @acsmem
+@c   parse_backslash dup @ascuheap @acsmem
+@c   w_addchar dup @ascuheap @acsmem
+@c  parse_dquote @mtasuconst:@mtsenv @mtslocale @mtsenv @ascudlopen @ascuplugin @ascuintl @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   parse_dollars dup @mtasuconst:@mtsenv @mtslocale @mtsenv @ascudlopen @ascuplugin @ascuintl @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   parse_backtick dup @ascuplugin @ascuheap @aculock @acsfd @acsmem
+@c   parse_qtd_backslash dup @ascuheap @acsmem
+@c   w_addchar dup @ascuheap @acsmem
+@c  w_addword dup @ascuheap @acsmem
+@c   strdup dup @ascuheap @acsmem
+@c   realloc dup @ascuheap @acsmem
+@c   free dup @ascuheap @acsmem
+@c  parse_squote dup @ascuheap @acsmem
+@c   w_addchar dup @ascuheap @acsmem
+@c  parse_tilde @mtslocale @mtsenv @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   strchr dup ok
+@c   w_addchar dup @ascuheap @acsmem
+@c   getenv dup @mtsenv
+@c   w_addstr dup @ascuheap @acsmem
+@c    strlen dup ok
+@c    w_addmem dup @ascuheap @acsmem
+@c     realloc dup @ascuheap @acsmem
+@c     free dup @ascuheap @acsmem
+@c     mempcpy dup ok
+@c   getuid dup ok
+@c   getpwuid_r dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   getpwnam_r dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  parse_glob @mtasurace:utent @mtasuconst:@mtsenv @mtsenv @mtascusig:ALRM @mtascutimer @mtslocale @ascudlopen @ascuplugin @ascuintl @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   strchr dup ok
+@c   parse_dollars dup @mtasuconst:@mtsenv @mtslocale @mtsenv @ascudlopen @ascuplugin @ascuintl @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   parse_qtd_backslash @ascuheap @acsmem
+@c    w_addchar dup @ascuheap @acsmem
+@c   parse_backslash dup @ascuheap @acsmem
+@c   w_addchar dup @ascuheap @acsmem
+@c   w_addword dup @ascuheap @acsmem
+@c   w_newword dup ok
+@c   do_parse_glob @mtasurace:utent @mtsenv @mtascusig:ALRM @mtascutimer @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @aculock @acsfd @acsmem
+@c    glob dup @mtasurace:utent @mtsenv @mtascusig:ALRM @mtascutimer @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @aculock @acsfd @acsmem [auto glob_t avoids @asucorrupt @acucorrupt]
+@c    w_addstr dup @ascuheap @acsmem
+@c    w_addchar dup @ascuheap @acsmem
+@c    globfree dup @ascuheap @acsmem [auto glob_t avoids @asucorrupt @acucorrupt]
+@c    free dup @ascuheap @acsmem
+@c    w_newword dup ok
+@c    strdup dup @ascuheap @acsmem
+@c    w_addword dup @ascuheap @acsmem
+@c   wordfree dup @asucorrupt @ascuheap @acucorrupt @acsmem
+@c  strchr dup ok
+@c  w_addchar dup @ascuheap @acsmem
+@c   realloc dup @ascuheap @acsmem
+@c   free dup @ascuheap @acsmem
+@c  free dup @ascuheap @acsmem
 Perform word expansion on the string @var{words}, putting the result in
 a newly allocated vector, and store the size and address of this vector
 into @code{*@var{word-vector-ptr}}.  The argument @var{flags} is a
@@ -1289,6 +2013,9 @@ quoting character is a syntax error.
 @comment wordexp.h
 @comment POSIX.2
 @deftypefun void wordfree (wordexp_t *@var{word-vector-ptr})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{}}}
+@c wordfree dup @asucorrupt @ascuheap @acucorrupt @acsmem
+@c  free dup @ascuheap @acsmem
 Free the storage used for the word-strings and vector that
 @code{*@var{word-vector-ptr}} points to.  This does not free the
 structure @code{*@var{word-vector-ptr}} itself---only the other
