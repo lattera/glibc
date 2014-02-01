@@ -66,6 +66,16 @@ These functions are declared in the header file @file{ctype.h}.
 @comment ctype.h
 @comment ISO
 @deftypefun int islower (int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c The is* macros call __ctype_b_loc to get the ctype array from the
+@c current locale, and then index it by c.  __ctype_b_loc reads from
+@c thread-local memory the (indirect) pointer to the ctype array, which
+@c may involve one word access to the global locale object, if that's
+@c the active locale for the thread, and the array, being part of the
+@c locale data, is undeletable, so there's no thread-safety issue.  We
+@c might want to mark these with @mtslocale to flag to callers that
+@c changing locales might affect them, even if not these simpler
+@c functions.
 Returns true if @var{c} is a lower-case letter.  The letter need not be
 from the Latin alphabet, any alphabet representable is valid.
 @end deftypefun
@@ -74,6 +84,7 @@ from the Latin alphabet, any alphabet representable is valid.
 @comment ctype.h
 @comment ISO
 @deftypefun int isupper (int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Returns true if @var{c} is an upper-case letter.  The letter need not be
 from the Latin alphabet, any alphabet representable is valid.
 @end deftypefun
@@ -82,6 +93,7 @@ from the Latin alphabet, any alphabet representable is valid.
 @comment ctype.h
 @comment ISO
 @deftypefun int isalpha (int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Returns true if @var{c} is an alphabetic character (a letter).  If
 @code{islower} or @code{isupper} is true of a character, then
 @code{isalpha} is also true.
@@ -97,6 +109,7 @@ additional characters.
 @comment ctype.h
 @comment ISO
 @deftypefun int isdigit (int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Returns true if @var{c} is a decimal digit (@samp{0} through @samp{9}).
 @end deftypefun
 
@@ -104,6 +117,7 @@ Returns true if @var{c} is a decimal digit (@samp{0} through @samp{9}).
 @comment ctype.h
 @comment ISO
 @deftypefun int isalnum (int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Returns true if @var{c} is an alphanumeric character (a letter or
 number); in other words, if either @code{isalpha} or @code{isdigit} is
 true of a character, then @code{isalnum} is also true.
@@ -113,6 +127,7 @@ true of a character, then @code{isalnum} is also true.
 @comment ctype.h
 @comment ISO
 @deftypefun int isxdigit (int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Returns true if @var{c} is a hexadecimal digit.
 Hexadecimal digits include the normal decimal digits @samp{0} through
 @samp{9} and the letters @samp{A} through @samp{F} and
@@ -123,6 +138,7 @@ Hexadecimal digits include the normal decimal digits @samp{0} through
 @comment ctype.h
 @comment ISO
 @deftypefun int ispunct (int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Returns true if @var{c} is a punctuation character.
 This means any printing character that is not alphanumeric or a space
 character.
@@ -132,6 +148,7 @@ character.
 @comment ctype.h
 @comment ISO
 @deftypefun int isspace (int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Returns true if @var{c} is a @dfn{whitespace} character.  In the standard
 @code{"C"} locale, @code{isspace} returns true for only the standard
 whitespace characters:
@@ -161,6 +178,7 @@ vertical tab
 @comment ctype.h
 @comment ISO
 @deftypefun int isblank (int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Returns true if @var{c} is a blank character; that is, a space or a tab.
 This function was originally a GNU extension, but was added in @w{ISO C99}.
 @end deftypefun
@@ -169,6 +187,7 @@ This function was originally a GNU extension, but was added in @w{ISO C99}.
 @comment ctype.h
 @comment ISO
 @deftypefun int isgraph (int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Returns true if @var{c} is a graphic character; that is, a character
 that has a glyph associated with it.  The whitespace characters are not
 considered graphic.
@@ -178,6 +197,7 @@ considered graphic.
 @comment ctype.h
 @comment ISO
 @deftypefun int isprint (int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Returns true if @var{c} is a printing character.  Printing characters
 include all the graphic characters, plus the space (@samp{ }) character.
 @end deftypefun
@@ -186,6 +206,7 @@ include all the graphic characters, plus the space (@samp{ }) character.
 @comment ctype.h
 @comment ISO
 @deftypefun int iscntrl (int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Returns true if @var{c} is a control character (that is, a character that
 is not a printing character).
 @end deftypefun
@@ -194,6 +215,7 @@ is not a printing character).
 @comment ctype.h
 @comment SVID, BSD
 @deftypefun int isascii (int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Returns true if @var{c} is a 7-bit @code{unsigned char} value that fits
 into the US/UK ASCII character set.  This function is a BSD extension
 and is also an SVID extension.
@@ -227,6 +249,10 @@ These functions are declared in the header file @file{ctype.h}.
 @comment ctype.h
 @comment ISO
 @deftypefun int tolower (int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c The to* macros/functions call different functions that use different
+@c arrays than those of__ctype_b_loc, but the access patterns and
+@c thus safety guarantees are the same.
 If @var{c} is an upper-case letter, @code{tolower} returns the corresponding
 lower-case letter.  If @var{c} is not an upper-case letter,
 @var{c} is returned unchanged.
@@ -235,6 +261,7 @@ lower-case letter.  If @var{c} is not an upper-case letter,
 @comment ctype.h
 @comment ISO
 @deftypefun int toupper (int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 If @var{c} is a lower-case letter, @code{toupper} returns the corresponding
 upper-case letter.  Otherwise @var{c} is returned unchanged.
 @end deftypefun
@@ -242,6 +269,7 @@ upper-case letter.  Otherwise @var{c} is returned unchanged.
 @comment ctype.h
 @comment SVID, BSD
 @deftypefun int toascii (int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function converts @var{c} to a 7-bit @code{unsigned char} value
 that fits into the US/UK ASCII character set, by clearing the high-order
 bits.  This function is a BSD extension and is also an SVID extension.
@@ -250,6 +278,7 @@ bits.  This function is a BSD extension and is also an SVID extension.
 @comment ctype.h
 @comment SVID
 @deftypefun int _tolower (int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This is identical to @code{tolower}, and is provided for compatibility
 with the SVID.  @xref{SVID}.@refill
 @end deftypefun
@@ -257,6 +286,7 @@ with the SVID.  @xref{SVID}.@refill
 @comment ctype.h
 @comment SVID
 @deftypefun int _toupper (int @var{c})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This is identical to @code{toupper}, and is provided for compatibility
 with the SVID.
 @end deftypefun
@@ -303,6 +333,18 @@ This type is defined in @file{wctype.h}.
 @comment wctype.h
 @comment ISO
 @deftypefun wctype_t wctype (const char *@var{property})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
+@c Although the source code of wctype contains multiple references to
+@c the locale, that could each reference different locale_data objects
+@c should the global locale object change while active, the compiler can
+@c and does combine them all into a single dereference that resolves
+@c once to the LCTYPE locale object used throughout the function, so it
+@c is safe in (optimized) practice, if not in theory, even when the
+@c locale changes.  Ideally we'd explicitly save the resolved
+@c locale_data object to make it visibly safe instead of safe only under
+@c compiler optimizations, but given the decision that setlocale is
+@c MT-Unsafe, all this would afford us would be the ability to not mark
+@c this function with @mtslocale.
 The @code{wctype} returns a value representing a class of wide
 characters which is identified by the string @var{property}.  Beside
 some standard properties each locale can define its own ones.  In case
@@ -331,6 +373,8 @@ the @w{ISO C} standard defines a completely new function.
 @comment wctype.h
 @comment ISO
 @deftypefun int iswctype (wint_t @var{wc}, wctype_t @var{desc})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c The compressed lookup table returned by wctype is read-only.
 This function returns a nonzero value if @var{wc} is in the character
 class specified by @var{desc}.  @var{desc} must previously be returned
 by a successful call to @code{wctype}.
@@ -350,6 +394,16 @@ standard classes.
 @comment wctype.h
 @comment ISO
 @deftypefun int iswalnum (wint_t @var{wc})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
+@c The implicit wctype call in the isw* functions is actually an
+@c optimized version because the category has a known offset, but the
+@c wctype is equally safe when optimized, unsafe with changing locales
+@c if not optimized (thus @mtslocale).  Since it's not a macro, we
+@c always optimize, and the locale can't change in any MT-Safe way, it's
+@c fine.  The test whether wc is ASCII to use the non-wide is*
+@c macro/function doesn't bring any other safety issues: the test does
+@c not depend on the locale, and each path after the decision resolves
+@c the locale object only once.
 This function returns a nonzero value if @var{wc} is an alphanumeric
 character (a letter or number); in other words, if either @code{iswalpha}
 or @code{iswdigit} is true of a character, then @code{iswalnum} is also
@@ -370,6 +424,7 @@ It is declared in @file{wctype.h}.
 @comment wctype.h
 @comment ISO
 @deftypefun int iswalpha (wint_t @var{wc})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
 Returns true if @var{wc} is an alphabetic character (a letter).  If
 @code{iswlower} or @code{iswupper} is true of a character, then
 @code{iswalpha} is also true.
@@ -394,6 +449,7 @@ It is declared in @file{wctype.h}.
 @comment wctype.h
 @comment ISO
 @deftypefun int iswcntrl (wint_t @var{wc})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
 Returns true if @var{wc} is a control character (that is, a character that
 is not a printing character).
 
@@ -412,6 +468,7 @@ It is declared in @file{wctype.h}.
 @comment wctype.h
 @comment ISO
 @deftypefun int iswdigit (wint_t @var{wc})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
 Returns true if @var{wc} is a digit (e.g., @samp{0} through @samp{9}).
 Please note that this function does not only return a nonzero value for
 @emph{decimal} digits, but for all kinds of digits.  A consequence is
@@ -442,6 +499,7 @@ It is declared in @file{wctype.h}.
 @comment wctype.h
 @comment ISO
 @deftypefun int iswgraph (wint_t @var{wc})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
 Returns true if @var{wc} is a graphic character; that is, a character
 that has a glyph associated with it.  The whitespace characters are not
 considered graphic.
@@ -461,6 +519,7 @@ It is declared in @file{wctype.h}.
 @comment ctype.h
 @comment ISO
 @deftypefun int iswlower (wint_t @var{wc})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
 Returns true if @var{wc} is a lower-case letter.  The letter need not be
 from the Latin alphabet, any alphabet representable is valid.
 
@@ -479,6 +538,7 @@ It is declared in @file{wctype.h}.
 @comment wctype.h
 @comment ISO
 @deftypefun int iswprint (wint_t @var{wc})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
 Returns true if @var{wc} is a printing character.  Printing characters
 include all the graphic characters, plus the space (@samp{ }) character.
 
@@ -497,6 +557,7 @@ It is declared in @file{wctype.h}.
 @comment wctype.h
 @comment ISO
 @deftypefun int iswpunct (wint_t @var{wc})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
 Returns true if @var{wc} is a punctuation character.
 This means any printing character that is not alphanumeric or a space
 character.
@@ -516,6 +577,7 @@ It is declared in @file{wctype.h}.
 @comment wctype.h
 @comment ISO
 @deftypefun int iswspace (wint_t @var{wc})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
 Returns true if @var{wc} is a @dfn{whitespace} character.  In the standard
 @code{"C"} locale, @code{iswspace} returns true for only the standard
 whitespace characters:
@@ -555,6 +617,7 @@ It is declared in @file{wctype.h}.
 @comment wctype.h
 @comment ISO
 @deftypefun int iswupper (wint_t @var{wc})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
 Returns true if @var{wc} is an upper-case letter.  The letter need not be
 from the Latin alphabet, any alphabet representable is valid.
 
@@ -573,6 +636,7 @@ It is declared in @file{wctype.h}.
 @comment wctype.h
 @comment ISO
 @deftypefun int iswxdigit (wint_t @var{wc})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
 Returns true if @var{wc} is a hexadecimal digit.
 Hexadecimal digits include the normal decimal digits @samp{0} through
 @samp{9} and the letters @samp{A} through @samp{F} and
@@ -597,6 +661,7 @@ characters as well.
 @comment wctype.h
 @comment ISO
 @deftypefun int iswblank (wint_t @var{wc})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
 Returns true if @var{wc} is a blank character; that is, a space or a tab.
 This function was originally a GNU extension, but was added in @w{ISO C99}.
 It is declared in @file{wchar.h}.
@@ -691,6 +756,8 @@ This type is defined in @file{wctype.h}.
 @comment wctype.h
 @comment ISO
 @deftypefun wctrans_t wctrans (const char *@var{property})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
+@c Similar implementation, same caveats as wctype.
 The @code{wctrans} function has to be used to find out whether a named
 mapping is defined in the current locale selected for the
 @code{LC_CTYPE} category.  If the returned value is non-zero, you can use
@@ -713,6 +780,8 @@ These functions are declared in @file{wctype.h}.
 @comment wctype.h
 @comment ISO
 @deftypefun wint_t towctrans (wint_t @var{wc}, wctrans_t @var{desc})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Same caveats as iswctype.
 @code{towctrans} maps the input character @var{wc}
 according to the rules of the mapping for which @var{desc} is a
 descriptor, and returns the value it finds.  @var{desc} must be
@@ -730,6 +799,9 @@ for them.
 @comment wctype.h
 @comment ISO
 @deftypefun wint_t towlower (wint_t @var{wc})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
+@c Same caveats as iswalnum, just using a wctrans rather than a wctype
+@c table.
 If @var{wc} is an upper-case letter, @code{towlower} returns the corresponding
 lower-case letter.  If @var{wc} is not an upper-case letter,
 @var{wc} is returned unchanged.
@@ -749,6 +821,7 @@ This function is declared in @file{wctype.h}.
 @comment wctype.h
 @comment ISO
 @deftypefun wint_t towupper (wint_t @var{wc})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
 If @var{wc} is a lower-case letter, @code{towupper} returns the corresponding
 upper-case letter.  Otherwise @var{wc} is returned unchanged.
 
