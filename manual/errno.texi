@@ -1293,6 +1293,9 @@ name of the program that encountered the error.
 @comment string.h
 @comment ISO
 @deftypefun {char *} strerror (int @var{errnum})
+@safety{@prelim{}@mtunsafe{@mtasurace{:strerror}}@asunsafe{@ascuheap{} @ascuintl{}}@acunsafe{@acsmem{}}}
+@c Calls strerror_r with a static buffer allocated with malloc on the
+@c first use.
 The @code{strerror} function maps the error code (@pxref{Checking for
 Errors}) specified by the @var{errnum} argument to a descriptive error
 message string.  The return value is a pointer to this string.
@@ -1310,6 +1313,7 @@ The function @code{strerror} is declared in @file{string.h}.
 @comment string.h
 @comment GNU
 @deftypefun {char *} strerror_r (int @var{errnum}, char *@var{buf}, size_t @var{n})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuintl{}}@acunsafe{}}
 The @code{strerror_r} function works like @code{strerror} but instead of
 returning the error message in a statically allocated buffer shared by
 all threads in the process, it returns a private copy for the
@@ -1331,6 +1335,10 @@ This function @code{strerror_r} is a GNU extension and it is declared in
 @comment stdio.h
 @comment ISO
 @deftypefun void perror (const char *@var{message})
+@safety{@prelim{}@mtsafe{@mtasurace{:stderr}}@asunsafe{@asucorrupt{} @ascuintl{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
+@c Besides strerror_r's and some of fprintf's issues, if stderr is not
+@c oriented yet, create a new stream with a dup of stderr's fd and write
+@c to that instead of stderr, to avoid orienting it.
 This function prints an error message to the stream @code{stderr};
 see @ref{Standard Streams}.  The orientation of @code{stderr} is not
 changed.
@@ -1442,6 +1450,13 @@ These functions are declared in @file{error.h}.
 @comment error.h
 @comment GNU
 @deftypefun void error (int @var{status}, int @var{errnum}, const char *@var{format}, @dots{})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @asuheap{} @asuintl{}}@acsafe{}}
+@c Cancellation is disabled throughout the execution.  It flushes stdout
+@c and then holds a lock on stderr while printing the program name and
+@c then running error_tail.  The non-wide case just runs vfprintf; the
+@c wide case converts the message to an alloca/malloc-allocated buffer
+@c with mbsrtowcs, then prints it with vfwprintf.  Afterwards,
+@c print_errno_message calls strerror_r and fxprintf.
 The @code{error} function can be used to report general problems during
 program execution.  The @var{format} argument is a format string just
 like those given to the @code{printf} family of functions.  The
@@ -1477,6 +1492,15 @@ incremented by one to keep track of the number of errors reported.
 @comment error.h
 @comment GNU
 @deftypefun void error_at_line (int @var{status}, int @var{errnum}, const char *@var{fname}, unsigned int @var{lineno}, const char *@var{format}, @dots{})
+@safety{@prelim{}@mtunsafe{@mtasurace{:error_at_line/error_one_per_line} @mtslocale{}}@asunsafe{@asucorrupt{} @asuheap{} @asuintl{}}@acunsafe{@acucorrupt{/error_one_per_line}}}
+@c The error_one_per_line variable is accessed (without any form of
+@c synchronization, but since it's an int used once, it should be safe
+@c enough) and, if this mode is enabled, static variables used to hold
+@c the last printed file name and line number are accessed and modified
+@c without synchronization; the update is not atomic and it occurs
+@c before disabling cancellation, so it can be interrupted after only
+@c one of the two variables is modified.  After that, it's very much
+@c like error.
 
 The @code{error_at_line} function is very similar to the @code{error}
 function.  The only difference are the additional parameters @var{fname}
@@ -1582,6 +1606,8 @@ are included only for compatibility.
 @comment err.h
 @comment BSD
 @deftypefun void warn (const char *@var{format}, @dots{})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{} @ascuintl{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{}}}
+@c Just calls vwarn with the va_list.
 The @code{warn} function is roughly equivalent to a call like
 @smallexample
   error (0, errno, format, @r{the parameters})
@@ -1594,6 +1620,11 @@ are not used.
 @comment err.h
 @comment BSD
 @deftypefun void vwarn (const char *@var{format}, va_list @var{ap})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{} @ascuintl{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{}}}
+@c While holding stderr's recursive lock, it prints the programname, the
+@c given message, and the error string with fw?printf's %m.  When the
+@c stream is wide, convert_and_print converts the format string to an
+@c alloca/malloc-created buffer using mbsrtowcs and then calls fwprintf.
 The @code{vwarn} function is just like @code{warn} except that the
 parameters for the handling of the format string @var{format} are passed
 in as a value of type @code{va_list}.
@@ -1602,6 +1633,8 @@ in as a value of type @code{va_list}.
 @comment err.h
 @comment BSD
 @deftypefun void warnx (const char *@var{format}, @dots{})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{}}}
+@c Same as warn, but without the strerror translation issues.
 The @code{warnx} function is roughly equivalent to a call like
 @smallexample
   error (0, 0, format, @r{the parameters})
@@ -1615,6 +1648,8 @@ string is printed.
 @comment err.h
 @comment BSD
 @deftypefun void vwarnx (const char *@var{format}, va_list @var{ap})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{}}}
+@c Same as vwarn, but without the strerror translation issues.
 The @code{vwarnx} function is just like @code{warnx} except that the
 parameters for the handling of the format string @var{format} are passed
 in as a value of type @code{va_list}.
@@ -1623,6 +1658,8 @@ in as a value of type @code{va_list}.
 @comment err.h
 @comment BSD
 @deftypefun void err (int @var{status}, const char *@var{format}, @dots{})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{} @ascuintl{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{}}}
+@c Same as warn followed by exit.
 The @code{err} function is roughly equivalent to a call like
 @smallexample
   error (status, errno, format, @r{the parameters})
@@ -1635,6 +1672,8 @@ are not used and that the program is exited even if @var{status} is zero.
 @comment err.h
 @comment BSD
 @deftypefun void verr (int @var{status}, const char *@var{format}, va_list @var{ap})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{} @ascuintl{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{}}}
+@c Same as vwarn followed by exit.
 The @code{verr} function is just like @code{err} except that the
 parameters for the handling of the format string @var{format} are passed
 in as a value of type @code{va_list}.
@@ -1643,6 +1682,8 @@ in as a value of type @code{va_list}.
 @comment err.h
 @comment BSD
 @deftypefun void errx (int @var{status}, const char *@var{format}, @dots{})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{}}}
+@c Same as warnx followed by exit.
 The @code{errx} function is roughly equivalent to a call like
 @smallexample
   error (status, 0, format, @r{the parameters})
@@ -1657,6 +1698,8 @@ string is printed.
 @comment err.h
 @comment BSD
 @deftypefun void verrx (int @var{status}, const char *@var{format}, va_list @var{ap})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{}}}
+@c Same as vwarnx followed by exit.
 The @code{verrx} function is just like @code{errx} except that the
 parameters for the handling of the format string @var{format} are passed
 in as a value of type @code{va_list}.
