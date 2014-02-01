@@ -157,6 +157,7 @@ You can also compute the value of pi with the expression @code{acos
 @comment math.h
 @comment ISO
 @deftypefunx {long double} sinl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the sine of @var{x}, where @var{x} is given in
 radians.  The return value is in the range @code{-1} to @code{1}.
 @end deftypefun
@@ -170,6 +171,7 @@ radians.  The return value is in the range @code{-1} to @code{1}.
 @comment math.h
 @comment ISO
 @deftypefunx {long double} cosl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the cosine of @var{x}, where @var{x} is given in
 radians.  The return value is in the range @code{-1} to @code{1}.
 @end deftypefun
@@ -183,6 +185,7 @@ radians.  The return value is in the range @code{-1} to @code{1}.
 @comment math.h
 @comment ISO
 @deftypefunx {long double} tanl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the tangent of @var{x}, where @var{x} is given in
 radians.
 
@@ -205,6 +208,7 @@ function to do that.
 @comment math.h
 @comment GNU
 @deftypefunx void sincosl (long double @var{x}, long double *@var{sinx}, long double *@var{cosx})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the sine of @var{x} in @code{*@var{sinx}} and the
 cosine of @var{x} in @code{*@var{cos}}, where @var{x} is given in
 radians.  Both values, @code{*@var{sinx}} and @code{*@var{cosx}}, are in
@@ -233,6 +237,9 @@ the implementation.)
 @comment complex.h
 @comment ISO
 @deftypefunx {complex long double} csinl (complex long double @var{z})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c There are calls to nan* that could trigger @mtslocale if they didn't get
+@c empty strings.
 These functions return the complex sine of @var{z}.
 The mathematical definition of the complex sine is
 
@@ -253,6 +260,7 @@ $$\sin(z) = {1\over 2i} (e^{zi} - e^{-zi})$$
 @comment complex.h
 @comment ISO
 @deftypefunx {complex long double} ccosl (complex long double @var{z})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the complex cosine of @var{z}.
 The mathematical definition of the complex cosine is
 
@@ -273,6 +281,7 @@ $$\cos(z) = {1\over 2} (e^{zi} + e^{-zi})$$
 @comment complex.h
 @comment ISO
 @deftypefunx {complex long double} ctanl (complex long double @var{z})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the complex tangent of @var{z}.
 The mathematical definition of the complex tangent is
 
@@ -307,6 +316,7 @@ respectively.
 @comment math.h
 @comment ISO
 @deftypefunx {long double} asinl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions compute the arc sine of @var{x}---that is, the value whose
 sine is @var{x}.  The value is in units of radians.  Mathematically,
 there are infinitely many such values; the one actually returned is the
@@ -326,6 +336,7 @@ domain, @code{asin} signals a domain error.
 @comment math.h
 @comment ISO
 @deftypefunx {long double} acosl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions compute the arc cosine of @var{x}---that is, the value
 whose cosine is @var{x}.  The value is in units of radians.
 Mathematically, there are infinitely many such values; the one actually
@@ -345,6 +356,7 @@ domain, @code{acos} signals a domain error.
 @comment math.h
 @comment ISO
 @deftypefunx {long double} atanl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions compute the arc tangent of @var{x}---that is, the value
 whose tangent is @var{x}.  The value is in units of radians.
 Mathematically, there are infinitely many such values; the one actually
@@ -360,6 +372,7 @@ returned is the one between @code{-pi/2} and @code{pi/2} (inclusive).
 @comment math.h
 @comment ISO
 @deftypefunx {long double} atan2l (long double @var{y}, long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function computes the arc tangent of @var{y}/@var{x}, but the signs
 of both arguments are used to determine the quadrant of the result, and
 @var{x} is permitted to be zero.  The return value is given in radians
@@ -388,6 +401,7 @@ If both @var{x} and @var{y} are zero, @code{atan2} returns zero.
 @comment complex.h
 @comment ISO
 @deftypefunx {complex long double} casinl (complex long double @var{z})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions compute the complex arc sine of @var{z}---that is, the
 value whose sine is @var{z}.  The value returned is in radians.
 
@@ -404,6 +418,7 @@ values of @var{z}.
 @comment complex.h
 @comment ISO
 @deftypefunx {complex long double} cacosl (complex long double @var{z})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions compute the complex arc cosine of @var{z}---that is, the
 value whose cosine is @var{z}.  The value returned is in radians.
 
@@ -421,6 +436,7 @@ values of @var{z}.
 @comment complex.h
 @comment ISO
 @deftypefunx {complex long double} catanl (complex long double @var{z})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions compute the complex arc tangent of @var{z}---that is,
 the value whose tangent is @var{z}.  The value is in units of radians.
 @end deftypefun
@@ -441,6 +457,7 @@ the value whose tangent is @var{z}.  The value is in units of radians.
 @comment math.h
 @comment ISO
 @deftypefunx {long double} expl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions compute @code{e} (the base of natural logarithms) raised
 to the power @var{x}.
 
@@ -457,6 +474,7 @@ If the magnitude of the result is too large to be representable,
 @comment math.h
 @comment ISO
 @deftypefunx {long double} exp2l (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions compute @code{2} raised to the power @var{x}.
 Mathematically, @code{exp2 (x)} is the same as @code{exp (x * log (2))}.
 @end deftypefun
@@ -479,6 +497,7 @@ Mathematically, @code{exp2 (x)} is the same as @code{exp (x * log (2))}.
 @comment math.h
 @comment GNU
 @deftypefunx {long double} pow10l (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions compute @code{10} raised to the power @var{x}.
 Mathematically, @code{exp10 (x)} is the same as @code{exp (x * log (10))}.
 
@@ -496,6 +515,7 @@ preferred, since it is analogous to @code{exp} and @code{exp2}.
 @comment math.h
 @comment ISO
 @deftypefunx {long double} logl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions compute the natural logarithm of @var{x}.  @code{exp (log
 (@var{x}))} equals @var{x}, exactly in mathematics and approximately in
 C.
@@ -514,6 +534,7 @@ it may signal overflow.
 @comment math.h
 @comment ISO
 @deftypefunx {long double} log10l (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the base-10 logarithm of @var{x}.
 @code{log10 (@var{x})} equals @code{log (@var{x}) / log (10)}.
 
@@ -528,6 +549,7 @@ These functions return the base-10 logarithm of @var{x}.
 @comment math.h
 @comment ISO
 @deftypefunx {long double} log2l (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the base-2 logarithm of @var{x}.
 @code{log2 (@var{x})} equals @code{log (@var{x}) / log (2)}.
 @end deftypefun
@@ -541,6 +563,7 @@ These functions return the base-2 logarithm of @var{x}.
 @comment math.h
 @comment ISO
 @deftypefunx {long double} logbl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions extract the exponent of @var{x} and return it as a
 floating-point value.  If @code{FLT_RADIX} is two, @code{logb} is equal
 to @code{floor (log2 (x))}, except it's probably faster.
@@ -560,6 +583,7 @@ negative), @code{logb} returns @math{@infinity{}}.  If @var{x} is zero,
 @comment math.h
 @comment ISO
 @deftypefunx int ilogbl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions are equivalent to the corresponding @code{logb}
 functions except that they return signed integer values.
 @end deftypefun
@@ -619,6 +643,7 @@ if (i == FP_ILOGB0 || i == FP_ILOGBNAN)
 @comment math.h
 @comment ISO
 @deftypefunx {long double} powl (long double @var{base}, long double @var{power})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These are general exponentiation functions, returning @var{base} raised
 to @var{power}.
 
@@ -638,6 +663,7 @@ underflow or overflow the destination type.
 @comment math.h
 @comment ISO
 @deftypefunx {long double} sqrtl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the nonnegative square root of @var{x}.
 
 If @var{x} is negative, @code{sqrt} signals a domain error.
@@ -654,6 +680,7 @@ Mathematically, it should return a complex number.
 @comment math.h
 @comment BSD
 @deftypefunx {long double} cbrtl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the cube root of @var{x}.  They cannot
 fail; every representable real value has a representable real cube root.
 @end deftypefun
@@ -667,6 +694,7 @@ fail; every representable real value has a representable real cube root.
 @comment math.h
 @comment ISO
 @deftypefunx {long double} hypotl (long double @var{x}, long double @var{y})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return @code{sqrt (@var{x}*@var{x} +
 @var{y}*@var{y})}.  This is the length of the hypotenuse of a right
 triangle with sides of length @var{x} and @var{y}, or the distance
@@ -684,6 +712,7 @@ much smaller.  See also the function @code{cabs} in @ref{Absolute Value}.
 @comment math.h
 @comment ISO
 @deftypefunx {long double} expm1l (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return a value equivalent to @code{exp (@var{x}) - 1}.
 They are computed in a way that is accurate even if @var{x} is
 near zero---a case where @code{exp (@var{x}) - 1} would be inaccurate owing
@@ -699,6 +728,7 @@ to subtraction of two numbers that are nearly equal.
 @comment math.h
 @comment ISO
 @deftypefunx {long double} log1pl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions returns a value equivalent to @w{@code{log (1 + @var{x})}}.
 They are computed in a way that is accurate even if @var{x} is
 near zero.
@@ -719,6 +749,7 @@ logarithm functions.
 @comment complex.h
 @comment ISO
 @deftypefunx {complex long double} cexpl (complex long double @var{z})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return @code{e} (the base of natural
 logarithms) raised to the power of @var{z}.
 Mathematically, this corresponds to the value
@@ -740,6 +771,7 @@ $$\exp(z) = e^z = e^{{\rm Re}\,z} (\cos ({\rm Im}\,z) + i \sin ({\rm Im}\,z))$$
 @comment complex.h
 @comment ISO
 @deftypefunx {complex long double} clogl (complex long double @var{z})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the natural logarithm of @var{z}.
 Mathematically, this corresponds to the value
 
@@ -766,6 +798,7 @@ or is very close to 0.  It is well-defined for all other values of
 @comment complex.h
 @comment GNU
 @deftypefunx {complex long double} clog10l (complex long double @var{z})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the base 10 logarithm of the complex value
 @var{z}. Mathematically, this corresponds to the value
 
@@ -788,6 +821,7 @@ These functions are GNU extensions.
 @comment complex.h
 @comment ISO
 @deftypefunx {complex long double} csqrtl (complex long double @var{z})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the complex square root of the argument @var{z}.  Unlike
 the real-valued functions, they are defined for all values of @var{z}.
 @end deftypefun
@@ -801,6 +835,7 @@ the real-valued functions, they are defined for all values of @var{z}.
 @comment complex.h
 @comment ISO
 @deftypefunx {complex long double} cpowl (complex long double @var{base}, complex long double @var{power})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return @var{base} raised to the power of
 @var{power}.  This is equivalent to @w{@code{cexp (y * clog (x))}}
 @end deftypefun
@@ -821,6 +856,7 @@ see @ref{Exponents and Logarithms}.
 @comment math.h
 @comment ISO
 @deftypefunx {long double} sinhl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the hyperbolic sine of @var{x}, defined
 mathematically as @w{@code{(exp (@var{x}) - exp (-@var{x})) / 2}}.  They
 may signal overflow if @var{x} is too large.
@@ -835,6 +871,7 @@ may signal overflow if @var{x} is too large.
 @comment math.h
 @comment ISO
 @deftypefunx {long double} coshl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These function return the hyperbolic cosine of @var{x},
 defined mathematically as @w{@code{(exp (@var{x}) + exp (-@var{x})) / 2}}.
 They may signal overflow if @var{x} is too large.
@@ -849,6 +886,7 @@ They may signal overflow if @var{x} is too large.
 @comment math.h
 @comment ISO
 @deftypefunx {long double} tanhl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the hyperbolic tangent of @var{x},
 defined mathematically as @w{@code{sinh (@var{x}) / cosh (@var{x})}}.
 They may signal overflow if @var{x} is too large.
@@ -868,6 +906,7 @@ complex arguments.
 @comment complex.h
 @comment ISO
 @deftypefunx {complex long double} csinhl (complex long double @var{z})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the complex hyperbolic sine of @var{z}, defined
 mathematically as @w{@code{(exp (@var{z}) - exp (-@var{z})) / 2}}.
 @end deftypefun
@@ -881,6 +920,7 @@ mathematically as @w{@code{(exp (@var{z}) - exp (-@var{z})) / 2}}.
 @comment complex.h
 @comment ISO
 @deftypefunx {complex long double} ccoshl (complex long double @var{z})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the complex hyperbolic cosine of @var{z}, defined
 mathematically as @w{@code{(exp (@var{z}) + exp (-@var{z})) / 2}}.
 @end deftypefun
@@ -894,6 +934,7 @@ mathematically as @w{@code{(exp (@var{z}) + exp (-@var{z})) / 2}}.
 @comment complex.h
 @comment ISO
 @deftypefunx {complex long double} ctanhl (complex long double @var{z})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the complex hyperbolic tangent of @var{z},
 defined mathematically as @w{@code{csinh (@var{z}) / ccosh (@var{z})}}.
 @end deftypefun
@@ -910,6 +951,7 @@ defined mathematically as @w{@code{csinh (@var{z}) / ccosh (@var{z})}}.
 @comment math.h
 @comment ISO
 @deftypefunx {long double} asinhl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the inverse hyperbolic sine of @var{x}---the
 value whose hyperbolic sine is @var{x}.
 @end deftypefun
@@ -923,6 +965,7 @@ value whose hyperbolic sine is @var{x}.
 @comment math.h
 @comment ISO
 @deftypefunx {long double} acoshl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the inverse hyperbolic cosine of @var{x}---the
 value whose hyperbolic cosine is @var{x}.  If @var{x} is less than
 @code{1}, @code{acosh} signals a domain error.
@@ -937,6 +980,7 @@ value whose hyperbolic cosine is @var{x}.  If @var{x} is less than
 @comment math.h
 @comment ISO
 @deftypefunx {long double} atanhl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the inverse hyperbolic tangent of @var{x}---the
 value whose hyperbolic tangent is @var{x}.  If the absolute value of
 @var{x} is greater than @code{1}, @code{atanh} signals a domain error;
@@ -954,6 +998,7 @@ if it is equal to 1, @code{atanh} returns infinity.
 @comment complex.h
 @comment ISO
 @deftypefunx {complex long double} casinhl (complex long double @var{z})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the inverse complex hyperbolic sine of
 @var{z}---the value whose complex hyperbolic sine is @var{z}.
 @end deftypefun
@@ -967,6 +1012,7 @@ These functions return the inverse complex hyperbolic sine of
 @comment complex.h
 @comment ISO
 @deftypefunx {complex long double} cacoshl (complex long double @var{z})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the inverse complex hyperbolic cosine of
 @var{z}---the value whose complex hyperbolic cosine is @var{z}.  Unlike
 the real-valued functions, there are no restrictions on the value of @var{z}.
@@ -981,6 +1027,7 @@ the real-valued functions, there are no restrictions on the value of @var{z}.
 @comment complex.h
 @comment ISO
 @deftypefunx {complex long double} catanhl (complex long double @var{z})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the inverse complex hyperbolic tangent of
 @var{z}---the value whose complex hyperbolic tangent is @var{z}.  Unlike
 the real-valued functions, there are no restrictions on the value of
@@ -1005,6 +1052,7 @@ useful.  Currently they only have real-valued versions.
 @comment math.h
 @comment SVID
 @deftypefunx {long double} erfl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{erf} returns the error function of @var{x}.  The error
 function is defined as
 @tex
@@ -1026,6 +1074,7 @@ erf (x) = 2/sqrt(pi) * integral from 0 to x of exp(-t^2) dt
 @comment math.h
 @comment SVID
 @deftypefunx {long double} erfcl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{erfc} returns @code{1.0 - erf(@var{x})}, but computed in a
 fashion that avoids round-off error when @var{x} is large.
 @end deftypefun
@@ -1039,6 +1088,7 @@ fashion that avoids round-off error when @var{x} is large.
 @comment math.h
 @comment SVID
 @deftypefunx {long double} lgammal (long double @var{x})
+@safety{@prelim{}@mtunsafe{@mtasurace{:signgam}}@asunsafe{}@acsafe{}}
 @code{lgamma} returns the natural logarithm of the absolute value of
 the gamma function of @var{x}.  The gamma function is defined as
 @tex
@@ -1077,6 +1127,7 @@ singularity.
 @comment math.h
 @comment XPG
 @deftypefunx {long double} lgammal_r (long double @var{x}, int *@var{signp})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{lgamma_r} is just like @code{lgamma}, but it stores the sign of
 the intermediate result in the variable pointed to by @var{signp}
 instead of in the @var{signgam} global.  This means it is reentrant.
@@ -1091,6 +1142,7 @@ instead of in the @var{signgam} global.  This means it is reentrant.
 @comment math.h
 @comment SVID
 @deftypefunx {long double} gammal (long double @var{x})
+@safety{@prelim{}@mtunsafe{@mtasurace{:signgam}}@asunsafe{}@acsafe{}}
 These functions exist for compatibility reasons.  They are equivalent to
 @code{lgamma} etc.  It is better to use @code{lgamma} since for one the
 name reflects better the actual computation, moreover @code{lgamma} is
@@ -1106,6 +1158,7 @@ standardized in @w{ISO C99} while @code{gamma} is not.
 @comment math.h
 @comment XPG, ISO
 @deftypefunx {long double} tgammal (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{tgamma} applies the gamma function to @var{x}.  The gamma
 function is defined as
 @tex
@@ -1129,6 +1182,7 @@ This function was introduced in @w{ISO C99}.
 @comment math.h
 @comment SVID
 @deftypefunx {long double} j0l (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{j0} returns the Bessel function of the first kind of order 0 of
 @var{x}.  It may signal underflow if @var{x} is too large.
 @end deftypefun
@@ -1142,6 +1196,7 @@ This function was introduced in @w{ISO C99}.
 @comment math.h
 @comment SVID
 @deftypefunx {long double} j1l (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{j1} returns the Bessel function of the first kind of order 1 of
 @var{x}.  It may signal underflow if @var{x} is too large.
 @end deftypefun
@@ -1155,6 +1210,7 @@ This function was introduced in @w{ISO C99}.
 @comment math.h
 @comment SVID
 @deftypefunx {long double} jnl (int @var{n}, long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{jn} returns the Bessel function of the first kind of order
 @var{n} of @var{x}.  It may signal underflow if @var{x} is too large.
 @end deftypefun
@@ -1168,6 +1224,7 @@ This function was introduced in @w{ISO C99}.
 @comment math.h
 @comment SVID
 @deftypefunx {long double} y0l (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{y0} returns the Bessel function of the second kind of order 0 of
 @var{x}.  It may signal underflow if @var{x} is too large.  If @var{x}
 is negative, @code{y0} signals a domain error; if it is zero,
@@ -1183,6 +1240,7 @@ is negative, @code{y0} signals a domain error; if it is zero,
 @comment math.h
 @comment SVID
 @deftypefunx {long double} y1l (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{y1} returns the Bessel function of the second kind of order 1 of
 @var{x}.  It may signal underflow if @var{x} is too large.  If @var{x}
 is negative, @code{y1} signals a domain error; if it is zero,
@@ -1198,6 +1256,7 @@ is negative, @code{y1} signals a domain error; if it is zero,
 @comment math.h
 @comment SVID
 @deftypefunx {long double} ynl (int @var{n}, long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{yn} returns the Bessel function of the second kind of order @var{n} of
 @var{x}.  It may signal underflow if @var{x} is too large.  If @var{x}
 is negative, @code{yn} signals a domain error; if it is zero,
@@ -1384,6 +1443,8 @@ value the @code{rand} function can return.  In @theglibc{}, it is
 @comment stdlib.h
 @comment ISO
 @deftypefun int rand (void)
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
+@c Just calls random.
 The @code{rand} function returns the next pseudo-random number in the
 series.  The value ranges from @code{0} to @code{RAND_MAX}.
 @end deftypefun
@@ -1391,6 +1452,8 @@ series.  The value ranges from @code{0} to @code{RAND_MAX}.
 @comment stdlib.h
 @comment ISO
 @deftypefun void srand (unsigned int @var{seed})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
+@c Alias to srandom.
 This function establishes @var{seed} as the seed for a new series of
 pseudo-random numbers.  If you call @code{rand} before a seed has been
 established with @code{srand}, it uses the value @code{1} as a default
@@ -1407,6 +1470,7 @@ designed and unsuitable for serious work.
 @comment stdlib.h
 @comment POSIX.1
 @deftypefun int rand_r (unsigned int *@var{seed})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function returns a random number in the range 0 to @code{RAND_MAX}
 just as @code{rand} does.  However, all its state is stored in the
 @var{seed} argument.  This means the RNG's state can only have as many
@@ -1433,6 +1497,9 @@ The prototypes for these functions are in @file{stdlib.h}.
 @comment stdlib.h
 @comment BSD
 @deftypefun {long int} random (void)
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
+@c Takes a lock and calls random_r with an automatic variable and the
+@c global state, while holding a lock.
 This function returns the next pseudo-random number in the sequence.
 The value returned ranges from @code{0} to @code{2147483647}.
 
@@ -1446,6 +1513,11 @@ though.
 @comment stdlib.h
 @comment BSD
 @deftypefun void srandom (unsigned int @var{seed})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
+@c Takes a lock and calls srandom_r with an automatic variable and a
+@c static buffer.  There's no MT-safety issue because the static buffer
+@c is internally protected by a lock, although other threads may modify
+@c the set state before it is used.
 The @code{srandom} function sets the state of the random number
 generator based on the integer @var{seed}.  If you supply a @var{seed} value
 of @code{1}, this will cause @code{random} to reproduce the default set
@@ -1458,6 +1530,7 @@ program runs, do @code{srandom (time (0))}.
 @comment stdlib.h
 @comment BSD
 @deftypefun {char *} initstate (unsigned int @var{seed}, char *@var{state}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 The @code{initstate} function is used to initialize the random number
 generator state.  The argument @var{state} is an array of @var{size}
 bytes, used to hold the state information.  It is initialized based on
@@ -1472,6 +1545,7 @@ restore that state.
 @comment stdlib.h
 @comment BSD
 @deftypefun {char *} setstate (char *@var{state})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 The @code{setstate} function restores the random number state
 information @var{state}.  The argument must have been the result of
 a previous call to @var{initstate} or @var{setstate}.
@@ -1512,6 +1586,7 @@ functions.
 @comment stdlib.h
 @comment GNU
 @deftypefun int random_r (struct random_data *restrict @var{buf}, int32_t *restrict @var{result})
+@safety{@prelim{}@mtsafe{@mtsrace{:buf}}@assafe{}@acunsafe{@acucorrupt{}}}
 The @code{random_r} function behaves exactly like the @code{random}
 function except that it uses and modifies the state in the object
 pointed to by the first parameter instead of the global state.
@@ -1520,6 +1595,7 @@ pointed to by the first parameter instead of the global state.
 @comment stdlib.h
 @comment GNU
 @deftypefun int srandom_r (unsigned int @var{seed}, struct random_data *@var{buf})
+@safety{@prelim{}@mtsafe{@mtsrace{:buf}}@assafe{}@acunsafe{@acucorrupt{}}}
 The @code{srandom_r} function behaves exactly like the @code{srandom}
 function except that it uses and modifies the state in the object
 pointed to by the second parameter instead of the global state.
@@ -1528,6 +1604,7 @@ pointed to by the second parameter instead of the global state.
 @comment stdlib.h
 @comment GNU
 @deftypefun int initstate_r (unsigned int @var{seed}, char *restrict @var{statebuf}, size_t @var{statelen}, struct random_data *restrict @var{buf})
+@safety{@prelim{}@mtsafe{@mtsrace{:buf}}@assafe{}@acunsafe{@acucorrupt{}}}
 The @code{initstate_r} function behaves exactly like the @code{initstate}
 function except that it uses and modifies the state in the object
 pointed to by the fourth parameter instead of the global state.
@@ -1536,6 +1613,7 @@ pointed to by the fourth parameter instead of the global state.
 @comment stdlib.h
 @comment GNU
 @deftypefun int setstate_r (char *restrict @var{statebuf}, struct random_data *restrict @var{buf})
+@safety{@prelim{}@mtsafe{@mtsrace{:buf}}@assafe{}@acunsafe{@acucorrupt{}}}
 The @code{setstate_r} function behaves exactly like the @code{setstate}
 function except that it uses and modifies the state in the object
 pointed to by the first parameter instead of the global state.
@@ -1582,6 +1660,12 @@ The prototypes for these functions are in @file{stdlib.h}.
 @comment stdlib.h
 @comment SVID
 @deftypefun double drand48 (void)
+@safety{@prelim{}@mtunsafe{@mtasurace{:drand48}}@asunsafe{}@acunsafe{@acucorrupt{}}}
+@c Uses of the static state buffer are not guarded by a lock (thus
+@c @mtasurace:drand48), so they may be found or left at a
+@c partially-updated state in case of calls from within signal handlers
+@c or cancellation.  None of this will break safety rules or invoke
+@c undefined behavior, but it may affect randomness.
 This function returns a @code{double} value in the range of @code{0.0}
 to @code{1.0} (exclusive).  The random bits are determined by the global
 state of the random number generator in the C library.
@@ -1595,6 +1679,9 @@ bits and they are initialized to @code{0}.
 @comment stdlib.h
 @comment SVID
 @deftypefun double erand48 (unsigned short int @var{xsubi}[3])
+@safety{@prelim{}@mtunsafe{@mtasurace{:drand48}}@asunsafe{}@acunsafe{@acucorrupt{}}}
+@c The static buffer is just initialized with default parameters, which
+@c are later read to advance the state held in xsubi.
 This function returns a @code{double} value in the range of @code{0.0}
 to @code{1.0} (exclusive), similarly to @code{drand48}.  The argument is
 an array describing the state of the random number generator.
@@ -1607,6 +1694,7 @@ initial use to obtain reproducible results.
 @comment stdlib.h
 @comment SVID
 @deftypefun {long int} lrand48 (void)
+@safety{@prelim{}@mtunsafe{@mtasurace{:drand48}}@asunsafe{}@acunsafe{@acucorrupt{}}}
 The @code{lrand48} function returns an integer value in the range of
 @code{0} to @code{2^31} (exclusive).  Even if the size of the @code{long
 int} type can take more than 32 bits, no higher numbers are returned.
@@ -1617,6 +1705,7 @@ generator in the C library.
 @comment stdlib.h
 @comment SVID
 @deftypefun {long int} nrand48 (unsigned short int @var{xsubi}[3])
+@safety{@prelim{}@mtunsafe{@mtasurace{:drand48}}@asunsafe{}@acunsafe{@acucorrupt{}}}
 This function is similar to the @code{lrand48} function in that it
 returns a number in the range of @code{0} to @code{2^31} (exclusive) but
 the state of the random number generator used to produce the random bits
@@ -1631,6 +1720,7 @@ first call to obtain reproducible results.
 @comment stdlib.h
 @comment SVID
 @deftypefun {long int} mrand48 (void)
+@safety{@prelim{}@mtunsafe{@mtasurace{:drand48}}@asunsafe{}@acunsafe{@acucorrupt{}}}
 The @code{mrand48} function is similar to @code{lrand48}.  The only
 difference is that the numbers returned are in the range @code{-2^31} to
 @code{2^31} (exclusive).
@@ -1639,6 +1729,7 @@ difference is that the numbers returned are in the range @code{-2^31} to
 @comment stdlib.h
 @comment SVID
 @deftypefun {long int} jrand48 (unsigned short int @var{xsubi}[3])
+@safety{@prelim{}@mtunsafe{@mtasurace{:drand48}}@asunsafe{}@acunsafe{@acucorrupt{}}}
 The @code{jrand48} function is similar to @code{nrand48}.  The only
 difference is that the numbers returned are in the range @code{-2^31} to
 @code{2^31} (exclusive).  For the @code{xsubi} parameter the same
@@ -1652,6 +1743,7 @@ information provided.
 @comment stdlib.h
 @comment SVID
 @deftypefun void srand48 (long int @var{seedval})
+@safety{@prelim{}@mtunsafe{@mtasurace{:drand48}}@asunsafe{}@acunsafe{@acucorrupt{}}}
 The @code{srand48} function sets the most significant 32 bits of the
 internal state of the random number generator to the least
 significant 32 bits of the @var{seedval} parameter.  The lower 16 bits
@@ -1671,6 +1763,7 @@ the user has called the @code{lcong48} function (see below).
 @comment stdlib.h
 @comment SVID
 @deftypefun {unsigned short int *} seed48 (unsigned short int @var{seed16v}[3])
+@safety{@prelim{}@mtunsafe{@mtasurace{:drand48}}@asunsafe{}@acunsafe{@acucorrupt{}}}
 The @code{seed48} function initializes all 48 bits of the state of the
 internal random number generator from the contents of the parameter
 @var{seed16v}.  Here the lower 16 bits of the first element of
@@ -1698,6 +1791,7 @@ change the parameters in the congruential formula.
 @comment stdlib.h
 @comment SVID
 @deftypefun void lcong48 (unsigned short int @var{param}[7])
+@safety{@prelim{}@mtunsafe{@mtasurace{:drand48}}@asunsafe{}@acunsafe{@acucorrupt{}}}
 The @code{lcong48} function allows the user to change the complete state
 of the random number generator.  Unlike @code{srand48} and
 @code{seed48}, this function also changes the constants in the
@@ -1730,6 +1824,7 @@ This type should be regarded as opaque and not manipulated directly.
 @comment stdlib.h
 @comment GNU
 @deftypefun int drand48_r (struct drand48_data *@var{buffer}, double *@var{result})
+@safety{@prelim{}@mtsafe{@mtsrace{:buffer}}@assafe{}@acunsafe{@acucorrupt{}}}
 This function is equivalent to the @code{drand48} function with the
 difference that it does not modify the global random number generator
 parameters but instead the parameters in the buffer supplied through the
@@ -1747,6 +1842,7 @@ programs.
 @comment stdlib.h
 @comment GNU
 @deftypefun int erand48_r (unsigned short int @var{xsubi}[3], struct drand48_data *@var{buffer}, double *@var{result})
+@safety{@prelim{}@mtsafe{@mtsrace{:buffer}}@assafe{}@acunsafe{@acucorrupt{}}}
 The @code{erand48_r} function works like @code{erand48}, but in addition
 it takes an argument @var{buffer} which describes the random number
 generator.  The state of the random number generator is taken from the
@@ -1763,6 +1859,7 @@ programs.
 @comment stdlib.h
 @comment GNU
 @deftypefun int lrand48_r (struct drand48_data *@var{buffer}, long int *@var{result})
+@safety{@prelim{}@mtsafe{@mtsrace{:buffer}}@assafe{}@acunsafe{@acucorrupt{}}}
 This function is similar to @code{lrand48}, but in addition it takes a
 pointer to a buffer describing the state of the random number generator
 just like @code{drand48}.
@@ -1777,6 +1874,7 @@ programs.
 @comment stdlib.h
 @comment GNU
 @deftypefun int nrand48_r (unsigned short int @var{xsubi}[3], struct drand48_data *@var{buffer}, long int *@var{result})
+@safety{@prelim{}@mtsafe{@mtsrace{:buffer}}@assafe{}@acunsafe{@acucorrupt{}}}
 The @code{nrand48_r} function works like @code{nrand48} in that it
 produces a random number in the range @code{0} to @code{2^31}.  But instead
 of using the global parameters for the congruential formula it uses the
@@ -1793,6 +1891,7 @@ programs.
 @comment stdlib.h
 @comment GNU
 @deftypefun int mrand48_r (struct drand48_data *@var{buffer}, long int *@var{result})
+@safety{@prelim{}@mtsafe{@mtsrace{:buffer}}@assafe{}@acunsafe{@acucorrupt{}}}
 This function is similar to @code{mrand48} but like the other reentrant
 functions it uses the random number generator described by the value in
 the buffer pointed to by @var{buffer}.
@@ -1807,6 +1906,7 @@ programs.
 @comment stdlib.h
 @comment GNU
 @deftypefun int jrand48_r (unsigned short int @var{xsubi}[3], struct drand48_data *@var{buffer}, long int *@var{result})
+@safety{@prelim{}@mtsafe{@mtsrace{:buffer}}@assafe{}@acunsafe{@acucorrupt{}}}
 The @code{jrand48_r} function is similar to @code{jrand48}.  Like the
 other reentrant functions of this function family it uses the
 congruential formula parameters from the buffer pointed to by
@@ -1841,6 +1941,7 @@ what you expect.
 @comment stdlib.h
 @comment GNU
 @deftypefun int srand48_r (long int @var{seedval}, struct drand48_data *@var{buffer})
+@safety{@prelim{}@mtsafe{@mtsrace{:buffer}}@assafe{}@acunsafe{@acucorrupt{}}}
 The description of the random number generator represented by the
 information in @var{buffer} is initialized similarly to what the function
 @code{srand48} does.  The state is initialized from the parameter
@@ -1856,6 +1957,7 @@ programs.
 @comment stdlib.h
 @comment GNU
 @deftypefun int seed48_r (unsigned short int @var{seed16v}[3], struct drand48_data *@var{buffer})
+@safety{@prelim{}@mtsafe{@mtsrace{:buffer}}@assafe{}@acunsafe{@acucorrupt{}}}
 This function is similar to @code{srand48_r} but like @code{seed48} it
 initializes all 48 bits of the state from the parameter @var{seed16v}.
 
@@ -1872,6 +1974,7 @@ programs.
 @comment stdlib.h
 @comment GNU
 @deftypefun int lcong48_r (unsigned short int @var{param}[7], struct drand48_data *@var{buffer})
+@safety{@prelim{}@mtsafe{@mtsrace{:buffer}}@assafe{}@acunsafe{@acucorrupt{}}}
 This function initializes all aspects of the random number generator
 described in @var{buffer} with the data in @var{param}.  Here it is
 especially true that the function does more than just copying the
