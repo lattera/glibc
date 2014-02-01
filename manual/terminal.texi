@@ -44,6 +44,9 @@ file @file{unistd.h}.
 @comment unistd.h
 @comment POSIX.1
 @deftypefun int isatty (int @var{filedes})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c isatty ok
+@c  tcgetattr dup ok
 This function returns @code{1} if @var{filedes} is a file descriptor
 associated with an open terminal device, and @math{0} otherwise.
 @end deftypefun
@@ -55,6 +58,20 @@ associated file name using the @code{ttyname} function.  See also the
 @comment unistd.h
 @comment POSIX.1
 @deftypefun {char *} ttyname (int @var{filedes})
+@safety{@prelim{}@mtunsafe{@mtasurace{:ttyname}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
+@c ttyname @mtasurace:ttyname @ascuheap @asulock @aculock @acsmem @acsfd
+@c  isatty dup ok
+@c  fstat dup ok
+@c  memcpy dup ok
+@c  getttyname @mtasurace:ttyname @ascuheap @asulock @aculock @acsmem @acsfd
+@c   opendir @ascuheap @acsmem @acsfd
+@c   readdir ok [protected by exclusive access]
+@c   strcmp dup ok
+@c   free dup @asulock @aculock @acsfd @acsmem
+@c   malloc dup @asulock @aculock @acsfd @acsmem
+@c   closedir @ascuheap @acsmem @acsfd
+@c   mempcpy dup ok
+@c   stat dup ok
 If the file descriptor @var{filedes} is associated with a terminal
 device, the @code{ttyname} function returns a pointer to a
 statically-allocated, null-terminated string containing the file name of
@@ -65,6 +82,18 @@ isn't associated with a terminal, or the file name cannot be determined.
 @comment unistd.h
 @comment POSIX.1
 @deftypefun int ttyname_r (int @var{filedes}, char *@var{buf}, size_t @var{len})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{} @acsfd{}}}
+@c ttyname_r @ascuheap @acsmem @acsfd
+@c  isatty dup ok
+@c  fstat dup ok
+@c  memcpy dup ok
+@c  getttyname_r @ascuheap @acsmem @acsfd
+@c   opendir @ascuheap @acsmem @acsfd
+@c   readdir ok [protected by exclusive access]
+@c   strcmp dup ok
+@c   closedir @ascuheap @acsmem @acsfd
+@c   stpncpy dup ok
+@c   stat dup ok
 The @code{ttyname_r} function is similar to the @code{ttyname} function
 except that it places its result into the user-specified buffer starting
 at @var{buf} with length @var{len}.
@@ -264,6 +293,9 @@ array.
 @comment termios.h
 @comment POSIX.1
 @deftypefun int tcgetattr (int @var{filedes}, struct termios *@var{termios-p})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Converting the kernel-returned termios data structure to the userland
+@c format does not ensure atomic or consistent writing.
 This function is used to examine the attributes of the terminal
 device with file descriptor @var{filedes}.  The attributes are returned
 in the structure that @var{termios-p} points to.
@@ -284,6 +316,9 @@ The @var{filedes} is not associated with a terminal.
 @comment termios.h
 @comment POSIX.1
 @deftypefun int tcsetattr (int @var{filedes}, int @var{when}, const struct termios *@var{termios-p})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Converting the incoming termios data structure to the kernel format
+@c does not ensure atomic or consistent reading.
 This function sets the attributes of the terminal device with file
 descriptor @var{filedes}.  The new attributes are taken from the
 structure that @var{termios-p} points to.
@@ -1016,6 +1051,10 @@ store them:
 @comment termios.h
 @comment POSIX.1
 @deftypefun speed_t cfgetospeed (const struct termios *@var{termios-p})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Direct access to a single termios field, except on Linux, where
+@c multiple accesses may take place.  No worries either way, callers
+@c must ensure mutual exclusion on such non-opaque types.
 This function returns the output line speed stored in the structure
 @code{*@var{termios-p}}.
 @end deftypefun
@@ -1023,6 +1062,7 @@ This function returns the output line speed stored in the structure
 @comment termios.h
 @comment POSIX.1
 @deftypefun speed_t cfgetispeed (const struct termios *@var{termios-p})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function returns the input line speed stored in the structure
 @code{*@var{termios-p}}.
 @end deftypefun
@@ -1030,6 +1070,7 @@ This function returns the input line speed stored in the structure
 @comment termios.h
 @comment POSIX.1
 @deftypefun int cfsetospeed (struct termios *@var{termios-p}, speed_t @var{speed})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function stores @var{speed} in @code{*@var{termios-p}} as the output
 speed.  The normal return value is @math{0}; a value of @math{-1}
 indicates an error.  If @var{speed} is not a speed, @code{cfsetospeed}
@@ -1039,6 +1080,7 @@ returns @math{-1}.
 @comment termios.h
 @comment POSIX.1
 @deftypefun int cfsetispeed (struct termios *@var{termios-p}, speed_t @var{speed})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function stores @var{speed} in @code{*@var{termios-p}} as the input
 speed.  The normal return value is @math{0}; a value of @math{-1}
 indicates an error.  If @var{speed} is not a speed, @code{cfsetospeed}
@@ -1048,6 +1090,14 @@ returns @math{-1}.
 @comment termios.h
 @comment BSD
 @deftypefun int cfsetspeed (struct termios *@var{termios-p}, speed_t @var{speed})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c There's no guarantee that the two calls are atomic, but since this is
+@c not an opaque type, callers ought to ensure mutual exclusion to the
+@c termios object.
+
+@c cfsetspeed ok
+@c  cfsetispeed ok
+@c  cfsetospeed ok
 This function stores @var{speed} in @code{*@var{termios-p}} as both the
 input and output speeds.  The normal return value is @math{0}; a value
 of @math{-1} indicates an error.  If @var{speed} is not a speed,
@@ -1625,6 +1675,10 @@ uses.
 @comment termios.h
 @comment BSD
 @deftypefun void cfmakeraw (struct termios *@var{termios-p})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c There's no guarantee the changes are atomic, but since this is not an
+@c opaque type, callers ought to ensure mutual exclusion to the termios
+@c object.
 This function provides an easy way to set up @code{*@var{termios-p}} for
 what has traditionally been called ``raw mode'' in BSD.  This uses
 noncanonical input, and turns off most processing to give an unmodified
@@ -1678,6 +1732,8 @@ Various flags
 @comment sgtty.h
 @comment BSD
 @deftypefun int gtty (int @var{filedes}, struct sgttyb *@var{attributes})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Direct ioctl, BSD only.
 This function gets the attributes of a terminal.
 
 @code{gtty} sets *@var{attributes} to describe the terminal attributes
@@ -1687,6 +1743,8 @@ of the terminal which is open with file descriptor @var{filedes}.
 @comment sgtty.h
 @comment BSD
 @deftypefun int stty (int @var{filedes}, const struct sgttyb *@var{attributes})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Direct ioctl, BSD only.
 
 This function sets the attributes of a terminal.
 
@@ -1710,6 +1768,12 @@ operation is performed and no signal is sent.  @xref{Job Control}.
 @comment termios.h
 @comment POSIX.1
 @deftypefun int tcsendbreak (int @var{filedes}, int @var{duration})
+@safety{@prelim{}@mtunsafe{@mtasurace{:tcattr(filedes)/bsd}}@asunsafe{}@acunsafe{@acucorrupt{/bsd}}}
+@c On Linux, this calls just one out of two ioctls; on BSD, it's two
+@c ioctls with a select (for the delay only) in between, the first
+@c setting and the latter clearing the break status.  The BSD
+@c implementation may leave the break enabled if cancelled, and threads
+@c and signals may cause the break to be interrupted before requested.
 This function generates a break condition by transmitting a stream of
 zero bits on the terminal associated with the file descriptor
 @var{filedes}.  The duration of the break is controlled by the
@@ -1738,6 +1802,8 @@ The @var{filedes} is not associated with a terminal device.
 @comment termios.h
 @comment POSIX.1
 @deftypefun int tcdrain (int @var{filedes})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Direct ioctl.
 The @code{tcdrain} function waits until all queued
 output to the terminal @var{filedes} has been transmitted.
 
@@ -1772,6 +1838,8 @@ The operation was interrupted by delivery of a signal.
 @comment termios.h
 @comment POSIX.1
 @deftypefun int tcflush (int @var{filedes}, int @var{queue})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Direct ioctl.
 The @code{tcflush} function is used to clear the input and/or output
 queues associated with the terminal file @var{filedes}.  The @var{queue}
 argument specifies which queue(s) to clear, and can be one of the
@@ -1822,6 +1890,11 @@ from POSIX and we cannot change it.
 @comment termios.h
 @comment POSIX.1
 @deftypefun int tcflow (int @var{filedes}, int @var{action})
+@safety{@prelim{}@mtunsafe{@mtasurace{:tcattr(filedes)/bsd}}@asunsafe{}@acsafe{}}
+@c Direct ioctl on Linux.  On BSD, the TCO* actions are a single ioctl,
+@c whereas the TCI actions first call tcgetattr and then write to the fd
+@c the c_cc character corresponding to the action; there's a window for
+@c another thread to change the xon/xoff characters.
 The @code{tcflow} function is used to perform operations relating to
 XON/XOFF flow control on the terminal file specified by @var{filedes}.
 
@@ -1931,6 +2004,14 @@ functions are declared in the header file @file{stdlib.h}.
 @comment stdlib.h
 @comment GNU
 @deftypefun int getpt (void)
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{@acsfd{}}}
+@c On BSD, tries to open multiple potential pty names, returning on the
+@c first success.  On Linux, try posix_openpt first, then fallback to
+@c the BSD implementation.  The posix implementation opens the ptmx
+@c device, checks with statfs that /dev/pts is a devpts or that /dev is
+@c a devfs, and returns the fd; static variables devpts_mounted and
+@c have_no_dev_ptmx are safely initialized so as to avoid repeated
+@c tests.
 The @code{getpt} function returns a new file descriptor for the next
 available master pseudo-terminal.  The normal return value from
 @code{getpt} is a non-negative integer file descriptor.  In the case of
@@ -1948,6 +2029,32 @@ This function is a GNU extension.
 @comment stdlib.h
 @comment SVID, XPG4.2
 @deftypefun int grantpt (int @var{filedes})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c grantpt @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  unix/grantpt:pts_name @acsuheap @acsmem
+@c   ptsname_internal dup ok (but this is Linux-only!)
+@c   memchr dup ok
+@c   realloc dup @acsuheap @acsmem
+@c   malloc dup @acsuheap @acsmem
+@c   free dup @acsuheap @acsmem
+@c  fcntl dup ok
+@c  getuid dup ok
+@c  chown dup ok
+@c  sysconf(_SC_GETGR_R_SIZE_MAX) ok
+@c  getgrnam_r @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  getgid dup ok
+@c  chmod dup ok
+@c  fork dup @aculock
+@c  [child]
+@c   setrlimit
+@c   dup2
+@c   CLOSE_ALL_FDS
+@c   execle
+@c   _exit
+@c  waitpid dup ok
+@c  WIFEXITED dup ok
+@c  WEXITSTATUS dup ok
+@c  free dup @ascuheap @acsmem
 The @code{grantpt} function changes the ownership and access permission
 of the slave pseudo-terminal device corresponding to the master
 pseudo-terminal device associated with the file descriptor
@@ -1985,6 +2092,13 @@ with @var{filedes} could not be accessed.
 @comment stdlib.h
 @comment SVID, XPG4.2
 @deftypefun int unlockpt (int @var{filedes})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{/bsd}}@acunsafe{@acsmem{} @acsfd{}}}
+@c unlockpt @ascuheap/bsd @acsmem @acsfd
+@c /bsd
+@c  ptsname_r dup @ascuheap @acsmem @acsfd
+@c  revoke ok (syscall)
+@c /linux
+@c  ioctl dup ok
 The @code{unlockpt} function unlocks the slave pseudo-terminal device
 corresponding to the master pseudo-terminal device associated with the
 file descriptor @var{filedes}.  On many systems, the slave can only be
@@ -2008,6 +2122,9 @@ device.
 @comment stdlib.h
 @comment SVID, XPG4.2
 @deftypefun {char *} ptsname (int @var{filedes})
+@safety{@prelim{}@mtunsafe{@mtasurace{:ptsname}}@asunsafe{@ascuheap{/bsd}}@acunsafe{@acsmem{} @acsfd{}}}
+@c ptsname @mtasurace:ptsname @ascuheap/bsd @acsmem @acsfd
+@c  ptsname_r dup @ascuheap/bsd @acsmem @acsfd
 If the file descriptor @var{filedes} is associated with a
 master pseudo-terminal device, the @code{ptsname} function returns a
 pointer to a statically-allocated, null-terminated string containing the
@@ -2018,6 +2135,37 @@ might be overwritten by subsequent calls to @code{ptsname}.
 @comment stdlib.h
 @comment GNU
 @deftypefun int ptsname_r (int @var{filedes}, char *@var{buf}, size_t @var{len})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{/bsd}}@acunsafe{@acsmem{} @acsfd{}}}
+@c ptsname_r @ascuheap/bsd @acsmem @acsfd
+@c /hurd
+@c  term_get_peername ok
+@c  strlen dup ok
+@c  memcpy dup ok
+@c /bsd
+@c  isatty dup ok
+@c  strlen dup ok
+@c  ttyname_r dup @ascuheap @acsmem @acsfd
+@c  stat dup ok
+@c /linux
+@c  ptsname_internal ok
+@c   isatty dup ok
+@c   ioctl dup ok
+@c   strlen dup ok
+@c   itoa_word dup ok
+@c   stpcpy dup ok
+@c   memcpy dup ok
+@c   fxstat64 dup ok
+@c   MASTER_P ok
+@c    major ok
+@c     gnu_dev_major ok
+@c    minor ok
+@c     gnu_dev_minor ok
+@c   minor dup ok
+@c   xstat64 dup ok
+@c   S_ISCHR dup ok
+@c   SLAVE_P ok
+@c    major dup ok
+@c    minor dup ok
 The @code{ptsname_r} function is similar to the @code{ptsname} function
 except that it places its result into the user-specified buffer starting
 at @var{buf} with length @var{len}.
@@ -2083,6 +2231,22 @@ These functions, derived from BSD, are available in the separate
 @comment pty.h
 @comment BSD
 @deftypefun int openpty (int *@var{amaster}, int *@var{aslave}, char *@var{name}, const struct termios *@var{termp}, const struct winsize *@var{winp})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c openpty @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  getpt @acsfd
+@c  grantpt @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  unlockpt dup @ascuheap/bsd @acsmem @acsfd
+@c  openpty:pts_name @acsuheap @acsmem @acsfd
+@c   ptsname_r dup @ascuheap/bsd @acsmem @acsfd
+@c   realloc dup @acsuheap @acsmem
+@c   malloc dup @acsuheap @acsmem
+@c   free dup @acsuheap @acsmem
+@c  open dup @acsfd
+@c  free dup @acsuheap @acsmem
+@c  tcsetattr dup ok
+@c  ioctl dup ok
+@c  strcpy dup ok
+@c  close dup @acsfd
 This function allocates and opens a pseudo-terminal pair, returning the
 file descriptor for the master in @var{*amaster}, and the file
 descriptor for the slave in @var{*aslave}.  If the argument @var{name}
@@ -2114,6 +2278,16 @@ device instead.
 @comment pty.h
 @comment BSD
 @deftypefun int forkpty (int *@var{amaster}, char *@var{name}, const struct termios *@var{termp}, const struct winsize *@var{winp})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c forkpty @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  openpty dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c  fork dup @aculock
+@c  close dup @acsfd
+@c  /child
+@c   close dup @acsfd
+@c   login_tty dup @mtasurace:ttyname @ascuheap @asulock @aculock @acsmem @acsfd
+@c   _exit dup ok
+@c  close dup @acsfd
 This function is similar to the @code{openpty} function, but in
 addition, forks a new process (@pxref{Creating a Process}) and makes the
 newly opened slave pseudo-terminal device the controlling terminal
