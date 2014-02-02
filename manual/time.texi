@@ -939,7 +939,7 @@ available.  @code{timelocal} is rather rare.
 @c   reinitialization, so all issues may arise.
 @c  tzset dup @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
 @c  mktime_internal(gmtime_r) @asulock @aculock
-@c...gmtime_r @asulock @aculock
+@c ..gmtime_r @asulock @aculock
 @c    ... dup ok
 @c    tz_convert(!use_localtime) @asulock @aculock
 @c     ... dup @asulock @aculock

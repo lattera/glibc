@@ -1,3 +1,8 @@
+2014-02-02  Alexandre Oliva <aoliva@redhat.com>
+
+	* manual/time.texi (timegm): Add missing blank after @c.
+	Reported by Joseph Myers <joseph@codesourcery.com>.
+
 2014-02-01  Alexandre Oliva <aoliva@redhat.com>
 
 	* manual/check-safety.sh: New.
