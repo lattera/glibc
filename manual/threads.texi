@@ -20,9 +20,11 @@ The @glibcadj{} implements functions to allow users to create and manage
 data specific to a thread.  Such data may be destroyed at thread exit,
 if a destructor is provided.  The following functions are defined:
 
-@table @code
-
-@item int pthread_key_create (pthread_key_t *@var{key}, void (*@var{destructor})(void*))
+@deftypefun int pthread_key_create (pthread_key_t *@var{key}, void (*@var{destructor})(void*))
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c pthread_key_create ok
+@c  KEY_UNUSED ok
+@c  KEY_USABLE ok
 Create a thread-specific data key for the calling thread, referenced by
 @var{key}.
 
@@ -30,21 +32,39 @@ Objects declared with the C++11 @code{thread_local} keyword are destroyed
 before thread-specific data, so they should not be used in thread-specific
 data destructors or even as members of the thread-specific data, since the
 latter is passed as an argument to the destructor function.
+@end deftypefun
 
-@c FIXME: use @deftypefun for these.
-@item int pthread_key_delete (pthread_key_t @var{key})
+@deftypefun int pthread_key_delete (pthread_key_t @var{key})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c pthread_key_delete ok
+@c   This uses atomic compare and exchange to increment the seq number
+@c   after testing it's not a KEY_UNUSED seq number.
+@c  KEY_UNUSED dup ok
 Destroy the thread-specific data @var{key} in the calling thread.  The
 destructor for the thread-specific data is not called during destruction, nor
 is it called during thread exit.
+@end deftypefun
 
-@item void *pthread_getspecific (pthread_key_t @var{key})
+@deftypefun void *pthread_getspecific (pthread_key_t @var{key})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c pthread_getspecific ok
 Return the thread-specific data associated with @var{key} in the calling
 thread.
+@end deftypefun
 
-@item int pthread_setspecific (pthread_key_t @var{key}, const void *@var{value})
+@deftypefun int pthread_setspecific (pthread_key_t @var{key}, const void *@var{value})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{}}}
+@c pthread_setspecific @asucorrupt @ascuheap @acucorrupt @acsmem
+@c   a level2 block may be allocated by a signal handler after
+@c   another call already made a decision to allocate it, thus losing
+@c   the allocated value.  the seq number is updated before the
+@c   value, which might cause an earlier-generation value to seem
+@c   current if setspecific is cancelled or interrupted by a signal
+@c  KEY_UNUSED ok
+@c  calloc dup @ascuheap @acsmem
 Associate the thread-specific @var{value} with @var{key} in the calling thread.
+@end deftypefun
 
-@end table
 
 @node Non-POSIX Extensions
 @section Non-POSIX Extensions

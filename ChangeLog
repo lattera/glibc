@@ -1,3 +1,11 @@
+2014-02-03  Alexandre Oliva <aoliva@redhat.com>
+
+	* manual/threads.texi (pthread_key_create, pthread_key_delete,
+	pthread_getspecific, pthread_setspecific): Format with
+	@deftypefun, and add @safety note.
+	* manual/signal.texi: Move comments that analyze the above
+	functions to their home place.
+
 2014-02-03  Allan McRae  <allan@archlinux.org>
 
 	* po/sl.po: Update Slovenian translation from translation project.

@@ -894,22 +894,13 @@ may come from a signal handler in the same process.
 @c   uses a static buffer if tsd key creation fails
 @c  [once] init
 @c   libc_key_create ok
-@c    pthread_key_create ok
-@c     KEY_UNUSED ok
-@c     KEY_USABLE ok
+@c    pthread_key_create dup ok
 @c  getbuffer @asucorrupt @ascuheap @acsmem
 @c   libc_getspecific ok
-@c    pthread_getspecific ok
+@c    pthread_getspecific dup ok
 @c   malloc dup @ascuheap @acsmem
 @c   libc_setspecific @asucorrupt @ascuheap @acucorrupt @acsmem
-@c    pthread_setspecific @asucorrupt @ascuheap @acucorrupt @acsmem
-@c      a level2 block may be allocated by a signal handler after
-@c      another call already made a decision to allocate it, thus losing
-@c      the allocated value.  the seq number is updated before the
-@c      value, which might cause an earlier-generation value to seem
-@c      current if setspecific is cancelled or interrupted by a signal
-@c     KEY_UNUSED ok
-@c     calloc dup @ascuheap @acsmem
+@c    pthread_setspecific dup @asucorrupt @ascuheap @acucorrupt @acsmem
 @c  snprintf dup @mtslocale @ascuheap @acsmem
 @c  _ @ascuintl
 This function returns a pointer to a statically-allocated string
