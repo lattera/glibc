@@ -1,5 +1,9 @@
 2014-02-03  Alexandre Oliva <aoliva@redhat.com>
 
+	* manual/macros.texi: Add comments before MTASC-safety macros.
+
+2014-02-03  Alexandre Oliva <aoliva@redhat.com>
+
 	* manual/users.texi: Document MTASC-safety properties.
 
 2014-02-03  Alexandre Oliva <aoliva@redhat.com>

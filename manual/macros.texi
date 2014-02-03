@@ -35,13 +35,13 @@ non-GNU systems
 GNU/Linux and GNU/Hurd systems
 @end macro
 
-@c Descrption applying to GNU/Hurd systems; that is, systems using the
+@c Description applying to GNU/Hurd systems; that is, systems using the
 @c GNU Hurd with the GNU C Library.
 @macro gnuhurdsystems
 GNU/Hurd systems
 @end macro
 
-@c Descrption applying to GNU/Linux systems; that is, systems using
+@c Description applying to GNU/Linux systems; that is, systems using
 @c the Linux kernel with the GNU C Library.
 @macro gnulinuxsystems
 GNU/Linux systems
@@ -103,111 +103,155 @@ Preliminary:
 
 
 @end macro
+@c Function is MT- and AS-Unsafe due to an internal race.
 @macro mtasurace {comments}
 race\comments\
 @end macro
+@c Function is AS-Unsafe due to an internal race.
 @macro asurace {comments}
 race\comments\
 @end macro
+@c Function is MT-Safe, but with potential race on user-supplied object
+@c of opaque type.
 @macro mtsrace {comments}
 race\comments\
 @end macro
+@c Function is MT- and AS-Unsafe for modifying an object that is decreed
+@c MT-constant due to MT-Unsafe accesses elsewhere.
 @macro mtasuconst {comments}
 const\comments\
 @end macro
+@c Function accesses the assumed-constant locale object.
 @macro mtslocale {comments}
 locale\comments\
 @end macro
+@c Function accesses the assumed-constant environment.
 @macro mtsenv {comments}
 env\comments\
 @end macro
+@c Function accesses the assumed-constant hostid.
 @macro mtshostid {comments}
 hostid\comments\
 @end macro
+@c Function accesses the assumed-constant _sigintr variable.
 @macro mtssigintr {comments}
 sigintr\comments\
 @end macro
+@c Function performs MT-Unsafe initialization at the first call.
 @macro mtuinit {comments}
 init\comments\
 @end macro
+@c Function performs libc_once AS-Unsafe initialization.
 @macro asuinit {comments}
 init\comments\
 @end macro
+@c Function performs libc_once AC-Unsafe initialization.
 @macro acuinit {comments}
 init\comments\
 @end macro
+@c Function is AS-Unsafe because it takes a non-recursive mutex that may
+@c already be held by the function interrupted by the signal.
 @macro asulock {comments}
 lock\comments\
 @end macro
+@c Function is AC-Unsafe because it may fail to release a mutex.
 @macro aculock {comments}
 lock\comments\
 @end macro
+@c Function is AS-Unsafe because some data structure may be inconsistent
+@c due to an ongoing updated interrupted by a signal.
 @macro asucorrupt {comments}
 corrupt\comments\
 @end macro
+@c Function is AC-Unsafe because some data structure may be left
+@c inconsistent when cancelled.
 @macro acucorrupt {comments}
 corrupt\comments\
 @end macro
+@c Function is AS- and AC-Unsafe because of malloc/free.
 @macro ascuheap {comments}
 heap\comments\
 @end macro
+@c Function is AS-Unsafe because of malloc/free.
 @macro asuheap {comments}
 heap\comments\
 @end macro
+@c Function is AS- and AC-Unsafe because of dlopen/dlclose.
 @macro ascudlopen {comments}
 dlopen\comments\
 @end macro
+@c Function is AS- and AC-Unsafe because of unknown plugins.
 @macro ascuplugin {comments}
 plugin\comments\
 @end macro
+@c Function is AS- and AC-Unsafe because of i18n.
 @macro ascuintl {comments}
 i18n\comments\
 @end macro
+@c Function is AS--Unsafe because of i18n.
 @macro asuintl {comments}
 i18n\comments\
 @end macro
+@c Function may leak file descriptors if async-cancelled.
 @macro acsfd {comments}
 fd\comments\
 @end macro
+@c Function may leak memory if async-cancelled.
 @macro acsmem {comments}
 mem\comments\
 @end macro
+@c Function is unsafe due to temporary overriding a signal handler.
 @macro mtascusig {comments}
 sig\comments\
 @end macro
+@c Function is MT- and AS-Unsafe due to temporarily changing attributes
+@c of the controlling terminal.
 @macro mtasuterm {comments}
 term\comments\
 @end macro
+@c Function is AC-Unsafe for failing to restore attributes of the
+@c controlling terminal.
 @macro acuterm {comments}
 term\comments\
 @end macro
+@c Function sets timers atomically.
 @macro mtstimer {comments}
 timer\comments\
 @end macro
+@c Function sets and restores timers.
 @macro mtascutimer {comments}
 timer\comments\
 @end macro
+@c Function temporarily changes the current working directory.
 @macro mtasscwd {comments}
 cwd\comments\
 @end macro
+@c Function may fail to restore to the original current working
+@c directory after temporarily changing it.
 @macro acscwd {comments}
 cwd\comments\
 @end macro
+@c Function is MT-Safe while POSIX says it needn't be MT-Safe.
 @macro mtsposix {comments}
 !posix\comments\
 @end macro
+@c Function is MT-Unsafe while POSIX says it should be MT-Safe.
 @macro mtuposix {comments}
 !posix\comments\
 @end macro
+@c Function is AS-Safe while POSIX says it needn't be AS-Safe.
 @macro assposix {comments}
 !posix\comments\
 @end macro
+@c Function is AS-Unsafe while POSIX says it should be AS-Safe.
 @macro asuposix {comments}
 !posix\comments\
 @end macro
+@c Function is AC-Safe while POSIX says it needn't be AC-Safe.
 @macro acsposix {comments}
 !posix\comments\
 @end macro
+@c Function is AC-Unsafe while POSIX says it should be AC-Safe.
 @macro acuposix {comments}
 !posix\comments\
 @end macro
