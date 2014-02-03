@@ -41,7 +41,7 @@ see the event from the execor's point of view, see @ref{Executing a File}.
 * Program Termination::         Telling the system you're done; return status
 @end menu
 
-@node Program Arguments
+@node Program Arguments, Environment Variables, , Program Basics
 @section Program Arguments
 @cindex program arguments
 @cindex command line arguments
@@ -263,7 +263,7 @@ example of the use of @code{getsubopt}:
 @end smallexample
 
 
-@node Environment Variables
+@node Environment Variables, Auxiliary Vector, Program Arguments, Program Basics
 @section Environment Variables
 
 @cindex environment variable
