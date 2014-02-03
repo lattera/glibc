@@ -1,5 +1,10 @@
 2014-02-04  David Holsgrove <david.holsgrove@xilinx.com>
 
+	* sysdeps/microblaze/libm-test-ulps: Update.
+	* sysdeps/microblaze/libm-test-ulps_new: Delete redundant file.
+
+2014-02-04  David Holsgrove <david.holsgrove@xilinx.com>
+
 	[BZ #15705]
 	* sysdeps/unix/sysv/linux/microblaze/mmap64.c: New file.
 
