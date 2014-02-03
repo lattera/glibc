@@ -1,3 +1,7 @@
+2014-02-03  Carlos O'Donell  <carlos@redhat.com>
+
+	* sysdeps/hppa/fpu/libm-test-ulps: Regenerate.
+
 2013-11-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/hppa/fpu/fegetround.c (fegetround): Use libm_hidden_def.
