@@ -7,11 +7,7 @@
 
 	* manual/macros.texi: Add comments before MTASC-safety macros.
 
-2014-02-03  Alexandre Oliva <aoliva@redhat.com>
-
 	* manual/users.texi: Document MTASC-safety properties.
-
-2014-02-03  Alexandre Oliva <aoliva@redhat.com>
 
 	* manual/threads.texi (pthread_key_create, pthread_key_delete,
 	pthread_getspecific, pthread_setspecific): Format with
@@ -33,61 +29,33 @@
 	* manual/check-safety.sh: New.
 	* manual/Makefile ($(objpfx)stamp-summary): Run it.
 
-2014-02-01  Alexandre Oliva <aoliva@redhat.com>
-
 	* manual/terminal.texi: Document MTASC-safety properties.
-
-2014-02-01  Alexandre Oliva <aoliva@redhat.com>
 
 	* manual/filesys.texi: Document MTASC-safety properties.
 
-2014-02-01  Alexandre Oliva <aoliva@redhat.com>
-
 	* manual/errno.texi: Document MTASC-safety properties.
-
-2014-02-01  Alexandre Oliva <aoliva@redhat.com>
 
 	* manual/intro.texi: Document safety identifiers and
 	conditionals.
 
-2014-02-01  Alexandre Oliva <aoliva@redhat.com>
-
 	* manual/string.texi (wcstok): Fix prototype.
 	(wcstok, strtok, strtok_r): Adjust reentrancy remarks.
 
-2014-02-01  Alexandre Oliva <aoliva@redhat.com>
-
 	* manual/time.texi: Document MTASC-safety properties.
-
-2014-02-01  Alexandre Oliva <aoliva@redhat.com>
 
 	* manual/string.texi: Document MTASC-safety properties.
 
-2014-02-01  Alexandre Oliva <aoliva@redhat.com>
-
 	* manual/threads.texi: Document MTASC-safety properties.
-
-2014-02-01  Alexandre Oliva <aoliva@redhat.com>
 
 	* manual/stdio.texi: Document MTASC-safety properties.
 
-2014-02-01  Alexandre Oliva <aoliva@redhat.com>
-
 	* manual/syslog.texi: Document MTASC-safety properties.
-
-2014-02-01  Alexandre Oliva <aoliva@redhat.com>
 
 	* manual/sysinfo.texi: Document MTASC-safety properties.
 
-2014-02-01  Alexandre Oliva <aoliva@redhat.com>
-
 	* manual/startup.texi: Document MTASC-safety properties.
 
-2014-02-01  Alexandre Oliva <aoliva@redhat.com>
-
 	* manual/socket.texi: Document MTASC-safety properties.
-
-2014-02-01  Alexandre Oliva <aoliva@redhat.com>
 
 	* manual/signal.texi: Document MTASC-safety properties.
 
@@ -95,68 +63,36 @@
 
 	* manual/setjmp.texi: Document MTASC-safety properties.
 
-2014-01-31  Alexandre Oliva <aoliva@redhat.com>
-
 	* manual/search.texi: Document MTASC-safety properties.
-
-2014-01-31  Alexandre Oliva <aoliva@redhat.com>
 
 	* manual/resource.texi: Document MTASC-safety properties.
 
-2014-01-31  Alexandre Oliva <aoliva@redhat.com>
-
 	* manual/process.texi: Document MTASC-safety properties.
-
-2014-01-31  Alexandre Oliva <aoliva@redhat.com>
 
 	* manual/platform.texi: Document MTASC-safety properties.
 
-2014-01-31  Alexandre Oliva <aoliva@redhat.com>
-
 	* manual/pipe.texi: Document MTASC-safety properties.
-
-2014-01-31  Alexandre Oliva <aoliva@redhat.com>
 
 	* manual/pattern.texi: Document MTASC-safety properties.
 
-2014-01-31  Alexandre Oliva <aoliva@redhat.com>
-
 	* manual/message.texi: Document MTASC-safety properties.
-
-2014-01-31  Alexandre Oliva <aoliva@redhat.com>
 
 	[BZ #12751]
 	* manual/memory.texi: Document MTASC-safety properties.
 
-2014-01-31  Alexandre Oliva <aoliva@redhat.com>
-
 	* manual/math.texi: Document MTASC-safety properties.
-
-2014-01-31  Alexandre Oliva <aoliva@redhat.com>
 
 	* manual/locale.texi: Document MTASC-safety properties.
 
-2014-01-31  Alexandre Oliva <aoliva@redhat.com>
-
 	* manual/llio.texi: Document MTASC-safety properties.
-
-2014-01-31  Alexandre Oliva <aoliva@redhat.com>
 
 	* manual/libdl.texi: New.
 
-2014-01-31  Alexandre Oliva <aoliva@redhat.com>
-
 	* manual/lang.texi: Document MTASC-safety properties.
-
-2014-01-31  Alexandre Oliva <aoliva@redhat.com>
 
 	* manual/job.texi: Document MTASC-safety properties.
 
-2014-01-31  Alexandre Oliva <aoliva@redhat.com>
-
 	* manual/getopt.texi: Document MTASC-safety properties.
-
-2014-01-31  Alexandre Oliva <aoliva@redhat.com>
 
 	* manual/ctype.texi: Document MTASC-safety properties.
 
@@ -190,23 +126,13 @@
 
 	* manual/charset.texi: Document MTASC-safety properties.
 
-2014-01-29  Alexandre Oliva <aoliva@redhat.com>
-
 	* manual/crypt.texi: Document MTASC-safety properties.
-
-2014-01-29  Alexandre Oliva <aoliva@redhat.com>
 
 	* manual/conf.texi: Document MTASC-safety properties.
 
-2014-01-29  Alexandre Oliva <aoliva@redhat.com>
-
 	* manual/arith.texi: Document MTASC-safety properties.
 
-2014-01-29  Alexandre Oliva <aoliva@redhat.com>
-
 	* manual/argp.texi: Document MTASC-safety properties.
-
-2014-01-29  Alexandre Oliva <aoliva@redhat.com>
 
 	* manual/macros.texi: Introduce macros to document multi
 	thread, asynchronous signal and asynchronous cancellation
