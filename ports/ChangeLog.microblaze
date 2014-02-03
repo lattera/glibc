@@ -1,3 +1,8 @@
+2014-02-04  David Holsgrove <david.holsgrove@xilinx.com>
+
+	* sysdeps/microblaze/fegetround.c: Delete redundant file.
+	* sysdeps/microblaze/fesetround.c: Likewise.
+
 2013-11-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/microblaze/fegetround.c (fegetround): Use
