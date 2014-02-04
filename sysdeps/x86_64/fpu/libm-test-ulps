@@ -108,6 +108,9 @@ ldouble: 1
 Test "acos_upward (0xf.fffffffffffffffp-4)":
 ildouble: 1
 ldouble: 1
+Test "acos_upward (0xf.fffffp-4)":
+ildouble: 1
+ldouble: 1
 
 # acosh
 Test "acosh (0x6.4p+4)":
@@ -4490,6 +4493,9 @@ ifloat: 1
 Test "Real part of: catan (-0x1p-13 + 1.0 i)":
 float: 1
 ifloat: 1
+Test "Imaginary part of: catan (-0x1p-13 + 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catan (-0x1p-13 - 0x0.ffffffp0 i)":
 ildouble: 1
 ldouble: 1
@@ -4508,10 +4514,25 @@ ldouble: 1
 Test "Imaginary part of: catan (-0x1p-16382 - 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: catan (-0x1p-27 - 0x0.fffffffffffff8p0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (-0x1p-27 - 0x1.0000000000001p0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (-0x1p-27 - 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catan (-0x1p-33 + 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: catan (-0x1p-33 + 0x1.0000000000000002p0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catan (-0x1p-33 - 0x0.ffffffffffffffffp0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (-0x1p-33 - 0x1.0000000000000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catan (-0x1p-54 + 1.0 i)":
@@ -4643,6 +4664,9 @@ ifloat: 1
 Test "Real part of: catan (0x1p-13 + 1.0 i)":
 float: 1
 ifloat: 1
+Test "Imaginary part of: catan (0x1p-13 + 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catan (0x1p-13 - 0x0.ffffffp0 i)":
 ildouble: 1
 ldouble: 1
@@ -4661,10 +4685,25 @@ ldouble: 1
 Test "Imaginary part of: catan (0x1p-16382 - 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: catan (0x1p-27 - 0x0.fffffffffffff8p0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (0x1p-27 - 0x1.0000000000001p0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (0x1p-27 - 1.0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catan (0x1p-33 + 0x0.ffffffffffffffffp0 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: catan (0x1p-33 + 0x1.0000000000000002p0 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catan (0x1p-33 - 0x0.ffffffffffffffffp0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: catan (0x1p-33 - 0x1.0000000000000002p0 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catan (0x1p-54 + 1.0 i)":
@@ -4708,6 +4747,12 @@ ildouble: 1
 ldouble: 1
 
 # catanh
+Test "Real part of: catanh (-0x0.fffffffffffff8p0 + 0x1p-27 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x0.fffffffffffff8p0 - 0x1p-27 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: catanh (-0x0.ffffffffffffffffp0 + 0x1p-1022 i)":
 ildouble: 1
 ldouble: 1
@@ -4730,6 +4775,18 @@ Test "Real part of: catanh (-0x0.ffffffp0 + 0x1p-13 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: catanh (-0x0.ffffffp0 - 0x1p-13 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1.0000000000000002p0 + 0x1p-33 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1.0000000000000002p0 - 0x1p-33 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1.0000000000001p0 + 0x1p-27 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (-0x1.0000000000001p0 - 0x1p-27 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: catanh (-0x1.000002p0 + 0x1p-13 i)":
@@ -4827,6 +4884,9 @@ ldouble: 1
 Test "Imaginary part of: catanh (-1.0 + 0x1p-13 i)":
 float: 1
 ifloat: 1
+Test "Real part of: catanh (-1.0 + 0x1p-27 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: catanh (-1.0 + 0x1p-54 i)":
 float: 1
 ifloat: 1
@@ -4847,6 +4907,9 @@ ldouble: 1
 Test "Imaginary part of: catanh (-1.0 - 0x1p-13 i)":
 float: 1
 ifloat: 1
+Test "Real part of: catanh (-1.0 - 0x1p-27 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: catanh (-1.0 - 0x1p-54 i)":
 float: 1
 ifloat: 1
@@ -4884,6 +4947,12 @@ Test "Real part of: catanh (0x0.ffffffp0 + 0x1p-13 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: catanh (0x0.ffffffp0 - 0x1p-13 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (0x1.0000000000000002p0 + 0x1p-33 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (0x1.0000000000000002p0 - 0x1p-33 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catanh (0x1.000002p0 + 0x1p-13 i)":
@@ -4978,6 +5047,9 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "Real part of: catanh (1.0 + 0x1p-13 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catanh (1.0 + 0x1p-13 i)":
 float: 1
 ifloat: 1
@@ -4996,6 +5068,9 @@ ldouble: 1
 Test "Real part of: catanh (1.0 - 0x1p-1020 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: catanh (1.0 - 0x1p-13 i)":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catanh (1.0 - 0x1p-13 i)":
@@ -5046,6 +5121,9 @@ idouble: 1
 Test "Imaginary part of: ccos (-0xcp-4 - 0x5.98p+4 i)":
 float: 1
 ifloat: 1
+Test "Imaginary part of: ccos (0x1p-120 + 0x8p-32 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: ccos (0x4p-1076 + 0x5.ap+8 i)":
 double: 1
 idouble: 1
@@ -5113,6 +5191,9 @@ ifloat: 1
 Test "Imaginary part of: ccosh (0x5.ap+8 + 0x4p-1076 i)":
 double: 1
 idouble: 1
+Test "Imaginary part of: ccosh (0x8p-32 + 0x1p-120 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: ccosh (0xcp-4 + 0x1.4p+0 i)":
 double: 1
 float: 1
@@ -5416,6 +5497,8 @@ ldouble: 1
 Test "Real part of: clog (0x1.48e45e3268d8p-4 + 0xf.f2c64p-4 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "Real part of: clog (0x1.48e45ep-4 + 0xf.f2c63p-4 i)":
 float: 1
 ifloat: 1
@@ -5571,6 +5654,9 @@ ldouble: 1
 Test "Real part of: clog (0x2.82b794p-4 + 0xf.cd42ap-4 i)":
 ildouble: 1
 ldouble: 1
+Test "Real part of: clog (0x2.82b794p-4 + 0xf.cd42bp-4 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: clog (0x2.82b795e420b281a8p-4 + 0xf.cd42a15bf9a3613p-4 i)":
 ildouble: 1
 ldouble: 1
@@ -5632,6 +5718,9 @@ Test "Real part of: clog (0x3.3b8f9163276aa8dcp-4 + 0xf.ab873d09e61e797p-4 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: clog (0x3.3b8f9163276aa8dcp-4 + 0xf.ab873d09e61ep-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.3b8f9163276aa8ep-4 + 0xf.ab873d09e61e797p-4 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: clog (0x3.3b8f9163276aa8ep-4 + 0xf.ab873d09e61e8p-4 i)":
@@ -5739,6 +5828,12 @@ Test "Real part of: clog (0x3.bea2bcp-4 + 0xf.8e3d619a8d118p-4 i)":
 double: 1
 idouble: 1
 Test "Real part of: clog (0x3.bea2bcp-4 + 0xf.8e3d619a8d11bfdp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x3.bea2bcp-4 + 0xf.8e3d7p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0x3.bea2bcp-4 + 0xf.8e3d7p-4 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: clog (0x3.bea2bd62e3501174p-4 + 0xf.8e3d619a8d11bfep-4 i)":
@@ -5905,6 +6000,9 @@ idouble: 1
 Test "Real part of: clog (0x4.7017a8p-4 + 0xf.5f4a6p-4 i)":
 float: 1
 ifloat: 1
+Test "Real part of: clog (0x4.7017ap-4 + 0xf.5f4a550c9d75e3cp-4 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: clog (0x4.7017ap-4 + 0xf.5f4a5p-4 i)":
 ildouble: 1
 ldouble: 1
@@ -5952,6 +6050,9 @@ ldouble: 1
 Test "Real part of: clog (0x5.318c596a8cb114ep-4 + 0xf.22364p-4 i)":
 ildouble: 1
 ldouble: 1
+Test "Real part of: clog (0x5.318c596a8cb14p-4 + 0xf.22363bf989d98p-4 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: clog (0x5.318c596a8cb1p-4 + 0xf.22363bf989dap-4 i)":
 ildouble: 1
 ldouble: 1
@@ -5979,6 +6080,9 @@ Test "Real part of: clog (0x5.b06b7p-4 + 0xe.f452cp-4 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: clog (0x5.ba8ce4b6p-4 + 0xe.f0742508p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x5.ba8ce8p-4 + 0xe.f0743p-4 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: clog (0x5.ba8cep-4 + 0xe.f0742p-4 i)":
@@ -6172,7 +6276,13 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "Real part of: clog (0x7.eca921b40e02ae18p-4 + 0xd.e655e694e510a95p-4 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: clog (0x7.eca921b40e02ae18p-4 + 0xd.e655fp-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x7.eca921b40e02ae1p-4 + 0xd.e655e694e5108p-4 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: clog (0x7.eca921b40e02ae1p-4 + 0xd.e655e694e511p-4 i)":
@@ -6440,10 +6550,16 @@ ldouble: 1
 Test "Imaginary part of: clog (0x9.c1b6bp-4 + 0xc.ae53de1d5a7c8p-4 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: clog (0xa.47c0c65bd4928p-4 + 0xc.42a51a3c05c199fp-4 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: clog (0xa.47c0c65bd4928p-4 + 0xc.42a51a3c05c19ap-4 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: clog (0xa.47c0c65bd4928p-4 + 0xc.42a51a3c05c2p-4 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0xa.47c0c65bd4928p-4 + 0xc.42a51a3c05c2p-4 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: clog (0xa.47c0c65bd4928p-4 + 0xc.42a51p-4 i)":
@@ -6577,6 +6693,9 @@ ldouble: 1
 Test "Imaginary part of: clog (0xa.e7de8cc868ff8p-4 + 0xb.b51ccp-4 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: clog (0xa.e7de8p-4 + 0xb.b51cb9f04d4dp-4 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: clog (0xa.e7de8p-4 + 0xb.b51cbp-4 i)":
 float: 1
 ifloat: 1
@@ -6604,6 +6723,9 @@ ldouble: 1
 Test "Real part of: clog (0xa.ec55b7682e528ap-4 + 0xb.b0f2405504a68p-4 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: clog (0xa.ec55b7682e528ap-4 + 0xb.b0f24p-4 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: clog (0xa.ec55b7682e528p-4 + 0xb.b0f2405504a6p-4 i)":
 ildouble: 1
 ldouble: 1
@@ -6625,6 +6747,9 @@ ldouble: 1
 Test "Real part of: clog (0xa.ec55b7682e53p-4 + 0xb.b0f25p-4 i)":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: clog (0xa.ec55b7682e53p-4 + 0xb.b0f25p-4 i)":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: clog (0xa.ec55bp-4 + 0xb.b0f2405504a68p-4 i)":
 ildouble: 1
 ldouble: 1
@@ -6642,6 +6767,9 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: clog (0xa.ec55cp-4 + 0xb.b0f2405504a68p-4 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: clog (0xa.ec55cp-4 + 0xb.b0f2405504a6p-4 i)":
 ildouble: 1
 ldouble: 1
@@ -6651,6 +6779,9 @@ ifloat: 1
 Test "Real part of: clog (0xb.263a77543bp-4 + 0xb.79c9ap-4 i)":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0xb.263a8p-4 + 0xb.79c9ap-4 i)":
 ildouble: 1
 ldouble: 1
 Test "Real part of: clog (0xb.263a8p-4 + 0xb.79c9bp-4 i)":
@@ -7883,8 +8014,8 @@ float: 2
 idouble: 1
 ifloat: 2
 Test "cosh_upward (0x1.6p+4)":
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 Test "cosh_upward (0x1.8p+4)":
 double: 1
 idouble: 1
@@ -10369,6 +10500,9 @@ ldouble: 1
 Test "expm1 (0x2.c5c4p+12)":
 ildouble: 1
 ldouble: 1
+Test "expm1 (0x8p-32)":
+ildouble: 1
+ldouble: 1
 Test "expm1 (0xcp-4)":
 double: 1
 idouble: 1
@@ -10393,6 +10527,9 @@ Test "expm1_downward (-0x5p+4)":
 ildouble: 1
 ldouble: 1
 Test "expm1_downward (-0x6.4p+4)":
+ildouble: 1
+ldouble: 1
+Test "expm1_downward (-0x8p-32)":
 ildouble: 1
 ldouble: 1
 Test "expm1_downward (0x1.f4p+8)":
@@ -10453,6 +10590,9 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "expm1_tonearest (0x2.c5c4p+12)":
+ildouble: 1
+ldouble: 1
+Test "expm1_tonearest (0x8p-32)":
 ildouble: 1
 ldouble: 1
 Test "expm1_tonearest (0xcp-4)":
@@ -12011,6 +12151,11 @@ Test "sincos (0xf.ffffffffffff8p+1020) extra output 1":
 ildouble: 1
 ldouble: 1
 
+# sinh
+Test "sinh (0x8p-32)":
+ildouble: 1
+ldouble: 1
+
 # sinh_downward
 Test "sinh_downward (0x1.6p+4)":
 double: 1
@@ -12026,6 +12171,11 @@ Test "sinh_downward (0x1.8p+4)":
 ildouble: 1
 ldouble: 1
 Test "sinh_downward (0x8p-32)":
+ildouble: 1
+ldouble: 1
+
+# sinh_tonearest
+Test "sinh_tonearest (0x8p-32)":
 ildouble: 1
 ldouble: 1
 
@@ -13908,7 +14058,7 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
-ildouble: 1
+ildouble: 2
 ldouble: 3
 
 Function: Real part of "cpow":
@@ -14349,9 +14499,17 @@ Function: "sincos":
 ildouble: 1
 ldouble: 1
 
+Function: "sinh":
+ildouble: 1
+ldouble: 1
+
 Function: "sinh_downward":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
+
+Function: "sinh_tonearest":
 ildouble: 1
 ldouble: 1
 

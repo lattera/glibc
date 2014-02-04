@@ -2,6 +2,10 @@
 
 	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
 
+2014-02-04  Eric Wong  <normalperson@yhbt.net>
+
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
+
 2014-02-03  Carlos O'Donell  <carlos@redhat.com>
 
 	* manual/startup.texi: Add next, previous, and top entries for
