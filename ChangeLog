@@ -1,5 +1,34 @@
 2014-02-04  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/ld-le.abilist: New
+	file
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libBrokenLocale-le.abilist:
+	New file
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libanl-le.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libc-le.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libcrypt-le.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libdl-le.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libm-le.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libnsl-le.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libpthread-le.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libresolv-le.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/librt-le.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libthread_db-le.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libutil-le.abilist:
+	New file.
+
+2014-02-01  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* nptl/shlib-versions: Change powerpc*le start to 2.17.
 	* shlib-versions: Likewise.
 
