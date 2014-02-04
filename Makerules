@@ -1175,6 +1175,14 @@ ifeq ($(build-shared),yes)
 	LC_ALL=C $(OBJDUMP) --dynamic-syms $< > $@T
 	mv -f $@T $@
 
+# A sysdeps/.../Makefile can set abilist-pattern to something like
+# %-foo.abilist to look for libc-foo.abilist instead of libc.abilist.
+# This makes sense if multiple ABIs can be most cleanly supported by a
+# configuration without using separate sysdeps directories for each.
+ifdef abilist-pattern
+vpath $(abilist-pattern) $(+sysdep_dirs)
+endif
+
 vpath %.abilist $(+sysdep_dirs)
 
 # The .PRECIOUS rule prevents the files built by an implicit rule whose
@@ -1184,18 +1192,42 @@ vpath %.abilist $(+sysdep_dirs)
 .PRECIOUS: %.symlist
 generated += $(extra-libs:=.symlist)
 
+ifdef abilist-pattern
+check-abi-%: $(common-objpfx)config.make $(abilist-pattern) $(objpfx)%.symlist
+	$(check-abi-pattern)
+check-abi-%: $(common-objpfx)config.make $(abilist-pattern) \
+	     $(common-objpfx)%.symlist
+	$(check-abi-pattern)
+endif
 check-abi-%: $(common-objpfx)config.make %.abilist $(objpfx)%.symlist
 	$(check-abi)
 check-abi-%: $(common-objpfx)config.make %.abilist $(common-objpfx)%.symlist
 	$(check-abi)
+define check-abi-pattern
+	diff -p -U 0 $(filter $(abilist-pattern),$^) $(filter %.symlist,$^)
+endef
 define check-abi
 	diff -p -U 0 $(filter %.abilist,$^) $(filter %.symlist,$^)
 endef
 
+ifdef abilist-pattern
+update-abi-%: $(objpfx)%.symlist $(abilist-pattern)
+	$(update-abi-pattern)
+update-abi-%: $(common-objpfx)%.symlist $(abilist-pattern)
+	$(update-abi-pattern)
+endif
 update-abi-%: $(objpfx)%.symlist %.abilist
 	$(update-abi)
 update-abi-%: $(common-objpfx)%.symlist %.abilist
 	$(update-abi)
+define update-abi-pattern
+@if cmp -s $^ 2> /dev/null; \
+ then \
+      echo '+++ $(filter $(abilist-pattern),$^) is unchanged'; \
+ else cp -f $^; \
+      echo '*** Now check $(filter $(abilist-pattern),$^) changes for correctness ***'; \
+ fi
+endef
 define update-abi
 @if cmp -s $^ 2> /dev/null; \
  then \

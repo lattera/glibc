@@ -1,3 +1,14 @@
+2014-02-04  Roland McGrath  <roland@hack.frob.com>
+	    Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/Makefile [$(config-machine) ends with 'le']
+	(abilist-pattern): New variable, set to %-le.abilist.
+
+	* Makerules (abilist-pattern): New variable.
+	(vpath): Use $(abilist-pattern) in place of %.abilist.
+	(check-abi-% pattern rule): Likewise.
+	(check-abi, update-abi): Likewise.
+
 2014-02-04  Eric Wong  <normalperson@yhbt.net>
 
 	* sysdeps/x86_64/fpu/libm-test-ulps: Update.

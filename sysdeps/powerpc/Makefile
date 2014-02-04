@@ -27,3 +27,7 @@ ifeq ($(subdir),misc)
 sysdep_headers += sys/platform/ppc.h
 tests += test-gettimebase
 endif
+
+ifneq (,$(filter %le,$(config-machine)))
+abilist-pattern = %-le.abilist
+endif
