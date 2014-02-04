@@ -1,3 +1,8 @@
+2014-02-04  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* nptl/shlib-versions: Change powerpc*le start to 2.17.
+	* shlib-versions: Likewise.
+
 2014-02-04  Roland McGrath  <roland@hack.frob.com>
 	    Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
