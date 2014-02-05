@@ -715,7 +715,7 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
 		       - fp->_wide_data->_IO_write_base) / clen;
 	  else
 	    {
-	      enum __codecvt_result status;
+	      enum __codecvt_result status = __codecvt_ok;
 	      delta = (fp->_wide_data->_IO_write_ptr
 		       - fp->_wide_data->_IO_write_base);
 	      const wchar_t *write_base = fp->_wide_data->_IO_write_base;
@@ -728,9 +728,12 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
 		 flush buffers for every ftell.  */
 	      do
 		{
-		  /* Ugh, no point trying to avoid the flush.  Just do it
-		     and go back to how it was with the read mode.  */
-		  if (delta > 0 && new_write_ptr == fp->_IO_buf_end)
+		  /* There is not enough space in the buffer to do the entire
+		     conversion, so there is no point trying to avoid the
+		     buffer flush.  Just do it and go back to how it was with
+		     the read mode.  */
+		  if (status == __codecvt_partial
+		      || (delta > 0 && new_write_ptr == fp->_IO_buf_end))
 		    {
 		      if (_IO_switch_to_wget_mode (fp))
 			return WEOF;
