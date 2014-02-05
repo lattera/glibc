@@ -463,18 +463,6 @@ _dl_allocate_tls (void *mem)
 }
 rtld_hidden_def (_dl_allocate_tls)
 
-void
-internal_function
-_dl_clear_dtv (dtv_t *dtv)
-{
-  for (size_t cnt = 0; cnt < dtv[-1].counter; ++cnt)
-    if (! dtv[1 + cnt].pointer.is_static
-	&& dtv[1 + cnt].pointer.val != TLS_DTV_UNALLOCATED)
-      free (dtv[1 + cnt].pointer.val);
-  memset (dtv, '\0', (dtv[-1].counter + 1) * sizeof (dtv_t));
-}
-
-rtld_hidden_def (_dl_clear_dtv)
 
 #ifndef SHARED
 extern dtv_t _dl_static_dtv[];

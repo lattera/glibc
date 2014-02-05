@@ -1046,13 +1046,6 @@
 
 2013-12-18  Andrew Hunter  <ahh@google.com>
 
-	* elf/Versions (ld): Add _dl_clear_dtv.
-	* sysdeps/generic/ldsodefs.h (_dl_clear_dtv): New prototype.
-	* elf/dl-tls.c (_dl_clear_dtv): New function.
-	* nptl/allocatestack.c (get_cached_stack): Call _dl_clear_dtv.
-
-2013-12-18  Andrew Hunter  <ahh@google.com>
-
 	* sysdeps/generic/ldsodefs.h (_dl_mask_all_signals): New prototype.
 	(_dl_unmask_signals): Likewise.
 	* sysdeps/mach/hurd/dl-sysdep.h (_dl_mask_all_signals): New stub.

@@ -989,11 +989,6 @@ extern void *_dl_allocate_tls_storage (void)
 extern void *_dl_allocate_tls_init (void *) internal_function;
 rtld_hidden_proto (_dl_allocate_tls_init)
 
-/* Remove all allocated dynamic TLS regions from a DTV
-   for reuse by new thread.  */
-extern void _dl_clear_dtv (dtv_t *dtv) internal_function;
-rtld_hidden_proto (_dl_clear_dtv)
-
 /* Deallocate memory allocated with _dl_allocate_tls.  */
 extern void _dl_deallocate_tls (void *tcb, bool dealloc_tcb) internal_function;
 rtld_hidden_proto (_dl_deallocate_tls)
