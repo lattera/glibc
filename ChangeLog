@@ -1,3 +1,9 @@
+2014-02-05  Carlos O'Donell  <carlos@rehdat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x020621]
+	(__ASSUME_PROC_PID_TASK_COMM): Define.
+
 2014-02-05  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* manual/contrib.texi: Update entry for Ondrej Bilka, Will

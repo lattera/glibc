@@ -1,3 +1,9 @@
+2014-02-05  Carlos O'Donell  <carlos@redhat.com>
+
+	* sysdeps/unix/sysv/linux/tst-setgetname.c (do_test): Skip the
+	test if !__ASSUME_PROC_PID_TASK_COMM and get_self_comm returns
+	ENOENT.
+
 2014-01-23  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* tst-tls7.c: Adjust testcase timeout
