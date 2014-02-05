@@ -1,3 +1,9 @@
+2014-02-05  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* manual/contrib.texi: Update entry for Ondrej Bilka, Will
+	Newton and Alexandre Oliva.  Add entries for Steve Ellcey, Chris
+	Leonard and Allan McRae.
+
 2014-02-04  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/ld-le.abilist: New

@@ -29,7 +29,8 @@ Stephen R. van den Berg for contributing a highly-optimized
 @code{strstr} function.
 
 @item
-Ondrej Bilka for contributing optimized string routines for x64.
+Ondrej Bilka for contributing optimized string routines for x64 and various
+fixes.
 
 @item
 Eric Blake for adding O(n) implementations of @code{memmem},
@@ -82,6 +83,9 @@ and wide-character support functions (@file{wctype.h}, @file{wchar.h}, etc.).
 @item
 Paul Eggert for the @code{mktime} function and for his direction as
 part of @theglibc{} steering committee.
+
+@item
+Steve Ellcey for various fixes.
 
 @item
 Tulio Magno Quites Machado Filho for adding a new class of installed
@@ -175,6 +179,9 @@ functions @code{malloc}, @code{realloc} and @code{free} and related
 code.
 
 @item
+Chris Leonard for various fixes and enhancements to localedata.
+
+@item
 Hongjiu Lu for providing the support for a Linux 32-bit runtime
 environment under x86-64 (x32), for porting to Linux on IA64, for
 improved string functions, a framework for testing IFUNC
@@ -194,6 +201,9 @@ Greg McGary for adding runtime support for bounds checking.
 Roland McGrath for writing most of @theglibc{} originally, for his
 work on the Hurd port, his direction as part of @theglibc{} steering
 committee, and for many bug fixes and reviewing of contributions.
+
+@item
+Allan McRae for various fixes.
 
 @item
 Jason Merrill for the port to the Sequent Symmetry running Dynix
@@ -232,8 +242,8 @@ coverage of conformtest, and merging the ports/ subdirectory
 into the @glibcadj{} main repository.
 
 @item
-Will Newton for contributing an optimized memcpy for ARM NEON and
-VFP chips.
+Will Newton for contributing some optimized string functions and pointer
+encryption support for ARM and various fixes.
 
 @item
 Carlos O'Donell for his maintainership of the HPPA architecture and
@@ -242,7 +252,8 @@ maintaining @theglibc{} web pages.
 @item
 Alexandre Oliva for adding TLS descriptors for LD and GD on x86 and
 x86-64, for the am33 port, for completing the MIPS n64/n32/o32 multilib
-port, and for various fixes.
+port, for thread-safety, async-signal safety and async-cancellation
+safety documentation in the manual and for various fixes.
 
 @item
 Paul Pluzhnikov for various fixes.
