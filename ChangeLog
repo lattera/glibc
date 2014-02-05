@@ -961,12 +961,6 @@
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
 
-2013-12-19  Paul Pluzhnikov  <ppluzhnikov@google.com>
-
-	* elf/dl-misc.c (ptr_to_signal_safe_allocator_header): New function.
-	(__signal_safe_memalign, __signal_safe_free): Use it.
-	(__signal_safe_realloc): Likewise.
-
 2013-12-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* manual/texinfo.tex: Update to version 2013-11-26.10 with
@@ -1049,19 +1043,6 @@
 
 	* manual/install.texi: Suppress menu for plain text output.
 	* INSTALL: Regenerated.
-
-2013-12-18  Andrew Hunter  <ahh@google.com>
-
-	* sysdeps/generic/ldsodefs.h (__signal_safe_memalign): New prototype.
-	(__signal_safe_malloc, __signal_safe_free): Likewise.
-	(__signal_safe_realloc, __signal_safe_calloc): Likewise.
-	* elf/dl-misc.c (__signal_safe_allocator_header): New struct.
-	(__signal_safe_memalign, __signal_safe_malloc): New function.
-	(__signal_safe_free, __signal_safe_realloc): Likewise.
-	(__signal_safe_calloc): Likewise.
-	* elf/dl-tls.c (allocate_dtv, _dl_clear_dtv): Call signal-safe
-	functions.
-	(_dl_deallocate_tls, _dl_update_slotinfo): Likewise.
 
 2013-12-18  Andrew Hunter  <ahh@google.com>
 

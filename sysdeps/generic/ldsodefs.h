@@ -994,12 +994,6 @@ rtld_hidden_proto (_dl_allocate_tls_init)
 extern void _dl_clear_dtv (dtv_t *dtv) internal_function;
 rtld_hidden_proto (_dl_clear_dtv)
 
-extern void *__signal_safe_memalign (size_t boundary, size_t size);
-extern void *__signal_safe_malloc (size_t size);
-extern void __signal_safe_free (void *ptr);
-extern void *__signal_safe_realloc (void *ptr, size_t size);
-extern void *__signal_safe_calloc (size_t nmemb, size_t size);
-
 /* Deallocate memory allocated with _dl_allocate_tls.  */
 extern void _dl_deallocate_tls (void *tcb, bool dealloc_tcb) internal_function;
 rtld_hidden_proto (_dl_deallocate_tls)

@@ -293,7 +293,7 @@ allocate_dtv (void *result)
      initial set of modules.  This should avoid in most cases expansions
      of the dtv.  */
   dtv_length = GL(dl_tls_max_dtv_idx) + DTV_SURPLUS;
-  dtv = __signal_safe_calloc (dtv_length + 2, sizeof (dtv_t));
+  dtv = calloc (dtv_length + 2, sizeof (dtv_t));
   if (dtv != NULL)
     {
       /* This is the initial length of the dtv.  */
@@ -470,7 +470,7 @@ _dl_clear_dtv (dtv_t *dtv)
   for (size_t cnt = 0; cnt < dtv[-1].counter; ++cnt)
     if (! dtv[1 + cnt].pointer.is_static
 	&& dtv[1 + cnt].pointer.val != TLS_DTV_UNALLOCATED)
-      __signal_safe_free (dtv[1 + cnt].pointer.val);
+      free (dtv[1 + cnt].pointer.val);
   memset (dtv, '\0', (dtv[-1].counter + 1) * sizeof (dtv_t));
 }
 
@@ -491,11 +491,11 @@ _dl_deallocate_tls (void *tcb, bool dealloc_tcb)
   for (size_t cnt = 0; cnt < dtv[-1].counter; ++cnt)
     if (! dtv[1 + cnt].pointer.is_static
 	&& dtv[1 + cnt].pointer.val != TLS_DTV_UNALLOCATED)
-      __signal_safe_free (dtv[1 + cnt].pointer.val);
+      free (dtv[1 + cnt].pointer.val);
 
   /* The array starts with dtv[-1].  */
   if (dtv != GL(dl_initial_dtv))
-    __signal_safe_free (dtv - 1);
+    free (dtv - 1);
 
   if (dealloc_tcb)
     {
@@ -537,7 +537,8 @@ static void *
 allocate_and_init (struct link_map *map)
 {
   void *newp;
-  newp = __signal_safe_memalign (map->l_tls_align, map->l_tls_blocksize);
+
+  newp = __libc_memalign (map->l_tls_align, map->l_tls_blocksize);
   if (newp == NULL)
     oom ();
 
@@ -607,27 +608,25 @@ _dl_update_slotinfo (unsigned long int req_modid)
 	      if (gen <= dtv[0].counter)
 		continue;
 
-	      size_t modid = total + cnt;
-
 	      /* If there is no map this means the entry is empty.  */
 	      struct link_map *map = listp->slotinfo[cnt].map;
 	      if (map == NULL)
 		{
 		  /* If this modid was used at some point the memory
 		     might still be allocated.  */
-		  if (dtv[-1].counter >= modid
-		      && !dtv[modid].pointer.is_static
-		      && dtv[modid].pointer.val != TLS_DTV_UNALLOCATED)
+		  if (! dtv[total + cnt].pointer.is_static
+		      && dtv[total + cnt].pointer.val != TLS_DTV_UNALLOCATED)
 		    {
-		      __signal_safe_free (dtv[modid].pointer.val);
-		      dtv[modid].pointer.val = TLS_DTV_UNALLOCATED;
+		      free (dtv[total + cnt].pointer.val);
+		      dtv[total + cnt].pointer.val = TLS_DTV_UNALLOCATED;
 		    }
 
 		  continue;
 		}
 
-	      assert (modid == map->l_tls_modid);
 	      /* Check whether the current dtv array is large enough.  */
+	      size_t modid = map->l_tls_modid;
+	      assert (total + cnt == modid);
 	      if (dtv[-1].counter < modid)
 		{
 		  /* Reallocate the dtv.  */
@@ -641,18 +640,17 @@ _dl_update_slotinfo (unsigned long int req_modid)
 		    {
 		      /* This is the initial dtv that was allocated
 			 during rtld startup using the dl-minimal.c
-			 malloc instead of the real allocator.  We can't
+			 malloc instead of the real malloc.  We can't
 			 free it, we have to abandon the old storage.  */
 
-		      newp = __signal_safe_malloc (
-					(2 + newsize) * sizeof (dtv_t));
+		      newp = malloc ((2 + newsize) * sizeof (dtv_t));
 		      if (newp == NULL)
 			oom ();
 		      memcpy (newp, &dtv[-1], (2 + oldsize) * sizeof (dtv_t));
 		    }
 		  else
 		    {
-		      newp = __signal_safe_realloc (&dtv[-1],
+		      newp = realloc (&dtv[-1],
 				      (2 + newsize) * sizeof (dtv_t));
 		      if (newp == NULL)
 			oom ();
@@ -682,7 +680,7 @@ _dl_update_slotinfo (unsigned long int req_modid)
 		   deallocate even if it is this dtv entry we are
 		   supposed to load.  The reason is that we call
 		   memalign and not malloc.  */
-		__signal_safe_free (dtv[modid].pointer.val);
+		free (dtv[modid].pointer.val);
 
 	      /* This module is loaded dynamically- We defer memory
 		 allocation.  */
