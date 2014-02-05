@@ -5,11 +5,6 @@
 
 2014-02-04  David Holsgrove <david.holsgrove@xilinx.com>
 
-	[BZ #15705]
-	* sysdeps/unix/sysv/linux/microblaze/mmap64.c: New file.
-
-2014-02-04  David Holsgrove <david.holsgrove@xilinx.com>
-
 	* sysdeps/microblaze/fegetround.c: Delete redundant file.
 	* sysdeps/microblaze/fesetround.c: Likewise.
 
