@@ -12,6 +12,11 @@
 	Newton and Alexandre Oliva.  Add entries for Steve Ellcey, Chris
 	Leonard and Allan McRae.
 
+2014-02-04  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/fpu/libm-test-ulps: Update for some 64-bit differences from
+	32-bit.
+
 2014-02-04  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/ld-le.abilist: New
