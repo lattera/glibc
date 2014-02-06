@@ -1,3 +1,8 @@
+2014-02-11  David S. Miller  <davem@davemloft.net>
+
+	* stdio-common/tst-sscanf.c (main): Use 'long' for 'dummy' when
+	processing int_tests.
+
 2014-02-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips: Move directory from ports/sysdeps/mips.

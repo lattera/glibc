@@ -186,7 +186,8 @@ main (void)
 
   for (i = 0; i < sizeof (int_tests) / sizeof (int_tests[0]); ++i)
     {
-      int dummy, ret;
+      long dummy;
+      int ret;
 
       if ((ret = SSCANF (int_tests[i].str, int_tests[i].fmt,
 			 &dummy)) != int_tests[i].retval)
