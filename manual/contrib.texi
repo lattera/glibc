@@ -12,7 +12,8 @@ order.
 @itemize @bullet
 
 @item
-Ryan S. Arnold for his improvements for Linux on PowerPC.
+Ryan S. Arnold for his improvements for Linux on PowerPC and his direction
+as FSF Project Steward for @theglibc{}.
 
 @item
 Miles Bader for writing the @code{argp} argument-parsing package, and the
@@ -200,7 +201,8 @@ Greg McGary for adding runtime support for bounds checking.
 @item
 Roland McGrath for writing most of @theglibc{} originally, for his
 work on the Hurd port, his direction as part of @theglibc{} steering
-committee, and for many bug fixes and reviewing of contributions.
+committee and as FSF Project Steward for @theglibc{}, and for many bug
+fixes and reviewing of contributions.
 
 @item
 Allan McRae for various fixes.
@@ -238,22 +240,25 @@ implementations for PowerPC.
 Joseph S. Myers for numerous bug fixes for the libm functions, for
 his maintainership of the ARM and MIPS architectures, improving
 cross-compilation and cross-testing of @theglibc{}, expanded
-coverage of conformtest, and merging the ports/ subdirectory
-into the @glibcadj{} main repository.
+coverage of conformtest, merging the ports/ subdirectory
+into the @glibcadj{} main repository and his direction as FSF Project
+Steward for @theglibc{}.
 
 @item
 Will Newton for contributing some optimized string functions and pointer
 encryption support for ARM and various fixes.
 
 @item
-Carlos O'Donell for his maintainership of the HPPA architecture and
-maintaining @theglibc{} web pages.
+Carlos O'Donell for his maintainership of the HPPA architecture, for
+maintaining @theglibc{} web pages and wiki, for his direction as FSF
+Project Steward for @theglibc{} and various bug fixes.
 
 @item
 Alexandre Oliva for adding TLS descriptors for LD and GD on x86 and
 x86-64, for the am33 port, for completing the MIPS n64/n32/o32 multilib
 port, for thread-safety, async-signal safety and async-cancellation
-safety documentation in the manual and for various fixes.
+safety documentation in the manual, for his direction as FSF Project
+Maintainer and for various fixes.
 
 @item
 Paul Pluzhnikov for various fixes.

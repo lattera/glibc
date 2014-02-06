@@ -1,3 +1,8 @@
+2014-02-06  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* manual/contrib.texi: Update entry for Carlos O'Donell,
+	Joseph Myers, Roland McGrath, Alexandre Oliva and Ryan Arnold.
+
 2014-02-05  Carlos O'Donell  <carlos@rehdat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h: Fix comment.
