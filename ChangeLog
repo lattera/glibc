@@ -1,3 +1,9 @@
+2014-02-11  Will Newton  <will.newton@linaro.org>
+
+	* malloc/mtrace.c (attribute_hidden): Remove unused macro
+	definition.  (tr_where, tr_freehook, tr_mallochook,
+	tr_reallochook, tr_memalignhook): Use ANSI protoype.
+
 2014-02-11  David S. Miller  <davem@davemloft.net>
 
 	* stdio-common/tst-sscanf.c (main): Use 'long' for 'dummy' when

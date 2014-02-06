@@ -41,10 +41,6 @@
 
 #include <kernel-features.h>
 
-#ifndef attribute_hidden
-# define attribute_hidden
-#endif
-
 #define TRACE_BUFFER_SIZE 512
 
 static FILE *mallstream;
@@ -77,11 +73,8 @@ tr_break (void)
 }
 libc_hidden_def (tr_break)
 
-static void tr_where (const __ptr_t, Dl_info *) __THROW internal_function;
-static void
-internal_function tr_where (caller, info)
-const __ptr_t caller;
-Dl_info *info;
+static void internal_function
+tr_where (const __ptr_t caller, Dl_info *info)
 {
   if (caller != NULL)
     {
@@ -114,7 +107,6 @@ Dl_info *info;
     }
 }
 
-
 static Dl_info *
 lock_and_info (const __ptr_t caller, Dl_info *mem)
 {
@@ -128,11 +120,8 @@ lock_and_info (const __ptr_t caller, Dl_info *mem)
   return res;
 }
 
-
-static void tr_freehook (__ptr_t, const __ptr_t) __THROW;
-static void tr_freehook (ptr, caller)
-__ptr_t ptr;
-const __ptr_t caller;
+static void
+tr_freehook (__ptr_t ptr, const __ptr_t caller)
 {
   if (ptr == NULL)
     return;
@@ -157,10 +146,8 @@ const __ptr_t caller;
   __libc_lock_unlock (lock);
 }
 
-static __ptr_t tr_mallochook (size_t, const __ptr_t) __THROW;
-static __ptr_t tr_mallochook (size, caller)
-size_t size;
-const __ptr_t caller;
+static __ptr_t
+tr_mallochook (size_t size, const __ptr_t caller)
 {
   __ptr_t hdr;
 
@@ -186,12 +173,8 @@ const __ptr_t caller;
   return hdr;
 }
 
-static __ptr_t tr_reallochook (__ptr_t, size_t, const __ptr_t)
-__THROW;
-static __ptr_t tr_reallochook (ptr, size, caller)
-__ptr_t ptr;
-size_t size;
-const __ptr_t caller;
+static __ptr_t
+tr_reallochook (__ptr_t ptr, size_t size, const __ptr_t caller)
 {
   __ptr_t hdr;
 
@@ -238,11 +221,8 @@ const __ptr_t caller;
   return hdr;
 }
 
-static __ptr_t tr_memalignhook (size_t, size_t,
-                                const __ptr_t) __THROW;
-static __ptr_t tr_memalignhook (alignment, size, caller)
-size_t alignment, size;
-const __ptr_t caller;
+static __ptr_t
+tr_memalignhook (size_t alignment, size_t size, const __ptr_t caller)
 {
   __ptr_t hdr;
 
@@ -269,7 +249,6 @@ const __ptr_t caller;
 
   return hdr;
 }
-
 
 
 #ifdef _LIBC
