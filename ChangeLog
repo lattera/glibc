@@ -1,3 +1,8 @@
+2014-02-06  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #16529]
+	* inet/netinet/in.h: Remove comma after IPPROTO_MH.
+
 2014-02-06  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* manual/contrib.texi: Update entry for Carlos O'Donell,

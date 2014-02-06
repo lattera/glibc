@@ -108,7 +108,7 @@ enum
 #define IPPROTO_NONE		IPPROTO_NONE
     IPPROTO_DSTOPTS = 60,  /* IPv6 destination options.  */
 #define IPPROTO_DSTOPTS		IPPROTO_DSTOPTS
-    IPPROTO_MH = 135,      /* IPv6 mobility header.  */
+    IPPROTO_MH = 135       /* IPv6 mobility header.  */
 #define IPPROTO_MH		IPPROTO_MH
   };
 #endif /* !__USE_KERNEL_IPV6_DEFS */
