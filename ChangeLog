@@ -1131,6 +1131,7 @@
 
 2013-12-17  Paul Eggert  <eggert@cs.ucla.edu>
 
+	[BZ #15968]
 	Support TZ transition times < 00:00:00.
 	This is needed for version-3 tz-format files; it supports time
 	stamps past 2037 for America/Godthab (the only entry in the tz
