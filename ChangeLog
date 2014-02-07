@@ -1,3 +1,9 @@
+2014-02-07  Allan McRae  <allan@archlinux.org>
+
+	* version.h (RELEASE): Set to "development".
+	(VERSION): Set to "2.19.90"
+	* NEWS: Add 2.20 section.
+
 2014-02-06  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #16529]
