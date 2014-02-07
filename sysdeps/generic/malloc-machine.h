@@ -35,7 +35,7 @@
 typedef int mutex_t;
 
 # define mutex_init(m)          (*(m) = 0)
-# define mutex_lock(m)          ((*(m) = 1), 0)
+# define mutex_lock(m)          ({ *(m) = 1; 0; })
 # define mutex_trylock(m)       (*(m) ? 1 : ((*(m) = 1), 0))
 # define mutex_unlock(m)        (*(m) = 0)
 # define MUTEX_INITIALIZER      (0)

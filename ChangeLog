@@ -1,3 +1,12 @@
+2014-02-07  Roland McGrath  <roland@hack.frob.com>
+
+	* bits/sigset.h (__sigemptyset): Use a statement expression rather
+	than the comma operator, to avoid "rhs of comma has no effect"
+	compiler warnings.
+	(__sigfillset, __sigandset, __sigorset): Likewise.
+	* include/signal.h (__sigemptyset): Likewise.
+	* sysdeps/generic/malloc-machine.h (mutex_lock): Likewise.
+
 2014-02-07  Allan McRae  <allan@archlinux.org>
 
 	* version.h (RELEASE): Set to "development".

@@ -44,15 +44,17 @@ typedef unsigned long int __sigset_t;
    overflow if `sigset_t' is wider than `int'.  */
 #define	__sigmask(sig)	(((__sigset_t) 1) << ((sig) - 1))
 
-#define	__sigemptyset(set)	((*(set) = (__sigset_t) 0), 0)
-#define	__sigfillset(set)	((*(set) = ~(__sigset_t) 0), 0)
+#define	__sigemptyset(set)	\
+  (__extension__ ({ *(set) = (__sigset_t) 0; 0; })
+#define	__sigfillset(set)	\
+  (__extension__ ({ *(set) = ~(__sigset_t) 0; 0; }))
 
 #ifdef _GNU_SOURCE
 # define __sigisemptyset(set)	(*(set) == (__sigset_t) 0)
 # define __sigandset(dest, left, right) \
-				((*(dest) = (*(left) & *(right))), 0)
+  (__extension__ ({ *(dest) = *(left) & *(right); 0; }))
 # define __sigorset(dest, left, right) \
-				((*(dest) = (*(left) | *(right))), 0)
+  (__extension__ ({ *(dest) = *(left) | *(right); 0; }))
 #endif
 
 /* These functions needn't check for a bogus signal number -- error

@@ -55,7 +55,8 @@ extern int __xpg_sigpause (int sig);
 
 /* Simplified sigemptyset() implementation without the parameter checking.  */
 #undef __sigemptyset
-#define __sigemptyset(ss) (__builtin_memset (ss, '\0', sizeof (sigset_t)), 0)
+#define __sigemptyset(ss) \
+  ({ __builtin_memset (ss, '\0', sizeof (sigset_t)); 0; })
 
 
 /* Allocate real-time signal with highest/lowest available priority.  */
