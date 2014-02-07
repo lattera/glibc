@@ -3882,6 +3882,7 @@
 
 2013-11-04  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #6981]
 	* include/stdc-predef.h [__GCC_IEC_559] (__STDC_IEC_559__): Define
 	depending on [__GCC_IEC_559 > 0].
 	[__GCC_IEC_559_COMPLEX] (__STDC_IEC_559_COMPLEX__): Define
