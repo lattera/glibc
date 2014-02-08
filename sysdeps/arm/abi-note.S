@@ -6,4 +6,3 @@
 	.eabi_attribute 24, 1
 
 #include <csu/abi-note.S>
-
