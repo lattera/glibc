@@ -1,5 +1,29 @@
 2014-02-08  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/unix/sysv/linux/bits/in.h (IP_NODEFRAG): Define.
+	(IP_PMTUDISC_INTERFACE): Likewise.
+	(IP_MULTICAST_IF): Likewise.
+	(IP_MULTICAST_TTL): Likewise.
+	(IP_MULTICAST_LOOP): Likewise.
+	(IP_ADD_MEMBERSHIP): Likewise.
+	(IP_DROP_MEMBERSHIP): Likewise.
+	(IP_UNBLOCK_SOURCE): Likewise.
+	(IP_BLOCK_SOURCE): Likewise.
+	(IP_ADD_SOURCE_MEMBERSHIP): Likewise.
+	(IP_DROP_SOURCE_MEMBERSHIP): Likewise.
+	(IP_MSFILTER): Likewise.
+	(MCAST_JOIN_GROUP): Likewise.
+	(MCAST_BLOCK_SOURCE): Likewise.
+	(MCAST_UNBLOCK_SOURCE): Likewise.
+	(MCAST_LEAVE_GROUP): Likewise.
+	(MCAST_JOIN_SOURCE_GROUP): Likewise.
+	(MCAST_LEAVE_SOURCE_GROUP): Likewise.
+	(MCAST_MSFILTER): Likewise.
+	(IP_MULTICAST_ALL): Likewise.
+	(IP_UNICAST_IF): Likewise.
+
+2014-02-08  Mike Frysinger  <vapier@gentoo.org>
+
 	* timezone/Makefile: Delete $(have-ksh) check.
 	($(objpfx)tzselect): Change $(KSH) to $(BASH).
 	* timezone/tzselect.ksh: Add +x mode bits.
