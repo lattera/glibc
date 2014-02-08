@@ -40,7 +40,6 @@ located in the `ports' subdirectory of the source tree.
 
 	aarch64*-*-linux-gnu
 	alpha*-*-linux-gnu
-	am33*-*-linux-gnu	Not currently functional
 	arm-*-linux-gnueabi
 	hppa-*-linux-gnu	Not currently functional without patches.
 	ia64-*-linux-gnu

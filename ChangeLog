@@ -1,3 +1,7 @@
+2014-02-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* README: Remove mention of am33.
+
 2014-02-07  Roland McGrath  <roland@hack.frob.com>
 
 	* bits/sigset.h (__sigemptyset): Use a statement expression rather
