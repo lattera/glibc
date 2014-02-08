@@ -1,4 +1,16 @@
+This file describes changes to the ARM port while it was in the ports
+add-on directory.  This port is no longer part of an add-on and so
+future changes to it should be listed in the top-level ChangeLog file,
+not here.
+
+
+
 2014-02-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm: Move directory to ../sysdeps/arm.
+	* sysdeps/unix/arm: Move directory to ../sysdeps.arm.
+	* sysdeps/unix/sysv/linux/arm: Move directory to
+	../sysdeps/unix/sysv/linux/arm.
 
 	* sysdeps/unix/sysv/linux/arm/msgctl.c: Move from
 	sysdeps/unix/sysv/linux/alpha/msgctl.c instead of #include of that
