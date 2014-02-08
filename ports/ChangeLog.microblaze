@@ -1,3 +1,15 @@
+2014-02-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/microblaze/msgctl.c: Include
+	sysdeps/unix/sysv/linux/arm/msgctl.c instead of
+	sysdeps/unix/sysv/linux/alpha/msgctl.c.
+	* sysdeps/unix/sysv/linux/microblaze/semctl.c: Include
+	sysdeps/unix/sysv/linux/arm/semctl.c instead of
+	sysdeps/unix/sysv/linux/alpha/semctl.c.
+	* sysdeps/unix/sysv/linux/microblaze/shmctl.c: Include
+	sysdeps/unix/sysv/linux/arm/shmctl.c instead of
+	sysdeps/unix/sysv/linux/alpha/shmctl.c.
+
 2014-02-04  David Holsgrove <david.holsgrove@xilinx.com>
 
 	* sysdeps/microblaze/libm-test-ulps: Update.

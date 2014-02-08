@@ -1,3 +1,15 @@
+2014-02-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/msgctl.c: Move from
+	sysdeps/unix/sysv/linux/alpha/msgctl.c instead of #include of that
+	file.
+	* sysdeps/unix/sysv/linux/arm/semctl.c: Move from
+	sysdeps/unix/sysv/linux/alpha/semctl.c instead of #include of that
+	file.
+	* sysdeps/unix/sysv/linux/arm/shmctl.c: Move from
+	sysdeps/unix/sysv/linux/alpha/shmctl.c instead of #include of that
+	file.
+
 2014-01-24  Will Newton  <will.newton@linaro.org>
 
 	[BZ #16499]
