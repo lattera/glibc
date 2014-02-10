@@ -1,5 +1,10 @@
 2014-02-10  Ondřej Bílka  <neleai@seznam.cz>
 
+	[BZ #15894]
+	* stdlib/setenv.c (__add_to_environ): Remove duplicate code.
+
+2014-02-10  Ondřej Bílka  <neleai@seznam.cz>
+
 	* malloc/arena.c (grow_heap, get_free_list, reused_arena,
 	arena_get2): Remove THREAD_STATS conditionals.
 	* malloc/malloc.c (__malloc_assert, __libc_realloc, _int_free,

@@ -146,82 +146,13 @@ __add_to_environ (name, value, combined, replace)
 	  UNLOCK;
 	  return -1;
 	}
-
-      /* If the whole entry is given add it.  */
-      if (combined != NULL)
-	/* We must not add the string to the search tree since it belongs
-	   to the user.  */
-	new_environ[size] = (char *) combined;
-      else
-	{
-	  /* See whether the value is already known.  */
-#ifdef USE_TSEARCH
-	  char *new_value;
-	  int use_alloca = __libc_use_alloca (varlen);
-	  if (__builtin_expect (use_alloca, 1))
-	    new_value = (char *) alloca (varlen);
-	  else
-	    {
-	      new_value = malloc (varlen);
-	      if (new_value == NULL)
-		{
-		  UNLOCK;
-		  if (last_environ == NULL)
-		    free (new_environ);
-		  return -1;
-		}
-	    }
-# ifdef _LIBC
-	  __mempcpy (__mempcpy (__mempcpy (new_value, name, namelen), "=", 1),
-		     value, vallen);
-# else
-	  memcpy (new_value, name, namelen);
-	  new_value[namelen] = '=';
-	  memcpy (&new_value[namelen + 1], value, vallen);
-# endif
-
-	  new_environ[size] = KNOWN_VALUE (new_value);
-	  if (__builtin_expect (new_environ[size] == NULL, 1))
-#endif
-	    {
-#ifdef USE_TSEARCH
-	      if (__builtin_expect (! use_alloca, 0))
-		new_environ[size] = new_value;
-	      else
-#endif
-		{
-		  new_environ[size] = (char *) malloc (varlen);
-		  if (__builtin_expect (new_environ[size] == NULL, 0))
-		    {
-		      UNLOCK;
-		      return -1;
-		    }
-
-#ifdef USE_TSEARCH
-		  memcpy (new_environ[size], new_value, varlen);
-#else
-		  memcpy (new_environ[size], name, namelen);
-		  new_environ[size][namelen] = '=';
-		  memcpy (&new_environ[size][namelen + 1], value, vallen);
-#endif
-		}
-
-	      /* And save the value now.  We cannot do this when we remove
-		 the string since then we cannot decide whether it is a
-		 user string or not.  */
-	      STORE_VALUE (new_environ[size]);
-	    }
-	}
-
-      if (__environ != last_environ)
-	memcpy ((char *) new_environ, (char *) __environ,
-		size * sizeof (char *));
-
+      new_environ[size] = NULL;
       new_environ[size + 1] = NULL;
+      ep = new_environ + size;
 
       last_environ = __environ = new_environ;
     }
-  else if (replace)
+  if (*ep == NULL || replace)
     {
       char *np;
 
