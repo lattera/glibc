@@ -27,6 +27,7 @@ The GNU C Library supports these configurations for using Linux kernels:
 	arm-*-linux-gnueabi
 	i[4567]86-*-linux-gnu
 	x86_64-*-linux-gnu	Can build either x86_64 or x32
+	m68k-*-linux-gnu
 	powerpc-*-linux-gnu	Hardware or software floating point, BE only.
 	powerpc64*-*-linux-gnu	Big-endian and little-endian.
 	s390-*-linux-gnu
@@ -45,7 +46,6 @@ located in the `ports' subdirectory of the source tree.
 	alpha*-*-linux-gnu
 	hppa-*-linux-gnu	Not currently functional without patches.
 	ia64-*-linux-gnu
-	m68k-*-linux-gnu
 	mips-*-linux-gnu
 	mips64-*-linux-gnu
 

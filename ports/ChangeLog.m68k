@@ -1,3 +1,16 @@
+This file describes changes to the M68K port while it was in the ports
+add-on directory.  This port is no longer part of an add-on and so
+future changes to it should be listed in the top-level ChangeLog file,
+not here.
+
+
+
+2014-02-10  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k: Move directory to ../sysdeps/m68k.
+	* sysdeps/unix/sysv/linux/m68k: Move directory to
+	../sysdeps/unix/sysv/linux/m68k.
+
 2014-01-27  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/m680x0/fpu/libm-test-ulps: Regenerate.
