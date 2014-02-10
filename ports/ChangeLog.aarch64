@@ -1,3 +1,16 @@
+This file describes changes to the AArch64 port while it was in the ports
+add-on directory.  This port is no longer part of an add-on and so
+future changes to it should be listed in the top-level ChangeLog file,
+not here.
+
+
+
+2014-02-11  Marcus Shawcroft  <marcus.shawcroft@arm.com>
+
+	* sysdeps/aarch64: Move directory to ../sysdeps/aarch64.
+	* sysdeps/unix/sysv/linux/aarch64: Move directory to
+	../sysdeps/unix/sysv/linux/aarch64.
+
 2014-01-22  Marcus Shawcroft  <marcus.shawcroft@arm.com>
 
 	* sysdeps/aarch64/libm-test-ulps: Regenerated.

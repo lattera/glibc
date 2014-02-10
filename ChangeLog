@@ -1,3 +1,10 @@
+2014-02-11  Marcus Shawcroft  <marcus.shawcroft@arm.com>
+
+	* sysdeps/aarch64: Move directory from ports/sysdeps/aarch64.
+	* sysdeps/unix/sysv/linux/aarch64: Move directory from
+	ports/sysdeps/unix/sysv/linux/aarch64.
+	* README: Update listing for aarch64*-*-linux-gnu.
+
 2014-02-11  Will Newton  <will.newton@linaro.org>
 
 	* manual/probes.texi (Mathematical Function Probes): Use
