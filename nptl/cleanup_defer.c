@@ -34,14 +34,14 @@ __pthread_register_cancel_defer (__pthread_unwind_buf_t *buf)
   int cancelhandling = THREAD_GETMEM (self, cancelhandling);
 
   /* Disable asynchronous cancellation for now.  */
-  if (__builtin_expect (cancelhandling & CANCELTYPE_BITMASK, 0))
+  if (__glibc_unlikely (cancelhandling & CANCELTYPE_BITMASK))
     while (1)
       {
 	int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling,
 						cancelhandling
 						& ~CANCELTYPE_BITMASK,
 						cancelhandling);
-	if (__builtin_expect (curval == cancelhandling, 1))
+	if (__glibc_likely (curval == cancelhandling))
 	  /* Successfully replaced the value.  */
 	  break;
 
@@ -78,7 +78,7 @@ __pthread_unregister_cancel_restore (__pthread_unwind_buf_t *buf)
 						  cancelhandling
 						  | CANCELTYPE_BITMASK,
 						  cancelhandling);
-	  if (__builtin_expect (curval == cancelhandling, 1))
+	  if (__glibc_likely (curval == cancelhandling))
 	    /* Successfully replaced the value.  */
 	    break;
 

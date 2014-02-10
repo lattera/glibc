@@ -61,7 +61,7 @@
 	{								      \
 	  /* We are not in the initial state.  To switch back we have	      \
 	     to emit `SI'.  */						      \
-	  if (__builtin_expect (outbuf >= outend, 0))			      \
+	  if (__glibc_unlikely (outbuf >= outend))			      \
 	    /* We don't have enough room in the output buffer.  */	      \
 	    status = __GCONV_FULL_OUTPUT;				      \
 	  else								      \
@@ -150,7 +150,7 @@ enum
 									      \
 	assert (curcs == db);						      \
 									      \
-	if (__builtin_expect (inptr + 1 >= inend, 0))			      \
+	if (__glibc_unlikely (inptr + 1 >= inend))			      \
 	  {								      \
 	    /* The second character is not available.  Store the	      \
 	       intermediate result. */					      \
@@ -197,7 +197,7 @@ enum
     const struct gap *rp2 = __ucs4_to_ibm930db_idx;			      \
     const char *cp;							      \
 									      \
-    if (__builtin_expect (ch >= 0xffff, 0))				      \
+    if (__glibc_unlikely (ch >= 0xffff))				      \
       {									      \
 	UNICODE_TAG_HANDLER (ch, 4);					      \
 									      \
@@ -227,7 +227,7 @@ enum
 	  {								      \
 	    if (curcs == sb)						      \
 	      {								      \
-		if (__builtin_expect (outptr + 1 > outend, 0))		      \
+		if (__glibc_unlikely (outptr + 1 > outend))		      \
 		  {							      \
 		    result = __GCONV_FULL_OUTPUT;			      \
 		    break;						      \
@@ -236,7 +236,7 @@ enum
 		curcs = db;						      \
 	      }								      \
 									      \
-	    if (__builtin_expect (outptr + 2 > outend, 0))		      \
+	    if (__glibc_unlikely (outptr + 2 > outend))			      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -249,7 +249,7 @@ enum
       {									      \
 	if (curcs == db)						      \
 	  {								      \
-	    if (__builtin_expect (outptr + 1 > outend, 0))		      \
+	    if (__glibc_unlikely (outptr + 1 > outend))			      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -257,7 +257,7 @@ enum
 	    *outptr++ = SI;						      \
 	  }								      \
 									      \
-	if (__builtin_expect (outptr + 1 > outend, 0))			      \
+	if (__glibc_unlikely (outptr + 1 > outend))			      \
 	  {								      \
 	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \

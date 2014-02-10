@@ -134,7 +134,7 @@ renameat (oldfd, old, newfd, new)
   if (oldfd != AT_FDCWD && old[0] != '/')
     {
       size_t filelen = strlen (old);
-      if (__builtin_expect (filelen == 0, 0))
+      if (__glibc_unlikely (filelen == 0))
 	{
 	  __set_errno (ENOENT);
 	  return -1;
@@ -159,7 +159,7 @@ renameat (oldfd, old, newfd, new)
   if (newfd != AT_FDCWD && new[0] != '/')
     {
       size_t filelen = strlen (new);
-      if (__builtin_expect (filelen == 0, 0))
+      if (__glibc_unlikely (filelen == 0))
 	{
 	  __set_errno (ENOENT);
 	  return -1;
@@ -183,7 +183,7 @@ renameat (oldfd, old, newfd, new)
 
   result = INTERNAL_SYSCALL (rename, err, 2, old,  new);
 
-  if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
+  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
     {
       __atfct_seterrno_2 (INTERNAL_SYSCALL_ERRNO (result, err), newfd, bufnew,
 			  oldfd, bufold);

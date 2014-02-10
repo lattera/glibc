@@ -32,7 +32,7 @@ __pthread_rwlock_tryrdlock (pthread_rwlock_t *rwlock)
       && (rwlock->__data.__nr_writers_queued == 0
 	  || PTHREAD_RWLOCK_PREFER_READER_P (rwlock)))
     {
-      if (__builtin_expect (++rwlock->__data.__nr_readers == 0, 0))
+      if (__glibc_unlikely (++rwlock->__data.__nr_readers == 0))
 	{
 	  --rwlock->__data.__nr_readers;
 	  result = EAGAIN;

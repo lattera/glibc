@@ -23,7 +23,7 @@ size_t
 __wcsnrtombs_chk (char *dst, const wchar_t **src, size_t nwc, size_t len,
 		  mbstate_t *ps, size_t dstlen)
 {
-  if (__builtin_expect (dstlen < len, 0))
+  if (__glibc_unlikely (dstlen < len))
     __chk_fail ();
 
   return __wcsnrtombs (dst, src, nwc, len, ps);

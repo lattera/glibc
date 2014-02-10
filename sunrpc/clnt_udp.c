@@ -196,7 +196,7 @@ __libc_clntudp_bufcreate (struct sockaddr_in *raddr, u_long program,
 # endif
 	}
 #endif
-      if (__builtin_expect (*sockp < 0, 0))
+      if (__glibc_unlikely (*sockp < 0))
 	{
 	  struct rpc_createerr *ce = &get_rpc_createerr ();
 	  ce->cf_stat = RPC_SYSTEMERROR;

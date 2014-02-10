@@ -3076,7 +3076,7 @@ static const char uhc_hangul_from_ucs[11172][2] =
 	   is also available.  */					      \
 	uint32_t ch2;							      \
 									      \
-	if (__builtin_expect (inptr + 1 >= inend, 0))			      \
+	if (__glibc_unlikely (inptr + 1 >= inend))			      \
 	  {								      \
 	    /* The second character is not available.  Store		      \
 	       the intermediate result.  */				      \
@@ -3123,7 +3123,7 @@ static const char uhc_hangul_from_ucs[11172][2] =
 				     ? (ch - 0x81) * 178		      \
 				     : 5696 + (ch - 0xa1) * 84)];	      \
 									      \
-	    if (__builtin_expect (ch == 0, 0))				      \
+	    if (__glibc_unlikely (ch == 0))				      \
 	      {								      \
 		/* This is an illegal character.  */			      \
 		STANDARD_FROM_LOOP_ERR_HANDLER (2);			      \
@@ -3173,7 +3173,7 @@ static const char uhc_hangul_from_ucs[11172][2] =
       {									      \
 	const char *s = uhc_hangul_from_ucs[ch - 0xac00];		      \
 									      \
-	if (__builtin_expect (outptr + 2 > outend, 0))			      \
+	if (__glibc_unlikely (outptr + 2 > outend))			      \
 	  {								      \
 	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
@@ -3186,12 +3186,12 @@ static const char uhc_hangul_from_ucs[11172][2] =
       {									      \
 	size_t written = ucs4_to_ksc5601_hanja (ch, outptr, outend - outptr); \
 									      \
-	if (__builtin_expect (written == 0, 0))				      \
+	if (__glibc_unlikely (written == 0))				      \
 	  {								      \
 	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
 	  }								      \
-	if (__builtin_expect (written == __UNKNOWN_10646_CHAR, 0))	      \
+	if (__glibc_unlikely (written == __UNKNOWN_10646_CHAR))		      \
 	  {								      \
 	    STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
 	  }								      \
@@ -3213,7 +3213,7 @@ static const char uhc_hangul_from_ucs[11172][2] =
 	    UNICODE_TAG_HANDLER (ch, 4);				      \
 	    STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
 	  }								      \
-	if (__builtin_expect (written == 0, 0))				      \
+	if (__glibc_unlikely (written == 0))				      \
 	  {								      \
 	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \

@@ -41,14 +41,14 @@ hp_timing_gettime (clockid_t clock_id, struct timespec *tp)
 {
   hp_timing_t tsc;
 
-  if (__builtin_expect (freq == 0, 0))
+  if (__glibc_unlikely (freq == 0))
     {
       /* This can only happen if we haven't initialized the `freq'
 	 variable yet.  Do this now. We don't have to protect this
 	 code against multiple execution since all of them should
 	 lead to the same result.  */
       freq = __get_clockfreq ();
-      if (__builtin_expect (freq == 0, 0))
+      if (__glibc_unlikely (freq == 0))
 	/* Something went wrong.  */
 	return -1;
     }

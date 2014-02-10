@@ -110,7 +110,7 @@ aio_suspend (list, nent, timeout)
      int nent;
      const struct timespec *timeout;
 {
-  if (__builtin_expect (nent < 0, 0))
+  if (__glibc_unlikely (nent < 0))
     {
       __set_errno (EINVAL);
       return -1;
@@ -229,7 +229,7 @@ aio_suspend (list, nent, timeout)
 
 #ifndef DONT_NEED_AIO_MISC_COND
   /* Release the conditional variable.  */
-  if (__builtin_expect (pthread_cond_destroy (&cond) != 0, 0))
+  if (__glibc_unlikely (pthread_cond_destroy (&cond) != 0))
     /* This must never happen.  */
     abort ();
 #endif

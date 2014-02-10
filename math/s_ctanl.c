@@ -28,7 +28,7 @@ __ctanl (__complex__ long double x)
 {
   __complex__ long double res;
 
-  if (__builtin_expect (!isfinite (__real__ x) || !isfinite (__imag__ x), 0))
+  if (__glibc_unlikely (!isfinite (__real__ x) || !isfinite (__imag__ x)))
     {
       if (__isinf_nsl (__imag__ x))
 	{
@@ -58,7 +58,7 @@ __ctanl (__complex__ long double x)
       /* tan(x+iy) = (sin(2x) + i*sinh(2y))/(cos(2x) + cosh(2y))
 	 = (sin(x)*cos(x) + i*sinh(y)*cosh(y)/(cos(x)^2 + sinh(y)^2). */
 
-      if (__builtin_expect (rcls != FP_SUBNORMAL, 1))
+      if (__glibc_likely (rcls != FP_SUBNORMAL))
 	{
 	  __sincosl (__real__ x, &sinrx, &cosrx);
 	}

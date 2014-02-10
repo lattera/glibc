@@ -48,7 +48,7 @@ __ieee754_atanhf (float x)
   float t;
   if (isless (xa, 0.5f))
     {
-      if (__builtin_expect (xa < 0x1.0p-28f, 0))
+      if (__glibc_unlikely (xa < 0x1.0p-28f))
 	{
 	  math_force_eval (huge + x);
 	  return x;
@@ -57,7 +57,7 @@ __ieee754_atanhf (float x)
       t = xa + xa;
       t = 0.5f * __log1pf (t + t * xa / (1.0f - xa));
     }
-  else if (__builtin_expect (isless (xa, 1.0f), 1))
+  else if (__glibc_likely (isless (xa, 1.0f)))
     t = 0.5f * __log1pf ((xa + xa) / (1.0f - xa));
   else
     {

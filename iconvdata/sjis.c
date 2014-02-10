@@ -4361,7 +4361,7 @@ static const char from_ucs4_extra[0x100][2] =
 	uint32_t ch2;							      \
 	uint_fast32_t idx;						      \
 									      \
-	if (__builtin_expect (inptr + 1 >= inend, 0))			      \
+	if (__glibc_unlikely (inptr + 1 >= inend))			      \
 	  {								      \
 	    /* The second byte is not available.  Store			      \
 	       the intermediate result.  */				      \
@@ -4371,7 +4371,7 @@ static const char from_ucs4_extra[0x100][2] =
 									      \
 	ch2 = inptr[1];							      \
 	idx = ch * 256 + ch2;						      \
-	if (__builtin_expect (ch2 < 0x40, 0))				      \
+	if (__glibc_unlikely (ch2 < 0x40))				      \
 	  {								      \
 	    /* This is illegal.  */					      \
 	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
@@ -4398,7 +4398,7 @@ static const char from_ucs4_extra[0x100][2] =
 	    else							      \
 	      ch = cjk_block4[(ch - 0xe0) * 192 + ch2 - 0x40];		      \
 									      \
-	    if (__builtin_expect (ch == 0, 0))				      \
+	    if (__glibc_unlikely (ch == 0))				      \
 	      {								      \
 		/* This is an illegal character.  */			      \
 		STANDARD_FROM_LOOP_ERR_HANDLER (2);			      \
@@ -4469,7 +4469,7 @@ static const char from_ucs4_extra[0x100][2] =
 	/* Now test for a possible second byte and write this if possible.  */\
 	if (cp[1] != '\0')						      \
 	  {								      \
-	    if (__builtin_expect (outptr + 1 >= outend, 0))		      \
+	    if (__glibc_unlikely (outptr + 1 >= outend))		      \
 	      {								      \
 		/* The result does not fit into the buffer.  */		      \
 		result = __GCONV_FULL_OUTPUT;				      \

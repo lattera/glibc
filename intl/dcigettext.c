@@ -640,7 +640,7 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 
 		  /* Resource problems are not fatal, instead we return no
 		     translation.  */
-		  if (__builtin_expect (retval == (char *) -1, 0))
+		  if (__glibc_unlikely (retval == (char *) -1))
 		    goto no_translation;
 
 		  if (retval != NULL)
@@ -654,7 +654,7 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 	  /* Returning -1 means that some resource problem exists
 	     (likely memory) and that the strings could not be
 	     converted.  Return the original strings.  */
-	  if (__builtin_expect (retval == (char *) -1, 0))
+	  if (__glibc_unlikely (retval == (char *) -1))
 	    goto no_translation;
 
 	  if (retval != NULL)
@@ -904,7 +904,7 @@ _nl_find_msg (domain_file, domainbinding, msgid, convert, lengthp)
 	    realloc (domain->conversions,
 		     (nconversions + 1) * sizeof (struct converted_domain));
 
-	  if (__builtin_expect (new_conversions == NULL, 0))
+	  if (__glibc_unlikely (new_conversions == NULL))
 	    {
 	      /* Nothing we can do, no more memory.  We cannot use the
 		 translation because it might be encoded incorrectly.  */
@@ -917,7 +917,7 @@ _nl_find_msg (domain_file, domainbinding, msgid, convert, lengthp)
 
 	  /* Copy the 'encoding' string to permanent storage.  */
 	  encoding = strdup (encoding);
-	  if (__builtin_expect (encoding == NULL, 0))
+	  if (__glibc_unlikely (encoding == NULL))
 	    /* Nothing we can do, no more memory.  We cannot use the
 	       translation because it might be encoded incorrectly.  */
 	    goto unlock_fail;
@@ -948,7 +948,7 @@ _nl_find_msg (domain_file, domainbinding, msgid, convert, lengthp)
 
 	    /* Resource problems are fatal.  If we continue onwards we will
 	       only attempt to calloc a new conv_tab and fail later.  */
-	    if (__builtin_expect (nullentry == (char *) -1, 0))
+	    if (__glibc_unlikely (nullentry == (char *) -1))
 	      return (char *) -1;
 
 	    if (nullentry != NULL)
@@ -981,12 +981,12 @@ _nl_find_msg (domain_file, domainbinding, msgid, convert, lengthp)
 		    charset = norm_add_slashes (charset, "");
 		    int r = __gconv_open (outcharset, charset, &convd->conv,
 					  GCONV_AVOID_NOCONV);
-		    if (__builtin_expect (r != __GCONV_OK, 0))
+		    if (__glibc_unlikely (r != __GCONV_OK))
 		      {
 			/* If the output encoding is the same there is
 			   nothing to do.  Otherwise do not use the
 			   translation at all.  */
-			if (__builtin_expect (r != __GCONV_NULCONV, 1))
+			if (__glibc_likely (r != __GCONV_NULCONV))
 			  {
 			    __libc_rwlock_unlock (domain->conversions_lock);
 			    free ((char *) encoding);
@@ -1053,7 +1053,7 @@ _nl_find_msg (domain_file, domainbinding, msgid, convert, lengthp)
 	     handle this case by converting RESULTLEN bytes, including
 	     NULs.  */
 
-	  if (__builtin_expect (convd->conv_tab == NULL, 0))
+	  if (__glibc_unlikely (convd->conv_tab == NULL))
 	    {
 	      __libc_lock_lock (lock);
 	      if (convd->conv_tab == NULL)
@@ -1069,7 +1069,7 @@ _nl_find_msg (domain_file, domainbinding, msgid, convert, lengthp)
 	      __libc_lock_unlock (lock);
 	    }
 
-	  if (__builtin_expect (convd->conv_tab == (char **) -1, 0))
+	  if (__glibc_unlikely (convd->conv_tab == (char **) -1))
 	    /* Nothing we can do, no more memory.  We cannot use the
 	       translation because it might be encoded incorrectly.  */
 	    return (char *) -1;
@@ -1190,7 +1190,7 @@ _nl_find_msg (domain_file, domainbinding, msgid, convert, lengthp)
 		      /* Fall through and return -1.  */
 # endif
 		    }
-		  if (__builtin_expect (newmem == NULL, 0))
+		  if (__glibc_unlikely (newmem == NULL))
 		    {
 		      freemem = NULL;
 		      freemem_size = 0;

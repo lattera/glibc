@@ -377,17 +377,17 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
   weak_extern (_dl_rtld_map);
 #endif
 
-  if (__builtin_expect (r_type == R_SPARC_NONE, 0))
+  if (__glibc_unlikely (r_type == R_SPARC_NONE))
     return;
 
-  if (__builtin_expect (r_type == R_SPARC_SIZE64, 0))
+  if (__glibc_unlikely (r_type == R_SPARC_SIZE64))
     {
       *reloc_addr = sym->st_size + reloc->r_addend;
       return;
     }
 
 #if !defined RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
-  if (__builtin_expect (r_type == R_SPARC_RELATIVE, 0))
+  if (__glibc_unlikely (r_type == R_SPARC_RELATIVE))
     {
 # if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
       if (map != &_dl_rtld_map) /* Already done in rtld itself. */
@@ -652,13 +652,13 @@ elf_machine_lazy_rel (struct link_map *map,
   Elf64_Addr *const reloc_addr = (void *) (l_addr + reloc->r_offset);
   const unsigned int r_type = ELF64_R_TYPE (reloc->r_info);
 
-  if (__builtin_expect (r_type == R_SPARC_JMP_SLOT, 1))
+  if (__glibc_likely (r_type == R_SPARC_JMP_SLOT))
     ;
   else if (r_type == R_SPARC_JMP_IREL
 	   || r_type == R_SPARC_IRELATIVE)
     {
       Elf64_Addr value = map->l_addr + reloc->r_addend;
-      if (__builtin_expect (!skip_ifunc, 1))
+      if (__glibc_likely (!skip_ifunc))
 	value = ((Elf64_Addr (*) (int)) value) (GLRO(dl_hwcap));
       if (r_type == R_SPARC_JMP_IREL)
 	{

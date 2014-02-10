@@ -79,7 +79,7 @@
     {									      \
       if (FROM_DIRECTION)						      \
 	{								      \
-	  if (__builtin_expect (outbuf + 4 <= outend, 1))		      \
+	  if (__glibc_likely (outbuf + 4 <= outend))			      \
 	    {								      \
 	      /* Write out the last character.  */			      \
 	      *((uint32_t *) outbuf) = data->__statep->__count >> 3;	      \
@@ -92,7 +92,7 @@
 	}								      \
       else								      \
 	{								      \
-	  if (__builtin_expect (outbuf + 2 <= outend, 1))		      \
+	  if (__glibc_likely (outbuf + 2 <= outend))			      \
 	    {								      \
 	      /* Write out the last character.  */			      \
 	      uint32_t lasttwo = data->__statep->__count >> 3;		      \
@@ -119,7 +119,7 @@
 									      \
     /* Determine whether there is a buffered character pending.  */	      \
     ch = *statep >> 3;							      \
-    if (__builtin_expect (ch == 0, 1))					      \
+    if (__glibc_likely (ch == 0))					      \
       {									      \
 	/* No - so look at the next input byte.  */			      \
 	ch = *inptr;							      \
@@ -132,7 +132,7 @@
 	    /* Two or three byte character.  */				      \
 	    uint32_t ch2;						      \
 									      \
-	    if (__builtin_expect (inptr + 1 >= inend, 0))		      \
+	    if (__glibc_unlikely (inptr + 1 >= inend))			      \
 	      {								      \
 		/* The second byte is not available.  */		      \
 		result = __GCONV_INCOMPLETE_INPUT;			      \
@@ -142,7 +142,7 @@
 	    ch2 = inptr[1];						      \
 									      \
 	    /* The second byte must be >= 0xa1 and <= 0xfe.  */		      \
-	    if (__builtin_expect (ch2 < 0xa1 || ch2 > 0xfe, 0))		      \
+	    if (__glibc_unlikely (ch2 < 0xa1 || ch2 > 0xfe))		      \
 	      {								      \
 		/* This is an illegal character.  */			      \
 		STANDARD_FROM_LOOP_ERR_HANDLER (1);			      \
@@ -151,7 +151,7 @@
 	    if (ch == 0x8e)						      \
 	      {								      \
 		/* Half-width katakana.  */				      \
-		if (__builtin_expect (ch2 > 0xdf, 0))			      \
+		if (__glibc_unlikely (ch2 > 0xdf))			      \
 		  STANDARD_FROM_LOOP_ERR_HANDLER (1);			      \
 									      \
 		ch = ch2 + 0xfec0;					      \
@@ -166,7 +166,7 @@
 		    /* JISX 0213 plane 2.  */				      \
 		    uint32_t ch3;					      \
 									      \
-		    if (__builtin_expect (inptr + 2 >= inend, 0))	      \
+		    if (__glibc_unlikely (inptr + 2 >= inend))		      \
 		      {							      \
 			/* The third byte is not available.  */		      \
 			result = __GCONV_INCOMPLETE_INPUT;		      \
@@ -323,7 +323,7 @@ static const struct
 	if (len > 0)							      \
 	  {								      \
 	    /* Output the combined character.  */			      \
-	    if (__builtin_expect (outptr + 1 >= outend, 0))		      \
+	    if (__glibc_unlikely (outptr + 1 >= outend))		      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -338,7 +338,7 @@ static const struct
 									      \
       not_combining:							      \
 	/* Output the buffered character.  */				      \
-	if (__builtin_expect (outptr + 1 >= outend, 0))			      \
+	if (__glibc_unlikely (outptr + 1 >= outend))			      \
 	  {								      \
 	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
@@ -355,7 +355,7 @@ static const struct
     else if (ch >= 0xff61 && ch <= 0xff9f)				      \
       {									      \
 	/* Half-width katakana.  */					      \
-	if (__builtin_expect (outptr + 1 >= outend, 0))			      \
+	if (__glibc_unlikely (outptr + 1 >= outend))			      \
 	  {								      \
 	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
@@ -389,7 +389,7 @@ static const struct
 	if (jch & 0x8000)						      \
 	  {								      \
 	    /* JISX 0213 plane 2.  */					      \
-	    if (__builtin_expect (outptr + 2 >= outend, 0))		      \
+	    if (__glibc_unlikely (outptr + 2 >= outend))		      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -399,7 +399,7 @@ static const struct
 	else								      \
 	  {								      \
 	    /* JISX 0213 plane 1.  */					      \
-	    if (__builtin_expect (outptr + 1 >= outend, 0))		      \
+	    if (__glibc_unlikely (outptr + 1 >= outend))		      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \

@@ -999,7 +999,7 @@ register_traced_file (size_t dbidx, struct traced_file *finfo)
   if (! dbs[dbidx].enabled || ! dbs[dbidx].check_file)
     return;
 
-  if (__builtin_expect (debug_level > 0, 0))
+  if (__glibc_unlikely (debug_level > 0))
     dbg_log (_("register trace file %s for database %s"),
 	     finfo->fname, dbnames[dbidx]);
 
@@ -1129,7 +1129,7 @@ send_ro_fd (struct database_dyn *db, char *key, int fd)
 #endif
   (void) TEMP_FAILURE_RETRY (sendmsg (fd, &msg, MSG_NOSIGNAL));
 
-  if (__builtin_expect (debug_level > 0, 0))
+  if (__glibc_unlikely (debug_level > 0))
     dbg_log (_("provide access to FD %d, for %s"), db->ro_fd, key);
 }
 #endif	/* SCM_RIGHTS */
@@ -1201,7 +1201,7 @@ request from '%s' [%ld] not handled due to missing permission"),
 	}
 
       /* Is this service enabled?  */
-      if (__builtin_expect (!db->enabled, 0))
+      if (__glibc_unlikely (!db->enabled))
 	{
 	  /* No, sent the prepared record.  */
 	  if (TEMP_FAILURE_RETRY (send (fd, db->disabled_iov->iov_base,
@@ -1220,7 +1220,7 @@ request from '%s' [%ld] not handled due to missing permission"),
 	}
 
       /* Be sure we can read the data.  */
-      if (__builtin_expect (pthread_rwlock_tryrdlock (&db->lock) != 0, 0))
+      if (__glibc_unlikely (pthread_rwlock_tryrdlock (&db->lock) != 0))
 	{
 	  ++db->head->rdlockdelayed;
 	  pthread_rwlock_rdlock (&db->lock);
@@ -1236,7 +1236,7 @@ request from '%s' [%ld] not handled due to missing permission"),
 	  ssize_t nwritten;
 
 #ifdef HAVE_SENDFILE
-	  if (__builtin_expect (db->mmap_used, 1))
+	  if (__glibc_likely (db->mmap_used))
 	    {
 	      assert (db->wr_fd != -1);
 	      assert ((char *) cached->data > (char *) db->data);
@@ -1603,7 +1603,7 @@ nscd_run_prune (void *p)
   dbs[my_number].head->timestamp = now;
 
   struct timespec prune_ts;
-  if (__builtin_expect (clock_gettime (timeout_clock, &prune_ts) == -1, 0))
+  if (__glibc_unlikely (clock_gettime (timeout_clock, &prune_ts) == -1))
     /* Should never happen.  */
     abort ();
 
@@ -1656,7 +1656,7 @@ nscd_run_prune (void *p)
 	     we need to wake up occasionally to update the timestamp.
 	     Wait 90% of the update period.  */
 #define UPDATE_MAPPING_TIMEOUT (MAPPING_TIMEOUT * 9 / 10)
-	  if (__builtin_expect (! dont_need_update, 0))
+	  if (__glibc_unlikely (! dont_need_update))
 	    {
 	      next_wait = MIN (UPDATE_MAPPING_TIMEOUT, next_wait);
 	      dbs[my_number].head->timestamp = now;
@@ -1756,7 +1756,7 @@ nscd_run_worker (void *p)
 #ifdef SO_PEERCRED
       pid_t pid = 0;
 
-      if (__builtin_expect (debug_level > 0, 0))
+      if (__glibc_unlikely (debug_level > 0))
 	{
 	  struct ucred caller;
 	  socklen_t optlen = sizeof (caller);
@@ -1849,7 +1849,7 @@ fd_ready (int fd)
     }
 
   bool do_signal = true;
-  if (__builtin_expect (nready == 0, 0))
+  if (__glibc_unlikely (nready == 0))
     {
       ++client_queued;
       do_signal = false;
@@ -2264,7 +2264,7 @@ main_loop_epoll (int efd)
 						 sizeof (inev)));
 		if (nb < (ssize_t) sizeof (struct inotify_event))
 		  {
-		    if (__builtin_expect (nb == -1 && errno != EAGAIN, 0))
+		    if (__glibc_unlikely (nb == -1 && errno != EAGAIN))
 		      {
 			/* Something went wrong when reading the inotify
 			   data.  Better disable inotify.  */

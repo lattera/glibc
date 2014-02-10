@@ -39,7 +39,7 @@ __fread_unlocked_chk (void *__restrict ptr, size_t ptrlen,
 	__chk_fail ();
     }
 
-  if (__builtin_expect (bytes_requested > ptrlen, 0))
+  if (__glibc_unlikely (bytes_requested > ptrlen))
     __chk_fail ();
 
   CHECK_FILE (stream, 0);

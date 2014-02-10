@@ -56,7 +56,7 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
   PREPARE_CREATE;
 #endif
 
-  if (__builtin_expect (stopped != 0, 0))
+  if (__glibc_unlikely (stopped != 0))
     /* We make sure the thread does not run far by forcing it to get a
        lock.  We lock it here too so that the new thread cannot continue
        until we tell it to.  */
@@ -75,7 +75,7 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
   int rc = ARCH_CLONE (fct, STACK_VARIABLES_ARGS, clone_flags,
 		       pd, &pd->tid, TLS_VALUE, &pd->tid);
 
-  if (__builtin_expect (rc == -1, 0))
+  if (__glibc_unlikely (rc == -1))
     {
       atomic_decrement (&__nptl_nthreads); /* Oops, we lied for a second.  */
 
@@ -93,7 +93,7 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
     }
 
   /* Now we have the possibility to set scheduling parameters etc.  */
-  if (__builtin_expect (stopped != 0, 0))
+  if (__glibc_unlikely (stopped != 0))
     {
       INTERNAL_SYSCALL_DECL (err);
       int res = 0;
@@ -104,7 +104,7 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
 	  res = INTERNAL_SYSCALL (sched_setaffinity, err, 3, pd->tid,
 				  attr->cpusetsize, attr->cpuset);
 
-	  if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))
+	  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (res, err)))
 	    {
 	      /* The operation failed.  We have to kill the thread.  First
 		 send it the cancellation signal.  */
@@ -129,7 +129,7 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
 	  res = INTERNAL_SYSCALL (sched_setscheduler, err, 3, pd->tid,
 				  pd->schedpolicy, &pd->schedparam);
 
-	  if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))
+	  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (res, err)))
 	    goto err_out;
 	}
     }
@@ -183,7 +183,7 @@ create_thread (struct pthread *pd, const struct pthread_attr *attr,
 		     | CLONE_CHILD_CLEARTID | CLONE_SYSVSEM
 		     | 0);
 
-  if (__builtin_expect (THREAD_GETMEM (THREAD_SELF, report_events), 0))
+  if (__glibc_unlikely (THREAD_GETMEM (THREAD_SELF, report_events)))
     {
       /* The parent thread is supposed to report events.  Check whether
 	 the TD_CREATE event is needed, too.  */

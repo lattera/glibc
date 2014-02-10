@@ -30,7 +30,7 @@ __logb (double x)
     return -1.0 / fabs (x);
   if (ix >= 0x7ff00000)
     return x * x;
-  if (__builtin_expect ((rix = ix >> 20) == 0, 0))
+  if (__glibc_unlikely ((rix = ix >> 20) == 0))
     {
       /* POSIX specifies that denormal number is treated as
          though it were normalized.  */

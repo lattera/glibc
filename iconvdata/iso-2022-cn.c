@@ -88,7 +88,7 @@ enum
 	{								      \
 	  /* We are not in the initial state.  To switch back we have	      \
 	     to emit `SI'.  */						      \
-	  if (__builtin_expect (outbuf == outend, 0))			      \
+	  if (__glibc_unlikely (outbuf == outend))			      \
 	    /* We don't have enough room in the output buffer.  */	      \
 	    status = __GCONV_FULL_OUTPUT;				      \
 	  else								      \
@@ -121,7 +121,7 @@ enum
     uint32_t ch = *inptr;						      \
 									      \
     /* This is a 7bit character set, disallow all 8bit characters.  */	      \
-    if (__builtin_expect (ch >= 0x7f, 0))				      \
+    if (__glibc_unlikely (ch >= 0x7f))					      \
       STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 									      \
     /* Recognize escape sequences.  */					      \
@@ -246,7 +246,7 @@ enum
 	  {								      \
 	    *outptr++ = SI;						      \
 	    set = ASCII_set;						      \
-	    if (__builtin_expect (outptr == outend, 0))			      \
+	    if (__glibc_unlikely (outptr == outend))			      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -319,7 +319,7 @@ enum
 	      {								      \
 		const char *escseq;					      \
 									      \
-		if (__builtin_expect (outptr + 4 > outend, 0))		      \
+		if (__glibc_unlikely (outptr + 4 > outend))		      \
 		  {							      \
 		    result = __GCONV_FULL_OUTPUT;			      \
 		    break;						      \
@@ -342,7 +342,7 @@ enum
 									      \
 	    if (used == CNS11643_2_set)					      \
 	      {								      \
-		if (__builtin_expect (outptr + 2 > outend, 0))		      \
+		if (__glibc_unlikely (outptr + 2 > outend))		      \
 		  {							      \
 		    result = __GCONV_FULL_OUTPUT;			      \
 		    break;						      \
@@ -357,7 +357,7 @@ enum
 		   SO charset.  */					      \
 		if (set == ASCII_set)					      \
 		  {							      \
-		    if (__builtin_expect (outptr + 1 > outend, 0))	      \
+		    if (__glibc_unlikely (outptr + 1 > outend))		      \
 		      {							      \
 			result = __GCONV_FULL_OUTPUT;			      \
 			break;						      \
@@ -368,13 +368,13 @@ enum
 									      \
 	    /* Always test the length here since we have used up all the      \
 	       guaranteed output buffer slots.  */			      \
-	    if (__builtin_expect (outptr + 2 > outend, 0))		      \
+	    if (__glibc_unlikely (outptr + 2 > outend))			      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
 	  }								      \
-	else if (__builtin_expect (outptr + 2 > outend, 0))		      \
+	else if (__glibc_unlikely (outptr + 2 > outend))		      \
 	  {								      \
 	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \

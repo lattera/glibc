@@ -30,7 +30,7 @@ static long int nsec;		/* Clock frequency of the processor.  */
 static int
 hp_timing_getres (struct timespec *res)
 {
-  if (__builtin_expect (nsec == 0, 0))
+  if (__glibc_unlikely (nsec == 0))
     {
       hp_timing_t freq;
 
@@ -39,7 +39,7 @@ hp_timing_getres (struct timespec *res)
 	 code against multiple execution since all of them should
 	 lead to the same result.  */
       freq = __get_clockfreq ();
-      if (__builtin_expect (freq == 0, 0))
+      if (__glibc_unlikely (freq == 0))
 	/* Something went wrong.  */
 	return -1;
 
@@ -60,7 +60,7 @@ realtime_getres (struct timespec *res)
 {
   long int clk_tck = sysconf (_SC_CLK_TCK);
 
-  if (__builtin_expect (clk_tck != -1, 1))
+  if (__glibc_likely (clk_tck != -1))
     {
       /* This implementation assumes that the realtime clock has a
 	 resolution higher than 1 second.  This is the case for any

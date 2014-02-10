@@ -59,7 +59,7 @@ __pthread_mutex_init (mutex, mutexattr)
 
     case PTHREAD_PRIO_INHERIT << PTHREAD_MUTEXATTR_PROTOCOL_SHIFT:
 #ifndef __ASSUME_FUTEX_LOCK_PI
-      if (__builtin_expect (tpi_supported == 0, 0))
+      if (__glibc_unlikely (tpi_supported == 0))
 	{
 	  int lock = 0;
 	  INTERNAL_SYSCALL_DECL (err);
@@ -68,7 +68,7 @@ __pthread_mutex_init (mutex, mutexattr)
 	  assert (INTERNAL_SYSCALL_ERROR_P (ret, err));
 	  tpi_supported = INTERNAL_SYSCALL_ERRNO (ret, err) == ENOSYS ? -1 : 1;
 	}
-      if (__builtin_expect (tpi_supported < 0, 0))
+      if (__glibc_unlikely (tpi_supported < 0))
 	return ENOTSUP;
 #endif
       break;

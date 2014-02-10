@@ -73,7 +73,7 @@
 		UCS4 -> GB2312 -> GBK -> UCS4				      \
 									      \
 	   might not produce identical text.  */			      \
-	if (__builtin_expect (inptr + 1 >= inend, 0))			      \
+	if (__glibc_unlikely (inptr + 1 >= inend))			      \
 	  {								      \
 	    /* The second character is not available.  Store		      \
 	       the intermediate result.  */				      \
@@ -81,7 +81,7 @@
 	    break;							      \
 	  }								      \
 									      \
-	if (__builtin_expect (outend - outptr < 2, 0))			      \
+	if (__glibc_unlikely (outend - outptr < 2))			      \
 	  {								      \
 	    /* We ran out of space.  */					      \
 	    result = __GCONV_FULL_OUTPUT;				      \
@@ -91,7 +91,7 @@
 	ch = (ch << 8) | inptr[1];					      \
 									      \
 	/* Map 0xA844 (U2015 in GBK) to 0xA1AA (U2015 in GB2312).  */	      \
-	if (__builtin_expect (ch == 0xa844, 0))				      \
+	if (__glibc_unlikely (ch == 0xa844))				      \
 	  ch = 0xa1aa;							      \
 									      \
 	/* Now determine whether the character is valid.  */		      \
@@ -134,7 +134,7 @@
 									      \
     if (ch > 0x7f)							      \
       {									      \
-	if (__builtin_expect (inptr + 1 >= inend, 0))			      \
+	if (__glibc_unlikely (inptr + 1 >= inend))			      \
 	  {								      \
 	    /* The second character is not available.  Store		      \
 		 the intermediate result.  */				      \
@@ -142,7 +142,7 @@
 	    break;							      \
 	  }								      \
 									      \
-	if (__builtin_expect (outend - outptr < 2, 0))			      \
+	if (__glibc_unlikely (outend - outptr < 2))			      \
 	  {								      \
 	    /* We ran out of space.  */					      \
 	    result = __GCONV_FULL_OUTPUT;				      \

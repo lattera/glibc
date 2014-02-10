@@ -358,7 +358,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 	}
 
 #ifdef USE_HOOKS
-	if (__builtin_expect (statp->qhook || statp->rhook, 0)) {
+	if (__glibc_unlikely (statp->qhook || statp->rhook))       {
 		if (anssiz < MAXPACKET && ansp) {
 			u_char *buf = malloc (MAXPACKET);
 			if (buf == NULL)
@@ -499,7 +499,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 			goto next_ns;
 	    same_ns:
 #ifdef USE_HOOKS
-		if (__builtin_expect (statp->qhook != NULL, 0)) {
+		if (__glibc_unlikely (statp->qhook != NULL))       {
 			int done = 0, loops = 0;
 
 			do {
@@ -541,7 +541,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 					   : &((struct sockaddr_in *) nsap)->sin_addr),
 					  tmpbuf, sizeof (tmpbuf))));
 
-		if (__builtin_expect (v_circuit, 0)) {
+		if (__glibc_unlikely (v_circuit))       {
 			/* Use VC; at most one attempt per server. */
 			try = statp->retry;
 			n = send_vc(statp, buf, buflen, buf2, buflen2,
@@ -595,7 +595,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 			__res_iclose(statp, false);
 		}
 #ifdef USE_HOOKS
-		if (__builtin_expect (statp->rhook, 0)) {
+		if (__glibc_unlikely (statp->rhook))       {
 			int done = 0, loops = 0;
 
 			do {
@@ -814,7 +814,7 @@ send_vc(res_state statp,
 	if (rlen > *thisanssizp) {
 		/* Yes, we test ANSCP here.  If we have two buffers
 		   both will be allocatable.  */
-		if (__builtin_expect (anscp != NULL, 1)) {
+		if (__glibc_likely (anscp != NULL))       {
 			u_char *newp = malloc (MAXPACKET);
 			if (newp == NULL) {
 				*terrno = ENOMEM;
@@ -835,7 +835,7 @@ send_vc(res_state statp,
 	} else
 		len = rlen;
 
-	if (__builtin_expect (len < HFIXEDSZ, 0)) {
+	if (__glibc_unlikely (len < HFIXEDSZ))       {
 		/*
 		 * Undersized message.
 		 */
@@ -851,13 +851,13 @@ send_vc(res_state statp,
 		cp += n;
 		len -= n;
 	}
-	if (__builtin_expect (n <= 0, 0)) {
+	if (__glibc_unlikely (n <= 0))       {
 		*terrno = errno;
 		Perror(statp, stderr, "read(vc)", errno);
 		__res_iclose(statp, false);
 		return (0);
 	}
-	if (__builtin_expect (truncating, 0)) {
+	if (__glibc_unlikely (truncating))       {
 		/*
 		 * Flush rest of answer so connection stays in synch.
 		 */
@@ -917,7 +917,7 @@ reopen (res_state statp, int *terrno, int ns)
 
 		/* only try IPv6 if IPv6 NS and if not failed before */
 		if (nsap->sa_family == AF_INET6 && !statp->ipv6_unavail) {
-			if (__builtin_expect (__have_o_nonblock >= 0, 1)) {
+			if (__glibc_likely (__have_o_nonblock >= 0))       {
 				EXT(statp).nssocks[ns] =
 				  socket(PF_INET6, SOCK_DGRAM|SOCK_NONBLOCK,
 					 0);
@@ -928,14 +928,14 @@ reopen (res_state statp, int *terrno, int ns)
 					     && errno == EINVAL ? -1 : 1);
 #endif
 			}
-			if (__builtin_expect (__have_o_nonblock < 0, 0))
+			if (__glibc_unlikely (__have_o_nonblock < 0))
 				EXT(statp).nssocks[ns] =
 				  socket(PF_INET6, SOCK_DGRAM, 0);
 			if (EXT(statp).nssocks[ns] < 0)
 			    statp->ipv6_unavail = errno == EAFNOSUPPORT;
 			slen = sizeof (struct sockaddr_in6);
 		} else if (nsap->sa_family == AF_INET) {
-			if (__builtin_expect (__have_o_nonblock >= 0, 1)) {
+			if (__glibc_likely (__have_o_nonblock >= 0))       {
 				EXT(statp).nssocks[ns]
 				  = socket(PF_INET, SOCK_DGRAM|SOCK_NONBLOCK,
 					   0);
@@ -946,7 +946,7 @@ reopen (res_state statp, int *terrno, int ns)
 					     && errno == EINVAL ? -1 : 1);
 #endif
 			}
-			if (__builtin_expect (__have_o_nonblock < 0, 0))
+			if (__glibc_unlikely (__have_o_nonblock < 0))
 				EXT(statp).nssocks[ns]
 				  = socket(PF_INET, SOCK_DGRAM, 0);
 			slen = sizeof (struct sockaddr_in);
@@ -973,7 +973,7 @@ reopen (res_state statp, int *terrno, int ns)
 			__res_iclose(statp, false);
 			return (0);
 		}
-		if (__builtin_expect (__have_o_nonblock < 0, 0)) {
+		if (__glibc_unlikely (__have_o_nonblock < 0))       {
 			/* Make socket non-blocking.  */
 			int fl = __fcntl (EXT(statp).nssocks[ns], F_GETFL);
 			if  (fl != -1)
@@ -1055,7 +1055,7 @@ send_dg(res_state statp,
 	n = 0;
 	if (nwritten == 0)
 	  n = __poll (pfd, 1, 0);
-	if (__builtin_expect (n == 0, 0)) {
+	if (__glibc_unlikely (n == 0))       {
 		n = __poll (pfd, 1, ptimeout);
 		need_recompute = 1;
 	}
@@ -1130,7 +1130,7 @@ send_dg(res_state statp,
 		    reqs[1].msg_hdr.msg_controllen = 0;
 
 		    int ndg = __sendmmsg (pfd[0].fd, reqs, 2, MSG_NOSIGNAL);
-		    if (__builtin_expect (ndg == 2, 1))
+		    if (__glibc_likely (ndg == 2))
 		      {
 			if (reqs[0].msg_len != buflen
 			    || reqs[1].msg_len != buflen2)
@@ -1146,7 +1146,7 @@ send_dg(res_state statp,
 		    else
 		      {
 #ifndef __ASSUME_SENDMMSG
-			if (__builtin_expect (have_sendmmsg == 0, 0))
+			if (__glibc_unlikely (have_sendmmsg == 0))
 			  {
 			    if (ndg < 0 && errno == ENOSYS)
 			      {
@@ -1246,7 +1246,7 @@ send_dg(res_state statp,
 		*thisresplenp = recvfrom(pfd[0].fd, (char*)*thisansp,
 					 *thisanssizp, 0,
 					(struct sockaddr *)&from, &fromlen);
-		if (__builtin_expect (*thisresplenp <= 0, 0)) {
+		if (__glibc_unlikely (*thisresplenp <= 0))       {
 			if (errno == EINTR || errno == EAGAIN) {
 				need_recompute = 1;
 				goto wait;
@@ -1255,7 +1255,7 @@ send_dg(res_state statp,
 			goto err_out;
 		}
 		*gotsomewhere = 1;
-		if (__builtin_expect (*thisresplenp < HFIXEDSZ, 0)) {
+		if (__glibc_unlikely (*thisresplenp < HFIXEDSZ))       {
 			/*
 			 * Undersized message.
 			 */

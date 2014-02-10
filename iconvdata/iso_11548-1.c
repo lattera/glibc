@@ -53,7 +53,7 @@
 #define BODY \
   {									      \
     uint32_t ch = *((const uint32_t *) inptr);				      \
-    if (__builtin_expect ((ch & 0xffffff00u) != BRAILLE_UCS_BASE, 0))	      \
+    if (__glibc_unlikely ((ch & 0xffffff00u) != BRAILLE_UCS_BASE))	      \
       {									      \
 	UNICODE_TAG_HANDLER (ch, 4);					      \
 									      \

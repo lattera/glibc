@@ -113,7 +113,7 @@
 # include <hp-timing.h>
 # if HP_TIMING_AVAIL
 #  define RANDOM_BITS(Var) \
-  if (__builtin_expect (value == UINT64_C (0), 0))			      \
+  if (__glibc_unlikely (value == UINT64_C (0)))				      \
     {									      \
       /* If this is the first time this function is used initialize	      \
 	 the variable we accumulate the value in to some somewhat	      \

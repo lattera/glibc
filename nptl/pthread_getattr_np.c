@@ -57,7 +57,7 @@ pthread_getattr_np (thread_id, attr)
   iattr->guardsize = thread->reported_guardsize;
 
   /* The sizes are subject to alignment.  */
-  if (__builtin_expect (thread->stackblock != NULL, 1))
+  if (__glibc_likely (thread->stackblock != NULL))
     {
       iattr->stacksize = thread->stackblock_size;
       iattr->stackaddr = (char *) thread->stackblock + iattr->stacksize;

@@ -57,7 +57,7 @@ __aio_notify_only (struct sigevent *sigev)
   int result = 0;
 
   /* Send the signal to notify about finished processing of the request.  */
-  if (__builtin_expect (sigev->sigev_notify == SIGEV_THREAD, 0))
+  if (__glibc_unlikely (sigev->sigev_notify == SIGEV_THREAD))
     {
       /* We have to start a thread.  */
       pthread_t tid;

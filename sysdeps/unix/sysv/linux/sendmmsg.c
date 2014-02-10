@@ -52,7 +52,7 @@ static int have_sendmmsg;
 int
 __sendmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags)
 {
-  if (__builtin_expect (have_sendmmsg >= 0, 1))
+  if (__glibc_likely (have_sendmmsg >= 0))
     {
       int ret = __internal_sendmmsg (fd, vmessages, vlen, flags);
       /* The kernel returns -EINVAL for unknown socket operations.

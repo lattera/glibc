@@ -655,7 +655,7 @@ elf_machine_rela (struct link_map *map,
       return;
     }
 
-  if (__builtin_expect (r_type == R_PPC64_NONE, 0))
+  if (__glibc_unlikely (r_type == R_PPC64_NONE))
     return;
 
   /* We need SYM_MAP even in the absence of TLS, for elf_machine_fixup_plt
@@ -680,13 +680,13 @@ elf_machine_rela (struct link_map *map,
       return;
 
     case R_PPC64_IRELATIVE:
-      if (__builtin_expect (!skip_ifunc, 1))
+      if (__glibc_likely (!skip_ifunc))
 	value = resolve_ifunc (value, map, sym_map);
       *reloc_addr = value;
       return;
 
     case R_PPC64_JMP_IREL:
-      if (__builtin_expect (!skip_ifunc, 1))
+      if (__glibc_likely (!skip_ifunc))
 	value = resolve_ifunc (value, map, sym_map);
       /* Fall thru */
     case R_PPC64_JMP_SLOT:

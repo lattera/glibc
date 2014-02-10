@@ -32,7 +32,7 @@ __vswprintf_chk (wchar_t *s, size_t maxlen, int flags, size_t slen,
      Though, maxlen is supposed to be the size of buffer pointed
      to by s, so a conforming program can't pass such maxlen
      to *snprintf.  */
-  if (__builtin_expect (slen < maxlen, 0))
+  if (__glibc_unlikely (slen < maxlen))
     __chk_fail ();
 
   _IO_wstrnfile sf;
@@ -44,7 +44,7 @@ __vswprintf_chk (wchar_t *s, size_t maxlen, int flags, size_t slen,
 
   /* We need to handle the special case where MAXLEN is 0.  Use the
      overflow buffer right from the start.  */
-  if (__builtin_expect (maxlen == 0, 0))
+  if (__glibc_unlikely (maxlen == 0))
     /* Since we have to write at least the terminating L'\0' a buffer
        length of zero always makes the function fail.  */
     return -1;

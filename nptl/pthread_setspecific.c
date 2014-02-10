@@ -36,7 +36,7 @@ __pthread_setspecific (key, value)
 
   /* Special case access to the first 2nd-level block.  This is the
      usual case.  */
-  if (__builtin_expect (key < PTHREAD_KEY_2NDLEVEL_SIZE, 1))
+  if (__glibc_likely (key < PTHREAD_KEY_2NDLEVEL_SIZE))
     {
       /* Verify the key is sane.  */
       if (KEY_UNUSED ((seq = __pthread_keys[key].seq)))

@@ -178,7 +178,7 @@ __fmal (long double x, long double y, long double z)
     }
 
   /* Ensure correct sign of exact 0 + 0.  */
-  if (__builtin_expect ((x == 0 || y == 0) && z == 0, 0))
+  if (__glibc_unlikely ((x == 0 || y == 0) && z == 0))
     return x * y + z;
 
   fenv_t env;
@@ -220,7 +220,7 @@ __fmal (long double x, long double y, long double z)
   /* Perform m2 + a2 addition with round to odd.  */
   u.d = a2 + m2;
 
-  if (__builtin_expect (adjust == 0, 1))
+  if (__glibc_likely (adjust == 0))
     {
       if ((u.ieee.mantissa3 & 1) == 0 && u.ieee.exponent != 0x7fff)
 	u.ieee.mantissa3 |= fetestexcept (FE_INEXACT) != 0;
@@ -228,7 +228,7 @@ __fmal (long double x, long double y, long double z)
       /* Result is a1 + u.d.  */
       return a1 + u.d;
     }
-  else if (__builtin_expect (adjust > 0, 1))
+  else if (__glibc_likely (adjust > 0))
     {
       if ((u.ieee.mantissa3 & 1) == 0 && u.ieee.exponent != 0x7fff)
 	u.ieee.mantissa3 |= fetestexcept (FE_INEXACT) != 0;

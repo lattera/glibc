@@ -45,7 +45,7 @@ __pthread_rwlock_rdlock (rwlock)
 	      || PTHREAD_RWLOCK_PREFER_READER_P (rwlock)))
 	{
 	  /* Increment the reader counter.  Avoid overflow.  */
-	  if (__builtin_expect (++rwlock->__data.__nr_readers == 0, 0))
+	  if (__glibc_unlikely (++rwlock->__data.__nr_readers == 0))
 	    {
 	      /* Overflow on number of readers.	 */
 	      --rwlock->__data.__nr_readers;
@@ -67,7 +67,7 @@ __pthread_rwlock_rdlock (rwlock)
 	}
 
       /* Remember that we are a reader.  */
-      if (__builtin_expect (++rwlock->__data.__nr_readers_queued == 0, 0))
+      if (__glibc_unlikely (++rwlock->__data.__nr_readers_queued == 0))
 	{
 	  /* Overflow on number of queued readers.  */
 	  --rwlock->__data.__nr_readers_queued;

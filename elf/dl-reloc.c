@@ -183,14 +183,14 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
       && __builtin_expect (l->l_info[DT_BIND_NOW] != NULL, 0))
     lazy = 0;
 
-  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_RELOC, 0))
+  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_RELOC))
     _dl_debug_printf ("\nrelocation processing: %s%s\n",
 		      DSO_FILENAME (l->l_name), lazy ? " (lazy)" : "");
 
   /* DT_TEXTREL is now in level 2 and might phase out at some time.
      But we rewrite the DT_FLAGS entry to a DT_TEXTREL entry to make
      testing easier and therefore it will be available at all time.  */
-  if (__builtin_expect (l->l_info[DT_TEXTREL] != NULL, 0))
+  if (__glibc_unlikely (l->l_info[DT_TEXTREL] != NULL))
     {
       /* Bletch.  We must make read-only segments writable
 	 long enough to relocate them.  */
@@ -264,7 +264,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
     ELF_DYNAMIC_RELOCATE (l, lazy, consider_profiling, skip_ifunc);
 
 #ifndef PROF
-    if (__builtin_expect (consider_profiling, 0))
+    if (__glibc_unlikely (consider_profiling))
       {
 	/* Allocate the array which will contain the already found
 	   relocations.  If the shared object lacks a PLT (for example

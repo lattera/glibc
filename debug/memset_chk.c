@@ -25,7 +25,7 @@ __memset_chk (dstpp, c, len, dstlen)
      size_t len;
      size_t dstlen;
 {
-  if (__builtin_expect (dstlen < len, 0))
+  if (__glibc_unlikely (dstlen < len))
     __chk_fail ();
 
   return memset (dstpp, c, len);

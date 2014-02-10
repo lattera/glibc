@@ -53,7 +53,7 @@ memmem (const void *haystack_start, size_t haystack_len,
 
   /* Sanity check, otherwise the loop might search through the whole
      memory.  */
-  if (__builtin_expect (haystack_len < needle_len, 0))
+  if (__glibc_unlikely (haystack_len < needle_len))
     return NULL;
 
   /* Use optimizations in memchr when possible, to reduce the search

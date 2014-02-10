@@ -60,7 +60,7 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
 
       return 0;
     }
-  else if (__builtin_expect (type == PTHREAD_MUTEX_TIMED_ELISION_NP, 1))
+  else if (__glibc_likely (type == PTHREAD_MUTEX_TIMED_ELISION_NP))
     {
       /* Don't reset the owner/users fields for elision.  */
       return lll_unlock_elision (mutex->__data.__lock,

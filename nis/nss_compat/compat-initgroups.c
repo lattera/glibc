@@ -214,7 +214,7 @@ add_group (long int *start, long int *size, gid_t **groupsp, long int limit,
   gid_t *groups = *groupsp;
 
   /* Matches user.  Insert this group.  */
-  if (__builtin_expect (*start == *size, 0))
+  if (__glibc_unlikely (*start == *size))
     {
       /* Need a bigger buffer.  */
       gid_t *newgroups;
@@ -420,7 +420,7 @@ internal_getgrent_r (ent_t *ent, char *buffer, size_t buflen, const char *user,
       do
 	{
 	  /* We need at least 3 characters for one line.  */
-	  if (__builtin_expect (buflen < 3, 0))
+	  if (__glibc_unlikely (buflen < 3))
 	    {
 	    erange:
 	      *errnop = ERANGE;
@@ -453,7 +453,7 @@ internal_getgrent_r (ent_t *ent, char *buffer, size_t buflen, const char *user,
 	     !(parse_res = _nss_files_parse_grent (p, &grpbuf, data, buflen,
 						   errnop)));
 
-      if (__builtin_expect (parse_res == -1, 0))
+      if (__glibc_unlikely (parse_res == -1))
 	/* The parser ran out of space.  */
 	goto erange_reset;
 

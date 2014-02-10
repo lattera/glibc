@@ -49,7 +49,7 @@ __get_clockfreq (void)
     {
       int fd = __open ("/proc/cpuinfo", O_RDONLY);
 
-      if (__builtin_expect (fd != -1, 1))
+      if (__glibc_likely (fd != -1))
 	{
 	  /* The timebase will be in the 1st 1024 bytes for systems with up
 	     to 8 processors.  If the first read returns less then 1024
@@ -87,7 +87,7 @@ __get_clockfreq (void)
 	    {
 	      char *mhz = memmem (buf, n, "timebase", 7);
 
-	      if (__builtin_expect (mhz != NULL, 1))
+	      if (__glibc_likely (mhz != NULL))
 		{
 		  char *endp = buf + n;
 

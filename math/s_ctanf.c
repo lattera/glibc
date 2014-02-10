@@ -28,7 +28,7 @@ __ctanf (__complex__ float x)
 {
   __complex__ float res;
 
-  if (__builtin_expect (!isfinite (__real__ x) || !isfinite (__imag__ x), 0))
+  if (__glibc_unlikely (!isfinite (__real__ x) || !isfinite (__imag__ x)))
     {
       if (__isinf_nsf (__imag__ x))
 	{
@@ -57,7 +57,7 @@ __ctanf (__complex__ float x)
       /* tan(x+iy) = (sin(2x) + i*sinh(2y))/(cos(2x) + cosh(2y))
 	 = (sin(x)*cos(x) + i*sinh(y)*cosh(y)/(cos(x)^2 + sinh(y)^2). */
 
-      if (__builtin_expect (fpclassify(__real__ x) != FP_SUBNORMAL, 1))
+      if (__glibc_likely (fpclassify(__real__ x) != FP_SUBNORMAL))
 	{
 	  __sincosf (__real__ x, &sinrx, &cosrx);
 	}

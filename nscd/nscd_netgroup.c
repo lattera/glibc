@@ -124,7 +124,7 @@ __nscd_setnetgrent (const char *group, struct __netgrent *datap)
     }
   else
     {
-      if (__builtin_expect (netgroup_resp.found == -1, 0))
+      if (__glibc_unlikely (netgroup_resp.found == -1))
 	{
 	  /* The daemon does not cache this database.  */
 	  __nss_not_use_nscd_netgroup = 1;
@@ -248,7 +248,7 @@ __nscd_innetgr (const char *netgroup, const char *host, const char *user,
     retval = innetgroup_resp.result;
   else
     {
-      if (__builtin_expect (innetgroup_resp.found == -1, 0))
+      if (__glibc_unlikely (innetgroup_resp.found == -1))
 	{
 	  /* The daemon does not cache this database.  */
 	  __nss_not_use_nscd_netgroup = 1;

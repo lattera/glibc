@@ -61,7 +61,7 @@ pthread_mutex_timedlock (mutex, abstime)
       if (mutex->__data.__owner == id)
 	{
 	  /* Just bump the counter.  */
-	  if (__builtin_expect (mutex->__data.__count + 1 == 0, 0))
+	  if (__glibc_unlikely (mutex->__data.__count + 1 == 0))
 	    /* Overflow of the counter.  */
 	    return EAGAIN;
 
@@ -84,7 +84,7 @@ pthread_mutex_timedlock (mutex, abstime)
       /* Error checking mutex.  */
     case PTHREAD_MUTEX_ERRORCHECK_NP:
       /* Check whether we already hold the mutex.  */
-      if (__builtin_expect (mutex->__data.__owner == id, 0))
+      if (__glibc_unlikely (mutex->__data.__owner == id))
 	return EDEADLK;
 
       /* FALLTHROUGH */
@@ -175,7 +175,7 @@ pthread_mutex_timedlock (mutex, abstime)
 	    }
 
 	  /* Check whether we already hold the mutex.  */
-	  if (__builtin_expect ((oldval & FUTEX_TID_MASK) == id, 0))
+	  if (__glibc_unlikely ((oldval & FUTEX_TID_MASK) == id))
 	    {
 	      int kind = PTHREAD_MUTEX_TYPE (mutex);
 	      if (kind == PTHREAD_MUTEX_ROBUST_ERRORCHECK_NP)
@@ -191,7 +191,7 @@ pthread_mutex_timedlock (mutex, abstime)
 				 NULL);
 
 		  /* Just bump the counter.  */
-		  if (__builtin_expect (mutex->__data.__count + 1 == 0, 0))
+		  if (__glibc_unlikely (mutex->__data.__count + 1 == 0))
 		    /* Overflow of the counter.  */
 		    return EAGAIN;
 
@@ -250,7 +250,7 @@ pthread_mutex_timedlock (mutex, abstime)
 	oldval = mutex->__data.__lock;
 
 	/* Check whether we already hold the mutex.  */
-	if (__builtin_expect ((oldval & FUTEX_TID_MASK) == id, 0))
+	if (__glibc_unlikely ((oldval & FUTEX_TID_MASK) == id))
 	  {
 	    if (kind == PTHREAD_MUTEX_ERRORCHECK_NP)
 	      {
@@ -263,7 +263,7 @@ pthread_mutex_timedlock (mutex, abstime)
 		THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 
 		/* Just bump the counter.  */
-		if (__builtin_expect (mutex->__data.__count + 1 == 0, 0))
+		if (__glibc_unlikely (mutex->__data.__count + 1 == 0))
 		  /* Overflow of the counter.  */
 		  return EAGAIN;
 
@@ -337,7 +337,7 @@ pthread_mutex_timedlock (mutex, abstime)
 	    assert (robust || (oldval & FUTEX_OWNER_DIED) == 0);
 	  }
 
-	if (__builtin_expect (oldval & FUTEX_OWNER_DIED, 0))
+	if (__glibc_unlikely (oldval & FUTEX_OWNER_DIED))
 	  {
 	    atomic_and (&mutex->__data.__lock, ~FUTEX_OWNER_DIED);
 
@@ -400,7 +400,7 @@ pthread_mutex_timedlock (mutex, abstime)
 	    if (kind == PTHREAD_MUTEX_RECURSIVE_NP)
 	      {
 		/* Just bump the counter.  */
-		if (__builtin_expect (mutex->__data.__count + 1 == 0, 0))
+		if (__glibc_unlikely (mutex->__data.__count + 1 == 0))
 		  /* Overflow of the counter.  */
 		  return EAGAIN;
 

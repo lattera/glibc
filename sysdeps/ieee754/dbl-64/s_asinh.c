@@ -36,12 +36,12 @@ __asinh (double x)
   int32_t hx, ix;
   GET_HIGH_WORD (hx, x);
   ix = hx & 0x7fffffff;
-  if (__builtin_expect (ix < 0x3e300000, 0))            /* |x|<2**-28 */
+  if (__glibc_unlikely (ix < 0x3e300000))                  /* |x|<2**-28 */
     {
       if (huge + x > one)
 	return x;                       /* return x inexact except 0 */
     }
-  if (__builtin_expect (ix > 0x41b00000, 0))            /* |x| > 2**28 */
+  if (__glibc_unlikely (ix > 0x41b00000))                  /* |x| > 2**28 */
     {
       if (ix >= 0x7ff00000)
 	return x + x;                           /* x is inf or NaN */

@@ -57,7 +57,7 @@ _nis_saveit (int instatus, char *inkey, int inkeylen, char *inval,
     {
       struct response_t *bucket = intern->next;
 
-      if (__builtin_expect (bucket == NULL, 0))
+      if (__glibc_unlikely (bucket == NULL))
 	{
 #define MINSIZE 4096 - 4 * sizeof (void *)
 	  const size_t minsize = MAX (MINSIZE, 2 * (invallen + 1));
@@ -92,7 +92,7 @@ _nis_saveit (int instatus, char *inkey, int inkeylen, char *inval,
 	}
 
       char *p = mempcpy (&bucket->mem[intern->offset], inval, invallen);
-      if (__builtin_expect (p[-1] != '\0', 0))
+      if (__glibc_unlikely (p[-1] != '\0'))
 	{
 	  *p = '\0';
 	  ++invallen;
@@ -143,7 +143,7 @@ internal_nis_setpwent (void)
 {
   /* We have to read all the data now.  */
   char *domain;
-  if (__builtin_expect (yp_get_default_domain (&domain), 0))
+  if (__glibc_unlikely (yp_get_default_domain (&domain)))
     return NSS_STATUS_UNAVAIL;
 
   struct ypall_callback ypcb;
@@ -210,7 +210,7 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen,
 	handle_batch_read:
 	  bucket = intern.next;
 
-	  if (__builtin_expect (intern.offset >= bucket->size, 0))
+	  if (__glibc_unlikely (intern.offset >= bucket->size))
 	    {
 	      if (bucket->next == NULL)
 		return NSS_STATUS_NOTFOUND;
@@ -249,7 +249,7 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen,
 	    yperr = yp_next (domain, "passwd.byname", oldkey, oldkeylen,
 			     &outkey, &keylen, &result, &len);
 
-	  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
+	  if (__glibc_unlikely (yperr != YPERR_SUCCESS))
 	    {
 	      enum nss_status retval = yperr2nss (yperr);
 
@@ -312,7 +312,7 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen,
       else
 	{
 	non_adjunct:
-	  if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
+	  if (__glibc_unlikely ((size_t) (len + 1) > buflen))
 	    {
 	      free (result);
 	      *errnop = ERANGE;
@@ -330,7 +330,7 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen,
 
       parse_res = _nss_files_parse_pwent (p, pwd, (void *) buffer, buflen,
 					  errnop);
-      if (__builtin_expect (parse_res == -1, 0))
+      if (__glibc_unlikely (parse_res == -1))
 	{
 	  if (!batch_read)
 	    free (outkey);
@@ -379,7 +379,7 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
     }
 
   char *domain;
-  if (__builtin_expect (yp_get_default_domain (&domain), 0))
+  if (__glibc_unlikely (yp_get_default_domain (&domain)))
     return NSS_STATUS_UNAVAIL;
 
   size_t namelen = strlen (name);
@@ -388,7 +388,7 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
   int len;
   int yperr = yp_match (domain, "passwd.byname", name, namelen, &result, &len);
 
-  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
+  if (__glibc_unlikely (yperr != YPERR_SUCCESS))
     {
       enum nss_status retval = yperr2nss (yperr);
 
@@ -447,7 +447,7 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
   else
     {
     non_adjunct:
-      if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
+      if (__glibc_unlikely ((size_t) (len + 1) > buflen))
 	{
 	  free (result);
 	  *errnop = ERANGE;
@@ -464,7 +464,7 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
 
   int parse_res = _nss_files_parse_pwent (p, pwd, (void *) buffer, buflen,
 					  errnop);
-  if (__builtin_expect (parse_res < 1, 0))
+  if (__glibc_unlikely (parse_res < 1))
     {
       if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;
@@ -480,7 +480,7 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
 		     char *buffer, size_t buflen, int *errnop)
 {
   char *domain;
-  if (__builtin_expect (yp_get_default_domain (&domain), 0))
+  if (__glibc_unlikely (yp_get_default_domain (&domain)))
     return NSS_STATUS_UNAVAIL;
 
   char buf[32];
@@ -490,7 +490,7 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
   int len;
   int yperr = yp_match (domain, "passwd.byuid", buf, nlen, &result, &len);
 
-  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
+  if (__glibc_unlikely (yperr != YPERR_SUCCESS))
     {
       enum nss_status retval = yperr2nss (yperr);
 
@@ -552,7 +552,7 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
   else
     {
     non_adjunct:
-      if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
+      if (__glibc_unlikely ((size_t) (len + 1) > buflen))
 	{
 	  free (result);
 	  *errnop = ERANGE;
@@ -569,7 +569,7 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
 
   int parse_res = _nss_files_parse_pwent (p, pwd, (void *) buffer, buflen,
 					  errnop);
-  if (__builtin_expect (parse_res < 1, 0))
+  if (__glibc_unlikely (parse_res < 1))
     {
       if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;

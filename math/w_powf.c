@@ -25,7 +25,7 @@ float
 __powf (float x, float y)
 {
   float z = __ieee754_powf (x, y);
-  if (__builtin_expect (!__finitef (z), 0))
+  if (__glibc_unlikely (!__finitef (z)))
     {
       if (_LIB_VERSION != _IEEE_)
 	{

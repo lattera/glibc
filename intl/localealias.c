@@ -293,7 +293,7 @@ read_alias_file (fname, fname_len)
 		*cp++ = '\0';
 
 	      if (nmap >= maxmap)
-		if (__builtin_expect (extend_alias_table (), 0))
+		if (__glibc_unlikely (extend_alias_table ()))
 		  goto out;
 
 	      alias_len = strlen (alias) + 1;
@@ -309,7 +309,7 @@ read_alias_file (fname, fname_len)
 		  if (new_pool == NULL)
 		    goto out;
 
-		  if (__builtin_expect (string_space != new_pool, 0))
+		  if (__glibc_unlikely (string_space != new_pool))
 		    {
 		      size_t i;
 

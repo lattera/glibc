@@ -27,7 +27,7 @@ sysv_scalb (double x, double fn)
 {
   double z = __ieee754_scalb (x, fn);
 
-  if (__builtin_expect (__isinf (z), 0))
+  if (__glibc_unlikely (__isinf (z)))
     {
       if (__finite (x))
 	return __kernel_standard (x, fn, 32); /* scalb overflow */

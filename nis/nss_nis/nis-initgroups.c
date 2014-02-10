@@ -72,7 +72,7 @@ internal_getgrent_r (struct group *grp, char *buffer, size_t buflen,
     {
       struct response_t *bucket = intern->next;
 
-      if (__builtin_expect (intern->offset >= bucket->size, 0))
+      if (__glibc_unlikely (intern->offset >= bucket->size))
 	{
 	  if (bucket->next == NULL)
 	    return NSS_STATUS_NOTFOUND;
@@ -88,7 +88,7 @@ internal_getgrent_r (struct group *grp, char *buffer, size_t buflen,
         ++intern->offset;
 
       size_t len = strlen (p) + 1;
-      if (__builtin_expect (len > buflen, 0))
+      if (__glibc_unlikely (len > buflen))
 	{
 	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
@@ -106,7 +106,7 @@ internal_getgrent_r (struct group *grp, char *buffer, size_t buflen,
 
       parse_res = _nss_files_parse_grent (p, grp, (void *) buffer, buflen,
 					  errnop);
-      if (__builtin_expect (parse_res == -1, 0))
+      if (__glibc_unlikely (parse_res == -1))
         return NSS_STATUS_TRYAGAIN;
 
       intern->offset += len;
@@ -160,7 +160,7 @@ initgroups_netid (uid_t uid, gid_t group, long int *start, long int *size,
   int reslen;
   int yperr = yp_match (domainname, "netid.byname", key, keylen, &result,
 			&reslen);
-  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
+  if (__glibc_unlikely (yperr != YPERR_SUCCESS))
     return yperr2nss (yperr);
 
   /* Parse the result: following the colon is a comma separated list of

@@ -22,13 +22,13 @@
 int
 __getgroups_chk (int size, __gid_t list[], size_t listlen)
 {
-  if (__builtin_expect (size < 0, 0))
+  if (__glibc_unlikely (size < 0))
     {
       __set_errno (EINVAL);
       return -1;
     }
 
-  if (__builtin_expect (size * sizeof (__gid_t) > listlen, 0))
+  if (__glibc_unlikely (size * sizeof (__gid_t) > listlen))
     __chk_fail ();
 
   return __getgroups (size, list);

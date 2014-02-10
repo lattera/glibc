@@ -720,7 +720,7 @@ tls_get_addr_tail (GET_ADDR_ARGS, dtv_t *dtv, struct link_map *the_map)
 			!= FORCED_DYNAMIC_TLS_OFFSET, 0))
     {
       __rtld_lock_lock_recursive (GL(dl_load_lock));
-      if (__builtin_expect (the_map->l_tls_offset == NO_TLS_OFFSET, 1))
+      if (__glibc_likely (the_map->l_tls_offset == NO_TLS_OFFSET))
 	{
 	  the_map->l_tls_offset = FORCED_DYNAMIC_TLS_OFFSET;
 	  __rtld_lock_unlock_recursive (GL(dl_load_lock));
@@ -732,7 +732,7 @@ tls_get_addr_tail (GET_ADDR_ARGS, dtv_t *dtv, struct link_map *the_map)
 				!= FORCED_DYNAMIC_TLS_OFFSET, 1))
 	    {
 	      void *p = dtv[GET_ADDR_MODULE].pointer.val;
-	      if (__builtin_expect (p == TLS_DTV_UNALLOCATED, 0))
+	      if (__glibc_unlikely (p == TLS_DTV_UNALLOCATED))
 		goto again;
 
 	      return (char *) p + GET_ADDR_OFFSET;
@@ -755,7 +755,7 @@ update_get_addr (GET_ADDR_ARGS)
 
   void *p = dtv[GET_ADDR_MODULE].pointer.val;
 
-  if (__builtin_expect (p == TLS_DTV_UNALLOCATED, 0))
+  if (__glibc_unlikely (p == TLS_DTV_UNALLOCATED))
     return tls_get_addr_tail (GET_ADDR_PARAM, dtv, the_map);
 
   return (void *) p + GET_ADDR_OFFSET;
@@ -769,12 +769,12 @@ __tls_get_addr (GET_ADDR_ARGS)
 {
   dtv_t *dtv = THREAD_DTV ();
 
-  if (__builtin_expect (dtv[0].counter != GL(dl_tls_generation), 0))
+  if (__glibc_unlikely (dtv[0].counter != GL(dl_tls_generation)))
     return update_get_addr (GET_ADDR_PARAM);
 
   void *p = dtv[GET_ADDR_MODULE].pointer.val;
 
-  if (__builtin_expect (p == TLS_DTV_UNALLOCATED, 0))
+  if (__glibc_unlikely (p == TLS_DTV_UNALLOCATED))
     return tls_get_addr_tail (GET_ADDR_PARAM, dtv, NULL);
 
   return (char *) p + GET_ADDR_OFFSET;
@@ -787,12 +787,12 @@ __tls_get_addr (GET_ADDR_ARGS)
 void *
 _dl_tls_get_addr_soft (struct link_map *l)
 {
-  if (__builtin_expect (l->l_tls_modid == 0, 0))
+  if (__glibc_unlikely (l->l_tls_modid == 0))
     /* This module has no TLS segment.  */
     return NULL;
 
   dtv_t *dtv = THREAD_DTV ();
-  if (__builtin_expect (dtv[0].counter != GL(dl_tls_generation), 0))
+  if (__glibc_unlikely (dtv[0].counter != GL(dl_tls_generation)))
     {
       /* This thread's DTV is not completely current,
 	 but it might already cover this module.  */
@@ -817,7 +817,7 @@ _dl_tls_get_addr_soft (struct link_map *l)
     }
 
   void *data = dtv[l->l_tls_modid].pointer.val;
-  if (__builtin_expect (data == TLS_DTV_UNALLOCATED, 0))
+  if (__glibc_unlikely (data == TLS_DTV_UNALLOCATED))
     /* The DTV is current, but this thread has not yet needed
        to allocate this module's segment.  */
     data = NULL;

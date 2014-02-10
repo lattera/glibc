@@ -545,7 +545,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 
   struct __locale_data *current = loc->__locales[LC_NUMERIC];
 
-  if (__builtin_expect (group, 0))
+  if (__glibc_unlikely (group))
     {
       grouping = _NL_CURRENT (LC_NUMERIC, GROUPING);
       if (*grouping <= 0 || *grouping == CHAR_MAX)
@@ -709,7 +709,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
   while (c == L'0' || ((wint_t) thousands != L'\0' && c == (wint_t) thousands))
     c = *++cp;
 #else
-  if (__builtin_expect (thousands == NULL, 1))
+  if (__glibc_likely (thousands == NULL))
     while (c == '0')
       c = *++cp;
   else
@@ -789,7 +789,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	    /* Not a digit or separator: end of the integer part.  */
 	    break;
 #else
-	  if (__builtin_expect (thousands == NULL, 1))
+	  if (__glibc_likely (thousands == NULL))
 	    break;
 	  else
 	    {
@@ -1181,10 +1181,10 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
     exponent -= incr;
   }
 
-  if (__builtin_expect (exponent > MAX_10_EXP + 1 - (intmax_t) int_no, 0))
+  if (__glibc_unlikely (exponent > MAX_10_EXP + 1 - (intmax_t) int_no))
     return overflow_value (negative);
 
-  if (__builtin_expect (exponent < MIN_10_EXP - (DIG + 1), 0))
+  if (__glibc_unlikely (exponent < MIN_10_EXP - (DIG + 1)))
     return underflow_value (negative);
 
   if (int_no > 0)
@@ -1245,7 +1245,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 
       /* Now we know the exponent of the number in base two.
 	 Check it against the maximum possible exponent.  */
-      if (__builtin_expect (bits > MAX_EXP, 0))
+      if (__glibc_unlikely (bits > MAX_EXP))
 	return overflow_value (negative);
 
       /* We have already the first BITS bits of the result.  Together with

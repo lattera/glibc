@@ -87,7 +87,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 
   /* Work around the fact that the kernel rejects negative timeout values
      despite them being valid.  */
-  if (__builtin_expect (abstime->tv_sec < 0, 0))
+  if (__glibc_unlikely (abstime->tv_sec < 0))
     goto timeout;
 
   /* Remember the mutex we are using here.  If there is already a
@@ -143,7 +143,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 	  --rt.tv_sec;
 	}
       /* Did we already time out?  */
-      if (__builtin_expect (rt.tv_sec < 0, 0))
+      if (__glibc_unlikely (rt.tv_sec < 0))
 	{
 	  if (cbuffer.bc_seq != cond->__data.__broadcast_seq)
 	    goto bc_out;
@@ -217,7 +217,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 	break;
 
       /* Not woken yet.  Maybe the time expired?  */
-      if (__builtin_expect (err == -ETIMEDOUT, 0))
+      if (__glibc_unlikely (err == -ETIMEDOUT))
 	{
 	timeout:
 	  /* Yep.  Adjust the counters.  */

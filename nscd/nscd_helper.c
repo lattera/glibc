@@ -110,7 +110,7 @@ __readvall (int fd, const struct iovec *iov, int iovcnt)
   ssize_t ret = TEMP_FAILURE_RETRY (__readv (fd, iov, iovcnt));
   if (ret <= 0)
     {
-      if (__builtin_expect (ret == 0 || errno != EAGAIN, 1))
+      if (__glibc_likely (ret == 0 || errno != EAGAIN))
 	/* A genuine error or no data to read.  */
 	return ret;
 
@@ -226,7 +226,7 @@ open_socket (request_type type, const char *key, size_t keylen)
       ssize_t wres = TEMP_FAILURE_RETRY (__send (sock, &reqdata,
 						 real_sizeof_reqdata,
 						 MSG_NOSIGNAL));
-      if (__builtin_expect (wres == (ssize_t) real_sizeof_reqdata, 1))
+      if (__glibc_likely (wres == (ssize_t) real_sizeof_reqdata))
 	/* We managed to send the request.  */
 	return sock;
 
@@ -339,13 +339,13 @@ __nscd_get_mapping (request_type type, const char *key,
   int *ip = (void *) CMSG_DATA (cmsg);
   mapfd = *ip;
 
-  if (__builtin_expect (n != keylen && n != keylen + sizeof (mapsize), 0))
+  if (__glibc_unlikely (n != keylen && n != keylen + sizeof (mapsize)))
     goto out_close;
 
-  if (__builtin_expect (strcmp (resdata, key) != 0, 0))
+  if (__glibc_unlikely (strcmp (resdata, key) != 0))
     goto out_close;
 
-  if (__builtin_expect (n == keylen, 0))
+  if (__glibc_unlikely (n == keylen))
     {
       struct stat64 st;
       if (__builtin_expect (fstat64 (mapfd, &st) != 0, 0)
@@ -358,7 +358,7 @@ __nscd_get_mapping (request_type type, const char *key,
 
   /* The file is large enough, map it now.  */
   void *mapping = __mmap (NULL, mapsize, PROT_READ, MAP_SHARED, mapfd, 0);
-  if (__builtin_expect (mapping != MAP_FAILED, 1))
+  if (__glibc_likely (mapping != MAP_FAILED))
     {
       /* Check whether the database is correct and up-to-date.  */
       struct database_pers_head *head = mapping;
@@ -383,7 +383,7 @@ __nscd_get_mapping (request_type type, const char *key,
 					       ALIGN)
 		     + head->data_size);
 
-      if (__builtin_expect (mapsize < size, 0))
+      if (__glibc_unlikely (mapsize < size))
 	goto out_unmap;
 
       /* Allocate a record for the mapping.  */
@@ -433,7 +433,7 @@ __nscd_get_map_ref (request_type type, const char *name,
 
   cur = mapptr->mapped;
 
-  if (__builtin_expect (cur != NO_MAPPING, 1))
+  if (__glibc_likely (cur != NO_MAPPING))
     {
       /* If not mapped or timestamp not updated, request new map.  */
       if (cur == NULL
@@ -443,7 +443,7 @@ __nscd_get_map_ref (request_type type, const char *name,
 	cur = __nscd_get_mapping (type, name,
 				  (struct mapped_database **) &mapptr->mapped);
 
-      if (__builtin_expect (cur != NO_MAPPING, 1))
+      if (__glibc_likely (cur != NO_MAPPING))
 	{
 	  if (__builtin_expect (((*gc_cyclep = cur->head->gc_cycle) & 1) != 0,
 				0))

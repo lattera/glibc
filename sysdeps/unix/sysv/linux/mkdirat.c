@@ -56,7 +56,7 @@ mkdirat (fd, file, mode)
   if (fd != AT_FDCWD && file[0] != '/')
     {
       size_t filelen = strlen (file);
-      if (__builtin_expect (filelen == 0, 0))
+      if (__glibc_unlikely (filelen == 0))
 	{
 	  __set_errno (ENOENT);
 	  return -1;
@@ -80,7 +80,7 @@ mkdirat (fd, file, mode)
   INTERNAL_SYSCALL_DECL (err);
   res = INTERNAL_SYSCALL (mkdir, err, 2, file, mode);
 
-  if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))
+  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (res, err)))
     {
       __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (res, err), fd, buf);
       res = -1;

@@ -68,7 +68,7 @@ __libc_memalign (size_t align, size_t n)
       /* Insufficient space left; allocate another page.  */
       caddr_t page;
       size_t nup = (n + GLRO(dl_pagesize) - 1) & ~(GLRO(dl_pagesize) - 1);
-      if (__builtin_expect (nup == 0, 0))
+      if (__glibc_unlikely (nup == 0))
 	{
 	  if (n)
 	    return NULL;

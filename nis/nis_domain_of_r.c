@@ -50,7 +50,7 @@ nis_domain_of_r (const_nis_name name, char *buffer, size_t buflen)
       return strcpy (buffer, ".");
     }
 
-  if (__builtin_expect (cptr_len >= buflen, 0))
+  if (__glibc_unlikely (cptr_len >= buflen))
     {
       __set_errno (ERANGE);
       return NULL;

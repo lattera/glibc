@@ -110,7 +110,7 @@ __opendirat (int dfd, const char *name)
 	 performed on, say, a tape device might have undesirable effects.  */
       if (__builtin_expect (__xstat64 (_STAT_VER, name, &statbuf), 0) < 0)
 	return NULL;
-      if (__builtin_expect (! S_ISDIR (statbuf.st_mode), 0))
+      if (__glibc_unlikely (! S_ISDIR (statbuf.st_mode)))
 	{
 	  __set_errno (ENOTDIR);
 	  return NULL;
@@ -139,7 +139,7 @@ __opendirat (int dfd, const char *name)
 	 the `stat' call.  */
       if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &statbuf), 0) < 0)
 	goto lose;
-      if (__builtin_expect (! S_ISDIR (statbuf.st_mode), 0))
+      if (__glibc_unlikely (! S_ISDIR (statbuf.st_mode)))
 	{
 	  __set_errno (ENOTDIR);
 	lose:

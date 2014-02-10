@@ -42,7 +42,7 @@ _i18n_number_rewrite (CHAR_T *w, CHAR_T *rear_ptr, CHAR_T *end)
   wint_t wthousands = __towctrans (L',', map);
 
 #ifndef COMPILE_WPRINTF
-  if (__builtin_expect (map != NULL, 0))
+  if (__glibc_unlikely (map != NULL))
     {
       mbstate_t state;
       memset (&state, '\0', sizeof (state));

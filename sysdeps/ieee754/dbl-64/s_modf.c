@@ -54,7 +54,7 @@ __modf (double x, double *iptr)
 	    }
 	}
     }
-  else if (__builtin_expect (j0 > 51, 0))        /* no fraction part */
+  else if (__glibc_unlikely (j0 > 51))              /* no fraction part */
     {
       *iptr = x * one;
       /* We must handle NaNs separately.  */

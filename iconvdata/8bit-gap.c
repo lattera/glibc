@@ -88,7 +88,7 @@ struct gap
     uint32_t ch = get32 (inptr);					      \
     unsigned char res;							      \
 									      \
-    if (__builtin_expect (ch >= 0xffff, 0))				      \
+    if (__glibc_unlikely (ch >= 0xffff))				      \
       {									      \
 	UNICODE_TAG_HANDLER (ch, 4);					      \
 	rp = NULL;							      \

@@ -258,7 +258,7 @@ internal_nisplus_getservent_r (struct servent *serv, char *buffer,
 
       parse_res = _nss_nisplus_parse_servent (result, serv, buffer,
 					      buflen, errnop);
-      if (__builtin_expect (parse_res == -1, 0))
+      if (__glibc_unlikely (parse_res == -1))
 	{
 	  nis_freeresult (result);
 	  result = saved_res;
@@ -360,7 +360,7 @@ _nss_nisplus_getservbyname_r (const char *name, const char *protocol,
       return NSS_STATUS_TRYAGAIN;
     }
 
-  if (__builtin_expect (niserr2nss (result->status) != NSS_STATUS_SUCCESS, 0))
+  if (__glibc_unlikely (niserr2nss (result->status) != NSS_STATUS_SUCCESS))
     {
       enum nss_status status = niserr2nss (result->status);
 
@@ -374,7 +374,7 @@ _nss_nisplus_getservbyname_r (const char *name, const char *protocol,
 					      errnop);
   nis_freeresult (result);
 
-  if (__builtin_expect (parse_res < 1, 0))
+  if (__glibc_unlikely (parse_res < 1))
     {
       if (parse_res == -1)
 	{
@@ -429,7 +429,7 @@ _nss_nisplus_getservbyport_r (const int number, const char *protocol,
       return NSS_STATUS_TRYAGAIN;
     }
 
-  if (__builtin_expect (niserr2nss (result->status) != NSS_STATUS_SUCCESS, 0))
+  if (__glibc_unlikely (niserr2nss (result->status) != NSS_STATUS_SUCCESS))
     {
       enum nss_status status = niserr2nss (result->status);
 
@@ -443,7 +443,7 @@ _nss_nisplus_getservbyport_r (const int number, const char *protocol,
 					      errnop);
   nis_freeresult (result);
 
-  if (__builtin_expect (parse_res < 1, 0))
+  if (__glibc_unlikely (parse_res < 1))
     {
       if (parse_res == -1)
 	{

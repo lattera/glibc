@@ -40,7 +40,7 @@ __remquo (double x, double y, int *quo)
   hx &= UINT64_C(0x7fffffffffffffff);
 
   /* Purge off exception values.  */
-  if (__builtin_expect (hy == 0, 0))
+  if (__glibc_unlikely (hy == 0))
     return (x * y) / (x * y);			/* y = 0 */
   if (__builtin_expect (hx >= UINT64_C(0x7ff0000000000000) /* x not finite */
 			|| hy > UINT64_C(0x7ff0000000000000), 0))/* y is NaN */
@@ -49,7 +49,7 @@ __remquo (double x, double y, int *quo)
   if (hy <= UINT64_C(0x7fbfffffffffffff))
     x = __ieee754_fmod (x, 8 * y);		/* now x < 8y */
 
-  if (__builtin_expect (hx == hy, 0))
+  if (__glibc_unlikely (hx == hy))
     {
       *quo = qs ? -1 : 1;
       return zero * x;

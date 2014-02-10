@@ -48,7 +48,7 @@ __ieee754_fmodl (long double x, long double y)
 			    (hx>=0x7ff0000000000000LL)|| /* y=0,or x not finite */
 			    (hy>0x7ff0000000000000LL),0))	/* or y is NaN */
 	    return (x*y)/(x*y);
-	if (__builtin_expect (hx <= hy, 0))
+	if (__glibc_unlikely (hx <= hy))
 	  {
 	    /* If |x| < |y| return x.  */
 	    if (hx < hy)
@@ -83,7 +83,7 @@ __ieee754_fmodl (long double x, long double y)
 	ldbl_extract_mantissa(&hx, &lx, &ix, x);
 	ldbl_extract_mantissa(&hy, &ly, &iy, y);
 
-	if (__builtin_expect (ix == -IEEE754_DOUBLE_BIAS, 0))
+	if (__glibc_unlikely (ix == -IEEE754_DOUBLE_BIAS))
 	  {
 	    /* subnormal x, shift x to normal.  */
 	    while ((hx & (1LL << 48)) == 0)
@@ -94,7 +94,7 @@ __ieee754_fmodl (long double x, long double y)
 	      }
 	  }
 
-	if (__builtin_expect (iy == -IEEE754_DOUBLE_BIAS, 0))
+	if (__glibc_unlikely (iy == -IEEE754_DOUBLE_BIAS))
 	  {
 	    /* subnormal y, shift y to normal.  */
 	    while ((hy & (1LL << 48)) == 0)

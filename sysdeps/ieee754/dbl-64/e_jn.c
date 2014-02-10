@@ -60,7 +60,7 @@ __ieee754_jn (int n, double x)
   EXTRACT_WORDS (hx, lx, x);
   ix = 0x7fffffff & hx;
   /* if J(n,NaN) is NaN */
-  if (__builtin_expect ((ix | ((u_int32_t) (lx | -lx)) >> 31) > 0x7ff00000, 0))
+  if (__glibc_unlikely ((ix | ((u_int32_t) (lx | -lx)) >> 31) > 0x7ff00000))
     return x + x;
   if (n < 0)
     {
@@ -74,7 +74,7 @@ __ieee754_jn (int n, double x)
     return (__ieee754_j1 (x));
   sgn = (n & 1) & (hx >> 31);   /* even n -- 0, odd n -- sign(x) */
   x = fabs (x);
-  if (__builtin_expect ((ix | lx) == 0 || ix >= 0x7ff00000, 0))
+  if (__glibc_unlikely ((ix | lx) == 0 || ix >= 0x7ff00000))
     /* if x is 0 or inf */
     b = zero;
   else if ((double) n <= x)
@@ -253,12 +253,12 @@ __ieee754_yn (int n, double x)
   EXTRACT_WORDS (hx, lx, x);
   ix = 0x7fffffff & hx;
   /* if Y(n,NaN) is NaN */
-  if (__builtin_expect ((ix | ((u_int32_t) (lx | -lx)) >> 31) > 0x7ff00000, 0))
+  if (__glibc_unlikely ((ix | ((u_int32_t) (lx | -lx)) >> 31) > 0x7ff00000))
     return x + x;
-  if (__builtin_expect ((ix | lx) == 0, 0))
+  if (__glibc_unlikely ((ix | lx) == 0))
     return -HUGE_VAL + x;
   /* -inf and overflow exception.  */;
-  if (__builtin_expect (hx < 0, 0))
+  if (__glibc_unlikely (hx < 0))
     return zero / (zero * x);
   sign = 1;
   if (n < 0)
@@ -270,7 +270,7 @@ __ieee754_yn (int n, double x)
     return (__ieee754_y0 (x));
   if (n == 1)
     return (sign * __ieee754_y1 (x));
-  if (__builtin_expect (ix == 0x7ff00000, 0))
+  if (__glibc_unlikely (ix == 0x7ff00000))
     return zero;
   if (ix >= 0x52D00000)      /* x > 2**302 */
     { /* (x >> n**2)

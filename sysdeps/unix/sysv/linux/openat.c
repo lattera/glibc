@@ -108,7 +108,7 @@ OPENAT_NOT_CANCEL (fd, file, oflag, mode)
   if (fd != AT_FDCWD && file[0] != '/')
     {
       size_t filelen = strlen (file);
-      if (__builtin_expect (filelen == 0, 0))
+      if (__glibc_unlikely (filelen == 0))
 	{
 	  __set_errno (ENOENT);
 	  return -1;
@@ -132,7 +132,7 @@ OPENAT_NOT_CANCEL (fd, file, oflag, mode)
 
   res = INTERNAL_SYSCALL (open, err, 3, file, oflag, mode);
 
-  if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))
+  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (res, err)))
     {
       __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (res, err), fd, buf);
       res = -1;

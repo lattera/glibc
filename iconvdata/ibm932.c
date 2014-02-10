@@ -64,7 +64,7 @@
     if (__builtin_expect (res == 0, 0) && ch != 0)			      \
       {									      \
 	/* Use the IBM932 table for double byte.  */			      \
-	if (__builtin_expect (inptr + 1 >= inend, 0))			      \
+	if (__glibc_unlikely (inptr + 1 >= inend))			      \
 	  {								      \
 	    /* The second character is not available.			      \
 	       Store the intermediate result.  */			      \
@@ -134,7 +134,7 @@
     uint32_t high;							      \
     uint16_t pccode;							      \
 									      \
-    if (__builtin_expect (ch >= 0xffff, 0))				      \
+    if (__glibc_unlikely (ch >= 0xffff))				      \
       {									      \
 	UNICODE_TAG_HANDLER (ch, 4);					      \
 	rp = NULL;							      \
@@ -156,7 +156,7 @@
 	high = (sizeof (__ucs4_to_ibm932db) >> 1)			      \
 		/ sizeof (__ucs4_to_ibm932db[0][FROM]);			      \
 	pccode = ch;							      \
-	if (__builtin_expect (rp != NULL, 1))				      \
+	if (__glibc_likely (rp != NULL))				      \
 	  while (low < high)						      \
 	    {								      \
 	      i = (low + high) >> 1;					      \
@@ -173,7 +173,7 @@
 	    }								      \
 	if (found) 							      \
 	  {								      \
-	    if (__builtin_expect (outptr + 2 > outend, 0))		      \
+	    if (__glibc_unlikely (outptr + 2 > outend))			      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -189,7 +189,7 @@
       }									      \
     else								      \
       {									      \
-	if (__builtin_expect (outptr + 1 > outend, 0))			      \
+	if (__glibc_unlikely (outptr + 1 > outend))			      \
 	  {								      \
 	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \

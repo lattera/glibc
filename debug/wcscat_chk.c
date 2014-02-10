@@ -30,7 +30,7 @@ __wcscat_chk (wchar_t *dest, const wchar_t *src, size_t destlen)
   /* Find the end of the string.  */
   do
     {
-      if (__builtin_expect (destlen-- == 0, 0))
+      if (__glibc_unlikely (destlen-- == 0))
 	__chk_fail ();
       c = *s1++;
     }
@@ -43,7 +43,7 @@ __wcscat_chk (wchar_t *dest, const wchar_t *src, size_t destlen)
 
   do
     {
-      if (__builtin_expect (destlen-- == 0, 0))
+      if (__glibc_unlikely (destlen-- == 0))
 	__chk_fail ();
       c = *s2++;
       *++s1 = c;

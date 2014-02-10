@@ -123,7 +123,7 @@ _IO_wfile_underflow (fp)
   enum __codecvt_result status;
   _IO_ssize_t count;
 
-  if (__builtin_expect (fp->_flags & _IO_NO_READS, 0))
+  if (__glibc_unlikely (fp->_flags & _IO_NO_READS))
     {
       fp->_flags |= _IO_ERR_SEEN;
       __set_errno (EBADF);
@@ -264,7 +264,7 @@ _IO_wfile_underflow (fp)
   const char *from = fp->_IO_read_ptr;
   const char *to = fp->_IO_read_end;
   size_t to_copy = count;
-  if (__builtin_expect (naccbuf != 0, 0))
+  if (__glibc_unlikely (naccbuf != 0))
     {
       to_copy = MIN (sizeof (accbuf) - naccbuf, count);
       to = __mempcpy (&accbuf[naccbuf], from, to_copy);
@@ -277,7 +277,7 @@ _IO_wfile_underflow (fp)
 				   fp->_wide_data->_IO_buf_end,
 				   &fp->_wide_data->_IO_read_end);
 
-  if (__builtin_expect (naccbuf != 0, 0))
+  if (__glibc_unlikely (naccbuf != 0))
     fp->_IO_read_ptr += MAX (0, read_ptr_copy - &accbuf[naccbuf - to_copy]);
   else
     fp->_IO_read_ptr = (char *) read_ptr_copy;
@@ -341,7 +341,7 @@ _IO_wfile_underflow_mmap (_IO_FILE *fp)
   struct _IO_codecvt *cd;
   const char *read_stop;
 
-  if (__builtin_expect (fp->_flags & _IO_NO_READS, 0))
+  if (__glibc_unlikely (fp->_flags & _IO_NO_READS))
     {
       fp->_flags |= _IO_ERR_SEEN;
       __set_errno (EBADF);
@@ -581,7 +581,7 @@ adjust_wide_data (_IO_FILE *fp, bool do_convert)
 				       &fp->_wide_data->_IO_read_end);
 
       /* Should we return EILSEQ?  */
-      if (__builtin_expect (status == __codecvt_error, 0))
+      if (__glibc_unlikely (status == __codecvt_error))
 	{
 	  fp->_flags |= _IO_ERR_SEEN;
 	  return -1;
@@ -755,7 +755,7 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
 
 		  /* If there was an error, then return WEOF.
 		     TODO: set buffer state.  */
-		  if (__builtin_expect (status == __codecvt_error, 0))
+		  if (__glibc_unlikely (status == __codecvt_error))
 		      return WEOF;
 		}
 	      while (delta > 0);

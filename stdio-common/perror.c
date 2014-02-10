@@ -60,7 +60,7 @@ perror (const char *s)
       || (fd = __dup (fd)) == -1
       || (fp = fdopen (fd, "w+")) == NULL)
     {
-      if (__builtin_expect (fd != -1, 0))
+      if (__glibc_unlikely (fd != -1))
 	__close (fd);
 
       /* Use standard error as is.  */

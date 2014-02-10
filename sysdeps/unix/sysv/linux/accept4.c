@@ -52,7 +52,7 @@ static int have_accept4;
 int
 accept4 (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len, int flags)
 {
-  if (__builtin_expect (have_accept4 >= 0, 1))
+  if (__glibc_likely (have_accept4 >= 0))
     {
       int ret = __internal_accept4 (fd, addr, addr_len, flags);
       /* The kernel returns -EINVAL for unknown socket operations.

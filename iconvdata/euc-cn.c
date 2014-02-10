@@ -56,7 +56,7 @@
 	     next byte is also available.  */				      \
 	  const unsigned char *endp;					      \
 									      \
-	  if (__builtin_expect (inptr + 1 >= inend, 0))			      \
+	  if (__glibc_unlikely (inptr + 1 >= inend))			      \
 	    {								      \
 	      /* The second character is not available.  Store		      \
 		 the intermediate result.  */				      \
@@ -67,14 +67,14 @@
 	  ch = inptr[1];						      \
 									      \
 	  /* All second bytes of a multibyte character must be >= 0xa1. */    \
-	  if (__builtin_expect (ch < 0xa1, 0))				      \
+	  if (__glibc_unlikely (ch < 0xa1))				      \
 	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 									      \
 	  /* This is code set 1: GB 2312-80.  */			      \
 	  endp = inptr;							      \
 									      \
 	  ch = gb2312_to_ucs4 (&endp, 2, 0x80);				      \
-	  if (__builtin_expect (ch == __UNKNOWN_10646_CHAR, 0))		      \
+	  if (__glibc_unlikely (ch == __UNKNOWN_10646_CHAR))		      \
 	    {								      \
 	      /* This is an illegal character.  */			      \
 	      STANDARD_FROM_LOOP_ERR_HANDLER (2);			      \

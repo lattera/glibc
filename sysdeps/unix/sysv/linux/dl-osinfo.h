@@ -33,7 +33,7 @@
        if the library is not compiled to run on all kernels.  */	      \
 									      \
     int version = _dl_discover_osversion ();				      \
-    if (__builtin_expect (version >= 0, 1))				      \
+    if (__glibc_likely (version >= 0))					      \
       {									      \
 	if (__builtin_expect (GLRO(dl_osversion) == 0, 1)		      \
 	    || GLRO(dl_osversion) > version)				      \
@@ -58,7 +58,7 @@ _dl_setup_stack_chk_guard (void *dl_random)
   } ret;
 
 #ifndef __ASSUME_AT_RANDOM
-  if (__builtin_expect (dl_random == NULL, 0))
+  if (__glibc_unlikely (dl_random == NULL))
     {
       const size_t filllen = sizeof (ret.bytes) - 1;
       ret.num = 0;

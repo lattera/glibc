@@ -442,19 +442,19 @@ __process_machine_rela (struct link_map *map,
       break;
 
     case R_PPC_ADDR24:
-      if (__builtin_expect (finaladdr > 0x01fffffc && finaladdr < 0xfe000000, 0))
+      if (__glibc_unlikely (finaladdr > 0x01fffffc && finaladdr < 0xfe000000))
 	_dl_reloc_overflow (map,  "R_PPC_ADDR24", reloc_addr, refsym);
       *reloc_addr = (*reloc_addr & 0xfc000003) | (finaladdr & 0x3fffffc);
       break;
 
     case R_PPC_ADDR16:
-      if (__builtin_expect (finaladdr > 0x7fff && finaladdr < 0xffff8000, 0))
+      if (__glibc_unlikely (finaladdr > 0x7fff && finaladdr < 0xffff8000))
 	_dl_reloc_overflow (map,  "R_PPC_ADDR16", reloc_addr, refsym);
       *(Elf32_Half*) reloc_addr = finaladdr;
       break;
 
     case R_PPC_UADDR16:
-      if (__builtin_expect (finaladdr > 0x7fff && finaladdr < 0xffff8000, 0))
+      if (__glibc_unlikely (finaladdr > 0x7fff && finaladdr < 0xffff8000))
 	_dl_reloc_overflow (map,  "R_PPC_UADDR16", reloc_addr, refsym);
       ((union unaligned *) reloc_addr)->u2 = finaladdr;
       break;
@@ -474,7 +474,7 @@ __process_machine_rela (struct link_map *map,
     case R_PPC_ADDR14:
     case R_PPC_ADDR14_BRTAKEN:
     case R_PPC_ADDR14_BRNTAKEN:
-      if (__builtin_expect (finaladdr > 0x7fff && finaladdr < 0xffff8000, 0))
+      if (__glibc_unlikely (finaladdr > 0x7fff && finaladdr < 0xffff8000))
 	_dl_reloc_overflow (map,  "R_PPC_ADDR14", reloc_addr, refsym);
       *reloc_addr = (*reloc_addr & 0xffff0003) | (finaladdr & 0xfffc);
       if (rinfo != R_PPC_ADDR14)
@@ -578,7 +578,7 @@ __process_machine_rela (struct link_map *map,
 
     inline void do_reloc16 (const char *r_name, Elf32_Addr value)
       {
-	if (__builtin_expect (value > 0x7fff && value < 0xffff8000, 0))
+	if (__glibc_unlikely (value > 0x7fff && value < 0xffff8000))
 	  _dl_reloc_overflow (map, r_name, reloc_addr, refsym);
 	*(Elf32_Half *) reloc_addr = value;
       }

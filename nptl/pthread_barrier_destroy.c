@@ -32,7 +32,7 @@ pthread_barrier_destroy (barrier)
 
   lll_lock (ibarrier->lock, ibarrier->private ^ FUTEX_PRIVATE_FLAG);
 
-  if (__builtin_expect (ibarrier->left == ibarrier->init_count, 1))
+  if (__glibc_likely (ibarrier->left == ibarrier->init_count))
     /* The barrier is not used anymore.  */
     result = 0;
   else

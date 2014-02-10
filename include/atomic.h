@@ -375,7 +375,7 @@
      do									      \
        {								      \
 	 __atg11_oldval = *__atg11_memp;				      \
-	 if (__builtin_expect (__atg11_oldval <= 0, 0))			      \
+	 if (__glibc_unlikely (__atg11_oldval <= 0))			      \
 	   break;							      \
        }								      \
      while (__builtin_expect						      \

@@ -75,10 +75,10 @@ where_is_shmfs (void)
   /* OK, do it the hard way.  Look through the /proc/mounts file and if
      this does not exist through /etc/fstab to find the mount point.  */
   fp = __setmntent ("/proc/mounts", "r");
-  if (__builtin_expect (fp == NULL, 0))
+  if (__glibc_unlikely (fp == NULL))
     {
       fp = __setmntent (_PATH_MNTTAB, "r");
-      if (__builtin_expect (fp == NULL, 0))
+      if (__glibc_unlikely (fp == NULL))
 	/* There is nothing we can do.  Blind guesses are not helpful.  */
 	return;
     }
@@ -208,7 +208,7 @@ shm_open (const char *name, int oflag, mode_t mode)
 	}
 #endif
     }
-  else if (__builtin_expect (errno == EISDIR, 0))
+  else if (__glibc_unlikely (errno == EISDIR))
     /* It might be better to fold this error with EINVAL since
        directory names are just another example for unsuitable shared
        object names and the standard does not mention EISDIR.  */

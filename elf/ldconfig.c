@@ -770,7 +770,7 @@ search_dir (const struct dir_entry *entry)
 	lstat_buf.st_mode = DTTOIF (direntry->d_type);
       else
 #endif
-	if (__builtin_expect (lstat64 (real_file_name, &lstat_buf), 0))
+	if (__glibc_unlikely (lstat64 (real_file_name, &lstat_buf)))
 	  {
 	    error (0, errno, _("Cannot lstat %s"), file_name);
 	    continue;
@@ -794,7 +794,7 @@ search_dir (const struct dir_entry *entry)
 		  continue;
 		}
 	    }
-	  if (__builtin_expect (stat64 (target_name, &stat_buf), 0))
+	  if (__glibc_unlikely (stat64 (target_name, &stat_buf)))
 	    {
 	      if (opt_verbose)
 		error (0, errno, _("Cannot stat %s"), file_name);

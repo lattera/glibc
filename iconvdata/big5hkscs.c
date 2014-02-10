@@ -17774,7 +17774,7 @@ static struct
     {									      \
       if (FROM_DIRECTION)						      \
 	{								      \
-	  if (__builtin_expect (outbuf + 4 <= outend, 1))		      \
+	  if (__glibc_likely (outbuf + 4 <= outend))			      \
 	    {								      \
 	      /* Write out the last character.  */			      \
 	      *((uint32_t *) outbuf) = data->__statep->__count >> 3;	      \
@@ -17787,7 +17787,7 @@ static struct
 	}								      \
       else								      \
 	{								      \
-	  if (__builtin_expect (outbuf + 2 <= outend, 1))		      \
+	  if (__glibc_likely (outbuf + 2 <= outend))			      \
 	    {								      \
 	      /* Write out the last character.  */			      \
 	      uint32_t lasttwo = data->__statep->__count >> 3;		      \
@@ -17814,7 +17814,7 @@ static struct
 									      \
     /* Determine whether there is a buffered character pending.  */	      \
     ch = *statep >> 3;							      \
-    if (__builtin_expect (ch == 0, 1))					      \
+    if (__glibc_likely (ch == 0))					      \
       {									      \
 	/* No - so look at the next input byte.  */			      \
 	ch = *inptr;							      \
@@ -17826,7 +17826,7 @@ static struct
 	    uint32_t ch2;						      \
 	    int idx;							      \
 									      \
-	    if (__builtin_expect (inptr + 1 >= inend, 0))		      \
+	    if (__glibc_unlikely (inptr + 1 >= inend))			      \
 	      {								      \
 		/* The second character is not available.  */		      \
 		result = __GCONV_INCOMPLETE_INPUT;			      \
@@ -17887,7 +17887,7 @@ static struct
 									      \
 	    inptr += 2;							      \
 	  }								      \
-	else if (__builtin_expect (ch == 0xff, 0))			      \
+	else if (__glibc_unlikely (ch == 0xff))				      \
 	  {								      \
 	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
@@ -17937,7 +17937,7 @@ static struct
 	  goto not_combining;						      \
 									      \
 	/* Output the combined character.  */				      \
-	if (__builtin_expect (outptr + 1 >= outend, 0))			      \
+	if (__glibc_unlikely (outptr + 1 >= outend))			      \
 	  {								      \
 	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
@@ -17950,7 +17950,7 @@ static struct
 									      \
       not_combining:							      \
 	/* Output the buffered character.  */				      \
-	if (__builtin_expect (outptr + 1 >= outend, 0))			      \
+	if (__glibc_unlikely (outptr + 1 >= outend))			      \
 	  {								      \
 	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
@@ -17992,7 +17992,7 @@ static struct
 	else								      \
 	  {								      \
 	   /* Check for possible combining character.  */		      \
-	    if (__builtin_expect (ch == 0xca || ch == 0xea, 0))		      \
+	    if (__glibc_unlikely (ch == 0xca || ch == 0xea))		      \
 	      {								      \
 		*statep = ((cp[0] << 8) | cp[1]) << 3;			      \
 		inptr += 4;						      \
@@ -18009,7 +18009,7 @@ static struct
 	      }								      \
 									      \
 	    *outptr++ = cp[0];						      \
-	    if (__builtin_expect (cp[1] != '\0', 1))			      \
+	    if (__glibc_likely (cp[1] != '\0'))				      \
 	      *outptr++ = cp[1];					      \
 	  }								      \
       }									      \

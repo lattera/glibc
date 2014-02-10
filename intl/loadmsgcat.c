@@ -829,7 +829,7 @@ _nl_load_domain (domain_file, domainbinding)
   data = (struct mo_file_header *) mmap (NULL, size, PROT_READ,
 					 MAP_PRIVATE, fd, 0);
 
-  if (__builtin_expect (data != MAP_FAILED, 1))
+  if (__glibc_likely (data != MAP_FAILED))
     {
       /* mmap() call was successful.  */
       close (fd);
@@ -1257,7 +1257,7 @@ _nl_load_domain (domain_file, domainbinding)
 
   /* Get the header entry and look for a plural specification.  */
   nullentry = _nl_find_msg (domain_file, domainbinding, "", 0, &nullentrylen);
-  if (__builtin_expect (nullentry == (char *) -1, 0))
+  if (__glibc_unlikely (nullentry == (char *) -1))
     {
       __libc_rwlock_fini (domain->conversions_lock);
       goto invalid;

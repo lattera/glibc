@@ -29,7 +29,7 @@ __wcsncat_chk (wchar_t *dest, const wchar_t *src, size_t n, size_t destlen)
   /* Find the end of DEST.  */
   do
     {
-      if (__builtin_expect (destlen-- == 0, 0))
+      if (__glibc_unlikely (destlen-- == 0))
 	__chk_fail ();
       c = *dest++;
     }
@@ -45,25 +45,25 @@ __wcsncat_chk (wchar_t *dest, const wchar_t *src, size_t n, size_t destlen)
       size_t n4 = n >> 2;
       do
 	{
-	  if (__builtin_expect (destlen-- == 0, 0))
+	  if (__glibc_unlikely (destlen-- == 0))
 	    __chk_fail ();
 	  c = *src++;
 	  *++dest = c;
 	  if (c == L'\0')
 	    return s;
-	  if (__builtin_expect (destlen-- == 0, 0))
+	  if (__glibc_unlikely (destlen-- == 0))
 	    __chk_fail ();
 	  c = *src++;
 	  *++dest = c;
 	  if (c == L'\0')
 	    return s;
-	  if (__builtin_expect (destlen-- == 0, 0))
+	  if (__glibc_unlikely (destlen-- == 0))
 	    __chk_fail ();
 	  c = *src++;
 	  *++dest = c;
 	  if (c == L'\0')
 	    return s;
-	  if (__builtin_expect (destlen-- == 0, 0))
+	  if (__glibc_unlikely (destlen-- == 0))
 	    __chk_fail ();
 	  c = *src++;
 	  *++dest = c;
@@ -75,7 +75,7 @@ __wcsncat_chk (wchar_t *dest, const wchar_t *src, size_t n, size_t destlen)
 
   while (n > 0)
     {
-      if (__builtin_expect (destlen-- == 0, 0))
+      if (__glibc_unlikely (destlen-- == 0))
 	__chk_fail ();
       c = *src++;
       *++dest = c;
@@ -86,7 +86,7 @@ __wcsncat_chk (wchar_t *dest, const wchar_t *src, size_t n, size_t destlen)
 
   if (c != L'\0')
     {
-      if (__builtin_expect (destlen-- == 0, 0))
+      if (__glibc_unlikely (destlen-- == 0))
 	__chk_fail ();
       *++dest = L'\0';
     }

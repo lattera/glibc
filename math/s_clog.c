@@ -29,7 +29,7 @@ __clog (__complex__ double x)
   int rcls = fpclassify (__real__ x);
   int icls = fpclassify (__imag__ x);
 
-  if (__builtin_expect (rcls == FP_ZERO && icls == FP_ZERO, 0))
+  if (__glibc_unlikely (rcls == FP_ZERO && icls == FP_ZERO))
     {
       /* Real and imaginary part are 0.0.  */
       __imag__ result = signbit (__real__ x) ? M_PI : 0.0;
@@ -37,7 +37,7 @@ __clog (__complex__ double x)
       /* Yes, the following line raises an exception.  */
       __real__ result = -1.0 / fabs (__real__ x);
     }
-  else if (__builtin_expect (rcls != FP_NAN && icls != FP_NAN, 1))
+  else if (__glibc_likely (rcls != FP_NAN && icls != FP_NAN))
     {
       /* Neither real nor imaginary part is NaN.  */
       double absx = fabs (__real__ x), absy = fabs (__imag__ x);

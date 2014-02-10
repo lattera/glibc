@@ -58,7 +58,7 @@ readlinkat (fd, path, buf, len)
   if (fd != AT_FDCWD && path[0] != '/')
     {
       size_t pathlen = strlen (path);
-      if (__builtin_expect (pathlen == 0, 0))
+      if (__glibc_unlikely (pathlen == 0))
 	{
 	  __set_errno (ENOENT);
 	  return -1;
@@ -83,7 +83,7 @@ readlinkat (fd, path, buf, len)
 
   result = INTERNAL_SYSCALL (readlink, err, 3, path, buf, len);
 
-  if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
+  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
     {
       __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, pathbuf);
       result = -1;

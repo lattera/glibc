@@ -33,7 +33,7 @@ MEMMOVE_CHK (dest, src, len, destlen)
      size_t len;
      size_t destlen;
 {
-  if (__builtin_expect (destlen < len, 0))
+  if (__glibc_unlikely (destlen < len))
     __chk_fail ();
 
   return memmove (dest, src, len);

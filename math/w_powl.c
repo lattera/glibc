@@ -25,7 +25,7 @@ long double
 __powl (long double x, long double y)
 {
   long double z = __ieee754_powl (x, y);
-  if (__builtin_expect (!__finitel (z), 0))
+  if (__glibc_unlikely (!__finitel (z)))
     {
       if (_LIB_VERSION != _IEEE_)
 	{

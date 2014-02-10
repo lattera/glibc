@@ -64,7 +64,7 @@
     {									      \
       if (FROM_DIRECTION)						      \
 	{								      \
-	  if (__builtin_expect (outbuf + 4 <= outend, 1))		      \
+	  if (__glibc_likely (outbuf + 4 <= outend))			      \
 	    {								      \
 	      /* Write out the last character.  */			      \
 	      *((uint32_t *) outbuf) = data->__statep->__count >> 3;	      \
@@ -652,7 +652,7 @@ static const struct
 	    res = 0;							      \
 	  }								      \
 									      \
-	if (__builtin_expect (res != 0, 1))				      \
+	if (__glibc_likely (res != 0))					      \
 	  {								      \
 	    *outptr++ = res;						      \
 	    inptr += 4;							      \
@@ -696,7 +696,7 @@ static const struct
 		  }							      \
 									      \
 		/* See whether we have room for two bytes.  */		      \
-		if (__builtin_expect (outptr + 1 >= outend, 0))		      \
+		if (__glibc_unlikely (outptr + 1 >= outend))		      \
 		  {							      \
 		    result = __GCONV_FULL_OUTPUT;			      \
 		    break;						      \

@@ -127,7 +127,7 @@ empty dynamic string token substitution"));				      \
 	    else							      \
 	      {								      \
 		/* This is for DT_AUXILIARY.  */			      \
-		if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS, 0))\
+		if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_LIBS))   \
 		  _dl_debug_printf (N_("\
 cannot load auxiliary `%s' because of empty dynamic string token "	      \
 					    "substitution\n"), __str);	      \
@@ -253,7 +253,7 @@ _dl_map_object_deps (struct link_map *map,
 		bool malloced;
 		int err = _dl_catch_error (&objname, &errstring, &malloced,
 					   openaux, &args);
-		if (__builtin_expect (errstring != NULL, 0))
+		if (__glibc_unlikely (errstring != NULL))
 		  {
 		    char *new_errstring = strdupa (errstring);
 		    objname = strdupa (objname);
@@ -317,7 +317,7 @@ _dl_map_object_deps (struct link_map *map,
 		    bool malloced;
 		    (void) _dl_catch_error (&objname, &errstring, &malloced,
 					    openaux, &args);
-		    if (__builtin_expect (errstring != NULL, 0))
+		    if (__glibc_unlikely (errstring != NULL))
 		      {
 			/* We are not interested in the error message.  */
 			assert (errstring != NULL);
@@ -342,7 +342,7 @@ _dl_map_object_deps (struct link_map *map,
 		    bool malloced;
 		    int err = _dl_catch_error (&objname, &errstring, &malloced,
 					       openaux, &args);
-		    if (__builtin_expect (errstring != NULL, 0))
+		    if (__glibc_unlikely (errstring != NULL))
 		      {
 			char *new_errstring = strdupa (errstring);
 			objname = strdupa (objname);
@@ -622,7 +622,7 @@ Filters not supported with LD_TRACE_PRELINKING"));
      itself will always be initialize last.  */
   memcpy (l_initfini, map->l_searchlist.r_list,
 	  nlist * sizeof (struct link_map *));
-  if (__builtin_expect (nlist > 1, 1))
+  if (__glibc_likely (nlist > 1))
     {
       /* We can skip looking for the binary itself which is at the front
 	 of the search list.  */
@@ -645,7 +645,7 @@ Filters not supported with LD_TRACE_PRELINKING"));
 	      if (runp != NULL)
 		/* Look through the dependencies of the object.  */
 		while (*runp != NULL)
-		  if (__builtin_expect (*runp++ == thisp, 0))
+		  if (__glibc_unlikely (*runp++ == thisp))
 		    {
 		      /* Move the current object to the back past the last
 			 object with it as the dependency.  */

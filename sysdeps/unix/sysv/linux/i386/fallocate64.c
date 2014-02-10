@@ -40,7 +40,7 @@ fallocate64 (int fd, int mode, __off64_t offset, __off64_t len)
 
       LIBC_CANCEL_RESET (oldtype);
     }
-  if (__builtin_expect (err, 0))
+  if (__glibc_unlikely (err))
     {
       __set_errno (err);
       err = -1;

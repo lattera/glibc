@@ -59,7 +59,7 @@ __lrintl (long double x)
 	hi = llhi;
       xh -= hi;
 #else
-      if (__builtin_expect ((xh == -(double) (-__LONG_MAX__ - 1)), 0))
+      if (__glibc_unlikely ((xh == -(double) (-__LONG_MAX__ - 1))))
 	{
 	  /* When XH is 9223372036854775808.0, converting to long long will
 	     overflow, resulting in an invalid operation.  However, XL might
@@ -87,7 +87,7 @@ __lrintl (long double x)
       res = hi + lo;
 
       /* This is just sign(hi) == sign(lo) && sign(res) != sign(hi).  */
-      if (__builtin_expect (((~(hi ^ lo) & (res ^ hi)) < 0), 0))
+      if (__glibc_unlikely (((~(hi ^ lo) & (res ^ hi)) < 0)))
 	goto overflow;
 
       xh -= lo;
@@ -129,7 +129,7 @@ __lrintl (long double x)
 	  break;
 	}
 
-      if (__builtin_expect (((~(hi ^ (res - hi)) & (res ^ hi)) < 0), 0))
+      if (__glibc_unlikely (((~(hi ^ (res - hi)) & (res ^ hi)) < 0)))
 	goto overflow;
 
       return res;

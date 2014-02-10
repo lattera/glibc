@@ -57,7 +57,7 @@ fgetgrent (FILE *stream)
       char *new_buf;
       buffer_size += NSS_BUFLEN_GROUP;
       new_buf = realloc (buffer, buffer_size);
-      if (__builtin_expect (new_buf == NULL, 0))
+      if (__glibc_unlikely (new_buf == NULL))
 	{
 	  /* We are out of memory.  Free the current buffer so that the
 	     process gets a chance for a normal termination.  */

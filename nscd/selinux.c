@@ -212,7 +212,7 @@ preserve_capabilities (void)
 
   cap_free (tmp_caps);
 
-  if (__builtin_expect (res != 0, 0))
+  if (__glibc_unlikely (res != 0))
     {
       cap_free (new_caps);
       dbg_log (_("Failed to drop capabilities"));

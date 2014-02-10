@@ -271,18 +271,18 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
 
   cb = (struct nis_cb *) calloc (1,
 				 sizeof (struct nis_cb) + sizeof (nis_server));
-  if (__builtin_expect (cb == NULL, 0))
+  if (__glibc_unlikely (cb == NULL))
     goto failed;
   cb->serv = (nis_server *) (cb + 1);
   cb->serv->name = strdup (nis_local_principal ());
-  if (__builtin_expect (cb->serv->name == NULL, 0))
+  if (__glibc_unlikely (cb->serv->name == NULL))
     goto failed;
   cb->serv->ep.ep_val = (endpoint *) calloc (2, sizeof (endpoint));
-  if (__builtin_expect (cb->serv->ep.ep_val == NULL, 0))
+  if (__glibc_unlikely (cb->serv->ep.ep_val == NULL))
     goto failed;
   cb->serv->ep.ep_len = 1;
   cb->serv->ep.ep_val[0].family = strdup ("inet");
-  if (__builtin_expect (cb->serv->ep.ep_val[0].family == NULL, 0))
+  if (__glibc_unlikely (cb->serv->ep.ep_val[0].family == NULL))
     goto failed;
   cb->callback = callback;
   cb->userdata = userdata;
@@ -314,7 +314,7 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
     }
 
   cb->serv->ep.ep_val[0].proto = strdup ((flags & USE_DGRAM) ? "udp" : "tcp");
-  if (__builtin_expect (cb->serv->ep.ep_val[0].proto == NULL, 0))
+  if (__glibc_unlikely (cb->serv->ep.ep_val[0].proto == NULL))
     goto failed;
   cb->xprt = ((flags & USE_DGRAM)
 	      ? svcudp_bufcreate (sock, 100, 8192)

@@ -45,7 +45,7 @@ __gconv_close (__gconv_t cd)
 	  struct __gconv_trans_data *curp = transp;
 	  transp = transp->__next;
 
-	  if (__builtin_expect (curp->__trans_end_fct != NULL, 0))
+	  if (__glibc_unlikely (curp->__trans_end_fct != NULL))
 	    curp->__trans_end_fct (curp->__data);
 
 	  free (curp);

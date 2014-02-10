@@ -77,23 +77,23 @@ __ieee754_log (double x)
   ux = num.i[HIGH_HALF];
   dx = num.i[LOW_HALF];
   n = 0;
-  if (__builtin_expect (ux < 0x00100000, 0))
+  if (__glibc_unlikely (ux < 0x00100000))
     {
-      if (__builtin_expect (((ux & 0x7fffffff) | dx) == 0, 0))
+      if (__glibc_unlikely (((ux & 0x7fffffff) | dx) == 0))
 	return MHALF / 0.0;     /* return -INF */
-      if (__builtin_expect (ux < 0, 0))
+      if (__glibc_unlikely (ux < 0))
 	return (x - x) / 0.0;   /* return NaN  */
       n -= 54;
       x *= two54.d;             /* scale x     */
       num.d = x;
     }
-  if (__builtin_expect (ux >= 0x7ff00000, 0))
+  if (__glibc_unlikely (ux >= 0x7ff00000))
     return x + x;               /* INF or NaN  */
 
   /* Regular values of x */
 
   w = x - 1;
-  if (__builtin_expect (ABS (w) > U03, 1))
+  if (__glibc_likely (ABS (w) > U03))
     goto case_03;
 
   /*--- Stage I, the case abs(x-1) < 0.03 */

@@ -191,17 +191,17 @@ __add_to_environ (name, value, combined, replace)
 # endif
 
 	  np = KNOWN_VALUE (new_value);
-	  if (__builtin_expect (np == NULL, 1))
+	  if (__glibc_likely (np == NULL))
 #endif
 	    {
 #ifdef USE_TSEARCH
-	      if (__builtin_expect (! use_alloca, 0))
+	      if (__glibc_unlikely (! use_alloca))
 		np = new_value;
 	      else
 #endif
 		{
 		  np = malloc (varlen);
-		  if (__builtin_expect (np == NULL, 0))
+		  if (__glibc_unlikely (np == NULL))
 		    {
 		      UNLOCK;
 		      return -1;

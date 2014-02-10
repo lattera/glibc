@@ -528,7 +528,7 @@ getpwent_next_file (struct passwd *result, ent_t *ent,
       do
 	{
 	  /* We need at least 3 characters for one line.  */
-	  if (__builtin_expect (buflen < 3, 0))
+	  if (__glibc_unlikely (buflen < 3))
 	    {
 	    erange:
 	      *errnop = ERANGE;
@@ -561,7 +561,7 @@ getpwent_next_file (struct passwd *result, ent_t *ent,
 	     !(parse_res = _nss_files_parse_pwent (p, result, data, buflen,
 						   errnop)));
 
-      if (__builtin_expect (parse_res == -1, 0))
+      if (__glibc_unlikely (parse_res == -1))
 	/* The parser ran out of space.  */
 	goto erange_reset;
 
@@ -727,7 +727,7 @@ internal_getpwnam_r (const char *name, struct passwd *result, ent_t *ent,
       do
 	{
 	  /* We need at least 3 characters for one line.  */
-	  if (__builtin_expect (buflen < 3, 0))
+	  if (__glibc_unlikely (buflen < 3))
 	    {
 	    erange:
 	      *errnop = ERANGE;
@@ -761,7 +761,7 @@ internal_getpwnam_r (const char *name, struct passwd *result, ent_t *ent,
 	     !(parse_res = _nss_files_parse_pwent (p, result, data, buflen,
 						   errnop)));
 
-      if (__builtin_expect (parse_res == -1, 0))
+      if (__glibc_unlikely (parse_res == -1))
 	/* The parser ran out of space.  */
 	goto erange_reset;
 
@@ -934,7 +934,7 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
       do
 	{
 	  /* We need at least 3 characters for one line.  */
-	  if (__builtin_expect (buflen < 3, 0))
+	  if (__glibc_unlikely (buflen < 3))
 	    {
 	    erange:
 	      *errnop = ERANGE;
@@ -967,7 +967,7 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
 	     !(parse_res = _nss_files_parse_pwent (p, result, data, buflen,
 						   errnop)));
 
-      if (__builtin_expect (parse_res == -1, 0))
+      if (__glibc_unlikely (parse_res == -1))
 	/* The parser ran out of space.  */
 	goto erange_reset;
 

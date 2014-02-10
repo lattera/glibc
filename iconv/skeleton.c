@@ -410,7 +410,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
   /* If the function is called with no input this means we have to reset
      to the initial state.  The possibly partly converted input is
      dropped.  */
-  if (__builtin_expect (do_flush, 0))
+  if (__glibc_unlikely (do_flush))
     {
       /* This should never happen during error handling.  */
       assert (outbufstart == NULL);
@@ -461,7 +461,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 
 		      if (result != __GCONV_EMPTY_INPUT)
 			{
-			  if (__builtin_expect (outerr != outbuf, 0))
+			  if (__glibc_unlikely (outerr != outbuf))
 			    {
 			      /* We have a problem.  Undo the conversion.  */
 			      outbuf = outstart;
@@ -604,7 +604,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	  SAVE_RESET_STATE (1);
 #endif
 
-	  if (__builtin_expect (!unaligned, 1))
+	  if (__glibc_likely (!unaligned))
 	    {
 	      if (FROM_DIRECTION)
 		/* Run the conversion loop.  */
@@ -635,7 +635,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 
 	  /* If we were called as part of an error handling module we
 	     don't do anything else here.  */
-	  if (__builtin_expect (outbufstart != NULL, 0))
+	  if (__glibc_unlikely (outbufstart != NULL))
 	    {
 	      *outbufstart = outbuf;
 	      return status;
@@ -653,7 +653,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 
 	  /* If this is the last step leave the loop, there is nothing
 	     we can do.  */
-	  if (__builtin_expect (data->__flags & __GCONV_IS_LAST, 0))
+	  if (__glibc_unlikely (data->__flags & __GCONV_IS_LAST))
 	    {
 	      /* Store information about how many bytes are available.  */
 	      data->__outbuf = outbuf;
@@ -666,7 +666,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	    }
 
 	  /* Write out all output which was produced.  */
-	  if (__builtin_expect (outbuf > outstart, 1))
+	  if (__glibc_likely (outbuf > outstart))
 	    {
 	      const unsigned char *outerr = data->__outbuf;
 	      int result;
@@ -677,7 +677,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 
 	      if (result != __GCONV_EMPTY_INPUT)
 		{
-		  if (__builtin_expect (outerr != outbuf, 0))
+		  if (__glibc_unlikely (outerr != outbuf))
 		    {
 #ifdef RESET_INPUT_BUFFER
 		      RESET_INPUT_BUFFER;
@@ -695,7 +695,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 		      SAVE_RESET_STATE (0);
 # endif
 
-		      if (__builtin_expect (!unaligned, 1))
+		      if (__glibc_likely (!unaligned))
 			{
 			  if (FROM_DIRECTION)
 			    /* Run the conversion loop.  */
@@ -738,7 +738,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 
 		      /* If we haven't consumed a single byte decrement
 			 the invocation counter.  */
-		      if (__builtin_expect (outbuf == outstart, 0))
+		      if (__glibc_unlikely (outbuf == outstart))
 			--data->__invocation_counter;
 #endif	/* reset input buffer */
 		    }

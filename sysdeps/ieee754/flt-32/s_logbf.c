@@ -27,7 +27,7 @@ __logbf (float x)
     return (float) -1.0 / fabsf (x);
   if (ix >= 0x7f800000)
     return x * x;
-  if (__builtin_expect ((rix = ix >> 23) == 0, 0))
+  if (__glibc_unlikely ((rix = ix >> 23) == 0))
     {
       /* POSIX specifies that denormal number is treated as
          though it were normalized.  */

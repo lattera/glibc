@@ -215,14 +215,14 @@ ldbl_nearbyint (double a)
 {
   double two52 = 0x1p52;
 
-  if (__builtin_expect ((__builtin_fabs (a) < two52), 1))
+  if (__glibc_likely ((__builtin_fabs (a) < two52)))
     {
-      if (__builtin_expect ((a > 0.0), 1))
+      if (__glibc_likely ((a > 0.0)))
 	{
 	  a += two52;
 	  a -= two52;
 	}
-      else if (__builtin_expect ((a < 0.0), 1))
+      else if (__glibc_likely ((a < 0.0)))
 	{
 	  a = two52 - a;
 	  a = -(a - two52);

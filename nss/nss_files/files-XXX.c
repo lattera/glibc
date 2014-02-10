@@ -272,7 +272,7 @@ internal_getent (struct STRUCTURE *result,
 	 || ! (parse_result = parse_line (p, result, data, buflen, errnop
 					  EXTRA_ARGS)));
 
-  if (__builtin_expect (parse_result == -1, 0))
+  if (__glibc_unlikely (parse_result == -1))
     {
       H_ERRNO_SET (NETDB_INTERNAL);
       return NSS_STATUS_TRYAGAIN;

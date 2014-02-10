@@ -103,7 +103,7 @@ _IO_file_doallocate (fp)
      function it points to.  This is to make sure _IO_cleanup gets called
      on exit.  We call it from _IO_file_doallocate, since that is likely
      to get called by any program that does buffered I/O. */
-  if (__builtin_expect (_IO_cleanup_registration_needed != NULL, 0))
+  if (__glibc_unlikely (_IO_cleanup_registration_needed != NULL))
     (*_IO_cleanup_registration_needed) ();
 #endif
 

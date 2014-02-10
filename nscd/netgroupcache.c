@@ -120,7 +120,7 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
 		 const char *key, uid_t uid, struct hashentry *he,
 		 struct datahead *dh, struct dataset **resultp)
 {
-  if (__builtin_expect (debug_level > 0, 0))
+  if (__glibc_unlikely (debug_level > 0))
     {
       if (he == NULL)
 	dbg_log (_("Haven't found \"%s\" in netgroup cache!"), key);
@@ -398,7 +398,7 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
   {
     struct dataset *newp
       = (struct dataset *) mempool_alloc (db, total + req->key_len, 1);
-    if (__builtin_expect (newp != NULL, 1))
+    if (__glibc_likely (newp != NULL))
       {
 	/* Adjust pointer into the memory block.  */
 	key_copy = (char *) newp + (key_copy - buffer);
@@ -494,7 +494,7 @@ addinnetgrX (struct database_dyn *db, int fd, request_header *req,
     key = (char *) rawmemchr (key, '\0') + 1;
   const char *domain = *key++ ? key : NULL;
 
-  if (__builtin_expect (debug_level > 0, 0))
+  if (__glibc_unlikely (debug_level > 0))
     {
       if (he == NULL)
 	dbg_log (_("Haven't found \"%s (%s,%s,%s)\" in netgroup cache!"),
@@ -531,7 +531,7 @@ addinnetgrX (struct database_dyn *db, int fd, request_header *req,
 					    1);
   struct indataset dataset_mem;
   bool cacheable = true;
-  if (__builtin_expect (dataset == NULL, 0))
+  if (__glibc_unlikely (dataset == NULL))
     {
       cacheable = false;
       dataset = &dataset_mem;

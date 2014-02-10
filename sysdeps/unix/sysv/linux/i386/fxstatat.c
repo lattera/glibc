@@ -66,7 +66,7 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 #endif
 
 #ifndef __ASSUME_ATFCTS
-  if (__builtin_expect (flag & ~AT_SYMLINK_NOFOLLOW, 0))
+  if (__glibc_unlikely (flag & ~AT_SYMLINK_NOFOLLOW))
     {
       __set_errno (EINVAL);
       return -1;
@@ -77,7 +77,7 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
   if (fd != AT_FDCWD && file[0] != '/')
     {
       size_t filelen = strlen (file);
-      if (__builtin_expect (filelen == 0, 0))
+      if (__glibc_unlikely (filelen == 0))
 	{
 	  __set_errno (ENOENT);
 	  return -1;
@@ -113,11 +113,11 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
     result = INTERNAL_SYSCALL (lstat64, err, 2, file, &st64);
   else
     result = INTERNAL_SYSCALL (stat64, err, 2, file, &st64);
-  if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
+  if (__glibc_likely (!INTERNAL_SYSCALL_ERROR_P (result, err)))
     return __xstat32_conv (vers, &st64, st);
 
  out:
-  if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
+  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
     {
       __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
       result = -1;

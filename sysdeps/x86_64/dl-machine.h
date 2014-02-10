@@ -92,7 +92,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	 to intercept the calls to collect information.  In this case we
 	 don't store the address in the GOT so that all future calls also
 	 end in this function.  */
-      if (__builtin_expect (profile, 0))
+      if (__glibc_unlikely (profile))
 	{
 	  *(ElfW(Addr) *) (got + 2) = (ElfW(Addr)) &_dl_runtime_profile;
 
@@ -241,7 +241,7 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
   const unsigned long int r_type = ELFW(R_TYPE) (reloc->r_info);
 
 # if !defined RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
-  if (__builtin_expect (r_type == R_X86_64_RELATIVE, 0))
+  if (__glibc_unlikely (r_type == R_X86_64_RELATIVE))
     {
 #  if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
       /* This is defined in rtld.c, but nowhere in the static libc.a;
@@ -262,11 +262,11 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 # if !defined RTLD_BOOTSTRAP
   /* l_addr + r_addend may be > 0xffffffff and R_X86_64_RELATIVE64
      relocation updates the whole 64-bit entry.  */
-  if (__builtin_expect (r_type == R_X86_64_RELATIVE64, 0))
+  if (__glibc_unlikely (r_type == R_X86_64_RELATIVE64))
     *(Elf64_Addr *) reloc_addr = (Elf64_Addr) map->l_addr + reloc->r_addend;
   else
 # endif
-  if (__builtin_expect (r_type == R_X86_64_NONE, 0))
+  if (__glibc_unlikely (r_type == R_X86_64_NONE))
     return;
   else
     {
@@ -419,7 +419,7 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 	  *(unsigned int *) reloc_addr = value;
 
 	  const char *fmt;
-	  if (__builtin_expect (value > UINT_MAX, 0))
+	  if (__glibc_unlikely (value > UINT_MAX))
 	    {
 	      const char *strtab;
 
@@ -438,7 +438,7 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 	case R_X86_64_PC32:
 	  value += reloc->r_addend - (ElfW(Addr)) reloc_addr;
 	  *(unsigned int *) reloc_addr = value;
-	  if (__builtin_expect (value != (int) value, 0))
+	  if (__glibc_unlikely (value != (int) value))
 	    {
 	      fmt = "\
 %s: Symbol `%s' causes overflow in R_X86_64_PC32 relocation\n";
@@ -484,7 +484,7 @@ elf_machine_rela_relative (ElfW(Addr) l_addr, const ElfW(Rela) *reloc,
 #if !defined RTLD_BOOTSTRAP
   /* l_addr + r_addend may be > 0xffffffff and R_X86_64_RELATIVE64
      relocation updates the whole 64-bit entry.  */
-  if (__builtin_expect (ELFW(R_TYPE) (reloc->r_info) == R_X86_64_RELATIVE64, 0))
+  if (__glibc_unlikely (ELFW(R_TYPE) (reloc->r_info) == R_X86_64_RELATIVE64))
     *(Elf64_Addr *) reloc_addr = (Elf64_Addr) l_addr + reloc->r_addend;
   else
 #endif
@@ -504,7 +504,7 @@ elf_machine_lazy_rel (struct link_map *map,
   const unsigned long int r_type = ELFW(R_TYPE) (reloc->r_info);
 
   /* Check for unexpected PLT reloc type.  */
-  if (__builtin_expect (r_type == R_X86_64_JUMP_SLOT, 1))
+  if (__glibc_likely (r_type == R_X86_64_JUMP_SLOT))
     {
       if (__builtin_expect (map->l_mach.plt, 0) == 0)
 	*reloc_addr += l_addr;
@@ -513,7 +513,7 @@ elf_machine_lazy_rel (struct link_map *map,
 	  map->l_mach.plt
 	  + (((ElfW(Addr)) reloc_addr) - map->l_mach.gotplt) * 2;
     }
-  else if (__builtin_expect (r_type == R_X86_64_TLSDESC, 1))
+  else if (__glibc_likely (r_type == R_X86_64_TLSDESC))
     {
       struct tlsdesc volatile * __attribute__((__unused__)) td =
 	(struct tlsdesc volatile *)reloc_addr;
@@ -522,10 +522,10 @@ elf_machine_lazy_rel (struct link_map *map,
       td->entry = (void*)(D_PTR (map, l_info[ADDRIDX (DT_TLSDESC_PLT)])
 			  + map->l_addr);
     }
-  else if (__builtin_expect (r_type == R_X86_64_IRELATIVE, 0))
+  else if (__glibc_unlikely (r_type == R_X86_64_IRELATIVE))
     {
       ElfW(Addr) value = map->l_addr + reloc->r_addend;
-      if (__builtin_expect (!skip_ifunc, 1))
+      if (__glibc_likely (!skip_ifunc))
 	value = ((ElfW(Addr) (*) (void)) value) ();
       *reloc_addr = value;
     }

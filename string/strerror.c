@@ -32,7 +32,7 @@ strerror (errnum)
   char *ret = __strerror_r (errnum, NULL, 0);
   int saved_errno;
 
-  if (__builtin_expect (ret != NULL, 1))
+  if (__glibc_likely (ret != NULL))
     return ret;
   saved_errno = errno;
   if (buf == NULL)

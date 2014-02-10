@@ -269,7 +269,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 #define ADDW(Ch)							    \
   do									    \
     {									    \
-      if (__builtin_expect (wpsize == wpmax, 0))			    \
+      if (__glibc_unlikely (wpsize == wpmax))				      \
 	{								    \
 	  CHAR_T *old = wp;						    \
 	  size_t newsize = (UCHAR_MAX + 1 > 2 * wpmax			    \
@@ -392,7 +392,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	      do
 		{
 		  c = inchar ();
-		  if (__builtin_expect (c == EOF, 0))
+		  if (__glibc_unlikely (c == EOF))
 		    input_error ();
 		  else if (c != (unsigned char) *f++)
 		    {
@@ -420,7 +420,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	  c = inchar ();
 
 	  /* Characters other than format specs must just match.  */
-	  if (__builtin_expect (c == EOF, 0))
+	  if (__glibc_unlikely (c == EOF))
 	    input_error ();
 
 	  /* We saw white space char as the last character in the format
@@ -428,12 +428,12 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	  if (skip_space)
 	    {
 	      while (ISSPACE (c))
-		if (__builtin_expect (inchar () == EOF, 0))
+		if (__glibc_unlikely (inchar () == EOF))
 		  input_error ();
 	      skip_space = 0;
 	    }
 
-	  if (__builtin_expect (c != fc, 0))
+	  if (__glibc_unlikely (c != fc))
 	    {
 	      ungetc (c, s);
 	      conv_error ();
@@ -581,7 +581,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	}
 
       /* End of the format string?  */
-      if (__builtin_expect (*f == L_('\0'), 0))
+      if (__glibc_unlikely (*f == L_('\0')))
 	conv_error ();
 
       /* Find the conversion specifier.  */
@@ -610,9 +610,9 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	{
 	case L_('%'):	/* Must match a literal '%'.  */
 	  c = inchar ();
-	  if (__builtin_expect (c == EOF, 0))
+	  if (__glibc_unlikely (c == EOF))
 	    input_error ();
-	  if (__builtin_expect (c != fc, 0))
+	  if (__glibc_unlikely (c != fc))
 	    {
 	      ungetc_not_eof (c, s);
 	      conv_error ();
@@ -710,7 +710,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 #endif
 
 	      c = inchar ();
-	      if (__builtin_expect (c == EOF, 0))
+	      if (__glibc_unlikely (c == EOF))
 		input_error ();
 
 #ifdef COMPILE_WSCANF
@@ -758,7 +758,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		    }
 
 		  n = __wcrtomb (!(flags & SUPPRESS) ? str : NULL, c, &state);
-		  if (__builtin_expect (n == (size_t) -1, 0))
+		  if (__glibc_unlikely (n == (size_t) -1))
 		    /* No valid wide character.  */
 		    input_error ();
 
@@ -836,7 +836,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	  STRING_ARG (wstr, wchar_t, (width > 1024 ? 1024 : width));
 
 	  c = inchar ();
-	  if (__builtin_expect (c == EOF, 0))
+	  if (__glibc_unlikely (c == EOF))
 	    input_error ();
 
 #ifdef COMPILE_WSCANF
@@ -946,14 +946,14 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		      {
 			/* Possibly correct character, just not enough
 			   input.  */
-			if (__builtin_expect (inchar () == EOF, 0))
+			if (__glibc_unlikely (inchar () == EOF))
 			  encode_error ();
 
 			buf[0] = c;
 			continue;
 		      }
 
-		    if (__builtin_expect (n != 1, 0))
+		    if (__glibc_unlikely (n != 1))
 		      encode_error ();
 
 		    /* We have a match.  */
@@ -991,7 +991,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	      STRING_ARG (str, char, 100);
 
 	      c = inchar ();
-	      if (__builtin_expect (c == EOF, 0))
+	      if (__glibc_unlikely (c == EOF))
 		input_error ();
 
 #ifdef COMPILE_WSCANF
@@ -1060,7 +1060,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 
 		    n = __wcrtomb (!(flags & SUPPRESS) ? str : NULL, c,
 				   &state);
-		    if (__builtin_expect (n == (size_t) -1, 0))
+		    if (__glibc_unlikely (n == (size_t) -1))
 		      encode_error ();
 
 		    assert (n <= MB_CUR_MAX);
@@ -1262,14 +1262,14 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			{
 			  /* Possibly correct character, just not enough
 			     input.  */
-			  if (__builtin_expect (inchar () == EOF, 0))
+			  if (__glibc_unlikely (inchar () == EOF))
 			    encode_error ();
 
 			  buf[0] = c;
 			  continue;
 			}
 
-		      if (__builtin_expect (n != 1, 0))
+		      if (__glibc_unlikely (n != 1))
 			encode_error ();
 
 		      /* We have a match.  */
@@ -1368,7 +1368,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 
 	number:
 	  c = inchar ();
-	  if (__builtin_expect (c == EOF, 0))
+	  if (__glibc_unlikely (c == EOF))
 	    input_error ();
 
 	  /* Check for a sign.  */
@@ -1434,7 +1434,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 #endif
 
 	      /* Get the alternative digit forms if there are any.  */
-	      if (__builtin_expect (map != NULL, 0))
+	      if (__glibc_unlikely (map != NULL))
 		{
 		  /*  Adding new level for extra digits set in locale file.  */
 		  ++to_level;
@@ -1502,7 +1502,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		    {
 		      /* Get the string for the digits with value N.  */
 #ifdef COMPILE_WSCANF
-		      if (__builtin_expect (map != NULL, 0))
+		      if (__glibc_unlikely (map != NULL))
 			wcdigits[n] = wcdigits_extended[n];
 		      else
 			wcdigits[n] = (const wchar_t *)
@@ -1521,7 +1521,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		      const char *cmpp;
 		      int avail = width > 0 ? width : INT_MAX;
 
-		      if (__builtin_expect (map != NULL, 0))
+		      if (__glibc_unlikely (map != NULL))
 			mbdigits[n] = mbdigits_extended[n];
 		      else
 			mbdigits[n]
@@ -1795,7 +1795,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	      else
 		num.ul = __strtoul_internal (wp, &tw, base, flags & GROUP);
 	    }
-	  if (__builtin_expect (wp == tw, 0))
+	  if (__glibc_unlikely (wp == tw))
 	    conv_error ();
 
 	  if (!(flags & SUPPRESS))
@@ -1842,7 +1842,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	  c = inchar ();
 	  if (width > 0)
 	    --width;
-	  if (__builtin_expect (c == EOF, 0))
+	  if (__glibc_unlikely (c == EOF))
 	    input_error ();
 
 	  got_digit = got_dot = got_e = 0;
@@ -1851,7 +1851,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	  if (c == L_('-') || c == L_('+'))
 	    {
 	      negative = c == L_('-');
-	      if (__builtin_expect (width == 0 || inchar () == EOF, 0))
+	      if (__glibc_unlikely (width == 0 || inchar () == EOF))
 		/* EOF is only an input error before we read any chars.  */
 		conv_error ();
 	      if (width > 0)
@@ -2334,7 +2334,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		*ARG (float *) = negative ? -d : d;
 	    }
 
-	  if (__builtin_expect (tw == wp, 0))
+	  if (__glibc_unlikely (tw == wp))
 	    conv_error ();
 
 	  if (!(flags & SUPPRESS))
@@ -2374,7 +2374,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 
 	  while ((fc = *f++) != L'\0' && fc != L']');
 
-	  if (__builtin_expect (fc == L'\0', 0))
+	  if (__glibc_unlikely (fc == L'\0'))
 	    conv_error ();
 	  wchar_t *twend = (wchar_t *) f - 1;
 #else
@@ -2410,7 +2410,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	      /* Add the character to the flag map.  */
 	      wp[fc] = 1;
 
-	  if (__builtin_expect (fc == '\0', 0))
+	  if (__glibc_unlikely (fc == '\0'))
 	    conv_error();
 #endif
 
@@ -2418,7 +2418,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	    {
 	      size_t now = read_in;
 #ifdef COMPILE_WSCANF
-	      if (__builtin_expect (inchar () == WEOF, 0))
+	      if (__glibc_unlikely (inchar () == WEOF))
 		input_error ();
 
 	      do
@@ -2530,7 +2530,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	      size_t cnt = 0;
 	      mbstate_t cstate;
 
-	      if (__builtin_expect (inchar () == EOF, 0))
+	      if (__glibc_unlikely (inchar () == EOF))
 		input_error ();
 
 	      memset (&cstate, '\0', sizeof (cstate));
@@ -2613,13 +2613,13 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		}
 	      while (inchar () != EOF);
 
-	      if (__builtin_expect (cnt != 0, 0))
+	      if (__glibc_unlikely (cnt != 0))
 		/* We stopped in the middle of recognizing another
 		   character.  That's a problem.  */
 		encode_error ();
 #endif
 
-	      if (__builtin_expect (now == read_in, 0))
+	      if (__glibc_unlikely (now == read_in))
 		/* We haven't succesfully read any character.  */
 		conv_error ();
 
@@ -2645,7 +2645,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	    {
 	      size_t now = read_in;
 
-	      if (__builtin_expect (inchar () == EOF, 0))
+	      if (__glibc_unlikely (inchar () == EOF))
 		input_error ();
 
 #ifdef COMPILE_WSCANF
@@ -2754,7 +2754,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		    }
 
 		  n = __wcrtomb (!(flags & SUPPRESS) ? str : NULL, c, &state);
-		  if (__builtin_expect (n == (size_t) -1, 0))
+		  if (__glibc_unlikely (n == (size_t) -1))
 		    encode_error ();
 
 		  assert (n <= MB_CUR_MAX);
@@ -2817,7 +2817,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	      while (--width > 0 && inchar () != EOF);
 #endif
 
-	      if (__builtin_expect (now == read_in, 0))
+	      if (__glibc_unlikely (now == read_in))
 		/* We haven't succesfully read any character.  */
 		conv_error ();
 
@@ -2911,9 +2911,9 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
   if (errp != NULL)
     *errp |= errval;
 
-  if (__builtin_expect (done == EOF, 0))
+  if (__glibc_unlikely (done == EOF))
     {
-      if (__builtin_expect (ptrs_to_free != NULL, 0))
+      if (__glibc_unlikely (ptrs_to_free != NULL))
 	{
 	  struct ptrs_to_free *p = ptrs_to_free;
 	  while (p != NULL)
@@ -2928,7 +2928,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	    }
 	}
     }
-  else if (__builtin_expect (strptr != NULL, 0))
+  else if (__glibc_unlikely (strptr != NULL))
     {
       free (*strptr);
       *strptr = NULL;

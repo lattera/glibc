@@ -35,7 +35,7 @@ __wcscpy_chk (wchar_t *dest, const wchar_t *src, size_t n)
 
       do
 	{
-	  if (__builtin_expect (n-- == 0, 0))
+	  if (__glibc_unlikely (n-- == 0))
 	    __chk_fail ();
 	  c = *wcp++;
 	  wcp[off] = c;
@@ -48,7 +48,7 @@ __wcscpy_chk (wchar_t *dest, const wchar_t *src, size_t n)
 
       do
 	{
-	  if (__builtin_expect (n-- == 0, 0))
+	  if (__glibc_unlikely (n-- == 0))
 	    __chk_fail ();
 	  c = *src++;
 	  *wcp++ = c;

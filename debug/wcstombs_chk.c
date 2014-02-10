@@ -23,7 +23,7 @@
 size_t
 __wcstombs_chk (char *dst, const wchar_t *src, size_t len, size_t dstlen)
 {
-  if (__builtin_expect (dstlen < len, 0))
+  if (__glibc_unlikely (dstlen < len))
     __chk_fail ();
 
   mbstate_t state;

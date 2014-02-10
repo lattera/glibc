@@ -227,7 +227,7 @@ _nss_hesiod_initgroups_dyn (const char *user, gid_t group, long int *start,
 	  if (status == NSS_STATUS_SUCCESS
 	      && !internal_gid_in_list (groups, group, *start))
 	    {
-	      if (__builtin_expect (*start == *size, 0))
+	      if (__glibc_unlikely (*start == *size))
 		{
 		  /* Need a bigger buffer.  */
 		  gid_t *newgroups;

@@ -64,7 +64,7 @@
   else if (!data->__internal_use && data->__invocation_counter == 0)	      \
     {									      \
       /* Emit the Byte Order Mark.  */					      \
-      if (__builtin_expect (outbuf + 2 > outend, 0))			      \
+      if (__glibc_unlikely (outbuf + 2 > outend))			      \
 	return __GCONV_FULL_OUTPUT;					      \
 									      \
       put16u (outbuf, BOM);						      \
@@ -150,12 +150,12 @@ gconv_end (struct __gconv_step *data)
   {									      \
     uint32_t c = get32 (inptr);						      \
 									      \
-    if (__builtin_expect (c >= 0x10000, 0))				      \
+    if (__glibc_unlikely (c >= 0x10000))				      \
       {									      \
 	UNICODE_TAG_HANDLER (c, 4);					      \
 	STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
       }									      \
-    else if (__builtin_expect (c >= 0xd800 && c < 0xe000, 0))		      \
+    else if (__glibc_unlikely (c >= 0xd800 && c < 0xe000))		      \
       {									      \
 	/* Surrogate characters in UCS-4 input are not valid.		      \
 	   We must catch this, because the UCS-2 output might be	      \
@@ -195,7 +195,7 @@ gconv_end (struct __gconv_step *data)
     if (swap)								      \
       u1 = bswap_16 (u1);						      \
 									      \
-    if (__builtin_expect (u1 >= 0xd800 && u1 < 0xe000, 0))		      \
+    if (__glibc_unlikely (u1 >= 0xd800 && u1 < 0xe000))			      \
       {									      \
 	/* Surrogate characters in UCS-2 input are not valid.  Reject	      \
 	   them.  (Catching this here is not security relevant.)  */	      \

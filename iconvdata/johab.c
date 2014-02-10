@@ -192,7 +192,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	    uint32_t ch2;						      \
 	    uint_fast32_t idx;						      \
 									      \
-	    if (__builtin_expect (inptr + 1 >= inend, 0))		      \
+	    if (__glibc_unlikely (inptr + 1 >= inend))			      \
 	      {								      \
 		/* The second character is not available.  Store the	      \
 		   intermediate result.  */				      \
@@ -202,7 +202,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 									      \
 	    ch2 = inptr[1];						      \
 	    idx = ch * 256 + ch2;					      \
-	    if (__builtin_expect (ch <= 0xd3, 1))			      \
+	    if (__glibc_likely (ch <= 0xd3))				      \
 	      {								      \
 		/* Hangul */						      \
 		int_fast32_t i, m, f;					      \
@@ -262,7 +262,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	      }								      \
 	  }								      \
 									      \
-	if (__builtin_expect (ch == 0, 0))				      \
+	if (__glibc_unlikely (ch == 0))					      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
 	    STANDARD_FROM_LOOP_ERR_HANDLER (2);				      \
@@ -313,7 +313,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
       {									      \
 	if (ch >= 0xac00 && ch <= 0xd7a3)				      \
 	  {								      \
-	    if (__builtin_expect (outptr + 2 > outend, 0))		      \
+	    if (__glibc_unlikely (outptr + 2 > outend))			      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -334,7 +334,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	  {								      \
 	    ch = jamo_from_ucs_table[ch - 0x3131];			      \
 									      \
-	    if (__builtin_expect (outptr + 2 > outend, 0))		      \
+	    if (__glibc_unlikely (outptr + 2 > outend))			      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -355,7 +355,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
-	    if (__builtin_expect (written == __UNKNOWN_10646_CHAR, 0))	      \
+	    if (__glibc_unlikely (written == __UNKNOWN_10646_CHAR))	      \
 	      {								      \
 		STANDARD_TO_LOOP_ERR_HANDLER (4);			      \
 	      }								      \

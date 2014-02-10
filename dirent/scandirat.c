@@ -98,7 +98,7 @@ SCANDIRAT (dfd, dir, namelist, select, cmp)
 	  /* Ignore errors from select or readdir */
 	  __set_errno (0);
 
-	  if (__builtin_expect (c.cnt == vsize, 0))
+	  if (__glibc_unlikely (c.cnt == vsize))
 	    {
 	      DIRENT_TYPE **new;
 	      if (vsize == 0)

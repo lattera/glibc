@@ -32,7 +32,7 @@ __round (double x)
 
   EXTRACT_WORDS64 (i0, x);
   j0 = ((i0 >> 52) & 0x7ff) - 0x3ff;
-  if (__builtin_expect (j0 < 52, 1))
+  if (__glibc_likely (j0 < 52))
     {
       if (j0 < 0)
 	{

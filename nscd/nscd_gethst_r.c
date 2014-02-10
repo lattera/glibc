@@ -140,7 +140,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	       struct hostent *resultbuf, char *buffer, size_t buflen,
 	       struct hostent **result, int *h_errnop)
 {
-  if (__builtin_expect (__nss_have_localdomain >= 0, 0))
+  if (__glibc_unlikely (__nss_have_localdomain >= 0))
     {
       if (__nss_have_localdomain == 0)
 	__nss_have_localdomain = getenv ("LOCALDOMAIN") != NULL ? 1 : -1;
@@ -232,7 +232,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
   /* No value found so far.  */
   *result = NULL;
 
-  if (__builtin_expect (hst_resp.found == -1, 0))
+  if (__glibc_unlikely (hst_resp.found == -1))
     {
       /* The daemon does not cache this database.  */
       __nss_not_use_nscd_hosts = 1;
@@ -377,7 +377,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	  goto out_close;
 	}
       /* See whether this would exceed the buffer capacity.  */
-      if (__builtin_expect (cp > buffer + buflen, 0))
+      if (__glibc_unlikely (cp > buffer + buflen))
 	{
 	  /* aliases_len array might contain garbage during nscd GC cycle,
 	     retry rather than fail in that case.  */

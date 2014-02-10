@@ -85,7 +85,7 @@ __old_scandir64 (dir, namelist, select, cmp)
 	  /* Ignore errors from select or readdir */
 	  __set_errno (0);
 
-	  if (__builtin_expect (c.cnt == vsize, 0))
+	  if (__glibc_unlikely (c.cnt == vsize))
 	    {
 	      struct __old_dirent64 **new;
 	      if (vsize == 0)

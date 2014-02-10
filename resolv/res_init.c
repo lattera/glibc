@@ -334,7 +334,7 @@ __res_vinit(res_state statp, int preinit) {
 				sa6->sin6_flowinfo = 0;
 				sa6->sin6_addr = a6;
 
-				if (__builtin_expect (el == NULL, 1))
+				if (__glibc_likely (el == NULL))
 				    sa6->sin6_scope_id = 0;
 				else {
 				    int try_numericscope = 1;

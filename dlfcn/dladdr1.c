@@ -32,7 +32,7 @@ int
 __dladdr1 (const void *address, Dl_info *info, void **extra, int flags)
 {
 # ifdef SHARED
-  if (__builtin_expect (_dlfcn_hook != NULL, 0))
+  if (__glibc_unlikely (_dlfcn_hook != NULL))
     return _dlfcn_hook->dladdr1 (address, info, extra, flags);
 # endif
 

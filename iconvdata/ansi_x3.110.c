@@ -567,7 +567,7 @@ static const char from_ucs4[][2] =
     /* Now test for a possible second byte and write this if possible.  */    \
     if (cp[1] != '\0')							      \
       {									      \
-	if (__builtin_expect (outptr >= outend, 0))	 		      \
+	if (__glibc_unlikely (outptr >= outend))			      \
 	  {								      \
 	    /* The result does not fit into the buffer.  */		      \
 	    --outptr;							      \

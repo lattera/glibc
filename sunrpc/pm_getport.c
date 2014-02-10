@@ -59,7 +59,7 @@ __get_socket (struct sockaddr_in *saddr)
   laddr.sin_addr.s_addr = htonl (INADDR_ANY);
 
   int cc = __bind (so, (struct sockaddr *) &laddr, namelen);
-  if (__builtin_expect (cc < 0, 0))
+  if (__glibc_unlikely (cc < 0))
     {
     fail:
       __close (so);
@@ -67,7 +67,7 @@ __get_socket (struct sockaddr_in *saddr)
     }
 
   cc = __connect (so, (struct sockaddr *) saddr, namelen);
-  if (__builtin_expect (cc < 0, 0))
+  if (__glibc_unlikely (cc < 0))
     goto fail;
 
   return so;

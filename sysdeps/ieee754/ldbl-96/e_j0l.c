@@ -112,7 +112,7 @@ __ieee754_j0l (long double x)
 
   GET_LDOUBLE_EXP (se, x);
   ix = se & 0x7fff;
-  if (__builtin_expect (ix >= 0x7fff, 0))
+  if (__glibc_unlikely (ix >= 0x7fff))
     return one / (x * x);
   x = fabsl (x);
   if (ix >= 0x4000)		/* |x| >= 2.0 */
@@ -132,7 +132,7 @@ __ieee754_j0l (long double x)
        * j0(x) = 1/sqrt(pi) * (P(0,x)*cc - Q(0,x)*ss) / sqrt(x)
        * y0(x) = 1/sqrt(pi) * (P(0,x)*ss + Q(0,x)*cc) / sqrt(x)
        */
-      if (__builtin_expect (ix > 0x4080, 0))	/* 2^129 */
+      if (__glibc_unlikely (ix > 0x4080))      	/* 2^129 */
 	z = (invsqrtpi * cc) / __ieee754_sqrtl (x);
       else
 	{
@@ -142,7 +142,7 @@ __ieee754_j0l (long double x)
 	}
       return z;
     }
-  if (__builtin_expect (ix < 0x3fef, 0)) /* |x| < 2**-16 */
+  if (__glibc_unlikely (ix < 0x3fef))       /* |x| < 2**-16 */
     {
       /* raise inexact if x != 0 */
       math_force_eval (huge + x);
@@ -199,11 +199,11 @@ __ieee754_y0l (long double x)
   GET_LDOUBLE_WORDS (se, i0, i1, x);
   ix = se & 0x7fff;
   /* Y0(NaN) is NaN, y0(-inf) is Nan, y0(inf) is 0  */
-  if (__builtin_expect (se & 0x8000, 0))
+  if (__glibc_unlikely (se & 0x8000))
     return zero / (zero * x);
-  if (__builtin_expect (ix >= 0x7fff, 0))
+  if (__glibc_unlikely (ix >= 0x7fff))
     return one / (x + x * x);
-  if (__builtin_expect ((i0 | i1) == 0, 0))
+  if (__glibc_unlikely ((i0 | i1) == 0))
     return -HUGE_VALL + x;  /* -inf and overflow exception.  */
   if (ix >= 0x4000)
     {				/* |x| >= 2.0 */
@@ -234,7 +234,7 @@ __ieee754_y0l (long double x)
 	  else
 	    ss = z / cc;
 	}
-      if (__builtin_expect (ix > 0x4080, 0))	/* 1e39 */
+      if (__glibc_unlikely (ix > 0x4080))      	/* 1e39 */
 	z = (invsqrtpi * ss) / __ieee754_sqrtl (x);
       else
 	{
@@ -244,7 +244,7 @@ __ieee754_y0l (long double x)
 	}
       return z;
     }
-  if (__builtin_expect (ix <= 0x3fde, 0)) /* x < 2^-33 */
+  if (__glibc_unlikely (ix <= 0x3fde))       /* x < 2^-33 */
     {
       z = -7.380429510868722527629822444004602747322E-2L
 	+ tpi * __ieee754_logl (x);

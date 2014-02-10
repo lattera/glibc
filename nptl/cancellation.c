@@ -40,7 +40,7 @@ __pthread_enable_asynccancel (void)
 
       int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling, newval,
 					      oldval);
-      if (__builtin_expect (curval == oldval, 1))
+      if (__glibc_likely (curval == oldval))
 	{
 	  if (CANCEL_ENABLED_AND_CANCELED_AND_ASYNCHRONOUS (newval))
 	    {
@@ -79,7 +79,7 @@ __pthread_disable_asynccancel (int oldtype)
 
       int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling, newval,
 					      oldval);
-      if (__builtin_expect (curval == oldval, 1))
+      if (__glibc_likely (curval == oldval))
 	break;
 
       /* Prepare the next round.  */

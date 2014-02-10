@@ -268,7 +268,7 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
   uintptr_t pad = -(uintptr_t) buffer % __alignof__ (struct net_data);
   buffer += pad;
 
-  if (__builtin_expect (buflen < sizeof (*net_data) + pad, 0))
+  if (__glibc_unlikely (buflen < sizeof (*net_data) + pad))
     {
       /* The buffer is too small.  */
     too_small:

@@ -471,7 +471,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    bool malloc_namebuf = false;
 	    char *namebuf = (char *) name;
 
-	    if (__builtin_expect (scope_delim != NULL, 0))
+	    if (__glibc_unlikely (scope_delim != NULL))
 	      {
 		if (malloc_name)
 		  *scope_delim = '\0';
@@ -2608,7 +2608,7 @@ getaddrinfo (const char *name, const char *service,
 	 the information.  */
       struct sort_result_combo src
 	= { .results = results, .nresults = nresults };
-      if (__builtin_expect (gaiconf_reload_flag_ever_set, 0))
+      if (__glibc_unlikely (gaiconf_reload_flag_ever_set))
 	{
 	  __libc_lock_define_initialized (static, lock);
 

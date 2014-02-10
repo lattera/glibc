@@ -30,16 +30,16 @@ __cexpf (__complex__ float x)
   int rcls = fpclassify (__real__ x);
   int icls = fpclassify (__imag__ x);
 
-  if (__builtin_expect (rcls >= FP_ZERO, 1))
+  if (__glibc_likely (rcls >= FP_ZERO))
     {
       /* Real part is finite.  */
-      if (__builtin_expect (icls >= FP_ZERO, 1))
+      if (__glibc_likely (icls >= FP_ZERO))
 	{
 	  /* Imaginary part is finite.  */
 	  const int t = (int) ((FLT_MAX_EXP - 1) * M_LN2);
 	  float sinix, cosix;
 
-	  if (__builtin_expect (icls != FP_SUBNORMAL, 1))
+	  if (__glibc_likely (icls != FP_SUBNORMAL))
 	    {
 	      __sincosf (__imag__ x, &sinix, &cosix);
 	    }
@@ -97,10 +97,10 @@ __cexpf (__complex__ float x)
 	  feraiseexcept (FE_INVALID);
 	}
     }
-  else if (__builtin_expect (rcls == FP_INFINITE, 1))
+  else if (__glibc_likely (rcls == FP_INFINITE))
     {
       /* Real part is infinite.  */
-      if (__builtin_expect (icls >= FP_ZERO, 1))
+      if (__glibc_likely (icls >= FP_ZERO))
 	{
 	  /* Imaginary part is finite.  */
 	  float value = signbit (__real__ x) ? 0.0 : HUGE_VALF;
@@ -115,7 +115,7 @@ __cexpf (__complex__ float x)
 	    {
 	      float sinix, cosix;
 
-	      if (__builtin_expect (icls != FP_SUBNORMAL, 1))
+	      if (__glibc_likely (icls != FP_SUBNORMAL))
 		{
 		  __sincosf (__imag__ x, &sinix, &cosix);
 		}

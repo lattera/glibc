@@ -89,7 +89,7 @@ _IO_getdelim (lineptr, n, delimiter, fp)
       t = (char *) memchr ((void *) fp->_IO_read_ptr, delimiter, len);
       if (t != NULL)
 	len = (t - fp->_IO_read_ptr) + 1;
-      if (__builtin_expect (len >= SSIZE_MAX - cur_len, 0))
+      if (__glibc_unlikely (len >= SSIZE_MAX - cur_len))
 	{
 	  __set_errno (EOVERFLOW);
 	  result = -1;

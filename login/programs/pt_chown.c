@@ -170,7 +170,7 @@ main (int argc, char *argv[])
 
 	  cap_free (caps);
 
-	  if (__builtin_expect (res != 0, 0))
+	  if (__glibc_unlikely (res != 0))
 	    return FAIL_EXEC;
 	}
 #endif

@@ -28,7 +28,7 @@ __ctanhf (__complex__ float x)
 {
   __complex__ float res;
 
-  if (__builtin_expect (!isfinite (__real__ x) || !isfinite (__imag__ x), 0))
+  if (__glibc_unlikely (!isfinite (__real__ x) || !isfinite (__imag__ x)))
     {
       if (__isinf_nsf (__real__ x))
 	{
@@ -57,7 +57,7 @@ __ctanhf (__complex__ float x)
       /* tanh(x+iy) = (sinh(2x) + i*sin(2y))/(cosh(2x) + cos(2y))
 	 = (sinh(x)*cosh(x) + i*sin(y)*cos(y))/(sinh(x)^2 + cos(y)^2).  */
 
-      if (__builtin_expect (fpclassify(__imag__ x) != FP_SUBNORMAL, 1))
+      if (__glibc_likely (fpclassify(__imag__ x) != FP_SUBNORMAL))
 	{
 	  __sincosf (__imag__ x, &sinix, &cosix);
 	}

@@ -177,7 +177,7 @@ elf_machine_runtime_setup (struct link_map *map,
       extern void _dl_runtime_resolve (void);
       extern void _dl_prof_resolve (void);
 
-      if (__builtin_expect (!profile, 1))
+      if (__glibc_likely (!profile))
 	dlrr = _dl_runtime_resolve;
       else
 	{
@@ -287,7 +287,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       return;
     }
 
-  if (__builtin_expect (r_type == R_PPC_NONE, 0))
+  if (__glibc_unlikely (r_type == R_PPC_NONE))
     return;
 
   /* binutils on ppc32 includes st_value in r_addend for relocations

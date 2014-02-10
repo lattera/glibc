@@ -190,7 +190,7 @@ option_alloc (struct cmsghdr *cmsg, int datalen, int multx, int plusy)
   int dsize = cmsg->cmsg_len - CMSG_LEN (0);
 
   /* The first two bytes of the option are for the extended header.  */
-  if (__builtin_expect (dsize == 0, 0))
+  if (__glibc_unlikely (dsize == 0))
     {
       cmsg->cmsg_len += sizeof (struct ip6_ext);
       dsize = sizeof (struct ip6_ext);

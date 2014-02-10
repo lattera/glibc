@@ -53,7 +53,7 @@ int
 recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
 	  const struct timespec *tmo)
 {
-  if (__builtin_expect (have_recvmmsg >= 0, 1))
+  if (__glibc_likely (have_recvmmsg >= 0))
     {
       int ret = __internal_recvmmsg (fd, vmessages, vlen, flags, tmo);
       /* The kernel returns -EINVAL for unknown socket operations.

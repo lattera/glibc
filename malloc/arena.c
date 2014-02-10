@@ -376,7 +376,7 @@ ptmalloc_init (void)
   tsd_setspecific (arena_key, (void *) &main_arena);
   thread_atfork (ptmalloc_lock_all, ptmalloc_unlock_all, ptmalloc_unlock_all2);
   const char *s = NULL;
-  if (__builtin_expect (_environ != NULL, 1))
+  if (__glibc_likely (_environ != NULL))
     {
       char **runp = _environ;
       char *envline;
@@ -624,7 +624,7 @@ shrink_heap (heap_info *h, long diff)
 
   /* Try to re-map the extra heap space freshly to save memory, and make it
      inaccessible.  See malloc-sysdep.h to know when this is true.  */
-  if (__builtin_expect (check_may_shrink_heap (), 0))
+  if (__glibc_unlikely (check_may_shrink_heap ()))
     {
       if ((char *) MMAP ((char *) h + new_size, diff, PROT_NONE,
                          MAP_FIXED) == (char *) MAP_FAILED)
@@ -863,12 +863,12 @@ arena_get2 (mstate a_tsd, size_t size, mstate avoid_arena)
          narenas_limit is 0.  There is no possibility for narenas to
          be too big for the test to always fail since there is not
          enough address space to create that many arenas.  */
-      if (__builtin_expect (n <= narenas_limit - 1, 0))
+      if (__glibc_unlikely (n <= narenas_limit - 1))
         {
           if (catomic_compare_and_exchange_bool_acq (&narenas, n + 1, n))
             goto repeat;
           a = _int_new_arena (size);
-          if (__builtin_expect (a == NULL, 0))
+	  if (__glibc_unlikely (a == NULL))
             catomic_decrement (&narenas);
         }
       else

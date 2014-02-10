@@ -174,7 +174,7 @@ __fma (double x, double y, double z)
     }
 
   /* Ensure correct sign of exact 0 + 0.  */
-  if (__builtin_expect ((x == 0 || y == 0) && z == 0, 0))
+  if (__glibc_unlikely ((x == 0 || y == 0) && z == 0))
     return x * y + z;
 
   fenv_t env;
@@ -216,7 +216,7 @@ __fma (double x, double y, double z)
   /* Perform m2 + a2 addition with round to odd.  */
   u.d = a2 + m2;
 
-  if (__builtin_expect (adjust < 0, 0))
+  if (__glibc_unlikely (adjust < 0))
     {
       if ((u.ieee.mantissa1 & 1) == 0)
 	u.ieee.mantissa1 |= libc_fetestexcept (FE_INEXACT) != 0;
@@ -228,14 +228,14 @@ __fma (double x, double y, double z)
   /* Reset rounding mode and test for inexact simultaneously.  */
   int j = libc_feupdateenv_test (&env, FE_INEXACT) != 0;
 
-  if (__builtin_expect (adjust == 0, 1))
+  if (__glibc_likely (adjust == 0))
     {
       if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7ff)
 	u.ieee.mantissa1 |= j;
       /* Result is a1 + u.d.  */
       return a1 + u.d;
     }
-  else if (__builtin_expect (adjust > 0, 1))
+  else if (__glibc_likely (adjust > 0))
     {
       if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7ff)
 	u.ieee.mantissa1 |= j;

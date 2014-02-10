@@ -27,10 +27,10 @@ static inline __attribute__((always_inline)) pid_t really_getpid (pid_t oldval);
 static inline __attribute__((always_inline)) pid_t
 really_getpid (pid_t oldval)
 {
-  if (__builtin_expect (oldval == 0, 1))
+  if (__glibc_likely (oldval == 0))
     {
       pid_t selftid = THREAD_GETMEM (THREAD_SELF, tid);
-      if (__builtin_expect (selftid != 0, 1))
+      if (__glibc_likely (selftid != 0))
 	return selftid;
     }
 
@@ -53,7 +53,7 @@ __getpid (void)
   pid_t result = INTERNAL_SYSCALL (getpid, err, 0);
 #else
   pid_t result = THREAD_GETMEM (THREAD_SELF, pid);
-  if (__builtin_expect (result <= 0, 0))
+  if (__glibc_unlikely (result <= 0))
     result = really_getpid (result);
 #endif
   return result;

@@ -84,7 +84,7 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
   if (fd != AT_FDCWD && file[0] != '/')
     {
       size_t filelen = strlen (file);
-      if (__builtin_expect (filelen == 0, 0))
+      if (__glibc_unlikely (filelen == 0))
 	{
 	  __set_errno (ENOENT);
 	  return -1;
@@ -114,7 +114,7 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 	result = INTERNAL_SYSCALL (stat, err, 2, file,
 				   (struct kernel_stat *) st);
 
-      if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
+      if (__glibc_likely (!INTERNAL_SYSCALL_ERROR_P (result, err)))
 	return result;
     }
 #ifdef STAT_IS_KERNEL_STAT
@@ -129,7 +129,7 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
   else
     result = INTERNAL_SYSCALL (stat, err, 2, file, &kst);
 
-  if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
+  if (__glibc_likely (!INTERNAL_SYSCALL_ERROR_P (result, err)))
     return __xstat_conv (vers, &kst, st);
 #endif
 

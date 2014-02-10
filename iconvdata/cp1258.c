@@ -66,7 +66,7 @@
     {									      \
       if (FROM_DIRECTION)						      \
 	{								      \
-	  if (__builtin_expect (outbuf + 4 <= outend, 1))		      \
+	  if (__glibc_likely (outbuf + 4 <= outend))			      \
 	    {								      \
 	      /* Write out the last character.  */			      \
 	      *((uint32_t *) outbuf) = data->__statep->__count >> 3;	      \
@@ -375,7 +375,7 @@ static const struct
     if (ch >= 0x80)							      \
       {									      \
 	ch = to_ucs4[ch - 0x80];					      \
-	if (__builtin_expect (ch == L'\0', 0))				      \
+	if (__glibc_unlikely (ch == L'\0'))				      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
 	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
@@ -802,7 +802,7 @@ static const struct
 	    res = 0;							      \
 	  }								      \
 									      \
-	if (__builtin_expect (res != 0, 1))				      \
+	if (__glibc_likely (res != 0))					      \
 	  {								      \
 	    *outptr++ = res;						      \
 	    inptr += 4;							      \
@@ -845,7 +845,7 @@ static const struct
 		  }							      \
 									      \
 		/* See whether we have room for two bytes.  */		      \
-		if (__builtin_expect (outptr + 1 >= outend, 0))		      \
+		if (__glibc_unlikely (outptr + 1 >= outend))		      \
 		  {							      \
 		    result = __GCONV_FULL_OUTPUT;			      \
 		    break;						      \

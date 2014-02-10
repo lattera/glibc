@@ -159,7 +159,7 @@ getgrouplist (const char *user, gid_t group, gid_t *groups, int *ngroups)
   long int size = MAX (1, *ngroups);
 
   gid_t *newgroups = (gid_t *) malloc (size * sizeof (gid_t));
-  if (__builtin_expect (newgroups == NULL, 0))
+  if (__glibc_unlikely (newgroups == NULL))
     /* No more memory.  */
     // XXX This is wrong.  The user provided memory, we have to use
     // XXX it.  The internal functions must be called with the user
@@ -212,7 +212,7 @@ initgroups (const char *user, gid_t group)
     size = 16;
 
   groups = (gid_t *) malloc (size * sizeof (gid_t));
-  if (__builtin_expect (groups == NULL, 0))
+  if (__glibc_unlikely (groups == NULL))
     /* No more memory.  */
     return -1;
 

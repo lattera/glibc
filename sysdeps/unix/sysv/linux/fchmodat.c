@@ -70,7 +70,7 @@ fchmodat (fd, file, mode, flag)
   if (fd != AT_FDCWD && file[0] != '/')
     {
       size_t filelen = strlen (file);
-      if (__builtin_expect (filelen == 0, 0))
+      if (__glibc_unlikely (filelen == 0))
 	{
 	  __set_errno (ENOENT);
 	  return -1;
@@ -100,7 +100,7 @@ fchmodat (fd, file, mode, flag)
 # endif
     result = INTERNAL_SYSCALL (chmod, err, 2, file, mode);
 
-  if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
+  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
     {
       __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
       result = -1;

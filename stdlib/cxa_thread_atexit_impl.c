@@ -52,7 +52,7 @@ __cxa_thread_atexit_impl (dtor_func func, void *obj, void *dso_symbol)
   /* See if we already encountered the DSO.  */
   __rtld_lock_lock_recursive (GL(dl_load_lock));
 
-  if (__builtin_expect (dso_symbol_cache != dso_symbol, 0))
+  if (__glibc_unlikely (dso_symbol_cache != dso_symbol))
     {
       ElfW(Addr) caller = (ElfW(Addr)) dso_symbol;
 

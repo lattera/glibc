@@ -184,16 +184,16 @@ __tzset_parse_tz (tz)
     {
       /* Check for the quoted version.  */
       char *wp = tzbuf;
-      if (__builtin_expect (*tz++ != '<', 0))
+      if (__glibc_unlikely (*tz++ != '<'))
 	goto out;
 
       while (isalnum (*tz) || *tz == '+' || *tz == '-')
 	*wp++ = *tz++;
-      if (__builtin_expect (*tz++ != '>' || wp - tzbuf < 3, 0))
+      if (__glibc_unlikely (*tz++ != '>' || wp - tzbuf < 3))
 	goto out;
       *wp = '\0';
     }
-  else if (__builtin_expect (consumed < 3, 0))
+  else if (__glibc_unlikely (consumed < 3))
     goto out;
   else
     tz += consumed;
@@ -232,19 +232,19 @@ __tzset_parse_tz (tz)
 	  /* Check for the quoted version.  */
 	  char *wp = tzbuf;
 	  const char *rp = tz;
-	  if (__builtin_expect (*rp++ != '<', 0))
+	  if (__glibc_unlikely (*rp++ != '<'))
 	    /* Punt on name, set up the offsets.  */
 	    goto done_names;
 
 	  while (isalnum (*rp) || *rp == '+' || *rp == '-')
 	    *wp++ = *rp++;
-	  if (__builtin_expect (*rp++ != '>' || wp - tzbuf < 3, 0))
+	  if (__glibc_unlikely (*rp++ != '>' || wp - tzbuf < 3))
 	    /* Punt on name, set up the offsets.  */
 	    goto done_names;
 	  *wp = '\0';
 	  tz = rp;
 	}
-      else if (__builtin_expect (consumed < 3, 0))
+      else if (__glibc_unlikely (consumed < 3))
 	/* Punt on name, set up the offsets.  */
 	goto done_names;
       else

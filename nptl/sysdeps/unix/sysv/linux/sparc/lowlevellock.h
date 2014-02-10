@@ -223,7 +223,7 @@ __lll_lock (int *futex, int private)
 {
   int val = atomic_compare_and_exchange_val_24_acq (futex, 1, 0);
 
-  if (__builtin_expect (val != 0, 0))
+  if (__glibc_unlikely (val != 0))
     {
       if (__builtin_constant_p (private) && private == LLL_PRIVATE)
 	__lll_lock_wait_private (futex);
@@ -251,7 +251,7 @@ __lll_cond_lock (int *futex, int private)
 {
   int val = atomic_compare_and_exchange_val_24_acq (futex, 2, 0);
 
-  if (__builtin_expect (val != 0, 0))
+  if (__glibc_unlikely (val != 0))
     __lll_lock_wait (futex, private);
 }
 #define lll_cond_lock(futex, private) __lll_cond_lock (&(futex), private)
@@ -272,7 +272,7 @@ __lll_timedlock (int *futex, const struct timespec *abstime, int private)
   int val = atomic_compare_and_exchange_val_24_acq (futex, 1, 0);
   int result = 0;
 
-  if (__builtin_expect (val != 0, 0))
+  if (__glibc_unlikely (val != 0))
     result = __lll_timedlock_wait (futex, abstime, private);
   return result;
 }
@@ -296,7 +296,7 @@ __lll_robust_timedlock (int *futex, const struct timespec *abstime,
   ((void) ({								      \
     int *__futex = &(lock);						      \
     int __val = atomic_exchange_24_rel (__futex, 0);			      \
-    if (__builtin_expect (__val > 1, 0))				      \
+    if (__glibc_unlikely (__val > 1))					      \
       lll_futex_wake (__futex, 1, private);				      \
   }))
 
@@ -304,7 +304,7 @@ __lll_robust_timedlock (int *futex, const struct timespec *abstime,
   ((void) ({								      \
     int *__futex = &(lock);						      \
     int __val = atomic_exchange_rel (__futex, 0);			      \
-    if (__builtin_expect (__val & FUTEX_WAITERS, 0))			      \
+    if (__glibc_unlikely (__val & FUTEX_WAITERS))			      \
       lll_futex_wake (__futex, 1, private);				      \
   }))
 

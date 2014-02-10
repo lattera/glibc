@@ -81,7 +81,7 @@ __ieee754_jnl (int n, long double x)
   ix = se & 0x7fff;
 
   /* if J(n,NaN) is NaN */
-  if (__builtin_expect ((ix == 0x7fff) && ((i0 & 0x7fffffff) != 0), 0))
+  if (__glibc_unlikely ((ix == 0x7fff) && ((i0 & 0x7fffffff) != 0)))
     return x + x;
   if (n < 0)
     {
@@ -95,7 +95,7 @@ __ieee754_jnl (int n, long double x)
     return (__ieee754_j1l (x));
   sgn = (n & 1) & (se >> 15);	/* even n -- 0, odd n -- sign(x) */
   x = fabsl (x);
-  if (__builtin_expect ((ix | i0 | i1) == 0 || ix >= 0x7fff, 0))
+  if (__glibc_unlikely ((ix | i0 | i1) == 0 || ix >= 0x7fff))
     /* if x is 0 or inf */
     b = zero;
   else if ((long double) n <= x)
@@ -316,7 +316,7 @@ __ieee754_ynl (int n, long double x)
     return (__ieee754_y0l (x));
   if (n == 1)
     return (sign * __ieee754_y1l (x));
-  if (__builtin_expect (ix == 0x7fff, 0))
+  if (__glibc_unlikely (ix == 0x7fff))
     return zero;
   if (ix >= 0x412D)
     {				/* x > 2**302 */

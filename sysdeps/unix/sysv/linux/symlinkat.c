@@ -56,7 +56,7 @@ symlinkat (from, tofd, to)
   if (tofd != AT_FDCWD && to[0] != '/')
     {
       size_t tolen = strlen (to);
-      if (__builtin_expect (tolen == 0, 0))
+      if (__glibc_unlikely (tolen == 0))
 	{
 	  __set_errno (ENOENT);
 	  return -1;
@@ -81,7 +81,7 @@ symlinkat (from, tofd, to)
 
   result = INTERNAL_SYSCALL (symlink, err, 2, from, to);
 
-  if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
+  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
     {
       __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), tofd, buf);
       result = -1;

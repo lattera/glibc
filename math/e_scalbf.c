@@ -40,9 +40,9 @@ invalid_fn (float x, float fn)
 float
 __ieee754_scalbf (float x, float fn)
 {
-  if (__builtin_expect (__isnanf (x), 0))
+  if (__glibc_unlikely (__isnanf (x)))
     return x * fn;
-  if (__builtin_expect (!__finitef (fn), 0))
+  if (__glibc_unlikely (!__finitef (fn)))
     {
       if (__isnanf (fn) || fn > 0.0f)
 	return x * fn;
@@ -50,7 +50,7 @@ __ieee754_scalbf (float x, float fn)
 	return x;
       return x / -fn;
     }
-  if (__builtin_expect ((float) (int) fn != fn, 0))
+  if (__glibc_unlikely ((float) (int) fn != fn))
     return invalid_fn (x, fn);
 
   return __scalbnf (x, (int) fn);

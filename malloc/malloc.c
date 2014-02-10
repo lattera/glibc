@@ -3368,7 +3368,7 @@ _int_malloc (mstate av, size_t bytes)
           else
             {
               bck = victim->bk;
-              if (__builtin_expect (bck->fd != victim, 0))
+	if (__glibc_unlikely (bck->fd != victim))
                 {
                   errstr = "malloc(): smallbin double linked list corrupted";
                   goto errout;
@@ -3591,7 +3591,7 @@ _int_malloc (mstate av, size_t bytes)
                      have to perform a complete insert here.  */
                   bck = unsorted_chunks (av);
                   fwd = bck->fd;
-                  if (__builtin_expect (fwd->bk != bck, 0))
+	  if (__glibc_unlikely (fwd->bk != bck))
                     {
                       errstr = "malloc(): corrupted unsorted chunks";
                       goto errout;
@@ -3698,7 +3698,7 @@ _int_malloc (mstate av, size_t bytes)
                      have to perform a complete insert here.  */
                   bck = unsorted_chunks (av);
                   fwd = bck->fd;
-                  if (__builtin_expect (fwd->bk != bck, 0))
+	  if (__glibc_unlikely (fwd->bk != bck))
                     {
                       errstr = "malloc(): corrupted unsorted chunks 2";
                       goto errout;
@@ -3824,7 +3824,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
     }
   /* We know that each chunk is at least MINSIZE bytes in size or a
      multiple of MALLOC_ALIGNMENT.  */
-  if (__builtin_expect (size < MINSIZE || !aligned_OK (size), 0))
+  if (__glibc_unlikely (size < MINSIZE || !aligned_OK (size)))
     {
       errstr = "free(): invalid size";
       goto errout;
@@ -3922,7 +3922,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 
     /* Lightweight tests: check whether the block is already the
        top block.  */
-    if (__builtin_expect (p == av->top, 0))
+    if (__glibc_unlikely (p == av->top))
       {
 	errstr = "double free or corruption (top)";
 	goto errout;
@@ -3936,7 +3936,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 	goto errout;
       }
     /* Or whether the block is actually not marked used.  */
-    if (__builtin_expect (!prev_inuse(nextchunk), 0))
+    if (__glibc_unlikely (!prev_inuse(nextchunk)))
       {
 	errstr = "double free or corruption (!prev)";
 	goto errout;
@@ -3979,7 +3979,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 
       bck = unsorted_chunks(av);
       fwd = bck->fd;
-      if (__builtin_expect (fwd->bk != bck, 0))
+      if (__glibc_unlikely (fwd->bk != bck))
 	{
 	  errstr = "free(): corrupted unsorted chunks";
 	  goto errout;

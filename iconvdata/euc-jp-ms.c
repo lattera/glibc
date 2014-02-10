@@ -4673,7 +4673,7 @@ static const unsigned char from_ucs4_extra[229][2] =
 	   character is also available.  */				      \
 	unsigned char ch2;						      \
 									      \
-	if (__builtin_expect (inptr + 1 >= inend, 0))			      \
+	if (__glibc_unlikely (inptr + 1 >= inend))			      \
 	  {								      \
 	    /* The second character is not available.  Store the	      \
 	       intermediate result.  */					      \
@@ -4684,7 +4684,7 @@ static const unsigned char from_ucs4_extra[229][2] =
 	ch2 = (unsigned char)inptr[1];					      \
 									      \
 	/* All second bytes of a multibyte character must be >= 0xa1. */      \
-	if (__builtin_expect (ch2 < 0xa1, 0))				      \
+	if (__glibc_unlikely (ch2 < 0xa1))				      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
 	    if (! ignore_errors_p ())					      \
@@ -4703,7 +4703,7 @@ static const unsigned char from_ucs4_extra[229][2] =
 	    /* This is code set 2: half-width katakana.  */		      \
 	    ch = jisx0201_to_ucs4 (ch2);				      \
 	    /*if (__builtin_expect (ch, 0) == __UNKNOWN_10646_CHAR)*/	      \
-	    if (__builtin_expect (ch == __UNKNOWN_10646_CHAR, 0))	      \
+	    if (__glibc_unlikely (ch == __UNKNOWN_10646_CHAR))		      \
 	      {								      \
 		/* Illegal character.  */				      \
 		if (! ignore_errors_p ())				      \
@@ -4896,15 +4896,15 @@ static const unsigned char from_ucs4_extra[229][2] =
 	/* Now test for a possible second byte and write this if possible.  */\
 	if (cp[1] != '\0')						      \
 	  {								      \
-	    if (__builtin_expect (outptr + 1 >= outend, 0))		      \
+	    if (__glibc_unlikely (outptr + 1 >= outend))		      \
 	      {								      \
 		/* The result does not fit into the buffer.  */		      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
-	    if (__builtin_expect (cp[1] < 0x80, 0))			      \
+	    if (__glibc_unlikely (cp[1] < 0x80))			      \
 	      {								      \
-		if (__builtin_expect (outptr + 2 >= outend, 0))		      \
+		if (__glibc_unlikely (outptr + 2 >= outend))		      \
 		  {							      \
 		    /* The result does not fit into the buffer.  */	      \
 		    result = __GCONV_FULL_OUTPUT;			      \

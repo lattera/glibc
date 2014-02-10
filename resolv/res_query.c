@@ -202,7 +202,7 @@ __libc_res_nquery(res_state statp,
 			goto again;
 		}
 	}
-	if (__builtin_expect (n <= 0, 0)) {
+	if (__glibc_unlikely (n <= 0))       {
 		/* If the query choked with EDNS0, retry without EDNS0.  */
 		if ((statp->options & (RES_USE_EDNS0|RES_USE_DNSSEC)) != 0
 		    && ((oflags ^ statp->_flags) & RES_F_EDNS0ERR) != 0) {

@@ -114,7 +114,7 @@ __ieee754_j1l (long double x)
 
   GET_LDOUBLE_EXP (se, x);
   ix = se & 0x7fff;
-  if (__builtin_expect (ix >= 0x7fff, 0))
+  if (__glibc_unlikely (ix >= 0x7fff))
     return one / x;
   y = fabsl (x);
   if (ix >= 0x4000)
@@ -134,7 +134,7 @@ __ieee754_j1l (long double x)
        * j1(x) = 1/sqrt(pi) * (P(1,x)*cc - Q(1,x)*ss) / sqrt(x)
        * y1(x) = 1/sqrt(pi) * (P(1,x)*ss + Q(1,x)*cc) / sqrt(x)
        */
-      if (__builtin_expect (ix > 0x4080, 0))
+      if (__glibc_unlikely (ix > 0x4080))
 	z = (invsqrtpi * cc) / __ieee754_sqrtl (y);
       else
 	{
@@ -147,7 +147,7 @@ __ieee754_j1l (long double x)
       else
 	return z;
     }
-  if (__builtin_expect (ix < 0x3fde, 0)) /* |x| < 2^-33 */
+  if (__glibc_unlikely (ix < 0x3fde))       /* |x| < 2^-33 */
     {
       if (huge + x > one)
 	return 0.5 * x;		/* inexact if x!=0 necessary */
@@ -192,11 +192,11 @@ __ieee754_y1l (long double x)
   GET_LDOUBLE_WORDS (se, i0, i1, x);
   ix = se & 0x7fff;
   /* if Y1(NaN) is NaN, Y1(-inf) is NaN, Y1(inf) is 0 */
-  if (__builtin_expect (se & 0x8000, 0))
+  if (__glibc_unlikely (se & 0x8000))
     return zero / (zero * x);
-  if (__builtin_expect (ix >= 0x7fff, 0))
+  if (__glibc_unlikely (ix >= 0x7fff))
     return one / (x + x * x);
-  if (__builtin_expect ((i0 | i1) == 0, 0))
+  if (__glibc_unlikely ((i0 | i1) == 0))
     return -HUGE_VALL + x;  /* -inf and overflow exception.  */
   if (ix >= 0x4000)
     {				/* |x| >= 2.0 */
@@ -222,7 +222,7 @@ __ieee754_y1l (long double x)
        *              sin(x) +- cos(x) = -cos(2x)/(sin(x) -+ cos(x))
        * to compute the worse one.
        */
-      if (__builtin_expect (ix > 0x4080, 0))
+      if (__glibc_unlikely (ix > 0x4080))
 	z = (invsqrtpi * ss) / __ieee754_sqrtl (x);
       else
 	{
@@ -232,7 +232,7 @@ __ieee754_y1l (long double x)
 	}
       return z;
     }
-  if (__builtin_expect (ix <= 0x3fbe, 0))
+  if (__glibc_unlikely (ix <= 0x3fbe))
     {				/* x < 2**-65 */
       return (-tpi / x);
     }

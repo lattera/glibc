@@ -44,7 +44,7 @@
   int swap;								      \
   if (FROM_DIRECTION && var == UTF_32)					      \
     {									      \
-      if (__builtin_expect (data->__invocation_counter == 0, 0))	      \
+      if (__glibc_unlikely (data->__invocation_counter == 0))		      \
 	{								      \
 	  /* We have to find out which byte order the file is encoded in.  */ \
 	  if (inptr + 4 > inend)					      \
@@ -65,7 +65,7 @@
 	   && data->__invocation_counter == 0)				      \
     {									      \
       /* Emit the Byte Order Mark.  */					      \
-      if (__builtin_expect (outbuf + 4 > outend, 0))			      \
+      if (__glibc_unlikely (outbuf + 4 > outend))			      \
 	return __GCONV_FULL_OUTPUT;					      \
 									      \
       put32u (outbuf, BOM);						      \
@@ -196,11 +196,11 @@ gconv_end (struct __gconv_step *data)
   {									      \
     uint32_t c = get32 (inptr);						      \
 									      \
-    if (__builtin_expect (c >= 0x110000, 0))				      \
+    if (__glibc_unlikely (c >= 0x110000))				      \
       {									      \
 	STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
       }									      \
-    else if (__builtin_expect (c >= 0xd800 && c < 0xe000, 0))		      \
+    else if (__glibc_unlikely (c >= 0xd800 && c < 0xe000))		      \
       {									      \
 	/* Surrogate characters in UCS-4 input are not valid.		      \
 	   We must catch this.  If we let surrogates pass through,	      \
@@ -238,7 +238,7 @@ gconv_end (struct __gconv_step *data)
     if (swap)								      \
       u1 = bswap_32 (u1);						      \
 									      \
-    if (__builtin_expect (u1 >= 0x110000, 0))				      \
+    if (__glibc_unlikely (u1 >= 0x110000))				      \
       {									      \
 	/* This is illegal.  */						      \
 	STANDARD_FROM_LOOP_ERR_HANDLER (4);				      \

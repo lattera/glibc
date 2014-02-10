@@ -264,7 +264,7 @@ _nss_nisplus_gethostton_r (const char *name, struct etherent *eth,
       return NSS_STATUS_TRYAGAIN;
     }
 
-  if (__builtin_expect (niserr2nss (result->status) != NSS_STATUS_SUCCESS, 0))
+  if (__glibc_unlikely (niserr2nss (result->status) != NSS_STATUS_SUCCESS))
     {
       enum nss_status status = niserr2nss (result->status);
       nis_freeresult (result);
@@ -277,7 +277,7 @@ _nss_nisplus_gethostton_r (const char *name, struct etherent *eth,
   /* We do not need the lookup result anymore.  */
   nis_freeresult (result);
 
-  if (__builtin_expect (parse_res < 1, 0))
+  if (__glibc_unlikely (parse_res < 1))
     {
       __set_errno (olderr);
 
@@ -331,7 +331,7 @@ _nss_nisplus_getntohost_r (const struct ether_addr *addr, struct etherent *eth,
       return NSS_STATUS_TRYAGAIN;
     }
 
-  if (__builtin_expect (niserr2nss (result->status) != NSS_STATUS_SUCCESS, 0))
+  if (__glibc_unlikely (niserr2nss (result->status) != NSS_STATUS_SUCCESS))
     {
       enum nss_status status = niserr2nss (result->status);
       nis_freeresult (result);
@@ -344,7 +344,7 @@ _nss_nisplus_getntohost_r (const struct ether_addr *addr, struct etherent *eth,
   /* We do not need the lookup result anymore.  */
   nis_freeresult (result);
 
-  if (__builtin_expect (parse_res < 1, 0))
+  if (__glibc_unlikely (parse_res < 1))
     {
       if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;

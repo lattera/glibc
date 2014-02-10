@@ -452,7 +452,7 @@ addgrbyX (struct database_dyn *db, int fd, request_header *req,
   bool use_malloc = false;
   int errval = 0;
 
-  if (__builtin_expect (debug_level > 0, 0))
+  if (__glibc_unlikely (debug_level > 0))
     {
       if (he == NULL)
 	dbg_log (_("Haven't found \"%s\" in group cache!"), keystr);
@@ -465,7 +465,7 @@ addgrbyX (struct database_dyn *db, int fd, request_header *req,
     {
       errno = 0;
 
-      if (__builtin_expect (buflen > 32768, 0))
+      if (__glibc_unlikely (buflen > 32768))
 	{
 	  char *old_buffer = buffer;
 	  buflen *= 2;

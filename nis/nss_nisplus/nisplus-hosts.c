@@ -439,7 +439,7 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
     }
 
   int retval = niserr2nss (result->status);
-  if (__builtin_expect (retval != NSS_STATUS_SUCCESS, 0))
+  if (__glibc_unlikely (retval != NSS_STATUS_SUCCESS))
     {
       if (retval == NSS_STATUS_TRYAGAIN)
 	{
@@ -543,7 +543,7 @@ _nss_nisplus_gethostbyaddr_r (const void *addr, socklen_t addrlen, int af,
     }
 
   retval = niserr2nss (result->status);
-  if (__builtin_expect (retval != NSS_STATUS_SUCCESS, 0))
+  if (__glibc_unlikely (retval != NSS_STATUS_SUCCESS))
     {
       if (retval == NSS_STATUS_TRYAGAIN)
 	{
@@ -587,7 +587,7 @@ _nss_nisplus_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
   enum nss_status status = internal_gethostbyname2_r (name, AF_UNSPEC, &host,
 						      buffer, buflen,
 						      errnop, herrnop, 0);
-  if (__builtin_expect (status == NSS_STATUS_SUCCESS, 1))
+  if (__glibc_likely (status == NSS_STATUS_SUCCESS))
     {
       if (*pat == NULL)
 	{
@@ -596,7 +596,7 @@ _nss_nisplus_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
 	  buffer += pad;
 	  buflen = buflen > pad ? buflen - pad : 0;
 
-	  if (__builtin_expect (buflen < sizeof (struct gaih_addrtuple), 0))
+	  if (__glibc_unlikely (buflen < sizeof (struct gaih_addrtuple)))
 	    {
 	      free (result);
 	      *errnop = ERANGE;

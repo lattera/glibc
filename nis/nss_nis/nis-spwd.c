@@ -71,7 +71,7 @@ internal_nis_getspent_r (struct spwd *sp, char *buffer, size_t buflen,
 			 int *errnop)
 {
   char *domain;
-  if (__builtin_expect (yp_get_default_domain (&domain), 0))
+  if (__glibc_unlikely (yp_get_default_domain (&domain)))
     return NSS_STATUS_UNAVAIL;
 
   /* Get the next entry until we found a correct one. */
@@ -102,7 +102,7 @@ internal_nis_getspent_r (struct spwd *sp, char *buffer, size_t buflen,
 				  ? "passwd.adjunct.byname" : "shadow.byname"),
 			 oldkey, oldkeylen, &outkey, &keylen, &result, &len);
 
-      if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
+      if (__glibc_unlikely (yperr != YPERR_SUCCESS))
 	{
 	  enum nss_status retval = yperr2nss (yperr);
 
@@ -177,7 +177,7 @@ _nss_nis_getspnam_r (const char *name, struct spwd *sp,
   const size_t name_len = strlen (name);
 
   char *domain;
-  if (__builtin_expect (yp_get_default_domain (&domain), 0))
+  if (__glibc_unlikely (yp_get_default_domain (&domain)))
     return NSS_STATUS_UNAVAIL;
 
   bool adjunct_used = false;
@@ -194,7 +194,7 @@ _nss_nis_getspnam_r (const char *name, struct spwd *sp,
       adjunct_used = true;
     }
 
-  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
+  if (__glibc_unlikely (yperr != YPERR_SUCCESS))
     {
       enum nss_status retval = yperr2nss (yperr);
 
@@ -203,7 +203,7 @@ _nss_nis_getspnam_r (const char *name, struct spwd *sp,
       return retval;
     }
 
-  if (__builtin_expect ((size_t) (len + (adjunct_used ? 3 : 1)) > buflen, 0))
+  if (__glibc_unlikely ((size_t) (len + (adjunct_used ? 3 : 1)) > buflen))
     {
       free (result);
       *errnop = ERANGE;
@@ -224,7 +224,7 @@ _nss_nis_getspnam_r (const char *name, struct spwd *sp,
 
   int parse_res = _nss_files_parse_spent (p, sp, (void *) buffer, buflen,
 					  errnop);
-  if (__builtin_expect (parse_res < 1, 0))
+  if (__glibc_unlikely (parse_res < 1))
     {
       if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;

@@ -189,7 +189,7 @@ nscd_getserv_r (const char *crit, size_t critlen, const char *proto,
   /* No value found so far.  */
   *result = NULL;
 
-  if (__builtin_expect (serv_resp.found == -1, 0))
+  if (__glibc_unlikely (serv_resp.found == -1))
     {
       /* The daemon does not cache this database.  */
       __nss_not_use_nscd_services = 1;
@@ -300,7 +300,7 @@ nscd_getserv_r (const char *crit, size_t critlen, const char *proto,
 	}
 
       /* See whether this would exceed the buffer capacity.  */
-      if (__builtin_expect (cp > buf + buflen, 0))
+      if (__glibc_unlikely (cp > buf + buflen))
 	{
 	  /* aliases_len array might contain garbage during nscd GC cycle,
 	     retry rather than fail in that case.  */

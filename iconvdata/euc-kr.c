@@ -93,13 +93,13 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 	/* Two-byte character.  First test whether the next byte	      \
 	   is also available.  */					      \
 	ch = ksc5601_to_ucs4 (&inptr, inend - inptr, 0x80);		      \
-	if (__builtin_expect (ch == 0, 0))				      \
+	if (__glibc_unlikely (ch == 0))					      \
 	  {								      \
 	    /* The second byte is not available.  */			      \
 	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
-	if (__builtin_expect (ch == __UNKNOWN_10646_CHAR, 0))		      \
+	if (__glibc_unlikely (ch == __UNKNOWN_10646_CHAR))		      \
 	  /* This is an illegal character.  */				      \
 	  STANDARD_FROM_LOOP_ERR_HANDLER (2);				      \
       }									      \
@@ -144,7 +144,7 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
     /* Now test for a possible second byte and write this if possible.  */    \
     if (cp[1] != '\0')							      \
       {									      \
-	if (__builtin_expect (outptr >= outend, 0))			      \
+	if (__glibc_unlikely (outptr >= outend))			      \
 	  {								      \
 	    /* The result does not fit into the buffer.  */		      \
 	    --outptr;							      \

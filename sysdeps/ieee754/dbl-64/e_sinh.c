@@ -49,7 +49,7 @@ __ieee754_sinh (double x)
   ix = jx & 0x7fffffff;
 
   /* x is INF or NaN */
-  if (__builtin_expect (ix >= 0x7ff00000, 0))
+  if (__glibc_unlikely (ix >= 0x7ff00000))
     return x + x;
 
   h = 0.5;
@@ -58,7 +58,7 @@ __ieee754_sinh (double x)
   /* |x| in [0,22], return sign(x)*0.5*(E+E/(E+1))) */
   if (ix < 0x40360000)                  /* |x|<22 */
     {
-      if (__builtin_expect (ix < 0x3e300000, 0))        /* |x|<2**-28 */
+      if (__glibc_unlikely (ix < 0x3e300000))              /* |x|<2**-28 */
 	if (shuge + x > one)
 	  return x;
       /* sinh(tiny) = tiny with inexact */

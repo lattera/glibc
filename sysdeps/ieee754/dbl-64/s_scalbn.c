@@ -31,7 +31,7 @@ __scalbn (double x, int n)
   int32_t k, hx, lx;
   EXTRACT_WORDS (hx, lx, x);
   k = (hx & 0x7ff00000) >> 20;                  /* extract exponent */
-  if (__builtin_expect (k == 0, 0))             /* 0 or subnormal x */
+  if (__glibc_unlikely (k == 0))                   /* 0 or subnormal x */
     {
       if ((lx | (hx & 0x7fffffff)) == 0)
 	return x;                                  /* +-0 */
@@ -39,16 +39,16 @@ __scalbn (double x, int n)
       GET_HIGH_WORD (hx, x);
       k = ((hx & 0x7ff00000) >> 20) - 54;
     }
-  if (__builtin_expect (k == 0x7ff, 0))
+  if (__glibc_unlikely (k == 0x7ff))
     return x + x;                                       /* NaN or Inf */
-  if (__builtin_expect (n < -50000, 0))
+  if (__glibc_unlikely (n < -50000))
     return tiny * __copysign (tiny, x);   /*underflow*/
-  if (__builtin_expect (n > 50000 || k + n > 0x7fe, 0))
+  if (__glibc_unlikely (n > 50000 || k + n > 0x7fe))
     return huge * __copysign (huge, x);   /* overflow  */
   /* Now k and n are bounded we know that k = k+n does not
      overflow.  */
   k = k + n;
-  if (__builtin_expect (k > 0, 1))              /* normal result */
+  if (__glibc_likely (k > 0))                    /* normal result */
     {
       SET_HIGH_WORD (x, (hx & 0x800fffff) | (k << 20)); return x;
     }

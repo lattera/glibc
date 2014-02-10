@@ -156,7 +156,7 @@ __wcsmbs_load_conv (struct __locale_data *new_category)
 
   /* We should repeat the test since while we waited some other thread
      might have run this function.  */
-  if (__builtin_expect (new_category->private.ctype == NULL, 1))
+  if (__glibc_likely (new_category->private.ctype == NULL))
     {
       /* We must find the real functions.  */
       const char *charset_name;

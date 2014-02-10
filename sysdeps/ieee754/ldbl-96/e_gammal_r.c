@@ -119,19 +119,19 @@ __ieee754_gammal_r (long double x, int *signgamp)
 
   GET_LDOUBLE_WORDS (es, hx, lx, x);
 
-  if (__builtin_expect (((es & 0x7fff) | hx | lx) == 0, 0))
+  if (__glibc_unlikely (((es & 0x7fff) | hx | lx) == 0))
     {
       /* Return value for x == 0 is Inf with divide by zero exception.  */
       *signgamp = 0;
       return 1.0 / x;
     }
-  if (__builtin_expect (es == 0xffffffff && ((hx & 0x7fffffff) | lx) == 0, 0))
+  if (__glibc_unlikely (es == 0xffffffff && ((hx & 0x7fffffff) | lx) == 0))
     {
       /* x == -Inf.  According to ISO this is NaN.  */
       *signgamp = 0;
       return x - x;
     }
-  if (__builtin_expect ((es & 0x7fff) == 0x7fff, 0))
+  if (__glibc_unlikely ((es & 0x7fff) == 0x7fff))
     {
       /* Positive infinity (return positive infinity) or NaN (return
 	 NaN).  */

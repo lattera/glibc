@@ -61,7 +61,7 @@ fchownat (int fd, const char *file, uid_t owner, gid_t group, int flag)
   if (fd != AT_FDCWD && file[0] != '/')
     {
       size_t filelen = strlen (file);
-      if (__builtin_expect (filelen == 0, 0))
+      if (__glibc_unlikely (filelen == 0))
 	{
 	  __set_errno (ENOENT);
 	  return -1;
@@ -89,7 +89,7 @@ fchownat (int fd, const char *file, uid_t owner, gid_t group, int flag)
   else
     result = INTERNAL_SYSCALL (chown32, err, 3, file, owner, group);
 
-  if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
+  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
     {
       __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
       return -1;

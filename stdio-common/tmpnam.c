@@ -38,7 +38,7 @@ tmpnam (char *s)
 			0))
     return NULL;
 
-  if (__builtin_expect (__gen_tempname (tmpbuf, 0, 0, __GT_NOCREATE), 0))
+  if (__glibc_unlikely (__gen_tempname (tmpbuf, 0, 0, __GT_NOCREATE)))
     return NULL;
 
   if (s == NULL)

@@ -33,7 +33,7 @@ unsigned int
 __sleep (unsigned int seconds)
 {
   /* This is not necessary but some buggy programs depend on it.  */
-  if (__builtin_expect (seconds == 0, 0))
+  if (__glibc_unlikely (seconds == 0))
     {
 #ifdef CANCELLATION_P
       CANCELLATION_P (THREAD_SELF);

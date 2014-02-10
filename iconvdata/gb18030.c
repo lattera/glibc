@@ -24212,7 +24212,7 @@ static const unsigned char __ucs_to_gb18030_tab2[][2] =
 									      \
 	      inptr += 4;						      \
 	    }								      \
-	  else if (__builtin_expect (ch2 >= 0x40, 1))			      \
+	  else if (__glibc_likely (ch2 >= 0x40))			      \
 	    {								      \
 	      /* A two-byte character */				      \
 	      idx = (ch - 0x81) * 192 + (ch2 - 0x40);			      \
@@ -24375,7 +24375,7 @@ static const unsigned char __ucs_to_gb18030_tab2[][2] =
 	  {								      \
 	    /* See whether there is enough room for all four bytes we	      \
 	       write.  */						      \
-	    if (__builtin_expect (outptr + 3 >= outend, 0))		      \
+	    if (__glibc_unlikely (outptr + 3 >= outend))		      \
 	      {								      \
 		/* We have not enough room.  */				      \
 		result = __GCONV_FULL_OUTPUT;				      \

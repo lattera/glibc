@@ -83,7 +83,7 @@ ADJTIME (const struct TIMEVAL *itv, struct TIMEVAL *otv)
 #if defined ADJ_OFFSET_SS_READ && !defined __ASSUME_ADJ_OFFSET_SS_READ
  again:
 #endif
-  if (__builtin_expect (ADJTIMEX (&tntx) < 0, 0))
+  if (__glibc_unlikely (ADJTIMEX (&tntx) < 0))
     {
 #if defined ADJ_OFFSET_SS_READ && !defined __ASSUME_ADJ_OFFSET_SS_READ
       if (itv && errno == EINVAL && tntx.modes == ADJ_OFFSET_SS_READ)

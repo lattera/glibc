@@ -31,7 +31,7 @@ __fdopendir (int fd)
 
   if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &statbuf), 0) < 0)
     return NULL;
-  if (__builtin_expect (! S_ISDIR (statbuf.st_mode), 0))
+  if (__glibc_unlikely (! S_ISDIR (statbuf.st_mode)))
     {
       __set_errno (ENOTDIR);
       return NULL;
@@ -39,9 +39,9 @@ __fdopendir (int fd)
 
   /* Make sure the descriptor allows for reading.  */
   int flags = __fcntl (fd, F_GETFL);
-  if (__builtin_expect (flags == -1, 0))
+  if (__glibc_unlikely (flags == -1))
     return NULL;
-  if (__builtin_expect ((flags & O_ACCMODE) == O_WRONLY, 0))
+  if (__glibc_unlikely ((flags & O_ACCMODE) == O_WRONLY))
     {
       __set_errno (EINVAL);
       return NULL;

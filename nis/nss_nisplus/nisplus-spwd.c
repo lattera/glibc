@@ -124,7 +124,7 @@ internal_nisplus_getspent_r (struct spwd *sp, char *buffer, size_t buflen,
 
       parse_res = _nss_nisplus_parse_spent (result, sp, buffer,
 					    buflen, errnop);
-      if (__builtin_expect (parse_res == -1, 0))
+      if (__glibc_unlikely (parse_res == -1))
 	{
 	  nis_freeresult (result);
 	  result = saved_res;
@@ -189,7 +189,7 @@ _nss_nisplus_getspnam_r (const char *name, struct spwd *sp,
       return NSS_STATUS_TRYAGAIN;
     }
 
-  if (__builtin_expect (niserr2nss (result->status) != NSS_STATUS_SUCCESS, 0))
+  if (__glibc_unlikely (niserr2nss (result->status) != NSS_STATUS_SUCCESS))
     {
       enum nss_status status = niserr2nss (result->status);
 
@@ -202,7 +202,7 @@ _nss_nisplus_getspnam_r (const char *name, struct spwd *sp,
   parse_res = _nss_nisplus_parse_spent (result, sp, buffer, buflen, errnop);
   nis_freeresult (result);
 
-  if (__builtin_expect (parse_res < 1, 0))
+  if (__glibc_unlikely (parse_res < 1))
     {
       if (parse_res == -1)
 	{

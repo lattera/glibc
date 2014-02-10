@@ -50,7 +50,7 @@ raise (sig)
     /* raise is an async-safe function.  It could be called while the
        fork/vfork function temporarily invalidated the PID field.  Adjust for
        that.  */
-    if (__builtin_expect (pid <= 0, 0))
+    if (__glibc_unlikely (pid <= 0))
       pid = (pid & INT_MAX) == 0 ? selftid : -pid;
 
   return INLINE_SYSCALL (tgkill, 3, pid, selftid, sig);

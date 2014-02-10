@@ -344,7 +344,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
     }
 #endif
 
-  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_STATISTICS, 0))
+  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_STATISTICS))
     {
 #ifndef HP_TIMING_NONAVAIL
       print_statistics (&rtld_total_time);
@@ -517,7 +517,7 @@ _dl_start (void *arg)
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
-	if (__builtin_expect (lossage != NULL, 0))
+	if (__glibc_unlikely (lossage != NULL))
 	  _dl_fatal_printf ("cannot set up thread-local storage: %s\n",
 			    lossage);
 
@@ -779,7 +779,7 @@ cannot allocate TLS data structures for initial thread");
 #else
     = TLS_INIT_TP (tcbp, 0);
 #endif
-  if (__builtin_expect (lossage != NULL, 0))
+  if (__glibc_unlikely (lossage != NULL))
     _dl_fatal_printf ("cannot set up thread-local storage: %s\n", lossage);
   tls_init_tp_called = true;
 
@@ -813,7 +813,7 @@ do_preload (char *fname, struct link_map *main_map, const char *where)
   unsigned int old_nloaded = GL(dl_ns)[LM_ID_BASE]._ns_nloaded;
 
   (void) _dl_catch_error (&objname, &err_str, &malloced, map_doit, &args);
-  if (__builtin_expect (err_str != NULL, 0))
+  if (__glibc_unlikely (err_str != NULL))
     {
       _dl_error_printf ("\
 ERROR: ld.so: object '%s' from %s cannot be preloaded (%s): ignored.\n",
@@ -1067,7 +1067,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  args.mode = __RTLD_OPENEXEC;
 	  (void) _dl_catch_error (&objname, &err_str, &malloced, map_doit,
 				  &args);
-	  if (__builtin_expect (err_str != NULL, 0))
+	  if (__glibc_unlikely (err_str != NULL))
 	    /* We don't free the returned string, the programs stops
 	       anyway.  */
 	    _exit (EXIT_FAILURE);
@@ -1394,7 +1394,7 @@ of this helper program; chances are you did not intend to run this program.\n\
     GL(dl_rtld_map).l_tls_modid = _dl_next_tls_modid ();
 
   /* If we have auditing DSOs to load, do it now.  */
-  if (__builtin_expect (audit_list != NULL, 0))
+  if (__glibc_unlikely (audit_list != NULL))
     {
       /* Iterate over all entries in the list.  The order is important.  */
       struct audit_ifaces *last_audit = NULL;
@@ -1428,7 +1428,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  bool malloced;
 	  (void) _dl_catch_error (&objname, &err_str, &malloced, dlmopen_doit,
 				  &dlmargs);
-	  if (__builtin_expect (err_str != NULL, 0))
+	  if (__glibc_unlikely (err_str != NULL))
 	    {
 	    not_loaded:
 	      _dl_error_printf ("\
@@ -1544,7 +1544,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 
       /* If we have any auditing modules, announce that we already
 	 have two objects loaded.  */
-      if (__builtin_expect (GLRO(dl_naudit) > 0, 0))
+      if (__glibc_unlikely (GLRO(dl_naudit) > 0))
 	{
 	  struct link_map *ls[2] = { main_map, &GL(dl_rtld_map) };
 
@@ -1593,7 +1593,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 
   /* Auditing checkpoint: we are ready to signal that the initial map
      is being constructed.  */
-  if (__builtin_expect (GLRO(dl_naudit) > 0, 0))
+  if (__glibc_unlikely (GLRO(dl_naudit) > 0))
     {
       struct audit_ifaces *afct = GLRO(dl_audit);
       for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
@@ -1612,7 +1612,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
   struct link_map **preloads = NULL;
   unsigned int npreloads = 0;
 
-  if (__builtin_expect (preloadlist != NULL, 0))
+  if (__glibc_unlikely (preloadlist != NULL))
     {
       /* The LD_PRELOAD environment variable gives list of libraries
 	 separated by white space or colons that are loaded before the
@@ -1643,12 +1643,12 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
      the work but this does not matter, since it is not for production
      use.  */
   static const char preload_file[] = "/etc/ld.so.preload";
-  if (__builtin_expect (__access (preload_file, R_OK) == 0, 0))
+  if (__glibc_unlikely (__access (preload_file, R_OK) == 0))
     {
       /* Read the contents of the file.  */
       file = _dl_sysdep_read_whole_file (preload_file, &file_size,
 					 PROT_READ | PROT_WRITE);
-      if (__builtin_expect (file != MAP_FAILED, 0))
+      if (__glibc_unlikely (file != MAP_FAILED))
 	{
 	  /* Parse the file.  It contains names of libraries to be loaded,
 	     separated by white spaces or `:'.  It may also contain
@@ -1720,7 +1720,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	}
     }
 
-  if (__builtin_expect (*first_preload != NULL, 0))
+  if (__glibc_unlikely (*first_preload != NULL))
     {
       /* Set up PRELOADS with a vector of the preloaded libraries.  */
       struct link_map *l = *first_preload;
@@ -1757,7 +1757,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
       break;
 
   bool rtld_multiple_ref = false;
-  if (__builtin_expect (i < main_map->l_searchlist.r_nlist, 1))
+  if (__glibc_likely (i < main_map->l_searchlist.r_nlist))
     {
       /* Some DT_NEEDED entry referred to the interpreter object itself, so
 	 put it back in the list of visible objects.  We insert it into the
@@ -1815,7 +1815,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
   if (tcbp == NULL)
     tcbp = init_tls ();
 
-  if (__builtin_expect (audit_list == NULL, 1))
+  if (__glibc_likely (audit_list == NULL))
     /* Initialize security features.  But only if we have not done it
        earlier.  */
     security_init ();
@@ -2099,7 +2099,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
       if (r_list == r_listend && liblist == liblistend)
 	prelinked = true;
 
-      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS, 0))
+      if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_LIBS))
 	_dl_debug_printf ("\nprelink checking: %s\n",
 			  prelinked ? "ok" : "failed");
     }
@@ -2117,7 +2117,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
   GLRO(dl_init_all_dirs) = GL(dl_all_dirs);
 
   /* Print scope information.  */
-  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_SCOPES, 0))
+  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_SCOPES))
     {
       _dl_debug_printf ("\nInitial object scopes\n");
 
@@ -2215,7 +2215,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	 this has to go here because the calls it makes should use the
 	 rtld versions of the functions (particularly calloc()), but it
 	 needs to have _dl_profile_map set up by the relocator.  */
-      if (__builtin_expect (GL(dl_profile_map) != NULL, 0))
+      if (__glibc_unlikely (GL(dl_profile_map) != NULL))
 	/* We must prepare the profiling.  */
 	_dl_start_profile ();
     }
@@ -2238,7 +2238,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 #else
 	= TLS_INIT_TP (tcbp, 0);
 #endif
-      if (__builtin_expect (lossage != NULL, 0))
+      if (__glibc_unlikely (lossage != NULL))
 	_dl_fatal_printf ("cannot set up thread-local storage: %s\n",
 			  lossage);
     }
@@ -2279,7 +2279,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 
 #ifdef SHARED
   /* Auditing checkpoint: we have added all objects.  */
-  if (__builtin_expect (GLRO(dl_naudit) > 0, 0))
+  if (__glibc_unlikely (GLRO(dl_naudit) > 0))
     {
       struct link_map *head = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
       /* Do not call the functions for any auditing object.  */

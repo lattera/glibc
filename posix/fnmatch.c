@@ -348,12 +348,12 @@ fnmatch (pattern, string, flags)
 #else
       n = strlen (pattern);
 #endif
-      if (__builtin_expect (n < 1024, 1))
+      if (__glibc_likely (n < 1024))
 	{
 	  wpattern = (wchar_t *) alloca_account ((n + 1) * sizeof (wchar_t),
 						 alloca_used);
 	  n = mbsrtowcs (wpattern, &p, n + 1, &ps);
-	  if (__builtin_expect (n == (size_t) -1, 0))
+	  if (__glibc_unlikely (n == (size_t) -1))
 	    /* Something wrong.
 	       XXX Do we have to set `errno' to something which mbsrtows hasn't
 	       already done?  */
@@ -368,12 +368,12 @@ fnmatch (pattern, string, flags)
 	{
 	prepare_wpattern:
 	  n = mbsrtowcs (NULL, &pattern, 0, &ps);
-	  if (__builtin_expect (n == (size_t) -1, 0))
+	  if (__glibc_unlikely (n == (size_t) -1))
 	    /* Something wrong.
 	       XXX Do we have to set `errno' to something which mbsrtows hasn't
 	       already done?  */
 	    return -1;
-	  if (__builtin_expect (n >= (size_t) -1 / sizeof (wchar_t), 0))
+	  if (__glibc_unlikely (n >= (size_t) -1 / sizeof (wchar_t)))
 	    {
 	      __set_errno (ENOMEM);
 	      return -2;
@@ -393,12 +393,12 @@ fnmatch (pattern, string, flags)
       n = strlen (string);
 #endif
       p = string;
-      if (__builtin_expect (n < 1024, 1))
+      if (__glibc_likely (n < 1024))
 	{
 	  wstring = (wchar_t *) alloca_account ((n + 1) * sizeof (wchar_t),
 						alloca_used);
 	  n = mbsrtowcs (wstring, &p, n + 1, &ps);
-	  if (__builtin_expect (n == (size_t) -1, 0))
+	  if (__glibc_unlikely (n == (size_t) -1))
 	    {
 	      /* Something wrong.
 		 XXX Do we have to set `errno' to something which
@@ -417,12 +417,12 @@ fnmatch (pattern, string, flags)
 	{
 	prepare_wstring:
 	  n = mbsrtowcs (NULL, &string, 0, &ps);
-	  if (__builtin_expect (n == (size_t) -1, 0))
+	  if (__glibc_unlikely (n == (size_t) -1))
 	    /* Something wrong.
 	       XXX Do we have to set `errno' to something which mbsrtows hasn't
 	       already done?  */
 	    goto free_return;
-	  if (__builtin_expect (n >= (size_t) -1 / sizeof (wchar_t), 0))
+	  if (__glibc_unlikely (n >= (size_t) -1 / sizeof (wchar_t)))
 	    {
 	      free (wpattern_malloc);
 	      __set_errno (ENOMEM);

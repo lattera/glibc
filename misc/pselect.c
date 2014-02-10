@@ -45,7 +45,7 @@ __pselect (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
     {
       /* Catch bugs which would be hidden by the TIMESPEC_TO_TIMEVAL
 	 computations.  The division by 1000 truncates values.  */
-      if (__builtin_expect (timeout->tv_nsec < 0, 0))
+      if (__glibc_unlikely (timeout->tv_nsec < 0))
 	{
 	  __set_errno (EINVAL);
 	  return -1;

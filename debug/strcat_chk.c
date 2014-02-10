@@ -33,7 +33,7 @@ __strcat_chk (dest, src, destlen)
   /* Find the end of the string.  */
   do
     {
-      if (__builtin_expect (destlen-- == 0, 0))
+      if (__glibc_unlikely (destlen-- == 0))
 	__chk_fail ();
       c = *s1++;
     }
@@ -46,7 +46,7 @@ __strcat_chk (dest, src, destlen)
 
   do
     {
-      if (__builtin_expect (destlen-- == 0, 0))
+      if (__glibc_unlikely (destlen-- == 0))
 	__chk_fail ();
       c = *s2++;
       *++s1 = c;

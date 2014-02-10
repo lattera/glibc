@@ -82,7 +82,7 @@ compat_call (service_user *nip, const char *user, gid_t group, long int *start,
 		  {
 		    /* Matches user and not yet on the list.  Insert
 		       this group.  */
-		    if (__builtin_expect (*start == *size, 0))
+		    if (__glibc_unlikely (*start == *size))
 		      {
 			/* Need a bigger buffer.  */
 			gid_t *newgroups;

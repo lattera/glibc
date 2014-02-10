@@ -158,12 +158,12 @@ set_binding_values (domainname, dirnamep, codesetp)
 #else
 		      size_t len = strlen (dirname) + 1;
 		      result = (char *) malloc (len);
-		      if (__builtin_expect (result != NULL, 1))
+		      if (__glibc_likely (result != NULL))
 			memcpy (result, dirname, len);
 #endif
 		    }
 
-		  if (__builtin_expect (result != NULL, 1))
+		  if (__glibc_likely (result != NULL))
 		    {
 		      if (binding->dirname != _nl_default_dirname)
 			free (binding->dirname);
@@ -196,11 +196,11 @@ set_binding_values (domainname, dirnamep, codesetp)
 #else
 		  size_t len = strlen (codeset) + 1;
 		  result = (char *) malloc (len);
-		  if (__builtin_expect (result != NULL, 1))
+		  if (__glibc_likely (result != NULL))
 		    memcpy (result, codeset, len);
 #endif
 
-		  if (__builtin_expect (result != NULL, 1))
+		  if (__glibc_likely (result != NULL))
 		    {
 		      free (binding->codeset);
 
@@ -228,7 +228,7 @@ set_binding_values (domainname, dirnamep, codesetp)
       struct binding *new_binding =
 	(struct binding *) malloc (offsetof (struct binding, domainname) + len);
 
-      if (__builtin_expect (new_binding == NULL, 0))
+      if (__glibc_unlikely (new_binding == NULL))
 	goto failed;
 
       memcpy (new_binding->domainname, domainname, len);
@@ -249,12 +249,12 @@ set_binding_values (domainname, dirnamep, codesetp)
 		  char *result;
 #if defined _LIBC || defined HAVE_STRDUP
 		  result = strdup (dirname);
-		  if (__builtin_expect (result == NULL, 0))
+		  if (__glibc_unlikely (result == NULL))
 		    goto failed_dirname;
 #else
 		  size_t len = strlen (dirname) + 1;
 		  result = (char *) malloc (len);
-		  if (__builtin_expect (result == NULL, 0))
+		  if (__glibc_unlikely (result == NULL))
 		    goto failed_dirname;
 		  memcpy (result, dirname, len);
 #endif
@@ -278,12 +278,12 @@ set_binding_values (domainname, dirnamep, codesetp)
 
 #if defined _LIBC || defined HAVE_STRDUP
 	      result = strdup (codeset);
-	      if (__builtin_expect (result == NULL, 0))
+	      if (__glibc_unlikely (result == NULL))
 		goto failed_codeset;
 #else
 	      size_t len = strlen (codeset) + 1;
 	      result = (char *) malloc (len);
-	      if (__builtin_expect (result == NULL, 0))
+	      if (__glibc_unlikely (result == NULL))
 		goto failed_codeset;
 	      memcpy (result, codeset, len);
 #endif

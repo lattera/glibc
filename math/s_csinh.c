@@ -33,16 +33,16 @@ __csinh (__complex__ double x)
 
   __real__ x = fabs (__real__ x);
 
-  if (__builtin_expect (rcls >= FP_ZERO, 1))
+  if (__glibc_likely (rcls >= FP_ZERO))
     {
       /* Real part is finite.  */
-      if (__builtin_expect (icls >= FP_ZERO, 1))
+      if (__glibc_likely (icls >= FP_ZERO))
 	{
 	  /* Imaginary part is finite.  */
 	  const int t = (int) ((DBL_MAX_EXP - 1) * M_LN2);
 	  double sinix, cosix;
 
-	  if (__builtin_expect (icls != FP_SUBNORMAL, 1))
+	  if (__glibc_likely (icls != FP_SUBNORMAL))
 	    {
 	      __sincos (__imag__ x, &sinix, &cosix);
 	    }
@@ -125,12 +125,12 @@ __csinh (__complex__ double x)
   else if (rcls == FP_INFINITE)
     {
       /* Real part is infinite.  */
-      if (__builtin_expect (icls > FP_ZERO, 1))
+      if (__glibc_likely (icls > FP_ZERO))
 	{
 	  /* Imaginary part is finite.  */
 	  double sinix, cosix;
 
-	  if (__builtin_expect (icls != FP_SUBNORMAL, 1))
+	  if (__glibc_likely (icls != FP_SUBNORMAL))
 	    {
 	      __sincos (__imag__ x, &sinix, &cosix);
 	    }

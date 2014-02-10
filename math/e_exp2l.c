@@ -23,7 +23,7 @@
 long double
 __ieee754_exp2l (long double x)
 {
-  if (__builtin_expect (isless (x, (long double) LDBL_MAX_EXP), 1))
+  if (__glibc_likely (isless (x, (long double) LDBL_MAX_EXP)))
     {
       if (__builtin_expect (isgreaterequal (x, (long double) (LDBL_MIN_EXP
 							      - LDBL_MANT_DIG

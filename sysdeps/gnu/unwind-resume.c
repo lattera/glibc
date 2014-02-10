@@ -46,7 +46,7 @@ init (void)
 void
 _Unwind_Resume (struct _Unwind_Exception *exc)
 {
-  if (__builtin_expect (libgcc_s_resume == NULL, 0))
+  if (__glibc_unlikely (libgcc_s_resume == NULL))
     init ();
   libgcc_s_resume (exc);
 }
@@ -57,7 +57,7 @@ __gcc_personality_v0 (int version, _Unwind_Action actions,
                       struct _Unwind_Exception *ue_header,
                       struct _Unwind_Context *context)
 {
-  if (__builtin_expect (libgcc_s_personality == NULL, 0))
+  if (__glibc_unlikely (libgcc_s_personality == NULL))
     init ();
   return libgcc_s_personality (version, actions, exception_class,
 			       ue_header, context);

@@ -188,7 +188,7 @@
 #define INLINE_SYSCALL(name, nr, args...)				      \
   ({									      \
     long _ret = INTERNAL_SYSCALL (name, , nr, args);			      \
-    if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (_ret, ), 0))	      \
+    if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (_ret, )))		      \
      {									      \
        __set_errno (INTERNAL_SYSCALL_ERRNO (_ret, ));			      \
        _ret = -1;							      \

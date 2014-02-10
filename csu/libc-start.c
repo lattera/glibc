@@ -214,7 +214,7 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 #endif
 
   /* Register the destructor of the dynamic linker if there is any.  */
-  if (__builtin_expect (rtld_fini != NULL, 1))
+  if (__glibc_likely (rtld_fini != NULL))
     __cxa_atexit ((void (*) (void *)) rtld_fini, NULL, NULL);
 
 #ifndef SHARED
@@ -245,7 +245,7 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 
 #ifdef SHARED
   /* Auditing checkpoint: we have a new object.  */
-  if (__builtin_expect (GLRO(dl_naudit) > 0, 0))
+  if (__glibc_unlikely (GLRO(dl_naudit) > 0))
     {
       struct audit_ifaces *afct = GLRO(dl_audit);
       struct link_map *head = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
@@ -260,7 +260,7 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 #endif
 
 #ifdef SHARED
-  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
+  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS))
     GLRO(dl_debug_printf) ("\ntransferring control: %s\n\n", argv[0]);
 #endif
 
@@ -270,7 +270,7 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 
   int not_first_call;
   not_first_call = setjmp ((struct __jmp_buf_tag *) unwind_buf.cancel_jmp_buf);
-  if (__builtin_expect (! not_first_call, 1))
+  if (__glibc_likely (! not_first_call))
     {
       struct pthread *self = THREAD_SELF;
 

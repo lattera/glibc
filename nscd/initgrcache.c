@@ -71,7 +71,7 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
     char strdata[0];
   } *dataset = NULL;
 
-  if (__builtin_expect (debug_level > 0, 0))
+  if (__glibc_unlikely (debug_level > 0))
     {
       if (he == NULL)
 	dbg_log (_("Haven't found \"%s\" in group cache!"), (char *) key);
@@ -112,7 +112,7 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
      mempool_alloc.  */
   // XXX This really should use alloca.  need to change the backends.
   gid_t *groups = (gid_t *) malloc (size * sizeof (gid_t));
-  if (__builtin_expect (groups == NULL, 0))
+  if (__glibc_unlikely (groups == NULL))
     /* No more memory.  */
     goto out;
 

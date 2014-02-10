@@ -34,7 +34,7 @@ __sigaction (sig, act, oact)
      const struct sigaction *act;
      struct sigaction *oact;
 {
-  if (__builtin_expect (sig == SIGCANCEL || sig == SIGSETXID, 0))
+  if (__glibc_unlikely (sig == SIGCANCEL || sig == SIGSETXID))
     {
       __set_errno (EINVAL);
       return -1;

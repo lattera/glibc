@@ -36,7 +36,7 @@ __logbl (long double x)
     return -1.0 / fabs (x);
   if (hx >= 0x7ff0000000000000LL)
     return x * x;
-  if (__builtin_expect ((rhx = hx >> 52) == 0, 0))
+  if (__glibc_unlikely ((rhx = hx >> 52) == 0))
     {
       /* POSIX specifies that denormal number is treated as
          though it were normalized.  */

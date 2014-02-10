@@ -33,16 +33,16 @@ __csinhl (__complex__ long double x)
 
   __real__ x = fabsl (__real__ x);
 
-  if (__builtin_expect (rcls >= FP_ZERO, 1))
+  if (__glibc_likely (rcls >= FP_ZERO))
     {
       /* Real part is finite.  */
-      if (__builtin_expect (icls >= FP_ZERO, 1))
+      if (__glibc_likely (icls >= FP_ZERO))
 	{
 	  /* Imaginary part is finite.  */
 	  const int t = (int) ((LDBL_MAX_EXP - 1) * M_LN2l);
 	  long double sinix, cosix;
 
-	  if (__builtin_expect (icls != FP_SUBNORMAL, 1))
+	  if (__glibc_likely (icls != FP_SUBNORMAL))
 	    {
 	      __sincosl (__imag__ x, &sinix, &cosix);
 	    }
@@ -122,15 +122,15 @@ __csinhl (__complex__ long double x)
 	    }
 	}
     }
-  else if (__builtin_expect (rcls == FP_INFINITE, 1))
+  else if (__glibc_likely (rcls == FP_INFINITE))
     {
       /* Real part is infinite.  */
-      if (__builtin_expect (icls > FP_ZERO, 1))
+      if (__glibc_likely (icls > FP_ZERO))
 	{
 	  /* Imaginary part is finite.  */
 	  long double sinix, cosix;
 
-	  if (__builtin_expect (icls != FP_SUBNORMAL, 1))
+	  if (__glibc_likely (icls != FP_SUBNORMAL))
 	    {
 	      __sincosl (__imag__ x, &sinix, &cosix);
 	    }

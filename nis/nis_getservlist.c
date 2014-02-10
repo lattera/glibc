@@ -38,7 +38,7 @@ nis_getservlist (const_nis_name dir)
       serv =
 	malloc (sizeof (nis_server *) *
 		(NIS_RES_OBJECT (res)->DI_data.do_servers.do_servers_len + 1));
-      if (__builtin_expect (serv == NULL, 0))
+      if (__glibc_unlikely (serv == NULL))
 	{
 	  nis_freeresult (res);
 	  return NULL;
@@ -50,7 +50,7 @@ nis_getservlist (const_nis_name dir)
 	  server =
 	    &NIS_RES_OBJECT (res)->DI_data.do_servers.do_servers_val[i];
 	  serv[i] = calloc (1, sizeof (nis_server));
-	  if (__builtin_expect (serv[i] == NULL, 0))
+	  if (__glibc_unlikely (serv[i] == NULL))
 	    {
 	    free_all:
 	      while (i-- > 0)
@@ -81,7 +81,7 @@ nis_getservlist (const_nis_name dir)
 	  if (server->name != NULL)
 	    {
 	      serv[i]->name = strdup (server->name);
-	      if (__builtin_expect (serv[i]->name == NULL, 0))
+	      if (__glibc_unlikely (serv[i]->name == NULL))
 		{
 		  ++i;
 		  goto free_all;
@@ -95,7 +95,7 @@ nis_getservlist (const_nis_name dir)
 
               serv[i]->ep.ep_val =
 		malloc (server->ep.ep_len * sizeof (endpoint));
-	      if (__builtin_expect (serv[i]->ep.ep_val == NULL, 0))
+	      if (__glibc_unlikely (serv[i]->ep.ep_val == NULL))
 		{
 		  ++i;
 		  goto free_all;
@@ -126,7 +126,7 @@ nis_getservlist (const_nis_name dir)
           if (server->pkey.n_len > 0)
             {
               serv[i]->pkey.n_bytes = malloc (server->pkey.n_len);
-              if (__builtin_expect (serv[i]->pkey.n_bytes == NULL, 0))
+              if (__glibc_unlikely (serv[i]->pkey.n_bytes == NULL))
 		{
 		  ++i;
 		  goto free_all;
@@ -140,7 +140,7 @@ nis_getservlist (const_nis_name dir)
   else
     {
       serv = malloc (sizeof (nis_server *));
-      if (__builtin_expect (serv != NULL, 0))
+      if (__glibc_unlikely (serv != NULL))
 	serv[0] = NULL;
     }
 

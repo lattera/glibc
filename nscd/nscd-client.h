@@ -331,7 +331,7 @@ __nscd_acquire_maplock (volatile struct locked_map_ptr *mapptr)
 								1, 0) != 0, 0))
     {
       // XXX Best number of rounds?
-      if (__builtin_expect (++cnt > 5, 0))
+      if (__glibc_unlikely (++cnt > 5))
 	return false;
 
       atomic_delay ();
@@ -369,7 +369,7 @@ __nscd_drop_map_ref (struct mapped_database *map, int *gc_cycle)
   if (map != NO_MAPPING)
     {
       int now_cycle = map->head->gc_cycle;
-      if (__builtin_expect (now_cycle != *gc_cycle, 0))
+      if (__glibc_unlikely (now_cycle != *gc_cycle))
 	{
 	  /* We might have read inconsistent data.  */
 	  *gc_cycle = now_cycle;

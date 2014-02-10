@@ -220,7 +220,7 @@ _IO_file_open (fp, filename, posix_mode, prot, read_write, is32not64)
 {
   int fdesc;
 #ifdef _LIBC
-  if (__builtin_expect (fp->_flags2 & _IO_FLAGS2_NOTCANCEL, 0))
+  if (__glibc_unlikely (fp->_flags2 & _IO_FLAGS2_NOTCANCEL))
     fdesc = open_not_cancel (filename,
 			     posix_mode | (is32not64 ? 0 : O_LARGEFILE), prot);
   else
@@ -726,7 +726,7 @@ _IO_file_underflow_mmap (_IO_FILE *fp)
   if (fp->_IO_read_ptr < fp->_IO_read_end)
     return *(unsigned char *) fp->_IO_read_ptr;
 
-  if (__builtin_expect (mmap_remap_check (fp), 0))
+  if (__glibc_unlikely (mmap_remap_check (fp)))
     /* We punted to the regular file functions.  */
     return _IO_UNDERFLOW (fp);
 
@@ -836,7 +836,7 @@ _IO_new_file_overflow (f, ch)
 	 makes room for subsequent output.
 	 Otherwise, set the read pointers to _IO_read_end (leaving that
 	 alone, so it can continue to correspond to the external position). */
-      if (__builtin_expect (_IO_in_backup (f), 0))
+      if (__glibc_unlikely (_IO_in_backup (f)))
 	{
 	  size_t nbackup = f->_IO_read_end - f->_IO_read_ptr;
 	  _IO_free_backup_area (f);
@@ -1464,7 +1464,7 @@ _IO_file_xsgetn_mmap (fp, data, n)
 
   if (have < n)
     {
-      if (__builtin_expect (_IO_in_backup (fp), 0))
+      if (__glibc_unlikely (_IO_in_backup (fp)))
 	{
 #ifdef _LIBC
 	  s = __mempcpy (s, read_ptr, have);
@@ -1481,7 +1481,7 @@ _IO_file_xsgetn_mmap (fp, data, n)
       if (have < n)
 	{
 	  /* Check that we are mapping all of the file, in case it grew.  */
-	  if (__builtin_expect (mmap_remap_check (fp), 0))
+	  if (__glibc_unlikely (mmap_remap_check (fp)))
 	    /* We punted mmap, so complete with the vanilla code.  */
 	    return s - (char *) data + _IO_XSGETN (fp, data, n);
 

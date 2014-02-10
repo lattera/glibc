@@ -231,7 +231,7 @@ gconv_end (struct __gconv_step *data)
 	{								      \
 	  /* We are not in the initial state.  To switch back we have	      \
 	     to emit the sequence `Esc ( B'.  */			      \
-	  if (__builtin_expect (outbuf + 3 > outend, 0))		      \
+	  if (__glibc_unlikely (outbuf + 3 > outend))			      \
 	    /* We don't have enough room in the output buffer.  */	      \
 	    status = __GCONV_FULL_OUTPUT;				      \
 	  else								      \
@@ -404,7 +404,7 @@ gconv_end (struct __gconv_step *data)
       {									      \
 	/* Use the JIS X 0201 table.  */				      \
 	ch = jisx0201_to_ucs4 (ch);					      \
-	if (__builtin_expect (ch == __UNKNOWN_10646_CHAR, 0))		      \
+	if (__glibc_unlikely (ch == __UNKNOWN_10646_CHAR))		      \
 	  STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	++inptr;							      \
       }									      \
@@ -412,7 +412,7 @@ gconv_end (struct __gconv_step *data)
       {									      \
 	/* Use the JIS X 0201 table.  */				      \
 	ch = jisx0201_to_ucs4 (ch + 0x80);				      \
-	if (__builtin_expect (ch == __UNKNOWN_10646_CHAR, 0))		      \
+	if (__glibc_unlikely (ch == __UNKNOWN_10646_CHAR))		      \
 	  STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	++inptr;							      \
       }									      \
@@ -438,12 +438,12 @@ gconv_end (struct __gconv_step *data)
 	    ch = ksc5601_to_ucs4 (&inptr, inend - inptr, 0);		      \
 	  }								      \
 									      \
-	if (__builtin_expect (ch == 0, 0))				      \
+	if (__glibc_unlikely (ch == 0))					      \
 	  {								      \
 	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
-	else if (__builtin_expect (ch == __UNKNOWN_10646_CHAR, 0))	      \
+	else if (__glibc_unlikely (ch == __UNKNOWN_10646_CHAR))		      \
 	  {								      \
 	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
@@ -493,7 +493,7 @@ static const cvlist_t conversion_lists[4] =
     if (var == iso2022jp2)						      \
       {									      \
 	/* Handle Unicode tag characters (range U+E0000..U+E007F).  */	      \
-	if (__builtin_expect ((ch >> 7) == (0xe0000 >> 7), 0))		      \
+	if (__glibc_unlikely ((ch >> 7) == (0xe0000 >> 7)))		      \
 	  {								      \
 	    ch &= 0x7f;							      \
 	    if (ch >= 'A' && ch <= 'Z')					      \
@@ -529,7 +529,7 @@ static const cvlist_t conversion_lists[4] =
 									      \
 	/* Non-tag characters reset the tag parsing state, if the current     \
 	   state is a temporary state.  */				      \
-	if (__builtin_expect (tag >= TAG_language, 0))			      \
+	if (__glibc_unlikely (tag >= TAG_language))			      \
 	  tag = TAG_none;						      \
       }									      \
 									      \
@@ -613,7 +613,7 @@ static const cvlist_t conversion_lists[4] =
 	else								      \
 	  written = __UNKNOWN_10646_CHAR;				      \
 									      \
-	if (__builtin_expect (written == 0, 0))				      \
+	if (__glibc_unlikely (written == 0))				      \
 	  {								      \
 	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
@@ -629,7 +629,7 @@ static const cvlist_t conversion_lists[4] =
 	  {								      \
 	    if (ch >= 0x80 && ch <= 0xff)				      \
 	      {								      \
-		if (__builtin_expect (outptr + 3 > outend, 0))		      \
+		if (__glibc_unlikely (outptr + 3 > outend))		      \
 		  {							      \
 		    result = __GCONV_FULL_OUTPUT;			      \
 		    break;						      \
@@ -643,7 +643,7 @@ static const cvlist_t conversion_lists[4] =
 	  }								      \
 	else if (set2 == ISO88597_set)					      \
 	  {								      \
-	    if (__builtin_expect (ch < 0xffff, 1))			      \
+	    if (__glibc_likely (ch < 0xffff))				      \
 	      {								      \
 		const struct gap *rp = from_idx;			      \
 									      \
@@ -655,7 +655,7 @@ static const cvlist_t conversion_lists[4] =
 		      iso88597_from_ucs4[ch - 0xa0 + rp->idx];		      \
 		    if (res != '\0')					      \
 		      {							      \
-			if (__builtin_expect (outptr + 3 > outend, 0))	      \
+			if (__glibc_unlikely (outptr + 3 > outend))	      \
 			  {						      \
 			    result = __GCONV_FULL_OUTPUT;		      \
 			    break;					      \
@@ -685,7 +685,7 @@ static const cvlist_t conversion_lists[4] =
 	  {								      \
 	    /* We must encode using ASCII.  First write out the		      \
 	       escape sequence.  */					      \
-	    if (__builtin_expect (outptr + 3 > outend, 0))		      \
+	    if (__glibc_unlikely (outptr + 3 > outend))			      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -696,7 +696,7 @@ static const cvlist_t conversion_lists[4] =
 	    *outptr++ = 'B';						      \
 	    set = ASCII_set;						      \
 									      \
-	    if (__builtin_expect (outptr + 1 > outend, 0))		      \
+	    if (__glibc_unlikely (outptr + 1 > outend))			      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -742,7 +742,7 @@ static const cvlist_t conversion_lists[4] =
 			  set2 = ISO88591_set;				      \
 			}						      \
 									      \
-		      if (__builtin_expect (outptr + 3 > outend, 0))	      \
+		      if (__glibc_unlikely (outptr + 3 > outend))	      \
 			{						      \
 			  res = __GCONV_FULL_OUTPUT;			      \
 			  break;					      \
@@ -755,7 +755,7 @@ static const cvlist_t conversion_lists[4] =
 		    }							      \
 									      \
 		  /* Try ISO 8859-7 upper half.  */			      \
-		  if (__builtin_expect (ch < 0xffff, 1))		      \
+		  if (__glibc_likely (ch < 0xffff))			      \
 		    {							      \
 		      const struct gap *rp = from_idx;			      \
 									      \
@@ -817,7 +817,7 @@ static const cvlist_t conversion_lists[4] =
 			  set = JISX0201_Roman_set;			      \
 			}						      \
 									      \
-		      if (__builtin_expect (outptr + 1 > outend, 0))	      \
+		      if (__glibc_unlikely (outptr + 1 > outend))	      \
 			{						      \
 			  res = __GCONV_FULL_OUTPUT;			      \
 			  break;					      \
@@ -844,7 +844,7 @@ static const cvlist_t conversion_lists[4] =
 			  set = JISX0208_1983_set;			      \
 			}						      \
 									      \
-		      if (__builtin_expect (outptr + 2 > outend, 0))	      \
+		      if (__glibc_unlikely (outptr + 2 > outend))	      \
 			{						      \
 			  res = __GCONV_FULL_OUTPUT;			      \
 			  break;					      \
@@ -855,7 +855,7 @@ static const cvlist_t conversion_lists[4] =
 		      break;						      \
 		    }							      \
 									      \
-		  if (__builtin_expect (var == iso2022jp, 0))		      \
+		  if (__glibc_unlikely (var == iso2022jp))		      \
 		    /* Don't use the other Japanese character sets.  */	      \
 		    break;						      \
 									      \
@@ -877,7 +877,7 @@ static const cvlist_t conversion_lists[4] =
 			  set = JISX0212_set;				      \
 			}						      \
 									      \
-		      if (__builtin_expect (outptr + 2 > outend, 0))	      \
+		      if (__glibc_unlikely (outptr + 2 > outend))	      \
 			{						      \
 			  res = __GCONV_FULL_OUTPUT;			      \
 			  break;					      \
@@ -910,7 +910,7 @@ static const cvlist_t conversion_lists[4] =
 			  set = GB2312_set;				      \
 			}						      \
 									      \
-		      if (__builtin_expect (outptr + 2 > outend, 0))	      \
+		      if (__glibc_unlikely (outptr + 2 > outend))	      \
 			{						      \
 			  res = __GCONV_FULL_OUTPUT;			      \
 			  break;					      \
@@ -944,7 +944,7 @@ static const cvlist_t conversion_lists[4] =
 			  set = KSC5601_set;				      \
 			}						      \
 									      \
-		      if (__builtin_expect (outptr + 2 > outend, 0))	      \
+		      if (__glibc_unlikely (outptr + 2 > outend))	      \
 			{						      \
 			  res = __GCONV_FULL_OUTPUT;			      \
 			  break;					      \
@@ -979,7 +979,7 @@ static const cvlist_t conversion_lists[4] =
 			  set = JISX0201_Kana_set;			      \
 			}						      \
 									      \
-		      if (__builtin_expect (outptr + 1 > outend, 0))	      \
+		      if (__glibc_unlikely (outptr + 1 > outend))	      \
 			{						      \
 			  res = __GCONV_FULL_OUTPUT;			      \
 			  break;					      \

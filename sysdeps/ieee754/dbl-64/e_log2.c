@@ -81,15 +81,15 @@ __ieee754_log2 (double x)
   k = 0;
   if (hx < 0x00100000)
     {                           /* x < 2**-1022  */
-      if (__builtin_expect (((hx & 0x7fffffff) | lx) == 0, 0))
+      if (__glibc_unlikely (((hx & 0x7fffffff) | lx) == 0))
 	return -two54 / (x - x);        /* log(+-0)=-inf */
-      if (__builtin_expect (hx < 0, 0))
+      if (__glibc_unlikely (hx < 0))
 	return (x - x) / (x - x);       /* log(-#) = NaN */
       k -= 54;
       x *= two54;               /* subnormal number, scale up x */
       GET_HIGH_WORD (hx, x);
     }
-  if (__builtin_expect (hx >= 0x7ff00000, 0))
+  if (__glibc_unlikely (hx >= 0x7ff00000))
     return x + x;
   k += (hx >> 20) - 1023;
   hx &= 0x000fffff;

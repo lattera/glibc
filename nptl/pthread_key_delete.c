@@ -27,7 +27,7 @@ pthread_key_delete (key)
 {
   int result = EINVAL;
 
-  if (__builtin_expect (key < PTHREAD_KEYS_MAX, 1))
+  if (__glibc_likely (key < PTHREAD_KEYS_MAX))
     {
       unsigned int seq = __pthread_keys[key].seq;
 

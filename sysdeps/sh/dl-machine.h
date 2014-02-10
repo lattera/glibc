@@ -291,7 +291,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     } \
   }
 
-  if (__builtin_expect (r_type == R_SH_RELATIVE, 0))
+  if (__glibc_unlikely (r_type == R_SH_RELATIVE))
     {
 #ifndef RTLD_BOOTSTRAP
       if (map != &GL(dl_rtld_map)) /* Already done in rtld itself.	 */
@@ -310,7 +310,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	}
     }
 #ifndef RTLD_BOOTSTRAP
-  else if (__builtin_expect (r_type == R_SH_NONE, 0))
+  else if (__glibc_unlikely (r_type == R_SH_NONE))
     return;
 #endif
   else

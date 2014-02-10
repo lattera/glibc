@@ -70,7 +70,7 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
   if (fd != AT_FDCWD && file[0] != '/')
     {
       size_t filelen = strlen (file);
-      if (__builtin_expect (filelen == 0, 0))
+      if (__glibc_unlikely (filelen == 0))
 	{
 	  __set_errno (ENOENT);
 	  return -1;
@@ -98,7 +98,7 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
   else
     res = INTERNAL_SYSCALL (stat, err, 2, file, st);
 
-  if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))
+  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (res, err)))
     {
       __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (res, err), fd, buf);
       res = -1;

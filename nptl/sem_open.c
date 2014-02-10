@@ -74,10 +74,10 @@ __where_is_shmfs (void)
   /* OK, do it the hard way.  Look through the /proc/mounts file and if
      this does not exist through /etc/fstab to find the mount point.  */
   fp = __setmntent ("/proc/mounts", "r");
-  if (__builtin_expect (fp == NULL, 0))
+  if (__glibc_unlikely (fp == NULL))
     {
       fp = __setmntent (_PATH_MNTTAB, "r");
-      if (__builtin_expect (fp == NULL, 0))
+      if (__glibc_unlikely (fp == NULL))
 	/* There is nothing we can do.  Blind guesses are not helpful.  */
 	return;
     }

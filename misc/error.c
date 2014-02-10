@@ -165,7 +165,7 @@ error_tail (int status, int errnum, const char *message, va_list args)
 	  if (res != len)
 	    break;
 
-	  if (__builtin_expect (len >= SIZE_MAX / sizeof (wchar_t) / 2, 0))
+	  if (__glibc_unlikely (len >= SIZE_MAX / sizeof (wchar_t) / 2))
 	    {
 	      /* This really should not happen if everything is fine.  */
 	      res = (size_t) -1;

@@ -70,7 +70,7 @@ main (int argc, char *argv[])
   pthread_t th[nthreads];
   int i;
   for (i = 0; __builtin_expect (i < nthreads, 1); ++i)
-    if (__builtin_expect ((err = pthread_create (&th[i], NULL, cons, (void *) (long) i)) != 0, 0))
+    if (__glibc_unlikely ((err = pthread_create (&th[i], NULL, cons, (void *) (long) i)) != 0))
       printf ("pthread_create: %s\n", strerror (err));
 
   for (i = 0; __builtin_expect (i < nrounds, 1); ++i)

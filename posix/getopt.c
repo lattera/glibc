@@ -601,7 +601,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 
 		  fputc_unlocked ('\n', fp);
 
-		  if (__builtin_expect (fclose (fp) != EOF, 1))
+		  if (__glibc_likely (fclose (fp) != EOF))
 		    {
 		      _IO_flockfile (stderr);
 

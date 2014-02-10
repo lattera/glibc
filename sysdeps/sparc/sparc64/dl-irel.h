@@ -40,13 +40,13 @@ elf_irela (const Elf64_Rela *reloc)
 {
   unsigned int r_type = (reloc->r_info & 0xff);
 
-  if (__builtin_expect (r_type == R_SPARC_IRELATIVE, 1))
+  if (__glibc_likely (r_type == R_SPARC_IRELATIVE))
     {
       Elf64_Addr *const reloc_addr = (void *) reloc->r_offset;
       Elf64_Addr value = elf_ifunc_invoke(reloc->r_addend);
       *reloc_addr = value;
     }
-  else if (__builtin_expect (r_type == R_SPARC_JMP_IREL, 1))
+  else if (__glibc_likely (r_type == R_SPARC_JMP_IREL))
     {
       Elf64_Addr *const reloc_addr = (void *) reloc->r_offset;
       Elf64_Addr value = elf_ifunc_invoke(reloc->r_addend);

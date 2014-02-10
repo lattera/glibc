@@ -211,7 +211,7 @@ __free_tcb (struct pthread *pd)
 	abort ();
 
       /* Free TPP data.  */
-      if (__builtin_expect (pd->tpp != NULL, 0))
+      if (__glibc_unlikely (pd->tpp != NULL))
 	{
 	  struct priority_protection_data *tpp = pd->tpp;
 
@@ -246,7 +246,7 @@ start_thread (void *arg)
   __ctype_init ();
 
   /* Allow setxid from now onwards.  */
-  if (__builtin_expect (atomic_exchange_acq (&pd->setxid_futex, 0) == -2, 0))
+  if (__glibc_unlikely (atomic_exchange_acq (&pd->setxid_futex, 0) == -2))
     lll_futex_wake (&pd->setxid_futex, 1, LLL_PRIVATE);
 
 #ifdef __NR_set_robust_list
@@ -265,7 +265,7 @@ start_thread (void *arg)
   /* If the parent was running cancellation handlers while creating
      the thread the new thread inherited the signal mask.  Reset the
      cancellation signal mask.  */
-  if (__builtin_expect (pd->parent_cancelhandling & CANCELING_BITMASK, 0))
+  if (__glibc_unlikely (pd->parent_cancelhandling & CANCELING_BITMASK))
     {
       INTERNAL_SYSCALL_DECL (err);
       sigset_t mask;
@@ -285,12 +285,12 @@ start_thread (void *arg)
 
   int not_first_call;
   not_first_call = setjmp ((struct __jmp_buf_tag *) unwind_buf.cancel_jmp_buf);
-  if (__builtin_expect (! not_first_call, 1))
+  if (__glibc_likely (! not_first_call))
     {
       /* Store the new cleanup handler info.  */
       THREAD_SETMEM (pd, cleanup_jmp_buf, &unwind_buf);
 
-      if (__builtin_expect (pd->stopped_start, 0))
+      if (__glibc_unlikely (pd->stopped_start))
 	{
 	  int oldtype = CANCEL_ASYNC ();
 
@@ -327,12 +327,12 @@ start_thread (void *arg)
   /* If this is the last thread we terminate the process now.  We
      do not notify the debugger, it might just irritate it if there
      is no thread left.  */
-  if (__builtin_expect (atomic_decrement_and_test (&__nptl_nthreads), 0))
+  if (__glibc_unlikely (atomic_decrement_and_test (&__nptl_nthreads)))
     /* This was the last thread.  */
     exit (0);
 
   /* Report the death of the thread if this is wanted.  */
-  if (__builtin_expect (pd->report_events, 0))
+  if (__glibc_unlikely (pd->report_events))
     {
       /* See whether TD_DEATH is in any of the mask.  */
       const int idx = __td_eventword (TD_DEATH);
@@ -412,7 +412,7 @@ start_thread (void *arg)
   if (IS_DETACHED (pd))
     /* Free the TCB.  */
     __free_tcb (pd);
-  else if (__builtin_expect (pd->cancelhandling & SETXID_BITMASK, 0))
+  else if (__glibc_unlikely (pd->cancelhandling & SETXID_BITMASK))
     {
       /* Some other thread might call any of the setXid functions and expect
 	 us to reply.  In this case wait until we did that.  */
@@ -482,7 +482,7 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
   int err = ALLOCATE_STACK (iattr, &pd);
   int retval = 0;
 
-  if (__builtin_expect (err != 0, 0))
+  if (__glibc_unlikely (err != 0))
     /* Something went wrong.  Maybe a parameter of the attributes is
        invalid or we could not allocate memory.  Note we have to
        translate error codes.  */

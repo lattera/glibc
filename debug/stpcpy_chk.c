@@ -34,7 +34,7 @@ __stpcpy_chk (dest, src, destlen)
 
   do
     {
-      if (__builtin_expect (destlen-- == 0, 0))
+      if (__glibc_unlikely (destlen-- == 0))
 	__chk_fail ();
       *d++ = *s;
     }

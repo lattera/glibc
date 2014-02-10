@@ -29,7 +29,7 @@ __catan (__complex__ double x)
   int rcls = fpclassify (__real__ x);
   int icls = fpclassify (__imag__ x);
 
-  if (__builtin_expect (rcls <= FP_INFINITE || icls <= FP_INFINITE, 0))
+  if (__glibc_unlikely (rcls <= FP_INFINITE || icls <= FP_INFINITE))
     {
       if (rcls == FP_INFINITE)
 	{
@@ -55,7 +55,7 @@ __catan (__complex__ double x)
 	  __imag__ res = __nan ("");
 	}
     }
-  else if (__builtin_expect (rcls == FP_ZERO && icls == FP_ZERO, 0))
+  else if (__glibc_unlikely (rcls == FP_ZERO && icls == FP_ZERO))
     {
       res = x;
     }

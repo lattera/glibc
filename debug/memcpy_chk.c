@@ -29,7 +29,7 @@ __memcpy_chk (dstpp, srcpp, len, dstlen)
      size_t len;
      size_t dstlen;
 {
-  if (__builtin_expect (dstlen < len, 0))
+  if (__glibc_unlikely (dstlen < len))
     __chk_fail ();
 
   return memcpy (dstpp, srcpp, len);

@@ -39,7 +39,7 @@ __ieee754_acosh (double x)
 
   if (hx > INT64_C (0x4000000000000000))
     {
-      if (__builtin_expect (hx >= INT64_C (0x41b0000000000000), 0))
+      if (__glibc_unlikely (hx >= INT64_C (0x41b0000000000000)))
 	{
 	  /* x > 2**28 */
 	  if (hx >= INT64_C (0x7ff0000000000000))
@@ -53,13 +53,13 @@ __ieee754_acosh (double x)
       double t = x * x;
       return __ieee754_log (2.0 * x - one / (x + __ieee754_sqrt (t - one)));
     }
-  else if (__builtin_expect (hx > INT64_C (0x3ff0000000000000), 1))
+  else if (__glibc_likely (hx > INT64_C (0x3ff0000000000000)))
     {
       /* 1<x<2 */
       double t = x - one;
       return __log1p (t + __ieee754_sqrt (2.0 * t + t * t));
     }
-  else if (__builtin_expect (hx == INT64_C (0x3ff0000000000000), 1))
+  else if (__glibc_likely (hx == INT64_C (0x3ff0000000000000)))
     return 0.0;				/* acosh(1) = 0 */
   else					/* x < 1 */
     return (x - x) / (x - x);

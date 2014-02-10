@@ -177,7 +177,7 @@ internal_ucs4_loop_single (struct __gconv_step *step,
   while (*inptrp < inend && cnt < 4)
     state->__value.__wchb[cnt++] = *(*inptrp)++;
 
-  if (__builtin_expect (cnt < 4, 0))
+  if (__glibc_unlikely (cnt < 4))
     {
       /* Still not enough bytes.  Store the ones in the input buffer.  */
       state->__count &= ~7;
@@ -249,7 +249,7 @@ ucs4_internal_loop (struct __gconv_step *step,
       inval = *(const uint32_t *) inptr;
 #endif
 
-      if (__builtin_expect (inval > 0x7fffffff, 0))
+      if (__glibc_unlikely (inval > 0x7fffffff))
 	{
 	  /* The value is too large.  We don't try transliteration here since
 	     this is not an error because of the lack of possibilities to
@@ -308,7 +308,7 @@ ucs4_internal_loop_unaligned (struct __gconv_step *step,
 
   for (cnt = 0; cnt < n_convert; ++cnt, inptr += 4)
     {
-      if (__builtin_expect (inptr[0] > 0x80, 0))
+      if (__glibc_unlikely (inptr[0] > 0x80))
 	{
 	  /* The value is too large.  We don't try transliteration here since
 	     this is not an error because of the lack of possibilities to
@@ -376,7 +376,7 @@ ucs4_internal_loop_single (struct __gconv_step *step,
   while (*inptrp < inend && cnt < 4)
     state->__value.__wchb[cnt++] = *(*inptrp)++;
 
-  if (__builtin_expect (cnt < 4, 0))
+  if (__glibc_unlikely (cnt < 4))
     {
       /* Still not enough bytes.  Store the ones in the input buffer.  */
       state->__count &= ~7;
@@ -546,7 +546,7 @@ internal_ucs4le_loop_single (struct __gconv_step *step,
   while (*inptrp < inend && cnt < 4)
     state->__value.__wchb[cnt++] = *(*inptrp)++;
 
-  if (__builtin_expect (cnt < 4, 0))
+  if (__glibc_unlikely (cnt < 4))
     {
       /* Still not enough bytes.  Store the ones in the input buffer.  */
       state->__count &= ~7;
@@ -617,7 +617,7 @@ ucs4le_internal_loop (struct __gconv_step *step,
       inval = *(const uint32_t *) inptr;
 #endif
 
-      if (__builtin_expect (inval > 0x7fffffff, 0))
+      if (__glibc_unlikely (inval > 0x7fffffff))
 	{
 	  /* The value is too large.  We don't try transliteration here since
 	     this is not an error because of the lack of possibilities to
@@ -677,7 +677,7 @@ ucs4le_internal_loop_unaligned (struct __gconv_step *step,
 
   for (cnt = 0; cnt < n_convert; ++cnt, inptr += 4)
     {
-      if (__builtin_expect (inptr[3] > 0x80, 0))
+      if (__glibc_unlikely (inptr[3] > 0x80))
 	{
 	  /* The value is too large.  We don't try transliteration here since
 	     this is not an error because of the lack of possibilities to
@@ -749,7 +749,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
   while (*inptrp < inend && cnt < 4)
     state->__value.__wchb[cnt++] = *(*inptrp)++;
 
-  if (__builtin_expect (cnt < 4, 0))
+  if (__glibc_unlikely (cnt < 4))
     {
       /* Still not enough bytes.  Store the ones in the input buffer.  */
       state->__count &= ~7;
@@ -810,7 +810,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    if (__builtin_expect (*inptr > '\x7f', 0))				      \
+    if (__glibc_unlikely (*inptr > '\x7f'))				      \
       {									      \
 	/* The value is too large.  We don't try transliteration here since   \
 	   this is not an error because of the lack of possibilities to	      \
@@ -846,7 +846,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    if (__builtin_expect (*((const uint32_t *) inptr) > 0x7f, 0))	      \
+    if (__glibc_unlikely (*((const uint32_t *) inptr) > 0x7f))		      \
       {									      \
 	UNICODE_TAG_HANDLER (*((const uint32_t *) inptr), 4);		      \
 	STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
@@ -883,10 +883,10 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
   {									      \
     uint32_t wc = *((const uint32_t *) inptr);				      \
 									      \
-    if (__builtin_expect (wc < 0x80, 1))				      \
+    if (__glibc_likely (wc < 0x80))					      \
       /* It's an one byte sequence.  */					      \
       *outptr++ = (unsigned char) wc;					      \
-    else if (__builtin_expect (wc <= 0x7fffffff, 1))			      \
+    else if (__glibc_likely (wc <= 0x7fffffff))				      \
       {									      \
 	size_t step;							      \
 	unsigned char *start;						      \
@@ -895,7 +895,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	  if ((wc & (~(uint32_t)0 << (5 * step + 1))) == 0)		      \
 	    break;							      \
 									      \
-	if (__builtin_expect (outptr + step > outend, 0))		      \
+	if (__glibc_unlikely (outptr + step > outend))			      \
 	  {								      \
 	    /* Too long.  */						      \
 	    result = __GCONV_FULL_OUTPUT;				      \
@@ -946,7 +946,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
     /* Next input byte.  */						      \
     uint32_t ch = *inptr;						      \
 									      \
-    if (__builtin_expect (ch < 0x80, 1))				      \
+    if (__glibc_likely (ch < 0x80))					      \
       {									      \
 	/* One byte sequence.  */					      \
 	++inptr;							      \
@@ -964,25 +964,25 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	    cnt = 2;							      \
 	    ch &= 0x1f;							      \
 	  }								      \
-	else if (__builtin_expect ((ch & 0xf0) == 0xe0, 1))		      \
+	else if (__glibc_likely ((ch & 0xf0) == 0xe0))			      \
 	  {								      \
 	    /* We expect three bytes.  */				      \
 	    cnt = 3;							      \
 	    ch &= 0x0f;							      \
 	  }								      \
-	else if (__builtin_expect ((ch & 0xf8) == 0xf0, 1))		      \
+	else if (__glibc_likely ((ch & 0xf8) == 0xf0))			      \
 	  {								      \
 	    /* We expect four bytes.  */				      \
 	    cnt = 4;							      \
 	    ch &= 0x07;							      \
 	  }								      \
-	else if (__builtin_expect ((ch & 0xfc) == 0xf8, 1))		      \
+	else if (__glibc_likely ((ch & 0xfc) == 0xf8))			      \
 	  {								      \
 	    /* We expect five bytes.  */				      \
 	    cnt = 5;							      \
 	    ch &= 0x03;							      \
 	  }								      \
-	else if (__builtin_expect ((ch & 0xfe) == 0xfc, 1))		      \
+	else if (__glibc_likely ((ch & 0xfe) == 0xfc))			      \
 	  {								      \
 	    /* We expect six bytes.  */					      \
 	    cnt = 6;							      \
@@ -1003,7 +1003,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	    STANDARD_FROM_LOOP_ERR_HANDLER (i);				      \
 	  }								      \
 									      \
-	if (__builtin_expect (inptr + cnt > inend, 0))			      \
+	if (__glibc_unlikely (inptr + cnt > inend))			      \
 	  {								      \
 	    /* We don't have enough input.  But before we report that check   \
 	       that all the bytes are correct.  */			      \
@@ -1011,7 +1011,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	      if ((inptr[i] & 0xc0) != 0x80)				      \
 		break;							      \
 									      \
-	    if (__builtin_expect (inptr + i == inend, 1))		      \
+	    if (__glibc_likely (inptr + i == inend))			      \
 	      {								      \
 		result = __GCONV_INCOMPLETE_INPUT;			      \
 		break;							      \
@@ -1073,19 +1073,19 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	cnt = 2;							      \
 	ch &= 0x1f;							      \
       }									      \
-    else if (__builtin_expect ((ch & 0xf0) == 0xe0, 1))			      \
+    else if (__glibc_likely ((ch & 0xf0) == 0xe0))			      \
       {									      \
 	/* We expect three bytes.  */					      \
 	cnt = 3;							      \
 	ch &= 0x0f;							      \
       }									      \
-    else if (__builtin_expect ((ch & 0xf8) == 0xf0, 1))			      \
+    else if (__glibc_likely ((ch & 0xf8) == 0xf0))			      \
       {									      \
 	/* We expect four bytes.  */					      \
 	cnt = 4;							      \
 	ch &= 0x07;							      \
       }									      \
-    else if (__builtin_expect ((ch & 0xfc) == 0xf8, 1))			      \
+    else if (__glibc_likely ((ch & 0xfc) == 0xf8))			      \
       {									      \
 	/* We expect five bytes.  */					      \
 	cnt = 5;							      \
@@ -1164,7 +1164,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
   {									      \
     uint16_t u1 = get16 (inptr);					      \
 									      \
-    if (__builtin_expect (u1 >= 0xd800 && u1 < 0xe000, 0))		      \
+    if (__glibc_unlikely (u1 >= 0xd800 && u1 < 0xe000))			      \
       {									      \
 	/* Surrogate characters in UCS-2 input are not valid.  Reject	      \
 	   them.  (Catching this here is not security relevant.)  */	      \
@@ -1198,12 +1198,12 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
   {									      \
     uint32_t val = *((const uint32_t *) inptr);				      \
 									      \
-    if (__builtin_expect (val >= 0x10000, 0))				      \
+    if (__glibc_unlikely (val >= 0x10000))				      \
       {									      \
 	UNICODE_TAG_HANDLER (val, 4);					      \
 	STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
       }									      \
-    else if (__builtin_expect (val >= 0xd800 && val < 0xe000, 0))	      \
+    else if (__glibc_unlikely (val >= 0xd800 && val < 0xe000))		      \
       {									      \
 	/* Surrogate characters in UCS-4 input are not valid.		      \
 	   We must catch this, because the UCS-2 output might be	      \
@@ -1248,7 +1248,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
   {									      \
     uint16_t u1 = bswap_16 (get16 (inptr));				      \
 									      \
-    if (__builtin_expect (u1 >= 0xd800 && u1 < 0xe000, 0))		      \
+    if (__glibc_unlikely (u1 >= 0xd800 && u1 < 0xe000))			      \
       {									      \
 	/* Surrogate characters in UCS-2 input are not valid.  Reject	      \
 	   them.  (Catching this here is not security relevant.)  */	      \
@@ -1288,12 +1288,12 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 #define BODY \
   {									      \
     uint32_t val = *((const uint32_t *) inptr);				      \
-    if (__builtin_expect (val >= 0x10000, 0))				      \
+    if (__glibc_unlikely (val >= 0x10000))				      \
       {									      \
 	UNICODE_TAG_HANDLER (val, 4);					      \
 	STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
       }									      \
-    else if (__builtin_expect (val >= 0xd800 && val < 0xe000, 0))	      \
+    else if (__glibc_unlikely (val >= 0xd800 && val < 0xe000))		      \
       {									      \
 	/* Surrogate characters in UCS-4 input are not valid.		      \
 	   We must catch this, because the UCS-2 output might be	      \

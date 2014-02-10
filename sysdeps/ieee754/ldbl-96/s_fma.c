@@ -29,7 +29,7 @@
 double
 __fma (double x, double y, double z)
 {
-  if (__builtin_expect (isinf (z), 0))
+  if (__glibc_unlikely (isinf (z)))
     {
       /* If z is Inf, but x and y are finite, the result should be
 	 z rather than NaN.  */
@@ -39,7 +39,7 @@ __fma (double x, double y, double z)
     }
 
   /* Ensure correct sign of exact 0 + 0.  */
-  if (__builtin_expect ((x == 0 || y == 0) && z == 0, 0))
+  if (__glibc_unlikely ((x == 0 || y == 0) && z == 0))
     return x * y + z;
 
   fenv_t env;

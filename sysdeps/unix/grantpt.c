@@ -108,7 +108,7 @@ grantpt (int fd)
   char *buf = _buf;
   struct stat64 st;
 
-  if (__builtin_expect (pts_name (fd, &buf, sizeof (_buf), &st), 0))
+  if (__glibc_unlikely (pts_name (fd, &buf, sizeof (_buf), &st)))
     {
       int save_errno = errno;
 
@@ -136,7 +136,7 @@ grantpt (int fd)
     }
 
   static int tty_gid = -1;
-  if (__builtin_expect (tty_gid == -1, 0))
+  if (__glibc_unlikely (tty_gid == -1))
     {
       char *grtmpbuf;
       struct group grbuf;

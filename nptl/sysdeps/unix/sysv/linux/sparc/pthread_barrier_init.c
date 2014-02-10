@@ -28,7 +28,7 @@ pthread_barrier_init (barrier, attr, count)
 {
   union sparc_pthread_barrier *ibarrier;
 
-  if (__builtin_expect (count == 0, 0))
+  if (__glibc_unlikely (count == 0))
     return EINVAL;
 
   struct pthread_barrierattr *iattr = (struct pthread_barrierattr *) attr;

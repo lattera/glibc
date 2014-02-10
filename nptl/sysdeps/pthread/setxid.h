@@ -48,7 +48,7 @@
   ({									\
     extern __typeof (__nptl_setxid) __nptl_setxid __attribute__((weak));\
     int __result;							\
-    if (__builtin_expect (__nptl_setxid	!= NULL, 0))			\
+    if (__glibc_unlikely (__nptl_setxid	!= NULL))			      \
       {									\
 	struct xid_command __cmd;					\
 	__cmd.syscall_no = __NR_##name;					\

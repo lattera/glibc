@@ -278,7 +278,7 @@ setlocale (int category, const char *locale)
 	if (category != LC_ALL)
 	  newnames[category] = (char *) locale;
 
-      if (__builtin_expect (strchr (locale, ';') != NULL, 0))
+      if (__glibc_unlikely (strchr (locale, ';') != NULL))
 	{
 	  /* This is a composite name.  Make a copy and split it up.  */
 	  char *np = strdupa (locale);

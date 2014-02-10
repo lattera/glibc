@@ -167,9 +167,9 @@ base64 (unsigned int i)
 	    put32 (outptr, ch);						      \
 	    outptr += 4;						      \
 	  }								      \
-	else if (__builtin_expect (ch == '+', 1))			      \
+	else if (__glibc_likely (ch == '+'))				      \
 	  {								      \
-	    if (__builtin_expect (inptr + 2 > inend, 0))		      \
+	    if (__glibc_unlikely (inptr + 2 > inend))			      \
 	      {								      \
 		/* Not enough input available.  */			      \
 		result = __GCONV_INCOMPLETE_INPUT;			      \
@@ -340,7 +340,7 @@ base64 (unsigned int i)
 	    else							      \
 	      STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
 									      \
-	    if (__builtin_expect (outptr + count > outend, 0))		      \
+	    if (__glibc_unlikely (outptr + count > outend))		      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -381,7 +381,7 @@ base64 (unsigned int i)
 	    size_t count;						      \
 									      \
 	    count = ((statep->__count & 0x18) >= 0x10) + isxbase64 (ch) + 1;  \
-	    if (__builtin_expect (outptr + count > outend, 0))		      \
+	    if (__glibc_unlikely (outptr + count > outend))		      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -405,7 +405,7 @@ base64 (unsigned int i)
 	    else							      \
 	      STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
 									      \
-	    if (__builtin_expect (outptr + count > outend, 0))		      \
+	    if (__glibc_unlikely (outptr + count > outend))		      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -509,7 +509,7 @@ base64 (unsigned int i)
 	  /* Deactivate base64 encoding.  */				      \
 	  size_t count = ((state & 0x18) >= 0x10) + 1;			      \
 									      \
-	  if (__builtin_expect (outbuf + count > outend, 0))		      \
+	  if (__glibc_unlikely (outbuf + count > outend))		      \
 	    /* We don't have enough room in the output buffer.  */	      \
 	    status = __GCONV_FULL_OUTPUT;				      \
 	  else								      \

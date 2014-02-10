@@ -54,7 +54,7 @@
       if (dir == to_utf16)						\
 	{								\
           /* Emit the UTF-16 Byte Order Mark.  */			\
-          if (__builtin_expect (outbuf + 2 > outend, 0))		\
+          if (__glibc_unlikely (outbuf + 2 > outend))			      \
 	    return __GCONV_FULL_OUTPUT;					\
 									\
 	  put16u (outbuf, BOM_UTF16);					\
@@ -63,7 +63,7 @@
       else								\
 	{								\
           /* Emit the UTF-32 Byte Order Mark.  */			\
-	  if (__builtin_expect (outbuf + 4 > outend, 0))		\
+	  if (__glibc_unlikely (outbuf + 4 > outend))			      \
 	    return __GCONV_FULL_OUTPUT;					\
 									\
 	  put32u (outbuf, BOM_UTF32);					\
@@ -236,13 +236,13 @@ gconv_end (struct __gconv_step *data)
       {									\
         /* An isolated low-surrogate was found.  This has to be         \
 	   considered ill-formed.  */					\
-        if (__builtin_expect (u1 >= 0xdc00, 0))				\
+        if (__glibc_unlikely (u1 >= 0xdc00))				      \
 	  {								\
 	    STANDARD_FROM_LOOP_ERR_HANDLER (2);				\
 	  }								\
 	/* It's a surrogate character.  At least the first word says	\
 	   it is.  */							\
-	if (__builtin_expect (inptr + 4 > inend, 0))			\
+	if (__glibc_unlikely (inptr + 4 > inend))			      \
 	  {								\
 	    /* We don't have enough input for another complete input	\
 	       character.  */						\
@@ -306,7 +306,7 @@ gconv_end (struct __gconv_step *data)
 	uint16_t out;							\
 									\
 	/* Generate a surrogate character.  */				\
-	if (__builtin_expect (outptr + 4 > outend, 0))			\
+	if (__glibc_unlikely (outptr + 4 > outend))			      \
 	  {								\
 	    /* Overflow in the output buffer.  */			\
 	    result = __GCONV_FULL_OUTPUT;				\

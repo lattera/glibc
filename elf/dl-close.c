@@ -73,7 +73,7 @@ remove_slotinfo (size_t idx, struct dtv_slotinfo_list *listp, size_t disp,
 
       /* The entry might still be in its unused state if we are closing an
 	 object that wasn't fully set up.  */
-      if (__builtin_expect (old_map != NULL, 1))
+      if (__glibc_likely (old_map != NULL))
 	{
 	  assert (old_map->l_tls_modid == idx);
 
@@ -123,7 +123,7 @@ _dl_close_worker (struct link_map *map)
 	dl_close_state = rerun;
 
       /* There are still references to this object.  Do nothing more.  */
-      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
+      if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_FILES))
 	_dl_debug_printf ("\nclosing file=%s; direct_opencount=%u\n",
 			  map->l_name, map->l_direct_opencount);
 
@@ -280,7 +280,7 @@ _dl_close_worker (struct link_map *map)
 
 #ifdef SHARED
 	  /* Auditing checkpoint: we remove an object.  */
-	  if (__builtin_expect (do_audit, 0))
+	  if (__glibc_unlikely (do_audit))
 	    {
 	      struct audit_ifaces *afct = GLRO(dl_audit);
 	      for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
@@ -452,7 +452,7 @@ _dl_close_worker (struct link_map *map)
 
 #ifdef SHARED
   /* Auditing checkpoint: we will start deleting objects.  */
-  if (__builtin_expect (do_audit, 0))
+  if (__glibc_unlikely (do_audit))
     {
       struct link_map *head = ns->_ns_loaded;
       struct audit_ifaces *afct = GLRO(dl_audit);
@@ -536,7 +536,7 @@ _dl_close_worker (struct link_map *map)
 	     object.  We can unmap it.  */
 
 	  /* Remove the object from the dtv slotinfo array if it uses TLS.  */
-	  if (__builtin_expect (imap->l_tls_blocksize > 0, 0))
+	  if (__glibc_unlikely (imap->l_tls_blocksize > 0))
 	    {
 	      any_tls = true;
 
@@ -662,7 +662,7 @@ _dl_close_worker (struct link_map *map)
 	  free (imap->l_reldeps);
 
 	  /* Print debugging message.  */
-	  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
+	  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_FILES))
 	    _dl_debug_printf ("\nfile=%s [%lu];  destroying link map\n",
 			      imap->l_name, imap->l_ns);
 
@@ -704,7 +704,7 @@ _dl_close_worker (struct link_map *map)
   /* If we removed any object which uses TLS bump the generation counter.  */
   if (any_tls)
     {
-      if (__builtin_expect (++GL(dl_tls_generation) == 0, 0))
+      if (__glibc_unlikely (++GL(dl_tls_generation) == 0))
 	_dl_fatal_printf ("TLS generation counter wrapped!  Please report as described in "REPORT_BUGS_TO".\n");
 
       if (tls_free_end == GL(dl_tls_static_used))
@@ -713,7 +713,7 @@ _dl_close_worker (struct link_map *map)
 
 #ifdef SHARED
   /* Auditing checkpoint: we have deleted all objects.  */
-  if (__builtin_expect (do_audit, 0))
+  if (__glibc_unlikely (do_audit))
     {
       struct link_map *head = ns->_ns_loaded;
       /* Do not call the functions for any auditing object.  */
@@ -757,7 +757,7 @@ _dl_close (void *_map)
   struct link_map *map = _map;
 
   /* First see whether we can remove the object at all.  */
-  if (__builtin_expect (map->l_flags_1 & DF_1_NODELETE, 0))
+  if (__glibc_unlikely (map->l_flags_1 & DF_1_NODELETE))
     {
       assert (map->l_init_called);
       /* Nope.  Do nothing.  */

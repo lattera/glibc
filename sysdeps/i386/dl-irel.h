@@ -39,7 +39,7 @@ elf_irel (const Elf32_Rel *reloc)
   Elf32_Addr *const reloc_addr = (void *) reloc->r_offset;
   const unsigned long int r_type = ELF32_R_TYPE (reloc->r_info);
 
-  if (__builtin_expect (r_type == R_386_IRELATIVE, 1))
+  if (__glibc_likely (r_type == R_386_IRELATIVE))
     {
       Elf32_Addr value = elf_ifunc_invoke(*reloc_addr);
       *reloc_addr = value;

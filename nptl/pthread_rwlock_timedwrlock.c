@@ -69,7 +69,7 @@ pthread_rwlock_timedwrlock (rwlock, abstime)
 
       /* Work around the fact that the kernel rejects negative timeout values
 	 despite them being valid.  */
-      if (__builtin_expect (abstime->tv_sec < 0, 0))
+      if (__glibc_unlikely (abstime->tv_sec < 0))
 	{
 	  result = ETIMEDOUT;
 	  break;

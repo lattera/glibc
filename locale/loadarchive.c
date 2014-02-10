@@ -263,7 +263,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
     }
 
   /* If there is no archive or it cannot be loaded for some reason fail.  */
-  if (__builtin_expect (headmap.ptr == NULL, 0))
+  if (__glibc_unlikely (headmap.ptr == NULL))
     goto close_and_out;
 
   /* We have the archive available.  To find the name we first have to
@@ -459,11 +459,11 @@ _nl_load_locale_from_archive (int category, const char **namep)
      Now we need the expected data structures to point into the data.  */
 
   lia = malloc (sizeof *lia);
-  if (__builtin_expect (lia == NULL, 0))
+  if (__glibc_unlikely (lia == NULL))
     return NULL;
 
   lia->name = strdup (*namep);
-  if (__builtin_expect (lia->name == NULL, 0))
+  if (__glibc_unlikely (lia->name == NULL))
     {
       free (lia);
       return NULL;
@@ -478,7 +478,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	lia->data[cnt] = _nl_intern_locale_data (cnt,
 						 results[cnt].addr,
 						 results[cnt].len);
-	if (__builtin_expect (lia->data[cnt] != NULL, 1))
+	if (__glibc_likely (lia->data[cnt] != NULL))
 	  {
 	    /* _nl_intern_locale_data leaves us these fields to initialize.  */
 	    lia->data[cnt]->alloc = ld_archive;

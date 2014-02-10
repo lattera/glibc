@@ -23,7 +23,7 @@
 wchar_t *
 __wcpncpy_chk (wchar_t *dest, const wchar_t *src, size_t n, size_t destlen)
 {
-  if (__builtin_expect (destlen < n, 0))
+  if (__glibc_unlikely (destlen < n))
     __chk_fail ();
 
   /* This function is not often enough used to justify not using a

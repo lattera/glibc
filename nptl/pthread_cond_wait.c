@@ -119,7 +119,7 @@ __pthread_cond_wait (cond, mutex)
 
   /* Now we can release the mutex.  */
   err = __pthread_mutex_unlock_usercnt (mutex, 0);
-  if (__builtin_expect (err, 0))
+  if (__glibc_unlikely (err))
     {
       lll_unlock (cond->__data.__lock, pshared);
       return err;

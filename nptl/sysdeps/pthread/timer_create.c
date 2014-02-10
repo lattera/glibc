@@ -68,7 +68,7 @@ timer_create (clock_id, evp, timerid)
   pthread_mutex_lock (&__timer_mutex);
 
   newtimer = __timer_alloc ();
-  if (__builtin_expect (newtimer == NULL, 0))
+  if (__glibc_unlikely (newtimer == NULL))
     {
       __set_errno (EAGAIN);
       goto unlock_bail;
@@ -123,7 +123,7 @@ timer_create (clock_id, evp, timerid)
 	thread = __timer_thread_alloc (&newtimer->attr, clock_id);
 
       /* Out of luck; no threads are available.  */
-      if (__builtin_expect (thread == NULL, 0))
+      if (__glibc_unlikely (thread == NULL))
 	{
 	  __set_errno (EAGAIN);
 	  goto unlock_bail;

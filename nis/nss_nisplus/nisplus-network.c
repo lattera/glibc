@@ -376,7 +376,7 @@ _nss_nisplus_getnetbyname_r (const char *name, struct netent *network,
     }
 
   retval = niserr2nss (result->status);
-  if (__builtin_expect (retval != NSS_STATUS_SUCCESS, 0))
+  if (__glibc_unlikely (retval != NSS_STATUS_SUCCESS))
     {
       if (retval == NSS_STATUS_TRYAGAIN)
 	{
@@ -447,7 +447,7 @@ _nss_nisplus_getnetbyaddr_r (uint32_t addr, const int type,
 	    return NSS_STATUS_TRYAGAIN;
 	  }
 	enum nss_status retval = niserr2nss (result->status);
-	if (__builtin_expect (retval != NSS_STATUS_SUCCESS, 0))
+	if (__glibc_unlikely (retval != NSS_STATUS_SUCCESS))
 	  {
 	    if (b2len > 2 && buf2[b2len - 2] == '.' && buf2[b2len - 1] == '0')
 	      {

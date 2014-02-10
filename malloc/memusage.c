@@ -137,20 +137,20 @@ update_data (struct header *result, size_t len, size_t old_len)
      value.  The base stack pointer might not be set if this is not
      the main thread and it is the first call to any of these
      functions.  */
-  if (__builtin_expect (!start_sp, 0))
+  if (__glibc_unlikely (!start_sp))
     start_sp = GETSP ();
 
   uintptr_t sp = GETSP ();
 #ifdef STACK_GROWS_UPWARD
   /* This can happen in threads where we didn't catch the thread's
      stack early enough.  */
-  if (__builtin_expect (sp < start_sp, 0))
+  if (__glibc_unlikely (sp < start_sp))
     start_sp = sp;
   size_t current_stack = sp - start_sp;
 #else
   /* This can happen in threads where we didn't catch the thread's
      stack early enough.  */
-  if (__builtin_expect (sp > start_sp, 0))
+  if (__glibc_unlikely (sp > start_sp))
     start_sp = sp;
   size_t current_stack = start_sp - sp;
 #endif
@@ -330,7 +330,7 @@ malloc (size_t len)
   struct header *result = NULL;
 
   /* Determine real implementation if not already happened.  */
-  if (__builtin_expect (initialized <= 0, 0))
+  if (__glibc_unlikely (initialized <= 0))
     {
       if (initialized == -1)
         return NULL;
@@ -382,7 +382,7 @@ realloc (void *old, size_t len)
   size_t old_len;
 
   /* Determine real implementation if not already happened.  */
-  if (__builtin_expect (initialized <= 0, 0))
+  if (__glibc_unlikely (initialized <= 0))
     {
       if (initialized == -1)
         return NULL;
@@ -476,7 +476,7 @@ calloc (size_t n, size_t len)
   size_t size = n * len;
 
   /* Determine real implementation if not already happened.  */
-  if (__builtin_expect (initialized <= 0, 0))
+  if (__glibc_unlikely (initialized <= 0))
     {
       if (initialized == -1)
         return NULL;
@@ -526,7 +526,7 @@ free (void *ptr)
   struct header *real;
 
   /* Determine real implementation if not already happened.  */
-  if (__builtin_expect (initialized <= 0, 0))
+  if (__glibc_unlikely (initialized <= 0))
     {
       if (initialized == -1)
         return;
@@ -578,7 +578,7 @@ mmap (void *start, size_t len, int prot, int flags, int fd, off_t offset)
   void *result = NULL;
 
   /* Determine real implementation if not already happened.  */
-  if (__builtin_expect (initialized <= 0, 0))
+  if (__glibc_unlikely (initialized <= 0))
     {
       if (initialized == -1)
         return NULL;
@@ -631,7 +631,7 @@ mmap64 (void *start, size_t len, int prot, int flags, int fd, off64_t offset)
   void *result = NULL;
 
   /* Determine real implementation if not already happened.  */
-  if (__builtin_expect (initialized <= 0, 0))
+  if (__glibc_unlikely (initialized <= 0))
     {
       if (initialized == -1)
         return NULL;
@@ -689,7 +689,7 @@ mremap (void *start, size_t old_len, size_t len, int flags, ...)
   va_end (ap);
 
   /* Determine real implementation if not already happened.  */
-  if (__builtin_expect (initialized <= 0, 0))
+  if (__glibc_unlikely (initialized <= 0))
     {
       if (initialized == -1)
         return NULL;
@@ -750,7 +750,7 @@ munmap (void *start, size_t len)
   int result;
 
   /* Determine real implementation if not already happened.  */
-  if (__builtin_expect (initialized <= 0, 0))
+  if (__glibc_unlikely (initialized <= 0))
     {
       if (initialized == -1)
         return -1;
@@ -766,7 +766,7 @@ munmap (void *start, size_t len)
       /* Keep track of number of calls.  */
       catomic_increment (&calls[idx_munmap]);
 
-      if (__builtin_expect (result == 0, 1))
+      if (__glibc_likely (result == 0))
         {
           /* Keep track of total memory freed using `free'.  */
           catomic_add (&total[idx_munmap], len);

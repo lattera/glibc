@@ -180,7 +180,7 @@ res_nmkquery(res_state statp,
 		n = ns_name_compress((char *)data, cp, buflen,
 				     (const u_char **) dnptrs,
 				     (const u_char **) lastdnptr);
-		if (__builtin_expect (n < 0, 0))
+		if (__glibc_unlikely (n < 0))
 			return (-1);
 		cp += n;
 		buflen -= n;
@@ -195,7 +195,7 @@ res_nmkquery(res_state statp,
 		/*
 		 * Initialize answer section
 		 */
-		if (__builtin_expect (buflen < 1 + RRFIXEDSZ + datalen, 0))
+		if (__glibc_unlikely (buflen < 1 + RRFIXEDSZ + datalen))
 			return (-1);
 		*cp++ = '\0';	/* no domain name */
 		NS_PUT16 (type, cp);

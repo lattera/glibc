@@ -306,7 +306,7 @@ queue_stack (struct pthread *stack)
   stack_list_add (&stack->list, &stack_cache);
 
   stack_cache_actsize += stack->stackblock_size;
-  if (__builtin_expect (stack_cache_actsize > stack_cache_maxsize, 0))
+  if (__glibc_unlikely (stack_cache_actsize > stack_cache_maxsize))
     __free_stacks (stack_cache_maxsize);
 }
 
@@ -368,7 +368,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
     }
 
   /* Get memory for the stack.  */
-  if (__builtin_expect (attr->flags & ATTR_FLAG_STACKADDR, 0))
+  if (__glibc_unlikely (attr->flags & ATTR_FLAG_STACKADDR))
     {
       uintptr_t adj;
 
@@ -504,7 +504,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	  mem = mmap (NULL, size, prot,
 		      MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
 
-	  if (__builtin_expect (mem == MAP_FAILED, 0))
+	  if (__glibc_unlikely (mem == MAP_FAILED))
 	    return errno;
 
 	  /* SIZE is guaranteed to be greater than zero.
@@ -525,7 +525,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 	  /* Make sure the coloring offsets does not disturb the alignment
 	     of the TCB and static TLS block.  */
-	  if (__builtin_expect ((coloring & __static_tls_align_m1) != 0, 0))
+	  if (__glibc_unlikely ((coloring & __static_tls_align_m1) != 0))
 	    coloring = (((coloring + __static_tls_align_m1)
 			 & ~(__static_tls_align_m1))
 			& ~pagesize_m1);
@@ -629,7 +629,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	}
 
       /* Create or resize the guard area if necessary.  */
-      if (__builtin_expect (guardsize > pd->guardsize, 0))
+      if (__glibc_unlikely (guardsize > pd->guardsize))
 	{
 #ifdef NEED_SEPARATE_REGISTER_STACK
 	  char *guard = mem + (((size - guardsize) / 2) & ~pagesize_m1);
@@ -752,7 +752,7 @@ __deallocate_stack (struct pthread *pd)
      not reset the 'used' flag in the 'tid' field.  This is done by
      the kernel.  If no thread has been created yet this field is
      still zero.  */
-  if (__builtin_expect (! pd->user_stack, 1))
+  if (__glibc_likely (! pd->user_stack))
     (void) queue_stack (pd);
   else
     /* Free the memory associated with the ELF TLS.  */
@@ -916,7 +916,7 @@ __reclaim_stacks (void)
   INIT_LIST_HEAD (&stack_used);
   INIT_LIST_HEAD (&__stack_user);
 
-  if (__builtin_expect (THREAD_GETMEM (self, user_stack), 0))
+  if (__glibc_unlikely (THREAD_GETMEM (self, user_stack)))
     list_add (&self->list, &__stack_user);
   else
     list_add (&self->list, &stack_used);

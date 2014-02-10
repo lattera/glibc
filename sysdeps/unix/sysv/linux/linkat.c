@@ -65,7 +65,7 @@ linkat (fromfd, from, tofd, to, flags)
   if (fromfd != AT_FDCWD && from[0] != '/')
     {
       size_t filelen = strlen (from);
-      if (__builtin_expect (filelen == 0, 0))
+      if (__glibc_unlikely (filelen == 0))
 	{
 	  __set_errno (ENOENT);
 	  return -1;
@@ -108,7 +108,7 @@ linkat (fromfd, from, tofd, to, flags)
 
   result = INTERNAL_SYSCALL (link, err, 2, from,  to);
 
-  if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
+  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
     {
       __atfct_seterrno_2 (INTERNAL_SYSCALL_ERRNO (result, err), tofd, bufto,
 			  fromfd, buffrom);

@@ -36,7 +36,7 @@ iconv (iconv_t cd, char **inbuf, size_t *inbytesleft, char **outbuf,
   size_t irreversible;
   int result;
 
-  if (__builtin_expect (inbuf == NULL || *inbuf == NULL, 0))
+  if (__glibc_unlikely (inbuf == NULL || *inbuf == NULL))
     {
       if (outbuf == NULL || *outbuf == NULL)
 	result = __gconv (gcd, NULL, NULL, NULL, NULL, &irreversible);

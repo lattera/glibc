@@ -34,7 +34,7 @@ __logb (double x)
   ex = ix >> 52;
   if (ex == 0x7ff)
     return x * x;
-  if (__builtin_expect (ex == 0, 0))
+  if (__glibc_unlikely (ex == 0))
     {
       int m = __builtin_clzll (ix);
       ex -= m - 12;

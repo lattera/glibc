@@ -13157,7 +13157,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	  uint32_t ch2;							      \
 	  int idx;							      \
 									      \
-	  if (__builtin_expect (inptr + 1 >= inend, 0))			      \
+	  if (__glibc_unlikely (inptr + 1 >= inend))			      \
 	    {								      \
 	      /* The second character is not available.  Store		      \
 		 the intermediate result.  */				      \

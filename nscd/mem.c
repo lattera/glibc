@@ -124,11 +124,11 @@ gc (struct database_dyn *db)
   /* In prune_cache we are also using a dynamically allocated array.
      If the array in the caller is too large we have malloc'ed it.  */
   size_t stack_used = sizeof (bool) * db->head->module;
-  if (__builtin_expect (stack_used > MAX_STACK_USE, 0))
+  if (__glibc_unlikely (stack_used > MAX_STACK_USE))
     stack_used = 0;
   size_t nmark = (db->head->first_free / BLOCK_ALIGN + BITS - 1) / BITS;
   size_t memory_needed = nmark * sizeof (BITMAP_T);
-  if (__builtin_expect (stack_used + memory_needed <= MAX_STACK_USE, 1))
+  if (__glibc_likely (stack_used + memory_needed <= MAX_STACK_USE))
     {
       mark = (BITMAP_T *) alloca_account (memory_needed, stack_used);
       mark_use_malloc = false;
@@ -146,7 +146,7 @@ gc (struct database_dyn *db)
   struct hashentry **he;
   struct hashentry **he_data;
   bool he_use_malloc;
-  if (__builtin_expect (stack_used + memory_needed <= MAX_STACK_USE, 1))
+  if (__glibc_likely (stack_used + memory_needed <= MAX_STACK_USE))
     {
       he = alloca_account (memory_needed, stack_used);
       he_use_malloc = false;
@@ -421,7 +421,7 @@ gc (struct database_dyn *db)
 	}
       while (runp != moves->next);
 
-      if (__builtin_expect (debug_level >= 3, 0))
+      if (__glibc_unlikely (debug_level >= 3))
 	dbg_log (_("freed %zu bytes in %s cache"),
 		 db->head->first_free
 		 - ((char *) moves->to + moves->size - db->data),
@@ -432,7 +432,7 @@ gc (struct database_dyn *db)
       db->head->first_free = (char *) moves->to + moves->size - db->data;
 
       /* Consistency check.  */
-      if (__builtin_expect (debug_level >= 3, 0))
+      if (__glibc_unlikely (debug_level >= 3))
 	{
 	  for (size_t idx = 0; idx < db->head->module; ++idx)
 	    {
@@ -527,7 +527,7 @@ mempool_alloc (struct database_dyn *db, size_t len, int data_alloc)
  retry:
   res = db->data + db->head->first_free;
 
-  if (__builtin_expect (db->head->first_free + len > db->head->data_size, 0))
+  if (__glibc_unlikely (db->head->first_free + len > db->head->data_size))
     {
       if (! tried_resize)
 	{

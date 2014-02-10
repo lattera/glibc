@@ -43,14 +43,14 @@ hp_timing_settime (clockid_t clock_id, const struct timespec *tp)
   /* First thing is to get the current time.  */
   HP_TIMING_NOW (tsc);
 
-  if (__builtin_expect (freq == 0, 0))
+  if (__glibc_unlikely (freq == 0))
     {
       /* This can only happen if we haven't initialized the `freq'
 	 variable yet.  Do this now. We don't have to protect this
 	 code against multiple execution since all of them should lead
 	 to the same result.  */
       freq = __get_clockfreq ();
-      if (__builtin_expect (freq == 0, 0))
+      if (__glibc_unlikely (freq == 0))
 	/* Something went wrong.  */
 	return -1;
     }

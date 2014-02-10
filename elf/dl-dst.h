@@ -25,7 +25,7 @@
     size_t __cnt = 0;							      \
     const char *__sf = strchr (name, '$');				      \
 									      \
-    if (__builtin_expect (__sf != NULL, 0))				      \
+    if (__glibc_unlikely (__sf != NULL))				      \
       __cnt = _dl_dst_count (__sf, is_path);			      \
 									      \
     __cnt; })

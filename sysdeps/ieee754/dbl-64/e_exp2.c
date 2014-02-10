@@ -43,10 +43,10 @@ __ieee754_exp2 (double x)
   static const double lomark = (double) (DBL_MIN_EXP - DBL_MANT_DIG - 1);
 
   /* Check for usual case.  */
-  if (__builtin_expect (isless (x, himark), 1))
+  if (__glibc_likely (isless (x, himark)))
     {
       /* Exceptional cases:  */
-      if (__builtin_expect (!isgreaterequal (x, lomark), 0))
+      if (__glibc_unlikely (!isgreaterequal (x, lomark)))
 	{
 	  if (__isinf (x))
 	    /* e^-inf == 0, with no error.  */

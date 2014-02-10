@@ -233,7 +233,7 @@ static inline void
 __attribute__ ((always_inline))
 __lll_lock (int *futex, int private)
 {
-  if (__builtin_expect (atomic_compare_and_exchange_bool_acq (futex, 1, 0), 0))
+  if (__glibc_unlikely (atomic_compare_and_exchange_bool_acq (futex, 1, 0)))
     {
       if (__builtin_constant_p (private) && private == LLL_PRIVATE)
 	__lll_lock_wait_private (futex);
@@ -260,7 +260,7 @@ static inline void
 __attribute__ ((always_inline))
 __lll_cond_lock (int *futex, int private)
 {
-  if (__builtin_expect (atomic_compare_and_exchange_bool_acq (futex, 2, 0), 0))
+  if (__glibc_unlikely (atomic_compare_and_exchange_bool_acq (futex, 2, 0)))
     __lll_lock_wait (futex, private);
 }
 #define lll_cond_lock(futex, private) __lll_cond_lock (&(futex), private)
@@ -278,7 +278,7 @@ __attribute__ ((always_inline))
 __lll_timedlock (int *futex, const struct timespec *abstime, int private)
 {
   int result = 0;
-  if (__builtin_expect (atomic_compare_and_exchange_bool_acq (futex, 1, 0), 0))
+  if (__glibc_unlikely (atomic_compare_and_exchange_bool_acq (futex, 1, 0)))
     result = __lll_timedlock_wait (futex, abstime, private);
   return result;
 }
@@ -307,7 +307,7 @@ __lll_robust_timedlock (int *futex, const struct timespec *abstime,
        int *__futexp = (futex);						      \
 									      \
        lll_compare_and_swap (__futexp, __oldval, __newval, "slr %2,%2");      \
-       if (__builtin_expect (__oldval > 1, 0))				      \
+       if (__glibc_unlikely (__oldval > 1))				      \
 	 lll_futex_wake (__futexp, 1, private);				      \
     })
 #define lll_unlock(futex, private) __lll_unlock(&(futex), private)
@@ -320,7 +320,7 @@ __lll_robust_timedlock (int *futex, const struct timespec *abstime,
        int *__futexp = (futex);						      \
 									      \
        lll_compare_and_swap (__futexp, __oldval, __newval, "slr %2,%2");      \
-       if (__builtin_expect (__oldval & FUTEX_WAITERS, 0))		      \
+       if (__glibc_unlikely (__oldval & FUTEX_WAITERS))			      \
 	 lll_futex_wake (__futexp, 1, private);				      \
     })
 #define lll_robust_unlock(futex, private) \

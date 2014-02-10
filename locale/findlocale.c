@@ -101,11 +101,11 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
 
   /* We really have to load some data.  First we try the archive,
      but only if there was no LOCPATH environment variable specified.  */
-  if (__builtin_expect (locale_path == NULL, 1))
+  if (__glibc_likely (locale_path == NULL))
     {
       struct __locale_data *data
 	= _nl_load_locale_from_archive (category, name);
-      if (__builtin_expect (data != NULL, 1))
+      if (__glibc_likely (data != NULL))
 	return data;
 
       /* Nothing in the archive.  Set the default path to search below.  */

@@ -32,7 +32,7 @@ _dl_resolve_conflicts (struct link_map *l, ElfW(Rela) *conflict,
 		       ElfW(Rela) *conflictend)
 {
 #if ! ELF_MACHINE_NO_RELA
-  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_RELOC, 0))
+  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_RELOC))
     _dl_debug_printf ("\nconflict processing: %s\n", DSO_FILENAME (l->l_name));
 
   {

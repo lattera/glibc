@@ -33,7 +33,7 @@ __wcpcpy_chk (wchar_t *dest, const wchar_t *src, size_t destlen)
 
   do
     {
-      if (__builtin_expect (destlen-- == 0, 0))
+      if (__glibc_unlikely (destlen-- == 0))
 	__chk_fail ();
       c = wcp[off];
       *++wcp = c;

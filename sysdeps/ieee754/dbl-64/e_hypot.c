@@ -70,7 +70,7 @@ __ieee754_hypot (double x, double y)
       return a + b;
     }                                       /* x/y > 2**60 */
   k = 0;
-  if (__builtin_expect (ha > 0x5f300000, 0))            /* a>2**500 */
+  if (__glibc_unlikely (ha > 0x5f300000))                  /* a>2**500 */
     {
       if (ha >= 0x7ff00000)             /* Inf or NaN */
 	{

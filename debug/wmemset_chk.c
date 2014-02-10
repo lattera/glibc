@@ -22,7 +22,7 @@
 wchar_t *
 __wmemset_chk (wchar_t *s, wchar_t c, size_t n, size_t dstlen)
 {
-  if (__builtin_expect (dstlen < n, 0))
+  if (__glibc_unlikely (dstlen < n))
     __chk_fail ();
 
   return wmemset (s, c, n);

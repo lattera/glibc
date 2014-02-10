@@ -23,7 +23,7 @@ size_t
 __mbsrtowcs_chk (wchar_t *dst, const char **src, size_t len,
 		 mbstate_t *ps, size_t dstlen)
 {
-  if (__builtin_expect (dstlen < len, 0))
+  if (__glibc_unlikely (dstlen < len))
     __chk_fail ();
 
   return __mbsrtowcs (dst, src, len, ps);

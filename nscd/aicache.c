@@ -77,7 +77,7 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
     char strdata[0];
   } *dataset = NULL;
 
-  if (__builtin_expect (debug_level > 0, 0))
+  if (__glibc_unlikely (debug_level > 0))
     {
       if (he == NULL)
 	dbg_log (_("Haven't found \"%s\" in hosts cache!"), (char *) key);
@@ -434,7 +434,7 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 	      struct dataset *newp
 		= (struct dataset *) mempool_alloc (db, total + req->key_len,
 						    1);
-	      if (__builtin_expect (newp != NULL, 1))
+	      if (__glibc_likely (newp != NULL))
 		{
 		  /* Adjust pointer into the memory block.  */
 		  key_copy = (char *) newp + (key_copy - (char *) dataset);

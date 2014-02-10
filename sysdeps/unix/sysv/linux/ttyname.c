@@ -127,7 +127,7 @@ ttyname (int fd)
 
   /* isatty check, tcgetattr is used because it sets the correct
      errno (EBADF resp. ENOTTY) on error.  */
-  if (__builtin_expect (__tcgetattr (fd, &term) < 0, 0))
+  if (__glibc_unlikely (__tcgetattr (fd, &term) < 0))
     return NULL;
 
   if (__fxstat64 (_STAT_VER, fd, &st) < 0)
@@ -148,7 +148,7 @@ ttyname (int fd)
     }
 
   ssize_t len = __readlink (procname, ttyname_buf, buflen);
-  if (__builtin_expect (len != -1, 1))
+  if (__glibc_likely (len != -1))
     {
       if ((size_t) len >= buflen)
 	return NULL;

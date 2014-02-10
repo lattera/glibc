@@ -57,7 +57,7 @@ __cxa_finalize (void *d)
 
 	      /* It is possible that that last exit function registered
 		 more exit functions.  Start the loop over.  */
-	      if (__builtin_expect (check != __new_exitfn_called, 0))
+	      if (__glibc_unlikely (check != __new_exitfn_called))
 		goto restart;
 	    }
 	}

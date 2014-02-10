@@ -122,7 +122,7 @@ __ieee754_gamma_r (double x, int *signgamp)
 
   EXTRACT_WORDS (hx, lx, x);
 
-  if (__builtin_expect (((hx & 0x7fffffff) | lx) == 0, 0))
+  if (__glibc_unlikely (((hx & 0x7fffffff) | lx) == 0))
     {
       /* Return value for x == 0 is Inf with divide by zero exception.  */
       *signgamp = 0;
@@ -135,13 +135,13 @@ __ieee754_gamma_r (double x, int *signgamp)
       *signgamp = 0;
       return (x - x) / (x - x);
     }
-  if (__builtin_expect ((unsigned int) hx == 0xfff00000 && lx == 0, 0))
+  if (__glibc_unlikely ((unsigned int) hx == 0xfff00000 && lx == 0))
     {
       /* x == -Inf.  According to ISO this is NaN.  */
       *signgamp = 0;
       return x - x;
     }
-  if (__builtin_expect ((hx & 0x7ff00000) == 0x7ff00000, 0))
+  if (__glibc_unlikely ((hx & 0x7ff00000) == 0x7ff00000))
     {
       /* Positive infinity (return positive infinity) or NaN (return
 	 NaN).  */

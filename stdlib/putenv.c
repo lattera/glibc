@@ -77,7 +77,7 @@ putenv (string)
 #endif
       int result = __add_to_environ (name, NULL, string, 1);
 
-      if (__builtin_expect (use_malloc, 0))
+      if (__glibc_unlikely (use_malloc))
 	free (name);
 
       return result;

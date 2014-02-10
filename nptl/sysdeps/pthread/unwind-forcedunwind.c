@@ -42,7 +42,7 @@ pthread_cancel_init (void)
   void *getcfa;
   void *handle;
 
-  if (__builtin_expect (libgcc_s_handle != NULL, 1))
+  if (__glibc_likely (libgcc_s_handle != NULL))
     {
       /* Force gcc to reload all values.  */
       asm volatile ("" ::: "memory");
@@ -93,7 +93,7 @@ __unwind_freeres (void)
 void
 _Unwind_Resume (struct _Unwind_Exception *exc)
 {
-  if (__builtin_expect (libgcc_s_handle == NULL, 0))
+  if (__glibc_unlikely (libgcc_s_handle == NULL))
     pthread_cancel_init ();
   else
     atomic_read_barrier ();
@@ -109,7 +109,7 @@ __gcc_personality_v0 (int version, _Unwind_Action actions,
 		      struct _Unwind_Exception *ue_header,
 		      struct _Unwind_Context *context)
 {
-  if (__builtin_expect (libgcc_s_handle == NULL, 0))
+  if (__glibc_unlikely (libgcc_s_handle == NULL))
     pthread_cancel_init ();
   else
     atomic_read_barrier ();
@@ -125,7 +125,7 @@ _Unwind_Reason_Code
 _Unwind_ForcedUnwind (struct _Unwind_Exception *exc, _Unwind_Stop_Fn stop,
 		      void *stop_argument)
 {
-  if (__builtin_expect (libgcc_s_handle == NULL, 0))
+  if (__glibc_unlikely (libgcc_s_handle == NULL))
     pthread_cancel_init ();
   else
     atomic_read_barrier ();
@@ -140,7 +140,7 @@ _Unwind_ForcedUnwind (struct _Unwind_Exception *exc, _Unwind_Stop_Fn stop,
 _Unwind_Word
 _Unwind_GetCFA (struct _Unwind_Context *context)
 {
-  if (__builtin_expect (libgcc_s_handle == NULL, 0))
+  if (__glibc_unlikely (libgcc_s_handle == NULL))
     pthread_cancel_init ();
   else
     atomic_read_barrier ();

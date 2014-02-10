@@ -80,15 +80,15 @@ __ieee754_log2 (double x)
   k = 0;
   if (hx < INT64_C(0x0010000000000000))
     {				/* x < 2**-1022  */
-      if (__builtin_expect ((hx & UINT64_C(0x7fffffffffffffff)) == 0, 0))
+      if (__glibc_unlikely ((hx & UINT64_C(0x7fffffffffffffff)) == 0))
 	return -two54 / (x - x);	/* log(+-0)=-inf */
-      if (__builtin_expect (hx < 0, 0))
+      if (__glibc_unlikely (hx < 0))
 	return (x - x) / (x - x);	/* log(-#) = NaN */
       k -= 54;
       x *= two54;		/* subnormal number, scale up x */
       EXTRACT_WORDS64 (hx, x);
     }
-  if (__builtin_expect (hx >= UINT64_C(0x7ff0000000000000), 0))
+  if (__glibc_unlikely (hx >= UINT64_C(0x7ff0000000000000)))
     return x + x;
   k += (hx >> 52) - 1023;
   hx &= UINT64_C(0x000fffffffffffff);

@@ -31,7 +31,7 @@ raise (sig)
      fork function temporarily invalidated the PID field.  Adjust for
      that.  */
   pid_t pid = THREAD_GETMEM (THREAD_SELF, pid);
-  if (__builtin_expect (pid < 0, 0))
+  if (__glibc_unlikely (pid < 0))
     pid = -pid;
 
   return INLINE_SYSCALL (tgkill, 3, pid, THREAD_GETMEM (THREAD_SELF, tid),

@@ -138,7 +138,7 @@ cache_add (int type, const void *key, size_t len, struct datahead *packet,
 	   bool first, struct database_dyn *table,
 	   uid_t owner, bool prune_wakeup)
 {
-  if (__builtin_expect (debug_level >= 2, 0))
+  if (__glibc_unlikely (debug_level >= 2))
     {
       const char *str;
       char buf[INET6_ADDRSTRLEN + 1];
@@ -311,7 +311,7 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
   bool *mark;
   size_t memory_needed = cnt * sizeof (bool);
   bool mark_use_alloca;
-  if (__builtin_expect (memory_needed <= MAX_STACK_USE, 1))
+  if (__glibc_likely (memory_needed <= MAX_STACK_USE))
     {
       mark = alloca (cnt * sizeof (bool));
       memset (mark, '\0', memory_needed);
@@ -327,7 +327,7 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
   char *const data = table->data;
   bool any = false;
 
-  if (__builtin_expect (debug_level > 2, 0))
+  if (__glibc_unlikely (debug_level > 2))
     dbg_log (_("pruning %s cache; time %ld"),
 	     dbnames[table - dbs], (long int) now);
 
@@ -343,7 +343,7 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
 	  struct datahead *dh = (struct datahead *) (data + runp->packet);
 
 	  /* Some debug support.  */
-	  if (__builtin_expect (debug_level > 2, 0))
+	  if (__glibc_unlikely (debug_level > 2))
 	    {
 	      char buf[INET6_ADDRSTRLEN];
 	      const char *str;
@@ -422,7 +422,7 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
     }
   while (cnt > 0);
 
-  if (__builtin_expect (fd != -1, 0))
+  if (__glibc_unlikely (fd != -1))
     {
       /* Reply to the INVALIDATE initiator that the cache has been
 	 invalidated.  */
@@ -436,7 +436,7 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
 
       /* Now we have to get the write lock since we are about to modify
 	 the table.  */
-      if (__builtin_expect (pthread_rwlock_trywrlock (&table->lock) != 0, 0))
+      if (__glibc_unlikely (pthread_rwlock_trywrlock (&table->lock) != 0))
 	{
 	  ++table->head->wrlockdelayed;
 	  pthread_rwlock_wrlock (&table->lock);
@@ -492,7 +492,7 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
 	       MS_ASYNC);
 
       /* One extra pass if we do debugging.  */
-      if (__builtin_expect (debug_level > 0, 0))
+      if (__glibc_unlikely (debug_level > 0))
 	{
 	  struct hashentry *runp = head;
 
@@ -517,7 +517,7 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
 	}
     }
 
-  if (__builtin_expect (! mark_use_alloca, 0))
+  if (__glibc_unlikely (! mark_use_alloca))
     free (mark);
 
   /* Run garbage collection if any entry has been removed or replaced.  */

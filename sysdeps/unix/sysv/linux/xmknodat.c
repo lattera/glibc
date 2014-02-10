@@ -70,7 +70,7 @@ __xmknodat (int vers, int fd, const char *file, mode_t mode, dev_t *dev)
   if (fd != AT_FDCWD && file[0] != '/')
     {
       size_t filelen = strlen (file);
-      if (__builtin_expect (filelen == 0, 0))
+      if (__glibc_unlikely (filelen == 0))
 	{
 	  __set_errno (ENOENT);
 	  return -1;

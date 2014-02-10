@@ -36,7 +36,7 @@ posix_fallocate (int fd, __off_t offset, __off_t len)
 {
 #ifdef __NR_fallocate
 # ifndef __ASSUME_FALLOCATE
-  if (__builtin_expect (__have_fallocate >= 0, 1))
+  if (__glibc_likely (__have_fallocate >= 0))
 # endif
     {
       int res = __call_fallocate (fd, 0, offset, len);
@@ -44,7 +44,7 @@ posix_fallocate (int fd, __off_t offset, __off_t len)
 	return 0;
 
 # ifndef __ASSUME_FALLOCATE
-      if (__builtin_expect (res == ENOSYS, 0))
+      if (__glibc_unlikely (res == ENOSYS))
 	__have_fallocate = -1;
       else
 # endif

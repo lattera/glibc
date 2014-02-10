@@ -33,7 +33,7 @@ putgrent (gr, stream)
 {
   int retval;
 
-  if (__builtin_expect (gr == NULL, 0) || __builtin_expect (stream == NULL, 0))
+  if (__glibc_unlikely (gr == NULL) || __glibc_unlikely (stream == NULL))
     {
       __set_errno (EINVAL);
       return -1;

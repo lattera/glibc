@@ -90,7 +90,7 @@
 	{								      \
 	  do								      \
 	    {								      \
-	      if (__builtin_expect (outbuf + 4 > outend, 0))		      \
+	      if (__glibc_unlikely (outbuf + 4 > outend))		      \
 		{							      \
 		  /* We don't have enough room in the output buffer.  */      \
 		  status = __GCONV_FULL_OUTPUT;				      \
@@ -108,10 +108,10 @@
       else								      \
 	{								      \
 	  uint32_t last = data->__statep->__count >> 3;			      \
-	  if (__builtin_expect (last >> 8, 0))				      \
+	  if (__glibc_unlikely (last >> 8))				      \
 	    {								      \
 	      /* Write out the last character, two bytes.  */		      \
-	      if (__builtin_expect (outbuf + 2 <= outend, 1))		      \
+	      if (__glibc_likely (outbuf + 2 <= outend))		      \
 		{							      \
 		  *outbuf++ = last & 0xff;				      \
 		  *outbuf++ = (last >> 8) & 0xff;			      \
@@ -124,7 +124,7 @@
 	  else								      \
 	    {								      \
 	      /* Write out the last character, a single byte.  */	      \
-	      if (__builtin_expect (outbuf < outend, 1))		      \
+	      if (__glibc_likely (outbuf < outend))			      \
 		{							      \
 		  *outbuf++ = last & 0xff;				      \
 		  data->__statep->__count = 0;				      \
@@ -384,7 +384,7 @@ static const uint32_t tscii_next_state[6] =
 		/* See whether we have room for two characters.  Otherwise    \
 		   store only the first character now, and put the second     \
 		   one into the queue.  */				      \
-		if (__builtin_expect (outptr + 4 > outend, 0))		      \
+		if (__glibc_unlikely (outptr + 4 > outend))		      \
 		  {							      \
 		    *statep = u2 << 8;					      \
 		    result = __GCONV_FULL_OUTPUT;			      \
@@ -421,7 +421,7 @@ static const uint32_t tscii_next_state[6] =
 	    inptr++;							      \
 	    put32 (outptr, 0x0BB8);					      \
 	    outptr += 4;						      \
-	    if (__builtin_expect (outptr + 4 > outend, 0))		      \
+	    if (__glibc_unlikely (outptr + 4 > outend))			      \
 	      {								      \
 		*statep = (0x0BCD << 8) + (4 << 4);			      \
 		result = __GCONV_FULL_OUTPUT;				      \
@@ -429,7 +429,7 @@ static const uint32_t tscii_next_state[6] =
 	      }								      \
 	    put32 (outptr, 0x0BCD);					      \
 	    outptr += 4;						      \
-	    if (__builtin_expect (outptr + 4 > outend, 0))		      \
+	    if (__glibc_unlikely (outptr + 4 > outend))			      \
 	      {								      \
 		*statep = (0x0BB0 << 8) + (2 << 4);			      \
 		result = __GCONV_FULL_OUTPUT;				      \
@@ -437,7 +437,7 @@ static const uint32_t tscii_next_state[6] =
 	      }								      \
 	    put32 (outptr, 0x0BB0);					      \
 	    outptr += 4;						      \
-	    if (__builtin_expect (outptr + 4 > outend, 0))		      \
+	    if (__glibc_unlikely (outptr + 4 > outend))			      \
 	      {								      \
 		*statep = (0x0BC0 << 8);				      \
 		result = __GCONV_FULL_OUTPUT;				      \
@@ -454,7 +454,7 @@ static const uint32_t tscii_next_state[6] =
 	    inptr++;							      \
 	    put32 (outptr, 0x0B95);					      \
 	    outptr += 4;						      \
-	    if (__builtin_expect (outptr + 4 > outend, 0))		      \
+	    if (__glibc_unlikely (outptr + 4 > outend))			      \
 	      {								      \
 		*statep = (0x0BCD << 8) + (1 << 4);			      \
 		result = __GCONV_FULL_OUTPUT;				      \
@@ -462,7 +462,7 @@ static const uint32_t tscii_next_state[6] =
 	      }								      \
 	    put32 (outptr, 0x0BCD);					      \
 	    outptr += 4;						      \
-	    if (__builtin_expect (outptr + 4 > outend, 0))		      \
+	    if (__glibc_unlikely (outptr + 4 > outend))			      \
 	      {								      \
 		*statep = (0x0BB7 << 8);				      \
 		result = __GCONV_FULL_OUTPUT;				      \
@@ -479,7 +479,7 @@ static const uint32_t tscii_next_state[6] =
 	    inptr++;							      \
 	    put32 (outptr, 0x0B95);					      \
 	    outptr += 4;						      \
-	    if (__builtin_expect (outptr + 4 > outend, 0))		      \
+	    if (__glibc_unlikely (outptr + 4 > outend))			      \
 	      {								      \
 		*statep = (0x0BCD << 8) + (5 << 4);			      \
 		result = __GCONV_FULL_OUTPUT;				      \
@@ -487,7 +487,7 @@ static const uint32_t tscii_next_state[6] =
 	      }								      \
 	    put32 (outptr, 0x0BCD);					      \
 	    outptr += 4;						      \
-	    if (__builtin_expect (outptr + 4 > outend, 0))		      \
+	    if (__glibc_unlikely (outptr + 4 > outend))			      \
 	      {								      \
 		*statep = (0x0BB7 << 8) + (3 << 4);			      \
 		result = __GCONV_FULL_OUTPUT;				      \
@@ -495,7 +495,7 @@ static const uint32_t tscii_next_state[6] =
 	      }								      \
 	    put32 (outptr, 0x0BB7);					      \
 	    outptr += 4;						      \
-	    if (__builtin_expect (outptr + 4 > outend, 0))		      \
+	    if (__glibc_unlikely (outptr + 4 > outend))			      \
 	      {								      \
 		*statep = (0x0BCD << 8);				      \
 		result = __GCONV_FULL_OUTPUT;				      \
@@ -592,7 +592,7 @@ static const uint8_t consonant_with_virama[18] =
 	      }								      \
 	    if (ch == 0x0BC6)						      \
 	      {								      \
-		if (__builtin_expect (outptr + 2 <= outend, 1))		      \
+		if (__glibc_likely (outptr + 2 <= outend))		      \
 		  {							      \
 		    *outptr++ = 0xa6;					      \
 		    *outptr++ = last;					      \
@@ -608,7 +608,7 @@ static const uint8_t consonant_with_virama[18] =
 	      }								      \
 	    if (ch == 0x0BC7)						      \
 	      {								      \
-		if (__builtin_expect (outptr + 2 <= outend, 1))		      \
+		if (__glibc_likely (outptr + 2 <= outend))		      \
 		  {							      \
 		    *outptr++ = 0xa7;					      \
 		    *outptr++ = last;					      \
@@ -624,7 +624,7 @@ static const uint8_t consonant_with_virama[18] =
 	      }								      \
 	    if (ch == 0x0BC8)						      \
 	      {								      \
-		if (__builtin_expect (outptr + 2 <= outend, 1))		      \
+		if (__glibc_likely (outptr + 2 <= outend))		      \
 		  {							      \
 		    *outptr++ = 0xa8;					      \
 		    *outptr++ = last;					      \
@@ -640,7 +640,7 @@ static const uint8_t consonant_with_virama[18] =
 	      }								      \
 	    if (ch == 0x0BCA)						      \
 	      {								      \
-		if (__builtin_expect (outptr + 3 <= outend, 1))		      \
+		if (__glibc_likely (outptr + 3 <= outend))		      \
 		  {							      \
 		    *outptr++ = 0xa6;					      \
 		    *outptr++ = last;					      \
@@ -657,7 +657,7 @@ static const uint8_t consonant_with_virama[18] =
 	      }								      \
 	    if (ch == 0x0BCB)						      \
 	      {								      \
-		if (__builtin_expect (outptr + 3 <= outend, 1))		      \
+		if (__glibc_likely (outptr + 3 <= outend))		      \
 		  {							      \
 		    *outptr++ = 0xa7;					      \
 		    *outptr++ = last;					      \
@@ -674,7 +674,7 @@ static const uint8_t consonant_with_virama[18] =
 	      }								      \
 	    if (ch == 0x0BCC)						      \
 	      {								      \
-		if (__builtin_expect (outptr + 3 <= outend, 1))		      \
+		if (__glibc_likely (outptr + 3 <= outend))		      \
 		  {							      \
 		    *outptr++ = 0xa7;					      \
 		    *outptr++ = last;					      \
@@ -771,9 +771,9 @@ static const uint8_t consonant_with_virama[18] =
 	  }								      \
 									      \
 	/* Output the buffered character.  */				      \
-	if (__builtin_expect (last >> 8, 0))				      \
+	if (__glibc_unlikely (last >> 8))				      \
 	  {								      \
-	    if (__builtin_expect (outptr + 2 <= outend, 1))		      \
+	    if (__glibc_likely (outptr + 2 <= outend))			      \
 	      {								      \
 		*outptr++ = last & 0xff;				      \
 		*outptr++ = (last >> 8) & 0xff;				      \
@@ -808,7 +808,7 @@ static const uint8_t consonant_with_virama[18] =
 	else if (ch >= 0x0BCA && ch <= 0x0BCC)				      \
 	  {								      \
 	    /* See whether we have room for two bytes.  */		      \
-	    if (__builtin_expect (outptr + 2 <= outend, 1))		      \
+	    if (__glibc_likely (outptr + 2 <= outend))			      \
 	      {								      \
 		*outptr++ = (ch == 0x0BCA ? 0xa6 : 0xa7);		      \
 		*outptr++ = (ch != 0x0BCC ? 0xa1 : 0xaa);		      \

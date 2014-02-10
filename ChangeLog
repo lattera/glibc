@@ -1,5 +1,501 @@
 2014-02-10  Ondřej Bílka  <neleai@seznam.cz>
 
+	* assert/assert.c (__assert_fail_base): Use glibc_likely instead __builtin_expect.
+	* benchtests/bench-memmem.c (simple_memmem): Likewise.
+	* catgets/open_catalog.c (__open_catalog): Likewise.
+	* csu/libc-start.c (LIBC_START_MAIN): Likewise.
+	* debug/confstr_chk.c: Likewise.
+	* debug/fread_chk.c (__fread_chk): Likewise.
+	* debug/fread_u_chk.c (__fread_unlocked_chk): Likewise.
+	* debug/getgroups_chk.c: Likewise.
+	* debug/mbsnrtowcs_chk.c: Likewise.
+	* debug/mbsrtowcs_chk.c: Likewise.
+	* debug/mbstowcs_chk.c: Likewise.
+	* debug/memcpy_chk.c: Likewise.
+	* debug/memmove_chk.c: Likewise.
+	* debug/mempcpy_chk.c: Likewise.
+	* debug/memset_chk.c: Likewise.
+	* debug/stpcpy_chk.c (__stpcpy_chk): Likewise.
+	* debug/strcat_chk.c (__strcat_chk): Likewise.
+	* debug/strcpy_chk.c (__strcpy_chk): Likewise.
+	* debug/strncat_chk.c (__strncat_chk): Likewise.
+	* debug/vsnprintf_chk.c (___vsnprintf_chk): Likewise.
+	* debug/vswprintf_chk.c (__vswprintf_chk): Likewise.
+	* debug/wcpcpy_chk.c (__wcpcpy_chk): Likewise.
+	* debug/wcpncpy_chk.c: Likewise.
+	* debug/wcscat_chk.c (__wcscat_chk): Likewise.
+	* debug/wcscpy_chk.c (__wcscpy_chk): Likewise.
+	* debug/wcsncat_chk.c (__wcsncat_chk): Likewise.
+	* debug/wcsncpy_chk.c: Likewise.
+	* debug/wcsnrtombs_chk.c: Likewise.
+	* debug/wcsrtombs_chk.c: Likewise.
+	* debug/wcstombs_chk.c: Likewise.
+	* debug/wmemcpy_chk.c: Likewise.
+	* debug/wmemmove_chk.c: Likewise.
+	* debug/wmempcpy_chk.c: Likewise.
+	* debug/wmemset_chk.c: Likewise.
+	* dirent/scandirat.c (SCANDIRAT): Likewise.
+	* dlfcn/dladdr1.c (dladdr1): Likewise.
+	* dlfcn/dladdr.c (dladdr): Likewise.
+	* dlfcn/dlclose.c (dlclose_doit): Likewise.
+	* dlfcn/dlerror.c (__dlerror): Likewise.
+	* dlfcn/dlinfo.c (dlinfo_doit): Likewise.
+	* dlfcn/dlmopen.c (dlmopen_doit): Likewise.
+	* dlfcn/dlopen.c (dlopen_doit): Likewise.
+	* dlfcn/dlopenold.c (__dlopen_nocheck): Likewise.
+	* dlfcn/dlsym.c (dlsym_doit): Likewise.
+	* dlfcn/dlvsym.c (dlvsym_doit): Likewise.
+	* elf/dl-cache.c (_dl_load_cache_lookup): Likewise.
+	* elf/dl-close.c (remove_slotinfo, _dl_close_worker, _dl_close):
+	Likewise.
+	* elf/dl-conflict.c: Likewise.
+	* elf/dl-deps.c (_dl_build_local_scope, _dl_map_object_deps): Likewise.
+	* elf/dl-dst.h: Likewise.
+	* elf/dl-fini.c (_dl_sort_fini, _dl_fini): Likewise.
+	* elf/dl-fptr.c (_dl_make_fptr): Likewise.
+	* elf/dl-hwcaps.c (_dl_important_hwcaps): Likewise.
+	* elf/dl-init.c (call_init, _dl_init): Likewise.
+	* elf/dl-libc.c (__libc_dlopen_mode, __libc_dlsym): Likewise.
+	* elf/dl-load.c (_dl_dst_substitute, fillin_rpath, _dl_init_paths,
+	_dl_map_object_from_fd, open_verify, open_path,
+	_dl_map_object): Likewise.
+	* elf/dl-lookup.c (do_lookup_x, add_dependency, _dl_lookup_symbol_x):
+	Likewise.
+	* elf/dl-minimal.c (__libc_memalign): Likewise.
+	* elf/dl-open.c (add_to_global, dl_open_worker, _dl_open): Likewise.
+	* elf/dl-reloc.c (_dl_relocate_object): Likewise.
+	* elf/dl-runtime.c (_dl_fixup, _dl_profile_fixup): Likewise.
+	* elf/dl-sym.c (do_sym): Likewise.
+	* elf/dl-tls.c (tls_get_addr_tail, update_get_addr, __tls_get_addr,
+	_dl_tls_get_addr_soft): Likewise.
+	* elf/dl-version.c (match_symbol, _dl_check_map_versions): Likewise.
+	* elf/dl-writev.h (_dl_writev): Likewise.
+	* elf/ldconfig.c (search_dir): Likewise.
+	* elf/rtld.c (_dl_start_final, _dl_start, init_tls, do_preload,
+	dl_main): Likewise.
+	* elf/setup-vdso.h (setup_vdso): Likewise.
+	* grp/compat-initgroups.c (compat_call): Likewise.
+	* grp/fgetgrent.c (fgetgrent): Likewise.
+	* grp/initgroups.c (getgrouplist, initgroups): Likewise.
+	* grp/putgrent.c (putgrent): Likewise.
+	* hesiod/nss_hesiod/hesiod-grp.c (_nss_hesiod_initgroups_dyn):
+	Likewise.
+	* hurd/hurdinit.c: Likewise.
+	* iconvdata/8bit-gap.c (struct): Likewise.
+	* iconvdata/ansi_x3.110.c : Likewise.
+	* iconvdata/big5.c : Likewise.
+	* iconvdata/big5hkscs.c : Likewise.
+	* iconvdata/cp1255.c: Likewise.
+	* iconvdata/cp1258.c : Likewise.
+	* iconvdata/cp932.c : Likewise.
+	* iconvdata/euc-cn.c: Likewise.
+	* iconvdata/euc-jisx0213.c : Likewise.
+	* iconvdata/euc-jp.c: Likewise.
+	* iconvdata/euc-jp-ms.c : Likewise.
+	* iconvdata/euc-kr.c (euckr_from_ucs4): Likewise.
+	* iconvdata/gb18030.c : Likewise.
+	* iconvdata/gbbig5.c (const): Likewise.
+	* iconvdata/gbgbk.c: Likewise.
+	* iconvdata/gbk.c : Likewise.
+	* iconvdata/ibm1364.c : Likewise.
+	* iconvdata/ibm930.c : Likewise.
+	* iconvdata/ibm932.c: Likewise.
+	* iconvdata/ibm933.c : Likewise.
+	* iconvdata/ibm935.c : Likewise.
+	* iconvdata/ibm937.c : Likewise.
+	* iconvdata/ibm939.c : Likewise.
+	* iconvdata/ibm943.c: Likewise.
+	* iconvdata/iso_11548-1.c: Likewise.
+	* iconvdata/iso-2022-cn.c : Likewise.
+	* iconvdata/iso-2022-cn-ext.c : Likewise.
+	* iconvdata/iso-2022-jp-3.c: Likewise.
+	* iconvdata/iso-2022-jp.c (gconv_end): Likewise.
+	* iconvdata/iso-2022-kr.c : Likewise.
+	* iconvdata/iso646.c (gconv_end): Likewise.
+	* iconvdata/iso_6937-2.c : Likewise.
+	* iconvdata/iso_6937.c : Likewise.
+	* iconvdata/iso8859-1.c: Likewise.
+	* iconvdata/johab.c (johab_sym_hanja_to_ucs): Likewise.
+	* iconvdata/shift_jisx0213.c : Likewise.
+	* iconvdata/sjis.c : Likewise.
+	* iconvdata/t.61.c : Likewise.
+	* iconvdata/tcvn5712-1.c : Likewise.
+	* iconvdata/tscii.c: Likewise.
+	* iconvdata/uhc.c : Likewise.
+	* iconvdata/unicode.c (gconv_end): Likewise.
+	* iconvdata/utf-16.c (gconv_end): Likewise.
+	* iconvdata/utf-32.c (gconv_end): Likewise.
+	* iconvdata/utf-7.c (base64): Likewise.
+	* iconv/gconv_cache.c (__gconv_load_cache): Likewise.
+	* iconv/gconv_close.c (__gconv_close): Likewise.
+	* iconv/gconv_open.c (__gconv_open): Likewise.
+	* iconv/gconv_simple.c (internal_ucs4_loop_single, ucs4_internal_loop,
+	ucs4_internal_loop_unaligned, ucs4_internal_loop_single,
+	internal_ucs4le_loop_single, ucs4le_internal_loop,
+	ucs4le_internal_loop_unaligned, ucs4le_internal_loop_single): Likewise.
+	* iconv/iconv.c (iconv): Likewise.
+	* iconv/iconv_close.c: Likewise.
+	* iconv/loop.c (SINGLE): Likewise.
+	* iconv/skeleton.c (FUNCTION_NAME): Likewise.
+	* include/atomic.h: Likewise.
+	* inet/inet6_option.c (option_alloc): Likewise.
+	* intl/bindtextdom.c (set_binding_values): Likewise.
+	* intl/dcigettext.c (DCIGETTEXT, _nl_find_msg): Likewise.
+	* intl/loadmsgcat.c (_nl_load_domain): Likewise.
+	* intl/localealias.c (read_alias_file): Likewise.
+	* libio/filedoalloc.c (_IO_file_doallocate): Likewise.
+	* libio/fileops.c (_IO_file_open, _IO_file_underflow_mmap,
+	_IO_new_file_overflow, _IO_file_xsgetn_mmap): Likewise.
+	* libio/fmemopen.c (fmemopen): Likewise.
+	* libio/iofgets.c (_IO_fgets): Likewise.
+	* libio/iofgets_u.c (fgets_unlocked): Likewise.
+	* libio/iofgetws.c (fgetws): Likewise.
+	* libio/iofgetws_u.c (fgetws_unlocked): Likewise.
+	* libio/iogetdelim.c (_IO_getdelim): Likewise.
+	* libio/wfileops.c (_IO_wfile_underflow, _IO_wfile_underflow_mmap,
+	adjust_wide_data, _IO_wfile_seekoff): Likewise.
+	* locale/findlocale.c (_nl_find_locale): Likewise.
+	* locale/loadarchive.c (_nl_load_locale_from_archive): Likewise.
+	* locale/loadlocale.c (_nl_intern_locale_data, _nl_load_locale):
+	Likewise.
+	* locale/setlocale.c (setlocale): Likewise.
+	* login/programs/pt_chown.c (main): Likewise.
+	* malloc/arena.c (ptmalloc_init, shrink_heap, arena_get2): Likewise.
+	* malloc/malloc.c (_int_malloc, _int_free): Likewise.
+	* malloc/memusage.c (update_data, malloc, realloc, calloc, free,
+	mmap, mmap64, mremap, munmap): Likewise.
+	* math/e_exp2l.c: Likewise.
+	* math/e_scalb.c (invalid_fn, __ieee754_scalb): Likewise.
+	* math/e_scalbf.c (invalid_fn, __ieee754_scalbf): Likewise.
+	* math/e_scalbl.c (invalid_fn, __ieee754_scalbl): Likewise.
+	* math/s_catan.c (__catan): Likewise.
+	* math/s_catanf.c (__catanf): Likewise.
+	* math/s_catanh.c (__catanh): Likewise.
+	* math/s_catanhf.c (__catanhf): Likewise.
+	* math/s_catanhl.c (__catanhl): Likewise.
+	* math/s_catanl.c (__catanl): Likewise.
+	* math/s_ccosh.c (__ccosh): Likewise.
+	* math/s_ccoshf.c (__ccoshf): Likewise.
+	* math/s_ccoshl.c (__ccoshl): Likewise.
+	* math/s_cexp.c (__cexp): Likewise.
+	* math/s_cexpf.c (__cexpf): Likewise.
+	* math/s_cexpl.c (__cexpl): Likewise.
+	* math/s_clog10.c (__clog10): Likewise.
+	* math/s_clog10f.c (__clog10f): Likewise.
+	* math/s_clog10l.c (__clog10l): Likewise.
+	* math/s_clog.c (__clog): Likewise.
+	* math/s_clogf.c (__clogf): Likewise.
+	* math/s_clogl.c (__clogl): Likewise.
+	* math/s_csin.c (__csin): Likewise.
+	* math/s_csinf.c (__csinf): Likewise.
+	* math/s_csinh.c (__csinh): Likewise.
+	* math/s_csinhf.c (__csinhf): Likewise.
+	* math/s_csinhl.c (__csinhl): Likewise.
+	* math/s_csinl.c (__csinl): Likewise.
+	* math/s_csqrt.c (__csqrt): Likewise.
+	* math/s_csqrtf.c (__csqrtf): Likewise.
+	* math/s_csqrtl.c (__csqrtl): Likewise.
+	* math/s_ctan.c (__ctan): Likewise.
+	* math/s_ctanf.c (__ctanf): Likewise.
+	* math/s_ctanh.c (__ctanh): Likewise.
+	* math/s_ctanhf.c (__ctanhf): Likewise.
+	* math/s_ctanhl.c (__ctanhl): Likewise.
+	* math/s_ctanl.c (__ctanl): Likewise.
+	* math/w_pow.c: Likewise.
+	* math/w_powf.c: Likewise.
+	* math/w_powl.c: Likewise.
+	* math/w_scalb.c (sysv_scalb): Likewise.
+	* math/w_scalbf.c (sysv_scalbf): Likewise.
+	* math/w_scalbl.c (sysv_scalbl): Likewise.
+	* misc/error.c (error_tail): Likewise.
+	* misc/pselect.c (__pselect): Likewise.
+	* nis/nis_callback.c (__nis_create_callback): Likewise.
+	* nis/nis_call.c (__nisfind_server): Likewise.
+	* nis/nis_creategroup.c (nis_creategroup): Likewise.
+	* nis/nis_domain_of_r.c (nis_domain_of_r): Likewise.
+	* nis/nis_findserv.c (__nis_findfastest_with_timeout): Likewise.
+	* nis/nis_getservlist.c (nis_getservlist): Likewise.
+	* nis/nis_lookup.c (nis_lookup): Likewise.
+	* nis/nis_subr.c (nis_leaf_of_r, nis_getnames): Likewise.
+	* nis/nis_table.c (__create_ib_request, nis_list, nis_add_entry,
+	nis_modify_entry, nis_first_entry, nis_next_entry): Likewise.
+	* nis/nis_xdr.c (xdr_endpoint): Likewise.
+	* nis/nss_compat/compat-grp.c (getgrent_next_file, internal_getgrnam_r,
+	internal_getgrgid_r): Likewise.
+	* nis/nss_compat/compat-initgroups.c (add_group, internal_getgrent_r):
+	Likewise.
+	* nis/nss_compat/compat-pwd.c (getpwent_next_file, internal_getpwnam_r,
+	internal_getpwuid_r): Likewise.
+	* nis/nss_compat/compat-spwd.c (getspent_next_file,
+	internal_getspnam_r): Likewise.
+	* nis/nss_nis/nis-alias.c (internal_nis_getaliasent_r,
+	_nss_nis_getaliasbyname_r): Likewise.
+	* nis/nss_nis/nis-ethers.c (_nss_nis_gethostton_r,
+	_nss_nis_getntohost_r): Likewise.
+	* nis/nss_nis/nis-grp.c (internal_nis_setgrent,
+	internal_nis_getgrent_r, _nss_nis_getgrnam_r, _nss_nis_getgrgid_r):
+	Likewise.
+	* nis/nss_nis/nis-hosts.c (_nss_nis_sethostent,
+	internal_nis_gethostent_r, internal_gethostbyname2_r,
+	_nss_nis_gethostbyname_r, _nss_nis_gethostbyaddr_r,
+	_nss_nis_gethostbyname4_r): Likewise.
+	* nis/nss_nis/nis-initgroups.c (internal_getgrent_r,
+	initgroups_netid): Likewise.
+	* nis/nss_nis/nis-netgrp.c (_nss_nis_setnetgrent): Likewise.
+	* nis/nss_nis/nis-network.c (internal_nis_getnetent_r,
+	_nss_nis_getnetbyname_r, _nss_nis_getnetbyaddr_r): Likewise.
+	* nis/nss_nis/nis-proto.c (_nss_nis_getprotobyname_r,
+	_nss_nis_getprotobynumber_r): Likewise.
+	* nis/nss_nis/nis-publickey.c (_nss_nis_getpublickey,
+	_nss_nis_getsecretkey): Likewise.
+	* nis/nss_nis/nis-pwd.c (_nis_saveit, internal_nis_setpwent,
+	internal_nis_getpwent_r, _nss_nis_getpwnam_r, _nss_nis_getpwuid_r):
+	Likewise.
+	* nis/nss_nis/nis-rpc.c (internal_nis_getrpcent_r,
+	_nss_nis_getrpcbyname_r, _nss_nis_getrpcbynumber_r): Likewise.
+	* nis/nss_nis/nis-service.c (dosearch, internal_nis_getservent_r,
+	_nss_nis_getservbyname_r, _nss_nis_getservbyport_r): Likewise.
+	* nis/nss_nis/nis-spwd.c (_nss_nis_setspent, internal_nis_getspent_r,
+	_nss_nis_getspnam_r): Likewise.
+	* nis/nss_nisplus/nisplus-alias.c (_nss_nisplus_getaliasbyname_r):
+	Likewise.
+	* nis/nss_nisplus/nisplus-ethers.c (_nss_nisplus_gethostton_r,
+	_nss_nisplus_getntohost_r): Likewise.
+	* nis/nss_nisplus/nisplus-grp.c (internal_nisplus_getgrent_r,
+	_nss_nisplus_getgrnam_r, _nss_nisplus_getgrgid_r): Likewise.
+	* nis/nss_nisplus/nisplus-hosts.c (internal_gethostbyname2_r,
+	_nss_nisplus_gethostbyaddr_r, _nss_nisplus_gethostbyname4_r): Likewise.
+	* nis/nss_nisplus/nisplus-initgroups.c (_nss_nisplus_initgroups_dyn):
+	Likewise.
+	* nis/nss_nisplus/nisplus-network.c (_nss_nisplus_getnetbyname_r,
+	_nss_nisplus_getnetbyaddr_r): Likewise.
+	* nis/nss_nisplus/nisplus-proto.c (_nss_nisplus_getprotobyname_r,
+	_nss_nisplus_getprotobynumber_r): Likewise.
+	* nis/nss_nisplus/nisplus-pwd.c (internal_nisplus_getpwent_r,
+	_nss_nisplus_getpwnam_r, _nss_nisplus_getpwuid_r): Likewise.
+	* nis/nss_nisplus/nisplus-rpc.c (_nss_nisplus_getrpcbyname_r):
+	Likewise.
+	* nis/nss_nisplus/nisplus-service.c (internal_nisplus_getservent_r,
+	_nss_nisplus_getservbyname_r, _nss_nisplus_getservbyport_r): Likewise.
+	* nis/nss_nisplus/nisplus-spwd.c (internal_nisplus_getspent_r,
+	_nss_nisplus_getspnam_r): Likewise.
+	* nis/ypclnt.c (__yp_bind, yp_match, yp_all, yp_maplist): Likewise.
+	* nscd/aicache.c (addhstaiX): Likewise.
+	* nscd/cache.c (cache_search, prune_cache): Likewise.
+	* nscd/connections.c (register_traced_file, send_ro_fd, handle_request,
+	nscd_run_prune, nscd_run_worker, fd_ready, main_loop_epoll): Likewise.
+	* nscd/grpcache.c (addgrbyX): Likewise.
+	* nscd/hstcache.c (addhstbyX): Likewise.
+	* nscd/initgrcache.c (addinitgroupsX): Likewise.
+	* nscd/mem.c (gc, mempool_alloc): Likewise.
+	* nscd/netgroupcache.c (do_notfound, addgetnetgrentX, addinnetgrX):
+	Likewise.
+	* nscd/nscd-client.h (__nscd_acquire_maplock, __nscd_drop_map_ref):
+	Likewise.
+	* nscd/nscd_getai.c (__nscd_getai): Likewise.
+	* nscd/nscd_getgr_r.c (nscd_getgr_r): Likewise.
+	* nscd/nscd_gethst_r.c (__nscd_get_nl_timestamp, nscd_gethst_r):
+	Likewise.
+	* nscd/nscd_getpw_r.c (nscd_getpw_r): Likewise.
+	* nscd/nscd_getserv_r.c (nscd_getserv_r): Likewise.
+	* nscd/nscd_helper.c (__readvall, open_socket,
+	__nscd_get_mapping, __nscd_get_map_ref): Likewise.
+	* nscd/nscd_initgroups.c (__nscd_getgrouplist): Likewise.
+	* nscd/nscd_netgroup.c (__nscd_setnetgrent, __nscd_innetgr): Likewise.
+	* nscd/pwdcache.c (addpwbyX): Likewise.
+	* nscd/selinux.c (preserve_capabilities): Likewise.
+	* nscd/servicescache.c (addservbyX): Likewise.
+	* nss/nss_files/files-XXX.c (internal_getent): Likewise.
+	* posix/fnmatch.c (fnmatch): Likewise.
+	* posix/getopt.c (_getopt_internal_r): Likewise.
+	* posix/glob.c (glob, glob_in_dir): Likewise.
+	* posix/wordexp.c (exec_comm_child): Likewise.
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyaddr2_r, getanswer_r,
+	gaih_getanswer_slice): Likewise.
+	* resolv/nss_dns/dns-network.c (getanswer_r): Likewise.
+	* resolv/res_init.c: Likewise.
+	* resolv/res_mkquery.c (res_nmkquery): Likewise.
+	* resolv/res_query.c (__libc_res_nquery): Likewise.
+	* resolv/res_send.c (__libc_res_nsend, send_vc, reopen, send_dg):
+	Likewise.
+	* stdio-common/_i18n_number.h (_i18n_number_rewrite): Likewise.
+	* stdio-common/perror.c (perror): Likewise.
+	* stdio-common/printf_fp.c (___printf_fp): Likewise.
+	* stdio-common/tmpnam.c (tmpnam): Likewise.
+	* stdio-common/vfscanf.c (_IO_vfscanf_internal): Likewise.
+	* stdlib/cxa_finalize.c (__cxa_finalize): Likewise.
+	* stdlib/cxa_thread_atexit_impl.c (__cxa_thread_atexit_impl): Likewise.
+	* stdlib/drand48-iter.c (__drand48_iterate): Likewise.
+	* stdlib/putenv.c (putenv): Likewise.
+	* stdlib/setenv.c (__add_to_environ): Likewise.
+	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Likewise.
+	* stdlib/strtol_l.c (INTERNAL): Likewise.
+	* string/memmem.c (memmem): Likewise.
+	* string/strerror.c (strerror): Likewise.
+	* string/strnlen.c (__strnlen): Likewise.
+	* string/test-memmem.c (simple_memmem): Likewise.
+	* sunrpc/clnt_udp.c (__libc_clntudp_bufcreate): Likewise.
+	* sunrpc/pm_getport.c (__get_socket): Likewise.
+	* sysdeps/gnu/unwind-resume.c (init, _Unwind_Resume): Likewise.
+	* sysdeps/i386/dl-irel.h (elf_irel): Likewise.
+	* sysdeps/i386/dl-machine.h (elf_machine_runtime_setup,
+	elf_machine_rel, elf_machine_lazy_rel, elf_machine_lazy_rela):
+	Likewise.
+	* sysdeps/ieee754/dbl-64/e_atanh.c (__ieee754_atanh): Likewise.
+	* sysdeps/ieee754/dbl-64/e_exp2.c (__ieee754_exp2): Likewise.
+	* sysdeps/ieee754/dbl-64/e_fmod.c (__ieee754_fmod): Likewise.
+	* sysdeps/ieee754/dbl-64/e_gamma_r.c (__ieee754_gamma_r): Likewise.
+	* sysdeps/ieee754/dbl-64/e_hypot.c (__ieee754_hypot): Likewise.
+	* sysdeps/ieee754/dbl-64/e_j1.c (__ieee754_j1, __ieee754_y1): Likewise.
+	* sysdeps/ieee754/dbl-64/e_jn.c (__ieee754_jn, __ieee754_yn): Likewise.
+	* sysdeps/ieee754/dbl-64/e_log10.c (__ieee754_log10): Likewise.
+	* sysdeps/ieee754/dbl-64/e_log2.c (__ieee754_log2): Likewise.
+	* sysdeps/ieee754/dbl-64/e_log.c (__ieee754_log): Likewise.
+	* sysdeps/ieee754/dbl-64/e_sinh.c (__ieee754_sinh): Likewise.
+	* sysdeps/ieee754/dbl-64/s_asinh.c (__asinh): Likewise.
+	* sysdeps/ieee754/dbl-64/s_fma.c (__fma): Likewise.
+	* sysdeps/ieee754/dbl-64/s_log1p.c (__log1p): Likewise.
+	* sysdeps/ieee754/dbl-64/s_logb.c (__logb): Likewise.
+	* sysdeps/ieee754/dbl-64/s_modf.c (__modf): Likewise.
+	* sysdeps/ieee754/dbl-64/s_scalbln.c (__scalbln): Likewise.
+	* sysdeps/ieee754/dbl-64/s_scalbn.c (__scalbn): Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/e_acosh.c (__ieee754_acosh):
+	Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/e_log10.c (__ieee754_log10):
+	Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/e_log2.c (__ieee754_log2):
+	Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_frexp.c (__frexp): Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_logb.c (__logb): Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_remquo.c (__remquo): Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_round.c (__round): Likewise.
+	* sysdeps/ieee754/flt-32/e_atanhf.c (__ieee754_atanhf): Likewise.
+	* sysdeps/ieee754/flt-32/e_gammaf_r.c (__ieee754_gammaf_r): Likewise.
+	* sysdeps/ieee754/flt-32/s_logbf.c (__logbf): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_fmodl.c (__ieee754_fmodl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/math_ldbl.h (ldbl_nearbyint): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_llrintl.c (__llrintl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_llroundl.c (__llroundl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_logbl.c (__logbl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_lrintl.c (__lrintl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_lroundl.c (__lroundl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_fmal.c (__fmal): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_gammal_r.c (__ieee754_gammal_r): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_j0l.c (__ieee754_j0l, __ieee754_y0l):
+	Likewise.
+	* sysdeps/ieee754/ldbl-96/e_j1l.c (__ieee754_j1l, __ieee754_y1l):
+	Likewise.
+	* sysdeps/ieee754/ldbl-96/e_jnl.c (__ieee754_jnl, __ieee754_ynl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fma.c (__fma): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fmal.c (__fmal): Likewise.
+	* sysdeps/posix/clock_getres.c (hp_timing_getres, realtime_getres):
+	Likewise.
+	* sysdeps/posix/fdopendir.c (__fdopendir): Likewise.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet, getaddrinfo): Likewise.
+	* sysdeps/posix/opendir.c (__opendirat): Likewise.
+	* sysdeps/posix/sleep.c: Likewise.
+	* sysdeps/posix/tempname.c: Likewise.
+	* sysdeps/powerpc/powerpc32/dl-irel.h (elf_irela): Likewise.
+	* sysdeps/powerpc/powerpc32/dl-machine.c (__process_machine_rela):
+	Likewise.
+	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_runtime_setup,
+	elf_machine_rela): Likewise.
+	* sysdeps/powerpc/powerpc64/dl-irel.h (elf_irela): Likewise.
+	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/pthread/aio_notify.c (__aio_notify_only): Likewise.
+	* sysdeps/pthread/aio_suspend.c (do_aio_misc_wait, aio_suspend):
+	Likewise.
+	* sysdeps/s390/dl-irel.h (elf_irela): Likewise.
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_runtime_setup,
+	elf_machine_rela, elf_machine_lazy_rel): Likewise.
+	* sysdeps/s390/s390-64/dl-machine.h (elf_machine_runtime_setup,
+	elf_machine_rela, elf_machine_lazy_rel): Likewise.
+	* sysdeps/s390/s390-64/utf16-utf32-z9.c (gconv_end): Likewise.
+	* sysdeps/s390/s390-64/utf8-utf16-z9.c (gconv_end): Likewise.
+	* sysdeps/s390/s390-64/utf8-utf32-z9.c (gconv_end): Likewise.
+	* sysdeps/sh/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/sparc/sparc32/dl-irel.h (elf_irela): Likewise.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela,
+	elf_machine_lazy_rel): Likewise.
+	* sysdeps/sparc/sparc64/dl-irel.h (elf_irela): Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela,
+	elf_machine_lazy_rel): Likewise.
+	* sysdeps/sparc/sparc64/dl-plt.h (sparc64_fixup_plt): Likewise.
+	* sysdeps/unix/clock_gettime.c (hp_timing_gettime): Likewise.
+	* sysdeps/unix/clock_settime.c (hp_timing_settime): Likewise.
+	* sysdeps/unix/grantpt.c (grantpt): Likewise.
+	* sysdeps/unix/sysv/linux/accept4.c (accept4): Likewise.
+	* sysdeps/unix/sysv/linux/adjtime.c (ADJTIME): Likewise.
+	* sysdeps/unix/sysv/linux/check_pf.c (__check_pf): Likewise.
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (_dl_setup_stack_chk_guard):
+	Likewise.
+	* sysdeps/unix/sysv/linux/faccessat.c (faccessat): Likewise.
+	* sysdeps/unix/sysv/linux/fchmodat.c (fchmodat): Likewise.
+	* sysdeps/unix/sysv/linux/fchownat.c (fchownat): Likewise.
+	* sysdeps/unix/sysv/linux/futimesat.c (futimesat): Likewise.
+	* sysdeps/unix/sysv/linux/fxstatat64.c (__fxstatat64): Likewise.
+	* sysdeps/unix/sysv/linux/fxstatat.c (__fxstatat): Likewise.
+	* sysdeps/unix/sysv/linux/i386/fallocate64.c (fallocate64): Likewise.
+	* sysdeps/unix/sysv/linux/i386/fallocate.c (fallocate): Likewise.
+	* sysdeps/unix/sysv/linux/i386/fchownat.c (fchownat): Likewise.
+	* sysdeps/unix/sysv/linux/i386/fxstatat.c (__fxstatat): Likewise.
+	* sysdeps/unix/sysv/linux/i386/get_clockfreq.c (__get_clockfreq):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/posix_fallocate64.c
+	(__posix_fallocate64_l64): Likewise.
+	* sysdeps/unix/sysv/linux/i386/posix_fallocate.c
+	(posix_fallocate): Likewise.
+	* sysdeps/unix/sysv/linux/i386/scandir64.c (__old_scandir64): Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/ifaddrs.c (__netlink_request,
+	getifaddrs_internal): Likewise.
+	* sysdeps/unix/sysv/linux/linkat.c (linkat): Likewise.
+	* sysdeps/unix/sysv/linux/mkdirat.c (mkdirat): Likewise.
+	* sysdeps/unix/sysv/linux/mq_unlink.c (mq_unlink): Likewise.
+	* sysdeps/unix/sysv/linux/openat.c (OPENAT_NOT_CANCEL): Likewise.
+	* sysdeps/unix/sysv/linux/posix_fallocate64.c
+	(__posix_fallocate64_l64): Likewise.
+	* sysdeps/unix/sysv/linux/posix_fallocate.c (posix_fallocate):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/fchownat.c (fchownat): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/get_clockfreq.c (__get_clockfreq):
+	Likewise.
+	* sysdeps/unix/sysv/linux/readlinkat.c (readlinkat): Likewise.
+	* sysdeps/unix/sysv/linux/recvmmsg.c (recvmmsg): Likewise.
+	* sysdeps/unix/sysv/linux/renameat.c (renameat): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sched_setaffinity.c: Likewise.
+	* sysdeps/unix/sysv/linux/sendmmsg.c (__sendmmsg): Likewise.
+	* sysdeps/unix/sysv/linux/shm_open.c (where_is_shmfs, shm_open):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sleep.c (__sleep): Likewise.
+	* sysdeps/unix/sysv/linux/symlinkat.c (symlinkat): Likewise.
+	* sysdeps/unix/sysv/linux/tcgetattr.c (__tcgetattr): Likewise.
+	* sysdeps/unix/sysv/linux/ttyname.c (ttyname): Likewise.
+	* sysdeps/unix/sysv/linux/ttyname_r.c (__ttyname_r): Likewise.
+	* sysdeps/unix/sysv/linux/unlinkat.c (unlinkat): Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/fxstatat.c (__fxstatat):
+	Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/posix_fallocate.c
+	(posix_fallocate): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/xmknodat.c (__xmknodat): Likewise.
+	* sysdeps/x86_64/dl-irel.h (elf_irela): Likewise.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_runtime_setup,
+	elf_machine_rela, elf_machine_rela_relative, elf_machine_lazy_rel):
+	Likewise.
+	* time/asctime.c (asctime_internal): Likewise.
+	* time/tzfile.c (__tzfile_read, __tzfile_compute): Likewise.
+	* time/tzset.c (__tzset_parse_tz): Likewise.
+	* wcsmbs/mbrtoc16.c (mbrtoc16): Likewise.
+	* wcsmbs/mbrtowc.c (__mbrtowc): Likewise.
+	* wcsmbs/wcsmbsload.c (__wcsmbs_load_conv): Likewise.
+	* wcsmbs/wcsmbsload.h: Likewise.
+
+2014-02-10  Ondřej Bílka  <neleai@seznam.cz>
+
 	[BZ #15894]
 	* stdlib/setenv.c (__add_to_environ): Remove duplicate code.
 

@@ -125,7 +125,7 @@ internal_nis_getaliasent_r (struct aliasent *alias, char *buffer,
 {
   char *domain;
 
-  if (__builtin_expect (yp_get_default_domain (&domain), 0))
+  if (__glibc_unlikely (yp_get_default_domain (&domain)))
     return NSS_STATUS_UNAVAIL;
 
   alias->alias_local = 0;
@@ -147,7 +147,7 @@ internal_nis_getaliasent_r (struct aliasent *alias, char *buffer,
 	yperr = yp_next (domain, "mail.aliases", oldkey, oldkeylen, &outkey,
 			 &keylen, &result, &len);
 
-      if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
+      if (__glibc_unlikely (yperr != YPERR_SUCCESS))
 	{
 	  enum nss_status retval = yperr2nss (yperr);
 
@@ -156,7 +156,7 @@ internal_nis_getaliasent_r (struct aliasent *alias, char *buffer,
 	  return retval;
 	}
 
-      if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
+      if (__glibc_unlikely ((size_t) (len + 1) > buflen))
 	{
 	  free (result);
 	  *errnop = ERANGE;
@@ -170,7 +170,7 @@ internal_nis_getaliasent_r (struct aliasent *alias, char *buffer,
 
       parse_res = _nss_nis_parse_aliasent (outkey, p, alias, buffer,
 					   buflen, errnop);
-      if (__builtin_expect (parse_res == -1, 0))
+      if (__glibc_unlikely (parse_res == -1))
 	{
 	  free (outkey);
 	  *errnop = ERANGE;
@@ -213,7 +213,7 @@ _nss_nis_getaliasbyname_r (const char *name, struct aliasent *alias,
     }
 
   char *domain;
-  if (__builtin_expect (yp_get_default_domain (&domain), 0))
+  if (__glibc_unlikely (yp_get_default_domain (&domain)))
     return NSS_STATUS_UNAVAIL;
 
   size_t namlen = strlen (name);
@@ -244,7 +244,7 @@ _nss_nis_getaliasbyname_r (const char *name, struct aliasent *alias,
   if (!use_alloca)
     free (name2);
 
-  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
+  if (__glibc_unlikely (yperr != YPERR_SUCCESS))
     {
       enum nss_status retval = yperr2nss (yperr);
 
@@ -253,7 +253,7 @@ _nss_nis_getaliasbyname_r (const char *name, struct aliasent *alias,
       return retval;
     }
 
-  if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
+  if (__glibc_unlikely ((size_t) (len + 1) > buflen))
     {
       free (result);
       *errnop = ERANGE;
@@ -269,7 +269,7 @@ _nss_nis_getaliasbyname_r (const char *name, struct aliasent *alias,
   alias->alias_local = 0;
   int parse_res = _nss_nis_parse_aliasent (name, p, alias, buffer, buflen,
 					   errnop);
-  if (__builtin_expect (parse_res < 1, 0))
+  if (__glibc_unlikely (parse_res < 1))
     {
       if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;

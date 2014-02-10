@@ -30,7 +30,7 @@ __csqrtl (__complex__ long double x)
   int rcls = fpclassify (__real__ x);
   int icls = fpclassify (__imag__ x);
 
-  if (__builtin_expect (rcls <= FP_INFINITE || icls <= FP_INFINITE, 0))
+  if (__glibc_unlikely (rcls <= FP_INFINITE || icls <= FP_INFINITE))
     {
       if (icls == FP_INFINITE)
 	{
@@ -59,7 +59,7 @@ __csqrtl (__complex__ long double x)
     }
   else
     {
-      if (__builtin_expect (icls == FP_ZERO, 0))
+      if (__glibc_unlikely (icls == FP_ZERO))
 	{
 	  if (__real__ x < 0.0)
 	    {
@@ -73,7 +73,7 @@ __csqrtl (__complex__ long double x)
 	      __imag__ res = __copysignl (0.0, __imag__ x);
 	    }
 	}
-      else if (__builtin_expect (rcls == FP_ZERO, 0))
+      else if (__glibc_unlikely (rcls == FP_ZERO))
 	{
 	  long double r;
 	  if (fabsl (__imag__ x) >= 2.0L * LDBL_MIN)

@@ -306,7 +306,7 @@ extern int __lll_robust_timedlock_wait
   ((void) ({								      \
     int *__futex = &(lock);						      \
     int __val = atomic_exchange_rel (__futex, 0);			      \
-    if (__builtin_expect (__val > 1, 0))				      \
+    if (__glibc_unlikely (__val > 1))					      \
       lll_futex_wake (__futex, 1, private);				      \
   }))
 
@@ -314,7 +314,7 @@ extern int __lll_robust_timedlock_wait
   ((void) ({								      \
     int *__futex = &(lock);						      \
     int __val = atomic_exchange_rel (__futex, 0);			      \
-    if (__builtin_expect (__val & FUTEX_WAITERS, 0))			      \
+    if (__glibc_unlikely (__val & FUTEX_WAITERS))			      \
       lll_futex_wake (__futex, 1, private);				      \
   }))
 

@@ -32,7 +32,7 @@ static size_t __kernel_cpumask_size;
 int
 __sched_setaffinity_new (pid_t pid, size_t cpusetsize, const cpu_set_t *cpuset)
 {
-  if (__builtin_expect (__kernel_cpumask_size == 0, 0))
+  if (__glibc_unlikely (__kernel_cpumask_size == 0))
     {
       INTERNAL_SYSCALL_DECL (err);
       int res;

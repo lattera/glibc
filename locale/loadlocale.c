@@ -107,7 +107,7 @@ _nl_intern_locale_data (int category, const void *data, size_t datasize)
   for (cnt = 0; cnt < newdata->nstrings; ++cnt)
     {
       size_t idx = filedata->strindex[cnt];
-      if (__builtin_expect (idx > (size_t) newdata->filesize, 0))
+      if (__glibc_unlikely (idx > (size_t) newdata->filesize))
 	{
 	puntdata:
 	  free (newdata);
@@ -183,7 +183,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
       close_not_cancel_no_status (fd);
       return;
     }
-  if (__builtin_expect (S_ISDIR (st.st_mode), 0))
+  if (__glibc_unlikely (S_ISDIR (st.st_mode)))
     {
       /* LOCALE/LC_foo is a directory; open LOCALE/LC_foo/SYS_LC_foo
 	   instead.  */
@@ -221,7 +221,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 # endif
   filedata = __mmap ((caddr_t) 0, st.st_size,
 		     PROT_READ, MAP_FILE|MAP_COPY, fd, 0);
-  if (__builtin_expect (filedata == MAP_FAILED, 0))
+  if (__glibc_unlikely (filedata == MAP_FAILED))
     {
       filedata = NULL;
       if (__builtin_expect (errno, ENOSYS) == ENOSYS)
@@ -258,12 +258,12 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
   /* We have mapped the data, so we no longer need the descriptor.  */
   close_not_cancel_no_status (fd);
 
-  if (__builtin_expect (filedata == NULL, 0))
+  if (__glibc_unlikely (filedata == NULL))
     /* We failed to map or read the data.  */
     return;
 
   newdata = _nl_intern_locale_data (category, filedata, st.st_size);
-  if (__builtin_expect (newdata == NULL, 0))
+  if (__glibc_unlikely (newdata == NULL))
     /* Bad data.  */
     {
 #ifdef _POSIX_MAPPED_FILES

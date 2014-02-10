@@ -50,7 +50,7 @@ __pthread_mutex_trylock (mutex)
       if (mutex->__data.__owner == id)
 	{
 	  /* Just bump the counter.  */
-	  if (__builtin_expect (mutex->__data.__count + 1 == 0, 0))
+	  if (__glibc_unlikely (mutex->__data.__count + 1 == 0))
 	    /* Overflow of the counter.  */
 	    return EAGAIN;
 
@@ -133,7 +133,7 @@ __pthread_mutex_trylock (mutex)
 	    }
 
 	  /* Check whether we already hold the mutex.  */
-	  if (__builtin_expect ((oldval & FUTEX_TID_MASK) == id, 0))
+	  if (__glibc_unlikely ((oldval & FUTEX_TID_MASK) == id))
 	    {
 	      int kind = PTHREAD_MUTEX_TYPE (mutex);
 	      if (kind == PTHREAD_MUTEX_ROBUST_ERRORCHECK_NP)
@@ -149,7 +149,7 @@ __pthread_mutex_trylock (mutex)
 				 NULL);
 
 		  /* Just bump the counter.  */
-		  if (__builtin_expect (mutex->__data.__count + 1 == 0, 0))
+		  if (__glibc_unlikely (mutex->__data.__count + 1 == 0))
 		    /* Overflow of the counter.  */
 		    return EAGAIN;
 
@@ -211,7 +211,7 @@ __pthread_mutex_trylock (mutex)
 	oldval = mutex->__data.__lock;
 
 	/* Check whether we already hold the mutex.  */
-	if (__builtin_expect ((oldval & FUTEX_TID_MASK) == id, 0))
+	if (__glibc_unlikely ((oldval & FUTEX_TID_MASK) == id))
 	  {
 	    if (kind == PTHREAD_MUTEX_ERRORCHECK_NP)
 	      {
@@ -224,7 +224,7 @@ __pthread_mutex_trylock (mutex)
 		THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 
 		/* Just bump the counter.  */
-		if (__builtin_expect (mutex->__data.__count + 1 == 0, 0))
+		if (__glibc_unlikely (mutex->__data.__count + 1 == 0))
 		  /* Overflow of the counter.  */
 		  return EAGAIN;
 
@@ -270,7 +270,7 @@ __pthread_mutex_trylock (mutex)
 	    oldval = mutex->__data.__lock;
 	  }
 
-	if (__builtin_expect (oldval & FUTEX_OWNER_DIED, 0))
+	if (__glibc_unlikely (oldval & FUTEX_OWNER_DIED))
 	  {
 	    atomic_and (&mutex->__data.__lock, ~FUTEX_OWNER_DIED);
 
@@ -337,7 +337,7 @@ __pthread_mutex_trylock (mutex)
 	    if (kind == PTHREAD_MUTEX_RECURSIVE_NP)
 	      {
 		/* Just bump the counter.  */
-		if (__builtin_expect (mutex->__data.__count + 1 == 0, 0))
+		if (__glibc_unlikely (mutex->__data.__count + 1 == 0))
 		  /* Overflow of the counter.  */
 		  return EAGAIN;
 

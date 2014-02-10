@@ -241,7 +241,7 @@
     /* If any of them recognized the input continue with the loop.  */	      \
     if (result != __GCONV_ILLEGAL_INPUT)				      \
       {									      \
-	if (__builtin_expect (result == __GCONV_FULL_OUTPUT, 0))	      \
+	if (__glibc_unlikely (result == __GCONV_FULL_OUTPUT))		      \
 	  break;							      \
 									      \
 	continue;							      \
@@ -442,7 +442,7 @@ SINGLE(LOOPFCT) (struct __gconv_step *step,
      bytes from the state and at least one more, or the character is still
      incomplete, or we have some other error (like illegal input character,
      no space in output buffer).  */
-  if (__builtin_expect (inptr != bytebuf, 1))
+  if (__glibc_likely (inptr != bytebuf))
     {
       /* We found a new character.  */
       assert (inptr - bytebuf > (state->__count & 7));

@@ -48,7 +48,7 @@ pthread_setschedprio (threadid, prio)
     param.sched_priority = pd->tpp->priomax;
 
   /* Try to set the scheduler information.  */
-  if (__builtin_expect (sched_setparam (pd->tid, &param) == -1, 0))
+  if (__glibc_unlikely (sched_setparam (pd->tid, &param) == -1))
     result = errno;
   else
     {

@@ -55,7 +55,7 @@ void *
 __dlsym (void *handle, const char *name DL_CALLER_DECL)
 {
 # ifdef SHARED
-  if (__builtin_expect (_dlfcn_hook != NULL, 0))
+  if (__glibc_unlikely (_dlfcn_hook != NULL))
     return _dlfcn_hook->dlsym (handle, name, DL_CALLER);
 # endif
 

@@ -28,7 +28,7 @@ __pthread_getspecific (key)
 
   /* Special case access to the first 2nd-level block.  This is the
      usual case.  */
-  if (__builtin_expect (key < PTHREAD_KEY_2NDLEVEL_SIZE, 1))
+  if (__glibc_likely (key < PTHREAD_KEY_2NDLEVEL_SIZE))
     data = &THREAD_SELF->specific_1stblock[key];
   else
     {
@@ -58,7 +58,7 @@ __pthread_getspecific (key)
     {
       uintptr_t seq = data->seq;
 
-      if (__builtin_expect (seq != __pthread_keys[key].seq, 0))
+      if (__glibc_unlikely (seq != __pthread_keys[key].seq))
 	result = data->data = NULL;
     }
 

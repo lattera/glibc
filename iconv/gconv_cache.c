@@ -79,7 +79,7 @@ __gconv_load_cache (void)
   cache_size = st.st_size;
 #ifdef _POSIX_MAPPED_FILES
   gconv_cache = __mmap (NULL, cache_size, PROT_READ, MAP_SHARED, fd, 0);
-  if (__builtin_expect (gconv_cache == MAP_FAILED, 0))
+  if (__glibc_unlikely (gconv_cache == MAP_FAILED))
 #endif
     {
       size_t already_read;

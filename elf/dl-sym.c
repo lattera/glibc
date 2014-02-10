@@ -128,7 +128,7 @@ do_sym (void *handle, const char *name, void *who,
 
 	  THREAD_GSCOPE_RESET_FLAG ();
 
-	  if (__builtin_expect (errstring != NULL, 0))
+	  if (__glibc_unlikely (errstring != NULL))
 	    {
 	      /* The lookup was unsuccessful.  Rethrow the error.  */
 	      char *errstring_dup = strdupa (errstring);
@@ -145,7 +145,7 @@ do_sym (void *handle, const char *name, void *who,
     }
   else if (handle == RTLD_NEXT)
     {
-      if (__builtin_expect (match == GL(dl_ns)[LM_ID_BASE]._ns_loaded, 0))
+      if (__glibc_unlikely (match == GL(dl_ns)[LM_ID_BASE]._ns_loaded))
 	{
 	  if (match == NULL
 	      || caller < match->l_map_start
@@ -183,7 +183,7 @@ RTLD_NEXT used in code not dynamically loaded"));
 	value = DL_SYMBOL_ADDRESS (result, ref);
 
       /* Resolve indirect function address.  */
-      if (__builtin_expect (ELFW(ST_TYPE) (ref->st_info) == STT_GNU_IFUNC, 0))
+      if (__glibc_unlikely (ELFW(ST_TYPE) (ref->st_info) == STT_GNU_IFUNC))
 	{
 	  DL_FIXUP_VALUE_TYPE fixup
 	    = DL_FIXUP_MAKE_VALUE (result, (ElfW(Addr)) value);
@@ -195,7 +195,7 @@ RTLD_NEXT used in code not dynamically loaded"));
       /* Auditing checkpoint: we have a new binding.  Provide the
 	 auditing libraries the possibility to change the value and
 	 tell us whether further auditing is wanted.  */
-      if (__builtin_expect (GLRO(dl_naudit) > 0, 0))
+      if (__glibc_unlikely (GLRO(dl_naudit) > 0))
 	{
 	  const char *strtab = (const char *) D_PTR (result,
 						     l_info[DT_STRTAB]);

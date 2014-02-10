@@ -266,7 +266,7 @@ mq_notify (mqd_t mqdes, const struct sigevent *notification)
 
   /* If we cannot create the netlink socket we cannot provide
      SIGEV_THREAD support.  */
-  if (__builtin_expect (netlink_socket == -1, 0))
+  if (__glibc_unlikely (netlink_socket == -1))
     {
       __set_errno (ENOSYS);
       return -1;
@@ -299,7 +299,7 @@ mq_notify (mqd_t mqdes, const struct sigevent *notification)
   int retval = INLINE_SYSCALL (mq_notify, 2, mqdes, &se);
 
   /* If it failed, free the allocated memory.  */
-  if (__builtin_expect (retval != 0, 0))
+  if (__glibc_unlikely (retval != 0))
     free (data.attr);
 
   return retval;

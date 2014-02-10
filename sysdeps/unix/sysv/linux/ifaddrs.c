@@ -175,7 +175,7 @@ __netlink_request (struct netlink_handle *h, int type)
       if (nladdr.nl_pid != 0)
 	continue;
 
-      if (__builtin_expect (msg.msg_flags & MSG_TRUNC, 0))
+      if (__glibc_unlikely (msg.msg_flags & MSG_TRUNC))
 	goto out_fail;
 
       size_t count = 0;
@@ -459,7 +459,7 @@ getifaddrs_internal (struct ifaddrs **ifap)
 		 kernel.  */
 	      ifa_index = map_newlink (ifim->ifi_index - 1, ifas,
 				       map_newlink_data, newlink);
-	      if (__builtin_expect (ifa_index == -1, 0))
+	      if (__glibc_unlikely (ifa_index == -1))
 		{
 		try_again:
 		  result = -EAGAIN;
@@ -552,7 +552,7 @@ getifaddrs_internal (struct ifaddrs **ifap)
 	      ifa_index = newlink + newaddr_idx;
 	      int idx = map_newlink (ifam->ifa_index - 1, ifas,
 				     map_newlink_data, newlink);
-	      if (__builtin_expect (idx == -1, 0))
+	      if (__glibc_unlikely (idx == -1))
 		goto try_again;
 	      ifas[ifa_index].ifa.ifa_flags = ifas[idx].ifa.ifa_flags;
 	      if (ifa_index > 0)
@@ -737,7 +737,7 @@ getifaddrs_internal (struct ifaddrs **ifap)
 		{
 		  int idx = map_newlink (ifam->ifa_index - 1, ifas,
 					 map_newlink_data, newlink);
-		  if (__builtin_expect (idx == -1, 0))
+		  if (__glibc_unlikely (idx == -1))
 		    goto try_again;
 		  ifas[ifa_index].ifa.ifa_name = ifas[idx].ifa.ifa_name;
 		}

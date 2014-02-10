@@ -38,7 +38,7 @@ __posix_fallocate64_l64 (int fd, __off64_t offset, __off64_t len)
 {
 #ifdef __NR_fallocate
 # ifndef __ASSUME_FALLOCATE
-  if (__builtin_expect (__have_fallocate >= 0, 1))
+  if (__glibc_likely (__have_fallocate >= 0))
 # endif
     {
       int res = __call_fallocate (fd, 0, offset, len);
@@ -47,7 +47,7 @@ __posix_fallocate64_l64 (int fd, __off64_t offset, __off64_t len)
 	return 0;
 
 # ifndef __ASSUME_FALLOCATE
-      if (__builtin_expect (res == ENOSYS, 0))
+      if (__glibc_unlikely (res == ENOSYS))
 	__have_fallocate = -1;
       else
 # endif

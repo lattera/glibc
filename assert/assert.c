@@ -67,7 +67,7 @@ __assert_fail_base (const char *fmt, const char *assertion, const char *file,
       total = (total + 1 + GLRO(dl_pagesize) - 1) & ~(GLRO(dl_pagesize) - 1);
       struct abort_msg_s *buf = __mmap (NULL, total, PROT_READ | PROT_WRITE,
 					MAP_ANON | MAP_PRIVATE, -1, 0);
-      if (__builtin_expect (buf != MAP_FAILED, 1))
+      if (__glibc_likely (buf != MAP_FAILED))
 	{
 	  buf->size = total;
 	  strcpy (buf->msg, str);

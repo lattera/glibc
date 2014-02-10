@@ -33,7 +33,7 @@
 int
 __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
 {
-  if (__builtin_expect (vers != _STAT_VER_LINUX, 0))
+  if (__glibc_unlikely (vers != _STAT_VER_LINUX))
     {
       __set_errno (EINVAL);
       return -1;
@@ -76,7 +76,7 @@ __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
   if (fd != AT_FDCWD && file[0] != '/')
     {
       size_t filelen = strlen (file);
-      if (__builtin_expect (filelen == 0, 0))
+      if (__glibc_unlikely (filelen == 0))
 	{
 	  __set_errno (ENOENT);
 	  return -1;
@@ -101,7 +101,7 @@ __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
     result = INTERNAL_SYSCALL (lstat64, err, 2, file, st);
   else
     result = INTERNAL_SYSCALL (stat64, err, 2, file, st);
-  if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
+  if (__glibc_likely (!INTERNAL_SYSCALL_ERROR_P (result, err)))
     {
 # if defined _HAVE_STAT64___ST_INO && __ASSUME_ST_INO_64_BIT == 0
       if (st->__st_ino != (__ino_t) st->st_ino)

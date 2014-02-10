@@ -52,7 +52,7 @@ call_init (struct link_map *l, int argc, char **argv, char **env)
     return;
 
   /* Print a debug message if wanted.  */
-  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
+  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS))
     _dl_debug_printf ("\ncalling init: %s\n\n",
 		      DSO_FILENAME (l->l_name));
 
@@ -88,7 +88,7 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
   ElfW(Dyn) *preinit_array_size = main_map->l_info[DT_PREINIT_ARRAYSZ];
   unsigned int i;
 
-  if (__builtin_expect (GL(dl_initfirst) != NULL, 0))
+  if (__glibc_unlikely (GL(dl_initfirst) != NULL))
     {
       call_init (GL(dl_initfirst), argc, argv, env);
       GL(dl_initfirst) = NULL;
@@ -102,7 +102,7 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
       ElfW(Addr) *addrs;
       unsigned int cnt;
 
-      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
+      if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS))
 	_dl_debug_printf ("\ncalling preinit: %s\n\n",
 			  DSO_FILENAME (main_map->l_name));
 

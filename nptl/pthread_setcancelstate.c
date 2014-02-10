@@ -55,7 +55,7 @@ __pthread_setcancelstate (state, oldstate)
 	 atomically since other bits could be modified as well.  */
       int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling, newval,
 					      oldval);
-      if (__builtin_expect (curval == oldval, 1))
+      if (__glibc_likely (curval == oldval))
 	{
 	  if (CANCEL_ENABLED_AND_CANCELED_AND_ASYNCHRONOUS (newval))
 	    __do_cancel ();

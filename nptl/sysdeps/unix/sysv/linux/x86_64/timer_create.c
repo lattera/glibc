@@ -50,7 +50,7 @@ __timer_create_old (clockid_t clock_id, struct sigevent *evp, int *timerid)
 	    break;
 	  }
 
-      if (__builtin_expect (i == OLD_TIMER_MAX, 0))
+      if (__glibc_unlikely (i == OLD_TIMER_MAX))
 	{
 	  /* No free slot.  */
 	  (void) __timer_delete_new (newp);

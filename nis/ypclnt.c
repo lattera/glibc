@@ -183,7 +183,7 @@ __yp_bind (const char *domain, dom_binding **ypdb)
     {
       is_new = 1;
       ysd = (dom_binding *) calloc (1, sizeof *ysd);
-      if (__builtin_expect (ysd == NULL, 0))
+      if (__glibc_unlikely (ysd == NULL))
 	return YPERR_RESRC;
     }
 
@@ -471,7 +471,7 @@ yp_match (const char *indomain, const char *inmap, const char *inkey,
   *outvallen = resp.val.valdat_len;
   *outval = malloc (*outvallen + 1);
   int status = YPERR_RESRC;
-  if (__builtin_expect (*outval != NULL, 1))
+  if (__glibc_likely (*outval != NULL))
     {
       memcpy (*outval, resp.val.valdat_val, *outvallen);
       (*outval)[*outvallen] = '\0';
@@ -770,7 +770,7 @@ yp_all (const char *indomain, const char *inmap,
 			  (caddr_t) &req, (xdrproc_t) __xdr_ypresp_all,
 			  (caddr_t) &data, RPCTIMEOUT);
 
-      if (__builtin_expect (result != RPC_SUCCESS, 0))
+      if (__glibc_unlikely (result != RPC_SUCCESS))
 	{
 	  /* Print the error message only on the last try.  */
 	  if (try == MAXTRIES - 1)
@@ -811,7 +811,7 @@ yp_maplist (const char *indomain, struct ypmaplist **outmaplist)
 			 (caddr_t) &indomain, (xdrproc_t) xdr_ypresp_maplist,
 			 (caddr_t) &resp);
 
-  if (__builtin_expect (result == YPERR_SUCCESS, 1))
+  if (__glibc_likely (result == YPERR_SUCCESS))
     {
       *outmaplist = resp.maps;
       /* We don't free the list, this will be done by ypserv

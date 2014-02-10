@@ -4574,7 +4574,7 @@ static const char from_ucs4_extra[229][2] =
 	uint32_t ch2;							      \
 	uint_fast32_t idx;						      \
 									      \
-	if (__builtin_expect (inptr + 1 >= inend, 0))			      \
+	if (__glibc_unlikely (inptr + 1 >= inend))			      \
 	  {								      \
 	    /* The second character is not available.  Store		      \
 	       the intermediate result.  */				      \
@@ -4704,7 +4704,7 @@ static const char from_ucs4_extra[229][2] =
 	/* Now test for a possible second byte and write this if possible.  */\
 	if (cp[1] != '\0')						      \
 	  {								      \
-	    if (__builtin_expect (outptr + 1 >= outend, 0))		      \
+	    if (__glibc_unlikely (outptr + 1 >= outend))		      \
 	      {								      \
 		/* The result does not fit into the buffer.  */		      \
 		result = __GCONV_FULL_OUTPUT;				      \

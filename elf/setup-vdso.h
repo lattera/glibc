@@ -31,7 +31,7 @@ setup_vdso (struct link_map *main_map __attribute__ ((unused)),
      mapped and relocated it normally.  */
   struct link_map *l = _dl_new_object ((char *) "", "", lt_library, NULL,
 				       0, LM_ID_BASE);
-  if (__builtin_expect (l != NULL, 1))
+  if (__glibc_likely (l != NULL))
     {
       static ElfW(Dyn) dyn_temp[DL_RO_DYN_TEMP_CNT] attribute_relro;
 

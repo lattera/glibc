@@ -130,7 +130,7 @@ __nscd_getgrouplist (const char *user, gid_t group, long int *size,
     }
   else
     {
-      if (__builtin_expect (initgr_resp.found == -1, 0))
+      if (__glibc_unlikely (initgr_resp.found == -1))
 	{
 	  /* The daemon does not cache this database.  */
 	  __nss_not_use_nscd_group = 1;

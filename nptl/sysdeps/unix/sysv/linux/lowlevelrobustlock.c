@@ -35,7 +35,7 @@ __lll_robust_lock_wait (int *futex, int private)
 
   do
     {
-      if (__builtin_expect (oldval & FUTEX_OWNER_DIED, 0))
+      if (__glibc_unlikely (oldval & FUTEX_OWNER_DIED))
 	return oldval;
 
       int newval = oldval | FUTEX_WAITERS;
@@ -72,7 +72,7 @@ __lll_robust_timedlock_wait (int *futex, const struct timespec *abstime,
 
   /* Work around the fact that the kernel rejects negative timeout values
      despite them being valid.  */
-  if (__builtin_expect (abstime->tv_sec < 0, 0))
+  if (__glibc_unlikely (abstime->tv_sec < 0))
     return ETIMEDOUT;
 
   do
@@ -100,7 +100,7 @@ __lll_robust_timedlock_wait (int *futex, const struct timespec *abstime,
 #endif
 
       /* Wait.  */
-      if (__builtin_expect (oldval & FUTEX_OWNER_DIED, 0))
+      if (__glibc_unlikely (oldval & FUTEX_OWNER_DIED))
 	return oldval;
 
       int newval = oldval | FUTEX_WAITERS;

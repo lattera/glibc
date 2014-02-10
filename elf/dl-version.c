@@ -82,13 +82,13 @@ match_symbol (const char *name, Lmid_t ns, ElfW(Word) hash, const char *string,
   int result = 0;
 
   /* Display information about what we are doing while debugging.  */
-  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_VERSIONS, 0))
+  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_VERSIONS))
     _dl_debug_printf ("\
 checking for version `%s' in file %s [%lu] required by file %s [%lu]\n",
 		      string, DSO_FILENAME (map->l_name),
 		      map->l_ns, name, ns);
 
-  if (__builtin_expect (map->l_info[VERSYMIDX (DT_VERDEF)] == NULL, 0))
+  if (__glibc_unlikely (map->l_info[VERSYMIDX (DT_VERDEF)] == NULL))
     {
       /* The file has no symbol versioning.  I.e., the dependent
 	 object was linked against another version of this file.  We
@@ -145,7 +145,7 @@ no version information available (required by ", name, ")");
     }
 
   /* Symbol not found.  If it was a weak reference it is not fatal.  */
-  if (__builtin_expect (weak, 1))
+  if (__glibc_likely (weak))
     {
       if (verbose)
 	{
@@ -291,7 +291,7 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 	 section.  */
       map->l_versions = (struct r_found_version *)
 	calloc (ndx_high + 1, sizeof (*map->l_versions));
-      if (__builtin_expect (map->l_versions == NULL, 0))
+      if (__glibc_unlikely (map->l_versions == NULL))
 	{
 	  errstring = N_("cannot allocate version reference table");
 	  errval = ENOMEM;
@@ -316,7 +316,7 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 		{
 		  ElfW(Half) ndx = aux->vna_other & 0x7fff;
 		  /* In trace mode, dependencies may be missing.  */
-		  if (__builtin_expect (ndx < map->l_nversions, 1))
+		  if (__glibc_likely (ndx < map->l_nversions))
 		    {
 		      map->l_versions[ndx].hash = aux->vna_hash;
 		      map->l_versions[ndx].hidden = aux->vna_other & 0x8000;

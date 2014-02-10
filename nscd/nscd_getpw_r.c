@@ -134,7 +134,7 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
   /* No value found so far.  */
   *result = NULL;
 
-  if (__builtin_expect (pw_resp.found == -1, 0))
+  if (__glibc_unlikely (pw_resp.found == -1))
     {
       /* The daemon does not cache this database.  */
       __nss_not_use_nscd_passwd = 1;
@@ -165,9 +165,9 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
       p += pw_resp.pw_shell_len;
 
       ssize_t total = p - buffer;
-      if (__builtin_expect (pw_name + total > recend, 0))
+      if (__glibc_unlikely (pw_name + total > recend))
 	goto out_close;
-      if (__builtin_expect (buflen < total, 0))
+      if (__glibc_unlikely (buflen < total))
 	{
 	  __set_errno (ERANGE);
 	  retval = ERANGE;
@@ -179,7 +179,7 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
 	{
 	  ssize_t nbytes = __readall (sock, buffer, total);
 
-	  if (__builtin_expect (nbytes != total, 0))
+	  if (__glibc_unlikely (nbytes != total))
 	    {
 	      /* The `errno' to some value != ERANGE.  */
 	      __set_errno (ENOENT);

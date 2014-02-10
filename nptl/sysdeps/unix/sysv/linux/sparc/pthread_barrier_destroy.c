@@ -33,7 +33,7 @@ pthread_barrier_destroy (barrier)
 
   lll_lock (ibarrier->b.lock, private);
 
-  if (__builtin_expect (ibarrier->b.left == ibarrier->b.init_count, 1))
+  if (__glibc_likely (ibarrier->b.left == ibarrier->b.init_count))
     /* The barrier is not used anymore.  */
     result = 0;
   else

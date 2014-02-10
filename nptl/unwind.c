@@ -62,7 +62,7 @@ unwind_stop (int version, _Unwind_Action actions,
 				    adj))
     do_longjump = 1;
 
-  if (__builtin_expect (curp != NULL, 0))
+  if (__glibc_unlikely (curp != NULL))
     {
       /* Handle the compatibility stuff.  Execute all handlers
 	 registered with the old method which would be unwound by this

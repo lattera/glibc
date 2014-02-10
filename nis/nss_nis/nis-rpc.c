@@ -124,7 +124,7 @@ internal_nis_getrpcent_r (struct rpcent *rpc, char *buffer, size_t buflen,
     {
       struct response_t *bucket = intern->next;
 
-      if (__builtin_expect (intern->offset >= bucket->size, 0))
+      if (__glibc_unlikely (intern->offset >= bucket->size))
 	{
 	  if (bucket->next == NULL)
 	    return NSS_STATUS_NOTFOUND;
@@ -139,7 +139,7 @@ internal_nis_getrpcent_r (struct rpcent *rpc, char *buffer, size_t buflen,
         ++intern->offset;
 
       size_t len = strlen (p) + 1;
-      if (__builtin_expect (len > buflen, 0))
+      if (__glibc_unlikely (len > buflen))
 	{
 	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
@@ -156,7 +156,7 @@ internal_nis_getrpcent_r (struct rpcent *rpc, char *buffer, size_t buflen,
       p = memcpy (buffer, &bucket->mem[intern->offset], len);
 
       parse_res = _nss_files_parse_rpcent (p, rpc, pdata, buflen, errnop);
-      if (__builtin_expect (parse_res == -1, 0))
+      if (__glibc_unlikely (parse_res == -1))
 	return NSS_STATUS_TRYAGAIN;
 
       intern->offset += len;
@@ -193,7 +193,7 @@ _nss_nis_getrpcbyname_r (const char *name, struct rpcent *rpc,
 
   intern_t data = { NULL, NULL, 0 };
   enum nss_status status = internal_nis_setrpcent (&data);
-  if (__builtin_expect (status != NSS_STATUS_SUCCESS, 0))
+  if (__glibc_unlikely (status != NSS_STATUS_SUCCESS))
     return status;
 
   int found = 0;
@@ -222,7 +222,7 @@ _nss_nis_getrpcbyname_r (const char *name, struct rpcent *rpc,
 
   internal_nis_endrpcent (&data);
 
-  if (__builtin_expect (!found && status == NSS_STATUS_SUCCESS, 0))
+  if (__glibc_unlikely (!found && status == NSS_STATUS_SUCCESS))
     return NSS_STATUS_NOTFOUND;
 
   return status;
@@ -233,7 +233,7 @@ _nss_nis_getrpcbynumber_r (int number, struct rpcent *rpc,
 			   char *buffer, size_t buflen, int *errnop)
 {
   char *domain;
-  if (__builtin_expect (yp_get_default_domain (&domain), 0))
+  if (__glibc_unlikely (yp_get_default_domain (&domain)))
     return NSS_STATUS_UNAVAIL;
 
   char buf[32];
@@ -243,7 +243,7 @@ _nss_nis_getrpcbynumber_r (int number, struct rpcent *rpc,
   int len;
   int yperr = yp_match (domain, "rpc.bynumber", buf, nlen, &result, &len);
 
-  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
+  if (__glibc_unlikely (yperr != YPERR_SUCCESS))
     {
       enum nss_status retval = yperr2nss (yperr);
 
@@ -252,7 +252,7 @@ _nss_nis_getrpcbynumber_r (int number, struct rpcent *rpc,
       return retval;
     }
 
-  if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
+  if (__glibc_unlikely ((size_t) (len + 1) > buflen))
     {
       free (result);
       *errnop = ERANGE;
@@ -267,7 +267,7 @@ _nss_nis_getrpcbynumber_r (int number, struct rpcent *rpc,
 
   int parse_res = _nss_files_parse_rpcent (p, rpc, (void  *) buffer, buflen,
 					   errnop);
-  if (__builtin_expect (parse_res < 1, 0))
+  if (__glibc_unlikely (parse_res < 1))
     {
       if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;

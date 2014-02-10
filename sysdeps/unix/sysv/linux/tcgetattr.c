@@ -39,7 +39,7 @@ __tcgetattr (fd, termios_p)
 
   retval = INLINE_SYSCALL (ioctl, 3, fd, TCGETS, &k_termios);
 
-  if (__builtin_expect (retval == 0, 1))
+  if (__glibc_likely (retval == 0))
     {
       termios_p->c_iflag = k_termios.c_iflag;
       termios_p->c_oflag = k_termios.c_oflag;

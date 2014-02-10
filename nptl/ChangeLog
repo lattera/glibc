@@ -1,3 +1,76 @@
+2014-02-10  Ondřej Bílka  <neleai@seznam.cz>
+
+	* allocatestack.c (queue_stack, allocate_stack,
+	__deallocate_stack, __reclaim_stacks): Use glibc_likely instead
+	__builtin_expect.
+	* cancellation.c (__pthread_enable_asynccancel,
+	__pthread_disable_asynccancel): Likewise.
+	* cleanup_defer.c (__pthread_register_cancel_defer,
+	__pthread_unregister_cancel_restore): Likewise.
+	* cleanup_defer_compat.c (_pthread_cleanup_push_defer,
+	_pthread_cleanup_pop_restore): Likewise.
+	* cond-perf.c (main): Likewise.
+	* nptl-init.c (sigcancel_handler, sighandler_setxid): Likewise.
+	* perf.c (get_clockfreq): Likewise.
+	* pthread_barrier_destroy.c (pthread_barrier_destroy): Likewise.
+	* pthread_barrier_init.c (pthread_barrier_init): Likewise.
+	* pthread_cond_timedwait.c (__pthread_cond_timedwait): Likewise.
+	* pthread_cond_wait.c (__pthread_cond_wait): Likewise.
+	* pthread_create.c (__free_tcb, start_thread, __pthread_create_2_1):
+	Likewise.
+	* pthread_getattr_np.c (pthread_getattr_np): Likewise.
+	* pthread_getspecific.c (__pthread_getspecific): Likewise.
+	* pthread_join.c (pthread_join): Likewise.
+	* pthread_key_delete.c (pthread_key_delete): Likewise.
+	* pthread_mutex_init.c (__pthread_mutex_init): Likewise.
+	* pthread_mutex_lock.c (__pthread_mutex_lock,
+	__pthread_mutex_lock_full): Likewise.
+	* pthread_mutex_timedlock.c (pthread_mutex_timedlock): Likewise.
+	* pthread_mutex_trylock.c (__pthread_mutex_trylock): Likewise.
+	* pthread_mutex_unlock.c (__pthread_mutex_unlock_usercnt): Likewise.
+	* pthread_rwlock_rdlock.c (__pthread_rwlock_rdlock): Likewise.
+	* pthread_rwlock_timedrdlock.c (pthread_rwlock_timedrdlock): Likewise.
+	* pthread_rwlock_timedwrlock.c (pthread_rwlock_timedwrlock): Likewise.
+	* pthread_rwlock_tryrdlock.c (__pthread_rwlock_tryrdlock): Likewise.
+	* pthread_setcancelstate.c (__pthread_setcancelstate): Likewise.
+	* pthread_setcanceltype.c (__pthread_setcanceltype): Likewise.
+	* pthread_setschedprio.c (pthread_setschedprio): Likewise.
+	* pthread_setspecific.c (__pthread_setspecific): Likewise.
+	* sem_init.c (__new_sem_init): Likewise.
+	* sem_open.c (__where_is_shmfs): Likewise.
+	* sigaction.c: Likewise.
+	* sockperf.c (get_clockfreq): Likewise.
+	* sysdeps/pthread/createthread.c (do_clone, create_thread): Likewise.
+	* sysdeps/pthread/setxid.h: Likewise.
+	* sysdeps/pthread/timer_create.c (timer_create): Likewise.
+	* sysdeps/pthread/unwind-forcedunwind.c (pthread_cancel_init,
+	__unwind_freeres, _Unwind_Resume, __gcc_personality_v0,
+	_Unwind_ForcedUnwind): Likewise.
+	* sysdeps/unix/sysv/linux/getpid.c (__getpid): Likewise.
+	* sysdeps/unix/sysv/linux/lowlevelrobustlock.c
+	(__lll_robust_lock_wait, __lll_robust_timedlock_wait): Likewise.
+	* sysdeps/unix/sysv/linux/mq_notify.c (mq_notify): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/pthread_kill.c (__pthread_kill): Likewise.
+	* sysdeps/unix/sysv/linux/pthread_setaffinity.c
+	(__pthread_setaffinity_new): Likewise.
+	* sysdeps/unix/sysv/linux/pthread_sigqueue.c (pthread_sigqueue):
+	Likewise.
+	* sysdeps/unix/sysv/linux/pt-raise.c (raise): Likewise.
+	* sysdeps/unix/sysv/linux/raise.c (raise): Likewise.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h (__lll_robust_trylock,
+	__lll_robust_lock, __lll_cond_lock, __lll_robust_timedlock): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h (__lll_lock,
+	__lll_cond_lock, __lll_timedlock, __lll_robust_timedlock): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/pthread_barrier_destroy.c
+	(pthread_barrier_destroy): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/pthread_barrier_init.c
+	(pthread_barrier_init): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sem_init.c (__new_sem_init): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/timer_create.c (__timer_create_old):
+	Likewise.
+	* unwind.c (unwind_stop): Likewise.
+
 2014-02-08  Mike Frysinger  <vapier@gentoo.org>
 
 	* sem_open.c (__where_is_shmfs): Compare f.f_type to RAMFS_MAGIC too.

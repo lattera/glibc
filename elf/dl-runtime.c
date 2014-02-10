@@ -142,7 +142,7 @@ _dl_fixup (
     value = elf_ifunc_invoke (DL_FIXUP_VALUE_ADDR (value));
 
   /* Finally, fix up the plt itself.  */
-  if (__builtin_expect (GLRO(dl_bind_not), 0))
+  if (__glibc_unlikely (GLRO(dl_bind_not)))
     return value;
 
   return elf_machine_fixup_plt (l, result, reloc, rel_addr, value);
@@ -347,7 +347,7 @@ _dl_profile_fixup (
 #endif
 
       /* Store the result for later runs.  */
-      if (__builtin_expect (! GLRO(dl_bind_not), 1))
+      if (__glibc_likely (! GLRO(dl_bind_not)))
 	*resultp = value;
     }
 
