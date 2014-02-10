@@ -146,6 +146,11 @@ __add_to_environ (name, value, combined, replace)
 	  UNLOCK;
 	  return -1;
 	}
+
+      if (__environ != last_environ)
+	memcpy ((char *) new_environ, (char *) __environ,
+		size * sizeof (char *));
+
       new_environ[size] = NULL;
       new_environ[size + 1] = NULL;
       ep = new_environ + size;
