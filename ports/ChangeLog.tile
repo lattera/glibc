@@ -1,3 +1,16 @@
+This file describes changes to the TILE-Gx and TILEPro ports while they
+were in the ports add-on directory.  These ports are no longer part of
+an add-on and so future changes to them should be listed in the top-level
+ChangeLog file, not here.
+
+
+
+2014-02-10  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile: Move directory to ../sysdeps/tile.
+	* sysdeps/unix/sysv/linux/tile: Move directory to
+	../sysdeps/unix/sysv/linux/tile.
+
 2014-01-03  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/tile/libm-test-ulps: Regenerated.

@@ -1,3 +1,12 @@
+2014-02-10  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile: Move directory from ports/sysdeps/tile.
+	* sysdeps/unix/sysv/linux/generic: Move directory from
+	ports/sysdeps/unix/sysv/linux/generic.
+	* sysdeps/unix/sysv/linux/tile: Move directory from
+	ports/sysdeps/unix/sysv/linux/tile.
+	* README: Update listing for tile*-*-linux-gnu.
+
 2014-02-10  Ondřej Bílka  <neleai@seznam.cz>
 
 	* assert/assert.c (__assert_fail_base): Use glibc_likely instead __builtin_expect.

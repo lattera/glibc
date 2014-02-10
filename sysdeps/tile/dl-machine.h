@@ -238,8 +238,8 @@ dl_platform_init (void)
 
 static inline ElfW(Addr)
 elf_machine_fixup_plt (struct link_map *map, lookup_t t,
-        	       const ElfW(Rela) *reloc,
-        	       ElfW(Addr) *reloc_addr, ElfW(Addr) value)
+		       const ElfW(Rela) *reloc,
+		       ElfW(Addr) *reloc_addr, ElfW(Addr) value)
 {
   return *reloc_addr = value;
 }
@@ -247,7 +247,7 @@ elf_machine_fixup_plt (struct link_map *map, lookup_t t,
 /* Return the final value of a plt relocation.  */
 static inline ElfW(Addr)
 elf_machine_plt_value (struct link_map *map, const ElfW(Rela) *reloc,
-        	       ElfW(Addr) value)
+		       ElfW(Addr) value)
 {
   return value;
 }
@@ -517,8 +517,8 @@ static const struct reloc_howto howto[] =
 
 auto inline void __attribute__ ((always_inline))
 elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
-        	  const ElfW(Sym) *sym, const struct r_found_version *version,
-        	  void *const reloc_addr_arg, int skip_ifunc)
+		  const ElfW(Sym) *sym, const struct r_found_version *version,
+		  void *const reloc_addr_arg, int skip_ifunc)
 {
   ElfW(Addr) *const reloc_addr = reloc_addr_arg;
   const unsigned int r_type = ELFW_R_TYPE (reloc->r_info);

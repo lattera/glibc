@@ -1,3 +1,15 @@
+This file describes changes to the linux-generic infrastructure while
+it was in the ports add-on directory.  This code is no longer maintained
+here and so future changes to it should be listed in the top-level
+ChangeLog file.
+
+
+
+2014-02-10  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/unix/sysv/linux/generic: Move directory to
+	../sysdeps/unix/sysv/linux/generic.
+
 2013-11-13  Chung-Lin Tang  <cltang@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/generic/bits/stat.h (__field64): Use
