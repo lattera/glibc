@@ -1672,11 +1672,6 @@ struct malloc_state
   /* Flags (formerly in max_fast).  */
   int flags;
 
-#if THREAD_STATS
-  /* Statistics for locking.  Only used if THREAD_STATS is defined.  */
-  long stat_lock_direct, stat_lock_loop, stat_lock_wait;
-#endif
-
   /* Fastbins */
   mfastbinptr fastbinsY[NFASTBINS];
 
@@ -3010,17 +3005,7 @@ __libc_realloc (void *oldmem, size_t bytes)
     }
 
   ar_ptr = arena_for_chunk (oldp);
-#if THREAD_STATS
-  if (!mutex_trylock (&ar_ptr->mutex))
-    ++(ar_ptr->stat_lock_direct);
-  else
-    {
-      (void) mutex_lock (&ar_ptr->mutex);
-      ++(ar_ptr->stat_lock_wait);
-    }
-#else
   (void) mutex_lock (&ar_ptr->mutex);
-#endif
 
 
   newp = _int_realloc (ar_ptr, oldp, oldsize, nb);
@@ -3929,16 +3914,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 
   else if (!chunk_is_mmapped(p)) {
     if (! have_lock) {
-#if THREAD_STATS
-      if(!mutex_trylock(&av->mutex))
-	++(av->stat_lock_direct);
-      else {
-	(void)mutex_lock(&av->mutex);
-	++(av->stat_lock_wait);
-      }
-#else
       (void)mutex_lock(&av->mutex);
-#endif
       locked = 1;
     }
 
@@ -4681,9 +4657,6 @@ __malloc_stats (void)
   int i;
   mstate ar_ptr;
   unsigned int in_use_b = mp_.mmapped_mem, system_b = in_use_b;
-#if THREAD_STATS
-  long stat_lock_direct = 0, stat_lock_loop = 0, stat_lock_wait = 0;
-#endif
 
   if (__malloc_initialized < 0)
     ptmalloc_init ();
@@ -4706,11 +4679,6 @@ __malloc_stats (void)
 #endif
       system_b += mi.arena;
       in_use_b += mi.uordblks;
-#if THREAD_STATS
-      stat_lock_direct += ar_ptr->stat_lock_direct;
-      stat_lock_loop += ar_ptr->stat_lock_loop;
-      stat_lock_wait += ar_ptr->stat_lock_wait;
-#endif
       (void) mutex_unlock (&ar_ptr->mutex);
       ar_ptr = ar_ptr->next;
       if (ar_ptr == &main_arena)
@@ -4722,14 +4690,6 @@ __malloc_stats (void)
   fprintf (stderr, "max mmap regions = %10u\n", (unsigned int) mp_.max_n_mmaps);
   fprintf (stderr, "max mmap bytes   = %10lu\n",
            (unsigned long) mp_.max_mmapped_mem);
-#if THREAD_STATS
-  fprintf (stderr, "heaps created    = %10d\n", stat_n_heaps);
-  fprintf (stderr, "locked directly  = %10ld\n", stat_lock_direct);
-  fprintf (stderr, "locked in loop   = %10ld\n", stat_lock_loop);
-  fprintf (stderr, "locked waiting   = %10ld\n", stat_lock_wait);
-  fprintf (stderr, "locked total     = %10ld\n",
-           stat_lock_direct + stat_lock_loop + stat_lock_wait);
-#endif
   ((_IO_FILE *) stderr)->_flags2 |= old_flags2;
   _IO_funlockfile (stderr);
 }

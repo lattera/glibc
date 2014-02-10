@@ -1,3 +1,10 @@
+2014-02-10  Ondřej Bílka  <neleai@seznam.cz>
+
+	* malloc/arena.c (grow_heap, get_free_list, reused_arena,
+	arena_get2): Remove THREAD_STATS conditionals.
+	* malloc/malloc.c (__malloc_assert, __libc_realloc, _int_free,
+	__malloc_stats, int): Likewise.
+
 2014-02-08  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/shm_open.c (where_is_shmfs): Compare
