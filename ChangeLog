@@ -1,3 +1,12 @@
+2014-02-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips: Move directory from ports/sysdeps/mips.
+	* sysdeps/unix/mips: Move directory from ports/sysdeps/unix/mips.
+	* sysdeps/unix/sysv/linux/mips: Move directory from
+	ports/sysdeps/unix/sysv/linux/mips.
+	* README: Update listing for mips-*-linux-gnu and
+	mips64-*-linux-gnu.
+
 2014-02-10  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k: Move directory from ports/sysdeps/m68k.
