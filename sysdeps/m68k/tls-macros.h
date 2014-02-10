@@ -66,4 +66,3 @@
     asm ("movel #" #x "@TLSLE, %0"					\
 	 : "=a" (__offset));						\
     (int *) (__tp + __offset); })
-
