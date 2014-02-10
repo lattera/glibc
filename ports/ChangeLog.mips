@@ -1,5 +1,11 @@
 2014-02-10  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/mips64/umount.c: Move from
+	sysdeps/unix/sysv/linux/hppa/umount.c instead of #include of that
+	file.
+
+2014-02-10  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/mips/ipc_priv.h: Directly include
 	sysdeps/unix/sysv/linux/powerpc/ipc_priv.h instead of via
 	sysdeps/unix/sysv/linux/alpha/ipc_priv.h.
