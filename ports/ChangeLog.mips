@@ -1,3 +1,9 @@
+2014-02-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/ipc_priv.h: Directly include
+	sysdeps/unix/sysv/linux/powerpc/ipc_priv.h instead of via
+	sysdeps/unix/sysv/linux/alpha/ipc_priv.h.
+
 2014-01-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libc.abilist: Move to
