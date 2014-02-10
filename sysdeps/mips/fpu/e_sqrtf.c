@@ -36,4 +36,3 @@ strong_alias (__ieee754_sqrtf, __sqrtf_finite)
 #include <sysdeps/ieee754/flt-32/e_sqrtf.c>
 
 #endif
-
