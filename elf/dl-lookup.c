@@ -31,6 +31,13 @@
 
 #include <assert.h>
 
+/* Return nonzero if do_lookup_x:check_match should consider SYM to
+   fail to match a symbol reference for some machine-specific
+   reason.  */
+#ifndef ELF_MACHINE_SYM_NO_MATCH
+# define ELF_MACHINE_SYM_NO_MATCH(sym) 0
+#endif
+
 #define VERSTAG(tag)	(DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (tag))
 
 /* We need this string more than once.  */
@@ -133,6 +140,7 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 	assert (ELF_RTYPE_CLASS_PLT == 1);
 	if (__builtin_expect ((sym->st_value == 0 /* No value.  */
 			       && stt != STT_TLS)
+			      || ELF_MACHINE_SYM_NO_MATCH (sym)
 			      || (type_class & (sym->st_shndx == SHN_UNDEF)),
 			      0))
 	  return NULL;

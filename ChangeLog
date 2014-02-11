@@ -1,3 +1,11 @@
+2014-02-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* elf/dl-lookup.c (ELF_MACHINE_SYM_NO_MATCH): Define if not
+	already defined.
+	(do_lookup_x): Use ELF_MACHINE_SYM_NO_MATCH.
+	* sysdeps/mips/dl-lookup.c: Remove.
+	* sysdeps/mips/dl-machine.h (ELF_MACHINE_SYM_NO_MATCH): New macro.
+
 2014-02-11  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	[BZ #16447]

@@ -439,6 +439,21 @@ elf_machine_plt_value (struct link_map *map, const ElfW(Rel) *reloc,
   return value;
 }
 
+/* The semantics of zero/non-zero values of undefined symbols differs
+   depending on whether the non-PIC ABI is in use.  Under the non-PIC
+   ABI, a non-zero value indicates that there is an address reference
+   to the symbol and thus it must always be resolved (except when
+   resolving a jump slot relocation) to the PLT entry whose address is
+   provided as the symbol's value; a zero value indicates that this
+   canonical-address behaviour is not required.  Yet under the classic
+   MIPS psABI, a zero value indicates that there is an address
+   reference to the function and the dynamic linker must resolve the
+   symbol immediately upon loading.  To avoid conflict, symbols for
+   which the dynamic linker must assume the non-PIC ABI semantics are
+   marked with the STO_MIPS_PLT flag.  */
+#define ELF_MACHINE_SYM_NO_MATCH(sym) \
+  ((sym)->st_shndx == SHN_UNDEF && !((sym)->st_other & STO_MIPS_PLT))
+
 #endif /* !dl_machine_h */
 
 #ifdef RESOLVE_MAP
