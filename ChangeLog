@@ -1,5 +1,7 @@
 2014-02-11  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
+
 	* elf/dl-lookup.c (ELF_MACHINE_SYM_NO_MATCH): Define if not
 	already defined.
 	(do_lookup_x): Use ELF_MACHINE_SYM_NO_MATCH.
