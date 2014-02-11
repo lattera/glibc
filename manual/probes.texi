@@ -247,127 +247,133 @@ precision in the mantissa of the multiple precision number.  Hence, a precision
 level of 32 implies 768 bits of precision in the mantissa.
 
 @deftp Probe slowexp_p6 (double @var{$arg1}, double @var{$arg2})
-This probe is hit when the @code{exp} function is called with an input that
-results in multiple precision computation with precision 6. Argument
-@var{$arg1} is the input value and @var{$arg2} is the computed output.
+This probe is triggered when the @code{exp} function is called with an
+input that results in multiple precision computation with precision
+6. Argument @var{$arg1} is the input value and @var{$arg2} is the
+computed output.
 @end deftp
 
 @deftp Probe slowexp_p32 (double @var{$arg1}, double @var{$arg2})
-This probe is hit when the @code{exp} function is called with an input that
-results in multiple precision computation with precision 32. Argument
-@var{$arg1} is the input value and @var{$arg2} is the computed output.
+This probe is triggered when the @code{exp} function is called with an
+input that results in multiple precision computation with precision
+32. Argument @var{$arg1} is the input value and @var{$arg2} is the
+computed output.
 @end deftp
 
 @deftp Probe slowpow_p10 (double @var{$arg1}, double @var{$arg2}, double @var{$arg3}, double @var{$arg4})
-This probe is hit when the @code{pow} function is called with inputs that
-result in multiple precision computation with precision 10. Arguments
-@var{$arg1} and @var{$arg2} are the input values, @code{$arg3} is the value
-computed in the fast phase of the algorithm and @code{$arg4} is the final
-accurate value.
+This probe is triggered when the @code{pow} function is called with
+inputs that result in multiple precision computation with precision
+10. Arguments @var{$arg1} and @var{$arg2} are the input values,
+@code{$arg3} is the value computed in the fast phase of the algorithm
+and @code{$arg4} is the final accurate value.
 @end deftp
 
 @deftp Probe slowpow_p32 (double @var{$arg1}, double @var{$arg2}, double @var{$arg3}, double @var{$arg4})
-This probe is hit when the @code{pow} function is called with an input that
-results in multiple precision computation with precision 32. Arguments
-@var{$arg1} and @var{$arg2} are the input values, @code{$arg3} is the value
-computed in the fast phase of the algorithm and @code{$arg4} is the final
-accurate value.
+This probe is triggered when the @code{pow} function is called with an
+input that results in multiple precision computation with precision
+32. Arguments @var{$arg1} and @var{$arg2} are the input values,
+@code{$arg3} is the value computed in the fast phase of the algorithm
+and @code{$arg4} is the final accurate value.
 @end deftp
 
 @deftp Probe slowlog (int @var{$arg1}, double @var{$arg2}, double @var{$arg3})
-This probe is hit when the @code{log} function is called with an input that
-results in multiple precision computation.  Argument @var{$arg1} is the
-precision with which the computation succeeded.  Argument @var{$arg2} is the
-input and @var{$arg3} is the computed output.
+This probe is triggered when the @code{log} function is called with an
+input that results in multiple precision computation.  Argument
+@var{$arg1} is the precision with which the computation succeeded.
+Argument @var{$arg2} is the input and @var{$arg3} is the computed
+output.
 @end deftp
 
 @deftp Probe slowlog_inexact (int @var{$arg1}, double @var{$arg2}, double @var{$arg3})
-This probe is hit when the @code{log} function is called with an input that
-results in multiple precision computation and none of the multiple precision
-computations result in an accurate result.  Argument @var{$arg1} is the maximum
-precision  with which computations were performed.  Argument @var{$arg2} is the
-input and @var{$arg3} is the computed output.
+This probe is triggered when the @code{log} function is called with an
+input that results in multiple precision computation and none of the
+multiple precision computations result in an accurate result.
+Argument @var{$arg1} is the maximum precision with which computations
+were performed.  Argument @var{$arg2} is the input and @var{$arg3} is
+the computed output.
 @end deftp
 
 @deftp Probe slowatan2 (int @var{$arg1}, double @var{$arg2}, double @var{$arg3}, double @var{$arg4})
-This probe is hit when the @code{atan2} function is called with an input that
-results in multiple precision computation.  Argument @var{$arg1} is the
-precision with which computation succeeded.  Arguments @var{$arg2} and
-@var{$arg3} are inputs to the @code{atan2} function and @var{$arg4} is the
-computed result.
+This probe is triggered when the @code{atan2} function is called with
+an input that results in multiple precision computation.  Argument
+@var{$arg1} is the precision with which computation succeeded.
+Arguments @var{$arg2} and @var{$arg3} are inputs to the @code{atan2}
+function and @var{$arg4} is the computed result.
 @end deftp
 
 @deftp Probe slowatan2_inexact (int @var{$arg1}, double @var{$arg2}, double @var{$arg3}, double @var{$arg4})
-This probe is hit when the @code{atan} function is called with an input that
-results in multiple precision computation and none of the multiple precision
-computations result in an accurate result.  Argument @var{$arg1} is the maximum
-precision  with which computations were performed.  Arguments @var{$arg2} and
-@var{$arg3} are inputs to the @code{atan2} function and @var{$arg4} is the
-computed result.
+This probe is triggered when the @code{atan} function is called with
+an input that results in multiple precision computation and none of
+the multiple precision computations result in an accurate result.
+Argument @var{$arg1} is the maximum precision with which computations
+were performed.  Arguments @var{$arg2} and @var{$arg3} are inputs to
+the @code{atan2} function and @var{$arg4} is the computed result.
 @end deftp
 
 @deftp Probe slowatan (int @var{$arg1}, double @var{$arg2}, double @var{$arg3})
-This probe is hit when the @code{atan} function is called with an input that
-results in multiple precision computation.  Argument @var{$arg1} is the
-precision with which computation succeeded.  Argument @var{$arg2} is the
-input to the @code{atan} function and @var{$arg3} is the computed result.
+This probe is triggered when the @code{atan} function is called with
+an input that results in multiple precision computation.  Argument
+@var{$arg1} is the precision with which computation succeeded.
+Argument @var{$arg2} is the input to the @code{atan} function and
+@var{$arg3} is the computed result.
 @end deftp
 
 @deftp Probe slowatan_inexact (int @var{$arg1}, double @var{$arg2}, double @var{$arg3})
-This probe is hit when the @code{atan} function is called with an input that
-results in multiple precision computation and none of the multiple precision
-computations result in an accurate result.  Argument @var{$arg1} is the maximum
-precision  with which computations were performed.  Argument @var{$arg2} is the
-input to the @code{atan} function and @var{$arg3} is the computed result.
+This probe is triggered when the @code{atan} function is called with
+an input that results in multiple precision computation and none of
+the multiple precision computations result in an accurate result.
+Argument @var{$arg1} is the maximum precision with which computations
+were performed.  Argument @var{$arg2} is the input to the @code{atan}
+function and @var{$arg3} is the computed result.
 @end deftp
 
 @deftp Probe slowtan (double @var{$arg1}, double @var{$arg2})
-This probe is hit when the @code{tan} function is called with an input that
-results in multiple precision computation with precision 32.  Argument
-@var{$arg1} is the input to the function and @var{$arg2} is the computed
-result.
+This probe is triggered when the @code{tan} function is called with an
+input that results in multiple precision computation with precision
+32.  Argument @var{$arg1} is the input to the function and @var{$arg2}
+is the computed result.
 @end deftp
 
 @deftp Probe slowasin (double @var{$arg1}, double @var{$arg2})
-This probe is hit when the @code{asin} function is called with an input that
-results in multiple precision computation with precision 32.  Argument
-@var{$arg1} is the input to the function and @var{$arg2} is the computed
-result.
+This probe is triggered when the @code{asin} function is called with
+an input that results in multiple precision computation with precision
+32.  Argument @var{$arg1} is the input to the function and @var{$arg2}
+is the computed result.
 @end deftp
 
 @deftp Probe slowacos (double @var{$arg1}, double @var{$arg2})
-This probe is hit when the @code{acos} function is called with an input that
-results in multiple precision computation with precision 32.  Argument
-@var{$arg1} is the input to the function and @var{$arg2} is the computed
-result.
+This probe is triggered when the @code{acos} function is called with
+an input that results in multiple precision computation with precision
+32.  Argument @var{$arg1} is the input to the function and @var{$arg2}
+is the computed result.
 @end deftp
 
 @deftp Probe slowsin (double @var{$arg1}, double @var{$arg2})
-This probe is hit when the @code{sin} function is called with an input that
-results in multiple precision computation with precision 32.  Argument
-@var{$arg1} is the input to the function and @var{$arg2} is the computed
-result.
+This probe is triggered when the @code{sin} function is called with an
+input that results in multiple precision computation with precision
+32.  Argument @var{$arg1} is the input to the function and @var{$arg2}
+is the computed result.
 @end deftp
 
 @deftp Probe slowcos (double @var{$arg1}, double @var{$arg2})
-This probe is hit when the @code{cos} function is called with an input that
-results in multiple precision computation with precision 32.  Argument
-@var{$arg1} is the input to the function and @var{$arg2} is the computed
-result.
+This probe is triggered when the @code{cos} function is called with an
+input that results in multiple precision computation with precision
+32.  Argument @var{$arg1} is the input to the function and @var{$arg2}
+is the computed result.
 @end deftp
 
 @deftp Probe slowsin_dx (double @var{$arg1}, double @var{$arg2}, double @var{$arg3})
-This probe is hit when the @code{sin} function is called with an input that
-results in multiple precision computation with precision 32.  Argument
-@var{$arg1} is the input to the function, @var{$arg2} is the error bound of
-@var{$arg1} and @var{$arg3} is the computed result.
+This probe is triggered when the @code{sin} function is called with an
+input that results in multiple precision computation with precision
+32.  Argument @var{$arg1} is the input to the function, @var{$arg2} is
+the error bound of @var{$arg1} and @var{$arg3} is the computed result.
 @end deftp
 
 @deftp Probe slowcos_dx (double @var{$arg1}, double @var{$arg2}, double @var{$arg3})
-This probe is hit when the @code{cos} function is called with an input that
-results in multiple precision computation with precision 32.  Argument
-@var{$arg1} is the input to the function, @var{$arg2} is the error bound of
-@var{$arg1} and @var{$arg3} is the computed result.
+This probe is triggered when the @code{cos} function is called with an
+input that results in multiple precision computation with precision
+32.  Argument @var{$arg1} is the input to the function, @var{$arg2} is
+the error bound of @var{$arg1} and @var{$arg3} is the computed result.
 @end deftp
 
 @node Non-local Goto Probes
