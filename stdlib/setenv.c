@@ -135,7 +135,6 @@ __add_to_environ (name, value, combined, replace)
 
   if (ep == NULL || __builtin_expect (*ep == NULL, 1))
     {
-      const size_t varlen = namelen + 1 + vallen;
       char **new_environ;
 
       /* We allocated this space; we can extend it.  */
