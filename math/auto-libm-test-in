@@ -725,6 +725,7 @@ exp max xfail-rounding:dbl-64 xfail-rounding:ldbl-128ibm
 exp -7.4444006192138124e+02
 exp -0x1.75f113c30b1c8p+9
 exp -max
+exp -11342.8125
 
 exp10 0
 exp10 -0

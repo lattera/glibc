@@ -1,3 +1,12 @@
+2014-02-11  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	[BZ #16447]
+	* math/auto-libm-test-in: Add testcase for expl.
+	* math/auto-libm-test-out: Regenerate.
+	* sysdeps/ieee754/ldbl-128/e_expl.c (__ieee754_expl): Fix
+	calculation of unsafe.
+	* sysdeps/s390/fpu/libm-test-ulps: Adjust ULPs for added testcase.
+
 2014-02-11  Marcus Shawcroft  <marcus.shawcroft@arm.com>
 
 	* sysdeps/aarch64: Move directory from ports/sysdeps/aarch64.

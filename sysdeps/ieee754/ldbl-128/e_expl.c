@@ -181,7 +181,7 @@ __ieee754_expl (long double x)
 		* __expl_table[T_EXPL_RES2 + tval2];
       n_i = (int)n;
       /* 'unsafe' is 1 iff n_1 != 0.  */
-      unsafe = abs(n_i) >= -LDBL_MIN_EXP - 1;
+      unsafe = abs(n_i) >= 15000;
       ex2_u.ieee.exponent += n_i >> unsafe;
 
       /* Compute scale = 2^n_1.  */
