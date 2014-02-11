@@ -379,9 +379,8 @@ reflect automatically in the environment.  This also requires that
 variable is removed from the environment.  The same applies of course to
 dynamically allocated variables which are freed later.
 
-This function is part of the extended Unix interface.  Since it was also
-available in old SVID libraries you should define either
-@var{_XOPEN_SOURCE} or @var{_SVID_SOURCE} before including any header.
+This function is part of the extended Unix interface.  You should define
+@var{_XOPEN_SOURCE} before including any header.
 @end deftypefun
 
 

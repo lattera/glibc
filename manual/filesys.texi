@@ -893,7 +893,7 @@ seeing this value in a @code{ftw} callback function means the referenced
 file does not exist.  The situation for @code{nftw} is different.
 
 This value is only available if the program is compiled with
-@code{_BSD_SOURCE} or @code{_XOPEN_EXTENDED} defined before including
+@code{_XOPEN_EXTENDED} defined before including
 the first header.  The original SVID systems do not have symbolic links.
 @end vtable
 
@@ -2553,8 +2553,9 @@ the file's modification time onto disk reliably (the idea being that
 no-one cares for a swap file).
 
 This bit is only available on BSD systems (and those derived from
-them).  Therefore one has to use the @code{_BSD_SOURCE} feature select
-macro to get the definition (@pxref{Feature Test Macros}).
+them).  Therefore one has to use the @code{_GNU_SOURCE} feature select
+macro, or not define any feature test macros, to get the definition
+(@pxref{Feature Test Macros}).
 @end table
 
 The actual bit values of the symbols are listed in the table above

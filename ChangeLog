@@ -1,5 +1,23 @@
 2014-02-11  Joseph Myers  <joseph@codesourcery.com>
 
+	* include/features.h: Update comment documenting feature test
+	macros.
+	[_BSD_SOURCE || _SVID_SOURCE]: Give #warning.  Define
+	_DEFAULT_SOURCE.
+	* manual/creature.texi (_BSD_SOURCE): Remove documentation.
+	(_SVID_SOURCE): Likewise.
+	(_DEFAULT_SOURCE): Update description of default features.
+	(Feature Test Macros): Don't mention _SVID_SOURCE in conjunction
+	with _GNU_SOURCE.
+	* manual/filesys.texi (__ftw_func_t): Do not refer to _BSD_SOURCE.
+	(S_ISVTX): Likewise.
+	* manual/math.texi (Mathematical Constants): Likewise.
+	* manual/signal.texi (Interrupted Primitives): Likewise.
+	* manual/startup.texi (putenv): Do not refer to _SVID_SOURCE.
+	* math/test-matherr.c (_SVID_SOURCE): Do not define.
+	* sysvipc/sys/ipc.h [__USE_SVID && !__USE_XOPEN && __GNUC__ >= 2]:
+	Don't refer to _SVID_SOURCE in warning text.
+
 	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
 
 	* elf/dl-lookup.c (ELF_MACHINE_SYM_NO_MATCH): Define if not

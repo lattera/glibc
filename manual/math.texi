@@ -106,7 +106,7 @@ The reciprocal of the square root of two (also the square root of 1/2).
 @end vtable
 
 These constants come from the Unix98 standard and were also available in
-4.4BSD; therefore they are only defined if @code{_BSD_SOURCE} or
+4.4BSD; therefore they are only defined if
 @code{_XOPEN_SOURCE=500}, or a more general feature select macro, is
 defined.  The default set of features includes these constants.
 @xref{Feature Test Macros}.

@@ -37,8 +37,6 @@
    _LARGEFILE_SOURCE	Some more functions for correct standard I/O.
    _LARGEFILE64_SOURCE	Additional functionality from LFS for large files.
    _FILE_OFFSET_BITS=N	Select default filesystem interface.
-   _BSD_SOURCE		ISO C, POSIX, and 4.3BSD things.
-   _SVID_SOURCE		ISO C, POSIX, and SVID things.
    _ATFILE_SOURCE	Additional *at interfaces.
    _GNU_SOURCE		All of the above, plus GNU extensions.
    _DEFAULT_SOURCE	The default set of features (taking precedence over
@@ -51,11 +49,11 @@
    The `-ansi' switch to the GNU C compiler, and standards conformance
    options such as `-std=c99', define __STRICT_ANSI__.  If none of
    these are defined, or if _DEFAULT_SOURCE is defined, the default is
-   to have _SVID_SOURCE, _BSD_SOURCE, and _POSIX_SOURCE set to one and
-   _POSIX_C_SOURCE set to 200809L.  If more than one of these are
-   defined, they accumulate.  For example __STRICT_ANSI__,
-   _POSIX_SOURCE and _POSIX_C_SOURCE together give you ISO C, 1003.1,
-   and 1003.2, but nothing else.
+   to have _POSIX_SOURCE set to one and _POSIX_C_SOURCE set to
+   200809L, as well as enabling miscellaneous functions from BSD and
+   SVID.  If more than one of these are defined, they accumulate.  For
+   example __STRICT_ANSI__, _POSIX_SOURCE and _POSIX_C_SOURCE together
+   give you ISO C, 1003.1, and 1003.2, but nothing else.
 
    These are defined by this file and are used by the
    header files to decide what to declare or define:
@@ -145,6 +143,13 @@
 # define __GNUC_PREREQ(maj, min) 0
 #endif
 
+/* _BSD_SOURCE and _SVID_SOURCE are deprecated aliases for
+   _DEFAULT_SOURCE.  */
+#if defined _BSD_SOURCE || defined _SVID_SOURCE
+# warning "_BSD_SOURCE and _SVID_SOURCE are deprecated, use _DEFAULT_SOURCE"
+# undef  _DEFAULT_SOURCE
+# define _DEFAULT_SOURCE	1
+#endif
 
 /* If _GNU_SOURCE was defined by the user, turn on all the other features.  */
 #ifdef _GNU_SOURCE

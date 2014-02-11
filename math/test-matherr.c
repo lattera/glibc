@@ -1,5 +1,3 @@
-#undef _SVID_SOURCE
-#define _SVID_SOURCE
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>

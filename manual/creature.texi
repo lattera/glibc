@@ -73,20 +73,6 @@ edition is made available.
 @end defvr
 
 @comment (none)
-@comment GNU
-@defvr Macro _BSD_SOURCE
-If you define this macro, functionality derived from 4.3 BSD Unix is
-included as well as the @w{ISO C}, POSIX.1, and POSIX.2 material.
-@end defvr
-
-@comment (none)
-@comment GNU
-@defvr Macro _SVID_SOURCE
-If you define this macro, functionality derived from SVID is
-included as well as the @w{ISO C}, POSIX.1, POSIX.2, and X/Open material.
-@end defvr
-
-@comment (none)
 @comment X/Open
 @defvr Macro _XOPEN_SOURCE
 @comment (none)
@@ -192,9 +178,9 @@ precedence.
 @comment GNU
 @defvr Macro _DEFAULT_SOURCE
 If you define this macro, most features are included apart from
-X/Open, LFS and GNU extensions; the effect is similar to defining
-@code{_POSIX_C_SOURCE} to @code{200809L} and @code{_POSIX_SOURCE},
-@code{_SVID_SOURCE}, and @code{_BSD_SOURCE} to 1.  Defining this
+X/Open, LFS and GNU extensions: the effect is to enable features from
+the 2008 edition of POSIX, as well as certain BSD and SVID features
+without a separate feature test macro to control them.  Defining this
 macro, on its own and without using compiler options such as
 @option{-ansi} or @option{-std=c99}, has the same effect as not
 defining any feature test macros; defining it together with other
@@ -229,4 +215,4 @@ it is harmless to define in addition a feature test macro for a subset of
 those features.  For example, if you define @code{_POSIX_C_SOURCE}, then
 defining @code{_POSIX_SOURCE} as well has no effect.  Likewise, if you
 define @code{_GNU_SOURCE}, then defining either @code{_POSIX_SOURCE} or
-@code{_POSIX_C_SOURCE} or @code{_SVID_SOURCE} as well has no effect.
+@code{_POSIX_C_SOURCE} as well has no effect.
