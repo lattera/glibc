@@ -69,7 +69,7 @@ ln -s $tmpdir/foo/lvl1/lvl2/lvl3/lvl4 $tmpdir/foo/lvl1/link@1
 echo > $tmpdir/bar/xo
 chmod a-x,a+r $tmpdir/bar
 
-testout=$tmp/ftwtest.out
+testout=$tmp/ftwtest-tmp.out
 
 $testprogram $tmpdir |
     sort > $testout
