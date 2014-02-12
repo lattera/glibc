@@ -1,3 +1,9 @@
+2014-02-12  Dylan Alex Simon  <dylan@dylex.net>
+
+	[BZ #16545]
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update on AMD family 21h
+	model 1.
+
 2014-02-12  Richard Henderson  <rth@redhat.com>
 
         * sysdeps/alpha: Move directory from ports/sysdeps/alpha.

@@ -8445,9 +8445,14 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
+Test "Real part of: ctan (0xcp-4 + 0x1.4p+0 i)":
+float: 1
+ifloat: 1
 Test "Imaginary part of: ctan (0xcp-4 + 0x1.4p+0 i)":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "Real part of: ctan (0xf.ffffffffffff8p+1020 + 0x1p+0 i)":
@@ -8766,9 +8771,14 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
+Test "Real part of: ctan_tonearest (0xcp-4 + 0x1.4p+0 i)":
+float: 1
+ifloat: 1
 Test "Imaginary part of: ctan_tonearest (0xcp-4 + 0x1.4p+0 i)":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "Real part of: ctan_tonearest (0xf.ffffffffffff8p+1020 + 0x1p+0 i)":
@@ -9289,9 +9299,9 @@ ildouble: 1
 ldouble: 1
 Test "Real part of: ctanh (-0x2p+0 - 0x3p+0 i)":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: ctanh (-0x2p+0 - 0x3p+0 i)":
@@ -9647,9 +9657,9 @@ ildouble: 1
 ldouble: 1
 Test "Real part of: ctanh_tonearest (-0x2p+0 - 0x3p+0 i)":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: ctanh_tonearest (-0x2p+0 - 0x3p+0 i)":
@@ -9815,7 +9825,9 @@ float: 1
 ifloat: 1
 Test "Real part of: ctanh_towardzero (-0x2p+0 - 0x3p+0 i)":
 double: 2
+float: 1
 idouble: 2
+ifloat: 1
 Test "Imaginary part of: ctanh_towardzero (-0x2p+0 - 0x3p+0 i)":
 double: 1
 float: 1
@@ -10089,9 +10101,9 @@ ildouble: 1
 ldouble: 1
 Test "Real part of: ctanh_upward (0x1p+0 + 0x8p+124 i)":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 Test "Imaginary part of: ctanh_upward (0x1p+0 + 0x8p+124 i)":
 double: 2
 float: 1
@@ -10128,7 +10140,9 @@ ifloat: 1
 ildouble: 2
 ldouble: 2
 Test "Imaginary part of: ctanh_upward (0x2.dp+4 + 0x1p+0 i)":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
@@ -10260,6 +10274,9 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "Real part of: ctanh_upward (0xcp-4 + 0x1.4p+0 i)":
+float: 1
+ifloat: 1
 Test "Imaginary part of: ctanh_upward (0xcp-4 + 0x1.4p+0 i)":
 float: 2
 ifloat: 2
@@ -10310,6 +10327,9 @@ Test "erfc (0x7.fffd59e26af37bcp+0)":
 ildouble: 1
 ldouble: 1
 Test "erfc (0x7.fffd6p+0)":
+float: 1
+ifloat: 1
+Test "erfc (0xcp-4)":
 float: 1
 ifloat: 1
 
@@ -11209,7 +11229,9 @@ idouble: 1
 ildouble: 1
 ldouble: 1
 Test "jn (4, 0x2.67a2a8p+0)":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
@@ -11235,7 +11257,9 @@ idouble: 2
 ildouble: 1
 ldouble: 1
 Test "jn (5, 0x2.67a2a8p+0)":
+double: 1
 float: 2
+idouble: 1
 ifloat: 2
 Test "jn (6, 0x2.67a2a4p+0)":
 double: 2
@@ -12935,7 +12959,9 @@ ildouble: 1
 ldouble: 1
 Test "tgamma (-0x4.fffff8p+0)":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "tgamma (-0x4.ffffffffffffcp+0)":
@@ -12949,9 +12975,9 @@ ildouble: 1
 ldouble: 1
 Test "tgamma (-0x5.000008p+0)":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 Test "tgamma (-0x5.8p+0)":
@@ -13089,9 +13115,9 @@ double: 1
 idouble: 1
 Test "tgamma (-0x9.8p+0)":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 2
 ldouble: 2
 Test "tgamma (-0x9.ffffffffffff8p+0)":
@@ -13325,6 +13351,8 @@ float: 1
 idouble: 1
 ifloat: 1
 Test "tgamma (0x4.fffff8p+0)":
+float: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "tgamma (0x4.ffffffffffffcp+0)":
@@ -13343,8 +13371,8 @@ Test "tgamma (0x5.0000000000004p+0)":
 double: 1
 idouble: 1
 Test "tgamma (0x5.000008p+0)":
-float: 2
-ifloat: 2
+float: 3
+ifloat: 3
 ildouble: 1
 ldouble: 1
 Test "tgamma (0x5.8p+0)":
@@ -13456,7 +13484,9 @@ double: 1
 idouble: 1
 Test "tgamma (0x9.8p+0)":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "tgamma (0x9p+0)":
@@ -13509,18 +13539,26 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "y0 (0x1p-20)":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 Test "y0 (0x1p-40)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "y0 (0x1p-60)":
+float: 1
+ifloat: 1
 Test "y0 (0x1p-80)":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "y0 (0x2p+0)":
+double: 1
+idouble: 1
 Test "y0 (0x2p-4)":
 ildouble: 1
 ldouble: 1
@@ -13550,7 +13588,9 @@ float: 1
 ifloat: 1
 Test "y0 (0x4p-72)":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 Test "y0 (0x8p+0)":
 double: 1
 float: 1
@@ -13559,7 +13599,9 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "y0 (0xap+0)":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 Test "y0 (0xf.ffffffffffff8p+1020)":
 double: 1
@@ -13641,6 +13683,9 @@ idouble: 2
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "yn (0, 0x2p+0)":
+double: 1
+idouble: 1
 Test "yn (0, 0x2p-4)":
 ildouble: 1
 ldouble: 1
@@ -13652,7 +13697,9 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "yn (0, 0xap+0)":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 Test "yn (1, 0x1.8p+0)":
 float: 1
@@ -13685,9 +13732,9 @@ float: 2
 idouble: 1
 ifloat: 2
 Test "yn (10, 0x2p+0)":
-double: 2
+double: 3
 float: 1
-idouble: 2
+idouble: 3
 ifloat: 1
 Test "yn (10, 0x2p-4)":
 double: 1
@@ -13704,9 +13751,9 @@ Test "yn (10, 0x8p-972)":
 ildouble: 1
 ldouble: 1
 Test "yn (10, 0xap+0)":
-double: 1
+double: 2
 float: 1
-idouble: 1
+idouble: 2
 ifloat: 1
 Test "yn (10, 0xcp-4)":
 double: 1
