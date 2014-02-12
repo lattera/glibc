@@ -119,7 +119,7 @@ pread64 (int __fd, void *__buf, size_t __nbytes, __off64_t __offset)
 # endif
 #endif
 
-#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
 extern ssize_t __readlink_chk (const char *__restrict __path,
 			       char *__restrict __buf, size_t __len,
 			       size_t __buflen)
@@ -210,7 +210,7 @@ __NTH (getcwd (char *__buf, size_t __size))
   return __getcwd_alias (__buf, __size);
 }
 
-#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 extern char *__getwd_chk (char *__buf, size_t buflen)
      __THROW __nonnull ((1)) __wur;
 extern char *__REDIRECT_NTH (__getwd_warn, (char *__buf), getwd)
@@ -329,7 +329,7 @@ getlogin_r (char *__buf, size_t __buflen)
 #endif
 
 
-#if defined __USE_BSD || defined __USE_UNIX98
+#if defined __USE_MISC || defined __USE_UNIX98
 extern int __gethostname_chk (char *__buf, size_t __buflen, size_t __nreal)
      __THROW __nonnull ((1));
 extern int __REDIRECT_NTH (__gethostname_alias, (char *__buf, size_t __buflen),
@@ -356,7 +356,7 @@ __NTH (gethostname (char *__buf, size_t __buflen))
 #endif
 
 
-#if defined __USE_BSD || (defined __USE_XOPEN && !defined __USE_UNIX98)
+#if defined __USE_MISC || (defined __USE_XOPEN && !defined __USE_UNIX98)
 extern int __getdomainname_chk (char *__buf, size_t __buflen, size_t __nreal)
      __THROW __nonnull ((1)) __wur;
 extern int __REDIRECT_NTH (__getdomainname_alias, (char *__buf,

@@ -67,7 +67,7 @@
 
 #endif /* __USE_MISC || __USE_XOPEN */
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 
 # ifdef MDMBUF
 #  undef MDMBUF
@@ -79,7 +79,7 @@
 #  undef PENDIN
 # endif
 
-#endif /* __USE_BSD */
+#endif /* __USE_MISC */
 
 #ifdef ECHO
 # undef ECHO
@@ -123,10 +123,10 @@ struct termios
 #define	ICRNL	(1 << 8)	/* Map CR to NL on input.  */
 #define	IXON	(1 << 9)	/* Enable start/stop output control.  */
 #define	IXOFF	(1 << 10)	/* Enable start/stop input control.  */
-#if defined __USE_BSD || defined __USE_UNIX98
+#if defined __USE_MISC || defined __USE_UNIX98
 # define IXANY	(1 << 11)	/* Any character will restart after stop.  */
 #endif
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 # define IMAXBEL (1 << 13)	/* Ring bell when input queue is full.  */
 #endif
 #ifdef __USE_GNU
@@ -136,14 +136,14 @@ struct termios
   /* Output modes.  */
   tcflag_t c_oflag;
 #define	OPOST	(1 << 0)	/* Perform output processing.  */
-#if defined __USE_BSD || defined __USE_XOPEN
+#if defined __USE_MISC || defined __USE_XOPEN
 # define ONLCR	(1 << 1)	/* Map NL to CR-NL on output.  */
 #endif
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 # define OXTABS	TAB3		/* Expand tabs to spaces.  */
 # define ONOEOT	(1 << 3)	/* Discard EOT (^D) on output.  */
 #endif
-#if defined __USE_BSD || defined __USE_XOPEN
+#if defined __USE_MISC || defined __USE_XOPEN
 # define OCRNL	(1 << 4)	/* Map CR to NL.  */
 # define ONOCR	(1 << 5)	/* Discard CR's when on column 0.  */
 # define ONLRET	(1 << 6)	/* Move to column 0 on NL.  */
@@ -181,7 +181,7 @@ struct termios
 
   /* Control modes.  */
   tcflag_t c_cflag;
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 # define CIGNORE	(1 << 0)	/* Ignore these control flags.  */
 #endif
 #define	CSIZE	(CS5|CS6|CS7|CS8)	/* Number of bits per byte (mask).  */
@@ -195,7 +195,7 @@ struct termios
 #define	PARODD	(1 << 13)	/* Odd parity instead of even.  */
 #define	HUPCL	(1 << 14)	/* Hang up on last close.  */
 #define	CLOCAL	(1 << 15)	/* Ignore modem status lines.  */
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 # define CRTSCTS	(1 << 16)	/* RTS/CTS flow control.  */
 # define CRTS_IFLOW	CRTSCTS		/* Compatibility.  */
 # define CCTS_OFLOW	CRTSCTS		/* Compatibility.  */
@@ -206,7 +206,7 @@ struct termios
 
   /* Local modes.  */
   tcflag_t c_lflag;
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 # define ECHOKE	(1 << 0)	/* Visual erase for KILL.  */
 #endif
 #define	_ECHOE	(1 << 1)	/* Visual erase for ERASE.  */
@@ -217,7 +217,7 @@ struct termios
 #define	ECHO	_ECHO
 #define	_ECHONL	(1 << 4)	/* Echo NL even if ECHO is off.  */
 #define	ECHONL	_ECHONL
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 # define ECHOPRT	(1 << 5)	/* Hardcopy visual erase.  */
 # define ECHOCTL	(1 << 6)	/* Echo control characters as ^X.  */
 #endif
@@ -225,7 +225,7 @@ struct termios
 #define	ISIG	_ISIG
 #define	_ICANON	(1 << 8)	/* Do erase and kill processing.  */
 #define	ICANON	_ICANON
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 # define ALTWERASE (1 << 9)	/* Alternate WERASE algorithm.  */
 #endif
 #define	_IEXTEN	(1 << 10)	/* Enable DISCARD and LNEXT.  */
@@ -233,7 +233,7 @@ struct termios
 #define	EXTPROC	(1 << 11)	/* External processing.  */
 #define	_TOSTOP	(1 << 22)	/* Send SIGTTOU for background output.  */
 #define	TOSTOP	_TOSTOP
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 # define FLUSHO	(1 << 23)	/* Output being flushed (state).  */
 # define NOKERNINFO (1 << 25)	/* Disable VSTATUS.  */
 # define PENDIN	(1 << 29)	/* Retype pending input (state).  */
@@ -244,32 +244,32 @@ struct termios
   /* Control characters.  */
 #define	VEOF	0		/* End-of-file character [ICANON].  */
 #define	VEOL	1		/* End-of-line character [ICANON].  */
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 # define VEOL2	2		/* Second EOL character [ICANON].  */
 #endif
 #define	VERASE	3		/* Erase character [ICANON].  */
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 # define VWERASE	4		/* Word-erase character [ICANON].  */
 #endif
 #define	VKILL	5		/* Kill-line character [ICANON].  */
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 # define VREPRINT 6		/* Reprint-line character [ICANON].  */
 #endif
 #define	VINTR	8		/* Interrupt character [ISIG].  */
 #define	VQUIT	9		/* Quit character [ISIG].  */
 #define	VSUSP	10		/* Suspend character [ISIG].  */
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 # define VDSUSP	11		/* Delayed suspend character [ISIG].  */
 #endif
 #define	VSTART	12		/* Start (X-ON) character [IXON, IXOFF].  */
 #define	VSTOP	13		/* Stop (X-OFF) character [IXON, IXOFF].  */
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 # define VLNEXT	14		/* Literal-next character [IEXTEN].  */
 # define VDISCARD 15		/* Discard character [IEXTEN].  */
 #endif
 #define	VMIN	16		/* Minimum number of bytes read at once [!ICANON].  */
 #define	VTIME	17		/* Time-out value (tenths of a second) [!ICANON].  */
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 # define VSTATUS	18		/* Status character [ICANON].  */
 #endif
 #define	NCCS	20		/* Value duplicated in <hurd/tioctl.defs>.  */
@@ -325,7 +325,7 @@ struct termios
 #define	TCSANOW		0	/* Change immediately.  */
 #define	TCSADRAIN	1	/* Change when pending output is written.  */
 #define	TCSAFLUSH	2	/* Flush pending input before changing.  */
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 # define TCSASOFT	0x10	/* Flag: Don't alter hardware state.  */
 #endif
 

@@ -49,7 +49,7 @@ __BEGIN_DECLS
 #endif
 
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 /* Structure crudely representing a timezone.
    This is obsolete and should never be used.  */
 struct timezone
@@ -71,7 +71,7 @@ typedef void *__restrict __timezone_ptr_t;
 extern int gettimeofday (struct timeval *__restrict __tv,
 			 __timezone_ptr_t __tz) __THROW __nonnull ((1));
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 /* Set the current time of day and timezone information.
    This call is restricted to the super-user.  */
 extern int settimeofday (const struct timeval *__tv,
@@ -138,7 +138,7 @@ extern int setitimer (__itimer_which_t __which,
 extern int utimes (const char *__file, const struct timeval __tvp[2])
      __THROW __nonnull ((1));
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 /* Same as `utimes', but does not follow symbolic links.  */
 extern int lutimes (const char *__file, const struct timeval __tvp[2])
      __THROW __nonnull ((1));
@@ -156,7 +156,7 @@ extern int futimesat (int __fd, const char *__file,
 #endif
 
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 /* Convenience macros for operations on timevals.
    NOTE: `timercmp' does not work for >= or <=.  */
 # define timerisset(tvp)	((tvp)->tv_sec || (tvp)->tv_usec)

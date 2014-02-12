@@ -1,3 +1,8 @@
+2014-02-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/hppa/bits/mman.h [__USE_BSD]: Change
+	condition to [__USE_MISC].
+
 2014-02-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/hppa/umount.c: Move to

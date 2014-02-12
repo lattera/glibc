@@ -38,7 +38,7 @@ __BEGIN_DECLS
    `cc_t', `speed_t', and all the macros specifying the flag bits.  */
 #include <bits/termios.h>
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 /* Compare a character C to a value VAL from the `c_cc' array in a
    `struct termios'.  If VAL is _POSIX_VDISABLE, no character can match it.  */
 # define CCEQ(val, c)	((c) == (val) && (val) != _POSIX_VDISABLE)
@@ -56,7 +56,7 @@ extern int cfsetospeed (struct termios *__termios_p, speed_t __speed) __THROW;
 /* Set the input baud rate stored in *TERMIOS_P to SPEED.  */
 extern int cfsetispeed (struct termios *__termios_p, speed_t __speed) __THROW;
 
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 /* Set both the input and output baud rates in *TERMIOS_OP to SPEED.  */
 extern int cfsetspeed (struct termios *__termios_p, speed_t __speed) __THROW;
 #endif
@@ -71,7 +71,7 @@ extern int tcsetattr (int __fd, int __optional_actions,
 		      const struct termios *__termios_p) __THROW;
 
 
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 /* Set *TERMIOS_P to indicate raw mode.  */
 extern void cfmakeraw (struct termios *__termios_p) __THROW;
 #endif
@@ -100,7 +100,7 @@ extern __pid_t tcgetsid (int __fd) __THROW;
 #endif
 
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 # include <sys/ttydefaults.h>
 #endif
 

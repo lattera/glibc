@@ -24,7 +24,7 @@
 
 #include <linux/if_fddi.h>
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 
 struct fddi_header {
   u_int8_t fddi_fc;                    /* Frame Control (FC) value */

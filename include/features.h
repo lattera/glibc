@@ -75,9 +75,7 @@
    __USE_LARGEFILE	Define correct standard I/O things.
    __USE_LARGEFILE64	Define LFS things with separate names.
    __USE_FILE_OFFSET64	Define 64bit interface as default.
-   __USE_BSD		Define 4.3BSD things.
-   __USE_SVID		Define SVID things.
-   __USE_MISC		Define things common to BSD and System V Unix.
+   __USE_MISC		Define things from 4.3BSD or System V Unix.
    __USE_ATFILE		Define *at interfaces and AT_* constants for them.
    __USE_GNU		Define GNU extensions.
    __USE_REENTRANT	Define reentrant/thread-safe *_r functions.
@@ -114,8 +112,6 @@
 #undef	__USE_LARGEFILE
 #undef	__USE_LARGEFILE64
 #undef	__USE_FILE_OFFSET64
-#undef	__USE_BSD
-#undef	__USE_SVID
 #undef	__USE_MISC
 #undef	__USE_ATFILE
 #undef	__USE_GNU
@@ -171,28 +167,19 @@
 # define _LARGEFILE64_SOURCE	1
 # undef  _DEFAULT_SOURCE
 # define _DEFAULT_SOURCE	1
-# undef  _BSD_SOURCE
-# define _BSD_SOURCE	1
-# undef  _SVID_SOURCE
-# define _SVID_SOURCE	1
 # undef  _ATFILE_SOURCE
 # define _ATFILE_SOURCE	1
 #endif
 
 /* If nothing (other than _GNU_SOURCE and _DEFAULT_SOURCE) is defined,
-   define _DEFAULT_SOURCE, _BSD_SOURCE and _SVID_SOURCE.  */
+   define _DEFAULT_SOURCE.  */
 #if (defined _DEFAULT_SOURCE					\
      || (!defined __STRICT_ANSI__				\
 	 && !defined _ISOC99_SOURCE				\
 	 && !defined _POSIX_SOURCE && !defined _POSIX_C_SOURCE	\
-	 && !defined _XOPEN_SOURCE				\
-	 && !defined _BSD_SOURCE && !defined _SVID_SOURCE))
+	 && !defined _XOPEN_SOURCE))
 # undef  _DEFAULT_SOURCE
 # define _DEFAULT_SOURCE	1
-# undef  _BSD_SOURCE
-# define _BSD_SOURCE	1
-# undef  _SVID_SOURCE
-# define _SVID_SOURCE	1
 #endif
 
 /* This is to enable the ISO C11 extension.  */
@@ -317,16 +304,8 @@
 # define __USE_FILE_OFFSET64	1
 #endif
 
-#if defined _BSD_SOURCE || defined _SVID_SOURCE
+#if defined _DEFAULT_SOURCE
 # define __USE_MISC	1
-#endif
-
-#ifdef	_BSD_SOURCE
-# define __USE_BSD	1
-#endif
-
-#ifdef	_SVID_SOURCE
-# define __USE_SVID	1
 #endif
 
 #ifdef	_ATFILE_SOURCE

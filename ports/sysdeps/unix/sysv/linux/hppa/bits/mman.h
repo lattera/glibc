@@ -76,7 +76,7 @@
 #endif
 
 /* Advice to "madvise"  */
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 # define MADV_NORMAL	  0	/* No further special treatment */
 # define MADV_RANDOM	  1	/* Expect random page references */
 # define MADV_SEQUENTIAL  2	/* Expect sequential page references */

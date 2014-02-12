@@ -24,7 +24,7 @@
 /* Get definitions from kernel header file.  */
 #include <linux/if_ether.h>
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 /*
  * Copyright (c) 1982, 1986, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -99,6 +99,6 @@ struct	ether_arp {
 }
 
 __END_DECLS
-#endif /* __USE_BSD */
+#endif /* __USE_MISC */
 
 #endif /* netinet/if_ether.h */

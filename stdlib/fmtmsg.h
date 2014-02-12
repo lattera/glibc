@@ -95,7 +95,7 @@ extern int fmtmsg (long int __classification, const char *__label,
 		   int __severity, const char *__text,
 		   const char *__action, const char *__tag);
 
-#ifdef __USE_SVID
+#ifdef __USE_MISC
 /* Add or remove severity level.  */
 extern int addseverity (int __severity, const char *__string) __THROW;
 #endif

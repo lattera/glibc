@@ -37,7 +37,7 @@ __warndecl (__warn_memset_zero_len,
 #  undef mempcpy
 #  undef stpcpy
 # endif
-# ifdef __USE_BSD
+# ifdef __USE_MISC
 #  undef bcopy
 #  undef bzero
 # endif
@@ -84,7 +84,7 @@ __NTH (memset (void *__dest, int __ch, size_t __len))
   return __builtin___memset_chk (__dest, __ch, __len, __bos0 (__dest));
 }
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 __fortify_function void
 __NTH (bcopy (const void *__src, void *__dest, size_t __len))
 {

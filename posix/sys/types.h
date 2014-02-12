@@ -28,7 +28,7 @@ __BEGIN_DECLS
 
 #include <bits/types.h>
 
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 # ifndef __u_char_defined
 typedef __u_char u_char;
 typedef __u_short u_short;
@@ -99,7 +99,7 @@ typedef __pid_t pid_t;
 # define __pid_t_defined
 #endif
 
-#if (defined __USE_SVID || defined __USE_XOPEN || defined __USE_XOPEN2K8) \
+#if (defined __USE_MISC || defined __USE_XOPEN || defined __USE_XOPEN2K8) \
     && !defined __id_t_defined
 typedef __id_t id_t;
 # define __id_t_defined
@@ -110,7 +110,7 @@ typedef __ssize_t ssize_t;
 # define __ssize_t_defined
 #endif
 
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 # ifndef __daddr_t_defined
 typedef __daddr_t daddr_t;
 typedef __caddr_t caddr_t;
@@ -118,7 +118,7 @@ typedef __caddr_t caddr_t;
 # endif
 #endif
 
-#if (defined __USE_SVID || defined __USE_XOPEN) && !defined __key_t_defined
+#if (defined __USE_MISC || defined __USE_XOPEN) && !defined __key_t_defined
 typedef __key_t key_t;
 # define __key_t_defined
 #endif
@@ -211,7 +211,7 @@ typedef int register_t __attribute__ ((__mode__ (__word__)));
 #define __BIT_TYPES_DEFINED__	1
 
 
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 /* In BSD <sys/types.h> is expected to define BYTE_ORDER.  */
 # include <endian.h>
 

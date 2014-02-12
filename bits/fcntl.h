@@ -58,11 +58,11 @@
 #define	O_APPEND	0x0008	/* Writes append to the file.  */
 #define	O_NONBLOCK	0x0004	/* Non-blocking I/O.  */
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 # define O_NDELAY	O_NONBLOCK
 #endif
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 /* Bits in the file status flags returned by F_GETFL.
    These are all the O_* flags, plus FREAD and FWRITE, which are
    independent bits set by which of O_RDONLY, O_WRONLY, and O_RDWR, was
@@ -88,7 +88,7 @@
 #define	F_SETFD		2	/* Set file descriptor flags.  */
 #define	F_GETFL		3	/* Get file status flags.  */
 #define	F_SETFL		4	/* Set file status flags.  */
-#if defined __USE_BSD || defined __USE_UNIX98 || defined __USE_XOPEN2K8
+#if defined __USE_MISC || defined __USE_UNIX98 || defined __USE_XOPEN2K8
 #define	F_GETOWN	5	/* Get owner (receiver of SIGIO).  */
 #define	F_SETOWN	6	/* Set owner (receiver of SIGIO).  */
 #endif

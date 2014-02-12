@@ -26,7 +26,7 @@
 
 __BEGIN_DECLS
 
-#if defined __USE_SVID || defined __USE_XOPEN_EXTENDED
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 /* Prototype structure for a linked-list data structure.
    This is the type used by the `insque' and `remque' functions.  */
 

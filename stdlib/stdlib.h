@@ -41,7 +41,7 @@ __BEGIN_DECLS
 # include <bits/waitflags.h>
 # include <bits/waitstatus.h>
 
-# ifdef __USE_BSD
+# ifdef __USE_MISC
 
 /* Lots of hair to allow traditional BSD use of `union wait'
    as well as POSIX.1 use of `int' for the status word.  */
@@ -189,7 +189,7 @@ extern unsigned long int strtoul (const char *__restrict __nptr,
      __THROW __nonnull ((1));
 __END_NAMESPACE_STD
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 /* Convert a string to a quadword integer.  */
 __extension__
 extern long long int strtoq (const char *__restrict __nptr,
@@ -298,7 +298,7 @@ __END_NAMESPACE_C99
 #endif /* Optimizing and Inlining.  */
 
 
-#if defined __USE_SVID || defined __USE_XOPEN_EXTENDED
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 /* Convert N to base 64 using the digits "./0-9A-Za-z", least-significant
    digit first.  Returns a pointer to static storage overwritten by the
    next call.  */
@@ -310,7 +310,7 @@ extern long int a64l (const char *__s)
 
 #endif	/* Use SVID || extended X/Open.  */
 
-#if defined __USE_SVID || defined __USE_XOPEN_EXTENDED || defined __USE_BSD
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_MISC
 # include <sys/types.h>	/* we need int32_t... */
 
 /* These are the functions that actually do things.  The `random', `srandom',
@@ -382,7 +382,7 @@ extern int rand_r (unsigned int *__seed) __THROW;
 #endif
 
 
-#if defined __USE_SVID || defined __USE_XOPEN
+#if defined __USE_MISC || defined __USE_XOPEN
 /* System V style 48-bit random number generator functions.  */
 
 /* Return non-negative, double-precision floating-point value in [0.0,1.0).  */
@@ -488,12 +488,12 @@ __END_NAMESPACE_STD
 extern void cfree (void *__ptr) __THROW;
 #endif /* Use misc.  */
 
-#if defined __USE_GNU || defined __USE_BSD || defined __USE_MISC
+#if defined __USE_GNU || defined __USE_MISC || defined __USE_MISC
 # include <alloca.h>
 #endif /* Use GNU, BSD, or misc.  */
 
 #if (defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K) \
-    || defined __USE_BSD
+    || defined __USE_MISC
 /* Allocate SIZE bytes on a page boundary.  The storage cannot be freed.  */
 extern void *valloc (size_t __size) __THROW __attribute_malloc__ __wur;
 #endif
@@ -571,14 +571,14 @@ extern char *secure_getenv (const char *__name)
      __THROW __nonnull ((1)) __wur;
 #endif
 
-#if defined __USE_SVID || defined __USE_XOPEN
+#if defined __USE_MISC || defined __USE_XOPEN
 /* The SVID says this is in <stdio.h>, but this seems a better place.	*/
 /* Put STRING, which is of the form "NAME=VALUE", in the environment.
    If there is no `=', remove NAME from the environment.  */
 extern int putenv (char *__string) __THROW __nonnull ((1));
 #endif
 
-#if defined __USE_BSD || defined __USE_XOPEN2K
+#if defined __USE_MISC || defined __USE_XOPEN2K
 /* Set NAME to VALUE in the environment.
    If REPLACE is nonzero, overwrite an existing value.  */
 extern int setenv (const char *__name, const char *__value, int __replace)
@@ -654,7 +654,7 @@ extern int mkstemps64 (char *__template, int __suffixlen)
 # endif
 #endif
 
-#if defined __USE_BSD || defined __USE_XOPEN2K8
+#if defined __USE_MISC || defined __USE_XOPEN2K8
 /* Create a unique temporary directory from TEMPLATE.
    The last six characters of TEMPLATE must be "XXXXXX";
    they are replaced with a string that makes the directory name unique.
@@ -725,7 +725,7 @@ extern char *canonicalize_file_name (const char *__name)
      __THROW __nonnull ((1)) __wur;
 #endif
 
-#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 /* Return the canonical absolute name of file NAME.  If RESOLVED is
    null, the result is malloc'd; otherwise, if the canonical name is
    PATH_MAX chars or more, returns null with `errno' set to
@@ -802,7 +802,7 @@ __END_NAMESPACE_C99
 
 
 #if (defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K8) \
-    || defined __USE_SVID
+    || defined __USE_MISC
 /* Convert floating point numbers to strings.  The returned values are
    valid only until another call to the same function.  */
 
@@ -880,7 +880,7 @@ extern size_t wcstombs (char *__restrict __s,
 __END_NAMESPACE_STD
 
 
-#ifdef __USE_SVID
+#ifdef __USE_MISC
 /* Determine whether the string value of RESPONSE matches the affirmation
    or negative response expression as specified by the LC_MESSAGES category
    in the program's current locale.  Returns 1 if affirmative, 0 if
@@ -944,7 +944,7 @@ extern int ptsname_r (int __fd, char *__buf, size_t __buflen)
 extern int getpt (void);
 #endif
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 /* Put the 1 minute, 5 minute and 15 minute load averages into the first
    NELEM elements of LOADAVG.  Return the number written (never more than
    three, but may be less than NELEM), or -1 if an error occurred.  */

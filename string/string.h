@@ -54,7 +54,7 @@ __END_NAMESPACE_STD
 /* Copy no more than N bytes of SRC to DEST, stopping when C is found.
    Return the position in DEST one byte past where C was copied,
    or NULL if C was not found in the first N bytes of SRC.  */
-#if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN
+#if defined __USE_MISC || defined __USE_MISC || defined __USE_XOPEN
 extern void *memccpy (void *__restrict __dest, const void *__restrict __src,
 		      int __c, size_t __n)
      __THROW __nonnull ((1, 2));
@@ -170,7 +170,7 @@ extern size_t strxfrm_l (char *__dest, const char *__src, size_t __n,
 			 __locale_t __l) __THROW __nonnull ((2, 4));
 #endif
 
-#if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED \
+#if defined __USE_MISC || defined __USE_MISC || defined __USE_XOPEN_EXTENDED \
     || defined __USE_XOPEN2K8
 /* Duplicate S, returning an identical malloc'd string.  */
 extern char *strdup (const char *__s)
@@ -450,7 +450,7 @@ extern char *strerror_l (int __errnum, __locale_t __l) __THROW;
    the namespace rules does not allow this.  */
 extern void __bzero (void *__s, size_t __n) __THROW __nonnull ((1));
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 /* Copy N bytes of SRC to DEST (like memmove, but args reversed).  */
 extern void bcopy (const void *__src, void *__dest, size_t __n)
      __THROW __nonnull ((1, 2));
@@ -551,7 +551,7 @@ extern int strncasecmp_l (const char *__s1, const char *__s2,
      __THROW __attribute_pure__ __nonnull ((1, 2, 4));
 #endif
 
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 /* Return the next DELIM-delimited token from *STRINGP,
    terminating it with a '\0', and update *STRINGP to point past it.  */
 extern char *strsep (char **__restrict __stringp,

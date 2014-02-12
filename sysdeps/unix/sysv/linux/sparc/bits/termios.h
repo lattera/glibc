@@ -196,7 +196,7 @@ struct termios
 # define PENDIN		0x00004000
 #endif
 #define IEXTEN	0x00008000
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 # define EXTPROC 0x00010000
 #endif
 

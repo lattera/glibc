@@ -436,7 +436,7 @@ extern int getnetgrent_r (char **__restrict __hostp,
 #endif	/* misc */
 
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 /* Call `rshd' at port RPORT on remote machine *AHOST to execute CMD.
    The local user is LOCUSER, on the remote machine the command is
    executed as REMUSER.  In *FD2P the descriptor to the socket for the

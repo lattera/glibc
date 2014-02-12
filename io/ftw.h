@@ -43,7 +43,7 @@ enum
   FTW_NS,		/* Unstatable file.  */
 #define FTW_NS	 FTW_NS
 
-#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 
   FTW_SL,		/* Symbolic link.  */
 # define FTW_SL	 FTW_SL

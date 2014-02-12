@@ -47,8 +47,8 @@ __BEGIN_NAMESPACE_STD
 /* The opaque type of streams.  This is the definition used elsewhere.  */
 typedef struct _IO_FILE FILE;
 __END_NAMESPACE_STD
-#if defined __USE_LARGEFILE64 || defined __USE_SVID || defined __USE_POSIX \
-    || defined __USE_BSD || defined __USE_ISOC99 || defined __USE_XOPEN \
+#if defined __USE_LARGEFILE64 || defined __USE_MISC || defined __USE_POSIX \
+    || defined __USE_MISC || defined __USE_ISOC99 || defined __USE_XOPEN \
     || defined __USE_POSIX2
 __USING_NAMESPACE_STD(FILE)
 #endif
@@ -146,7 +146,7 @@ typedef _G_fpos64_t fpos64_t;
 #endif
 
 
-#if defined __USE_SVID || defined __USE_XOPEN
+#if defined __USE_MISC || defined __USE_XOPEN
 /* Default path prefix for `tempnam' and `tmpnam'.  */
 # define P_tmpdir	"/tmp"
 #endif
@@ -216,7 +216,7 @@ extern char *tmpnam_r (char *__s) __THROW __wur;
 #endif
 
 
-#if defined __USE_SVID || defined __USE_XOPEN
+#if defined __USE_MISC || defined __USE_XOPEN
 /* Generate a unique temporary filename using up to five characters of PFX
    if it is not NULL.  The directory to put this file in is searched for
    as follows: First the environment variable "TMPDIR" is checked.
@@ -337,7 +337,7 @@ extern int setvbuf (FILE *__restrict __stream, char *__restrict __buf,
 		    int __modes, size_t __n) __THROW;
 __END_NAMESPACE_STD
 
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 /* If BUF is NULL, make STREAM unbuffered.
    Else make it use SIZE bytes of BUF for buffering.  */
 extern void setbuffer (FILE *__restrict __stream, char *__restrict __buf,
@@ -380,7 +380,7 @@ extern int vsprintf (char *__restrict __s, const char *__restrict __format,
 		     _G_va_list __arg) __THROWNL;
 __END_NAMESPACE_STD
 
-#if defined __USE_BSD || defined __USE_ISOC99 || defined __USE_UNIX98
+#if defined __USE_MISC || defined __USE_ISOC99 || defined __USE_UNIX98
 __BEGIN_NAMESPACE_C99
 /* Maximum chars of output to write in MAXLEN.  */
 extern int snprintf (char *__restrict __s, size_t __maxlen,
@@ -604,7 +604,7 @@ extern int putchar_unlocked (int __c);
 #endif /* Use POSIX or MISC.  */
 
 
-#if defined __USE_SVID || defined __USE_MISC \
+#if defined __USE_MISC || defined __USE_MISC \
     || (defined __USE_XOPEN && !defined __USE_XOPEN2K)
 /* Get a word (int) from STREAM.  */
 extern int getw (FILE *__stream);
@@ -864,7 +864,7 @@ extern int fileno_unlocked (FILE *__stream) __THROW __wur;
 #endif
 
 
-#if (defined __USE_POSIX2 || defined __USE_SVID  || defined __USE_BSD || \
+#if (defined __USE_POSIX2 || defined __USE_MISC  || defined __USE_MISC || \
      defined __USE_MISC)
 /* Create a new stream connected to a pipe running the given command.
 

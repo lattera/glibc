@@ -193,7 +193,7 @@ struct termios
 #endif
 #define TOSTOP	0100000		/* Send SIGTTOU for background output.  */
 #define ITOSTOP	TOSTOP
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 # define EXTPROC 0200000
 #endif
 

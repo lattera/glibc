@@ -190,7 +190,7 @@ extern int setlogmask (int __mask) __THROW;
 extern void syslog (int __pri, const char *__fmt, ...)
      __attribute__ ((__format__ (__printf__, 2, 3)));
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 /* Generate a log message using FMT and using arguments pointed to by AP.
 
    This function is not part of POSIX and therefore no official

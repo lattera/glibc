@@ -98,7 +98,7 @@ extern __sighandler_t sysv_signal (int __sig, __sighandler_t __handler)
    handler, or SIG_ERR on error.
    By default `signal' has the BSD semantic.  */
 __BEGIN_NAMESPACE_STD
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 extern __sighandler_t signal (int __sig, __sighandler_t __handler)
      __THROW;
 #else
@@ -127,7 +127,7 @@ extern __sighandler_t bsd_signal (int __sig, __sighandler_t __handler)
 extern int kill (__pid_t __pid, int __sig) __THROW;
 #endif /* Use POSIX.  */
 
-#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 /* Send SIG to all processes in process group PGRP.
    If PGRP is zero, send SIG to all processes in
    the current process's process group.  */
@@ -139,7 +139,7 @@ __BEGIN_NAMESPACE_STD
 extern int raise (int __sig) __THROW;
 __END_NAMESPACE_STD
 
-#ifdef __USE_SVID
+#ifdef __USE_MISC
 /* SVID names for the same things.  */
 extern __sighandler_t ssignal (int __sig, __sighandler_t __handler)
      __THROW;
@@ -176,7 +176,7 @@ extern int sigpause (int __sig) __asm__ ("__xpg_sigpause");
 #endif
 
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 /* None of the following functions should be used anymore.  They are here
    only for compatibility.  A single word (`int') is not guaranteed to be
    enough to hold a complete signal mask and therefore these functions
@@ -205,7 +205,7 @@ typedef __sighandler_t sighandler_t;
 #endif
 
 /* 4.4 BSD uses the name `sig_t' for this.  */
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 typedef __sighandler_t sig_t;
 #endif
 
@@ -296,7 +296,7 @@ extern int sigqueue (__pid_t __pid, int __sig, const union sigval __val)
 
 #endif /* Use POSIX.  */
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 
 /* Names of the signals.  This variable exists only for compatibility.
    Use `strsignal' instead (see <string.h>).  */
@@ -337,7 +337,7 @@ extern int sigreturn (struct sigcontext *__scp) __THROW;
 #endif /*  use BSD.  */
 
 
-#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
 # define __need_size_t
 # include <stddef.h>
 

@@ -51,7 +51,7 @@ extern ssize_t writev (int __fd, const struct iovec *__iovec, int __count)
   __wur;
 
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 # ifndef __USE_FILE_OFFSET64
 /* Read data from file descriptor FD at the given position OFFSET
    without change the file pointer, and put the result in the buffers

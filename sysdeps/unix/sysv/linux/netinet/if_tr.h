@@ -93,7 +93,7 @@ struct tr_statistics
 #define TR_RCF_BROADCAST_MASK 	0xC000
 #define TR_MAXRIFLEN 		18
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 
 struct trn_hdr
 {

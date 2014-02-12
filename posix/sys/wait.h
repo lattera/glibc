@@ -34,7 +34,7 @@ __BEGIN_DECLS
    bits to `waitpid', `wait3', and `wait4'.  */
 # include <bits/waitflags.h>
 
-# ifdef	__USE_BSD
+# ifdef	__USE_MISC
 
 /* Lots of hair to allow traditional BSD use of `union wait'
    as well as POSIX.1 use of `int' for the status word.  */
@@ -87,7 +87,7 @@ typedef union
 # endif
 #endif	/* <stdlib.h> not included.  */
 
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 # define WCOREFLAG		__WCOREFLAG
 # define WCOREDUMP(status)	__WCOREDUMP (__WAIT_INT (status))
 # define W_EXITCODE(ret, sig)	__W_EXITCODE (ret, sig)
@@ -95,7 +95,7 @@ typedef union
 #endif
 
 /* The following values are used by the `waitid' function.  */
-#if defined __USE_SVID || defined __USE_XOPEN || defined __USE_XOPEN2K8
+#if defined __USE_MISC || defined __USE_XOPEN || defined __USE_XOPEN2K8
 typedef enum
 {
   P_ALL,		/* Wait for any child.  */
@@ -112,7 +112,7 @@ typedef enum
    __THROW.  */
 extern __pid_t wait (__WAIT_STATUS __stat_loc);
 
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 /* Special values for the PID argument to `waitpid' and `wait4'.  */
 # define WAIT_ANY	(-1)	/* Any process.  */
 # define WAIT_MYPGRP	0	/* Any process in my process group.  */
@@ -135,7 +135,7 @@ extern __pid_t wait (__WAIT_STATUS __stat_loc);
    __THROW.  */
 extern __pid_t waitpid (__pid_t __pid, int *__stat_loc, int __options);
 
-#if defined __USE_SVID || defined __USE_XOPEN || defined __USE_XOPEN2K8
+#if defined __USE_MISC || defined __USE_XOPEN || defined __USE_XOPEN2K8
 # ifndef __id_t_defined
 #  include <bits/types.h>
 typedef __id_t id_t;
@@ -160,7 +160,7 @@ extern int waitid (idtype_t __idtype, __id_t __id, siginfo_t *__infop,
 		   int __options);
 #endif
 
-#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 /* This being here makes the prototypes valid whether or not
    we have already included <sys/resource.h> to define `struct rusage'.  */
 struct rusage;
@@ -174,7 +174,7 @@ extern __pid_t wait3 (__WAIT_STATUS __stat_loc, int __options,
 		      struct rusage * __usage) __THROWNL;
 #endif
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 /* PID is like waitpid.  Other args are like wait3.  */
 extern __pid_t wait4 (__pid_t __pid, __WAIT_STATUS __stat_loc, int __options,
 		      struct rusage *__usage) __THROWNL;

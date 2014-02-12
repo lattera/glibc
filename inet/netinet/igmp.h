@@ -21,7 +21,7 @@
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 
 #include <netinet/in.h>
 

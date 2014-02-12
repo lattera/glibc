@@ -59,7 +59,7 @@
 #define	__WCOREFLAG		0x80
 
 
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 
 # include <endian.h>
 

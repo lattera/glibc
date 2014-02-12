@@ -76,7 +76,7 @@ extern void longjmp (struct __jmp_buf_tag __env[1], int __val)
 
 __END_NAMESPACE_STD
 
-#if defined __USE_BSD || defined __USE_XOPEN
+#if defined __USE_MISC || defined __USE_XOPEN
 /* Same.  Usually `_longjmp' is used with `_setjmp', which does not save
    the signal mask.  But it is how ENV was saved that determines whether
    `longjmp' restores the mask; `_longjmp' is just an alias.  */

@@ -37,7 +37,7 @@ __BEGIN_DECLS
    `struct msghdr', and `struct linger' types.  */
 #include <bits/socket.h>
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 /* This is the 4.3 BSD `struct sockaddr' format, which is used as wire
    format in the grotty old 4.3 `talk' protocol.  */
 struct osockaddr

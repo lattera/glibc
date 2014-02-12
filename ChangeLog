@@ -1,5 +1,93 @@
 2014-02-12  Joseph Myers  <joseph@codesourcery.com>
 
+	* include/features.h (__USE_BSD): Remove macro definitions.
+	(__USE_SVID): Likewise.
+	(_BSD_SOURCE): Likewise.
+	(_SVID_SOURCE): Likewise.
+	[!defined _BSD_SOURCE && !defined _SVID_SOURCE]: Remove condition
+	from definition of _DEFAULT_SOURCE.
+	[_BSD_SOURCE || _SVID_SOURCE]: Change condition to
+	[_DEFAULT_SOURCE].
+	* bits/fcntl.h [__USE_BSD]: Change condition to [__USE_MISC].
+	* bits/mman.h [__USE_BSD]: Likewise.
+	* bits/termios.h [__USE_BSD]: Likewise.
+	* bits/waitstatus.h [__USE_BSD]: Likewise.
+	* ctype/ctype.h [__USE_SVID]: Likewise.
+	* dirent/dirent.h [__USE_BSD]: Likewise.
+	* grp/grp.h [__USE_SVID]: Likewise.
+	[__USE_BSD]: Likewise.
+	* inet/netinet/igmp.h [__USE_BSD]: Likewise.
+	* io/fcntl.h [__USE_BSD]: Likewise.
+	* io/ftw.h [__USE_BSD]: Likewise.
+	* io/sys/stat.h [__USE_BSD]: Likewise.
+	* libio/bits/stdio-ldbl.h [__USE_BSD]: Likewise.
+	* libio/bits/stdio2.h [__USE_BSD]: Likewise.
+	* libio/stdio.h [__USE_SVID]: Likewise.
+	[__USE_BSD]: Likewise.
+	* math/math.h [__USE_SVID]: Likewise.
+	[__USE_BSD]: Likewise.
+	* misc/bits/syslog-ldbl.h [__USE_BSD]: Likewise.
+	* misc/bits/syslog.h [__USE_BSD]: Likewise.
+	* misc/search.h [__USE_SVID]: Likewise.
+	* misc/sys/mman.h [__USE_BSD]: Likewise.
+	* misc/sys/syslog.h [__USE_BSD]: Likewise.
+	* misc/sys/uio.h [__USE_BSD]: Likewise.
+	* posix/bits/unistd.h [__USE_BSD]: Likewise.
+	* posix/glob.h [__USE_BSD]: Likewise.
+	* posix/regex.h [__USE_BSD]: Likewise.
+	* posix/sys/types.h [__USE_BSD]: Likewise.
+	[__USE_SVID]: Likewise.
+	* posix/sys/utsname.h [__USE_SVID]: Likewise.
+	* posix/sys/wait.h [__USE_BSD]: Likewise.
+	[__USE_SVID]: Likewise.
+	* posix/unistd.h [__USE_BSD]: Likewise.
+	[__USE_SVID]: Likewise.
+	* pwd/pwd.h [__USE_SVID]: Likewise.
+	* resolv/netdb.h [__USE_BSD]: Likewise.
+	* setjmp/setjmp.h [__USE_BSD]: Likewise.
+	* signal/signal.h [__USE_BSD]: Likewise.
+	[__USE_SVID]: Likewise.
+	* socket/sys/socket.h [__USE_BSD]: Likewise.
+	* stdlib/fmtmsg.h [__USE_SVID]: Likewise.
+	* stdlib/stdlib.h [__USE_BSD]: Likewise.
+	[__USE_SVID]: Likewise.
+	* string/bits/string2.h [__USE_BSD]: Likewise.
+	[__USE_SVID]: Likewise.
+	* string/bits/string3.h [__USE_BSD]: Likewise.
+	* string/endian.h [__USE_BSD]: Likewise.
+	* string/string.h [__USE_SVID]: Likewise.
+	[__USE_BSD]: Likewise.
+	* string/strings.h [__USE_BSD]: Likewise.
+	* sysdeps/generic/netinet/ip.h [__USE_BSD]: Likewise.
+	* sysdeps/gnu/netinet/ip_icmp.h [__USE_BSD]: Likewise.
+	* sysdeps/mach/hurd/bits/fcntl.h [__USE_BSD]: Likewise.
+	* sysdeps/mach/hurd/bits/stat.h [__USE_BSD]: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/mman.h [__USE_BSD]: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/termios.h [__USE_BSD]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/bits/fcntl-linux.h [__USE_BSD]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/bits/mman-linux.h [__USE_BSD]: Likewise.
+	* sysdeps/unix/sysv/linux/bits/sys_errlist.h [__USE_BSD]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/bits/termios.h [__USE_BSD]: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/termios.h [__USE_BSD]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/netinet/if_ether.h [__USE_BSD]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/netinet/if_fddi.h [__USE_BSD]: Likewise.
+	* sysdeps/unix/sysv/linux/netinet/if_tr.h [__USE_BSD]: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h [__USE_BSD]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h [__USE_BSD]:
+	Likewise.
+	* sysdeps/x86/bits/string.h [__USE_BSD]: Likewise.
+	* sysvipc/sys/ipc.h [__USE_SVID]: Likewise.
+	* termios/termios.h [__USE_BSD]: Likewise.
+	* time/sys/time.h [__USE_BSD]: Likewise.
+	* time/time.h [__USE_BSD]: Likewise.
+	[__USE_SVID]: Likewise.
+
 	* Makefile (subdir_targets): Remove subdir_lint.out.
 
 	* stdio-common/Makefile (do-tst-unbputc): Remove target.

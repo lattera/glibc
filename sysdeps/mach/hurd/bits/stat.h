@@ -223,7 +223,7 @@ struct stat64
 #endif
 
 /* Default file creation mask (umask).  */
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 # define CMASK		0022
 #endif
 

@@ -71,7 +71,7 @@ struct utsname
 #endif
   };
 
-#ifdef __USE_SVID
+#ifdef __USE_MISC
 /* Note that SVID assumes all members have the same size.  */
 # define SYS_NMLN  _UTSNAME_LENGTH
 #endif

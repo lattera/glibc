@@ -103,7 +103,7 @@
    fail with EAGAIN.  */
 
 #define	O_NONBLOCK	0x0008	/* Non-blocking open or non-blocking I/O.  */
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 # define O_NDELAY	O_NONBLOCK /* Deprecated.  */
 #endif
 
@@ -134,7 +134,7 @@
 #define	O_NOCTTY	0	/* Don't assign a controlling terminal.  */
 
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 /* Bits in the file status flags returned by F_GETFL.  */
 # define FREAD		O_RDONLY
 # define FWRITE		O_WRONLY
@@ -159,7 +159,7 @@
 #define	F_SETFD		2	/* Set file descriptor flags.  */
 #define	F_GETFL		3	/* Get file status flags.  */
 #define	F_SETFL		4	/* Set file status flags.  */
-#if defined __USE_BSD || defined __USE_UNIX98 || defined __USE_XOPEN2K8
+#if defined __USE_MISC || defined __USE_UNIX98 || defined __USE_XOPEN2K8
 # define F_GETOWN	5	/* Get owner (receiver of SIGIO).  */
 # define F_SETOWN	6	/* Set owner (receiver of SIGIO).  */
 #endif

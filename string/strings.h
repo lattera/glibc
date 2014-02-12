@@ -19,9 +19,9 @@
 #define	_STRINGS_H	1
 
 /* We don't need and should not read this file if <string.h> was already
-   read. The one exception being that if __USE_BSD isn't defined, then
+   read. The one exception being that if __USE_MISC isn't defined, then
    these aren't defined in string.h, so we need to define them here.  */
-#if !defined _STRING_H || !defined __USE_BSD
+#if !defined _STRING_H || !defined __USE_MISC
 
 # include <features.h>
 # define __need_size_t

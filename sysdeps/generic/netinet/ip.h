@@ -64,7 +64,7 @@ struct iphdr
     /*The options start here. */
   };
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 /*
  * Copyright (c) 1982, 1986, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -146,7 +146,7 @@ struct ip_timestamp
 #endif
     u_int32_t data[9];
   };
-#endif /* __USE_BSD */
+#endif /* __USE_MISC */
 
 #define	IPVERSION	4               /* IP version number */
 #define	IP_MAXPACKET	65535		/* maximum packet size */

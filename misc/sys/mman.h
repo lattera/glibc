@@ -88,7 +88,7 @@ extern int mprotect (void *__addr, size_t __len, int __prot) __THROW;
    __THROW.  */
 extern int msync (void *__addr, size_t __len, int __flags);
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 /* Advise the system about particular usage patterns the program follows
    for the region starting at ADDR and extending LEN bytes.  */
 extern int madvise (void *__addr, size_t __len, int __advice) __THROW;

@@ -20,7 +20,7 @@
 
 #include <features.h>
 
-#if !defined __USE_SVID && !defined __USE_XOPEN && __GNUC__ >= 2
+#if !defined __USE_MISC && !defined __USE_XOPEN && __GNUC__ >= 2
 # warning "Files using this header must be compiled with _GNU_SOURCE or _XOPEN_SOURCE"
 #endif
 

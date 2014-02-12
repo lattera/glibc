@@ -55,7 +55,7 @@
 #undef  MS_INVALIDATE
 #define MS_INVALIDATE	  4
 
-#ifdef __USE_BSD
+#ifdef __USE_MISC
 # undef  MADV_DONTNEED
 # define MADV_DONTNEED    6
 #endif

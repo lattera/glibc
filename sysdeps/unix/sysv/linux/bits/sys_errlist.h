@@ -22,7 +22,7 @@
 
 /* sys_errlist and sys_nerr are deprecated.  Use strerror instead.  */
 
-#ifdef  __USE_BSD
+#ifdef  __USE_MISC
 extern int sys_nerr;
 extern const char *const sys_errlist[];
 #endif

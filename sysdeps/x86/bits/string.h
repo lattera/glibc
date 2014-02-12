@@ -1373,7 +1373,7 @@ __strchrnul_g (const char *__s, int __c)
 # endif
 
 
-# if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+# if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 /* Find the first occurrence of C in S.  This is the BSD name.  */
 #  define _HAVE_STRING_ARCH_index 1
 #  define index(s, c) \
@@ -1487,7 +1487,7 @@ __strrchr_g (const char *__s, int __c)
 # endif
 
 
-# if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+# if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 /* Find the last occurrence of C in S.  This is the BSD name.  */
 #  define _HAVE_STRING_ARCH_rindex 1
 #  define rindex(s, c) \
@@ -1957,7 +1957,7 @@ __strstr_g (const char *__haystack, const char *__needle)
 
 /* Bit find functions.  We define only the i686 version since for the other
    processors gcc generates good code.  */
-# if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+# if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 #  ifdef __i686__
 #   define _HAVE_STRING_ARCH_ffs 1
 #   define ffs(word) (__builtin_constant_p (word)			      \

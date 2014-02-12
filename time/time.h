@@ -74,7 +74,7 @@ __BEGIN_NAMESPACE_STD
 /* Returned by `time'.  */
 typedef __time_t time_t;
 __END_NAMESPACE_STD
-#if defined __USE_POSIX || defined __USE_MISC || defined __USE_SVID
+#if defined __USE_POSIX || defined __USE_MISC || defined __USE_MISC
 __USING_NAMESPACE_STD(time_t)
 #endif
 
@@ -142,7 +142,7 @@ struct tm
   int tm_yday;			/* Days in year.[0-365]	*/
   int tm_isdst;			/* DST.		[-1/0/1]*/
 
-# ifdef	__USE_BSD
+# ifdef	__USE_MISC
   long int tm_gmtoff;		/* Seconds east of UTC.  */
   const char *tm_zone;		/* Timezone abbreviation.  */
 # else
@@ -293,12 +293,12 @@ extern char *tzname[2];
 extern void tzset (void) __THROW;
 # endif
 
-# if defined __USE_SVID || defined __USE_XOPEN
+# if defined __USE_MISC || defined __USE_XOPEN
 extern int daylight;
 extern long int timezone;
 # endif
 
-# ifdef __USE_SVID
+# ifdef __USE_MISC
 /* Set the system time to *WHEN.
    This call is restricted to the superuser.  */
 extern int stime (const time_t *__when) __THROW;
