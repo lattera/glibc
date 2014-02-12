@@ -9,7 +9,7 @@ Version 2.20
 
 * The following bugs are resolved with this release:
 
-  15894.
+  15894, 16447.
 
 * The am33 port, which had not worked for several years, has been removed
   from ports.
