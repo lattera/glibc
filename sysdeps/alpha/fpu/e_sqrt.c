@@ -123,7 +123,7 @@ __ieee754_sqrt:								\n\
 	subt	$f15, $f10, $f1		# fa   4: $f1 = (1.5-0.5*x*y*y)	\n\
 									\n\
 	mult	$f13, $f1, $f13         # fm   4: yp = y*(1.5-0.5*x*y^2)\n\
- 	mult/su	$f11, $f13, $f1		# fm   4: $f11 = x * 0.5 * yp	\n\
+	mult/su	$f11, $f13, $f1		# fm   4: $f11 = x * 0.5 * yp	\n\
 	mult	$f1, $f13, $f11		# fm   4: $f11 = (x*0.5*yp)*yp	\n\
 	subt	$f18, $f11, $f1		# fa   4: $f1=(1.5-2^-30)-x/2*yp^2\n\
 									\n\

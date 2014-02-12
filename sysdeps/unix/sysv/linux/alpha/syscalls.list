@@ -67,4 +67,3 @@ wait4		-	wait4		4	__wait4 wait4@@GLIBC_2.1
 # avoid 64-bit aliases on 32-bit statfs syscalls
 fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs
 statfs		-	statfs		i:sp	__statfs	statfs
-

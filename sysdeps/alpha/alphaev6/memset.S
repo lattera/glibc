@@ -139,7 +139,7 @@ $bigalign:
 	 * $17 - mask of stuff to store
 	 * Scratch registers available: $7, $2, $4, $1
 	 * We know that we'll be taking a minimum of one trip through.
- 	 * CWG Section 3.7.6: do not expect a sustained store rate of > 1/cycle
+	 * CWG Section 3.7.6: do not expect a sustained store rate of > 1/cycle
 	 * Assumes the wh64 needs to be for 2 trips through the loop in the future.
 	 * The wh64 is issued on for the starting destination address for trip +2
 	 * through the loop, and if there are less than two trips left, the target
