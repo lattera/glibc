@@ -255,7 +255,7 @@ endif
 
 include ../Rules
 
-check-abi: check-abi-ld
+check-abi: $(objpfx)check-abi-ld.out
 update-abi: update-abi-ld
 
 ifeq (yes,$(build-shared))

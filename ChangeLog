@@ -1,5 +1,12 @@
 2014-02-12  Joseph Myers  <joseph@codesourcery.com>
 
+	* Makerules (check-abi-%): Change target to
+	$(objpfx)check-abi-%.out.
+	(check-abi target): Update dependencies.
+	(check-abi-pattern variable): Redirect output of diff to $@.
+	(check-abi variable): Likewise.
+	* elf/Makefile (check-abi): Update dependencies.
+
 	* soft-fp/op-common.h (_FP_DECL): Mark exponent as possibly
 	unused.
 	(_FP_PACK_SEMIRAW): Determine tininess based on rounding shifted

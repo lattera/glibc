@@ -1193,21 +1193,25 @@ vpath %.abilist $(+sysdep_dirs)
 generated += $(extra-libs:=.symlist)
 
 ifdef abilist-pattern
-check-abi-%: $(common-objpfx)config.make $(abilist-pattern) $(objpfx)%.symlist
+$(objpfx)check-abi-%.out: $(common-objpfx)config.make $(abilist-pattern) \
+			  $(objpfx)%.symlist
 	$(check-abi-pattern)
-check-abi-%: $(common-objpfx)config.make $(abilist-pattern) \
-	     $(common-objpfx)%.symlist
+$(objpfx)check-abi-%.out: $(common-objpfx)config.make $(abilist-pattern) \
+			  $(common-objpfx)%.symlist
 	$(check-abi-pattern)
 endif
-check-abi-%: $(common-objpfx)config.make %.abilist $(objpfx)%.symlist
+$(objpfx)check-abi-%.out: $(common-objpfx)config.make %.abilist \
+			  $(objpfx)%.symlist
 	$(check-abi)
-check-abi-%: $(common-objpfx)config.make %.abilist $(common-objpfx)%.symlist
+$(objpfx)check-abi-%.out: $(common-objpfx)config.make %.abilist \
+			  $(common-objpfx)%.symlist
 	$(check-abi)
 define check-abi-pattern
-	diff -p -U 0 $(filter $(abilist-pattern),$^) $(filter %.symlist,$^)
+	diff -p -U 0 $(filter $(abilist-pattern),$^) $(filter %.symlist,$^) \
+	     > $@
 endef
 define check-abi
-	diff -p -U 0 $(filter %.abilist,$^) $(filter %.symlist,$^)
+	diff -p -U 0 $(filter %.abilist,$^) $(filter %.symlist,$^) > $@
 endef
 
 ifdef abilist-pattern
@@ -1239,7 +1243,7 @@ endef
 
 .PHONY: update-abi check-abi
 update-abi: $(patsubst %.so,update-abi-%,$(install-lib.so-versioned))
-check-abi: $(patsubst %.so,check-abi-%,$(install-lib.so-versioned))
+check-abi: $(patsubst %.so,$(objpfx)check-abi-%.out,$(install-lib.so-versioned))
 ifdef subdir
 subdir_check-abi: check-abi
 subdir_update-abi: update-abi
@@ -1249,7 +1253,7 @@ update-abi: subdir_update-abi
 endif
 
 ifeq ($(subdir),elf)
-check-abi: check-abi-libc
+check-abi: $(objpfx)check-abi-libc.out
 update-abi: update-abi-libc
 common-generated += libc.symlist
 endif
