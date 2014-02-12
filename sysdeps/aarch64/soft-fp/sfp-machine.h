@@ -60,6 +60,8 @@
 #define FP_EX_DIVZERO		FE_DIVBYZERO
 #define FP_EX_INEXACT		FE_INEXACT
 
+#define _FP_TININESS_AFTER_ROUNDING 0
+
 #define FP_INIT_ROUNDMODE			\
 do {						\
   _FPU_GETCW (_fcw);				\

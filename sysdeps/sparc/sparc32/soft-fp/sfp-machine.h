@@ -185,6 +185,8 @@
 #define FP_EX_DIVZERO		(1 << 1)
 #define FP_EX_INEXACT		(1 << 0)
 
+#define _FP_TININESS_AFTER_ROUNDING 0
+
 #define _FP_DECL_EX \
   fpu_control_t _fcw __attribute__ ((unused)) = (FP_RND_NEAREST << 30)
 

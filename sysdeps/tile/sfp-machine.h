@@ -95,3 +95,5 @@
       }								\
     R##_c = FP_CLS_NAN;						\
   } while (0)
+
+#define _FP_TININESS_AFTER_ROUNDING 0

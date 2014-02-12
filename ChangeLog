@@ -1,3 +1,36 @@
+2014-02-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* soft-fp/op-common.h (_FP_DECL): Mark exponent as possibly
+	unused.
+	(_FP_PACK_SEMIRAW): Determine tininess based on rounding shifted
+	value if _FP_TININESS_AFTER_ROUNDING and unrounded value is in
+	subnormal range.
+	(_FP_PACK_CANONICAL): Determine tininess based on rounding to
+	normal precision if _FP_TININESS_AFTER_ROUNDING and unrounded
+	value has largest subnormal exponent.
+	* soft-fp/soft-fp.h [FP_NO_EXCEPTIONS]
+	(_FP_TININESS_AFTER_ROUNDING): Undefine and redefine to 0.
+	* sysdeps/aarch64/soft-fp/sfp-machine.h
+	(_FP_TININESS_AFTER_ROUNDING): New macro.
+	* sysdeps/alpha/soft-fp/sfp-machine.h
+	(_FP_TININESS_AFTER_ROUNDING): Likewise.
+	* sysdeps/arm/soft-fp/sfp-machine.h (_FP_TININESS_AFTER_ROUNDING):
+	Likewise.
+	* sysdeps/mips/mips64/soft-fp/sfp-machine.h
+	(_FP_TININESS_AFTER_ROUNDING): Likewise.
+	* sysdeps/mips/soft-fp/sfp-machine.h
+	(_FP_TININESS_AFTER_ROUNDING): Likewise.
+	* sysdeps/powerpc/soft-fp/sfp-machine.h
+	(_FP_TININESS_AFTER_ROUNDING): Likewise.
+	* sysdeps/sh/soft-fp/sfp-machine.h (_FP_TININESS_AFTER_ROUNDING):
+	Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/sfp-machine.h
+	(_FP_TININESS_AFTER_ROUNDING): Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/sfp-machine.h
+	(_FP_TININESS_AFTER_ROUNDING): Likewise.
+	* sysdeps/tile/sfp-machine.h (_FP_TININESS_AFTER_ROUNDING):
+	Likewise.
+
 2014-02-12  Dylan Alex Simon  <dylan@dylex.net>
 
 	[BZ #16545]

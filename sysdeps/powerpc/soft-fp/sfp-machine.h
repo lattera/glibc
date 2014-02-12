@@ -41,6 +41,8 @@
     R##_c = FP_CLS_NAN;						\
   } while (0)
 
+#define _FP_TININESS_AFTER_ROUNDING 0
+
 #if defined __NO_FPRS__ && !defined _SOFT_FLOAT
 
 /* Exception flags.  We use the bit positions of the appropriate bits

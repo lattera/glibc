@@ -64,3 +64,5 @@
 #define FP_EX_OVERFLOW          (1 << 2)
 #define FP_EX_UNDERFLOW         (1 << 1)
 #define FP_EX_INEXACT           (1 << 0)
+
+#define _FP_TININESS_AFTER_ROUNDING 1

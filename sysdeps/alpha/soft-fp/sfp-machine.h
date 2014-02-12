@@ -74,6 +74,8 @@
 #define FP_EX_DIVZERO		FE_DIVBYZERO
 #define FP_EX_INEXACT		FE_INEXACT
 
+#define _FP_TININESS_AFTER_ROUNDING 1
+
 #define FP_INIT_ROUNDMODE					\
 do {								\
   if (__builtin_expect (_round == 4, 0))			\

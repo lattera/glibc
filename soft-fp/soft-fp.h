@@ -161,6 +161,9 @@
 # undef FP_ROUNDMODE
 # define FP_ROUNDMODE FP_RND_ZERO
 
+# undef _FP_TININESS_AFTER_ROUNDING
+# define _FP_TININESS_AFTER_ROUNDING 0
+
 #endif
 
 #define _FP_ROUND_NEAREST(wc, X)				\
