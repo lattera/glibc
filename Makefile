@@ -51,7 +51,7 @@ endif # $(AUTOCONF) = no
 # These are the targets that are made by making them in each subdirectory.
 +subdir_targets	:= subdir_lib objects objs others subdir_mostlyclean	\
 		   subdir_clean subdir_distclean subdir_realclean	\
-		   tests xtests subdir_lint.out				\
+		   tests xtests						\
 		   subdir_update-abi subdir_check-abi			\
 		   subdir_echo-headers					\
 		   subdir_install					\

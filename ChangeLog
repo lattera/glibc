@@ -1,5 +1,7 @@
 2014-02-12  Joseph Myers  <joseph@codesourcery.com>
 
+	* Makefile (subdir_targets): Remove subdir_lint.out.
+
 	* stdio-common/Makefile (do-tst-unbputc): Remove target.
 	(do-tst-printf): Likewise.
 	(tests): Depend directly on $(objpfx)tst-unbputc.out and
