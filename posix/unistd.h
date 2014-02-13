@@ -645,7 +645,7 @@ extern __pid_t getpgid (__pid_t __pid) __THROW;
    If PGID is zero, the process ID of the process is used.  */
 extern int setpgid (__pid_t __pid, __pid_t __pgid) __THROW;
 
-#if defined __USE_MISC || defined __USE_MISC || defined __USE_XOPEN_EXTENDED
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 /* Both System V and BSD have `setpgrp' functions, but with different
    calling conventions.  The BSD function is the same as POSIX.1 `setpgid'
    (above).  The System V function takes no arguments and puts the calling

@@ -54,7 +54,7 @@ __END_NAMESPACE_STD
 /* Copy no more than N bytes of SRC to DEST, stopping when C is found.
    Return the position in DEST one byte past where C was copied,
    or NULL if C was not found in the first N bytes of SRC.  */
-#if defined __USE_MISC || defined __USE_MISC || defined __USE_XOPEN
+#if defined __USE_MISC || defined __USE_XOPEN
 extern void *memccpy (void *__restrict __dest, const void *__restrict __src,
 		      int __c, size_t __n)
      __THROW __nonnull ((1, 2));
@@ -170,7 +170,7 @@ extern size_t strxfrm_l (char *__dest, const char *__src, size_t __n,
 			 __locale_t __l) __THROW __nonnull ((2, 4));
 #endif
 
-#if defined __USE_MISC || defined __USE_MISC || defined __USE_XOPEN_EXTENDED \
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED \
     || defined __USE_XOPEN2K8
 /* Duplicate S, returning an identical malloc'd string.  */
 extern char *strdup (const char *__s)

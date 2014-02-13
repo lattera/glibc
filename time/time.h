@@ -74,7 +74,7 @@ __BEGIN_NAMESPACE_STD
 /* Returned by `time'.  */
 typedef __time_t time_t;
 __END_NAMESPACE_STD
-#if defined __USE_POSIX || defined __USE_MISC || defined __USE_MISC
+#if defined __USE_POSIX || defined __USE_MISC
 __USING_NAMESPACE_STD(time_t)
 #endif
 

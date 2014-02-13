@@ -604,7 +604,7 @@ extern int putchar_unlocked (int __c);
 #endif /* Use POSIX or MISC.  */
 
 
-#if defined __USE_MISC || defined __USE_MISC \
+#if defined __USE_MISC \
     || (defined __USE_XOPEN && !defined __USE_XOPEN2K)
 /* Get a word (int) from STREAM.  */
 extern int getw (FILE *__stream);
@@ -864,8 +864,7 @@ extern int fileno_unlocked (FILE *__stream) __THROW __wur;
 #endif
 
 
-#if (defined __USE_POSIX2 || defined __USE_MISC  || defined __USE_MISC || \
-     defined __USE_MISC)
+#if defined  __USE_POSIX2 || defined __USE_MISC
 /* Create a new stream connected to a pipe running the given command.
 
    This function is a possible cancellation point and therefore not

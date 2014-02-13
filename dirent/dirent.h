@@ -60,7 +60,7 @@ typedef __ino64_t ino64_t;
 
 #include <bits/dirent.h>
 
-#if (defined __USE_MISC || defined __USE_MISC) && !defined d_fileno
+#if defined __USE_MISC && !defined d_fileno
 # define d_ino	d_fileno		 /* Backward compatibility.  */
 #endif
 
@@ -207,7 +207,7 @@ extern int readdir64_r (DIR *__restrict __dirp,
 /* Rewind DIRP to the beginning of the directory.  */
 extern void rewinddir (DIR *__dirp) __THROW __nonnull ((1));
 
-#if defined __USE_MISC || defined __USE_MISC || defined __USE_XOPEN
+#if defined __USE_MISC || defined __USE_XOPEN
 # include <bits/types.h>
 
 /* Seek to position POS on DIRP.  */
@@ -217,7 +217,7 @@ extern void seekdir (DIR *__dirp, long int __pos) __THROW __nonnull ((1));
 extern long int telldir (DIR *__dirp) __THROW __nonnull ((1));
 #endif
 
-#if defined __USE_MISC || defined __USE_MISC || defined __USE_XOPEN2K8
+#if defined __USE_MISC || defined __USE_XOPEN2K8
 
 /* Return the file descriptor used by DIRP.  */
 extern int dirfd (DIR *__dirp) __THROW __nonnull ((1));
@@ -226,7 +226,7 @@ extern int dirfd (DIR *__dirp) __THROW __nonnull ((1));
 #  define dirfd(dirp)	_DIR_dirfd (dirp)
 # endif
 
-# if defined __USE_MISC || defined __USE_MISC
+# ifdef __USE_MISC
 #  ifndef MAXNAMLEN
 /* Get the definitions of the POSIX.1 limits.  */
 #  include <bits/posix1_lim.h>
@@ -343,7 +343,7 @@ extern int alphasort64 (const struct dirent64 **__e1,
 #endif /* Use BSD or misc or XPG7.  */
 
 
-#if defined __USE_MISC || defined __USE_MISC
+#ifdef __USE_MISC
 /* Read directory entries from FD into BUF, reading at most NBYTES.
    Reading starts at offset *BASEP, and *BASEP is updated with the new
    position after reading.  Returns the number of bytes read; zero when at

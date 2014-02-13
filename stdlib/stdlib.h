@@ -310,7 +310,7 @@ extern long int a64l (const char *__s)
 
 #endif	/* Use SVID || extended X/Open.  */
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_MISC
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 # include <sys/types.h>	/* we need int32_t... */
 
 /* These are the functions that actually do things.  The `random', `srandom',
@@ -488,7 +488,7 @@ __END_NAMESPACE_STD
 extern void cfree (void *__ptr) __THROW;
 #endif /* Use misc.  */
 
-#if defined __USE_GNU || defined __USE_MISC || defined __USE_MISC
+#if defined __USE_GNU || defined __USE_MISC
 # include <alloca.h>
 #endif /* Use GNU, BSD, or misc.  */
 

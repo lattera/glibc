@@ -54,7 +54,7 @@ struct group
 #endif
 
 
-#if defined __USE_MISC || defined __USE_MISC || defined __USE_XOPEN_EXTENDED
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 /* Rewind the group-file stream.
 
    This function is a possible cancellation point and therefore not
@@ -62,7 +62,7 @@ struct group
 extern void setgrent (void);
 #endif
 
-#if defined __USE_MISC || defined __USE_MISC || defined __USE_XOPEN_EXTENDED \
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED \
     || defined __USE_XOPEN2K8
 /* Close the group-file stream.
 

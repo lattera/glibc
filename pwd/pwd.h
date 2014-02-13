@@ -64,7 +64,7 @@ struct passwd
 #endif
 
 
-#if defined __USE_MISC || defined __USE_MISC || defined __USE_XOPEN_EXTENDED
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 /* Rewind the password-file stream.
 
    This function is a possible cancellation point and therefore not
@@ -131,7 +131,7 @@ extern struct passwd *getpwnam (const char *__name);
    other reentrant functions so the chances are good this is what the
    POSIX people would choose.  */
 
-# if defined __USE_MISC || defined __USE_MISC
+# ifdef __USE_MISC
 /* This function is not part of POSIX and therefore no official
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and

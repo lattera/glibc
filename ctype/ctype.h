@@ -143,7 +143,7 @@ __END_NAMESPACE_C99
 extern int isctype (int __c, int __mask) __THROW;
 #endif
 
-#if defined __USE_MISC || defined __USE_MISC || defined __USE_XOPEN
+#if defined __USE_MISC || defined __USE_XOPEN
 
 /* Return nonzero iff C is in the ASCII set
    (i.e., is no more than 7 bits wide).  */
@@ -229,7 +229,7 @@ __NTH (toupper (int __c))
 #  define toupper(c)	__tobody (c, toupper, *__ctype_toupper_loc (), (c))
 # endif /* Optimizing gcc */
 
-# if defined __USE_MISC || defined __USE_MISC || defined __USE_XOPEN
+# if defined __USE_MISC || defined __USE_XOPEN
 #  define isascii(c)	__isascii (c)
 #  define toascii(c)	__toascii (c)
 
@@ -316,7 +316,7 @@ extern int toupper_l (int __c, __locale_t __l) __THROW;
 
 #  define __isblank_l(c,l)	__isctype_l((c), _ISblank, (l))
 
-#  if defined __USE_MISC || defined __USE_MISC
+#  ifdef __USE_MISC
 #   define __isascii_l(c,l)	((l), __isascii (c))
 #   define __toascii_l(c,l)	((l), __toascii (c))
 #  endif
@@ -335,7 +335,7 @@ extern int toupper_l (int __c, __locale_t __l) __THROW;
 
 #  define isblank_l(c,l)	__isblank_l ((c), (l))
 
-#  if defined __USE_MISC || defined __USE_MISC
+#  ifdef __USE_MISC
 #   define isascii_l(c,l)	__isascii_l ((c), (l))
 #   define toascii_l(c,l)	__toascii_l ((c), (l))
 #  endif

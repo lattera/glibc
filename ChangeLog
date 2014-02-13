@@ -1,3 +1,19 @@
+2014-02-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* bits/mman.h [__USE_MISC]: Remove redundant conditionals.
+	* ctype/ctype.h [__USE_MISC]: Likewise.
+	* dirent/dirent.h [__USE_MISC]: Likewise.
+	* grp/grp.h [__USE_MISC]: Likewise.
+	* io/fcntl.h [__USE_MISC]: Likewise.
+	* io/sys/stat.h [__USE_MISC]: Likewise.
+	* libio/stdio.h [__USE_MISC]: Likewise.
+	* posix/unistd.h [__USE_MISC]: Likewise.
+	* pwd/pwd.h [__USE_MISC]: Likewise.
+	* stdlib.h [__USE_MISC]: Likewise.
+	* string/bits/string2.h [__USE_MISC]: Likewise.
+	* string/string.h [__USE_MISC]: Likewise.
+	* time/time.h [__USE_MISC]: Likewise.
+
 2014-02-13  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #16574]

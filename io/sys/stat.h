@@ -104,7 +104,7 @@ __BEGIN_DECLS
 
 #include <bits/stat.h>
 
-#if defined __USE_MISC || defined __USE_MISC || defined __USE_XOPEN
+#if defined __USE_MISC || defined __USE_XOPEN
 # define S_IFMT		__S_IFMT
 # define S_IFDIR	__S_IFDIR
 # define S_IFCHR	__S_IFCHR
@@ -116,7 +116,7 @@ __BEGIN_DECLS
 # ifdef __S_IFLNK
 #  define S_IFLNK	__S_IFLNK
 # endif
-# if (defined __USE_MISC || defined __USE_MISC || defined __USE_UNIX98) \
+# if (defined __USE_MISC || defined __USE_UNIX98) \
      && defined __S_IFSOCK
 #  define S_IFSOCK	__S_IFSOCK
 # endif
@@ -164,7 +164,7 @@ __BEGIN_DECLS
 #define	S_ISUID __S_ISUID	/* Set user ID on execution.  */
 #define	S_ISGID	__S_ISGID	/* Set group ID on execution.  */
 
-#if defined __USE_MISC || defined __USE_MISC || defined __USE_XOPEN
+#if defined __USE_MISC || defined __USE_XOPEN
 /* Save swapped text after use (sticky bit).  This is pretty well obsolete.  */
 # define S_ISVTX	__S_ISVTX
 #endif
@@ -175,7 +175,7 @@ __BEGIN_DECLS
 /* Read, write, and execute by owner.  */
 #define	S_IRWXU	(__S_IREAD|__S_IWRITE|__S_IEXEC)
 
-#if defined __USE_MISC && defined __USE_MISC
+#ifdef __USE_MISC
 # define S_IREAD	S_IRUSR
 # define S_IWRITE	S_IWUSR
 # define S_IEXEC	S_IXUSR
@@ -332,7 +332,7 @@ extern int mkdirat (int __fd, const char *__path, __mode_t __mode)
 /* Create a device file named PATH, with permission and special bits MODE
    and device number DEV (which can be constructed from major and minor
    device numbers with the `makedev' macro above).  */
-#if defined __USE_MISC || defined __USE_MISC || defined __USE_XOPEN_EXTENDED
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 extern int mknod (const char *__path, __mode_t __mode, __dev_t __dev)
      __THROW __nonnull ((1));
 
@@ -478,7 +478,7 @@ __NTH (fstatat (int __fd, const char *__filename, struct stat *__statbuf,
 }
 # endif
 
-# if defined __USE_MISC || defined __USE_MISC
+# ifdef __USE_MISC
 __extern_inline int
 __NTH (mknod (const char *__path, __mode_t __mode, __dev_t __dev))
 {
