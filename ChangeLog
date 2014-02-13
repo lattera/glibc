@@ -1,5 +1,12 @@
 2014-02-12  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/mips/math-tests.h: Include <features.h>.
+	[!__mips_soft_float && _MIPS_SIM != _ABIO32 && __GNUC_PREREQ (4, 9)]
+	(ROUNDING_TESTS_long_double): Do not define.
+	[!__mips_soft_float && _MIPS_SIM != _ABIO32 && __GNUC_PREREQ (4, 9)]
+	(EXCEPTION_TESTS_long_double): Likewise.
+	* sysdeps/mips/mips64/libm-test-ulps: Update.
+
 	* include/features.h (__USE_BSD): Remove macro definitions.
 	(__USE_SVID): Likewise.
 	(_BSD_SOURCE): Likewise.
