@@ -1,3 +1,9 @@
+2014-02-13  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #16574]
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyname4_r): Free the
+	second answer buffer if it was separately allocated.
+
 2014-02-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/math-tests.h: Include <features.h>.
