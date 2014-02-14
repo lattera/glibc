@@ -86,7 +86,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-getaddrinfo3 tst-fnmatch2 tst-cpucount tst-cpuset \
 		   bug-getopt1 bug-getopt2 bug-getopt3 bug-getopt4 \
 		   bug-getopt5 tst-getopt_long1 bug-regex34 bug-regex35 \
-		   tst-pathconf tst-getaddrinfo4
+		   tst-pathconf tst-getaddrinfo4 tst-rxspencer-no-utf8
 xtests		:= bug-ga2
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
@@ -106,7 +106,8 @@ generated := $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
 	     bug-regex2.mtrace bug-regex14-mem bug-regex14.mtrace \
 	     bug-regex21-mem bug-regex21.mtrace \
 	     bug-regex31-mem bug-regex31.mtrace \
-	     tst-rxspencer-mem tst-rxspencer.mtrace tst-getconf.out \
+	     tst-rxspencer-no-utf8-mem tst-rxspencer-no-utf8.mtrace \
+	     tst-getconf.out \
 	     tst-pcre-mem tst-pcre.mtrace tst-boost-mem tst-boost.mtrace \
 	     bug-ga2.mtrace bug-ga2-mem bug-glob2.mtrace bug-glob2-mem \
 	     tst-vfork3-mem tst-vfork3.mtrace getconf.speclist \
@@ -202,7 +203,9 @@ bug-regex33-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex34-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex35-ENV = LOCPATH=$(common-objpfx)localedata
 tst-rxspencer-ARGS = --utf8 rxspencer/tests
+tst-rxspencer-no-utf8-ARGS = rxspencer/tests
 tst-rxspencer-ENV = LOCPATH=$(common-objpfx)localedata
+tst-rxspencer-no-utf8-ENV = LOCPATH=$(common-objpfx)localedata
 tst-pcre-ARGS = PCRE.tests
 tst-boost-ARGS = BOOST.tests
 bug-glob1-ARGS = "$(objpfx)"
@@ -221,7 +224,8 @@ ptestcases.h: PTESTS PTESTS2C.sed
 tests: $(objpfx)annexc.out
 ifeq ($(run-built-tests),yes)
 tests: $(objpfx)bug-regex2-mem $(objpfx)bug-regex14-mem \
-  $(objpfx)bug-regex21-mem $(objpfx)bug-regex31-mem $(objpfx)tst-rxspencer-mem\
+  $(objpfx)bug-regex21-mem $(objpfx)bug-regex31-mem \
+  $(objpfx)tst-rxspencer-no-utf8-mem \
   $(objpfx)tst-pcre-mem $(objpfx)tst-boost-mem $(objpfx)tst-getconf.out \
   $(objpfx)bug-glob2-mem $(objpfx)tst-vfork3-mem $(objpfx)tst-fnmatch-mem
 xtests: $(objpfx)bug-ga2-mem
@@ -265,14 +269,12 @@ tst-vfork3-ENV = MALLOC_TRACE=$(objpfx)tst-vfork3.mtrace
 $(objpfx)tst-vfork3-mem: $(objpfx)tst-vfork3.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-vfork3.mtrace > $@
 
-# tst-rxspencer.mtrace is generated only when run without --utf8
-# option, since otherwise the file has almost 100M and takes very long
-# time to process.
-$(objpfx)tst-rxspencer-mem: $(objpfx)tst-rxspencer.out
-	MALLOC_TRACE=$(objpfx)tst-rxspencer.mtrace $(tst-rxspencer-ENV) \
-	  $(test-program-prefix) $(objpfx)tst-rxspencer rxspencer/tests \
-	  > /dev/null
-	$(common-objpfx)malloc/mtrace $(objpfx)tst-rxspencer.mtrace > $@
+# tst-rxspencer.mtrace is not generated, only
+# tst-rxspencer-no-utf8.mtrace, since otherwise the file has almost
+# 100M and takes very long time to process.
+tst-rxspencer-no-utf8-ENV += MALLOC_TRACE=$(objpfx)tst-rxspencer-no-utf8.mtrace
+$(objpfx)tst-rxspencer-no-utf8-mem: $(objpfx)tst-rxspencer-no-utf8.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-rxspencer-no-utf8.mtrace > $@
 
 tst-pcre-ENV = MALLOC_TRACE=$(objpfx)tst-pcre.mtrace
 $(objpfx)tst-pcre-mem: $(objpfx)tst-pcre.out

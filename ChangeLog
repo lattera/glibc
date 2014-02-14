@@ -1,5 +1,21 @@
 2014-02-14  Joseph Myers  <joseph@codesourcery.com>
 
+	* libio/Makefile ($(objpfx)tst-fopenloc.check): Split into
+	separate $(objpfx)tst-fopenloc-cmp.out and
+	$(objpfx)tst-fopenloc-mem.out targets.
+	(tests): Update dependencies.
+	* posix/Makefile (tests variable): Add tst-rxspencer-no-utf8.
+	(generated): Change tst-rxspencer-mem and tst-rxspencer.mtrace to
+	tst-rxspencer-no-utf8-mem and tst-rxspencer-no-utf8.mtrace.
+	(tst-rxspencer-no-utf8-ARGS): New variable.
+	(tst-rxspencer-no-utf8-ENV): Likewise.
+	(tests target): Depend on $(objpfx)tst-rxspencer-no-utf8-mem
+	instead of $(objpfx)tst-rxspencer-mem.
+	($(objpfx)tst-rxspencer-mem): Change target to
+	$(objpfx)tst-rxspencer-no-utf8-mem.  Depend on
+	$(objpfx)tst-rxspencer-no-utf8.out instead of running test program.
+	* posix/tst-rxspencer-no-utf8.c: New file.
+
 	* elf/Makefile ($(objpfx)order.out): Remove rule.
 	[$(run-built-tests) = yes] (tests): Depend on
 	$(objpfx)order-cmp.out.

@@ -179,9 +179,9 @@ include ../Rules
 ifeq ($(run-built-tests),yes)
 tests: $(objpfx)test-freopen.out
 ifeq (yes,$(build-shared))
-# Run tst-fopenloc.check only if shared library is enabled since it
-# depends on tst-fopenloc.out.
-tests: $(objpfx)tst-fopenloc.check
+# Run tst-fopenloc-cmp.out and tst-openloc-mem.out only if shared
+# library is enabled since they depend on tst-fopenloc.out.
+tests: $(objpfx)tst-fopenloc-cmp.out $(objpfx)tst-fopenloc-mem.out
 endif
 endif
 
@@ -189,7 +189,9 @@ $(objpfx)test-freopen.out: test-freopen.sh $(objpfx)test-freopen
 	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'	\
 	$(common-objpfx)libio/
 
-$(objpfx)tst-fopenloc.check: $(objpfx)tst-fopenloc.out
-	cmp ../iconvdata/testdata/ISO-8859-1..UTF8 $(objpfx)tst-fopenloc.out \
-	  > $@
-	$(common-objpfx)malloc/mtrace $(objpfx)tst-fopenloc.mtrace >> $@
+$(objpfx)tst-fopenloc-cmp.out: ../iconvdata/testdata/ISO-8859-1..UTF8 \
+			       $(objpfx)tst-fopenloc.out
+	cmp $^ > $@
+
+$(objpfx)tst-fopenloc-mem.out: $(objpfx)tst-fopenloc.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-fopenloc.mtrace > $@
