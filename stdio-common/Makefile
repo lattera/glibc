@@ -124,9 +124,15 @@ tst-grouping-ENV = LOCPATH=$(common-objpfx)localedata
 
 CPPFLAGS += $(libio-mtsafe)
 
-$(objpfx)tst-setvbuf1.out: tst-setvbuf1.expect $(objpfx)tst-setvbuf1
+ifeq ($(run-built-tests),yes)
+tests: $(objpfx)tst-setvbuf1-cmp.out
+endif
+
+$(objpfx)tst-setvbuf1.out: /dev/null $(objpfx)tst-setvbuf1
 	$(test-program-cmd) > $@ 2>&1
-	cmp tst-setvbuf1.expect $@
+
+$(objpfx)tst-setvbuf1-cmp.out: tst-setvbuf1.expect $(objpfx)tst-setvbuf1.out
+	cmp $^ > $@
 
 ifeq ($(build-shared),yes)
 link-libm = $(common-objpfx)math/libm.so

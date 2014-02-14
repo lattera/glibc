@@ -637,10 +637,11 @@ $(objpfx)circlemod2a.so: $(objpfx)circlemod3a.so
 
 $(objpfx)order: $(addprefix $(objpfx),dep4.so dep3.so dep2.so dep1.so)
 
-$(objpfx)order.out: $(objpfx)order
-	$(test-program-prefix) \
-	  $(objpfx)order > $@
-	(echo "0123456789" | cmp $@ -) > /dev/null
+ifeq ($(run-built-tests),yes)
+tests: $(objpfx)order-cmp.out
+endif
+$(objpfx)order-cmp.out: $(objpfx)order.out
+	(echo "0123456789" | cmp $< -) > $@
 
 $(objpfx)vismain: $(addprefix $(objpfx),vismod1.so vismod2.so)
 $(objpfx)vismain.out: $(addprefix $(objpfx),vismod3.so)
@@ -848,38 +849,39 @@ endif
 LDFLAGS-tst-array2 = $(no-as-needed)
 LDFLAGS-tst-array5 = $(no-as-needed)
 
-$(objpfx)tst-array1.out: tst-array1.exp $(objpfx)tst-array1
-	$(test-program-cmd) > $@
-	cmp $@ tst-array1.exp > /dev/null
+ifeq ($(run-built-tests),yes)
+tests: $(objpfx)tst-array1-cmp.out $(objpfx)tst-array1-static-cmp.out \
+       $(objpfx)tst-array2-cmp.out $(objpfx)tst-array3-cmp.out \
+       $(objpfx)tst-array4-cmp.out $(objpfx)tst-array5-cmp.out \
+       $(objpfx)tst-array5-static-cmp.out
+endif
 
-$(objpfx)tst-array1-static.out: tst-array1.exp $(objpfx)tst-array1-static
-	$(test-program-cmd) > $@
-	cmp $@ tst-array1.exp > /dev/null
+$(objpfx)tst-array1-cmp.out: tst-array1.exp $(objpfx)tst-array1.out
+	cmp $^ > $@
+
+$(objpfx)tst-array1-static-cmp.out: tst-array1.exp \
+				    $(objpfx)tst-array1-static.out
+	cmp $^ > $@
 
 $(objpfx)tst-array2: $(objpfx)tst-array2dep.so
-$(objpfx)tst-array2.out: tst-array2.exp $(objpfx)tst-array2
-	$(test-program-cmd) > $@
-	cmp $@ tst-array2.exp > /dev/null
+$(objpfx)tst-array2-cmp.out: tst-array2.exp $(objpfx)tst-array2.out
+	cmp $^ > $@
 
-$(objpfx)tst-array3.out: tst-array1.exp $(objpfx)tst-array3
-	$(test-program-cmd) > $@
-	cmp $@ tst-array1.exp > /dev/null
+$(objpfx)tst-array3-cmp.out: tst-array1.exp $(objpfx)tst-array3.out
+	cmp $^ > $@
 
 $(objpfx)tst-array4: $(libdl)
-$(objpfx)tst-array4.out: tst-array4.exp $(objpfx)tst-array4 \
-			 $(objpfx)tst-array2dep.so
-	$(test-program-cmd) > $@
-	cmp $@ tst-array4.exp > /dev/null
+$(objpfx)tst-array4.out: $(objpfx)tst-array2dep.so
+$(objpfx)tst-array4-cmp.out: tst-array4.exp $(objpfx)tst-array4.out
+	cmp $^ > $@
 
 $(objpfx)tst-array5: $(objpfx)tst-array5dep.so
-$(objpfx)tst-array5.out: tst-array5.exp $(objpfx)tst-array5
-	$(test-program-cmd) > $@
-	cmp $@ tst-array5.exp > /dev/null
+$(objpfx)tst-array5-cmp.out: tst-array5.exp $(objpfx)tst-array5.out
+	cmp $^ > $@
 
-$(objpfx)tst-array5-static.out: tst-array5-static.exp \
-				$(objpfx)tst-array5-static
-	$(test-program-cmd) > $@
-	cmp $@ tst-array5-static.exp > /dev/null
+$(objpfx)tst-array5-static-cmp.out: tst-array5-static.exp \
+				$(objpfx)tst-array5-static.out
+	cmp $^ > $@
 
 CFLAGS-tst-pie1.c += $(pie-ccflag)
 
@@ -1003,12 +1005,13 @@ tst-audit8-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
 $(objpfx)tst-global1: $(libdl)
 $(objpfx)tst-global1.out: $(objpfx)testobj6.so $(objpfx)testobj2.so
 
+ifeq ($(run-built-tests),yes)
+tests: $(objpfx)order2-cmp.out
+endif
 $(objpfx)order2: $(libdl)
-$(objpfx)order2.out: $(objpfx)order2 $(objpfx)order2mod1.so \
-		     $(objpfx)order2mod2.so
-	$(test-program-prefix) \
-	  $(objpfx)order2 > $@
-	(echo "12345" | cmp $@ -) > /dev/null
+$(objpfx)order2.out: $(objpfx)order2mod1.so $(objpfx)order2mod2.so
+$(objpfx)order2-cmp.out: $(objpfx)order2.out
+	(echo "12345" | cmp $< -) > $@
 $(objpfx)order2mod1.so: $(objpfx)order2mod4.so
 $(objpfx)order2mod4.so: $(objpfx)order2mod3.so
 $(objpfx)order2mod2.so: $(objpfx)order2mod3.so
@@ -1104,10 +1107,11 @@ $(objpfx)tst-unique3.out: $(objpfx)tst-unique3lib2.so
 
 $(objpfx)tst-unique4: $(objpfx)tst-unique4lib.so
 
-$(objpfx)tst-initorder.out: $(objpfx)tst-initorder
-	$(test-program-prefix) \
-	  $< > $@
-	cmp $@ tst-initorder.exp > /dev/null
+ifeq ($(run-built-tests),yes)
+tests: $(objpfx)tst-initorder-cmp.out
+endif
+$(objpfx)tst-initorder-cmp.out: tst-initorder.exp $(objpfx)tst-initorder.out
+	cmp $^ > $@
 
 $(objpfx)tst-initorder2: $(objpfx)tst-initorder2a.so $(objpfx)tst-initorder2d.so $(objpfx)tst-initorder2c.so
 $(objpfx)tst-initorder2a.so: $(objpfx)tst-initorder2b.so
@@ -1124,10 +1128,11 @@ endef
 object-suffixes-left := a b c d
 include $(o-iterator)
 
-$(objpfx)tst-initorder2.out: $(objpfx)tst-initorder2
-	$(test-program-prefix) \
-	  $< > $@
-	cmp $@ tst-initorder2.exp > /dev/null
+ifeq ($(run-built-tests),yes)
+tests: $(objpfx)tst-initorder2-cmp.out
+endif
+$(objpfx)tst-initorder2-cmp.out: tst-initorder2.exp $(objpfx)tst-initorder2.out
+	cmp $^ > $@
 
 $(objpfx)tst-relsort1: $(libdl)
 $(objpfx)tst-relsort1mod1.so: $(libm) $(objpfx)tst-relsort1mod2.so
@@ -1136,7 +1141,7 @@ $(objpfx)tst-relsort1.out: $(objpfx)tst-relsort1mod1.so \
 			   $(objpfx)tst-relsort1mod2.so
 
 ifeq ($(run-built-tests),yes)
-tests: $(objpfx)tst-unused-dep.out
+tests: $(objpfx)tst-unused-dep.out $(objpfx)tst-unused-dep-cmp.out
 endif
 
 $(objpfx)tst-unused-dep.out: $(objpfx)testobj1.so
@@ -1147,4 +1152,6 @@ $(objpfx)tst-unused-dep.out: $(objpfx)testobj1.so
 	$(elf-objpfx)${rtld-installed-name} \
 	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
 	  $< > $@
-	cmp $@ /dev/null > /dev/null
+
+$(objpfx)tst-unused-dep-cmp.out: $(objpfx)tst-unused-dep.out
+	cmp $< /dev/null > $@

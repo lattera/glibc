@@ -542,7 +542,13 @@ endif
 ifeq ($(build-shared),yes)
 
 $(objpfx)tst-cleanup0.out: /dev/null $(objpfx)tst-cleanup0
-	$(make-test-out) 2>&1 | cmp - tst-cleanup0.expect > $@
+	$(make-test-out) > $@ 2>&1
+
+ifeq ($(run-built-tests),yes)
+tests: $(objpfx)tst-cleanup0-cmp.out
+endif
+$(objpfx)tst-cleanup0-cmp.out: tst-cleanup0.expect $(objpfx)tst-cleanup0.out
+	cmp $^ > $@
 
 $(objpfx)crti.o: $(objpfx)pt-crti.o
 	ln -f $< $@

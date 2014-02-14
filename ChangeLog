@@ -1,3 +1,53 @@
+2014-02-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* elf/Makefile ($(objpfx)order.out): Remove rule.
+	[$(run-built-tests) = yes] (tests): Depend on
+	$(objpfx)order-cmp.out.
+	($(objpfx)order-cmp.out): New rule.
+	[$(run-built-tests) = yes] (tests): Depend on
+	$(objpfx)tst-array1-cmp.out, $(objpfx)tst-array1-static-cmp.out,
+	$(objpfx)tst-array2-cmp.out, $(objpfx)tst-array3-cmp.out,
+	$(objpfx)tst-array4-cmp.out, $(objpfx)tst-array5-cmp.out and
+	$(objpfx)tst-array5-static-cmp.out.
+	($(objpfx)tst-array1.out): Remove rule.
+	($(objpfx)tst-array1-cmp.out): New rule.
+	($(objpfx)tst-array1-static.out): Remove rule.
+	($(objpfx)tst-array1-static-cmp.out): New rule.
+	($(objpfx)tst-array2.out): Remove rule.
+	($(objpfx)tst-array2-cmp.out): New rule.
+	($(objpfx)tst-array3.out): Remove rule.
+	($(objpfx)tst-array3-cmp.out): New rule.
+	($(objpfx)tst-array4.out): Remove rule.
+	($(objpfx)tst-array4-cmp.out): New rule.
+	($(objpfx)tst-array5.out): Remove rule.
+	($(objpfx)tst-array5-cmp.out): New rule.
+	($(objpfx)tst-array5-static.out): Remove rule.
+	($(objpfx)tst-array5-static-cmp.out): New rule.
+	[$(run-built-tests) = yes] (tests): Depend on
+	$(objpfx)order2-cmp.out.
+	($(objpfx)order2.out): Remove rule.
+	($(objpfx)order2-cmp.out): New rule.
+	($(objpfx)tst-initorder.out): Remove rule.
+	[$(run-built-tests) = yes] (tests): Depend on
+	$(objpfx)tst-initorder-cmp.out.
+	($(objpfx)tst-initorder-cmp.out): New rule.
+	($(objpfx)tst-initorder2.out): Remove rule.
+	[$(run-built-tests) = yes] (tests): Depend on
+	$(objpfx)tst-initorder2-cmp.out.
+	($(objpfx)tst-initorder2-cmp.out): New rule.
+	[$(run-built-tests) = yes] (tests): Depend on
+	$(objpfx)tst-unused-dep-cmp.out.
+	($(objpfx)tst-unused-dep-cmp.out): Do not run cmp.
+	($(objpfx)tst-unused-dep-cmp.out): New rule.
+	* stdio-common/Makefile [$(run-built-tests) = yes] (tests): Depend
+	on $(objpfx)tst-setvbuf1-cmp.out.
+	($(objpfx)tst-setvbuf1.out): Do not run cmp.
+	($(objpfx)tst-setvbuf1-cmp.out): New rule.
+	* string/Makefile [$(run-built-tests) = yes] (tests): Depend
+	$(objpfx)tst-svc-cmp.out instead of $(objpfx)tst-svc.out.
+	($(objpfx)tst-svc.out): Remove rule.
+	($(objpfx)tst-svc-cmp.out): New rule.
+
 2014-02-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* bits/mman.h [__USE_MISC]: Remove redundant conditionals.

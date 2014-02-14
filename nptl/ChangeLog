@@ -1,3 +1,10 @@
+2014-02-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makefile ($(objpfx)tst-cleanup0.out): Do not run cmp.
+	[$(run-built-tests) = yes] (tests): Depend on
+	$(objpfx)tst-cleanup0-cmp.out.
+	($(objpfx)tst-cleanup0-cmp.out): New rule.
+
 2014-02-10  Ondřej Bílka  <neleai@seznam.cz>
 
 	* allocatestack.c (queue_stack, allocate_stack,

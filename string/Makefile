@@ -74,9 +74,7 @@ CFLAGS-test-ffs.c = -fno-builtin
 CFLAGS-tst-inlcall.c = -fno-builtin
 
 ifeq ($(run-built-tests),yes)
-tests: $(objpfx)tst-svc.out
-$(objpfx)tst-svc.out: tst-svc.input $(objpfx)tst-svc
-	GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
-	  $(test-program-cmd) < $(word 1,$^) > $@
-	@cmp tst-svc.expect $(objpfx)tst-svc.out
+tests: $(objpfx)tst-svc-cmp.out
+$(objpfx)tst-svc-cmp.out: tst-svc.expect $(objpfx)tst-svc.out
+	cmp $^ > $@
 endif
