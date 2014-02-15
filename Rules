@@ -183,9 +183,11 @@ make-test-out = $(test-wrapper-env) \
 		GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
 		$($*-ENV) $(host-test-program-cmd) $($*-ARGS)
 $(objpfx)%.out: %.input $(objpfx)%
-	$(make-test-out) > $@ < $(word 1,$^)
+	$(make-test-out) > $@ < $(word 1,$^); \
+	$(evaluate-test)
 $(objpfx)%.out: /dev/null $(objpfx)%	# Make it 2nd arg for canned sequence.
-	$(make-test-out) > $@
+	$(make-test-out) > $@; \
+	$(evaluate-test)
 
 endif	# tests
 

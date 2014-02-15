@@ -1080,6 +1080,13 @@ defines += -D_LIBC_REENTRANT
 libio-mtsafe = -D_IO_MTSAFE_IO
 endif
 
+# The name to give to a test in test results summaries.
+test-name = $(strip $(patsubst %.out, %, $(patsubst $(common-objpfx)%, %, $@)))
+
+# Command to output a test status line (such as PASS: test-name).
+evaluate-test = $(..)scripts/evaluate-test.sh $(test-name) $$? \
+		  > $(common-objpfx)$(test-name).test-result
+
 endif # Makeconfig not yet included
 
 # Local Variables:

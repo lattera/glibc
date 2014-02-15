@@ -1,3 +1,13 @@
+2014-02-14  Tomas Dohnalek  <tdohnale@redhat.com>
+	    Joseph Myers  <joseph@codesourcery.com>
+
+	* Makeconfig (test-name): New variable.
+	(evaluate-test): Likewise.
+	* Makerules (do-test-clean): Remove .test-result files.
+	(common-mostlyclean): Likewise.
+	* Rules ($(objpfx)%.out): Use $(evaluate-test) in both rules.
+	* scripts/evaluate-test.sh: New file.
+
 2014-02-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* libio/Makefile ($(objpfx)tst-fopenloc.check): Split into
