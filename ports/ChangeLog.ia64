@@ -1,4 +1,10 @@
-2013-01-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
+2014-02-16  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/ia64: Move directory to ../sysdeps/ia64.
+	* sysdeps/unix/sysv/linux/ia64: Move directory to
+	../sysdeps/unix/sysv/linux/ia64.
+
+2014-01-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/setjmp.S: Remove spaces before
 	tabs.

@@ -29,6 +29,7 @@ The GNU C Library supports these configurations for using Linux kernels:
 	arm-*-linux-gnueabi
 	i[4567]86-*-linux-gnu
 	x86_64-*-linux-gnu	Can build either x86_64 or x32
+	ia64-*-linux-gnu
 	m68k-*-linux-gnu
 	mips-*-linux-gnu
 	mips64-*-linux-gnu
@@ -47,7 +48,6 @@ the core glibc maintenance effort is contained in the `ports' add-on,
 located in the `ports' subdirectory of the source tree.
 
 	hppa-*-linux-gnu	Not currently functional without patches.
-	ia64-*-linux-gnu
 
 If you are interested in doing a port, please contact the glibc
 maintainers; see http://www.gnu.org/software/libc/ for more

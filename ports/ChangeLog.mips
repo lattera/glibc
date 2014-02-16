@@ -140,7 +140,7 @@ not here.
 	* sysdeps/mips/mips64/memset.S: Remove.
 
 2013-09-18  Maciej W. Rozycki  <macro@codesourcery.com>
-            Thomas Schwinge  <thomas@codesourcery.com>
+	    Thomas Schwinge  <thomas@codesourcery.com>
 
 	* sysdeps/mips/dl-machine.h (ELF_MACHINE_NAN2008): New macro.
 	(elf_machine_matches_host): Reject objects that use a different

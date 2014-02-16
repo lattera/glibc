@@ -1,3 +1,10 @@
+2014-02-16  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/ia64: Move directory from ports/sysdeps/ia64.
+	* sysdeps/unix/sysv/linux/ia64: Move directory from
+	ports/sysdeps/unix/sysv/linux/ia64.
+	* README: Update listing for ia64-*-linux-gnu.
+
 2014-02-14  Tomas Dohnalek  <tdohnale@redhat.com>
 	    Joseph Myers  <joseph@codesourcery.com>
 
@@ -248,7 +255,7 @@
 
 2014-02-12  Richard Henderson  <rth@redhat.com>
 
-        * sysdeps/alpha: Move directory from ports/sysdeps/alpha.
+	* sysdeps/alpha: Move directory from ports/sysdeps/alpha.
 	* sysdeps/unix/alpha: Move directory from ports/sysdeps/unix/alpha.
 	* sysdeps/unix/sysv/linux/alpha: Move directory from
 	ports/sysdeps/unix/sysv/linux/alpha.
