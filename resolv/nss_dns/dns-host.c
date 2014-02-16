@@ -315,7 +315,13 @@ _nss_dns_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
   int n = __libc_res_nsearch (&_res, name, C_IN, T_UNSPEC,
 			      host_buffer.buf->buf, anslen, &host_buffer.ptr,
 			      &ans2p, &nans2p, &resplen2);
-  if (n < 0)
+  if (n >= 0)
+    {
+      status = gaih_getanswer (host_buffer.buf, n, (const querybuf *) ans2p,
+			       resplen2, name, pat, buffer, buflen,
+			       errnop, herrnop, ttlp);
+    }
+  else
     {
       switch (errno)
 	{
@@ -342,16 +348,7 @@ _nss_dns_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
 	*errnop = EAGAIN;
       else
 	__set_errno (olderr);
-
-      if (host_buffer.buf != orig_host_buffer)
-	free (host_buffer.buf);
-
-      return status;
     }
-
-  status = gaih_getanswer(host_buffer.buf, n, (const querybuf *) ans2p,
-			  resplen2, name, pat, buffer, buflen,
-			  errnop, herrnop, ttlp);
 
   /* Check whether ans2p was separately allocated.  */
   if (host_buffer.buf != orig_host_buffer)
