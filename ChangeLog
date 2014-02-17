@@ -1,3 +1,10 @@
+2014-02-17  David Holsgrove <david.holsgrove@xilinx.com>
+
+        * sysdeps/microblaze: Move directory from ports/sysdeps/microblaze.
+        * sysdeps/unix/sysv/linux/microblaze: Move directory from
+          ports/sysdeps/unix/sysv/linux/microblaze.
+	* README: Add missing listing for microblaze*-*-linux-gnu.
+
 2014-02-16  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/ia64: Move directory from ports/sysdeps/ia64.

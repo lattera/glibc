@@ -1,3 +1,9 @@
+2014-02-17  David Holsgrove <david.holsgrove@xilinx.com>
+
+	* sysdeps/microblaze: Move directory to ../sysdeps/microblaze.
+	* sysdeps/unix/sysv/linux/microblaze: Move directory to
+	  ../sysdeps/unix/sysv/linux/microblaze.
+
 2014-02-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/microblaze/msgctl.c: Include

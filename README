@@ -31,6 +31,7 @@ The GNU C Library supports these configurations for using Linux kernels:
 	x86_64-*-linux-gnu	Can build either x86_64 or x32
 	ia64-*-linux-gnu
 	m68k-*-linux-gnu
+	microblaze*-*-linux-gnu
 	mips-*-linux-gnu
 	mips64-*-linux-gnu
 	powerpc-*-linux-gnu	Hardware or software floating point, BE only.
