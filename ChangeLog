@@ -1,5 +1,16 @@
 2014-02-27  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add llround power8
+	implementation.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llround-power8.S: New file:
+	POWER8 llround ifunc implementation.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llround.c (__lllround): Add
+	POWER8 implementation.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_llround.S: New file:
+	POWER8 llround implementation.
+
+2014-02-27  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add llrint power8
 	implementation.
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llrint-power8.S: New file:
