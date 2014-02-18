@@ -1,5 +1,31 @@
 2014-02-18  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/auto-libm-test-in: Add tests of fma.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (fma_test_data): Use AUTO_TESTS_fff_f.
+	(fma_towardzero_test_data): Likewise.
+	(fma_downward_test_data): Likewise.
+	(fma_upward_test_data): Likewise.
+	* math/gen-auto-libm-tests.c (rounding_mode_desc): Add field
+	mpc_mode.
+	(rounding_modes): Add values for new field.
+	(func_calc_method): Add value mpfr_fff_f.
+	(func_calc_desc): Add mpfr_fff_f union field.
+	(test_function): Add field exact_args.
+	(FUNC): Add macro argument EXACT_ARGS.
+	(FUNC_mpfr_f_f): Update call to FUNC.
+	(FUNC_mpfr_f_f): Likewise.
+	(FUNC_mpfr_ff_f): Likewise.
+	(FUNC_mpfr_if_f): Likewise.
+	(FUNC_mpc_c_f): Likewise.
+	(FUNC_mpc_c_c): Likewise.
+	(test_functions): Add fma.  Update calls to FUNC.
+	(handle_input_arg): Add argument exact_args.
+	(add_test): Update call to handle_input_arg.
+	(calc_generic_results): Add argument mode.  Handle mpfr_fff_f.
+	(output_for_one_input_case): Update call to calc_generic_results.
+	Recalculate exact zero results in each rounding mode.
+
 	* math/gen-auto-libm-tests.c (adjust_real): Ensure integers are
 	non-negative before setting low bit.
 	* math/auto-libm-test-in: Mark one asin test possibly having

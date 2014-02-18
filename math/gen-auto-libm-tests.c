@@ -210,16 +210,18 @@ typedef struct
   const char *name;
   /* The MPFR rounding mode.  */
   mpfr_rnd_t mpfr_mode;
+  /* The MPC rounding mode.  */
+  mpc_rnd_t mpc_mode;
 } rounding_mode_desc;
 
 /* List of rounding modes, in the same order as the rounding_mode
    enumeration.  */
 static const rounding_mode_desc rounding_modes[rm_num_modes] =
   {
-    { "downward", MPFR_RNDD },
-    { "tonearest", MPFR_RNDN },
-    { "towardzero", MPFR_RNDZ },
-    { "upward", MPFR_RNDU },
+    { "downward", MPFR_RNDD, MPC_RNDDD },
+    { "tonearest", MPFR_RNDN, MPC_RNDNN },
+    { "towardzero", MPFR_RNDZ, MPC_RNDZZ },
+    { "upward", MPFR_RNDU, MPC_RNDUU },
   };
 
 /* The supported exceptions.  */
@@ -394,6 +396,8 @@ typedef enum
     mpfr_f_f,
     /* MPFR function with two arguments and one result.  */
     mpfr_ff_f,
+    /* MPFR function with three arguments and one result.  */
+    mpfr_fff_f,
     /* MPFR function with a single argument and floating-point and
        integer results.  */
     mpfr_f_f1,
@@ -424,6 +428,8 @@ typedef struct
   {
     int (*mpfr_f_f) (mpfr_t, const mpfr_t, mpfr_rnd_t);
     int (*mpfr_ff_f) (mpfr_t, const mpfr_t, const mpfr_t, mpfr_rnd_t);
+    int (*mpfr_fff_f) (mpfr_t, const mpfr_t, const mpfr_t, const mpfr_t,
+		       mpfr_rnd_t);
     int (*mpfr_f_f1) (mpfr_t, int *, const mpfr_t, mpfr_rnd_t);
     int (*mpfr_if_f) (mpfr_t, long, const mpfr_t, mpfr_rnd_t);
     int (*mpfr_f_11) (mpfr_t, mpfr_t, const mpfr_t, mpfr_rnd_t);
@@ -452,6 +458,10 @@ typedef struct
   /* Whether the function is a complex function, so errno setting is
      optional.  */
   bool complex_fn;
+  /* Whether to treat arguments given as floating-point constants as
+     exact only, rather than rounding them up and down to all
+     formats.  */
+  bool exact_args;
   /* How to calculate this function.  */
   func_calc_desc calc;
   /* The number of tests allocated for this function.  */
@@ -469,26 +479,26 @@ typedef struct
 #define RET1(T1) 1, { T1 }
 #define RET2(T1, T2) 2, { T1, T2 }
 #define CALC(TYPE, FN) { TYPE, { .TYPE = FN } }
-#define FUNC(NAME, ARGS, RET, EXACT, COMPLEX_FN, CALC)		\
-  {								\
-    NAME, ARGS, RET, EXACT, COMPLEX_FN, CALC, 0, 0, NULL	\
+#define FUNC(NAME, ARGS, RET, EXACT, COMPLEX_FN, EXACT_ARGS, CALC)	\
+  {									\
+    NAME, ARGS, RET, EXACT, COMPLEX_FN, EXACT_ARGS, CALC, 0, 0, NULL	\
   }
 
-#define FUNC_mpfr_f_f(NAME, MPFR_FUNC, EXACT)			\
-  FUNC (NAME, ARGS1 (type_fp), RET1 (type_fp), EXACT, false,	\
+#define FUNC_mpfr_f_f(NAME, MPFR_FUNC, EXACT)				\
+  FUNC (NAME, ARGS1 (type_fp), RET1 (type_fp), EXACT, false, false,	\
 	CALC (mpfr_f_f, MPFR_FUNC))
 #define FUNC_mpfr_ff_f(NAME, MPFR_FUNC, EXACT)				\
   FUNC (NAME, ARGS2 (type_fp, type_fp), RET1 (type_fp), EXACT, false,	\
-	CALC (mpfr_ff_f, MPFR_FUNC))
+	false, CALC (mpfr_ff_f, MPFR_FUNC))
 #define FUNC_mpfr_if_f(NAME, MPFR_FUNC, EXACT)				\
   FUNC (NAME, ARGS2 (type_int, type_fp), RET1 (type_fp), EXACT, false,	\
-	CALC (mpfr_if_f, MPFR_FUNC))
+	false, CALC (mpfr_if_f, MPFR_FUNC))
 #define FUNC_mpc_c_f(NAME, MPFR_FUNC, EXACT)				\
   FUNC (NAME, ARGS2 (type_fp, type_fp), RET1 (type_fp), EXACT, true,	\
-	CALC (mpc_c_f, MPFR_FUNC))
+	false, CALC (mpc_c_f, MPFR_FUNC))
 #define FUNC_mpc_c_c(NAME, MPFR_FUNC, EXACT)				\
   FUNC (NAME, ARGS2 (type_fp, type_fp), RET2 (type_fp, type_fp), EXACT, \
-	true, CALC (mpc_c_c, MPFR_FUNC))
+	true, false, CALC (mpc_c_c, MPFR_FUNC))
 
 /* List of functions handled by this program.  */
 static test_function test_functions[] =
@@ -517,7 +527,8 @@ static test_function test_functions[] =
     FUNC_mpfr_f_f ("cos", mpfr_cos, false),
     FUNC_mpfr_f_f ("cosh", mpfr_cosh, false),
     FUNC ("cpow", ARGS4 (type_fp, type_fp, type_fp, type_fp),
-	  RET2 (type_fp, type_fp), false, true, CALC (mpc_cc_c, mpc_pow)),
+	  RET2 (type_fp, type_fp), false, true, false,
+	  CALC (mpc_cc_c, mpc_pow)),
     FUNC_mpc_c_c ("csin", mpc_sin, false),
     FUNC_mpc_c_c ("csinh", mpc_sinh, false),
     FUNC_mpc_c_c ("csqrt", mpc_sqrt, false),
@@ -529,12 +540,14 @@ static test_function test_functions[] =
     FUNC_mpfr_f_f ("exp10", mpfr_exp10, false),
     FUNC_mpfr_f_f ("exp2", mpfr_exp2, false),
     FUNC_mpfr_f_f ("expm1", mpfr_expm1, false),
+    FUNC ("fma", ARGS3 (type_fp, type_fp, type_fp), RET1 (type_fp),
+	  true, false, true, CALC (mpfr_fff_f, mpfr_fma)),
     FUNC_mpfr_ff_f ("hypot", mpfr_hypot, false),
     FUNC_mpfr_f_f ("j0", mpfr_j0, false),
     FUNC_mpfr_f_f ("j1", mpfr_j1, false),
     FUNC_mpfr_if_f ("jn", mpfr_jn, false),
     FUNC ("lgamma", ARGS1 (type_fp), RET2 (type_fp, type_int), false, false,
-	  CALC (mpfr_f_f1, mpfr_lgamma)),
+	  false, CALC (mpfr_f_f1, mpfr_lgamma)),
     FUNC_mpfr_f_f ("log", mpfr_log, false),
     FUNC_mpfr_f_f ("log10", mpfr_log10, false),
     FUNC_mpfr_f_f ("log1p", mpfr_log1p, false),
@@ -542,7 +555,7 @@ static test_function test_functions[] =
     FUNC_mpfr_ff_f ("pow", mpfr_pow, false),
     FUNC_mpfr_f_f ("sin", mpfr_sin, false),
     FUNC ("sincos", ARGS1 (type_fp), RET2 (type_fp, type_fp), false, false,
-	  CALC (mpfr_f_11, mpfr_sin_cos)),
+	  false, CALC (mpfr_f_11, mpfr_sin_cos)),
     FUNC_mpfr_f_f ("sinh", mpfr_sinh, false),
     FUNC_mpfr_f_f ("sqrt", mpfr_sqrt, true),
     FUNC_mpfr_f_f ("tan", mpfr_tan, false),
@@ -1092,16 +1105,19 @@ round_real (mpfr_t res[rm_num_modes],
 
 /* Handle the input argument at ARG (NUL-terminated), updating the
    lists of test inputs in IT accordingly.  NUM_PREV_ARGS arguments
-   are already in those lists.  The argument, of type GTYPE, comes
-   from file FILENAME, line LINENO.  */
+   are already in those lists.  If EXACT_ARGS, interpret a value given
+   as a floating-point constant exactly (it must be exact for some
+   supported format) rather than rounding up and down.  The argument,
+   of type GTYPE, comes from file FILENAME, line LINENO.  */
 
 static void
 handle_input_arg (const char *arg, input_test *it, size_t num_prev_args,
-		  generic_value_type gtype,
+		  generic_value_type gtype, bool exact_args,
 		  const char *filename, unsigned int lineno)
 {
   size_t num_values = 0;
   generic_value values[2 * fp_num_formats];
+  bool check_empty_list = false;
   switch (gtype)
     {
     case gtype_fp:
@@ -1125,6 +1141,8 @@ handle_input_arg (const char *arg, input_test *it, size_t num_prev_args,
 	    {
 	      mpfr_t tmp;
 	      char *ep;
+	      if (exact_args)
+		check_empty_list = true;
 	      mpfr_init (tmp);
 	      bool inexact = mpfr_strtofr (tmp, arg, &ep, 0, MPFR_RNDZ);
 	      if (*ep != 0 || !mpfr_number_p (tmp))
@@ -1136,7 +1154,9 @@ handle_input_arg (const char *arg, input_test *it, size_t num_prev_args,
 	      unsigned int exc_after[rm_num_modes];
 	      round_real (rounded, exc_before, exc_after, tmp, f);
 	      mpfr_clear (tmp);
-	      if (mpfr_number_p (rounded[rm_upward]))
+	      if (mpfr_number_p (rounded[rm_upward])
+		  && (!exact_args || mpfr_equal_p (rounded[rm_upward],
+						   rounded[rm_downward])))
 		{
 		  mpfr_init2 (extra_values[num_extra_values],
 			      fp_formats[f].mant_dig);
@@ -1144,7 +1164,7 @@ handle_input_arg (const char *arg, input_test *it, size_t num_prev_args,
 					  rounded[rm_upward], MPFR_RNDN));
 		  num_extra_values++;
 		}
-	      if (mpfr_number_p (rounded[rm_downward]))
+	      if (mpfr_number_p (rounded[rm_downward]) && !exact_args)
 		{
 		  mpfr_init2 (extra_values[num_extra_values],
 			      fp_formats[f].mant_dig);
@@ -1195,6 +1215,10 @@ handle_input_arg (const char *arg, input_test *it, size_t num_prev_args,
     default:
       abort ();
     }
+  if (check_empty_list && num_values == 0)
+    error_at_line (EXIT_FAILURE, 0, filename, lineno,
+		   "floating-point argument not exact for any format: '%s'",
+		   arg);
   assert (num_values > 0 && num_values <= ARRAY_SIZE (values));
   if (it->num_input_cases >= SIZE_MAX / num_values)
     error_at_line (EXIT_FAILURE, 0, filename, lineno, "too many input cases");
@@ -1319,7 +1343,7 @@ add_test (char *line, const char *filename, unsigned int lineno)
 	      *ep = 0;
 	      handle_input_arg (p, it, j,
 				generic_arg_ret_type (tf->arg_types[j]),
-				filename, lineno);
+				tf->exact_args, filename, lineno);
 	      *ep = c;
 	      p = ep + 1;
 	    }
@@ -1383,15 +1407,19 @@ read_input (const char *filename)
 }
 
 /* Calculate the generic results (round-to-zero with sticky bit) for
-   the function described by CALC, with inputs INPUTS.  */
+   the function described by CALC, with inputs INPUTS, if MODE is
+   rm_towardzero; for other modes, calculate results in that mode,
+   which must be exact zero results.  */
 
 static void
 calc_generic_results (generic_value *outputs, generic_value *inputs,
-		      const func_calc_desc *calc)
+		      const func_calc_desc *calc, rounding_mode mode)
 {
   bool inexact;
   int mpc_ternary;
   mpc_t ci1, ci2, co;
+  mpfr_rnd_t mode_mpfr = rounding_modes[mode].mpfr_mode;
+  mpc_rnd_t mode_mpc = rounding_modes[mode].mpc_mode;
 
   switch (calc->method)
     {
@@ -1400,7 +1428,9 @@ calc_generic_results (generic_value *outputs, generic_value *inputs,
       outputs[0].type = gtype_fp;
       mpfr_init (outputs[0].value.f);
       inexact = calc->func.mpfr_f_f (outputs[0].value.f, inputs[0].value.f,
-				     MPFR_RNDZ);
+				     mode_mpfr);
+      if (mode != rm_towardzero)
+	assert (!inexact && mpfr_zero_p (outputs[0].value.f));
       adjust_real (outputs[0].value.f, inexact);
       break;
 
@@ -1410,7 +1440,23 @@ calc_generic_results (generic_value *outputs, generic_value *inputs,
       outputs[0].type = gtype_fp;
       mpfr_init (outputs[0].value.f);
       inexact = calc->func.mpfr_ff_f (outputs[0].value.f, inputs[0].value.f,
-				      inputs[1].value.f, MPFR_RNDZ);
+				      inputs[1].value.f, mode_mpfr);
+      if (mode != rm_towardzero)
+	assert (!inexact && mpfr_zero_p (outputs[0].value.f));
+      adjust_real (outputs[0].value.f, inexact);
+      break;
+
+    case mpfr_fff_f:
+      assert (inputs[0].type == gtype_fp);
+      assert (inputs[1].type == gtype_fp);
+      assert (inputs[2].type == gtype_fp);
+      outputs[0].type = gtype_fp;
+      mpfr_init (outputs[0].value.f);
+      inexact = calc->func.mpfr_fff_f (outputs[0].value.f, inputs[0].value.f,
+				       inputs[1].value.f, inputs[2].value.f,
+				       mode_mpfr);
+      if (mode != rm_towardzero)
+	assert (!inexact && mpfr_zero_p (outputs[0].value.f));
       adjust_real (outputs[0].value.f, inexact);
       break;
 
@@ -1421,7 +1467,9 @@ calc_generic_results (generic_value *outputs, generic_value *inputs,
       mpfr_init (outputs[0].value.f);
       int i = 0;
       inexact = calc->func.mpfr_f_f1 (outputs[0].value.f, &i,
-				      inputs[0].value.f, MPFR_RNDZ);
+				      inputs[0].value.f, mode_mpfr);
+      if (mode != rm_towardzero)
+	assert (!inexact && mpfr_zero_p (outputs[0].value.f));
       adjust_real (outputs[0].value.f, inexact);
       mpz_init_set_si (outputs[1].value.i, i);
       break;
@@ -1434,7 +1482,9 @@ calc_generic_results (generic_value *outputs, generic_value *inputs,
       assert (mpz_fits_slong_p (inputs[0].value.i));
       long l = mpz_get_si (inputs[0].value.i);
       inexact = calc->func.mpfr_if_f (outputs[0].value.f, l,
-				      inputs[1].value.f, MPFR_RNDZ);
+				      inputs[1].value.f, mode_mpfr);
+      if (mode != rm_towardzero)
+	assert (!inexact && mpfr_zero_p (outputs[0].value.f));
       adjust_real (outputs[0].value.f, inexact);
       break;
 
@@ -1447,7 +1497,12 @@ calc_generic_results (generic_value *outputs, generic_value *inputs,
       int comb_ternary = calc->func.mpfr_f_11 (outputs[0].value.f,
 					       outputs[1].value.f,
 					       inputs[0].value.f,
-					       MPFR_RNDZ);
+					       mode_mpfr);
+      if (mode != rm_towardzero)
+	assert (((comb_ternary & 0x3) == 0
+		 && mpfr_zero_p (outputs[0].value.f))
+		|| ((comb_ternary & 0xc) == 0
+		    && mpfr_zero_p (outputs[1].value.f)));
       adjust_real (outputs[0].value.f, (comb_ternary & 0x3) != 0);
       adjust_real (outputs[1].value.f, (comb_ternary & 0xc) != 0);
       break;
@@ -1460,7 +1515,9 @@ calc_generic_results (generic_value *outputs, generic_value *inputs,
       mpc_init2 (ci1, internal_precision);
       assert_exact (mpc_set_fr_fr (ci1, inputs[0].value.f, inputs[1].value.f,
 				   MPC_RNDNN));
-      inexact = calc->func.mpc_c_f (outputs[0].value.f, ci1, MPFR_RNDZ);
+      inexact = calc->func.mpc_c_f (outputs[0].value.f, ci1, mode_mpfr);
+      if (mode != rm_towardzero)
+	assert (!inexact && mpfr_zero_p (outputs[0].value.f));
       adjust_real (outputs[0].value.f, inexact);
       mpc_clear (ci1);
       break;
@@ -1476,7 +1533,12 @@ calc_generic_results (generic_value *outputs, generic_value *inputs,
       mpc_init2 (co, internal_precision);
       assert_exact (mpc_set_fr_fr (ci1, inputs[0].value.f, inputs[1].value.f,
 				   MPC_RNDNN));
-      mpc_ternary = calc->func.mpc_c_c (co, ci1, MPC_RNDZZ);
+      mpc_ternary = calc->func.mpc_c_c (co, ci1, mode_mpc);
+      if (mode != rm_towardzero)
+	assert ((!MPC_INEX_RE (mpc_ternary)
+		 && mpfr_zero_p (mpc_realref (co)))
+		|| (!MPC_INEX_IM (mpc_ternary)
+		    && mpfr_zero_p (mpc_imagref (co))));
       assert_exact (mpfr_set (outputs[0].value.f, mpc_realref (co),
 			      MPFR_RNDN));
       assert_exact (mpfr_set (outputs[1].value.f, mpc_imagref (co),
@@ -1503,7 +1565,12 @@ calc_generic_results (generic_value *outputs, generic_value *inputs,
 				   MPC_RNDNN));
       assert_exact (mpc_set_fr_fr (ci2, inputs[2].value.f, inputs[3].value.f,
 				   MPC_RNDNN));
-      mpc_ternary = calc->func.mpc_cc_c (co, ci1, ci2, MPC_RNDZZ);
+      mpc_ternary = calc->func.mpc_cc_c (co, ci1, ci2, mode_mpc);
+      if (mode != rm_towardzero)
+	assert ((!MPC_INEX_RE (mpc_ternary)
+		 && mpfr_zero_p (mpc_realref (co)))
+		|| (!MPC_INEX_IM (mpc_ternary)
+		    && mpfr_zero_p (mpc_imagref (co))));
       assert_exact (mpfr_set (outputs[0].value.f, mpc_realref (co),
 			      MPFR_RNDN));
       assert_exact (mpfr_set (outputs[1].value.f, mpc_imagref (co),
@@ -1674,7 +1741,7 @@ output_for_one_input_case (FILE *fp, const char *filename, test_function *tf,
 	}
     }
   generic_value generic_outputs[MAX_NRET];
-  calc_generic_results (generic_outputs, inputs, &tf->calc);
+  calc_generic_results (generic_outputs, inputs, &tf->calc, rm_towardzero);
   bool ignore_output_long32[MAX_NRET] = { false };
   bool ignore_output_long64[MAX_NRET] = { false };
   for (size_t i = 0; i < tf->num_ret; i++)
@@ -1776,6 +1843,21 @@ output_for_one_input_case (FILE *fp, const char *filename, test_function *tf,
 			    |= (!mpfr_zero_p (generic_outputs[i].value.f)
 				&& mpfr_cmpabs (generic_outputs[i].value.f,
 						fp_formats[f].min) <= 0);
+			}
+		      /* If the result is an exact zero, the sign may
+			 depend on the rounding mode, so recompute it
+			 directly in that mode.  */
+		      if (mpfr_zero_p (all_res[i][m])
+			  && (all_exc_before[i][m] & (1U << exc_inexact)) == 0)
+			{
+			  generic_value outputs_rm[MAX_NRET];
+			  calc_generic_results (outputs_rm, inputs,
+						&tf->calc, m);
+			  assert_exact (mpfr_set (all_res[i][m],
+						  outputs_rm[i].value.f,
+						  MPFR_RNDN));
+			  for (size_t j = 0; j < tf->num_ret; j++)
+			    generic_value_free (&outputs_rm[j]);
 			}
 		    }
 		  break;
