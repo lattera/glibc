@@ -1,5 +1,16 @@
 2014-02-27  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add llrint power8
+	implementation.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llrint-power8.S: New file:
+	POWER8 llrint ifunc implementation.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llrint.c (__lllrint): Add
+	POWER8 implementation.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_llrint.S: New file:
+	POWER8 llrint implementation.
+
+2014-02-27  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add finite power8
 	implementation.
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_finite-power8.S: New file:
