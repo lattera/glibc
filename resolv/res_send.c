@@ -186,12 +186,12 @@ evNowTime(struct timespec *res) {
 static int		send_vc(res_state, const u_char *, int,
 				const u_char *, int,
 				u_char **, int *, int *, int, u_char **,
-				u_char **, int *, int *);
+				u_char **, int *, int *, int *);
 static int		send_dg(res_state, const u_char *, int,
 				const u_char *, int,
 				u_char **, int *, int *, int,
 				int *, int *, u_char **,
-				u_char **, int *, int *);
+				u_char **, int *, int *, int *);
 #ifdef DEBUG
 static void		Aerror(const res_state, FILE *, const char *, int,
 			       const struct sockaddr *);
@@ -343,7 +343,7 @@ int
 __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 		 const u_char *buf2, int buflen2,
 		 u_char *ans, int anssiz, u_char **ansp, u_char **ansp2,
-		 int *nansp2, int *resplen2)
+		 int *nansp2, int *resplen2, int *ansp2_malloced)
 {
   int gotsomewhere, terrno, try, v_circuit, resplen, ns, n;
 
@@ -546,7 +546,8 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 			try = statp->retry;
 			n = send_vc(statp, buf, buflen, buf2, buflen2,
 				    &ans, &anssiz, &terrno,
-				    ns, ansp, ansp2, nansp2, resplen2);
+				    ns, ansp, ansp2, nansp2, resplen2,
+				    ansp2_malloced);
 			if (n < 0)
 				return (-1);
 			if (n == 0 && (buf2 == NULL || *resplen2 == 0))
@@ -556,7 +557,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 			n = send_dg(statp, buf, buflen, buf2, buflen2,
 				    &ans, &anssiz, &terrno,
 				    ns, &v_circuit, &gotsomewhere, ansp,
-				    ansp2, nansp2, resplen2);
+				    ansp2, nansp2, resplen2, ansp2_malloced);
 			if (n < 0)
 				return (-1);
 			if (n == 0 && (buf2 == NULL || *resplen2 == 0))
@@ -646,7 +647,7 @@ res_nsend(res_state statp,
 	  const u_char *buf, int buflen, u_char *ans, int anssiz)
 {
   return __libc_res_nsend(statp, buf, buflen, NULL, 0, ans, anssiz,
-			  NULL, NULL, NULL, NULL);
+			  NULL, NULL, NULL, NULL, NULL);
 }
 libresolv_hidden_def (res_nsend)
 
@@ -657,7 +658,7 @@ send_vc(res_state statp,
 	const u_char *buf, int buflen, const u_char *buf2, int buflen2,
 	u_char **ansp, int *anssizp,
 	int *terrno, int ns, u_char **anscp, u_char **ansp2, int *anssizp2,
-	int *resplen2)
+	int *resplen2, int *ansp2_malloced)
 {
 	const HEADER *hp = (HEADER *) buf;
 	const HEADER *hp2 = (HEADER *) buf2;
@@ -823,6 +824,8 @@ send_vc(res_state statp,
 			}
 			*thisanssizp = MAXPACKET;
 			*thisansp = newp;
+			if (thisansp == ansp2)
+			  *ansp2_malloced = 1;
 			anhp = (HEADER *) newp;
 			len = rlen;
 		} else {
@@ -992,7 +995,7 @@ send_dg(res_state statp,
 	const u_char *buf, int buflen, const u_char *buf2, int buflen2,
 	u_char **ansp, int *anssizp,
 	int *terrno, int ns, int *v_circuit, int *gotsomewhere, u_char **anscp,
-	u_char **ansp2, int *anssizp2, int *resplen2)
+	u_char **ansp2, int *anssizp2, int *resplen2, int *ansp2_malloced)
 {
 	const HEADER *hp = (HEADER *) buf;
 	const HEADER *hp2 = (HEADER *) buf2;
@@ -1238,6 +1241,8 @@ send_dg(res_state statp,
 			if (newp != NULL) {
 				*anssizp = MAXPACKET;
 				*thisansp = ans = newp;
+				if (thisansp == ansp2)
+				  *ansp2_malloced = 1;
 			}
 		}
 		HEADER *anhp = (HEADER *) *thisansp;

@@ -621,7 +621,7 @@ gethostbyname2(name, af)
 	buf.buf = origbuf = (querybuf *) alloca (1024);
 
 	if ((n = __libc_res_nsearch(&_res, name, C_IN, type, buf.buf->buf, 1024,
-				    &buf.ptr, NULL, NULL, NULL)) < 0) {
+				    &buf.ptr, NULL, NULL, NULL, NULL)) < 0) {
 		if (buf.buf != origbuf)
 			free (buf.buf);
 		Dprintf("res_nsearch failed (%d)\n", n);
@@ -716,12 +716,12 @@ gethostbyaddr(addr, len, af)
 	buf.buf = orig_buf = (querybuf *) alloca (1024);
 
 	n = __libc_res_nquery(&_res, qbuf, C_IN, T_PTR, buf.buf->buf, 1024,
-			      &buf.ptr, NULL, NULL, NULL);
+			      &buf.ptr, NULL, NULL, NULL, NULL);
 	if (n < 0 && af == AF_INET6 && (_res.options & RES_NOIP6DOTINT) == 0) {
 		strcpy(qp, "ip6.int");
 		n = __libc_res_nquery(&_res, qbuf, C_IN, T_PTR, buf.buf->buf,
 				      buf.buf != orig_buf ? MAXPACKET : 1024,
-				      &buf.ptr, NULL, NULL, NULL);
+				      &buf.ptr, NULL, NULL, NULL, NULL);
 	}
 	if (n < 0) {
 		if (buf.buf != orig_buf)

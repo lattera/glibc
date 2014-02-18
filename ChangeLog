@@ -1,3 +1,40 @@
+2014-02-18  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #16574]
+	* resolv/res_send.c (send_vc): Add parameter ansp2_malloced.
+	Store non-zero if the second buffer was newly allocated.
+	(send_dg): Likewise.
+	(__libc_res_nsend): Add parameter ansp2_malloced and pass it down
+	to send_vc and send_dg.
+	(res_nsend): Pass NULL for ansp2_malloced.
+	* resolv/res_query.c (__libc_res_nquery): Add parameter
+	answerp2_malloced and pass it down to __libc_res_nsend.
+	(res_nquery): Pass additional NULL to __libc_res_nquery.
+	(__libc_res_nsearch): Add parameter answerp2_malloced and pass it
+	down to __libc_res_nquery and __libc_res_nquerydomain.  Deallocate
+	second answer buffer if answerp2_malloced was set.
+	(res_nsearch): Pass additional NULL to __libc_res_nsearch.
+	(__libc_res_nquerydomain): Add parameter
+	answerp2_malloced and pass it down to __libc_res_nquery.
+	(res_nquerydomain): Pass additional NULL to
+	__libc_res_nquerydomain.
+	* resolv/nss_dns/dns-network.c (_nss_dns_getnetbyname_r): Pass
+	additional NULL to __libc_res_nsend and __libc_res_nquery.
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyname3_r): Pass
+	additional NULL to __libc_res_nsearch.
+	(_nss_dns_gethostbyname4_r): Revert last change.  Use new
+	parameter of __libc_res_nsearch to check for separately allocated
+	second buffer.
+	(_nss_dns_gethostbyaddr2_r): Pass additional NULL to
+	__libc_res_nquery.
+	* resolv/nss_dns/dns-canon.c (_nss_dns_getcanonname_r): Pass
+	additional NULL to __libc_res_nquery.
+	* resolv/gethnamaddr.c (gethostbyname2): Pass additional NULL to
+	__libc_res_nsearch.
+	(gethostbyaddr): Pass additional NULL to __libc_res_nquery.
+	* include/resolv.h: Update prototypes of __libc_res_nquery,
+	__libc_res_nsearch, __libc_res_nsend.
+
 2014-02-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Add tests of fma.
