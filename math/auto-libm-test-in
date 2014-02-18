@@ -61,8 +61,9 @@ asin -0x0.ffffffffffffp0
 asin 0x0.ffffffffffffffffp0
 asin -0x0.ffffffffffffffffp0
 # Bug 16351: underflow exception may be missing.
+# Bug 16599: spurious underflow may occur.
 asin min missing-underflow
-asin -min missing-underflow
+asin -min missing-underflow spurious-underflow:dbl-64:x86
 asin min_subnorm missing-underflow
 asin -min_subnorm missing-underflow
 

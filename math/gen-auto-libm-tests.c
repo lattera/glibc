@@ -987,7 +987,14 @@ adjust_real (mpfr_t r, bool inexact)
       mpz_t tmp;
       mpz_init (tmp);
       mpfr_exp_t e = mpfr_get_z_2exp (tmp, r);
-      mpz_setbit (tmp, 0);
+      if (mpz_sgn (tmp) < 0)
+	{
+	  mpz_neg (tmp, tmp);
+	  mpz_setbit (tmp, 0);
+	  mpz_neg (tmp, tmp);
+	}
+      else
+	mpz_setbit (tmp, 0);
       assert_exact (mpfr_set_z_2exp (r, tmp, e, MPFR_RNDN));
       mpz_clear (tmp);
     }

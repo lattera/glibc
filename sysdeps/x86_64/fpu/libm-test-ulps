@@ -123,7 +123,45 @@ double: 1
 Test "asin_downward (-0x1p+0)":
 double: 1
 idouble: 1
+Test "asin_downward (-0x2p-16384)":
+ildouble: 1
+ldouble: 1
+Test "asin_downward (-0x4p-1024)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "asin_downward (-0x4p-1076)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "asin_downward (-0x4p-128)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "asin_downward (-0x4p-16384)":
+ildouble: 1
+ldouble: 1
+Test "asin_downward (-0x8p-152)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "asin_downward (-0x8p-16448)":
+ildouble: 1
+ldouble: 1
 Test "asin_downward (-0x8p-4)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "asin_downward (-0x8p-972)":
 double: 1
 idouble: 1
 ildouble: 1
@@ -5127,6 +5165,9 @@ ldouble: 1
 Test "Imaginary part of: ccos (0x4p-1076 + 0x5.ap+8 i)":
 double: 1
 idouble: 1
+Test "Imaginary part of: ccos (0x4p-16328 + 0x1p-120 i)":
+ildouble: 1
+ldouble: 1
 Test "Real part of: ccos (0xcp-4 + 0x1.4p+0 i)":
 double: 1
 float: 1
@@ -8485,6 +8526,13 @@ double: 2
 idouble: 2
 ildouble: 2
 ldouble: 2
+Test "Imaginary part of: ctan_downward (-0xc.35p+12 - 0xc.35p+12 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "Real part of: ctan_downward (0x1.921fb4p+0 + +0 i)":
 float: 1
 ifloat: 1
@@ -8629,6 +8677,13 @@ float: 1
 idouble: 2
 ifloat: 1
 Test "Imaginary part of: ctan_downward (0x8p+16380 + 0x1p+0 i)":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan_downward (0xc.35p+12 - 0xc.35p+12 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "Real part of: ctan_downward (0xcp-4 + 0x1.4p+0 i)":
@@ -9477,6 +9532,20 @@ double: 1
 float: 3
 idouble: 1
 ifloat: 3
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_downward (-0xc.35p+12 + 0xc.35p+12 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctanh_downward (-0xc.35p+12 - 0xc.35p+12 i)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: ctanh_downward (0x1.63p+8 + 0x1p+0 i)":

@@ -1,3 +1,13 @@
+2014-02-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/gen-auto-libm-tests.c (adjust_real): Ensure integers are
+	non-negative before setting low bit.
+	* math/auto-libm-test-in: Mark one asin test possibly having
+	spurious underflow.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2014-02-17  David Holsgrove <david.holsgrove@xilinx.com>
 
         * sysdeps/microblaze: Move directory from ports/sysdeps/microblaze.
