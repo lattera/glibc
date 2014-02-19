@@ -1,3 +1,11 @@
+2014-02-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/auto-libm-test-in: Add tests of clog10.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (clog10_test_data): Use AUTO_TESTS_c_c.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2014-02-18  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #16574]
