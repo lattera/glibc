@@ -41,6 +41,11 @@
 # define __ASSUME_RECVMMSG_SYSCALL	1
 #endif
 
+/* Support for the sendmmsg syscall was added in 3.1.  */
+#if __LINUX_KERNEL_VERSION >= 0x030100
+# define __ASSUME_SENDMMSG_SYSCALL	1
+#endif
+
 #include_next <kernel-features.h>
 
 /* The n32 syscall ABI did not have a getdents64 syscall until

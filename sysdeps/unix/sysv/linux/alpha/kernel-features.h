@@ -47,9 +47,10 @@
 # define __ASSUME_RECVMMSG_SYSCALL       1
 #endif
 
-/* Support for accept4 was added for alpha in 3.2.  */
+/* Support for accept4 and sendmmsg was added for alpha in 3.2.  */
 #if __LINUX_KERNEL_VERSION >= 0x030200
 # define __ASSUME_ACCEPT4_SYSCALL      1
+# define __ASSUME_SENDMMSG_SYSCALL     1
 #endif
 
 #include_next <kernel-features.h>

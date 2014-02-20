@@ -1,5 +1,48 @@
 2014-02-20  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16611]
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x030000 && __ASSUME_SOCKETCALL]
+	(__ASSUME_SENDMMSG_SOCKETCALL): Define.
+	[__LINUX_KERNEL_VERSION >= 0x030000 && (__i386__ || __x86_64__ ||
+	__powerpc__ || __sh__ || __sparc__)] (__ASSUME_SENDMMSG_SYSCALL):
+	Likewise.
+	[__i386__ || __powerpc__ || __sh__ || __sparc__]
+	(__ASSUME_SENDMMSG_SYSCALL_WITH_SOCKETCALL): Likewise.
+	[__ASSUME_SENDMMSG_SOCKETCALL || __ASSUME_SENDMMSG_SYSCALL]
+	(__ASSUME_SENDMMSG): Define instead of using previous
+	[__LINUX_KERNEL_VERSION >= 0x020627] condition.
+	* sysdeps/unix/sysv/linux/aarch64/kernel-features.h
+	(__ASSUME_SENDMMSG_SYSCALL): Define.
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x030200] (__ASSUME_SENDMMSG_SYSCALL):
+	Likewise.
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x030000] (__ASSUME_SENDMMSG_SYSCALL):
+	Likewise.
+	* sysdeps/unix/sysv/linux/ia64/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x030000] (__ASSUME_SENDMMSG_SYSCALL):
+	Likewise.
+	* sysdeps/unix/sysv/linux/internal_sendmmsg.S [__ASSUME_SOCKETCALL
+	&& !__ASSUME_SENDMMSG_SYSCALL_WITH_SOCKETCALL &&
+	!__ASSUME_SENDMMSG_SYSCALL] (__NR_sendmmsg): Undefine.
+	[__ASSUME_SENDMMSG]: Change conditionals to
+	[__ASSUME_SENDMMSG_SOCKETCALL].
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x030300] (__ASSUME_SENDMMSG_SYSCALL):
+	Define.
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x030100] (__ASSUME_SENDMMSG_SYSCALL):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sendmmsg.c [__ASSUME_SOCKETCALL &&
+	!__ASSUME_SENDMMSG_SYSCALL_WITH_SOCKETCALL &&
+	!__ASSUME_SENDMMSG_SYSCALL] (__NR_sendmmsg): Undefine.
+	[!__ASSUME_SENDMMSG]: Change conditional to
+	[!__ASSUME_SENDMMSG_SOCKETCALL].
+	* sysdeps/unix/sysv/linux/tile/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x030000] (__ASSUME_SENDMMSG_SYSCALL):
+	Define.
+
 	[BZ #16610]
 	* sysdeps/unix/sysv/linux/kernel-features.h
 	[__LINUX_KERNEL_VERSION >= 0x020621 && __ASSUME_SOCKETCALL]

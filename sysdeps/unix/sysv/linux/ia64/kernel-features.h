@@ -52,6 +52,11 @@
 # define __ASSUME_RECVMMSG_SYSCALL	1
 #endif
 
+/* Support for the sendmmsg syscall was added in 3.0.  */
+#if __LINUX_KERNEL_VERSION >= 0x030000
+# define __ASSUME_SENDMMSG_SYSCALL	1
+#endif
+
 /* Support for the accept4 syscall was added in 3.3.  */
 #if __LINUX_KERNEL_VERSION >= 0x030300
 # define __ASSUME_ACCEPT4_SYSCALL	1

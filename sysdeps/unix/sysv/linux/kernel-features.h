@@ -271,8 +271,25 @@
 # define __ASSUME_PRLIMIT64	1
 #endif
 
-/* sendmmsg is available in 2.6.39.  */
-#if __LINUX_KERNEL_VERSION >= 0x020627
+/* Support for sendmmsg functionality was added in 3.0.  The macros
+   defined correspond to those for accept4 and recvmmsg.  */
+#if __LINUX_KERNEL_VERSION >= 0x030000 && defined __ASSUME_SOCKETCALL
+# define __ASSUME_SENDMMSG_SOCKETCALL	1
+#endif
+
+/* The sendmmsg syscall was added for i386, x86_64, PowerPC, SH and
+   SPARC in 3.0.  */
+#if __LINUX_KERNEL_VERSION >= 0x030000					\
+    && (defined __i386__ || defined __x86_64__ || defined __powerpc__	\
+	|| defined __sh__ || defined __sparc__)
+# define __ASSUME_SENDMMSG_SYSCALL	1
+#endif
+#if defined __i386__ || defined __powerpc__ || defined __sh__ \
+    || defined __sparc__
+# define __ASSUME_SENDMMSG_SYSCALL_WITH_SOCKETCALL	1
+#endif
+
+#if defined __ASSUME_SENDMMSG_SOCKETCALL || defined __ASSUME_SENDMMSG_SYSCALL
 # define __ASSUME_SENDMMSG	1
 #endif
 

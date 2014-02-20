@@ -41,6 +41,11 @@
 # define __ASSUME_ACCEPT4_SYSCALL	1
 #endif
 
+/* Support for the sendmmsg syscall was added in 3.0.  */
+#if __LINUX_KERNEL_VERSION >= 0x030000
+# define __ASSUME_SENDMMSG_SYSCALL	1
+#endif
+
 #include_next <kernel-features.h>
 
 /* Support for pselect6, ppoll and epoll_pwait was added in 2.6.32.  */

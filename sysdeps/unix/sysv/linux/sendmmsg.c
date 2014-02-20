@@ -23,6 +23,14 @@
 #include <sys/syscall.h>
 #include <kernel-features.h>
 
+/* Do not use the sendmmsg syscall on socketcall architectures unless
+   it was added at the same time as the socketcall support or can be
+   assumed to be present.  */
+#if defined __ASSUME_SOCKETCALL \
+    && !defined __ASSUME_SENDMMSG_SYSCALL_WITH_SOCKETCALL \
+    && !defined __ASSUME_SENDMMSG_SYSCALL
+# undef __NR_sendmmsg
+#endif
 
 #ifdef __NR_sendmmsg
 int
@@ -42,7 +50,7 @@ __sendmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags)
 libc_hidden_def (__sendmmsg)
 weak_alias (__sendmmsg, sendmmsg)
 #elif defined __NR_socketcall
-# ifndef __ASSUME_SENDMMSG
+# ifndef __ASSUME_SENDMMSG_SOCKETCALL
 extern int __internal_sendmmsg (int fd, struct mmsghdr *vmessages,
 				unsigned int vlen, int flags)
      attribute_hidden;
@@ -86,7 +94,8 @@ __sendmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags)
 libc_hidden_def (__sendmmsg)
 weak_alias (__sendmmsg, sendmmsg)
 # else
-/* When __ASSUME_SENDMMSG sendmmsg is defined in internal_sendmmsg.S.  */
+/* When __ASSUME_SENDMMSG_SOCKETCALL sendmmsg is defined in
+   internal_sendmmsg.S.  */
 # endif
 #else
 # include <socket/sendmmsg.c>

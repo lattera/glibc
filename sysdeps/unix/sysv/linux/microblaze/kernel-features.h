@@ -36,4 +36,9 @@
 #endif
 #define __ASSUME_RECVMMSG_SYSCALL_WITH_SOCKETCALL      1
 
+/* Support for the sendmmsg syscall was added in 3.3.  */
+#if __LINUX_KERNEL_VERSION >= 0x030300
+# define __ASSUME_SENDMMSG_SYSCALL       1
+#endif
+
 #include_next <kernel-features.h>
