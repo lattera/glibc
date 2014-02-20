@@ -1,5 +1,56 @@
 2014-02-20  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16609]
+	* sysdeps/unix/sysv/linux/kernel-features.h [__i386__ ||
+	__powerpc__ || __s390__ || __sh__ || __sparc__]
+	(__ASSUME_SOCKETCALL): Define.
+	[__LINUX_KERNEL_VERSION && __ASSUME_SOCKETCALL]
+	(__ASSUME_ACCEPT4_SOCKETCALL): Likewise.
+	[(__LINUX_KERNEL_VERSION >= 0x02061c && (__x86_64__ || __sparc__))
+	|| (__LINUX_KERNEL_VERSION >= 0x020625 && (__powerpc__ ||
+	__sh__))] (__ASSUME_ACCEPT4_SYSCALL): Likewise.
+	[__sparc__] (__ASSUME_ACCEPT4_SYSCALL_WITH_SOCKETCALL): Likewise.
+	[__ASSUME_ACCEPT4_SOCKETCALL || __ASSUME_ACCEPT4_SYSCALL]
+	(__ASSUME_ACCEPT4): Define instead of using previous
+	[__LINUX_KERNEL_VERSION >= 0x02061c && (__i386__ || __x86_64__ ||
+	__powerpc__ || __sparc__ || __s390__)] condition.
+	* sysdeps/unix/sysv/linux/aarch64/kernel-features.h
+	(__ASSUME_ACCEPT4): Change to __ASSUME_ACCEPT4_SYSCALL.
+	* sysdeps/unix/sysv/linux/accept4.c [__ASSUME_SOCKETCALL &&
+	!__ASSUME_ACCEPT4_SYSCALL_WITH_SOCKETCALL &&
+	!__ASSUME_ACCEPT4_SYSCALL] (__NR_accept4): Undefine.
+	[!__ASSUME_ACCEPT4]: Change condition to
+	[!__ASSUME_ACCEPT4_SOCKETCALL].
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
+	(__ASSUME_ACCEPT4): Change to __ASSUME_ACCEPT4_SYSCALL.  Correct
+	condition to [__LINUX_KERNEL_VERSION >= 0x030200].
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x020624] (__ASSUME_ACCEPT4): Change to
+	__ASSUME_ACCEPT4_SYSCALL.
+	* sysdeps/unix/sysv/linux/i386/accept4.S [__ASSUME_ACCEPT4]:
+	Change conditions to [__ASSUME_ACCEPT4_SOCKETCALL].
+	* sysdeps/unix/sysv/linux/ia64/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x030300] (__ASSUME_ACCEPT4): Change to
+	__ASSUME_ACCEPT4_SYSCALL.
+	* sysdeps/unix/sysv/linux/internal_accept4.S [__ASSUME_SOCKETCALL
+	&& !__ASSUME_ACCEPT4_SYSCALL_WITH_SOCKETCALL &&
+	!__ASSUME_ACCEPT4_SYSCALL] (__NR_accept4): Undefine.
+	[__ASSUME_ACCEPT4]: Change condition to
+	[__ASSUME_ACCEPT4_SOCKETCALL].
+	* sysdeps/unix/sysv/linux/m68k/kernel-features.h
+	(__ASSUME_SOCKETCALL): Define.
+	[__LINUX_KERNEL_VERSION >= 0x02061c] (__ASSUME_ACCEPT4): Remove.
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	(__ASSUME_SOCKETCALL): Define.
+	(__ASSUME_ACCEPT4): Remove.
+	[__LINUX_KERNEL_VERSION >= 0x020621] (__ASSUME_ACCEPT4_SYSCALL):
+	Define.
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x02061f] (__ASSUME_ACCEPT4_SYSCALL):
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/kernel-features.h
+	(__ASSUME_ACCEPT4): Change to __ASSUME_ACCEPT4_SYSCALL.
+
 	* sysdeps/unix/sysv/linux/arm/bits/hwcap.h (HWCAP_ARM_VFPD32): New
 	macro.
 	(HWCAP_ARM_LPAE): Likewise.

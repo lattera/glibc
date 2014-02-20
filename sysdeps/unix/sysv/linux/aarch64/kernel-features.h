@@ -24,7 +24,7 @@
 /* AArch64 support starts with 3.7.0, guaranteeing many kernel
    features.  */
 
-#define __ASSUME_ACCEPT4                1
+#define __ASSUME_ACCEPT4_SYSCALL        1
 #define __ASSUME_DUP3                   1
 #define __ASSUME_EVENTFD2		1
 #define __ASSUME_IN_NONBLOCK            1

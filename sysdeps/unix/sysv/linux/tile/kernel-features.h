@@ -25,7 +25,7 @@
 #define __ASSUME_PIPE2			1
 #define __ASSUME_EVENTFD2		1
 #define __ASSUME_SIGNALFD4		1
-#define __ASSUME_ACCEPT4		1
+#define __ASSUME_ACCEPT4_SYSCALL	1
 #define __ASSUME_DUP3			1
 
 #include_next <kernel-features.h>

@@ -23,7 +23,7 @@
 #define EINVAL	22
 #define ENOSYS	38
 
-#ifdef __ASSUME_ACCEPT4
+#ifdef __ASSUME_ACCEPT4_SOCKETCALL
 # define errlabel SYSCALL_ERROR_LABEL
 #else
 # define errlabel .Lerr
@@ -114,7 +114,7 @@ ENTRY (__libc_accept4)
 	ret
 #endif
 
-#ifndef __ASSUME_ACCEPT4
+#ifndef __ASSUME_ACCEPT4_SOCKETCALL
 	/* The kernel returns -EINVAL for unknown socket operations.
 	   We need to convert that error to an ENOSYS error.  */
 .Lerr:	cmpl $-EINVAL, %eax

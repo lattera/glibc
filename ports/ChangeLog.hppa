@@ -1,3 +1,10 @@
+2014-02-20  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16609]
+	* sysdeps/unix/sysv/linux/hppa/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x020622] (__ASSUME_ACCEPT4_SYSCALL):
+	Define.
+
 2014-02-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/hppa/bits/mman.h [__USE_BSD]: Change

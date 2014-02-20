@@ -16,6 +16,9 @@
    <http://www.gnu.org/licenses/>.  */
 
 
+/* MicroBlaze uses socketcall.  */
+#define __ASSUME_SOCKETCALL	1
+
 /* MicroBlaze glibc support starts with 2.6.30, guaranteeing many kernel features.  */
 #define __ASSUME_UTIMES         1
 #define __ASSUME_O_CLOEXEC      1
@@ -24,7 +27,11 @@
 #define __ASSUME_PIPE2          1
 #define __ASSUME_EVENTFD2       1
 #define __ASSUME_SIGNALFD4      1
-#define __ASSUME_ACCEPT4        1
 #define __ASSUME_DUP3           1
+
+/* Support for the accept4 syscall was added in 2.6.33.  */
+#if __LINUX_KERNEL_VERSION >= 0x020621
+# define __ASSUME_ACCEPT4_SYSCALL        1
+#endif
 
 #include_next <kernel-features.h>

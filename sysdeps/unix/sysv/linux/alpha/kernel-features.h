@@ -42,9 +42,9 @@
 # define __ASSUME_SIGNALFD4 1
 #endif
 
-/* Support for accept4 was added for alpha after 2.6.33-rc1.  */
-#if __LINUX_KERNEL_VERSION >= 0x020621
-# define __ASSUME_ACCEPT4      1
+/* Support for accept4 was added for alpha in 3.2.  */
+#if __LINUX_KERNEL_VERSION >= 0x030200
+# define __ASSUME_ACCEPT4_SYSCALL      1
 #endif
 
 #include_next <kernel-features.h>

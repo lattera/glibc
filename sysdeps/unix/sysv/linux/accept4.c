@@ -24,6 +24,14 @@
 #include <sys/syscall.h>
 #include <kernel-features.h>
 
+/* Do not use the accept4 syscall on socketcall architectures unless
+   it was added at the same time as the socketcall support or can be
+   assumed to be present.  */
+#if defined __ASSUME_SOCKETCALL \
+    && !defined __ASSUME_ACCEPT4_SYSCALL_WITH_SOCKETCALL \
+    && !defined __ASSUME_ACCEPT4_SYSCALL
+# undef __NR_accept4
+#endif
 
 #ifdef __NR_accept4
 int
@@ -42,7 +50,7 @@ accept4 (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len, int flags)
   return result;
 }
 #elif defined __NR_socketcall
-# ifndef __ASSUME_ACCEPT4
+# ifndef __ASSUME_ACCEPT4_SOCKETCALL
 extern int __internal_accept4 (int fd, __SOCKADDR_ARG addr,
 			       socklen_t *addr_len, int flags)
      attribute_hidden;
@@ -83,7 +91,8 @@ accept4 (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len, int flags)
   return -1;
 }
 # else
-/* When __ASSUME_ACCEPT4 accept4 is defined in internal_accept4.S.  */
+/* When __ASSUME_ACCEPT4_SOCKETCALL accept4 is defined in
+   internal_accept4.S.  */
 # endif
 #else
 int

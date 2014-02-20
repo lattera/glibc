@@ -30,4 +30,9 @@
 /* PA-RISC 2.6.9 kernels had the first LWS CAS support */
 #define __ASSUME_LWS_CAS		1
 
+/* Support for the accept4 syscall was added in 2.6.34.  */
+#if __LINUX_KERNEL_VERSION >= 0x020622
+# define __ASSUME_ACCEPT4_SYSCALL	1
+#endif
+
 #include_next <kernel-features.h>

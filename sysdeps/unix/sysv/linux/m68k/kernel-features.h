@@ -17,6 +17,9 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+/* m68k uses socketcall.  */
+#define __ASSUME_SOCKETCALL	1
+
 /* Many syscalls were added in 2.6.10 for m68k.  */
 #define __ASSUME_UTIMES	1
 
@@ -33,11 +36,6 @@
 # define __ASSUME_EVENTFD2	1
 # define __ASSUME_SIGNALFD4	1
 # define __ASSUME_DUP3		1
-#endif
-
-/* Support for the accept4 syscall was added in 2.6.28.  */
-#if __LINUX_KERNEL_VERSION >= 0x02061c
-# define __ASSUME_ACCEPT4	1
 #endif
 
 #include_next <kernel-features.h>
