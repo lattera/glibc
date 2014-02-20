@@ -27,6 +27,7 @@
 #define __ASSUME_SIGNALFD4		1
 #define __ASSUME_ACCEPT4_SYSCALL	1
 #define __ASSUME_DUP3			1
+#define __ASSUME_RECVMMSG_SYSCALL	1
 
 #include_next <kernel-features.h>
 

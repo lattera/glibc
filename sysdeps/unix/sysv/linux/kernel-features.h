@@ -233,8 +233,25 @@
 # define __ASSUME_F_GETOWN_EX	1
 #endif
 
-/* Support for the recvmmsg syscall was added in 2.6.33.  */
-#if __LINUX_KERNEL_VERSION >= 0x020621
+/* Support for recvmmsg functionality was added in 2.6.33.  The macros
+   defined correspond to those for accept4.  */
+#if __LINUX_KERNEL_VERSION >= 0x020621 && defined __ASSUME_SOCKETCALL
+# define __ASSUME_RECVMMSG_SOCKETCALL	1
+#endif
+
+/* The recvmmsg syscall was added for i386, x86_64 and SPARC in
+   2.6.33, and for PowerPC and SH in 2.6.37.  */
+#if (__LINUX_KERNEL_VERSION >= 0x020621			\
+     && (defined __i386__ || defined __x86_64__ || defined __sparc__))	\
+    || (__LINUX_KERNEL_VERSION >= 0x020625		\
+	&& (defined __powerpc__ || defined __sh__))
+# define __ASSUME_RECVMMSG_SYSCALL	1
+#endif
+#if defined __i386__ || defined __sparc__
+# define __ASSUME_RECVMMSG_SYSCALL_WITH_SOCKETCALL	1
+#endif
+
+#if defined __ASSUME_RECVMMSG_SOCKETCALL || defined __ASSUME_RECVMMSG_SYSCALL
 # define __ASSUME_RECVMMSG	1
 #endif
 

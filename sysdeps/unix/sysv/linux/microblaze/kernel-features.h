@@ -29,9 +29,11 @@
 #define __ASSUME_SIGNALFD4      1
 #define __ASSUME_DUP3           1
 
-/* Support for the accept4 syscall was added in 2.6.33.  */
+/* Support for the accept4 and recvmmsg syscalls was added in 2.6.33.  */
 #if __LINUX_KERNEL_VERSION >= 0x020621
 # define __ASSUME_ACCEPT4_SYSCALL        1
+# define __ASSUME_RECVMMSG_SYSCALL       1
 #endif
+#define __ASSUME_RECVMMSG_SYSCALL_WITH_SOCKETCALL      1
 
 #include_next <kernel-features.h>
