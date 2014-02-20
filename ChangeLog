@@ -1,3 +1,14 @@
+2014-02-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/bits/hwcap.h (HWCAP_ARM_VFPD32): New
+	macro.
+	(HWCAP_ARM_LPAE): Likewise.
+	(HWCAP_ARM_EVTSTRM): Likewise.
+	* sysdeps/unix/sysv/linux/arm/dl-procinfo.c (_dl_arm_cap_flags):
+	Add vpfd32, lpae and evtstrm.
+	* sysdeps/unix/sysv/linux/arm/dl-procinfo.h (_DL_HWCAP_COUNT):
+	Increase to 22.
+
 2014-02-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Add tests of clog10.
