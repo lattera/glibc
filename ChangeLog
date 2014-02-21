@@ -1,3 +1,7 @@
+2014-02-21  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* benchtests/bench-strrchr.c (do_test): Fix minor formatting.
+
 2014-02-21  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* benchtests/bench-strrchr.c: Print length instead of position.

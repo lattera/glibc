@@ -97,7 +97,7 @@ do_test (size_t align, size_t pos, size_t len, int seek_char, int max_char)
   CHAR *buf = (CHAR *) buf1;
 
   align &= 7;
-  if ( (align + len) * sizeof(CHAR) >= page_size)
+  if ((align + len) * sizeof (CHAR) >= page_size)
     return;
 
   for (i = 0; i < len; ++i)
@@ -122,7 +122,7 @@ do_test (size_t align, size_t pos, size_t len, int seek_char, int max_char)
   else
     result = NULL;
 
-  printf ("Length %4zd, alignment in bytes %2zd:", len, align * sizeof(CHAR));
+  printf ("Length %4zd, alignment in bytes %2zd:", len, align * sizeof (CHAR));
 
   FOR_EACH_IMPL (impl, 0)
     do_one_test (impl, (CHAR *) (buf + align), seek_char, result);
