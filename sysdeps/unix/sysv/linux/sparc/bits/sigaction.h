@@ -58,7 +58,7 @@ struct sigaction
 #if defined __USE_UNIX98 || defined __USE_MISC
 # define SA_ONSTACK   0x00000001 /* Use signal stack by using `sa_restorer'. */
 #endif
-#if defined __USE_UNIX98 || defined __USE_MISC || defined __USE_XOPEN2K8
+#if defined __USE_UNIX98 || defined __USE_XOPEN2K8
 # define SA_RESTART   0x00000002 /* Restart syscall on signal return.  */
 # define SA_INTERRUPT 0x00000010 /* Historical no-op.  */
 # define SA_NOMASK    0x00000020 /* Don't automatically block the signal when

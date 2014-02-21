@@ -58,7 +58,7 @@ __END_NAMESPACE_STD
 extern void *memccpy (void *__restrict __dest, const void *__restrict __src,
 		      int __c, size_t __n)
      __THROW __nonnull ((1, 2));
-#endif /* SVID.  */
+#endif /* Misc || X/Open.  */
 
 
 __BEGIN_NAMESPACE_STD
@@ -170,8 +170,7 @@ extern size_t strxfrm_l (char *__dest, const char *__src, size_t __n,
 			 __locale_t __l) __THROW __nonnull ((2, 4));
 #endif
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED \
-    || defined __USE_XOPEN2K8
+#if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
 /* Duplicate S, returning an identical malloc'd string.  */
 extern char *strdup (const char *__s)
      __THROW __attribute_malloc__ __nonnull ((1));
@@ -355,7 +354,7 @@ extern char *__strtok_r (char *__restrict __s,
 			 const char *__restrict __delim,
 			 char **__restrict __save_ptr)
      __THROW __nonnull ((2, 3));
-#if defined __USE_POSIX || defined __USE_MISC
+#ifdef __USE_POSIX
 extern char *strtok_r (char *__restrict __s, const char *__restrict __delim,
 		       char **__restrict __save_ptr)
      __THROW __nonnull ((2, 3));
@@ -412,7 +411,7 @@ __BEGIN_NAMESPACE_STD
 /* Return a string describing the meaning of the `errno' code in ERRNUM.  */
 extern char *strerror (int __errnum) __THROW;
 __END_NAMESPACE_STD
-#if defined __USE_XOPEN2K || defined __USE_MISC
+#ifdef __USE_XOPEN2K
 /* Reentrant version of `strerror'.
    There are 2 flavors of `strerror_r', GNU which returns the string
    and may or may not use the supplied temporary buffer and POSIX one
@@ -537,7 +536,7 @@ extern int strcasecmp (const char *__s1, const char *__s2)
 /* Compare no more than N chars of S1 and S2, ignoring case.  */
 extern int strncasecmp (const char *__s1, const char *__s2, size_t __n)
      __THROW __attribute_pure__ __nonnull ((1, 2));
-#endif /* Use BSD.  */
+#endif /* Use misc.  */
 
 #ifdef	__USE_GNU
 /* Again versions of a few functions which use the given locale instead

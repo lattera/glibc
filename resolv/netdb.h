@@ -70,7 +70,7 @@ extern int *__h_errno_location (void) __THROW __attribute__ ((__const__));
 # define NO_DATA	4	/* Valid name, no data record of requested
 				   type.  */
 #endif
-#if defined __USE_MISC || defined __USE_GNU
+#ifdef __USE_MISC
 # define NETDB_INTERNAL	-1	/* See errno.  */
 # define NETDB_SUCCESS	0	/* No problem.  */
 # define NO_ADDRESS	NO_DATA	/* No address, look for MX record.  */
@@ -104,7 +104,7 @@ struct hostent
   int h_addrtype;		/* Host address type.  */
   int h_length;			/* Length of address.  */
   char **h_addr_list;		/* List of addresses from name server.  */
-#if defined __USE_MISC || defined __USE_GNU
+#ifdef __USE_MISC
 # define	h_addr	h_addr_list[0] /* Address, for backward compatibility.*/
 #endif
 };

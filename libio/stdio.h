@@ -47,8 +47,8 @@ __BEGIN_NAMESPACE_STD
 /* The opaque type of streams.  This is the definition used elsewhere.  */
 typedef struct _IO_FILE FILE;
 __END_NAMESPACE_STD
-#if defined __USE_LARGEFILE64 || defined __USE_MISC || defined __USE_POSIX \
-    || defined __USE_MISC || defined __USE_ISOC99 || defined __USE_XOPEN \
+#if defined __USE_LARGEFILE64 || defined __USE_POSIX \
+    || defined __USE_ISOC99 || defined __USE_XOPEN \
     || defined __USE_POSIX2
 __USING_NAMESPACE_STD(FILE)
 #endif
@@ -380,7 +380,7 @@ extern int vsprintf (char *__restrict __s, const char *__restrict __format,
 		     _G_va_list __arg) __THROWNL;
 __END_NAMESPACE_STD
 
-#if defined __USE_MISC || defined __USE_ISOC99 || defined __USE_UNIX98
+#if defined __USE_ISOC99 || defined __USE_UNIX98
 __BEGIN_NAMESPACE_C99
 /* Maximum chars of output to write in MAXLEN.  */
 extern int snprintf (char *__restrict __s, size_t __maxlen,
@@ -542,14 +542,14 @@ __END_NAMESPACE_STD
    optimization for it.  */
 #define getc(_fp) _IO_getc (_fp)
 
-#if defined __USE_POSIX || defined __USE_MISC
+#ifdef __USE_POSIX
 /* These are defined in POSIX.1:1996.
 
    These functions are possible cancellation points and therefore not
    marked with __THROW.  */
 extern int getc_unlocked (FILE *__stream);
 extern int getchar_unlocked (void);
-#endif /* Use POSIX or MISC.  */
+#endif /* Use POSIX.  */
 
 #ifdef __USE_MISC
 /* Faster version when locking is not necessary.
@@ -594,14 +594,14 @@ __END_NAMESPACE_STD
 extern int fputc_unlocked (int __c, FILE *__stream);
 #endif /* Use MISC.  */
 
-#if defined __USE_POSIX || defined __USE_MISC
+#ifdef __USE_POSIX
 /* These are defined in POSIX.1:1996.
 
    These functions are possible cancellation points and therefore not
    marked with __THROW.  */
 extern int putc_unlocked (int __c, FILE *__stream);
 extern int putchar_unlocked (int __c);
-#endif /* Use POSIX or MISC.  */
+#endif /* Use POSIX.  */
 
 
 #if defined __USE_MISC \
@@ -864,7 +864,7 @@ extern int fileno_unlocked (FILE *__stream) __THROW __wur;
 #endif
 
 
-#if defined  __USE_POSIX2 || defined __USE_MISC
+#ifdef __USE_POSIX2
 /* Create a new stream connected to a pipe running the given command.
 
    This function is a possible cancellation point and therefore not
@@ -905,7 +905,7 @@ extern int obstack_vprintf (struct obstack *__restrict __obstack,
 #endif /* Use GNU.  */
 
 
-#if defined __USE_POSIX || defined __USE_MISC
+#ifdef __USE_POSIX
 /* These are defined in POSIX.1:1996.  */
 
 /* Acquire ownership of STREAM.  */
@@ -917,7 +917,7 @@ extern int ftrylockfile (FILE *__stream) __THROW __wur;
 
 /* Relinquish the ownership granted for STREAM.  */
 extern void funlockfile (FILE *__stream) __THROW;
-#endif /* POSIX || misc */
+#endif /* POSIX */
 
 #if defined __USE_XOPEN && !defined __USE_XOPEN2K && !defined __USE_GNU
 /* The X/Open standard requires some functions and variables to be

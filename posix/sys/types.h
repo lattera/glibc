@@ -99,7 +99,7 @@ typedef __pid_t pid_t;
 # define __pid_t_defined
 #endif
 
-#if (defined __USE_MISC || defined __USE_XOPEN || defined __USE_XOPEN2K8) \
+#if (defined __USE_XOPEN || defined __USE_XOPEN2K8) \
     && !defined __id_t_defined
 typedef __id_t id_t;
 # define __id_t_defined
@@ -220,7 +220,7 @@ typedef int register_t __attribute__ ((__mode__ (__word__)));
 
 /* BSD defines these symbols, so we follow.  */
 # include <sys/sysmacros.h>
-#endif /* Use BSD.  */
+#endif /* Use misc.  */
 
 
 #if (defined __USE_UNIX98 || defined __USE_XOPEN2K8) \

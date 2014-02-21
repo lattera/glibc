@@ -58,7 +58,7 @@ struct passwd
 };
 
 
-#if defined __USE_MISC || defined __USE_GNU
+#ifdef __USE_MISC
 # define __need_FILE
 # include <stdio.h>
 #endif
@@ -115,7 +115,7 @@ extern struct passwd *getpwuid (__uid_t __uid);
    marked with __THROW.  */
 extern struct passwd *getpwnam (const char *__name);
 
-#if defined __USE_POSIX || defined __USE_MISC
+#ifdef __USE_POSIX
 
 # ifdef __USE_MISC
 /* Reasonable value for the buffer sized used in the reentrant

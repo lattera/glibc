@@ -184,7 +184,7 @@ extern int futimesat (int __fd, const char *__file,
       (result)->tv_usec += 1000000;					      \
     }									      \
   } while (0)
-#endif	/* BSD */
+#endif	/* Misc.  */
 
 __END_DECLS
 

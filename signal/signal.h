@@ -132,7 +132,7 @@ extern int kill (__pid_t __pid, int __sig) __THROW;
    If PGRP is zero, send SIG to all processes in
    the current process's process group.  */
 extern int killpg (__pid_t __pgrp, int __sig) __THROW;
-#endif /* Use BSD || X/Open Unix.  */
+#endif /* Use misc || X/Open Unix.  */
 
 __BEGIN_NAMESPACE_STD
 /* Raise signal SIG, i.e., send SIG to yourself.  */
@@ -144,12 +144,12 @@ __END_NAMESPACE_STD
 extern __sighandler_t ssignal (int __sig, __sighandler_t __handler)
      __THROW;
 extern int gsignal (int __sig) __THROW;
-#endif /* Use SVID.  */
+#endif /* Use misc.  */
 
-#if defined __USE_MISC || defined __USE_XOPEN2K
+#ifdef __USE_XOPEN2K
 /* Print a message describing the meaning of the given signal number.  */
 extern void psignal (int __sig, const char *__s);
-#endif /* Use misc or POSIX 2008.  */
+#endif /* Use POSIX 2008.  */
 
 #ifdef __USE_XOPEN2K
 /* Print a message describing the meaning of the given signal information.  */
@@ -193,7 +193,7 @@ extern int sigsetmask (int __mask) __THROW __attribute_deprecated__;
 
 /* Return currently selected signal mask.  */
 extern int siggetmask (void) __THROW __attribute_deprecated__;
-#endif /* Use BSD.  */
+#endif /* Use misc.  */
 
 
 #ifdef __USE_MISC
@@ -334,10 +334,10 @@ extern int sigvec (int __sig, const struct sigvec *__vec,
 /* Restore the state saved in SCP.  */
 extern int sigreturn (struct sigcontext *__scp) __THROW;
 
-#endif /*  use BSD.  */
+#endif /* Use misc.  */
 
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
+#if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
 # define __need_size_t
 # include <stddef.h>
 
@@ -363,7 +363,7 @@ extern int sigstack (struct sigstack *__ss, struct sigstack *__oss)
 extern int sigaltstack (const struct sigaltstack *__restrict __ss,
 			struct sigaltstack *__restrict __oss) __THROW;
 
-#endif /* use BSD or X/Open Unix.  */
+#endif /* Use POSIX.1-2008 or X/Open Unix.  */
 
 #ifdef __USE_XOPEN_EXTENDED
 /* Simplified interface for signal management.  */

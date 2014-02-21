@@ -82,7 +82,7 @@ __MATHDECL (void,sincos,,
 	    (_Mdouble_ __x, _Mdouble_ *__sinx, _Mdouble_ *__cosx));
 #endif
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
+#if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 __BEGIN_NAMESPACE_C99
 /* Hyperbolic arc cosine of X.  */
 __MATHCALL (acosh,, (_Mdouble_ __x));
@@ -122,7 +122,7 @@ __MATHCALL (exp10,, (_Mdouble_ __x));
 __MATHCALL (pow10,, (_Mdouble_ __x));
 #endif
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
+#if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 __BEGIN_NAMESPACE_C99
 /* Return exp(X) - 1.  */
 __MATHCALL (expm1,, (_Mdouble_ __x));
@@ -156,14 +156,14 @@ __MATHCALL (pow,, (_Mdouble_ __x, _Mdouble_ __y));
 __MATHCALL (sqrt,, (_Mdouble_ __x));
 _Mdouble_END_NAMESPACE
 
-#if defined __USE_MISC || defined __USE_XOPEN || defined __USE_ISOC99
+#if defined __USE_XOPEN || defined __USE_ISOC99
 __BEGIN_NAMESPACE_C99
 /* Return `sqrt(X*X + Y*Y)'.  */
 __MATHCALL (hypot,, (_Mdouble_ __x, _Mdouble_ __y));
 __END_NAMESPACE_C99
 #endif
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
+#if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 __BEGIN_NAMESPACE_C99
 /* Return the cube root of X.  */
 __MATHCALL (cbrt,, (_Mdouble_ __x));
@@ -211,7 +211,7 @@ __MATHCALL (drem,, (_Mdouble_ __x, _Mdouble_ __y));
 __MATHCALL (significand,, (_Mdouble_ __x));
 #endif /* Use misc.  */
 
-#if defined __USE_MISC || defined __USE_ISOC99
+#ifdef __USE_ISOC99
 __BEGIN_NAMESPACE_C99
 /* Return X with its signed changed to Y's.  */
 __MATHCALLX (copysign,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
@@ -243,7 +243,7 @@ __MATHCALL (yn,, (int, _Mdouble_));
 #endif
 
 
-#if defined __USE_MISC || defined __USE_XOPEN || defined __USE_ISOC99
+#if defined __USE_XOPEN || defined __USE_ISOC99
 __BEGIN_NAMESPACE_C99
 /* Error and gamma functions.  */
 __MATHCALL (erf,, (_Mdouble_));
@@ -272,7 +272,7 @@ __MATHCALL (lgamma,_r, (_Mdouble_, int *__signgamp));
 #endif
 
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
+#if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 __BEGIN_NAMESPACE_C99
 /* Return the integer nearest X in the direction of the
    prevailing rounding mode.  */
@@ -287,7 +287,7 @@ __MATHCALLX (nexttoward,, (_Mdouble_ __x, long double __y), (__const__));
 /* Return the remainder of integer divison X / Y with infinite precision.  */
 __MATHCALL (remainder,, (_Mdouble_ __x, _Mdouble_ __y));
 
-# if defined __USE_MISC || defined __USE_ISOC99
+# ifdef __USE_ISOC99
 /* Return X times (2 to the Nth power).  */
 __MATHCALL (scalbn,, (_Mdouble_ __x, int __n));
 # endif
@@ -356,7 +356,7 @@ __MATHDECL_1 (int, __signbit,, (_Mdouble_ __value))
 __MATHCALL (fma,, (_Mdouble_ __x, _Mdouble_ __y, _Mdouble_ __z));
 #endif /* Use ISO C99.  */
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
+#if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 __END_NAMESPACE_C99
 #endif
 

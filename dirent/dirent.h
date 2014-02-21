@@ -173,7 +173,7 @@ extern struct dirent *__REDIRECT (readdir, (DIR *__dirp), readdir64)
 extern struct dirent64 *readdir64 (DIR *__dirp) __nonnull ((1));
 #endif
 
-#if defined __USE_POSIX || defined __USE_MISC
+#ifdef __USE_POSIX
 /* Reentrant version of `readdir'.  Return in RESULT a pointer to the
    next entry.
 
@@ -217,7 +217,7 @@ extern void seekdir (DIR *__dirp, long int __pos) __THROW __nonnull ((1));
 extern long int telldir (DIR *__dirp) __THROW __nonnull ((1));
 #endif
 
-#if defined __USE_MISC || defined __USE_XOPEN2K8
+#ifdef __USE_XOPEN2K8
 
 /* Return the file descriptor used by DIRP.  */
 extern int dirfd (DIR *__dirp) __THROW __nonnull ((1));
@@ -340,7 +340,7 @@ extern int alphasort64 (const struct dirent64 **__e1,
 			const struct dirent64 **__e2)
      __THROW __attribute_pure__ __nonnull ((1, 2));
 # endif
-#endif /* Use BSD or misc or XPG7.  */
+#endif /* Use XPG7.  */
 
 
 #ifdef __USE_MISC
@@ -371,7 +371,7 @@ extern __ssize_t getdirentries64 (int __fd, char *__restrict __buf,
 				  __off64_t *__restrict __basep)
      __THROW __nonnull ((2, 4));
 # endif
-#endif /* Use BSD or misc.  */
+#endif /* Use misc.  */
 
 #ifdef __USE_GNU
 /* Function to compare two `struct dirent's by name & version.  */

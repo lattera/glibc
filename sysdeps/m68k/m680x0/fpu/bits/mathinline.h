@@ -131,7 +131,7 @@ __NTH (__signbitl (long double __x))
    suffixed with f and l for the float and long double version, resp).  OP
    is the name of the fpu operation (without leading f).  */
 
-#if defined __USE_MISC || defined __USE_ISOC99
+#ifdef __USE_ISOC99
 # define __inline_mathop(func, op)			\
   __inline_mathop1(double, func, op)			\
   __inline_mathop1(float, __CONCAT(func,f), op)	\
@@ -157,7 +157,7 @@ __inline_mathop(__tan, tan)
 __inline_mathop(__tanh, tanh)
 __inline_mathop(__fabs, abs)
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
+#if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 __inline_mathop(__rint, int)
 __inline_mathop(__expm1, etoxm1)
 __inline_mathop(__log1p, lognp1)
@@ -176,7 +176,7 @@ __inline_mathop(__trunc, intrz)
 __inline_mathop(atan, atan)
 __inline_mathop(tanh, tanh)
 
-# if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
+# if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 __inline_mathop(rint, int)
 __inline_mathop(log1p, lognp1)
 # endif
@@ -229,7 +229,7 @@ __m81_defun (float_type, __CONCAT(__ceil,s), (float_type __x))	  	  \
 }
 
 __inline_functions(double,)
-#if defined __USE_MISC || defined __USE_ISOC99
+#ifdef __USE_ISOC99
 __inline_functions(float,f)
 __inline_functions(long double,l)
 #endif
@@ -392,7 +392,7 @@ __inline_forward(void,sincos, (double __x, double *__sinx, double *__cosx),
 		 (__x, __sinx, __cosx))
 # endif
 
-# if defined __USE_MISC || defined __USE_ISOC99
+# ifdef __USE_ISOC99
 
 __inline_forward_c(float,floorf, (float __x), (__x))
 __inline_forward_c(float,ceilf, (float __x), (__x))

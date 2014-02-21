@@ -159,7 +159,7 @@
 #define	F_SETFD		2	/* Set file descriptor flags.  */
 #define	F_GETFL		3	/* Get file status flags.  */
 #define	F_SETFL		4	/* Set file status flags.  */
-#if defined __USE_MISC || defined __USE_UNIX98 || defined __USE_XOPEN2K8
+#if defined __USE_UNIX98 || defined __USE_XOPEN2K8
 # define F_GETOWN	5	/* Get owner (receiver of SIGIO).  */
 # define F_SETOWN	6	/* Set owner (receiver of SIGIO).  */
 #endif

@@ -57,7 +57,7 @@ fgetc_unlocked (FILE *__fp)
 # endif /* misc */
 
 
-# if defined __USE_POSIX || defined __USE_MISC
+# ifdef __USE_POSIX
 /* This is defined in POSIX.1:1996.  */
 __STDIO_INLINE int
 getc_unlocked (FILE *__fp)
@@ -71,7 +71,7 @@ getchar_unlocked (void)
 {
   return _IO_getc_unlocked (stdin);
 }
-# endif	/* POSIX || misc */
+# endif	/* POSIX */
 
 
 /* Write a character to stdout.  */
@@ -92,7 +92,7 @@ fputc_unlocked (int __c, FILE *__stream)
 # endif /* misc */
 
 
-# if defined __USE_POSIX || defined __USE_MISC
+# ifdef __USE_POSIX
 /* This is defined in POSIX.1:1996.  */
 __STDIO_INLINE int
 putc_unlocked (int __c, FILE *__stream)
@@ -106,7 +106,7 @@ putchar_unlocked (int __c)
 {
   return _IO_putc_unlocked (__c, stdout);
 }
-# endif	/* POSIX || misc */
+# endif	/* POSIX */
 
 
 # ifdef	__USE_GNU

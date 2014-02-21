@@ -31,7 +31,7 @@ extern long double __REDIRECT_NTH (acosl, (long double), __acosl_finite);
 # endif
 #endif
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
+#if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 /* acosh.  */
 extern double __REDIRECT_NTH (acosh, (double), __acosh_finite);
 extern float __REDIRECT_NTH (acoshf, (float), __acoshf_finite);
@@ -68,7 +68,7 @@ extern long double __REDIRECT_NTH (atan2l, (long double, long double),
 # endif
 #endif
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
+#if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 /* atanh.  */
 extern double __REDIRECT_NTH (atanh, (double), __atanh_finite);
 extern float __REDIRECT_NTH (atanhf, (float), __atanhf_finite);
@@ -251,7 +251,7 @@ extern long double __REDIRECT_NTH (lgammal_r, (long double, int *),
 # endif
 #endif
 
-#if defined __USE_MISC || defined __USE_XOPEN || defined __USE_ISOC99
+#if defined __USE_XOPEN || defined __USE_ISOC99
 /* lgamma.  */
 __extern_always_inline double __NTH (lgamma (double __d))
 {

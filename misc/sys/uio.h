@@ -115,7 +115,7 @@ extern ssize_t preadv64 (int __fd, const struct iovec *__iovec, int __count,
 extern ssize_t pwritev64 (int __fd, const struct iovec *__iovec, int __count,
 			  __off64_t __offset) __wur;
 # endif
-#endif	/* Use BSD */
+#endif	/* Use misc.  */
 
 __END_DECLS
 

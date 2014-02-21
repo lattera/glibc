@@ -262,7 +262,7 @@ typedef __pid_t pid_t;
 # endif
 #endif	/* X/Open */
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
+#if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
 # ifndef __intptr_t_defined
 typedef __intptr_t intptr_t;
 #  define __intptr_t_defined
@@ -473,7 +473,7 @@ extern int pause (void);
 extern int chown (const char *__file, __uid_t __owner, __gid_t __group)
      __THROW __nonnull ((1)) __wur;
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
+#if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
 /* Change the owner and group of the file that FD is open on.  */
 extern int fchown (int __fd, __uid_t __owner, __gid_t __group) __THROW __wur;
 
@@ -483,7 +483,7 @@ extern int fchown (int __fd, __uid_t __owner, __gid_t __group) __THROW __wur;
 extern int lchown (const char *__file, __uid_t __owner, __gid_t __group)
      __THROW __nonnull ((1)) __wur;
 
-#endif /* Use BSD || X/Open Unix.  */
+#endif /* Use X/Open Unix.  */
 
 #ifdef __USE_ATFILE
 /* Change the owner and group of FILE relative to the directory FD is open
@@ -496,7 +496,7 @@ extern int fchownat (int __fd, const char *__file, __uid_t __owner,
 /* Change the process's working directory to PATH.  */
 extern int chdir (const char *__path) __THROW __nonnull ((1)) __wur;
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
+#if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
 /* Change the process's working directory to the one FD is open on.  */
 extern int fchdir (int __fd) __THROW __wur;
 #endif
@@ -659,7 +659,7 @@ extern int setpgid (__pid_t __pid, __pid_t __pgid) __THROW;
    This is exactly the same as `setpgid (0, 0)'.  */
 extern int setpgrp (void) __THROW;
 
-#endif	/* Use SVID or BSD.  */
+#endif	/* Use misc or X/Open.  */
 
 /* Create a new session with the calling process as its leader.
    The process group IDs of the session and the calling process
@@ -705,10 +705,10 @@ extern int setuid (__uid_t __uid) __THROW __wur;
 extern int setreuid (__uid_t __ruid, __uid_t __euid) __THROW __wur;
 #endif
 
-#if defined __USE_MISC || defined __USE_XOPEN2K
+#ifdef __USE_XOPEN2K
 /* Set the effective user ID of the calling process to UID.  */
 extern int seteuid (__uid_t __uid) __THROW __wur;
-#endif /* Use BSD.  */
+#endif /* Use POSIX.1-2001.  */
 
 /* Set the group ID of the calling process to GID.
    If the calling process is the super-user, set the real
@@ -722,10 +722,10 @@ extern int setgid (__gid_t __gid) __THROW __wur;
 extern int setregid (__gid_t __rgid, __gid_t __egid) __THROW __wur;
 #endif
 
-#if defined __USE_MISC || defined __USE_XOPEN2K
+#ifdef __USE_XOPEN2K
 /* Set the effective group ID of the calling process to GID.  */
 extern int setegid (__gid_t __gid) __THROW __wur;
-#endif /* Use BSD.  */
+#endif /* Use POSIX.1-2001.  */
 
 #ifdef __USE_GNU
 /* Fetch the real user ID, effective user ID, and saved-set user ID,
@@ -762,7 +762,7 @@ extern __pid_t fork (void) __THROWNL;
    replaced by a call to `execve'.  Return -1 for errors, 0 to the new process,
    and the process ID of the new process to the old process.  */
 extern __pid_t vfork (void) __THROW;
-#endif /* Use BSD or XPG < 7. */
+#endif /* Use misc or XPG < 7. */
 
 
 /* Return the pathname of the terminal FD is open on, or NULL on errors.
@@ -798,7 +798,7 @@ extern int linkat (int __fromfd, const char *__from, int __tofd,
      __THROW __nonnull ((2, 4)) __wur;
 #endif
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
+#if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
 /* Make a symbolic link to FROM named TO.  */
 extern int symlink (const char *__from, const char *__to)
      __THROW __nonnull ((1, 2)) __wur;
@@ -809,7 +809,7 @@ extern int symlink (const char *__from, const char *__to)
 extern ssize_t readlink (const char *__restrict __path,
 			 char *__restrict __buf, size_t __len)
      __THROW __nonnull ((1, 2)) __wur;
-#endif /* Use BSD.  */
+#endif /* Use POSIX.1-2001.  */
 
 #ifdef __USE_ATFILE
 /* Like symlink but a relative path in TO is interpreted relative to TOFD.  */
@@ -872,7 +872,7 @@ extern int setlogin (const char *__name) __THROW __nonnull ((1));
 #endif
 
 
-#if defined __USE_MISC || defined __USE_UNIX98 || defined __USE_XOPEN2K
+#if defined __USE_UNIX98 || defined __USE_XOPEN2K
 /* Put the name of the current host in no more than LEN bytes of NAME.
    The result is null-terminated if LEN is large enough for the full
    name and the terminator.  */
@@ -935,7 +935,7 @@ extern void setusershell (void) __THROW; /* Rewind and re-read the file.  */
    terminal.  If NOCHDIR is zero, do `chdir ("/")'.  If NOCLOSE is zero,
    redirects stdin, stdout, and stderr to /dev/null.  */
 extern int daemon (int __nochdir, int __noclose) __THROW __wur;
-#endif /* Use BSD || X/Open.  */
+#endif /* Use misc || X/Open.  */
 
 
 #if defined __USE_MISC || (defined __USE_XOPEN && !defined __USE_XOPEN2K)
@@ -946,7 +946,7 @@ extern int chroot (const char *__path) __THROW __nonnull ((1)) __wur;
 /* Prompt with PROMPT and read a string from the terminal without echoing.
    Uses /dev/tty if possible; otherwise stderr and stdin.  */
 extern char *getpass (const char *__prompt) __nonnull ((1));
-#endif /* Use BSD || X/Open.  */
+#endif /* Use misc || X/Open.  */
 
 
 /* Make all changes done to FD actually appear on disk.
@@ -983,10 +983,10 @@ extern int getpagesize (void)  __THROW __attribute__ ((__const__));
 extern int getdtablesize (void) __THROW;
 # endif
 
-#endif /* Use BSD || X/Open Unix.  */
+#endif /* Use misc || X/Open Unix.  */
 
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
+#if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
 
 /* Truncate FILE to LENGTH bytes.  */
 # ifndef __USE_FILE_OFFSET64
@@ -1006,9 +1006,9 @@ extern int truncate64 (const char *__file, __off64_t __length)
      __THROW __nonnull ((1)) __wur;
 # endif
 
-#endif /* Use BSD || X/Open Unix || POSIX 2008.  */
+#endif /* Use X/Open Unix || POSIX 2008.  */
 
-#if defined __USE_MISC || defined __USE_POSIX199309 \
+#if defined __USE_POSIX199309 \
     || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
 
 /* Truncate the file FD is open on to LENGTH bytes.  */
@@ -1026,7 +1026,7 @@ extern int __REDIRECT_NTH (ftruncate, (int __fd, __off64_t __length),
 extern int ftruncate64 (int __fd, __off64_t __length) __THROW __wur;
 # endif
 
-#endif /* Use BSD || POSIX.1b || X/Open Unix || XPG6.  */
+#endif /* Use POSIX.1b || X/Open Unix || XPG6.  */
 
 
 #if (defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K) \

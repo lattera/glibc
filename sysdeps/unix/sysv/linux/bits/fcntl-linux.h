@@ -158,7 +158,7 @@
 # define __F_GETOWN	9
 #endif
 
-#if defined __USE_MISC || defined __USE_UNIX98 || defined __USE_XOPEN2K8
+#if defined __USE_UNIX98 || defined __USE_XOPEN2K8
 # define F_SETOWN	__F_SETOWN /* Get owner (process receiving SIGIO).  */
 # define F_GETOWN	__F_GETOWN /* Set owner (process receiving SIGIO).  */
 #endif
@@ -262,7 +262,7 @@ struct f_owner_ex
 # define FASYNC		O_ASYNC
 # define FNONBLOCK	O_NONBLOCK
 # define FNDELAY	O_NDELAY
-#endif /* Use BSD.  */
+#endif /* Use misc.  */
 
 #ifndef __POSIX_FADV_DONTNEED
 #  define __POSIX_FADV_DONTNEED	4

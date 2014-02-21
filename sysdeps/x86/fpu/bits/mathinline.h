@@ -283,7 +283,7 @@ __END_NAMESPACE_C99
 #  endif
 
 #  if defined __SSE4_1__ && defined __SSE2_MATH__
-#   if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
+#   if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 __BEGIN_NAMESPACE_C99
 
 /* Round to nearest integer.  */
@@ -399,7 +399,7 @@ __END_NAMESPACE_C99
    We define two sets of macros.  The set with the additional NP
    doesn't add a prototype declaration.  */
 
-#  if defined __USE_MISC || defined __USE_ISOC99
+#  ifdef __USE_ISOC99
 #   define __inline_mathop(func, op) \
   __inline_mathop_ (double, func, op)					      \
   __inline_mathop_ (float, __CONCAT(func,f), op)			      \
@@ -421,7 +421,7 @@ __END_NAMESPACE_C99
   __inline_mathop_declNP_ (float_type, func, op, "0" (__x))
 
 
-#  if defined __USE_MISC || defined __USE_ISOC99
+#  ifdef __USE_ISOC99
 #   define __inline_mathop_decl(func, op, params...) \
   __inline_mathop_decl_ (double, func, op, params)			      \
   __inline_mathop_decl_ (float, __CONCAT(func,f), op, params)		      \
@@ -450,7 +450,7 @@ __END_NAMESPACE_C99
   }
 
 
-#  if defined __USE_MISC || defined __USE_ISOC99
+#  ifdef __USE_ISOC99
 #   define __inline_mathcode(func, arg, code) \
   __inline_mathcode_ (double, func, arg, code)				      \
   __inline_mathcode_ (float, __CONCAT(func,f), arg, code)		      \
@@ -684,7 +684,7 @@ __inline_mathopNP_ (long double, __sqrtl, "fsqrt")
 
 #  if __GNUC_PREREQ (2, 8)
 __inline_mathcodeNP_ (double, fabs, __x, return __builtin_fabs (__x))
-#   if defined __USE_MISC || defined __USE_ISOC99
+#   ifdef __USE_ISOC99
 __inline_mathcodeNP_ (float, fabsf, __x, return __builtin_fabsf (__x))
 __inline_mathcodeNP_ (long double, fabsl, __x, return __builtin_fabsl (__x))
 #   endif
@@ -793,7 +793,7 @@ __NTH (ldexp (double __x, int __y))
 
 
 /* Optimized versions for some non-standardized functions.  */
-#  if defined __USE_ISOC99 || defined __USE_MISC
+#  ifdef __USE_ISOC99
 
 #   ifdef __FAST_MATH__
 __inline_mathcodeNP (expm1, __x, __expm1_code)

@@ -119,7 +119,7 @@ pread64 (int __fd, void *__buf, size_t __nbytes, __off64_t __offset)
 # endif
 #endif
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
+#if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
 extern ssize_t __readlink_chk (const char *__restrict __path,
 			       char *__restrict __buf, size_t __len,
 			       size_t __buflen)

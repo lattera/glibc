@@ -45,7 +45,7 @@ typedef __SIZE_TYPE__ size_t;
 #define	GLOB_NOESCAPE	(1 << 6)/* Backslashes don't quote metacharacters.  */
 #define	GLOB_PERIOD	(1 << 7)/* Leading `.' can be matched by metachars.  */
 
-#if !defined __USE_POSIX2 || defined __USE_MISC || defined __USE_GNU
+#if !defined __USE_POSIX2 || defined __USE_MISC
 # define GLOB_MAGCHAR	 (1 << 8)/* Set in gl_flags if any metachars seen.  */
 # define GLOB_ALTDIRFUNC (1 << 9)/* Use gl_opendir et al functions.  */
 # define GLOB_BRACE	 (1 << 10)/* Expand "{a,b}" to "a" "b".  */

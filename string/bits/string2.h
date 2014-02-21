@@ -1167,7 +1167,7 @@ __strtok_r_1c (char *__s, char __sep, char **__nextp)
   *__nextp = __s;
   return __result;
 }
-# if defined __USE_POSIX || defined __USE_MISC
+# ifdef __USE_POSIX
 #  define strtok_r(s, sep, nextp) __strtok_r (s, sep, nextp)
 # endif
 #endif

@@ -157,7 +157,7 @@ extern int toascii (int __c) __THROW;
    check the argument for being in the range of a `char'.  */
 __exctype (_toupper);
 __exctype (_tolower);
-#endif /* Use SVID or use misc.  */
+#endif /* Use X/Open or use misc.  */
 
 /* This code is needed for the optimized mapping functions.  */
 #define __tobody(c, f, a, args) \

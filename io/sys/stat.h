@@ -26,12 +26,11 @@
 
 #include <bits/types.h>		/* For __mode_t and __dev_t.  */
 
-#if defined __USE_XOPEN || defined __USE_XOPEN2K || defined __USE_MISC \
-	 || defined __USE_ATFILE
+#if defined __USE_XOPEN || defined __USE_XOPEN2K || defined __USE_ATFILE
 # if defined __USE_XOPEN || defined __USE_XOPEN2K
 #  define __need_time_t
 # endif
-# if defined __USE_MISC || defined __USE_ATFILE
+# ifdef __USE_ATFILE
 #  define __need_timespec
 # endif
 # include <time.h>		/* For time_t resp. timespec.  */
@@ -141,7 +140,7 @@ __BEGIN_DECLS
 # define S_ISLNK(mode)  0
 #endif
 
-#if (defined __USE_MISC || defined __USE_UNIX98 || defined __USE_XOPEN2K) \
+#if (defined __USE_UNIX98 || defined __USE_XOPEN2K) \
     && defined __S_IFSOCK
 # define S_ISSOCK(mode) __S_ISTYPE((mode), __S_IFSOCK)
 #elif defined __USE_XOPEN2K
@@ -256,7 +255,7 @@ extern int fstatat64 (int __fd, const char *__restrict __file,
 # endif
 #endif
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
+#if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
 # ifndef __USE_FILE_OFFSET64
 /* Get file attributes about FILE and put them in BUF.
    If FILE is a symbolic link, do not follow it.  */
@@ -293,7 +292,7 @@ extern int lchmod (const char *__file, __mode_t __mode)
 #endif
 
 /* Set file access permissions of the file FD is open on to MODE.  */
-#if defined __USE_MISC || defined __USE_POSIX
+#ifdef __USE_POSIX
 extern int fchmod (int __fd, __mode_t __mode) __THROW;
 #endif
 

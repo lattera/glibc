@@ -1974,7 +1974,7 @@ __strstr_g (const char *__haystack, const char *__needle)
 #    define ffsl(word) ffs(word)
 #   endif
 #  endif /* i686 */
-# endif	/* BSD || X/Open */
+# endif	/* Misc || X/Open */
 
 # ifndef _FORCE_INLINES
 #  undef __STRING_INLINE

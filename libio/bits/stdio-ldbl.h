@@ -40,7 +40,7 @@ __LDBL_REDIR_DECL (sscanf)
 #endif
 __END_NAMESPACE_STD
 
-#if defined __USE_MISC || defined __USE_ISOC99 || defined __USE_UNIX98
+#if defined __USE_ISOC99 || defined __USE_UNIX98
 __BEGIN_NAMESPACE_C99
 __LDBL_REDIR_DECL (snprintf)
 __LDBL_REDIR_DECL (vsnprintf)
@@ -78,7 +78,7 @@ __LDBL_REDIR_DECL (obstack_vprintf)
 #if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function
 __LDBL_REDIR_DECL (__sprintf_chk)
 __LDBL_REDIR_DECL (__vsprintf_chk)
-# if defined __USE_MISC || defined __USE_ISOC99 || defined __USE_UNIX98
+# if defined __USE_ISOC99 || defined __USE_UNIX98
 __LDBL_REDIR_DECL (__snprintf_chk)
 __LDBL_REDIR_DECL (__vsnprintf_chk)
 # endif

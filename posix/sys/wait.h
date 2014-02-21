@@ -65,13 +65,13 @@ typedef union
 #   define __WAIT_STATUS_DEFN	int *
 #  endif
 
-# else /* Don't use BSD.  */
+# else /* Don't use misc.  */
 
 #  define __WAIT_INT(status)	(status)
 #  define __WAIT_STATUS		int *
 #  define __WAIT_STATUS_DEFN	int *
 
-# endif /* Use BSD.  */
+# endif /* Use misc.  */
 
 /* This will define all the `__W*' macros.  */
 # include <bits/waitstatus.h>
@@ -95,7 +95,7 @@ typedef union
 #endif
 
 /* The following values are used by the `waitid' function.  */
-#if defined __USE_MISC || defined __USE_XOPEN || defined __USE_XOPEN2K8
+#if defined __USE_XOPEN || defined __USE_XOPEN2K8
 typedef enum
 {
   P_ALL,		/* Wait for any child.  */
@@ -135,7 +135,7 @@ extern __pid_t wait (__WAIT_STATUS __stat_loc);
    __THROW.  */
 extern __pid_t waitpid (__pid_t __pid, int *__stat_loc, int __options);
 
-#if defined __USE_MISC || defined __USE_XOPEN || defined __USE_XOPEN2K8
+#if defined __USE_XOPEN || defined __USE_XOPEN2K8
 # ifndef __id_t_defined
 #  include <bits/types.h>
 typedef __id_t id_t;
@@ -178,7 +178,7 @@ extern __pid_t wait3 (__WAIT_STATUS __stat_loc, int __options,
 /* PID is like waitpid.  Other args are like wait3.  */
 extern __pid_t wait4 (__pid_t __pid, __WAIT_STATUS __stat_loc, int __options,
 		      struct rusage *__usage) __THROWNL;
-#endif /* Use BSD.  */
+#endif /* Use misc.  */
 
 
 __END_DECLS

@@ -72,13 +72,13 @@ typedef union
 #   define __WAIT_STATUS_DEFN	int *
 #  endif
 
-# else /* Don't use BSD.  */
+# else /* Don't use misc.  */
 
 #  define __WAIT_INT(status)	(status)
 #  define __WAIT_STATUS		int *
 #  define __WAIT_STATUS_DEFN	int *
 
-# endif /* Use BSD.  */
+# endif /* Use misc.  */
 
 /* Define the macros <sys/wait.h> also would define this way.  */
 # define WEXITSTATUS(status)	__WEXITSTATUS (__WAIT_INT (status))
@@ -151,7 +151,7 @@ extern long int atol (const char *__nptr)
      __THROW __attribute_pure__ __nonnull ((1)) __wur;
 __END_NAMESPACE_STD
 
-#if defined __USE_ISOC99 || defined __USE_MISC
+#ifdef __USE_ISOC99
 __BEGIN_NAMESPACE_C99
 /* Convert a string to a long long integer.  */
 __extension__ extern long long int atoll (const char *__nptr)
@@ -200,9 +200,9 @@ __extension__
 extern unsigned long long int strtouq (const char *__restrict __nptr,
 				       char **__restrict __endptr, int __base)
      __THROW __nonnull ((1));
-#endif /* Use BSD.  */
+#endif /* Use misc.  */
 
-#if defined __USE_ISOC99 || defined __USE_MISC
+#ifdef __USE_ISOC99
 __BEGIN_NAMESPACE_C99
 /* Convert a string to a quadword integer.  */
 __extension__
@@ -286,7 +286,7 @@ __NTH (atol (const char *__nptr))
 }
 __END_NAMESPACE_STD
 
-# if defined __USE_MISC || defined __USE_ISOC99
+# ifdef __USE_ISOC99
 __BEGIN_NAMESPACE_C99
 __extension__ __extern_inline long long int
 __NTH (atoll (const char *__nptr))
@@ -308,7 +308,7 @@ extern char *l64a (long int __n) __THROW __wur;
 extern long int a64l (const char *__s)
      __THROW __attribute_pure__ __nonnull ((1)) __wur;
 
-#endif	/* Use SVID || extended X/Open.  */
+#endif	/* Use misc || extended X/Open.  */
 
 #if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 # include <sys/types.h>	/* we need int32_t... */
@@ -366,7 +366,7 @@ extern int setstate_r (char *__restrict __statebuf,
 		       struct random_data *__restrict __buf)
      __THROW __nonnull ((1, 2));
 # endif	/* Use misc.  */
-#endif	/* Use SVID || extended X/Open || BSD. */
+#endif	/* Use extended X/Open || misc. */
 
 
 __BEGIN_NAMESPACE_STD
@@ -455,7 +455,7 @@ extern int lcong48_r (unsigned short int __param[7],
 		      struct drand48_data *__buffer)
      __THROW __nonnull ((1, 2));
 # endif	/* Use misc.  */
-#endif	/* Use SVID or X/Open.  */
+#endif	/* Use misc or X/Open.  */
 
 #endif /* don't just need malloc and calloc */
 
@@ -488,9 +488,9 @@ __END_NAMESPACE_STD
 extern void cfree (void *__ptr) __THROW;
 #endif /* Use misc.  */
 
-#if defined __USE_GNU || defined __USE_MISC
+#ifdef __USE_MISC
 # include <alloca.h>
-#endif /* Use GNU, BSD, or misc.  */
+#endif /* Use misc.  */
 
 #if (defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K) \
     || defined __USE_MISC
@@ -578,7 +578,7 @@ extern char *secure_getenv (const char *__name)
 extern int putenv (char *__string) __THROW __nonnull ((1));
 #endif
 
-#if defined __USE_MISC || defined __USE_XOPEN2K
+#ifdef __USE_XOPEN2K
 /* Set NAME to VALUE in the environment.
    If REPLACE is nonzero, overwrite an existing value.  */
 extern int setenv (const char *__name, const char *__value, int __replace)
@@ -606,8 +606,7 @@ extern int clearenv (void) __THROW;
 extern char *mktemp (char *__template) __THROW __nonnull ((1));
 #endif
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED \
-    || defined __USE_XOPEN2K8
+#if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
 /* Generate a unique temporary file name from TEMPLATE.
    The last six characters of TEMPLATE must be "XXXXXX";
    they are replaced with a string that makes the filename unique.
@@ -654,7 +653,7 @@ extern int mkstemps64 (char *__template, int __suffixlen)
 # endif
 #endif
 
-#if defined __USE_MISC || defined __USE_XOPEN2K8
+#ifdef __USE_XOPEN2K8
 /* Create a unique temporary directory from TEMPLATE.
    The last six characters of TEMPLATE must be "XXXXXX";
    they are replaced with a string that makes the directory name unique.

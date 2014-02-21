@@ -317,7 +317,7 @@ struct ucred
 #endif
 
 /* Ugly workaround for unclean kernel headers.  */
-#if !defined __USE_MISC && !defined __USE_GNU
+#ifndef __USE_MISC
 # ifndef FIOGETOWN
 #  define __SYS_SOCKET_H_undef_FIOGETOWN
 # endif
@@ -344,7 +344,7 @@ struct ucred
 /* Get socket manipulation related informations from kernel headers.  */
 #include <asm/socket.h>
 
-#if !defined __USE_MISC && !defined __USE_GNU
+#ifndef __USE_MISC
 # ifdef __SYS_SOCKET_H_undef_FIOGETOWN
 #  undef __SYS_SOCKET_H_undef_FIOGETOWN
 #  undef FIOGETOWN

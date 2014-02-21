@@ -1,3 +1,84 @@
+2014-02-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* bits/fcntl.h [__USE_MISC]: Remove redundant conditionals.
+	* bits/sigaction.h [__USE_MISC]: Likewise.
+	* bits/waitstatus.h: Update #endif comments.
+	* ctype/ctype.h: Likewise.
+	* dirent/dirent.h: Likewise.
+	[__USE_MISC]: Remove redundant conditionals.
+	* grp/grp.h: Update #endif comments.
+	[__USE_GNU]: Remove redundant conditionals.
+	[__USE_MISC]: Likewise.
+	* inet/netinet/in.h [__USE_GNU]: Likewise.
+	* io/sys/stat.h [__USE_MISC]: Likewise.
+	* libio/bits/stdio-ldbl.h [__USE_MISC]: Likewise.
+	* libio/bits/stdio.h: Update #endif comments.
+	[__USE_MISC]: Remove redundant conditionals.
+	* libio/bits/stdio2.h [__USE_MISC]: Likewise.
+	* libio/stdio.h: Update #endif comments.
+	[__USE_MISC]: Remove redundant conditionals.
+	* math/bits/math-finite.h [__USE_MISC]: Likewise.
+	* math/bits/mathcalls.h [__USE_MISC]: Likewise.
+	* math/math.h: Update #else and #endif comments.
+	[__USE_MISC]: Remove redundant conditionals.
+	* misc/sys/uio.h: Update #endif comments.
+	* posix/bits/unistd.h [__USE_MISC]: Remove redundant conditionals.
+	* posix/glob.h [__USE_MISC]: Likewise.
+	* posix/sys/types.h: Update #endif comments.
+	[__USE_MISC]: Remove redundant conditionals.
+	* posix/sys/wait.h: Update #endif comments.
+	[__USE_MISC]: Remove redundant conditionals.
+	* posix/unistd.h: Update #endif comments.
+	[__USE_MISC]: Remove redundant conditionals.
+	* pwd/pwd.h [__USE_GNU]: Likewise.
+	[__USE_MISC]: Likewise.
+	* resolv/netdb.h [__USE_GNU]: Likewise.
+	* signal/signal.h: Update #endif comments.
+	[__USE_MISC]: Remove redundant conditionals.
+	* stdlib/stdlib.h: Update #else and #endif comments.
+	[__USE_MISC]: Remove redundant conditionals.
+	[__USE_GNU]: Likewise.
+	* string/bits/string2.h [__USE_MISC]: Likewise.
+	* string/string.h: Update #endif comments.
+	[__USE_MISC]: Remove redundant conditionals.
+	* sysdeps/m68k/m680x0/fpu/bits/mathinline.h [__USE_MISC]:
+	Likewise.
+	* sysdeps/mach/hurd/bits/fcntl.h [__USE_MISC]: Likewise.
+	* sysdeps/mach/hurd/bits/stat.h [__USE_MISC]: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/sigaction.h [__USE_MISC]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/stat.h [__USE_MISC]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/bits/fcntl-linux.h: Update #endif
+	comments.
+	[__USE_MISC]: Remove redundant conditionals.
+	* sysdeps/unix/sysv/linux/bits/in.h [__USE_GNU]: Likewise.
+	* sysdeps/unix/sysv/linux/bits/sigaction.h [__USE_MISC]: Likewise.
+	* sysdeps/unix/sysv/linux/bits/socket.h [__USE_GNU]: Likewise.
+	* sysdeps/unix/sysv/linux/bits/stat.h [__USE_MISC]: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/sigaction.h [__USE_MISC]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/m68k/bits/stat.h [__USE_MISC]: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/sigaction.h [__USE_MISC]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/stat.h [__USE_MISC]: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/stat.h [__USE_MISC]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/sigaction.h [__USE_MISC]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/stat.h [__USE_MISC]: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/sigaction.h [__USE_MISC]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/stat.h [__USE_MISC]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/stat.h [__USE_MISC]: Likewise.
+	* sysdeps/x86/bits/string.h: Update #endif comments.
+	* sysdeps/x86/fpu/bits/mathinline.h [__USE_MISC]: Remove redundant
+	conditionals.
+	* time/sys/time.h: Update #endif comments.
+	* time/time.h: Likewise.
+	[__USE_MISC]: Remove redundant conditionals.
+
 2014-02-21  Yury Gribov  <y.gribov@samsung.com>
 
 	[BZ #16600]

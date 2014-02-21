@@ -58,7 +58,7 @@ __BEGIN_NAMESPACE_STD
 /* Returned by `clock'.  */
 typedef __clock_t clock_t;
 __END_NAMESPACE_STD
-#if defined __USE_XOPEN || defined __USE_POSIX || defined __USE_MISC
+#if defined __USE_XOPEN || defined __USE_POSIX
 __USING_NAMESPACE_STD(clock_t)
 #endif
 
@@ -74,7 +74,7 @@ __BEGIN_NAMESPACE_STD
 /* Returned by `time'.  */
 typedef __time_t time_t;
 __END_NAMESPACE_STD
-#if defined __USE_POSIX || defined __USE_MISC
+#ifdef __USE_POSIX
 __USING_NAMESPACE_STD(time_t)
 #endif
 
@@ -108,7 +108,7 @@ typedef __timer_t timer_t;
 
 #if (!defined __timespec_defined					\
      && ((defined _TIME_H						\
-	  && (defined __USE_POSIX199309 || defined __USE_MISC		\
+	  && (defined __USE_POSIX199309					\
 	      || defined __USE_ISOC11))					\
 	 || defined __need_timespec))
 # define __timespec_defined	1
@@ -151,7 +151,7 @@ struct tm
 # endif
 };
 __END_NAMESPACE_STD
-#if defined __USE_XOPEN || defined __USE_POSIX || defined __USE_MISC
+#if defined __USE_XOPEN || defined __USE_POSIX
 __USING_NAMESPACE_STD(tm)
 #endif
 
@@ -243,7 +243,7 @@ extern struct tm *gmtime (const time_t *__timer) __THROW;
 extern struct tm *localtime (const time_t *__timer) __THROW;
 __END_NAMESPACE_STD
 
-# if defined __USE_POSIX || defined __USE_MISC
+# ifdef __USE_POSIX
 /* Return the `struct tm' representation of *TIMER in UTC,
    using *TP to store the result.  */
 extern struct tm *gmtime_r (const time_t *__restrict __timer,
@@ -253,7 +253,7 @@ extern struct tm *gmtime_r (const time_t *__restrict __timer,
    using *TP to store the result.  */
 extern struct tm *localtime_r (const time_t *__restrict __timer,
 			       struct tm *__restrict __tp) __THROW;
-# endif	/* POSIX or misc */
+# endif	/* POSIX */
 
 __BEGIN_NAMESPACE_STD
 /* Return a string of the form "Day Mon dd hh:mm:ss yyyy\n"
@@ -264,7 +264,7 @@ extern char *asctime (const struct tm *__tp) __THROW;
 extern char *ctime (const time_t *__timer) __THROW;
 __END_NAMESPACE_STD
 
-# if defined __USE_POSIX || defined __USE_MISC
+# ifdef __USE_POSIX
 /* Reentrant versions of the above functions.  */
 
 /* Return in BUF a string of the form "Day Mon dd hh:mm:ss yyyy\n"
@@ -275,7 +275,7 @@ extern char *asctime_r (const struct tm *__restrict __tp,
 /* Equivalent to `asctime_r (localtime_r (timer, *TMP*), buf)'.  */
 extern char *ctime_r (const time_t *__restrict __timer,
 		      char *__restrict __buf) __THROW;
-# endif	/* POSIX or misc */
+# endif	/* POSIX */
 
 
 /* Defined in localtime.c.  */

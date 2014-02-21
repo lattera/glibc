@@ -54,7 +54,7 @@
 #define IP_ADD_SOURCE_MEMBERSHIP 39 /* ip_mreq_source: join source group */
 #define IP_DROP_SOURCE_MEMBERSHIP 40 /* ip_mreq_source: leave source group */
 #define IP_MSFILTER 41
-#if defined __USE_MISC || defined __USE_GNU
+#ifdef __USE_MISC
 # define MCAST_JOIN_GROUP 42	/* group_req: join any-source group */
 # define MCAST_BLOCK_SOURCE 43	/* group_source_req: block from given group */
 # define MCAST_UNBLOCK_SOURCE 44 /* group_source_req: unblock from given group*/
@@ -129,7 +129,7 @@
 #define IP_DEFAULT_MULTICAST_LOOP       1
 #define IP_MAX_MEMBERSHIPS              20
 
-#if defined __USE_MISC || defined __USE_GNU
+#ifdef __USE_MISC
 /* Structure used to describe IP options for IP_OPTIONS and IP_RETOPTS.
    The `ip_dst' field is used for the first-hop gateway when using a
    source route (this gets put into the header proper).  */

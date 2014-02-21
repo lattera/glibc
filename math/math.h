@@ -72,7 +72,7 @@ __BEGIN_DECLS
 #undef _Mdouble_END_NAMESPACE
 #undef	__MATH_PRECNAME
 
-#if defined __USE_MISC || defined __USE_ISOC99
+#ifdef __USE_ISOC99
 
 
 /* Include the file of declarations again, this time using `float'
@@ -137,7 +137,7 @@ extern long double __REDIRECT_NTH (nexttowardl,
 
 # endif /* !(__NO_LONG_DOUBLE_MATH && _LIBC) || __LDBL_COMPAT */
 
-#endif	/* Use misc or ISO C99.  */
+#endif	/* Use ISO C99.  */
 #undef	__MATHDECL_1
 #undef	__MATHDECL
 #undef	__MATHCALL
@@ -352,14 +352,14 @@ extern int matherr (struct exception *__exc);
 /* SVID mode specifies returning this large value instead of infinity.  */
 # define HUGE		3.40282347e+38F
 
-#else	/* !SVID */
+#else	/* !Misc.  */
 
 # ifdef __USE_XOPEN
 /* X/Open wants another strange constant.  */
 #  define MAXFLOAT	3.40282347e+38F
 # endif
 
-#endif	/* SVID */
+#endif	/* Misc.  */
 
 
 /* Some useful constants.  */

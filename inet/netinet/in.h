@@ -211,13 +211,13 @@ struct in6_addr
     union
       {
 	uint8_t	__u6_addr8[16];
-#if defined __USE_MISC || defined __USE_GNU
+#ifdef __USE_MISC
 	uint16_t __u6_addr16[8];
 	uint32_t __u6_addr32[4];
 #endif
       } __in6_u;
 #define s6_addr			__in6_u.__u6_addr8
-#if defined __USE_MISC || defined __USE_GNU
+#ifdef __USE_MISC
 # define s6_addr16		__in6_u.__u6_addr16
 # define s6_addr32		__in6_u.__u6_addr32
 #endif
@@ -259,7 +259,7 @@ struct sockaddr_in6
   };
 #endif /* !__USE_KERNEL_IPV6_DEFS */
 
-#if defined __USE_MISC || defined __USE_GNU
+#ifdef __USE_MISC
 /* IPv4 multicast request.  */
 struct ip_mreq
   {
@@ -295,7 +295,7 @@ struct ipv6_mreq
   };
 #endif /* !__USE_KERNEL_IPV6_DEFS */
 
-#if defined __USE_MISC || defined __USE_GNU
+#ifdef __USE_MISC
 /* Multicast group request.  */
 struct group_req
   {
@@ -496,7 +496,7 @@ extern uint16_t htons (uint16_t __hostshort)
 
 #define IN6_IS_ADDR_MULTICAST(a) (((const uint8_t *) (a))[0] == 0xff)
 
-#if defined __USE_MISC || defined __USE_GNU
+#ifdef __USE_MISC
 /* Bind socket to a privileged IP port.  */
 extern int bindresvport (int __sockfd, struct sockaddr_in *__sock_in) __THROW;
 
