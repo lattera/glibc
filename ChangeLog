@@ -1,3 +1,12 @@
+2014-02-21  Adam Conrad  <adconrad@0c3.net>
+
+	* sysdeps/powerpc/bits/hwcap.h: Allow _SYSDEPS_SYSDEP_H guard as a
+	synonym for _SYS_AUXV_H to allow direct inclusion.
+	* sysdeps/sparc/bits/hwcap.h: Likewise.
+	* sysdeps/powerpc/sysdep.h: Define _SYSDEPS_SYSDEP_H instead of
+	_SYS_AUXV_H so we can include sysdep.h and sys/auxv.h together.
+	* sysdeps/sparc/sysdep.h: Likewise.
+
 2014-02-21  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* benchtests/bench-strrchr.c (do_test): Fix minor formatting.

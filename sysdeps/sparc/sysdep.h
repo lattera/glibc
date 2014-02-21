@@ -15,7 +15,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define _SYS_AUXV_H 1
+#define _SYSDEPS_SYSDEP_H 1
 #include <bits/hwcap.h>
 
 #ifdef	__ASSEMBLER__
