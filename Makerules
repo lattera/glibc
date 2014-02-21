@@ -1195,17 +1195,21 @@ generated += $(extra-libs:=.symlist)
 ifdef abilist-pattern
 $(objpfx)check-abi-%.out: $(common-objpfx)config.make $(abilist-pattern) \
 			  $(objpfx)%.symlist
-	$(check-abi-pattern)
+	$(check-abi-pattern); \
+	$(evaluate-test)
 $(objpfx)check-abi-%.out: $(common-objpfx)config.make $(abilist-pattern) \
 			  $(common-objpfx)%.symlist
-	$(check-abi-pattern)
+	$(check-abi-pattern); \
+	$(evaluate-test)
 endif
 $(objpfx)check-abi-%.out: $(common-objpfx)config.make %.abilist \
 			  $(objpfx)%.symlist
-	$(check-abi)
+	$(check-abi); \
+	$(evaluate-test)
 $(objpfx)check-abi-%.out: $(common-objpfx)config.make %.abilist \
 			  $(common-objpfx)%.symlist
-	$(check-abi)
+	$(check-abi); \
+	$(evaluate-test)
 define check-abi-pattern
 	diff -p -U 0 $(filter $(abilist-pattern),$^) $(filter %.symlist,$^) \
 	     > $@

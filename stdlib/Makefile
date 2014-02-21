@@ -132,14 +132,16 @@ endif
 
 $(objpfx)isomac.out: $(objpfx)isomac
 	$(dir $<)$(notdir $<) '$(CC)'  \
-	'-I../include $(+sysdep-includes) $(sysincludes) -I..' > $<.out
+	'-I../include $(+sysdep-includes) $(sysincludes) -I..' > $<.out; \
+	$(evaluate-test)
 
 isomac-CFLAGS = -O
 $(objpfx)isomac: isomac.c
 	$(native-compile)
 
 $(objpfx)tst-fmtmsg.out: tst-fmtmsg.sh $(objpfx)tst-fmtmsg
-	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)' $(common-objpfx)stdlib/
+	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)' $(common-objpfx)stdlib/; \
+	$(evaluate-test)
 
 $(objpfx)tst-putenv: $(objpfx)tst-putenvmod.so
 LDFLAGS-tst-putenv = $(no-as-needed)

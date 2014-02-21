@@ -104,5 +104,6 @@ ifeq ($(run-built-tests),yes)
 tests: $(objpfx)ftwtest.out
 
 $(objpfx)ftwtest.out: ftwtest-sh $(objpfx)ftwtest
-	$(SHELL) $< $(common-objpfx) '$(test-program-cmd)' > $@
+	$(SHELL) $< $(common-objpfx) '$(test-program-cmd)' > $@; \
+	$(evaluate-test)
 endif

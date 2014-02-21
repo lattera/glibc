@@ -278,7 +278,8 @@ endif
 
 tst-loading-ENV = MALLOC_TRACE=$(objpfx)tst-loading.mtrace
 $(objpfx)mtrace-tst-loading: $(objpfx)tst-loading.out
-	$(common-objpfx)malloc/mtrace $(objpfx)tst-loading.mtrace > $@
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-loading.mtrace > $@; \
+	$(evaluate-test)
 
 $(objpfx)bug-iconv1.out: $(objpfx)gconv-modules \
 			 $(addprefix $(objpfx),$(modules.so))
@@ -299,13 +300,15 @@ $(objpfx)tst-iconv7.out: $(objpfx)gconv-modules \
 $(objpfx)iconv-test.out: run-iconv-test.sh $(objpfx)gconv-modules \
 			 $(addprefix $(objpfx),$(modules.so)) \
 			 $(common-objdir)/iconv/iconv_prog TESTS
-	$(SHELL) $< $(common-objdir) '$(test-wrapper)' > $@
+	$(SHELL) $< $(common-objdir) '$(test-wrapper)' > $@; \
+	$(evaluate-test)
 
 $(objpfx)tst-tables.out: tst-tables.sh $(objpfx)gconv-modules \
 			 $(addprefix $(objpfx),$(modules.so)) \
 			 $(objpfx)tst-table-from $(objpfx)tst-table-to
 	$(SHELL) $< $(common-objpfx) $(common-objpfx)iconvdata/ \
-		'$(test-program-prefix)' > $@
+		'$(test-program-prefix)' > $@; \
+	$(evaluate-test)
 
 do-tests-clean common-mostlyclean: tst-tables-clean
 

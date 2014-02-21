@@ -1,5 +1,78 @@
 2014-02-21  Joseph Myers  <joseph@codesourcery.com>
 
+	* Makefile ($(objpfx)c++-types-check.out): Use $(evaluate-test).
+	($(objpfx)check-local-headers.out): Likewise.
+	($(objpfx)begin-end-check.out): Likewise.
+	* Makerules (check-abi-%.out): Likewise.
+	* catgets/Makefile ($(objpfx)test1.cat): Likewise.
+	($(objpfx)test2.cat): Likewise.
+	($(objpfx)de/libc.cat): Likewise.
+	($(objpfx)test-gencat.out): Likewise.
+	* conform/Makefile ($(objpfx)run-conformtest.out): Likewise.
+	* elf/Makefile ($(objpfx)order-cmp.out): Likewise.
+	($(objpfx)noload-mem): Likewise.
+	($(objpfx)tst-pathopt.out): Likewise.
+	($(objpfx)tst-rtld-load-self.out): Likewise.
+	($(objpfx)tst-array1-cmp.out): Likewise.
+	($(objpfx)tst-array1-static-cmp.out): Likewise.
+	($(objpfx)tst-array2-cmp.out): Likewise.
+	($(objpfx)tst-array3-cmp.out): Likewise.
+	($(objpfx)tst-array4-cmp.out): Likewise.
+	($(objpfx)tst-array5-cmp.out): Likewise.
+	($(objpfx)tst-array5-static-cmp.out): Likewise.
+	($(objpfx)check-textrel.out): Likewise.
+	($(objpfx)check-execstack.out): Likewise.
+	($(objpfx)check-localplt.out): Likewise.
+	($(objpfx)order2-cmp.out): Likewise.
+	($(objpfx)tst-leaks1-mem): Likewise.
+	($(objpfx)tst-leaks1-static-mem): Likewise.
+	($(objpfx)tst-initorder-cmp.out): Likewise.
+	($(objpfx)tst-initorder2-cmp.out): Likewise.
+	($(objpfx)tst-unused-dep.out): Likewise.
+	($(objpfx)tst-unused-dep-cmp.out): Likewise.
+	* grp/Makefile ($(objpfx)tst_fgetgrent.out): Likewise.
+	* iconv/Makefile (test-iconvconfig): Likewise.
+	* iconvdata/Makefile ($(objpfx)mtrace-tst-loading): Likewise.
+	($(objpfx)iconv-test.out): Likewise.
+	($(objpfx)tst-tables.out): Likewise.
+	* intl/Makefile ($(objpfx)mtrace-tst-gettext): Likewise.
+	($(objpfx)tst-gettext.out): Likewise.
+	($(objpfx)tst-translit.out): Likewise.
+	($(objpfx)tst-gettext2.out): Likewise.
+	($(objpfx)tst-gettext4.out): Likewise.
+	($(objpfx)tst-gettext6.out): Likewise.
+	* io/Makefile ($(objpfx)ftwtest.out): Likewise.
+	* libio/Makefile ($(objpfx)test-freopen.out): Likewise.
+	($(objpfx)tst-fopenloc-cmp.out): Likewise.
+	($(objpfx)tst-fopenloc-mem.out): Likewise.
+	* malloc/Makefile ($(objpfx)tst-mtrace.out): Likewise.
+	* misc/Makefile ($(objpfx)tst-error1-mem): Likewise.
+	* posix/Makefile ($(objpfx)globtest.out): Likewise.
+	($(objpfx)wordexp-tst.out): Likewise.
+	($(objpfx)annexc.out): Likewise.
+	($(objpfx)tst-fnmatch-mem): Likewise.
+	($(objpfx)bug-regex2-mem): Likewise.
+	($(objpfx)bug-regex14-mem): Likewise.
+	($(objpfx)bug-regex21-mem): Likewise.
+	($(objpfx)bug-regex31-mem): Likewise.
+	($(objpfx)tst-vfork3-mem): Likewise.
+	($(objpfx)tst-rxspencer-no-utf8-mem): Likewise.
+	($(objpfx)tst-pcre-mem): Likewise.
+	($(objpfx)tst-boost-mem): Likewise.
+	($(objpfx)tst-getconf.out): Likewise.
+	($(objpfx)bug-ga2-mem): Likewise.
+	($(objpfx)bug-glob2-mem): Likewise.
+	* resolv/Makefile ($(objpfx)mtrace-tst-leaks): Likewise.
+	($(objpfx)mtrace-tst-leaks2): Likewise.
+	* stdio-common/Makefile ($(objpfx)tst-unbputc.out): Likewise.
+	($(objpfx)tst-printf.out): Likewise.
+	($(objpfx)tst-setvbuf1.out): Likewise.
+	($(objpfx)tst-setvbuf1-cmp.out): Likewise.
+	* stdlib/Makefile ($(objpfx)isomac.out): Likewise.
+	($(objpfx)tst-fmtmsg.out): Likewise.
+	* string/Makefile ($(objpfx)tst-svc-cmp.out): Likewise.
+	* sysdeps/x86/Makefile ($(objpfx)tst-xmmymm.out): Likewise.
+
 	* bits/fcntl.h [__USE_MISC]: Remove redundant conditionals.
 	* bits/sigaction.h [__USE_MISC]: Likewise.
 	* bits/waitstatus.h: Update #endif comments.

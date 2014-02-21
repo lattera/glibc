@@ -67,10 +67,12 @@ ifeq ($(run-built-tests),yes)
 tests: $(objpfx)tst-unbputc.out $(objpfx)tst-printf.out
 
 $(objpfx)tst-unbputc.out: tst-unbputc.sh $(objpfx)tst-unbputc
-	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'
+	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'; \
+	$(evaluate-test)
 
 $(objpfx)tst-printf.out: tst-printf.sh $(objpfx)tst-printf
-	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'
+	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'; \
+	$(evaluate-test)
 endif
 
 CFLAGS-vfprintf.c = -Wno-uninitialized
@@ -129,10 +131,12 @@ tests: $(objpfx)tst-setvbuf1-cmp.out
 endif
 
 $(objpfx)tst-setvbuf1.out: /dev/null $(objpfx)tst-setvbuf1
-	$(test-program-cmd) > $@ 2>&1
+	$(test-program-cmd) > $@ 2>&1; \
+	$(evaluate-test)
 
 $(objpfx)tst-setvbuf1-cmp.out: tst-setvbuf1.expect $(objpfx)tst-setvbuf1.out
-	cmp $^ > $@
+	cmp $^ > $@; \
+	$(evaluate-test)
 
 ifeq ($(build-shared),yes)
 link-libm = $(common-objpfx)math/libm.so

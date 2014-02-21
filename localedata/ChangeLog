@@ -1,3 +1,17 @@
+2014-02-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makefile ($(objpfx)sort-test.out): Use $(evaluate-test).
+	($(objpfx)tst-fmon.out): Likewise.
+	($(objpfx)tst-numeric.out): Likewise.
+	($(objpfx)tst-locale.out): Likewise.
+	($(objpfx)tst-rpmatch.out): Likewise.
+	($(objpfx)tst-trans.out): Likewise.
+	($(objpfx)tst-mbswcs.out): Likewise.
+	($(objpfx)tst-ctype.out): Likewise.
+	($(objpfx)tst-wctype.out): Likewise.
+	($(objpfx)tst-langinfo.out): Likewise.
+	($(objpfx)mtrace-tst-leaks): Likewise.
+
 2013-12-26  Chris Leonard  <cjl@sugarlabs.org>
 
 	* locales/sa_IN: Add lang_name.

@@ -94,7 +94,8 @@ $(objpfx)ga_test: $(objpfx)libanl.so $(shared-thread-library)
 $(objpfx)tst-leaks: $(objpfx)libresolv.so
 tst-leaks-ENV = MALLOC_TRACE=$(objpfx)tst-leaks.mtrace
 $(objpfx)mtrace-tst-leaks: $(objpfx)tst-leaks.out
-	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks.mtrace > $@
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks.mtrace > $@; \
+	$(evaluate-test)
 ifeq ($(run-built-tests),yes)
 ifneq (no,$(PERL))
 tests: $(objpfx)mtrace-tst-leaks
@@ -103,7 +104,8 @@ endif
 
 tst-leaks2-ENV = MALLOC_TRACE=$(objpfx)tst-leaks2.mtrace
 $(objpfx)mtrace-tst-leaks2: $(objpfx)tst-leaks2.out
-	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks2.mtrace > $@
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks2.mtrace > $@; \
+	$(evaluate-test)
 ifeq ($(run-built-tests),yes)
 ifneq (no,$(PERL))
 xtests: $(objpfx)mtrace-tst-leaks2

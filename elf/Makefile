@@ -641,7 +641,8 @@ ifeq ($(run-built-tests),yes)
 tests: $(objpfx)order-cmp.out
 endif
 $(objpfx)order-cmp.out: $(objpfx)order.out
-	(echo "0123456789" | cmp $< -) > $@
+	(echo "0123456789" | cmp $< -) > $@; \
+	$(evaluate-test)
 
 $(objpfx)vismain: $(addprefix $(objpfx),vismod1.so vismod2.so)
 $(objpfx)vismain.out: $(addprefix $(objpfx),vismod3.so)
@@ -652,7 +653,8 @@ LDFLAGS-noload = -rdynamic $(no-as-needed)
 $(objpfx)noload.out: $(objpfx)testobj5.so
 
 $(objpfx)noload-mem: $(objpfx)noload.out
-	$(common-objpfx)malloc/mtrace $(objpfx)noload.mtrace > $@
+	$(common-objpfx)malloc/mtrace $(objpfx)noload.mtrace > $@; \
+	$(evaluate-test)
 noload-ENV = MALLOC_TRACE=$(objpfx)noload.mtrace
 
 LDFLAGS-nodelete = -rdynamic
@@ -704,10 +706,12 @@ $(objpfx)lateglobal.out: $(objpfx)ltglobmod1.so $(objpfx)ltglobmod2.so
 $(objpfx)tst-pathopt: $(libdl)
 $(objpfx)tst-pathopt.out: tst-pathopt.sh $(objpfx)tst-pathopt \
 			  $(objpfx)pathoptobj.so
-	$(SHELL) $< $(common-objpfx) '$(test-wrapper-env)'
+	$(SHELL) $< $(common-objpfx) '$(test-wrapper-env)'; \
+	$(evaluate-test)
 
 $(objpfx)tst-rtld-load-self.out: tst-rtld-load-self.sh $(objpfx)ld.so
-	$(SHELL) $^ '$(test-wrapper)' '$(test-wrapper-env)' > $@
+	$(SHELL) $^ '$(test-wrapper)' '$(test-wrapper-env)' > $@; \
+	$(evaluate-test)
 
 $(objpfx)initfirst: $(libdl)
 $(objpfx)initfirst.out: $(objpfx)firstobj.so
@@ -857,31 +861,38 @@ tests: $(objpfx)tst-array1-cmp.out $(objpfx)tst-array1-static-cmp.out \
 endif
 
 $(objpfx)tst-array1-cmp.out: tst-array1.exp $(objpfx)tst-array1.out
-	cmp $^ > $@
+	cmp $^ > $@; \
+	$(evaluate-test)
 
 $(objpfx)tst-array1-static-cmp.out: tst-array1.exp \
 				    $(objpfx)tst-array1-static.out
-	cmp $^ > $@
+	cmp $^ > $@; \
+	$(evaluate-test)
 
 $(objpfx)tst-array2: $(objpfx)tst-array2dep.so
 $(objpfx)tst-array2-cmp.out: tst-array2.exp $(objpfx)tst-array2.out
-	cmp $^ > $@
+	cmp $^ > $@; \
+	$(evaluate-test)
 
 $(objpfx)tst-array3-cmp.out: tst-array1.exp $(objpfx)tst-array3.out
-	cmp $^ > $@
+	cmp $^ > $@; \
+	$(evaluate-test)
 
 $(objpfx)tst-array4: $(libdl)
 $(objpfx)tst-array4.out: $(objpfx)tst-array2dep.so
 $(objpfx)tst-array4-cmp.out: tst-array4.exp $(objpfx)tst-array4.out
-	cmp $^ > $@
+	cmp $^ > $@; \
+	$(evaluate-test)
 
 $(objpfx)tst-array5: $(objpfx)tst-array5dep.so
 $(objpfx)tst-array5-cmp.out: tst-array5.exp $(objpfx)tst-array5.out
-	cmp $^ > $@
+	cmp $^ > $@; \
+	$(evaluate-test)
 
 $(objpfx)tst-array5-static-cmp.out: tst-array5-static.exp \
 				$(objpfx)tst-array5-static.out
-	cmp $^ > $@
+	cmp $^ > $@; \
+	$(evaluate-test)
 
 CFLAGS-tst-pie1.c += $(pie-ccflag)
 
@@ -905,7 +916,8 @@ common-generated += $(all-built-dso:$(common-objpfx)%=%.dyn)
 
 $(objpfx)check-textrel.out: $(..)scripts/check-textrel.awk \
 			    $(all-built-dso:=.dyn)
-	LC_ALL=C $(AWK) -f $^ > $@
+	LC_ALL=C $(AWK) -f $^ > $@; \
+	$(evaluate-test)
 generated += check-textrel.out
 
 $(objpfx)execstack-default: $(first-word $(wildcard $(sysdirs:%=%/stackinfo.h)))
@@ -932,7 +944,8 @@ common-generated += $(all-built-dso:$(common-objpfx)%=%.phdr)
 $(objpfx)check-execstack.out: $(..)scripts/check-execstack.awk \
 			      $(objpfx)execstack-default \
 			      $(all-built-dso:=.phdr)
-	LC_ALL=C $(AWK) -f $^ > $@
+	LC_ALL=C $(AWK) -f $^ > $@; \
+	$(evaluate-test)
 generated += check-execstack.out
 
 $(objpfx)tst-dlmodcount: $(libdl)
@@ -967,7 +980,8 @@ $(objpfx)check-localplt.out: $(..)scripts/check-localplt.awk \
 			     localplt.data
 	LC_ALL=C $(AWK) -f $(filter-out $< %localplt.data,$^) | \
 	  LC_ALL=C $(AWK) -f $< $(filter %localplt.data,$^) - \
-	  > $@
+	  > $@; \
+	$(evaluate-test)
 endif
 
 $(objpfx)tst-dlopenrpathmod.so: $(libdl)
@@ -1011,7 +1025,8 @@ endif
 $(objpfx)order2: $(libdl)
 $(objpfx)order2.out: $(objpfx)order2mod1.so $(objpfx)order2mod2.so
 $(objpfx)order2-cmp.out: $(objpfx)order2.out
-	(echo "12345" | cmp $< -) > $@
+	(echo "12345" | cmp $< -) > $@; \
+	$(evaluate-test)
 $(objpfx)order2mod1.so: $(objpfx)order2mod4.so
 $(objpfx)order2mod4.so: $(objpfx)order2mod3.so
 $(objpfx)order2mod2.so: $(objpfx)order2mod3.so
@@ -1030,11 +1045,13 @@ tst-ptrguard1-static-ARGS = --command "$(objpfx)tst-ptrguard1-static --child"
 
 $(objpfx)tst-leaks1: $(libdl)
 $(objpfx)tst-leaks1-mem: $(objpfx)tst-leaks1.out
-	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks1.mtrace > $@
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks1.mtrace > $@; \
+	$(evaluate-test)
 
 $(objpfx)tst-leaks1-static: $(common-objpfx)dlfcn/libdl.a
 $(objpfx)tst-leaks1-static-mem: $(objpfx)tst-leaks1-static.out
-	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks1-static.mtrace > $@
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks1-static.mtrace > $@; \
+	$(evaluate-test)
 
 tst-leaks1-ENV = MALLOC_TRACE=$(objpfx)tst-leaks1.mtrace
 tst-leaks1-static-ENV = MALLOC_TRACE=$(objpfx)tst-leaks1-static.mtrace
@@ -1111,7 +1128,8 @@ ifeq ($(run-built-tests),yes)
 tests: $(objpfx)tst-initorder-cmp.out
 endif
 $(objpfx)tst-initorder-cmp.out: tst-initorder.exp $(objpfx)tst-initorder.out
-	cmp $^ > $@
+	cmp $^ > $@; \
+	$(evaluate-test)
 
 $(objpfx)tst-initorder2: $(objpfx)tst-initorder2a.so $(objpfx)tst-initorder2d.so $(objpfx)tst-initorder2c.so
 $(objpfx)tst-initorder2a.so: $(objpfx)tst-initorder2b.so
@@ -1132,7 +1150,8 @@ ifeq ($(run-built-tests),yes)
 tests: $(objpfx)tst-initorder2-cmp.out
 endif
 $(objpfx)tst-initorder2-cmp.out: tst-initorder2.exp $(objpfx)tst-initorder2.out
-	cmp $^ > $@
+	cmp $^ > $@; \
+	$(evaluate-test)
 
 $(objpfx)tst-relsort1: $(libdl)
 $(objpfx)tst-relsort1mod1.so: $(libm) $(objpfx)tst-relsort1mod2.so
@@ -1151,7 +1170,9 @@ $(objpfx)tst-unused-dep.out: $(objpfx)testobj1.so
 	LD_PRELOAD= \
 	$(elf-objpfx)${rtld-installed-name} \
 	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
-	  $< > $@
+	  $< > $@; \
+	$(evaluate-test)
 
 $(objpfx)tst-unused-dep-cmp.out: $(objpfx)tst-unused-dep.out
-	cmp $< /dev/null > $@
+	cmp $< /dev/null > $@; \
+	$(evaluate-test)

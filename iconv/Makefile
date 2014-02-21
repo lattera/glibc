@@ -78,4 +78,5 @@ test-iconvconfig: /dev/null $(objpfx)iconvconfig
 	rm -f $$tmp; \
 	$(make-test-out) --output=$$tmp --nostdlib $(inst_gconvdir) && \
 	cmp $$tmp $(inst_gconvdir)/gconv-modules.cache && \
-	rm -f $$tmp
+	rm -f $$tmp; \
+	$(evaluate-test)

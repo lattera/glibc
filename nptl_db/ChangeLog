@@ -1,3 +1,8 @@
+2014-02-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makefile ($(objpfx)db-symbols.out): Use
+	$(evaluate-test).
+
 2013-05-31  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makefile ($(objpfx)libthread_db.so): Remove dependencies on

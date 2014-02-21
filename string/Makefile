@@ -76,5 +76,6 @@ CFLAGS-tst-inlcall.c = -fno-builtin
 ifeq ($(run-built-tests),yes)
 tests: $(objpfx)tst-svc-cmp.out
 $(objpfx)tst-svc-cmp.out: tst-svc.expect $(objpfx)tst-svc.out
-	cmp $^ > $@
+	cmp $^ > $@; \
+	$(evaluate-test)
 endif

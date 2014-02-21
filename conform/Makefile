@@ -32,6 +32,7 @@ $(objpfx)run-conformtest.out: run-conformtest.sh conformtest.pl \
 			      $(wildcard data/*.h-data) \
 			      $(wildcard data/*/*.h-data)
 	-$(BASH) -e $< $(objpfx) $(PERL) '$(CC)' \
-	  '-I../include $(+sysdep-includes) $(sysincludes) -I..'
+	  '-I../include $(+sysdep-includes) $(sysincludes) -I..'; \
+	$(evaluate-test)
 
 generated = $(wildcard $(objpfx)conform-*.out)

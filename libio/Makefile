@@ -187,11 +187,14 @@ endif
 
 $(objpfx)test-freopen.out: test-freopen.sh $(objpfx)test-freopen
 	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'	\
-	$(common-objpfx)libio/
+	$(common-objpfx)libio/; \
+	$(evaluate-test)
 
 $(objpfx)tst-fopenloc-cmp.out: ../iconvdata/testdata/ISO-8859-1..UTF8 \
 			       $(objpfx)tst-fopenloc.out
-	cmp $^ > $@
+	cmp $^ > $@; \
+	$(evaluate-test)
 
 $(objpfx)tst-fopenloc-mem.out: $(objpfx)tst-fopenloc.out
-	$(common-objpfx)malloc/mtrace $(objpfx)tst-fopenloc.mtrace > $@
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-fopenloc.mtrace > $@; \
+	$(evaluate-test)

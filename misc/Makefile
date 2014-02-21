@@ -111,4 +111,5 @@ endif
 tst-error1-ENV = MALLOC_TRACE=$(objpfx)tst-error1.mtrace
 tst-error1-ARGS = $(objpfx)tst-error1.out
 $(objpfx)tst-error1-mem: $(objpfx)tst-error1.out
-	$(common-objpfx)malloc/mtrace $(objpfx)tst-error1.mtrace > $@
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-error1.mtrace > $@; \
+	$(evaluate-test)

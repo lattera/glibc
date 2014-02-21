@@ -54,6 +54,7 @@ include ../Rules
 tests: $(objpfx)db-symbols.out
 $(objpfx)db-symbols.out: $(objpfx)db-symbols.v.i \
 			 $(common-objpfx)nptl/libpthread.so
-	LC_ALL=C $(READELF) -W -s $(filter %.so,$^) | $(AWK) -f $< > $@
+	LC_ALL=C $(READELF) -W -s $(filter %.so,$^) | $(AWK) -f $< > $@; \
+	$(evaluate-test)
 
 $(objpfx)db-symbols.v.i: db-symbols.awk

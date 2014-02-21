@@ -256,12 +256,14 @@ ifneq ($(CXX),no)
 vpath c++-types.data $(+sysdep_dirs)
 
 $(objpfx)c++-types-check.out: c++-types.data scripts/check-c++-types.sh
-	scripts/check-c++-types.sh $< $(CXX) $(filter-out -std=gnu99 -Wstrict-prototypes,$(CFLAGS)) $(CPPFLAGS) > $@
+	scripts/check-c++-types.sh $< $(CXX) $(filter-out -std=gnu99 -Wstrict-prototypes,$(CFLAGS)) $(CPPFLAGS) > $@; \
+	$(evaluate-test)
 endif
 
 $(objpfx)check-local-headers.out: scripts/check-local-headers.sh
 	AWK='$(AWK)' scripts/check-local-headers.sh \
-	  "$(includedir)" "$(objpfx)" > $@
+	  "$(includedir)" "$(objpfx)" > $@; \
+	$(evaluate-test)
 
 ifneq ($(PERL),no)
 installed-headers = argp/argp.h assert/assert.h catgets/nl_types.h \
@@ -310,7 +312,8 @@ installed-headers = argp/argp.h assert/assert.h catgets/nl_types.h \
 
 tests: $(objpfx)begin-end-check.out
 $(objpfx)begin-end-check.out: scripts/begin-end-check.pl
-	$(PERL) scripts/begin-end-check.pl $(installed-headers) > $@
+	$(PERL) scripts/begin-end-check.pl $(installed-headers) > $@; \
+	$(evaluate-test)
 endif
 
 # The realclean target is just like distclean for the parent, but we want

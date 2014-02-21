@@ -1,3 +1,12 @@
+2014-02-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makefile ($(objpfx)tst-stack3-mem): Use $(evaluate-test).
+	($(objpfx)tst-tls6.out): Likewise.
+	($(objpfx)tst-cleanup0.out): Likewise.
+	($(objpfx)tst-cleanup0-cmp.out): Likewise.
+	($(objpfx)tst-cancel-wrappers.out): Likewise.
+	($(objpfx)tst-oddstacklimit.out): Likewise.
+
 2014-02-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makefile ($(objpfx)tst-cleanup0.out): Do not run cmp.
