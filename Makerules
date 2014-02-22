@@ -311,7 +311,6 @@ $(common-objpfx)Versions.all: $(..)scripts/firstversions.awk \
 # See %.v/%.v.i implicit rules in Makeconfig.
 $(common-objpfx)Versions.v.i: $(wildcard $(subdirs:%=$(..)%/Versions)) \
 			      $(wildcard $(sysdirs:%=%/Versions)) \
-			      $(common-objpfx)abi-versions.h \
 			      $(sysd-versions-force)
 $(common-objpfx)sysd-versions: $(common-objpfx)Versions.all \
 			       $(common-objpfx)Versions.v \

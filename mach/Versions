@@ -1,27 +1,11 @@
-%define SHARED
-%include <shlib-compat.h>
-
 libc {
   GLIBC_2.0 {
-%if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-    # This symbol is here only for binary compatibility with the
-    # pre-versioning libc.so.0.2 ABI.  When the soname changes,
-    # it can be removed.
-    __vm_allocate;
-%endif
-
     # variables used in Mach-specific macros
     __mach_task_self_;
     __vm_page_size;
 
     # functions used in inline functions and macros
     __mach_port_deallocate; __mach_thread_self;
-%if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
-    __mutex_init; __mutex_lock; __mutex_lock_solid; __mutex_trylock;
-    __mutex_unlock; __mutex_unlock_solid;
-    __spin_lock; __spin_lock_init; __spin_lock_solid; __spin_try_lock;
-    __spin_unlock;
-%endif
 
     # functions used by RPC stubs
     __mach_msg; __mach_msg_overwrite;
@@ -71,12 +55,10 @@ libc {
     mig_strncpy;
   }
 
-%if !SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
   HURD_CTHREADS_0.3 {
     __mutex_init; __mutex_lock; __mutex_lock_solid; __mutex_trylock;
     __mutex_unlock; __mutex_unlock_solid;
     __spin_lock; __spin_lock_init; __spin_lock_solid; __spin_try_lock;
     __spin_unlock;
   }
-%endif
 }

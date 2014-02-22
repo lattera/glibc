@@ -1,5 +1,14 @@
 2014-02-22  Roland McGrath  <roland@hack.frob.com>
 
+	* Makerules ($(common-objpfx)Versions.v.i): No longer depend
+	on $(common-objpfx)abi-versions.h; using <shlib-compat.h> inside
+	Versions files is now verboten.
+	* hurd/Versions (libc: GLIBC_2.0):
+	Remove various [SHLIB_COMPAT (libc, GLIBC_2_0, ...)] sections.
+	(libc: HURD_CTHREADS_0.3): Remove conditionalization, was under
+	[!SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)].
+	* mach/Versions: Likewise.
+
 	* csu/Versions: Remove unused %include.
 	* resolv/Versions: Likewise.
 

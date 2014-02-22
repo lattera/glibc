@@ -1,32 +1,5 @@
-%define SHARED
-%include <shlib-compat.h>
-
 libc {
   GLIBC_2.0 {
-%if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-    # These few symbols are here only for binary compatibility
-    # with the pre-versioning libc.so.0.2 ABI.  Their replacements
-    # are in the GLIBC_2.1 version set.  When the soname changes,
-    # these can be removed.
-    __getuids;
-    __hurd_file_name_lookup;
-    _hurd_proc_init; _hurd_umask;
-%endif
-
-    # These go into a different version set if GLIBC_2.0 compatibility
-    # is not required.  See below.
-%if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
-    # variables used for detecting cthreads
-    _cthread_exit_routine; _cthread_init_routine;
-
-    # cthreads functions with stubs in libc
-    cthread_keycreate; cthread_getspecific; cthread_setspecific;
-    __libc_getspecific;
-
-    # weak refs to libthreads functions that libc calls iff libthreads in use
-    cthread_fork; cthread_detach;
-%endif
-
     # necessary for the Hurd brk implementation
     _end;
 
@@ -157,7 +130,6 @@ libc {
     __errno_location;
   }
 
-%if !SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
   HURD_CTHREADS_0.3 {
     # weak refs to libthreads functions that libc calls iff libthreads in use
     cthread_fork; cthread_detach;
@@ -169,5 +141,4 @@ libc {
     cthread_keycreate; cthread_getspecific; cthread_setspecific;
     __libc_getspecific;
   }
-%endif
 }
