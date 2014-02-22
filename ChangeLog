@@ -1,3 +1,11 @@
+2014-05-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* benchtests/README: Document 'init' directive.
+	* benchtests/bench-skeleton.c (main) [BENCH_INIT]: Call
+	BENCH_INIT.
+	* scripts/bench.py (gen_source): Define BENCH_INIT macro.
+	(parse_file): Recognize 'init' directive.
+
 2014-05-26  Kyle McMartin  <kyle@redhat.com>
 
 	[BZ #16796]

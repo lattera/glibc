@@ -128,6 +128,10 @@ def gen_source(func, directives, all_vals):
     else:
         getret = ''
 
+    # Test initialization.
+    if directives['init']:
+        print('#define BENCH_INIT %s' % directives['init'])
+
     print(EPILOGUE % {'getret': getret, 'func': func})
 
 
@@ -232,7 +236,8 @@ def parse_file(func):
             'args': [],
             'includes': [],
             'include-sources': [],
-            'ret': ''
+            'ret': '',
+            'init': ''
     }
 
     try:

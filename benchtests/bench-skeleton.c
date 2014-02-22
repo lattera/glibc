@@ -62,6 +62,9 @@ main (int argc, char **argv)
 
   unsigned long iters, res;
 
+#ifdef BENCH_INIT
+  BENCH_INIT ();
+#endif
   TIMING_INIT (res);
 
   iters = 1000 * res;
