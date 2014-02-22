@@ -1,3 +1,8 @@
+2014-02-22  Roland McGrath  <roland@hack.frob.com>
+
+	* csu/Versions: Remove unused %include.
+	* resolv/Versions: Likewise.
+
 2014-02-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makefile ($(objpfx)c++-types-check.out): Use $(evaluate-test).
