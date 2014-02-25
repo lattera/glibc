@@ -1,6 +1,10 @@
 2014-04-17  Will Newton  <will.newton@linaro.org>
 
 	[BZ #16629]
+	* stdlib/tst-setcontext.c: Include signal.h.
+	(main): Check that the signal stack before and
+	after swapcontext is the same.
+
 	* sysdeps/unix/sysv/linux/aarch64/setcontext.S (__setcontext):
 	Re-implement to restore registers in user code and avoid
 	rt_sigreturn system call.
