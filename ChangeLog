@@ -1,3 +1,17 @@
+2014-02-25  Ulrich Drepper  <drepper@gmail.com>
+	    Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #16613]
+	* elf/dl-tls.c (_dl_count_modids): New function.
+	* sysdeps/generic/ldsodefs.h: Declare _dl_count_modids.
+	* elf/rtld.c (dl_main): Call _dl_count_modids to track TLS usage in
+	audit library and increment generation counter.
+	(_dl_allocate_tls_init): Add assertion to check TLS generation count.
+	* elf/tst-audit9.c: New file.
+	* elf/tst-auditmod9a.c: New file.
+	* elf/tst-auditmod9b.c: New file.
+	* elf/Makefile: Add rules to build and run tst-audit9.
+
 2014-02-25  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #15347]

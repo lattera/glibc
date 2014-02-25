@@ -957,6 +957,9 @@ extern void _dl_sysdep_start_cleanup (void)
 /* Determine next available module ID.  */
 extern size_t _dl_next_tls_modid (void) internal_function attribute_hidden;
 
+/* Count the modules with TLS segments.  */
+extern size_t _dl_count_modids (void) internal_function attribute_hidden;
+
 /* Calculate offset of the TLS blocks in the static TLS block.  */
 extern void _dl_determine_tlsoffset (void) internal_function attribute_hidden;
 

@@ -144,7 +144,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-dlmodcount tst-dlopenrpath tst-deep1 \
 	 tst-dlmopen1 tst-dlmopen2 tst-dlmopen3 \
 	 unload3 unload4 unload5 unload6 unload7 unload8 tst-global1 order2 \
-	 tst-audit1 tst-audit2 tst-audit8 \
+	 tst-audit1 tst-audit2 tst-audit8 tst-audit9 \
 	 tst-stackguard1 tst-addr1 tst-thrlock \
 	 tst-unique1 tst-unique2 tst-unique3 tst-unique4 \
 	 tst-initorder tst-initorder2 tst-relsort1 tst-null-argv \
@@ -203,6 +203,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		order2mod1 order2mod2 order2mod3 order2mod4 \
 		tst-unique1mod1 tst-unique1mod2 \
 		tst-unique2mod1 tst-unique2mod2 \
+		tst-auditmod9a tst-auditmod9b \
 		tst-unique3lib tst-unique3lib2 \
 		tst-unique4lib \
 		tst-initordera1 tst-initorderb1 \
@@ -560,6 +561,8 @@ unload4mod1.so-no-z-defs = yes
 ifuncmod1.so-no-z-defs = yes
 ifuncmod5.so-no-z-defs = yes
 ifuncmod6.so-no-z-defs = yes
+tst-auditmod9a.so-no-z-defs = yes
+tst-auditmod9b.so-no-z-defs = yes
 
 ifeq ($(build-shared),yes)
 # Build all the modules even when not actually running test programs.
@@ -1011,6 +1014,10 @@ tst-audit1-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
 
 $(objpfx)tst-audit2.out: $(objpfx)tst-auditmod1.so
 tst-audit2-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
+
+$(objpfx)tst-audit9: $(libdl)
+$(objpfx)tst-audit9.out: $(objpfx)tst-auditmod9a.so $(objpfx)tst-auditmod9b.so
+tst-audit9-ENV = LD_AUDIT=$(objpfx)tst-auditmod9a.so
 
 $(objpfx)tst-audit8: $(common-objpfx)math/libm.so
 $(objpfx)tst-audit8.out: $(objpfx)tst-auditmod1.so
