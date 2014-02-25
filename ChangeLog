@@ -1,3 +1,8 @@
+2014-02-25  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #15347]
+	* misc/sys/select.h (__FD_MASK): Avoid signed integer overflow.
+
 2014-02-25  Will Newton  <will.newton@linaro.org>
 
 	* sysdeps/arm/__longjmp.S: Include stap-probe.h.
