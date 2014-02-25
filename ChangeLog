@@ -1,3 +1,9 @@
+2014-02-25  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #16632]
+	* include/features.h: Don't warn about _BSD_SOURCE or _SVID_SOURCE if
+	_DEFAULT_SOURCE is defined.
+
 2014-02-25  Ulrich Drepper  <drepper@gmail.com>
 	    Carlos O'Donell  <carlos@redhat.com>
 

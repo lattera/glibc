@@ -140,8 +140,11 @@
 #endif
 
 /* _BSD_SOURCE and _SVID_SOURCE are deprecated aliases for
-   _DEFAULT_SOURCE.  */
-#if defined _BSD_SOURCE || defined _SVID_SOURCE
+   _DEFAULT_SOURCE.  If _DEFAULT_SOURCE is present we do not
+   issue a warning; the expectation is that the source is being
+   transitioned to use the new macro.  */
+#if (defined _BSD_SOURCE || defined _SVID_SOURCE) \
+    && !defined _DEFAULT_SOURCE
 # warning "_BSD_SOURCE and _SVID_SOURCE are deprecated, use _DEFAULT_SOURCE"
 # undef  _DEFAULT_SOURCE
 # define _DEFAULT_SOURCE	1
