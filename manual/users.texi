@@ -71,7 +71,7 @@ in a data base which you can access as described in @ref{User Database}.
 @cindex group ID
 Users are classified in @dfn{groups}.  Each user name belongs to one
 @dfn{default group} and may also belong to any number of
-@dfn{supplementary groups}. Users who are members of the same group can
+@dfn{supplementary groups}.  Users who are members of the same group can
 share resources (such as files) that are not accessible to users who are
 not a member of that group.  Each group has a @dfn{group name} and
 @dfn{group ID}.  @xref{Group Database}, for how to find information
@@ -830,7 +830,7 @@ special user.
 Be cautious about using the @code{exec} functions in combination with
 changing the effective user ID.  Don't let users of your program execute
 arbitrary programs under a changed user ID.  Executing a shell is
-especially bad news. Less obviously, the @code{execlp} and @code{execvp}
+especially bad news.  Less obviously, the @code{execlp} and @code{execvp}
 functions are a potential risk (since the program they execute depends
 on the user's @code{PATH} environment variable).
 

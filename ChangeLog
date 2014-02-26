@@ -56,6 +56,25 @@
 
 	* malloc/malloc.c (__libc_calloc): Simplify implementation.
 
+	* manual/arith.texi: Fix spaces after sentences.
+	* manual/charset.texi: Likewise.
+	* manual/errno.texi: Likewise.
+	* manual/install.texi: Likewise.
+	* manual/llio.texi: Likewise.
+	* manual/locale.texi: Likewise.
+	* manual/maint.texi: Likewise.
+	* manual/math.texi: Likewise.
+	* manual/memory.texi: Likewise.
+	* manual/message.texi: Likewise.
+	* manual/probes.texi: Likewise.
+	* manual/resource.texi: Likewise.
+	* manual/signal.texi: Likewise.
+	* manual/socket.texi: Likewise.
+	* manual/stdio.texi: Likewise.
+	* manual/string.texi: Likewise.
+	* manual/time.texi: Likewise.
+	* manual/users.texi: Likewise.
+
 2014-02-25  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #16632]

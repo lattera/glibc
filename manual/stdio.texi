@@ -541,7 +541,7 @@ another thread.
 @deftypefun void funlockfile (FILE *@var{stream})
 @safety{@prelim{}@mtsafe{}@assafe{}@acunsafe{@aculock{}}}
 The @code{funlockfile} function releases the internal locking object of
-the stream @var{stream}. The stream must have been locked before by a
+the stream @var{stream}.  The stream must have been locked before by a
 call to @code{flockfile} or a successful call of @code{ftrylockfile}.
 The implicit locking performed by the stream operations do not count.
 The @code{funlockfile} function does not return an error status and the
@@ -2547,7 +2547,7 @@ address of a @code{char *} object, and a successful call to
 location.
 
 The return value is the number of characters allocated for the buffer, or
-less than zero if an error occurred. Usually this means that the buffer
+less than zero if an error occurred.  Usually this means that the buffer
 could not be allocated.
 
 Here is how to use @code{asprintf} to get the same result as the

@@ -800,7 +800,7 @@ or is very close to 0.  It is well-defined for all other values of
 @deftypefunx {complex long double} clog10l (complex long double @var{z})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the base 10 logarithm of the complex value
-@var{z}. Mathematically, this corresponds to the value
+@var{z}.  Mathematically, this corresponds to the value
 
 @ifnottex
 @math{log (z) = log10 (cabs (z)) + I * carg (z)}

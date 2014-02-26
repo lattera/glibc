@@ -1584,7 +1584,7 @@ for the @code{iconv_open} function, or a null pointer.
 
 If the @var{codeset} parameter is the null pointer,
 @code{bind_textdomain_codeset} returns the currently selected codeset
-for the domain with the name @var{domainname}. It returns @code{NULL} if
+for the domain with the name @var{domainname}.  It returns @code{NULL} if
 no codeset has yet been selected.
 
 The @code{bind_textdomain_codeset} function can be used several times.

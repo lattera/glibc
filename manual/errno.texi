@@ -1317,7 +1317,7 @@ The function @code{strerror} is declared in @file{string.h}.
 The @code{strerror_r} function works like @code{strerror} but instead of
 returning the error message in a statically allocated buffer shared by
 all threads in the process, it returns a private copy for the
-thread. This might be either some permanent global data or a message
+thread.  This might be either some permanent global data or a message
 string in the user supplied buffer starting at @var{buf} with the
 length of @var{n} bytes.
 

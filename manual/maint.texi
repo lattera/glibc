@@ -424,7 +424,7 @@ top level of the @file{sysdeps} directory tree.  For example,
 files specific to those machine architectures, but not specific to any
 particular operating system.  There might be subdirectories for
 specializations of those architectures, such as
-@w{@file{sysdeps/m68k/68020}}. Code which is specific to the
+@w{@file{sysdeps/m68k/68020}}.  Code which is specific to the
 floating-point coprocessor used with a particular machine should go in
 @w{@file{sysdeps/@var{machine}/fpu}}.
 

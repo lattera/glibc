@@ -1036,7 +1036,7 @@ There was insufficient memory available to satisfy the request.
 
 @end table
 
-This function was introduced in POSIX 1003.1d. Although this function is
+This function was introduced in POSIX 1003.1d.  Although this function is
 superseded by @code{aligned_alloc}, it is more portable to older POSIX
 systems that do not support @w{ISO C11}.
 @end deftypefun
@@ -1361,7 +1361,7 @@ memory consumption of the program.
 @defvar __memalign_hook
 The value of this variable is a pointer to function that @code{aligned_alloc},
 @code{memalign}, @code{posix_memalign} and @code{valloc} use whenever they
-are called. You should define this function to look like @code{aligned_alloc};
+are called.  You should define this function to look like @code{aligned_alloc};
 that is, like:
 
 @smallexample
@@ -2492,7 +2492,7 @@ add_string (struct obstack *obstack, const char *ptr, int len)
       int room = obstack_room (obstack);
       if (room == 0)
         @{
-          /* @r{Not enough room. Add one character slowly,}
+          /* @r{Not enough room.  Add one character slowly,}
              @r{which may copy to a new chunk and make room.}  */
           obstack_1grow (obstack, *ptr++);
           len--;

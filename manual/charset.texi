@@ -1709,7 +1709,7 @@ implementation has the possibility to perform such a conversion, the
 function returns a handle.
 
 If the wanted conversion is not available, the @code{iconv_open} function
-returns @code{(iconv_t) -1}. In this case the global variable
+returns @code{(iconv_t) -1}.  In this case the global variable
 @code{errno} can have the following values:
 
 @table @code
@@ -1838,7 +1838,7 @@ implementation chosen for @theglibc{} as it is described below.
 Therefore an @code{iconv} call to reset the state should always be
 performed if some protocol requires this for the output text.
 
-The conversion stops for one of three reasons. The first is that all
+The conversion stops for one of three reasons.  The first is that all
 characters from the input buffer are converted.  This actually can mean
 two things: either all bytes from the input buffer are consumed or
 there are some bytes at the end of the buffer that possibly can form a
@@ -2133,7 +2133,7 @@ will succeed, but how to find @math{@cal{B}}?
 
 Unfortunately, the answer is: there is no general solution.  On some
 systems guessing might help.  On those systems most character sets can
-convert to and from UTF-8 encoded @w{ISO 10646} or Unicode text. Beside
+convert to and from UTF-8 encoded @w{ISO 10646} or Unicode text.  Beside
 this only some very system-specific methods can help.  Since the
 conversion functions come from loadable modules and these modules must
 be stored somewhere in the filesystem, one @emph{could} try to find them
@@ -2333,7 +2333,7 @@ identical.
 
 So far this section has described how modules are located and considered
 to be used.  What remains to be described is the interface of the modules
-so that one can write new ones. This section describes the interface as
+so that one can write new ones.  This section describes the interface as
 it is in use in January 1999.  The interface will change a bit in the
 future but, with luck, only in an upwardly compatible way.
 
@@ -2918,7 +2918,7 @@ gconv (struct __gconv_step *step, struct __gconv_step_data *data,
           /* @r{Run the conversion loop.  @code{status} is set}
              @r{appropriately afterwards.}  */
 
-          /* @r{If this is the last step, leave the loop. There is}
+          /* @r{If this is the last step, leave the loop.  There is}
              @r{nothing we can do.}  */
           if (data->__is_last)
             @{

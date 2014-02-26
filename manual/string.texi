@@ -1308,7 +1308,7 @@ we find a digit in each string - then we enter a special comparison
 mode, where each sequence of digits is taken as a whole.  If we reach the
 end of these two parts without noticing a difference, we return to the
 standard comparison mode.  There are two types of numeric parts:
-"integral" and "fractional" (those  begin with a '0'). The types
+"integral" and "fractional" (those  begin with a '0').  The types
 of the numeric parts affect the way we sort them:
 
 @itemize @bullet
@@ -2260,7 +2260,7 @@ on different systems.
 @comment XPG
 @deftypefun {char *} basename (const char *@var{path})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-This is the standard XPG defined @code{basename}. It is similar in
+This is the standard XPG defined @code{basename}.  It is similar in
 spirit to the GNU version, but may modify the @var{path} by removing
 trailing '/' characters.  If the @var{path} is made up entirely of '/'
 characters, then "/" will be returned.  Also, if @var{path} is

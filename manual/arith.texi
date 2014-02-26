@@ -1237,7 +1237,7 @@ sqrt (creal (@var{z}) * creal (@var{z}) + cimag (@var{z}) * cimag (@var{z}))
 
 This function should always be used instead of the direct formula
 because it takes special care to avoid losing precision.  It may also
-take advantage of hardware support for this operation. See @code{hypot}
+take advantage of hardware support for this operation.  See @code{hypot}
 in @ref{Exponents and Logarithms}.
 @end deftypefun
 
@@ -1369,7 +1369,7 @@ of @w{IEEE 754} conformance.
 
 @pindex math.h
 The functions listed here perform operations such as rounding and
-truncation of floating-point values. Some of these functions convert
+truncation of floating-point values.  Some of these functions convert
 floating point numbers to integer values.  They are all declared in
 @file{math.h}.
 
@@ -2625,7 +2625,7 @@ All these functions are defined in @file{stdlib.h}.
 @safety{@prelim{}@mtunsafe{@mtasurace{:ecvt}}@asunsafe{}@acsafe{}}
 The function @code{ecvt} converts the floating-point number @var{value}
 to a string with at most @var{ndigit} decimal digits.  The
-returned string contains no decimal point or sign. The first digit of
+returned string contains no decimal point or sign.  The first digit of
 the string is non-zero (unless @var{value} is actually zero) and the
 last digit is rounded to nearest.  @code{*@var{decpt}} is set to the
 index in the string of the first digit after the decimal point.

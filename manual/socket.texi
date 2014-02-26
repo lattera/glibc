@@ -742,7 +742,7 @@ features, and will eventually replace IPv4.
 To create a socket in the IPv4 Internet namespace, use the symbolic name
 @code{PF_INET} of this namespace as the @var{namespace} argument to
 @code{socket} or @code{socketpair}.  For IPv6 addresses you need the
-macro @code{PF_INET6}. These macros are defined in @file{sys/socket.h}.
+macro @code{PF_INET6}.  These macros are defined in @file{sys/socket.h}.
 @pindex sys/socket.h
 
 @comment sys/socket.h
@@ -1110,7 +1110,7 @@ it in the @code{struct in_addr} that @var{addr} points to.
 This function converts the IPv4 Internet host address @var{name} from the
 standard numbers-and-dots notation into binary data.  If the input is
 not valid, @code{inet_addr} returns @code{INADDR_NONE}.  This is an
-obsolete interface to @code{inet_aton}, described immediately above. It
+obsolete interface to @code{inet_aton}, described immediately above.  It
 is obsolete because @code{INADDR_NONE} is a valid address
 (255.255.255.255), and @code{inet_aton} provides a cleaner way to
 indicate error return.
@@ -1126,8 +1126,8 @@ indicate error return.
 @c  tolower dup @mtslocale
 @c  isspace dup @mtslocale
 This function extracts the network number from the address @var{name},
-given in the standard numbers-and-dots notation. The returned address is
-in host order. If the input is not valid, @code{inet_network} returns
+given in the standard numbers-and-dots notation.  The returned address is
+in host order.  If the input is not valid, @code{inet_network} returns
 @code{-1}.
 
 The function works only with traditional IPv4 class A, B and C network
@@ -1419,7 +1419,7 @@ allows the caller to specify the desired address family (e.g.@:
 The @code{gethostbyaddr} function returns information about the host
 with Internet address @var{addr}.  The parameter @var{addr} is not
 really a pointer to char - it can be a pointer to an IPv4 or an IPv6
-address. The @var{length} argument is the size (in bytes) of the address
+address.  The @var{length} argument is the size (in bytes) of the address
 at @var{addr}.  @var{format} specifies the address format; for an IPv4
 Internet address, specify a value of @code{AF_INET}; for an IPv6
 Internet address, use @code{AF_INET6}.
@@ -1550,15 +1550,15 @@ pointer and the size of the buffer in the @var{buf} and @var{buflen}
 parameters.
 
 A pointer to the buffer, in which the result is stored, is available in
-@code{*@var{result}} after the function call successfully returned. The
+@code{*@var{result}} after the function call successfully returned.  The
 buffer passed as the @var{buf} parameter can be freed only once the caller
 has finished with the result hostent struct, or has copied it including all
-the other memory that it points to. If an error occurs or if no entry is
-found, the pointer @code{*@var{result}} is a null pointer. Success is
+the other memory that it points to.  If an error occurs or if no entry is
+found, the pointer @code{*@var{result}} is a null pointer.  Success is
 signalled by a zero return value.  If the function failed the return value
 is an error number.  In addition to the errors defined for
-@code{gethostbyname} it can also be @code{ERANGE}. In this case the call
-should be repeated with a larger buffer. Additional error information is
+@code{gethostbyname} it can also be @code{ERANGE}.  In this case the call
+should be repeated with a larger buffer.  Additional error information is
 not stored in the global variable @code{h_errno} but instead in the object
 pointed to by @var{h_errnop}.
 
@@ -1634,7 +1634,7 @@ allows the caller to specify the desired address family (e.g.@:
 The @code{gethostbyaddr_r} function returns information about the host
 with Internet address @var{addr}.  The parameter @var{addr} is not
 really a pointer to char - it can be a pointer to an IPv4 or an IPv6
-address. The @var{length} argument is the size (in bytes) of the address
+address.  The @var{length} argument is the size (in bytes) of the address
 at @var{addr}.  @var{format} specifies the address format; for an IPv4
 Internet address, specify a value of @code{AF_INET}; for an IPv6
 Internet address, use @code{AF_INET6}.

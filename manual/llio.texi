@@ -1083,7 +1083,7 @@ which describe the location and size of each buffer.
 @comment BSD
 @deftp {Data Type} {struct iovec}
 
-The @code{iovec} structure describes a buffer. It contains two fields:
+The @code{iovec} structure describes a buffer.  It contains two fields:
 
 @table @code
 
@@ -1141,8 +1141,8 @@ error.  The possible errors are the same as in @code{write}.
 
 @end deftypefun
 
-@c Note - I haven't read this anywhere. I surmised it from my knowledge
-@c of computer science. Thus, there could be subtleties I'm missing.
+@c Note - I haven't read this anywhere.  I surmised it from my knowledge
+@c of computer science.  Thus, there could be subtleties I'm missing.
 
 Note that if the buffers are small (under about 1kB), high-level streams
 may be easier to use than these functions.  However, @code{readv} and
@@ -1195,8 +1195,8 @@ The @code{mmap} function creates a new mapping, connected to bytes
 is created, which is not removed by closing the file.
 
 @var{address} gives a preferred starting address for the mapping.
-@code{NULL} expresses no preference. Any previous mapping at that
-address is automatically removed. The address you give may still be
+@code{NULL} expresses no preference.  Any previous mapping at that
+address is automatically removed.  The address you give may still be
 changed, unless you use the @code{MAP_FIXED} flag.
 
 @vindex PROT_READ
@@ -1260,7 +1260,7 @@ as the included @code{malloc} automatically uses @code{mmap} where appropriate.
 
 @c Linux has some other MAP_ options, which I have not discussed here.
 @c MAP_DENYWRITE, MAP_EXECUTABLE and MAP_GROWSDOWN don't seem applicable to
-@c user programs (and I don't understand the last two). MAP_LOCKED does
+@c user programs (and I don't understand the last two).  MAP_LOCKED does
 @c not appear to be implemented.
 
 @end vtable
@@ -1405,14 +1405,14 @@ There is no existing mapping in at least part of the given region.
 
 This function can be used to change the size of an existing memory
 area. @var{address} and @var{length} must cover a region entirely mapped
-in the same @code{mmap} statement. A new mapping with the same
+in the same @code{mmap} statement.  A new mapping with the same
 characteristics will be returned with the length @var{new_length}.
 
-One option is possible, @code{MREMAP_MAYMOVE}. If it is given in
+One option is possible, @code{MREMAP_MAYMOVE}.  If it is given in
 @var{flags}, the system may remove the existing mapping and create a new
 one of the desired length in another location.
 
-The address of the resulting mapping is returned, or @math{-1}. Possible
+The address of the resulting mapping is returned, or @math{-1}.  Possible
 error codes include:
 
 @table @code
@@ -1464,11 +1464,11 @@ The valid BSD values for @var{advice} are:
 The region should receive no further special treatment.
 
 @item MADV_RANDOM
-The region will be accessed via random page references. The kernel
+The region will be accessed via random page references.  The kernel
 should page-in the minimal number of pages for each page fault.
 
 @item MADV_SEQUENTIAL
-The region will be accessed via sequential page references. This
+The region will be accessed via sequential page references.  This
 may cause the kernel to aggressively read-ahead, expecting further
 sequential references after any page fault within this region.
 
@@ -1540,7 +1540,7 @@ There is no existing mapping in at least part of the given region.
 @c  close dup @acsfd
 
 This function returns a file descriptor that can be used to allocate shared
-memory via mmap. Unrelated processes can use same @var{name} to create or
+memory via mmap.  Unrelated processes can use same @var{name} to create or
 open existing shared memory objects.
 
 A @var{name} argument specifies the shared memory object to be opened.
@@ -3899,7 +3899,7 @@ There is no process or process group corresponding to @var{pid}.
 @gnusystems{} can handle most input/output operations on many different
 devices and objects in terms of a few file primitives - @code{read},
 @code{write} and @code{lseek}.  However, most devices also have a few
-peculiar operations which do not fit into this model. Such as:
+peculiar operations which do not fit into this model.  Such as:
 
 @itemize @bullet
 

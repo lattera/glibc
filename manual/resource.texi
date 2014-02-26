@@ -1723,7 +1723,7 @@ running.  This number is average over different periods of times
 @c it, closes it, without cancellation point, and calls strtod_l with
 @c the C locale to convert the strings to doubles.
 This function gets the 1, 5 and 15 minute load averages of the
-system. The values are placed in @var{loadavg}.  @code{getloadavg} will
+system.  The values are placed in @var{loadavg}.  @code{getloadavg} will
 place at most @var{nelem} elements into the array but never more than
 three elements.  The return value is the number of elements written to
 @var{loadavg}, or -1 on error.

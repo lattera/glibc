@@ -249,21 +249,21 @@ level of 32 implies 768 bits of precision in the mantissa.
 @deftp Probe slowexp_p6 (double @var{$arg1}, double @var{$arg2})
 This probe is triggered when the @code{exp} function is called with an
 input that results in multiple precision computation with precision
-6. Argument @var{$arg1} is the input value and @var{$arg2} is the
+6.  Argument @var{$arg1} is the input value and @var{$arg2} is the
 computed output.
 @end deftp
 
 @deftp Probe slowexp_p32 (double @var{$arg1}, double @var{$arg2})
 This probe is triggered when the @code{exp} function is called with an
 input that results in multiple precision computation with precision
-32. Argument @var{$arg1} is the input value and @var{$arg2} is the
+32.  Argument @var{$arg1} is the input value and @var{$arg2} is the
 computed output.
 @end deftp
 
 @deftp Probe slowpow_p10 (double @var{$arg1}, double @var{$arg2}, double @var{$arg3}, double @var{$arg4})
 This probe is triggered when the @code{pow} function is called with
 inputs that result in multiple precision computation with precision
-10. Arguments @var{$arg1} and @var{$arg2} are the input values,
+10.  Arguments @var{$arg1} and @var{$arg2} are the input values,
 @code{$arg3} is the value computed in the fast phase of the algorithm
 and @code{$arg4} is the final accurate value.
 @end deftp
@@ -271,7 +271,7 @@ and @code{$arg4} is the final accurate value.
 @deftp Probe slowpow_p32 (double @var{$arg1}, double @var{$arg2}, double @var{$arg3}, double @var{$arg4})
 This probe is triggered when the @code{pow} function is called with an
 input that results in multiple precision computation with precision
-32. Arguments @var{$arg1} and @var{$arg2} are the input values,
+32.  Arguments @var{$arg1} and @var{$arg2} are the input values,
 @code{$arg3} is the value computed in the fast phase of the algorithm
 and @code{$arg4} is the final accurate value.
 @end deftp
@@ -393,7 +393,7 @@ address that will be stored in the @code{jmp_buf}.
 
 @deftp Probe longjmp (void *@var{$arg1}, int @var{$arg2}, void *@var{$arg3})
 This probe is triggered whenever @code{longjmp} or @code{siglongjmp}
-is called. Argument @var{$arg1} is a pointer to the @code{jmp_buf}
+is called.  Argument @var{$arg1} is a pointer to the @code{jmp_buf}
 passed as the first argument of @code{longjmp} or @code{siglongjmp},
 @var{$arg2} is the return value passed as the second argument of
 @code{longjmp} or @code{siglongjmp} and @var{$arg3} is a pointer to
