@@ -37,6 +37,9 @@
 # include <fenv_libc.h>
 # include <fpu_control.h>
 
+# define _FPU_MASK_ALL (_FPU_MASK_V | _FPU_MASK_Z | _FPU_MASK_O \
+			|_FPU_MASK_U | _FPU_MASK_I | FE_ALL_EXCEPT)
+
 static __always_inline void
 libc_feholdexcept_mips (fenv_t *envp)
 {
@@ -47,7 +50,7 @@ libc_feholdexcept_mips (fenv_t *envp)
   envp->__fp_control_register = cw;
 
   /* Clear all exception enable bits and flags.  */
-  cw &= ~(_FPU_MASK_V|_FPU_MASK_Z|_FPU_MASK_O|_FPU_MASK_U|_FPU_MASK_I|FE_ALL_EXCEPT);
+  cw &= ~(_FPU_MASK_ALL);
   _FPU_SETCW (cw);
 }
 # define libc_feholdexcept libc_feholdexcept_mips
@@ -83,7 +86,7 @@ libc_feholdexcept_setround_mips (fenv_t *envp, int round)
   envp->__fp_control_register = cw;
 
   /* Clear all exception enable bits and flags.  */
-  cw &= ~(_FPU_MASK_V|_FPU_MASK_Z|_FPU_MASK_O|_FPU_MASK_U|_FPU_MASK_I|FE_ALL_EXCEPT);
+  cw &= ~(_FPU_MASK_ALL);
 
   /* Set rounding bits.  */
   cw &= ~_FPU_RC_MASK;
@@ -95,6 +98,10 @@ libc_feholdexcept_setround_mips (fenv_t *envp, int round)
 # define libc_feholdexcept_setround libc_feholdexcept_setround_mips
 # define libc_feholdexcept_setroundf libc_feholdexcept_setround_mips
 # define libc_feholdexcept_setroundl libc_feholdexcept_setround_mips
+
+# define libc_feholdsetround libc_feholdexcept_setround_mips
+# define libc_feholdsetroundf libc_feholdexcept_setround_mips
+# define libc_feholdsetroundl libc_feholdexcept_setround_mips
 
 static __always_inline void
 libc_fesetenv_mips (fenv_t *envp)
@@ -110,27 +117,140 @@ libc_fesetenv_mips (fenv_t *envp)
 # define libc_fesetenvf libc_fesetenv_mips
 # define libc_fesetenvl libc_fesetenv_mips
 
-static __always_inline void
-libc_feupdateenv_mips (fenv_t *envp)
+static __always_inline int
+libc_feupdateenv_test_mips (fenv_t *envp, int excepts)
 {
-  int temp;
+  /* int ret = fetestexcept (excepts); feupdateenv (envp); return ret; */
+  int cw, temp;
 
-  /* Save current exceptions.  */
-  _FPU_GETCW (temp);
+  /* Get current control word.  */
+  _FPU_GETCW (cw);
 
   /* Set flag bits (which are accumulative), and *also* set the
      cause bits.  The setting of the cause bits is what actually causes
      the hardware to generate the exception, if the corresponding enable
      bit is set as well.  */
-  temp &= FE_ALL_EXCEPT;
+  temp = cw & FE_ALL_EXCEPT;
   temp |= envp->__fp_control_register | (temp << CAUSE_SHIFT);
 
   /* Set new state.  */
   _FPU_SETCW (temp);
+
+  return cw & excepts & FE_ALL_EXCEPT;
+}
+# define libc_feupdateenv_test libc_feupdateenv_test_mips
+# define libc_feupdateenv_testf libc_feupdateenv_test_mips
+# define libc_feupdateenv_testl libc_feupdateenv_test_mips
+
+static __always_inline void
+libc_feupdateenv_mips (fenv_t *envp)
+{
+  libc_feupdateenv_test_mips (envp, 0);
 }
 # define libc_feupdateenv libc_feupdateenv_mips
 # define libc_feupdateenvf libc_feupdateenv_mips
 # define libc_feupdateenvl libc_feupdateenv_mips
+
+# define libc_feresetround libc_feupdateenv_mips
+# define libc_feresetroundf libc_feupdateenv_mips
+# define libc_feresetroundl libc_feupdateenv_mips
+
+static __always_inline int
+libc_fetestexcept_mips (int excepts)
+{
+  int cw;
+
+  /* Get current control word.  */
+  _FPU_GETCW (cw);
+
+  return cw & excepts & FE_ALL_EXCEPT;
+}
+# define libc_fetestexcept libc_fetestexcept_mips
+# define libc_fetestexceptf libc_fetestexcept_mips
+# define libc_fetestexceptl libc_fetestexcept_mips
+
+/*  Enable support for rounding mode context.  */
+# define HAVE_RM_CTX 1
+
+static __always_inline void
+libc_feholdexcept_setround_mips_ctx (struct rm_ctx *ctx, int round)
+{
+  fpu_control_t old, new;
+
+  /* Save the current state.  */
+  _FPU_GETCW (old);
+  ctx->env.__fp_control_register = old;
+
+  /* Clear all exception enable bits and flags.  */
+  new = old & ~(_FPU_MASK_ALL);
+
+  /* Set rounding bits.  */
+  new = (new & ~_FPU_RC_MASK) | round;
+
+  if (__glibc_unlikely (new != old))
+    {
+      _FPU_SETCW (new);
+      ctx->updated_status = true;
+    }
+  else
+    ctx->updated_status = false;
+}
+# define libc_feholdexcept_setround_ctx   libc_feholdexcept_setround_mips_ctx
+# define libc_feholdexcept_setroundf_ctx  libc_feholdexcept_setround_mips_ctx
+# define libc_feholdexcept_setroundl_ctx  libc_feholdexcept_setround_mips_ctx
+
+static __always_inline void
+libc_fesetenv_mips_ctx (struct rm_ctx *ctx)
+{
+  libc_fesetenv_mips (&ctx->env);
+}
+# define libc_fesetenv_ctx                libc_fesetenv_mips_ctx
+# define libc_fesetenvf_ctx               libc_fesetenv_mips_ctx
+# define libc_fesetenvl_ctx               libc_fesetenv_mips_ctx
+
+static __always_inline void
+libc_feupdateenv_mips_ctx (struct rm_ctx *ctx)
+{
+  if (__glibc_unlikely (ctx->updated_status))
+    libc_feupdateenv_test_mips (&ctx->env, 0);
+}
+# define libc_feupdateenv_ctx             libc_feupdateenv_mips_ctx
+# define libc_feupdateenvf_ctx            libc_feupdateenv_mips_ctx
+# define libc_feupdateenvl_ctx            libc_feupdateenv_mips_ctx
+
+static __always_inline void
+libc_feholdsetround_mips_ctx (struct rm_ctx *ctx, int round)
+{
+  fpu_control_t old, new;
+
+  /* Save the current state.  */
+  _FPU_GETCW (old);
+  ctx->env.__fp_control_register = old;
+
+  /* Set rounding bits.  */
+  new = (old & ~_FPU_RC_MASK) | round;
+
+  if (__glibc_unlikely (new != old))
+    {
+      _FPU_SETCW (new);
+      ctx->updated_status = true;
+    }
+  else
+    ctx->updated_status = false;
+}
+# define libc_feholdsetround_ctx          libc_feholdsetround_mips_ctx
+# define libc_feholdsetroundf_ctx         libc_feholdsetround_mips_ctx
+# define libc_feholdsetroundl_ctx         libc_feholdsetround_mips_ctx
+
+static __always_inline void
+libc_feresetround_mips_ctx (struct rm_ctx *ctx)
+{
+  if (__glibc_unlikely (ctx->updated_status))
+    _FPU_SETCW (ctx->env);
+}
+# define libc_feresetround_ctx            libc_feresetround_mips_ctx
+# define libc_feresetroundf_ctx           libc_feresetround_mips_ctx
+# define libc_feresetroundl_ctx           libc_feresetround_mips_ctx
 
 #endif
 

@@ -1,3 +1,44 @@
+2014-02-26  Steve Ellcey  <sellcey@mips.com>
+
+	* sysdeps/mips/math_private.h (_FPU_MASK_ALL) New.
+	(libc_feholdexcept_mips): Use _FPU_MASK_ALL.
+	(libc_feholdexcept_setround_mips): Ditto.
+	(libc_feholdsetround): New.
+	(libc_feholdsetroundf): New.
+	(libc_feholdsetroundl): New.
+	(libc_feupdateenv_test_mips): New.
+	(libc_feupdateenv_test): New.
+	(libc_feupdateenv_testf): New.
+	(libc_feupdateenv_testl): New.
+	(libc_feresetround): New.
+	(libc_feresetroundf): New.
+	(libc_feresetroundl): New.
+	(libc_fetestexcept_mips): New.
+	(libc_fetestexcept): New.
+	(libc_fetestexceptf): New.
+	(libc_fetestexceptl): New.
+	(HAVE_RM_CTX): New.
+	(libc_feholdexcept_setround_mips_ctx): New.
+	(libc_feholdexcept_setround_ctx): New.
+	(libc_feholdexcept_setroundf_ctx): New.
+	(libc_feholdexcept_setroundl_ctx): New.
+	(libc_fesetenv_mips_ctx): New.
+	(libc_fesetenv_ctx): New.
+	(libc_fesetenv_ctxf): New.
+	(libc_fesetenv_ctxl): New.
+	(libc_feupdateenv_mips_ctx): New.
+	(libc_feupdateenv_ctx): New.
+	(libc_feupdateenvf_ctx): New.
+	(libc_feupdateenvl_ctx): New.
+	(libc_feholdsetround_mips_ctx): New.
+	(libc_feholdsetround_ctx): New.
+	(libc_feholdsetroundf_ctx): New.
+	(libc_feholdsetroundl_ctx): New.
+	(libc_feresetround_mips_ctx): New.
+	(libc_feresetround_ctx): New.
+	(libc_feresetroundf_ctx): New.
+	(libc_feresetroundl_ctx): New.
+
 2014-02-26  Carlos O'Donell  <carlos@redhat.com>
 
 	* manual/ipc.texi (Semaphores): Use @Theglibc{}.
