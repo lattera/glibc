@@ -16,6 +16,9 @@
 # <http://www.gnu.org/licenses/>.
 
 subdir		:= dlfcn
+
+include ../Makeconfig
+
 headers		:= bits/dlfcn.h dlfcn.h
 extra-libs	:= libdl
 libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr dladdr1 dlinfo \
@@ -24,8 +27,6 @@ routines	:= $(patsubst %,s%,$(filter-out dlfcn,$(libdl-routines)))
 elide-routines.os := $(routines)
 
 extra-libs-others := libdl
-
-include ../Makeconfig
 
 ifeq ($(build-shared),yes)
 libdl-routines	+= dlopenold

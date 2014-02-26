@@ -20,6 +20,8 @@
 #
 subdir	:= conform
 
+include ../Makeconfig
+
 include ../Rules
 
 ifneq (yes,$(fast-check))

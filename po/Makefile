@@ -19,6 +19,8 @@
 
 subdir := po
 
+include ../Makeconfig
+
 # Add names of the languages with broken .po files here.
 BROKEN_LINGUAS =
 
@@ -35,10 +37,6 @@ endif
 
 # Text domain name to install under; must match ../locale/SYS_libc.c string.
 domainname = libc
-
-all: # Make this the default target; it will be defined in Rules.
-
-include ../Makeconfig
 
 # Pattern for where message catalog object for language % gets installed.
 mo-installed = $(inst_msgcatdir)/%/LC_MESSAGES/$(domainname).mo

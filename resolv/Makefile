@@ -20,6 +20,8 @@
 #
 subdir	:= resolv
 
+include ../Makeconfig
+
 headers	:= resolv.h \
 	   netdb.h bits/netdb.h \
 	   arpa/nameser.h arpa/nameser_compat.h \
@@ -32,8 +34,6 @@ tests = tst-aton tst-leaks tst-inet_ntop
 xtests = tst-leaks2
 
 generate := mtrace-tst-leaks tst-leaks.mtrace tst-leaks2.mtrace
-
-include ../Makeconfig
 
 extra-libs := libresolv libnss_dns
 ifeq ($(have-thread-library),yes)

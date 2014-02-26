@@ -20,6 +20,8 @@
 #
 subdir	:= libio
 
+include ../Makeconfig
+
 headers	:= stdio.h libio.h _G_config.h bits/stdio.h bits/stdio-lock.h \
 	   bits/sys_errlist.h bits/stdio2.h bits/stdio-ldbl.h bits/libio-ldbl.h
 
@@ -46,8 +48,6 @@ routines	:=							      \
 									      \
 	libc_fatal fmemopen
 
-include ../Makeconfig
-
 tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
 	tst_wprintf2 tst-widetext test-fmemopen tst-ext tst-ext2 \
 	tst-fgetws tst-ungetwc1 tst-ungetwc2 tst-swscanf tst-sscanf	      \
@@ -67,8 +67,6 @@ ifeq (yes,$(build-shared))
 tests += tst-fopenloc
 endif
 test-srcs = test-freopen
-
-all: # Make this the default target; it will be defined in Rules.
 
 ifeq ($(build-shared),yes)
 routines += oldiofopen oldiofdopen oldiofclose oldiopopen oldpclose \

@@ -20,6 +20,8 @@
 #
 subdir	:= sysvipc
 
+include ../Makeconfig
+
 headers	:= sys/ipc.h sys/msg.h sys/sem.h sys/shm.h \
 	   bits/ipctypes.h bits/ipc.h bits/msq.h bits/sem.h bits/shm.h
 

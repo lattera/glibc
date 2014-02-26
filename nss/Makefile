@@ -20,6 +20,8 @@
 #
 subdir	:= nss
 
+include ../Makeconfig
+
 headers			:= nss.h
 
 # This is the trivial part which goes into libc itself.
@@ -39,8 +41,6 @@ extra-objs		+= $(makedb-modules:=.o)
 
 tests			= test-netdb tst-nss-test1 test-digits-dots
 xtests			= bug-erange
-
-include ../Makeconfig
 
 # Specify rules for the nss_* modules.  We have some services.
 services		:= files db

@@ -20,6 +20,8 @@
 #
 subdir	:= hesiod
 
+include ../Makeconfig
+
 extra-libs := libnss_hesiod
 extra-libs-others = $(extra-libs)
 

@@ -20,6 +20,8 @@
 #
 subdir	:= wctype
 
+include ../Makeconfig
+
 headers		:= wctype.h
 routines	:= wcfuncs wctype iswctype wctrans towctrans \
 		   wcfuncs_l wctype_l iswctype_l wctrans_l towctrans_l

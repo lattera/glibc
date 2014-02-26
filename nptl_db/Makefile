@@ -19,6 +19,8 @@
 
 subdir          := nptl_db
 
+include ../Makeconfig
+
 nptl_db-version = 1.0
 
 extra-libs = libthread_db

@@ -19,6 +19,9 @@
 #	Sub-makefile for assert portion of the library.
 #
 subdir	:= assert
+
+include ../Makeconfig
+
 headers	:= assert.h
 
 routines := assert assert-perr __assert

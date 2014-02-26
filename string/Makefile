@@ -20,6 +20,8 @@
 #
 subdir	:= string
 
+include ../Makeconfig
+
 headers	:= string.h strings.h memory.h endian.h bits/endian.h \
 	   argz.h envz.h byteswap.h bits/byteswap.h bits/byteswap-16.h \
 	   bits/string.h bits/string2.h bits/string3.h

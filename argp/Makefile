@@ -20,6 +20,8 @@
 #
 subdir	:= argp
 
+include ../Makeconfig
+
 headers		= argp.h
 routines	= $(addprefix argp-, ba fmtstream fs-xinl help parse pv \
 				     pvh xinl eexst)

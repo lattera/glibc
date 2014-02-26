@@ -20,6 +20,8 @@
 #
 subdir	:= gshadow
 
+include ../Makeconfig
+
 headers		= gshadow.h
 routines	= getsgent getsgnam sgetsgent fgetsgent putsgent \
 		  getsgent_r getsgnam_r sgetsgent_r fgetsgent_r

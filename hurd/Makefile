@@ -17,11 +17,7 @@
 
 subdir := hurd
 
-all:
-
-# Some things below (but before including Rules) use configuration variables.
 include ../Makeconfig
-
 
 headers = hurd.h $(interface-headers) \
 	  $(addprefix hurd/,fd.h id.h port.h signal.h sigpreempt.h ioctl.h\

@@ -19,6 +19,9 @@
 #	Sub-makefile for ctype portion of the library.
 #
 subdir	:= ctype
+
+include ../Makeconfig
+
 headers	:= ctype.h
 
 routines	:= ctype ctype-extn ctype_l isctype

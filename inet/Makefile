@@ -20,6 +20,8 @@
 #
 subdir	:= inet
 
+include ../Makeconfig
+
 headers	:= netinet/ether.h netinet/in.h netinet/in_systm.h \
 	   netinet/if_ether.h netinet/igmp.h \
 	   netinet/tcp.h netinet/ip.h $(wildcard arpa/*.h protocols/*.h) \

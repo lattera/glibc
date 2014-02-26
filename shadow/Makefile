@@ -20,6 +20,8 @@
 #
 subdir	:= shadow
 
+include ../Makeconfig
+
 headers		= shadow.h
 routines	= getspent getspnam sgetspent fgetspent putspent \
 		  getspent_r getspnam_r sgetspent_r fgetspent_r \

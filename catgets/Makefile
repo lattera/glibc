@@ -20,6 +20,8 @@
 #
 subdir	:= catgets
 
+include ../Makeconfig
+
 headers		= nl_types.h
 routines	= catgets open_catalog
 others		= gencat

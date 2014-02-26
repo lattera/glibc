@@ -21,6 +21,8 @@
 #
 subdir	:= soft-fp
 
+include ../Makeconfig
+
 gcc-single-routines := negsf2 addsf3 subsf3 mulsf3 divsf3 eqsf2 \
 	lesf2 gesf2 unordsf2 fixsfsi fixunssfsi floatsisf fixsfdi        \
 	fixunssfdi floatdisf sqrtsf2 floatunsisf floatundisf

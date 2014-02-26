@@ -20,9 +20,9 @@
 #
 subdir	:= nis
 
-aux			:= nis_hash
-
 include ../Makeconfig
+
+aux			:= nis_hash
 
 ifeq ($(link-obsolete-rpc),yes)
 headers			:= $(wildcard rpcsvc/*.[hx])

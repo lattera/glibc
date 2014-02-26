@@ -21,6 +21,8 @@
 
 subdir	:= login
 
+include ../Makeconfig
+
 headers	:= utmp.h bits/utmp.h lastlog.h pty.h
 
 routines := getlogin getlogin_r setlogin getlogin_r_chk \
@@ -31,8 +33,6 @@ routines := getlogin getlogin_r setlogin getlogin_r_chk \
 CFLAGS-grantpt.c = -DLIBEXECDIR='"$(libexecdir)"'
 
 others = utmpdump
-
-include ../Makeconfig
 
 ifeq (yes,$(build-pt-chown))
 others += pt_chown

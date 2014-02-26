@@ -17,6 +17,8 @@
 
 subdir := gnulib
 
+include ../Makeconfig
+
 # Maybe this is the right place for a test of gcc's interface.
 tests = tst-gcc
 

@@ -20,6 +20,8 @@
 #
 subdir	:= posix
 
+include ../Makeconfig
+
 headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	      \
 	   glob.h regex.h wordexp.h fnmatch.h getopt.h			      \
 	   bits/types.h bits/typesizes.h bits/pthreadtypes.h		      \
@@ -58,8 +60,6 @@ routines :=								      \
 	spawnattr_setsigmask spawnattr_setschedpolicy spawnattr_setschedparam \
 	posix_madvise							      \
 	get_child_max sched_cpucount sched_cpualloc sched_cpufree
-
-include ../Makeconfig
 
 aux		:= init-posix environ
 tests		:= tstgetopt testfnm runtests runptests	     \

@@ -20,6 +20,8 @@
 #
 subdir	:= setjmp
 
+include ../Makeconfig
+
 headers	:= setjmp.h bits/setjmp.h bits/setjmp2.h
 
 routines	:= setjmp sigjmp bsd-setjmp bsd-_setjmp \

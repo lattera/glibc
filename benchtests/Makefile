@@ -20,6 +20,9 @@
 # Add benchmark functions in alphabetical order.
 
 subdir := benchtests
+
+include ../Makeconfig
+
 bench := acos acosh asin asinh atan atanh cos cosh exp exp2 log log2 modf pow \
 	 rint sin sincos sinh sqrt tan tanh
 
@@ -65,7 +68,6 @@ LDLIBS-bench-sincos = -lm
 # affect their performance.
 .NOTPARALLEL:
 
-include ../Makeconfig
 include ../Rules
 
 binaries-bench := $(addprefix $(objpfx)bench-,$(bench))

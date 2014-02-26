@@ -20,6 +20,8 @@
 #
 subdir	:= crypt
 
+include ../Makeconfig
+
 headers := crypt.h
 
 extra-libs := libcrypt
@@ -29,8 +31,6 @@ libcrypt-routines := crypt-entry md5-crypt sha256-crypt sha512-crypt crypt \
 		     crypt_util
 
 tests := cert md5c-test sha256c-test sha512c-test badsalttest
-
-include ../Makeconfig
 
 ifeq ($(crypt-in-libc),yes)
 routines += $(libcrypt-routines)

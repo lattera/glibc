@@ -21,6 +21,8 @@
 
 subdir	:= misc
 
+include ../Makeconfig
+
 headers	:= sys/uio.h bits/uio.h sys/ioctl.h bits/ioctls.h bits/ioctl-types.h \
 	   sys/ptrace.h sys/file.h sys/dir.h sys/cdefs.h \
 	   ar.h a.out.h libgen.h stab.h bits/stab.def sgtty.h \
@@ -68,8 +70,6 @@ routines := brk sbrk sstk ioctl \
 	    removexattr setxattr getauxval ifunc-impl-list
 
 generated := tst-error1.mtrace tst-error1-mem
-
-include ../Makeconfig
 
 aux := init-misc
 install-lib := libg.a

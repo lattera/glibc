@@ -18,13 +18,14 @@
 # Makefile for intl subdirectory: message handling code from GNU gettext.
 
 subdir = intl
+
+include ../Makeconfig
+
 headers = libintl.h
 routines = bindtextdom dcgettext dgettext gettext	\
 	   dcigettext dcngettext dngettext ngettext \
 	   finddomain loadmsgcat localealias textdomain
 aux =	   l10nflist explodename plural plural-exp hash-string
-
-include ../Makeconfig
 
 multithread-test-srcs := tst-gettext4 tst-gettext5 tst-gettext6
 test-srcs := tst-gettext tst-translit tst-gettext2 tst-codeset tst-gettext3

@@ -19,13 +19,12 @@
 
 subdir := manual
 
+include ../Makeconfig
+
 # Allow override
 INSTALL_INFO = install-info
 
 .PHONY: dvi pdf info html
-
-# Get glibc's configuration info.
-include ../Makeconfig
 
 dvi: $(objpfx)libc.dvi
 pdf: $(objpfx)libc.pdf

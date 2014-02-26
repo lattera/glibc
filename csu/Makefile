@@ -24,6 +24,8 @@
 
 subdir := csu
 
+include ../Makeconfig
+
 routines = init-first libc-start $(libc-init) sysdep version check_fds \
 	   libc-tls elf-init dso_handle
 aux	 = errno
@@ -42,10 +44,6 @@ before-compile = $(objpfx)version-info.h
 
 tests := tst-empty tst-atomic tst-atomic-long
 tests-static := tst-empty
-
-all: # Make this the default target; it will be defined in Rules.
-
-include ../Makeconfig
 
 ifeq (yes,$(build-shared))
 extra-objs += S$(start-installed-name)

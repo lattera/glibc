@@ -20,6 +20,8 @@
 #
 subdir	:= iconvdata
 
+include ../Makeconfig
+
 # Names of all the shared objects which implement the transformations.
 modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   ISO8859-6 ISO8859-7 ISO8859-8 ISO8859-9 ISO8859-10		 \
@@ -62,8 +64,6 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   CP770 CP771 CP772 CP773 CP774
 
 modules.so := $(addsuffix .so, $(modules))
-
-include ../Makeconfig
 
 ifeq (yes,$(build-shared))
 tests = bug-iconv1 bug-iconv2 tst-loading tst-e2big tst-iconv4 bug-iconv4 \

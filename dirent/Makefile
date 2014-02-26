@@ -20,6 +20,8 @@
 #
 subdir		:= dirent
 
+include ../Makeconfig
+
 headers		:= dirent.h bits/dirent.h
 routines	:= opendir closedir readdir readdir_r rewinddir \
 		   seekdir telldir scandir alphasort versionsort \

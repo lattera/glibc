@@ -20,6 +20,8 @@
 #
 subdir	:= wcsmbs
 
+include ../Makeconfig
+
 headers	:= wchar.h bits/wchar.h bits/wchar2.h bits/wchar-ldbl.h uchar.h
 
 routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \

@@ -1,3 +1,76 @@
+2014-02-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* argp/Makefile: Include Makeconfig immediately after defining
+	subdir.
+	* assert/Makefile: Likewise.
+	* benchtests/Makefile: Likewise.
+	* catgets/Makefile: Likewise.
+	* conform/Makefile: Likewise.
+	* crypt/Makefile: Likewise.
+	* csu/Makefile: Likewise.
+	(all): Remove target.
+	* ctype/Makefile: Include Makeconfig immediately after defining
+	subdir.
+	* debug/Makefile: Likewise.
+	* dirent/Makefile: Likewise.
+	* dlfcn/Makefile: Likewise.
+	* gmon/Makefile: Likewise.
+	* gnulib/Makefile: Likewise.
+	* grp/Makefile: Likewise.
+	* gshadow/Makefile: Likewise.
+	* hesiod/Makefile: Likewise.
+	* hurd/Makefile: Likewise.
+	(all): Remove target.
+	* iconvdata/Makefile: Include Makeconfig immediately after
+	defining subdir.
+	* inet/Makefile: Likewise.
+	* intl/Makefile: Likewise.
+	* io/Makefile: Likewise.
+	* libio/Makefile: Likewise.
+	(all): Remove target.
+	* locale/Makefile: Include Makeconfig immediately after defining
+	subdir.
+	* login/Makefile: Likewise.
+	* mach/Makefile: Likewise.
+	(all): Remove target.
+	* malloc/Makefile: Include Makeconfig immediately after defining
+	subdir.
+	(all): Remove target.
+	* manual/Makefile: Include Makeconfig immediately after defining
+	subdir.
+	* math/Makefile: Likewise.
+	* misc/Makefile: Likewise.
+	* nis/Makefile: Likewise.
+	* nss/Makefile: Likewise.
+	* po/Makefile: Likewise.
+	(all): Remove target.
+	* posix/Makefile: Include Makeconfig immediately after defining
+	subdir.
+	* pwd/Makefile: Likewise.
+	* resolv/Makefile: Likewise.
+	* resource/Makefile: Likewise.
+	* rt/Makefile: Likewise.
+	* setjmp/Makefile: Likewise.
+	* shadow/Makefile: Likewise.
+	* signal/Makefile: Likewise.
+	* socket/Makefile: Likewise.
+	* soft-fp/Makefile: Likewise.
+	* stdio-common/Makefile: Likewise.
+	* stdlib/Makefile: Likewise.
+	* streams/Makefile: Likewise.
+	* string/Makefile: Likewise.
+	* sunrpc/Makefile: Likewise.
+	(all): Remove target.
+	* sysvipc/Makefile: Include Makeconfig immediately after defining
+	subdir.
+	* termios/Makefile: Likewise.
+	* time/Makefile: Likewise.
+	* timezone/Makefile: Likewise.
+	(all): Remove target.
+	* wcsmbs/Makefile: Include Makeconfig immediately after defining
+	subdir.
+	* wctype/Makefile: Likewise.
+
 2014-02-26  Steve Ellcey  <sellcey@mips.com>
 
 	* sysdeps/mips/math_private.h (_FPU_MASK_ALL) New.

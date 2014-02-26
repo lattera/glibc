@@ -20,6 +20,8 @@
 #
 subdir	:= debug
 
+include ../Makeconfig
+
 headers	:= execinfo.h
 
 # Note that ptsname_r_chk and getlogin_r are not here, but in
@@ -160,8 +162,6 @@ libpcprofile-inhibit-o = $(filter-out .os,$(object-suffixes))
 others = pcprofiledump
 install-bin = pcprofiledump
 install-bin-script = xtrace
-
-include ../Makeconfig
 
 ifeq ($(build-shared),yes)
 install-bin-script += catchsegv

@@ -20,12 +20,12 @@
 #
 subdir	:= gmon
 
+include ../Makeconfig
+
 headers	:= sys/gmon.h sys/gmon_out.h sys/profil.h
 routines := gmon mcount profil sprofil bb_init_func bb_exit_func prof-freq
 
 elide-routines.os = bb_init_func bb_exit_func
-
-include ../Makeconfig
 
 tests	= tst-sprofil
 ifeq ($(build-profile),yes)

@@ -19,13 +19,14 @@
 #	Sub-makefile for grp portion of the library.
 #
 subdir	:= grp
+
+include ../Makeconfig
+
 headers := grp.h
 
 routines := fgetgrent initgroups setgroups \
 	    getgrent getgrgid getgrnam putgrent \
 	    getgrent_r getgrgid_r getgrnam_r fgetgrent_r
-
-include ../Makeconfig
 
 tests := testgrp
 

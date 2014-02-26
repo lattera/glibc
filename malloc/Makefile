@@ -20,7 +20,7 @@
 #
 subdir	:= malloc
 
-all:
+include ../Makeconfig
 
 dist-headers := malloc.h
 headers := $(dist-headers) obstack.h mcheck.h
@@ -47,8 +47,6 @@ extra-objs = mcheck-init.o libmcheck.a
 
 # Include the cleanup handler.
 aux := set-freeres thread-freeres
-
-include ../Makeconfig
 
 CPPFLAGS-memusagestat = -DNOT_IN_libc
 

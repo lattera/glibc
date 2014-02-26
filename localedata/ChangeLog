@@ -1,3 +1,8 @@
+2014-02-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makefile: Include Makeconfig immediately after defining subdir.
+	(all): Remove target.
+
 2014-02-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makefile ($(objpfx)sort-test.out): Use $(evaluate-test).

@@ -20,6 +20,8 @@
 #
 subdir	:= stdio-common
 
+include ../Makeconfig
+
 headers	:= stdio_ext.h printf.h bits/printf-ldbl.h bits/stdio_lim.h
 
 routines	:=							      \
@@ -38,8 +40,6 @@ routines	:=							      \
 	isoc99_scanf isoc99_vscanf isoc99_fscanf isoc99_vfscanf isoc99_sscanf \
 	isoc99_vsscanf							      \
 	psiginfo
-
-include ../Makeconfig
 
 aux	:= errlist siglist printf-parsemb printf-parsewc fxprintf
 

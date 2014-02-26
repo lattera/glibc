@@ -20,6 +20,8 @@
 #
 subdir	:= time
 
+include ../Makeconfig
+
 headers	:= time.h sys/time.h sys/timeb.h bits/time.h
 
 routines := offtime asctime clock ctime ctime_r difftime \

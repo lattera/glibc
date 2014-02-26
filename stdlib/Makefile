@@ -20,6 +20,8 @@
 #
 subdir	:= stdlib
 
+include ../Makeconfig
+
 headers	:= stdlib.h bits/stdlib.h bits/stdlib-ldbl.h bits/stdlib-float.h      \
 	   monetary.h bits/monetary-ldbl.h				      \
 	   inttypes.h stdint.h bits/wordsize.h				      \
@@ -75,8 +77,6 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 tests-static	:= tst-secure-getenv
 
 modules-names	= tst-tls-atexit-lib
-
-include ../Makeconfig
 
 ifeq ($(build-shared),yes)
 tests		+= tst-putenv

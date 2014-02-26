@@ -19,6 +19,9 @@
 #	Sub-makefile for pwd portion of the library.
 #
 subdir	:= pwd
+
+include ../Makeconfig
+
 headers := pwd.h
 
 routines := fgetpwent getpw putpwent \

@@ -20,6 +20,8 @@
 #
 subdir	:= rt
 
+include ../Makeconfig
+
 headers	:= aio.h mqueue.h bits/mqueue.h bits/mqueue2.h
 
 aio-routines   := aio_cancel aio_error aio_fsync aio_misc aio_read	\

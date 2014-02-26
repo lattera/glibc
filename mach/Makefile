@@ -17,11 +17,7 @@
 
 subdir := mach
 
-all:
-
-# Some things below (but before including Rules) use configuration variables.
 include ../Makeconfig
-
 
 headers = mach_init.h mach.h mach_error.h mach-shortcuts.h mach/mach_traps.h \
 	  $(interface-headers) mach/mach.h mach/mig_support.h mach/error.h \

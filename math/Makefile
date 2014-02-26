@@ -19,6 +19,8 @@
 
 subdir		:= math
 
+include ../Makeconfig
+
 # Installed header files.
 headers		:= math.h bits/mathcalls.h bits/mathinline.h bits/huge_val.h \
 		   bits/huge_valf.h bits/huge_vall.h bits/inf.h bits/nan.h \
@@ -60,8 +62,6 @@ libm-calls = e_acos e_acosh e_asin e_atan2 e_atanh e_cosh e_exp e_fmod	\
 	     s_fma s_lrint s_llrint s_lround s_llround e_exp10 w_log2	\
 	     s_isinf_ns s_issignaling $(calls:s_%=m_%) x2y2m1 k_casinh	\
 	     gamma_product
-
-include ../Makeconfig
 
 dbl-only-routines := branred doasin dosincos halfulp mpa mpatan2	\
 		     mpatan mpexp mplog mpsqrt mptan sincos32 slowexp	\

@@ -17,6 +17,8 @@
 
 subdir := resource
 
+include ../Makeconfig
+
 headers	  := sys/resource.h bits/resource.h sys/vlimit.h sys/vtimes.h	\
 	     ulimit.h
 

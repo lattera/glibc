@@ -19,7 +19,7 @@
 
 subdir := localedata
 
-all: # Make this the default target; it will be defined in Rules.
+include ../Makeconfig
 
 # List with all available character set descriptions.
 charmaps := $(wildcard charmaps/[A-I]*) $(wildcard charmaps/[J-Z]*)
@@ -55,9 +55,6 @@ generated := $(test-input) $(test-output) sort-test.out tst-locale.out \
 	     tst-mbswcs.out tst-leaks.mtrace mtrace-tst-leaks
 generated-dirs := $(ld-test-names) tt_TT de_DE.437			\
 		  $(addprefix tstfmon_,$(fmon-tests))			\
-
-# Get $(inst_i18ndir) defined.
-include ../Makeconfig
 
 ifeq ($(run-built-tests),yes)
 locale_test_suite := tst_iswalnum tst_iswalpha tst_iswcntrl            \
