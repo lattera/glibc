@@ -1,4 +1,4 @@
-@node Processes, Job Control, Program Basics, Top
+@node Processes, Inter-Process Communication, Program Basics, Top
 @c %MENU% How to create processes and run other programs
 @chapter Processes
 

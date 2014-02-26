@@ -1,4 +1,4 @@
-@node Job Control, Name Service Switch, Processes, Top
+@node Job Control, Name Service Switch, Inter-Process Communication, Top
 @c %MENU% All about process groups and sessions
 @chapter Job Control
 
