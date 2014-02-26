@@ -1,5 +1,7 @@
 2014-02-26  Carlos O'Donell  <carlos@redhat.com>
 
+	* manual/ipc.texi (Semaphores): Use @Theglibc{}.
+
 	* manual/ipc.texi: New file.
 	* manual/Makefile (chapters): Add ipc.
 	* manual/job.texi: Add "Inter-Process Communication" to next.

@@ -12,7 +12,7 @@ This chapter describes the @glibcadj{} inter-process communication primitives.
 @node Semaphores
 @section Semaphores
 
-The @glibcadj{} implements the semaphore APIs as defined in POSIX and
+@Theglibc{} implements the semaphore APIs as defined in POSIX and
 System V.  Semaphores can be used by multiple processes to coordinate shared
 resources.  The following is a complete list of the semaphore functions provided
 by @theglibc{}.
