@@ -1,3 +1,7 @@
+2014-02-26  Ondřej Bílka  <neleai@seznam.cz>
+
+	* malloc/malloc.c (__libc_calloc): Simplify implementation.
+
 2014-02-25  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #16632]
