@@ -1,3 +1,8 @@
+2014-02-27  Joey Ye  <joey.ye@arm.com>
+
+	* sysdeps/arm/soft-fp/sfp-machine.h (_FP_NANFRAC_S, _FP_NANFRAC_D)
+	(_FP_NANFRAC_Q): Set to zero.
+
 2014-02-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #16623]
