@@ -1,5 +1,5 @@
-/* Multiple versions of isnan.
-   Copyright (C) 2013-2014 Free Software Foundation, Inc.
+/* isnan().  PowerPC64/POWER8 version.
+   Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,32 +16,29 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math.h>
+#include <sysdep.h>
 #include <math_ldbl_opt.h>
-#include <shlib-compat.h>
-#include "init-arch.h"
 
-extern __typeof (__isnan) __isnan_ppc64 attribute_hidden;
-extern __typeof (__isnan) __isnan_power5 attribute_hidden;
-extern __typeof (__isnan) __isnan_power6 attribute_hidden;
-extern __typeof (__isnan) __isnan_power6x attribute_hidden;
-extern __typeof (__isnan) __isnan_power7 attribute_hidden;
-extern __typeof (__isnan) __isnan_power8 attribute_hidden;
+#define MFVSRD_R3_V1  .byte 0x7c,0x23,0x00,0x66     /* mfvsrd  r3,vs1  */
 
-libc_ifunc (__isnan,
-	    (hwcap2 & PPC_FEATURE2_ARCH_2_07)
-	    ? __isnan_power8 :
-	      (hwcap & PPC_FEATURE_ARCH_2_06)
-	      ? __isnan_power7 :
-		(hwcap & PPC_FEATURE_POWER6_EXT)
-		? __isnan_power6x :
-		  (hwcap & PPC_FEATURE_ARCH_2_05)
-		    ? __isnan_power6 :
-		    (hwcap & PPC_FEATURE_POWER5)
-		      ? __isnan_power5
-            : __isnan_ppc64);
+/* int [r3] __isnan([f1] x)  */
 
-weak_alias (__isnan, isnan)
+EALIGN (__isnan, 4, 0)
+	CALL_MCOUNT 0
+	MFVSRD_R3_V1
+	lis     r9,0x7ff0
+	clrldi  r3,r3,1       /* r3 = r3 & 0x8000000000000000  */
+	rldicr  r9,r9,32,31   /* r9 = (r9 << 32) & 0xffffffff  */
+	subf    r3,r3,r9
+	rldicl  r3,r3,1,63
+	blr
+END (__isnan)
+
+/* It turns out that the 'double' version will also always work for
+   single-precision.  */
+strong_alias (__isnan, __isnanf)
+hidden_def (__isnanf)
+weak_alias (__isnanf, isnanf)
 
 #ifdef NO_LONG_DOUBLE
 strong_alias (__isnan, __isnanl)

@@ -1,3 +1,19 @@
+2014-02-27  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power4/multiarch/init-arch.h (INIT_ARCH):
+	Add hwcap2 initialization.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add isnan power8
+	implementation.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isnan-power8.S: New file:
+	POWER8 isnan ifunc implementation.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isnan.c (__isnan): Add
+	POWER8 implementation.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isnanf.c (__isnanf):
+	Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_isnan.S: New file:
+	POWER8 isnan implementation.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_isnanf.S: New file.
+
 2014-02-27  Joey Ye  <joey.ye@arm.com>
 
 	* sysdeps/arm/soft-fp/sfp-machine.h (_FP_NANFRAC_S, _FP_NANFRAC_D)

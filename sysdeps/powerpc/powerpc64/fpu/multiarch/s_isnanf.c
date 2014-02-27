@@ -25,16 +25,19 @@ extern __typeof (__isnanf) __isnan_power5 attribute_hidden;
 extern __typeof (__isnanf) __isnan_power6 attribute_hidden;
 extern __typeof (__isnanf) __isnan_power6x attribute_hidden;
 extern __typeof (__isnanf) __isnan_power7 attribute_hidden;
+extern __typeof (__isnanf) __isnan_power8 attribute_hidden;
 
 libc_ifunc (__isnanf,
-	    (hwcap & PPC_FEATURE_ARCH_2_06)
-	    ? __isnan_power7 :
-	      (hwcap & PPC_FEATURE_POWER6_EXT)
-		? __isnan_power6x :
-		(hwcap & PPC_FEATURE_ARCH_2_05)
-		  ? __isnan_power6 :
-		  (hwcap & PPC_FEATURE_POWER5)
-		    ? __isnan_power5
+	    (hwcap2 & PPC_FEATURE2_ARCH_2_07)
+	    ? __isnan_power8 :
+	      (hwcap & PPC_FEATURE_ARCH_2_06)
+	      ? __isnan_power7 :
+		(hwcap & PPC_FEATURE_POWER6_EXT)
+		  ? __isnan_power6x :
+		  (hwcap & PPC_FEATURE_ARCH_2_05)
+		    ? __isnan_power6 :
+		    (hwcap & PPC_FEATURE_POWER5)
+		      ? __isnan_power5
             : __isnan_ppc64);
 
 weak_alias (__isnanf, isnanf)
