@@ -10900,6 +10900,14 @@ idouble: 1
 Test "cos_downward (0x1.0c152382d7365p+0)":
 double: 1
 idouble: 1
+Test "cos_downward (0x1.200145a975ce6p+32)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "cos_downward (0x1.200146p+32)":
+ildouble: 1
+ldouble: 1
 Test "cos_downward (0x1.921fb4p+0)":
 ildouble: 1
 ldouble: 1
@@ -11126,6 +11134,9 @@ idouble: 1
 Test "cos_towardzero (0x1.0c152382d7365p+0)":
 double: 1
 idouble: 1
+Test "cos_towardzero (0x1.200146p+32)":
+double: 1
+idouble: 1
 Test "cos_towardzero (0x1.921fb4p+0)":
 ildouble: 1
 ldouble: 1
@@ -11258,6 +11269,17 @@ idouble: 1
 Test "cos_upward (0x1.0c1524p+0)":
 double: 1
 idouble: 1
+Test "cos_upward (0x1.200144p+32)":
+double: 1
+idouble: 1
+Test "cos_upward (0x1.200145a975ce6p+32)":
+ildouble: 1
+ldouble: 1
+Test "cos_upward (0x1.200146p+32)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
 Test "cos_upward (0x1.921fb4p+0)":
 double: 1
 idouble: 1
@@ -15155,6 +15177,19 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "sin_downward (0x1.2001469775ce6p+32)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "sin_downward (0x1.200146p+32)":
+double: 1
+idouble: 1
+Test "sin_downward (0x1.200148p+32)":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
 Test "sin_downward (0x1.921fb54442d18468p+0)":
 ildouble: 1
 ldouble: 1
@@ -15383,6 +15418,9 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "sin_towardzero (0x1.200146p+32)":
+double: 1
+idouble: 1
 Test "sin_towardzero (0x1.921fb54442d18468p+0)":
 ildouble: 1
 ldouble: 1
@@ -15530,6 +15568,12 @@ Test "sin_upward (-0x8.60a91p-4)":
 ildouble: 1
 ldouble: 1
 Test "sin_upward (-0x8.60a92p-4)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x1.2001469775ce6p+32)":
+ildouble: 1
+ldouble: 1
+Test "sin_upward (0x1.200148p+32)":
 ildouble: 1
 ldouble: 1
 Test "sin_upward (0x1.921fb4p+0)":

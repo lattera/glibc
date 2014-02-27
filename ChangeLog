@@ -1,3 +1,13 @@
+2014-02-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #16623]
+	* math/auto-libm-test-in: New test inputs.
+	* math/auto-libm-test-out: Regenerate.
+	* sysdeps/ieee754/dbl-64/s_sin.c (__sin): Preserve sign of A
+	and DA.
+	(__cos): Likewise.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Regenerate.
+
 2014-02-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/evaluate-test.sh: Take new argument indicating whether

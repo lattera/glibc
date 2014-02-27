@@ -594,6 +594,7 @@ cos 0x1.0000010b239a9p0
 cos 0x1.00000162a932bp0
 cos 0x1.000002d452a10p0
 cos 0x1.000005bc7d86dp0
+cos 0x1.200145a975ce6p32
 cos 1
 cos 2
 cos 3
@@ -1748,6 +1749,7 @@ sin 7
 sin 8
 sin 9
 sin 10
+sin 0x1.2001469775ce6p32
 
 sincos 0
 sincos -0
