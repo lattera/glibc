@@ -30,10 +30,11 @@ tests: $(objpfx)run-conformtest.out
 endif
 endif
 
+test-xfail-run-conformtest = yes
 $(objpfx)run-conformtest.out: run-conformtest.sh conformtest.pl \
 			      $(wildcard data/*.h-data) \
 			      $(wildcard data/*/*.h-data)
-	-$(BASH) -e $< $(objpfx) $(PERL) '$(CC)' \
+	$(BASH) -e $< $(objpfx) $(PERL) '$(CC)' \
 	  '-I../include $(+sysdep-includes) $(sysincludes) -I..'; \
 	$(evaluate-test)
 

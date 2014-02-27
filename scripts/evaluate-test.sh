@@ -17,10 +17,12 @@
 # License along with the GNU C Library; if not, see
 # <http://www.gnu.org/licenses/>.
 
-# usage: evaluate-test.sh test_name rc
+# usage: evaluate-test.sh test_name rc xfail
 
 test_name=$1
 rc=$2
+orig_rc=$rc
+xfail=$3
 
 if [ $rc -eq 0 ]; then
   result="PASS"
@@ -28,6 +30,11 @@ else
   result="FAIL"
 fi
 
+if $xfail; then
+  result="X$result"
+  rc=0
+fi
+
 echo "$result: $test_name"
-echo "original exit status $rc"
+echo "original exit status $orig_rc"
 exit $rc

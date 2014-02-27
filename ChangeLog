@@ -1,3 +1,15 @@
+2014-02-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/evaluate-test.sh: Take new argument indicating whether
+	failure is expected.
+	* Makeconfig (evaluate-test): Pass argument to evaluate-test.sh
+	indicating whether failure is expected.
+	* conform/Makefile (test-xfail-run-conformtest): New variable.
+	($(objpfx)run-conformtest.out): Don't expect to fail at makefile
+	level.
+	* posix/Makefile (test-xfail-annexc): New variable.
+	($(objpfx)annexc.out): Don't expect to fail at makefile level.
+
 2014-02-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* argp/Makefile: Include Makeconfig immediately after defining

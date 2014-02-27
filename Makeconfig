@@ -1083,8 +1083,11 @@ endif
 # The name to give to a test in test results summaries.
 test-name = $(strip $(patsubst %.out, %, $(patsubst $(common-objpfx)%, %, $@)))
 
-# Command to output a test status line (such as PASS: test-name).
+# Command to output a test status line (such as PASS: test-name).  If
+# test-xfail-$(@F:.out=) has a nonempty value, the status will be
+# XPASS or XFAIL rather than PASS or FAIL.
 evaluate-test = $(..)scripts/evaluate-test.sh $(test-name) $$? \
+		  $(if $(test-xfail-$(@F:.out=)),true,false) \
 		  > $(common-objpfx)$(test-name).test-result
 
 endif # Makeconfig not yet included

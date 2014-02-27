@@ -233,8 +233,9 @@ tests: $(objpfx)bug-regex2-mem $(objpfx)bug-regex14-mem \
 xtests: $(objpfx)bug-ga2-mem
 endif
 
+test-xfail-annexc = yes
 $(objpfx)annexc.out: $(objpfx)annexc
-	-$(dir $<)$(notdir $<) '$(CC)' \
+	$(dir $<)$(notdir $<) '$(CC)' \
 	  '$(patsubst %,-I../%,$(sorted-subdirs)) -I../include $(+sysdep-includes) $(sysincludes) -I..' > $@; \
 	$(evaluate-test)
 
