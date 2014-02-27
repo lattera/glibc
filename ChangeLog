@@ -1,5 +1,19 @@
 2014-02-27  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add isinf power8
+	implementation.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinf-power8.S: New file:
+	POWER8 isinf ifunc implementation.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinf.c (__isinf): Add
+	POWER8 implementation.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinff.c (__isinff):
+	Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_isinf.S: New file:
+	POWER8 isinf implementation.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_isinff.S: New file.
+
+2014-02-27  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/power4/multiarch/init-arch.h (INIT_ARCH):
 	Add hwcap2 initialization.
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add isnan power8

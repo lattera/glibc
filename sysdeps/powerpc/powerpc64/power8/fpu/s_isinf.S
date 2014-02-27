@@ -1,5 +1,5 @@
-/* Multiple versions of isinf.
-   Copyright (C) 2013-2014 Free Software Foundation, Inc.
+/* isinf().  PowerPC64/POWER8 version.
+   Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,23 +16,37 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math.h>
+#include <sysdep.h>
 #include <math_ldbl_opt.h>
-#include <shlib-compat.h>
-#include "init-arch.h"
 
-extern __typeof (__isinf) __isinf_ppc64 attribute_hidden;
-extern __typeof (__isinf) __isinf_power7 attribute_hidden;
-extern __typeof (__isinf) __isinf_power8 attribute_hidden;
+#define MFVSRD_R3_V1  .byte 0x7c,0x23,0x00,0x66     /* mfvsrd  r3,vs1  */
 
-libc_ifunc (__isinf,
-	    (hwcap2 & PPC_FEATURE2_ARCH_2_07)
-	    ? __isinf_power8 :
-	      (hwcap & PPC_FEATURE_ARCH_2_06)
-	      ? __isinf_power7
-            : __isinf_ppc64);
+/* int [r3] __isinf([fp1] x)  */
 
+EALIGN (__isinf, 4, 0)
+	CALL_MCOUNT 0
+	MFVSRD_R3_V1
+	lis     r9,0x7ff0     /* r9 = 0x7ff0  */
+	rldicl  r10,r3,0,1    /* r10 = r3 & (0x8000000000000000)  */
+	sldi    r9,r9,32      /* r9 = r9 << 52  */
+	cmpd    cr7,r10,r9    /* fp1 & 0x7ff0000000000000 ?  */
+	beq     cr7,L(inf)
+	li      r3,0          /* Not inf  */
+	blr
+L(inf):
+	sradi   r3,r3,63      /* r3 = r3 >> 63  */
+	ori     r3,r3,1       /* r3 = r3 | 0x1  */
+	blr
+END (__isinf)
+
+hidden_def (__isinf)
 weak_alias (__isinf, isinf)
+
+/* It turns out that the 'double' version will also always work for
+   single-precision.  */
+strong_alias (__isinf, __isinff)
+hidden_def (__isinff)
+weak_alias (__isinff, isinff)
 
 #ifdef NO_LONG_DOUBLE
 strong_alias (__isinf, __isinfl)
@@ -40,7 +54,7 @@ weak_alias (__isinf, isinfl)
 #endif
 
 #ifndef IS_IN_libm
-# if LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)
+# if LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)
 compat_symbol (libc, __isinf, __isinfl, GLIBC_2_0);
 compat_symbol (libc, isinf, isinfl, GLIBC_2_0);
 # endif
