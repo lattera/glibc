@@ -5,7 +5,7 @@ sysdep_routines += s_isnan-power7 s_isnan-power6x s_isnan-power6 \
 		   s_finitef-ppc64 s_isinff-ppc64 s_isinf-power7 \
 		   s_isinf-ppc64 s_modf-power5+ s_modf-ppc64 \
 		   s_modff-power5+ s_modff-ppc64 s_isnan-power8 \
-		   s_isinf-power8
+		   s_isinf-power8 s_finite-power8
 
 libm-sysdep_routines += s_isnan-power7 s_isnan-power6x s_isnan-power6 \
 			s_isnan-power5 s_isnan-ppc64 s_llround-power6x \
@@ -23,7 +23,7 @@ libm-sysdep_routines += s_isnan-power7 s_isnan-power6x s_isnan-power6 \
 			s_logbl-ppc64 s_modf-power5+ s_modf-ppc64 \
 			s_modff-power5+ s_modff-ppc64 e_hypot-ppc64 \
 			e_hypot-power7 e_hypotf-ppc64 e_hypotf-power7 \
-			s_isnan-power8 s_isinf-power8
+			s_isnan-power8 s_isinf-power8 s_finite-power8
 
 CFLAGS-s_logbf-power7.c = -mcpu=power7
 CFLAGS-s_logbl-power7.c = -mcpu=power7

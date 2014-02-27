@@ -1,5 +1,19 @@
 2014-02-27  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add finite power8
+	implementation.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_finite-power8.S: New file:
+	POWER8 finite ifunc implementation.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_finite.c (__finite): Add
+	POWER8 implementation.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_finitef.c (__finitef):
+	Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_finite.S: New file:
+	POWER8 finite implementation.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_finitef.S: New file.
+
+2014-02-27  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add isinf power8
 	implementation.
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinf-power8.S: New file:
