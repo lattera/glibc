@@ -1,5 +1,8 @@
 2014-02-28  Carlos O'Donell  <carlos@redhat.com>
 
+	* manual/threads.texi: Add header and standard comments to all
+	functions.
+
 	* elf/dl-lookup.c (check_match): New function.
 	(ELF_MACHINE_SYM_NO_MATCH): Adjust comment.
 	(do_lookup_x): Remove nested function check_match. Use non-nested
