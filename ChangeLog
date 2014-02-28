@@ -1,3 +1,7 @@
+2014-02-28  Roland McGrath  <roland@hack.frob.com>
+
+	* stdio-common/Versions (libc: GLIBC_PRIVATE): Add missing }.
+
 2014-02-27  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Add llround power8
