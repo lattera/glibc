@@ -166,7 +166,7 @@ install-bin-script = xtrace
 ifeq ($(build-shared),yes)
 install-bin-script += catchsegv
 endif
-generated = catchsegv xtrace
+generated += catchsegv xtrace
 
 include ../Rules
 

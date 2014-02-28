@@ -34,12 +34,12 @@ test-srcs += $(multithread-test-srcs)
 endif
 tests = tst-ngettext
 
-before-compile = $(objpfx)msgs.h
+before-compile += $(objpfx)msgs.h
 
 install-others = $(inst_msgcatdir)/locale.alias
 
-generated = msgs.h mtrace-tst-gettext tst-gettext.mtrace
-generated-dirs := domaindir localedir
+generated += msgs.h mtrace-tst-gettext tst-gettext.mtrace
+generated-dirs += domaindir localedir
 
 ifneq (no,$(BISON))
 plural.c: plural.y

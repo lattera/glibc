@@ -60,7 +60,7 @@ tststatic5-ENV = $(tststatic-ENV)
 endif
 
 extra-test-objs += $(modules-names:=.os)
-generated := $(modules-names:=.so)
+generated += $(modules-names:=.so)
 
 include ../Rules
 

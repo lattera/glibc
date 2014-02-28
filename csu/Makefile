@@ -39,8 +39,8 @@ omit-deps = $(patsubst %.o,%,$(start-installed-name) g$(start-installed-name) \
 			     b$(start-installed-name) $(csu-dummies) \
 			     S$(start-installed-name))
 install-lib = $(start-installed-name) g$(start-installed-name) $(csu-dummies)
-generated = version-info.h
-before-compile = $(objpfx)version-info.h
+generated += version-info.h
+before-compile += $(objpfx)version-info.h
 
 tests := tst-empty tst-atomic tst-atomic-long
 tests-static := tst-empty

@@ -338,7 +338,7 @@ $(objpfx)multidir.mk: $(common-objpfx)config.make
 crti-objs := crti.o
 crtn-objs := crtn.o
 ifneq (,$(patsubst .,,$(multidir)))
-generated-dirs := $(firstword $(subst /, , $(multidir)))
+generated-dirs += $(firstword $(subst /, , $(multidir)))
 crti-objs += $(multidir)/crti.o
 crtn-objs += $(multidir)/crtn.o
 $(objpfx)$(multidir):

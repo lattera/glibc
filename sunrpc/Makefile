@@ -56,9 +56,9 @@ headers-not-in-tirpc = $(addprefix rpc/,key_prot.h rpc_des.h) \
 		       $(rpcsvc:%=rpcsvc/%) rpcsvc/bootparam.h
 headers = rpc/netdb.h
 install-others = $(inst_sysconfdir)/rpc
-generated = $(rpcsvc:%.x=rpcsvc/%.h) $(rpcsvc:%.x=x%.c) $(rpcsvc:%.x=x%.stmp) \
-	    $(rpcsvc:%.x=rpcsvc/%.stmp) rpcgen
-generated-dirs := rpcsvc
+generated += $(rpcsvc:%.x=rpcsvc/%.h) $(rpcsvc:%.x=x%.c) $(rpcsvc:%.x=x%.stmp) \
+	     $(rpcsvc:%.x=rpcsvc/%.stmp) rpcgen
+generated-dirs += rpcsvc
 
 ifeq ($(link-obsolete-rpc),yes)
 headers += $(headers-in-tirpc) $(headers-not-in-tirpc)

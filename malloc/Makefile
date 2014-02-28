@@ -53,7 +53,7 @@ CPPFLAGS-memusagestat = -DNOT_IN_libc
 # The Perl script to analyze the output of the mtrace functions.
 ifneq ($(PERL),no)
 install-bin-script = mtrace
-generated = mtrace
+generated += mtrace
 
 # The Perl script will print addresses and to do this nicely we must know
 # whether we are on a 32 or 64 bit machine.

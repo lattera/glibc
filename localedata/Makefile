@@ -51,9 +51,9 @@ ld-test-srcs := $(addprefix tests/,$(addsuffix .cm,$(ld-test-names)) \
 fmon-tests = n01y12 n02n40 n10y31 n11y41 n12y11 n20n32 n30y20 n41n00 \
 	     y01y10 y02n22 y22n42 y30y21 y32n31 y40y00 y42n21
 
-generated := $(test-input) $(test-output) sort-test.out tst-locale.out \
+generated += $(test-input) $(test-output) sort-test.out tst-locale.out \
 	     tst-mbswcs.out tst-leaks.mtrace mtrace-tst-leaks
-generated-dirs := $(ld-test-names) tt_TT de_DE.437			\
+generated-dirs += $(ld-test-names) tt_TT de_DE.437			\
 		  $(addprefix tstfmon_,$(fmon-tests))			\
 
 ifeq ($(run-built-tests),yes)

@@ -55,9 +55,9 @@ routines += unwind-dw2-fde-glibc
 shared-only-routines += unwind-dw2-fde-glibc
 endif
 
-before-compile  = $(objpfx)trusted-dirs.h
-generated	:= trusted-dirs.h trusted-dirs.st for-renamed/renamed.so
-generated-dirs	:= for-renamed
+before-compile  += $(objpfx)trusted-dirs.h
+generated	+= trusted-dirs.h trusted-dirs.st for-renamed/renamed.so
+generated-dirs	+= for-renamed
 
 ifeq ($(build-shared),yes)
 ld-map		= $(common-objpfx)ld.map

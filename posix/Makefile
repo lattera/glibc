@@ -101,7 +101,7 @@ install-others-programs	:= $(inst_libexecdir)/getconf
 before-compile	:= testcases.h ptestcases.h
 
 # So they get cleaned up.
-generated := $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
+generated += $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
 	     annexc annexc.out wordexp-tst.out bug-regex2-mem \
 	     bug-regex2.mtrace bug-regex14-mem bug-regex14.mtrace \
 	     bug-regex21-mem bug-regex21.mtrace \

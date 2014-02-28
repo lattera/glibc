@@ -35,10 +35,10 @@ tzbases := africa antarctica asia australasia europe northamerica \
 tzlinks := backward systemv
 tzfiles := $(tzbases) $(tzlinks)
 
-generated := $(addprefix z.,$(tzfiles))
+generated += $(addprefix z.,$(tzfiles))
 install-sbin := zic zdump
 
-generated-dirs = testdata
+generated-dirs += testdata
 
 CPPFLAGS-zic = -DNOT_IN_libc
 

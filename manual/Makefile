@@ -162,14 +162,14 @@ minimal-dist = summary.awk texis.awk tsort.awk libc-texinfo.sh libc.texinfo \
 	       $(patsubst %.c.texi,examples/%.c, $(examples))
 
 indices = cp fn pg tp vr ky
-generated-dirs := libc
-generated = libc.dvi libc.pdf libc.tmp libc.info*			    \
-	stubs								    \
-	texis summary.texi stamp-summary *.c.texi			    \
-	$(foreach index,$(indices),libc.$(index) libc.$(index)s)	    \
-	libc.log libc.aux libc.toc					    \
-	$(libc-texi-generated)						    \
-	stamp-libm-err stamp-version
+generated-dirs += libc
+generated += libc.dvi libc.pdf libc.tmp libc.info*			      \
+	     stubs							      \
+	     texis summary.texi stamp-summary *.c.texi			      \
+	     $(foreach index,$(indices),libc.$(index) libc.$(index)s)	      \
+	     libc.log libc.aux libc.toc					      \
+	     $(libc-texi-generated)					      \
+	     stamp-libm-err stamp-version
 
 include ../Rules
 

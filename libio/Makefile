@@ -159,7 +159,7 @@ bug-ftell-ENV = LOCPATH=$(common-objpfx)localedata
 tst-fgetwc-ENV = LOCPATH=$(common-objpfx)localedata
 tst-fseek-ENV = LOCPATH=$(common-objpfx)localedata
 
-generated = tst-fopenloc.mtrace tst-fopenloc.check
+generated += tst-fopenloc.mtrace tst-fopenloc.check
 
 aux	:= fileops genops stdfiles stdio strops
 

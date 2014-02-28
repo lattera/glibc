@@ -1,5 +1,21 @@
 2014-02-28  Roland McGrath  <roland@hack.frob.com>
 
+	* csu/Makefile (generated, before-compile): Use += rather than =.
+	* catgets/Makefile (generated, generated-dirs): Likewise.
+	* debug/Makefile (generated): Likewise.
+	* dlfcn/Makefile (generated): Likewise.
+	* elf/Makefile (before-compile, generated, generated-dirs): Likewise.
+	* iconvdata/Makefile (before-compile, generated): Likewise.
+	* intl/Makefile (before-compile, generated, generated-dirs): Likewise.
+	* libio/Makefile (generated): Likewise.
+	* malloc/Makefile (generated): Likewise.
+	* manual/Makefile (generated, generated-dirs): Likewise.
+	* misc/Makefile (generated): Likewise.
+	* posix/Makefile (generated): Likewise.
+	* resolv/Makefile (generated): Likewise.
+	* sunrpc/Makefile (generated, generated-dirs): Likewise.
+	* timezone/Makefile (generated, generated-dirs): Likewise.
+
 	* stdio-common/Versions (libc: GLIBC_PRIVATE): Add missing }.
 
 2014-02-27  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>

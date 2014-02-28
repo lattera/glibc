@@ -64,7 +64,7 @@ ifeq (yesyes,$(build-shared)$(have-thread-library))
 tests: $(objpfx)ga_test
 endif
 
-generated := mtrace-tst-leaks tst-leaks.mtrace \
+generated += mtrace-tst-leaks tst-leaks.mtrace \
 	     mtrace-tst-leaks2 tst-leaks2.mtrace
 
 include ../Rules

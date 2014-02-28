@@ -177,9 +177,9 @@ gen-special-modules := iso8859-7jp
 generated-modules := $(gen-8bit-modules) $(gen-8bit-gap-modules) \
 		     $(gen-special-modules)
 
-generated = $(generated-modules:=.h) $(generated-modules:=.stmp) \
-	    iconv-test.out iconv-rules tst-loading.mtrace	 \
-	    mtrace-tst-loading tst-tables.out iconv-test.xxx
+generated += $(generated-modules:=.h) $(generated-modules:=.stmp) \
+	     iconv-test.out iconv-rules tst-loading.mtrace	 \
+	     mmtrace-tst-loading tst-tables.out iconv-test.xxx
 ifdef objpfx
 generated += gconv-modules
 endif
@@ -202,7 +202,7 @@ touch $@
 endef
 
 # The headers must be generated before the compilation.
-before-compile = $(addprefix $(objpfx),$(generated-modules:=.h))
+before-compile += $(addprefix $(objpfx),$(generated-modules:=.h))
 
 ifndef avoid-generated
 $(objpfx)iconv-rules: Makefile

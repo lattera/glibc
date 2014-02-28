@@ -46,9 +46,9 @@ catgets-CPPFLAGS := -DNLSPATH='"$(msgcatdir)/%L/%N:$(msgcatdir)/%L/LC_MESSAGES/%
 
 CPPFLAGS-gencat = -DNOT_IN_libc
 
-generated = de.msg test1.cat test1.h test2.cat test2.h sample.SJIS.cat \
-	    test-gencat.h
-generated-dirs = de
+generated += de.msg test1.cat test1.h test2.cat test2.h sample.SJIS.cat \
+	     test-gencat.h
+generated-dirs += de
 
 tst-catgets-ENV = NLSPATH="$(objpfx)%l/%N.cat" LANG=de
 

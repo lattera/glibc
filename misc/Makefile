@@ -69,7 +69,7 @@ routines := brk sbrk sstk ioctl \
 	    listxattr lgetxattr llistxattr lremovexattr lsetxattr \
 	    removexattr setxattr getauxval ifunc-impl-list
 
-generated := tst-error1.mtrace tst-error1-mem
+generated += tst-error1.mtrace tst-error1-mem
 
 aux := init-misc
 install-lib := libg.a
