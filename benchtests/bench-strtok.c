@@ -20,66 +20,13 @@
 #define TEST_NAME "strtok"
 #include "bench-string.h"
 
-char *
-simple_strtok (char *s1, char *s2)
-{
-  static char *saveptr;
-  char *token;
-  ssize_t i = 0, j = 0;
-  int found = 0;
-  size_t s2len = strlen (s2);
+#define STRTOK strtok_string
+#include <string/strtok.c>
 
-  if (s1 == NULL)
-    s1 = saveptr;
-  if (s1 == NULL || *s1 == '\0')
-    return NULL;
-
-  while (!found)
-    {
-      if (s1[i] == '\0')
-	{
-	  saveptr = NULL;
-	  return NULL;
-	}
-      for (j = 0; j < s2len; j++)
-	{
-	  if (s1[i] == s2[j])
-	    {
-	      i++;
-	      found = 0;
-	      break;
-	    }
-	  found = 1;
-	}
-    }
-  token = s1 + i;
-  i++;
-  found = 0;
-  while (!found)
-    {
-      if (s1[i] == '\0')
-	{
-	  saveptr = NULL;
-	  return token;
-	}
-      for (j = 0; j < s2len; j++)
-	{
-	  if (s1[i] == s2[j])
-	    {
-	      found = 1;
-	      break;
-	    }
-	}
-      i++;
-    }
-  s1[i - 1] = '\0';
-  saveptr = s1 + i;
-  return token;
-}
 
 typedef char *(*proto_t) (const char *, const char *);
 
-IMPL (simple_strtok, 0)
+IMPL (strtok_string, 0)
 IMPL (strtok, 1)
 
 static void
