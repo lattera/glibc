@@ -1,3 +1,9 @@
+2014-02-28  Ondřej Bílka  <neleai@seznam.cz>
+
+	* benchtest/bench-strtok.c (simple_strtok): Delete.
+	(strtok_string): Use as benchmark.
+	* string/strtok (STRTOK): New macro.
+
 2014-02-28  Carlos O'Donell  <carlos@redhat.com>
 
 	* manual/threads.texi: Add header and standard comments to all
