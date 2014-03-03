@@ -1,3 +1,8 @@
+2014-03-13  Will Newton  <will.newton@linaro.org>
+
+	* manual/setjmp.texi (System V contexts): Improve
+	clarity and grammar of documentation.
+
 2014-03-12  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #16381]

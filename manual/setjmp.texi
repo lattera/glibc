@@ -307,17 +307,16 @@ The function returns @code{0} if successful.  Otherwise it returns
 @end deftypefun
 
 The @code{getcontext} function is similar to @code{setjmp} but it does
-not provide an indication of whether the function returns for the first
-time or whether the initialized context was used and the execution is
-resumed at just that point.  If this is necessary the user has to
-determine this herself.  This must be done carefully since the context
-contains registers which might contain register variables.  This is a
-good situation to define variables with @code{volatile}.
+not provide an indication of whether @code{getcontext} is returning for
+the first time or whether an initialized context has just been restored.
+If this is necessary the user has to determine this herself.  This must
+be done carefully since the context contains registers which might contain
+register variables.  This is a good situation to define variables with
+@code{volatile}.
 
 Once the context variable is initialized it can be used as is or it can
-be modified.  The latter is normally done to implement co-routines or
-similar constructs.  The @code{makecontext} function has to be
-used to do that.
+be modified using the @code{makecontext} function.  The latter is normally
+done when implementing co-routines or similar constructs.
 
 @comment ucontext.h
 @comment SVID
@@ -325,7 +324,7 @@ used to do that.
 @safety{@prelim{}@mtsafe{@mtsrace{:ucp}}@assafe{}@acsafe{}}
 @c Linux-only implementations mostly in assembly, nothing unsafe.
 
-The @var{ucp} parameter passed to the @code{makecontext} shall be
+The @var{ucp} parameter passed to @code{makecontext} shall be
 initialized by a call to @code{getcontext}.  The context will be
 modified in a way such that if the context is resumed it will start by
 calling the function @code{func} which gets @var{argc} integer arguments
@@ -436,7 +435,7 @@ function fails it returns @code{-1} and sets @var{errno} accordingly.
 
 The easiest way to use the context handling functions is as a
 replacement for @code{setjmp} and @code{longjmp}.  The context contains
-on most platforms more information which might lead to less surprises
+on most platforms more information which may lead to fewer surprises
 but this also means using these functions is more expensive (besides
 being less portable).
 
