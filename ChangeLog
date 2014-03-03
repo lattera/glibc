@@ -1,3 +1,25 @@
+2014-03-03  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #16639]
+	* nscd/connections.c (nscd_init): Call do_exit.
+	(start_threads): Call do_exit and notify_parent.
+	(begin_drop_privileges): Call do_exit.
+	(finish_drop_privileges): Likewise.
+	* nscd/selinux.c (preserve_capabilities): Likewise.
+	(install_real_capabilities): Likewise.
+	(nscd_selinux_enabled): Likewise.
+	(avc_create_thread): Likewise.
+	(avc_alloc_lock): Likewise.
+	(nscd_avc_init): Likewise.
+	* nscd/nscd.c (parent_fd): New static variable.
+	(main): Create a pipe between parent and child processes.
+	Skip closing parent_fd.
+	(monitor_child): New function.
+	(do_exit): Likewise.
+	(notify_parent): Likewise.
+	* nscd/nscd.h (notify_parent): Likewise.
+	(do_exit): Likewise.
+
 2014-03-03  Carlos O'Donell  <carlos@redhat.com>
 
 	* malloc/malloc.c (__libc_calloc): Revert last change.

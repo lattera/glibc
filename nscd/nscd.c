@@ -39,6 +39,8 @@
 #include <sys/stat.h>
 #include <sys/uio.h>
 #include <sys/un.h>
+#include <sys/wait.h>
+#include <stdarg.h>
 
 #include "dbg_log.h"
 #include "nscd.h"
@@ -101,6 +103,7 @@ gid_t old_gid;
 
 static int check_pid (const char *file);
 static int write_pid (const char *file);
+static int monitor_child (int fd);
 
 /* Name and version of program.  */
 static void print_version (FILE *stream, struct argp_state *state);
@@ -142,6 +145,7 @@ static struct argp argp =
 
 /* True if only statistics are requested.  */
 static bool get_stats;
+static int parent_fd = -1;
 
 int
 main (int argc, char **argv)
@@ -196,11 +200,27 @@ main (int argc, char **argv)
       /* Behave like a daemon.  */
       if (run_mode == RUN_DAEMONIZE)
 	{
+	  int fd[2];
+
+	  if (pipe (fd) != 0)
+	    error (EXIT_FAILURE, errno,
+		   _("cannot create a pipe to talk to the child"));
+
 	  pid = fork ();
 	  if (pid == -1)
 	    error (EXIT_FAILURE, errno, _("cannot fork"));
 	  if (pid != 0)
-	    exit (0);
+	    {
+	      /* The parent only reads from the child.  */
+	      close (fd[1]);
+	      exit (monitor_child (fd[0]));
+	    }
+	  else
+	    {
+	      /* The child only writes to the parent.  */
+	      close (fd[0]);
+	      parent_fd = fd[1];
+	    }
 	}
 
       int nullfd = open (_PATH_DEVNULL, O_RDWR);
@@ -242,7 +262,8 @@ main (int argc, char **argv)
 	      char *endp;
 	      long int fdn = strtol (dirent->d_name, &endp, 10);
 
-	      if (*endp == '\0' && fdn != dfdn && fdn >= min_close_fd)
+	      if (*endp == '\0' && fdn != dfdn && fdn >= min_close_fd
+		  && fdn != parent_fd)
 		close ((int) fdn);
 	    }
 
@@ -250,13 +271,14 @@ main (int argc, char **argv)
 	}
       else
 	for (i = min_close_fd; i < getdtablesize (); i++)
-	  close (i);
+	  if (i != parent_fd)
+	    close (i);
 
       setsid ();
 
       if (chdir ("/") != 0)
-	error (EXIT_FAILURE, errno,
-	       _("cannot change current working directory to \"/\""));
+	do_exit (EXIT_FAILURE, errno,
+		 _("cannot change current working directory to \"/\""));
 
       openlog ("nscd", LOG_CONS | LOG_ODELAY, LOG_DAEMON);
 
@@ -591,4 +613,80 @@ write_pid (const char *file)
   fclose (fp);
 
   return result;
+}
+
+static int
+monitor_child (int fd)
+{
+  int child_ret = 0;
+  int ret = read (fd, &child_ret, sizeof (child_ret));
+
+  /* The child terminated with an error, either via exit or some other abnormal
+     method, like a segfault.  */
+  if (ret <= 0 || child_ret != 0)
+    {
+      int err = wait (&child_ret);
+
+      if (err < 0)
+	{
+	  fprintf (stderr, _("wait failed"));
+	  return 1;
+	}
+
+      fprintf (stderr, _("child exited with status %d"),
+	       WEXITSTATUS (child_ret));
+      if (WIFSIGNALED (child_ret))
+	fprintf (stderr, _(", terminated by signal %d.\n"),
+		 WTERMSIG (child_ret));
+      else
+	fprintf (stderr, ".\n");
+    }
+
+  /* We have the child status, so exit with that code.  */
+  close (fd);
+
+  return child_ret;
+}
+
+void
+do_exit (int child_ret, int errnum, const char *format, ...)
+{
+  if (parent_fd != -1)
+    {
+      int ret = write (parent_fd, &child_ret, sizeof (child_ret));
+      assert (ret == sizeof (child_ret));
+      close (parent_fd);
+    }
+
+  if (format != NULL)
+    {
+      /* Emulate error() since we don't have a va_list variant for it.  */
+      va_list argp;
+
+      fflush (stdout);
+
+      fprintf (stderr, "%s: ", program_invocation_name);
+
+      va_start (argp, format);
+      vfprintf (stderr, format, argp);
+      va_end (argp);
+
+      fprintf (stderr, ": %s\n", strerror (errnum));
+      fflush (stderr);
+    }
+
+  /* Finally, exit.  */
+  exit (child_ret);
+}
+
+void
+notify_parent (int child_ret)
+{
+  if (parent_fd == -1)
+    return;
+
+  int ret = write (parent_fd, &child_ret, sizeof (child_ret));
+  assert (ret == sizeof (child_ret));
+  close (parent_fd);
+  parent_fd = -1;
 }

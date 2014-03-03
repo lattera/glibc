@@ -649,8 +649,8 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
 		  close (fd);
 	      }
 	    else if (errno == EACCES)
-	      error (EXIT_FAILURE, 0, _("cannot access '%s'"),
-		     dbs[cnt].db_filename);
+	      do_exit (EXIT_FAILURE, 0, _("cannot access '%s'"),
+		       dbs[cnt].db_filename);
 	  }
 
 	if (dbs[cnt].head == NULL)
@@ -699,8 +699,7 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
 		  {
 		    dbg_log (_("database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"),
 			     dbnames[cnt], dbs[cnt].db_filename);
-		    // XXX Correct way to terminate?
-		    exit (1);
+		    do_exit (1, 0, NULL);
 		  }
 
 		if  (dbs[cnt].persistent)
@@ -867,7 +866,7 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
   if (sock < 0)
     {
       dbg_log (_("cannot open socket: %s"), strerror (errno));
-      exit (errno == EACCES ? 4 : 1);
+      do_exit (errno == EACCES ? 4 : 1, 0, NULL);
     }
   /* Bind a name to the socket.  */
   struct sockaddr_un sock_addr;
@@ -876,7 +875,7 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
   if (bind (sock, (struct sockaddr *) &sock_addr, sizeof (sock_addr)) < 0)
     {
       dbg_log ("%s: %s", _PATH_NSCDSOCKET, strerror (errno));
-      exit (errno == EACCES ? 4 : 1);
+      do_exit (errno == EACCES ? 4 : 1, 0, NULL);
     }
 
 #ifndef __ASSUME_SOCK_CLOEXEC
@@ -888,7 +887,7 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
 	{
 	  dbg_log (_("cannot change socket to nonblocking mode: %s"),
 		   strerror (errno));
-	  exit (1);
+	  do_exit (1, 0, NULL);
 	}
 
       /* The descriptor needs to be closed on exec.  */
@@ -896,7 +895,7 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
 	{
 	  dbg_log (_("cannot set socket to close on exec: %s"),
 		   strerror (errno));
-	  exit (1);
+	  do_exit (1, 0, NULL);
 	}
     }
 #endif
@@ -909,7 +908,7 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
     {
       dbg_log (_("cannot enable socket to accept connections: %s"),
 	       strerror (errno));
-      exit (1);
+      do_exit (1, 0, NULL);
     }
 
 #ifdef HAVE_NETLINK
@@ -953,7 +952,7 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
 		      dbg_log (_("\
 cannot change socket to nonblocking mode: %s"),
 			       strerror (errno));
-		      exit (1);
+		      do_exit (1, 0, NULL);
 		    }
 
 		  /* The descriptor needs to be closed on exec.  */
@@ -962,7 +961,7 @@ cannot change socket to nonblocking mode: %s"),
 		    {
 		      dbg_log (_("cannot set socket to close on exec: %s"),
 			       strerror (errno));
-		      exit (1);
+		      do_exit (1, 0, NULL);
 		    }
 		}
 # endif
@@ -2392,7 +2391,7 @@ start_threads (void)
       if (pthread_cond_init (&dbs[i].prune_cond, &condattr) != 0)
 	{
 	  dbg_log (_("could not initialize conditional variable"));
-	  exit (1);
+	  do_exit (1, 0, NULL);
 	}
 
       pthread_t th;
@@ -2400,7 +2399,7 @@ start_threads (void)
 	  && pthread_create (&th, &attr, nscd_run_prune, (void *) i) != 0)
 	{
 	  dbg_log (_("could not start clean-up thread; terminating"));
-	  exit (1);
+	  do_exit (1, 0, NULL);
 	}
     }
 
@@ -2414,12 +2413,16 @@ start_threads (void)
 	  if (i == 0)
 	    {
 	      dbg_log (_("could not start any worker thread; terminating"));
-	      exit (1);
+	      do_exit (1, 0, NULL);
 	    }
 
 	  break;
 	}
     }
+
+  /* Now it is safe to let the parent know that we're doing fine and it can
+     exit.  */
+  notify_parent (0);
 
   /* Determine how much room for descriptors we should initially
      allocate.  This might need to change later if we cap the number
@@ -2465,8 +2468,8 @@ begin_drop_privileges (void)
   if (pwd == NULL)
     {
       dbg_log (_("Failed to run nscd as user '%s'"), server_user);
-      error (EXIT_FAILURE, 0, _("Failed to run nscd as user '%s'"),
-	     server_user);
+      do_exit (EXIT_FAILURE, 0,
+	       _("Failed to run nscd as user '%s'"), server_user);
     }
 
   server_uid = pwd->pw_uid;
@@ -2483,7 +2486,8 @@ begin_drop_privileges (void)
     {
       /* This really must never happen.  */
       dbg_log (_("Failed to run nscd as user '%s'"), server_user);
-      error (EXIT_FAILURE, errno, _("initial getgrouplist failed"));
+      do_exit (EXIT_FAILURE, errno,
+	       _("initial getgrouplist failed"));
     }
 
   server_groups = (gid_t *) xmalloc (server_ngroups * sizeof (gid_t));
@@ -2492,7 +2496,7 @@ begin_drop_privileges (void)
       == -1)
     {
       dbg_log (_("Failed to run nscd as user '%s'"), server_user);
-      error (EXIT_FAILURE, errno, _("getgrouplist failed"));
+      do_exit (EXIT_FAILURE, errno, _("getgrouplist failed"));
     }
 }
 
@@ -2510,7 +2514,7 @@ finish_drop_privileges (void)
   if (setgroups (server_ngroups, server_groups) == -1)
     {
       dbg_log (_("Failed to run nscd as user '%s'"), server_user);
-      error (EXIT_FAILURE, errno, _("setgroups failed"));
+      do_exit (EXIT_FAILURE, errno, _("setgroups failed"));
     }
 
   int res;
@@ -2521,8 +2525,7 @@ finish_drop_privileges (void)
   if (res == -1)
     {
       dbg_log (_("Failed to run nscd as user '%s'"), server_user);
-      perror ("setgid");
-      exit (4);
+      do_exit (4, errno, "setgid");
     }
 
   if (paranoia)
@@ -2532,8 +2535,7 @@ finish_drop_privileges (void)
   if (res == -1)
     {
       dbg_log (_("Failed to run nscd as user '%s'"), server_user);
-      perror ("setuid");
-      exit (4);
+      do_exit (4, errno, "setuid");
     }
 
 #if defined HAVE_LIBAUDIT && defined HAVE_LIBCAP
