@@ -1,3 +1,7 @@
+2014-03-03  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
+
 2014-03-03  Rajalakshmi Srinivasaraghavan <raji@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power7/strrchr.S: New file.
