@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2014 Free Software Foundation, Inc.
+/* Multiple versions of strrchr. PowerPC64 version.
+   Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,39 +16,20 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <string.h>
+/* Define multiple versions only for definition in libc.  */
+#ifndef NOT_IN_libc
+# include <string.h>
+# include <shlib-compat.h>
+# include "init-arch.h"
 
-#undef strrchr
+extern __typeof (strrchr) __strrchr_ppc attribute_hidden;
+extern __typeof (strrchr) __strrchr_power7 attribute_hidden;
 
-#ifndef STRRCHR
-# define STRRCHR strrchr
-#endif
-
-/* Find the last occurrence of C in S.  */
-char *
-STRRCHR (const char *s, int c)
-{
-  const char *found, *p;
-
-  c = (unsigned char) c;
-
-  /* Since strchr is fast, we use it rather than the obvious loop.  */
-
-  if (c == '\0')
-    return strchr (s, '\0');
-
-  found = NULL;
-  while ((p = strchr (s, c)) != NULL)
-    {
-      found = p;
-      s = p + 1;
-    }
-
-  return (char *) found;
-}
-
-#ifdef weak_alias
-#undef rindex
+/* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
+   ifunc symbol properly.  */
+libc_ifunc (strrchr,
+            (hwcap & PPC_FEATURE_HAS_VSX)
+            ? __strrchr_power7
+            : __strrchr_ppc);
 weak_alias (strrchr, rindex)
 #endif
-libc_hidden_builtin_def (strrchr)

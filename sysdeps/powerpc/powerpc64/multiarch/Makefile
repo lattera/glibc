@@ -13,7 +13,8 @@ sysdep_routines += memcpy-power7 memcpy-a2 memcpy-power6 memcpy-cell \
 		   wcschr-power6 wcschr-ppc64 wcsrchr-power7 wcsrchr-power6 \
 		   wcsrchr-ppc64 wcscpy-power7 wcscpy-power6 wcscpy-ppc64 \
 		   wordcopy-power7 wordcopy-power6 wordcopy-ppc64 \
-		   strcpy-power7 strcpy-ppc64 stpcpy-power7 stpcpy-ppc64
+		   strcpy-power7 strcpy-ppc64 stpcpy-power7 stpcpy-ppc64 \
+		   strrchr-power7 strrchr-ppc64
 
 CFLAGS-strncase-power7.c += -mcpu=power7 -funroll-loops
 CFLAGS-strncase_l-power7.c += -mcpu=power7 -funroll-loops

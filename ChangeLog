@@ -1,3 +1,15 @@
+2014-03-03  Rajalakshmi Srinivasaraghavan <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power7/strrchr.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add strrchr multiarch
+	implementation.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c:
+	(__libc_ifunc_impl_list): Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strrchr.c: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strrchr-ppc64.c: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strrchr-power7.S: New file.
+	* string/strrchr.c: Define STRRCHR.
+
 2014-02-28  Ondřej Bílka  <neleai@seznam.cz>
 
 	* benchtest/bench-strtok.c (simple_strtok): Delete.

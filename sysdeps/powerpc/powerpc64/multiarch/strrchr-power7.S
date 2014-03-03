@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2014 Free Software Foundation, Inc.
+/* Optimized strrchr implementation for POWER7.
+   Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,39 +16,24 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <string.h>
+#include <sysdep.h>
 
-#undef strrchr
+#undef ENTRY
+#define ENTRY(name)						\
+  .section ".text";						\
+  ENTRY_2(__strrchr_power7)					\
+  .align ALIGNARG(2);						\
+  BODY_LABEL(__strrchr_power7):					\
+  cfi_startproc;						\
+  LOCALENTRY(__strrchr_power7)
 
-#ifndef STRRCHR
-# define STRRCHR strrchr
-#endif
+#undef END
+#define END(name)						\
+  cfi_endproc;							\
+  TRACEBACK(__strrchr_power7)					\
+  END_2(__strrchr_power7)
 
-/* Find the last occurrence of C in S.  */
-char *
-STRRCHR (const char *s, int c)
-{
-  const char *found, *p;
+#undef libc_hidden_builtin_def
+#define libc_hidden_builtin_def(name)
 
-  c = (unsigned char) c;
-
-  /* Since strchr is fast, we use it rather than the obvious loop.  */
-
-  if (c == '\0')
-    return strchr (s, '\0');
-
-  found = NULL;
-  while ((p = strchr (s, c)) != NULL)
-    {
-      found = p;
-      s = p + 1;
-    }
-
-  return (char *) found;
-}
-
-#ifdef weak_alias
-#undef rindex
-weak_alias (strrchr, rindex)
-#endif
-libc_hidden_builtin_def (strrchr)
+#include <sysdeps/powerpc/powerpc64/power7/strrchr.S>

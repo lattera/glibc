@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2014 Free Software Foundation, Inc.
+/* Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,37 +17,17 @@
 
 #include <string.h>
 
-#undef strrchr
-
-#ifndef STRRCHR
-# define STRRCHR strrchr
+#define STRRCHR __strrchr_ppc
+#undef weak_alias
+#define weak_alias(name, aliasname) \
+  extern __typeof (__strrchr_ppc) aliasname \
+    __attribute__ ((weak, alias ("__strrchr_ppc")));
+#if !defined(NOT_IN_libc) && defined(SHARED)
+# undef libc_hidden_builtin_def
+# define libc_hidden_builtin_def(name) \
+  __hidden_ver1(__strrchr_ppc, __GI_strrchr, __strrchr_ppc);
 #endif
 
-/* Find the last occurrence of C in S.  */
-char *
-STRRCHR (const char *s, int c)
-{
-  const char *found, *p;
+extern __typeof (strrchr) __strrchr_ppc attribute_hidden;
 
-  c = (unsigned char) c;
-
-  /* Since strchr is fast, we use it rather than the obvious loop.  */
-
-  if (c == '\0')
-    return strchr (s, '\0');
-
-  found = NULL;
-  while ((p = strchr (s, c)) != NULL)
-    {
-      found = p;
-      s = p + 1;
-    }
-
-  return (char *) found;
-}
-
-#ifdef weak_alias
-#undef rindex
-weak_alias (strrchr, rindex)
-#endif
-libc_hidden_builtin_def (strrchr)
+#include <string/strrchr.c>
