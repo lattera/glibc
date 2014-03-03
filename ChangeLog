@@ -1,5 +1,28 @@
 2014-06-13  Andi Kleen  <ak@linux.intel.com>
 
+        * sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_rdlock.S: Remove.
+        * sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedrdlock.S: dito.
+        * sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedwrlock.S: dito.
+        * sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_unlock.S: dito.
+        * sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_wrlock.S: dito.
+        * sysdeps/unix/sysv/linux/i386/i586/pthread_rwlock_rdlock.S: dito.
+        * sysdeps/unix/sysv/linux/i386/i586/pthread_rwlock_timedrdlock.S: dito.
+        * sysdeps/unix/sysv/linux/i386/i586/pthread_rwlock_timedwrlock.S: dito.
+        * sysdeps/unix/sysv/linux/i386/i586/pthread_rwlock_unlock.S: dito.
+        * sysdeps/unix/sysv/linux/i386/i586/pthread_rwlock_wrlock.S: dito.
+        * sysdeps/unix/sysv/linux/i386/i686/pthread_rwlock_rdlock.S: dito.
+        * sysdeps/unix/sysv/linux/i386/i686/pthread_rwlock_timedrdlock.S: dito.
+        * sysdeps/unix/sysv/linux/i386/i686/pthread_rwlock_timedwrlock.S: dito.
+        * sysdeps/unix/sysv/linux/i386/i686/pthread_rwlock_unlock.S: dito.
+        * sysdeps/unix/sysv/linux/i386/i686/pthread_rwlock_wrlock.S: dito.
+        * sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_rdlock.S: dito.
+        * sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedrdlock.S: dito.
+        * sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedwrlock.S: dito.
+        * sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_unlock.S: dito.
+        * sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_wrlock.S: dito.
+
+2014-06-13  Andi Kleen  <ak@linux.intel.com>
+
 	* nptl/pthread_rwlock_rdlock.c: Include elide.h.
         (pthread_rwlock_rdlock): Add elision.
         * nptl/pthread_rwlock_wrlock.c: Include elide.h.
