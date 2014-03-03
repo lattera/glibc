@@ -1,3 +1,8 @@
+This file describes changes to the nptl_db/ subdirectory prior to 2014-03-03.
+Later nptl_db/ changes go into the top-level ChangeLog file, not here.
+
+
+
 2014-02-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makefile: Include Makeconfig immediately after defining subdir.

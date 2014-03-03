@@ -1,3 +1,8 @@
+2014-03-03  Roland McGrath  <roland@hack.frob.com>
+
+	* nptl/ChangeLog: Renamed to nptl/ChangeLog.old, no longer used.
+	* nptl_db/ChangeLog: Renamed to nptl_db/ChangeLog.old, no longer used.
+
 2014-03-03  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #16639]

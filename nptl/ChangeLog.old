@@ -1,3 +1,8 @@
+This file describes changes to the nptl/ subdirectory prior to 2014-03-03.
+Later nptl/ changes go into the top-level ChangeLog file, not here.
+
+
+
 2014-02-28  Roland McGrath  <roland@hack.frob.com>
 
 	* Makefile (generated-dirs): Use += rather than =.
