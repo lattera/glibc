@@ -1,3 +1,10 @@
+2014-03-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (print_complex_max_error): Check separately
+	whether real and imaginary errors are within allowed range and
+	pass 0 to print_complex_function_ulps instead of value within
+	allowed range.
+
 2014-03-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* libio/tst-ftell-active-handler.c (get_handles_fdopen): Fix

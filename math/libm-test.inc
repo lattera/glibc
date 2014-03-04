@@ -568,19 +568,26 @@ static void
 print_complex_max_error (const char *func_name)
 {
   __complex__ FLOAT allowed = find_complex_function_ulps (func_name);
-  int ok = 0;
+  int real_ok = 0, imag_ok = 0, ok;
 
-  if ((real_max_error == 0 && imag_max_error == 0)
-      || (real_max_error <= __real__ allowed
-	  && imag_max_error <= __imag__ allowed
-	  && !ignore_max_ulp))
+  if (real_max_error == 0
+      || (real_max_error <= __real__ allowed && !ignore_max_ulp))
     {
-      ok = 1;
+      real_ok = 1;
     }
 
-  if (!ok)
-    print_complex_function_ulps (func_name, real_max_error, imag_max_error);
+  if (imag_max_error == 0
+      || (imag_max_error <= __imag__ allowed && !ignore_max_ulp))
+    {
+      imag_ok = 1;
+    }
 
+  ok = real_ok && imag_ok;
+
+  if (!ok)
+    print_complex_function_ulps (func_name,
+				 real_ok ? 0 : real_max_error,
+				 imag_ok ? 0 : imag_max_error);
 
   if (print_screen_max_error (ok))
     {
