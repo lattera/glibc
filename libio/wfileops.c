@@ -699,8 +699,8 @@ do_ftell_wide (_IO_FILE *fp)
 	      offset += outstop - out;
 	    }
 
-	  /* _IO_read_end coincides with fp._offset, so the actual file position
-	     is fp._offset - (_IO_read_end - new_write_ptr).  */
+	  /* _IO_read_end coincides with fp._offset, so the actual file
+	     position is fp._offset - (_IO_read_end - new_write_ptr).  */
 	  offset -= fp->_IO_read_end - fp->_IO_write_ptr;
 	}
 

@@ -1,5 +1,7 @@
 2014-03-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* libio/wfileops.c (do_ftell_wide): Fix up formatting.
+
 	* libio/fileops.c (do_ftell): Use cached offset when
 	available.
 	* libio/iofwide.c (do_ftell_wide): Likewise.
