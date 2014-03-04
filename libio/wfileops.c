@@ -596,29 +596,24 @@ done:
   return 0;
 }
 
-_IO_off64_t
-_IO_wfile_seekoff (fp, offset, dir, mode)
-     _IO_FILE *fp;
-     _IO_off64_t offset;
-     int dir;
-     int mode;
+/* ftell{,o} implementation for wide mode.  Don't modify any state of the file
+   pointer while we try to get the current state of the stream.  */
+static _IO_off64_t
+do_ftell_wide (_IO_FILE *fp)
 {
-  _IO_off64_t result;
-  _IO_off64_t delta, new_offset;
-  long int count;
-  /* POSIX.1 8.2.3.7 says that after a call the fflush() the file
-     offset of the underlying file must be exact.  */
-  int must_be_exact = ((fp->_wide_data->_IO_read_base
-			== fp->_wide_data->_IO_read_end)
-		       && (fp->_wide_data->_IO_write_base
-			   == fp->_wide_data->_IO_write_ptr));
+  _IO_off64_t result, offset = 0;
 
-  bool was_writing = ((fp->_wide_data->_IO_write_ptr
-		       > fp->_wide_data->_IO_write_base)
-		      || _IO_in_put_mode (fp));
-
-  if (mode == 0)
+  /* No point looking for offsets in the buffer if it hasn't even been
+     allocated.  */
+  if (fp->_wide_data->_IO_buf_base != NULL)
     {
+      const wchar_t *wide_read_base;
+      const wchar_t *wide_read_ptr;
+      const wchar_t *wide_read_end;
+      bool was_writing = ((fp->_wide_data->_IO_write_ptr
+			   > fp->_wide_data->_IO_write_base)
+			  || _IO_in_put_mode (fp));
+
       /* XXX For wide stream with backup store it is not very
 	 reasonable to determine the offset.  The pushed-back
 	 character might require a state change and we need not be
@@ -633,13 +628,119 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
 	      return -1;
 	    }
 
-	  /* There is no more data in the backup buffer.  We can
-	     switch back.  */
-	  _IO_switch_to_main_wget_area (fp);
+	  /* Nothing in the backup store, so note the backed up pointers
+	     without changing the state.  */
+	  wide_read_base = fp->_wide_data->_IO_save_base;
+	  wide_read_ptr = wide_read_base;
+	  wide_read_end = fp->_wide_data->_IO_save_end;
+	}
+      else
+	{
+	  wide_read_base = fp->_wide_data->_IO_read_base;
+	  wide_read_ptr = fp->_wide_data->_IO_read_ptr;
+	  wide_read_end = fp->_wide_data->_IO_read_end;
 	}
 
-      dir = _IO_seek_cur, offset = 0; /* Don't move any pointers. */
+      struct _IO_codecvt *cv = fp->_codecvt;
+      int clen = (*cv->__codecvt_do_encoding) (cv);
+
+      if (!was_writing)
+	{
+	  if (clen > 0)
+	    {
+	      offset -= (wide_read_end - wide_read_ptr) * clen;
+	      offset -= fp->_IO_read_end - fp->_IO_read_ptr;
+	    }
+	  else
+	    {
+	      int nread;
+
+	      size_t delta = wide_read_ptr - wide_read_base;
+	      __mbstate_t state = fp->_wide_data->_IO_last_state;
+	      nread = (*cv->__codecvt_do_length) (cv, &state,
+						  fp->_IO_read_base,
+						  fp->_IO_read_end, delta);
+	      offset -= fp->_IO_read_end - fp->_IO_read_base - nread;
+	    }
+	}
+      else
+	{
+	  if (clen > 0)
+	    offset += (fp->_wide_data->_IO_write_ptr
+		       - fp->_wide_data->_IO_write_base) * clen;
+	  else
+	    {
+	      size_t delta = (fp->_wide_data->_IO_write_ptr
+			      - fp->_wide_data->_IO_write_base);
+
+	      /* Allocate enough space for the conversion.  */
+	      size_t outsize = delta * sizeof (wchar_t);
+	      char *out = malloc (outsize);
+	      char *outstop = out;
+	      const wchar_t *in = fp->_wide_data->_IO_write_base;
+
+	      enum __codecvt_result status;
+
+	      __mbstate_t state = fp->_wide_data->_IO_last_state;
+	      status = (*cv->__codecvt_do_out) (cv, &state,
+						in, in + delta, &in,
+						out, out + outsize, &outstop);
+
+	      /* We don't check for __codecvt_partial because it can be
+		 returned on one of two conditions: either the output
+		 buffer is full or the input sequence is incomplete.  We
+		 take care to allocate enough buffer and our input
+		 sequences must be complete since they are accepted as
+		 wchar_t; if not, then that is an error.  */
+	      if (__glibc_unlikely (status != __codecvt_ok))
+		return WEOF;
+
+	      offset += outstop - out;
+	    }
+
+	  /* _IO_read_end coincides with fp._offset, so the actual file position
+	     is fp._offset - (_IO_read_end - new_write_ptr).  */
+	  offset -= fp->_IO_read_end - fp->_IO_write_ptr;
+	}
     }
+
+  result = get_file_offset (fp);
+
+  if (result == EOF)
+    return result;
+
+  result += offset;
+
+  return result;
+}
+
+_IO_off64_t
+_IO_wfile_seekoff (fp, offset, dir, mode)
+     _IO_FILE *fp;
+     _IO_off64_t offset;
+     int dir;
+     int mode;
+{
+  _IO_off64_t result;
+  _IO_off64_t delta, new_offset;
+  long int count;
+
+  /* Short-circuit into a separate function.  We don't want to mix any
+     functionality and we don't want to touch anything inside the FILE
+     object. */
+  if (mode == 0)
+    return do_ftell_wide (fp);
+
+  /* POSIX.1 8.2.3.7 says that after a call the fflush() the file
+     offset of the underlying file must be exact.  */
+  int must_be_exact = ((fp->_wide_data->_IO_read_base
+			== fp->_wide_data->_IO_read_end)
+		       && (fp->_wide_data->_IO_write_base
+			   == fp->_wide_data->_IO_write_ptr));
+
+  bool was_writing = ((fp->_wide_data->_IO_write_ptr
+		       > fp->_wide_data->_IO_write_base)
+		      || _IO_in_put_mode (fp));
 
   /* Flush unwritten characters.
      (This may do an unneeded write if we seek within the buffer.
@@ -648,7 +749,7 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
      which assumes file_ptr() is eGptr.  Anyway, since we probably
      end up flushing when we close(), it doesn't make much difference.)
      FIXME: simulate mem-mapped files. */
-  else if (was_writing && _IO_switch_to_wget_mode (fp))
+  if (was_writing && _IO_switch_to_wget_mode (fp))
     return WEOF;
 
   if (fp->_wide_data->_IO_buf_base == NULL)
@@ -693,7 +794,6 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
 	    {
 	      int nread;
 
-	    flushed:
 	      delta = (fp->_wide_data->_IO_read_ptr
 		       - fp->_wide_data->_IO_read_base);
 	      fp->_wide_data->_IO_state = fp->_wide_data->_IO_last_state;
@@ -706,80 +806,9 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
 	      offset -= fp->_IO_read_end - fp->_IO_read_base - nread;
 	    }
 	}
-      else
-	{
-	  char *new_write_ptr = fp->_IO_write_ptr;
-
-	  if (clen > 0)
-	    offset += (fp->_wide_data->_IO_write_ptr
-		       - fp->_wide_data->_IO_write_base) / clen;
-	  else
-	    {
-	      enum __codecvt_result status = __codecvt_ok;
-	      delta = (fp->_wide_data->_IO_write_ptr
-		       - fp->_wide_data->_IO_write_base);
-	      const wchar_t *write_base = fp->_wide_data->_IO_write_base;
-
-	      /* FIXME: This actually ends up in two iterations of conversion,
-		 one here and the next when the buffer actually gets flushed.
-		 It may be possible to optimize this in future so that
-		 wdo_write identifies already converted content and does not
-		 redo it.  In any case, this is much better than having to
-		 flush buffers for every ftell.  */
-	      do
-		{
-		  /* There is not enough space in the buffer to do the entire
-		     conversion, so there is no point trying to avoid the
-		     buffer flush.  Just do it and go back to how it was with
-		     the read mode.  */
-		  if (status == __codecvt_partial
-		      || (delta > 0 && new_write_ptr == fp->_IO_buf_end))
-		    {
-		      if (_IO_switch_to_wget_mode (fp))
-			return WEOF;
-		      goto flushed;
-		    }
-
-		  const wchar_t *new_wbase = fp->_wide_data->_IO_write_base;
-		  fp->_wide_data->_IO_state = fp->_wide_data->_IO_last_state;
-		  status = (*cv->__codecvt_do_out) (cv,
-						    &fp->_wide_data->_IO_state,
-						    write_base,
-						    write_base + delta,
-						    &new_wbase,
-						    new_write_ptr,
-						    fp->_IO_buf_end,
-						    &new_write_ptr);
-
-		  delta -= new_wbase - write_base;
-
-		  /* If there was an error, then return WEOF.
-		     TODO: set buffer state.  */
-		  if (__glibc_unlikely (status == __codecvt_error))
-		      return WEOF;
-		}
-	      while (delta > 0);
-	    }
-
-	  /* _IO_read_end coincides with fp._offset, so the actual file position
-	     is fp._offset - (_IO_read_end - new_write_ptr).  This is fine
-	     even if fp._offset is not set, since fp->_IO_read_end is then at
-	     _IO_buf_base and this adjustment is for unbuffered output.  */
-	  offset -= fp->_IO_read_end - new_write_ptr;
-	}
 
       if (fp->_offset == _IO_pos_BAD)
-	{
-	  if (mode != 0)
-	    goto dumb;
-	  else
-	    {
-	      result = _IO_SYSSEEK (fp, 0, dir);
-	      if (result == EOF)
-		return result;
-	      fp->_offset = result;
-	    }
-	}
+	goto dumb;
 
       /* Make offset absolute, assuming current pointer is file_ptr(). */
       offset += fp->_offset;
@@ -801,10 +830,6 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
       }
     }
   /* At this point, dir==_IO_seek_set. */
-
-  /* If we are only interested in the current position we've found it now.  */
-  if (mode == 0)
-    return offset;
 
   /* If destination is within current buffer, optimize: */
   if (fp->_offset != _IO_pos_BAD && fp->_IO_read_base != NULL

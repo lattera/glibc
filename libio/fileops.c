@@ -929,6 +929,71 @@ _IO_file_sync_mmap (_IO_FILE *fp)
   return 0;
 }
 
+/* Get the current file offset using a system call.  This is the safest method
+   to get the current file offset, since we are sure that we get the current
+   state of the file.  Before the stream handle is activated (by using fread,
+   fwrite, etc.), an application may alter the state of the file descriptor
+   underlying it by calling read/write/lseek on it.  Using a cached offset at
+   this point will result in returning the incorrect value.  Same is the case
+   when one switches from reading in a+ mode to writing, where the buffer has
+   not been flushed - the cached offset would reflect the reading position
+   while the actual write position would be at the end of the file.
+
+   do_ftell and do_ftell_wide may resort to using the cached offset in some
+   special cases instead of calling get_file_offset, but those cases should be
+   thoroughly described.  */
+_IO_off64_t
+get_file_offset (_IO_FILE *fp)
+{
+  if ((fp->_flags & _IO_IS_APPENDING) == _IO_IS_APPENDING)
+    {
+      struct stat64 st;
+      bool ret = (_IO_SYSSTAT (fp, &st) == 0 && S_ISREG (st.st_mode));
+      if (ret)
+	return st.st_size;
+      else
+	return EOF;
+    }
+  else
+    return _IO_SYSSEEK (fp, 0, _IO_seek_cur);
+}
+
+
+/* ftell{,o} implementation.  Don't modify any state of the file pointer while
+   we try to get the current state of the stream.  */
+static _IO_off64_t
+do_ftell (_IO_FILE *fp)
+{
+  _IO_off64_t result;
+
+  result = get_file_offset (fp);
+
+  if (result == EOF)
+    return result;
+
+  /* No point looking at unflushed data if we haven't allocated buffers
+     yet.  */
+  if (fp->_IO_buf_base != NULL)
+    {
+      bool was_writing = (fp->_IO_write_ptr > fp->_IO_write_base
+			  || _IO_in_put_mode (fp));
+
+      /* Adjust for unflushed data.  */
+      if (!was_writing)
+	result -= fp->_IO_read_end - fp->_IO_read_ptr;
+      else
+	result += fp->_IO_write_ptr - fp->_IO_read_end;
+    }
+
+  if (result < 0)
+    {
+      __set_errno (EINVAL);
+      return EOF;
+    }
+
+  return result;
+}
+
 
 _IO_off64_t
 _IO_new_file_seekoff (fp, offset, dir, mode)
@@ -940,6 +1005,13 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
   _IO_off64_t result;
   _IO_off64_t delta, new_offset;
   long count;
+
+  /* Short-circuit into a separate function.  We don't want to mix any
+     functionality and we don't want to touch anything inside the FILE
+     object. */
+  if (mode == 0)
+    return do_ftell (fp);
+
   /* POSIX.1 8.2.3.7 says that after a call the fflush() the file
      offset of the underlying file must be exact.  */
   int must_be_exact = (fp->_IO_read_base == fp->_IO_read_end
@@ -948,9 +1020,6 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
   bool was_writing = (fp->_IO_write_ptr > fp->_IO_write_base
 		      || _IO_in_put_mode (fp));
 
-  if (mode == 0)
-    dir = _IO_seek_cur, offset = 0; /* Don't move any pointers. */
-
   /* Flush unwritten characters.
      (This may do an unneeded write if we seek within the buffer.
      But to be able to switch to reading, we would need to set
@@ -958,7 +1027,7 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
      which assumes file_ptr() is eGptr.  Anyway, since we probably
      end up flushing when we close(), it doesn't make much difference.)
      FIXME: simulate mem-mapped files. */
-  else if (was_writing && _IO_switch_to_get_mode (fp))
+  if (was_writing && _IO_switch_to_get_mode (fp))
     return EOF;
 
   if (fp->_IO_buf_base == NULL)
@@ -978,30 +1047,10 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
     {
     case _IO_seek_cur:
       /* Adjust for read-ahead (bytes is buffer). */
-      if (mode != 0 || !was_writing)
-	offset -= fp->_IO_read_end - fp->_IO_read_ptr;
-      else
-	{
-	  /* _IO_read_end coincides with fp._offset, so the actual file position
-	     is fp._offset - (_IO_read_end - new_write_ptr).  This is fine
-	     even if fp._offset is not set, since fp->_IO_read_end is then at
-	     _IO_buf_base and this adjustment is for unbuffered output.  */
-	  offset -= fp->_IO_read_end - fp->_IO_write_ptr;
-	}
+      offset -= fp->_IO_read_end - fp->_IO_read_ptr;
 
       if (fp->_offset == _IO_pos_BAD)
-	{
-	  if (mode != 0)
-	    goto dumb;
-	  else
-	    {
-	      result = _IO_SYSSEEK (fp, 0, dir);
-	      if (result == EOF)
-		return result;
-
-	      fp->_offset = result;
-	    }
-	}
+	goto dumb;
       /* Make offset absolute, assuming current pointer is file_ptr(). */
       offset += fp->_offset;
       if (offset < 0)
@@ -1027,10 +1076,6 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
       }
     }
   /* At this point, dir==_IO_seek_set. */
-
-  /* If we are only interested in the current position we've found it now.  */
-  if (mode == 0)
-    return offset;
 
   /* If destination is within current buffer, optimize: */
   if (fp->_offset != _IO_pos_BAD && fp->_IO_read_base != NULL

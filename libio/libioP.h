@@ -397,6 +397,7 @@ extern void _IO_wdoallocbuf (_IO_FILE *) __THROW;
 libc_hidden_proto (_IO_wdoallocbuf)
 extern void _IO_unsave_wmarkers (_IO_FILE *) __THROW;
 extern unsigned _IO_adjust_wcolumn (unsigned, const wchar_t *, int) __THROW;
+extern _IO_off64_t get_file_offset (_IO_FILE *fp);
 
 /* Marker-related function. */
 

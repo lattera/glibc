@@ -1,3 +1,15 @@
+2014-03-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #16532]
+	* libio/libioP.h (get_file_offset): New function.
+	* libio/fileops.c (get_file_offset): Likewise.
+	(do_ftell): Likewise.
+	(_IO_new_file_seekoff): Split out ftell logic.
+	* libio/wfileops.c (do_ftell_wide): Likewise.
+	(_IO_wfile_seekoff): Split out ftell logic.
+	* libio/tst-ftell-active-handler.c: New test case.
+	* libio/Makefile (tests): Add it.
+
 2014-03-03  Roland McGrath  <roland@hack.frob.com>
 
 	* nptl/ChangeLog: Renamed to nptl/ChangeLog.old, no longer used.
