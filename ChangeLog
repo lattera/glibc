@@ -1,5 +1,10 @@
 2014-03-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* libio/tst-ftell-active-handler.c (get_handles_fdopen): Fix
+	formatting.
+	(get_handles_fopen): Likewise.
+	(do_write_test): Likewise.
+
 	* libio/wfileops.c (do_ftell_wide): Fix up formatting.
 
 	* libio/fileops.c (do_ftell): Use cached offset when

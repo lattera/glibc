@@ -44,11 +44,11 @@ static int do_test (void);
     {									      \
       (fp) = fdopen ((fd), (mode));					      \
       if ((fp) == NULL)							      \
-        {								      \
-          printf ("fdopen failed: %m\n");				      \
-          close (fd);							      \
-          ret = 1;							      \
-        }								      \
+	{								      \
+	  printf ("fdopen failed: %m\n");				      \
+	  close (fd);							      \
+	  ret = 1;							      \
+	}								      \
     }									      \
   ret;									      \
 })
@@ -66,7 +66,7 @@ static int do_test (void);
     {									      \
       (fd) = fileno (fp);						      \
       if ((fd) == -1)							      \
-        {								      \
+	{								      \
 	  printf ("fileno failed: %m\n");				      \
 	  ret = 1;							      \
 	}								      \
@@ -230,7 +230,7 @@ do_write_test (const char *filename)
 
 	  printf ("offset = %ld\n", offset);
 	  fclose (fp);
-        }
+	}
     }
 
   return ret;
