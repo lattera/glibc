@@ -1,5 +1,12 @@
 2014-03-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* libio/fileops.c (do_ftell): Use cached offset when
+	available.
+	* libio/iofwide.c (do_ftell_wide): Likewise.
+	* libio/iofdopen.c (_IO_new_fdopen): Don't use
+	_IO_file_attach.
+	* libio/wfileops.c (_IO_fwide): Don't cache offset.
+
 	[BZ #16532]
 	* libio/libioP.h (get_file_offset): New function.
 	* libio/fileops.c (get_file_offset): Likewise.

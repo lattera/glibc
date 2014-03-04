@@ -141,9 +141,6 @@ _IO_new_fdopen (fd, mode)
 #ifdef _IO_MTSAFE_IO
   new_f->fp.file._lock = &new_f->lock;
 #endif
-  /* Set up initially to use the `maybe_mmap' jump tables rather than using
-     __fopen_maybe_mmap to do it, because we need them in place before we
-     call _IO_file_attach or else it will allocate a buffer immediately.  */
   _IO_no_init (&new_f->fp.file, 0, 0, &new_f->wd,
 #ifdef _G_HAVE_MMAP
 	       (use_mmap && (read_write & _IO_NO_WRITES))
@@ -159,13 +156,12 @@ _IO_new_fdopen (fd, mode)
 #if  !_IO_UNIFIED_JUMPTABLES
   new_f->fp.vtable = NULL;
 #endif
-  if (_IO_file_attach ((_IO_FILE *) &new_f->fp, fd) == NULL)
-    {
-      _IO_setb (&new_f->fp.file, NULL, NULL, 0);
-      _IO_un_link (&new_f->fp);
-      free (new_f);
-      return NULL;
-    }
+  /* We only need to record the fd because _IO_file_init will have unset the
+     offset.  It is important to unset the cached offset because the real
+     offset in the file could change between now and when the handle is
+     activated and we would then mislead ftell into believing that we have a
+     valid offset.  */
+  new_f->fp.file._fileno = fd;
   new_f->fp.file._flags &= ~_IO_DELETE_DONT_CLOSE;
 
   _IO_mask_flags (&new_f->fp.file, read_write,

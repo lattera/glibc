@@ -602,6 +602,7 @@ static _IO_off64_t
 do_ftell_wide (_IO_FILE *fp)
 {
   _IO_off64_t result, offset = 0;
+  bool use_cached_offset = false;
 
   /* No point looking for offsets in the buffer if it hasn't even been
      allocated.  */
@@ -702,9 +703,31 @@ do_ftell_wide (_IO_FILE *fp)
 	     is fp._offset - (_IO_read_end - new_write_ptr).  */
 	  offset -= fp->_IO_read_end - fp->_IO_write_ptr;
 	}
+
+      /* It is safe to use the cached offset when available if there is
+	 unbuffered data (indicating that the file handle is active) and
+	 the handle is not for a file open in a+ mode.  The latter
+	 condition is because there could be a scenario where there is a
+	 switch from read mode to write mode using an fseek to an arbitrary
+	 position.  In this case, there would be unbuffered data due to be
+	 appended to the end of the file, but the offset may not
+	 necessarily be the end of the file.  It is fine to use the cached
+	 offset when the a+ stream is in read mode though, since the offset
+	 is maintained correctly in that case.  Note that this is not a
+	 comprehensive set of cases when the offset is reliable.  The
+	 offset may be reliable even in some cases where there is no
+	 unflushed input and the handle is active, but it's just that we
+	 don't have a way to identify that condition reliably.  */
+      use_cached_offset = (offset != 0 && fp->_offset != _IO_pos_BAD
+			   && ((fp->_flags & (_IO_IS_APPENDING | _IO_NO_READS))
+			       == (_IO_IS_APPENDING | _IO_NO_READS)
+			       && was_writing));
     }
 
-  result = get_file_offset (fp);
+  if (use_cached_offset)
+    result = fp->_offset;
+  else
+    result = get_file_offset (fp);
 
   if (result == EOF)
     return result;
