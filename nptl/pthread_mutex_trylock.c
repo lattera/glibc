@@ -26,8 +26,8 @@
 #define lll_trylock_elision(a,t) lll_trylock(a)
 #endif
 
-#ifndef DO_ELISION
-#define DO_ELISION(m) 0
+#ifndef FORCE_ELISION
+#define FORCE_ELISION(m, s)
 #endif
 
 /* We don't force elision in trylock, because this can lead to inconsistent
@@ -69,7 +69,7 @@ __pthread_mutex_trylock (mutex)
       break;
 
     case PTHREAD_MUTEX_TIMED_ELISION_NP:
-    elision:
+    elision: __attribute__((unused))
       if (lll_trylock_elision (mutex->__data.__lock,
 			       mutex->__data.__elision) != 0)
 	break;
@@ -77,8 +77,7 @@ __pthread_mutex_trylock (mutex)
       return 0;
 
     case PTHREAD_MUTEX_TIMED_NP:
-      if (DO_ELISION (mutex))
-	goto elision;
+      FORCE_ELISION (mutex, goto elision);
       /*FALL THROUGH*/
     case PTHREAD_MUTEX_ADAPTIVE_NP:
     case PTHREAD_MUTEX_ERRORCHECK_NP:

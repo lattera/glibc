@@ -1,5 +1,13 @@
 2014-12-11  Andreas Schwab  <schwab@suse.de>
 
+	[BZ #16657]
+	* nptl/pthread_mutex_trylock.c (__pthread_mutex_trylock): Use
+	FORCE_ELISION instead of DO_ELISION.
+	* sysdeps/unix/sysv/linux/x86/force-elision.h (DO_ELISION):
+	Remove.
+	* sysdeps/unix/sysv/linux/s390/force-elision.h (DO_ELISION):
+	Likewise.
+
 	* iconvdata/gconv-modules: Remove duplicate entry.
 
 2014-12-11  Will Newton  <will.newton@linaro.org>

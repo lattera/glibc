@@ -17,11 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #ifdef ENABLE_LOCK_ELISION
-/* Check for elision on this lock without upgrading.  */
-#define DO_ELISION(m)							\
-  (__pthread_force_elision						\
-   && (m->__data.__kind & PTHREAD_MUTEX_NO_ELISION_NP) == 0)		\
-
 /* Automatically enable elision for existing user lock kinds.  */
 #define FORCE_ELISION(m, s)						\
   if (__pthread_force_elision						\
