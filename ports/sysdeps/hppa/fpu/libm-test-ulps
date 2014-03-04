@@ -4958,6 +4958,9 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "Real part of: ctan_downward (0x8p+1020 + 0x1p+0 i)":
+double: 6
+idouble: 6
 Test "Real part of: ctan_downward (0x8p+124 + 0x1p+0 i)":
 double: 4
 float: 3
@@ -4974,6 +4977,11 @@ ifloat: 1
 Test "Real part of: ctan_downward (0xf.ffffffffffff8p+1020 + 0x1p+0 i)":
 double: 3
 idouble: 3
+Test "Real part of: ctan_downward (0xf.fffffp+124 + 0x1p+0 i)":
+double: 5
+float: 5
+idouble: 5
+ifloat: 5
 Test "Imaginary part of: ctan_downward (0xf.fffffp+124 + 0x1p+0 i)":
 double: 1
 idouble: 1
@@ -5454,6 +5462,9 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "Imaginary part of: ctanh_downward (0x1p+0 + 0x8p+1020 i)":
+double: 6
+idouble: 6
 Test "Real part of: ctanh_downward (0x1p+0 + 0x8p+124 i)":
 double: 2
 float: 1
@@ -5470,6 +5481,11 @@ idouble: 3
 Test "Real part of: ctanh_downward (0x1p+0 + 0xf.fffffp+124 i)":
 double: 1
 idouble: 1
+Test "Imaginary part of: ctanh_downward (0x1p+0 + 0xf.fffffp+124 i)":
+double: 5
+float: 5
+idouble: 5
+ifloat: 5
 Test "Real part of: ctanh_downward (0x1p-149 + 0x1.921fb6p+0 i)":
 float: 1
 ifloat: 1
@@ -9241,6 +9257,12 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
+Function: Real part of "ctan_downward":
+double: 6
+float: 5
+idouble: 6
+ifloat: 5
+
 Function: Imaginary part of "ctan_downward":
 double: 2
 float: 1
@@ -9302,6 +9324,12 @@ double: 4
 float: 1
 idouble: 4
 ifloat: 1
+
+Function: Imaginary part of "ctanh_downward":
+double: 6
+float: 5
+idouble: 6
+ifloat: 5
 
 Function: Real part of "ctanh_tonearest":
 double: 2

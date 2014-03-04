@@ -1,3 +1,7 @@
+2014-03-04  Carlos O'Donell  <carlos@redhat.com>
+
+	* ports/sysdeps/hppa/fpu/libm-test-ulps: Regenerate.
+
 2014-02-20  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16611]
