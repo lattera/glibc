@@ -68,14 +68,12 @@ sorted new ULPs file from the output of the test drivers.
 
 Contents of libm-test-ulps
 ==========================
-Since libm-test-ulps can be generated automatically, just a few
-notes.  The file contains lines for single tests, like:
-Test "cos (pi/2) == 0":
-float:  1
 
-and lines for maximal errors of single functions, like:
+Since libm-test-ulps can be generated automatically, just a few notes.
+The file contains lines for maximal errors of single functions, like:
+
 Function "yn":
-idouble:  6.0000
+idouble: 6
 
 The keywords are float, ifloat, double, idouble, ldouble and ildouble
 (the prefix i stands for inline).

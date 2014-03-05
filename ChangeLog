@@ -1,3 +1,53 @@
+2014-03-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (struct ulp_data): Don't refer to ulps for
+	individual tests in comment.
+	(libm-test-ulps.h): Don't refer to test_ulps in #include comment.
+	(prev_max_error): New variable.
+	(prev_real_max_error): Likewise.
+	(prev_imag_max_error): Likewise.
+	(compare_ulp_data): Don't refer to test names in comment.
+	(find_test_ulps): Remove function.
+	(find_function_ulps): Likewise.
+	(find_complex_function_ulps): Likewise.
+	(init_max_error): Take function name as argument.  Look up ulps
+	for that function.
+	(print_ulps): Remove function.
+	(print_max_error): Use prev_max_error instead of calling
+	find_function_ulps.
+	(print_complex_max_error): Use prev_real_max_error and
+	prev_imag_max_error instead of calling find_complex_function_ulps.
+	(check_float_internal): Take max_ulp parameter instead of calling
+	find_test_ulps.  Don't call print_ulps.
+	(check_float): Update call to check_float_internal.
+	(check_complex): Update calls to check_float_internal.
+	(START): Pass argument to init_max_error.
+	* math/gen-libm-test.pl (%results): Don't include "kind"
+	information.
+	(parse_ulps): Don't handle ulps of individual tests.
+	(print_ulps_file): Likewise.
+	(output_ulps): Likewise.
+	* math/README.libm-test: Update.
+	* manual/libm-err-tab.pl (parse_ulps): Don't handle ulps of
+	individual tests.
+	* sysdeps/aarch64/libm-test-ulps: Remove individual test ulps.
+	* sysdeps/alpha/fpu/libm-test-ulps: Likewise.
+	* sysdeps/arm/libm-test-ulps: Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Likewise.
+	* sysdeps/ia64/fpu/libm-test-ulps: Likewise.
+	* sysdeps/m68k/coldfire/fpu/libm-test-ulps: Likewise.
+	* sysdeps/m68k/m680x0/fpu/libm-test-ulps: Likewise.
+	* sysdeps/microblaze/libm-test-ulps: Likewise.
+	* sysdeps/mips/mips32/libm-test-ulps: Likewise.
+	* sysdeps/mips/mips64/libm-test-ulps: Likewise.
+	* sysdeps/powerpc/fpu/libm-test-ulps: Likewise.
+	* sysdeps/powerpc/nofpu/libm-test-ulps: Likewise.
+	* sysdeps/s390/fpu/libm-test-ulps: Likewise.
+	* sysdeps/sh/libm-test-ulps: Likewise.
+	* sysdeps/sparc/fpu/libm-test-ulps: Likewise.
+	* sysdeps/tile/libm-test-ulps: Likewise.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2014-03-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (print_complex_max_error): Check separately

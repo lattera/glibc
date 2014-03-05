@@ -127,16 +127,16 @@
 #include <tininess.h>
 #include <math-tests.h>
 
-/* Structure for ulp data for a test, a function, or the real or
-   imaginary part of a function.  */
+/* Structure for ulp data for a function, or the real or imaginary
+   part of a function.  */
 struct ulp_data
 {
   const char *name;
   FLOAT max_ulp;
 };
 
-/* This header defines test_ulps, func_ulps, func_real_ulps and
-   func_imag_ulps arrays.  */
+/* This header defines func_ulps, func_real_ulps and func_imag_ulps
+   arrays.  */
 #include "libm-test-ulps.h"
 
 /* Allow platforms without all rounding modes to test properly,
@@ -324,6 +324,7 @@ static int ignore_max_ulp;	/* Should we ignore max_ulp?  */
 
 static FLOAT max_error, real_max_error, imag_max_error;
 
+static FLOAT prev_max_error, prev_real_max_error, prev_imag_max_error;
 
 #define BUILD_COMPLEX(real, imag) \
   ({ __complex__ FLOAT __retval;					      \
@@ -336,9 +337,9 @@ static FLOAT max_error, real_max_error, imag_max_error;
 #define MIN_EXP CHOOSE ((LDBL_MIN_EXP-1), (DBL_MIN_EXP-1), (FLT_MIN_EXP-1),	\
 			(LDBL_MIN_EXP-1), (DBL_MIN_EXP-1), (FLT_MIN_EXP-1))
 
-/* Compare KEY (a string, with the name of a test or a function) with
-   ULP (a pointer to a struct ulp_data structure), returning a value
-   less than, equal to or greater than zero for use in bsearch.  */
+/* Compare KEY (a string, with the name of a function) with ULP (a
+   pointer to a struct ulp_data structure), returning a value less
+   than, equal to or greater than zero for use in bsearch.  */
 
 static int
 compare_ulp_data (const void *key, const void *ulp)
@@ -362,44 +363,20 @@ find_ulps (const char *name, const struct ulp_data *data, size_t nmemb)
     return entry->max_ulp;
 }
 
-/* Return the ulps for test NAME.  */
-
-static FLOAT
-find_test_ulps (const char *name)
-{
-  return find_ulps (name, test_ulps,
-		    sizeof (test_ulps) / sizeof (test_ulps[0]));
-}
-
-/* Return the ulps for real function NAME.  */
-
-static FLOAT
-find_function_ulps (const char *name)
-{
-  return find_ulps (name, func_ulps,
-		    sizeof (func_ulps) / sizeof (func_ulps[0]));
-}
-
-/* Return the ulps for complex function NAME.  */
-
-static __complex__ FLOAT
-find_complex_function_ulps (const char *name)
-{
-  FLOAT ulp_real = find_ulps (name, func_real_ulps,
-			      (sizeof (func_real_ulps)
-			       / sizeof (func_real_ulps[0])));
-  FLOAT ulp_imag = find_ulps (name, func_imag_ulps,
-			      (sizeof (func_imag_ulps)
-			       / sizeof (func_imag_ulps[0])));
-  return BUILD_COMPLEX (ulp_real, ulp_imag);
-}
-
 static void
-init_max_error (void)
+init_max_error (const char *name)
 {
   max_error = 0;
   real_max_error = 0;
   imag_max_error = 0;
+  prev_max_error = find_ulps (name, func_ulps,
+			      sizeof (func_ulps) / sizeof (func_ulps[0]));
+  prev_real_max_error = find_ulps (name, func_real_ulps,
+				   (sizeof (func_real_ulps)
+				    / sizeof (func_real_ulps[0])));
+  prev_imag_max_error = find_ulps (name, func_imag_ulps,
+				   (sizeof (func_imag_ulps)
+				    / sizeof (func_imag_ulps[0])));
   feclearexcept (FE_ALL_EXCEPT);
   errno = 0;
 }
@@ -457,19 +434,6 @@ update_stats (int ok)
   ++noTests;
   if (!ok)
     ++noErrors;
-}
-
-static void
-print_ulps (const char *test_name, FLOAT ulp)
-{
-  if (output_ulps)
-    {
-      fprintf (ulps_file, "Test \"%s\":\n", test_name);
-      fprintf (ulps_file, "%s: %.0" PRINTF_NEXPR "\n",
-	       CHOOSE("ldouble", "double", "float",
-		      "ildouble", "idouble", "ifloat"),
-	       FUNC(ceil) (ulp));
-    }
 }
 
 static void
@@ -541,10 +505,9 @@ fpstack_test (const char *test_name)
 static void
 print_max_error (const char *func_name)
 {
-  FLOAT allowed = find_function_ulps (func_name);
   int ok = 0;
 
-  if (max_error == 0.0 || (max_error <= allowed && !ignore_max_ulp))
+  if (max_error == 0.0 || (max_error <= prev_max_error && !ignore_max_ulp))
     {
       ok = 1;
     }
@@ -557,7 +520,8 @@ print_max_error (const char *func_name)
     {
       printf ("Maximal error of `%s'\n", func_name);
       printf (" is      : %.0" PRINTF_NEXPR " ulp\n", FUNC(ceil) (max_error));
-      printf (" accepted: %.0" PRINTF_NEXPR " ulp\n", FUNC(ceil) (allowed));
+      printf (" accepted: %.0" PRINTF_NEXPR " ulp\n",
+	      FUNC(ceil) (prev_max_error));
     }
 
   update_stats (ok);
@@ -567,17 +531,16 @@ print_max_error (const char *func_name)
 static void
 print_complex_max_error (const char *func_name)
 {
-  __complex__ FLOAT allowed = find_complex_function_ulps (func_name);
   int real_ok = 0, imag_ok = 0, ok;
 
   if (real_max_error == 0
-      || (real_max_error <= __real__ allowed && !ignore_max_ulp))
+      || (real_max_error <= prev_real_max_error && !ignore_max_ulp))
     {
       real_ok = 1;
     }
 
   if (imag_max_error == 0
-      || (imag_max_error <= __imag__ allowed && !ignore_max_ulp))
+      || (imag_max_error <= prev_imag_max_error && !ignore_max_ulp))
     {
       imag_ok = 1;
     }
@@ -595,12 +558,12 @@ print_complex_max_error (const char *func_name)
       printf (" is      : %.0" PRINTF_NEXPR " ulp\n",
 	      FUNC(ceil) (real_max_error));
       printf (" accepted: %.0" PRINTF_NEXPR " ulp\n",
-	      FUNC(ceil) (__real__ allowed));
+	      FUNC(ceil) (prev_real_max_error));
       printf ("Maximal error of imaginary part of: %s\n", func_name);
       printf (" is      : %.0" PRINTF_NEXPR " ulp\n",
 	      FUNC(ceil) (imag_max_error));
       printf (" accepted: %.0" PRINTF_NEXPR " ulp\n",
-	      FUNC(ceil) (__imag__ allowed));
+	      FUNC(ceil) (prev_imag_max_error));
     }
 
   update_stats (ok);
@@ -773,7 +736,7 @@ ulp (FLOAT value)
 static void
 check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
 		      int exceptions,
-		      FLOAT *curr_max_error)
+		      FLOAT *curr_max_error, FLOAT max_ulp)
 {
   int ok = 0;
   int print_diff = 0;
@@ -785,7 +748,6 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
   test_errno (test_name, errno_value, exceptions);
   if (exceptions & IGNORE_RESULT)
     goto out;
-  FLOAT max_ulp = find_test_ulps (test_name);
   if (issignaling (computed) && issignaling (expected))
     {
       if ((exceptions & TEST_NAN_SIGN) != 0
@@ -839,11 +801,7 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
       else if (ulps <= 0.5 || (ulps <= max_ulp && !ignore_max_ulp))
 	ok = 1;
       else
-	{
-	  ok = 0;
-	  print_ulps (test_name, ulps);
-	}
-
+	ok = 0;
     }
   if (print_screen (ok))
     {
@@ -876,7 +834,7 @@ check_float (const char *test_name, FLOAT computed, FLOAT expected,
 	     int exceptions)
 {
   check_float_internal (test_name, computed, expected,
-			exceptions, &max_error);
+			exceptions, &max_error, prev_max_error);
 }
 
 
@@ -895,7 +853,7 @@ check_complex (const char *test_name, __complex__ FLOAT computed,
   part_exp = __real__ expected;
 
   check_float_internal (str, part_comp, part_exp,
-			exception, &real_max_error);
+			exception, &real_max_error, prev_real_max_error);
   free (str);
 
   if (asprintf (&str, "Imaginary part of: %s", test_name) == -1)
@@ -910,7 +868,7 @@ check_complex (const char *test_name, __complex__ FLOAT computed,
 			exception & (IGNORE_ZERO_INF_SIGN
 				     | TEST_NAN_SIGN
 				     | IGNORE_RESULT),
-			&imag_max_error);
+			&imag_max_error, prev_imag_max_error);
   free (str);
 }
 
@@ -1629,7 +1587,7 @@ struct test_fFF_11_data
 /* Start and end the tests for a given function.  */
 #define START(FUNC)				\
   const char *this_func = #FUNC;		\
-  init_max_error ()
+  init_max_error (this_func)
 #define END					\
   print_max_error (this_func)
 #define END_COMPLEX				\

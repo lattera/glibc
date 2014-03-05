@@ -21,8 +21,6 @@
 # Note that functions and tests share the same namespace.
 
 # Information about tests are stored in: %results
-# $results{$test}{"kind"} is either "fct" or "test" and flags whether this
-# is a maximal error of a function or a single test.
 # $results{$test}{"type"} is the result type, e.g. normal or complex.
 # $results{$test}{"has_ulps"} is set if deltas exist.
 # In the following description $type and $float are:
@@ -484,7 +482,7 @@ sub generate_testfile {
 # Parse ulps file
 sub parse_ulps {
   my ($file) = @_;
-  my ($test, $type, $float, $eps, $kind);
+  my ($test, $type, $float, $eps);
 
   # $type has the following values:
   # "normal": No complex variable
@@ -496,21 +494,6 @@ sub parse_ulps {
     # ignore comments and empty lines
     next if /^#/;
     next if /^\s*$/;
-    if (/^Test/) {
-      if (/Real part of:/) {
-	s/Real part of: //;
-	$type = 'real';
-      } elsif (/Imaginary part of:/) {
-	s/Imaginary part of: //;
-	$type = 'imag';
-      } else {
-	$type = 'normal';
-      }
-      s/^.+\"(.*)\".*$/$1/;
-      $test = $_;
-      $kind = 'test';
-      next;
-    }
     if (/^Function: /) {
       if (/Real part of/) {
 	s/Real part of //;
@@ -522,7 +505,6 @@ sub parse_ulps {
 	$type = 'normal';
       }
       ($test) = ($_ =~ /^Function:\s*\"([a-zA-Z0-9_]+)\"/);
-      $kind = 'fct';
       next;
     }
     if (/^i?(float|double|ldouble):/) {
@@ -540,7 +522,6 @@ sub parse_ulps {
       } elsif ($type eq 'normal') {
 	$results{$test}{'type'} = 'normal';
       }
-      $results{$test}{'kind'} = $kind;
       next;
     }
     print "Skipping unknown entry: `$_'\n";
@@ -569,39 +550,9 @@ sub print_ulps_file {
   $last_fct = '';
   open NEWULP, ">$file" or die ("Can't open $file: $!");
   print NEWULP "# Begin of automatic generation\n";
-  # first the function calls
-  foreach $test (sort keys %results) {
-    next if ($results{$test}{'kind'} ne 'test');
-    foreach $type ('real', 'imag', 'normal') {
-      if (exists $results{$test}{$type}) {
-	if (defined $results{$test}) {
-	  ($fct) = ($test =~ /^(\w+)\s/);
-	  if ($fct ne $last_fct) {
-	    $last_fct = $fct;
-	    print NEWULP "\n# $fct\n";
-	  }
-	}
-	if ($type eq 'normal') {
-	  print NEWULP "Test \"$test\":\n";
-	} elsif ($type eq 'real') {
-	  print NEWULP "Test \"Real part of: $test\":\n";
-	} elsif ($type eq 'imag') {
-	  print NEWULP "Test \"Imaginary part of: $test\":\n";
-	}
-	foreach $float (@all_floats) {
-	  if (exists $results{$test}{$type}{'ulp'}{$float}) {
-	    print NEWULP "$float: ",
-	    &clean_up_number ($results{$test}{$type}{'ulp'}{$float}),
-	    "\n";
-	  }
-	}
-      }
-    }
-  }
   print NEWULP "\n# Maximal error of functions:\n";
 
   foreach $fct (sort keys %results) {
-    next if ($results{$fct}{'kind'} ne 'fct');
     foreach $type ('real', 'imag', 'normal') {
       if (exists $results{$fct}{$type}) {
 	if ($type eq 'normal') {
@@ -656,7 +607,7 @@ sub get_all_ulps_for_test {
 sub output_ulps {
   my ($file, $ulps_filename) = @_;
   my ($i, $fct, $type, $ulp, $ulp_real, $ulp_imag);
-  my (%test_ulps, %func_ulps, %func_real_ulps, %func_imag_ulps);
+  my (%func_ulps, %func_real_ulps, %func_imag_ulps);
 
   open ULP, ">$file" or die ("Can't open $file: $!");
 
@@ -674,22 +625,11 @@ sub output_ulps {
     } else {
       die "unknown results ($fct) type $type\n";
     }
-    if ($results{$fct}{'kind'} eq 'fct') {
-      if ($type eq 'normal') {
-	$func_ulps{$fct} = $ulp;
-      } else {
-	$func_real_ulps{$fct} = $ulp_real;
-	$func_imag_ulps{$fct} = $ulp_imag;
-      }
-    } elsif ($results{$fct}{'kind'} eq 'test') {
-      if ($type eq 'normal') {
-	$test_ulps{$fct} = $ulp;
-      } else {
-	$test_ulps{"Real part of: $fct"} = $ulp_real;
-	$test_ulps{"Imaginary part of: $fct"} = $ulp_imag;
-      }
+    if ($type eq 'normal') {
+      $func_ulps{$fct} = $ulp;
     } else {
-      die "unknown results ($fct) kind $results{$fct}{'kind'}\n";
+      $func_real_ulps{$fct} = $ulp_real;
+      $func_imag_ulps{$fct} = $ulp_imag;
     }
   }
   print ULP "\n/* Maximal error of functions.  */\n";
@@ -706,13 +646,6 @@ sub output_ulps {
   print ULP "static const struct ulp_data func_imag_ulps[] =\n  {\n";
   foreach $fct (sort keys %func_imag_ulps) {
     print ULP "    { \"$fct\", $func_imag_ulps{$fct} },\n";
-  }
-  print ULP "  };\n";
-
-  print ULP "\n/* Error of single function calls.  */\n";
-  print ULP "static const struct ulp_data test_ulps[] =\n  {\n";
-  foreach $fct (sort keys %test_ulps) {
-    print ULP "    { \"$fct\", $test_ulps{$fct} },\n";
   }
   print ULP "  };\n";
   close ULP;
