@@ -1,3 +1,11 @@
+2014-03-13  Carlos O'Donell  <carlos@redhat.com>
+
+	* nptl/pthread_attr_setstack.c (__pthread_attr_setstack)
+	[!_STACK_GROWS_DOWN]: Don't add stacksize to stackaddr.
+	(__old_pthread_attr_setstack): Likewise.
+	* nptl/pthread_attr_getstack.c (__pthread_attr_getstack)
+	[!_STACK_GROWS_DOWN]: Likewise.
+
 2014-03-13  Mike Frysinger  <vapier@gentoo.org>
 
 	* config.make.in (have-bash2): Delete.
@@ -86,7 +94,7 @@
 
 	[BZ #16381]
 	* elf/Makefile (tests): Add tst-pie2.
-        (tests-pie): Add tst-pie2.
+	(tests-pie): Add tst-pie2.
 	* elf/tst-pie2.c: New file.
 	* elf/dl-load.c (_dl_map_object_from_fd): Assert correct l_type
 	for ET_EXEC.
