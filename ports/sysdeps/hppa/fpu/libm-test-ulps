@@ -7999,11 +7999,6 @@ Test "expm1_upward (0x8p-32)":
 float: 1
 ifloat: 1
 
-# fma
-Test "fma (0x2.fffp+12, 0x1.000002p+0, 0x1.ffffp-24)":
-double: 1
-idouble: 1
-
 # gamma
 Test "gamma (-0x1p-20)":
 double: 1
@@ -11273,10 +11268,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-
-Function: "fma":
-double: 1
-idouble: 1
 
 Function: "gamma":
 double: 1
