@@ -1,5 +1,10 @@
 2014-03-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/aarch64/kernel-features.h
+	(__ASSUME_UTIMES): Remove.
+	* sysdeps/unix/sysv/linux/tile/kernel-features.h
+	(__ASSUME_UTIMES): Likewise.
+
 	* math/gen-auto-libm-tests.c: Update comment on output format.
 	(output_for_one_input_case): Generate before-rounding and
 	after-rounding information as conditions on output flags not

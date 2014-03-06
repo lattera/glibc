@@ -34,6 +34,5 @@
 #define __ASSUME_SENDMMSG_SYSCALL       1
 #define __ASSUME_SIGNALFD4		1
 #define __ASSUME_SOCK_CLOEXEC           1
-#define __ASSUME_UTIMES                 1
 
 #include_next <kernel-features.h>
