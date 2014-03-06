@@ -1,5 +1,33 @@
 2014-03-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/aio.h-data [XPG3 || XPG4]: Disable whole file.
+	* conform/data/arpa/inet.h-data [XPG3]: Likewise.
+	* conform/data/dlfcn.h-data [XPG3 || XPG4]: Likewise.
+	* conform/data/fmtmsg.h-data [XPG3]: Likewise.
+	* conform/data/libgen.h-data [XPG3]: Likewise.
+	* conform/data/mqueue.h-data [XPG3 || XPG4]: Likewise.
+	* conform/data/ndbm.h-data [XPG3]: Likewise.
+	* conform/data/net/if.h-data [XPG3 || XPG4 || UNIX98]: Likewise.
+	* conform/data/netdb.h-data [XPG3]: Likewise.
+	* conform/data/netinet/in.h-data [XPG3]: Likewise.
+	* conform/data/poll.h-data [XPG3]: Likewise.
+	* conform/data/spawn.h-data [XPG3 || XPG4 || UNIX98]: Likewise.
+	* conform/data/strings.h-data [XPG3]: Likewise.
+	* conform/data/stropts.h-data [XPG3]: Likewise.
+	* conform/data/sys/mman.h-data [XPG3]: Likewise.
+	* conform/data/sys/resource.h-data [XPG3]: Likewise.
+	* conform/data/sys/select.h-data [XPG3 || XPG4 || UNIX98]:
+	Likewise.
+	* conform/data/sys/statvfs.h-data [XPG3]: Likewise.
+	* conform/data/sys/time.h-data [XPG3]: Likewise.
+	* conform/data/sys/timeb.h-data [XPG3]: Likewise.
+	* conform/data/sys/uio.h-data [XPG3]: Likewise.
+	* conform/data/sys/un.h-data [XPG3]: Likewise.
+	* conform/data/syslog.h-data [XPG3]: Likewise.
+	* conform/data/ucontext.h-data [XPG3]: Likewise.
+	* conform/data/utmpx.h-data [XPG3]: Likewise.
+	* conform/data/varargs.h-data [UNIX98]: Enable file.
+
 	* manual/Makefile (INSTALL_INFO): Remove variable setting.
 
 	* math/libm-test.inc (struct test_f_f_data): Move expected results

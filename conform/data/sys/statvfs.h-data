@@ -1,4 +1,4 @@
-#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX && !defined XPG3
 type {struct statvfs}
 
 element {struct statvfs} {unsigned long} f_bsize

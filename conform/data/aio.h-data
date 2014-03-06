@@ -1,4 +1,4 @@
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined XPG3 && !defined XPG4
 type {struct aiocb}
 
 // Test elements of the AIO control struct.

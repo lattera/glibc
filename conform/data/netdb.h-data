@@ -1,4 +1,4 @@
-#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX && !defined XPG3
 optional-type in_port_t
 optional-type in_addr_t
 

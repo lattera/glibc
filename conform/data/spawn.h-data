@@ -1,4 +1,4 @@
-#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
 type posix_spawnattr_t
 type posix_spawn_file_actions_t
 # if defined XOPEN2K8 || defined POSIX2008
