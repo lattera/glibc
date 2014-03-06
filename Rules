@@ -95,11 +95,11 @@ else
 others: $(addprefix $(objpfx),$(extra-objs))
 endif
 ifeq ($(run-built-tests),no)
-tests: $(addprefix $(objpfx),$(tests) $(test-srcs))
-xtests: tests
+tests: $(addprefix $(objpfx),$(tests) $(test-srcs)) $(tests-special)
+xtests: tests $(xtests-special)
 else
-tests: $(tests:%=$(objpfx)%.out)
-xtests: tests $(xtests:%=$(objpfx)%.out)
+tests: $(tests:%=$(objpfx)%.out) $(tests-special)
+xtests: tests $(xtests:%=$(objpfx)%.out) $(xtests-special)
 endif
 
 ifeq ($(build-programs),yes)

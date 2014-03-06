@@ -157,8 +157,8 @@ tests-execstack-yes = tst-execstack tst-execstack-needed tst-execstack-prog
 endif
 endif
 ifeq ($(run-built-tests),yes)
-tests: $(objpfx)tst-leaks1-mem $(objpfx)tst-leaks1-static-mem \
-       $(objpfx)noload-mem
+tests-special += $(objpfx)tst-leaks1-mem $(objpfx)tst-leaks1-static-mem \
+		 $(objpfx)noload-mem
 endif
 tlsmod17a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
 tlsmod18a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
@@ -253,11 +253,30 @@ modules-names += ifuncmod1 ifuncmod3 ifuncmod5 ifuncmod6
 endif
 endif
 
+ifeq (yes,$(build-shared))
+ifeq ($(run-built-tests),yes)
+tests-special += $(objpfx)tst-pathopt.out $(objpfx)tst-rtld-load-self.out
+endif
+tests-special += $(objpfx)check-textrel.out $(objpfx)check-execstack.out \
+		 $(objpfx)check-localplt.out
+endif
 
-include ../Rules
+ifeq ($(run-built-tests),yes)
+tests-special += $(objpfx)order-cmp.out $(objpfx)tst-array1-cmp.out \
+		 $(objpfx)tst-array1-static-cmp.out \
+		 $(objpfx)tst-array2-cmp.out $(objpfx)tst-array3-cmp.out \
+		 $(objpfx)tst-array4-cmp.out $(objpfx)tst-array5-cmp.out \
+		 $(objpfx)tst-array5-static-cmp.out $(objpfx)order2-cmp.out \
+		 $(objpfx)tst-initorder-cmp.out \
+		 $(objpfx)tst-initorder2-cmp.out $(objpfx)tst-unused-dep.out \
+		 $(objpfx)tst-unused-dep-cmp.out
+endif
 
 check-abi: $(objpfx)check-abi-ld.out
+tests-special += $(objpfx)check-abi-ld.out
 update-abi: update-abi-ld
+
+include ../Rules
 
 ifeq (yes,$(build-shared))
 # Make sure these things are built in the `make lib' pass so they can be used
@@ -429,12 +448,6 @@ CPPFLAGS-.os += $(if $(filter $(@F),$(patsubst %,%.os,$(all-rtld-routines))),\
 
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(strip $(modules-names))))
 generated += $(addsuffix .so,$(strip $(modules-names)))
-
-ifeq (yes,$(build-shared))
-ifeq ($(run-built-tests),yes)
-tests: $(objpfx)tst-pathopt.out $(objpfx)tst-rtld-load-self.out
-endif
-endif
 
 $(objpfx)testobj1.so: $(libdl)
 $(objpfx)testobj1_1.so: $(objpfx)testobj1.so $(libdl)
@@ -640,9 +653,6 @@ $(objpfx)circlemod2a.so: $(objpfx)circlemod3a.so
 
 $(objpfx)order: $(addprefix $(objpfx),dep4.so dep3.so dep2.so dep1.so)
 
-ifeq ($(run-built-tests),yes)
-tests: $(objpfx)order-cmp.out
-endif
 $(objpfx)order-cmp.out: $(objpfx)order.out
 	(echo "0123456789" | cmp $< -) > $@; \
 	$(evaluate-test)
@@ -856,13 +866,6 @@ endif
 LDFLAGS-tst-array2 = $(no-as-needed)
 LDFLAGS-tst-array5 = $(no-as-needed)
 
-ifeq ($(run-built-tests),yes)
-tests: $(objpfx)tst-array1-cmp.out $(objpfx)tst-array1-static-cmp.out \
-       $(objpfx)tst-array2-cmp.out $(objpfx)tst-array3-cmp.out \
-       $(objpfx)tst-array4-cmp.out $(objpfx)tst-array5-cmp.out \
-       $(objpfx)tst-array5-static-cmp.out
-endif
-
 $(objpfx)tst-array1-cmp.out: tst-array1.exp $(objpfx)tst-array1.out
 	cmp $^ > $@; \
 	$(evaluate-test)
@@ -902,8 +905,6 @@ CFLAGS-tst-pie1.c += $(pie-ccflag)
 $(objpfx)tst-pie1: $(objpfx)tst-piemod1.so
 
 ifeq (yes,$(build-shared))
-tests: $(objpfx)check-textrel.out $(objpfx)check-execstack.out
-
 all-built-dso := $(common-objpfx)libc.so \
 		 $(filter-out $(common-objpfx)linkobj/libc.so, \
 			      $(sort $(wildcard $(addprefix $(common-objpfx), \
@@ -960,8 +961,6 @@ $(all-built-dso:=.jmprel): %.jmprel: % Makefile
 	test -s $@T
 	mv -f $@T $@
 common-generated += $(all-built-dso:$(common-objpfx)%=%.jmprel)
-
-tests: $(objpfx)check-localplt.out
 
 localplt-built-dso := $(addprefix $(common-objpfx),\
 				  libc.so \
@@ -1026,9 +1025,6 @@ tst-audit8-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
 $(objpfx)tst-global1: $(libdl)
 $(objpfx)tst-global1.out: $(objpfx)testobj6.so $(objpfx)testobj2.so
 
-ifeq ($(run-built-tests),yes)
-tests: $(objpfx)order2-cmp.out
-endif
 $(objpfx)order2: $(libdl)
 $(objpfx)order2.out: $(objpfx)order2mod1.so $(objpfx)order2mod2.so
 $(objpfx)order2-cmp.out: $(objpfx)order2.out
@@ -1131,9 +1127,6 @@ $(objpfx)tst-unique3.out: $(objpfx)tst-unique3lib2.so
 
 $(objpfx)tst-unique4: $(objpfx)tst-unique4lib.so
 
-ifeq ($(run-built-tests),yes)
-tests: $(objpfx)tst-initorder-cmp.out
-endif
 $(objpfx)tst-initorder-cmp.out: tst-initorder.exp $(objpfx)tst-initorder.out
 	cmp $^ > $@; \
 	$(evaluate-test)
@@ -1153,9 +1146,6 @@ endef
 object-suffixes-left := a b c d
 include $(o-iterator)
 
-ifeq ($(run-built-tests),yes)
-tests: $(objpfx)tst-initorder2-cmp.out
-endif
 $(objpfx)tst-initorder2-cmp.out: tst-initorder2.exp $(objpfx)tst-initorder2.out
 	cmp $^ > $@; \
 	$(evaluate-test)
@@ -1165,10 +1155,6 @@ $(objpfx)tst-relsort1mod1.so: $(libm) $(objpfx)tst-relsort1mod2.so
 $(objpfx)tst-relsort1mod2.so: $(libm)
 $(objpfx)tst-relsort1.out: $(objpfx)tst-relsort1mod1.so \
 			   $(objpfx)tst-relsort1mod2.so
-
-ifeq ($(run-built-tests),yes)
-tests: $(objpfx)tst-unused-dep.out $(objpfx)tst-unused-dep-cmp.out
-endif
 
 $(objpfx)tst-unused-dep.out: $(objpfx)testobj1.so
 	$(test-wrapper-env) \

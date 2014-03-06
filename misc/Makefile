@@ -78,7 +78,7 @@ gpl2lgpl := error.c error.h
 tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt tst-mntent tst-hsearch \
 	 tst-error1 tst-pselect tst-insremque tst-mntent2 bug-hsearch1
 ifeq ($(run-built-tests),yes)
-tests: $(objpfx)tst-error1-mem
+tests-special += $(objpfx)tst-error1-mem
 endif
 
 CFLAGS-select.c = -fexceptions -fasynchronous-unwind-tables

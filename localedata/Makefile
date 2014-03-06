@@ -79,7 +79,7 @@ tests-static = bug-setlocale1-static
 tests += $(tests-static)
 ifeq (yes,$(build-shared))
 ifneq (no,$(PERL))
-tests: $(objpfx)mtrace-tst-leaks
+tests-special += $(objpfx)mtrace-tst-leaks
 endif
 endif
 endif
@@ -90,6 +90,12 @@ install-others := $(addprefix $(inst_i18ndir)/, \
 			      $(locales))
 
 tests: $(objdir)/iconvdata/gconv-modules
+
+tests-special += $(objpfx)sort-test.out $(objpfx)tst-fmon.out \
+		 $(objpfx)tst-locale.out $(objpfx)tst-rpmatch.out \
+		 $(objpfx)tst-trans.out $(objpfx)tst-mbswcs.out \
+		 $(objpfx)tst-ctype.out $(objpfx)tst-wctype.out \
+		 $(objpfx)tst-langinfo.out $(objpfx)tst-numeric.out
 
 include ../Rules
 
@@ -136,11 +142,6 @@ $(addprefix $(objpfx),$(CTYPE_FILES)): %: \
 
 $(addsuffix .out,$(addprefix $(objpfx),$(tests))): %: \
   $(addprefix $(objpfx),$(CTYPE_FILES))
-
-tests: $(objpfx)sort-test.out $(objpfx)tst-fmon.out $(objpfx)tst-locale.out \
-       $(objpfx)tst-rpmatch.out $(objpfx)tst-trans.out \
-       $(objpfx)tst-mbswcs.out $(objpfx)tst-ctype.out $(objpfx)tst-wctype.out \
-       $(objpfx)tst-langinfo.out $(objpfx)tst-numeric.out
 
 $(objpfx)sort-test.out: sort-test.sh $(objpfx)collate-test $(objpfx)xfrm-test \
 		       $(test-input-data) $(addprefix $(objpfx),$(CTYPE_FILES))

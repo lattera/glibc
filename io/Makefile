@@ -73,6 +73,10 @@ tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 		   tst-mknodat tst-mkfifoat tst-ttyname_r bug-ftw5 \
 		   tst-posix_fallocate
 
+ifeq ($(run-built-tests),yes)
+tests-special += $(objpfx)ftwtest.out
+endif
+
 include ../Rules
 
 CFLAGS-open.c = -fexceptions -fasynchronous-unwind-tables
@@ -103,8 +107,6 @@ test-stat2-ARGS = Makefile . $(objpfx)test-stat2
 tst-statvfs-ARGS = $(objpfx)tst-statvfs tst-statvfs.c /tmp
 
 ifeq ($(run-built-tests),yes)
-tests: $(objpfx)ftwtest.out
-
 $(objpfx)ftwtest.out: ftwtest-sh $(objpfx)ftwtest
 	$(SHELL) $< $(common-objpfx) '$(test-program-cmd)' > $@; \
 	$(evaluate-test)

@@ -47,22 +47,27 @@ plural.c: plural.y
 endif
 $(objpfx)plural.o: plural.c
 
+ifeq ($(run-built-tests),yes)
+ifeq (yes,$(build-shared))
+ifneq ($(strip $(MSGFMT)),:)
+tests-special += $(objpfx)tst-translit.out $(objpfx)tst-gettext.out \
+		 $(objpfx)tst-gettext2.out $(objpfx)tst-codeset.out \
+		 $(objpfx)tst-gettext3.out
+ifeq ($(have-thread-library),yes)
+tests-special += $(objpfx)tst-gettext4.out $(objpfx)tst-gettext5.out \
+		 $(objpfx)tst-gettext6.out
+endif
+ifneq (no,$(PERL))
+tests-special += $(objpfx)mtrace-tst-gettext
+endif
+endif
+endif
+endif
+
 include ../Rules
 
 ifeq ($(run-built-tests),yes)
 ifeq (yes,$(build-shared))
-ifneq ($(strip $(MSGFMT)),:)
-tests: $(objpfx)tst-translit.out $(objpfx)tst-gettext2.out \
-       $(objpfx)tst-codeset.out $(objpfx)tst-gettext3.out
-ifeq ($(have-thread-library),yes)
-tests: $(objpfx)tst-gettext4.out $(objpfx)tst-gettext5.out \
-       $(objpfx)tst-gettext6.out
-endif
-ifneq (no,$(PERL))
-tests: $(objpfx)mtrace-tst-gettext
-endif
-endif
-
 # Multiple tests use this data.  Create it once to avoid racing and
 # spurious test failures.
 codeset_mo = $(objpfx)domaindir/de_DE/LC_MESSAGES/codeset.mo

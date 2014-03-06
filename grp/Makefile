@@ -32,6 +32,9 @@ tests := testgrp
 
 ifeq (yes,$(build-shared))
 test-srcs :=  tst_fgetgrent
+ifeq ($(run-built-tests),yes)
+tests-special += $(objpfx)tst_fgetgrent.out
+endif
 endif
 
 
@@ -54,7 +57,6 @@ endif
 ifeq ($(run-built-tests),yes)
 # tst_fgetgrent currently only works with shared libraries
 ifeq (yes,$(build-shared))
-tests: $(objpfx)tst_fgetgrent.out
 $(objpfx)tst_fgetgrent.out: tst_fgetgrent.sh $(objpfx)tst_fgetgrent
 	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'; \
 	$(evaluate-test)

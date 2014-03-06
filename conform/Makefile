@@ -22,13 +22,13 @@ subdir	:= conform
 
 include ../Makeconfig
 
-include ../Rules
-
 ifneq (yes,$(fast-check))
 ifeq (no,$(cross-compiling))
-tests: $(objpfx)run-conformtest.out
+tests-special += $(objpfx)run-conformtest.out
 endif
 endif
+
+include ../Rules
 
 test-xfail-run-conformtest = yes
 $(objpfx)run-conformtest.out: run-conformtest.sh conformtest.pl \

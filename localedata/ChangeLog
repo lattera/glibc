@@ -1,3 +1,8 @@
+2014-03-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makefile (tests): Change dependencies to ....
+	(tests-special): ... additions to this variable.
+
 2014-02-28  Roland McGrath  <roland@hack.frob.com>
 
 	* Makefile (generated, generated-dirs): Use += rather than =.

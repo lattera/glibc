@@ -51,9 +51,10 @@ libthread_db-inhibit-o = $(filter-out .os,$(object-suffixes))
 # The ps_* callback functions are not defined.
 libthread_db.so-no-z-defs = yes
 
+tests-special += $(objpfx)db-symbols.out
+
 include ../Rules
 
-tests: $(objpfx)db-symbols.out
 $(objpfx)db-symbols.out: $(objpfx)db-symbols.v.i \
 			 $(common-objpfx)nptl/libpthread.so
 	LC_ALL=C $(READELF) -W -s $(filter %.so,$^) | $(AWK) -f $< > $@; \

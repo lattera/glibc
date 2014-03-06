@@ -92,6 +92,14 @@ memusagestat-modules = memusagestat
 $(objpfx)memusagestat: $(memusagestat-modules:%=$(objpfx)%.o)
 	$(LINK.o) -o $@ $^ $(libgd-LDFLAGS) -lgd -lpng -lz -lm
 
+ifeq ($(run-built-tests),yes)
+ifeq (yes,$(build-shared))
+ifneq ($(PERL),no)
+tests-special += $(objpfx)tst-mtrace.out
+endif
+endif
+endif
+
 include ../Rules
 
 CFLAGS-mcheck-init.c = $(PIC-ccflag)
@@ -107,7 +115,6 @@ lib: $(objpfx)libmcheck.a
 ifeq ($(run-built-tests),yes)
 ifeq (yes,$(build-shared))
 ifneq ($(PERL),no)
-tests: $(objpfx)tst-mtrace.out
 $(objpfx)tst-mtrace.out: tst-mtrace.sh $(objpfx)tst-mtrace
 	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'; \
 	$(evaluate-test)

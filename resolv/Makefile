@@ -64,6 +64,13 @@ ifeq (yesyes,$(build-shared)$(have-thread-library))
 tests: $(objpfx)ga_test
 endif
 
+ifeq ($(run-built-tests),yes)
+ifneq (no,$(PERL))
+tests-special += $(objpfx)mtrace-tst-leaks
+xtests-special += $(objpfx)mtrace-tst-leaks2
+endif
+endif
+
 generated += mtrace-tst-leaks tst-leaks.mtrace \
 	     mtrace-tst-leaks2 tst-leaks2.mtrace
 
@@ -96,18 +103,8 @@ tst-leaks-ENV = MALLOC_TRACE=$(objpfx)tst-leaks.mtrace
 $(objpfx)mtrace-tst-leaks: $(objpfx)tst-leaks.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks.mtrace > $@; \
 	$(evaluate-test)
-ifeq ($(run-built-tests),yes)
-ifneq (no,$(PERL))
-tests: $(objpfx)mtrace-tst-leaks
-endif
-endif
 
 tst-leaks2-ENV = MALLOC_TRACE=$(objpfx)tst-leaks2.mtrace
 $(objpfx)mtrace-tst-leaks2: $(objpfx)tst-leaks2.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks2.mtrace > $@; \
 	$(evaluate-test)
-ifeq ($(run-built-tests),yes)
-ifneq (no,$(PERL))
-xtests: $(objpfx)mtrace-tst-leaks2
-endif
-endif

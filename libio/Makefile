@@ -172,16 +172,16 @@ shared-only-routines = oldiofopen oldiofdopen oldiofclose oldfileops	\
 		       oldiofgetpos oldiofgetpos64 oldiofsetpos		\
 		       oldiofsetpos64
 
-include ../Rules
-
 ifeq ($(run-built-tests),yes)
-tests: $(objpfx)test-freopen.out
+tests-special += $(objpfx)test-freopen.out
 ifeq (yes,$(build-shared))
 # Run tst-fopenloc-cmp.out and tst-openloc-mem.out only if shared
 # library is enabled since they depend on tst-fopenloc.out.
-tests: $(objpfx)tst-fopenloc-cmp.out $(objpfx)tst-fopenloc-mem.out
+tests-special += $(objpfx)tst-fopenloc-cmp.out $(objpfx)tst-fopenloc-mem.out
 endif
 endif
+
+include ../Rules
 
 $(objpfx)test-freopen.out: test-freopen.sh $(objpfx)test-freopen
 	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'	\

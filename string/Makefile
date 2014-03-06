@@ -58,6 +58,10 @@ tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
 
 xtests = tst-strcoll-overflow
 
+ifeq ($(run-built-tests),yes)
+tests-special += $(objpfx)tst-svc-cmp.out
+endif
+
 include ../Rules
 
 tester-ENV = LANGUAGE=C
@@ -76,7 +80,6 @@ CFLAGS-test-ffs.c = -fno-builtin
 CFLAGS-tst-inlcall.c = -fno-builtin
 
 ifeq ($(run-built-tests),yes)
-tests: $(objpfx)tst-svc-cmp.out
 $(objpfx)tst-svc-cmp.out: tst-svc.expect $(objpfx)tst-svc.out
 	cmp $^ > $@; \
 	$(evaluate-test)

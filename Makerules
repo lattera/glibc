@@ -1246,7 +1246,9 @@ endef
 
 .PHONY: update-abi check-abi
 update-abi: $(patsubst %.so,update-abi-%,$(install-lib.so-versioned))
-check-abi: $(patsubst %.so,$(objpfx)check-abi-%.out,$(install-lib.so-versioned))
+check-abi-list = $(patsubst %.so,$(objpfx)check-abi-%.out, \
+				 $(install-lib.so-versioned))
+check-abi: $(check-abi-list)
 ifdef subdir
 subdir_check-abi: check-abi
 subdir_update-abi: update-abi
@@ -1257,13 +1259,14 @@ endif
 
 ifeq ($(subdir),elf)
 check-abi: $(objpfx)check-abi-libc.out
+tests-special += $(objpfx)check-abi-libc.out
 update-abi: update-abi-libc
 common-generated += libc.symlist
 endif
 
 ifeq ($(build-shared),yes)
 ifdef subdir
-tests: check-abi
+tests-special += $(check-abi-list)
 endif
 endif
 

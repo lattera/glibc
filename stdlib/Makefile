@@ -111,6 +111,13 @@ CFLAGS-tst-bsearch.c = $(stack-align-test-flags)
 CFLAGS-tst-qsort.c = $(stack-align-test-flags)
 CFLAGS-tst-makecontext2.c = $(stack-align-test-flags)
 
+# Run a test on the header files we use.
+tests-special += $(objpfx)isomac.out
+
+ifeq ($(run-built-tests),yes)
+tests-special += $(objpfx)tst-fmtmsg.out
+endif
+
 include ../Rules
 
 # Testdir has to be named stdlib and needs to be writable
@@ -122,13 +129,6 @@ tst-strtod4-ENV = LOCPATH=$(common-objpfx)localedata
 tst-strtod5-ENV = LOCPATH=$(common-objpfx)localedata
 testmb2-ENV = LOCPATH=$(common-objpfx)localedata
 bug-fmtmsg1-ENV = SEV_LEVEL=foo,11,newsev
-
-# Run a test on the header files we use.
-tests: $(objpfx)isomac.out
-
-ifeq ($(run-built-tests),yes)
-tests: $(objpfx)tst-fmtmsg.out
-endif
 
 $(objpfx)isomac.out: $(objpfx)isomac
 	$(dir $<)$(notdir $<) '$(CC)'  \

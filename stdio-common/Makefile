@@ -61,11 +61,14 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 
 test-srcs = tst-unbputc tst-printf
 
+ifeq ($(run-built-tests),yes)
+tests-special += $(objpfx)tst-unbputc.out $(objpfx)tst-printf.out \
+		 $(objpfx)tst-setvbuf1-cmp.out
+endif
+
 include ../Rules
 
 ifeq ($(run-built-tests),yes)
-tests: $(objpfx)tst-unbputc.out $(objpfx)tst-printf.out
-
 $(objpfx)tst-unbputc.out: tst-unbputc.sh $(objpfx)tst-unbputc
 	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'; \
 	$(evaluate-test)
@@ -125,10 +128,6 @@ bug14-ENV = LOCPATH=$(common-objpfx)localedata
 tst-grouping-ENV = LOCPATH=$(common-objpfx)localedata
 
 CPPFLAGS += $(libio-mtsafe)
-
-ifeq ($(run-built-tests),yes)
-tests: $(objpfx)tst-setvbuf1-cmp.out
-endif
 
 $(objpfx)tst-setvbuf1.out: /dev/null $(objpfx)tst-setvbuf1
 	$(test-program-cmd) > $@ 2>&1; \

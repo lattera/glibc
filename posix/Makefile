@@ -113,12 +113,30 @@ generated += $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
 	     tst-vfork3-mem tst-vfork3.mtrace getconf.speclist \
 	     tst-fnmatch-mem tst-fnmatch.mtrace
 
+ifeq ($(run-built-tests),yes)
+ifeq (yes,$(build-shared))
+tests-special += $(objpfx)globtest.out $(objpfx)wordexp-tst.out
+endif
+endif
+
+# Run a test on the header files we use.
+# XXX Please note that for now we ignore the result of this test.
+tests-special += $(objpfx)annexc.out
+ifeq ($(run-built-tests),yes)
+tests-special += $(objpfx)bug-regex2-mem $(objpfx)bug-regex14-mem \
+		 $(objpfx)bug-regex21-mem $(objpfx)bug-regex31-mem \
+		 $(objpfx)tst-rxspencer-no-utf8-mem $(objpfx)tst-pcre-mem \
+		 $(objpfx)tst-boost-mem $(objpfx)tst-getconf.out \
+		 $(objpfx)bug-glob2-mem $(objpfx)tst-vfork3-mem \
+		 $(objpfx)tst-fnmatch-mem
+xtests-special += $(objpfx)bug-ga2-mem
+endif
+
 include ../Rules
 
 ifeq ($(run-built-tests),yes)
 # globtest and wordexp-test currently only works with shared libraries
 ifeq (yes,$(build-shared))
-tests: $(objpfx)globtest.out $(objpfx)wordexp-tst.out
 $(objpfx)globtest.out: globtest.sh $(objpfx)globtest
 	$(SHELL) $< $(common-objpfx) '$(test-via-rtld-prefix)' \
 		'$(test-program-prefix)' '$(test-wrapper-env)'; \
@@ -220,18 +238,6 @@ testcases.h: TESTS TESTS2C.sed
 ptestcases.h: PTESTS PTESTS2C.sed
 	LC_ALL=C sed -f PTESTS2C.sed < $< > $@T
 	mv -f $@T $@
-
-# Run a test on the header files we use.
-# XXX Please note that for now we ignore the result of this test.
-tests: $(objpfx)annexc.out
-ifeq ($(run-built-tests),yes)
-tests: $(objpfx)bug-regex2-mem $(objpfx)bug-regex14-mem \
-  $(objpfx)bug-regex21-mem $(objpfx)bug-regex31-mem \
-  $(objpfx)tst-rxspencer-no-utf8-mem \
-  $(objpfx)tst-pcre-mem $(objpfx)tst-boost-mem $(objpfx)tst-getconf.out \
-  $(objpfx)bug-glob2-mem $(objpfx)tst-vfork3-mem $(objpfx)tst-fnmatch-mem
-xtests: $(objpfx)bug-ga2-mem
-endif
 
 test-xfail-annexc = yes
 $(objpfx)annexc.out: $(objpfx)annexc

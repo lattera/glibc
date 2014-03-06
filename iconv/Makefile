@@ -60,6 +60,10 @@ CPPFLAGS-strtab = -DNOT_IN_libc
 CPPFLAGS-charmap = -DNOT_IN_libc
 CPPFLAGS-charmap-dir = -DNOT_IN_libc
 
+ifeq ($(run-built-tests),yes)
+xtests-special += test-iconvconfig
+endif
+
 include ../Rules
 
 $(inst_bindir)/iconv: $(objpfx)iconv_prog $(+force)
@@ -67,10 +71,6 @@ $(inst_bindir)/iconv: $(objpfx)iconv_prog $(+force)
 
 $(objpfx)iconv_prog: $(iconv_prog-modules:%=$(objpfx)%.o)
 $(objpfx)iconvconfig: $(iconvconfig-modules:%=$(objpfx)%.o)
-
-ifeq ($(run-built-tests),yes)
-xtests: test-iconvconfig
-endif
 
 .PHONY: test-iconvconfig
 test-iconvconfig: /dev/null $(objpfx)iconvconfig

@@ -265,16 +265,16 @@ endif
 
 endif # build-shared = yes
 
-include ../Rules
-
 ifeq ($(run-built-tests),yes)
 ifeq (yes,$(build-shared))
-tests: $(objpfx)iconv-test.out $(objpfx)tst-tables.out
+tests-special += $(objpfx)iconv-test.out $(objpfx)tst-tables.out
 ifneq (no,$(PERL))
-tests: $(objpfx)mtrace-tst-loading
+tests-special += $(objpfx)mtrace-tst-loading
 endif
 endif
 endif
+
+include ../Rules
 
 tst-loading-ENV = MALLOC_TRACE=$(objpfx)tst-loading.mtrace
 $(objpfx)mtrace-tst-loading: $(objpfx)tst-loading.out

@@ -31,6 +31,11 @@ extra-objs	= $(gencat-modules:=.o)
 tests = tst-catgets
 test-srcs = test-gencat
 
+ifeq ($(run-built-tests),yes)
+tests-special += $(objpfx)de/libc.cat $(objpfx)test1.cat $(objpfx)test2.cat \
+		 $(objpfx)test-gencat.out
+endif
+
 gencat-modules	= xmalloc
 
 # To find xmalloc.c
@@ -53,8 +58,6 @@ generated-dirs += de
 tst-catgets-ENV = NLSPATH="$(objpfx)%l/%N.cat" LANG=de
 
 ifeq ($(run-built-tests),yes)
-tests: $(objpfx)de/libc.cat $(objpfx)test1.cat $(objpfx)test2.cat \
-       $(objpfx)test-gencat.out
 # This test just checks whether the program produces any error or not.
 # The result is not tested.
 $(objpfx)test1.cat: test1.msg $(objpfx)gencat

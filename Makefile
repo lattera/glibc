@@ -250,7 +250,7 @@ mostlyclean: parent-mostlyclean
 tests-clean:
 	@$(MAKE) subdir_testclean no_deps=t
 
-tests: $(objpfx)c++-types-check.out $(objpfx)check-local-headers.out
+tests-special += $(objpfx)c++-types-check.out $(objpfx)check-local-headers.out
 ifneq ($(CXX),no)
 
 vpath c++-types.data $(+sysdep_dirs)
@@ -310,11 +310,13 @@ installed-headers = argp/argp.h assert/assert.h catgets/nl_types.h \
 		    time/sys/time.h time/sys/timeb.h wcsmbs/wchar.h \
 		    wctype/wctype.h
 
-tests: $(objpfx)begin-end-check.out
+tests-special += $(objpfx)begin-end-check.out
 $(objpfx)begin-end-check.out: scripts/begin-end-check.pl
 	$(PERL) scripts/begin-end-check.pl $(installed-headers) > $@; \
 	$(evaluate-test)
 endif
+
+tests: $(tests-special)
 
 # The realclean target is just like distclean for the parent, but we want
 # the subdirs to know the difference in case they care.
