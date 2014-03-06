@@ -1,3 +1,14 @@
+2014-03-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/gen-auto-libm-tests.c: Update comment on output format.
+	(output_for_one_input_case): Generate before-rounding and
+	after-rounding information as conditions on output flags not
+	floating-point format.
+	* math/auto-libm-test-out: Regenerated.
+	* math/gen-libm-test.pl (cond_value): New function.
+	(or_cond_value): Use cond_value.
+	(generate_testfile): Handle conditional exceptions.
+
 2014-03-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (max_valid_error): New variable.

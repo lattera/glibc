@@ -104,22 +104,22 @@
    ... : flags".  rounding-mode is "tonearest", "towardzero", "upward"
    or "downward".  format is a name from the floating_point_formats
    array, possibly followed by a sequence of ":flag" for flags from
-   "long32", "long64", "before-rounding" and "after-rounding" (the
-   last two indicating tests where expectations for underflow
-   exceptions depend on how the architecture detects tininess).
-   Inputs and outputs are specified as hex floats with the required
-   suffix for the floating-point type, or plus_infty or minus_infty
-   for infinite expected results, or as integer constant expressions
-   (not necessarily with the right type) or IGNORE for integer inputs
-   and outputs.  Flags are "no-test-inline", "xfail", "<exception>",
-   "<exception>-ok", "errno-<value>", "errno-<value>-ok", where
-   "<exception>" and "errno-<value>" are unconditional, indicating
-   that a correct result means the given exception should be raised or
-   errno should be set to the given value, and other settings may be
-   conditional or unconditional; "-ok" means not to test for the given
-   exception or errno value (whether because it was marked as possibly
-   missing or spurious, or because the calculation of correct results
-   indicated it was optional).  */
+   "long32" and "long64".  Inputs and outputs are specified as hex
+   floats with the required suffix for the floating-point type, or
+   plus_infty or minus_infty for infinite expected results, or as
+   integer constant expressions (not necessarily with the right type)
+   or IGNORE for integer inputs and outputs.  Flags are
+   "no-test-inline", "xfail", "<exception>", "<exception>-ok",
+   "errno-<value>", "errno-<value>-ok", which may be unconditional or
+   conditional.  "<exception>" indicates that a correct result means
+   the given exception should be raised.  "errno-<value>" indicates
+   that a correct result means errno should be set to the given value.
+   "-ok" means not to test for the given exception or errno value
+   (whether because it was marked as possibly missing or spurious, or
+   because the calculation of correct results indicated it was
+   optional).  Conditions "before-rounding" and "after-rounding"
+   indicate tests where expectations for underflow exceptions depend
+   on how the architecture detects tininess.  */
 
 #define _GNU_SOURCE
 
@@ -1882,224 +1882,246 @@ output_for_one_input_case (FILE *fp, const char *filename, test_function *tf,
 	    {
 	      bool before_after_matters
 		= tf->exact && merged_exc_before[m] != merged_exc_after[m];
-	      for (int after = 0; after <= 1; after++)
+	      if (before_after_matters)
 		{
-		  if (after == 1 && !before_after_matters)
-		    continue;
-		  const char *after_cond;
-		  if (before_after_matters)
-		    after_cond = (after
-				  ? ":after-rounding"
-				  : ":before-rounding");
-		  else
-		    after_cond = "";
-		  unsigned int merged_exc = (after
-					     ? merged_exc_after[m]
-					     : merged_exc_before[m]);
-		  if (fprintf (fp, "= %s %s %s%s%s", tf->name,
-			       rounding_modes[m].name, fp_formats[f].name,
-			       long_cond, after_cond) < 0)
-		    error (EXIT_FAILURE, errno, "write to '%s'", filename);
-		  /* Print inputs.  */
-		  for (size_t i = 0; i < tf->num_args; i++)
-		    output_generic_value (fp, filename, &inputs[i], false,
-					  tf->arg_types[i], f, long_bits);
-		  if (fputs (" :", fp) < 0)
-		    error (EXIT_FAILURE, errno, "write to '%s'", filename);
-		  /* Print outputs.  */
-		  bool must_erange = false;
-		  for (size_t i = 0; i < tf->num_ret; i++)
+		  assert ((merged_exc_before[m] ^ merged_exc_after[m])
+			  == (1U << exc_underflow));
+		  assert ((merged_exc_before[m] & (1U << exc_underflow)) != 0);
+		}
+	      unsigned int merged_exc = merged_exc_before[m];
+	      if (fprintf (fp, "= %s %s %s%s", tf->name,
+			   rounding_modes[m].name, fp_formats[f].name,
+			   long_cond) < 0)
+		error (EXIT_FAILURE, errno, "write to '%s'", filename);
+	      /* Print inputs.  */
+	      for (size_t i = 0; i < tf->num_args; i++)
+		output_generic_value (fp, filename, &inputs[i], false,
+				      tf->arg_types[i], f, long_bits);
+	      if (fputs (" :", fp) < 0)
+		error (EXIT_FAILURE, errno, "write to '%s'", filename);
+	      /* Print outputs.  */
+	      bool must_erange = false;
+	      for (size_t i = 0; i < tf->num_ret; i++)
+		{
+		  generic_value g;
+		  g.type = generic_outputs[i].type;
+		  switch (g.type)
 		    {
-		      generic_value g;
-		      g.type = generic_outputs[i].type;
-		      switch (g.type)
-			{
-			case gtype_fp:
-			  if (mpfr_inf_p (all_res[i][m])
-			      && (all_exc_before[i][m]
-				  & (1U << exc_overflow)) != 0)
-			    must_erange = true;
-			  if (mpfr_zero_p (all_res[i][m])
-			      && (tf->exact
-				  || mpfr_zero_p (all_res[i][rm_tonearest]))
-			      && (all_exc_before[i][m]
-				  & (1U << exc_underflow)) != 0)
-			    must_erange = true;
-			  mpfr_init2 (g.value.f, fp_formats[f].mant_dig);
-			  assert_exact (mpfr_set (g.value.f, all_res[i][m],
-						  MPFR_RNDN));
-			  break;
+		    case gtype_fp:
+		      if (mpfr_inf_p (all_res[i][m])
+			  && (all_exc_before[i][m]
+			      & (1U << exc_overflow)) != 0)
+			must_erange = true;
+		      if (mpfr_zero_p (all_res[i][m])
+			  && (tf->exact
+			      || mpfr_zero_p (all_res[i][rm_tonearest]))
+			  && (all_exc_before[i][m]
+			      & (1U << exc_underflow)) != 0)
+			must_erange = true;
+		      mpfr_init2 (g.value.f, fp_formats[f].mant_dig);
+		      assert_exact (mpfr_set (g.value.f, all_res[i][m],
+					      MPFR_RNDN));
+		      break;
 
-			case gtype_int:
-			  mpz_init (g.value.i);
-			  mpz_set (g.value.i, generic_outputs[i].value.i);
-			  break;
+		    case gtype_int:
+		      mpz_init (g.value.i);
+		      mpz_set (g.value.i, generic_outputs[i].value.i);
+		      break;
 
-			default:
-			  abort ();
-			}
-		      output_generic_value (fp, filename, &g, ignore_output[i],
-					    tf->ret_types[i], f, long_bits);
-		      generic_value_free (&g);
+		    default:
+		      abort ();
 		    }
-		  if (fputs (" :", fp) < 0)
-		    error (EXIT_FAILURE, errno, "write to '%s'", filename);
-		  /* Print miscellaneous flags (passed through from
-		     input).  */
-		  for (size_t i = 0; i < it->num_flags; i++)
-		    switch (it->flags[i].type)
-		      {
-		      case flag_no_test_inline:
-		      case flag_xfail:
-			if (fprintf (fp, " %s%s",
-				     input_flags[it->flags[i].type],
-				     (it->flags[i].cond
-				      ? it->flags[i].cond
-				      : "")) < 0)
+		  output_generic_value (fp, filename, &g, ignore_output[i],
+					tf->ret_types[i], f, long_bits);
+		  generic_value_free (&g);
+		}
+	      if (fputs (" :", fp) < 0)
+		error (EXIT_FAILURE, errno, "write to '%s'", filename);
+	      /* Print miscellaneous flags (passed through from
+		 input).  */
+	      for (size_t i = 0; i < it->num_flags; i++)
+		switch (it->flags[i].type)
+		  {
+		  case flag_no_test_inline:
+		  case flag_xfail:
+		    if (fprintf (fp, " %s%s",
+				 input_flags[it->flags[i].type],
+				 (it->flags[i].cond
+				  ? it->flags[i].cond
+				  : "")) < 0)
+		      error (EXIT_FAILURE, errno, "write to '%s'",
+			     filename);
+		    break;
+		  case flag_xfail_rounding:
+		    if (m != rm_tonearest)
+		      if (fprintf (fp, " xfail%s",
+				   (it->flags[i].cond
+				    ? it->flags[i].cond
+				    : "")) < 0)
+			error (EXIT_FAILURE, errno, "write to '%s'",
+			       filename);
+		    break;
+		  default:
+		    break;
+		  }
+	      /* Print exception flags and compute errno
+		 expectations where not already computed.  */
+	      bool may_edom = false;
+	      bool must_edom = false;
+	      bool may_erange = must_erange || may_underflow;
+	      for (fp_exception e = exc_first_exception;
+		   e < exc_num_exceptions;
+		   e++)
+		{
+		  bool expect_e = (merged_exc & (1U << e)) != 0;
+		  bool e_optional = false;
+		  switch (e)
+		    {
+		    case exc_divbyzero:
+		      if (expect_e)
+			may_erange = must_erange = true;
+		      break;
+
+		    case exc_inexact:
+		      if (!tf->exact)
+			e_optional = true;
+		      break;
+
+		    case exc_invalid:
+		      if (expect_e)
+			may_edom = must_edom = true;
+		      break;
+
+		    case exc_overflow:
+		      if (expect_e)
+			may_erange = true;
+		      break;
+
+		    case exc_underflow:
+		      if (expect_e)
+			may_erange = true;
+		      if (must_underflow)
+			assert (expect_e);
+		      if (may_underflow && !must_underflow)
+			e_optional = true;
+		      break;
+
+		    default:
+		      abort ();
+		    }
+		  if (e_optional)
+		    {
+		      assert (!before_after_matters);
+		      if (fprintf (fp, " %s-ok", exceptions[e]) < 0)
+			error (EXIT_FAILURE, errno, "write to '%s'",
+			       filename);
+		    }
+		  else
+		    {
+		      if (expect_e)
+			if (fprintf (fp, " %s", exceptions[e]) < 0)
 			  error (EXIT_FAILURE, errno, "write to '%s'",
 				 filename);
-			break;
-		      case flag_xfail_rounding:
-			if (m != rm_tonearest)
-			  if (fprintf (fp, " xfail%s",
-				       (it->flags[i].cond
-					? it->flags[i].cond
-					: "")) < 0)
-			    error (EXIT_FAILURE, errno, "write to '%s'",
-				   filename);
-			break;
-		      default:
-			break;
-		      }
-		  /* Print exception flags and compute errno
-		     expectations where not already computed.  */
-		  bool may_edom = false;
-		  bool must_edom = false;
-		  bool may_erange = must_erange || may_underflow;
-		  for (fp_exception e = exc_first_exception;
-		       e < exc_num_exceptions;
-		       e++)
-		    {
-		      bool expect_e = (merged_exc & (1U << e)) != 0;
-		      bool e_optional = false;
-		      switch (e)
+		      if (before_after_matters && e == exc_underflow)
+			if (fputs (":before-rounding", fp) < 0)
+			  error (EXIT_FAILURE, errno, "write to '%s'",
+				 filename);
+		      for (int after = 0; after <= 1; after++)
 			{
-			case exc_divbyzero:
-			  if (expect_e)
-			    may_erange = must_erange = true;
-			  break;
-
-			case exc_inexact:
-			  if (!tf->exact)
-			    e_optional = true;
-			  break;
-
-			case exc_invalid:
-			  if (expect_e)
-			    may_edom = must_edom = true;
-			  break;
-
-			case exc_overflow:
-			  if (expect_e)
-			    may_erange = true;
-			  break;
-
-			case exc_underflow:
-			  if (expect_e)
-			    may_erange = true;
-			  if (must_underflow)
-			    assert (expect_e);
-			  if (may_underflow && !must_underflow)
-			    e_optional = true;
-			  break;
-
-			default:
-			  abort ();
-			}
-		      if (e_optional)
-			{
-			  if (fprintf (fp, " %s-ok", exceptions[e]) < 0)
-			    error (EXIT_FAILURE, errno, "write to '%s'",
-				   filename);
-			}
-		      else
-			{
-			  if (expect_e)
-			    if (fprintf (fp, " %s", exceptions[e]) < 0)
-			      error (EXIT_FAILURE, errno, "write to '%s'",
-				     filename);
+			  bool expect_e_here = expect_e;
+			  if (after == 1 && (!before_after_matters
+					     || e != exc_underflow))
+			    continue;
+			  const char *after_cond;
+			  if (before_after_matters && e == exc_underflow)
+			    {
+			      after_cond = (after
+					    ? ":after-rounding"
+					    : ":before-rounding");
+			      expect_e_here = !after;
+			    }
+			  else
+			    after_cond = "";
 			  input_flag_type okflag;
-			  okflag = (expect_e
+			  okflag = (expect_e_here
 				    ? flag_missing_first
 				    : flag_spurious_first) + e;
 			  for (size_t i = 0; i < it->num_flags; i++)
 			    if (it->flags[i].type == okflag)
-			      if (fprintf (fp, " %s-ok%s",
+			      if (fprintf (fp, " %s-ok%s%s",
 					   exceptions[e],
 					   (it->flags[i].cond
 					    ? it->flags[i].cond
-					    : "")) < 0)
+					    : ""), after_cond) < 0)
 				error (EXIT_FAILURE, errno, "write to '%s'",
 				       filename);
 			}
 		    }
-		  /* Print errno expectations.  */
-		  if (tf->complex_fn)
-		    {
-		      must_edom = false;
-		      must_erange = false;
-		    }
-		  if (may_edom && !must_edom)
-		    {
-		      if (fputs (" errno-edom-ok", fp) < 0)
-			error (EXIT_FAILURE, errno, "write to '%s'",
-			       filename);
-		    }
-		  else
-		    {
-		      if (must_edom)
-			if (fputs (" errno-edom", fp) < 0)
-			  error (EXIT_FAILURE, errno, "write to '%s'",
-				 filename);
-		      input_flag_type okflag = (must_edom
-						? flag_missing_errno
-						: flag_spurious_errno);
-		      for (size_t i = 0; i < it->num_flags; i++)
-			if (it->flags[i].type == okflag)
-			  if (fprintf (fp, " errno-edom-ok%s",
-				       (it->flags[i].cond
-					? it->flags[i].cond
-					: "")) < 0)
-			    error (EXIT_FAILURE, errno, "write to '%s'",
-				   filename);
-		    }
-		  if (may_erange && !must_erange)
-		    {
-		      if (fputs (" errno-erange-ok", fp) < 0)
-			error (EXIT_FAILURE, errno, "write to '%s'",
-			       filename);
-		    }
-		  else
-		    {
-		      if (must_erange)
-			if (fputs (" errno-erange", fp) < 0)
-			  error (EXIT_FAILURE, errno, "write to '%s'",
-				 filename);
-		      input_flag_type okflag = (must_erange
-						? flag_missing_errno
-						: flag_spurious_errno);
-		      for (size_t i = 0; i < it->num_flags; i++)
-			if (it->flags[i].type == okflag)
-			  if (fprintf (fp, " errno-erange-ok%s",
-				       (it->flags[i].cond
-					? it->flags[i].cond
-					: "")) < 0)
-			    error (EXIT_FAILURE, errno, "write to '%s'",
-				   filename);
-		    }
-		  if (putc ('\n', fp) < 0)
-		    error (EXIT_FAILURE, errno, "write to '%s'", filename);
 		}
+	      /* Print errno expectations.  */
+	      if (tf->complex_fn)
+		{
+		  must_edom = false;
+		  must_erange = false;
+		}
+	      if (may_edom && !must_edom)
+		{
+		  if (fputs (" errno-edom-ok", fp) < 0)
+		    error (EXIT_FAILURE, errno, "write to '%s'",
+			   filename);
+		}
+	      else
+		{
+		  if (must_edom)
+		    if (fputs (" errno-edom", fp) < 0)
+		      error (EXIT_FAILURE, errno, "write to '%s'",
+			     filename);
+		  input_flag_type okflag = (must_edom
+					    ? flag_missing_errno
+					    : flag_spurious_errno);
+		  for (size_t i = 0; i < it->num_flags; i++)
+		    if (it->flags[i].type == okflag)
+		      if (fprintf (fp, " errno-edom-ok%s",
+				   (it->flags[i].cond
+				    ? it->flags[i].cond
+				    : "")) < 0)
+			error (EXIT_FAILURE, errno, "write to '%s'",
+			       filename);
+		}
+	      if (before_after_matters)
+		assert (may_erange && !must_erange);
+	      if (may_erange && !must_erange)
+		{
+		  if (fprintf (fp, " errno-erange-ok%s",
+			       (before_after_matters
+				? ":before-rounding"
+				: "")) < 0)
+		    error (EXIT_FAILURE, errno, "write to '%s'",
+			   filename);
+		}
+	      if (before_after_matters || !(may_erange && !must_erange))
+		{
+		  if (must_erange)
+		    if (fputs (" errno-erange", fp) < 0)
+		      error (EXIT_FAILURE, errno, "write to '%s'",
+			     filename);
+		  input_flag_type okflag = (must_erange
+					    ? flag_missing_errno
+					    : flag_spurious_errno);
+		  for (size_t i = 0; i < it->num_flags; i++)
+		    if (it->flags[i].type == okflag)
+		      if (fprintf (fp, " errno-erange-ok%s%s",
+				   (it->flags[i].cond
+				    ? it->flags[i].cond
+				    : ""),
+				   (before_after_matters
+				    ? ":after-rounding"
+				    : "")) < 0)
+			error (EXIT_FAILURE, errno, "write to '%s'",
+			       filename);
+		}
+	      if (putc ('\n', fp) < 0)
+		error (EXIT_FAILURE, errno, "write to '%s'", filename);
 	    }
 	  for (size_t i = 0; i < tf->num_ret; i++)
 	    {

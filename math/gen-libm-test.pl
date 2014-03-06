@@ -326,17 +326,23 @@ sub or_value {
   }
 }
 
+# Return a conditional expression between two values.
+sub cond_value {
+  my ($cond, $if, $else) = @_;
+  if ($cond eq "1") {
+    return $if;
+  } elsif ($cond eq "0") {
+    return $else;
+  } else {
+    return "($cond ? $if : $else)";
+  }
+}
+
 # Return text to OR a conditional expression between two values into
 # an accumulated flags string.
 sub or_cond_value {
   my ($cond, $if, $else) = @_;
-  if ($cond eq "1") {
-    return or_value ($if);
-  } elsif ($cond eq "0") {
-    return or_value ($else);
-  } else {
-    return or_value ("($cond ? $if : $else)");
-  }
+  return or_value (cond_value ($cond, $if, $else));
 }
 
 # Generate libm-test.c
@@ -392,7 +398,7 @@ sub generate_testfile {
 	my (@exc_list) = qw(divbyzero inexact invalid overflow underflow);
 	my ($exc);
 	foreach $exc (@exc_list) {
-	  my ($exc_expected, $exc_ok, $no_exc);
+	  my ($exc_expected, $exc_ok, $no_exc, $exc_cond, $exc_ok_cond);
 	  $exc_expected = "\U$exc\E_EXCEPTION";
 	  $exc_ok = "\U$exc\E_EXCEPTION_OK";
 	  $no_exc = "0";
@@ -401,23 +407,20 @@ sub generate_testfile {
 	    $no_exc = "NO_INEXACT_EXCEPTION";
 	  }
 	  if (defined ($flag_cond{$exc})) {
-	    if ($flag_cond{$exc} ne "1") {
-	      die ("unexpected condition for $exc\n");
-	    }
-	    if (defined ($flag_cond{"$exc-ok"})) {
-	      $flags_conv .= or_cond_value ($flag_cond{"$exc-ok"},
-					    $exc_ok, $exc_expected);
-	    } else {
-	      $flags_conv .= or_value ($exc_expected);
-	    }
+	    $exc_cond = $flag_cond{$exc};
 	  } else {
-	    if (defined ($flag_cond{"$exc-ok"})) {
-	      $flags_conv .= or_cond_value ($flag_cond{"$exc-ok"},
-					    $exc_ok, $no_exc);
-	    } else {
-	      $flags_conv .= or_value ($no_exc);
-	    }
+	    $exc_cond = "0";
 	  }
+	  if (defined ($flag_cond{"$exc-ok"})) {
+	    $exc_ok_cond = $flag_cond{"$exc-ok"};
+	  } else {
+	    $exc_ok_cond = "0";
+	  }
+	  $flags_conv .= or_cond_value ($exc_cond,
+					cond_value ($exc_ok_cond,
+						    $exc_ok, $exc_expected),
+					cond_value ($exc_ok_cond,
+						    $exc_ok, $no_exc));
 	}
 	my ($errno_expected, $errno_unknown_cond);
 	if (defined ($flag_cond{"errno-edom"})) {
