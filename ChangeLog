@@ -1,5 +1,12 @@
 2014-03-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/netinet/tcp.h-data [POSIX2008 || XOPEN2K8]: Enable
+	whole file.
+	* conform/data/sys/timeb.h-data [POSIX2008 || XOPEN2K8]: Disable
+	whole file.
+	* conform/data/sys/uio.h-data [POSIX2008]: Likewise.
+	* conform/data/ucontext.h-data [POSIX2008 || XOPEN2K8]: Likewise.
+
 	* conform/data/aio.h-data [XPG3 || XPG4]: Disable whole file.
 	* conform/data/arpa/inet.h-data [XPG3]: Likewise.
 	* conform/data/dlfcn.h-data [XPG3 || XPG4]: Likewise.
