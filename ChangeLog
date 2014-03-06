@@ -1,5 +1,7 @@
 2014-03-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* manual/Makefile (INSTALL_INFO): Remove variable setting.
+
 	* math/libm-test.inc (struct test_f_f_data): Move expected results
 	into structure for each rounding mode.
 	(struct test_ff_f_data): Likewise.

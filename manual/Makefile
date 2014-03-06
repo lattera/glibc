@@ -21,9 +21,6 @@ subdir := manual
 
 include ../Makeconfig
 
-# Allow override
-INSTALL_INFO = install-info
-
 .PHONY: dvi pdf info html
 
 dvi: $(objpfx)libc.dvi
