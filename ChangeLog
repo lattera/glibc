@@ -1,5 +1,50 @@
 2014-03-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (struct test_f_f_data): Move expected results
+	into structure for each rounding mode.
+	(struct test_ff_f_data): Likewise.
+	(struct test_ff_f_data_nexttoward): Likewise.
+	(struct test_fi_f_data): Likewise.
+	(struct test_fl_f_data): Likewise.
+	(struct test_if_f_data): Likewise.
+	(struct test_fff_f_data): Likewise.
+	(struct test_c_f_data): Likewise.
+	(struct test_f_f1_data): Likewise.
+	(struct test_fF_f1_data): Likewise.
+	(struct test_ffI_f1_data): Likewise.
+	(struct test_c_c_data): Likewise.
+	(struct test_cc_c_data): Likewise.
+	(struct test_f_i_data): Likewise.
+	(struct test_ff_i_data): Likewise.
+	(struct test_f_l_data): Likewise.
+	(struct test_f_L_data): Likewise.
+	(struct test_fFF_11_data): Likewise.
+	(RM_): New macro.
+	(RM_FE_DOWNWARD): Likewise.
+	(RM_FE_TONEAREST): Likewise.
+	(RM_FE_TOWARDZERO): Likewise.
+	(RM_FE_UPWARD): Likewise.
+	(RUN_TEST_LOOP_f_f): Update references to expected results.
+	(RUN_TEST_LOOP_2_f): Likewise.
+	(RUN_TEST_LOOP_fff_f): Likewise.
+	(RUN_TEST_LOOP_c_f): Likewise.
+	(RUN_TEST_LOOP_f_f1): Likewise.
+	(RUN_TEST_LOOP_fF_f1): Likewise.
+	(RUN_TEST_LOOP_fI_f1): Likewise.
+	(RUN_TEST_LOOP_ffI_f1): Likewise.
+	(RUN_TEST_LOOP_c_c): Likewise.
+	(RUN_TEST_LOOP_cc_c): Likewise.
+	(RUN_TEST_LOOP_f_i): Likewise.
+	(RUN_TEST_LOOP_f_i_tg): Likewise.
+	(RUN_TEST_LOOP_ff_i_tg): Likewise.
+	(RUN_TEST_LOOP_f_b): Likewise.
+	(RUN_TEST_LOOP_f_b_tg): Likewise.
+	(RUN_TEST_LOOP_f_l): Likewise.
+	(RUN_TEST_LOOP_f_L): Likewise.
+	(RUN_TEST_LOOP_fFF_11): Likewise.
+	* math/gen-libm-test.pl (parse_args): Output four copies of
+	expected results for each test.
+
 	* sysdeps/unix/sysv/linux/aarch64/kernel-features.h
 	(__ASSUME_UTIMES): Remove.
 	* sysdeps/unix/sysv/linux/tile/kernel-features.h

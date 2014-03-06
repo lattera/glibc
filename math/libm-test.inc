@@ -1044,103 +1044,142 @@ struct test_f_f_data
 {
   const char *arg_str;
   FLOAT arg;
-  FLOAT expected;
-  int exceptions;
+  struct
+  {
+    FLOAT expected;
+    int exceptions;
+  } rd, rn, rz, ru;
 };
 struct test_ff_f_data
 {
   const char *arg_str;
   FLOAT arg1, arg2;
-  FLOAT expected;
-  int exceptions;
+  struct
+  {
+    FLOAT expected;
+    int exceptions;
+  } rd, rn, rz, ru;
 };
 struct test_ff_f_data_nexttoward
 {
   const char *arg_str;
   FLOAT arg1;
   long double arg2;
-  FLOAT expected;
-  int exceptions;
+  struct
+  {
+    FLOAT expected;
+    int exceptions;
+  } rd, rn, rz, ru;
 };
 struct test_fi_f_data
 {
   const char *arg_str;
   FLOAT arg1;
   int arg2;
-  FLOAT expected;
-  int exceptions;
+  struct
+  {
+    FLOAT expected;
+    int exceptions;
+  } rd, rn, rz, ru;
 };
 struct test_fl_f_data
 {
   const char *arg_str;
   FLOAT arg1;
   long int arg2;
-  FLOAT expected;
-  int exceptions;
+  struct
+  {
+    FLOAT expected;
+    int exceptions;
+  } rd, rn, rz, ru;
 };
 struct test_if_f_data
 {
   const char *arg_str;
   int arg1;
   FLOAT arg2;
-  FLOAT expected;
-  int exceptions;
+  struct
+  {
+    FLOAT expected;
+    int exceptions;
+  } rd, rn, rz, ru;
 };
 struct test_fff_f_data
 {
   const char *arg_str;
   FLOAT arg1, arg2, arg3;
-  FLOAT expected;
-  int exceptions;
+  struct
+  {
+    FLOAT expected;
+    int exceptions;
+  } rd, rn, rz, ru;
 };
 struct test_c_f_data
 {
   const char *arg_str;
   FLOAT argr, argc;
-  FLOAT expected;
-  int exceptions;
+  struct
+  {
+    FLOAT expected;
+    int exceptions;
+  } rd, rn, rz, ru;
 };
 /* Used for both RUN_TEST_LOOP_f_f1 and RUN_TEST_LOOP_fI_f1.  */
 struct test_f_f1_data
 {
   const char *arg_str;
   FLOAT arg;
-  FLOAT expected;
-  int exceptions;
-  int extra_test;
-  int extra_expected;
+  struct
+  {
+    FLOAT expected;
+    int exceptions;
+    int extra_test;
+    int extra_expected;
+  } rd, rn, rz, ru;
 };
 struct test_fF_f1_data
 {
   const char *arg_str;
   FLOAT arg;
-  FLOAT expected;
-  int exceptions;
-  int extra_test;
-  FLOAT extra_expected;
+  struct
+  {
+    FLOAT expected;
+    int exceptions;
+    int extra_test;
+    FLOAT extra_expected;
+  } rd, rn, rz, ru;
 };
 struct test_ffI_f1_data
 {
   const char *arg_str;
   FLOAT arg1, arg2;
-  FLOAT expected;
-  int exceptions;
-  int extra_test;
-  int extra_expected;
+  struct
+  {
+    FLOAT expected;
+    int exceptions;
+    int extra_test;
+    int extra_expected;
+  } rd, rn, rz, ru;
 };
 struct test_c_c_data
 {
   const char *arg_str;
   FLOAT argr, argc;
-  FLOAT expr, expc;
-  int exceptions;
+  struct
+  {
+    FLOAT expr, expc;
+    int exceptions;
+  } rd, rn, rz, ru;
 };
 struct test_cc_c_data
 {
   const char *arg_str;
   FLOAT arg1r, arg1c, arg2r, arg2c;
-  FLOAT expr, expc;
-  int exceptions;
+  struct
+  {
+    FLOAT expr, expc;
+    int exceptions;
+  } rd, rn, rz, ru;
 };
 /* Used for all of RUN_TEST_LOOP_f_i, RUN_TEST_LOOP_f_i_tg,
    RUN_TEST_LOOP_f_b and RUN_TEST_LOOP_f_b_tg.  */
@@ -1148,39 +1187,54 @@ struct test_f_i_data
 {
   const char *arg_str;
   FLOAT arg;
-  int expected;
-  int exceptions;
+  struct
+  {
+    int expected;
+    int exceptions;
+  } rd, rn, rz, ru;
 };
 struct test_ff_i_data
 {
   const char *arg_str;
   FLOAT arg1, arg2;
-  int expected;
-  int exceptions;
+  struct
+  {
+    int expected;
+    int exceptions;
+  } rd, rn, rz, ru;
 };
 struct test_f_l_data
 {
   const char *arg_str;
   FLOAT arg;
-  long int expected;
-  int exceptions;
+  struct
+  {
+    long int expected;
+    int exceptions;
+  } rd, rn, rz, ru;
 };
 struct test_f_L_data
 {
   const char *arg_str;
   FLOAT arg;
-  long long int expected;
-  int exceptions;
+  struct
+  {
+    long long int expected;
+    int exceptions;
+  } rd, rn, rz, ru;
 };
 struct test_fFF_11_data
 {
   const char *arg_str;
   FLOAT arg;
-  int exceptions;
-  int extra1_test;
-  FLOAT extra1_expected;
-  int extra2_test;
-  FLOAT extra2_expected;
+  struct
+  {
+    int exceptions;
+    int extra1_test;
+    FLOAT extra1_expected;
+    int extra2_test;
+    FLOAT extra2_expected;
+  } rd, rn, rz, ru;
 };
 
 /* Set the rounding mode, or restore the saved value.  */
@@ -1210,6 +1264,13 @@ struct test_fFF_11_data
   fesetround (save_round_mode)
 #define ROUND_RESTORE_FE_UPWARD			\
   fesetround (save_round_mode)
+
+/* Field name to use for a given rounding mode.  */
+#define RM_			rn
+#define RM_FE_DOWNWARD		rd
+#define RM_FE_TONEAREST		rn
+#define RM_FE_TOWARDZERO	rz
+#define RM_FE_UPWARD		ru
 
 /* Common setup for an individual test.  */
 #define COMMON_TEST_SETUP(ARG_STR)					\
@@ -1249,7 +1310,8 @@ struct test_fFF_11_data
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_f_f ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,	\
-		    (ARRAY)[i].expected, (ARRAY)[i].exceptions);	\
+		    (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
+		    (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);		\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_2_f(ARG_STR, FUNC_NAME, ARG1, ARG2, EXPECTED,	\
 		     EXCEPTIONS)				\
@@ -1266,8 +1328,9 @@ struct test_fFF_11_data
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_2_f ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg1,	\
-		    (ARRAY)[i].arg2, (ARRAY)[i].expected,		\
-		    (ARRAY)[i].exceptions);				\
+		    (ARRAY)[i].arg2,					\
+		    (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
+		    (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);		\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_ff_f RUN_TEST_2_f
 #define RUN_TEST_LOOP_ff_f RUN_TEST_LOOP_2_f
@@ -1293,7 +1356,8 @@ struct test_fFF_11_data
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_fff_f ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg1,	\
 		      (ARRAY)[i].arg2, (ARRAY)[i].arg3,			\
-		      (ARRAY)[i].expected, (ARRAY)[i].exceptions);	\
+		      (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
+		      (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_c_f(ARG_STR, FUNC_NAME, ARG1, ARG2, EXPECTED,		\
 		     EXCEPTIONS)					\
@@ -1311,8 +1375,9 @@ struct test_fFF_11_data
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_c_f ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].argr,	\
-		    (ARRAY)[i].argc, (ARRAY)[i].expected,		\
-		    (ARRAY)[i].exceptions);				\
+		    (ARRAY)[i].argc,					\
+		    (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
+		    (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);		\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_f1(ARG_STR, FUNC_NAME, ARG, EXPECTED,		\
 		      EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,		\
@@ -1335,9 +1400,11 @@ struct test_fFF_11_data
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_f_f1 ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,	\
-		     (ARRAY)[i].expected, (ARRAY)[i].exceptions,	\
-		     EXTRA_VAR, (ARRAY)[i].extra_test,			\
-		     (ARRAY)[i].extra_expected);			\
+		     (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
+		     (ARRAY)[i].RM_##ROUNDING_MODE.exceptions,		\
+		     EXTRA_VAR,						\
+		     (ARRAY)[i].RM_##ROUNDING_MODE.extra_test,		\
+		     (ARRAY)[i].RM_##ROUNDING_MODE.extra_expected);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_fF_f1(ARG_STR, FUNC_NAME, ARG, EXPECTED,		\
 		       EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,		\
@@ -1360,9 +1427,11 @@ struct test_fFF_11_data
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_fF_f1 ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,	\
-		      (ARRAY)[i].expected, (ARRAY)[i].exceptions,	\
-		      EXTRA_VAR, (ARRAY)[i].extra_test,			\
-		      (ARRAY)[i].extra_expected);			\
+		      (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
+		      (ARRAY)[i].RM_##ROUNDING_MODE.exceptions,		\
+		      EXTRA_VAR,					\
+		      (ARRAY)[i].RM_##ROUNDING_MODE.extra_test,		\
+		      (ARRAY)[i].RM_##ROUNDING_MODE.extra_expected);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_fI_f1(ARG_STR, FUNC_NAME, ARG, EXPECTED,		\
 		       EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,		\
@@ -1385,9 +1454,11 @@ struct test_fFF_11_data
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_fI_f1 ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,	\
-		      (ARRAY)[i].expected, (ARRAY)[i].exceptions,	\
-		      EXTRA_VAR, (ARRAY)[i].extra_test,			\
-		      (ARRAY)[i].extra_expected);			\
+		      (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
+		      (ARRAY)[i].RM_##ROUNDING_MODE.exceptions,		\
+		      EXTRA_VAR,					\
+		      (ARRAY)[i].RM_##ROUNDING_MODE.extra_test,		\
+		      (ARRAY)[i].RM_##ROUNDING_MODE.extra_expected);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_ffI_f1(ARG_STR, FUNC_NAME, ARG1, ARG2, EXPECTED,	\
 			EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,		\
@@ -1413,9 +1484,11 @@ struct test_fFF_11_data
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_ffI_f1 ((ARRAY)[i].arg_str, FUNC_NAME,			\
 		       (ARRAY)[i].arg1, (ARRAY)[i].arg2,		\
-		       (ARRAY)[i].expected, (ARRAY)[i].exceptions,	\
-		       EXTRA_VAR, (ARRAY)[i].extra_test,		\
-		       (ARRAY)[i].extra_expected);			\
+		       (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
+		       (ARRAY)[i].RM_##ROUNDING_MODE.exceptions,	\
+		       EXTRA_VAR,					\
+		       (ARRAY)[i].RM_##ROUNDING_MODE.extra_test,	\
+		       (ARRAY)[i].RM_##ROUNDING_MODE.extra_expected);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_c_c(ARG_STR, FUNC_NAME, ARGR, ARGC, EXPR, EXPC,	\
 		     EXCEPTIONS)					\
@@ -1433,8 +1506,10 @@ struct test_fFF_11_data
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_c_c ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].argr,	\
-		    (ARRAY)[i].argc, (ARRAY)[i].expr, (ARRAY)[i].expc,	\
-		    (ARRAY)[i].exceptions);				\
+		    (ARRAY)[i].argc,					\
+		    (ARRAY)[i].RM_##ROUNDING_MODE.expr,			\
+		    (ARRAY)[i].RM_##ROUNDING_MODE.expc,			\
+		    (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);		\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_cc_c(ARG_STR, FUNC_NAME, ARG1R, ARG1C, ARG2R, ARG2C,	\
 		      EXPR, EXPC, EXCEPTIONS)				\
@@ -1454,8 +1529,10 @@ struct test_fFF_11_data
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_cc_c ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg1r,	\
 		     (ARRAY)[i].arg1c, (ARRAY)[i].arg2r,		\
-		     (ARRAY)[i].arg2c, (ARRAY)[i].expr,			\
-		     (ARRAY)[i].expc, (ARRAY)[i].exceptions);		\
+		     (ARRAY)[i].arg2c,					\
+		     (ARRAY)[i].RM_##ROUNDING_MODE.expr,		\
+		     (ARRAY)[i].RM_##ROUNDING_MODE.expc,		\
+		     (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);		\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_i(ARG_STR, FUNC_NAME, ARG, EXPECTED, EXCEPTIONS)	\
   do									\
@@ -1471,7 +1548,8 @@ struct test_fFF_11_data
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_f_i ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,	\
-		    (ARRAY)[i].expected, (ARRAY)[i].exceptions);	\
+		    (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
+		    (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);		\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_i_tg(ARG_STR, FUNC_NAME, ARG, EXPECTED,		\
 			EXCEPTIONS)					\
@@ -1487,7 +1565,8 @@ struct test_fFF_11_data
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_f_i_tg ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,	\
-		       (ARRAY)[i].expected, (ARRAY)[i].exceptions);	\
+		       (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
+		       (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_ff_i_tg(ARG_STR, FUNC_NAME, ARG1, ARG2, EXPECTED,	\
 			 EXCEPTIONS)					\
@@ -1503,9 +1582,10 @@ struct test_fFF_11_data
 #define RUN_TEST_LOOP_ff_i_tg(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
-      RUN_TEST_ff_i_tg ((ARRAY)[i].arg_str, FUNC_NAME,		\
+      RUN_TEST_ff_i_tg ((ARRAY)[i].arg_str, FUNC_NAME,			\
 			(ARRAY)[i].arg1, (ARRAY)[i].arg2,		\
-			(ARRAY)[i].expected, (ARRAY)[i].exceptions);	\
+			(ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
+			(ARRAY)[i].RM_##ROUNDING_MODE.exceptions);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_b(ARG_STR, FUNC_NAME, ARG, EXPECTED, EXCEPTIONS)	\
   do									\
@@ -1521,7 +1601,8 @@ struct test_fFF_11_data
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_f_b ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,	\
-		    (ARRAY)[i].expected, (ARRAY)[i].exceptions);	\
+		    (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
+		    (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);		\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_b_tg(ARG_STR, FUNC_NAME, ARG, EXPECTED,		\
 			EXCEPTIONS)					\
@@ -1537,7 +1618,8 @@ struct test_fFF_11_data
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_f_b_tg ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,	\
-		       (ARRAY)[i].expected, (ARRAY)[i].exceptions);	\
+		       (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
+		       (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_l(ARG_STR, FUNC_NAME, ARG, EXPECTED, EXCEPTIONS)	\
   do									\
@@ -1553,7 +1635,8 @@ struct test_fFF_11_data
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_f_l ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,	\
-		    (ARRAY)[i].expected, (ARRAY)[i].exceptions);	\
+		    (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
+		    (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);		\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_L(ARG_STR, FUNC_NAME, ARG, EXPECTED, EXCEPTIONS)	\
   do									\
@@ -1569,7 +1652,8 @@ struct test_fFF_11_data
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_f_L ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,	\
-		    (ARRAY)[i].expected, (ARRAY)[i].exceptions);	\
+		    (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
+		    (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);		\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_fFF_11(ARG_STR, FUNC_NAME, ARG, EXCEPTIONS,		\
 			EXTRA1_VAR, EXTRA1_TEST,			\
@@ -1597,12 +1681,13 @@ struct test_fFF_11_data
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_fFF_11 ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,	\
-		       (ARRAY)[i].exceptions,				\
-		       EXTRA1_VAR, (ARRAY)[i].extra1_test,		\
-		       (ARRAY)[i].extra1_expected,			\
+		       (ARRAY)[i].RM_##ROUNDING_MODE.exceptions,	\
+		       EXTRA1_VAR,					\
+		       (ARRAY)[i].RM_##ROUNDING_MODE.extra1_test,	\
+		       (ARRAY)[i].RM_##ROUNDING_MODE.extra1_expected,	\
 		       EXTRA2_VAR,					\
-		       (ARRAY)[i].extra2_test,				\
-		       (ARRAY)[i].extra2_expected);			\
+		       (ARRAY)[i].RM_##ROUNDING_MODE.extra2_test,	\
+		       (ARRAY)[i].RM_##ROUNDING_MODE.extra2_expected);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
 
 /* Start and end the tests for a given function.  */

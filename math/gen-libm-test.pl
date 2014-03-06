@@ -154,7 +154,7 @@ sub show_exceptions {
 sub parse_args {
   my ($file, $descr, $args) = @_;
   my (@args, $descr_args, $descr_res, @descr);
-  my ($current_arg, $cline, $i);
+  my ($current_arg, $cline, $cline_res, $i);
   my (@special);
   my ($call_args);
   my ($ignore_result_any, $ignore_result_all);
@@ -247,6 +247,7 @@ sub parse_args {
   @descr = split //,$descr_res;
   $ignore_result_any = 0;
   $ignore_result_all = 1;
+  $cline_res = "";
   foreach (@descr) {
     if ($_ =~ /b|f|i|l|L/ ) {
       my ($result) = $args[$current_arg];
@@ -256,7 +257,7 @@ sub parse_args {
       } else {
 	$ignore_result_all = 0;
       }
-      $cline .= ", $result";
+      $cline_res .= ", $result";
       $current_arg++;
     } elsif ($_ eq 'c') {
       my ($result1) = $args[$current_arg];
@@ -273,7 +274,7 @@ sub parse_args {
       } else {
 	$ignore_result_all = 0;
       }
-      $cline .= ", $result1, $result2";
+      $cline_res .= ", $result1, $result2";
       $current_arg += 2;
     } elsif ($_ eq '1') {
       push @special, $args[$current_arg];
@@ -284,10 +285,10 @@ sub parse_args {
     die ("some but not all function results ignored\n");
   }
   # Add exceptions.
-  $cline .= show_exceptions ($ignore_result_any,
-			     ($current_arg <= $#args)
-			     ? $args[$current_arg]
-			     : undef);
+  $cline_res .= show_exceptions ($ignore_result_any,
+				 ($current_arg <= $#args)
+				 ? $args[$current_arg]
+				 : undef);
 
   # special treatment for some functions
   $i = 0;
@@ -298,8 +299,10 @@ sub parse_args {
     if (!$run_extra) {
       $extra_expected = "0";
     }
-    $cline .= ", $run_extra, $extra_expected";
+    $cline_res .= ", $run_extra, $extra_expected";
   }
+  $cline_res =~ s/^, //;
+  $cline .= ", { $cline_res }, { $cline_res }, { $cline_res }, { $cline_res }";
   print $file "    $cline },\n";
 }
 
