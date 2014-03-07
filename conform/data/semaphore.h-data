@@ -16,11 +16,13 @@ function int sem_trywait (sem_t*)
 function int sem_unlink (const char*)
 function int sem_wait (sem_t*)
 
-# ifndef POSIX
 allow-header fcntl.h
+# if !defined POSIX2008 && !defined XOPEN2K8
 allow-header sys/types.h
 # endif
+# if !defined POSIX && !defined UNIX98 && !defined XOPEN2K
 allow-header time.h
+# endif
 
 allow sem_*
 allow SEM_*

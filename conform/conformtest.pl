@@ -391,7 +391,7 @@ while ($#headers >= 0) {
 		     "Member \"$member\" does not have the correct type.",
 		     $res, 0);
       }
-    } elsif (/^(macro|constant|macro-constant|macro-int-constant) +([a-zA-Z0-9_]*) *(?:{([^}]*)} *)?(?:([>=<!]+) ([A-Za-z0-9_-]*))?/) {
+    } elsif (/^(macro|constant|macro-constant|macro-int-constant) +([a-zA-Z0-9_]*) *(?:{([^}]*)} *)?(?:([>=<!]+) ([A-Za-z0-9_\\'-]*))?/) {
       my($symbol_type) = $1;
       my($symbol) = $2;
       my($type) = $3;

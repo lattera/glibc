@@ -69,7 +69,6 @@ function int raise (int)
 #if !defined ISO && !defined ISO99 && !defined ISO11
 macro-int-constant SIGALRM {int} > 0
 macro-int-constant SIGHUP {int} > 0
-macro-int-constant SIGIO {int} > 0
 macro-int-constant SIGKILL {int} > 0
 macro-int-constant SIGPIPE {int} > 0
 macro-int-constant SIGQUIT {int} > 0
@@ -81,17 +80,23 @@ macro-int-constant SIGSTOP {int} > 0
 macro-int-constant SIGTSTP {int} > 0
 macro-int-constant SIGTTIN {int} > 0
 macro-int-constant SIGTTOU {int} > 0
+# ifndef XPG3
 macro-int-constant SIGBUS {int} > 0
+# endif
+# if !defined POSIX && !defined XPG3
 macro-int-constant SIGPOLL {int} > 0
 macro-int-constant SIGPROF {int} > 0
 macro-int-constant SIGSYS {int} > 0
-# if !defined POSIX && !defined POSIX2008
+# endif
+# if !defined POSIX && !defined XPG3 && !defined POSIX2008
 macro-int-constant SIGTRAP {int} > 0
 # endif
+# if !defined POSIX && !defined XPG3
 macro-int-constant SIGURG {int} > 0
 macro-int-constant SIGVTALRM {int} > 0
 macro-int-constant SIGXCPU {int} > 0
 macro-int-constant SIGXFSZ {int} > 0
+# endif
 
 type {struct sigaction}
 
@@ -101,6 +106,7 @@ element {struct sigaction} int sa_flags
 element {struct sigaction} {void(*} sa_sigaction )(int, siginfo_t*, void*)
 
 constant SA_NOCLDSTOP
+constant SA_SIGINFO
 constant SIG_BLOCK
 constant SIG_UNBLOCK
 constant SIG_SETMASK
@@ -110,7 +116,6 @@ constant SA_ONSTACK
 # if !defined POSIX
 constant SA_RESETHAND
 constant SA_RESTART
-constant SA_SIGINFO
 constant SA_NOCLDWAIT
 constant SA_NODEFER
 # endif
@@ -141,20 +146,27 @@ element {struct sigstack} int ss_onstack
 element {struct sigstack} {void*} ss_sp
 # endif
 
+# ifndef XPG3
 type siginfo_t
 
 element siginfo_t int si_signo
-# if !defined POSIX && !defined POSIX2008
+#  if !defined POSIX && !defined POSIX2008
 element siginfo_t int si_errno
-# endif
+#  endif
 element siginfo_t int si_code
+#  ifndef POSIX
 element siginfo_t pid_t si_pid
 element siginfo_t uid_t si_uid
 element siginfo_t {void*} si_addr
 element siginfo_t int si_status
 element siginfo_t long si_band
+#  endif
+#  ifndef XPG4
 element siginfo_t {union sigval} si_value
+#  endif
+# endif
 
+# if !defined POSIX && !defined XPG3
 constant ILL_ILLOPC
 constant ILL_ILLOPN
 constant ILL_ILLADR
@@ -176,8 +188,6 @@ constant SEGV_ACCERR
 constant BUS_ADRALN
 constant BUS_ADRERR
 constant BUS_OBJERR
-constant TRAP_BRKPT
-constant TRAP_TRACE
 constant CLD_EXITED
 constant CLD_KILLED
 constant CLD_DUMPED
@@ -190,6 +200,11 @@ constant POLL_MSG
 constant POLL_ERR
 constant POLL_PRI
 constant POLL_HUP
+# endif
+# if !defined POSIX && !defined XPG3 && !defined POSIX2008
+constant TRAP_BRKPT
+constant TRAP_TRACE
+# endif
 constant SI_USER
 constant SI_QUEUE
 constant SI_TIMER
@@ -251,26 +266,35 @@ function void psignal (int, const char*)
 
 // The following expressions are not entirely correct but the current
 // poorfnmatch implementation doesn't grok the right form.
-allow SIG*
 allow sa_*
-allow uc_*
-allow ss_*
-allow sv_*
+allow SA_*
+# ifndef XPG3
 allow si_*
 allow SI_*
+# endif
+# if !defined XPG3 && !defined XPG4
 allow sigev_*
 allow SIGEV_*
 allow sival_*
-allow SA_*
+# endif
+# if !defined POSIX && !defined XPG3 && !defined XPG4
+allow uc_*
+# endif
+# if !defined POSIX && !defined XPG3
 allow BUS_*
 allow CLD_*
 allow FPE_*
 allow ILL_*
 allow POLL_*
 allow SEGV_*
+# endif
+# if !defined POSIX && !defined XPG3 && !defined POSIX2008
 allow SS_*
 allow SV_*
 allow TRAP_*
+allow ss_*
+allow sv_*
+# endif
 allow *_t
 
 allow-header time.h

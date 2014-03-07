@@ -1,3 +1,111 @@
+2014-03-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/conformtest.pl: Allow ' and \ in values given for
+	constants.
+	* conform/data/semaphore.h-data [POSIX] (fcntl.h): Allow header
+	inclusion.
+	[POSIX] (sys/types.h): Likewise.
+	[POSIX2008 || XOPEN2K8] (sys/types.h): Don't allow header
+	inclusion.
+	[POSIX || UNIX98 || XOPEN2K] (time.h): Don't allow header
+	inclusion.
+	* conform/data/signal.h-data (SIGIO): Remove expectation.
+	[XPG3] (SIGBUS): Do not expect.
+	[POSIX || XPG3] (SIGPOLL): Likewise.
+	[POSIX || XPG3] (SIGPROF): Likewise.
+	[POSIX || XPG3] (SIGSYS): Likewise.
+	[XPG3] (SIGTRAP): Likewise.
+	[POSIX || XPG3] (SIGURG): Likewise.
+	[POSIX || XPG3] (SIGVTALRM): Likewise.
+	[POSIX || XPG3] (SIGXCPU): Likewise.
+	[POSIX || XPG3] (SIGXFSZ): Likewise.
+	[POSIX] (SA_SIGINFO): Expect.
+	[XPG3] (siginfo_t): Do not expect type or contents.
+	[POSIX] (si_pid): Do not expect element.
+	[POSIX] (si_uid): Likewise.
+	[POSIX] (si_addr): Likewise.
+	[POSIX] (si_status): Likewise.
+	[POSIX] (si_band): Likewise.
+	[XPG4] (si_value): Likewise.
+	[POSIX || XPG3] (ILL_ILLOPC): Do not expect.
+	[POSIX || XPG3] (ILL_ILLOPN): Likewise.
+	[POSIX || XPG3] (ILL_ILLADR): Likewise.
+	[POSIX || XPG3] (ILL_ILLTRP): Likewise.
+	[POSIX || XPG3] (ILL_PRVOPC): Likewise.
+	[POSIX || XPG3] (ILL_PRVREG): Likewise.
+	[POSIX || XPG3] (ILL_COPROC): Likewise.
+	[POSIX || XPG3] (ILL_BADSTK): Likewise.
+	[POSIX || XPG3] (FPE_INTDIV): Likewise.
+	[POSIX || XPG3] (FPE_INTOVF): Likewise.
+	[POSIX || XPG3] (FPE_FLTDIV): Likewise.
+	[POSIX || XPG3] (FPE_FLTOVF): Likewise.
+	[POSIX || XPG3] (FPE_FLTUND): Likewise.
+	[POSIX || XPG3] (FPE_FLTRES): Likewise.
+	[POSIX || XPG3] (FPE_FLTINV): Likewise.
+	[POSIX || XPG3] (FPE_FLTSUB): Likewise.
+	[POSIX || XPG3] (SEGV_MAPERR): Likewise.
+	[POSIX || XPG3] (SEGV_ACCERR): Likewise.
+	[POSIX || XPG3] (BUS_ADRALN): Likewise.
+	[POSIX || XPG3] (BUS_ADRERR): Likewise.
+	[POSIX || XPG3] (BUS_OBJERR): Likewise.
+	[POSIX || XPG3] (CLD_EXITED): Likewise.
+	[POSIX || XPG3] (CLD_KILLED): Likewise.
+	[POSIX || XPG3] (CLD_DUMPED): Likewise.
+	[POSIX || XPG3] (CLD_TRAPPED): Likewise.
+	[POSIX || XPG3] (CLD_STOPPED): Likewise.
+	[POSIX || XPG3] (CLD_CONTINUED): Likewise.
+	[POSIX || XPG3] (POLL_IN): Likewise.
+	[POSIX || XPG3] (POLL_OUT): Likewise.
+	[POSIX || XPG3] (POLL_MSG): Likewise.
+	[POSIX || XPG3] (POLL_ERR): Likewise.
+	[POSIX || XPG3] (POLL_PRI): Likewise.
+	[POSIX || XPG3] (POLL_HUP): Likewise.
+	[POSIX || XPG3 || POSIX2008] (TRAP_BRKPT): Likewise.
+	[POSIX || XPG3 || POSIX2008] (TRAP_TRACE): Likewise.
+	(SIG*): Do not allow.
+	[XPG3] (si_*): Likewise.
+	[XPG3] (SI_*): Likewise.
+	[XPG3 || XPG4] (sigev_*): Likewise.
+	[XPG3 || XPG4] (SIGEV_*): Likewise.
+	[XPG3 || XPG4] (sival_*): Likewise.
+	[POSIX || XPG3 || XPG4] (uc_*): Likewise.
+	[POSIX || XPG3] (BUS_*): Likewise.
+	[POSIX || XPG3] (CLD_*): Likewise.
+	[POSIX || XPG3] (FPE_*): Likewise.
+	[POSIX || XPG3] (ILL_*): Likewise.
+	[POSIX || XPG3] (POLL_*): Likewise.
+	[POSIX || XPG3] (SEGV_*): Likewise.
+	[POSIX || XPG3 || POSIX2008] (SS_*): Likewise.
+	[POSIX || XPG3 || POSIX2008] (SV_*): Likewise.
+	[POSIX || XPG3 || POSIX2008] (TRAP_*): Likewise.
+	[POSIX || XPG3 || POSIX2008] (ss_*): Likewise.
+	[POSIX || XPG3 || POSIX2008] (sv_*): Likewise.
+	* conform/data/tar.h-data (TMAGLEN): Use macro-int-constant.
+	Specify type and value.
+	(TVERSLEN): Likewise.
+	(REGTYPE): Likewise.
+	(AREGTYPE): Likewise.
+	(LNKTYPE): Likewise.
+	(SYMTYPE): Likewise.
+	(CHRTYPE): Likewise.
+	(BLKTYPE): Likewise.
+	(DIRTYPE): Likewise.
+	(FIFOTYPE): Likewise.
+	(CONTTYPE): Likewise.
+	(TSUID): Likewise.
+	(TSGID): Likewise.
+	(TSVTX): Likewise.
+	(TUREAD): Likewise.
+	(TUWRITE): Likewise.
+	(TUEXEC): Likewise.
+	(TGREAD): Likewise.
+	(TGWRITE): Likewise.
+	(TGEXEC): Likewise.
+	(TOREAD): Likewise.
+	(TOWRITE): Likewise.
+	(TOEXEC): Likewise.
+	[POSIX] (TSVTX): Expect constant.
+
 2014-03-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makefile (tests): Change dependencies to ....
