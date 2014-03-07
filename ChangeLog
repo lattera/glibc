@@ -1,3 +1,16 @@
+2014-03-10  Vidya Ranganathan  <vidya@linux.vnet.ibm.com>
+	    Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power7/strncat.S: New file: Optimization.
+	* sysdeps/powerpc/powerpc64/multiarch/strncat.c: New file:
+	multiarch strncat for PPC64.
+	* sysdeps/powerpc/powerpc64/multiarch/strncat-ppc64.c: New file
+	* sysdeps/powerpc/powerpc64/multiarch/strncat-power7.S: New file
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c:
+	(__libc_ifunc_impl_list): Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add strncat
+	multiarch optimizations
+
 2014-03-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #16639]
