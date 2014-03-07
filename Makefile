@@ -316,7 +316,18 @@ $(objpfx)begin-end-check.out: scripts/begin-end-check.pl
 	$(evaluate-test)
 endif
 
+tests-special-notdir = $(patsubst $(objpfx)%, %, $(tests-special))
 tests: $(tests-special)
+	$(..)scripts/merge-test-results.sh -s $(objpfx) "" \
+	  $(sort $(tests-special-notdir:.out=)) \
+	  > $(objpfx)subdir-tests.sum
+	$(..)scripts/merge-test-results.sh -t $(objpfx) subdir-tests.sum \
+	  $(sort $(subdirs) .) \
+	  > $(objpfx)tests.sum
+xtests:
+	$(..)scripts/merge-test-results.sh -t $(objpfx) subdir-xtests.sum \
+	  $(sort $(subdirs)) \
+	  > $(objpfx)xtests.sum
 
 # The realclean target is just like distclean for the parent, but we want
 # the subdirs to know the difference in case they care.

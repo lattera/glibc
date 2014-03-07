@@ -102,6 +102,17 @@ tests: $(tests:%=$(objpfx)%.out) $(tests-special)
 xtests: tests $(xtests:%=$(objpfx)%.out) $(xtests-special)
 endif
 
+tests-special-notdir = $(patsubst $(objpfx)%, %, $(tests-special))
+xtests-special-notdir = $(patsubst $(objpfx)%, %, $(xtests-special))
+tests:
+	$(..)scripts/merge-test-results.sh -s $(objpfx) $(subdir) \
+	  $(sort $(tests) $(tests-special-notdir:.out=)) \
+	  > $(objpfx)subdir-tests.sum
+xtests:
+	$(..)scripts/merge-test-results.sh -s $(objpfx) $(subdir) \
+	  $(sort $(xtests) $(xtests-special-notdir:.out=)) \
+	  > $(objpfx)subdir-xtests.sum
+
 ifeq ($(build-programs),yes)
 binaries-all-notests = $(others) $(sysdep-others)
 binaries-all-tests = $(tests) $(xtests) $(test-srcs)

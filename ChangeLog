@@ -1,5 +1,14 @@
 2014-03-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* scripts/merge-test-results.sh: New file.
+	* Makefile (tests-special-notdir): New variable.
+	(tests): Run merge-test-results.sh.
+	(xtests): Likewise.
+	* Rules (tests-special-notdir): New variable.
+	(xtests-special-notdir): Likewise.
+	(tests): Run merge-test-results.sh
+	(xtests): Likewise.
+
 	* Makeconfig (test-xfail-name): New variable.
 	(evaluate-test): Use $(test-xfail-name) instead of $(@F:.out=) to
 	compute variable name for expected failures.
