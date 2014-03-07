@@ -1,5 +1,364 @@
 2014-03-07  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16674]
+	* bits/siginfo.h (ILL_ILLOPC): Condition on [__USE_XOPEN_EXTENDED
+	|| __USE_XOPEN2K8].
+	(ILL_ILLOPN): Likewise.
+	(ILL_ILLADR): Likewise.
+	(ILL_ILLTRP): Likewise.
+	(ILL_PRVOPC): Likewise.
+	(ILL_PRVREG): Likewise.
+	(ILL_COPROC): Likewise.
+	(ILL_BADSTK): Likewise.
+	(FPE_INTDIV): Likewise.
+	(FPE_INTOVF): Likewise.
+	(FPE_FLTDIV): Likewise.
+	(FPE_FLTOVF): Likewise.
+	(FPE_FLTUND): Likewise.
+	(FPE_FLTRES): Likewise.
+	(FPE_FLTINV): Likewise.
+	(FPE_FLTSUB): Likewise.
+	(SEGV_MAPERR): Likewise.
+	(SEGV_ACCERR): Likewise.
+	(BUS_ADRALN): Likewise.
+	(BUS_ADRERR): Likewise.
+	(BUS_OBJERR): Likewise.
+	(TRAP_BRKPT): Condition on [__USE_XOPEN_EXTENDED].
+	(TRAP_TRACE): Likewise.
+	(CLD_EXITED): Condition on [__USE_XOPEN_EXTENDED ||
+	__USE_XOPEN2K8].
+	(CLD_KILLED): Likewise.
+	(CLD_DUMPED): Likewise.
+	(CLD_TRAPPED): Likewise.
+	(CLD_STOPPED): Likewise.
+	(CLD_CONTINUED): Likewise.
+	(POLL_IN): Likewise.
+	(POLL_OUT): Likewise.
+	(POLL_MSG): Likewise.
+	(POLL_ERR): Likewise.
+	(POLL_PRI): Likewise.
+	(POLL_HUP): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/siginfo.h (ILL_ILLOPC):
+	Likewise.
+	(ILL_ILLOPN): Likewise.
+	(ILL_ILLADR): Likewise.
+	(ILL_ILLTRP): Likewise.
+	(ILL_PRVOPC): Likewise.
+	(ILL_PRVREG): Likewise.
+	(ILL_COPROC): Likewise.
+	(ILL_BADSTK): Likewise.
+	(FPE_INTDIV): Likewise.
+	(FPE_INTOVF): Likewise.
+	(FPE_FLTDIV): Likewise.
+	(FPE_FLTOVF): Likewise.
+	(FPE_FLTUND): Likewise.
+	(FPE_FLTRES): Likewise.
+	(FPE_FLTINV): Likewise.
+	(FPE_FLTSUB): Likewise.
+	(SEGV_MAPERR): Likewise.
+	(SEGV_ACCERR): Likewise.
+	(BUS_ADRALN): Likewise.
+	(BUS_ADRERR): Likewise.
+	(BUS_OBJERR): Likewise.
+	(BUS_MCEERR_AR): Likewise.
+	(BUS_MCEERR_AO): Likewise.
+	(TRAP_BRKPT): Condition on [__USE_XOPEN_EXTENDED].
+	(TRAP_TRACE): Likewise.
+	(CLD_EXITED): Condition on [__USE_XOPEN_EXTENDED ||
+	__USE_XOPEN2K8].
+	(CLD_KILLED): Likewise.
+	(CLD_DUMPED): Likewise.
+	(CLD_TRAPPED): Likewise.
+	(CLD_STOPPED): Likewise.
+	(CLD_CONTINUED): Likewise.
+	(POLL_IN): Likewise.
+	(POLL_OUT): Likewise.
+	(POLL_MSG): Likewise.
+	(POLL_ERR): Likewise.
+	(POLL_PRI): Likewise.
+	(POLL_HUP): Likewise.
+	* sysdeps/unix/sysv/linux/bits/siginfo.h (ILL_ILLOPC): Likewise.
+	(ILL_ILLOPN): Likewise.
+	(ILL_ILLADR): Likewise.
+	(ILL_ILLTRP): Likewise.
+	(ILL_PRVOPC): Likewise.
+	(ILL_PRVREG): Likewise.
+	(ILL_COPROC): Likewise.
+	(ILL_BADSTK): Likewise.
+	(FPE_INTDIV): Likewise.
+	(FPE_INTOVF): Likewise.
+	(FPE_FLTDIV): Likewise.
+	(FPE_FLTOVF): Likewise.
+	(FPE_FLTUND): Likewise.
+	(FPE_FLTRES): Likewise.
+	(FPE_FLTINV): Likewise.
+	(FPE_FLTSUB): Likewise.
+	(SEGV_MAPERR): Likewise.
+	(SEGV_ACCERR): Likewise.
+	(BUS_ADRALN): Likewise.
+	(BUS_ADRERR): Likewise.
+	(BUS_OBJERR): Likewise.
+	(BUS_MCEERR_AR): Likewise.
+	(BUS_MCEERR_AO): Likewise.
+	(TRAP_BRKPT): Condition on [__USE_XOPEN_EXTENDED].
+	(TRAP_TRACE): Likewise.
+	(CLD_EXITED): Condition on [__USE_XOPEN_EXTENDED ||
+	__USE_XOPEN2K8].
+	(CLD_KILLED): Likewise.
+	(CLD_DUMPED): Likewise.
+	(CLD_TRAPPED): Likewise.
+	(CLD_STOPPED): Likewise.
+	(CLD_CONTINUED): Likewise.
+	(POLL_IN): Likewise.
+	(POLL_OUT): Likewise.
+	(POLL_MSG): Likewise.
+	(POLL_ERR): Likewise.
+	(POLL_PRI): Likewise.
+	(POLL_HUP): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h (ILL_ILLOPC):
+	Likewise.
+	(ILL_ILLOPN): Likewise.
+	(ILL_ILLADR): Likewise.
+	(ILL_ILLTRP): Likewise.
+	(ILL_PRVOPC): Likewise.
+	(ILL_PRVREG): Likewise.
+	(ILL_COPROC): Likewise.
+	(ILL_BADSTK): Likewise.
+	(ILL_BADIADDR): Likewise.
+	(ILL_BREAK): Likewise.
+	(FPE_INTDIV): Likewise.
+	(FPE_INTOVF): Likewise.
+	(FPE_FLTDIV): Likewise.
+	(FPE_FLTOVF): Likewise.
+	(FPE_FLTUND): Likewise.
+	(FPE_FLTRES): Likewise.
+	(FPE_FLTINV): Likewise.
+	(FPE_FLTSUB): Likewise.
+	(FPE_DECOVF): Likewise.
+	(FPE_DECDIV): Likewise.
+	(FPE_DECERR): Likewise.
+	(FPE_INVASC): Likewise.
+	(FPE_INVDEC): Likewise.
+	(SEGV_MAPERR): Likewise.
+	(SEGV_ACCERR): Likewise.
+	(SEGV_PSTKOVF): Likewise.
+	(BUS_ADRALN): Likewise.
+	(BUS_ADRERR): Likewise.
+	(BUS_OBJERR): Likewise.
+	(BUS_MCEERR_AR): Likewise.
+	(BUS_MCEERR_AO): Likewise.
+	(TRAP_BRKPT): Condition on [__USE_XOPEN_EXTENDED].
+	(TRAP_TRACE): Likewise.
+	(TRAP_BRANCH): Likewise.
+	(TRAP_HWBKPT): Likewise.
+	(CLD_EXITED): Condition on [__USE_XOPEN_EXTENDED ||
+	__USE_XOPEN2K8].
+	(CLD_KILLED): Likewise.
+	(CLD_DUMPED): Likewise.
+	(CLD_TRAPPED): Likewise.
+	(CLD_STOPPED): Likewise.
+	(CLD_CONTINUED): Likewise.
+	(POLL_IN): Likewise.
+	(POLL_OUT): Likewise.
+	(POLL_MSG): Likewise.
+	(POLL_ERR): Likewise.
+	(POLL_PRI): Likewise.
+	(POLL_HUP): Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h (ILL_ILLOPC): Likewise.
+	(ILL_ILLOPN): Likewise.
+	(ILL_ILLADR): Likewise.
+	(ILL_ILLTRP): Likewise.
+	(ILL_PRVOPC): Likewise.
+	(ILL_PRVREG): Likewise.
+	(ILL_COPROC): Likewise.
+	(ILL_BADSTK): Likewise.
+	(FPE_INTDIV): Likewise.
+	(FPE_INTOVF): Likewise.
+	(FPE_FLTDIV): Likewise.
+	(FPE_FLTOVF): Likewise.
+	(FPE_FLTUND): Likewise.
+	(FPE_FLTRES): Likewise.
+	(FPE_FLTINV): Likewise.
+	(FPE_FLTSUB): Likewise.
+	(SEGV_MAPERR): Likewise.
+	(SEGV_ACCERR): Likewise.
+	(BUS_ADRALN): Likewise.
+	(BUS_ADRERR): Likewise.
+	(BUS_OBJERR): Likewise.
+	(BUS_MCEERR_AR): Likewise.
+	(BUS_MCEERR_AO): Likewise.
+	(TRAP_BRKPT): Condition on [__USE_XOPEN_EXTENDED].
+	(TRAP_TRACE): Likewise.
+	(CLD_EXITED): Condition on [__USE_XOPEN_EXTENDED ||
+	__USE_XOPEN2K8].
+	(CLD_KILLED): Likewise.
+	(CLD_DUMPED): Likewise.
+	(CLD_TRAPPED): Likewise.
+	(CLD_STOPPED): Likewise.
+	(CLD_CONTINUED): Likewise.
+	(POLL_IN): Likewise.
+	(POLL_OUT): Likewise.
+	(POLL_MSG): Likewise.
+	(POLL_ERR): Likewise.
+	(POLL_PRI): Likewise.
+	(POLL_HUP): Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/siginfo.h (ILL_ILLOPC): Likewise.
+	(ILL_ILLOPN): Likewise.
+	(ILL_ILLADR): Likewise.
+	(ILL_ILLTRP): Likewise.
+	(ILL_PRVOPC): Likewise.
+	(ILL_PRVREG): Likewise.
+	(ILL_COPROC): Likewise.
+	(ILL_BADSTK): Likewise.
+	(FPE_INTDIV): Likewise.
+	(FPE_INTOVF): Likewise.
+	(FPE_FLTDIV): Likewise.
+	(FPE_FLTOVF): Likewise.
+	(FPE_FLTUND): Likewise.
+	(FPE_FLTRES): Likewise.
+	(FPE_FLTINV): Likewise.
+	(FPE_FLTSUB): Likewise.
+	(SEGV_MAPERR): Likewise.
+	(SEGV_ACCERR): Likewise.
+	(BUS_ADRALN): Likewise.
+	(BUS_ADRERR): Likewise.
+	(BUS_OBJERR): Likewise.
+	(BUS_MCEERR_AR): Likewise.
+	(BUS_MCEERR_AO): Likewise.
+	(TRAP_BRKPT): Condition on [__USE_XOPEN_EXTENDED].
+	(TRAP_TRACE): Likewise.
+	(CLD_EXITED): Condition on [__USE_XOPEN_EXTENDED ||
+	__USE_XOPEN2K8].
+	(CLD_KILLED): Likewise.
+	(CLD_DUMPED): Likewise.
+	(CLD_TRAPPED): Likewise.
+	(CLD_STOPPED): Likewise.
+	(CLD_CONTINUED): Likewise.
+	(POLL_IN): Likewise.
+	(POLL_OUT): Likewise.
+	(POLL_MSG): Likewise.
+	(POLL_ERR): Likewise.
+	(POLL_PRI): Likewise.
+	(POLL_HUP): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/siginfo.h (ILL_ILLOPC): Likewise.
+	(ILL_ILLOPN): Likewise.
+	(ILL_ILLADR): Likewise.
+	(ILL_ILLTRP): Likewise.
+	(ILL_PRVOPC): Likewise.
+	(ILL_PRVREG): Likewise.
+	(ILL_COPROC): Likewise.
+	(ILL_BADSTK): Likewise.
+	(FPE_INTDIV): Likewise.
+	(FPE_INTOVF): Likewise.
+	(FPE_FLTDIV): Likewise.
+	(FPE_FLTOVF): Likewise.
+	(FPE_FLTUND): Likewise.
+	(FPE_FLTRES): Likewise.
+	(FPE_FLTINV): Likewise.
+	(FPE_FLTSUB): Likewise.
+	(SEGV_MAPERR): Likewise.
+	(SEGV_ACCERR): Likewise.
+	(BUS_ADRALN): Likewise.
+	(BUS_ADRERR): Likewise.
+	(BUS_OBJERR): Likewise.
+	(BUS_MCEERR_AR): Likewise.
+	(BUS_MCEERR_AO): Likewise.
+	(TRAP_BRKPT): Condition on [__USE_XOPEN_EXTENDED].
+	(TRAP_TRACE): Likewise.
+	(CLD_EXITED): Condition on [__USE_XOPEN_EXTENDED ||
+	__USE_XOPEN2K8].
+	(CLD_KILLED): Likewise.
+	(CLD_DUMPED): Likewise.
+	(CLD_TRAPPED): Likewise.
+	(CLD_STOPPED): Likewise.
+	(CLD_CONTINUED): Likewise.
+	(POLL_IN): Likewise.
+	(POLL_OUT): Likewise.
+	(POLL_MSG): Likewise.
+	(POLL_ERR): Likewise.
+	(POLL_PRI): Likewise.
+	(POLL_HUP): Likewise.
+	* sysdeps/unix/sysv/linux/tile/bits/siginfo.h (ILL_ILLOPC): Likewise.
+	(ILL_ILLOPN): Likewise.
+	(ILL_ILLADR): Likewise.
+	(ILL_ILLTRP): Likewise.
+	(ILL_PRVOPC): Likewise.
+	(ILL_PRVREG): Likewise.
+	(ILL_COPROC): Likewise.
+	(ILL_BADSTK): Likewise.
+	(ILL_DBLFLT): Likewise.
+	(ILL_HARDWALL): Likewise.
+	(FPE_INTDIV): Likewise.
+	(FPE_INTOVF): Likewise.
+	(FPE_FLTDIV): Likewise.
+	(FPE_FLTOVF): Likewise.
+	(FPE_FLTUND): Likewise.
+	(FPE_FLTRES): Likewise.
+	(FPE_FLTINV): Likewise.
+	(FPE_FLTSUB): Likewise.
+	(SEGV_MAPERR): Likewise.
+	(SEGV_ACCERR): Likewise.
+	(BUS_ADRALN): Likewise.
+	(BUS_ADRERR): Likewise.
+	(BUS_OBJERR): Likewise.
+	(BUS_MCEERR_AR): Likewise.
+	(BUS_MCEERR_AO): Likewise.
+	(TRAP_BRKPT): Condition on [__USE_XOPEN_EXTENDED].
+	(TRAP_TRACE): Likewise.
+	(CLD_EXITED): Condition on [__USE_XOPEN_EXTENDED ||
+	__USE_XOPEN2K8].
+	(CLD_KILLED): Likewise.
+	(CLD_DUMPED): Likewise.
+	(CLD_TRAPPED): Likewise.
+	(CLD_STOPPED): Likewise.
+	(CLD_CONTINUED): Likewise.
+	(POLL_IN): Likewise.
+	(POLL_OUT): Likewise.
+	(POLL_MSG): Likewise.
+	(POLL_ERR): Likewise.
+	(POLL_PRI): Likewise.
+	(POLL_HUP): Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/siginfo.h (ILL_ILLOPC): Likewise.
+	(ILL_ILLOPN): Likewise.
+	(ILL_ILLADR): Likewise.
+	(ILL_ILLTRP): Likewise.
+	(ILL_PRVOPC): Likewise.
+	(ILL_PRVREG): Likewise.
+	(ILL_COPROC): Likewise.
+	(ILL_BADSTK): Likewise.
+	(FPE_INTDIV): Likewise.
+	(FPE_INTOVF): Likewise.
+	(FPE_FLTDIV): Likewise.
+	(FPE_FLTOVF): Likewise.
+	(FPE_FLTUND): Likewise.
+	(FPE_FLTRES): Likewise.
+	(FPE_FLTINV): Likewise.
+	(FPE_FLTSUB): Likewise.
+	(SEGV_MAPERR): Likewise.
+	(SEGV_ACCERR): Likewise.
+	(BUS_ADRALN): Likewise.
+	(BUS_ADRERR): Likewise.
+	(BUS_OBJERR): Likewise.
+	(BUS_MCEERR_AR): Likewise.
+	(BUS_MCEERR_AO): Likewise.
+	(TRAP_BRKPT): Condition on [__USE_XOPEN_EXTENDED].
+	(TRAP_TRACE): Likewise.
+	(CLD_EXITED): Condition on [__USE_XOPEN_EXTENDED ||
+	__USE_XOPEN2K8].
+	(CLD_KILLED): Likewise.
+	(CLD_DUMPED): Likewise.
+	(CLD_TRAPPED): Likewise.
+	(CLD_STOPPED): Likewise.
+	(CLD_CONTINUED): Likewise.
+	(POLL_IN): Likewise.
+	(POLL_OUT): Likewise.
+	(POLL_MSG): Likewise.
+	(POLL_ERR): Likewise.
+	(POLL_PRI): Likewise.
+	(POLL_HUP): Likewise.
+	* conform/Makefile (test-xfail-POSIX/signal.h/conform): Remove.
+	(test-xfail-POSIX/sys/wait.h/conform): Likewise.
+
 	[BZ #16670]
 	* posix/sched.h [!__USE_XOPEN2K] (__need_time_t): Don't define
 	before #include of <time.h>.
