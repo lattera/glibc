@@ -1,5 +1,47 @@
 2014-03-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* elf/Makefile (tests-special): Rename tests to end with .out.
+	($(objpfx)noload-mem): Likewise.
+	($(objpfx)tst-leaks1-mem): Likewise.
+	($(objpfx)tst-leaks1-static-mem.out): Likewise.
+	* iconv/Makefile (xtests-special): Change test-iconvconfig to
+	$(objpfx)test-iconvconfig.out.
+	(test-iconvconfig): Change to $(objpfx)test-iconvconfig.out.  Use
+	set -e inside subshell and redirect output to file.
+	* iconvdata/Makefile (generated): Rename tests to end with .out.
+	Correct type.
+	(tests-special): Rename tests to end with .out.
+	($(objpfx)mtrace-tst-loading): Likewise.
+	* intl/Makefile (generated): Likewise.
+	(tests-special): Likewise.
+	($(objpfx)mtrace-tst-gettext): Likewise.
+	* misc/Makefile (generated): Likewise.
+	(tests-special): Likewise.
+	($(objpfx)tst-error1-mem): Likewise.
+	* nptl/Makefile (tests-special): Likewise.
+	($(objpfx)tst-stack3-mem): Likewise.
+	(generated): Likewise.
+	* posix/Makefile (generated): Likewise.
+	(tests-special): Likewise.
+	(xtests-special): Likewise.
+	($(objpfx)tst-fnmatch-mem): Likewise.
+	($(objpfx)bug-regex2-mem): Likewise.
+	($(objpfx)bug-regex14-mem): Likewise.
+	($(objpfx)bug-regex21-mem): Likewise.
+	($(objpfx)bug-regex31-mem): Likewise.
+	($(objpfx)tst-vfork3-mem): Likewise.
+	($(objpfx)tst-rxspencer-no-utf8-mem): Likewise.
+	($(objpfx)tst-pcre-mem): Likewise.
+	($(objpfx)tst-boost-mem): Likewise.
+	($(objpfx)bug-ga2-mem): Likewise.
+	($(objpfx)bug-glob2-mem): Likewise.
+	* resolv/Makefile (generate): Likewise.
+	(tests-special): Likewise.
+	(xtests-special): Likewise.
+	(generated): Likewise.
+	($(objpfx)mtrace-tst-leaks): Likewise.
+	($(objpfx)mtrace-tst-leaks2): Likewise.
+
 	* scripts/merge-test-results.sh: New file.
 	* Makefile (tests-special-notdir): New variable.
 	(tests): Run merge-test-results.sh.

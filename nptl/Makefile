@@ -368,7 +368,7 @@ xtests-static += tst-setuid1-static
 tests-reverse += tst-cancel5 tst-cancel23 tst-vfork1x tst-vfork2x
 
 ifeq ($(run-built-tests),yes)
-tests-special += $(objpfx)tst-stack3-mem $(objpfx)tst-oddstacklimit.out
+tests-special += $(objpfx)tst-stack3-mem.out $(objpfx)tst-oddstacklimit.out
 ifeq ($(build-shared),yes)
 tests-special += $(objpfx)tst-tls6.out $(objpfx)tst-cleanup0-cmp.out \
 		 $(objpfx)tst-cancel-wrappers.out
@@ -466,10 +466,10 @@ tst-atfork2-ENV = MALLOC_TRACE=$(objpfx)tst-atfork2.mtrace
 $(objpfx)tst-atfork2mod.so: $(shared-thread-library)
 
 tst-stack3-ENV = MALLOC_TRACE=$(objpfx)tst-stack3.mtrace
-$(objpfx)tst-stack3-mem: $(objpfx)tst-stack3.out
+$(objpfx)tst-stack3-mem.out: $(objpfx)tst-stack3.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-stack3.mtrace > $@; \
 	$(evaluate-test)
-generated += tst-stack3-mem tst-stack3.mtrace
+generated += tst-stack3-mem.out tst-stack3.mtrace
 
 $(objpfx)tst-cleanup4: $(objpfx)tst-cleanup4aux.o $(shared-thread-library)
 $(objpfx)tst-cleanupx4: $(objpfx)tst-cleanup4aux.o $(shared-thread-library)

@@ -179,7 +179,7 @@ generated-modules := $(gen-8bit-modules) $(gen-8bit-gap-modules) \
 
 generated += $(generated-modules:=.h) $(generated-modules:=.stmp) \
 	     iconv-test.out iconv-rules tst-loading.mtrace	 \
-	     mmtrace-tst-loading tst-tables.out iconv-test.xxx
+	     mtrace-tst-loading.out tst-tables.out iconv-test.xxx
 ifdef objpfx
 generated += gconv-modules
 endif
@@ -269,7 +269,7 @@ ifeq ($(run-built-tests),yes)
 ifeq (yes,$(build-shared))
 tests-special += $(objpfx)iconv-test.out $(objpfx)tst-tables.out
 ifneq (no,$(PERL))
-tests-special += $(objpfx)mtrace-tst-loading
+tests-special += $(objpfx)mtrace-tst-loading.out
 endif
 endif
 endif
@@ -277,7 +277,7 @@ endif
 include ../Rules
 
 tst-loading-ENV = MALLOC_TRACE=$(objpfx)tst-loading.mtrace
-$(objpfx)mtrace-tst-loading: $(objpfx)tst-loading.out
+$(objpfx)mtrace-tst-loading.out: $(objpfx)tst-loading.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-loading.mtrace > $@; \
 	$(evaluate-test)
 

@@ -1,3 +1,9 @@
+2014-03-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makefile (generated): Rename tests to end with .out.
+	(tests-special): Likewise.
+	($(objpfx)mtrace-tst-leaks): Likewise.
+
 2014-03-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makefile (tests): Change dependencies to ....

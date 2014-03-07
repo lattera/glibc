@@ -38,7 +38,7 @@ before-compile += $(objpfx)msgs.h
 
 install-others = $(inst_msgcatdir)/locale.alias
 
-generated += msgs.h mtrace-tst-gettext tst-gettext.mtrace
+generated += msgs.h mtrace-tst-gettext.out tst-gettext.mtrace
 generated-dirs += domaindir localedir
 
 ifneq (no,$(BISON))
@@ -58,7 +58,7 @@ tests-special += $(objpfx)tst-gettext4.out $(objpfx)tst-gettext5.out \
 		 $(objpfx)tst-gettext6.out
 endif
 ifneq (no,$(PERL))
-tests-special += $(objpfx)mtrace-tst-gettext
+tests-special += $(objpfx)mtrace-tst-gettext.out
 endif
 endif
 endif
@@ -77,7 +77,7 @@ $(codeset_mo): tstcodeset.po
 	msgfmt -o $@T $<
 	mv -f $@T $@
 
-$(objpfx)mtrace-tst-gettext: $(objpfx)tst-gettext.out
+$(objpfx)mtrace-tst-gettext.out: $(objpfx)tst-gettext.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-gettext.mtrace > $@; \
 	$(evaluate-test)
 $(objpfx)tst-gettext.out: tst-gettext.sh $(objpfx)tst-gettext

@@ -102,16 +102,17 @@ before-compile	:= testcases.h ptestcases.h
 
 # So they get cleaned up.
 generated += $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
-	     annexc annexc.out wordexp-tst.out bug-regex2-mem \
-	     bug-regex2.mtrace bug-regex14-mem bug-regex14.mtrace \
-	     bug-regex21-mem bug-regex21.mtrace \
-	     bug-regex31-mem bug-regex31.mtrace \
-	     tst-rxspencer-no-utf8-mem tst-rxspencer-no-utf8.mtrace \
+	     annexc annexc.out wordexp-tst.out bug-regex2-mem.out \
+	     bug-regex2.mtrace bug-regex14-mem.out bug-regex14.mtrace \
+	     bug-regex21-mem.out bug-regex21.mtrace \
+	     bug-regex31-mem.out bug-regex31.mtrace \
+	     tst-rxspencer-no-utf8-mem.out tst-rxspencer-no-utf8.mtrace \
 	     tst-getconf.out \
-	     tst-pcre-mem tst-pcre.mtrace tst-boost-mem tst-boost.mtrace \
-	     bug-ga2.mtrace bug-ga2-mem bug-glob2.mtrace bug-glob2-mem \
-	     tst-vfork3-mem tst-vfork3.mtrace getconf.speclist \
-	     tst-fnmatch-mem tst-fnmatch.mtrace
+	     tst-pcre-mem.out tst-pcre.mtrace tst-boost-mem.out \
+	     tst-boost.mtrace bug-ga2.mtrace bug-ga2-mem.out \
+	     bug-glob2.mtrace bug-glob2-mem.out tst-vfork3-mem.out \
+	     tst-vfork3.mtrace getconf.speclist tst-fnmatch-mem.out \
+	     tst-fnmatch.mtrace
 
 ifeq ($(run-built-tests),yes)
 ifeq (yes,$(build-shared))
@@ -123,13 +124,13 @@ endif
 # XXX Please note that for now we ignore the result of this test.
 tests-special += $(objpfx)annexc.out
 ifeq ($(run-built-tests),yes)
-tests-special += $(objpfx)bug-regex2-mem $(objpfx)bug-regex14-mem \
-		 $(objpfx)bug-regex21-mem $(objpfx)bug-regex31-mem \
-		 $(objpfx)tst-rxspencer-no-utf8-mem $(objpfx)tst-pcre-mem \
-		 $(objpfx)tst-boost-mem $(objpfx)tst-getconf.out \
-		 $(objpfx)bug-glob2-mem $(objpfx)tst-vfork3-mem \
-		 $(objpfx)tst-fnmatch-mem
-xtests-special += $(objpfx)bug-ga2-mem
+tests-special += $(objpfx)bug-regex2-mem.out $(objpfx)bug-regex14-mem.out \
+		 $(objpfx)bug-regex21-mem.out $(objpfx)bug-regex31-mem.out \
+		 $(objpfx)tst-rxspencer-no-utf8-mem.out $(objpfx)tst-pcre-mem.out \
+		 $(objpfx)tst-boost-mem.out $(objpfx)tst-getconf.out \
+		 $(objpfx)bug-glob2-mem.out $(objpfx)tst-vfork3-mem.out \
+		 $(objpfx)tst-fnmatch-mem.out
+xtests-special += $(objpfx)bug-ga2-mem.out
 endif
 
 include ../Rules
@@ -251,37 +252,37 @@ $(objpfx)annexc: annexc.c
 
 tst-fnmatch-ENV += MALLOC_TRACE=$(objpfx)tst-fnmatch.mtrace
 
-$(objpfx)tst-fnmatch-mem: $(objpfx)tst-fnmatch.out
+$(objpfx)tst-fnmatch-mem.out: $(objpfx)tst-fnmatch.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-fnmatch.mtrace > $@; \
 	$(evaluate-test)
 
 bug-regex2-ENV = MALLOC_TRACE=$(objpfx)bug-regex2.mtrace
 
-$(objpfx)bug-regex2-mem: $(objpfx)bug-regex2.out
+$(objpfx)bug-regex2-mem.out: $(objpfx)bug-regex2.out
 	$(common-objpfx)malloc/mtrace $(objpfx)bug-regex2.mtrace > $@; \
 	$(evaluate-test)
 
 bug-regex14-ENV = MALLOC_TRACE=$(objpfx)bug-regex14.mtrace
 
-$(objpfx)bug-regex14-mem: $(objpfx)bug-regex14.out
+$(objpfx)bug-regex14-mem.out: $(objpfx)bug-regex14.out
 	$(common-objpfx)malloc/mtrace $(objpfx)bug-regex14.mtrace > $@; \
 	$(evaluate-test)
 
 bug-regex21-ENV = MALLOC_TRACE=$(objpfx)bug-regex21.mtrace
 
-$(objpfx)bug-regex21-mem: $(objpfx)bug-regex21.out
+$(objpfx)bug-regex21-mem.out: $(objpfx)bug-regex21.out
 	$(common-objpfx)malloc/mtrace $(objpfx)bug-regex21.mtrace > $@; \
 	$(evaluate-test)
 
 bug-regex31-ENV = MALLOC_TRACE=$(objpfx)bug-regex31.mtrace
 
-$(objpfx)bug-regex31-mem: $(objpfx)bug-regex31.out
+$(objpfx)bug-regex31-mem.out: $(objpfx)bug-regex31.out
 	$(common-objpfx)malloc/mtrace $(objpfx)bug-regex31.mtrace > $@; \
 	$(evaluate-test)
 
 tst-vfork3-ENV = MALLOC_TRACE=$(objpfx)tst-vfork3.mtrace
 
-$(objpfx)tst-vfork3-mem: $(objpfx)tst-vfork3.out
+$(objpfx)tst-vfork3-mem.out: $(objpfx)tst-vfork3.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-vfork3.mtrace > $@; \
 	$(evaluate-test)
 
@@ -289,18 +290,18 @@ $(objpfx)tst-vfork3-mem: $(objpfx)tst-vfork3.out
 # tst-rxspencer-no-utf8.mtrace, since otherwise the file has almost
 # 100M and takes very long time to process.
 tst-rxspencer-no-utf8-ENV += MALLOC_TRACE=$(objpfx)tst-rxspencer-no-utf8.mtrace
-$(objpfx)tst-rxspencer-no-utf8-mem: $(objpfx)tst-rxspencer-no-utf8.out
+$(objpfx)tst-rxspencer-no-utf8-mem.out: $(objpfx)tst-rxspencer-no-utf8.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-rxspencer-no-utf8.mtrace \
 				      > $@; \
 	$(evaluate-test)
 
 tst-pcre-ENV = MALLOC_TRACE=$(objpfx)tst-pcre.mtrace
-$(objpfx)tst-pcre-mem: $(objpfx)tst-pcre.out
+$(objpfx)tst-pcre-mem.out: $(objpfx)tst-pcre.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-pcre.mtrace > $@; \
 	$(evaluate-test)
 
 tst-boost-ENV = MALLOC_TRACE=$(objpfx)tst-boost.mtrace
-$(objpfx)tst-boost-mem: $(objpfx)tst-boost.out
+$(objpfx)tst-boost-mem.out: $(objpfx)tst-boost.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-boost.mtrace > $@; \
 	$(evaluate-test)
 
@@ -308,7 +309,7 @@ $(objpfx)tst-getconf.out: tst-getconf.sh $(objpfx)getconf
 	$(SHELL) $< $(common-objpfx) '$(built-program-cmd)'; \
 	$(evaluate-test)
 
-$(objpfx)bug-ga2-mem: $(objpfx)bug-ga2.out
+$(objpfx)bug-ga2-mem.out: $(objpfx)bug-ga2.out
 	$(common-objpfx)malloc/mtrace $(objpfx)bug-ga2.mtrace > $@; \
 	$(evaluate-test)
 
@@ -316,7 +317,7 @@ bug-ga2-ENV = MALLOC_TRACE=$(objpfx)bug-ga2.mtrace
 
 bug-glob2-ENV = MALLOC_TRACE=$(objpfx)bug-glob2.mtrace
 
-$(objpfx)bug-glob2-mem: $(objpfx)bug-glob2.out
+$(objpfx)bug-glob2-mem.out: $(objpfx)bug-glob2.out
 	$(common-objpfx)malloc/mtrace $(objpfx)bug-glob2.mtrace > $@; \
 	$(evaluate-test)
 

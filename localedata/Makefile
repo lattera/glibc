@@ -52,7 +52,7 @@ fmon-tests = n01y12 n02n40 n10y31 n11y41 n12y11 n20n32 n30y20 n41n00 \
 	     y01y10 y02n22 y22n42 y30y21 y32n31 y40y00 y42n21
 
 generated += $(test-input) $(test-output) sort-test.out tst-locale.out \
-	     tst-mbswcs.out tst-leaks.mtrace mtrace-tst-leaks
+	     tst-mbswcs.out tst-leaks.mtrace mtrace-tst-leaks.out
 generated-dirs += $(ld-test-names) tt_TT de_DE.437			\
 		  $(addprefix tstfmon_,$(fmon-tests))			\
 
@@ -79,7 +79,7 @@ tests-static = bug-setlocale1-static
 tests += $(tests-static)
 ifeq (yes,$(build-shared))
 ifneq (no,$(PERL))
-tests-special += $(objpfx)mtrace-tst-leaks
+tests-special += $(objpfx)mtrace-tst-leaks.out
 endif
 endif
 endif
@@ -292,7 +292,7 @@ tst-sscanf-ENV = LOCPATH=$(common-objpfx)localedata
 
 tst-leaks-ENV = MALLOC_TRACE=$(objpfx)tst-leaks.mtrace \
 		LOCPATH=$(common-objpfx)localedata
-$(objpfx)mtrace-tst-leaks: $(objpfx)tst-leaks.out
+$(objpfx)mtrace-tst-leaks.out: $(objpfx)tst-leaks.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks.mtrace > $@; \
 	$(evaluate-test)
 

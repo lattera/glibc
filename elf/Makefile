@@ -157,8 +157,8 @@ tests-execstack-yes = tst-execstack tst-execstack-needed tst-execstack-prog
 endif
 endif
 ifeq ($(run-built-tests),yes)
-tests-special += $(objpfx)tst-leaks1-mem $(objpfx)tst-leaks1-static-mem \
-		 $(objpfx)noload-mem
+tests-special += $(objpfx)tst-leaks1-mem.out \
+		 $(objpfx)tst-leaks1-static-mem.out $(objpfx)noload-mem.out
 endif
 tlsmod17a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
 tlsmod18a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
@@ -665,7 +665,7 @@ $(objpfx)noload: $(objpfx)testobj1.so $(common-objpfx)dlfcn/libdl.so
 LDFLAGS-noload = -rdynamic $(no-as-needed)
 $(objpfx)noload.out: $(objpfx)testobj5.so
 
-$(objpfx)noload-mem: $(objpfx)noload.out
+$(objpfx)noload-mem.out: $(objpfx)noload.out
 	$(common-objpfx)malloc/mtrace $(objpfx)noload.mtrace > $@; \
 	$(evaluate-test)
 noload-ENV = MALLOC_TRACE=$(objpfx)noload.mtrace
@@ -1047,12 +1047,12 @@ CFLAGS-tst-ptrguard1-static.c = -DPTRGUARD_LOCAL
 tst-ptrguard1-static-ARGS = --command "$(objpfx)tst-ptrguard1-static --child"
 
 $(objpfx)tst-leaks1: $(libdl)
-$(objpfx)tst-leaks1-mem: $(objpfx)tst-leaks1.out
+$(objpfx)tst-leaks1-mem.out: $(objpfx)tst-leaks1.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks1.mtrace > $@; \
 	$(evaluate-test)
 
 $(objpfx)tst-leaks1-static: $(common-objpfx)dlfcn/libdl.a
-$(objpfx)tst-leaks1-static-mem: $(objpfx)tst-leaks1-static.out
+$(objpfx)tst-leaks1-static-mem.out: $(objpfx)tst-leaks1-static.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks1-static.mtrace > $@; \
 	$(evaluate-test)
 

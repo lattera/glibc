@@ -61,7 +61,7 @@ CPPFLAGS-charmap = -DNOT_IN_libc
 CPPFLAGS-charmap-dir = -DNOT_IN_libc
 
 ifeq ($(run-built-tests),yes)
-xtests-special += test-iconvconfig
+xtests-special += $(objpfx)test-iconvconfig.out
 endif
 
 include ../Rules
@@ -72,11 +72,11 @@ $(inst_bindir)/iconv: $(objpfx)iconv_prog $(+force)
 $(objpfx)iconv_prog: $(iconv_prog-modules:%=$(objpfx)%.o)
 $(objpfx)iconvconfig: $(iconvconfig-modules:%=$(objpfx)%.o)
 
-.PHONY: test-iconvconfig
-test-iconvconfig: /dev/null $(objpfx)iconvconfig
-	tmp=$(objpfx)gconv-modules.cache.$$$$; \
-	rm -f $$tmp; \
-	$(make-test-out) --output=$$tmp --nostdlib $(inst_gconvdir) && \
-	cmp $$tmp $(inst_gconvdir)/gconv-modules.cache && \
-	rm -f $$tmp; \
+$(objpfx)test-iconvconfig.out: /dev/null $(objpfx)iconvconfig
+	(set -e; \
+	 tmp=$(objpfx)gconv-modules.cache.$$$$; \
+	 rm -f $$tmp; \
+	 $(make-test-out) --output=$$tmp --nostdlib $(inst_gconvdir); \
+	 cmp $$tmp $(inst_gconvdir)/gconv-modules.cache; \
+	 rm -f $$tmp) > $@; \
 	$(evaluate-test)
