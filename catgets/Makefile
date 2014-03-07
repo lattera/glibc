@@ -33,7 +33,7 @@ test-srcs = test-gencat
 
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)de/libc.cat $(objpfx)test1.cat $(objpfx)test2.cat \
-		 $(objpfx)test-gencat.out
+		 $(objpfx)sample.SJIS.cat $(objpfx)test-gencat.out
 endif
 
 gencat-modules	= xmalloc
@@ -88,5 +88,6 @@ $(objpfx)test-gencat.out: test-gencat.sh $(objpfx)test-gencat \
 
 $(objpfx)sample.SJIS.cat: sample.SJIS $(objpfx)gencat
 	GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
-	$(built-program-cmd) -H $(objpfx)test-gencat.h < $(word 1,$^) > $@
+	$(built-program-cmd) -H $(objpfx)test-gencat.h < $(word 1,$^) > $@; \
+	$(evaluate-test)
 endif

@@ -97,6 +97,21 @@ tests-special += $(objpfx)sort-test.out $(objpfx)tst-fmon.out \
 		 $(objpfx)tst-ctype.out $(objpfx)tst-wctype.out \
 		 $(objpfx)tst-langinfo.out $(objpfx)tst-numeric.out
 
+ifeq ($(run-built-tests),yes)
+# We have to generate locales
+LOCALES := de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ANSI_X3.4-1968 \
+	   en_US.ISO-8859-1 en_US.UTF-8 ja_JP.EUC-JP da_DK.ISO-8859-1 \
+	   hr_HR.ISO-8859-2 sv_SE.ISO-8859-1 ja_JP.SJIS fr_FR.ISO-8859-1 \
+	   nb_NO.ISO-8859-1 nn_NO.ISO-8859-1 tr_TR.UTF-8 cs_CZ.UTF-8 \
+	   zh_TW.EUC-TW fa_IR.UTF-8 fr_FR.UTF-8 ja_JP.UTF-8 si_LK.UTF-8 \
+	   tr_TR.ISO-8859-9
+LOCALE_SRCS := $(shell echo "$(LOCALES)"|sed 's/\([^ .]*\)[^ ]*/\1/g')
+CHARMAPS := $(shell echo "$(LOCALES)" | \
+		    sed -e 's/[^ .]*[.]\([^ ]*\)/\1/g' -e s/SJIS/SHIFT_JIS/g)
+CTYPE_FILES = $(addsuffix /LC_CTYPE,$(LOCALES))
+tests-special += $(addprefix $(objpfx),$(CTYPE_FILES))
+endif
+
 include ../Rules
 
 # Install the charmap files in gzipped format.
@@ -119,18 +134,6 @@ CFLAGS-tst-trans.c = -Wno-format
 
 
 ifeq ($(run-built-tests),yes)
-# We have to generate locales
-LOCALES := de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ANSI_X3.4-1968 \
-	   en_US.ISO-8859-1 en_US.UTF-8 ja_JP.EUC-JP da_DK.ISO-8859-1 \
-	   hr_HR.ISO-8859-2 sv_SE.ISO-8859-1 ja_JP.SJIS fr_FR.ISO-8859-1 \
-	   nb_NO.ISO-8859-1 nn_NO.ISO-8859-1 tr_TR.UTF-8 cs_CZ.UTF-8 \
-	   zh_TW.EUC-TW fa_IR.UTF-8 fr_FR.UTF-8 ja_JP.UTF-8 si_LK.UTF-8 \
-	   tr_TR.ISO-8859-9
-LOCALE_SRCS := $(shell echo "$(LOCALES)"|sed 's/\([^ .]*\)[^ ]*/\1/g')
-CHARMAPS := $(shell echo "$(LOCALES)" | \
-		    sed -e 's/[^ .]*[.]\([^ ]*\)/\1/g' -e s/SJIS/SHIFT_JIS/g)
-CTYPE_FILES = $(addsuffix /LC_CTYPE,$(LOCALES))
-
 generated-dirs += $(LOCALES)
 
 # Dependency for the locale files.  We actually make it depend only on
@@ -138,7 +141,8 @@ generated-dirs += $(LOCALES)
 $(addprefix $(objpfx),$(CTYPE_FILES)): %: \
   gen-locale.sh $(common-objpfx)locale/localedef Makefile \
   $(addprefix charmaps/,$(CHARMAPS)) $(addprefix locales/,$(LOCALE_SRCS))
-	@$(SHELL) gen-locale.sh $(common-objpfx) '$(built-program-cmd)' $@
+	@$(SHELL) gen-locale.sh $(common-objpfx) '$(built-program-cmd)' $@; \
+	$(evaluate-test)
 
 $(addsuffix .out,$(addprefix $(objpfx),$(tests))): %: \
   $(addprefix $(objpfx),$(CTYPE_FILES))

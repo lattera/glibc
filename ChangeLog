@@ -1,5 +1,13 @@
 2014-03-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* catgets/Makefile (tests-special): Add $(objpfx)sample.SJIS.cat.
+	($(objpfx)sample.SJIS.cat): Use $(evaluate-test).
+	* timezone/Makefile (testdata): Move definition above include of
+	Rules.
+	(test-zones): New variable.
+	(tests-special): Add zone files.
+	(build-testdata): Use $(evaluate-test).
+
 	* elf/Makefile (tests-special): Rename tests to end with .out.
 	($(objpfx)noload-mem): Likewise.
 	($(objpfx)tst-leaks1-mem): Likewise.

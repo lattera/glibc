@@ -1,5 +1,12 @@
 2014-03-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* Makefile (LOCALES): Move definition above include of Rules.
+	(LOCALE_SRCS): Likewise.
+	(CHARMAPS): Likewise.
+	(CTYPE_FILES): Likewise.
+	(tests-special): Add locale files.
+	($(addprefix $(objpfx),$(CTYPE_FILES))): Use $(evaluate-test).
+
 	* Makefile (generated): Rename tests to end with .out.
 	(tests-special): Likewise.
 	($(objpfx)mtrace-tst-leaks): Likewise.
