@@ -1,3 +1,9 @@
+2014-03-07  Marcus Shawcroft  <marcus.shawcroft@arm.com>
+
+	* sysdeps/aarch64/fpu/feenablxcpt.c (feenableexcept): Detect and
+	error absence of trapping exception support.
+	* sysdeps/aarch64/fpu/fesetenv.c (fesetenv): Likewise.
+
 2014-03-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* catgets/Makefile (tests-special): Add $(objpfx)sample.SJIS.cat.

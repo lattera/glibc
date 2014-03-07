@@ -24,6 +24,7 @@ fesetenv (const fenv_t *envp)
 {
   fpu_control_t fpcr;
   fpu_fpsr_t fpsr;
+  fpu_control_t updated_fpcr;
 
   _FPU_GETCW (fpcr);
   _FPU_GETFPSR (fpsr);
@@ -50,6 +51,15 @@ fesetenv (const fenv_t *envp)
   _FPU_SETFPSR (fpsr);
 
   _FPU_SETCW (fpcr);
+
+  /* Trapping exceptions are optional in AArch64 the relevant enable
+     bits in FPCR are RES0 hence the absence of support can be
+     detected by reading back the FPCR and comparing with the required
+     value.  */
+
+  _FPU_GETCW (updated_fpcr);
+  if ((updated_fpcr & fpcr) != fpcr)
+    return 1;
 
   return 0;
 }
