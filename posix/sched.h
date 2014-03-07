@@ -27,8 +27,10 @@
 #define __need_size_t
 #include <stddef.h>
 
-#define __need_time_t
-#define __need_timespec
+#ifdef __USE_XOPEN2K
+# define __need_time_t
+# define __need_timespec
+#endif
 #include <time.h>
 
 #ifndef __pid_t_defined

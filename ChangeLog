@@ -1,3 +1,12 @@
+2014-03-07  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16670]
+	* posix/sched.h [!__USE_XOPEN2K] (__need_time_t): Don't define
+	before #include of <time.h>.
+	[!__USE_XOPEN2K] (__need_timespec): Likewise.
+	* conform/Makefile (test-xfail-POSIX/sched.h/conform): Remove.
+	(test-xfail-UNIX98/sched.h/conform): Likewise.
+
 2014-03-07  Marcus Shawcroft  <marcus.shawcroft@arm.com>
 
 	* sysdeps/aarch64/fpu/feenablxcpt.c (feenableexcept): Detect and
