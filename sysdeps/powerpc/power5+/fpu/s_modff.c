@@ -35,12 +35,12 @@ __modff (float x, float *iptr)
   if (x >= 0.0)
     {
       *iptr = __floorf (x);
-      return (x - *iptr);
+      return __copysignf (x - *iptr, x);
     }
   else
     {
       *iptr = __ceilf (x);
-      return (x - *iptr);
+      return __copysignf (x - *iptr, x);
     }
 }
 weak_alias (__modff, modff)

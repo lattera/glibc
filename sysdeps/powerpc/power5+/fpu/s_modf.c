@@ -36,12 +36,12 @@ __modf (double x, double *iptr)
   if (x >= 0.0)
     {
       *iptr = __floor (x);
-      return (x - *iptr);
+      return __copysign (x - *iptr, x);
     }
   else
     {
       *iptr = __ceil (x);
-      return (x - *iptr);
+      return __copysign (x - *iptr, x);
     }
 }
 weak_alias (__modf, modf)
