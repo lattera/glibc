@@ -1,3 +1,60 @@
+2014-03-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (ALL_RM_TEST): New macro.
+	(ceil_test): Use ALL_RM_TEST.
+	(cimag_test): Likewise.
+	(conj_test): Likewise.
+	(copysign_test): Likewise.
+	(cproj_test): Likewise.
+	(creal_test): Likewise.
+	(fabs_test): Likewise.
+	(floor_test): Likewise.
+	(fmax_test): Likewise.
+	(fmin_test): Likewise.
+	(fmod_test): Likewise.
+	(fpclassify_test): Likewise.
+	(frexp_test): Likewise.
+	(ilogb_test): Likewise.
+	(isfinite_test): Likewise.
+	(finite_test): Likewise.
+	(isgreater_test): Likewise.
+	(isgreaterequal_test): Likewise.
+	(isinf_test): Likewise.
+	(isless_test): Likewise.
+	(islessequal_test): Likewise.
+	(islessgreater_test): Likewise.
+	(isnan_test): Likewise.
+	(isnormal_test): Likewise.
+	(issignaling_test): Likewise.
+	(isunordered_test): Likewise.
+	(logb_test): Likewise.
+	(logb_downward_test_data): Remove.
+	(logb_test_downward): Likewise.
+	(lround_test): Use ALL_RM_TEST.
+	(llround_test): Likewise.
+	(modf_test): Likewise.
+	(nexttoward_test): Likewise.
+	(remainder_test): Likewise.
+	(drem_test): Likewise.
+	(remainder_tonearest_test_data): Likewise.
+	(remainder_test_tonearest): Likewise.
+	(drem_test_tonearest): Likewise.
+	(remainder_towardzero_test_data): Likewise.
+	(remainder_test_towardzero): Likewise.
+	(drem_test_towardzero): Likewise.
+	(remainder_downward_test_data): Likewise.
+	(remainder_test_downward): Likewise.
+	(drem_test_downward): Likewise.
+	(remainder_upward_test_data): Likewise.
+	(remainder_test_upward): Likewise.
+	(drem_test_upward): Likewise.
+	(remquo_test): Use ALL_RM_TEST.  Remove comment about x.
+	(round_test): Use ALL_RM_TEST.
+	(signbit_test): Likewise.
+	(trunc_test): Likewise.
+	(significand_test): Likewise.
+	(main): Don't call removed functions.
+
 2014-03-07  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16674]
