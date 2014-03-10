@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2014 Free Software Foundation, Inc.
+/* Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,31 +17,17 @@
 
 #include <string.h>
 
-#undef strspn
-#ifndef STRSPN
-#define STRSPN strspn
+#define STRSPN __strspn_ppc
+#undef weak_alias
+#define weak_alias(name, aliasname) \
+  extern __typeof (__strspn_ppc) aliasname \
+    __attribute__ ((weak, alias ("__strspn_ppc")));
+#if !defined(NOT_IN_libc) && defined(SHARED)
+# undef libc_hidden_builtin_def
+# define libc_hidden_builtin_def(name) \
+  __hidden_ver1(__strspn_ppc, __GI_strspn, __strspn_ppc);
 #endif
 
-/* Return the length of the maximum initial segment
-   of S which contains only characters in ACCEPT.  */
-size_t
-STRSPN (const char *s, const char *accept)
-{
-  const char *p;
-  const char *a;
-  size_t count = 0;
+extern __typeof (strspn) __strspn_ppc attribute_hidden;
 
-  for (p = s; *p != '\0'; ++p)
-    {
-      for (a = accept; *a != '\0'; ++a)
-	if (*p == *a)
-	  break;
-      if (*a == '\0')
-	return count;
-      else
-	++count;
-    }
-
-  return count;
-}
-libc_hidden_builtin_def (strspn)
+#include <string/strspn.c>

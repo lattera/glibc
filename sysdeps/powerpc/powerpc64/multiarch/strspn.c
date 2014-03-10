@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2014 Free Software Foundation, Inc.
+/* Multiple versions of strspn. PowerPC64 version.
+   Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,33 +16,16 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <string.h>
+#if defined SHARED && !defined NOT_IN_libc
+# include <string.h>
+# include <shlib-compat.h>
+# include "init-arch.h"
 
-#undef strspn
-#ifndef STRSPN
-#define STRSPN strspn
+extern __typeof (strspn) __strspn_ppc attribute_hidden;
+extern __typeof (strspn) __strspn_power7 attribute_hidden;
+
+libc_ifunc (strspn,
+            (hwcap & PPC_FEATURE_HAS_VSX)
+            ? __strspn_power7
+            : __strspn_ppc);
 #endif
-
-/* Return the length of the maximum initial segment
-   of S which contains only characters in ACCEPT.  */
-size_t
-STRSPN (const char *s, const char *accept)
-{
-  const char *p;
-  const char *a;
-  size_t count = 0;
-
-  for (p = s; *p != '\0'; ++p)
-    {
-      for (a = accept; *a != '\0'; ++a)
-	if (*p == *a)
-	  break;
-      if (*a == '\0')
-	return count;
-      else
-	++count;
-    }
-
-  return count;
-}
-libc_hidden_builtin_def (strspn)

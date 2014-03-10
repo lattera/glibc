@@ -1,3 +1,16 @@
+2014-03-11  Vidya Ranganathan  <vidya@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power7/strspn.S: New file: Optimization.
+	* sysdeps/powerpc/powerpc64/multiarch/strspn.c: New file:
+	multiarch strspn for PPC64.
+	* sysdeps/powerpc/powerpc64/multiarch/strspn-ppc64.c: New file
+	* sysdeps/powerpc/powerpc64/multiarch/strspn-power7.S: New file
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c:
+	(__libc_ifunc_impl_list): Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add strspn
+	multiarch optimizations
+	* string/strspn.c (strspn): Using macro to redefine symbol name.
+
 2014-03-10  Vidya Ranganathan  <vidya@linux.vnet.ibm.com>
 	    Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 

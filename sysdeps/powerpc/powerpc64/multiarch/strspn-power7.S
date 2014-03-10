@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2014 Free Software Foundation, Inc.
+/* Optimized strspn implementation for POWER7.
+   Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,33 +16,25 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <string.h>
+#include <sysdep.h>
 
-#undef strspn
-#ifndef STRSPN
-#define STRSPN strspn
-#endif
+#undef EALIGN
+#define EALIGN(name, alignt, words)				\
+  .section ".text";						\
+  ENTRY_2(__strspn_power7)					\
+  .align ALIGNARG(alignt);					\
+  EALIGN_W_##words;						\
+  BODY_LABEL(__strspn_power7):					\
+  cfi_startproc;						\
+  LOCALENTRY(__strspn_power7)
 
-/* Return the length of the maximum initial segment
-   of S which contains only characters in ACCEPT.  */
-size_t
-STRSPN (const char *s, const char *accept)
-{
-  const char *p;
-  const char *a;
-  size_t count = 0;
+#undef END
+#define END(name)						\
+  cfi_endproc;							\
+  TRACEBACK(__strspn_power7)					\
+  END_2(__strspn_power7)
 
-  for (p = s; *p != '\0'; ++p)
-    {
-      for (a = accept; *a != '\0'; ++a)
-	if (*p == *a)
-	  break;
-      if (*a == '\0')
-	return count;
-      else
-	++count;
-    }
+#undef libc_hidden_builtin_def
+#define libc_hidden_builtin_def(name)
 
-  return count;
-}
-libc_hidden_builtin_def (strspn)
+#include <sysdeps/powerpc/powerpc64/power7/strspn.S>
