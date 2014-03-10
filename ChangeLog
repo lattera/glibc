@@ -1,5 +1,10 @@
 2014-03-17  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* libio/tst-ftell-active-handler.c (do_ftell_test): Don't mix
+	up test status with function return status.
+	(do_write_test): Likewise.
+	(do_append_test): Likewise.
+
 	* nptl/sysdeps/pthread/bits/libc-lockP.h [defined NOT_IN_libc
 	&& !defined IS_IN_libpthread && __LT_SPINNOCK_INIT != 0]:
 	Remove.

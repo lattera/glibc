@@ -119,17 +119,20 @@ do_ftell_test (const char *filename)
 	{
 	  FILE *fp;
 	  int fd;
+	  int fileret;
+
 	  printf ("\tftell: %s (file, \"%s\"): ", j == 0 ? "fdopen" : "fopen",
 		  test_modes[i].mode);
 
 	  if (j == 0)
-	    ret = get_handles_fdopen (filename, fd, fp, test_modes[i].fd_mode,
-				      test_modes[i].mode);
+	    fileret = get_handles_fdopen (filename, fd, fp,
+					  test_modes[i].fd_mode,
+					  test_modes[i].mode);
 	  else
-	    ret = get_handles_fopen (filename, fd, fp, test_modes[i].mode);
+	    fileret = get_handles_fopen (filename, fd, fp, test_modes[i].mode);
 
-	  if (ret != 0)
-	    return ret;
+	  if (fileret != 0)
+	    return fileret;
 
 	  long off = ftell (fp);
 	  if (off != test_modes[i].old_off)
@@ -143,7 +146,12 @@ do_ftell_test (const char *filename)
 
 	  /* The effect of this write on the offset should be seen in the ftell
 	     call that follows it.  */
-	  int ret = write (fd, data, data_len);
+	  int write_ret = write (fd, data, data_len);
+	  if (write_ret != data_len)
+	    {
+	      printf ("write failed (%m)\n");
+	      ret |= 1;
+	    }
 	  off = ftell (fp);
 
 	  if (off != test_modes[i].new_off)
@@ -184,21 +192,23 @@ do_write_test (const char *filename)
     {
       for (int i = 0; i < sizeof (test_modes) / sizeof (struct test); i++)
 	{
+	  int fileret;
 	  printf ("\twrite: %s (file, \"%s\"): ", j == 0 ? "fopen" : "fdopen",
 		  test_modes[i].mode);
 
 	  if (j == 0)
-	    ret = get_handles_fopen (filename, fd, fp, test_modes[i].mode);
+	    fileret = get_handles_fopen (filename, fd, fp, test_modes[i].mode);
 	  else
-	    ret = get_handles_fdopen (filename, fd, fp, test_modes[i].fd_mode,
-				      test_modes[i].mode);
+	    fileret = get_handles_fdopen (filename, fd, fp,
+					  test_modes[i].fd_mode,
+					  test_modes[i].mode);
 
-	  if (ret != 0)
-	    return ret;
+	  if (fileret != 0)
+	    return fileret;
 
 	  /* Move offset to just before the end of the file.  */
-	  off_t ret = lseek (fd, file_len - 1, SEEK_SET);
-	  if (ret == -1)
+	  off_t seek_ret = lseek (fd, file_len - 1, SEEK_SET);
+	  if (seek_ret == -1)
 	    {
 	      printf ("lseek failed: %m\n");
 	      ret |= 1;
@@ -258,17 +268,20 @@ do_append_test (const char *filename)
     {
       for (int i = 0; i < sizeof (test_modes) / sizeof (struct test); i++)
 	{
+	  int fileret;
+
 	  printf ("\tappend: %s (file, \"%s\"): ", j == 0 ? "fopen" : "fdopen",
 		  test_modes[i].mode);
 
 	  if (j == 0)
-	    ret = get_handles_fopen (filename, fd, fp, test_modes[i].mode);
+	    fileret = get_handles_fopen (filename, fd, fp, test_modes[i].mode);
 	  else
-	    ret = get_handles_fdopen (filename, fd, fp, test_modes[i].fd_mode,
-				      test_modes[i].mode);
+	    fileret = get_handles_fdopen (filename, fd, fp,
+					  test_modes[i].fd_mode,
+					  test_modes[i].mode);
 
-	  if (ret != 0)
-	    return ret;
+	  if (fileret != 0)
+	    return fileret;
 
 	  /* Write some data.  */
 	  size_t written = fputs_func (data, fp);
