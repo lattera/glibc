@@ -1,3 +1,10 @@
+2014-03-11  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	[BZ #16683]
+	* sysdeps/powerpc/powerpc64/multiarch/memset-ppc64.S (__bzero_ppc):
+	Define it for static builds as well.
+	(NO_BZERO_IMPL): Likewise.
+
 2014-03-11  Vidya Ranganathan  <vidya@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power7/strspn.S: New file: Optimization.

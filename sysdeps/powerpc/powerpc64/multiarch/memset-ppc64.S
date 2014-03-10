@@ -18,10 +18,9 @@
 
 #include <sysdep.h>
 
-#if defined SHARED && !defined NOT_IN_libc
-
 /* Copied from bzero.S to prevent the linker from inserting a stub
-   between bzero and memset.  */
+   between bzero and memset.  NOTE: this code should be positioned
+   before ENTRY/END_GEN_TB redefinition.  */
 ENTRY (__bzero_ppc)
         CALL_MCOUNT 3
         mr      r5,r4
@@ -29,6 +28,8 @@ ENTRY (__bzero_ppc)
         b       L(_memset)
 END_GEN_TB (__bzero_ppc,TB_TOCLESS)
 
+
+#if defined SHARED && !defined NOT_IN_libc
 # undef EALIGN
 # define EALIGN(name, alignt, words)				\
   .section ".text";						\
@@ -48,9 +49,9 @@ END_GEN_TB (__bzero_ppc,TB_TOCLESS)
 # undef libc_hidden_builtin_def
 # define libc_hidden_builtin_def(name)				\
   .globl __GI_memset; __GI_memset = __memset_ppc
+#endif
 
 /* Do not implement __bzero at powerpc64/memset.S.  */
-# define NO_BZERO_IMPL
-#endif
+#define NO_BZERO_IMPL
 
 #include <sysdeps/powerpc/powerpc64/memset.S>
