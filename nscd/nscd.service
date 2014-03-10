@@ -4,8 +4,8 @@
 Description=Name Service Cache Daemon
 
 [Service]
-Type=simple
-ExecStart=/usr/sbin/nscd --foreground
+Type=forking
+ExecStart=/usr/sbin/nscd
 ExecStop=/usr/sbin/nscd --shutdown
 ExecReload=/usr/sbin/nscd -i passwd
 ExecReload=/usr/sbin/nscd -i group
