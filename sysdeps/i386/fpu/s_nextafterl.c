@@ -106,7 +106,10 @@ long double __nextafterl(long double x, long double y)
 	    }
 	}
 	esy = esx&0x7fff;
-	if(esy==0x7fff) return x+x;	/* overflow  */
+	if(esy==0x7fff) {
+	    long double u = x + x;	/* overflow  */
+	    math_force_eval (u);
+	}
 	if(esy==0) {
 	    long double u = x*x;		/* underflow */
 	    math_force_eval (u);		/* raise underflow flag */

@@ -57,10 +57,8 @@ float __nextafterf(float x, float y)
 	}
 	hy = hx&0x7f800000;
 	if(hy>=0x7f800000) {
-	  x = x+x;	/* overflow  */
-	  if (FLT_EVAL_METHOD != 0)
-	    asm ("" : "+m"(x));
-	  return x;	/* overflow  */
+	  float u = x+x;	/* overflow  */
+	  math_force_eval (u);
 	}
 	if(hy<0x00800000) {
 	    float u = x*x;			/* underflow */

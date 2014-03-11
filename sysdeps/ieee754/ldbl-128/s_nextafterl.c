@@ -67,7 +67,10 @@ long double __nextafterl(long double x, long double y)
 	    }
 	}
 	hy = hx&0x7fff000000000000LL;
-	if(hy==0x7fff000000000000LL) return x+x;/* overflow  */
+	if(hy==0x7fff000000000000LL) {
+	    long double u = x + x;		/* overflow  */
+	    math_force_eval (u);
+	}
 	if(hy==0) {
 	    long double u = x*x;		/* underflow */
 	    math_force_eval (u);		/* raise underflow flag */

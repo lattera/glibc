@@ -66,8 +66,11 @@ long double __nextafterl(long double x, long double y)
 	       long double with a 106 bit mantissa, and nextafterl
 	       is insane with variable precision.  So to make
 	       nextafterl sane we assume 106 bit precision.  */
-	    if((hx==0xffefffffffffffffLL)&&(lx==0xfc8ffffffffffffeLL))
-	      return x+x;	/* overflow, return -inf */
+	    if((hx==0xffefffffffffffffLL)&&(lx==0xfc8ffffffffffffeLL)) {
+	      u = x+x;	/* overflow, return -inf */
+	      math_force_eval (u);
+	      return y;
+	    }
 	    if (hx >= 0x7ff0000000000000LL) {
 	      u = 0x1.fffffffffffff7ffffffffffff8p+1023L;
 	      return u;
@@ -93,8 +96,11 @@ long double __nextafterl(long double x, long double y)
 	    }
 	    return x - u;
 	} else {				/* x < y, x += ulp */
-	    if((hx==0x7fefffffffffffffLL)&&(lx==0x7c8ffffffffffffeLL))
-	      return x+x;	/* overflow, return +inf */
+	    if((hx==0x7fefffffffffffffLL)&&(lx==0x7c8ffffffffffffeLL)) {
+	      u = x+x;	/* overflow, return +inf */
+	      math_force_eval (u);
+	      return y;
+	    }
 	    if ((uint64_t) hx >= 0xfff0000000000000ULL) {
 	      u = -0x1.fffffffffffff7ffffffffffff8p+1023L;
 	      return u;

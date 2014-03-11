@@ -1,3 +1,17 @@
+2014-03-11  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16677]
+	* math/s_nextafter.c (__nextafter): Do not return value from
+	overflowing computation.
+	* sysdeps/i386/fpu/s_nextafterl.c (__nextafterl): Likewise.
+	* sysdeps/ieee754/flt-32/s_nextafterf.c (__nextafterf): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nextafterl.c (__nextafterl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_nextafterl.c (__nextafterl):
+	Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_nextafterl.c (__nextafterl): Likewise.
+	* math/libm-test.inc (nextafter_test): Use ALL_RM_TEST.
+
 2014-03-11  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/setjmp.S: Use sfi_breg on stores of mangled registers.

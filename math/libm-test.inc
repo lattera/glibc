@@ -9553,10 +9553,7 @@ static const struct test_ff_f_data nextafter_test_data[] =
 static void
 nextafter_test (void)
 {
-
-  START (nextafter, 1);
-  RUN_TEST_LOOP_ff_f (nextafter, nextafter_test_data, );
-  END;
+  ALL_RM_TEST (nextafter, 1, nextafter_test_data, RUN_TEST_LOOP_ff_f, END);
 }
 
 
