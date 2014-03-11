@@ -1,3 +1,8 @@
+2014-03-12  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/strspn.c (strspn): Build IFUNC
+	selector for static builds.
+
 2014-03-11  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/math_private.h [__mips_hard_float]
