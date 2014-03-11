@@ -217,6 +217,9 @@ libc_feupdateenv_mips_ctx (struct rm_ctx *ctx)
 # define libc_feupdateenv_ctx             libc_feupdateenv_mips_ctx
 # define libc_feupdateenvf_ctx            libc_feupdateenv_mips_ctx
 # define libc_feupdateenvl_ctx            libc_feupdateenv_mips_ctx
+# define libc_feresetround_ctx            libc_feupdateenv_mips_ctx
+# define libc_feresetroundf_ctx           libc_feupdateenv_mips_ctx
+# define libc_feresetroundl_ctx           libc_feupdateenv_mips_ctx
 
 static __always_inline void
 libc_feholdsetround_mips_ctx (struct rm_ctx *ctx, int round)
@@ -241,16 +244,6 @@ libc_feholdsetround_mips_ctx (struct rm_ctx *ctx, int round)
 # define libc_feholdsetround_ctx          libc_feholdsetround_mips_ctx
 # define libc_feholdsetroundf_ctx         libc_feholdsetround_mips_ctx
 # define libc_feholdsetroundl_ctx         libc_feholdsetround_mips_ctx
-
-static __always_inline void
-libc_feresetround_mips_ctx (struct rm_ctx *ctx)
-{
-  if (__glibc_unlikely (ctx->updated_status))
-    _FPU_SETCW (ctx->env);
-}
-# define libc_feresetround_ctx            libc_feresetround_mips_ctx
-# define libc_feresetroundf_ctx           libc_feresetround_mips_ctx
-# define libc_feresetroundl_ctx           libc_feresetround_mips_ctx
 
 #endif
 

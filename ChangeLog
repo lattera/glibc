@@ -1,5 +1,12 @@
 2014-03-11  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/mips/math_private.h [__mips_hard_float]
+	(libc_feresetround_ctx): Define to libc_feupdateenv_mips_ctx not
+	libc_feresetround_mips_ctx.
+	[__mips_hard_float] (libc_feresetroundf_ctx): Likewise.
+	[__mips_hard_float] (libc_feresetroundl_ctx): Likewise.
+	[__mips_hard_float] (libc_feresetround_mips_ctx): Remove.
+
 	[BZ #16677]
 	* math/s_nextafter.c (__nextafter): Do not return value from
 	overflowing computation.
