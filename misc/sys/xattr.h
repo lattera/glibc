@@ -26,6 +26,7 @@ __BEGIN_DECLS
 
 /* The following constants should be used for the fifth parameter of
    `*setxattr'.  */
+#ifndef __USE_KERNEL_XATTR_DEFS
 enum
 {
   XATTR_CREATE = 1,	/* set value, fail if attr already exists.  */
@@ -33,6 +34,7 @@ enum
   XATTR_REPLACE = 2	/* set value, fail if attr does not exist.  */
 #define XATTR_REPLACE	XATTR_REPLACE
 };
+#endif
 
 /* Set the attribute NAME of the file pointed to by PATH to VALUE (which
    is SIZE bytes long).  Return 0 on success, -1 for errors.  */
