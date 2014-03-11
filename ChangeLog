@@ -1,5 +1,19 @@
 2014-03-17  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	[BZ #16680]
+	* libio/fileops.c (_IO_file_open): Seek to end of file but
+	don't cache the offset.
+	(get_file_offset): Remove function.
+	(do_ftell): Use cached offset when available.
+	* libio/iofdopen.c (_IO_new_fdopen): Seek to end of file but
+	don't cache the offset.
+	* libio/tst-ftell-active-handler.c (do_rewind_test): New test
+	case.
+	(do_one_test): Call it.
+	(do_ftell_test): Fix up expected old offset for a+ mode.
+	* libio/wfileops.c (do_ftell_wide): Used cached offset when
+	available.
+
 	* libio/tst-ftell-active-handler.c (do_ftell_test): Don't mix
 	up test status with function return status.
 	(do_write_test): Likewise.

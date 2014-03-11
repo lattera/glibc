@@ -232,13 +232,18 @@ _IO_file_open (fp, filename, posix_mode, prot, read_write, is32not64)
     return NULL;
   fp->_fileno = fdesc;
   _IO_mask_flags (fp, read_write,_IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
-  if ((read_write & _IO_IS_APPENDING) && (read_write & _IO_NO_READS))
-    if (_IO_SEEKOFF (fp, (_IO_off64_t)0, _IO_seek_end, _IOS_INPUT|_IOS_OUTPUT)
-	== _IO_pos_BAD && errno != ESPIPE)
-      {
-	close_not_cancel (fdesc);
-	return NULL;
-      }
+  /* For append mode, send the file offset to the end of the file.  Don't
+     update the offset cache though, since the file handle is not active.  */
+  if ((read_write & (_IO_IS_APPENDING | _IO_NO_READS))
+      == (_IO_IS_APPENDING | _IO_NO_READS))
+    {
+      _IO_off64_t new_pos = _IO_SYSSEEK (fp, 0, _IO_seek_end);
+      if (new_pos == _IO_pos_BAD && errno != ESPIPE)
+	{
+	  close_not_cancel (fdesc);
+	  return NULL;
+	}
+    }
   _IO_link_in ((struct _IO_FILE_plus *) fp);
   return fp;
 }
@@ -929,43 +934,13 @@ _IO_file_sync_mmap (_IO_FILE *fp)
   return 0;
 }
 
-/* Get the current file offset using a system call.  This is the safest method
-   to get the current file offset, since we are sure that we get the current
-   state of the file.  Before the stream handle is activated (by using fread,
-   fwrite, etc.), an application may alter the state of the file descriptor
-   underlying it by calling read/write/lseek on it.  Using a cached offset at
-   this point will result in returning the incorrect value.  Same is the case
-   when one switches from reading in a+ mode to writing, where the buffer has
-   not been flushed - the cached offset would reflect the reading position
-   while the actual write position would be at the end of the file.
-
-   do_ftell and do_ftell_wide may resort to using the cached offset in some
-   special cases instead of calling get_file_offset, but those cases should be
-   thoroughly described.  */
-_IO_off64_t
-get_file_offset (_IO_FILE *fp)
-{
-  if ((fp->_flags & _IO_IS_APPENDING) == _IO_IS_APPENDING)
-    {
-      struct stat64 st;
-      bool ret = (_IO_SYSSTAT (fp, &st) == 0 && S_ISREG (st.st_mode));
-      if (ret)
-	return st.st_size;
-      else
-	return EOF;
-    }
-  else
-    return _IO_SYSSEEK (fp, 0, _IO_seek_cur);
-}
-
-
-/* ftell{,o} implementation.  Don't modify any state of the file pointer while
-   we try to get the current state of the stream.  */
+/* ftell{,o} implementation.  The only time we modify the state of the stream
+   is when we have unflushed writes.  In that case we seek to the end and
+   record that offset in the stream object.  */
 static _IO_off64_t
 do_ftell (_IO_FILE *fp)
 {
-  _IO_off64_t result = 0;
-  bool use_cached_offset = false;
+  _IO_off64_t result, offset = 0;
 
   /* No point looking at unflushed data if we haven't allocated buffers
      yet.  */
@@ -974,38 +949,36 @@ do_ftell (_IO_FILE *fp)
       bool was_writing = (fp->_IO_write_ptr > fp->_IO_write_base
 			  || _IO_in_put_mode (fp));
 
+      bool append_mode = (fp->_flags & _IO_IS_APPENDING) == _IO_IS_APPENDING;
+
+      /* When we have unflushed writes in append mode, seek to the end of the
+	 file and record that offset.  This is the only time we change the file
+	 stream state and it is safe since the file handle is active.  */
+      if (was_writing && append_mode)
+	{
+	  result = _IO_SYSSEEK (fp, 0, _IO_seek_end);
+	  if (result == _IO_pos_BAD)
+	    return EOF;
+	  else
+	    fp->_offset = result;
+	}
+
       /* Adjust for unflushed data.  */
       if (!was_writing)
-	result -= fp->_IO_read_end - fp->_IO_read_ptr;
+	offset -= fp->_IO_read_end - fp->_IO_read_ptr;
       else
-	result += fp->_IO_write_ptr - fp->_IO_read_end;
-
-      /* It is safe to use the cached offset when available if there is
-	 unbuffered data (indicating that the file handle is active) and the
-	 handle is not for a file open in a+ mode.  The latter condition is
-	 because there could be a scenario where there is a switch from read
-	 mode to write mode using an fseek to an arbitrary position.  In this
-	 case, there would be unbuffered data due to be appended to the end of
-	 the file, but the offset may not necessarily be the end of the
-	 file.  It is fine to use the cached offset when the a+ stream is in
-	 read mode though, since the offset is maintained correctly in that
-	 case.  Note that this is not a comprehensive set of cases when the
-	 offset is reliable.  The offset may be reliable even in some cases
-	 where there is no unflushed input and the handle is active, but it's
-	 just that we don't have a way to identify that condition reliably.  */
-      use_cached_offset = (result != 0 && fp->_offset != _IO_pos_BAD
-			   && ((fp->_flags & (_IO_IS_APPENDING | _IO_NO_READS))
-			       == (_IO_IS_APPENDING | _IO_NO_READS)
-			       && was_writing));
+	offset += fp->_IO_write_ptr - fp->_IO_read_end;
     }
 
-  if (use_cached_offset)
-    result += fp->_offset;
+  if (fp->_offset != _IO_pos_BAD)
+    result = fp->_offset;
   else
-    result += get_file_offset (fp);
+    result = _IO_SYSSEEK (fp, 0, _IO_seek_cur);
 
   if (result == EOF)
     return result;
+
+  result += offset;
 
   if (result < 0)
     {
@@ -1015,7 +988,6 @@ do_ftell (_IO_FILE *fp)
 
   return result;
 }
-
 
 _IO_off64_t
 _IO_new_file_seekoff (fp, offset, dir, mode)

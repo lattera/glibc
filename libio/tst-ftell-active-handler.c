@@ -88,6 +88,107 @@ static size_t file_len;
 typedef int (*fputs_func_t) (const void *data, FILE *fp);
 fputs_func_t fputs_func;
 
+/* Test that ftell output after a rewind is correct.  */
+static int
+do_rewind_test (const char *filename)
+{
+  int ret = 0;
+  struct test
+    {
+      const char *mode;
+      int fd_mode;
+      size_t old_off;
+      size_t new_off;
+    } test_modes[] = {
+	  {"w", O_WRONLY, 0, data_len},
+	  {"w+", O_RDWR, 0, data_len},
+	  {"r+", O_RDWR, 0, data_len},
+	  /* The new offsets for 'a' and 'a+' modes have to factor in the
+	     previous writes since they always append to the end of the
+	     file.  */
+	  {"a", O_WRONLY, 0, 3 * data_len},
+	  {"a+", O_RDWR, 0, 4 * data_len},
+    };
+
+  /* Empty the file before the test so that our offsets are simple to
+     calculate.  */
+  FILE *fp = fopen (filename, "w");
+  if (fp == NULL)
+    {
+      printf ("Failed to open file for emptying\n");
+      return 1;
+    }
+  fclose (fp);
+
+  for (int j = 0; j < 2; j++)
+    {
+      for (int i = 0; i < sizeof (test_modes) / sizeof (struct test); i++)
+	{
+	  FILE *fp;
+	  int fd;
+	  int fileret;
+
+	  printf ("\trewind: %s (file, \"%s\"): ", j == 0 ? "fdopen" : "fopen",
+		  test_modes[i].mode);
+
+	  if (j == 0)
+	    fileret = get_handles_fdopen (filename, fd, fp,
+					  test_modes[i].fd_mode,
+					  test_modes[i].mode);
+	  else
+	    fileret = get_handles_fopen (filename, fd, fp, test_modes[i].mode);
+
+	  if (fileret != 0)
+	    return fileret;
+
+	  /* Write some content to the file, rewind and ensure that the ftell
+	     output after the rewind is 0.  POSIX does not specify what the
+	     behavior is when a file is rewound in 'a' mode, so we retain
+	     current behavior, which is to keep the 0 offset.  */
+	  size_t written = fputs_func (data, fp);
+
+	  if (written == EOF)
+	    {
+	      printf ("fputs[1] failed to write data\n");
+	      ret |= 1;
+	    }
+
+	  rewind (fp);
+	  long offset = ftell (fp);
+
+	  if (offset != test_modes[i].old_off)
+	    {
+	      printf ("Incorrect old offset.  Expected %zu, but got %ld, ",
+		      test_modes[i].old_off, offset);
+	      ret |= 1;
+	    }
+	  else
+	    printf ("old offset = %ld, ", offset);
+
+	  written = fputs_func (data, fp);
+
+	  if (written == EOF)
+	    {
+	      printf ("fputs[1] failed to write data\n");
+	      ret |= 1;
+	    }
+
+	  /* After this write, the offset in append modes should factor in the
+	     implicit lseek to the end of file.  */
+	  offset = ftell (fp);
+	  if (offset != test_modes[i].new_off)
+	    {
+	      printf ("Incorrect new offset.  Expected %zu, but got %ld\n",
+		      test_modes[i].new_off, offset);
+	      ret |= 1;
+	    }
+	  else
+	    printf ("new offset = %ld\n", offset);
+	}
+    }
+  return ret;
+}
+
 /* Test that the value of ftell is not cached when the stream handle is not
    active.  */
 static int
@@ -107,11 +208,13 @@ do_ftell_test (const char *filename)
 	  {"w", O_WRONLY, 0, data_len},
 	  {"w+", O_RDWR, 0, data_len},
 	  {"r+", O_RDWR, 0, data_len},
-	  /* For 'a' and 'a+' modes, the initial file position should be the
+	  /* For the 'a' mode, the initial file position should be the
 	     current end of file. After the write, the offset has data_len
-	     added to the old value.  */
+	     added to the old value.  For a+ mode however, the initial file
+	     position is the file position of the underlying file descriptor,
+	     since it is initially assumed to be in read mode.  */
 	  {"a", O_WRONLY, data_len, 2 * data_len},
-	  {"a+", O_RDWR, 2 * data_len, 3 * data_len},
+	  {"a+", O_RDWR, 0, 3 * data_len},
     };
   for (int j = 0; j < 2; j++)
     {
@@ -157,7 +260,7 @@ do_ftell_test (const char *filename)
 	  if (off != test_modes[i].new_off)
 	    {
 	      printf ("Incorrect new offset.  Expected %zu but got %ld\n",
-		      test_modes[i].old_off, off);
+		      test_modes[i].new_off, off);
 	      ret |= 1;
 	    }
 	  else
@@ -322,6 +425,7 @@ do_one_test (const char *filename)
   ret |= do_ftell_test (filename);
   ret |= do_write_test (filename);
   ret |= do_append_test (filename);
+  ret |= do_rewind_test (filename);
 
   return ret;
 }

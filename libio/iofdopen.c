@@ -167,6 +167,15 @@ _IO_new_fdopen (fd, mode)
   _IO_mask_flags (&new_f->fp.file, read_write,
 		  _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
 
+  /* For append mode, set the file offset to the end of the file.  Don't
+     update the offset cache though, since the file handle is not active.  */
+  if ((read_write & (_IO_IS_APPENDING | _IO_NO_READS))
+      == (_IO_IS_APPENDING | _IO_NO_READS))
+    {
+      _IO_off64_t new_pos = _IO_SYSSEEK (&new_f->fp.file, 0, _IO_seek_end);
+      if (new_pos == _IO_pos_BAD && errno != ESPIPE)
+	return NULL;
+    }
   return &new_f->fp.file;
 }
 libc_hidden_ver (_IO_new_fdopen, _IO_fdopen)
