@@ -1,3 +1,8 @@
+2014-03-18  Will Newton  <will.newton@linaro.org>
+
+	* sysdeps/unix/sysv/linux/aarch64/sysdep.h: Remove
+	inaccurate comment.
+
 2014-03-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makerules [!subdir] (check-abi): Exit with error status if a

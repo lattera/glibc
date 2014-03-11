@@ -169,10 +169,6 @@ __local_syscall_error:						\
 	arg 6		x5
 	arg 7		x6
 
-   We need to shuffle values between R4..R6 and the stack so that the
-   caller's v1..v3 and stack frame are not corrupted, and the kernel
-   sees the right arguments.
-
 */
 
 # undef	DO_CALL
