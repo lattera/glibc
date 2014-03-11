@@ -36,12 +36,16 @@ ENTRY (__sigsetjmp)
 #ifdef PTR_MANGLE
 	mov	a4, sp
 	PTR_MANGLE2 (a4, a4, a3)
-	str	a4, [ip], #4
+	sfi_breg ip, \
+	str	a4, [\B], #4
 	PTR_MANGLE2 (a4, lr, a3)
-	str	a4, [ip], #4
+	sfi_breg ip, \
+	str	a4, [\B], #4
 #else
-	str	sp, [ip], #4
-	str	lr, [ip], #4
+	sfi_breg ip, \
+	str	sp, [\B], #4
+	sfi_breg ip, \
+	str	lr, [\B], #4
 #endif
 	/* Save registers */
 	sfi_breg ip, \

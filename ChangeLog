@@ -1,3 +1,10 @@
+2014-03-11  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/setjmp.S: Use sfi_breg on stores of mangled registers.
+	* sysdeps/arm/__longjmp.S: Use sfi_breg on loads of mangled registers.
+	Move sfi_sp use from the load-multiple (that no longer sets sp) to
+	the new mov targetting sp.
+
 2014-03-11  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ #16683]

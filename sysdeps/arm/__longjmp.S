@@ -38,22 +38,27 @@ ENTRY (__longjmp)
 #endif
 
 #ifdef PTR_DEMANGLE
-	ldr	a4, [ip], #4
+	sfi_breg ip, \
+	ldr	a4, [\B], #4
 	PTR_DEMANGLE (a4, a4, a3, r4)
 	cfi_undefined (r4)
-	ldr	r4, [ip], #4
+	sfi_breg ip, \
+	ldr	r4, [\B], #4
 	PTR_DEMANGLE2 (r4, r4, a3)
 #else
-	ldr	a4, [ip], #4
-	ldr	r4, [ip], #4
+	sfi_breg ip, \
+	ldr	a4, [\B], #4
+	sfi_breg ip, \
+	ldr	r4, [\B], #4
 	cfi_undefined (r4)
 #endif
 	/* longjmp probe expects longjmp first argument (4@r0), second
 	   argument (-4@r1), and target address (4@r4), respectively.  */
 	LIBC_PROBE (longjmp, 3, 4@r0, -4@r1, 4@r4)
+	sfi_sp \
 	mov	sp, a4
 	mov	lr, r4
-	sfi_sp sfi_breg ip, \
+	sfi_breg ip, \
 	ldmia	\B!, JMP_BUF_REGLIST
 	cfi_restore (v1)
 	cfi_restore (v2)
