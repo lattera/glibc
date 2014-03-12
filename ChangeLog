@@ -1,3 +1,9 @@
+2014-03-12  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #16695]
+	* nscd/netgroupcache.c (addgetnetgrentX): Factor in space for
+	key in the buffer.
+
 2014-03-12  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/strspn.c (strspn): Build IFUNC
