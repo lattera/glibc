@@ -1,3 +1,9 @@
+2014-03-12  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16642]
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	(__ASSUME_PSELECT): Undefine.
+
 2014-03-12  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ #16689]

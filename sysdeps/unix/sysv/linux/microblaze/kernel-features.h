@@ -42,3 +42,6 @@
 #endif
 
 #include_next <kernel-features.h>
+
+/* The MicroBlaze kernel does not support the pselect6 syscall.  */
+#undef __ASSUME_PSELECT
