@@ -1534,8 +1534,8 @@ cannot enable executable stack as shared object requires");
   /* Signal that we closed the file.  */
   fd = -1;
 
-  if (l->l_type == lt_library && type == ET_EXEC)
-    l->l_type = lt_executable;
+  /* If this is ET_EXEC, we should have loaded it as lt_executable.  */
+  assert (type != ET_EXEC || l->l_type == lt_executable);
 
   l->l_entry += l->l_addr;
 

@@ -1,3 +1,15 @@
+2014-03-12  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #16381]
+
+	* elf/Makefile (tests): Add tst-pie2.
+        (tests-pie): Add tst-pie2.
+	* elf/tst-pie2.c: New file.
+	* elf/dl-load.c (_dl_map_object_from_fd): Assert correct l_type
+	for ET_EXEC.
+	* elf/rtld.c (map_doit): Load executable as lt_executable.
+	(dl_main): Likewise.
+
 2014-03-12  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16642]

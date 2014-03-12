@@ -623,7 +623,8 @@ static void
 map_doit (void *a)
 {
   struct map_args *args = (struct map_args *) a;
-  args->map = _dl_map_object (args->loader, args->str, lt_library, 0,
+  int type = (args->mode == __RTLD_OPENEXEC) ? lt_executable : lt_library;
+  args->map = _dl_map_object (args->loader, args->str, type, 0,
 			      args->mode, LM_ID_BASE);
 }
 
@@ -1075,7 +1076,7 @@ of this helper program; chances are you did not intend to run this program.\n\
       else
 	{
 	  HP_TIMING_NOW (start);
-	  _dl_map_object (NULL, rtld_progname, lt_library, 0,
+	  _dl_map_object (NULL, rtld_progname, lt_executable, 0,
 			  __RTLD_OPENEXEC, LM_ID_BASE);
 	  HP_TIMING_NOW (stop);
 

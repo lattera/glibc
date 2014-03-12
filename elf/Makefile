@@ -215,8 +215,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-array5dep tst-null-argv-lib
 ifeq (yesyes,$(have-fpie)$(build-shared))
 modules-names += tst-piemod1
-tests += tst-pie1
-tests-pie += tst-pie1
+tests += tst-pie1 tst-pie2
+tests-pie += tst-pie1 tst-pie2
 endif
 modules-execstack-yes = tst-execstack-mod
 extra-test-objs += $(addsuffix .os,$(strip $(modules-names)))
@@ -901,6 +901,7 @@ $(objpfx)tst-array5-static-cmp.out: tst-array5-static.exp \
 	$(evaluate-test)
 
 CFLAGS-tst-pie1.c += $(pie-ccflag)
+CFLAGS-tst-pie2.c += $(pie-ccflag)
 
 $(objpfx)tst-pie1: $(objpfx)tst-piemod1.so
 
