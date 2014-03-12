@@ -1,3 +1,12 @@
+2014-03-12  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	[BZ #16689]
+	* sysdeps/powerpc/powerpc32/power4/multiarch/bzero-ppc32.S
+	(__bzero_ppc): Call memset@local instead of __memset_ppc@local for
+	static build.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/bzero.c: Build IFUNC
+	selector for static builds.
+
 2014-03-12  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #16695]

@@ -19,8 +19,17 @@
 
 #include <sysdep.h>
 
+/* memset ifunc selector is not built for static and memset@local
+   for shared builds makes the linker point the call to the ifunc
+   selector.  */
+#ifdef SHARED
+# define MEMSET __memset_ppc
+#else
+# define MEMSET memset
+#endif
+
 ENTRY (__bzero_ppc)
         mr      r5,r4
         li      r4,0
-        b       __memset_ppc@local
+        b       MEMSET@local
 END (__bzero_ppc)

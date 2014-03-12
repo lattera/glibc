@@ -17,7 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 /* Define multiple versions only for definition in libc.  */
-#if defined SHARED && !defined NOT_IN_libc
+#ifndef NOT_IN_libc
 # include <string.h>
 # include <strings.h>
 # include "init-arch.h"
