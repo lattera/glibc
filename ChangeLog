@@ -10,7 +10,6 @@
 2014-03-12  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #16381]
-
 	* elf/Makefile (tests): Add tst-pie2.
         (tests-pie): Add tst-pie2.
 	* elf/tst-pie2.c: New file.
