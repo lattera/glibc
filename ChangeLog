@@ -1,3 +1,33 @@
+2014-03-13  Igor Zamyatin  <igor.zamyatin@intel.com>
+
+	* config.h.in (HAVE_AVX512_SUPPORT): New #undef.
+	(HAVE_AVX512_ASM_SUPPORT): Likewise.
+	* sysdeps/x86_64/bits/link.h (La_x86_64_zmm): New.
+	(La_x86_64_vector): Add zmm.
+	* sysdeps/x86_64/Makefile (tests): Add tst-audit10.
+	(modules-names): Add tst-auditmod10a and tst-auditmod10b.
+	($(objpfx)tst-audit10): New target.
+	($(objpfx)tst-audit10.out): Likewise.
+	(tst-audit10-ENV): New.
+	(AVX512-CFLAGS): Likewise.
+	(CFLAGS-tst-audit10.c): Likewise.
+	(CFLAGS-tst-auditmod10a.c): Likewise.
+	(CFLAGS-tst-auditmod10b.c): Likewise.
+	* sysdeps/x86_64/configure.ac: Set config-cflags-avx512,
+	HAVE_AVX512_SUPPORT and HAVE_AVX512_ASM_SUPPORT.
+	* sysdeps/x86_64/configure: Regenerated.
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Add
+	AVX-512 zmm register support.
+	(_dl_x86_64_save_sse): Likewise.
+	(_dl_x86_64_restore_sse): Likewise.
+	* sysdeps/x86_64/dl-trampoline.h: Updated to support different
+	size vector registers.
+	* sysdeps/x86_64/link-defines.sym (YMM_SIZE): New.
+	(ZMM_SIZE): Likewise.
+	* sysdeps/x86_64/tst-audit10.c: New file.
+	* sysdeps/x86_64/tst-auditmod10a.c: Likewise.
+	* sysdeps/x86_64/tst-auditmod10b.c: Likewise.
+
 2014-03-13  Roland McGrath  <roland@hack.frob.com>
 
 	* configure.ac (HAVE_EHDR_START): New check.

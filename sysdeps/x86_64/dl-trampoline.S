@@ -96,7 +96,7 @@ _dl_runtime_profile:
 
 	/* Actively align the La_x86_64_regs structure.  */
 	andq $0xfffffffffffffff0, %rsp
-# ifdef HAVE_AVX_SUPPORT
+# if defined HAVE_AVX_SUPPORT || defined HAVE_AVX512_ASM_SUPPORT
 	/* sizeof(La_x86_64_regs).  Need extra space for 8 SSE registers
 	   to detect if any xmm0-xmm7 registers are changed by audit
 	   module.  */
@@ -130,7 +130,7 @@ _dl_runtime_profile:
 	movaps %xmm6, (LR_XMM_OFFSET + XMM_SIZE*6)(%rsp)
 	movaps %xmm7, (LR_XMM_OFFSET + XMM_SIZE*7)(%rsp)
 
-# ifdef HAVE_AVX_SUPPORT
+# if defined HAVE_AVX_SUPPORT || defined HAVE_AVX512_ASM_SUPPORT
 	.data
 L(have_avx):
 	.zero 4
@@ -138,7 +138,7 @@ L(have_avx):
 	.previous
 
 	cmpl	$0, L(have_avx)(%rip)
-	jne	1f
+	jne	L(defined)
 	movq	%rbx, %r11		# Save rbx
 	movl	$1, %eax
 	cpuid
@@ -147,18 +147,54 @@ L(have_avx):
 	// AVX and XSAVE supported?
 	andl	$((1 << 28) | (1 << 27)), %ecx
 	cmpl	$((1 << 28) | (1 << 27)), %ecx
-	jne	2f
+	jne	10f
+#  ifdef HAVE_AVX512_ASM_SUPPORT
+	// AVX512 supported in processor?
+	movq	%rbx, %r11		# Save rbx
+	xorl	%ecx, %ecx
+	mov	$0x7, %eax
+	cpuid
+	andl	$(1 << 16), %ebx
+#  endif
 	xorl	%ecx, %ecx
 	// Get XFEATURE_ENABLED_MASK
 	xgetbv
-	andl	$0x6, %eax
-2:	subl	$0x5, %eax
+#  ifdef HAVE_AVX512_ASM_SUPPORT
+	test	%ebx, %ebx
+	movq	%r11, %rbx		# Restore rbx
+	je	20f
+	// Verify that XCR0[7:5] = '111b' and
+	// XCR0[2:1] = '11b' which means
+	// that zmm state is enabled
+	andl	$0xe6, %eax
+	cmpl	$0xe6, %eax
+	jne	20f
+	movl	%eax, L(have_avx)(%rip)
+L(avx512):
+#   define RESTORE_AVX
+#   define VMOV    vmovdqu64
+#   define VEC(i)  zmm##i
+#   define MORE_CODE
+#   include "dl-trampoline.h"
+#   undef VMOV
+#   undef VEC
+#   undef RESTORE_AVX
+#  endif
+20:	andl	$0x6, %eax
+10:	subl	$0x5, %eax
 	movl	%eax, L(have_avx)(%rip)
 	cmpl	$0, %eax
 
-1:	js	L(no_avx)
+L(defined):
+	js	L(no_avx)
+#  ifdef HAVE_AVX512_ASM_SUPPORT
+	cmpl	$0xe6, L(have_avx)(%rip)
+	je	L(avx512)
+#  endif
 
 #  define RESTORE_AVX
+#  define VMOV    vmovdqu
+#  define VEC(i)  ymm##i
 #  define MORE_CODE
 #  include "dl-trampoline.h"
 
@@ -180,9 +216,9 @@ L(no_avx):
 	.align 16
 	cfi_startproc
 _dl_x86_64_save_sse:
-# ifdef HAVE_AVX_SUPPORT
+# if defined HAVE_AVX_SUPPORT || defined HAVE_AVX512_ASM_SUPPORT
 	cmpl	$0, L(have_avx)(%rip)
-	jne	1f
+	jne	L(defined_5)
 	movq	%rbx, %r11		# Save rbx
 	movl	$1, %eax
 	cpuid
@@ -191,21 +227,43 @@ _dl_x86_64_save_sse:
 	// AVX and XSAVE supported?
 	andl	$((1 << 28) | (1 << 27)), %ecx
 	cmpl	$((1 << 28) | (1 << 27)), %ecx
-	jne	2f
+	jne	1f
+#  ifdef HAVE_AVX512_ASM_SUPPORT
+	// AVX512 supported in a processor?
+	movq	%rbx, %r11              # Save rbx
+	xorl	%ecx,%ecx
+	mov	$0x7,%eax
+	cpuid
+	andl	$(1 << 16), %ebx
+#  endif
 	xorl	%ecx, %ecx
 	// Get XFEATURE_ENABLED_MASK
 	xgetbv
-	andl	$0x6, %eax
-	cmpl	$0x6, %eax
-	// Nonzero if SSE and AVX state saving is enabled.
-	sete	%al
-2:	leal	-1(%eax,%eax), %eax
+#  ifdef HAVE_AVX512_ASM_SUPPORT
+	test	%ebx, %ebx
+	movq	%r11, %rbx		# Restore rbx
+	je	2f
+	// Verify that XCR0[7:5] = '111b' and
+	// XCR0[2:1] = '11b' which means
+	// that zmm state is enabled
+	andl	$0xe6, %eax
+	movl	%eax, L(have_avx)(%rip)
+	cmpl	$0xe6, %eax
+	je	L(avx512_5)
+#  endif
+
+2:	andl	$0x6, %eax
+1:	subl	$0x5, %eax
 	movl	%eax, L(have_avx)(%rip)
 	cmpl	$0, %eax
 
-1:	js	L(no_avx5)
+L(defined_5):
+	js	L(no_avx5)
+#  ifdef HAVE_AVX512_ASM_SUPPORT
+	cmpl	$0xe6, L(have_avx)(%rip)
+	je	L(avx512_5)
+#  endif
 
-#  define YMM_SIZE 32
 	vmovdqa %ymm0, %fs:RTLD_SAVESPACE_SSE+0*YMM_SIZE
 	vmovdqa %ymm1, %fs:RTLD_SAVESPACE_SSE+1*YMM_SIZE
 	vmovdqa %ymm2, %fs:RTLD_SAVESPACE_SSE+2*YMM_SIZE
@@ -215,6 +273,18 @@ _dl_x86_64_save_sse:
 	vmovdqa %ymm6, %fs:RTLD_SAVESPACE_SSE+6*YMM_SIZE
 	vmovdqa %ymm7, %fs:RTLD_SAVESPACE_SSE+7*YMM_SIZE
 	ret
+#  ifdef HAVE_AVX512_ASM_SUPPORT
+L(avx512_5):
+	vmovdqu64 %zmm0, %fs:RTLD_SAVESPACE_SSE+0*ZMM_SIZE
+	vmovdqu64 %zmm1, %fs:RTLD_SAVESPACE_SSE+1*ZMM_SIZE
+	vmovdqu64 %zmm2, %fs:RTLD_SAVESPACE_SSE+2*ZMM_SIZE
+	vmovdqu64 %zmm3, %fs:RTLD_SAVESPACE_SSE+3*ZMM_SIZE
+	vmovdqu64 %zmm4, %fs:RTLD_SAVESPACE_SSE+4*ZMM_SIZE
+	vmovdqu64 %zmm5, %fs:RTLD_SAVESPACE_SSE+5*ZMM_SIZE
+	vmovdqu64 %zmm6, %fs:RTLD_SAVESPACE_SSE+6*ZMM_SIZE
+	vmovdqu64 %zmm7, %fs:RTLD_SAVESPACE_SSE+7*ZMM_SIZE
+	ret
+#  endif
 L(no_avx5):
 # endif
 	movdqa	%xmm0, %fs:RTLD_SAVESPACE_SSE+0*XMM_SIZE
@@ -235,9 +305,13 @@ L(no_avx5):
 	.align 16
 	cfi_startproc
 _dl_x86_64_restore_sse:
-# ifdef HAVE_AVX_SUPPORT
+# if defined HAVE_AVX_SUPPORT || defined HAVE_AVX512_ASM_SUPPORT
 	cmpl	$0, L(have_avx)(%rip)
 	js	L(no_avx6)
+#  ifdef HAVE_AVX512_ASM_SUPPORT
+	cmpl	$0xe6, L(have_avx)(%rip)
+	je	L(avx512_6)
+#  endif
 
 	vmovdqa %fs:RTLD_SAVESPACE_SSE+0*YMM_SIZE, %ymm0
 	vmovdqa %fs:RTLD_SAVESPACE_SSE+1*YMM_SIZE, %ymm1
@@ -248,6 +322,18 @@ _dl_x86_64_restore_sse:
 	vmovdqa %fs:RTLD_SAVESPACE_SSE+6*YMM_SIZE, %ymm6
 	vmovdqa %fs:RTLD_SAVESPACE_SSE+7*YMM_SIZE, %ymm7
 	ret
+#  ifdef HAVE_AVX512_ASM_SUPPORT
+L(avx512_6):
+	vmovdqu64 %fs:RTLD_SAVESPACE_SSE+0*ZMM_SIZE, %zmm0
+	vmovdqu64 %fs:RTLD_SAVESPACE_SSE+1*ZMM_SIZE, %zmm1
+	vmovdqu64 %fs:RTLD_SAVESPACE_SSE+2*ZMM_SIZE, %zmm2
+	vmovdqu64 %fs:RTLD_SAVESPACE_SSE+3*ZMM_SIZE, %zmm3
+	vmovdqu64 %fs:RTLD_SAVESPACE_SSE+4*ZMM_SIZE, %zmm4
+	vmovdqu64 %fs:RTLD_SAVESPACE_SSE+5*ZMM_SIZE, %zmm5
+	vmovdqu64 %fs:RTLD_SAVESPACE_SSE+6*ZMM_SIZE, %zmm6
+	vmovdqu64 %fs:RTLD_SAVESPACE_SSE+7*ZMM_SIZE, %zmm7
+	ret
+#  endif
 L(no_avx6):
 # endif
 	movdqa	%fs:RTLD_SAVESPACE_SSE+0*XMM_SIZE, %xmm0

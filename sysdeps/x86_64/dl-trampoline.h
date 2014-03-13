@@ -19,14 +19,14 @@
 
 #ifdef RESTORE_AVX
 	/* This is to support AVX audit modules.  */
-	vmovdqu %ymm0,		      (LR_VECTOR_OFFSET)(%rsp)
-	vmovdqu %ymm1, (LR_VECTOR_OFFSET +   VECTOR_SIZE)(%rsp)
-	vmovdqu %ymm2, (LR_VECTOR_OFFSET + VECTOR_SIZE*2)(%rsp)
-	vmovdqu %ymm3, (LR_VECTOR_OFFSET + VECTOR_SIZE*3)(%rsp)
-	vmovdqu %ymm4, (LR_VECTOR_OFFSET + VECTOR_SIZE*4)(%rsp)
-	vmovdqu %ymm5, (LR_VECTOR_OFFSET + VECTOR_SIZE*5)(%rsp)
-	vmovdqu %ymm6, (LR_VECTOR_OFFSET + VECTOR_SIZE*6)(%rsp)
-	vmovdqu %ymm7, (LR_VECTOR_OFFSET + VECTOR_SIZE*7)(%rsp)
+	VMOV %VEC(0),		      (LR_VECTOR_OFFSET)(%rsp)
+	VMOV %VEC(1), (LR_VECTOR_OFFSET +   VECTOR_SIZE)(%rsp)
+	VMOV %VEC(2), (LR_VECTOR_OFFSET + VECTOR_SIZE*2)(%rsp)
+	VMOV %VEC(3), (LR_VECTOR_OFFSET + VECTOR_SIZE*3)(%rsp)
+	VMOV %VEC(4), (LR_VECTOR_OFFSET + VECTOR_SIZE*4)(%rsp)
+	VMOV %VEC(5), (LR_VECTOR_OFFSET + VECTOR_SIZE*5)(%rsp)
+	VMOV %VEC(6), (LR_VECTOR_OFFSET + VECTOR_SIZE*6)(%rsp)
+	VMOV %VEC(7), (LR_VECTOR_OFFSET + VECTOR_SIZE*7)(%rsp)
 
 	/* Save xmm0-xmm7 registers to detect if any of them are
 	   changed by audit module.  */
@@ -72,7 +72,7 @@
 	je 2f
 	vmovdqa	%xmm0, (LR_VECTOR_OFFSET)(%rsp)
 	jmp 1f
-2:	vmovdqu	(LR_VECTOR_OFFSET)(%rsp), %ymm0
+2:	VMOV (LR_VECTOR_OFFSET)(%rsp), %VEC(0)
 	vmovdqa	%xmm0, (LR_XMM_OFFSET)(%rsp)
 
 1:	vpcmpeqq (LR_SIZE + XMM_SIZE)(%rsp), %xmm1, %xmm8
@@ -81,7 +81,7 @@
 	je 2f
 	vmovdqa	%xmm1, (LR_VECTOR_OFFSET + VECTOR_SIZE)(%rsp)
 	jmp 1f
-2:	vmovdqu	(LR_VECTOR_OFFSET + VECTOR_SIZE)(%rsp), %ymm1
+2:	VMOV (LR_VECTOR_OFFSET + VECTOR_SIZE)(%rsp), %VEC(1)
 	vmovdqa	%xmm1, (LR_XMM_OFFSET + XMM_SIZE)(%rsp)
 
 1:	vpcmpeqq (LR_SIZE + XMM_SIZE*2)(%rsp), %xmm2, %xmm8
@@ -90,7 +90,7 @@
 	je 2f
 	vmovdqa	%xmm2, (LR_VECTOR_OFFSET + VECTOR_SIZE*2)(%rsp)
 	jmp 1f
-2:	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*2)(%rsp), %ymm2
+2:	VMOV (LR_VECTOR_OFFSET + VECTOR_SIZE*2)(%rsp), %VEC(2)
 	vmovdqa	%xmm2, (LR_XMM_OFFSET + XMM_SIZE*2)(%rsp)
 
 1:	vpcmpeqq (LR_SIZE + XMM_SIZE*3)(%rsp), %xmm3, %xmm8
@@ -99,7 +99,7 @@
 	je 2f
 	vmovdqa	%xmm3, (LR_VECTOR_OFFSET + VECTOR_SIZE*3)(%rsp)
 	jmp 1f
-2:	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*3)(%rsp), %ymm3
+2:	VMOV (LR_VECTOR_OFFSET + VECTOR_SIZE*3)(%rsp), %VEC(3)
 	vmovdqa	%xmm3, (LR_XMM_OFFSET + XMM_SIZE*3)(%rsp)
 
 1:	vpcmpeqq (LR_SIZE + XMM_SIZE*4)(%rsp), %xmm4, %xmm8
@@ -108,7 +108,7 @@
 	je 2f
 	vmovdqa	%xmm4, (LR_VECTOR_OFFSET + VECTOR_SIZE*4)(%rsp)
 	jmp 1f
-2:	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*4)(%rsp), %ymm4
+2:	VMOV (LR_VECTOR_OFFSET + VECTOR_SIZE*4)(%rsp), %VEC(4)
 	vmovdqa	%xmm4, (LR_XMM_OFFSET + XMM_SIZE*4)(%rsp)
 
 1:	vpcmpeqq (LR_SIZE + XMM_SIZE*5)(%rsp), %xmm5, %xmm8
@@ -117,7 +117,7 @@
 	je 2f
 	vmovdqa	%xmm5, (LR_VECTOR_OFFSET + VECTOR_SIZE*5)(%rsp)
 	jmp 1f
-2:	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*5)(%rsp), %ymm5
+2:	VMOV (LR_VECTOR_OFFSET + VECTOR_SIZE*5)(%rsp), %VEC(5)
 	vmovdqa	%xmm5, (LR_XMM_OFFSET + XMM_SIZE*5)(%rsp)
 
 1:	vpcmpeqq (LR_SIZE + XMM_SIZE*6)(%rsp), %xmm6, %xmm8
@@ -126,7 +126,7 @@
 	je 2f
 	vmovdqa	%xmm6, (LR_VECTOR_OFFSET + VECTOR_SIZE*6)(%rsp)
 	jmp 1f
-2:	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*6)(%rsp), %ymm6
+2:	VMOV (LR_VECTOR_OFFSET + VECTOR_SIZE*6)(%rsp), %VEC(6)
 	vmovdqa	%xmm6, (LR_XMM_OFFSET + XMM_SIZE*6)(%rsp)
 
 1:	vpcmpeqq (LR_SIZE + XMM_SIZE*7)(%rsp), %xmm7, %xmm8
@@ -135,7 +135,7 @@
 	je 2f
 	vmovdqa	%xmm7, (LR_VECTOR_OFFSET + VECTOR_SIZE*7)(%rsp)
 	jmp 1f
-2:	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*7)(%rsp), %ymm7
+2:	VMOV (LR_VECTOR_OFFSET + VECTOR_SIZE*7)(%rsp), %VEC(7)
 	vmovdqa	%xmm7, (LR_XMM_OFFSET + XMM_SIZE*7)(%rsp)
 
 1:
@@ -213,8 +213,8 @@
 
 #ifdef RESTORE_AVX
 	/* This is to support AVX audit modules.  */
-	vmovdqu %ymm0, LRV_VECTOR0_OFFSET(%rcx)
-	vmovdqu %ymm1, LRV_VECTOR1_OFFSET(%rcx)
+	VMOV %VEC(0), LRV_VECTOR0_OFFSET(%rcx)
+	VMOV %VEC(1), LRV_VECTOR1_OFFSET(%rcx)
 
 	/* Save xmm0/xmm1 registers to detect if they are changed
 	   by audit module.  */
@@ -243,13 +243,13 @@
 	vpmovmskb %xmm2, %esi
 	cmpl $0xffff, %esi
 	jne 1f
-	vmovdqu LRV_VECTOR0_OFFSET(%rsp), %ymm0
+	VMOV LRV_VECTOR0_OFFSET(%rsp), %VEC(0)
 
 1:	vpcmpeqq (LRV_SIZE + XMM_SIZE)(%rsp), %xmm1, %xmm2
 	vpmovmskb %xmm2, %esi
 	cmpl $0xffff, %esi
 	jne 1f
-	vmovdqu LRV_VECTOR1_OFFSET(%rsp), %ymm1
+	VMOV LRV_VECTOR1_OFFSET(%rsp), %VEC(1)
 
 1:
 #endif

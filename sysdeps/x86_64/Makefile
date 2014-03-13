@@ -38,7 +38,7 @@ tests-pie += $(quad-pie-test)
 $(objpfx)tst-quad1pie: $(objpfx)tst-quadmod1pie.o
 $(objpfx)tst-quad2pie: $(objpfx)tst-quadmod2pie.o
 
-tests += tst-audit3 tst-audit4 tst-audit5
+tests += tst-audit3 tst-audit4 tst-audit5 tst-audit10
 ifeq (yes,$(config-cflags-avx))
 tests += tst-audit6 tst-audit7
 endif
@@ -46,7 +46,8 @@ modules-names += tst-auditmod3a tst-auditmod3b \
 		tst-auditmod4a tst-auditmod4b \
 		tst-auditmod5a tst-auditmod5b \
 		tst-auditmod6a tst-auditmod6b tst-auditmod6c \
-		tst-auditmod7a tst-auditmod7b
+		tst-auditmod7a tst-auditmod7b \
+		tst-auditmod10a tst-auditmod10b
 
 $(objpfx)tst-audit3: $(objpfx)tst-auditmod3a.so
 $(objpfx)tst-audit3.out: $(objpfx)tst-auditmod3b.so
@@ -69,6 +70,10 @@ $(objpfx)tst-audit7: $(objpfx)tst-auditmod7a.so
 $(objpfx)tst-audit7.out: $(objpfx)tst-auditmod7b.so
 tst-audit7-ENV = LD_AUDIT=$(objpfx)tst-auditmod7b.so
 
+$(objpfx)tst-audit10: $(objpfx)tst-auditmod10a.so
+$(objpfx)tst-audit10.out: $(objpfx)tst-auditmod10b.so
+tst-audit10-ENV = LD_AUDIT=$(objpfx)tst-auditmod10b.so
+
 ifeq (yes,$(config-cflags-avx))
 AVX-CFLAGS=-mavx
 ifeq (yes,$(config-cflags-novzeroupper))
@@ -80,6 +85,12 @@ CFLAGS-tst-auditmod4b.c += $(AVX-CFLAGS)
 CFLAGS-tst-auditmod6b.c += $(AVX-CFLAGS)
 CFLAGS-tst-auditmod6c.c += $(AVX-CFLAGS)
 CFLAGS-tst-auditmod7b.c += $(AVX-CFLAGS)
+endif
+ifeq (yes,$(config-cflags-avx512))
+AVX512-CFLAGS = -mavx512f
+CFLAGS-tst-audit10.c += $(AVX512-CFLAGS)
+CFLAGS-tst-auditmod10a.c += $(AVX512-CFLAGS)
+CFLAGS-tst-auditmod10b.c += $(AVX512-CFLAGS)
 endif
 endif
 
