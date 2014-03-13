@@ -396,6 +396,9 @@ time of the call.  If @code{uc_link} was a null pointer the application
 terminates normally with an exit status value of @code{EXIT_SUCCESS}
 (@pxref{Program Termination}).
 
+If the context was created by a call to a signal handler or from any
+other source then the behaviour of @code{setcontext} is unspecified.
+
 Since the context contains information about the stack no two threads
 should use the same context at the same time.  The result in most cases
 would be disastrous.
@@ -483,11 +486,11 @@ and then resume where execution was stopped.
 This an example how the context functions can be used to implement
 co-routines or cooperative multi-threading.  All that has to be done is
 to call every once in a while @code{swapcontext} to continue running a
-different context.  It is not allowed to do the context switching from
-the signal handler directly since neither @code{setcontext} nor
-@code{swapcontext} are functions which can be called from a signal
-handler.  But setting a variable in the signal handler and checking it
-in the body of the functions which are executed is OK.  Since
-@code{swapcontext} is saving the current context it is possible to have
-multiple different scheduling points in the code.  Execution will always
-resume where it was left.
+different context.  It is not recommended to do the context switching from
+the signal handler directly since leaving the signal handler via
+@code{setcontext} if the signal was delivered during code that was not
+asynchronous signal safe could lead to problems. Setting a variable in
+the signal handler and checking it in the body of the functions which
+are executed is a safer approach.  Since @code{swapcontext} is saving the
+current context it is possible to have multiple different scheduling points
+in the code.  Execution will always resume where it was left.

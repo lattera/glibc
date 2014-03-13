@@ -1,5 +1,11 @@
 2014-04-17  Will Newton  <will.newton@linaro.org>
 
+	* manual/setjmp.texi (System V contexts): Add note that
+	calling setcontext on a context created by a call to a
+	signal handler is undefined.  Update text to note that
+	setcontext from a signal handler is possible but not
+	recommended.
+
 	[BZ #16629]
 	* stdlib/tst-setcontext.c: Include signal.h.
 	(main): Check that the signal stack before and
