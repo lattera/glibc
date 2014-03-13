@@ -195,6 +195,9 @@
 /* Define if linux/fanotify.h is available.  */
 #undef HAVE_LINUX_FANOTIFY_H
 
+/* Define if the linker defines __ehdr_start.  */
+#undef HAVE_EHDR_START
+
 /*
  */
 

@@ -2069,6 +2069,27 @@ if test $libc_cv_predef_stack_protector = yes; then
 fi
 AC_SUBST(libc_extra_cflags)
 
+AC_CACHE_CHECK([whether the linker provides __ehdr_start],
+	       libc_cv_ehdr_start, [
+old_CFLAGS="$CFLAGS"
+old_LDFLAGS="$LDFLAGS"
+old_LIBS="$LIBS"
+CFLAGS="$CFLAGS -fPIC"
+LDFLAGS="$LDFLAGS -nostdlib -nostartfiles -shared"
+LIBS=
+AC_LINK_IFELSE([AC_LANG_SOURCE([
+extern const char __ehdr_start __attribute__ ((visibility ("hidden")));
+const char *ehdr (void) { return &__ehdr_start; }
+])],
+	       [libc_cv_ehdr_start=yes], [libc_cv_ehdr_start=no])
+CFLAGS="$old_CFLAGS"
+LDFLAGS="$old_LDFLAGS"
+LIBS="$old_LIBS"
+])
+if test $libc_cv_ehdr_start = yes; then
+  AC_DEFINE([HAVE_EHDR_START])
+fi
+
 ### End of automated tests.
 ### Now run sysdeps configure fragments.
 

@@ -1,3 +1,11 @@
+2014-03-13  Roland McGrath  <roland@hack.frob.com>
+
+	* configure.ac (HAVE_EHDR_START): New check.
+	* configure: Regenerated.
+	* config.h.in (HAVE_EHDR_START): New #undef.
+	* elf/rtld.c (dl_main) [HAVE_EHDR_START]: Use __ehdr_start rather than
+	assuming the lowest-addressed segment maps the start of the file.
+
 2014-03-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* INSTALL: Regenerated.

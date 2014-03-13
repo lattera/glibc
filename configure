@@ -7268,6 +7268,44 @@ if test $libc_cv_predef_stack_protector = yes; then
 fi
 
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether the linker provides __ehdr_start" >&5
+$as_echo_n "checking whether the linker provides __ehdr_start... " >&6; }
+if ${libc_cv_ehdr_start+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+old_CFLAGS="$CFLAGS"
+old_LDFLAGS="$LDFLAGS"
+old_LIBS="$LIBS"
+CFLAGS="$CFLAGS -fPIC"
+LDFLAGS="$LDFLAGS -nostdlib -nostartfiles -shared"
+LIBS=
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+extern const char __ehdr_start __attribute__ ((visibility ("hidden")));
+const char *ehdr (void) { return &__ehdr_start; }
+
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  libc_cv_ehdr_start=yes
+else
+  libc_cv_ehdr_start=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+CFLAGS="$old_CFLAGS"
+LDFLAGS="$old_LDFLAGS"
+LIBS="$old_LIBS"
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ehdr_start" >&5
+$as_echo "$libc_cv_ehdr_start" >&6; }
+if test $libc_cv_ehdr_start = yes; then
+  $as_echo "#define HAVE_EHDR_START 1" >>confdefs.h
+
+fi
+
 ### End of automated tests.
 ### Now run sysdeps configure fragments.
 
