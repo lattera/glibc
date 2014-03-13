@@ -2449,7 +2449,7 @@ EST+5EDT,M3.2.0/2,M11.1.0/2
 
 Israel Standard Time (IST) and Israel Daylight Time (IDT) are 2 hours
 ahead of the prime meridian in winter, springing forward an hour on
-March's fourth Tuesday at 26:00 (i.e., 02:00 on the first Friday on or
+March's fourth Thursday at 26:00 (i.e., 02:00 on the first Friday on or
 after March 23), and falling back on October's last Sunday at 02:00.
 
 @smallexample
