@@ -601,6 +601,12 @@ run-built-tests = yes
 endif
 endif
 
+# Whether to stop immediately when a test fails.  Nonempty means to
+# stop, empty means not to stop.
+ifndef stop-on-test-failure
+stop-on-test-failure =
+endif
+
 # How to run a program we just linked with our library.
 # The program binary is assumed to be $(word 2,$^).
 built-program-file = $(dir $(word 2,$^))$(notdir $(word 2,$^))
@@ -1092,6 +1098,7 @@ test-xfail-name = $(strip $(patsubst %.out, %, $(patsubst $(objpfx)%, %, $@)))
 # XPASS or XFAIL rather than PASS or FAIL.
 evaluate-test = $(..)scripts/evaluate-test.sh $(test-name) $$? \
 		  $(if $(test-xfail-$(test-xfail-name)),true,false) \
+		  $(if $(stop-on-test-failure),true,false) \
 		  > $(common-objpfx)$(test-name).test-result
 
 endif # Makeconfig not yet included

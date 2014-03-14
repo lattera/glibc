@@ -13,6 +13,13 @@ Version 2.20
   16611, 16613, 16623, 16632, 16639, 16642, 16670, 16674, 16677, 16683,
   16689, 16695, 16701, 16706, 16707.
 
+* Running the testsuite no longer terminates as soon as a test fails.
+  Instead, a file tests.sum (xtests.sum from "make xcheck") is generated,
+  with PASS or FAIL lines for individual tests.  A summary of the results is
+  printed, including a list of failing lists, and "make check" exits with
+  error status if there were any unexpected failures.  "make check
+  stop-on-test-failure=y" may be used to keep the old behavior.
+
 * The am33 port, which had not worked for several years, has been removed
   from ports.
 

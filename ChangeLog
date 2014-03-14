@@ -1,3 +1,17 @@
+2014-03-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/evaluate-test.sh: Handle fourth argument to determine
+	whether test run should stop on failure.
+	* Makeconfig (stop-on-test-failure): New variable.
+	(evaluate-test): Pass fourth argument to evaluate-test.sh based on
+	$(stop-on-test-failure).
+	* Makefile (tests): Give a summary of results from testing and
+	exit with failure status if they include an ERROR or FAIL.
+	(xtests): Likewise.
+	* manual/install.texi (Configuring and compiling): Mention
+	stop-on-test-failure=y.
+	* INSTALL: Regenerated.
+
 2014-03-14  Roland McGrath  <roland@hack.frob.com>
 
 	* scripts/versionlist.awk: New file.

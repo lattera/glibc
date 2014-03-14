@@ -203,6 +203,12 @@ The tests (and later installation) use some pre-existing files of the
 system such as `/etc/passwd', `/etc/nsswitch.conf' and others.  These
 files must all contain correct and sensible content.
 
+   Normally, `make check' will run all the tests before reporting all
+problems found and exiting with error status if any problems occurred.
+You can specify `stop-on-test-failure=y' when running `make check' to
+make the test run stop and exit with an error status immediately when a
+failure occurs.
+
    To format the `GNU C Library Reference Manual' for printing, type
 `make dvi'.  You need a working TeX installation to do this.  The
 distribution builds the on-line formatted version of the manual, as

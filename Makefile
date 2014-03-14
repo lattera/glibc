@@ -324,10 +324,22 @@ tests: $(tests-special)
 	$(..)scripts/merge-test-results.sh -t $(objpfx) subdir-tests.sum \
 	  $(sort $(subdirs) .) \
 	  > $(objpfx)tests.sum
+	@grep '^ERROR:' $(objpfx)tests.sum || true
+	@grep '^FAIL:' $(objpfx)tests.sum || true
+	@echo "Summary of test results:"
+	@sed 's/:.*//' < $(objpfx)tests.sum | sort | uniq -c
+	@if grep -q '^ERROR:' $(objpfx)tests.sum; then exit 1; fi
+	@if grep -q '^FAIL:' $(objpfx)tests.sum; then exit 1; fi
 xtests:
 	$(..)scripts/merge-test-results.sh -t $(objpfx) subdir-xtests.sum \
 	  $(sort $(subdirs)) \
 	  > $(objpfx)xtests.sum
+	@grep '^ERROR:' $(objpfx)xtests.sum || true
+	@grep '^FAIL:' $(objpfx)xtests.sum || true
+	@echo "Summary of test results for extra tests:"
+	@sed 's/:.*//' < $(objpfx)xtests.sum | sort | uniq -c
+	@if grep -q '^ERROR:' $(objpfx)xtests.sum; then exit 1; fi
+	@if grep -q '^FAIL:' $(objpfx)xtests.sum; then exit 1; fi
 
 # The realclean target is just like distclean for the parent, but we want
 # the subdirs to know the difference in case they care.
