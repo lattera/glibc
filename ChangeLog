@@ -1,3 +1,8 @@
+2014-03-14  Roland McGrath  <roland@hack.frob.com>
+
+	* csu/Makefile ($(objpfx)version-info.h): Remove linux-specific
+	"Compiled on ..." crapola.  It is anti-useful.
+
 2014-03-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/evaluate-test.sh: Handle fourth argument to determine
