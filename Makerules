@@ -288,19 +288,22 @@ ifeq ($(build-shared),yes)
 $(addprefix $(common-objpfx),$(version-maps)): $(common-objpfx)sysd-versions
 common-generated += $(version-maps)
 postclean-generated += sysd-versions Versions.all abi-versions.h \
-		       Versions.def.v.i Versions.def.v Versions.v.i Versions.v
+		       Versions.def Versions.v.i Versions.v
 
 ifndef avoid-generated
 ifneq ($(sysd-versions-subdirs),$(sorted-subdirs) $(config-sysdirs))
 sysd-versions-force = FORCE
 FORCE:
 endif
-# See %.v/%.v.i implicit rules in Makeconfig.
-$(common-objpfx)Versions.def.v.i: $(..)Versions.def \
-				  $(wildcard $(add-ons:%=$(..)%/Versions.def))
+
+$(common-objpfx)Versions.def: $(..)scripts/versionlist.awk \
+			      $(common-objpfx)Versions.v
+	LC_ALL=C $(AWK) -f $^ > $@T
+	mv -f $@T $@
+
 $(common-objpfx)Versions.all: $(..)scripts/firstversions.awk \
 			      $(common-objpfx)soversions.i \
-			      $(common-objpfx)Versions.def.v
+			      $(common-objpfx)Versions.def
 	{ while read which lib version setname; do \
 	    test x"$$which" = xDEFAULT || continue; \
 	    test -z "$$setname" || echo "$$lib : $$setname"; \
