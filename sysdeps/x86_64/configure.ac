@@ -23,15 +23,6 @@ if test $libc_cv_cc_avx = yes; then
 fi
 LIBC_CONFIG_VAR([config-cflags-avx], [$libc_cv_cc_avx])
 
-dnl Check if -mavx512f works.
-AC_CACHE_CHECK(for AVX512 support, libc_cv_cc_avx512, [dnl
-LIBC_TRY_CC_OPTION([-mavx512f], [libc_cv_cc_avx512=yes], [libc_cv_cc_avx512=no])
-])
-if test $libc_cv_cc_avx512 = yes; then
-  AC_DEFINE(HAVE_AVX512_SUPPORT)
-fi
-LIBC_CONFIG_VAR([config-cflags-avx512], [$libc_cv_cc_avx512])
-
 dnl Check if asm supports AVX512.
 AC_CACHE_CHECK(for AVX512 support in assembler, libc_cv_asm_avx512, [dnl
 cat > conftest.s <<\EOF
@@ -46,6 +37,15 @@ rm -f conftest*])
 if test $libc_cv_asm_avx512 == yes; then
   AC_DEFINE(HAVE_AVX512_ASM_SUPPORT)
 fi
+
+dnl Check if -mavx512f works.
+AC_CACHE_CHECK(for AVX512 support, libc_cv_cc_avx512, [dnl
+LIBC_TRY_CC_OPTION([-mavx512f], [libc_cv_cc_avx512=$libc_cv_asm_avx512], [libc_cv_cc_avx512=no])
+])
+if test $libc_cv_cc_avx512 = yes; then
+  AC_DEFINE(HAVE_AVX512_SUPPORT)
+fi
+LIBC_CONFIG_VAR([config-cflags-avx512], [$libc_cv_cc_avx512])
 
 dnl Check if -msse2avx works.
 AC_CACHE_CHECK(for AVX encoding of SSE instructions, libc_cv_cc_sse2avx, [dnl
