@@ -9521,6 +9521,16 @@ static const struct test_f_f_data nearbyint_test_data[] =
     TEST_f_f (nearbyint, -562949953421312.75, -562949953421313.0, NO_INEXACT_EXCEPTION),
     TEST_f_f (nearbyint, -1125899906842624.75, -1125899906842625.0, NO_INEXACT_EXCEPTION),
 #endif
+#ifdef TEST_LDOUBLE
+    /* Check cases where first double is a exact integer higher than 2^52 and
+       the precision is determined by second long double for IBM long double.  */
+    TEST_f_f (nearbyint,  34503599627370498.515625L, 34503599627370499.0L),
+    TEST_f_f (nearbyint, -34503599627370498.515625L, -34503599627370499.0L),
+# if LDBL_MANT_DIG >= 106
+    TEST_f_f (nearbyint,  1192568192774434123539907640624.484375L, 1192568192774434123539907640624.0L),
+    TEST_f_f (nearbyint, -1192568192774434123539907640624.484375L, -1192568192774434123539907640624.0L),
+# endif
+#endif
   };
 
 static void
