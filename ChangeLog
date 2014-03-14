@@ -1,3 +1,8 @@
+2014-03-14  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* math/libm-test.inc (trunc_test_data): Add more tests related to
+	BZ#16414.
+
 2014-03-14  Roland McGrath  <roland@hack.frob.com>
 
 	* nptl/pthread_create.c (__pthread_create_2_1): Test TLS_TCB_AT_TP
