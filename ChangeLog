@@ -1,5 +1,12 @@
 2014-03-14  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	[BZ #16707]
+	* sysdeps/powerpc/powerpc64/fpu/s_roundl.S: Remove wrong
+	implementation.
+	* math/libm-test.inc (round_test_data): Add more tests.
+
+2014-03-14  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	[BZ #16706]
 	* sysdeps/powerpc/powerpc64/fpu/s_nearbyintl.S: Remove wrong
 	implementation.
