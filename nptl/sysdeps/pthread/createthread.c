@@ -147,7 +147,7 @@ static int
 create_thread (struct pthread *pd, const struct pthread_attr *attr,
 	       STACK_VARIABLES_PARMS)
 {
-#ifdef TLS_TCB_AT_TP
+#if TLS_TCB_AT_TP
   assert (pd->header.tcb != NULL);
 #endif
 
