@@ -1,3 +1,7 @@
+2014-02-28  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/hppa/nptl/tls.h (TLS_TCB_AT_TP): New macro.
+
 2014-03-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/hppa/fpu/libm-test-ulps: Remove individual test ulps.

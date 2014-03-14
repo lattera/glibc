@@ -6,6 +6,11 @@
 
 # ifdef IS_IN_rtld
 #  include <dl-sysdep.h>
+#  ifndef RTLD_PRIVATE_ERRNO
+#   error "dl-sysdep.h must define RTLD_PRIVATE_ERRNO!"
+#  endif
+# else
+#  define RTLD_PRIVATE_ERRNO	0
 # endif
 
 # if RTLD_PRIVATE_ERRNO

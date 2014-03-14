@@ -26,6 +26,7 @@
 /* The TCB can have any size and the memory following the address the
    thread pointer points to is unspecified.  Allocate the TCB there.  */
 #define TLS_TCB_AT_TP	1
+#define TLS_DTV_AT_TP	0
 
 #ifndef __ASSEMBLER__
 

@@ -92,10 +92,6 @@ typedef struct
 /* Get system call information.  */
 # include <sysdep.h>
 
-
-/* Get the thread descriptor definition.  */
-# include <nptl/descr.h>
-
 #ifndef LOCK_PREFIX
 # ifdef UP
 #  define LOCK_PREFIX	/* nothing */
@@ -121,6 +117,10 @@ typedef struct
 /* The TCB can have any size and the memory following the address the
    thread pointer points to is unspecified.  Allocate the TCB there.  */
 # define TLS_TCB_AT_TP	1
+# define TLS_DTV_AT_TP	0
+
+/* Get the thread descriptor definition.  */
+# include <nptl/descr.h>
 
 
 /* Install the dtv pointer.  The pointer passed is to the element with

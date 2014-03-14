@@ -1,3 +1,26 @@
+2014-03-14  Roland McGrath  <roland@hack.frob.com>
+
+	* Makeconfig (+gccwarn): Add -Wundef.
+	* include/errno.h [IS_IN_rtld] [!RTLD_PRIVATE_ERRNO]: #error to catch
+	a dl-sysdep.h breaking its contract.
+	[!IS_IN_rtld] (RTLD_PRIVATE_ERRNO): Define it to 0.
+	* include/stackinfo.h: New file.
+	* nptl/sysdeps/i386/tls.h (TLS_DTV_AT_TP): New macro.
+	* nptl/sysdeps/powerpc/tls.h (TLS_TCB_AT_TP): New macro.
+	* nptl/sysdeps/s390/tls.h (TLS_DTV_AT_TP): New macro.
+	* nptl/sysdeps/sh/tls.h (TLS_TCB_AT_TP): New macro.
+	* nptl/sysdeps/sparc/tls.h (TLS_DTV_AT_TP): New macro.
+	* nptl/sysdeps/x86_64/tls.h (TLS_DTV_AT_TP): New macro.
+	* sysdeps/aarch64/nptl/tls.h (TLS_TCB_AT_TP): New macro.
+	* sysdeps/alpha/nptl/tls.h (TLS_TCB_AT_TP): New macro.
+	* sysdeps/arm/nptl/tls.h (TLS_TCB_AT_TP): New macro.
+	* sysdeps/ia64/nptl/tls.h (TLS_TCB_AT_TP): New macro.
+	* sysdeps/m68k/nptl/tls.h (TLS_TCB_AT_TP): New macro.
+	* sysdeps/mach/hurd/i386/tls.h (TLS_DTV_AT_TP): New macro.
+	* sysdeps/microblaze/nptl/tls.h (TLS_TCB_AT_TP): New macro.
+	* sysdeps/mips/nptl/tls.h (TLS_TCB_AT_TP): New macro.
+	* sysdeps/tile/nptl/tls.h (TLS_TCB_AT_TP): New macro.
+
 2014-03-14  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ #16707]

@@ -685,6 +685,7 @@ ifeq ($(all-warnings),yes)
 else
 +gccwarn := -Wall -Wwrite-strings -Winline
 endif
++gccwarn += -Wundef
 +gccwarn-c = -Wstrict-prototypes
 
 # We do not depend on the address of constants in different files to be

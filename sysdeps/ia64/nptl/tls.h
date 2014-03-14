@@ -87,6 +87,7 @@ register struct pthread *__thread_self __asm__("r13");
 
 /* The DTV is allocated at the TP; the TCB is placed elsewhere.  */
 # define TLS_DTV_AT_TP	1
+# define TLS_TCB_AT_TP	0
 
 /* Get the thread descriptor definition.  */
 # include <nptl/descr.h>

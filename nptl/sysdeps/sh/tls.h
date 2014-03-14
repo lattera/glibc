@@ -76,6 +76,7 @@ typedef struct
 
 /* The TLS blocks start right after the TCB.  */
 # define TLS_DTV_AT_TP	1
+# define TLS_TCB_AT_TP	0
 
 /* Get the thread descriptor definition.  */
 # include <nptl/descr.h>

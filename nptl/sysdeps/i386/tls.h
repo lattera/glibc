@@ -104,9 +104,6 @@ union user_desc_init
 };
 
 
-/* Get the thread descriptor definition.  */
-# include <nptl/descr.h>
-
 /* This is the size of the initial TCB.  Can't be just sizeof (tcbhead_t),
    because NPTL getpid, __libc_alloca_cutoff etc. need (almost) the whole
    struct pthread even when not linked with -lpthread.  */
@@ -124,6 +121,10 @@ union user_desc_init
 /* The TCB can have any size and the memory following the address the
    thread pointer points to is unspecified.  Allocate the TCB there.  */
 # define TLS_TCB_AT_TP	1
+# define TLS_DTV_AT_TP	0
+
+/* Get the thread descriptor definition.  */
+# include <nptl/descr.h>
 
 
 /* Install the dtv pointer.  The pointer passed is to the element with
