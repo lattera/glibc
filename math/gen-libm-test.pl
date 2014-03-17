@@ -158,6 +158,7 @@ sub parse_args {
   my (@special);
   my ($call_args);
   my ($ignore_result_any, $ignore_result_all);
+  my ($num_res, @args_res, $start_rm, $this_start_rm);
 
   ($descr_args, $descr_res) = split /_/,$descr, 2;
 
@@ -194,31 +195,38 @@ sub parse_args {
   }
 
   # Result
+  @args_res = @args[$current_arg .. $#args];
+  $num_res = 0;
   @descr = split //,$descr_res;
   foreach (@descr) {
     if ($_ =~ /f|i|l|L/) {
-      ++$current_arg;
+      ++$num_res;
     } elsif ($_ eq 'c') {
-      $current_arg += 2;
+      $num_res += 2;
     } elsif ($_ eq 'b') {
       # boolean
-      ++$current_arg;
+      ++$num_res;
     } elsif ($_ eq '1') {
-      ++$current_arg;
+      ++$num_res;
     } else {
       die ("$_ is unknown");
     }
   }
   # consistency check
-  if ($current_arg == $#args) {
+  if ($#args_res == $num_res - 1) {
+    # One set of results for all rounding modes, no flags.
+    $start_rm = [ 0, 0, 0, 0 ];
+  } elsif ($#args_res == $num_res) {
+    # One set of results for all rounding modes, with flags.
     die ("wrong number of arguments")
-      unless ($args[$current_arg] =~ /EXCEPTION|ERRNO|IGNORE_ZERO_INF_SIGN|TEST_NAN_SIGN|NO_TEST_INLINE|XFAIL_TEST/);
-  } elsif ($current_arg < $#args) {
-    die ("wrong number of arguments");
-  } elsif ($current_arg > ($#args+1)) {
+      unless ($args_res[$#args_res] =~ /EXCEPTION|ERRNO|IGNORE_ZERO_INF_SIGN|TEST_NAN_SIGN|NO_TEST_INLINE|XFAIL_TEST/);
+    $start_rm = [ 0, 0, 0, 0 ];
+  } elsif ($#args_res == 4 * $num_res + 3) {
+    # One set of results per rounding mode, with flags.
+    $start_rm = [ 0, $num_res + 1, 2 * $num_res + 2, 3 * $num_res + 3 ];
+  } else {
     die ("wrong number of arguments");
   }
-
 
   # Put the C program line together
   # Reset some variables to start again
@@ -245,64 +253,68 @@ sub parse_args {
   }
 
   @descr = split //,$descr_res;
-  $ignore_result_any = 0;
-  $ignore_result_all = 1;
-  $cline_res = "";
-  foreach (@descr) {
-    if ($_ =~ /b|f|i|l|L/ ) {
-      my ($result) = $args[$current_arg];
-      if ($result eq "IGNORE") {
-	$ignore_result_any = 1;
-	$result = "0";
-      } else {
-	$ignore_result_all = 0;
+  foreach $this_start_rm (@$start_rm) {
+    $current_arg = $this_start_rm;
+    $ignore_result_any = 0;
+    $ignore_result_all = 1;
+    $cline_res = "";
+    @special = ();
+    foreach (@descr) {
+      if ($_ =~ /b|f|i|l|L/ ) {
+	my ($result) = $args_res[$current_arg];
+	if ($result eq "IGNORE") {
+	  $ignore_result_any = 1;
+	  $result = "0";
+	} else {
+	  $ignore_result_all = 0;
+	}
+	$cline_res .= ", $result";
+	$current_arg++;
+      } elsif ($_ eq 'c') {
+	my ($result1) = $args_res[$current_arg];
+	if ($result1 eq "IGNORE") {
+	  $ignore_result_any = 1;
+	  $result1 = "0";
+	} else {
+	  $ignore_result_all = 0;
+	}
+	my ($result2) = $args_res[$current_arg + 1];
+	if ($result2 eq "IGNORE") {
+	  $ignore_result_any = 1;
+	  $result2 = "0";
+	} else {
+	  $ignore_result_all = 0;
+	}
+	$cline_res .= ", $result1, $result2";
+	$current_arg += 2;
+      } elsif ($_ eq '1') {
+	push @special, $args_res[$current_arg];
+	++$current_arg;
       }
-      $cline_res .= ", $result";
-      $current_arg++;
-    } elsif ($_ eq 'c') {
-      my ($result1) = $args[$current_arg];
-      if ($result1 eq "IGNORE") {
-	$ignore_result_any = 1;
-	$result1 = "0";
-      } else {
-	$ignore_result_all = 0;
-      }
-      my ($result2) = $args[$current_arg + 1];
-      if ($result2 eq "IGNORE") {
-	$ignore_result_any = 1;
-	$result2 = "0";
-      } else {
-	$ignore_result_all = 0;
-      }
-      $cline_res .= ", $result1, $result2";
-      $current_arg += 2;
-    } elsif ($_ eq '1') {
-      push @special, $args[$current_arg];
-      ++$current_arg;
     }
-  }
-  if ($ignore_result_any && !$ignore_result_all) {
-    die ("some but not all function results ignored\n");
-  }
-  # Add exceptions.
-  $cline_res .= show_exceptions ($ignore_result_any,
-				 ($current_arg <= $#args)
-				 ? $args[$current_arg]
-				 : undef);
+    if ($ignore_result_any && !$ignore_result_all) {
+      die ("some but not all function results ignored\n");
+    }
+    # Add exceptions.
+    $cline_res .= show_exceptions ($ignore_result_any,
+				   ($current_arg <= $#args_res)
+				   ? $args_res[$current_arg]
+				   : undef);
 
-  # special treatment for some functions
-  $i = 0;
-  foreach (@special) {
-    ++$i;
-    my ($extra_expected) = $_;
-    my ($run_extra) = ($extra_expected ne "IGNORE" ? 1 : 0);
-    if (!$run_extra) {
-      $extra_expected = "0";
+    # special treatment for some functions
+    $i = 0;
+    foreach (@special) {
+      ++$i;
+      my ($extra_expected) = $_;
+      my ($run_extra) = ($extra_expected ne "IGNORE" ? 1 : 0);
+      if (!$run_extra) {
+	$extra_expected = "0";
+      }
+      $cline_res .= ", $run_extra, $extra_expected";
     }
-    $cline_res .= ", $run_extra, $extra_expected";
+    $cline_res =~ s/^, //;
+    $cline .= ", { $cline_res }";
   }
-  $cline_res =~ s/^, //;
-  $cline .= ", { $cline_res }, { $cline_res }, { $cline_res }, { $cline_res }";
   print $file "    $cline },\n";
 }
 

@@ -1,3 +1,47 @@
+2014-03-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/gen-libm-test.pl (parse_args): Handle results specified for
+	each rounding mode separately.
+	* math/libm-test.inc (lrint_test_data): Merge in per-rounding-mode
+	tests and results from lrint_tonearest_test_data,
+	lrint_towardzero_test_data, lrint_downward_test_data and
+	lrint_upward_test_data.
+	(lrint_test): Use ALL_RM_TEST.
+	(lrint_tonearest_test_data): Remove.
+	(lrint_test_tonearest): Likewise.
+	(lrint_towardzero_test_data): Likewise.
+	(lrint_test_towardzero): Likewise.
+	(lrint_downward_test_data): Likewise.
+	(lrint_test_downward): Likewise.
+	(lrint_upward_test_data): Likewise.
+	(lrint_test_upward): Likewise.
+	(llrint_test_data): Merge in per-rounding-mode tests and results
+	from llrint_tonearest_test_data, llrint_towardzero_test_data,
+	llrint_downward_test_data and llrint_upward_test_data.
+	(llrint_test): Use ALL_RM_TEST.
+	(llrint_tonearest_test_data): Remove.
+	(llrint_test_tonearest): Likewise.
+	(llrint_towardzero_test_data): Likewise.
+	(llrint_test_towardzero): Likewise.
+	(llrint_downward_test_data): Likewise.
+	(llrint_test_downward): Likewise.
+	(llrint_upward_test_data): Likewise.
+	(llrint_test_upward): Likewise.
+	(rint_test_data): Merge in per-rounding-mode tests and results
+	from rint_tonearest_test_data, rint_towardzero_test_data,
+	rint_downward_test_data and rint_upward_test_data.  Add
+	per-rounding-mode results for tests not in those arrays.
+	(rint_test): Use ALL_RM_TEST.
+	(rint_tonearest_test_data): Remove.
+	(rint_test_tonearest): Likewise.
+	(rint_towardzero_test_data): Likewise.
+	(rint_test_towardzero): Likewise.
+	(rint_downward_test_data): Likewise.
+	(rint_test_downward): Likewise.
+	(rint_upward_test_data): Likewise.
+	(rint_test_upward): Likewise.
+	(main): Don't call removed functions.
+
 2014-03-14  Roland McGrath  <roland@hack.frob.com>
 
 	* csu/Makefile ($(objpfx)version-info.h): Remove linux-specific
