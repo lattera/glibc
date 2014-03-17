@@ -1,5 +1,11 @@
 2014-03-17  Will Newton  <will.newton@linaro.org>
 
+	* libio/genops.c: Check whether
+	_IO_JUMPS_OFFSET is defined with #ifdef rather
+	than #if.
+	* libio/libioP.h: Likewise.
+	* stdio-common/vfprintf.c: Likewise.
+
 	* sysdeps/generic/ldsodefs.h: Check whether
 	HP_SMALL_TIMING_AVAIL is defined with #ifdef rather
 	than #if.
