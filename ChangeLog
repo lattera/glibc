@@ -1,5 +1,9 @@
 2014-03-17  Will Newton  <will.newton@linaro.org>
 
+	* libio/genops.c: Revert previous change.
+	* libio/libioP.h: Likewise.
+	* stdio-common/vfprintf.c: Likewise.
+
 	* sysdeps/generic/math_private.h: Revert previous
 	change.
 
