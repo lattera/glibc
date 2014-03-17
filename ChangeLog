@@ -1,5 +1,9 @@
 2014-03-17  Will Newton  <will.newton@linaro.org>
 
+	* sysdeps/generic/ldsodefs.h: Check whether
+	HP_SMALL_TIMING_AVAIL is defined with #ifdef rather
+	than #if.
+
 	* nptl/sysdeps/pthread/pthread.h: Check
 	__PTHREAD_MUTEX_HAVE_ELISION is defined before testing
 	its value.
