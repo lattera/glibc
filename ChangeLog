@@ -1,5 +1,10 @@
 2014-03-17  Will Newton  <will.newton@linaro.org>
 
+	* argp/argp-fmtstream.h: Check whether
+	__STRICT_ANSI__ is defined with #ifdef rather
+	than #if.
+	* argp/argp.h: Likewise.
+
 	* libio/genops.c: Check whether
 	_IO_JUMPS_OFFSET is defined with #ifdef rather
 	than #if.
