@@ -1,3 +1,10 @@
+2014-03-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (nearbyint_test_data): Include all tests used
+	for rint.  Include results for all rounding modes.
+	(nearbyint_test): Use ALL_RM_TEST.
+	(rint_test_data): Include all tests used for nearbyint.
+
 2014-03-17  Will Newton  <will.newton@linaro.org>
 
 	* nptl/sysdeps/pthread/pthread.h: Revert previous
