@@ -1,5 +1,8 @@
 2014-03-17  Will Newton  <will.newton@linaro.org>
 
+	* sysdeps/generic/math_private.h: Revert previous
+	change.
+
 	* sysdeps/generic/math_private.h: Check whether
 	HAVE_RM_CTX is defined with #ifdef rather
 	than #if.
