@@ -1,3 +1,9 @@
+2014-03-17  Will Newton  <will.newton@linaro.org>
+
+	* nptl/sysdeps/pthread/pthread.h: Check
+	__PTHREAD_MUTEX_HAVE_ELISION is defined before testing
+	its value.
+
 2014-03-17  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* libio/iofdopen.c (_IO_new_fdopen): Seek to end only if
