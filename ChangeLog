@@ -1,5 +1,8 @@
 2014-03-17  Will Newton  <will.newton@linaro.org>
 
+	* nptl/sysdeps/pthread/pthread.h: Revert previous
+	change.
+
 	* sysdeps/generic/ldsodefs.h: Revert previous
 	change.
 
