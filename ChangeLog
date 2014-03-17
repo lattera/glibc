@@ -1,3 +1,10 @@
+2014-06-13  Andi Kleen  <ak@linux.intel.com>
+
+	* nptl/pthread_rwlock_rdlock (__pthread_rwlock_rdlock):
+	Split into __do_pthread_rwlock_rdlock and __pthread_rwlock_rdlock.
+	* nptl/pthread_rwlock_wrlock (__pthread_rwlock_wrlock):
+	Split into __do_pthread_rwlock_wrlock and __pthread_wrlock_rdlock.
+
 2014-06-13  Meador Inge  <meadori@codesourcery.com>
 
 	[BZ #16996]

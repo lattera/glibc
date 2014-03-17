@@ -24,39 +24,16 @@
 #include <stap-probe.h>
 
 
-/* Acquire read lock for RWLOCK.  */
-int
-__pthread_rwlock_rdlock (rwlock)
-     pthread_rwlock_t *rwlock;
+/* Acquire read lock for RWLOCK.  Slow path.  */
+static int __attribute__((noinline))
+__pthread_rwlock_rdlock_slow (pthread_rwlock_t *rwlock)
 {
   int result = 0;
 
-  LIBC_PROBE (rdlock_entry, 1, rwlock);
-
-  /* Make sure we are alone.  */
-  lll_lock (rwlock->__data.__lock, rwlock->__data.__shared);
+  /* Lock is taken in caller.  */
 
   while (1)
     {
-      /* Get the rwlock if there is no writer...  */
-      if (rwlock->__data.__writer == 0
-	  /* ...and if either no writer is waiting or we prefer readers.  */
-	  && (!rwlock->__data.__nr_writers_queued
-	      || PTHREAD_RWLOCK_PREFER_READER_P (rwlock)))
-	{
-	  /* Increment the reader counter.  Avoid overflow.  */
-	  if (__glibc_unlikely (++rwlock->__data.__nr_readers == 0))
-	    {
-	      /* Overflow on number of readers.	 */
-	      --rwlock->__data.__nr_readers;
-	      result = EAGAIN;
-	    }
-	  else
-	    LIBC_PROBE (rdlock_acquire_read, 1, rwlock);
-
-	  break;
-	}
-
       /* Make sure we are not holding the rwlock as a writer.  This is
 	 a deadlock situation we recognize and report.  */
       if (__builtin_expect (rwlock->__data.__writer
@@ -88,12 +65,69 @@ __pthread_rwlock_rdlock (rwlock)
       lll_lock (rwlock->__data.__lock, rwlock->__data.__shared);
 
       --rwlock->__data.__nr_readers_queued;
+
+      /* Get the rwlock if there is no writer...  */
+      if (rwlock->__data.__writer == 0
+	  /* ...and if either no writer is waiting or we prefer readers.  */
+	  && (!rwlock->__data.__nr_writers_queued
+	      || PTHREAD_RWLOCK_PREFER_READER_P (rwlock)))
+	{
+	  /* Increment the reader counter.  Avoid overflow.  */
+	  if (__glibc_unlikely (++rwlock->__data.__nr_readers == 0))
+	    {
+	      /* Overflow on number of readers.	 */
+	      --rwlock->__data.__nr_readers;
+	      result = EAGAIN;
+	    }
+	  else
+	    LIBC_PROBE (rdlock_acquire_read, 1, rwlock);
+
+	  break;
+	}
     }
 
   /* We are done, free the lock.  */
   lll_unlock (rwlock->__data.__lock, rwlock->__data.__shared);
 
   return result;
+}
+
+
+/* Fast path of acquiring read lock on RWLOCK.  */
+
+int
+__pthread_rwlock_rdlock (pthread_rwlock_t *rwlock)
+{
+  int result = 0;
+
+  LIBC_PROBE (rdlock_entry, 1, rwlock);
+
+  /* Make sure we are alone.  */
+  lll_lock (rwlock->__data.__lock, rwlock->__data.__shared);
+
+  /* Get the rwlock if there is no writer...  */
+  if (rwlock->__data.__writer == 0
+      /* ...and if either no writer is waiting or we prefer readers.  */
+      && (!rwlock->__data.__nr_writers_queued
+	  || PTHREAD_RWLOCK_PREFER_READER_P (rwlock)))
+    {
+      /* Increment the reader counter.  Avoid overflow.  */
+      if (__glibc_unlikely (++rwlock->__data.__nr_readers == 0))
+	{
+	  /* Overflow on number of readers.	 */
+	  --rwlock->__data.__nr_readers;
+	  result = EAGAIN;
+	}
+      else
+	LIBC_PROBE (rdlock_acquire_read, 1, rwlock);
+
+      /* We are done, free the lock.  */
+      lll_unlock (rwlock->__data.__lock, rwlock->__data.__shared);
+
+      return result;
+    }
+
+  return __pthread_rwlock_rdlock_slow (rwlock);
 }
 
 weak_alias (__pthread_rwlock_rdlock, pthread_rwlock_rdlock)
