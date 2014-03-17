@@ -1,5 +1,10 @@
 2014-03-17  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* libio/iofdopen.c (_IO_new_fdopen): Seek to end only if
+	setting O_APPEND.
+	* libio/tst-ftell-active-handler.c (do_append_test): Add a
+	test case.
+
 	[BZ #16680]
 	* libio/fileops.c (_IO_file_open): Seek to end of file but
 	don't cache the offset.

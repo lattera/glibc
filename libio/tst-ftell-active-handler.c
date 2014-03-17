@@ -414,6 +414,61 @@ do_append_test (const char *filename)
 	}
     }
 
+  /* For fdopen in 'a' mode, the file descriptor should not change if the file
+     is already open with the O_APPEND flag set.  */
+  fd = open (filename, O_WRONLY | O_APPEND, 0);
+  if (fd == -1)
+    {
+      printf ("open(O_APPEND) failed: %m\n");
+      return 1;
+    }
+
+  off_t seek_ret = lseek (fd, file_len - 1, SEEK_SET);
+  if (seek_ret == -1)
+    {
+      printf ("lseek[O_APPEND][0] failed: %m\n");
+      ret |= 1;
+    }
+
+  fp = fdopen (fd, "a");
+  if (fp == NULL)
+    {
+      printf ("fdopen(O_APPEND) failed: %m\n");
+      close (fd);
+      return 1;
+    }
+
+  off_t new_seek_ret = lseek (fd, 0, SEEK_CUR);
+  if (seek_ret == -1)
+    {
+      printf ("lseek[O_APPEND][1] failed: %m\n");
+      ret |= 1;
+    }
+
+  printf ("\tappend: fdopen (file, \"a\"): O_APPEND: ");
+
+  if (seek_ret != new_seek_ret)
+    {
+      printf ("incorrectly modified file offset to %ld, should be %ld",
+	      new_seek_ret, seek_ret);
+      ret |= 1;
+    }
+  else
+    printf ("retained current file offset %ld", seek_ret);
+
+  new_seek_ret = ftello (fp);
+
+  if (seek_ret != new_seek_ret)
+    {
+      printf (", ftello reported incorrect offset %ld, should be %ld\n",
+	      new_seek_ret, seek_ret);
+      ret |= 1;
+    }
+  else
+    printf (", ftello reported correct offset %ld\n", seek_ret);
+
+  fclose (fp);
+
   return ret;
 }
 

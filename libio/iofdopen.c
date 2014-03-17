@@ -59,6 +59,11 @@ _IO_new_fdopen (fd, mode)
   int i;
   int use_mmap = 0;
 
+  /* Decide whether we modify the offset of the file we attach to and seek to
+     the end of file.  We only do this if the mode is 'a' and if the file
+     descriptor did not have O_APPEND in its flags already.  */
+  bool do_seek = false;
+
   switch (*mode)
     {
     case 'r':
@@ -128,6 +133,7 @@ _IO_new_fdopen (fd, mode)
      */
   if ((posix_mode & O_APPEND) && !(fd_flags & O_APPEND))
     {
+      do_seek = true;
 #ifdef F_SETFL
       if (_IO_fcntl (fd, F_SETFL, fd_flags | O_APPEND) == -1)
 #endif
@@ -167,10 +173,11 @@ _IO_new_fdopen (fd, mode)
   _IO_mask_flags (&new_f->fp.file, read_write,
 		  _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
 
-  /* For append mode, set the file offset to the end of the file.  Don't
-     update the offset cache though, since the file handle is not active.  */
-  if ((read_write & (_IO_IS_APPENDING | _IO_NO_READS))
-      == (_IO_IS_APPENDING | _IO_NO_READS))
+  /* For append mode, set the file offset to the end of the file if we added
+     O_APPEND to the file descriptor flags.  Don't update the offset cache
+     though, since the file handle is not active.  */
+  if (do_seek && ((read_write & (_IO_IS_APPENDING | _IO_NO_READS))
+		  == (_IO_IS_APPENDING | _IO_NO_READS)))
     {
       _IO_off64_t new_pos = _IO_SYSSEEK (&new_f->fp.file, 0, _IO_seek_end);
       if (new_pos == _IO_pos_BAD && errno != ESPIPE)
