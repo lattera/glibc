@@ -78,13 +78,8 @@ typedef pthread_key_t __libc_key_t;
   CLASS __libc_lock_t NAME = LLL_LOCK_INITIALIZER;
 # endif
 #else
-# if __LT_SPINLOCK_INIT == 0
-#  define __libc_lock_define_initialized(CLASS,NAME) \
+# define __libc_lock_define_initialized(CLASS,NAME) \
   CLASS __libc_lock_t NAME;
-# else
-#  define __libc_lock_define_initialized(CLASS,NAME) \
-  CLASS __libc_lock_t NAME = PTHREAD_MUTEX_INITIALIZER;
-# endif
 #endif
 
 #define __libc_rwlock_define_initialized(CLASS,NAME) \

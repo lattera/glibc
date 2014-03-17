@@ -1,3 +1,9 @@
+2014-03-17  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* nptl/sysdeps/pthread/bits/libc-lockP.h [defined NOT_IN_libc
+	&& !defined IS_IN_libpthread && __LT_SPINNOCK_INIT != 0]:
+	Remove.
+
 2014-03-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/gen-libm-test.pl (parse_args): Handle results specified for
