@@ -551,7 +551,7 @@ default_libc_feupdateenv_test (fenv_t *e, int ex)
 # define libc_feresetround_noexl libc_fesetenvl
 #endif
 
-#if HAVE_RM_CTX
+#ifdef HAVE_RM_CTX
 /* Set/Restore Rounding Modes only when necessary.  If defined, these functions
    set/restore floating point state only if the state needed within the lexical
    block is different from the current state.  This saves a lot of time when
