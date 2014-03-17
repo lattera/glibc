@@ -1,5 +1,8 @@
 2014-03-17  Will Newton  <will.newton@linaro.org>
 
+	* sysdeps/generic/ldsodefs.h: Revert previous
+	change.
+
 	* libio/genops.c: Revert previous change.
 	* libio/libioP.h: Likewise.
 	* stdio-common/vfprintf.c: Likewise.
