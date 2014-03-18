@@ -1,3 +1,8 @@
+2014-03-18  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/bits/mman-linux.h: Moved to ...
+	* bits/mman-linux.h: ... here.
+
 2014-03-18  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* conform/conformtest.pl: Add standard definition when calling C
