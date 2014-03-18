@@ -1257,6 +1257,7 @@ subdir_check-abi: check-abi
 subdir_update-abi: update-abi
 else
 check-abi: subdir_check-abi
+	if grep -q '^FAIL:' $(objpfx)*/check-abi*.test-result; then exit 1; fi
 update-abi: subdir_update-abi
 endif
 
