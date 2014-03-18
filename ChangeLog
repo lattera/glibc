@@ -1,3 +1,8 @@
+2015-05-12  Ondřej Bílka  <neleai@seznam.cz>
+
+	* sysdeps/x86_64/multiarch/strcspn.S: Remove plt indirection.
+	* sysdeps/x86_64/multiarch/strspn.S: Likewise.
+
 2015-05-12  Roland McGrath  <roland@hack.frob.com>
 
 	* posix/uname-values.h: New file.
