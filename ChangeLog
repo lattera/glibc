@@ -1,3 +1,13 @@
+2014-03-21  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* bits/mathdef.h: Use #ifdef instead of #if.
+	* sysdeps/arm/bits/mathdef.h [defined __USE_ISOC99 && defined
+	_MATH_H && !defined _MATH_H_MATHDEF]: Likewise.
+	* sysdeps/tile/bits/mathdef.h [defined __USE_ISOC99 && defined
+	_MATH_H && !defined _MATH_H_MATHDEF]: Likewise.
+	* sysdeps/x86/bits/mathdef.h [defined __USE_ISOC99 && defined
+	_MATH_H && !defined _MATH_H_MATHDEF]: Likewise.
+
 2014-03-20  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 	    Vidya Ranganathan  <vidya@linux.vnet.ibm.com>
 

@@ -34,15 +34,15 @@ typedef double double_t;	/* `double' expressions are evaluated as
 
 /* The GCC 4.6 compiler will define __FP_FAST_FMA{,F,L} if the fma{,f,l}
    builtins are supported.  */
-# if __FP_FAST_FMA
+# ifdef __FP_FAST_FMA
 #  define FP_FAST_FMA 1
 # endif
 
-# if __FP_FAST_FMAF
+# ifdef __FP_FAST_FMAF
 #  define FP_FAST_FMAF 1
 # endif
 
-# if __FP_FAST_FMAL
+# ifdef __FP_FAST_FMAL
 #  define FP_FAST_FMAL 1
 # endif
 
