@@ -158,7 +158,8 @@ sub parse_args {
   my (@special);
   my ($call_args);
   my ($ignore_result_any, $ignore_result_all);
-  my ($num_res, @args_res, $start_rm, $this_start_rm);
+  my ($num_res, @args_res, @start_rm, $rm);
+  my (@plus_oflow, @minus_oflow, @plus_uflow, @minus_uflow);
 
   ($descr_args, $descr_res) = split /_/,$descr, 2;
 
@@ -215,15 +216,15 @@ sub parse_args {
   # consistency check
   if ($#args_res == $num_res - 1) {
     # One set of results for all rounding modes, no flags.
-    $start_rm = [ 0, 0, 0, 0 ];
+    @start_rm = ( 0, 0, 0, 0 );
   } elsif ($#args_res == $num_res) {
     # One set of results for all rounding modes, with flags.
     die ("wrong number of arguments")
       unless ($args_res[$#args_res] =~ /EXCEPTION|ERRNO|IGNORE_ZERO_INF_SIGN|TEST_NAN_SIGN|NO_TEST_INLINE|XFAIL_TEST/);
-    $start_rm = [ 0, 0, 0, 0 ];
+    @start_rm = ( 0, 0, 0, 0 );
   } elsif ($#args_res == 4 * $num_res + 3) {
     # One set of results per rounding mode, with flags.
-    $start_rm = [ 0, $num_res + 1, 2 * $num_res + 2, 3 * $num_res + 3 ];
+    @start_rm = ( 0, $num_res + 1, 2 * $num_res + 2, 3 * $num_res + 3 );
   } else {
     die ("wrong number of arguments");
   }
@@ -253,8 +254,12 @@ sub parse_args {
   }
 
   @descr = split //,$descr_res;
-  foreach $this_start_rm (@$start_rm) {
-    $current_arg = $this_start_rm;
+  @plus_oflow = qw(max_value plus_infty max_value plus_infty);
+  @minus_oflow = qw(minus_infty minus_infty -max_value -max_value);
+  @plus_uflow = qw(plus_zero plus_zero plus_zero min_subnorm_value);
+  @minus_uflow = qw(-min_subnorm_value minus_zero minus_zero minus_zero);
+  for ($rm = 0; $rm <= 3; $rm++) {
+    $current_arg = $start_rm[$rm];
     $ignore_result_any = 0;
     $ignore_result_all = 1;
     $cline_res = "";
@@ -313,6 +318,10 @@ sub parse_args {
       $cline_res .= ", $run_extra, $extra_expected";
     }
     $cline_res =~ s/^, //;
+    $cline_res =~ s/plus_oflow/$plus_oflow[$rm]/g;
+    $cline_res =~ s/minus_oflow/$minus_oflow[$rm]/g;
+    $cline_res =~ s/plus_uflow/$plus_uflow[$rm]/g;
+    $cline_res =~ s/minus_uflow/$minus_uflow[$rm]/g;
     $cline .= ", { $cline_res }";
   }
   print $file "    $cline },\n";

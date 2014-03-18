@@ -1,3 +1,15 @@
+2014-03-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/gen-libm-test.pl (parse_args): Handle plus_oflow,
+	minus_oflow, plus_uflow and minus_uflow in expected results.
+	* math/libm-test.inc (scalbn_test_data): Add more tests of
+	negative arguments.  Use plus_oflow, minus_oflow, plus_uflow and
+	minus_uflow.
+	(scalbn_test): Use ALL_RM_TEST.
+	(scalbln_test_data): Add more tests of negative arguments.  Use
+	plus_oflow, minus_oflow, plus_uflow and minus_uflow.
+	(scalbln_test): Use ALL_RM_TEST.
+
 2014-03-18  Roland McGrath  <roland@hack.frob.com>
 
 	* scripts/abilist.awk: Ignore symbols marked with .hidden.
