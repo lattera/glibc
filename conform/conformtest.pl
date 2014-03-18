@@ -264,7 +264,6 @@ sub checknamespace {
   close (TESTFILE);
 
   undef %errors;
-  $nknown = 0;
   open (CONTENT, "$CC $CFLAGS_namespace -E $fnamebase.c -P -Wp,-dN | sed -e '/^# [1-9]/d' -e '/^[[:space:]]*\$/d' |");
   loop: while (<CONTENT>) {
     chop;
@@ -324,7 +323,7 @@ while ($#headers >= 0) {
   printf ("Testing <$h>\n");
   printf ("----------" . "-" x length ($h) . "\n");
 
-  open (CONTROL, "$CC -E -D$standard -x c data/$h-data |");
+  open (CONTROL, "$CC -E -D$standard -std=c99 -x c data/$h-data |");
   control: while (<CONTROL>) {
     chop;
     next control if (/^#/);
