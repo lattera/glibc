@@ -21,7 +21,10 @@
 #endif
 
 /* The following definitions basically come from the kernel headers.
-   But the kernel header is not namespace clean.  */
+   But the kernel header is not namespace clean.
+
+   This file is also used by some non-Linux configurations of the
+   GNU C Library, for other systems that use these same bit values.  */
 
 
 /* Protections are chosen from these bits, OR'd together.  The

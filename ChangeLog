@@ -1,5 +1,9 @@
 2014-03-18  Roland McGrath  <roland@hack.frob.com>
 
+	* bits/mman-linux.h: Add comment about non-Linux use.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add comment about
+	bits/mman-linux.h resting place.
+
 	* sysdeps/unix/sysv/linux/bits/mman-linux.h: Moved to ...
 	* bits/mman-linux.h: ... here.
 
