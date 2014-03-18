@@ -1,3 +1,7 @@
+2014-03-18  Roland McGrath  <roland@hack.frob.com>
+
+	* scripts/abilist.awk: Ignore symbols marked with .hidden.
+
 2014-03-18  Will Newton  <will.newton@linaro.org>
 
 	* sysdeps/unix/sysv/linux/aarch64/sysdep.h: Remove
