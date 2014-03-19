@@ -43,5 +43,8 @@
 
 #include_next <kernel-features.h>
 
-/* The MicroBlaze kernel does not support the pselect6 syscall.  */
+/* The MicroBlaze kernel does not support the pselect6, preadv and
+   pwritev syscalls.  */
 #undef __ASSUME_PSELECT
+#undef __ASSUME_PREADV
+#undef __ASSUME_PWRITEV

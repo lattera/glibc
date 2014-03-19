@@ -93,4 +93,10 @@
 # define __ASSUME_FDATASYNC	1
 #endif
 
+/* Support for preadv and pwritev was added for alpha in 2.6.33.  */
+#if __LINUX_KERNEL_VERSION < 0x020621
+# undef __ASSUME_PREADV
+# undef __ASSUME_PWRITEV
+#endif
+
 #endif /* _KERNEL_FEATURES_H */

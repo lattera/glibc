@@ -1,3 +1,13 @@
+2014-03-19  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16649]
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
+	[__LINUX_KERNEL_VERSION < 0x020621] (__ASSUME_PREADV): Undefine.
+	[__LINUX_KERNEL_VERSION < 0x020621] (__ASSUME_PWRITEV): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	(__ASSUME_PREADV): Undefine.
+	(__ASSUME_PWRITEV): Likewise.
+
 2014-03-18  Roland McGrath  <roland@hack.frob.com>
 
 	* bits/mman-linux.h: Add comment about non-Linux use.
