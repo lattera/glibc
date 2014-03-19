@@ -1,3 +1,11 @@
+2014-03-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (fdim_test): Use ALL_RM_TEST.
+	(ldexp_test_data): Remove.
+	(ldexp_test): Move to after scalbn_test.  Use ALL_RM_TEST with
+	scalbn_test_data.
+	(scalb_test): Use ALL_RM_TEST.
+
 2014-03-19  Andreas Schwab  <schwab@suse.de>
 
 	* nscd/nscd.service: Also invalidate netgroup cache on reload.

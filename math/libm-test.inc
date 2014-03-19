@@ -7445,9 +7445,7 @@ static const struct test_ff_f_data fdim_test_data[] =
 static void
 fdim_test (void)
 {
-  START (fdim, 1);
-  RUN_TEST_LOOP_ff_f (fdim, fdim_test_data, );
-  END;
+  ALL_RM_TEST (fdim, 1, fdim_test_data, RUN_TEST_LOOP_ff_f, END);
 }
 
 
@@ -8165,31 +8163,6 @@ jn_test (void)
 {
   START (jn, 0);
   RUN_TEST_LOOP_if_f (jn, jn_test_data, );
-  END;
-}
-
-
-static const struct test_fi_f_data ldexp_test_data[] =
-  {
-    TEST_fi_f (ldexp, 0, 0, 0, NO_INEXACT_EXCEPTION),
-    TEST_fi_f (ldexp, minus_zero, 0, minus_zero, NO_INEXACT_EXCEPTION),
-
-    TEST_fi_f (ldexp, plus_infty, 1, plus_infty, NO_INEXACT_EXCEPTION),
-    TEST_fi_f (ldexp, minus_infty, 1, minus_infty, NO_INEXACT_EXCEPTION),
-    TEST_fi_f (ldexp, qnan_value, 1, qnan_value, NO_INEXACT_EXCEPTION),
-
-    TEST_fi_f (ldexp, 0.8L, 4, 12.8L, NO_INEXACT_EXCEPTION),
-    TEST_fi_f (ldexp, -0.854375L, 5, -27.34L, NO_INEXACT_EXCEPTION),
-
-    /* ldexp (x, 0) == x.  */
-    TEST_fi_f (ldexp, 1.0L, 0L, 1.0L, NO_INEXACT_EXCEPTION),
-  };
-
-static void
-ldexp_test (void)
-{
-  START (ldexp, 1);
-  RUN_TEST_LOOP_fi_f (ldexp, ldexp_test_data, );
   END;
 }
 
@@ -9784,10 +9757,7 @@ static const struct test_ff_f_data scalb_test_data[] =
 static void
 scalb_test (void)
 {
-
-  START (scalb, 1);
-  RUN_TEST_LOOP_ff_f (scalb, scalb_test_data, );
-  END;
+  ALL_RM_TEST (scalb, 1, scalb_test_data, RUN_TEST_LOOP_ff_f, END);
 }
 
 
@@ -9828,6 +9798,13 @@ static void
 scalbn_test (void)
 {
   ALL_RM_TEST (scalbn, 1, scalbn_test_data, RUN_TEST_LOOP_fi_f, END);
+}
+
+static void
+ldexp_test (void)
+{
+  /* ldexp uses the same test data as scalbn.  */
+  ALL_RM_TEST (ldexp, 1, scalbn_test_data, RUN_TEST_LOOP_fi_f, END);
 }
 
 
