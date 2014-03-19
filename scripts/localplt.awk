@@ -32,9 +32,15 @@ $1 == "Offset" && $2 == "Info" { in_relocs = 1; next }
 NF == 0 { in_relocs = 0 }
 
 in_relocs && relocs_offset == jmprel_offset && NF >= 5 {
-  symval = strtonum("0x" $4);
-  if (symval != 0)
+  # Relocations against GNU_IFUNC symbols are not shown as an hexadecimal
+  # value, but rather as the resolver symbol followed by ().
+  if ($4 ~ /\(\)/) {
     print whatfile, $5
+  } else {
+    symval = strtonum("0x" $4);
+    if (symval != 0)
+      print whatfile, $5
+  }
 }
 
 in_relocs { next }
