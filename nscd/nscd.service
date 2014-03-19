@@ -11,6 +11,7 @@ ExecReload=/usr/sbin/nscd -i passwd
 ExecReload=/usr/sbin/nscd -i group
 ExecReload=/usr/sbin/nscd -i hosts
 ExecReload=/usr/sbin/nscd -i services
+ExecReload=/usr/sbin/nscd -i netgroup
 Restart=always
 PIDFile=/run/nscd/nscd.pid
 
