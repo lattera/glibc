@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2014 Free Software Foundation, Inc.
+/* Multiple versions of strpbrk. PowerPC64 version.
+   Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,27 +16,16 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <string.h>
+#ifndef NOT_IN_libc
+# include <string.h>
+# include <shlib-compat.h>
+# include "init-arch.h"
 
-#undef strpbrk
+extern __typeof (strpbrk) __strpbrk_ppc attribute_hidden;
+extern __typeof (strpbrk) __strpbrk_power7 attribute_hidden;
 
-#ifndef STRPBRK
-#define STRPBRK strpbrk
+libc_ifunc (strpbrk,
+	    (hwcap & PPC_FEATURE_HAS_VSX)
+	    ? __strpbrk_power7
+	    : __strpbrk_ppc);
 #endif
-
-/* Find the first occurrence in S of any character in ACCEPT.  */
-char *
-STRPBRK (const char *s, const char *accept)
-{
-  while (*s != '\0')
-    {
-      const char *a = accept;
-      while (*a != '\0')
-	if (*a++ == *s)
-	  return (char *) s;
-      ++s;
-    }
-
-  return NULL;
-}
-libc_hidden_builtin_def (strpbrk)

@@ -1,3 +1,20 @@
+2014-03-20  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+	    Vidya Ranganathan  <vidya@linux.vnet.ibm.com>
+
+	* string/strpbrk.c (strpbrk): Using macro to redefine symbol name.
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add strpbrk-power7
+	and strpbrk-ppc64 objects.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add new strpbrk optimized symbols.
+	* sysdeps/powerpc/powerpc64/multiarch/strpbrk-power7.S: New file:
+	multiarch strpbrk for POWER7.
+	* sysdeps/powerpc/powerpc64/multiarch/strpbrk-ppc64.c: New file:
+	multiarch strpbrk for PPC64.
+	* sysdeps/powerpc/powerpc64/multiarch/strpbrk.c: New file: strpbrk
+	ifunc selector.
+	* sysdeps/powerpc/powerpc64/power7/strpbrk.S: New file: optimited
+	strpbrk for POWER7.
+
 2014-03-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (asinh_test): Use ALL_RM_TEST.

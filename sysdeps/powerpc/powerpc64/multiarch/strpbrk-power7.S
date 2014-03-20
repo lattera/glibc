@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2014 Free Software Foundation, Inc.
+/* Optimized strpbrk implementation for POWER7.
+   Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,27 +16,25 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <string.h>
+#include <sysdep.h>
 
-#undef strpbrk
+#undef EALIGN
+#define EALIGN(name, alignt, words)				\
+  .section ".text";						\
+  ENTRY_2(__strpbrk_power7)					\
+  .align ALIGNARG(alignt);					\
+  EALIGN_W_##words;						\
+  BODY_LABEL(__strpbrk_power7):					\
+  cfi_startproc;						\
+  LOCALENTRY(__strpbrk_power7)
 
-#ifndef STRPBRK
-#define STRPBRK strpbrk
-#endif
+#undef END
+#define END(name)						\
+  cfi_endproc;							\
+  TRACEBACK(__strpbrk_power7)					\
+  END_2(__strpbrk_power7)
 
-/* Find the first occurrence in S of any character in ACCEPT.  */
-char *
-STRPBRK (const char *s, const char *accept)
-{
-  while (*s != '\0')
-    {
-      const char *a = accept;
-      while (*a != '\0')
-	if (*a++ == *s)
-	  return (char *) s;
-      ++s;
-    }
+#undef libc_hidden_builtin_def
+#define libc_hidden_builtin_def(name)
 
-  return NULL;
-}
-libc_hidden_builtin_def (strpbrk)
+#include <sysdeps/powerpc/powerpc64/power7/strpbrk.S>
