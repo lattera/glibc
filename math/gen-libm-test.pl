@@ -378,114 +378,136 @@ sub generate_testfile {
 
   # Replace the special macros
   while (<INPUT>) {
-    # AUTO_TESTS (function, mode),
+    # AUTO_TESTS (function),
     if (/^\s*AUTO_TESTS_/) {
-      my ($descr, $func, $mode, $auto_test, $num_auto_tests);
-      ($descr, $func, $mode) = ($_ =~ /AUTO_TESTS_(\w+)\s*\((\w+),\s*(\w+)\)/);
-      $num_auto_tests = 0;
-      foreach $auto_test (sort keys %{$auto_tests{$func}{$mode}}) {
-	my ($finputs, $format, $inputs, $outputs, $flags);
-	my ($format_conv, $flags_conv, @flags, %flag_cond);
-	$num_auto_tests++;
-	($finputs, $outputs, $flags) = split / : */, $auto_test;
-	($format, $inputs) = split / /, $finputs, 2;
-	$inputs =~ s/ /, /g;
-	$outputs =~ s/ /, /g;
-	$format_conv = convert_condition ($format);
-	print OUTPUT "#if $format_conv\n";
-	@flags = split / /, $flags;
-	foreach (@flags) {
-	  if (/^([^:]*):(.*)$/) {
-	    my ($flag, $cond);
-	    $flag = $1;
-	    $cond = convert_condition ($2);
-	    if (defined ($flag_cond{$flag})) {
-	      if ($flag_cond{$flag} ne "1") {
-		$flag_cond{$flag} .= " || $cond";
-	      }
-	    } else {
-	      $flag_cond{$flag} = $cond;
-	    }
-	  } else {
-	    $flag_cond{$_} = "1";
+      my ($descr, $func, @modes, $auto_test, $num_auto_tests);
+      my (@rm_tests, $rm, $i);
+      @modes = qw(downward tonearest towardzero upward);
+      ($descr, $func) = ($_ =~ /AUTO_TESTS_(\w+)\s*\((\w+)\)/);
+      for ($rm = 0; $rm <= 3; $rm++) {
+	$rm_tests[$rm] = [sort keys %{$auto_tests{$func}{$modes[$rm]}}];
+      }
+      $num_auto_tests = scalar @{$rm_tests[0]};
+      for ($rm = 1; $rm <= 3; $rm++) {
+	if ($num_auto_tests != scalar @{$rm_tests[$rm]}) {
+	  die ("inconsistent numbers of tests for $func\n");
+	}
+	for ($i = 0; $i < $num_auto_tests; $i++) {
+	  if ($rm_tests[0][$i] ne $rm_tests[$rm][$i]) {
+	    die ("inconsistent list of tests of $func\n");
 	  }
 	}
-	$flags_conv = "";
-	if (defined ($flag_cond{"no-test-inline"})) {
-	  $flags_conv .= or_cond_value ($flag_cond{"no-test-inline"},
-					"NO_TEST_INLINE", "0");
-	}
-	if (defined ($flag_cond{"xfail"})) {
-	  $flags_conv .= or_cond_value ($flag_cond{"xfail"},
-					"XFAIL_TEST", "0");
-	}
-	my (@exc_list) = qw(divbyzero inexact invalid overflow underflow);
-	my ($exc);
-	foreach $exc (@exc_list) {
-	  my ($exc_expected, $exc_ok, $no_exc, $exc_cond, $exc_ok_cond);
-	  $exc_expected = "\U$exc\E_EXCEPTION";
-	  $exc_ok = "\U$exc\E_EXCEPTION_OK";
-	  $no_exc = "0";
-	  if ($exc eq "inexact") {
-	    $exc_ok = "0";
-	    $no_exc = "NO_INEXACT_EXCEPTION";
-	  }
-	  if (defined ($flag_cond{$exc})) {
-	    $exc_cond = $flag_cond{$exc};
-	  } else {
-	    $exc_cond = "0";
-	  }
-	  if (defined ($flag_cond{"$exc-ok"})) {
-	    $exc_ok_cond = $flag_cond{"$exc-ok"};
-	  } else {
-	    $exc_ok_cond = "0";
-	  }
-	  $flags_conv .= or_cond_value ($exc_cond,
-					cond_value ($exc_ok_cond,
-						    $exc_ok, $exc_expected),
-					cond_value ($exc_ok_cond,
-						    $exc_ok, $no_exc));
-	}
-	my ($errno_expected, $errno_unknown_cond);
-	if (defined ($flag_cond{"errno-edom"})) {
-	  if ($flag_cond{"errno-edom"} ne "1") {
-	    die ("unexpected condition for errno-edom");
-	  }
-	  if (defined ($flag_cond{"errno-erange"})) {
-	    die ("multiple errno values expected");
-	  }
-	  $errno_expected = "ERRNO_EDOM";
-	} elsif (defined ($flag_cond{"errno-erange"})) {
-	  if ($flag_cond{"errno-erange"} ne "1") {
-	    die ("unexpected condition for errno-erange");
-	  }
-	  $errno_expected = "ERRNO_ERANGE";
-	} else {
-	  $errno_expected = "ERRNO_UNCHANGED";
-	}
-	if (defined ($flag_cond{"errno-edom-ok"})) {
-	  if (defined ($flag_cond{"errno-erange-ok"})
-	      && $flag_cond{"errno-erange-ok"} ne $flag_cond{"errno-edom-ok"}) {
-	    $errno_unknown_cond = "($flag_cond{\"errno-edom-ok\"} || $flag_cond{\"errno-erange-ok\"})";
-	  } else {
-	    $errno_unknown_cond = $flag_cond{"errno-edom-ok"};
-	  }
-	} elsif (defined ($flag_cond{"errno-erange-ok"})) {
-	  $errno_unknown_cond = $flag_cond{"errno-erange-ok"};
-	} else {
-	  $errno_unknown_cond = "0";
-	}
-	$flags_conv .= or_cond_value ($errno_unknown_cond,
-				      "0", $errno_expected);
-	if ($flags_conv ne "") {
-	  $flags_conv =~ s/^ \|/,/;
-	}
-	&parse_args (\*OUTPUT, $descr,
-		     "$func, $inputs, $outputs$flags_conv");
-	print OUTPUT "#endif\n";
       }
       if ($num_auto_tests == 0) {
-	die ("no automatic tests for $func, $mode\n");
+	die ("no automatic tests for $func\n");
+      }
+      foreach $auto_test (@{$rm_tests[0]}) {
+	my ($format, $inputs, $format_conv, $args_str);
+	($format, $inputs) = split / /, $auto_test, 2;
+	$inputs =~ s/ /, /g;
+	$format_conv = convert_condition ($format);
+	print OUTPUT "#if $format_conv\n";
+	$args_str = "$func, $inputs";
+	for ($rm = 0; $rm <= 3; $rm++) {
+	  my ($auto_test_out, $outputs, $flags);
+	  my ($flags_conv, @flags, %flag_cond);
+	  $auto_test_out = $auto_tests{$func}{$modes[$rm]}{$auto_test};
+	  ($outputs, $flags) = split / : */, $auto_test_out;
+	  $outputs =~ s/ /, /g;
+	  @flags = split / /, $flags;
+	  foreach (@flags) {
+	    if (/^([^:]*):(.*)$/) {
+	      my ($flag, $cond);
+	      $flag = $1;
+	      $cond = convert_condition ($2);
+	      if (defined ($flag_cond{$flag})) {
+		if ($flag_cond{$flag} ne "1") {
+		  $flag_cond{$flag} .= " || $cond";
+		}
+	      } else {
+		$flag_cond{$flag} = $cond;
+	      }
+	    } else {
+	      $flag_cond{$_} = "1";
+	    }
+	  }
+	  $flags_conv = "";
+	  if (defined ($flag_cond{"no-test-inline"})) {
+	    $flags_conv .= or_cond_value ($flag_cond{"no-test-inline"},
+					  "NO_TEST_INLINE", "0");
+	  }
+	  if (defined ($flag_cond{"xfail"})) {
+	    $flags_conv .= or_cond_value ($flag_cond{"xfail"},
+					  "XFAIL_TEST", "0");
+	  }
+	  my (@exc_list) = qw(divbyzero inexact invalid overflow underflow);
+	  my ($exc);
+	  foreach $exc (@exc_list) {
+	    my ($exc_expected, $exc_ok, $no_exc, $exc_cond, $exc_ok_cond);
+	    $exc_expected = "\U$exc\E_EXCEPTION";
+	    $exc_ok = "\U$exc\E_EXCEPTION_OK";
+	    $no_exc = "0";
+	    if ($exc eq "inexact") {
+	      $exc_ok = "0";
+	      $no_exc = "NO_INEXACT_EXCEPTION";
+	    }
+	    if (defined ($flag_cond{$exc})) {
+	      $exc_cond = $flag_cond{$exc};
+	    } else {
+	      $exc_cond = "0";
+	    }
+	    if (defined ($flag_cond{"$exc-ok"})) {
+	      $exc_ok_cond = $flag_cond{"$exc-ok"};
+	    } else {
+	      $exc_ok_cond = "0";
+	    }
+	    $flags_conv .= or_cond_value ($exc_cond,
+					  cond_value ($exc_ok_cond,
+						      $exc_ok, $exc_expected),
+					  cond_value ($exc_ok_cond,
+						      $exc_ok, $no_exc));
+	  }
+	  my ($errno_expected, $errno_unknown_cond);
+	  if (defined ($flag_cond{"errno-edom"})) {
+	    if ($flag_cond{"errno-edom"} ne "1") {
+	      die ("unexpected condition for errno-edom");
+	    }
+	    if (defined ($flag_cond{"errno-erange"})) {
+	      die ("multiple errno values expected");
+	    }
+	    $errno_expected = "ERRNO_EDOM";
+	  } elsif (defined ($flag_cond{"errno-erange"})) {
+	    if ($flag_cond{"errno-erange"} ne "1") {
+	      die ("unexpected condition for errno-erange");
+	    }
+	    $errno_expected = "ERRNO_ERANGE";
+	  } else {
+	    $errno_expected = "ERRNO_UNCHANGED";
+	  }
+	  if (defined ($flag_cond{"errno-edom-ok"})) {
+	    if (defined ($flag_cond{"errno-erange-ok"})
+		&& ($flag_cond{"errno-erange-ok"}
+		    ne $flag_cond{"errno-edom-ok"})) {
+	      $errno_unknown_cond = "($flag_cond{\"errno-edom-ok\"} || $flag_cond{\"errno-erange-ok\"})";
+	    } else {
+	      $errno_unknown_cond = $flag_cond{"errno-edom-ok"};
+	    }
+	  } elsif (defined ($flag_cond{"errno-erange-ok"})) {
+	    $errno_unknown_cond = $flag_cond{"errno-erange-ok"};
+	  } else {
+	    $errno_unknown_cond = "0";
+	  }
+	  $flags_conv .= or_cond_value ($errno_unknown_cond,
+					"0", $errno_expected);
+	  if ($flags_conv eq "") {
+	    $flags_conv = ", NO_EXCEPTION";
+	  } else {
+	    $flags_conv =~ s/^ \|/,/;
+	  }
+	  $args_str .= ", $outputs$flags_conv";
+	}
+	&parse_args (\*OUTPUT, $descr, $args_str);
+	print OUTPUT "#endif\n";
       }
       next;
     }
@@ -686,8 +708,8 @@ sub parse_auto_input {
     chop;
     next if !/^= /;
     s/^= //;
-    if (/^(\S+) (\S+) (.*)$/) {
-      $auto_tests{$1}{$2}{$3} = 1;
+    if (/^(\S+) (\S+) ([^:]*) : (.*)$/) {
+      $auto_tests{$1}{$2}{$3} = $4;
     } else {
       die ("bad automatic test line: $_\n");
     }

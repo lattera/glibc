@@ -1,3 +1,186 @@
+2014-03-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/gen-libm-test.pl (generate_testfile): Expect only function
+	name as argument to AUTO_TESTS_* and pass results for all rounding
+	modes to parse_args.
+	(parse_auto_input): Separate inputs of automatic tests from
+	outputs before storing in %auto_tests.
+	* math/libm-test.inc (acos_test_data): Update call to
+	AUTO_TESTS_f_f.
+	(acos_test): Use ALL_RM_TEST.
+	(acos_tonearest_test_data): Remove.
+	(acos_test_tonearest): Likewise.
+	(acos_towardzero_test_data): Likewise.
+	(acos_test_towardzero): Likewise.
+	(acos_downward_test_data): Likewise.
+	(acos_test_downward): Likewise.
+	(acos_upward_test_data): Likewise.
+	(acos_test_upward): Likewise.
+	(acosh_test_data): Update call to AUTO_TESTS_f_f.
+	(asin_test_data): Likewise.
+	(asin_test): Use ALL_RM_TEST.
+	(asin_tonearest_test_data): Remove.
+	(asin_test_tonearest): Likewise.
+	(asin_towardzero_test_data): Likewise.
+	(asin_test_towardzero): Likewise.
+	(asin_downward_test_data): Likewise.
+	(asin_test_downward): Likewise.
+	(asin_upward_test_data): Likewise.
+	(asin_test_upward): Likewise.
+	(asinh_test_data): Update call to AUTO_TESTS_f_f.
+	(atan_test_data): Likewise.
+	(atanh_test_data): Likewise.
+	(atan2_test_data): Update call to AUTO_TESTS_ff_f.
+	(cabs_test_data): Update call to AUTO_TESTS_c_f.
+	(carg_test_data): Likewise.
+	(cbrt_test_data): Update call to AUTO_TESTS_f_f.
+	(ccos_test_data): Update call to AUTO_TESTS_c_c.
+	(ccosh_test_data): Likewise.
+	(cexp_test_data): Likewise.
+	(clog_test_data): Likewise.
+	(clog10_test_data): Likewise.
+	(cos_test_data): Update call to AUTO_TESTS_f_f.
+	(cos_test): Use ALL_RM_TEST.
+	(cos_tonearest_test_data): Remove.
+	(cos_test_tonearest): Likewise.
+	(cos_towardzero_test_data): Likewise.
+	(cos_test_towardzero): Likewise.
+	(cos_downward_test_data): Likewise.
+	(cos_test_downward): Likewise.
+	(cos_upward_test_data): Likewise.
+	(cos_test_upward): Likewise.
+	(cosh_test_data): Update call to AUTO_TESTS_f_f.
+	(cosh_test): Use ALL_RM_TEST.
+	(cosh_tonearest_test_data): Remove.
+	(cosh_test_tonearest): Likewise.
+	(cosh_towardzero_test_data): Likewise.
+	(cosh_test_towardzero): Likewise.
+	(cosh_downward_test_data): Likewise.
+	(cosh_test_downward): Likewise.
+	(cosh_upward_test_data): Likewise.
+	(cosh_test_upward): Likewise.
+	(cpow_test_data): Update call to AUTO_TESTS_cc_c.
+	(csqrt_test_data): Update call to AUTO_TESTS_c_c.
+	(ctan_test_data): Likewise.
+	(ctan_test): Use ALL_RM_TEST.
+	(ctan_tonearest_test_data): Remove.
+	(ctan_test_tonearest): Likewise.
+	(ctan_towardzero_test_data): Likewise.
+	(ctan_test_towardzero): Likewise.
+	(ctan_downward_test_data): Likewise.
+	(ctan_test_downward): Likewise.
+	(ctan_upward_test_data): Likewise.
+	(ctan_test_upward): Likewise.
+	(ctanh_test_data): Update call to AUTO_TESTS_c_c.
+	(ctanh_test): Use ALL_RM_TEST.
+	(ctanh_tonearest_test_data): Remove.
+	(ctanh_test_tonearest): Likewise.
+	(ctanh_towardzero_test_data): Likewise.
+	(ctanh_test_towardzero): Likewise.
+	(ctanh_downward_test_data): Likewise.
+	(ctanh_test_downward): Likewise.
+	(ctanh_upward_test_data): Likewise.
+	(ctanh_test_upward): Likewise.
+	(erf_test_data): Update call to AUTO_TESTS_f_f.
+	(erfc_test_data): Likewise.
+	(exp_test_data): Likewise.
+	(exp_test): Use ALL_RM_TEST.
+	(exp_tonearest_test_data): Remove.
+	(exp_test_tonearest): Likewise.
+	(exp_towardzero_test_data): Likewise.
+	(exp_test_towardzero): Likewise.
+	(exp_downward_test_data): Likewise.
+	(exp_test_downward): Likewise.
+	(exp_upward_test_data): Likewise.
+	(exp_test_upward): Likewise.
+	(exp10_test_data): Update call to AUTO_TESTS_f_f.
+	(exp10_test): Use ALL_RM_TEST.
+	(exp10_tonearest_test_data): Remove.
+	(exp10_test_tonearest): Likewise.
+	(exp10_towardzero_test_data): Likewise.
+	(exp10_test_towardzero): Likewise.
+	(exp10_downward_test_data): Likewise.
+	(exp10_test_downward): Likewise.
+	(exp10_upward_test_data): Likewise.
+	(exp10_test_upward): Likewise.
+	(exp2_test_data): Update call to AUTO_TESTS_f_f.
+	(expm1_test_data): Likewise.
+	(expm1_test): Use ALL_RM_TEST.
+	(expm1_tonearest_test_data): Remove.
+	(expm1_test_tonearest): Likewise.
+	(expm1_towardzero_test_data): Likewise.
+	(expm1_test_towardzero): Likewise.
+	(expm1_downward_test_data): Likewise.
+	(expm1_test_downward): Likewise.
+	(expm1_upward_test_data): Likewise.
+	(expm1_test_upward): Likewise.
+	(fma_test_data): Update call to AUTO_TESTS_fff_f.
+	(fma_test): Use ALL_RM_TEST.
+	(fma_towardzero_test_data): Remove.
+	(fma_test_towardzero): Likewise.
+	(fma_downward_test_data): Likewise.
+	(fma_test_downward): Likewise.
+	(fma_upward_test_data): Likewise.
+	(fma_test_upward): Likewise.
+	(hypot_test_data): Update call to AUTO_TESTS_ff_f.
+	(j0_test_data): Update call to AUTO_TESTS_f_f.
+	(j1_test_data): Likewise.
+	(jn_test_data): Update call to AUTO_TESTS_if_f.
+	(lgamma_test_data): Update call to AUTO_TESTS_f_f1.
+	(log_test_data): Update call to AUTO_TESTS_f_f.
+	(log10_test_data): Likewise.
+	(log1p_test_data): Likewise.
+	(log2_test_data): Likewise.
+	(pow_test_data): Update call to AUTO_TESTS_ff_f.
+	(pow_tonearest_test_data): Likewise.
+	(sin_test_data): Update call to AUTO_TESTS_f_f.
+	(sin_test): Use ALL_RM_TEST.
+	(sin_tonearest_test_data): Remove.
+	(sin_test_tonearest): Likewise.
+	(sin_towardzero_test_data): Likewise.
+	(sin_test_towardzero): Likewise.
+	(sin_downward_test_data): Likewise.
+	(sin_test_downward): Likewise.
+	(sin_upward_test_data): Likewise.
+	(sin_test_upward): Likewise.
+	(sincos_test_data): Update call to AUTO_TESTS_fFF_11.
+	(sinh_test_data): Update call to AUTO_TESTS_f_f.
+	(sinh_test): Use ALL_RM_TEST.
+	(sinh_tonearest_test_data): Remove.
+	(sinh_test_tonearest): Likewise.
+	(sinh_towardzero_test_data): Likewise.
+	(sinh_test_towardzero): Likewise.
+	(sinh_downward_test_data): Likewise.
+	(sinh_test_downward): Likewise.
+	(sinh_upward_test_data): Likewise.
+	(sinh_test_upward): Likewise.
+	(sqrt_test_data): Update call to AUTO_TESTS_f_f.
+	(sqrt_test): Use ALL_RM_TEST.
+	(sqrt_tonearest_test_data): Remove.
+	(sqrt_test_tonearest): Likewise.
+	(sqrt_towardzero_test_data): Likewise.
+	(sqrt_test_towardzero): Likewise.
+	(sqrt_downward_test_data): Likewise.
+	(sqrt_test_downward): Likewise.
+	(sqrt_upward_test_data): Likewise.
+	(sqrt_test_upward): Likewise.
+	(tan_test_data): Update call to AUTO_TESTS_f_f.
+	(tan_test): Use ALL_RM_TEST.
+	(tan_tonearest_test_data): Remove.
+	(tan_test_tonearest): Likewise.
+	(tan_towardzero_test_data): Likewise.
+	(tan_test_towardzero): Likewise.
+	(tan_downward_test_data): Likewise.
+	(tan_test_downward): Likewise.
+	(tan_upward_test_data): Likewise.
+	(tan_test_upward): Likewise.
+	(tanh_test_data): Update call to AUTO_TESTS_f_f.
+	(tgamma_test_data): Likewise.
+	(y0_test_data): Likewise.
+	(y1_test_data): Likewise.
+	(yn_test_data): Update call to AUTO_TESTS_if_f.
+	(main): Do not call removed functions.
+
 2014-03-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (fdim_test): Use ALL_RM_TEST.
