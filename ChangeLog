@@ -1,3 +1,19 @@
+2014-03-20  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+        * string/strcspn.c (strcspn): Using macro to redefine symbol name.
+        * sysdeps/powerpc/powerpc64/multiarch/Makefile: Add strcspn-power7
+	and strcspn-ppc64 objects.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add new strcspn optimized symbols.
+	* sysdeps/powerpc/powerpc64/multiarch/strcspn-power7.S: New file:
+	multiarch strcspn for POWER7.
+	* sysdeps/powerpc/powerpc64/multiarch/strcspn-ppc64.c: New file:
+	multiarch strcspn for PPC64.
+	* sysdeps/powerpc/powerpc64/multiarch/strcspn.c: New file: strcspn
+	ifunc selector.
+	* sysdeps/powerpc/powerpc64/power7/strcspn.S: New file: optimited
+	strcspn for POWER7.
+
 2014-03-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/gen-libm-test.pl (generate_testfile): Expect only function

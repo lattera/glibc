@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2014 Free Software Foundation, Inc.
+/* Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -8,7 +8,7 @@
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
@@ -17,25 +17,14 @@
 
 #include <string.h>
 
-#undef strcspn
+#define STRCSPN __strcspn_ppc
+#ifdef SHARED
 
-#ifndef STRCSPN
-# define STRCSPN strcspn
+# undef libc_hidden_builtin_def
+# define libc_hidden_builtin_def(name) \
+  __hidden_ver1 (__strcspn_ppc, __GI_strcspn, __strcspn_ppc);
 #endif
 
-/* Return the length of the maximum initial segment of S
-   which contains no characters from REJECT.  */
-size_t
-STRCSPN (const char *s, const char *reject)
-{
-  size_t count = 0;
+extern __typeof (strcspn) __strcspn_ppc attribute_hidden;
 
-  while (*s != '\0')
-    if (strchr (reject, *s++) == NULL)
-      ++count;
-    else
-      return count;
-
-  return count;
-}
-libc_hidden_builtin_def (strcspn)
+#include <string/strcspn.c>
