@@ -1,3 +1,9 @@
+2014-03-20  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #16743]
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Properly skip over
+	non-matching result from nscd.
+
 2014-03-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* scripts/bench.py: Moved to ...
