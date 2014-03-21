@@ -1,3 +1,20 @@
+2014-03-21  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16731]
+	* sysdeps/i386/fpu/e_log.S (__ieee754_log): Take absolute value
+	when x - 1 is zero.
+	* sysdeps/i386/fpu/e_logf.S (__ieee754_logf): Likewise.
+	* sysdeps/i386/fpu/e_logl.S (__ieee754_logl): Likewise.
+	* sysdeps/i386/i686/fpu/e_logl.S (__ieee754_logl): Likewise.
+	* sysdeps/ieee754/dbl-64/e_log.c (__ieee754_log): Return +0 when
+	argument is 1.
+	* sysdeps/ieee754/ldbl-128/e_logl.c (__ieee754_logl): Likewise.
+	* sysdeps/x86_64/fpu/e_logl.S: Take absolute value when x - 1 is
+	zero.
+	* math/libm-test.inc (log_test): Use ALL_RM_TEST.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2014-03-21  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* scripts/bench.pl: Remove file.

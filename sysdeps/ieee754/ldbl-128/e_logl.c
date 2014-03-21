@@ -240,6 +240,8 @@ __ieee754_logl(long double x)
   /* On this interval the table is not used due to cancellation error.  */
   if ((x <= 1.0078125L) && (x >= 0.9921875L))
     {
+      if (x == 1.0L)
+	return 0.0L;
       z = x - 1.0L;
       k = 64;
       t.value  = 1.0L;

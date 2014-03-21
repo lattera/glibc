@@ -96,6 +96,10 @@ __ieee754_log (double x)
   if (__glibc_likely (ABS (w) > U03))
     goto case_03;
 
+  /* log (1) is +0 in all rounding modes.  */
+  if (w == 0.0)
+    return 0.0;
+
   /*--- Stage I, the case abs(x-1) < 0.03 */
 
   t8 = MHALF * w;

@@ -1170,6 +1170,22 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
+Function: "log_downward":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "log_towardzero":
+ildouble: 1
+ldouble: 1
+
+Function: "log_upward":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
 Function: "pow":
 float: 1
 ifloat: 1

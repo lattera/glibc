@@ -1096,6 +1096,18 @@ Function: "log1p":
 ildouble: 1
 ldouble: 1
 
+Function: "log_downward":
+ildouble: 1
+ldouble: 1
+
+Function: "log_towardzero":
+ildouble: 1
+ldouble: 1
+
+Function: "log_upward":
+ildouble: 1
+ldouble: 1
+
 Function: "pow":
 ildouble: 1
 ldouble: 1

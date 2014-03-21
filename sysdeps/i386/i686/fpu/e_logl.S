@@ -46,7 +46,13 @@ ENTRY(__ieee754_logl)
 	fcomip	%st(1)		// |x-1| : x-1 : x : log(2)
 	fstp	%st(0)		// x-1 : x : log(2)
 	jc	2f
-	fstp	%st(1)		// x-1 : log(2)
+	fxam
+	fnstsw
+	andb	$0x45, %ah
+	cmpb	$0x40, %ah
+	jne	4f
+	fabs			// log(1) is +0 in all rounding modes.
+4:	fstp	%st(1)		// x-1 : log(2)
 	fyl2xp1			// log(x)
 	ret
 
