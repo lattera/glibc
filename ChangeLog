@@ -64,8 +64,8 @@
 
 2014-03-20  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
-        * string/strcspn.c (strcspn): Using macro to redefine symbol name.
-        * sysdeps/powerpc/powerpc64/multiarch/Makefile: Add strcspn-power7
+	* string/strcspn.c (strcspn): Using macro to redefine symbol name.
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add strcspn-power7
 	and strcspn-ppc64 objects.
 	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
 	(__libc_ifunc_impl_list): Add new strcspn optimized symbols.
