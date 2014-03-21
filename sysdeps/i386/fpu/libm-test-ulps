@@ -49,13 +49,101 @@ Function: "asinh":
 ildouble: 1
 ldouble: 1
 
+Function: "asinh_downward":
+double: 1
+float: 1
+ildouble: 1
+ldouble: 3
+
+Function: "asinh_towardzero":
+double: 1
+float: 1
+ildouble: 1
+ldouble: 2
+
+Function: "asinh_upward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 5
+ldouble: 2
+
 Function: "atan2":
+ildouble: 1
+ldouble: 1
+
+Function: "atan2_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "atan2_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "atan2_upward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "atan_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "atan_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "atan_upward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "atanh":
 ildouble: 2
 ldouble: 1
+
+Function: "atanh_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 1
+
+Function: "atanh_towardzero":
+idouble: 1
+ifloat: 1
+ildouble: 4
+ldouble: 1
+
+Function: "atanh_upward":
+idouble: 1
+ifloat: 1
+ildouble: 3
+ldouble: 2
 
 Function: Real part of "cacos":
 double: 1
@@ -89,6 +177,76 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
+Function: Real part of "cacosh_downward":
+double: 3
+float: 3
+idouble: 3
+ifloat: 3
+ildouble: 5
+ldouble: 5
+
+Function: Imaginary part of "cacosh_downward":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Real part of "cacosh_towardzero":
+double: 3
+float: 3
+idouble: 3
+ifloat: 3
+ildouble: 5
+ldouble: 5
+
+Function: Imaginary part of "cacosh_towardzero":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Real part of "cacosh_upward":
+double: 4
+float: 4
+idouble: 4
+ifloat: 4
+ildouble: 5
+ldouble: 5
+
+Function: Imaginary part of "cacosh_upward":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 2
+ldouble: 2
+
+Function: "carg_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "carg_towardzero":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "carg_upward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
 Function: Real part of "casin":
 double: 1
 float: 1
@@ -105,6 +263,54 @@ ifloat: 1
 ildouble: 2
 ldouble: 2
 
+Function: Real part of "casin_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Imaginary part of "casin_downward":
+double: 3
+float: 3
+idouble: 3
+ifloat: 3
+ildouble: 5
+ldouble: 5
+
+Function: Real part of "casin_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Imaginary part of "casin_towardzero":
+double: 3
+float: 3
+idouble: 3
+ifloat: 3
+ildouble: 5
+ldouble: 5
+
+Function: Real part of "casin_upward":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Imaginary part of "casin_upward":
+double: 4
+float: 4
+idouble: 4
+ifloat: 4
+ildouble: 5
+ldouble: 5
+
 Function: Real part of "casinh":
 double: 1
 float: 1
@@ -120,6 +326,54 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+
+Function: Real part of "casinh_downward":
+double: 3
+float: 3
+idouble: 3
+ifloat: 3
+ildouble: 5
+ldouble: 5
+
+Function: Imaginary part of "casinh_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Real part of "casinh_towardzero":
+double: 3
+float: 3
+idouble: 3
+ifloat: 3
+ildouble: 5
+ldouble: 5
+
+Function: Imaginary part of "casinh_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Real part of "casinh_upward":
+double: 4
+float: 4
+idouble: 4
+ifloat: 4
+ildouble: 5
+ldouble: 5
+
+Function: Imaginary part of "casinh_upward":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 2
+ldouble: 2
 
 Function: Imaginary part of "catan":
 double: 1
@@ -142,6 +396,30 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+
+Function: "cbrt_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 3
+ldouble: 3
+
+Function: "cbrt_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: "cbrt_upward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 3
+ldouble: 3
 
 Function: Real part of "ccos":
 double: 1
@@ -328,6 +606,50 @@ Function: Imaginary part of "csqrt":
 ildouble: 1
 ldouble: 1
 
+Function: Real part of "csqrt_downward":
+double: 1
+idouble: 1
+ildouble: 3
+ldouble: 3
+
+Function: Imaginary part of "csqrt_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Real part of "csqrt_towardzero":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+
+Function: Imaginary part of "csqrt_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Real part of "csqrt_upward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 3
+ldouble: 3
+
+Function: Imaginary part of "csqrt_upward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
 Function: Real part of "ctan":
 double: 1
 float: 1
@@ -494,11 +816,39 @@ idouble: 1
 ildouble: 1
 ldouble: 1
 
+Function: "erf_upward":
+ildouble: 1
+ldouble: 1
+
 Function: "erfc":
 double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+
+Function: "erfc_downward":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 3
+ldouble: 3
+
+Function: "erfc_towardzero":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 2
+ldouble: 2
+
+Function: "erfc_upward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 3
+ldouble: 3
 
 Function: "exp10":
 ildouble: 1
@@ -584,7 +934,49 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
+Function: "gamma_downward":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 3
+ldouble: 3
+
+Function: "gamma_towardzero":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 2
+ldouble: 2
+
+Function: "gamma_upward":
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
+ildouble: 2
+ldouble: 2
+
 Function: "hypot":
+ildouble: 1
+ldouble: 1
+
+Function: "hypot_downward":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+
+Function: "hypot_towardzero":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+
+Function: "hypot_upward":
+double: 1
+idouble: 1
 ildouble: 1
 ldouble: 1
 
@@ -596,6 +988,30 @@ ifloat: 1
 ildouble: 2
 ldouble: 2
 
+Function: "j0_downward":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 4
+ldouble: 4
+
+Function: "j0_towardzero":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 5
+ldouble: 5
+
+Function: "j0_upward":
+double: 1
+float: 3
+idouble: 1
+ifloat: 3
+ildouble: 4
+ldouble: 4
+
 Function: "j1":
 double: 2
 float: 1
@@ -603,6 +1019,30 @@ idouble: 2
 ifloat: 1
 ildouble: 1
 ldouble: 1
+
+Function: "j1_downward":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 4
+ldouble: 4
+
+Function: "j1_towardzero":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 4
+ldouble: 4
+
+Function: "j1_upward":
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
+ildouble: 3
+ldouble: 3
 
 Function: "jn":
 double: 2
@@ -619,6 +1059,30 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+
+Function: "lgamma_downward":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 3
+ldouble: 3
+
+Function: "lgamma_towardzero":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 2
+ldouble: 2
+
+Function: "lgamma_upward":
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
+ildouble: 2
+ldouble: 2
 
 Function: "log":
 ildouble: 1
@@ -637,6 +1101,30 @@ ildouble: 1
 ldouble: 1
 
 Function: "pow10":
+ildouble: 1
+ldouble: 1
+
+Function: "pow10_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: "pow10_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "pow10_upward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
@@ -693,6 +1181,24 @@ ldouble: 2
 Function: "sincos":
 ildouble: 1
 ldouble: 1
+
+Function: "sincos_downward":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+
+Function: "sincos_towardzero":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+
+Function: "sincos_upward":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "sinh":
 ildouble: 1
@@ -752,6 +1258,26 @@ ifloat: 1
 ildouble: 2
 ldouble: 2
 
+Function: "tanh_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 3
+ldouble: 1
+
+Function: "tanh_towardzero":
+double: 1
+float: 1
+ildouble: 2
+ldouble: 1
+
+Function: "tanh_upward":
+double: 1
+float: 1
+ildouble: 2
+ldouble: 1
+
 Function: "tgamma":
 double: 4
 float: 2
@@ -768,6 +1294,30 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
+Function: "y0_downward":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 5
+ldouble: 5
+
+Function: "y0_towardzero":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 5
+ldouble: 5
+
+Function: "y0_upward":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 3
+ldouble: 3
+
 Function: "y1":
 double: 2
 float: 2
@@ -775,6 +1325,30 @@ idouble: 2
 ifloat: 2
 ildouble: 2
 ldouble: 2
+
+Function: "y1_downward":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 7
+ldouble: 7
+
+Function: "y1_towardzero":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 5
+ldouble: 5
+
+Function: "y1_upward":
+double: 1
+float: 3
+idouble: 1
+ifloat: 3
+ildouble: 7
+ldouble: 7
 
 Function: "yn":
 double: 2

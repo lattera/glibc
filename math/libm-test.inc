@@ -1830,9 +1830,7 @@ static const struct test_f_f_data asinh_test_data[] =
 static void
 asinh_test (void)
 {
-  START (asinh, 0);
-  RUN_TEST_LOOP_f_f (asinh, asinh_test_data, );
-  END;
+  ALL_RM_TEST (asinh, 0, asinh_test_data, RUN_TEST_LOOP_f_f, END);
 }
 
 static const struct test_f_f_data atan_test_data[] =
@@ -1847,9 +1845,7 @@ static const struct test_f_f_data atan_test_data[] =
 static void
 atan_test (void)
 {
-  START (atan, 0);
-  RUN_TEST_LOOP_f_f (atan, atan_test_data, );
-  END;
+  ALL_RM_TEST (atan, 0, atan_test_data, RUN_TEST_LOOP_f_f, END);
 }
 
 
@@ -1863,8 +1859,8 @@ static const struct test_f_f_data atanh_test_data[] =
     /* atanh (x) == qNaN plus invalid exception if |x| > 1.  */
     TEST_f_f (atanh, 1.125L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (atanh, -1.125L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
-    TEST_f_f (atanh, max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
-    TEST_f_f (atanh, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (atanh, max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM|NO_TEST_INLINE),
+    TEST_f_f (atanh, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM|NO_TEST_INLINE),
     TEST_f_f (atanh, plus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (atanh, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
 
@@ -1874,9 +1870,7 @@ static const struct test_f_f_data atanh_test_data[] =
 static void
 atanh_test (void)
 {
-  START (atanh, 0);
-  RUN_TEST_LOOP_f_f (atanh, atanh_test_data, );
-  END;
+  ALL_RM_TEST (atanh, 0, atanh_test_data, RUN_TEST_LOOP_f_f, END);
 }
 
 static const struct test_ff_f_data atan2_test_data[] =
@@ -1911,9 +1905,7 @@ static const struct test_ff_f_data atan2_test_data[] =
 static void
 atan2_test (void)
 {
-  START (atan2, 0);
-  RUN_TEST_LOOP_ff_f (atan2, atan2_test_data, );
-  END;
+  ALL_RM_TEST (atan2, 0, atan2_test_data, RUN_TEST_LOOP_ff_f, END);
 }
 
 static const struct test_c_f_data cabs_test_data[] =
@@ -1936,9 +1928,7 @@ static const struct test_c_f_data cabs_test_data[] =
 static void
 cabs_test (void)
 {
-  START (cabs, 0);
-  RUN_TEST_LOOP_c_f (cabs, cabs_test_data, );
-  END;
+  ALL_RM_TEST (cabs, 0, cabs_test_data, RUN_TEST_LOOP_c_f, END);
 }
 
 
@@ -3311,9 +3301,7 @@ static const struct test_c_c_data cacosh_test_data[] =
 static void
 cacosh_test (void)
 {
-  START (cacosh, 0);
-  RUN_TEST_LOOP_c_c (cacosh, cacosh_test_data, );
-  END_COMPLEX;
+  ALL_RM_TEST (cacosh, 0, cacosh_test_data, RUN_TEST_LOOP_c_c, END_COMPLEX);
 }
 
 
@@ -3355,9 +3343,7 @@ static const struct test_c_f_data carg_test_data[] =
 static void
 carg_test (void)
 {
-  START (carg, 0);
-  RUN_TEST_LOOP_c_f (carg, carg_test_data, );
-  END;
+  ALL_RM_TEST (carg, 0, carg_test_data, RUN_TEST_LOOP_c_f, END);
 }
 
 static const struct test_c_c_data casin_test_data[] =
@@ -4051,9 +4037,7 @@ static const struct test_c_c_data casin_test_data[] =
 static void
 casin_test (void)
 {
-  START (casin, 0);
-  RUN_TEST_LOOP_c_c (casin, casin_test_data, );
-  END_COMPLEX;
+  ALL_RM_TEST (casin, 0, casin_test_data, RUN_TEST_LOOP_c_c, END_COMPLEX);
 }
 
 
@@ -4748,9 +4732,7 @@ static const struct test_c_c_data casinh_test_data[] =
 static void
 casinh_test (void)
 {
-  START (casinh, 0);
-  RUN_TEST_LOOP_c_c (casinh, casinh_test_data, );
-  END_COMPLEX;
+  ALL_RM_TEST (casinh, 0, casinh_test_data, RUN_TEST_LOOP_c_c, END_COMPLEX);
 }
 
 
@@ -5781,9 +5763,7 @@ static const struct test_f_f_data cbrt_test_data[] =
 static void
 cbrt_test (void)
 {
-  START (cbrt, 0);
-  RUN_TEST_LOOP_f_f (cbrt, cbrt_test_data, );
-  END;
+  ALL_RM_TEST (cbrt, 0, cbrt_test_data, RUN_TEST_LOOP_f_f, END);
 }
 
 
@@ -6657,9 +6637,7 @@ static const struct test_c_c_data csqrt_test_data[] =
 static void
 csqrt_test (void)
 {
-  START (csqrt, 0);
-  RUN_TEST_LOOP_c_c (csqrt, csqrt_test_data, );
-  END_COMPLEX;
+  ALL_RM_TEST (csqrt, 0, csqrt_test_data, RUN_TEST_LOOP_c_c, END_COMPLEX);
 }
 
 static const struct test_c_c_data ctan_test_data[] =
@@ -6767,9 +6745,7 @@ static const struct test_f_f_data erf_test_data[] =
 static void
 erf_test (void)
 {
-  START (erf, 0);
-  RUN_TEST_LOOP_f_f (erf, erf_test_data, );
-  END;
+  ALL_RM_TEST (erf, 0, erf_test_data, RUN_TEST_LOOP_f_f, END);
 }
 
 
@@ -6785,9 +6761,7 @@ static const struct test_f_f_data erfc_test_data[] =
 static void
 erfc_test (void)
 {
-  START (erfc, 0);
-  RUN_TEST_LOOP_f_f (erfc, erfc_test_data, );
-  END;
+  ALL_RM_TEST (erfc, 0, erfc_test_data, RUN_TEST_LOOP_f_f, END);
 }
 
 
@@ -6825,10 +6799,8 @@ exp10_test (void)
 static void
 pow10_test (void)
 {
-  START (pow10, 0);
   /* pow10 uses the same test data as exp10.  */
-  RUN_TEST_LOOP_f_f (pow10, exp10_test_data, );
-  END;
+  ALL_RM_TEST (pow10, 0, exp10_test_data, RUN_TEST_LOOP_f_f, END);
 }
 
 
@@ -6844,9 +6816,7 @@ static const struct test_f_f_data exp2_test_data[] =
 static void
 exp2_test (void)
 {
-  START (exp2, 0);
-  RUN_TEST_LOOP_f_f (exp2, exp2_test_data, );
-  END;
+  ALL_RM_TEST (exp2, 0, exp2_test_data, RUN_TEST_LOOP_f_f, END);
 }
 
 
@@ -7260,9 +7230,7 @@ static const struct test_ff_f_data hypot_test_data[] =
 static void
 hypot_test (void)
 {
-  START (hypot, 0);
-  RUN_TEST_LOOP_ff_f (hypot, hypot_test_data, );
-  END;
+  ALL_RM_TEST (hypot, 0, hypot_test_data, RUN_TEST_LOOP_ff_f, END);
 }
 
 
@@ -7549,9 +7517,7 @@ static const struct test_f_f_data j0_test_data[] =
 static void
 j0_test (void)
 {
-  START (j0, 0);
-  RUN_TEST_LOOP_f_f (j0, j0_test_data, );
-  END;
+  ALL_RM_TEST (j0, 0, j0_test_data, RUN_TEST_LOOP_f_f, END);
 }
 
 
@@ -7567,9 +7533,7 @@ static const struct test_f_f_data j1_test_data[] =
 static void
 j1_test (void)
 {
-  START (j1, 0);
-  RUN_TEST_LOOP_f_f (j1, j1_test_data, );
-  END;
+  ALL_RM_TEST (j1, 0, j1_test_data, RUN_TEST_LOOP_f_f, END);
 }
 
 static const struct test_if_f_data jn_test_data[] =
@@ -7621,18 +7585,14 @@ static const struct test_f_f1_data lgamma_test_data[] =
 static void
 lgamma_test (void)
 {
-  START (lgamma, 0);
-  RUN_TEST_LOOP_f_f1 (lgamma, lgamma_test_data, , signgam);
-  END;
+  ALL_RM_TEST (lgamma, 0, lgamma_test_data, RUN_TEST_LOOP_f_f1, END, signgam);
 }
 
 static void
 gamma_test (void)
 {
-  START (gamma, 0);
   /* gamma uses the same test data as lgamma.  */
-  RUN_TEST_LOOP_f_f1 (gamma, lgamma_test_data, , signgam);
-  END;
+  ALL_RM_TEST (gamma, 0, lgamma_test_data, RUN_TEST_LOOP_f_f1, END, signgam);
 }
 
 
@@ -9374,9 +9334,7 @@ sincos_test (void)
 {
   FLOAT sin_res, cos_res;
 
-  START (sincos, 0);
-  RUN_TEST_LOOP_fFF_11 (sincos, sincos_test_data, , sin_res, cos_res);
-  END;
+  ALL_RM_TEST (sincos, 0, sincos_test_data, RUN_TEST_LOOP_fFF_11, END, sin_res, cos_res);
 }
 
 static const struct test_f_f_data sinh_test_data[] =
@@ -9443,9 +9401,7 @@ static const struct test_f_f_data tanh_test_data[] =
 static void
 tanh_test (void)
 {
-  START (tanh, 0);
-  RUN_TEST_LOOP_f_f (tanh, tanh_test_data, );
-  END;
+  ALL_RM_TEST (tanh, 0, tanh_test_data, RUN_TEST_LOOP_f_f, END);
 }
 
 static const struct test_f_f_data tgamma_test_data[] =
@@ -9609,9 +9565,7 @@ static const struct test_f_f_data y0_test_data[] =
 static void
 y0_test (void)
 {
-  START (y0, 0);
-  RUN_TEST_LOOP_f_f (y0, y0_test_data, );
-  END;
+  ALL_RM_TEST (y0, 0, y0_test_data, RUN_TEST_LOOP_f_f, END);
 }
 
 
@@ -9632,9 +9586,7 @@ static const struct test_f_f_data y1_test_data[] =
 static void
 y1_test (void)
 {
-  START (y1, 0);
-  RUN_TEST_LOOP_f_f (y1, y1_test_data, );
-  END;
+  ALL_RM_TEST (y1, 0, y1_test_data, RUN_TEST_LOOP_f_f, END);
 }
 
 

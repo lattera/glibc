@@ -1,3 +1,33 @@
+2014-03-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (asinh_test): Use ALL_RM_TEST.
+	(atan_test): Likewise.
+	(atanh_test_data): Use NO_TEST_INLINE for two tests.
+	(atanh_test): Use ALL_RM_TEST.
+	(atan2_test_data): Likewise.
+	(cabs_test): Likewise.
+	(cacosh_test): Likewise.
+	(carg_test): Likewise.
+	(casin_test): Likewise.
+	(casinh_test): Likewise.
+	(cbrt_test): Likewise.
+	(csqrt_test): Likewise.
+	(erf_test): Likewise.
+	(erfc_test): Likewise.
+	(pow10_test): Likewise.
+	(exp2_test): Likewise.
+	(hypot_test): Likewise.
+	(j0_test): Likewise.
+	(j1_test): Likewise.
+	(lgamma_test): Likewise.
+	(gamma_test): Likewise.
+	(sincos_test): Likewise.
+	(tanh_test): Likewise.
+	(y0_test): Likewise.
+	(y1_test): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2014-03-20  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
         * string/strcspn.c (strcspn): Using macro to redefine symbol name.
