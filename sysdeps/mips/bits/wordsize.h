@@ -15,6 +15,8 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <sgidefs.h>
+
 #define __WORDSIZE	_MIPS_SZPTR
 #if _MIPS_SIM == _ABI64
 # define __WORDSIZE_TIME64_COMPAT32	1

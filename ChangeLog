@@ -1,5 +1,9 @@
 2014-03-21  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/mips/bits/wordsize.h: Include <sgidefs.h>.
+	* sysdeps/unix/sysv/linux/mips/getrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/setrlimit64.c: Likewise.
+
 	[BZ #16731]
 	* sysdeps/i386/fpu/e_log.S (__ieee754_log): Take absolute value
 	when x - 1 is zero.

@@ -15,6 +15,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <sgidefs.h>
 
 #if _MIPS_SIM == _ABIO32 || _MIPS_SIM == _ABIN32
 
