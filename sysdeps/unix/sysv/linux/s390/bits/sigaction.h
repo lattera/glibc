@@ -43,7 +43,8 @@ struct sigaction
 #endif
 
     /* Special flags.  */
-    unsigned long int sa_flags;
+    int __glibc_reserved0;
+    int sa_flags;
 
     /* Restore handler.  */
     void (*sa_restorer) (void);
