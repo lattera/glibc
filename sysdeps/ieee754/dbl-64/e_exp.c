@@ -58,168 +58,178 @@ __ieee754_exp (double x)
   int4 i, j, m, n, ex;
   double retval;
 
-  SET_RESTORE_ROUND (FE_TONEAREST);
+  {
+    SET_RESTORE_ROUND (FE_TONEAREST);
 
-  junk1.x = x;
-  m = junk1.i[HIGH_HALF];
-  n = m & hugeint;
+    junk1.x = x;
+    m = junk1.i[HIGH_HALF];
+    n = m & hugeint;
 
-  if (n > smallint && n < bigint)
-    {
-      y = x * log2e.x + three51.x;
-      bexp = y - three51.x;	/*  multiply the result by 2**bexp        */
+    if (n > smallint && n < bigint)
+      {
+	y = x * log2e.x + three51.x;
+	bexp = y - three51.x;	/*  multiply the result by 2**bexp        */
 
-      junk1.x = y;
+	junk1.x = y;
 
-      eps = bexp * ln_two2.x;	/* x = bexp*ln(2) + t - eps               */
-      t = x - bexp * ln_two1.x;
+	eps = bexp * ln_two2.x;	/* x = bexp*ln(2) + t - eps               */
+	t = x - bexp * ln_two1.x;
 
-      y = t + three33.x;
-      base = y - three33.x;	/* t rounded to a multiple of 2**-18      */
-      junk2.x = y;
-      del = (t - base) - eps;	/*  x = bexp*ln(2) + base + del           */
-      eps = del + del * del * (p3.x * del + p2.x);
+	y = t + three33.x;
+	base = y - three33.x;	/* t rounded to a multiple of 2**-18      */
+	junk2.x = y;
+	del = (t - base) - eps;	/*  x = bexp*ln(2) + base + del           */
+	eps = del + del * del * (p3.x * del + p2.x);
 
-      binexp.i[HIGH_HALF] = (junk1.i[LOW_HALF] + 1023) << 20;
+	binexp.i[HIGH_HALF] = (junk1.i[LOW_HALF] + 1023) << 20;
 
-      i = ((junk2.i[LOW_HALF] >> 8) & 0xfffffffe) + 356;
-      j = (junk2.i[LOW_HALF] & 511) << 1;
+	i = ((junk2.i[LOW_HALF] >> 8) & 0xfffffffe) + 356;
+	j = (junk2.i[LOW_HALF] & 511) << 1;
 
-      al = coar.x[i] * fine.x[j];
-      bet = ((coar.x[i] * fine.x[j + 1] + coar.x[i + 1] * fine.x[j])
-	     + coar.x[i + 1] * fine.x[j + 1]);
+	al = coar.x[i] * fine.x[j];
+	bet = ((coar.x[i] * fine.x[j + 1] + coar.x[i + 1] * fine.x[j])
+	       + coar.x[i + 1] * fine.x[j + 1]);
 
-      rem = (bet + bet * eps) + al * eps;
-      res = al + rem;
-      cor = (al - res) + rem;
-      if (res == (res + cor * err_0))
-	{
-	  retval = res * binexp.x;
-	  goto ret;
-	}
-      else
-	{
-	  retval = __slowexp (x);
-	  goto ret;
-	}			/*if error is over bound */
-    }
+	rem = (bet + bet * eps) + al * eps;
+	res = al + rem;
+	cor = (al - res) + rem;
+	if (res == (res + cor * err_0))
+	  {
+	    retval = res * binexp.x;
+	    goto ret;
+	  }
+	else
+	  {
+	    retval = __slowexp (x);
+	    goto ret;
+	  }			/*if error is over bound */
+      }
 
-  if (n <= smallint)
-    {
-      retval = 1.0;
-      goto ret;
-    }
+    if (n <= smallint)
+      {
+	retval = 1.0;
+	goto ret;
+      }
 
-  if (n >= badint)
-    {
-      if (n > infint)
-	{
-	  retval = x + x;
-	  goto ret;
-	}			/* x is NaN */
-      if (n < infint)
-	{
-	  retval = (x > 0) ? (hhuge * hhuge) : (tiny * tiny);
-	  goto ret;
-	}
-      /* x is finite,  cause either overflow or underflow  */
-      if (junk1.i[LOW_HALF] != 0)
-	{
-	  retval = x + x;
-	  goto ret;
-	}			/*  x is NaN  */
-      retval = (x > 0) ? inf.x : zero;	/* |x| = inf;  return either inf or 0 */
-      goto ret;
-    }
+    if (n >= badint)
+      {
+	if (n > infint)
+	  {
+	    retval = x + x;
+	    goto ret;
+	  }			/* x is NaN */
+	if (n < infint)
+	  {
+	    if (x > 0)
+	      goto ret_huge;
+	    else
+	      goto ret_tiny;
+	  }
+	/* x is finite,  cause either overflow or underflow  */
+	if (junk1.i[LOW_HALF] != 0)
+	  {
+	    retval = x + x;
+	    goto ret;
+	  }			/*  x is NaN  */
+	retval = (x > 0) ? inf.x : zero;	/* |x| = inf;  return either inf or 0 */
+	goto ret;
+      }
 
-  y = x * log2e.x + three51.x;
-  bexp = y - three51.x;
-  junk1.x = y;
-  eps = bexp * ln_two2.x;
-  t = x - bexp * ln_two1.x;
-  y = t + three33.x;
-  base = y - three33.x;
-  junk2.x = y;
-  del = (t - base) - eps;
-  eps = del + del * del * (p3.x * del + p2.x);
-  i = ((junk2.i[LOW_HALF] >> 8) & 0xfffffffe) + 356;
-  j = (junk2.i[LOW_HALF] & 511) << 1;
-  al = coar.x[i] * fine.x[j];
-  bet = ((coar.x[i] * fine.x[j + 1] + coar.x[i + 1] * fine.x[j])
-	 + coar.x[i + 1] * fine.x[j + 1]);
-  rem = (bet + bet * eps) + al * eps;
-  res = al + rem;
-  cor = (al - res) + rem;
-  if (m >> 31)
-    {
-      ex = junk1.i[LOW_HALF];
-      if (res < 1.0)
-	{
-	  res += res;
-	  cor += cor;
-	  ex -= 1;
-	}
-      if (ex >= -1022)
-	{
-	  binexp.i[HIGH_HALF] = (1023 + ex) << 20;
-	  if (res == (res + cor * err_0))
-	    {
-	      retval = res * binexp.x;
-	      goto ret;
-	    }
-	  else
-	    {
-	      retval = __slowexp (x);
-	      goto check_uflow_ret;
-	    }			/*if error is over bound */
-	}
-      ex = -(1022 + ex);
-      binexp.i[HIGH_HALF] = (1023 - ex) << 20;
-      res *= binexp.x;
-      cor *= binexp.x;
-      eps = 1.0000000001 + err_0 * binexp.x;
-      t = 1.0 + res;
-      y = ((1.0 - t) + res) + cor;
-      res = t + y;
-      cor = (t - res) + y;
-      if (res == (res + eps * cor))
-	{
-	  binexp.i[HIGH_HALF] = 0x00100000;
-	  retval = (res - 1.0) * binexp.x;
-	  goto check_uflow_ret;
-	}
-      else
-	{
-	  retval = __slowexp (x);
-	  goto check_uflow_ret;
-	}			/*   if error is over bound    */
-    check_uflow_ret:
-      if (retval < DBL_MIN)
-	{
+    y = x * log2e.x + three51.x;
+    bexp = y - three51.x;
+    junk1.x = y;
+    eps = bexp * ln_two2.x;
+    t = x - bexp * ln_two1.x;
+    y = t + three33.x;
+    base = y - three33.x;
+    junk2.x = y;
+    del = (t - base) - eps;
+    eps = del + del * del * (p3.x * del + p2.x);
+    i = ((junk2.i[LOW_HALF] >> 8) & 0xfffffffe) + 356;
+    j = (junk2.i[LOW_HALF] & 511) << 1;
+    al = coar.x[i] * fine.x[j];
+    bet = ((coar.x[i] * fine.x[j + 1] + coar.x[i + 1] * fine.x[j])
+	   + coar.x[i + 1] * fine.x[j + 1]);
+    rem = (bet + bet * eps) + al * eps;
+    res = al + rem;
+    cor = (al - res) + rem;
+    if (m >> 31)
+      {
+	ex = junk1.i[LOW_HALF];
+	if (res < 1.0)
+	  {
+	    res += res;
+	    cor += cor;
+	    ex -= 1;
+	  }
+	if (ex >= -1022)
+	  {
+	    binexp.i[HIGH_HALF] = (1023 + ex) << 20;
+	    if (res == (res + cor * err_0))
+	      {
+		retval = res * binexp.x;
+		goto ret;
+	      }
+	    else
+	      {
+		retval = __slowexp (x);
+		goto check_uflow_ret;
+	      }			/*if error is over bound */
+	  }
+	ex = -(1022 + ex);
+	binexp.i[HIGH_HALF] = (1023 - ex) << 20;
+	res *= binexp.x;
+	cor *= binexp.x;
+	eps = 1.0000000001 + err_0 * binexp.x;
+	t = 1.0 + res;
+	y = ((1.0 - t) + res) + cor;
+	res = t + y;
+	cor = (t - res) + y;
+	if (res == (res + eps * cor))
+	  {
+	    binexp.i[HIGH_HALF] = 0x00100000;
+	    retval = (res - 1.0) * binexp.x;
+	    goto check_uflow_ret;
+	  }
+	else
+	  {
+	    retval = __slowexp (x);
+	    goto check_uflow_ret;
+	  }			/*   if error is over bound    */
+      check_uflow_ret:
+	if (retval < DBL_MIN)
+	  {
 #if FLT_EVAL_METHOD != 0
-	  volatile
+	    volatile
 #endif
-	  double force_underflow = tiny * tiny;
-	  math_force_eval (force_underflow);
-	}
-      goto ret;
-    }
-  else
-    {
-      binexp.i[HIGH_HALF] = (junk1.i[LOW_HALF] + 767) << 20;
-      if (res == (res + cor * err_0))
-	{
+	      double force_underflow = tiny * tiny;
+	    math_force_eval (force_underflow);
+	  }
+	if (retval == 0)
+	  goto ret_tiny;
+	goto ret;
+      }
+    else
+      {
+	binexp.i[HIGH_HALF] = (junk1.i[LOW_HALF] + 767) << 20;
+	if (res == (res + cor * err_0))
 	  retval = res * binexp.x * t256.x;
-	  goto ret;
-	}
-      else
-	{
+	else
 	  retval = __slowexp (x);
+	if (__isinf (retval))
+	  goto ret_huge;
+	else
 	  goto ret;
-	}
-    }
+      }
+  }
 ret:
   return retval;
+
+ ret_huge:
+  return hhuge * hhuge;
+
+ ret_tiny:
+  return tiny * tiny;
 }
 #ifndef __ieee754_exp
 strong_alias (__ieee754_exp, __exp_finite)

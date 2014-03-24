@@ -5820,9 +5820,7 @@ static const struct test_c_c_data ccos_test_data[] =
 static void
 ccos_test (void)
 {
-  START (ccos, 0);
-  RUN_TEST_LOOP_c_c (ccos, ccos_test_data, );
-  END_COMPLEX;
+  ALL_RM_TEST (ccos, 0, ccos_test_data, RUN_TEST_LOOP_c_c, END_COMPLEX);
 }
 
 
@@ -5879,9 +5877,7 @@ static const struct test_c_c_data ccosh_test_data[] =
 static void
 ccosh_test (void)
 {
-  START (ccosh, 0);
-  RUN_TEST_LOOP_c_c (ccosh, ccosh_test_data, );
-  END_COMPLEX;
+  ALL_RM_TEST (ccosh, 0, ccosh_test_data, RUN_TEST_LOOP_c_c, END_COMPLEX);
 }
 
 
@@ -6467,15 +6463,15 @@ static const struct test_c_c_data csin_test_data[] =
 #endif
 
 #ifdef TEST_FLOAT
-    TEST_c_c (csin, 0x1p-149, 180, 1.043535896672617552965983803453927655332e33L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_c_c (csin, 0x1p-149, 180, 1.043535896672617552965983803453927655332e33L, plus_oflow, OVERFLOW_EXCEPTION),
 #endif
 
 #if defined TEST_DOUBLE || (defined TEST_LDOUBLE && LDBL_MAX_EXP == 1024)
-    TEST_c_c (csin, 0x1p-1074, 1440, 5.981479269486130556466515778180916082415e301L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_c_c (csin, 0x1p-1074, 1440, 5.981479269486130556466515778180916082415e301L, plus_oflow, OVERFLOW_EXCEPTION),
 #endif
 
 #if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
-    TEST_c_c (csin, 0x1p-16434L, 22730, 1.217853148905605987081057582351152052687e4924L, plus_infty, OVERFLOW_EXCEPTION),
+    TEST_c_c (csin, 0x1p-16434L, 22730, 1.217853148905605987081057582351152052687e4924L, plus_oflow, OVERFLOW_EXCEPTION),
 #endif
 
     TEST_c_c (csin, min_subnorm_value, min_value, min_subnorm_value, min_value, UNDERFLOW_EXCEPTION),
@@ -6485,9 +6481,7 @@ static const struct test_c_c_data csin_test_data[] =
 static void
 csin_test (void)
 {
-  START (csin, 0);
-  RUN_TEST_LOOP_c_c (csin, csin_test_data, );
-  END_COMPLEX;
+  ALL_RM_TEST (csin, 0, csin_test_data, RUN_TEST_LOOP_c_c, END_COMPLEX);
 }
 
 
@@ -6566,15 +6560,15 @@ static const struct test_c_c_data csinh_test_data[] =
 #endif
 
 #ifdef TEST_FLOAT
-    TEST_c_c (csinh, 180, 0x1p-149, plus_infty, 1.043535896672617552965983803453927655332e33L, OVERFLOW_EXCEPTION),
+    TEST_c_c (csinh, 180, 0x1p-149, plus_oflow, 1.043535896672617552965983803453927655332e33L, OVERFLOW_EXCEPTION),
 #endif
 
 #if defined TEST_DOUBLE || (defined TEST_LDOUBLE && LDBL_MAX_EXP == 1024)
-    TEST_c_c (csinh, 1440, 0x1p-1074, plus_infty, 5.981479269486130556466515778180916082415e301L, OVERFLOW_EXCEPTION),
+    TEST_c_c (csinh, 1440, 0x1p-1074, plus_oflow, 5.981479269486130556466515778180916082415e301L, OVERFLOW_EXCEPTION),
 #endif
 
 #if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
-    TEST_c_c (csinh, 22730, 0x1p-16434L, plus_infty, 1.217853148905605987081057582351152052687e4924L, OVERFLOW_EXCEPTION),
+    TEST_c_c (csinh, 22730, 0x1p-16434L, plus_oflow, 1.217853148905605987081057582351152052687e4924L, OVERFLOW_EXCEPTION),
 #endif
 
     TEST_c_c (csinh, min_subnorm_value, min_value, min_subnorm_value, min_value, UNDERFLOW_EXCEPTION),
@@ -6584,9 +6578,7 @@ static const struct test_c_c_data csinh_test_data[] =
 static void
 csinh_test (void)
 {
-  START (csinh, 0);
-  RUN_TEST_LOOP_c_c (csinh, csinh_test_data, );
-  END_COMPLEX;
+  ALL_RM_TEST (csinh, 0, csinh_test_data, RUN_TEST_LOOP_c_c, END_COMPLEX);
 }
 
 

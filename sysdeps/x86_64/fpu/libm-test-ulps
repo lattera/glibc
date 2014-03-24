@@ -468,6 +468,54 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
+Function: Real part of "ccos_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 3
+ldouble: 3
+
+Function: Imaginary part of "ccos_downward":
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
+ildouble: 3
+ldouble: 3
+
+Function: Real part of "ccos_towardzero":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 3
+ldouble: 3
+
+Function: Imaginary part of "ccos_towardzero":
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
+ildouble: 3
+ldouble: 3
+
+Function: Real part of "ccos_upward":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 2
+ldouble: 2
+
+Function: Imaginary part of "ccos_upward":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 2
+ldouble: 2
+
 Function: Real part of "ccosh":
 double: 1
 float: 1
@@ -481,6 +529,54 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+
+Function: Real part of "ccosh_downward":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 3
+ldouble: 3
+
+Function: Imaginary part of "ccosh_downward":
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
+ildouble: 3
+ldouble: 3
+
+Function: Real part of "ccosh_towardzero":
+double: 1
+float: 3
+idouble: 1
+ifloat: 3
+ildouble: 3
+ldouble: 3
+
+Function: Imaginary part of "ccosh_towardzero":
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
+ildouble: 3
+ldouble: 3
+
+Function: Real part of "ccosh_upward":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 2
+ldouble: 2
+
+Function: Imaginary part of "ccosh_upward":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 2
+ldouble: 2
 
 Function: Real part of "cexp":
 double: 2
@@ -616,6 +712,54 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
+Function: Real part of "csin_downward":
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
+ildouble: 3
+ldouble: 3
+
+Function: Imaginary part of "csin_downward":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 3
+ldouble: 3
+
+Function: Real part of "csin_towardzero":
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
+ildouble: 3
+ldouble: 3
+
+Function: Imaginary part of "csin_towardzero":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 3
+ldouble: 3
+
+Function: Real part of "csin_upward":
+double: 1
+float: 3
+idouble: 1
+ifloat: 3
+ildouble: 3
+ldouble: 3
+
+Function: Imaginary part of "csin_upward":
+double: 1
+float: 3
+idouble: 1
+ifloat: 3
+ildouble: 3
+ldouble: 3
+
 Function: Real part of "csinh":
 float: 1
 ifloat: 1
@@ -627,6 +771,54 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+
+Function: Real part of "csinh_downward":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 3
+ldouble: 3
+
+Function: Imaginary part of "csinh_downward":
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
+ildouble: 3
+ldouble: 3
+
+Function: Real part of "csinh_towardzero":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 3
+ldouble: 3
+
+Function: Imaginary part of "csinh_towardzero":
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
+ildouble: 3
+ldouble: 3
+
+Function: Real part of "csinh_upward":
+double: 1
+float: 3
+idouble: 1
+ifloat: 3
+ildouble: 3
+ldouble: 3
+
+Function: Imaginary part of "csinh_upward":
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
+ildouble: 3
+ldouble: 3
 
 Function: Real part of "csqrt":
 double: 1
