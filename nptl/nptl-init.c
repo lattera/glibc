@@ -232,6 +232,7 @@ sighandler_setxid (int sig, siginfo_t *si, void *ctx)
   /* Determine the process ID.  It might be negative if the thread is
      in the middle of a fork() call.  */
   pid_t pid = THREAD_GETMEM (THREAD_SELF, pid);
+  int result;
   if (__glibc_unlikely (pid < 0))
     pid = -pid;
 
@@ -245,8 +246,12 @@ sighandler_setxid (int sig, siginfo_t *si, void *ctx)
     return;
 
   INTERNAL_SYSCALL_DECL (err);
-  INTERNAL_SYSCALL_NCS (__xidcmd->syscall_no, err, 3, __xidcmd->id[0],
-			__xidcmd->id[1], __xidcmd->id[2]);
+  result = INTERNAL_SYSCALL_NCS (__xidcmd->syscall_no, err, 3, __xidcmd->id[0],
+				 __xidcmd->id[1], __xidcmd->id[2]);
+  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
+    /* Safety check.  This should never happen if the setxid system
+       calls are only ever called through their glibc wrappers.  */
+    abort ();
 
   /* Reset the SETXID flag.  */
   struct pthread *self = THREAD_SELF;

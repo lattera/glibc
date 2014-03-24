@@ -1,3 +1,10 @@
+2014-04-01  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #13347]
+	* nptl/nptl-init.c (sighandler_setxid): Check system call result.
+	* nptl/tst-setuid2.c: New file.
+	* nptl/Makefile (xtests): Add tst-setuid2.
+
 2014-04-01  Alan Modra  <amodra@gmail.com>
 
 	[BZ #16786]
