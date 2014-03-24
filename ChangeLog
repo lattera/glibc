@@ -1,3 +1,8 @@
+2014-03-24  Stefan Liebler <stli@linux.vnet.ibm.com>
+
+	* nptl/sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h
+	(__PTHREAD_MUTEX_HAVE_ELISION): New define.
+
 2014-03-20  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #16743]
