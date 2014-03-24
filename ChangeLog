@@ -1,3 +1,9 @@
+2014-03-24  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #16002]
+	* sysdeps/unix/sysv/linux/check_pf.c (make_request): Use
+	alloca_account and account alloca use for struct in6ailist.
+
 2014-03-24  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16284]
