@@ -1,3 +1,9 @@
+2014-03-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* scripts/bench.py: Moved to ...
+	* benchtests/scripts/bench.py: ... here.
+	* benchtests/Makefile ($(objpfx)bench-%.c): Adjust.
+
 2014-03-24  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #16002]
