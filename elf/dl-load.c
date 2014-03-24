@@ -1667,7 +1667,7 @@ print_search_path (struct r_search_path_elem **list,
    user might want to know about this.  */
 static int
 open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
-	     int whatcode, bool *found_other_class, bool free_name)
+	     int whatcode, int mode, bool *found_other_class, bool free_name)
 {
   /* This is the expected ELF header.  */
 #define ELF32_CLASS ELFCLASS32
@@ -1843,6 +1843,17 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
 	  errstring = N_("only ET_DYN and ET_EXEC can be loaded");
 	  goto call_lose;
 	}
+      else if (__glibc_unlikely (ehdr->e_type == ET_EXEC
+				 && (mode & __RTLD_OPENEXEC) == 0))
+	{
+	  /* BZ #16634. It is an error to dlopen ET_EXEC (unless
+	     __RTLD_OPENEXEC is explicitly set).  We return error here
+	     so that code in _dl_map_object_from_fd does not try to set
+	     l_tls_modid for this module.  */
+
+	  errstring = N_("cannot dynamically load executable");
+	  goto call_lose;
+	}
       else if (__builtin_expect (ehdr->e_phentsize, sizeof (ElfW(Phdr)))
 	       != sizeof (ElfW(Phdr)))
 	{
@@ -1928,7 +1939,7 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
    if MAY_FREE_DIRS is true.  */
 
 static int
-open_path (const char *name, size_t namelen, int secure,
+open_path (const char *name, size_t namelen, int mode,
 	   struct r_search_path_struct *sps, char **realname,
 	   struct filebuf *fbp, struct link_map *loader, int whatcode,
 	   bool *found_other_class)
@@ -1980,8 +1991,8 @@ open_path (const char *name, size_t namelen, int secure,
 	  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_LIBS))
 	    _dl_debug_printf ("  trying file=%s\n", buf);
 
-	  fd = open_verify (buf, fbp, loader, whatcode, found_other_class,
-			    false);
+	  fd = open_verify (buf, fbp, loader, whatcode, mode,
+			    found_other_class, false);
 	  if (this_dir->status[cnt] == unknown)
 	    {
 	      if (fd != -1)
@@ -2010,7 +2021,7 @@ open_path (const char *name, size_t namelen, int secure,
 	  /* Remember whether we found any existing directory.  */
 	  here_any |= this_dir->status[cnt] != nonexisting;
 
-	  if (fd != -1 && __builtin_expect (secure, 0)
+	  if (fd != -1 && __builtin_expect (mode & __RTLD_SECURE, 0)
 	      && INTUSE(__libc_enable_secure))
 	    {
 	      /* This is an extra security effort to make sure nobody can
@@ -2184,7 +2195,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 	  for (l = loader; l; l = l->l_loader)
 	    if (cache_rpath (l, &l->l_rpath_dirs, DT_RPATH, "RPATH"))
 	      {
-		fd = open_path (name, namelen, mode & __RTLD_SECURE,
+		fd = open_path (name, namelen, mode,
 				&l->l_rpath_dirs,
 				&realname, &fb, loader, LA_SER_RUNPATH,
 				&found_other_class);
@@ -2200,7 +2211,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 	      && main_map != NULL && main_map->l_type != lt_loaded
 	      && cache_rpath (main_map, &main_map->l_rpath_dirs, DT_RPATH,
 			      "RPATH"))
-	    fd = open_path (name, namelen, mode & __RTLD_SECURE,
+	    fd = open_path (name, namelen, mode,
 			    &main_map->l_rpath_dirs,
 			    &realname, &fb, loader ?: main_map, LA_SER_RUNPATH,
 			    &found_other_class);
@@ -2208,7 +2219,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 
       /* Try the LD_LIBRARY_PATH environment variable.  */
       if (fd == -1 && env_path_list.dirs != (void *) -1)
-	fd = open_path (name, namelen, mode & __RTLD_SECURE, &env_path_list,
+	fd = open_path (name, namelen, mode, &env_path_list,
 			&realname, &fb,
 			loader ?: GL(dl_ns)[LM_ID_BASE]._ns_loaded,
 			LA_SER_LIBPATH, &found_other_class);
@@ -2217,7 +2228,7 @@ _dl_map_object (struct link_map *loader, const char *name,
       if (fd == -1 && loader != NULL
 	  && cache_rpath (loader, &loader->l_runpath_dirs,
 			  DT_RUNPATH, "RUNPATH"))
-	fd = open_path (name, namelen, mode & __RTLD_SECURE,
+	fd = open_path (name, namelen, mode,
 			&loader->l_runpath_dirs, &realname, &fb, loader,
 			LA_SER_RUNPATH, &found_other_class);
 
@@ -2267,7 +2278,8 @@ _dl_map_object (struct link_map *loader, const char *name,
 		{
 		  fd = open_verify (cached,
 				    &fb, loader ?: GL(dl_ns)[nsid]._ns_loaded,
-				    LA_SER_CONFIG, &found_other_class, false);
+				    LA_SER_CONFIG, mode, &found_other_class,
+				    false);
 		  if (__glibc_likely (fd != -1))
 		    {
 		      realname = local_strdup (cached);
@@ -2287,7 +2299,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 	  && ((l = loader ?: GL(dl_ns)[nsid]._ns_loaded) == NULL
 	      || __builtin_expect (!(l->l_flags_1 & DF_1_NODEFLIB), 1))
 	  && rtld_search_dirs.dirs != (void *) -1)
-	fd = open_path (name, namelen, mode & __RTLD_SECURE, &rtld_search_dirs,
+	fd = open_path (name, namelen, mode, &rtld_search_dirs,
 			&realname, &fb, l, LA_SER_DEFAULT, &found_other_class);
 
       /* Add another newline when we are tracing the library loading.  */
@@ -2305,7 +2317,7 @@ _dl_map_object (struct link_map *loader, const char *name,
       else
 	{
 	  fd = open_verify (realname, &fb,
-			    loader ?: GL(dl_ns)[nsid]._ns_loaded, 0,
+			    loader ?: GL(dl_ns)[nsid]._ns_loaded, 0, mode,
 			    &found_other_class, true);
 	  if (__builtin_expect (fd, 0) == -1)
 	    free (realname);
