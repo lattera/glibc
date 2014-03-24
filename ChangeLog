@@ -1,5 +1,11 @@
 2014-03-24  Stefan Liebler <stli@linux.vnet.ibm.com>
 
+	[BZ #16714]
+	* sysdeps/unix/sysv/linux/s390/bits/stat.h
+	(struct stat): Rename member pad0 to __glibc_reserved0.
+
+2014-03-24  Stefan Liebler <stli@linux.vnet.ibm.com>
+
 	[BZ #16712]
 	* sysdeps/s390/s390-32/bits/wordsize.h
 	(__WORDSIZE32_SIZE_ULONG): New define.
