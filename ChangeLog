@@ -1,3 +1,9 @@
+2014-03-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/dbl-64/e_exp.c: Include <math.h>.
+	* sysdeps/x86_64/fpu/multiarch/e_exp.c
+	[HAVE_FMA4_SUPPORT || HAVE_AVX_SUPPORT]: Likewise.
+
 2014-03-24  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #16634]

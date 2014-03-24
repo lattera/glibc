@@ -32,6 +32,7 @@
 /*                                                                         */
 /***************************************************************************/
 
+#include <math.h>
 #include "endian.h"
 #include "uexp.h"
 #include "mydefs.h"
