@@ -1,5 +1,15 @@
 2014-03-24  Stefan Liebler <stli@linux.vnet.ibm.com>
 
+	[BZ #16712]
+	* sysdeps/s390/s390-32/bits/wordsize.h
+	(__WORDSIZE32_SIZE_ULONG): New define.
+	* sysdeps/s390/s390-64/bits/wordsize.h
+	(__WORDSIZE32_SIZE_ULONG): Likewise.
+	* sysdeps/generic/stdint.h (SIZE_MAX):
+	Define as UL if __WORDSIZE32_SIZE_ULONG.
+
+2014-03-24  Stefan Liebler <stli@linux.vnet.ibm.com>
+
 	[BZ #16713]
 	* sysdeps/unix/sysv/linux/s390/bits/sigaction.h
 	(__glibc_reserved0): New variable.

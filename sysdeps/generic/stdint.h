@@ -260,7 +260,11 @@ typedef unsigned long long int	uintmax_t;
 # if __WORDSIZE == 64
 #  define SIZE_MAX		(18446744073709551615UL)
 # else
-#  define SIZE_MAX		(4294967295U)
+#  ifdef __WORDSIZE32_SIZE_ULONG
+#   define SIZE_MAX		(4294967295UL)
+#  else
+#   define SIZE_MAX		(4294967295U)
+#  endif
 # endif
 
 /* Limits of `wchar_t'.  */
