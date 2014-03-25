@@ -158,6 +158,8 @@ tst-swscanf-ENV = LOCPATH=$(common-objpfx)localedata
 bug-ftell-ENV = LOCPATH=$(common-objpfx)localedata
 tst-fgetwc-ENV = LOCPATH=$(common-objpfx)localedata
 tst-fseek-ENV = LOCPATH=$(common-objpfx)localedata
+tst-ftell-partial-wide-ENV = LOCPATH=$(common-objpfx)localedata
+tst-ftell-active-handler-ENV = LOCPATH=$(common-objpfx)localedata
 
 generated += tst-fopenloc.mtrace tst-fopenloc.check
 

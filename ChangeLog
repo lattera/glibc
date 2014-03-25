@@ -1,3 +1,8 @@
+2014-03-25  Andreas Schwab  <schwab@suse.de>
+
+	* libio/Makefile (tst-ftell-partial-wide-ENV)
+	(tst-ftell-active-handler-ENV): Define.
+
 2014-03-25  Stefan Liebler <stli@linux.vnet.ibm.com>
 
 	* NEWS: Add 16712, 16713, 16714 to fixed bug list.
