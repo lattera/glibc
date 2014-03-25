@@ -171,6 +171,8 @@ typedef struct
   int min_exp;
   /* The largest normal value.  */
   mpfr_t max;
+  /* The value 0.5ulp above the least positive normal value.  */
+  mpfr_t min_plus_half;
   /* The least positive normal value, 2^(MIN_EXP-1).  */
   mpfr_t min;
   /* The greatest positive subnormal value.  */
@@ -183,13 +185,13 @@ typedef struct
    enumeration.  */
 static fp_format_desc fp_formats[fp_num_formats] =
   {
-    { "flt-32", "f", NULL, 24, 128, -125, {}, {}, {}, {} },
-    { "dbl-64", "", NULL, 53, 1024, -1021, {}, {}, {}, {} },
-    { "ldbl-96-intel", "L", NULL, 64, 16384, -16381, {}, {}, {}, {} },
-    { "ldbl-96-m68k", "L", NULL, 64, 16384, -16382, {}, {}, {}, {} },
-    { "ldbl-128", "L", NULL, 113, 16384, -16381, {}, {}, {}, {} },
+    { "flt-32", "f", NULL, 24, 128, -125, {}, {}, {}, {}, {} },
+    { "dbl-64", "", NULL, 53, 1024, -1021, {}, {}, {}, {}, {} },
+    { "ldbl-96-intel", "L", NULL, 64, 16384, -16381, {}, {}, {}, {}, {} },
+    { "ldbl-96-m68k", "L", NULL, 64, 16384, -16382, {}, {}, {}, {}, {} },
+    { "ldbl-128", "L", NULL, 113, 16384, -16381, {}, {}, {}, {}, {} },
     { "ldbl-128ibm", "L", "0x1.fffffffffffff7ffffffffffff8p+1023",
-      106, 1024, -968, {}, {}, {}, {} },
+      106, 1024, -968, {}, {}, {}, {}, {} },
   };
 
 /* The supported rounding modes.  */
@@ -702,6 +704,10 @@ init_fp_formats ()
       assert_exact (mpfr_set_ui_2exp (fp_formats[f].min, 1,
 				      fp_formats[f].min_exp - 1,
 				      MPFR_RNDN));
+      mpfr_init2 (fp_formats[f].min_plus_half, fp_formats[f].mant_dig + 1);
+      assert_exact (mpfr_set (fp_formats[f].min_plus_half,
+			      fp_formats[f].min, MPFR_RNDN));
+      mpfr_nextabove (fp_formats[f].min_plus_half);
       mpfr_init2 (fp_formats[f].subnorm_max, fp_formats[f].mant_dig);
       assert_exact (mpfr_set (fp_formats[f].subnorm_max, fp_formats[f].min,
 			      MPFR_RNDN));
@@ -1841,8 +1847,9 @@ output_for_one_input_case (FILE *fp, const char *filename, test_function *tf,
 				    <= 0));
 			  may_underflow
 			    |= (!mpfr_zero_p (generic_outputs[i].value.f)
-				&& mpfr_cmpabs (generic_outputs[i].value.f,
-						fp_formats[f].min) <= 0);
+				&& (mpfr_cmpabs (generic_outputs[i].value.f,
+						 fp_formats[f].min_plus_half)
+				    <= 0));
 			}
 		      /* If the result is an exact zero, the sign may
 			 depend on the rounding mode, so recompute it

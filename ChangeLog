@@ -1,3 +1,20 @@
+2014-03-25  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16357]
+	[BZ #16599]
+	* math/gen-auto-libm-tests.c (fp_format_desc): Add field
+	min_plus_half.
+	(fp_formats): Update initializers.
+	(init_fp_formats): Initialize new field.
+	(output_for_one_input_case): Allow underflow for results up to
+	min_plus_half.
+	* math/libm-test.inc (log1p_test): Use ALL_RM_TEST.
+	* math/auto-libm-test-in: Don't mark some underflows from asin and
+	atanh as spurious.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2014-03-25  Andreas Schwab  <schwab@suse.de>
 
 	* libio/Makefile (tst-ftell-partial-wide-ENV)
