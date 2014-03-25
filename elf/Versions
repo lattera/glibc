@@ -12,6 +12,9 @@ libc {
     dl_iterate_phdr;
   }
 %ifdef EXPORT_UNWIND_FIND_FDE
+  # Needed for SHLIB_COMPAT calls using this version.
+  GLIBC_2.2.5 {
+  }
   GCC_3.0 {
     __deregister_frame_info_bases; __register_frame_info_bases;
     __register_frame_info_table_bases; _Unwind_Find_FDE;
