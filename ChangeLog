@@ -1,5 +1,8 @@
 2014-05-14  Andreas Schwab  <schwab@suse.de>
 
+	* elf/rtld.c (_dl_start_final, _dl_start, init_tls, dl_main):
+	Remove code conditionalized on USE___THREAD.
+
 	* config.h.in (HAVE_PT_CHOWN): Define as 0.
 	* sysdeps/unix/grantpt.c (grantpt): Check HAVE_PT_CHOWN for value,
 	not definedness.
