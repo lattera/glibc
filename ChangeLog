@@ -1,3 +1,7 @@
+2014-03-24  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* elf/tst-dlopen-aout.c: Adjust comments. Use test-skeleton.c
+
 2014-03-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/dbl-64/e_exp.c: Include <math.h>.
@@ -7,7 +11,6 @@
 2014-03-24  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #16634]
-
 	* elf/dl-load.c (open_verify): Add mode parameter.
         Error early when ET_EXEC and mode does not have __RTLD_OPENEXEC.
         (open_path): Change from boolean 'secure' to complete flag 'mode'

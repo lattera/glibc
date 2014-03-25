@@ -1,5 +1,8 @@
 /* Test case for BZ #16634.
 
+   Verify that incorrectly dlopen()ing an executable without
+   __RTLD_OPENEXEC does not cause assertion in ld.so.
+
    Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -33,8 +36,8 @@ fn (void *p)
   return p;
 }
 
-int
-main (int argc, char *argv[])
+static int
+do_test (int argc, char *argv[])
 {
   int j;
 
@@ -59,3 +62,6 @@ main (int argc, char *argv[])
 
   return 0;
 }
+
+#define TEST_FUNCTION do_test (argc, argv)
+#include "../test-skeleton.c"
