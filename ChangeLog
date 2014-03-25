@@ -1,3 +1,8 @@
+2014-03-25  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/check_pf.c (make_request): Add out_fail2
+	label to be used after in6ailist is initialized.
+
 2014-03-20  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* nptl/sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h

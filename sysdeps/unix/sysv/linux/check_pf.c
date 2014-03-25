@@ -182,10 +182,10 @@ make_request (int fd, pid_t pid)
 
       ssize_t read_len = TEMP_FAILURE_RETRY (__recvmsg (fd, &msg, 0));
       if (read_len < 0)
-	goto out_fail;
+	goto out_fail2;
 
       if (msg.msg_flags & MSG_TRUNC)
-	goto out_fail;
+	goto out_fail2;
 
       struct nlmsghdr *nlmh;
       for (nlmh = (struct nlmsghdr *) buf;
@@ -251,7 +251,7 @@ make_request (int fd, pid_t pid)
 		{
 		  newp = malloc (sizeof (*newp));
 		  if (newp == NULL)
-		    goto out_fail;
+		    goto out_fail2;
 		  newp->use_malloc = true;
 		}
 	      newp->info.flags = (((ifam->ifa_flags
@@ -289,7 +289,7 @@ make_request (int fd, pid_t pid)
       result = malloc (sizeof (*result)
 		       + in6ailistlen * sizeof (struct in6addrinfo));
       if (result == NULL)
-	goto out_fail;
+	goto out_fail2;
 
       result->timestamp = get_nl_timestamp ();
       result->usecnt = 2;
@@ -319,7 +319,7 @@ make_request (int fd, pid_t pid)
     free (buf);
   return result;
 
- out_fail:
+ out_fail2:
   while (in6ailist != NULL)
     {
       struct in6ailist *next = in6ailist->next;
@@ -327,6 +327,7 @@ make_request (int fd, pid_t pid)
 	free (in6ailist);
       in6ailist = next;
     }
+ out_fail:
   if (use_malloc)
     free (buf);
   return NULL;
