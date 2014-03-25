@@ -1,3 +1,8 @@
+2014-03-20  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* nptl/sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h
+	(__PTHREAD_MUTEX_HAVE_ELISION): New define.
+
 2014-03-25  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16357]

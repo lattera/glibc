@@ -21,6 +21,8 @@
 
 #include <bits/wordsize.h>
 
+#define __PTHREAD_MUTEX_HAVE_ELISION   0
+
 #if __WORDSIZE == 64
 # define __SIZEOF_PTHREAD_ATTR_T 56
 # define __SIZEOF_PTHREAD_MUTEX_T 40
