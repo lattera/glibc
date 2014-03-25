@@ -114,4 +114,7 @@ do_bench (void)
 
 #define TEST_FUNCTION do_bench ()
 
+/* On slower platforms this test needs more than the default 2 seconds.  */
+#define TIMEOUT 10
+
 #include "../test-skeleton.c"
