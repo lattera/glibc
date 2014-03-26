@@ -82,15 +82,6 @@ enum
 #endif
 
 
-/* Mutex initializers.  */
-#if __PTHREAD_MUTEX_HAVE_ELISION == 1 /* 64bit layout.  */
-#define __PTHREAD_SPINS 0, 0
-#elif __PTHREAD_MUTEX_HAVE_ELISION == 2 /* 32bit layout.  */
-#define __PTHREAD_SPINS { 0, 0 }
-#else
-#define __PTHREAD_SPINS 0
-#endif
-
 #ifdef __PTHREAD_MUTEX_HAVE_PREV
 # define PTHREAD_MUTEX_INITIALIZER \
   { { 0, 0, 0, 0, 0, __PTHREAD_SPINS, { 0, 0 } } }

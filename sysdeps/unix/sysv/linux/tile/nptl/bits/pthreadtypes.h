@@ -112,6 +112,9 @@ typedef union
   int __align;
 } pthread_mutexattr_t;
 
+/* Mutex __spins initializer used by PTHREAD_MUTEX_INITIALIZER.  */
+#define __PTHREAD_SPINS 0
+
 
 /* Data structure for conditional variable handling.  The structure of
    the attribute type is not exposed on purpose.  */

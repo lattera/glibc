@@ -1,3 +1,8 @@
+2014-04-09  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* ports/sysdeps/unix/sysv/linux/hppa/nptl/bits/pthreadtypes.h
+	(__PTHREAD_SPIN): Moved defintion from pthread.h.
+
 2014-03-18  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/hppa/dl-fptr.c: Include <dl-unmap-segments.h>.

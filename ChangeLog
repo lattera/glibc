@@ -1,5 +1,37 @@
 2014-04-09  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* nptl/sysdeps/pthread/pthread.h (__PTHREAD_MUTEX_HAVE_ELISION):
+	Remove macro usage.
+	(__PTHREAD_SPINS): Move definition to ...
+	* nptl/sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h
+	(__PTHREAD_SPINS): ... here.
+	* nptl/sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h
+	(__PTHREAD_SPIN): Likewise.
+	* nptl/sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h
+	(__PTHREAD_SPIN): Likewise.
+	* nptl/sysdeps/unix/sysv/linux/sparc/bits/pthreadtypes.h
+	(__PTHREAD_SPIN): Likewise.
+	* nptl/sysdeps/unix/sysv/linux/x86/bits/pthreadtypes.h
+	(__PTHREAD_SPIN): Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/nptl/bits/pthreadtypes.h
+	(__PTHREAD_SPIN): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/nptl/bits/pthreadtypes.h
+	(__PTHREAD_SPIN): Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/bits/pthreadtypes.h
+	(__PTHREAD_SPIN): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/nptl/bits/pthreadtypes.h
+	(__PTHREAD_SPIN): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/nptl/bits/pthreadtypes.h
+	(__PTHREAD_SPIN): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/nptl/bits/pthreadtypes.h
+	(__PTHREAD_SPIN): Likewise.
+	* sysdeps/unix/sysv/linux/mips/nptl/bits/pthreadtypes.h
+	(__PTHREAD_SPIN): Likewise.
+	* sysdeps/unix/sysv/linux/tile/nptl/bits/pthreadtypes.h
+	(__PTHREAD_SPIN): Likewise.
+
+2014-04-09  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/power6x/fpu/Implies: New file.
 	* sysdeps/powerpc/powerpc64/power6x/fpu/Implies: new file.
 	* sysdeps/powerpc/powerpc64/power6x/multiarch/Implies: New file.

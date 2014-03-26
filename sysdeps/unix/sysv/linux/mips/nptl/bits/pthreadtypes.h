@@ -106,6 +106,9 @@ typedef union
   long int __align;
 } pthread_mutex_t;
 
+/* Mutex __spins initializer used by PTHREAD_MUTEX_INITIALIZER.  */
+#define __PTHREAD_SPINS 0
+
 typedef union
 {
   char __size[__SIZEOF_PTHREAD_MUTEXATTR_T];

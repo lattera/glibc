@@ -20,8 +20,6 @@
 
 #include <bits/wordsize.h>
 
-# define __PTHREAD_MUTEX_HAVE_ELISION   0
-
 #if __WORDSIZE == 64
 # define __SIZEOF_PTHREAD_ATTR_T 56
 # define __SIZEOF_PTHREAD_MUTEX_T 40
@@ -106,6 +104,9 @@ typedef union
   char __size[__SIZEOF_PTHREAD_MUTEX_T];
   long int __align;
 } pthread_mutex_t;
+
+/* Mutex __spins initializer used by PTHREAD_MUTEX_INITIALIZER.  */
+#define __PTHREAD_SPINS 0
 
 typedef union
 {

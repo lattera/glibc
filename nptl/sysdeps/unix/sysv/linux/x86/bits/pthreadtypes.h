@@ -105,7 +105,8 @@ typedef union
     short __elision;
     __pthread_list_t __list;
 # define __PTHREAD_MUTEX_HAVE_PREV	1
-# define __PTHREAD_MUTEX_HAVE_ELISION   1
+/* Mutex __spins initializer used by PTHREAD_MUTEX_INITIALIZER.  */
+# define __PTHREAD_SPINS             0, 0
 #else
     unsigned int __nusers;
     __extension__ union
@@ -116,7 +117,7 @@ typedef union
 	short __elision;
 # define __spins d.__espins
 # define __elision d.__elision
-# define __PTHREAD_MUTEX_HAVE_ELISION   2
+# define __PTHREAD_SPINS         { 0, 0 }
       } d;
       __pthread_slist_t __list;
     };
