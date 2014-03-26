@@ -1,3 +1,7 @@
+2014-03-26  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* elf/dl-load.c: Convert __builtin_expect into __glibc_{un}likely.
+
 2014-03-26  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16198]
