@@ -1,3 +1,16 @@
+2014-03-27  Andi Kleen  <ak@linux.intel.com>
+
+	* nptl/sysdeps/unix/sysv/linux/x86_64/lowlevellock.h (lll_lock,
+	lll_robust_lock, lll_cond_lock, lll_timedlock, lll_robust_cond_lock,
+	lll_robust_timedlock, lll_unlock, lll_robust_unlock):
+	Remove out of line section. Use cfi intrinsics.
+	(LLL_STUB_UNWIND_INFO*): Remove.
+	* nptl/sysdeps/unix/sysv/linux/i386/lowlevellock.h (lll_lock,
+	lll_robust_lock, lll_cond_lock, lll_timedlock, lll_robust_cond_lock,
+	lll_robust_timedlock, lll_unlock, lll_robust_unlock):
+	Remove out of line section. Use cfi intrinsics.
+	(LLL_STUB_UNWIND_INFO*): Remove.
+
 2014-03-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #16758]

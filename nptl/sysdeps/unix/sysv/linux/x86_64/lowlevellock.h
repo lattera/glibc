@@ -106,105 +106,6 @@
 /* Delay in spinlock loop.  */
 #define BUSY_WAIT_NOP	  asm ("rep; nop")
 
-
-#define LLL_STUB_UNWIND_INFO_START \
-	".section	.eh_frame,\"a\",@progbits\n" 		\
-"7:\t"	".long	9f-8f	# Length of Common Information Entry\n" \
-"8:\t"	".long	0x0	# CIE Identifier Tag\n\t" 		\
-	".byte	0x1	# CIE Version\n\t" 			\
-	".ascii \"zR\\0\"	# CIE Augmentation\n\t" 	\
-	".uleb128 0x1	# CIE Code Alignment Factor\n\t" 	\
-	".sleb128 -8	# CIE Data Alignment Factor\n\t" 	\
-	".byte	0x10	# CIE RA Column\n\t" 			\
-	".uleb128 0x1	# Augmentation size\n\t" 		\
-	".byte	0x1b	# FDE Encoding (pcrel sdata4)\n\t" 	\
-	".byte	0x12	# DW_CFA_def_cfa_sf\n\t" 		\
-	".uleb128 0x7\n\t" 					\
-	".sleb128 16\n\t" 					\
-	".align " LP_SIZE "\n" 					\
-"9:\t"	".long	23f-10f	# FDE Length\n" 			\
-"10:\t"	".long	10b-7b	# FDE CIE offset\n\t" 			\
-	".long	1b-.	# FDE initial location\n\t" 		\
-	".long	6b-1b	# FDE address range\n\t" 		\
-	".uleb128 0x0	# Augmentation size\n\t" 		\
-	".byte	0x16	# DW_CFA_val_expression\n\t" 		\
-	".uleb128 0x10\n\t" 					\
-	".uleb128 12f-11f\n" 					\
-"11:\t"	".byte	0x80	# DW_OP_breg16\n\t" 			\
-	".sleb128 4b-1b\n"
-#define LLL_STUB_UNWIND_INFO_END \
-	".byte	0x16	# DW_CFA_val_expression\n\t" 		\
-	".uleb128 0x10\n\t" 					\
-	".uleb128 14f-13f\n" 					\
-"13:\t"	".byte	0x80	# DW_OP_breg16\n\t" 			\
-	".sleb128 4b-2b\n" 					\
-"14:\t"	".byte	0x40 + (3b-2b) # DW_CFA_advance_loc\n\t" 	\
-	".byte	0x0e	# DW_CFA_def_cfa_offset\n\t" 		\
-	".uleb128 0\n\t" 					\
-	".byte	0x16	# DW_CFA_val_expression\n\t" 		\
-	".uleb128 0x10\n\t" 					\
-	".uleb128 16f-15f\n" 					\
-"15:\t"	".byte	0x80	# DW_OP_breg16\n\t" 			\
-	".sleb128 4b-3b\n" 					\
-"16:\t"	".byte	0x40 + (4b-3b-1) # DW_CFA_advance_loc\n\t" 	\
-	".byte	0x0e	# DW_CFA_def_cfa_offset\n\t" 		\
-	".uleb128 128\n\t" 					\
-	".byte	0x16	# DW_CFA_val_expression\n\t" 		\
-	".uleb128 0x10\n\t" 					\
-	".uleb128 20f-17f\n" 					\
-"17:\t"	".byte	0x80	# DW_OP_breg16\n\t" 			\
-	".sleb128 19f-18f\n\t" 					\
-	".byte	0x0d	# DW_OP_const4s\n" 			\
-"18:\t"	".4byte	4b-.\n\t" 					\
-	".byte	0x1c	# DW_OP_minus\n\t" 			\
-	".byte	0x0d	# DW_OP_const4s\n" 			\
-"19:\t"	".4byte	24f-.\n\t" 					\
-	".byte	0x22	# DW_OP_plus\n" 			\
-"20:\t"	".byte	0x40 + (5b-4b+1) # DW_CFA_advance_loc\n\t" 	\
-	".byte	0x13	# DW_CFA_def_cfa_offset_sf\n\t" 	\
-	".sleb128 16\n\t" 					\
-	".byte	0x16	# DW_CFA_val_expression\n\t" 		\
-	".uleb128 0x10\n\t" 					\
-	".uleb128 22f-21f\n" 					\
-"21:\t"	".byte	0x80	# DW_OP_breg16\n\t" 			\
-	".sleb128 4b-5b\n" 					\
-"22:\t"	".align " LP_SIZE "\n" 					\
-"23:\t"	".previous\n"
-
-/* Unwind info for
-   1: leaq ..., %rdi
-   2: subq $128, %rsp
-   3: callq ...
-   4: addq $128, %rsp
-   5: jmp 24f
-   6:
-   snippet.  */
-#define LLL_STUB_UNWIND_INFO_5 \
-LLL_STUB_UNWIND_INFO_START					\
-"12:\t"	".byte	0x40 + (2b-1b) # DW_CFA_advance_loc\n\t" 	\
-LLL_STUB_UNWIND_INFO_END
-
-/* Unwind info for
-   1: leaq ..., %rdi
-   0: movq ..., %rdx
-   2: subq $128, %rsp
-   3: callq ...
-   4: addq $128, %rsp
-   5: jmp 24f
-   6:
-   snippet.  */
-#define LLL_STUB_UNWIND_INFO_6 \
-LLL_STUB_UNWIND_INFO_START					\
-"12:\t"	".byte	0x40 + (0b-1b) # DW_CFA_advance_loc\n\t" 	\
-	".byte	0x16	# DW_CFA_val_expression\n\t" 		\
-	".uleb128 0x10\n\t" 					\
-	".uleb128 26f-25f\n" 					\
-"25:\t"	".byte	0x80	# DW_OP_breg16\n\t" 			\
-	".sleb128 4b-0b\n" 					\
-"26:\t"	".byte	0x40 + (2b-0b) # DW_CFA_advance_loc\n\t" 	\
-LLL_STUB_UNWIND_INFO_END
-
-
 #define lll_futex_wait(futex, val, private) \
   lll_futex_timed_wait(futex, val, NULL, private)
 
@@ -283,7 +184,7 @@ LLL_STUB_UNWIND_INFO_END
 
 #if defined NOT_IN_libc || defined UP
 # define __lll_lock_asm_start LOCK_INSTR "cmpxchgl %4, %2\n\t"		      \
-			      "jnz 1f\n\t"
+			      "jz 24f\n\t"
 #else
 # define __lll_lock_asm_start "cmpl $0, __libc_multiple_threads(%%rip)\n\t"   \
 			      "je 0f\n\t"				      \
@@ -291,7 +192,7 @@ LLL_STUB_UNWIND_INFO_END
 			      "jnz 1f\n\t"				      \
 			      "jmp 24f\n"				      \
 			      "0:\tcmpxchgl %4, %2\n\t"			      \
-			      "jnz 1f\n\t"
+			      "jz 24f\n\t"
 #endif
 
 #define lll_lock(futex, private) \
@@ -299,17 +200,12 @@ LLL_STUB_UNWIND_INFO_END
     ({ int ignore1, ignore2, ignore3;					      \
        if (__builtin_constant_p (private) && (private) == LLL_PRIVATE)	      \
 	 __asm __volatile (__lll_lock_asm_start				      \
-			   ".subsection 1\n\t"				      \
-			   ".type _L_lock_%=, @function\n"		      \
-			   "_L_lock_%=:\n"				      \
 			   "1:\tlea %2, %%" RDI_LP "\n"			      \
 			   "2:\tsub $128, %%" RSP_LP "\n"		      \
+			   ".cfi_adjust_cfa_offset 128\n"		      \
 			   "3:\tcallq __lll_lock_wait_private\n"	      \
 			   "4:\tadd $128, %%" RSP_LP "\n"		      \
-			   "5:\tjmp 24f\n"				      \
-			   "6:\t.size _L_lock_%=, 6b-1b\n\t"		      \
-			   ".previous\n"				      \
-			   LLL_STUB_UNWIND_INFO_5			      \
+			   ".cfi_adjust_cfa_offset -128\n"		      \
 			   "24:"					      \
 			   : "=S" (ignore1), "=&D" (ignore2), "=m" (futex),   \
 			     "=a" (ignore3)				      \
@@ -317,17 +213,12 @@ LLL_STUB_UNWIND_INFO_END
 			   : "cx", "r11", "cc", "memory");		      \
        else								      \
 	 __asm __volatile (__lll_lock_asm_start				      \
-			   ".subsection 1\n\t"				      \
-			   ".type _L_lock_%=, @function\n"		      \
-			   "_L_lock_%=:\n"				      \
 			   "1:\tlea %2, %%" RDI_LP "\n"			      \
 			   "2:\tsub $128, %%" RSP_LP "\n"		      \
+			   ".cfi_adjust_cfa_offset 128\n"		      \
 			   "3:\tcallq __lll_lock_wait\n"		      \
 			   "4:\tadd $128, %%" RSP_LP "\n"		      \
-			   "5:\tjmp 24f\n"				      \
-			   "6:\t.size _L_lock_%=, 6b-1b\n\t"		      \
-			   ".previous\n"				      \
-			   LLL_STUB_UNWIND_INFO_5			      \
+			   ".cfi_adjust_cfa_offset -128\n"		      \
 			   "24:"					      \
 			   : "=S" (ignore1), "=D" (ignore2), "=m" (futex),    \
 			     "=a" (ignore3)				      \
@@ -338,18 +229,13 @@ LLL_STUB_UNWIND_INFO_END
 #define lll_robust_lock(futex, id, private) \
   ({ int result, ignore1, ignore2;					      \
     __asm __volatile (LOCK_INSTR "cmpxchgl %4, %2\n\t"			      \
-		      "jnz 1f\n\t"					      \
-		      ".subsection 1\n\t"				      \
-		      ".type _L_robust_lock_%=, @function\n"		      \
-		      "_L_robust_lock_%=:\n"				      \
+		      "jz 24f\n"					      \
 		      "1:\tlea %2, %%" RDI_LP "\n"			      \
 		      "2:\tsub $128, %%" RSP_LP "\n"			      \
+		      ".cfi_adjust_cfa_offset 128\n"			      \
 		      "3:\tcallq __lll_robust_lock_wait\n"		      \
 		      "4:\tadd $128, %%" RSP_LP "\n"			      \
-		      "5:\tjmp 24f\n"					      \
-		      "6:\t.size _L_robust_lock_%=, 6b-1b\n\t"		      \
-		      ".previous\n"					      \
-		      LLL_STUB_UNWIND_INFO_5				      \
+		      ".cfi_adjust_cfa_offset -128\n"			      \
 		      "24:"						      \
 		      : "=S" (ignore1), "=D" (ignore2), "=m" (futex),	      \
 			"=a" (result)					      \
@@ -361,18 +247,13 @@ LLL_STUB_UNWIND_INFO_END
   (void)								      \
     ({ int ignore1, ignore2, ignore3;					      \
        __asm __volatile (LOCK_INSTR "cmpxchgl %4, %2\n\t"		      \
-			 "jnz 1f\n\t"					      \
-			 ".subsection 1\n\t"				      \
-			 ".type _L_cond_lock_%=, @function\n"		      \
-			 "_L_cond_lock_%=:\n"				      \
+			 "jz 24f\n"					      \
 			 "1:\tlea %2, %%" RDI_LP "\n"			      \
 			 "2:\tsub $128, %%" RSP_LP "\n"			      \
+			 ".cfi_adjust_cfa_offset 128\n"			      \
 			 "3:\tcallq __lll_lock_wait\n"			      \
 			 "4:\tadd $128, %%" RSP_LP "\n"			      \
-			 "5:\tjmp 24f\n"				      \
-			 "6:\t.size _L_cond_lock_%=, 6b-1b\n\t"		      \
-			 ".previous\n"					      \
-			 LLL_STUB_UNWIND_INFO_5				      \
+			 ".cfi_adjust_cfa_offset -128\n"		      \
 			 "24:"						      \
 			 : "=S" (ignore1), "=D" (ignore2), "=m" (futex),      \
 			   "=a" (ignore3)				      \
@@ -383,18 +264,13 @@ LLL_STUB_UNWIND_INFO_END
 #define lll_robust_cond_lock(futex, id, private) \
   ({ int result, ignore1, ignore2;					      \
     __asm __volatile (LOCK_INSTR "cmpxchgl %4, %2\n\t"			      \
-		      "jnz 1f\n\t"					      \
-		      ".subsection 1\n\t"				      \
-		      ".type _L_robust_cond_lock_%=, @function\n"	      \
-		      "_L_robust_cond_lock_%=:\n"			      \
+		      "jz 24f\n"					      \
 		      "1:\tlea %2, %%" RDI_LP "\n"			      \
 		      "2:\tsub $128, %%" RSP_LP "\n"			      \
+		      ".cfi_adjust_cfa_offset 128\n"			      \
 		      "3:\tcallq __lll_robust_lock_wait\n"		      \
 		      "4:\tadd $128, %%" RSP_LP "\n"			      \
-		      "5:\tjmp 24f\n"					      \
-		      "6:\t.size _L_robust_cond_lock_%=, 6b-1b\n\t"	      \
-		      ".previous\n"					      \
-		      LLL_STUB_UNWIND_INFO_5				      \
+		      ".cfi_adjust_cfa_offset -128\n"			      \
 		      "24:"						      \
 		      : "=S" (ignore1), "=D" (ignore2), "=m" (futex),	      \
 			"=a" (result)					      \
@@ -406,19 +282,14 @@ LLL_STUB_UNWIND_INFO_END
 #define lll_timedlock(futex, timeout, private) \
   ({ int result, ignore1, ignore2, ignore3;				      \
      __asm __volatile (LOCK_INSTR "cmpxchgl %1, %4\n\t"			      \
-		       "jnz 1f\n\t"					      \
-		       ".subsection 1\n\t"				      \
-		       ".type _L_timedlock_%=, @function\n"		      \
-		       "_L_timedlock_%=:\n"				      \
+		       "jz 24f\n"					      \
 		       "1:\tlea %4, %%" RDI_LP "\n"			      \
 		       "0:\tmov %8, %%" RDX_LP "\n"			      \
 		       "2:\tsub $128, %%" RSP_LP "\n"			      \
+		       ".cfi_adjust_cfa_offset 128\n"			      \
 		       "3:\tcallq __lll_timedlock_wait\n"		      \
 		       "4:\tadd $128, %%" RSP_LP "\n"			      \
-		       "5:\tjmp 24f\n"					      \
-		       "6:\t.size _L_timedlock_%=, 6b-1b\n\t"		      \
-		       ".previous\n"					      \
-		       LLL_STUB_UNWIND_INFO_6				      \
+		       ".cfi_adjust_cfa_offset -128\n"			      \
 		       "24:"						      \
 		       : "=a" (result), "=D" (ignore1), "=S" (ignore2),	      \
 			 "=&d" (ignore3), "=m" (futex)			      \
@@ -437,19 +308,14 @@ extern int __lll_timedlock_elision (int *futex, short *adapt_count,
 #define lll_robust_timedlock(futex, timeout, id, private) \
   ({ int result, ignore1, ignore2, ignore3;				      \
      __asm __volatile (LOCK_INSTR "cmpxchgl %1, %4\n\t"			      \
-		       "jnz 1f\n\t"					      \
-		       ".subsection 1\n\t"				      \
-		       ".type _L_robust_timedlock_%=, @function\n"	      \
-		       "_L_robust_timedlock_%=:\n"			      \
+		       "jz 24f\n\t"					      \
 		       "1:\tlea %4, %%" RDI_LP "\n"			      \
 		       "0:\tmov %8, %%" RDX_LP "\n"			      \
 		       "2:\tsub $128, %%" RSP_LP "\n"			      \
+		       ".cfi_adjust_cfa_offset 128\n"			      \
 		       "3:\tcallq __lll_robust_timedlock_wait\n"	      \
 		       "4:\tadd $128, %%" RSP_LP "\n"			      \
-		       "5:\tjmp 24f\n"					      \
-		       "6:\t.size _L_robust_timedlock_%=, 6b-1b\n\t"	      \
-		       ".previous\n"					      \
-		       LLL_STUB_UNWIND_INFO_6				      \
+		       ".cfi_adjust_cfa_offset -128\n"			      \
 		       "24:"						      \
 		       : "=a" (result), "=D" (ignore1), "=S" (ignore2),       \
 			 "=&d" (ignore3), "=m" (futex)			      \
@@ -460,7 +326,7 @@ extern int __lll_timedlock_elision (int *futex, short *adapt_count,
 
 #if defined NOT_IN_libc || defined UP
 # define __lll_unlock_asm_start LOCK_INSTR "decl %0\n\t"		      \
-				"jne 1f\n\t"
+				"je 24f\n\t"
 #else
 # define __lll_unlock_asm_start "cmpl $0, __libc_multiple_threads(%%rip)\n\t" \
 				"je 0f\n\t"				      \
@@ -468,7 +334,7 @@ extern int __lll_timedlock_elision (int *futex, short *adapt_count,
 				"jne 1f\n\t"				      \
 				"jmp 24f\n\t"				      \
 				"0:\tdecl %0\n\t"			      \
-				"jne 1f\n\t"
+				"je 24f\n\t"
 #endif
 
 #define lll_unlock(futex, private) \
@@ -476,34 +342,24 @@ extern int __lll_timedlock_elision (int *futex, short *adapt_count,
     ({ int ignore;							      \
        if (__builtin_constant_p (private) && (private) == LLL_PRIVATE)	      \
 	 __asm __volatile (__lll_unlock_asm_start			      \
-			   ".subsection 1\n\t"				      \
-			   ".type _L_unlock_%=, @function\n"		      \
-			   "_L_unlock_%=:\n"				      \
 			   "1:\tlea %0, %%" RDI_LP "\n"			      \
 			   "2:\tsub $128, %%" RSP_LP "\n"		      \
+			   ".cfi_adjust_cfa_offset 128\n"		      \
 			   "3:\tcallq __lll_unlock_wake_private\n"	      \
 			   "4:\tadd $128, %%" RSP_LP "\n"		      \
-			   "5:\tjmp 24f\n"				      \
-			   "6:\t.size _L_unlock_%=, 6b-1b\n\t"		      \
-			   ".previous\n"				      \
-			   LLL_STUB_UNWIND_INFO_5			      \
+			   ".cfi_adjust_cfa_offset -128\n"		      \
 			   "24:"					      \
 			   : "=m" (futex), "=&D" (ignore)		      \
 			   : "m" (futex)				      \
 			   : "ax", "cx", "r11", "cc", "memory");	      \
        else								      \
 	 __asm __volatile (__lll_unlock_asm_start			      \
-			   ".subsection 1\n\t"				      \
-			   ".type _L_unlock_%=, @function\n"		      \
-			   "_L_unlock_%=:\n"				      \
 			   "1:\tlea %0, %%" RDI_LP "\n"			      \
 			   "2:\tsub $128, %%" RSP_LP "\n"		      \
+			   ".cfi_adjust_cfa_offset 128\n"		      \
 			   "3:\tcallq __lll_unlock_wake\n"		      \
 			   "4:\tadd $128, %%" RSP_LP "\n"		      \
-			   "5:\tjmp 24f\n"				      \
-			   "6:\t.size _L_unlock_%=, 6b-1b\n\t"		      \
-			   ".previous\n"				      \
-			   LLL_STUB_UNWIND_INFO_5			      \
+			   ".cfi_adjust_cfa_offset -128\n"		      \
 			   "24:"					      \
 			   : "=m" (futex), "=&D" (ignore)		      \
 			   : "m" (futex), "S" (private)			      \
@@ -515,18 +371,13 @@ extern int __lll_timedlock_elision (int *futex, short *adapt_count,
     {									      \
       int ignore;							      \
       __asm __volatile (LOCK_INSTR "andl %2, %0\n\t"			      \
-			"jne 1f\n\t"					      \
-			".subsection 1\n\t"				      \
-			".type _L_robust_unlock_%=, @function\n"	      \
-			"_L_robust_unlock_%=:\n"			      \
+			"je 24f\n\t"					      \
 			"1:\tlea %0, %%" RDI_LP "\n"			      \
 			"2:\tsub $128, %%" RSP_LP "\n"			      \
+			".cfi_adjust_cfa_offset 128\n"			      \
 			"3:\tcallq __lll_unlock_wake\n"			      \
 			"4:\tadd $128, %%" RSP_LP "\n"			      \
-			"5:\tjmp 24f\n"					      \
-			"6:\t.size _L_robust_unlock_%=, 6b-1b\n\t"	      \
-			".previous\n"					      \
-			LLL_STUB_UNWIND_INFO_5				      \
+			".cfi_adjust_cfa_offset -128\n"			      \
 			"24:"						      \
 			: "=m" (futex), "=&D" (ignore)			      \
 			: "i" (FUTEX_WAITERS), "m" (futex),		      \

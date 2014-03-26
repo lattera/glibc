@@ -126,83 +126,6 @@
 /* Delay in spinlock loop.  */
 #define BUSY_WAIT_NOP	asm ("rep; nop")
 
-
-#define LLL_STUB_UNWIND_INFO_START \
-	".section	.eh_frame,\"a\",@progbits\n"		\
-"5:\t"	".long	7f-6f	# Length of Common Information Entry\n"	\
-"6:\t"	".long	0x0	# CIE Identifier Tag\n\t"		\
-	".byte	0x1	# CIE Version\n\t"			\
-	".ascii \"zR\\0\"	# CIE Augmentation\n\t"		\
-	".uleb128 0x1	# CIE Code Alignment Factor\n\t"	\
-	".sleb128 -4	# CIE Data Alignment Factor\n\t"	\
-	".byte	0x8	# CIE RA Column\n\t"			\
-	".uleb128 0x1	# Augmentation size\n\t"		\
-	".byte	0x1b	# FDE Encoding (pcrel sdata4)\n\t"	\
-	".byte	0xc	# DW_CFA_def_cfa\n\t"			\
-	".uleb128 0x4\n\t"					\
-	".uleb128 0x0\n\t"					\
-	".align 4\n"						\
-"7:\t"	".long	17f-8f	# FDE Length\n"				\
-"8:\t"	".long	8b-5b	# FDE CIE offset\n\t"			\
-	".long	1b-.	# FDE initial location\n\t"		\
-	".long	4b-1b	# FDE address range\n\t"		\
-	".uleb128 0x0	# Augmentation size\n\t"		\
-	".byte	0x16	# DW_CFA_val_expression\n\t"		\
-	".uleb128 0x8\n\t"					\
-	".uleb128 10f-9f\n"					\
-"9:\t"	".byte	0x78	# DW_OP_breg8\n\t"			\
-	".sleb128 3b-1b\n"
-#define LLL_STUB_UNWIND_INFO_END \
-	".byte	0x16	# DW_CFA_val_expression\n\t"		\
-	".uleb128 0x8\n\t"					\
-	".uleb128 12f-11f\n"					\
-"11:\t"	".byte	0x78	# DW_OP_breg8\n\t"			\
-	".sleb128 3b-2b\n"					\
-"12:\t"	".byte	0x40 + (3b-2b-1) # DW_CFA_advance_loc\n\t"	\
-	".byte	0x16	# DW_CFA_val_expression\n\t"		\
-	".uleb128 0x8\n\t"					\
-	".uleb128 16f-13f\n"					\
-"13:\t"	".byte	0x78	# DW_OP_breg8\n\t"			\
-	".sleb128 15f-14f\n\t"					\
-	".byte	0x0d	# DW_OP_const4s\n"			\
-"14:\t"	".4byte	3b-.\n\t"					\
-	".byte	0x1c	# DW_OP_minus\n\t"			\
-	".byte	0x0d	# DW_OP_const4s\n"			\
-"15:\t"	".4byte	18f-.\n\t"					\
-	".byte	0x22	# DW_OP_plus\n"				\
-"16:\t"	".align 4\n"						\
-"17:\t"	".previous\n"
-
-/* Unwind info for
-   1: lea ..., ...
-   2: call ...
-   3: jmp 18f
-   4:
-   snippet.  */
-#define LLL_STUB_UNWIND_INFO_3 \
-LLL_STUB_UNWIND_INFO_START					\
-"10:\t"	".byte	0x40 + (2b-1b) # DW_CFA_advance_loc\n\t"	\
-LLL_STUB_UNWIND_INFO_END
-
-/* Unwind info for
-   1: lea ..., ...
-   0: movl ..., ...
-   2: call ...
-   3: jmp 18f
-   4:
-   snippet.  */
-#define LLL_STUB_UNWIND_INFO_4 \
-LLL_STUB_UNWIND_INFO_START					\
-"10:\t"	".byte	0x40 + (0b-1b) # DW_CFA_advance_loc\n\t"	\
-	".byte	0x16	# DW_CFA_val_expression\n\t"		\
-	".uleb128 0x8\n\t"					\
-	".uleb128 20f-19f\n"					\
-"19:\t"	".byte	0x78	# DW_OP_breg8\n\t"			\
-	".sleb128 3b-0b\n"					\
-"20:\t"	".byte	0x40 + (2b-0b) # DW_CFA_advance_loc\n\t"	\
-LLL_STUB_UNWIND_INFO_END
-
-
 #define lll_futex_wait(futex, val, private) \
   lll_futex_timed_wait (futex, val, NULL, private)
 
@@ -298,16 +221,9 @@ LLL_STUB_UNWIND_INFO_END
     ({ int ignore1, ignore2;						      \
        if (__builtin_constant_p (private) && (private) == LLL_PRIVATE)	      \
 	 __asm __volatile (__lll_lock_asm_start				      \
-			   "jnz _L_lock_%=\n\t"				      \
-			   ".subsection 1\n\t"				      \
-			   ".type _L_lock_%=,@function\n"		      \
-			   "_L_lock_%=:\n"				      \
+			   "jz 18f\n\t"				      \
 			   "1:\tleal %2, %%ecx\n"			      \
 			   "2:\tcall __lll_lock_wait_private\n" 	      \
-			   "3:\tjmp 18f\n"				      \
-			   "4:\t.size _L_lock_%=, 4b-1b\n\t"		      \
-			   ".previous\n"				      \
-			   LLL_STUB_UNWIND_INFO_3			      \
 			   "18:"					      \
 			   : "=a" (ignore1), "=c" (ignore2), "=m" (futex)     \
 			   : "0" (0), "1" (1), "m" (futex),		      \
@@ -317,17 +233,10 @@ LLL_STUB_UNWIND_INFO_END
 	 {								      \
 	   int ignore3;							      \
 	   __asm __volatile (__lll_lock_asm_start			      \
-			     "jnz _L_lock_%=\n\t"			      \
-			     ".subsection 1\n\t"			      \
-			     ".type _L_lock_%=,@function\n"		      \
-			     "_L_lock_%=:\n"				      \
+			     "jz 18f\n\t"			 	      \
 			     "1:\tleal %2, %%edx\n"			      \
 			     "0:\tmovl %8, %%ecx\n"			      \
 			     "2:\tcall __lll_lock_wait\n"		      \
-			     "3:\tjmp 18f\n"				      \
-			     "4:\t.size _L_lock_%=, 4b-1b\n\t"		      \
-			     ".previous\n"				      \
-			     LLL_STUB_UNWIND_INFO_4			      \
 			     "18:"					      \
 			     : "=a" (ignore1), "=c" (ignore2),		      \
 			       "=m" (futex), "=&d" (ignore3) 		      \
@@ -341,17 +250,10 @@ LLL_STUB_UNWIND_INFO_END
 #define lll_robust_lock(futex, id, private) \
   ({ int result, ignore1, ignore2;					      \
      __asm __volatile (LOCK_INSTR "cmpxchgl %1, %2\n\t"			      \
-		       "jnz _L_robust_lock_%=\n\t"			      \
-		       ".subsection 1\n\t"				      \
-		       ".type _L_robust_lock_%=,@function\n"		      \
-		       "_L_robust_lock_%=:\n"				      \
+		       "jz 18f\n\t"					      \
 		       "1:\tleal %2, %%edx\n"				      \
 		       "0:\tmovl %7, %%ecx\n"				      \
 		       "2:\tcall __lll_robust_lock_wait\n"		      \
-		       "3:\tjmp 18f\n"					      \
-		       "4:\t.size _L_robust_lock_%=, 4b-1b\n\t"		      \
-		       ".previous\n"					      \
-		       LLL_STUB_UNWIND_INFO_4				      \
 		       "18:"						      \
 		       : "=a" (result), "=c" (ignore1), "=m" (futex),	      \
 			 "=&d" (ignore2)				      \
@@ -366,17 +268,10 @@ LLL_STUB_UNWIND_INFO_END
   (void)								      \
     ({ int ignore1, ignore2, ignore3;					      \
        __asm __volatile (LOCK_INSTR "cmpxchgl %1, %2\n\t"		      \
-			 "jnz _L_cond_lock_%=\n\t"			      \
-			 ".subsection 1\n\t"				      \
-			 ".type _L_cond_lock_%=,@function\n"		      \
-			 "_L_cond_lock_%=:\n"				      \
+			 "jz 18f\n\t"					      \
 			 "1:\tleal %2, %%edx\n"				      \
 			 "0:\tmovl %7, %%ecx\n"				      \
 			 "2:\tcall __lll_lock_wait\n"			      \
-			 "3:\tjmp 18f\n"				      \
-			 "4:\t.size _L_cond_lock_%=, 4b-1b\n\t"		      \
-			 ".previous\n"					      \
-			 LLL_STUB_UNWIND_INFO_4				      \
 			 "18:"						      \
 			 : "=a" (ignore1), "=c" (ignore2), "=m" (futex),      \
 			   "=&d" (ignore3)				      \
@@ -388,17 +283,10 @@ LLL_STUB_UNWIND_INFO_END
 #define lll_robust_cond_lock(futex, id, private) \
   ({ int result, ignore1, ignore2;					      \
      __asm __volatile (LOCK_INSTR "cmpxchgl %1, %2\n\t"			      \
-		       "jnz _L_robust_cond_lock_%=\n\t"			      \
-		       ".subsection 1\n\t"				      \
-		       ".type _L_robust_cond_lock_%=,@function\n"	      \
-		       "_L_robust_cond_lock_%=:\n"			      \
+		       "jz 18f\n\t"					      \
 		       "1:\tleal %2, %%edx\n"				      \
 		       "0:\tmovl %7, %%ecx\n"				      \
 		       "2:\tcall __lll_robust_lock_wait\n"		      \
-		       "3:\tjmp 18f\n"					      \
-		       "4:\t.size _L_robust_cond_lock_%=, 4b-1b\n\t"	      \
-		       ".previous\n"					      \
-		       LLL_STUB_UNWIND_INFO_4				      \
 		       "18:"						      \
 		       : "=a" (result), "=c" (ignore1), "=m" (futex),	      \
 			 "=&d" (ignore2)				      \
@@ -411,17 +299,10 @@ LLL_STUB_UNWIND_INFO_END
 #define lll_timedlock(futex, timeout, private) \
   ({ int result, ignore1, ignore2, ignore3;				      \
      __asm __volatile (LOCK_INSTR "cmpxchgl %1, %3\n\t"			      \
-		       "jnz _L_timedlock_%=\n\t"			      \
-		       ".subsection 1\n\t"				      \
-		       ".type _L_timedlock_%=,@function\n"		      \
-		       "_L_timedlock_%=:\n"				      \
+		       "jz 18f\n\t"					      \
 		       "1:\tleal %3, %%ecx\n"				      \
 		       "0:\tmovl %8, %%edx\n"				      \
 		       "2:\tcall __lll_timedlock_wait\n"		      \
-		       "3:\tjmp 18f\n"					      \
-		       "4:\t.size _L_timedlock_%=, 4b-1b\n\t"		      \
-		       ".previous\n"					      \
-		       LLL_STUB_UNWIND_INFO_4				      \
 		       "18:"						      \
 		       : "=a" (result), "=c" (ignore1), "=&d" (ignore2),      \
 			 "=m" (futex), "=S" (ignore3)			      \
@@ -440,17 +321,10 @@ extern int __lll_timedlock_elision (int *futex, short *adapt_count,
 #define lll_robust_timedlock(futex, timeout, id, private) \
   ({ int result, ignore1, ignore2, ignore3;				      \
      __asm __volatile (LOCK_INSTR "cmpxchgl %1, %3\n\t"			      \
-		       "jnz _L_robust_timedlock_%=\n\t"			      \
-		       ".subsection 1\n\t"				      \
-		       ".type _L_robust_timedlock_%=,@function\n"	      \
-		       "_L_robust_timedlock_%=:\n"			      \
+		       "jz 18f\n\t"			   		      \
 		       "1:\tleal %3, %%ecx\n"				      \
 		       "0:\tmovl %8, %%edx\n"				      \
 		       "2:\tcall __lll_robust_timedlock_wait\n"		      \
-		       "3:\tjmp 18f\n"					      \
-		       "4:\t.size _L_robust_timedlock_%=, 4b-1b\n\t"	      \
-		       ".previous\n"					      \
-		       LLL_STUB_UNWIND_INFO_4				      \
 		       "18:"						      \
 		       : "=a" (result), "=c" (ignore1), "=&d" (ignore2),      \
 			 "=m" (futex), "=S" (ignore3)			      \
@@ -473,16 +347,9 @@ extern int __lll_timedlock_elision (int *futex, short *adapt_count,
     ({ int ignore;							      \
        if (__builtin_constant_p (private) && (private) == LLL_PRIVATE)	      \
 	 __asm __volatile (__lll_unlock_asm				      \
-			   "jne _L_unlock_%=\n\t"			      \
-			   ".subsection 1\n\t"				      \
-			   ".type _L_unlock_%=,@function\n"		      \
-			   "_L_unlock_%=:\n"				      \
+			   "je 18f\n\t"					      \
 			   "1:\tleal %0, %%eax\n"			      \
 			   "2:\tcall __lll_unlock_wake_private\n"	      \
-			   "3:\tjmp 18f\n"				      \
-			   "4:\t.size _L_unlock_%=, 4b-1b\n\t"		      \
-			   ".previous\n"				      \
-			   LLL_STUB_UNWIND_INFO_3			      \
 			   "18:"					      \
 			   : "=m" (futex), "=&a" (ignore)		      \
 			   : "m" (futex), "i" (MULTIPLE_THREADS_OFFSET)	      \
@@ -491,17 +358,10 @@ extern int __lll_timedlock_elision (int *futex, short *adapt_count,
 	 {								      \
 	   int ignore2;							      \
 	   __asm __volatile (__lll_unlock_asm				      \
-			     "jne _L_unlock_%=\n\t"			      \
-			     ".subsection 1\n\t"			      \
-			     ".type _L_unlock_%=,@function\n"		      \
-			     "_L_unlock_%=:\n"				      \
+			     "je 18f\n\t"				      \
 			     "1:\tleal %0, %%eax\n"			      \
 			     "0:\tmovl %5, %%ecx\n"			      \
 			     "2:\tcall __lll_unlock_wake\n"		      \
-			     "3:\tjmp 18f\n"				      \
-			     "4:\t.size _L_unlock_%=, 4b-1b\n\t"	      \
-			     ".previous\n"				      \
-			     LLL_STUB_UNWIND_INFO_4			      \
 			     "18:"					      \
 			     : "=m" (futex), "=&a" (ignore), "=&c" (ignore2)  \
 			     : "i" (MULTIPLE_THREADS_OFFSET), "m" (futex),    \
@@ -514,17 +374,10 @@ extern int __lll_timedlock_elision (int *futex, short *adapt_count,
   (void)								      \
     ({ int ignore, ignore2;						      \
        __asm __volatile (LOCK_INSTR "andl %3, %0\n\t"			      \
-			 "jne _L_robust_unlock_%=\n\t"			      \
-			 ".subsection 1\n\t"				      \
-			 ".type _L_robust_unlock_%=,@function\n"	      \
-			 "_L_robust_unlock_%=:\n\t"			      \
+			 "je 18f\n\t"					      \
 			 "1:\tleal %0, %%eax\n"				      \
 			 "0:\tmovl %5, %%ecx\n"				      \
 			 "2:\tcall __lll_unlock_wake\n"			      \
-			 "3:\tjmp 18f\n"				      \
-			 "4:\t.size _L_robust_unlock_%=, 4b-1b\n\t"	      \
-			 ".previous\n"					      \
-			 LLL_STUB_UNWIND_INFO_4				      \
 			 "18:"						      \
 			 : "=m" (futex), "=&a" (ignore), "=&c" (ignore2)      \
 			 : "i" (FUTEX_WAITERS), "m" (futex),		      \
