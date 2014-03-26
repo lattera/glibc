@@ -1,3 +1,16 @@
+2014-04-09  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* bits/string.h (_STRING_ARCH_unaligned): Define it to 0.
+	* crypt/sha256.c (_STRING_ARCH_unaligned): Check its value instead of its
+	definition.
+	* iconv/gconv_simple.c (_STRING_ARCH_unaligned): Likewise.
+	* iconv/loop.c (_STRING_ARCH_unaligned): Likewise.
+	* iconv/skeleton.c (_STRING_ARCH_unaligned): Likewise.
+	* nscd/nscd_gethst_r.c (_STRING_ARCH_unaligned): Likewise.
+	* nscd/nscd_getserv_r.c (_STRING_ARCH_unaligned): Likewise.
+	* nscd/nscd_helper.c (_STRING_ARCH_unaligned): Likewise.
+	* resolv/res_send.c (_STRING_ARCH_unaligned): Likewise.
+
 2014-04-09  Peter Brett  <peter@peter-b.co.uk>
 
 	[BZ #15514]

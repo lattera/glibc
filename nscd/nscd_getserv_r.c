@@ -141,7 +141,7 @@ nscd_getserv_r (const char *crit, size_t critlen, const char *proto,
 				> recend, 0))
 	    goto out;
 
-#ifndef _STRING_ARCH_unaligned
+#if !_STRING_ARCH_unaligned
 	  /* The aliases_len array in the mapped database might very
 	     well be unaligned.  We will access it word-wise so on
 	     platforms which do not tolerate unaligned accesses we

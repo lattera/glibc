@@ -787,7 +787,7 @@ send_vc(res_state statp,
 			/* No buffer allocated for the first
 			   reply.  We can try to use the rest
 			   of the user-provided buffer.  */
-#ifdef _STRING_ARCH_unaligned
+#if _STRING_ARCH_unaligned
 			*anssizp2 = orig_anssizp - resplen;
 			*ansp2 = *ansp + resplen;
 #else
@@ -1205,7 +1205,7 @@ send_dg(res_state statp,
 				/* No buffer allocated for the first
 				   reply.  We can try to use the rest
 				   of the user-provided buffer.  */
-#ifdef _STRING_ARCH_unaligned
+#if _STRING_ARCH_unaligned
 				*anssizp2 = orig_anssizp - resplen;
 				*ansp2 = *ansp + resplen;
 #else

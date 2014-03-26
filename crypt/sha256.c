@@ -125,7 +125,7 @@ __sha256_finish_ctx (ctx, resbuf)
   memcpy (&ctx->buffer[bytes], fillbuf, pad);
 
   /* Put the 64-bit file length in *bits* at the end of the buffer.  */
-#ifdef _STRING_ARCH_unaligned
+#if _STRING_ARCH_unaligned
   ctx->buffer64[(bytes + pad) / 8] = SWAP64 (ctx->total64 << 3);
 #else
   ctx->buffer32[(bytes + pad + 4) / 4] = SWAP (ctx->total[TOTAL64_low] << 3);

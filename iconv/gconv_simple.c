@@ -112,7 +112,7 @@ internal_ucs4_loop (struct __gconv_step *step,
   return result;
 }
 
-#ifndef _STRING_ARCH_unaligned
+#if !_STRING_ARCH_unaligned
 static inline int
 __attribute ((always_inline))
 internal_ucs4_loop_unaligned (struct __gconv_step *step,
@@ -289,7 +289,7 @@ ucs4_internal_loop (struct __gconv_step *step,
   return result;
 }
 
-#ifndef _STRING_ARCH_unaligned
+#if !_STRING_ARCH_unaligned
 static inline int
 __attribute ((always_inline))
 ucs4_internal_loop_unaligned (struct __gconv_step *step,
@@ -478,7 +478,7 @@ internal_ucs4le_loop (struct __gconv_step *step,
   return result;
 }
 
-#ifndef _STRING_ARCH_unaligned
+#if !_STRING_ARCH_unaligned
 static inline int
 __attribute ((always_inline))
 internal_ucs4le_loop_unaligned (struct __gconv_step *step,
@@ -658,7 +658,7 @@ ucs4le_internal_loop (struct __gconv_step *step,
   return result;
 }
 
-#ifndef _STRING_ARCH_unaligned
+#if !_STRING_ARCH_unaligned
 static inline int
 __attribute ((always_inline))
 ucs4le_internal_loop_unaligned (struct __gconv_step *step,

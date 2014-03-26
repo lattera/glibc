@@ -63,7 +63,7 @@
    representations with a fixed width of 2 or 4 bytes.  But if we cannot
    access unaligned memory we still have to read byte-wise.  */
 #undef FCTNAME2
-#if defined _STRING_ARCH_unaligned || !defined DEFINE_UNALIGNED
+#if _STRING_ARCH_unaligned || !defined DEFINE_UNALIGNED
 /* We can handle unaligned memory access.  */
 # define get16(addr) *((const uint16_t *) (addr))
 # define get32(addr) *((const uint32_t *) (addr))
@@ -342,7 +342,7 @@ FCTNAME (LOOPFCT) (struct __gconv_step *step,
 
 /* Include the file a second time to define the function to handle
    unaligned access.  */
-#if !defined DEFINE_UNALIGNED && !defined _STRING_ARCH_unaligned \
+#if !defined DEFINE_UNALIGNED && !_STRING_ARCH_unaligned \
     && MIN_NEEDED_INPUT != 1 && MAX_NEEDED_INPUT % MIN_NEEDED_INPUT == 0 \
     && MIN_NEEDED_OUTPUT != 1 && MAX_NEEDED_OUTPUT % MIN_NEEDED_OUTPUT == 0
 # undef get16

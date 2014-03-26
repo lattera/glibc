@@ -8,5 +8,7 @@
 #ifndef _BITS_STRING_H
 #define _BITS_STRING_H	1
 
+/* Define if architecture can access unaligned multi-byte variables.  */
+#define _STRING_ARCH_unaligned   0
 
 #endif /* bits/string.h */
