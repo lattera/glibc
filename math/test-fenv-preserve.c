@@ -1,5 +1,5 @@
-/* Store current floating-point environment.
-   Copyright (C) 2001-2014 Free Software Foundation, Inc.
+/* Test fegetenv preserves exception mask (bug 16198).
+   Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,17 +17,37 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
+#include <stdio.h>
 
-int
-fegetenv (fenv_t *envp)
+static int
+do_test (void)
 {
-  __asm__ ("fnstenv %0\n"
-	   /* fnstenv changes the exception mask, so load back the
-	      stored environment.  */
-	   "fldenv %0\n"
-	   "stmxcsr %1" : "=m" (*envp), "=m" (envp->__mxcsr));
+  fenv_t env;
 
-  /* Success.  */
-  return 0;
+  if (feenableexcept (FE_INVALID) != 0)
+    {
+      puts ("feenableexcept (FE_INVALID) failed, cannot test");
+      return 0;
+    }
+
+  if (fegetenv (&env) != 0)
+    {
+      puts ("fegetenv failed, cannot test");
+      return 0;
+    }
+
+  int ret = fegetexcept ();
+  if (ret == FE_INVALID)
+    {
+      puts ("fegetenv preserved exception mask, OK");
+      return 0;
+    }
+  else
+    {
+      printf ("fegetexcept returned %d, expected %d\n", ret, FE_INVALID);
+      return 1;
+    }
 }
-libm_hidden_def (fegetenv)
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

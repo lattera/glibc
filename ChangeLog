@@ -1,3 +1,11 @@
+2014-03-26  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16198]
+	* sysdeps/x86_64/fpu/fegetenv.c (fegetenv): Use fldenv after
+	fnstenv.
+	* math/test-fenv-preserve.c: New file.
+	* math/Makefile (tests): Add test-fenv-preserve.
+
 2014-03-26  Will Newton <will.newton@linaro.org>
 
 	* benchtests/bench-strtod.c (TIMEOUT): Define to 10.
