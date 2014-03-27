@@ -843,6 +843,24 @@ exp -7.4444006192138124e+02
 exp -0x1.75f113c30b1c8p+9
 exp -max
 exp -11342.8125
+exp 0x1p-10
+exp -0x1p-10
+exp 0x1p-20
+exp -0x1p-20
+exp 0x1p-30
+exp -0x1p-30
+exp 0x1p-40
+exp -0x1p-40
+exp 0x1p-50
+exp -0x1p-50
+exp 0x1p-60
+exp -0x1p-60
+exp 0x1p-100
+exp -0x1p-100
+exp min
+exp -min
+exp min_subnorm
+exp -min_subnorm
 
 exp10 0
 exp10 -0

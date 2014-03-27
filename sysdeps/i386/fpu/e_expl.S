@@ -112,8 +112,14 @@ ENTRY(IEEE754_EXPL)
 	movzwl	4+8(%esp), %eax
 	andl	$0x7fff, %eax
 	cmpl	$0x400d, %eax
-	jle	3f
-	/* Overflow, underflow or infinity or NaN as argument.  */
+	jg	5f
+	cmpl	$0x3fbc, %eax
+	jge	3f
+	/* Argument's exponent below -67, result rounds to 1.  */
+	fld1
+	faddp
+	jmp	2f
+5:	/* Overflow, underflow or infinity or NaN as argument.  */
 	fstsw	%ax
 	movb	$0x45, %dh
 	andb	%ah, %dh

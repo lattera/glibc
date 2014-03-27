@@ -1,3 +1,13 @@
+2014-03-27  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16348]
+	* sysdeps/i386/fpu/e_expl.S (IEEE754_EXPL) [!USE_AS_EXPM1L]: Use
+	1+x for argument with exponent below -67.
+	* sysdeps/x86_64/fpu/e_expl.S (IEEE754_EXPL) [!USE_AS_EXPM1L]:
+	Likewise.
+	* math/auto-libm-test-in: Add more tests of exp.
+	* math/auto-libm-test-out: Regenerated.
+
 2014-03-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #16759]
