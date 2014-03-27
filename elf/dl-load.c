@@ -1269,7 +1269,7 @@ cannot allocate TLS data structures for initial thread");
     /* Length of the sections to be loaded.  */
     maplength = loadcmds[nloadcmds - 1].allocend - c->mapstart;
 
-    if (__builtin_expect (type, ET_DYN) == ET_DYN)
+    if (__glibc_likely (type == ET_DYN))
       {
 	/* This is a position-independent shared object.  We can let the
 	   kernel map it anywhere it likes, but we must have space for all
@@ -1767,14 +1767,13 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
 	}
 
       /* See whether the ELF header is what we expect.  */
-      if (__builtin_expect (! VALID_ELF_HEADER (ehdr->e_ident, expected,
+      if (__glibc_unlikely (! VALID_ELF_HEADER (ehdr->e_ident, expected,
 						EI_ABIVERSION)
 			    || !VALID_ELF_ABIVERSION (ehdr->e_ident[EI_OSABI],
 						      ehdr->e_ident[EI_ABIVERSION])
 			    || memcmp (&ehdr->e_ident[EI_PAD],
 				       &expected[EI_PAD],
-				       EI_NIDENT - EI_PAD) != 0,
-			    0))
+				       EI_NIDENT - EI_PAD) != 0))
 	{
 	  /* Something is wrong.  */
 	  const Elf32_Word *magp = (const void *) ehdr->e_ident;
@@ -1832,10 +1831,10 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
 	  errstring = N_("ELF file version does not match current one");
 	  goto call_lose;
 	}
-      if (! __builtin_expect (elf_machine_matches_host (ehdr), 1))
+      if (! __glibc_likely (elf_machine_matches_host (ehdr)))
 	goto close_and_out;
-      else if (__builtin_expect (ehdr->e_type, ET_DYN) != ET_DYN
-	       && __builtin_expect (ehdr->e_type, ET_EXEC) != ET_EXEC)
+      else if (__glibc_unlikely (ehdr->e_type != ET_DYN
+				 && ehdr->e_type != ET_EXEC))
 	{
 	  errstring = N_("only ET_DYN and ET_EXEC can be loaded");
 	  goto call_lose;
@@ -2104,8 +2103,7 @@ _dl_map_object (struct link_map *loader, const char *name,
       /* If the requested name matches the soname of a loaded object,
 	 use that object.  Elide this check for names that have not
 	 yet been opened.  */
-      if (__glibc_unlikely (l->l_faked != 0)
-	  || __builtin_expect (l->l_removed, 0) != 0)
+      if (__glibc_unlikely ((l->l_faked | l->l_removed) != 0))
 	continue;
       if (!_dl_name_match_p (name, l))
 	{
@@ -2230,7 +2228,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 
 #ifdef USE_LDCONFIG
       if (fd == -1
-	  && (__builtin_expect (! (mode & __RTLD_SECURE), 1)
+	  && (__glibc_likely ((mode & __RTLD_SECURE) == 0)
 	      || ! INTUSE(__libc_enable_secure))
 	  && __glibc_likely (GLRO(dl_inhibit_cache) == 0))
 	{
