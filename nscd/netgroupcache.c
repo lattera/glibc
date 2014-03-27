@@ -216,6 +216,10 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
 			    const char *nuser = data.val.triple.user;
 			    const char *ndomain = data.val.triple.domain;
 
+			    size_t hostlen = strlen (nhost ?: "") + 1;
+			    size_t userlen = strlen (nuser ?: "") + 1;
+			    size_t domainlen = strlen (ndomain ?: "") + 1;
+
 			    if (nhost == NULL || nuser == NULL || ndomain == NULL
 				|| nhost > nuser || nuser > ndomain)
 			      {
@@ -233,9 +237,6 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
 				     : last + strlen (last) + 1 - buffer);
 
 				/* We have to make temporary copies.  */
-				size_t hostlen = strlen (nhost ?: "") + 1;
-				size_t userlen = strlen (nuser ?: "") + 1;
-				size_t domainlen = strlen (ndomain ?: "") + 1;
 				size_t needed = hostlen + userlen + domainlen;
 
 				if (buflen - req->key_len - bufused < needed)
@@ -269,9 +270,12 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
 			      }
 
 			    char *wp = buffer + buffilled;
-			    wp = stpcpy (wp, nhost) + 1;
-			    wp = stpcpy (wp, nuser) + 1;
-			    wp = stpcpy (wp, ndomain) + 1;
+			    wp = memmove (wp, nhost ?: "", hostlen);
+			    wp += hostlen;
+			    wp = memmove (wp, nuser ?: "", userlen);
+			    wp += userlen;
+			    wp = memmove (wp, ndomain ?: "", domainlen);
+			    wp += domainlen;
 			    buffilled = wp - buffer;
 			    ++nentries;
 			  }

@@ -1,3 +1,9 @@
+2014-03-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #16760]
+	* nscd/netgroupcache.c (addgetnetgrentX): Use memmove instead
+	of stpcpy.
+
 2014-03-27  Andi Kleen  <ak@linux.intel.com>
 
 	* nptl/sysdeps/unix/sysv/linux/x86_64/lowlevellock.h (lll_lock,
