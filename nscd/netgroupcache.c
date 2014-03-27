@@ -560,15 +560,19 @@ addinnetgrX (struct database_dyn *db, int fd, request_header *req,
 	{
 	  bool success = true;
 
-	  if (host != NULL)
+	  /* For the host, user and domain in each triplet, we assume success
+	     if the value is blank because that is how the wildcard entry to
+	     match anything is stored in the netgroup cache.  */
+	  if (host != NULL && *triplets != '\0')
 	    success = strcmp (host, triplets) == 0;
 	  triplets = (const char *) rawmemchr (triplets, '\0') + 1;
 
-	  if (success && user != NULL)
+	  if (success && user != NULL && *triplets != '\0')
 	    success = strcmp (user, triplets) == 0;
 	  triplets = (const char *) rawmemchr (triplets, '\0') + 1;
 
-	  if (success && (domain == NULL || strcmp (domain, triplets) == 0))
+	  if (success && (domain == NULL || *triplets == '\0'
+			  || strcmp (domain, triplets) == 0))
 	    {
 	      dataset->resp.result = 1;
 	      break;

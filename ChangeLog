@@ -1,3 +1,9 @@
+2014-03-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #16758]
+	* nscd/netgroupcache.c (addinnetgrX): Succeed if triplet has
+	blank values.
+
 2014-03-26  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* elf/dl-load.c: Convert __builtin_expect into __glibc_{un}likely.
