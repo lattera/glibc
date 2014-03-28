@@ -22,9 +22,8 @@
 subdir := benchtests
 
 include ../Makeconfig
-
-bench := acos acosh asin asinh atan atanh cos cosh exp exp2 log log2 modf pow \
-	 rint sin sincos sinh sqrt tan tanh
+bench := acos acosh asin asinh atan atanh cos cosh exp exp2 ffs ffsll \
+	log log2 modf pow rint sin sincos sinh sqrt tan tanh
 
 # String function benchmarks.
 string-bench := bcopy bzero memccpy memchr memcmp memcpy memmem memmove \
