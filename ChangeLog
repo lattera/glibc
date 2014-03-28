@@ -1,3 +1,8 @@
+2014-07-02  Will Newton  <will.newton@linaro.org>
+	    Paul Eggert  <eggert@cs.ucla.edu>
+
+	* misc/sys/cdefs.h (_Noreturn): New macro, for pre-C11 compilers.
+
 2014-07-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* resolv/gethnamaddr.c: Add comment warning that the file is
