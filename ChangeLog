@@ -1,3 +1,18 @@
+2014-03-28  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16362]
+	* math/s_clog10.c (M_PI_LOG10E): New macro.
+	(__clog10): Use M_PI_LOG10E instead of M_PI when real and
+	imaginary parts are 0.
+	* math/s_clog10f.c (M_PI_LOG10Ef): New macro.
+	(__clog10f): Use M_PI_LOG10Ef instead of M_PI when real and
+	imaginary parts are 0.
+	* math/s_clog10l.c (M_PI_LOG10El): New macro.
+	(__clog10l): Use M_PI_LOG10El instead of M_PIl when real and
+	imaginary parts are 0.
+	* math/libm-test.inc (clog10_test_data): Update expected results
+	for when real and imaginary parts are 0.
+
 2014-03-27  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* elf/dl-load.c: Finish conversion of __builtin_expect into

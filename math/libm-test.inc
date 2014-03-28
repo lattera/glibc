@@ -6130,8 +6130,8 @@ clog_test (void)
 
 static const struct test_c_c_data clog10_test_data[] =
   {
-    TEST_c_c (clog10, minus_zero, 0, minus_infty, M_PIl, DIVIDE_BY_ZERO_EXCEPTION),
-    TEST_c_c (clog10, minus_zero, minus_zero, minus_infty, -M_PIl, DIVIDE_BY_ZERO_EXCEPTION),
+    TEST_c_c (clog10, minus_zero, 0, minus_infty, M_PI_LOG10El, DIVIDE_BY_ZERO_EXCEPTION),
+    TEST_c_c (clog10, minus_zero, minus_zero, minus_infty, -M_PI_LOG10El, DIVIDE_BY_ZERO_EXCEPTION),
 
     TEST_c_c (clog10, 0, 0, minus_infty, 0.0, DIVIDE_BY_ZERO_EXCEPTION),
     TEST_c_c (clog10, 0, minus_zero, minus_infty, minus_zero, DIVIDE_BY_ZERO_EXCEPTION),

@@ -25,6 +25,9 @@
 /* log_10 (2).  */
 #define M_LOG10_2 0.3010299956639811952137388947244930267682
 
+/* pi * log10 (e).  */
+#define M_PI_LOG10E 1.364376353841841347485783625431355770210
+
 __complex__ double
 __clog10 (__complex__ double x)
 {
@@ -35,7 +38,7 @@ __clog10 (__complex__ double x)
   if (__glibc_unlikely (rcls == FP_ZERO && icls == FP_ZERO))
     {
       /* Real and imaginary part are 0.0.  */
-      __imag__ result = signbit (__real__ x) ? M_PI : 0.0;
+      __imag__ result = signbit (__real__ x) ? M_PI_LOG10E : 0.0;
       __imag__ result = __copysign (__imag__ result, __imag__ x);
       /* Yes, the following line raises an exception.  */
       __real__ result = -1.0 / fabs (__real__ x);
