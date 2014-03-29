@@ -18,6 +18,7 @@
 
 #include <string.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <time.h>
 #include <inttypes.h>
@@ -48,6 +49,10 @@ main (int argc, char **argv)
   unsigned long i, k;
   struct timespec runtime;
   timing_t start, end;
+  bool detailed = false;
+
+  if (argc == 2 && !strcmp (argv[1], "-d"))
+    detailed = true;
 
   startup();
 
@@ -72,6 +77,7 @@ main (int argc, char **argv)
 
       double d_total_i = 0;
       timing_t total = 0, max = 0, min = 0x7fffffffffffffff;
+      int64_t c = 0;
       while (1)
 	{
 	  for (i = 0; i < NUM_SAMPLES (v); i++)
@@ -91,8 +97,13 @@ main (int argc, char **argv)
 		min = cur;
 
 	      TIMING_ACCUM (total, cur);
+	      /* Accumulate timings for the value.  In the end we will divide
+	         by the total iterations.  */
+	      RESULT_ACCUM (cur, v, i, c * iters, (c + 1) * iters);
+
 	      d_total_i += iters;
 	    }
+	  c++;
 	  struct timespec curtime;
 
 	  memset (&curtime, 0, sizeof (curtime));
@@ -114,6 +125,17 @@ main (int argc, char **argv)
 	      d_total_s, d_total_i, max / d_iters, min / d_iters,
 	      d_total_s / d_total_i);
 
+      if (detailed)
+	{
+	  printf (",\n\"timings\": [");
+	  for (int i = 0; i < NUM_SAMPLES (v); i++)
+	    {
+	      if (i > 0)
+		putc (',', stdout);
+	      printf ("%g", RESULT (v, i));
+	    }
+	  puts ("]");
+	}
       puts ("}");
     }
 

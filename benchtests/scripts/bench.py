@@ -50,6 +50,7 @@ STRUCT_TEMPLATE = '''
 struct args
 {
 %(args)s
+  double timing;
 };
 
 struct _variants
@@ -80,6 +81,9 @@ struct _variants variants[%(num_variants)d] = {
 
 # Epilogue for the generated source file.
 EPILOGUE = '''
+#define RESULT(__v, __i) (variants[(__v)].in[(__i)].timing)
+#define RESULT_ACCUM(r, v, i, old, new) \\
+        ((RESULT ((v), (i))) = (RESULT ((v), (i)) * (old) + (r)) / ((new) + 1))
 #define BENCH_FUNC(i, j) ({%(getret)s CALL_BENCH_FUNC (i, j);})
 #define FUNCNAME "%(func)s"
 #include "bench-skeleton.c"'''
@@ -168,7 +172,7 @@ def _print_arg_data(func, directives, all_vals):
     # Now print the values.
     variants = []
     for (k, vals), i in zip(all_vals.items(), itertools.count()):
-        out = ['  {%s},' % v for v in vals]
+        out = ['  {%s, 0},' % v for v in vals]
 
         # Members for the variants structure list that we will
         # print later.

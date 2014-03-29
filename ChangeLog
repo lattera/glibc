@@ -1,5 +1,15 @@
 2014-03-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* benchtests/Makefile (DETAILED_OPT): New make option.
+	(bench-func): Run benchmark program with -d if DETAILED_OPT is
+	set.
+	* benchtests/bench-skeleton.c: Include stdbool.h.
+	(main): Store and print timings per input.
+	* benchtests/scripts/bench.py (STRUCT_TEMPLATE): Add timing
+	member to each argument value.
+	(EPILOGUE): Define new macros RESULT and RESULT_ACCUM.
+	(_print_arg_data): Initialize per-input timing to 0.
+
 	* benchtests/Makefile (timing-type): New binary.
 	(bench-clean): Also remove bench-timing-type.
 	(bench): New target for timing-type.

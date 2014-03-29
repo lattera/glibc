@@ -86,6 +86,12 @@ ifdef USE_CLOCK_GETTIME
 CPPFLAGS-nonlib += -DUSE_CLOCK_GETTIME
 endif
 
+DETAILED_OPT :=
+
+ifdef DETAILED
+DETAILED_OPT := -d
+endif
+
 # This makes sure CPPFLAGS-nonlib and CFLAGS-nonlib are passed
 # for all these modules.
 cpp-srcs-left := $(binaries-benchset:=.c) $(binaries-bench:=.c)
@@ -126,7 +132,7 @@ bench-func: $(binaries-bench)
 	    echo ","; \
 	  fi; \
 	  echo "Running $${run}" >&2; \
-	  $(run-bench); \
+	  $(run-bench) $(DETAILED_OPT); \
 	done; \
 	echo "  }"; \
 	echo "}"; } > $(objpfx)bench.out-tmp; \
