@@ -98,11 +98,14 @@ run-bench = $(test-wrapper-env) \
 	    GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
 	    $($*-ENV) $(rtld-prefix) $${run}
 
+timing-type := $(objpfx)bench-timing-type
+
 bench-clean:
 	rm -f $(binaries-bench) $(addsuffix .o,$(binaries-bench))
 	rm -f $(binaries-benchset) $(addsuffix .o,$(binaries-benchset))
+	rm -f $(timing-type) $(addsuffix .o,$(timing-type))
 
-bench: bench-set bench-func
+bench: $(timing-type) bench-set bench-func
 
 bench-set: $(binaries-benchset)
 	for run in $^; do \
@@ -110,17 +113,29 @@ bench-set: $(binaries-benchset)
 	  $(run-bench) > $${run}.out; \
 	done
 
+# Build and execute the benchmark functions.  This target generates JSON
+# formatted bench.out.  Each of the programs produce independent JSON output,
+# so one could even execute them individually and process it using any JSON
+# capable language or tool.
 bench-func: $(binaries-bench)
-	{ for run in $^; do \
+	{ echo "{"; \
+	$(timing-type); \
+	echo "  ,\"functions\": {"; \
+	for run in $^; do \
+	  if ! [ "x$${run}" = "x$<" ]; then \
+	    echo ","; \
+	  fi; \
 	  echo "Running $${run}" >&2; \
 	  $(run-bench); \
-	done; } > $(objpfx)bench.out-tmp; \
+	done; \
+	echo "  }"; \
+	echo "}"; } > $(objpfx)bench.out-tmp; \
 	if [ -f $(objpfx)bench.out ]; then \
 	  mv -f $(objpfx)bench.out $(objpfx)bench.out.old; \
 	fi; \
 	mv -f $(objpfx)bench.out-tmp $(objpfx)bench.out
 
-$(binaries-bench) $(binaries-benchset): %: %.o \
+$(timing-type) $(binaries-bench) $(binaries-benchset): %: %.o \
   $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link)

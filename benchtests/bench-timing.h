@@ -25,6 +25,8 @@
 hp_timing_t _dl_hp_timing_overhead;
 typedef hp_timing_t timing_t;
 
+# define TIMING_TYPE "hp_timing"
+
 # define TIMING_INIT(res) \
 ({									      \
   HP_TIMING_DIFF_INIT();						      \
@@ -35,15 +37,12 @@ typedef hp_timing_t timing_t;
 # define TIMING_DIFF(diff, start, end) HP_TIMING_DIFF ((diff), (start), (end))
 # define TIMING_ACCUM(sum, diff) HP_TIMING_ACCUM_NT ((sum), (diff))
 
-# define TIMING_PRINT_STATS(func, d_total_s, d_iters, d_total_i, max, min) \
-  printf ("%s: ITERS:%g: TOTAL:%gMcy, MAX:%gcy, MIN:%gcy, %g calls/Mcy\n",    \
-	  (func), (d_total_i), (d_total_s) * 1e-6, (max) / (d_iters),	      \
-	  (min) / (d_iters), 1e6 * (d_total_i) / (d_total_s));
-
 #else
 
 #include <time.h>
 typedef uint64_t timing_t;
+
+# define TIMING_TYPE "clock_gettime"
 
 /* Measure the resolution of the clock so we can scale the number of
    benchmark iterations by this value.  */
@@ -63,11 +62,6 @@ typedef uint64_t timing_t;
 
 # define TIMING_DIFF(diff, start, end) (diff) = (end) - (start)
 # define TIMING_ACCUM(sum, diff) (sum) += (diff)
-
-# define TIMING_PRINT_STATS(func, d_total_s, d_iters, d_total_i, max, min) \
-  printf ("%s: ITERS:%g: TOTAL:%gs, MAX:%gns, MIN:%gns, %g iter/s\n",	      \
-	  (func), (d_total_i), (d_total_s) * 1e-9, (max) / (d_iters),		      \
-	  (min) / (d_iters), 1e9 * (d_total_i) / (d_total_s))
 
 #endif
 

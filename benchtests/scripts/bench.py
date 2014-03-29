@@ -172,7 +172,7 @@ def _print_arg_data(func, directives, all_vals):
 
         # Members for the variants structure list that we will
         # print later.
-        variants.append('  {"%s(%s)", %d, in%d},' % (func, k, len(vals), i))
+        variants.append('  {"%s", %d, in%d},' % (k, len(vals), i))
         print(ARGS_TEMPLATE % {'argnum': i, 'num_args': len(vals),
                                'args': '\n'.join(out)})
 

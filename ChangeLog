@@ -1,5 +1,17 @@
 2014-03-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* benchtests/Makefile (timing-type): New binary.
+	(bench-clean): Also remove bench-timing-type.
+	(bench): New target for timing-type.
+	(bench-func): Print output in JSON format.
+	* benchtests/bench-skeleton.c (main): Print output in JSON
+	format.
+	* benchtests/bench-timing-type.c: New file.
+	* benchtests/bench-timing.h (TIMING_TYPE): New macro.
+	(TIMING_PRINT_STATS): Remove.
+	* benchtests/scripts/bench.py (_print_arg_data): Store variant
+	name separately.
+
 	* benchtests/bench-modf.c: Remove.
 	* benchtests/modf-inputs: New inputs file.
 

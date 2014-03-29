@@ -59,8 +59,13 @@ main (int argc, char **argv)
 
   iters = 1000 * res;
 
+  /* Begin function.  */
+  printf ("\"%s\": {\n", FUNCNAME);
+
   for (int v = 0; v < NUM_VARIANTS; v++)
     {
+      if (v)
+	putc (',', stdout);
       /* Run for approximately DURATION seconds.  */
       clock_gettime (CLOCK_MONOTONIC_RAW, &runtime);
       runtime.tv_sec += DURATION;
@@ -86,7 +91,6 @@ main (int argc, char **argv)
 		min = cur;
 
 	      TIMING_ACCUM (total, cur);
-
 	      d_total_i += iters;
 	    }
 	  struct timespec curtime;
@@ -104,9 +108,17 @@ main (int argc, char **argv)
       d_total_s = total;
       d_iters = iters;
 
-      TIMING_PRINT_STATS (VARIANT (v), d_total_s, d_iters, d_total_i, max,
-			  min);
+      printf ("\"%s\": {\n", VARIANT (v));
+      printf ("\"duration\": %g, \"iterations\": %g, "
+	      "\"max\": %g, \"min\": %g, \"mean\": %g\n",
+	      d_total_s, d_total_i, max / d_iters, min / d_iters,
+	      d_total_s / d_total_i);
+
+      puts ("}");
     }
+
+  /* End function.  */
+  puts ("}");
 
   return 0;
 }
