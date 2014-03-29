@@ -1,3 +1,8 @@
+2014-03-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* benchtests/bench-modf.c: Remove.
+	* benchtests/modf-inputs: New inputs file.
+
 2014-03-28  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16362]
