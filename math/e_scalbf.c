@@ -50,7 +50,7 @@ __ieee754_scalbf (float x, float fn)
 	return x;
       return x / -fn;
     }
-  if (__glibc_unlikely ((float) (int) fn != fn))
+  if (__glibc_unlikely (fabsf (fn) >= 0x1p31f || (float) (int) fn != fn))
     return invalid_fn (x, fn);
 
   return __scalbnf (x, (int) fn);

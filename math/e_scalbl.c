@@ -50,7 +50,7 @@ __ieee754_scalbl (long double x, long double fn)
 	return x;
       return x / -fn;
     }
-  if (__glibc_unlikely ((long double) (int) fn != fn))
+  if (__glibc_unlikely (fabsl (fn) >= 0x1p31L || (long double) (int) fn != fn))
     return invalid_fn (x, fn);
 
   return __scalbnl (x, (int) fn);

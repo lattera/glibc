@@ -9134,6 +9134,23 @@ static const struct test_ff_f_data scalb_test_data[] =
     TEST_ff_f (scalb, plus_infty, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
     TEST_ff_f (scalb, qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
 
+    TEST_ff_f (scalb, max_value, max_value, plus_oflow, OVERFLOW_EXCEPTION),
+    TEST_ff_f (scalb, max_value, -max_value, plus_uflow, UNDERFLOW_EXCEPTION),
+    TEST_ff_f (scalb, 1, max_value, plus_oflow, OVERFLOW_EXCEPTION),
+    TEST_ff_f (scalb, 1, -max_value, plus_uflow, UNDERFLOW_EXCEPTION),
+    TEST_ff_f (scalb, min_value, max_value, plus_oflow, OVERFLOW_EXCEPTION),
+    TEST_ff_f (scalb, min_value, -max_value, plus_uflow, UNDERFLOW_EXCEPTION),
+    TEST_ff_f (scalb, min_subnorm_value, max_value, plus_oflow, OVERFLOW_EXCEPTION),
+    TEST_ff_f (scalb, min_subnorm_value, -max_value, plus_uflow, UNDERFLOW_EXCEPTION),
+    TEST_ff_f (scalb, -max_value, max_value, minus_oflow, OVERFLOW_EXCEPTION),
+    TEST_ff_f (scalb, -max_value, -max_value, minus_uflow, UNDERFLOW_EXCEPTION),
+    TEST_ff_f (scalb, -1, max_value, minus_oflow, OVERFLOW_EXCEPTION),
+    TEST_ff_f (scalb, -1, -max_value, minus_uflow, UNDERFLOW_EXCEPTION),
+    TEST_ff_f (scalb, -min_value, max_value, minus_oflow, OVERFLOW_EXCEPTION),
+    TEST_ff_f (scalb, -min_value, -max_value, minus_uflow, UNDERFLOW_EXCEPTION),
+    TEST_ff_f (scalb, -min_subnorm_value, max_value, minus_oflow, OVERFLOW_EXCEPTION),
+    TEST_ff_f (scalb, -min_subnorm_value, -max_value, minus_uflow, UNDERFLOW_EXCEPTION),
+
     TEST_ff_f (scalb, 0.8L, 4, 12.8L),
     TEST_ff_f (scalb, -0.854375L, 5, -27.34L),
   };

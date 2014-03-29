@@ -1,3 +1,12 @@
+2014-03-29  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16770]
+	* math/e_scalb.c (__ieee754_scalb): Check second argument is not
+	too large before casting to int.
+	* math/e_scalbf.c (__ieee754_scalbf): Likewise.
+	* math/e_scalbl.c (__ieee754_scalbl): Likewise.
+	* math/libm-test.inc (scalb_test_data): Add more tests.
+
 2014-03-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* benchtests/Makefile (DETAILED_OPT): New make option.
