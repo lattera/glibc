@@ -183,9 +183,9 @@
 
 	[BZ #16634]
 	* elf/dl-load.c (open_verify): Add mode parameter.
-        Error early when ET_EXEC and mode does not have __RTLD_OPENEXEC.
-        (open_path): Change from boolean 'secure' to complete flag 'mode'
-        (_dl_map_object): Adjust.
+	Error early when ET_EXEC and mode does not have __RTLD_OPENEXEC.
+	(open_path): Change from boolean 'secure' to complete flag 'mode'
+	(_dl_map_object): Adjust.
 	* elf/Makefile (tests): Add tst-dlopen-aout.
 	* elf/tst-dlopen-aout.c: New test.
 
