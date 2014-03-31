@@ -16,7 +16,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <string.h>
-#include <memcopy.h>
 
 #undef strcmp
 
@@ -24,9 +23,7 @@
    greater than zero if S1 is lexicographically less than,
    equal to or greater than S2.  */
 int
-strcmp (p1, p2)
-     const char *p1;
-     const char *p2;
+strcmp (const char *p1, const char *p2)
 {
   const unsigned char *s1 = (const unsigned char *) p1;
   const unsigned char *s2 = (const unsigned char *) p2;

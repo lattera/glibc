@@ -16,15 +16,12 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <string.h>
-#include <memcopy.h>
 
 #undef strcat
 
 /* Append SRC on the end of DEST.  */
 char *
-strcat (dest, src)
-     char *dest;
-     const char *src;
+strcat (char *dest, const char *src)
 {
   char *s1 = dest;
   const char *s2 = src;

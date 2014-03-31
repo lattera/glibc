@@ -1,3 +1,22 @@
+2014-04-07  Will Newton  <will.newton@linaro.org>
+
+	* string/basename.c [HAVE_CONFIG_H]: Remove #ifdef and
+	and contents.  [!_LIBC] Remove #ifndef and contents.
+	(basename): Use ANSI prototype.  [_LIBC] Remove #idef.
+	* string/memccpy.c (__memccpy): Use ANSI prototype.
+	* string/memfrob.c (memfrob): Likewise.
+	* string/strcoll.c (STRCOLL): Likewise.
+	* string/strlen.c (strlen): Likewise.
+	* string/strtok.c (STRTOK): Likewise.
+	* string/strcat.c: Remove unused #include of memcopy.h.
+	(strcat): Use ANSI prototype.
+	* string/strchr.c: Remove unused #include of memcopy.h.
+	(strchr): Use ANSI prototype.
+	* string/strcmp.c: Remove unused #include of memcopy.h.
+	(strcmp): Use ANSI prototype.
+	* string/strcpy.c: Remove unused #include of memcopy.h.
+	(strcpy): Use ANSI prototype.
+
 2014-04-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* Makeconfig (CPPFLAGS): Add config-extra-cppflags to list.

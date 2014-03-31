@@ -29,9 +29,7 @@
 
 
 int
-STRCOLL (s1, s2)
-     const STRING_TYPE *s1;
-     const STRING_TYPE *s2;
+STRCOLL (const STRING_TYPE *s1, const STRING_TYPE *s2)
 {
   return STRCOLL_L (s1, s2, _NL_CURRENT_LOCALE);
 }

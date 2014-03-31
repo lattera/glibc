@@ -18,9 +18,7 @@
 #include <string.h>
 
 void *
-memfrob (s, n)
-     void *s;
-     size_t n;
+memfrob (void *s, size_t n)
 {
   char *p = (char *) s;
 

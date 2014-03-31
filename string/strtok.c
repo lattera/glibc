@@ -36,9 +36,7 @@ static char *olds;
 		// s = "abc\0=-def\0"
 */
 char *
-STRTOK (s, delim)
-     char *s;
-     const char *delim;
+STRTOK (char *s, const char *delim)
 {
   char *token;
 

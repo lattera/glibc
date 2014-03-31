@@ -16,26 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
-
 #include <string.h>
 
-#ifndef _LIBC
-/* We cannot generally use the name `basename' since XPG defines an unusable
-   variant of the function but we cannot use it.  */
-# define basename gnu_basename
-#endif
-
-
 char *
-basename (filename)
-     const char *filename;
+basename (const char *filename)
 {
   char *p = strrchr (filename, '/');
   return p ? p + 1 : (char *) filename;
 }
-#ifdef _LIBC
 libc_hidden_def (basename)
-#endif

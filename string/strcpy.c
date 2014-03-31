@@ -17,15 +17,12 @@
 
 #include <stddef.h>
 #include <string.h>
-#include <memcopy.h>
 
 #undef strcpy
 
 /* Copy SRC to DEST.  */
 char *
-strcpy (dest, src)
-     char *dest;
-     const char *src;
+strcpy (char *dest, const char *src)
 {
   char c;
   char *s = (char *) src;
