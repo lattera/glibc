@@ -41,6 +41,11 @@
 # define __ASSUME_SENDMMSG_SYSCALL       1
 #endif
 
+/* Support for the futimesat syscall was added in 2.6.33.  */
+#if __LINUX_KERNEL_VERSION >= 0x020621
+# define __ASSUME_FUTIMESAT              1
+#endif
+
 #include_next <kernel-features.h>
 
 /* The MicroBlaze kernel does not support the pselect6, preadv and

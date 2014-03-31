@@ -1,3 +1,10 @@
+2014-03-31  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16648]
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x020621] (__ASSUME_FUTIMESAT): Define.
+	* sysdeps/unix/sysv/linux/microblaze/futimesat.c: New file.
+
 2014-03-31  Will Newton  <will.newton@linaro.org>
 
 	* benchtests/Makefile (bench): Add ffs and ffsll to list
