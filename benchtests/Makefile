@@ -37,6 +37,9 @@ stdlib-bench := strtod
 
 benchset := $(string-bench-all) $(stdlib-bench)
 
+CFLAGS-bench-ffs.c += -fno-builtin
+CFLAGS-bench-ffsll.c += -fno-builtin
+
 LDLIBS-bench-acos = -lm
 LDLIBS-bench-acosh = -lm
 LDLIBS-bench-asin = -lm
