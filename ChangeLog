@@ -1,5 +1,34 @@
 2014-03-31  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #9894]
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	[__sparc__ && !__arch64__ && !__sparc_v9__]
+	(__ASSUME_SET_ROBUST_LIST): Do not define.
+	[__sparc__ && !__arch64__ && !__sparc_v9__]
+	(__ASSUME_FUTEX_LOCK_PI): Likewise.
+	[__sparc__ && !__arch64__ && !__sparc_v9__] (__ASSUME_REQUEUE_PI):
+	Likewise.
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h
+	(__ASSUME_FUTEX_LOCK_PI): Undefine.
+	(__ASSUME_REQUEUE_PI): Likewise.
+	(__ASSUME_SET_ROBUST_LIST): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/kernel-features.h
+	[__LINUX_KERNEL_VERSION < 0x030a00] (__ASSUME_FUTEX_LOCK_PI):
+	Undefine.
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	[__LINUX_KERNEL_VERSION < 0x020621] (__ASSUME_FUTEX_LOCK_PI):
+	Likewise.
+	[__LINUX_KERNEL_VERSION < 0x020621] (__ASSUME_REQUEUE_PI):
+	Likewise.
+	[__LINUX_KERNEL_VERSION < 0x020621] (__ASSUME_SET_ROBUST_LIST):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h
+	[__mips == 1 || _MIPS_ARCH_R5900] (__ASSUME_FUTEX_LOCK_PI):
+	Undefine.
+	[__mips == 1 || _MIPS_ARCH_R5900] (__ASSUME_REQUEUE_PI): Likewise.
+	[__mips == 1 || _MIPS_ARCH_R5900] (__ASSUME_SET_ROBUST_LIST):
+	Likewise.
+
 	[BZ #16648]
 	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
 	[__LINUX_KERNEL_VERSION >= 0x020621] (__ASSUME_FUTIMESAT): Define.

@@ -53,3 +53,11 @@
 #if _MIPS_SIM == _ABIN32 && __LINUX_KERNEL_VERSION < 0x020623
 # undef __ASSUME_GETDENTS64_SYSCALL
 #endif
+
+/* The MIPS kernel does not support futex_atomic_cmpxchg_inatomic if
+   emulating LL/SC.  */
+#if __mips == 1 || defined _MIPS_ARCH_R5900
+# undef __ASSUME_FUTEX_LOCK_PI
+# undef __ASSUME_REQUEUE_PI
+# undef __ASSUME_SET_ROBUST_LIST
+#endif

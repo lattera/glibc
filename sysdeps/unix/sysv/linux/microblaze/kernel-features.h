@@ -48,6 +48,13 @@
 
 #include_next <kernel-features.h>
 
+/* Support for futex_atomic_cmpxchg_inatomic was added in 2.6.33.  */
+#if __LINUX_KERNEL_VERSION < 0x020621
+# undef __ASSUME_FUTEX_LOCK_PI
+# undef __ASSUME_REQUEUE_PI
+# undef __ASSUME_SET_ROBUST_LIST
+#endif
+
 /* The MicroBlaze kernel does not support the pselect6, preadv and
    pwritev syscalls.  */
 #undef __ASSUME_PSELECT

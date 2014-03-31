@@ -53,3 +53,10 @@
 # undef __ASSUME_PSELECT
 # undef __ASSUME_PPOLL
 #endif
+
+/* The ARM kernel may or may not support
+   futex_atomic_cmpxchg_inatomic, depending on kernel
+   configuration.  */
+#undef __ASSUME_FUTEX_LOCK_PI
+#undef __ASSUME_REQUEUE_PI
+#undef __ASSUME_SET_ROBUST_LIST

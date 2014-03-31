@@ -106,9 +106,12 @@
 # define __ASSUME_ATFCTS	1
 #endif
 
-/* Support for inter-process robust mutexes was added in 2.6.17.  */
+/* Support for inter-process robust mutexes was added in 2.6.17 (but
+   some architectures lack futex_atomic_cmpxchg_inatomic in some
+   configurations).  */
 #if __LINUX_KERNEL_VERSION >= 0x020611 \
-    && (!defined __sh__ || __LINUX_KERNEL_VERSION >= 0x020613)
+    && (!defined __sh__ || __LINUX_KERNEL_VERSION >= 0x020613) \
+    && !(defined __sparc__ && !defined __arch64__ && !defined __sparc_v9__)
 # define __ASSUME_SET_ROBUST_LIST	1
 #endif
 
@@ -119,8 +122,10 @@
 # define __ASSUME_COMPLETE_READV_WRITEV	1
 #endif
 
-/* Support for PI futexes was added in 2.6.18.  */
-#if __LINUX_KERNEL_VERSION >= 0x020612
+/* Support for PI futexes was added in 2.6.18 (but some architectures
+   lack futex_atomic_cmpxchg_inatomic in some configurations).  */
+#if __LINUX_KERNEL_VERSION >= 0x020612 \
+    && !(defined __sparc__ && !defined __arch64__ && !defined __sparc_v9__)
 # define __ASSUME_FUTEX_LOCK_PI	1
 #endif
 
@@ -223,8 +228,11 @@
 # define __ASSUME_PWRITEV	1
 #endif
 
-/* Support for FUTEX_*_REQUEUE_PI was added in 2.6.31.  */
-#if __LINUX_KERNEL_VERSION >= 0x02061f
+/* Support for FUTEX_*_REQUEUE_PI was added in 2.6.31 (but some
+   architectures lack futex_atomic_cmpxchg_inatomic in some
+   configurations).  */
+#if __LINUX_KERNEL_VERSION >= 0x02061f \
+    && !(defined __sparc__ && !defined __arch64__ && !defined __sparc_v9__)
 # define __ASSUME_REQUEUE_PI	1
 #endif
 
