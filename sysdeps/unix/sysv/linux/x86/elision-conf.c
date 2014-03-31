@@ -66,6 +66,8 @@ elision_init (int argc __attribute__ ((unused)),
 #ifdef ENABLE_LOCK_ELISION
   __pthread_force_elision = __libc_enable_secure ? 0 : __elision_available;
 #endif
+  if (!HAS_RTM)
+    __elision_aconf.retry_try_xbegin = 0; /* Disable elision on rwlocks */
 }
 
 #ifdef SHARED

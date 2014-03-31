@@ -22,12 +22,18 @@
 #include <pthread.h>
 #include <pthreadP.h>
 #include <stap-probe.h>
+#include <elide.h>
+
 
 /* Unlock RWLOCK.  */
 int
 __pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
 {
   LIBC_PROBE (rwlock_unlock, 1, rwlock);
+
+  if (ELIDE_UNLOCK (rwlock->__data.__writer == 0
+		    && rwlock->__data.__nr_readers == 0))
+    return 0;
 
   lll_lock (rwlock->__data.__lock, rwlock->__data.__shared);
   if (rwlock->__data.__writer)

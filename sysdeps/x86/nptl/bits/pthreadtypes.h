@@ -184,11 +184,13 @@ typedef union
     unsigned int __nr_writers_queued;
     int __writer;
     int __shared;
-    unsigned long int __pad1;
+    signed char __rwelision;
+    unsigned char __pad1[7];
     unsigned long int __pad2;
     /* FLAGS must stay at this position in the structure to maintain
        binary compatibility.  */
     unsigned int __flags;
+# define __PTHREAD_RWLOCK_ELISION_EXTRA 0, {0, 0, 0, 0, 0, 0, 0 }
 # define __PTHREAD_RWLOCK_INT_FLAGS_SHARED	1
   } __data;
 # else
@@ -204,7 +206,8 @@ typedef union
        binary compatibility.  */
     unsigned char __flags;
     unsigned char __shared;
-    unsigned char __pad1;
+    signed char __rwelision;
+# define __PTHREAD_RWLOCK_ELISION_EXTRA 0
     unsigned char __pad2;
     int __writer;
   } __data;

@@ -214,6 +214,8 @@ typedef union
   long int __align;
 } pthread_rwlock_t;
 
+#define __PTHREAD_RWLOCK_ELISION_EXTRA 0
+
 typedef union
 {
   char __size[__SIZEOF_PTHREAD_RWLOCKATTR_T];

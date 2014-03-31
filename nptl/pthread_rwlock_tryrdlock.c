@@ -19,12 +19,19 @@
 #include <errno.h>
 #include "pthreadP.h"
 #include <lowlevellock.h>
+#include <elide.h>
 
 
 int
 __pthread_rwlock_tryrdlock (pthread_rwlock_t *rwlock)
 {
   int result = EBUSY;
+
+  if (ELIDE_TRYLOCK (rwlock->__data.__rwelision,
+		     rwlock->__data.__lock == 0
+		     && rwlock->__data.__nr_readers == 0
+		     && rwlock->__data.__writer, 0))
+    return 0;
 
   lll_lock (rwlock->__data.__lock, rwlock->__data.__shared);
 
