@@ -45,9 +45,33 @@ sysv_scalb (double x, double fn)
 double
 __scalb (double x, double fn)
 {
-  return (__builtin_expect (_LIB_VERSION == _SVID_, 0)
-	  ? sysv_scalb (x, fn)
-	  : __ieee754_scalb (x, fn));
+  if (__glibc_unlikely (_LIB_VERSION == _SVID_))
+    return sysv_scalb (x, fn);
+  else
+    {
+      double z = __ieee754_scalb (x, fn);
+
+      if (__glibc_unlikely (!__finite (z) || z == 0.0))
+	{
+	  if (__isnan (z))
+	    {
+	      if (!__isnan (x) && !__isnan (fn))
+		__set_errno (EDOM);
+	    }
+	  else if (__isinf_ns (z))
+	    {
+	      if (!__isinf_ns (x) && !__isinf_ns (fn))
+		__set_errno (ERANGE);
+	    }
+	  else
+	    {
+	      /* z == 0.  */
+	      if (x != 0.0 && !__isinf_ns (fn))
+		__set_errno (ERANGE);
+	    }
+	}
+      return z;
+    }
 }
 weak_alias (__scalb, scalb)
 #ifdef NO_LONG_DOUBLE

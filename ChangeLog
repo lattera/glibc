@@ -1,5 +1,16 @@
 2014-03-31  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #6803]
+	[BZ #6804]
+	* math/w_scalb.c (__scalb): For non-SVID mode, check result and
+	set errno as appropriate.
+	* math/w_scalbf.c (__scalbf): Likewise.
+	* math/w_scalbl.c (__scalbl): Likewise.
+	* math/gen-libm-test.pl (parse_args): Handle ERRNO_PLUS_OFLOW,
+	ERRNO_MINUS_OFLOW, ERRNO_PLUS_UFLOW and ERRNO_MINUS_UFLOW.
+	* math/libm-test.inc (scalb_test_data): Add errno expectations.
+	Add more NaN tests.
+
 	[BZ #16349]
 	* math/w_atan2.c: Include <errno.h>.
 	(__atan2): Set errno for result underflowing to zero.

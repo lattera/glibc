@@ -45,8 +45,32 @@ sysv_scalbf (float x, float fn)
 float
 __scalbf (float x, float fn)
 {
-  return (__builtin_expect (_LIB_VERSION == _SVID_, 0)
-	  ? sysv_scalbf (x, fn)
-	  : __ieee754_scalbf (x, fn));
+  if (__glibc_unlikely (_LIB_VERSION == _SVID_))
+    return sysv_scalbf (x, fn);
+  else
+    {
+      float z = __ieee754_scalbf (x, fn);
+
+      if (__glibc_unlikely (!__finitef (z) || z == 0.0f))
+	{
+	  if (__isnanf (z))
+	    {
+	      if (!__isnanf (x) && !__isnanf (fn))
+		__set_errno (EDOM);
+	    }
+	  else if (__isinf_nsf (z))
+	    {
+	      if (!__isinf_nsf (x) && !__isinf_nsf (fn))
+		__set_errno (ERANGE);
+	    }
+	  else
+	    {
+	      /* z == 0.  */
+	      if (x != 0.0f && !__isinf_nsf (fn))
+		__set_errno (ERANGE);
+	    }
+	}
+      return z;
+    }
 }
 weak_alias (__scalbf, scalbf)

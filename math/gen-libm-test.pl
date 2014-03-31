@@ -160,6 +160,8 @@ sub parse_args {
   my ($ignore_result_any, $ignore_result_all);
   my ($num_res, @args_res, @start_rm, $rm);
   my (@plus_oflow, @minus_oflow, @plus_uflow, @minus_uflow);
+  my (@errno_plus_oflow, @errno_minus_oflow);
+  my (@errno_plus_uflow, @errno_minus_uflow);
 
   ($descr_args, $descr_res) = split /_/,$descr, 2;
 
@@ -258,6 +260,10 @@ sub parse_args {
   @minus_oflow = qw(minus_infty minus_infty -max_value -max_value);
   @plus_uflow = qw(plus_zero plus_zero plus_zero min_subnorm_value);
   @minus_uflow = qw(-min_subnorm_value minus_zero minus_zero minus_zero);
+  @errno_plus_oflow = qw(0 ERRNO_ERANGE 0 ERRNO_ERANGE);
+  @errno_minus_oflow = qw(ERRNO_ERANGE ERRNO_ERANGE 0 0);
+  @errno_plus_uflow = qw(ERRNO_ERANGE ERRNO_ERANGE ERRNO_ERANGE 0);
+  @errno_minus_uflow = qw(0 ERRNO_ERANGE ERRNO_ERANGE ERRNO_ERANGE);
   for ($rm = 0; $rm <= 3; $rm++) {
     $current_arg = $start_rm[$rm];
     $ignore_result_any = 0;
@@ -322,6 +328,10 @@ sub parse_args {
     $cline_res =~ s/minus_oflow/$minus_oflow[$rm]/g;
     $cline_res =~ s/plus_uflow/$plus_uflow[$rm]/g;
     $cline_res =~ s/minus_uflow/$minus_uflow[$rm]/g;
+    $cline_res =~ s/ERRNO_PLUS_OFLOW/$errno_plus_oflow[$rm]/g;
+    $cline_res =~ s/ERRNO_MINUS_OFLOW/$errno_minus_oflow[$rm]/g;
+    $cline_res =~ s/ERRNO_PLUS_UFLOW/$errno_plus_uflow[$rm]/g;
+    $cline_res =~ s/ERRNO_MINUS_UFLOW/$errno_minus_uflow[$rm]/g;
     $cline .= ", { $cline_res }";
   }
   print $file "    $cline },\n";
