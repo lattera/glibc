@@ -1,3 +1,16 @@
+2014-03-31  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_finite.S (MFVSRD_R3_V1):
+	Encode instruction correctly in little endian.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_isinf.S (MFVSRD_R3_V1):
+	Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_isnan.S (MFVSRD_R3_V1):
+	Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_llrint.S (MFVSRD_R3_V1):
+	Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_llround.S (MFVSRD_R3_V1):
+	Likewise.
+
 2014-03-31  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #9894]
