@@ -20,6 +20,7 @@
  * wrapper atan2(y,x)
  */
 
+#include <errno.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -27,10 +28,15 @@
 double
 __atan2 (double y, double x)
 {
+  double z;
+
   if (__builtin_expect (x == 0.0 && y == 0.0, 0) && _LIB_VERSION == _SVID_)
     return __kernel_standard (y, x, 3); /* atan2(+-0,+-0) */
 
-  return __ieee754_atan2 (y, x);
+  z = __ieee754_atan2 (y, x);
+  if (__glibc_unlikely (z == 0.0 && y != 0.0 && __finite (x)))
+    __set_errno (ERANGE);
+  return z;
 }
 weak_alias (__atan2, atan2)
 #ifdef NO_LONG_DOUBLE

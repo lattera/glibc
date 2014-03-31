@@ -1,3 +1,16 @@
+2014-03-31  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16349]
+	* math/w_atan2.c: Include <errno.h>.
+	(__atan2): Set errno for result underflowing to zero.
+	* math/w_atan2f.c: Include <errno.h>.
+	(__atan2f): Set errno for result underflowing to zero.
+	* math/w_atan2l.c: Include <errno.h>.
+	(__atan2l): Set errno for result underflowing to zero.
+	* math/auto-libm-test-in: Don't allow missing errno for some atan2
+	tests.
+	* math/auto-libm-test-out: Regenerated.
+
 2014-03-31  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power8/fpu/s_finite.S (MFVSRD_R3_V1):

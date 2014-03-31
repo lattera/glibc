@@ -20,6 +20,7 @@
  * wrapper atan2f(y,x)
  */
 
+#include <errno.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -27,9 +28,14 @@
 float
 __atan2f (float y, float x)
 {
+  float z;
+
   if (__builtin_expect (x == 0.0f && y == 0.0f, 0) && _LIB_VERSION == _SVID_)
     return __kernel_standard_f (y, x, 103); /* atan2(+-0,+-0) */
 
-  return __ieee754_atan2f (y, x);
+  z = __ieee754_atan2f (y, x);
+  if (__glibc_unlikely (z == 0.0f && y != 0.0f && __finitef (x)))
+    __set_errno (ERANGE);
+  return z;
 }
 weak_alias (__atan2f, atan2f)

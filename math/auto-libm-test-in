@@ -157,13 +157,12 @@ atan2 -min -max
 atan2 min_subnorm -max
 atan2 -min_subnorm -max
 # Bug 15319: underflow exception may be missing.
-# Bug 16349: errno setting may be missing.
 atan2 1 max missing-underflow
 atan2 -1 max missing-underflow
-atan2 min max missing-underflow missing-errno
-atan2 -min max missing-underflow missing-errno
-atan2 min_subnorm max missing-underflow missing-errno
-atan2 -min_subnorm max missing-underflow missing-errno
+atan2 min max missing-underflow
+atan2 -min max missing-underflow
+atan2 min_subnorm max missing-underflow
+atan2 -min_subnorm max missing-underflow
 
 atanh 0
 atanh -0
