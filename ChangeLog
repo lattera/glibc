@@ -1,3 +1,8 @@
+2014-04-01  Alan Modra  <amodra@gmail.com>
+
+	[BZ #16786]
+	* sysdeps/powerpc/powerpc64/fpu/s_copysign.S: Don't trash stack.
+
 2014-03-31  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #6803]
