@@ -24,6 +24,30 @@
 # error RTLD_SAVESPACE_SSE must be aligned to 32 bytes
 #endif
 
+/* Area on stack to save and restore registers used for parameter
+   passing when calling _dl_fixup.  */
+#ifdef __ILP32__
+/* X32 saves RCX, RDX, RSI, RDI, R8 and R9 plus RAX.  */
+# define REGISTER_SAVE_AREA	(8 * 7)
+# define REGISTER_SAVE_RAX	0
+#else
+/* X86-64 saves RCX, RDX, RSI, RDI, R8 and R9 plus RAX as well as BND0,
+   BND1, BND2, BND3.  */
+# define REGISTER_SAVE_AREA	(8 * 7 + 16 * 4)
+/* Align bound register save area to 16 bytes.  */
+# define REGISTER_SAVE_BND0	0
+# define REGISTER_SAVE_BND1	(REGISTER_SAVE_BND0 + 16)
+# define REGISTER_SAVE_BND2	(REGISTER_SAVE_BND1 + 16)
+# define REGISTER_SAVE_BND3	(REGISTER_SAVE_BND2 + 16)
+# define REGISTER_SAVE_RAX	(REGISTER_SAVE_BND3 + 16)
+#endif
+#define REGISTER_SAVE_RCX	(REGISTER_SAVE_RAX + 8)
+#define REGISTER_SAVE_RDX	(REGISTER_SAVE_RCX + 8)
+#define REGISTER_SAVE_RSI	(REGISTER_SAVE_RDX + 8)
+#define REGISTER_SAVE_RDI	(REGISTER_SAVE_RSI + 8)
+#define REGISTER_SAVE_R8	(REGISTER_SAVE_RDI + 8)
+#define REGISTER_SAVE_R9	(REGISTER_SAVE_R8 + 8)
+
 	.text
 	.globl _dl_runtime_resolve
 	.type _dl_runtime_resolve, @function
@@ -31,28 +55,63 @@
 	cfi_startproc
 _dl_runtime_resolve:
 	cfi_adjust_cfa_offset(16) # Incorporate PLT
-	subq $56,%rsp
-	cfi_adjust_cfa_offset(56)
-	movq %rax,(%rsp)	# Preserve registers otherwise clobbered.
-	movq %rcx, 8(%rsp)
-	movq %rdx, 16(%rsp)
-	movq %rsi, 24(%rsp)
-	movq %rdi, 32(%rsp)
-	movq %r8, 40(%rsp)
-	movq %r9, 48(%rsp)
-	movq 64(%rsp), %rsi	# Copy args pushed by PLT in register.
-	movq 56(%rsp), %rdi	# %rdi: link_map, %rsi: reloc_index
+	subq $REGISTER_SAVE_AREA,%rsp
+	cfi_adjust_cfa_offset(REGISTER_SAVE_AREA)
+	# Preserve registers otherwise clobbered.
+	movq %rax, REGISTER_SAVE_RAX(%rsp)
+	movq %rcx, REGISTER_SAVE_RCX(%rsp)
+	movq %rdx, REGISTER_SAVE_RDX(%rsp)
+	movq %rsi, REGISTER_SAVE_RSI(%rsp)
+	movq %rdi, REGISTER_SAVE_RDI(%rsp)
+	movq %r8, REGISTER_SAVE_R8(%rsp)
+	movq %r9, REGISTER_SAVE_R9(%rsp)
+#ifndef __ILP32__
+	# We also have to preserve bound registers.  These are nops if
+	# Intel MPX isn't available or disabled.
+# ifdef HAVE_MPX_SUPPORT
+	bndmov %bnd0, REGISTER_SAVE_BND0(%rsp)
+	bndmov %bnd1, REGISTER_SAVE_BND1(%rsp)
+	bndmov %bnd2, REGISTER_SAVE_BND2(%rsp)
+	bndmov %bnd3, REGISTER_SAVE_BND3(%rsp)
+# else
+	.byte 0x66,0x0f,0x1b,0x44,0x24,REGISTER_SAVE_BND0
+	.byte 0x66,0x0f,0x1b,0x4c,0x24,REGISTER_SAVE_BND1
+	.byte 0x66,0x0f,0x1b,0x54,0x24,REGISTER_SAVE_BND2
+	.byte 0x66,0x0f,0x1b,0x5c,0x24,REGISTER_SAVE_BND3
+# endif
+#endif
+	# Copy args pushed by PLT in register.
+	# %rdi: link_map, %rsi: reloc_index
+	movq (REGISTER_SAVE_AREA + 8)(%rsp), %rsi
+	movq REGISTER_SAVE_AREA(%rsp), %rdi
 	call _dl_fixup		# Call resolver.
 	movq %rax, %r11		# Save return value
-	movq 48(%rsp), %r9	# Get register content back.
-	movq 40(%rsp), %r8
-	movq 32(%rsp), %rdi
-	movq 24(%rsp), %rsi
-	movq 16(%rsp), %rdx
-	movq 8(%rsp), %rcx
-	movq (%rsp), %rax
-	addq $72, %rsp		# Adjust stack(PLT did 2 pushes)
-	cfi_adjust_cfa_offset(-72)
+#ifndef __ILP32__
+	# Restore bound registers.  These are nops if Intel MPX isn't
+	# avaiable or disabled.
+# ifdef HAVE_MPX_SUPPORT
+	bndmov REGISTER_SAVE_BND3(%rsp), %bnd3
+	bndmov REGISTER_SAVE_BND2(%rsp), %bnd2
+	bndmov REGISTER_SAVE_BND1(%rsp), %bnd1
+	bndmov REGISTER_SAVE_BND0(%rsp), %bnd0
+# else
+	.byte 0x66,0x0f,0x1a,0x5c,0x24,REGISTER_SAVE_BND3
+	.byte 0x66,0x0f,0x1a,0x54,0x24,REGISTER_SAVE_BND2
+	.byte 0x66,0x0f,0x1a,0x4c,0x24,REGISTER_SAVE_BND1
+	.byte 0x66,0x0f,0x1a,0x44,0x24,REGISTER_SAVE_BND0
+# endif
+#endif
+	# Get register content back.
+	movq REGISTER_SAVE_R9(%rsp), %r9
+	movq REGISTER_SAVE_R8(%rsp), %r8
+	movq REGISTER_SAVE_RDI(%rsp), %rdi
+	movq REGISTER_SAVE_RSI(%rsp), %rsi
+	movq REGISTER_SAVE_RDX(%rsp), %rdx
+	movq REGISTER_SAVE_RCX(%rsp), %rcx
+	movq REGISTER_SAVE_RAX(%rsp), %rax
+	# Adjust stack(PLT did 2 pushes)
+	addq $(REGISTER_SAVE_AREA + 16), %rsp
+	cfi_adjust_cfa_offset(-(REGISTER_SAVE_AREA + 16))
 	jmp *%r11		# Jump to function address.
 	cfi_endproc
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve

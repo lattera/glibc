@@ -104,6 +104,9 @@
 /* Define if assembler supports AVX512.  */
 #undef  HAVE_AVX512_ASM_SUPPORT
 
+/* Define if assembler supports Intel MPX.  */
+#undef  HAVE_MPX_SUPPORT
+
 /* Define if gcc supports FMA4.  */
 #undef	HAVE_FMA4_SUPPORT
 

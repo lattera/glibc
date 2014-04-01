@@ -1,3 +1,24 @@
+2014-04-09  Igor Zamyatin  <igor.zamyatin@intel.com>
+	    H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config.h.in (HAVE_MPX_SUPPORT): New #undef.
+	* sysdeps/x86_64/configure.ac: Set HAVE_MPX_SUPPORT.
+	* sysdeps/x86_64/configure: Regenerated.
+	* sysdeps/x86_64/dl-trampoline.S (REGISTER_SAVE_AREA): New
+	macro.
+	(REGISTER_SAVE_RAX): Likewise.
+	(REGISTER_SAVE_RCX): Likewise.
+	(REGISTER_SAVE_RDX): Likewise.
+	(REGISTER_SAVE_RSI): Likewise.
+	(REGISTER_SAVE_RDI): Likewise.
+	(REGISTER_SAVE_R8): Likewise.
+	(REGISTER_SAVE_R9): Likewise.
+	(REGISTER_SAVE_BND0): Likewise.
+	(REGISTER_SAVE_BND1): Likewise.
+	(REGISTER_SAVE_BND2): Likewise.
+	(_dl_runtime_resolve): Use them.  Save and restore Intel MPX
+	bound registers when calling _dl_fixup.
+
 2014-04-09  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* bits/string.h (_STRING_ARCH_unaligned): Define it to 0.
