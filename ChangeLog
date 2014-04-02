@@ -1,3 +1,9 @@
+2014-04-03  David Svoboda  <svoboda@cert.org>
+
+	[BZ #5666]
+	* manual/stdio.texi (Line-Oriented Input): Document buffer allocation
+	explicitly.
+
 2014-04-03  Roland McGrath  <roland@hack.frob.com>
 
 	* elf/dl-unmap-segments.h: New file.

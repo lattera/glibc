@@ -1298,7 +1298,8 @@ back in @code{*@var{n}}.
 
 If you set @code{*@var{lineptr}} to a null pointer, and @code{*@var{n}}
 to zero, before the call, then @code{getline} allocates the initial
-buffer for you by calling @code{malloc}.
+buffer for you by calling @code{malloc}.  This buffer remains allocated
+even if @code{getline} encounters errors and is unable to read any bytes.
 
 In either case, when @code{getline} returns,  @code{*@var{lineptr}} is
 a @code{char *} which points to the text of the line.
