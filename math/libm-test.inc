@@ -8302,6 +8302,14 @@ static const struct test_ff_f_data nextafter_test_data[] =
     // XXX Enable once gcc is fixed.
     //TEST_ff_f (nextafter, 0x0.00000040000000000000p-16385L, -0.1L, 0x0.0000003ffffffff00000p-16385L),
 #endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG == 106
+    TEST_ff_f (nextafter, 1.0L, -10.0L, 1.0L-0x1p-106L, NO_EXCEPTION),
+    TEST_ff_f (nextafter, 1.0L, 10.0L, 1.0L+0x1p-105L, NO_EXCEPTION),
+    TEST_ff_f (nextafter, 1.0L-0x1p-106L, 10.0L, 1.0L, NO_EXCEPTION),
+    TEST_ff_f (nextafter, -1.0L, -10.0L, -1.0L-0x1p-105L, NO_EXCEPTION),
+    TEST_ff_f (nextafter, -1.0L, 10.0L, -1.0L+0x1p-106L, NO_EXCEPTION),
+    TEST_ff_f (nextafter, -1.0L+0x1p-106L, -10.0L, -1.0L, NO_EXCEPTION),
+#endif
 
     /* XXX We need the hexadecimal FP number representation here for further
        tests.  */

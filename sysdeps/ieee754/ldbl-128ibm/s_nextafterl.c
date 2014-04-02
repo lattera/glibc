@@ -30,8 +30,7 @@ static char rcsid[] = "$NetBSD: $";
 
 long double __nextafterl(long double x, long double y)
 {
-	int64_t hx,hy,ihx,ihy;
-	uint64_t lx;
+	int64_t hx, hy, ihx, ihy, lx;
 	double xhi, xlo, yhi;
 
 	ldbl_unpack (x, &xhi, &xlo);
@@ -79,19 +78,28 @@ long double __nextafterl(long double x, long double y)
 	      u = math_opt_barrier (x);
 	      x -= __LDBL_DENORM_MIN__;
 	      if (ihx < 0x0360000000000000LL
-		  || (hx > 0 && (int64_t) lx <= 0)
-		  || (hx < 0 && (int64_t) lx > 1)) {
+		  || (hx > 0 && lx <= 0)
+		  || (hx < 0 && lx > 1)) {
 		u = u * u;
 		math_force_eval (u);		/* raise underflow flag */
 	      }
 	      return x;
 	    }
-	    if (ihx < 0x06a0000000000000LL) { /* ulp will denormal */
-	      INSERT_WORDS64 (yhi, hx & (0x7ffLL<<52));
-	      u = yhi;
-	      u *= 0x1.0000000000000p-105L;
+	    /* If the high double is an exact power of two and the low
+	       double is the opposite sign, then 1ulp is one less than
+	       what we might determine from the high double.  Similarly
+	       if X is an exact power of two, and positive, because
+	       making it a little smaller will result in the exponent
+	       decreasing by one and normalisation of the mantissa.   */
+	    if ((hx & 0x000fffffffffffffLL) == 0
+		&& ((lx != 0 && (hx ^ lx) < 0)
+		    || (lx == 0 && hx >= 0)))
+	      ihx -= 1LL << 52;
+	    if (ihx < (106LL << 52)) { /* ulp will denormal */
+	      INSERT_WORDS64 (yhi, ihx & (0x7ffLL<<52));
+	      u = yhi * 0x1p-105;
 	    } else {
-	      INSERT_WORDS64 (yhi, (hx & (0x7ffLL<<52))-(0x069LL<<52));
+	      INSERT_WORDS64 (yhi, (ihx & (0x7ffLL<<52))-(105LL<<52));
 	      u = yhi;
 	    }
 	    return x - u;
@@ -109,8 +117,8 @@ long double __nextafterl(long double x, long double y)
 	      u = math_opt_barrier (x);
 	      x += __LDBL_DENORM_MIN__;
 	      if (ihx < 0x0360000000000000LL
-		  || (hx > 0 && (int64_t) lx < 0 && lx != 0x8000000000000001LL)
-		  || (hx < 0 && (int64_t) lx >= 0)) {
+		  || (hx > 0 && lx < 0 && lx != 0x8000000000000001LL)
+		  || (hx < 0 && lx >= 0)) {
 		u = u * u;
 		math_force_eval (u);		/* raise underflow flag */
 	      }
@@ -118,12 +126,21 @@ long double __nextafterl(long double x, long double y)
 		x = -0.0L;
 	      return x;
 	    }
-	    if (ihx < 0x06a0000000000000LL) { /* ulp will denormal */
-	      INSERT_WORDS64 (yhi, hx & (0x7ffLL<<52));
-	      u = yhi;
-	      u *= 0x1.0000000000000p-105L;
+	    /* If the high double is an exact power of two and the low
+	       double is the opposite sign, then 1ulp is one less than
+	       what we might determine from the high double.  Similarly
+	       if X is an exact power of two, and negative, because
+	       making it a little larger will result in the exponent
+	       decreasing by one and normalisation of the mantissa.   */
+	    if ((hx & 0x000fffffffffffffLL) == 0
+		&& ((lx != 0 && (hx ^ lx) < 0)
+		    || (lx == 0 && hx < 0)))
+	      ihx -= 1LL << 52;
+	    if (ihx < (106LL << 52)) { /* ulp will denormal */
+	      INSERT_WORDS64 (yhi, ihx & (0x7ffLL<<52));
+	      u = yhi * 0x1p-105;
 	    } else {
-	      INSERT_WORDS64 (yhi, (hx & (0x7ffLL<<52))-(0x069LL<<52));
+	      INSERT_WORDS64 (yhi, (ihx & (0x7ffLL<<52))-(105LL<<52));
 	      u = yhi;
 	    }
 	    return x + u;

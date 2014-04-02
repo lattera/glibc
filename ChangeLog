@@ -1,5 +1,15 @@
 2014-04-02  Alan Modra  <amodra@gmail.com>
 
+	[BZ #16739]
+	* sysdeps/ieee754/ldbl-128ibm/s_nextafterl.c (__nextafterl): Correct
+	output when value is near a power of two.  Use int64_t for lx and
+	remove casts.  Use decimal rather than hex exponent constants.
+	Don't use long double multiplication when double will suffice.
+	* math/libm-test.inc (nextafter_test_data): Add tests.
+	* NEWS: Add 16739 and 16786 to bug list.
+
+2014-04-02  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/powerpc64/power7/memrchr.S: Correct stream hint.
 
 2014-04-02  Alan Modra  <amodra@gmail.com>
