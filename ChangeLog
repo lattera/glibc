@@ -1,3 +1,9 @@
+2014-04-03  Will Newton  <will.newton@linaro.org>
+
+	* elf/dl-lookup.c (do_lookup_x): Remove comment
+	referring to nested function and move variable
+	declarations down to before first use.
+
 2014-04-02  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16799]

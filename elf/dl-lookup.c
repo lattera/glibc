@@ -208,11 +208,6 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 
   do
     {
-      /* These variables are used in the nested function.  */
-      Elf_Symndx symidx;
-      int num_versions = 0;
-      const ElfW(Sym) *versioned_sym = NULL;
-
       const struct link_map *map = list[i]->l_real;
 
       /* Here come the extra test needed for `_dl_lookup_symbol_skip'.  */
@@ -236,6 +231,10 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
       /* If the hash table is empty there is nothing to do here.  */
       if (map->l_nbuckets == 0)
 	continue;
+
+      Elf_Symndx symidx;
+      int num_versions = 0;
+      const ElfW(Sym) *versioned_sym = NULL;
 
       /* The tables for this map.  */
       const ElfW(Sym) *symtab = (const void *) D_PTR (map, l_info[DT_SYMTAB]);
