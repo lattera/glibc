@@ -593,6 +593,102 @@ ifloat: 1
 ildouble: 2
 ldouble: 2
 
+Function: Real part of "clog10_downward":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 4
+ldouble: 4
+
+Function: Imaginary part of "clog10_downward":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 2
+ldouble: 2
+
+Function: Real part of "clog10_towardzero":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 4
+ldouble: 4
+
+Function: Imaginary part of "clog10_towardzero":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 2
+ldouble: 2
+
+Function: Real part of "clog10_upward":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 4
+ldouble: 4
+
+Function: Imaginary part of "clog10_upward":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 2
+ldouble: 2
+
+Function: Real part of "clog_downward":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Imaginary part of "clog_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: Real part of "clog_towardzero":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Imaginary part of "clog_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: Real part of "clog_upward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Imaginary part of "clog_upward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
 Function: "cos":
 ildouble: 1
 ldouble: 1

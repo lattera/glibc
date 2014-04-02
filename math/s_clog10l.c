@@ -80,8 +80,11 @@ __clog10l (__complex__ long double x)
 	{
 	  long double absy2 = absy * absy;
 	  if (absy2 <= LDBL_MIN * 2.0L * M_LN10l)
-	    __real__ result
-	      = (absy2 / 2.0L - absy2 * absy2 / 4.0L) * M_LOG10El;
+	    {
+	      long double force_underflow = absy2 * absy2;
+	      __real__ result = absy2 * (M_LOG10El / 2.0);
+	      math_force_eval (force_underflow);
+	    }
 	  else
 	    __real__ result = __log1pl (absy2) * (M_LOG10El / 2.0L);
 	}

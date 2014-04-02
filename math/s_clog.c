@@ -68,12 +68,9 @@ __clog (__complex__ double x)
 	  double absy2 = absy * absy;
 	  if (absy2 <= DBL_MIN * 2.0)
 	    {
-#if __FLT_EVAL_METHOD__ == 0
-	      __real__ result = absy2 / 2.0 - absy2 * absy2 / 4.0;
-#else
-	      volatile double force_underflow = absy2 * absy2 / 4.0;
-	      __real__ result = absy2 / 2.0 - force_underflow;
-#endif
+	      double force_underflow = absy2 * absy2;
+	      __real__ result = absy2 / 2.0;
+	      math_force_eval (force_underflow);
 	    }
 	  else
 	    __real__ result = __log1p (absy2) / 2.0;

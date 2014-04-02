@@ -6122,9 +6122,7 @@ static const struct test_c_c_data clog_test_data[] =
 static void
 clog_test (void)
 {
-  START (clog, 0);
-  RUN_TEST_LOOP_c_c (clog, clog_test_data, );
-  END_COMPLEX;
+  ALL_RM_TEST (clog, 0, clog_test_data, RUN_TEST_LOOP_c_c, END_COMPLEX);
 }
 
 
@@ -6184,9 +6182,7 @@ static const struct test_c_c_data clog10_test_data[] =
 static void
 clog10_test (void)
 {
-  START (clog10, 0);
-  RUN_TEST_LOOP_c_c (clog10, clog10_test_data, );
-  END_COMPLEX;
+  ALL_RM_TEST (clog10, 0, clog10_test_data, RUN_TEST_LOOP_c_c, END_COMPLEX);
 }
 
 

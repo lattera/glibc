@@ -74,14 +74,9 @@ __clog10f (__complex__ float x)
 	  float absy2 = absy * absy;
 	  if (absy2 <= FLT_MIN * 2.0f * (float) M_LN10)
 	    {
-#if __FLT_EVAL_METHOD__ == 0
-	      __real__ result
-		= (absy2 / 2.0f - absy2 * absy2 / 4.0f) * (float) M_LOG10E;
-#else
-	      volatile float force_underflow = absy2 * absy2 / 4.0f;
-	      __real__ result
-		= (absy2 / 2.0f - force_underflow) * (float) M_LOG10E;
-#endif
+	      float force_underflow = absy2 * absy2;
+	      __real__ result = absy2 * ((float) M_LOG10E / 2.0f);
+	      math_force_eval (force_underflow);
 	    }
 	  else
 	    __real__ result = __log1pf (absy2) * ((float) M_LOG10E / 2.0f);
