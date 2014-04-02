@@ -186,6 +186,162 @@ check_match (const char *const undef_name,
   return sym;
 }
 
+/* Utility function for do_lookup_x. Lookup an STB_GNU_UNIQUE symbol
+   in the unique symbol table, creating a new entry if necessary.
+   Return the matching symbol in RESULT.  */
+static void
+do_lookup_unique (const char *undef_name, uint_fast32_t new_hash,
+		  const struct link_map *map, struct sym_val *result,
+		  int type_class, const ElfW(Sym) *sym, const char *strtab,
+		  const ElfW(Sym) *ref, const struct link_map *undef_map)
+{
+  /* We have to determine whether we already found a
+     symbol with this name before.  If not then we have to
+     add it to the search table.  If we already found a
+     definition we have to use it.  */
+  void enter (struct unique_sym *table, size_t size,
+	      unsigned int hash, const char *name,
+	      const ElfW(Sym) *sym, const struct link_map *map)
+  {
+    size_t idx = hash % size;
+    size_t hash2 = 1 + hash % (size - 2);
+    while (table[idx].name != NULL)
+      {
+	idx += hash2;
+	if (idx >= size)
+	  idx -= size;
+      }
+
+    table[idx].hashval = hash;
+    table[idx].name = name;
+    table[idx].sym = sym;
+    table[idx].map = map;
+  }
+
+  struct unique_sym_table *tab
+    = &GL(dl_ns)[map->l_ns]._ns_unique_sym_table;
+
+  __rtld_lock_lock_recursive (tab->lock);
+
+  struct unique_sym *entries = tab->entries;
+  size_t size = tab->size;
+  if (entries != NULL)
+    {
+      size_t idx = new_hash % size;
+      size_t hash2 = 1 + new_hash % (size - 2);
+      while (1)
+	{
+	  if (entries[idx].hashval == new_hash
+	      && strcmp (entries[idx].name, undef_name) == 0)
+	    {
+	      if ((type_class & ELF_RTYPE_CLASS_COPY) != 0)
+		{
+		  /* We possibly have to initialize the central
+		     copy from the copy addressed through the
+		     relocation.  */
+		  result->s = sym;
+		  result->m = (struct link_map *) map;
+		}
+	      else
+		{
+		  result->s = entries[idx].sym;
+		  result->m = (struct link_map *) entries[idx].map;
+		}
+	      __rtld_lock_unlock_recursive (tab->lock);
+	      return;
+	    }
+
+	  if (entries[idx].name == NULL)
+	    break;
+
+	  idx += hash2;
+	  if (idx >= size)
+	    idx -= size;
+	}
+
+      if (size * 3 <= tab->n_elements * 4)
+	{
+	  /* Expand the table.  */
+#ifdef RTLD_CHECK_FOREIGN_CALL
+	  /* This must not happen during runtime relocations.  */
+	  assert (!RTLD_CHECK_FOREIGN_CALL);
+#endif
+	  size_t newsize = _dl_higher_prime_number (size + 1);
+	  struct unique_sym *newentries
+	    = calloc (sizeof (struct unique_sym), newsize);
+	  if (newentries == NULL)
+	    {
+	    nomem:
+	      __rtld_lock_unlock_recursive (tab->lock);
+	      _dl_fatal_printf ("out of memory\n");
+	    }
+
+	  for (idx = 0; idx < size; ++idx)
+	    if (entries[idx].name != NULL)
+	      enter (newentries, newsize, entries[idx].hashval,
+		     entries[idx].name, entries[idx].sym,
+		     entries[idx].map);
+
+	  tab->free (entries);
+	  tab->size = newsize;
+	  size = newsize;
+	  entries = tab->entries = newentries;
+	  tab->free = free;
+	}
+    }
+  else
+    {
+#ifdef RTLD_CHECK_FOREIGN_CALL
+      /* This must not happen during runtime relocations.  */
+      assert (!RTLD_CHECK_FOREIGN_CALL);
+#endif
+
+#ifdef SHARED
+      /* If tab->entries is NULL, but tab->size is not, it means
+	 this is the second, conflict finding, lookup for
+	 LD_TRACE_PRELINKING in _dl_debug_bindings.  Don't
+	 allocate anything and don't enter anything into the
+	 hash table.  */
+      if (__glibc_unlikely (tab->size))
+	{
+	  assert (GLRO(dl_debug_mask) & DL_DEBUG_PRELINK);
+	  goto success;
+	}
+#endif
+
+#define INITIAL_NUNIQUE_SYM_TABLE 31
+      size = INITIAL_NUNIQUE_SYM_TABLE;
+      entries = calloc (sizeof (struct unique_sym), size);
+      if (entries == NULL)
+	goto nomem;
+
+      tab->entries = entries;
+      tab->size = size;
+      tab->free = free;
+    }
+
+  if ((type_class & ELF_RTYPE_CLASS_COPY) != 0)
+    enter (entries, size, new_hash, strtab + sym->st_name, ref,
+	   undef_map);
+  else
+    {
+      enter (entries, size, new_hash, strtab + sym->st_name, sym, map);
+
+      if (map->l_type == lt_loaded)
+	/* Make sure we don't unload this object by
+	   setting the appropriate flag.  */
+	((struct link_map *) map)->l_flags_1 |= DF_1_NODELETE;
+    }
+  ++tab->n_elements;
+
+#ifdef SHARED
+ success:
+#endif
+  __rtld_lock_unlock_recursive (tab->lock);
+
+  result->s = sym;
+  result->m = (struct link_map *) map;
+}
 
 /* Inner part of the lookup functions.  We return a value > 0 if we
    found the symbol, the value 0 if nothing is found and < 0 if
@@ -323,157 +479,15 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 		}
 	      /* FALLTHROUGH */
 	    case STB_GLOBAL:
-	    success:
 	      /* Global definition.  Just what we need.  */
 	      result->s = sym;
 	      result->m = (struct link_map *) map;
 	      return 1;
 
 	    case STB_GNU_UNIQUE:;
-	      /* We have to determine whether we already found a
-		 symbol with this name before.  If not then we have to
-		 add it to the search table.  If we already found a
-		 definition we have to use it.  */
-	      void enter (struct unique_sym *table, size_t size,
-			  unsigned int hash, const char *name,
-			  const ElfW(Sym) *sym, const struct link_map *map)
-	      {
-		size_t idx = hash % size;
-		size_t hash2 = 1 + hash % (size - 2);
-		while (table[idx].name != NULL)
-		  {
-		    idx += hash2;
-		    if (idx >= size)
-		      idx -= size;
-		  }
-
-		table[idx].hashval = hash;
-		table[idx].name = name;
-		table[idx].sym = sym;
-		table[idx].map = map;
-	      }
-
-	      struct unique_sym_table *tab
-		= &GL(dl_ns)[map->l_ns]._ns_unique_sym_table;
-
-	      __rtld_lock_lock_recursive (tab->lock);
-
-	      struct unique_sym *entries = tab->entries;
-	      size_t size = tab->size;
-	      if (entries != NULL)
-		{
-		  size_t idx = new_hash % size;
-		  size_t hash2 = 1 + new_hash % (size - 2);
-		  while (1)
-		    {
-		      if (entries[idx].hashval == new_hash
-			  && strcmp (entries[idx].name, undef_name) == 0)
-			{
-			  if ((type_class & ELF_RTYPE_CLASS_COPY) != 0)
-			    {
-			      /* We possibly have to initialize the central
-				 copy from the copy addressed through the
-				 relocation.  */
-			      result->s = sym;
-			      result->m = (struct link_map *) map;
-			    }
-			  else
-			    {
-			      result->s = entries[idx].sym;
-			      result->m = (struct link_map *) entries[idx].map;
-			    }
-			  __rtld_lock_unlock_recursive (tab->lock);
-			  return 1;
-			}
-
-		      if (entries[idx].name == NULL)
-			break;
-
-		      idx += hash2;
-		      if (idx >= size)
-			idx -= size;
-		    }
-
-		  if (size * 3 <= tab->n_elements * 4)
-		    {
-		      /* Expand the table.  */
-#ifdef RTLD_CHECK_FOREIGN_CALL
-		      /* This must not happen during runtime relocations.  */
-		      assert (!RTLD_CHECK_FOREIGN_CALL);
-#endif
-		      size_t newsize = _dl_higher_prime_number (size + 1);
-		      struct unique_sym *newentries
-			= calloc (sizeof (struct unique_sym), newsize);
-		      if (newentries == NULL)
-			{
-			nomem:
-			  __rtld_lock_unlock_recursive (tab->lock);
-			  _dl_fatal_printf ("out of memory\n");
-			}
-
-		      for (idx = 0; idx < size; ++idx)
-			if (entries[idx].name != NULL)
-			  enter (newentries, newsize, entries[idx].hashval,
-				 entries[idx].name, entries[idx].sym,
-				 entries[idx].map);
-
-		      tab->free (entries);
-		      tab->size = newsize;
-		      size = newsize;
-		      entries = tab->entries = newentries;
-		      tab->free = free;
-		    }
-		}
-	      else
-		{
-#ifdef RTLD_CHECK_FOREIGN_CALL
-		  /* This must not happen during runtime relocations.  */
-		  assert (!RTLD_CHECK_FOREIGN_CALL);
-#endif
-
-#ifdef SHARED
-		  /* If tab->entries is NULL, but tab->size is not, it means
-		     this is the second, conflict finding, lookup for
-		     LD_TRACE_PRELINKING in _dl_debug_bindings.  Don't
-		     allocate anything and don't enter anything into the
-		     hash table.  */
-		  if (__glibc_unlikely (tab->size))
-		    {
-		      assert (GLRO(dl_debug_mask) & DL_DEBUG_PRELINK);
-		      __rtld_lock_unlock_recursive (tab->lock);
-		      goto success;
-		    }
-#endif
-
-#define INITIAL_NUNIQUE_SYM_TABLE 31
-		  size = INITIAL_NUNIQUE_SYM_TABLE;
-		  entries = calloc (sizeof (struct unique_sym), size);
-		  if (entries == NULL)
-		    goto nomem;
-
-		  tab->entries = entries;
-		  tab->size = size;
-		  tab->free = free;
-		}
-
-	      if ((type_class & ELF_RTYPE_CLASS_COPY) != 0)
-		enter (entries, size, new_hash, strtab + sym->st_name, ref,
-		       undef_map);
-	      else
-		{
-		  enter (entries, size, new_hash, strtab + sym->st_name, sym,
-			 map);
-
-		  if (map->l_type == lt_loaded)
-		    /* Make sure we don't unload this object by
-		       setting the appropriate flag.  */
-		    ((struct link_map *) map)->l_flags_1 |= DF_1_NODELETE;
-		}
-	      ++tab->n_elements;
-
-	      __rtld_lock_unlock_recursive (tab->lock);
-
-	      goto success;
+	      do_lookup_unique (undef_name, new_hash, map, result, type_class,
+				sym, strtab, ref, undef_map);
+	      return 1;
 
 	    default:
 	      /* Local symbols are ignored.  */
