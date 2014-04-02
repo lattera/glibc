@@ -1,5 +1,9 @@
 2014-04-02  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/powerpc/powerpc64/power7/memrchr.S: Correct stream hint.
+
+2014-04-02  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/powerpc64/start.S: Add @toc to toc symbol reference.
 
 2014-04-01  Will Newton  <will.newton@linaro.org>

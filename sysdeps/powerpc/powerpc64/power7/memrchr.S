@@ -29,7 +29,7 @@ ENTRY (__memrchr)
 	mr	r10,r3
 	clrrdi	r6,r7,7
 	li	r9,3<<5
-	dcbt	r9,r6,16      /* Stream hint, decreasing addresses.  */
+	dcbt	r9,r6,8       /* Stream hint, decreasing addresses.  */
 
 	/* Replicate BYTE to doubleword.  */
 	insrdi	r4,r4,8,48
