@@ -1,5 +1,21 @@
 2014-04-02  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16799]
+	[BZ #16800]
+	* math/s_catan.c (__catan): Avoid passing -0 denominator to atan2
+	with 0 numerator.
+	* math/s_catanf.c (__catanf): Likewise.
+	* math/s_catanh.c (__catanh): Likewise.
+	* math/s_catanhf.c (__catanhf): Likewise.
+	* math/s_catanhl.c (__catanhl): Likewise.
+	* math/s_catanl.c (__catanl): Likewise.
+	* sysdeps/ieee754/flt-32/e_logf.c (__ieee754_logf): Always divide
+	by positive zero when computing -Inf result.
+	* math/libm-test.inc (catan_test): Use ALL_RM_TEST.
+	(catanh_test): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	[BZ #16789]
 	* math/s_clog.c (__clog): Use math_force_eval to ensure underflow
 	instead of using underflowing value in computing result.

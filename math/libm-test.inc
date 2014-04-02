@@ -5239,9 +5239,7 @@ static const struct test_c_c_data catan_test_data[] =
 static void
 catan_test (void)
 {
-  START (catan, 0);
-  RUN_TEST_LOOP_c_c (catan, catan_test_data, );
-  END_COMPLEX;
+  ALL_RM_TEST (catan, 0, catan_test_data, RUN_TEST_LOOP_c_c, END_COMPLEX);
 }
 
 static const struct test_c_c_data catanh_test_data[] =
@@ -5746,9 +5744,7 @@ static const struct test_c_c_data catanh_test_data[] =
 static void
 catanh_test (void)
 {
-  START (catanh, 0);
-  RUN_TEST_LOOP_c_c (catanh, catanh_test_data, );
-  END_COMPLEX;
+  ALL_RM_TEST (catanh, 0, catanh_test_data, RUN_TEST_LOOP_c_c, END_COMPLEX);
 }
 
 static const struct test_f_f_data cbrt_test_data[] =

@@ -112,7 +112,11 @@ __catanhf (__complex__ float x)
 	    }
 
 	  if (absy < FLT_EPSILON / 2.0f)
-	    den = (1.0f - absx) * (1.0f + absx);
+	    {
+	      den = (1.0f - absx) * (1.0f + absx);
+	      if (den == -0.0f)
+		den = 0.0f;
+	    }
 	  else if (absx >= 1.0f)
 	    den = (1.0f - absx) * (1.0f + absx) - absy * absy;
 	  else if (absx >= 0.75f || absy >= 0.5f)

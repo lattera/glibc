@@ -97,7 +97,11 @@ __catanl (__complex__ long double x)
 	    }
 
 	  if (absy < LDBL_EPSILON / 2.0L)
-	    den = (1.0L - absx) * (1.0L + absx);
+	    {
+	      den = (1.0L - absx) * (1.0L + absx);
+	      if (den == -0.0L)
+		den = 0.0L;
+	    }
 	  else if (absx >= 1.0L)
 	    den = (1.0L - absx) * (1.0L + absx) - absy * absy;
 	  else if (absx >= 0.75L || absy >= 0.5L)

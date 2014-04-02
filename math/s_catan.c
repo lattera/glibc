@@ -89,7 +89,11 @@ __catan (__complex__ double x)
 	    }
 
 	  if (absy < DBL_EPSILON / 2.0)
-	    den = (1.0 - absx) * (1.0 + absx);
+	    {
+	      den = (1.0 - absx) * (1.0 + absx);
+	      if (den == -0.0)
+		den = 0.0;
+	    }
 	  else if (absx >= 1.0)
 	    den = (1.0 - absx) * (1.0 + absx) - absy * absy;
 	  else if (absx >= 0.75 || absy >= 0.5)
