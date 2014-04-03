@@ -33,6 +33,8 @@
 #include <tls.h>
 #include <stap-probe.h>
 
+#include <dl-unmap-segments.h>
+
 
 /* Type of the constructor functions.  */
 typedef void (*fini_t) (void);

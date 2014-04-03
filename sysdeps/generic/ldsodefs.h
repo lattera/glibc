@@ -91,9 +91,7 @@ typedef struct link_map *lookup_t;
 
 /* Unmap a loaded object, called by _dl_close (). */
 #ifndef DL_UNMAP_IS_SPECIAL
-# define DL_UNMAP(map) \
- __munmap ((void *) (map)->l_map_start,					      \
-	   (map)->l_map_end - (map)->l_map_start)
+# define DL_UNMAP(map)	_dl_unmap_segments (map)
 #endif
 
 /* By default we do not need special support to initialize DSOs loaded

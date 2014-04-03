@@ -23,6 +23,7 @@
 #include <elf/dynamic-link.h>
 #include <tls.h>
 #include <dl-tlsdesc.h>
+#include <dl-unmap-segments.h>
 #include <tlsdeschtab.h>
 
 /* The following functions take an entry_check_offset argument.  It's
@@ -144,8 +145,7 @@ void
 internal_function
 _dl_unmap (struct link_map *map)
 {
-  __munmap ((void *) (map)->l_map_start,
-	    (map)->l_map_end - (map)->l_map_start);
+  _dl_unmap_segments (map);
 
 #if SHARED
   if (map->l_mach.tlsdesc_table)

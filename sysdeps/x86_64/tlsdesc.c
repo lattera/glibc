@@ -21,6 +21,7 @@
 #include <elf/dynamic-link.h>
 #include <tls.h>
 #include <dl-tlsdesc.h>
+#include <dl-unmap-segments.h>
 #include <tlsdeschtab.h>
 
 /* The following 2 functions take a caller argument, that contains the
@@ -136,8 +137,7 @@ void
 internal_function
 _dl_unmap (struct link_map *map)
 {
-  __munmap ((void *) (map)->l_map_start,
-	    (map)->l_map_end - (map)->l_map_start);
+  _dl_unmap_segments (map);
 
 #if SHARED
   /* _dl_unmap is only called for dlopen()ed libraries, for which

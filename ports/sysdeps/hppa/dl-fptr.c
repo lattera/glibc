@@ -26,6 +26,7 @@
 #include <ldsodefs.h>
 #include <elf/dynamic-link.h>
 #include <dl-fptr.h>
+#include <dl-unmap-segments.h>
 #include <atomic.h>
 
 #ifndef ELF_MACHINE_BOOT_FPTR_TABLE_LEN
@@ -284,8 +285,7 @@ _dl_unmap (struct link_map *map)
   struct fdesc *head = NULL, *tail = NULL;
   size_t i;
 
-  __munmap ((void *) map->l_map_start,
-	    map->l_map_end - map->l_map_start);
+  _dl_unmap_segments (map);
 
   if (ftab == NULL)
     return;

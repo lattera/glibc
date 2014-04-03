@@ -1,3 +1,26 @@
+2014-04-03  Roland McGrath  <roland@hack.frob.com>
+
+	* elf/dl-unmap-segments.h: New file.
+	* sysdeps/generic/ldsodefs.h
+	(DL_UNMAP): Use _dl_unmap_segments in place of __munmap.
+	* elf/dl-close.c: Include <dl-unmap-segments.h>.
+	* elf/dl-fptr.c: Likewise.
+	(_dl_unmap): Use _dl_unmap_segments in place of __munmap.
+	* sysdeps/aarch64/tlsdesc.c: Likewise.
+	* sysdeps/arm/tlsdesc.c: Likewise.
+	* sysdeps/i386/tlsdesc.c: Likewise.
+	* sysdeps/tile/dl-runtime.c: Likewise.
+	* sysdeps/x86_64/tlsdesc.c: Likewise.
+	* elf/dl-load.h: New file.
+	* elf/dl-load.c: Include it.
+	(MAP_FILE, MAP_COPY, MAP_BASE_ADDR):
+	Macros moved to dl-load.h.
+	(ELF_PREFERRED_ADDRESS_DATA, ELF_PREFERRED_ADDRESS): Likewise.
+	(_dl_map_object_from_fd): Type 'struct loadcmd' moved to dl-load.h.
+	Use _dl_unmap_segments in place of __munmap.
+	Break out segment-mapping loop into ...
+	* elf/dl-map-segments.h (_dl_map_segments): ... here, in new file.
+
 2014-04-03  Will Newton  <will.newton@linaro.org>
 
 	* elf/dl-lookup.c (do_lookup_x): Remove comment

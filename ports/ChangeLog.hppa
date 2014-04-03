@@ -1,3 +1,8 @@
+2014-03-18  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/hppa/dl-fptr.c: Include <dl-unmap-segments.h>.
+	(_dl_unmap): Use _dl_unmap_segments in place of __munmap.
+
 2014-02-28  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/hppa/nptl/tls.h (TLS_TCB_AT_TP): New macro.

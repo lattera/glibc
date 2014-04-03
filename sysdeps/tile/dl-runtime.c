@@ -27,6 +27,7 @@
 
 #include <sys/mman.h>
 #include <arch/sim.h>
+#include <dl-unmap-segments.h>
 
 /* Like realpath(), but simplified: no dynamic memory use, no lstat(),
    no set_errno(), no valid "rpath" on error, etc.  This handles some
@@ -154,5 +155,5 @@ void internal_function
 _dl_unmap (struct link_map *l)
 {
   sim_dlclose (l->l_map_start);
-  __munmap ((void *) l->l_map_start, l->l_map_end - l->l_map_start);
+  _dl_unmap_segments (map);
 }

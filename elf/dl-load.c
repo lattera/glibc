@@ -38,39 +38,9 @@
 #include <stap-probe.h>
 
 #include <dl-dst.h>
-
-/* On some systems, no flag bits are given to specify file mapping.  */
-#ifndef MAP_FILE
-# define MAP_FILE	0
-#endif
-
-/* The right way to map in the shared library files is MAP_COPY, which
-   makes a virtual copy of the data at the time of the mmap call; this
-   guarantees the mapped pages will be consistent even if the file is
-   overwritten.  Some losing VM systems like Linux's lack MAP_COPY.  All we
-   get is MAP_PRIVATE, which copies each page when it is modified; this
-   means if the file is overwritten, we may at some point get some pages
-   from the new version after starting with pages from the old version.
-
-   To make up for the lack and avoid the overwriting problem,
-   what Linux does have is MAP_DENYWRITE.  This prevents anyone
-   from modifying the file while we have it mapped.  */
-#ifndef MAP_COPY
-# ifdef MAP_DENYWRITE
-#  define MAP_COPY	(MAP_PRIVATE | MAP_DENYWRITE)
-# else
-#  define MAP_COPY	MAP_PRIVATE
-# endif
-#endif
-
-/* Some systems link their relocatable objects for another base address
-   than 0.  We want to know the base address for these such that we can
-   subtract this address from the segment addresses during mapping.
-   This results in a more efficient address space usage.  Defaults to
-   zero for almost all systems.  */
-#ifndef MAP_BASE_ADDR
-# define MAP_BASE_ADDR(l)	0
-#endif
+#include <dl-load.h>
+#include <dl-map-segments.h>
+#include <dl-unmap-segments.h>
 
 
 #include <endian.h>
@@ -84,18 +54,6 @@
 #endif
 
 #define STRING(x) __STRING (x)
-
-/* Handle situations where we have a preferred location in memory for
-   the shared objects.  */
-#ifdef ELF_PREFERRED_ADDRESS_DATA
-ELF_PREFERRED_ADDRESS_DATA;
-#endif
-#ifndef ELF_PREFERRED_ADDRESS
-# define ELF_PREFERRED_ADDRESS(loader, maplength, mapstartpref) (mapstartpref)
-#endif
-#ifndef ELF_FIXED_ADDRESS
-# define ELF_FIXED_ADDRESS(loader, mapstart) ((void) 0)
-#endif
 
 
 int __stack_prot attribute_hidden attribute_relro
@@ -1093,12 +1051,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
   {
     /* Scan the program header table, collecting its load commands.  */
-    struct loadcmd
-      {
-	ElfW(Addr) mapstart, mapend, dataend, allocend;
-	ElfW(Off) mapoff;
-	int prot;
-      } loadcmds[l->l_phnum], *c;
+    struct loadcmd loadcmds[l->l_phnum];
     size_t nloadcmds = 0;
     bool has_holes = false;
 
@@ -1137,7 +1090,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	      goto call_lose;
 	    }
 
-	  c = &loadcmds[nloadcmds++];
+	  struct loadcmd *c = &loadcmds[nloadcmds++];
 	  c->mapstart = ph->p_vaddr & ~(GLRO(dl_pagesize) - 1);
 	  c->mapend = ((ph->p_vaddr + ph->p_filesz + GLRO(dl_pagesize) - 1)
 		       & ~(GLRO(dl_pagesize) - 1));
@@ -1263,154 +1216,26 @@ cannot allocate TLS data structures for initial thread");
 	goto call_lose;
       }
 
-    /* Now process the load commands and map segments into memory.  */
-    c = loadcmds;
-
-    /* Length of the sections to be loaded.  */
-    maplength = loadcmds[nloadcmds - 1].allocend - c->mapstart;
-
-    if (__glibc_likely (type == ET_DYN))
+    if (__glibc_unlikely (type != ET_DYN)
+	&& __glibc_unlikely ((mode & __RTLD_OPENEXEC) == 0))
       {
-	/* This is a position-independent shared object.  We can let the
-	   kernel map it anywhere it likes, but we must have space for all
-	   the segments in their specified positions relative to the first.
-	   So we map the first segment without MAP_FIXED, but with its
-	   extent increased to cover all the segments.  Then we remove
-	   access from excess portion, and there is known sufficient space
-	   there to remap from the later segments.
-
-	   As a refinement, sometimes we have an address that we would
-	   prefer to map such objects at; but this is only a preference,
-	   the OS can do whatever it likes. */
-	ElfW(Addr) mappref;
-	mappref = (ELF_PREFERRED_ADDRESS (loader, maplength,
-					  c->mapstart & GLRO(dl_use_load_bias))
-		   - MAP_BASE_ADDR (l));
-
-	/* Remember which part of the address space this object uses.  */
-	l->l_map_start = (ElfW(Addr)) __mmap ((void *) mappref, maplength,
-					      c->prot,
-					      MAP_COPY|MAP_FILE,
-					      fd, c->mapoff);
-	if (__glibc_unlikely ((void *) l->l_map_start == MAP_FAILED))
-	  {
-	  map_error:
-	    errstring = N_("failed to map segment from shared object");
-	    goto call_lose_errno;
-	  }
-
-	l->l_map_end = l->l_map_start + maplength;
-	l->l_addr = l->l_map_start - c->mapstart;
-
-	if (has_holes)
-	  /* Change protection on the excess portion to disallow all access;
-	     the portions we do not remap later will be inaccessible as if
-	     unallocated.  Then jump into the normal segment-mapping loop to
-	     handle the portion of the segment past the end of the file
-	     mapping.  */
-	  __mprotect ((caddr_t) (l->l_addr + c->mapend),
-		      loadcmds[nloadcmds - 1].mapstart - c->mapend,
-		      PROT_NONE);
-
-	l->l_contiguous = 1;
-
-	goto postmap;
-      }
-
-    /* This object is loaded at a fixed address.  This must never
-       happen for objects loaded with dlopen().  */
-    if (__glibc_unlikely ((mode & __RTLD_OPENEXEC) == 0))
-      {
+	/* This object is loaded at a fixed address.  This must never
+	   happen for objects loaded with dlopen.  */
 	errstring = N_("cannot dynamically load executable");
 	goto call_lose;
       }
 
-    /* Notify ELF_PREFERRED_ADDRESS that we have to load this one
-       fixed.  */
-    ELF_FIXED_ADDRESS (loader, c->mapstart);
+    /* Length of the sections to be loaded.  */
+    maplength = loadcmds[nloadcmds - 1].allocend - loadcmds[0].mapstart;
 
-
-    /* Remember which part of the address space this object uses.  */
-    l->l_map_start = c->mapstart + l->l_addr;
-    l->l_map_end = l->l_map_start + maplength;
-    l->l_contiguous = !has_holes;
-
-    while (c < &loadcmds[nloadcmds])
-      {
-	if (c->mapend > c->mapstart
-	    /* Map the segment contents from the file.  */
-	    && (__mmap ((void *) (l->l_addr + c->mapstart),
-			c->mapend - c->mapstart, c->prot,
-			MAP_FIXED|MAP_COPY|MAP_FILE,
-			fd, c->mapoff)
-		== MAP_FAILED))
-	  goto map_error;
-
-      postmap:
-	if (c->prot & PROT_EXEC)
-	  l->l_text_end = l->l_addr + c->mapend;
-
-	if (l->l_phdr == 0
-	    && c->mapoff <= header->e_phoff
-	    && ((size_t) (c->mapend - c->mapstart + c->mapoff)
-		>= header->e_phoff + header->e_phnum * sizeof (ElfW(Phdr))))
-	  /* Found the program header in this segment.  */
-	  l->l_phdr = (void *) (uintptr_t) (c->mapstart + header->e_phoff
-					    - c->mapoff);
-
-	if (c->allocend > c->dataend)
-	  {
-	    /* Extra zero pages should appear at the end of this segment,
-	       after the data mapped from the file.   */
-	    ElfW(Addr) zero, zeroend, zeropage;
-
-	    zero = l->l_addr + c->dataend;
-	    zeroend = l->l_addr + c->allocend;
-	    zeropage = ((zero + GLRO(dl_pagesize) - 1)
-			& ~(GLRO(dl_pagesize) - 1));
-
-	    if (zeroend < zeropage)
-	      /* All the extra data is in the last page of the segment.
-		 We can just zero it.  */
-	      zeropage = zeroend;
-
-	    if (zeropage > zero)
-	      {
-		/* Zero the final part of the last page of the segment.  */
-		if (__glibc_unlikely ((c->prot & PROT_WRITE) == 0))
-		  {
-		    /* Dag nab it.  */
-		    if (__mprotect ((caddr_t) (zero
-					       & ~(GLRO(dl_pagesize) - 1)),
-				    GLRO(dl_pagesize), c->prot|PROT_WRITE) < 0)
-		      {
-			errstring = N_("cannot change memory protections");
-			goto call_lose_errno;
-		      }
-		  }
-		memset ((void *) zero, '\0', zeropage - zero);
-		if (__glibc_unlikely ((c->prot & PROT_WRITE) == 0))
-		  __mprotect ((caddr_t) (zero & ~(GLRO(dl_pagesize) - 1)),
-			      GLRO(dl_pagesize), c->prot);
-	      }
-
-	    if (zeroend > zeropage)
-	      {
-		/* Map the remaining zero pages in from the zero fill FD.  */
-		caddr_t mapat;
-		mapat = __mmap ((caddr_t) zeropage, zeroend - zeropage,
-				c->prot, MAP_ANON|MAP_PRIVATE|MAP_FIXED,
-				-1, 0);
-		if (__glibc_unlikely (mapat == MAP_FAILED))
-		  {
-		    errstring = N_("cannot map zero-fill pages");
-		    goto call_lose_errno;
-		  }
-	      }
-	  }
-
-	++c;
-      }
+    /* Now process the load commands and map segments into memory.
+       This is responsible for filling in:
+       l_map_start, l_map_end, l_addr, l_contiguous, l_text_end, l_phdr
+     */
+    errstring = _dl_map_segments (l, fd, header, type, loadcmds, nloadcmds,
+                                  maplength, has_holes, loader);
+    if (__glibc_unlikely (errstring != NULL))
+      goto call_lose;
   }
 
   if (l->l_ld == 0)
@@ -1432,7 +1257,7 @@ cannot allocate TLS data structures for initial thread");
       && (mode & __RTLD_DLOPEN))
     {
       /* We are not supposed to load this object.  Free all resources.  */
-      __munmap ((void *) l->l_map_start, l->l_map_end - l->l_map_start);
+      _dl_unmap_segments (l);
 
       if (!l->l_libname->dont_free)
 	free (l->l_libname);
@@ -1738,8 +1563,8 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
       assert (sizeof (fbp->buf) > sizeof (ElfW(Ehdr)));
       /* Read in the header.  */
       do
-        {
-          ssize_t retlen = __libc_read (fd, fbp->buf + fbp->len,
+	{
+	  ssize_t retlen = __libc_read (fd, fbp->buf + fbp->len,
 					sizeof (fbp->buf) - fbp->len);
 	  if (retlen <= 0)
 	    break;
