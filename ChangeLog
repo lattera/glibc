@@ -1,5 +1,9 @@
 2014-06-23  Will Newton  <will.newton@linaro.org>
 
+	* elf/dl-lookup.c (undefined_msg): Remove variable.
+	(_dl_lookup_symbol_x): Replace undefined_msg with string
+	literal.
+
 	* elf/dl-lookup.c (do_lookup_unique): New function.
 	(do_lookup_x): Move STB_GNU_UNIQUE handling code
 	to a separate function.

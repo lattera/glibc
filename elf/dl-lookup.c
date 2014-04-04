@@ -39,9 +39,6 @@
 
 #define VERSTAG(tag)	(DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (tag))
 
-/* We need this string more than once.  */
-static const char undefined_msg[] = "undefined symbol: ";
-
 
 struct sym_val
   {
@@ -817,7 +814,7 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 	  /* XXX We cannot translate the message.  */
 	  _dl_signal_cerror (0, DSO_FILENAME (reference_name),
 			     N_("symbol lookup error"),
-			     make_string (undefined_msg, undef_name,
+			     make_string ("undefined symbol: ", undef_name,
 					  versionstr, versionname));
 	}
       *ref = NULL;
