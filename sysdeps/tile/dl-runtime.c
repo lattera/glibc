@@ -152,8 +152,8 @@ sim_dlclose (ElfW(Addr) map_start)
 }
 
 void internal_function
-_dl_unmap (struct link_map *l)
+_dl_unmap (struct link_map *map)
 {
-  sim_dlclose (l->l_map_start);
+  sim_dlclose (map->l_map_start);
   _dl_unmap_segments (map);
 }
