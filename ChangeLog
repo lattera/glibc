@@ -1,3 +1,12 @@
+2014-04-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	[BZ #16815]
+	* sysdeps/powerpc/powerpc32/fpu/s_nearbyint.S (__nearbyint): Fix
+	result for FE_DOWNWARD rounding mode.
+	* sysdeps/powerpc/powerpc32/fpu/s_nearbyintf.S (__nearbyintf):
+	Likewise.
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
+
 2014-04-04  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/tile/dl-runtime.c (_dl_unmap): Fix cut-and-paste bug

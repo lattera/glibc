@@ -52,16 +52,17 @@ ENTRY (__nearbyintf)
 	fcmpu	cr7,fp1,fp12		/* if (x > 0.0 */
 	ble	cr7,L(lessthanzero)
 	mtfsb0	4*cr7+lt		/* Disable FE_INEXACT exception */
-	fadds	fp0,fp1,fp13		/* x += TWO23 */
-	fsubs	fp1,fp0,fp13		/* x -= TWO23 */
+	fadds	fp1,fp1,fp13		/* x += TWO23 */
+	fsubs	fp1,fp1,fp13		/* x -= TWO23 */
+	fabs	fp1,fp1			/* if (x == 0.0) */
 	mtfsb0	4*cr1+eq		/* Clear any FE_INEXACT exception */
 	blr
 L(lessthanzero):
 	bgelr	cr7
 	mtfsb0	4*cr7+lt		/* Disable FE_INEXACT exception */
-	fsubs	fp0,fp13,fp1		/* x -= TWO23 */
-	fsubs	fp0,fp0,fp13		/* x += TWO23 */
-	fneg	fp1,fp0			/* if (x == 0.0) */
+	fsubs	fp1,fp1,fp13		/* x -= TWO23 */
+	fadds	fp1,fp1,fp13		/* x += TWO23 */
+	fnabs	fp1,fp1			/* if (x == 0.0) */
 	mtfsb0	4*cr1+eq		/* Clear any FE_INEXACT exception */
 	blr
 END (__nearbyintf)
