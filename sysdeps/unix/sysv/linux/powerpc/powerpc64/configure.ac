@@ -12,4 +12,14 @@ if test $libc_cv_ppc64_elfv2_abi = yes; then
   LIBC_CONFIG_VAR([default-abi], [64-v2])
 else
   LIBC_CONFIG_VAR([default-abi], [64-v1])
+  # Compiler that do not support ELFv2 ABI does not define _CALL_ELF
+  AC_CACHE_CHECK([whether the compiler defines _CALL_ELF],
+    [libc_cv_ppc64_def_call_elf],
+    [AC_EGREP_CPP(yes,[#ifdef _CALL_ELF
+                         yes
+                       #endif
+    ], libc_cv_ppc64_def_call_elf=yes, libc_cv_ppc64_def_call_elf=no)])
+  if test $libc_cv_ppc64_def_call_elf = no; then
+    libc_extra_cppflags="$libc_extra_cppflags -D_CALL_ELF=1"
+  fi
 fi

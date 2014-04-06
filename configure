@@ -591,6 +591,7 @@ libc_cv_slibdir
 old_glibc_headers
 use_nscd
 libc_cv_gcc_unwind_find_fde
+libc_extra_cppflags
 libc_extra_cflags
 CPPUNDEFS
 sizeof_long_double
@@ -7199,9 +7200,9 @@ fi
 $as_echo "$libc_cv_predef_stack_protector" >&6; }
 libc_extra_cflags=
 if test $libc_cv_predef_stack_protector = yes; then
-  libc_extra_cflags=-fno-stack-protector
+  libc_extra_cflags="$libc_extra_cflags -fno-stack-protector"
 fi
-
+libc_extra_cppflags=
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether the linker provides __ehdr_start" >&5
 $as_echo_n "checking whether the linker provides __ehdr_start... " >&6; }
@@ -7265,6 +7266,9 @@ $as_echo "running configure fragment for $dir" >&6; }
     . $dest/configure
   fi
 done
+
+
+
 
 if test x$libc_cv_gcc_unwind_find_fde = xyes; then
   $as_echo "#define EXPORT_UNWIND_FIND_FDE 1" >>confdefs.h

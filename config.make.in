@@ -37,6 +37,7 @@ cflags-cpu = @libc_cv_cc_submachine@
 asflags-cpu = @libc_cv_cc_submachine@
 
 config-extra-cflags = @libc_extra_cflags@
+config-extra-cppflags = @libc_extra_cppflags@
 config-cflags-nofma = @libc_cv_cc_nofma@
 
 defines = @DEFINES@

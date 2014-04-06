@@ -1,5 +1,19 @@
 2014-04-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* Makeconfig (CPPFLAGS): Add config-extra-cppflags to list.
+	* config.make.in (config-extra-cppflags): Set it from
+	libc_extra_cppflags.
+	* configure.ac (libc_extra_cflags): Make it accumulate over
+	configure fragments.
+	(libc_extra_cppflags): New flag.
+	* configure. Regenerate.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/configure.ac
+	(libc_cv_ppc64_def_call_elf): Define it to yes if compiler does not set
+	_CALL_ELF and add -D_CALL_ELF=1 to libc_extra_cppflags.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/configure: Regenerate.
+
+2014-04-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	[BZ #16815]
 	* sysdeps/powerpc/powerpc32/fpu/s_nearbyint.S (__nearbyint): Fix
 	result for FE_DOWNWARD rounding mode.

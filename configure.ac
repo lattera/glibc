@@ -2042,9 +2042,9 @@ esac],
 ])
 libc_extra_cflags=
 if test $libc_cv_predef_stack_protector = yes; then
-  libc_extra_cflags=-fno-stack-protector
+  libc_extra_cflags="$libc_extra_cflags -fno-stack-protector"
 fi
-AC_SUBST(libc_extra_cflags)
+libc_extra_cppflags=
 
 AC_CACHE_CHECK([whether the linker provides __ehdr_start],
 	       libc_cv_ehdr_start, [
@@ -2090,6 +2090,9 @@ for dir in $sysnames; do
     . $dest/configure
   fi
 done
+
+AC_SUBST(libc_extra_cflags)
+AC_SUBST(libc_extra_cppflags)
 
 if test x$libc_cv_gcc_unwind_find_fde = xyes; then
   AC_DEFINE(EXPORT_UNWIND_FIND_FDE)

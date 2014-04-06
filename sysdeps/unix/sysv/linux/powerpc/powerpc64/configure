@@ -163,4 +163,31 @@ default-abi = 64-v2"
 else
   config_vars="$config_vars
 default-abi = 64-v1"
+  # Compiler that do not support ELFv2 ABI does not define _CALL_ELF
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether the compiler defines _CALL_ELF" >&5
+$as_echo_n "checking whether the compiler defines _CALL_ELF... " >&6; }
+if ${libc_cv_ppc64_def_call_elf+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#ifdef _CALL_ELF
+                         yes
+                       #endif
+
+_ACEOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  $EGREP "yes" >/dev/null 2>&1; then :
+  libc_cv_ppc64_def_call_elf=yes
+else
+  libc_cv_ppc64_def_call_elf=no
+fi
+rm -f conftest*
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ppc64_def_call_elf" >&5
+$as_echo "$libc_cv_ppc64_def_call_elf" >&6; }
+  if test $libc_cv_ppc64_def_call_elf = no; then
+    libc_extra_cppflags="$libc_extra_cppflags -D_CALL_ELF=1"
+  fi
 fi
