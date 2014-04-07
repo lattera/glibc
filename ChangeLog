@@ -1,3 +1,9 @@
+2014-04-09  Peter Brett  <peter@peter-b.co.uk>
+
+	[BZ #15514]
+	* sysdeps/posix/pathconf.c (__pathconf): Use statvfs64() for
+	pathconf(_PC_NAME_MAX).
+
 2014-04-09  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* nptl/sysdeps/pthread/pthread.h (__PTHREAD_MUTEX_HAVE_ELISION):
