@@ -1,3 +1,20 @@
+2014-04-09  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power6x/fpu/Implies: New file.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/Implies: new file.
+	* sysdeps/powerpc/powerpc64/power6x/multiarch/Implies: New file.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/Implies: Remove multiarch
+	imply folder.
+	* sysdeps/powerpc/powerpc64/power5/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/multiarch/Implies: Adjust
+	correct imply path.
+	* sysdeps/powerpc/powerpc64/power7/strncat.S (STRLEN): Define correct
+	strlen symbol for non multi-arch builds.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_isnan.S (__isnan): Add
+	missing hidden_def and weak_alias.
+
 2014-04-08  Carlos O'Donell  <carlos@redhat.com>
 
 	* manual/ipc.texi (sem_close): AC-unsafe because of aculock.

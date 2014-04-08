@@ -39,6 +39,9 @@ EALIGN (__isnan, 4, 0)
 	blr
 END (__isnan)
 
+hidden_def (__isnan)
+weak_alias (__isnan, isnan)
+
 /* It turns out that the 'double' version will also always work for
    single-precision.  */
 strong_alias (__isnan, __isnanf)

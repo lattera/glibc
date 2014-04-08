@@ -38,7 +38,9 @@
 #endif
 
 #ifndef STRLEN
-# define STRLEN   __strlen_ppc
+/* For builds with no IFUNC support, local calls should be made to internal
+   GLIBC symbol (created by libc_hidden_builtin_def).  */
+# define STRLEN   __GI_strlen
 #endif
 
 #define	FRAMESIZE	(FRAME_MIN_SIZE+32)
