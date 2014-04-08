@@ -23,6 +23,7 @@
 #include <time.h>
 #include <inttypes.h>
 #include "bench-timing.h"
+#include "json-lib.h"
 
 volatile unsigned int dontoptimize = 0;
 
@@ -50,6 +51,7 @@ main (int argc, char **argv)
   struct timespec runtime;
   timing_t start, end;
   bool detailed = false;
+  json_ctx_t json_ctx;
 
   if (argc == 2 && !strcmp (argv[1], "-d"))
     detailed = true;
@@ -64,13 +66,13 @@ main (int argc, char **argv)
 
   iters = 1000 * res;
 
+  json_init (&json_ctx, 2, stdout);
+
   /* Begin function.  */
-  printf ("\"%s\": {\n", FUNCNAME);
+  json_attr_object_begin (&json_ctx, FUNCNAME);
 
   for (int v = 0; v < NUM_VARIANTS; v++)
     {
-      if (v)
-	putc (',', stdout);
       /* Run for approximately DURATION seconds.  */
       clock_gettime (CLOCK_MONOTONIC_RAW, &runtime);
       runtime.tv_sec += DURATION;
@@ -119,28 +121,31 @@ main (int argc, char **argv)
       d_total_s = total;
       d_iters = iters;
 
-      printf ("\"%s\": {\n", VARIANT (v));
-      printf ("\"duration\": %g, \"iterations\": %g, "
-	      "\"max\": %g, \"min\": %g, \"mean\": %g\n",
-	      d_total_s, d_total_i, max / d_iters, min / d_iters,
-	      d_total_s / d_total_i);
+      /* Begin variant.  */
+      json_attr_object_begin (&json_ctx, VARIANT (v));
+
+      json_attr_double (&json_ctx, "duration", d_total_s);
+      json_attr_double (&json_ctx, "iterations", d_total_i);
+      json_attr_double (&json_ctx, "max", max / d_iters);
+      json_attr_double (&json_ctx, "min", min / d_iters);
+      json_attr_double (&json_ctx, "mean", d_total_s / d_total_i);
 
       if (detailed)
 	{
-	  printf (",\n\"timings\": [");
+	  json_array_begin (&json_ctx, "timings");
+
 	  for (int i = 0; i < NUM_SAMPLES (v); i++)
-	    {
-	      if (i > 0)
-		putc (',', stdout);
-	      printf ("%g", RESULT (v, i));
-	    }
-	  puts ("]");
+	    json_element_double (&json_ctx, RESULT (v, i));
+
+	  json_array_end (&json_ctx);
 	}
-      puts ("}");
+
+      /* End variant.  */
+      json_attr_object_end (&json_ctx);
     }
 
   /* End function.  */
-  puts ("}");
+  json_attr_object_end (&json_ctx);
 
   return 0;
 }

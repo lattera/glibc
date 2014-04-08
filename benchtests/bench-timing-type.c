@@ -22,6 +22,6 @@
 int
 main (int argc, char **argv)
 {
-  printf ("\"timing-type\": \"%s\"\n", TIMING_TYPE);
+  puts (TIMING_TYPE);
   return 0;
 }

@@ -101,6 +101,8 @@ cpp-srcs-left := $(binaries-benchset:=.c) $(binaries-bench:=.c)
 lib := nonlib
 include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 
+extra-objs += json-lib.o
+
 bench-deps := bench-skeleton.c bench-timing.h Makefile
 
 run-bench = $(test-wrapper-env) \
@@ -127,9 +129,9 @@ bench-set: $(binaries-benchset)
 # so one could even execute them individually and process it using any JSON
 # capable language or tool.
 bench-func: $(binaries-bench)
-	{ echo "{"; \
-	$(timing-type); \
-	echo "  ,\"functions\": {"; \
+	{ timing_type=$$($(timing-type)); \
+	echo "{\"timing_type\": \"$${timing_type}\","; \
+	echo " \"functions\": {"; \
 	for run in $^; do \
 	  if ! [ "x$${run}" = "x$<" ]; then \
 	    echo ","; \
@@ -137,14 +139,15 @@ bench-func: $(binaries-bench)
 	  echo "Running $${run}" >&2; \
 	  $(run-bench) $(DETAILED_OPT); \
 	done; \
-	echo "  }"; \
+	echo; \
+	echo " }"; \
 	echo "}"; } > $(objpfx)bench.out-tmp; \
 	if [ -f $(objpfx)bench.out ]; then \
 	  mv -f $(objpfx)bench.out $(objpfx)bench.out.old; \
 	fi; \
 	mv -f $(objpfx)bench.out-tmp $(objpfx)bench.out
 
-$(timing-type) $(binaries-bench) $(binaries-benchset): %: %.o \
+$(timing-type) $(binaries-bench) $(binaries-benchset): %: %.o $(objpfx)json-lib.o \
   $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link)
