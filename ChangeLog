@@ -1,3 +1,7 @@
+2014-04-08  Carlos O'Donell  <carlos@redhat.com>
+
+	* manual/ipc.texi (sem_close): AC-unsafe because of aculock.
+
 2014-04-07  Will Newton  <will.newton@linaro.org>
 
 	* string/basename.c [HAVE_CONFIG_H]: Remove #ifdef and

@@ -68,9 +68,9 @@ by @theglibc{}.
 @end deftypefun
 
 @deftypefun int sem_close (sem_t *@var{sem});
-@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@asucorrupt{}}}
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 @c lll_lock asulock aculock
-@c twalk asucorrupt
+@c twalk mtsrace{:root}
 @c
 @c We are AS-unsafe because we take a non-recursive lock.
 @c We are AC-unsafe because several internal data structures
