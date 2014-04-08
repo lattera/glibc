@@ -151,6 +151,20 @@ Version 2.19
 
 * Preliminary documentation about Multi-Thread, Async-Signal and
   Async-Cancel Safety has been added.
+
+* Change of ABI data structures for s390 and s390x:
+  On s390 and s390x the size of struct ucontext and jmp_buf was increased to
+  allow for future hardware extensions. All library functions that accept or
+  return these structures were versioned in order to provide backwards
+  compatibility with existing code. However, not all cases can be handled
+  with interface versioning. If an application embeds either structure into
+  another structure and that structure is passed to another compilation unit
+  which expects the newer larger-sized object then any access to the new
+  fields will result in undefined behaviour. Similarly any access to fields
+  that were moved by the enlarging of the structures will cause undefined
+  behaviour. To fix the undefined behaviour all objects that are part of the
+  final in-memory image must agree on the size of structures, and this may
+  require recompilation.
 
 Version 2.18
 
