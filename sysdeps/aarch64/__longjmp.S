@@ -18,6 +18,7 @@
 
 #include <sysdep.h>
 #include <jmpbuf-offsets.h>
+#include <stap-probe.h>
 
 /* __longjmp(jmpbuf, val) */
 
@@ -56,6 +57,10 @@ ENTRY (__longjmp)
 #else
 	ldp	x29, x30, [x0, #JB_X29<<3]
 #endif
+	/* longjmp probe takes 3 arguments, address of jump buffer as
+	   first argument (8@x0), return value as second argument (-4@x1),
+	   and target address (8@x30), respectively.  */
+	LIBC_PROBE (longjmp, 3, 8@x0, -4@x1, 8@x30)
 	ldp	 d8,  d9, [x0, #JB_D8<<3]
 	ldp	d10, d11, [x0, #JB_D10<<3]
 	ldp	d12, d13, [x0, #JB_D12<<3]
@@ -98,6 +103,11 @@ ENTRY (__longjmp)
 	ldr	x5, [x0, #JB_SP<<3]
 #endif
 	mov	sp, x5
+
+	/* longjmp_target probe takes 3 arguments, address of jump buffer
+	   as first argument (8@x0), return value as second argument (-4@x1),
+	   and target address (8@x30), respectively.  */
+	LIBC_PROBE (longjmp_target, 3, 8@x0, -4@x1, 8@x30)
 	cmp	x1, #0
 	mov	x0, #1
 	csel	x0, x1, x0, ne

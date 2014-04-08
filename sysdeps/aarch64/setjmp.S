@@ -18,6 +18,7 @@
 
 #include <sysdep.h>
 #include <jmpbuf-offsets.h>
+#include <stap-probe.h>
 
         /* Keep traditional entry points in with sigsetjmp(). */
 ENTRY (setjmp)
@@ -46,6 +47,10 @@ ENTRY (__sigsetjmp)
 #else
 	stp	x29, x30, [x0, #JB_X29<<3]
 #endif
+	/* setjmp probe takes 3 arguments, address of jump buffer
+	   first argument (8@x0), return value second argument (-4@x1),
+	   and target address (8@x30), respectively.  */
+	LIBC_PROBE (setjmp, 3, 8@x0, -4@x1, 8@x30)
 	stp	 d8,  d9, [x0, #JB_D8<<3]
 	stp	d10, d11, [x0, #JB_D10<<3]
 	stp	d12, d13, [x0, #JB_D12<<3]

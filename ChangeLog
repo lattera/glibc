@@ -1,3 +1,12 @@
+2014-04-22  Will Newton  <will.newton@linaro.org>
+	    Venkataramanan Kumar  <venkataramanan.kumar@linaro.org>
+
+	* sysdeps/aarch64/__longjmp.S: Include stap-probe.h.
+	(__longjmp): Add longjmp and longjmp_target SystemTap
+	probes.
+	* sysdeps/aarch64/setjmp.S: Include stap-probe.h.
+	(__sigsetjmp): Add setjmp SystemTap probe.
+
 2014-04-17  Carlos O'Donell  <carlos@redhat.com>
 
 	* manual/intro.texi (Roadmap to the manual): Sort chapter listing to
