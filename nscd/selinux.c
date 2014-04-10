@@ -28,7 +28,6 @@
 #include <syslog.h>
 #include <unistd.h>
 #include <sys/prctl.h>
-#include <selinux/av_permissions.h>
 #include <selinux/avc.h>
 #include <selinux/flask.h>
 #include <selinux/selinux.h>
@@ -44,35 +43,31 @@
 /* Global variable to tell if the kernel has SELinux support.  */
 int selinux_enabled;
 
-/* Define mappings of access vector permissions to request types.  */
-static const access_vector_t perms[LASTREQ] =
+/* Define mappings of request type to AVC permission name.  */
+static const char *perms[LASTREQ] =
 {
-  [GETPWBYNAME] = NSCD__GETPWD,
-  [GETPWBYUID] = NSCD__GETPWD,
-  [GETGRBYNAME] = NSCD__GETGRP,
-  [GETGRBYGID] = NSCD__GETGRP,
-  [GETHOSTBYNAME] = NSCD__GETHOST,
-  [GETHOSTBYNAMEv6] = NSCD__GETHOST,
-  [GETHOSTBYADDR] = NSCD__GETHOST,
-  [GETHOSTBYADDRv6] = NSCD__GETHOST,
-  [GETSTAT] = NSCD__GETSTAT,
-  [SHUTDOWN] = NSCD__ADMIN,
-  [INVALIDATE] = NSCD__ADMIN,
-  [GETFDPW] = NSCD__SHMEMPWD,
-  [GETFDGR] = NSCD__SHMEMGRP,
-  [GETFDHST] = NSCD__SHMEMHOST,
-  [GETAI] = NSCD__GETHOST,
-  [INITGROUPS] = NSCD__GETGRP,
-#ifdef NSCD__GETSERV
-  [GETSERVBYNAME] = NSCD__GETSERV,
-  [GETSERVBYPORT] = NSCD__GETSERV,
-  [GETFDSERV] = NSCD__SHMEMSERV,
-#endif
-#ifdef NSCD__GETNETGRP
-  [GETNETGRENT] = NSCD__GETNETGRP,
-  [INNETGR] = NSCD__GETNETGRP,
-  [GETFDNETGR] = NSCD__SHMEMNETGRP,
-#endif
+  [GETPWBYNAME] = "getpwd",
+  [GETPWBYUID] = "getpwd",
+  [GETGRBYNAME] = "getgrp",
+  [GETGRBYGID] = "getgrp",
+  [GETHOSTBYNAME] = "gethost",
+  [GETHOSTBYNAMEv6] = "gethost",
+  [GETHOSTBYADDR] = "gethost",
+  [GETHOSTBYADDRv6] = "gethost",
+  [SHUTDOWN] = "admin",
+  [GETSTAT] = "getstat",
+  [INVALIDATE] = "admin",
+  [GETFDPW] = "shmempwd",
+  [GETFDGR] = "shmemgrp",
+  [GETFDHST] = "shmemhost",
+  [GETAI] = "gethost",
+  [INITGROUPS] = "getgrp",
+  [GETSERVBYNAME] = "getserv",
+  [GETSERVBYPORT] = "getserv",
+  [GETFDSERV] = "shmemserv",
+  [GETNETGRENT] = "getnetgrp",
+  [INNETGR] = "getnetgrp",
+  [GETFDNETGR] = "shmemnetgrp",
 };
 
 /* Store an entry ref to speed AVC decisions.  */
@@ -344,7 +339,16 @@ nscd_avc_init (void)
 
 
 /* Check the permission from the caller (via getpeercon) to nscd.
-   Returns 0 if access is allowed, 1 if denied, and -1 on error.  */
+   Returns 0 if access is allowed, 1 if denied, and -1 on error.
+
+   The SELinux policy, enablement, and permission bits are all dynamic and the
+   caching done by glibc is not entirely correct.  This nscd support should be
+   rewritten to use selinux_check_permission.  A rewrite is risky though and
+   requires some refactoring.  Currently we use symbolic mappings instead of
+   compile time constants (which SELinux upstream says are going away), and we
+   use security_deny_unknown to determine what to do if selinux-policy* doesn't
+   have a definition for the the permission or object class we are looking
+   up.  */
 int
 nscd_request_avc_has_perm (int fd, request_type req)
 {
@@ -354,6 +358,33 @@ nscd_request_avc_has_perm (int fd, request_type req)
   security_id_t ssid = NULL;
   security_id_t tsid = NULL;
   int rc = -1;
+  security_class_t sc_nscd;
+  access_vector_t perm;
+  int avc_deny_unknown;
+
+  /* Check if SELinux denys or allows unknown object classes
+     and permissions.  It is 0 if they are allowed, 1 if they
+     are not allowed and -1 on error.  */
+  if ((avc_deny_unknown = security_deny_unknown ()) == -1)
+    dbg_log (_("Error querying policy for undefined object classes "
+	       "or permissions."));
+
+  /* Get the security class for nscd.  If this fails we will likely be
+     unable to do anything unless avc_deny_unknown is 0.  */
+  sc_nscd = string_to_security_class ("nscd");
+  if (perm == 0 && avc_deny_unknown == 1)
+    dbg_log (_("Error getting security class for nscd."));
+
+  /* Convert permission to AVC bits.  */
+  perm = string_to_av_perm (sc_nscd, perms[req]);
+  if (perm == 0 && avc_deny_unknown == 1)
+      dbg_log (_("Error translating permission name "
+		 "\"%s\" to access vector bit."), perms[req]);
+
+  /* If the nscd security class was not found or perms were not
+     found and AVC does not deny unknown values then allow it.  */
+  if ((sc_nscd == 0 || perm == 0) && avc_deny_unknown == 0)
+    return 0;
 
   if (getpeercon (fd, &scon) < 0)
     {
@@ -372,15 +403,13 @@ nscd_request_avc_has_perm (int fd, request_type req)
       goto out;
     }
 
-#ifndef NSCD__GETSERV
-  if (perms[req] == 0)
-    {
-      dbg_log (_("compile-time support for database policy missing"));
-      goto out;
-    }
-#endif
-
-  rc = avc_has_perm (ssid, tsid, SECCLASS_NSCD, perms[req], &aeref, NULL) < 0;
+  /* The SELinux API for avc_has_perm conflates access denied and error into
+     the return code -1, while nscd_request_avs_has_perm has distinct error
+     (-1) and denied (1) return codes. We map the avc_has_perm access denied or
+     error into an access denied at the nscd interface level (we do accurately
+     report error for the getpeercon, getcon, and avc_context_to_sid interfaces
+     used above).  */
+  rc = avc_has_perm (ssid, tsid, sc_nscd, perm, &aeref, NULL) < 0;
 
 out:
   if (scon)

@@ -1,3 +1,13 @@
+2014-04-14  Carlos O'Donell  <carlos@redhat.com>
+
+	* configure.ac: Remove SELinux header check.
+	* configure: Regenerate.
+	* nscd/selinux.c (perms): Array of const char* to permission names.
+	(nscd_request_avc_has_perm): Call security_deny_unknown to find
+	default policy. Call string_to_security_class and string_to_av_perm to
+	translate strings. Enforce default policy and call avs_has_perm with
+	results of translated strings.
+
 2014-04-13  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.

@@ -1945,22 +1945,9 @@ else
   # See if we have the SELinux library
   AC_CHECK_LIB(selinux, is_selinux_enabled,
 	       have_selinux=yes, have_selinux=no)
-  # See if we have the SELinux header with the NSCD permissions in it.
-  if test x$have_selinux = xyes ; then
-    AC_MSG_CHECKING([for NSCD Flask permissions in selinux/av_permissions.h])
-    AC_TRY_COMPILE([#include <selinux/av_permissions.h>],
-		    [#ifdef NSCD__SHMEMHOST
-		     return 0;
-		     #else
-		     #error NSCD__SHMEMHOST not defined
-		     #endif],
-		    have_selinux=yes, have_selinux=no)
-    AC_MSG_RESULT($have_selinux)
-  fi
-
   if test x$with_selinux = xyes ; then
     if test x$have_selinux = xno ; then
-      AC_MSG_ERROR([SELinux explicitly required, but sufficiently recent SELinux library not found])
+      AC_MSG_ERROR([SELinux explicitly required, but SELinux library not found])
     fi
   fi
 fi
