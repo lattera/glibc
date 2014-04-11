@@ -22,6 +22,7 @@
 static int
 do_test (void)
 {
+#if FE_ALL_EXCEPT
   fenv_t env;
 
   if (feenableexcept (FE_INVALID) != 0)
@@ -47,6 +48,10 @@ do_test (void)
       printf ("fegetexcept returned %d, expected %d\n", ret, FE_INVALID);
       return 1;
     }
+#else
+  puts ("No exceptions defined, cannot test");
+  return 0;
+#endif
 }
 
 #define TEST_FUNCTION do_test ()

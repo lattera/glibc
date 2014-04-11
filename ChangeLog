@@ -1,3 +1,8 @@
+2014-04-11  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* math/test-fenv-preserve.c [FE_ALL_EXCEPT == 0] (do_test):
+	Make the test a no-op if there are no exceptions defined.
+
 2014-04-11  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* elf/Makefile (tests): make tst-dlopen-atout conditional on
