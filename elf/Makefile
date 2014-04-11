@@ -148,8 +148,11 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-stackguard1 tst-addr1 tst-thrlock \
 	 tst-unique1 tst-unique2 tst-unique3 tst-unique4 \
 	 tst-initorder tst-initorder2 tst-relsort1 tst-null-argv \
-	 tst-ptrguard1 tst-dlopen-aout
+	 tst-ptrguard1
 #	 reldep9
+ifeq ($(build-hardcoded-path-in-tests),yes)
+tests += tst-dlopen-aout
+endif
 test-srcs = tst-pathopt
 selinux-enabled := $(shell cat /selinux/enforce 2> /dev/null)
 ifneq ($(selinux-enabled),1)
