@@ -5,7 +5,7 @@
 
 2014-04-11  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
-	* elf/Makefile (tests): make tst-dlopen-atout conditional on
+	* elf/Makefile (tests): make tst-dlopen-aout conditional on
 	enable-hardcoded-path-in-tests
 
 2014-04-11  Will Newton  <will.newton@linaro.org>
