@@ -1,5 +1,11 @@
 2014-04-14  Carlos O'Donell  <carlos@redhat.com>
 
+	[BZ #16831]
+	* csu/libc-start.c (LIBC_START_MAIN) [!SHARED]: Call
+	_dl_debug_initialize.
+
+2014-04-14  Carlos O'Donell  <carlos@redhat.com>
+
 	* configure.ac: Remove SELinux header check.
 	* configure: Regenerate.
 	* nscd/selinux.c (perms): Array of const char* to permission names.

@@ -264,6 +264,9 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
     GLRO(dl_debug_printf) ("\ntransferring control: %s\n\n", argv[0]);
 #endif
 
+#ifndef SHARED
+  _dl_debug_initialize (0, LM_ID_BASE);
+#endif
 #ifdef HAVE_CLEANUP_JMP_BUF
   /* Memory for the cancellation buffer.  */
   struct pthread_unwind_buf unwind_buf;
