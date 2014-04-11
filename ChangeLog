@@ -1,5 +1,8 @@
 2014-06-23  Will Newton  <will.newton@linaro.org>
 
+	* elf/dl-lookup.c: Use __glibc_unlikely and __glibc_likely
+	rather than __builtin_expect.
+
 	* elf/dl-lookup.c (undefined_msg): Remove variable.
 	(_dl_lookup_symbol_x): Replace undefined_msg with string
 	literal.

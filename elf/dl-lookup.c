@@ -92,11 +92,10 @@ check_match (const char *const undef_name,
 {
   unsigned int stt = ELFW(ST_TYPE) (sym->st_info);
   assert (ELF_RTYPE_CLASS_PLT == 1);
-  if (__builtin_expect ((sym->st_value == 0 /* No value.  */
+  if (__glibc_unlikely ((sym->st_value == 0 /* No value.  */
 			 && stt != STT_TLS)
 			|| ELF_MACHINE_SYM_NO_MATCH (sym)
-			|| (type_class & (sym->st_shndx == SHN_UNDEF)),
-			0))
+			|| (type_class & (sym->st_shndx == SHN_UNDEF))))
     return NULL;
 
   /* Ignore all but STT_NOTYPE, STT_OBJECT, STT_FUNC,
@@ -405,8 +404,8 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 	  unsigned int hashbit2 = ((new_hash >> map->l_gnu_shift)
 				   & (__ELF_NATIVE_CLASS - 1));
 
-	  if (__builtin_expect ((bitmask_word >> hashbit1)
-				& (bitmask_word >> hashbit2) & 1, 0))
+	  if (__glibc_unlikely ((bitmask_word >> hashbit1)
+				& (bitmask_word >> hashbit2) & 1))
 	    {
 	      Elf32_Word bucket = map->l_gnu_buckets[new_hash
 						     % map->l_nbuckets];
@@ -461,7 +460,7 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
       if (sym != NULL)
 	{
 	found_it:
-	  switch (__builtin_expect (ELFW(ST_BIND) (sym->st_info), STB_GLOBAL))
+	  switch (ELFW(ST_BIND) (sym->st_info))
 	    {
 	    case STB_WEAK:
 	      /* Weak definition.  Use this value if we don't find another.  */
@@ -495,7 +494,7 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
       /* If this current map is the one mentioned in the verneed entry
 	 and we have not found a weak entry, it is a bug.  */
       if (symidx == STN_UNDEF && version != NULL && version->filename != NULL
-	  && __builtin_expect (_dl_name_match_p (version->filename, map), 0))
+	  && __glibc_unlikely (_dl_name_match_p (version->filename, map)))
 	return -1;
     }
   while (++i < n);
@@ -776,7 +775,7 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
       if (res > 0)
 	break;
 
-      if (__builtin_expect (res, 0) < 0 && skip_map == NULL)
+      if (__glibc_unlikely (res < 0) && skip_map == NULL)
 	{
 	  /* Oh, oh.  The file named in the relocation entry does not
 	     contain the needed symbol.  This code is never reached
@@ -857,7 +856,7 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
      in the global scope which was dynamically loaded.  In this case
      we have to prevent the latter from being unloaded unless the
      UNDEF_MAP object is also unloaded.  */
-  if (__builtin_expect (current_value.m->l_type == lt_loaded, 0)
+  if (__glibc_unlikely (current_value.m->l_type == lt_loaded)
       /* Don't do this for explicit lookups as opposed to implicit
 	 runtime lookups.  */
       && (flags & DL_LOOKUP_ADD_DEPENDENCY) != 0
@@ -874,8 +873,8 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
   if (__glibc_unlikely (current_value.m->l_used == 0))
     current_value.m->l_used = 1;
 
-  if (__builtin_expect (GLRO(dl_debug_mask)
-			& (DL_DEBUG_BINDINGS|DL_DEBUG_PRELINK), 0))
+  if (__glibc_unlikely (GLRO(dl_debug_mask)
+			& (DL_DEBUG_BINDINGS|DL_DEBUG_PRELINK)))
     _dl_debug_bindings (undef_name, undef_map, ref,
 			&current_value, version, type_class, protected);
 
@@ -892,9 +891,9 @@ _dl_setup_hash (struct link_map *map)
 {
   Elf_Symndx *hash;
 
-  if (__builtin_expect (map->l_info[DT_ADDRTAGIDX (DT_GNU_HASH) + DT_NUM
+  if (__glibc_likely (map->l_info[DT_ADDRTAGIDX (DT_GNU_HASH) + DT_NUM
 				    + DT_THISPROCNUM + DT_VERSIONTAGNUM
-				    + DT_EXTRANUM + DT_VALNUM] != NULL, 1))
+				    + DT_EXTRANUM + DT_VALNUM] != NULL))
     {
       Elf32_Word *hash32
 	= (void *) D_PTR (map, l_info[DT_ADDRTAGIDX (DT_GNU_HASH) + DT_NUM
@@ -973,10 +972,10 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 		       type_class, undef_map);
 	  if (val.s != value->s || val.m != value->m)
 	    conflict = 1;
-	  else if (__builtin_expect (undef_map->l_symbolic_in_local_scope, 0)
+	  else if (__glibc_unlikely (undef_map->l_symbolic_in_local_scope)
 		   && val.s
-		   && __builtin_expect (ELFW(ST_BIND) (val.s->st_info),
-					STB_GLOBAL) == STB_GNU_UNIQUE)
+		   && __glibc_unlikely (ELFW(ST_BIND) (val.s->st_info)
+					== STB_GNU_UNIQUE))
 	    {
 	      /* If it is STB_GNU_UNIQUE and undef_map's l_local_scope
 		 contains any DT_SYMBOLIC libraries, unfortunately there
@@ -1010,11 +1009,11 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 
       if (value->s)
 	{
-	  if (__builtin_expect (ELFW(ST_TYPE) (value->s->st_info)
-				== STT_TLS, 0))
+	  if (__glibc_unlikely (ELFW(ST_TYPE) (value->s->st_info)
+				== STT_TLS))
 	    type_class = 4;
-	  else if (__builtin_expect (ELFW(ST_TYPE) (value->s->st_info)
-				     == STT_GNU_IFUNC, 0))
+	  else if (__glibc_unlikely (ELFW(ST_TYPE) (value->s->st_info)
+				     == STT_GNU_IFUNC))
 	    type_class |= 8;
 	}
 
