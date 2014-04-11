@@ -1,3 +1,12 @@
+2014-04-11  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/s390-32/configure.ac: Unify file with ...
+	* sysdeps/s390/s390-64/configure.ac: ... this ...
+	* sysdeps/s390/configure.ac: ... to here.
+	* sysdeps/s390/s390-32/configure: Delete file.
+	* sysdeps/s390/s390-64/configure: Delete file.
+	* sysdeps/s390/configure: Regenerate.
+
 2014-04-11  Joseph Anthony Pasquale Holsten  <joseph@josephholsten.com>
 
 	* resolv/res_query.c (__libc_res_nsearch): Fix typo in comment.
