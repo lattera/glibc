@@ -482,7 +482,7 @@ __libc_res_nsearch(res_state statp,
 	}
 
 	/*
-	 * f the query has not already been tried as is then try it
+	 * If the query has not already been tried as is then try it
 	 * unless RES_NOTLDQUERY is set and there were no dots.
 	 */
 	if ((dots || !searched || (statp->options & RES_NOTLDQUERY) == 0)
