@@ -1,3 +1,10 @@
+2014-04-12  Allan McRae  <allan@archlinux.org>
+
+	[BZ #16838]
+	* manual/string.texi (Collation Functions): Fix qsort argument
+	order in example.
+	Reported by David C. Rankin <drankinatty@suddenlinkmail.com>.
+
 2014-04-11  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* math/test-fenv-preserve.c [FE_ALL_EXCEPT == 0] (do_test):

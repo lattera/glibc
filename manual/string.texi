@@ -1572,8 +1572,8 @@ sort_strings_fast (char **array, int nstrings)
     @}
 
   /* @r{Sort @code{temp_array} by comparing transformed strings.} */
-  qsort (temp_array, sizeof (struct sorter),
-         nstrings, compare_elements);
+  qsort (temp_array, nstrings,
+         sizeof (struct sorter), compare_elements);
 
   /* @r{Put the elements back in the permanent array}
      @r{in their sorted order.} */
