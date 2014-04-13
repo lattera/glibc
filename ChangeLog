@@ -1,5 +1,9 @@
 2014-04-17  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* nptl/sysdeps/unix/sysv/linux/powerpc/pthread_once.c: Remove file.
+
+2014-04-17  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/fpu/fenv_private.h
 	(libc_feholdexcept_setroundl_ctx): Define to
 	libc_feholdexcept_setround_ppc_ctx.
