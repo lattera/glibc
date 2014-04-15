@@ -1,3 +1,10 @@
+2014-04-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* benchtests/Makefile: Depend on libraries in build directory.
+	(bench-math): Separate out math tests.
+	(bench-pthread): Separate out pthread tests.
+	(bench): Include math and pthread tests.
+
 2014-04-14  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #16831]

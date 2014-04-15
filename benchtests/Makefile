@@ -22,8 +22,12 @@
 subdir := benchtests
 
 include ../Makeconfig
-bench := acos acosh asin asinh atan atanh cos cosh exp exp2 ffs ffsll \
-	log log2 modf pow pthread_once rint sin sincos sinh sqrt tan tanh
+bench-math := acos acosh asin asinh atan atanh cos cosh exp exp2 ffs ffsll \
+	      log log2 modf pow rint sin sincos sinh sqrt tan tanh
+
+bench-pthread := pthread_once
+
+bench := $(bench-math) $(bench-pthread)
 
 # String function benchmarks.
 string-bench := bcopy bzero memccpy memchr memcmp memcpy memmem memmove \
@@ -40,27 +44,9 @@ benchset := $(string-bench-all) $(stdlib-bench)
 CFLAGS-bench-ffs.c += -fno-builtin
 CFLAGS-bench-ffsll.c += -fno-builtin
 
-LDLIBS-bench-acos = -lm
-LDLIBS-bench-acosh = -lm
-LDLIBS-bench-asin = -lm
-LDLIBS-bench-asinh = -lm
-LDLIBS-bench-atan = -lm
-LDLIBS-bench-atanh = -lm
-LDLIBS-bench-cos = -lm
-LDLIBS-bench-cosh = -lm
-LDLIBS-bench-exp = -lm
-LDLIBS-bench-exp2 = -lm
-LDLIBS-bench-log = -lm
-LDLIBS-bench-log2 = -lm
-LDLIBS-bench-pow = -lm
-LDLIBS-bench-pthread_once = -lpthread
-LDLIBS-bench-rint = -lm
-LDLIBS-bench-sin = -lm
-LDLIBS-bench-sinh = -lm
-LDLIBS-bench-sqrt = -lm
-LDLIBS-bench-tan = -lm
-LDLIBS-bench-tanh = -lm
-LDLIBS-bench-sincos = -lm
+$(addprefix $(objpfx)bench-,$(bench-math)): $(common-objpfx)math/libm.so
+$(addprefix $(objpfx)bench-,$(bench-pthread)): \
+	$(common-objpfx)nptl/libpthread.so
 
 
 
