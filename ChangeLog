@@ -1,3 +1,7 @@
+2014-04-16  Marcus Shawcroft  <marcus.shawcroft@arm.com>
+
+	* sysdeps/aarch64/libm-test-ulps: Regenerate.
+
 2014-04-16  Igor Zamyatin  <igor.zamyatin@intel.com>
 
 	* sysdeps/x86_64/bits/link.h (La_x86_64_regs): Add lr_bnd.
