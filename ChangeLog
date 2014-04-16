@@ -1,5 +1,11 @@
 2014-04-16  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
+	* sysdeps/mach/hurd/tls.h (dtv, dtv_t, tcbhead_t): Move declarations
+	to...
+	* sysdeps/mach/hurd/i386/tls.h: ... here.
+
+2014-04-16  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
 	* sysdeps/mach/munmap.c (__munmap): Return EINVAL if `addr' is 0.
 
 2014-04-16  Stefan Liebler  <stli@linux.vnet.ibm.com>
