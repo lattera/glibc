@@ -1,5 +1,9 @@
 2014-04-16  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/fpu/libm-test-ulps: Regenerate.
+
+2014-04-16  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	[BZ #14770]
 	* sysdeps/s390/configure.ac: Check for Binutils >= 2.24.
 	* sysdeps/s390/configure: Regenerate.
