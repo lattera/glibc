@@ -1,3 +1,9 @@
+2014-04-16  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	[BZ #16824]
+	* sysdeps/ieee754/ldbl-128/e_j1l.c (__ieee754_y1l):
+	Set round-to-nearest internally to reduce error accumulation.
+
 2014-04-16  Alan Modra  <amodra@gmail.com>
 
 	[BZ #16740]

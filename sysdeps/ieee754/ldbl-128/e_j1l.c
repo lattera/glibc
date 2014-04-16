@@ -856,6 +856,7 @@ __ieee754_y1l (long double x)
   if (xx <= 2.0L)
     {
       /* 0 <= x <= 2 */
+      SET_RESTORE_ROUNDL (FE_TONEAREST);
       z = xx * xx;
       p = xx * neval (z, Y0_2N, NY0_2N) / deval (z, Y0_2D, NY0_2D);
       p = -TWOOPI / xx + p;
