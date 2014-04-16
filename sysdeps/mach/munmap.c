@@ -27,6 +27,13 @@ int
 __munmap (__ptr_t addr, size_t len)
 {
   kern_return_t err;
+
+  if (addr == 0)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   if (err = __vm_deallocate (__mach_task_self (),
 			     (vm_address_t) addr, (vm_size_t) len))
     {

@@ -1,3 +1,7 @@
+2014-04-16  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/munmap.c (__munmap): Return EINVAL if `addr' is 0.
+
 2014-04-16  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/fpu/libm-test-ulps: Regenerate.
