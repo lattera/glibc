@@ -3,6 +3,9 @@
 	* sysdeps/mach/hurd/tls.h (dtv, dtv_t, tcbhead_t): Move declarations
 	to...
 	* sysdeps/mach/hurd/i386/tls.h: ... here.
+	(tcbhead_t): Add multiple_threads, sysinfo, stack_guard,
+	pointer_guard, gscope_flag, private_futex, __private_tm, __private_ss
+	fields.
 
 2014-04-16  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 

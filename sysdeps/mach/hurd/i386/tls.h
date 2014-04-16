@@ -43,6 +43,16 @@ typedef struct
   void *tcb;			/* Points to this structure.  */
   dtv_t *dtv;			/* Vector of pointers to TLS data.  */
   thread_t self;		/* This thread's control port.  */
+  int multiple_threads;
+  uintptr_t sysinfo;
+  uintptr_t stack_guard;
+  uintptr_t pointer_guard;
+  int gscope_flag;
+  int private_futex;
+  /* Reservation of some values for the TM ABI.  */
+  void *__private_tm[4];
+  /* GCC split stack support.  */
+  void *__private_ss;
 } tcbhead_t;
 #endif
 
