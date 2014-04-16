@@ -93,6 +93,9 @@ typedef struct La_x86_64_regs
   uint64_t lr_rsp;
   La_x86_64_xmm lr_xmm[8];
   La_x86_64_vector lr_vector[8];
+#ifndef __ILP32__
+  __int128 lr_bnd[4];
+#endif
 } La_x86_64_regs;
 
 /* Return values for calls from PLT on x86-64.  */
@@ -106,6 +109,10 @@ typedef struct La_x86_64_retval
   long double lrv_st1;
   La_x86_64_vector lrv_vector0;
   La_x86_64_vector lrv_vector1;
+#ifndef __ILP32__
+  __int128 lrv_bnd0;
+  __int128 lrv_bnd1;
+#endif
 } La_x86_64_retval;
 
 #define La_x32_regs La_x86_64_regs

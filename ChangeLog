@@ -1,3 +1,17 @@
+2014-04-16  Igor Zamyatin  <igor.zamyatin@intel.com>
+
+	* sysdeps/x86_64/bits/link.h (La_x86_64_regs): Add lr_bnd.
+	(La_x86_64_retval): Add lrv_bnd0 and lrv_bnd1.
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Save
+	Intel MPX bound registers before _dl_profile_fixup.
+	* sysdeps/x86_64/dl-trampoline.h: Restore Intel MPX bound
+	registers after _dl_profile_fixup.  Save and restore bound
+	registers bnd0/bnd1 when calling _dl_call_pltexit.
+	* sysdeps/x86_64/link-defines.sym (BND_SIZE): New.
+	(LR_BND_OFFSET): Likewise.
+	(LRV_BND0_OFFSET): Likewise.
+	(LRV_BND1_OFFSET): Likewise.
+
 2014-04-16  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/tls.h (dtv, dtv_t, tcbhead_t): Move declarations

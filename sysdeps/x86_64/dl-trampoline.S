@@ -189,6 +189,20 @@ _dl_runtime_profile:
 	movaps %xmm6, (LR_XMM_OFFSET + XMM_SIZE*6)(%rsp)
 	movaps %xmm7, (LR_XMM_OFFSET + XMM_SIZE*7)(%rsp)
 
+# ifndef __ILP32__
+#  ifdef HAVE_MPX_SUPPORT
+	bndmov %bnd0, 		   (LR_BND_OFFSET)(%rsp)  # Preserve bound
+	bndmov %bnd1, (LR_BND_OFFSET +   BND_SIZE)(%rsp)  # registers. Nops if
+	bndmov %bnd2, (LR_BND_OFFSET + BND_SIZE*2)(%rsp)  # MPX not available
+	bndmov %bnd3, (LR_BND_OFFSET + BND_SIZE*3)(%rsp)  # or disabled.
+#  else
+	.byte 0x66,0x0f,0x1b,0x84,0x24;.long (LR_BND_OFFSET)
+	.byte 0x66,0x0f,0x1b,0x8c,0x24;.long (LR_BND_OFFSET + BND_SIZE)
+	.byte 0x66,0x0f,0x1b,0x84,0x24;.long (LR_BND_OFFSET + BND_SIZE*2)
+	.byte 0x66,0x0f,0x1b,0x8c,0x24;.long (LR_BND_OFFSET + BND_SIZE*3)
+#  endif
+# endif
+
 # if defined HAVE_AVX_SUPPORT || defined HAVE_AVX512_ASM_SUPPORT
 	.data
 L(have_avx):

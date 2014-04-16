@@ -63,6 +63,20 @@
 	movaps (LR_XMM_OFFSET + XMM_SIZE*6)(%rsp), %xmm6
 	movaps (LR_XMM_OFFSET + XMM_SIZE*7)(%rsp), %xmm7
 
+#ifndef __ILP32__
+# ifdef HAVE_MPX_SUPPORT
+	bndmov 		    (LR_BND_OFFSET)(%rsp), %bnd0  # Restore bound
+	bndmov (LR_BND_OFFSET +   BND_SIZE)(%rsp), %bnd1  # registers.
+	bndmov (LR_BND_OFFSET + BND_SIZE*2)(%rsp), %bnd2
+	bndmov (LR_BND_OFFSET + BND_SIZE*3)(%rsp), %bnd3
+# else
+	.byte 0x66,0x0f,0x1a,0x84,0x24;.long (LR_BND_OFFSET)
+	.byte 0x66,0x0f,0x1a,0x8c,0x24;.long (LR_BND_OFFSET + BND_SIZE)
+	.byte 0x66,0x0f,0x1a,0x94,0x24;.long (LR_BND_OFFSET + BND_SIZE*2)
+	.byte 0x66,0x0f,0x1a,0x9c,0x24;.long (LR_BND_OFFSET + BND_SIZE*3)
+# endif
+#endif
+
 #ifdef RESTORE_AVX
 	/* Check if any xmm0-xmm7 registers are changed by audit
 	   module.  */
@@ -222,6 +236,16 @@
 	vmovdqa %xmm1, (LRV_SIZE + XMM_SIZE)(%rcx)
 #endif
 
+#ifndef __ILP32__
+# ifdef HAVE_MPX_SUPPORT
+	bndmov %bnd0, LRV_BND0_OFFSET(%rcx)  # Preserve returned bounds.
+	bndmov %bnd1, LRV_BND1_OFFSET(%rcx)
+# else
+	.byte  0x66,0x0f,0x1b,0x81;.long (LRV_BND0_OFFSET)
+	.byte  0x66,0x0f,0x1b,0x89;.long (LRV_BND1_OFFSET)
+# endif
+#endif
+
 	fstpt LRV_ST0_OFFSET(%rcx)
 	fstpt LRV_ST1_OFFSET(%rcx)
 
@@ -252,6 +276,16 @@
 	VMOV LRV_VECTOR1_OFFSET(%rsp), %VEC(1)
 
 1:
+#endif
+
+#ifndef __ILP32__
+# ifdef HAVE_MPX_SUPPORT
+	bndmov LRV_BND0_OFFSET(%rcx), %bnd0  # Restore bound registers.
+	bndmov LRV_BND1_OFFSET(%rcx), %bnd1
+# else
+	.byte  0x66,0x0f,0x1a,0x81;.long (LRV_BND0_OFFSET)
+	.byte  0x66,0x0f,0x1a,0x89;.long (LRV_BND1_OFFSET)
+# endif
 #endif
 
 	fldt LRV_ST1_OFFSET(%rsp)
