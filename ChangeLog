@@ -4,6 +4,7 @@
 	[BZ #16619]
 	* sysdeps/ieee754/ldbl-128ibm/s_frexpl.c (__frexpl): Rewrite.
 	* math/libm-test.inc (frexp_test_data): Add tests.
+	* NEWS: Update fixed bug list.
 
 2014-04-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
