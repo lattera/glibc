@@ -209,6 +209,61 @@ libc_feresetround_aarch64 (fenv_t *envp)
 #define libc_feresetroundf libc_feresetround_aarch64
 #define libc_feresetroundl libc_feresetround_aarch64
 
+/* We have support for rounding mode context.  */
+#define HAVE_RM_CTX 1
+
+static __always_inline void
+libc_feholdsetround_aarch64_ctx (struct rm_ctx *ctx, int r)
+{
+  fpu_control_t fpcr, fpsr, round;
+
+  _FPU_GETCW (fpcr);
+  _FPU_GETFPSR (fpsr);
+  ctx->env.__fpsr = fpsr;
+
+  /* Check whether rounding modes are different.  */
+  round = (fpcr ^ r) & FE_TOWARDZERO;
+  ctx->updated_status = round != 0;
+
+  /* Set the rounding mode if changed.  */
+  if (__glibc_unlikely (round != 0))
+    {
+      ctx->env.__fpcr = fpcr;
+      _FPU_SETCW (fpcr ^ round);
+    }
+}
+
+#define libc_feholdsetround_ctx		libc_feholdsetround_aarch64_ctx
+#define libc_feholdsetroundf_ctx	libc_feholdsetround_aarch64_ctx
+#define libc_feholdsetroundl_ctx	libc_feholdsetround_aarch64_ctx
+
+static __always_inline void
+libc_feresetround_aarch64_ctx (struct rm_ctx *ctx)
+{
+  /* Restore the rounding mode if updated.  */
+  if (__glibc_unlikely (ctx->updated_status))
+    _FPU_SETCW (ctx->env.__fpcr);
+}
+
+#define libc_feresetround_ctx		libc_feresetround_aarch64_ctx
+#define libc_feresetroundf_ctx		libc_feresetround_aarch64_ctx
+#define libc_feresetroundl_ctx		libc_feresetround_aarch64_ctx
+
+static __always_inline void
+libc_feresetround_noex_aarch64_ctx (struct rm_ctx *ctx)
+{
+  /* Restore the rounding mode if updated.  */
+  if (__glibc_unlikely (ctx->updated_status))
+    _FPU_SETCW (ctx->env.__fpcr);
+
+  /* Write new FPSR to restore exception flags.  */
+  _FPU_SETFPSR (ctx->env.__fpsr);
+}
+
+#define libc_feresetround_noex_ctx	libc_feresetround_noex_aarch64_ctx
+#define libc_feresetround_noexf_ctx	libc_feresetround_noex_aarch64_ctx
+#define libc_feresetround_noexl_ctx	libc_feresetround_noex_aarch64_ctx
+
 #include_next <math_private.h>
 
 #endif

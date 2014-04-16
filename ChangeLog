@@ -1,3 +1,15 @@
+2014-04-17  Ian Bolton  <ian.bolton@arm.com>
+	    Wilco Dijkstra  <wilco.dijkstra@arm.com>
+
+	* sysdeps/aarch64/fpu/math_private.h (HAVE_RM_CTX)
+	(libc_feholdsetround_aarch64_ctx)
+	(libc_feholdsetround_ctx, libc_feholdsetroundf_ctx)
+	(libc_feholdsetroundl_ctx, libc_feresetround_aarch64_ctx)
+	(libc_feresetround_ctx, libc_feresetroundf_ctx)
+	(libc_feresetroundl_ctx, libc_feresetround_noex_aarch64_ctx)
+	(libc_feresetround_noex_ctx, libc_feresetround_noexf_ctx)
+	(libc_feresetround_noexl_ctx): Define.
+
 2014-04-16  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/nptl/pthread_once.c: Remove.
