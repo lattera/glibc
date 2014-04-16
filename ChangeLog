@@ -10,6 +10,11 @@
 
 	* sysdeps/alpha/libm-test-ulps: Regenerate.
 
+2014-04-16  Ian Bolton  <ian.bolton@arm.com>
+	    Wilco Dijkstra  <wilco.dijkstra@arm.com>
+
+	* sysdeps/aarch64/fpu/math_private.h: New file.
+
 2014-04-16  Marcus Shawcroft  <marcus.shawcroft@arm.com>
 
 	* sysdeps/aarch64/libm-test-ulps: Regenerate.
