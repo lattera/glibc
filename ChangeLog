@@ -1,3 +1,13 @@
+2014-04-17  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/fenv_private.h
+	(libc_feholdexcept_setroundl_ctx): Define to
+	libc_feholdexcept_setround_ppc_ctx.
+	(libc_fesetenvl_ctx): Define to libc_fesetenv_ppc_ctx.
+	(libc_feholdsetroundl_ctx): Define to libc_feholdsetround_ppc_ctx.
+	(libc_feresetroundl_ctx): Define to libc_feresetround_ppc_ctx.
+	(libc_feupdateenvl_ctx): libc_feupdateenv_ppc_ctx.
+
 2014-04-17  Ian Bolton  <ian.bolton@arm.com>
 
 	* sysdeps/aarch64/math-tests.h: New file.

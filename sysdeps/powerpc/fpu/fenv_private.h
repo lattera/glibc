@@ -260,15 +260,20 @@ libc_feresetround_ppc_ctx (struct rm_ctx *ctx)
     libc_feresetround_ppc (&ctx->env);
 }
 
-#define libc_feholdexcept_setroundf_ctx  libc_feholdexcept_setround_ppc_ctx
 #define libc_feholdexcept_setround_ctx   libc_feholdexcept_setround_ppc_ctx
+#define libc_feholdexcept_setroundf_ctx  libc_feholdexcept_setround_ppc_ctx
+#define libc_feholdexcept_setroundl_ctx  libc_feholdexcept_setround_ppc_ctx
 #define libc_fesetenv_ctx                libc_fesetenv_ppc_ctx
 #define libc_fesetenvf_ctx               libc_fesetenv_ppc_ctx
+#define libc_fesetenvl_ctx               libc_fesetenv_ppc_ctx
 #define libc_feholdsetround_ctx          libc_feholdsetround_ppc_ctx
 #define libc_feholdsetroundf_ctx         libc_feholdsetround_ppc_ctx
+#define libc_feholdsetroundl_ctx         libc_feholdsetround_ppc_ctx
 #define libc_feresetround_ctx            libc_feresetround_ppc_ctx
 #define libc_feresetroundf_ctx           libc_feresetround_ppc_ctx
-#define libc_feupdateenvf_ctx            libc_feupdateenv_ppc_ctx
+#define libc_feresetroundl_ctx           libc_feresetround_ppc_ctx
 #define libc_feupdateenv_ctx             libc_feupdateenv_ppc_ctx
+#define libc_feupdateenvf_ctx            libc_feupdateenv_ppc_ctx
+#define libc_feupdateenvl_ctx            libc_feupdateenv_ppc_ctx
 
 #endif
