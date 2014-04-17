@@ -20,6 +20,11 @@ ifeq ($(subdir),db2)
 CPPFLAGS += -DHAVE_SPINLOCKS=1 -DHAVE_ASSEM_ALPHA=1
 endif
 
+ifeq ($(subdir),debug)
+# Consider making this GCC's default...
+CFLAGS-backtrace.c = -fasynchronous-unwind-tables
+endif
+
 ifeq ($(subdir),gmon)
 sysdep_routines += _mcount
 endif

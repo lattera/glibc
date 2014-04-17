@@ -1,5 +1,8 @@
 2014-04-16  Richard Henderson  <rth@redhat.com>
 
+	* sysdeps/alpha/Makefile [debug] (CFLAGS-backtrace.c): Enable
+	unwind tables.
+
 	* sysdeps/unix/alpha/sysdep.h (__pointer_chk_guard): Remove
 	const from the non-libc, non-ldso copy.
 
