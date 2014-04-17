@@ -1,3 +1,16 @@
+2014-04-17  Sihai Yao  <sihai.ysh@alibaba-inc.com>
+
+	* sysdeps/x86_64/multiarch/ifunc-defines.sym (COMMON_CPUID_INDEX_7):
+	New.
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features):
+	Check and set bit_AVX2_Usable.
+	* sysdeps/x86_64/multiarch/init-arch.h (bit_AVX2_Usable): New
+	macro.
+	(bit_AVX2): Likewise.
+	(index_AVX2_Usable): Likewise.
+	(CPUID_AVX2): Likewise.
+	(HAS_AVX2): Likewise.
+
 2014-04-17  Will Newton  <will.newton@linaro.org>
 
 	* manual/setjmp.texi (System V contexts): Add note that

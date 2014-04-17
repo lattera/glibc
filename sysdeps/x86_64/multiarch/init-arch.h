@@ -24,6 +24,7 @@
 #define bit_FMA_Usable			(1 << 7)
 #define bit_FMA4_Usable			(1 << 8)
 #define bit_Slow_SSE4_2			(1 << 9)
+#define bit_AVX2_Usable			(1 << 10)
 
 /* CPUID Feature flags.  */
 
@@ -40,6 +41,7 @@
 
 /* COMMON_CPUID_INDEX_7.  */
 #define bit_RTM		(1 << 11)
+#define bit_AVX2	(1 << 5)
 
 /* XCR0 Feature flags.  */
 #define bit_XMM_state  (1 << 1)
@@ -54,6 +56,7 @@
 # define index_SSE4_1	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
 # define index_SSE4_2	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
 # define index_AVX	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
+# define index_AVX2	COMMON_CPUID_INDEX_7*CPUID_SIZE+CPUID_EBX_OFFSET
 
 # define index_Fast_Rep_String		FEATURE_INDEX_1*FEATURE_SIZE
 # define index_Fast_Copy_Backward	FEATURE_INDEX_1*FEATURE_SIZE
@@ -64,6 +67,7 @@
 # define index_FMA_Usable		FEATURE_INDEX_1*FEATURE_SIZE
 # define index_FMA4_Usable		FEATURE_INDEX_1*FEATURE_SIZE
 # define index_Slow_SSE4_2		FEATURE_INDEX_1*FEATURE_SIZE
+# define index_AVX2_Usable		FEATURE_INDEX_1*FEATURE_SIZE
 
 #else	/* __ASSEMBLER__ */
 
@@ -145,6 +149,8 @@ extern const struct cpu_features *__get_cpu_features (void)
   HAS_CPUID_FLAG (COMMON_CPUID_INDEX_80000001, ecx, bit_FMA4)
 # define CPUID_RTM \
   HAS_CPUID_FLAG (COMMON_CPUID_INDEX_7, ebx, bit_RTM)
+# define CPUID_AVX2 \
+  HAS_CPUID_FLAG (COMMON_CPUID_INDEX_7, ebx, bit_AVX2)
 
 /* HAS_* evaluates to true if we may use the feature at runtime.  */
 # define HAS_SSE2	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, edx, bit_SSE2)
@@ -153,6 +159,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define HAS_SSE4_1	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, ecx, bit_SSE4_1)
 # define HAS_SSE4_2	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, ecx, bit_SSE4_2)
 # define HAS_RTM	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_7, ebx, bit_RTM)
+# define HAS_AVX2	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_7, ebx, bit_AVX2)
 
 # define index_Fast_Rep_String		FEATURE_INDEX_1
 # define index_Fast_Copy_Backward	FEATURE_INDEX_1
@@ -163,6 +170,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define index_FMA_Usable		FEATURE_INDEX_1
 # define index_FMA4_Usable		FEATURE_INDEX_1
 # define index_Slow_SSE4_2		FEATURE_INDEX_1
+# define index_AVX2_Usable		FEATURE_INDEX_1
 
 # define HAS_ARCH_FEATURE(name) \
   ((__get_cpu_features ()->feature[index_##name] & (bit_##name)) != 0)

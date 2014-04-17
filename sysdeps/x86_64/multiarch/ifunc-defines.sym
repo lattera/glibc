@@ -17,4 +17,5 @@ FEATURE_OFFSET		offsetof (struct cpu_features, feature)
 FEATURE_SIZE		sizeof (unsigned int)
 
 COMMON_CPUID_INDEX_1
+COMMON_CPUID_INDEX_7
 FEATURE_INDEX_1
