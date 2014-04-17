@@ -1,3 +1,7 @@
+2014-04-17  Ian Bolton  <ian.bolton@arm.com>
+
+	* sysdeps/aarch64/math-tests.h: New file.
+
 2014-04-17  Sihai Yao  <sihai.ysh@alibaba-inc.com>
 
 	* sysdeps/x86_64/multiarch/ifunc-defines.sym (COMMON_CPUID_INDEX_7):
