@@ -76,3 +76,14 @@
   (sizeof (TYPE) == sizeof (float) ? EXCEPTION_TESTS_float	\
    : sizeof (TYPE) == sizeof (double) ? EXCEPTION_TESTS_double	\
    : EXCEPTION_TESTS_long_double)
+
+/* Indicate whether the given exception trap(s) can be enabled
+   in feenableexcept.  If non-zero, the traps are always supported.
+   If zero, traps may or may not be supported depending on the
+   target (this can be determined by checking the return value
+   of feenableexcept).  This enables skipping of tests which use
+   traps.  By default traps are supported unless overridden.  */
+#ifndef EXCEPTION_ENABLE_SUPPORTED
+# define EXCEPTION_ENABLE_SUPPORTED(EXCEPT)			\
+   (EXCEPTION_TESTS_float || EXCEPTION_TESTS_double)
+#endif

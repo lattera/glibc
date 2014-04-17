@@ -1,3 +1,10 @@
+2014-04-17  Wilco  <wdijkstr@arm.com>
+
+	* sysdeps/arm/math-tests.h: New file: Set ARM math-test settings.
+	* sysdeps/generic/math-tests.h: Add macro (EXCEPTION_ENABLE_SUPPORTED).
+	* math/test-fenv.c: Skip exception trap tests on targets which only
+	support non-stop mode.
+
 2014-04-17  Ian Bolton  <ian.bolton@arm.com>
 	    Wilco Dijkstra  <wilco.dijkstra@arm.com>
 

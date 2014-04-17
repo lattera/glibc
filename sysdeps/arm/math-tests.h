@@ -29,4 +29,7 @@
 # define EXCEPTION_TESTS_long_double	0
 #endif
 
+/* Not all VFP implementations support trapping exceptions.  */
+#define EXCEPTION_ENABLE_SUPPORTED(EXCEPT)	((EXCEPT) == 0)
+
 #include_next <math-tests.h>
