@@ -1283,19 +1283,59 @@ The header file @file{termios.h} reserves names prefixed with @samp{c_},
 Here is an overview of the contents of the remaining chapters of
 this manual.
 
+@c The chapter overview ordering is:
+@c Error Reporting (2)
+@c Virtual Memory Allocation and Paging (3)
+@c Character Handling (4)
+@c Strings and Array Utilities (5)
+@c Character Set Handling (6)
+@c Locales and Internationalization (7)
+@c Searching and Sorting (9)
+@c Pattern Matching (10)
+@c Input/Output Overview (11)
+@c Input/Output on Streams (12)
+@c Low-level Input/Ooutput (13)
+@c File System Interface (14)
+@c Pipes and FIFOs (15)
+@c Sockets (16)
+@c Low-Level Terminal Interface (17)
+@c Syslog (18)
+@c Mathematics (19)
+@c Aritmetic Functions (20)
+@c Date and Time (21)
+@c Non-Local Exist (23)
+@c Signal Handling (24)
+@c The Basic Program/System Interface (25)
+@c Processes (26)
+@c Job Control (28)
+@c System Databases and Name Service Switch (29)
+@c Users and Groups (30) -- References `User Database' and `Group Database'
+@c System Management (31)
+@c System Configuration Parameters (32)
+@c C Language Facilities in the Library (AA)
+@c Summary of Library Facilities (AB)
+@c Installing (AC)
+@c Library Maintenance (AD)
+
+@c The following chapters need overview text to be added:
+@c Message Translation (8)
+@c Resource Usage And Limitations (22)
+@c Inter-Process Communication (27)
+@c DES Encryption and Password Handling (33)
+@c Debugging support (34)
+@c POSIX Threads (35)
+@c Internal Probes (36)
+@c Platform-specific facilities (AE)
+@c Contributors to (AF)
+@c Free Software Needs Free Documentation (AG)
+@c GNU Lesser General Public License (AH)
+@c GNU Free Documentation License (AI)
+
 @itemize @bullet
 @item
 @ref{Error Reporting}, describes how errors detected by the library
 are reported.
 
-@item
-@ref{Language Features}, contains information about library support for
-standard parts of the C language, including things like the @code{sizeof}
-operator and the symbolic constant @code{NULL}, how to write functions
-accepting variable numbers of arguments, and constants describing the
-ranges and other properties of the numerical types.  There is also a simple
-debugging mechanism which allows you to put assertions in your code, and
-have diagnostic messages printed if the tests fail.
 
 @item
 @ref{Memory}, describes @theglibc{}'s facilities for managing and
@@ -1313,6 +1353,26 @@ performing case conversion.
 @ref{String and Array Utilities}, has descriptions of functions for
 manipulating strings (null-terminated character arrays) and general
 byte arrays, including operations such as copying and comparison.
+
+@item
+@ref{Character Set Handling}, contains information about manipulating
+characters and strings using character sets larger than will fit in
+the usual @code{char} data type.
+
+@item
+@ref{Locales}, describes how selecting a particular country
+or language affects the behavior of the library.  For example, the locale
+affects collation sequences for strings and how monetary values are
+formatted.
+
+@item
+@ref{Searching and Sorting}, contains information about functions
+for searching and sorting arrays.  You can use these functions on any
+kind of array by providing an appropriate comparison function.
+
+@item
+@ref{Pattern Matching}, presents functions for matching regular expressions
+and shell file name patterns, and for expanding words as the shell does.
 
 @item
 @ref{I/O Overview}, gives an overall look at the input and output
@@ -1366,28 +1426,8 @@ for simple arithmetic, analysis of floating-point values, and reading
 numbers from strings.
 
 @item
-@ref{Searching and Sorting}, contains information about functions
-for searching and sorting arrays.  You can use these functions on any
-kind of array by providing an appropriate comparison function.
-
-@item
-@ref{Pattern Matching}, presents functions for matching regular expressions
-and shell file name patterns, and for expanding words as the shell does.
-
-@item
 @ref{Date and Time}, describes functions for measuring both calendar time
 and CPU time, as well as functions for setting alarms and timers.
-
-@item
-@ref{Character Set Handling}, contains information about manipulating
-characters and strings using character sets larger than will fit in
-the usual @code{char} data type.
-
-@item
-@ref{Locales}, describes how selecting a particular country
-or language affects the behavior of the library.  For example, the locale
-affects collation sequences for strings and how monetary values are
-formatted.
 
 @item
 @ref{Non-Local Exits}, contains descriptions of the @code{setjmp} and
@@ -1433,6 +1473,15 @@ is executing under.
 @ref{System Configuration}, tells you how you can get information about
 various operating system limits.  Most of these parameters are provided for
 compatibility with POSIX.
+
+@item
+@ref{Language Features}, contains information about library support for
+standard parts of the C language, including things like the @code{sizeof}
+operator and the symbolic constant @code{NULL}, how to write functions
+accepting variable numbers of arguments, and constants describing the
+ranges and other properties of the numerical types.  There is also a simple
+debugging mechanism which allows you to put assertions in your code, and
+have diagnostic messages printed if the tests fail.
 
 @item
 @ref{Library Summary}, gives a summary of all the functions, variables, and

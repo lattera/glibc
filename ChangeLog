@@ -1,3 +1,8 @@
+2014-04-17  Carlos O'Donell  <carlos@redhat.com>
+
+	* manual/intro.texi (Roadmap to the manual): Sort chapter listing to
+	match manual order.
+
 2014-04-17  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* nptl/sysdeps/unix/sysv/linux/powerpc/pthread_once.c: Remove file.
