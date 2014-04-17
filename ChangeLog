@@ -1,5 +1,7 @@
 2014-04-16  Richard Henderson  <rth@redhat.com>
 
+	* sysdeps/unix/sysv/linux/alpha/nptl/pthread_once.c: Remove.
+
 	* sysdeps/alpha/Makefile [debug] (CFLAGS-backtrace.c): Enable
 	unwind tables.
 
