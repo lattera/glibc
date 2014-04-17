@@ -1,3 +1,7 @@
+2014-04-16  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/libm-test-ulps: Regenerate.
+
 2014-04-16  Marcus Shawcroft  <marcus.shawcroft@arm.com>
 
 	* sysdeps/aarch64/libm-test-ulps: Regenerate.
