@@ -25,6 +25,7 @@
 
 #include <pthreadP.h>
 #include <shlib-compat.h>
+#include <atomic.h>
 
 
 void

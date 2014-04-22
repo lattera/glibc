@@ -1,3 +1,8 @@
+2014-04-22  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* nptl/sysdeps/unix/sysv/linux/sem_trywait.c: Include atomic.h.
+	* nptl/sysdeps/unix/sysv/linux/sem_wait.c: Likewise.
+
 2014-04-22  Will Newton  <will.newton@linaro.org>
 	    Venkataramanan Kumar  <venkataramanan.kumar@linaro.org>
 
