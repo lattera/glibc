@@ -122,6 +122,22 @@ extern const UQItype __clz_tab[256] attribute_hidden;
 #define __AND_CLOBBER_CC , "cc"
 #endif /* __GNUC__ < 2 */
 
+#if defined (__aarch64__)
+
+#if W_TYPE_SIZE == 32
+#define count_leading_zeros(COUNT, X)	((COUNT) = __builtin_clz (X))
+#define count_trailing_zeros(COUNT, X)   ((COUNT) = __builtin_ctz (X))
+#define COUNT_LEADING_ZEROS_0 32
+#endif /* W_TYPE_SIZE == 32 */
+
+#if W_TYPE_SIZE == 64
+#define count_leading_zeros(COUNT, X)	((COUNT) = __builtin_clzll (X))
+#define count_trailing_zeros(COUNT, X)   ((COUNT) = __builtin_ctzll (X))
+#define COUNT_LEADING_ZEROS_0 64
+#endif /* W_TYPE_SIZE == 64 */
+
+#endif /* __aarch64__ */
+
 #if defined (__alpha) && W_TYPE_SIZE == 64
 #define umul_ppmm(ph, pl, m0, m1) \
   do {									\

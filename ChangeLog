@@ -1,3 +1,8 @@
+2014-04-22  Yufeng Zhang  <yufeng.zhang@arm.com>
+
+	* stdlib/longlong.h (count_leading_zeros, count_trailing_zeros)
+	(COUNT_LEADING_ZEROS_0): Define for AArch64.
+
 2014-04-22  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* nptl/sysdeps/unix/sysv/linux/sem_trywait.c: Include atomic.h.
