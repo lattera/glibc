@@ -38,6 +38,8 @@ Version 2.20
   interfaces those macros enabled remain available when compiling with
   _GNU_SOURCE defined, with _DEFAULT_SOURCE defined, or without any feature
   test macros defined.
+
+* Optimized strcmp implementation for ARMv7.  Contributed by ARM Ltd.
 
 Version 2.19
 

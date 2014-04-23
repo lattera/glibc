@@ -1,3 +1,8 @@
+2014-05-09  Will Newton  <will.newton@linaro.org>
+
+	* sysdeps/arm/armv7/strcmp.S: New file.
+	* NEWS: Mention addition of ARMv7 optimized strcmp.
+
 2014-05-08  Roland McGrath  <roland@hack.frob.com>
 
 	* Makeconfig ($(common-objpfx)config.status): Fix patsubst uses to
