@@ -1,3 +1,11 @@
+2014-02-23  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* nptl/tst-sem3.c: Use test-skeleton.c
+	(main): Rename to do_test.  Use return instead of
+	exit.
+	* nptl/tst-sem4.c: Use test-skeleton.c
+	(main): Rename to do_test.
+
 2014-04-22  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/bits/sigaction.h

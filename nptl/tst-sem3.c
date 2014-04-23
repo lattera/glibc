@@ -28,7 +28,7 @@
 
 
 int
-main (void)
+do_test (void)
 {
   size_t ps = sysconf (_SC_PAGESIZE);
   char tmpfname[] = "/tmp/tst-sem3.XXXXXX";
@@ -43,7 +43,7 @@ main (void)
   if (fd == -1)
     {
       printf ("cannot open temporary file: %m\n");
-      exit (1);
+      return 1;
     }
 
   /* Make sure it is always removed.  */
@@ -56,14 +56,14 @@ main (void)
   if (write (fd, data, ps) != (ssize_t) ps)
     {
       puts ("short write");
-      exit (1);
+      return 1;
     }
 
   mem = mmap (NULL, ps, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
   if (mem == MAP_FAILED)
     {
       printf ("mmap failed: %m\n");
-      exit (1);
+      return 1;
     }
 
   s = (sem_t *) (((uintptr_t) mem + __alignof (sem_t))
@@ -73,25 +73,25 @@ main (void)
   if (sem_init (s, 1, 1) == -1)
     {
       puts ("init failed");
-      exit (1);
+      return 1;
     }
 
   if (TEMP_FAILURE_RETRY (sem_wait (s)) == -1)
     {
       puts ("1st wait failed");
-      exit (1);
+      return 1;
     }
 
   errno = 0;
   if (TEMP_FAILURE_RETRY (sem_trywait (s)) != -1)
     {
       puts ("trywait succeeded");
-      exit (1);
+      return 1;
     }
   else if (errno != EAGAIN)
     {
       puts ("trywait didn't return EAGAIN");
-      exit (1);
+      return 1;
     }
 
   *p = 0;
@@ -101,7 +101,7 @@ main (void)
   if (pid == -1)
     {
       puts ("fork failed");
-      exit (1);
+      return 1;
     }
   else if (pid == 0)
     {
@@ -109,13 +109,13 @@ main (void)
       if ((*p)++ != 0)
 	{
 	  puts ("child: *p != 0");
-	  exit (1);
+	  return 1;
 	}
 
       if (sem_post (s) == -1)
 	{
 	  puts ("child: 1st post failed");
-	  exit (1);
+	  return 1;
 	}
 
       puts ("child done");
@@ -125,17 +125,20 @@ main (void)
       if (TEMP_FAILURE_RETRY (sem_wait (s)) == -1)
 	{
 	  printf ("parent: 2nd wait failed: %m\n");
-	  exit (1);
+	  return 1;
 	}
 
       if (*p != 1)
 	{
 	  puts ("*p != 1");
-	  exit (1);
+	  return 1;
 	}
 
       puts ("parent done");
     }
 
-  exit (0);
+  return 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

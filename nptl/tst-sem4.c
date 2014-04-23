@@ -32,7 +32,7 @@ remove_sem (int status, void *arg)
 
 
 int
-main (void)
+do_test (void)
 {
   sem_t *s;
   sem_t *s2;
@@ -144,3 +144,6 @@ main (void)
 
   return 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
