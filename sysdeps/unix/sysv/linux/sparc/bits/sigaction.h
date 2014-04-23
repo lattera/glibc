@@ -43,7 +43,8 @@ struct sigaction
     __sigset_t sa_mask;
 
     /* Special flags.  */
-    unsigned long sa_flags;
+    int __glibc_reserved0;
+    int sa_flags;
 
     /* Not used by Linux/Sparc yet.  */
     void (*sa_restorer) (void);
