@@ -1,3 +1,18 @@
+2014-04-24  Ian Bolton  <ian.bolton@arm.com>
+
+	* sysdeps/aarch64/fpu/fclrexcpt.c (feclearexcept): Don't write to
+	fpsr if value didn't change.
+	* sysdeps/aarch64/fpu/fedisblxcpt.c (fedisableexcept): Don't write
+	to fpcr if value didn't change.
+	* sysdeps/aarch64/fpu/feenablxcpt.c (feenableexcept): Likewise.
+	* sysdeps/aarch64/fpu/feholdexcpt.c (feholdexcept): Don't write to
+	fpsr or fpcr if value didn't change.
+	* sysdeps/aarch64/fpu/fesetenv.c (fesetenv): Likewise.
+	* sysdeps/aarch64/fpu/fesetround.c (fesetround): Don't write to
+	fpcr if value didn't change.
+	* sysdeps/aarch64/fpu/fsetexcptflg.c (fesetexceptflag): Don't write
+	to fpsr if value didn't change.
+
 2014-02-23  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* nptl/tst-sem3.c: Use test-skeleton.c

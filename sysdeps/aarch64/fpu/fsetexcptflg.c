@@ -24,16 +24,18 @@ int
 fesetexceptflag (const fexcept_t *flagp, int excepts)
 {
   fpu_fpsr_t fpsr;
+  fpu_fpsr_t fpsr_new;
 
   /* Get the current environment.  */
   _FPU_GETFPSR (fpsr);
 
   /* Set the desired exception mask.  */
-  fpsr &= ~(excepts & FE_ALL_EXCEPT);
-  fpsr |= (*flagp & excepts & FE_ALL_EXCEPT);
+  fpsr_new = fpsr & ~(excepts & FE_ALL_EXCEPT);
+  fpsr_new |= (*flagp & excepts & FE_ALL_EXCEPT);
 
   /* Save state back to the FPU.  */
-  _FPU_SETFPSR (fpsr);
+  if (fpsr != fpsr_new)
+    _FPU_SETFPSR (fpsr_new);
 
   return 0;
 }

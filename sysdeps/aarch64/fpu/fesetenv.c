@@ -23,34 +23,38 @@ int
 fesetenv (const fenv_t *envp)
 {
   fpu_control_t fpcr;
-  fpu_fpsr_t fpsr;
+  fpu_control_t fpcr_new;
   fpu_control_t updated_fpcr;
+  fpu_fpsr_t fpsr;
+  fpu_fpsr_t fpsr_new;
 
   _FPU_GETCW (fpcr);
   _FPU_GETFPSR (fpsr);
 
-  fpcr &= _FPU_RESERVED;
-  fpsr &= _FPU_FPSR_RESERVED;
+  fpcr_new = fpcr & _FPU_RESERVED;
+  fpsr_new = fpsr & _FPU_FPSR_RESERVED;
 
   if (envp == FE_DFL_ENV)
     {
-      fpcr |= _FPU_DEFAULT;
-      fpsr |= _FPU_FPSR_DEFAULT;
+      fpcr_new |= _FPU_DEFAULT;
+      fpsr_new |= _FPU_FPSR_DEFAULT;
     }
   else if (envp == FE_NOMASK_ENV)
     {
-      fpcr |= _FPU_FPCR_IEEE;
-      fpsr |= _FPU_FPSR_IEEE;
+      fpcr_new |= _FPU_FPCR_IEEE;
+      fpsr_new |= _FPU_FPSR_IEEE;
     }
   else
     {
-      fpcr |= envp->__fpcr & ~_FPU_RESERVED;
-      fpsr |= envp->__fpsr & ~_FPU_FPSR_RESERVED;
+      fpcr_new |= envp->__fpcr & ~_FPU_RESERVED;
+      fpsr_new |= envp->__fpsr & ~_FPU_FPSR_RESERVED;
     }
 
-  _FPU_SETFPSR (fpsr);
+  if (fpsr != fpsr_new)
+    _FPU_SETFPSR (fpsr_new);
 
-  _FPU_SETCW (fpcr);
+  if (fpcr != fpcr_new)
+    _FPU_SETCW (fpcr_new);
 
   /* Trapping exceptions are optional in AArch64 the relevant enable
      bits in FPCR are RES0 hence the absence of support can be
@@ -58,7 +62,7 @@ fesetenv (const fenv_t *envp)
      value.  */
 
   _FPU_GETCW (updated_fpcr);
-  if ((updated_fpcr & fpcr) != fpcr)
+  if ((updated_fpcr & fpcr_new) != fpcr_new)
     return 1;
 
   return 0;

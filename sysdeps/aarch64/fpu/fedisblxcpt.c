@@ -23,6 +23,7 @@ int
 fedisableexcept (int excepts)
 {
   fpu_control_t fpcr;
+  fpu_control_t fpcr_new;
   int original_excepts;
 
   _FPU_GETCW (fpcr);
@@ -31,9 +32,10 @@ fedisableexcept (int excepts)
 
   excepts &= FE_ALL_EXCEPT;
 
-  fpcr &= ~(excepts << FE_EXCEPT_SHIFT);
+  fpcr_new = fpcr & ~(excepts << FE_EXCEPT_SHIFT);
 
-  _FPU_SETCW (fpcr);
+  if (fpcr != fpcr_new)
+    _FPU_SETCW (fpcr_new);
 
   return original_excepts;
 }

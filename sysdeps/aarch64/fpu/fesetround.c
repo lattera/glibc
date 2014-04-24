@@ -23,6 +23,7 @@ int
 fesetround (int round)
 {
   fpu_control_t fpcr;
+  fpu_control_t fpcr_new;
 
   switch (round)
     {
@@ -31,9 +32,10 @@ fesetround (int round)
     case FE_DOWNWARD:
     case FE_TOWARDZERO:
       _FPU_GETCW (fpcr);
-      fpcr = (fpcr & ~FE_TOWARDZERO) | round;
+      fpcr_new = (fpcr & ~FE_TOWARDZERO) | round;
 
-      _FPU_SETCW (fpcr);
+      if (fpcr != fpcr_new)
+	_FPU_SETCW (fpcr_new);
       return 0;
 
     default:

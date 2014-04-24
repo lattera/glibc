@@ -22,8 +22,10 @@
 int
 feholdexcept (fenv_t *envp)
 {
-  fpu_fpsr_t fpsr;
   fpu_control_t fpcr;
+  fpu_control_t fpcr_new;
+  fpu_fpsr_t fpsr;
+  fpu_fpsr_t fpsr_new;
 
   _FPU_GETCW (fpcr);
   envp->__fpcr = fpcr;
@@ -32,14 +34,16 @@ feholdexcept (fenv_t *envp)
   envp->__fpsr = fpsr;
 
   /* Now set all exceptions to non-stop.  */
-  fpcr &= ~(FE_ALL_EXCEPT << FE_EXCEPT_SHIFT);
+  fpcr_new = fpcr & ~(FE_ALL_EXCEPT << FE_EXCEPT_SHIFT);
 
   /* And clear all exception flags.  */
-  fpsr &= ~FE_ALL_EXCEPT;
+  fpsr_new = fpsr & ~FE_ALL_EXCEPT;
 
-  _FPU_SETFPSR (fpsr);
+  if (fpsr != fpsr_new)
+    _FPU_SETFPSR (fpsr_new);
 
-  _FPU_SETCW (fpcr);
+  if (fpcr != fpcr_new)
+    _FPU_SETCW (fpcr_new);
 
   return 0;
 }

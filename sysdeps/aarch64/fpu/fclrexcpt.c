@@ -23,13 +23,15 @@ int
 feclearexcept (int excepts)
 {
   fpu_fpsr_t fpsr;
+  fpu_fpsr_t fpsr_new;
 
   excepts &= FE_ALL_EXCEPT;
 
   _FPU_GETFPSR (fpsr);
-  fpsr = (fpsr & ~FE_ALL_EXCEPT) | (fpsr & FE_ALL_EXCEPT & ~excepts);
+  fpsr_new = (fpsr & ~FE_ALL_EXCEPT) | (fpsr & FE_ALL_EXCEPT & ~excepts);
 
-  _FPU_SETFPSR (fpsr);
+  if (fpsr != fpsr_new)
+    _FPU_SETFPSR (fpsr_new);
 
   return 0;
 }

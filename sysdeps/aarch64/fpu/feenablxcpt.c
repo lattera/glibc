@@ -23,6 +23,7 @@ int
 feenableexcept (int excepts)
 {
   fpu_control_t fpcr;
+  fpu_control_t fpcr_new;
   int original_excepts;
 
   _FPU_GETCW (fpcr);
@@ -31,9 +32,10 @@ feenableexcept (int excepts)
 
   excepts &= FE_ALL_EXCEPT;
 
-  fpcr |= (excepts << FE_EXCEPT_SHIFT);
+  fpcr_new = fpcr | (excepts << FE_EXCEPT_SHIFT);
 
-  _FPU_SETCW (fpcr);
+  if (fpcr != fpcr_new)
+    _FPU_SETCW (fpcr_new);
 
   /* Trapping exceptions are optional in AArch64 the relevant enable
      bits in FPCR are RES0 hence the absence of support can be
