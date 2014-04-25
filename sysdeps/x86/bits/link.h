@@ -94,7 +94,7 @@ typedef struct La_x86_64_regs
   La_x86_64_xmm lr_xmm[8];
   La_x86_64_vector lr_vector[8];
 #ifndef __ILP32__
-  __int128 lr_bnd[4];
+  __int128_t lr_bnd[4];
 #endif
 } La_x86_64_regs;
 
@@ -110,8 +110,8 @@ typedef struct La_x86_64_retval
   La_x86_64_vector lrv_vector0;
   La_x86_64_vector lrv_vector1;
 #ifndef __ILP32__
-  __int128 lrv_bnd0;
-  __int128 lrv_bnd1;
+  __int128_t lrv_bnd0;
+  __int128_t lrv_bnd1;
 #endif
 } La_x86_64_retval;
 

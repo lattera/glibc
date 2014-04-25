@@ -1,3 +1,9 @@
+2014-04-25  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/bits/link.h (La_x86_64_regs): Replace __int128
+	with __int128_t.
+	(La_x86_64_retval): Likewise.
+
 2014-04-24  Ian Bolton  <ian.bolton@arm.com>
 
 	* sysdeps/aarch64/fpu/fclrexcpt.c (feclearexcept): Don't write to
