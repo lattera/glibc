@@ -1,3 +1,8 @@
+2014-05-14  Will Newton  <will.newton@linaro.org>
+
+	* stdlib/gmp-impl.h: Test USE_STACK_ALLOC #ifdef
+	rather than #if.
+
 2014-05-14  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16564]

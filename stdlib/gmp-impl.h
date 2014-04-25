@@ -47,7 +47,7 @@ along with the GNU MP Library; see the file COPYING.LIB.  If not, see
 #endif
 #endif
 
-#if ! defined (HAVE_ALLOCA) || USE_STACK_ALLOC
+#if ! defined (HAVE_ALLOCA) || defined (USE_STACK_ALLOC)
 #include "stack-alloc.h"
 #else
 #define TMP_DECL(m)
