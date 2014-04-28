@@ -29,6 +29,8 @@ __fesetenv (const fenv_t *envp)
   /* get the currently set exceptions.  */
   new.fenv = *envp;
   old.fenv = fegetenv_register ();
+  if (old.l == new.l)
+    return 0;
 
   /* If the old env has no enabled exceptions and the new env has any enabled
      exceptions, then unmask SIGFPE in the MSR FE0/FE1 bits.  This will put the

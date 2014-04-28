@@ -1,3 +1,15 @@
+2014-04-28  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/fclrexcpt.c (__feclearexcept): Do not update
+	FPSCR if value do not change.
+	* sysdeps/powerpc/fpu/fedisblxcpt.c (fedisableexcept): Likewise.
+	* sysdeps/powerpc/fpu/feenablxcpt.c (feenableexcept): Likewise.
+	* sysdeps/powerpc/fpu/feholdexcpt.c (feholdexcept): Likewise.
+	* sysdeps/powerpc/fpu/fesetenv.c (__fesetenv): Likewise.
+	* sysdeps/powerpc/fpu/fsetexcptflg.c (__fesetexceptflag): Likewise.
+	* sysdeps/powerpc/fpu/fenv_libc.h (fenv_reg_to_exceptions): New helper
+	function.
+
 2014-05-29  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/hppa: Move directory from ports/sysdeps/hppa.

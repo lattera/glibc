@@ -22,15 +22,17 @@
 int
 fedisableexcept (int excepts)
 {
-  fenv_union_t fe;
-  int result, new;
+  fenv_union_t fe, curr;
+  int result = 0, new;
 
-  result = __fegetexcept ();
+  /* Get current exception mask to return.  */
+  fe.fenv = curr.fenv = fegetenv_register ();
+  result = fenv_reg_to_exceptions (fe.l);
 
   if ((excepts & FE_ALL_INVALID) == FE_ALL_INVALID)
     excepts = (excepts | FE_INVALID) & ~ FE_ALL_INVALID;
 
-  fe.fenv = fegetenv_register ();
+  /* Sets the new exception mask.  */
   if (excepts & FE_INEXACT)
     fe.l &= ~(1 << (31 - FPSCR_XE));
   if (excepts & FE_DIVBYZERO)
@@ -41,7 +43,9 @@ fedisableexcept (int excepts)
     fe.l &= ~(1 << (31 - FPSCR_OE));
   if (excepts & FE_INVALID)
     fe.l &= ~(1 << (31 - FPSCR_VE));
-  fesetenv_register (fe.fenv);
+
+  if (fe.l != curr.l)
+    fesetenv_register (fe.fenv);
 
   new = __fegetexcept ();
   if (new == 0 && result != 0)

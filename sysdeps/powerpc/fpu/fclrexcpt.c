@@ -22,17 +22,18 @@
 int
 __feclearexcept (int excepts)
 {
-  fenv_union_t u;
+  fenv_union_t u, n;
 
   /* Get the current state.  */
   u.fenv = fegetenv_register ();
 
   /* Clear the relevant bits.  */
-  u.l = u.l & ~((-(excepts >> (31 - FPSCR_VX) & 1) & FE_ALL_INVALID)
+  n.l = u.l & ~((-(excepts >> (31 - FPSCR_VX) & 1) & FE_ALL_INVALID)
 		| (excepts & FPSCR_STICKY_BITS));
 
   /* Put the new state in effect.  */
-  fesetenv_register (u.fenv);
+  if (u.l != n.l)
+    fesetenv_register (n.fenv);
 
   /* Success.  */
   return 0;
