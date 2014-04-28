@@ -1,3 +1,9 @@
+2014-04-28  Wilco  <wdijkstr@arm.com>
+
+        * sysdeps/arm/fenv_private.h: New file.
+	* sysdeps/arm/math_private.h: New file.
+	* sysdeps/arm/fpu_control.h: Add _FPU_MASK_NCZV and _FPU_MASK_EXCEPT.
+
 2014-04-25  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86/bits/link.h (La_x86_64_regs): Replace __int128
