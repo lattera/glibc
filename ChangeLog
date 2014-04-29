@@ -1,3 +1,7 @@
+2014-04-29  Steve Ellcey  <sellcey@mips.com>
+
+	* iconv/skeleton.c (ONE_DIRECTION): Set default value if not set.
+
 2014-04-29  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	[BZ #16823]
