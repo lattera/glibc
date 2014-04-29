@@ -1,3 +1,10 @@
+This file describes changes to the machine while it was in the ports
+add-on directory.  This port is no longer part of an add-on and so
+future changes to it should be listed in the top-level ChangeLog file,
+not here.
+
+
+
 2014-02-16  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/ia64: Move directory to ../sysdeps/ia64.
