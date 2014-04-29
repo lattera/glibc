@@ -1,5 +1,8 @@
 2014-04-29  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* sysdeps/hppa/nptl/tls.h (THREAD_GSCOPE_RESET_FLAG): Use
+	lll_futex_wake.
+
 	* sysdeps/hppa/__longjmp.c (__longjmp): Use r25 as second arg
 	to simplify generated assembly.
 
