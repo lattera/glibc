@@ -1,3 +1,8 @@
+2014-04-29  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/hppa/__longjmp.c (__longjmp): Use r25 as second arg
+	to simplify generated assembly.
+
 2014-04-11  Torvald Riegel  <triegel@redhat.com>
 
 	[BZ #15215]

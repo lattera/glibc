@@ -27,6 +27,7 @@ __longjmp (__jmp_buf env, int val)
   /* We must use one of the non-callee saves registers
      for env.  */
   register unsigned long r26 asm ("r26") = (unsigned long)&env[0];
+  register unsigned long r25 asm ("r25") = (unsigned long)(val == 0 ? 1 : val);
 
 #ifdef CHECK_SP
   CHECK_SP (env[0].__jmp_buf.__sp);
@@ -61,22 +62,22 @@ __longjmp (__jmp_buf env, int val)
 	/* Load return pointer. */
 	"ldw	80(%1), %%rp\n\t"
 	/* Ues a spare caller saves register.  */
-	"ldo	88(%1),%%r20\n\t"
+	"ldo	88(%1),%%r25\n\t"
 	/* Load callee saves from fr12 to fr21.  */
-	"fldds,ma 8(%%r20), %%fr12\n\t"
-	"fldds,ma 8(%%r20), %%fr13\n\t"
-	"fldds,ma 8(%%r20), %%fr14\n\t"
-	"fldds,ma 8(%%r20), %%fr15\n\t"
-	"fldds,ma 8(%%r20), %%fr16\n\t"
-	"fldds,ma 8(%%r20), %%fr17\n\t"
-	"fldds,ma 8(%%r20), %%fr18\n\t"
-	"fldds,ma 8(%%r20), %%fr19\n\t"
-	"fldds,ma 8(%%r20), %%fr20\n\t"
-	"fldds	 0(%%r20), %%fr21\n\t"
+	"fldds,ma 8(%%r25), %%fr12\n\t"
+	"fldds,ma 8(%%r25), %%fr13\n\t"
+	"fldds,ma 8(%%r25), %%fr14\n\t"
+	"fldds,ma 8(%%r25), %%fr15\n\t"
+	"fldds,ma 8(%%r25), %%fr16\n\t"
+	"fldds,ma 8(%%r25), %%fr17\n\t"
+	"fldds,ma 8(%%r25), %%fr18\n\t"
+	"fldds,ma 8(%%r25), %%fr19\n\t"
+	"fldds,ma 8(%%r25), %%fr20\n\t"
+	"fldds	 0(%%r25), %%fr21\n\t"
 	/* Jump back to stored return address.  */
 	"bv,n	%%r0(%%r2)\n\t"
 	: /* No outputs.  */
-	: "r" (val == 0 ? 1 : val), "r" (r26)
+	: "r" (r25), "r" (r26)
 	: /* No point in clobbers.  */ );
   /* Avoid `volatile function does return' warnings.  */
   for (;;);
