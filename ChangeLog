@@ -1,3 +1,7 @@
+2014-04-30  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* * sysdeps/generic/symbol-hacks.h (memcpy): Add internal alias.
+
 2014-04-30  Yang Yingliang  <yangyingliang@huawei.com>
 
 	* nptl/pthread_cond_broadcast.c (__pthread_cond_broadcast):
