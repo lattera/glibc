@@ -1,3 +1,10 @@
+2014-05-29  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/hppa: Move directory from ports/sysdeps/hppa.
+	* sysdeps/unix/sysv/linux/hppa: Move directory from
+	ports/systeps/unix/sysv/linux/hppa.
+	* README: Update listing for hppa-*-linux-gnu.
+
 2014-04-28  Ondřej Bílka  <neleai@seznam.cz>
 
 	[BZ #16754]
