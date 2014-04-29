@@ -1,3 +1,7 @@
+2014-04-29  Carlos O'Donell  <carlos@redhat.com>
+
+	* README: Removed. The ports repository is no longer used.
+
 2013-10-30  Mike Frysinger  <vapier@gentoo.org>
 
 	* README: Change references to preconfigure.in to
