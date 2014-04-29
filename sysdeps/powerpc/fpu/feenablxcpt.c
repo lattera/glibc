@@ -23,7 +23,7 @@ int
 feenableexcept (int excepts)
 {
   fenv_union_t fe, curr;
-  int result = 0, new;
+  int result, new;
 
   /* Get current exception mask to return.  */
   fe.fenv = curr.fenv = fegetenv_register ();
