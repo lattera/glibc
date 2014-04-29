@@ -1,3 +1,11 @@
+2014-04-29  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	[BZ #16823]
+	* sysdeps/ieee754/ldbl-128/s_log1pl.c (__log1pl):
+	Always divide by positive zero when computing -Inf result.
+	* sysdeps/ieee754/dbl-64/s_log1p.c (__log1p): Likewise.
+	* sysdeps/ieee754/flt-32/s_log1pf.c (__log1pf): Likewise.
+
 2014-04-28  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/fclrexcpt.c (__feclearexcept): Do not update

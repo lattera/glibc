@@ -110,7 +110,7 @@ __log1p (double x)
       if (__glibc_unlikely (ax >= 0x3ff00000))           /* x <= -1.0 */
 	{
 	  if (x == -1.0)
-	    return -two54 / (x - x);            /* log1p(-1)=+inf */
+	    return -two54 / zero;               /* log1p(-1)=-inf */
 	  else
 	    return (x - x) / (x - x);           /* log1p(x<-1)=NaN */
 	}

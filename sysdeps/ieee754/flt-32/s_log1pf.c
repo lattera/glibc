@@ -42,7 +42,7 @@ __log1pf(float x)
 	k = 1;
 	if (hx < 0x3ed413d7) {			/* x < 0.41422  */
 	    if(ax>=0x3f800000) {		/* x <= -1.0 */
-		if(x==(float)-1.0) return -two25/(x-x); /* log1p(-1)=+inf */
+		if(x==(float)-1.0) return -two25/zero; /* log1p(-1)=-inf */
 		else return (x-x)/(x-x);	/* log1p(x<-1)=NaN */
 	    }
 	    if(ax<0x31000000) {			/* |x| < 2**-29 */
