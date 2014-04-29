@@ -42,6 +42,8 @@
 #define FUTEX_TRYLOCK_PI	8
 #define FUTEX_WAIT_BITSET	9
 #define FUTEX_WAKE_BITSET	10
+#define FUTEX_WAIT_REQUEUE_PI	11
+#define FUTEX_CMP_REQUEUE_PI	12
 #define FUTEX_PRIVATE_FLAG	128
 #define FUTEX_CLOCK_REALTIME	256
 
@@ -119,19 +121,7 @@ typedef int lll_lock_t;
 			      (val), (timespec));			      \
     __ret;								      \
   })
-
-# define lll_private_futex_wake(futexp, nr) \
-  ({									      \
-    INTERNAL_SYSCALL_DECL (__err);					      \
-    long int __ret;							      \
-    __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
-			      (futexp), FUTEX_WAKE | FUTEX_PRIVATE_FLAG,      \
-			      (nr), 0);					      \
-    __ret;								      \
-  })
-
 #else
-
 # define lll_private_futex_timed_wait(futexp, val, timespec) \
   ({									      \
     INTERNAL_SYSCALL_DECL (__err);					      \
@@ -139,16 +129,6 @@ typedef int lll_lock_t;
     __op = FUTEX_WAIT | THREAD_GETMEM (THREAD_SELF, header.private_futex);    \
     __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
 			      (futexp), __op, (val), (timespec));	      \
-    __ret;								      \
-  })
-
-# define lll_private_futex_wake(futexp, nr) \
-  ({									      \
-    INTERNAL_SYSCALL_DECL (__err);					      \
-    long int __ret, __op;						      \
-    __op = FUTEX_WAKE | THREAD_GETMEM (THREAD_SELF, header.private_futex);    \
-    __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
-			      (futexp), __op, (nr), 0);			      \
     __ret;								      \
   })
 #endif
@@ -183,6 +163,34 @@ typedef int lll_lock_t;
 			      (nr_wake), (nr_wake2), (futexp2),		   \
 			      FUTEX_OP_CLEAR_WAKE_IF_GT_ONE);		   \
     __ret;								   \
+  })
+
+/* Priority Inheritance support.  */
+#define lll_futex_wait_requeue_pi(futexp, val, mutex, private) \
+  lll_futex_timed_wait_requeue_pi (futexp, val, NULL, 0, mutex, private)
+
+#define lll_futex_timed_wait_requeue_pi(futexp, val, timespec, clockbit,      \
+					mutex, private)			      \
+  ({									      \
+    INTERNAL_SYSCALL_DECL (__err);					      \
+    long int __ret;							      \
+    int __op = FUTEX_WAIT_REQUEUE_PI | clockbit;			      \
+									      \
+    __ret = INTERNAL_SYSCALL (futex, __err, 5, (futexp),		      \
+			      __lll_private_flag (__op, private),	      \
+			      (val), (timespec), mutex); 		      \
+    INTERNAL_SYSCALL_ERROR_P (__ret, __err) ? -__ret : __ret;		      \
+  })
+
+#define lll_futex_cmp_requeue_pi(futexp, nr_wake, nr_move, mutex, val, priv)  \
+  ({									      \
+    INTERNAL_SYSCALL_DECL (__err);					      \
+    long int __ret;							      \
+									      \
+    __ret = INTERNAL_SYSCALL (futex, __err, 6, (futexp),		      \
+			      __lll_private_flag (FUTEX_CMP_REQUEUE_PI, priv),\
+			      (nr_wake), (nr_move), (mutex), (val));	      \
+    INTERNAL_SYSCALL_ERROR_P (__ret, __err);				      \
   })
 
 static inline int
