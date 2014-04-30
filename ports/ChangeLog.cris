@@ -1,3 +1,10 @@
+This file describes changes to the CRIS port while it was in the ports/
+add-on directory.  That port has since been removed entirely.
+The ports/ directory is no longer used, so reintroduction of AIX code
+would be described in the top-level ChangeLog file, not here.
+
+
+
 2012-02-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/cris: Remove.

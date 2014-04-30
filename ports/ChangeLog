@@ -1,3 +1,9 @@
+This file describes changes to the shared files of the ports/ add-on
+directory.  The ports/ directory is no longer used and the files
+described here are all gone.
+
+
+
 2014-04-29  Carlos O'Donell  <carlos@redhat.com>
 
 	* README: Removed. The ports repository is no longer used.

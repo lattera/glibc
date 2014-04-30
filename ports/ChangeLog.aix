@@ -1,3 +1,10 @@
+This file describes changes to the AIX port while it was in the ports/
+add-on directory.  That port has since been removed entirely.
+The ports/ directory is no longer used, so reintroduction of AIX code
+would be described in the top-level ChangeLog file, not here.
+
+
+
 2011-11-29  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/aix: Remove.
