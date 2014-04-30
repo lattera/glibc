@@ -1,5 +1,8 @@
 2014-04-30  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/bits/string.h (_STRING_ARCH_unaligned): Define to
+	0.
+
 	* sysdeps/unix/sysv/linux/sparc/bits/siginfo.h (EMT_TAGOVF): Protect
 	with XOPEN cpp guards.
 

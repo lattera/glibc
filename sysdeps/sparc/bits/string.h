@@ -20,6 +20,9 @@
 # error "Never use <bits/string.h> directly; include <string.h> instead."
 #endif
 
+/* Define if architecture can access unaligned multi-byte variables.  */
+#define _STRING_ARCH_unaligned   0
+
 /* sparc32 and sparc64 strchr(x, '\0') perform better than
    __rawmemchr(x, '\0').  */
 #define _HAVE_STRING_ARCH_strchr 1
