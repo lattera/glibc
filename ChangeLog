@@ -1,3 +1,14 @@
+2014-04-30  Siddhesh Poyarekar  <siddhesh@redhat.com>
+	    Atsushi Onoe  <atsushi@onoe.org>
+
+	[BZ #14308]
+	[BZ #12994]
+	[BZ #13651]
+	* resolv/res_query.c (__libc_res_nsearch): Return if at least
+	one response is valid.
+	* resolv/res_send.c (send_dg): Check for validity of other
+	response if the current response is a referral.
+
 2014-04-29  Steve Ellcey  <sellcey@mips.com>
 
 	* iconv/skeleton.c (ONE_DIRECTION): Set default value if not set.
