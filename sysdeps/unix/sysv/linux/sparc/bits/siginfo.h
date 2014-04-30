@@ -278,12 +278,14 @@ enum
 };
 # endif
 
+# if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
 /* `si_code' values for SIGEMT signal.  */
 enum
 {
   EMT_TAGOVF = 1		/* Tag overflow.  */
 # define EMT_TAGOVF	EMT_TAGOVF
 };
+# endif
 
 # undef __need_siginfo_t
 #endif	/* !have siginfo_t && (have _SIGNAL_H || need siginfo_t).  */
