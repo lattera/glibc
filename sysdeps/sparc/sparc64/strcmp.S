@@ -121,6 +121,37 @@ ENTRY(strcmp)
 	movleu	%xcc, -1, %o0
 	srlx	rTMP1, 7, rTMP1
 
+	/* In order not to be influenced by bytes after the zero byte, we
+	 * have to retain only the highest bit in the mask for the comparison
+	 * with rSTRXOR to work properly.
+	 */
+	mov	0, rTMP2
+	andcc	rTMP1, 0x0100, %g0
+
+	movne	%xcc, 8, rTMP2
+	sllx	rTMP1, 63 - 16, %o1
+
+	movrlz	%o1, 16, rTMP2
+	sllx	rTMP1, 63 - 24, %o1
+
+	movrlz	%o1, 24, rTMP2
+	sllx	rTMP1, 63 - 32, %o1
+
+	movrlz	%o1, 32, rTMP2
+	sllx	rTMP1, 63 - 40, %o1
+
+	movrlz	%o1, 40, rTMP2
+	sllx	rTMP1, 63 - 48, %o1
+
+	movrlz	%o1, 48, rTMP2
+	sllx	rTMP1, 63 - 56, %o1
+
+	movrlz	%o1, 56, rTMP2
+
+	srlx	rTMP1, rTMP2, rTMP1
+
+	sllx	rTMP1, rTMP2, rTMP1
+
 	cmp	rTMP1, rSTRXOR
 	retl
 	 movgu	%xcc, 0, %o0

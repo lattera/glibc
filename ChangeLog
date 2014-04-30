@@ -1,3 +1,13 @@
+2014-05-01  David S. Miller  <davem@davemloft.net>
+
+	[BZ #16885]
+	* sysdeps/sparc/sparc64/strcmp.S: Fix end comparison handling when
+	multiple zero bytes exist at the end of a string.
+	Reported by Aurelien Jarno <aurelien@aurel32.net>
+
+	* string/test-strcmp.c (check): Add explicit test for situations where
+	there are multiple zero bytes after the first.
+
 2014-05-01  Andreas Schwab  <schwab@linux-m68k.org>
 
 	[BZ #16890]
