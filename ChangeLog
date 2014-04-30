@@ -1,5 +1,26 @@
 2014-04-30  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/fpu/fenv_private.h (HAVE_RM_CTX): Define.
+	(libc_feholdexcept_setround_sparc_ctx): New function.
+	(libc_fesetenv_sparc_ctx): Likewise.
+	(libc_feupdateenv_sparc_ctx): Likewise.
+	(libc_feholdsetround_sparc_ctx): Likewise.
+	(libc_feholdexcept_setround_ctx): Define.
+	(libc_feholdexcept_setroundf_ctx): Likewise.
+	(libc_feholdexcept_setroundl_ctx): Likewise.
+	(libc_fesetenv_ctx): Likewise.
+	(libc_fesetenvf_ctx): Likewise.
+	(libc_fesetenvl_ctx): Likewise.
+	(libc_feupdateenv_ctx): Likewise.
+	(libc_feupdateenvf_ctx): Likewise.
+	(libc_feupdateenvl_ctx): Likewise.
+	(libc_feresetround_ctx): Likewise.
+	(libc_feresetroundf_ctx): Likewise.
+	(libc_feresetroundl_ctx): Likewise.
+	(libc_feholdsetround_ctx): Likewise.
+	(libc_feholdsetroundf_ctx): Likewise.
+	(libc_feholdsetroundl_ctx): Likewise.
+
 	* sysdeps/unix/sysv/linux/sparc/bits/siginfo.h (EMT_TAGOVF): Protect
 	with __USE_GNU instead of XOPEN cpp guards.
 
