@@ -177,7 +177,7 @@ function {void*} valloc (size_t)
 function size_t wcstombs (char*, const wchar_t*, size_t)
 function int wctomb (char*, wchar_t)
 
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX
 allow-header stddef.h
 allow-header limits.h
 allow-header math.h

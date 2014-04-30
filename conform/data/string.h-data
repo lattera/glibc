@@ -53,7 +53,7 @@ function {char*} strsignal (int)
 function size_t strspn (const char*, const char*)
 function {char*} strstr (const char*, const char*)
 function {char*} strtok (char*, const char*)
-#if defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
+#if defined POSIX || defined UNIX98 || defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 function {char*} strtok_r (char*, const char*, char**)
 #endif
 function size_t strxfrm (char*, const char*, size_t)
@@ -61,7 +61,7 @@ function size_t strxfrm (char*, const char*, size_t)
 function size_t strxfrm_l (char*, const char*, size_t, locale_t)
 #endif
 
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX
 allow-header stddef.h
 #endif
 

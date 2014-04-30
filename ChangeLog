@@ -1,3 +1,14 @@
+2014-04-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/stdlib.h-data [POSIX] (stddef.h): Do not allow
+	header inclusion.
+	[POSIX] (limits.h): Likewise.
+	[POSIX] (math.h): Likewise.
+	[POSIX] (sys/wait.h): Likewise.
+	* conform/data/string.h-data [POSIX || UNIX98] (strtok_r): Require
+	function.
+	[POSIX] (stddef.h): Do not allow header inclusion.
+
 2014-04-30  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/generic/symbol-hacks.h (memcpy): Add internal alias.
