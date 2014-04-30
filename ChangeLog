@@ -1,5 +1,19 @@
 2014-04-30  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #9894]
+	* sysdeps/unix/sysv/linux/configure.ac (LIBC_LINUX_VERSION):
+	Change to 2.6.32.
+	(arch_minimum_kernel): Change all 2.6.16 settings to 2.6.32.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/microblaze/configure.ac: Remove file.
+	* sysdeps/unix/sysv/linux/microblaze/configure: Likewise.
+	* sysdeps/unix/sysv/linux/tile/configure.ac: Likewise.
+	* sysdeps/unix/sysv/linux/tile/configure: Likewise.
+	* README: Update reference to required Linux kernel version.
+	* manual/install.texi (Linux): Update reference to required Linux
+	kernel headers version.
+	* INSTALL: Regenerated.
+
 	* conform/data/stdlib.h-data [POSIX] (stddef.h): Do not allow
 	header inclusion.
 	[POSIX] (limits.h): Likewise.

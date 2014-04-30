@@ -445,7 +445,7 @@ patches, although we try to avoid this.
 @cindex kernel header files
 
 If you are installing @theglibc{} on @gnulinuxsystems{}, you need to have
-the header files from a 2.6.19.1 or newer kernel around for reference.
+the header files from a 2.6.32 or newer kernel around for reference.
 These headers must be installed using @samp{make headers_install}; the
 headers present in the kernel source directory are not suitable for
 direct use by @theglibc{}.  You do not need to use that kernel, just have

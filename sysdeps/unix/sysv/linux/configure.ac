@@ -5,7 +5,7 @@ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # existing system library, because we are the only system library.
 inhibit_glue=yes
 
-define([LIBC_LINUX_VERSION],[2.6.19])dnl
+define([LIBC_LINUX_VERSION],[2.6.32])dnl
 if test -n "$sysheaders"; then
   OLD_CPPFLAGS=$CPPFLAGS
   CPPFLAGS="$CPPFLAGS $SYSINCLUDES"
@@ -41,37 +41,37 @@ test -n "$arch_minimum_kernel" ||
 case "$machine" in
   i386*)
     libc_cv_gcc_unwind_find_fde=yes
-    arch_minimum_kernel=2.6.16
+    arch_minimum_kernel=2.6.32
     ;;
   x86_64/x32)
     arch_minimum_kernel=3.4.0
     ;;
   powerpc/powerpc32*)
     libc_cv_gcc_unwind_find_fde=yes
-    arch_minimum_kernel=2.6.16
+    arch_minimum_kernel=2.6.32
     ;;
   s390/s390-32)
     libc_cv_gcc_unwind_find_fde=yes
-    arch_minimum_kernel=2.6.16
+    arch_minimum_kernel=2.6.32
     ;;
   s390/s390-64)
     libc_cv_gcc_unwind_find_fde=yes
-    arch_minimum_kernel=2.6.16
+    arch_minimum_kernel=2.6.32
     ;;
   sh*)
-    arch_minimum_kernel=2.6.16
+    arch_minimum_kernel=2.6.32
     libc_cv_gcc_unwind_find_fde=yes
     ;;
   sparc/sparc64*)
     libc_cv_gcc_unwind_find_fde=yes
-    arch_minimum_kernel=2.6.16
+    arch_minimum_kernel=2.6.32
     ;;
   sparc*)
     libc_cv_gcc_unwind_find_fde=yes
-    arch_minimum_kernel=2.6.16
+    arch_minimum_kernel=2.6.32
     ;;
   *)
-    arch_minimum_kernel=2.6.16
+    arch_minimum_kernel=2.6.32
     ;;
 esac
 if test -n "$minimum_kernel"; then
