@@ -1,5 +1,11 @@
 2014-04-30  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	[BZ #16791]
+	* nscd/nscd-client.h (datahead_init_common): Initialize entire
+	structure.
+	(datahead_init_pos): Call datahead_init_common early.
+	(datahead_init_neg): Likewise.
+
 	* nscd/nscd-client.h (datahead_init_common, datahead_init_pos,
 	datahead_init_neg): New functions.
 	* nscd/aicache.c (addhstaiX): Use them.

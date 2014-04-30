@@ -240,12 +240,17 @@ static inline time_t
 datahead_init_common (struct datahead *head, nscd_ssize_t allocsize,
 		      nscd_ssize_t recsize, uint32_t ttl)
 {
+  /* Initialize so that we don't write out junk in uninitialized data to the
+     cache.  */
+  memset (head, 0, sizeof (*head));
+
   head->allocsize = allocsize;
   head->recsize = recsize;
   head->usable = true;
 
   head->ttl = ttl;
-  /* Compute the timeout time.  */
+
+  /* Compute and return the timeout time.  */
   return head->timeout = time (NULL) + ttl;
 }
 
@@ -253,18 +258,25 @@ static inline time_t
 datahead_init_pos (struct datahead *head, nscd_ssize_t allocsize,
 		   nscd_ssize_t recsize, uint8_t nreloads, uint32_t ttl)
 {
+  time_t ret = datahead_init_common (head, allocsize, recsize, ttl);
+
   head->notfound = false;
   head->nreloads = nreloads;
-  return datahead_init_common (head, allocsize, recsize, ttl);
+
+  return ret;
 }
 
 static inline time_t
 datahead_init_neg (struct datahead *head, nscd_ssize_t allocsize,
 		   nscd_ssize_t recsize, uint32_t ttl)
 {
+  time_t ret = datahead_init_common (head, allocsize, recsize, ttl);
+
+  /* We don't need to touch nreloads here since it is set to our desired value
+     (0) when we clear the structure.  */
   head->notfound = true;
-  head->nreloads = 0;
-  return datahead_init_common (head, allocsize, recsize, ttl);
+
+  return ret;
 }
 
 /* Structure for one hash table entry.  */
