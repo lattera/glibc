@@ -1,3 +1,8 @@
+2014-04-30  Yang Yingliang  <yangyingliang@huawei.com>
+
+	* nptl/pthread_cond_broadcast.c (__pthread_cond_broadcast):
+	Return immediately after lll_futex_wake.
+
 2014-04-30  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #16791]
