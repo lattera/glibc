@@ -278,7 +278,7 @@ enum
 };
 # endif
 
-# if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
+# if defined __USE_GNU
 /* `si_code' values for SIGEMT signal.  */
 enum
 {
