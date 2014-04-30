@@ -213,14 +213,10 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 	  else if ((dataset = mempool_alloc (db, (sizeof (struct dataset)
 						  + req->key_len), 1)) != NULL)
 	    {
-	      dataset->head.allocsize = sizeof (struct dataset) + req->key_len;
-	      dataset->head.recsize = total;
-	      dataset->head.notfound = true;
-	      dataset->head.nreloads = 0;
-	      dataset->head.usable = true;
-
-	      /* Compute the timeout time.  */
-	      timeout = dataset->head.timeout = time (NULL) + db->negtimeout;
+	      timeout = datahead_init_neg (&dataset->head,
+					   (sizeof (struct dataset)
+					    + req->key_len), total,
+					   db->negtimeout);
 
 	      /* This is the reply.  */
 	      memcpy (&dataset->resp, &notfound, total);
@@ -276,14 +272,10 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 	  alloca_used = true;
 	}
 
-      dataset->head.allocsize = total + req->key_len;
-      dataset->head.recsize = total - offsetof (struct dataset, resp);
-      dataset->head.notfound = false;
-      dataset->head.nreloads = he == NULL ? 0 : (dh->nreloads + 1);
-      dataset->head.usable = true;
-
-      /* Compute the timeout time.  */
-      timeout = dataset->head.timeout = time (NULL) + db->postimeout;
+      timeout = datahead_init_pos (&dataset->head, total + req->key_len,
+				   total - offsetof (struct dataset, resp),
+				   he == NULL ? 0 : dh->nreloads + 1,
+				   db->postimeout);
 
       dataset->resp.version = NSCD_VERSION;
       dataset->resp.found = 1;

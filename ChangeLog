@@ -1,4 +1,18 @@
 2014-04-30  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* nscd/nscd-client.h (datahead_init_common, datahead_init_pos,
+	datahead_init_neg): New functions.
+	* nscd/aicache.c (addhstaiX): Use them.
+	* nscd/grpcache.c (cache_addgr): Likewise.
+	* nscd/hstcache.c (cache_addhst): Likewise.
+	* nscd/initgrcache.c (addinitgroupsX): Likewise.
+	* nscd/netgroupcache.c (do_notfound): Likewise.
+	(addgetnetgrentX): Likewise.
+	(addinnetgrX): Likewise.
+	* nscd/pwdcache.c (cache_addpw): Likewise.
+	* nscd/servicescache.c (cache_addserv): Likewise.
+
+2014-04-30  Siddhesh Poyarekar  <siddhesh@redhat.com>
 	    Atsushi Onoe  <atsushi@onoe.org>
 
 	[BZ #14308]

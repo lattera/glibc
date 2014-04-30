@@ -383,17 +383,12 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 	  cp = family;
 	}
 
+      timeout = datahead_init_pos (&dataset->head, total + req->key_len,
+				   total - offsetof (struct dataset, resp),
+				   he == NULL ? 0 : dh->nreloads + 1,
+				   ttl == INT32_MAX ? db->postimeout : ttl);
+
       /* Fill in the rest of the dataset.  */
-      dataset->head.allocsize = total + req->key_len;
-      dataset->head.recsize = total - offsetof (struct dataset, resp);
-      dataset->head.notfound = false;
-      dataset->head.nreloads = he == NULL ? 0 : (dh->nreloads + 1);
-      dataset->head.usable = true;
-
-      /* Compute the timeout time.  */
-      dataset->head.ttl = ttl == INT32_MAX ? db->postimeout : ttl;
-      timeout = dataset->head.timeout = time (NULL) + dataset->head.ttl;
-
       dataset->resp.version = NSCD_VERSION;
       dataset->resp.found = 1;
       dataset->resp.naddrs = naddrs;
@@ -528,15 +523,9 @@ next_nip:
       else if ((dataset = mempool_alloc (db, (sizeof (struct dataset)
 					      + req->key_len), 1)) != NULL)
 	{
-	  dataset->head.allocsize = sizeof (struct dataset) + req->key_len;
-	  dataset->head.recsize = total;
-	  dataset->head.notfound = true;
-	  dataset->head.nreloads = 0;
-	  dataset->head.usable = true;
-
-	  /* Compute the timeout time.  */
-	  timeout = dataset->head.timeout = time (NULL) + db->negtimeout;
-	  dataset->head.ttl = db->negtimeout;
+	  timeout = datahead_init_neg (&dataset->head,
+				       sizeof (struct dataset) + req->key_len,
+				       total, db->negtimeout);
 
 	  /* This is the reply.  */
 	  memcpy (&dataset->resp, &notfound, total);

@@ -90,15 +90,9 @@ do_notfound (struct database_dyn *db, int fd, request_header *req,
   /* If we cannot permanently store the result, so be it.  */
   if (dataset != NULL)
     {
-      dataset->head.allocsize = sizeof (struct dataset) + req->key_len;
-      dataset->head.recsize = total;
-      dataset->head.notfound = true;
-      dataset->head.nreloads = 0;
-      dataset->head.usable = true;
-
-      /* Compute the timeout time.  */
-      timeout = dataset->head.timeout = time (NULL) + db->negtimeout;
-      dataset->head.ttl = db->negtimeout;
+      timeout = datahead_init_neg (&dataset->head,
+				   sizeof (struct dataset) + req->key_len,
+				   total, db->negtimeout);
 
       /* This is the reply.  */
       memcpy (&dataset->resp, &notfound, total);
@@ -359,13 +353,10 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
 
   /* Fill in the dataset.  */
   dataset = (struct dataset *) buffer;
-  dataset->head.allocsize = total + req->key_len;
-  dataset->head.recsize = total - offsetof (struct dataset, resp);
-  dataset->head.notfound = false;
-  dataset->head.nreloads = he == NULL ? 0 : (dh->nreloads + 1);
-  dataset->head.usable = true;
-  dataset->head.ttl = db->postimeout;
-  timeout = dataset->head.timeout = time (NULL) + dataset->head.ttl;
+  timeout = datahead_init_pos (&dataset->head, total + req->key_len,
+			       total - offsetof (struct dataset, resp),
+			       he == NULL ? 0 : dh->nreloads + 1,
+			       db->postimeout);
 
   dataset->resp.version = NSCD_VERSION;
   dataset->resp.found = 1;
@@ -541,12 +532,12 @@ addinnetgrX (struct database_dyn *db, int fd, request_header *req,
       dataset = &dataset_mem;
     }
 
-  dataset->head.allocsize = sizeof (*dataset) + req->key_len;
-  dataset->head.recsize = sizeof (innetgroup_response_header);
+  datahead_init_pos (&dataset->head, sizeof (*dataset) + req->key_len,
+		     sizeof (innetgroup_response_header),
+		     he == NULL ? 0 : dh->nreloads + 1, result->head.ttl);
+  /* Set the notfound status and timeout based on the result from
+     getnetgrent.  */
   dataset->head.notfound = result->head.notfound;
-  dataset->head.nreloads = he == NULL ? 0 : (dh->nreloads + 1);
-  dataset->head.usable = true;
-  dataset->head.ttl = result->head.ttl;
   dataset->head.timeout = timeout;
 
   dataset->resp.version = NSCD_VERSION;

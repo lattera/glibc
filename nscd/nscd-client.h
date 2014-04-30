@@ -236,6 +236,36 @@ struct datahead
   } data[0];
 };
 
+static inline time_t
+datahead_init_common (struct datahead *head, nscd_ssize_t allocsize,
+		      nscd_ssize_t recsize, uint32_t ttl)
+{
+  head->allocsize = allocsize;
+  head->recsize = recsize;
+  head->usable = true;
+
+  head->ttl = ttl;
+  /* Compute the timeout time.  */
+  return head->timeout = time (NULL) + ttl;
+}
+
+static inline time_t
+datahead_init_pos (struct datahead *head, nscd_ssize_t allocsize,
+		   nscd_ssize_t recsize, uint8_t nreloads, uint32_t ttl)
+{
+  head->notfound = false;
+  head->nreloads = nreloads;
+  return datahead_init_common (head, allocsize, recsize, ttl);
+}
+
+static inline time_t
+datahead_init_neg (struct datahead *head, nscd_ssize_t allocsize,
+		   nscd_ssize_t recsize, uint32_t ttl)
+{
+  head->notfound = true;
+  head->nreloads = 0;
+  return datahead_init_common (head, allocsize, recsize, ttl);
+}
 
 /* Structure for one hash table entry.  */
 struct hashentry
