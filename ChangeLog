@@ -1,6 +1,8 @@
 2014-05-01  Will Newton  <will.newton@linaro.org>
 	    Bernard Ogden  <bernie.ogden@linaro.org>
 
+	* NEWS: Update fixed bug list.
+
 	[BZ #15119]
 	* sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.c: Remove file.
 
