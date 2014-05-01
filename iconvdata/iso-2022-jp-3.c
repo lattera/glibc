@@ -37,6 +37,7 @@
 #define TO_LOOP			to_iso2022jp3_loop
 #define DEFINE_INIT		1
 #define DEFINE_FINI		1
+#define ONE_DIRECTION		0
 #define FROM_LOOP_MIN_NEEDED_FROM	1
 #define FROM_LOOP_MAX_NEEDED_FROM	4
 #define FROM_LOOP_MIN_NEEDED_TO		4

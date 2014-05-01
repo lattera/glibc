@@ -43,6 +43,8 @@
 #define DEFINE_FINI		0
 #define MIN_NEEDED_FROM		1
 #define MIN_NEEDED_TO		4
+#define ONE_DIRECTION		0
+
 #define FROM_DIRECTION		(dir == from_iso646)
 #define PREPARE_LOOP \
   enum direction dir = ((struct iso646_data *) step->__data)->dir;	      \

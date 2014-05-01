@@ -29,6 +29,7 @@
 #define CHARSET_NAME	"IBM943//"
 #define FROM_LOOP	from_ibm943
 #define TO_LOOP		to_ibm943
+#define ONE_DIRECTION	0
 
 /* Definitions of initialization and destructor function.  */
 #define DEFINE_INIT	1

@@ -1,3 +1,52 @@
+2014-05-01  Steve Ellcey  <sellcey@mips.com>
+
+	* iconvdata/ansi_x3.110.c (ONE_DIRECTION): Define.
+	* iconvdata/armscii-8.c (ONE_DIRECTION): Define.
+	* iconvdata/big5.c (ONE_DIRECTION): Define.
+	* iconvdata/big5hkscs.c (ONE_DIRECTION): Define.
+	* iconvdata/cp1255.c (ONE_DIRECTION): Define.
+	* iconvdata/cp1258.c (ONE_DIRECTION): Define.
+	* iconvdata/cp932.c (ONE_DIRECTION): Define.
+	* iconvdata/euc-cn.c (ONE_DIRECTION): Define.
+	* iconvdata/euc-jisx0213.c (ONE_DIRECTION): Define.
+	* iconvdata/euc-jp-ms.c (ONE_DIRECTION): Define.
+	* iconvdata/euc-jp.c (ONE_DIRECTION): Define.
+	* iconvdata/euc-kr.c (ONE_DIRECTION): Define.
+	* iconvdata/euc-tw.c (ONE_DIRECTION): Define.
+	* iconvdata/gb18030.c (ONE_DIRECTION): Define.
+	* iconvdata/gbbig5.c (ONE_DIRECTION): Define.
+	* iconvdata/gbgbk.c (ONE_DIRECTION): Define.
+	* iconvdata/gbk.c (ONE_DIRECTION): Define.
+	* iconvdata/ibm1364.c (ONE_DIRECTION): Define.
+	* iconvdata/ibm930.c (ONE_DIRECTION): Define.
+	* iconvdata/ibm932.c (ONE_DIRECTION): Define.
+	* iconvdata/ibm933.c (ONE_DIRECTION): Define.
+	* iconvdata/ibm935.c (ONE_DIRECTION): Define.
+	* iconvdata/ibm937.c (ONE_DIRECTION): Define.
+	* iconvdata/ibm939.c (ONE_DIRECTION): Define.
+	* iconvdata/ibm943.c (ONE_DIRECTION): Define.
+	* iconvdata/iso-2022-cn-ext.c (ONE_DIRECTION): Define.
+	* iconvdata/iso-2022-cn.c (ONE_DIRECTION): Define.
+	* iconvdata/iso-2022-jp-3.c (ONE_DIRECTION): Define.
+	* iconvdata/iso-2022-jp.c (ONE_DIRECTION): Define.
+	* iconvdata/iso-2022-kr.c (ONE_DIRECTION): Define.
+	* iconvdata/iso646.c (ONE_DIRECTION): Define.
+	* iconvdata/iso8859-1.c (ONE_DIRECTION): Define.
+	* iconvdata/iso_11548-1.c (ONE_DIRECTION): Define.
+	* iconvdata/iso_6937-2.c (ONE_DIRECTION): Define.
+	* iconvdata/iso_6937.c (ONE_DIRECTION): Define.
+	* iconvdata/johab.c (ONE_DIRECTION): Define.
+	* iconvdata/shift_jisx0213.c (ONE_DIRECTION): Define.
+	* iconvdata/sjis.c (ONE_DIRECTION): Define.
+	* iconvdata/t.61.c (ONE_DIRECTION): Define.
+	* iconvdata/tcvn5712-1.c (ONE_DIRECTION): Define.
+	* iconvdata/tscii.c (ONE_DIRECTION): Define.
+	* iconvdata/uhc.c (ONE_DIRECTION): Define.
+	* iconvdata/unicode.c (ONE_DIRECTION): Define.
+	* iconvdata/utf-16.c (ONE_DIRECTION): Define.
+	* iconvdata/utf-32.c (ONE_DIRECTION): Define.
+	* iconvdata/utf-7.c (ONE_DIRECTION): Define.
+
 2014-05-01  Roland McGrath  <roland@hack.frob.com>
 
 	* libio/libioP.h [!_IO_USE_OLD_IO_FILE && !_G_IO_NO_BACKWARD_COMPAT]

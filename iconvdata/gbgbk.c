@@ -32,6 +32,7 @@
 #define MAX_NEEDED_FROM		2
 #define MIN_NEEDED_TO		1
 #define MAX_NEEDED_TO		2
+#define ONE_DIRECTION		0
 
 
 /* First define the conversion function from GBK to GB2312.  */

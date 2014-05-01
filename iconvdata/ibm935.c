@@ -31,6 +31,7 @@
 #define CHARSET_NAME	"IBM935//"
 #define FROM_LOOP	from_ibm935
 #define TO_LOOP		to_ibm935
+#define ONE_DIRECTION			0
 #define FROM_LOOP_MIN_NEEDED_FROM	1
 #define FROM_LOOP_MAX_NEEDED_FROM	2
 #define FROM_LOOP_MIN_NEEDED_TO		4

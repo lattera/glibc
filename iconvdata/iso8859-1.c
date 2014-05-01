@@ -28,6 +28,7 @@
 #define DEFINE_FINI		1
 #define MIN_NEEDED_FROM		1
 #define MIN_NEEDED_TO		4
+#define ONE_DIRECTION		0
 
 /* First define the conversion function from ISO 8859-1 to UCS4.  */
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM

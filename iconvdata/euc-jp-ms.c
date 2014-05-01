@@ -4641,6 +4641,7 @@ static const unsigned char from_ucs4_extra[229][2] =
 #define MIN_NEEDED_FROM		1
 #define MAX_NEEDED_FROM		3
 #define MIN_NEEDED_TO		4
+#define ONE_DIRECTION		0
 
 
 /* First define the conversion function from EUC-JP-MS to UCS4.  */

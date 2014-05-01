@@ -4320,6 +4320,7 @@ static const char from_ucs4_extra[0x100][2] =
 #define MIN_NEEDED_FROM		1
 #define MAX_NEEDED_FROM		2
 #define MIN_NEEDED_TO		4
+#define ONE_DIRECTION		0
 
 /* First define the conversion function from SJIS to UCS4.  */
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM

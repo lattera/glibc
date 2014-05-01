@@ -55,6 +55,7 @@
 #else
 # define MAX_NEEDED_TO	4
 #endif
+#define ONE_DIRECTION	0
 #define PREPARE_LOOP \
   int save_curcs;							      \
   int *curcsp = &data->__statep->__count;

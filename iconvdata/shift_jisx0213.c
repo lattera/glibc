@@ -43,6 +43,7 @@
 #define TO_LOOP			to_shift_jisx0213
 #define DEFINE_INIT		1
 #define DEFINE_FINI		1
+#define ONE_DIRECTION		0
 #define FROM_LOOP_MIN_NEEDED_FROM	1
 #define FROM_LOOP_MAX_NEEDED_FROM	2
 #define FROM_LOOP_MIN_NEEDED_TO		4

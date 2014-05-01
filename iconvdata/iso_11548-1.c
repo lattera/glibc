@@ -29,6 +29,7 @@
 #define DEFINE_FINI		1
 #define MIN_NEEDED_FROM		1
 #define MIN_NEEDED_TO		4
+#define ONE_DIRECTION		0
 
 #define BRAILLE_UCS_BASE	0x2800
 

@@ -120,6 +120,7 @@ base64 (unsigned int i)
 #define MAX_NEEDED_FROM		6
 #define MIN_NEEDED_TO		4
 #define MAX_NEEDED_TO		4
+#define ONE_DIRECTION		0
 #define PREPARE_LOOP \
   mbstate_t saved_state;						      \
   mbstate_t *statep = data->__statep;

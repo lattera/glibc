@@ -4784,6 +4784,7 @@ const char __from_big5_to_gb2312 [13973][2] =
 #define MAX_NEEDED_FROM		2
 #define MIN_NEEDED_TO		1
 #define MAX_NEEDED_TO		2
+#define ONE_DIRECTION		0
 
 
 /* First define the conversion function from GB2312 to BIG5.  */

@@ -31,6 +31,7 @@
 #define MIN_NEEDED_FROM		1
 #define MAX_NEEDED_FROM		4
 #define MIN_NEEDED_TO		4
+#define ONE_DIRECTION		0
 
 
 /* First define the conversion function from EUC-TW to UCS4.  */

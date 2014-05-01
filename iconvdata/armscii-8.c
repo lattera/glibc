@@ -28,6 +28,7 @@
 #define DEFINE_FINI		1
 #define MIN_NEEDED_FROM		1
 #define MIN_NEEDED_TO		4
+#define ONE_DIRECTION		0
 
 
 static const uint16_t map_from_armscii_8[0xfe - 0xa2 + 1] =

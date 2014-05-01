@@ -42,6 +42,7 @@
 #define MAX_NEEDED_FROM		4
 #define MIN_NEEDED_TO		4
 #define MAX_NEEDED_TO		4
+#define ONE_DIRECTION		0
 #define PREPARE_LOOP \
   int save_set;								      \
   int *setp = &data->__statep->__count;					      \

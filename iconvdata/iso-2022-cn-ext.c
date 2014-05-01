@@ -47,6 +47,7 @@
 #define CHARSET_NAME		"ISO-2022-CN-EXT//"
 #define DEFINE_INIT		1
 #define DEFINE_FINI		1
+#define ONE_DIRECTION		0
 #define FROM_LOOP		from_iso2022cn_ext_loop
 #define TO_LOOP			to_iso2022cn_ext_loop
 #define FROM_LOOP_MIN_NEEDED_FROM	1

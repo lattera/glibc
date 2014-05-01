@@ -37,6 +37,7 @@
 #define DEFINE_FINI		0
 #define MIN_NEEDED_FROM		4
 #define MIN_NEEDED_TO		4
+#define ONE_DIRECTION		0
 #define FROM_DIRECTION		(dir == from_utf32)
 #define PREPARE_LOOP \
   enum direction dir = ((struct utf32_data *) step->__data)->dir;	      \

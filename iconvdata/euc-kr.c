@@ -66,6 +66,7 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 #define MIN_NEEDED_FROM		1
 #define MAX_NEEDED_FROM		2
 #define MIN_NEEDED_TO		4
+#define ONE_DIRECTION		0
 
 
 /* First define the conversion function from EUC-KR to UCS4.  */

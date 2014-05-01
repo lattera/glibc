@@ -24107,6 +24107,7 @@ static const unsigned char __ucs_to_gb18030_tab2[][2] =
 #define MIN_NEEDED_FROM		1
 #define MAX_NEEDED_FROM		4
 #define MIN_NEEDED_TO		4
+#define ONE_DIRECTION		0
 
 
 /* First define the conversion function from GB18030 to UCS4.  */
