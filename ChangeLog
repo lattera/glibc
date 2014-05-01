@@ -1,3 +1,9 @@
+2014-05-01  Will Newton  <will.newton@linaro.org>
+	    Bernard Ogden  <bernie.ogden@linaro.org>
+
+	[BZ #15119]
+	* sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.c: Remove file.
+
 2014-04-30  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/fenv_private.h (HAVE_RM_CTX): Define.
