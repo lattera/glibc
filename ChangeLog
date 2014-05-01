@@ -1,3 +1,11 @@
+2014-05-01  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #16890]
+	* stdio-common/vfprintf.c (process_arg) [%p]: Mark string as wide
+	when compiling wprintf.
+	* stdio-common/tstdiomisc.c (t3): New function.
+	(main): Call it.
+
 2014-05-01  Steve Ellcey  <sellcey@mips.com>
 
 	* intl/iconv/skeleton.c (ONE_DIRECTION): Remove define.

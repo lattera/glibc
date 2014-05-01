@@ -46,6 +46,24 @@ t2 (void)
   return result;
 }
 
+static int
+t3 (void)
+{
+  char buf[80];
+  wchar_t wbuf[80];
+  int result = 0;
+  int retval;
+
+  retval = sprintf (buf, "%p", (char *) NULL);
+  result |= retval != 5 || strcmp (buf, "(nil)") != 0;
+
+  retval = swprintf (wbuf, sizeof (wbuf) / sizeof (wbuf[0]),
+		     L"%p", (char *) NULL);
+  result |= retval != 5 || wcscmp (wbuf, L"(nil)") != 0;
+
+  return result;
+}
+
 volatile double qnanval;
 volatile long double lqnanval;
 /* A sNaN is only guaranteed to be representable in variables with static (or
@@ -243,6 +261,7 @@ main (int argc, char *argv[])
 
   result |= t1 ();
   result |= t2 ();
+  result |= t3 ();
   result |= F ();
 
   result |= fflush (stdout) == EOF;

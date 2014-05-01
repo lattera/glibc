@@ -936,7 +936,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    /* Make sure the full string "(nil)" is printed.  */	      \
 	    if (prec < 5)						      \
 	      prec = 5;							      \
-	    is_long = 0;	/* This is no wide-char string.  */	      \
+	    /* This is a wide string iff compiling wprintf.  */		      \
+	    is_long = sizeof (CHAR_T) > 1;				      \
 	    goto LABEL (print_string);					      \
 	  }								      \
       }									      \
