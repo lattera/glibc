@@ -1,3 +1,11 @@
+2014-05-01  Roland McGrath  <roland@hack.frob.com>
+
+	* nptl/sysdeps/pthread/bits/libc-lock.h
+	[_LIBC && (!NOT_IN_libc || IS_IN_libpthread)]
+	(__libc_lock_define_initialized_recursive): Always define using
+	initializer.  Modern compilers treat uninitialized (implicit zero) and
+	explicit zero initializers the same (i.e. put the datum in bss).
+
 2014-05-01  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* nscd/nscd-client.h: Include <string.h>.

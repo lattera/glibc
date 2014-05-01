@@ -48,13 +48,8 @@ typedef struct __libc_lock_recursive_opaque__ __libc_lock_recursive_t;
 /* Define an initialized recursive lock variable NAME with storage
    class CLASS.  */
 #if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
-# if LLL_LOCK_INITIALIZER == 0
-#  define __libc_lock_define_initialized_recursive(CLASS,NAME) \
-  CLASS __libc_lock_recursive_t NAME;
-# else
-#  define __libc_lock_define_initialized_recursive(CLASS,NAME) \
+# define __libc_lock_define_initialized_recursive(CLASS, NAME) \
   CLASS __libc_lock_recursive_t NAME = _LIBC_LOCK_RECURSIVE_INITIALIZER;
-# endif
 # define _LIBC_LOCK_RECURSIVE_INITIALIZER \
   { LLL_LOCK_INITIALIZER, 0, NULL }
 #else
