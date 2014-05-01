@@ -1,3 +1,7 @@
+2014-05-01  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* nscd/nscd-client.h: Include <string.h>.
+
 2014-05-01  David S. Miller  <davem@davemloft.net>
 
 	[BZ #16885]
