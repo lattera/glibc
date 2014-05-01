@@ -1,5 +1,8 @@
 2014-05-01  Roland McGrath  <roland@hack.frob.com>
 
+	* libio/libioP.h [!_IO_USE_OLD_IO_FILE && !_G_IO_NO_BACKWARD_COMPAT]
+	(_IO_JUMPS_OFFSET): Define to 0.
+
 	* nptl/sysdeps/pthread/bits/libc-lock.h
 	[_LIBC && (!NOT_IN_libc || IS_IN_libpthread)]
 	(__libc_lock_define_initialized_recursive): Always define using

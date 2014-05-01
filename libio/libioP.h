@@ -100,6 +100,8 @@ extern "C" {
 #if (!defined _IO_USE_OLD_IO_FILE \
      && (!defined _G_IO_NO_BACKWARD_COMPAT || _G_IO_NO_BACKWARD_COMPAT == 0))
 # define _IO_JUMPS_OFFSET 1
+#else
+# define _IO_JUMPS_OFFSET 0
 #endif
 
 #define _IO_JUMPS(THIS) (THIS)->vtable
