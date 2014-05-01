@@ -68,6 +68,7 @@ __gconv_btwoc_ascii (struct __gconv_step *step, unsigned char c)
 #define FROM_LOOP		internal_ucs4_loop
 #define TO_LOOP			internal_ucs4_loop /* This is not used.  */
 #define FUNCTION_NAME		__gconv_transform_internal_ucs4
+#define ONE_DIRECTION		0
 
 
 static inline int
@@ -222,6 +223,7 @@ internal_ucs4_loop_single (struct __gconv_step *step,
 #define FROM_LOOP		ucs4_internal_loop
 #define TO_LOOP			ucs4_internal_loop /* This is not used.  */
 #define FUNCTION_NAME		__gconv_transform_ucs4_internal
+#define ONE_DIRECTION		0
 
 
 static inline int
@@ -433,6 +435,7 @@ ucs4_internal_loop_single (struct __gconv_step *step,
 #define FROM_LOOP		internal_ucs4le_loop
 #define TO_LOOP			internal_ucs4le_loop /* This is not used.  */
 #define FUNCTION_NAME		__gconv_transform_internal_ucs4le
+#define ONE_DIRECTION		0
 
 
 static inline int
@@ -590,6 +593,7 @@ internal_ucs4le_loop_single (struct __gconv_step *step,
 #define FROM_LOOP		ucs4le_internal_loop
 #define TO_LOOP			ucs4le_internal_loop /* This is not used.  */
 #define FUNCTION_NAME		__gconv_transform_ucs4le_internal
+#define ONE_DIRECTION		0
 
 
 static inline int

@@ -42,6 +42,7 @@ struct gap
 #define DEFINE_FINI		1
 #define MIN_NEEDED_FROM		1
 #define MIN_NEEDED_TO		4
+#define ONE_DIRECTION		0
 
 
 /* First define the conversion function from the 8bit charset to UCS4.  */

@@ -1,5 +1,12 @@
 2014-05-01  Steve Ellcey  <sellcey@mips.com>
 
+	* intl/iconv/skeleton.c (ONE_DIRECTION): Remove define.
+	* iconv/gconv_simple.c (ONE_DIRECTION): Define.
+	* iconvdata/8bit-gap.c (ONE_DIRECTION): Ditto.
+	* iconvdata/8bit-generic.c (ONE_DIRECTION): Ditto.
+
+2014-05-01  Steve Ellcey  <sellcey@mips.com>
+
 	* stdlib/longlong.h: Updated from GCC.
 
 2014-05-01  Will Newton  <will.newton@linaro.org>

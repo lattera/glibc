@@ -163,11 +163,6 @@
 # endif
 #endif
 
-#ifndef ONE_DIRECTION
-# define ONE_DIRECTION 0
-#endif
-
-
 /* How many bytes are needed at most for the from-charset.  */
 #ifndef MAX_NEEDED_FROM
 # define MAX_NEEDED_FROM	MIN_NEEDED_FROM
