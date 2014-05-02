@@ -47,8 +47,7 @@ END_GEN_TB (__bzero_ppc,TB_TOCLESS)
   END_2(__memset_ppc)
 
 # undef libc_hidden_builtin_def
-# define libc_hidden_builtin_def(name)				\
-  .globl __GI_memset; __GI_memset = __memset_ppc
+# define libc_hidden_builtin_def(name)
 #endif
 
 /* Do not implement __bzero at powerpc64/memset.S.  */

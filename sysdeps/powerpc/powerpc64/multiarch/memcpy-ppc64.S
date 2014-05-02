@@ -36,8 +36,7 @@
    END_2(__memcpy_ppc)
 
 # undef libc_hidden_builtin_def
-# define libc_hidden_builtin_def(name)				\
-   .globl __GI_memcpy; __GI_memcpy = __memcpy_ppc
+# define libc_hidden_builtin_def(name)
 #endif
 
 #include <sysdeps/powerpc/powerpc64/memcpy.S>

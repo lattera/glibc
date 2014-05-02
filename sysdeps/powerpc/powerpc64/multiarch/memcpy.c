@@ -20,20 +20,23 @@
    DSO.  In static binaries we need memcpy before the initialization
    happened.  */
 #if defined SHARED && !defined NOT_IN_libc
+/* Redefine memcpy so that the compiler won't complain about the type
+   mismatch with the IFUNC selector in strong_alias, below.  */
+# undef memcpy
+# define memcpy __redirect_memcpy
 # include <string.h>
-# include <shlib-compat.h>
 # include "init-arch.h"
 
-extern __typeof (memcpy) __memcpy_ppc attribute_hidden;
-extern __typeof (memcpy) __memcpy_power4 attribute_hidden;
-extern __typeof (memcpy) __memcpy_cell attribute_hidden;
-extern __typeof (memcpy) __memcpy_power6 attribute_hidden;
-extern __typeof (memcpy) __memcpy_a2 attribute_hidden;
-extern __typeof (memcpy) __memcpy_power7 attribute_hidden;
+extern __typeof (__redirect_memcpy) __libc_memcpy;
 
-/* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
-   ifunc symbol properly.  */
-libc_ifunc (memcpy,
+extern __typeof (__redirect_memcpy) __memcpy_ppc attribute_hidden;
+extern __typeof (__redirect_memcpy) __memcpy_power4 attribute_hidden;
+extern __typeof (__redirect_memcpy) __memcpy_cell attribute_hidden;
+extern __typeof (__redirect_memcpy) __memcpy_power6 attribute_hidden;
+extern __typeof (__redirect_memcpy) __memcpy_a2 attribute_hidden;
+extern __typeof (__redirect_memcpy) __memcpy_power7 attribute_hidden;
+
+libc_ifunc (__libc_memcpy,
             (hwcap & PPC_FEATURE_HAS_VSX)
             ? __memcpy_power7 :
 	      (hwcap & PPC_FEATURE_ARCH_2_06)
@@ -45,4 +48,8 @@ libc_ifunc (memcpy,
 		    (hwcap & PPC_FEATURE_POWER4)
 		    ? __memcpy_power4
             : __memcpy_ppc);
+
+#undef memcpy
+strong_alias (__libc_memcpy, memcpy);
+libc_hidden_ver (__libc_memcpy, memcpy);
 #endif

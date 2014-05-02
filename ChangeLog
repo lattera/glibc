@@ -1,3 +1,18 @@
+2014-05-04  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memchr-ppc32.c
+	[libc_hidden_builtin_def]: Define to empty value.
+	* sysdeps/powerpc/powerpc64/multiarch/memcpy-ppc64.S:
+	[libc_hidden_builtin_def]: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memset-ppc64.S:
+	[libc_hidden_builtin_def]: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strlen-ppc64.S:
+	[libc_hidden_builtin_def]: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memcpy.c (memcpy): Redefined to
+	__redirect_memcpy and define ifunc as default hidden symbol.
+	* sysdeps/powerpc/powerpc64/multiarch/memset.c (memset): Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strlen.c (strlen): Likewise.
+
 2014-05-04  Adam Conrad  <adconrad@0c3.net>
 
 	* locale/iso-4217.def: Reintroduce XDR currency.

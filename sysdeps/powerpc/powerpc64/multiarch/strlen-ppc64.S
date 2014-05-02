@@ -35,8 +35,7 @@
   END_2(__strlen_ppc)
 
 # undef libc_hidden_builtin_def
-# define libc_hidden_builtin_def(name)				\
-    .globl __GI_strlen; __GI_strlen = __strlen_ppc
+# define libc_hidden_builtin_def(name)
 #endif
 
 #include <sysdeps/powerpc/powerpc64/strlen.S>

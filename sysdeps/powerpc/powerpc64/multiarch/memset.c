@@ -18,18 +18,24 @@
 
 /* Define multiple versions only for definition in libc.  */
 #if defined SHARED && !defined NOT_IN_libc
+/* Redefine memset so that the compiler won't complain about the type
+   mismatch with the IFUNC selector in strong_alias, below.  */
+# undef memset
+# define memset __redirect_memset
 # include <string.h>
 # include <shlib-compat.h>
 # include "init-arch.h"
 
-extern __typeof (memset) __memset_ppc attribute_hidden;
-extern __typeof (memset) __memset_power4 attribute_hidden;
-extern __typeof (memset) __memset_power6 attribute_hidden;
-extern __typeof (memset) __memset_power7 attribute_hidden;
+extern __typeof (__redirect_memset) __libc_memset;
+
+extern __typeof (__redirect_memset) __memset_ppc attribute_hidden;
+extern __typeof (__redirect_memset) __memset_power4 attribute_hidden;
+extern __typeof (__redirect_memset) __memset_power6 attribute_hidden;
+extern __typeof (__redirect_memset) __memset_power7 attribute_hidden;
 
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
-libc_ifunc (memset,
+libc_ifunc (__libc_memset,
             (hwcap & PPC_FEATURE_HAS_VSX)
             ? __memset_power7 :
 	      (hwcap & PPC_FEATURE_ARCH_2_05)
@@ -37,4 +43,8 @@ libc_ifunc (memset,
 		  (hwcap & PPC_FEATURE_POWER4)
 		? __memset_power4
             : __memset_ppc);
+
+#undef memset
+strong_alias (__libc_memset, memset);
+libc_hidden_ver (__libc_memset, memset);
 #endif

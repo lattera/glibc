@@ -17,15 +17,25 @@
    <http://www.gnu.org/licenses/>.  */
 
 #if defined SHARED && !defined NOT_IN_libc
+/* Redefine strlen so that the compiler won't complain about the type
+   mismatch with the IFUNC selector in strong_alias, below.  */
+# undef strlen
+# define strlen __redirect_strlen
 # include <string.h>
 # include <shlib-compat.h>
 # include "init-arch.h"
 
-extern __typeof (strlen) __strlen_ppc attribute_hidden;
-extern __typeof (strlen) __strlen_power7 attribute_hidden;
+extern __typeof (__redirect_strlen) __libc_strlen;
 
-libc_ifunc (strlen,
+extern __typeof (__redirect_strlen) __strlen_ppc attribute_hidden;
+extern __typeof (__redirect_strlen) __strlen_power7 attribute_hidden;
+
+libc_ifunc (__libc_strlen,
             (hwcap & PPC_FEATURE_HAS_VSX)
             ? __strlen_power7
             : __strlen_ppc);
+
+#undef strlen
+strong_alias (__libc_strlen, strlen)
+libc_hidden_ver (__libc_strlen, strlen)
 #endif
