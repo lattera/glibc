@@ -47,6 +47,12 @@
 #define bit_XMM_state  (1 << 1)
 #define bit_YMM_state  (2 << 1)
 
+/* The integer bit array index for the first set of internal feature bits.  */
+# define FEATURE_INDEX_1 0
+
+/* The current maximum size of the feature integer bit array.  */
+# define FEATURE_INDEX_MAX 1
+
 #ifdef	__ASSEMBLER__
 
 # include <ifunc-defines.h>
@@ -80,13 +86,6 @@ enum
     COMMON_CPUID_INDEX_80000001,	/* for AMD */
     /* Keep the following line at the end.  */
     COMMON_CPUID_INDEX_MAX
-  };
-
-enum
-  {
-    FEATURE_INDEX_1 = 0,
-    /* Keep the following line at the end.  */
-    FEATURE_INDEX_MAX
   };
 
 extern struct cpu_features

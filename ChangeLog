@@ -1,3 +1,9 @@
+2014-05-02  Carlos O'Donell  <carlos@redhat.com>
+
+	* sysdeps/x86_64/multiarch/init-arch.h:	Define FEATURE_INDEX_1 to 0,
+	and FEATURE_INDEX_MAX to 1.
+	[!__ASSEMBLER__]: Remove anonymous enum for FEATURE_INDEX_*.
+
 2014-05-01  Steve Ellcey  <sellcey@mips.com>
 
 	* iconvdata/ansi_x3.110.c (ONE_DIRECTION): Define.
