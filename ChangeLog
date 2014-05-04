@@ -1,3 +1,7 @@
+2014-05-04  Allan McRae  <allan@archlinux.org>
+
+	* po/eo.po: Update Esperanto translation from translation project.
+
 2014-05-02  Carlos O'Donell  <carlos@redhat.com>
 
 	* sysdeps/x86_64/multiarch/init-arch.h:	Define FEATURE_INDEX_1 to 0,

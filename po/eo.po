@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libc 2.18.90.20140105\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-01-05 17:40+1000\n"
-"PO-Revision-Date: 2014-01-08 21:23+0100\n"
+"PO-Revision-Date: 2014-04-22 22:50+0200\n"
 "Last-Translator: Benno Schulenberg <benno@vertaalt.nl>\n"
 "Language-Team: Esperanto <translation-team-eo@lists.sourceforge.net>\n"
 "Language: eo\n"
@@ -967,7 +967,7 @@ msgstr "mankas dosieraj argumentoj"
 #. TRANS expected to already exist.
 #: elf/ldd.bash.in:147 sysdeps/gnu/errlist.c:36
 msgid "No such file or directory"
-msgstr "Dosiero aü dosierujo ne ekzistas"
+msgstr "Dosiero aŭ dosierujo ne ekzistas"
 
 #: elf/ldd.bash.in:150 inet/rcmd.c:488
 msgid "not regular file"
@@ -992,7 +992,7 @@ msgstr "eraro: vi ne havas permeson legi"
 #: elf/pldd-xx.c:105
 #, c-format
 msgid "cannot find program header of process"
-msgstr ""
+msgstr "ne eblas trovi programĉapon de procezo"
 
 #: elf/pldd-xx.c:110
 #, c-format
@@ -1055,7 +1055,7 @@ msgstr "ne eblas malfermi %s/task"
 #: elf/pldd.c:145
 #, c-format
 msgid "cannot prepare reading %s/task"
-msgstr ""
+msgstr "ne eblas prepari legado de %s/task"
 
 #: elf/pldd.c:158
 #, c-format
@@ -1070,7 +1070,7 @@ msgstr ""
 #: elf/pldd.c:261
 #, c-format
 msgid "cannot get information about process %lu"
-msgstr ""
+msgstr "ne eblas ekhavi informon pri procezo %lu"
 
 #: elf/pldd.c:274
 #, c-format
@@ -1080,7 +1080,7 @@ msgstr "procezo %lu ne estas ELF-programo"
 #: elf/readelflib.c:34
 #, c-format
 msgid "file %s is truncated\n"
-msgstr ""
+msgstr "dosiero %s trunkiĝis\n"
 
 #: elf/readelflib.c:66
 #, c-format
@@ -1105,7 +1105,7 @@ msgstr ""
 #: elf/readelflib.c:108
 #, c-format
 msgid "more than one dynamic segment\n"
-msgstr ""
+msgstr "pli ol unu dinamika segmento\n"
 
 #: elf/readlib.c:96
 #, c-format
@@ -1191,7 +1191,7 @@ msgstr ""
 
 #: elf/sotruss.ksh:46
 msgid "Mandatory arguments to long options are also mandatory for any corresponding\\nshort options.\\n"
-msgstr ""
+msgstr "Endaj argumentoj por longaj opcioj ankaŭ endas por korespondaj mallongaj opcioj.\\n"
 
 #: elf/sotruss.ksh:55
 msgid "%s: option requires an argument -- '%s'\\n"
@@ -1576,7 +1576,7 @@ msgstr "malsukcesis eltrovi statinformon"
 
 #: inet/rcmd.c:493
 msgid "cannot open"
-msgstr ""
+msgstr "ne eblas malfermi"
 
 #: inet/rcmd.c:495
 msgid "fstat failed"
@@ -5788,7 +5788,7 @@ msgstr "Eraro de en-eligo"
 #. TRANS computer.
 #: sysdeps/gnu/errlist.c:82
 msgid "No such device or address"
-msgstr "Tiu aparato aü adreso ne ekzistas"
+msgstr "Tiu aparato aŭ adreso ne ekzistas"
 
 #. TRANS Argument list too long; used when the arguments passed to a new program
 #. TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
@@ -6311,7 +6311,7 @@ msgstr "Ne subtenatas"
 #. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
 #: sysdeps/gnu/errlist.c:931
 msgid "Invalid or incomplete multibyte or wide character"
-msgstr "Nevalida aü nekompleta plurbajta aü larĝa signo"
+msgstr "Nevalida aŭ nekompleta plurbajta aŭ larĝa signo"
 
 #. TRANS On @gnuhurdsystems{}, servers supporting the @code{term} protocol return
 #. TRANS this error for certain operations when the caller is not in the
