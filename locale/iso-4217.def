@@ -162,6 +162,7 @@ DEFINE_INT_CURR("VUV")		/* Vanuatu Vatu  */
 DEFINE_INT_CURR("WST")		/* Samoa Tala  */
 DEFINE_INT_CURR("XAF")		/* Central African Franc (United Republic of Cameroon, Central African Republic, Chad, Congo, Gabon)  */
 DEFINE_INT_CURR("XCD")		/* East Caribbean Dollar (Antiqua, Dominica, Grenada, Montserrat, St. Kitts-Nevis-Anguilla, Saint Lucia, Saint Vincent and the Grenadines)  */
+DEFINE_INT_CURR("XDR")		/* International Monetary Fund  */
 DEFINE_INT_CURR("XOF")		/* West African Franc (Benin, Ivory Coast, Niger, Senegal, Togo, Upper Volta)  */
 DEFINE_INT_CURR("XPF")		/* French polynesia, New Caledonia, Wallis and Futuna Islands  */
 DEFINE_INT_CURR("YER")		/* Yemeni Rial  */
