@@ -20,9 +20,25 @@
 int
 pthread_spin_init (pthread_spinlock_t *lock, int pshared)
 {
-  int tmp = 0;
-  /* This should be a memory barrier to newer compilers */
-  __asm__ __volatile__ ("stw,ma %1,0(%0)"
-                        : : "r" (lock), "r" (tmp) : "memory");
+  /* CONCURRENCTY NOTES:
+
+     The atomic_exchange_rel synchronizes-with the atomic_exhange_acq in
+     pthread_spin_lock.
+
+     On hppa we must not use a plain `stw` to reset the guard lock.  This
+     has to do with the kernel compare-and-swap helper that is used to
+     implement all of the atomic operations.
+
+     The kernel CAS helper uses its own internal locks and that means that
+     to create a true happens-before relationship between any two threads,
+     the second thread must observe the internal lock having a value of 0
+     (it must attempt to take the lock with ldcw).  This creates the
+     ordering required for a second thread to observe the effects of the
+     RMW of the kernel CAS helper in any other thread.
+
+     Therefore if a variable is used in an atomic macro it must always be
+     manipulated with atomic macros in order for memory ordering rules to
+     be preserved.  */
+  atomic_exchange_rel (lock, 0);
   return 0;
 }

@@ -1,3 +1,10 @@
+2016-01-06  John David Anglin  <dave.anglin@bell.net>
+
+	* sysdeps/hppa/nptl/pthread_spin_init.c (pthread_spin_init): Replace
+	asm stw with atomic_exchange_rel.  Add explanatory comment.
+	* sysdeps/hppa/nptl/pthread_spin_unlock.c (pthread_spin_unlock):
+	Likewise.
+
 2016-01-05  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19122]
