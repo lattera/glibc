@@ -1,3 +1,10 @@
+2014-05-05  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/gnu/errlist.awk (BEGIN): Emit an initial #define of ERR_MAX
+	to 0, so the first #if test emitted later doesn't see it undefined.
+	(END): Emit "!defined ERRLIST_NO_COMPAT" to match what BEGIN does.
+	* sysdeps/gnu/errlist.c: Regenerated.
+
 2014-05-04  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power4/multiarch/memchr-ppc32.c

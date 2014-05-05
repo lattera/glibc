@@ -52,6 +52,7 @@ BEGIN {
     print "#ifdef ERR_MAX";
     print "# define ERRLIST_SIZE ERR_MAX + 1";
     print "#else"
+    print "# define ERR_MAX 0";
     print "# define ERRLIST_SIZE";
     print "#endif";
 
@@ -109,7 +110,7 @@ END {
   print "  (sizeof _sys_errlist_internal / sizeof _sys_errlist_internal [0])";
   print "const int _sys_nerr_internal = NERR;"
   print "";
-  print "#if !defined NOT_IN_libc && !ERRLIST_NO_COMPAT";
+  print "#if !defined NOT_IN_libc && !defined ERRLIST_NO_COMPAT";
   print "# include <errlist-compat.c>";
   print "#endif";
   print "";
