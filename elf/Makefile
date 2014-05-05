@@ -70,8 +70,8 @@ install-others	= $(inst_rtlddir)/$(rtld-installed-name)
 install-bin-script = ldd
 endif
 
-others		= sprof sln pldd
-install-bin	= sprof pldd
+others		= sprof sln
+install-bin	= sprof
 others-static   = sln
 install-rootsbin = sln
 sln-modules	:= static-stubs
@@ -87,8 +87,6 @@ ldconfig-modules := cache readlib xmalloc xstrdup chroot_canon static-stubs
 extra-objs	+= $(ldconfig-modules:=.o)
 endif
 endif
-
-pldd-modules := xmalloc
 
 # To find xmalloc.c and xstrdup.c
 vpath %.c ../locale/programs
@@ -429,8 +427,6 @@ $(objpfx)sprof: $(libdl)
 $(objpfx)sln: $(sln-modules:%=$(objpfx)%.o)
 
 $(objpfx)ldconfig: $(ldconfig-modules:%=$(objpfx)%.o)
-
-$(objpfx)pldd: $(pldd-modules:%=$(objpfx)%.o)
 
 SYSCONF-FLAGS := -D'SYSCONFDIR="$(sysconfdir)"'
 CFLAGS-ldconfig.c = $(SYSCONF-FLAGS) -D'LIBDIR="$(libdir)"' \

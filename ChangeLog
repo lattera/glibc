@@ -1,5 +1,12 @@
 2014-05-05  Roland McGrath  <roland@hack.frob.com>
 
+	* elf/Makefile (others, install-bin): Remove pldd.
+	(pldd-modules): Variable removed.
+	($(objpfx)pldd): Target removed.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir) = elf]
+	(others, install-bin): Append pldd here.
+	($(objpfx)pldd): New target.
+
 	* sysdeps/gnu/errlist.awk (BEGIN): Emit an initial #define of ERR_MAX
 	to 0, so the first #if test emitted later doesn't see it undefined.
 	(END): Emit "!defined ERRLIST_NO_COMPAT" to match what BEGIN does.
