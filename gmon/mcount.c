@@ -69,8 +69,8 @@ _MCOUNT_DECL(frompc, selfpc)	/* _mcount; may be static, inline, etc */
 	 * check that we are profiling
 	 * and that we aren't recursively invoked.
 	 */
-	if (catomic_compare_and_exchange_bool_acq (&p->state, GMON_PROF_BUSY,
-						   GMON_PROF_ON))
+	if (atomic_compare_and_exchange_bool_acq (&p->state, GMON_PROF_BUSY,
+						  GMON_PROF_ON))
 	  return;
 
 	/*

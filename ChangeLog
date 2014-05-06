@@ -1,3 +1,10 @@
+2014-05-06  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #16912]
+	* gmon/mcount.c (_MCOUNT_DECL): Use
+	atomic_compare_and_exchange_bool_acq instead of
+	catomic_compare_and_exchange_bool_acq.
+
 2014-05-05  Roland McGrath  <roland@hack.frob.com>
 
 	* elf/Makefile (others, install-bin): Remove pldd.
