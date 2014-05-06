@@ -1,3 +1,8 @@
+2014-05-06  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/arm/nptl/unwind.h: File moved to ...
+	* sysdeps/arm/unwind.h: ... here.
+
 2014-05-06  Aurelien Jarno  <aurelien@aurel32.net>
 
         [BZ# 16916]
