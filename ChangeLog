@@ -1,3 +1,20 @@
+2014-05-06  Vidya Ranganathan  <vidya@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power7/strncpy.S: New file: Optimization.
+	* sysdeps/powerpc/powerpc64/multiarch/strncpy.c: New file:
+	multiarch strncpy for PPC64.
+	* sysdeps/powerpc/powerpc64/multiarch/strncpy-ppc64.c: New file
+	* sysdeps/powerpc/powerpc64/multiarch/strncpy-power7.S: New file
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add strpcpy, stpncpy
+	multiarch optimizations.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c:
+	(__libc_ifunc_impl_list): Likewise.
+	* sysdeps/powerpc/powerpc64/power7/stpncpy.S: New file: Optimization.
+	* sysdeps/powerpc/powerpc64/multiarch/stpncpy.c: New file:
+	multiarch stpncpy for PPC64.
+	* sysdeps/powerpc/powerpc64/multiarch/stpncpy-ppc64.c: New file
+	* sysdeps/powerpc/powerpc64/multiarch/stpncpy-power7.S: New file
+
 2014-05-06  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #16912]
