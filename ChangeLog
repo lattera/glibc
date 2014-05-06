@@ -1,3 +1,9 @@
+2014-05-06  Aurelien Jarno  <aurelien@aurel32.net>
+
+        [BZ# 16916]
+        * sysdeps/unix/sysv/linux/sparc/bits/eventfd.h (EFD_SEMAPHORE):
+        Define.
+
 2014-05-06  Vidya Ranganathan  <vidya@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power7/strncpy.S: New file: Optimization.
