@@ -1,3 +1,8 @@
+2014-05-16  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h [__USE_MISC]: Guard
+	BSD terminal modes definitions.
+
 2014-05-16  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/arm/arch-fork.h: New file.

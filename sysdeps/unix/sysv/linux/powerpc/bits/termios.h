@@ -95,8 +95,10 @@ struct termios {
 # define NLDLY	00001400
 # define   NL0	00000000
 # define   NL1	00000400
-# define   NL2	00001000
-# define   NL3	00001400
+# if defined __USE_MISC
+#  define   NL2	00001000
+#  define   NL3	00001400
+# endif
 # define TABDLY	00006000
 # define   TAB0	00000000
 # define   TAB1	00002000
@@ -222,6 +224,8 @@ struct termios {
 #define	TCSADRAIN	1
 #define	TCSAFLUSH	2
 
+#ifdef __USE_MISC
+
 struct sgttyb {
 	char	sg_ispeed;
 	char	sg_ospeed;
@@ -256,6 +260,7 @@ struct ltchars {
 #define TIOCPKT_START		 8
 #define TIOCPKT_NOSTOP		16
 #define TIOCPKT_DOSTOP		32
+
 
 struct winsize {
 	unsigned short ws_row;
@@ -319,3 +324,5 @@ struct termio {
 #define N_HDLC		13	/* synchronous HDLC  */
 #define N_SYNC_PPP	14	/* synchronous PPP  */
 #define	N_HCI		15	/* Bluetooth HCI UART  */
+
+#endif /* __USE_MISC  */
