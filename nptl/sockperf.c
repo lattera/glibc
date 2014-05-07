@@ -71,7 +71,6 @@ client (void *arg)
   struct thread_param *param = arg;
   unsigned int cnt;
   unsigned int nserv = param->nserv;
-  int clisock[nserv];
   struct pollfd servpoll[nserv];
   struct sockaddr_un servaddr;
   socklen_t servlen;
@@ -102,7 +101,7 @@ client (void *arg)
   for (cnt = 0; cnt < nserv; ++cnt)
     {
       servpoll[cnt].fd = socket (AF_UNIX, SOCK_STREAM, 0);
-      if (clisock < 0)
+      if (servpoll[cnt].fd < 0)
 	{
 	  puts ("cannot create socket in client");
 	  return NULL;
