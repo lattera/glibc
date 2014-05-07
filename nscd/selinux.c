@@ -372,7 +372,7 @@ nscd_request_avc_has_perm (int fd, request_type req)
   /* Get the security class for nscd.  If this fails we will likely be
      unable to do anything unless avc_deny_unknown is 0.  */
   sc_nscd = string_to_security_class ("nscd");
-  if (perm == 0 && avc_deny_unknown == 1)
+  if (sc_nscd == 0 && avc_deny_unknown == 1)
     dbg_log (_("Error getting security class for nscd."));
 
   /* Convert permission to AVC bits.  */
