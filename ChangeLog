@@ -1,3 +1,10 @@
+2014-05-07  Steve Ellcey  <sellcey@mips.com>
+
+	[BZ# 16922]
+	* sysdeps/mips/sys/asm.h (INT_SUB): Fix definition.
+	(LONG_SUB): Ditto.
+	(PTR_SUB): Ditto.
+
 2014-05-07  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Advance address pointer
