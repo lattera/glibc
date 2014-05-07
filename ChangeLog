@@ -1,7 +1,13 @@
+2014-05-07  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Advance address pointer
+	when skipping over non-matching result from nscd.
+
 2014-05-07  Ondřej Bílka  <neleai@seznam.cz>
 
 	[BZ #16876]
 	* nptl/sockperf.c (client): Check socket return value.
+
 	[BZ #16877]
 	* nscd/selinux.c (nscd_request_avc_has_perm): Check if there is
 	nscd security class.

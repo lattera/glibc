@@ -710,16 +710,20 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		  struct gaih_addrtuple *addrfree = addrmem;
 		  for (int i = 0; i < air->naddrs; ++i)
 		    {
+		      socklen_t size = (air->family[i] == AF_INET
+					? INADDRSZ : IN6ADDRSZ);
+
 		      if (!((air->family[i] == AF_INET
 			     && req->ai_family == AF_INET6
 			     && (req->ai_flags & AI_V4MAPPED) != 0)
 			    || req->ai_family == AF_UNSPEC
 			    || air->family[i] == req->ai_family))
-			/* Skip over non-matching result.  */
-			continue;
+			{
+			  /* Skip over non-matching result.  */
+			  addrs += size;
+			  continue;
+			}
 
-		      socklen_t size = (air->family[i] == AF_INET
-					? INADDRSZ : IN6ADDRSZ);
 		      if (*pat == NULL)
 			{
 			  *pat = addrfree++;
