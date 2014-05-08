@@ -21,4 +21,8 @@
 
 /* The size of the character arrays used to hold the information
    in a `struct utsname'.  Enlarge this as necessary.  */
-#define	_UTSNAME_LENGTH	1024
+#define	_UTSNAME_LENGTH		1024
+
+/* If nonzero, the size of of the `domainname` field in `struct utsname'.
+   This is zero to indicate that there should be no such field at all.  */
+#define _UTSNAME_DOMAIN_LENGTH	0
