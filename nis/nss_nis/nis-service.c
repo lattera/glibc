@@ -271,6 +271,13 @@ _nss_nis_getservbyname_r (const char *name, const char *protocol,
   /* If the protocol is given, we could try if our NIS server knows
      about services.byservicename map. If yes, we only need one query.  */
   size_t keylen = strlen (name) + (protocol ? 1 + strlen (protocol) : 0);
+  /* Limit key length to the maximum size of an RPC packet.  */
+  if (keylen > UDPMSGSIZE)
+    {
+      *errnop = ERANGE;
+      return NSS_STATUS_UNAVAIL;
+    }
+
   char key[keylen + 1];
 
   /* key is: "name/proto" */
@@ -355,6 +362,13 @@ _nss_nis_getservbyport_r (int port, const char *protocol,
      Otherwise try first port/tcp, then port/udp and then fallback
      to sequential scanning of services.byname.  */
   const char *proto = protocol != NULL ? protocol : "tcp";
+  /* Limit protocol name length to the maximum size of an RPC packet.  */
+  if (strlen (proto) > UDPMSGSIZE)
+    {
+      *errnop = ERANGE;
+      return NSS_STATUS_UNAVAIL;
+    }
+
   do
     {
       /* key is: "port/proto" */

@@ -150,6 +150,13 @@ initgroups_netid (uid_t uid, gid_t group, long int *start, long int *size,
 		  gid_t **groupsp, long int limit, int *errnop,
 		  const char *domainname)
 {
+  /* Limit domainname length to the maximum size of an RPC packet.  */
+  if (strlen (domainname) > UDPMSGSIZE)
+    {
+      *errnop = ERANGE;
+      return NSS_STATUS_UNAVAIL;
+    }
+
   /* Prepare the key.  The form is "unix.UID@DOMAIN" with the UID and
      DOMAIN field filled in appropriately.  */
   char key[sizeof ("unix.@") + sizeof (uid_t) * 3 + strlen (domainname)];

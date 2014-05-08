@@ -179,6 +179,13 @@ _nss_nis_getnetbyname_r (const char *name, struct netent *net, char *buffer,
 
   /* Convert name to lowercase.  */
   size_t namlen = strlen (name);
+  /* Limit name length to the maximum size of an RPC packet.  */
+  if (namlen > UDPMSGSIZE)
+    {
+      *errnop = ERANGE;
+      return NSS_STATUS_UNAVAIL;
+    }
+
   char name2[namlen + 1];
   size_t i;
 

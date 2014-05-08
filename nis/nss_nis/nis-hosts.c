@@ -270,6 +270,13 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
 
   /* Convert name to lowercase.  */
   size_t namlen = strlen (name);
+  /* Limit name length to the maximum size of an RPC packet.  */
+  if (namlen > UDPMSGSIZE)
+    {
+      *errnop = ERANGE;
+      return NSS_STATUS_UNAVAIL;
+    }
+
   char name2[namlen + 1];
   size_t i;
 
@@ -461,6 +468,13 @@ _nss_nis_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
 
   /* Convert name to lowercase.  */
   size_t namlen = strlen (name);
+  /* Limit name length to the maximum size of an RPC packet.  */
+  if (namlen > UDPMSGSIZE)
+    {
+      *errnop = ERANGE;
+      return NSS_STATUS_UNAVAIL;
+    }
+
   char name2[namlen + 1];
   size_t i;
 

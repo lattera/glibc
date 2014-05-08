@@ -1,3 +1,14 @@
+2014-05-12  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #16932]
+	* nis/nss_nis/nis-hosts.c (internal_gethostbyname2_r)
+	(_nss_nis_gethostbyname4_r): Return error if item length is larger
+	than maximum RPC packet size.
+	* nis/nss_nis/nis-initgroups.c (initgroups_netid): Likewise.
+	* nis/nss_nis/nis-network.c (_nss_nis_getnetbyname_r): Likewise.
+	* nis/nss_nis/nis-service.c (_nss_nis_getservbyname_r)
+	(_nss_nis_getservbyport_r): Likewise.
+
 2014-05-12  Will Newton  <will.newton@linaro.org>
 
 	* malloc/Makefile (tests): Add tst-mallopt.
