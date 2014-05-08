@@ -1,10 +1,6 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/unix/sysv/linux.
 
-# Don't bother trying to generate any glue code to be compatible with the
-# existing system library, because we are the only system library.
-inhibit_glue=yes
-
 define([LIBC_LINUX_VERSION],[2.6.32])dnl
 if test -n "$sysheaders"; then
   OLD_CPPFLAGS=$CPPFLAGS

@@ -1,5 +1,13 @@
 2014-05-08  Roland McGrath  <roland@hack.frob.com>
 
+	* Makeconfig ($(common-objpfx)config.status): Fix patsubst uses to
+	look for %.ac rather than %.in.
+
+	* sysdeps/mach/hurd/configure.ac (inhibit_glue): Remove variable.
+	* sysdeps/unix/sysv/linux/configure.ac: Likewise.
+	* sysdeps/mach/hurd/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+
 	* bits/utsname.h (_UTSNAME_DOMAIN_LENGTH): New macro, set to 0.
 
 2014-05-07  Steve Ellcey  <sellcey@mips.com>

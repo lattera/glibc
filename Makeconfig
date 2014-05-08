@@ -86,12 +86,12 @@ $(common-objpfx)config.make: $(common-objpfx)config.status \
 $(common-objpfx)config.status: $(..)version.h $(..)configure \
 			       $(foreach dir,$(sysdirs),\
 					 $(wildcard $(dir)/Implies) \
-					 $(patsubst %.in,%,\
+					 $(patsubst %.ac,%,\
 						    $(firstword $(wildcard \
  $(addprefix $(dir)/,configure configure.ac))))) \
-			       $(patsubst %.in,%,\
+			       $(patsubst %.ac,%,\
  $(wildcard $(..)sysdeps/*/preconfigure $(..)sysdeps/*/preconfigure.ac)) \
-			       $(patsubst %.in,%,\
+			       $(patsubst %.ac,%,\
 					  $(foreach add-on,$(add-ons),\
 						    $(firstword $(wildcard \
  $(addprefix $(firstword $(filter /%,$(add-on)) $(..)$(add-on))/,\
@@ -1049,7 +1049,7 @@ ifndef avoid-generated
 # existing directory not in all-subdirs, then sysd-sorted needs to
 # be regenerated, so it depends on existing $(sorted-subdirs:=/Depend) files.
 all-Depend-files := $(wildcard $(sort \
-		        $(foreach dir,$(all-subdirs),\
+			$(foreach dir,$(all-subdirs),\
 				  $(firstword $($(dir)-srcdir) \
 				  $(..)$(dir))/Depend) \
 			$(sorted-subdirs:=/Depend)))

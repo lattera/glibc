@@ -3,10 +3,6 @@ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 dnl We need this setting because of the need for PLT calls in ld.so.
 AC_DEFINE([NO_HIDDEN])
 
-# Don't bother trying to generate any glue code to be compatible with the
-# existing system library, because we are the only system library.
-inhibit_glue=yes
-
 case "$machine" in
   i386*)
     # The default oldest ABI is 2.2.6.
