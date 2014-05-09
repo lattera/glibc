@@ -1,3 +1,8 @@
+2014-05-09  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* elf/Makefile (tst-tlsmod5.so): Add $(no-as-needed).
+	(tst-tlsmod6.so): Likewise.
+
 2014-05-09  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/gnu/unwind-resume.c (libgcc_s_resume): Mark as noreturn.

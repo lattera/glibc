@@ -521,8 +521,8 @@ LDFLAGS-tst-initordera2.so = $(no-as-needed)
 LDFLAGS-tst-initordera3.so = $(no-as-needed)
 LDFLAGS-tst-initordera4.so = $(no-as-needed)
 LDFLAGS-tst-initorderb2.so = $(no-as-needed)
-LDFLAGS-tst-tlsmod5.so = -nostdlib
-LDFLAGS-tst-tlsmod6.so = -nostdlib
+LDFLAGS-tst-tlsmod5.so = -nostdlib $(no-as-needed)
+LDFLAGS-tst-tlsmod6.so = -nostdlib $(no-as-needed)
 
 testobj1.so-no-z-defs = yes
 testobj3.so-no-z-defs = yes
