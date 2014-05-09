@@ -651,6 +651,7 @@ libc_cv_nss_crypt
 all_warnings
 force_install
 bindnow
+enable_lock_elision
 hardcoded_path_in_tests
 oldest_abi
 use_default_link
@@ -3475,6 +3476,7 @@ if test "${enable_lock_elision+set}" = set; then :
 else
   enable_lock_elision=no
 fi
+
 
 if test "$enable_lock_elision" = yes ; then
   $as_echo "#define ENABLE_LOCK_ELISION 1" >>confdefs.h

@@ -40,6 +40,14 @@ Version 2.20
   test macros defined.
 
 * Optimized strcmp implementation for ARMv7.  Contributed by ARM Ltd.
+
+* Added support for TX lock elision of pthread mutexes on s390 and s390x.
+  This may improve lock scaling of existing programs on TX capable systems.
+  The lock elision code is only built with --enable-lock-elision=yes and
+  then requires a GCC version supporting the TX builtins.  With lock elision
+  default mutexes are elided via __builtin_tbegin, if the cpu supports
+  transactions. By default lock elision is not enabled and the elision code
+  is not built.
 
 Version 2.19
 

@@ -89,14 +89,37 @@ typedef union
        binary compatibility.  */
     int __kind;
 #if __WORDSIZE == 64
+# ifdef ENABLE_LOCK_ELISION
+    short __spins;
+    short __elision;
+    /* Mutex __spins initializer used by PTHREAD_MUTEX_INITIALIZER.  */
+#  define __PTHREAD_SPINS               0, 0
+# else
     int __spins;
+    /* Mutex __spins initializer used by PTHREAD_MUTEX_INITIALIZER.  */
+#  define __PTHREAD_SPINS               0
+# endif
     __pthread_list_t __list;
 # define __PTHREAD_MUTEX_HAVE_PREV	1
 #else
     unsigned int __nusers;
     __extension__ union
     {
+# ifdef ENABLE_LOCK_ELISION
+      struct
+      {
+	short __espins;
+	short __elision;
+      } _d;
+#  define __spins _d.__espins
+#  define __elision _d.__elision
+    /* Mutex __spins initializer used by PTHREAD_MUTEX_INITIALIZER.  */
+#  define __PTHREAD_SPINS               { 0, 0 }
+# else
       int __spins;
+    /* Mutex __spins initializer used by PTHREAD_MUTEX_INITIALIZER.  */
+#  define __PTHREAD_SPINS               0
+# endif
       __pthread_slist_t __list;
     };
 #endif
@@ -105,8 +128,6 @@ typedef union
   long int __align;
 } pthread_mutex_t;
 
-/* Mutex __spins initializer used by PTHREAD_MUTEX_INITIALIZER.  */
-#define __PTHREAD_SPINS 0
 
 typedef union
 {

@@ -1,3 +1,38 @@
+2014-05-09  Dominik Vogt  <vogt@linux.vnet.ibm.com>
+	    Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* config.make.in (enable-lock-elision): New Makefile variable.
+	* configure.ac: Likewise.
+	* configure: Regenerate.
+	* sysdeps/s390/configure.ac:
+	Add check for gcc transactions support.
+	* sysdeps/s390/configure: Regenerate.
+	* nptl/sysdeps/unix/sysv/linux/s390/Makefile: New file.
+	Build elision files if enabled.
+	* nptl/sysdeps/unix/sysv/linux/s390/elision-conf.c: New file.
+	Add lock elision support for s390.
+	* nptl/sysdeps/unix/sysv/linux/s390/elision-conf.h: Likewise.
+	* nptl/sysdeps/unix/sysv/linux/s390/elision-lock.c: Likewise.
+	* nptl/sysdeps/unix/sysv/linux/s390/elision-timed.c: Likewise.
+	* nptl/sysdeps/unix/sysv/linux/s390/elision-trylock.c: Likewise.
+	* nptl/sysdeps/unix/sysv/linux/s390/elision-unlock.c: Likewise.
+	* nptl/sysdeps/unix/sysv/linux/s390/force-elision.h: Likewise.
+	* nptl/sysdeps/unix/sysv/linux/s390/pthread_mutex_cond_lock.c:
+	Likewise.
+	* nptl/sysdeps/unix/sysv/linux/s390/pthread_mutex_lock.c:
+	Likewise.
+	* nptl/sysdeps/unix/sysv/linux/s390/pthread_mutex_timedlock.c:
+	Likewise.
+	* nptl/sysdeps/unix/sysv/linux/s390/pthread_mutex_trylock.c:
+	Likewise.
+	* nptl/sysdeps/unix/sysv/linux/s390/lowlevellock.h:
+	(__lll_timedlock_elision, __lll_lock_elision)
+	(__lll_unlock_elision, __lll_trylock_elision)
+	(lll_timedlock_elision, lll_lock_elision)
+	(lll_unlock_elision, lll_trylock_elision): Add.
+	* nptl/sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h
+	(pthread_mutex_t): Add lock elision support for s390.
+
 2014-05-09  Will Newton  <will.newton@linaro.org>
 
 	* sysdeps/arm/armv7/strcmp.S: New file.

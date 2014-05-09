@@ -285,6 +285,15 @@ __lll_timedlock (int *futex, const struct timespec *abstime, int private)
 #define lll_timedlock(futex, abstime, private) \
   __lll_timedlock (&(futex), abstime, private)
 
+#ifdef ENABLE_LOCK_ELISION
+extern int __lll_timedlock_elision
+  (int *futex, short *adapt_count, const struct timespec *timeout, int private)
+  attribute_hidden;
+
+# define lll_timedlock_elision(futex, adapt_count, timeout, private)	\
+  __lll_timedlock_elision(&(futex), &(adapt_count), timeout, private)
+#endif
+
 static inline int
 __attribute__ ((always_inline))
 __lll_robust_timedlock (int *futex, const struct timespec *abstime,
@@ -359,5 +368,23 @@ extern int __lll_timedwait_tid (int *, const struct timespec *)
       __res = __lll_timedwait_tid (&(tid), (abstime));			      \
     __res;								      \
   })
+
+#ifdef ENABLE_LOCK_ELISION
+extern int __lll_lock_elision (int *futex, short *adapt_count, int private)
+  attribute_hidden;
+
+extern int __lll_unlock_elision(int *futex, int private)
+  attribute_hidden;
+
+extern int __lll_trylock_elision(int *futex, short *adapt_count)
+  attribute_hidden;
+
+# define lll_lock_elision(futex, adapt_count, private) \
+  __lll_lock_elision (&(futex), &(adapt_count), private)
+# define lll_unlock_elision(futex, private) \
+  __lll_unlock_elision (&(futex), private)
+# define lll_trylock_elision(futex, adapt_count) \
+  __lll_trylock_elision(&(futex), &(adapt_count))
+#endif
 
 #endif	/* lowlevellock.h */
