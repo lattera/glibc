@@ -56,3 +56,11 @@ arm*)
 
   machine=arm/$machine
 esac
+
+case "$machine" in
+arm*)
+	# Parameters to allow auto-detection of -z relro.
+	libc_commonpagesize=0x1000
+	libc_relro_required=yes
+	;;
+esac

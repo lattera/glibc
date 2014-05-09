@@ -1,3 +1,9 @@
+2014-05-09  Will Newton  <will.newton@linaro.org>
+
+	* sysdeps/arm/preconfigure.ac: Set libc_commonpagesize
+	and libc_relro_required for ARM.
+	* sysdeps/arm/preconfigure: Regenerate.
+
 2014-05-09  Dominik Vogt  <vogt@linux.vnet.ibm.com>
 	    Stefan Liebler  <stli@linux.vnet.ibm.com>
 
