@@ -1,3 +1,7 @@
+2014-05-09  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/gnu/unwind-resume.c (libgcc_s_resume): Mark as noreturn.
+
 2014-05-09  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16064]

@@ -21,7 +21,8 @@
 #include <unwind.h>
 #include <gnu/lib-names.h>
 
-static void (*libgcc_s_resume) (struct _Unwind_Exception *exc);
+static void (*libgcc_s_resume) (struct _Unwind_Exception *exc)
+  __attribute__ ((noreturn));
 static _Unwind_Reason_Code (*libgcc_s_personality)
   (int, _Unwind_Action, _Unwind_Exception_Class, struct _Unwind_Exception *,
    struct _Unwind_Context *);
@@ -37,7 +38,8 @@ init (void)
   if (handle == NULL
       || (resume = __libc_dlsym (handle, "_Unwind_Resume")) == NULL
       || (personality = __libc_dlsym (handle, "__gcc_personality_v0")) == NULL)
-    __libc_fatal (LIBGCC_S_SO " must be installed for pthread_cancel to work\n");
+    __libc_fatal (LIBGCC_S_SO
+                  " must be installed for pthread_cancel to work\n");
 
   libgcc_s_resume = resume;
   libgcc_s_personality = personality;
@@ -48,7 +50,7 @@ _Unwind_Resume (struct _Unwind_Exception *exc)
 {
   if (__glibc_unlikely (libgcc_s_resume == NULL))
     init ();
-  libgcc_s_resume (exc);
+  (*libgcc_s_resume) (exc);
 }
 
 _Unwind_Reason_Code
@@ -59,6 +61,6 @@ __gcc_personality_v0 (int version, _Unwind_Action actions,
 {
   if (__glibc_unlikely (libgcc_s_personality == NULL))
     init ();
-  return libgcc_s_personality (version, actions, exception_class,
-			       ue_header, context);
+  return (*libgcc_s_personality) (version, actions, exception_class,
+                                  ue_header, context);
 }
