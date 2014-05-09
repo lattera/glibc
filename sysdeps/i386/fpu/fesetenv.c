@@ -19,6 +19,9 @@
 
 #include <fenv.h>
 #include <assert.h>
+#include <unistd.h>
+#include <ldsodefs.h>
+#include <dl-procinfo.h>
 
 
 int
@@ -40,21 +43,11 @@ __fesetenv (const fenv_t *envp)
       temp.__control_word |= FE_ALL_EXCEPT;
       temp.__control_word &= ~FE_TOWARDZERO;
       temp.__status_word &= ~FE_ALL_EXCEPT;
-      temp.__eip = 0;
-      temp.__cs_selector = 0;
-      temp.__opcode = 0;
-      temp.__data_offset = 0;
-      temp.__data_selector = 0;
     }
   else if (envp == FE_NOMASK_ENV)
     {
       temp.__control_word &= ~(FE_ALL_EXCEPT | FE_TOWARDZERO);
       temp.__status_word &= ~FE_ALL_EXCEPT;
-      temp.__eip = 0;
-      temp.__cs_selector = 0;
-      temp.__opcode = 0;
-      temp.__data_offset = 0;
-      temp.__data_selector = 0;
     }
   else
     {
@@ -63,14 +56,41 @@ __fesetenv (const fenv_t *envp)
 			      & (FE_ALL_EXCEPT | FE_TOWARDZERO));
       temp.__status_word &= ~FE_ALL_EXCEPT;
       temp.__status_word |= envp->__status_word & FE_ALL_EXCEPT;
-      temp.__eip = envp->__eip;
-      temp.__cs_selector = envp->__cs_selector;
-      temp.__opcode = envp->__opcode;
-      temp.__data_offset = envp->__data_offset;
-      temp.__data_selector = envp->__data_selector;
     }
+  temp.__eip = 0;
+  temp.__cs_selector = 0;
+  temp.__opcode = 0;
+  temp.__data_offset = 0;
+  temp.__data_selector = 0;
 
   __asm__ ("fldenv %0" : : "m" (temp));
+
+  if ((GLRO(dl_hwcap) & HWCAP_I386_XMM) != 0)
+    {
+      unsigned int mxcsr;
+      __asm__ ("stmxcsr %0" : "=m" (mxcsr));
+
+      if (envp == FE_DFL_ENV)
+	{
+	  /* Set mask for SSE MXCSR.  */
+	  mxcsr |= (FE_ALL_EXCEPT << 7);
+	  /* Set rounding to FE_TONEAREST.  */
+	  mxcsr &= ~0x6000;
+	  mxcsr |= (FE_TONEAREST << 3);
+	}
+      else if (envp == FE_NOMASK_ENV)
+	{
+	  /* Do not mask exceptions.  */
+	  mxcsr &= ~(FE_ALL_EXCEPT << 7);
+	  /* Set rounding to FE_TONEAREST.  */
+	  mxcsr &= ~0x6000;
+	  mxcsr |= (FE_TONEAREST << 3);
+	}
+      else
+	mxcsr = envp->__eip;
+
+      __asm__ ("ldmxcsr %0" : : "m" (mxcsr));
+    }
 
   /* Success.  */
   return 0;

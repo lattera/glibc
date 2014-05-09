@@ -18,6 +18,9 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
+#include <unistd.h>
+#include <ldsodefs.h>
+#include <dl-procinfo.h>
 
 int
 __fegetenv (fenv_t *envp)
@@ -27,6 +30,9 @@ __fegetenv (fenv_t *envp)
      Intel thought this opcode to be used in interrupt handlers which
      would block all exceptions.  */
   __asm__ ("fldenv %0" : : "m" (*envp));
+
+  if ((GLRO(dl_hwcap) & HWCAP_I386_XMM) != 0)
+    __asm__ ("stmxcsr %0" : "=m" (envp->__eip));
 
   /* Success.  */
   return 0;

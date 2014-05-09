@@ -35,10 +35,10 @@ feholdexcept (fenv_t *envp)
       unsigned int xwork;
 
       /* Get the current control word.  */
-      __asm__ ("stmxcsr %0" : "=m" (*&xwork));
+      __asm__ ("stmxcsr %0" : "=m" (envp->__eip));
 
       /* Set all exceptions to non-stop and clear them.  */
-      xwork = (xwork | 0x1f80) & ~0x3f;
+      xwork = (envp->__eip | 0x1f80) & ~0x3f;
 
       __asm__ ("ldmxcsr %0" : : "m" (*&xwork));
     }

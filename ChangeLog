@@ -1,3 +1,22 @@
+2014-05-09  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16064]
+	* sysdeps/i386/fpu/fegetenv.c: Include <unistd.h>, <ldsodefs.h>
+	and <dl-procinfo.h>.
+	(__fegetenv): Save SSE state in envp->__eip if supported.
+	* sysdeps/i386/fpu/feholdexcpt.c (feholdexcept): Save SSE state in
+	envp->__eip if supported.
+	* sysdeps/i386/fpu/fesetenv.c: Include <unistd.h>, <ldsodefs.h>
+	and <dl-procinfo.h>.
+	(__fesetenv): Always set __eip, __cs_selector, __opcode,
+	__data_offset and __data_selector in environment to 0.  Set SSE
+	state if supported.
+	* sysdeps/x86/fpu/Makefile [$(subdir) = math] (tests): Add
+	test-fenv-sse.
+	[$(subdir) = math] (CFLAGS-test-fenv-sse.c): Add -msse2
+	-mfpmath=sse.
+	* sysdeps/x86/fpu/test-fenv-sse.c: New file.
+
 2014-05-09  Will Newton  <will.newton@linaro.org>
 
 	* sysdeps/arm/preconfigure.ac: Set libc_commonpagesize
