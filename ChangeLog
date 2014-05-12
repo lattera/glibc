@@ -1,5 +1,14 @@
 2014-07-02  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #17137]
+	* locale/findlocale.c (name_present, valid_locale_name): New
+	functions.
+	(_nl_find_locale): Use the loc_name variable to store name
+	candidates.  Call name_present and valid_locale_name to check and
+	validate locale names.  Return an error if the locale is invalid.
+
+2014-07-02  Florian Weimer  <fweimer@redhat.com>
+
 	* locale/setlocale.c (setlocale): Use strdup for allocating
 	composite name copy.
 

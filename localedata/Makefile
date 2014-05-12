@@ -74,7 +74,8 @@ locale_test_suite := tst_iswalnum tst_iswalpha tst_iswcntrl            \
 tests = $(locale_test_suite) tst-digits tst-setlocale bug-iconv-trans \
 	tst-leaks tst-mbswcs1 tst-mbswcs2 tst-mbswcs3 tst-mbswcs4 tst-mbswcs5 \
 	tst-mbswcs6 tst-xlocale1 tst-xlocale2 bug-usesetlocale \
-	tst-strfmon1 tst-sscanf bug-setlocale1 tst-setlocale2 tst-wctype
+	tst-strfmon1 tst-sscanf bug-setlocale1 tst-setlocale2 tst-setlocale3 \
+	tst-wctype
 tests-static = bug-setlocale1-static
 tests += $(tests-static)
 ifeq (yes,$(build-shared))

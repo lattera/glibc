@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <assert.h>
+#include <errno.h>
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>
@@ -57,6 +58,45 @@ struct loaded_l10nfile *_nl_locale_file_list[__LC_LAST];
 
 const char _nl_default_locale_path[] attribute_hidden = LOCALEDIR;
 
+/* Checks if the name is actually present, that is, not NULL and not
+   empty.  */
+static inline int
+name_present (const char *name)
+{
+  return name != NULL && name[0] != '\0';
+}
+
+/* Checks that the locale name neither extremely long, nor contains a
+   ".." path component (to prevent directory traversal).  */
+static inline int
+valid_locale_name (const char *name)
+{
+  /* Not set.  */
+  size_t namelen = strlen (name);
+  /* Name too long.  The limit is arbitrary and prevents stack overflow
+     issues later.  */
+  if (__glibc_unlikely (namelen > 255))
+    return 0;
+  /* Directory traversal attempt.  */
+  static const char slashdot[4] = {'/', '.', '.', '/'};
+  if (__glibc_unlikely (memmem (name, namelen,
+				slashdot, sizeof (slashdot)) != NULL))
+    return 0;
+  if (namelen == 2 && __glibc_unlikely (name[0] == '.' && name [1] == '.'))
+    return 0;
+  if (namelen >= 3
+      && __glibc_unlikely (((name[0] == '.'
+			     && name[1] == '.'
+			     && name[2] == '/')
+			    || (name[namelen - 3] == '/'
+				&& name[namelen - 2] == '.'
+				&& name[namelen - 1] == '.'))))
+    return 0;
+  /* If there is a slash in the name, it must start with one.  */
+  if (__glibc_unlikely (memchr (name, '/', namelen) != NULL) && name[0] != '/')
+    return 0;
+  return 1;
+}
 
 struct __locale_data *
 internal_function
@@ -65,7 +105,7 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
 {
   int mask;
   /* Name of the locale for this category.  */
-  char *loc_name;
+  char *loc_name = (char *) *name;
   const char *language;
   const char *modifier;
   const char *territory;
@@ -73,31 +113,39 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
   const char *normalized_codeset;
   struct loaded_l10nfile *locale_file;
 
-  if ((*name)[0] == '\0')
+  if (loc_name[0] == '\0')
     {
       /* The user decides which locale to use by setting environment
 	 variables.  */
-      *name = getenv ("LC_ALL");
-      if (*name == NULL || (*name)[0] == '\0')
-	*name = getenv (_nl_category_names.str
+      loc_name = getenv ("LC_ALL");
+      if (!name_present (loc_name))
+	loc_name = getenv (_nl_category_names.str
 			+ _nl_category_name_idxs[category]);
-      if (*name == NULL || (*name)[0] == '\0')
-	*name = getenv ("LANG");
+      if (!name_present (loc_name))
+	loc_name = getenv ("LANG");
+      if (!name_present (loc_name))
+	loc_name = (char *) _nl_C_name;
     }
 
-  if (*name == NULL || (*name)[0] == '\0'
-      || (__builtin_expect (__libc_enable_secure, 0)
-	  && strchr (*name, '/') != NULL))
-    *name = (char *) _nl_C_name;
+  /* We used to fall back to the C locale if the name contains a slash
+     character '/', but we now check for directory traversal in
+     valid_locale_name, so this is no longer necessary.  */
 
-  if (__builtin_expect (strcmp (*name, _nl_C_name), 1) == 0
-      || __builtin_expect (strcmp (*name, _nl_POSIX_name), 1) == 0)
+  if (__builtin_expect (strcmp (loc_name, _nl_C_name), 1) == 0
+      || __builtin_expect (strcmp (loc_name, _nl_POSIX_name), 1) == 0)
     {
       /* We need not load anything.  The needed data is contained in
 	 the library itself.  */
       *name = (char *) _nl_C_name;
       return _nl_C[category];
     }
+  else if (!valid_locale_name (loc_name))
+    {
+      __set_errno (EINVAL);
+      return NULL;
+    }
+
+  *name = loc_name;
 
   /* We really have to load some data.  First we try the archive,
      but only if there was no LOCPATH environment variable specified.  */

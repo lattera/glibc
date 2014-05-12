@@ -1,3 +1,9 @@
+2014-07-02  Florian Weimer  <fweimer@redhat.com>
+
+	* tst-setlocale3.c: New file.
+	* Makefile (tests): Add tst-setlocale3.
+	(tst-setlocale3-ENV): New variable.
+
 2014-06-20  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* Makefile (LOCALES): Add en_GB.UTF-8.
