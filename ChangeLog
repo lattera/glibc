@@ -1,3 +1,73 @@
+2014-05-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h [__s390__]
+	(__ASSUME_UTIMES): Do not condition on kernel version.
+	(__ASSUME_PSELECT): Define unconditionally.
+	(__ASSUME_PPOLL): Likewise.
+	(__ASSUME_ATFCTS): Likewise.
+	(__ASSUME_SET_ROBUST_LIST): Do not condition on kernel version.
+	(__ASSUME_COMPLETE_READV_WRITEV): Define unconditionally.
+	(__ASSUME_FUTEX_LOCK_PI): Do not condition on kernel version.
+	(__ASSUME_UTIMENSAT): Define unconditionally.
+	(__ASSUME_PRIVATE_FUTEX): Likewise.
+	(__ASSUME_FALLOCATE): Likewise.
+	(__ASSUME_O_CLOEXEC): Likewise.
+	(__LINUX_ARG_MAX_STACK_BASED_MIN_KERNEL): Remove.
+	(__ASSUME_ARG_MAX_STACK_BASED): Likewise.
+	(__ASSUME_ADJ_OFFSET_SS_READ): Define unconditionally.
+	(__ASSUME_SOCK_CLOEXEC): Do not condition on kernel version.
+	(__ASSUME_IN_NONBLOCK): Likewise.
+	(__ASSUME_PIPE2): Likewise.
+	(__ASSUME_EVENTFD2): Likewise.
+	(__ASSUME_SIGNALFD4): Likewise.
+	(__ASSUME_DUP3): Likewise.
+	[__x86_64__ || __sparc__] (__ASSUME_ACCEPT4_SYSCALL): Likewise.
+	(__ASSUME_FUTEX_CLOCK_REALTIME): Define unconditionally.
+	(__ASSUME_AT_RANDOM): Likewise.
+	(__ASSUME_PREADV): Likewise.
+	(__ASSUME_PWRITEV): Likewise.
+	(__ASSUME_REQUEUE_PI): Do not condition on kernel version.
+	(__ASSUME_F_GETOWN_EX): Define unconditionally.
+	(__ASSUME_XFS_RESTRICTED_CHOWN): Likewise.
+	* sysdeps/unix/sysv/linux/sysconf.c (__sysconf)
+	[!__ASSUME_ARG_MAX_STACK_BASED]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
+	(__ASSUME_O_CLOEXEC): Define unconditionally.
+	(__ASSUME_PSELECT): Do not undefine conditionally.
+	(__ASSUME_PPOLL): Likewise.
+	(__ASSUME_ATFCTS): Likewise.
+	(__ASSUME_SET_ROBUST_LIST): Likewise.
+	(__ASSUME_UTIMENSAT): Likewise.
+	(__ASSUME_FDATASYNC): Define unconditionally.
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h
+	(__ASSUME_SIGFRAME_V2): Likewise.
+	)__ASSUME_EVENTFD2): Likewise.
+	(__ASSUME_SIGNALFD4): Likewise.
+	(__ASSUME_PSELECT): Do not undefine conditionally.
+	(__ASSUME_PPOLL): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/kernel-features.h
+	(__ASSUME_PSELECT): Define unconditionally.
+	(__ASSUME_PPOLL): Likewise.
+	(__ASSUME_O_CLOEXEC): Likewise.
+	(__ASSUME_SOCK_CLOEXEC): Likewise.
+	(__ASSUME_IN_NONBLOCK): Likewise.
+	(__ASSUME_PIPE2): Likewise.
+	(__ASSUME_EVENTFD2): Likewise.
+	(__ASSUME_SIGNALFD4): Likewise.
+	(__ASSUME_DUP3): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/kernel-features.h
+	(__ASSUME_O_CLOEXEC): Likewise.
+	(__ASSUME_SOCK_CLOEXEC): Likewise.
+	(__ASSUME_IN_NONBLOCK): Likewise.
+	(__ASSUME_PIPE2): Likewise.
+	(__ASSUME_EVENTFD2): Likewise.
+	(__ASSUME_SIGNALFD4): Likewise.
+	(__ASSUME_DUP3): Likewise.
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h
+	(__ASSUME_EVENTFD2): Likewise.
+	(__ASSUME_SIGNALFD4): Likewise.
+	(__ASSUME_ACCEPT4_SYSCALL): Likewise.
+
 2014-05-12  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #16932]

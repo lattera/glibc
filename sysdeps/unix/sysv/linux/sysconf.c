@@ -88,15 +88,9 @@ __sysconf (int name)
       return HAS_CPUCLOCK (name);
 
     case _SC_ARG_MAX:
-#if !__ASSUME_ARG_MAX_STACK_BASED
-      /* Determine whether this is a kernel with an argument limit
-	 determined by the stack size.  */
-      if (GLRO(dl_discover_osversion) ()
-	  >= __LINUX_ARG_MAX_STACK_BASED_MIN_KERNEL)
-#endif
-	/* Use getrlimit to get the stack limit.  */
-	if (__getrlimit (RLIMIT_STACK, &rlimit) == 0)
-	  return MAX (legacy_ARG_MAX, rlimit.rlim_cur / 4);
+      /* Use getrlimit to get the stack limit.  */
+      if (__getrlimit (RLIMIT_STACK, &rlimit) == 0)
+	return MAX (legacy_ARG_MAX, rlimit.rlim_cur / 4);
 
       return legacy_ARG_MAX;
 

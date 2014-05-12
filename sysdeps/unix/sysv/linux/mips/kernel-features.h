@@ -26,15 +26,11 @@
 #define __ASSUME_UTIMES		1
 
 /* Support for the eventfd2 and signalfd4 syscalls was added in 2.6.27.  */
-#if __LINUX_KERNEL_VERSION >= 0x02061c
-# define __ASSUME_EVENTFD2	1
-# define __ASSUME_SIGNALFD4	1
-#endif
+#define __ASSUME_EVENTFD2	1
+#define __ASSUME_SIGNALFD4	1
 
 /* Support for the accept4 syscall was added in 2.6.31.  */
-#if __LINUX_KERNEL_VERSION >= 0x02061f
-# define __ASSUME_ACCEPT4_SYSCALL	1
-#endif
+#define __ASSUME_ACCEPT4_SYSCALL	1
 
 /* Support for the recvmmsg syscall was added in 2.6.33.  */
 #if __LINUX_KERNEL_VERSION >= 0x020621

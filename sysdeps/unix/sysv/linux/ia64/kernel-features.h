@@ -24,28 +24,20 @@
    forever.  */
 #define __ASSUME_UTIMES	1
 
-/* pselect/ppoll were introduced just after 2.6.16-rc1.  Due to the way
-   the kernel versions are advertised we can only rely on 2.6.17 to have
-   the code.  */
-#if __LINUX_KERNEL_VERSION >= 0x020616
-# define __ASSUME_PSELECT	1
-# define __ASSUME_PPOLL		1
-#endif
+/* pselect/ppoll were introduced just after 2.6.16-rc1.  */
+#define __ASSUME_PSELECT	1
+#define __ASSUME_PPOLL		1
 
 /* Support for various CLOEXEC and NONBLOCK flags was added in 2.6.23.  */
-#if __LINUX_KERNEL_VERSION >= 0x020617
-# define __ASSUME_O_CLOEXEC	1
-#endif
+#define __ASSUME_O_CLOEXEC	1
 
 /* Support for various CLOEXEC and NONBLOCK flags was added in 2.6.27.  */
-#if __LINUX_KERNEL_VERSION >= 0x02061b
-# define __ASSUME_SOCK_CLOEXEC	1
-# define __ASSUME_IN_NONBLOCK	1
-# define __ASSUME_PIPE2		1
-# define __ASSUME_EVENTFD2	1
-# define __ASSUME_SIGNALFD4	1
-# define __ASSUME_DUP3		1
-#endif
+#define __ASSUME_SOCK_CLOEXEC	1
+#define __ASSUME_IN_NONBLOCK	1
+#define __ASSUME_PIPE2		1
+#define __ASSUME_EVENTFD2	1
+#define __ASSUME_SIGNALFD4	1
+#define __ASSUME_DUP3		1
 
 /* Support for the recvmmsg syscall was added in 2.6.33.  */
 #if __LINUX_KERNEL_VERSION >= 0x020621

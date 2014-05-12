@@ -21,15 +21,11 @@
 #define __ASSUME_UTIMES	1
 
 /* The signal frame layout changed in 2.6.18.  */
-#if __LINUX_KERNEL_VERSION >= 132626
-# define __ASSUME_SIGFRAME_V2	1
-#endif
+#define __ASSUME_SIGFRAME_V2	1
 
 /* Support for the eventfd2 and signalfd4 syscalls was added in 2.6.27.  */
-#if __LINUX_KERNEL_VERSION >= 0x02061b
-# define __ASSUME_EVENTFD2	1
-# define __ASSUME_SIGNALFD4	1
-#endif
+#define __ASSUME_EVENTFD2	1
+#define __ASSUME_SIGNALFD4	1
 
 /* Support for the recvmmsg syscall was added in 2.6.33.  */
 #if __LINUX_KERNEL_VERSION >= 0x020621
@@ -47,12 +43,6 @@
 #endif
 
 #include_next <kernel-features.h>
-
-/* Support for pselect6, ppoll and epoll_pwait was added in 2.6.32.  */
-#if __LINUX_KERNEL_VERSION < 0x020620
-# undef __ASSUME_PSELECT
-# undef __ASSUME_PPOLL
-#endif
 
 /* The ARM kernel may or may not support
    futex_atomic_cmpxchg_inatomic, depending on kernel
