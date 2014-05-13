@@ -1,3 +1,7 @@
+2014-05-13  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/grantpt.c (grantpt): Fix typo in assertion.
+
 2014-05-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h [__s390__]

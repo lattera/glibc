@@ -229,7 +229,7 @@ grantpt (int fd)
 	    break;
 
 	  default:
-	    assert(! "getpt: internal error: invalid exit code from pt_chown");
+	    assert(! "grantpt: internal error: invalid exit code from pt_chown");
 	  }
     }
 #endif
