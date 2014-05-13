@@ -3,7 +3,6 @@
 	* timezone/Makefile ($(objpfx)tzselect): Use zonedir instead
 	current working directory
 
-
 2014-05-13  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/arm/nptl/c++-types.data: Moved ...
