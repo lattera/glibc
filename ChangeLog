@@ -1,5 +1,25 @@
 2014-05-13  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/arm/Versions (libc: GLIBC_PRIVATE): New set.
+	* sysdeps/unix/sysv/linux/arm/nptl/Versions: File removed.
+
+	* sysdeps/unix/sysv/linux/arm/Makefile
+	[$(subdir) = rt] (librt-sysdep_routines, librt-shared-only-routines):
+	Add rt-aeabi_unwind_cpp_pr1.
+	[$(subdir) = nptl] (librt-sysdep_routines, librt-shared-only-routines):
+	Add nptl-aeabi_unwind_cpp_pr1.
+	[$(subdir) = nptl] (tests): Filter out tst-cleanupx4.
+	* sysdeps/unix/sysv/linux/arm/nptl/Makefile: File removed.
+	* sysdeps/unix/sysv/linux/arm/nptl/rt-aeabi_unwind_cpp_pr1.c: Move ...
+	* sysdeps/unix/sysv/linux/arm/rt-aeabi_unwind_cpp_pr1.c: ... here.
+	* sysdeps/unix/sysv/linux/arm/nptl/nptl-aeabi_unwind_cpp_pr1.c: Move ...
+	* sysdeps/unix/sysv/linux/arm/nptl-aeabi_unwind_cpp_pr1.c: ... here.
+
+	* sysdeps/unix/sysv/linux/arm/configure.ac: Force -fexceptions here.
+	* sysdeps/unix/sysv/linux/arm/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/arm/nptl/configure.ac: File removed.
+	* sysdeps/unix/sysv/linux/arm/nptl/configure: File removed.
+
 	* sysdeps/unix/sysv/linux/arm/clone.S: Include <tcb-offsets.h>.
 	Deconditionalize the code that was previously under [RESET_PID].
 	* sysdeps/unix/sysv/linux/arm/nptl/clone.S: File removed.
