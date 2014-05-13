@@ -119,7 +119,7 @@ typedef struct
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
-# define TLS_INIT_TP(thrdescr, secondcall) \
+# define TLS_INIT_TP(thrdescr) \
   ({ void *_thrdescr = (thrdescr);					      \
      tcbhead_t *_head = _thrdescr;					      \
 									      \

@@ -641,7 +641,7 @@ cannot allocate TLS data structures for initial thread");
   GL(dl_initial_dtv) = GET_DTV (tcbp);
 
   /* And finally install it for the main thread.  */
-  const char *lossage = TLS_INIT_TP (tcbp, 0);
+  const char *lossage = TLS_INIT_TP (tcbp);
   if (__glibc_unlikely (lossage != NULL))
     _dl_fatal_printf ("cannot set up thread-local storage: %s\n", lossage);
   tls_init_tp_called = true;
@@ -2114,7 +2114,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
   /* And finally install it for the main thread.  */
   if (! tls_init_tp_called)
     {
-      const char *lossage = TLS_INIT_TP (tcbp, 0);
+      const char *lossage = TLS_INIT_TP (tcbp);
       if (__glibc_unlikely (lossage != NULL))
 	_dl_fatal_printf ("cannot set up thread-local storage: %s\n",
 			  lossage);

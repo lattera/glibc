@@ -1,3 +1,27 @@
+2014-05-27  Andreas Schwab  <schwab@suse.de>
+
+	* csu/libc-tls.c (__libc_setup_tls): Remove second argument from
+	TLS_INIT_TP macro.
+	* elf/dl-load.c (_dl_map_object_from_fd): Likewise.
+	* elf/rtld.c (init_tls, dl_main): Likewise.
+	* nptl/sysdeps/i386/tls.h (TLS_INIT_TP): Likewise.
+	* nptl/sysdeps/powerpc/tls.h (TLS_INIT_TP): Likewise.
+	* nptl/sysdeps/s390/tls.h (TLS_INIT_TP): Likewise.
+	* nptl/sysdeps/sh/tls.h (TLS_INIT_TP): Likewise.
+	* nptl/sysdeps/sparc/tls.h (TLS_INIT_TP): Likewise.
+	* nptl/sysdeps/x86_64/tls.h (TLS_INIT_TP): Likewise.
+	* sysdeps/aarch64/nptl/tls.h (TLS_INIT_TP): Likewise.
+	* sysdeps/alpha/nptl/tls.h (TLS_INIT_TP): Likewise.
+	* sysdeps/arm/nptl/tls.h (TLS_INIT_TP): Likewise.
+	* sysdeps/hppa/nptl/tls.h (TLS_INIT_TP): Likewise.
+	* sysdeps/ia64/nptl/tls.h (TLS_INIT_TP): Likewise.
+	* sysdeps/m68k/nptl/tls.h (TLS_INIT_TP): Likewise.
+	* sysdeps/mach/hurd/i386/tls.h (_hurd_tls_init): Likewise.
+	* sysdeps/microblaze/nptl/tls.h (TLS_INIT_TP): Likewise.
+	* sysdeps/mips/nptl/tls.h (TLS_INIT_TP): Likewise.
+	* sysdeps/tile/nptl/tls.h (TLS_INIT_TP): Likewise.
+	* sysdeps/generic/tls.h: Update description.
+
 2014-05-27  Will Newton  <will.newton@linaro.org>
 
 	[BZ #16990]

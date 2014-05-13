@@ -1176,7 +1176,7 @@ cannot allocate TLS data structures for initial thread");
 		}
 
 	      /* Now we install the TCB in the thread register.  */
-	      errstring = TLS_INIT_TP (tcb, 0);
+	      errstring = TLS_INIT_TP (tcb);
 	      if (__glibc_likely (errstring == NULL))
 		{
 		  /* Now we are all good.  */

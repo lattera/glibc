@@ -90,60 +90,37 @@ typedef struct
 
 
 static inline const char * __attribute__ ((unused))
-_hurd_tls_init (tcbhead_t *tcb, int secondcall)
+_hurd_tls_init (tcbhead_t *tcb)
 {
   HURD_TLS_DESC_DECL (desc, tcb);
 
-  if (!secondcall)
+  /* This field is used by TLS accesses to get our "thread pointer"
+     from the TLS point of view.  */
+  tcb->tcb = tcb;
+
+  /* Cache our thread port.  */
+  tcb->self = __mach_thread_self ();
+
+  /* Get the first available selector.  */
+  int sel = -1;
+  error_t err = __i386_set_gdt (tcb->self, &sel, desc);
+  if (err == MIG_BAD_ID)
     {
-      /* This field is used by TLS accesses to get our "thread pointer"
-	 from the TLS point of view.  */
-      tcb->tcb = tcb;
-
-      /* Cache our thread port.  */
-      tcb->self = __mach_thread_self ();
-
-      /* Get the first available selector.  */
-      int sel = -1;
-      error_t err = __i386_set_gdt (tcb->self, &sel, desc);
-      if (err == MIG_BAD_ID)
-	{
-	  /* Old kernel, use a per-thread LDT.  */
-	  sel = 0x27;
-	  err = __i386_set_ldt (tcb->self, sel, &desc, 1);
-	  assert_perror (err);
-	  if (err)
-	    return "i386_set_ldt failed";
-	}
-      else if (err)
-	{
-	  assert_perror (err); /* Separate from above with different line #. */
-	  return "i386_set_gdt failed";
-	}
-
-      /* Now install the new selector.  */
-      asm volatile ("mov %w0, %%gs" :: "q" (sel));
+      /* Old kernel, use a per-thread LDT.  */
+      sel = 0x27;
+      err = __i386_set_ldt (tcb->self, sel, &desc, 1);
+      assert_perror (err);
+      if (err)
+	return "i386_set_ldt failed";
     }
-  else
+  else if (err)
     {
-      /* Fetch the selector set by the first call.  */
-      int sel;
-      asm ("mov %%gs, %w0" : "=q" (sel) : "0" (0));
-      if (__builtin_expect (sel, 0x50) & 4) /* LDT selector */
-	{
-	  error_t err = __i386_set_ldt (tcb->self, sel, &desc, 1);
-	  assert_perror (err);
-	  if (err)
-	    return "i386_set_ldt failed";
-	}
-      else
-	{
-	  error_t err = __i386_set_gdt (tcb->self, &sel, desc);
-	  assert_perror (err);
-	  if (err)
-	    return "i386_set_gdt failed";
-	}
+      assert_perror (err); /* Separate from above with different line #. */
+      return "i386_set_gdt failed";
     }
+
+  /* Now install the new selector.  */
+  asm volatile ("mov %w0, %%gs" :: "q" (sel));
 
   return 0;
 }
@@ -151,8 +128,8 @@ _hurd_tls_init (tcbhead_t *tcb, int secondcall)
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
-# define TLS_INIT_TP(descr, secondcall) \
-    _hurd_tls_init ((tcbhead_t *) (descr), (secondcall))
+# define TLS_INIT_TP(descr) \
+    _hurd_tls_init ((tcbhead_t *) (descr))
 
 /* Return the TCB address of the current thread.  */
 # define THREAD_SELF							      \

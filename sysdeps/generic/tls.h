@@ -59,12 +59,11 @@
      use the value.
 
 
-     TLS_INIT_TP(tcb, firstcall)
+     TLS_INIT_TP(tcb)
 
      This macro must initialize the thread pointer to enable normal TLS
-     operation.  The first parameter is a pointer to the thread control
-     block.  The second parameter specifies whether this is the first
-     call for the TCB.  ld.so calls this macro more than once.
+     operation.  The parameter is a pointer to the thread control block.
+     ld.so calls this macro once.
 
 
      THREAD_DTV()

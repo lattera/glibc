@@ -144,7 +144,7 @@ typedef struct
 
    We have to make the syscall for both uses of the macro since the
    address might be (and probably is) different.  */
-# define TLS_INIT_TP(thrdescr, secondcall) \
+# define TLS_INIT_TP(thrdescr) \
   ({ void *_thrdescr = (thrdescr);					      \
      tcbhead_t *_head = _thrdescr;					      \
      int _result;							      \

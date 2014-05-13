@@ -107,7 +107,7 @@ register struct pthread *__thread_self __asm__("%g7");
   (((tcbhead_t *) (descr))->dtv)
 
 /* Code to initially initialize the thread pointer.  */
-# define TLS_INIT_TP(descr, secondcall) \
+# define TLS_INIT_TP(descr) \
   (__thread_self = (__typeof (__thread_self)) (descr), NULL)
 
 /* Return the address of the dtv for the current thread.  */

@@ -182,10 +182,10 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 #if TLS_TCB_AT_TP
   INSTALL_DTV ((char *) tlsblock + tcb_offset, _dl_static_dtv);
 
-  const char *lossage = TLS_INIT_TP ((char *) tlsblock + tcb_offset, 0);
+  const char *lossage = TLS_INIT_TP ((char *) tlsblock + tcb_offset);
 #elif TLS_DTV_AT_TP
   INSTALL_DTV (tlsblock, _dl_static_dtv);
-  const char *lossage = TLS_INIT_TP (tlsblock, 0);
+  const char *lossage = TLS_INIT_TP (tlsblock);
 #else
 # error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 #endif

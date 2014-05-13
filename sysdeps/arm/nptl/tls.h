@@ -91,7 +91,7 @@ typedef struct
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
-# define TLS_INIT_TP(tcbp, secondcall) \
+# define TLS_INIT_TP(tcbp) \
   ({ INTERNAL_SYSCALL_DECL (err);					\
      long result_var;							\
      result_var = INTERNAL_SYSCALL_ARM (set_tls, err, 1, (tcbp));	\

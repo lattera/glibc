@@ -129,7 +129,7 @@ register void *__thread_register __asm__ ("r13");
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
-# define TLS_INIT_TP(tcbp, secondcall) \
+# define TLS_INIT_TP(tcbp) \
     (__thread_register = (void *) (tcbp) + TLS_TCB_OFFSET, NULL)
 
 /* Return the address of the dtv for the current thread.  */

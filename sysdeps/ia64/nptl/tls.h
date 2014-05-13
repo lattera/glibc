@@ -118,7 +118,7 @@ register struct pthread *__thread_self __asm__("r13");
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
-# define TLS_INIT_TP(thrdescr, secondcall) \
+# define TLS_INIT_TP(thrdescr) \
   (__thread_self = (thrdescr), INIT_SYSINFO, NULL)
 
 /* Return the address of the dtv for the current thread.  */

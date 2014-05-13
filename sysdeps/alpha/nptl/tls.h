@@ -84,7 +84,7 @@ typedef struct
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
-# define TLS_INIT_TP(tcbp, secondcall) \
+# define TLS_INIT_TP(tcbp) \
   (__builtin_set_thread_pointer ((void *)(tcbp)), NULL)
 
 /* Return the address of the dtv for the current thread.  */

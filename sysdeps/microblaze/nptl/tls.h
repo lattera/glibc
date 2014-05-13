@@ -98,7 +98,7 @@ static inline void *__microblaze_get_thread_area (void)
 
 /* Code to initially initialize the thread pointer.
    r21 is reserved for thread pointer.  */
-# define TLS_INIT_TP(tcbp, secondcall) \
+# define TLS_INIT_TP(tcbp) \
   ({ __asm __volatile ("or r21,r0,%0" : : "r" ((void *)tcbp)); 0; })
 
 /* Return the address of the dtv for the current thread.  */

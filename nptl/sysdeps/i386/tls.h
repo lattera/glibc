@@ -195,7 +195,7 @@ union user_desc_init
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
-# define TLS_INIT_TP(thrdescr, secondcall) \
+# define TLS_INIT_TP(thrdescr) \
   ({ void *_thrdescr = (thrdescr);					      \
      tcbhead_t *_head = _thrdescr;					      \
      union user_desc_init _segdescr;					      \
@@ -208,10 +208,7 @@ union user_desc_init
      INIT_SYSINFO;							      \
 									      \
      /* The 'entry_number' field.  Let the kernel pick a value.  */	      \
-     if (secondcall)							      \
-       _segdescr.vals[0] = TLS_GET_GS () >> 3;				      \
-     else								      \
-       _segdescr.vals[0] = -1;						      \
+     _segdescr.vals[0] = -1;						      \
      /* The 'base_addr' field.  Pointer to the TCB.  */			      \
      _segdescr.vals[1] = (unsigned long int) _thrdescr;			      \
      /* The 'limit' field.  We use 4GB which is 0xfffff pages.  */	      \

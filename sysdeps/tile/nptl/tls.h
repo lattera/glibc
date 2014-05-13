@@ -106,7 +106,7 @@ register void *__thread_pointer asm ("tp");
 # define GET_DTV(tcbp)	(((tcbhead_t *) (tcbp))[-1].dtv)
 
 /* Code to initially initialize the thread pointer (tp).  */
-# define TLS_INIT_TP(tcbp, secondcall) \
+# define TLS_INIT_TP(tcbp) \
     (__thread_pointer = (char *)(tcbp) + TLS_TCB_OFFSET, NULL)
 
 /* Return the address of the dtv for the current thread.  */
