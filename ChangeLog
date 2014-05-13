@@ -1,3 +1,10 @@
+2014-05-13  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/arm/nptl/bits/pthreadtypes.h: Moved ...
+	* sysdeps/arm/nptl/bits/pthreadtypes.h: ... here.
+	* sysdeps/unix/sysv/linux/arm/nptl/bits/semaphore.h: Moved ...
+	* sysdeps/arm/nptl/bits/semaphore.h: ... here.
+
 2014-05-13  Sami Kerola  <kerolasa@iki.fi>
 
 	* timezone/Makefile ($(objpfx)tzselect): Use zonedir instead
