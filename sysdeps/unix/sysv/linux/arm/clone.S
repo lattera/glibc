@@ -20,6 +20,7 @@
    and invokes a function in the right context after its all over.  */
 
 #include <sysdep.h>
+#include <tcb-offsets.h>
 #define _ERRNO_H	1
 #include <bits/errno.h>
 
@@ -45,9 +46,7 @@ ENTRY(__clone)
 	@ do the system call
 	@ get flags
 	mov	r0, r2
-#ifdef RESET_PID
 	mov	ip, r2
-#endif
 	@ new sp is already in r1
 	push	{r4, r7}
 	cfi_adjust_cfa_offset (8)
@@ -71,7 +70,6 @@ PSEUDO_END (__clone)
 1:
 	.fnstart
 	.cantunwind
-#ifdef RESET_PID
 	tst	ip, #CLONE_THREAD
 	bne	3f
 	GET_TLS (lr)
@@ -85,7 +83,6 @@ PSEUDO_END (__clone)
 	str	r0, NEGOFF_OFF1 (r1, TID_OFFSET)
 	str	r0, NEGOFF_OFF2 (r1, PID_OFFSET, TID_OFFSET)
 3:
-#endif
 	@ pick the function arg and call address off the stack and execute
 	ldr	r0, [sp, #4]
 	ldr 	ip, [sp], #8

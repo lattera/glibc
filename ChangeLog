@@ -1,5 +1,9 @@
 2014-05-13  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/arm/clone.S: Include <tcb-offsets.h>.
+	Deconditionalize the code that was previously under [RESET_PID].
+	* sysdeps/unix/sysv/linux/arm/nptl/clone.S: File removed.
+
 	* sysdeps/generic/exit-thread.h: New file.
 	* sysdeps/unix/sysv/linux/exit-thread.h: New file.
 	* include/unistd.h (__exit_thread): Remove declaration.
