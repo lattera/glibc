@@ -42,10 +42,3 @@
 /* Location of current stack frame.  The frame pointer is not usable.  */
 #define CURRENT_STACK_FRAME \
   ({ register char *frame __asm__("rsp"); frame; })
-
-
-/* XXX Until we have a better place keep the definitions here.  */
-
-/* While there is no such syscall.  */
-#define __exit_thread_inline(val) \
-  asm volatile ("syscall" :: "a" (__NR_exit), "D" (val))

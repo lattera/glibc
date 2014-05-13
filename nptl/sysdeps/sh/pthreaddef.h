@@ -32,17 +32,3 @@
 
 /* Location of current stack frame.  */
 #define CURRENT_STACK_FRAME	__builtin_frame_address (0)
-
-
-/* XXX Until we have a better place keep the definitions here.  */
-
-/* While there is no such syscall.  */
-#define __exit_thread_inline(val) \
-  while (1) {								      \
-    if (__builtin_constant_p (val) && (val) == 0)			      \
-      asm volatile ("mov #0,r4; mov %0,r3; trapa #0x11\n\t" SYSCALL_INST_PAD  \
-		   :: "i" (__NR_exit));  \
-    else								      \
-      asm volatile ("mov %1,r4; mov %0,r3; trapa #0x11\n\t" SYSCALL_INST_PAD  \
-		    :: "i" (__NR_exit), "r" (val));			      \
-  }

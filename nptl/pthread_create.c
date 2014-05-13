@@ -29,6 +29,7 @@
 #include <libc-internal.h>
 #include <resolv.h>
 #include <kernel-features.h>
+#include <exit-thread.h>
 
 #include <shlib-compat.h>
 
@@ -432,7 +433,7 @@ start_thread (void *arg)
 
      The exit code is zero since in case all threads exit by calling
      'pthread_exit' the exit status must be 0 (zero).  */
-  __exit_thread_inline (0);
+  __exit_thread ();
 
   /* NOTREACHED */
   return 0;

@@ -33,8 +33,3 @@
 
 /* Location of current stack frame.  */
 #define CURRENT_STACK_FRAME __builtin_frame_address (0)
-
-/* XXX Until we have a better place keep the definitions here.  */
-
-#define __exit_thread_inline(val) \
-  INLINE_SYSCALL (exit, 1, (val))

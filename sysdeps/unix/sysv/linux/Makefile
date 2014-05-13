@@ -141,7 +141,7 @@ endif
 ifeq ($(subdir),posix)
 sysdep_headers += bits/initspin.h
 
-sysdep_routines += exit-thread sched_getcpu
+sysdep_routines += sched_getcpu
 
 tests += tst-getcpu
 endif

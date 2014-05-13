@@ -31,9 +31,3 @@
 /* Location of current stack frame.  */
 #define CURRENT_STACK_FRAME  (stack_pointer + (2 * 128))
 register char *stack_pointer __asm__("%sp");
-
-/* XXX Until we have a better place keep the definitions here.  */
-
-/* While there is no such syscall.  */
-#define __exit_thread_inline(val) \
-  INLINE_SYSCALL (exit, 1, (val))

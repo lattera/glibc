@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2014 Free Software Foundation, Inc.
+/* Call to terminate the current thread.  Stub version.
+   Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,8 +16,13 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
+/* This causes the current thread to exit, without affecting other
+   threads in the process if there are any.  If there are no other
+   threads left, then this has the effect of _exit (0).  */
 
-PSEUDO (__exit_thread, exit, 1)
-	/* Shouldn't get here.  */
-PSEUDO_END(__exit_thread)
+static inline void __attribute__ ((noreturn, always_inline, unused))
+__exit_thread (void)
+{
+  while (1)
+    asm ("write me!");
+}

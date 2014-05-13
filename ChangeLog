@@ -1,3 +1,31 @@
+2014-05-13  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/generic/exit-thread.h: New file.
+	* sysdeps/unix/sysv/linux/exit-thread.h: New file.
+	* include/unistd.h (__exit_thread): Remove declaration.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Drop exit-thread.
+	* sysdeps/unix/sysv/linux/exit-thread.S: File removed.
+	* csu/libc-start.c: Include <exit-thread.h>.
+	(LIBC_START_MAIN): Pass no argument to __exit_thread.
+	* nptl/pthread_create.c: Include <exit-thread.h>.
+	(start_thread): Call __exit_thread in place of __exit_thread_inline.
+	* nptl/sysdeps/i386/pthreaddef.h (__exit_thread_inline): Macro removed.
+	* nptl/sysdeps/powerpc/pthreaddef.h: Likewise.
+	* nptl/sysdeps/s390/pthreaddef.h: Likewise.
+	* nptl/sysdeps/sh/pthreaddef.h: Likewise.
+	* nptl/sysdeps/sparc/sparc32/pthreaddef.h: Likewise.
+	* nptl/sysdeps/sparc/sparc64/pthreaddef.h: Likewise.
+	* nptl/sysdeps/x86_64/pthreaddef.h: Likewise.
+	* sysdeps/aarch64/nptl/pthreaddef.h: Likewise.
+	* sysdeps/alpha/nptl/pthreaddef.h: Likewise.
+	* sysdeps/arm/nptl/pthreaddef.h: Likewise.
+	* sysdeps/hppa/nptl/pthreaddef.h: Likewise.
+	* sysdeps/ia64/nptl/pthreaddef.h: Likewise.
+	* sysdeps/m68k/nptl/pthreaddef.h: Likewise.
+	* sysdeps/microblaze/nptl/pthreaddef.h: Likewise.
+	* sysdeps/mips/nptl/pthreaddef.h: Likewise.
+	* sysdeps/tile/nptl/pthreaddef.h: Likewise.
+
 2014-05-13  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/grantpt.c (grantpt): Fix typo in assertion.

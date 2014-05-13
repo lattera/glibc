@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <ldsodefs.h>
+#include <exit-thread.h>
 
 extern void __libc_init_first (int argc, char **argv, char **envp);
 #ifndef SHARED
@@ -312,7 +313,7 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 
       if (! atomic_decrement_and_test (ptr))
 	/* Not much left to do but to exit the thread, not the process.  */
-	__exit_thread (0);
+	__exit_thread ();
     }
 #else
   /* Nothing fancy, just call the function.  */
