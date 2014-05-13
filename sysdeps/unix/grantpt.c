@@ -176,7 +176,7 @@ grantpt (int fd)
   /* We have to use the helper program if it is available.  */
  helper:;
 
-#ifdef HAVE_PT_CHOWN
+#if HAVE_PT_CHOWN
   pid_t pid = __fork ();
   if (pid == -1)
     goto cleanup;

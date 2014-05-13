@@ -251,7 +251,7 @@
 #undef HAVE_ARM_PCS_VFP
 
 /* The pt_chown binary is being built and used by grantpt.  */
-#undef HAVE_PT_CHOWN
+#define HAVE_PT_CHOWN 0
 
 /* ports/sysdeps/mips/configure.in  */
 /* Define if using the IEEE 754-2008 NaN encoding on the MIPS target.  */

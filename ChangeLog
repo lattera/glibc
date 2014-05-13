@@ -1,3 +1,9 @@
+2014-05-14  Andreas Schwab  <schwab@suse.de>
+
+	* config.h.in (HAVE_PT_CHOWN): Define as 0.
+	* sysdeps/unix/grantpt.c (grantpt): Check HAVE_PT_CHOWN for value,
+	not definedness.
+
 2014-05-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_UTIMES):
