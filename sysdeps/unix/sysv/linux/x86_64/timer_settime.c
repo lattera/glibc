@@ -20,19 +20,20 @@
 #include "compat-timer.h"
 
 
-#define timer_getoverrun_alias __timer_getoverrun_new
-#include "../timer_getoverr.c"
+#define timer_settime_alias __timer_settime_new
+#include <sysdeps/unix/sysv/linux/timer_settime.c>
 
-#undef timer_getoverrun
-versioned_symbol (librt, __timer_getoverrun_new, timer_getoverrun,
-		  GLIBC_2_3_3);
+#undef timer_settime
+versioned_symbol (librt, __timer_settime_new, timer_settime, GLIBC_2_3_3);
 
 
 #if SHLIB_COMPAT (librt, GLIBC_2_2, GLIBC_2_3_3)
 int
-__timer_getoverrun_old (int timerid)
+__timer_settime_old (int timerid, int flags, const struct itimerspec *value,
+		     struct itimerspec *ovalue)
 {
-  return __timer_getoverrun_new (__compat_timer_list[timerid]);
+  return __timer_settime_new (__compat_timer_list[timerid], flags,
+			      value, ovalue);
 }
-compat_symbol (librt, __timer_getoverrun_old, timer_getoverrun, GLIBC_2_2);
+compat_symbol (librt, __timer_settime_old, timer_settime, GLIBC_2_2);
 #endif

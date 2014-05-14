@@ -20,18 +20,25 @@
 #include "compat-timer.h"
 
 
-#define timer_gettime_alias __timer_gettime_new
-#include "../timer_gettime.c"
+#define timer_delete_alias __timer_delete_new
+#include <sysdeps/unix/sysv/linux/timer_delete.c>
 
-#undef timer_gettime
-versioned_symbol (librt, __timer_gettime_new, timer_gettime, GLIBC_2_3_3);
+#undef timer_delete
+versioned_symbol (librt, __timer_delete_new, timer_delete, GLIBC_2_3_3);
 
 
 #if SHLIB_COMPAT (librt, GLIBC_2_2, GLIBC_2_3_3)
 int
-__timer_gettime_old (int timerid, struct itimerspec *value)
+__timer_delete_old (int timerid)
 {
-  return __timer_gettime_new (__compat_timer_list[timerid], value);
+  int res = __timer_delete_new (__compat_timer_list[timerid]);
+
+  if (res == 0)
+    /* Successful timer deletion, now free the index.  We only need to
+       store a word and that better be atomic.  */
+    __compat_timer_list[timerid] = NULL;
+
+  return res;
 }
-compat_symbol (librt, __timer_gettime_old, timer_gettime, GLIBC_2_2);
+compat_symbol (librt, __timer_delete_old, timer_delete, GLIBC_2_2);
 #endif

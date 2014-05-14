@@ -1,5 +1,38 @@
 2014-05-14  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/sysdeps/unix/sysv/linux/x86_64/Versions: Remove, merge into ...
+	* sysdeps/unix/sysv/linux/x86_64/Versions: ... here.
+	* nptl/sysdeps/unix/sysv/linux/x86_64/timer_create.c: Moved ...
+	* sysdeps/unix/sysv/linux/x86_64/timer_create.c: here.
+	* nptl/sysdeps/unix/sysv/linux/x86_64/timer_delete.c: Moved ...
+	* sysdeps/unix/sysv/linux/x86_64/timer_delete.c: ... here
+	* nptl/sysdeps/unix/sysv/linux/x86_64/timer_getoverr.c: Moved ...
+	* sysdeps/unix/sysv/linux/x86_64/timer_getoverr.c: ... here
+	* nptl/sysdeps/unix/sysv/linux/x86_64/timer_gettime.c: Moved ...
+	* sysdeps/unix/sysv/linux/x86_64/timer_gettime.c: ... here
+	* nptl/sysdeps/unix/sysv/linux/x86_64/timer_settime.c: Moved ...
+	* sysdeps/unix/sysv/linux/x86_64/timer_settime.c: ... here
+	* nptl/sysdeps/unix/sysv/linux/powerpc/powerpc64/timer_create.c:
+	Update #include.
+	* nptl/sysdeps/unix/sysv/linux/powerpc/powerpc64/timer_delete.c:
+	Likewise.
+	* nptl/sysdeps/unix/sysv/linux/powerpc/powerpc64/timer_getoverr.c:
+	Likewise.
+	* nptl/sysdeps/unix/sysv/linux/powerpc/powerpc64/timer_gettime.c:
+	Likewise.
+	* nptl/sysdeps/unix/sysv/linux/powerpc/powerpc64/timer_settime.c:
+	Likewise.
+	* nptl/sysdeps/unix/sysv/linux/sparc/sparc64/timer_create.c:
+	Likewise.
+	* nptl/sysdeps/unix/sysv/linux/sparc/sparc64/timer_delete.c:
+	Likewise.
+	* nptl/sysdeps/unix/sysv/linux/sparc/sparc64/timer_getoverr.c:
+	Likewise.
+	* nptl/sysdeps/unix/sysv/linux/sparc/sparc64/timer_gettime.c:
+	Likewise.
+	* nptl/sysdeps/unix/sysv/linux/sparc/sparc64/timer_settime.c:
+	Likewise.
+
 	* sysdeps/unix/sysv/linux/x86_64/clone.S: Deconditionalize the code
 	that was previously under [RESET_PID].
 	* sysdeps/unix/sysv/linux/i386/clone.S: Likewise.

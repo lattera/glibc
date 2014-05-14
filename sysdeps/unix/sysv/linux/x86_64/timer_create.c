@@ -18,22 +18,48 @@
 
 #include <shlib-compat.h>
 #include "compat-timer.h"
+#include <atomic.h>
 
 
-#define timer_settime_alias __timer_settime_new
-#include "../timer_settime.c"
+#define timer_create_alias __timer_create_new
+#include <sysdeps/unix/sysv/linux/timer_create.c>
 
-#undef timer_settime
-versioned_symbol (librt, __timer_settime_new, timer_settime, GLIBC_2_3_3);
+#undef timer_create
+versioned_symbol (librt, __timer_create_new, timer_create, GLIBC_2_3_3);
 
 
 #if SHLIB_COMPAT (librt, GLIBC_2_2, GLIBC_2_3_3)
+timer_t __compat_timer_list[OLD_TIMER_MAX] attribute_hidden;
+
+
 int
-__timer_settime_old (int timerid, int flags, const struct itimerspec *value,
-		     struct itimerspec *ovalue)
+__timer_create_old (clockid_t clock_id, struct sigevent *evp, int *timerid)
 {
-  return __timer_settime_new (__compat_timer_list[timerid], flags,
-			      value, ovalue);
+  timer_t newp;
+
+  int res = __timer_create_new (clock_id, evp, &newp);
+  if (res == 0)
+    {
+      int i;
+      for (i = 0; i < OLD_TIMER_MAX; ++i)
+	if (__compat_timer_list[i] == NULL
+	    && ! atomic_compare_and_exchange_bool_acq (&__compat_timer_list[i],
+						       newp, NULL))
+	  {
+	    *timerid = i;
+	    break;
+	  }
+
+      if (__glibc_unlikely (i == OLD_TIMER_MAX))
+	{
+	  /* No free slot.  */
+	  (void) __timer_delete_new (newp);
+	  __set_errno (EINVAL);
+	  res = -1;
+	}
+    }
+
+  return res;
 }
-compat_symbol (librt, __timer_settime_old, timer_settime, GLIBC_2_2);
+compat_symbol (librt, __timer_create_old, timer_create, GLIBC_2_2);
 #endif
