@@ -1,5 +1,17 @@
 2014-05-14  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/i386/vfork.S: Include <tcb-offsets.h>.
+	(__vfork): Incorporate save/restore of PID from nptl/vfork.S here.
+	(__libc_vfork): New strong alias.
+	* nptl/sysdeps/unix/sysv/linux/i386/vfork.S: File removed.
+	* nptl/sysdeps/unix/sysv/linux/i386/pt-vfork.S: File removed.
+
+	* sysdeps/unix/sysv/linux/x86_64/vfork.S: Include <tcb-offsets.h>.
+	(__vfork): Incorporate save/restore of PID from nptl/vfork.S here.
+	(__libc_vfork): New strong alias.
+	* nptl/sysdeps/unix/sysv/linux/x86_64/vfork.S: File removed.
+	* nptl/sysdeps/unix/sysv/linux/x86_64/pt-vfork.S: File removed.
+
 	* sysdeps/unix/sysv/linux/arm/vfork.S: Include <tcb-offsets.h>.
 	(__vfork): Incorporate save/restore of PID from nptl/vfork.S here.
 	(__libc_vfork): New strong alias.
