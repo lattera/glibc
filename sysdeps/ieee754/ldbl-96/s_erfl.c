@@ -105,6 +105,7 @@
 
 
 #include <errno.h>
+#include <float.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -120,8 +121,6 @@ tiny = 1e-4931L,
  */
   /* 2/sqrt(pi) - 1 */
   efx = 1.2837916709551257389615890312154517168810E-1L,
-  /* 8 * (2/sqrt(pi) - 1) */
-  efx8 = 1.0270333367641005911692712249723613735048E0L,
 
   pp[6] = {
     1.122751350964552113068262337278335028553E6L,
@@ -272,7 +271,16 @@ __erfl (long double x)
       if (ix < 0x3fde8000) /* |x|<2**-33 */
 	{
 	  if (ix < 0x00080000)
-	    return 0.125 * (8.0 * x + efx8 * x);	/*avoid underflow */
+	    {
+	      /* Avoid spurious underflow.  */
+	      long double ret = 0.0625 * (16.0 * x + (16.0 * efx) * x);
+	      if (fabsl (ret) < LDBL_MIN)
+		{
+		  long double force_underflow = ret * ret;
+		  math_force_eval (force_underflow);
+		}
+	      return ret;
+	    }
 	  return x + efx * x;
 	}
       z = x * x;

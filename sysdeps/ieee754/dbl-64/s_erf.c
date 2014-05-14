@@ -128,7 +128,6 @@ static const double
  * Coefficients for approximation to  erf on [0,0.84375]
  */
   efx = 1.28379167095512586316e-01, /* 0x3FC06EBA, 0x8214DB69 */
-  efx8 = 1.02703333676410069053e+00, /* 0x3FF06EBA, 0x8214DB69 */
   pp[] = { 1.28379167095512558561e-01, /* 0x3FC06EBA, 0x8214DB68 */
 	   -3.25042107247001499370e-01, /* 0xBFD4CD7D, 0x691CB913 */
 	   -2.84817495755985104766e-02, /* 0xBF9D2A51, 0xDBD7194F */
@@ -211,7 +210,16 @@ __erf (double x)
       if (ix < 0x3e300000)              /* |x|<2**-28 */
 	{
 	  if (ix < 0x00800000)
-	    return 0.125 * (8.0 * x + efx8 * x);  /*avoid underflow */
+	    {
+	      /* Avoid spurious underflow.  */
+	      double ret = 0.0625 * (16.0 * x + (16.0 * efx) * x);
+	      if (fabs (ret) < DBL_MIN)
+		{
+		  double force_underflow = ret * ret;
+		  math_force_eval (force_underflow);
+		}
+	      return ret;
+	    }
 	  return x + efx * x;
 	}
       z = x * x;

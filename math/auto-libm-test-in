@@ -796,6 +796,10 @@ erf 4.125
 erf 27.0
 erf -27.0
 erf -0x1.fffffffffffff8p-2
+erf 0x1.c5bf94p-127
+erf 0x3.8b7fa8p-128
+erf -0x3.8b7f12369ded8p-1024
+erf 0x3.8b7f12369ded5518p-16384
 
 erfc 0.0
 erfc -0

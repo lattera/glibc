@@ -1,3 +1,27 @@
+2014-05-14  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16516]
+	* sysdeps/ieee754/dbl-64/s_erf.c (efx8): Remove variable.
+	(__erf): Scale by 16 instead of 8 in potentially underflowing
+	case.  Ensure exception if result actually underflows.
+	* sysdeps/ieee754/flt-32/s_erff.c (efx8): Remove variable.
+	(__erff): Scale by 16 instead of 8 in potentially underflowing
+	case.  Ensure exception if result actually underflows.
+	* sysdeps/ieee754/ldbl-128/s_erfl.c: Include <float.h>.
+	(efx8): Remove variable.
+	(__erfl): Scale by 16 instead of 8 in potentially underflowing
+	case.  Ensure exception if result actually underflows.
+	* sysdeps/ieee754/ldbl-128ibm/s_erfl.c: Include <float.h>.
+	(efx8): Remove variable.
+	(__erfl): Scale by 16 instead of 8 in potentially underflowing
+	case.  Ensure exception if result actually underflows.
+	* sysdeps/ieee754/ldbl-96/s_erfl.c: Include <float.h>.
+	(efx8): Remove variable.
+	(__erfl): Scale by 16 instead of 8 in potentially underflowing
+	case.  Ensure exception if result actually underflows.
+	* math/auto-libm-test-in: Add more tests of erf.
+	* math/auto-libm-test-out: Regenerated.
+
 2014-05-14  Andreas Schwab  <schwab@suse.de>
 
 	* elf/rtld.c (_dl_start_final, _dl_start, init_tls, dl_main):
