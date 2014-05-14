@@ -34,6 +34,8 @@ __cacosl (__complex__ long double x)
       y = __casinl (x);
 
       __real__ res = M_PI_2l - __real__ y;
+      if (__real__ res == 0.0L)
+	__real__ res = 0.0L;
       __imag__ res = -__imag__ y;
     }
   else

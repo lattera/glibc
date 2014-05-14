@@ -34,6 +34,8 @@ __cacosf (__complex__ float x)
       y = __casinf (x);
 
       __real__ res = (float) M_PI_2 - __real__ y;
+      if (__real__ res == 0.0f)
+	__real__ res = 0.0f;
       __imag__ res = -__imag__ y;
     }
   else

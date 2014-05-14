@@ -34,6 +34,8 @@ __cacos (__complex__ double x)
       y = __casin (x);
 
       __real__ res = (double) M_PI_2 - __real__ y;
+      if (__real__ res == 0.0)
+	__real__ res = 0.0;
       __imag__ res = -__imag__ y;
     }
   else

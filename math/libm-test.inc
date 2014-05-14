@@ -2615,9 +2615,7 @@ static const struct test_c_c_data cacos_test_data[] =
 static void
 cacos_test (void)
 {
-  START (cacos, 0);
-  RUN_TEST_LOOP_c_c (cacos, cacos_test_data, );
-  END_COMPLEX;
+  ALL_RM_TEST (cacos, 0, cacos_test_data, RUN_TEST_LOOP_c_c, END_COMPLEX);
 }
 
 static const struct test_c_c_data cacosh_test_data[] =

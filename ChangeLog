@@ -1,5 +1,14 @@
 2014-05-14  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16928]
+	* math/s_cacos.c (__cacos): Ensure zero real part of result from
+	non-finite arguments is +0.
+	* math/s_cacosf.c (__cacosf): Likewise.
+	* math/s_cacosl.c (__cacosl): Likewise.
+	* math/libm-test.inc (cacos_test): Use ALL_RM_TEST.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	[BZ #16927]
 	* sysdeps/i386/fpu/e_acosh.S (__ieee754_acosh): Use fabs on x-1
 	value.
