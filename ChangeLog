@@ -1,5 +1,8 @@
 2014-05-14  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/fork.h: New file.
+	* nptl/sysdeps/unix/sysv/linux/powerpc/fork.c: File removed.
+
 	* nptl/sysdeps/unix/sysv/linux/i386/pthread_spin_init.c: File removed.
 	* nptl/sysdeps/unix/sysv/linux/i386/pthread_spin_unlock.S: File removed.
 
