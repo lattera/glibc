@@ -53,12 +53,17 @@ ENTRY(__log1pl)
 	sahf
 	jnc	2f
 
+	movzwl	4+8(%esp), %eax
+	xorb	$0x80, %ah
+	cmpl	$0xc040, %eax
+	jae	5f
+
 #ifdef PIC
 	faddl	one@GOTOFF(%edx)
 #else
 	faddl	one
 #endif
-	fyl2x
+5:	fyl2x
 	ret
 
 2:	fyl2xp1

@@ -1,5 +1,17 @@
 2014-05-14  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16564]
+	* sysdeps/i386/fpu/s_log1pl.S (__log1pl): Do not add 1 to positive
+	arguments with exponent 65 or above.
+	* sysdeps/ieee754/ldbl-128/s_log1pl.c (__log1pl): Do not add 1 to
+	arguments 0x1p113L or above.
+	* sysdeps/ieee754/ldbl-128ibm/s_log1pl.c (__log1pl): Do not add 1
+	to arguments 0x1p107L or above.
+	* sysdeps/x86_64/fpu/s_log1pl.S (__log1pl): Do not add 1 to
+	positive arguments with exponent 65 or above.
+	* math/auto-libm-test-in: Add more tests of log1p.
+	* math/auto-libm-test-out: Regenerated.
+
 	[BZ #16928]
 	* math/s_cacos.c (__cacos): Ensure zero real part of result from
 	non-finite arguments is +0.

@@ -144,7 +144,10 @@ __log1pl (long double xm1)
 	return xm1;
     }
 
-  x = xm1 + 1.0L;
+  if (xm1 >= 0x1p113L)
+    x = xm1;
+  else
+    x = xm1 + 1.0L;
 
   /* log1p(-1) = -inf */
   if (x <= 0.0L)

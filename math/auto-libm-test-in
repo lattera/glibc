@@ -1421,6 +1421,14 @@ log1p min missing-underflow
 log1p min_subnorm missing-underflow
 log1p -min missing-underflow
 log1p -min_subnorm missing-underflow
+log1p 0x1p10
+log1p 0x1p20
+log1p 0x1p30
+log1p 0x1p50
+log1p 0x1p60
+log1p 0x1p100
+log1p 0x1p1000
+log1p max
 
 log2 1
 log2 e
