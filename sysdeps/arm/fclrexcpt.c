@@ -22,7 +22,7 @@
 
 
 int
-__feclearexcept (int excepts)
+feclearexcept (int excepts)
 {
   if (ARM_HAVE_VFP)
     {
@@ -47,12 +47,4 @@ __feclearexcept (int excepts)
   /* Unsupported, so fail unless nothing needs to be done.  */
   return (excepts != 0);
 }
-
-#include <shlib-compat.h>
-#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__feclearexcept, __old_feclearexcept)
-compat_symbol (libm, __old_feclearexcept, feclearexcept, GLIBC_2_1);
-#endif
-
-libm_hidden_ver (__feclearexcept, feclearexcept)
-versioned_symbol (libm, __feclearexcept, feclearexcept, GLIBC_2_2);
+libm_hidden_def (feclearexcept)

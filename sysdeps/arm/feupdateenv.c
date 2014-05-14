@@ -23,7 +23,7 @@
 
 
 int
-__feupdateenv (const fenv_t *envp)
+feupdateenv (const fenv_t *envp)
 {
   if (ARM_HAVE_VFP)
     {
@@ -45,12 +45,4 @@ __feupdateenv (const fenv_t *envp)
   /* Unsupported, so fail.  */
   return 1;
 }
-
-#include <shlib-compat.h>
-#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__feupdateenv, __old_feupdateenv)
-compat_symbol (libm, __old_feupdateenv, feupdateenv, GLIBC_2_1);
-#endif
-
-libm_hidden_ver (__feupdateenv, feupdateenv)
-versioned_symbol (libm, __feupdateenv, feupdateenv, GLIBC_2_2);
+libm_hidden_def (feupdateenv)

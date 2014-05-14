@@ -1,3 +1,24 @@
+2014-05-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/fclrexcpt.c (__feclearexcept): Rename to
+	feclearexcept.  Remove symbol versioning code.
+	* sysdeps/arm/fegetenv.c (__fegetenv): Rename to fegetenv.  Remove
+	symbol versioning code.
+	* sysdeps/arm/fesetenv.c (__fesetenv): Rename to fesetenv.  Remove
+	symbol versioning code.
+	* sysdeps/arm/feupdateenv.c (__feupdateenv): Rename to
+	feupdateenv.  Remove symbol versioning code.
+	* sysdeps/arm/fgetexcptflg.c (__fegetexceptflag): Rename to
+	fegetexceptflag.  Remove symbol versioning code.
+	* sysdeps/arm/fsetexcptflg.c (__fesetexceptflag): Rename to
+	fesetexceptflag.  Remove symbol versioning code.
+	* sysdeps/unix/sysv/linux/arm/Versions (libc): Remove GLIBC_2.0,
+	GLIBC_2.2 and GLIBC_2.3.3 entries.  Change GLIBC_2.1 to GLIBC_2.4.
+	* sysdeps/unix/sysv/linux/arm/posix_fadvise64.c
+	(__posix_fadvise64_l32): Remove prototype.
+	[SHLIB_COMPAT(libc, GLIBC_2_2, GLIBC_2_3_3)]: Remove conditional
+	code.
+
 2014-05-13  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/arm/nptl/bits/pthreadtypes.h: Moved ...

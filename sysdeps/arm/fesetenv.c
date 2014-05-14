@@ -22,7 +22,7 @@
 
 
 int
-__fesetenv (const fenv_t *envp)
+fesetenv (const fenv_t *envp)
 {
   if (ARM_HAVE_VFP)
     {
@@ -58,6 +58,4 @@ __fesetenv (const fenv_t *envp)
   return 1;
 }
 
-#include <shlib-compat.h>
-libm_hidden_ver (__fesetenv, fesetenv)
-versioned_symbol (libm, __fesetenv, fesetenv, GLIBC_2_2);
+libm_hidden_def (fesetenv)

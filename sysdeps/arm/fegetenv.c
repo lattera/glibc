@@ -22,7 +22,7 @@
 
 
 int
-__fegetenv (fenv_t *envp)
+fegetenv (fenv_t *envp)
 {
   if (ARM_HAVE_VFP)
     {
@@ -37,12 +37,4 @@ __fegetenv (fenv_t *envp)
   /* Unsupported, so fail.  */
   return 1;
 }
-
-#include <shlib-compat.h>
-#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__fegetenv, __old_fegetenv)
-compat_symbol (libm, __old_fegetenv, fegetenv, GLIBC_2_1);
-#endif
-
-libm_hidden_ver (__fegetenv, fegetenv)
-versioned_symbol (libm, __fegetenv, fegetenv, GLIBC_2_2);
+libm_hidden_def (fegetenv)
