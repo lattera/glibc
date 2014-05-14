@@ -76,14 +76,7 @@
    forever.  For x86 it was introduced after 2.5.75, for x86-64,
    ppc, and ppc64 it was introduced in 2.6.0-test3, for s390 it was
    introduced in 2.6.21-rc5.  */
-#if defined __sparc__ \
-    || defined __i386__ \
-    || defined __x86_64__ \
-    || defined __powerpc__ \
-    || defined __sh__ \
-    || defined __s390__
-# define __ASSUME_UTIMES	1
-#endif
+#define __ASSUME_UTIMES	1
 
 /* pselect/ppoll were introduced just after 2.6.16-rc1.  On x86_64 and
    SH this appeared first in 2.6.19-rc1, on ia64 in 2.6.22-rc1.  */
@@ -123,27 +116,21 @@
    only after 2.6.23-rc1.  */
 #define __ASSUME_FALLOCATE	1
 
-/* Support for various CLOEXEC and NONBLOCK flags was added for x86,
-   x86-64, PPC, IA-64, SPARC< and S390 in 2.6.23.  */
-#if (defined __i386__ || defined __x86_64__ || defined __powerpc__ \
-     || defined __sparc__ || defined __s390__)
-# define __ASSUME_O_CLOEXEC	1
-#endif
+/* Support for various CLOEXEC and NONBLOCK flags was added in
+   2.6.23.  */
+#define __ASSUME_O_CLOEXEC	1
 
 /* Support for ADJ_OFFSET_SS_READ was added in 2.6.24.  */
 #define __ASSUME_ADJ_OFFSET_SS_READ	1
 
-/* Support for various CLOEXEC and NONBLOCK flags was added for x86,
-   x86-64, PPC, IA-64, and SPARC in 2.6.27.  */
-#if (defined __i386__ || defined __x86_64__ || defined __powerpc__ \
-     || defined __sparc__ || defined __s390__)
-# define __ASSUME_SOCK_CLOEXEC	1
-# define __ASSUME_IN_NONBLOCK	1
-# define __ASSUME_PIPE2		1
-# define __ASSUME_EVENTFD2	1
-# define __ASSUME_SIGNALFD4	1
-# define __ASSUME_DUP3		1
-#endif
+/* Support for various CLOEXEC and NONBLOCK flags was added in
+   2.6.27.  */
+#define __ASSUME_SOCK_CLOEXEC	1
+#define __ASSUME_IN_NONBLOCK	1
+#define __ASSUME_PIPE2		1
+#define __ASSUME_EVENTFD2	1
+#define __ASSUME_SIGNALFD4	1
+#define __ASSUME_DUP3		1
 
 /* Support for accept4 functionality was added in 2.6.28, but for some
    architectures using a separate syscall rather than socketcall that

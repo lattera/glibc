@@ -18,15 +18,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 
-/* There are an infinite number of PA-RISC kernel versions numbered
-   2.4.0.  But they've not really been released as such.  We require
-   and expect the final version here.  */
-#define __ASSUME_32BITUIDS		1
-#define __ASSUME_TRUNCATE64_SYSCALL	1
-#define __ASSUME_IPC64			1
-#define __ASSUME_ST_INO_64_BIT		1
-#define __ASSUME_GETDENTS64_SYSCALL	1
-
 /* PA-RISC 2.6.9 kernels had the first LWS CAS support */
 #define __ASSUME_LWS_CAS		1
 
@@ -42,3 +33,8 @@
 #endif
 
 #include_next <kernel-features.h>
+
+/* hppa did not get the utimes syscall until 3.14.  */
+#if __LINUX_KERNEL_VERSION < 0x030e00
+# undef __ASSUME_UTIMES
+#endif

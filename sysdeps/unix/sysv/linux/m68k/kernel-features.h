@@ -20,20 +20,6 @@
 /* m68k uses socketcall.  */
 #define __ASSUME_SOCKETCALL	1
 
-/* Many syscalls were added in 2.6.10 for m68k.  */
-#define __ASSUME_UTIMES	1
-
-/* Support for various CLOEXEC and NONBLOCK flags was added 2.6.23.  */
-#define __ASSUME_O_CLOEXEC	1
-
-/* Support for various CLOEXEC and NONBLOCK flags was added in 2.6.27.  */
-#define __ASSUME_SOCK_CLOEXEC	1
-#define __ASSUME_IN_NONBLOCK	1
-#define __ASSUME_PIPE2		1
-#define __ASSUME_EVENTFD2	1
-#define __ASSUME_SIGNALFD4	1
-#define __ASSUME_DUP3		1
-
 #include_next <kernel-features.h>
 
 /* These syscalls were added only in 3.0 for m68k.  */

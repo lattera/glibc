@@ -20,26 +20,6 @@
 #ifndef _KERNEL_FEATURES_H
 #define _KERNEL_FEATURES_H 1
 
-#define __ASSUME_UTIMES	1
-
-/* Support for the O_CLOEXEC flag was added for alpha in 2.6.23.  */
-#define __ASSUME_O_CLOEXEC    1
-
-/* Support for various CLOEXEC and NONBLOCK flags was added for alpha after
-   2.6.33-rc1.  */
-#if __LINUX_KERNEL_VERSION >= 0x020621
-# define __ASSUME_SOCK_CLOEXEC  1
-# define __ASSUME_IN_NONBLOCK   1
-#endif
-
-/* Support for the pipe2, eventfd2, signalfd4 syscalls was added for alpha
-   after 2.6.33-rc1.  */
-#if __LINUX_KERNEL_VERSION >= 0x020621
-# define __ASSUME_PIPE2     1
-# define __ASSUME_EVENTFD2  1
-# define __ASSUME_SIGNALFD4 1
-#endif
-
 /* Support for recvmmsg was added for alpha in 2.6.33.  */
 #if __LINUX_KERNEL_VERSION >= 0x020621
 # define __ASSUME_RECVMMSG_SYSCALL       1
@@ -67,10 +47,15 @@
 /* Support for fsyncdata was added for alpha after 2.6.21.  */
 #define __ASSUME_FDATASYNC	1
 
-/* Support for preadv and pwritev was added for alpha in 2.6.33.  */
+/* Support for various syscalls was added for alpha in 2.6.33.  */
 #if __LINUX_KERNEL_VERSION < 0x020621
 # undef __ASSUME_PREADV
 # undef __ASSUME_PWRITEV
+# undef __ASSUME_IN_NONBLOCK
+# undef __ASSUME_PIPE2
+# undef __ASSUME_EVENTFD2
+# undef __ASSUME_SIGNALFD4
+# undef __ASSUME_DUP3
 #endif
 
 #endif /* _KERNEL_FEATURES_H */

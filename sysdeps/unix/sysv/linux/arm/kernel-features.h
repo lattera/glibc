@@ -17,15 +17,8 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* The utimes syscall was added before 2.6.1.  */
-#define __ASSUME_UTIMES	1
-
 /* The signal frame layout changed in 2.6.18.  */
 #define __ASSUME_SIGFRAME_V2	1
-
-/* Support for the eventfd2 and signalfd4 syscalls was added in 2.6.27.  */
-#define __ASSUME_EVENTFD2	1
-#define __ASSUME_SIGNALFD4	1
 
 /* Support for the recvmmsg syscall was added in 2.6.33.  */
 #if __LINUX_KERNEL_VERSION >= 0x020621

@@ -20,25 +20,6 @@
 #ifndef _KERNEL_FEATURES_H
 #define _KERNEL_FEATURES_H 1
 
-/* The utimes syscall has been available for some architectures
-   forever.  */
-#define __ASSUME_UTIMES	1
-
-/* pselect/ppoll were introduced just after 2.6.16-rc1.  */
-#define __ASSUME_PSELECT	1
-#define __ASSUME_PPOLL		1
-
-/* Support for various CLOEXEC and NONBLOCK flags was added in 2.6.23.  */
-#define __ASSUME_O_CLOEXEC	1
-
-/* Support for various CLOEXEC and NONBLOCK flags was added in 2.6.27.  */
-#define __ASSUME_SOCK_CLOEXEC	1
-#define __ASSUME_IN_NONBLOCK	1
-#define __ASSUME_PIPE2		1
-#define __ASSUME_EVENTFD2	1
-#define __ASSUME_SIGNALFD4	1
-#define __ASSUME_DUP3		1
-
 /* Support for the recvmmsg syscall was added in 2.6.33.  */
 #if __LINUX_KERNEL_VERSION >= 0x020621
 # define __ASSUME_RECVMMSG_SYSCALL	1

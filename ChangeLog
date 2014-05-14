@@ -1,5 +1,89 @@
 2014-05-14  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_UTIMES):
+	Define unconditionally.
+	(__ASSUME_O_CLOEXEC): Likewise.
+	(__ASSUME_SOCK_CLOEXEC): Likewise.
+	(__ASSUME_IN_NONBLOCK): Likewise.
+	(__ASSUME_PIPE2): Likewise.
+	(__ASSUME_EVENTFD2): Likewise.
+	(__ASSUME_SIGNALFD4): Likewise.
+	(__ASSUME_DUP3): Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/kernel-features.h
+	(__ASSUME_DUP3): Do not define.
+	(__ASSUME_EVENTFD2): Likewise.
+	(__ASSUME_IN_NONBLOCK): Likewise.
+	(__ASSUME_O_CLOEXEC): Likewise.
+	(__ASSUME_PIPE2): Likewise.
+	(__ASSUME_SIGNALFD4): Likewise.
+	(__ASSUME_SOCK_CLOEXEC): Likewise.
+	(__ASSUME_UTIMES): Undefine.
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
+	(__ASSUME_UTIMES): Do not define.
+	(__ASSUME_O_CLOEXEC): Likewise.
+	(__ASSUME_SOCK_CLOEXEC): Likewise.
+	(__ASSUME_IN_NONBLOCK): Undefine if [__LINUX_KERNEL_VERSION <
+	0x020621] instead of defining if [__LINUX_KERNEL_VERSION >=
+	0x020621].
+	(__ASSUME_PIPE2): Likewise.
+	(__ASSUME_EVENTFD2): Likewise.
+	(__ASSUME_SIGNALFD4): Likewise.
+	[__LINUX_KERNEL_VERSION < 0x020621] (__ASSUME_DUP3): Undefine.
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h (__ASSUME_UTIMES):
+	Do not define.
+	(__ASSUME_EVENTFD2): Likewise.
+	(__ASSUME_SIGNALFD4): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/kernel-features.h
+	(__ASSUME_32BITUIDS): Likewise.
+	(__ASSUME_TRUNCATE64_SYSCALL): Likewise.
+	(__ASSUME_IPC64): Likewise.
+	(__ASSUME_ST_INO_64_BIT): Likewise.
+	(__ASSUME_GETDENTS64_SYSCALL): Likewise.
+	[__LINUX_KERNEL_VERSION < 0x030e00] (__ASSUME_UTIMES): Undefine.
+	* sysdeps/unix/sysv/linux/ia64/kernel-features.h
+	(__ASSUME_UTIMES): Do not define.
+	(__ASSUME_PSELECT): Likewise.
+	(__ASSUME_PPOLL): Likewise.
+	(__ASSUME_O_CLOEXEC): Likewise.
+	(__ASSUME_SOCK_CLOEXEC): Likewise.
+	(__ASSUME_IN_NONBLOCK): Likewise.
+	(__ASSUME_PIPE2): Likewise.
+	(__ASSUME_EVENTFD2): Likewise.
+	(__ASSUME_SIGNALFD4): Likewise.
+	(__ASSUME_DUP3): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/kernel-features.h
+	(__ASSUME_UTIMES): Likewise.
+	(__ASSUME_O_CLOEXEC): Likewise.
+	(__ASSUME_SOCK_CLOEXEC): Likewise.
+	(__ASSUME_IN_NONBLOCK): Likewise.
+	(__ASSUME_PIPE2): Likewise.
+	(__ASSUME_EVENTFD2): Likewise.
+	(__ASSUME_SIGNALFD4): Likewise.
+	(__ASSUME_DUP3): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	(__ASSUME_UTIMES): Likewise.
+	(__ASSUME_O_CLOEXEC): Likewise.
+	(__ASSUME_SOCK_CLOEXEC): Likewise.
+	(__ASSUME_IN_NONBLOCK): Likewise.
+	(__ASSUME_PIPE2): Likewise.
+	(__ASSUME_EVENTFD2): Likewise.
+	(__ASSUME_SIGNALFD4): Likewise.
+	(__ASSUME_DUP3): Likewise.
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h (__ASSUME_IPC64):
+	Likewise.
+	(__ASSUME_UTIMES): Likewise.
+	(__ASSUME_EVENTFD2): Likewise.
+	(__ASSUME_SIGNALFD4): Likewise.
+	* sysdeps/unix/sysv/linux/tile/kernel-features.h
+	(__ASSUME_O_CLOEXEC): Likewise.
+	(__ASSUME_SOCK_CLOEXEC): Likewise.
+	(__ASSUME_IN_NONBLOCK): Likewise.
+	(__ASSUME_PIPE2): Likewise.
+	(__ASSUME_EVENTFD2): Likewise.
+	(__ASSUME_SIGNALFD4): Likewise.
+	(__ASSUME_DUP3): Likewise.
+	(__ASSUME_UTIMES): Undefine.
+
 	* sysdeps/arm/fclrexcpt.c (__feclearexcept): Rename to
 	feclearexcept.  Remove symbol versioning code.
 	* sysdeps/arm/fegetenv.c (__fegetenv): Rename to fegetenv.  Remove

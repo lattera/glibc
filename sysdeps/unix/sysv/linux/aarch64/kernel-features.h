@@ -25,14 +25,10 @@
    features.  */
 
 #define __ASSUME_ACCEPT4_SYSCALL        1
-#define __ASSUME_DUP3                   1
-#define __ASSUME_EVENTFD2		1
-#define __ASSUME_IN_NONBLOCK            1
-#define __ASSUME_O_CLOEXEC              1
-#define __ASSUME_PIPE2                  1
 #define __ASSUME_RECVMMSG_SYSCALL       1
 #define __ASSUME_SENDMMSG_SYSCALL       1
-#define __ASSUME_SIGNALFD4		1
-#define __ASSUME_SOCK_CLOEXEC           1
 
 #include_next <kernel-features.h>
+
+/* asm-generic architectures do not have the utimes syscall.  */
+#undef __ASSUME_UTIMES
