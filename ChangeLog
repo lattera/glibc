@@ -116,6 +116,16 @@
 	* nptl/sysdeps/unix/sysv/linux/s390/s390-64/timer_getoverr.c: Likewise.
 	* nptl/sysdeps/unix/sysv/linux/s390/s390-64/timer_gettime.c: Likewise.
 	* nptl/sysdeps/unix/sysv/linux/s390/s390-64/timer_settime.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/nptl/timer_create.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/nptl/timer_delete.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/nptl/timer_getoverr.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/nptl/timer_gettime.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/nptl/timer_settime.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/nptl/timer_create.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/nptl/timer_delete.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/nptl/timer_getoverr.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/nptl/timer_gettime.c:  Likewise.
+	* sysdeps/unix/sysv/linux/ia64/nptl/timer_settime.c:  Likewise.
 
 	* sysdeps/unix/sysv/linux/x86_64/clone.S: Deconditionalize the code
 	that was previously under [RESET_PID].
