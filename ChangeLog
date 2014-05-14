@@ -1,5 +1,16 @@
 2014-05-14  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/sysdeps/unix/sysv/linux/i386/not-cancel.h: Moved ...
+	* sysdeps/unix/sysv/linux/not-cancel.h: ... here.
+	* nptl/sysdeps/unix/sysv/linux/sparc/not-cancel.h: File removed.
+	* nptl/sysdeps/unix/sysv/linux/sh/not-cancel.h: File removed.
+	* nptl/sysdeps/unix/sysv/linux/powerpc/not-cancel.h: File removed.
+	* nptl/sysdeps/unix/sysv/linux/x86_64/not-cancel.h: File removed.
+	* nptl/sysdeps/unix/sysv/linux/s390/not-cancel.h: File removed.
+	* sysdeps/unix/sysv/linux/generic/not-cancel.h: File removed.
+	* sysdeps/unix/sysv/linux/generic/nptl/not-cancel.h: File removed.
+	* sysdeps/unix/sysv/linux/m68k/nptl/not-cancel.h: File removed.
+
 	* nptl/sysdeps/unix/sysv/linux/x86_64/pthread_spin_init.c: File removed.
 	* nptl/sysdeps/unix/sysv/linux/x86_64/pthread_spin_unlock.S: Likewise.
 
