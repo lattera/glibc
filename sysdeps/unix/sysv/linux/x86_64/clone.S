@@ -92,7 +92,6 @@ L(thread_start):
 	   the outermost frame obviously.  */
 	xorl	%ebp, %ebp
 
-#ifdef RESET_PID
 	testq	$CLONE_THREAD, %rdi
 	jne	1f
 	testq	$CLONE_VM, %rdi
@@ -103,7 +102,6 @@ L(thread_start):
 2:	movl	%eax, %fs:PID
 	movl	%eax, %fs:TID
 1:
-#endif
 
 	/* Set up arguments for the function call.  */
 	popq	%rax		/* Function to call.  */

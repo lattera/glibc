@@ -74,9 +74,6 @@ ENTRY (__clone)
 	movl	%eax,8(%ecx)
 	/* Don't leak any information.  */
 	movl	$0,4(%ecx)
-#ifndef RESET_PID
-	movl	$0,(%ecx)
-#endif
 
 	/* Do the system call */
 	pushl	%ebx
@@ -95,10 +92,8 @@ ENTRY (__clone)
 	cfi_rel_offset (edi, 0)
 	movl	$SYS_ify(clone),%eax
 
-#ifdef RESET_PID
 	/* Remember the flag value.  */
 	movl	%ebx, (%ecx)
-#endif
 
 	/* End FDE now, because in the child the unwind info will be
 	   wrong.  */
@@ -121,11 +116,9 @@ L(thread_start):
 	cfi_undefined (eip);
 	/* Note: %esi is zero.  */
 	movl	%esi,%ebp	/* terminate the stack frame */
-#ifdef RESET_PID
 	testl	$CLONE_THREAD, %edi
 	je	L(newpid)
 L(haspid):
-#endif
 	call	*%ebx
 #ifdef PIC
 	call	L(here)
@@ -137,7 +130,6 @@ L(here):
 	movl	$SYS_ify(exit), %eax
 	ENTER_KERNEL
 
-#ifdef RESET_PID
 	.subsection 2
 L(newpid):
 	testl	$CLONE_VM, %edi
@@ -150,7 +142,6 @@ L(nomoregetpid):
 	movl	%eax, %gs:TID
 	jmp	L(haspid)
 	.previous
-#endif
 	cfi_endproc;
 
 	cfi_startproc

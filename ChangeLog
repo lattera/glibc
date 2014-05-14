@@ -1,5 +1,11 @@
 2014-05-14  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/clone.S: Deconditionalize the code
+	that was previously under [RESET_PID].
+	* sysdeps/unix/sysv/linux/i386/clone.S: Likewise.
+	* nptl/sysdeps/unix/sysv/linux/x86_64/clone.S: File removed.
+	* nptl/sysdeps/unix/sysv/linux/i386/clone.S: File removed.
+
 	* sysdeps/i386/nptl/Implies: New file.
 	* sysdeps/x86_64/nptl/Implies: New file.
 	* nptl/sysdeps/unix/sysv/linux/x86/bits/pthreadtypes.h: Moved ...
