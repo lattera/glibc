@@ -1,5 +1,8 @@
 2014-05-14  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/mips/fork.h: New file.
+	* sysdeps/unix/sysv/linux/mips/nptl/fork.c: File removed.
+
 	* nptl/sysdeps/unix/sysv/linux/i386/Implies: File removed.
 	* nptl/sysdeps/unix/sysv/linux/i386/i786/Implies: Moved ...
 	* sysdeps/unix/sysv/linux/i386/i786/Implies: ... here.
