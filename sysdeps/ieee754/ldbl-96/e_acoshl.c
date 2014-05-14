@@ -48,7 +48,7 @@ __ieee754_acoshl(long double x)
 		return x+x;
 	    } else
 		return __ieee754_logl(x)+ln2;	/* acoshl(huge)=logl(2x) */
-	} else if(((se-0x3fff)|i0|i1)==0) {
+	} else if(((se-0x3fff)|(i0^0x80000000)|i1)==0) {
 	    return 0.0;			/* acosh(1) = 0 */
 	} else if (se > 0x4000) {	/* 2**28 > x > 2 */
 	    t=x*x;

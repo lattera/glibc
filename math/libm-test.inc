@@ -1792,9 +1792,7 @@ static const struct test_f_f_data acosh_test_data[] =
 static void
 acosh_test (void)
 {
-  START (acosh, 0);
-  RUN_TEST_LOOP_f_f (acosh, acosh_test_data, );
-  END;
+  ALL_RM_TEST (acosh, 0, acosh_test_data, RUN_TEST_LOOP_f_f, END);
 }
 
 static const struct test_f_f_data asin_test_data[] =

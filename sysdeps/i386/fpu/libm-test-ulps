@@ -21,6 +21,18 @@ Function: "acos_upward":
 ildouble: 1
 ldouble: 1
 
+Function: "acosh_downward":
+ildouble: 2
+ldouble: 2
+
+Function: "acosh_towardzero":
+ildouble: 2
+ldouble: 2
+
+Function: "acosh_upward":
+ildouble: 1
+ldouble: 1
+
 Function: "asin_downward":
 double: 1
 float: 1

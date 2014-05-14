@@ -59,6 +59,7 @@ ENTRY(__ieee754_acoshl)
 
 	// 1 <= x <= 2 => y = log1p(x-1+sqrt(2*(x-1)+(x-1)^2))
 	fsubl	MO(one)			// x-1 : log(2)
+	fabs				// acosh(1) is +0 in all rounding modes
 	fld	%st			// x-1 : x-1 : log(2)
 	fmul	%st(1)			// (x-1)^2 : x-1 : log(2)
 	fadd	%st(1)			// x-1+(x-1)^2 : x-1 : log(2)

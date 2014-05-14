@@ -1,5 +1,17 @@
 2014-05-14  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16927]
+	* sysdeps/i386/fpu/e_acosh.S (__ieee754_acosh): Use fabs on x-1
+	value.
+	* sysdeps/i386/fpu/e_acoshf.S (__ieee754_acoshf): Likewise.
+	* sysdeps/i386/fpu/e_acoshl.S (__ieee754_acoshl): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_acoshl.c (__ieee754_acoshl): Correct
+	for explicit high bit of mantissa when testing for argument equal
+	to 1.
+	* math/libm-test.inc (acosh_test): Use ALL_RM_TEST.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	[BZ #16516]
 	* sysdeps/ieee754/dbl-64/s_erf.c (efx8): Remove variable.
 	(__erf): Scale by 16 instead of 8 in potentially underflowing
