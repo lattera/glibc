@@ -1,5 +1,12 @@
 2014-05-14  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/i386/nptl/Implies: New file.
+	* sysdeps/x86_64/nptl/Implies: New file.
+	* nptl/sysdeps/unix/sysv/linux/x86/bits/pthreadtypes.h: Moved ...
+	* sysdeps/x86/nptl/bits/pthreadtypes.h: ... here.
+	* nptl/sysdeps/unix/sysv/linux/x86/bits/semaphore.h: Moved ...
+	* sysdeps/x86/nptl/bits/semaphore.h: ... here.
+
 	* sysdeps/unix/sysv/linux/i386/vfork.S: Include <tcb-offsets.h>.
 	(__vfork): Incorporate save/restore of PID from nptl/vfork.S here.
 	(__libc_vfork): New strong alias.
