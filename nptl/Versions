@@ -30,6 +30,7 @@ libc {
     __libc_alloca_cutoff;
     # Internal libc interface to libpthread
     __libc_dl_error_tsd;
+    __libc_vfork;
   }
 }
 
@@ -255,6 +256,9 @@ libpthread {
   GLIBC_2.18 {
     pthread_getattr_default_np;
     pthread_setattr_default_np;
+  }
+
+  GLIBC_2.20 {
   }
 
   GLIBC_PRIVATE {

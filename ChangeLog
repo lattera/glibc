@@ -1,3 +1,14 @@
+2014-05-14  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/arm/vfork.S: Include <tcb-offsets.h>.
+	(__vfork): Incorporate save/restore of PID from nptl/vfork.S here.
+	(__libc_vfork): New strong alias.
+	* sysdeps/unix/sysv/linux/arm/nptl/vfork.S: File removed.
+	* sysdeps/unix/sysv/linux/arm/nptl/pt-vfork.S: File removed.
+	* nptl/pt-vfork.c: New file.
+	* nptl/Versions (libc: GLIBC_PRIVATE): Add __libc_vfork.
+	(libpthread: GLIBC_2.20): New version set (empty).
+
 2014-05-14  Will Newton  <will.newton@linaro.org>
 
 	* stdlib/gmp-impl.h: Test USE_STACK_ALLOC #ifdef
