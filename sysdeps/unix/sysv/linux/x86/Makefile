@@ -16,3 +16,9 @@ abi-x32-ld-soname := ld-linux-x32.so.2
 ifeq ($(subdir),misc)
 sysdep_headers += sys/elf.h sys/perm.h sys/reg.h sys/vm86.h sys/debugreg.h sys/io.h
 endif
+
+ifeq ($(subdir),nptl)
+libpthread-sysdep_routines += init-arch
+libpthread-sysdep_routines += elision-lock elision-unlock elision-timed \
+			      elision-trylock
+endif
