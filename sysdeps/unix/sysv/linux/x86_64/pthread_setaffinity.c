@@ -11,4 +11,4 @@
 				   header.vgetcpu_cache[1])));		\
   } while (0)
 
-#include "../pthread_setaffinity.c"
+#include <sysdeps/unix/sysv/linux/pthread_setaffinity.c>
