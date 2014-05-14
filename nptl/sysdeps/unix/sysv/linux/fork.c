@@ -23,12 +23,12 @@
 #include <sysdep.h>
 #include <libio/libioP.h>
 #include <tls.h>
-#include "fork.h"
 #include <hp-timing.h>
 #include <ldsodefs.h>
 #include <bits/stdio-lock.h>
 #include <atomic.h>
 #include <pthreadP.h>
+#include <fork.h>
 
 
 unsigned long int *__fork_generation_pointer;

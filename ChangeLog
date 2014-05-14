@@ -1,5 +1,11 @@
 2014-05-14  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/sysdeps/unix/sysv/linux/fork.c: Use <> for fork.h #include.
+	* nptl/sysdeps/unix/sysv/linux/x86_64/fork.c: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/fork.h: New file.
+	* nptl/sysdeps/unix/sysv/linux/i386/fork.c: File removed.
+	* sysdeps/unix/sysv/linux/i386/fork.h: New file.
+
 	* nptl/sysdeps/unix/sysv/linux/i386/not-cancel.h: Moved ...
 	* sysdeps/unix/sysv/linux/not-cancel.h: ... here.
 	* nptl/sysdeps/unix/sysv/linux/sparc/not-cancel.h: File removed.
