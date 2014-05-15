@@ -105,7 +105,9 @@ __ptsname_internal (int fd, char *buf, size_t buflen, struct stat64 *stp)
 
       memcpy (__stpcpy (buf, devpts), p, &numbuf[sizeof (numbuf)] - p);
     }
-  else if (errno == EINVAL)
+  else if (errno != EINVAL)
+    return errno;
+  else
 #endif
     {
       char *p;

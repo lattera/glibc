@@ -1,3 +1,12 @@
+2014-05-16  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #16917]
+	* sysdeps/unix/sysv/linux/ptsname.c (__ptsname_internal): Return
+	errno if the TIOCGPTN ioctl fails with an error different than
+	EINVAL.
+	* login/tst-ptsname.c: New file.
+	* login/Makefile (tests): Add tst-ptsname.
+
 2014-05-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #16849]
