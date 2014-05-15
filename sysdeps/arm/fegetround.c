@@ -24,17 +24,14 @@
 int
 fegetround (void)
 {
-  if (ARM_HAVE_VFP)
-    {
-      unsigned int temp;
+  fpu_control_t fpscr;
 
-      /* Get the current environment.  */
-      _FPU_GETCW (temp);
+  /* FE_TONEAREST is the only supported rounding mode
+     if a VFP unit isn't present.  */
+  if (!ARM_HAVE_VFP)
+    return FE_TONEAREST;
 
-      return temp & FE_TOWARDZERO;
-    }
-
-  /* The current soft-float implementation only handles TONEAREST.  */
-  return FE_TONEAREST;
+  _FPU_GETCW (fpscr);
+  return fpscr & FE_TOWARDZERO;
 }
 libm_hidden_def (fegetround)

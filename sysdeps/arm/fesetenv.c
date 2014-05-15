@@ -24,38 +24,36 @@
 int
 fesetenv (const fenv_t *envp)
 {
-  if (ARM_HAVE_VFP)
+  fpu_control_t fpscr;
+
+  /* Fail if a VFP unit isn't present.  */
+  if (!ARM_HAVE_VFP)
+    return 1;
+
+  _FPU_GETCW (fpscr);
+
+  /* Preserve the reserved FPSCR flags.  */
+  fpscr &= _FPU_RESERVED;
+
+  if (envp == FE_DFL_ENV)
+    fpscr |= _FPU_DEFAULT;
+  else if (envp == FE_NOMASK_ENV)
+    fpscr |= _FPU_IEEE;
+  else
+    fpscr |= envp->__cw & ~_FPU_RESERVED;
+
+  _FPU_SETCW (fpscr);
+
+  if (envp == FE_NOMASK_ENV)
     {
-      unsigned int temp;
-
-      _FPU_GETCW (temp);
-      temp &= _FPU_RESERVED;
-
-      if (envp == FE_DFL_ENV)
-	temp |= _FPU_DEFAULT;
-      else if (envp == FE_NOMASK_ENV)
-	temp |= _FPU_IEEE;
-      else
-	temp |= envp->__cw & ~_FPU_RESERVED;
-
-      _FPU_SETCW (temp);
-
-      if (envp == FE_NOMASK_ENV)
-	{
-	  /* VFPv3 and VFPv4 do not support trapping exceptions, so
-	     test whether the relevant bits were set and fail if
-	     not.  */
-	  _FPU_GETCW (temp);
-	  if ((temp & _FPU_IEEE) != _FPU_IEEE)
-	    return 1;
-	}
-
-      /* Success.  */
-      return 0;
+      /* Not all VFP architectures support trapping exceptions, so
+	 test whether the relevant bits were set and fail if not.  */
+      _FPU_GETCW (fpscr);
+      if ((fpscr & _FPU_IEEE) != _FPU_IEEE)
+	return 1;
     }
 
-  /* Unsupported, so fail.  */
-  return 1;
+  return 0;
 }
 
 libm_hidden_def (fesetenv)

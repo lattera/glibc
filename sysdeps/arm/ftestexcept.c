@@ -24,17 +24,15 @@
 int
 fetestexcept (int excepts)
 {
-  if (ARM_HAVE_VFP)
-    {
-      fexcept_t temp;
+  fpu_control_t fpscr;
 
-      /* Get current exceptions.  */
-      _FPU_GETCW(temp);
+  /* Return no exception flags if a VFP unit isn't present.  */
+  if (!ARM_HAVE_VFP)
+    return 0;
 
-      return temp & excepts & FE_ALL_EXCEPT;
-    }
+  /* Get current exceptions.  */
+  _FPU_GETCW (fpscr);
 
-  /* Unsupported, return 0.  */
-  return 0;
+  return fpscr & excepts & FE_ALL_EXCEPT;
 }
 libm_hidden_def (fetestexcept)

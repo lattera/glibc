@@ -25,9 +25,12 @@
 int
 feraiseexcept (int excepts)
 {
-  if (ARM_HAVE_VFP)
+  /* Fail if a VFP unit isn't present unless nothing needs to be done.  */
+  if (!ARM_HAVE_VFP)
+    return (excepts != 0);
+  else
     {
-      int fpscr;
+      fpu_control_t fpscr;
       const float fp_zero = 0.0, fp_one = 1.0, fp_max = FLT_MAX,
                   fp_min = FLT_MIN, fp_1e32 = 1.0e32f, fp_two = 2.0,
 		  fp_three = 3.0;
@@ -98,9 +101,6 @@ feraiseexcept (int excepts)
       /* Success.  */
       return 0;
     }
-
-  /* Unsupported, so fail unless nothing needs to be done.  */
-  return (excepts != 0);
 }
 
 libm_hidden_def (feraiseexcept)

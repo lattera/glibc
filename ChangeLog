@@ -895,6 +895,25 @@
 	* nptl/sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h
 	(pthread_mutex_t): Add lock elision support for s390.
 
+2014-05-14  Wilco  <wdijkstr@arm.com>
+
+	* sysdeps/arm/fclrexcpt.c: Cleanup.
+	* sysdeps/arm/fedisblxcpt.c: Cleanup.
+	* sysdeps/arm/feenablxcpt.c: Cleanup.
+	* sysdeps/arm/fegetenv.c: Cleanup.
+	* sysdeps/arm/fegetexcept.c: Cleanup.
+	* sysdeps/arm/fegetround.c: Cleanup.
+	* sysdeps/arm/feholdexcpt.c: Cleanup.
+	* sysdeps/arm/fesetenv.c: Cleanup.
+	* sysdeps/arm/fesetround.c: Cleanup.
+	* sysdeps/arm/feupdateenv.c: Cleanup.
+	* sysdeps/arm/fgetexcptflg.c: Cleanup.
+	* sysdeps/arm/fraiseexcpt.c: Cleanup.
+	* sysdeps/arm/fsetexcptflg.c: Cleanup.
+	* sysdeps/arm/ftestexcept.c: Cleanup.
+	* sysdeps/arm/get-rounding-mode.h: Cleanup.
+	* sysdeps/arm/setfpucw.c: Cleanup.
+
 2014-05-09  Will Newton  <will.newton@linaro.org>
 
 	* sysdeps/arm/armv7/strcmp.S: New file.

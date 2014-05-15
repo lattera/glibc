@@ -25,23 +25,17 @@
 int
 fedisableexcept (int excepts)
 {
-  if (ARM_HAVE_VFP)
-    {
-      unsigned long int new_exc, old_exc;
+  fpu_control_t fpscr, new_fpscr;
 
-      _FPU_GETCW(new_exc);
+  /* Fail if a VFP unit isn't present.  */
+  if (!ARM_HAVE_VFP)
+    return -1;
 
-      old_exc = (new_exc >> FE_EXCEPT_SHIFT) & FE_ALL_EXCEPT;
+  _FPU_GETCW (fpscr);
+  excepts &= FE_ALL_EXCEPT;
+  new_fpscr = fpscr & ~(excepts << FE_EXCEPT_SHIFT);
 
-      excepts &= FE_ALL_EXCEPT;
+  _FPU_SETCW (new_fpscr);
 
-      new_exc &= ~(excepts << FE_EXCEPT_SHIFT);
-
-      _FPU_SETCW(new_exc);
-
-      return old_exc;
-    }
-
-  /* Unsupported, so return -1 for failure.  */
-  return -1;
+  return (fpscr >> FE_EXCEPT_SHIFT) & FE_ALL_EXCEPT;
 }

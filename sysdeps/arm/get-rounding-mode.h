@@ -28,15 +28,15 @@
 static inline int
 get_rounding_mode (void)
 {
-  if (ARM_HAVE_VFP)
-    {
-      fpu_control_t fc;
+  fpu_control_t fpscr;
 
-      _FPU_GETCW (fc);
-      return fc & FE_TOWARDZERO;
-    }
-  else
+  /* FE_TONEAREST is the only supported rounding mode
+     if a VFP unit isn't present.  */
+  if (!ARM_HAVE_VFP)
     return FE_TONEAREST;
+
+  _FPU_GETCW (fpscr);
+  return fpscr & FE_TOWARDZERO;
 }
 
 #endif /* get-rounding-mode.h */

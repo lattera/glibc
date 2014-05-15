@@ -25,24 +25,19 @@
 int
 fesetexceptflag (const fexcept_t *flagp, int excepts)
 {
-  if (ARM_HAVE_VFP)
-    {
-      fexcept_t temp;
+  fpu_control_t fpscr;
 
-      /* Get the current environment.  */
-      _FPU_GETCW (temp);
+  /* Fail if a VFP unit isn't present unless nothing needs to be done.  */
+  if (!ARM_HAVE_VFP)
+    return (excepts != 0);
 
-      /* Set the desired exception mask.  */
-      temp &= ~(excepts & FE_ALL_EXCEPT);
-      temp |= (*flagp & excepts & FE_ALL_EXCEPT);
+  _FPU_GETCW (fpscr);
 
-      /* Save state back to the FPU.  */
-      _FPU_SETCW (temp);
+  /* Set the desired exception mask.  */
+  fpscr &= ~(excepts & FE_ALL_EXCEPT);
+  fpscr |= (*flagp & excepts & FE_ALL_EXCEPT);
 
-      /* Success.  */
-      return 0;
-    }
-
-  /* Unsupported, so fail unless nothing needs to be done.  */
-  return (excepts != 0);
+  /* Save state back to the FPU.  */
+  _FPU_SETCW (fpscr);
+  return 0;
 }

@@ -25,19 +25,14 @@
 int
 fegetexceptflag (fexcept_t *flagp, int excepts)
 {
-  if (ARM_HAVE_VFP)
-    {
-      unsigned long temp;
+  fpu_control_t fpscr;
 
-      /* Get the current exceptions.  */
-      _FPU_GETCW (temp);
+  /* Fail if a VFP unit isn't present.  */
+  if (!ARM_HAVE_VFP)
+    return 1;
 
-      *flagp = temp & excepts & FE_ALL_EXCEPT;
+  _FPU_GETCW (fpscr);
 
-      /* Success.  */
-      return 0;
-    }
-
-  /* Unsupported, so fail.  */
-  return 1;
+  *flagp = fpscr & excepts & FE_ALL_EXCEPT;
+  return 0;
 }

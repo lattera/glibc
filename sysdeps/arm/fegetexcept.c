@@ -25,15 +25,13 @@
 int
 fegetexcept (void)
 {
-  if (ARM_HAVE_VFP)
-    {
-      unsigned long temp;
+  fpu_control_t fpscr;
 
-      _FPU_GETCW (temp);
+  /* Return with all exceptions disabled if a VFP unit isn't present.  */
+  if (!ARM_HAVE_VFP)
+    return 0;
 
-      return (temp >> FE_EXCEPT_SHIFT) & FE_ALL_EXCEPT;
-    }
+  _FPU_GETCW (fpscr);
 
-  /* Unsupported. Return all exceptions disabled.  */
-  return 0;
+  return (fpscr >> FE_EXCEPT_SHIFT) & FE_ALL_EXCEPT;
 }

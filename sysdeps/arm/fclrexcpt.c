@@ -24,27 +24,20 @@
 int
 feclearexcept (int excepts)
 {
-  if (ARM_HAVE_VFP)
-    {
-      unsigned long int temp;
+  fpu_control_t fpscr;
 
-      /* Mask out unsupported bits/exceptions.  */
-      excepts &= FE_ALL_EXCEPT;
+  /* Fail if a VFP unit isn't present unless nothing needs to be done.  */
+  if (!ARM_HAVE_VFP)
+    return (excepts != 0);
 
-      /* Get the current floating point status. */
-      _FPU_GETCW (temp);
+  _FPU_GETCW (fpscr);
+  excepts &= FE_ALL_EXCEPT;
 
-      /* Clear the relevant bits.  */
-      temp = (temp & ~FE_ALL_EXCEPT) | (temp & FE_ALL_EXCEPT & ~excepts);
+  /* Clear the relevant bits.  */
+  fpscr = (fpscr & ~FE_ALL_EXCEPT) | (fpscr & FE_ALL_EXCEPT & ~excepts);
 
-      /* Put the new data in effect.  */
-      _FPU_SETCW (temp);
+  _FPU_SETCW (fpscr);
 
-      /* Success.  */
-      return 0;
-    }
-
-  /* Unsupported, so fail unless nothing needs to be done.  */
-  return (excepts != 0);
+  return 0;
 }
 libm_hidden_def (feclearexcept)

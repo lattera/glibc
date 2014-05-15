@@ -25,35 +25,27 @@
 int
 feenableexcept (int excepts)
 {
-  if (ARM_HAVE_VFP)
+  fpu_control_t fpscr, new_fpscr;
+
+  /* Fail if a VFP unit isn't present.  */
+  if (!ARM_HAVE_VFP)
+    return -1;
+
+  _FPU_GETCW (fpscr);
+  excepts &= FE_ALL_EXCEPT;
+  new_fpscr = fpscr | (excepts << FE_EXCEPT_SHIFT);
+
+  _FPU_SETCW (new_fpscr);
+
+  if (excepts != 0)
     {
-      unsigned long int new_exc, old_exc;
-
-      _FPU_GETCW(new_exc);
-
-      old_exc = (new_exc >> FE_EXCEPT_SHIFT) & FE_ALL_EXCEPT;
-
-      excepts &= FE_ALL_EXCEPT;
-
-      new_exc |= (excepts << FE_EXCEPT_SHIFT);
-
-      _FPU_SETCW(new_exc);
-
-      if (excepts != 0)
-	{
-	  /* VFPv3 and VFPv4 do not support trapping exceptions, so
-	     test whether the relevant bits were set and fail if
-	     not.  */
-	  unsigned int temp;
-	  _FPU_GETCW (temp);
-	  if ((temp & (excepts << FE_EXCEPT_SHIFT))
-	      != (excepts << FE_EXCEPT_SHIFT))
-	    return -1;
-	}
-
-      return old_exc;
+      /* Not all VFP architectures support trapping exceptions, so
+	 test whether the relevant bits were set and fail if not.  */
+      _FPU_GETCW (new_fpscr);
+      if ((new_fpscr & (excepts << FE_EXCEPT_SHIFT))
+	  != (excepts << FE_EXCEPT_SHIFT))
+	return -1;
     }
 
-  /* Unsupported, so return -1 for failure.  */
-  return -1;
+  return (fpscr >> FE_EXCEPT_SHIFT) & FE_ALL_EXCEPT;
 }

@@ -25,24 +25,19 @@
 int
 feupdateenv (const fenv_t *envp)
 {
-  if (ARM_HAVE_VFP)
-    {
-      unsigned int temp;
+  fpu_control_t fpscr;
 
-      /* Get the current exception state.  */
-      _FPU_GETCW (temp);
+  /* Fail if a VFP unit isn't present.  */
+  if (!ARM_HAVE_VFP)
+    return 1;
 
-      /* Install new environment.  */
-      fesetenv (envp);
+  _FPU_GETCW (fpscr);
 
-      /* Raise the saved exceptions.  */
-      feraiseexcept (temp & FE_ALL_EXCEPT);
+  /* Install new environment.  */
+  fesetenv (envp);
 
-      /* Success.  */
-      return 0;
-    }
-
-  /* Unsupported, so fail.  */
-  return 1;
+  /* Raise the saved exceptions.  */
+  feraiseexcept (fpscr & FE_ALL_EXCEPT);
+  return 0;
 }
 libm_hidden_def (feupdateenv)

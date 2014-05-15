@@ -24,30 +24,21 @@
 int
 fesetround (int round)
 {
-  if (ARM_HAVE_VFP)
-    {
-      fpu_control_t temp;
+  fpu_control_t fpscr;
 
-      switch (round)
-	{
-	case FE_TONEAREST:
-	case FE_UPWARD:
-	case FE_DOWNWARD:
-	case FE_TOWARDZERO:
-	  _FPU_GETCW (temp);
-	  temp = (temp & ~FE_TOWARDZERO) | round;
-	  _FPU_SETCW (temp);
-	  return 0;
-	default:
-	  return 1;
-	}
-    }
-  else if (round == FE_TONEAREST)
-    /* This is the only supported rounding mode for soft-fp.  */
-    return 0;
+  /* FE_TONEAREST is the only supported rounding mode
+     if a VFP unit isn't present.  */
+  if (!ARM_HAVE_VFP)
+    return (round == FE_TONEAREST) ? 0 : 1;
 
-  /* Unsupported, so fail.  */
-  return 1;
+  /* Fail if the rounding mode is not valid.  */
+  if (round & ~FE_TOWARDZERO)
+    return 1;
+
+  _FPU_GETCW (fpscr);
+  fpscr = (fpscr & ~FE_TOWARDZERO) | round;
+  _FPU_SETCW (fpscr);
+  return 0;
 }
 
 libm_hidden_def (fesetround)

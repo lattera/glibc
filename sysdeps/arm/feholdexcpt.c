@@ -24,27 +24,23 @@
 int
 feholdexcept (fenv_t *envp)
 {
-  if (ARM_HAVE_VFP)
-    {
-      unsigned long int temp;
+  fpu_control_t fpscr;
 
-      /* Store the environment.  */
-      _FPU_GETCW(temp);
-      envp->__cw = temp;
+  /* Fail if a VFP unit isn't present.  */
+  if (!ARM_HAVE_VFP)
+    return 1;
 
-      /* Now set all exceptions to non-stop.  */
-      temp &= ~(FE_ALL_EXCEPT << FE_EXCEPT_SHIFT);
+  _FPU_GETCW (fpscr);
+  envp->__cw = fpscr;
 
-      /* And clear all exception flags.  */
-      temp &= ~FE_ALL_EXCEPT;
+  /* Now set all exceptions to non-stop.  */
+  fpscr &= ~(FE_ALL_EXCEPT << FE_EXCEPT_SHIFT);
 
-      _FPU_SETCW(temp);
+  /* And clear all exception flags.  */
+  fpscr &= ~FE_ALL_EXCEPT;
 
-      return 0;
-    }
-
-  /* Unsupported, so fail.  */
-  return 1;
+  _FPU_SETCW (fpscr);
+  return 0;
 }
 
 libm_hidden_def (feholdexcept)

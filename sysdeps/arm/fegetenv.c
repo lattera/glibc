@@ -24,17 +24,14 @@
 int
 fegetenv (fenv_t *envp)
 {
-  if (ARM_HAVE_VFP)
-    {
-      unsigned long int temp;
-      _FPU_GETCW (temp);
-      envp->__cw = temp;
+  fpu_control_t fpscr;
 
-      /* Success.  */
-      return 0;
-    }
+  /* Fail if a VFP unit isn't present.  */
+  if (!ARM_HAVE_VFP)
+    return 1;
 
-  /* Unsupported, so fail.  */
-  return 1;
+  _FPU_GETCW (fpscr);
+  envp->__cw = fpscr;
+  return 0;
 }
 libm_hidden_def (fegetenv)
