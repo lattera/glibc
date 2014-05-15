@@ -7,6 +7,10 @@
 	* login/tst-ptsname.c: New file.
 	* login/Makefile (tests): Add tst-ptsname.
 
+	[BZ #16943]
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h: Declare prlimit
+	and prlimit64.
+
 2014-05-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #16849]
