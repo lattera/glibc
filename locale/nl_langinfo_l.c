@@ -20,6 +20,7 @@
 #include <locale.h>
 #include <errno.h>
 #include <stddef.h>
+#include <stdlib.h>
 #include "localeinfo.h"
 
 
@@ -43,7 +44,21 @@ __nl_langinfo_l (item, l)
   if (index == _NL_ITEM_INDEX (_NL_LOCALE_NAME (category)))
     return (char *) l->__names[category];
 
+#if defined NL_CURRENT_INDIRECT
+  /* Make direct reference to every _nl_current_CATEGORY symbol,
+     since we know only at runtime which categories are used.  */
+  switch (category)
+    {
+# define DEFINE_CATEGORY(category, category_name, items, a) \
+      case category: data = *_nl_current_##category; break;
+# include "categories.def"
+# undef DEFINE_CATEGORY
+    default:                   /* Should be impossible.  */
+      abort();
+    }
+#else
   data = l->__locales[category];
+#endif
 
   if (index >= data->nstrings)
     /* Bogus index for this category: bogus item.  */

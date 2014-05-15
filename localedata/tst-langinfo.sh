@@ -340,7 +340,6 @@ ja_JP.EUC-JP         NOEXPR      ^([nNｎＮ]|いいえ|イイエ)
 ja_JP.EUC-JP         CODESET     EUC-JP
 EOF
 LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}iconvdata \
-LC_ALL=tt_TT ${tst_langinfo} \
-    > ${common_objpfx}localedata/tst-langinfo.out
+LC_ALL=tt_TT ${tst_langinfo}
 
 exit $?

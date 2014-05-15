@@ -1,3 +1,16 @@
+2014-05-20  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #16915]
+	* locale/nl_langinfo_l.c: Make direct reference to every
+	_nl_current_CATEGORY symbol.
+	* localedata/Makefile (test-srcs): Add tst-langinfo-static.
+	(tests-static): Add tst-langinfo-static.
+	(tests-special): Add tst-langinfo-static.out.
+	($(objpfx)tst-langinfo.out): Redirect output.
+	($(objpfx)tst-langinfo-static.out): New.
+	* localedata/tst-langinfo.sh: Send output to stdout.
+	* localedata/tst-langinfo-static.c: New file.
+
 2014-05-20  Richard Henderson  <rth@redhat.com>
 
 	[BZ #16967]
