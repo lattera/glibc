@@ -1,3 +1,9 @@
+2014-05-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #16849]
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Only check for
+	herrno to return EAI_AGAIN.
+
 2014-05-14  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/i386/nptl/c++-types.data: Moved ...
