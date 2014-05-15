@@ -17,27 +17,35 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <fenv.h>
-#include <fpu_control.h>
+#include <fenv_private.h>
 #include <arm-features.h>
 
 
 int
 feupdateenv (const fenv_t *envp)
 {
-  fpu_control_t fpscr;
+  fenv_t fenv;
 
   /* Fail if a VFP unit isn't present.  */
   if (!ARM_HAVE_VFP)
     return 1;
 
-  _FPU_GETCW (fpscr);
+  if ((envp == FE_DFL_ENV) || (envp == FE_NOMASK_ENV))
+    {
+      fpu_control_t fpscr;
 
-  /* Install new environment.  */
-  fesetenv (envp);
+      _FPU_GETCW (fpscr);
 
-  /* Raise the saved exceptions.  */
-  feraiseexcept (fpscr & FE_ALL_EXCEPT);
+      /* Preserve the reserved FPSCR flags.  */
+      fpscr &= _FPU_RESERVED;
+      fpscr |= (envp == FE_DFL_ENV) ? _FPU_DEFAULT : _FPU_IEEE;
+
+      /* Create a valid fenv to pass to libc_feupdateenv_vfp.  */
+      fenv.__cw = fpscr;
+      envp = &fenv;
+    }
+
+  libc_feupdateenv_vfp (envp);
   return 0;
 }
 libm_hidden_def (feupdateenv)

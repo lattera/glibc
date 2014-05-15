@@ -16,28 +16,22 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <fenv.h>
-#include <fpu_control.h>
+#include <fenv_private.h>
 #include <arm-features.h>
 
 
 int
 fesetround (int round)
 {
-  fpu_control_t fpscr;
-
   /* FE_TONEAREST is the only supported rounding mode
      if a VFP unit isn't present.  */
   if (!ARM_HAVE_VFP)
     return (round == FE_TONEAREST) ? 0 : 1;
 
-  /* Fail if the rounding mode is not valid.  */
   if (round & ~FE_TOWARDZERO)
     return 1;
 
-  _FPU_GETCW (fpscr);
-  fpscr = (fpscr & ~FE_TOWARDZERO) | round;
-  _FPU_SETCW (fpscr);
+  libc_fesetround_vfp (round);
   return 0;
 }
 

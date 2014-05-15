@@ -16,43 +16,43 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <fenv.h>
-#include <fpu_control.h>
+#include <fenv_private.h>
 #include <arm-features.h>
 
 
 int
 fesetenv (const fenv_t *envp)
 {
-  fpu_control_t fpscr;
-
   /* Fail if a VFP unit isn't present.  */
   if (!ARM_HAVE_VFP)
     return 1;
 
-  _FPU_GETCW (fpscr);
-
-  /* Preserve the reserved FPSCR flags.  */
-  fpscr &= _FPU_RESERVED;
-
-  if (envp == FE_DFL_ENV)
-    fpscr |= _FPU_DEFAULT;
-  else if (envp == FE_NOMASK_ENV)
-    fpscr |= _FPU_IEEE;
-  else
-    fpscr |= envp->__cw & ~_FPU_RESERVED;
-
-  _FPU_SETCW (fpscr);
-
-  if (envp == FE_NOMASK_ENV)
+  if ((envp == FE_DFL_ENV) || (envp == FE_NOMASK_ENV))
     {
-      /* Not all VFP architectures support trapping exceptions, so
-	 test whether the relevant bits were set and fail if not.  */
+      fpu_control_t fpscr, new_fpscr;
+
       _FPU_GETCW (fpscr);
-      if ((fpscr & _FPU_IEEE) != _FPU_IEEE)
-	return 1;
+
+      /* Preserve the reserved FPSCR flags.  */
+      new_fpscr = fpscr & _FPU_RESERVED;
+
+      if (envp == FE_DFL_ENV)
+	_FPU_SETCW (new_fpscr | _FPU_DEFAULT);
+      else
+	{
+	  _FPU_SETCW (new_fpscr | _FPU_IEEE);
+	  /* Not all VFP architectures support trapping exceptions, so
+	     test whether the relevant bits were set and fail if not.  */
+	  _FPU_GETCW (fpscr);
+
+	  if ((fpscr & _FPU_IEEE) != _FPU_IEEE)
+	    return 1;
+	}
+
+      return 0;
     }
 
+  libc_fesetenv_vfp (envp);
   return 0;
 }
 

@@ -35,7 +35,9 @@ fedisableexcept (int excepts)
   excepts &= FE_ALL_EXCEPT;
   new_fpscr = fpscr & ~(excepts << FE_EXCEPT_SHIFT);
 
-  _FPU_SETCW (new_fpscr);
+  /* Write new exceptions if changed.  */
+  if (new_fpscr != fpscr)
+    _FPU_SETCW (new_fpscr);
 
   return (fpscr >> FE_EXCEPT_SHIFT) & FE_ALL_EXCEPT;
 }

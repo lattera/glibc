@@ -35,15 +35,15 @@ feenableexcept (int excepts)
   excepts &= FE_ALL_EXCEPT;
   new_fpscr = fpscr | (excepts << FE_EXCEPT_SHIFT);
 
-  _FPU_SETCW (new_fpscr);
-
-  if (excepts != 0)
+  if (new_fpscr != fpscr)
     {
+      _FPU_SETCW (new_fpscr);
+
       /* Not all VFP architectures support trapping exceptions, so
 	 test whether the relevant bits were set and fail if not.  */
       _FPU_GETCW (new_fpscr);
-      if ((new_fpscr & (excepts << FE_EXCEPT_SHIFT))
-	  != (excepts << FE_EXCEPT_SHIFT))
+
+      if (((new_fpscr >> FE_EXCEPT_SHIFT) & excepts) != excepts)
 	return -1;
     }
 
