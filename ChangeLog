@@ -1,3 +1,8 @@
+2014-05-16  Allan McRae  <allan@archlinux.org>
+
+	* timezone/Makefile ($(objpfx)tzselect): Use correct variable
+	in sed expression.
+
 2014-05-16  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #16917]
