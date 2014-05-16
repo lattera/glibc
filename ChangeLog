@@ -1,5 +1,7 @@
 2014-05-16  Allan McRae  <allan@archlinux.org>
 
+	* po/sv.po: Update Swedish translation from translation project.
+
 	* timezone/Makefile ($(objpfx)tzselect): Use correct variable
 	in sed expression.
 

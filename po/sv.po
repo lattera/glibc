@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.18.90.20140105\n"
 "POT-Creation-Date: 2014-01-05 17:40+1000\n"
-"PO-Revision-Date: 2014-01-09 10:33+0100\n"
+"PO-Revision-Date: 2014-05-06 18:15+0200\n"
 "Last-Translator: Jan Djärv <jan.h.d@swipnet.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -883,7 +883,7 @@ msgstr "bibliotek %s och %s i katalog %s har samma \"soname\" men olika typ."
 #: elf/ldconfig.c:1072
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
-msgstr "Varning: Ignorerar konfigurationsfil som inte kan öppnas: %s"
+msgstr "Varning: ignorerar konfigurationsfil som inte kan öppnas: %s"
 
 #: elf/ldconfig.c:1138
 #, c-format
@@ -4104,7 +4104,7 @@ msgstr "Skapa inte barnprocess, visa meddelanden på nuvarande tty"
 
 #: nscd/nscd.c:120
 msgid "Do not fork, but otherwise behave like a daemon"
-msgstr "Skapa inte brnprocess, men i allt annat uppträd som en demon"
+msgstr "Skapa inte barnprocess, men i allt annat uppträd som en demon"
 
 #: nscd/nscd.c:121
 msgid "NUMBER"
@@ -4630,7 +4630,7 @@ msgstr "problem när \"%s\" lästes"
 #: nss/makedb.c:799
 #, c-format
 msgid "failed to write new database file"
-msgstr "misslyckades med att skriva databasfil"
+msgstr "misslyckades med att skriva ny databasfil"
 
 #: nss/makedb.c:812
 #, c-format
@@ -5496,7 +5496,7 @@ msgstr "-Y sökväg\t\tkatalog för att hitta C preprocessorn (cpp)\n"
 #: sunrpc/rpc_main.c:1445
 #, c-format
 msgid "-5\t\tSysVr4 compatibility mode\n"
-msgstr "-5\t\tSysVr4 kompabilitetsläge\n"
+msgstr "-5\t\tSysVr4-kompatibilitetsläge\n"
 
 #: sunrpc/rpc_main.c:1446
 #, c-format
@@ -6812,7 +6812,7 @@ msgid ""
 "\n"
 "Report bugs to %s.\n"
 msgstr ""
-"%s: användning är %s [ --version ] [ --help ] [ -{vV} ] [ -{ct} [start,]slut] zonnamn ...\n"
+"%s: användning: %s [ --version ] [ --help ] [ -{vV} ] [ -{ct} [start,]slut] zonnamn ...\n"
 "Rapportera fel till %s.\n"
 "Rapportera fel eller synpunkter på översättningen till <tp-sv@listor.tp-sv.se>.\n"
 
