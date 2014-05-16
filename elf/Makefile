@@ -653,7 +653,7 @@ $(objpfx)vismain: $(addprefix $(objpfx),vismod1.so vismod2.so)
 $(objpfx)vismain.out: $(addprefix $(objpfx),vismod3.so)
 vismain-ENV = LD_PRELOAD=$(addprefix $(objpfx),vismod3.so)
 
-$(objpfx)noload: $(objpfx)testobj1.so $(common-objpfx)dlfcn/libdl.so
+$(objpfx)noload: $(objpfx)testobj1.so $(libdl)
 LDFLAGS-noload = -rdynamic $(no-as-needed)
 $(objpfx)noload.out: $(objpfx)testobj5.so
 
@@ -1011,7 +1011,7 @@ $(objpfx)tst-audit9: $(libdl)
 $(objpfx)tst-audit9.out: $(objpfx)tst-auditmod9a.so $(objpfx)tst-auditmod9b.so
 tst-audit9-ENV = LD_AUDIT=$(objpfx)tst-auditmod9a.so
 
-$(objpfx)tst-audit8: $(common-objpfx)math/libm.so
+$(objpfx)tst-audit8: $(libm)
 $(objpfx)tst-audit8.out: $(objpfx)tst-auditmod1.so
 tst-audit8-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
 

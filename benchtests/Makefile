@@ -44,9 +44,8 @@ benchset := $(string-bench-all) $(stdlib-bench)
 CFLAGS-bench-ffs.c += -fno-builtin
 CFLAGS-bench-ffsll.c += -fno-builtin
 
-$(addprefix $(objpfx)bench-,$(bench-math)): $(common-objpfx)math/libm.so
-$(addprefix $(objpfx)bench-,$(bench-pthread)): \
-	$(common-objpfx)nptl/libpthread.so
+$(addprefix $(objpfx)bench-,$(bench-math)): $(libm)
+$(addprefix $(objpfx)bench-,$(bench-pthread)): $(shared-thread-library)
 
 
 

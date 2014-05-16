@@ -33,9 +33,4 @@ tests		:= tst-setjmp jmpbug bug269-setjmp tst-setjmp-fp \
 
 include ../Rules
 
-ifeq ($(build-shared),yes)
-link-libm = $(common-objpfx)math/libm.so
-else
-link-libm = $(common-objpfx)math/libm.a
-endif
-$(objpfx)tst-setjmp-fp: $(link-libm)
+$(objpfx)tst-setjmp-fp: $(libm)

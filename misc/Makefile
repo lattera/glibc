@@ -102,11 +102,7 @@ include ../Rules
 
 $(objpfx)libg.a: $(dep-dummy-lib); $(make-dummy-lib)
 
-ifeq ($(build-shared),yes)
-$(objpfx)tst-tsearch: $(common-objpfx)math/libm.so$(libm.so-version)
-else
-$(objpfx)tst-tsearch: $(common-objpfx)math/libm.a
-endif
+$(objpfx)tst-tsearch: $(libm)
 
 tst-error1-ENV = MALLOC_TRACE=$(objpfx)tst-error1.mtrace
 tst-error1-ARGS = $(objpfx)tst-error1.out

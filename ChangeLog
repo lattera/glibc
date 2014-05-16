@@ -1,3 +1,41 @@
+2014-05-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* benchtests/Makefile
+	($(addprefix $(objpfx)bench-,$(bench-math))): Depend on $(libm),
+	not $(common-objpfx)math/libm.so.
+	($(addprefix $(objpfx)bench-,$(bench-pthread))): Depend on
+	$(shared-thread-library), not $(common-objpfx)nptl/libpthread.so.
+	* elf/Makefile ($(objpfx)noload): Depend on $(libdl), not
+	$(common-objpfx)dlfcn/libdl.so.
+	($(objpfx)tst-audit8): Depend on $(libm), not
+	$(common-objpfx)math/libm.so.
+	* malloc/Makefile ($(objpfx)libmemusage.so): Depend on $(libdl),
+	not $(common-objpfx)dlfcn/libdl.so.
+	* math/Makefile
+	($(addprefix $(objpfx),$(filter-out $(tests-static),$(tests)))):
+	Depend on $(libm), not $(objpfx)libm.so.  Do not condition on
+	[$(build-shared) = yes].
+	($(objpfx)test-fenv-tls): Depend on $(shared-thread-library), not
+	$(common-objpfx)nptl/libpthread.so.
+	* misc/Makefile ($(objpfx)tst-tsearch): Depend on $(libm), not
+	$(common-objpfx)math/libm.so$(libm.so-version) or
+	$(common-objpfx)math/libm.a depending on [$(build-shared) = yes].
+	* nptl/Makefile ($(objpfx)tst-unload): Depend on $(libdl), not
+	$(common-objpfx)dlfcn/libdl.so.
+	* setjmp/Makefile (link-libm): Remove variable.
+	($(objpfx)tst-setjmp-fp): Depend on $(libm), not $(link-libm).
+	* stdio-common/Makefile (link-libm): Remove variable.
+	($(objpfx)tst-printf-round): Depend on $(libm), not $(link-libm).
+	* stdlib/Makefile (link-libm): Remove variable.
+	($(objpfx)bug-getcontext): Depend on $(libm), not $(link-libm).
+	($(objpfx)tst-strtod-round): Likewise.
+	($(objpfx)tst-tininess): Likewise.
+	($(objpfx)tst-strtod-underflow): Likewise.
+	($(objpfx)tst-strtod6): Likewise.
+	($(objpfx)tst-tls-atexit): Depend on $(shared-thread-library) and
+	$(libdl), not $(common-objpfx)nptl/libpthread.so and
+	$(common-objpfx)dlfcn/libdl.so.
+
 2014-05-16  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h [__USE_MISC]: Guard

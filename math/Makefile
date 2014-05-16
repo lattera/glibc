@@ -219,12 +219,8 @@ $(objpfx)libieee.a: $(objpfx)ieee-math.o
 	$(patsubst %/,cd % &&,$(objpfx)) \
 	$(LN_S) $(<F) $(@F)
 
-ifeq ($(build-shared),yes)
-$(addprefix $(objpfx),$(filter-out $(tests-static),$(tests))): $(objpfx)libm.so$(libm.so-version)
+$(addprefix $(objpfx),$(filter-out $(tests-static),$(tests))): $(libm)
 $(addprefix $(objpfx),$(tests-static)): $(objpfx)libm.a
-else
-$(addprefix $(objpfx),$(tests)): $(objpfx)libm.a
-endif
 
 gmp-objs = $(patsubst %,$(common-objpfx)stdlib/%.o,\
 		      add_n sub_n cmp addmul_1 mul_1 mul_n divmod_1 \
@@ -233,4 +229,4 @@ gmp-objs = $(patsubst %,$(common-objpfx)stdlib/%.o,\
 $(objpfx)atest-exp: $(gmp-objs)
 $(objpfx)atest-sincos: $(gmp-objs)
 $(objpfx)atest-exp2: $(gmp-objs)
-$(objpfx)test-fenv-tls: $(common-objpfx)nptl/libpthread.so
+$(objpfx)test-fenv-tls: $(shared-thread-library)

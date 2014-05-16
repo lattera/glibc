@@ -137,9 +137,4 @@ $(objpfx)tst-setvbuf1-cmp.out: tst-setvbuf1.expect $(objpfx)tst-setvbuf1.out
 	cmp $^ > $@; \
 	$(evaluate-test)
 
-ifeq ($(build-shared),yes)
-link-libm = $(common-objpfx)math/libm.so
-else
-link-libm = $(common-objpfx)math/libm.a
-endif
-$(objpfx)tst-printf-round: $(link-libm)
+$(objpfx)tst-printf-round: $(libm)
