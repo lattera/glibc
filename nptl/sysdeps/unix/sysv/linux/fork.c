@@ -29,6 +29,7 @@
 #include <atomic.h>
 #include <pthreadP.h>
 #include <fork.h>
+#include <arch-fork.h>
 
 
 unsigned long int *__fork_generation_pointer;

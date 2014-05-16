@@ -1,3 +1,16 @@
+2014-05-16  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/i386/fork.h: Moved ...
+	* sysdeps/unix/sysv/linux/i386/arch-fork.h: ... here.
+	Don't do #include_next.
+	* sysdeps/unix/sysv/linux/x86_64/fork.h: Moved ...
+	* sysdeps/unix/sysv/linux/x86_64/arch-fork.h: ... here.
+	Don't do #include_next.
+	* sysdeps/unix/sysv/linux/mips/arch-fork.h: New file.
+	* sysdeps/unix/sysv/linux/mips/fork.h: File removed.
+	* sysdeps/unix/sysv/linux/powerpc/arch-fork.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/fork.h: File removed.
+
 2014-05-16  Allan McRae  <allan@archlinux.org>
 
 	* po/sv.po: Update Swedish translation from translation project.
