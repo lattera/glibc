@@ -83,13 +83,8 @@ extern int __openat64_nocancel (int fd, const char *fname, int oflag,
   __fcntl_nocancel (fd, cmd, val)
 
 /* Uncancelable waitpid.  */
-#ifdef __NR_waitpid
-# define waitpid_not_cancel(pid, stat_loc, options) \
-  __waitpid_nocancel (pid, stat_loc, options)
-#else
-# define waitpid_not_cancel(pid, stat_loc, options) \
+#define waitpid_not_cancel(pid, stat_loc, options) \
   INLINE_SYSCALL (wait4, 4, pid, stat_loc, options, NULL)
-#endif
 
 /* Uncancelable pause.  */
 #define pause_not_cancel() \
