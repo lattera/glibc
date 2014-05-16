@@ -1,3 +1,8 @@
+2014-05-30  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/m68k/arch-fork.h: New file.
+	* sysdeps/unix/sysv/linux/m68k/nptl/fork.c: File removed.
+
 2014-05-30  Ondřej Bílka  <neleai@seznam.cz>
 
 	* malloc/malloc.c (malloc_info): Inline mi_arena.
