@@ -1,6 +1,6 @@
-/* Copyright (C) 2005-2014 Free Software Foundation, Inc.
+/* ARCH_FORK definition for Linux fork implementation.  ARM version.
+   Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Phil Blundell <pb@nexus.co.uk>, 2005
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -13,18 +13,15 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
 #include <sched.h>
-#include <signal.h>
 #include <sysdep.h>
 #include <tls.h>
 
 
-#define ARCH_FORK()							\
-  INLINE_SYSCALL (clone, 5,						\
-		  CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD,	\
-		  NULL, NULL, NULL, &THREAD_SELF->tid)
-
-#include <nptl/sysdeps/unix/sysv/linux/fork.c>
+#define ARCH_FORK()                                                     \
+  INLINE_SYSCALL (clone, 5,                                             \
+                  CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD,  \
+                  NULL, NULL, NULL, &THREAD_SELF->tid)

@@ -1,5 +1,8 @@
 2014-05-16  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/arm/arch-fork.h: New file.
+	* sysdeps/unix/sysv/linux/arm/fork.c: File removed.
+
 	* sysdeps/unix/sysv/linux/arch-fork.h: New file.
 	* sysdeps/unix/sysv/linux/i386/fork.h: Moved ...
 	* sysdeps/unix/sysv/linux/i386/arch-fork.h: ... here.
