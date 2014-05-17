@@ -1,3 +1,9 @@
+2014-05-17  Jose E. Marchesi  <jose.marchesi@oracle.com>
+
+	[BZ #16958]
+	* sysdeps/sparc/sparc64/multiarch/memcpy-niagara2.S: Add missing
+	membar to avoid block loads/stores to overlap previous stores.
+
 2014-05-17  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/nptl/sysdep-cancel.h (PSEUDO):

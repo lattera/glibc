@@ -211,6 +211,7 @@ ENTRY(__memcpy_niagara2)
 	 */
 	VISEntryHalf
 
+	membar		#Sync
 	alignaddr	%o1, %g0, %g0
 
 	add		%o1, (64 - 1), %o4
