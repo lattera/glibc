@@ -9,6 +9,9 @@
 
 2014-05-16  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/alpha/arch-fork.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/nptl/fork.c: File removed.
+
 	* sysdeps/unix/sysv/linux/not-cancel.h (waitpid_not_cancel):
 	Use wait4 regardless of [__NR_waitpid].
 
