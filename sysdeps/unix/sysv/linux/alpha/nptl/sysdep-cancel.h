@@ -28,24 +28,32 @@
 
 # undef PSEUDO
 # define PSEUDO(name, syscall_name, args)			\
-	.globl name;						\
+	.globl	__##syscall_name##_nocancel;			\
+	.type	__##syscall_name##_nocancel, @function;		\
+	.usepv	__##syscall_name##_nocancel, std;		\
 	.align 4;						\
-	.type name, @function;					\
-	.usepv name, std;					\
 	cfi_startproc;						\
-__LABEL(name)							\
+__LABEL(__##syscall_name##_nocancel)				\
 	ldgp	gp, 0(pv);					\
 	PSEUDO_PROF;						\
-	PSEUDO_PREPARE_ARGS					\
-	SINGLE_THREAD_P(t0);					\
-	bne	t0, $pseudo_cancel;				\
+__LABEL($pseudo_nocancel)					\
+	PSEUDO_PREPARE_ARGS;					\
 	lda	v0, SYS_ify(syscall_name);			\
 	call_pal PAL_callsys;					\
 	bne	a3, SYSCALL_ERROR_LABEL;			\
 __LABEL($pseudo_ret)						\
 	.subsection 2;						\
+	.size __##syscall_name##_nocancel, .-__##syscall_name##_nocancel; \
+	.globl	name;						\
+	.type	name, @function;				\
+	.usepv	name, std;					\
+	.align 4;						\
 	cfi_startproc;						\
-__LABEL($pseudo_cancel)						\
+__LABEL(name)							\
+	ldgp	gp, 0(pv);					\
+	PSEUDO_PROF;						\
+	SINGLE_THREAD_P(t0);					\
+	beq	t0, $pseudo_nocancel;				\
 	subq	sp, 64, sp;					\
 	cfi_def_cfa_offset(64);					\
 	stq	ra, 0(sp);					\

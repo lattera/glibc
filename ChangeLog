@@ -1,3 +1,10 @@
+2014-05-17  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/nptl/sysdep-cancel.h (PSEUDO):
+	Create the __##syscall_name##_nocancel entry point.
+	* sysdeps/unix/sysv/linux/alpha/sigsuspend.S (__sigsuspend_nocancel):
+	Remove; let the sysdep-cancel.h code create it.
+
 2014-05-17  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/bits/termios.h (PAGEOUT, WRAP):
