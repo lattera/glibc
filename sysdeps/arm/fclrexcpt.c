@@ -24,7 +24,7 @@
 int
 feclearexcept (int excepts)
 {
-  fpu_control_t fpscr, new_fpscr;
+  fpu_control_t fpscr;
 
   /* Fail if a VFP unit isn't present unless nothing needs to be done.  */
   if (!ARM_HAVE_VFP)
@@ -32,11 +32,11 @@ feclearexcept (int excepts)
 
   _FPU_GETCW (fpscr);
   excepts &= FE_ALL_EXCEPT;
-  new_fpscr = fpscr & ~excepts;
 
-  /* Write new exception flags if changed.  */
-  if (new_fpscr != fpscr)
-    _FPU_SETCW (new_fpscr);
+  /* Clear the relevant bits.  */
+  fpscr = (fpscr & ~FE_ALL_EXCEPT) | (fpscr & FE_ALL_EXCEPT & ~excepts);
+
+  _FPU_SETCW (fpscr);
 
   return 0;
 }

@@ -1013,24 +1013,6 @@
 
 2014-05-14  Wilco  <wdijkstr@arm.com>
 
-	* sysdeps/arm/fclrexcpt.c: Optimize to avoid unnecessary FPSCR writes.
-	* sysdeps/arm/fedisblxcpt.c: Likewise.
-	* sysdeps/arm/feenablxcpt.c: Likewise.
-	* sysdeps/arm/fegetround.c: Call (get_rounding_mode).
-	* sysdeps/arm/feholdexcpt.c: Call optimized (libc_feholdexcept_vfp).
-	* sysdeps/arm/fesetenv.c: Special case FE_DFL_ENV and FE_NOMASK_ENV.
-	Call optimized (libc_fesetenv_vfp).
-	* sysdeps/arm/fesetround.c: Call optimized (libc_fesetround_vfp).
-	* sysdeps/arm/feupdateenv.c: Special case FE_DFL_ENV and FE_NOMASK_ENV.
-	Call optimized (libc_feupdateenv_vfp).
-	* sysdeps/arm/fgetexcptflg.c: Call optimized (libc_fetestexcept_vfp).
-	* sysdeps/arm/fsetexcptflg.c: Optimize to avoid unnecessary FPSCR
-	writes.
-	* sysdeps/arm/ftestexcept.c: Call optimized (libc_fetestexcept_vfp).
-	* sysdeps/arm/setfpucw.c: Optimize to avoid unnecessary FPSCR writes.
-
-2014-05-14  Wilco  <wdijkstr@arm.com>
-
 	* sysdeps/arm/fclrexcpt.c: Cleanup.
 	* sysdeps/arm/fedisblxcpt.c: Cleanup.
 	* sysdeps/arm/feenablxcpt.c: Cleanup.

@@ -16,12 +16,22 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <get-rounding-mode.h>
+#include <fenv.h>
+#include <fpu_control.h>
+#include <arm-features.h>
 
 
 int
 fegetround (void)
 {
-  return get_rounding_mode ();
+  fpu_control_t fpscr;
+
+  /* FE_TONEAREST is the only supported rounding mode
+     if a VFP unit isn't present.  */
+  if (!ARM_HAVE_VFP)
+    return FE_TONEAREST;
+
+  _FPU_GETCW (fpscr);
+  return fpscr & FE_TOWARDZERO;
 }
 libm_hidden_def (fegetround)

@@ -17,17 +17,22 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <fenv_private.h>
+#include <fenv.h>
+#include <fpu_control.h>
 #include <arm-features.h>
 
 
 int
 fegetexceptflag (fexcept_t *flagp, int excepts)
 {
+  fpu_control_t fpscr;
+
   /* Fail if a VFP unit isn't present.  */
   if (!ARM_HAVE_VFP)
     return 1;
 
-  *flagp = libc_fetestexcept_vfp (excepts);
+  _FPU_GETCW (fpscr);
+
+  *flagp = fpscr & excepts & FE_ALL_EXCEPT;
   return 0;
 }

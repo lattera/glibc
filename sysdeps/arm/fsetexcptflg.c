@@ -25,22 +25,19 @@
 int
 fesetexceptflag (const fexcept_t *flagp, int excepts)
 {
-  fpu_control_t fpscr, new_fpscr;
+  fpu_control_t fpscr;
 
   /* Fail if a VFP unit isn't present unless nothing needs to be done.  */
   if (!ARM_HAVE_VFP)
     return (excepts != 0);
 
   _FPU_GETCW (fpscr);
-  excepts &= FE_ALL_EXCEPT;
 
   /* Set the desired exception mask.  */
-  new_fpscr = fpscr & ~excepts;
-  new_fpscr |= *flagp & excepts;
+  fpscr &= ~(excepts & FE_ALL_EXCEPT);
+  fpscr |= (*flagp & excepts & FE_ALL_EXCEPT);
 
-  /* Write new exception flags if changed.  */
-  if (new_fpscr != fpscr)
-    _FPU_SETCW (new_fpscr);
-
+  /* Save state back to the FPU.  */
+  _FPU_SETCW (fpscr);
   return 0;
 }
