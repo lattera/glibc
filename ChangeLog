@@ -1,3 +1,7 @@
+2014-05-18  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/dl-machine.h (ELF_MACHINE_NO_RELA): Define.
+
 2014-05-20  Will Newton  <will.newton@linaro.org>
 
 	* sysdeps/unix/sysv/linux/aarch64/nptl/sysdep-cancel.h (PSEUDO):

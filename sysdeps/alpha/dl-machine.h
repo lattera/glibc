@@ -242,6 +242,7 @@ $fixup_stack:							\n\
 
 /* The alpha never uses Elf64_Rel relocations.  */
 #define ELF_MACHINE_NO_REL 1
+#define ELF_MACHINE_NO_RELA 0
 
 /* We define an initialization functions.  This is called very early in
  *    _dl_sysdep_start.  */
