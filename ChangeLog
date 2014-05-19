@@ -1,4 +1,9 @@
 2014-05-20  Will Newton  <will.newton@linaro.org>
+
+	* sysdeps/unix/sysv/linux/aarch64/nptl/sysdep-cancel.h (PSEUDO):
+	Test the return value of the system call in the nocancel case.
+
+2014-05-20  Will Newton  <will.newton@linaro.org>
 	    Yvan Roux  <yvan.roux@linaro.org>
 
 	* sysdeps/unix/sysv/linux/aarch64/sys/user.h: Remove unused

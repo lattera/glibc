@@ -32,6 +32,7 @@
   __##syscall_name##_nocancel:						\
     cfi_startproc;							\
     DO_CALL (syscall_name, args);					\
+    cmn x0, 4095;							\
     PSEUDO_RET;								\
     cfi_endproc;							\
     .size __##syscall_name##_nocancel,.-__##syscall_name##_nocancel;	\
