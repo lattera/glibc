@@ -1,3 +1,8 @@
+2014-05-19  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_hypof.c: Moved ...
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_hypotf.c: ... here.
+
 2014-05-17  Jose E. Marchesi  <jose.marchesi@oracle.com>
 
 	[BZ #16958]
