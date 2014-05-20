@@ -1,3 +1,8 @@
+2014-05-20  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/math_private.h [__copysignf]: Fix copysign macro
+	optimization when used with float constants.
+
 2014-05-20  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #16915]

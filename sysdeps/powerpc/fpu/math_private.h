@@ -166,11 +166,13 @@ __ieee754_sqrtf (float __x)
 # ifndef __copysignf
 #  define __copysignf(x, y)		\
     ({ float __z;			\
+       float __x = x;			\
+       float __y = y;			\
      __asm __volatile (			\
 	"	fcpsgn %0,%1,%2\n"	\
 	"	frsp %0,%0\n"		\
 		: "=f" (__z)		\
-		: "f" (y), "f" (x));	\
+		: "f" (__y), "f" (__x));\
      __z; })
 # endif
 
