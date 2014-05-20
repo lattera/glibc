@@ -748,7 +748,7 @@ are very helpful for this purpose.
 
 @comment dirent.h
 @comment BSD/SVID
-@deftypefun int alphasort (const void *@var{a}, const void *@var{b})
+@deftypefun int alphasort (const struct dirent **@var{a}, const struct dirent **@var{b})
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 @c Calls strcoll.
 The @code{alphasort} function behaves like the @code{strcoll} function
@@ -762,7 +762,7 @@ than zero depending on the order of the two entries @var{a} and @var{b}.
 
 @comment dirent.h
 @comment GNU
-@deftypefun int versionsort (const void *@var{a}, const void *@var{b})
+@deftypefun int versionsort (const struct dirent **@var{a}, const struct dirent **@var{b})
 @safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
 @c Calls strverscmp, which will accesses the locale object multiple
 @c times.
@@ -797,7 +797,7 @@ argument.  Instead we provide the two replacement functions below.
 
 @comment dirent.h
 @comment GNU
-@deftypefun int alphasort64 (const void *@var{a}, const void *@var{b})
+@deftypefun int alphasort64 (const struct dirent64 **@var{a}, const struct dirent **@var{b})
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 @c See alphasort.
 The @code{alphasort64} function behaves like the @code{strcoll} function
@@ -811,7 +811,7 @@ than zero depending on the order of the two entries @var{a} and @var{b}.
 
 @comment dirent.h
 @comment GNU
-@deftypefun int versionsort64 (const void *@var{a}, const void *@var{b})
+@deftypefun int versionsort64 (const struct dirent64 **@var{a}, const struct dirent64 **@var{b})
 @safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
 @c See versionsort.
 The @code{versionsort64} function is like @code{alphasort64}, excepted that it

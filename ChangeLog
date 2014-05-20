@@ -1,3 +1,8 @@
+2014-05-23  Rasmus Villemoes  <rv@rasmusvillemoes.dk>
+
+	* manual/filesys.texi (Scanning Directory Content): Fix prototype of
+	alphasort and versionsort.
+
 2014-05-22  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/math_private.h [copysign]: Remove unneeded
