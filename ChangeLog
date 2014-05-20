@@ -1,3 +1,21 @@
+2014-05-20  Will Newton  <will.newton@linaro.org>
+	    Yvan Roux  <yvan.roux@linaro.org>
+
+	* sysdeps/unix/sysv/linux/aarch64/sys/user.h: Remove unused
+	#include of asm/ptrace.h.
+	(PTRACE_GET_THREAD_AREA): Remove #undef.
+	(PTRACE_GETHBPREGS): Likewise.
+	(PTRACE_SETHBPREGS): Likewise.
+	(struct user_regs_struct): New structure.
+	(struct user_fpsimd_struct): New structure.
+	* sysdeps/unix/sysv/linux/aarch64/sys/procfs.h: Remove unused
+	#include of asm/ptrace.h and second #include of sys/user.h.
+	(PTRACE_GET_THREAD_AREA): Remove #undef.
+	(PTRACE_GETHBPREGS): Likewise.
+	(PTRACE_SETHBPREGS): Likewise.
+	(ELF_NGREG): Use new struct user_regs_struct.
+	(elf_fpregset_t): Use new struct user_fpsimd_struct.
+
 2014-05-19  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_hypof.c: Moved ...

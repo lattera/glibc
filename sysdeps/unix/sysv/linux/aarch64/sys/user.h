@@ -19,13 +19,19 @@
 #ifndef _SYS_USER_H
 #define _SYS_USER_H	1
 
-/* We need to see the definition of struct pt_regs but do not want the
-   linux PTRACE_* defines since they conflict with the generic glibc
-   definitions in sys/ptrace.h Hence the undef's below.  */
-#include <asm/ptrace.h>
+struct user_regs_struct
+{
+  unsigned long long regs[31];
+  unsigned long long sp;
+  unsigned long long pc;
+  unsigned long long pstate;
+};
 
-#undef PTRACE_GET_THREAD_AREA
-#undef PTRACE_GETHBPREGS
-#undef PTRACE_SETHBPREGS
+struct user_fpsimd_struct
+{
+  __uint128_t  vregs[32];
+  unsigned int fpsr;
+  unsigned int fpcr;
+};
 
 #endif

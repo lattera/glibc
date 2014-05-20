@@ -33,17 +33,6 @@
 #include <sys/types.h>
 #include <sys/user.h>
 
-/* We need to see the definition of struct pt_regs but do not want the
-   linux PTRACE_* defines since they conflict with the generic eglibc
-   definitions in sys/ptrace.h Hence the undef's below.  */
-#include <asm/ptrace.h>
-
-#undef PTRACE_GET_THREAD_AREA
-#undef PTRACE_GETHBPREGS
-#undef PTRACE_SETHBPREGS
-
-#include <sys/user.h>
-
 __BEGIN_DECLS
 
 /* Type for a general-purpose register.  */
@@ -53,11 +42,11 @@ typedef unsigned long elf_greg_t;
    pt_regs' directly in the typedef, but tradition says that
    the register set is an array, which does have some peculiar
    semantics, so leave it that way.  */
-#define ELF_NGREG (sizeof (struct user_pt_regs) / sizeof(elf_greg_t))
+#define ELF_NGREG (sizeof (struct user_regs_struct) / sizeof(elf_greg_t))
 typedef elf_greg_t elf_gregset_t[ELF_NGREG];
 
 /* Register set for the floating-point registers.  */
-typedef struct user_fpsimd_state elf_fpregset_t;
+typedef struct user_fpsimd_struct elf_fpregset_t;
 
 /* Signal info.  */
 struct elf_siginfo
