@@ -3,6 +3,8 @@
 	* sysdeps/powerpc/fpu/math_private.h [__copysignf]: Fix copysign macro
 	optimization when used with float constants.
 
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
+
 2014-05-20  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #16915]

@@ -37,6 +37,21 @@ idouble: 1
 ildouble: 1
 ldouble: 1
 
+Function: "acosh_downward":
+float: 1
+ildouble: 1
+ldouble: 1
+
+Function: "acosh_towardzero":
+float: 1
+ildouble: 1
+ldouble: 1
+
+Function: "acosh_upward":
+double: 1
+ildouble: 1
+ldouble: 2
+
 Function: "asin":
 ildouble: 2
 ldouble: 2
@@ -219,6 +234,54 @@ idouble: 3
 ifloat: 2
 ildouble: 2
 ldouble: 2
+
+Function: Real part of "cacos_downward":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 6
+ldouble: 6
+
+Function: Imaginary part of "cacos_downward":
+double: 5
+float: 3
+idouble: 5
+ifloat: 3
+ildouble: 5
+ldouble: 5
+
+Function: Real part of "cacos_towardzero":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 6
+ldouble: 6
+
+Function: Imaginary part of "cacos_towardzero":
+double: 5
+float: 3
+idouble: 5
+ifloat: 3
+ildouble: 5
+ldouble: 5
+
+Function: Real part of "cacos_upward":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 4
+ldouble: 4
+
+Function: Imaginary part of "cacos_upward":
+double: 4
+float: 4
+idouble: 4
+ifloat: 4
+ildouble: 8
+ldouble: 8
 
 Function: Real part of "cacosh":
 double: 1
