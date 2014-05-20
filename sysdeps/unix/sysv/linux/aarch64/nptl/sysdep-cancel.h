@@ -33,6 +33,7 @@
     cfi_startproc;							\
     DO_CALL (syscall_name, args);					\
     cmn x0, 4095;							\
+    b.cs .Lsyscall_error;						\
     PSEUDO_RET;								\
     cfi_endproc;							\
     .size __##syscall_name##_nocancel,.-__##syscall_name##_nocancel;	\
@@ -41,6 +42,7 @@
     bne .Lpseudo_cancel;						\
     DO_CALL (syscall_name, 0);						\
     cmn x0, 4095;							\
+    b.cs .Lsyscall_error;						\
     PSEUDO_RET;								\
   .Lpseudo_cancel:							\
     DOCARGS_##args;	/* save syscall args etc. around CENABLE.  */	\
@@ -58,7 +60,8 @@
     ldr x30, [sp], 16;							\
     cfi_adjust_cfa_offset (-16);					\
     cfi_restore (x30);							\
-    cmn x0, 4095;
+    cmn x0, 4095;							\
+    b.cs .Lsyscall_error;
 
 # define DOCARGS_0							\
 	str x30, [sp, -16]!;						\

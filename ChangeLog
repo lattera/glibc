@@ -1,5 +1,13 @@
 2014-05-25  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/sysv/linux/aarch64/sysdep.h (PSEUDO_RET): Move
+	branch to syscall error ...
+	(PSEUDO): ... here.
+	[NOT_IN_libc] (SYSCALL_ERROR_HANDLER): Rename the label
+	from __local_syscall_error to .Lsyscall_error.
+	[!NOT_IN_libc] (SYSCALL_ERROR_HANDLER): Branch to __syscall_error.
+	(SYSCALL_ERROR): Update label name.
+
 	* sysdeps/unix/sysv/linux/aarch64/nptl/sysdep-cancel.h (PSEUDO):
 	Do not use DOARGS/UNDOARGS.
 	* sysdeps/unix/sysv/linux/aarch64/sysdep.h (DO_CALL): Likewise.

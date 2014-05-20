@@ -58,17 +58,15 @@
   .text;								      \
   ENTRY (name);								      \
     DO_CALL (syscall_name, args);					      \
-    cmn x0, #4095;
+    cmn x0, #4095;							      \
+    b.cs .Lsyscall_error;
 
 /* Notice the use of 'RET' instead of 'ret' the assembler is case
    insensitive and eglibc already uses the preprocessor symbol 'ret'
    so we use the upper case 'RET' to force through a ret instruction
    to the assembler */
 # define PSEUDO_RET							      \
-    b.cs 1f;								      \
-    RET;								      \
-    1:                                                                        \
-    b SYSCALL_ERROR
+    RET;
 # undef ret
 # define ret PSEUDO_RET
 
@@ -112,10 +110,10 @@
 # define ret_ERRVAL PSEUDO_RET_NOERRNO
 
 # if NOT_IN_libc
-#  define SYSCALL_ERROR __local_syscall_error
+#  define SYSCALL_ERROR  .Lsyscall_error
 #  if RTLD_PRIVATE_ERRNO
 #   define SYSCALL_ERROR_HANDLER				\
-__local_syscall_error:						\
+.Lsyscall_error:						\
 	adrp	x1, C_SYMBOL_NAME(rtld_errno);			\
 	neg     w0, w0;						\
 	str     w0, [x1, :lo12:C_SYMBOL_NAME(rtld_errno)];	\
@@ -124,7 +122,7 @@ __local_syscall_error:						\
 #  else
 
 #   define SYSCALL_ERROR_HANDLER				\
-__local_syscall_error:						\
+.Lsyscall_error:						\
 	stp     x29, x30, [sp, -32]!;				\
 	cfi_adjust_cfa_offset (32);				\
 	cfi_rel_offset (x29, 0);				\
@@ -143,8 +141,10 @@ __local_syscall_error:						\
 	RET;
 #  endif
 # else
-#  define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
 #  define SYSCALL_ERROR __syscall_error
+#  define SYSCALL_ERROR_HANDLER                                 \
+.Lsyscall_error:                                                \
+	b	__syscall_error;
 # endif
 
 /* Linux takes system call args in registers:
