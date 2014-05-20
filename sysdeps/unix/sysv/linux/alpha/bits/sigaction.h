@@ -43,7 +43,7 @@ struct sigaction
     __sigset_t sa_mask;
 
     /* Special flags.  */
-    unsigned int sa_flags;
+    int sa_flags;
   };
 
 /* Bits in `sa_flags'.  */
