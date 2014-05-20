@@ -113,17 +113,9 @@ extern int __local_multiple_threads attribute_hidden;
 				   header.multiple_threads) == 0, 1)
 #  else
 #   define SINGLE_THREAD_P(R)						\
-	stp	x0, x30, [sp, -16]!;					\
-	cfi_adjust_cfa_offset (16);					\
-	cfi_rel_offset (x0, 0);						\
-	cfi_rel_offset (x30, 8);					\
-	bl	__read_tp;						\
-	sub	x0, x0, PTHREAD_SIZEOF;					\
-	ldr	w##R, [x0, PTHREAD_MULTIPLE_THREADS_OFFSET];		\
-	ldp	x0, x30, [sp], 16;					\
-	cfi_restore (x0);						\
-	cfi_restore (x30);						\
-	cfi_adjust_cfa_offset (-16)
+	mrs     x##R, tpidr_el0;					\
+	sub	x##R, x##R, PTHREAD_SIZEOF;				\
+	ldr	w##R, [x##R, PTHREAD_MULTIPLE_THREADS_OFFSET]
 #  endif
 # endif
 

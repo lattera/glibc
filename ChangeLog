@@ -1,5 +1,9 @@
 2014-05-29  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/sysv/linux/aarch64/nptl/sysdep-cancel.h
+	[!NOT_IN_libc] (SINGLE_THREAD_P): Use tpidr_el0 instead of a
+	call to __read_tp.
+
 	* sysdeps/unix/sysv/linux/aarch64/nptl/sysdep-cancel.h (PSEUDO):
 	Always allocate 64 bytes of stack frame.  Use ldp/stp to create
 	it and break it down.
