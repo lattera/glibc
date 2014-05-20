@@ -243,9 +243,14 @@ round_and_return (mp_limb_t *retval, intmax_t exponent, int negative,
 	  more_bits |= ((round_limb & ((((mp_limb_t) 1) << round_bit) - 1))
 			!= 0);
 
-	  (void) __mpn_rshift (retval, &retval[shift / BITS_PER_MP_LIMB],
-			       RETURN_LIMB_SIZE - (shift / BITS_PER_MP_LIMB),
-			       shift % BITS_PER_MP_LIMB);
+	  /* __mpn_rshift requires 0 < shift < BITS_PER_MP_LIMB.  */
+	  if ((shift % BITS_PER_MP_LIMB) != 0)
+	    (void) __mpn_rshift (retval, &retval[shift / BITS_PER_MP_LIMB],
+			         RETURN_LIMB_SIZE - (shift / BITS_PER_MP_LIMB),
+			         shift % BITS_PER_MP_LIMB);
+	  else
+	    for (i = 0; i < RETURN_LIMB_SIZE - (shift / BITS_PER_MP_LIMB); i++)
+	      retval[i] = retval[i + (shift / BITS_PER_MP_LIMB)];
 	  MPN_ZERO (&retval[RETURN_LIMB_SIZE - (shift / BITS_PER_MP_LIMB)],
 		    shift / BITS_PER_MP_LIMB);
 	}
