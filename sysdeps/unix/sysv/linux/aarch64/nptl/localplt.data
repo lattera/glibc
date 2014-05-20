@@ -12,4 +12,3 @@ libm.so: matherr
 libm.so: __signbit
 libm.so: __signbitf
 libm.so: __signbitl
-libpthread.so: __errno_location

@@ -123,21 +123,12 @@
 
 #   define SYSCALL_ERROR_HANDLER				\
 .Lsyscall_error:						\
-	stp     x29, x30, [sp, -32]!;				\
-	cfi_adjust_cfa_offset (32);				\
-	cfi_rel_offset (x29, 0);				\
-	cfi_rel_offset (x30, 8);				\
-        add     x29, sp, 0;					\
-        str     x19, [sp,16];					\
-	neg	x19, x0;					\
-	bl	C_SYMBOL_NAME(__errno_location);		\
-	str	w19, [x0];					\
+	adrp	x1, :gottprel:errno;				\
+	neg	w2, w0;						\
+	ldr	x1, [x1, :gottprel_lo12:errno];			\
+	mrs	x3, tpidr_el0;					\
 	mov	x0, -1;						\
-        ldr     x19, [sp,16];					\
-        ldp     x29, x30, [sp], 32;				\
-	cfi_adjust_cfa_offset (-32);				\
-	cfi_restore (x29);					\
-	cfi_restore (x30);					\
+	str	w2, [x1, x3];					\
 	RET;
 #  endif
 # else

@@ -1,7 +1,13 @@
 2014-05-29  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/sysv/linux/aarch64/sysdep.h [NOT_IN_libc]
+	(SYSCALL_ERROR_HANDLER): Use tpidr_el0 instead of a call
+	to __errno_location.
+	* sysdeps/unix/sysv/linux/aarch64/nptl/localplt.data (libpthread.so):
+	Remove the expected plt for __errno_location.
+
 	* sysdeps/unix/sysv/linux/aarch64/nptl/sysdep-cancel.h
-	[!NOT_IN_libc] (SINGLE_THREAD_P): Use tpidr_el0 instead of a
+	[NOT_IN_libc] (SINGLE_THREAD_P): Use tpidr_el0 instead of a
 	call to __read_tp.
 
 	* sysdeps/unix/sysv/linux/aarch64/nptl/sysdep-cancel.h (PSEUDO):
