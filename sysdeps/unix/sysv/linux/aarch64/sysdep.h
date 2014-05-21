@@ -117,9 +117,8 @@
 #   define SYSCALL_ERROR_HANDLER				\
 __local_syscall_error:						\
 	adrp	x1, C_SYMBOL_NAME(rtld_errno);			\
-	add	x1, x1, #:lo12:C_SYMBOL_NAME(rtld_errno);	\
 	neg     w0, w0;						\
-	str     w0, [x1];					\
+	str     w0, [x1, :lo12:C_SYMBOL_NAME(rtld_errno)];	\
 	mov	x0, -1;						\
 	RET;
 #  else

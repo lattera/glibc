@@ -1,3 +1,8 @@
+2014-05-21  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/aarch64/sysdep.h [RTLD_PRIVATE_ERRNO]
+	(SYSCALL_ERROR_HANDLER): Fold add insn into str offset.
+
 2014-05-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/unwind-forcedunwind.c
