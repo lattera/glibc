@@ -41,14 +41,10 @@ ENTRY (__clone)
 	beq-	cr0,L(badargs)
 
 	/* Save some regs in the "red zone".  */
-#ifdef RESET_PID
 	std	r29,-24(r1)
-#endif
 	std	r30,-16(r1)
 	std	r31,-8(r1)
-#ifdef RESET_PID
 	cfi_offset(r29,-24)
-#endif
 	cfi_offset(r30,-16)
 	cfi_offset(r31,-8)
 
@@ -59,15 +55,13 @@ ENTRY (__clone)
 
 	/* Save fn, args, stack across syscall.  */
 	mr	r30,r3			/* Function in r30.  */
-#ifdef RESET_PID
 	mr	r29,r5			/* Flags in r29.  */
-#endif
 	mr	r31,r6			/* Argument in r31.  */
 
 	/* 'flags' argument is first parameter to clone syscall.
 	   Second is the stack pointer, already in r4.  */
 	mr	r3,r5
-  /* Move the parent_tid, child_tid and tls arguments. */
+	/* Move the parent_tid, child_tid and tls arguments. */
 	mr	r5,r7
 	mr	r6,r8
 	mr	r7,r9
@@ -84,7 +78,6 @@ ENTRY (__clone)
 	crandc	cr1*4+eq,cr1*4+eq,cr0*4+so
 	bne-	cr1,L(parent)		/* The '-' is to minimise the race.  */
 
-#ifdef RESET_PID
 	andis.	r0,r29,CLONE_THREAD>>16
 	bne+	cr0,L(oldpid)
 	andi.	r0,r29,CLONE_VM
@@ -95,7 +88,6 @@ L(nomoregetpid):
 	stw	r3,TID(r13)
 	stw	r3,PID(r13)
 L(oldpid):
-#endif
 
 	std	r2,FRAME_TOC_SAVE(r1)
 	/* Call procedure.  */
@@ -120,21 +112,16 @@ L(badargs):
 
 L(parent):
 	/* Parent.  Restore registers & return.  */
-#ifdef RESET_PID
 	cfi_offset(r29,-24)
-#endif
 	cfi_offset(r30,-16)
 	cfi_offset(r31,-8)
-#ifdef RESET_PID
 	ld	r29,-24(r1)
-#endif
 	ld	r30,-16(r1)
 	ld	r31,-8(r1)
-#ifdef RESET_PID
 	cfi_restore(r29)
-#endif
 	cfi_restore(r30)
 	cfi_restore(r31)
+
 	PSEUDO_RET
 
 END (__clone)
