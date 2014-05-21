@@ -163,9 +163,8 @@ extern int __local_multiple_threads attribute_hidden;
 #  else
 #   define SINGLE_THREAD_P						\
   adrp	x16, __local_multiple_threads;					\
-  add	x16, x16, #:lo12:__local_multiple_threads;			\
-  ldr	x16, [x16];							\
-  cmp	x16, 0;
+  ldr	w16, [x16, :lo12:__local_multiple_threads];			\
+  cmp	w16, 0;
 #  endif
 # else
 /*  There is no __local_multiple_threads for librt, so use the TCB.  */
@@ -181,12 +180,12 @@ extern int __local_multiple_threads attribute_hidden;
   cfi_rel_offset (x30, 8);						\
   bl	__read_tp;							\
   sub	x0, x0, PTHREAD_SIZEOF;						\
-  ldr	x16, [x0, PTHREAD_MULTIPLE_THREADS_OFFSET];			\
+  ldr	w16, [x0, PTHREAD_MULTIPLE_THREADS_OFFSET];			\
   ldp	x0, x30, [sp], 16;						\
   cfi_restore (x0);							\
   cfi_restore (x30);							\
   cfi_adjust_cfa_offset (-16);						\
-  cmp	x16, 0
+  cmp	w16, 0
 #   define SINGLE_THREAD_P_PIC(x) SINGLE_THREAD_P
 #  endif
 # endif

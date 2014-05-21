@@ -1,5 +1,9 @@
 2014-05-21  Richard Henderson  <rth@redhat.com>
 
+	* sysdeps/unix/sysv/linux/aarch64/nptl/sysdep-cancel.h
+	(SINGLE_THREAD_P): Use the correct width load.  Fold
+	into the ldr offset.
+
 	* sysdeps/unix/sysv/linux/aarch64/sysdep.h [RTLD_PRIVATE_ERRNO]
 	(SYSCALL_ERROR_HANDLER): Fold add insn into str offset.
 
