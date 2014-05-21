@@ -451,7 +451,7 @@ rtld-LDFLAGS = -Wl,-dynamic-linker=$(rtlddir)/$(rtld-installed-name)
 endif
 ifndef rtld-tests-LDFLAGS
 ifeq (yes,$(build-hardcoded-path-in-tests))
-rtld-tests-LDFLAGS = -Wl,-dynamic-linker=$(common-objpfx)elf/ld.so
+rtld-tests-LDFLAGS = -Wl,-dynamic-linker=$(elf-objpfx)ld.so
 else
 rtld-tests-LDFLAGS = $(rtld-LDFLAGS)
 endif
@@ -470,7 +470,7 @@ link-libc-tests-rpath-link = $(link-libc-rpath-link)
 endif
 link-libc-before-gnulib = $(common-objpfx)libc.so$(libc.so-version) \
 			  $(common-objpfx)$(patsubst %,$(libtype.oS),c) \
-			  $(as-needed) $(common-objpfx)elf/ld.so \
+			  $(as-needed) $(elf-objpfx)ld.so \
 			  $(no-as-needed)
 link-libc = $(link-libc-rpath-link) $(link-libc-before-gnulib) $(gnulib)
 link-libc-tests = $(link-libc-tests-rpath-link) \
@@ -484,8 +484,6 @@ link-libc = $(common-objpfx)libc.a $(otherlibs) $(gnulib) $(common-objpfx)libc.a
 link-libc-tests = $(common-objpfx)libc.a $(otherlibs) $(gnulib-tests) $(common-objpfx)libc.a $(gnulib-tests)
 endif
 endif
-
-elfobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)elf)
 
 # Differences in the linkers on the various platforms.
 LDFLAGS-rpath-ORIGIN = -Wl,-rpath,'$$ORIGIN'

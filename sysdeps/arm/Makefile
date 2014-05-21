@@ -1,5 +1,5 @@
-gnulib-arch = $(elfobjdir)/libgcc-stubs.a
-static-gnulib-arch = $(elfobjdir)/libgcc-stubs.a
+gnulib-arch = $(elf-objpfx)libgcc-stubs.a
+static-gnulib-arch = $(elf-objpfx)libgcc-stubs.a
 
 ifeq ($(subdir),elf)
 sysdep-dl-routines += tlsdesc dl-tlsdesc

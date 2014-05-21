@@ -1,3 +1,29 @@
+2014-05-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makeconfig [$(build-hardcoded-path-in-tests) = yes]
+	(rtld-tests-LDFLAGS): Use $(elf-objpfx) instead of
+	$(common-objpfx)elf/.
+	(link-libc-before-gnulib): Likewise.
+	(elfobjdir): Remove variable.
+	* Makefile (install): Use $(elf-objpfx) instead of
+	$(common-objpfx)elf/.
+	* Makerules (link-libc-args): Use $(elf-objpfx) instead of
+	$(elfobjdir)/.
+	(link-libc-deps): Likewise.
+	($(common-objpfx)libc.so): Likewise.
+	($(common-objpfx)linkobj/libc.so): Likewise.
+	[$(cross-compiling) = no] (symbolic-link-prog): Use $(elf-objpfx)
+	instead of $(common-objpfx)elf/.
+	(symbolic-link-list): Likewise.
+	* iconvdata/Makefile ($(inst_gconvdir)/gconv-modules)
+	[$(cross-compiling) = no]: Likewise.
+	* sysdeps/arm/Makefile (gnulib-arch): Use $(elf-objpfx) instead of
+	$(elfobjdir)/.
+	(static-gnulib-arch): Likewise.
+	* sysdeps/s390/s390-64/Makefile ($(inst_gconvdir)/gconv-modules)
+	[$(cross-compiling) = no]: Use $(elf-objpfx) instead of
+	$(common-objpfx)elf/.
+
 2014-05-21  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/sysv/linux/aarch64/nptl/sysdep-cancel.h

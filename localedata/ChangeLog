@@ -1,3 +1,8 @@
+2014-05-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makefile (LOCALEDEF): Use $(elf-objpfx) instead of
+	$(common-objpfx)elf/.
+
 2014-03-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makefile (LOCALES): Move definition above include of Rules.

@@ -417,7 +417,7 @@ endif
 link-libc-args = -Wl,--start-group \
 		 $(libc-for-link) \
 		 $(common-objpfx)libc_nonshared.a \
-		 $(as-needed) $(elfobjdir)/ld.so $(no-as-needed) \
+		 $(as-needed) $(elf-objpfx)ld.so $(no-as-needed) \
 		 -Wl,--end-group
 
 # The corresponding shared libc to use.  This may be modified for a
@@ -428,7 +428,7 @@ libc-for-link = $(common-objpfx)libc.so
 # not just commands, they cannot use target-specific variables so need
 # to name both possible libc.so objects.
 link-libc-deps = $(common-objpfx)libc.so $(common-objpfx)linkobj/libc.so \
-		 $(common-objpfx)libc_nonshared.a $(elfobjdir)/ld.so
+		 $(common-objpfx)libc_nonshared.a $(elf-objpfx)ld.so
 
 # Pattern rule to build a shared object from an archive of PIC objects.
 # This must come after the installation rules so Make doesn't try to
@@ -592,19 +592,19 @@ $(common-objpfx)linkobj/libc.so: link-libc-deps = # empty
 
 # Use our own special initializer and finalizer files for the libc.so
 # libraries.
-$(common-objpfx)libc.so: $(elfobjdir)/soinit.os \
+$(common-objpfx)libc.so: $(elf-objpfx)soinit.os \
 			 $(common-objpfx)libc_pic.os$(libc_pic_clean) \
-			 $(elfobjdir)/sofini.os \
-			 $(elfobjdir)/interp.os \
-			 $(elfobjdir)/ld.so \
+			 $(elf-objpfx)sofini.os \
+			 $(elf-objpfx)interp.os \
+			 $(elf-objpfx)ld.so \
 			 $(shlib-lds)
 	$(build-shlib)
 
-$(common-objpfx)linkobj/libc.so: $(elfobjdir)/soinit.os \
+$(common-objpfx)linkobj/libc.so: $(elf-objpfx)soinit.os \
 			 $(common-objpfx)linkobj/libc_pic.a \
-			 $(elfobjdir)/sofini.os \
-			 $(elfobjdir)/interp.os \
-			 $(elfobjdir)/ld.so \
+			 $(elf-objpfx)sofini.os \
+			 $(elf-objpfx)interp.os \
+			 $(elf-objpfx)ld.so \
 			 $(shlib-lds)
 	$(build-shlib)
 
@@ -895,8 +895,8 @@ endif
 
 ifeq (yes,$(build-shared))
 ifeq (no,$(cross-compiling))
-symbolic-link-prog := $(common-objpfx)elf/sln
-symbolic-link-list := $(common-objpfx)elf/symlink.list
+symbolic-link-prog := $(elf-objpfx)sln
+symbolic-link-list := $(elf-objpfx)symlink.list
 define make-shlib-link
 echo `$(..)scripts/rellns-sh -p $< $@` $@ >> $(symbolic-link-list)
 endef
