@@ -31,3 +31,7 @@ sysdep_headers += bits/ppc.h
 sysdep_routines += get_timebase_freq
 tests += test-gettimebasefreq
 endif
+
+ifeq ($(subdir),nptl)
+libpthread-routines += sysdep
+endif
