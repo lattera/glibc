@@ -1,5 +1,10 @@
 2014-05-21  Joseph Myers  <joseph@codesourcery.com>
 
+	* nscd/Depend (linuxthreads): Remove.
+	(nptl): Add.
+	* resolv/Depend (linuxthreads): Remove.
+	* rt/Depend (linuxthreads): Remove.
+
 	* Makeconfig [$(build-hardcoded-path-in-tests) = yes]
 	(rtld-tests-LDFLAGS): Use $(elf-objpfx) instead of
 	$(common-objpfx)elf/.
