@@ -57,9 +57,7 @@ __clone:
 	subq	a1, 32, a1
 	stq	a0, 0(a1)
 	stq	a3, 8(a1)
-#ifdef RESET_PID
 	stq	a2, 16(a1)
-#endif
 
 	/* The syscall is of the form clone(flags, usp, ptid, ctid, tls).
 	   Shift the flags, ptid, ctid, tls arguments into place; the
@@ -86,6 +84,7 @@ PSEUDO_END(__clone)
    its own function so that we can terminate the stack trace with our
    debug info.  */
 
+	.align	4
 	.ent thread_start
 	cfi_startproc
 thread_start:
@@ -93,14 +92,12 @@ thread_start:
 	cfi_def_cfa_register(fp)
 	cfi_undefined(ra)
 
-#ifdef RESET_PID
 	/* Check and see if we need to reset the PID.  */
 	ldq	t0, 16(sp)
 	lda	t1, CLONE_THREAD
 	and	t0, t1, t2
 	beq	t2, 2f
 1:
-#endif
 
 	/* Load up the arguments.  */
 	ldq	pv, 0(sp)
@@ -120,9 +117,10 @@ thread_start:
 #endif
 
 	/* Die horribly.  */
+	.align	4
 	halt
 
-#ifdef RESET_PID
+	.align	4
 2:
 	rduniq
 	lda	t1, CLONE_VM
@@ -136,7 +134,6 @@ thread_start:
 	stl	v0, PID_OFFSET(s0)
 	stl	v0, TID_OFFSET(s0)
 	br	1b
-#endif
 	cfi_endproc
 	.end thread_start
 

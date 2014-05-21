@@ -1,5 +1,9 @@
 2014-05-23  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/sysv/linux/alpha/clone.S: Deconditionalize the code
+	that was previously under [RESET_PID].
+	* sysdeps/unix/sysv/linux/alpha/nptl/clone.S: File removed.
+
 	* sysdeps/unix/sysv/linux/alpha/nptl/fork.c: Remove file.
 
 2014-05-23  Joseph Myers  <joseph@codesourcery.com>
