@@ -1,5 +1,10 @@
 2014-05-26  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* nptl/sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h: Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h: ... here.
+	* nptl/sysdeps/unix/sysv/linux/powerpc/bits/semaphore.h: Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/bits/semaphore.h: ... here.
+
 	* nptl/sysdeps/unix/sysv/linux/powerpc/powerpc64/Versions: Remove,
 	merge into ...
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/Versions: ... here.
