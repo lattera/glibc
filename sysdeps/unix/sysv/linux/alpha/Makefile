@@ -37,3 +37,8 @@ ifeq ($(subdir),math)
 # Provide these routines here as well.
 libm-routines += multc3 divtc3
 endif   # math
+
+ifeq ($(subdir),nptl)
+# pull in __syscall_error routine, __sigprocmask, __syscall_rt_sigaction
+libpthread-routines += ptw-sysdep ptw-sigprocmask ptw-rt_sigaction
+endif
