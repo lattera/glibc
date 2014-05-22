@@ -25,7 +25,8 @@
 
 #ifdef SHARED
 # undef libc_hidden_builtin_def
-# define libc_hidden_builtin_def(name)
+# define libc_hidden_builtin_def(name) \
+  __hidden_ver1(__memchr_ppc, __GI_memchr, __memchr_ppc);
 #endif
 
 extern __typeof (memchr) __memchr_ppc attribute_hidden;

@@ -1,3 +1,10 @@
+2014-05-22  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memchr.c (memchr): Remove
+	libc_hidden_builtin_def to ifunc.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memchr-ppc32.c
+	[libc_hidden_builtin_def]: Define hidden definition to __memchr_ppc32.
+
 2014-05-16  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/aarch64/arch-fork.h: New file.
