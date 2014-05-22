@@ -1,5 +1,15 @@
 2014-05-29  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/sysv/linux/aarch64/sysdep.h (INTERNAL_VSYSCALL_NCS):
+	Remove comma before expanding ASM_ARGS_##nr.
+	(INTERNAL_SYSCALL_RAW): Make _sys_result signed, instead of casting.
+	Make _x0 a strict output; make _x8 a strict input; adjust expansion
+	of ASM_ARGS_##nr.
+	(CLOBBER_ARGS_0, CLOBBER_ARGS_1, CLOBBER_ARGS_2): Remove.
+	(CLOBBER_ARGS_3, CLOBBER_ARGS_4, CLOBBER_ARGS_5): Remove.
+	(CLOBBER_ARGS_6, CLOBBER_ARGS_7): Remove.
+	(ASM_ARGS_1): Add leading comma.
+
 	* sysdeps/unix/sysv/linux/aarch64/sysdep.h [NOT_IN_libc]
 	(SYSCALL_ERROR_HANDLER): Use tpidr_el0 instead of a call
 	to __errno_location.

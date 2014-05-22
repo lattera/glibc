@@ -231,7 +231,7 @@
     LOAD_ARGS_##nr (args)					\
     asm volatile ("blr %1"					\
 		  : "=r" (_x0)					\
-		  : "r" (funcptr), ASM_ARGS_##nr		\
+		  : "r" (funcptr) ASM_ARGS_##nr			\
 		  : "x30", "memory");				\
     (long) _x0;							\
   })
@@ -254,17 +254,15 @@
 
 # undef INTERNAL_SYSCALL_RAW
 # define INTERNAL_SYSCALL_RAW(name, err, nr, args...)		\
-  ({ unsigned long _sys_result;					\
+  ({ long _sys_result;						\
      {								\
        LOAD_ARGS_##nr (args)					\
        register long _x8 asm ("x8") = (name);			\
        asm volatile ("svc	0	// syscall " # name     \
-		     : "+r" (_x0), "+r" (_x8)			\
-		     : ASM_ARGS_##nr				\
-		     : "memory", CLOBBER_ARGS_##nr);		\
+		     : "=r" (_x0) : "r"(_x8) ASM_ARGS_##nr : "memory");	\
        _sys_result = _x0;					\
      }								\
-     (long) _sys_result; })
+     _sys_result; })
 
 # undef INTERNAL_SYSCALL
 # define INTERNAL_SYSCALL(name, err, nr, args...)		\
@@ -281,54 +279,44 @@
 # undef INTERNAL_SYSCALL_ERRNO
 # define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))
 
-# define CLOBBER_ARGS_0       CLOBBER_ARGS_1
-# define CLOBBER_ARGS_1 "x1", CLOBBER_ARGS_2
-# define CLOBBER_ARGS_2 "x2", CLOBBER_ARGS_3
-# define CLOBBER_ARGS_3 "x3", CLOBBER_ARGS_4
-# define CLOBBER_ARGS_4 "x4", CLOBBER_ARGS_5
-# define CLOBBER_ARGS_5 "x5", CLOBBER_ARGS_6
-# define CLOBBER_ARGS_6 "x6", CLOBBER_ARGS_7
-# define CLOBBER_ARGS_7 \
-  "x7", "x9", "x10", "x11", "x12", "x13", "x14", "x15", "x16", "x17", "x18"
-
 # define LOAD_ARGS_0()				\
   register long _x0 asm ("x0");
-
-# define ASM_ARGS_0
 # define LOAD_ARGS_1(x0)			\
   long _x0tmp = (long) (x0);			\
   LOAD_ARGS_0 ()				\
   _x0 = _x0tmp;
-# define ASM_ARGS_1	"r" (_x0)
 # define LOAD_ARGS_2(x0, x1)			\
   long _x1tmp = (long) (x1);			\
   LOAD_ARGS_1 (x0)				\
   register long _x1 asm ("x1") = _x1tmp;
-# define ASM_ARGS_2	ASM_ARGS_1, "r" (_x1)
 # define LOAD_ARGS_3(x0, x1, x2)		\
   long _x2tmp = (long) (x2);			\
   LOAD_ARGS_2 (x0, x1)				\
   register long _x2 asm ("x2") = _x2tmp;
-# define ASM_ARGS_3	ASM_ARGS_2, "r" (_x2)
 # define LOAD_ARGS_4(x0, x1, x2, x3)		\
   long _x3tmp = (long) (x3);			\
   LOAD_ARGS_3 (x0, x1, x2)			\
   register long _x3 asm ("x3") = _x3tmp;
-# define ASM_ARGS_4	ASM_ARGS_3, "r" (_x3)
 # define LOAD_ARGS_5(x0, x1, x2, x3, x4)	\
   long _x4tmp = (long) (x4);			\
   LOAD_ARGS_4 (x0, x1, x2, x3)			\
   register long _x4 asm ("x4") = _x4tmp;
-# define ASM_ARGS_5	ASM_ARGS_4, "r" (_x4)
 # define LOAD_ARGS_6(x0, x1, x2, x3, x4, x5)	\
   long _x5tmp = (long) (x5);			\
   LOAD_ARGS_5 (x0, x1, x2, x3, x4)		\
   register long _x5 asm ("x5") = _x5tmp;
-# define ASM_ARGS_6	ASM_ARGS_5, "r" (_x5)
 # define LOAD_ARGS_7(x0, x1, x2, x3, x4, x5, x6)\
   long _x6tmp = (long) (x6);			\
   LOAD_ARGS_6 (x0, x1, x2, x3, x4, x5)		\
   register long _x6 asm ("x6") = _x6tmp;
+
+# define ASM_ARGS_0
+# define ASM_ARGS_1	, "r" (_x0)
+# define ASM_ARGS_2	ASM_ARGS_1, "r" (_x1)
+# define ASM_ARGS_3	ASM_ARGS_2, "r" (_x2)
+# define ASM_ARGS_4	ASM_ARGS_3, "r" (_x3)
+# define ASM_ARGS_5	ASM_ARGS_4, "r" (_x4)
+# define ASM_ARGS_6	ASM_ARGS_5, "r" (_x5)
 # define ASM_ARGS_7	ASM_ARGS_6, "r" (_x6)
 
 # undef INTERNAL_SYSCALL_NCS
