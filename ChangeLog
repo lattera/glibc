@@ -1,3 +1,8 @@
+2014-05-22  Kostya Serebryany  <konstantin.s.serebryany@gmail.com>
+
+	* crypt/md5-crypt.c (__md5_crypt_r): Remove a nested function.
+	(b64_from_24bit): New function.
+
 2014-05-22  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power4/multiarch/memchr.c (memchr): Remove
