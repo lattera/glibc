@@ -38,10 +38,8 @@
     .size __##syscall_name##_nocancel,.-__##syscall_name##_nocancel;	\
   ENTRY (name);								\
     SINGLE_THREAD_P;							\
-    DOARGS_##args;							\
     bne .Lpseudo_cancel;						\
     DO_CALL (syscall_name, 0);						\
-    UNDOARGS_##args;							\
     cmn x0, 4095;							\
     PSEUDO_RET;								\
   .Lpseudo_cancel:							\
@@ -60,7 +58,6 @@
     ldr x30, [sp], 16;							\
     cfi_adjust_cfa_offset (-16);					\
     cfi_restore (x30);							\
-    UNDOARGS_##args;							\
     cmn x0, 4095;
 
 # define DOCARGS_0							\

@@ -172,28 +172,8 @@ __local_syscall_error:						\
 
 # undef	DO_CALL
 # define DO_CALL(syscall_name, args)		\
-    DOARGS_##args				\
     mov x8, SYS_ify (syscall_name);		\
-    svc 0;					\
-    UNDOARGS_##args
-
-# define DOARGS_0 /* nothing */
-# define DOARGS_1 /* nothing */
-# define DOARGS_2 /* nothing */
-# define DOARGS_3 /* nothing */
-# define DOARGS_4 /* nothing */
-# define DOARGS_5 /* nothing */
-# define DOARGS_6 /* nothing */
-# define DOARGS_7 /* nothing */
-
-# define UNDOARGS_0 /* nothing */
-# define UNDOARGS_1 /* nothing */
-# define UNDOARGS_2 /* nothing */
-# define UNDOARGS_3 /* nothing */
-# define UNDOARGS_4 /* nothing */
-# define UNDOARGS_5 /* nothing */
-# define UNDOARGS_6 /* nothing */
-# define UNDOARGS_7 /* nothing */
+    svc 0
 
 #else /* not __ASSEMBLER__ */
 
