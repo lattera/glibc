@@ -1,3 +1,9 @@
+2014-05-22  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/math_private.h [copysign]: Remove unneeded
+	macro.
+	[copysignf]: Likewise.
+
 2014-05-22  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* crypt/md5-crypt.c: Fix formatting.
