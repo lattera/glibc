@@ -18,28 +18,40 @@
 #include <sysdep.h>
 #include <tcb-offsets.h>
 
-#undef PSEUDO_PREPARE_ARGS
-#define PSEUDO_PREPARE_ARGS						\
-	/* Load the current cached pid value across the vfork.  */	\
-	rduniq;								\
-	ldl	a2, PID_OFFSET(v0);					\
-	mov	v0, a1;							\
-	/* If the cached value is initialized (nonzero), then write	\
-	   back its negation, or INT_MIN, to indicate that the pid	\
-	   value is uninitialized in the child, and in the window	\
-	   between here and the point at which we restore the value.  */ \
-	ldah	t0, -0x8000;						\
-	negl	a2, t1;							\
-	cmovne	a2, t1, t0;						\
+ENTRY(__vfork)
+	PSEUDO_PROLOGUE
+
+	/* Load the thread pointer value in A1 across the vfork.  */
+	rduniq
+	mov	v0, a1
+
+	/* Save the TCB-cached PID away in A2, and then negate the TCB
+           field.  But if it's zero, set it to 0x80000000 instead.  See
+           raise.c for the logic that relies on this value.  */
+	ldl	a2, PID_OFFSET(v0)
+	ldah	t0, -0x8000
+	negl	a2, t1
+	cmovne	a2, t1, t0
 	stl	t0, PID_OFFSET(v0);
 
-PSEUDO (__vfork, vfork, 0)
+	lda	v0, SYS_ify(vfork)
+	call_pal PAL_callsys
 
-	/* If we're back in the parent, restore the saved pid.  */
+	/* Restore the original value of the TCB cache of the PID, if we're
+	   the parent.  But in the child (syscall return value equals zero),
+	   leave things as they are.  */
 	beq	v0, 1f
 	stl	a2, PID_OFFSET(a1)
-1:	ret
+1:
+	/* Normal error check and return.  */
+	bne	a3, SYSCALL_ERROR_LABEL
+	ret
 
 PSEUDO_END (__vfork)
 libc_hidden_def (__vfork)
+
 weak_alias (__vfork, vfork)
+
+#if !NOT_IN_libc
+strong_alias (__vfork, __libc_vfork)
+#endif

@@ -14,7 +14,6 @@ semget		-	semget		i:iii	__semget	semget
 oldsemctl	EXTRA	semctl		i:iiii	__old_semctl	semctl@GLIBC_2.0
 
 sigstack	-	sigstack	2	sigstack
-vfork		-	vfork		0	__vfork		vfork
 
 getpriority	-	getpriority	i:ii	__getpriority	getpriority
 

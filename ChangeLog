@@ -1,5 +1,13 @@
 2014-05-23  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Remove vfork.
+	* sysdeps/unix/sysv/linux/alpha/nptl/vfork.S: Move file ...
+	* sysdeps/unix/sysv/linux/alpha/vfork.S: ... here.  Restore PID
+	before exiting on error.
+	(__libc_vfork): New strong alias.
+	* sysdeps/unix/sysv/linux/alpha/nptl/pt-vfork.S: Remove file.
+	* sysdeps/unix/sysv/linux/alpha/pt-vfork.S: New file.
+
 	* sysdeps/unix/sysv/linux/alpha/clone.S: Deconditionalize the code
 	that was previously under [RESET_PID].
 	* sysdeps/unix/sysv/linux/alpha/nptl/clone.S: File removed.
