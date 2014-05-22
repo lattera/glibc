@@ -35,7 +35,7 @@ typedef int PRBool;
 # define md5_init_ctx(ctxp, nss_ctxp) \
   do									      \
     {									      \
-      if (((nss_ctxp = NSSLOWHASH_NewContext (nss_ictx, HASH_AlgMD5))         \
+      if (((nss_ctxp = NSSLOWHASH_NewContext (nss_ictx, HASH_AlgMD5))	      \
 	   == NULL))							      \
 	{								      \
 	  if (nss_ctx != NULL)						      \
@@ -90,8 +90,8 @@ extern char *__md5_crypt (const char *key, const char *salt);
 
 static void
 b64_from_24bit (char **cp, int *buflen,
-                unsigned int b2, unsigned int b1, unsigned int b0,
-                int n)
+		unsigned int b2, unsigned int b1, unsigned int b0,
+		int n)
 {
   unsigned int w = (b2 << 16) | (b1 << 8) | b0;
   while (n-- > 0 && *buflen > 0)
@@ -283,17 +283,17 @@ __md5_crypt_r (key, salt, buffer, buflen)
     }
 
   b64_from_24bit (&cp, &buflen,
-                  alt_result[0], alt_result[6], alt_result[12], 4);
+		  alt_result[0], alt_result[6], alt_result[12], 4);
   b64_from_24bit (&cp, &buflen,
-                  alt_result[1], alt_result[7], alt_result[13], 4);
+		  alt_result[1], alt_result[7], alt_result[13], 4);
   b64_from_24bit (&cp, &buflen,
-                  alt_result[2], alt_result[8], alt_result[14], 4);
+		  alt_result[2], alt_result[8], alt_result[14], 4);
   b64_from_24bit (&cp, &buflen,
-                  alt_result[3], alt_result[9], alt_result[15], 4);
+		  alt_result[3], alt_result[9], alt_result[15], 4);
   b64_from_24bit (&cp, &buflen,
-                  alt_result[4], alt_result[10], alt_result[5], 4);
+		  alt_result[4], alt_result[10], alt_result[5], 4);
   b64_from_24bit (&cp, &buflen,
-                  0, 0, alt_result[11], 2);
+		  0, 0, alt_result[11], 2);
   if (buflen <= 0)
     {
       __set_errno (ERANGE);

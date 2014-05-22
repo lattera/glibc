@@ -1,3 +1,7 @@
+2014-05-22  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* crypt/md5-crypt.c: Fix formatting.
+
 2014-05-22  Kostya Serebryany  <konstantin.s.serebryany@gmail.com>
 
 	* crypt/md5-crypt.c (__md5_crypt_r): Remove a nested function.
