@@ -48,7 +48,7 @@ L(_memset):
 	ble-	cr1, L(small)
 /* Align to word boundary.  */
 	cmplwi	cr5, rLEN, 31
-	insrdi	rCHR, rCHR, 8, 48	/* Replicate byte to halfword.  */
+	insrwi	rCHR, rCHR, 8, 16	/* Replicate byte to halfword.  */
 	beq+	L(aligned)
 	mtcrf	0x01, rMEMP0
 	subfic	rALIGN, rALIGN, 4
@@ -64,7 +64,7 @@ L(g0):
 /* Handle the case of size < 31.  */
 L(aligned):
 	mtcrf	0x01, rLEN
-	insrdi	rCHR, rCHR, 16, 32	/* Replicate halfword to word.  */
+	insrwi	rCHR, rCHR, 16, 0	/* Replicate halfword to word.  */
 	ble	cr5, L(medium)
 /* Align to 32-byte boundary.  */
 	andi.	rALIGN, rMEMP, 0x1C

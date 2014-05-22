@@ -35,8 +35,8 @@ L(_memset):
 	cfi_offset(31,-8)
 
 	/* Replicate byte to word.  */
-	insrdi	4,4,8,48
-	insrdi	4,4,16,32
+	insrwi	4,4,8,16
+	insrwi	4,4,16,0
 
 	ble	cr6,L(small)	/* If length <= 8, use short copy code.  */
 

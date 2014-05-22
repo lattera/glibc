@@ -35,8 +35,8 @@ ENTRY (strchr)
 	beq	cr7,L(null_match)
 
 	/* Replicate byte to word.  */
-	insrdi	r4,r4,8,48
-	insrdi	r4,r4,16,32
+	insrwi	r4,r4,8,16
+	insrwi	r4,r4,16,0
 
 	/* Now r4 has a word of c bytes and r0 has
 	   a word of null bytes.  */

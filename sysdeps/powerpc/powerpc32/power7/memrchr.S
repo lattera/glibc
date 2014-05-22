@@ -32,8 +32,8 @@ ENTRY (__memrchr)
 	dcbt	r9,r6,16      /* Stream hint, decreasing addresses.  */
 
 	/* Replicate BYTE to word.  */
-	rldimi	r4,r4,8,48
-	rldimi	r4,r4,16,32
+	insrwi	r4,r4,8,16
+	insrwi	r4,r4,16,0
 	li	r6,-4
 	li	r9,-1
 	rlwinm	r0,r0,3,27,28 /* Calculate padding.  */

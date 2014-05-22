@@ -27,8 +27,8 @@ ENTRY (__strchrnul)
 	clrrwi	r8,r3,2	      /* Align the address to word boundary.  */
 
 	/* Replicate byte to word.  */
-	insrdi	r4,r4,8,48
-	insrdi	r4,r4,16,32
+	insrwi  r4,r4,8,16
+	insrwi  r4,r4,16,0
 
 	rlwinm	r6,r3,3,27,28 /* Calculate padding.  */
 	lwz	r12,0(r8)     /* Load word from memory.  */

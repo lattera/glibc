@@ -1,3 +1,15 @@
+2014-05-26  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power4/memset.S (memset): Replace insrdi
+	by insrwi.
+	* sysdeps/powerpc/powerpc32/power6/memset.S (memset): Likewise.
+	* sysdeps/powerpc/powerpc32/power7/memset.S (memset): Likewise.
+	* sysdeps/powerpc/powerpc32/power7/memchr.S (memchr): Likewise.
+	* sysdeps/powerpc/powerpc32/power7/memrchr.S (memrchr): Likewise.
+	* sysdeps/powerpc/powerpc32/power7/rawmemchr.S (rawmemchr): Likewise.
+	* sysdeps/powerpc/powerpc32/power7/strchr.S (strchr): Likewise.
+	* sysdeps/powerpc/powerpc32/power7/strchrnul.S (strchrnul): Likewise.
+
 2014-05-26  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #16984]
