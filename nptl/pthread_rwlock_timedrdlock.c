@@ -16,121 +16,22 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <sysdep.h>
-#include <lowlevellock.h>
-#include <futex-internal.h>
-#include <pthread.h>
-#include <pthreadP.h>
-#include <sys/time.h>
-#include <stdbool.h>
+#include "pthread_rwlock_common.c"
 
-
-/* Try to acquire read lock for RWLOCK or return after specfied time.  */
+/* See pthread_rwlock_common.c.  */
 int
 pthread_rwlock_timedrdlock (pthread_rwlock_t *rwlock,
-			    const struct timespec *abstime)
+    const struct timespec *abstime)
 {
-  int result = 0;
-  bool wake = false;
-  int futex_shared =
-      rwlock->__data.__shared == LLL_PRIVATE ? FUTEX_PRIVATE : FUTEX_SHARED;
+  /* Make sure the passed in timeout value is valid.  Note that the previous
+     implementation assumed that this check *must* not be performed if there
+     would in fact be no blocking; however, POSIX only requires that "the
+     validity of the abstime parameter need not be checked if the lock can be
+     immediately acquired" (i.e., we need not but may check it).  */
+  /* ??? Just move this to __pthread_rwlock_rdlock_full?  */
+  if (__glibc_unlikely (abstime->tv_nsec >= 1000000000
+      || abstime->tv_nsec < 0))
+    return EINVAL;
 
-  /* Make sure we are alone.  */
-  lll_lock(rwlock->__data.__lock, rwlock->__data.__shared);
-
-  while (1)
-    {
-      int err;
-
-      /* Get the rwlock if there is no writer...  */
-      if (rwlock->__data.__writer == 0
-	  /* ...and if either no writer is waiting or we prefer readers.  */
-	  && (!rwlock->__data.__nr_writers_queued
-	      || PTHREAD_RWLOCK_PREFER_READER_P (rwlock)))
-	{
-	  /* Increment the reader counter.  Avoid overflow.  */
-	  if (++rwlock->__data.__nr_readers == 0)
-	    {
-	      /* Overflow on number of readers.	 */
-	      --rwlock->__data.__nr_readers;
-	      result = EAGAIN;
-	    }
-	  else
-	    {
-	      /* See pthread_rwlock_rdlock.  */
-	      if (rwlock->__data.__nr_readers == 1
-		  && rwlock->__data.__nr_readers_queued > 0
-		  && rwlock->__data.__nr_writers_queued > 0)
-		{
-		  ++rwlock->__data.__readers_wakeup;
-		  wake = true;
-		}
-	    }
-
-	  break;
-	}
-
-      /* Make sure we are not holding the rwlock as a writer.  This is
-	 a deadlock situation we recognize and report.  */
-      if (__builtin_expect (rwlock->__data.__writer
-			    == THREAD_GETMEM (THREAD_SELF, tid), 0))
-	{
-	  result = EDEADLK;
-	  break;
-	}
-
-      /* Make sure the passed in timeout value is valid.  Ideally this
-	 test would be executed once.  But since it must not be
-	 performed if we would not block at all simply moving the test
-	 to the front is no option.  Replicating all the code is
-	 costly while this test is not.  */
-      if (__builtin_expect (abstime->tv_nsec >= 1000000000
-                            || abstime->tv_nsec < 0, 0))
-	{
-	  result = EINVAL;
-	  break;
-	}
-
-      /* Remember that we are a reader.  */
-      if (++rwlock->__data.__nr_readers_queued == 0)
-	{
-	  /* Overflow on number of queued readers.  */
-	  --rwlock->__data.__nr_readers_queued;
-	  result = EAGAIN;
-	  break;
-	}
-
-      int waitval = rwlock->__data.__readers_wakeup;
-
-      /* Free the lock.  */
-      lll_unlock (rwlock->__data.__lock, rwlock->__data.__shared);
-
-      /* Wait for the writer to finish.  We handle ETIMEDOUT below; on other
-	 return values, we decide how to continue based on the state of the
-	 rwlock.  */
-      err = futex_abstimed_wait (&rwlock->__data.__readers_wakeup, waitval,
-				 abstime, futex_shared);
-
-      /* Get the lock.  */
-      lll_lock (rwlock->__data.__lock, rwlock->__data.__shared);
-
-      --rwlock->__data.__nr_readers_queued;
-
-      /* Did the futex call time out?  */
-      if (err == ETIMEDOUT)
-	{
-	  /* Yep, report it.  */
-	  result = ETIMEDOUT;
-	  break;
-	}
-    }
-
-  /* We are done, free the lock.  */
-  lll_unlock (rwlock->__data.__lock, rwlock->__data.__shared);
-
-  if (wake)
-    futex_wake (&rwlock->__data.__readers_wakeup, INT_MAX, futex_shared);
-
-  return result;
+  return __pthread_rwlock_rdlock_full (rwlock, abstime);
 }

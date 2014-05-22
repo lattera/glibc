@@ -168,13 +168,13 @@ typedef union
        next four words are all set to 1 by the Linuxthreads
        PTHREAD_RWLOCK_INITIALIZER. We ignore them in NPTL.  */
     int __compat_padding[4] __attribute__ ((__aligned__(16)));
-    int __lock;
-    unsigned int __nr_readers;
-    unsigned int __readers_wakeup;
-    unsigned int __writer_wakeup;
-    unsigned int __nr_readers_queued;
-    unsigned int __nr_writers_queued;
-    int __writer;
+    unsigned int __readers;
+    unsigned int __writers;
+    unsigned int __wrphase_futex;
+    unsigned int __writers_futex;
+    unsigned int __pad3;
+    unsigned int __pad4;
+    int __cur_writer;
     /* An unused word, reserved for future use. It was added
        to maintain the location of the flags from the Linuxthreads
        layout of this structure.  */

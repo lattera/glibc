@@ -1,3 +1,58 @@
+2016-01-10  Torvald Riegel  <triegel@redhat.com>
+
+	* nptl/DESIGN-rwlock.txt: Remove.
+	* nptl/lowlevelrwlock.sym: Remove.
+	* nptl/Makefile: Add new tests.
+	* nptl/pthread_rwlock_common.c: New file.  Contains the new rwlock.
+	* nptl/pthreadP.h (PTHREAD_RWLOCK_PREFER_READER_P): Remove.
+	(PTHREAD_RWLOCK_WRPHASE, PTHREAD_RWLOCK_WRLOCKED,
+	PTHREAD_RWLOCK_RWAITING, PTHREAD_RWLOCK_READER_SHIFT,
+	PTHREAD_RWLOCK_READER_OVERFLOW, PTHREAD_RWLOCK_WRHANDOVER,
+	PTHREAD_RWLOCK_FUTEX_USED): New.
+	* nptl/pthread_rwlock_init.c (__pthread_rwlock_init): Adapt to new
+	implementation.
+	* nptl/pthread_rwlock_rdlock.c (__pthread_rwlock_rdlock_slow): Remove.
+	(__pthread_rwlock_rdlock): Adapt.
+	* nptl/pthread_rwlock_timedrdlock.c
+	(pthread_rwlock_timedrdlock): Adapt.
+	* nptl/pthread_rwlock_timedwrlock.c
+	(pthread_rwlock_timedwrlock): Adapt.
+	* nptl/pthread_rwlock_trywrlock.c (pthread_rwlock_trywrlock): Adapt.
+	* nptl/pthread_rwlock_tryrdlock.c (pthread_rwlock_tryrdlock): Adapt.
+	* nptl/pthread_rwlock_unlock.c (pthread_rwlock_unlock): Adapt.
+	* nptl/pthread_rwlock_wrlock.c (__pthread_rwlock_wrlock_slow): Remove.
+	(__pthread_rwlock_wrlock): Adapt.
+	* nptl/tst-rwlock10.c: Adapt.
+	* nptl/tst-rwlock11.c: Adapt.
+	* nptl/tst-rwlock17.c: New file.
+	* nptl/tst-rwlock18.c: New file.
+	* nptl/tst-rwlock19.c: New file.
+	* nptl/tst-rwlock2b.c: New file.
+	* nptl/tst-rwlock8.c: Adapt.
+	* nptl/tst-rwlock9.c: Adapt.
+	* sysdeps/aarch64/nptl/bits/pthreadtypes.h (pthread_rwlock_t): Adapt.
+	* sysdeps/arm/nptl/bits/pthreadtypes.h (pthread_rwlock_t): Adapt.
+	* sysdeps/hppa/nptl/bits/pthreadtypes.h (pthread_rwlock_t): Adapt.
+	* sysdeps/ia64/nptl/bits/pthreadtypes.h (pthread_rwlock_t): Adapt.
+	* sysdeps/m68k/nptl/bits/pthreadtypes.h (pthread_rwlock_t): Adapt.
+	* sysdeps/microblaze/nptl/bits/pthreadtypes.h (pthread_rwlock_t): Adapt.
+	* sysdeps/mips/nptl/bits/pthreadtypes.h (pthread_rwlock_t): Adapt.
+	* sysdeps/nios2/nptl/bits/pthreadtypes.h (pthread_rwlock_t): Adapt.
+	* sysdeps/s390/nptl/bits/pthreadtypes.h (pthread_rwlock_t): Adapt.
+	* sysdeps/sh/nptl/bits/pthreadtypes.h (pthread_rwlock_t): Adapt.
+	* sysdeps/sparc/nptl/bits/pthreadtypes.h (pthread_rwlock_t): Adapt.
+	* sysdeps/tile/nptl/bits/pthreadtypes.h (pthread_rwlock_t): Adapt.
+	* sysdeps/unix/sysv/linux/alpha/bits/pthreadtypes.h
+	(pthread_rwlock_t): Adapt.
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h
+	(pthread_rwlock_t): Adapt.
+	* sysdeps/x86/bits/pthreadtypes.h (pthread_rwlock_t): Adapt.
+	* nptl/nptl-printers.py (): Adapt.
+	* nptl/nptl_lock_constants.pysym: Adapt.
+	* nptl/test-rwlock-printers.py: Adapt.
+	* nptl/test-rwlockattr-printers.c: Adapt.
+	* nptl/test-rwlockattr-printers.py: Adapt.
+
 2017-01-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (XFAIL_IBM128_LIBGCC): New macro.

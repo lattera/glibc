@@ -141,12 +141,12 @@ typedef union
 {
   struct
   {
-    int __lock;
-    unsigned int __nr_readers;
-    unsigned int __readers_wakeup;
-    unsigned int __writer_wakeup;
-    unsigned int __nr_readers_queued;
-    unsigned int __nr_writers_queued;
+    unsigned int __readers;
+    unsigned int __writers;
+    unsigned int __wrphase_futex;
+    unsigned int __writers_futex;
+    unsigned int __pad3;
+    unsigned int __pad4;
 #if __BYTE_ORDER == __BIG_ENDIAN
     unsigned char __pad1;
     unsigned char __pad2;
@@ -162,7 +162,7 @@ typedef union
     unsigned char __pad1;
     unsigned char __pad2;
 #endif
-    int __writer;
+    int __cur_writer;
   } __data;
   char __size[__SIZEOF_PTHREAD_RWLOCK_T];
   long int __align;

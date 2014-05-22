@@ -34,11 +34,11 @@
 #define TIMEOUT 1000000
 #define DELAY   1000000
 
-#ifndef INIT
-# define INIT PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP
+#ifndef KIND
+# define KIND PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP
 #endif
 
-static pthread_rwlock_t lock = INIT;
+static pthread_rwlock_t lock;
 
 
 static void *
@@ -156,6 +156,25 @@ do_test (void)
   pthread_t thrd[NREADERS];
   int n;
   void *res;
+  pthread_rwlockattr_t a;
+
+  if (pthread_rwlockattr_init (&a) != 0)
+    {
+      puts ("rwlockattr_t failed");
+      exit (1);
+    }
+
+  if (pthread_rwlockattr_setkind_np (&a, KIND) != 0)
+    {
+      puts ("rwlockattr_setkind failed");
+      exit (1);
+    }
+
+  if (pthread_rwlock_init (&lock, &a) != 0)
+    {
+      puts ("rwlock_init failed");
+      exit (1);
+    }
 
   /* Make standard error the same as standard output.  */
   dup2 (1, 2);

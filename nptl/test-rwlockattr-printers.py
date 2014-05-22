@@ -46,6 +46,9 @@ try:
     next_cmd(2)
     test_printer(rwlock_var, rwlock_to_string, {'Prefers': 'Writers'})
     test_printer(attr_var, attr_to_string, {'Prefers': 'Writers'})
+    next_cmd(2)
+    test_printer(rwlock_var, rwlock_to_string, {'Prefers': 'Writers no recursive readers'})
+    test_printer(attr_var, attr_to_string, {'Prefers': 'Writers no recursive readers'})
 
     break_at(test_source, 'Set shared')
     continue_cmd() # Go to test_setpshared

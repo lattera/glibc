@@ -18,60 +18,29 @@
 
 #include <errno.h>
 #include <sysdep.h>
-#include <lowlevellock.h>
 #include <futex-internal.h>
 #include <pthread.h>
 #include <pthreadP.h>
 #include <stap-probe.h>
-#include <elide.h>
 
+#include "pthread_rwlock_common.c"
 
-/* Unlock RWLOCK.  */
+/* See pthread_rwlock_common.c for an overview.  */
 int
 __pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
 {
-  int futex_shared =
-      rwlock->__data.__shared == LLL_PRIVATE ? FUTEX_PRIVATE : FUTEX_SHARED;
-
   LIBC_PROBE (rwlock_unlock, 1, rwlock);
 
-  /* Trying to elide an unlocked lock may crash the process.  This
-     is expected and is compatible with POSIX.1-2008: "results are
-     undefined if the read-write lock rwlock is not held by the
-     calling thread".  */
-  if (ELIDE_UNLOCK (rwlock->__data.__writer == 0
-		    && rwlock->__data.__nr_readers == 0))
-    return 0;
-
-  lll_lock (rwlock->__data.__lock, rwlock->__data.__shared);
-  if (rwlock->__data.__writer)
-    rwlock->__data.__writer = 0;
+  /* We distinguish between having acquired a read vs. a write lock by looking
+     at the writer TID.  If it's equal to our TID, we must be the writer
+     because nobody else can have stored this value.  Also, if we are a
+     reader, we will read from the wrunlock store with value 0 by the most
+     recent writer because that writer happens-before us.  */
+  if (atomic_load_relaxed (&rwlock->__data.__cur_writer)
+      == THREAD_GETMEM (THREAD_SELF, tid))
+      __pthread_rwlock_wrunlock (rwlock);
   else
-    --rwlock->__data.__nr_readers;
-  /* If there are still readers present, we do not yet need to wake writers
-     nor are responsible to wake any readers.  */
-  if (rwlock->__data.__nr_readers == 0)
-    {
-      /* Note that if there is a blocked writer, we effectively make it
-	 responsible for waking any readers because we don't wake readers in
-	 this case.  */
-      if (rwlock->__data.__nr_writers_queued)
-	{
-	  ++rwlock->__data.__writer_wakeup;
-	  lll_unlock (rwlock->__data.__lock, rwlock->__data.__shared);
-	  futex_wake (&rwlock->__data.__writer_wakeup, 1, futex_shared);
-	  return 0;
-	}
-      else if (rwlock->__data.__nr_readers_queued)
-	{
-	  ++rwlock->__data.__readers_wakeup;
-	  lll_unlock (rwlock->__data.__lock, rwlock->__data.__shared);
-	  futex_wake (&rwlock->__data.__readers_wakeup, INT_MAX,
-		      futex_shared);
-	  return 0;
-	}
-    }
-  lll_unlock (rwlock->__data.__lock, rwlock->__data.__shared);
+    __pthread_rwlock_rdunlock (rwlock);
   return 0;
 }
 

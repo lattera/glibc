@@ -150,9 +150,16 @@ enum
    | PTHREAD_MUTEXATTR_PROTOCOL_MASK | PTHREAD_MUTEXATTR_PRIO_CEILING_MASK)
 
 
-/* Check whether rwlock prefers readers.   */
-#define PTHREAD_RWLOCK_PREFER_READER_P(rwlock) \
-  ((rwlock)->__data.__flags == 0)
+/* For the following, see pthread_rwlock_common.c.  */
+#define PTHREAD_RWLOCK_WRPHASE		1
+#define PTHREAD_RWLOCK_WRLOCKED		2
+#define PTHREAD_RWLOCK_RWAITING		4
+#define PTHREAD_RWLOCK_READER_SHIFT	3
+#define PTHREAD_RWLOCK_READER_OVERFLOW	((unsigned int) 1 \
+					 << (sizeof (unsigned int) * 8 - 1))
+#define PTHREAD_RWLOCK_WRHANDOVER	((unsigned int) 1 \
+					 << (sizeof (unsigned int) * 8 - 1))
+#define PTHREAD_RWLOCK_FUTEX_USED	2
 
 
 /* Bits used in robust mutex implementation.  */

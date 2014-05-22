@@ -16,5 +16,5 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If
    not, see <http://www.gnu.org/licenses/>.  */
 
-#define INIT PTHREAD_RWLOCK_INITIALIZER
+#define KIND PTHREAD_RWLOCK_PREFER_READER_NP
 #include "tst-rwlock9.c"

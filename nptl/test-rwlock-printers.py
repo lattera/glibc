@@ -35,9 +35,9 @@ try:
 
     break_at(test_source, 'Test locking (reader)')
     continue_cmd() # Go to test_locking_reader
-    test_printer(var, to_string, {'Status': 'Unlocked'})
+    test_printer(var, to_string, {'Status': 'Not acquired'})
     next_cmd()
-    test_printer(var, to_string, {'Status': r'Locked \(Read\)', 'Readers': '1'})
+    test_printer(var, to_string, {'Status': r'Acquired \(Read\)', 'Readers': '1'})
     next_cmd()
     test_printer(var, to_string, {'Readers': '2'})
     next_cmd()
@@ -45,10 +45,10 @@ try:
 
     break_at(test_source, 'Test locking (writer)')
     continue_cmd() # Go to test_locking_writer
-    test_printer(var, to_string, {'Status': 'Unlocked'})
+    test_printer(var, to_string, {'Status': 'Not acquired'})
     next_cmd()
     thread_id = get_current_thread_lwpid()
-    test_printer(var, to_string, {'Status': r'Locked \(Write\)',
+    test_printer(var, to_string, {'Status': r'Acquired \(Write\)',
                                   'Writer ID': thread_id})
 
     continue_cmd() # Exit

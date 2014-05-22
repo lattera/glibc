@@ -75,6 +75,8 @@ test_setkind_np (pthread_rwlock_t *rwlock, pthread_rwlockattr_t *attr)
 
   if (SET_KIND (attr, PTHREAD_RWLOCK_PREFER_READER_NP) == 0 /* Set kind.  */
       && rwlock_reinit (rwlock, attr) == PASS
+      && SET_KIND (attr, PTHREAD_RWLOCK_PREFER_WRITER_NP) == 0
+      && rwlock_reinit (rwlock, attr) == PASS
       && SET_KIND (attr, PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP) == 0
       && rwlock_reinit (rwlock, attr) == PASS)
     result = PASS;

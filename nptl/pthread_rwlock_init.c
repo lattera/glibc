@@ -18,7 +18,6 @@
 
 #include "pthreadP.h"
 #include <string.h>
-#include <kernel-features.h>
 
 
 static const struct pthread_rwlockattr default_rwlockattr =
@@ -28,6 +27,7 @@ static const struct pthread_rwlockattr default_rwlockattr =
   };
 
 
+/* See pthread_rwlock_common.c.  */
 int
 __pthread_rwlock_init (pthread_rwlock_t *rwlock,
 		       const pthread_rwlockattr_t *attr)
@@ -38,27 +38,10 @@ __pthread_rwlock_init (pthread_rwlock_t *rwlock,
 
   memset (rwlock, '\0', sizeof (*rwlock));
 
-  rwlock->__data.__flags
-    = iattr->lockkind == PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP;
+  rwlock->__data.__flags = iattr->lockkind;
 
-  /* The __SHARED field is computed to minimize the work that needs to
-     be done while handling the futex.  There are two inputs: the
-     availability of private futexes and whether the rwlock is shared
-     or private.  Unfortunately the value of a private rwlock is
-     fixed: it must be zero.  The PRIVATE_FUTEX flag has the value
-     0x80 in case private futexes are available and zero otherwise.
-     This leads to the following table:
-
-		 |     pshared     |     result
-		 | shared  private | shared  private |
-     ------------+-----------------+-----------------+
-     !avail 0    |     0       0   |     0       0   |
-      avail 0x80 |  0x80       0   |     0    0x80   |
-
-     If the pshared value is in locking functions XORed with avail
-     we get the expected result.  */
-  rwlock->__data.__shared = (iattr->pshared == PTHREAD_PROCESS_PRIVATE
-			     ? 0 : FUTEX_PRIVATE_FLAG);
+  /* The value of __SHARED in a private rwlock must be zero.  */
+  rwlock->__data.__shared = (iattr->pshared != PTHREAD_PROCESS_PRIVATE);
 
   return 0;
 }
