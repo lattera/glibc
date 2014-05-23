@@ -1,5 +1,25 @@
 2014-05-26  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* nptl/sysdeps/unix/sysv/linux/powerpc/powerpc64/Versions: Remove,
+	merge into ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/Versions: ... here.
+	* nptl/sysdeps/unix/sysv/linux/powerpc/powerpc64/timer_create.c: Moved
+	...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/timer_create.c: ... here.
+	* nptl/sysdeps/unix/sysv/linux/powerpc/powerpc64/timer_delete.c: Moved
+	...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/timer_delete.c: ... here.
+	* nptl/sysdeps/unix/sysv/linux/powerpc/powerpc64/timer_getoverr.c:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/timer_getoverr.c: ...
+	here.
+	* nptl/sysdeps/unix/sysv/linux/powerpc/powerpc64/timer_gettime.c:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/timer_gettime.c: ... here.
+	* nptl/sysdeps/unix/sysv/linux/powerpc/powerpc64/timer_settime.c:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/timer_settime.c: ... here.
+
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S: Remove
 	conditional [RESET_PID].
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: Likewise.
