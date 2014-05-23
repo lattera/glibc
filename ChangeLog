@@ -1,3 +1,20 @@
+2014-05-23  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16977]
+	* sysdeps/i386/fpu/e_log10.S (__ieee754_log10): Take absolute
+	value when x - 1 is zero.
+	* sysdeps/i386/fpu/e_log10f.S (__ieee754_log10f): Likewise.
+	* sysdeps/i386/fpu/e_log10l.S (__ieee754_log10l): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_log10l.c (__ieee754_log10l): Return
+	0.0L for an argument of 1.0L.
+	* sysdeps/ieee754/ldbl-128ibm/e_log10l.c (__ieee754_log10l):
+	Likewise.
+	* sysdeps/x86_64/fpu/e_log10l.S (__ieee754_log10l): Take absolute
+	value when x - 1 is zero.
+	* math/libm-test.inc (log10_test): Use ALL_RM_TEST.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2014-05-23  Rasmus Villemoes  <rv@rasmusvillemoes.dk>
 
 	* manual/filesys.texi (Scanning Directory Content): Fix prototype of

@@ -7798,9 +7798,7 @@ static const struct test_f_f_data log10_test_data[] =
 static void
 log10_test (void)
 {
-  START (log10, 0);
-  RUN_TEST_LOOP_f_f (log10, log10_test_data, );
-  END;
+  ALL_RM_TEST (log10, 0, log10_test_data, RUN_TEST_LOOP_f_f, END);
 }
 
 
