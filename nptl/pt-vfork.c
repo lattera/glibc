@@ -28,12 +28,23 @@
    vfork symbols in libpthread.so; so we define them using IFUNC to
    redirect to the libc function.  */
 
+/* Note! If the architecture doesn't support IFUNC, then we need an
+   alternate target-specific mechanism to implement this.  So we just
+   assume IFUNC here and require that the target override this file
+   if necessary.
+
+   If the architecture can assume all supported versions of gcc will
+   produce a tail-call to __libc_vfork, consider including the version
+   in sysdeps/unix/sysv/linux/aarch64/pt-vfork.c.  */
+
+#if !HAVE_IFUNC
+# error "must write pt-vfork for this machine or get IFUNC support"
+#endif
+
 #if (SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_20) \
      || SHLIB_COMPAT (libpthread, GLIBC_2_1_2, GLIBC_2_20))
 
 extern __typeof (vfork) __libc_vfork;   /* Defined in libc.  */
-
-# ifdef HAVE_IFUNC
 
 attribute_hidden __attribute__ ((used))
 __typeof (vfork) *
@@ -42,29 +53,16 @@ vfork_ifunc (void)
   return &__libc_vfork;
 }
 
-#  ifdef HAVE_ASM_SET_DIRECTIVE
-#   define DEFINE_VFORK(name) \
+# ifdef HAVE_ASM_SET_DIRECTIVE
+#  define DEFINE_VFORK(name) \
   asm (".set " #name ", vfork_ifunc\n" \
        ".globl " #name "\n" \
        ".type " #name ", %gnu_indirect_function");
-#  else
-#   define DEFINE_VFORK(name) \
+# else
+#  define DEFINE_VFORK(name) \
   asm (#name " = vfork_ifunc\n" \
        ".globl " #name "\n" \
        ".type " #name ", %gnu_indirect_function");
-#  endif
-
-# else
-
-attribute_hidden
-pid_t
-vfork_compat (void)
-{
-  return __libc_vfork ();
-}
-
-# define DEFINE_VFORK(name)     weak_alias (vfork_compat, name)
-
 # endif
 #endif
 

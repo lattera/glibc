@@ -1,3 +1,9 @@
+2014-05-23  Richard Henderson  <rth@twiddle.net>
+
+	* nptl/pt-vfork.c: Error if !HAVE_IFUNC.
+	[!HAVE_IFUNC] (vfork_compat): Remove.
+	[!HAVE_IFUNC] (DEFINE_VFORK): Remove.
+
 2014-05-23  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16978]
