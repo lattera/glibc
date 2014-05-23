@@ -73,7 +73,7 @@
 /* The bits in mode: */
 #define TSUID	04000
 #define TSGID	02000
-#ifdef __USE_XOPEN
+#if defined __USE_XOPEN || !defined __USE_XOPEN2K
 # define TSVTX	01000
 #endif
 #define TUREAD	00400

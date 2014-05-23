@@ -1,3 +1,10 @@
+2014-05-23  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16978]
+	* posix/tar.h [!__USE_XOPEN2K] (TSVTX): Define macro.
+	* conform/Makefile (test-xfail-POSIX/tar.h/conform): Remove
+	variable.
+
 2014-05-23  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/unix/sysv/linux/alpha/nptl/Makefile: Merge into...

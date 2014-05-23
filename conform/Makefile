@@ -188,7 +188,6 @@ test-xfail-XPG4/termios.h/conform = yes
 test-xfail-XPG4/ucontext.h/conform = yes
 test-xfail-XPG4/unistd.h/conform = yes
 test-xfail-XPG4/utmpx.h/conform = yes
-test-xfail-POSIX/tar.h/conform = yes
 test-xfail-UNIX98/arpa/inet.h/conform = yes
 test-xfail-UNIX98/fcntl.h/conform = yes
 test-xfail-UNIX98/langinfo.h/conform = yes
