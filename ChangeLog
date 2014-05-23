@@ -1,5 +1,10 @@
 2014-05-25  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/sysv/linux/aarch64/nptl/sysdep-cancel.h
+	(SINGLE_THREAD_P_PIC): Remove.
+	* sysdeps/unix/sysv/linux/arm/sysdep-cancel.h
+	(SINGLE_THREAD_P_PIC): Remove.
+
 	* sysdeps/unix/sysv/linux/aarch64/sysdep.h (PSEUDO_RET): Move
 	branch to syscall error ...
 	(PSEUDO): ... here.

@@ -223,7 +223,6 @@ extern int __local_multiple_threads attribute_hidden;
 	cfi_adjust_cfa_offset (-8);					\
 	cfi_restore (lr);						\
 	teq	ip, #0
-#   define SINGLE_THREAD_P_PIC(x) SINGLE_THREAD_P
 #  endif
 # endif
 

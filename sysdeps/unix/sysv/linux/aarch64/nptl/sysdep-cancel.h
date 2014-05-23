@@ -186,7 +186,6 @@ extern int __local_multiple_threads attribute_hidden;
   cfi_restore (x30);							\
   cfi_adjust_cfa_offset (-16);						\
   cmp	w16, 0
-#   define SINGLE_THREAD_P_PIC(x) SINGLE_THREAD_P
 #  endif
 # endif
 
