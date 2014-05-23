@@ -1,3 +1,9 @@
+2014-05-27  Will Newton  <will.newton@linaro.org>
+
+	[BZ #16990]
+	* sysdeps/arm/dl-tlsdesc.S (_dl_tlsdesc_resolve_hold): Save
+	and restore r2 rather than just restoring.
+
 2014-05-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #16724]

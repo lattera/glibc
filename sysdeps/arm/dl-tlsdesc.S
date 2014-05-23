@@ -186,7 +186,9 @@ _dl_tlsdesc_lazy_resolver:
 	.size	_dl_tlsdesc_lazy_resolver, .-_dl_tlsdesc_lazy_resolver
 
 /* Holder for lazy tls descriptors being resolve in another thread.
-   Same ABI as the lazy resolver itself.  */
+
+   Our calling convention is to clobber r0, r1 and the processor
+   flags.  All others that are modified must be saved */
 	.hidden _dl_tlsdesc_resolve_hold
 	.global	_dl_tlsdesc_resolve_hold
 	.type	_dl_tlsdesc_resolve_hold,#function
@@ -194,29 +196,20 @@ _dl_tlsdesc_lazy_resolver:
 	eabi_fnstart
 	.align 2
 _dl_tlsdesc_resolve_hold:
-	/* Tell the unwinder that r2 has already been pushed.  */
-	eabi_save ({r2})
-	cfi_adjust_cfa_offset (4)
+	eabi_save ({r2,r3,ip,lr})
+	push	{r2, r3, ip, lr}
+	cfi_adjust_cfa_offset (16)
 	cfi_rel_offset (r2, 0)
-	eabi_save ({r0,r1,r3,ip,lr})
-	push	{r0, r1, r3, ip, lr}
-	cfi_adjust_cfa_offset (20)
-	cfi_rel_offset (r0, 0)
-	cfi_rel_offset (r1, 4)
-	cfi_rel_offset (r3, 8)
-	cfi_rel_offset (ip, 12)
-	cfi_rel_offset (lr, 16)
-	adr	r2, _dl_tlsdesc_resolve_hold
+	cfi_rel_offset (r3, 4)
+	cfi_rel_offset (ip, 8)
+	cfi_rel_offset (lr, 12)
+	adr	r1, _dl_tlsdesc_resolve_hold
 	bl	_dl_tlsdesc_resolve_hold_fixup
-	pop	{r0, r1, r3, ip, lr}
-	cfi_adjust_cfa_offset (-20)
+	pop	{r2, r3, ip, lr}
+	cfi_adjust_cfa_offset (-16)
 	cfi_restore (lr)
 	cfi_restore (ip)
 	cfi_restore (r3)
-	cfi_restore (r1)
-	cfi_restore (r0)
-	pop	{r2}
-	cfi_adjust_cfa_offset (-4)
 	cfi_restore (r2)
 	sfi_breg r0, \
 	ldr     r1, [\B, #4]
