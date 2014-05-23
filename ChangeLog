@@ -1,5 +1,8 @@
 2014-05-23  Richard Henderson  <rth@twiddle.net>
 
+	* nptl/pt-vfork.c (vfork_resolve): Rename from vfork_ifunc.
+	(vfork, __vfork): Define via compat_symbol.
+
 	* nptl/pt-vfork.c: Error if !HAVE_IFUNC.
 	[!HAVE_IFUNC] (vfork_compat): Remove.
 	[!HAVE_IFUNC] (DEFINE_VFORK): Remove.
