@@ -27,24 +27,17 @@
 # undef PSEUDO
 # define PSEUDO(name, syscall_name, args)				\
 	.section ".text";						\
-	.type	__##syscall_name##_nocancel,%function;			\
-	.globl	__##syscall_name##_nocancel;				\
-__##syscall_name##_nocancel:						\
-	cfi_startproc;							\
+ENTRY (__##syscall_name##_nocancel);					\
+.Lpseudo_nocancel:							\
 	DO_CALL (syscall_name, args);					\
+.Lpseudo_finish:							\
 	cmn	x0, 4095;						\
 	b.cs	.Lsyscall_error;					\
-	PSEUDO_RET;							\
-	cfi_endproc;							\
+	.subsection 2;							\
 	.size __##syscall_name##_nocancel,.-__##syscall_name##_nocancel; \
 ENTRY (name);								\
 	SINGLE_THREAD_P;						\
-	bne .Lpseudo_cancel;						\
-	DO_CALL (syscall_name, 0);					\
-	cmn x0, 4095;							\
-	b.cs .Lsyscall_error;						\
-	PSEUDO_RET;							\
-.Lpseudo_cancel:							\
+	beq .Lpseudo_nocancel;						\
 	DOCARGS_##args;	/* save syscall args etc. around CENABLE.  */	\
 	CENABLE;							\
 	mov	x16, x0;	/* put mask in safe place.  */		\
@@ -60,8 +53,15 @@ ENTRY (name);								\
 	ldr	x30, [sp], 16;						\
 	cfi_adjust_cfa_offset (-16);					\
 	cfi_restore (x30);						\
-	cmn	x0, 4095;						\
-	b.cs	.Lsyscall_error;
+	b	.Lpseudo_finish;					\
+	cfi_endproc;							\
+	.size	name, .-name;						\
+	.previous
+
+# undef PSEUDO_END
+# define PSEUDO_END(name)						\
+	SYSCALL_ERROR_HANDLER;						\
+	cfi_endproc
 
 # define DOCARGS_0							\
 	str x30, [sp, -16]!;						\
