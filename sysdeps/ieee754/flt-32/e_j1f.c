@@ -107,6 +107,7 @@ __ieee754_y1f(float x)
 		return -HUGE_VALF+x;  /* -inf and overflow exception.  */
 	if(__builtin_expect(hx<0, 0)) return zero/(zero*x);
 	if(ix >= 0x40000000) {  /* |x| >= 2.0 */
+		SET_RESTORE_ROUNDF (FE_TONEAREST);
 		__sincosf (x, &s, &c);
 		ss = -s-c;
 		cc = s-c;
