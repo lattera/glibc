@@ -36,8 +36,8 @@ ENTRY (__##syscall_name##_nocancel);					\
 	.subsection 2;							\
 	.size __##syscall_name##_nocancel,.-__##syscall_name##_nocancel; \
 ENTRY (name);								\
-	SINGLE_THREAD_P;						\
-	beq .Lpseudo_nocancel;						\
+	SINGLE_THREAD_P(16);						\
+	cbz	w16, .Lpseudo_nocancel;					\
 	DOCARGS_##args;	/* save syscall args etc. around CENABLE.  */	\
 	CENABLE;							\
 	mov	x16, x0;	/* put mask in safe place.  */		\
@@ -161,10 +161,9 @@ ENTRY (name);								\
 extern int __local_multiple_threads attribute_hidden;
 #   define SINGLE_THREAD_P __builtin_expect (__local_multiple_threads == 0, 1)
 #  else
-#   define SINGLE_THREAD_P						\
-	adrp	x16, __local_multiple_threads;				\
-	ldr	w16, [x16, :lo12:__local_multiple_threads];		\
-	cmp	w16, 0;
+#   define SINGLE_THREAD_P(R)						\
+	adrp	x##R, __local_multiple_threads;				\
+	ldr	w##R, [x##R, :lo12:__local_multiple_threads]
 #  endif
 # else
 /*  There is no __local_multiple_threads for librt, so use the TCB.  */
@@ -173,19 +172,18 @@ extern int __local_multiple_threads attribute_hidden;
   __builtin_expect (THREAD_GETMEM (THREAD_SELF,				\
 				   header.multiple_threads) == 0, 1)
 #  else
-#   define SINGLE_THREAD_P						\
+#   define SINGLE_THREAD_P(R)						\
 	stp	x0, x30, [sp, -16]!;					\
 	cfi_adjust_cfa_offset (16);					\
 	cfi_rel_offset (x0, 0);						\
 	cfi_rel_offset (x30, 8);					\
 	bl	__read_tp;						\
 	sub	x0, x0, PTHREAD_SIZEOF;					\
-	ldr	w16, [x0, PTHREAD_MULTIPLE_THREADS_OFFSET];		\
+	ldr	w##R, [x0, PTHREAD_MULTIPLE_THREADS_OFFSET];		\
 	ldp	x0, x30, [sp], 16;					\
 	cfi_restore (x0);						\
 	cfi_restore (x30);						\
-	cfi_adjust_cfa_offset (-16);					\
-	cmp	w16, 0;
+	cfi_adjust_cfa_offset (-16)
 #  endif
 # endif
 

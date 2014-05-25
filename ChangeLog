@@ -1,5 +1,9 @@
 2014-05-29  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/sysv/linux/aarch64/nptl/sysdep-cancel.h
+	(SINGLE_THREAD_P): New parameter for result regno.
+	(PSEUDO): Update to match; use cbz instead of beq.
+
 	* sysdeps/unix/sysv/linux/aarch64/nptl/sysdep-cancel.h (PSEUDO):
 	Use ENTRY to define the _nocancel entry point.  Share the syscall
 	and syscall error check paths with the cancel path.
