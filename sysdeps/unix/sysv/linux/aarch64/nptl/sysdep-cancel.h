@@ -26,42 +26,42 @@
 
 # undef PSEUDO
 # define PSEUDO(name, syscall_name, args)				\
-  .section ".text";							\
-  .type __##syscall_name##_nocancel,%function;				\
-  .globl __##syscall_name##_nocancel;					\
-  __##syscall_name##_nocancel:						\
-    cfi_startproc;							\
-    DO_CALL (syscall_name, args);					\
-    cmn x0, 4095;							\
-    b.cs .Lsyscall_error;						\
-    PSEUDO_RET;								\
-    cfi_endproc;							\
-    .size __##syscall_name##_nocancel,.-__##syscall_name##_nocancel;	\
-  ENTRY (name);								\
-    SINGLE_THREAD_P;							\
-    bne .Lpseudo_cancel;						\
-    DO_CALL (syscall_name, 0);						\
-    cmn x0, 4095;							\
-    b.cs .Lsyscall_error;						\
-    PSEUDO_RET;								\
-  .Lpseudo_cancel:							\
-    DOCARGS_##args;	/* save syscall args etc. around CENABLE.  */	\
-    CENABLE;								\
-    mov x16, x0;	/* put mask in safe place.  */			\
-    UNDOCARGS_##args;	/* restore syscall args.  */			\
-    mov x8, SYS_ify (syscall_name);	/* do the call.  */		\
-    svc	0;								\
-    str x0, [sp, -16]!;	/* save syscall return value.  */		\
-    cfi_adjust_cfa_offset (16);						\
-    mov x0, x16;	 /* get mask back.  */				\
-    CDISABLE;								\
-    ldr x0, [sp], 16;							\
-    cfi_adjust_cfa_offset (-16);					\
-    ldr x30, [sp], 16;							\
-    cfi_adjust_cfa_offset (-16);					\
-    cfi_restore (x30);							\
-    cmn x0, 4095;							\
-    b.cs .Lsyscall_error;
+	.section ".text";						\
+	.type	__##syscall_name##_nocancel,%function;			\
+	.globl	__##syscall_name##_nocancel;				\
+__##syscall_name##_nocancel:						\
+	cfi_startproc;							\
+	DO_CALL (syscall_name, args);					\
+	cmn	x0, 4095;						\
+	b.cs	.Lsyscall_error;					\
+	PSEUDO_RET;							\
+	cfi_endproc;							\
+	.size __##syscall_name##_nocancel,.-__##syscall_name##_nocancel; \
+ENTRY (name);								\
+	SINGLE_THREAD_P;						\
+	bne .Lpseudo_cancel;						\
+	DO_CALL (syscall_name, 0);					\
+	cmn x0, 4095;							\
+	b.cs .Lsyscall_error;						\
+	PSEUDO_RET;							\
+.Lpseudo_cancel:							\
+	DOCARGS_##args;	/* save syscall args etc. around CENABLE.  */	\
+	CENABLE;							\
+	mov	x16, x0;	/* put mask in safe place.  */		\
+	UNDOCARGS_##args;	/* restore syscall args.  */		\
+	mov	x8, SYS_ify (syscall_name);	/* do the call.  */	\
+	svc	0;							\
+	str	x0, [sp, -16]!;	/* save syscall return value.  */	\
+	cfi_adjust_cfa_offset (16);					\
+	mov	x0, x16;	 /* get mask back.  */			\
+	CDISABLE;							\
+	ldr	x0, [sp], 16;						\
+	cfi_adjust_cfa_offset (-16);					\
+	ldr	x30, [sp], 16;						\
+	cfi_adjust_cfa_offset (-16);					\
+	cfi_restore (x30);						\
+	cmn	x0, 4095;						\
+	b.cs	.Lsyscall_error;
 
 # define DOCARGS_0							\
 	str x30, [sp, -16]!;						\
@@ -162,9 +162,9 @@ extern int __local_multiple_threads attribute_hidden;
 #   define SINGLE_THREAD_P __builtin_expect (__local_multiple_threads == 0, 1)
 #  else
 #   define SINGLE_THREAD_P						\
-  adrp	x16, __local_multiple_threads;					\
-  ldr	w16, [x16, :lo12:__local_multiple_threads];			\
-  cmp	w16, 0;
+	adrp	x16, __local_multiple_threads;				\
+	ldr	w16, [x16, :lo12:__local_multiple_threads];		\
+	cmp	w16, 0;
 #  endif
 # else
 /*  There is no __local_multiple_threads for librt, so use the TCB.  */
@@ -174,18 +174,18 @@ extern int __local_multiple_threads attribute_hidden;
 				   header.multiple_threads) == 0, 1)
 #  else
 #   define SINGLE_THREAD_P						\
-  stp	x0, x30, [sp, -16]!;						\
-  cfi_adjust_cfa_offset (16);						\
-  cfi_rel_offset (x0, 0);						\
-  cfi_rel_offset (x30, 8);						\
-  bl	__read_tp;							\
-  sub	x0, x0, PTHREAD_SIZEOF;						\
-  ldr	w16, [x0, PTHREAD_MULTIPLE_THREADS_OFFSET];			\
-  ldp	x0, x30, [sp], 16;						\
-  cfi_restore (x0);							\
-  cfi_restore (x30);							\
-  cfi_adjust_cfa_offset (-16);						\
-  cmp	w16, 0
+	stp	x0, x30, [sp, -16]!;					\
+	cfi_adjust_cfa_offset (16);					\
+	cfi_rel_offset (x0, 0);						\
+	cfi_rel_offset (x30, 8);					\
+	bl	__read_tp;						\
+	sub	x0, x0, PTHREAD_SIZEOF;					\
+	ldr	w16, [x0, PTHREAD_MULTIPLE_THREADS_OFFSET];		\
+	ldp	x0, x30, [sp], 16;					\
+	cfi_restore (x0);						\
+	cfi_restore (x30);						\
+	cfi_adjust_cfa_offset (-16);					\
+	cmp	w16, 0;
 #  endif
 # endif
 

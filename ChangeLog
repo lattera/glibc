@@ -1,3 +1,8 @@
+2014-05-29  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/unix/sysv/linux/aarch64/nptl/sysdep-cancel.h: Adjust
+	whitespace; tabs before and after asm mnemonics.
+
 2014-05-29  Eric Wong  <normalperson@yhbt.net>
 
 	[BZ #15132]
