@@ -1,5 +1,8 @@
 2014-05-25  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/sysv/linux/aarch64/sysdep.h (DO_CALL): Fix
+	block comment.
+
 	* sysdeps/unix/sysv/linux/alpha/vfork.S (vfork, __vfork): Only
 	define if !NOT_IN_libc.
 	* sysdeps/unix/sysv/linux/alpha/pt-vfork.S (vfork, __vfork): Only

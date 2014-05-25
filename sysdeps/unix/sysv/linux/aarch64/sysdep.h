@@ -148,7 +148,7 @@ __local_syscall_error:						\
 # endif
 
 /* Linux takes system call args in registers:
-	syscall number	in the SVC instruction
+	syscall number	x8
 	arg 1		x0
 	arg 2		x1
 	arg 3		x2
