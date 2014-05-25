@@ -38,20 +38,22 @@ ENTRY (__##syscall_name##_nocancel);					\
 ENTRY (name);								\
 	SINGLE_THREAD_P(16);						\
 	cbz	w16, .Lpseudo_nocancel;					\
-	DOCARGS_##args;	/* save syscall args etc. around CENABLE.  */	\
+	/* Setup common stack frame no matter the number of args.	\
+	   Also save the first arg, since it's basically free.  */	\
+	stp	x30, x0, [sp, -64]!;					\
+	cfi_adjust_cfa_offset (64);					\
+	cfi_rel_offset (x30, 0);					\
+	DOCARGS_##args;		/* save syscall args around CENABLE.  */ \
 	CENABLE;							\
-	mov	x16, x0;	/* put mask in safe place.  */		\
+	mov	x16, x0;	/* save mask around syscall.  */	\
 	UNDOCARGS_##args;	/* restore syscall args.  */		\
-	mov	x8, SYS_ify (syscall_name);	/* do the call.  */	\
-	svc	0;							\
-	str	x0, [sp, -16]!;	/* save syscall return value.  */	\
-	cfi_adjust_cfa_offset (16);					\
-	mov	x0, x16;	 /* get mask back.  */			\
+	DO_CALL (syscall_name, args);					\
+	str	x0, [sp, 8];	/* save result around CDISABLE.  */	\
+	mov	x0, x16;	/* restore mask for CDISABLE.  */	\
 	CDISABLE;							\
-	ldr	x0, [sp], 16;						\
-	cfi_adjust_cfa_offset (-16);					\
-	ldr	x30, [sp], 16;						\
-	cfi_adjust_cfa_offset (-16);					\
+	/* Break down the stack frame, restoring result at once.  */	\
+	ldp	x30, x0, [sp], 64;					\
+	cfi_adjust_cfa_offset (-64);					\
 	cfi_restore (x30);						\
 	b	.Lpseudo_finish;					\
 	cfi_endproc;							\
@@ -63,83 +65,21 @@ ENTRY (name);								\
 	SYSCALL_ERROR_HANDLER;						\
 	cfi_endproc
 
-# define DOCARGS_0							\
-	str x30, [sp, -16]!;						\
-	cfi_adjust_cfa_offset (16);					\
-	cfi_rel_offset (x30, 0)
+# define DOCARGS_0
+# define DOCARGS_1
+# define DOCARGS_2	str x1, [sp, 16]
+# define DOCARGS_3	stp x1, x2, [sp, 16]
+# define DOCARGS_4	DOCARGS_3; str x3, [sp, 32]
+# define DOCARGS_5	DOCARGS_3; stp x3, x4, [sp, 32]
+# define DOCARGS_6	DOCARGS_5; str x5, [sp, 48]
 
 # define UNDOCARGS_0
-
-# define DOCARGS_1							\
-	DOCARGS_0;							\
-	str x0, [sp, -16]!;						\
-	cfi_adjust_cfa_offset (16);					\
-	cfi_rel_offset (x0, 0)
-
-# define UNDOCARGS_1							\
-	ldr x0, [sp], 16;						\
-	cfi_restore (x0);						\
-	cfi_adjust_cfa_offset (-16);					\
-
-# define DOCARGS_2							\
-	DOCARGS_1;							\
-	str x1, [sp, -16]!;						\
-	cfi_adjust_cfa_offset (16);					\
-	cfi_rel_offset (x1, 0)
-
-# define UNDOCARGS_2							\
-	ldr x1, [sp], 16;						\
-	cfi_restore (x1);						\
-	cfi_adjust_cfa_offset (-16);					\
-	UNDOCARGS_1
-
-# define DOCARGS_3							\
-	DOCARGS_2;							\
-	str x2, [sp, -16]!;						\
-	cfi_adjust_cfa_offset (16);					\
-	cfi_rel_offset (x2, 0)
-
-# define UNDOCARGS_3							\
-	ldr x2, [sp], 16;						\
-	cfi_restore (x2);						\
-	cfi_adjust_cfa_offset (-16);					\
-	UNDOCARGS_2
-
-# define DOCARGS_4							\
-	DOCARGS_3;							\
-	str x3, [sp, -16]!;						\
-	cfi_adjust_cfa_offset (16);					\
-	cfi_rel_offset (x3, 0)
-
-# define UNDOCARGS_4							\
-	ldr x3, [sp], 16;						\
-	cfi_restore (x3);						\
-	cfi_adjust_cfa_offset (-16);					\
-	UNDOCARGS_3
-
-# define DOCARGS_5							\
-	DOCARGS_4;							\
-	str x4, [sp, -16]!;						\
-	cfi_adjust_cfa_offset (16);					\
-	cfi_rel_offset (x4, 0)
-
-# define UNDOCARGS_5							\
-	ldr x4, [sp], 16;						\
-	cfi_restore (x4);						\
-	cfi_adjust_cfa_offset (-16);					\
-	UNDOCARGS_4
-
-# define DOCARGS_6							\
-	DOCARGS_5;							\
-	str x5, [sp, -16]!;						\
-	cfi_adjust_cfa_offset (16);					\
-	cfi_rel_offset (x5, 0)
-
-# define UNDOCARGS_6							\
-	ldr x5, [sp], 16;						\
-	cfi_restore (x5);						\
-	cfi_adjust_cfa_offset (-16);					\
-	UNDOCARGS_5
+# define UNDOCARGS_1	ldr x0, [sp, 8]
+# define UNDOCARGS_2	ldp x0, x1, [sp, 8]
+# define UNDOCARGS_3	UNDOCARGS_1; ldp x1, x2, [sp, 16]
+# define UNDOCARGS_4	UNDOCARGS_2; ldp x2, x3, [sp, 24]
+# define UNDOCARGS_5	UNDOCARGS_3; ldp x3, x4, [sp, 32]
+# define UNDOCARGS_6	UNDOCARGS_4; ldp x4, x5, [sp, 40]
 
 # ifdef IS_IN_libpthread
 #  define CENABLE	bl __pthread_enable_asynccancel

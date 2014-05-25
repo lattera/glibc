@@ -1,5 +1,15 @@
 2014-05-29  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/sysv/linux/aarch64/nptl/sysdep-cancel.h (PSEUDO):
+	Always allocate 64 bytes of stack frame.  Use ldp/stp to create
+	it and break it down.
+	(DOCARGS_0, DOCARGS_1): Do nothing.
+	(DOCARGS_2): Update to store into the new stack frame.
+	(DOCARGS_3, DOCARGS_4, DOCARGS_5, DOCARGS_6): Likewise.
+	(UNDOCARGS_1): Update to restore from the new stack frame.
+	(UNDOCARGS_2, UNDOCARGS_3, UNDOCARGS_4): Likewise.
+	(UNDOCARGS_5, UNDOCARGS_6): Likewise.
+
 	* sysdeps/unix/sysv/linux/aarch64/nptl/sysdep-cancel.h
 	(SINGLE_THREAD_P): New parameter for result regno.
 	(PSEUDO): Update to match; use cbz instead of beq.
