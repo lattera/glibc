@@ -18,7 +18,7 @@
 #include <sysdep.h>
 #include <tcb-offsets.h>
 
-ENTRY(__vfork)
+ENTRY(__libc_vfork)
 	PSEUDO_PROLOGUE
 
 	/* Load the thread pointer value in A1 across the vfork.  */
@@ -47,11 +47,10 @@ ENTRY(__vfork)
 	bne	a3, SYSCALL_ERROR_LABEL
 	ret
 
-PSEUDO_END (__vfork)
-libc_hidden_def (__vfork)
-
-weak_alias (__vfork, vfork)
+PSEUDO_END (__libc_vfork)
 
 #if !NOT_IN_libc
-strong_alias (__vfork, __libc_vfork)
+weak_alias (__libc_vfork, vfork)
+strong_alias (__libc_vfork, __vfork)
+libc_hidden_def (__vfork)
 #endif

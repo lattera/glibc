@@ -1,3 +1,10 @@
+2014-05-25  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/unix/sysv/linux/alpha/vfork.S (vfork, __vfork): Only
+	define if !NOT_IN_libc.
+	* sysdeps/unix/sysv/linux/alpha/pt-vfork.S (vfork, __vfork): Only
+	define with non-default symbol versions.
+
 2014-05-23  Richard Henderson  <rth@twiddle.net>
 
 	* nptl/pt-vfork.c (vfork_resolve): Rename from vfork_ifunc.

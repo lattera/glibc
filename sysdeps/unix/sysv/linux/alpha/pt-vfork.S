@@ -32,3 +32,12 @@
 #include <vfork.S>
 
 #endif
+
+#if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_20)
+compat_symbol (libpthread, __libc_vfork, vfork, GLIBC_2_0);
+#endif
+
+#if SHLIB_COMPAT (libpthread, GLIBC_2_1_2, GLIBC_2_20)
+strong_alias (__libc_vfork, __vfork_compat)
+compat_symbol (libpthread, __vfork_compat, __vfork, GLIBC_2_1_2);
+#endif
