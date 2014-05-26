@@ -1,3 +1,9 @@
+2014-05-26  Kyle McMartin  <kyle@redhat.com>
+
+	[BZ #16796]
+	* sysdeps/aarch64/nptl/tls.h: increase TCB alignment to the
+	alignment of struct pthread.
+
 2014-05-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #16878]
