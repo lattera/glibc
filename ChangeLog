@@ -1,3 +1,9 @@
+2014-05-26  Carlos O'Donell  <carlos@redhat.com>
+
+	* malloc/malloc.c (mi_arena): New function.
+	(malloc_info): Remove nested function mi_arena. Call non-nosted
+	function mi_arena.
+
 2014-05-26  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power4/memset.S (memset): Replace insrdi
