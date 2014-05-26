@@ -1,3 +1,10 @@
+2014-05-26  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #16984]
+	* locale/programs/repertoire.c (repertoire_read): Add slash
+	between I18NPATH element and file name.
+	* locale/programs/locfile.c (locfile_read): Likewise.
+
 2014-05-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* nptl/pthread_mutexattr_settype.c

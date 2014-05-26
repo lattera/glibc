@@ -96,7 +96,7 @@ repertoire_read (const char *filename)
 
 		  if (repfile == NULL)
 		    {
-		      stpcpy (stpcpy (path, next), filename);
+		      stpcpy (stpcpy (stpcpy (path, next), "/"), filename);
 
 		      repfile = lr_open (path, repertoiremap_hash);
 		    }

@@ -84,7 +84,7 @@ locfile_read (struct localedef_t *result, const struct charmap_t *charmap)
 
 		  if (ldfile == NULL)
 		    {
-		      stpcpy (stpcpy (path, next), filename);
+		      stpcpy (stpcpy (stpcpy (path, next), "/"), filename);
 
 		      ldfile = lr_open (path, locfile_hash);
 		    }
