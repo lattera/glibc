@@ -197,11 +197,6 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
 		    int e;
 		    status = getfct.f (&data, buffer + buffilled,
 				       buflen - buffilled - req->key_len, &e);
-		    if (status == NSS_STATUS_RETURN
-			|| status == NSS_STATUS_NOTFOUND)
-		      /* This was either the last one for this group or the
-			 group was empty.  Look at next group if available.  */
-		      break;
 		    if (status == NSS_STATUS_SUCCESS)
 		      {
 			if (data.type == triple_val)
@@ -320,11 +315,18 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
 			      }
 			  }
 		      }
-		    else if (status == NSS_STATUS_UNAVAIL && e == ERANGE)
+		    else if (status == NSS_STATUS_TRYAGAIN && e == ERANGE)
 		      {
 			buflen *= 2;
 			buffer = xrealloc (buffer, buflen);
 		      }
+		    else if (status == NSS_STATUS_RETURN
+			     || status == NSS_STATUS_NOTFOUND
+			     || status == NSS_STATUS_UNAVAIL)
+		      /* This was either the last one for this group or the
+			 group was empty or the NSS module had an internal
+			 failure.  Look at next group if available.  */
+		      break;
 		  }
 
 	      enum nss_status (*endfct) (struct __netgrent *);

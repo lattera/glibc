@@ -252,7 +252,7 @@ _nss_netgroup_parseline (char **cursor, struct __netgrent *result,
   if (cp - host > buflen)
     {
       *errnop = ERANGE;
-      status = NSS_STATUS_UNAVAIL;
+      status = NSS_STATUS_TRYAGAIN;
     }
   else
     {

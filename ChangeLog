@@ -1,3 +1,11 @@
+2014-05-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #16878]
+	* nscd/netgroupcache.c (addgetnetgrentX): Look for
+	NSS_STATUS_TRYAGAIN to indicate insufficient buffer space.
+	* nscd/nss_files/files-netgrp.c (_nss_netgroup_parseline): Use
+	NSS_STATUS_TRYAGAIN to indicate insufficient buffer space.
+
 2014-05-25  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/unix/sysv/linux/aarch64/nptl/sysdep-cancel.h
