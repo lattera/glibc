@@ -1,5 +1,7 @@
 2014-05-26  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
+
 	* nptl/sysdeps/unix/sysv/linux/powerpc/Versions: Remove, merge into
 	...
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/Versions: ... here.
