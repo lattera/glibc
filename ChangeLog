@@ -1,3 +1,23 @@
+2014-05-26  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/vfork.S: Include
+	<tcb-offsets.h>.
+	(__vfork): Incorporate save/restore of PID from nptl/vfork.S here.
+	(__libc_vfork): New strong alias.
+	* nptl/sysdeps/unix/sysv/linux/powerpc/powerpc32/pt-vfork.S: File
+	removed.
+	* nptl/sysdeps/unix/sysv/linux/powerpc/powerpc32/vfork.S: File
+	Removed.
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/vfork.S: Include
+	<tcb-offsets.h>.
+	(__vfork): Incorporate save/retore of PID from nptl/vfork.S here.
+	(__libc_vfork): New strong alias.
+	* nptl/sysdeps/unix/sysv/linux/powerpc/powerpc64/pt-vfork.S: File
+	removed.
+	* nptl/sysdeps/unix/sysv/linux/powerpc/powerpc64/vfork.S: File
+	removed.
+
 2014-05-26  Carlos O'Donell  <carlos@redhat.com>
 
 	* malloc/malloc.c (mi_arena): New function.
