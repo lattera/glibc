@@ -1,5 +1,11 @@
 2014-05-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* nptl/pthread_mutexattr_settype.c
+	(__pthread_mutexattr_settype):
+	Disable lock elision for PTHREAD_MUTEX_NORMAL.
+
+2014-05-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* nptl/tst-mutex5 (do_test):
 	Use #ifndef ENABLE_LOCK_ELISION instead of #ifdef.
 
