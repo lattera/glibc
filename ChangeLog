@@ -1,3 +1,9 @@
+2014-06-03  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #15946]
+	* resolv/res_send.c (send_dg): Reload file descriptor after
+	calling reopen.
+
 2014-06-03  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/fpu/libm-test-ulps: Regenerate.

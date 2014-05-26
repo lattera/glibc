@@ -1410,6 +1410,7 @@ send_dg(res_state statp,
 					retval = reopen (statp, terrno, ns);
 					if (retval <= 0)
 						return retval;
+					pfd[0].fd = EXT(statp).nssocks[ns];
 				}
 			}
 			goto wait;
