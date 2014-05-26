@@ -1,3 +1,8 @@
+2014-05-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* nptl/tst-mutex5 (do_test):
+	Use #ifndef ENABLE_LOCK_ELISION instead of #ifdef.
+
 2014-05-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* benchtests/README: Document 'init' directive.

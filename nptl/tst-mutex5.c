@@ -87,7 +87,7 @@ do_test (void)
     }
 
   /* Elided locks do not time out.  */
-#ifdef ENABLE_LOCK_ELISION
+#ifndef ENABLE_LOCK_ELISION
   if (pthread_mutex_trylock (&m) == 0)
     {
       puts ("mutex_trylock succeeded");
