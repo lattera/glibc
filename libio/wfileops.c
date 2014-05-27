@@ -713,9 +713,16 @@ do_ftell_wide (_IO_FILE *fp)
 	      offset += outstop - out;
 	    }
 
-	  /* _IO_read_end coincides with fp._offset, so the actual file
-	     position is fp._offset - (_IO_read_end - new_write_ptr).  */
-	  offset -= fp->_IO_read_end - fp->_IO_write_ptr;
+	  /* We don't trust _IO_read_end to represent the current file offset
+	     when writing in append mode because the value would have to be
+	     shifted to the end of the file during a flush.  Use the write base
+	     instead, along with the new offset we got above when we did a seek
+	     to the end of the file.  */
+	  if (append_mode)
+	    offset += fp->_IO_write_ptr - fp->_IO_write_base;
+	  /* For all other modes, _IO_read_end represents the file offset.  */
+	  else
+	    offset += fp->_IO_write_ptr - fp->_IO_read_end;
 	}
     }
 

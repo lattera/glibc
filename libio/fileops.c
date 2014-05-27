@@ -91,7 +91,9 @@ extern struct __gconv_trans_data __libio_translit attribute_hidden;
 
    The position in the buffer that corresponds to the position
    in external file system is normally _IO_read_end, except in putback
-   mode, when it is _IO_save_end.
+   mode, when it is _IO_save_end and also when the file is in append mode,
+   since switching from read to write mode automatically sends the position in
+   the external file system to the end of file.
    If the field _fb._offset is >= 0, it gives the offset in
    the file as a whole corresponding to eGptr(). (?)
 
@@ -966,6 +968,14 @@ do_ftell (_IO_FILE *fp)
       /* Adjust for unflushed data.  */
       if (!was_writing)
 	offset -= fp->_IO_read_end - fp->_IO_read_ptr;
+      /* We don't trust _IO_read_end to represent the current file offset when
+	 writing in append mode because the value would have to be shifted to
+	 the end of the file during a flush.  Use the write base instead, along
+	 with the new offset we got above when we did a seek to the end of the
+	 file.  */
+      else if (append_mode)
+	offset += fp->_IO_write_ptr - fp->_IO_write_base;
+      /* For all other modes, _IO_read_end represents the file offset.  */
       else
 	offset += fp->_IO_write_ptr - fp->_IO_read_end;
     }
