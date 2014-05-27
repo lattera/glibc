@@ -302,22 +302,24 @@ _dl_map_object_deps (struct link_map *map,
 		/* Store the tag in the argument structure.  */
 		args.name = name;
 
-		if (d->d_tag == DT_AUXILIARY)
-		  {
-		    /* Say that we are about to load an auxiliary library.  */
-		    if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS,
-					  0))
-		      _dl_debug_printf ("load auxiliary object=%s"
-					" requested by file=%s\n",
-					name,
-					DSO_FILENAME (l->l_name));
+		/* Say that we are about to load an auxiliary library.  */
+		if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS,
+				      0))
+		  _dl_debug_printf ("load auxiliary object=%s"
+				    " requested by file=%s\n",
+				    name,
+				    DSO_FILENAME (l->l_name));
 
-		    /* We must be prepared that the addressed shared
-		       object is not available.  */
-		    bool malloced;
-		    (void) _dl_catch_error (&objname, &errstring, &malloced,
-					    openaux, &args);
-		    if (__glibc_unlikely (errstring != NULL))
+		/* We must be prepared that the addressed shared
+		   object is not available.  For filter objects the dependency
+		   must be available.  */
+		bool malloced;
+		int err = _dl_catch_error (&objname, &errstring, &malloced,
+					openaux, &args);
+
+		if (__glibc_unlikely (errstring != NULL))
+		  {
+		    if (d->d_tag == DT_AUXILIARY)
 		      {
 			/* We are not interested in the error message.  */
 			assert (errstring != NULL);
@@ -327,23 +329,9 @@ _dl_map_object_deps (struct link_map *map,
 			/* Simply ignore this error and continue the work.  */
 			continue;
 		      }
-		  }
-		else
-		  {
-		    /* Say that we are about to load an auxiliary library.  */
-		    if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS,
-					  0))
-		      _dl_debug_printf ("load filtered object=%s"
-					" requested by file=%s\n",
-					name,
-					DSO_FILENAME (l->l_name));
-
-		    /* For filter objects the dependency must be available.  */
-		    bool malloced;
-		    int err = _dl_catch_error (&objname, &errstring, &malloced,
-					       openaux, &args);
-		    if (__glibc_unlikely (errstring != NULL))
+		    else
 		      {
+
 			char *new_errstring = strdupa (errstring);
 			objname = strdupa (objname);
 			if (malloced)
