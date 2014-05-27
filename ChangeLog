@@ -1,3 +1,8 @@
+2014-05-27  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/sh/arch-fork.h: New file.
+	* nptl/sysdeps/unix/sysv/linux/sh/fork.c: File removed.
+
 2014-05-27  Ondřej Bílka  <neleai@seznam.cz>
 
 	* elf/dl-deps.c (_dl_map_object_deps): Remove duplicate code.
