@@ -29,6 +29,7 @@ will follow the conventions preferred by the user.
 * Setting the Locale::          How a program specifies the locale
                                  with library functions.
 * Standard Locales::            Locale names available on all systems.
+* Locale Names::                Format of system-specific locale names.
 * Locale Information::          How to access the information for the locale.
 * Formatting Numbers::          A dedicated function to format numbers.
 * Yes-or-No Questions::         Check a Response against the locale.
@@ -99,14 +100,16 @@ locale named @samp{espana-castellano} to use the standard conventions of
 most of Spain.
 
 The set of locales supported depends on the operating system you are
-using, and so do their names.  We can't make any promises about what
-locales will exist, except for one standard locale called @samp{C} or
-@samp{POSIX}.  Later we will describe how to construct locales.
-@comment (@pxref{Building Locale Files}).
+using, and so do their names, except that the standard locale called
+@samp{C} or @samp{POSIX} always exist.  @xref{Locale Names}.
+
+In order to force the system to always use the default locale, the
+user can set the @code{LC_ALL} environment variable to @samp{C}.
 
 @cindex combining locales
-A user also has the option of specifying different locales for different
-purposes---in effect, choosing a mixture of multiple locales.
+A user also has the option of specifying different locales for
+different purposes---in effect, choosing a mixture of multiple
+locales.  @xref{Locale Categories}.
 
 For example, the user might specify the locale @samp{espana-castellano}
 for most purposes, but specify the locale @samp{usa-english} for
@@ -120,7 +123,7 @@ which locales apply.  However, the user can choose to use each locale
 for a particular subset of those purposes.
 
 @node Locale Categories, Setting the Locale, Choosing Locale, Locales
-@section Categories of Activities that Locales Affect
+@section Locale Categories
 @cindex categories for locales
 @cindex locale categories
 
@@ -128,7 +131,11 @@ The purposes that locales serve are grouped into @dfn{categories}, so
 that a user or a program can choose the locale for each category
 independently.  Here is a table of categories; each name is both an
 environment variable that a user can set, and a macro name that you can
-use as an argument to @code{setlocale}.
+use as the first argument to @code{setlocale}.
+
+The contents of the environment variable (or the string in the second
+argument to @code{setlocale}) has to be a valid locale name.
+@xref{Locale Names}.
 
 @vtable @code
 @comment locale.h
@@ -172,7 +179,7 @@ for affirmative and negative responses.
 @comment locale.h
 @comment ISO
 @item LC_ALL
-This is not an environment variable; it is only a macro that you can use
+This is not a category; it is only a macro that you can use
 with @code{setlocale} to set a single locale for all purposes.  Setting
 this environment variable overwrites all selections by the other
 @code{LC_*} variables or @code{LANG}.
@@ -355,13 +362,7 @@ The symbols in this section are defined in the header file @file{locale.h}.
 @c   strndup @ascuheap @acsmem
 @c   strcasecmp_l ok (C locale)
 The function @code{setlocale} sets the current locale for category
-@var{category} to @var{locale}.  A list of all the locales the system
-provides can be created by running
-
-@pindex locale
-@smallexample
-  locale -a
-@end smallexample
+@var{category} to @var{locale}.
 
 If @var{category} is @code{LC_ALL}, this specifies the locale for all
 purposes.  The other possible values of @var{category} specify an
@@ -386,10 +387,9 @@ is passed in as @var{locale} parameter.
 
 When you read the current locale for category @code{LC_ALL}, the value
 encodes the entire combination of selected locales for all categories.
-In this case, the value is not just a single locale name.  In fact, we
-don't make any promises about what it looks like.  But if you specify
-the same ``locale name'' with @code{LC_ALL} in a subsequent call to
-@code{setlocale}, it restores the same combination of locale selections.
+If you specify the same ``locale name'' with @code{LC_ALL} in a
+subsequent call to @code{setlocale}, it restores the same combination
+of locale selections.
 
 To be sure you can use the returned string encoding the currently selected
 locale at a later time, you must make a copy of the string.  It is not
@@ -405,19 +405,14 @@ for @var{category}.
 If a nonempty string is given for @var{locale}, then the locale of that
 name is used if possible.
 
+The effective locale name (either the second argument to
+@code{setlocale}, or if the argument is an empty string, the name
+obtained from the process environment) must be valid locale name.
+@xref{Locale Names}.
+
 If you specify an invalid locale name, @code{setlocale} returns a null
 pointer and leaves the current locale unchanged.
 @end deftypefun
-
-The path used for finding locale data can be set using the
-@code{LOCPATH} environment variable.  The default path for finding
-locale data is system specific.  It is computed from the value given
-as the prefix while configuring the C library.  This value normally is
-@file{/usr} or @file{/}.  For the former the complete path is:
-
-@smallexample
-/usr/lib/locale
-@end smallexample
 
 Here is an example showing how you might use @code{setlocale} to
 temporarily switch to a new locale.
@@ -458,7 +453,7 @@ locale categories, and future versions of the library will do so.  For
 portability, assume that any symbol beginning with @samp{LC_} might be
 defined in @file{locale.h}.
 
-@node Standard Locales, Locale Information, Setting the Locale, Locales
+@node Standard Locales, Locale Names, Setting the Locale, Locales
 @section Standard Locales
 
 The only locale names you can count on finding on all operating systems
@@ -492,7 +487,94 @@ with the environment, rather than trying to specify some non-standard
 locale explicitly by name.  Remember, different machines might have
 different sets of locales installed.
 
-@node Locale Information, Formatting Numbers, Standard Locales, Locales
+@node Locale Names, Locale Information, Standard Locales, Locales
+@section Locale Names
+
+The following command prints a list of locales supported by the
+system:
+
+@pindex locale
+@smallexample
+  locale -a
+@end smallexample
+
+@strong{Portability Note:} With the notable exception of the standard
+locale names @samp{C} and @samp{POSIX}, locale names are
+system-specific.
+
+Most locale names follow XPG syntax and consist of up to four parts:
+
+@smallexample
+@var{language}[_@var{territory}[.@var{codeset}]][@@@var{modifier}]
+@end smallexample
+
+Beside the first part, all of them are allowed to be missing.  If the
+full specified locale is not found, less specific ones are looked for.
+The various parts will be stripped off, in the following order:
+
+@enumerate
+@item
+codeset
+@item
+normalized codeset
+@item
+territory
+@item
+modifier
+@end enumerate
+
+For example, the locale name @samp{de_AT.iso885915@@euro} denotes a
+German-language locale for use in Austria, using the ISO-8859-15
+(Latin-9) character set, and with the Euro as the currency symbol.
+
+In addition to locale names which follow XPG syntax, systems may
+provide aliases such as @samp{german}.  Both categories of names must
+not contain the slash character @samp{/}.
+
+If the locale name starts with a slash @samp{/}, it is treated as a
+path relative to the configured locale directories; see @code{LOCPATH}
+below.  The specified path must not contain a component @samp{..}, or
+the name is invalid, and @code{setlocale} will fail.
+
+@strong{Portability Note:} POSIX suggests that if a locale name starts
+with a slash @samp{/}, it is resolved as an absolute path.  However,
+@theglibc{} treats it as a relative path under the directories listed
+in @code{LOCPATH} (or the default locale directory if @code{LOCPATH}
+is unset).
+
+Locale names which are longer than an implementation-defined limit are
+invalid and cause @code{setlocale} to fail.
+
+As a special case, locale names used with @code{LC_ALL} can combine
+several locales, reflecting different locale settings for different
+categories.  For example, you might want to use a U.S. locale with ISO
+A4 paper format, so you set @code{LANG} to @samp{en_US.UTF-8}, and
+@code{LC_PAPER} to @samp{de_DE.UTF-8}.  In this case, the
+@code{LC_ALL}-style combined locale name is
+
+@smallexample
+LC_CTYPE=en_US.UTF-8;LC_TIME=en_US.UTF-8;LC_PAPER=de_DE.UTF-8;@dots{}
+@end smallexample
+
+followed by other category settings not shown here.
+
+@vindex LOCPATH
+The path used for finding locale data can be set using the
+@code{LOCPATH} environment variable.  This variable lists the
+directories in which to search for locale definitions, separated by a
+colon @samp{:}.
+
+The default path for finding locale data is system specific.  A typical
+value for the @code{LOCPATH} default is:
+
+@smallexample
+/usr/share/locale
+@end smallexample
+
+The value of @code{LOCPATH} is ignored by privileged programs for
+security reasons, and only the default directory is used.
+
+@node Locale Information, Formatting Numbers, Locale Names, Locales
 @section Accessing Locale Information
 
 There are several ways to access locale information.  The simplest

@@ -1,5 +1,18 @@
 2014-07-02  Florian Weimer  <fweimer@redhat.com>
 
+	* manual/locale.texi (Locale Names): New section documenting
+	locale name syntax.  Adjust menu and node chaining accordingly.
+	(Choosing Locale): Reference Locale Names, Locale Categories.
+	Mention setting LC_ALL=C.  Reflect that name syntax is now
+	documented.
+	(Locale Categories): New section title.  Reference Locale Names.
+	LC_ALL is an environment variable, but not a category.
+	(Setting the Locale): Remove "locale -a" invocation and LOCPATH
+	description, now in Locale Name.  Reference that section.  Locale
+	name syntax is now documented.
+
+2014-07-02  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #17137]
 	* locale/findlocale.c (name_present, valid_locale_name): New
 	functions.
