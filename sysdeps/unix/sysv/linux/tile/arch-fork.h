@@ -1,4 +1,5 @@
-/* Copyright (C) 2011-2014 Free Software Foundation, Inc.
+/* ARCH_FORK definition for Linux fork implementation.  Tile* version.
+   Copyright (C) 2011-2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
    Based on work contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
@@ -19,7 +20,6 @@
 
 #include <sched.h>
 #include <signal.h>
-#include <stdio.h>
 #include <sysdep.h>
 #include <tls.h>
 
@@ -27,5 +27,3 @@
   INLINE_SYSCALL (clone, 4,						      \
 		  CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD,        \
 		  0, NULL, &THREAD_SELF->tid)
-
-#include <sysdeps/unix/sysv/linux/fork.c>
