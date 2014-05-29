@@ -1,5 +1,11 @@
 2014-05-30  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/sysv/linux/aarch64/sysdep.h (PSEUDO_RET): Remove.
+	(PSEUDO_RET_NOERRNO): Remove.
+	(ret): Don't redefine.
+	(ret_NOERRNO): Define in terms of ret.
+	(ret_ERRVAL): Likewise.
+
 	* sysdeps/unix/sysv/linux/aarch64/ioctl.S (__ioctl): Remove the
 	use of PSEUDO_RET; perform the error check directly.
 

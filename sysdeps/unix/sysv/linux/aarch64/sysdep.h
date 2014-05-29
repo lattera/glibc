@@ -61,15 +61,6 @@
     cmn x0, #4095;							      \
     b.cs .Lsyscall_error;
 
-/* Notice the use of 'RET' instead of 'ret' the assembler is case
-   insensitive and eglibc already uses the preprocessor symbol 'ret'
-   so we use the upper case 'RET' to force through a ret instruction
-   to the assembler */
-# define PSEUDO_RET							      \
-    RET;
-# undef ret
-# define ret PSEUDO_RET
-
 # undef	PSEUDO_END
 # define PSEUDO_END(name)						      \
   SYSCALL_ERROR_HANDLER							      \
@@ -81,19 +72,11 @@
   ENTRY (name);								      \
     DO_CALL (syscall_name, args);
 
-/* Notice the use of 'RET' instead of 'ret' the assembler is case
-   insensitive and eglibc already uses the preprocessor symbol 'ret'
-   so we use the upper case 'RET' to force through a ret instruction
-   to the assembler */
-# define PSEUDO_RET_NOERRNO						      \
-    RET;
-
-# undef ret_NOERRNO
-# define ret_NOERRNO PSEUDO_RET_NOERRNO
-
 # undef	PSEUDO_END_NOERRNO
 # define PSEUDO_END_NOERRNO(name)					      \
   END (name)
+
+# define ret_NOERRNO ret
 
 /* The function has to return the error code.  */
 # undef	PSEUDO_ERRVAL
@@ -107,7 +90,7 @@
 # define PSEUDO_END_ERRVAL(name) \
   END (name)
 
-# define ret_ERRVAL PSEUDO_RET_NOERRNO
+# define ret_ERRVAL ret
 
 # if NOT_IN_libc
 #  define SYSCALL_ERROR  .Lsyscall_error
