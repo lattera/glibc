@@ -1,5 +1,9 @@
 2014-05-28  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/sh/clone.S: Deconditionalize the code
+	that was previously under [RESET_PID].
+	* nptl/sysdeps/unix/sysv/linux/sh/clone.S: File removed.
+
 	* sysdeps/unix/sysv/linux/tile/arch-fork.h: New file.
 	* sysdeps/unix/sysv/linux/tile/nptl/fork.c: File removed.
 
