@@ -1,3 +1,8 @@
+2014-05-30  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/unix/sysv/linux/aarch64/ioctl.S (__ioctl): Remove the
+	use of PSEUDO_RET; perform the error check directly.
+
 2014-05-30 Marko Myllynen  <myllynen@redhat.com>
 
 	* sysdeps/x86_64/link-defines.sym (BND_SIZE): Replace __int128
