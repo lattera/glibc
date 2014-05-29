@@ -22,22 +22,20 @@
 #include <sys/statvfs.h>
 
 extern void __internal_statvfs (const char *name, struct statvfs *buf,
-				struct statfs *fsbuf, struct stat64 *st);
+				struct statfs *fsbuf, int fd);
 
 
 int
 statvfs (const char *file, struct statvfs *buf)
 {
   struct statfs fsbuf;
-  struct stat64 st;
 
   /* Get as much information as possible from the system.  */
   if (__statfs (file, &fsbuf) < 0)
     return -1;
 
   /* Convert the result.  */
-  __internal_statvfs (file, buf, &fsbuf,
-		      stat64 (file, &st) == -1 ? NULL : &st);
+  __internal_statvfs (file, buf, &fsbuf, -1);
 
   /* We signal success if the statfs call succeeded.  */
   return 0;

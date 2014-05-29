@@ -26,7 +26,7 @@
 
 
 extern void __internal_statvfs64 (const char *name, struct statvfs64 *buf,
-				  struct statfs64 *fsbuf, struct stat64 *st);
+				  struct statfs64 *fsbuf, int fd);
 
 
 /* Return information about the filesystem on which FILE resides.  */
@@ -61,12 +61,8 @@ __statvfs64 (const char *file, struct statvfs64 *buf)
 #endif
 
   if (res == 0)
-    {
-      /* Convert the result.  */
-      struct stat64 st;
-      __internal_statvfs64 (file, buf, &fsbuf,
-			    stat64 (file, &st) == -1 ? NULL : &st);
-    }
+    /* Convert the result.  */
+    __internal_statvfs64 (file, buf, &fsbuf, -1);
 
   return res;
 }

@@ -25,7 +25,7 @@
 
 
 extern void __internal_statvfs64 (const char *name, struct statvfs64 *buf,
-				  struct statfs64 *fsbuf, struct stat64 *st);
+				  struct statfs64 *fsbuf, int fd);
 
 
 /* Return information about the filesystem on which FD resides.  */
@@ -60,12 +60,8 @@ __fstatvfs64 (int fd, struct statvfs64 *buf)
 #endif
 
   if (res == 0)
-    {
-      /* Convert the result.  */
-      struct stat64 st;
-      __internal_statvfs64 (NULL, buf, &fsbuf,
-			    fstat64 (fd, &st) == -1 ? NULL : &st);
-    }
+    /* Convert the result.  */
+    __internal_statvfs64 (NULL, buf, &fsbuf, fd);
 
   return res;
 }

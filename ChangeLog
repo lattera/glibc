@@ -1,3 +1,19 @@
+2014-05-29  Eric Wong  <normalperson@yhbt.net>
+
+	[BZ #15132]
+	* sysdeps/unix/sysv/linux/internal_statvfs.c (__statvfs_getflags):
+	Call fstat64 or stat64 internally, depending on arguments passed.
+	Replace stat buffer argument with file descriptor argument.
+	(INTERNAL_STATVFS): Update arguments to match __statvfs_getflags.
+	* sysdeps/unix/sysv/linux/fstatvfs.c (fstatvfs):
+	Pass fd to __internal_statvfs instead of calling fstat64.
+	* sysdeps/unix/sysv/linux/fstatvfs64.c (__fstatvfs64):
+	Pass fd to __internal_statvfs64 instead of calling fstat64.
+	* sysdeps/unix/sysv/linux/statvfs.c (statvfs):
+	Pass -1 to __internal_statvfs instead of calling stat64.
+	* sysdeps/unix/sysv/linux/statvfs64.c (__statvfs64):
+	Pass -1 to __internal_statvfs64 instead of calling stat64.
+
 2014-05-28  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/sh/clone.S: Deconditionalize the code

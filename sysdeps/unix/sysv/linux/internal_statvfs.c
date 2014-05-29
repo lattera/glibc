@@ -43,9 +43,11 @@
 
 # ifndef __ASSUME_STATFS_F_FLAGS
 int
-__statvfs_getflags (const char *name, int fstype, struct stat64 *st)
+__statvfs_getflags (const char *name, int fstype, int fd)
 {
-  if (st == NULL)
+  struct stat64 st;
+
+  if ((fd < 0 ? stat64 (name, &st) : fstat64 (fd, &st)) < 0)
     return 0;
 
   const char *fsname = NULL;
@@ -159,7 +161,7 @@ __statvfs_getflags (const char *name, int fstype, struct stat64 *st)
 	  /* Find out about the device the current entry is for.  */
 	  struct stat64 fsst;
 	  if (stat64 (mntbuf.mnt_dir, &fsst) >= 0
-	      && st->st_dev == fsst.st_dev)
+	      && st.st_dev == fsst.st_dev)
 	    {
 	      /* Bingo, we found the entry for the device FD is on.
 		 Now interpret the option string.  */
@@ -222,14 +224,13 @@ __statvfs_getflags (const char *name, int fstype, struct stat64 *st)
 }
 # endif
 #else
-extern int __statvfs_getflags (const char *name, int fstype,
-			       struct stat64 *st);
+extern int __statvfs_getflags (const char *name, int fstype, int fd);
 #endif
 
 
 void
 INTERNAL_STATVFS (const char *name, struct STATVFS *buf,
-		  struct STATFS *fsbuf, struct stat64 *st)
+		  struct STATFS *fsbuf, int fd)
 {
   /* Now fill in the fields we have information for.  */
   buf->f_bsize = fsbuf->f_bsize;
@@ -272,7 +273,7 @@ INTERNAL_STATVFS (const char *name, struct STATVFS *buf,
        the /etc/mtab file and search for the entry which matches the given
        file.  The way we can test for matching filesystem is using the
        device number.  */
-    buf->f_flag = __statvfs_getflags (name, fsbuf->f_type, st);
+    buf->f_flag = __statvfs_getflags (name, fsbuf->f_type, fd);
   else
 #endif
     buf->f_flag = fsbuf->f_flags ^ ST_VALID;

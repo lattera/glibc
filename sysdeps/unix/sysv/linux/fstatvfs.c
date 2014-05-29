@@ -22,7 +22,7 @@
 #include <sys/statvfs.h>
 
 extern void __internal_statvfs (const char *name, struct statvfs *buf,
-				struct statfs *fsbuf, struct stat64 *st);
+				struct statfs *fsbuf, int fd);
 
 
 int
@@ -36,7 +36,7 @@ fstatvfs (int fd, struct statvfs *buf)
     return -1;
 
   /* Convert the result.  */
-  __internal_statvfs (NULL, buf, &fsbuf, fstat64 (fd, &st) == -1 ? NULL : &st);
+  __internal_statvfs (NULL, buf, &fsbuf, fd);
 
   /* We signal success if the statfs call succeeded.  */
   return 0;
