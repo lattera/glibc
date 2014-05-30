@@ -1,3 +1,8 @@
+2014-05-30 Marko Myllynen  <myllynen@redhat.com>
+
+	* sysdeps/x86_64/link-defines.sym (BND_SIZE): Replace __int128
+	with __int128_t.
+
 2014-05-30  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* malloc/malloc (malloc_info): Fix formatting.
