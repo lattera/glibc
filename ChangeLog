@@ -1,3 +1,11 @@
+2014-06-03  Guo Yixuan  <culu.gyx@gmail.com>
+
+	[BZ #16882]
+	* nptl/sysdeps/sparc/sparc32/pthread_spin_lock.S
+	(pthread_spin_lock): Branch out of spin loop to proper location.
+	* nptl/sysdeps/sparc/sparc64/pthread_spin_lock.S
+	(pthread_spin_lock): Likewise.
+
 2014-06-03  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #15946]

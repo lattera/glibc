@@ -19,10 +19,10 @@
 
 	.text
 ENTRY(pthread_spin_lock)
-	ldstub		[%o0], %g1
+1:	ldstub		[%o0], %g1
 	brnz,pn		%g1, 2f
 	 membar		#StoreLoad | #StoreStore
-1:	retl
+	retl
 	 mov		0, %o0
 2:	ldub		[%o0], %g1
 	brnz,pt		%g1, 2b

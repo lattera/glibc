@@ -19,11 +19,11 @@
 
 	.text
 ENTRY(pthread_spin_lock)
-	ldstub		[%o0], %g1
+1:	ldstub		[%o0], %g1
 	orcc		%g1, 0x0, %g0
 	bne,a		2f
 	 ldub		[%o0], %g1
-1:	retl
+	retl
 	 mov		0, %o0
 2:	orcc		%g1, 0x0, %g0
 	bne,a		2b
