@@ -5146,18 +5146,18 @@ malloc_info (int options, FILE *fp)
   while (ar_ptr != &main_arena);
 
   fprintf (fp,
-           "<total type=\"fast\" count=\"%zu\" size=\"%zu\"/>\n"
-           "<total type=\"rest\" count=\"%zu\" size=\"%zu\"/>\n"
+	   "<total type=\"fast\" count=\"%zu\" size=\"%zu\"/>\n"
+	   "<total type=\"rest\" count=\"%zu\" size=\"%zu\"/>\n"
 	   "<total type=\"mmap\" count=\"%zu\" size=\"%zu\"/>\n"
-           "<system type=\"current\" size=\"%zu\"/>\n"
-           "<system type=\"max\" size=\"%zu\"/>\n"
-           "<aspace type=\"total\" size=\"%zu\"/>\n"
-           "<aspace type=\"mprotect\" size=\"%zu\"/>\n"
-           "</malloc>\n",
-           total_nfastblocks, total_fastavail, total_nblocks, total_avail,
+	   "<system type=\"current\" size=\"%zu\"/>\n"
+	   "<system type=\"max\" size=\"%zu\"/>\n"
+	   "<aspace type=\"total\" size=\"%zu\"/>\n"
+	   "<aspace type=\"mprotect\" size=\"%zu\"/>\n"
+	   "</malloc>\n",
+	   total_nfastblocks, total_fastavail, total_nblocks, total_avail,
 	   mp_.n_mmaps, mp_.mmapped_mem,
-           total_system, total_max_system,
-           total_aspace, total_aspace_mprotect);
+	   total_system, total_max_system,
+	   total_aspace, total_aspace_mprotect);
 
   return 0;
 }

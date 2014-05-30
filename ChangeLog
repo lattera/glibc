@@ -1,4 +1,8 @@
 2014-05-30  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* malloc/malloc (malloc_info): Fix formatting.
+
+2014-05-30  Siddhesh Poyarekar  <siddhesh@redhat.com>
 	    Roland McGrath  <roland@hack.frob.com>
 
 	* malloc/malloc (malloc_info): Also print mmapped statistics.
