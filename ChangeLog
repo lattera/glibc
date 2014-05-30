@@ -136,6 +136,9 @@
 
 	* malloc/malloc.c (malloc_info): Inline mi_arena.
 
+	* nptl/tst-spin4.c: New test.
+	* nptl/Makefile (tests): Add tst-spin4.
+
 2014-05-29  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/unix/sysv/linux/aarch64/sysdep.h (INTERNAL_VSYSCALL_NCS):
