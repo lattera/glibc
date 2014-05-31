@@ -1,3 +1,53 @@
+2014-12-31  Matthew Fortune  <matthew.fortune@imgtec.com>
+
+	* elf/elf.h (PT_MIPS_ABIFLAGS): Define.
+	(Elf_MIPS_ABIFlags_v0): New structure.
+	(EF_MIPS_FP64): Define.
+	(MIPS_AFL_REG_NONE, MIPS_AFL_REG_32, MIPS_AFL_REG_64): Likewise.
+	(MIPS_AFL_REG_128, MIPS_AFL_ASE_DSP, MIPS_AFL_ASE_DSP64): Likewise.
+	(MIPS_AFL_ASE_DSPR2, MIPS_AFL_ASE_EVA, MIPS_AFL_ASE_MCU): Likewise.
+	(MIPS_AFL_ASE_MDMX, MIPS_AFL_ASE_MIPS3D, MIPS_AFL_ASE_MT): Likewise.
+	(MIPS_AFL_ASE_SMARTMIPS, MIPS_AFL_ASE_VIRT): Likewise.
+	(MIPS_AFL_ASE_VIRT64, MIPS_AFL_ASE_MSA, MIPS_AFL_ASE_MSA64): Likewise.
+	(MIPS_AFL_ASE_MIPS16, MIPS_AFL_ASE_MICROMIPS): Likewise.
+	(MIPS_AFL_ASE_XPA, MIPS_AFL_EXT_XLR, MIPS_AFL_EXT_OCTEON2): Likewise.
+	(MIPS_AFL_EXT_OCTEONP, MIPS_AFL_EXT_LOONGSON_3A): Likewise.
+	(MIPS_AFL_EXT_OCTEON, MIPS_AFL_EXT_5900, MIPS_AFL_EXT_4010): Likewise.
+	(MIPS_AFL_EXT_4100, MIPS_AFL_EXT_3900, MIPS_AFL_EXT_10000): Likewise.
+	(MIPS_AFL_EXT_SB1, MIPS_AFL_EXT_4111, MIPS_AFL_EXT_4120): Likewise.
+	(MIPS_AFL_EXT_5400, MIPS_AFL_EXT_5500): Likewise.
+	(MIPS_AFL_EXT_LOONGSON_2E, MIPS_AFL_EXT_LOONGSON_2F): Likewise.
+	(Val_GNU_MIPS_ABI_FP_ANY, Val_GNU_MIPS_ABI_FP_DOUBLE): New enum values.
+	(Val_GNU_MIPS_ABI_FP_SINGLE, Val_GNU_MIPS_ABI_FP_SOFT): Likewise.
+	(Val_GNU_MIPS_ABI_FP_OLD_64, Val_GNU_MIPS_ABI_FP_XX): Likewise.
+	(Val_GNU_MIPS_ABI_FP_64, Val_GNU_MIPS_ABI_FP_64A): Likewise.
+	(Val_GNU_MIPS_ABI_FP_MAX): Likewise.
+	* sysdeps/mips/Makefile [subdir=elf]: Add tst-abi-interlink,
+	tst-mode-switch-1, tst-mode-switch-2, tst-mode-switch-3 tests.
+	* sysdeps/mips/bits/linkmap.h (struct link_map_machine): Add fpmode
+	field.
+	* sysdeps/mips/dl-machine.h (elf_machine_matches_host): Reject
+	EF_MIPS_FP64.
+	* sysdeps/mips/dl-machine-reject-phdr.h: New file.
+	* sysdeps/mips/tst-abi-fp32mod.c: Likewise.
+	* sysdeps/mips/tst-abi-fpxxmod.c: Likewise.
+	* sysdeps/mips/tst-abi-fpxxomod.c: Likewise.
+	* sysdeps/mips/tst-abi-fp64mod.c: Likewise.
+	* sysdeps/mips/tst-abi-fp64amod.c: Likewise.
+	* sysdeps/mips/tst-abi-interlink.c: Likewise.
+	* sysdeps/mips/tst-mode-switch-1.c: Likewise.
+	* sysdeps/mips/tst-mode-switch-2.c: Likewise.
+	* sysdeps/mips/tst-mode-switch-3.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/configure.ac (o32-fpabi): Define to
+	record the current FP ABI extension.
+	(mips-mode-switch): Define to show if kernel headers support mode
+	switching.
+	* sysdeps/unix/sysv/linux/mips/configure: Regenerate.
+	* sysdeps/unix/sysv/linux/mips/ldsodefs.h: Increase maximum
+	supported SYSV ABI version to 3.
+	* sysdeps/unix/sysv/linux/mips/libc-abis: Add new MIPS_O32_FP64
+	feature.
+
 2014-12-31  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 	    Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 

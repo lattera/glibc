@@ -105,6 +105,148 @@ if test -z "$libc_mips_float"; then
   as_fn_error $? "could not determine if compiler is using hard or soft floating point ABI" "$LINENO" 5
 fi
 
+libc_mips_o32_fp=
+
+if test x"$libc_mips_abi" = xo32 -a x"$libc_mips_float" = xhard; then
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+      #if !defined(__mips_fpr)
+      #error Missing FPR sizes
+      #endif
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+        #if (__mips_fpr != 32)
+        #error Not FP32
+        #endif
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  libc_mips_o32_fp=32
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+          #if (__mips_fpr != 0) || !defined(_MIPS_SPFPSET) || (_MIPS_SPFPSET != 16)
+          #error Not FPXX (without odd single-precision registers)
+          #endif
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  libc_mips_o32_fp=xx
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+            #if (__mips_fpr != 0)
+            #error Not FPXX (with odd single precision registers)
+            #endif
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  libc_mips_o32_fp=xxo
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+              #if (__mips_fpr != 64) || !defined(_MIPS_SPFPSET) || (_MIPS_SPFPSET != 16)
+              #error Not FP64A
+              #endif
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  libc_mips_o32_fp=64a
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+                #if (__mips_fpr != 64)
+                #error Not FP64
+                #endif
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  libc_mips_o32_fp=64
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+config_vars="$config_vars
+o32-fpabi = ${libc_mips_o32_fp}"
+
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+    #include <linux/prctl.h>
+    #if !defined(PR_GET_FP_MODE) || !defined(PR_SET_FP_MODE)
+    #error New prctl support for setting FP modes not found
+    #endif
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  libc_mips_mode_switch=yes
+else
+  libc_mips_mode_switch=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+config_vars="$config_vars
+mips-mode-switch = ${libc_mips_mode_switch}"
+
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for grep that handles long lines and -e" >&5
 $as_echo_n "checking for grep that handles long lines and -e... " >&6; }

@@ -34,7 +34,7 @@ extern void _dl_static_init (struct link_map *map);
 #undef VALID_ELF_ABIVERSION
 #define VALID_ELF_ABIVERSION(osabi,ver)			\
   (ver == 0						\
-   || (osabi == ELFOSABI_SYSV && ver < 2)		\
+   || (osabi == ELFOSABI_SYSV && ver < 4)		\
    || (osabi == ELFOSABI_GNU && ver < LIBC_ABI_MAX))
 
 #endif /* ldsodefs.h */

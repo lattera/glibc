@@ -11,3 +11,6 @@ MIPS_PLT	mips*-*-linux*
 # Unique symbol definitions for C++.
 # Architecture independent, all ELF targets (== all targets)
 UNIQUE
+#
+# MIPS O32 FP64
+MIPS_O32_FP64   mips*-*-linux*

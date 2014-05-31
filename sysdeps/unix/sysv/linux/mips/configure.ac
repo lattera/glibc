@@ -44,6 +44,59 @@ if test -z "$libc_mips_float"; then
   AC_MSG_ERROR([could not determine if compiler is using hard or soft floating point ABI])
 fi
 
+libc_mips_o32_fp=
+
+if test x"$libc_mips_abi" = xo32 -a x"$libc_mips_float" = xhard; then
+  AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM([
+      #if !defined(__mips_fpr)
+      #error Missing FPR sizes
+      #endif])],
+    [AC_COMPILE_IFELSE(
+      [AC_LANG_PROGRAM([
+        #if (__mips_fpr != 32)
+        #error Not FP32
+        #endif])],
+      [libc_mips_o32_fp=32],
+      [AC_COMPILE_IFELSE(
+        [AC_LANG_PROGRAM([
+          #if (__mips_fpr != 0) || !defined(_MIPS_SPFPSET) || (_MIPS_SPFPSET != 16)
+          #error Not FPXX (without odd single-precision registers)
+          #endif])],
+        [libc_mips_o32_fp=xx],
+        [AC_COMPILE_IFELSE(
+          [AC_LANG_PROGRAM([
+            #if (__mips_fpr != 0)
+            #error Not FPXX (with odd single precision registers)
+            #endif])],
+          [libc_mips_o32_fp=xxo],
+          [AC_COMPILE_IFELSE(
+            [AC_LANG_PROGRAM([
+              #if (__mips_fpr != 64) || !defined(_MIPS_SPFPSET) || (_MIPS_SPFPSET != 16)
+              #error Not FP64A
+              #endif])],
+            [libc_mips_o32_fp=64a],
+            [AC_COMPILE_IFELSE(
+              [AC_LANG_PROGRAM([
+                #if (__mips_fpr != 64)
+                #error Not FP64
+                #endif])],
+              [libc_mips_o32_fp=64],
+              [])])])])])],
+    [])
+fi
+LIBC_CONFIG_VAR([o32-fpabi],[${libc_mips_o32_fp}])
+
+AC_COMPILE_IFELSE(
+  [AC_LANG_PROGRAM([
+    #include <linux/prctl.h>
+    #if !defined(PR_GET_FP_MODE) || !defined(PR_SET_FP_MODE)
+    #error New prctl support for setting FP modes not found
+    #endif])],
+  [libc_mips_mode_switch=yes],
+  [libc_mips_mode_switch=no])
+LIBC_CONFIG_VAR([mips-mode-switch],[${libc_mips_mode_switch}])
+
 AC_CACHE_CHECK([whether the compiler is using the 2008 NaN encoding],
   libc_cv_mips_nan2008, [AC_EGREP_CPP(yes, [dnl
 #ifdef __mips_nan2008

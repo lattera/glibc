@@ -1383,6 +1383,7 @@ typedef struct
 #define EF_MIPS_64BIT_WHIRL	16
 #define EF_MIPS_ABI2		32
 #define EF_MIPS_ABI_ON32	64
+#define EF_MIPS_FP64		512  /* Uses FP64 (12 callee-saved).  */
 #define EF_MIPS_NAN2008	1024  /* Uses IEEE 754-2008 NaN encoding.  */
 #define EF_MIPS_ARCH		0xf0000000 /* MIPS architecture level.  */
 
@@ -1631,9 +1632,10 @@ typedef struct
 
 /* Legal values for p_type field of Elf32_Phdr.  */
 
-#define PT_MIPS_REGINFO	0x70000000	/* Register usage information */
-#define PT_MIPS_RTPROC  0x70000001	/* Runtime procedure table. */
-#define PT_MIPS_OPTIONS 0x70000002
+#define PT_MIPS_REGINFO	  0x70000000	/* Register usage information. */
+#define PT_MIPS_RTPROC	  0x70000001	/* Runtime procedure table. */
+#define PT_MIPS_OPTIONS	  0x70000002
+#define PT_MIPS_ABIFLAGS  0x70000003	/* FP mode requirement. */
 
 /* Special program header types.  */
 
@@ -1755,6 +1757,101 @@ typedef struct
 
 typedef Elf32_Addr Elf32_Conflict;
 
+typedef struct
+{
+  /* Version of flags structure.  */
+  Elf32_Half version;
+  /* The level of the ISA: 1-5, 32, 64.  */
+  unsigned char isa_level;
+  /* The revision of ISA: 0 for MIPS V and below, 1-n otherwise.  */
+  unsigned char isa_rev;
+  /* The size of general purpose registers.  */
+  unsigned char gpr_size;
+  /* The size of co-processor 1 registers.  */
+  unsigned char cpr1_size;
+  /* The size of co-processor 2 registers.  */
+  unsigned char cpr2_size;
+  /* The floating-point ABI.  */
+  unsigned char fp_abi;
+  /* Processor-specific extension.  */
+  Elf32_Word isa_ext;
+  /* Mask of ASEs used.  */
+  Elf32_Word ases;
+  /* Mask of general flags.  */
+  Elf32_Word flags1;
+  Elf32_Word flags2;
+} Elf_MIPS_ABIFlags_v0;
+
+/* Values for the register size bytes of an abi flags structure.  */
+
+#define MIPS_AFL_REG_NONE	0x00	 /* No registers.  */
+#define MIPS_AFL_REG_32		0x01	 /* 32-bit registers.  */
+#define MIPS_AFL_REG_64		0x02	 /* 64-bit registers.  */
+#define MIPS_AFL_REG_128	0x03	 /* 128-bit registers.  */
+
+/* Masks for the ases word of an ABI flags structure.  */
+
+#define MIPS_AFL_ASE_DSP	0x00000001 /* DSP ASE.  */
+#define MIPS_AFL_ASE_DSPR2	0x00000002 /* DSP R2 ASE.  */
+#define MIPS_AFL_ASE_EVA	0x00000004 /* Enhanced VA Scheme.  */
+#define MIPS_AFL_ASE_MCU	0x00000008 /* MCU (MicroController) ASE.  */
+#define MIPS_AFL_ASE_MDMX	0x00000010 /* MDMX ASE.  */
+#define MIPS_AFL_ASE_MIPS3D	0x00000020 /* MIPS-3D ASE.  */
+#define MIPS_AFL_ASE_MT		0x00000040 /* MT ASE.  */
+#define MIPS_AFL_ASE_SMARTMIPS	0x00000080 /* SmartMIPS ASE.  */
+#define MIPS_AFL_ASE_VIRT	0x00000100 /* VZ ASE.  */
+#define MIPS_AFL_ASE_MSA	0x00000200 /* MSA ASE.  */
+#define MIPS_AFL_ASE_MIPS16	0x00000400 /* MIPS16 ASE.  */
+#define MIPS_AFL_ASE_MICROMIPS	0x00000800 /* MICROMIPS ASE.  */
+#define MIPS_AFL_ASE_XPA	0x00001000 /* XPA ASE.  */
+#define MIPS_AFL_ASE_MASK	0x00001fff /* All ASEs.  */
+
+/* Values for the isa_ext word of an ABI flags structure.  */
+
+#define MIPS_AFL_EXT_XLR	  1   /* RMI Xlr instruction.  */
+#define MIPS_AFL_EXT_OCTEON2	  2   /* Cavium Networks Octeon2.  */
+#define MIPS_AFL_EXT_OCTEONP	  3   /* Cavium Networks OcteonP.  */
+#define MIPS_AFL_EXT_LOONGSON_3A  4   /* Loongson 3A.  */
+#define MIPS_AFL_EXT_OCTEON	  5   /* Cavium Networks Octeon.  */
+#define MIPS_AFL_EXT_5900	  6   /* MIPS R5900 instruction.  */
+#define MIPS_AFL_EXT_4650	  7   /* MIPS R4650 instruction.  */
+#define MIPS_AFL_EXT_4010	  8   /* LSI R4010 instruction.  */
+#define MIPS_AFL_EXT_4100	  9   /* NEC VR4100 instruction.  */
+#define MIPS_AFL_EXT_3900	  10  /* Toshiba R3900 instruction.  */
+#define MIPS_AFL_EXT_10000	  11  /* MIPS R10000 instruction.  */
+#define MIPS_AFL_EXT_SB1	  12  /* Broadcom SB-1 instruction.  */
+#define MIPS_AFL_EXT_4111	  13  /* NEC VR4111/VR4181 instruction.  */
+#define MIPS_AFL_EXT_4120	  14  /* NEC VR4120 instruction.  */
+#define MIPS_AFL_EXT_5400	  15  /* NEC VR5400 instruction.  */
+#define MIPS_AFL_EXT_5500	  16  /* NEC VR5500 instruction.  */
+#define MIPS_AFL_EXT_LOONGSON_2E  17  /* ST Microelectronics Loongson 2E.  */
+#define MIPS_AFL_EXT_LOONGSON_2F  18  /* ST Microelectronics Loongson 2F.  */
+
+/* Masks for the flags1 word of an ABI flags structure.  */
+#define MIPS_AFL_FLAGS1_ODDSPREG  1  /* Uses odd single-precision registers.  */
+
+/* Object attribute values.  */
+enum
+{
+  /* Not tagged or not using any ABIs affected by the differences.  */
+  Val_GNU_MIPS_ABI_FP_ANY = 0,
+  /* Using hard-float -mdouble-float.  */
+  Val_GNU_MIPS_ABI_FP_DOUBLE = 1,
+  /* Using hard-float -msingle-float.  */
+  Val_GNU_MIPS_ABI_FP_SINGLE = 2,
+  /* Using soft-float.  */
+  Val_GNU_MIPS_ABI_FP_SOFT = 3,
+  /* Using -mips32r2 -mfp64.  */
+  Val_GNU_MIPS_ABI_FP_OLD_64 = 4,
+  /* Using -mfpxx.  */
+  Val_GNU_MIPS_ABI_FP_XX = 5,
+  /* Using -mips32r2 -mfp64.  */
+  Val_GNU_MIPS_ABI_FP_64 = 6,
+  /* Using -mips32r2 -mfp64 -mno-odd-spreg.  */
+  Val_GNU_MIPS_ABI_FP_64A = 7,
+  /* Maximum allocated FP ABI value.  */
+  Val_GNU_MIPS_ABI_FP_MAX = 7
+};
 
 /* HPPA specific definitions.  */
 

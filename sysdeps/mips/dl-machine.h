@@ -99,6 +99,11 @@ elf_machine_matches_host (const ElfW(Ehdr) *ehdr)
   if ((ehdr->e_flags & EF_MIPS_NAN2008) != ELF_MACHINE_NAN2008)
     return 0;
 
+  /* Ensure that the old O32 FP64 ABI is never loaded, it is not supported
+     on linux.  */
+  if (ehdr->e_flags & EF_MIPS_FP64)
+    return 0;
+
   switch (ehdr->e_machine)
     {
     case EM_MIPS:
