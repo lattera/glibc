@@ -1,3 +1,8 @@
+2014-06-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* malloc/malloc.c (malloc_info): Fix format specifier for
+	n_mmaps.
+
 2014-06-02  Wilco  <wdijkstr@arm.com>
 
 	* sysdeps/aarch64/fpu/fpu_control.h (_FPU_SETCW): Remove ISB after

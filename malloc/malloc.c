@@ -5148,7 +5148,7 @@ malloc_info (int options, FILE *fp)
   fprintf (fp,
 	   "<total type=\"fast\" count=\"%zu\" size=\"%zu\"/>\n"
 	   "<total type=\"rest\" count=\"%zu\" size=\"%zu\"/>\n"
-	   "<total type=\"mmap\" count=\"%zu\" size=\"%zu\"/>\n"
+	   "<total type=\"mmap\" count=\"%d\" size=\"%zu\"/>\n"
 	   "<system type=\"current\" size=\"%zu\"/>\n"
 	   "<system type=\"max\" size=\"%zu\"/>\n"
 	   "<aspace type=\"total\" size=\"%zu\"/>\n"
