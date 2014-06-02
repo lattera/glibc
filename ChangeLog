@@ -1,3 +1,13 @@
+2014-06-02  Roland McGrath  <roland@hack.frob.com>
+
+	* nptl/sysdeps/unix/sysv/linux/sh/vfork.S: Moved ...
+	* sysdeps/unix/sysv/linux/sh/vfork.S: ... here.
+	Label the code __libc_vfork rather than __vfork.
+	[!NOT_IN_libc] (vfork): Define as weak alias.
+	[!NOT_IN_libc] (__vfork): Define as strong alias, and libc_hidden_def.
+	* sysdeps/unix/sysv/linux/sh/pt-vfork.S: New file.
+	* nptl/sysdeps/unix/sysv/linux/sh/pt-vfork.S: File removed.
+
 2014-06-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* malloc/malloc.c (malloc_info): Fix format specifier for
