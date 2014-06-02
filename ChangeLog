@@ -1,3 +1,9 @@
+2014-06-02  Wilco  <wdijkstr@arm.com>
+
+	[BZ #17009]
+	* sysdeps/aarch64/fpu/feupdateenv (feupdateenv):
+	Rewrite to reduce FPCR/FPSR accesses.
+
 2014-06-01  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.
