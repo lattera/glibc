@@ -24,11 +24,8 @@
 #define _FPU_GETCW(fpcr) \
   __asm__ __volatile__ ("mrs	%0, fpcr" : "=r" (fpcr))
 
-#define _FPU_SETCW(fpcr)				   \
-  {							   \
-    __asm__ __volatile__ ("msr	fpcr, %0" : : "r" (fpcr)); \
-    __asm__ __volatile__ ("isb");			   \
-  }
+#define _FPU_SETCW(fpcr) \
+  __asm__ __volatile__ ("msr	fpcr, %0" : : "r" (fpcr))
 
 #define _FPU_GETFPSR(fpsr) \
   __asm__ __volatile__ ("mrs	%0, fpsr" : "=r" (fpsr))

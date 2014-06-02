@@ -1,5 +1,10 @@
 2014-06-02  Wilco  <wdijkstr@arm.com>
 
+	* sysdeps/aarch64/fpu/fpu_control.h (_FPU_SETCW): Remove ISB after
+	FPCR write.
+
+2014-06-02  Wilco  <wdijkstr@arm.com>
+
 	[BZ #17009]
 	* sysdeps/aarch64/fpu/feupdateenv (feupdateenv):
 	Rewrite to reduce FPCR/FPSR accesses.
