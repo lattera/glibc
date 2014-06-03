@@ -1,3 +1,7 @@
+2014-06-03  Marcus Shawcroft  <marcus.shawcroft@arm.com>
+
+	* sysdeps/aarch64/libm-test-ulps: Regenerate.
+
 2014-06-03  Wilco  <wdijkstr@arm.com>
 
 	* sysdeps/aarch64/fpu/math_private.h (libc_fesetround_aarch64)
