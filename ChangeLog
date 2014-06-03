@@ -10,6 +10,7 @@
 	SAVE_PID and RESTORE_PID blocks from pt-vfork.S.  Map 0 to INT_MIN
 	in the SAVE_PID block.
 	(__libc_vfork): New alias.
+	* sysdeps/unix/sysv/linux/aarch64/nptl/vfork.S: Remove file.
 
 	* sysdeps/unix/sysv/linux/aarch64/clone.S (__clone): Save args for
 	child in registers, not on the stack.  Remove RESET_PID conditionals.
