@@ -1,5 +1,14 @@
 2014-06-03  Wilco  <wdijkstr@arm.com>
 
+	* sysdeps/aarch64/fpu/math_private.h (libc_fesetround_aarch64)
+	(libc_feholdexcept_setround_aarch64) (libc_feholdsetround_aarch64)
+	(libc_feresetround_aarch64) (libc_feholdsetround_aarch64_ctx):
+	Use _FPU_FPCR_RM_MASK for rounding mask rather than FE_TOWARDZERO.
+	* sysdeps/aarch64/fpu/get-rounding-mode.h (get_rounding_mode):
+	Likewise.
+
+2014-06-03  Wilco  <wdijkstr@arm.com>
+
 	* sysdeps/aarch64/fpu/math_private.h
 	(libc_feholdexcept_aarch64) (libc_feholdexcept_setround_aarch64)
 	(libc_fetestexcept_aarch64) (libc_fesetenv_aarch64)

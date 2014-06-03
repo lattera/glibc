@@ -32,7 +32,7 @@ get_rounding_mode (void)
   fpu_control_t fpcr;
 
   _FPU_GETCW (fpcr);
-  return fpcr & FE_TOWARDZERO;
+  return fpcr & _FPU_FPCR_RM_MASK;
 }
 
 #endif /* get-rounding-mode.h */
