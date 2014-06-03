@@ -6,6 +6,9 @@
 	* nptl/sysdeps/sparc/sparc64/pthread_spin_lock.S
 	(pthread_spin_lock): Likewise.
 
+	* nptl/tst-spin4.c: New test.
+	* nptl/Makefile (tests): Add tst-spin4.
+
 2014-06-03  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #15946]
@@ -135,9 +138,6 @@
 2014-05-30  Ondřej Bílka  <neleai@seznam.cz>
 
 	* malloc/malloc.c (malloc_info): Inline mi_arena.
-
-	* nptl/tst-spin4.c: New test.
-	* nptl/Makefile (tests): Add tst-spin4.
 
 2014-05-29  Richard Henderson  <rth@twiddle.net>
 
