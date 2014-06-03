@@ -25,7 +25,10 @@
 static __always_inline void
 libc_feholdexcept_aarch64 (fenv_t *envp)
 {
-  fpu_control_t fpcr, new_fpcr, fpsr, new_fpsr;
+  fpu_control_t fpcr;
+  fpu_control_t new_fpcr;
+  fpu_fpsr_t fpsr;
+  fpu_fpsr_t new_fpsr;
 
   _FPU_GETCW (fpcr);
   _FPU_GETFPSR (fpsr);
@@ -69,7 +72,10 @@ libc_fesetround_aarch64 (int round)
 static __always_inline void
 libc_feholdexcept_setround_aarch64 (fenv_t *envp, int round)
 {
-  fpu_control_t fpcr, new_fpcr, fpsr, new_fpsr;
+  fpu_control_t fpcr;
+  fpu_control_t new_fpcr;
+  fpu_fpsr_t fpsr;
+  fpu_fpsr_t new_fpsr;
 
   _FPU_GETCW (fpcr);
   _FPU_GETFPSR (fpsr);
@@ -96,7 +102,7 @@ libc_feholdexcept_setround_aarch64 (fenv_t *envp, int round)
 static __always_inline int
 libc_fetestexcept_aarch64 (int ex)
 {
-  fpu_control_t fpsr;
+  fpu_fpsr_t fpsr;
 
   _FPU_GETFPSR (fpsr);
   return fpsr & ex & FE_ALL_EXCEPT;
@@ -109,7 +115,8 @@ libc_fetestexcept_aarch64 (int ex)
 static __always_inline void
 libc_fesetenv_aarch64 (const fenv_t *envp)
 {
-  fpu_control_t fpcr, new_fpcr;
+  fpu_control_t fpcr;
+  fpu_control_t new_fpcr;
 
   _FPU_GETCW (fpcr);
   new_fpcr = envp->__fpcr;
@@ -130,7 +137,10 @@ libc_fesetenv_aarch64 (const fenv_t *envp)
 static __always_inline int
 libc_feupdateenv_test_aarch64 (const fenv_t *envp, int ex)
 {
-  fpu_control_t fpcr, new_fpcr, fpsr, new_fpsr;
+  fpu_control_t fpcr;
+  fpu_control_t new_fpcr;
+  fpu_fpsr_t fpsr;
+  fpu_fpsr_t new_fpsr;
   int excepts;
 
   _FPU_GETCW (fpcr);
@@ -171,7 +181,8 @@ libc_feupdateenv_aarch64 (const fenv_t *envp)
 static __always_inline void
 libc_feholdsetround_aarch64 (fenv_t *envp, int round)
 {
-  fpu_control_t fpcr, fpsr;
+  fpu_control_t fpcr;
+  fpu_fpsr_t fpsr;
 
   _FPU_GETCW (fpcr);
   _FPU_GETFPSR (fpsr);
@@ -193,7 +204,8 @@ libc_feholdsetround_aarch64 (fenv_t *envp, int round)
 static __always_inline void
 libc_feresetround_aarch64 (fenv_t *envp)
 {
-  fpu_control_t fpcr, round;
+  fpu_control_t fpcr;
+  int round;
 
   _FPU_GETCW (fpcr);
 
@@ -215,7 +227,9 @@ libc_feresetround_aarch64 (fenv_t *envp)
 static __always_inline void
 libc_feholdsetround_aarch64_ctx (struct rm_ctx *ctx, int r)
 {
-  fpu_control_t fpcr, fpsr, round;
+  fpu_control_t fpcr;
+  fpu_fpsr_t fpsr;
+  int round;
 
   _FPU_GETCW (fpcr);
   _FPU_GETFPSR (fpsr);

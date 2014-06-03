@@ -1,3 +1,12 @@
+2014-06-03  Wilco  <wdijkstr@arm.com>
+
+	* sysdeps/aarch64/fpu/math_private.h
+	(libc_feholdexcept_aarch64) (libc_feholdexcept_setround_aarch64)
+	(libc_fetestexcept_aarch64) (libc_fesetenv_aarch64)
+	(libc_feupdateenv_test_aarch64) (libc_feholdsetround_aarch64)
+	(libc_feresetround_aarch64) (libc_feholdsetround_aarch64_ctx):
+	Fix declarations.
+
 2014-06-03  Kostya Serebryany  <konstantin.s.serebryany@gmail.com>
 
 	* crypt/crypt-private.h: Include ufc-crypt.h.
