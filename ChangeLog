@@ -1,3 +1,18 @@
+2014-06-03  Kostya Serebryany  <konstantin.s.serebryany@gmail.com>
+
+	* crypt/crypt-private.h: Include ufc-crypt.h.
+	(__b64_from_24bit): Declare extern.
+	* crypt/crypt_util.c(__b64_from_24bit): New function.
+	(b64t): New static const variable.
+	* crypt/md5-crypt.c (b64_from_24bit): Remove function.
+	(b64t): Remove variable.
+	(__md5_crypt_r): Replace b64_from_24bit with __b64_from_24bit.
+	* crypt/sha256-crypt.c: Include crypt-private.h.
+	(b64t): Remove variable.
+	(__sha256_crypt_r): Remove b64_from_24bit and replace
+	with __b64_from_24bit.
+	* crypt/sha512-crypt.c: Likewise.
+
 2014-06-02  Roland McGrath  <roland@hack.frob.com>
 
 	* nptl/sysdeps/unix/sysv/linux/sh/vfork.S: Moved ...

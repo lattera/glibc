@@ -253,6 +253,10 @@ static ufc_long eperm32tab[4][256][2];
  */
 static ufc_long efp[16][64][2];
 
+/* Table with characters for base64 transformation.  */
+static const char b64t[64] =
+"./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
 /*
  * For use by the old, non-reentrant routines
  * (crypt/encrypt/setkey)
@@ -955,4 +959,18 @@ setkey(__key)
      const char *__key;
 {
   __setkey_r(__key, &_ufc_foobar);
+}
+
+void
+__b64_from_24bit (char **cp, int *buflen,
+		  unsigned int b2, unsigned int b1, unsigned int b0,
+		  int n)
+{
+  unsigned int w = (b2 << 16) | (b1 << 8) | b0;
+  while (n-- > 0 && (*buflen) > 0)
+    {
+      *(*cp)++ = b64t[w & 0x3f];
+      --(*buflen);
+      w >>= 6;
+    }
 }

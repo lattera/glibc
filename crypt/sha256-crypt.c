@@ -26,6 +26,7 @@
 #include <sys/param.h>
 
 #include "sha256.h"
+#include "crypt-private.h"
 
 
 #ifdef USE_NSS
@@ -89,10 +90,6 @@ static const char sha256_rounds_prefix[] = "rounds=";
 #define ROUNDS_MIN 1000
 /* Maximum number of rounds.  */
 #define ROUNDS_MAX 999999999
-
-/* Table with characters for base64 transformation.  */
-static const char b64t[64] =
-"./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 
 /* Prototypes for local functions.  */
@@ -341,29 +338,28 @@ __sha256_crypt_r (key, salt, buffer, buflen)
       --buflen;
     }
 
-  void b64_from_24bit (unsigned int b2, unsigned int b1, unsigned int b0,
-		       int n)
-  {
-    unsigned int w = (b2 << 16) | (b1 << 8) | b0;
-    while (n-- > 0 && buflen > 0)
-      {
-	*cp++ = b64t[w & 0x3f];
-	--buflen;
-	w >>= 6;
-      }
-  }
-
-  b64_from_24bit (alt_result[0], alt_result[10], alt_result[20], 4);
-  b64_from_24bit (alt_result[21], alt_result[1], alt_result[11], 4);
-  b64_from_24bit (alt_result[12], alt_result[22], alt_result[2], 4);
-  b64_from_24bit (alt_result[3], alt_result[13], alt_result[23], 4);
-  b64_from_24bit (alt_result[24], alt_result[4], alt_result[14], 4);
-  b64_from_24bit (alt_result[15], alt_result[25], alt_result[5], 4);
-  b64_from_24bit (alt_result[6], alt_result[16], alt_result[26], 4);
-  b64_from_24bit (alt_result[27], alt_result[7], alt_result[17], 4);
-  b64_from_24bit (alt_result[18], alt_result[28], alt_result[8], 4);
-  b64_from_24bit (alt_result[9], alt_result[19], alt_result[29], 4);
-  b64_from_24bit (0, alt_result[31], alt_result[30], 3);
+  __b64_from_24bit (&cp, &buflen,
+		    alt_result[0], alt_result[10], alt_result[20], 4);
+  __b64_from_24bit (&cp, &buflen,
+		    alt_result[21], alt_result[1], alt_result[11], 4);
+  __b64_from_24bit (&cp, &buflen,
+		    alt_result[12], alt_result[22], alt_result[2], 4);
+  __b64_from_24bit (&cp, &buflen,
+		    alt_result[3], alt_result[13], alt_result[23], 4);
+  __b64_from_24bit (&cp, &buflen,
+		    alt_result[24], alt_result[4], alt_result[14], 4);
+  __b64_from_24bit (&cp, &buflen,
+		    alt_result[15], alt_result[25], alt_result[5], 4);
+  __b64_from_24bit (&cp, &buflen,
+		    alt_result[6], alt_result[16], alt_result[26], 4);
+  __b64_from_24bit (&cp, &buflen,
+		    alt_result[27], alt_result[7], alt_result[17], 4);
+  __b64_from_24bit (&cp, &buflen,
+		    alt_result[18], alt_result[28], alt_result[8], 4);
+  __b64_from_24bit (&cp, &buflen,
+		    alt_result[9], alt_result[19], alt_result[29], 4);
+  __b64_from_24bit (&cp, &buflen,
+		    0, alt_result[31], alt_result[30], 3);
   if (buflen <= 0)
     {
       __set_errno (ERANGE);
