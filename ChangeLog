@@ -1,3 +1,9 @@
+2014-06-05  Ondřej Bílka  <neleai@seznam.cz>
+
+	* manual/resource.texi (How to get information about the memory
+	subsystem?): Fix typo.
+	Reported by Peon de la Parra Ivan <peon@keba.com>
+
 2014-06-03  Guo Yixuan  <culu.gyx@gmail.com>
 
 	[BZ #16882]
