@@ -1,3 +1,87 @@
+2014-06-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* Rules (make-test-out): Include
+	LOCPATH=$(common-objpfx)localedata in default environment.
+	* debug/Makefile (tst-chk1-ENV): Remove variable.
+	(tst-chk2-ENV): Likewise.
+	(tst-chk3-ENV): Likewise.
+	(tst-chk4-ENV): Likewise.
+	(tst-chk5-ENV): Likewise.
+	(tst-chk6-ENV): Likewise.
+	(tst-lfschk1-ENV): Likewise.
+	(tst-lfschk2-ENV): Likewise.
+	(tst-lfschk3-ENV): Likewise.
+	(tst-lfschk4-ENV): Likewise.
+	(tst-lfschk5-ENV): Likewise.
+	(tst-lfschk6-ENV): Likewise.
+	* iconvdata/Makefile (bug-iconv6-ENV): Likewise.
+	(tst-iconv7-ENV): Likewise.
+	* intl/Makefile (LOCPATH-ENV): Likewise.
+	(tst-codeset-ENV): Likewise.
+	(tst-gettext3-ENV): Likewise.
+	(tst-gettext5-ENV): Likewise.
+	* libio/Makefile (tst-widetext-ENV): Don't set LOCPATH.
+	(tst-fopenloc-ENV): Likewise.
+	(tst-fgetws-ENV): Remove variable.
+	(tst-ungetwc1-ENV): Likewise.
+	(tst-ungetwc2-ENV): Likewise.
+	(bug-ungetwc2-ENV): Likewise.
+	(tst-swscanf-ENV): Likewise.
+	(bug-ftell-ENV): Likewise.
+	(tst-fgetwc-ENV): Likewise.
+	(tst-fseek-ENV): Likewise.
+	(tst-ftell-partial-wide-ENV): Likewise.
+	(tst-ftell-active-handler-ENV): Likewise.
+	(tst-ftell-append-ENV): Likewise.
+	* posix/Makefile (tst-fnmatch-ENV): Likewise.
+	(tst-regexloc-ENV): Likewise.
+	(bug-regex1-ENV): Likewise.
+	(tst-regex-ENV): Likewise.
+	(tst-regex2-ENV): Likewise.
+	(bug-regex5-ENV): Likewise.
+	(bug-regex6-ENV): Likewise.
+	(bug-regex17-ENV): Likewise.
+	(bug-regex18-ENV): Likewise.
+	(bug-regex19-ENV): Likewise.
+	(bug-regex20-ENV): Likewise.
+	(bug-regex22-ENV): Likewise.
+	(bug-regex23-ENV): Likewise.
+	(bug-regex25-ENV): Likewise.
+	(bug-regex26-ENV): Likewise.
+	(bug-regex30-ENV): Likewise.
+	(bug-regex32-ENV): Likewise.
+	(bug-regex33-ENV): Likewise.
+	(bug-regex34-ENV): Likewise.
+	(bug-regex35-ENV): Likewise.
+	(tst-rxspencer-ENV): Likewise.
+	(tst-rxspencer-no-utf8-ENV): Likewise.
+	* stdio-common/Makefile (tst-sprintf-ENV): Likewise.
+	(tst-sscanf-ENV): Likewise.
+	(tst-swprintf-ENV): Likewise.
+	(tst-swscanf-ENV): Likewise.
+	(test-vfprintf-ENV): Likewise.
+	(scanf13-ENV): Likewise.
+	(bug14-ENV): Likewise.
+	(tst-grouping-ENV): Likewise.
+	* stdlib/Makefile (tst-strtod-ENV): Likewise.
+	(tst-strtod3-ENV): Likewise.
+	(tst-strtod4-ENV): Likewise.
+	(tst-strtod5-ENV): Likewise.
+	(testmb2-ENV): Likewise./
+	* string/Makefile (tst-strxfrm-ENV): Likewise.
+	(tst-strxfrm2-ENV): Likewise.
+	(bug-strcoll1-ENV): Likewise.
+	(test-strcasecmp-ENV): Likewise.
+	(test-strncasecmp-ENV): Likewise.
+	* time/Makefile (tst-strptime-ENV): Likewise.
+	(tst-ftime_l-ENV): Likewise.
+	* wcsmbs/Makefile (tst-btowc-ENV): Likewise.
+	(tst-mbrtowc-ENV): Likewise.
+	(tst-wcrtomb-ENV): Likewise.
+	(tst-mbrtowc2-ENV): Likewise.
+	(tst-c16c32-1-ENV): Likewise.
+	(tst-mbsnrtowcs-ENV): Likewise.
+
 2014-06-05  Ondřej Bílka  <neleai@seznam.cz>
 
 	* manual/resource.texi (How to get information about the memory

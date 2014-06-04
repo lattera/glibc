@@ -123,11 +123,6 @@ include ../Rules
 # Testdir has to be named stdlib and needs to be writable
 test-canon-ARGS = --test-dir=${common-objpfx}stdlib
 
-tst-strtod-ENV = LOCPATH=$(common-objpfx)localedata
-tst-strtod3-ENV = LOCPATH=$(common-objpfx)localedata
-tst-strtod4-ENV = LOCPATH=$(common-objpfx)localedata
-tst-strtod5-ENV = LOCPATH=$(common-objpfx)localedata
-testmb2-ENV = LOCPATH=$(common-objpfx)localedata
 bug-fmtmsg1-ENV = SEV_LEVEL=foo,11,newsev
 
 $(objpfx)isomac.out: $(objpfx)isomac

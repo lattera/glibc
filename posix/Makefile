@@ -203,30 +203,8 @@ tst-dir-ARGS = `pwd` `cd $(common-objdir)/$(subdir); pwd` `cd $(common-objdir); 
 tst-chmod-ARGS = $(objdir)
 tst-vfork3-ARGS = --test-dir=$(objpfx)
 
-tst-fnmatch-ENV = LOCPATH=$(common-objpfx)localedata
-tst-regexloc-ENV = LOCPATH=$(common-objpfx)localedata
-bug-regex1-ENV = LOCPATH=$(common-objpfx)localedata
-tst-regex-ENV = LOCPATH=$(common-objpfx)localedata
-tst-regex2-ENV = LOCPATH=$(common-objpfx)localedata
-bug-regex5-ENV = LOCPATH=$(common-objpfx)localedata
-bug-regex6-ENV = LOCPATH=$(common-objpfx)localedata
-bug-regex17-ENV = LOCPATH=$(common-objpfx)localedata
-bug-regex18-ENV = LOCPATH=$(common-objpfx)localedata
-bug-regex19-ENV = LOCPATH=$(common-objpfx)localedata
-bug-regex20-ENV = LOCPATH=$(common-objpfx)localedata
-bug-regex22-ENV = LOCPATH=$(common-objpfx)localedata
-bug-regex23-ENV = LOCPATH=$(common-objpfx)localedata
-bug-regex25-ENV = LOCPATH=$(common-objpfx)localedata
-bug-regex26-ENV = LOCPATH=$(common-objpfx)localedata
-bug-regex30-ENV = LOCPATH=$(common-objpfx)localedata
-bug-regex32-ENV = LOCPATH=$(common-objpfx)localedata
-bug-regex33-ENV = LOCPATH=$(common-objpfx)localedata
-bug-regex34-ENV = LOCPATH=$(common-objpfx)localedata
-bug-regex35-ENV = LOCPATH=$(common-objpfx)localedata
 tst-rxspencer-ARGS = --utf8 rxspencer/tests
 tst-rxspencer-no-utf8-ARGS = rxspencer/tests
-tst-rxspencer-ENV = LOCPATH=$(common-objpfx)localedata
-tst-rxspencer-no-utf8-ENV = LOCPATH=$(common-objpfx)localedata
 tst-pcre-ARGS = PCRE.tests
 tst-boost-ARGS = BOOST.tests
 bug-glob1-ARGS = "$(objpfx)"

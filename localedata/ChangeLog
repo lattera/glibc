@@ -1,3 +1,70 @@
+2014-06-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makefile (TEST_MBWC_ENV): Remove variable.
+	(tst_iswalnum-ENV): Likewise.
+	(tst_iswalpha-ENV): Likewise.
+	(tst_iswcntrl-ENV): Likewise.
+	(tst_iswctype-ENV): Likewise.
+	(tst_iswdigit-ENV): Likewise.
+	(tst_iswgraph-ENV): Likewise.
+	(tst_iswlower-ENV): Likewise.
+	(tst_iswprint-ENV): Likewise.
+	(tst_iswpunct-ENV): Likewise.
+	(tst_iswspace-ENV): Likewise.
+	(tst_iswupper-ENV): Likewise.
+	(tst_iswxdigit-ENV): Likewise.
+	(tst_mblen-ENV): Likewise.
+	(tst_mbrlen-ENV): Likewise.
+	(tst_mbrtowc-ENV): Likewise.
+	(tst_mbsrtowcs-ENV): Likewise.
+	(tst_mbstowcs-ENV): Likewise.
+	(tst_mbtowc-ENV): Likewise.
+	(tst_strcoll-ENV): Likewise.
+	(tst_strfmon-ENV): Likewise.
+	(tst_strxfrm-ENV): Likewise.
+	(tst_swscanf-ENV): Likewise.
+	(tst_towctrans-ENV): Likewise.
+	(tst_towlower-ENV): Likewise.
+	(tst_towupper-ENV): Likewise.
+	(tst_wcrtomb-ENV): Likewise.
+	(tst_wcscat-ENV): Likewise.
+	(tst_wcschr-ENV): Likewise.
+	(tst_wcscmp-ENV): Likewise.
+	(tst_wcscoll-ENV): Likewise.
+	(tst_wcscpy-ENV): Likewise.
+	(tst_wcscspn-ENV): Likewise.
+	(tst_wcslen-ENV): Likewise.
+	(tst_wcsncat-ENV): Likewise.
+	(tst_wcsncmp-ENV): Likewise.
+	(tst_wcsncpy-ENV): Likewise.
+	(tst_wcspbrk-ENV): Likewise.
+	(tst_wcsrtombs-ENV): Likewise.
+	(tst_wcsspn-ENV): Likewise.
+	(tst_wcsstr-ENV): Likewise.
+	(tst_wcstod-ENV): Likewise.
+	(tst_wcstok-ENV): Likewise.
+	(tst_wcstombs-ENV): Likewise.
+	(tst_wcswidth-ENV): Likewise.
+	(tst_wcsxfrm-ENV): Likewise.
+	(tst_wctob-ENV): Likewise.
+	(tst_wctomb-ENV): Likewise.
+	(tst_wctrans-ENV): Likewise.
+	(tst_wctype-ENV): Likewise.
+	(tst_wcwidth-ENV): Likewise.
+	(tst-digits-ENV): Likewise.
+	(tst-mbswcs6-ENV): Likewise.
+	(tst-xlocale1-ENV): Likewise.
+	(tst-xlocale2-ENV): Likewise.
+	(tst-strfmon1-ENV): Likewise.
+	(tst-strptime-ENV): Likewise.
+	(tst-setlocale-ENV): Don't set LOCPATH.
+	(bug-iconv-trans-ENV): Remove variable.
+	(tst-sscanf-ENV): Likewise.
+	(tst-leaks-ENV): Don't set LOCPATH.
+	(bug-setlocale1-ENV): Remove variable.
+	(bug-setlocale1-static-ENV): Likewise.
+	(tst-setlocale2-ENV): Likewise.
+
 2014-05-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makefile (LOCALEDEF): Use $(elf-objpfx) instead of

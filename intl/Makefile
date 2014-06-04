@@ -118,11 +118,6 @@ CFLAGS-tst-gettext4.c = -DOBJPFX=\"$(objpfx)\"
 CFLAGS-tst-gettext5.c = -DOBJPFX=\"$(objpfx)\"
 CFLAGS-tst-gettext6.c = -DOBJPFX=\"$(objpfx)\"
 
-LOCPATH-ENV = LOCPATH=$(common-objpfx)localedata
-tst-codeset-ENV = $(LOCPATH-ENV)
-tst-gettext3-ENV = $(LOCPATH-ENV)
-tst-gettext5-ENV = $(LOCPATH-ENV)
-
 ifeq ($(have-thread-library),yes)
 ifeq (yes,$(build-shared))
 $(addprefix $(objpfx),$(multithread-test-srcs)): $(shared-thread-library)
