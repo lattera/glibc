@@ -1,3 +1,11 @@
+2016-11-25  Jim Meyering  <meyering@fb.com>
+
+	Let gcc detect assert(a = 1) errors.
+	* assert/assert.h (assert) Rewrite, retaining the old definintion
+	when required, but otherwise putting the expression as-is in an "if"
+	expression (hence, with no added parentheses) within a statement
+	expression.
+
 2016-12-17  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* benchtests/Makefile (binaries-benchset): Depend on libsupport
