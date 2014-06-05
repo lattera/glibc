@@ -780,10 +780,10 @@ getifaddrs_internal (struct ifaddrs **ifap)
 		      else
 			preflen = ifam->ifa_prefixlen;
 
-		      for (i = 0; i < (preflen / 8); i++)
+		      for (i = 0; i < ((preflen - 1) / 8); i++)
 			*cp++ = 0xff;
 		      c = 0xff;
-		      c <<= (8 - (preflen % 8));
+		      c <<= ((128 - preflen) % 8);
 		      *cp = c;
 		    }
 		}

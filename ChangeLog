@@ -1,3 +1,9 @@
+2014-06-05  Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ #15698]
+	* sysdeps/unix/sysv/linux/ifaddrs.c (getifaddrs_internal): Fix
+	memory overrun.
+
 2014-06-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* Rules (make-test-out): Include
