@@ -830,26 +830,23 @@ __reclaim_stacks (void)
 
       if (add_p)
 	{
-	  /* We always add at the beginning of the list.  So in this
-	     case we only need to check the beginning of these lists.  */
-	  int check_list (list_t *l)
-	  {
-	    if (l->next->prev != l)
-	      {
-		assert (l->next->prev == elem);
+	  /* We always add at the beginning of the list.  So in this case we
+	     only need to check the beginning of these lists to see if the
+	     pointers at the head of the list are inconsistent.  */
+	  list_t *l = NULL;
 
-		elem->next = l->next;
-		elem->prev = l;
-		l->next = elem;
+	  if (stack_used.next->prev != &stack_used)
+	    l = &stack_used;
+	  else if (stack_cache.next->prev != &stack_cache)
+	    l = &stack_cache;
 
-		return 1;
-	      }
-
-	    return 0;
-	  }
-
-	  if (check_list (&stack_used) == 0)
-	    (void) check_list (&stack_cache);
+	  if (l != NULL)
+	    {
+	      assert (l->next->prev == elem);
+	      elem->next = l->next;
+	      elem->prev = l;
+	      l->next = elem;
+	    }
 	}
       else
 	{

@@ -1,3 +1,8 @@
+2014-06-05  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* nptl/allocatestack.c (check_list): Inlined function...
+	(__reclaim_stacks): ... here.
+
 2014-06-05  Ondřej Bílka  <neleai@seznam.cz>
 
 	[BZ #15698]
