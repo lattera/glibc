@@ -40,7 +40,11 @@
 #ifndef STRLEN
 /* For builds with no IFUNC support, local calls should be made to internal
    GLIBC symbol (created by libc_hidden_builtin_def).  */
-# define STRLEN   __GI_strlen
+# ifdef SHARED
+#  define STRLEN   __GI_strlen
+# else
+#  define STRLEN   strlen
+# endif
 #endif
 
 #define	FRAMESIZE	(FRAME_MIN_SIZE+32)

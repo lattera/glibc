@@ -1,3 +1,8 @@
+2014-06-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power7/strncat.S [STRLEN]: Define it as
+	strlen for non SHARED builds.
+
 2014-06-05  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* nptl/allocatestack.c (check_list): Inlined function...
