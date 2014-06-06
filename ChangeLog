@@ -1,3 +1,15 @@
+2014-06-11  Vidya Ranganathan  <vidya@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power7/strcmp.S: New file: Optimization.
+	* sysdeps/powerpc/powerpc64/multiarch/strcmp.c: New file:
+	multiarch strcmp for PPC64.
+	* sysdeps/powerpc/powerpc64/multiarch/strcmp-ppc64.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strcmp-power7.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add strcmp
+	multiarch optimizations.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c:
+	(__libc_ifunc_impl_list): Likewise.
+
 2014-06-11  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* benchtests/scripts/validate_benchout.py: New script.
