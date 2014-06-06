@@ -21,9 +21,11 @@
 set -e
 
 common_objpfx=$1
-run_program_prefix=$2
-test_program_prefix=$3
-datafile=$4
+run_program_prefix_before_env=$2
+run_program_env=$3
+run_program_prefix_after_env=$4
+test_program_prefix=$5
+datafile=$6
 
 here=`pwd`
 
@@ -33,9 +35,10 @@ lang=`sed -e '/^#/d' -e '/^$/d' -e '/^C	/d' -e '/^tstfmon/d' -e 's/^\([^	]*\).*/
 for cns in `cd ./tst-fmon-locales && ls tstfmon_*`; do
     cn=tst-fmon-locales/$cns
     fn=charmaps/ISO-8859-1
-    I18NPATH=. GCONV_PATH=${common_objpfx}iconvdata \
-    LOCPATH=${common_objpfx}localedata LC_ALL=C LANGUAGE=C \
-    ${run_program_prefix} ${common_objpfx}locale/localedef \
+    ${run_program_prefix_before_env} \
+    ${run_program_env} \
+    I18NPATH=. LANGUAGE=C \
+    ${run_program_prefix_after_env} ${common_objpfx}locale/localedef \
     --quiet -i $cn -f $fn ${common_objpfx}localedata/$cns
 done
 
@@ -46,8 +49,6 @@ while IFS="	" read locale format value expect; do
     case "$locale" in '#'*) continue ;; esac
     if [ -n "$format" ]; then
 	expect=`echo "$expect" | sed 's/^\"\(.*\)\"$/\1/'`
-	LOCPATH=${common_objpfx}localedata \
-	GCONV_PATH=${common_objpfx}/iconvdata \
 	${test_program_prefix} ${common_objpfx}localedata/tst-fmon \
 	"$locale" "$format" "$value" "$expect" < /dev/null ||
 	errcode=$?

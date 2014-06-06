@@ -20,11 +20,14 @@
 set -e
 
 common_objpfx=$1
-tst_wctype=$2
+tst_wctype_before_env=$2
+run_program_env=$3
+tst_wctype_after_env=$4
 
 # Run the test program.
-LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}iconvdata \
-LC_ALL=ja_JP.EUC-JP ${tst_wctype} < tst-wctype.input \
+${tst_wctype_before_env} \
+${run_program_env} \
+LC_ALL=ja_JP.EUC-JP ${tst_wctype_after_env} < tst-wctype.input \
     > ${common_objpfx}localedata/tst-wctype.out
 
 exit $?

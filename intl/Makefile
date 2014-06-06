@@ -81,7 +81,8 @@ $(objpfx)mtrace-tst-gettext.out: $(objpfx)tst-gettext.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-gettext.mtrace > $@; \
 	$(evaluate-test)
 $(objpfx)tst-gettext.out: tst-gettext.sh $(objpfx)tst-gettext
-	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)' \
+	$(SHELL) $< $(common-objpfx) '$(test-program-prefix-before-env)' \
+	  '$(run-program-env)' '$(test-program-prefix-after-env)' \
 	  $(common-objpfx)intl/ $(objpfx)tst-gettext.mtrace; \
 	$(evaluate-test)
 $(objpfx)tst-translit.out: tst-translit.sh $(objpfx)tst-translit
@@ -89,7 +90,8 @@ $(objpfx)tst-translit.out: tst-translit.sh $(objpfx)tst-translit
 	  $(common-objpfx)intl/; \
 	$(evaluate-test)
 $(objpfx)tst-gettext2.out: tst-gettext2.sh $(objpfx)tst-gettext2
-	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)' \
+	$(SHELL) $< $(common-objpfx) '$(test-program-prefix-before-env)' \
+	  '$(run-program-env)' '$(test-program-prefix-after-env)' \
 	  $(common-objpfx)intl/; \
 	$(evaluate-test)
 $(objpfx)tst-gettext4.out: tst-gettext4.sh $(objpfx)tst-gettext4

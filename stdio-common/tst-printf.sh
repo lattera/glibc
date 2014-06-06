@@ -24,7 +24,6 @@ test_program_prefix=$1; shift
 
 status=0
 
-LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}iconvdata \
 ${test_program_prefix} \
   ${common_objpfx}stdio-common/tst-printf \
   > ${common_objpfx}stdio-common/tst-printf.out || status=1

@@ -628,17 +628,30 @@ run-via-rtld-prefix =							      \
 else
 run-via-rtld-prefix =
 endif
+# $(run-program-env) is the default environment variable settings to
+# use when running a program built with the newly built library.
+run-program-env = GCONV_PATH=$(common-objpfx)iconvdata \
+		  LOCPATH=$(common-objpfx)localedata LC_ALL=C
 # $(run-program-prefix) is a command that, when prepended to the name
 # of a program built with the newly built library, produces a command
 # that, executed on the build system on which "make" is run, runs that
-# program.
-run-program-prefix = $(test-wrapper) $(run-via-rtld-prefix)
+# program.  $(run-program-prefix-before-env) and
+# $(run-program-prefix-after-env) are similar, but separate parts
+# before and after a list of environment variables.
+run-program-prefix-before-env = $(test-wrapper-env)
+run-program-prefix-after-env = $(run-via-rtld-prefix)
+run-program-prefix = $(run-program-prefix-before-env) $(run-program-env) \
+		     $(run-program-prefix-after-env)
 # $(built-program-cmd) is a command that, executed on the build system
 # on which "make" is run, runs the newly built program that is the
 # second dependency of the makefile target in which
-# $(built-program-cmd) is used.
-built-program-cmd = $(test-wrapper) \
-		    $(run-via-rtld-prefix) $(built-program-file)
+# $(built-program-cmd) is used.  $(built-program-cmd-before-env) and
+# $(built-program-cmd-after-env) are similar, before and after a list
+# of environment variables.
+built-program-cmd-before-env = $(test-wrapper-env)
+built-program-cmd-after-env = $(run-via-rtld-prefix) $(built-program-file)
+built-program-cmd = $(built-program-cmd-before-env) $(run-program-env) \
+		    $(built-program-cmd-after-env)
 # $(host-built-program-cmd) is a command that, executed on the host
 # for which the library is built, runs the newly built program that is
 # the second dependency of the makefile target in which
@@ -659,12 +672,16 @@ endif
 # $(test-program-prefix) is a command that, when prepended to the name
 # of a test program built with the newly built library, produces a command
 # that, executed on the build system on which "make" is run, runs that
-# test program.
+# test program.  $(test-program-prefix-before-env) and
+# $(test-program-prefix-after-env) are similar, before and after a
+# list of environment variables.
 
 # $(test-program-cmd) is a command that, executed on the build system
 # on which "make" is run, runs the newly built test program that is the
 # second dependency of the makefile target in which
-# $(test-program-cmd) is used.
+# $(test-program-cmd) is used.  $(test-program-cmd-before-env) and
+# $(test-program-cmd-after-env) are similar, before and after a list
+# of environment variables.
 
 # $(host-test-program-cmd) is a command that, executed on the host
 # for which the library is built, runs the newly built test program that
@@ -673,12 +690,22 @@ endif
 
 ifeq (yes,$(build-hardcoded-path-in-tests))
 test-via-rtld-prefix =
-test-program-prefix = $(test-wrapper)
-test-program-cmd = $(test-wrapper) $(built-program-file)
+test-program-prefix-before-env = $(test-wrapper-env)
+test-program-prefix-after-env =
+test-program-prefix = $(test-program-prefix-before-env) $(run-program-env) \
+		      $(test-program-prefix-after-env)
+test-program-cmd-before-env = $(test-wrapper-env)
+test-program-cmd-after-env = $(built-program-file)
+test-program-cmd = $(test-program-cmd-before-env) $(run-program-env) \
+		   $(test-program-cmd-after-env)
 host-test-program-cmd = $(built-program-file)
 else
 test-via-rtld-prefix = $(run-via-rtld-prefix)
+test-program-prefix-before-env = $(run-program-prefix-before-env)
+test-program-prefix-after-env = $(run-program-prefix-after-env)
 test-program-prefix = $(run-program-prefix)
+test-program-cmd-before-env = $(built-program-cmd-before-env)
+test-program-cmd-after-env = $(built-program-cmd-after-env)
 test-program-cmd = $(built-program-cmd)
 host-test-program-cmd = $(host-built-program-cmd)
 endif

@@ -30,9 +30,7 @@ errcode=0
 while IFS="	" read locale format value expect; do
     case "$locale" in '#'*) continue ;; esac
     if [ -n "$format" ]; then
-	if LOCPATH=${common_objpfx}localedata \
-	    GCONV_PATH=${common_objpfx}/iconvdata \
-	    ${test_program_prefix} ${common_objpfx}localedata/tst-numeric \
+	if ${test_program_prefix} ${common_objpfx}localedata/tst-numeric \
 	    "$locale" "$format" "$value" "$expect" < /dev/null
 	then
 	    echo "Locale: \"${locale}\" Format: \"${format}\"" \

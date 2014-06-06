@@ -21,6 +21,7 @@ set -e
 
 common_objpfx=$1
 test_wrapper_env=$2
+run_program_env=$3
 
 test -e ${common_objpfx}elf/will-be-empty &&
   rm -fr ${common_objpfx}elf/will-be-empty
@@ -30,8 +31,8 @@ test -d ${common_objpfx}elf/for-renamed ||
 cp ${common_objpfx}elf/pathoptobj.so ${common_objpfx}elf/for-renamed/renamed.so
 
 ${test_wrapper_env} \
-LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}iconvdata \
-LC_ALL=C LD_LIBRARY_PATH=${common_objpfx}elf/will-be-empty:${common_objpfx}elf/for-renamed:${common_objpfx}.:${common_objpfx}dlfcn \
+${run_program_env} \
+LD_LIBRARY_PATH=${common_objpfx}elf/will-be-empty:${common_objpfx}elf/for-renamed:${common_objpfx}.:${common_objpfx}dlfcn \
   ${common_objpfx}elf/ld.so ${common_objpfx}elf/tst-pathopt \
     > ${common_objpfx}elf/tst-pathopt.out
 

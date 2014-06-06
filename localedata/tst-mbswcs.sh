@@ -25,23 +25,18 @@ test_program_prefix=$1; shift
 status=0
 
 # Run the test programs.
-LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}iconvdata \
 ${test_program_prefix} ${common_objpfx}localedata/tst-mbswcs1 \
   > ${common_objpfx}localedata/tst-mbswcs.out || status=1
 
-LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}iconvdata \
 ${test_program_prefix} ${common_objpfx}localedata/tst-mbswcs2 \
   >> ${common_objpfx}localedata/tst-mbswcs.out || status=1
 
-LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}iconvdata \
 ${test_program_prefix} ${common_objpfx}localedata/tst-mbswcs3 \
   >> ${common_objpfx}localedata/tst-mbswcs.out || status=1
 
-LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}iconvdata \
 ${test_program_prefix} ${common_objpfx}localedata/tst-mbswcs4 \
   >> ${common_objpfx}localedata/tst-mbswcs.out || status=1
 
-LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}iconvdata \
 ${test_program_prefix} ${common_objpfx}localedata/tst-mbswcs5 \
   >> ${common_objpfx}localedata/tst-mbswcs.out || status=1
 

@@ -159,7 +159,7 @@ ifneq (no,$(PERL))
 .PHONY: regen-ulps
 
 run-regen-ulps = $(test-wrapper-env) \
-	    GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
+	    $(run-program-env) \
 	    $($*-ENV) $(rtld-prefix) $${run}
 
 regen-ulps: $(addprefix $(objpfx),$(libm-tests))

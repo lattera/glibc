@@ -23,19 +23,11 @@ common_objpfx=$1
 test_program_prefix=$2
 objpfx=$3
 
-LC_ALL=C
-export LC_ALL
-
 # Create the locale directories.
 mkdir -p ${objpfx}localedir/existing-locale/LC_MESSAGES
 
 msgfmt -o ${objpfx}domaindir/existing-locale/LC_MESSAGES/translit.mo \
        translit.po
-
-GCONV_PATH=${common_objpfx}iconvdata
-export GCONV_PATH
-LOCPATH=${common_objpfx}localedata
-export LOCPATH
 
 ${test_program_prefix} \
 ${objpfx}tst-translit > ${objpfx}tst-translit.out ${objpfx}domaindir

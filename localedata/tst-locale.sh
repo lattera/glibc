@@ -21,7 +21,9 @@
 set -e
 
 common_objpfx=$1; shift
-localedef=$1; shift
+localedef_before_env=$1; shift
+run_program_env=$1; shift
+localedef_after_env=$1; shift
 
 test_locale ()
 {
@@ -32,9 +34,10 @@ test_locale ()
     if test $rep; then
       rep="--repertoire-map $rep"
     fi
-    I18NPATH=. GCONV_PATH=${common_objpfx}iconvdata \
-    LOCPATH=${common_objpfx}localedata LC_ALL=C LANGUAGE=C \
-    ${localedef} --quiet -c -f $charmap -i $input \
+    ${localedef_before_env} \
+    ${run_program_env} \
+    I18NPATH=. LANGUAGE=C \
+    ${localedef_after_env} --quiet -c -f $charmap -i $input \
       ${rep} ${common_objpfx}localedata/$out
 
     if [ $? -ne 0 ]; then

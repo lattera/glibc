@@ -20,7 +20,9 @@
 set -e
 
 common_objpfx=$1; shift
-tst_ctype=$1; shift
+tst_ctype_before_env=$1; shift
+run_program_env=$1; shift
+tst_ctype_after_env=$1; shift
 status=0
 
 # Run the test programs.
@@ -31,8 +33,9 @@ for loc in C de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ANSI_X3.4-1968 ja_JP.EUC-JP; do
   else
     input=/dev/null
   fi
-  LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}iconvdata \
-  LC_ALL=$loc ${tst_ctype} < $input \
+  ${tst_ctype_before_env} \
+  ${run_program_env} \
+  LC_ALL=$loc ${tst_ctype_after_env} < $input \
     >> ${common_objpfx}localedata/tst-ctype.out || status=1
 done
 

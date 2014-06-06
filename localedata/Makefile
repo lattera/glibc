@@ -143,7 +143,9 @@ generated-dirs += $(LOCALES)
 $(addprefix $(objpfx),$(CTYPE_FILES)): %: \
   gen-locale.sh $(common-objpfx)locale/localedef Makefile \
   $(addprefix charmaps/,$(CHARMAPS)) $(addprefix locales/,$(LOCALE_SRCS))
-	@$(SHELL) gen-locale.sh $(common-objpfx) '$(built-program-cmd)' $@; \
+	@$(SHELL) gen-locale.sh $(common-objpfx) \
+		  '$(built-program-cmd-before-env)' '$(run-program-env)' \
+		  '$(built-program-cmd-after-env)' $@; \
 	$(evaluate-test)
 
 $(addsuffix .out,$(addprefix $(objpfx),$(tests))): %: \
@@ -151,14 +153,17 @@ $(addsuffix .out,$(addprefix $(objpfx),$(tests))): %: \
 
 $(objpfx)sort-test.out: sort-test.sh $(objpfx)collate-test $(objpfx)xfrm-test \
 		       $(test-input-data) $(addprefix $(objpfx),$(CTYPE_FILES))
-	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)' $(test-input) \
+	$(SHELL) $< $(common-objpfx) '$(test-program-prefix-before-env)' \
+	  '$(run-program-env)' '$(test-program-prefix-after-env)' \
+	  $(test-input) \
 	  > $@; \
 	$(evaluate-test)
 $(objpfx)tst-fmon.out: tst-fmon.sh $(objpfx)tst-fmon tst-fmon.data \
 		       $(objpfx)sort-test.out \
 		       $(addprefix $(objpfx),$(CTYPE_FILES))
-	$(SHELL) $< $(common-objpfx) '$(run-program-prefix)' \
-		'$(test-program-prefix)' tst-fmon.data  \
+	$(SHELL) $< $(common-objpfx) '$(run-program-prefix-before-env)' \
+		 '$(run-program-env)' '$(run-program-prefix-after-env)' \
+		 '$(test-program-prefix)' tst-fmon.data \
 	  > $@; \
 	$(evaluate-test)
 $(objpfx)tst-numeric.out: tst-numeric.sh $(objpfx)tst-numeric tst-numeric.data \
@@ -169,7 +174,8 @@ $(objpfx)tst-numeric.out: tst-numeric.sh $(objpfx)tst-numeric tst-numeric.data \
 	$(evaluate-test)
 $(objpfx)tst-locale.out: tst-locale.sh $(common-objpfx)locale/localedef \
 			 $(ld-test-srcs) $(addprefix $(objpfx),$(CTYPE_FILES))
-	$(SHELL) $< $(common-objpfx) '$(built-program-cmd)' > $@; \
+	$(SHELL) $< $(common-objpfx) '$(built-program-cmd-before-env)' \
+		 '$(run-program-env)' '$(built-program-cmd-after-env)' > $@; \
 	$(evaluate-test)
 $(objpfx)tst-rpmatch.out: tst-rpmatch.sh $(objpfx)tst-rpmatch \
 			  $(objpfx)tst-fmon.out \
@@ -178,7 +184,10 @@ $(objpfx)tst-rpmatch.out: tst-rpmatch.sh $(objpfx)tst-rpmatch \
 	$(evaluate-test)
 $(objpfx)tst-trans.out: tst-trans.sh $(objpfx)tst-trans \
 			$(addprefix $(objpfx),$(CTYPE_FILES))
-	$(SHELL) $< $(common-objpfx) '$(run-program-prefix)' '$(test-program-prefix)'; \
+	$(SHELL) $< $(common-objpfx) '$(run-program-prefix-before-env)' \
+		 '$(run-program-env)' '$(run-program-prefix-after-env)' \
+		 '$(test-program-prefix-before-env)' \
+		 '$(test-program-prefix-after-env)'; \
 	$(evaluate-test)
 $(objpfx)tst-mbswcs.out: tst-mbswcs.sh $(objpfx)tst-mbswcs1 \
 			 $(objpfx)tst-mbswcs2 $(objpfx)tst-mbswcs3 \
@@ -189,22 +198,26 @@ $(objpfx)tst-mbswcs.out: tst-mbswcs.sh $(objpfx)tst-mbswcs1 \
 $(objpfx)tst-ctype.out: tst-ctype.sh $(objpfx)tst-ctype \
 			$(objpfx)sort-test.out \
 			$(addprefix $(objpfx),$(CTYPE_FILES))
-	$(SHELL) $< $(common-objpfx) '$(test-program-cmd)'; \
+	$(SHELL) $< $(common-objpfx) '$(test-program-cmd-before-env)' \
+		 '$(run-program-env)' '$(test-program-cmd-after-env)'; \
 	$(evaluate-test)
 $(objpfx)tst-wctype.out: tst-wctype.sh $(objpfx)tst-wctype \
 			$(objpfx)sort-test.out tst-wctype.input \
 			$(addprefix $(objpfx),$(CTYPE_FILES))
-	$(SHELL) $< $(common-objpfx) '$(test-program-cmd)'; \
+	$(SHELL) $< $(common-objpfx) '$(test-program-cmd-before-env)' \
+		 '$(run-program-env)' '$(test-program-cmd-after-env)'; \
 	$(evaluate-test)
 $(objpfx)tst-langinfo.out: tst-langinfo.sh $(objpfx)tst-langinfo \
 			$(objpfx)sort-test.out \
 			$(addprefix $(objpfx),$(CTYPE_FILES))
-	$(SHELL) $< $(common-objpfx) '$(test-program-cmd)' > $@; \
+	$(SHELL) $< $(common-objpfx) '$(test-program-cmd-before-env)' \
+		 '$(run-program-env)' '$(test-program-cmd-after-env)' > $@; \
 	$(evaluate-test)
 $(objpfx)tst-langinfo-static.out: tst-langinfo.sh $(objpfx)tst-langinfo-static \
 			$(objpfx)sort-test.out \
 			$(addprefix $(objpfx),$(CTYPE_FILES))
-	$(SHELL) $< $(common-objpfx) '$(test-program-cmd)' > $@; \
+	$(SHELL) $< $(common-objpfx) '$(test-program-cmd-before-env)' \
+		 '$(run-program-env)' '$(test-program-cmd-after-env)' > $@; \
 	$(evaluate-test)
 $(objpfx)tst-digits.out: $(objpfx)tst-locale.out
 $(objpfx)tst-mbswcs6.out: $(addprefix $(objpfx),$(CTYPE_FILES))

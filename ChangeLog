@@ -1,3 +1,90 @@
+2014-06-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makeconfig (run-program-env): New variable.
+	(run-program-prefix-before-env): Likewise.
+	(run-program-prefix-after-env): Likewise.
+	(run-program-prefix): Define in terms of new variables.
+	(built-program-cmd-before-env): New variable.
+	(built-program-cmd-after-env): Likewise.
+	(built-program-cmd): Define in terms of new variables.
+	(test-program-prefix-before-env): New variable.
+	(test-program-prefix-after-env): Likewise.
+	(test-program-prefix): Define in terms of new variables.
+	(test-program-cmd-before-env): New variable.
+	(test-program-cmd-after-env): Likewise.
+	(test-program-cmd): Define in terms of new variables.
+	* Rules (make-test-out): Use $(run-program-env).
+	* scripts/cross-test-ssh.sh (env_blacklist): Remove variable.
+	(help): Do not mention environment variables.  Mention
+	--timeoutfactor option.
+	(timeoutfactor): New variable.
+	(blacklist_exports): Remove function.
+	(exports): Remove variable.
+	(command): Do not include ${exports}.
+	* manual/install.texi (Configuring and compiling): Do not mention
+	test wrappers preserving environment variables.  Mention that last
+	assignment to a variable must take precedence.
+	* INSTALL: Regenerated.
+	* benchtests/Makefile (run-bench): Use $(run-program-env).
+	* catgets/Makefile ($(objpfx)test1.cat): Use
+	$(built-program-cmd-before-env), $(run-program-env) and
+	$(built-program-cmd-after-env).
+	($(objpfx)test2.cat): Do not specify environment variables
+	explicitly.
+	($(objpfx)de/libc.cat): Use $(built-program-cmd-before-env),
+	$(run-program-env) and $(built-program-cmd-after-env).
+	($(objpfx)test-gencat.out): Use $(test-program-cmd-before-env),
+	$(run-program-env) and $(test-program-cmd-after-env).
+	($(objpfx)sample.SJIS.cat): Do not specify environment variables
+	explicitly.
+	* catgets/test-gencat.sh: Use test_program_cmd_before_env,
+	run_program_env and test_program_cmd_after_env arguments.
+	* elf/Makefile ($(objpfx)tst-pathopt.out): Use $(run-program-env).
+	* elf/tst-pathopt.sh: Use run_program_env argument.
+	* iconvdata/Makefile ($(objpfx)iconv-test.out): Use
+	$(test-wrapper-env) and $(run-program-env).
+	* iconvdata/run-iconv-test.sh: Use test_wrapper_env and
+	run_program_env arguments.
+	* iconvdata/tst-table.sh: Do not set GCONV_PATH explicitly.
+	* intl/Makefile ($(objpfx)tst-gettext.out): Use
+	$(test-program-prefix-before-env), $(run-program-env) and
+	$(test-program-prefix-after-env).
+	($(objpfx)tst-gettext2.out): Likewise.
+	* intl/tst-gettext.sh: Use test_program_prefix_before_env,
+	run_program_env and test_program_prefix_after_env arguments.
+	* intl/tst-gettext2.sh: Likewise.
+	* intl/tst-gettext4.sh: Do not set environment variables
+	explicitly.
+	* intl/tst-gettext6.sh: Likewise.
+	* intl/tst-translit.sh: Likewise.
+	* malloc/Makefile ($(objpfx)tst-mtrace.out): Use
+	$(test-program-prefix-before-env), $(run-program-env) and
+	$(test-program-prefix-after-env).
+	* malloc/tst-mtrace.sh: Use test_program_prefix_before_env,
+	run_program_env and test_program_prefix_after_env arguments.
+	* math/Makefile (run-regen-ulps): Use $(run-program-env).
+	* nptl/Makefile ($(objpfx)tst-tls6.out): Use $(run-program-env).
+	* nptl/tst-tls6.sh: Use run_program_env argument.  Set LANG=C
+	explicitly with each use of ${test_wrapper_env}.
+	* posix/Makefile ($(objpfx)wordexp-tst.out): Use
+	$(test-program-prefix-before-env), $(run-program-env) and
+	$(test-program-prefix-after-env).
+	* posix/tst-getconf.sh: Do not set environment variables
+	explicitly.
+	* posix/wordexp-tst.sh: Use test_program_prefix_before_env,
+	run_program_env and test_program_prefix_after_env arguments.
+	* stdio-common/tst-printf.sh: Do not set environment variables
+	explicitly.
+	* stdlib/Makefile ($(objpfx)tst-fmtmsg.out): Use
+	$(test-program-prefix-before-env), $(run-program-env) and
+	$(test-program-prefix-after-env).
+	* stdlib/tst-fmtmsg.sh: Use test_program_prefix_before_env,
+	run_program_env and test_program_prefix_after_env arguments.
+	Split $test calls into $test_pre and $test.
+	* timezone/Makefile (build-testdata): Use
+	$(built-program-cmd-before-env), $(run-program-env) and
+	$(built-program-cmd-after-env).
+
 2014-06-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power7/strncat.S [STRLEN]: Define it as

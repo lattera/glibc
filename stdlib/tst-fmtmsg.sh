@@ -20,47 +20,47 @@
 set -e
 
 common_objpfx=$1
-test_program_prefix=$2
-objpfx=$3
+test_program_prefix_before_env=$2
+run_program_env=$3
+test_program_prefix_after_env=$4
+objpfx=$5
 
-test="${test_program_prefix} ${objpfx}tst-fmtmsg"
+test_pre="${test_program_prefix_before_env} ${run_program_env}"
+test="${test_program_prefix_after_env} ${objpfx}tst-fmtmsg"
 out=${objpfx}tst-fmtmsg.out
 
-LC_ALL=C
-export LC_ALL
-
-(MSGVERB= $test || exit 1;
- MSGVERB=label $test || exit 1;
- MSGVERB=severity $test || exit 1;
- MSGVERB=severity:label $test || exit 1;
- MSGVERB=text $test || exit 1;
- MSGVERB=text:label $test || exit 1;
- MSGVERB=text:severity $test || exit 1;
- MSGVERB=text:severity:label $test || exit 1;
- MSGVERB=action $test || exit 1;
- MSGVERB=action:label $test || exit 1;
- MSGVERB=action:severity $test || exit 1;
- MSGVERB=action:severity:label $test || exit 1;
- MSGVERB=action:text $test || exit 1;
- MSGVERB=action:text:label $test || exit 1;
- MSGVERB=action:text:severity $test || exit 1;
- MSGVERB=action:text:severity:label $test || exit 1;
- MSGVERB=tag $test || exit 1;
- MSGVERB=tag:label $test || exit 1;
- MSGVERB=tag:severity $test || exit 1;
- MSGVERB=tag:severity:label $test || exit 1;
- MSGVERB=tag:text $test || exit 1;
- MSGVERB=tag:text:label $test || exit 1;
- MSGVERB=tag:text:severity $test || exit 1;
- MSGVERB=tag:text:severity:label $test || exit 1;
- MSGVERB=tag:action $test || exit 1;
- MSGVERB=tag:action:label $test || exit 1;
- MSGVERB=tag:action:severity $test || exit 1;
- MSGVERB=tag:action:severity:label $test || exit 1;
- MSGVERB=tag:action:text $test || exit 1;
- MSGVERB=tag:action:text:label $test || exit 1;
- MSGVERB=tag:action:text:severity $test || exit 1;
- MSGVERB=tag:action:text:severity:label $test || exit 1;) 2> $out
+($test_pre MSGVERB= $test || exit 1;
+ $test_pre MSGVERB=label $test || exit 1;
+ $test_pre MSGVERB=severity $test || exit 1;
+ $test_pre MSGVERB=severity:label $test || exit 1;
+ $test_pre MSGVERB=text $test || exit 1;
+ $test_pre MSGVERB=text:label $test || exit 1;
+ $test_pre MSGVERB=text:severity $test || exit 1;
+ $test_pre MSGVERB=text:severity:label $test || exit 1;
+ $test_pre MSGVERB=action $test || exit 1;
+ $test_pre MSGVERB=action:label $test || exit 1;
+ $test_pre MSGVERB=action:severity $test || exit 1;
+ $test_pre MSGVERB=action:severity:label $test || exit 1;
+ $test_pre MSGVERB=action:text $test || exit 1;
+ $test_pre MSGVERB=action:text:label $test || exit 1;
+ $test_pre MSGVERB=action:text:severity $test || exit 1;
+ $test_pre MSGVERB=action:text:severity:label $test || exit 1;
+ $test_pre MSGVERB=tag $test || exit 1;
+ $test_pre MSGVERB=tag:label $test || exit 1;
+ $test_pre MSGVERB=tag:severity $test || exit 1;
+ $test_pre MSGVERB=tag:severity:label $test || exit 1;
+ $test_pre MSGVERB=tag:text $test || exit 1;
+ $test_pre MSGVERB=tag:text:label $test || exit 1;
+ $test_pre MSGVERB=tag:text:severity $test || exit 1;
+ $test_pre MSGVERB=tag:text:severity:label $test || exit 1;
+ $test_pre MSGVERB=tag:action $test || exit 1;
+ $test_pre MSGVERB=tag:action:label $test || exit 1;
+ $test_pre MSGVERB=tag:action:severity $test || exit 1;
+ $test_pre MSGVERB=tag:action:severity:label $test || exit 1;
+ $test_pre MSGVERB=tag:action:text $test || exit 1;
+ $test_pre MSGVERB=tag:action:text:label $test || exit 1;
+ $test_pre MSGVERB=tag:action:text:severity $test || exit 1;
+ $test_pre MSGVERB=tag:action:text:severity:label $test || exit 1;) 2> $out
 
 cmp $out <<EOF
 GLIBC:tst-fmtmsg: HALT: halt

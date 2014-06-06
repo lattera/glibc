@@ -21,16 +21,16 @@
 # Run with --help flag to get more detailed help.
 
 progname="$(basename $0)"
-env_blacklist='HOME LOGNAME MAIL PATH SHELL SHLVL SSH_CLIENT SSH_CONNECTION
-USER TERM TERMCAP PWD'
 
 usage="usage: ${progname} [--ssh SSH] HOST COMMAND ..."
 help="Run a glibc test COMMAND on the remote machine HOST, via ssh,
-passing environment variables, preserving the current working directory,
-and respecting quoting.
+preserving the current working directory, and respecting quoting.
 
 If the '--ssh SSH' flag is present, use SSH as the SSH command,
 instead of ordinary 'ssh'.
+
+If the '--timeoutfactor FACTOR' flag is present, set TIMEOUTFACTOR on
+the remote machine to the specified FACTOR.
 
 To use this to run glibc tests, invoke the tests as follows:
 
@@ -58,13 +58,10 @@ ${progname} itself is run in on the build machine.
 The command and arguments are passed to the remote host in a way that
 avoids any further shell substitution or expansion, on the assumption
 that the shell on the build machine has already done them
-appropriately.
-
-${progname} propagates the values all environment variables through to
-the remote target, except the following:
-${env_blacklist}"
+appropriately."
 
 ssh='ssh'
+timeoutfactor=
 while [ $# -gt 0 ]; do
   case "$1" in
 
@@ -74,6 +71,14 @@ while [ $# -gt 0 ]; do
         break
       fi
       ssh="$1"
+      ;;
+
+    "--timeoutfactor")
+      shift
+      if [ $# -lt 1 ]; then
+        break
+      fi
+      timeoutfactor="$1"
       ;;
 
     "--help")
@@ -108,25 +113,19 @@ bourne_quote ()
   done
 }
 
-# Unset all variables from the blacklist.  Then echo all exported
-# variables.
-blacklist_exports ()
-{
-  (unset ${env_blacklist}; export -p) | sed 's/^declare -x/export/'
-}
-
-# Produce commands to carry over the current environment, less blacklisted
-# variables.
-exports="$(blacklist_exports)"
-
 # Transform the current argument list into a properly quoted Bourne shell
 # command string.
 command="$(bourne_quote "$@")"
 
-# Add commands to set environment variables and the current directory.
-command="${exports}
-cd $(bourne_quote "$PWD")
+# Add command to set the current directory.
+command="cd $(bourne_quote "$PWD")
 ${command}"
+
+# Add command to set the timeout factor, if required.
+if [ "$timeoutfactor" ]; then
+  command="export TIMEOUTFACTOR=$(bourne_quote "$timeoutfactor")
+${command}"
+fi
 
 # HOST's sshd simply concatenates its arguments with spaces and
 # passes them to some shell.  We want to force the use of /bin/sh,

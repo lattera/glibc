@@ -21,7 +21,8 @@
 set -e
 
 codir=$1
-test_wrapper="$2"
+test_wrapper_env="$2"
+run_program_env="$3"
 
 # We use always the same temporary file.
 temp1=$codir/iconvdata/iconv-test.xxx
@@ -29,18 +30,13 @@ temp2=$codir/iconvdata/iconv-test.yyy
 
 trap "rm -f $temp1 $temp2" 1 2 3 15
 
-# We must tell the iconv(1) program where the modules we want to use can
-# be found.
-GCONV_PATH=$codir/iconvdata
-export GCONV_PATH
-
 # We have to have some directories in the library path.
 LIBPATH=$codir:$codir/iconvdata
 
 # How the start the iconv(1) program.
 ICONV='$codir/elf/ld.so --library-path $LIBPATH --inhibit-rpath ${from}.so \
        $codir/iconv/iconv_prog'
-ICONV="$test_wrapper $ICONV"
+ICONV="$test_wrapper_env $run_program_env $ICONV"
 
 # Which echo?
 if (echo "testing\c"; echo 1,2,3) | grep c >/dev/null; then

@@ -191,8 +191,7 @@ ifneq "$(strip $(tests) $(xtests) $(test-srcs))" ""
 # from the test programs and whatever input files are present.
 
 make-test-out = $(test-wrapper-env) \
-		GCONV_PATH=$(common-objpfx)iconvdata \
-		LOCPATH=$(common-objpfx)localedata LC_ALL=C \
+		$(run-program-env) \
 		$($*-ENV) $(host-test-program-cmd) $($*-ARGS)
 $(objpfx)%.out: %.input $(objpfx)%
 	$(make-test-out) > $@ < $(word 1,$^); \

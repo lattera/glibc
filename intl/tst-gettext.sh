@@ -20,12 +20,11 @@
 set -e
 
 common_objpfx=$1
-test_program_prefix=$2
-objpfx=$3
-malloc_trace=$4
-
-LC_ALL=C
-export LC_ALL
+test_program_prefix_before_env=$2
+run_program_env=$3
+test_program_prefix_after_env=$4
+objpfx=$5
+malloc_trace=$6
 
 # Generate the test data.
 
@@ -47,14 +46,12 @@ msgfmt -o ${objpfx}domaindir/existing-locale/LC_MESSAGES/existing-domain.mo \
 msgfmt -o ${objpfx}domaindir/existing-locale/LC_TIME/existing-time-domain.mo \
        -f ../po/de.po
 
-GCONV_PATH=${common_objpfx}iconvdata
-export GCONV_PATH
-LOCPATH=${common_objpfx}localedata
-export LOCPATH
-
 # Now run the test.
-MALLOC_TRACE=$malloc_trace LOCPATH=${objpfx}localedir:$LOCPATH \
-${test_program_prefix} \
+${test_program_prefix_before_env} \
+${run_program_env} \
+MALLOC_TRACE=$malloc_trace \
+LOCPATH=${objpfx}localedir:${common_objpfx}localedata \
+${test_program_prefix_after_env} \
 ${objpfx}tst-gettext > ${objpfx}tst-gettext.out ${objpfx}domaindir
 
 exit $?

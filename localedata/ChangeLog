@@ -1,3 +1,45 @@
+2014-06-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makefile ($(addprefix $(objpfx),$(CTYPE_FILES))): Use
+	$(built-program-cmd-before-env), $(run-program-env) and
+	$(built-program-cmd-after-env).
+	($(objpfx)sort-test.out): Use $(test-program-prefix-before-env),
+	$(run-program-env) and $(test-program-prefix-after-env).
+	($(objpfx)tst-fmon.out): Use $(run-program-prefix-before-env),
+	$(run-program-env) and $(run-program-prefix-after-env).
+	($(objpfx)tst-locale.out): Use $(built-program-cmd-before-env),
+	$(run-program-env) and $(built-program-cmd-after-env).
+	($(objpfx)tst-trans.out): Use $(run-program-prefix-before-env),
+	$(run-program-env), $(run-program-prefix-after-env),
+	$(test-program-prefix-before-env) and
+	$(test-program-prefix-after-env).
+	($(objpfx)tst-ctype.out): Use $(test-program-cmd-before-env),
+	$(run-program-env) and $(test-program-cmd-after-env).
+	($(objpfx)tst-wctype.out): Likewise.
+	($(objpfx)tst-langinfo.out): Likewise.
+	($(objpfx)tst-langinfo-static.out): Likewise.
+	* gen-locale.sh: Use localedef_before_env, run_program_env and
+	localedef_after_env arguments.
+	* sort-test.sh: Use test_program_prefix_before_env,
+	run_program_env and test_program_prefix_after_env arguments.
+	* tst-ctype.sh: Use tst_ctype_before_env, run_program_env and
+	tst_ctype_after_env arguments.
+	* tst-fmon.sh: Use run_program_prefix_before_env, run_program_env
+	and run_program_prefix_after_env arguments.
+	* tst-langinfo.sh: Use tst_langinfo_before_env, run_program_env
+	and tst_langinfo_after_env arguments.
+	* tst-locale.sh: Use localedef_before_env, run_program_env and
+	localedef_after_env arguments.
+	* tst-mbswcs.sh: Do not set environment variables explicitly.
+	* tst-numeric.sh: Likewise.
+	* tst-rpmatch.sh: Likewise.
+	* tst-trans.sh: Use run_program_prefix_before_env,
+	run_program_env, run_program_prefix_after_env,
+	test_program_prefix_before_env and test_program_prefix_after_env
+	arguments.
+	* tst-wctype.sh: Use tst_wctype_before_env, run_program_env and
+	tst_wctype_after_env arguments.
+
 2014-06-05  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #16095]

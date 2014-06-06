@@ -24,12 +24,6 @@ run_getconf=$1; shift
 
 logfile=$common_objpfx/posix/tst-getconf.out
 
-# Since we use `sort' we must make sure to use the same locale everywhere.
-LC_ALL=C
-export LC_ALL
-LANG=C
-export LANG
-
 rm -f $logfile
 result=0
 while read name; do

@@ -143,7 +143,8 @@ $(objpfx)globtest.out: globtest.sh $(objpfx)globtest
 		'$(test-program-prefix)' '$(test-wrapper-env)'; \
 	$(evaluate-test)
 $(objpfx)wordexp-tst.out: wordexp-tst.sh $(objpfx)wordexp-test
-	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'; \
+	$(SHELL) $< $(common-objpfx) '$(test-program-prefix-before-env)' \
+		 '$(run-program-env)' '$(test-program-prefix-after-env)'; \
 	$(evaluate-test)
 endif
 endif

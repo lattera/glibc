@@ -20,7 +20,9 @@
 set -e
 
 common_objpfx=$1; shift
-test_program_prefix=$1; shift
+test_program_prefix_before_env=$1; shift
+run_program_env=$1; shift
+test_program_prefix_after_env=$1; shift
 lang=$*
 
 id=${PPID:-100}
@@ -31,8 +33,9 @@ status=0
 for l in $lang; do
   here=0
   cns=`echo $l | sed 's/\(.*\)[.][^.]*/\1/'`
-  LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}/iconvdata \
-   LC_ALL=$l ${test_program_prefix} \
+  ${test_program_prefix_before_env} \
+   ${run_program_env} \
+   LC_ALL=$l ${test_program_prefix_after_env} \
    ${common_objpfx}localedata/collate-test $id < $cns.in \
    > ${common_objpfx}localedata/$cns.out || here=1
   cmp -s $cns.in ${common_objpfx}localedata/$cns.out || here=1
@@ -44,8 +47,9 @@ for l in $lang; do
     status=1
   fi
 
-  LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}/iconvdata \
-   LC_ALL=$l ${test_program_prefix} \
+  ${test_program_prefix_before_env} \
+   ${run_program_env} \
+   LC_ALL=$l ${test_program_prefix_after_env} \
    ${common_objpfx}localedata/xfrm-test $id < $cns.in \
    > ${common_objpfx}localedata/$cns.xout || here=1
   cmp -s $cns.in ${common_objpfx}localedata/$cns.xout || here=1

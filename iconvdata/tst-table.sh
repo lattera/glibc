@@ -27,8 +27,7 @@ test_program_prefix=$3
 charset=$4
 charmap=$5
 
-GCONV_PATH=${common_objpfx}iconvdata
-export GCONV_PATH
+# sort is used on the build system.
 LC_ALL=C
 export LC_ALL
 
