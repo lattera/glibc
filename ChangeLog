@@ -1,3 +1,10 @@
+2014-06-06  Roland McGrath  <roland@hack.frob.com>
+
+	* nptl/sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h: Moved ...
+	* sysdeps/sh/nptl/bits/pthreadtypes.h: ... here.
+	* nptl/sysdeps/unix/sysv/linux/sh/bits/semaphore.h: Moved ...
+	* sysdeps/sh/nptl/bits/semaphore.h: ... here.
+
 2014-06-06  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* crypt/crypt-private.h [DOS]: Add some includes taken from the
