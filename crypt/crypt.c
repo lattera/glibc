@@ -23,8 +23,6 @@
  *
  */
 
-#include "ufc-crypt.h"
-#include "crypt.h"
 #include "crypt-private.h"
 
 #ifdef _UFC_32_

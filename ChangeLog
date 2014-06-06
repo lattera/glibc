@@ -1,3 +1,11 @@
+2014-06-06  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* crypt/crypt-private.h [DOS]: Add some includes taken from the
+	other files in the crypt directory.
+	* crypt/crypt.c: Remove duplicate includes.
+	* crypt/crypt-entry.c: Likewise.
+	* crypt/crypt_util.c: Likewise.
+
 2014-06-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makeconfig (run-program-env): New variable.

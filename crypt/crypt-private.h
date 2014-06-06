@@ -28,7 +28,16 @@
 #include <features.h>
 #include <stdbool.h>
 
+#ifndef DOS
 #include "ufc-crypt.h"
+#else
+/*
+ * Thanks to greg%wind@plains.NoDak.edu (Greg W. Wettstein)
+ * for DOS patches
+ */
+#include "pl.h"
+#include "ufc.h"
+#endif
 #include "crypt.h"
 
 /* crypt.c */

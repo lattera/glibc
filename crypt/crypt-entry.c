@@ -34,16 +34,6 @@
 #define STATIC static
 #endif
 
-#ifndef DOS
-#include "ufc-crypt.h"
-#else
-/*
- * Thanks to greg%wind@plains.NoDak.edu (Greg W. Wettstein)
- * for DOS patches
- */
-#include "ufc.h"
-#endif
-#include "crypt.h"
 #include "crypt-private.h"
 
 /* Prototypes for local functions.  */
