@@ -105,7 +105,7 @@ install-symbolic-link: subdir_install
 	rm -f $(symbolic-link-list)
 
 install:
-	-test ! -x $(elf-objpfx)ldconfig || LC_ALL=C LANGUAGE=C \
+	-test ! -x $(elf-objpfx)ldconfig || LC_ALL=C \
 	  $(elf-objpfx)ldconfig $(addprefix -r ,$(install_root)) \
 				$(slibdir) $(libdir)
 ifneq (no,$(PERL))

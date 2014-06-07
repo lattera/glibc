@@ -40,8 +40,6 @@ esac
 # Since we use `sort' we must make sure to use the same locale everywhere.
 LC_ALL=C
 export LC_ALL
-LANG=C
-export LANG
 
 # Create the arena
 testdir=${common_objpfx}posix/globtest-dir

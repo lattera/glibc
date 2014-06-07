@@ -28,6 +28,3 @@ routines := assert assert-perr __assert
 tests := test-assert test-assert-perr
 
 include ../Rules
-
-test-assert-ENV = LANGUAGE=C
-test-assert-perr-ENV = LANGUAGE=C

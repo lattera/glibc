@@ -76,7 +76,7 @@ ifeq (no,$(cross-compiling))
 # Update the $(prefix)/lib/gconv/gconv-modules.cache file. This is necessary
 # if this libc has more gconv modules than the previously installed one.
 	if test -f "$(inst_gconvdir)/gconv-modules.cache"; then \
-	   LC_ALL=C LANGUAGE=C \
+	   LC_ALL=C \
 	   $(elf-objpfx)ld.so --library-path $(rpath-link) \
 	   $(common-objpfx)iconv/iconvconfig \
 	     $(addprefix --prefix=,$(install_root)); \

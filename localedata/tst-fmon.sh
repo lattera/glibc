@@ -37,7 +37,7 @@ for cns in `cd ./tst-fmon-locales && ls tstfmon_*`; do
     fn=charmaps/ISO-8859-1
     ${run_program_prefix_before_env} \
     ${run_program_env} \
-    I18NPATH=. LANGUAGE=C \
+    I18NPATH=. \
     ${run_program_prefix_after_env} ${common_objpfx}locale/localedef \
     --quiet -i $cn -f $fn ${common_objpfx}localedata/$cns
 done

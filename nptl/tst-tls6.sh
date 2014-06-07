@@ -36,7 +36,7 @@ for aligned in a e f; do
   echo "preload tst-tls5mod{$aligned,b,c,d}.so" >> $logfile
   echo "===============" >> $logfile
   ${test_wrapper_env} \
-  ${run_program_env} LANG=C \
+  ${run_program_env} \
   LD_PRELOAD="`echo ${common_objpfx}nptl/tst-tls5mod{$aligned,b,c,d}.so \
 	      | sed 's/:$//;s/: /:/g'`" ${tst_tls5} >> $logfile || fail=1
   echo >> $logfile
@@ -44,7 +44,7 @@ for aligned in a e f; do
   echo "preload tst-tls5mod{b,$aligned,c,d}.so" >> $logfile
   echo "===============" >> $logfile
   ${test_wrapper_env} \
-  ${run_program_env} LANG=C \
+  ${run_program_env} \
   LD_PRELOAD="`echo ${common_objpfx}nptl/tst-tls5mod{b,$aligned,c,d}.so \
 	      | sed 's/:$//;s/: /:/g'`" ${tst_tls5} >> $logfile || fail=1
   echo >> $logfile
@@ -52,7 +52,7 @@ for aligned in a e f; do
   echo "preload tst-tls5mod{b,c,d,$aligned}.so" >> $logfile
   echo "===============" >> $logfile
   ${test_wrapper_env} \
-  ${run_program_env} LANG=C \
+  ${run_program_env} \
   LD_PRELOAD="`echo ${common_objpfx}nptl/tst-tls5mod{b,c,d,$aligned}.so \
 	      | sed 's/:$//;s/: /:/g'`" ${tst_tls5} >> $logfile || fail=1
   echo >> $logfile
@@ -61,7 +61,7 @@ done
 echo "preload tst-tls5mod{d,a,b,c,e}" >> $logfile
 echo "===============" >> $logfile
 ${test_wrapper_env} \
-${run_program_env} LANG=C \
+${run_program_env} \
 LD_PRELOAD="`echo ${common_objpfx}nptl/tst-tls5mod{d,a,b,c,e}.so \
 	    | sed 's/:$//;s/: /:/g'`" ${tst_tls5} >> $logfile || fail=1
 echo >> $logfile
@@ -69,7 +69,7 @@ echo >> $logfile
 echo "preload tst-tls5mod{d,a,b,e,f}" >> $logfile
 echo "===============" >> $logfile
 ${test_wrapper_env} \
-${run_program_env} LANG=C \
+${run_program_env} \
 LD_PRELOAD="`echo ${common_objpfx}nptl/tst-tls5mod{d,a,b,e,f}.so \
 	    | sed 's/:$//;s/: /:/g'`" ${tst_tls5} >> $logfile || fail=1
 echo >> $logfile

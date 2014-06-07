@@ -148,7 +148,6 @@ CFLAGS-tst_putwc.c = -DOBJPFX=\"$(objpfx)\"
 
 tst_wprintf2-ARGS = "Some Text"
 
-tst-widetext-ENV = LANGUAGE=C
 tst-fopenloc-ENV = MALLOC_TRACE=$(objpfx)tst-fopenloc.mtrace
 
 generated += tst-fopenloc.mtrace tst-fopenloc.check

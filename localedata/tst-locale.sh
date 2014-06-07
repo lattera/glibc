@@ -36,7 +36,7 @@ test_locale ()
     fi
     ${localedef_before_env} \
     ${run_program_env} \
-    I18NPATH=. LANGUAGE=C \
+    I18NPATH=. \
     ${localedef_after_env} --quiet -c -f $charmap -i $input \
       ${rep} ${common_objpfx}localedata/$out
 

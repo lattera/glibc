@@ -591,7 +591,6 @@ $(objpfx)neededtest3: $(libdl)
 $(objpfx)neededtest3.out: $(objpfx)neededobj1.so $(objpfx)neededobj2.so \
 			  $(objpfx)neededobj3.so $(objpfx)neededobj4.so
 
-neededtest4-ENV = LC_ALL=C LANGUAGE=C
 $(objpfx)neededtest4: $(libdl) $(objpfx)neededobj1.so
 $(objpfx)neededtest4.out: $(objpfx)neededobj5.so $(objpfx)neededobj6.so
 

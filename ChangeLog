@@ -1,3 +1,27 @@
+2014-06-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makefile (install): Don't set LANGUAGE.
+	* Makefile.in (install): Likewise.
+	* assert/Makefile (test-assert-ENV): Remove variable.
+	(test-assert-perr-ENV): Likewise.
+	* elf/Makefile (neededtest4-ENV): Likewise.
+	* iconvdata/Makefile ($(inst_gconvdir)/gconv-modules)
+	[$(cross-compiling) = no]: Don't set LANGUAGE.
+	* io/ftwtest-sh (LANG): Remove variable.
+	* libio/Makefile (tst-widetext-ENV): Likewise.
+	* manual/install.texi (Running make install): Don't refer to
+	environment settings for make install.
+	* INSTALL: Regenerated.
+	* nptl/tst-tls6.sh: Don't set LANG.
+	* posix/globtest.sh (LANG): Remove variable.
+	* string/Makefile (tester-ENV): Likewise.
+	(inl-tester-ENV): Likewise.
+	(noinl-tester-ENV): Likewise.
+	* sysdeps/s390/s390-64/Makefile ($(inst_gconvdir)/gconv-modules)
+	[$(cross-compiling) = no]: Don't set LANGUAGE.
+	* timezone/Makefile (build-testdata): Use $(built-program-cmd)
+	without explicit environment settings.
+
 2014-06-06  Roland McGrath  <roland@hack.frob.com>
 
 	* nptl/sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h: Moved ...
