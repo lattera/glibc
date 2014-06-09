@@ -102,6 +102,8 @@ typedef struct
 # define TLS_INIT_TP(tcbp) \
   ({ __asm __volatile ("ldc %0,gbr" : : "r" (tcbp)); 0; })
 
+# define TLS_DEFINE_INIT_TP(tp, pd) void *tp = (pd) + 1
+
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
   ({ tcbhead_t *__tcbp;							      \
