@@ -1,3 +1,73 @@
+2015-07-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #6544]
+	[BZ #11216]
+	[BZ #12836]
+	[BZ #13151]
+	[BZ #13152]
+	[BZ #14292]
+	* include/stdio.h (fmemopen): Remove hidden prototype.
+	(__fmemopen): Add new hidden prototype.
+	* libio/Makefile: Add oldfmemopen object.
+	* libio/Versions [GLIBC_2.22]: Add new fmemopen symbol.
+	* libio/fmemopen.c (__fmemopen): Function rewrite to be POSIX
+	compliance.
+	* libio/oldfmemopen.c: New file: old fmemopen implementation for
+	symbol compatibility.
+	* stdio-common/Makefile [tests]: Add new tst-fmemopen3.
+	* stdio-common/psiginfo.c [psiginfo]: Call __fmemopen instead of
+	fmemopen.
+	* stdio-common/tst-fmemopen3.c: New file: more fmemopen tests, focus
+	on append and read mode.
+	* sysdeps/unix/sysv/linux/aarch64/libc.abilist [GLIBC_2.22]: Add
+	fmemopen.
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist [GLIBC_2.22]: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libc.abilist [GLIBC_2.22]: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libc.abilist [GLIBC_2.22]: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libc.abilist [GLIBC_2.22]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist
+	[GLIBC_2.22]: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist [GLIBC_2.22]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libc.abilist [GLIBC_2.22]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist
+	[GLIBC_2.22]: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist
+	[GLIBC_2.22]: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist
+	[GLIBC_2.22]: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist
+	[GLIBC_2.22]: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist
+	[GLIBC_2.22]: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist
+	[GLIBC_2.22]: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc.abilist
+	[GLIBC_2.22]: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist [GLIBC_2.22]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist [GLIBC_2.22]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/libc.abilist [GLIBC_2.22]: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist
+	[GLIBC_2.22]: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist
+	[GLIBC_2.22]: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libc.abilist
+	[GLIBC_2.22]: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libc.abilist
+	[GLIBC_2.22]: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libc.abilist [GLIBC_2.22]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libc.abilist [GLIBC_2.22]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist [GLIBC_2.22]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libc.abilist [GLIBC_2.22]: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libc.abilist [GLIBC_2.22]: Likewise.
+
 2015-07-08  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #18643]

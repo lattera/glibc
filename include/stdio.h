@@ -197,6 +197,9 @@ gets (char *__str)
 }
 #  endif
 
+extern FILE * __fmemopen (void *buf, size_t len, const char *mode);
+libc_hidden_proto (__fmemopen)
+
 __END_DECLS
 # endif
 

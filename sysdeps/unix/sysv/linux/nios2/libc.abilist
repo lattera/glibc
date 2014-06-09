@@ -2121,3 +2121,6 @@ GLIBC_2.21
  xencrypt F
  xprt_register F
  xprt_unregister F
+GLIBC_2.22
+ GLIBC_2.22 A
+ fmemopen F

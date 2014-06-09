@@ -148,6 +148,10 @@ libc {
   GLIBC_2.4 {
     open_wmemstream;
   }
+  GLIBC_2.22 {
+    # f*
+    fmemopen;
+  }
   GLIBC_PRIVATE {
     # Used by NPTL and librt
     __libc_fatal;

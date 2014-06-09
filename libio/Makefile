@@ -46,7 +46,7 @@ routines	:=							      \
 	__fbufsize __freading __fwriting __freadable __fwritable __flbf	      \
 	__fpurge __fpending __fsetlocking				      \
 									      \
-	libc_fatal fmemopen
+	libc_fatal fmemopen oldfmemopen
 
 tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
 	tst_wprintf2 tst-widetext test-fmemopen tst-ext tst-ext2 \

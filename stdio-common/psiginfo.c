@@ -60,7 +60,7 @@ void
 psiginfo (const siginfo_t *pinfo, const char *s)
 {
   char buf[512];
-  FILE *fp = fmemopen (buf, sizeof (buf), "w");
+  FILE *fp = __fmemopen (buf, sizeof (buf), "w");
   if (fp == NULL)
     {
       const char *colon;
