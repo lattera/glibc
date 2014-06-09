@@ -112,6 +112,9 @@ typedef struct
 				    ((void *) (tcbp)) + TLS_TCB_OFFSET); \
     INTERNAL_SYSCALL_ERROR_P (_sys_result, err) ? "unknown error" : NULL; })
 
+# define TLS_DEFINE_INIT_TP(tp, pd) \
+  void *tp = (void *) (pd) + TLS_TCB_OFFSET + TLS_PRE_TCB_SIZE
+
 extern void * __m68k_read_tp (void);
 
 /* Return the address of the dtv for the current thread.  */
