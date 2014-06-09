@@ -1,5 +1,8 @@
 2014-06-09  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/arm/nptl/tls.h (TLS_DEFINE_INIT_TP): New macro.
+	* sysdeps/unix/sysv/linux/arm/createthread.c: File removed.
+
 	* nptl/sysdeps/pthread/createthread.c (TLS_DEFINE_INIT_TP): New macro,
 	if not already defined.
 	(do_clone): Use that in place of PREPARE_CREATE and TLS_VALUE.
