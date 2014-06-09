@@ -34,8 +34,7 @@ vpath %.h tests-mbwc
 
 
 test-srcs := collate-test xfrm-test tst-fmon tst-rpmatch tst-trans \
-	     tst-mbswcs1 tst-mbswcs2 tst-mbswcs3 tst-mbswcs4 tst-mbswcs5 \
-	     tst-ctype tst-wctype tst-langinfo tst-langinfo-static tst-numeric
+	     tst-ctype tst-langinfo tst-langinfo-static tst-numeric
 test-input := de_DE.ISO-8859-1 en_US.ISO-8859-1 da_DK.ISO-8859-1 \
 	      hr_HR.ISO-8859-2 sv_SE.ISO-8859-1 tr_TR.UTF-8 fr_FR.UTF-8 \
 	      si_LK.UTF-8
@@ -52,7 +51,7 @@ fmon-tests = n01y12 n02n40 n10y31 n11y41 n12y11 n20n32 n30y20 n41n00 \
 	     y01y10 y02n22 y22n42 y30y21 y32n31 y40y00 y42n21
 
 generated += $(test-input) $(test-output) sort-test.out tst-locale.out \
-	     tst-mbswcs.out tst-leaks.mtrace mtrace-tst-leaks.out
+	     tst-leaks.mtrace mtrace-tst-leaks.out
 generated-dirs += $(ld-test-names) tt_TT de_DE.437			\
 		  $(addprefix tstfmon_,$(fmon-tests))			\
 
@@ -73,8 +72,9 @@ locale_test_suite := tst_iswalnum tst_iswalpha tst_iswcntrl            \
 		     tst_wctype tst_wcwidth
 
 tests = $(locale_test_suite) tst-digits tst-setlocale bug-iconv-trans \
-	tst-leaks tst-mbswcs6 tst-xlocale1 tst-xlocale2 bug-usesetlocale \
-	tst-strfmon1 tst-sscanf bug-setlocale1 tst-setlocale2
+	tst-leaks tst-mbswcs1 tst-mbswcs2 tst-mbswcs3 tst-mbswcs4 tst-mbswcs5 \
+	tst-mbswcs6 tst-xlocale1 tst-xlocale2 bug-usesetlocale \
+	tst-strfmon1 tst-sscanf bug-setlocale1 tst-setlocale2 tst-wctype
 tests-static = bug-setlocale1-static
 tests += $(tests-static)
 ifeq (yes,$(build-shared))
@@ -93,8 +93,7 @@ tests: $(objdir)/iconvdata/gconv-modules
 
 tests-special += $(objpfx)sort-test.out $(objpfx)tst-fmon.out \
 		 $(objpfx)tst-locale.out $(objpfx)tst-rpmatch.out \
-		 $(objpfx)tst-trans.out $(objpfx)tst-mbswcs.out \
-		 $(objpfx)tst-ctype.out $(objpfx)tst-wctype.out \
+		 $(objpfx)tst-trans.out $(objpfx)tst-ctype.out \
 		 $(objpfx)tst-langinfo.out $(objpfx)tst-langinfo-static.out \
 		 $(objpfx)tst-numeric.out
 tests-static += tst-langinfo-static
@@ -189,20 +188,8 @@ $(objpfx)tst-trans.out: tst-trans.sh $(objpfx)tst-trans \
 		 '$(test-program-prefix-before-env)' \
 		 '$(test-program-prefix-after-env)'; \
 	$(evaluate-test)
-$(objpfx)tst-mbswcs.out: tst-mbswcs.sh $(objpfx)tst-mbswcs1 \
-			 $(objpfx)tst-mbswcs2 $(objpfx)tst-mbswcs3 \
-			 $(objpfx)tst-mbswcs4 $(objpfx)tst-mbswcs5 \
-			 $(addprefix $(objpfx),$(CTYPE_FILES))
-	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'; \
-	$(evaluate-test)
 $(objpfx)tst-ctype.out: tst-ctype.sh $(objpfx)tst-ctype \
 			$(objpfx)sort-test.out \
-			$(addprefix $(objpfx),$(CTYPE_FILES))
-	$(SHELL) $< $(common-objpfx) '$(test-program-cmd-before-env)' \
-		 '$(run-program-env)' '$(test-program-cmd-after-env)'; \
-	$(evaluate-test)
-$(objpfx)tst-wctype.out: tst-wctype.sh $(objpfx)tst-wctype \
-			$(objpfx)sort-test.out tst-wctype.input \
 			$(addprefix $(objpfx),$(CTYPE_FILES))
 	$(SHELL) $< $(common-objpfx) '$(test-program-cmd-before-env)' \
 		 '$(run-program-env)' '$(test-program-cmd-after-env)'; \
@@ -250,6 +237,7 @@ $(INSTALL-SUPPORTED-LOCALES): install-locales-dir
 	echo ' done'; \
 
 tst-setlocale-ENV = LC_ALL=ja_JP.EUC-JP
+tst-wctype-ENV = LC_ALL=ja_JP.EUC-JP
 
 tst-leaks-ENV = MALLOC_TRACE=$(objpfx)tst-leaks.mtrace
 $(objpfx)mtrace-tst-leaks.out: $(objpfx)tst-leaks.out

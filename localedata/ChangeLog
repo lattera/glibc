@@ -1,3 +1,18 @@
+2014-06-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makefile (test-srcs): Remove tst-mbswcs1, tst-mbswcs2,
+	tst-mbswcs3, tst-mbswcs4, tst-mbswcs5 and tst-wctype.
+	(generated): Remove tst-mbswcs.out.
+	(tests): Add tst-mbswcs1, tst-mbswcs2, tst-mbswcs3, tst-mbswcs4,
+	tst-mbswcs5 and tst-wctype.
+	(tests-special): Remove $(objpfx)tst-mbswcs.out and
+	$(objpfx)tst-wctype.out.
+	($(objpfx)tst-mbswcs.out): Remove rule.
+	($(objpfx)tst-wctype.out): Likewise.
+	(tst-wctype-ENV): New variable.
+	* tst-mbswcs.sh: Remove file.
+	* tst-wctype.sh: Likewise.
+
 2014-06-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* tst-fmon.sh: Don't set LANGUAGE.
