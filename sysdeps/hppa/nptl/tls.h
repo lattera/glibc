@@ -98,6 +98,9 @@ typedef struct
 # define TLS_INIT_TP(tcbp) \
   ({ __set_cr27(tcbp); NULL; })
 
+/* Value passed to 'clone' for initialization of the thread register.  */
+# define TLS_DEFINE_INIT_TP(tp, pd) void *tp = (pd) + 1
+
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
   ({ tcbhead_t *__tcbp = (tcbhead_t *)__get_cr27();	\
