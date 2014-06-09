@@ -1,5 +1,8 @@
 2014-06-09  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/mips/nptl/tls.h (TLS_DEFINE_INIT_TP): New macro.
+	* sysdeps/unix/sysv/linux/mips/nptl/createthread.c: File removed.
+
 	* sysdeps/arm/nptl/tls.h (TLS_DEFINE_INIT_TP): New macro.
 	* sysdeps/unix/sysv/linux/arm/createthread.c: File removed.
 

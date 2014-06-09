@@ -126,6 +126,10 @@ typedef struct
      INTERNAL_SYSCALL_ERROR_P (result_var, err)				\
        ? "unknown error" : NULL; })
 
+/* Value passed to 'clone' for initialization of the thread register.  */
+# define TLS_DEFINE_INIT_TP(tp, pd) \
+  void *tp = (void *) (pd) + TLS_TCB_OFFSET + TLS_PRE_TCB_SIZE
+
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
   (((tcbhead_t *) (READ_THREAD_POINTER () - TLS_TCB_OFFSET))[-1].dtv)
