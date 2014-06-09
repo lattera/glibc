@@ -192,6 +192,26 @@ union user_desc_init
 # endif
 #endif
 
+static inline void __attribute__ ((unused, always_inline))
+tls_fill_user_desc (union user_desc_init *desc,
+                    unsigned int entry_number,
+                    void *pd)
+{
+  desc->vals[0] = entry_number;
+  /* The 'base_addr' field.  Pointer to the TCB.  */
+  desc->vals[1] = (unsigned long int) pd;
+  /* The 'limit' field.  We use 4GB which is 0xfffff pages.  */
+  desc->vals[2] = 0xfffff;
+  /* Collapsed value of the bitfield:
+     .seg_32bit = 1
+     .contents = 0
+     .read_exec_only = 0
+     .limit_in_pages = 1
+     .seg_not_present = 0
+     .useable = 1 */
+  desc->vals[3] = 0x51;
+}
+
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
@@ -207,20 +227,8 @@ union user_desc_init
      /* New syscall handling support.  */				      \
      INIT_SYSINFO;							      \
 									      \
-     /* The 'entry_number' field.  Let the kernel pick a value.  */	      \
-     _segdescr.vals[0] = -1;						      \
-     /* The 'base_addr' field.  Pointer to the TCB.  */			      \
-     _segdescr.vals[1] = (unsigned long int) _thrdescr;			      \
-     /* The 'limit' field.  We use 4GB which is 0xfffff pages.  */	      \
-     _segdescr.vals[2] = 0xfffff;					      \
-     /* Collapsed value of the bitfield:				      \
-	  .seg_32bit = 1						      \
-	  .contents = 0							      \
-	  .read_exec_only = 0						      \
-	  .limit_in_pages = 1						      \
-	  .seg_not_present = 0						      \
-	  .useable = 1 */						      \
-     _segdescr.vals[3] = 0x51;						      \
+     /* Let the kernel pick a value for the 'entry_number' field.  */	      \
+     tls_fill_user_desc (&_segdescr, -1, _thrdescr);			      \
 									      \
      /* Install the TLS.  */						      \
      asm volatile (TLS_LOAD_EBX						      \
@@ -243,6 +251,15 @@ union user_desc_init
 									      \
      _result == 0 ? NULL						      \
      : "set_thread_area failed when setting up thread-local storage\n"; })
+
+# define TLS_DEFINE_INIT_TP(tp, pd)					      \
+  union user_desc_init _segdescr;					      \
+  /* Find the 'entry_number' field that the kernel selected in TLS_INIT_TP.   \
+     The first three bits of the segment register value select the GDT,	      \
+     ignore them.  We get the index from the value of the %gs register in     \
+     the current thread.  */						      \
+  tls_fill_user_desc (&_segdescr, TLS_GET_GS () >> 3, pd);		      \
+  const struct user_desc *tp = &_segdescr.desc
 
 
 /* Return the address of the dtv for the current thread.  */

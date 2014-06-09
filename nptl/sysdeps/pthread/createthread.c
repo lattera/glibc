@@ -30,10 +30,18 @@
 
 #define CLONE_SIGNAL		(CLONE_SIGHAND | CLONE_THREAD)
 
-/* Unless otherwise specified, the thread "register" is going to be
-   initialized with a pointer to the TCB.  */
-#ifndef TLS_VALUE
-# define TLS_VALUE pd
+/* The <tls.h> header should define the macro TLS_DEFINE_INIT_TP such that:
+	TLS_DEFINE_INIT_TP (VAR, PD);
+   Declares and initializes a variable VAR with the value that should
+   be passed to the OS thread creation function (e.g. clone) to initialize
+   its TLS state for the 'struct pthread *' PD.  */
+#ifndef TLS_DEFINE_INIT_TP
+/* For a transitional period while all the <tls.h> implementations are
+   getting updated, we define it using the old TLS_VALUE macro.  */
+# define TLS_DEFINE_INIT_TP(tp, pd) void *tp = TLS_VALUE
+# ifndef TLS_VALUE
+#  define TLS_VALUE pd
+# endif
 #endif
 
 #ifndef ARCH_CLONE
@@ -52,9 +60,7 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
 	  int clone_flags, int (*fct) (void *), STACK_VARIABLES_PARMS,
 	  int stopped)
 {
-#ifdef PREPARE_CREATE
-  PREPARE_CREATE;
-#endif
+  TLS_DEFINE_INIT_TP (tp, pd);
 
   if (__glibc_unlikely (stopped != 0))
     /* We make sure the thread does not run far by forcing it to get a
@@ -73,7 +79,7 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
   atomic_increment (&__nptl_nthreads);
 
   int rc = ARCH_CLONE (fct, STACK_VARIABLES_ARGS, clone_flags,
-		       pd, &pd->tid, TLS_VALUE, &pd->tid);
+		       pd, &pd->tid, tp, &pd->tid);
 
   if (__glibc_unlikely (rc == -1))
     {

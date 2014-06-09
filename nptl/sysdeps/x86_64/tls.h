@@ -164,6 +164,8 @@ typedef struct
     _result ? "cannot set %fs base address for thread-local storage" : 0;     \
   })
 
+# define TLS_DEFINE_INIT_TP(tp, pd) void *tp = (pd)
+
 
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \

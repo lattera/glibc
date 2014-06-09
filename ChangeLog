@@ -1,3 +1,14 @@
+2014-06-09  Roland McGrath  <roland@hack.frob.com>
+
+	* nptl/sysdeps/pthread/createthread.c (TLS_DEFINE_INIT_TP): New macro,
+	if not already defined.
+	(do_clone): Use that in place of PREPARE_CREATE and TLS_VALUE.
+	* nptl/sysdeps/x86_64/tls.h (TLS_DEFINE_INIT_TP): New macro.
+	* nptl/sysdeps/i386/tls.h (tls_fill_user_desc): New function.
+	(TLS_INIT_TP): Use it.
+	(TLS_DEFINE_INIT_TP): New macro.
+	* sysdeps/unix/sysv/linux/i386/createthread.c: File removed.
+
 2014-06-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/data/termios.h-data [POSIX] (IUCLC): Do not expect
