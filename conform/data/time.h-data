@@ -46,8 +46,10 @@ function int timespec_get (struct timespec *, int)
 symbol CLK_TCK
 # endif
 # if !defined XPG3 && !defined XPG4
+#  if !defined POSIX && !defined UNIX98
 constant CLOCK_PROCESS_CPUTIME_ID
 constant CLOCK_THREAD_CPUTIME_ID
+#  endif
 
 type {struct itimerspec}
 
@@ -56,7 +58,9 @@ element {struct itimerspec} {struct timespec} it_value
 
 constant CLOCK_REALTIME
 constant TIMER_ABSTIME
+#  if !defined POSIX && !defined UNIX98
 constant CLOCK_MONOTONIC
+#  endif
 
 type clockid_t
 type timer_t
@@ -116,7 +120,9 @@ variable {long int} timezone
 # endif
 variable {char*} tzname [2]
 
+# ifndef POSIX
 allow tm_*
+# endif
 allow clock_*
 allow timer_*
 allow it_*

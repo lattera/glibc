@@ -1,3 +1,33 @@
+2014-06-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/termios.h-data [POSIX] (IUCLC): Do not expect
+	constant.
+	[POSIX] (IXANY): Likewise.
+	[POSIX] (OLCUC): Likewise.
+	[POSIX || POSIX2008] (CBAUD): Do not allow.
+	[POSIX || POSIX2008] (DEFECHO): Likewise.
+	[POSIX || POSIX2008] (ECHOCTL): Likewise.
+	[POSIX || POSIX2008] (ECHOKE): Likewise.
+	[POSIX || POSIX2008] (ECHOPRT): Likewise.
+	[POSIX || POSIX2008] (EXTA): Likewise.
+	[POSIX || POSIX2008] (EXTB): Likewise.
+	[POSIX || POSIX2008] (FLUSHO): Likewise.
+	[POSIX || POSIX2008] (LOBLK): Likewise.
+	[POSIX || POSIX2008] (PENDIN): Likewise.
+	[POSIX || POSIX2008] (SWTCH): Likewise.
+	[POSIX || POSIX2008] (VDISCARD): Likewise.
+	[POSIX || POSIX2008] (VDSUSP): Likewise.
+	[POSIX || POSIX2008] (VLNEXT): Likewise.
+	[POSIX || POSIX2008] (VREPRINT): Likewise.
+	[POSIX || POSIX2008] (VSTATUS): Likewise.
+	[POSIX || POSIX2008] (VWERASE): Likewise.
+	(B*): Change to B[0123456789]*.
+	* conform/data/time.h-data [POSIX || UNIX98]
+	(CLOCK_PROCESS_CPUTIME_ID): Do not expect constant.
+	[POSIX || UNIX98] (CLOCK_THREAD_CPUTIME_ID): Likewise.
+	[POSIX || UNIX98] (CLOCK_MONOTONIC): Likewise.
+	[POSIX] (tm_*): Do not allow.
+
 2014-06-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makefile (install): Don't set LANGUAGE.

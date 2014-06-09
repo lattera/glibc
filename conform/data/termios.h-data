@@ -37,16 +37,18 @@ constant IGNPAR
 constant INLCR
 constant INPCK
 constant ISTRIP
-# if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
+# if !defined POSIX && !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
 constant IUCLC
 # endif
+# ifndef POSIX
 constant IXANY
+# endif
 constant IXOFF
 constant IXON
 constant PARMRK
 
 constant OPOST
-# if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
+# if !defined POSIX && !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
 constant OLCUC
 # endif
 # if !defined POSIX && !defined POSIX2008
@@ -148,6 +150,7 @@ function pid_t tcgetsid (int)
 function int tcsendbreak (int, int)
 function int tcsetattr (int, int, const struct termios*)
 
+#if !defined POSIX && !defined POSIX2008
 allow CBAUD
 allow DEFECHO
 allow ECHOCTL
@@ -165,12 +168,13 @@ allow VLNEXT
 allow VREPRINT
 allow VSTATUS
 allow VWERASE
+#endif
 
 allow c_*
 allow V*
 allow I*
 allow O*
 allow TC*
-allow B*
+allow B[0123456789]*
 allow *_t
 #endif
