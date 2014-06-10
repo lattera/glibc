@@ -23,3 +23,8 @@ sysdep_routines += dl-static
 sysdep-rtld-routines += dl-static
 endif
 endif
+
+ifeq ($(subdir),nptl)
+# pull in __syscall_error routine
+libpthread-routines += sysdep
+endif
