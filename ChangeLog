@@ -1,161 +1,161 @@
 2014-06-10  Chris Metcalf  <cmetcalf@tilera.com>
 
-        * sysdeps/unix/sysv/linux/tile/nptl/bits/pthreadtypes.h: Moved ...
-        * sysdeps/tile/nptl/bits/pthreadtypes.h: ... here.
-        * sysdeps/unix/sysv/linux/tile/nptl/bits/semaphore.h: Moved ...
-        * sysdeps/tile/nptl/bits/semaphore.h: ... here.
-        * sysdeps/unix/sysv/linux/tile/nptl/Makefile: Removed, merged into ...
-        * sysdeps/unix/sysv/linux/tile/Makefile: ... here.
-        * sysdeps/unix/sysv/linux/tile/nptl/clone.S: Moved ...
-        * sysdeps/unix/sysv/linux/tile/clone.S: ... here.
-        * sysdeps/unix/sysv/linux/tile/nptl/createthread.c: Moved ...
-        * sysdeps/unix/sysv/linux/tile/createthread.c: ... here.
-        * sysdeps/unix/sysv/linux/tile/nptl/lowlevellock.h: Moved ...
-        * sysdeps/unix/sysv/linux/tile/lowlevellock.h: ... here.
-        * sysdeps/unix/sysv/linux/tile/nptl/pt-vfork.S: Moved ...
-        * sysdeps/unix/sysv/linux/tile/pt-vfork.S: ... here.
-        * sysdeps/unix/sysv/linux/tile/nptl/sysdep-cancel.h: Moved ...
-        * sysdeps/unix/sysv/linux/tile/sysdep-cancel.h: ... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/c++-types.data:
+	* sysdeps/unix/sysv/linux/tile/nptl/bits/pthreadtypes.h: Moved ...
+	* sysdeps/tile/nptl/bits/pthreadtypes.h: ... here.
+	* sysdeps/unix/sysv/linux/tile/nptl/bits/semaphore.h: Moved ...
+	* sysdeps/tile/nptl/bits/semaphore.h: ... here.
+	* sysdeps/unix/sysv/linux/tile/nptl/Makefile: Removed, merged into ...
+	* sysdeps/unix/sysv/linux/tile/Makefile: ... here.
+	* sysdeps/unix/sysv/linux/tile/nptl/clone.S: Moved ...
+	* sysdeps/unix/sysv/linux/tile/clone.S: ... here.
+	* sysdeps/unix/sysv/linux/tile/nptl/createthread.c: Moved ...
+	* sysdeps/unix/sysv/linux/tile/createthread.c: ... here.
+	* sysdeps/unix/sysv/linux/tile/nptl/lowlevellock.h: Moved ...
+	* sysdeps/unix/sysv/linux/tile/lowlevellock.h: ... here.
+	* sysdeps/unix/sysv/linux/tile/nptl/pt-vfork.S: Moved ...
+	* sysdeps/unix/sysv/linux/tile/pt-vfork.S: ... here.
+	* sysdeps/unix/sysv/linux/tile/nptl/sysdep-cancel.h: Moved ...
+	* sysdeps/unix/sysv/linux/tile/sysdep-cancel.h: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/c++-types.data:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/c++-types.data:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/c++-types.data:
 	... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/ld.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/ld.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/ld.abilist: ... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libBrokenLocale.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/ld.abilist: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libBrokenLocale.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libBrokenLocale.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libBrokenLocale.abilist:
 	... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libanl.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libanl.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libanl.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libanl.abilist:
 	... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libc.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libc.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libc.abilist: ... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libcrypt.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libc.abilist: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libcrypt.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libcrypt.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libcrypt.abilist:
 	... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libdl.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libdl.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libdl.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libdl.abilist:
 	... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libm.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libm.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist: ... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libnsl.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libnsl.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libnsl.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libnsl.abilist:
 	... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libpthread.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libpthread.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libpthread.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libpthread.abilist:
 	... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libresolv.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libresolv.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libresolv.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libresolv.abilist:
 	... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/librt.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/librt.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/librt.abilist: ... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libthread_db.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/librt.abilist: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libthread_db.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libthread_db.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libthread_db.abilist:
 	... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libutil.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libutil.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libutil.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libutil.abilist:
 	... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/c++-types.data:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/c++-types.data:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/c++-types.data:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/c++-types.data:
 	... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/ld.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/ld.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/ld.abilist: ... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libBrokenLocale.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/ld.abilist: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libBrokenLocale.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libBrokenLocale.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libBrokenLocale.abilist:
 	... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libanl.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libanl.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libanl.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libanl.abilist:
 	... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libc.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libc.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libc.abilist: ... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libcrypt.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libc.abilist: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libcrypt.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libcrypt.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libcrypt.abilist:
 	... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libdl.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libdl.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libdl.abilist: ... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libm.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libdl.abilist: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libm.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist: ... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libnsl.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libnsl.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libnsl.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libnsl.abilist:
 	... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libpthread.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libpthread.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libpthread.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libpthread.abilist:
 	... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libresolv.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libresolv.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libresolv.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libresolv.abilist:
 	... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/librt.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/librt.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/librt.abilist: ... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libthread_db.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/librt.abilist: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libthread_db.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libthread_db.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libthread_db.abilist:
 	... here.
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libutil.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libutil.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libutil.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libutil.abilist:
 	... here.
-        * sysdeps/unix/sysv/linux/tile/tilepro/nptl/c++-types.data: Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilepro/c++-types.data: ... here.
-        * sysdeps/unix/sysv/linux/tile/tilepro/nptl/ld.abilist: Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilepro/ld.abilist: ... here.
-        * sysdeps/unix/sysv/linux/tile/tilepro/nptl/libBrokenLocale.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/c++-types.data: Moved ...
+	* sysdeps/unix/sysv/linux/tile/tilepro/c++-types.data: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/ld.abilist: Moved ...
+	* sysdeps/unix/sysv/linux/tile/tilepro/ld.abilist: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libBrokenLocale.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilepro/libBrokenLocale.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilepro/libBrokenLocale.abilist:
 	... here.
-        * sysdeps/unix/sysv/linux/tile/tilepro/nptl/libanl.abilist: Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilepro/libanl.abilist: ... here.
-        * sysdeps/unix/sysv/linux/tile/tilepro/nptl/libc.abilist: Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilepro/libc.abilist: ... here.
-        * sysdeps/unix/sysv/linux/tile/tilepro/nptl/libcrypt.abilist: Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilepro/libcrypt.abilist: ... here.
-        * sysdeps/unix/sysv/linux/tile/tilepro/nptl/libdl.abilist: Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilepro/libdl.abilist: ... here.
-        * sysdeps/unix/sysv/linux/tile/tilepro/nptl/libm.abilist: Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: ... here.
-        * sysdeps/unix/sysv/linux/tile/tilepro/nptl/libnsl.abilist: Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilepro/libnsl.abilist: ... here.
-        * sysdeps/unix/sysv/linux/tile/tilepro/nptl/libpthread.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libanl.abilist: Moved ...
+	* sysdeps/unix/sysv/linux/tile/tilepro/libanl.abilist: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libc.abilist: Moved ...
+	* sysdeps/unix/sysv/linux/tile/tilepro/libc.abilist: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libcrypt.abilist: Moved ...
+	* sysdeps/unix/sysv/linux/tile/tilepro/libcrypt.abilist: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libdl.abilist: Moved ...
+	* sysdeps/unix/sysv/linux/tile/tilepro/libdl.abilist: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libm.abilist: Moved ...
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libnsl.abilist: Moved ...
+	* sysdeps/unix/sysv/linux/tile/tilepro/libnsl.abilist: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libpthread.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilepro/libpthread.abilist: ... here.
-        * sysdeps/unix/sysv/linux/tile/tilepro/nptl/libresolv.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilepro/libpthread.abilist: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libresolv.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilepro/libresolv.abilist: ... here.
-        * sysdeps/unix/sysv/linux/tile/tilepro/nptl/librt.abilist: Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilepro/librt.abilist: ... here.
-        * sysdeps/unix/sysv/linux/tile/tilepro/nptl/libthread_db.abilist:
+	* sysdeps/unix/sysv/linux/tile/tilepro/libresolv.abilist: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/librt.abilist: Moved ...
+	* sysdeps/unix/sysv/linux/tile/tilepro/librt.abilist: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libthread_db.abilist:
 	Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilepro/libthread_db.abilist: ... here.
-        * sysdeps/unix/sysv/linux/tile/tilepro/nptl/libutil.abilist: Moved ...
-        * sysdeps/unix/sysv/linux/tile/tilepro/libutil.abilist: ... here.
-        * sysdeps/unix/sysv/linux/tile/nptl/vfork.S: Moved ...
-        * sysdeps/unix/sysv/linux/tile/vfork.S: ... here.
-        * sysdeps/unix/sysv/linux/tile/nptl/waitpid.S: Moved ...
-        * sysdeps/unix/sysv/linux/tile/waitpid.S: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libthread_db.abilist: ... here.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libutil.abilist: Moved ...
+	* sysdeps/unix/sysv/linux/tile/tilepro/libutil.abilist: ... here.
+	* sysdeps/unix/sysv/linux/tile/nptl/vfork.S: Moved ...
+	* sysdeps/unix/sysv/linux/tile/vfork.S: ... here.
+	* sysdeps/unix/sysv/linux/tile/nptl/waitpid.S: Moved ...
+	* sysdeps/unix/sysv/linux/tile/waitpid.S: ... here.
 
 2014-06-10  Wilco  <wdijkstr@arm.com>
 
