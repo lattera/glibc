@@ -1,3 +1,20 @@
+2014-06-10  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17042]
+	* sysdeps/i386/fpu/e_log2.S (__ieee754_log2): Take absolete value
+	when x - 1 is zero.
+	* sysdeps/i386/fpu/e_log2f.S (__ieee754_log2f): Likewise.
+	* sysdeps/i386/fpu/e_log2l.S (__ieee754_log2l): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_log2l.c (__ieee754_log2l): Return
+	0.0L for an argument of 1.0L.
+	* sysdeps/ieee754/ldbl-128ibm/e_log2l.c (__ieee754_log2l):
+	Likewise.
+	* sysdeps/x86_64/fpu/e_log2l.S (__ieee754_log2l): Take absolute
+	value when x - 1 is zero.
+	* math/libm-test.inc (log2_test): Use ALL_RM_TEST.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2014-06-09  Bernard Ogden  <bernie.ogden@linaro.org>
 
 	[BZ #15119]

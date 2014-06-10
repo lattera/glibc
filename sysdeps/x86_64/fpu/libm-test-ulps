@@ -1665,6 +1665,28 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
+Function: "log2_downward":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+
+Function: "log2_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "log2_upward":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 1
+ldouble: 1
+
 Function: "log_downward":
 float: 1
 ifloat: 1

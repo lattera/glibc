@@ -188,6 +188,9 @@ __ieee754_log2l (x)
   if (hx >= 0x7fff000000000000LL)
     return (x + x);
 
+  if (x == 1.0L)
+    return 0.0L;
+
 /* separate mantissa from exponent */
 
 /* Note, frexp is used so that denormal numbers
