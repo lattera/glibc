@@ -1,3 +1,8 @@
+2014-06-09  Bernard Ogden  <bernie.ogden@linaro.org>
+
+	[BZ #15119]
+	* ports/sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.c: Remove file.
+
 2014-06-09  Roland McGrath  <roland@hack.frob.com>
 
 	* nptl/sysdeps/sh/tls.h (TLS_DEFINE_INIT_TP): New macro.
