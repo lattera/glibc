@@ -1,3 +1,21 @@
+2014-06-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/sys/mman.h-data [POSIX] (size_t): Do not require
+	type.
+	[POSIX] (off_t): Likewise.
+	* conform/data/sys/stat.h-data (S_IRGRP): Require constant.
+	[POSIX] (S_ISBLK): Require macro.
+	[POSIX] (S_ISCHR): Likewise.
+	[POSIX] (S_ISDIR): Likewise.
+	[POSIX] (S_ISFIFO): Likewise.
+	[POSIX] (S_ISREG): Likewise.
+	[POSIX || XPG3 || XPG4 || UNIX98] (S_TYPEISTMO): Do not list
+	optional-macro.
+	* conform/data/sys/types.h-data [POSIX] (blkcnt_t): Do not require
+	type.
+	[POSIX] (time_t): Likewise.
+	[POSIX] (timer_t): Likewise.
+
 2014-06-11  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #17048]

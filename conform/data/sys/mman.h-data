@@ -39,8 +39,10 @@ optional-function int posix_typed_mem_get_info (int, struct posix_typed_mem_info
 optional-function int posix_typed_mem_open (const char*, int, int)
 # endif
 
+# ifndef POSIX
 type size_t
 type off_t
+# endif
 
 function int mlock (const void*, size_t)
 function int mlockall (int)
