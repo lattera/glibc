@@ -1,3 +1,8 @@
+2014-06-11  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/aarch64/nptl/tls.h (TLS_DEFINE_INIT_TP): New macro.
+	* sysdeps/unix/sysv/linux/aarch64/nptl/createthread.c: File removed.
+
 2014-06-11  Vidya Ranganathan  <vidya@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power7/strcmp.S: New file: Optimization.
