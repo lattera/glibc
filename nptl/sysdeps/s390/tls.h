@@ -133,6 +133,9 @@ typedef struct
     NULL;								      \
   })
 
+/* Value passed to 'clone' for initialization of the thread register.  */
+# define TLS_DEFINE_INIT_TP(tp, pd) void *tp = (pd)
+
 /* Return the address of the dtv for the current thread.  */
 #  define THREAD_DTV() \
   (((tcbhead_t *) __builtin_thread_pointer ())->dtv)
