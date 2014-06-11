@@ -38,9 +38,7 @@ ENTRY (__vfork)
 	 shli r13, r13, 31		/* Build 0x80000000. */
 	}
 	sub r12, zero, r12		/* Negate it.  */
-#ifndef PT_VFORK
 	CMOVEQZ r12, r12, r13		/* Replace zero pids.  */
-#endif
 	ST4 r11, r12			/* Store the temporary PID.  */
 
 	{
@@ -67,9 +65,7 @@ ENTRY (__vfork)
 	 CMPEQ r13, r12, r12		/* Test for that value. */
 	 sub r12, zero, r12		/* Re-negate it.  */
 	}
-#ifndef PT_VFORK
 	CMOVNEZ r12, r13, zero		/* Replace zero pids.  */
-#endif
 	ST4 r11, r12			/* Restore the PID.  */
 1:
 	BNEZ r1, 0f
@@ -78,3 +74,4 @@ PSEUDO_END (__vfork)
 libc_hidden_def (__vfork)
 
 weak_alias (__vfork, vfork)
+strong_alias (__vfork, __libc_vfork)
