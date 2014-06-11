@@ -1,3 +1,21 @@
+/* basic fmemopen interface testing.
+   Copyright (C) 2014 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -8,10 +26,24 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-int
-main (int argc, char **argv)
+static char *test_file;
+
+static void
+do_prepare (int argc, char *argv[])
 {
-  char *test_file;
+  /* Construct the test file name based on ARGV[0], which will be
+     an absolute file name in the build directory.  Don't touch the
+     source directory, which might be read-only.  */
+  if (asprintf (&test_file, "%s.test", argv[0]) < 0)
+    {
+      puts ("asprintf failed\n");
+      exit (EXIT_FAILURE);
+    }
+}
+
+static int
+do_test (void)
+{
   const char blah[] = "BLAH";
   FILE *fp;
   char *mmap_data;
@@ -19,17 +51,14 @@ main (int argc, char **argv)
   struct stat fs;
   const char *cp;
 
-  /* Construct the test file name based on ARGV[0], which will be
-     an absolute file name in the build directory.  Don't touch the
-     source directory, which might be read-only.  */
-  if (argc != 1 || asprintf (&test_file, "%s.test", argv[0]) < 0)
-    exit (99);
-
   /* setup the physical file, and use it */
   if ((fp = fopen (test_file, "w+")) == NULL)
-    exit (1);
+    return 1;
   if (fwrite (blah, 1, strlen (blah), fp) != strlen (blah))
-    exit (2);
+    {
+      fclose (fp);
+      return 2;
+    }
 
   rewind (fp);
   printf ("file: ");
@@ -41,7 +70,8 @@ main (int argc, char **argv)
 	{
 	  printf ("\ncharacter %td: '%c' instead of '%c'\n",
 		  cp - blah, ch, *cp);
-	  exit (1);
+	  fclose (fp);
+	  return 1;
 	}
       ++cp;
     }
@@ -49,33 +79,44 @@ main (int argc, char **argv)
   if (ferror (fp))
     {
       puts ("fp: error");
-      exit (1);
+      fclose (fp);
+      return 1;
     }
   if (feof (fp))
     printf ("fp: EOF\n");
   else
     {
       puts ("not EOF");
-      exit (1);
+      fclose (fp);
+      return 1;
     }
   fclose (fp);
 
   /* Now, mmap the file into a buffer, and do that too */
   if ((fd = open (test_file, O_RDONLY)) == -1)
-    exit (3);
+    {
+      printf ("open (%s, O_RDONLY) failed\n", test_file);
+      return 3;
+    }
   if (fstat (fd, &fs) == -1)
-    exit (4);
+    {
+      printf ("stat (%i)\n", fd);
+      return 4;
+    }
 
   if ((mmap_data = (char *) mmap (NULL, fs.st_size, PROT_READ,
 				  MAP_SHARED, fd, 0)) == MAP_FAILED)
     {
-      if (errno == ENOSYS)
-	exit (0);
-      exit (5);
+      printf ("mmap (NULL, %zu, PROT_READ, MAP_SHARED, %i, 0) failed\n",
+	      fs.st_size, fd);
+      return 5;
     }
 
   if ((fp = fmemopen (mmap_data, fs.st_size, "r")) == NULL)
-    exit (1);
+    {
+      printf ("fmemopen (%p, %zu) failed\n", mmap_data, fs.st_size);
+      return 1;
+    }
 
   printf ("mem: ");
   cp = blah;
@@ -86,7 +127,8 @@ main (int argc, char **argv)
 	{
 	  printf ("%td character: '%c' instead of '%c'\n",
 		  cp - blah, ch, *cp);
-	  exit (1);
+	  fclose (fp);
+	  return 1;
 	}
       ++cp;
     }
@@ -96,14 +138,16 @@ main (int argc, char **argv)
   if (ferror (fp))
     {
       puts ("fp: error");
-      exit (1);
+      fclose (fp);
+      return 1;
     }
   if (feof (fp))
     printf ("fp: EOF\n");
   else
     {
       puts ("not EOF");
-      exit (1);
+      fclose (fp);
+      return 1;
     }
 
   fclose (fp);
@@ -115,3 +159,7 @@ main (int argc, char **argv)
 
   return 0;
 }
+
+#define PREPARE(argc, argv) do_prepare (argc, argv)
+#define TEST_FUNCTION       do_test ()
+#include "../test-skeleton.c"

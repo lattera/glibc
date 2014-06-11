@@ -1,3 +1,8 @@
+2014-11-05  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* stdio-common/tst-fmemopen.c (do_test): Refactor to use
+	test-skeleton.c.
+
 2014-11-05  Will Newton  <will.newton@linaro.org>
 
 	* benchtests/Makefile: (bench-malloc): Add malloc thread
