@@ -168,6 +168,7 @@ do_test (int argc, char *argv[])
   char fd2name[18];
   char fd3name[18];
   char fd4name[18];
+  char *name3_copy;
   char *spargv[12];
   int i;
 
@@ -222,9 +223,15 @@ do_test (int argc, char *argv[])
    if (posix_spawn_file_actions_addclose (&actions, fd1) != 0)
      error (EXIT_FAILURE, errno, "posix_spawn_file_actions_addclose");
    /* We want to open the third file.  */
-   if (posix_spawn_file_actions_addopen (&actions, fd3, name3,
+   name3_copy = strdup (name3);
+   if (name3_copy == NULL)
+     error (EXIT_FAILURE, errno, "strdup");
+   if (posix_spawn_file_actions_addopen (&actions, fd3, name3_copy,
 					 O_RDONLY, 0666) != 0)
      error (EXIT_FAILURE, errno, "posix_spawn_file_actions_addopen");
+   /* Overwrite the name to check that a copy has been made.  */
+   memset (name3_copy, 'X', strlen (name3_copy));
+
    /* We dup the second descriptor.  */
    fd4 = MAX (2, MAX (fd1, MAX (fd2, fd3))) + 1;
    if (posix_spawn_file_actions_adddup2 (&actions, fd2, fd4) != 0)
@@ -253,6 +260,7 @@ do_test (int argc, char *argv[])
    /* Cleanup.  */
    if (posix_spawn_file_actions_destroy (&actions) != 0)
      error (EXIT_FAILURE, errno, "posix_spawn_file_actions_destroy");
+   free (name3_copy);
 
   /* Wait for the child.  */
   if (waitpid (pid, &status, 0) != pid)

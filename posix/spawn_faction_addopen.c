@@ -35,17 +35,24 @@ posix_spawn_file_actions_addopen (posix_spawn_file_actions_t *file_actions,
   if (fd < 0 || fd >= maxfd)
     return EBADF;
 
+  char *path_copy = strdup (path);
+  if (path_copy == NULL)
+    return ENOMEM;
+
   /* Allocate more memory if needed.  */
   if (file_actions->__used == file_actions->__allocated
       && __posix_spawn_file_actions_realloc (file_actions) != 0)
-    /* This can only mean we ran out of memory.  */
-    return ENOMEM;
+    {
+      /* This can only mean we ran out of memory.  */
+      free (path_copy);
+      return ENOMEM;
+    }
 
   /* Add the new value.  */
   rec = &file_actions->__actions[file_actions->__used];
   rec->tag = spawn_do_open;
   rec->action.open_action.fd = fd;
-  rec->action.open_action.path = path;
+  rec->action.open_action.path = path_copy;
   rec->action.open_action.oflag = oflag;
   rec->action.open_action.mode = mode;
 

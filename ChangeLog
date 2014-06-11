@@ -1,3 +1,16 @@
+2014-06-11  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #17048]
+	* posix/spawn_int.h (struct __spawn_action): Make the path string
+	non-const to support deallocation.
+	* posix/spawn_faction_addopen.c
+	(posix_spawn_file_actions_addopen): Make a copy of the pathname.
+	* posix/spawn_faction_destroy.c
+	(posix_spawn_file_actions_destroy): Adjust comment.  Deallocate
+	path in all spawn_do_open actions.
+	* posix/tst-spawn.c (do_test): Exercise the copy operation in
+	posix_spawn_file_actions_addopen.
+
 2014-06-11  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/unix/sysv/linux/tile/pt-vfork.c: New file.
