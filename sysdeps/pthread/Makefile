@@ -1,6 +1,6 @@
-# Copyright (C) 2002-2014 Free Software Foundation, Inc.
+# sysdeps makefile fragment for all pthread-supporting configurations.
+# Copyright (C) 2014 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
-# Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
 # The GNU C Library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -16,26 +16,8 @@
 # License along with the GNU C Library; if not, see
 # <http://www.gnu.org/licenses/>.
 
-ifeq ($(subdir),nptl)
-libpthread-sysdep_routines += errno-loc
-endif
-
-ifeq ($(subdir),rt)
-librt-sysdep_routines += timer_routines librt-cancellation
-CFLAGS-librt-cancellation.c += -fexceptions -fasynchronous-unwind-tables
-
 ifeq (yes,$(build-shared))
 $(objpfx)tst-timer: $(objpfx)librt.so $(shared-thread-library)
 else
 $(objpfx)tst-timer: $(objpfx)librt.a $(static-thread-library)
-endif
-
-ifeq ($(have-forced-unwind),yes)
-tests += tst-mqueue8x
-CFLAGS-tst-mqueue8x.c += -fexceptions
-endif
-endif
-
-ifeq ($(subdir),posix)
-CFLAGS-confstr.c += -DLIBPTHREAD_VERSION='"NPTL $(version)"'
 endif
