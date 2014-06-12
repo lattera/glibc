@@ -1,5 +1,8 @@
 2014-06-12  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/sparc/arch-fork.h: New file.
+	* nptl/sysdeps/unix/sysv/linux/sparc/fork.c: File removed.
+
 	* sysdeps/pthread/posix-timer.h: Include <list.h>.
 	(struct list_links): Type removed.
 	(struct thread_node, struct timer_node): Replace struct list_links

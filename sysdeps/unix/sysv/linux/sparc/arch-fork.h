@@ -1,4 +1,5 @@
-/* Copyright (C) 2003-2014 Free Software Foundation, Inc.
+/* ARCH_FORK definition for Linux fork implementation.  SPARC version.
+   Copyright (C) 2003-2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -24,5 +25,3 @@
 #define ARCH_FORK() \
   INLINE_CLONE_SYSCALL (CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD, \
 			0, NULL, NULL, &THREAD_SELF->tid)
-
-#include "../fork.c"
