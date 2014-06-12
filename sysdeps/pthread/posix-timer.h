@@ -19,13 +19,7 @@
 
 #include <limits.h>
 #include <signal.h>
-
-/* Double linked list.  */
-struct list_links
-{
-  struct list_links *next;
-  struct list_links *prev;
-};
+#include <list.h>
 
 
 /* Forward declaration.  */
@@ -35,11 +29,11 @@ struct timer_node;
 /* Definitions for an internal thread of the POSIX timer implementation.  */
 struct thread_node
 {
-  struct list_links links;
+  struct list_head links;
   pthread_attr_t attr;
   pthread_t id;
   unsigned int exists;
-  struct list_links timer_queue;
+  struct list_head timer_queue;
   pthread_cond_t cond;
   struct timer_node *current_timer;
   pthread_t captured;
@@ -50,7 +44,7 @@ struct thread_node
 /* Internal representation of a timer.  */
 struct timer_node
 {
-  struct list_links links;
+  struct list_head links;
   struct sigevent event;
   clockid_t clock;
   struct itimerspec value;
@@ -167,9 +161,9 @@ timespec_sub (struct timespec *diff, const struct timespec *left,
 
 /* We need one of the list functions in the other modules.  */
 static inline void
-list_unlink_ip (struct list_links *list)
+list_unlink_ip (struct list_head *list)
 {
-  struct list_links *lnext = list->next, *lprev = list->prev;
+  struct list_head *lnext = list->next, *lprev = list->prev;
 
   lnext->prev = lprev;
   lprev->next = lnext;

@@ -54,9 +54,9 @@ int __timer_init_failed;
 struct thread_node __timer_signal_thread_rclk;
 
 /* Lists to keep free and used timers and threads.  */
-struct list_links timer_free_list;
-struct list_links thread_free_list;
-struct list_links thread_active_list;
+struct list_head timer_free_list;
+struct list_head thread_free_list;
+struct list_head thread_active_list;
 
 
 #ifdef __NR_rt_sigqueueinfo
@@ -66,13 +66,7 @@ extern int __syscall_rt_sigqueueinfo (int, int, siginfo_t *);
 
 /* List handling functions.  */
 static inline void
-list_init (struct list_links *list)
-{
-  list->next = list->prev = list;
-}
-
-static inline void
-list_append (struct list_links *list, struct list_links *newp)
+list_append (struct list_head *list, struct list_head *newp)
 {
   newp->prev = list->prev;
   newp->next = list;
@@ -81,7 +75,7 @@ list_append (struct list_links *list, struct list_links *newp)
 }
 
 static inline void
-list_insbefore (struct list_links *list, struct list_links *newp)
+list_insbefore (struct list_head *list, struct list_head *newp)
 {
   list_append (list, newp);
 }
@@ -92,34 +86,34 @@ list_insbefore (struct list_links *list, struct list_links *newp)
  */
 
 static inline void
-list_unlink (struct list_links *list)
+list_unlink (struct list_head *list)
 {
-  struct list_links *lnext = list->next, *lprev = list->prev;
+  struct list_head *lnext = list->next, *lprev = list->prev;
 
   lnext->prev = lprev;
   lprev->next = lnext;
 }
 
-static inline struct list_links *
-list_first (struct list_links *list)
+static inline struct list_head *
+list_first (struct list_head *list)
 {
   return list->next;
 }
 
-static inline struct list_links *
-list_null (struct list_links *list)
+static inline struct list_head *
+list_null (struct list_head *list)
 {
   return list;
 }
 
-static inline struct list_links *
-list_next (struct list_links *list)
+static inline struct list_head *
+list_next (struct list_head *list)
 {
   return list->next;
 }
 
 static inline int
-list_isempty (struct list_links *list)
+list_isempty (struct list_head *list)
 {
   return list->next == list;
 }
@@ -127,14 +121,14 @@ list_isempty (struct list_links *list)
 
 /* Functions build on top of the list functions.  */
 static inline struct thread_node *
-thread_links2ptr (struct list_links *list)
+thread_links2ptr (struct list_head *list)
 {
   return (struct thread_node *) ((char *) list
 				 - offsetof (struct thread_node, links));
 }
 
 static inline struct timer_node *
-timer_links2ptr (struct list_links *list)
+timer_links2ptr (struct list_head *list)
 {
   return (struct timer_node *) ((char *) list
 				- offsetof (struct timer_node, links));
@@ -154,7 +148,7 @@ thread_init (struct thread_node *thread, const pthread_attr_t *attr, clockid_t c
     }
 
   thread->exists = 0;
-  list_init (&thread->timer_queue);
+  INIT_LIST_HEAD (&thread->timer_queue);
   pthread_cond_init (&thread->cond, 0);
   thread->current_timer = 0;
   thread->captured = pthread_self ();
@@ -170,9 +164,9 @@ init_module (void)
 {
   int i;
 
-  list_init (&timer_free_list);
-  list_init (&thread_free_list);
-  list_init (&thread_active_list);
+  INIT_LIST_HEAD (&timer_free_list);
+  INIT_LIST_HEAD (&thread_free_list);
+  INIT_LIST_HEAD (&thread_active_list);
 
   for (i = 0; i < TIMER_MAX; ++i)
     {
@@ -225,7 +219,7 @@ thread_deinit (struct thread_node *thread)
 struct thread_node *
 __timer_thread_alloc (const pthread_attr_t *desired_attr, clockid_t clock_id)
 {
-  struct list_links *node = list_first (&thread_free_list);
+  struct list_head *node = list_first (&thread_free_list);
 
   if (node != list_null (&thread_free_list))
     {
@@ -366,7 +360,7 @@ thread_func (void *arg)
 
   while (1)
     {
-      struct list_links *first;
+      struct list_head *first;
       struct timer_node *timer = NULL;
 
       /* While the timer queue is not empty, inspect the first node.  */
@@ -441,7 +435,7 @@ int
 __timer_thread_queue_timer (struct thread_node *thread,
 			    struct timer_node *insert)
 {
-  struct list_links *iter;
+  struct list_head *iter;
   int athead = 1;
 
   for (iter = list_first (&thread->timer_queue);
@@ -520,7 +514,7 @@ struct thread_node *
 __timer_thread_find_matching (const pthread_attr_t *desired_attr,
 			      clockid_t desired_clock_id)
 {
-  struct list_links *iter = list_first (&thread_active_list);
+  struct list_head *iter = list_first (&thread_active_list);
 
   while (iter != list_null (&thread_active_list))
     {
@@ -542,7 +536,7 @@ __timer_thread_find_matching (const pthread_attr_t *desired_attr,
 struct timer_node *
 __timer_alloc (void)
 {
-  struct list_links *node = list_first (&timer_free_list);
+  struct list_head *node = list_first (&timer_free_list);
 
   if (node != list_null (&timer_free_list))
     {

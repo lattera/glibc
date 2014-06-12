@@ -1,5 +1,15 @@
 2014-06-12  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/pthread/posix-timer.h: Include <list.h>.
+	(struct list_links): Type removed.
+	(struct thread_node, struct timer_node): Replace struct list_links
+	with struct list_head.
+	(list_unlink_ip): Likewise.
+	* sysdeps/pthread/timer_routines.c
+	(timer_free_list, thread_free_list, thread_active_list): Likewise.
+	(list_append, list_insbefore): Likewise.
+	(list_init): Function removed.
+	(thread_init, init_module): Use INIT_LIST_HEAD instead.
 	* sysdeps/nptl/Makefile: Move tst-timer bits to ...
 	* sysdeps/pthread/Makefile: ... here, new file.
 
