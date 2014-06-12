@@ -1,1 +1,1 @@
-#include "../i386/pthread_spin_init.c"
+#include <sysdeps/i386/nptl/pthread_spin_init.c>

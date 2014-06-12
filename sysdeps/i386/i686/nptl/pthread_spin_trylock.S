@@ -16,20 +16,5 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _TLS_H
-
-/* Additional definitions for <tls.h> on i686 and up.  */
-
-
-/* Macros to load from and store into segment registers.  We can use
-   the 32-bit instructions.  */
-#define TLS_GET_GS() \
-  ({ int __seg; __asm ("movl %%gs, %0" : "=q" (__seg)); __seg; })
-#define TLS_SET_GS(val) \
-  __asm ("movl %0, %%gs" :: "q" (val))
-
-
-/* Get the full set of definitions.  */
-#include "../tls.h"
-
-#endif	/* tls.h */
+#define HAVE_CMOV	1
+#include <sysdeps/i386/i486/nptl/pthread_spin_trylock.S>
