@@ -1287,7 +1287,7 @@ extern char *__strdup (const char *__string) __THROW __attribute_malloc__;
 			  __retval; }))					      \
 		  : __strdup (s)))
 
-#  if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
+#  if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
 #   define strdup(s) __strdup (s)
 #  endif
 # endif
@@ -1315,7 +1315,7 @@ extern char *__strndup (const char *__string, size_t __n)
 			  __retval; }))					      \
 		  : __strndup (s, n)))
 
-#  ifdef __USE_GNU
+#  ifdef __USE_XOPEN2K8
 #   define strndup(s, n) __strndup (s, n)
 #  endif
 # endif

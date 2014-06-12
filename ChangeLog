@@ -1,3 +1,7 @@
+2014-06-16  Andreas Schwab  <schwab@suse.de>
+
+	* string/bits/string2.h (strdup, strndup): Update feature guard.
+
 2014-06-14  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.
