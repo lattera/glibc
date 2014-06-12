@@ -1,5 +1,4 @@
-/* strcat version that uses fast strcpy/strlen.
-   Copyright (C) 1997-2014 Free Software Foundation, Inc.
+/* Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -9,25 +8,22 @@
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <http://www.gnu.org/licenses/ >.  */
 
 #include <string.h>
 
-#ifndef STRCAT
-# undef strcat
-# define STRCAT  strcat
+#define STRCAT __strcat_ppc
+#ifdef SHARED
+# undef libc_hidden_builtin_def
+# define libc_hidden_builtin_def(name) \
+  __hidden_ver1 (__strcat_ppc, __GI_strcat, __strcat_ppc);
 #endif
 
-/* Append SRC on the end of DEST.  */
-char *
-STRCAT(char *dest, const char *src)
-{
-  strcpy (dest + strlen (dest), src);
-  return dest;
-}
-libc_hidden_builtin_def (STRCAT)
+extern __typeof (strcat) __strcat_ppc attribute_hidden;
+
+#include <sysdeps/powerpc/strcat.c>

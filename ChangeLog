@@ -1,3 +1,16 @@
+2014-07-02  Vidya Ranganathan  <vidya@linux.vnet.ibm.com>
+	    Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/strcat.c: Using macro to redefine symbol name.
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add strcat multiarch
+	optimizations.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c:
+	(__libc_ifunc_impl_list): Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcat.c: New file:
+	multiarch strcat for PPC64.
+	* sysdeps/powerpc/powerpc64/multiarch/strcat-ppc64.c: New file/
+	* sysdeps/powerpc/powerpc64/multiarch/strcat-power7.c: New file.
+
 2014-07-02  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/dl-sysdep.c: Include <sys/param.h>.
