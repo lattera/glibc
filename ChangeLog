@@ -1,3 +1,7 @@
+2014-06-12  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* posix/spawn_faction_addopen.c: Include string.h.
+
 2014-06-11  Roland McGrath  <roland@hack.frob.com>
 
 	* nptl/sysdeps/x86_64/64/shlib-versions: Moved ...
