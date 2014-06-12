@@ -1,5 +1,7 @@
 2014-06-12  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/sysdeps/sparc/tls.h (TLS_DEFINE_INIT_TP): New macro.
+
 	* sysdeps/unix/sysv/linux/sparc/arch-fork.h: New file.
 	* nptl/sysdeps/unix/sysv/linux/sparc/fork.c: File removed.
 

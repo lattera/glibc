@@ -110,6 +110,9 @@ register struct pthread *__thread_self __asm__("%g7");
 # define TLS_INIT_TP(descr) \
   (__thread_self = (__typeof (__thread_self)) (descr), NULL)
 
+/* Value passed to 'clone' for initialization of the thread register.  */
+# define TLS_DEFINE_INIT_TP(tp, pd) void *tp = (pd)
+
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
   (((tcbhead_t *) __thread_self)->dtv)
