@@ -19,7 +19,7 @@
 #ifndef _X32_TLS_H
 #define _X32_TLS_H	1
 
-#include <sysdeps/x86_64/tls.h>
+#include_next <tls.h>
 
 #ifndef __ASSEMBLER__
 
