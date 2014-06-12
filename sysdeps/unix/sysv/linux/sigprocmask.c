@@ -17,12 +17,13 @@
 
 #include <errno.h>
 #include <signal.h>
-#include <string.h>	/* Neede for string function builtin redirection.  */
+#include <string.h>  /* Needed for string function builtin redirection.  */
 #include <unistd.h>
 
 #include <sysdep.h>
 #include <sys/syscall.h>
 
+#include <nptl/pthreadP.h>              /* SIGCANCEL, SIGSETXID */
 #include <kernel-features.h>
 
 

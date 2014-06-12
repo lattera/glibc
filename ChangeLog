@@ -1,5 +1,8 @@
 2014-06-12  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/sigprocmask.c: Include <nptl/pthreadP.h>.
+	* nptl/sysdeps/pthread/sigprocmask.c: File removed.
+
 	* nptl/sysdeps/i386/i486/pthread_spin_trylock.S: Moved ...
 	* sysdeps/i386/i486/nptl/pthread_spin_trylock.S: ... here.
 	* nptl/sysdeps/i386/i586/pthread_spin_trylock.S: Moved ...
