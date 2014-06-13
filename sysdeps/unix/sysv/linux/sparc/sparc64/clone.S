@@ -77,7 +77,6 @@ END(__clone)
 
 	.type __thread_start,@function
 __thread_start:
-#ifdef RESET_PID
 	sethi	%hi(CLONE_THREAD), %l0
 	andcc	%g4, %l0, %g0
 	bne,pt	%icc, 1f
@@ -89,7 +88,6 @@ __thread_start:
 2:	st	%o0,[%g7 + PID]
 	st	%o0,[%g7 + TID]
 1:
-#endif
 	mov	%g0, %fp	/* terminate backtrace */
 	call	%g2
 	 mov	%g3,%o0

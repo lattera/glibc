@@ -20,25 +20,30 @@
 #include <tcb-offsets.h>
 
 	.text
-	.globl	__syscall_error
+	.globl		__syscall_error
 ENTRY(__vfork)
 	ld	[%g7 + PID], %o5
-	sub	%g0, %o5, %o4
-	st	%o4, [%g7 + PID]
+	cmp	%o5, 0
+	bne	1f
+	 sub	%g0, %o5, %o4
+	sethi	%hi(0x80000000), %o4
+1:	st	%o4, [%g7 + PID]
 
 	LOADSYSCALL(vfork)
-	ta	0x6d
-	bcc,pt	%xcc, 2f
+	ta	0x10
+	bcc	2f
 	 mov	%o7, %g1
 	st	%o5, [%g7 + PID]
 	call	__syscall_error
 	 mov	%g1, %o7
 2:	sub	%o1, 1, %o1
 	andcc	%o0, %o1, %o0
-	bne,a,pt %icc, 1f
+	bne,a	1f
 	 st	%o5, [%g7 + PID]
 1:	retl
 	 nop
 END(__vfork)
 
+libc_hidden_def (__vfork)
 weak_alias (__vfork, vfork)
+strong_alias (__vfork, __libc_vfork)

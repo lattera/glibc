@@ -1,3 +1,21 @@
+2014-06-13  David S. Miller  <davem@davemloft.net>
+
+	* nptl/sysdeps/unix/sysv/linux/sparc/sparc32/clone.S: Delete.
+	* nptl/sysdeps/unix/sysv/linux/sparc/sparc32/pt-vfork.S: Delete.
+	* nptl/sysdeps/unix/sysv/linux/sparc/sparc32/vfork.S: Moved ...
+	* sysdeps/unix/sysv/linux/sparc/sparc32/vfork.S: ... here.
+	* nptl/sysdeps/unix/sysv/linux/sparc/sparc64/clone.S: Delete.
+	* nptl/sysdeps/unix/sysv/linux/sparc/sparc64/pt-vfork.S: Delete.
+	* nptl/sysdeps/unix/sysv/linux/sparc/sparc64/vfork.S: Moved ...
+	* sysdeps/unix/sysv/linux/sparc/sparc64/vfork.S: ... here.
+	* sysdeps/unix/sysv/linux/sparc/fork.S: Delete.
+	* sysdeps/unix/sysv/linux/sparc/pt-vfork.S: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S (__thread_start):
+	Remove RESET_PID cpp guards.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S (__thread_start):
+	Remove RESET_PID cpp guards.
+	* sysdeps/unix/sysv/linux/sparc/vfork.S: Delete.
+
 2014-06-13  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/jmpbuf-unwind.h (_JMPBUF_UNWINDS, _jmpbuf_sp): Cast
