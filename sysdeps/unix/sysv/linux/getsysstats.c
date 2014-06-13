@@ -126,13 +126,13 @@ next_line (int fd, char *const buffer, char **cp, char **re,
 int
 __get_nprocs (void)
 {
-  static int cached_result;
+  static int cached_result = -1;
   static time_t timestamp;
 
   time_t now = time (NULL);
   time_t prev = timestamp;
   atomic_read_barrier ();
-  if (now == prev)
+  if (now == prev && cached_result > -1)
     return cached_result;
 
   /* XXX Here will come a test for the new system call.  */
