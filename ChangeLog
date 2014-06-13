@@ -1,3 +1,8 @@
+2014-06-13  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/jmpbuf-unwind.h (_JMPBUF_UNWINDS, _jmpbuf_sp): Cast
+	__sp to uintptr_t.
+
 2014-06-13  Andi Kleen  <ak@linux.intel.com>
 
         * sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_rdlock.S: Remove.
