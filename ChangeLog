@@ -1,3 +1,7 @@
+2014-06-14 Andi Kleen  <ak@linux.intel.com>
+
+	* sysdeps/generic/elide.h: New file.
+
 2014-06-13  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* Makefile (installed-headers): Adjust path of pthread.h header.
