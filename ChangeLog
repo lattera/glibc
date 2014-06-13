@@ -1,3 +1,8 @@
+2014-06-13  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/s390/arch-fork.h: New file.
+	* nptl/sysdeps/unix/sysv/linux/s390/fork.c: File removed.
+
 2014-06-13  David S. Miller  <davem@davemloft.net>
 
 	* nptl/sysdeps/unix/sysv/linux/sparc/sparc32/clone.S: Delete.
