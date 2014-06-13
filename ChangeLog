@@ -1,3 +1,8 @@
+2014-06-19  Will Newton  <will.newton@linaro.org>
+
+	* malloc/malloc.c (systrim): If extra is zero then return
+	early.
+
 2014-06-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* benchtests/Makefile ($(objpfx)bench-%.c): Remove $(.).

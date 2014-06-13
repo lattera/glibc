@@ -2749,6 +2749,9 @@ systrim (size_t pad, mstate av)
   /* Release in pagesize units, keeping at least one page */
   extra = (top_area - pad) & ~(pagesz - 1);
 
+  if (extra == 0)
+    return 0;
+
   /*
      Only proceed if end of memory is where we last set it.
      This avoids problems if there were foreign sbrk calls.
