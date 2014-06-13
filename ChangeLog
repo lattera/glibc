@@ -79,7 +79,7 @@
 2014-06-13  Meador Inge  <meadori@codesourcery.com>
 
 	[BZ #16996]
-	sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs): Ensure
+	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs): Ensure
 	that the cached result has been set before returning it.
 
 2014-06-12  Roland McGrath  <roland@hack.frob.com>
