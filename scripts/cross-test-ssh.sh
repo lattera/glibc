@@ -61,7 +61,7 @@ that the shell on the build machine has already done them
 appropriately."
 
 ssh='ssh'
-timeoutfactor=
+timeoutfactor=$TIMEOUTFACTOR
 while [ $# -gt 0 ]; do
   case "$1" in
 
