@@ -22,9 +22,7 @@
 #include <sysdep.h>
 #define _ERRNO_H	1
 #include <bits/errno.h>
-#ifdef RESET_PID
 #include <tls.h>
-#endif
 
 #define CLONE_VM      0x00000100
 #define CLONE_THREAD  0x00010000
@@ -101,7 +99,6 @@ thread_start:
 	cfi_startproc
 	cfi_undefined (pc)	/* Mark end of stack */
 	subl	%fp, %fp	/* terminate the stack frame */
-#ifdef RESET_PID
 	/* Check and see if we need to reset the PID.  */
 	movel	%d1, %a1
 	andl	#CLONE_THREAD, %d1
@@ -121,7 +118,6 @@ gotpid:
 	movel	%d0, TID_OFFSET(%a0)
 	movel	(%sp)+, %a0
 donepid:
-#endif
 	jsr	(%a0)
 	movel	%d0, %d1
 	movel	#SYS_ify (exit), %d0

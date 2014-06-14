@@ -1,5 +1,9 @@
 2014-06-14  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* sysdeps/unix/sysv/linux/m68k/clone.S: Deconditionalize the code
+	that was previously under [RESET_PID].
+	* sysdeps/unix/sysv/linux/m68k/nptl/clone.S: Remove file.
+
 	* sysdeps/unix/sysv/linux/m68k/pt-vfork.c: New file.
 	* sysdeps/unix/sysv/linux/m68k/nptl/pt-vfork.S: Remove file.
 	* sysdeps/unix/sysv/linux/m68k/vfork.S: Include <tcb-offsets.h>.
