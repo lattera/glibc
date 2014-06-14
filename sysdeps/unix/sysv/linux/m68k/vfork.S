@@ -20,14 +20,7 @@
 #define _ERRNO_H	1
 #include <bits/errno.h>
 #include <kernel-features.h>
-
-#ifndef SAVE_PID
-#define SAVE_PID
-#endif
-
-#ifndef RESTORE_PID
-#define RESTORE_PID
-#endif
+#include <tcb-offsets.h>
 
 /* Clone the calling process, but without copying the whole address space.
    The calling process is suspended until the new process exits or is
@@ -36,10 +29,17 @@
 
 ENTRY (__vfork)
 
-	/* SAVE_PID clobbers call-clobbered registers and
-	   saves data in D1 and A1.  */
-
-	SAVE_PID
+	/* Save the TCB-cached PID away in %d1, and then negate the TCB
+	   field.  But if it's zero, set it to 0x80000000 instead.  See
+	   raise.c for the logic that relies on this value.  */
+	jbsr	__m68k_read_tp@PLTPC
+	movel	%a0, %a1
+	movel	PID_OFFSET(%a1), %d0
+	movel	%d0, %d1
+	negl	%d0
+	jne	1f
+	movel	#0x80000000, %d0
+1:	movel	%d0, PID_OFFSET(%a1)
 
 	/* Pop the return PC value into A0.  */
 	movel	%sp@+, %a0
@@ -50,7 +50,13 @@ ENTRY (__vfork)
 	movel	#SYS_ify (vfork), %d0
 	trap	#0
 
-	RESTORE_PID
+	/* Restore the original value of the TCB cache of the PID, if we're
+	   the parent.  But in the child (syscall return value equals zero),
+	   leave things as they are.  */
+	tstl	%d0
+	jeq	1f
+	movel	%d1, PID_OFFSET(%a1)
+1:
 
 	tstl	%d0
 	jmi	.Lerror		/* Branch forward if it failed.  */
@@ -72,3 +78,4 @@ PSEUDO_END (__vfork)
 libc_hidden_def (__vfork)
 
 weak_alias (__vfork, vfork)
+strong_alias (__vfork, __libc_vfork)

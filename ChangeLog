@@ -1,3 +1,12 @@
+2014-06-14  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/m68k/pt-vfork.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/nptl/pt-vfork.S: Remove file.
+	* sysdeps/unix/sysv/linux/m68k/vfork.S: Include <tcb-offsets.h>.
+	(__vfork): Incorporate save/restore of PID from nptl/vfork.S here.
+	(__libc_vfork): New strong alias.
+	* sysdeps/unix/sysv/linux/m68k/nptl/vfork.S: Remove file.
+
 2014-06-14 Andi Kleen  <ak@linux.intel.com>
 
 	* sysdeps/generic/elide.h: New file.
