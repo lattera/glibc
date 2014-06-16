@@ -11,6 +11,7 @@ RCSID("$NetBSD: $")
 ENTRY(__ceill)
 	fldt	4(%esp)
 	subl	$8,%esp
+	cfi_adjust_cfa_offset (8)
 
 	fstcw	4(%esp)			/* store fpu control word */
 
@@ -28,6 +29,7 @@ ENTRY(__ceill)
 	fldcw	4(%esp)			/* restore original control word */
 
 	addl	$8,%esp
+	cfi_adjust_cfa_offset (-8)
 	ret
 END (__ceill)
 weak_alias (__ceill, ceill)

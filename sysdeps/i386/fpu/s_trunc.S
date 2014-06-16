@@ -22,6 +22,7 @@
 ENTRY(__trunc)
 	fldl	4(%esp)
 	subl	$8, %esp
+	cfi_adjust_cfa_offset (8)
 	fstcw	4(%esp)
 	movl	$0xc00, %edx
 	orl	4(%esp), %edx
@@ -30,6 +31,7 @@ ENTRY(__trunc)
 	frndint
 	fldcw	4(%esp)
 	addl	$8, %esp
+	cfi_adjust_cfa_offset (-8)
 	ret
 END(__trunc)
 weak_alias (__trunc, trunc)

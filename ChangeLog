@@ -1,3 +1,16 @@
+2014-06-16  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16681]
+	* sysdeps/i386/fpu/s_ceil.S (__ceil): Add CFI.
+	* sysdeps/i386/fpu/s_ceilf.S (__ceilf): Likewise.
+	* sysdeps/i386/fpu/s_ceill.S (__ceill): Likewise.
+	* sysdeps/i386/fpu/s_floor.S (__floor): Likewise.
+	* sysdeps/i386/fpu/s_floorf.S (__floorf): Likewise.
+	* sysdeps/i386/fpu/s_floorl.S (__floorl): Likewise.
+	* sysdeps/i386/fpu/s_trunc.S (__trunc): Likewise.
+	* sysdeps/i386/fpu/s_truncf.S (__truncf): Likewise.
+	* sysdeps/i386/fpu/s_truncl.S (__truncl): Likewise.
+
 2014-06-17  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/m680x0/fpu/libm-test-ulps: Update.

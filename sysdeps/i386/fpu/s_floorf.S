@@ -10,6 +10,7 @@ RCSID("$NetBSD: s_floorf.S,v 1.3 1995/05/09 00:04:32 jtc Exp $")
 ENTRY(__floorf)
 	flds	4(%esp)
 	subl	$8,%esp
+	cfi_adjust_cfa_offset (8)
 
 	fstcw	4(%esp)			/* store fpu control word */
 
@@ -27,6 +28,7 @@ ENTRY(__floorf)
 	fldcw	4(%esp)			/* restore original control word */
 
 	addl	$8,%esp
+	cfi_adjust_cfa_offset (-8)
 	ret
 END (__floorf)
 weak_alias (__floorf, floorf)
