@@ -25,7 +25,7 @@
 # define HUGE_VALL	(__builtin_huge_vall ())
 #elif __GNUC_PREREQ(2,96)
 # define HUGE_VALL	(__extension__ 0x1.0p32767L)
-#elif defined__GNUC__
+#elif defined __GNUC__
 
 # define HUGE_VALL					\
   (__extension__					\
