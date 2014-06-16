@@ -1,3 +1,7 @@
+2014-06-17  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/m680x0/fpu/libm-test-ulps: Update.
+
 2014-06-16  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/m680x0/bits/huge_vall.h: Fix missing space after
