@@ -1,3 +1,9 @@
+2014-06-16  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #17058]
+	* nptl/tst-setuid2.c (do_test): Fix tautological comparison in
+	non-executed part of the test.
+
 2014-06-16  Andreas Schwab  <schwab@suse.de>
 
 	* string/bits/string2.h (strdup, strndup): Update feature guard.

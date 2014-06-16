@@ -135,7 +135,7 @@ do_test (void)
 
   /* If we get here, check that the kernel did the right thing. */
   run_on_thread (get_thread_ids);
-  if (ruid != 1001 || euid != 1002 || euid != 1003)
+  if (ruid != 1001 || euid != 1002 || suid != 1003)
     FAIL ("unexpected UIDs after setuid: %ld, %ld, %ld",
 	  (long) ruid, (long) euid, (long) suid);
   return 0;
