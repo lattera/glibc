@@ -110,74 +110,72 @@
 
 2014-06-13  Andi Kleen  <ak@linux.intel.com>
 
-        * sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_rdlock.S: Remove.
-        * sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedrdlock.S: dito.
-        * sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedwrlock.S: dito.
-        * sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_unlock.S: dito.
-        * sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_wrlock.S: dito.
-        * sysdeps/unix/sysv/linux/i386/i586/pthread_rwlock_rdlock.S: dito.
-        * sysdeps/unix/sysv/linux/i386/i586/pthread_rwlock_timedrdlock.S: dito.
-        * sysdeps/unix/sysv/linux/i386/i586/pthread_rwlock_timedwrlock.S: dito.
-        * sysdeps/unix/sysv/linux/i386/i586/pthread_rwlock_unlock.S: dito.
-        * sysdeps/unix/sysv/linux/i386/i586/pthread_rwlock_wrlock.S: dito.
-        * sysdeps/unix/sysv/linux/i386/i686/pthread_rwlock_rdlock.S: dito.
-        * sysdeps/unix/sysv/linux/i386/i686/pthread_rwlock_timedrdlock.S: dito.
-        * sysdeps/unix/sysv/linux/i386/i686/pthread_rwlock_timedwrlock.S: dito.
-        * sysdeps/unix/sysv/linux/i386/i686/pthread_rwlock_unlock.S: dito.
-        * sysdeps/unix/sysv/linux/i386/i686/pthread_rwlock_wrlock.S: dito.
-        * sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_rdlock.S: dito.
-        * sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedrdlock.S: dito.
-        * sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedwrlock.S: dito.
-        * sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_unlock.S: dito.
-        * sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_wrlock.S: dito.
-
-2014-06-13  Andi Kleen  <ak@linux.intel.com>
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_rdlock.S: Remove.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedrdlock.S: dito.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedwrlock.S: dito.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_unlock.S: dito.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_wrlock.S: dito.
+	* sysdeps/unix/sysv/linux/i386/i586/pthread_rwlock_rdlock.S: dito.
+	* sysdeps/unix/sysv/linux/i386/i586/pthread_rwlock_timedrdlock.S: dito.
+	* sysdeps/unix/sysv/linux/i386/i586/pthread_rwlock_timedwrlock.S: dito.
+	* sysdeps/unix/sysv/linux/i386/i586/pthread_rwlock_unlock.S: dito.
+	* sysdeps/unix/sysv/linux/i386/i586/pthread_rwlock_wrlock.S: dito.
+	* sysdeps/unix/sysv/linux/i386/i686/pthread_rwlock_rdlock.S: dito.
+	* sysdeps/unix/sysv/linux/i386/i686/pthread_rwlock_timedrdlock.S: dito.
+	* sysdeps/unix/sysv/linux/i386/i686/pthread_rwlock_timedwrlock.S: dito.
+	* sysdeps/unix/sysv/linux/i386/i686/pthread_rwlock_unlock.S: dito.
+	* sysdeps/unix/sysv/linux/i386/i686/pthread_rwlock_wrlock.S: dito.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_rdlock.S: dito.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedrdlock.S: dito.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedwrlock.S: dito.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_unlock.S: dito.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_wrlock.S: dito.
 
 	* nptl/pthread_rwlock_rdlock.c: Include elide.h.
-        (pthread_rwlock_rdlock): Add elision.
-        * nptl/pthread_rwlock_wrlock.c: Include elide.h.
-        (pthread_rwlock_wrlock): Add elision.
-        * nptl/pthread_rwlock_trywrlock.c: Include elide.h.
-        (pthread_rwlock_trywrlock): Add elision.
-        * nptl/pthread_rwlock_tryrdlock.c: Include elide.h.
-        (pthread_rwlock_tryrdlock): Add elision.
-        * nptl/pthread_rwlock_unlock.c: Include elide.h.
-        (pthread_rwlock_tryrdlock): Add elision unlock.
-        * nptl/sysdeps/pthread/pthread.h:
-        (__PTHREAD_RWLOCK_ELISION_EXTRA): Handle new define
-        (PTHREAD_RWLOCK_INITIALIZER,
-        PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP):
-        Handle new elision field.
-        * sysdeps/x86/nptl/elide.h: New file. Add generic elision macros.
-        * sysdeps/arm/nptl/bits/pthreadtypes.h
-        (__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
-        * sysdeps/sh/nptl/bits/pthreadtypes.h
-        (__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
-        * sysdeps/tile/nptl/bits/pthreadtypes.h
-        (__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
-        * sysdeps/a/nptl/bits/pthreadtypes.h
-        (__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
-        * sysdeps/unix/sysv/linux/aarch64/nptl/bits/pthreadtypes.h
-        (__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
-        * sysdeps/unix/sysv/linux/alpha/nptl/bits/pthreadtypes.h
-        (__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
-        * sysdeps/unix/sysv/linux/hppa/nptl/bits/pthreadtypes.h
-        (__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
-        * sysdeps/unix/sysv/linux/ia64/nptl/bits/pthreadtypes.h
-        (__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
-        * sysdeps/unix/sysv/linux/m68k/nptl/bits/pthreadtypes.h
-        (__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
-        * sysdeps/unix/sysv/linux/microblaze/nptl/bits/pthreadtypes.h
-        (__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
-        * sysdeps/unix/sysv/linux/mips/nptl/bits/pthreadtypes.h
-        (__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
-        * sysdeps/unix/sysv/linux/powerpc/nptl/bits/pthreadtypes.h
-        (__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
-        * sysdeps/unix/sysv/linux/x86/elision-conf.c:
-        (elision_init): Set try_xbegin to zero when no RTM.
-        * sysdeps/x86/nptl/bits/pthreadtypes.h
-        (pthread_rwlock_t): Change __pad1 to __rwelision.
-        (__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
+	(pthread_rwlock_rdlock): Add elision.
+	* nptl/pthread_rwlock_wrlock.c: Include elide.h.
+	(pthread_rwlock_wrlock): Add elision.
+	* nptl/pthread_rwlock_trywrlock.c: Include elide.h.
+	(pthread_rwlock_trywrlock): Add elision.
+	* nptl/pthread_rwlock_tryrdlock.c: Include elide.h.
+	(pthread_rwlock_tryrdlock): Add elision.
+	* nptl/pthread_rwlock_unlock.c: Include elide.h.
+	(pthread_rwlock_tryrdlock): Add elision unlock.
+	* nptl/sysdeps/pthread/pthread.h:
+	(__PTHREAD_RWLOCK_ELISION_EXTRA): Handle new define
+	(PTHREAD_RWLOCK_INITIALIZER,
+	PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP):
+	Handle new elision field.
+	* sysdeps/x86/nptl/elide.h: New file. Add generic elision macros.
+	* sysdeps/arm/nptl/bits/pthreadtypes.h
+	(__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
+	* sysdeps/sh/nptl/bits/pthreadtypes.h
+	(__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
+	* sysdeps/tile/nptl/bits/pthreadtypes.h
+	(__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
+	* sysdeps/a/nptl/bits/pthreadtypes.h
+	(__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
+	* sysdeps/unix/sysv/linux/aarch64/nptl/bits/pthreadtypes.h
+	(__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
+	* sysdeps/unix/sysv/linux/alpha/nptl/bits/pthreadtypes.h
+	(__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
+	* sysdeps/unix/sysv/linux/hppa/nptl/bits/pthreadtypes.h
+	(__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
+	* sysdeps/unix/sysv/linux/ia64/nptl/bits/pthreadtypes.h
+	(__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
+	* sysdeps/unix/sysv/linux/m68k/nptl/bits/pthreadtypes.h
+	(__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
+	* sysdeps/unix/sysv/linux/microblaze/nptl/bits/pthreadtypes.h
+	(__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
+	* sysdeps/unix/sysv/linux/mips/nptl/bits/pthreadtypes.h
+	(__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
+	* sysdeps/unix/sysv/linux/powerpc/nptl/bits/pthreadtypes.h
+	(__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
+	* sysdeps/unix/sysv/linux/x86/elision-conf.c:
+	(elision_init): Set try_xbegin to zero when no RTM.
+	* sysdeps/x86/nptl/bits/pthreadtypes.h
+	(pthread_rwlock_t): Change __pad1 to __rwelision.
+	(__PTHREAD_RWLOCK_ELISION_EXTRA): Add.
 
 2014-06-13  Andi Kleen  <ak@linux.intel.com>
 
