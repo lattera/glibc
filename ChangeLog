@@ -1,3 +1,11 @@
+2014-16-17  Rajalakshmi Srinivasaraghavan <raji@linux.vnet.ibm.com>
+
+	[BZ #17031]
+	* sysdeps/ieee754/ldbl-128ibm/s_nearbyintl.c: Consider the low
+	double, adjusted for any remainder from the high double.
+	* math/libm-test.inc (nearbyint): Add tests.
+	(rint): Likewise.
+
 2014-06-17  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* nptl/sysdeps/powerpc/Makefile: Moved ...
