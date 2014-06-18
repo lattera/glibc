@@ -1155,8 +1155,7 @@ $(objpfx)tst-unused-dep.out: $(objpfx)testobj1.so
 	LD_TRACE_LOADED_OBJECTS=1 \
 	LD_DEBUG=unused \
 	LD_PRELOAD= \
-	$(elf-objpfx)${rtld-installed-name} \
-	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
+	$(rtld-prefix) \
 	  $< > $@; \
 	$(evaluate-test)
 

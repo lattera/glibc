@@ -252,7 +252,7 @@ ifeq (no,$(cross-compiling))
 # if this libc has more gconv modules than the previously installed one.
 	if test -f "$(inst_gconvdir)/gconv-modules.cache"; then \
 	   LC_ALL=C \
-	   $(elf-objpfx)ld.so --library-path $(rpath-link) \
+	   $(rtld-prefix) \
 	   $(common-objpfx)iconv/iconvconfig \
 	     $(addprefix --prefix=,$(install_root)); \
 	fi

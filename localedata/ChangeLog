@@ -1,3 +1,7 @@
+2014-06-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makefile (LOCALEDEF): Use $(rtld-prefix).
+
 2014-06-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makefile (test-srcs): Remove tst-mbswcs1, tst-mbswcs2,
