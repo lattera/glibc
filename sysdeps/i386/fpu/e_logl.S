@@ -40,8 +40,11 @@ ENTRY(__ieee754_logl)
 	fld	%st		// x : x : log(2)
 	sahf
 	jc	3f		// in case x is NaN or +-Inf
+	movzwl	4+8(%esp), %eax
+	cmpl	$0xc000, %eax
+	jae	6f		// x <= -2, avoid overflow from -LDBL_MAX - 1.
 4:	fsubl	MO(one)		// x-1 : x : log(2)
-	fld	%st		// x-1 : x-1 : x : log(2)
+6:	fld	%st		// x-1 : x-1 : x : log(2)
 	fabs			// |x-1| : x-1 : x : log(2)
 	fcompl	MO(limit)	// x-1 : x : log(2)
 	fnstsw			// x-1 : x : log(2)

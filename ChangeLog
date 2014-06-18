@@ -1,3 +1,11 @@
+2014-06-18  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17022]
+	* sysdeps/i386/fpu/e_logl.S (__ieee754_logl): Do not subtract 1
+	from arguments -2 or below.
+	* sysdeps/i386/i686/fpu/e_logl.S (__ieee754_logl): Likewise.
+	* sysdeps/x86_64/fpu/e_logl.S (__ieee754_logl): Likewise.
+
 2014-06-18  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #17062]
