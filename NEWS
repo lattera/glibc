@@ -22,6 +22,8 @@ Version 2.20
   16967, 16977, 16978, 16984, 16990, 16996, 17009, 17022, 17031, 17042,
   17048, 17058, 17062.
 
+* Optimized strchr implementation for AArch64.  Contributed by ARM Ltd.
+
 * The minimum Linux kernel version that this version of the GNU C Library
   can be used with is 2.6.32.
 

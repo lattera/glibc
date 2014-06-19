@@ -1,3 +1,7 @@
+2014-06-19  Richard Earnshaw  <rearnsha@arm.com>
+
+	* sysdeps/aarch64/strchr.S: New file.
+
 2014-06-18  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17022]
