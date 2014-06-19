@@ -87,7 +87,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   bug-getopt1 bug-getopt2 bug-getopt3 bug-getopt4 \
 		   bug-getopt5 tst-getopt_long1 bug-regex34 bug-regex35 \
 		   tst-pathconf tst-getaddrinfo4 tst-rxspencer-no-utf8 \
-		   tst-fnmatch3
+		   tst-fnmatch3 bug-regex36
 xtests		:= bug-ga2
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
@@ -113,7 +113,7 @@ generated += $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
 	     tst-boost.mtrace bug-ga2.mtrace bug-ga2-mem.out \
 	     bug-glob2.mtrace bug-glob2-mem.out tst-vfork3-mem.out \
 	     tst-vfork3.mtrace getconf.speclist tst-fnmatch-mem.out \
-	     tst-fnmatch.mtrace
+	     tst-fnmatch.mtrace bug-regex36.mtrace
 
 ifeq ($(run-built-tests),yes)
 ifeq (yes,$(build-shared))
@@ -130,7 +130,7 @@ tests-special += $(objpfx)bug-regex2-mem.out $(objpfx)bug-regex14-mem.out \
 		 $(objpfx)tst-rxspencer-no-utf8-mem.out $(objpfx)tst-pcre-mem.out \
 		 $(objpfx)tst-boost-mem.out $(objpfx)tst-getconf.out \
 		 $(objpfx)bug-glob2-mem.out $(objpfx)tst-vfork3-mem.out \
-		 $(objpfx)tst-fnmatch-mem.out
+		 $(objpfx)tst-fnmatch-mem.out $(objpfx)bug-regex36-mem.out
 xtests-special += $(objpfx)bug-ga2-mem.out
 endif
 
@@ -258,6 +258,12 @@ bug-regex31-ENV = MALLOC_TRACE=$(objpfx)bug-regex31.mtrace
 
 $(objpfx)bug-regex31-mem.out: $(objpfx)bug-regex31.out
 	$(common-objpfx)malloc/mtrace $(objpfx)bug-regex31.mtrace > $@; \
+	$(evaluate-test)
+
+bug-regex36-ENV = MALLOC_TRACE=$(objpfx)bug-regex36.mtrace
+
+$(objpfx)bug-regex36-mem.out: $(objpfx)bug-regex36.out
+	$(common-objpfx)malloc/mtrace $(objpfx)bug-regex36.mtrace > $@; \
 	$(evaluate-test)
 
 tst-vfork3-ENV = MALLOC_TRACE=$(objpfx)tst-vfork3.mtrace

@@ -1,3 +1,15 @@
+2014-06-19  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #17069]
+	* posix/regcomp.c (parse_expression): Deallocate partially
+	constructed tree before returning error.
+	* posix/Makefile.c (tests): Add bug-regex36.
+	(generated): Add bug-regex36.mtrace.
+	(tests-special): Add $(objpfx)bug-regex36-mem.out
+	(bug-regex36-ENV): New variable.
+	($(objpfx)bug-regex36-mem.out): New rule.
+	* posix/bug-regex36.c: New file.
+
 2014-06-19  Will Newton  <will.newton@linaro.org>
 
 	* malloc/malloc.c (systrim): If extra is zero then return
