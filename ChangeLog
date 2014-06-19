@@ -1,3 +1,7 @@
+2014-06-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* benchtests/Makefile ($(objpfx)bench-%.c): Remove $(.).
+
 2014-06-19  Richard Earnshaw  <rearnsha@arm.com>
 
 	* sysdeps/aarch64/strchr.S: New file.
