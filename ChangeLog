@@ -33,8 +33,6 @@
 	* sysdeps/ia64/fpu/w_scalblnf.c: New File.
 	Do not use wrapper because of own implementation.
 
-	* Makefile (LOCALES): Add en_GB.UTF-8.
-
 2014-06-19  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86/nptl/bits/pthreadtypes.h (pthread_rwlock_t): Use
