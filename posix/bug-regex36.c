@@ -1,4 +1,4 @@
-/* Test regcomp not leaking memory on invalid repetition operator
+/* Test regcomp not leaking memory on parse errors
    Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -24,6 +24,6 @@ main (int argc, char **argv)
 {
   regex_t r;
   mtrace ();
-  regcomp (&r, "[a]\\{-2,}", 0);
+  regcomp (&r, "[a]\\|[a]\\{-2,}", 0);
   regfree (&r);
 }

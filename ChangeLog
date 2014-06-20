@@ -1,3 +1,10 @@
+2014-06-20  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #17069]
+	* posix/regcomp.c (parse_reg_exp): Deallocate partially
+	constructed tree before returning error.
+	* posix/bug-regexp36.c: Expand test case.
+
 2014-06-20  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	[BZ #6803]
