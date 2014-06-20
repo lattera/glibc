@@ -21,6 +21,7 @@
 #include <lowlevellock.h>
 #include <pthread.h>
 #include <pthreadP.h>
+#include <kernel-features.h>
 
 
 /* Try to acquire write lock for RWLOCK or return after specfied time.	*/

@@ -21,6 +21,7 @@
 #include <lowlevellock.h>
 #include <sys/time.h>
 #include <pthreadP.h>
+#include <kernel-features.h>
 
 
 int

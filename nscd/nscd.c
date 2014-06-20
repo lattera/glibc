@@ -50,6 +50,7 @@
 #ifdef HAVE_INOTIFY
 # include <sys/inotify.h>
 #endif
+#include <kernel-features.h>
 
 /* Get libc version number.  */
 #include <version.h>

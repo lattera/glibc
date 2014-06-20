@@ -1,5 +1,15 @@
 2014-06-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* nptl/pthread_cond_wait.c: Include <kernel-features.h>.
+	* nptl/pthread_rwlock_timedrdlock.c: Likewise.
+	* nptl/pthread_rwlock_timedwrlock.c: Likewise.
+	* nptl/sysdeps/unix/sysv/linux/lowlevelrobustlock.c: Likewise.
+	* nscd/nscd.c: Likewise.
+	* sysdeps/i386/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/powerpc/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/sh/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/x86_64/nptl/tcb-offsets.sym: Likewise.
+
 	* nptl/sysdeps/unix/sysv/linux/mq_notify.c: Do not include
 	<kernel-features.h>.
 	(init_mq_netlink): Remove conditional have_sock_cloexec

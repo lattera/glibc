@@ -1,5 +1,6 @@
 #include <sysdep.h>
 #include <tls.h>
+#include <kernel-features.h>
 
 RESULT			offsetof (struct pthread, result)
 TID			offsetof (struct pthread, tid)
