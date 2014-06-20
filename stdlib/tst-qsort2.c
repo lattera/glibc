@@ -70,7 +70,7 @@ int
 main (int argc, char **argv)
 {
   int ret = 0;
-  if (argc >= 2)
+  if (argc >= 3)
     ret |= test (atoi (argv[1]), atoi (argv[2]));
   else
     {

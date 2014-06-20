@@ -1,3 +1,8 @@
+2014-06-20  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	* stdlib/tst-qsort2.c (main): Fix off-by-one argc interpretation
+	error.
+
 2014-06-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h
