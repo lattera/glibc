@@ -11,6 +11,26 @@ $(objpfx)libgcc-stubs.a: $(objpfx)aeabi_unwind_cpp_pr1.os
 	$(build-extra-lib)
 
 lib-noranlib: $(objpfx)libgcc-stubs.a
+
+ifeq ($(build-shared),yes)
+ifeq ($(have-arm-tls-desc),yes)
+tests += tst-armtlsdescloc tst-armtlsdescextnow tst-armtlsdescextlazy
+modules-names += tst-armtlsdesclocmod
+modules-names += tst-armtlsdescextlazymod tst-armtlsdescextnowmod
+CPPFLAGS-tst-armtlsdescextnowmod.c += -Dstatic=
+CPPFLAGS-tst-armtlsdescextlazymod.c += -Dstatic=
+CFLAGS-tst-armtlsdesclocmod.c += -mtls-dialect=gnu2
+CFLAGS-tst-armtlsdescextnowmod.c += -mtls-dialect=gnu2
+CFLAGS-tst-armtlsdescextlazymod.c += -mtls-dialect=gnu2
+LDFLAGS-tst-armtlsdescextnowmod.so += -Wl,-z,now
+tst-armtlsdescloc-ENV = LD_BIND_NOW=1
+tst-armtlsdescextnow-ENV = LD_BIND_NOW=1
+tst-armtlsdescextlazy-ENV = LD_BIND_NOW=1
+$(objpfx)tst-armtlsdescloc: $(objpfx)tst-armtlsdesclocmod.so
+$(objpfx)tst-armtlsdescextnow: $(objpfx)tst-armtlsdescextnowmod.so
+$(objpfx)tst-armtlsdescextlazy: $(objpfx)tst-armtlsdescextlazymod.so
+endif
+endif
 endif
 
 ifeq ($(subdir),csu)

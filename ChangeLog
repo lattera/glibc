@@ -1,3 +1,31 @@
+2014-06-20  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	[BZ #17075]
+	* sysdeps/arm/dl-machine.h (elf_machine_rel) <R_ARM_TLS_DESC>:
+	Fix calculation of the symbol's value.
+	* sysdeps/arm/tst-armtlsdescloc.c: New file.
+	* sysdeps/arm/tst-armtlsdesclocmod.c: New file.
+	* sysdeps/arm/tst-armtlsdescextnow.c: New file.
+	* sysdeps/arm/tst-armtlsdescextlazymod.c: New file.
+	* sysdeps/arm/tst-armtlsdescextlazy.c: New file.
+	* sysdeps/arm/tst-armtlsdescextnowmod.c: New file.
+	* sysdeps/arm/Makefile (tests): Add `tst-armtlsdesc',
+	`tst-armtlsdescextnow' and `tst-armtlsdescextlazy'.
+	(modules-names): Add `tst-armtlsdescmod',
+	`tst-armtlsdescextlazymod' and `tst-armtlsdescextnowmod'.
+	(CPPFLAGS-tst-armtlsdescextnowmod.c): New variable.
+	(CPPFLAGS-tst-armtlsdescextlazymod.c): Likewise.
+	(CFLAGS-tst-armtlsdesclocmod.c): Likewise.
+	(CFLAGS-tst-armtlsdescextnowmod.c): Likewise.
+	(CFLAGS-tst-armtlsdescextlazymod.c): Likewise.
+	(LDFLAGS-tst-armtlsdescextnowmod.so): Likewise.
+	($(objpfx)tst-armtlsdescloc): New dependency.
+	($(objpfx)tst-armtlsdescextnow): Likewise.
+	($(objpfx)tst-armtlsdescextlazy): Likewise.
+	* sysdeps/arm/configure.ac: Add a check for tools' GNU descriptor
+	TLS scheme support.
+	* sysdeps/arm/configure: Regenerate.
+
 2014-06-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* include/fcntl.h (__atfct_seterrno): Remove prototype.

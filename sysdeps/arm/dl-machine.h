@@ -452,7 +452,10 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	    else
 # endif
 	      {
-		value = sym->st_value + td->argument.value;
+		if (ELF32_R_SYM (reloc->r_info) == STN_UNDEF)
+		  value = td->argument.value;
+		else
+		  value = sym->st_value;
 
 # ifndef RTLD_BOOTSTRAP
 #  ifndef SHARED
