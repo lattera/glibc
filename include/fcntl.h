@@ -31,14 +31,6 @@ extern int __openat_2 (int __fd, const char *__path, int __oflag);
 extern int __openat64_2 (int __fd, const char *__path, int __oflag);
 
 
-/* Helper functions for the various *at functions.  For Linux.  */
-extern void __atfct_seterrno (int errval, int fd, const char *buf)
-  attribute_hidden;
-extern void __atfct_seterrno_2 (int errval, int fd1, const char *buf1,
-				int fd2, const char *buf2)
-  attribute_hidden;
-
-
 /* Flag determining whether the *at system calls are available.  */
 extern int __have_atfcts attribute_hidden;
 

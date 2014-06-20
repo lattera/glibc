@@ -24,8 +24,9 @@
 #include <sys/types.h>
 #include <alloca.h>
 #include <sysdep.h>
-#include <kernel-features.h>
 
+
+/* Consider moving to syscalls.list.  */
 
 /* Change the owner and group of FILE.  */
 int
@@ -36,69 +37,5 @@ fchownat (fd, file, owner, group, flag)
      gid_t group;
      int flag;
 {
-  int result;
-
-#ifdef __NR_fchownat
-# ifndef __ASSUME_ATFCTS
-  if (__have_atfcts >= 0)
-# endif
-    {
-      result = INLINE_SYSCALL (fchownat, 5, fd, file, owner, group, flag);
-# ifndef __ASSUME_ATFCTS
-      if (result == -1 && errno == ENOSYS)
-	__have_atfcts = -1;
-      else
-# endif
-	return result;
-    }
-#endif
-
-#ifndef __ASSUME_ATFCTS
-  if (flag & ~AT_SYMLINK_NOFOLLOW)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
-  char *buf = NULL;
-
-  if (fd != AT_FDCWD && file[0] != '/')
-    {
-      size_t filelen = strlen (file);
-      if (__glibc_unlikely (filelen == 0))
-	{
-	  __set_errno (ENOENT);
-	  return -1;
-	}
-
-      static const char procfd[] = "/proc/self/fd/%d/%s";
-      /* Buffer for the path name we are going to use.  It consists of
-	 - the string /proc/self/fd/
-	 - the file descriptor number
-	 - the file name provided.
-	 The final NUL is included in the sizeof.   A bit of overhead
-	 due to the format elements compensates for possible negative
-	 numbers.  */
-      size_t buflen = sizeof (procfd) + sizeof (int) * 3 + filelen;
-      buf = alloca (buflen);
-
-      __snprintf (buf, buflen, procfd, fd, file);
-      file = buf;
-    }
-
-  INTERNAL_SYSCALL_DECL (err);
-
-  if (flag & AT_SYMLINK_NOFOLLOW)
-    result = INTERNAL_SYSCALL (lchown, err, 3, file, owner, group);
-  else
-    result = INTERNAL_SYSCALL (chown, err, 3, file, owner, group);
-
-  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
-    {
-      __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
-      result = -1;
-    }
-
-  return result;
-#endif
+  return INLINE_SYSCALL (fchownat, 5, fd, file, owner, group, flag);
 }

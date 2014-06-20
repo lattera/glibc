@@ -23,8 +23,9 @@
 #include <string.h>
 #include <sysdep.h>
 #include <unistd.h>
-#include <kernel-features.h>
 
+
+/* Consider moving to syscalls.list.  */
 
 /* Read the contents of the symbolic link PATH relative to FD into no
    more than LEN bytes of BUF.  */
@@ -35,61 +36,6 @@ readlinkat (fd, path, buf, len)
      char *buf;
      size_t len;
 {
-  int result;
-
-#ifdef __NR_readlinkat
-# ifndef __ASSUME_ATFCTS
-  if (__have_atfcts >= 0)
-# endif
-    {
-      result = INLINE_SYSCALL (readlinkat, 4, fd, path, buf, len);
-# ifndef __ASSUME_ATFCTS
-      if (result == -1 && errno == ENOSYS)
-	__have_atfcts = -1;
-      else
-# endif
-	return result;
-    }
-#endif
-
-#ifndef __ASSUME_ATFCTS
-  char *pathbuf = NULL;
-
-  if (fd != AT_FDCWD && path[0] != '/')
-    {
-      size_t pathlen = strlen (path);
-      if (__glibc_unlikely (pathlen == 0))
-	{
-	  __set_errno (ENOENT);
-	  return -1;
-	}
-
-      static const char procfd[] = "/proc/self/fd/%d/%s";
-      /* Buffer for the path name we are going to use.  It consists of
-	 - the string /proc/self/fd/
-	 - the file descriptor number
-	 - the file name provided.
-	 The final NUL is included in the sizeof.   A bit of overhead
-	 due to the format elements compensates for possible negative
-	 numbers.  */
-      size_t buflen = sizeof (procfd) + sizeof (int) * 3 + pathlen;
-      pathbuf = __alloca (buflen);
-
-      __snprintf (pathbuf, buflen, procfd, fd, path);
-      path = pathbuf;
-    }
-
-  INTERNAL_SYSCALL_DECL (err);
-
-  result = INTERNAL_SYSCALL (readlink, err, 3, path, buf, len);
-
-  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
-    {
-      __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, pathbuf);
-      result = -1;
-    }
-
-  return result;
-#endif
+  return INLINE_SYSCALL (readlinkat, 4, fd, path, buf, len);
 }
 libc_hidden_def (readlinkat)

@@ -24,7 +24,6 @@
 #include <sys/sysmacros.h>
 
 #include <sysdep.h>
-#include <kernel-features.h>
 #include <sys/syscall.h>
 
 
@@ -48,51 +47,7 @@ __xmknodat (int vers, int fd, const char *file, mode_t mode, dev_t *dev)
       return -1;
     }
 
-#ifdef __NR_mknodat
-# ifndef __ASSUME_ATFCTS
-  if (__have_atfcts >= 0)
-# endif
-    {
-      int res = INLINE_SYSCALL (mknodat, 4, fd, file, mode,
-				(unsigned int) k_dev);
-# ifndef __ASSUME_ATFCTS
-      if (res == -1 && errno == ENOSYS)
-	__have_atfcts = -1;
-      else
-# endif
-	return res;
-    }
-#endif
-
-#ifndef __ASSUME_ATFCTS
-  char *buf = NULL;
-
-  if (fd != AT_FDCWD && file[0] != '/')
-    {
-      size_t filelen = strlen (file);
-      if (__glibc_unlikely (filelen == 0))
-	{
-	  __set_errno (ENOENT);
-	  return -1;
-	}
-
-      static const char procfd[] = "/proc/self/fd/%d/%s";
-      /* Buffer for the path name we are going to use.  It consists of
-	 - the string /proc/self/fd/
-	 - the file descriptor number
-	 - the file name provided.
-	 The final NUL is included in the sizeof.   A bit of overhead
-	 due to the format elements compensates for possible negative
-	 numbers.  */
-      size_t buflen = sizeof (procfd) + sizeof (int) * 3 + filelen;
-      buf = alloca (buflen);
-
-      __snprintf (buf, buflen, procfd, fd, file);
-      file = buf;
-    }
-
-  return INLINE_SYSCALL (mknod, 3, file, mode, (unsigned int) k_dev);
-#endif
+  return INLINE_SYSCALL (mknodat, 4, fd, file, mode, (unsigned int) k_dev);
 }
 
 libc_hidden_def (__xmknodat)

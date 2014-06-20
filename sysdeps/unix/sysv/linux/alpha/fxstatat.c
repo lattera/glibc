@@ -29,10 +29,6 @@
 
 #undef __fxstatat64
 
-#ifdef __ASSUME_ATFCTS
-# define __have_atfcts 1
-#endif
-
 /* Get information about the file NAME in BUF.  */
 int
 __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
@@ -45,67 +41,11 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
      cannot actually check this, lest the compiler not optimize the rest
      of the function away.  */
 
-#ifdef __NR_fstatat64
-  if (__have_atfcts >= 0)
-    {
-      result = INTERNAL_SYSCALL (fstatat64, err, 4, fd, file, st, flag);
-      if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
-	return result;
-      errno_out = INTERNAL_SYSCALL_ERRNO (result, err);
-#ifndef __ASSUME_ATFCTS
-      if (errno_out == ENOSYS)
-	__have_atfcts = -1;
-      else
-#endif
-	{
-	  __set_errno (errno_out);
-	  return -1;
-	}
-    }
-#endif /* __NR_fstatat64 */
-
-  if (flag & ~AT_SYMLINK_NOFOLLOW)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
-  char *buf = NULL;
-
-  if (fd != AT_FDCWD && file[0] != '/')
-    {
-      size_t filelen = strlen (file);
-      if (__builtin_expect (filelen == 0, 0))
-        {
-          __set_errno (ENOENT);
-          return -1;
-        }
-
-      static const char procfd[] = "/proc/self/fd/%d/%s";
-      /* Buffer for the path name we are going to use.  It consists of
-	 - the string /proc/self/fd/
-	 - the file descriptor number
-	 - the file name provided.
-	 The final NUL is included in the sizeof.   A bit of overhead
-	 due to the format elements compensates for possible negative
-	 numbers.  */
-      size_t buflen = sizeof (procfd) + sizeof (int) * 3 + filelen;
-      buf = alloca (buflen);
-
-      __snprintf (buf, buflen, procfd, fd, file);
-      file = buf;
-    }
-
-  if (flag & AT_SYMLINK_NOFOLLOW)
-    result = INTERNAL_SYSCALL (lstat64, err, 2, file, st);
-  else
-    result = INTERNAL_SYSCALL (stat64, err, 2, file, st);
+  result = INTERNAL_SYSCALL (fstatat64, err, 4, fd, file, st, flag);
   if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
     return result;
-
   errno_out = INTERNAL_SYSCALL_ERRNO (result, err);
-  __atfct_seterrno (errno_out, fd, buf);
-
+  __set_errno (errno_out);
   return -1;
 }
 libc_hidden_def (__fxstatat)

@@ -23,8 +23,9 @@
 #include <string.h>
 #include <sysdep.h>
 #include <unistd.h>
-#include <kernel-features.h>
 
+
+/* Consider moving to syscalls.list.  */
 
 /* Make a symbolic link to FROM named TO relative to TOFD.  */
 int
@@ -33,60 +34,5 @@ symlinkat (from, tofd, to)
      int tofd;
      const char *to;
 {
-  int result;
-
-#ifdef __NR_symlinkat
-# ifndef __ASSUME_ATFCTS
-  if (__have_atfcts >= 0)
-# endif
-    {
-      result = INLINE_SYSCALL (symlinkat, 3, from, tofd, to);
-# ifndef __ASSUME_ATFCTS
-      if (result == -1 && errno == ENOSYS)
-	__have_atfcts = -1;
-      else
-# endif
-	return result;
-    }
-#endif
-
-#ifndef __ASSUME_ATFCTS
-  char *buf = NULL;
-
-  if (tofd != AT_FDCWD && to[0] != '/')
-    {
-      size_t tolen = strlen (to);
-      if (__glibc_unlikely (tolen == 0))
-	{
-	  __set_errno (ENOENT);
-	  return -1;
-	}
-
-      static const char procfd[] = "/proc/self/fd/%d/%s";
-      /* Buffer for the path name we are going to use.  It consists of
-	 - the string /proc/self/fd/
-	 - the file descriptor number
-	 - the file name provided.
-	 The final NUL is included in the sizeof.   A bit of overhead
-	 due to the format elements compensates for possible negative
-	 numbers.  */
-      size_t buflen = sizeof (procfd) + sizeof (int) * 3 + tolen;
-      buf = __alloca (buflen);
-
-      __snprintf (buf, buflen, procfd, tofd, to);
-      to = buf;
-    }
-
-  INTERNAL_SYSCALL_DECL (err);
-
-  result = INTERNAL_SYSCALL (symlink, err, 2, from, to);
-
-  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
-    {
-      __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), tofd, buf);
-      result = -1;
-    }
-
-  return result;
-#endif
+  return INLINE_SYSCALL (symlinkat, 3, from, tofd, to);
 }

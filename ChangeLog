@@ -1,3 +1,100 @@
+2014-06-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/fcntl.h (__atfct_seterrno): Remove prototype.
+	(__atfct_seterrno_2): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/dl-fxstatat64.c: Do not include
+	<kernel-features.h>.
+	(__ASSUME_ATFCTS): Do not undefine and redefine.
+	* sysdeps/unix/sysv/linux/alpha/fxstatat.c [__ASSUME_ATFCTS]
+	(__have_atfcts): Remove conditional definition.
+	(__fxstatat([__NR_fstatat64]: Make code unconditional.
+	(__fxstatat) [!__ASSUME_ATFCTS]: Remove conditional code and code
+	unreachable if [__ASSUME_ATFCTS].
+	* sysdeps/unix/sysv/linux/dl-fxstatat64.c (__ASSUME_ATFCTS): Do
+	not undefine and redefine.
+	* sysdeps/unix/sysv/linux/faccessat.c: Do not include
+	<kernel-features.h>.
+	(faccessat) [__NR_faccessat]: Make code unconditional.
+	(faccessat) [!__ASSUME_ATFCTS]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/fchmodat.c: Do not include
+	<kernel-features.h>.
+	(fchmodat) [__NR_fchmodat]: Make code unconditional.
+	(fchmodat) [!__ASSUME_ATFCTS]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/fchownat.c: Do not include
+	<kernel-features.h>.
+	(fchownat) [__NR_fchownat]: Make code unconditional.
+	(fchownat) [!__ASSUME_ATFCTS]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/futimesat.c: Do not include
+	<kernel-features.h>.
+	(futimesat) [__NR_futimesat]: Make code unconditional.
+	(futimesat) [!__ASSUME_ATFCTS]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/fxstatat.c: Do not include
+	<kernel-features.h>.
+	(__fxstatat) [__NR_newfstatat]: Make code unconditional.
+	(__fxstatat) [!__ASSUME_ATFCTS]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/fxstatat64.c: Do not include
+	<kernel-features.h>.
+	(__fxstatat64) [__NR_fstatat64]: Make code unconditional.
+	(__fxstatat64) [!__ASSUME_ATFCTS]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/i386/fchownat.c: Remove file.
+	* sysdeps/unix/sysv/linux/i386/fxstatat.c: Do not include
+	<kernel-features.h>.
+	(__fxstatat) [__NR_fstatat64]: Make code unconditional.
+	(__fxstatat) [!__ASSUME_ATFCTS]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/linkat.c: Do not include
+	<kernel-features.h>.
+	(linkat) [__NR_linkat]: Make code unconditional.
+	(linkat) [!__ASSUME_ATFCTS]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/m68k/fchownat.c: Remove file.
+	* sysdeps/unix/sysv/linux/mips/mips64/fxstatat64.c: Do not include
+	<kernel-features.h>.
+	(__fxstatat64) [__NR_newfstatat]: Make code unconditional.
+	(__fxstatat64) [!__ASSUME_ATFCTS]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/mkdirat.c: Do not include
+	<kernel-features.h>.
+	(mkdirat) [__NR_mkdirat]: Make code unconditional.
+	(mkdirat) [!__ASSUME_ATFCTS]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/openat.c: Do not include
+	<kernel-features.h>.
+	[!__ASSUME_ATFCTS] (__atfct_seterrno): Remove function.
+	[!__ASSUME_ATFCTS] (__have_atfcts): Remove variable.
+	(OPENAT_NOT_CANCEL) [__NR_openat]: Make code unconditional.
+	(OPENAT_NOT_CANCEL) [!__ASSUME_ATFCTS]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/powerpc/fchownat.c: Remove file.
+	* sysdeps/unix/sysv/linux/readlinkat.c: Do not include
+	<kernel-features.h>.
+	(readlinkat) [__NR_readlinkat]: Make code unconditional.
+	(readlinkat) [!__ASSUME_ATFCTS]: Remove conditional code.  Return
+	result of INLINE_SYSCALL directly, not via int variable.
+	* sysdeps/unix/sysv/linux/renameat.c: Do not include
+	<kernel-features.h>.
+	[!__ASSUME_ATFCTS] (__atfct_seterrno_2): Remove function.
+	(renameat) [__NR_renameat]: Make code unconditional.
+	(renameat) [!__ASSUME_ATFCTS]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/s390/s390-32/fchownat.c: Remove file.
+	* sysdeps/unix/sysv/linux/sh/fchownat.c: Remove file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/fchownat.c: Remove file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/dl-fxstatat64.c
+	(__ASSUME_ATFCTS): Do not undefine and redefine.
+	* sysdeps/unix/sysv/linux/symlinkat.c: Do not include
+	<kernel-features.h>.
+	(symlinkat) [__NR_symlinkat]: Make code unconditional.
+	(symlinkat) [!__ASSUME_ATFCTS]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/unlinkat.c: Do not include
+	<kernel-features.h>.
+	(unlinkat) [__NR_unlinkat]: Make code unconditional.
+	(unlinkat) [!__ASSUME_ATFCTS]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/wordsize-64/dl-fxstatat64.c
+	(__ASSUME_ATFCTS): Do not undefine and redefine.
+	* sysdeps/unix/sysv/linux/wordsize-64/fxstatat.c: Do not include
+	<kernel-features.h>.
+	(__fxstatat) [__NR_newfstatat]: Make code unconditional.
+	(__fxstatat) [!__ASSUME_ATFCTS]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/xmknodat.c: Do not include
+	<kernel-features.h>.
+	(__xmknodat) [__NR_mknodat]: Make code unconditional.
+	(__xmknodat) [!__ASSUME_ATFCTS]: Remove conditional code.
+
 2014-06-20  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/rtld-strlen.S: Removed.

@@ -30,8 +30,6 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-#include <kernel-features.h>
-
 #include <xstatconv.h>
 
 
@@ -43,88 +41,14 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
   INTERNAL_SYSCALL_DECL (err);
   struct stat64 st64;
 
-#ifdef __NR_fstatat64
-# ifndef __ASSUME_ATFCTS
-  if (__have_atfcts >= 0)
-# endif
+  result = INTERNAL_SYSCALL (fstatat64, err, 4, fd, file, &st64, flag);
+  if (!__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 1))
+    return __xstat32_conv (vers, &st64, st);
+  else
     {
-      result = INTERNAL_SYSCALL (fstatat64, err, 4, fd, file, &st64, flag);
-# ifndef __ASSUME_ATFCTS
-      if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 1)
-	  && INTERNAL_SYSCALL_ERRNO (result, err) == ENOSYS)
-	__have_atfcts = -1;
-      else
-# endif
-	if (!__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 1))
-	  return __xstat32_conv (vers, &st64, st);
-	else
-	  {
-	    __set_errno (INTERNAL_SYSCALL_ERRNO (result, err));
-	    return -1;
-	  }
-    }
-#endif
-
-#ifndef __ASSUME_ATFCTS
-  if (__glibc_unlikely (flag & ~AT_SYMLINK_NOFOLLOW))
-    {
-      __set_errno (EINVAL);
+      __set_errno (INTERNAL_SYSCALL_ERRNO (result, err));
       return -1;
     }
-
-  char *buf = NULL;
-
-  if (fd != AT_FDCWD && file[0] != '/')
-    {
-      size_t filelen = strlen (file);
-      if (__glibc_unlikely (filelen == 0))
-	{
-	  __set_errno (ENOENT);
-	  return -1;
-	}
-
-      static const char procfd[] = "/proc/self/fd/%d/%s";
-      /* Buffer for the path name we are going to use.  It consists of
-	 - the string /proc/self/fd/
-	 - the file descriptor number
-	 - the file name provided.
-	 The final NUL is included in the sizeof.   A bit of overhead
-	 due to the format elements compensates for possible negative
-	 numbers.  */
-      size_t buflen = sizeof (procfd) + sizeof (int) * 3 + filelen;
-      buf = alloca (buflen);
-
-      __snprintf (buf, buflen, procfd, fd, file);
-      file = buf;
-    }
-
-  if (vers == _STAT_VER_KERNEL)
-    {
-      if (flag & AT_SYMLINK_NOFOLLOW)
-	result = INTERNAL_SYSCALL (lstat, err, 2, file,
-				   (struct kernel_stat *) st);
-      else
-	result = INTERNAL_SYSCALL (stat, err, 2, file,
-				   (struct kernel_stat *) st);
-      goto out;
-    }
-
-  if (flag & AT_SYMLINK_NOFOLLOW)
-    result = INTERNAL_SYSCALL (lstat64, err, 2, file, &st64);
-  else
-    result = INTERNAL_SYSCALL (stat64, err, 2, file, &st64);
-  if (__glibc_likely (!INTERNAL_SYSCALL_ERROR_P (result, err)))
-    return __xstat32_conv (vers, &st64, st);
-
- out:
-  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
-    {
-      __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
-      result = -1;
-    }
-
-  return result;
-#endif
 }
 libc_hidden_def (__fxstatat)
 #ifdef XSTAT_IS_XSTAT64

@@ -23,7 +23,6 @@
 #include <utime.h>
 #include <sys/time.h>
 #include <sysdep.h>
-#include <kernel-features.h>
 
 
 /* Change the access time of FILE relative to FD to TVP[0] and
@@ -34,106 +33,8 @@ futimesat (fd, file, tvp)
      const char *file;
      const struct timeval tvp[2];
 {
-  int result;
-
-#ifdef __NR_futimesat
-# ifndef __ASSUME_ATFCTS
-  if (__have_atfcts >= 0)
-# endif
-    {
-      if (file == NULL)
-	return __futimes (fd, tvp);
-
-      result = INLINE_SYSCALL (futimesat, 3, fd, file, tvp);
-# ifndef __ASSUME_ATFCTS
-      if (result == -1 && errno == ENOSYS)
-	__have_atfcts = -1;
-      else
-# endif
-	return result;
-    }
-#endif
-
-#ifndef __ASSUME_ATFCTS
-  char *buf = NULL;
-
   if (file == NULL)
-    {
-      static const char procfd[] = "/proc/self/fd/%d";
-      /* Buffer for the path name we are going to use.  It consists of
-	 - the string /proc/self/fd/
-	 - the file descriptor number.
-	 The final NUL is included in the sizeof.   A bit of overhead
-	 due to the format elements compensates for possible negative
-	 numbers.  */
-      size_t buflen = sizeof (procfd) + sizeof (int) * 3;
-      buf = alloca (buflen);
+    return __futimes (fd, tvp);
 
-      __snprintf (buf, buflen, procfd, fd);
-      file = buf;
-    }
-  else if (fd != AT_FDCWD && file[0] != '/')
-    {
-      size_t filelen = strlen (file);
-      if (__glibc_unlikely (filelen == 0))
-	{
-	  __set_errno (ENOENT);
-	  return -1;
-	}
-
-      static const char procfd[] = "/proc/self/fd/%d/%s";
-      /* Buffer for the path name we are going to use.  It consists of
-	 - the string /proc/self/fd/
-	 - the file descriptor number
-	 - the file name provided.
-	 The final NUL is included in the sizeof.   A bit of overhead
-	 due to the format elements compensates for possible negative
-	 numbers.  */
-      size_t buflen = sizeof (procfd) + sizeof (int) * 3 + filelen;
-      buf = alloca (buflen);
-
-      __snprintf (buf, buflen, procfd, fd, file);
-      file = buf;
-    }
-
-  INTERNAL_SYSCALL_DECL (err);
-
-# ifdef __NR_utimes
-  result = INTERNAL_SYSCALL (utimes, err, 2, file, tvp);
-  if (__glibc_likely (!INTERNAL_SYSCALL_ERROR_P (result, err)))
-    return result;
-
-#  ifndef __ASSUME_UTIMES
-  if (INTERNAL_SYSCALL_ERRNO (result, err) != ENOSYS)
-    goto fail;
-#  endif
-# endif
-
-  /* The utimes() syscall does not exist or is not available in the
-     used kernel.  Use utime().  For this we have to convert to the
-     data format utime() expects.  */
-# ifndef __ASSUME_UTIMES
-  struct utimbuf tmp;
-  struct utimbuf *times;
-
-  if (tvp != NULL)
-    {
-      times = &tmp;
-      tmp.actime = tvp[0].tv_sec + tvp[0].tv_usec / 1000000;
-      tmp.modtime = tvp[1].tv_sec + tvp[1].tv_usec / 1000000;
-    }
-  else
-    times = NULL;
-
-  result = INTERNAL_SYSCALL (utime, err, 2, file, times);
-  if (__glibc_likely (!INTERNAL_SYSCALL_ERROR_P (result, err)))
-    return result;
-
- fail:
-# endif
-
-  __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
-
-  return -1;
-#endif
+  return INLINE_SYSCALL (futimesat, 3, fd, file, tvp);
 }
