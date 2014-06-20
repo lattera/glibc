@@ -1,3 +1,11 @@
+2014-06-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c (__libc_ifunc_impl_list):
+	Add tests for memset_chk and memset.
+
+	* sysdeps/x86_64/multiarch/init-arch.h (HAS_AVX2): Defined
+	with AVX2_Usable.
+
 2014-06-20  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	[BZ #16046]

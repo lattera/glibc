@@ -158,7 +158,6 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define HAS_SSE4_1	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, ecx, bit_SSE4_1)
 # define HAS_SSE4_2	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, ecx, bit_SSE4_2)
 # define HAS_RTM	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_7, ebx, bit_RTM)
-# define HAS_AVX2	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_7, ebx, bit_AVX2)
 
 # define index_Fast_Rep_String		FEATURE_INDEX_1
 # define index_Fast_Copy_Backward	FEATURE_INDEX_1
@@ -179,6 +178,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define HAS_SLOW_BSF			HAS_ARCH_FEATURE (Slow_BSF)
 # define HAS_FAST_UNALIGNED_LOAD	HAS_ARCH_FEATURE (Fast_Unaligned_Load)
 # define HAS_AVX			HAS_ARCH_FEATURE (AVX_Usable)
+# define HAS_AVX2			HAS_ARCH_FEATURE (AVX2_Usable)
 # define HAS_FMA			HAS_ARCH_FEATURE (FMA_Usable)
 # define HAS_FMA4			HAS_ARCH_FEATURE (FMA4_Usable)
 
