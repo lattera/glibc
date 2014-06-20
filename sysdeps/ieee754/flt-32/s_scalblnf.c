@@ -50,4 +50,3 @@ __scalblnf (float x, long int n)
 	SET_FLOAT_WORD(x,(ix&0x807fffff)|(k<<23));
 	return x*twom25;
 }
-weak_alias (__scalblnf, scalblnf)

@@ -47,4 +47,3 @@ __CONCATX(__scalbn,suffix) (x, exp)
 }
 weak_alias (__CONCATX(__scalbn,suffix), __CONCATX(scalbn,suffix))
 strong_alias (__CONCATX(__scalbn,suffix), __CONCATX(__scalbln,suffix))
-weak_alias (__CONCATX(__scalbn,suffix), __CONCATX(scalbln,suffix))

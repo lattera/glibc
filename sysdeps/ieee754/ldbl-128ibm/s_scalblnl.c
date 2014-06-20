@@ -102,4 +102,3 @@ long double __scalblnl (long double x, long int n)
 	x = ldbl_pack (xhi, xlo);
 	return x*twolm54;
 }
-long_double_symbol (libm, __scalblnl, scalblnl);

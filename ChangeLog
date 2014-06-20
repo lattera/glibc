@@ -1,5 +1,38 @@
 2014-06-20  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	[BZ #6803]
+	* math/libm-test.inc (scalbln_test_date):
+	Add errno expectations.
+	* math/w_scalblnf.c: New File.
+	Add wrapper which checks for setting errno to ERANGE.
+	Add weak_alias for corresponding scalbln function.
+	* math/w_scalbln.c: Likewise.
+	* math/w_scalblnl.c: Likewise.
+	* math/Makefile (libm-calls): Add w_scalbln.
+	* sysdeps/ieee754/flt-32/s_scalblnf.c:
+	Remove weak_alias for corresponding scalbln function.
+	* sysdeps/ieee754/dbl-64/s_scalbln.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_scalbln.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_scalblnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_scalblnl.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/s_scalblnl.c: Likewise.
+	* sysdeps/i386/fpu/s_scalbnf.S: Likewise.
+	* sysdeps/i386/fpu/s_scalbn.S: Likewise.
+	* sysdeps/i386/fpu/s_scalbnl.S: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_scalbn.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_scalblnl.c:
+	Remove long_double_symbol for scalblnl function in libm, libc.
+	* sysdeps/ieee754/ldbl-64-128/w_scalblnl.c: New File.
+	Add wrapper which checks for setting errno to ERANGE.
+	Add long_double_symbol for scalblnl function in libm, libc.
+	* sysdeps/ieee754/ldbl-128ibm/s_scalblnl.c:
+	Remove long_double_symbol for scalblnl in libm.
+	* sysdeps/ieee754/ldbl-128ibm/w_scalblnl.c: New File.
+	Add wrapper which checks for setting errno to ERANGE.
+	Add long_double_symbol for scalblnl function in libm.
+	* sysdeps/ia64/fpu/w_scalblnf.c: New File.
+	Do not use wrapper because of own implementation.
+
 	* Makefile (LOCALES): Add en_GB.UTF-8.
 
 2014-06-19  H.J. Lu  <hongjiu.lu@intel.com>

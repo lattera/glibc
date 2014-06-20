@@ -58,4 +58,3 @@ __scalblnl (long double x, long int n)
 	SET_LDOUBLE_EXP(x,(es&0x8000)|k);
 	return x*twom63;
 }
-weak_alias (__scalblnl, scalblnl)
