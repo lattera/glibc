@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2014 Free Software Foundation, Inc.
+/* PowerPC64 default bcopy.
+   Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,12 +18,8 @@
 
 #include <string.h>
 
-#define	memmove		bcopy
-#define	rettype		void
-#define	RETURN(s)	return
-#define	a1		src
-#define	a1const		const
-#define	a2		dest
-#define	a2const
+extern __typeof (bcopy) __bcopy_ppc attribute_hidden;
 
-#include <string/memmove.c>
+#define bcopy __bcopy_ppc
+
+#include <string/bcopy.c>

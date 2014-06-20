@@ -1,5 +1,25 @@
 2014-07-07  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* string/bcopy.c: Use full path to include memmove.c.
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add memmove and bcopy
+	multiarch objects.
+	* sysdeps/powerpc/powerpc64/multiarch/bcopy-ppc64.c: New file: default
+	bcopy for powerpc64.
+	* sysdeps/powerpc/powerpc64/multiarch/bcopy.c: New file: multiarch
+	bcopy for powerpc64.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c: Add bcopy
+	and memmove implementations.
+	* sysdeps/powerpc/powerpc64/multiarch/memmove-power7.S: New file:
+	optimized multiarch memmove for POWER7/powerpc64.
+	* sysdeps/powerpc/powerpc64/multiarch/memmove-ppc64.c: New file:
+	default multiarch memmove for powerpc64.
+	* sysdeps/powerpc/powerpc64/multiarch/memmove.c: New file: memmove
+	multiarch for powerpc64.
+	* sysdeps/powerpc/powerpc64/power7/bcopy.c: New file: optimized bcopy
+	for POWER7/powerpc64.
+	* sysdeps/powerpc/powerpc64/power7/memmove.S: New file: optimized
+	memmove for POWER7/powerpc64.
+
 	* sysdeps/powerpc/memmove.c (memmove): Cleanup impplementation to use
 	glibc default one.
 

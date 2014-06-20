@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2014 Free Software Foundation, Inc.
+/* Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,12 +17,12 @@
 
 #include <string.h>
 
-#define	memmove		bcopy
-#define	rettype		void
-#define	RETURN(s)	return
-#define	a1		src
-#define	a1const		const
-#define	a2		dest
-#define	a2const
+#define MEMMOVE __memmove_ppc
+#if !defined(NOT_IN_libc) && defined(SHARED)
+# undef libc_hidden_builtin_def
+# define libc_hidden_builtin_def(name)
+#endif
 
-#include <string/memmove.c>
+extern __typeof (memmove) __memmove_ppc attribute_hidden;
+
+#include <sysdeps/powerpc/memmove.c>

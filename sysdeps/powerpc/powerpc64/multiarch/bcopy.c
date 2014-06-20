@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2014 Free Software Foundation, Inc.
+/* PowerPC64 multiarch bcopy.
+   Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +17,13 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <string.h>
+#include "init-arch.h"
 
-#define	memmove		bcopy
-#define	rettype		void
-#define	RETURN(s)	return
-#define	a1		src
-#define	a1const		const
-#define	a2		dest
-#define	a2const
+extern __typeof (bcopy) __bcopy_ppc attribute_hidden;
+/* __bcopy_power7 symbol is implemented at memmove-power7.S  */
+extern __typeof (bcopy) __bcopy_power7 attribute_hidden;
 
-#include <string/memmove.c>
+libc_ifunc (bcopy,
+            (hwcap & PPC_FEATURE_HAS_VSX)
+            ? __bcopy_power7
+            : __bcopy_ppc);
