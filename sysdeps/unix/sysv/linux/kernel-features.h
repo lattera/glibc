@@ -173,9 +173,6 @@
 # define __ASSUME_REQUEUE_PI	1
 #endif
 
-/* Support for F_GETOWN_EX was introduced in 2.6.32.  */
-#define __ASSUME_F_GETOWN_EX	1
-
 /* Support for recvmmsg functionality was added in 2.6.33.  The macros
    defined correspond to those for accept4.  */
 #if __LINUX_KERNEL_VERSION >= 0x020621 && defined __ASSUME_SOCKETCALL
