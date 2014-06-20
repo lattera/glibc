@@ -72,28 +72,10 @@ ADJTIME (const struct TIMEVAL *itv, struct TIMEVAL *otv)
       tntx.modes = ADJ_OFFSET_SINGLESHOT;
     }
   else
-    {
-#ifdef ADJ_OFFSET_SS_READ
-      tntx.modes = ADJ_OFFSET_SS_READ;
-#else
-      tntx.modes = 0;
-#endif
-    }
+    tntx.modes = ADJ_OFFSET_SS_READ;
 
-#if defined ADJ_OFFSET_SS_READ && !defined __ASSUME_ADJ_OFFSET_SS_READ
- again:
-#endif
   if (__glibc_unlikely (ADJTIMEX (&tntx) < 0))
-    {
-#if defined ADJ_OFFSET_SS_READ && !defined __ASSUME_ADJ_OFFSET_SS_READ
-      if (itv && errno == EINVAL && tntx.modes == ADJ_OFFSET_SS_READ)
-	{
-	  tntx.modes = ADJ_OFFSET_SINGLESHOT;
-	  goto again;
-	}
-#endif
-      return -1;
-    }
+    return -1;
 
   if (otv)
     {

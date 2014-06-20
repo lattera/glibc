@@ -120,9 +120,6 @@
    2.6.23.  */
 #define __ASSUME_O_CLOEXEC	1
 
-/* Support for ADJ_OFFSET_SS_READ was added in 2.6.24.  */
-#define __ASSUME_ADJ_OFFSET_SS_READ	1
-
 /* Support for various CLOEXEC and NONBLOCK flags was added in
    2.6.27.  */
 #define __ASSUME_SOCK_CLOEXEC	1

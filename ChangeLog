@@ -1,3 +1,11 @@
+2014-06-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_ADJ_OFFSET_SS_READ): Remove macro.
+	* sysdeps/unix/sysv/linux/adjtime.c (ADJTIME)
+	[ADJ_OFFSET_SS_READ]: Make code unconditional.
+	(ADJTIME) [!ADJ_OFFSET_SS_READ]: Remove conditional code.
+
 2014-06-20  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	[BZ #17075]
