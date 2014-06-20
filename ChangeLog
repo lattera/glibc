@@ -1,5 +1,11 @@
 2014-06-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_AT_RANDOM):
+	Remove macro.
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (_dl_setup_stack_chk_guard)
+	[!__ASSUME_AT_RANDOM]: Remove conditional code.
+	(_dl_setup_pointer_guard) [!__ASSUME_AT_RANDOM]: Likewise.
+
 	* sysdeps/unix/sysv/linux/kernel-features.h
 	(__ASSUME_ADJ_OFFSET_SS_READ): Remove macro.
 	* sysdeps/unix/sysv/linux/adjtime.c (ADJTIME)

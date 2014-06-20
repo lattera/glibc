@@ -162,9 +162,6 @@
 /* Support for the FUTEX_CLOCK_REALTIME flag was added in 2.6.29.  */
 #define __ASSUME_FUTEX_CLOCK_REALTIME	1
 
-/* Support for the AT_RANDOM auxiliary vector entry was added in 2.6.29.  */
-#define __ASSUME_AT_RANDOM	1
-
 /* Support for preadv and pwritev was added in 2.6.30.  */
 #define __ASSUME_PREADV	1
 #define __ASSUME_PWRITEV	1

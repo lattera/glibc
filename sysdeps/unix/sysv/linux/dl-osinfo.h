@@ -57,39 +57,17 @@ _dl_setup_stack_chk_guard (void *dl_random)
     unsigned char bytes[sizeof (uintptr_t)];
   } ret;
 
-#ifndef __ASSUME_AT_RANDOM
-  if (__glibc_unlikely (dl_random == NULL))
-    {
-      const size_t filllen = sizeof (ret.bytes) - 1;
-      ret.num = 0;
-# ifdef ENABLE_STACKGUARD_RANDOMIZE
-      int fd = open_not_cancel_2 ("/dev/urandom", O_RDONLY);
-      if (fd >= 0)
-	{
-	  ssize_t reslen = read_not_cancel (fd, ret.bytes + 1, filllen);
-	  close_not_cancel_no_status (fd);
-	  if (reslen == (ssize_t) filllen)
-	    return ret.num;
-	}
-# endif
-      ret.bytes[filllen] = 255;
-      ret.bytes[filllen - 1] = '\n';
-    }
-  else
-#endif
-    {
-      /* We need in the moment only 8 bytes on 32-bit platforms and 16
-	 bytes on 64-bit platforms.  Therefore we can use the data
-	 directly and not use the kernel-provided data to seed a PRNG.  */
-      memcpy (ret.bytes, dl_random, sizeof (ret));
+  /* We need in the moment only 8 bytes on 32-bit platforms and 16
+     bytes on 64-bit platforms.  Therefore we can use the data
+     directly and not use the kernel-provided data to seed a PRNG.  */
+  memcpy (ret.bytes, dl_random, sizeof (ret));
 #if BYTE_ORDER == LITTLE_ENDIAN
-      ret.num &= ~(uintptr_t) 0xff;
+  ret.num &= ~(uintptr_t) 0xff;
 #elif BYTE_ORDER == BIG_ENDIAN
-      ret.num &= ~((uintptr_t) 0xff << (8 * (sizeof (ret) - 1)));
+  ret.num &= ~((uintptr_t) 0xff << (8 * (sizeof (ret) - 1)));
 #else
 # error "BYTE_ORDER unknown"
 #endif
-    }
   return ret.num;
 }
 
@@ -97,18 +75,6 @@ static inline uintptr_t __attribute__ ((always_inline))
 _dl_setup_pointer_guard (void *dl_random, uintptr_t stack_chk_guard)
 {
   uintptr_t ret;
-#ifndef __ASSUME_AT_RANDOM
-  if (dl_random == NULL)
-    {
-      ret = stack_chk_guard;
-# ifndef HP_TIMING_NONAVAIL
-      hp_timing_t now;
-      HP_TIMING_NOW (now);
-      ret ^= now;
-# endif
-    }
-  else
-#endif
-    memcpy (&ret, (char *) dl_random + sizeof (ret), sizeof (ret));
+  memcpy (&ret, (char *) dl_random + sizeof (ret), sizeof (ret));
   return ret;
 }
