@@ -1,3 +1,16 @@
+2014-06-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* nptl/sysdeps/unix/sysv/linux/mq_notify.c: Do not include
+	<kernel-features.h>.
+	(init_mq_netlink): Remove conditional have_sock_cloexec
+	definitions.  Remove code conditional on have_sock_cloexec < 0.
+	(init_mq_netlink) [!SOCK_CLOEXEC]: Remove conditional code.
+	(init_mq_netlink) [!__ASSUME_SOCK_CLOEXEC]: Likewise.
+	* sysdeps/unix/sysv/linux/opensock.c: Do not include
+	<kernel-features.h>.
+	(__opensock) [SOCK_CLOEXEC]: Make code unconditional.
+	(__opensock) [!__ASSUME_SOCK_CLOEXEC]: Remove conditional code.
+
 2014-06-20  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/ifunc-impl-list.c (__libc_ifunc_impl_list):
