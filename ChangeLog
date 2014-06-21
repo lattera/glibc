@@ -1,3 +1,12 @@
+2014-06-20  Roland McGrath  <roland@hack.frob.com>
+
+	* nptl/sysdeps/unix/sysv/linux/bits/local_lim.h: Moved ...
+	* sysdeps/unix/sysv/linux/bits/local_lim.h: ... here, replacing the
+	old file.
+	* nptl/sysdeps/unix/sysv/linux/bits/posix_opt.h: Moved ...
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: ... here, replacing the
+	old file.
+
 2014-06-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/kernel-features.h
