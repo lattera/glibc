@@ -1,5 +1,8 @@
 2014-06-20  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/sysdeps/unix/sysv/linux/smp.h: Moved ...
+	* nptl/smp.h: ... here.
+
 	* nptl/sysdeps/unix/sysv/linux/rtld-lowlevel.h: File removed.
 
 	* include/libc-symbols.h (HAVE_CONFIG_H, STDC_HEADERS): New macros.

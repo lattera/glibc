@@ -1,4 +1,4 @@
-/* Determine whether the host has multiple processors.  Linux version.
+/* Determine whether the host has multiple processors.  Stub version.
    Copyright (C) 1996-2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
