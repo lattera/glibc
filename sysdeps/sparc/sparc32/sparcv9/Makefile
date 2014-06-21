@@ -18,3 +18,7 @@ ASFLAGS-.op += -Wa,-Av9a
 ASFLAGS-.og += -Wa,-Av9a
 ASFLAGS-.oS += -Wa,-Av9a
 endif
+
+ifeq ($(subdir), nptl)
+libpthread-routines += cpu_relax
+endif

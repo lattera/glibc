@@ -11,3 +11,8 @@ endif
 ifeq ($(subdir),sysvipc)
 sysdep_routines += getshmlba
 endif
+
+ifeq ($(subdir),nptl)
+# pull in __syscall_error routine
+libpthread-routines += sysdep
+endif
