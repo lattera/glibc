@@ -48,6 +48,19 @@
 
 #include <config.h>
 
+/* Define this for the benefit of portable GNU code that wants to check it.
+   Code that checks with #if will not #include <config.h> again, since we've
+   already done it (and this file is implicitly included in every compile,
+   via -include).  Code that checks with #ifdef will #include <config.h>,
+   but that file should always be idempotent (i.e., it's just #define/#undef
+   and nothing else anywhere should be changing the macro state it touches),
+   so it's harmless.  */
+#define HAVE_CONFIG_H	0
+
+/* Define this for the benefit of portable GNU code that wants to check it.
+   Of course, it's never false when building libc!  */
+#define STDC_HEADERS	1
+
 /* The symbols in all the user (non-_) macros are C symbols.  */
 
 #if !defined HAVE_ASM_WEAK_DIRECTIVE && !defined HAVE_ASM_WEAKEXT_DIRECTIVE

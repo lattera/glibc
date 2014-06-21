@@ -1,5 +1,10 @@
 2014-06-20  Roland McGrath  <roland@hack.frob.com>
 
+	* include/libc-symbols.h (HAVE_CONFIG_H, STDC_HEADERS): New macros.
+	* catgets/Makefile (catgets-CPPFLAGS): Remove -DHAVE_CONFIG_H.
+	* locale/Makefile (CPPFLAGS-locale-programs): Likewise.
+	* stdlib/strtol_l.c [_LIBC] (STDC_HEADERS): Don't define it.
+
 	* nptl/allocatestack.c: Include <stack-aliasing.h>.
 	* nptl/stack-aliasing.h: New file.
 	* sysdeps/i386/i686/stack-aliasing.h: New file.

@@ -24,7 +24,6 @@
 
 #ifdef _LIBC
 # define USE_NUMBER_GROUPING
-# define STDC_HEADERS
 # define HAVE_LIMITS_H
 #endif
 
