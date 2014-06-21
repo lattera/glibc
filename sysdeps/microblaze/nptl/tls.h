@@ -101,6 +101,8 @@ static inline void *__microblaze_get_thread_area (void)
 # define TLS_INIT_TP(tcbp) \
   ({ __asm __volatile ("or r21,r0,%0" : : "r" ((void *)tcbp)); 0; })
 
+# define TLS_DEFINE_INIT_TP(tp, pd) void *tp = (pd) + 1
+
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
   (((tcbhead_t *) READ_THREAD_POINTER())->dtv)
