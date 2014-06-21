@@ -17,9 +17,6 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* The signal frame layout changed in 2.6.18.  */
-#define __ASSUME_SIGFRAME_V2	1
-
 /* Support for the recvmmsg syscall was added in 2.6.33.  */
 #if __LINUX_KERNEL_VERSION >= 0x020621
 # define __ASSUME_RECVMMSG_SYSCALL	1

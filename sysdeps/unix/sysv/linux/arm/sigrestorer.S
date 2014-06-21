@@ -28,10 +28,7 @@
 
    Start the unwind tables at least one instruction before the signal
    trampoline, because the unwinder will assume we are returning after
-   a call site.
-
-   Because the signal frame layout changed in 2.6.18, we provide two
-   copies of these functions with different unwind information.  */
+   a call site.  */
 
 /* Used in ENTRY.  */
 #undef cfi_startproc
@@ -60,58 +57,28 @@
 	cfi_offset (r14, OFFSET + 14 * 4); \
 	cfi_offset (r15, OFFSET + 15 * 4)
 
-#ifndef __ASSUME_SIGFRAME_V2
-#define OFFSET 12
-	.fnstart
-	.save {r0-r15}
-	.pad #OFFSET
-	nop
-ENTRY(__default_sa_restorer_v1)
-	CFI
-	mov	r7, $SYS_ify(sigreturn)
-	swi	0x0
-	.fnend
-END(__default_sa_restorer_v1)
-#undef OFFSET
-#endif /* __ASSUME_SIGFRAME_V2 */
-
 #define OFFSET 32
 	.fnstart
 	.save {r0-r15}
 	.pad #OFFSET
 	nop
-ENTRY(__default_sa_restorer_v2)
+ENTRY(__default_sa_restorer)
 	CFI
 	mov	r7, $SYS_ify(sigreturn)
 	swi	0x0
 	.fnend
-END(__default_sa_restorer_v2)
+END(__default_sa_restorer)
 #undef OFFSET
-
-#ifndef __ASSUME_SIGFRAME_V2
-#define OFFSET 168
-	.fnstart
-	.save {r0-r15}
-	.pad #OFFSET
-	nop
-ENTRY(__default_rt_sa_restorer_v1)
-	CFI
-	mov	r7, $SYS_ify(rt_sigreturn)
-	swi	0x0
-	.fnend
-END(__default_rt_sa_restorer_v1)
-#undef OFFSET
-#endif /* __ASSUME_SIGFRAME_V2 */
 
 #define OFFSET 160
 	.fnstart
 	.save {r0-r15}
 	.pad #OFFSET
 	nop
-ENTRY(__default_rt_sa_restorer_v2)
+ENTRY(__default_rt_sa_restorer)
 	CFI
 	mov	r7, $SYS_ify(rt_sigreturn)
 	swi	0x0
 	.fnend
-END(__default_rt_sa_restorer_v2)
+END(__default_rt_sa_restorer)
 #undef OFFSET

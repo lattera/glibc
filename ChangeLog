@@ -1,3 +1,22 @@
+2014-06-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h
+	(__ASSUME_SIGFRAME_V2): Remove macro.
+	* sysdeps/unix/sysv/linux/arm/sigrestorer.S: Update comment.
+	[!__ASSUME_SIGFRAME_V2]: Remove conditional code.
+	(__default_sa_restorer_v2): Rename to __default_sa_restorer.
+	(__default_rt_sa_restorer_v2): Rename to __default_rt_sa_restorer.
+	* sysdeps/unix/sysv/linux/arm/sigaction.c (__default_sa_restorer):
+	Declare as function.  Remove conditional macro definitions.
+	(__default_rt_sa_restorer): Likewise.
+	(__default_sa_restorer_v1): Remove declaration.
+	(__default_sa_restorer_v2): Likewise.
+	(__default_rt_sa_restorer_v1): Likewise.
+	(__default_rt_sa_restorer_v2): Likewise.
+	* sysdeps/unix/sysv/linux/arm/Versions (GLIBC_PRIVATE): Remove
+	__default_sa_restorer_v1, __default_rt_sa_restorer_v1,
+	__default_sa_restorer_v2 and __default_rt_sa_restorer_v2.
+
 2014-06-20  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/sparc/Makefile [$(subdir) = nptl]
