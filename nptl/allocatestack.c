@@ -30,6 +30,7 @@
 #include <list.h>
 #include <lowlevellock.h>
 #include <kernel-features.h>
+#include <stack-aliasing.h>
 
 
 #ifndef NEED_SEPARATE_REGISTER_STACK

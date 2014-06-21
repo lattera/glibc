@@ -1,5 +1,13 @@
 2014-06-20  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/allocatestack.c: Include <stack-aliasing.h>.
+	* nptl/stack-aliasing.h: New file.
+	* sysdeps/i386/i686/stack-aliasing.h: New file.
+	* sysdeps/i386/i686/nptl/Makefile: File removed.
+	* sysdeps/x86_64/stack-aliasing.h: New file.
+	* sysdeps/x86_64/nptl/Makefile
+	(CFLAGS-pthread_create.c): Variable removed.
+
 	* nptl/sysdeps/unix/sysv/linux/bits/local_lim.h: Moved ...
 	* sysdeps/unix/sysv/linux/bits/local_lim.h: ... here, replacing the
 	old file.
