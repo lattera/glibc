@@ -54,6 +54,12 @@ Version 2.20
   default mutexes are elided via __builtin_tbegin, if the cpu supports
   transactions. By default lock elision is not enabled and the elision code
   is not built.
+
+* CVE-2014-4043 The posix_spawn_file_actions_addopen implementation did not
+  copy the path argument.  This allowed programs to cause posix_spawn to
+  deference a dangling pointer, or use an unexpected pathname argument if
+  the string was modified after the posix_spawn_file_actions_addopen
+  invocation.
 
 Version 2.19
 

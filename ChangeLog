@@ -1,3 +1,7 @@
+2014-06-21  Allan McRae  <allan@archlinux.org>
+
+	* NEWS: Mention CVE-2014-4043.
+
 2014-06-20  Roland McGrath  <roland@hack.frob.com>
 
 	* nptl/sysdeps/unix/sysv/linux/smp.h: Moved ...
