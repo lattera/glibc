@@ -57,20 +57,6 @@
 
 #define PACKAGE _libc_intl_domainname
 
-/* Structure used by main() thread to keep track of the number of
-   active threads.  Used to limit how many threads it will create
-   and under a shutdown condition to wait till all in-progress
-   requests have finished before "turning off the lights".  */
-
-typedef struct
-{
-  int             num_active;
-  pthread_cond_t  thread_exit_cv;
-  pthread_mutex_t mutex;
-} thread_info_t;
-
-thread_info_t thread_info;
-
 int do_shutdown;
 int disabled_passwd;
 int disabled_group;

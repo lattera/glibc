@@ -1,3 +1,8 @@
+2014-06-22  Ludovic Courtès  <ludo@gnu.org>
+
+	* nscd/nscd.c (thread_info_t): Remove typedef.
+	(thread_info): Remove variable.
+
 2014-06-21  Allan McRae  <allan@archlinux.org>
 
 	* NEWS: Mention CVE-2014-4043.
