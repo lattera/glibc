@@ -1,3 +1,179 @@
+2014-06-23  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/c++-types.data:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/c++-types.data: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/libc.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/libm.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/localplt.data:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/localplt.data: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/c++-types.data:
+	File removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/ld.abilist:
+	File removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/libBrokenLocale.abilist:
+	File removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/libanl.abilist:
+	File removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/libcrypt.abilist:
+	File removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/libdl.abilist:
+	File removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/libnsl.abilist:
+	File removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/libpthread.abilist:
+	File removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/libresolv.abilist:
+	File removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/librt.abilist:
+	File removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/libthread_db.abilist:
+	File removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/libutil.abilist:
+	File removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/ld.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ld.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libBrokenLocale.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libBrokenLocale.abilist:
+	... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libanl.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libanl.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libcrypt.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libcrypt.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libdl.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libdl.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libnsl.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libnsl.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libpthread.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libpthread.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libresolv.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libresolv.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/librt.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/librt.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libthread_db.abilist: Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libthread_db.abilist:
+	... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libutil.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libutil.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libc.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist:
+	... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libm.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/localplt.data:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/localplt.data:
+	... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/c++-types.data:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/c++-types.data: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/ld-le.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ld-le.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/ld.abilist: Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ld.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libBrokenLocale-le.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libBrokenLocale-le.abilist:
+	... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libBrokenLocale.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libBrokenLocale.abilist:
+	... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libanl-le.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libanl-le.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libanl.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libanl.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libc-le.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc-le.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libc.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libcrypt-le.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libcrypt-le.abilist:
+	... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libcrypt.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libcrypt.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libdl-le.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libdl-le.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libdl.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libdl.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libm-le.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libm.abilist: Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libnsl-le.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libnsl-le.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libnsl.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libnsl.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libpthread-le.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libpthread-le.abilist:
+	... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libpthread.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libpthread.abilist:
+	... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libresolv-le.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libresolv-le.abilist:
+	... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libresolv.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libresolv.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/librt-le.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/librt-le.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/librt.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/librt.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libthread_db-le.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libthread_db-le.abilist:
+	... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libthread_db.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libthread_db.abilist:
+	... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libutil-le.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libutil-le.abilist:
+	... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libutil.abilist:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libutil.abilist: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/localplt.data:
+	Moved ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/localplt.data: ... here.
+
 2014-06-23  Will Newton  <will.newton@linaro.org>
 	    Wilco  <wdijkstr@arm.com>
 
