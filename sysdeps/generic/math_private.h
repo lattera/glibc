@@ -20,6 +20,7 @@
 #include <stdint.h>
 #include <sys/types.h>
 #include <fenv.h>
+#include <get-rounding-mode.h>
 
 /* The original fdlibm code used statements like:
 	n0 = ((*(int*)&one)>>29)^1;		* index of high word *
@@ -551,11 +552,25 @@ default_libc_feupdateenv_test (fenv_t *e, int ex)
 # define libc_feresetround_noexl libc_fesetenvl
 #endif
 
+#ifndef HAVE_RM_CTX
+# define HAVE_RM_CTX 0
+#endif
+
 #if HAVE_RM_CTX
 /* Set/Restore Rounding Modes only when necessary.  If defined, these functions
    set/restore floating point state only if the state needed within the lexical
    block is different from the current state.  This saves a lot of time when
    the floating point unit is much slower than the fixed point units.  */
+
+# ifndef libc_feholdsetround_noex_ctx
+#   define libc_feholdsetround_noex_ctx  libc_feholdsetround_ctx
+# endif
+# ifndef libc_feholdsetround_noexf_ctx
+#   define libc_feholdsetround_noexf_ctx libc_feholdsetroundf_ctx
+# endif
+# ifndef libc_feholdsetround_noexl_ctx
+#   define libc_feholdsetround_noexl_ctx libc_feholdsetroundl_ctx
+# endif
 
 # ifndef libc_feresetround_noex_ctx
 #   define libc_feresetround_noex_ctx  libc_fesetenv_ctx
@@ -567,24 +582,80 @@ default_libc_feupdateenv_test (fenv_t *e, int ex)
 #   define libc_feresetround_noexl_ctx libc_fesetenvl_ctx
 # endif
 
-# ifndef libc_feholdsetround_53bit_ctx
-#   define libc_feholdsetround_53bit_ctx libc_feholdsetround_ctx
-# endif
-
-# ifndef libc_feresetround_53bit_ctx
-#   define libc_feresetround_53bit_ctx libc_feresetround_ctx
-# endif
-
-# define SET_RESTORE_ROUND_GENERIC(RM,ROUNDFUNC,CLEANUPFUNC) \
-  struct rm_ctx ctx __attribute__((cleanup(CLEANUPFUNC ## _ctx)));	      \
-  ROUNDFUNC ## _ctx (&ctx, (RM))
 #else
-# define SET_RESTORE_ROUND_GENERIC(RM, ROUNDFUNC, CLEANUPFUNC) \
-  fenv_t __libc_save_rm __attribute__((cleanup(CLEANUPFUNC)));	\
-  ROUNDFUNC (&__libc_save_rm, (RM))
+
+/* Default implementation using standard fenv functions.
+   Avoid unnecessary rounding mode changes by first checking the
+   current rounding mode.  Note the use of __glibc_unlikely is
+   important for performance.  */
+
+static __always_inline void
+libc_feholdsetround_ctx (struct rm_ctx *ctx, int round)
+{
+  ctx->updated_status = false;
+
+  /* Update rounding mode only if different.  */
+  if (__glibc_unlikely (round != get_rounding_mode ()))
+    {
+      ctx->updated_status = true;
+      fegetenv (&ctx->env);
+      fesetround (round);
+    }
+}
+
+static __always_inline void
+libc_feresetround_ctx (struct rm_ctx *ctx)
+{
+  /* Restore the rounding mode if updated.  */
+  if (__glibc_unlikely (ctx->updated_status))
+    feupdateenv (&ctx->env);
+}
+
+static __always_inline void
+libc_feholdsetround_noex_ctx (struct rm_ctx *ctx, int round)
+{
+  /* Save exception flags and rounding mode.  */
+  fegetenv (&ctx->env);
+
+  /* Update rounding mode only if different.  */
+  if (__glibc_unlikely (round != get_rounding_mode ()))
+    fesetround (round);
+}
+
+static __always_inline void
+libc_feresetround_noex_ctx (struct rm_ctx *ctx)
+{
+  /* Restore exception flags and rounding mode.  */
+  fesetenv (&ctx->env);
+}
+
+# define libc_feholdsetroundf_ctx libc_feholdsetround_ctx
+# define libc_feholdsetroundl_ctx libc_feholdsetround_ctx
+# define libc_feresetroundf_ctx   libc_feresetround_ctx
+# define libc_feresetroundl_ctx   libc_feresetround_ctx
+
+# define libc_feholdsetround_noexf_ctx libc_feholdsetround_noex_ctx
+# define libc_feholdsetround_noexl_ctx libc_feholdsetround_noex_ctx
+# define libc_feresetround_noexf_ctx   libc_feresetround_noex_ctx
+# define libc_feresetround_noexl_ctx   libc_feresetround_noex_ctx
+
 #endif
 
-/* Save and restore the rounding mode within a lexical block.  */
+#ifndef libc_feholdsetround_53bit_ctx
+#  define libc_feholdsetround_53bit_ctx libc_feholdsetround_ctx
+#endif
+#ifndef libc_feresetround_53bit_ctx
+#  define libc_feresetround_53bit_ctx libc_feresetround_ctx
+#endif
+
+#define SET_RESTORE_ROUND_GENERIC(RM,ROUNDFUNC,CLEANUPFUNC) \
+  struct rm_ctx ctx __attribute__((cleanup (CLEANUPFUNC ## _ctx))); \
+  ROUNDFUNC ## _ctx (&ctx, (RM))
+
+/* Set the rounding mode within a lexical block.  Restore the rounding mode to
+   the value at the start of the block.  The exception mode must be preserved.
+   Exceptions raised within the block must be set in the exception flags.
+   Non-stop mode may be enabled inside the block.  */
 
 #define SET_RESTORE_ROUND(RM) \
   SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround, libc_feresetround)
@@ -593,15 +664,21 @@ default_libc_feupdateenv_test (fenv_t *e, int ex)
 #define SET_RESTORE_ROUNDL(RM) \
   SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetroundl, libc_feresetroundl)
 
-/* Save and restore the rounding mode within a lexical block, and also
-   the set of exceptions raised within the block may be discarded.  */
+/* Set the rounding mode within a lexical block.  Restore the rounding mode to
+   the value at the start of the block.  The exception mode must be preserved.
+   Exceptions raised within the block must be discarded, and exception flags
+   are restored to the value at the start of the block.
+   Non-stop mode may be enabled inside the block.  */
 
 #define SET_RESTORE_ROUND_NOEX(RM) \
-  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround, libc_feresetround_noex)
+  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround_noex, \
+			     libc_feresetround_noex)
 #define SET_RESTORE_ROUND_NOEXF(RM) \
-  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetroundf, libc_feresetround_noexf)
+  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround_noexf, \
+			     libc_feresetround_noexf)
 #define SET_RESTORE_ROUND_NOEXL(RM) \
-  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetroundl, libc_feresetround_noexl)
+  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround_noexl, \
+			     libc_feresetround_noexl)
 
 /* Like SET_RESTORE_ROUND, but also set rounding precision to 53 bits.  */
 #define SET_RESTORE_ROUND_53BIT(RM) \

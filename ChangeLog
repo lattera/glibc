@@ -1,3 +1,20 @@
+2014-06-23  Will Newton  <will.newton@linaro.org>
+	    Wilco  <wdijkstr@arm.com>
+
+	* sysdeps/generic/math_private.h: Add generic HAVE_RM_CTX
+	implementation.  Include get-rounding-mode.h.
+	[!HAVE_RM_CTX]: Define HAVE_RM_CTX to zero.
+	[!libc_feholdsetround_noex_ctx]: Define
+	libc_feholdsetround_noex_ctx.
+	[!libc_feholdsetround_noexf_ctx]: Define
+	libc_feholdsetround_noexf_ctx.
+	[!libc_feholdsetround_noexl_ctx]: Define
+	libc_feholdsetround_noexl_ctx.
+	(libc_feholdsetround_ctx): New function.
+	(libc_feresetround_ctx): New function.
+	(libc_feholdsetround_noex_ctx): New function.
+	(libc_feresetround_noex_ctx): New function.
+
 2014-06-23  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/mips/nptl/bits/pthreadtypes.h: Moved ...
