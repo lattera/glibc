@@ -1,3 +1,8 @@
+2014-06-23  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/bits/hwcap.h [PPC_FEATURE2_HAS_VEC_CRYPTO]: New
+	macro: hardware supports Vector Crypto instructions.
+
 2014-06-23  Will Newton  <will.newton@linaro.org>
 
 	* elf/dl-lookup.c: Use __glibc_unlikely and __glibc_likely
