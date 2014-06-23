@@ -1,3 +1,12 @@
+2014-06-23  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/bits/fcntl-linux.h [__USE_GNU]
+	(FALLOC_FL_COLLAPSE_RANGE): New macro.
+	[__USE_GNU] (FALLOC_FL_ZERO_RANGE): Likewise.
+	* sysdeps/unix/sysv/linux/bits/in.h (IP_PMTUDISC_OMIT): Likewise.
+	(IPV6_PMTUDISC_INTERFACE): Likewise.
+	(IPV6_PMTUDISC_OMIT): Likewise.
+
 2014-06-23  Andreas Schwab  <schwab@suse.de>
 
 	* nptl/sysdeps/unix/sysv/linux/mq_notify.c (init_mq_netlink):

@@ -101,6 +101,8 @@
    Also incoming ICMP frag_needed notifications will be ignored on
    this socket to prevent accepting spoofed ones.  */
 #define IP_PMTUDISC_INTERFACE           4
+/* Like IP_PMTUDISC_INTERFACE but allow packets to be fragmented.  */
+#define IP_PMTUDISC_OMIT		5
 
 #define IP_MULTICAST_IF			32
 #define IP_MULTICAST_TTL 		33
@@ -214,6 +216,8 @@ struct in_pktinfo
 #define IPV6_PMTUDISC_WANT	1	/* Use per route hints.  */
 #define IPV6_PMTUDISC_DO	2	/* Always DF.  */
 #define IPV6_PMTUDISC_PROBE	3	/* Ignore dst pmtu.  */
+#define IPV6_PMTUDISC_INTERFACE	4	/* See IP_PMTUDISC_INTERFACE.  */
+#define IPV6_PMTUDISC_OMIT	5	/* See IP_PMTUDISC_OMIT.  */
 
 /* Socket level values for IPv6.  */
 #define SOL_IPV6        41
