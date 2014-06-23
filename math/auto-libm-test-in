@@ -624,11 +624,14 @@ cosh 50
 # GCC bug 59666: results on directed rounding may be incorrect.
 cosh max no-test-inline xfail-rounding:ldbl-128ibm
 cosh -max no-test-inline xfail-rounding:ldbl-128ibm
-# Bug 16354: spurious underflow may occur.
-cosh min spurious-underflow
-cosh -min spurious-underflow
-cosh min_subnorm spurious-underflow
-cosh -min_subnorm spurious-underflow
+cosh min
+cosh -min
+cosh min_subnorm
+cosh -min_subnorm
+cosh 0x1p-56
+cosh -0x1p-56
+cosh 0x1p-72
+cosh -0x1p-72
 # Test values either side of overflow for each floating-point format.
 cosh 0x5.96a7ep+4
 cosh 0x5.96a7e8p+4

@@ -1,5 +1,21 @@
 2014-06-23  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16354]
+	[BZ #17061]
+	* sysdeps/ieee754/dbl-64/e_cosh.c (__ieee754_cosh): Check for
+	small arguments before calling __expm1.
+	* sysdeps/ieee754/flt-32/e_coshf.c (__ieee754_coshf): Check for
+	small arguments before calling __expm1f.
+	* sysdeps/ieee754/ldbl-128/e_coshl.c (__ieee754_coshl): Check for
+	small arguments before calling __expm1l.
+	* sysdeps/ieee754/ldbl-128ibm/e_coshl.c (__ieee754_coshl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-96/e_coshl.c (__ieee754_coshl): Likewise.
+	* math/auto-libm-test-in: Add more cosh tests.  Do not allow
+	spurious underflow for some cosh tests.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+
 	[BZ #17050]
 	* sysdeps/ieee754/dbl-64/e_j1.c: Include <errno.h>.
 	(__ieee754_y1): Set errno if return value overflows.

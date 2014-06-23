@@ -53,9 +53,9 @@ __ieee754_coshl (long double x)
 
     /* |x| in [0,0.5*ln2], return 1+expm1(|x|)^2/(2*exp(|x|)) */
 	if(ix<0x3fd62e42fefa39efLL) {
+	    if (ix<0x3c80000000000000LL) return one;	/* cosh(tiny) = 1 */
 	    t = __expm1l(fabsl(x));
 	    w = one+t;
-	    if (ix<0x3c80000000000000LL) return w;	/* cosh(tiny) = 1 */
 	    return one+(t*t)/(w+w);
 	}
 

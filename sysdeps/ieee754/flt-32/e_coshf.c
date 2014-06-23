@@ -33,9 +33,9 @@ __ieee754_coshf (float x)
 	if (ix < 0x41b00000) {
 	    /* |x| in [0,0.5*ln2], return 1+expm1(|x|)^2/(2*exp(|x|)) */
 		if(ix<0x3eb17218) {
+		    if (ix<0x24000000) return one;	/* cosh(tiny) = 1 */
 		    t = __expm1f(fabsf(x));
 		    w = one+t;
-		    if (ix<0x24000000) return w;	/* cosh(tiny) = 1 */
 		    return one+(t*t)/(w+w);
 		}
 

@@ -895,6 +895,7 @@ ldouble: 2
 
 Function: "cosh_upward":
 double: 1
+float: 1
 idouble: 1
 ifloat: 1
 ildouble: 2
