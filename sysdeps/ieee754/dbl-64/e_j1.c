@@ -58,6 +58,7 @@
  *	   by method mentioned above.
  */
 
+#include <errno.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -205,7 +206,10 @@ __ieee754_y1 (double x)
     }
   if (__glibc_unlikely (ix <= 0x3c900000))              /* x < 2**-54 */
     {
-      return (-tpi / x);
+      z = -tpi / x;
+      if (__isinf (z))
+	__set_errno (ERANGE);
+      return z;
     }
   z = x * x;
   u1 = U0[0] + z * U0[1]; z2 = z * z;

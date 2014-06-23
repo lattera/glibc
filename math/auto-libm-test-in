@@ -2458,6 +2458,8 @@ y0 0x1p-80
 y0 0x1p-90
 y0 0x1p-100
 y0 0x1p-110
+y0 min
+y0 min_subnorm
 
 y1 0.125
 y1 0.75
@@ -2482,6 +2484,8 @@ y1 0x1p-80
 y1 0x1p-90
 y1 0x1p-100
 y1 0x1p-110
+y1 min
+y1 min_subnorm
 
 # yn (0, x) == y0 (x).
 yn 0 0.125
@@ -2526,3 +2530,22 @@ yn 2 0x1.ffff62p+99
 yn 2 0x1p127
 yn 2 0x1p1023
 yn 2 0x1p16383
+
+yn 0 min
+yn 0 min_subnorm
+yn 1 min
+yn 1 min_subnorm
+yn -1 min
+yn -1 min_subnorm
+yn 2 min
+yn 2 min_subnorm
+yn -2 min
+yn -2 min_subnorm
+yn 17 min
+yn 17 min_subnorm
+yn -17 min
+yn -17 min_subnorm
+yn 42 min
+yn 42 min_subnorm
+yn -42 min
+yn -42 min_subnorm

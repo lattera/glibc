@@ -95,6 +95,7 @@
     License along with this library; if not, see
     <http://www.gnu.org/licenses/>.  */
 
+#include <errno.h>
 #include <math.h>
 #include <math_private.h>
 #include <float.h>
@@ -852,7 +853,12 @@ __ieee754_y1l (long double x)
     }
   xx = fabsl (x);
   if (xx <= 0x1p-114)
-    return -TWOOPI / x;
+    {
+      z = -TWOOPI / x;
+      if (__isinfl (z))
+	__set_errno (ERANGE);
+      return z;
+    }
   if (xx <= 2.0L)
     {
       /* 0 <= x <= 2 */

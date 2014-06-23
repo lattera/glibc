@@ -13,6 +13,7 @@
  * ====================================================
  */
 
+#include <errno.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -135,7 +136,10 @@ __ieee754_y1f(float x)
 		return z;
 	}
 	if(__builtin_expect(ix<=0x33000000, 0)) {    /* x < 2**-25 */
-	    return(-tpi/x);
+	    z = -tpi / x;
+	    if (__isinff (z))
+		__set_errno (ERANGE);
+	    return z;
 	}
 	z = x*x;
 	u = U0[0]+z*(U0[1]+z*(U0[2]+z*(U0[3]+z*U0[4])));

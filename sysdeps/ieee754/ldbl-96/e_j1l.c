@@ -71,6 +71,7 @@
  *	   by method mentioned above.
  */
 
+#include <errno.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -234,7 +235,10 @@ __ieee754_y1l (long double x)
     }
   if (__glibc_unlikely (ix <= 0x3fbe))
     {				/* x < 2**-65 */
-      return (-tpi / x);
+      z = -tpi / x;
+      if (__isinfl (z))
+	__set_errno (ERANGE);
+      return z;
     }
   z = x * x;
  u = U0[0] + z * (U0[1] + z * (U0[2] + z * (U0[3] + z * (U0[4] + z * U0[5]))));

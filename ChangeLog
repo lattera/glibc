@@ -1,5 +1,17 @@
 2014-06-23  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17050]
+	* sysdeps/ieee754/dbl-64/e_j1.c: Include <errno.h>.
+	(__ieee754_y1): Set errno if return value overflows.
+	* sysdeps/ieee754/flt-32/e_j1f.c: Include <errno.h>.
+	(__ieee754_y1f): Set errno if return value overflows.
+	* sysdeps/ieee754/ldbl-128/e_j1l.c: Include <errno.h>.
+	(__ieee754_y1l): Set errno if return value overflows.
+	* sysdeps/ieee754/ldbl-96/e_j1l.c: Include <errno.h>.
+	(__ieee754_y1l): Set errno if return value overflows.
+	* math/auto-libm-test-in: Add more tests of y0, y1 and yn.
+	* math/auto-libm-test-out: Regenerated.
+
 	* math/gen-auto-libm-tests.c: Document use of
 	ignore-zero-inf-sign.
 	(input_flag_type): Add value flag_ignore_zero_inf_sign.
