@@ -29,7 +29,6 @@ int
 fstatvfs (int fd, struct statvfs *buf)
 {
   struct statfs fsbuf;
-  struct stat64 st;
 
   /* Get as much information as possible from the system.  */
   if (__fstatfs (fd, &fsbuf) < 0)

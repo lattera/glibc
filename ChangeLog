@@ -1,3 +1,8 @@
+2014-06-23  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/fstatvfs.c (fstatvfs):
+	Remove unused variable ST.
+
 2014-06-23  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16354]
