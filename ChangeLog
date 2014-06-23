@@ -1,3 +1,9 @@
+2014-06-23  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #17079]
+	* nss/nss_files/files-XXX.c (get_contents): Store overflow marker
+	before reading the next line.
+
 2014-06-23  Will Newton  <will.newton@linaro.org>
 
 	* test-skeleton.c (signal_handler): Use printf and %m
