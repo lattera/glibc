@@ -84,15 +84,16 @@
    permitted), errno is expected to be left unchanged.
 
    The flag "no-test-inline" indicates a test is disabled for inline
-   function testing; "xfail" indicates the test is disabled as
-   expected to produce incorrect results, "xfail-rounding" indicates
-   the test is disabled only in rounding modes other than
-   round-to-nearest.  Otherwise, test flags are of the form
-   "spurious-<exception>" and "missing-<exception>", for any exception
-   ("overflow", "underflow", "inexact", "invalid", "divbyzero"),
-   "spurious-errno" and "missing-errno", to indicate when tests are
-   expected to deviate from the exception and errno settings
-   corresponding to the mathematical results.  "xfail",
+   function testing; "ignore-zero-inf-sign" indicates the the signs of
+   zero and infinite results should be ignored; "xfail" indicates the
+   test is disabled as expected to produce incorrect results,
+   "xfail-rounding" indicates the test is disabled only in rounding
+   modes other than round-to-nearest.  Otherwise, test flags are of
+   the form "spurious-<exception>" and "missing-<exception>", for any
+   exception ("overflow", "underflow", "inexact", "invalid",
+   "divbyzero"), "spurious-errno" and "missing-errno", to indicate
+   when tests are expected to deviate from the exception and errno
+   settings corresponding to the mathematical results.  "xfail",
    "xfail-rounding", "spurious-" and "missing-" flags should be
    accompanied by a comment referring to an open bug in glibc
    Bugzilla.
@@ -109,17 +110,17 @@
    plus_infty or minus_infty for infinite expected results, or as
    integer constant expressions (not necessarily with the right type)
    or IGNORE for integer inputs and outputs.  Flags are
-   "no-test-inline", "xfail", "<exception>", "<exception>-ok",
-   "errno-<value>", "errno-<value>-ok", which may be unconditional or
-   conditional.  "<exception>" indicates that a correct result means
-   the given exception should be raised.  "errno-<value>" indicates
-   that a correct result means errno should be set to the given value.
-   "-ok" means not to test for the given exception or errno value
-   (whether because it was marked as possibly missing or spurious, or
-   because the calculation of correct results indicated it was
-   optional).  Conditions "before-rounding" and "after-rounding"
-   indicate tests where expectations for underflow exceptions depend
-   on how the architecture detects tininess.  */
+   "no-test-inline", "ignore-zero-info-sign", "xfail", "<exception>",
+   "<exception>-ok", "errno-<value>", "errno-<value>-ok", which may be
+   unconditional or conditional.  "<exception>" indicates that a
+   correct result means the given exception should be raised.
+   "errno-<value>" indicates that a correct result means errno should
+   be set to the given value.  "-ok" means not to test for the given
+   exception or errno value (whether because it was marked as possibly
+   missing or spurious, or because the calculation of correct results
+   indicated it was optional).  Conditions "before-rounding" and
+   "after-rounding" indicate tests where expectations for underflow
+   exceptions depend on how the architecture detects tininess.  */
 
 #define _GNU_SOURCE
 
@@ -315,6 +316,7 @@ typedef struct
 typedef enum
   {
     flag_no_test_inline,
+    flag_ignore_zero_inf_sign,
     flag_xfail,
     flag_xfail_rounding,
     /* The "spurious" and "missing" flags must be in the same order as
@@ -342,6 +344,7 @@ typedef enum
 static const char *const input_flags[num_input_flag_types] =
   {
     "no-test-inline",
+    "ignore-zero-inf-sign",
     "xfail",
     "xfail-rounding",
     "spurious-divbyzero",
@@ -1950,6 +1953,7 @@ output_for_one_input_case (FILE *fp, const char *filename, test_function *tf,
 		switch (it->flags[i].type)
 		  {
 		  case flag_no_test_inline:
+		  case flag_ignore_zero_inf_sign:
 		  case flag_xfail:
 		    if (fprintf (fp, " %s%s",
 				 input_flags[it->flags[i].type],

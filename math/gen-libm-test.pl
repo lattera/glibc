@@ -442,6 +442,10 @@ sub generate_testfile {
 	    }
 	  }
 	  $flags_conv = "";
+	  if (defined ($flag_cond{"ignore-zero-inf-sign"})) {
+	    $flags_conv .= or_cond_value ($flag_cond{"ignore-zero-inf-sign"},
+					  "IGNORE_ZERO_INF_SIGN", "0");
+	  }
 	  if (defined ($flag_cond{"no-test-inline"})) {
 	    $flags_conv .= or_cond_value ($flag_cond{"no-test-inline"},
 					  "NO_TEST_INLINE", "0");

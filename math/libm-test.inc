@@ -6288,9 +6288,7 @@ static const struct test_cc_c_data cpow_test_data[] =
 static void
 cpow_test (void)
 {
-  START (cpow, 0);
-  RUN_TEST_LOOP_cc_c (cpow, cpow_test_data, );
-  END_COMPLEX;
+  ALL_RM_TEST (cpow, 0, cpow_test_data, RUN_TEST_LOOP_cc_c, END_COMPLEX);
 }
 
 

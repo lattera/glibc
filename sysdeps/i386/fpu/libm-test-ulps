@@ -916,6 +916,54 @@ ifloat: 1
 ildouble: 4
 ldouble: 4
 
+Function: Real part of "cpow_downward":
+double: 5
+float: 8
+idouble: 5
+ifloat: 8
+ildouble: 7
+ldouble: 7
+
+Function: Imaginary part of "cpow_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Real part of "cpow_towardzero":
+double: 5
+float: 8
+idouble: 5
+ifloat: 8
+ildouble: 7
+ldouble: 7
+
+Function: Imaginary part of "cpow_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: Real part of "cpow_upward":
+double: 4
+float: 1
+idouble: 4
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Imaginary part of "cpow_upward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
 Function: Real part of "csin":
 double: 1
 float: 1

@@ -1,5 +1,19 @@
 2014-06-23  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/gen-auto-libm-tests.c: Document use of
+	ignore-zero-inf-sign.
+	(input_flag_type): Add value flag_ignore_zero_inf_sign.
+	(input_flags): Add ignore-zero-inf-sign.
+	(output_for_one_input_case): Handle flag_ignore_zero_inf_sign.
+	* math/gen-libm-test.pl (generate_testfile): Handle
+	ignore-zero-inf-sign.
+	* math/auto-libm-test-in: Mark some cpow tests with
+	ignore-zero-inf-sign and some with xfail-rounding.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (cpow_test): Use ALL_RM_TEST.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	[BZ #16315]
 	* sysdeps/i386/fpu/e_pow.S (__ieee754_pow): Ensure possibly
 	overflowing or underflowing operations take place with sign of
