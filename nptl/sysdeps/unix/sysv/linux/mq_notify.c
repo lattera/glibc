@@ -209,7 +209,6 @@ init_mq_netlink (void)
 
   if (err != 0)
     {
-    errout:
       close_not_cancel_no_status (netlink_socket);
       netlink_socket = -1;
     }

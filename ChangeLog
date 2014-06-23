@@ -1,3 +1,8 @@
+2014-06-23  Andreas Schwab  <schwab@suse.de>
+
+	* nptl/sysdeps/unix/sysv/linux/mq_notify.c (init_mq_netlink):
+	Remove unused errout label.
+
 2014-06-23  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/bits/hwcap.h [PPC_FEATURE2_HAS_VEC_CRYPTO]: New
