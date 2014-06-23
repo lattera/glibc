@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <stdbool.h>
 
 /* High parts and low parts of -log (k/16), for integer k from 12 to
    24.  */
@@ -63,15 +64,32 @@ acc_split (long double *rhi, long double *rlo, long double hi, long double lo,
 extern long double __powl_helper (long double x, long double y);
 libm_hidden_proto (__powl_helper)
 
-/* Given X a value that is finite and nonzero, or a NaN, and only
-   negative if Y is not an integer, and Y a finite nonzero value with
-   0x1p-79 <= |Y| <= 0x1p78, compute X to the power Y.  */
+/* Given X a value that is finite and nonzero, or a NaN, and Y a
+   finite nonzero value with 0x1p-79 <= |Y| <= 0x1p78, compute X to
+   the power Y.  */
 
 long double
 __powl_helper (long double x, long double y)
 {
-  if (isnan (x) || x < 0)
+  if (isnan (x))
     return __ieee754_expl (y * __ieee754_logl (x));
+  bool negate;
+  if (x < 0)
+    {
+      long double absy = fabsl (y);
+      if (absy >= 0x1p64L)
+	negate = false;
+      else
+	{
+	  unsigned long long yll = absy;
+	  if (yll != absy)
+	    return __ieee754_expl (y * __ieee754_logl (x));
+	  negate = (yll & 1) != 0;
+	}
+      x = fabsl (x);
+    }
+  else
+    negate = false;
 
   /* We need to compute Y * log2 (X) to at least 64 bits after the
      point for normal results (that is, to at least 78 bits
@@ -199,11 +217,17 @@ __powl_helper (long double x, long double y)
      fractional parts.  */
   long double log2_res_int = __roundl (log2_res_hi);
   long double log2_res_frac = log2_res_hi - log2_res_int + log2_res_lo;
+  /* If the integer part is very large, the computed fractional part
+     may be outside the valid range for f2xm1.  */
+  if (fabsl (log2_res_int) > 16500)
+    log2_res_frac = 0;
 
   /* Compute the final result.  */
   long double res;
   asm ("f2xm1" : "=t" (res) : "0" (log2_res_frac));
   res += 1.0L;
+  if (negate)
+    res = -res;
   asm ("fscale" : "=t" (res) : "0" (res), "u" (log2_res_int));
   return res;
 }

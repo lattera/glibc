@@ -1,3 +1,37 @@
+2014-06-23  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16315]
+	* sysdeps/i386/fpu/e_pow.S (__ieee754_pow): Ensure possibly
+	overflowing or underflowing operations take place with sign of
+	result.
+	* sysdeps/i386/fpu/e_powf.S (__ieee754_powf): Likewise.
+	* sysdeps/i386/fpu/e_powl.S (__ieee754_powl): Likewise.
+	* sysdeps/ieee754/dbl-64/e_pow.c: Include <math.h>.
+	(__ieee754_pow): Recompute overflowing and underflowing results in
+	original rounding mode.
+	* sysdeps/x86/fpu/powl_helper.c: Include <stdbool.h>.
+	(__powl_helper): Allow negative argument X and scale negated value
+	as needed.  Avoid passing value outside [-1, 1] to f2xm1.
+	* sysdeps/x86_64/fpu/e_powl.S (__ieee754_powl): Ensure possibly
+	overflowing or underflowing operations take place with sign of
+	result.
+	* sysdeps/x86_64/fpu/multiarch/e_pow.c [HAVE_FMA4_SUPPORT]:
+	Include <math.h>.
+	* math/auto-libm-test-in: Add more tests of pow.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (pow_test): Use ALL_RM_TEST.
+	(pow_tonearest_test_data): Remove.
+	(pow_test_tonearest): Likewise.
+	(pow_towardzero_test_data): Likewise.
+	(pow_test_towardzero): Likewise.
+	(pow_downward_test_data): Likewise.
+	(pow_test_downward): Likewise.
+	(pow_upward_test_data): Likewise.
+	(pow_test_upward): Likewise.
+	(main): Don't call removed functions.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2014-06-23  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/c++-types.data:

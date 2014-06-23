@@ -8697,69 +8697,7 @@ static const struct test_ff_f_data pow_test_data[] =
 static void
 pow_test (void)
 {
-
-  START (pow, 0);
-  RUN_TEST_LOOP_ff_f (pow, pow_test_data, );
-  END;
-}
-
-
-static const struct test_ff_f_data pow_tonearest_test_data[] =
-  {
-    AUTO_TESTS_ff_f (pow),
-  };
-
-static void
-pow_test_tonearest (void)
-{
-  START (pow_tonearest, 0);
-  RUN_TEST_LOOP_ff_f (pow, pow_tonearest_test_data, FE_TONEAREST);
-  END;
-}
-
-
-static const struct test_ff_f_data pow_towardzero_test_data[] =
-  {
-    TEST_ff_f (pow, 1.0625L, 1.125L, 1.070582293028761362162622578677070098674L),
-    TEST_ff_f (pow, 1.5L, 1.03125L, 1.519127098714743184071644334163037684948L),
-  };
-
-static void
-pow_test_towardzero (void)
-{
-  START (pow_towardzero, 0);
-  RUN_TEST_LOOP_ff_f (pow, pow_towardzero_test_data, FE_TOWARDZERO);
-  END;
-}
-
-
-static const struct test_ff_f_data pow_downward_test_data[] =
-  {
-    TEST_ff_f (pow, 1.0625L, 1.125L, 1.070582293028761362162622578677070098674L),
-    TEST_ff_f (pow, 1.5L, 1.03125L, 1.519127098714743184071644334163037684948L),
-  };
-
-static void
-pow_test_downward (void)
-{
-  START (pow_downward, 0);
-  RUN_TEST_LOOP_ff_f (pow, pow_downward_test_data, FE_DOWNWARD);
-  END;
-}
-
-
-static const struct test_ff_f_data pow_upward_test_data[] =
-  {
-    TEST_ff_f (pow, 1.0625L, 1.125L, 1.070582293028761362162622578677070098674L),
-    TEST_ff_f (pow, 1.5L, 1.03125L, 1.519127098714743184071644334163037684948L),
-  };
-
-static void
-pow_test_upward (void)
-{
-  START (pow_upward, 0);
-  RUN_TEST_LOOP_ff_f (pow, pow_upward_test_data, FE_UPWARD);
-  END;
+  ALL_RM_TEST (pow, 0, pow_test_data, RUN_TEST_LOOP_ff_f, END);
 }
 
 
@@ -9946,10 +9884,6 @@ main (int argc, char **argv)
   fabs_test ();
   hypot_test ();
   pow_test ();
-  pow_test_tonearest ();
-  pow_test_towardzero ();
-  pow_test_downward ();
-  pow_test_upward ();
   sqrt_test ();
 
   /* Error and gamma functions:  */

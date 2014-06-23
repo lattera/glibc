@@ -151,7 +151,7 @@ ENTRY(__ieee754_powl)
 	fcompl	MO(p3)		// y : x
 	fnstsw
 	sahf
-	jnc	2f
+	jnc	3f
 	popl	%eax
 	cfi_adjust_cfa_offset (-4)
 	popl	%edx
@@ -166,12 +166,22 @@ ENTRY(__ieee754_powl)
 4:	fldl	MO(one)		// 1 : x
 	fxch
 
+	/* If y is even, take the absolute value of x.  Otherwise,
+	   ensure all intermediate values that might overflow have the
+	   sign of x.  */
+	testb	$1, %al
+	jnz	6f
+	fabs
+
 6:	shrdl	$1, %edx, %eax
 	jnc	5f
 	fxch
+	fabs
 	fmul	%st(1)		// x : ST*x
 	fxch
-5:	fmul	%st(0), %st	// x*x : ST*x
+5:	fld	%st		// x : x : ST*x
+	fabs			// |x| : x : ST*x
+	fmulp			// |x|*x : ST*x
 	shrl	$1, %edx
 	movl	%eax, %ecx
 	orl	%edx, %ecx
@@ -198,79 +208,31 @@ ENTRY(__ieee754_powl)
 
 	cfi_adjust_cfa_offset (8)
 	.align ALIGNARG(4)
-2:	// y is a large integer (absolute value at least 8), but
-	// may be odd unless at least 1L<<64.  So it may be necessary
-	// to adjust the sign of a negative result afterwards.
-	fxch			// x : y
-	fabs			// |x| : y
-	fxch			// y : |x|
+2:	// y is a large integer (absolute value at least 1L<<63).
 	// If y has absolute value at least 1L<<78, then any finite
 	// nonzero x will result in 0 (underflow), 1 or infinity (overflow).
 	// Saturate y to those bounds to avoid overflow in the calculation
 	// of y*log2(x).
-	fld	%st		// y : y : |x|
-	fabs			// |y| : y : |x|
-	fcompl	MO(p78)		// y : |x|
+	fld	%st		// y : y : x
+	fabs			// |y| : y : x
+	fcompl	MO(p78)		// y : x
 	fnstsw
 	sahf
 	jc	3f
 	fstp	%st(0)		// pop y
-	fldl	MO(p78)		// 1L<<78 : |x|
+	fldl	MO(p78)		// 1L<<78 : x
 	testb	$2, %dl
 	jz	3f		// y > 0
-	fchs			// -(1L<<78) : |x|
+	fchs			// -(1L<<78) : x
 	.align ALIGNARG(4)
 3:	/* y is a real number.  */
 	subl	$28, %esp
 	cfi_adjust_cfa_offset (28)
 	fstpt	12(%esp)	// x
 	fstpt	(%esp)		// <empty>
-	mov	%edx, 24(%esp)
 	call	HIDDEN_JUMPTARGET (__powl_helper)	// <result>
-	mov	24(%esp), %edx
-	addl	$28, %esp
-	cfi_adjust_cfa_offset (-28)
-	testb	$2, %dh
-	jz	292f
-	// x is negative.  If y is an odd integer, negate the result.
-#ifdef	PIC
-	LOAD_PIC_REG (cx)
-#endif
-	fldt	24(%esp)	// y : abs(result)
-	fld	%st		// y : y : abs(result)
-	fabs			// |y| : y : abs(result)
-	fcompl	MO(p64)		// y : abs(result)
-	fnstsw
-	sahf
-	jnc	291f
-	fldl	MO(p63)		// p63 : y : abs(result)
-	fxch			// y : p63 : abs(result)
-	fprem			// y%p63 : p63 : abs(result)
-	fstp	%st(1)		// y%p63 : abs(result)
-
-	// We must find out whether y is an odd integer.
-	fld	%st		// y : y : abs(result)
-	fistpll	(%esp)		// y : abs(result)
-	fildll	(%esp)		// int(y) : y : abs(result)
-	fucompp			// abs(result)
-	fnstsw
-	sahf
-	jne	292f
-
-	// OK, the value is an integer, but is it odd?
-	popl	%eax
-	cfi_adjust_cfa_offset (-4)
-	popl	%edx
-	cfi_adjust_cfa_offset (-4)
-	andb	$1, %al
-	jz	290f		// jump if not odd
-	// It's an odd integer.
-	fchs
-290:	ret
-	cfi_adjust_cfa_offset (8)
-291:	fstp	%st(0)		// abs(result)
-292:	addl	$8, %esp
-	cfi_adjust_cfa_offset (-8)
+	addl	$36, %esp
+	cfi_adjust_cfa_offset (-36)
 	ret
 
 	// pow(x,±0) = 1

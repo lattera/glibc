@@ -129,12 +129,22 @@ ENTRY(__ieee754_powf)
 4:	fldl	MO(one)		// 1 : x
 	fxch
 
+	/* If y is even, take the absolute value of x.  Otherwise,
+	   ensure all intermediate values that might overflow have the
+	   sign of x.  */
+	testb	$1, %dl
+	jnz	6f
+	fabs
+
 6:	shrl	$1, %edx
 	jnc	5f
 	fxch
+	fabs
 	fmul	%st(1)		// x : ST*x
 	fxch
-5:	fmul	%st(0), %st	// x*x : ST*x
+5:	fld	%st		// x : x : ST*x
+	fabs			// |x| : x : ST*x
+	fmulp			// |x|*x : ST*x
 	testl	%edx, %edx
 	jnz	6b
 	fstp	%st(0)		// ST*x
