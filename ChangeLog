@@ -1,4 +1,23 @@
 2014-07-02  Will Newton  <will.newton@linaro.org>
+
+	* malloc/obstack.c: Merge from gnulib master.
+	[HAVE_CONFIG_H]: Remove conditional code.
+	[!_LIBC]: Include config.h.
+	[!ELIDE_CODE]: Don't include inttypes.h, include
+	stdint.h unconditionally.
+	(print_and_abort): Mark as _Noreturn.
+	(_obstack_allocated_p): Mark as __attribute_pure__.
+	(obstack_free): Rename to __obstack_free.
+	[!__attribute__]: Remove conditional code.
+	* malloc/obstack.h: Merge from gnulib master.
+	[__cplusplus]: Move conditional down.
+	[!__attribute_pure__]: Define __attribute_pure__ here
+	if it is not already defined.
+	(_obstack_memory_used): Mark as __attribute_pure__.
+	[!__obstack_free]: Define as obstack_free.
+	[__GNUC__]: Remove check for ancient NeXT gcc.
+
+2014-07-02  Will Newton  <will.newton@linaro.org>
 	    Paul Eggert  <eggert@cs.ucla.edu>
 
 	* misc/sys/cdefs.h (_Noreturn): New macro, for pre-C11 compilers.
