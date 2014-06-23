@@ -1,5 +1,8 @@
 2014-06-23  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/generic/get-rounding-mode.h: Include <stdlib.h> before
+	using abort.
+
 	* sysdeps/unix/sysv/linux/fstatvfs.c (fstatvfs):
 	Remove unused variable ST.
 

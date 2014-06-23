@@ -20,6 +20,7 @@
 #define _GET_ROUNDING_MODE_H	1
 
 #include <fpu_control.h>
+#include <stdlib.h>
 
 /* Define values for FE_* modes not defined for this architecture.  */
 #ifdef FE_DOWNWARD
