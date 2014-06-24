@@ -1,3 +1,26 @@
+2014-06-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/configure.ac: Remove cases for
+	individual architectures.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/i386/configure.ac: New file.
+	* sysdeps/unix/sysv/linux/i386/configure: New generated file.
+	* sysdeps/unix/sysv/linux/powerpc/configure.ac
+	(ldd_rewrite_script): Define variable.
+	* sysdeps/unix/sysv/linux/powerpc/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/configure.ac: New
+	file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/configure: New
+	generated file.
+	* sysdeps/unix/sysv/linux/s390/configure.ac: New file.
+	* sysdeps/unix/sysv/linux/s390/configure: New generated file.
+	* sysdeps/unix/sysv/linux/sh/configure.ac: New file.
+	* sysdeps/unix/sysv/linux/sh/configure: New generated file.
+	* sysdeps/unix/sysv/linux/sparc/configure.ac: New file.
+	* sysdeps/unix/sysv/linux/sparc/configure: New generated file.
+	* sysdeps/unix/sysv/linux/x86_64/configure.ac: New file.
+	* sysdeps/unix/sysv/linux/x86_64/configure: New generated file.
+
 2014-06-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #17084]

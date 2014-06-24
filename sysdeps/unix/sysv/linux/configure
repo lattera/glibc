@@ -208,43 +208,7 @@ fi
 # set arch_minimum_kernel already, let that override our defaults here.
 # Note that we presume such a fragment has set libc_cv_gcc_unwind_find_fde
 # if appropriate too.
-test -n "$arch_minimum_kernel" ||
-case "$machine" in
-  i386*)
-    libc_cv_gcc_unwind_find_fde=yes
-    arch_minimum_kernel=2.6.32
-    ;;
-  x86_64/x32)
-    arch_minimum_kernel=3.4.0
-    ;;
-  powerpc/powerpc32*)
-    libc_cv_gcc_unwind_find_fde=yes
-    arch_minimum_kernel=2.6.32
-    ;;
-  s390/s390-32)
-    libc_cv_gcc_unwind_find_fde=yes
-    arch_minimum_kernel=2.6.32
-    ;;
-  s390/s390-64)
-    libc_cv_gcc_unwind_find_fde=yes
-    arch_minimum_kernel=2.6.32
-    ;;
-  sh*)
-    arch_minimum_kernel=2.6.32
-    libc_cv_gcc_unwind_find_fde=yes
-    ;;
-  sparc/sparc64*)
-    libc_cv_gcc_unwind_find_fde=yes
-    arch_minimum_kernel=2.6.32
-    ;;
-  sparc*)
-    libc_cv_gcc_unwind_find_fde=yes
-    arch_minimum_kernel=2.6.32
-    ;;
-  *)
-    arch_minimum_kernel=2.6.32
-    ;;
-esac
+test -n "$arch_minimum_kernel" || arch_minimum_kernel=2.6.32
 if test -n "$minimum_kernel"; then
 
   user_version=$((`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1 \* 65536 + \2 \* 256 + \3/'`))
@@ -361,29 +325,6 @@ fi
 
 # One Linux we use ldconfig.
 use_ldconfig=yes
-
-# We need some extensions to the `ldd' script.
-
-case "$machine" in
-  i[3456]86*)
-    ldd_rewrite_script=sysdeps/unix/sysv/linux/ldd-rewrite.sed
-    ;;
-  s390*)
-    ldd_rewrite_script=sysdeps/unix/sysv/linux/s390/ldd-rewrite.sed
-    ;;
-  sparc*)
-    ldd_rewrite_script=sysdeps/unix/sysv/linux/sparc/ldd-rewrite.sed
-    ;;
-  x86_64*)
-    ldd_rewrite_script=sysdeps/unix/sysv/linux/x86_64/ldd-rewrite.sed
-    ;;
-  powerpc*)
-    ldd_rewrite_script=sysdeps/unix/sysv/linux/powerpc/ldd-rewrite.sed
-    ;;
-  *)
-    ;;
-esac
-
 
 if test $host = $build; then
   # If $prefix/include/{net,scsi} are symlinks, make install will

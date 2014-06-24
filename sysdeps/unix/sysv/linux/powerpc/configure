@@ -75,3 +75,5 @@ $as_echo "$libc_cv_mabi_ibmlongdouble" >&6; }
     as_fn_error $? "this configuration requires -mlong-double-128 IBM extended format support" "$LINENO" 5
   fi
 fi
+
+ldd_rewrite_script=sysdeps/unix/sysv/linux/powerpc/ldd-rewrite.sed
