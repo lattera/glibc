@@ -115,10 +115,10 @@ typedef union
       {
 	short __espins;
 	short __elision;
-# define __spins d.__espins
-# define __elision d.__elision
+# define __spins __elision_data.__espins
+# define __elision __elision_data.__elision
 # define __PTHREAD_SPINS         { 0, 0 }
-      } d;
+      } __elision_data;
       __pthread_slist_t __list;
     };
 #endif

@@ -1,3 +1,9 @@
+2014-06-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #17084]
+	* sysdeps/x86/nptl/bits/pthreadtypes.h (pthread_mutex_t):
+	Rename member __data.d to __data.__elision_data.
+
 2014-06-24  Wilco  <wdijkstr@arm.com>
 
 	* NEWS: Add 16918 to fixed bug list.
