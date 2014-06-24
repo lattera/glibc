@@ -970,6 +970,8 @@ expm1 0x1p-64
 expm1 -0x1p-64
 expm1 0x1p-100
 expm1 -0x1p-100
+# Bug 16353: underflow exception may be missing
+expm1 0x4.0000000000000028p-16384 missing-underflow
 
 fma 1.0 2.0 3.0
 fma 1.25 0.75 0.0625

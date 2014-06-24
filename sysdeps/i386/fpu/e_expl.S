@@ -108,6 +108,16 @@ ENTRY(IEEE754_EXPL)
 	andb	%ah, %dh
 	cmpb	$0x40, %dh
 	je	2f
+
+	/* Test for arguments that are small but not subnormal.  */
+	movzwl	4+8(%esp), %eax
+	andl	$0x7fff, %eax
+	cmpl	$0x3fbf, %eax
+	jge	3f
+	/* Argument's exponent below -64; avoid spurious underflow if
+	   normal.  */
+	cmpl	$0x0001, %eax
+	jge	2f
 #else
 	movzwl	4+8(%esp), %eax
 	andl	$0x7fff, %eax
