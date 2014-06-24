@@ -1,5 +1,11 @@
 2014-06-24  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16287]
+	* sysdeps/ieee754/ldbl-128/s_erfl.c (__erfl): Return 1 without
+	calling __erfcl for arguments at least 16.
+	* math/auto-libm-test-in: Add more tests of erf.
+	* math/auto-libm-test-out: Regenerated.
+
 	* sysdeps/unix/sysv/linux/configure.ac: Remove cases for
 	individual architectures.
 	* sysdeps/unix/sysv/linux/configure: Regenerated.

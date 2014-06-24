@@ -769,6 +769,8 @@ __erfl (long double x)
 
   if (ix >= 0x3fff0000) /* |x| >= 1.0 */
     {
+      if (ix >= 0x40030000 && sign > 0)
+	return one; /* x >= 16, avoid spurious underflow from erfc.  */
       y = __erfcl (x);
       return (one - y);
       /*    return (one - __erfcl (x)); */

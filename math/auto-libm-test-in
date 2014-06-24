@@ -803,6 +803,16 @@ erf 0x1.c5bf94p-127
 erf 0x3.8b7fa8p-128
 erf -0x3.8b7f12369ded8p-1024
 erf 0x3.8b7f12369ded5518p-16384
+erf 26.0
+erf 28.0
+erf 100
+erf 106
+erf 106.5
+erf 106.625
+erf 107
+erf 108
+erf 1000
+erf max
 
 erfc 0.0
 erfc -0
