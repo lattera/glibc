@@ -1,5 +1,9 @@
 2014-06-24  Wilco  <wdijkstr@arm.com>
 
+	* sysdeps/arm/fesetenv.c (fesetenv): Optimize implementation.
+
+2014-06-24  Wilco  <wdijkstr@arm.com>
+
 	* sysdeps/arm/fpu_control.h (_FPU_MASK_RM): Define.
 	* sysdeps/arm/fenv_private.h (libc_fesetround_vfp)
 	(libc_feholdexcept_setround_vfp) (libc_feholdsetround_vfp)
