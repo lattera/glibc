@@ -1,3 +1,8 @@
+2014-06-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* Makerules (check-abi): Dump diff of symlist if the test
+	fails.
+
 2014-06-23  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/generic/get-rounding-mode.h: Include <stdlib.h> before
