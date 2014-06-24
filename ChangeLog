@@ -1,5 +1,11 @@
 2014-06-24  Wilco  <wdijkstr@arm.com>
 
+	[BZ #16918]
+	* sysdeps/arm/feupdateenv.c (feupdateenv):
+	Rewrite to reduce FPSCR accesses and fix return value.
+
+2014-06-24  Wilco  <wdijkstr@arm.com>
+
 	* sysdeps/arm/fclrexcpt.c (feclearexcept):
 	Optimize to avoid unnecessary FPSCR writes.
 	* sysdeps/arm/fedisblxcpt.c (fedisableexcept): Likewise.

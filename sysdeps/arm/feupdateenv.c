@@ -18,26 +18,58 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
-#include <fpu_control.h>
 #include <arm-features.h>
 
 
 int
 feupdateenv (const fenv_t *envp)
 {
-  fpu_control_t fpscr;
+  fpu_control_t fpscr, new_fpscr, updated_fpscr;
+  int excepts;
 
   /* Fail if a VFP unit isn't present.  */
   if (!ARM_HAVE_VFP)
     return 1;
 
   _FPU_GETCW (fpscr);
+  excepts = fpscr & FE_ALL_EXCEPT;
 
-  /* Install new environment.  */
-  fesetenv (envp);
+  if ((envp != FE_DFL_ENV) && (envp != FE_NOMASK_ENV))
+    {
+      /* Merge current exception flags with the saved fenv.  */
+      new_fpscr = envp->__cw | excepts;
 
-  /* Raise the saved exceptions.  */
-  feraiseexcept (fpscr & FE_ALL_EXCEPT);
+      /* Write new FPSCR if different (ignoring NZCV flags).  */
+      if (((fpscr ^ new_fpscr) & ~_FPU_MASK_NZCV) != 0)
+	_FPU_SETCW (new_fpscr);
+
+      /* Raise the exceptions if enabled in the new FP state.  */
+      if (excepts & (new_fpscr >> FE_EXCEPT_SHIFT))
+	return feraiseexcept (excepts);
+
+      return 0;
+    }
+
+  /* Preserve the reserved FPSCR flags.  */
+  new_fpscr = fpscr & (_FPU_RESERVED | FE_ALL_EXCEPT);
+  new_fpscr |= (envp == FE_DFL_ENV) ? _FPU_DEFAULT : _FPU_IEEE;
+
+  if (((new_fpscr ^ fpscr) & ~_FPU_MASK_NZCV) != 0)
+    {
+      _FPU_SETCW (new_fpscr);
+
+      /* Not all VFP architectures support trapping exceptions, so
+	 test whether the relevant bits were set and fail if not.  */
+      _FPU_GETCW (updated_fpscr);
+
+      if (new_fpscr & ~updated_fpscr)
+	return 1;
+    }
+
+  /* Raise the exceptions if enabled in the new FP state.  */
+  if (excepts & (new_fpscr >> FE_EXCEPT_SHIFT))
+    return feraiseexcept (excepts);
+
   return 0;
 }
 libm_hidden_def (feupdateenv)
