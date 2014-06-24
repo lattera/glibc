@@ -28,8 +28,7 @@ fesetround (int round)
   if (!ARM_HAVE_VFP)
     return (round == FE_TONEAREST) ? 0 : 1;
 
-  /* Fail if the rounding mode is not valid.  */
-  if (round & ~FE_TOWARDZERO)
+  if (round & ~_FPU_MASK_RM)
     return 1;
 
   libc_fesetround_vfp (round);

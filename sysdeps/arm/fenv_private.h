@@ -43,8 +43,8 @@ libc_fesetround_vfp (int round)
   _FPU_GETCW (fpscr);
 
   /* Set new rounding mode if different.  */
-  if (__glibc_unlikely ((fpscr & FE_TOWARDZERO) != round))
-    _FPU_SETCW ((fpscr & ~FE_TOWARDZERO) | round);
+  if (__glibc_unlikely ((fpscr & _FPU_MASK_RM) != round))
+    _FPU_SETCW ((fpscr & ~_FPU_MASK_RM) | round);
 }
 
 static __always_inline void
@@ -57,7 +57,7 @@ libc_feholdexcept_setround_vfp (fenv_t *envp, int round)
 
   /* Clear exception flags, set all exceptions to non-stop,
      and set new rounding mode.  */
-  fpscr &= ~(_FPU_MASK_EXCEPT | FE_TOWARDZERO);
+  fpscr &= ~(_FPU_MASK_EXCEPT | _FPU_MASK_RM);
   _FPU_SETCW (fpscr | round);
 }
 
@@ -70,8 +70,8 @@ libc_feholdsetround_vfp (fenv_t *envp, int round)
   envp->__cw = fpscr;
 
   /* Set new rounding mode if different.  */
-  if (__glibc_unlikely ((fpscr & FE_TOWARDZERO) != round))
-    _FPU_SETCW ((fpscr & ~FE_TOWARDZERO) | round);
+  if (__glibc_unlikely ((fpscr & _FPU_MASK_RM) != round))
+    _FPU_SETCW ((fpscr & ~_FPU_MASK_RM) | round);
 }
 
 static __always_inline void
@@ -82,7 +82,7 @@ libc_feresetround_vfp (fenv_t *envp)
   _FPU_GETCW (fpscr);
 
   /* Check whether rounding modes are different.  */
-  round = (envp->__cw ^ fpscr) & FE_TOWARDZERO;
+  round = (envp->__cw ^ fpscr) & _FPU_MASK_RM;
 
   /* Restore the rounding mode if it was changed.  */
   if (__glibc_unlikely (round != 0))
@@ -150,7 +150,7 @@ libc_feholdsetround_vfp_ctx (struct rm_ctx *ctx, int r)
   ctx->env.__cw = fpscr;
 
   /* Check whether rounding modes are different.  */
-  round = (fpscr ^ r) & FE_TOWARDZERO;
+  round = (fpscr ^ r) & _FPU_MASK_RM;
 
   /* Set the rounding mode if changed.  */
   if (__glibc_unlikely (round != 0))
@@ -169,7 +169,7 @@ libc_feresetround_vfp_ctx (struct rm_ctx *ctx)
       fpu_control_t fpscr;
 
       _FPU_GETCW (fpscr);
-      fpscr = (fpscr & ~FE_TOWARDZERO) | (ctx->env.__cw & FE_TOWARDZERO);
+      fpscr = (fpscr & ~_FPU_MASK_RM) | (ctx->env.__cw & _FPU_MASK_RM);
       _FPU_SETCW (fpscr);
     }
 }

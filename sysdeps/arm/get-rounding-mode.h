@@ -36,7 +36,7 @@ get_rounding_mode (void)
     return FE_TONEAREST;
 
   _FPU_GETCW (fpscr);
-  return fpscr & FE_TOWARDZERO;
+  return fpscr & _FPU_MASK_RM;
 }
 
 #endif /* get-rounding-mode.h */

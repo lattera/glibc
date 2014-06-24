@@ -37,8 +37,8 @@ extern fpu_control_t __fpu_control;
 #define _FPU_MASK_UM	0x00000800	/* underflow */
 #define _FPU_MASK_PM	0x00001000	/* inexact */
 
-#define _FPU_MASK_NZCV	0xF0000000	/* NZCV flags */
-
+#define _FPU_MASK_NZCV	0xf0000000	/* NZCV flags */
+#define _FPU_MASK_RM	0x00c00000	/* rounding mode */
 #define _FPU_MASK_EXCEPT 0x00001f1f	/* all exception flags */
 
 /* Some bits in the FPSCR are not yet defined.  They must be preserved when
