@@ -22,8 +22,6 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-#ifndef __SOFTFP__
-
 static __always_inline void
 libc_feholdexcept_vfp (fenv_t *envp)
 {
@@ -142,49 +140,6 @@ libc_feupdateenv_vfp (const fenv_t *envp)
   libc_feupdateenv_test_vfp (envp, 0);
 }
 
-#define libc_feholdexcept  libc_feholdexcept_vfp
-#define libc_feholdexceptf libc_feholdexcept_vfp
-#define libc_feholdexceptl libc_feholdexcept_vfp
-
-#define libc_fesetround  libc_fesetround_vfp
-#define libc_fesetroundf libc_fesetround_vfp
-#define libc_fesetroundl libc_fesetround_vfp
-
-#define libc_feresetround  libc_feresetround_vfp
-#define libc_feresetroundf libc_feresetround_vfp
-#define libc_feresetroundl libc_feresetround_vfp
-
-#define libc_feresetround_noex  libc_fesetenv_vfp
-#define libc_feresetround_noexf libc_fesetenv_vfp
-#define libc_feresetround_noexl libc_fesetenv_vfp
-
-#define libc_feholdexcept_setround  libc_feholdexcept_setround_vfp
-#define libc_feholdexcept_setroundf libc_feholdexcept_setround_vfp
-#define libc_feholdexcept_setroundl libc_feholdexcept_setround_vfp
-
-#define libc_feholdsetround  libc_feholdsetround_vfp
-#define libc_feholdsetroundf libc_feholdsetround_vfp
-#define libc_feholdsetroundl libc_feholdsetround_vfp
-
-#define libc_fetestexcept  libc_fetestexcept_vfp
-#define libc_fetestexceptf libc_fetestexcept_vfp
-#define libc_fetestexceptl libc_fetestexcept_vfp
-
-#define libc_fesetenv  libc_fesetenv_vfp
-#define libc_fesetenvf libc_fesetenv_vfp
-#define libc_fesetenvl libc_fesetenv_vfp
-
-#define libc_feupdateenv  libc_feupdateenv_vfp
-#define libc_feupdateenvf libc_feupdateenv_vfp
-#define libc_feupdateenvl libc_feupdateenv_vfp
-
-#define libc_feupdateenv_test  libc_feupdateenv_test_vfp
-#define libc_feupdateenv_testf libc_feupdateenv_test_vfp
-#define libc_feupdateenv_testl libc_feupdateenv_test_vfp
-
-/* We have support for rounding mode context.  */
-#define HAVE_RM_CTX 1
-
 static __always_inline void
 libc_feholdsetround_vfp_ctx (struct rm_ctx *ctx, int r)
 {
@@ -232,17 +187,62 @@ libc_fesetenv_vfp_ctx (struct rm_ctx *ctx)
     _FPU_SETCW (new_fpscr);
 }
 
-#define libc_feholdsetround_ctx		libc_feholdsetround_vfp_ctx
-#define libc_feresetround_ctx		libc_feresetround_vfp_ctx
-#define libc_feresetround_noex_ctx	libc_fesetenv_vfp_ctx
+#ifndef __SOFTFP__
 
-#define libc_feholdsetroundf_ctx	libc_feholdsetround_vfp_ctx
-#define libc_feresetroundf_ctx		libc_feresetround_vfp_ctx
-#define libc_feresetround_noexf_ctx	libc_fesetenv_vfp_ctx
+# define libc_feholdexcept  libc_feholdexcept_vfp
+# define libc_feholdexceptf libc_feholdexcept_vfp
+# define libc_feholdexceptl libc_feholdexcept_vfp
 
-#define libc_feholdsetroundl_ctx	libc_feholdsetround_vfp_ctx
-#define libc_feresetroundl_ctx		libc_feresetround_vfp_ctx
-#define libc_feresetround_noexl_ctx	libc_fesetenv_vfp_ctx
+# define libc_fesetround  libc_fesetround_vfp
+# define libc_fesetroundf libc_fesetround_vfp
+# define libc_fesetroundl libc_fesetround_vfp
+
+# define libc_feresetround  libc_feresetround_vfp
+# define libc_feresetroundf libc_feresetround_vfp
+# define libc_feresetroundl libc_feresetround_vfp
+
+# define libc_feresetround_noex  libc_fesetenv_vfp
+# define libc_feresetround_noexf libc_fesetenv_vfp
+# define libc_feresetround_noexl libc_fesetenv_vfp
+
+# define libc_feholdexcept_setround  libc_feholdexcept_setround_vfp
+# define libc_feholdexcept_setroundf libc_feholdexcept_setround_vfp
+# define libc_feholdexcept_setroundl libc_feholdexcept_setround_vfp
+
+# define libc_feholdsetround  libc_feholdsetround_vfp
+# define libc_feholdsetroundf libc_feholdsetround_vfp
+# define libc_feholdsetroundl libc_feholdsetround_vfp
+
+# define libc_fetestexcept  libc_fetestexcept_vfp
+# define libc_fetestexceptf libc_fetestexcept_vfp
+# define libc_fetestexceptl libc_fetestexcept_vfp
+
+# define libc_fesetenv  libc_fesetenv_vfp
+# define libc_fesetenvf libc_fesetenv_vfp
+# define libc_fesetenvl libc_fesetenv_vfp
+
+# define libc_feupdateenv  libc_feupdateenv_vfp
+# define libc_feupdateenvf libc_feupdateenv_vfp
+# define libc_feupdateenvl libc_feupdateenv_vfp
+
+# define libc_feupdateenv_test  libc_feupdateenv_test_vfp
+# define libc_feupdateenv_testf libc_feupdateenv_test_vfp
+# define libc_feupdateenv_testl libc_feupdateenv_test_vfp
+
+/* We have support for rounding mode context.  */
+#define HAVE_RM_CTX 1
+
+# define libc_feholdsetround_ctx	libc_feholdsetround_vfp_ctx
+# define libc_feresetround_ctx		libc_feresetround_vfp_ctx
+# define libc_feresetround_noex_ctx	libc_fesetenv_vfp_ctx
+
+# define libc_feholdsetroundf_ctx	libc_feholdsetround_vfp_ctx
+# define libc_feresetroundf_ctx		libc_feresetround_vfp_ctx
+# define libc_feresetround_noexf_ctx	libc_fesetenv_vfp_ctx
+
+# define libc_feholdsetroundl_ctx	libc_feholdsetround_vfp_ctx
+# define libc_feresetroundl_ctx		libc_feresetround_vfp_ctx
+# define libc_feresetround_noexl_ctx	libc_fesetenv_vfp_ctx
 
 #endif
 

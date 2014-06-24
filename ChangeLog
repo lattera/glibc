@@ -1,3 +1,14 @@
+2014-06-24  Wilco  <wdijkstr@arm.com>
+
+	* sysdeps/arm/fegetround.c (fegetround): Call get_rounding_mode.
+	* sysdeps/arm/feholdexcpt.c (feholdexcept): Call libc_feholdexcept_vfp.
+	* sysdeps/arm/fesetround.c (fesetround): Call libc_fesetround_vfp.
+	* sysdeps/arm/fgetexcptflg.c (fegetexceptflag):
+	Call libc_fetestexcept_vfp.
+	* sysdeps/arm/ftestexcept.c (fetestexcept): Call libc_fetestexcept_vfp.
+	* sysdeps/arm/fenv_private.h: Move libc_*_vfp functions outside of
+	__SOFTFP__ ifdef so that they can be built for softfp.
+
 2014-06-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/x86/nptl/elide.h (elision_adapt): Make first
