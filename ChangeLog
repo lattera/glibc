@@ -1,5 +1,8 @@
 2014-06-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/x86/nptl/elide.h (elision_adapt): Make first
+	argument type signed char.
+
 	* Makerules (check-abi): Dump diff of symlist if the test
 	fails.
 

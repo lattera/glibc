@@ -26,7 +26,7 @@
 /* Adapt elision with ADAPT_COUNT and STATUS and decide retries.  */
 
 static inline bool
-elision_adapt(uint8_t *adapt_count, unsigned int status)
+elision_adapt(signed char *adapt_count, unsigned int status)
 {
   if (status & _XABORT_RETRY)
     return false;
