@@ -1,5 +1,14 @@
 2014-07-07  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/power4/multiarch/Makefile: Add memmove
+	multiarch objects.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memmove-power7.c: New
+	file: multiarch power7 memmove.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memmove-ppc.c: New file:
+	multiarch default memmove.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memmove.c: New file:
+	multiarch memove for powerpc32/power4.
+
 	* string/bcopy.c: Use full path to include memmove.c.
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add memmove and bcopy
 	multiarch objects.
