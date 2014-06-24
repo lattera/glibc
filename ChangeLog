@@ -1,3 +1,11 @@
+2014-06-25  Will Newton  <will.newton@linaro.org>
+
+	* sysdeps/posix/tempname.c: Merge from gnulib, cosmetic
+	comment changes throughout the file.  Remove checks
+	for HAVE_*_H definitions that are not required.
+	(__gen_tempname): Call abort if an unknown kind value is
+	passed.
+
 2014-06-25  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #17086]

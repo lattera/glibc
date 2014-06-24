@@ -15,8 +15,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if HAVE_CONFIG_H
+#if !_LIBC
 # include <config.h>
+# include "tempname.h"
 #endif
 
 #include <sys/types.h>
@@ -39,74 +40,34 @@
 # define __GT_DIR	1
 # define __GT_NOCREATE	2
 #endif
-
-#if STDC_HEADERS || _LIBC
-# include <stddef.h>
-# include <stdlib.h>
-# include <string.h>
+#if !_LIBC && (GT_FILE != __GT_FILE || GT_DIR != __GT_DIR	\
+	       || GT_NOCREATE != __GT_NOCREATE)
+# error report this to bug-gnulib@gnu.org
 #endif
 
-#if HAVE_FCNTL_H || _LIBC
-# include <fcntl.h>
-#endif
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
 
-#if HAVE_SYS_TIME_H || _LIBC
-# include <sys/time.h>
-#endif
-
-#if HAVE_STDINT_H || _LIBC
-# include <stdint.h>
-#endif
-
-#if HAVE_UNISTD_H || _LIBC
-# include <unistd.h>
-#endif
+#include <fcntl.h>
+#include <sys/time.h>
+#include <stdint.h>
+#include <unistd.h>
 
 #include <sys/stat.h>
-#if STAT_MACROS_BROKEN
-# undef S_ISDIR
-#endif
-#if !defined S_ISDIR && defined S_IFDIR
-# define S_ISDIR(mode) (((mode) & S_IFMT) == S_IFDIR)
-#endif
-#if !S_IRUSR && S_IREAD
-# define S_IRUSR S_IREAD
-#endif
-#if !S_IRUSR
-# define S_IRUSR 00400
-#endif
-#if !S_IWUSR && S_IWRITE
-# define S_IWUSR S_IWRITE
-#endif
-#if !S_IWUSR
-# define S_IWUSR 00200
-#endif
-#if !S_IXUSR && S_IEXEC
-# define S_IXUSR S_IEXEC
-#endif
-#if !S_IXUSR
-# define S_IXUSR 00100
-#endif
 
 #if _LIBC
 # define struct_stat64 struct stat64
+# define __secure_getenv __libc_secure_getenv
 #else
 # define struct_stat64 struct stat
+# define __gen_tempname gen_tempname
 # define __getpid getpid
 # define __gettimeofday gettimeofday
 # define __mkdir mkdir
 # define __open open
-# define __open64 open
-# define __lxstat64(version, path, buf) lstat (path, buf)
-# define __xstat64(version, path, buf) stat (path, buf)
-#endif
-
-#if ! (HAVE_SECURE_GETENV || _LIBC)
-# ifdef HAVE___SECURE_GETENV
-#  define __libc_secure_getenv __secure_getenv
-# else
-#  define __libc_secure_getenv getenv
-# endif
+# define __lxstat64(version, file, buf) lstat (file, buf)
+# define __secure_getenv secure_getenv
 #endif
 
 #ifdef _LIBC
@@ -137,6 +98,7 @@
 # define uint64_t uintmax_t
 #endif
 
+#if _LIBC
 /* Return nonzero if DIR is an existent directory.  */
 static int
 direxists (const char *dir)
@@ -172,7 +134,7 @@ __path_search (char *tmpl, size_t tmpl_len, const char *dir, const char *pfx,
 
   if (try_tmpdir)
     {
-      d = __libc_secure_getenv ("TMPDIR");
+      d = __secure_getenv ("TMPDIR");
       if (d != NULL && direxists (d))
 	dir = d;
       else if (dir != NULL && direxists (dir))
@@ -207,8 +169,9 @@ __path_search (char *tmpl, size_t tmpl_len, const char *dir, const char *pfx,
   sprintf (tmpl, "%.*s/%.*sXXXXXX", (int) dlen, dir, (int) plen, pfx);
   return 0;
 }
+#endif /* _LIBC */
 
-/* These are the characters used in temporary filenames.  */
+/* These are the characters used in temporary file names.  */
 static const char letters[] =
 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
@@ -240,7 +203,7 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
   /* A lower bound on the number of temporary files to attempt to
      generate.  The maximum total number of temporary file names that
      can exist for a given template is 62**6.  It should never be
-     necessary to try all these combinations.  Instead if a reasonable
+     necessary to try all of these combinations.  Instead if a reasonable
      number of names is tried (we define reasonable as 62**3) fail to
      give the system administrator the chance to remove the problems.  */
 #define ATTEMPTS_MIN (62 * 62 * 62)
@@ -267,15 +230,11 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
 #ifdef RANDOM_BITS
   RANDOM_BITS (random_time_bits);
 #else
-# if HAVE_GETTIMEOFDAY || _LIBC
   {
     struct timeval tv;
     __gettimeofday (&tv, NULL);
     random_time_bits = ((uint64_t) tv.tv_usec << 16) ^ tv.tv_sec;
   }
-# else
-  random_time_bits = time (NULL);
-# endif
 #endif
   value += random_time_bits ^ __getpid ();
 
@@ -328,6 +287,7 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
 
 	default:
 	  assert (! "invalid KIND in __gen_tempname");
+	  abort ();
 	}
 
       if (fd >= 0)
