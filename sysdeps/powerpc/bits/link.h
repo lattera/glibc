@@ -63,7 +63,8 @@ extern unsigned int la_ppc32_gnu_pltexit (Elf32_Sym *__sym,
 
 __END_DECLS
 
-#elif _CALL_ELF != 2
+#elif __ELF_NATIVE_CLASS == 64
+# if _CALL_ELF != 2
 
 /* Registers for entry into PLT on PPC64.  */
 typedef struct La_ppc64_regs
@@ -107,7 +108,7 @@ extern unsigned int la_ppc64_gnu_pltexit (Elf64_Sym *__sym,
 
 __END_DECLS
 
-#else
+# else
 
 /* Registers for entry into PLT on PPC64 in the ELFv2 ABI.  */
 typedef struct La_ppc64v2_regs
@@ -151,4 +152,5 @@ extern unsigned int la_ppc64v2_gnu_pltexit (Elf64_Sym *__sym,
 
 __END_DECLS
 
+# endif
 #endif
