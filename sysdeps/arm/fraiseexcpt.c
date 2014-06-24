@@ -102,5 +102,4 @@ feraiseexcept (int excepts)
       return 0;
     }
 }
-
 libm_hidden_def (feraiseexcept)

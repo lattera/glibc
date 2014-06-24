@@ -30,5 +30,4 @@ feholdexcept (fenv_t *envp)
   libc_feholdexcept_vfp (envp);
   return 0;
 }
-
 libm_hidden_def (feholdexcept)

@@ -1,5 +1,12 @@
 2014-06-24  Wilco  <wdijkstr@arm.com>
 
+	* sysdeps/arm/feholdexcpt.c (feholdexcept): Remove space.
+	* sysdeps/arm/fesetenv.c (fesetenv): Remove space.
+	* sysdeps/arm/fesetround.c (fesetround): Remove space.
+	* sysdeps/arm/fraiseexcpt.c (feraiseexcept): Remove space.
+
+2014-06-24  Wilco  <wdijkstr@arm.com>
+
 	* NEWS: Add 16918 to fixed bug list.
 
 2014-06-24  Wilco  <wdijkstr@arm.com>

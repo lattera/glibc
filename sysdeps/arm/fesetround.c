@@ -35,5 +35,4 @@ fesetround (int round)
   libc_fesetround_vfp (round);
   return 0;
 }
-
 libm_hidden_def (fesetround)
