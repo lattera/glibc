@@ -25,7 +25,7 @@
 int
 feenableexcept (int excepts)
 {
-  fpu_control_t fpscr, new_fpscr;
+  fpu_control_t fpscr, new_fpscr, updated_fpscr;
 
   /* Fail if a VFP unit isn't present.  */
   if (!ARM_HAVE_VFP)
@@ -35,15 +35,15 @@ feenableexcept (int excepts)
   excepts &= FE_ALL_EXCEPT;
   new_fpscr = fpscr | (excepts << FE_EXCEPT_SHIFT);
 
-  _FPU_SETCW (new_fpscr);
-
-  if (excepts != 0)
+  if (new_fpscr != fpscr)
     {
+      _FPU_SETCW (new_fpscr);
+
       /* Not all VFP architectures support trapping exceptions, so
 	 test whether the relevant bits were set and fail if not.  */
-      _FPU_GETCW (new_fpscr);
-      if ((new_fpscr & (excepts << FE_EXCEPT_SHIFT))
-	  != (excepts << FE_EXCEPT_SHIFT))
+      _FPU_GETCW (updated_fpscr);
+
+      if (new_fpscr & ~updated_fpscr)
 	return -1;
     }
 

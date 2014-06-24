@@ -24,19 +24,20 @@
 void
 __setfpucw (fpu_control_t set)
 {
-  fpu_control_t fpscr;
+  fpu_control_t fpscr, new_fpscr;
 
   /* Do nothing if a VFP unit isn't present.  */
   if (!ARM_HAVE_VFP)
     return;
 
-  /* Fetch the current control word.  */
   _FPU_GETCW (fpscr);
 
   /* Preserve the reserved bits, and set the rest as the user
      specified (or the default, if the user gave zero).  */
-  fpscr &= _FPU_RESERVED;
-  fpscr |= set & ~_FPU_RESERVED;
+  new_fpscr = fpscr & _FPU_RESERVED;
+  new_fpscr |= set & ~_FPU_RESERVED;
 
-  _FPU_SETCW (fpscr);
+  /* Write FPSCR if changed.  */
+  if (new_fpscr != fpscr)
+    _FPU_SETCW (fpscr);
 }
