@@ -1,3 +1,9 @@
+2014-06-25  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #17086]
+	* sysdeps/m68k/m680x0/fpu/s_scalbn.c: Add compat symbols for
+	scalbln, scalblnf, scalblnl in libc.
+
 2014-06-25  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #17086]

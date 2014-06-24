@@ -47,3 +47,9 @@ __CONCATX(__scalbn,suffix) (x, exp)
 }
 weak_alias (__CONCATX(__scalbn,suffix), __CONCATX(scalbn,suffix))
 strong_alias (__CONCATX(__scalbn,suffix), __CONCATX(__scalbln,suffix))
+
+#include <shlib-compat.h>
+#if SHLIB_COMPAT (libc, GLIBC_2_1, GLIBC_2_20)
+compat_symbol (libc, __CONCATX(__scalbn,suffix), __CONCATX(scalbln,suffix),
+	       GLIBC_2_1);
+#endif
