@@ -1,5 +1,8 @@
 2014-07-07  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/memmove.c (memmove): Cleanup impplementation to use
+	glibc default one.
+
 	* sysdeps/powerpc/bits/link.h [_CALL_ELF]: Guard check for
 	__ELF_NATIVE_CLASS equal to 64.
 
