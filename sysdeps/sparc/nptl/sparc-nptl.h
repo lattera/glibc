@@ -1,6 +1,4 @@
-#ifndef _INTERNALTYPES_H
-
-#include_next <internaltypes.h>
+#ifndef _SPARC_NPTL_H
 
 union sparc_pthread_barrier
 {

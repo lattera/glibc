@@ -25,7 +25,7 @@
 
 #include <pthreadP.h>
 #include <shlib-compat.h>
-
+#include <sparc-nptl.h>
 
 extern void __sem_wait_cleanup (void *arg) attribute_hidden;
 

@@ -20,6 +20,7 @@
 #include <sysdep.h>
 #include <lowlevellock.h>
 #include <pthreadP.h>
+#include <sparc-nptl.h>
 
 /* Wait on barrier.  */
 int

@@ -19,6 +19,7 @@
 #include <errno.h>
 #include "pthreadP.h"
 #include <lowlevellock.h>
+#include <sparc-nptl.h>
 
 int
 pthread_barrier_destroy (barrier)

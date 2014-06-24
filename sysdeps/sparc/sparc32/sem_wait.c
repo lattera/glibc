@@ -25,7 +25,7 @@
 
 #include <pthreadP.h>
 #include <shlib-compat.h>
-
+#include <sparc-nptl.h>
 
 void
 attribute_hidden

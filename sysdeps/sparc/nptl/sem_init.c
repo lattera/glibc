@@ -23,7 +23,7 @@
 #include <shlib-compat.h>
 #include "semaphoreP.h"
 #include <kernel-features.h>
-
+#include <sparc-nptl.h>
 
 int
 __new_sem_init (sem, pshared, value)

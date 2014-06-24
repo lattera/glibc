@@ -7,6 +7,20 @@
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.
 
+	* sysdeps/sparc/nptl/internaltypes.h: Delete.
+	* sysdeps/sparc/nptl/sparc-nptl.h: New file.
+	* sysdeps/sparc/nptl/pthread_barrier_destroy.c: Include it.
+	* sysdeps/sparc/nptl/pthread_barrier_init.c: Likewise.
+	* sysdeps/sparc/nptl/pthread_barrier_wait.c: Likewise.
+	* sysdeps/sparc/nptl/sem_init.c: Likewise.
+	* sysdeps/sparc/nptl/sem_post.c: Likewise.
+	* sysdeps/sparc/nptl/sem_timedwait.c: Likewise.
+	* sysdeps/sparc/nptl/sem_wait.c: Likewise.
+	* sysdeps/sparc/sparc32/nptl/pthread_barrier_wait.c: Likewise.
+	* sysdeps/sparc/sparc32/nptl/sem_post.c: Likewise.
+	* sysdeps/sparc/sparc32/nptl/sem_timedwait.c: Likewise.
+	* sysdeps/sparc/sparc32/nptl/sem_wait.c: Likewise.
+
 2014-07-09  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/powerpc/test-gettimebase.c (do_test): Add newline to

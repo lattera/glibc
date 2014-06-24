@@ -24,6 +24,7 @@
 #include <semaphore.h>
 
 #include <shlib-compat.h>
+#include <sparc-nptl.h>
 
 int
 __new_sem_post (sem_t *sem)
