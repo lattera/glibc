@@ -1,5 +1,9 @@
 2014-07-07  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/power7/memcpy.S: Align VSX copies to 16B
+	to avoid alignment traps in non-cacheable memory.
+	* sysdeps/powerpc/powerpc32/power7/memcpy.S: Likewise.
+
 	* sysdeps/powerpc/powerpc32/power4/multiarch/Makefile: Add memmove
 	multiarch objects.
 	* sysdeps/powerpc/powerpc32/power4/multiarch/memmove-power7.c: New
