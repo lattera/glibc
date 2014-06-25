@@ -582,42 +582,8 @@ if test -z "$enable_hacker_mode" && test x"$libc_config_ok" != xyes; then
   esac
 fi
 
-dnl We need to use [ and ] for other purposes for a while now.
-changequote(,)dnl
-# Expand the configuration machine name into a subdirectory by architecture
-# type and particular chip.  If an add-on configure fragment already set
-# base_machine, we don't change it.
-test -n "$base_machine" || case "$machine" in
-i[4567]86)	base_machine=i386 machine=i386/$machine ;;
-powerpc64*)	base_machine=powerpc machine=powerpc/powerpc64 ;;
-powerpc*)	base_machine=powerpc machine=powerpc/powerpc32 ;;
-s390)           base_machine=s390 machine=s390/s390-32 ;;
-s390x)          base_machine=s390 machine=s390/s390-64 ;;
-sh3*)		base_machine=sh machine=sh/sh3 ;;
-sh4*)		base_machine=sh machine=sh/sh4 ;;
-sparc | sparcv[67])
-		base_machine=sparc machine=sparc/sparc32 ;;
-sparcv8 | supersparc | hypersparc)
-		base_machine=sparc machine=sparc/sparc32/sparcv8 ;;
-sparcv8plus | sparcv8plusa | sparcv9)
-		base_machine=sparc machine=sparc/sparc32/sparcv9 ;;
-sparcv8plusb | sparcv9b)
-		base_machine=sparc machine=sparc/sparc32/sparcv9/sparcv9b ;;
-sparcv9v)
-		base_machine=sparc machine=sparc/sparc32/sparcv9/sparcv9v ;;
-sparcv9v2)
-		base_machine=sparc machine=sparc/sparc32/sparcv9/sparcv9v2 ;;
-sparc64)
-		base_machine=sparc machine=sparc/sparc64 ;;
-sparc64b)
-		base_machine=sparc machine=sparc/sparc64/sparcv9b ;;
-sparc64v)
-		base_machine=sparc machine=sparc/sparc64/sparcv9v ;;
-sparc64v2)
-		base_machine=sparc machine=sparc/sparc64/sparcv9v2 ;;
-*)		base_machine=$machine ;;
-esac
-changequote([,])dnl
+# Set base_machine if not set by a preconfigure fragment.
+test -n "$base_machine" || base_machine=$machine
 AC_SUBST(base_machine)
 
 if test "$base_machine" = "i386"; then

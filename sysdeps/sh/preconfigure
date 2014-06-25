@@ -1,0 +1,6 @@
+# preconfigure fragment for sh.
+
+case "$machine" in
+sh3*)		base_machine=sh machine=sh/sh3 ;;
+sh4*)		base_machine=sh machine=sh/sh4 ;;
+esac

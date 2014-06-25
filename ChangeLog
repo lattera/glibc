@@ -1,3 +1,15 @@
+2014-06-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.ac (base_machine): Do not set specially for particular
+	machines here.
+	* configure: Regenerated.
+	* sysdeps/powerpc/preconfigure: Move machine and base_machine
+	settings from configure.ac.
+	* sysdeps/i386/preconfigure: New file.
+	* sysdeps/s390/preconfigure: Likewise.
+	* sysdeps/sh/preconfigure: Likewise.
+	* sysdeps/sparc/preconfigure: Likewise.
+
 2014-06-25  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/sparc/sparc64/nptl/cpu_relax.S: Moved ...

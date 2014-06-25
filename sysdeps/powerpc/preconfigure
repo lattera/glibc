@@ -1,10 +1,16 @@
-# Check for e500.
+# preconfigure fragment for powerpc.
 
 case "$machine" in
-powerpc)
+powerpc64*)
+  base_machine=powerpc machine=powerpc/powerpc64
+  ;;
+powerpc*)
+  # Check for e500.
   $CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null > conftest.i
   if grep -q __NO_FPRS__ conftest.i && ! grep -q _SOFT_FLOAT conftest.i; then
     base_machine=powerpc machine=powerpc/powerpc32/e500
+  else
+    base_machine=powerpc machine=powerpc/powerpc32
   fi
   rm -f conftest.i
   ;;
