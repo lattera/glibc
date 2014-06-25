@@ -1,3 +1,26 @@
+2014-06-24  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/i386/i486/nptl/pthread_spin_trylock.S: Moved ...
+	* sysdeps/i386/i486/pthread_spin_trylock.S: ... here.
+	* sysdeps/i386/i586/nptl/pthread_spin_trylock.S: Moved ...
+	* sysdeps/i386/i586/pthread_spin_trylock.S: ... here.
+	Update #include.
+	* sysdeps/i386/i686/nptl/pthread_spin_trylock.S: Moved ...
+	* sysdeps/i386/i686/pthread_spin_trylock.S: ... here.
+	Update #include.
+	* sysdeps/x86_64/64/nptl/shlib-versions: Moved ...
+	* sysdeps/unix/sysv/linux/x86_64/64/shlib-versions: ... here.
+	* sysdeps/x86_64/x32/nptl/shlib-versions: Moved ...
+	* sysdeps/unix/sysv/linux/x86_64/x32/shlib-versions: ... here.
+	* sysdeps/x86/nptl/bits/pthreadtypes.h: Moved ...
+	* sysdeps/x86/bits/pthreadtypes.h: ... here.
+	* sysdeps/x86/nptl/bits/semaphore.h: Moved ...
+	* sysdeps/x86/bits/semaphore.h: ... here.
+	* sysdeps/x86/nptl/elide.h: Moved ...
+	* sysdeps/x86/elide.h: ... here.
+	* sysdeps/x86_64/nptl/Implies: File removed.
+	* sysdeps/i386/nptl/Implies: File removed.
+
 2014-06-24  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16539]
