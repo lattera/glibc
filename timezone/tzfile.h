@@ -97,7 +97,7 @@ struct tzhead {
 */
 
 #ifndef TZ_MAX_TIMES
-#define TZ_MAX_TIMES	1200
+#define TZ_MAX_TIMES	2000
 #endif /* !defined TZ_MAX_TIMES */
 
 #ifndef TZ_MAX_TYPES

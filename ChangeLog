@@ -1,5 +1,11 @@
 2014-06-25  Joseph Myers  <joseph@codesourcery.com>
 
+	* timezone/checktab.awk: Update from tzcode 2014e.
+	* timezone/private.h: Likewise.
+	* timezone/tzfile.h: Likewise.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/kernel-features.h
 	(__ASSUME_XFS_RESTRICTED_CHOWN): Remove macro.
 	* sysdeps/unix/sysv/linux/pathconf.c (__statfs_chown_restricted)

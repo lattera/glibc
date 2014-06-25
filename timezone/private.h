@@ -120,8 +120,9 @@
 */
 #ifndef HAVE_STDINT_H
 #define HAVE_STDINT_H \
-	(199901 <= __STDC_VERSION__ || \
-	2 < (__GLIBC__ + (0 < __GLIBC_MINOR__)))
+   (199901 <= __STDC_VERSION__ \
+    || 2 < __GLIBC__ + (1 <= __GLIBC_MINOR__)	\
+    || __CYGWIN__)
 #endif /* !defined HAVE_STDINT_H */
 
 #if HAVE_STDINT_H
@@ -204,6 +205,10 @@ typedef unsigned long uintmax_t;
 #ifndef INT32_MIN
 #define INT32_MIN (-1 - INT32_MAX)
 #endif /* !defined INT32_MIN */
+
+#ifndef SIZE_MAX
+#define SIZE_MAX ((size_t) -1)
+#endif
 
 #if 2 < __GNUC__ + (96 <= __GNUC_MINOR__)
 # define ATTRIBUTE_CONST __attribute__ ((const))

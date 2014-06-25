@@ -162,6 +162,7 @@ static const char *	rfilename;
 static int		rlinenum;
 static const char *	progname;
 static int		timecnt;
+static int		timecnt_alloc;
 static int		typecnt;
 
 /*
@@ -247,9 +248,11 @@ static int		typecnt;
 
 static struct rule *	rules;
 static int		nrules;	/* number of rules */
+static int		nrules_alloc;
 
 static struct zone *	zones;
 static int		nzones;	/* number of zones */
+static int		nzones_alloc;
 
 struct link {
 	const char *	l_filename;
@@ -260,6 +263,7 @@ struct link {
 
 static struct link *	links;
 static int		nlinks;
+static int		nlinks_alloc;
 
 struct lookup {
 	const char *	l_word;
@@ -346,7 +350,7 @@ static const int	len_years[2] = {
 static struct attype {
 	zic_t		at;
 	unsigned char	type;
-}			attypes[TZ_MAX_TIMES];
+} *			attypes;
 static zic_t		gmtoffs[TZ_MAX_TYPES];
 static char		isdsts[TZ_MAX_TYPES];
 static unsigned char	abbrinds[TZ_MAX_TYPES];
@@ -361,16 +365,26 @@ static char		roll[TZ_MAX_LEAPS];
 ** Memory allocation.
 */
 
+static _Noreturn void
+memory_exhausted(const char *msg)
+{
+	fprintf(stderr, _("%s: Memory exhausted: %s\n"), progname, msg);
+	exit(EXIT_FAILURE);
+}
+
+static ATTRIBUTE_PURE size_t
+size_product(size_t nitems, size_t itemsize)
+{
+	if (SIZE_MAX / itemsize < nitems)
+		memory_exhausted("size overflow");
+	return nitems * itemsize;
+}
+
 static ATTRIBUTE_PURE void *
 memcheck(void *const ptr)
 {
-	if (ptr == NULL) {
-		const char *e = strerror(errno);
-
-		(void) fprintf(stderr, _("%s: Memory exhausted: %s\n"),
-			progname, e);
-		exit(EXIT_FAILURE);
-	}
+	if (ptr == NULL)
+		memory_exhausted(strerror(errno));
 	return ptr;
 }
 
@@ -378,6 +392,20 @@ memcheck(void *const ptr)
 #define erealloc(ptr, size)	memcheck(realloc(ptr, size))
 #define ecpyalloc(ptr)		memcheck(icpyalloc(ptr))
 #define ecatalloc(oldp, newp)	memcheck(icatalloc((oldp), (newp)))
+
+static void *
+growalloc(void *ptr, size_t itemsize, int nitems, int *nitems_alloc)
+{
+	if (nitems < *nitems_alloc)
+		return ptr;
+	else {
+		int amax = INT_MAX < SIZE_MAX ? INT_MAX : SIZE_MAX;
+		if ((amax - 1) / 3 * 2 < *nitems_alloc)
+			memory_exhausted("int overflow");
+		*nitems_alloc = *nitems_alloc + (*nitems_alloc >> 1) + 1;
+		return erealloc(ptr, size_product(*nitems_alloc, itemsize));
+	}
+}
 
 /*
 ** Error handling.
@@ -695,6 +723,36 @@ warning(_("hard link failed, symbolic link used"));
 static const zic_t min_time = (zic_t) -1 << (TIME_T_BITS_IN_FILE - 1);
 static const zic_t max_time = -1 - ((zic_t) -1 << (TIME_T_BITS_IN_FILE - 1));
 
+/* Estimated time of the Big Bang, in seconds since the POSIX epoch.
+   rounded downward to the negation of a power of two that is
+   comfortably outside the error bounds.
+
+   zic does not output time stamps before this, partly because they
+   are physically suspect, and partly because GNOME mishandles them; see
+   GNOME bug 730332 <https://bugzilla.gnome.org/show_bug.cgi?id=730332>.
+
+   For the time of the Big Bang, see:
+
+   Ade PAR, Aghanim N, Armitage-Caplan C et al.  Planck 2013 results.
+   I. Overview of products and scientific results.
+   arXiv:1303.5062 2013-03-20 20:10:01 UTC
+   <http://arxiv.org/pdf/1303.5062v1> [PDF]
+
+   Page 36, Table 9, row Age/Gyr, column Planck+WP+highL+BAO 68% limits
+   gives the value 13.798 plus-or-minus 0.037 billion years.
+   Multiplying this by 1000000000 and then by 31557600 (the number of
+   seconds in an astronomical year) gives a value that is comfortably
+   less than 2**59, so BIG_BANG is - 2**59.
+
+   BIG_BANG is approximate, and may change in future versions.
+   Please do not rely on its exact value.  */
+
+#ifndef BIG_BANG
+#define BIG_BANG (- (1LL << 59))
+#endif
+
+static const zic_t big_bang_time = BIG_BANG;
+
 static int
 itsdir(const char *const name)
 {
@@ -934,8 +992,6 @@ gethms(const char *string, const char *const errstring, const int signable)
 		error(_("time overflow"));
 		return 0;
 	}
-	if (noise && hh == HOURSPERDAY && mm == 0 && ss == 0)
-		warning(_("24:00 not handled by pre-1998 versions of zic"));
 	if (noise && (hh > HOURSPERDAY ||
 		(hh == HOURSPERDAY && (mm != 0 || ss != 0))))
 warning(_("values over 24 hours not handled by pre-2007 versions of zic"));
@@ -965,7 +1021,7 @@ inrule(register char **const fields, const int nfields)
 	r.r_abbrvar = ecpyalloc(fields[RF_ABBRVAR]);
 	if (max_abbrvar_len < strlen(r.r_abbrvar))
 		max_abbrvar_len = strlen(r.r_abbrvar);
-	rules = erealloc(rules, (nrules + 1) * sizeof *rules);
+	rules = growalloc(rules, sizeof *rules, nrules, &nrules_alloc);
 	rules[nrules++] = r;
 }
 
@@ -1081,7 +1137,7 @@ inzsub(register char **const fields, const int nfields, const int iscont)
 				return FALSE;
 		}
 	}
-	zones = erealloc(zones, (nzones + 1) * sizeof *zones);
+	zones = growalloc(zones, sizeof *zones, nzones, &nzones_alloc);
 	zones[nzones++] = z;
 	/*
 	** If there was an UNTIL field on this line,
@@ -1148,10 +1204,6 @@ inleap(register char ** const fields, const int nfields)
 			return;
 	}
 	dayoff = oadd(dayoff, day - 1);
-	if (dayoff < 0 && !TYPE_SIGNED(zic_t)) {
-		error(_("time before zero"));
-		return;
-	}
 	if (dayoff < min_time / SECSPERDAY) {
 		error(_("time too small"));
 		return;
@@ -1160,7 +1212,7 @@ inleap(register char ** const fields, const int nfields)
 		error(_("time too large"));
 		return;
 	}
-	t = (zic_t) dayoff * SECSPERDAY;
+	t = dayoff * SECSPERDAY;
 	tod = gethms(fields[LP_TIME], _("invalid time of day"), FALSE);
 	cp = fields[LP_CORR];
 	{
@@ -1189,7 +1241,12 @@ inleap(register char ** const fields, const int nfields)
 				));
 			return;
 		}
-		leapadd(tadd(t, tod), positive, lp->l_value, count);
+		t = tadd(t, tod);
+		if (t < big_bang_time) {
+			error(_("leap second precedes Big Bang"));
+			return;
+		}
+		leapadd(t, positive, lp->l_value, count);
 	}
 }
 
@@ -1214,7 +1271,7 @@ inlink(register char **const fields, const int nfields)
 	l.l_linenum = linenum;
 	l.l_from = ecpyalloc(fields[LF_FROM]);
 	l.l_to = ecpyalloc(fields[LF_TO]);
-	links = erealloc(links, (nlinks + 1) * sizeof *links);
+	links = growalloc(links, sizeof *links, nlinks, &nlinks_alloc);
 	links[nlinks++] = l;
 }
 
@@ -1434,8 +1491,9 @@ writezone(const char *const name, const char *const string, char version)
 	static char *			fullname;
 	static const struct tzhead	tzh0;
 	static struct tzhead		tzh;
-	zic_t				ats[TZ_MAX_TIMES];
-	unsigned char			types[TZ_MAX_TIMES];
+	zic_t *ats = emalloc(size_product(timecnt, sizeof *ats + 1));
+	void *typesptr = ats + timecnt;
+	unsigned char *types = typesptr;
 
 	/*
 	** Sort.
@@ -1451,19 +1509,13 @@ writezone(const char *const name, const char *const string, char version)
 
 		toi = 0;
 		fromi = 0;
-		while (fromi < timecnt && attypes[fromi].at < min_time)
+		while (fromi < timecnt && attypes[fromi].at < big_bang_time)
 			++fromi;
-		/*
-		** Remember that type 0 is reserved.
-		*/
-		if (isdsts[1] == 0)
-			while (fromi < timecnt && attypes[fromi].type == 1)
-				++fromi;	/* handled by default rule */
 		for ( ; fromi < timecnt; ++fromi) {
-			if (toi != 0 && ((attypes[fromi].at +
+			if (toi > 1 && ((attypes[fromi].at +
 				gmtoffs[attypes[toi - 1].type]) <=
-				(attypes[toi - 1].at + gmtoffs[toi == 1 ? 0
-				: attypes[toi - 2].type]))) {
+				(attypes[toi - 1].at +
+				gmtoffs[attypes[toi - 2].type]))) {
 					attypes[toi - 1].type =
 						attypes[fromi].type;
 					continue;
@@ -1474,6 +1526,9 @@ writezone(const char *const name, const char *const string, char version)
 		}
 		timecnt = toi;
 	}
+	if (noise && timecnt > 1200)
+		warning(_("pre-2014 clients may mishandle"
+			  " more than 1200 transition times"));
 	/*
 	** Transfer.
 	*/
@@ -1504,6 +1559,13 @@ writezone(const char *const name, const char *const string, char version)
 	while (timecnt32 > 0 && !is32(ats[timei32])) {
 		--timecnt32;
 		++timei32;
+	}
+	/*
+	** Output an INT32_MIN "transition" if appropriate--see below.
+	*/
+	if (timei32 > 0 && ats[timei32] > INT32_MIN) {
+		--timei32;
+		++timecnt32;
 	}
 	while (leapcnt32 > 0 && !is32(trans[leapcnt32 - 1]))
 		--leapcnt32;
@@ -1539,7 +1601,7 @@ writezone(const char *const name, const char *const string, char version)
 		register int	thistimei, thistimecnt;
 		register int	thisleapi, thisleapcnt;
 		register int	thistimelim, thisleaplim;
-		int		writetype[TZ_MAX_TIMES];
+		int		writetype[TZ_MAX_TYPES];
 		int		typemap[TZ_MAX_TYPES];
 		register int	thistypecnt;
 		char		thischars[TZ_MAX_CHARS];
@@ -1559,11 +1621,7 @@ writezone(const char *const name, const char *const string, char version)
 		}
 		thistimelim = thistimei + thistimecnt;
 		thisleaplim = thisleapi + thisleapcnt;
-		/*
-		** Remember that type 0 is reserved.
-		*/
-		writetype[0] = FALSE;
-		for (i = 1; i < typecnt; ++i)
+		for (i = 0; i < typecnt; ++i)
 			writetype[i] = thistimecnt == timecnt;
 		if (thistimecnt == 0) {
 			/*
@@ -1579,11 +1637,8 @@ writezone(const char *const name, const char *const string, char version)
 			/*
 			** For America/Godthab and Antarctica/Palmer
 			*/
-			/*
-			** Remember that type 0 is reserved.
-			*/
 			if (thistimei == 0)
-				writetype[1] = TRUE;
+				writetype[0] = TRUE;
 		}
 #ifndef LEAVE_SOME_PRE_2011_SYSTEMS_IN_THE_LURCH
 		/*
@@ -1633,26 +1688,8 @@ writezone(const char *const name, const char *const string, char version)
 		}
 #endif /* !defined LEAVE_SOME_PRE_2011_SYSTEMS_IN_THE_LURCH */
 		thistypecnt = 0;
-		/*
-		** Potentially, set type 0 to that of lowest-valued time.
-		*/
-		if (thistimei > 0) {
-			for (i = 1; i < typecnt; ++i)
-				if (writetype[i] && !isdsts[i])
-					break;
-			if (i != types[thistimei - 1]) {
-				i = types[thistimei - 1];
-				gmtoffs[0] = gmtoffs[i];
-				isdsts[0] = isdsts[i];
-				ttisstds[0] = ttisstds[i];
-				ttisgmts[0] = ttisgmts[i];
-				abbrinds[0] = abbrinds[i];
-				writetype[0] = TRUE;
-				writetype[i] = FALSE;
-			}
-		}
 		for (i = 0; i < typecnt; ++i)
-			typemap[i] = writetype[i] ?  thistypecnt++ : 0;
+			typemap[i] = writetype[i] ?  thistypecnt++ : -1;
 		for (i = 0; i < sizeof indmap / sizeof indmap[0]; ++i)
 			indmap[i] = -1;
 		thischarcnt = 0;
@@ -1696,7 +1733,12 @@ writezone(const char *const name, const char *const string, char version)
 #undef DO
 		for (i = thistimei; i < thistimelim; ++i)
 			if (pass == 1)
-				puttzcode(ats[i], fp);
+				/*
+				** Output an INT32_MIN "transition"
+				** if appropriate--see above.
+				*/
+				puttzcode(((ats[i] < INT32_MIN) ?
+					INT32_MIN : ats[i]), fp);
 			else	puttzcode64(ats[i], fp);
 		for (i = thistimei; i < thistimelim; ++i) {
 			unsigned char	uc;
@@ -1751,6 +1793,7 @@ writezone(const char *const name, const char *const string, char version)
 			progname, fullname);
 		exit(EXIT_FAILURE);
 	}
+	free(ats);
 }
 
 static void
@@ -2074,11 +2117,6 @@ outzone(const struct zone * const zpfirst, const int zonecount)
 		updateminmax(leapminyear);
 		updateminmax(leapmaxyear + (leapmaxyear < ZIC_MAX));
 	}
-	/*
-	** Reserve type 0.
-	*/
-	gmtoffs[0] = isdsts[0] = ttisstds[0] = ttisgmts[0] = abbrinds[0] = -1;
-	typecnt = 1;
 	for (i = 0; i < zonecount; ++i) {
 		zp = &zpfirst[i];
 		if (i < zonecount - 1)
@@ -2160,9 +2198,9 @@ outzone(const struct zone * const zpfirst, const int zonecount)
 		*/
 		stdoff = 0;
 		zp = &zpfirst[i];
-		usestart = i > 0 && (zp - 1)->z_untiltime > min_time;
+		usestart = i > 0 && (zp - 1)->z_untiltime > big_bang_time;
 		useuntil = i < (zonecount - 1);
-		if (useuntil && zp->z_untiltime <= min_time)
+		if (useuntil && zp->z_untiltime <= big_bang_time)
 			continue;
 		gmtoff = zp->z_gmtoff;
 		eat(zp->z_filename, zp->z_linenum);
@@ -2178,8 +2216,7 @@ outzone(const struct zone * const zpfirst, const int zonecount)
 			if (usestart) {
 				addtt(starttime, type);
 				usestart = FALSE;
-			} else if (stdoff != 0)
-				addtt(min_time, type);
+			} else	addtt(big_bang_time, type);
 		} else for (year = min_year; year <= max_year; ++year) {
 			if (useuntil && year > zp->z_untilrule.r_hiyear)
 				break;
@@ -2356,8 +2393,8 @@ error(_("can't determine time zone abbreviation to use just after until time"));
 static void
 addtt(const zic_t starttime, int type)
 {
-	if (starttime <= min_time ||
-		(timecnt == 1 && attypes[0].at < min_time)) {
+	if (starttime <= big_bang_time ||
+		(timecnt == 1 && attypes[0].at < big_bang_time)) {
 		gmtoffs[0] = gmtoffs[type];
 		isdsts[0] = isdsts[type];
 		ttisstds[0] = ttisstds[type];
@@ -2370,10 +2407,7 @@ addtt(const zic_t starttime, int type)
 		timecnt = 0;
 		type = 0;
 	}
-	if (timecnt >= TZ_MAX_TIMES) {
-		error(_("too many transitions?!"));
-		exit(EXIT_FAILURE);
-	}
+	attypes = growalloc(attypes, sizeof *attypes, timecnt, &timecnt_alloc);
 	attypes[timecnt].at = starttime;
 	attypes[timecnt].type = type;
 	++timecnt;
@@ -2572,7 +2606,7 @@ getfields(register char *cp)
 
 	if (cp == NULL)
 		return NULL;
-	array = emalloc((strlen(cp) + 1) * sizeof *array);
+	array = emalloc(size_product(strlen(cp) + 1, sizeof *array));
 	nsubs = 0;
 	for ( ; ; ) {
 		while (isascii((unsigned char) *cp) &&
