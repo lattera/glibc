@@ -289,35 +289,5 @@ __statfs_chown_restricted (int result, const struct statfs *fsbuf)
       return -1;
     }
 
-#if __ASSUME_XFS_RESTRICTED_CHOWN
   return 1;
-#else
-  int fd;
-  int save_errno;
-  long int retval = 1;
-  switch (fsbuf->f_type)
-    {
-    case XFS_SUPER_MAGIC:
-      save_errno = errno;
-      /* Read the value from /proc/sys/fs/xfs/restrict_chown.  If we cannot
-	 read it default to assume the restriction is in place.  */
-      fd = open_not_cancel_2 ("/proc/sys/fs/xfs/restrict_chown", O_RDONLY);
-      if (fd != -1)
-	{
-	  char buf[2];
-	  if (TEMP_FAILURE_RETRY (read_not_cancel (fd, buf, 2)) == 2
-	      && buf[0] >= '0' && buf[0] <= '1')
-	    retval = buf[0] - '0';
-
-	  close_not_cancel_no_status (fd);
-	}
-      __set_errno (save_errno);
-      break;
-
-    default:
-      break;
-    }
-
-  return retval;
-#endif
 }

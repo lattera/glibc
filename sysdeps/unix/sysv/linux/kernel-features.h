@@ -228,7 +228,3 @@
 #if defined __x86_64__ && __LINUX_KERNEL_VERSION >= 0x030100
 # define __ASSUME_GETCPU_SYSCALL	1
 #endif
-
-/* 2.6.29 removed the XFS restricted_chown sysctl, so it is pointless looking
-   for it in newer kernels.  */
-#define __ASSUME_XFS_RESTRICTED_CHOWN 1
