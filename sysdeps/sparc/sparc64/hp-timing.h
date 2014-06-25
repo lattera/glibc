@@ -29,8 +29,6 @@
 
 typedef unsigned long int hp_timing_t;
 
-#define HP_TIMING_ZERO(Var)	(Var) = (0)
-
 #define HP_TIMING_NOW(Var) __asm__ __volatile__ ("rd %%tick, %0" : "=r" (Var))
 
 #define HP_TIMING_DIFF_INIT() \

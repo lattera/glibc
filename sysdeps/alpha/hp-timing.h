@@ -42,8 +42,6 @@
    - hp_timing_t: This is the type for variables used to store the time
      values.
 
-   - HP_TIMING_ZERO: clear `hp_timing_t' object.
-
    - HP_TIMING_NOW: place timestamp for current time in variable given as
      parameter.
 
@@ -76,9 +74,6 @@
 
 /* We use 32 bit values for the times.  */
 typedef unsigned int hp_timing_t;
-
-/* Set timestamp value to zero.  */
-#define HP_TIMING_ZERO(VAR)	(VAR) = (0)
 
 /* The "rpcc" instruction returns a 32-bit counting half and a 32-bit
    "virtual cycle counter displacement".  Subtracting the two gives us

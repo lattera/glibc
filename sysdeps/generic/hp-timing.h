@@ -39,8 +39,6 @@
    - hp_timing_t: This is the type for variables used to store the time
      values.
 
-   - HP_TIMING_ZERO: clear `hp_timing_t' object.
-
    - HP_TIMING_NOW: place timestamp for current time in variable given as
      parameter.
 
@@ -68,7 +66,6 @@
 #define HP_TIMING_AVAIL		(0)
 #define HP_TIMING_INLINE	(0)
 typedef int hp_timing_t;
-#define HP_TIMING_ZERO(Var)
 #define HP_TIMING_NOW(var)
 #define HP_TIMING_DIFF_INIT()
 #define HP_TIMING_DIFF(Diff, Start, End)

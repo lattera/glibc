@@ -43,8 +43,6 @@
    - hp_timing_t: This is the type for variables used to store the time
      values.
 
-   - HP_TIMING_ZERO: clear `hp_timing_t' object.
-
    - HP_TIMING_NOW: place timestamp for current time in variable given as
      parameter.
 
@@ -76,10 +74,6 @@
 
 /* We use 64bit values for the times.  */
 typedef unsigned long int hp_timing_t;
-
-/* Set timestamp value to zero.  */
-#define HP_TIMING_ZERO(Var)	(Var) = (0)
-
 
 /* The Itanium/Merced has a bug where the ar.itc register value read
    is not correct in some situations.  The solution is to read again.
