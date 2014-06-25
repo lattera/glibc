@@ -61,6 +61,10 @@ Version 2.20
   deference a dangling pointer, or use an unexpected pathname argument if
   the string was modified after the posix_spawn_file_actions_addopen
   invocation.
+
+* All supported architectures now use the main glibc sysdeps directory
+  instead of some being in a separate "ports" directory (which was
+  distributed separately before glibc 2.17).
 
 Version 2.19
 

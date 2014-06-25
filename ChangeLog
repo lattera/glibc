@@ -1,5 +1,7 @@
 2014-06-25  Joseph Myers  <joseph@codesourcery.com>
 
+	* README: Do not mention ports directory.
+
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_UTIMENSAT):
 	Remove macro.
 	* sysdeps/unix/sysv/linux/futimes.c: Do not include
