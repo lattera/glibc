@@ -1,5 +1,18 @@
 2014-06-25  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/dl-opendir.c (__ASSUME_O_CLOEXEC): Do
+	not undefine and redefine.
+	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs)
+	[O_CLOEXEC]: Make code unconditional.
+	(__get_nprocs) [!O_CLOEXEC]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/shm_open.c: Do not include
+	<kernel-features.h>.
+	[O_CLOEXEC && !__ASSUME_O_CLOEXEC] (have_o_cloexec): Remove
+	conditional variable definition.
+	(shm_open) [O_CLOEXEC]: Make code unconditional.
+	(shm_open) [!O_CLOEXEC || !__ASSUME_O_CLOEXEC]: Remove conditional
+	code.
+
 	* configure.ac (USE_REGPARMS): Don't define here.
 	* configure: Regenerated.
 	* sysdeps/i386/configure.ac (USE_REGPARMS): Define here.

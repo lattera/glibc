@@ -28,8 +28,6 @@
 #include <bits/libc-lock.h>
 #include "linux_fsinfo.h"
 
-#include <kernel-features.h>
-
 
 /* Mount point of the shared memory filesystem.  */
 static struct
@@ -43,11 +41,6 @@ static const char defaultdir[] = "/dev/shm/";
 
 /* Protect the `mountpoint' variable above.  */
 __libc_once_define (static, once);
-
-
-#if defined O_CLOEXEC && !defined __ASSUME_O_CLOEXEC
-static bool have_o_cloexec;
-#endif
 
 
 /* Determine where the shmfs is mounted (if at all).  */
@@ -164,51 +157,13 @@ shm_open (const char *name, int oflag, mode_t mode)
   __mempcpy (__mempcpy (fname, mountpoint.dir, mountpoint.dirlen),
 	     name, namelen + 1);
 
-#ifdef O_CLOEXEC
-  oflag |= O_CLOEXEC;
-#endif
-
   /* And get the file descriptor.
      XXX Maybe we should test each descriptor whether it really is for a
      file on the shmfs.  If this is what should be done the whole function
      should be revamped since we can determine whether shmfs is available
      while trying to open the file, all in one turn.  */
-  fd = open (fname, oflag | O_NOFOLLOW, mode);
-  if (fd != -1)
-    {
-#if !defined O_CLOEXEC || !defined __ASSUME_O_CLOEXEC
-# ifdef O_CLOEXEC
-      if (have_o_cloexec <= 0)
-# endif
-	{
-	  /* We got a descriptor.  Now set the FD_CLOEXEC bit.  */
-	  int flags = fcntl (fd, F_GETFD, 0);
-
-	  if (__builtin_expect (flags, 0) >= 0)
-	    {
-# ifdef O_CLOEXEC
-	      if (have_o_cloexec == 0)
-		have_o_cloexec = (flags & FD_CLOEXEC) == 0 ? -1 : 1;
-	      if (have_o_cloexec < 0)
-# endif
-		{
-		  flags |= FD_CLOEXEC;
-		  flags = fcntl (fd, F_SETFD, flags);
-		}
-	    }
-
-	  if (flags == -1)
-	    {
-	      /* Something went wrong.  We cannot return the descriptor.  */
-	      int save_errno = errno;
-	      close (fd);
-	      fd = -1;
-	      __set_errno (save_errno);
-	    }
-	}
-#endif
-    }
-  else if (__glibc_unlikely (errno == EISDIR))
+  fd = open (fname, oflag | O_CLOEXEC | O_NOFOLLOW, mode);
+  if (fd == -1 && __glibc_unlikely (errno == EISDIR))
     /* It might be better to fold this error with EINVAL since
        directory names are just another example for unsuitable shared
        object names and the standard does not mention EISDIR.  */

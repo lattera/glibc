@@ -142,11 +142,7 @@ __get_nprocs (void)
   char *cp = buffer_end;
   char *re = buffer_end;
 
-#ifdef O_CLOEXEC
   const int flags = O_RDONLY | O_CLOEXEC;
-#else
-  const int flags = O_RDONLY;
-#endif
   int fd = open_not_cancel_2 ("/sys/devices/system/cpu/online", flags);
   char *l;
   int result = 0;
