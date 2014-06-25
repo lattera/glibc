@@ -23,7 +23,7 @@
    If anything should be added here check whether the size of each string
    is still ok with the given array size.
 
-   All the #ifdefs in the definitions ar equite irritating but
+   All the #ifdefs in the definitions are quite irritating but
    necessary if we want to avoid duplicating the information.  There
    are three different modes:
 
@@ -46,13 +46,14 @@
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_arm_cap_flags
 #else
-PROCINFO_CLASS const char _dl_arm_cap_flags[22][10]
+PROCINFO_CLASS const char _dl_arm_cap_flags[37][10]
 #endif
 #ifndef PROCINFO_DECL
 = {
     "swp", "half", "thumb", "26bit", "fastmult", "fpa", "vfp", "edsp",
     "java", "iwmmxt", "crunch", "thumbee", "neon", "vfpv3", "vfpv3d16",
     "tls", "vfpv4", "idiva", "idivt", "vfpd32", "lpae", "evtstrm",
+    "aes", "pmull", "sha1", "sha2", "crc32",
   }
 #endif
 #if !defined SHARED || defined PROCINFO_DECL

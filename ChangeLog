@@ -1,3 +1,15 @@
+2014-06-25  Will Newton  <will.newton@linaro.org>
+
+	* sysdeps/unix/sysv/linux/arm/dl-procinfo.c
+	(_dl_arm_cap_flags): Add HWCAP2 values.
+	* sysdeps/unix/sysv/linux/arm/dl-procinfo.h
+	(_DL_HWCAP_COUNT): Increase to 37.
+	(_DL_HWCAP_LAST): New define.
+	(_DL_HWCAP2_LAST): New define.
+	(_dl_procinfo): Add support for printing
+	AT_HWCAP2 entries.
+	(_dl_string_hwcap): Use _dl_hwcap_string.
+
 2014-06-25  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Update.

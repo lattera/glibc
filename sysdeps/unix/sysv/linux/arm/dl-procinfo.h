@@ -23,32 +23,17 @@
 #include <ldsodefs.h>
 #include <sysdep.h>
 
-#define _DL_HWCAP_COUNT 22
+#define _DL_HWCAP_COUNT 37
+
+/* Low 22 bits are allocated in HWCAP.  */
+#define _DL_HWCAP_LAST		21
+
+/* Low 5 bits are allocated in HWCAP2.  */
+#define _DL_HWCAP2_LAST		4
 
 /* The kernel provides platform data but it is not interesting.  */
-#define _DL_HWCAP_PLATFORM 	0
+#define _DL_HWCAP_PLATFORM	0
 
-
-static inline int
-__attribute__ ((unused))
-_dl_procinfo (unsigned int type, unsigned long int word)
-{
-  int i;
-
-  /* Fallback to unknown output mechanism.  */
-  if (type == AT_HWCAP2)
-    return -1;
-
-  _dl_printf ("AT_HWCAP:   ");
-
-  for (i = 0; i < _DL_HWCAP_COUNT; ++i)
-    if (word & (1 << i))
-      _dl_printf (" %s", GLRO(dl_arm_cap_flags)[i]);
-
-  _dl_printf ("\n");
-
-  return 0;
-}
 
 static inline const char *
 __attribute__ ((unused))
@@ -57,17 +42,47 @@ _dl_hwcap_string (int idx)
   return GLRO(dl_arm_cap_flags)[idx];
 };
 
+static inline int
+__attribute__ ((unused))
+_dl_procinfo (unsigned int type, unsigned long int word)
+{
+  switch(type)
+    {
+    case AT_HWCAP:
+      _dl_printf ("AT_HWCAP:       ");
+
+      for (int i = 0; i <= _DL_HWCAP_LAST; ++i)
+	if (word & (1 << i))
+	  _dl_printf (" %s", _dl_hwcap_string (i));
+      break;
+    case AT_HWCAP2:
+      {
+	unsigned int offset = _DL_HWCAP_LAST + 1;
+
+	_dl_printf ("AT_HWCAP2:      ");
+
+	for (int i = 0; i <= _DL_HWCAP2_LAST; ++i)
+	  if (word & (1 << i))
+	    _dl_printf (" %s", _dl_hwcap_string (offset + i));
+	break;
+      }
+    default:
+      /* This should not happen.  */
+      return -1;
+    }
+  _dl_printf ("\n");
+  return 0;
+}
+
 #define HWCAP_IMPORTANT		(HWCAP_ARM_VFP | HWCAP_ARM_NEON)
 
 static inline int
 __attribute__ ((unused))
 _dl_string_hwcap (const char *str)
 {
-  int i;
-
-  for (i = 0; i < _DL_HWCAP_COUNT; i++)
+  for (int i = 0; i < _DL_HWCAP_COUNT; i++)
     {
-      if (strcmp (str, GLRO(dl_arm_cap_flags)[i]) == 0)
+      if (strcmp (str, _dl_hwcap_string (i)) == 0)
 	return i;
     }
   return -1;
