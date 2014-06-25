@@ -1,5 +1,16 @@
 2014-06-25  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16560]
+	* sysdeps/ieee754/dbl-64/e_exp10.c (__ieee754_exp10): Return 1 for
+	arguments close to 0.
+	* sysdeps/ieee754/ldbl-128/e_exp10l.c (__ieee754_exp10l):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_exp10l.c (__ieee754_exp10l):
+	Likewise.
+	* math/auto-libm-test-in: Add more tests of exp10.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
+
 	* sysdeps/unix/sysv/linux/kernel-features.h
 	(__ASSUME_COMPLETE_READV_WRITEV): Remove macro.
 	* sysdeps/unix/sysv/linux/readv.c: Do not include

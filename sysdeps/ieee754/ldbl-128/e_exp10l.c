@@ -35,6 +35,8 @@ __ieee754_exp10l (long double arg)
     return LDBL_MIN * LDBL_MIN;
   else if (arg > LDBL_MAX_10_EXP + 1)
     return LDBL_MAX * LDBL_MAX;
+  else if (fabsl (arg) < 0x1p-116L)
+    return 1.0L;
 
   u.value = arg;
   u.parts64.lsw &= 0xfe00000000000000LL;

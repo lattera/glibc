@@ -35,6 +35,8 @@ __ieee754_exp10 (double arg)
     return DBL_MIN * DBL_MIN;
   else if (arg > DBL_MAX_10_EXP + 1)
     return DBL_MAX * DBL_MAX;
+  else if (fabs (arg) < 0x1p-56)
+    return 1.0;
 
   GET_LOW_WORD (lx, arg);
   lx &= 0xf8000000;

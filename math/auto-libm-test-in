@@ -902,6 +902,24 @@ exp10 -max
 exp10 0.75
 # GCC bug 59666: results on directed rounding may be incorrect.
 exp10 0x1.348e45573a1dd72cp+8 xfail-rounding:ldbl-128ibm
+exp10 0x1p-10
+exp10 -0x1p-10
+exp10 0x1p-20
+exp10 -0x1p-20
+exp10 0x1p-30
+exp10 -0x1p-30
+exp10 0x1p-40
+exp10 -0x1p-40
+exp10 0x1p-50
+exp10 -0x1p-50
+exp10 0x1p-60
+exp10 -0x1p-60
+exp10 0x1p-100
+exp10 -0x1p-100
+exp10 min
+exp10 -min
+exp10 min_subnorm
+exp10 -min_subnorm
 
 exp2 0
 exp2 -0
