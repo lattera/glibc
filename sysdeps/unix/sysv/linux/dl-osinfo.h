@@ -16,7 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <kernel-features.h>
 #include <dl-sysdep.h>
 #include <endian.h>
 #include <fcntl.h>

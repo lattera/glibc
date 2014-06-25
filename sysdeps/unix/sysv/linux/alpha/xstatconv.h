@@ -16,7 +16,6 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <kernel-features.h>
 #include <sys/syscall.h>
 
 extern int __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)

@@ -27,7 +27,6 @@
 #include <stdlib.h>
 
 #include <_itoa.h>
-#include <kernel-features.h>
 
 #if 0
 /* Is this used anywhere?  It is not exported.  */

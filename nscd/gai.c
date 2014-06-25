@@ -16,7 +16,6 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.  */
 
 #include <alloca.h>
-#include <kernel-features.h>
 
 /* This file uses the getaddrinfo code but it compiles it without NSCD
    support.  We just need a few symbol renames.  */

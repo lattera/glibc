@@ -25,7 +25,6 @@
 #include <sys/mman.h>
 #include <not-cancel.h>
 
-#include <kernel-features.h>
 #include "nss_db.h"
 
 /* Open the database stored in FILE.  If succesful, store either a

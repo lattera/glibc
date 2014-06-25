@@ -24,7 +24,6 @@
 #include <unistd.h>
 #include <sys/utsname.h>
 #include <ldsodefs.h>
-#include <kernel-features.h>
 
 #ifdef SHARED
 # define DL_SYSDEP_INIT frob_brk ()

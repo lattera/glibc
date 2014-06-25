@@ -23,7 +23,6 @@
 #include <stdarg.h>
 
 #include <sys/syscall.h>
-#include <kernel-features.h>
 
 
 static int

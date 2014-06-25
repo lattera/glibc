@@ -22,7 +22,6 @@
 #include <time.h>
 #include <sys/time.h>
 #include <sysdep.h>
-#include <kernel-features.h>
 
 
 int

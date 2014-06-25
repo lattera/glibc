@@ -27,8 +27,6 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-#include <kernel-features.h>
-
 
 /* If we compile the file for use in ld.so we don't need the feature
    that getcwd() allocates the buffers itself.  */

@@ -27,8 +27,6 @@
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
-#include <kernel-features.h>
-
 #ifdef __NR_pread64             /* Newer kernels renamed but it's the same.  */
 # ifdef __NR_pread
 #  error "__NR_pread and __NR_pread64 both defined???"

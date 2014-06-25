@@ -23,8 +23,6 @@
 #include <sysdep.h>
 #include <stdlib.h>
 
-#include <kernel-features.h>
-
 /* Consider moving to syscalls.list.  */
 
 /*

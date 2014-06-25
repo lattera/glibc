@@ -17,7 +17,6 @@
 
 #include <time.h>
 #include <sysdep.h>
-#include <kernel-features.h>
 
 #ifndef HAVE_CLOCK_GETTIME_VSYSCALL
 # undef INTERNAL_VSYSCALL

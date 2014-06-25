@@ -22,8 +22,6 @@
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
-#include <kernel-features.h>
-
 
 ssize_t
 __libc_pread64 (fd, buf, count, offset)

@@ -16,8 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <kernel-features.h>
-
 #ifndef STAT_IS_KERNEL_STAT
 extern int __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf);
 extern int __xstat64_conv (int vers, struct kernel_stat *kbuf, void *ubuf);

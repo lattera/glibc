@@ -19,7 +19,6 @@
 #include <errno.h>
 #include <time.h>
 #include <unistd.h>
-#include <kernel-features.h>
 #include "kernel-posix-cpu-timers.h"
 
 int

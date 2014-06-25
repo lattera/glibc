@@ -25,8 +25,6 @@
 #include <tls.h>
 #include <stdint.h>
 
-#include "kernel-features.h"
-
 
 #define CLONE_SIGNAL		(CLONE_SIGHAND | CLONE_THREAD)
 

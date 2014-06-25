@@ -26,7 +26,6 @@
 #include <sys/ioctl.h>
 #include <bits/libc-lock.h>
 #include <not-cancel.h>
-#include <kernel-features.h>
 
 #include "netlinkaccess.h"
 

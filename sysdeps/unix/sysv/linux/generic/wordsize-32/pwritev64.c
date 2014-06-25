@@ -25,8 +25,6 @@
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
-#include <kernel-features.h>
-
 static ssize_t
 do_pwritev64 (int fd, const struct iovec *vector, int count, off64_t offset)
 {

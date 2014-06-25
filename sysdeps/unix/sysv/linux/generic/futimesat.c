@@ -24,7 +24,6 @@
 #include <utime.h>
 #include <sys/time.h>
 #include <sysdep.h>
-#include <kernel-features.h>
 
 
 /* Change the access time of FILE relative to FD to TVP[0] and

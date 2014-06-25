@@ -22,8 +22,6 @@
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
-#include <kernel-features.h>
-
 
 static inline int __attribute__ ((always_inline))
 do_sigsuspend (const sigset_t *set)

@@ -24,8 +24,6 @@
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
-#include <kernel-features.h>
-
 static ssize_t
 do_pread64 (int fd, void *buf, size_t count, off64_t offset)
 {

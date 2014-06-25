@@ -22,8 +22,6 @@
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
-#include <kernel-features.h>
-
 
 /* Consider moving to syscalls.list.  */
 

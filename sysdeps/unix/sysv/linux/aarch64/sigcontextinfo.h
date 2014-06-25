@@ -17,7 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sys/ucontext.h>
-#include "kernel-features.h"
 
 #define SIGCONTEXT siginfo_t *_si, struct ucontext *
 #define GET_PC(ctx) ((void *) (ctx)->uc_mcontext.pc)

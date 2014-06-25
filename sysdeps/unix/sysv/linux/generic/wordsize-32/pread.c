@@ -25,8 +25,6 @@
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
-#include <kernel-features.h>
-
 static ssize_t
 do_pread (int fd, void *buf, size_t count, off_t offset)
 {

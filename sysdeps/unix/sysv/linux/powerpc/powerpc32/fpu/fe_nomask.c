@@ -22,7 +22,6 @@
 #include <unistd.h>
 #include <sysdep.h>
 #include <sys/prctl.h>
-#include <kernel-features.h>
 #include <shlib-compat.h>
 
 const fenv_t *

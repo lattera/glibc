@@ -19,7 +19,6 @@
 #include <sysdep.h>
 #include <rtld-global-offsets.h>
 #include <shlib-compat.h>
-#include <kernel-features.h>
 
 #define __ASSEMBLY__
 #include <asm/ptrace.h>

@@ -19,7 +19,6 @@
 #include <sysdep.h>
 #define _ERRNO_H	1
 #include <bits/errno.h>
-#include <kernel-features.h>
 #include <bits/wordsize.h>
 #include <tcb-offsets.h>
 

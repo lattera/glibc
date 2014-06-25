@@ -21,7 +21,6 @@
 #include <sys/stat.h>
 #include <kernel_stat.h>
 #include <string.h>
-#include <kernel-features.h>
 
 int
 __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)

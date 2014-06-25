@@ -20,7 +20,6 @@
 #include <signal.h>
 #include <sysdep.h>
 #include <tls.h>
-#include <kernel-features.h>
 
 
 int

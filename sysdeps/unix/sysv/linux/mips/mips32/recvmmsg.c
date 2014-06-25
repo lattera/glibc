@@ -23,7 +23,6 @@
 
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
-#include <kernel-features.h>
 
 #undef __NR_socketcall
 

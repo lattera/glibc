@@ -19,7 +19,6 @@
 #include <sysdep.h>
 #define _ERRNO_H	1
 #include <bits/errno.h>
-#include <kernel-features.h>
 
 #define CLONE_VM	0x00000100
 #define CLONE_THREAD	0x00010000

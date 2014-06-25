@@ -22,8 +22,6 @@
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
-#include <kernel-features.h>
-
 int
 __poll (struct pollfd *fds, nfds_t nfds, int timeout)
 {

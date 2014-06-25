@@ -17,7 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <kernel-features.h>
 
 #define __ASSEMBLY__
 #include <asm/ptrace.h>

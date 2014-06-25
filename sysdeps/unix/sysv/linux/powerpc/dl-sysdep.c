@@ -17,7 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <config.h>
-#include <kernel-features.h>
 #include <ldsodefs.h>
 
 int __cache_line_size attribute_hidden;

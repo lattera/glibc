@@ -25,7 +25,6 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#include <kernel-features.h>
 
 #include "overflow.h"
 

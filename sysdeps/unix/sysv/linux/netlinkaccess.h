@@ -23,8 +23,6 @@
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
 
-#include <kernel-features.h>
-
 
 struct netlink_res
 {

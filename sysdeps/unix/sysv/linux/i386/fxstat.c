@@ -28,8 +28,6 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-#include <kernel-features.h>
-
 #include <xstatconv.h>
 
 /* Get information about the file FD in BUF.  */

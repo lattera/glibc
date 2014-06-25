@@ -20,8 +20,6 @@
 #include <string.h>
 #include <sys/utsname.h>
 
-#include <kernel-features.h>
-
 static int
 kernel_has_rtsig (void)
 {

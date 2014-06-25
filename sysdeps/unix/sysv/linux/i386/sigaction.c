@@ -26,8 +26,6 @@
 #include <sys/syscall.h>
 #include <ldsodefs.h>
 
-#include <kernel-features.h>
-
 /* The difference here is that the sigaction structure used in the
    kernel is not the same as we use in the libc.  Therefore we must
    translate it here.  */

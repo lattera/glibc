@@ -21,7 +21,6 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 #include <sys/prctl.h>
-#include <kernel-features.h>
 #include <shlib-compat.h>
 
 const fenv_t *

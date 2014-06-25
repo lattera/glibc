@@ -23,8 +23,6 @@
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
-#include <kernel-features.h>
-
 ssize_t
 __libc_pread (fd, buf, count, offset)
      int fd;

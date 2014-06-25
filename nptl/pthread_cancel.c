@@ -21,7 +21,6 @@
 #include "pthreadP.h"
 #include "atomic.h"
 #include <sysdep.h>
-#include <kernel-features.h>
 
 
 int

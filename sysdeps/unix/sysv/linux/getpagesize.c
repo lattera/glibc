@@ -20,7 +20,6 @@
 #include <sys/param.h>
 
 #include <ldsodefs.h>
-#include <kernel-features.h>
 
 /* Return the system page size.  */
 int

@@ -21,7 +21,6 @@
 #include <pthreadP.h>
 #include <tls.h>
 #include <sysdep.h>
-#include <kernel-features.h>
 
 
 int

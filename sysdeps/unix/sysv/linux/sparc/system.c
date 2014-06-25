@@ -15,8 +15,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <kernel-features.h>
-
 /* We have to and actually can handle cancelable system().  The big
    problem: we have to kill the child process if necessary.  To do
    this a cleanup handler has to be registered and is has to be able

@@ -24,8 +24,6 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-#include <kernel-features.h>
-
 /* This is always 12, even on architectures where PAGE_SHIFT != 12.  */
 #if MMAP2_PAGE_SHIFT == -1
 static int page_shift;

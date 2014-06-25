@@ -20,7 +20,6 @@
 #include <time.h>
 
 #include "kernel-posix-cpu-timers.h"
-#include <kernel-features.h>
 
 #ifndef HAVE_CLOCK_GETRES_VSYSCALL
 # undef INTERNAL_VSYSCALL

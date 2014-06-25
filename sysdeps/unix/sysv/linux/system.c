@@ -22,7 +22,6 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <bits/libc-lock.h>
-#include <kernel-features.h>
 
 /* We have to and actually can handle cancelable system().  The big
    problem: we have to kill the child process if necessary.  To do

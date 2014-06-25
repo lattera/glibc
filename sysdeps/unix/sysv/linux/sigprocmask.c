@@ -24,7 +24,6 @@
 #include <sys/syscall.h>
 
 #include <nptl/pthreadP.h>              /* SIGCANCEL, SIGSETXID */
-#include <kernel-features.h>
 
 
 /* Get and/or change the set of blocked signals.  */

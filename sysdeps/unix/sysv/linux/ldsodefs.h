@@ -18,8 +18,6 @@
 
 #ifndef	_LDSODEFS_H
 
-#include <kernel-features.h>
-
 /* Get the real definitions.  */
 #include_next <ldsodefs.h>
 

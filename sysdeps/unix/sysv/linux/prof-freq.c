@@ -18,7 +18,6 @@
 
 #include <sys/time.h>
 #include <libc-internal.h>
-#include <kernel-features.h>
 #include <ldsodefs.h>
 
 

@@ -27,7 +27,6 @@
 #include <stdlib.h>
 
 #include <_itoa.h>
-#include <kernel-features.h>
 
 static int getttyname_r (char *buf, size_t buflen,
 			 dev_t mydev, ino64_t myino, int save,

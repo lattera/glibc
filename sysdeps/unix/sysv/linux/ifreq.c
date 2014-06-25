@@ -17,7 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include "ifreq.h"
-#include <kernel-features.h>
 
 
 void

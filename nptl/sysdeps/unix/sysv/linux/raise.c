@@ -21,7 +21,6 @@
 #include <signal.h>
 #include <sysdep.h>
 #include <nptl/pthreadP.h>
-#include <kernel-features.h>
 
 
 int

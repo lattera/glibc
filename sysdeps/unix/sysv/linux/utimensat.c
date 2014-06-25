@@ -20,8 +20,6 @@
 #include <sys/stat.h>
 #include <sysdep.h>
 
-#include <kernel-features.h>
-
 
 /* Change the access time of FILE to TSP[0] and
    the modification time of FILE to TSP[1].

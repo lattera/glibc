@@ -34,7 +34,6 @@
 
 #include <atomic.h>
 #include <not-cancel.h>
-#include <kernel-features.h>
 
 
 /* How we can determine the number of available processors depends on

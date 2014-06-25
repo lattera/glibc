@@ -32,7 +32,6 @@
 #include <linux/rtnetlink.h>
 
 #include <not-cancel.h>
-#include <kernel-features.h>
 #include <bits/libc-lock.h>
 #include <atomic.h>
 #include <nscd/nscd-client.h>

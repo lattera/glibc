@@ -20,7 +20,6 @@
 #include <pthreadP.h>
 #include <sys/time.h>
 #include <tls.h>
-#include <kernel-features.h>
 #include <kernel-posix-cpu-timers.h>
 
 
