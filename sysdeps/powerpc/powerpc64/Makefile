@@ -35,11 +35,6 @@ CFLAGS-rtld-memmove.os = $(no-special-regs)
 CFLAGS-rtld-memchr.os = $(no-special-regs)
 CFLAGS-rtld-strnlen.os = $(no-special-regs)
 
-ifeq ($(subdir),csu)
-sysdep_routines += hp-timing
-elide-routines.os += hp-timing
-endif
-
 ifeq ($(subdir),elf)
 # help gcc inline asm code from dl-machine.h
 +cflags += -finline-limit=2000

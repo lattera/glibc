@@ -22,16 +22,11 @@
 #if HP_TIMING_AVAIL && !defined USE_CLOCK_GETTIME
 # define GL(x) _##x
 # define GLRO(x) _##x
-hp_timing_t _dl_hp_timing_overhead;
 typedef hp_timing_t timing_t;
 
 # define TIMING_TYPE "hp_timing"
 
-# define TIMING_INIT(res) \
-({									      \
-  HP_TIMING_DIFF_INIT();						      \
-  (res) = 1;							      \
-})
+# define TIMING_INIT(res) ({ (res) = 1; })
 
 # define TIMING_NOW(var) HP_TIMING_NOW (var)
 # define TIMING_DIFF(diff, start, end) HP_TIMING_DIFF ((diff), (start), (end))

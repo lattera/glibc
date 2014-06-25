@@ -45,9 +45,6 @@
    - HP_TIMING_NOW: place timestamp for current time in variable given as
      parameter.
 
-   - HP_TIMING_DIFF_INIT: do whatever is necessary to be able to use the
-     HP_TIMING_DIFF macro.
-
    - HP_TIMING_DIFF: compute difference between two times and store it
      in a third.  Source and destination might overlap.
 
@@ -79,9 +76,6 @@ typedef unsigned int hp_timing_t;
     asm volatile ("rpcc %0" : "=r"(x_));				      \
     (VAR) = (int) (x_) - (int) (x_ >> 32);				      \
   } while (0)
-
-/* ??? Two rpcc instructions can be scheduled simultaneously.  */
-#define HP_TIMING_DIFF_INIT() do { } while (0)
 
 /* It's simple arithmetic for us.  */
 #define HP_TIMING_DIFF(Diff, Start, End)	(Diff) = ((End) - (Start))

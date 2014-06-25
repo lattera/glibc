@@ -279,9 +279,6 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
       else
 	start_time = info->start_time;
 #endif
-
-      /* Initialize the timing functions.  */
-      HP_TIMING_DIFF_INIT ();
     }
 
   /* Transfer data about ourselves to the permanent link_map structure.  */

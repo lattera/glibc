@@ -46,9 +46,6 @@
    - HP_TIMING_NOW: place timestamp for current time in variable given as
      parameter.
 
-   - HP_TIMING_DIFF_INIT: do whatever is necessary to be able to use the
-     HP_TIMING_DIFF macro.
-
    - HP_TIMING_DIFF: compute difference between two times and store it
      in a third.  Source and destination might overlap.
 
@@ -83,22 +80,6 @@ typedef unsigned long int hp_timing_t;
        asm volatile ("mov %0=ar.itc" : "=r" (__itc) : : "memory");	      \
      while (REPEAT_READ (__itc));					      \
      Var = __itc; })
-
-/* Use two 'ar.itc' instructions in a row to find out how long it takes.  */
-#define HP_TIMING_DIFF_INIT() \
-  do {									      \
-    int __cnt = 5;							      \
-    GLRO(dl_hp_timing_overhead) = ~0ul;					      \
-    do									      \
-      {									      \
-	hp_timing_t __t1, __t2;						      \
-	HP_TIMING_NOW (__t1);						      \
-	HP_TIMING_NOW (__t2);						      \
-	if (__t2 - __t1 < GLRO(dl_hp_timing_overhead))			      \
-	  GLRO(dl_hp_timing_overhead) = __t2 - __t1;			      \
-      }									      \
-    while (--__cnt > 0);						      \
-  } while (0)
 
 /* It's simple arithmetic for us.  */
 #define HP_TIMING_DIFF(Diff, Start, End)	(Diff) = ((End) - (Start))

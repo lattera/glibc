@@ -42,9 +42,6 @@
    - HP_TIMING_NOW: place timestamp for current time in variable given as
      parameter.
 
-   - HP_TIMING_DIFF_INIT: do whatever is necessary to be able to use the
-     HP_TIMING_DIFF macro.
-
    - HP_TIMING_DIFF: compute difference between two times and store it
      in a third.  Source and destination might overlap.
 
@@ -62,7 +59,6 @@
 #define HP_TIMING_INLINE	(0)
 typedef int hp_timing_t;
 #define HP_TIMING_NOW(var)
-#define HP_TIMING_DIFF_INIT()
 #define HP_TIMING_DIFF(Diff, Start, End)
 #define HP_TIMING_ACCUM_NT(Sum, Diff)
 #define HP_TIMING_PRINT(Buf, Len, Val)

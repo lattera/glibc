@@ -2,8 +2,6 @@
 long-double-fcts = yes
 
 ifeq ($(subdir),csu)
-sysdep_routines += hp-timing
-elide-routines.os += hp-timing
 gen-as-const-headers += link-defines.sym
 endif
 

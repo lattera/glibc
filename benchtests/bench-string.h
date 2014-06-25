@@ -69,8 +69,6 @@ int ret, do_srandom;
 unsigned int seed;
 size_t page_size;
 
-hp_timing_t _dl_hp_timing_overhead;
-
 # ifndef ITERATIONS
 size_t iterations = 100000;
 #  define ITERATIONS_OPTIONS \

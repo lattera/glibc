@@ -31,21 +31,6 @@ typedef unsigned long int hp_timing_t;
 
 #define HP_TIMING_NOW(Var) __asm__ __volatile__ ("rd %%tick, %0" : "=r" (Var))
 
-#define HP_TIMING_DIFF_INIT() \
-  do {									      \
-    int __cnt = 5;							      \
-    GLRO(dl_hp_timing_overhead) = ~0ull;				      \
-    do									      \
-      {									      \
-	hp_timing_t __t1, __t2;						      \
-	HP_TIMING_NOW (__t1);						      \
-	HP_TIMING_NOW (__t2);						      \
-	if (__t2 - __t1 < GLRO(dl_hp_timing_overhead))			      \
-	  GLRO(dl_hp_timing_overhead) = __t2 - __t1;			      \
-      }									      \
-    while (--__cnt > 0);						      \
-  } while (0)
-
 #define HP_TIMING_DIFF(Diff, Start, End)	(Diff) = ((End) - (Start))
 
 #define HP_TIMING_ACCUM_NT(Sum, Diff)	(Sum) += (Diff)

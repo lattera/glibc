@@ -45,9 +45,6 @@
    - HP_TIMING_NOW: place timestamp for current time in variable given as
      parameter.
 
-   - HP_TIMING_DIFF_INIT: do whatever is necessary to be able to use the
-     HP_TIMING_DIFF macro.
-
    - HP_TIMING_DIFF: compute difference between two times and store it
      in a third.  Source and destination might overlap.
 
@@ -79,26 +76,6 @@ typedef unsigned long long int hp_timing_t;
 #else
 #define HP_TIMING_NOW(Var)	__asm__ __volatile__ ("mftb %0" : "=r" (Var))
 #endif
-
-/* Use two 'mftb' instructions in a row to find out how long it takes.
-   On current POWER4, POWER5, and 970 processors mftb take ~10 cycles.  */
-#define HP_TIMING_DIFF_INIT() \
-  do {									      \
-    if (GLRO(dl_hp_timing_overhead) == 0)				      \
-      {									      \
-	int __cnt = 5;							      \
-	GLRO(dl_hp_timing_overhead) = ~0ull;				      \
-	do								      \
-	  {								      \
-	    hp_timing_t __t1, __t2;					      \
-	    HP_TIMING_NOW (__t1);					      \
-	    HP_TIMING_NOW (__t2);					      \
-	    if (__t2 - __t1 < GLRO(dl_hp_timing_overhead))		      \
-	      GLRO(dl_hp_timing_overhead) = __t2 - __t1;		      \
-	  }								      \
-	while (--__cnt > 0);						      \
-      }									      \
-  } while (0)
 
 /* It's simple arithmetic in 64-bit.  */
 #define HP_TIMING_DIFF(Diff, Start, End)	(Diff) = ((End) - (Start))

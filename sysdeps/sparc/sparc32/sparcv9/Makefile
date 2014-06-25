@@ -1,10 +1,5 @@
 sysdep-CFLAGS += -mcpu=ultrasparc -Wa,-Av9a
 
-ifeq ($(subdir),csu)
-sysdep_routines += hp-timing
-elide-routines.os += hp-timing
-endif
-
 ifeq ($(have-as-vis3),yes)
 ASFLAGS-.o += -Wa,-Av9d
 ASFLAGS-.os += -Wa,-Av9d
