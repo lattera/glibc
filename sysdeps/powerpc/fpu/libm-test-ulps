@@ -1021,6 +1021,54 @@ ifloat: 2
 ildouble: 2
 ldouble: 2
 
+Function: Real part of "cpow_downward":
+double: 4
+float: 8
+idouble: 4
+ifloat: 8
+ildouble: 7
+ldouble: 7
+
+Function: Imaginary part of "cpow_downward":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 4
+ldouble: 4
+
+Function: Real part of "cpow_towardzero":
+double: 4
+float: 8
+idouble: 4
+ifloat: 8
+ildouble: 8
+ldouble: 8
+
+Function: Imaginary part of "cpow_towardzero":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 4
+ldouble: 4
+
+Function: Real part of "cpow_upward":
+double: 4
+float: 1
+idouble: 4
+ifloat: 1
+ildouble: 3
+ldouble: 3
+
+Function: Imaginary part of "cpow_upward":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 3
+ldouble: 3
+
 Function: Imaginary part of "cproj":
 ildouble: 1
 ldouble: 1
@@ -1439,7 +1487,9 @@ ldouble: 1
 
 Function: "exp10_downward":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 4
 ldouble: 4
 
@@ -1451,7 +1501,9 @@ ldouble: 1
 
 Function: "exp10_towardzero":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 4
 ldouble: 4
 
@@ -1460,8 +1512,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 2
-ldouble: 2
+ildouble: 3
+ldouble: 3
 
 Function: "exp2":
 ildouble: 2
@@ -1851,13 +1903,17 @@ ldouble: 1
 
 Function: "pow10_downward":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 4
 ldouble: 4
 
 Function: "pow10_towardzero":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 4
 ldouble: 4
 
@@ -1866,11 +1922,13 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 2
-ldouble: 2
+ildouble: 3
+ldouble: 3
 
 Function: "pow_downward":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
@@ -1882,13 +1940,17 @@ ildouble: 1
 ldouble: 1
 
 Function: "pow_towardzero":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "pow_upward":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
