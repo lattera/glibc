@@ -1,5 +1,15 @@
 2014-06-25  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_UTIMENSAT):
+	Remove macro.
+	* sysdeps/unix/sysv/linux/futimes.c: Do not include
+	<kernel-features.h>.
+	[__NR_utimensat && !__ASSUME_UTIMENSAT] (miss_utimensat): Remove
+	conditional variable definition.
+	(__futimes): Update comment.
+	(__futimes) [__ASSUME_UTIMENSAT]: Make code unconditional.
+	(__futimes) [!__ASSUME_UTIMENSAT]: Remove conditional code.
+
 	[BZ #16560]
 	* sysdeps/ieee754/dbl-64/e_exp10.c (__ieee754_exp10): Return 1 for
 	arguments close to 0.

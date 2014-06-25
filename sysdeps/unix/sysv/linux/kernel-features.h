@@ -100,10 +100,6 @@
 # define __ASSUME_FUTEX_LOCK_PI	1
 #endif
 
-/* Support for utimensat syscall was added in 2.6.22, on SH
-   only after 2.6.22-rc1.  */
-#define __ASSUME_UTIMENSAT	1
-
 /* Support for private futexes was added in 2.6.22.  */
 #define __ASSUME_PRIVATE_FUTEX	1
 
