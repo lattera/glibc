@@ -94,11 +94,6 @@
 # define __ASSUME_SET_ROBUST_LIST	1
 #endif
 
-/* Pessimistically assume that 2.6.18 introduced real handling of
-   large numbers of requests to readv and writev and that we don't
-   need a fallback.  It likely worked for much longer.  */
-#define __ASSUME_COMPLETE_READV_WRITEV	1
-
 /* Support for PI futexes was added in 2.6.18 (but some architectures
    lack futex_atomic_cmpxchg_inatomic in some configurations).  */
 #if !(defined __sparc__ && !defined __arch64__ && !defined __sparc_v9__)

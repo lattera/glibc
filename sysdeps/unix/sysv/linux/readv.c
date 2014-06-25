@@ -23,19 +23,8 @@
 
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
-#include <kernel-features.h>
 
-#ifndef __ASSUME_COMPLETE_READV_WRITEV
-static ssize_t __atomic_readv_replacement (int, const struct iovec *,
-					   int) internal_function;
-#endif
-
-
-/* Not all versions of the kernel support the large number of records.  */
-#ifndef UIO_FASTIOV
-# define UIO_FASTIOV	8	/* 8 is a safe number.  */
-#endif
-
+/* Consider moving to syscalls.list.  */
 
 ssize_t
 __libc_readv (fd, vector, count)
@@ -56,19 +45,7 @@ __libc_readv (fd, vector, count)
       LIBC_CANCEL_RESET (oldtype);
     }
 
-#ifdef __ASSUME_COMPLETE_READV_WRITEV
   return result;
-#else
-  if (result >= 0 || errno != EINVAL || count <= UIO_FASTIOV)
-    return result;
-
-  return __atomic_readv_replacement (fd, vector, count);
-#endif
 }
 strong_alias (__libc_readv, __readv)
 weak_alias (__libc_readv, readv)
-
-#ifndef __ASSUME_COMPLETE_READV_WRITEV
-# define __libc_readv static internal_function __atomic_readv_replacement
-# include <sysdeps/posix/readv.c>
-#endif

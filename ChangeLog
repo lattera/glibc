@@ -1,3 +1,24 @@
+2014-06-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_COMPLETE_READV_WRITEV): Remove macro.
+	* sysdeps/unix/sysv/linux/readv.c: Do not include
+	<kernel-features.h>.
+	[!__ASSUME_COMPLETE_READV_WRITEV]: Remove conditional code.
+	[!UIO_FASTIOV] (UIO_FASTIOV): Remove macro.
+	(__libc_readv) [__ASSUME_COMPLETE_READV_WRITEV]: Make code
+	unconditional.
+	(__libc_readv) [!__ASSUME_COMPLETE_READV_WRITEV]: Remove
+	conditional code.
+	* sysdeps/unix/sysv/linux/writev.c: Do not include
+	<kernel-features.h>.
+	[!__ASSUME_COMPLETE_READV_WRITEV]: Remove conditional code.
+	[!UIO_FASTIOV] (UIO_FASTIOV): Remove macro.
+	(__libc_writev) [__ASSUME_COMPLETE_READV_WRITEV]: Make code
+	unconditional.
+	(__libc_writev) [!__ASSUME_COMPLETE_READV_WRITEV]: Remove
+	conditional code.
+
 2014-06-25  Will Newton  <will.newton@linaro.org>
 
 	* sysdeps/posix/tempname.c: Merge from gnulib, cosmetic
