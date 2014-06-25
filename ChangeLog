@@ -1,3 +1,10 @@
+2014-06-25  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #17086]
+	* sysdeps/i386/fpu/s_scalbn.S: Add compat symbol for libc.so.
+	* sysdeps/i386/fpu/s_scalbnf.S: Likewise.
+	* sysdeps/i386/fpu/s_scalbnl.S: Likewise.
+
 2014-06-24  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/i386/i486/nptl/pthread_spin_trylock.S: Moved ...

@@ -16,3 +16,8 @@ ENTRY(__scalbn)
 END (__scalbn)
 weak_alias (__scalbn, scalbn)
 strong_alias (__scalbn, __scalbln)
+
+#include <shlib-compat.h>
+#if SHLIB_COMPAT (libc, GLIBC_2_1, GLIBC_2_20)
+compat_symbol (libc, __scalbn, scalbln, GLIBC_2_1);
+#endif
