@@ -58,13 +58,8 @@
    - HP_TIMING_DIFF: compute difference between two times and store it
      in a third.  Source and destination might overlap.
 
-   - HP_TIMING_ACCUM: add time difference to another variable.  This might
-     be a bit more complicated to implement for some platforms as the
-     operation should be thread-safe and 64bit arithmetic on 32bit platforms
-     is not.
-
-   - HP_TIMING_ACCUM_NT: this is the variant for situations where we know
-     there are no threads involved.
+   - HP_TIMING_ACCUM_NT: add time difference to another variable, without
+     being thread-safe.
 
    - HP_TIMING_PRINT: write decimal representation of the timing value into
      the given string.  This operation need not be inline even though
@@ -110,30 +105,6 @@ typedef unsigned long long int hp_timing_t;
 /* It's simple arithmetic for us.  */
 #define HP_TIMING_DIFF(Diff, Start, End)	(Diff) = ((End) - (Start))
 
-/* We have to jump through hoops to get this correctly implemented.  */
-#define HP_TIMING_ACCUM(Sum, Diff) \
-  do {									      \
-    int __not_done;							      \
-    hp_timing_t __oldval = (Sum);					      \
-    hp_timing_t __diff = (Diff) - GLRO(dl_hp_timing_overhead);		      \
-    do									      \
-      {									      \
-	hp_timing_t __newval = __oldval + __diff;			      \
-	int __temp0, __temp1;						      \
-	__asm__ __volatile__ ("xchgl %0, %%ebx\n\t"			      \
-			      "lock; cmpxchg8b %1\n\t"			      \
-			      "sete %%bl\n\t"				      \
-			      "xchgl %0, %%ebx"				      \
-			      : "=SD" (__not_done), "=m" (Sum),		      \
-				"=A" (__oldval), "=c" (__temp0)		      \
-			      : "m" (Sum), "2" (__oldval),		      \
-				"3" ((unsigned int) (__newval >> 32)),	      \
-				"0" ((unsigned int) __newval));		      \
-      }									      \
-    while ((unsigned char) __not_done);					      \
-  } while (0)
-
-/* No threads, no extra work.  */
 #define HP_TIMING_ACCUM_NT(Sum, Diff)	(Sum) += (Diff)
 
 /* Print the time value.  */

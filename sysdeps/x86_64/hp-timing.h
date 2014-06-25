@@ -28,13 +28,4 @@
      asm volatile ("rdtsc" : "=a" (_lo), "=d" (_hi)); \
      (Var) = ((unsigned long long int) _hi << 32) | _lo; })
 
-/* The funny business for 32-bit mode is not required here.  */
-# undef HP_TIMING_ACCUM
-# define HP_TIMING_ACCUM(Sum, Diff)					      \
-  do {									      \
-    hp_timing_t __diff = (Diff) - GLRO(dl_hp_timing_overhead);		      \
-    __asm__ __volatile__ ("lock; addq %1, %0"				      \
-			  : "=m" (Sum) : "r" (__diff), "m" (Sum));	      \
-  } while (0)
-
 #endif /* hp-timing.h */

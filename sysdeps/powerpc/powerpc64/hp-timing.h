@@ -51,13 +51,8 @@
    - HP_TIMING_DIFF: compute difference between two times and store it
      in a third.  Source and destination might overlap.
 
-   - HP_TIMING_ACCUM: add time difference to another variable.  This might
-     be a bit more complicated to implement for some platforms as the
-     operation should be thread-safe and 64bit arithmetic on 32bit platforms
-     is not.
-
-   - HP_TIMING_ACCUM_NT: this is the variant for situations where we know
-     there are no threads involved.
+   - HP_TIMING_ACCUM_NT: add time difference to another variable, without
+     being thread-safe.
 
    - HP_TIMING_PRINT: write decimal representation of the timing value into
      the given string.  This operation need not be inline even though
@@ -108,15 +103,6 @@ typedef unsigned long long int hp_timing_t;
 /* It's simple arithmetic in 64-bit.  */
 #define HP_TIMING_DIFF(Diff, Start, End)	(Diff) = ((End) - (Start))
 
-/* We need to insure that this add is atomic in threaded environments.  We use
-   __arch_atomic_exchange_and_add_64 from atomic.h to get thread safety.  */
-#define HP_TIMING_ACCUM(Sum, Diff) \
-  do {									      \
-    hp_timing_t __diff = (Diff) - GLRO(dl_hp_timing_overhead);		      \
-    __arch_atomic_exchange_and_add_64 (&(Sum), __diff);	                      \
-  } while (0)
-
-/* No threads, no extra work.  */
 #define HP_TIMING_ACCUM_NT(Sum, Diff)	(Sum) += (Diff)
 
 /* Print the time value.  */

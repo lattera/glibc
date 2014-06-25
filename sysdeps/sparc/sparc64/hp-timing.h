@@ -48,21 +48,6 @@ typedef unsigned long int hp_timing_t;
 
 #define HP_TIMING_DIFF(Diff, Start, End)	(Diff) = ((End) - (Start))
 
-#define HP_TIMING_ACCUM(Sum, Diff)				\
-do {								\
-  hp_timing_t __diff = (Diff) - GLRO(dl_hp_timing_overhead);	\
-  hp_timing_t tmp1, tmp2;					\
-  __asm__ __volatile__("1: ldx	[%3], %0\n\t"			\
-		       "add	%0, %2, %1\n\t"			\
-		       "casx	[%3], %0,  %1\n\t"		\
-		       "cmp	%0, %1\n\t"			\
-		       "bne,pn	%%xcc, 1b\n\t"			\
-		       " nop"					\
-		       : "=&r" (tmp1), "=&r" (tmp2)		\
-		       : "r" (__diff), "r" (&(Sum))		\
-		       : "memory", "g1", "g5", "g6");		\
-} while(0)
-
 #define HP_TIMING_ACCUM_NT(Sum, Diff)	(Sum) += (Diff)
 
 #define HP_TIMING_PRINT(Buf, Len, Val) \
