@@ -6596,40 +6596,6 @@ if test $libc_cv_gcc_exceptions = yes; then
   exceptions=-fexceptions
 fi
 
-if test "$host_cpu" = powerpc ; then
-# Check for a bug present in at least versions 2.8.x of GCC
-# and versions 1.0.x of EGCS.
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether clobbering cr0 causes problems" >&5
-$as_echo_n "checking whether clobbering cr0 causes problems... " >&6; }
-if ${libc_cv_c_asmcr0_bug+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-int tester(int x) { asm ("" : : : "cc"); return x & 123; }
-int
-main ()
-{
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  libc_cv_c_asmcr0_bug='no'
-else
-  libc_cv_c_asmcr0_bug='yes'
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_c_asmcr0_bug" >&5
-$as_echo "$libc_cv_c_asmcr0_bug" >&6; }
-if test "$libc_cv_c_asmcr0_bug" != 'no'; then
-  $as_echo "#define BROKEN_PPC_ASM_CR0 1" >>confdefs.h
-
-fi
-fi
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for __builtin_memset" >&5
 $as_echo_n "checking for __builtin_memset... " >&6; }
 if ${libc_cv_gcc_builtin_memset+:} false; then :

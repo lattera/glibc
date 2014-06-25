@@ -1763,18 +1763,6 @@ if test $libc_cv_gcc_exceptions = yes; then
 fi
 AC_SUBST(exceptions)dnl
 
-if test "$host_cpu" = powerpc ; then
-# Check for a bug present in at least versions 2.8.x of GCC
-# and versions 1.0.x of EGCS.
-AC_CACHE_CHECK(whether clobbering cr0 causes problems,libc_cv_c_asmcr0_bug,[dnl
-AC_TRY_COMPILE([int tester(int x) { asm ("" : : : "cc"); return x & 123; }],,
-	       libc_cv_c_asmcr0_bug='no',
-	       libc_cv_c_asmcr0_bug='yes')])
-if test "$libc_cv_c_asmcr0_bug" != 'no'; then
-  AC_DEFINE(BROKEN_PPC_ASM_CR0)
-fi
-fi
-
 AC_CACHE_CHECK(for __builtin_memset, libc_cv_gcc_builtin_memset, [dnl
 cat > conftest.c <<\EOF
 void zero (void *x)

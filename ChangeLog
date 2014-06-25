@@ -1,5 +1,9 @@
 2014-06-25  Joseph Myers  <joseph@codesourcery.com>
 
+	* configure.ac (libc_cv_c_asmcr0_bug): Remove configure test.
+	* configure: Regenerated.
+	* config.h.in (BROKEN_PPC_ASM_CR0): Remove macro.
+
 	* configure.ac (base_machine): Do not set specially for particular
 	machines here.
 	* configure: Regenerated.
