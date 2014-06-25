@@ -1,3 +1,9 @@
+2014-06-25  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/mips/clone.S: Deconditionalize the code
+	that was previously under [RESET_PID].
+	* sysdeps/unix/sysv/linux/mips/nptl/clone.S: File removed.
+
 2014-06-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/dl-opendir.c (__ASSUME_O_CLOEXEC): Do
