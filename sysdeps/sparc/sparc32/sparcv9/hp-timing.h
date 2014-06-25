@@ -20,10 +20,6 @@
 #ifndef _HP_TIMING_H
 #define _HP_TIMING_H	1
 
-#include <string.h>
-#include <sys/param.h>
-#include <_itoa.h>
-
 #define HP_TIMING_AVAIL		(1)
 #define HP_TIMING_INLINE	(1)
 
@@ -34,19 +30,6 @@ typedef unsigned long long int hp_timing_t;
 			    "srlx %L0, 32, %H0" \
 			    : "=r" (Var))
 
-#define HP_TIMING_DIFF(Diff, Start, End)	(Diff) = ((End) - (Start))
-
-#define HP_TIMING_ACCUM_NT(Sum, Diff)	(Sum) += (Diff)
-
-#define HP_TIMING_PRINT(Buf, Len, Val) \
-  do {									      \
-    char __buf[20];							      \
-    char *__cp = _itoa (Val, __buf + sizeof (__buf), 10, 0);		      \
-    int __len = (Len);							      \
-    char *__dest = (Buf);						      \
-    while (__len-- > 0 && __cp < __buf + sizeof (__buf))		      \
-      *__dest++ = *__cp++;						      \
-    memcpy (__dest, " clock cycles", MIN (__len, sizeof (" clock cycles")));  \
-  } while (0)
+#include <hp-timing-common.h>
 
 #endif	/* hp-timing.h */

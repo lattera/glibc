@@ -20,43 +20,6 @@
 #ifndef _HP_TIMING_H
 #define _HP_TIMING_H	1
 
-#include <string.h>
-#include <sys/param.h>
-#include <_itoa.h>
-#include <atomic.h>
-
-/* The macros defined here use the powerpc 64-bit time base register.
-   The time base is nominally clocked at 1/8th the CPU clock, but this
-   can vary.
-
-   The list of macros we need includes the following:
-
-   - HP_TIMING_AVAIL: test for availability.
-
-   - HP_TIMING_INLINE: this macro is non-zero if the functionality is not
-     implemented using function calls but instead uses some inlined code
-     which might simply consist of a few assembler instructions.  We have to
-     know this since we might want to use the macros here in places where we
-     cannot make function calls.
-
-   - hp_timing_t: This is the type for variables used to store the time
-     values.
-
-   - HP_TIMING_NOW: place timestamp for current time in variable given as
-     parameter.
-
-   - HP_TIMING_DIFF: compute difference between two times and store it
-     in a third.  Source and destination might overlap.
-
-   - HP_TIMING_ACCUM_NT: add time difference to another variable, without
-     being thread-safe.
-
-   - HP_TIMING_PRINT: write decimal representation of the timing value into
-     the given string.  This operation need not be inline even though
-     HP_TIMING_INLINE is specified.
-
-*/
-
 /* We always assume having the timestamp register.  */
 #define HP_TIMING_AVAIL		(1)
 
@@ -77,21 +40,6 @@ typedef unsigned long long int hp_timing_t;
 #define HP_TIMING_NOW(Var)	__asm__ __volatile__ ("mftb %0" : "=r" (Var))
 #endif
 
-/* It's simple arithmetic in 64-bit.  */
-#define HP_TIMING_DIFF(Diff, Start, End)	(Diff) = ((End) - (Start))
-
-#define HP_TIMING_ACCUM_NT(Sum, Diff)	(Sum) += (Diff)
-
-/* Print the time value.  */
-#define HP_TIMING_PRINT(Buf, Len, Val) \
-  do {									      \
-    char __buf[20];							      \
-    char *__cp = _itoa (Val, __buf + sizeof (__buf), 10, 0);		      \
-    size_t __len = (Len);						      \
-    char *__dest = (Buf);						      \
-    while (__len-- > 0 && __cp < __buf + sizeof (__buf))		      \
-      *__dest++ = *__cp++;						      \
-    memcpy (__dest, " ticks", MIN (__len, sizeof (" ticks")));  \
-  } while (0)
+#include <hp-timing-common.h>
 
 #endif	/* hp-timing.h */
