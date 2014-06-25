@@ -1,5 +1,10 @@
 2014-06-25  Joseph Myers  <joseph@codesourcery.com>
 
+	* configure.ac (USE_REGPARMS): Don't define here.
+	* configure: Regenerated.
+	* sysdeps/i386/configure.ac (USE_REGPARMS): Define here.
+	* sysdeps/i386/configure: Regenerated.
+
 	* nptl/createthread.c: Don't include kernel-features.h.
 	* nptl/pthread_cancel.c: Likewise.
 	* nptl/pthread_condattr_setclock.c: Likewise.

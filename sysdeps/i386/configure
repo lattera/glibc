@@ -240,5 +240,8 @@ $as_echo "$libc_cv_cc_novzeroupper" >&6; }
 config_vars="$config_vars
 config-cflags-novzeroupper = $libc_cv_cc_novzeroupper"
 
+$as_echo "#define USE_REGPARMS 1" >>confdefs.h
+
+
 $as_echo "#define PI_STATIC_AND_HIDDEN 1" >>confdefs.h
 

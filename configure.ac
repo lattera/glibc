@@ -586,10 +586,6 @@ fi
 test -n "$base_machine" || base_machine=$machine
 AC_SUBST(base_machine)
 
-if test "$base_machine" = "i386"; then
-  AC_DEFINE(USE_REGPARMS)
-fi
-
 # For the multi-arch option we need support in the assembler & linker.
 AC_CACHE_CHECK([for assembler and linker STT_GNU_IFUNC support],
 	       libc_cv_ld_gnu_indirect_function, [dnl

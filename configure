@@ -3969,11 +3969,6 @@ fi
 test -n "$base_machine" || base_machine=$machine
 
 
-if test "$base_machine" = "i386"; then
-  $as_echo "#define USE_REGPARMS 1" >>confdefs.h
-
-fi
-
 # For the multi-arch option we need support in the assembler & linker.
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for assembler and linker STT_GNU_IFUNC support" >&5
 $as_echo_n "checking for assembler and linker STT_GNU_IFUNC support... " >&6; }
