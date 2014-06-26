@@ -20,7 +20,6 @@
 
 #include <string.h>
 #include <memcopy.h>
-#include <pagecopy.h>
 
 #ifndef MEMMOVE_CHK
 # define MEMMOVE_CHK __memmove_chk

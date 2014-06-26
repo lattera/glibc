@@ -1,5 +1,7 @@
 2014-06-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* debug/memmove_chk.c: Remove pagecopy.h include.
+
 	* time/mktime.c (leapyear): Remove inline keyword.  The code is now
 	identical to gnulib mktime.
 
