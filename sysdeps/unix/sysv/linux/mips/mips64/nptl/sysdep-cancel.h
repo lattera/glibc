@@ -47,7 +47,7 @@
   .globl __##syscall_name##_nocancel;					      \
   __##syscall_name##_nocancel:						      \
     SAVESTK;								      \
-    .cpsetup t9, STKOFF_GP, name;					      \
+    .cpsetup t9, STKOFF_GP, __##syscall_name##_nocancel;		      \
     cfi_rel_offset (gp, STKOFF_GP);					      \
     li v0, SYS_ify(syscall_name);					      \
     syscall;								      \

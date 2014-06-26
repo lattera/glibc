@@ -1,3 +1,9 @@
+2014-06-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips64/nptl/sysdep-cancel.h
+	[__PIC__] (PSEUDO): Use name of _nocancel entry point in
+	corresponding .cpsetup call.
+
 2014-06-26  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/arm/libc-aeabi_read_tp.S: Moved ...
