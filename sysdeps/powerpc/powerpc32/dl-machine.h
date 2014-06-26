@@ -148,6 +148,7 @@ __elf_preferred_address(struct link_map *loader, size_t maplength,
 
 /* The PowerPC never uses REL relocations.  */
 #define ELF_MACHINE_NO_REL 1
+#define ELF_MACHINE_NO_RELA 0
 
 /* Set up the loaded object described by MAP so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.

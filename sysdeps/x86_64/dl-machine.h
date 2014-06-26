@@ -189,6 +189,7 @@ _dl_start_user:\n\
 
 /* The x86-64 never uses Elf64_Rel/Elf32_Rel relocations.  */
 #define ELF_MACHINE_NO_REL 1
+#define ELF_MACHINE_NO_RELA 0
 
 /* We define an initialization function.  This is called very early in
    _dl_sysdep_start.  */

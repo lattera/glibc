@@ -60,6 +60,8 @@
    | (((type) == R_MIPS_COPY) * ELF_RTYPE_CLASS_COPY))
 
 #define ELF_MACHINE_PLT_REL 1
+#define ELF_MACHINE_NO_REL 0
+#define ELF_MACHINE_NO_RELA 0
 
 /* Translate a processor specific dynamic tag to the index
    in l_info array.  */

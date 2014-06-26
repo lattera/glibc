@@ -488,6 +488,7 @@ asm (									\
 
 /* We only use RELA. */
 #define ELF_MACHINE_NO_REL 1
+#define ELF_MACHINE_NO_RELA 0
 
 /* Return the address of the entry point. */
 #define ELF_MACHINE_START_ADDRESS(map, start)			\

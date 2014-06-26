@@ -251,6 +251,7 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rela *reloc,
 
 /* SH never uses Elf32_Rel relocations.	 */
 #define ELF_MACHINE_NO_REL 1
+#define ELF_MACHINE_NO_RELA 0
 
 #ifdef RESOLVE_MAP
 

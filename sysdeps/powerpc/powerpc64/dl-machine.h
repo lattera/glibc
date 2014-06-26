@@ -294,6 +294,7 @@ BODY_PREFIX "_dl_start_user:\n"						\
 
 /* The PowerPC never uses REL relocations.  */
 #define ELF_MACHINE_NO_REL 1
+#define ELF_MACHINE_NO_RELA 0
 
 /* Stuff for the PLT.  */
 #if _CALL_ELF != 2

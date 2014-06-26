@@ -1,5 +1,23 @@
 2014-06-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* elf/dl-runtime.c: Check for value of ELF_MACHINE_NO_RELA
+	instead of whether it is defined.
+	* sysdeps/aarch64/dl-machine.h: Define ELF_MACHINE_NO_RELA.
+	* sysdeps/hppa/dl-machine.h: Likewise.
+	* sysdeps/ia64/dl-machine.h: Likewise.
+	* sysdeps/m68k/dl-machine.h: Likewise.
+	* sysdeps/microblaze/dl-machine.h: Likewise.
+	* sysdeps/mips/dl-machine.: Likewise.
+	* sysdeps/powerpc/powerpc32/dl-machine.h: Likewise.
+	* sysdeps/powerpc/powerpc64/dl-machine.h: Likewise.
+	* sysdeps/s390/s390-32/dl-machine.h: Likewise.
+	* sysdeps/s390/s390-64/dl-machine.h: Likewise.
+	* sysdeps/sh/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc32/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h: Likewise.
+	* sysdeps/tile/dl-machine.h: Likewise.
+	* sysdeps/x86_64/dl-machine.h: Likewise.
+
 	* nscd/connections.c (enum usekey) [SEPARATE_KEY]: Remove
 	code.
 	(verify_persistent_db): Likewise.

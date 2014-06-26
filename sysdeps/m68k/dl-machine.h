@@ -178,6 +178,7 @@ _dl_start_user:\n\
 
 /* The m68k never uses Elf32_Rel relocations.  */
 #define ELF_MACHINE_NO_REL 1
+#define ELF_MACHINE_NO_RELA 0
 
 static inline Elf32_Addr
 elf_machine_fixup_plt (struct link_map *map, lookup_t t,

@@ -29,7 +29,7 @@
 #include <dl-irel.h>
 
 
-#if (!defined ELF_MACHINE_NO_RELA && !defined ELF_MACHINE_PLT_REL) \
+#if (!ELF_MACHINE_NO_RELA && !defined ELF_MACHINE_PLT_REL) \
     || ELF_MACHINE_NO_REL
 # define PLTREL  ElfW(Rela)
 #else

@@ -119,6 +119,7 @@ elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
 
 /* The SPARC never uses Elf64_Rel relocations.  */
 #define ELF_MACHINE_NO_REL 1
+#define ELF_MACHINE_NO_RELA 0
 
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */

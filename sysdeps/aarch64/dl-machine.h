@@ -198,6 +198,7 @@ _dl_start_user:							\n\
 
 /* AArch64 uses RELA not REL */
 #define ELF_MACHINE_NO_REL 1
+#define ELF_MACHINE_NO_RELA 0
 
 static inline ElfW(Addr)
 elf_machine_fixup_plt (struct link_map *map, lookup_t t,
