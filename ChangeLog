@@ -1,3 +1,12 @@
+2014-06-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* manual/texinfo.tex: Update to version 2014-05-05.10 with
+	trailing whitespace removed.
+	* scripts/config.guess: Update to version 2014-03-23.
+	* scripts/config.sub: Update to version 2014-05-01
+	* scripts/install-sh: Update to version 2013-12-25.23.
+	* scripts/move-if-change: Update from gnulib.
+
 2014-06-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* debug/memmove_chk.c: Remove pagecopy.h include.

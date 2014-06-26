@@ -3,11 +3,11 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2013-11-26.10}
+\def\texinfoversion{2014-05-05.10}
 %
 % Copyright 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006,
-% 2007, 2008, 2009, 2010, 2011, 2012, 2013 Free Software Foundation, Inc.
+% 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 Free Software Foundation, Inc.
 %
 % This texinfo.tex file is free software: you can redistribute it and/or
 % modify it under the terms of the GNU General Public License as
@@ -1138,10 +1138,10 @@ output) for that.)}
 
 \ifpdf
   %
-  % Color manipulation macros based on pdfcolor.tex,
+  % Color manipulation macros using ideas from pdfcolor.tex,
   % except using rgb instead of cmyk; the latter is said to render as a
   % very dark gray on-screen and a very dark halftone in print, instead
-  % of actual black. The dark red here  is dark enough to print on paper as
+  % of actual black. The dark red here is dark enough to print on paper as
   % nearly black, but still distinguishable for online viewing.  We use
   % black by default, though.
   \def\rgbDarkRed{0.50 0.09 0.12}
@@ -2146,7 +2146,7 @@ end
   \let\tenttsl=\secttsl
   \def\curfontsize{sec}%
   \def\lsize{subsec}\def\lllsize{reduced}%
-  \resetmathfonts \setleading{16pt}}
+  \resetmathfonts \setleading{17pt}}
 \def\subsecfonts{%
   \let\tenrm=\ssecrm \let\tenit=\ssecit \let\tensl=\ssecsl
   \let\tenbf=\ssecbf \let\tentt=\ssectt \let\smallcaps=\ssecsc
@@ -2575,12 +2575,12 @@ end
 \let\file=\code
 \let\option=\code
 
-% @uref (abbreviation for `urlref') takes an optional (comma-separated)
-% second argument specifying the text to display and an optional third
-% arg as text to display instead of (rather than in addition to) the url
-% itself.  First (mandatory) arg is the url.
+% @uref (abbreviation for `urlref') aka @url takes an optional
+% (comma-separated) second argument specifying the text to display and
+% an optional third arg as text to display instead of (rather than in
+% addition to) the url itself.  First (mandatory) arg is the url.
 
-% secret option to allow changing PDF output to show only the second
+% TeX-only option to allow changing PDF output to show only the second
 % arg (if given), and not the url (which is then just the link target).
 \newif\ifurefurlonlylink
 
@@ -2650,8 +2650,10 @@ end
 % we put a little stretch before and after the breakable chars, to help
 % line breaking of long url's.  The unequal skips make look better in
 % cmtt at least, especially for dots.
-\def\urefprestretch{\urefprebreak \hskip0pt plus.13em }
-\def\urefpoststretch{\urefpostbreak \hskip0pt plus.1em }
+\def\urefprestretchamount{.13em}
+\def\urefpoststretchamount{.1em}
+\def\urefprestretch{\urefprebreak \hskip0pt plus\urefprestretchamount\relax}
+\def\urefpoststretch{\urefpostbreak \hskip0pt plus\urefprestretchamount\relax}
 %
 \def\urefcodeamp{\urefprestretch \&\urefpoststretch}
 \def\urefcodedot{\urefprestretch .\urefpoststretch}
@@ -3934,17 +3936,21 @@ end
 
 % multitable-only commands.
 %
-% @headitem starts a heading row, which we typeset in bold.
-% Assignments have to be global since we are inside the implicit group
-% of an alignment entry.  \everycr resets \everytab so we don't have to
+% @headitem starts a heading row, which we typeset in bold.  Assignments
+% have to be global since we are inside the implicit group of an
+% alignment entry.  \everycr below resets \everytab so we don't have to
 % undo it ourselves.
 \def\headitemfont{\b}% for people to use in the template row; not changeable
 \def\headitem{%
   \checkenv\multitable
   \crcr
+  \gdef\headitemcrhook{\nobreak}% attempt to avoid page break after headings
   \global\everytab={\bf}% can't use \headitemfont since the parsing differs
   \the\everytab % for the first item
 }%
+%
+% default for tables with no headings.
+\let\headitemcrhook=\relax
 %
 % A \tab used to include \hskip1sp.  But then the space in a template
 % line is not enough.  That is bad.  So let's go back to just `&' until
@@ -3976,15 +3982,15 @@ end
   %
   \everycr = {%
     \noalign{%
-      \global\everytab={}%
+      \global\everytab={}% Reset from possible headitem.
       \global\colcount=0 % Reset the column counter.
-      % Check for saved footnotes, etc.
+      %
+      % Check for saved footnotes, etc.:
       \checkinserts
-      % Keeps underfull box messages off when table breaks over pages.
-      %\filbreak
-	% Maybe so, but it also creates really weird page breaks when the
-	% table breaks over pages. Wouldn't \vfil be better?  Wait until the
-	% problem manifests itself, so it can be fixed for real --karl.
+      %
+      % Perhaps a \nobreak, then reset:
+      \headitemcrhook
+      \global\let\headitemcrhook=\relax
     }%
   }%
   %
@@ -4426,7 +4432,7 @@ end
   % complicated, when \tex is in effect and \{ is a \delimiter again.
   % We can't use \lbracecmd and \rbracecmd because texindex assumes
   % braces and backslashes are used only as delimiters.  Perhaps we
-  % should define @lbrace and @rbrace commands a la @comma.
+  % should use @lbracechar and @rbracechar?
   \def\{{{\tt\char123}}%
   \def\}{{\tt\char125}}%
   %
@@ -4447,8 +4453,7 @@ end
   % @end macro
   % ...
   % @funindex commtest
-  %
-  % The above is not enough to reproduce the bug, but it gives the flavor.
+  % This is not enough to reproduce the bug, but it gives the flavor.
   %
   % Sample whatsit resulting:
   % .@write3{\entry{xyz}{@folio }{@code {xyz@endinput }}}
@@ -4649,7 +4654,20 @@ end
   \definedummyword\verb
   \definedummyword\w
   \definedummyword\xref
+  %
+  % Consider:
+  %   @macro mkind{arg1,arg2}
+  %   @cindex \arg2\
+  %   @end macro
+  %   @mkind{foo, bar}
+  % The space after the comma will end up in the temporary definition
+  % that we make for arg2 (see \parsemargdef ff.).  We want all this to be
+  % expanded for the sake of the index, so we end up just seeing "bar".
+  \let\xeatspaces = \eatspaces
 }
+
+% For testing: output @{ and @} in index sort strings as \{ and \}.
+\newif\ifusebracesinindexes
 
 % \indexnofonts is used when outputting the strings to sort the index
 % by, and when constructing control sequence names.  It eliminates all
@@ -4679,11 +4697,16 @@ end
   % Unfortunately, texindex is not prepared to handle braces in the
   % content at all.  So for index sorting, we map @{ and @} to strings
   % starting with |, since that ASCII character is between ASCII { and }.
-  \def\{{|a}%
-  \def\lbracechar{|a}%
+  \ifusebracesinindexes
+    \def\lbracechar{\lbracecmd}%
+    \def\rbracechar{\rbracecmd}%
+  \else
+    \def\lbracechar{|a}%
+    \def\rbracechar{|b}%
+  \fi
+  \let\{=\lbracechar
+  \let\}=\rbracechar
   %
-  \def\}{|b}%
-  \def\rbracechar{|b}%
   %
   % Non-English letters.
   \def\AA{AA}%
@@ -6411,8 +6434,6 @@ end
 				% side, and for 6pt waste from
 				% each corner char, and rule thickness
   \normbskip=\baselineskip \normpskip=\parskip \normlskip=\lineskip
-  % Flag to tell @lisp, etc., not to narrow margin.
-  \let\nonarrowing = t%
   %
   % If this cartouche directly follows a sectioning command, we need the
   % \parskip glue (backspaced over by default) or the cartouche can
@@ -6579,9 +6600,13 @@ end
 
 
 % @raggedright does more-or-less normal line breaking but no right
-% justification.  From plain.tex.
+% justification.  From plain.tex.  Don't stretch around special
+% characters in urls in this environment, since the stretch at the right
+% should be enough.
 \envdef\raggedright{%
-  \rightskip0pt plus2em \spaceskip.3333em \xspaceskip.5em\relax
+  \rightskip0pt plus2.4em \spaceskip.3333em \xspaceskip.5em\relax
+  \def\urefprestretchamount{0pt}%
+  \def\urefpoststretchamount{0pt}%
 }
 \let\Eraggedright\par
 
@@ -7474,7 +7499,7 @@ end
 
 % Parse the optional {params} list.  Set up \paramno and \paramlist
 % so \defmacro knows what to do.  Define \macarg.BLAH for each BLAH
-% in the params list to some hook where the argument si to be expanded.  If
+% in the params list to some hook where the argument is to be expanded.  If
 % there are less than 10 arguments that hook is to be replaced by ##N where N
 % is the position in that list, that is to say the macro arguments are to be
 % defined `a la TeX in the macro body.
@@ -8336,6 +8361,7 @@ end
 \gdef\footnote{%
   \let\indent=\ptexindent
   \let\noindent=\ptexnoindent
+  %
   \global\advance\footnoteno by \@ne
   \edef\thisfootno{$^{\the\footnoteno}$}%
   %
@@ -8359,6 +8385,11 @@ end
 %
 \gdef\dofootnote{%
   \insert\footins\bgroup
+  %
+  % Nested footnotes are not supported in TeX, that would take a lot
+  % more work.  (\startsavinginserts does not suffice.)
+  \let\footnote=\errfootnote
+  %
   % We want to typeset this text as a normal paragraph, even if the
   % footnote reference occurs in (for example) a display environment.
   % So reset some parameters.
@@ -8396,13 +8427,19 @@ end
 }
 }%end \catcode `\@=11
 
+\def\errfootnote{%
+  \errhelp=\EMsimple
+  \errmessage{Nested footnotes not supported in texinfo.tex,
+    even though they work in makeinfo; sorry}
+}
+
 % In case a @footnote appears in a vbox, save the footnote text and create
 % the real \insert just after the vbox finished.  Otherwise, the insertion
 % would be lost.
 % Similarly, if a @footnote appears inside an alignment, save the footnote
 % text to a box and make the \insert when a row of the table is finished.
 % And the same can be done for other insert classes.  --kasal, 16nov03.
-
+%
 % Replace the \insert primitive by a cheating macro.
 % Deeper inside, just make sure that the saved insertions are not spilled
 % out prematurely.
