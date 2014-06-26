@@ -142,7 +142,7 @@ verify (twos_complement_arithmetic,
 verify (base_year_is_a_multiple_of_100, TM_YEAR_BASE % 100 == 0);
 
 /* Return 1 if YEAR + TM_YEAR_BASE is a leap year.  */
-static inline int
+static int
 leapyear (long_int year)
 {
   /* Don't add YEAR to TM_YEAR_BASE, as that might overflow.

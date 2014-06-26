@@ -1,3 +1,8 @@
+2014-06-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* time/mktime.c (leapyear): Remove inline keyword.  The code is now
+	identical to gnulib mktime.
+
 2014-06-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* configure.ac: Do not test for machine being rs6000.  Do not test
