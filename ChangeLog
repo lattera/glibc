@@ -1,5 +1,8 @@
 2014-06-26  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/arm/fesetenv.c: Include <fpu_control.h>.
+	* sysdeps/arm/feupdateenv.c: Likewise.
+
 	* posix/spawn_faction_addopen.c: Include <stdlib.h> for free decl.
 
 2014-06-26  Joseph Myers  <joseph@codesourcery.com>

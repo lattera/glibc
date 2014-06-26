@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
+#include <fpu_control.h>
 #include <arm-features.h>
 
 
