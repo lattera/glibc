@@ -1,7 +1,5 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-vfork		-	vfork		0	__vfork		vfork
-
 # semaphore and shm system calls
 msgctl		-	msgctl		i:iip	__msgctl	msgctl
 msgget		-	msgget		i:ii	__msgget	msgget

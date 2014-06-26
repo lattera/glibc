@@ -1,5 +1,21 @@
 2014-06-26  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/sysdeps/unix/sysv/linux/s390/s390-32/vfork.S: Moved ...
+	* sysdeps/unix/sysv/linux/s390/s390-32/vfork.S: ... here.
+	(__libc_vfork): Define the function under this name.
+	[!NOT_IN_libc] (__vfork): Make this an alias.
+	[!NOT_IN_libc] (vfork): Conditionalize the weak_alias.
+	* nptl/sysdeps/unix/sysv/linux/s390/s390-64/vfork.S: Moved ...
+	* sysdeps/unix/sysv/linux/s390/s390-64/vfork.S: ... here.
+	(__libc_vfork): Define the function under this name.
+	[!NOT_IN_libc] (__vfork): Make this an alias.
+	[!NOT_IN_libc] (vfork): Conditionalize the weak_alias.
+	* sysdeps/unix/sysv/linux/s390/pt-vfork.S: New file.
+	* nptl/sysdeps/unix/sysv/linux/s390/s390-32/pt-vfork.S: File removed.
+	* nptl/sysdeps/unix/sysv/linux/s390/s390-64/pt-vfork.S: File removed.
+	* sysdeps/unix/sysv/linux/s390/s390-32/syscalls.list: Remove vfork.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list: Likewise.
+
 	* sysdeps/unix/sysv/linux/s390/s390-32/clone.S: Deconditionalize the
 	code that was previously under [RESET_PID].
 	* sysdeps/unix/sysv/linux/s390/s390-64/clone.S: Likewise.
