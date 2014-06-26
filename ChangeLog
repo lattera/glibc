@@ -1,5 +1,11 @@
 2014-06-26  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/s390/s390-32/clone.S: Deconditionalize the
+	code that was previously under [RESET_PID].
+	* sysdeps/unix/sysv/linux/s390/s390-64/clone.S: Likewise.
+	* nptl/sysdeps/unix/sysv/linux/s390/s390-32/clone.S: File removed.
+	* nptl/sysdeps/unix/sysv/linux/s390/s390-64/clone.S: File removed.
+
 	* sysdeps/unix/sysv/linux/aarch64/nptl/bits/pthreadtypes.h: Moved ...
 	* sysdeps/aarch64/nptl/bits/pthreadtypes.h: ... here.
 	* sysdeps/unix/sysv/linux/aarch64/nptl/bits/semaphore.h: Moved ...
