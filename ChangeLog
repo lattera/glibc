@@ -1,3 +1,9 @@
+2014-06-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* nscd/connections.c (enum usekey) [SEPARATE_KEY]: Remove
+	code.
+	(verify_persistent_db): Likewise.
+
 2014-06-26  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/c++-types.data: Moved ...
