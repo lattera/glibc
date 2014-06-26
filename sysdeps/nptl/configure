@@ -9,14 +9,6 @@ if test "x${libc_cv_visibility_attribute}" != xyes ||
   as_fn_error $? "working compiler support for visibility attribute is required" "$LINENO" 5
 fi
 
-if test "x$libc_cv_asm_cfi_directives" != xyes; then
-    case "$base_machine" in
-    i386 | x86_64 | powerpc | s390)
-      as_fn_error $? "CFI directive support in assembler is required" "$LINENO" 5 ;;
-    *) ;;
-  esac
-fi
-
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for forced unwind support" >&5
 $as_echo_n "checking for forced unwind support... " >&6; }

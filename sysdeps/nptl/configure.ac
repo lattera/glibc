@@ -10,15 +10,6 @@ if test "x${libc_cv_visibility_attribute}" != xyes ||
   AC_MSG_ERROR(working compiler support for visibility attribute is required)
 fi
 
-if test "x$libc_cv_asm_cfi_directives" != xyes; then
-  dnl We need this only for some architectures.
-  case "$base_machine" in
-    i386 | x86_64 | powerpc | s390)
-      AC_MSG_ERROR(CFI directive support in assembler is required) ;;
-    *) ;;
-  esac
-fi
-
 dnl Iff <unwind.h> is available, make sure it is the right one and it
 dnl contains struct _Unwind_Exception.
 AC_CACHE_CHECK(dnl

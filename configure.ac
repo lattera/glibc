@@ -1696,30 +1696,6 @@ elif test $libc_cv_asm_weakext_directive = yes; then
   AC_DEFINE(HAVE_ASM_WEAKEXT_DIRECTIVE)
 fi
 
-AC_CACHE_CHECK(whether CFI directives are supported, libc_cv_asm_cfi_directives, [dnl
-case $machine in
-  sparc/sparc64*) cfi_offset=2047;;
-  *) cfi_offset=0;;
-esac
-cat > conftest.s <<EOF
-	.text
-	.type   func,%function
-func:
-	.cfi_startproc
-	.cfi_remember_state
-	.cfi_rel_offset 1, $cfi_offset
-	.cfi_endproc
-EOF
-if AC_TRY_COMMAND(${CC-cc} $ASFLAGS -c conftest.s 1>&AS_MESSAGE_LOG_FD); then
-  libc_cv_asm_cfi_directives=yes
-else
-  libc_cv_asm_cfi_directives=no
-fi
-rm -f conftest*])
-if test $libc_cv_asm_cfi_directives = yes; then
-  AC_DEFINE(HAVE_ASM_CFI_DIRECTIVES)
-fi
-
 AC_CACHE_CHECK(for ld --no-whole-archive, libc_cv_ld_no_whole_archive, [dnl
 cat > conftest.c <<\EOF
 _start () {}

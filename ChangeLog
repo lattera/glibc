@@ -1,3 +1,21 @@
+2014-06-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.ac (libc_cv_asm_cfi_directives): Remove configure
+	test.
+	* configure: Regenerated.
+	* config.h.in (HAVE_ASM_CFI_DIRECTIVES): Remove macro undefine.
+	* sysdeps/arm/configure.ac (libc_cv_asm_cfi_directive_sections):
+	Remove configure test.
+	* sysdeps/arm/configure: Regenerated.
+	* sysdeps/nptl/configure.ac: Do not check
+	libc_cv_asm_cfi_directives.
+	* sysdeps/nptl/configure: Regenerated.
+	* sysdeps/x86_64/nptl/configure.ac: Remove file.
+	* sysdeps/x86_64/nptl/configure: Remove generated file.
+	* b/sysdeps/generic/sysdep.h [HAVE_ASM_CFI_DIRECTIVES]: Make code
+	unconditional.
+	[!HAVE_ASM_CFI_DIRECTIVES]: Remove conditional code.
+
 2014-06-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* posix/fnmatch.c: Define WIDE_CHAR_VERSION.

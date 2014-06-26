@@ -36,84 +36,62 @@
 #endif
 
 /* Makros to generate eh_frame unwind information.  */
-#ifdef HAVE_ASM_CFI_DIRECTIVES
-# ifdef __ASSEMBLER__
-#  define cfi_startproc			.cfi_startproc
-#  define cfi_endproc			.cfi_endproc
-#  define cfi_def_cfa(reg, off)		.cfi_def_cfa reg, off
-#  define cfi_def_cfa_register(reg)	.cfi_def_cfa_register reg
-#  define cfi_def_cfa_offset(off)	.cfi_def_cfa_offset off
-#  define cfi_adjust_cfa_offset(off)	.cfi_adjust_cfa_offset off
-#  define cfi_offset(reg, off)		.cfi_offset reg, off
-#  define cfi_rel_offset(reg, off)	.cfi_rel_offset reg, off
-#  define cfi_register(r1, r2)		.cfi_register r1, r2
-#  define cfi_return_column(reg)	.cfi_return_column reg
-#  define cfi_restore(reg)		.cfi_restore reg
-#  define cfi_same_value(reg)		.cfi_same_value reg
-#  define cfi_undefined(reg)		.cfi_undefined reg
-#  define cfi_remember_state		.cfi_remember_state
-#  define cfi_restore_state		.cfi_restore_state
-#  define cfi_window_save		.cfi_window_save
-#  define cfi_personality(enc, exp)	.cfi_personality enc, exp
-#  define cfi_lsda(enc, exp)		.cfi_lsda enc, exp
+#ifdef __ASSEMBLER__
+# define cfi_startproc			.cfi_startproc
+# define cfi_endproc			.cfi_endproc
+# define cfi_def_cfa(reg, off)		.cfi_def_cfa reg, off
+# define cfi_def_cfa_register(reg)	.cfi_def_cfa_register reg
+# define cfi_def_cfa_offset(off)	.cfi_def_cfa_offset off
+# define cfi_adjust_cfa_offset(off)	.cfi_adjust_cfa_offset off
+# define cfi_offset(reg, off)		.cfi_offset reg, off
+# define cfi_rel_offset(reg, off)	.cfi_rel_offset reg, off
+# define cfi_register(r1, r2)		.cfi_register r1, r2
+# define cfi_return_column(reg)	.cfi_return_column reg
+# define cfi_restore(reg)		.cfi_restore reg
+# define cfi_same_value(reg)		.cfi_same_value reg
+# define cfi_undefined(reg)		.cfi_undefined reg
+# define cfi_remember_state		.cfi_remember_state
+# define cfi_restore_state		.cfi_restore_state
+# define cfi_window_save		.cfi_window_save
+# define cfi_personality(enc, exp)	.cfi_personality enc, exp
+# define cfi_lsda(enc, exp)		.cfi_lsda enc, exp
 
-# else /* ! ASSEMBLER */
+#else /* ! ASSEMBLER */
 
-#  define CFI_STRINGIFY(Name) CFI_STRINGIFY2 (Name)
-#  define CFI_STRINGIFY2(Name) #Name
-#  define CFI_STARTPROC	".cfi_startproc"
-#  define CFI_ENDPROC	".cfi_endproc"
-#  define CFI_DEF_CFA(reg, off)	\
+# define CFI_STRINGIFY(Name) CFI_STRINGIFY2 (Name)
+# define CFI_STRINGIFY2(Name) #Name
+# define CFI_STARTPROC	".cfi_startproc"
+# define CFI_ENDPROC	".cfi_endproc"
+# define CFI_DEF_CFA(reg, off)	\
    ".cfi_def_cfa " CFI_STRINGIFY(reg) "," CFI_STRINGIFY(off)
-#  define CFI_DEF_CFA_REGISTER(reg) \
+# define CFI_DEF_CFA_REGISTER(reg) \
    ".cfi_def_cfa_register " CFI_STRINGIFY(reg)
-#  define CFI_DEF_CFA_OFFSET(off) \
+# define CFI_DEF_CFA_OFFSET(off) \
    ".cfi_def_cfa_offset " CFI_STRINGIFY(off)
-#  define CFI_ADJUST_CFA_OFFSET(off) \
+# define CFI_ADJUST_CFA_OFFSET(off) \
    ".cfi_adjust_cfa_offset " CFI_STRINGIFY(off)
-#  define CFI_OFFSET(reg, off) \
+# define CFI_OFFSET(reg, off) \
    ".cfi_offset " CFI_STRINGIFY(reg) "," CFI_STRINGIFY(off)
-#  define CFI_REL_OFFSET(reg, off) \
+# define CFI_REL_OFFSET(reg, off) \
    ".cfi_rel_offset " CFI_STRINGIFY(reg) "," CFI_STRINGIFY(off)
-#  define CFI_REGISTER(r1, r2) \
+# define CFI_REGISTER(r1, r2) \
    ".cfi_register " CFI_STRINGIFY(r1) "," CFI_STRINGIFY(r2)
-#  define CFI_RETURN_COLUMN(reg) \
+# define CFI_RETURN_COLUMN(reg) \
    ".cfi_return_column " CFI_STRINGIFY(reg)
-#  define CFI_RESTORE(reg) \
+# define CFI_RESTORE(reg) \
    ".cfi_restore " CFI_STRINGIFY(reg)
-#  define CFI_UNDEFINED(reg) \
+# define CFI_UNDEFINED(reg) \
    ".cfi_undefined " CFI_STRINGIFY(reg)
-#  define CFI_REMEMBER_STATE \
+# define CFI_REMEMBER_STATE \
    ".cfi_remember_state"
-#  define CFI_RESTORE_STATE \
+# define CFI_RESTORE_STATE \
    ".cfi_restore_state"
-#  define CFI_WINDOW_SAVE \
+# define CFI_WINDOW_SAVE \
    ".cfi_window_save"
-#  define CFI_PERSONALITY(enc, exp) \
+# define CFI_PERSONALITY(enc, exp) \
    ".cfi_personality " CFI_STRINGIFY(enc) "," CFI_STRINGIFY(exp)
-#  define CFI_LSDA(enc, exp) \
+# define CFI_LSDA(enc, exp) \
    ".cfi_lsda " CFI_STRINGIFY(enc) "," CFI_STRINGIFY(exp)
-# endif
-
-#else
-
-# define CFI_STARTPROC
-# define CFI_ENDPROC
-# define CFI_DEF_CFA(reg, off)
-# define CFI_DEF_CFA_REGISTER(reg)
-# define CFI_DEF_CFA_OFFSET(off)
-# define CFI_ADJUST_CFA_OFFSET(off)
-# define CFI_OFFSET(reg, off)
-# define CFI_REL_OFFSET(reg, off)
-# define CFI_REGISTER(r1, r2)
-# define CFI_RETURN_COLUMN(reg)
-# define CFI_RESTORE(reg)
-# define CFI_UNDEFINED(reg)
-# define CFI_REMEMBER_STATE
-# define CFI_RESTORE_STATE
-# define CFI_WINDOW_SAVE
-# define CFI_PERSONALITY(enc, exp)
-# define CFI_LSDA(enc, exp)
 #endif
 
 #include "dwarf2.h"
