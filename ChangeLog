@@ -1,5 +1,9 @@
 2014-06-26  Joseph Myers  <joseph@codesourcery.com>
 
+	* configure.ac: Do not test for machine being rs6000.  Do not test
+	for powerpc*-*soft.
+	* configure: Regenerated.
+
 	* configure.ac (libc_cv_asm_cfi_directives): Remove configure
 	test.
 	* configure: Regenerated.

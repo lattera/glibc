@@ -398,19 +398,6 @@ vendor=$config_vendor
 os=$config_os
 base_os=''
 
-# config.guess on some IBM machines says `rs6000' instead of `powerpc'.
-# Unify this here.
-if test "$machine" = rs6000; then
-  machine="powerpc"
-fi
-
-# Braindead PowerPC box with absolutely no FPU.
-case "$machine-$host_os" in
-  powerpc*-*soft)
-    with_fp=no
-    ;;
-esac
-
 submachine=
 AC_ARG_WITH([cpu],
 	    AS_HELP_STRING([--with-cpu=CPU], [select code for CPU variant]),
