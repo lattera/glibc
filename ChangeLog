@@ -1,5 +1,12 @@
 2014-07-04  Will Newton  <will.newton@linaro.org>
 
+	* string/memchr.c: Merge from gnulib.
+	[_LIBC]: Remove conditionals.
+	(__ptr_t): Remove define.
+	(LONG_MAX_32_BITS): Likewise.
+	(LONG_MAX): Likewise.
+	(MEMCHR): Use ANSI prototype and optimize algorithm.
+
 	* sysdeps/arm/dl-machine.h (ELF_MACHINE_NO_REL): Define.
 
 2014-07-03  Roland McGrath  <roland@hack.frob.com>

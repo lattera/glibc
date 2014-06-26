@@ -20,186 +20,141 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
+#ifndef _LIBC
+# include <config.h>
 #endif
 
-#undef __ptr_t
-#define __ptr_t void *
+#include <string.h>
 
-#if defined _LIBC
-# include <string.h>
-# include <memcopy.h>
-#endif
+#include <stddef.h>
 
-#if HAVE_STDLIB_H || defined _LIBC
-# include <stdlib.h>
-#endif
+#include <limits.h>
 
-#if HAVE_LIMITS_H || defined _LIBC
-# include <limits.h>
-#endif
-
-#define LONG_MAX_32_BITS 2147483647
-
-#ifndef LONG_MAX
-#define LONG_MAX LONG_MAX_32_BITS
-#endif
-
-#include <sys/types.h>
-
-#undef memchr
 #undef __memchr
+#ifdef _LIBC
+# undef memchr
+#endif
+
+#ifndef weak_alias
+# define __memchr memchr
+#endif
 
 #ifndef MEMCHR
 # define MEMCHR __memchr
 #endif
 
 /* Search no more than N bytes of S for C.  */
-__ptr_t
-MEMCHR (s, c_in, n)
-     const __ptr_t s;
-     int c_in;
-     size_t n;
+void *
+MEMCHR (void const *s, int c_in, size_t n)
 {
+  /* On 32-bit hardware, choosing longword to be a 32-bit unsigned
+     long instead of a 64-bit uintmax_t tends to give better
+     performance.  On 64-bit hardware, unsigned long is generally 64
+     bits already.  Change this typedef to experiment with
+     performance.  */
+  typedef unsigned long int longword;
+
   const unsigned char *char_ptr;
-  const unsigned long int *longword_ptr;
-  unsigned long int longword, magic_bits, charmask;
+  const longword *longword_ptr;
+  longword repeated_one;
+  longword repeated_c;
   unsigned char c;
 
   c = (unsigned char) c_in;
 
-  /* Handle the first few characters by reading one character at a time.
+  /* Handle the first few bytes by reading one byte at a time.
      Do this until CHAR_PTR is aligned on a longword boundary.  */
   for (char_ptr = (const unsigned char *) s;
-       n > 0 && ((unsigned long int) char_ptr
-		 & (sizeof (longword) - 1)) != 0;
+       n > 0 && (size_t) char_ptr % sizeof (longword) != 0;
        --n, ++char_ptr)
     if (*char_ptr == c)
-      return (__ptr_t) char_ptr;
+      return (void *) char_ptr;
+
+  longword_ptr = (const longword *) char_ptr;
 
   /* All these elucidatory comments refer to 4-byte longwords,
-     but the theory applies equally well to 8-byte longwords.  */
+     but the theory applies equally well to any size longwords.  */
 
-  longword_ptr = (unsigned long int *) char_ptr;
+  /* Compute auxiliary longword values:
+     repeated_one is a value which has a 1 in every byte.
+     repeated_c has c in every byte.  */
+  repeated_one = 0x01010101;
+  repeated_c = c | (c << 8);
+  repeated_c |= repeated_c << 16;
+  if (0xffffffffU < (longword) -1)
+    {
+      repeated_one |= repeated_one << 31 << 1;
+      repeated_c |= repeated_c << 31 << 1;
+      if (8 < sizeof (longword))
+	{
+	  size_t i;
 
-  /* Bits 31, 24, 16, and 8 of this number are zero.  Call these bits
-     the "holes."  Note that there is a hole just to the left of
-     each byte, with an extra at the end:
+	  for (i = 64; i < sizeof (longword) * 8; i *= 2)
+	    {
+	      repeated_one |= repeated_one << i;
+	      repeated_c |= repeated_c << i;
+	    }
+	}
+    }
 
-     bits:  01111110 11111110 11111110 11111111
-     bytes: AAAAAAAA BBBBBBBB CCCCCCCC DDDDDDDD
+  /* Instead of the traditional loop which tests each byte, we will test a
+     longword at a time.  The tricky part is testing if *any of the four*
+     bytes in the longword in question are equal to c.  We first use an xor
+     with repeated_c.  This reduces the task to testing whether *any of the
+     four* bytes in longword1 is zero.
 
-     The 1-bits make sure that carries propagate to the next 0-bit.
-     The 0-bits provide holes for carries to fall into.  */
+     We compute tmp =
+       ((longword1 - repeated_one) & ~longword1) & (repeated_one << 7).
+     That is, we perform the following operations:
+       1. Subtract repeated_one.
+       2. & ~longword1.
+       3. & a mask consisting of 0x80 in every byte.
+     Consider what happens in each byte:
+       - If a byte of longword1 is zero, step 1 and 2 transform it into 0xff,
+	 and step 3 transforms it into 0x80.  A carry can also be propagated
+	 to more significant bytes.
+       - If a byte of longword1 is nonzero, let its lowest 1 bit be at
+	 position k (0 <= k <= 7); so the lowest k bits are 0.  After step 1,
+	 the byte ends in a single bit of value 0 and k bits of value 1.
+	 After step 2, the result is just k bits of value 1: 2^k - 1.  After
+	 step 3, the result is 0.  And no carry is produced.
+     So, if longword1 has only non-zero bytes, tmp is zero.
+     Whereas if longword1 has a zero byte, call j the position of the least
+     significant zero byte.  Then the result has a zero at positions 0, ...,
+     j-1 and a 0x80 at position j.  We cannot predict the result at the more
+     significant bytes (positions j+1..3), but it does not matter since we
+     already have a non-zero bit at position 8*j+7.
 
-  if (sizeof (longword) != 4 && sizeof (longword) != 8)
-    abort ();
+     So, the test whether any byte in longword1 is zero is equivalent to
+     testing whether tmp is nonzero.  */
 
-#if LONG_MAX <= LONG_MAX_32_BITS
-  magic_bits = 0x7efefeff;
-#else
-  magic_bits = ((unsigned long int) 0x7efefefe << 32) | 0xfefefeff;
-#endif
-
-  /* Set up a longword, each of whose bytes is C.  */
-  charmask = c | (c << 8);
-  charmask |= charmask << 16;
-#if LONG_MAX > LONG_MAX_32_BITS
-  charmask |= charmask << 32;
-#endif
-
-  /* Instead of the traditional loop which tests each character,
-     we will test a longword at a time.  The tricky part is testing
-     if *any of the four* bytes in the longword in question are zero.  */
   while (n >= sizeof (longword))
     {
-      /* We tentatively exit the loop if adding MAGIC_BITS to
-	 LONGWORD fails to change any of the hole bits of LONGWORD.
+      longword longword1 = *longword_ptr ^ repeated_c;
 
-	 1) Is this safe?  Will it catch all the zero bytes?
-	 Suppose there is a byte with all zeros.  Any carry bits
-	 propagating from its left will fall into the hole at its
-	 least significant bit and stop.  Since there will be no
-	 carry from its most significant bit, the LSB of the
-	 byte to the left will be unchanged, and the zero will be
-	 detected.
-
-	 2) Is this worthwhile?  Will it ignore everything except
-	 zero bytes?  Suppose every byte of LONGWORD has a bit set
-	 somewhere.  There will be a carry into bit 8.  If bit 8
-	 is set, this will carry into bit 16.  If bit 8 is clear,
-	 one of bits 9-15 must be set, so there will be a carry
-	 into bit 16.  Similarly, there will be a carry into bit
-	 24.  If one of bits 24-30 is set, there will be a carry
-	 into bit 31, so all of the hole bits will be changed.
-
-	 The one misfire occurs when bits 24-30 are clear and bit
-	 31 is set; in this case, the hole at bit 31 is not
-	 changed.  If we had access to the processor carry flag,
-	 we could close this loophole by putting the fourth hole
-	 at bit 32!
-
-	 So it ignores everything except 128's, when they're aligned
-	 properly.
-
-	 3) But wait!  Aren't we looking for C, not zero?
-	 Good point.  So what we do is XOR LONGWORD with a longword,
-	 each of whose bytes is C.  This turns each byte that is C
-	 into a zero.  */
-
-      longword = *longword_ptr++ ^ charmask;
-
-      /* Add MAGIC_BITS to LONGWORD.  */
-      if ((((longword + magic_bits)
-
-	    /* Set those bits that were unchanged by the addition.  */
-	    ^ ~longword)
-
-	   /* Look at only the hole bits.  If any of the hole bits
-	      are unchanged, most likely one of the bytes was a
-	      zero.  */
-	   & ~magic_bits) != 0)
-	{
-	  /* Which of the bytes was C?  If none of them were, it was
-	     a misfire; continue the search.  */
-
-	  const unsigned char *cp = (const unsigned char *) (longword_ptr - 1);
-
-	  if (cp[0] == c)
-	    return (__ptr_t) cp;
-	  if (cp[1] == c)
-	    return (__ptr_t) &cp[1];
-	  if (cp[2] == c)
-	    return (__ptr_t) &cp[2];
-	  if (cp[3] == c)
-	    return (__ptr_t) &cp[3];
-#if LONG_MAX > 2147483647
-	  if (cp[4] == c)
-	    return (__ptr_t) &cp[4];
-	  if (cp[5] == c)
-	    return (__ptr_t) &cp[5];
-	  if (cp[6] == c)
-	    return (__ptr_t) &cp[6];
-	  if (cp[7] == c)
-	    return (__ptr_t) &cp[7];
-#endif
-	}
-
+      if ((((longword1 - repeated_one) & ~longword1)
+	   & (repeated_one << 7)) != 0)
+	break;
+      longword_ptr++;
       n -= sizeof (longword);
     }
 
   char_ptr = (const unsigned char *) longword_ptr;
 
-  while (n-- > 0)
+  /* At this point, we know that either n < sizeof (longword), or one of the
+     sizeof (longword) bytes starting at char_ptr is == c.  On little-endian
+     machines, we could determine the first such byte without any further
+     memory accesses, just by looking at the tmp result from the last loop
+     iteration.  But this does not work on big-endian machines.  Choose code
+     that works in both cases.  */
+
+  for (; n > 0; --n, ++char_ptr)
     {
       if (*char_ptr == c)
-	return (__ptr_t) char_ptr;
-      else
-	++char_ptr;
+	return (void *) char_ptr;
     }
 
-  return 0;
+  return NULL;
 }
 #ifdef weak_alias
 weak_alias (__memchr, memchr)
