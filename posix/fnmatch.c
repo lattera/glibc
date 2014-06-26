@@ -225,6 +225,7 @@ __wcschrnul (s, c)
 # define MEMPCPY(D, S, N) __mempcpy (D, S, N)
 # define MEMCHR(S, C, N) memchr (S, C, N)
 # define STRCOLL(S1, S2) strcoll (S1, S2)
+# define WIDE_CHAR_VERSION 0
 # include "fnmatch_loop.c"
 
 

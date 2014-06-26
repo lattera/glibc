@@ -1,5 +1,10 @@
 2014-06-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* posix/fnmatch.c: Define WIDE_CHAR_VERSION.
+	* posix/fnmatch_loop.c: Undefine WIDE_CHAR_VERSION.
+	(FCT): Check value of WIDE_CHAR_VERSION instead of checking if
+	it is defined.
+
 	* elf/dl-runtime.c: Check for value of ELF_MACHINE_NO_RELA
 	instead of whether it is defined.
 	* sysdeps/aarch64/dl-machine.h: Define ELF_MACHINE_NO_RELA.
