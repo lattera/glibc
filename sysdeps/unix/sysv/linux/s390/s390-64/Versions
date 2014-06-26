@@ -5,3 +5,11 @@ libc {
     __frame_state_for; __register_frame_info_table;
   }
 }
+
+librt {
+  GLIBC_2.3.3 {
+    # Changed timer_t.
+    timer_create; timer_delete; timer_getoverrun; timer_gettime;
+    timer_settime;
+  }
+}
