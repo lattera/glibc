@@ -1,3 +1,7 @@
+2014-06-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/list-sources.sh: Do not handle ports specially.
+
 2014-06-26  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/fesetenv.c: Include <fpu_control.h>.
