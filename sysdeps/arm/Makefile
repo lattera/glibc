@@ -38,11 +38,18 @@ ifeq ($(subdir),csu)
 gen-as-const-headers += rtld-global-offsets.sym tlsdesc.sym
 aeabi_constants = aeabi_lcsts aeabi_sighandlers aeabi_math
 aeabi_routines = aeabi_assert aeabi_localeconv aeabi_errno_addr \
-	aeabi_mb_cur_max aeabi_atexit aeabi_memclr aeabi_memcpy \
-	aeabi_memmove aeabi_memset
+		 aeabi_mb_cur_max aeabi_atexit aeabi_memclr aeabi_memcpy \
+		 aeabi_memmove aeabi_memset \
+		 aeabi_read_tp libc-aeabi_read_tp
 
 sysdep_routines += $(aeabi_constants) $(aeabi_routines)
-static-only-routines += $(aeabi_constants)
+static-only-routines += $(aeabi_constants) aeabi_read_tp
+shared-only-routines += libc-aeabi_read_tp
+
+# In order for unwinding to fail when it falls out of main, we need a
+# cantunwind marker.  There's one in start.S.  To make sure we reach it, add
+# unwind tables for __libc_start_main.
+CFLAGS-libc-start.c += -fexceptions
 endif
 
 ifeq ($(subdir),gmon)
@@ -51,4 +58,9 @@ endif
 
 ifeq ($(subdir),debug)
 CFLAGS-backtrace.c += -funwind-tables
+endif
+
+ifeq ($(subdir),rt)
+librt-sysdep_routines += rt-aeabi_unwind_cpp_pr1
+librt-shared-only-routines += rt-aeabi_unwind_cpp_pr1
 endif

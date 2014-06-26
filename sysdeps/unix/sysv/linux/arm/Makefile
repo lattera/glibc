@@ -1,14 +1,3 @@
-ifeq ($(subdir),csu)
-# In order for unwinding to fail when it falls out of main, we need a
-# cantunwind marker.  There's one in start.S.  To make sure we reach it, add
-# unwind tables for __libc_start_main.
-CFLAGS-libc-start.c += -fexceptions
-
-sysdep_routines += aeabi_read_tp libc-aeabi_read_tp
-static-only-routines += aeabi_read_tp
-shared-only-routines += libc-aeabi_read_tp
-endif
-
 ifeq ($(subdir),elf)
 sysdep-rtld-routines += aeabi_read_tp libc-do-syscall
 endif
@@ -37,21 +26,13 @@ libcrypt-sysdep_routines += libc-do-syscall
 endif
 
 ifeq ($(subdir),rt)
-librt-sysdep_routines += libc-do-syscall rt-aeabi_unwind_cpp_pr1
-librt-shared-only-routines += libc-do-syscall rt-aeabi_unwind_cpp_pr1
+librt-sysdep_routines += libc-do-syscall
+librt-shared-only-routines += libc-do-syscall
 endif
 
 ifeq ($(subdir),nptl)
-libpthread-sysdep_routines += libc-do-syscall nptl-aeabi_unwind_cpp_pr1
-libpthread-shared-only-routines += libc-do-syscall nptl-aeabi_unwind_cpp_pr1
-
-# This test relies on compiling part of the binary with EH information,
-# part without, and unwinding through.  The .ARM.exidx tables have
-# start addresses for EH regions, but no end addresses.  Every
-# region an exception needs to propogate through must have unwind
-# information, or a previous function's unwind table may be used
-# by mistake.
-tests := $(filter-out tst-cleanupx4,$(tests))
+libpthread-sysdep_routines += libc-do-syscall
+libpthread-shared-only-routines += libc-do-syscall
 endif
 
 ifeq ($(subdir),resolv)
