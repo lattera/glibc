@@ -10,8 +10,3 @@ case "$machine" in
 	    machine=tile/tilegx/tilegx32
 	fi ;;
 esac
-case "$machine" in
-    tile*)
-	libc_commonpagesize=0x10000
-	libc_relro_required=yes ;;
-esac

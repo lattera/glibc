@@ -1,5 +1,22 @@
 2014-06-27  Joseph Myers  <joseph@codesourcery.com>
 
+	* configure.ac (libc_commonpagesize): Remove variable.
+	(libc_relro_required): Likewise.
+	(libc_cv_z_relro): Remove configure test.
+	* configure: Regenerated.
+	* sysdeps/aarch64/preconfigure (libc_commonpagesize): Do not set
+	variable.
+	(libc_relro_required): Likewise.
+	* sysdeps/alpha/preconfigure (libc_commonpagesize): Likewise.
+	(libc_relro_required): Likewise.
+	* sysdeps/arm/preconfigure.ac (libc_commonpagesize): Likewise.
+	(libc_relro_required): Likewise.
+	* sysdeps/arm/preconfigure: Regenerated.
+	* sysdeps/ia64/preconfigure: Remove file.
+	* sysdeps/tile/preconfigure (libc_commonpagesize): Do not set
+	variable.
+	(libc_relro_required): Likewise.
+
 	[BZ #16561]
 	[BZ #16562]
 	* sysdeps/ieee754/dbl-64/e_jn.c: Include <float.h>.

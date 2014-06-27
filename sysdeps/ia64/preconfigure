@@ -1,3 +1,0 @@
-case "$machine" in
-ia64*)		libc_commonpagesize=0x4000 ;;
-esac
