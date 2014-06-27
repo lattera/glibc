@@ -18,7 +18,7 @@
 
 #ifdef SHARED
 # include <dl-vdso.h>
-# include <bits/libc-vdso.h>
+# include <libc-vdso.h>
 
 long int (*__vdso_clock_gettime) (clockid_t, struct timespec *)
   __attribute__ ((nocommon));

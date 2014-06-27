@@ -19,3 +19,7 @@ libpthread-sysdep_routines += init-arch
 libpthread-sysdep_routines += elision-lock elision-unlock elision-timed \
 			      elision-trylock
 endif
+
+ifeq ($(subdir),elf)
+sysdep_routines += dl-vdso
+endif

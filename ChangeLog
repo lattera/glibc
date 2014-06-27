@@ -1,4 +1,31 @@
 2015-01-12  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+	    Stefani Seibold  <stefani@seibold.net>
+
+	* sysdeps/unix/sysv/linux/x86_64/Makefile [$(subdir) = elf]
+	(sysdep_routines): Add dl-vdso here, ...
+	* sysdeps/unix/sysv/linux/x86/Makefile [$(subdir) = elf]
+	(sysdep_routines): ... not here.
+	* sysdeps/unix/sysv/linux/i386/gettimeofday.c: New file: set syscall
+	fallback when vDSO is not presented.
+	* sysdeps/unix/sysv/linux/x86_64/init-first.c (__vdso_clock_gettime):
+	Define with libc_hidden_proto/libc_hidden_data_def definitions.
+	(_libc_vdso_platform_setup): Rename to __vdso_platform_setup.
+	* sysdeps/unix/sysv/linux/i386/init-first.c: New file: likewise.
+	* sysdeps/unix/sysv/linux/i386/time.c: New file: likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/libc-vdso.h: Moved to ...
+	* sysdeps/unix/sysv/linux/x86/libc-vdso.h: ... here.
+	* sysdeps/unix/sysv/linux/x86_64/clock_gettime.c: Move to ...
+	* sysdeps/unix/sysv/linux/x86/clock_gettime.c: ... here.
+	* sysdeps/unix/sysv/linux/x86_64/gettimeofday.c: Move to ...
+	* sysdeps/unix/sysv/linux/x86/gettimeofday.c: ... here.  Also added
+	fallback configurable symbol when vDSO is not available.
+	* sysdeps/unix/sysv/linux/x86_64/time.c: Move to ...
+	* sysdeps/unix/sysv/linux/x86/time.c: ... here.  Also refactored to
+	be able to redefine fallback symbol when vDSO is not available.
+	* sysdeps/unix/sysv/linux/x86_64/timespec_get.c: Move to ...
+	* sysdeps/unix/sysv/linux/x86/timespec_get.c: ... here.
+
+2015-01-12  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/nptl/tls.h (tcbhead_t): Add tm_capable field.
 	(TLS_INIT_TP): Add tm_capable initialization.

@@ -1,5 +1,5 @@
-/* Initialization code run first thing by the ELF startup code.  Linux/x86-64.
-   Copyright (C) 2007-2015 Free Software Foundation, Inc.
+/* Initialization code run first thing by the ELF startup code.  Linux/i386.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,29 +27,23 @@ long int (*__vdso_clock_gettime) (clockid_t, struct timespec *)
 libc_hidden_proto (__vdso_clock_gettime)
 libc_hidden_data_def (__vdso_clock_gettime)
 
-long int (*__vdso_getcpu) (unsigned *, unsigned *, void *) attribute_hidden;
-
-extern long int __syscall_clock_gettime (clockid_t, struct timespec *);
-
+static long int
+clock_gettime_syscall (clockid_t id, struct timespec *tp)
+{
+  INTERNAL_SYSCALL_DECL (err);
+  return INTERNAL_SYSCALL (clock_gettime, err, 2, id, tp);
+}
 
 static inline void
 __vdso_platform_setup (void)
 {
-  PREPARE_VERSION (linux26, "LINUX_2.6", 61765110);
+  PREPARE_VERSION_KNOWN (linux26, LINUX_2_6);
 
   void *p = _dl_vdso_vsym ("__vdso_clock_gettime", &linux26);
   if (p == NULL)
-    p = __syscall_clock_gettime;
+    p = clock_gettime_syscall;
   PTR_MANGLE (p);
   __vdso_clock_gettime = p;
-
-  p = _dl_vdso_vsym ("__vdso_getcpu", &linux26);
-  /* If the vDSO is not available we fall back on the old vsyscall.  */
-#define VSYSCALL_ADDR_vgetcpu	0xffffffffff600800
-  if (p == NULL)
-    p = (void *) VSYSCALL_ADDR_vgetcpu;
-  PTR_MANGLE (p);
-  __vdso_getcpu = p;
 }
 
 # define VDSO_SETUP __vdso_platform_setup

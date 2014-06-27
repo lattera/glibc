@@ -1,4 +1,5 @@
-/* Copyright (C) 2001-2015 Free Software Foundation, Inc.
+/* gettimeofday - get the time.  Linux/i386 version.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,10 +16,24 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <sys/time.h>
+
 #ifdef SHARED
-/* If the vDSO is not available we fall back on the old vsyscall.  */
-#define VSYSCALL_ADDR_vtime	0xffffffffff600400
-#define TIME_FALLBACK           (void*)VSYSCALL_ADDR_vtime
+
+# include <dl-vdso.h>
+# include <errno.h>
+
+/* If the vDSO is not available we fall back on the syscall.  */
+static int
+__gettimeofday_syscall (struct timeval *tv, struct timezone *tz)
+{
+  return INLINE_SYSCALL (gettimeofday, 2, tv, tz);
+}
+# define GETTIMEOFAY_FALLBACK (void*) (&__gettimeofday_syscall)
+# undef libc_ifunc_hidden_def
+# define libc_ifunc_hidden_def(name)  \
+  libc_ifunc_hidden_def1 (__GI_##name, __gettimeofday_syscall)
+
 #endif
 
-#include <sysdeps/unix/sysv/linux/x86/time.c>
+#include <sysdeps/unix/sysv/linux/x86/gettimeofday.c>

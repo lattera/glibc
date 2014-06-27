@@ -18,42 +18,9 @@
 #include <sys/time.h>
 
 #ifdef SHARED
-
-# include <dl-vdso.h>
-
+/* If the vDSO is not available we fall back on the old vsyscall.  */
 # define VSYSCALL_ADDR_vgettimeofday	0xffffffffff600000ul
-
-void *gettimeofday_ifunc (void) __asm__ ("__gettimeofday");
-
-void *
-gettimeofday_ifunc (void)
-{
-  PREPARE_VERSION (linux26, "LINUX_2.6", 61765110);
-
-  /* If the vDSO is not available we fall back on the old vsyscall.  */
-  return (_dl_vdso_vsym ("__vdso_gettimeofday", &linux26)
-	  ?: (void *) VSYSCALL_ADDR_vgettimeofday);
-}
-asm (".type __gettimeofday, %gnu_indirect_function");
-
-/* This is doing "libc_hidden_def (__gettimeofday)" but the compiler won't
-   let us do it in C because it doesn't know we're defining __gettimeofday
-   here in this file.  */
-asm (".globl __GI___gettimeofday\n"
-     "__GI___gettimeofday = __gettimeofday");
-
-#else
-
-# include <sysdep.h>
-# include <errno.h>
-
-int
-__gettimeofday (struct timeval *tv, struct timezone *tz)
-{
-  return INLINE_SYSCALL (gettimeofday, 2, tv, tz);
-}
-libc_hidden_def (__gettimeofday)
-
+# define GETTIMEOFAY_FALLBACK  (void*)VSYSCALL_ADDR_vgettimeofday
 #endif
-weak_alias (__gettimeofday, gettimeofday)
-libc_hidden_weak (gettimeofday)
+
+#include <sysdeps/unix/sysv/linux/x86/gettimeofday.c>

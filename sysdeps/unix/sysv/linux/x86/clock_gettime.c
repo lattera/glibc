@@ -1,4 +1,5 @@
-/* Copyright (C) 2001-2015 Free Software Foundation, Inc.
+/* Get the current value of a clock.  Linux/x86 version.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,10 +16,19 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <libc-vdso.h>
+
 #ifdef SHARED
-/* If the vDSO is not available we fall back on the old vsyscall.  */
-#define VSYSCALL_ADDR_vtime	0xffffffffff600400
-#define TIME_FALLBACK           (void*)VSYSCALL_ADDR_vtime
+# define SYSCALL_GETTIME(id, tp) \
+  ({ long int (*f) (clockid_t, struct timespec *) = __vdso_clock_gettime; \
+  long int v_ret;							  \
+  PTR_DEMANGLE (f);							  \
+  v_ret = (*f) (id, tp);						  \
+  if (INTERNAL_SYSCALL_ERROR_P (v_ret, )) {				  \
+    __set_errno (INTERNAL_SYSCALL_ERRNO (v_ret, ));			  \
+    v_ret = -1;								  \
+  }									  \
+  v_ret; })
 #endif
 
-#include <sysdeps/unix/sysv/linux/x86/time.c>
+#include <sysdeps/unix/sysv/linux/clock_gettime.c>
