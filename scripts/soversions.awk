@@ -7,16 +7,6 @@ BEGIN {
 
 { thiscf = $1 }
 
-$2 == "ABI" {
-  if ((config ~ thiscf) && !abiname) {
-    abiname = $3;
-    sub(/@CPU@/, cpu, abiname);
-    sub(/@VENDOR@/, vendor, abiname);
-    sub(/@OS@/, os, abiname);
-  }
-  next;
-}
-
 # Obey the first matching DEFAULT line.
 $2 == "DEFAULT" {
   $1 = $2 = "";
@@ -64,9 +54,6 @@ END {
 	  lines[c FS lib] = configs[c] FS line;
 	}
       }
-  }
-  if (abiname) {
-    print "ABI", abiname
   }
   for (c in lines) {
     print lines[c]

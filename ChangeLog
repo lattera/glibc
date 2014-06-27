@@ -1,3 +1,12 @@
+2014-06-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makeconfig ($(common-objpfx)soversions.mk): Do not generate
+	abi-name definition.
+	* scripts/soversions.awk: Do not handle or generate ABI lines.
+	* shlib-versions: Remove ABI entries.
+	* sysdeps/powerpc/nofpu/shlib-versions: Remove file.
+	* sysdeps/x86_64/x32/shlib-versions: Remove ABI entry.
+
 2014-06-27  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips32/nptl/c++-types.data: Moved ...

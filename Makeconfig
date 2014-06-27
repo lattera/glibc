@@ -972,7 +972,6 @@ $(common-objpfx)soversions.i: $(..)scripts/soversions.awk \
 $(common-objpfx)soversions.mk: $(common-objpfx)soversions.i $(..)Makeconfig
 	(while read which lib number setname; do \
 	   eval seen_$$which=1; \
-	   test x"$$which" != xABI || echo abi-name = "$$lib"; \
 	   test x"$$which" = xDEFAULT || continue; \
 	   case $$number in \
 	     [0-9]*) echo "$$lib.so-version=.$$number"; \
