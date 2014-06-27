@@ -9609,9 +9609,7 @@ static const struct test_if_f_data yn_test_data[] =
 static void
 yn_test (void)
 {
-  START (yn, 0);
-  RUN_TEST_LOOP_if_f (yn, yn_test_data, );
-  END;
+  ALL_RM_TEST (yn, 0, yn_test_data, RUN_TEST_LOOP_if_f, END);
 }
 
 

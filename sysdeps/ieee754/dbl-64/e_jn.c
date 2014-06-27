@@ -37,6 +37,7 @@
  */
 
 #include <errno.h>
+#include <float.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -248,7 +249,7 @@ __ieee754_yn (int n, double x)
 {
   int32_t i, hx, ix, lx;
   int32_t sign;
-  double a, b, temp;
+  double a, b, temp, ret;
 
   EXTRACT_WORDS (hx, lx, x);
   ix = 0x7fffffff & hx;
@@ -268,57 +269,67 @@ __ieee754_yn (int n, double x)
     }
   if (n == 0)
     return (__ieee754_y0 (x));
-  if (n == 1)
-    return (sign * __ieee754_y1 (x));
-  if (__glibc_unlikely (ix == 0x7ff00000))
-    return zero;
-  if (ix >= 0x52D00000)      /* x > 2**302 */
-    { /* (x >> n**2)
-		 *	    Jn(x) = cos(x-(2n+1)*pi/4)*sqrt(2/x*pi)
-		 *	    Yn(x) = sin(x-(2n+1)*pi/4)*sqrt(2/x*pi)
-		 *	    Let s=sin(x), c=cos(x),
-		 *		xn=x-(2n+1)*pi/4, sqt2 = sqrt(2),then
-		 *
-		 *		   n	sin(xn)*sqt2	cos(xn)*sqt2
-		 *		----------------------------------
-		 *		   0	 s-c		 c+s
-		 *		   1	-s-c		-c+s
-		 *		   2	-s+c		-c-s
-		 *		   3	 s+c		 c-s
-		 */
-      double c;
-      double s;
-      __sincos (x, &s, &c);
-      switch (n & 3)
-	{
-	case 0: temp = s - c; break;
-	case 1: temp = -s - c; break;
-	case 2: temp = -s + c; break;
-	case 3: temp = s + c; break;
-	}
-      b = invsqrtpi * temp / __ieee754_sqrt (x);
-    }
-  else
-    {
-      u_int32_t high;
-      a = __ieee754_y0 (x);
-      b = __ieee754_y1 (x);
-      /* quit if b is -inf */
-      GET_HIGH_WORD (high, b);
-      for (i = 1; i < n && high != 0xfff00000; i++)
-	{
-	  temp = b;
-	  b = ((double) (i + i) / x) * b - a;
-	  GET_HIGH_WORD (high, b);
-	  a = temp;
-	}
-      /* If B is +-Inf, set up errno accordingly.  */
-      if (!__finite (b))
-	__set_errno (ERANGE);
-    }
-  if (sign > 0)
-    return b;
-  else
-    return -b;
+  {
+    SET_RESTORE_ROUND (FE_TONEAREST);
+    if (n == 1)
+      {
+	ret = sign * __ieee754_y1 (x);
+	goto out;
+      }
+    if (__glibc_unlikely (ix == 0x7ff00000))
+      return zero;
+    if (ix >= 0x52D00000)      /* x > 2**302 */
+      { /* (x >> n**2)
+	 *	    Jn(x) = cos(x-(2n+1)*pi/4)*sqrt(2/x*pi)
+	 *	    Yn(x) = sin(x-(2n+1)*pi/4)*sqrt(2/x*pi)
+	 *	    Let s=sin(x), c=cos(x),
+	 *		xn=x-(2n+1)*pi/4, sqt2 = sqrt(2),then
+	 *
+	 *		   n	sin(xn)*sqt2	cos(xn)*sqt2
+	 *		----------------------------------
+	 *		   0	 s-c		 c+s
+	 *		   1	-s-c		-c+s
+	 *		   2	-s+c		-c-s
+	 *		   3	 s+c		 c-s
+	 */
+	double c;
+	double s;
+	__sincos (x, &s, &c);
+	switch (n & 3)
+	  {
+	  case 0: temp = s - c; break;
+	  case 1: temp = -s - c; break;
+	  case 2: temp = -s + c; break;
+	  case 3: temp = s + c; break;
+	  }
+	b = invsqrtpi * temp / __ieee754_sqrt (x);
+      }
+    else
+      {
+	u_int32_t high;
+	a = __ieee754_y0 (x);
+	b = __ieee754_y1 (x);
+	/* quit if b is -inf */
+	GET_HIGH_WORD (high, b);
+	for (i = 1; i < n && high != 0xfff00000; i++)
+	  {
+	    temp = b;
+	    b = ((double) (i + i) / x) * b - a;
+	    GET_HIGH_WORD (high, b);
+	    a = temp;
+	  }
+	/* If B is +-Inf, set up errno accordingly.  */
+	if (!__finite (b))
+	  __set_errno (ERANGE);
+      }
+    if (sign > 0)
+      ret = b;
+    else
+      ret = -b;
+  }
+ out:
+  if (__isinf (ret))
+    ret = __copysign (DBL_MAX, ret) * DBL_MAX;
+  return ret;
 }
 strong_alias (__ieee754_yn, __yn_finite)

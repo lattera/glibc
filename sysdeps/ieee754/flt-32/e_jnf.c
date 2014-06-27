@@ -14,6 +14,7 @@
  */
 
 #include <errno.h>
+#include <float.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -169,6 +170,8 @@ strong_alias (__ieee754_jnf, __jnf_finite)
 float
 __ieee754_ynf(int n, float x)
 {
+    float ret;
+    {
 	int32_t i,hx,ix;
 	u_int32_t ib;
 	int32_t sign;
@@ -187,7 +190,11 @@ __ieee754_ynf(int n, float x)
 		sign = 1 - ((n&1)<<1);
 	}
 	if(n==0) return(__ieee754_y0f(x));
-	if(n==1) return(sign*__ieee754_y1f(x));
+	SET_RESTORE_ROUNDF (FE_TONEAREST);
+	if(n==1) {
+	    ret = sign*__ieee754_y1f(x);
+	    goto out;
+	}
 	if(__builtin_expect(ix==0x7f800000, 0)) return zero;
 
 	a = __ieee754_y0f(x);
@@ -203,6 +210,11 @@ __ieee754_ynf(int n, float x)
 	/* If B is +-Inf, set up errno accordingly.  */
 	if (! __finitef (b))
 	  __set_errno (ERANGE);
-	if(sign>0) return b; else return -b;
+	if(sign>0) ret = b; else ret = -b;
+    }
+ out:
+    if (__isinff (ret))
+	ret = __copysignf (FLT_MAX, ret) * FLT_MAX;
+    return ret;
 }
 strong_alias (__ieee754_ynf, __ynf_finite)

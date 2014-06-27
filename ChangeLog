@@ -1,3 +1,28 @@
+2014-06-27  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16561]
+	[BZ #16562]
+	* sysdeps/ieee754/dbl-64/e_jn.c: Include <float.h>.
+	(__ieee754_yn): Set FE_TONEAREST mode internally and then
+	recompute overflowing results in original rounding mode.
+	* sysdeps/ieee754/flt-32/e_jnf.c: Include <float.h>.
+	(__ieee754_ynf): Set FE_TONEAREST mode internally and then
+	recompute overflowing results in original rounding mode.
+	* sysdeps/ieee754/ldbl-128/e_jnl.c: Include <float.h>.
+	(__ieee754_ynl): Set FE_TONEAREST mode internally and then
+	recompute overflowing results in original rounding mode.
+	* sysdeps/ieee754/ldbl-128ibm/e_jnl.c: Include <float.h>.
+	(__ieee754_ynl): Set FE_TONEAREST mode internally and then
+	recompute overflowing results in original rounding mode.
+	* sysdeps/ieee754/ldbl-96/e_jnl.c: Include <float.h>.
+	(__ieee754_ynl): Set FE_TONEAREST mode internally and then
+	recompute overflowing results in original rounding mode.
+	* sysdeps/i386/fpu/fenv_private.h [!__SSE2_MATH__]
+	(libc_feholdsetround_ctx): New macro.
+	* math/libm-test.inc (yn_test): Use ALL_RM_TEST.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps : Likewise.
+
 2014-06-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips64/nptl/sysdep-cancel.h

@@ -57,6 +57,7 @@
  */
 
 #include <errno.h>
+#include <float.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -300,7 +301,7 @@ __ieee754_ynl (int n, long double x)
   u_int32_t se;
   int32_t i, ix;
   int32_t sign;
-  long double a, b, temp;
+  long double a, b, temp, ret;
   ieee854_long_double_shape_type u;
 
   u.value = x;
@@ -328,70 +329,80 @@ __ieee754_ynl (int n, long double x)
     }
   if (n == 0)
     return (__ieee754_y0l (x));
-  if (n == 1)
-    return (sign * __ieee754_y1l (x));
-  if (ix >= 0x7fff0000)
-    return zero;
-  if (ix >= 0x412D0000)
-    {				/* x > 2**302 */
+  {
+    SET_RESTORE_ROUNDL (FE_TONEAREST);
+    if (n == 1)
+      {
+	ret = sign * __ieee754_y1l (x);
+	goto out;
+      }
+    if (ix >= 0x7fff0000)
+      return zero;
+    if (ix >= 0x412D0000)
+      {				/* x > 2**302 */
 
-      /* ??? See comment above on the possible futility of this.  */
+	/* ??? See comment above on the possible futility of this.  */
 
-      /* (x >> n**2)
-       *      Jn(x) = cos(x-(2n+1)*pi/4)*sqrt(2/x*pi)
-       *      Yn(x) = sin(x-(2n+1)*pi/4)*sqrt(2/x*pi)
-       *      Let s=sin(x), c=cos(x),
-       *          xn=x-(2n+1)*pi/4, sqt2 = sqrt(2),then
-       *
-       *             n    sin(xn)*sqt2    cos(xn)*sqt2
-       *          ----------------------------------
-       *             0     s-c             c+s
-       *             1    -s-c            -c+s
-       *             2    -s+c            -c-s
-       *             3     s+c             c-s
-       */
-      long double s;
-      long double c;
-      __sincosl (x, &s, &c);
-      switch (n & 3)
-	{
-	case 0:
-	  temp = s - c;
-	  break;
-	case 1:
-	  temp = -s - c;
-	  break;
-	case 2:
-	  temp = -s + c;
-	  break;
-	case 3:
-	  temp = s + c;
-	  break;
-	}
-      b = invsqrtpi * temp / __ieee754_sqrtl (x);
-    }
-  else
-    {
-      a = __ieee754_y0l (x);
-      b = __ieee754_y1l (x);
-      /* quit if b is -inf */
-      u.value = b;
-      se = u.parts32.w0 & 0xffff0000;
-      for (i = 1; i < n && se != 0xffff0000; i++)
-	{
-	  temp = b;
-	  b = ((long double) (i + i) / x) * b - a;
-	  u.value = b;
-	  se = u.parts32.w0 & 0xffff0000;
-	  a = temp;
-	}
-    }
-  /* If B is +-Inf, set up errno accordingly.  */
-  if (! __finitel (b))
-    __set_errno (ERANGE);
-  if (sign > 0)
-    return b;
-  else
-    return -b;
+	/* (x >> n**2)
+	 *      Jn(x) = cos(x-(2n+1)*pi/4)*sqrt(2/x*pi)
+	 *      Yn(x) = sin(x-(2n+1)*pi/4)*sqrt(2/x*pi)
+	 *      Let s=sin(x), c=cos(x),
+	 *          xn=x-(2n+1)*pi/4, sqt2 = sqrt(2),then
+	 *
+	 *             n    sin(xn)*sqt2    cos(xn)*sqt2
+	 *          ----------------------------------
+	 *             0     s-c             c+s
+	 *             1    -s-c            -c+s
+	 *             2    -s+c            -c-s
+	 *             3     s+c             c-s
+	 */
+	long double s;
+	long double c;
+	__sincosl (x, &s, &c);
+	switch (n & 3)
+	  {
+	  case 0:
+	    temp = s - c;
+	    break;
+	  case 1:
+	    temp = -s - c;
+	    break;
+	  case 2:
+	    temp = -s + c;
+	    break;
+	  case 3:
+	    temp = s + c;
+	    break;
+	  }
+	b = invsqrtpi * temp / __ieee754_sqrtl (x);
+      }
+    else
+      {
+	a = __ieee754_y0l (x);
+	b = __ieee754_y1l (x);
+	/* quit if b is -inf */
+	u.value = b;
+	se = u.parts32.w0 & 0xffff0000;
+	for (i = 1; i < n && se != 0xffff0000; i++)
+	  {
+	    temp = b;
+	    b = ((long double) (i + i) / x) * b - a;
+	    u.value = b;
+	    se = u.parts32.w0 & 0xffff0000;
+	    a = temp;
+	  }
+      }
+    /* If B is +-Inf, set up errno accordingly.  */
+    if (! __finitel (b))
+      __set_errno (ERANGE);
+    if (sign > 0)
+      ret = b;
+    else
+      ret = -b;
+  }
+ out:
+  if (__isinfl (ret))
+    ret = __copysignl (LDBL_MAX, ret) * LDBL_MAX;
+  return ret;
 }
 strong_alias (__ieee754_ynl, __ynl_finite)

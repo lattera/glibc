@@ -482,6 +482,7 @@ libc_feupdateenv_387_ctx (struct rm_ctx *ctx)
 #else
 # define libc_feholdexcept_setround_ctx	libc_feholdexcept_setround_387_ctx
 # define libc_feupdateenv_ctx		libc_feupdateenv_387_ctx
+# define libc_feholdsetround_ctx	libc_feholdsetround_387_ctx
 # define libc_feresetround_ctx		libc_feresetround_387_ctx
 #endif /* __SSE2_MATH__ */
 
