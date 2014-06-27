@@ -1,3 +1,9 @@
+2014-06-27  Arjun Shankar  <arjun.is@lostca.se>
+
+	[BZ #17092]
+	* nscd/nscd.c (monitor_child): Return exit status of child
+	instead of return value from wait syscall.
+
 2014-06-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* configure.ac (libc_commonpagesize): Remove variable.

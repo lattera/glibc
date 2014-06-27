@@ -612,21 +612,25 @@ monitor_child (int fd)
      method, like a segfault.  */
   if (ret <= 0 || child_ret != 0)
     {
-      int err = wait (&child_ret);
+      int status;
+      int err = wait (&status);
 
       if (err < 0)
 	{
-	  fprintf (stderr, _("wait failed"));
+	  fprintf (stderr, _("'wait' failed\n"));
 	  return 1;
 	}
 
-      fprintf (stderr, _("child exited with status %d"),
-	       WEXITSTATUS (child_ret));
-      if (WIFSIGNALED (child_ret))
-	fprintf (stderr, _(", terminated by signal %d.\n"),
-		 WTERMSIG (child_ret));
-      else
-	fprintf (stderr, ".\n");
+      if (WIFEXITED (status))
+        {
+          child_ret = WEXITSTATUS (status);
+          fprintf (stderr, _("child exited with status %d\n"), child_ret);
+        }
+      if (WIFSIGNALED (status))
+        {
+          child_ret = WTERMSIG (status);
+          fprintf (stderr, _("child terminated by signal %d\n"), child_ret);
+        }
     }
 
   /* We have the child status, so exit with that code.  */
