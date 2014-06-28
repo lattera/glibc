@@ -1,3 +1,11 @@
+2014-06-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	mktime: merge #if/#ifdef usage from glibc
+	* lib/mktime.c: Use "#if defined DEBUG && DEBUG", not "#if DEBUG",
+	as that works with both Glibc's and Gnulib's style.
+	See thread starting at Siddhesh Poyarekar's bug report at:
+	http://lists.gnu.org/archive/html/bug-gnulib/2014-06/msg00102.html
+
 2014-06-28  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/generic/memcopy.h: Define MEMCPY_OK_FOR_FWD_MEMMOVE.
