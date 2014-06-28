@@ -19,6 +19,12 @@
 #include <sysdeps/generic/memcopy.h>
 #include <bits/wordsize.h>
 
+/* The tilegx implementation of memcpy is safe to use for memmove.  */
+#ifdef __tilegx__
+# undef MEMCPY_OK_FOR_FWD_MEMMOVE
+# define MEMCPY_OK_FOR_FWD_MEMMOVE 1
+#endif
+
 /* Support more efficient copying on tilegx32, which supports
    long long as a native 64-bit type.  */
 #if defined (__tilegx__) && __WORDSIZE == 32

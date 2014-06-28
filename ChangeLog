@@ -1,3 +1,9 @@
+2014-06-28  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/generic/memcopy.h: Define MEMCPY_OK_FOR_FWD_MEMMOVE.
+	* sysdeps/tile/memcopy.h: Redefine MEMCPY_OK_FOR_FWD_MEMMOVE.
+	* sysdeps/tile/tilegx/memmove.c: Remove file.
+
 2014-06-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makeconfig ($(common-objpfx)soversions.mk): Do not generate
