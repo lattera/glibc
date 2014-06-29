@@ -1,3 +1,10 @@
+2014-06-29  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17097]
+	* sysdeps/ieee754/ldbl-128/e_powl.c (__ieee754_powl): Return
+	result with correct sign in case of exponents that produce
+	overflow except for X very close to 1.
+
 2014-06-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	mktime: merge #if/#ifdef usage from glibc
