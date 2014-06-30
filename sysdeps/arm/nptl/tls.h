@@ -16,8 +16,8 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _TLS_H
-#define _TLS_H	1
+#ifndef _ARM_NPTL_TLS_H
+#define _ARM_NPTL_TLS_H	1
 
 #include <dl-sysdep.h>
 
@@ -43,9 +43,6 @@ typedef union dtv
 
 
 #ifndef __ASSEMBLER__
-
-/* Get system call information.  */
-# include <sysdep.h>
 
 /* The TP points to the start of the thread blocks.  */
 # define TLS_DTV_AT_TP	1
@@ -87,16 +84,6 @@ typedef struct
 /* Return dtv of given thread descriptor.  */
 # define GET_DTV(tcbp) \
   (((tcbhead_t *) (tcbp))->dtv)
-
-/* Code to initially initialize the thread pointer.  This might need
-   special attention since 'errno' is not yet available and if the
-   operation can cause a failure 'errno' must not be touched.  */
-# define TLS_INIT_TP(tcbp) \
-  ({ INTERNAL_SYSCALL_DECL (err);					\
-     long result_var;							\
-     result_var = INTERNAL_SYSCALL_ARM (set_tls, err, 1, (tcbp));	\
-     INTERNAL_SYSCALL_ERROR_P (result_var, err)				\
-       ? "unknown error" : NULL; })
 
 # define TLS_DEFINE_INIT_TP(tp, pd) void *tp = (pd) + 1
 
