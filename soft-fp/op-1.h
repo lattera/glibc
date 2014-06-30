@@ -92,27 +92,28 @@
  * normalize the data.
  */
 
-#define _FP_UNPACK_RAW_1(fs, X, val)		\
-  do						\
-    {						\
-      union _FP_UNION_##fs _flo;		\
-      _flo.flt = (val);				\
-						\
-      X##_f = _flo.bits.frac;			\
-      X##_e = _flo.bits.exp;			\
-      X##_s = _flo.bits.sign;			\
-    }						\
+#define _FP_UNPACK_RAW_1(fs, X, val)			\
+  do							\
+    {							\
+      union _FP_UNION_##fs _FP_UNPACK_RAW_1_flo;	\
+      _FP_UNPACK_RAW_1_flo.flt = (val);			\
+							\
+      X##_f = _FP_UNPACK_RAW_1_flo.bits.frac;		\
+      X##_e = _FP_UNPACK_RAW_1_flo.bits.exp;		\
+      X##_s = _FP_UNPACK_RAW_1_flo.bits.sign;		\
+    }							\
   while (0)
 
-#define _FP_UNPACK_RAW_1_P(fs, X, val)					\
-  do									\
-    {									\
-      union _FP_UNION_##fs *_flo = (union _FP_UNION_##fs *) (val);	\
-									\
-      X##_f = _flo->bits.frac;						\
-      X##_e = _flo->bits.exp;						\
-      X##_s = _flo->bits.sign;						\
-    }									\
+#define _FP_UNPACK_RAW_1_P(fs, X, val)			\
+  do							\
+    {							\
+      union _FP_UNION_##fs *_FP_UNPACK_RAW_1_P_flo	\
+	= (union _FP_UNION_##fs *) (val);		\
+							\
+      X##_f = _FP_UNPACK_RAW_1_P_flo->bits.frac;	\
+      X##_e = _FP_UNPACK_RAW_1_P_flo->bits.exp;		\
+      X##_s = _FP_UNPACK_RAW_1_P_flo->bits.sign;	\
+    }							\
   while (0)
 
 /*
@@ -122,25 +123,26 @@
 #define _FP_PACK_RAW_1(fs, val, X)		\
   do						\
     {						\
-      union _FP_UNION_##fs _flo;		\
+      union _FP_UNION_##fs _FP_PACK_RAW_1_flo;	\
 						\
-      _flo.bits.frac = X##_f;			\
-      _flo.bits.exp  = X##_e;			\
-      _flo.bits.sign = X##_s;			\
+      _FP_PACK_RAW_1_flo.bits.frac = X##_f;	\
+      _FP_PACK_RAW_1_flo.bits.exp  = X##_e;	\
+      _FP_PACK_RAW_1_flo.bits.sign = X##_s;	\
 						\
-      (val) = _flo.flt;				\
+      (val) = _FP_PACK_RAW_1_flo.flt;		\
     }						\
   while (0)
 
-#define _FP_PACK_RAW_1_P(fs, val, X)					\
-  do									\
-    {									\
-      union _FP_UNION_##fs *_flo = (union _FP_UNION_##fs *) (val);	\
-									\
-      _flo->bits.frac = X##_f;						\
-      _flo->bits.exp  = X##_e;						\
-      _flo->bits.sign = X##_s;						\
-    }									\
+#define _FP_PACK_RAW_1_P(fs, val, X)			\
+  do							\
+    {							\
+      union _FP_UNION_##fs *_FP_PACK_RAW_1_P_flo	\
+	= (union _FP_UNION_##fs *) (val);		\
+							\
+      _FP_PACK_RAW_1_P_flo->bits.frac = X##_f;		\
+      _FP_PACK_RAW_1_P_flo->bits.exp  = X##_e;		\
+      _FP_PACK_RAW_1_P_flo->bits.sign = X##_s;		\
+    }							\
   while (0)
 
 
@@ -181,13 +183,14 @@
 #define _FP_MUL_MEAT_1_wide(wfracbits, R, X, Y, doit)			\
   do									\
     {									\
-      _FP_FRAC_DECL_2 (_Z);						\
-      _FP_MUL_MEAT_DW_1_wide (wfracbits, _Z, X, Y, doit);		\
+      _FP_FRAC_DECL_2 (_FP_MUL_MEAT_1_wide_Z);				\
+      _FP_MUL_MEAT_DW_1_wide (wfracbits, _FP_MUL_MEAT_1_wide_Z,		\
+			      X, Y, doit);				\
       /* Normalize since we know where the msb of the multiplicands	\
 	 were (bit B), we know that the msb of the of the product is	\
 	 at either 2B or 2B-1.  */					\
-      _FP_FRAC_SRS_2 (_Z, wfracbits-1, 2*wfracbits);			\
-      R##_f = _Z_f0;							\
+      _FP_FRAC_SRS_2 (_FP_MUL_MEAT_1_wide_Z, wfracbits-1, 2*wfracbits);	\
+      R##_f = _FP_MUL_MEAT_1_wide_Z_f0;					\
     }									\
   while (0)
 
@@ -196,40 +199,49 @@
 #define _FP_MUL_MEAT_DW_1_hard(wfracbits, R, X, Y)			\
   do									\
     {									\
-      _FP_W_TYPE _xh, _xl, _yh, _yl;					\
-      _FP_FRAC_DECL_2 (_a);						\
+      _FP_W_TYPE _FP_MUL_MEAT_DW_1_hard_xh, _FP_MUL_MEAT_DW_1_hard_xl;	\
+      _FP_W_TYPE _FP_MUL_MEAT_DW_1_hard_yh, _FP_MUL_MEAT_DW_1_hard_yl;	\
+      _FP_FRAC_DECL_2 (_FP_MUL_MEAT_DW_1_hard_a);			\
 									\
       /* split the words in half */					\
-      _xh = X##_f >> (_FP_W_TYPE_SIZE/2);				\
-      _xl = X##_f & (((_FP_W_TYPE) 1 << (_FP_W_TYPE_SIZE/2)) - 1);	\
-      _yh = Y##_f >> (_FP_W_TYPE_SIZE/2);				\
-      _yl = Y##_f & (((_FP_W_TYPE) 1 << (_FP_W_TYPE_SIZE/2)) - 1);	\
+      _FP_MUL_MEAT_DW_1_hard_xh = X##_f >> (_FP_W_TYPE_SIZE/2);		\
+      _FP_MUL_MEAT_DW_1_hard_xl						\
+	= X##_f & (((_FP_W_TYPE) 1 << (_FP_W_TYPE_SIZE/2)) - 1);	\
+      _FP_MUL_MEAT_DW_1_hard_yh = Y##_f >> (_FP_W_TYPE_SIZE/2);		\
+      _FP_MUL_MEAT_DW_1_hard_yl						\
+	= Y##_f & (((_FP_W_TYPE) 1 << (_FP_W_TYPE_SIZE/2)) - 1);	\
 									\
       /* multiply the pieces */						\
-      R##_f0 = _xl * _yl;						\
-      _a_f0 = _xh * _yl;						\
-      _a_f1 = _xl * _yh;						\
-      R##_f1 = _xh * _yh;						\
+      R##_f0 = _FP_MUL_MEAT_DW_1_hard_xl * _FP_MUL_MEAT_DW_1_hard_yl;	\
+      _FP_MUL_MEAT_DW_1_hard_a_f0					\
+	= _FP_MUL_MEAT_DW_1_hard_xh * _FP_MUL_MEAT_DW_1_hard_yl;	\
+      _FP_MUL_MEAT_DW_1_hard_a_f1					\
+	= _FP_MUL_MEAT_DW_1_hard_xl * _FP_MUL_MEAT_DW_1_hard_yh;	\
+      R##_f1 = _FP_MUL_MEAT_DW_1_hard_xh * _FP_MUL_MEAT_DW_1_hard_yh;	\
 									\
       /* reassemble into two full words */				\
-      if ((_a_f0 += _a_f1) < _a_f1)					\
+      if ((_FP_MUL_MEAT_DW_1_hard_a_f0 += _FP_MUL_MEAT_DW_1_hard_a_f1)	\
+	  < _FP_MUL_MEAT_DW_1_hard_a_f1)				\
 	R##_f1 += (_FP_W_TYPE) 1 << (_FP_W_TYPE_SIZE/2);		\
-      _a_f1 = _a_f0 >> (_FP_W_TYPE_SIZE/2);				\
-      _a_f0 = _a_f0 << (_FP_W_TYPE_SIZE/2);				\
-      _FP_FRAC_ADD_2 (R, R, _a);					\
+      _FP_MUL_MEAT_DW_1_hard_a_f1					\
+	= _FP_MUL_MEAT_DW_1_hard_a_f0 >> (_FP_W_TYPE_SIZE/2);		\
+      _FP_MUL_MEAT_DW_1_hard_a_f0					\
+	= _FP_MUL_MEAT_DW_1_hard_a_f0 << (_FP_W_TYPE_SIZE/2);		\
+      _FP_FRAC_ADD_2 (R, R, _FP_MUL_MEAT_DW_1_hard_a);			\
     }									\
   while (0)
 
-#define _FP_MUL_MEAT_1_hard(wfracbits, R, X, Y)		\
-  do							\
-    {							\
-      _FP_FRAC_DECL_2 (_z);				\
-      _FP_MUL_MEAT_DW_1_hard (wfracbits, _z, X, Y);	\
-							\
-      /* normalize */					\
-      _FP_FRAC_SRS_2 (_z, wfracbits - 1, 2*wfracbits);	\
-      R##_f = _z_f0;					\
-    }							\
+#define _FP_MUL_MEAT_1_hard(wfracbits, R, X, Y)				\
+  do									\
+    {									\
+      _FP_FRAC_DECL_2 (_FP_MUL_MEAT_1_hard_z);				\
+      _FP_MUL_MEAT_DW_1_hard (wfracbits, _FP_MUL_MEAT_1_hard_z, X, Y);	\
+									\
+      /* normalize */							\
+      _FP_FRAC_SRS_2 (_FP_MUL_MEAT_1_hard_z,				\
+		      wfracbits - 1, 2*wfracbits);			\
+      R##_f = _FP_MUL_MEAT_1_hard_z_f0;					\
+    }									\
   while (0)
 
 
@@ -242,16 +254,16 @@
    C primitives or _FP_DIV_HELP_ldiv for the ISO function.  Which you
    choose will depend on what the compiler does with divrem4.  */
 
-#define _FP_DIV_MEAT_1_imm(fs, R, X, Y, doit)	\
-  do						\
-    {						\
-      _FP_W_TYPE _q, _r;			\
-      X##_f <<= (X##_f < Y##_f			\
-		 ? R##_e--, _FP_WFRACBITS_##fs	\
-		 : _FP_WFRACBITS_##fs - 1);	\
-      doit (_q, _r, X##_f, Y##_f);		\
-      R##_f = _q | (_r != 0);			\
-    }						\
+#define _FP_DIV_MEAT_1_imm(fs, R, X, Y, doit)				\
+  do									\
+    {									\
+      _FP_W_TYPE _FP_DIV_MEAT_1_imm_q, _FP_DIV_MEAT_1_imm_r;		\
+      X##_f <<= (X##_f < Y##_f						\
+		 ? R##_e--, _FP_WFRACBITS_##fs				\
+		 : _FP_WFRACBITS_##fs - 1);				\
+      doit (_FP_DIV_MEAT_1_imm_q, _FP_DIV_MEAT_1_imm_r, X##_f, Y##_f);	\
+      R##_f = _FP_DIV_MEAT_1_imm_q | (_FP_DIV_MEAT_1_imm_r != 0);	\
+    }									\
   while (0)
 
 /* GCC's longlong.h defines a 2W / 1W => (1W,1W) primitive udiv_qrnnd
@@ -262,47 +274,59 @@
 #define _FP_DIV_MEAT_1_udiv_norm(fs, R, X, Y)				\
   do									\
     {									\
-      _FP_W_TYPE _nh, _nl, _q, _r, _y;					\
+      _FP_W_TYPE _FP_DIV_MEAT_1_udiv_norm_nh;				\
+      _FP_W_TYPE _FP_DIV_MEAT_1_udiv_norm_nl;				\
+      _FP_W_TYPE _FP_DIV_MEAT_1_udiv_norm_q;				\
+      _FP_W_TYPE _FP_DIV_MEAT_1_udiv_norm_r;				\
+      _FP_W_TYPE _FP_DIV_MEAT_1_udiv_norm_y;				\
 									\
       /* Normalize Y -- i.e. make the most significant bit set.  */	\
-      _y = Y##_f << _FP_WFRACXBITS_##fs;				\
+      _FP_DIV_MEAT_1_udiv_norm_y = Y##_f << _FP_WFRACXBITS_##fs;	\
 									\
       /* Shift X op correspondingly high, that is, up one full word.  */ \
       if (X##_f < Y##_f)						\
 	{								\
 	  R##_e--;							\
-	  _nl = 0;							\
-	  _nh = X##_f;							\
+	  _FP_DIV_MEAT_1_udiv_norm_nl = 0;				\
+	  _FP_DIV_MEAT_1_udiv_norm_nh = X##_f;				\
 	}								\
       else								\
 	{								\
-	  _nl = X##_f << (_FP_W_TYPE_SIZE - 1);				\
-	  _nh = X##_f >> 1;						\
+	  _FP_DIV_MEAT_1_udiv_norm_nl = X##_f << (_FP_W_TYPE_SIZE - 1);	\
+	  _FP_DIV_MEAT_1_udiv_norm_nh = X##_f >> 1;			\
 	}								\
 									\
-      udiv_qrnnd (_q, _r, _nh, _nl, _y);				\
-      R##_f = _q | (_r != 0);						\
+      udiv_qrnnd (_FP_DIV_MEAT_1_udiv_norm_q,				\
+		  _FP_DIV_MEAT_1_udiv_norm_r,				\
+		  _FP_DIV_MEAT_1_udiv_norm_nh,				\
+		  _FP_DIV_MEAT_1_udiv_norm_nl,				\
+		  _FP_DIV_MEAT_1_udiv_norm_y);				\
+      R##_f = (_FP_DIV_MEAT_1_udiv_norm_q				\
+	       | (_FP_DIV_MEAT_1_udiv_norm_r != 0));			\
     }									\
   while (0)
 
-#define _FP_DIV_MEAT_1_udiv(fs, R, X, Y)		\
-  do							\
-    {							\
-      _FP_W_TYPE _nh, _nl, _q, _r;			\
-      if (X##_f < Y##_f)				\
-	{						\
-	  R##_e--;					\
-	  _nl = X##_f << _FP_WFRACBITS_##fs;		\
-	  _nh = X##_f >> _FP_WFRACXBITS_##fs;		\
-	}						\
-      else						\
-	{						\
-	  _nl = X##_f << (_FP_WFRACBITS_##fs - 1);	\
-	  _nh = X##_f >> (_FP_WFRACXBITS_##fs + 1);	\
-	}						\
-      udiv_qrnnd (_q, _r, _nh, _nl, Y##_f);		\
-      R##_f = _q | (_r != 0);				\
-    }							\
+#define _FP_DIV_MEAT_1_udiv(fs, R, X, Y)				\
+  do									\
+    {									\
+      _FP_W_TYPE _FP_DIV_MEAT_1_udiv_nh, _FP_DIV_MEAT_1_udiv_nl;	\
+      _FP_W_TYPE _FP_DIV_MEAT_1_udiv_q, _FP_DIV_MEAT_1_udiv_r;		\
+      if (X##_f < Y##_f)						\
+	{								\
+	  R##_e--;							\
+	  _FP_DIV_MEAT_1_udiv_nl = X##_f << _FP_WFRACBITS_##fs;		\
+	  _FP_DIV_MEAT_1_udiv_nh = X##_f >> _FP_WFRACXBITS_##fs;	\
+	}								\
+      else								\
+	{								\
+	  _FP_DIV_MEAT_1_udiv_nl = X##_f << (_FP_WFRACBITS_##fs - 1);	\
+	  _FP_DIV_MEAT_1_udiv_nh = X##_f >> (_FP_WFRACXBITS_##fs + 1);	\
+	}								\
+      udiv_qrnnd (_FP_DIV_MEAT_1_udiv_q, _FP_DIV_MEAT_1_udiv_r,		\
+		  _FP_DIV_MEAT_1_udiv_nh, _FP_DIV_MEAT_1_udiv_nl,	\
+		  Y##_f);						\
+      R##_f = _FP_DIV_MEAT_1_udiv_q | (_FP_DIV_MEAT_1_udiv_r != 0);	\
+    }									\
   while (0)
 
 

@@ -182,12 +182,12 @@
   (rh = xh - yh - ((rl = xl - yl) > xl))
 # endif
 # ifndef __FP_FRAC_DEC_2
-#  define __FP_FRAC_DEC_2(xh, xl, yh, yl)	\
-  do						\
-    {						\
-      UWtype _t = xl;				\
-      xh -= yh + ((xl -= yl) > _t);		\
-    }						\
+#  define __FP_FRAC_DEC_2(xh, xl, yh, yl)		\
+  do							\
+    {							\
+      UWtype __FP_FRAC_DEC_2_t = xl;			\
+      xh -= yh + ((xl -= yl) > __FP_FRAC_DEC_2_t);	\
+    }							\
   while (0)
 # endif
 
@@ -210,29 +210,30 @@
  * normalize the data.
  */
 
-#define _FP_UNPACK_RAW_2(fs, X, val)		\
-  do						\
-    {						\
-      union _FP_UNION_##fs _flo;		\
-      _flo.flt = (val);				\
-						\
-      X##_f0 = _flo.bits.frac0;			\
-      X##_f1 = _flo.bits.frac1;			\
-      X##_e  = _flo.bits.exp;			\
-      X##_s  = _flo.bits.sign;			\
-    }						\
+#define _FP_UNPACK_RAW_2(fs, X, val)			\
+  do							\
+    {							\
+      union _FP_UNION_##fs _FP_UNPACK_RAW_2_flo;	\
+      _FP_UNPACK_RAW_2_flo.flt = (val);			\
+							\
+      X##_f0 = _FP_UNPACK_RAW_2_flo.bits.frac0;		\
+      X##_f1 = _FP_UNPACK_RAW_2_flo.bits.frac1;		\
+      X##_e  = _FP_UNPACK_RAW_2_flo.bits.exp;		\
+      X##_s  = _FP_UNPACK_RAW_2_flo.bits.sign;		\
+    }							\
   while (0)
 
-#define _FP_UNPACK_RAW_2_P(fs, X, val)					\
-  do									\
-    {									\
-      union _FP_UNION_##fs *_flo = (union _FP_UNION_##fs *) (val);	\
-									\
-      X##_f0 = _flo->bits.frac0;					\
-      X##_f1 = _flo->bits.frac1;					\
-      X##_e  = _flo->bits.exp;						\
-      X##_s  = _flo->bits.sign;						\
-    }									\
+#define _FP_UNPACK_RAW_2_P(fs, X, val)			\
+  do							\
+    {							\
+      union _FP_UNION_##fs *_FP_UNPACK_RAW_2_P_flo	\
+	= (union _FP_UNION_##fs *) (val);		\
+							\
+      X##_f0 = _FP_UNPACK_RAW_2_P_flo->bits.frac0;	\
+      X##_f1 = _FP_UNPACK_RAW_2_P_flo->bits.frac1;	\
+      X##_e  = _FP_UNPACK_RAW_2_P_flo->bits.exp;	\
+      X##_s  = _FP_UNPACK_RAW_2_P_flo->bits.sign;	\
+    }							\
   while (0)
 
 
@@ -243,27 +244,28 @@
 #define _FP_PACK_RAW_2(fs, val, X)		\
   do						\
     {						\
-      union _FP_UNION_##fs _flo;		\
+      union _FP_UNION_##fs _FP_PACK_RAW_2_flo;	\
 						\
-      _flo.bits.frac0 = X##_f0;			\
-      _flo.bits.frac1 = X##_f1;			\
-      _flo.bits.exp   = X##_e;			\
-      _flo.bits.sign  = X##_s;			\
+      _FP_PACK_RAW_2_flo.bits.frac0 = X##_f0;	\
+      _FP_PACK_RAW_2_flo.bits.frac1 = X##_f1;	\
+      _FP_PACK_RAW_2_flo.bits.exp   = X##_e;	\
+      _FP_PACK_RAW_2_flo.bits.sign  = X##_s;	\
 						\
-      (val) = _flo.flt;				\
+      (val) = _FP_PACK_RAW_2_flo.flt;		\
     }						\
   while (0)
 
-#define _FP_PACK_RAW_2_P(fs, val, X)					\
-  do									\
-    {									\
-      union _FP_UNION_##fs *_flo = (union _FP_UNION_##fs *) (val);	\
-									\
-      _flo->bits.frac0 = X##_f0;					\
-      _flo->bits.frac1 = X##_f1;					\
-      _flo->bits.exp   = X##_e;						\
-      _flo->bits.sign  = X##_s;						\
-    }									\
+#define _FP_PACK_RAW_2_P(fs, val, X)			\
+  do							\
+    {							\
+      union _FP_UNION_##fs *_FP_PACK_RAW_2_P_flo	\
+	= (union _FP_UNION_##fs *) (val);		\
+							\
+      _FP_PACK_RAW_2_P_flo->bits.frac0 = X##_f0;	\
+      _FP_PACK_RAW_2_P_flo->bits.frac1 = X##_f1;	\
+      _FP_PACK_RAW_2_P_flo->bits.exp   = X##_e;		\
+      _FP_PACK_RAW_2_P_flo->bits.sign  = X##_s;		\
+    }							\
   while (0)
 
 
@@ -276,20 +278,28 @@
 #define _FP_MUL_MEAT_DW_2_wide(wfracbits, R, X, Y, doit)		\
   do									\
     {									\
-      _FP_FRAC_DECL_2 (_b);						\
-      _FP_FRAC_DECL_2 (_c);						\
+      _FP_FRAC_DECL_2 (_FP_MUL_MEAT_DW_2_wide_b);			\
+      _FP_FRAC_DECL_2 (_FP_MUL_MEAT_DW_2_wide_c);			\
 									\
-      doit (_FP_FRAC_WORD_4 (R, 1), _FP_FRAC_WORD_4 (R, 0), X##_f0, Y##_f0); \
-      doit (_b_f1, _b_f0, X##_f0, Y##_f1);				\
-      doit (_c_f1, _c_f0, X##_f1, Y##_f0);				\
-      doit (_FP_FRAC_WORD_4 (R, 3), _FP_FRAC_WORD_4 (R, 2), X##_f1, Y##_f1); \
+      doit (_FP_FRAC_WORD_4 (R, 1), _FP_FRAC_WORD_4 (R, 0),		\
+	    X##_f0, Y##_f0);						\
+      doit (_FP_MUL_MEAT_DW_2_wide_b_f1, _FP_MUL_MEAT_DW_2_wide_b_f0,	\
+	    X##_f0, Y##_f1);						\
+      doit (_FP_MUL_MEAT_DW_2_wide_c_f1, _FP_MUL_MEAT_DW_2_wide_c_f0,	\
+	    X##_f1, Y##_f0);						\
+      doit (_FP_FRAC_WORD_4 (R, 3), _FP_FRAC_WORD_4 (R, 2),		\
+	    X##_f1, Y##_f1);						\
 									\
       __FP_FRAC_ADD_3 (_FP_FRAC_WORD_4 (R, 3), _FP_FRAC_WORD_4 (R, 2),	\
-		       _FP_FRAC_WORD_4 (R, 1), 0, _b_f1, _b_f0,		\
+		       _FP_FRAC_WORD_4 (R, 1), 0,			\
+		       _FP_MUL_MEAT_DW_2_wide_b_f1,			\
+		       _FP_MUL_MEAT_DW_2_wide_b_f0,			\
 		       _FP_FRAC_WORD_4 (R, 3), _FP_FRAC_WORD_4 (R, 2),	\
 		       _FP_FRAC_WORD_4 (R, 1));				\
       __FP_FRAC_ADD_3 (_FP_FRAC_WORD_4 (R, 3), _FP_FRAC_WORD_4 (R, 2),	\
-		       _FP_FRAC_WORD_4 (R, 1), 0, _c_f1, _c_f0,		\
+		       _FP_FRAC_WORD_4 (R, 1), 0,			\
+		       _FP_MUL_MEAT_DW_2_wide_c_f1,			\
+		       _FP_MUL_MEAT_DW_2_wide_c_f0,			\
 		       _FP_FRAC_WORD_4 (R, 3), _FP_FRAC_WORD_4 (R, 2),	\
 		       _FP_FRAC_WORD_4 (R, 1));				\
     }									\
@@ -298,16 +308,17 @@
 #define _FP_MUL_MEAT_2_wide(wfracbits, R, X, Y, doit)			\
   do									\
     {									\
-      _FP_FRAC_DECL_4 (_z);						\
+      _FP_FRAC_DECL_4 (_FP_MUL_MEAT_2_wide_z);				\
 									\
-      _FP_MUL_MEAT_DW_2_wide (wfracbits, _z, X, Y, doit);		\
+      _FP_MUL_MEAT_DW_2_wide (wfracbits, _FP_MUL_MEAT_2_wide_z,		\
+			      X, Y, doit);				\
 									\
       /* Normalize since we know where the msb of the multiplicands	\
 	 were (bit B), we know that the msb of the of the product is	\
 	 at either 2B or 2B-1.  */					\
-      _FP_FRAC_SRS_4 (_z, wfracbits-1, 2*wfracbits);			\
-      R##_f0 = _FP_FRAC_WORD_4 (_z, 0);					\
-      R##_f1 = _FP_FRAC_WORD_4 (_z, 1);					\
+      _FP_FRAC_SRS_4 (_FP_MUL_MEAT_2_wide_z, wfracbits-1, 2*wfracbits);	\
+      R##_f0 = _FP_FRAC_WORD_4 (_FP_MUL_MEAT_2_wide_z, 0);		\
+      R##_f1 = _FP_FRAC_WORD_4 (_FP_MUL_MEAT_2_wide_z, 1);		\
     }									\
   while (0)
 
@@ -318,35 +329,51 @@
 #define _FP_MUL_MEAT_DW_2_wide_3mul(wfracbits, R, X, Y, doit)		\
   do									\
     {									\
-      _FP_FRAC_DECL_2 (_b);						\
-      _FP_FRAC_DECL_2 (_c);						\
-      _FP_W_TYPE _d;							\
-      int _c1, _c2;							\
+      _FP_FRAC_DECL_2 (_FP_MUL_MEAT_DW_2_wide_3mul_b);			\
+      _FP_FRAC_DECL_2 (_FP_MUL_MEAT_DW_2_wide_3mul_c);			\
+      _FP_W_TYPE _FP_MUL_MEAT_DW_2_wide_3mul_d;				\
+      int _FP_MUL_MEAT_DW_2_wide_3mul_c1;				\
+      int _FP_MUL_MEAT_DW_2_wide_3mul_c2;				\
 									\
-      _b_f0 = X##_f0 + X##_f1;						\
-      _c1 = _b_f0 < X##_f0;						\
-      _b_f1 = Y##_f0 + Y##_f1;						\
-      _c2 = _b_f1 < Y##_f0;						\
-      doit (_d, _FP_FRAC_WORD_4 (R, 0), X##_f0, Y##_f0);		\
-      doit (_FP_FRAC_WORD_4 (R, 2), _FP_FRAC_WORD_4 (R, 1), _b_f0, _b_f1); \
-      doit (_c_f1, _c_f0, X##_f1, Y##_f1);				\
+      _FP_MUL_MEAT_DW_2_wide_3mul_b_f0 = X##_f0 + X##_f1;		\
+      _FP_MUL_MEAT_DW_2_wide_3mul_c1					\
+	= _FP_MUL_MEAT_DW_2_wide_3mul_b_f0 < X##_f0;			\
+      _FP_MUL_MEAT_DW_2_wide_3mul_b_f1 = Y##_f0 + Y##_f1;		\
+      _FP_MUL_MEAT_DW_2_wide_3mul_c2					\
+	= _FP_MUL_MEAT_DW_2_wide_3mul_b_f1 < Y##_f0;			\
+      doit (_FP_MUL_MEAT_DW_2_wide_3mul_d, _FP_FRAC_WORD_4 (R, 0),	\
+	    X##_f0, Y##_f0);						\
+      doit (_FP_FRAC_WORD_4 (R, 2), _FP_FRAC_WORD_4 (R, 1),		\
+	    _FP_MUL_MEAT_DW_2_wide_3mul_b_f0,				\
+	    _FP_MUL_MEAT_DW_2_wide_3mul_b_f1);				\
+      doit (_FP_MUL_MEAT_DW_2_wide_3mul_c_f1,				\
+	    _FP_MUL_MEAT_DW_2_wide_3mul_c_f0, X##_f1, Y##_f1);		\
 									\
-      _b_f0 &= -_c2;							\
-      _b_f1 &= -_c1;							\
+      _FP_MUL_MEAT_DW_2_wide_3mul_b_f0					\
+	&= -_FP_MUL_MEAT_DW_2_wide_3mul_c2;				\
+      _FP_MUL_MEAT_DW_2_wide_3mul_b_f1					\
+	&= -_FP_MUL_MEAT_DW_2_wide_3mul_c1;				\
       __FP_FRAC_ADD_3 (_FP_FRAC_WORD_4 (R, 3), _FP_FRAC_WORD_4 (R, 2),	\
-		       _FP_FRAC_WORD_4 (R, 1), (_c1 & _c2), 0, _d,	\
+		       _FP_FRAC_WORD_4 (R, 1),				\
+		       (_FP_MUL_MEAT_DW_2_wide_3mul_c1			\
+			& _FP_MUL_MEAT_DW_2_wide_3mul_c2), 0,		\
+		       _FP_MUL_MEAT_DW_2_wide_3mul_d,			\
 		       0, _FP_FRAC_WORD_4 (R, 2), _FP_FRAC_WORD_4 (R, 1)); \
       __FP_FRAC_ADDI_2 (_FP_FRAC_WORD_4 (R, 3), _FP_FRAC_WORD_4 (R, 2),	\
-			_b_f0);						\
+			_FP_MUL_MEAT_DW_2_wide_3mul_b_f0);		\
       __FP_FRAC_ADDI_2 (_FP_FRAC_WORD_4 (R, 3), _FP_FRAC_WORD_4 (R, 2),	\
-			_b_f1);						\
+			_FP_MUL_MEAT_DW_2_wide_3mul_b_f1);		\
       __FP_FRAC_DEC_3 (_FP_FRAC_WORD_4 (R, 3), _FP_FRAC_WORD_4 (R, 2),	\
 		       _FP_FRAC_WORD_4 (R, 1),				\
-		       0, _d, _FP_FRAC_WORD_4 (R, 0));			\
+		       0, _FP_MUL_MEAT_DW_2_wide_3mul_d,		\
+		       _FP_FRAC_WORD_4 (R, 0));				\
       __FP_FRAC_DEC_3 (_FP_FRAC_WORD_4 (R, 3), _FP_FRAC_WORD_4 (R, 2),	\
-		       _FP_FRAC_WORD_4 (R, 1), 0, _c_f1, _c_f0);	\
+		       _FP_FRAC_WORD_4 (R, 1), 0,			\
+		       _FP_MUL_MEAT_DW_2_wide_3mul_c_f1,		\
+		       _FP_MUL_MEAT_DW_2_wide_3mul_c_f0);		\
       __FP_FRAC_ADD_2 (_FP_FRAC_WORD_4 (R, 3), _FP_FRAC_WORD_4 (R, 2),	\
-		       _c_f1, _c_f0,					\
+		       _FP_MUL_MEAT_DW_2_wide_3mul_c_f1,		\
+		       _FP_MUL_MEAT_DW_2_wide_3mul_c_f0,		\
 		       _FP_FRAC_WORD_4 (R, 3), _FP_FRAC_WORD_4 (R, 2));	\
     }									\
   while (0)
@@ -354,45 +381,50 @@
 #define _FP_MUL_MEAT_2_wide_3mul(wfracbits, R, X, Y, doit)		\
   do									\
     {									\
-      _FP_FRAC_DECL_4 (_z);						\
+      _FP_FRAC_DECL_4 (_FP_MUL_MEAT_2_wide_3mul_z);			\
 									\
-      _FP_MUL_MEAT_DW_2_wide_3mul (wfracbits, _z, X, Y, doit);		\
+      _FP_MUL_MEAT_DW_2_wide_3mul (wfracbits,				\
+				   _FP_MUL_MEAT_2_wide_3mul_z,		\
+				   X, Y, doit);				\
 									\
       /* Normalize since we know where the msb of the multiplicands	\
 	 were (bit B), we know that the msb of the of the product is	\
 	 at either 2B or 2B-1.  */					\
-      _FP_FRAC_SRS_4 (_z, wfracbits-1, 2*wfracbits);			\
-      R##_f0 = _FP_FRAC_WORD_4 (_z, 0);					\
-      R##_f1 = _FP_FRAC_WORD_4 (_z, 1);					\
+      _FP_FRAC_SRS_4 (_FP_MUL_MEAT_2_wide_3mul_z,			\
+		      wfracbits-1, 2*wfracbits);			\
+      R##_f0 = _FP_FRAC_WORD_4 (_FP_MUL_MEAT_2_wide_3mul_z, 0);		\
+      R##_f1 = _FP_FRAC_WORD_4 (_FP_MUL_MEAT_2_wide_3mul_z, 1);		\
     }									\
   while (0)
 
 #define _FP_MUL_MEAT_DW_2_gmp(wfracbits, R, X, Y)	\
   do							\
     {							\
-      _FP_W_TYPE _x[2], _y[2];				\
-      _x[0] = X##_f0;					\
-      _x[1] = X##_f1;					\
-      _y[0] = Y##_f0;					\
-      _y[1] = Y##_f1;					\
+      _FP_W_TYPE _FP_MUL_MEAT_DW_2_gmp_x[2];		\
+      _FP_W_TYPE _FP_MUL_MEAT_DW_2_gmp_y[2];		\
+      _FP_MUL_MEAT_DW_2_gmp_x[0] = X##_f0;		\
+      _FP_MUL_MEAT_DW_2_gmp_x[1] = X##_f1;		\
+      _FP_MUL_MEAT_DW_2_gmp_y[0] = Y##_f0;		\
+      _FP_MUL_MEAT_DW_2_gmp_y[1] = Y##_f1;		\
 							\
-      mpn_mul_n (R##_f, _x, _y, 2);			\
+      mpn_mul_n (R##_f, _FP_MUL_MEAT_DW_2_gmp_x,	\
+		 _FP_MUL_MEAT_DW_2_gmp_y, 2);		\
     }							\
   while (0)
 
 #define _FP_MUL_MEAT_2_gmp(wfracbits, R, X, Y)				\
   do									\
     {									\
-      _FP_FRAC_DECL_4 (_z);						\
+      _FP_FRAC_DECL_4 (_FP_MUL_MEAT_2_gmp_z);				\
 									\
-      _FP_MUL_MEAT_DW_2_gmp (wfracbits, _z, X, Y);			\
+      _FP_MUL_MEAT_DW_2_gmp (wfracbits, _FP_MUL_MEAT_2_gmp_z, X, Y);	\
 									\
       /* Normalize since we know where the msb of the multiplicands	\
 	 were (bit B), we know that the msb of the of the product is	\
 	 at either 2B or 2B-1.  */					\
-      _FP_FRAC_SRS_4 (_z, wfracbits-1, 2*wfracbits);			\
-      R##_f0 = _z_f[0];							\
-      R##_f1 = _z_f[1];							\
+      _FP_FRAC_SRS_4 (_FP_MUL_MEAT_2_gmp_z, wfracbits-1, 2*wfracbits);	\
+      R##_f0 = _FP_MUL_MEAT_2_gmp_z_f[0];				\
+      R##_f1 = _FP_MUL_MEAT_2_gmp_z_f[1];				\
     }									\
   while (0)
 
@@ -507,67 +539,91 @@
 #define _FP_DIV_MEAT_2_udiv(fs, R, X, Y)				\
   do									\
     {									\
-      _FP_W_TYPE _n_f2, _n_f1, _n_f0, _r_f1, _r_f0, _m_f1, _m_f0;	\
+      _FP_W_TYPE _FP_DIV_MEAT_2_udiv_n_f2;				\
+      _FP_W_TYPE _FP_DIV_MEAT_2_udiv_n_f1;				\
+      _FP_W_TYPE _FP_DIV_MEAT_2_udiv_n_f0;				\
+      _FP_W_TYPE _FP_DIV_MEAT_2_udiv_r_f1;				\
+      _FP_W_TYPE _FP_DIV_MEAT_2_udiv_r_f0;				\
+      _FP_W_TYPE _FP_DIV_MEAT_2_udiv_m_f1;				\
+      _FP_W_TYPE _FP_DIV_MEAT_2_udiv_m_f0;				\
       if (_FP_FRAC_GE_2 (X, Y))						\
 	{								\
-	  _n_f2 = X##_f1 >> 1;						\
-	  _n_f1 = X##_f1 << (_FP_W_TYPE_SIZE - 1) | X##_f0 >> 1;	\
-	  _n_f0 = X##_f0 << (_FP_W_TYPE_SIZE - 1);			\
+	  _FP_DIV_MEAT_2_udiv_n_f2 = X##_f1 >> 1;			\
+	  _FP_DIV_MEAT_2_udiv_n_f1					\
+	    = X##_f1 << (_FP_W_TYPE_SIZE - 1) | X##_f0 >> 1;		\
+	  _FP_DIV_MEAT_2_udiv_n_f0					\
+	    = X##_f0 << (_FP_W_TYPE_SIZE - 1);				\
 	}								\
       else								\
 	{								\
 	  R##_e--;							\
-	  _n_f2 = X##_f1;						\
-	  _n_f1 = X##_f0;						\
-	  _n_f0 = 0;							\
+	  _FP_DIV_MEAT_2_udiv_n_f2 = X##_f1;				\
+	  _FP_DIV_MEAT_2_udiv_n_f1 = X##_f0;				\
+	  _FP_DIV_MEAT_2_udiv_n_f0 = 0;					\
 	}								\
 									\
       /* Normalize, i.e. make the most significant bit of the		\
 	 denominator set. */						\
       _FP_FRAC_SLL_2 (Y, _FP_WFRACXBITS_##fs);				\
 									\
-      udiv_qrnnd (R##_f1, _r_f1, _n_f2, _n_f1, Y##_f1);			\
-      umul_ppmm (_m_f1, _m_f0, R##_f1, Y##_f0);				\
-      _r_f0 = _n_f0;							\
-      if (_FP_FRAC_GT_2 (_m, _r))					\
+      udiv_qrnnd (R##_f1, _FP_DIV_MEAT_2_udiv_r_f1,			\
+		  _FP_DIV_MEAT_2_udiv_n_f2, _FP_DIV_MEAT_2_udiv_n_f1,	\
+		  Y##_f1);						\
+      umul_ppmm (_FP_DIV_MEAT_2_udiv_m_f1, _FP_DIV_MEAT_2_udiv_m_f0,	\
+		 R##_f1, Y##_f0);					\
+      _FP_DIV_MEAT_2_udiv_r_f0 = _FP_DIV_MEAT_2_udiv_n_f0;		\
+      if (_FP_FRAC_GT_2 (_FP_DIV_MEAT_2_udiv_m, _FP_DIV_MEAT_2_udiv_r))	\
 	{								\
 	  R##_f1--;							\
-	  _FP_FRAC_ADD_2 (_r, Y, _r);					\
-	  if (_FP_FRAC_GE_2 (_r, Y) && _FP_FRAC_GT_2 (_m, _r))		\
+	  _FP_FRAC_ADD_2 (_FP_DIV_MEAT_2_udiv_r, Y,			\
+			  _FP_DIV_MEAT_2_udiv_r);			\
+	  if (_FP_FRAC_GE_2 (_FP_DIV_MEAT_2_udiv_r, Y)			\
+	      && _FP_FRAC_GT_2 (_FP_DIV_MEAT_2_udiv_m,			\
+				_FP_DIV_MEAT_2_udiv_r))			\
 	    {								\
 	      R##_f1--;							\
-	      _FP_FRAC_ADD_2 (_r, Y, _r);				\
+	      _FP_FRAC_ADD_2 (_FP_DIV_MEAT_2_udiv_r, Y,			\
+			      _FP_DIV_MEAT_2_udiv_r);			\
 	    }								\
 	}								\
-      _FP_FRAC_DEC_2 (_r, _m);						\
+      _FP_FRAC_DEC_2 (_FP_DIV_MEAT_2_udiv_r, _FP_DIV_MEAT_2_udiv_m);	\
 									\
-      if (_r_f1 == Y##_f1)						\
+      if (_FP_DIV_MEAT_2_udiv_r_f1 == Y##_f1)				\
 	{								\
 	  /* This is a special case, not an optimization		\
-	     (_r/Y##_f1 would not fit into UWtype).			\
-	     As _r is guaranteed to be < Y,  R##_f0 can be either	\
-	     (UWtype)-1 or (UWtype)-2.  But as we know what kind	\
-	     of bits it is (sticky, guard, round),  we don't care.	\
-	     We also don't care what the reminder is,  because the	\
-	     guard bit will be set anyway.  -jj */			\
+	     (_FP_DIV_MEAT_2_udiv_r/Y##_f1 would not fit into UWtype).	\
+	     As _FP_DIV_MEAT_2_udiv_r is guaranteed to be < Y,		\
+	     R##_f0 can be either (UWtype)-1 or (UWtype)-2.  But as we	\
+	     know what kind of bits it is (sticky, guard, round),	\
+	     we don't care.  We also don't care what the reminder is,	\
+	     because the guard bit will be set anyway.  -jj */		\
 	  R##_f0 = -1;							\
 	}								\
       else								\
 	{								\
-	  udiv_qrnnd (R##_f0, _r_f1, _r_f1, _r_f0, Y##_f1);		\
-	  umul_ppmm (_m_f1, _m_f0, R##_f0, Y##_f0);			\
-	  _r_f0 = 0;							\
-	  if (_FP_FRAC_GT_2 (_m, _r))					\
+	  udiv_qrnnd (R##_f0, _FP_DIV_MEAT_2_udiv_r_f1,			\
+		      _FP_DIV_MEAT_2_udiv_r_f1,				\
+		      _FP_DIV_MEAT_2_udiv_r_f0, Y##_f1);		\
+	  umul_ppmm (_FP_DIV_MEAT_2_udiv_m_f1,				\
+		     _FP_DIV_MEAT_2_udiv_m_f0, R##_f0, Y##_f0);		\
+	  _FP_DIV_MEAT_2_udiv_r_f0 = 0;					\
+	  if (_FP_FRAC_GT_2 (_FP_DIV_MEAT_2_udiv_m,			\
+			     _FP_DIV_MEAT_2_udiv_r))			\
 	    {								\
 	      R##_f0--;							\
-	      _FP_FRAC_ADD_2 (_r, Y, _r);				\
-	      if (_FP_FRAC_GE_2 (_r, Y) && _FP_FRAC_GT_2 (_m, _r))	\
+	      _FP_FRAC_ADD_2 (_FP_DIV_MEAT_2_udiv_r, Y,			\
+			      _FP_DIV_MEAT_2_udiv_r);			\
+	      if (_FP_FRAC_GE_2 (_FP_DIV_MEAT_2_udiv_r, Y)		\
+		  && _FP_FRAC_GT_2 (_FP_DIV_MEAT_2_udiv_m,		\
+				    _FP_DIV_MEAT_2_udiv_r))		\
 		{							\
 		  R##_f0--;						\
-		  _FP_FRAC_ADD_2 (_r, Y, _r);				\
+		  _FP_FRAC_ADD_2 (_FP_DIV_MEAT_2_udiv_r, Y,		\
+				  _FP_DIV_MEAT_2_udiv_r);		\
 		}							\
 	    }								\
-	  if (!_FP_FRAC_EQ_2 (_r, _m))					\
+	  if (!_FP_FRAC_EQ_2 (_FP_DIV_MEAT_2_udiv_r,			\
+			      _FP_DIV_MEAT_2_udiv_m))			\
 	    R##_f0 |= _FP_WORK_STICKY;					\
 	}								\
     }									\

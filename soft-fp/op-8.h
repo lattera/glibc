@@ -36,48 +36,66 @@
 #define _FP_FRAC_LOW_8(X)	(X##_f[0])
 #define _FP_FRAC_WORD_8(X, w)	(X##_f[w])
 
-#define _FP_FRAC_SLL_8(X, N)				\
-  do							\
-    {							\
-      _FP_I_TYPE _up, _down, _skip, _i;			\
-      _skip = (N) / _FP_W_TYPE_SIZE;			\
-      _up = (N) % _FP_W_TYPE_SIZE;			\
-      _down = _FP_W_TYPE_SIZE - _up;			\
-      if (!_up)						\
-	for (_i = 7; _i >= _skip; --_i)			\
-	  X##_f[_i] = X##_f[_i-_skip];			\
-      else						\
-	{						\
-	  for (_i = 7; _i > _skip; --_i)		\
-	    X##_f[_i] = (X##_f[_i-_skip] << _up		\
-			 | X##_f[_i-_skip-1] >> _down);	\
-	  X##_f[_i--] = X##_f[0] << _up;		\
-	}						\
-      for (; _i >= 0; --_i)				\
-	X##_f[_i] = 0;					\
-    }							\
+#define _FP_FRAC_SLL_8(X, N)						\
+  do									\
+    {									\
+      _FP_I_TYPE _FP_FRAC_SLL_8_up, _FP_FRAC_SLL_8_down;		\
+      _FP_I_TYPE _FP_FRAC_SLL_8_skip, _FP_FRAC_SLL_8_i;			\
+      _FP_FRAC_SLL_8_skip = (N) / _FP_W_TYPE_SIZE;			\
+      _FP_FRAC_SLL_8_up = (N) % _FP_W_TYPE_SIZE;			\
+      _FP_FRAC_SLL_8_down = _FP_W_TYPE_SIZE - _FP_FRAC_SLL_8_up;	\
+      if (!_FP_FRAC_SLL_8_up)						\
+	for (_FP_FRAC_SLL_8_i = 7;					\
+	     _FP_FRAC_SLL_8_i >= _FP_FRAC_SLL_8_skip;			\
+	     --_FP_FRAC_SLL_8_i)					\
+	  X##_f[_FP_FRAC_SLL_8_i]					\
+	    = X##_f[_FP_FRAC_SLL_8_i-_FP_FRAC_SLL_8_skip];		\
+      else								\
+	{								\
+	  for (_FP_FRAC_SLL_8_i = 7;					\
+	       _FP_FRAC_SLL_8_i > _FP_FRAC_SLL_8_skip;			\
+	       --_FP_FRAC_SLL_8_i)					\
+	    X##_f[_FP_FRAC_SLL_8_i]					\
+	      = ((X##_f[_FP_FRAC_SLL_8_i-_FP_FRAC_SLL_8_skip]		\
+		  << _FP_FRAC_SLL_8_up)					\
+		 | (X##_f[_FP_FRAC_SLL_8_i-_FP_FRAC_SLL_8_skip-1]	\
+		    >> _FP_FRAC_SLL_8_down));				\
+	  X##_f[_FP_FRAC_SLL_8_i--] = X##_f[0] << _FP_FRAC_SLL_8_up;	\
+	}								\
+      for (; _FP_FRAC_SLL_8_i >= 0; --_FP_FRAC_SLL_8_i)			\
+	X##_f[_FP_FRAC_SLL_8_i] = 0;					\
+    }									\
   while (0)
 
-#define _FP_FRAC_SRL_8(X, N)				\
-  do							\
-    {							\
-      _FP_I_TYPE _up, _down, _skip, _i;			\
-      _skip = (N) / _FP_W_TYPE_SIZE;			\
-      _down = (N) % _FP_W_TYPE_SIZE;			\
-      _up = _FP_W_TYPE_SIZE - _down;			\
-      if (!_down)					\
-	for (_i = 0; _i <= 7-_skip; ++_i)		\
-	  X##_f[_i] = X##_f[_i+_skip];			\
-      else						\
-	{						\
-	  for (_i = 0; _i < 7-_skip; ++_i)		\
-	    X##_f[_i] = (X##_f[_i+_skip] >> _down	\
-			 | X##_f[_i+_skip+1] << _up);	\
-	  X##_f[_i++] = X##_f[7] >> _down;		\
-	}						\
-      for (; _i < 8; ++_i)				\
-	X##_f[_i] = 0;					\
-    }							\
+#define _FP_FRAC_SRL_8(X, N)						\
+  do									\
+    {									\
+      _FP_I_TYPE _FP_FRAC_SRL_8_up, _FP_FRAC_SRL_8_down;		\
+      _FP_I_TYPE _FP_FRAC_SRL_8_skip, _FP_FRAC_SRL_8_i;			\
+      _FP_FRAC_SRL_8_skip = (N) / _FP_W_TYPE_SIZE;			\
+      _FP_FRAC_SRL_8_down = (N) % _FP_W_TYPE_SIZE;			\
+      _FP_FRAC_SRL_8_up = _FP_W_TYPE_SIZE - _FP_FRAC_SRL_8_down;	\
+      if (!_FP_FRAC_SRL_8_down)						\
+	for (_FP_FRAC_SRL_8_i = 0;					\
+	     _FP_FRAC_SRL_8_i <= 7-_FP_FRAC_SRL_8_skip;			\
+	     ++_FP_FRAC_SRL_8_i)					\
+	  X##_f[_FP_FRAC_SRL_8_i]					\
+	    = X##_f[_FP_FRAC_SRL_8_i+_FP_FRAC_SRL_8_skip];		\
+      else								\
+	{								\
+	  for (_FP_FRAC_SRL_8_i = 0;					\
+	       _FP_FRAC_SRL_8_i < 7-_FP_FRAC_SRL_8_skip;		\
+	       ++_FP_FRAC_SRL_8_i)					\
+	    X##_f[_FP_FRAC_SRL_8_i]					\
+	      = ((X##_f[_FP_FRAC_SRL_8_i+_FP_FRAC_SRL_8_skip]		\
+		  >> _FP_FRAC_SRL_8_down)				\
+		 | (X##_f[_FP_FRAC_SRL_8_i+_FP_FRAC_SRL_8_skip+1]	\
+		    << _FP_FRAC_SRL_8_up));				\
+	  X##_f[_FP_FRAC_SRL_8_i++] = X##_f[7] >> _FP_FRAC_SRL_8_down;	\
+	}								\
+      for (; _FP_FRAC_SRL_8_i < 8; ++_FP_FRAC_SRL_8_i)			\
+	X##_f[_FP_FRAC_SRL_8_i] = 0;					\
+    }									\
   while (0)
 
 
@@ -89,28 +107,40 @@
 #define _FP_FRAC_SRS_8(X, N, size)					\
   do									\
     {									\
-      _FP_I_TYPE _up, _down, _skip, _i;					\
-      _FP_W_TYPE _s;							\
-      _skip = (N) / _FP_W_TYPE_SIZE;					\
-      _down = (N) % _FP_W_TYPE_SIZE;					\
-      _up = _FP_W_TYPE_SIZE - _down;					\
-      for (_s = _i = 0; _i < _skip; ++_i)				\
-	_s |= X##_f[_i];						\
-      if (!_down)							\
-	for (_i = 0; _i <= 7-_skip; ++_i)				\
-	  X##_f[_i] = X##_f[_i+_skip];					\
+      _FP_I_TYPE _FP_FRAC_SRS_8_up, _FP_FRAC_SRS_8_down;		\
+      _FP_I_TYPE _FP_FRAC_SRS_8_skip, _FP_FRAC_SRS_8_i;			\
+      _FP_W_TYPE _FP_FRAC_SRS_8_s;					\
+      _FP_FRAC_SRS_8_skip = (N) / _FP_W_TYPE_SIZE;			\
+      _FP_FRAC_SRS_8_down = (N) % _FP_W_TYPE_SIZE;			\
+      _FP_FRAC_SRS_8_up = _FP_W_TYPE_SIZE - _FP_FRAC_SRS_8_down;	\
+      for (_FP_FRAC_SRS_8_s = _FP_FRAC_SRS_8_i = 0;			\
+	   _FP_FRAC_SRS_8_i < _FP_FRAC_SRS_8_skip;			\
+	   ++_FP_FRAC_SRS_8_i)						\
+	_FP_FRAC_SRS_8_s |= X##_f[_FP_FRAC_SRS_8_i];			\
+      if (!_FP_FRAC_SRS_8_down)						\
+	for (_FP_FRAC_SRS_8_i = 0;					\
+	     _FP_FRAC_SRS_8_i <= 7-_FP_FRAC_SRS_8_skip;			\
+	     ++_FP_FRAC_SRS_8_i)					\
+	  X##_f[_FP_FRAC_SRS_8_i]					\
+	    = X##_f[_FP_FRAC_SRS_8_i+_FP_FRAC_SRS_8_skip];		\
       else								\
 	{								\
-	  _s |= X##_f[_i] << _up;					\
-	  for (_i = 0; _i < 7-_skip; ++_i)				\
-	    X##_f[_i] = (X##_f[_i+_skip] >> _down			\
-			 | X##_f[_i+_skip+1] << _up);			\
-	  X##_f[_i++] = X##_f[7] >> _down;				\
+	  _FP_FRAC_SRS_8_s						\
+	    |= X##_f[_FP_FRAC_SRS_8_i] << _FP_FRAC_SRS_8_up;		\
+	  for (_FP_FRAC_SRS_8_i = 0;					\
+	       _FP_FRAC_SRS_8_i < 7-_FP_FRAC_SRS_8_skip;		\
+	       ++_FP_FRAC_SRS_8_i)					\
+	    X##_f[_FP_FRAC_SRS_8_i]					\
+	      = ((X##_f[_FP_FRAC_SRS_8_i+_FP_FRAC_SRS_8_skip]		\
+		  >> _FP_FRAC_SRS_8_down)				\
+		 | (X##_f[_FP_FRAC_SRS_8_i+_FP_FRAC_SRS_8_skip+1]	\
+		    << _FP_FRAC_SRS_8_up));				\
+	  X##_f[_FP_FRAC_SRS_8_i++] = X##_f[7] >> _FP_FRAC_SRS_8_down;	\
 	}								\
-      for (; _i < 8; ++_i)						\
-	X##_f[_i] = 0;							\
+      for (; _FP_FRAC_SRS_8_i < 8; ++_FP_FRAC_SRS_8_i)			\
+	X##_f[_FP_FRAC_SRS_8_i] = 0;					\
       /* don't fix the LSB until the very end when we're sure f[0] is	\
 	 stable */							\
-      X##_f[0] |= (_s != 0);						\
+      X##_f[0] |= (_FP_FRAC_SRS_8_s != 0);				\
     }									\
   while (0)

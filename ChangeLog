@@ -1,5 +1,51 @@
 2014-06-30  Joseph Myers  <joseph@codesourcery.com>
 
+	* soft-fp/op-1.h (_FP_UNPACK_RAW_1): Rename local variables to
+	include macro name.
+	(_FP_UNPACK_RAW_1_P): Likewise.
+	(_FP_PACK_RAW_1): Likewise.
+	(_FP_PACK_RAW_1_P): Likewise.
+	(_FP_MUL_MEAT_1_wide): Likewise.
+	(_FP_MUL_MEAT_DW_1_hard): Likewise.
+	(_FP_MUL_MEAT_1_hard): Likewise.
+	(_FP_DIV_MEAT_1_imm): Likewise.
+	(_FP_DIV_MEAT_1_udiv_norm): Likewise.
+	(_FP_DIV_MEAT_1_udiv): Likewise.
+	* soft-fp/op-2.h (__FP_FRAC_DEC_2): Likewise.
+	(_FP_UNPACK_RAW_2): Likewise.
+	(_FP_UNPACK_RAW_2_P): Likewise.
+	(_FP_PACK_RAW_2): Likewise.
+	(_FP_PACK_RAW_2_P): Likewise.
+	(_FP_MUL_MEAT_DW_2_wide): Likewise.
+	(_FP_MUL_MEAT_2_wide): Likewise.
+	(_FP_MUL_MEAT_DW_2_wide_3mul): Likewise.
+	(_FP_MUL_MEAT_2_wide_3mul): Likewise.
+	(_FP_MUL_MEAT_DW_2_gmp): Likewise.
+	(_FP_MUL_MEAT_2_gmp): Likewise.
+	(_FP_DIV_MEAT_2_udiv): Likewise.
+	* soft-fp/op-4.h (_FP_FRAC_SLL_4): Likewise.
+	(_FP_FRAC_SRL_4): Likewise.
+	(_FP_FRAC_SRST_4): Likewise.
+	(_FP_FRAC_SRS_4): Likewise.
+	(_FP_UNPACK_RAW_4): Likewise.
+	(_FP_UNPACK_RAW_4_P): Likewise.
+	(_FP_PACK_RAW_4): Likewise.
+	(_FP_PACK_RAW_4_P): Likewise.
+	(_FP_MUL_MEAT_DW_4_wide): Likewise.
+	(_FP_MUL_MEAT_4_wide): Likewise.
+	(_FP_MUL_MEAT_4_gmp): Likewise.
+	(umul_ppppmnnn): Likewise.
+	(_FP_DIV_MEAT_4_udiv): Likewise.
+	(__FP_FRAC_ADD_4): Likewise.
+	(__FP_FRAC_SUB_3): Likewise.
+	(__FP_FRAC_SUB_4): Likewise.
+	(__FP_FRAC_DEC_3): Likewise.
+	(__FP_FRAC_DEC_4): Likewise.
+	(__FP_FRAC_ADDI_4): Likewise.
+	* soft-fp/op-8.h (_FP_FRAC_SLL_8): Likewise.
+	(_FP_FRAC_SRL_8): Likewise.
+	(_FP_FRAC_SRS_8): Likewise.
+
 	* soft-fp/extended.h (FP_UNPACK_RAW_E): Rename local variables to
 	include macro name.
 	(FP_UNPACK_RAW_EP): Likewise.
