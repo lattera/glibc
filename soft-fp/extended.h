@@ -91,70 +91,72 @@ union _FP_UNION_E
 
 # define FP_DECL_E(X)		_FP_DECL (4, X)
 
-# define FP_UNPACK_RAW_E(X, val)		\
-  do						\
-    {						\
-      union _FP_UNION_E _flo;			\
-      _flo.flt = (val);				\
-						\
-      X##_f[2] = 0;				\
-      X##_f[3] = 0;				\
-      X##_f[0] = _flo.bits.frac0;		\
-      X##_f[1] = _flo.bits.frac1;		\
-      X##_e  = _flo.bits.exp;			\
-      X##_s  = _flo.bits.sign;			\
-    }						\
+# define FP_UNPACK_RAW_E(X, val)			\
+  do							\
+    {							\
+      union _FP_UNION_E FP_UNPACK_RAW_E_flo;		\
+      FP_UNPACK_RAW_E_flo.flt = (val);			\
+							\
+      X##_f[2] = 0;					\
+      X##_f[3] = 0;					\
+      X##_f[0] = FP_UNPACK_RAW_E_flo.bits.frac0;	\
+      X##_f[1] = FP_UNPACK_RAW_E_flo.bits.frac1;	\
+      X##_e  = FP_UNPACK_RAW_E_flo.bits.exp;		\
+      X##_s  = FP_UNPACK_RAW_E_flo.bits.sign;		\
+    }							\
   while (0)
 
-# define FP_UNPACK_RAW_EP(X, val)				\
-  do								\
-    {								\
-      union _FP_UNION_E *_flo = (union _FP_UNION_E *) (val);	\
-								\
-      X##_f[2] = 0;						\
-      X##_f[3] = 0;						\
-      X##_f[0] = _flo->bits.frac0;				\
-      X##_f[1] = _flo->bits.frac1;				\
-      X##_e  = _flo->bits.exp;					\
-      X##_s  = _flo->bits.sign;					\
-    }								\
+# define FP_UNPACK_RAW_EP(X, val)			\
+  do							\
+    {							\
+      union _FP_UNION_E *FP_UNPACK_RAW_EP_flo		\
+	= (union _FP_UNION_E *) (val);			\
+							\
+      X##_f[2] = 0;					\
+      X##_f[3] = 0;					\
+      X##_f[0] = FP_UNPACK_RAW_EP_flo->bits.frac0;	\
+      X##_f[1] = FP_UNPACK_RAW_EP_flo->bits.frac1;	\
+      X##_e  = FP_UNPACK_RAW_EP_flo->bits.exp;		\
+      X##_s  = FP_UNPACK_RAW_EP_flo->bits.sign;		\
+    }							\
   while (0)
 
 # define FP_PACK_RAW_E(val, X)			\
   do						\
     {						\
-      union _FP_UNION_E _flo;			\
+      union _FP_UNION_E FP_PACK_RAW_E_flo;	\
 						\
       if (X##_e)				\
 	X##_f[1] |= _FP_IMPLBIT_E;		\
       else					\
 	X##_f[1] &= ~(_FP_IMPLBIT_E);		\
-      _flo.bits.frac0 = X##_f[0];		\
-      _flo.bits.frac1 = X##_f[1];		\
-      _flo.bits.exp   = X##_e;			\
-      _flo.bits.sign  = X##_s;			\
+      FP_PACK_RAW_E_flo.bits.frac0 = X##_f[0];	\
+      FP_PACK_RAW_E_flo.bits.frac1 = X##_f[1];	\
+      FP_PACK_RAW_E_flo.bits.exp   = X##_e;	\
+      FP_PACK_RAW_E_flo.bits.sign  = X##_s;	\
 						\
-      (val) = _flo.flt;				\
+      (val) = FP_PACK_RAW_E_flo.flt;		\
     }						\
   while (0)
 
-# define FP_PACK_RAW_EP(val, X)						\
-  do									\
-    {									\
-      if (!FP_INHIBIT_RESULTS)						\
-	{								\
-	  union _FP_UNION_E *_flo = (union _FP_UNION_E *) (val);	\
-									\
-	  if (X##_e)							\
-	    X##_f[1] |= _FP_IMPLBIT_E;					\
-	  else								\
-	    X##_f[1] &= ~(_FP_IMPLBIT_E);				\
-	  _flo->bits.frac0 = X##_f[0];					\
-	  _flo->bits.frac1 = X##_f[1];					\
-	  _flo->bits.exp   = X##_e;					\
-	  _flo->bits.sign  = X##_s;					\
-	}								\
-    }									\
+# define FP_PACK_RAW_EP(val, X)				\
+  do							\
+    {							\
+      if (!FP_INHIBIT_RESULTS)				\
+	{						\
+	  union _FP_UNION_E *FP_PACK_RAW_EP_flo		\
+	    = (union _FP_UNION_E *) (val);		\
+							\
+	  if (X##_e)					\
+	    X##_f[1] |= _FP_IMPLBIT_E;			\
+	  else						\
+	    X##_f[1] &= ~(_FP_IMPLBIT_E);		\
+	  FP_PACK_RAW_EP_flo->bits.frac0 = X##_f[0];	\
+	  FP_PACK_RAW_EP_flo->bits.frac1 = X##_f[1];	\
+	  FP_PACK_RAW_EP_flo->bits.exp   = X##_e;	\
+	  FP_PACK_RAW_EP_flo->bits.sign  = X##_s;	\
+	}						\
+    }							\
   while (0)
 
 # define FP_UNPACK_E(X, val)			\
@@ -323,61 +325,63 @@ union _FP_UNION_E
 # define FP_UNPACK_RAW_E(X, val)		\
   do						\
     {						\
-      union _FP_UNION_E _flo;			\
-      _flo.flt = (val);				\
+      union _FP_UNION_E FP_UNPACK_RAW_E_flo;	\
+      FP_UNPACK_RAW_E_flo.flt = (val);		\
 						\
-      X##_f0 = _flo.bits.frac;			\
+      X##_f0 = FP_UNPACK_RAW_E_flo.bits.frac;	\
       X##_f1 = 0;				\
-      X##_e = _flo.bits.exp;			\
-      X##_s = _flo.bits.sign;			\
+      X##_e = FP_UNPACK_RAW_E_flo.bits.exp;	\
+      X##_s = FP_UNPACK_RAW_E_flo.bits.sign;	\
     }						\
   while (0)
 
-# define FP_UNPACK_RAW_EP(X, val)				\
-  do								\
-    {								\
-      union _FP_UNION_E *_flo = (union _FP_UNION_E *) (val);	\
-								\
-      X##_f0 = _flo->bits.frac;					\
-      X##_f1 = 0;						\
-      X##_e = _flo->bits.exp;					\
-      X##_s = _flo->bits.sign;					\
-    }								\
+# define FP_UNPACK_RAW_EP(X, val)		\
+  do						\
+    {						\
+      union _FP_UNION_E *FP_UNPACK_RAW_EP_flo	\
+	= (union _FP_UNION_E *) (val);		\
+						\
+      X##_f0 = FP_UNPACK_RAW_EP_flo->bits.frac;	\
+      X##_f1 = 0;				\
+      X##_e = FP_UNPACK_RAW_EP_flo->bits.exp;	\
+      X##_s = FP_UNPACK_RAW_EP_flo->bits.sign;	\
+    }						\
   while (0)
 
 # define FP_PACK_RAW_E(val, X)			\
   do						\
     {						\
-      union _FP_UNION_E _flo;			\
+      union _FP_UNION_E FP_PACK_RAW_E_flo;	\
 						\
       if (X##_e)				\
 	X##_f0 |= _FP_IMPLBIT_E;		\
       else					\
 	X##_f0 &= ~(_FP_IMPLBIT_E);		\
-      _flo.bits.frac = X##_f0;			\
-      _flo.bits.exp  = X##_e;			\
-      _flo.bits.sign = X##_s;			\
+      FP_PACK_RAW_E_flo.bits.frac = X##_f0;	\
+      FP_PACK_RAW_E_flo.bits.exp  = X##_e;	\
+      FP_PACK_RAW_E_flo.bits.sign = X##_s;	\
 						\
-      (val) = _flo.flt;				\
+      (val) = FP_PACK_RAW_E_flo.flt;		\
     }						\
   while (0)
 
-# define FP_PACK_RAW_EP(fs, val, X)					\
-  do									\
-    {									\
-      if (!FP_INHIBIT_RESULTS)						\
-	{								\
-	  union _FP_UNION_E *_flo = (union _FP_UNION_E *) (val);	\
-									\
-	  if (X##_e)							\
-	    X##_f0 |= _FP_IMPLBIT_E;					\
-	  else								\
-	    X##_f0 &= ~(_FP_IMPLBIT_E);					\
-	  _flo->bits.frac = X##_f0;					\
-	  _flo->bits.exp  = X##_e;					\
-	  _flo->bits.sign = X##_s;					\
-	}								\
-    }									\
+# define FP_PACK_RAW_EP(fs, val, X)			\
+  do							\
+    {							\
+      if (!FP_INHIBIT_RESULTS)				\
+	{						\
+	  union _FP_UNION_E *FP_PACK_RAW_EP_flo		\
+	    = (union _FP_UNION_E *) (val);		\
+							\
+	  if (X##_e)					\
+	    X##_f0 |= _FP_IMPLBIT_E;			\
+	  else						\
+	    X##_f0 &= ~(_FP_IMPLBIT_E);			\
+	  FP_PACK_RAW_EP_flo->bits.frac = X##_f0;	\
+	  FP_PACK_RAW_EP_flo->bits.exp  = X##_e;	\
+	  FP_PACK_RAW_EP_flo->bits.sign = X##_s;	\
+	}						\
+    }							\
   while (0)
 
 

@@ -1,3 +1,21 @@
+2014-06-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* soft-fp/extended.h (FP_UNPACK_RAW_E): Rename local variables to
+	include macro name.
+	(FP_UNPACK_RAW_EP): Likewise.
+	(FP_PACK_RAW_E): Likewise.
+	(FP_PACK_RAW_EP): Likewise.
+	* soft-fp/op-common.h (_FP_UNPACK_CANONICAL): Likewise.
+	(_FP_ISSIGNAN): Likewise.
+	(_FP_ADD_INTERNAL): Likewise.
+	(_FP_FMA): Likewise.
+	(_FP_CMP): Likewise.
+	(_FP_SQRT): Likewise.
+	(_FP_TO_INT): Likewise.
+	(_FP_FROM_INT): Likewise.
+	(FP_EXTEND): Likewise.
+	(_FP_DIV_MEAT_N_loop): Likewise.
+
 2014-06-30  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/bits/socket.h: Adjust macro formatting
