@@ -1,3 +1,10 @@
+2014-07-01  David Holsgrove  <david.holsgrove@xilinx.com>
+
+	* sysdeps/unix/sysv/linux/microblaze/sysdep-cancel.h: New file.
+	* sysdeps/unix/sysv/linux/microblaze/socket.S: Update SINGLE_THREAD_P use.
+	* sysdeps/unix/sysv/linux/microblaze/Makefile(libpthread-routines):
+	Add sysdep.
+
 2014-06-30  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Update.

@@ -80,7 +80,7 @@ ENTRY(__socket)
 /* The rest of the args (if any) are on the caller's stack already.  */
 
 #if defined NEED_CANCELLATION && defined CENABLE
-	SINGLE_THREAD_P
+	SINGLE_THREAD_P(r12)
 	bnei	r12,L(socket_cancel)
 #endif
 
