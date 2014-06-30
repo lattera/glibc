@@ -54,6 +54,7 @@
 
 
 #include <errno.h>
+#include <float.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -135,6 +136,10 @@ __expm1l (long double x)
   /* Minimum value.  */
   if (x < minarg)
     return (4.0/big - 1.0L);
+
+  /* Avoid internal underflow when result does not underflow.  */
+  if (fabsl (x) < 0x1p-113L && fabsl (x) >= LDBL_MIN)
+    return x;
 
   /* Express x = ln 2 (k + remainder), remainder not exceeding 1/2. */
   xx = C1 + C2;			/* ln 2. */

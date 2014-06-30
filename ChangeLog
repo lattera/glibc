@@ -1,5 +1,10 @@
 2014-06-30  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16539]
+	* sysdeps/ieee754/ldbl-128/s_expm1l.c: Include <float.h>.
+	(__expm1l): Return argument unchanged when small but not
+	subnormal.
+
 	* soft-fp/op-1.h (_FP_UNPACK_RAW_1): Rename local variables to
 	include macro name.
 	(_FP_UNPACK_RAW_1_P): Likewise.
