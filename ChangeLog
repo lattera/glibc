@@ -1,3 +1,8 @@
+2014-06-30  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h: Adjust macro formatting
+	throughout.
+
 2014-06-29  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17097]
