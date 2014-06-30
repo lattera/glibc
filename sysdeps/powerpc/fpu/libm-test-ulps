@@ -2219,4 +2219,28 @@ ifloat: 2
 ildouble: 2
 ldouble: 2
 
+Function: "yn_downward":
+double: 3
+float: 2
+idouble: 3
+ifloat: 2
+ildouble: 10
+ldouble: 10
+
+Function: "yn_towardzero":
+double: 3
+float: 3
+idouble: 3
+ifloat: 3
+ildouble: 8
+ldouble: 8
+
+Function: "yn_upward":
+double: 4
+float: 3
+idouble: 4
+ifloat: 3
+ildouble: 9
+ldouble: 9
+
 # end of automatic generation
