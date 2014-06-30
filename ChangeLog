@@ -1,3 +1,10 @@
+2014-06-30  Maciej W. Rozycki  <macro@codesourcery.com>
+	    Roland McGrath <roland@hack.frob.com>
+
+	* test-skeleton.c (signal_handler): Kill the whole process group
+	before killing the child individually.
+	(main): Report any failure on `setpgid'.
+
 2014-06-30  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/nptl/tls.h: Rename the multiple inclusion guard

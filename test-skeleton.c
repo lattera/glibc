@@ -17,6 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <assert.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <getopt.h>
@@ -138,7 +139,10 @@ signal_handler (int sig __attribute__ ((unused)))
   int killed;
   int status;
 
-  /* Send signal.  */
+  assert (pid > 1);
+  /* Kill the whole process group.  */
+  kill (-pid, SIGKILL);
+  /* In case setpgid failed in the child, kill it individually too.  */
   kill (pid, SIGKILL);
 
   /* Wait for it to terminate.  */
@@ -342,7 +346,8 @@ main (int argc, char *argv[])
 
       /* We put the test process in its own pgrp so that if it bogusly
 	 generates any job control signals, they won't hit the whole build.  */
-      setpgid (0, 0);
+      if (setpgid (0, 0) != 0)
+	printf ("Failed to set the process group ID: %m\n");
 
       /* Execute the test function and exit with the return value.   */
       exit (TEST_FUNCTION);
