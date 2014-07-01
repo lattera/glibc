@@ -319,7 +319,7 @@ struct rtld_global
   /* The object to be initialized first.  */
   EXTERN struct link_map *_dl_initfirst;
 
-#if HP_TIMING_AVAIL || HP_SMALL_TIMING_AVAIL
+#if HP_SMALL_TIMING_AVAIL
   /* Start time on CPU clock.  */
   EXTERN hp_timing_t _dl_cpuclock_offset;
 #endif

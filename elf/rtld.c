@@ -195,12 +195,6 @@ static void dl_main (const ElfW(Phdr) *phdr, ElfW(Word) phnum,
 static struct libname_list _dl_rtld_libname;
 static struct libname_list _dl_rtld_libname2;
 
-/* We expect less than a second for relocation.  */
-#ifdef HP_SMALL_TIMING_AVAIL
-# undef HP_TIMING_AVAIL
-# define HP_TIMING_AVAIL HP_SMALL_TIMING_AVAIL
-#endif
-
 /* Variable for statistics.  */
 #ifndef HP_TIMING_NONAVAIL
 static hp_timing_t relocate_time;
@@ -270,7 +264,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
 {
   ElfW(Addr) start_addr;
 
-  if (HP_TIMING_AVAIL)
+  if (HP_SMALL_TIMING_AVAIL)
     {
       /* If it hasn't happen yet record the startup time.  */
       if (! HP_TIMING_INLINE)
@@ -302,9 +296,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
 # endif
 #endif
 
-#if HP_TIMING_AVAIL
   HP_TIMING_NOW (GL(dl_cpuclock_offset));
-#endif
 
   /* Initialize the stack end variable.  */
   __libc_stack_end = __builtin_frame_address (0);
@@ -317,7 +309,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
 
 #ifndef HP_TIMING_NONAVAIL
   hp_timing_t rtld_total_time;
-  if (HP_TIMING_AVAIL)
+  if (HP_SMALL_TIMING_AVAIL)
     {
       hp_timing_t end_time;
 
@@ -359,7 +351,7 @@ _dl_start (void *arg)
 #define RESOLVE_MAP(sym, version, flags) (&bootstrap_map)
 #include "dynamic-link.h"
 
-  if (HP_TIMING_INLINE && HP_TIMING_AVAIL)
+  if (HP_TIMING_INLINE && HP_SMALL_TIMING_AVAIL)
 #ifdef DONT_USE_BOOTSTRAP_MAP
     HP_TIMING_NOW (start_time);
 #else
@@ -2589,7 +2581,7 @@ print_statistics (hp_timing_t *rtld_total_timep)
   char *wp;
 
   /* Total time rtld used.  */
-  if (HP_TIMING_AVAIL)
+  if (HP_SMALL_TIMING_AVAIL)
     {
       HP_TIMING_PRINT (buf, sizeof (buf), *rtld_total_timep);
       _dl_debug_printf ("\nruntime linker statistics:\n"
@@ -2657,7 +2649,7 @@ print_statistics (hp_timing_t *rtld_total_timep)
 
 #ifndef HP_TIMING_NONAVAIL
   /* Time spend while loading the object and the dependencies.  */
-  if (HP_TIMING_AVAIL)
+  if (HP_SMALL_TIMING_AVAIL)
     {
       char pbuf[30];
       HP_TIMING_PRINT (buf, sizeof (buf), load_time);

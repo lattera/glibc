@@ -129,12 +129,6 @@ void *_dl_random;
 /* Get architecture specific initializer.  */
 #include <dl-procinfo.c>
 
-/* We expect less than a second for relocation.  */
-#ifdef HP_SMALL_TIMING_AVAIL
-# undef HP_TIMING_AVAIL
-# define HP_TIMING_AVAIL HP_SMALL_TIMING_AVAIL
-#endif
-
 /* Initial value of the CPU clock.  */
 #ifndef HP_TIMING_NONAVAIL
 hp_timing_t _dl_cpuclock_offset;
@@ -315,7 +309,7 @@ _dl_non_dynamic_init (void)
   _dl_main_map.l_phdr = GL(dl_phdr);
   _dl_main_map.l_phnum = GL(dl_phnum);
 
-  if (HP_TIMING_AVAIL)
+  if (HP_SMALL_TIMING_AVAIL)
     HP_TIMING_NOW (_dl_cpuclock_offset);
 
   _dl_verbose = *(getenv ("LD_WARN") ?: "") == '\0' ? 0 : 1;
