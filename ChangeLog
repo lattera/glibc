@@ -1,5 +1,9 @@
 2014-07-01  Richard henderson  <rth@redhat.com>
 
+	* sysdeps/alpha/fpu/bits/mathinline.h (__isnanf): Remove.
+	(__isnan, __isnanl): Remove.
+	* sysdeps/alpha/fpu/s_isnan.c (__isnan): Use integer arithmetic.
+
 	* sysdeps/alpha/fpu/libm-test-ulps: Update.
 
 2014-07-01  Stefan Liebler  <stli@linux.vnet.ibm.com>

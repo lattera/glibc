@@ -120,29 +120,6 @@ __NTH (__signbitl (long double __x))
   return __builtin_signbitl (__x);
 #endif
 }
-
-/* Test for NaN.  Used in the isnan() macro.  */
-
-__MATH_INLINE int
-__NTH (__isnanf (float __x))
-{
-  return isunordered (__x, __x);
-}
-
-__MATH_INLINE int
-__NTH (__isnan (double __x))
-{
-  return isunordered (__x, __x);
-}
-
-#ifndef __NO_LONG_DOUBLE_MATH
-__MATH_INLINE int
-__NTH (__isnanl (long double __x))
-{
-  return isunordered (__x, __x);
-}
-#endif
-
 #endif /* C99 */
 
 #endif /* __NO_MATH_INLINES */

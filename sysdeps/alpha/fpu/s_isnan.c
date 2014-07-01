@@ -31,7 +31,9 @@
 int
 __isnan (double x)
 {
-  return isunordered (x, x);
+  uint64_t ix;
+  EXTRACT_WORDS64 (ix, x);
+  return ix * 2 > 0xffe0000000000000ul;
 }
 
 hidden_def (__isnan)
