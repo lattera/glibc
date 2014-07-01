@@ -1,3 +1,7 @@
+2014-07-01  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/fpu/libm-test-ulps: Regenerate.
+
 2014-07-01  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* resolv/nss_dns/dns-host.c (getanswer_r)
