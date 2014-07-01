@@ -1,3 +1,11 @@
+2014-07-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x030f00] (__ASSUME_PSELECT): Do not
+	undefine.
+	[__LINUX_KERNEL_VERSION >= 0x030f00] (__ASSUME_PREADV): Likewise.
+	[__LINUX_KERNEL_VERSION >= 0x030f00] (__ASSUME_PWRITEV): Likewise.
+
 2014-07-01  Roland McGrath <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/microblaze/arch-fork.h: New file.

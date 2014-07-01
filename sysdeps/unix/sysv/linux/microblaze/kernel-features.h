@@ -45,8 +45,10 @@
 # undef __ASSUME_SET_ROBUST_LIST
 #endif
 
-/* The MicroBlaze kernel does not support the pselect6, preadv and
-   pwritev syscalls.  */
-#undef __ASSUME_PSELECT
-#undef __ASSUME_PREADV
-#undef __ASSUME_PWRITEV
+/* Support for the pselect6, preadv and pwritev syscalls was added in
+   3.15.  */
+#if __LINUX_KERNEL_VERSION < 0x030f00
+# undef __ASSUME_PSELECT
+# undef __ASSUME_PREADV
+# undef __ASSUME_PWRITEV
+#endif
