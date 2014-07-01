@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/param.h>
 #include <not-cancel.h>
 #include "pthreadP.h"
 #include <lowlevellock.h>

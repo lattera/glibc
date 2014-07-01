@@ -22,6 +22,7 @@
 #include <string.h>
 #include <sysdep.h>
 #include <sys/types.h>
+#include <sys/param.h>
 #include <shlib-compat.h>
 
 

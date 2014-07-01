@@ -1,3 +1,10 @@
+2014-07-01  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/sysconf.c: Include <sys/param.h>.
+	* nptl/pthread_mutex_lock.c: Likewise.
+	* nptl/pthread_mutex_timedlock.c: Likewise.
+	* nptl/sysdeps/unix/sysv/linux/pthread_attr_getaffinity.c: Likewise.
+
 2014-07-01  Richard henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/fpu/bits/mathinline.h (__isnanf): Remove.

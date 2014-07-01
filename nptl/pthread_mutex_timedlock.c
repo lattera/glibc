@@ -19,6 +19,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <time.h>
+#include <sys/param.h>
 #include "pthreadP.h"
 #include <lowlevellock.h>
 #include <not-cancel.h>

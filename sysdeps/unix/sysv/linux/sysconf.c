@@ -23,6 +23,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <sys/resource.h>
+#include <sys/param.h>
 #include <not-cancel.h>
 #include <ldsodefs.h>
 
