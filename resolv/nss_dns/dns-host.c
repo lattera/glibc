@@ -869,27 +869,8 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	      ++had_error;
 	      break;
 	    }
-#if MULTI_PTRS_ARE_ALIASES
-	  cp += n;
-	  if (haveanswer == 0)
-	    result->h_name = bp;
-	  else if (ap < &host_data->aliases[MAXALIASES-1])
-	    *ap++ = bp;
-	  else
-	    n = -1;
-	  if (n != -1)
-	    {
-	      n = strlen (bp) + 1;	/* for the \0 */
-	      if (__builtin_expect (n, 0) >= MAXHOSTNAMELEN)
-		{
-		  ++had_error;
-		  break;
-		}
-	      bp += n;
-	      linebuflen -= n;
-	    }
-	  break;
-#else
+	  /* bind would put multiple PTR records as aliases, but we don't do
+	     that.  */
 	  result->h_name = bp;
 	  if (have_to_map)
 	    {
@@ -906,7 +887,6 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	    }
 	  *h_errnop = NETDB_SUCCESS;
 	  return NSS_STATUS_SUCCESS;
-#endif
 	case T_A:
 	case T_AAAA:
 	  if (__builtin_expect (strcasecmp (result->h_name, bp), 0) != 0)

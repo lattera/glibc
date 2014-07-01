@@ -1,3 +1,8 @@
+2014-07-01  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* resolv/nss_dns/dns-host.c (getanswer_r)
+	[MULTI_PTRS_ARE_ALIASES]: Remove code.
+
 2014-07-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
