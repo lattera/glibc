@@ -31,10 +31,6 @@ GLIBC_2.2
  timer_getoverrun F
  timer_gettime F
  timer_settime F
-GLIBC_2.3
- GLIBC_2.3 A
- aio_cancel F
- aio_cancel64 F
 GLIBC_2.3.4
  GLIBC_2.3.4 A
  mq_close F

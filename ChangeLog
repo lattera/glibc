@@ -1,5 +1,8 @@
 2014-07-01  Carlos O'Donell  <carlos@redhat.com>
 
+	* sysdeps/unix/sysv/linux/hppa/librt.abilist: Remove GLIBC_2.3
+	entries.
+
 	* sysdeps/unix/sysv/linux/hppa/Versions: Remove librt GLIBC_2.3
 	entry for aio_cancel and aio_cancel64.
 	* sysdeps/unix/sysv/linux/hppa/ld.abilist: New file.
