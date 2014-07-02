@@ -1,5 +1,7 @@
 2014-07-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* intl/loadmsgcat.c (_nl_load_domain): Use __builtin_expect.
+
 	* debug/memcpy_chk.c: Don't include pagecopy.h.
 	* debug/mempcpy_chk.c: Likewise.
 	* string/memcpy.c: Likewise.
