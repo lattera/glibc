@@ -382,7 +382,9 @@
 # define __glibc_likely(cond)	(cond)
 #endif
 
-#if !defined _Noreturn && __STDC_VERSION__ < 201112 && !__GNUC_PREREQ (4,7)
+#if (!defined _Noreturn \
+     && (defined __STDC_VERSION__ ? __STDC_VERSION__ : 0) < 201112 \
+     &&  !__GNUC_PREREQ (4,7))
 # if __GNUC_PREREQ (2,8)
 #  define _Noreturn __attribute__ ((__noreturn__))
 # else

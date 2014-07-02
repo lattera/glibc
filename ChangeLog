@@ -1,3 +1,8 @@
+2014-07-02  Roland McGrath  <roland@hack.frob.com>
+
+	* misc/sys/cdefs.h: Check if __STDC_VERSION__ is defined
+	before checking its value.
+
 2014-07-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* intl/loadmsgcat.c (_nl_load_domain): Use __builtin_expect.
