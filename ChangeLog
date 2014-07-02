@@ -1,3 +1,7 @@
+2014-07-02  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/dl-sysdep.c: Include <sys/param.h>.
+
 2014-07-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* intl/loadmsgcat.c: Remove declaration of
