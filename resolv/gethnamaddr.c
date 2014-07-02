@@ -49,6 +49,11 @@
  * --Copyright--
  */
 
+/* XXX This file is not used by any of the resolver functions implemented by
+   glibc (i.e. get*info and gethostby*).  It cannot be removed however because
+   it exports symbols in the libresolv ABI.  The file is not maintained any
+   more, nor are these functions.  */
+
 #if defined(LIBC_SCCS) && !defined(lint)
 static char sccsid[] = "@(#)gethostnamadr.c	8.1 (Berkeley) 6/4/93";
 #endif /* LIBC_SCCS and not lint */
