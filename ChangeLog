@@ -1,5 +1,12 @@
 2014-07-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* intl/loadmsgcat.c: Remove declaration of
+	get_sysdep_segment_value.
+	(get_sysdep_segment_value): Use ISO C style.
+	(_nl_load_domain): Use ISO C style.  Get rid of redundant
+	semicolon.  Fix typo and formatting in comment.
+	(_nl_unload_domain): Use ISO C style.
+
 	* sysdeps/posix/sysconf.c (__sysconf): Fix typo in macro name.
 
 2014-07-02  Will Newton  <will.newton@linaro.org>
