@@ -39,14 +39,19 @@
 # define alloca __builtin_alloca
 # define HAVE_ALLOCA 1
 #else
-# if defined HAVE_ALLOCA_H || defined _LIBC
-#  include <alloca.h>
+# ifdef _MSC_VER
+#  include <malloc.h>
+#  define alloca _alloca
 # else
-#  ifdef _AIX
- #pragma alloca
+#  if defined HAVE_ALLOCA_H || defined _LIBC
+#   include <alloca.h>
 #  else
-#   ifndef alloca
+#   ifdef _AIX
+ #pragma alloca
+#   else
+#    ifndef alloca
 char *alloca ();
+#    endif
 #   endif
 #  endif
 # endif
@@ -88,7 +93,17 @@ char *alloca ();
 #ifdef _LIBC
 # include "../locale/localeinfo.h"
 # include <not-cancel.h>
+#endif
+
+/* Handle multi-threaded applications.  */
+#ifdef _LIBC
 # include <bits/libc-lock.h>
+#else
+# include "lock.h"
+#endif
+
+#ifdef _LIBC
+# define PRI_MACROS_BROKEN 0
 #endif
 
 /* Provide fallback values for macros that ought to be defined in <inttypes.h>.
@@ -472,6 +487,24 @@ char *alloca ();
 # define freea(p) free (p)
 #endif
 
+/* For systems that distinguish between text and binary I/O.
+   O_BINARY is usually declared in <fcntl.h>. */
+#if !defined O_BINARY && defined _O_BINARY
+  /* For MSC-compatible compilers.  */
+# define O_BINARY _O_BINARY
+# define O_TEXT _O_TEXT
+#endif
+#ifdef __BEOS__
+  /* BeOS 5 has O_BINARY and O_TEXT, but they have no effect.  */
+# undef O_BINARY
+# undef O_TEXT
+#endif
+/* On reasonable systems, binary I/O is the default.  */
+#ifndef O_BINARY
+# define O_BINARY 0
+#endif
+
+
 /* We need a sign, whether a new catalog was loaded, which can be associated
    with all translations.  This is important if the translations are
    cached by one of GCC's features.  */
@@ -732,10 +765,12 @@ get_sysdep_segment_value (const char *name)
   /* Test for a glibc specific printf() format directive flag.  */
   if (name[0] == 'I' && name[1] == '\0')
     {
-#if defined _LIBC || __GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 2)
+#if defined _LIBC \
+    || ((__GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 2)) \
+        && !defined __UCLIBC__)
       /* The 'I' flag, in numeric format directives, replaces ASCII digits
 	 with the 'outdigits' defined in the LC_CTYPE locale facet.  This is
-	 used for Farsi (Persian) and maybe Arabic.  */
+	 used for Farsi (Persian), some Indic languages, and maybe Arabic.  */
       return "I";
 #else
       return "";
@@ -779,8 +814,7 @@ _nl_load_domain (struct loaded_l10nfile *domain_file,
 	   Not necessary anymore since if the lock is available this
 	   is finished.
       */
-      __libc_lock_unlock_recursive (lock);
-      return;
+      goto done;
     }
 
   domain_file->decided = -1;
@@ -798,7 +832,7 @@ _nl_load_domain (struct loaded_l10nfile *domain_file,
     goto out;
 
   /* Try to open the addressed file.  */
-  fd = open (domain_file->filename, O_RDONLY);
+  fd = open (domain_file->filename, O_RDONLY | O_BINARY);
   if (fd == -1)
     goto out;
 
@@ -846,11 +880,15 @@ _nl_load_domain (struct loaded_l10nfile *domain_file,
       read_ptr = (char *) data;
       do
 	{
-	  long int nb = (long int) TEMP_FAILURE_RETRY (read (fd, read_ptr,
-							     to_read));
+	  long int nb = (long int) read (fd, read_ptr, to_read);
 	  if (nb <= 0)
-	    goto out;
-
+	    {
+#ifdef EINTR
+	      if (nb == -1 && errno == EINTR)
+		continue;
+#endif
+	      goto out;
+	    }
 	  read_ptr += nb;
 	  to_read -= nb;
 	}
@@ -947,6 +985,7 @@ _nl_load_domain (struct loaded_l10nfile *domain_file,
 		  ((char *) data
 		   + W (domain->must_swap, data->sysdep_segments_offset));
 		sysdep_segment_values =
+		  (const char **)
 		  alloca (n_sysdep_segments * sizeof (const char *));
 		for (i = 0; i < n_sysdep_segments; i++)
 		  {
@@ -1244,13 +1283,24 @@ _nl_load_domain (struct loaded_l10nfile *domain_file,
   /* No caches of converted translations so far.  */
   domain->conversions = NULL;
   domain->nconversions = 0;
+#ifdef _LIBC
   __libc_rwlock_init (domain->conversions_lock);
+#else
+  gl_rwlock_init (domain->conversions_lock);
+#endif
 
   /* Get the header entry and look for a plural specification.  */
+#ifdef IN_LIBGLOCALE
+  nullentry =
+    _nl_find_msg (domain_file, domainbinding, NULL, "", &nullentrylen);
+#else
   nullentry = _nl_find_msg (domain_file, domainbinding, "", 0, &nullentrylen);
+#endif
   if (__builtin_expect (nullentry == (char *) -1, 0))
     {
+#ifdef _LIBC
       __libc_rwlock_fini (domain->conversions_lock);
+#endif
       goto invalid;
     }
   EXTRACT_PLURAL_EXPRESSION (nullentry, &domain->plural, &domain->nplurals);
@@ -1261,6 +1311,7 @@ _nl_load_domain (struct loaded_l10nfile *domain_file,
 
   domain_file->decided = 1;
 
+ done:
   __libc_lock_unlock_recursive (lock);
 }
 

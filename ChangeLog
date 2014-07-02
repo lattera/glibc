@@ -1,3 +1,15 @@
+2014-07-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	Sync up with gettext.
+	* intl/loadmsgcat.c: Define O_BINARY if not defined.
+	[_MSC_VER]: Include malloc.h
+	[_LIBC]: Define PRI_MACROS_BROKEN if it is not defined.
+	(get_sysdep_segment_value) [!__UCLIBC__]: Return "I" flag.
+	(_nl_load_domain): Open DOMAIN_FILE in binary mode.  Don't use
+	TEMP_FAILURE_RETRY.  Cast return of alloca.
+	[!_LIBC] Call gl_rwlock_init.
+	[IN_LIBGLOCALE]: Call _nl_find_msg with one less argument.
+
 2014-07-02  Roland McGrath  <roland@hack.frob.com>
 
 	* misc/sys/cdefs.h: Check if __STDC_VERSION__ is defined
