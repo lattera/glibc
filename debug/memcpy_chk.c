@@ -20,7 +20,6 @@
 
 #include <string.h>
 #include <memcopy.h>
-#include <pagecopy.h>
 
 void *
 __memcpy_chk (dstpp, srcpp, len, dstlen)

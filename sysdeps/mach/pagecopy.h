@@ -30,6 +30,3 @@
 				(vm_address_t) dstp) == KERN_SUCCESS	      \
 		     ? trunc_page (nbytes)				      \
 		     : 0)))
-
-/* Get the generic macro.  */
-#include <sysdeps/generic/pagecopy.h>

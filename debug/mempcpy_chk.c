@@ -21,7 +21,6 @@
 
 #include <string.h>
 #include <memcopy.h>
-#include <pagecopy.h>
 
 void *
 __mempcpy_chk (dstpp, srcpp, len, dstlen)

@@ -20,7 +20,6 @@
 
 #include <string.h>
 #include <memcopy.h>
-#include <pagecopy.h>
 
 /* All this is so that bcopy.c can #include
    this file after defining some things.  */

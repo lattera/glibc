@@ -40,6 +40,7 @@
 
 #include <sys/cdefs.h>
 #include <endian.h>
+#include <pagecopy.h>
 
 /* The macros defined in this file are:
 
@@ -144,6 +145,47 @@ extern void _wordcopy_bwd_dest_aligned (long int, long int, size_t) __THROW;
       (nbytes_left) = (nbytes) % OPSIZ;					      \
     } while (0)
 
+/* The macro PAGE_COPY_FWD_MAYBE (dstp, srcp, nbytes_left, nbytes) is invoked
+   like WORD_COPY_FWD et al.  The pointers should be at least word aligned.
+   This will check if virtual copying by pages can and should be done and do it
+   if so.  The pointers will be aligned to PAGE_SIZE bytes.  The macro requires
+   that pagecopy.h defines at least PAGE_COPY_THRESHOLD to 0.  If
+   PAGE_COPY_THRESHOLD is non-zero, the header must also define PAGE_COPY_FWD
+   and PAGE_SIZE.
+*/
+#if PAGE_COPY_THRESHOLD
+
+# include <assert.h>
+
+# define PAGE_COPY_FWD_MAYBE(dstp, srcp, nbytes_left, nbytes)		      \
+  do									      \
+    {									      \
+      if ((nbytes) >= PAGE_COPY_THRESHOLD &&				      \
+	  PAGE_OFFSET ((dstp) - (srcp)) == 0) 				      \
+	{								      \
+	  /* The amount to copy is past the threshold for copying	      \
+	     pages virtually with kernel VM operations, and the		      \
+	     source and destination addresses have the same alignment.  */    \
+	  size_t nbytes_before = PAGE_OFFSET (-(dstp));			      \
+	  if (nbytes_before != 0)					      \
+	    {								      \
+	      /* First copy the words before the first page boundary.  */     \
+	      WORD_COPY_FWD (dstp, srcp, nbytes_left, nbytes_before);	      \
+	      assert (nbytes_left == 0);				      \
+	      nbytes -= nbytes_before;					      \
+	    }								      \
+	  PAGE_COPY_FWD (dstp, srcp, nbytes_left, nbytes);		      \
+	}								      \
+    } while (0)
+
+/* The page size is always a power of two, so we can avoid modulo division.  */
+# define PAGE_OFFSET(n)	((n) & (PAGE_SIZE - 1))
+
+#else
+
+# define PAGE_COPY_FWD_MAYBE(dstp, srcp, nbytes_left, nbytes) /* nada */
+
+#endif
 
 /* Threshold value for when to enter the unrolled loops.  */
 #define	OP_T_THRES	16
