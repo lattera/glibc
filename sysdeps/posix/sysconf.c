@@ -998,7 +998,7 @@ __sysconf (name)
 #endif
 
     case _SC_SIGNALS:
-#ifdef _POSUX_SIGNALS
+#ifdef _POSIX_SIGNALS
       return _POSIX_SIGNALS;
 #else
       return -1;
