@@ -1,3 +1,21 @@
+2014-07-01  Carlos O'Donell  <carlos@redhat.com>
+
+	* sysdeps/unix/sysv/linux/hppa/Versions: Remove librt GLIBC_2.3
+	entry for aio_cancel and aio_cancel64.
+	* sysdeps/unix/sysv/linux/hppa/ld.abilist: New file.
+	* sysdeps/unix/sysv/linux/hppa/libBrokenLocale.abilist: New file.
+	* sysdeps/unix/sysv/linux/hppa/libanl.abilist: New file.
+	* sysdeps/unix/sysv/linux/hppa/libc.abilist: New file.
+	* sysdeps/unix/sysv/linux/hppa/libcrypt.abilist: New file.
+	* sysdeps/unix/sysv/linux/hppa/libdl.abilist: New file.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: New file.
+	* sysdeps/unix/sysv/linux/hppa/libnsl.abilist: New file.
+	* sysdeps/unix/sysv/linux/hppa/libpthread.abilist: New file.
+	* sysdeps/unix/sysv/linux/hppa/libresolv.abilist: New file.
+	* sysdeps/unix/sysv/linux/hppa/librt.abilist: New file.
+	* sysdeps/unix/sysv/linux/hppa/libthread_db.abilist: New file.
+	* sysdeps/unix/sysv/linux/hppa/libutil.abilist: New file.
+
 2014-07-01  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/sysconf.c: Include <sys/param.h>.
