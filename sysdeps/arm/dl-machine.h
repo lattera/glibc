@@ -279,6 +279,7 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rel *reloc,
 /* ARM never uses Elf32_Rela relocations for the dynamic linker.
    Prelinked libraries may use Elf32_Rela though.  */
 #define ELF_MACHINE_NO_RELA defined RTLD_BOOTSTRAP
+#define ELF_MACHINE_NO_REL 0
 
 /* Names of the architecture-specific auditing callback functions.  */
 #define ARCH_LA_PLTENTER arm_gnu_pltenter
