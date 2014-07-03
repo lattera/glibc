@@ -1,3 +1,7 @@
+2014-07-03  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	* stdlib/tst-strtod-overflow.c (TIMEOUT): Bump up to 30.
+
 2014-07-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	Sync up with gettext.
