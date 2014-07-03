@@ -25,11 +25,11 @@
 long int
 __lroundf (float x)
 {
-  float adj;
+  float adj, y;
 
-  adj = 0x1.fffffep-2;		/* nextafterf (0.5f, 0.0f) */
-  adj = copysignf (adj, x);
-  return x + adj;
+  adj = copysignf (0.5f, x);
+  asm("adds/suc %1,%2,%0" : "=&f"(y) : "f"(x), "f"(adj));
+  return y;
 }
 
 strong_alias (__lroundf, __llroundf)

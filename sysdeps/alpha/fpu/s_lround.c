@@ -25,11 +25,11 @@
 long int
 __lround (double x)
 {
-  double adj;
+  double adj, y;
 
-  adj = 0x1.fffffffffffffp-2;	/* nextafter (0.5, 0.0) */
-  adj = copysign (adj, x);
-  return x + adj;
+  adj = copysign (0.5, x);
+  asm("addt/suc %1,%2,%0" : "=&f"(y) : "f"(x), "f"(adj));
+  return y;
 }
 
 strong_alias (__lround, __llround)
