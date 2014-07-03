@@ -16,33 +16,8 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math.h>
-#include <math_ldbl_opt.h>
+#include <sysdeps/ieee754/dbl-64/wordsize-64/s_nearbyint.c>
 
-
-double
-__nearbyint (double x)
-{
-  if (isless (fabs (x), 9007199254740992.0))	/* 1 << DBL_MANT_DIG */
-    {
-      double tmp1, new_x;
-      __asm ("cvttq/svd %2,%1\n\t"
-	     "cvtqt/d %1,%0\n\t"
-	     : "=f"(new_x), "=&f"(tmp1)
-	     : "f"(x));
-
-      /* nearbyint(-0.1) == -0, and in general we'll always have the same
-	 sign as our input.  */
-      x = copysign(new_x, x);
-    }
-  return x;
-}
-
-weak_alias (__nearbyint, nearbyint)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__nearbyint, __nearbyintl)
-weak_alias (__nearbyint, nearbyintl)
-#endif
 #if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
 compat_symbol (libm, __nearbyint, nearbyintl, GLIBC_2_1);
 #endif

@@ -1,5 +1,9 @@
 2014-07-03  Richard Henderson  <rth@redhat.com>
 
+	* sysdeps/alpha/fpu/s_nearbyintf.c: Remove file.
+	* sysdeps/alpha/fpu/s_nearbyint.c (__nearbyint): Remove;
+	include sysdeps/ieee754/dbl-64/wordsize-64/s_nearbyint.c.
+
 	* sysdeps/alpha/fpu/math_private.h (math_opt_barrier): New.
 	(math_force_eval): New.
 
