@@ -1,3 +1,85 @@
+2014-07-03  Richard Henderson  <rth@redhat.com>
+
+	* elf/dl-support.c (HP_TIMING_AVAIL): Do not redefine.
+	(_dl_non_dynamic_init): Check HP_SMALL_TIMING_AVAIL instead.
+	* elf/rtld.c (HP_TIMING_AVAIL): Do not redefine.
+	(_dl_start_final): Check HP_SMALL_TIMING_AVAIL instead.
+	(_dl_start, print_statistics): Likewise.
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): Only check
+	HP_SMALL_TIMING_AVAIL in defining _dl_cpuclock_offset.
+
+	* sysdeps/aarch64/hp-timing.h (HP_SMALL_TIMING_AVAIL): Define.
+	* sysdeps/generic/hp-timing.h (HP_SMALL_TIMING_AVAIL): Define.
+	* sysdeps/i386/i686/hp-timing.h (HP_SMALL_TIMING_AVAIL): Define.
+	* sysdeps/ia64/hp-timing.h (HP_SMALL_TIMING_AVAIL): Define.
+	* sysdeps/powerpc/powerpc32/power4/hp-timing.h
+	(HP_SMALL_TIMING_AVAIL): Define.
+	* sysdeps/powerpc/powerpc64/hp-timing.h (HP_SMALL_TIMING_AVAIL): Define.
+	* sysdeps/sparc/sparc32/sparcv9/hp-timing.h
+	(HP_SMALL_TIMING_AVAIL): Define.
+	* sysdeps/sparc/sparc64/hp-timing.h (HP_SMALL_TIMING_AVAIL): Define.
+	* sysdeps/x86_64/hp-timing.h (HP_SMALL_TIMING_AVAIL): Define.
+
+	* sysdeps/aarch64/hp-timing.h: New file.
+
+	* sysdeps/generic/hp-timing.h: Remove dead comment.
+	* sysdeps/generic/hp-timing-common.h: New file.
+	* sysdeps/alpha/hp-timing.h: Include it.
+	(HP_TIMING_DIFF, HP_TIMING_ACCUM_NT, HP_TIMING_PRINT): Remove.
+	* sysdeps/i386/i686/hp-timing.h: Likewise.
+	* sysdeps/ia64/hp-timing.h: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/hp-timing.h: Likewise.
+	* sysdeps/powerpc/powerpc64/hp-timing.h: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/hp-timing.h: Likewise.
+	* sysdeps/sparc/sparc64/hp-timing.h: Likewise.
+	* sysdeps/x86_64/hp-timing.h: Don't include the i686 version.
+	(HP_TIMING_AVAIL, HP_TIMING_INLINE): Define.
+	(hp_timing_t): New.
+
+	* benchtests/bench-string.h (_dl_hp_timing_overhead): Remove.
+	* benchtests/bench-timing.h (_dl_hp_timing_overhead): Remove.
+	(TIMING_INIT): Remove call to HP_TIMING_DIFF_INIT.
+	* elf/rtld.c (_dl_start_final): Likewise.
+	* sysdeps/generic/ldsodefs.h (_dl_hp_timing_overhead): Remove.
+	* sysdeps/alpha/hp-timing.h (HP_TIMING_DIFF_INIT): Remove.
+	* sysdeps/generic/hp-timing.h (HP_TIMING_DIFF_INIT): Remove.
+	* sysdeps/i386/i686/hp-timing.h (HP_TIMING_DIFF_INIT): Remove.
+	* sysdeps/ia64/hp-timing.h (HP_TIMING_DIFF_INIT): Remove.
+	* sysdeps/powerpc/powerpc32/power4/hp-timing.h
+	(HP_TIMING_DIFF_INIT): Remove.
+	* sysdeps/powerpc/powerpc64/hp-timing.h (HP_TIMING_DIFF_INIT): Remove.
+	* sysdeps/sparc/sparc32/sparcv9/hp-timing.h
+	(HP_TIMING_DIFF_INIT): Remove.
+	* sysdeps/sparc/sparc64/hp-timing.h (HP_TIMING_DIFF_INIT): Remove.
+	* sysdeps/i386/i686/hp-timing.c: Remove file.
+	* sysdeps/x86_64/hp-timing.c: Remove file.
+	* sysdeps/ia64/hp-timing.c: Remove file.
+	* sysdeps/powerpc/powerpc32/power4/hp-timing.c: Remove file.
+	* sysdeps/powerpc/powerpc64/hp-timing.c: Remove file.
+	* sysdeps/sparc/sparc32/sparcv9/hp-timing.c: Remove file.
+	* sysdeps/sparc/sparc64/hp-timing.c: Remove file.
+
+	* sysdeps/alpha/hp-timing.h (HP_TIMING_ACCUM): Remove.
+	* sysdeps/generic/hp-timing.h (HP_TIMING_ACCUM): Remove.
+	* sysdeps/i386/i686/hp-timing.h (HP_TIMING_ACCUM): Remove.
+	* sysdeps/ia64/hp-timing.h (HP_TIMING_ACCUM): Remove.
+	* sysdeps/powerpc/powerpc32/power4/hp-timing.h
+	(HP_TIMING_ACCUM): Remove.
+	* sysdeps/powerpc/powerpc64/hp-timing.h (HP_TIMING_ACCUM): Remove.
+	* sysdeps/sparc/sparc32/sparcv9/hp-timing.h (HP_TIMING_ACCUM): Remove.
+	* sysdeps/sparc/sparc64/hp-timing.h (HP_TIMING_ACCUM): Remove.
+
+	* sysdeps/alpha/hp-timing.h (HP_TIMING_ZERO): Remove.
+	* sysdeps/generic/hp-timing.h (HP_TIMING_ZERO): Remove.
+	* sysdeps/i386/i686/hp-timing.h (HP_TIMING_ZERO): Remove.
+	* sysdeps/ia64/hp-timing.h (HP_TIMING_ZERO): Remove.
+	* sysdeps/powerpc/powerpc32/power4/hp-timing.h (HP_TIMING_ZERO): Remove.
+	* sysdeps/powerpc/powerpc64/hp-timing.h (HP_TIMING_ZERO): Remove.
+	* sysdeps/sparc/sparc32/sparcv9/hp-timing.h (HP_TIMING_ZERO): Remove.
+	* sysdeps/sparc/sparc64/hp-timing.h (HP_TIMING_ZERO): Remove.
+
+	* sysdeps/powerpc/powerpc32/hp-timing.h: Remove file.
+
 2014-07-03  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	* stdlib/tst-strtod-overflow.c (TIMEOUT): Bump up to 30.
