@@ -67,7 +67,6 @@ ENTRY(__clone2)
 (CHILD)	mov loc0=gp
 (PARENT) ret
 	;;
-#ifdef RESET_PID
 	tbit.nz p6,p0=in3,16	/* CLONE_THREAD */
 	tbit.z p7,p10=in3,8	/* CLONE_VM */
 (p6)	br.cond.dptk 1f
@@ -82,7 +81,6 @@ ENTRY(__clone2)
 	st4 [r9]=r8
 	st4 [r10]=r8
 	;;
-#endif
 1:	ld8 out1=[in0],8	/* Retrieve code pointer.	*/
 	mov out0=in4		/* Pass proper argument	to fn */
 	;;

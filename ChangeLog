@@ -1,3 +1,9 @@
+2014-08-04  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/ia64/clone2.S: Deconditionalize the code
+	that was previously under [RESET_PID].
+	* sysdeps/unix/sysv/linux/ia64/nptl/clone2.S: File removed.
+
 2014-08-04  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/ieee754/ldbl-96/s_fma.c: Include <math_private.h>.
