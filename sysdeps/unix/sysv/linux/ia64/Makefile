@@ -26,3 +26,7 @@ endif
 # This is a crude attempt to silence the compiler which complains about
 # then 'current' definition in the kernel headers.
 CPPFLAGS += -D_ASM_IA64_CURRENT_H
+
+ifeq ($(subdir),nptl)
+libpthread-sysdep_routines += __ia64_longjmp unwind_longjmp __sigstack_longjmp
+endif

@@ -26,7 +26,7 @@ static _Unwind_Word (*libgcc_s_getbsp) (struct _Unwind_Context *);
 #define ARCH_CANCEL_INIT(handle) \
   ((libgcc_s_getbsp = __libc_dlsym (handle, "_Unwind_GetBSP")) == NULL)
 
-#include <sysdeps/pthread/unwind-forcedunwind.c>
+#include <sysdeps/nptl/unwind-forcedunwind.c>
 
 _Unwind_Word
 _Unwind_GetBSP (struct _Unwind_Context *context)
