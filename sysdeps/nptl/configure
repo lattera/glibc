@@ -15,7 +15,12 @@ $as_echo_n "checking for forced unwind support... " >&6; }
 if ${libc_cv_forced_unwind+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+  old_CPPFLAGS="$CPPFLAGS"
+# Without inhibit_libc #define'd, GCC's unwind.h (at least for ia64)
+# will try to include <stdlib.h>, which doesn't exist yet if we're
+# building libc in a bare environment.
+CPPFLAGS="$CPPFLAGS -Dinhibit_libc=1"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #include <unwind.h>
 int
@@ -35,6 +40,7 @@ else
   libc_cv_forced_unwind=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+CPPFLAGS="$old_CPPFLAGS"
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_forced_unwind" >&5
 $as_echo "$libc_cv_forced_unwind" >&6; }

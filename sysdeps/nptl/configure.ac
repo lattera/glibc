@@ -14,11 +14,17 @@ dnl Iff <unwind.h> is available, make sure it is the right one and it
 dnl contains struct _Unwind_Exception.
 AC_CACHE_CHECK(dnl
 for forced unwind support, libc_cv_forced_unwind, [dnl
+old_CPPFLAGS="$CPPFLAGS"
+# Without inhibit_libc #define'd, GCC's unwind.h (at least for ia64)
+# will try to include <stdlib.h>, which doesn't exist yet if we're
+# building libc in a bare environment.
+CPPFLAGS="$CPPFLAGS -Dinhibit_libc=1"
 AC_TRY_COMPILE([#include <unwind.h>], [
 struct _Unwind_Exception exc;
 struct _Unwind_Context *context;
 _Unwind_GetCFA (context)],
-libc_cv_forced_unwind=yes, libc_cv_forced_unwind=no)])
+libc_cv_forced_unwind=yes, libc_cv_forced_unwind=no)
+CPPFLAGS="$old_CPPFLAGS"])
 if test $libc_cv_forced_unwind = yes; then
   AC_DEFINE(HAVE_FORCED_UNWIND)
 dnl Check for C cleanup handling.

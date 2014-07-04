@@ -1,5 +1,10 @@
 2014-07-03  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/nptl/configure.ac (libc_cv_forced_unwind):
+	Use -Dinhibit_libc=1 for unwind.h check to prevent false failure
+	in a bare environment with no <stdlib.h> installed.
+	* sysdeps/nptl/configure: Regenerated.
+
 	* sysdeps/alpha/fpu/s_nearbyint.c: Include <math_ldbl_opt.h>.
 
 	* sysdeps/unix/sysv/linux/configure.ac: Use AC_TRY_COMPILE rather than
