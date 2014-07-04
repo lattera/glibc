@@ -1,5 +1,8 @@
 2014-07-03  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/s390/nptl/tls.h (THREAD_SET_POINTER_GUARD): Refer to the
+	value so it's not diagnosed as unused.
+
 	* sysdeps/pthread/Makefile: Conditionalize tst-timer bits (the only
 	thing) with "ifeq ($(subdir),rt)".
 

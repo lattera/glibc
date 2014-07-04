@@ -173,7 +173,7 @@ typedef struct
    use stack_guard as pointer_guard.  */
 #define THREAD_GET_POINTER_GUARD() \
   THREAD_GETMEM (THREAD_SELF, header.stack_guard)
-#define THREAD_SET_POINTER_GUARD(value)
+#define THREAD_SET_POINTER_GUARD(value)	((void) (value))
 #define THREAD_COPY_POINTER_GUARD(descr)
 
 /* Get and set the global scope generation counter in struct pthread.  */
