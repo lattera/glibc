@@ -1,5 +1,7 @@
 2014-07-03  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/alpha/fpu/s_nearbyint.c: Include <math_ldbl_opt.h>.
+
 	* sysdeps/unix/sysv/linux/configure.ac: Use AC_TRY_COMPILE rather than
 	AC_EGREP_CPP for kernel header checks, so they only succeed if
 	including <linux/version.h> actually works right.

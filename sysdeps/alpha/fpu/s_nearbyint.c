@@ -16,8 +16,10 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <math_ldbl_opt.h>
+
 #include <sysdeps/ieee754/dbl-64/wordsize-64/s_nearbyint.c>
 
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
+#if LONG_DOUBLE_COMPAT (libm, GLIBC_2_1)
 compat_symbol (libm, __nearbyint, nearbyintl, GLIBC_2_1);
 #endif
