@@ -96,10 +96,10 @@ void __arm_link_error (void);
    For all "bool" routines, we return FALSE if exchange succesful.  */
 
 # define __arch_compare_and_exchange_bool_8_int(mem, newval, oldval, model) \
-  ({__arm_link_error (); oldval; })
+  ({__arm_link_error (); 0; })
 
 # define __arch_compare_and_exchange_bool_16_int(mem, newval, oldval, model) \
-  ({__arm_link_error (); oldval; })
+  ({__arm_link_error (); 0; })
 
 # define __arch_compare_and_exchange_bool_32_int(mem, newval, oldval, model) \
   ({                                                                    \
@@ -109,7 +109,7 @@ void __arm_link_error (void);
   })
 
 # define __arch_compare_and_exchange_bool_64_int(mem, newval, oldval, model) \
-  ({__arm_link_error (); oldval; })
+  ({__arm_link_error (); 0; })
 
 # define __arch_compare_and_exchange_val_8_int(mem, newval, oldval, model) \
   ({__arm_link_error (); oldval; })

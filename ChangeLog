@@ -1,5 +1,10 @@
 2014-07-17  Will Newton  <will.newton@linaro.org>
 
+	* sysdeps/arm/bits/atomic.h
+	(__arch_compare_and_exchange_bool_8_int): Evaluate to zero.
+	(__arch_compare_and_exchange_bool_16_int): Likewise.
+	(__arch_compare_and_exchange_bool_64_int): Likewise.
+
 	* iconv/loop.c: Move definition of LOOPFCT and gconv_btowc
 	into an #else block.
 
