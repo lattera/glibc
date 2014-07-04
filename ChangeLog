@@ -1,5 +1,14 @@
 2014-08-04  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/ia64/nptl/bits/pthreadtypes.h: Moved ...
+	* sysdeps/ia64/nptl/bits/pthreadtypes.h: ... here.
+	* sysdeps/unix/sysv/linux/ia64/nptl/bits/semaphore.h: Moved ...
+	* sysdeps/ia64/nptl/bits/semaphore.h: ... here.
+	* sysdeps/unix/sysv/linux/ia64/nptl/bits/local_lim.h: Moved ...
+	* sysdeps/unix/sysv/linux/ia64/bits/local_lim.h: ... here.
+
+2014-08-04  Roland McGrath  <roland@hack.frob.com>
+
 	* nptl/sysdeps/pthread/createthread.c: Include <arch-fork.h>.
 	* sysdeps/unix/sysv/linux/ia64/arch-fork.h (ARCH_CLONE): New macro.
 	* sysdeps/ia64/nptl/tls.h (TLS_DEFINE_INIT_TP): New macro.
