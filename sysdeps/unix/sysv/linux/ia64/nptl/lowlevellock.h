@@ -95,7 +95,7 @@
 ({									   \
    int __op = FUTEX_WAIT_BITSET | (clockbit);				   \
 									   \
-   DO_INLINE_SYSCALL(futex, 4, (long) (ftx),				   \
+   DO_INLINE_SYSCALL(futex, 6, (long) (ftx),				   \
 		     __lll_private_flag (__op, private),		   \
 		     (int) (val), (long) (timespec), NULL /* Unused.  */,  \
 		     FUTEX_BITSET_MATCH_ANY);				   \

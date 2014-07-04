@@ -1,5 +1,8 @@
 2014-07-03  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h
+	(lll_futex_timed_wait_bitset): Fix syscall argument count.
+
 	* sysdeps/nptl/configure.ac (libc_cv_forced_unwind):
 	Use -Dinhibit_libc=1 for unwind.h check to prevent false failure
 	in a bare environment with no <stdlib.h> installed.
