@@ -1,5 +1,14 @@
 2014-08-04  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/ia64/nptl/vfork.S: Moved ...
+	* sysdeps/unix/sysv/linux/ia64/vfork.S: ... here.
+	(__libc_vfork): Define function under this name.
+	(__vfork): Define as an alias.
+	* sysdeps/unix/sysv/linux/ia64/pt-vfork.S: New file.
+	* sysdeps/unix/sysv/linux/ia64/nptl/pt-vfork.S: File removed.
+
+2014-08-04  Roland McGrath  <roland@hack.frob.com>
+
 	* sysdeps/unix/sysv/linux/ia64/clone2.S: Deconditionalize the code
 	that was previously under [RESET_PID].
 	* sysdeps/unix/sysv/linux/ia64/nptl/clone2.S: File removed.
