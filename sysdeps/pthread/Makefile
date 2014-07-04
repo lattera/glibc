@@ -16,8 +16,12 @@
 # License along with the GNU C Library; if not, see
 # <http://www.gnu.org/licenses/>.
 
+ifeq ($(subdir),rt)
+
 ifeq (yes,$(build-shared))
 $(objpfx)tst-timer: $(objpfx)librt.so $(shared-thread-library)
 else
 $(objpfx)tst-timer: $(objpfx)librt.a $(static-thread-library)
+endif
+
 endif
