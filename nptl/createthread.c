@@ -25,6 +25,8 @@
 #include <tls.h>
 #include <stdint.h>
 
+#include <arch-fork.h>
+
 
 #define CLONE_SIGNAL		(CLONE_SIGHAND | CLONE_THREAD)
 

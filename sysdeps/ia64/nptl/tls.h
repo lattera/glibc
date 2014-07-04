@@ -121,6 +121,10 @@ register struct pthread *__thread_self __asm__("r13");
 # define TLS_INIT_TP(thrdescr) \
   (__thread_self = (thrdescr), INIT_SYSINFO, NULL)
 
+/* Value passed to 'clone2' for initialization of the thread register.  */
+# define TLS_DEFINE_INIT_TP(tp, pd) \
+  void *tp = (char *) (pd) + TLS_PRE_TCB_SIZE
+
 /* Return the address of the dtv for the current thread.  */
 #  define THREAD_DTV() \
   (((tcbhead_t *)__thread_self)->dtv)

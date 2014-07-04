@@ -27,3 +27,5 @@
   INLINE_SYSCALL (clone2, 6,						      \
 		  CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD,	      \
 		  NULL, 0, NULL, &THREAD_SELF->tid, NULL)
+
+#define ARCH_CLONE __clone2
