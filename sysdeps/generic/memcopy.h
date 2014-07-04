@@ -190,6 +190,9 @@ extern void _wordcopy_bwd_dest_aligned (long int, long int, size_t) __THROW;
 /* Threshold value for when to enter the unrolled loops.  */
 #define	OP_T_THRES	16
 
+/* Set to 1 if memcpy is safe to use for forward-copying memmove with
+   overlapping addresses.  This is 0 by default because memcpy implementations
+   are generally not safe for overlapping addresses.  */
 #define MEMCPY_OK_FOR_FWD_MEMMOVE 0
 
 #endif /* memcopy.h */

@@ -1,3 +1,8 @@
+2014-07-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/generic/memcopy.h: Add comment for
+	MEMCPY_OK_FOR_FWD_MEMMOVE.
+
 2014-07-04  Will Newton  <will.newton@linaro.org>
 
 	* string/memchr.c: Merge from gnulib.
