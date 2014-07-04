@@ -1,5 +1,10 @@
 2014-07-03  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/configure.ac: Use AC_TRY_COMPILE rather than
+	AC_EGREP_CPP for kernel header checks, so they only succeed if
+	including <linux/version.h> actually works right.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+
 	* sysdeps/s390/nptl/tls.h (THREAD_SET_POINTER_GUARD): Refer to the
 	value so it's not diagnosed as unused.
 

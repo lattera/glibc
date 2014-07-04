@@ -8,14 +8,14 @@ if test -n "$sysheaders"; then
 fi
 define([libc_cv_linuxVER], [libc_cv_linux]patsubst(LIBC_LINUX_VERSION,[\.]))dnl
 AC_CACHE_CHECK(installed Linux kernel header files, libc_cv_linuxVER, [dnl
-AC_EGREP_CPP([eat flaming death], [#include <linux/version.h>
+AC_TRY_COMPILE([#include <linux/version.h>
 #if !defined LINUX_VERSION_CODE || LINUX_VERSION_CODE < ]dnl
 patsubst(LIBC_LINUX_VERSION,[^\([^.]*\)\.\([^.]*\)\.\([^.]*\)$],dnl
 [ (\1 *65536+ \2 *256+ \3) /* \1.\2.\3 */])[
-eat flaming death
-#endif],
-	     libc_cv_linuxVER='TOO OLD!',
-	     libc_cv_linuxVER='LIBC_LINUX_VERSION or later')])
+# error kernel headers missing or too old
+#endif], [],
+	       [libc_cv_linuxVER='LIBC_LINUX_VERSION or later'],
+	       [libc_cv_linuxVER='missing or too old!'])])
 if test "$libc_cv_linuxVER" != 'LIBC_LINUX_VERSION or later'; then
   AC_MSG_ERROR([GNU libc requires kernel header files from
 Linux LIBC_LINUX_VERSION or later to be installed before configuring.
@@ -52,10 +52,10 @@ changequote(,)dnl
 decnum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/(\1 * 65536 + \2 * 256 + \3)/'`;
 abinum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1,\2,\3/'`;
 changequote([,])dnl
-AC_EGREP_CPP([eat flaming death], [#include <linux/version.h>
+AC_TRY_COMPILE([#include <linux/version.h>
 #if LINUX_VERSION_CODE < $decnum
-eat flaming death
-#endif], libc_minimum_kernel='too old!', libc_minimum_kernel=ok)
+# error kernel headers too old
+#endif], [], [libc_minimum_kernel=ok], [libc_minimum_kernel='too old!'])
 AC_MSG_RESULT($libc_minimum_kernel)
 if test "$libc_minimum_kernel" = ok; then
   AC_DEFINE_UNQUOTED(__LINUX_KERNEL_VERSION, $decnum)
