@@ -93,7 +93,7 @@ _start:
 	stw	%r23, -56(%sp)
 	/* Need to setup 1, 4, 5, and 7th arguments */
 
-#if SHARED
+#ifdef SHARED
 	/* load main (1st argument) */
 	addil	LT'.Lpmain, %r19
 	ldw	RT'.Lpmain(%r1), %r26

@@ -147,7 +147,7 @@ _dl_unmap (struct link_map *map)
 {
   _dl_unmap_segments (map);
 
-#if SHARED
+#ifdef SHARED
   if (map->l_mach.tlsdesc_table)
     htab_delete (map->l_mach.tlsdesc_table);
 #endif

@@ -1,3 +1,11 @@
+2014-07-09  Will Newton  <will.newton@linaro.org>
+
+	* sysdeps/aarch64/tlsdesc.c (_dl_unmap): Test SHARED with #ifdef.
+	* sysdeps/arm/tlsdesc.c (_dl_unmap): Likewise.
+	* sysdeps/i386/tlsdesc.c (_dl_unmap): Likewise.
+	* sysdeps/x86_64/tlsdesc.c (_dl_unmap): Likewise.
+	* sysdeps/hppa/start.S (_start): Likewise.
+
 2014-07-09  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sunrpc/xdr.c (xdr_string): Initialize SIZE to 0.
