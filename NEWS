@@ -65,6 +65,11 @@ Version 2.20
 * All supported architectures now use the main glibc sysdeps directory
   instead of some being in a separate "ports" directory (which was
   distributed separately before glibc 2.17).
+
+* The NPTL implementation of POSIX pthreads is no longer an "add-on".
+  On configurations that support it (all Linux configurations), it's now
+  used regardless of the --enable-add-ons switch to configure.  It is no
+  longer possible to build such configurations without pthreads support.
 
 Version 2.19
 

@@ -22,7 +22,7 @@
 
 #include <assert.h>
 #include <signal.h>
-#include <pthreadP.h>
+#include <nptl/pthreadP.h>
 #include <lowlevellock.h>
 
 #define DONT_NEED_GAI_MISC_COND	1

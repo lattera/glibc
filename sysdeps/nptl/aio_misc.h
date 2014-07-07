@@ -21,7 +21,7 @@
    correct aio_suspend and lio_listio implementations.  */
 
 #include <assert.h>
-#include <pthreadP.h>
+#include <nptl/pthreadP.h>
 #include <lowlevellock.h>
 
 #define DONT_NEED_AIO_MISC_COND	1

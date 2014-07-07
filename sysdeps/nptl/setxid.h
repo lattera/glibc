@@ -15,7 +15,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <pthreadP.h>
+#include <nptl/pthreadP.h>
 #include <sysdep.h>
 
 #define __SETXID_1(cmd, arg1) \

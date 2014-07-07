@@ -27,7 +27,7 @@
 #include <ldsodefs.h>
 #include <bits/stdio-lock.h>
 #include <atomic.h>
-#include <pthreadP.h>
+#include <nptl/pthreadP.h>
 #include <fork.h>
 #include <arch-fork.h>
 

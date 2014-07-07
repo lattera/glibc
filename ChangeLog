@@ -1,5 +1,38 @@
 2014-07-07  Roland McGrath  <roland@hack.frob.com>
 
+	* NEWS: NPTL is no longer an add-on!
+	* nptl/internaltypes.h: Moved ...
+	* sysdeps/nptl/internaltypes.h: ... here.
+	* sysdeps/nptl/aio_misc.h: Use <nptl/pthreadP.h> in #include.
+	* sysdeps/nptl/fork.c: Likewise.
+	* sysdeps/nptl/gai_misc.h: Likewise.
+	* sysdeps/nptl/librt-cancellation.c: Likewise.
+	* sysdeps/nptl/jmp-unwind.c: Likewise.
+	* sysdeps/nptl/setxid.h: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/Implies: New file.
+	* sysdeps/unix/sysv/linux/alpha/Implies: Add alpha/nptl.
+	* sysdeps/unix/sysv/linux/arm/Implies: New file.
+	* sysdeps/unix/sysv/linux/hppa/Implies: New file.
+	* sysdeps/unix/sysv/linux/i386/Implies: Add i386/nptl.
+	* sysdeps/unix/sysv/linux/i386/i686/Implies: New file.
+	* sysdeps/unix/sysv/linux/ia64/Implies: Add ia64/nptl.
+	* sysdeps/unix/sysv/linux/m68k/Implies: New file.
+	* sysdeps/unix/sysv/linux/microblaze/Implies: New file.
+	* sysdeps/unix/sysv/linux/mips/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/Implies: New file.
+	* sysdeps/unix/sysv/linux/s390/Implies: Add s390/nptl.
+	* sysdeps/unix/sysv/linux/sh/Implies: New file.
+	* sysdeps/unix/sysv/linux/sparc/Implies: New file.
+	* sysdeps/unix/sysv/linux/tile/Implies: New file.
+	* sysdeps/unix/sysv/linux/x86_64/Implies: Add x86_64/nptl.
+	* sysdeps/unix/sysv/linux/x86_64/x32/Implies: New file.
+	* nptl/Makeconfig: Moved ...
+	* sysdeps/nptl/Makeconfig: ... here.
+	* nptl/configure: File removed.
+	* nptl/ANNOUNCE: File removed.
+	* sysdeps/unix/sysv/linux/configure.ac: Remove nptl sanity check.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+
 	* nptl/Makefile (routines): Add libc_pthread_init,
 	libc_multiple_threads, register-atfork and unregister-atfork.
 	(libpthread-routines): Add pthread_mutex_cond_lock and pt-fork here.

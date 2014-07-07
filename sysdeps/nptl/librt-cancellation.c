@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "pthreadP.h"
+#include <nptl/pthreadP.h>
 
 
 #define __pthread_enable_asynccancel __librt_enable_asynccancel
