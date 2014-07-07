@@ -1,5 +1,7 @@
 2014-07-07  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/nptl/lowlevellock.h: File removed.
+
 	* NEWS: NPTL is no longer an add-on!
 	* nptl/internaltypes.h: Moved ...
 	* sysdeps/nptl/internaltypes.h: ... here.
