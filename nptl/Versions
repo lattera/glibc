@@ -21,6 +21,8 @@ libc {
     pthread_attr_init;
   }
   GLIBC_2.3.2 {
+    __register_atfork;
+
     # Changed pthread_cond_t.
     pthread_cond_init; pthread_cond_destroy;
     pthread_cond_wait; pthread_cond_signal;
@@ -31,6 +33,9 @@ libc {
     # Internal libc interface to libpthread
     __libc_dl_error_tsd;
     __libc_vfork;
+    __libc_pthread_init;
+    __libc_current_sigrtmin_private; __libc_current_sigrtmax_private;
+    __libc_allocate_rtsig_private;
   }
 }
 

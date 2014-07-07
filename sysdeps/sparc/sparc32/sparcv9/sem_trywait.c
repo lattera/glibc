@@ -1,1 +1,1 @@
-#include <sysdeps/unix/sysv/linux/sem_trywait.c>
+#include <nptl/sem_trywait.c>

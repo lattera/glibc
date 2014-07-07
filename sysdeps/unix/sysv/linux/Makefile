@@ -144,6 +144,10 @@ sysdep_headers += bits/initspin.h
 sysdep_routines += sched_getcpu
 
 tests += tst-getcpu
+
+CFLAGS-fork.c = $(libio-mtsafe)
+CFLAGS-getpid.o = -fomit-frame-pointer
+CFLAGS-getpid.os = -fomit-frame-pointer
 endif
 
 ifeq ($(subdir),inet)
@@ -189,4 +193,8 @@ endif
 ifeq ($(subdir),nscd)
 sysdep-CFLAGS += -DHAVE_EPOLL -DHAVE_SENDFILE -DHAVE_INOTIFY -DHAVE_NETLINK
 CFLAGS-gai.c += -DNEED_NETLINK
+endif
+
+ifeq ($(subdir),nptl)
+tests += tst-setgetname
 endif

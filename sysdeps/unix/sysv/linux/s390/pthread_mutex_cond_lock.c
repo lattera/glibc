@@ -19,4 +19,4 @@
    already elided locks.  */
 #include <elision-conf.h>
 
-#include <nptl/sysdeps/unix/sysv/linux/pthread_mutex_cond_lock.c>
+#include <nptl/pthread_mutex_cond_lock.c>

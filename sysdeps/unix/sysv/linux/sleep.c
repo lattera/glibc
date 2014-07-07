@@ -23,6 +23,7 @@
 #include <string.h>	/* For the real memset prototype.  */
 #include <unistd.h>
 #include <sys/param.h>
+#include <nptl/pthreadP.h>
 
 
 #if 0

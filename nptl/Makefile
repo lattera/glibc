@@ -29,7 +29,8 @@ extra-libs-others := $(extra-libs)
 install-lib-ldscripts := libpthread.so
 
 routines = alloca_cutoff forward libc-lowlevellock libc-cancellation \
-	   libc-cleanup
+	   libc-cleanup libc_pthread_init libc_multiple_threads \
+	   register-atfork unregister-atfork
 shared-only-routines = forward
 
 libpthread-routines = nptl-init vars events version \
@@ -54,6 +55,7 @@ libpthread-routines = nptl-init vars events version \
 		      pthread_mutex_init pthread_mutex_destroy \
 		      pthread_mutex_lock pthread_mutex_trylock \
 		      pthread_mutex_timedlock pthread_mutex_unlock \
+		      pthread_mutex_cond_lock \
 		      pthread_mutexattr_init pthread_mutexattr_destroy \
 		      pthread_mutexattr_getpshared \
 		      pthread_mutexattr_setpshared \
@@ -103,7 +105,7 @@ libpthread-routines = nptl-init vars events version \
 		      pt-longjmp pt-cleanup\
 		      cancellation \
 		      lowlevellock lowlevelrobustlock \
-		      pt-vfork \
+		      pt-fork pt-vfork \
 		      ptw-write ptw-read ptw-close ptw-fcntl ptw-accept \
 		      ptw-connect ptw-recv ptw-recvfrom ptw-recvmsg ptw-send \
 		      ptw-sendmsg ptw-sendto ptw-fsync ptw-lseek ptw-llseek \
@@ -277,7 +279,12 @@ test-srcs = tst-oddstacklimit
 # Files which must not be linked with libpthread.
 tests-nolibpthread = tst-unload
 
-gen-as-const-headers = pthread-errnos.sym
+gen-as-const-headers = pthread-errnos.sym \
+		       lowlevelcond.sym lowlevelrwlock.sym \
+		       lowlevelbarrier.sym unwindbuf.sym \
+		       lowlevelrobustlock.sym pthread-pi-defines.sym \
+		       structsem.sym
+
 
 LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
 

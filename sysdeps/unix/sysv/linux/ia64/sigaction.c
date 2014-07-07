@@ -45,12 +45,4 @@ __libc_sigaction (sig, act, oact)
 }
 libc_hidden_def (__libc_sigaction)
 
-#ifdef WRAPPER_INCLUDE
-# include WRAPPER_INCLUDE
-#endif
-
-#ifndef LIBC_SIGACTION
-weak_alias (__libc_sigaction, __sigaction)
-libc_hidden_def (__sigaction)
-weak_alias (__libc_sigaction, sigaction)
-#endif
+#include <nptl/sigaction.c>

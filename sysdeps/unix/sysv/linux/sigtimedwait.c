@@ -19,6 +19,7 @@
 #include <signal.h>
 #include <string.h>
 
+#include <nptl/pthreadP.h>
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
