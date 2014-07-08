@@ -28,16 +28,9 @@ TST_WCWIDTH tst_wcwidth_loc [] = {
 	{ /*inp*/ { 0x00C1		     },	 /* #06 */
 	  /*exp*/ { 0,	1,1,	     },
 	},
-#ifdef SHOJI_IS_RIGHT
-	/* <WAIVER> */	/* CHECK : wint_t */
-	{ /*inp*/ { 0x3041		     },	 /* #07 */
-	  /*exp*/ { 0,	1,0,	     },
-	},
-#else
 	{ /*inp*/ { 0x3041		     },	 /* #07 */
 	  /*exp*/ { 0,	1,EOF,	     },
 	},
-#endif
 	{ .is_last = 1 }
       }
     },
@@ -83,17 +76,10 @@ TST_WCWIDTH tst_wcwidth_loc [] = {
 	{ /*inp*/ { 0x0080		     },	 /* #04 */
 	  /*exp*/ { 0,	1,-1,	     },
 	},
-#ifdef SHOJI_IS_RIGHT
-	/* <NO_WAIVER> */
-	{ /*inp*/ { 0x00A1		     },	 /* #05 */
-	  /*exp*/ { 0,	1,0,	     },
-	},
-#else
 	/* XXX U00A1 is a valid character in EUC-JP.  */
 	{ /*inp*/ { 0x00A1		     },	 /* #05 */
 	  /*exp*/ { 0,	1,2,	     },
 	},
-#endif
 	/* jisx0212 */
 	{ /*inp*/ { 0x00C1		     },	 /* #06 */
 	  /*exp*/ { 0,	1,2,	     },

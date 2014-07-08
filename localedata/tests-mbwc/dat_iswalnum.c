@@ -103,54 +103,23 @@ TST_ISW_LOC (ALNUM, alnum) = {
 	{
 	  {  { 0x3000 }, { 0,1,0 }  },  /* IDEO. SPACE	*/
 	  {  { 0x3020 }, { 0,1,0 }  },  /* POSTAL MARK FACE	*/
-#ifdef SHOJI_IS_RIGHT
-	  {  { 0x3029 }, { 0,1,0 }  },  /* Hangzhou NUM9	*/
-#else
 	  {  { 0x3029 }, { 0,0,0 }  },  /* Hangzhou NUM9	*/
-#endif
 	  {  { 0x302F }, { 0,1,0 }  },  /* Diacritics(Hangul) */
 	  {  { 0x3037 }, { 0,1,0 }  },  /* Separator Symbol	*/
 	  {  { 0x303F }, { 0,1,0 }  },  /* IDEO. HALF SPACE	*/
-#ifdef SHOJI_IS_RIGHT
-	  {  { 0x3041 }, { 0,1,0 }  },  /* HIRAGANA a		*/
-	  {  { 0x3094 }, { 0,1,0 }  },  /* HIRAGANA u"		*/
-#else
 	  {  { 0x3041 }, { 0,0,0 }  },  /* HIRAGANA a		*/
 	  {  { 0x3094 }, { 0,0,0 }  },  /* HIRAGANA u"		*/
-#endif
 	  {  { 0x3099 }, { 0,1,0 }  },  /* SOUND MARK		*/
-#ifdef SHOJI_IS_RIGHT
-	  {  { 0x309E }, { 0,1,0 }  },  /* ITERATION MARK	*/
-	  {  { 0x30A1 }, { 0,1,0 }  },  /* KATAKANA a		*/
-	  {  { 0x30FA }, { 0,1,0 }  },  /* KATAKANA wo"	*/
-#else
 	  {  { 0x309E }, { 0,0,0 }  },  /* ITERATION MARK	*/
 	  {  { 0x30A1 }, { 0,0,0 }  },  /* KATAKANA a		*/
 	  {  { 0x30FA }, { 0,0,0 }  },  /* KATAKANA wo"	*/
-#endif
 	  {  { 0x30FB }, { 0,1,0 }  },  /* KATAKANA MID.DOT	*/
-#ifdef SHOJI_IS_RIGHT
-	  {  { 0x30FE }, { 0,1,0 }  },  /* KATAKANA ITERATION	*/
-#else
 	  {  { 0x30FE }, { 0,0,0 }  },  /* KATAKANA ITERATION	*/
-#endif
 	  {  { 0x3191 }, { 0,1,0 }  },  /* KANBUN REV.MARK	*/
 	  {  { 0x3243 }, { 0,1,0 }  },  /* IDEO. MARK (reach) */
 	  {  { 0x32CB }, { 0,1,0 }  },  /* IDEO.TEL.SYM.DEC12 */
 	  {  { 0x32FE }, { 0,1,0 }  },  /* MARU KATAKANA wo	*/
 	  {  { 0x33FE }, { 0,1,0 }  },  /* CJK IDEO.TEL.31th	*/
-#ifdef SHOJI_IS_RIGHT
-	  {  { 0x4E00 }, { 0,1,0 }  },  /* CJK UNI.IDEO.	*/
-	  {  { 0x4E05 }, { 0,1,0 }  },  /* CJK UNI.IDEO.	*/
-	  {  { 0x4E06 }, { 0,1,0 }  },  /* CJK UNI.IDEO.NON-J	*/
-	  {  { 0x4E07 }, { 0,1,0 }  },  /* CJK UNI.IDEO.	*/
-	  {  { 0x4FFF }, { 0,1,0 }  },  /* CJK UNI.IDEO.	*/
-	  {  { 0x9000 }, { 0,1,0 }  },  /* CJK UNI.IDEO.	*/
-	  {  { 0x9006 }, { 0,1,0 }  },  /* CJK UNI.IDEO.	*/
-	  {  { 0x9007 }, { 0,1,0 }  },  /* CJK UNI.IDEO.NON-J	*/
-	  {  { 0x9FA4 }, { 0,1,0 }  },  /* CJK UNI.IDEO.NON-J	*/
-	  {  { 0x9FA5 }, { 0,1,0 }  },  /* CJK UNI.IDEO.	*/
-#else
 	  {  { 0x4E00 }, { 0,0,0 }  },  /* CJK UNI.IDEO.	*/
 	  {  { 0x4E05 }, { 0,0,0 }  },  /* CJK UNI.IDEO.	*/
 	  {  { 0x4E06 }, { 0,0,0 }  },  /* CJK UNI.IDEO.NON-J	*/
@@ -161,7 +130,6 @@ TST_ISW_LOC (ALNUM, alnum) = {
 	  {  { 0x9007 }, { 0,0,0 }  },  /* CJK UNI.IDEO.NON-J	*/
 	  {  { 0x9FA4 }, { 0,0,0 }  },  /* CJK UNI.IDEO.NON-J	*/
 	  {  { 0x9FA5 }, { 0,0,0 }  },  /* CJK UNI.IDEO.	*/
-#endif
 	  {  { 0xFE4F }, { 0,1,0 }  },  /* CJK UNI.IDEO.	*/
 	  {  { 0xFF0F }, { 0,1,0 }  },  /* FULL SLASH		*/
 	  {  { 0xFF19 }, { 0,0,0 }  },  /* FULL 9		*/
@@ -172,19 +140,11 @@ TST_ISW_LOC (ALNUM, alnum) = {
 	  {  { 0xFF5E }, { 0,1,0 }  },  /* FULL ~ (tilde)	*/
 	  {  { 0xFF61 }, { 0,1,0 }  },  /* HALF IDEO.STOP. .	*/
 	  {  { 0xFF65 }, { 0,1,0 }  },  /* HALF KATA MID.DOT	*/
-#ifdef SHOJI_IS_RIGHT
-	  {  { 0xFF66 }, { 0,1,0 }  },  /* HALF KATA WO		*/
-	  {  { 0xFF6F }, { 0,1,0 }  },  /* HALF KATA tu		*/
-	  {  { 0xFF70 }, { 0,1,0 }  },  /* HALF KATA PL -	*/
-	  {  { 0xFF71 }, { 0,1,0 }  },  /* HALF KATA A		*/
-	  {  { 0xFF9E }, { 0,1,0 }  },  /* HALF KATA MI		*/
-#else
 	  {  { 0xFF66 }, { 0,0,0 }  },  /* HALF KATA WO		*/
 	  {  { 0xFF6F }, { 0,0,0 }  },  /* HALF KATA tu		*/
 	  {  { 0xFF70 }, { 0,0,0 }  },  /* HALF KATA PL -	*/
 	  {  { 0xFF71 }, { 0,0,0 }  },  /* HALF KATA A		*/
 	  {  { 0xFF9E }, { 0,0,0 }  },  /* HALF KATA MI		*/
-#endif
 	  {  .is_last = 1 }		  /* last element    */
 	}
     },

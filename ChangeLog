@@ -1,3 +1,40 @@
+2014-07-08  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* localedata/tests-mbwc/dat_iswalnum.c [SHOJI_IS_RIGHT]:
+	Remove code.
+	* localedata/tests-mbwc/dat_iswalpha.c [SHOJI_IS_RIGHT]:
+	Likewise
+	* localedata/tests-mbwc/dat_iswctype.c [SHOJI_IS_RIGHT]:
+	Likewise
+	* localedata/tests-mbwc/dat_iswgraph.c [SHOJI_IS_RIGHT]:
+	Likewise
+	* localedata/tests-mbwc/dat_iswprint.c [SHOJI_IS_RIGHT]:
+	Likewise
+	* localedata/tests-mbwc/dat_iswpunct.c [SHOJI_IS_RIGHT]:
+	Likewise
+	* localedata/tests-mbwc/dat_mbrlen.c [SHOJI_IS_RIGHT]:
+	Likewise
+	* localedata/tests-mbwc/dat_mbstowcs.c [SHOJI_IS_RIGHT]:
+	Likewise
+	* localedata/tests-mbwc/dat_mbtowc.c [SHOJI_IS_RIGHT]:
+	Likewise
+	* localedata/tests-mbwc/dat_strcoll.c [SHOJI_IS_RIGHT]:
+	Likewise
+	* localedata/tests-mbwc/dat_swscanf.c [SHOJI_IS_RIGHT]:
+	Likewise
+	* localedata/tests-mbwc/dat_towctrans.c [SHOJI_IS_RIGHT]:
+	Likewise
+	* localedata/tests-mbwc/dat_wcscoll.c [SHOJI_IS_RIGHT]:
+	Likewise
+	* localedata/tests-mbwc/dat_wcswidth.c [SHOJI_IS_RIGHT]:
+	Likewise
+	* localedata/tests-mbwc/dat_wctob.c [SHOJI_IS_RIGHT]:
+	Likewise
+	* localedata/tests-mbwc/dat_wcwidth.c [SHOJI_IS_RIGHT]:
+	Likewise
+	* localedata/tests-mbwc/tst_towctrans.c [SHOJI_IS_RIGHT]:
+	Likewise
+
 2014-07-07  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power7/memcpy.S: Align VSX copies to 16B

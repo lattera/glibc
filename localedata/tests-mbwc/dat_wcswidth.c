@@ -56,11 +56,7 @@ TST_WCSWIDTH tst_wcswidth_loc [] = {
 	/*expect*/ { 0,1,-1				   },
       },
       { /*input.*/ { { 0x00C1,0x00A0,0x0000 },		 2 },  /* 16 */
-#ifdef SHOJI_IS_RIGHT
-	/*expect*/ { 0,1,-1				   },
-#else
 	/*expect*/ { 0,1,2				   },
-#endif
       },
       { /*input.*/ { { 0x00C1,0x00A1,0x0000 },		 2 },  /* 17 */
 	/*expect*/ { 0,1,2				   },
@@ -89,21 +85,12 @@ TST_WCSWIDTH tst_wcswidth_loc [] = {
       { /*input.*/ { { 0x0041,0x0042,0x00C3,0x0000 },	 2 },  /* 03 */
 	/*expect*/ { 0,1,2				   },
       },
-#ifdef SHOJI_IS_RIGHT
-      { /*input.*/ { { 0x0041,0x0042,0x00C3,0x0000 },	 3 },  /* 04 */
-	/*expect*/ { 0,1,3				   },
-      },
-      { /*input.*/ { { 0x0041,0x0042,0x00C3,0x0000 },	 4 },  /* 05 */
-	/*expect*/ { 0,1,3				   },
-      },
-#else
       { /*input.*/ { { 0x0041,0x0042,0x00C3,0x0000 },	 3 },  /* 04 */
 	/*expect*/ { 0,1,-1				   },
       },
       { /*input.*/ { { 0x0041,0x0042,0x0043,0x0000 },	 4 },  /* 05 */
 	/*expect*/ { 0,1,3				   },
       },
-#endif
       { /*input.*/ { { 0x0000 },			 1 },  /* 06 */
 	/*expect*/ { 0,1,0				   },
       },
@@ -137,21 +124,12 @@ TST_WCSWIDTH tst_wcswidth_loc [] = {
       { /*input.*/ { { 0x0041,0x00A0,0x0000 },		 2 },  /* 16 */
 	/*expect*/ { 0,1,-1				   },
       },
-#ifdef SHOJI_IS_RIGHT
-      { /*input.*/ { { 0x0041,0x00A1,0x0000 },		 2 },  /* 17 */
-	/*expect*/ { 0,1,2				   },
-      },
-      { /*input.*/ { { 0x0041,0x00FF,0x0000 },		 2 },  /* 18 */
-	/*expect*/ { 0,1,2				   },
-      },
-#else
       { /*input.*/ { { 0x0041,0x007E,0x0000 },		 2 },  /* 17 */
 	/*expect*/ { 0,1,2				   },
       },
       { /*input.*/ { { 0x0041,0x0020,0x0000 },		 2 },  /* 18 */
 	/*expect*/ { 0,1,2				   },
       },
-#endif
       { /*input.*/ { { 0x0041,0x3042,0x0000 },		 2 },  /* 19 */
 	/*expect*/ { 0,1,-1				   },
       },

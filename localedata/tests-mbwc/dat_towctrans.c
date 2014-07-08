@@ -38,11 +38,7 @@ TST_TOWCTRANS tst_towctrans_loc [] = {
   {
     { Ttowctrans, TST_LOC_C },
     {
-#ifdef SHOJI_IS_RIGHT
-      {	 { 0x0010, "xxxxxxx" }, { EINVAL,1,0x0010 }  },
-#else
       {	 { 0x0010, "xxxxxxx" }, { 0,     1,0x0010 }  },
-#endif
       {	 { 0x007F, "tolower" }, { 0,	   1,0x007F }  },
       {	 { 0x0061, "toupper" }, { 0,	   1,0x0041 }  },
       {	 { 0x0041, "tolower" }, { 0,	   1,0x0061 }  },
@@ -52,11 +48,7 @@ TST_TOWCTRANS tst_towctrans_loc [] = {
   {
     { Ttowctrans, TST_LOC_de },
     {
-#ifdef SHOJI_IS_RIGHT
-      {	 { 0x0010, "tojkata" }, { EINVAL,1,0x0010 }  },
-#else
       {	 { 0x0010, "tojkata" }, { 0,     1,0x0010 }  },
-#endif
       {	 { 0x0080, "tolower" }, { 0,	   1,0x0080 }  },
       {	 { 0x00EC, "toupper" }, { 0,	   1,0x00CC }  },
       {	 { 0x00CC, "tolower" }, { 0,	   1,0x00EC }  },
@@ -66,11 +58,7 @@ TST_TOWCTRANS tst_towctrans_loc [] = {
   {
     { Ttowctrans, TST_LOC_enUS },
     {
-#ifdef SHOJI_IS_RIGHT
-      {	 { 0x0010, "xxxxxxx" }, { EINVAL,1,0x0010 }  },
-#else
       {	 { 0x0010, "xxxxxxx" }, { 0,     1,0x0010 }  },
-#endif
       {	 { 0x007F, "tolower" }, { 0,	   1,0x007F }  },
       {	 { 0x0061, "toupper" }, { 0,	   1,0x0041 }  },
       {	 { 0x0041, "tolower" }, { 0,	   1,0x0061 }  },

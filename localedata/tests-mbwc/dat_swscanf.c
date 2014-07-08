@@ -61,13 +61,8 @@ TST_SWSCANF tst_swscanf_loc [] =
       },
 	  L"1%d:2%d:3%d:4%d:5%d:6%d:7%d:8%d:9%d", 0
       },
-#ifdef SHOJI_IS_RIGHT
-	{ 1,EINVAL,1,WEOF,
-	  0,0,0,0,"", { 0x0000 },
-#else
 	{ 0,1,0,
 	  0,0,0,0,"", { 0x0000 },
-#endif
 	},
       },
       /*---------------------------------------------------*/
@@ -155,22 +150,6 @@ TST_SWSCANF tst_swscanf_loc [] =
 	  0, 1, 3.9, 'a', "cd", { 0x0000 }
 	},
       },
-#ifdef SHOJI_IS_RIGHT
-      /* XXX This test does not make sense.  The format string is
-	 L"\x1\x2\x25\x53" and it is supposed to match the words
-	 0x30A2, 0x30A4, 0x0001.  */
-      /*------------------------ 04 -----------------------*/
-      /* <NO_WAIVER> x 2 */
-      { { {
-	0x30A2, 0x30A4, 0x0001, 0x0000
-      },
-	  { 0x0001,0x0002,0x0025,0x0053,0x0000 }, 'S'
-      },
-	{ EILSEQ,1,EOF,
-	  0,0,0,0,"", { 0x0000 }
-	},
-      },
-#endif
       /*---------------------------------------------------*/
       { .is_last = 1}	/* Last element.  */
     }

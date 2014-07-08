@@ -72,22 +72,14 @@ TST_STRCOLL tst_strcoll_loc [] = {
       {
 	/* <WAIVER> */
 	/*input.*/ { "B",	"a"		      },  /* #4 */
-#ifdef SHOJI_IS_RIGHT
-	/*expect*/ { 0,0,-1,			      },
-#else
 		   /* XXX We are not testing the C locale.  */
 	/*expect*/ { 0,0,+1,			      },
-#endif
       },
       {
 	/* <WAIVER> */
 	/*input.*/ { "a",	"B"		      },  /* #5 */
-#ifdef SHOJI_IS_RIGHT
-	/*expect*/ { 0,0,+1,			      },
-#else
 		   /* XXX We are not testing the C locale.  */
 	/*expect*/ { 0,0,-1,			      },
-#endif
       },
       { /*input.*/ { "b",	"A"		      },  /* #6 */
 	/*expect*/ { 0,0,+1,			      },
