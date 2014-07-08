@@ -1,3 +1,7 @@
+2014-07-08  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/i386/dl-machine.h: Define ELF_MACHINE_NO_REL.
+
 2014-07-08  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/memmove.c: Remove file.
