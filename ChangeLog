@@ -1,3 +1,8 @@
+2014-07-08  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power4/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add memmove functions.
+
 2014-07-08  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* localedata/tests-mbwc/dat_iswalnum.c [SHOJI_IS_RIGHT]:
