@@ -30,7 +30,7 @@
  cfi_endproc;							\
  ASM_SIZE_DIRECTIVE(__strcasecmp_l_power7)
 
-#undef weak_alias(name, alias)
+#undef weak_alias
 #define weak_alias(name, alias)
 
 #undef libc_hidden_builtin_def

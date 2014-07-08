@@ -1,5 +1,12 @@
 2014-07-08  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/power4/multiarch/strcasecmp_l-power7.S:
+	[weak_alias]: Fix compiler warning due trailing data.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/strcasecmp-power7.S:
+	[weak_alias]: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcat-power7.c: Fix compile
+	warnigs due missing definition of __strcpy_power7 and __strlen_power7.
+
 	* sysdeps/powerpc/powerpc32/power4/multiarch/ifunc-impl-list.c
 	(__libc_ifunc_impl_list): Add memmove functions.
 

@@ -22,7 +22,9 @@
 #undef libc_hidden_def
 #define libc_hidden_def(name)
 
+extern typeof (strcpy) __strcpy_power7;
+extern typeof (strlen) __strlen_power7;
+
 #define strcpy __strcpy_power7
 #define strlen __strlen_power7
-
 #include <sysdeps/powerpc/strcat.c>
