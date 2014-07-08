@@ -1,5 +1,15 @@
 2014-07-08  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/memmove.c: Remove file.
+	* sysdeps/powerpc/powerpc32/power4/memcopy.h
+	[MEMCPY_OK_FOR_FWD_MEMMOVE]: Define it to 1.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memmove-power7.c
+	[MEMCPY_OK_FOR_FWD_MEMMOVE]: Remove define.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memmove-ppc.c:
+	[MEMCPY_OK_FOR_FWD_MEMMOVE]: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memmove-ppc64.c: Include default
+	string memmove instead of removed powerpc one.
+
 	* sysdeps/powerpc/powerpc32/power4/multiarch/strcasecmp_l-power7.S:
 	[weak_alias]: Fix compiler warning due trailing data.
 	* sysdeps/powerpc/powerpc32/power4/multiarch/strcasecmp-power7.S:

@@ -27,5 +27,4 @@ extern __typeof (memmove) __memmove_power7;
 #undef libc_hidden_builtin_def
 #define libc_hidden_builtin_def(name)
 
-#define MEMCPY_OK_FOR_FWD_MEMMOVE 1
 #include <string/memmove.c>

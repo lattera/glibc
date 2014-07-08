@@ -25,4 +25,4 @@
 
 extern __typeof (memmove) __memmove_ppc attribute_hidden;
 
-#include <sysdeps/powerpc/memmove.c>
+#include <string/memmove.c>

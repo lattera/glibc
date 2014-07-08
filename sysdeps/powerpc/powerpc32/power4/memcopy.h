@@ -110,3 +110,7 @@
 	  ((byte *) dst_ep)[0] = __x;					      \
 	}								      \
     } while (0)
+
+/* The powerpc memcpy implementation is safe to use for memmove.  */
+#undef MEMCPY_OK_FOR_FWD_MEMMOVE
+#define MEMCPY_OK_FOR_FWD_MEMMOVE 1

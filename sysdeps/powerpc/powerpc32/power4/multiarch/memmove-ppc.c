@@ -30,5 +30,4 @@ extern __typeof (memmove) __memmove_ppc;
   __hidden_ver1 (__memmove_ppc, __GI_memmove, __memmove_ppc);
 #endif
 
-#define MEMCPY_OK_FOR_FWD_MEMMOVE 1
 #include <string/memmove.c>
