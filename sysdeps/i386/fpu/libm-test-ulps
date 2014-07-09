@@ -846,12 +846,16 @@ ildouble: 1
 ldouble: 1
 
 Function: "cos":
+float: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "cos_downward":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 2
 ldouble: 2
 
@@ -861,13 +865,17 @@ ldouble: 1
 
 Function: "cos_towardzero":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "cos_upward":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 2
 ldouble: 2
 
@@ -1193,17 +1201,17 @@ ldouble: 1
 
 Function: Real part of "ctan_towardzero":
 double: 3
-float: 1
+float: 2
 idouble: 3
-ifloat: 1
+ifloat: 2
 ildouble: 5
 ldouble: 5
 
 Function: Imaginary part of "ctan_towardzero":
 double: 2
-float: 1
+float: 3
 idouble: 2
-ifloat: 1
+ifloat: 3
 ildouble: 4
 ldouble: 4
 
@@ -1273,17 +1281,17 @@ ldouble: 2
 
 Function: Real part of "ctanh_towardzero":
 double: 2
-float: 1
+float: 3
 idouble: 2
-ifloat: 1
+ifloat: 3
 ildouble: 4
 ldouble: 4
 
 Function: Imaginary part of "ctanh_towardzero":
 double: 2
-float: 1
+float: 2
 idouble: 2
-ifloat: 1
+ifloat: 2
 ildouble: 3
 ldouble: 3
 
@@ -1726,12 +1734,16 @@ ildouble: 2
 ldouble: 2
 
 Function: "sin":
+float: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "sin_downward":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 2
 ldouble: 2
 
@@ -1741,35 +1753,47 @@ ldouble: 1
 
 Function: "sin_towardzero":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "sin_upward":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 2
 ldouble: 2
 
 Function: "sincos":
+float: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "sincos_downward":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 2
 ldouble: 2
 
 Function: "sincos_towardzero":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "sincos_upward":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 2
 ldouble: 2
 
