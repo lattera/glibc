@@ -39,7 +39,7 @@ do_test (void)
   if (t1 != t2 && t1 != t3 && t2 != t3)
     return 0;
 
-  printf ("Fail: timebase reads should always be different.");
+  printf ("Fail: timebase reads should always be different.\n");
   return 1;
 }
 

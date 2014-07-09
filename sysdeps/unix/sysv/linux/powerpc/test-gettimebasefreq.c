@@ -41,7 +41,7 @@ do_test (void)
   printf ("Time Base frequency = %"PRIu64" Hz\n", f);
 
   if (f == 0) {
-      printf ("Fail: The time base frequency can't be zero.");
+      printf ("Fail: The time base frequency can't be zero.\n");
       return 1;
   }
 

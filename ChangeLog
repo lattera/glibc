@@ -1,5 +1,10 @@
 2014-07-09  Andreas Schwab  <schwab@suse.de>
 
+	* sysdeps/powerpc/test-gettimebase.c (do_test): Add newline to
+	output.
+	* sysdeps/unix/sysv/linux/powerpc/test-gettimebasefreq.c
+	(do_test): Likewise.
+
 	* sysdeps/i386/fpu/libm-test-ulps: Update ULPs.
 
 2014-07-09  Will Newton  <will.newton@linaro.org>
