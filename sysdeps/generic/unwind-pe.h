@@ -22,7 +22,7 @@
    than duplicating code, however.  */
 
 /* If using C++, references to abort have to be qualified with std::.  */
-#if __cplusplus
+#ifdef __cplusplus
 #define __gxx_abort std::abort
 #else
 #define __gxx_abort abort

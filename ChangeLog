@@ -1,3 +1,8 @@
+2014-07-09  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/generic/unwind-pe.h: Only check if __cplusplus is
+	defined.
+
 2014-07-08  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* resolv/res_query.c (__libc_res_nsearch): Dereference resplen2
