@@ -1,5 +1,7 @@
 2014-07-09  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sunrpc/xdr.c (xdr_string): Initialize SIZE to 0.
+
 	* sysdeps/generic/unwind-pe.h: Only check if __cplusplus is
 	defined.
 
