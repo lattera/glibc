@@ -27,11 +27,7 @@
 #include <stdint.h>
 #include <sys/types.h>
 
-#if HAVE_OBSTACK
-# include <obstack.h>
-#else
-# include "obstack.h"
-#endif
+#include <obstack.h>
 
 #ifdef HAVE_VALUES_H
 # include <values.h>

@@ -1,5 +1,7 @@
 2014-07-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* locale/programs/simple-hash.c [!HAVE_OBSTACK]: Remove code.
+
 	[BZ #17125]
 	* sysdeps/unix/sysv/linux/check_pf.c (cache): Don't use
 	libc_freeres_ptr.
