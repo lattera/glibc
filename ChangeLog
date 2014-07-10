@@ -1,3 +1,7 @@
+2014-07-09  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/fpu/libm-test-ulps: Update.
+
 2014-07-09  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/powerpc/test-gettimebase.c (do_test): Add newline to
