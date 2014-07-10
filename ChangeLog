@@ -1,3 +1,10 @@
+2014-07-10  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h (__lll_base_trylock):
+	New define.
+	(__lll_trylock): Use __lll_base_trylock.
+	(__lll_cond_trylock): Likewise.
+
 2014-07-10  Roland McGrath  <roland@hack.frob.com>
 
 	* nptl/pthread_create.c (start_thread): Use atomic_or and
