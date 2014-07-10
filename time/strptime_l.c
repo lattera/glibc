@@ -28,6 +28,7 @@
 #include <stdbool.h>
 
 #ifdef _LIBC
+# define HAVE_LOCALTIME_R 0
 # include "../locale/localeinfo.h"
 #endif
 

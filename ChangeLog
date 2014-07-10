@@ -1,5 +1,7 @@
 2014-07-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* time/strptime_l.c [_LIBC]: Define HAVE_LOCALTIME_R.
+
 	* time/strftime_l.c [_LIBC]: Define HAVE_STRFTIME.
 
 	* io/ftw.c: Include sys/param.h unconditionally.
