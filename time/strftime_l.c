@@ -29,6 +29,7 @@
 # define HAVE_TM_ZONE 1
 # define HAVE_TZNAME 1
 # define HAVE_TZSET 1
+# define HAVE_STRFTIME 0
 # define MULTIBYTE_IS_FORMAT_SAFE 1
 # define STDC_HEADERS 1
 # include "../locale/localeinfo.h"
