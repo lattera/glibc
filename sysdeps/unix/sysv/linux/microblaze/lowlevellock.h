@@ -180,11 +180,6 @@
 #define lll_cond_trylock(lock)                                                 \
   atomic_compare_and_exchange_val_acq(&(lock), 2, 0)
 
-#define __lll_robust_trylock(futex, id)                                        \
-  (atomic_compare_and_exchange_val_acq (futex, id, 0) != 0)
-#define lll_robust_trylock(lock, id)                                           \
-  __lll_robust_trylock (&(lock), id)
-
 extern void __lll_lock_wait_private (int *futex) attribute_hidden;
 extern void __lll_lock_wait (int *futex, int private) attribute_hidden;
 extern int __lll_robust_lock_wait (int *futex, int private) attribute_hidden;

@@ -195,15 +195,6 @@ typedef int lll_lock_t;
 
 static inline int
 __attribute__ ((always_inline))
-__lll_robust_trylock (int *futex, int id)
-{
-  return atomic_compare_and_exchange_val_acq (futex, id, 0) != 0;
-}
-#define lll_robust_trylock(futex, id) \
-  __lll_robust_trylock (&(futex), id)
-
-static inline int
-__attribute__ ((always_inline))
 __lll_cond_trylock (int *futex)
 {
   return atomic_compare_and_exchange_val_acq (futex, 2, 0) != 0;

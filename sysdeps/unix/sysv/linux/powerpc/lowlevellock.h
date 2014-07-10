@@ -202,23 +202,6 @@
 # endif
 #endif
 
-/* Set *futex to ID if it is 0, atomically.  Returns the old value */
-#define __lll_robust_trylock(futex, id) \
-  ({ int __val;								      \
-     __asm __volatile ("1:	lwarx	%0,0,%2" MUTEX_HINT_ACQ "\n"	      \
-		       "	cmpwi	0,%0,0\n"			      \
-		       "	bne	2f\n"				      \
-		       "	stwcx.	%3,0,%2\n"			      \
-		       "	bne-	1b\n"				      \
-		       "2:	" __lll_acq_instr			      \
-		       : "=&r" (__val), "=m" (*futex)			      \
-		       : "r" (futex), "r" (id), "m" (*futex)		      \
-		       : "cr0", "memory");				      \
-     __val;								      \
-  })
-
-#define lll_robust_trylock(lock, id) __lll_robust_trylock (&(lock), id)
-
 /* Set *futex to 1 if it is 0, atomically.  Returns the old value */
 #define __lll_trylock(futex) __lll_robust_trylock (futex, 1)
 

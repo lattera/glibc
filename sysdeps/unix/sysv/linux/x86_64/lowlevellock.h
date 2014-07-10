@@ -165,14 +165,6 @@
 		       : "memory");					      \
      ret; })
 
-#define lll_robust_trylock(futex, id) \
-  ({ int ret;								      \
-     __asm __volatile (LOCK_INSTR "cmpxchgl %2, %1"			      \
-		       : "=a" (ret), "=m" (futex)			      \
-		       : "r" (id), "m" (futex),	"0" (LLL_LOCK_INITIALIZER)    \
-		       : "memory");					      \
-     ret; })
-
 #define lll_cond_trylock(futex) \
   ({ int ret;								      \
      __asm __volatile (LOCK_INSTR "cmpxchgl %2, %1"			      \

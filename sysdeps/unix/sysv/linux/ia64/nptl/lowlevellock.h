@@ -169,12 +169,6 @@ while (0)
 #define lll_trylock(futex) __lll_trylock (&(futex))
 
 
-#define __lll_robust_trylock(futex, id) \
-  (atomic_compare_and_exchange_val_acq (futex, id, 0) != 0)
-#define lll_robust_trylock(futex, id) \
-  __lll_robust_trylock (&(futex), id)
-
-
 #define __lll_cond_trylock(futex) \
   (atomic_compare_and_exchange_val_acq (futex, 2, 0) != 0)
 #define lll_cond_trylock(futex) __lll_cond_trylock (&(futex))

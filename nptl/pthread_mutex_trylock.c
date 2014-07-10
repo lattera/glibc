@@ -72,7 +72,7 @@ __pthread_mutex_trylock (mutex)
     elision:
       if (lll_trylock_elision (mutex->__data.__lock,
 			       mutex->__data.__elision) != 0)
-        break;
+	break;
       /* Don't record the ownership.  */
       return 0;
 
@@ -159,7 +159,8 @@ __pthread_mutex_trylock (mutex)
 		}
 	    }
 
-	  oldval = lll_robust_trylock (mutex->__data.__lock, id);
+	  oldval = atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
+							id, 0);
 	  if (oldval != 0 && (oldval & FUTEX_OWNER_DIED) == 0)
 	    {
 	      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);

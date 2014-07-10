@@ -210,21 +210,6 @@ __lll_cond_trylock (int *futex)
 #define lll_cond_trylock(futex) __lll_cond_trylock (&(futex))
 
 
-static inline int
-__attribute__ ((always_inline))
-__lll_robust_trylock (int *futex, int id)
-{
-    unsigned int old;
-
-    __asm __volatile ("cs %0,%3,%1"
-		       : "=d" (old), "=Q" (*futex)
-		       : "0" (0), "d" (id), "m" (*futex) : "cc", "memory" );
-    return old != 0;
-}
-#define lll_robust_trylock(futex, id) \
-  __lll_robust_trylock (&(futex), id)
-
-
 extern void __lll_lock_wait_private (int *futex) attribute_hidden;
 extern void __lll_lock_wait (int *futex, int private) attribute_hidden;
 extern int __lll_robust_lock_wait (int *futex, int private) attribute_hidden;

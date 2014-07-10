@@ -118,28 +118,6 @@ extern int __lll_unlock_wake (int *__futex, int private) attribute_hidden;
 	: "r0", "r1", "r2", "t", "memory"); \
      __result; })
 
-#define lll_robust_trylock(futex, id)	\
-  ({ unsigned char __result; \
-     __asm __volatile ("\
-	.align 2\n\
-	mova 1f,r0\n\
-	nop\n\
-	mov r15,r1\n\
-	mov #-8,r15\n\
-     0: mov.l @%1,r2\n\
-	cmp/eq r2,%3\n\
-	bf 1f\n\
-	mov.l %2,@%1\n\
-     1: mov r1,r15\n\
-	mov #-1,%0\n\
-	negc %0,%0"\
-	: "=r" (__result) \
-	: "r" (&(futex)), \
-	  "r" (id), \
-	  "r" (LLL_LOCK_INITIALIZER) \
-	: "r0", "r1", "r2", "t", "memory"); \
-     __result; })
-
 #define lll_cond_trylock(futex) \
   ({ unsigned char __result; \
      __asm __volatile ("\
