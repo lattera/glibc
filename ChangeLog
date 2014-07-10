@@ -1,5 +1,7 @@
 2014-07-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* io/ftw.c: Include sys/param.h unconditionally.
+
 	* locale/programs/simple-hash.c [!HAVE_OBSTACK]: Remove code.
 
 	[BZ #17125]

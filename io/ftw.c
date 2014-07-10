@@ -66,9 +66,7 @@ char *alloca ();
 #include <string.h>
 #include <unistd.h>
 #include <not-cancel.h>
-#if HAVE_SYS_PARAM_H || defined _LIBC
-# include <sys/param.h>
-#endif
+#include <sys/param.h>
 #ifdef _LIBC
 # include <include/sys/stat.h>
 #else
