@@ -1059,6 +1059,25 @@ setxid_signal_thread (struct xid_command *cmdp, struct pthread *t)
     return 0;
 }
 
+/* Check for consistency across set*id system call results.  The abort
+   should not happen as long as all privileges changes happen through
+   the glibc wrappers.  ERROR must be 0 (no error) or an errno
+   code.  */
+void
+attribute_hidden
+__nptl_setxid_error (struct xid_command *cmdp, int error)
+{
+  do
+    {
+      int olderror = cmdp->error;
+      if (olderror == error)
+	break;
+      if (olderror != -1)
+	/* Mismatch between current and previous results.  */
+	abort ();
+    }
+  while (atomic_compare_and_exchange_bool_acq (&cmdp->error, error, -1));
+}
 
 int
 attribute_hidden
@@ -1070,6 +1089,7 @@ __nptl_setxid (struct xid_command *cmdp)
 
   __xidcmd = cmdp;
   cmdp->cntr = 0;
+  cmdp->error = -1;
 
   struct pthread *self = THREAD_SELF;
 
@@ -1153,11 +1173,14 @@ __nptl_setxid (struct xid_command *cmdp)
   INTERNAL_SYSCALL_DECL (err);
   result = INTERNAL_SYSCALL_NCS (cmdp->syscall_no, err, 3,
 				 cmdp->id[0], cmdp->id[1], cmdp->id[2]);
-  if (INTERNAL_SYSCALL_ERROR_P (result, err))
+  int error = 0;
+  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
     {
-      __set_errno (INTERNAL_SYSCALL_ERRNO (result, err));
+      error = INTERNAL_SYSCALL_ERRNO (result, err);
+      __set_errno (error);
       result = -1;
     }
+  __nptl_setxid_error (cmdp, error);
 
   lll_unlock (stack_cache_lock, LLL_PRIVATE);
   return result;

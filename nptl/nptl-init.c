@@ -248,10 +248,10 @@ sighandler_setxid (int sig, siginfo_t *si, void *ctx)
   INTERNAL_SYSCALL_DECL (err);
   result = INTERNAL_SYSCALL_NCS (__xidcmd->syscall_no, err, 3, __xidcmd->id[0],
 				 __xidcmd->id[1], __xidcmd->id[2]);
+  int error = 0;
   if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
-    /* Safety check.  This should never happen if the setxid system
-       calls are only ever called through their glibc wrappers.  */
-    abort ();
+    error = INTERNAL_SYSCALL_ERRNO (result, err);
+  __nptl_setxid_error (__xidcmd, error);
 
   /* Reset the SETXID flag.  */
   struct pthread *self = THREAD_SELF;

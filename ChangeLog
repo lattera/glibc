@@ -1,3 +1,15 @@
+2014-07-10  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #17135]
+	* nptl/pthreadP.h (__nptl_setxid_error): Declare function.
+	* nptl/allocatestack.c (__nptl_setxid_error): New function.
+	(__nptl_setxid): Initialize error member.  Call
+	__nptl_setxid_error.
+	* nptl/nptl-init.c (sighandler_setxid): Call __nptl_setxid_error.
+	* nptl/descr.h (struct xid_command): Add error member.
+	* nptl/tst-setuid3.c: New file.
+	* nptl/Makefile (tests): Add it.
+
 2014-07-10  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h (__lll_base_trylock):
