@@ -354,12 +354,10 @@ FCTNAME (LOOPFCT) (struct __gconv_step *step,
 # define DEFINE_UNALIGNED
 # include "loop.c"
 # undef DEFINE_UNALIGNED
-#endif
-
-
-#if MAX_NEEDED_INPUT > 1
-# define SINGLE(fct) SINGLE2 (fct)
-# define SINGLE2(fct) fct##_single
+#else
+# if MAX_NEEDED_INPUT > 1
+#  define SINGLE(fct) SINGLE2 (fct)
+#  define SINGLE2(fct) fct##_single
 static inline int
 __attribute ((always_inline))
 SINGLE(LOOPFCT) (struct __gconv_step *step,
@@ -369,37 +367,37 @@ SINGLE(LOOPFCT) (struct __gconv_step *step,
 		 size_t *irreversible EXTRA_LOOP_DECLS)
 {
   mbstate_t *state = step_data->__statep;
-#ifdef LOOP_NEED_FLAGS
+#  ifdef LOOP_NEED_FLAGS
   int flags = step_data->__flags;
-#endif
-#ifdef LOOP_NEED_DATA
+#  endif
+#  ifdef LOOP_NEED_DATA
   void *data = step->__data;
-#endif
+#  endif
   int result = __GCONV_OK;
   unsigned char bytebuf[MAX_NEEDED_INPUT];
   const unsigned char *inptr = *inptrp;
   unsigned char *outptr = *outptrp;
   size_t inlen;
 
-#ifdef INIT_PARAMS
+#  ifdef INIT_PARAMS
   INIT_PARAMS;
-#endif
+#  endif
 
-#ifdef UNPACK_BYTES
+#  ifdef UNPACK_BYTES
   UNPACK_BYTES
-#else
+#  else
   /* Add the bytes from the state to the input buffer.  */
   assert ((state->__count & 7) <= sizeof (state->__value));
   for (inlen = 0; inlen < (size_t) (state->__count & 7); ++inlen)
     bytebuf[inlen] = state->__value.__wchb[inlen];
-#endif
+#  endif
 
   /* Are there enough bytes in the input buffer?  */
   if (MIN_NEEDED_INPUT > 1
       && __builtin_expect (inptr + (MIN_NEEDED_INPUT - inlen) > inend, 0))
     {
       *inptrp = inend;
-#ifdef STORE_REST
+#  ifdef STORE_REST
       while (inptr < inend)
 	bytebuf[inlen++] = *inptr++;
 
@@ -408,12 +406,12 @@ SINGLE(LOOPFCT) (struct __gconv_step *step,
       inend = &bytebuf[inlen];
 
       STORE_REST
-#else
+#  else
       /* We don't have enough input for another complete input
 	 character.  */
       while (inptr < inend)
 	state->__value.__wchb[inlen++] = *inptr++;
-#endif
+#  endif
 
       return __GCONV_INCOMPLETE_INPUT;
     }
@@ -453,11 +451,11 @@ SINGLE(LOOPFCT) (struct __gconv_step *step,
       result = __GCONV_OK;
 
       /* Clear the state buffer.  */
-#ifdef CLEAR_STATE
+#  ifdef CLEAR_STATE
       CLEAR_STATE;
-#else
+#  else
       state->__count &= ~7;
-#endif
+#  endif
     }
   else if (result == __GCONV_INCOMPLETE_INPUT)
     {
@@ -466,11 +464,11 @@ SINGLE(LOOPFCT) (struct __gconv_step *step,
       assert (inend != &bytebuf[MAX_NEEDED_INPUT]);
 
       *inptrp += inend - bytebuf - (state->__count & 7);
-#ifdef STORE_REST
+#  ifdef STORE_REST
       inptrp = &inptr;
 
       STORE_REST
-#else
+#  else
       /* We don't have enough input for another complete input
 	 character.  */
       assert (inend - inptr > (state->__count & ~7));
@@ -479,24 +477,25 @@ SINGLE(LOOPFCT) (struct __gconv_step *step,
       inlen = 0;
       while (inptr < inend)
 	state->__value.__wchb[inlen++] = *inptr++;
-#endif
+#  endif
     }
 
   return result;
 }
-# undef SINGLE
-# undef SINGLE2
-#endif
+#  undef SINGLE
+#  undef SINGLE2
+# endif
 
 
-#ifdef ONEBYTE_BODY
+# ifdef ONEBYTE_BODY
 /* Define the shortcut function for btowc.  */
 static wint_t
 gconv_btowc (struct __gconv_step *step, unsigned char c)
   ONEBYTE_BODY
-# define FROM_ONEBYTE gconv_btowc
-#endif
+#  define FROM_ONEBYTE gconv_btowc
+# endif
 
+#endif
 
 /* We remove the macro definitions so that we can include this file again
    for the definition of another function.  */

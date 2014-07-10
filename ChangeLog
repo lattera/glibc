@@ -1,3 +1,8 @@
+2014-07-17  Will Newton  <will.newton@linaro.org>
+
+	* iconv/loop.c: Move definition of LOOPFCT and gconv_btowc
+	into an #else block.
+
 2014-07-16  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/preconfigure.ac: Apply EABI sanity check to arm*, not
