@@ -378,20 +378,6 @@ extern int __lll_timedlock_elision (int *futex, short *adapt_count,
     }									      \
   while (0)
 
-#define lll_robust_dead(futex, private) \
-  do									      \
-    {									      \
-      int ignore;							      \
-      __asm __volatile (LOCK_INSTR "orl %3, (%2)\n\t"			      \
-			"syscall"					      \
-			: "=m" (futex), "=a" (ignore)			      \
-			: "D" (&(futex)), "i" (FUTEX_OWNER_DIED),	      \
-			  "S" (__lll_private_flag (FUTEX_WAKE, private)),     \
-			  "1" (__NR_futex), "d" (1)			      \
-			: "cx", "r11", "cc", "memory");			      \
-    }									      \
-  while (0)
-
 /* Returns non-zero if error happened, zero if success.  */
 #define lll_futex_requeue(ftx, nr_wake, nr_move, mutex, val, private) \
   ({ int __res;								      \

@@ -114,18 +114,6 @@
     INTERNAL_SYSCALL_ERROR_P (__ret, __err) ? -__ret : __ret;		      \
   })
 
-#define lll_robust_dead(futexv, private) \
-  do									      \
-    {									      \
-      INTERNAL_SYSCALL_DECL (__err);					      \
-      int *__futexp = &(futexv);					      \
-									      \
-      atomic_or (__futexp, FUTEX_OWNER_DIED);				      \
-      INTERNAL_SYSCALL (futex, __err, 4, __futexp,			      \
-			__lll_private_flag (FUTEX_WAKE, private), 1, 0);      \
-    }									      \
-  while (0)
-
 /* Returns non-zero if error happened, zero if success.  */
 #define lll_futex_requeue(futexp, nr_wake, nr_move, mutex, val, private) \
   ({									      \

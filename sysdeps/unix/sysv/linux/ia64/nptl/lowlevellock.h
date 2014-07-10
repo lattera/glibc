@@ -110,16 +110,6 @@
    _r10 == -1 ? -_retval : _retval;					\
 })
 
-#define lll_robust_dead(futexv, private)				\
-do									\
-  {									\
-    int *__futexp = &(futexv);						\
-    atomic_or (__futexp, FUTEX_OWNER_DIED);				\
-    DO_INLINE_SYSCALL(futex, 3, (long) __futexp,			\
-		      __lll_private_flag (FUTEX_WAKE, private), 1);	\
-  }									\
-while (0)
-
 /* Returns non-zero if error happened, zero if success.  */
 #define lll_futex_requeue(ftx, nr_wake, nr_move, mutex, val, private)	     \
 ({									     \

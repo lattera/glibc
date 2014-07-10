@@ -1,5 +1,24 @@
 2014-07-10  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/pthread_create.c (start_thread): Use atomic_or and
+	lll_futex_wake directly rather than lll_robust_dead.
+	* sysdeps/unix/sysv/linux/aarch64/lowlevellock.h
+	(lll_robust_dead): Macro removed.
+	* sysdeps/unix/sysv/linux/alpha/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/nptl/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/tile/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Likewise.
+
 	* nptl/pthread_mutex_trylock.c (__pthread_mutex_trylock):
 	Use atomic_compare_and_exchange_val_acq directly rather than
 	lll_robust_trylock.

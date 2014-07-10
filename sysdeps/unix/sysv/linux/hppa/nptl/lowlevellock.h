@@ -144,15 +144,6 @@ typedef int lll_lock_t;
     __ret;								      \
   })
 
-#define lll_robust_dead(futexv, private) \
-  do									      \
-    {									      \
-      int *__futexp = &(futexv);					      \
-      atomic_or (__futexp, FUTEX_OWNER_DIED);				      \
-      lll_futex_wake (__futexp, 1, private);				      \
-    }									      \
-  while (0)
-
 /* Returns non-zero if error happened, zero if success.  */
 #define lll_futex_wake_unlock(futexp, nr_wake, nr_wake2, futexp2, private) \
   ({									   \

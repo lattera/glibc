@@ -301,21 +301,6 @@ extern int __lll_unlock_wake (int *__futex, int private) attribute_hidden;
 	    if (__result) \
 	      __lll_unlock_wake (__futex, private); })
 
-#define lll_robust_dead(futex, private)		       \
-  (void) ({ int __ignore, *__futex = &(futex); \
-	    __asm __volatile ("\
-		.align 2\n\
-		mova 1f,r0\n\
-		mov r15,r1\n\
-		mov #-6,r15\n\
-	     0: mov.l @%1,%0\n\
-		or %2,%0\n\
-		mov.l %0,@%1\n\
-	     1: mov r1,r15"\
-		: "=&r" (__ignore) : "r" (__futex), "r" (FUTEX_OWNER_DIED) \
-		: "r0", "r1", "memory");	\
-	    lll_futex_wake (__futex, 1, private); })
-
 # ifdef NEED_SYSCALL_INST_PAD
 #  define SYSCALL_WITH_INST_PAD "\
 	trapa #0x14; or r0,r0; or r0,r0; or r0,r0; or r0,r0; or r0,r0"

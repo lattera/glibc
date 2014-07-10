@@ -377,21 +377,6 @@ extern int __lll_timedlock_elision (int *futex, short *adapt_count,
     })
 
 
-#define lll_robust_dead(futex, private) \
-  (void)								      \
-    ({ int __ignore;							      \
-       register int _nr asm ("edx") = 1;				      \
-       __asm __volatile (LOCK_INSTR "orl %5, (%2)\n\t"			      \
-			 LLL_EBX_LOAD					      \
-			 LLL_ENTER_KERNEL				      \
-			 LLL_EBX_LOAD					      \
-			 : "=a" (__ignore)				      \
-			 : "0" (SYS_futex), LLL_EBX_REG (&(futex)),	      \
-			   "c" (__lll_private_flag (FUTEX_WAKE, private)),    \
-			   "d" (_nr), "i" (FUTEX_OWNER_DIED),		      \
-			   "i" (offsetof (tcbhead_t, sysinfo)));	      \
-    })
-
 #define lll_islocked(futex) \
   (futex != LLL_LOCK_INITIALIZER)
 

@@ -107,16 +107,6 @@
 			      (nr), 0);					      \
   })
 
-#define lll_robust_dead(futexv, private) \
-  do									      \
-    {									      \
-      int *__futexp = &(futexv);					      \
-									      \
-      atomic_or (__futexp, FUTEX_OWNER_DIED);				      \
-      lll_futex_wake (__futexp, 1, private);				      \
-    }									      \
-  while (0)
-
 
 /* Returns non-zero if error happened, zero if success.  */
 #define lll_futex_requeue(futexp, nr_wake, nr_move, mutex, val, private) \

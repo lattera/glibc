@@ -390,7 +390,8 @@ start_thread (void *arg)
 # endif
 	  this->__list.__next = NULL;
 
-	  lll_robust_dead (this->__lock, /* XYZ */ LLL_SHARED);
+	  atomic_or (&this->__lock, FUTEX_OWNER_DIED);
+	  lll_futex_wake (this->__lock, 1, /* XYZ */ LLL_SHARED);
 	}
       while (robust != (void *) &pd->robust_head);
     }
