@@ -1,5 +1,10 @@
 2014-07-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	[BZ #17125]
+	* sysdeps/unix/sysv/linux/check_pf.c (cache): Don't use
+	libc_freeres_ptr.
+	(freecache): New function to free CACHE on exit.
+
 	* sunrpc/xdr.c (xdr_string): Add comment about SIZE
 	initialization.
 

@@ -61,7 +61,7 @@ static struct cached_data noai6ai_cached =
     .in6ailen = 0
   };
 
-libc_freeres_ptr (static struct cached_data *cache);
+static struct cached_data *cache;
 __libc_lock_define_initialized (static, lock);
 
 
@@ -401,6 +401,12 @@ __check_pf (bool *seen_ipv4, bool *seen_ipv6,
   *seen_ipv6 = true;
 }
 
+/* Free the cache if it has been allocated.  */
+libc_freeres_fn (freecache)
+{
+  if (cache)
+    __free_in6ai (cache->in6ai);
+}
 
 void
 __free_in6ai (struct in6addrinfo *ai)
