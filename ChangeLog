@@ -1,5 +1,22 @@
 2014-07-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	Sync up with gnulib.
+	* misc/error.c: Use !_LIBC instead of HAVE_CONFIG_H.
+	[!_LIBC && ENABLE_NLS]: Include gettext.h.
+	[_LIBC]: Define USE_UNLOCKED_IO, _GL_ATTRIBUTE_FORMAT_PRINTF
+	and _GL_ARG_NONNULL.
+	[USE_UNLOCKED_IO]: Include unlocked-io.h.
+	[!_LIBC]: Include code for Windows and Cygwin.
+	[!_LIBC && !HAVE_DECL_STRERROR_R && !STRERROR_R_CHAR_P]:
+	Include prototype for int strerror_r.
+	[!_LIBC] (is_open): New function.
+	(flush_stdout): New function.
+	(print_errno_message): Use it.
+	(error): Likewise.
+	(error_at_line): Likewise.
+	(error_tail) Add function attribute macros.  Use
+	__builtin_expect.
+
 	* time/strptime_l.c [_LIBC]: Define HAVE_LOCALTIME_R.
 
 	* time/strftime_l.c [_LIBC]: Define HAVE_STRFTIME.
