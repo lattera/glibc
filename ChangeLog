@@ -4,6 +4,7 @@
 	lll_futex_wake directly rather than lll_robust_dead.
 	* sysdeps/unix/sysv/linux/aarch64/lowlevellock.h
 	(lll_robust_dead): Macro removed.
+	* sysdeps/unix/sysv/linux/aarch64/lowlevellock.h: Likewise.
 	* sysdeps/unix/sysv/linux/alpha/lowlevellock.h: Likewise.
 	* sysdeps/unix/sysv/linux/arm/lowlevellock.h: Likewise.
 	* sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.h: Likewise.
