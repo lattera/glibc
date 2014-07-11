@@ -950,6 +950,54 @@ ifloat: 2
 ildouble: 1
 ldouble: 1
 
+Function: Real part of "cpow_downward":
+double: 4
+float: 8
+idouble: 4
+ifloat: 8
+ildouble: 6
+ldouble: 6
+
+Function: Imaginary part of "cpow_downward":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 2
+ldouble: 2
+
+Function: Real part of "cpow_towardzero":
+double: 4
+float: 8
+idouble: 4
+ifloat: 8
+ildouble: 6
+ldouble: 6
+
+Function: Imaginary part of "cpow_towardzero":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 2
+ldouble: 2
+
+Function: Real part of "cpow_upward":
+double: 4
+float: 1
+idouble: 4
+ifloat: 1
+ildouble: 3
+ldouble: 3
+
+Function: Imaginary part of "cpow_upward":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 2
+ldouble: 2
+
 Function: Real part of "csin":
 double: 1
 float: 1
@@ -1197,8 +1245,8 @@ double: 2
 float: 3
 idouble: 2
 ifloat: 3
-ildouble: 3
-ldouble: 3
+ildouble: 5
+ldouble: 5
 
 Function: Real part of "ctanh":
 double: 2
@@ -1253,8 +1301,8 @@ double: 2
 float: 3
 idouble: 2
 ifloat: 3
-ildouble: 3
-ldouble: 3
+ildouble: 5
+ldouble: 5
 
 Function: Imaginary part of "ctanh_upward":
 double: 2
@@ -1326,13 +1374,17 @@ ldouble: 1
 
 Function: "exp10_downward":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 2
 ldouble: 2
 
 Function: "exp10_towardzero":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 2
 ldouble: 2
 
@@ -1620,6 +1672,30 @@ Function: "log2":
 ildouble: 1
 ldouble: 1
 
+Function: "log2_downward":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 1
+ldouble: 1
+
+Function: "log2_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "log2_upward":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 1
+ldouble: 1
+
 Function: "log_downward":
 float: 1
 ifloat: 1
@@ -1646,13 +1722,17 @@ ldouble: 1
 
 Function: "pow10_downward":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 2
 ldouble: 2
 
 Function: "pow10_towardzero":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 2
 ldouble: 2
 
@@ -1665,8 +1745,12 @@ ildouble: 2
 ldouble: 2
 
 Function: "pow_downward":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: "pow_tonearest":
 float: 1
@@ -1675,14 +1759,20 @@ ildouble: 1
 ldouble: 1
 
 Function: "pow_towardzero":
+double: 1
 float: 1
-ifloat: 1
-
-Function: "pow_upward":
-float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+
+Function: "pow_upward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
 
 Function: "sin":
 float: 1
@@ -1893,6 +1983,30 @@ double: 3
 float: 2
 idouble: 3
 ifloat: 2
+ildouble: 5
+ldouble: 5
+
+Function: "yn_downward":
+double: 3
+float: 2
+idouble: 3
+ifloat: 2
+ildouble: 5
+ldouble: 5
+
+Function: "yn_towardzero":
+double: 3
+float: 3
+idouble: 3
+ifloat: 3
+ildouble: 5
+ldouble: 5
+
+Function: "yn_upward":
+double: 4
+float: 3
+idouble: 4
+ifloat: 3
 ildouble: 5
 ldouble: 5
 

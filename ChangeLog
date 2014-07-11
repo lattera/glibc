@@ -1,3 +1,7 @@
+2014-07-11  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/aarch64/libm-test-ulps: Update.
+
 2014-07-10  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #17135]
