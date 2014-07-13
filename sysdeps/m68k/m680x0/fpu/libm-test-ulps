@@ -763,6 +763,54 @@ ifloat: 5
 ildouble: 1
 ldouble: 1
 
+Function: Real part of "cpow_downward":
+double: 5
+float: 8
+idouble: 5
+ifloat: 8
+ildouble: 7
+ldouble: 7
+
+Function: Imaginary part of "cpow_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Real part of "cpow_towardzero":
+double: 5
+float: 8
+idouble: 5
+ifloat: 8
+ildouble: 7
+ldouble: 7
+
+Function: Imaginary part of "cpow_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Real part of "cpow_upward":
+double: 4
+float: 1
+idouble: 4
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Imaginary part of "cpow_upward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
 Function: Real part of "csin":
 ildouble: 1
 ldouble: 1
@@ -1041,9 +1089,9 @@ ldouble: 2
 
 Function: Real part of "ctanh_upward":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 7
 ldouble: 7
 
@@ -1238,16 +1286,16 @@ double: 1
 float: 7
 idouble: 1
 ifloat: 7
-ildouble: 7
-ldouble: 7
+ildouble: 9
+ldouble: 9
 
 Function: "pow_downward":
 double: 1
-float: 1
+float: 7
 idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
+ifloat: 7
+ildouble: 9
+ldouble: 9
 
 Function: "pow_tonearest":
 double: 1
@@ -1259,19 +1307,19 @@ ldouble: 7
 
 Function: "pow_towardzero":
 double: 1
-float: 1
+float: 4
 idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
+ifloat: 4
+ildouble: 4
+ldouble: 4
 
 Function: "pow_upward":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
+ifloat: 2
+ildouble: 8
+ldouble: 8
 
 Function: "sin":
 double: 1
@@ -1350,6 +1398,30 @@ ildouble: 7
 ldouble: 7
 
 Function: "yn":
+double: 1
+float: 3
+idouble: 1
+ifloat: 3
+ildouble: 4
+ldouble: 4
+
+Function: "yn_downward":
+double: 1
+float: 3
+idouble: 1
+ifloat: 3
+ildouble: 6
+ldouble: 6
+
+Function: "yn_towardzero":
+double: 1
+float: 3
+idouble: 1
+ifloat: 3
+ildouble: 5
+ldouble: 5
+
+Function: "yn_upward":
 double: 1
 float: 3
 idouble: 1

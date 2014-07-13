@@ -1,3 +1,7 @@
+2014-07-13  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/m680x0/fpu/libm-test-ulps: Update.
+
 2014-07-11  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/aarch64/libm-test-ulps: Update.
