@@ -1,3 +1,13 @@
+2014-07-13  Jim Meyering  <meyering@fb.com>
+
+	[BZ 17150]
+	regex: don't deref NULL upon heap allocation failure
+	* posix/regcomp.c: (parse_dup_op): Handle duplicate_tree
+	failure in one more place.
+	To trigger the segfault, configure grep -with-included-regex,
+	build it, and run these commands:
+	( ulimit -v 300000; echo a|src/grep -E a+++++++++++++++++++++ )
+
 2014-07-13  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/m680x0/fpu/libm-test-ulps: Update.
