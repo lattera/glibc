@@ -35,6 +35,8 @@
 extern __typeof (__redirect_memmove) __memmove_sse2 attribute_hidden;
 extern __typeof (__redirect_memmove) __memmove_ssse3 attribute_hidden;
 extern __typeof (__redirect_memmove) __memmove_ssse3_back attribute_hidden;
+extern __typeof (__redirect_memmove) __memmove_avx_unaligned attribute_hidden;
+
 #endif
 
 #include "string/memmove.c"
@@ -47,10 +49,12 @@ extern __typeof (__redirect_memmove) __memmove_ssse3_back attribute_hidden;
    ifunc symbol properly.  */
 extern __typeof (__redirect_memmove) __libc_memmove;
 libc_ifunc (__libc_memmove,
-	    HAS_SSSE3
-	    ? (HAS_FAST_COPY_BACKWARD
-	       ? __memmove_ssse3_back : __memmove_ssse3)
-	    : __memmove_sse2)
+	    HAS_AVX
+	    ? __memmove_avx_unaligned
+	    : (HAS_SSSE3
+	       ? (HAS_FAST_COPY_BACKWARD
+	          ? __memmove_ssse3_back : __memmove_ssse3)
+	       : __memmove_sse2));
 
 strong_alias (__libc_memmove, memmove)
 

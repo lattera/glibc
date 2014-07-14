@@ -1,3 +1,23 @@
+2014-07-30  Ling Ma  <ling.ml@alibaba-inc.com>
+
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	memmove-avx-unaligned, memcpy-avx-unaligned and
+	mempcpy-avx-unaligned.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c (__libc_ifunc_impl_list):
+	Add tests for AVX memcpy functions.
+	* sysdeps/x86_64/multiarch/memcpy.S: Add support for AVX memcpy.
+	* sysdeps/x86_64/multiarch/memcpy_chk.S: Add support for AVX
+	memcpy_chk.
+	* sysdeps/x86_64/multiarch/memmove.c: Add support for AVX memmove.
+	* sysdeps/x86_64/multiarch/memmove_chk.c: Add support for AVX
+	memmove_chk.
+	* sysdeps/x86_64/multiarch/mempcpy.S: Add support for AVX mempcpy.
+	* sysdeps/x86_64/multiarch/mempcpy_chk.S: Add support for AVX
+	mempcpy_chk.
+	* sysdeps/x86_64/multiarch/memcpy-avx-unaligned.S: New file.
+	* sysdeps/x86_64/multiarch/mempcpy-avx-unaligned.S: New file.
+	* sysdeps/x86_64/multiarch/memmove-avx-unaligned.S: New file.
+
 2013-07-29  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ #17213]

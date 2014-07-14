@@ -32,6 +32,10 @@ ENTRY(__new_memcpy)
 	cmpl	$0, KIND_OFFSET+__cpu_features(%rip)
 	jne	1f
 	call	__init_cpu_features
+1:	leaq	__memcpy_avx_unaligned(%rip), %rax
+	testl	$bit_AVX_Usable, __cpu_features+FEATURE_OFFSET+index_AVX_Usable(%rip)
+	jz 1f
+	ret
 1:	leaq	__memcpy_sse2(%rip), %rax
 	testl	$bit_Slow_BSF, __cpu_features+FEATURE_OFFSET+index_Slow_BSF(%rip)
 	jnz	2f

@@ -25,11 +25,13 @@
 extern __typeof (__memmove_chk) __memmove_chk_sse2 attribute_hidden;
 extern __typeof (__memmove_chk) __memmove_chk_ssse3 attribute_hidden;
 extern __typeof (__memmove_chk) __memmove_chk_ssse3_back attribute_hidden;
+extern __typeof (__memmove_chk) __memmove_chk_avx_unaligned attribute_hidden;
 
 #include "debug/memmove_chk.c"
 
 libc_ifunc (__memmove_chk,
-	    HAS_SSSE3
+	    HAS_AVX ? __memmove_chk_avx_unaligned :
+	    (HAS_SSSE3
 	    ? (HAS_FAST_COPY_BACKWARD
 	       ? __memmove_chk_ssse3_back : __memmove_chk_ssse3)
-	    : __memmove_chk_sse2);
+	    : __memmove_chk_sse2));

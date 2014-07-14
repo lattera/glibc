@@ -11,6 +11,7 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c strcmp-ssse3 \
 		   memcmp-sse4 memcpy-ssse3 \
 		   memcpy-sse2-unaligned mempcpy-ssse3 \
 		   memmove-ssse3 memcpy-ssse3-back mempcpy-ssse3-back \
+		   memmove-avx-unaligned memcpy-avx-unaligned mempcpy-avx-unaligned \
 		   memmove-ssse3-back strcasecmp_l-ssse3 \
 		   strncase_l-ssse3 strcat-ssse3 strncat-ssse3\
 		   strcpy-ssse3 strncpy-ssse3 stpcpy-ssse3 stpncpy-ssse3 \
