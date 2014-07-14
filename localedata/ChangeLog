@@ -2,7 +2,6 @@
 
 	* tst-setlocale3.c: New file.
 	* Makefile (tests): Add tst-setlocale3.
-	(tst-setlocale3-ENV): New variable.
 
 2014-06-20  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
