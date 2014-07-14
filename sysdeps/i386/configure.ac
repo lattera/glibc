@@ -88,6 +88,15 @@ LIBC_TRY_CC_OPTION([-mno-vzeroupper],
 ])
 LIBC_CONFIG_VAR([config-cflags-novzeroupper], [$libc_cv_cc_novzeroupper])
 
+dnl Check if -mavx2 works.
+AC_CACHE_CHECK(for AVX2 support, libc_cv_cc_avx2, [dnl
+LIBC_TRY_CC_OPTION([-mavx2], [libc_cv_cc_avx2=yes], [libc_cv_cc_avx2=no])
+])
+if test $libc_cv_cc_avx2 = yes; then
+  AC_DEFINE(HAVE_AVX2_SUPPORT)
+fi
+LIBC_CONFIG_VAR([config-cflags-avx2], [$libc_cv_cc_avx2])
+
 AC_DEFINE(USE_REGPARMS)
 
 dnl It is always possible to access static and hidden symbols in an

@@ -1,3 +1,20 @@
+2014-07-14  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config.h.in (HAVE_AVX2_SUPPORT): New #undef.
+	* sysdeps/i386/configure.ac: Set HAVE_AVX2_SUPPORT and
+	config-cflags-avx2.
+	* sysdeps/x86_64/configure.ac: Likewise.
+	* sysdeps/i386/configure: Regenerated.
+	* sysdeps/x86_64/configure: Likewise.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	memset-avx2 only if config-cflags-avx2 is yes.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c (__libc_ifunc_impl_list):
+	Tests for memset_chk and memset only if HAVE_AVX2_SUPPORT is
+	defined.
+	* sysdeps/x86_64/multiarch/memset.S: Define multiple versions
+	only if HAVE_AVX2_SUPPORT is defined.
+	* sysdeps/x86_64/multiarch/memset_chk.S: Likewise.
+
 2014-07-14  Alan Modra  <amodra@gmail.com>
 
 	[BZ #17153]
