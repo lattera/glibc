@@ -1,3 +1,9 @@
+2014-07-14  Alan Modra  <amodra@gmail.com>
+
+	[BZ #17153]
+	* elf/elf.h (DT_PPC64_NUM): Correct value.
+	* NEWS: Add to fixed bug list.
+
 2014-07-13  Jim Meyering  <meyering@fb.com>
 
 	[BZ 17150]

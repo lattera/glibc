@@ -2283,7 +2283,7 @@ typedef Elf32_Addr Elf32_Conflict;
 #define DT_PPC64_OPD	(DT_LOPROC + 1)
 #define DT_PPC64_OPDSZ	(DT_LOPROC + 2)
 #define DT_PPC64_OPT	(DT_LOPROC + 3)
-#define DT_PPC64_NUM    3
+#define DT_PPC64_NUM    4
 
 /* PowerPC64 specific values for the DT_PPC64_OPT Dyn entry.  */
 #define PPC64_OPT_TLS		1
