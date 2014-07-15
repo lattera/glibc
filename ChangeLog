@@ -1,5 +1,9 @@
 2014-07-15  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/nptl/lowlevellock.h: New file.
+	* sysdeps/unix/sysv/linux/lowlevellock-futex.h: New file.
+	* sysdeps/nptl/lowlevellock-futex.h: New file.
+
 	* nptl/pthreadP.h (__current_sigrtmin, __current_sigrtmax):
 	Remove dead declarations.
 
