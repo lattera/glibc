@@ -150,6 +150,11 @@ test_main (void)
 	  if (i & (i - 1))
 	    do_test (0, c, i);
 	}
+      for (i = 32; i < 512; i+=32)
+	{
+	  do_test (0, c, i);
+	  do_test (i, c, i);
+	}
       do_test (1, c, 14);
       do_test (3, c, 1024);
       do_test (4, c, 64);

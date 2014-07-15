@@ -1,5 +1,20 @@
 2014-09-10  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* benchtests/bench-memset.c (test_main): Add more test from size
+	from 32 to 512 bytes.
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile [sysdep_routines]:
+	Add POWER8 memset object.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add POWER8 memset and bzero implementations.
+	* sysdeps/powerpc/powerpc64/multiarch/bzero.c (__bzero): Add POWER8
+	implementation.
+	* sysdeps/powerpc/powerpc64/multiarch/memset.c (__libc_memset):
+	Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memset-power8.S: New file:
+	multiarch POWER8 memset optimization.
+	* sysdeps/powerpc/powerpc64/power8/memset.S: New file: optimized
+	POWER8 memset optimization.
+
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile [sysdep_routines]:
 	Remove bzero multiarch objects.
 	* sysdeps/powerpc/powerpc64/multiarch/bzero-power4.S: Remove file.
