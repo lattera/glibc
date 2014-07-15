@@ -37,5 +37,6 @@
 #undef libc_hidden_builtin_def
 #define libc_hidden_builtin_def(name)
 
-#define NO_BZERO_IMPL
+#undef __bzero
+#define __bzero __bzero_power7
 #include <sysdeps/powerpc/powerpc64/power7/memset.S>

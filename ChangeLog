@@ -1,3 +1,20 @@
+2014-09-10  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile [sysdep_routines]:
+	Remove bzero multiarch objects.
+	* sysdeps/powerpc/powerpc64/multiarch/bzero-power4.S: Remove file.
+	* sysdeps/powerpc/powerpc64/multiarch/bzero-power6.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/bzero-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memset-power4.S [NO_BZERO_IMPL]:
+	Remove define.
+	[__bzero]: Redefine to specific name.
+	* sysdeps/powerpc/powerpc64/multiarch/memset-power6.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memset-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power4/memset.S [NO_BZERO_IMPL]: Remove
+	define.
+	* sysdeps/powerpc/powerpc64/power6/memset.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/memset.S: Likewise.
+
 2014-09-10  Florian Weimer  <fweimer@redhat.com>
 
 	* Makeconfig (gccwarn-c): Turn implicit-function-declaration
