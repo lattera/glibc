@@ -1,5 +1,9 @@
 2014-07-15  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/pthread_kill.c: New file.
+	* nptl/pthread_sigmask.c: New file.
+	* nptl/pthread_sigqueue.c: New file.
+
 	* sysdeps/nptl/lowlevellock.h: New file.
 	* sysdeps/unix/sysv/linux/lowlevellock-futex.h: New file.
 	* sysdeps/nptl/lowlevellock-futex.h: New file.
