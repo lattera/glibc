@@ -1,3 +1,15 @@
+2014-07-16  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/preconfigure.ac: Apply EABI sanity check to arm*, not
+	just Linux configurations.  Test empirically that the compiler sets
+	__ARM_EABI__, rather than using the tuple to decide.
+	* sysdeps/arm/preconfigure: Regenerated.
+	* sysdeps/unix/sysv/linux/arm/configure: File removed.
+	* sysdeps/unix/sysv/linux/arm/configure.ac: File removed,
+	contents appended ...
+	* sysdeps/arm/configure.ac: ... here.
+	* sysdeps/arm/configure: Regenerated.
+
 2014-07-15  Roland McGrath  <roland@hack.frob.com>
 
 	* nptl/pthread_kill.c: New file.

@@ -3,22 +3,19 @@ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 
 case "$machine" in
 arm*)
-  case $config_os in
-  linux-gnueabi*)
-    # If the compiler enables unwind tables by default, this causes
-    # problems with undefined symbols in -nostdlib link tests.  To
-    # avoid this, add -fno-unwind-tables here and remove it in
-    # sysdeps/unix/sysv/linux/arm/configure.ac after those tests have
-    # been run.
-    if test "${CFLAGS+set}" != "set"; then
-      CFLAGS="-g -O2"
-    fi
-    CFLAGS="$CFLAGS -fno-unwind-tables"
-    ;;
-  linux*)
-    AC_MSG_ERROR([Old ABI no longer supported])
-    ;;
-  esac
+  AC_TRY_COMPILE([
+#if !__ARM_EABI__
+#error
+#endif], [], [], [AC_MSG_ERROR([Old ABI no longer supported])])
+
+  # If the compiler enables unwind tables by default, this causes
+  # problems with undefined symbols in -nostdlib link tests.  To
+  # avoid this, add -fno-unwind-tables here and remove it in
+  # sysdeps/arm/configure.ac after those tests have been run.
+  if test "${CFLAGS+set}" != "set"; then
+    CFLAGS="-g -O2"
+  fi
+  CFLAGS="$CFLAGS -fno-unwind-tables"
 
   base_machine=arm
   # Lets ask the compiler which ARM family we've got
