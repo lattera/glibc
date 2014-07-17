@@ -1,3 +1,10 @@
+2014-07-17  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	[BZ #17078]
+	* sysdeps/arm/dl-machine.h (elf_machine_rela)
+	[RESOLVE_CONFLICT_FIND_MAP]: Handle R_ARM_TLS_DESC relocation.
+	(elf_machine_lazy_rel): Handle prelinked R_ARM_TLS_DESC entries.
+
 2014-07-17  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17088]
