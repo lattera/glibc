@@ -23,3 +23,5 @@ mips.*-.*-linux.*	libnss_hesiod=2		GLIBC_2.0 GLIBC_2.2
 mips.*-.*-linux.*	libnsl=1		GLIBC_2.0 GLIBC_2.2
 
 mips.*-.*-linux.*	librt=1			GLIBC_2.0 GLIBC_2.2
+
+mips.*-.*-linux.*	libpthread=0		GLIBC_2.0 GLIBC_2.2
