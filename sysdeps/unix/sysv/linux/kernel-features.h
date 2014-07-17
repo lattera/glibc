@@ -46,8 +46,7 @@
    architectures.  */
 #if defined __powerpc__ \
     || defined __s390__ \
-    || defined __sh__ \
-    || defined __sparc__
+    || defined __sh__
 # define __ASSUME_SOCKETCALL		1
 #endif
 
@@ -89,15 +88,11 @@
 /* Support for inter-process robust mutexes was added in 2.6.17 (but
    some architectures lack futex_atomic_cmpxchg_inatomic in some
    configurations).  */
-#if !(defined __sparc__ && !defined __arch64__ && !defined __sparc_v9__)
-# define __ASSUME_SET_ROBUST_LIST	1
-#endif
+#define __ASSUME_SET_ROBUST_LIST	1
 
 /* Support for PI futexes was added in 2.6.18 (but some architectures
    lack futex_atomic_cmpxchg_inatomic in some configurations).  */
-#if !(defined __sparc__ && !defined __arch64__ && !defined __sparc_v9__)
-# define __ASSUME_FUTEX_LOCK_PI	1
-#endif
+#define __ASSUME_FUTEX_LOCK_PI	1
 
 /* Support for private futexes was added in 2.6.22.  */
 #define __ASSUME_PRIVATE_FUTEX	1
@@ -136,13 +131,9 @@
 
 /* The accept4 syscall was added for x86_64 and SPARC in 2.6.28, and
    for PowerPC and SH in 2.6.37.  */
-#if defined __sparc__					\
-    || (__LINUX_KERNEL_VERSION >= 0x020625		\
-	&& (defined __powerpc__ || defined __sh__))
+#if (__LINUX_KERNEL_VERSION >= 0x020625			\
+     && (defined __powerpc__ || defined __sh__))
 # define __ASSUME_ACCEPT4_SYSCALL	1
-#endif
-#ifdef __sparc__
-# define __ASSUME_ACCEPT4_SYSCALL_WITH_SOCKETCALL	1
 #endif
 
 #if defined __ASSUME_ACCEPT4_SOCKETCALL || defined __ASSUME_ACCEPT4_SYSCALL
@@ -159,9 +150,7 @@
 /* Support for FUTEX_*_REQUEUE_PI was added in 2.6.31 (but some
    architectures lack futex_atomic_cmpxchg_inatomic in some
    configurations).  */
-#if !(defined __sparc__ && !defined __arch64__ && !defined __sparc_v9__)
-# define __ASSUME_REQUEUE_PI	1
-#endif
+#define __ASSUME_REQUEUE_PI	1
 
 /* Support for recvmmsg functionality was added in 2.6.33.  The macros
    defined correspond to those for accept4.  */
@@ -171,14 +160,9 @@
 
 /* The recvmmsg syscall was added for i386, x86_64 and SPARC in
    2.6.33, and for PowerPC and SH in 2.6.37.  */
-#if (__LINUX_KERNEL_VERSION >= 0x020621			\
-     && defined __sparc__)				\
-    || (__LINUX_KERNEL_VERSION >= 0x020625		\
-	&& (defined __powerpc__ || defined __sh__))
+#if (__LINUX_KERNEL_VERSION >= 0x020625			\
+     && (defined __powerpc__ || defined __sh__))
 # define __ASSUME_RECVMMSG_SYSCALL	1
-#endif
-#ifdef __sparc__
-# define __ASSUME_RECVMMSG_SYSCALL_WITH_SOCKETCALL	1
 #endif
 
 #if defined __ASSUME_RECVMMSG_SOCKETCALL || defined __ASSUME_RECVMMSG_SYSCALL
@@ -210,11 +194,10 @@
 /* The sendmmsg syscall was added for i386, x86_64, PowerPC, SH and
    SPARC in 3.0.  */
 #if __LINUX_KERNEL_VERSION >= 0x030000		\
-    && (defined __powerpc__			\
-	|| defined __sh__ || defined __sparc__)
+    && (defined __powerpc__ || defined __sh__)
 # define __ASSUME_SENDMMSG_SYSCALL	1
 #endif
-#if defined __powerpc__ || defined __sh__ || defined __sparc__
+#if defined __powerpc__ || defined __sh__
 # define __ASSUME_SENDMMSG_SYSCALL_WITH_SOCKETCALL	1
 #endif
 
