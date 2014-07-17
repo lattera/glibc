@@ -1,5 +1,11 @@
 2014-07-17  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17088]
+	* math/fesetenv.c (__fesetenv)
+	[FE_NOMASK_ENV && FE_ALL_EXCEPT != 0]: Return 1 for FE_NOMASK_ENV.
+	* math/feupdateenv.c (__feupdateenv)
+	[FE_NOMASK_ENV && FE_ALL_EXCEPT != 0]: Likewise.
+
 	* sysdeps/unix/sysv/linux/s390/kernel-features.h: New file.
 	* sysdeps/unix/sysv/linux/kernel-features.h [__s390__]
 	(__ASSUME_SOCKETCALL): Do not define.
