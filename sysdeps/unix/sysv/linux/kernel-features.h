@@ -44,7 +44,7 @@
    socket-related operations, via a socket.S file in glibc, instead of
    separate syscalls.  __ASSUME_SOCKETCALL is defined for such
    architectures.  */
-#if defined __s390__ || defined __sh__
+#ifdef __s390__
 # define __ASSUME_SOCKETCALL		1
 #endif
 
@@ -55,9 +55,7 @@
 
 /* The changed st_ino field appeared in 2.4.0-test6.  However, SH is lame,
    and still does not have a 64-bit inode field.  */
-#ifndef __sh__
-# define __ASSUME_ST_INO_64_BIT		1
-#endif
+#define __ASSUME_ST_INO_64_BIT		1
 
 /* The getdents64 syscall was introduced in 2.4.0-test7 (but later for
    MIPS n32).  */
@@ -125,12 +123,6 @@
 # define __ASSUME_ACCEPT4_SOCKETCALL	1
 #endif
 
-/* The accept4 syscall was added for x86_64 and SPARC in 2.6.28, and
-   for PowerPC and SH in 2.6.37.  */
-#if __LINUX_KERNEL_VERSION >= 0x020625 && defined __sh__
-# define __ASSUME_ACCEPT4_SYSCALL	1
-#endif
-
 #if defined __ASSUME_ACCEPT4_SOCKETCALL || defined __ASSUME_ACCEPT4_SYSCALL
 # define __ASSUME_ACCEPT4	1
 #endif
@@ -151,12 +143,6 @@
    defined correspond to those for accept4.  */
 #if __LINUX_KERNEL_VERSION >= 0x020621 && defined __ASSUME_SOCKETCALL
 # define __ASSUME_RECVMMSG_SOCKETCALL	1
-#endif
-
-/* The recvmmsg syscall was added for i386, x86_64 and SPARC in
-   2.6.33, and for PowerPC and SH in 2.6.37.  */
-#if __LINUX_KERNEL_VERSION >= 0x020625 && defined __sh__
-# define __ASSUME_RECVMMSG_SYSCALL	1
 #endif
 
 #if defined __ASSUME_RECVMMSG_SOCKETCALL || defined __ASSUME_RECVMMSG_SYSCALL
@@ -183,15 +169,6 @@
    defined correspond to those for accept4 and recvmmsg.  */
 #if __LINUX_KERNEL_VERSION >= 0x030000 && defined __ASSUME_SOCKETCALL
 # define __ASSUME_SENDMMSG_SOCKETCALL	1
-#endif
-
-/* The sendmmsg syscall was added for i386, x86_64, PowerPC, SH and
-   SPARC in 3.0.  */
-#if __LINUX_KERNEL_VERSION >= 0x030000 && defined __sh__
-# define __ASSUME_SENDMMSG_SYSCALL	1
-#endif
-#ifdef __sh__
-# define __ASSUME_SENDMMSG_SYSCALL_WITH_SOCKETCALL	1
 #endif
 
 #if defined __ASSUME_SENDMMSG_SOCKETCALL || defined __ASSUME_SENDMMSG_SYSCALL
