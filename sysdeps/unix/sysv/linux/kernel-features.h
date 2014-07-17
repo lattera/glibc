@@ -137,7 +137,7 @@
 
 /* The accept4 syscall was added for x86_64 and SPARC in 2.6.28, and
    for PowerPC and SH in 2.6.37.  */
-#if (defined __x86_64__ || defined __sparc__)		\
+#if defined __sparc__					\
     || (__LINUX_KERNEL_VERSION >= 0x020625		\
 	&& (defined __powerpc__ || defined __sh__))
 # define __ASSUME_ACCEPT4_SYSCALL	1
@@ -173,7 +173,7 @@
 /* The recvmmsg syscall was added for i386, x86_64 and SPARC in
    2.6.33, and for PowerPC and SH in 2.6.37.  */
 #if (__LINUX_KERNEL_VERSION >= 0x020621			\
-     && (defined __i386__ || defined __x86_64__ || defined __sparc__))	\
+     && (defined __i386__ || defined __sparc__))	\
     || (__LINUX_KERNEL_VERSION >= 0x020625		\
 	&& (defined __powerpc__ || defined __sh__))
 # define __ASSUME_RECVMMSG_SYSCALL	1
@@ -210,8 +210,8 @@
 
 /* The sendmmsg syscall was added for i386, x86_64, PowerPC, SH and
    SPARC in 3.0.  */
-#if __LINUX_KERNEL_VERSION >= 0x030000					\
-    && (defined __i386__ || defined __x86_64__ || defined __powerpc__	\
+#if __LINUX_KERNEL_VERSION >= 0x030000		\
+    && (defined __i386__ || defined __powerpc__	\
 	|| defined __sh__ || defined __sparc__)
 # define __ASSUME_SENDMMSG_SYSCALL	1
 #endif
@@ -222,9 +222,4 @@
 
 #if defined __ASSUME_SENDMMSG_SOCKETCALL || defined __ASSUME_SENDMMSG_SYSCALL
 # define __ASSUME_SENDMMSG	1
-#endif
-
-/* getcpu is a syscall for x86-64 since 3.1.  */
-#if defined __x86_64__ && __LINUX_KERNEL_VERSION >= 0x030100
-# define __ASSUME_GETCPU_SYSCALL	1
 #endif

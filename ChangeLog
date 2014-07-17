@@ -1,5 +1,15 @@
 2014-07-17  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/kernel-features.h: New file.
+	* sysdeps/unix/sysv/linux/kernel-features.h [__x86_64__]
+	(__ASSUME_ACCEPT4_SYSCALL): Do not define.
+	[__LINUX_KERNEL_VERSION >= 0x020621 && __x86_64__]
+	(__ASSUME_RECVMMSG_SYSCALL): Likewise.
+	[__LINUX_KERNEL_VERSION >= 0x030000 && __x86_64__]
+	(__ASSUME_SENDMMSG_SYSCALL): Likewise.
+	[__x86_64__ && __LINUX_KERNEL_VERSION >= 0x030100]
+	(__ASSUME_GETCPU_SYSCALL): Likewise.
+
 	* aclocal.m4 (LIBC_SLIBDIR_RTLDDIR): New macro.
 	* sysdeps/gnu/configure.ac: Use LIBC_SLIBDIR_RTLDDIR.  Remove
 	cases for individual architectures.
