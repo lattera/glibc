@@ -1,5 +1,18 @@
 2014-07-17  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/kernel-features.h: New file.
+	* sysdeps/unix/sysv/linux/kernel-features.h [__powerpc__]
+	(__ASSUME_SOCKETCALL): Do not define.
+	(__ASSUME_IPC64): Define unconditionally.
+	[__LINUX_KERNEL_VERSION >= 0x020625 && __powerpc__]
+	(__ASSUME_ACCEPT4_SYSCALL): Do not define.
+	[__LINUX_KERNEL_VERSION >= 0x020625 && __powerpc__]
+	(__ASSUME_RECVMMSG_SYSCALL): Likewise.
+	[__LINUX_KERNEL_VERSION >= 0x030000 && __powerpc__]
+	(__ASSUME_SENDMMSG_SYSCALL): Likewise.
+	[__powerpc__] (__ASSUME_SENDMMSG_SYSCALL_WITH_SOCKETCALL):
+	Likewise.
+
 	* sysdeps/unix/sysv/linux/sparc/kernel-features.h: New file.
 	* sysdeps/unix/sysv/linux/kernel-features.h [__sparc__]
 	(__ASSUME_SOCKETCALL): Do not define.

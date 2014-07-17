@@ -44,18 +44,14 @@
    socket-related operations, via a socket.S file in glibc, instead of
    separate syscalls.  __ASSUME_SOCKETCALL is defined for such
    architectures.  */
-#if defined __powerpc__ \
-    || defined __s390__ \
-    || defined __sh__
+#if defined __s390__ || defined __sh__
 # define __ASSUME_SOCKETCALL		1
 #endif
 
 /* Linux 2.3.39 introduced IPC64.  Except for powerpc.  Linux 2.4.0 on
    PPC introduced a correct IPC64.  But PowerPC64 does not support a
    separate 64-bit syscall, already 64-bit.  */
-#ifndef __powerpc64__
-# define __ASSUME_IPC64		1
-#endif
+#define __ASSUME_IPC64		1
 
 /* The changed st_ino field appeared in 2.4.0-test6.  However, SH is lame,
    and still does not have a 64-bit inode field.  */
@@ -131,8 +127,7 @@
 
 /* The accept4 syscall was added for x86_64 and SPARC in 2.6.28, and
    for PowerPC and SH in 2.6.37.  */
-#if (__LINUX_KERNEL_VERSION >= 0x020625			\
-     && (defined __powerpc__ || defined __sh__))
+#if __LINUX_KERNEL_VERSION >= 0x020625 && defined __sh__
 # define __ASSUME_ACCEPT4_SYSCALL	1
 #endif
 
@@ -160,8 +155,7 @@
 
 /* The recvmmsg syscall was added for i386, x86_64 and SPARC in
    2.6.33, and for PowerPC and SH in 2.6.37.  */
-#if (__LINUX_KERNEL_VERSION >= 0x020625			\
-     && (defined __powerpc__ || defined __sh__))
+#if __LINUX_KERNEL_VERSION >= 0x020625 && defined __sh__
 # define __ASSUME_RECVMMSG_SYSCALL	1
 #endif
 
@@ -193,11 +187,10 @@
 
 /* The sendmmsg syscall was added for i386, x86_64, PowerPC, SH and
    SPARC in 3.0.  */
-#if __LINUX_KERNEL_VERSION >= 0x030000		\
-    && (defined __powerpc__ || defined __sh__)
+#if __LINUX_KERNEL_VERSION >= 0x030000 && defined __sh__
 # define __ASSUME_SENDMMSG_SYSCALL	1
 #endif
-#if defined __powerpc__ || defined __sh__
+#ifdef __sh__
 # define __ASSUME_SENDMMSG_SYSCALL_WITH_SOCKETCALL	1
 #endif
 
