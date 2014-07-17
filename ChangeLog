@@ -1,5 +1,9 @@
 2014-07-17  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/s390/kernel-features.h: New file.
+	* sysdeps/unix/sysv/linux/kernel-features.h [__s390__]
+	(__ASSUME_SOCKETCALL): Do not define.
+
 	* sysdeps/unix/sysv/linux/sh/kernel-features.h: New file.
 	* sysdeps/unix/sysv/linux/kernel-features.h [__sh__]
 	(__ASSUME_SOCKETCALL): Do not define.

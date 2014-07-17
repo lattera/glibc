@@ -44,9 +44,6 @@
    socket-related operations, via a socket.S file in glibc, instead of
    separate syscalls.  __ASSUME_SOCKETCALL is defined for such
    architectures.  */
-#ifdef __s390__
-# define __ASSUME_SOCKETCALL		1
-#endif
 
 /* Linux 2.3.39 introduced IPC64.  Except for powerpc.  Linux 2.4.0 on
    PPC introduced a correct IPC64.  But PowerPC64 does not support a
