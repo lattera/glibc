@@ -44,8 +44,7 @@
    socket-related operations, via a socket.S file in glibc, instead of
    separate syscalls.  __ASSUME_SOCKETCALL is defined for such
    architectures.  */
-#if defined __i386__ \
-    || defined __powerpc__ \
+#if defined __powerpc__ \
     || defined __s390__ \
     || defined __sh__ \
     || defined __sparc__
@@ -173,12 +172,12 @@
 /* The recvmmsg syscall was added for i386, x86_64 and SPARC in
    2.6.33, and for PowerPC and SH in 2.6.37.  */
 #if (__LINUX_KERNEL_VERSION >= 0x020621			\
-     && (defined __i386__ || defined __sparc__))	\
+     && defined __sparc__)				\
     || (__LINUX_KERNEL_VERSION >= 0x020625		\
 	&& (defined __powerpc__ || defined __sh__))
 # define __ASSUME_RECVMMSG_SYSCALL	1
 #endif
-#if defined __i386__ || defined __sparc__
+#ifdef __sparc__
 # define __ASSUME_RECVMMSG_SYSCALL_WITH_SOCKETCALL	1
 #endif
 
@@ -211,12 +210,11 @@
 /* The sendmmsg syscall was added for i386, x86_64, PowerPC, SH and
    SPARC in 3.0.  */
 #if __LINUX_KERNEL_VERSION >= 0x030000		\
-    && (defined __i386__ || defined __powerpc__	\
+    && (defined __powerpc__			\
 	|| defined __sh__ || defined __sparc__)
 # define __ASSUME_SENDMMSG_SYSCALL	1
 #endif
-#if defined __i386__ || defined __powerpc__ || defined __sh__ \
-    || defined __sparc__
+#if defined __powerpc__ || defined __sh__ || defined __sparc__
 # define __ASSUME_SENDMMSG_SYSCALL_WITH_SOCKETCALL	1
 #endif
 
