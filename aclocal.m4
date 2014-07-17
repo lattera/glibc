@@ -281,3 +281,21 @@ else
   $5
 fi
 AC_MSG_RESULT($libc_compiler_builtin_inlined)])
+
+dnl Default to slibdir named SLIBDIR instead of "lib", and rtlddir
+dnl named RTLDDIR instead of "lib".  This is used to put 64-bit
+dnl libraries in /lib64.
+dnl LIBC_SLIBDIR_RTLDDIR([slibdir], [rtlddir])
+AC_DEFUN([LIBC_SLIBDIR_RTLDDIR],
+[test -n "$libc_cv_slibdir" ||
+case "$prefix" in
+/usr | /usr/)
+  libc_cv_slibdir=/$1
+  libc_cv_rtlddir=/$2
+  if test "$libdir" = '${exec_prefix}/lib'; then
+    libdir='${exec_prefix}/$1';
+    # Locale data can be shared between 32-bit and 64-bit libraries.
+    libc_cv_localedir='${exec_prefix}/lib/locale'
+  fi
+  ;;
+esac])

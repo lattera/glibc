@@ -58,33 +58,13 @@ fi
 LIBC_CONFIG_VAR([default-abi],
   [${libc_mips_abi}_${libc_mips_float}${libc_mips_nan}])
 
-case "$prefix" in
-/usr | /usr/)
-  # 64-bit libraries on bi-arch platforms go in /lib64 instead of /lib.
-  # Allow earlier configure scripts to handle libc_cv_slibdir, libdir,
-  # and libc_cv_localedir.
-  test -n "$libc_cv_slibdir" || \
-  case $machine in
-  mips/mips64/n64/* )
-    libc_cv_slibdir="/lib64"
-    if test "$libdir" = '${exec_prefix}/lib'; then
-      libdir='${exec_prefix}/lib64';
-      # Locale data can be shared between 32bit and 64bit libraries
-      libc_cv_localedir='${exec_prefix}/lib/locale'
-    fi
-    ;;
-  mips/mips64/n32/* )
-    libc_cv_slibdir="/lib32"
-    if test "$libdir" = '${exec_prefix}/lib'; then
-      libdir='${exec_prefix}/lib32';
-      # Locale data can be shared between 32bit and 64bit libraries
-      libc_cv_localedir='${exec_prefix}/lib/locale'
-    fi
-    ;;
-  *)
-    libc_cv_slibdir="/lib"
-    ;;
-  esac
+case $machine in
+mips/mips64/n64/*)
+  LIBC_SLIBDIR_RTLDDIR([lib64], [lib64])
+  ;;
+mips/mips64/n32/*)
+  LIBC_SLIBDIR_RTLDDIR([lib32], [lib32])
+  ;;
 esac
 
 libc_cv_gcc_unwind_find_fde=yes

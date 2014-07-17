@@ -6,30 +6,9 @@ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # files.  I.e., when the installation prefix is "/usr" we have to place
 # shared library objects and the configuration files on the root partition
 # in /lib and /etc.
+LIBC_SLIBDIR_RTLDDIR([lib], [lib])
 case "$prefix" in
 /usr | /usr/)
-  # 64-bit libraries on bi-arch platforms go in /lib64 instead of /lib.
-  # Allow earlier configure scripts to handle libc_cv_slibdir,
-  # libc_cv_rtlddir, libdir, and libc_cv_localedir.
-  test -n "$libc_cv_slibdir" || \
-  case $machine in
-  sparc/sparc64 | x86_64* | powerpc/powerpc64 | s390/s390-64)
-    libc_cv_slibdir=/lib64
-    case $machine in
-    s390/s390-64)
-      libc_cv_rtlddir=/lib
-      ;;
-    esac
-    if test "$libdir" = '${exec_prefix}/lib'; then
-      libdir='${exec_prefix}/lib64';
-      # Locale data can be shared between 32bit and 64bit libraries
-      libc_cv_localedir='${exec_prefix}/lib/locale'
-    fi
-    ;;
-  *)
-    libc_cv_slibdir=/lib
-    ;;
-  esac
   # Allow the user to override the path with --sysconfdir.
   if test "$sysconfdir" = '${prefix}/etc'; then
     libc_cv_sysconfdir=/etc
