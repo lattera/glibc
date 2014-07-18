@@ -1,3 +1,7 @@
+2014-07-18  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/m68k/lowlevellock.h: Removed.
+
 2014-07-17  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	[BZ #17078]
