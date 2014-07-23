@@ -9753,6 +9753,11 @@
 	ports/sysdeps/unix/sysv/linux/microblaze.
 	* README: Add missing listing for microblaze*-*-linux-gnu.
 
+2014-02-16  Ondřej Bílka  <neleai@seznam.cz>
+
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyname4_r): Remove
+	duplicate code
+
 2014-02-16  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/ia64: Move directory from ports/sysdeps/ia64.
