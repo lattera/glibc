@@ -117,6 +117,23 @@
 # define F_SETLKW64	14	/* Set record locking info (blocking).	*/
 #endif
 
+/* open file description locks.
+
+   Usually record locks held by a process are released on *any* close and are
+   not inherited across a fork.
+
+   These cmd values will set locks that conflict with process-associated record
+   locks, but are "owned" by the opened file description, not the process.
+   This means that they are inherited across fork or clone with CLONE_FILES
+   like BSD (flock) locks, and they are only released automatically when the
+   last reference to the the file description against which they were acquired
+   is put. */
+#ifdef __USE_GNU
+# define F_OFD_GETLK	36
+# define F_OFD_SETLK	37
+# define F_OFD_SETLKW	38
+#endif
+
 #ifdef __USE_LARGEFILE64
 # define O_LARGEFILE __O_LARGEFILE
 #endif

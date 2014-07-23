@@ -1,3 +1,12 @@
+2014-07-29  Jeff Layton  <jlayton@poochiereds.net>
+
+	[BZ #16839]
+	* manual/llio.texi: Add section about open file description locks.
+	* manual/examples/ofdlocks.c: Example of open file description
+	lock usage.
+	* sysdeps/unix/sysv/linux/bits/fcntl-linux.h: Define F_OFD_GETLK,
+	F_OFD_SETLK, and F_OFD_SETLKW.
+
 2014-07-23  Allan McRae  <allan@archlinux.org>
 
 	* po/es.po: Update Spanish translation from translation project.
