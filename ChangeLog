@@ -1,3 +1,7 @@
+2014-07-23  Allan McRae  <allan@archlinux.org>
+
+	* po/es.po: Update Spanish translation from translation project.
+
 2014-07-18  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/m68k/lowlevellock.h: Removed.
