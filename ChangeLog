@@ -1,3 +1,22 @@
+2014-08-05  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/ioctl-types.h (struct winsize):
+	Move definition from termios.h.
+	(struct termio): Likewise.
+	(NCC, TIOCM_LE, TIOCM_DTR, TIOCM_RTS, TIOCM_ST, TIOCM_SR, TIOCM_CTS,
+	TIOCM_CAR, TIOCM_RNG, TIOCM_DSR, TIOCM_CD, TIOCM_RI, N_TTY, N_SLIP,
+	N_MOUSE, N_PPP, N_STRIP, N_AX25, N_X25, N_6PACK, N_MASC, N_R3964,
+	N_PROFIBUS_FDL, N_IRDA, N_SMSBLOCK, N_HDLC, N_SYNC_PPP, N_HCI):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h (struct winsize):
+	Move definition to ioctl-types.h
+	(struct termio): Likewise.
+	(NCC, TIOCM_LE, TIOCM_DTR, TIOCM_RTS, TIOCM_ST, TIOCM_SR, TIOCM_CTS,
+	TIOCM_CAR, TIOCM_RNG, TIOCM_DSR, TIOCM_CD, TIOCM_RI, N_TTY, N_SLIP,
+	N_MOUSE, N_PPP, N_STRIP, N_AX25, N_X25, N_6PACK, N_MASC, N_R3964,
+	N_PROFIBUS_FDL, N_IRDA, N_SMSBLOCK, N_HDLC, N_SYNC_PPP, N_HCI):
+	Likewise.
+
 2014-08-05  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/soft-fp/ots_cvtxq.c (_OtsCvtXQ): Always raise
