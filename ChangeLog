@@ -1,3 +1,16 @@
+2015-12-15  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #17197]
+	* iconvdata/ibm930.c (BODY for TO_LOOP): Record current DBCS state
+	immediately after emitting SI.
+	* iconvdata/ibm933.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/ibm935.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/ibm937.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/ibm939.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/bug-iconv10.c: New file.
+	* iconvdata/Makefile (tests): Add bug-iconv10.
+	($(objpfx)bug-iconv10.out): New rule.
+
 2015-12-15  Florian Weimer  <fweimer@redhat.com>
 
 	* dlfcn/tst-rec-dlopen.c (call_func): Cast dlsym result, fixing an

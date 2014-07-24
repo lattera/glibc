@@ -260,6 +260,7 @@ enum
 		break;							      \
 	      }								      \
 	    *outptr++ = SI;						      \
+	    curcs = sb;							      \
 	  }								      \
 									      \
 	if (__glibc_unlikely (outptr + 1 > outend))			      \
@@ -273,7 +274,6 @@ enum
 	  *outptr++ = 0xb2;						      \
 	else								      \
 	  *outptr++ = cp[0];						      \
-	curcs = sb;							      \
       }									      \
 									      \
     /* Now that we wrote the output increment the input pointer.  */	      \

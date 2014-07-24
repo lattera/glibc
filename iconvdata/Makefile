@@ -67,7 +67,8 @@ modules.so := $(addsuffix .so, $(modules))
 
 ifeq (yes,$(build-shared))
 tests = bug-iconv1 bug-iconv2 tst-loading tst-e2big tst-iconv4 bug-iconv4 \
-	tst-iconv6 bug-iconv5 bug-iconv6 tst-iconv7 bug-iconv8 bug-iconv9
+	tst-iconv6 bug-iconv5 bug-iconv6 tst-iconv7 bug-iconv8 bug-iconv9 \
+	bug-iconv10
 ifeq ($(have-thread-library),yes)
 tests += bug-iconv3
 endif
@@ -306,6 +307,8 @@ $(objpfx)tst-iconv4.out: $(objpfx)gconv-modules \
 			 $(addprefix $(objpfx),$(modules.so))
 $(objpfx)tst-iconv7.out: $(objpfx)gconv-modules \
 			 $(addprefix $(objpfx),$(modules.so))
+$(objpfx)bug-iconv10.out: $(objpfx)gconv-modules \
+			  $(addprefix $(objpfx),$(modules.so))
 
 $(objpfx)iconv-test.out: run-iconv-test.sh $(objpfx)gconv-modules \
 			 $(addprefix $(objpfx),$(modules.so)) \
