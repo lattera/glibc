@@ -39,6 +39,12 @@ do_test (void)
   pid_t pid;
   int val;
 
+  /* Start with a clean slate and register a clean-up action.  No need to
+     act if sem_unlink fails because we will catch the same problem during the
+     sem_open below.  */
+  sem_unlink ("/glibc-tst-sem4");
+  on_exit (remove_sem, (void *) "/glibc-tst-sem4");
+
   s = sem_open ("/glibc-tst-sem4", O_CREAT, 0600, 1);
   if (s == SEM_FAILED)
     {
@@ -58,8 +64,6 @@ do_test (void)
       printf ("sem_open: %m\n");
       return 1;
     }
-
-  on_exit (remove_sem, (void *) "/glibc-tst-sem4");
 
   /* We have the semaphore object.  Now try again with O_EXCL, this
      should fail.  */

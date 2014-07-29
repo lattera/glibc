@@ -1,5 +1,9 @@
 2014-12-15  Torvald Riegel  <triegel@redhat.com>
 
+	* nptl/tst-sem4.c (do_test): Start with a fresh semaphore state.
+
+2014-12-15  Torvald Riegel  <triegel@redhat.com>
+
 	* nptl/tst-mutex5.c (do_test): Do not skip tests if elision is enabled.
 
 2014-12-15  Adhemerval Zanella  <Azanella@linux.vnet.ibm.com>
