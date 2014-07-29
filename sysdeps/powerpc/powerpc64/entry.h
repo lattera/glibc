@@ -23,6 +23,7 @@ extern void _start (void);
 
 #define ENTRY_POINT _start
 
+#if _CALL_ELF != 2
 /* We have to provide a special declaration.  */
 #define ENTRY_POINT_DECL(class) class void _start (void);
 
@@ -33,3 +34,4 @@ extern void _start (void);
 #define TEXT_START \
   ({ extern unsigned long int _start_as_data[] asm ("_start");  \
      _start_as_data[0]; })
+#endif
