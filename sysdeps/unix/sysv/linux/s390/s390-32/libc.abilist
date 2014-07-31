@@ -1777,7 +1777,6 @@ GLIBC_2.18
 GLIBC_2.19
  GLIBC_2.19 A
  __longjmp_chk F
- __setjmp F
  __sigsetjmp F
  _longjmp F
  _setjmp F

@@ -17,12 +17,6 @@ ifeq ($(subdir),elf)
 sysdep_routines += dl-vdso
 endif
 
-ifeq ($(subdir),debug)
-ifeq (yes,$(build-shared))
-sysdep_routines += v1-longjmp_chk
-endif
-endif
-
 ifeq ($(subdir),nptl)
 ifeq ($(enable-lock-elision),yes)
 libpthread-sysdep_routines += elision-lock elision-unlock elision-timed \

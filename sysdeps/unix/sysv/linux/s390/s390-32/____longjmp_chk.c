@@ -26,8 +26,8 @@
 #include <stdint.h>
 #include <signal.h>
 #include <sys/syscall.h>
-#include <libc-symbols.h>
-#include <shlib-compat.h>
+
+#define __longjmp ____longjmp_chk
 
 #define CHECK_SP(env, guard) \
   do									\
@@ -51,22 +51,4 @@
 	}								\
     } while (0)
 
-
-#if defined NOT_IN_libc
-/* Build a non-versioned object for rtld-*.  */
-# define __longjmp ____longjmp_chk
-# include "__longjmp-common.c"
-
-#else /* !NOT_IN_libc */
-# define __longjmp  ____v2__longjmp_chk
-# include "__longjmp-common.c"
-
-# if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_11, GLIBC_2_19)
-#  undef __longjmp
-#  define __V1_JMPBUF
-#  define __longjmp  ____v1__longjmp_chk
-#  include "__longjmp-common.c"
-#  undef __longjmp
-
-# endif
-#endif /* !NOT_IN_libc */
+#include "__longjmp.c"

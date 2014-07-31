@@ -65,25 +65,21 @@ ENTRY(__swapcontext)
 	std     %f14,SC_FPRS+112(%r1)
 	std     %f15,SC_FPRS+120(%r1)
 
+	/* Set __swapcontext return value to 0.  */
+	slgr     %r2,%r2
+
 	/* Store access registers.  */
 	stam    %a0,%a15,SC_ACRS(%r1)
-
-	/* Set __swapcontext return value to 0.  */
-	slgr	%r2,%r2
 
 	/* Store general purpose registers.  */
 	stmg    %r0,%r15,SC_GPRS(%r1)
 
-	/* Copy uc_flags into the new ucontext_t.  */
-	lgr	%r5,%r0
-	lg	%r2,SC_FLGS(%r5)
-	stg	%r2,SC_FLGS(%r1)
-
 	/* rt_sigprocmask (SIG_SETMASK, &sc->sc_mask, NULL, sigsetsize).  */
 	la      %r2,SIG_BLOCK
+	lgr	%r5,%r0
 	la	%r3,SC_MASK(%r5)
-	slgr	%r4,%r4
 	lghi	%r5,_NSIG8
+	slgr	%r4,%r4
 	svc	SYS_ify(rt_sigprocmask)
 
 	/* Load fpu context.  */

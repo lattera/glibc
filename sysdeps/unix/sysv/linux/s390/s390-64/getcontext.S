@@ -21,6 +21,8 @@
 
 #include "ucontext_i.h"
 
+#include <shlib-compat.h>
+
 /*  __getcontext (const ucontext_t *ucp)
 
   Saves the machine context in UCP such that when it is activated,
@@ -62,10 +64,6 @@ ENTRY(__getcontext)
 	/* Set __getcontext return value to 0.  */
 	slgr    %r2,%r2
 
-	/* Store the version number into the uc_flags field.  So far
-	   we do not make use of the reserved bytes so we store a zero.  */
-	stg	%r2,SC_FLGS(%r1)
-
 	/* Store access registers.  */
 	stam    %a0,%a15,SC_ACRS(%r1)
 
@@ -77,3 +75,12 @@ ENTRY(__getcontext)
 END(__getcontext)
 
 weak_alias (__getcontext, getcontext)
+
+#if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)
+/* In glibc release 2.19 a new version of getcontext was introduced,
+   but was reverted before 2.20. Thus both versions are the same function.  */
+weak_alias (__getcontext, __v1__getcontext)
+weak_alias (__getcontext, __v2__getcontext)
+versioned_symbol (libc, __v1__getcontext, getcontext, GLIBC_2_1)
+compat_symbol (libc, __v2__getcontext, getcontext, GLIBC_2_19)
+#endif

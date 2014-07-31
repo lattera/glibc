@@ -21,30 +21,38 @@
 #define _ASM
 #define _SETJMP_H
 #include <bits/setjmp.h>
+#include <shlib-compat.h>
+
+#if !defined IS_IN_rtld
+# if defined SHARED &&  SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)
+	/* we need a unique name in case of symbol versioning.  */
+#  define __sigsetjmp __v1__sigsetjmp
+# endif /* if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)  */
+#endif /* !defined IS_IN_rtld  */
 
 	/* We include the BSD entry points here as well but we make
 	   them weak.  */
 ENTRY (setjmp)
 	.weak C_SYMBOL_NAME (setjmp)
         lghi   %r3,1                /* Second argument of one.  */
-        j      0f                   /* Branch relativ to __sigsetjmp.  */
+        j      .Linternal_sigsetjmp /* Branch relativ to __sigsetjmp.  */
 END (setjmp)
 
 	/* Binary compatibility entry point.  */
 ENTRY(_setjmp)
         .weak  C_SYMBOL_NAME (_setjmp)
         slgr   %r3,%r3              /* Second argument of zero.  */
-        j      0f                   /* Branch relativ to __sigsetjmp.  */
+        j      .Linternal_sigsetjmp /* Branch relativ to __sigsetjmp.  */
 END (_setjmp)
 libc_hidden_def (_setjmp)
 
 ENTRY(__setjmp)
         slgr   %r3,%r3              /* Second argument of zero.  */
-        j      0f                   /* Branch relativ to __sigsetjmp.  */
+        j      .Linternal_sigsetjmp /* Branch relativ to __sigsetjmp.  */
 END (__setjmp)
 
 ENTRY(__sigsetjmp)
-0:
+.Linternal_sigsetjmp:
 #ifdef PTR_MANGLE
 	stmg   %r6,%r13,0(%r2)      /* Store registers in jmp_buf.  */
 	lgr    %r4,%r14
@@ -54,10 +62,6 @@ ENTRY(__sigsetjmp)
 	stmg   %r4,%r5,64(%r2)
 #else
         stmg   %r6,%r15,0(%r2)      /* Store registers in jmp_buf.  */
-#endif
-#ifndef __V1_JMPBUF
-	lghi   %r4,0
-	stg    %r4,144(%r2)         /* Set __flags to 0.  */
 #endif
 	std    %f8,80(%r2)
 	std    %f9,88(%r2)
@@ -77,3 +81,26 @@ ENTRY(__sigsetjmp)
 	jg     __sigjmp_save
 #endif
 END (__sigsetjmp)
+
+#if !defined IS_IN_rtld
+# if defined SHARED &&  SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)
+/* In glibc release 2.19 new versions of setjmp-functions were introduced,
+   but were reverted before 2.20. Thus both versions are the same function.  */
+
+#  undef __sigsetjmp
+
+weak_alias (setjmp, __v1setjmp);
+weak_alias (setjmp, __v2setjmp);
+versioned_symbol (libc, __v1setjmp, setjmp, GLIBC_2_0);
+compat_symbol (libc, __v2setjmp, setjmp, GLIBC_2_19);
+
+weak_alias (_setjmp, __v1_setjmp);
+weak_alias (_setjmp, __v2_setjmp);
+versioned_symbol (libc, __v1_setjmp, _setjmp, GLIBC_2_0);
+compat_symbol (libc, __v2_setjmp, _setjmp, GLIBC_2_19);
+
+strong_alias (__v1__sigsetjmp, __v2__sigsetjmp);
+versioned_symbol (libc, __v1__sigsetjmp, __sigsetjmp, GLIBC_2_0);
+compat_symbol (libc, __v2__sigsetjmp, __sigsetjmp, GLIBC_2_19);
+# endif /* if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)  */
+#endif /* if !defined IS_IN_rtld  */

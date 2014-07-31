@@ -1,3 +1,74 @@
+2014-07-31  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/Makefile: Delete file.
+	* sysdeps/s390/Versions (GLIBC_2.19): Remove __setjmp.
+	* sysdeps/s390/__longjmp.c: Delete file.
+	* sysdeps/s390/bits/setjmp.h (__s390_jmp_buf):
+	Remove fields __flags and __reserved.
+	* sysdeps/s390/longjmp.c: Include setjmp/longjmp.c
+	and add versioning.
+	* sysdeps/s390/rtld-__longjmp.c: Delete file.
+	* sysdeps/s390/rtld-global-offsets.sym: Likewise.
+	* sysdeps/s390/rtld-setjmp.S: Likewise.
+	* sysdeps/s390/s390-32/__longjmp-common.c: Move to ...
+	* sysdeps/s390/s390-32/__longjmp.c: ... here.
+	* sysdeps/s390/s390-32/setjmp-common.S: Move to ...
+	* sysdeps/s390/s390-32/setjmp.S: ... here.
+	Add versioning.
+	(__sigsetjmp): Remove setting __flags field.
+	* sysdeps/s390/s390-64/__longjmp-common.c:Move to ...
+	* sysdeps/s390/s390-64/__longjmp.c: ... here.
+	* sysdeps/s390/s390-64/setjmp-common.S: Move to ...
+	* sysdeps/s390/s390-64/setjmp.S: ... here.
+	Add versioning.
+	(__sigsetjmp): Remove setting __flags field.
+	* sysdeps/s390/setjmp.S: Delete file.
+	* sysdeps/s390/sigjmp.c: Likewise.
+	* sysdeps/s390/v1-longjmp.c: Likewise.
+	* sysdeps/s390/v1-setjmp.h: Likewise.
+	* sysdeps/s390/v1-sigjmp.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/Makefile (sysdep_routines):
+	Remove v1-longjmp_chk.
+	* sysdeps/unix/sysv/linux/s390/getcontext.S: Delete file.
+	* sysdeps/unix/sysv/linux/s390/longjmp_chk.c:
+	Include debug/longjmp_chk.c and add versioning.
+	* sysdeps/unix/sysv/linux/s390/pt-longjmp.c:
+	Include nptl/pt-longjmp.c and add versioning.
+	* sysdeps/unix/sysv/linux/s390/rtld-getcontext.S: Delete file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/____longjmp_chk.c:
+	Include __longjmp.c.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getcontext-common.S:
+	Move to ...
+	* sysdeps/unix/sysv/linux/s390/s390-32/getcontext.S: ... here.
+	(__getcontext): Remove setting __flags field.
+	Add versioning.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setcontext.S:
+	Don't restore upper high grps.
+	* sysdeps/unix/sysv/linux/s390/s390-32/swapcontext.S:
+	Likewise.
+	(__swapcontext): Remove setting uc_flags field.
+	* sysdeps/unix/sysv/linux/s390/s390-32/ucontext_i.sym:
+	Delete file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/____longjmp_chk.c:
+	Include __longjmp.c.
+	* sysdeps/unix/sysv/linux/s390/s390-64/getcontext-common.S:
+	Move to ...
+	* sysdeps/unix/sysv/linux/s390/s390-64/getcontext.S: ... here.
+	(__getcontext): Remove setting __flags field.
+	Add versioning.
+	* sysdeps/unix/sysv/linux/s390/s390-64/swapcontext.S:
+	(__swapcontext): Remove setting uc_flags field.
+	* unix/sysv/linux/s390/s390-64/ucontext_i.sym: Delete file.
+	* sysdeps/unix/sysv/linux/s390/sys/ucontext.h (ucontext):
+	Remove fields uc_high_gprs and __reserved.
+	* sysdeps/unix/sysv/linux/s390/ucontext_i.sym:
+	New file with reverted content.
+	* sysdeps/unix/sysv/linux/s390/v1-longjmp_chk.c: Delete file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist:
+	Regenerated.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist:
+	Regenerated.
+
 2014-07-31  Andreas Schwab  <schwab@suse.de>
 
 	* config.h.in (HAVE_IFUNC): Define to 0.

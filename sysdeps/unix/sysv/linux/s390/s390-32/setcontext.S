@@ -62,16 +62,8 @@ ENTRY(__setcontext)
 	/* Don't touch %a0, used for thread purposes.  */
 	lam	%a1,%a15,SC_ACRS+4(%r1)
 
-	/* Restore the upper halfs if available.  */
-	l	%r2,SC_FLGS(%r1)
-	tml	%r2,1   /* UCONTEXT_UC_FLAGS_HIGH_GPRS */
-	jz	0f
-	.machine	"z900"
-	.machinemode	"zarch_nohighgprs"
-	lmh	%r0,%r15,SC_HIGHGPRS(%r1)
-
 	/* Load general purpose registers.  */
-0:	lm	%r0,%r15,SC_GPRS(%r1)
+	lm	%r0,%r15,SC_GPRS(%r1)
 
 	/* Return.  */
 	br	%r14

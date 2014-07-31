@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 Free Software Foundation, Inc.
+/* Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,49 +15,30 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.
 
-   This is a copy of pthread/pt-longjmp.c made for extending the
-   jmpbuf structure on System z.  */
+   Versioned copy of nptl/pt-longjmp.c modified for versioning
+   the reverted jmpbuf extension.  */
 
-#include <setjmp.h>
-#include <stdlib.h>
-#include <bits/wordsize.h>
-#include "pthreadP.h"
 #include  <shlib-compat.h>
-#if defined SHARED && SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_19)
 
-/* The __v1 version prototypes are declared in v1-setjmp.h which
-   cannot be included together with setjmp.h.  So we put the
-   prototypes here manually.  */
-extern void __v1__libc_siglongjmp (sigjmp_buf env, int val)
-     __attribute__ ((noreturn));
-extern void __v1__libc_longjmp (sigjmp_buf env, int val)
-     __attribute__ ((noreturn));
+#if defined SHARED && SHLIB_COMPAT (libpthread, GLIBC_2_19, GLIBC_2_20)
+	/* we need a unique name in case of symbol versioning.  */
+# define longjmp __v1longjmp
+#endif /* defined SHARED && SHLIB_COMPAT (libpthread, GLIBC_2_19, GLIBC_2_20))  */
 
-void __v1_siglongjmp (sigjmp_buf env, int val)
-{
-  __v1__libc_siglongjmp (env, val);
-}
+#include <nptl/pt-longjmp.c>
 
-void __v1_longjmp (jmp_buf env, int val)
-{
-  __v1__libc_longjmp (env, val);
-}
+#if defined SHARED && SHLIB_COMPAT (libpthread, GLIBC_2_19, GLIBC_2_20)
+/* In glibc release 2.19 new versions of longjmp-functions were introduced,
+   but were reverted before 2.20. Thus both versions are the same function.  */
 
-compat_symbol (libpthread, __v1_longjmp, longjmp, GLIBC_2_0);
-compat_symbol (libpthread, __v1_siglongjmp, siglongjmp, GLIBC_2_0);
-#endif /* defined SHARED && SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_19))  */
+# undef longjmp
 
-void
-__v2_longjmp (jmp_buf env, int val)
-{
-  __libc_longjmp (env, val);
-}
+strong_alias (__v1longjmp, __v2longjmp)
+versioned_symbol (libpthread, __v1longjmp, longjmp, GLIBC_2_0);
+compat_symbol (libpthread, __v2longjmp, longjmp, GLIBC_2_19);
 
-void
-__v2_siglongjmp (jmp_buf env, int val)
-{
-  __libc_siglongjmp (env, val);
-}
-
-versioned_symbol (libpthread, __v2_longjmp, longjmp, GLIBC_2_19);
-versioned_symbol (libpthread, __v2_siglongjmp, siglongjmp, GLIBC_2_19);
+weak_alias (siglongjmp, __v1siglongjmp)
+weak_alias (siglongjmp, __v2siglongjmp)
+versioned_symbol (libpthread, __v1siglongjmp, siglongjmp, GLIBC_2_0);
+compat_symbol (libpthread, __v2siglongjmp, siglongjmp, GLIBC_2_19);
+#endif /* defined SHARED && SHLIB_COMPAT (libpthread, GLIBC_2_19, GLIBC_2_20))  */

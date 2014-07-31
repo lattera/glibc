@@ -1,11 +1,7 @@
 libc {
   GLIBC_2.19 {
-    setjmp; _setjmp; __setjmp; __sigsetjmp;
+    setjmp; _setjmp; __sigsetjmp;
     longjmp; _longjmp; siglongjmp;
-  }
-  GLIBC_PRIVATE {
-    __v1__libc_longjmp; __v1__libc_siglongjmp;
-    __v2__libc_longjmp; __v2__libc_siglongjmp;
   }
 }
 

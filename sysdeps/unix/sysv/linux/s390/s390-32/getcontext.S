@@ -19,8 +19,9 @@
 #include <sysdep.h>
 #include <features.h>
 
-#include "rtld-global-offsets.h"
 #include "ucontext_i.h"
+
+#include <shlib-compat.h>
 
 /*  __getcontext (const ucontext_t *ucp)
 
@@ -37,7 +38,7 @@ ENTRY(__getcontext)
 	/* rt_sigprocmask (SIG_BLOCK, NULL, &sc->sc_mask, sigsetsize).  */
 	la      %r2,SIG_BLOCK
 	slr	%r3,%r3
-	la      %r4,SC_MASK(%r1)
+	la	%r4,SC_MASK(%r1)
 	lhi	%r5,_NSIG8
 	svc	SYS_ify(rt_sigprocmask)
 
@@ -60,42 +61,6 @@ ENTRY(__getcontext)
 	std     %f14,SC_FPRS+112(%r1)
 	std     %f15,SC_FPRS+120(%r1)
 
-	lhi	%r2,0
-#ifndef __V1_UCONTEXT
-	bras	%r3,0f
-# ifdef IS_IN_rtld
-  /* Within ld.so we can do slightly better by addressing dl_hwap
-     relative to GOT start.  */
-1:	.long	_GLOBAL_OFFSET_TABLE_ - 1b
-	.long	C_SYMBOL_NAME(_rtld_global_ro)@GOTOFF
-0:	l	%r4,0(%r3)
-	la	%r4,0(%r3,%r4)
-	l	%r5,4(%r3)
-	/* _dl_hwcap is 64 bit and we need the lower 32.  */
-	l	%r3,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET+4(%r4,%r5)
-# elif PIC
-1:	.long	_GLOBAL_OFFSET_TABLE_ - 1b
-	.long	C_SYMBOL_NAME(_rtld_global_ro)@GOT
-0:	l	%r4,0(%r3)
-	la	%r4,0(%r3,%r4)  /* GOT pointer -> r4 */
-	l	%r5,4(%r3)      /* GOT offset -> r5 */
-	l	%r5,0(%r4,%r5)  /* GOT slot -> r5 */
-	l	%r3,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET+4(%r5)
-# else
-	.long	C_SYMBOL_NAME(_dl_hwcap)
-0:	l	%r3,0(%r3)
-	l	%r3,0(%r3)
-# endif
-	tml	%r3,512 /* HWCAP_S390_HIGH_GPRS */
-	jz	2f
-	/* highgprs implies zarch so stmh/oill is ok here.  */
-	.machine "z900"
-	.machinemode "zarch_nohighgprs"
-	stmh	%r0,%r15,SC_HIGHGPRS(%r1)
-	oill	%r2,1 /* UCONTEXT_UC_FLAGS_HIGH_GPRS */
-#endif
-2:	st	%r2,SC_FLGS(%r1)
-
 	/* Set __getcontext return value to 0.  */
 	slr     %r2,%r2
 
@@ -110,3 +75,12 @@ ENTRY(__getcontext)
 END(__getcontext)
 
 weak_alias (__getcontext, getcontext)
+
+#if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)
+/* In glibc release 2.19 a new version of getcontext was introduced,
+   but was reverted before 2.20. Thus both versions are the same function.  */
+weak_alias (__getcontext, __v1__getcontext)
+weak_alias (__getcontext, __v2__getcontext)
+versioned_symbol (libc, __v1__getcontext, getcontext, GLIBC_2_1)
+compat_symbol (libc, __v2__getcontext, getcontext, GLIBC_2_19)
+#endif

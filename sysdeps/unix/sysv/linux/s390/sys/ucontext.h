@@ -64,15 +64,6 @@ typedef struct
     fpreg_t fprs[16];
   } fpregset_t;
 
-/* Bit is set if the uc_high_gprs field contains the upper halfs of
-   the 64 bit general purpose registers.  Since the uc_high_gprs field
-   is only available in the 32 bit version of ucontext_t it will never
-   be set for 64 bit.  */
-#define UCONTEXT_UC_FLAGS_HIGH_GPRS (1UL << 0)
-
-/* A new uc_flags constant will be defined when actually making use of
-   the reserved space: UCONTEXT_UCFLAGS_RESERVED (1UL << 1).  */
-
 /* Context to describe whole processor state.  */
 typedef struct
   {
@@ -90,10 +81,6 @@ struct ucontext
     stack_t uc_stack;
     mcontext_t uc_mcontext;
     __sigset_t uc_sigmask;
-#ifndef __s390x__
-    unsigned long uc_high_gprs[16];
-#endif
-    char __reserved[512];
   };
 
 

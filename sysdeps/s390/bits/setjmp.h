@@ -40,10 +40,6 @@ typedef struct __s390_jmp_buf
   /* We save fpu registers 4 and 6.  */
   long __fpregs[4];
 # endif
-#ifndef __V1_JMPBUF
-  unsigned long __flags;
-  char __reserved[128];
-#endif
 } __jmp_buf[1];
 
 #endif

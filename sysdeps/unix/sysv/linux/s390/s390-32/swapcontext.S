@@ -65,31 +65,19 @@ ENTRY(__swapcontext)
 	std     %f14,SC_FPRS+112(%r1)
 	std     %f15,SC_FPRS+120(%r1)
 
-	/* Store access registers.  */
-	stam    %a0,%a15,SC_ACRS(%r1)
-
 	/* Set __swapcontext return value to 0.  */
 	slr     %r2,%r2
+
+	/* Store access registers.  */
+	stam    %a0,%a15,SC_ACRS(%r1)
 
 	/* Store general purpose registers.  */
 	stm     %r0,%r15,SC_GPRS(%r1)
 
-	/* Copy uc_flags into the new ucontext_t.  */
+	/* sigprocmask (SIG_SETMASK, &sc->sc_mask, NULL).  */
+	la      %r2,SIG_BLOCK
 	lr	%r5,%r0
-	l	%r2,SC_FLGS(%r5)
-	st	%r2,SC_FLGS(%r1)
-
-	/* Save/restore the upper halfs if necessary.  */
-	tml	%r2,1   /* UCONTEXT_UC_FLAGS_HIGH_GPRS */
-	jz	0f
-	.machine	"z900"
-	.machinemode	"zarch_nohighgprs"
-	stmh	%r0,%r15,SC_HIGHGPRS(%r1)
-	lmh	%r0,%r15,SC_HIGHGPRS(%r5)
-
-	/* rt_sigprocmask (SIG_SETMASK, &sc->sc_mask, NULL, sigsetsize).  */
-0:	la      %r2,SIG_BLOCK
-	la      %r3,SC_MASK(%r5)
+	la	%r3,SC_MASK(%r5)
 	slr	%r4,%r4
 	lhi	%r5,_NSIG8
 	svc	SYS_ify(rt_sigprocmask)

@@ -25,7 +25,7 @@
 
 /* Jump to the position specified by ENV, causing the
    setjmp call there to return VAL, or 1 if VAL is 0.  */
-attribute_hidden void
+void
 __longjmp (__jmp_buf env, int val)
 {
 #ifdef PTR_DEMANGLE
