@@ -42,6 +42,7 @@
 #define FROM_LOOP		from_utf8_loop
 #define TO_LOOP			to_utf8_loop
 #define FROM_DIRECTION		(dir == from_utf8)
+#define ONE_DIRECTION           0
 #define PREPARE_LOOP							\
   enum direction dir = ((struct utf8_data *) step->__data)->dir;	\
   int emit_bom = ((struct utf8_data *) step->__data)->emit_bom;		\

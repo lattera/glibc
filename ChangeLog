@@ -1,5 +1,14 @@
 2014-07-31  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/s390-64/utf16-utf32-z9.c
+	(ONE_DIRECTION): Define.
+	* sysdeps/s390/s390-64/utf8-utf16-z9.c
+	(ONE_DIRECTION): Define.
+	* sysdeps/s390/s390-64/utf8-utf32-z9.c
+	(ONE_DIRECTION): Define.
+
+2014-07-31  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/Makefile: Delete file.
 	* sysdeps/s390/Versions (GLIBC_2.19): Remove __setjmp.
 	* sysdeps/s390/__longjmp.c: Delete file.
