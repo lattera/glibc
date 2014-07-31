@@ -1,3 +1,9 @@
+2014-07-31  Andreas Schwab  <schwab@suse.de>
+
+	* config.h.in (HAVE_IFUNC): Define to 0.
+	* rt/clock-compat.c [HAVE_IFUNC]: Check for value, not
+	definedness.
+
 2014-07-30  Ling Ma  <ling.ml@alibaba-inc.com>
 
 	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add

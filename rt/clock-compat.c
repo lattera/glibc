@@ -27,7 +27,7 @@
 
 #include <time.h>
 
-#ifdef HAVE_IFUNC
+#if HAVE_IFUNC
 # define COMPAT_REDIRECT(name, proto, arglist)				      \
   __typeof (name) *name##_ifunc (void) asm (#name);			      \
   __typeof (name) *name##_ifunc (void)					      \
