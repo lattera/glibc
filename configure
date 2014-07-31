@@ -7003,6 +7003,44 @@ if test $libc_cv_ehdr_start = yes; then
 
 fi
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for __builtin_trap with no external dependencies" >&5
+$as_echo_n "checking for __builtin_trap with no external dependencies... " >&6; }
+if ${libc_cv_builtin_trap+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  libc_cv_builtin_trap=no
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+__builtin_trap ()
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+
+libc_undefs=`$NM -u conftest.o |
+  LC_ALL=C $AWK '$1 == "U" { print $2 | "sort -u"; next } { exit(1) }' \
+    2>&5` || {
+  as_fn_error $? "confusing output from $NM -u" "$LINENO" 5
+}
+echo >&5 "libc_undefs='$libc_undefs'"
+if test -z "$libc_undefs"; then
+  libc_cv_builtin_trap=yes
+fi
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_builtin_trap" >&5
+$as_echo "$libc_cv_builtin_trap" >&6; }
+if test $libc_cv_builtin_trap = yes; then
+  $as_echo "#define HAVE_BUILTIN_TRAP 1" >>confdefs.h
+
+fi
+
 ### End of automated tests.
 ### Now run sysdeps configure fragments.
 

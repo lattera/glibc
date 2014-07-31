@@ -1901,6 +1901,23 @@ if test $libc_cv_ehdr_start = yes; then
   AC_DEFINE([HAVE_EHDR_START])
 fi
 
+AC_CACHE_CHECK(for __builtin_trap with no external dependencies,
+	       libc_cv_builtin_trap, [dnl
+libc_cv_builtin_trap=no
+AC_TRY_COMPILE([], [__builtin_trap ()], [
+libc_undefs=`$NM -u conftest.o |
+  LC_ALL=C $AWK '$1 == "U" { print $2 | "sort -u"; next } { exit(1) }' \
+    2>&AS_MESSAGE_LOG_FD` || {
+  AC_MSG_ERROR([confusing output from $NM -u])
+}
+echo >&AS_MESSAGE_LOG_FD "libc_undefs='$libc_undefs'"
+if test -z "$libc_undefs"; then
+  libc_cv_builtin_trap=yes
+fi])])
+if test $libc_cv_builtin_trap = yes; then
+  AC_DEFINE([HAVE_BUILTIN_TRAP])
+fi
+
 ### End of automated tests.
 ### Now run sysdeps configure fragments.
 

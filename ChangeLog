@@ -1,5 +1,11 @@
 2014-07-31  Roland McGrath  <roland@hack.frob.com>
 
+	* config.h.in (HAVE_BUILTIN_TRAP): New #define to 0.
+	* configure.ac (libc_cv_builtin_trap): New test.
+	* configure: Regenerated.
+	* sysdeps/generic/abort-instr.h [HAVE_BUILTIN_TRAP]
+	(ABORT_INSTRUCTION): Define using __builtin_trap.
+
 	* nptl/pthreadP.h (SIGCANCEL, SIGTIMER, SIGSETXID, __xidcmd): Moved ...
 	* sysdeps/unix/sysv/linux/nptl-signals.h: ... to this new file.
 	* sysdeps/nptl/nptl-signals.h: New file.
