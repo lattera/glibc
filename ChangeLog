@@ -1,3 +1,10 @@
+2014-07-31  Roland McGrath  <roland@hack.frob.com>
+
+	* nptl/pthreadP.h (SIGCANCEL, SIGTIMER, SIGSETXID, __xidcmd): Moved ...
+	* sysdeps/unix/sysv/linux/nptl-signals.h: ... to this new file.
+	* sysdeps/nptl/nptl-signals.h: New file.
+	* nptl/pthreadP.h: Include <nptl-signals.h>.
+
 2014-07-31  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/s390-64/utf16-utf32-z9.c

@@ -32,6 +32,8 @@
 #include <atomic.h>
 #include <kernel-features.h>
 #include <errno.h>
+#include <nptl-signals.h>
+
 
 /* Atomic operations on TLS memory.  */
 #ifndef THREAD_ATOMIC_CMPXCHG_VAL
@@ -313,22 +315,6 @@ __do_cancel (void)
 # define LIBC_CANCEL_RESET(val)	((void)(val)) /* Nothing, but evaluate it.  */
 # define LIBC_CANCEL_HANDLED()	/* Nothing.  */
 #endif
-
-/* The signal used for asynchronous cancelation.  */
-#define SIGCANCEL	__SIGRTMIN
-
-
-/* Signal needed for the kernel-supported POSIX timer implementation.
-   We can reuse the cancellation signal since we can distinguish
-   cancellation from timer expirations.  */
-#define SIGTIMER	SIGCANCEL
-
-
-/* Signal used to implement the setuid et.al. functions.  */
-#define SIGSETXID	(__SIGRTMIN + 1)
-
-/* Used to communicate with signal handler.  */
-extern struct xid_command *__xidcmd attribute_hidden;
 
 
 /* Internal prototypes.  */
