@@ -1,5 +1,11 @@
 2014-07-31  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/generic/safe-fatal.h: New file.
+	* sysdeps/unix/sysv/linux/safe-fatal.h: New file.
+	* nptl/forward.c: Include it.
+	(__pthread_unwind): Use __safe_fatal as default action, rather
+	than a bogus use of INTERNAL_SYSCALL that could never work.
+
 	* config.h.in (HAVE_BUILTIN_TRAP): New #define to 0.
 	* configure.ac (libc_cv_builtin_trap): New test.
 	* configure: Regenerated.
