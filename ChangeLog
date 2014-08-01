@@ -1,5 +1,8 @@
 2014-08-01  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* posix/regex_internal.c: Check if DEBUG is defined and is
+	set.
+
 	* include/libc-symbols.h (HAVE_MBSTATE_T): Define macro.
 	(HAVE_MBSRTOWCS): Likewise.
 	* posix/fnmatch.c: Include string.h unconditionally.
