@@ -1,3 +1,12 @@
+2014-08-01  Richard Henderon  <rth@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/s_fma.c (__fma): Use math_force_eval before
+	feclearexcept; use math_opt_barrier instead of open-coded asm; fix
+	typo in exact zero test.
+	* sysdeps/ieee754/ldbl-128/s_fmal.c (__fmal): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fma.c (__fma): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fmal.c (__fmal): Likewise.
+
 2014-08-01  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/arm/sysdep.h (PTR_MANGLE_LOAD, PTR_MANGLE)
