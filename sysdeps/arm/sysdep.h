@@ -19,6 +19,10 @@
 #include <sysdeps/generic/sysdep.h>
 #include <features.h>
 
+#ifndef __ASSEMBLER__
+# include <stdint.h>
+#endif
+
 /* The __ARM_ARCH define is provided by gcc 4.8.  Construct it otherwise.  */
 #ifndef __ARM_ARCH
 # ifdef __ARM_ARCH_2__
@@ -285,4 +289,48 @@
 # define PC_OFS  4
 #else
 # define PC_OFS  8
+#endif
+
+/* Pointer mangling support.  */
+#if (defined NOT_IN_libc && defined IS_IN_rtld) || \
+  (!defined SHARED && (!defined NOT_IN_libc || defined IS_IN_libpthread))
+# ifdef __ASSEMBLER__
+#  define PTR_MANGLE_LOAD(guard, tmp)					\
+  LDST_PCREL(ldr, guard, tmp, C_SYMBOL_NAME(__pointer_chk_guard_local));
+#  define PTR_MANGLE(dst, src, guard, tmp)				\
+  PTR_MANGLE_LOAD(guard, tmp);						\
+  PTR_MANGLE2(dst, src, guard)
+/* Use PTR_MANGLE2 for efficiency if guard is already loaded.  */
+#  define PTR_MANGLE2(dst, src, guard)		\
+  eor dst, src, guard
+#  define PTR_DEMANGLE(dst, src, guard, tmp)	\
+  PTR_MANGLE (dst, src, guard, tmp)
+#  define PTR_DEMANGLE2(dst, src, guard)	\
+  PTR_MANGLE2 (dst, src, guard)
+# else
+extern uintptr_t __pointer_chk_guard_local attribute_relro attribute_hidden;
+#  define PTR_MANGLE(var) \
+  (var) = (__typeof (var)) ((uintptr_t) (var) ^ __pointer_chk_guard_local)
+#  define PTR_DEMANGLE(var)     PTR_MANGLE (var)
+# endif
+#else
+# ifdef __ASSEMBLER__
+#  define PTR_MANGLE_LOAD(guard, tmp)					\
+  LDST_GLOBAL(ldr, guard, tmp, C_SYMBOL_NAME(__pointer_chk_guard));
+#  define PTR_MANGLE(dst, src, guard, tmp)				\
+  PTR_MANGLE_LOAD(guard, tmp);						\
+  PTR_MANGLE2(dst, src, guard)
+/* Use PTR_MANGLE2 for efficiency if guard is already loaded.  */
+#  define PTR_MANGLE2(dst, src, guard)		\
+  eor dst, src, guard
+#  define PTR_DEMANGLE(dst, src, guard, tmp)	\
+  PTR_MANGLE (dst, src, guard, tmp)
+#  define PTR_DEMANGLE2(dst, src, guard)	\
+  PTR_MANGLE2 (dst, src, guard)
+# else
+extern uintptr_t __pointer_chk_guard attribute_relro;
+#  define PTR_MANGLE(var) \
+  (var) = (__typeof (var)) ((uintptr_t) (var) ^ __pointer_chk_guard)
+#  define PTR_DEMANGLE(var)     PTR_MANGLE (var)
+# endif
 #endif
