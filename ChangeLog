@@ -1,3 +1,9 @@
+2014-08-01  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* include/libc-symbols.h (HAVE_MBSTATE_T): Define macro.
+	(HAVE_MBSRTOWCS): Likewise.
+	* posix/fnmatch.c: Include string.h unconditionally.
+
 2014-08-01  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* NEWS: Explain the s390 jmp_buf / ucontext_t ABI change

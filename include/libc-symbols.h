@@ -57,9 +57,11 @@
    so it's harmless.  */
 #define HAVE_CONFIG_H	0
 
-/* Define this for the benefit of portable GNU code that wants to check it.
-   Of course, it's never false when building libc!  */
+/* Define these macros for the benefit of portable GNU code that wants to check
+   them.  Of course, STDC_HEADERS is never false when building libc!  */
 #define STDC_HEADERS	1
+#define HAVE_MBSTATE_T	1
+#define HAVE_MBSRTOWCS	1
 
 /* The symbols in all the user (non-_) macros are C symbols.  */
 

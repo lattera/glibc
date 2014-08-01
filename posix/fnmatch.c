@@ -28,12 +28,7 @@
 #include <errno.h>
 #include <fnmatch.h>
 #include <ctype.h>
-
-#if HAVE_STRING_H || defined _LIBC
-# include <string.h>
-#else
-# include <strings.h>
-#endif
+#include <string.h>
 
 #if defined STDC_HEADERS || defined _LIBC
 # include <stdlib.h>
