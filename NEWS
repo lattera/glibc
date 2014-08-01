@@ -24,6 +24,17 @@ Version 2.20
   17050, 17058, 17061, 17062, 17069, 17075, 17078, 17079, 17084, 17086,
   17088, 17092, 17097, 17125, 17135, 17137, 17150, 17153, 17213.
 
+* Reverted change of ABI data structures for s390 and s390x:
+  On s390 and s390x the size of struct ucontext and jmp_buf was increased in
+  2.19. This change is reverted in 2.20. The introduced 2.19 symbol versions
+  of getcontext, setjmp, _setjmp, __sigsetjmp, longjmp, _longjmp, siglongjmp
+  are preserved pointing straight to the same implementation as the old ones.
+  Given that, new callers wil simply provide a too-big buffer to these
+  functions. Any applications/libraries out there that embed jmp_buf or
+  ucontext_t in an ABI-relevant data structure that have already been rebuilt
+  against 2.19 headers will have to rebuilt again. This is necessary in any
+  case to revert the breakage in their ABI caused by the glibc change.
+
 * Support for file description locks is added to systems running the
   Linux kernel. The standard file locking interfaces are extended to
   operate on file descriptions, not file descriptors, via the use of
