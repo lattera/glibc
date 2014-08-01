@@ -62,6 +62,10 @@
 #define STDC_HEADERS	1
 #define HAVE_MBSTATE_T	1
 #define HAVE_MBSRTOWCS	1
+#define HAVE_LIBINTL_H	1
+#define HAVE_WCTYPE_H	1
+#define HAVE_ISWCTYPE	1
+#define ENABLE_NLS	1
 
 /* The symbols in all the user (non-_) macros are C symbols.  */
 

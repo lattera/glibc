@@ -1,5 +1,12 @@
 2014-08-01  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* include/libc-symbols.h (HAVE_LIBINTL_H): Define macro.
+	(HAVE_WCTYPE_H): Likewise.
+	(HAVE_ISWCTYPE): Likewise.
+	(ENABLE_NLS): Likewise.
+	* posix/regex_internal.h [(defined MB_CUR_MAX && HAVE_WCTYPE_H
+	&& HAVE_ISWCTYPE) || _LIBC]: Sync up with gnulib.
+
 	* posix/regex_internal.c: Check if DEBUG is defined and is
 	set.
 
