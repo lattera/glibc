@@ -1,3 +1,7 @@
+2014-08-01  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/arm/lowlevellock.h: File removed.
+
 2014-08-01  Richard Henderon  <rth@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/s_fma.c (__fma): Use math_force_eval before
