@@ -1,3 +1,8 @@
+2014-08-03  Mike Frysinger  <vapier@gentoo.org>
+
+	* stdlib/tst-setcontext.c (test_stack): Fix coding style.
+	(main): Likewise.
+
 2014-08-01  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/arm/lowlevellock.h: File removed.
