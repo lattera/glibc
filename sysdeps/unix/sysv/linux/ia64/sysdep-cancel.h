@@ -121,6 +121,25 @@ ENTRY (name)								      \
 (p6) br.cond.spnt.few __syscall_error;					      \
      ret;;								      \
      .endp name;							      \
+									      \
+      .proc __##syscall_name##_nocancel;				      \
+     .globl __##syscall_name##_nocancel;				      \
+__##syscall_name##_nocancel:						      \
+     .prologue;								      \
+     adds r2 = SYSINFO_OFFSET, r13;					      \
+     .save ar.pfs, r11;							      \
+     mov r11 = ar.pfs;;							      \
+     .body;								      \
+     ld8 r2 = [r2];							      \
+     mov r15 = SYS_ify(syscall_name);;					      \
+     mov b7 = r2;							      \
+     br.call.sptk.many b6 = b7;;					      \
+     mov ar.pfs = r11;							      \
+     cmp.eq p6,p0 = -1, r10;						      \
+(p6) br.cond.spnt.few __syscall_error;					      \
+     ret;;								      \
+     .endp __##syscall_name##_nocancel;					      \
+									      \
      .proc __GC_##name;							      \
      .globl __GC_##name;						      \
      .hidden __GC_##name;						      \
