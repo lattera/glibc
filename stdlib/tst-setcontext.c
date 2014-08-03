@@ -74,8 +74,8 @@ f2 (void)
 }
 
 void
-test_stack(volatile int a, volatile int b,
-           volatile int c, volatile int d)
+test_stack (volatile int a, volatile int b,
+	    volatile int c, volatile int d)
 {
   volatile int e = 5;
   volatile int f = 6;
@@ -83,7 +83,7 @@ test_stack(volatile int a, volatile int b,
 
   /* Test for cases where getcontext is clobbering the callers
      stack, including parameters.  */
-  getcontext(&uc);
+  getcontext (&uc);
 
   if (a != 1)
     {
@@ -147,7 +147,7 @@ main (void)
   char st1[32768];
   stack_t stack_before, stack_after;
 
-  sigaltstack(NULL, &stack_before);
+  sigaltstack (NULL, &stack_before);
 
   puts ("making contexts");
   if (getcontext (&ctx[1]) != 0)
@@ -211,7 +211,7 @@ main (void)
   puts ("back at main program");
   back_in_main = 1;
 
-  sigaltstack(NULL, &stack_after);
+  sigaltstack (NULL, &stack_after);
 
   if (was_in_f1 == 0)
     {
