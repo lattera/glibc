@@ -1,3 +1,7 @@
+2014-08-04  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/ieee754/ldbl-96/s_fma.c: Include <math_private.h>.
+
 2014-08-03  Mike Frysinger  <vapier@gentoo.org>
 
 	* stdlib/tst-setcontext.c (test_stack): Fix coding style.
