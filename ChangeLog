@@ -1,3 +1,8 @@
+2014-08-04  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep-cancel.h (PSEUDO): Add nocancel
+	variants for each function.
+
 2014-08-04  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/ia64/nptl/Makefile: File removed, contents
