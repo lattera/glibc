@@ -1,3 +1,7 @@
+2014-08-08  Mike Frysinger  <vapier@gentoo.org>
+
+	* intl/tst-gettext2.sh: Check every lang file for creation.
+
 2014-08-07  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/aarch64/fpu/math_private.h

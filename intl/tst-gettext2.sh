@@ -28,27 +28,23 @@ objpfx=$5
 # Generate the test data.
 mkdir -p ${objpfx}domaindir
 # Create the locale directories.
-test -d ${objpfx}domaindir/lang1 || {
-  mkdir ${objpfx}domaindir/lang1
-  for f in ADDRESS COLLATE CTYPE IDENTIFICATION MEASUREMENT MONETARY NAME NUMERIC PAPER TELEPHONE TIME; do
+mkdir -p \
+  ${objpfx}domaindir/lang1/LC_MESSAGES \
+  ${objpfx}domaindir/lang2/LC_MESSAGES
+
+for f in ADDRESS COLLATE CTYPE IDENTIFICATION MEASUREMENT MONETARY NAME NUMERIC PAPER TELEPHONE TIME; do
+  [ -e ${objpfx}domaindir/lang1/LC_$f ] ||
     cp ${common_objpfx}localedata/de_DE.ISO-8859-1/LC_$f \
        ${objpfx}domaindir/lang1
-  done
-}
-test -d ${objpfx}domaindir/lang2 || {
-  mkdir ${objpfx}domaindir/lang2
-  for f in ADDRESS COLLATE CTYPE IDENTIFICATION MEASUREMENT MONETARY NAME NUMERIC PAPER TELEPHONE TIME; do
+  [ -e ${objpfx}domaindir/lang2/LC_$f ] ||
     cp ${common_objpfx}localedata/de_DE.ISO-8859-1/LC_$f \
        ${objpfx}domaindir/lang2
-  done
-}
-test -d ${objpfx}domaindir/lang1/LC_MESSAGES || {
-  mkdir ${objpfx}domaindir/lang1/LC_MESSAGES
+done
+test -e ${objpfx}domaindir/lang1/LC_MESSAGES/SYS_LC_MESSAGES || {
   cp ${common_objpfx}localedata/de_DE.ISO-8859-1/LC_MESSAGES/SYS_LC_MESSAGES \
      ${objpfx}domaindir/lang1/LC_MESSAGES
 }
-test -d ${objpfx}domaindir/lang2/LC_MESSAGES || {
-  mkdir ${objpfx}domaindir/lang2/LC_MESSAGES
+test -e ${objpfx}domaindir/lang2/LC_MESSAGES/SYS_LC_MESSAGES || {
   cp ${common_objpfx}localedata/de_DE.ISO-8859-1/LC_MESSAGES/SYS_LC_MESSAGES \
      ${objpfx}domaindir/lang2/LC_MESSAGES
 }
