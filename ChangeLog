@@ -1,3 +1,7 @@
+2014-08-04  Bernard Ogden  <bernie.ogden@linaro.org>
+
+	* sysdeps/unix/sysv/linux/mips/lowlevellock.h: Remove file.
+
 2014-08-04  Will Newton  <will.newton@linaro.org>
 
 	* sysdeps/unix/sysv/linux/aarch64/lowlevellock.h: Remove
