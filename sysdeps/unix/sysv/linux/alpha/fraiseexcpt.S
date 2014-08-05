@@ -46,11 +46,12 @@ ENTRY(__feraiseexcept)
 END(__feraiseexcept)
 	cfi_endproc
 
-#include <shlib-compat.h>
-#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
+#ifdef IS_IN_libm
+# include <shlib-compat.h>
+# if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
 strong_alias (__feraiseexcept, __old_feraiseexcept)
 compat_symbol (libm, __old_feraiseexcept, feraiseexcept, GLIBC_2_1);
-#endif
-
+# endif
 libm_hidden_ver (__feraiseexcept, feraiseexcept)
 versioned_symbol (libm, __feraiseexcept, feraiseexcept, GLIBC_2_2);
+#endif

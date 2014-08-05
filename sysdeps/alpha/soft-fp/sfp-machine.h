@@ -86,13 +86,13 @@ do {								\
     }								\
 } while (0)
 
+/* We copy the libm function into libc for soft-fp.  */
+extern int __feraiseexcept (int __excepts) attribute_hidden;
+
 #define FP_HANDLE_EXCEPTIONS					\
 do {								\
   if (__builtin_expect (_fex, 0))				\
-    {								\
-      unsigned long t = __ieee_get_fp_control ();		\
-      __ieee_set_fp_control (t | _fex);				\
-    }								\
+    __feraiseexcept (_fex);					\
 } while (0)
 
 #define FP_TRAPPING_EXCEPTIONS					\
