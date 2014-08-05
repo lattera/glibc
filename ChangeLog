@@ -1,3 +1,7 @@
+2014-08-05  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/lowlevellock.h: Remove file.
+
 2014-08-04  Bernard Ogden  <bernie.ogden@linaro.org>
 
 	* sysdeps/unix/sysv/linux/mips/lowlevellock.h: Remove file.
