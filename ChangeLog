@@ -1,3 +1,8 @@
+2014-08-07  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* sysdeps/arm/armv6/strcpy.S (strcpy):
+	Fix performance issue in misaligned cases.
+
 2014-08-05  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/bits/ioctl-types.h (struct winsize):

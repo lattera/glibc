@@ -159,7 +159,7 @@ ENTRY (strcpy)
 	@ Prologue to unaligned loop.  Seed shifted non-zero bytes.
 	uqsub8	r4, r7, r2		@ Find EOS
 	uqsub8	r5, r7, r3
-	mvns	r4, r4			@ EOS in first word?
+	cmp	r4, #0			@ EOS in first word?
 	it	ne
 	subne	r1, r1, #8
 	bne	.Lbyte_loop
@@ -179,7 +179,7 @@ ENTRY (strcpy)
 	@ Rotated unaligned copy loop.  The tail of the prologue is
 	@ shared with the loop itself.
 	.balign 8
-1:	mvns	r5, r5			@ EOS in second word?
+1:	cmp	r5, #0			@ EOS in second word?
 	bne	4f
 	@ Combine first and second words
 	orr	r2, r2, r3, lsh_gt #(\unalign*8)
@@ -194,7 +194,7 @@ ENTRY (strcpy)
 	sfi_pld	r1, #128
 	uqsub8	r5, r7, r3
 	sfi_pld	r0, #128
-	mvns	r4, r4			@ EOS in first word?
+	cmp	r4, #0			@ EOS in first word?
 	bne	3f
 	@ Combine the leftover and the first word
 	orr	r6, r6, r2, lsh_gt #(\unalign*8)
