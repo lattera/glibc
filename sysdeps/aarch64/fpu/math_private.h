@@ -228,12 +228,9 @@ static __always_inline void
 libc_feholdsetround_aarch64_ctx (struct rm_ctx *ctx, int r)
 {
   fpu_control_t fpcr;
-  fpu_fpsr_t fpsr;
   int round;
 
   _FPU_GETCW (fpcr);
-  _FPU_GETFPSR (fpsr);
-  ctx->env.__fpsr = fpsr;
 
   /* Check whether rounding modes are different.  */
   round = (fpcr ^ r) & _FPU_FPCR_RM_MASK;
@@ -262,6 +259,33 @@ libc_feresetround_aarch64_ctx (struct rm_ctx *ctx)
 #define libc_feresetround_ctx		libc_feresetround_aarch64_ctx
 #define libc_feresetroundf_ctx		libc_feresetround_aarch64_ctx
 #define libc_feresetroundl_ctx		libc_feresetround_aarch64_ctx
+
+static __always_inline void
+libc_feholdsetround_noex_aarch64_ctx (struct rm_ctx *ctx, int r)
+{
+  fpu_control_t fpcr;
+  fpu_fpsr_t fpsr;
+  int round;
+
+  _FPU_GETCW (fpcr);
+  _FPU_GETFPSR (fpsr);
+  ctx->env.__fpsr = fpsr;
+
+  /* Check whether rounding modes are different.  */
+  round = (fpcr ^ r) & _FPU_FPCR_RM_MASK;
+  ctx->updated_status = round != 0;
+
+  /* Set the rounding mode if changed.  */
+  if (__glibc_unlikely (round != 0))
+    {
+      ctx->env.__fpcr = fpcr;
+      _FPU_SETCW (fpcr ^ round);
+    }
+}
+
+#define libc_feholdsetround_noex_ctx	libc_feholdsetround_noex_aarch64_ctx
+#define libc_feholdsetround_noexf_ctx	libc_feholdsetround_noex_aarch64_ctx
+#define libc_feholdsetround_noexl_ctx	libc_feholdsetround_noex_aarch64_ctx
 
 static __always_inline void
 libc_feresetround_noex_aarch64_ctx (struct rm_ctx *ctx)

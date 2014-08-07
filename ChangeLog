@@ -1,5 +1,10 @@
 2014-08-07  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* sysdeps/aarch64/fpu/math_private.h
+	(libc_feholdsetround_noex_aarch64_ctx): New function.
+
+2014-08-07  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* sysdeps/arm/armv6/strcpy.S (strcpy):
 	Fix performance issue in misaligned cases.
 
