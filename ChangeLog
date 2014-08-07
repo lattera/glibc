@@ -1,3 +1,9 @@
+2014-08-12  Mike Frysinger  <vapier@gentoo.org>
+
+	* configure.ac: Change __ehdr_start code to dereference the struct.
+	Run readelf on the output to look for relocations.
+	* configure: Regenerated.
+
 2014-08-12  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17261]

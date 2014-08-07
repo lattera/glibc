@@ -6965,8 +6965,11 @@ if test $libc_cv_predef_stack_protector = yes; then
 fi
 libc_extra_cppflags=
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether the linker provides __ehdr_start" >&5
-$as_echo_n "checking whether the linker provides __ehdr_start... " >&6; }
+# Some linkers on some architectures support __ehdr_start but with
+# bugs.  Make sure usage of it does not create relocations in the
+# output (as the linker should resolve them all for us).
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether the linker provides working __ehdr_start" >&5
+$as_echo_n "checking whether the linker provides working __ehdr_start... " >&6; }
 if ${libc_cv_ehdr_start+:} false; then :
   $as_echo_n "(cached) " >&6
 else
@@ -6980,12 +6983,20 @@ LIBS=
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
-extern const char __ehdr_start __attribute__ ((visibility ("hidden")));
-const char *ehdr (void) { return &__ehdr_start; }
+typedef struct {
+  char foo;
+  long val;
+} Ehdr;
+extern const Ehdr __ehdr_start __attribute__ ((visibility ("hidden")));
+long ehdr (void) { return __ehdr_start.val; }
 
 _ACEOF
 if ac_fn_c_try_link "$LINENO"; then :
-  libc_cv_ehdr_start=yes
+  if $READELF -r conftest | fgrep __ehdr_start >/dev/null; then
+		  libc_cv_ehdr_start=broken
+		else
+		  libc_cv_ehdr_start=yes
+		fi
 else
   libc_cv_ehdr_start=no
 fi
@@ -6998,9 +7009,12 @@ LIBS="$old_LIBS"
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ehdr_start" >&5
 $as_echo "$libc_cv_ehdr_start" >&6; }
-if test $libc_cv_ehdr_start = yes; then
+if test "$libc_cv_ehdr_start" = yes; then
   $as_echo "#define HAVE_EHDR_START 1" >>confdefs.h
 
+elif test "$libc_cv_ehdr_start" = broken; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: linker is broken -- you should upgrade" >&5
+$as_echo "$as_me: WARNING: linker is broken -- you should upgrade" >&2;}
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for __builtin_trap with no external dependencies" >&5
