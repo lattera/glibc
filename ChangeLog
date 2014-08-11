@@ -1,3 +1,9 @@
+2014-08-12  Bernard Ogden  <bernie.ogden@linaro.org>
+
+	[BZ #16892]
+	* sysdeps/nptl/lowlevellock.h (__lll_timedlock): Use
+	atomic_compare_and_exchange_bool_acq rather than atomic_exchange_acq.
+
 2014-08-12  Sean Anderson  <seanga2@gmail.com>
 
 	* malloc/malloc.c: Fix typo in comment.

@@ -88,12 +88,15 @@ extern int __lll_timedlock_wait (int *futex, const struct timespec *,
 extern int __lll_robust_timedlock_wait (int *futex, const struct timespec *,
 					int private) attribute_hidden;
 
+/* Take futex if it is untaken.
+   Otherwise block until either we get the futex or abstime runs out.  */
 #define __lll_timedlock(futex, abstime, private)                \
   ({                                                            \
     int *__futex = (futex);                                     \
     int __val = 0;                                              \
                                                                 \
-    if (__glibc_unlikely (atomic_exchange_acq (__futex, 1)))    \
+    if (__glibc_unlikely                                        \
+        (atomic_compare_and_exchange_bool_acq (__futex, 1, 0))) \
       __val = __lll_timedlock_wait (__futex, abstime, private); \
     __val;                                                      \
   })
