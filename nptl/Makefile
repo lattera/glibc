@@ -256,7 +256,7 @@ tests = tst-typesizes \
 	tst-exit1 tst-exit2 tst-exit3 \
 	tst-stdio1 tst-stdio2 \
 	tst-stack1 tst-stack2 tst-stack3 tst-stack4 tst-pthread-getattr \
-	tst-pthread-attr-affinity \
+	tst-pthread-attr-affinity tst-pthread-mutexattr \
 	tst-unload \
 	tst-dlsym1 \
 	tst-sysconf \
