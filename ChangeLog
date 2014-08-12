@@ -1,3 +1,7 @@
+2014-08-12  Sean Anderson  <seanga2@gmail.com>
+
+	* malloc/malloc.c: Fix typo in comment.
+
 2014-08-09  Allan McRae  <allan@archlinux.org>
 
 	* Regenerate libc.po.

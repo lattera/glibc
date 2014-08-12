@@ -22,7 +22,7 @@
   This is a version (aka ptmalloc2) of malloc/free/realloc written by
   Doug Lea and adapted to multiple threads/arenas by Wolfram Gloger.
 
-  There have been substantial changesmade after the integration into
+  There have been substantial changes made after the integration into
   glibc in all parts of the code.  Do not look for much commonality
   with the ptmalloc2 version.
 
