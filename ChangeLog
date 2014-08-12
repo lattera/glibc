@@ -1,3 +1,7 @@
+2014-08-12  Roland McGrath  <roland@hack.frob.com>
+
+	* NEWS: Mention x86-64 ld.so use of Intel MPX instructions.
+
 2014-08-12  Bernard Ogden  <bernie.ogden@linaro.org>
 
 	[BZ #16892]

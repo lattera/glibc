@@ -97,6 +97,16 @@ Version 2.20
   silently replaced with the "C" locale when running in AT_SECURE mode
   (e.g., in a SUID program).  This is no longer necessary because of the
   additional checks.
+
+* On x86-64, the dynamic linker's lazy-binding support is now compatible
+  with application code using Intel MPX instructions.  (With all previous
+  versions, the MPX register state could be clobbered when making calls
+  into or out of a shared library.)  Note that while the new dynamic
+  linker is compatible with all known x86 hardware whether or not it
+  supports Intel MPX, some x86 instruction-set emulators might fail to
+  handle the new instruction encodings.  This is known to affect Valgrind
+  versions up through 3.9 (but will be fixed in the forthcoming 3.10
+  release), and might affect other tools that do instruction emulation.
 
 Version 2.19
 
