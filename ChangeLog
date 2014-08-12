@@ -1,3 +1,10 @@
+2014-08-12  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17261]
+	* sysdeps/powerpc/nofpu/fenv_const.c (__fe_enabled_env): Change
+	value to 0.
+	(__fe_nonieee_env): Define as an alias for __fe_dfl_env.
+
 2014-08-12  Roland McGrath  <roland@hack.frob.com>
 
 	* NEWS: Mention x86-64 ld.so use of Intel MPX instructions.
