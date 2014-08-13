@@ -1,3 +1,11 @@
+2014-08-13  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17263]
+	* sysdeps/unix/sysv/linux/powerpc/get_clockfreq.c: Include
+	<stdint.h>.
+	(__get_clockfreq): Use uint64_t instead of hp_timing_t in
+	INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK call.
+
 2014-08-13  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/x86/fpu/bits/mathinline.h: Fix typo in comment.

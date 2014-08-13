@@ -18,6 +18,7 @@
 
 #include <ctype.h>
 #include <fcntl.h>
+#include <stdint.h>
 #include <string.h>
 #include <unistd.h>
 #include <libc-internal.h>
@@ -42,7 +43,7 @@ __get_clockfreq (void)
 #ifdef SHARED
   INTERNAL_SYSCALL_DECL (err);
   timebase_freq =
-    INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK (get_tbfreq, err, hp_timing_t, 0);
+    INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK (get_tbfreq, err, uint64_t, 0);
   if (INTERNAL_SYSCALL_ERROR_P (timebase_freq, err)
       && INTERNAL_SYSCALL_ERRNO (timebase_freq, err) == ENOSYS)
 #endif
