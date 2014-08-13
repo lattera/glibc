@@ -384,7 +384,10 @@ __END_NAMESPACE_C99
 # endif
 #endif
 
-#ifndef __SSE2_MATH__
+/* Disable x87 inlines when -fpmath=sse is passed and also when we're building
+   on x86_64.  Older gcc (gcc-3.2 for example) does not set __SSE2_MATH__
+   for x86_64.  */
+#if !defined __SSE2_MATH__ && !defined __x86_64__
 # if ((!defined __NO_MATH_INLINES || defined __LIBC_INTERNAL_MATH_INLINES) \
      && defined __OPTIMIZE__)
 
@@ -970,4 +973,4 @@ __inline_mathcode2 (__ieee754_atan2, __y, __x,
 		    return __value;)
 # endif
 
-#endif /* !__SSE2_MATH__ */
+#endif /* !__SSE2_MATH__ && !__x86_64__ */
