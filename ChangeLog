@@ -6717,6 +6717,7 @@
 
 2014-04-16  Igor Zamyatin  <igor.zamyatin@intel.com>
 
+	[BZ #16275]
 	* sysdeps/x86_64/bits/link.h (La_x86_64_regs): Add lr_bnd.
 	(La_x86_64_retval): Add lrv_bnd0 and lrv_bnd1.
 	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Save
@@ -6859,6 +6860,7 @@
 2014-04-09  Igor Zamyatin  <igor.zamyatin@intel.com>
 	    H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #16275]
 	* config.h.in (HAVE_MPX_SUPPORT): New #undef.
 	* sysdeps/x86_64/configure.ac: Set HAVE_MPX_SUPPORT.
 	* sysdeps/x86_64/configure: Regenerated.
@@ -8010,6 +8012,7 @@
 
 2014-03-13  Igor Zamyatin  <igor.zamyatin@intel.com>
 
+	[BZ #16194]
 	* config.h.in (HAVE_AVX512_SUPPORT): New #undef.
 	(HAVE_AVX512_ASM_SUPPORT): Likewise.
 	* sysdeps/x86_64/bits/link.h (La_x86_64_zmm): New.
