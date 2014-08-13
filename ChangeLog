@@ -1,5 +1,7 @@
 2014-08-13  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/x86/fpu/bits/mathinline.h: Fix typo in comment.
+
 	[BZ #17262]
 	* sysdeps/x86/fpu/bits/mathinline.h: Check both __SSE2_MATH__
 	and __x86_64__ when disabling x87 inline functions.
