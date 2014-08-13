@@ -1,3 +1,9 @@
+2014-08-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #17259]
+	* sysdeps/x86_64/cacheinfo.c (intel_check_word): Replace cpuid
+	asm statement with __cpuid_count.
+
 2014-08-12  Mike Frysinger  <vapier@gentoo.org>
 
 	* configure.ac: Change __ehdr_start code to dereference the struct.

@@ -191,9 +191,7 @@ intel_check_word (int name, unsigned int value, bool *has_level_2,
 	  unsigned int round = 0;
 	  while (1)
 	    {
-	      asm volatile ("xchgl %%ebx, %1; cpuid; xchgl %%ebx, %1"
-			    : "=a" (eax), "=r" (ebx), "=c" (ecx), "=d" (edx)
-			    : "0" (4), "2" (round));
+	      __cpuid_count (4, round, eax, ebx, ecx, edx);
 
 	      enum { null = 0, data = 1, inst = 2, uni = 3 } type = eax & 0x1f;
 	      if (type == null)
