@@ -135,16 +135,18 @@ elf_machine_lazy_rel (struct link_map *map,
 									      \
 	if (ranges[0].start + ranges[0].size == (start + size))		      \
 	  ranges[0].size -= size;					      \
-	if (! ELF_DURING_STARTUP && ((do_lazy) || ranges[0].size == 0))	      \
+	if (ELF_DURING_STARTUP						      \
+	    || (!(do_lazy)						      \
+		&& (ranges[0].start + ranges[0].size) == start))	      \
+	  {								      \
+	    /* Combine processing the sections.  */			      \
+	    ranges[0].size += size;					      \
+	  }								      \
+	else								      \
 	  {								      \
 	    ranges[1].start = start;					      \
 	    ranges[1].size = size;					      \
 	    ranges[1].lazy = (do_lazy);					      \
-	  }								      \
-	else								      \
-	  {								      \
-	    /* Combine processing the sections.  */			      \
-	    ranges[0].size += size;					      \
 	  }								      \
       }									      \
 									      \

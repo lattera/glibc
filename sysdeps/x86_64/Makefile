@@ -38,6 +38,11 @@ tests += tst-audit3 tst-audit4 tst-audit5 tst-audit10
 ifeq (yes,$(config-cflags-avx))
 tests += tst-audit6 tst-audit7
 endif
+
+tests += tst-split-dynreloc
+LDFLAGS-tst-split-dynreloc = -Wl,-T,$(..)sysdeps/x86_64/tst-split-dynreloc.lds
+tst-split-dynreloc-ENV = LD_BIND_NOW=1
+
 modules-names += tst-auditmod3a tst-auditmod3b \
 		tst-auditmod4a tst-auditmod4b \
 		tst-auditmod5a tst-auditmod5b \

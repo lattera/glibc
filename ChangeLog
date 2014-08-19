@@ -1,3 +1,14 @@
+2015-08-19   Petar Jovanovic  <petar.jovanovic@rt-rk.com>
+
+	[BZ #14341]
+	* elf/dynamic-link.h (elf_machine_lazy_rel): Properly handle the
+	case when there is a gap between DT_REL and DT_JMPREL sections.
+	* sysdeps/x86_64/Makefile (tests): Add tst-split-dynreloc.
+	(LDFLAGS-tst-split-dynreloc): New.
+	(tst-split-dynreloc-ENV): Likewise.
+	* sysdeps/x86_64/tst-split-dynreloc.c: New file.
+	* sysdeps/x86_64/tst-split-dynreloc.lds: Likewise.
+
 2015-08-19  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
