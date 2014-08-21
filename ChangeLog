@@ -1,5 +1,7 @@
 2014-08-21  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* nptl/Makefile (CFLAGS-pthread_atfork.c): Remove.
+
 	* catgets/Makefile (CPPFLAGS-gencat): Remove.
 	* iconv/Makefile (CPPFLAGS-iconv_prog): Likewise.
 	(CPPFLAGS-iconvconfig): Likewise.

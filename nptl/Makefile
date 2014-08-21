@@ -139,8 +139,6 @@ libpthread-routines = nptl-init vars events version \
 libpthread-shared-only-routines = version pt-allocrtsig unwind-forcedunwind
 libpthread-static-only-routines = pthread_atfork
 
-CFLAGS-pthread_atfork.c = -DNOT_IN_libc
-
 # Since cancellation handling is in large parts handled using exceptions
 # we have to compile some files with exception handling enabled, some
 # even with asynchronous unwind tables.
