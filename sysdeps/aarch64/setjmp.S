@@ -63,7 +63,7 @@ ENTRY (__sigsetjmp)
 	mov	x2,  sp
 	str	x2,  [x0, #JB_SP<<3]
 #endif
-#if defined NOT_IN_libc && defined IS_IN_rtld
+#ifdef IS_IN_rtld
 	/* In ld.so we never save the signal mask */
 	mov	w0, #0
 	RET

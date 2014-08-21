@@ -86,7 +86,7 @@ $sigsetjmp_local:
 	ldq	ra, 0(sp)
 	addq	sp, 16, sp
 	ret
-#elif defined NOT_IN_libc && defined IS_IN_rtld
+#elif defined IS_IN_rtld
 	/* In ld.so we never save the signal mask.  */
 	mov	0, v0
 	ret

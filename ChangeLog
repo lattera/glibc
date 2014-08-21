@@ -1,3 +1,36 @@
+2014-08-21  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* include/libc-symbols.h: Remove unnecessary check for
+	NOT_IN_libc.
+	* nptl/pthreadP.h: Likewise.
+	* sysdeps/aarch64/setjmp.S: Likewise.
+	* sysdeps/alpha/setjmp.S: Likewise.
+	* sysdeps/arm/sysdep.h: Likewise.
+	* sysdeps/i386/setjmp.S: Likewise.
+	* sysdeps/m68k/setjmp.c: Likewise.
+	* sysdeps/posix/getcwd.c: Likewise.
+	* sysdeps/powerpc/powerpc32/setjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc64/setjmp-common.S: Likewise.
+	* sysdeps/s390/s390-32/setjmp.S: Likewise.
+	* sysdeps/s390/s390-64/setjmp.S: Likewise.
+	* sysdeps/sh/sh3/setjmp.S: Likewise.
+	* sysdeps/sh/sh4/setjmp.S: Likewise.
+	* sysdeps/unix/alpha/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/setjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/tile/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h: Likewise.
+	* sysdeps/x86_64/setjmp.S: Likewise.
+
 2014-08-13  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17263]

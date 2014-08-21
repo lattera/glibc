@@ -349,7 +349,7 @@ __LABEL(name)						\
    we don't deoptimize things by placing the pointer check value there.  */
 
 #ifdef __ASSEMBLER__
-# if defined NOT_IN_libc && defined IS_IN_rtld
+# ifdef IS_IN_rtld
 #  define PTR_MANGLE(dst, src, tmp)				\
 	ldah	tmp, __pointer_chk_guard_local($29) !gprelhigh;	\
 	ldq	tmp, __pointer_chk_guard_local(tmp) !gprellow;	\
@@ -371,8 +371,9 @@ __LABEL(name)						\
 # define PTR_DEMANGLE2(dst, tmp)  PTR_MANGLE2(dst, dst, tmp)
 #else
 # include <stdint.h>
-# if (defined NOT_IN_libc && defined IS_IN_rtld) \
-     || (!defined SHARED && (!defined NOT_IN_libc || defined IS_IN_libpthread))
+# if (defined IS_IN_rtld \
+      || (!defined SHARED && (!defined NOT_IN_libc \
+			      || defined IS_IN_libpthread)))
 extern uintptr_t __pointer_chk_guard_local attribute_relro attribute_hidden;
 #  define PTR_MANGLE(var) \
 	(var) = (__typeof (var)) ((uintptr_t) (var) ^ __pointer_chk_guard_local)

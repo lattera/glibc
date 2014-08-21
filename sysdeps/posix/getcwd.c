@@ -206,7 +206,7 @@ extern char *alloca ();
 
 #ifdef __ASSUME_ATFCTS
 # define __have_atfcts 1
-#elif defined NOT_IN_libc && defined IS_IN_rtld
+#elif defined IS_IN_rtld
 static int __rtld_have_atfcts;
 # define __have_atfcts __rtld_have_atfcts
 #endif

@@ -213,7 +213,7 @@ L(no_vmx):
 #else
 	li	r6,0
 #endif
-#if defined NOT_IN_libc && defined IS_IN_rtld
+#ifdef IS_IN_rtld
 	li	r3,0
 	blr
 #elif defined SHARED

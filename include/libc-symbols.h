@@ -584,7 +584,7 @@ for linking")
 # define libc_hidden_data_ver(local, name)
 #endif
 
-#if defined NOT_IN_libc && defined IS_IN_rtld
+#ifdef IS_IN_rtld
 # define rtld_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define rtld_hidden_tls_proto(name, attrs...) hidden_tls_proto (name, ##attrs)
 # define rtld_hidden_def(name) hidden_def (name)
@@ -604,7 +604,7 @@ for linking")
 # define rtld_hidden_data_ver(local, name)
 #endif
 
-#if defined NOT_IN_libc && defined IS_IN_libm
+#ifdef IS_IN_libm
 # define libm_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define libm_hidden_tls_proto(name, attrs...) hidden_tls_proto (name, ##attrs)
 # define libm_hidden_def(name) hidden_def (name)
@@ -624,7 +624,7 @@ for linking")
 # define libm_hidden_data_ver(local, name)
 #endif
 
-#if defined NOT_IN_libc && defined IS_IN_libresolv
+#ifdef IS_IN_libresolv
 # define libresolv_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define libresolv_hidden_tls_proto(name, attrs...) \
   hidden_tls_proto (name, ##attrs)
@@ -645,7 +645,7 @@ for linking")
 # define libresolv_hidden_data_ver(local, name)
 #endif
 
-#if defined NOT_IN_libc && defined IS_IN_librt
+#ifdef IS_IN_librt
 # define librt_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define librt_hidden_tls_proto(name, attrs...) \
   hidden_tls_proto (name, ##attrs)
@@ -666,7 +666,7 @@ for linking")
 # define librt_hidden_data_ver(local, name)
 #endif
 
-#if defined NOT_IN_libc && defined IS_IN_libdl
+#ifdef IS_IN_libdl
 # define libdl_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define libdl_hidden_tls_proto(name, attrs...) \
   hidden_tls_proto (name, ##attrs)
@@ -687,7 +687,7 @@ for linking")
 # define libdl_hidden_data_ver(local, name)
 #endif
 
-#if defined NOT_IN_libc && defined IS_IN_libnss_files
+#ifdef IS_IN_libnss_files
 # define libnss_files_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define libnss_files_hidden_tls_proto(name, attrs...) \
   hidden_tls_proto (name, ##attrs)
@@ -708,7 +708,7 @@ for linking")
 # define libnss_files_hidden_data_ver(local, name)
 #endif
 
-#if defined NOT_IN_libc && defined IS_IN_libnsl
+#ifdef IS_IN_libnsl
 # define libnsl_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define libnsl_hidden_tls_proto(name, attrs...) \
   hidden_tls_proto (name, ##attrs)
@@ -729,7 +729,7 @@ for linking")
 # define libnsl_hidden_data_ver(local, name)
 #endif
 
-#if defined NOT_IN_libc && defined IS_IN_libnss_nisplus
+#ifdef IS_IN_libnss_nisplus
 # define libnss_nisplus_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define libnss_nisplus_hidden_tls_proto(name, attrs...) \
   hidden_tls_proto (name, ##attrs)
@@ -758,7 +758,7 @@ for linking")
 # define HIDDEN_BUILTIN_JUMPTARGET(name) HIDDEN_JUMPTARGET(name)
 #endif
 
-#if defined NOT_IN_libc && defined IS_IN_libutil
+#ifdef IS_IN_libutil
 # define libutil_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define libutil_hidden_tls_proto(name, attrs...) \
   hidden_tls_proto (name, ##attrs)

@@ -309,8 +309,9 @@
 #endif	/* __ASSEMBLER__ */
 
 /* Pointer mangling is supported for AArch64.  */
-#if (defined NOT_IN_libc && defined IS_IN_rtld) || \
-  (!defined SHARED && (!defined NOT_IN_libc || defined IS_IN_libpthread))
+#if (defined IS_IN_rtld || \
+     (!defined SHARED && (!defined NOT_IN_libc \
+			  || defined IS_IN_libpthread)))
 # ifdef __ASSEMBLER__
 #  define PTR_MANGLE(dst, src, guard, tmp)                                \
   LDST_PCREL (ldr, guard, tmp, C_SYMBOL_NAME(__pointer_chk_guard_local)); \

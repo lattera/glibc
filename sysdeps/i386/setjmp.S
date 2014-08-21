@@ -46,7 +46,7 @@ ENTRY (__sigsetjmp)
 	movl %ecx, (JB_PC*4)(%eax)
 	movl %ebp, (JB_BP*4)(%eax) /* Save caller's frame pointer.  */
 
-#if defined NOT_IN_libc && defined IS_IN_rtld
+#ifdef IS_IN_rtld
 	/* In ld.so we never save the signal mask.  */
 	xorl %eax, %eax
 	ret

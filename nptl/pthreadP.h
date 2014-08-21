@@ -252,7 +252,7 @@ extern void __pthread_register_cancel (__pthread_unwind_buf_t *__buf)
      __cleanup_fct_attribute;
 extern void __pthread_unregister_cancel (__pthread_unwind_buf_t *__buf)
      __cleanup_fct_attribute;
-#if defined NOT_IN_libc && defined IS_IN_libpthread
+#ifdef IS_IN_libpthread
 hidden_proto (__pthread_unwind)
 hidden_proto (__pthread_unwind_next)
 hidden_proto (__pthread_register_cancel)
@@ -296,13 +296,13 @@ __do_cancel (void)
 # define LIBC_CANCEL_HANDLED() \
   __asm (".globl " __SYMBOL_PREFIX "__libc_enable_asynccancel"); \
   __asm (".globl " __SYMBOL_PREFIX "__libc_disable_asynccancel")
-#elif defined NOT_IN_libc && defined IS_IN_libpthread
+#elif defined IS_IN_libpthread
 # define LIBC_CANCEL_ASYNC() CANCEL_ASYNC ()
 # define LIBC_CANCEL_RESET(val) CANCEL_RESET (val)
 # define LIBC_CANCEL_HANDLED() \
   __asm (".globl " __SYMBOL_PREFIX "__pthread_enable_asynccancel"); \
   __asm (".globl " __SYMBOL_PREFIX "__pthread_disable_asynccancel")
-#elif defined NOT_IN_libc && defined IS_IN_librt
+#elif defined IS_IN_librt
 # define LIBC_CANCEL_ASYNC() \
   __librt_enable_asynccancel ()
 # define LIBC_CANCEL_RESET(val) \
@@ -341,7 +341,7 @@ extern int __make_stacks_executable (void **stack_endp)
 
 /* longjmp handling.  */
 extern void __pthread_cleanup_upto (__jmp_buf target, char *targetframe);
-#if defined NOT_IN_libc && defined IS_IN_libpthread
+#ifdef IS_IN_libpthread
 hidden_proto (__pthread_cleanup_upto)
 #endif
 
@@ -486,7 +486,7 @@ extern int __pthread_enable_asynccancel (void) attribute_hidden;
 extern void __pthread_disable_asynccancel (int oldtype)
      internal_function attribute_hidden;
 
-#if defined NOT_IN_libc && defined IS_IN_libpthread
+#ifdef IS_IN_libpthread
 hidden_proto (__pthread_mutex_init)
 hidden_proto (__pthread_mutex_destroy)
 hidden_proto (__pthread_mutex_lock)
