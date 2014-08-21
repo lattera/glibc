@@ -40,8 +40,6 @@ install-sbin := zic zdump
 
 generated-dirs += testdata
 
-CPPFLAGS-zic = -DNOT_IN_libc
-
 install-bin-script = tzselect
 generated += tzselect
 

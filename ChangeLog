@@ -1,5 +1,10 @@
 2014-08-21  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* catgets/Makefile (CPPFLAGS-gencat): Remove.
+	* iconv/Makefile (CPPFLAGS-iconv_prog): Likewise.
+	(CPPFLAGS-iconvconfig): Likewise.
+	* timezone/Makefile (CPPFLAGS-zic): Likewise.
+
 	* include/libc-symbols.h: Remove unnecessary check for
 	NOT_IN_libc.
 	* nptl/pthreadP.h: Likewise.
