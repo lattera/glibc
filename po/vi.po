@@ -7,10 +7,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc-2.18.90.20140105\n"
+"Project-Id-Version: libc-2.19.90\n"
 "Report-Msgid-Bugs-To: http://www.gnu.org/software/libc/bugs.html\n"
-"POT-Creation-Date: 2014-01-05 17:40+1000\n"
-"PO-Revision-Date: 2014-01-09 15:04+0700\n"
+"POT-Creation-Date: 2014-08-09 17:06+1000\n"
+"PO-Revision-Date: 2014-08-21 15:45+0700\n"
 "Last-Translator: Trần Ngọc Quân <vnwildman@gmail.com>\n"
 "Language-Team: Vietnamese <translation-team-vi@lists.sourceforge.net>\n"
 "Language: vi\n"
@@ -25,7 +25,7 @@ msgstr ""
 #: argp/argp-help.c:227
 #, c-format
 msgid "%.*s: ARGP_HELP_FMT parameter requires a value"
-msgstr "%.*s: tham số “ARGP_HELP_FMT” cần có một giá trị"
+msgstr "%.*s: Tham số “ARGP_HELP_FMT” cần có một giá trị"
 
 #: argp/argp-help.c:237
 #, c-format
@@ -74,7 +74,7 @@ msgid "Give a short usage message"
 msgstr "Hiển thị thông tin về cách dùng dạng ngắn"
 
 #: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
-#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:115
+#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:105
 #: nss/makedb.c:120
 msgid "NAME"
 msgstr "TÊN"
@@ -152,7 +152,7 @@ msgstr ""
 "[TẬP-TIN-ĐẦU-RA [TẬP-TIN-ĐẦU-VÀO]...]"
 
 #: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:307
-#: elf/pldd.c:219 elf/sln.c:85 elf/sprof.c:372 iconv/iconv_prog.c:408
+#: elf/pldd.c:244 elf/sln.c:85 elf/sprof.c:372 iconv/iconv_prog.c:408
 #: iconv/iconvconfig.c:379 locale/programs/locale.c:277
 #: locale/programs/localedef.c:376 login/programs/pt_chown.c:88
 #: malloc/memusagestat.c:563 nss/getent.c:969 nss/makedb.c:369
@@ -168,11 +168,11 @@ msgstr ""
 "Thông báo lỗi dịch cho: <http://translationproject.org/team/vi.html>.\n"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:323 elf/ldd.bash.in:38 elf/pldd.c:235 elf/sotruss.ksh:75
+#: elf/ldconfig.c:323 elf/ldd.bash.in:38 elf/pldd.c:260 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:425 iconv/iconvconfig.c:396
 #: locale/programs/locale.c:294 locale/programs/localedef.c:402
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:71
-#: malloc/memusagestat.c:581 nscd/nscd.c:485 nss/getent.c:86 nss/makedb.c:385
+#: malloc/memusagestat.c:581 nscd/nscd.c:494 nss/getent.c:86 nss/makedb.c:385
 #: posix/getconf.c:1103 sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
@@ -185,10 +185,10 @@ msgstr ""
 "KHÔNG CÓ BẢO HÀNH GÌ CẢ; NGAY CẢ KHI NÓ ĐƯỢC BÁN HAY THÍCH HỢP CHO MỤC ĐÍCH CÁ NHÂN.\n"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:328 elf/pldd.c:240 elf/sprof.c:395 iconv/iconv_prog.c:430
+#: elf/ldconfig.c:328 elf/pldd.c:265 elf/sprof.c:395 iconv/iconv_prog.c:430
 #: iconv/iconvconfig.c:401 locale/programs/locale.c:299
 #: locale/programs/localedef.c:407 malloc/memusage.sh:75
-#: malloc/memusagestat.c:586 nscd/nscd.c:490 nss/getent.c:91 nss/makedb.c:390
+#: malloc/memusagestat.c:586 nscd/nscd.c:499 nss/getent.c:91 nss/makedb.c:390
 #: posix/getconf.c:1108
 #, c-format
 msgid "Written by %s.\n"
@@ -293,7 +293,7 @@ msgstr "[TẬP-TIN]"
 #: debug/pcprofiledump.c:108
 #, c-format
 msgid "cannot open input file"
-msgstr "không thể mở tập tin nhập vào"
+msgstr "không thể mở tập tin đầu vào"
 
 #: debug/pcprofiledump.c:115
 #, c-format
@@ -309,8 +309,8 @@ msgstr "kích cỡ con trỏ không hợp lệ"
 msgid "Usage: xtrace [OPTION]... PROGRAM [PROGRAMOPTION]...\\n"
 msgstr "Cách dùng: xtrace [TÙY-CHỌN]... CHƯƠNG-TRÌNH [TÙY_CHỌN_CHƯƠNG_TRÌNH]...\\n"
 
-#: debug/xtrace.sh:32 elf/sotruss.ksh:56 elf/sotruss.ksh:67
-#: elf/sotruss.ksh:135 malloc/memusage.sh:26
+#: debug/xtrace.sh:32 elf/sotruss.sh:56 elf/sotruss.sh:67 elf/sotruss.sh:135
+#: malloc/memusage.sh:26
 msgid "Try \\`%s --help' or \\`%s --usage' for more information.\\n"
 msgstr "Hãy chạy lệnh “%s --help” (trợ giúp) hoặc “%s --usage” (cách dùng) để xem thêm thông tin.\\n"
 
@@ -344,7 +344,7 @@ msgstr ""
 "cũng bắt buộc với các tùy chọn ngắn tương ứng.\n"
 "\n"
 
-#: debug/xtrace.sh:57 elf/ldd.bash.in:55 elf/sotruss.ksh:49
+#: debug/xtrace.sh:57 elf/ldd.bash.in:55 elf/sotruss.sh:49
 #: malloc/memusage.sh:64
 msgid "For bug reporting instructions, please see:\\\\n%s.\\\\n"
 msgstr "Để tìm hướng dẫn về thông báo lỗi, hãy xem:\\\\n%s.\\\\nThông báo lỗi dịch cho: <http://translationproject.org/team/vi.html>.\\\\n"
@@ -440,11 +440,11 @@ msgstr "Gặp lỗi khi thay đổi quyền truy cập của %s thành %#o"
 msgid "Renaming of %s to %s failed"
 msgstr "Gặp lỗi khi thay đổi tên %s thành %s"
 
-#: elf/dl-close.c:383 elf/dl-open.c:470
+#: elf/dl-close.c:385 elf/dl-open.c:470
 msgid "cannot create scope list"
 msgstr "không thể tạo danh sách phạm vi"
 
-#: elf/dl-close.c:776
+#: elf/dl-close.c:770
 msgid "shared object not open"
 msgstr "chưa mở đối tượng dùng chung"
 
@@ -461,15 +461,15 @@ msgstr "sự thay thế thẻ bài chuỗi động trống"
 msgid "cannot load auxiliary `%s' because of empty dynamic string token substitution\n"
 msgstr "không thể nạp bổ trợ “%s” do sự thay thế thẻ bài chuỗi động trống\n"
 
-#: elf/dl-deps.c:479
+#: elf/dl-deps.c:467
 msgid "cannot allocate dependency list"
 msgstr "không thể cấp phát danh sách quan hệ phụ thuộc"
 
-#: elf/dl-deps.c:516 elf/dl-deps.c:576
+#: elf/dl-deps.c:504 elf/dl-deps.c:564
 msgid "cannot allocate symbol search list"
 msgstr "không thể cấp phát danh sách tìm kiếm ký hiệu"
 
-#: elf/dl-deps.c:556
+#: elf/dl-deps.c:544
 msgid "Filters not supported with LD_TRACE_PRELINKING"
 msgstr "Không hỗ trợ bộ lọc với LD_TRACE_PRELINKING"
 
@@ -481,15 +481,15 @@ msgstr "LỖI LIÊN KẾT ĐỘNG!!!"
 msgid "error while loading shared libraries"
 msgstr "gặp lỗi khi nạp thư viện dùng chung"
 
-#: elf/dl-fptr.c:87 ports/sysdeps/hppa/dl-fptr.c:93
+#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:94
 msgid "cannot map pages for fdesc table"
 msgstr "không thể ánh xạ trang cho bảng fdesc"
 
-#: elf/dl-fptr.c:191 ports/sysdeps/hppa/dl-fptr.c:206
+#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:207
 msgid "cannot map pages for fptr table"
 msgstr "không thể ánh xạ trang cho bảng fptr"
 
-#: elf/dl-fptr.c:220 ports/sysdeps/hppa/dl-fptr.c:235
+#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:236
 msgid "internal error: symidx out of range of fptr table"
 msgstr "lỗi nội bộ: symidx ở ngoại phạm vi của bảng fptr"
 
@@ -497,163 +497,163 @@ msgstr "lỗi nội bộ: symidx ở ngoại phạm vi của bảng fptr"
 msgid "cannot create capability list"
 msgstr "không thể tạo danh sách khả năng"
 
-#: elf/dl-load.c:465
+#: elf/dl-load.c:423
 msgid "cannot allocate name record"
 msgstr "không thể cấp phát bản ghi tên"
 
-#: elf/dl-load.c:550 elf/dl-load.c:666 elf/dl-load.c:749 elf/dl-load.c:868
+#: elf/dl-load.c:508 elf/dl-load.c:624 elf/dl-load.c:707 elf/dl-load.c:826
 msgid "cannot create cache for search path"
 msgstr "không thể tạo bộ nhớ tạm cho đường dẫn tìm kiếm"
 
-#: elf/dl-load.c:641
+#: elf/dl-load.c:599
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "không thể tạo bản sao RUNPATH/RPATH"
 
-#: elf/dl-load.c:735
+#: elf/dl-load.c:693
 msgid "cannot create search path array"
 msgstr "không thể tạo mảng đường dẫn tìm kiếm"
 
-#: elf/dl-load.c:940
+#: elf/dl-load.c:898
 msgid "cannot stat shared object"
 msgstr "không thể lấy trạng thái về đối tượng dùng chung"
 
-#: elf/dl-load.c:1018
+#: elf/dl-load.c:976
 msgid "cannot open zero fill device"
 msgstr "không thể mở thiết bị điền số không"
 
-#: elf/dl-load.c:1065 elf/dl-load.c:2348
+#: elf/dl-load.c:1023 elf/dl-load.c:2173
 msgid "cannot create shared object descriptor"
 msgstr "không thể tạo bộ mô tả đối tượng dùng chung"
 
-#: elf/dl-load.c:1084 elf/dl-load.c:1761 elf/dl-load.c:1864
+#: elf/dl-load.c:1042 elf/dl-load.c:1583 elf/dl-load.c:1695
 msgid "cannot read file data"
 msgstr "không thể đọc dữ liệu tập tin"
 
-#: elf/dl-load.c:1130
+#: elf/dl-load.c:1082
 msgid "ELF load command alignment not page-aligned"
 msgstr "Sắp hàng câu lệnh nạp ELF không phải sắp hàng theo trang"
 
-#: elf/dl-load.c:1137
+#: elf/dl-load.c:1089
 msgid "ELF load command address/offset not properly aligned"
 msgstr "Địa chỉ/bù của câu lệnh nạp ELF không phải được sắp hàng đúng"
 
-#: elf/dl-load.c:1222
+#: elf/dl-load.c:1173
 msgid "cannot allocate TLS data structures for initial thread"
 msgstr "không thể cấp phát cấu trúc dữ liệu TLS đối với tuyến trình đầu tiên"
 
-#: elf/dl-load.c:1245
+#: elf/dl-load.c:1196
 msgid "cannot handle TLS data"
 msgstr "không thể xử lý dữ liệu TLS"
 
-#: elf/dl-load.c:1264
+#: elf/dl-load.c:1215
 msgid "object file has no loadable segments"
 msgstr "tập tin đối tượng không có đoạn nạp được"
 
-#: elf/dl-load.c:1300
-msgid "failed to map segment from shared object"
-msgstr "lỗi ánh xạ đoạn từ đối tượng dùng chung"
-
-#: elf/dl-load.c:1326
+#: elf/dl-load.c:1224 elf/dl-load.c:1675
 msgid "cannot dynamically load executable"
 msgstr "không thể nạp động tập tin thực hiện được"
 
-#: elf/dl-load.c:1389 elf/dl-load.c:1498
-msgid "cannot change memory protections"
-msgstr "không thể thay đổi sự bảo vệ bộ nhớ"
-
-#: elf/dl-load.c:1408
-msgid "cannot map zero-fill pages"
-msgstr "không thể ánh xạ trang điền số không"
-
-#: elf/dl-load.c:1422
+#: elf/dl-load.c:1245
 msgid "object file has no dynamic section"
 msgstr "tập tin đối tượng không có phần động"
 
-#: elf/dl-load.c:1445
+#: elf/dl-load.c:1268
 msgid "shared object cannot be dlopen()ed"
 msgstr "đối tượng dùng chung không thể được dlopen()"
 
-#: elf/dl-load.c:1458
+#: elf/dl-load.c:1281
 msgid "cannot allocate memory for program header"
 msgstr "không thể cấp phát bộ nhớ cho phần đầu chương trình"
 
-#: elf/dl-load.c:1475 elf/dl-open.c:195
+#: elf/dl-load.c:1297 elf/dl-open.c:195
 msgid "invalid caller"
 msgstr "bộ gọi không hợp lệ"
 
-#: elf/dl-load.c:1518
-msgid "cannot enable executable stack as shared object requires"
-msgstr "không thể hiệu lực đống thực hiện được theo yêu cầu của đối tượng dùng chung"
+#: elf/dl-load.c:1320 elf/dl-load.h:130
+msgid "cannot change memory protections"
+msgstr "không thể thay đổi sự bảo vệ bộ nhớ"
 
-#: elf/dl-load.c:1531
+#: elf/dl-load.c:1340
+msgid "cannot enable executable stack as shared object requires"
+msgstr "không thể hiệu lực ngăn xếp thực hiện được theo yêu cầu của đối tượng dùng chung"
+
+#: elf/dl-load.c:1353
 msgid "cannot close file descriptor"
 msgstr "không thể đóng bộ mô tả tập tin"
 
-#: elf/dl-load.c:1761
+#: elf/dl-load.c:1583
 msgid "file too short"
 msgstr "tập tin quá ngắn"
 
-#: elf/dl-load.c:1797
+#: elf/dl-load.c:1618
 msgid "invalid ELF header"
 msgstr "phần đầu ELF không hợp lệ"
 
-#: elf/dl-load.c:1809
+#: elf/dl-load.c:1630
 msgid "ELF file data encoding not big-endian"
 msgstr "Bảng mã dữ liệu tập tin ELF không có kiểu về cuối lớn (big-endian)"
 
-#: elf/dl-load.c:1811
+#: elf/dl-load.c:1632
 msgid "ELF file data encoding not little-endian"
 msgstr "Bảng mã dữ liệu tập tin ELF không có kiểu về cuối nhỏ (little-endian)"
 
-#: elf/dl-load.c:1815
+#: elf/dl-load.c:1636
 msgid "ELF file version ident does not match current one"
 msgstr "ident của phiên bản tập tin ELF không tương ứng với điều hiện thời"
 
-#: elf/dl-load.c:1819
+#: elf/dl-load.c:1640
 msgid "ELF file OS ABI invalid"
 msgstr "Hệ điều hành ABI của tập tin ELF không phải hợp lệ"
 
-#: elf/dl-load.c:1822
+#: elf/dl-load.c:1643
 msgid "ELF file ABI version invalid"
 msgstr "Phiên bản ABI của tập tin ELF không phải hợp lệ"
 
-#: elf/dl-load.c:1825
+#: elf/dl-load.c:1646
 msgid "nonzero padding in e_ident"
 msgstr "không có phần đệm số không trong e_ident"
 
-#: elf/dl-load.c:1828
+#: elf/dl-load.c:1649
 msgid "internal error"
 msgstr "lỗi nội bộ"
 
-#: elf/dl-load.c:1835
+#: elf/dl-load.c:1656
 msgid "ELF file version does not match current one"
 msgstr "Phiên bản tập tin ELF không tương ứng với điều hiện thời"
 
-#: elf/dl-load.c:1843
+#: elf/dl-load.c:1664
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "chỉ có thể nạp ET_DYN và ET_EXEC"
 
-#: elf/dl-load.c:1849
+#: elf/dl-load.c:1680
 msgid "ELF file's phentsize not the expected size"
 msgstr "kích cỡ phentsize của tập tin ELF là bất thường"
 
-#: elf/dl-load.c:2367
+#: elf/dl-load.c:2192
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "lớp ELF không đúng: ELFCLASS64"
 
-#: elf/dl-load.c:2368
+#: elf/dl-load.c:2193
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "lớp ELF không đúng: ELFCLASS32"
 
-#: elf/dl-load.c:2371
+#: elf/dl-load.c:2196
 msgid "cannot open shared object file"
 msgstr "không thể mở tập tin đối tượng dùng chung"
 
-#: elf/dl-lookup.c:753 ports/sysdeps/mips/dl-lookup.c:770
+#: elf/dl-load.h:128
+msgid "failed to map segment from shared object"
+msgstr "lỗi ánh xạ đoạn từ đối tượng dùng chung"
+
+#: elf/dl-load.h:132
+msgid "cannot map zero-fill pages"
+msgstr "không thể ánh xạ trang điền số không"
+
+#: elf/dl-lookup.c:788
 msgid "relocation error"
 msgstr "lỗi tái định vị"
 
-#: elf/dl-lookup.c:780 ports/sysdeps/mips/dl-lookup.c:797
+#: elf/dl-lookup.c:815
 msgid "symbol lookup error"
 msgstr "lỗi tra cứu ký hiệu"
 
@@ -669,41 +669,41 @@ msgstr "Bộ đếm tạo TLS đã bao bọc! Hãy thông báo lỗi này."
 msgid "cannot load any more object with static TLS"
 msgstr "không thể tải thêm đối tượng với TLS tĩnh"
 
-#: elf/dl-open.c:602
+#: elf/dl-open.c:599
 msgid "invalid mode for dlopen()"
 msgstr "chế độ không hợp lệ đối với dlopen()"
 
-#: elf/dl-open.c:619
+#: elf/dl-open.c:616
 msgid "no more namespaces available for dlmopen()"
 msgstr "không có sẵn miền tên thêm nữa đối với dlmopen()"
 
-#: elf/dl-open.c:637
+#: elf/dl-open.c:634
 msgid "invalid target namespace in dlmopen()"
 msgstr "miền tên đích không hợp lệ trong dlmopen()"
 
-#: elf/dl-reloc.c:158
+#: elf/dl-reloc.c:120
 msgid "cannot allocate memory in static TLS block"
 msgstr "không thể cấp phát bộ nhớ trong khối TLS tĩnh."
 
-#: elf/dl-reloc.c:250
+#: elf/dl-reloc.c:212
 msgid "cannot make segment writable for relocation"
 msgstr "không thể làm cho đoạn có khả năng ghi để tái định vị"
 
-#: elf/dl-reloc.c:313
+#: elf/dl-reloc.c:275
 #, c-format
 msgid "%s: no PLTREL found in object %s\n"
 msgstr "%s: không tìm thấy PLTREL trong đối tượng %s\n"
 
-#: elf/dl-reloc.c:324
+#: elf/dl-reloc.c:286
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: không đủ bộ nhớ để cất giữ kết quả tái định vị đối với %s\n"
 
-#: elf/dl-reloc.c:340
+#: elf/dl-reloc.c:302
 msgid "cannot restore segment prot after reloc"
 msgstr "không thể phục hồi giao thức (prot) đoạn sau khi tái định vị"
 
-#: elf/dl-reloc.c:369
+#: elf/dl-reloc.c:331
 msgid "cannot apply additional memory protection after relocation"
 msgstr "không thể áp dụng sự bảo vệ bộ nhớ thêm sau khi tái định vị"
 
@@ -711,7 +711,7 @@ msgstr "không thể áp dụng sự bảo vệ bộ nhớ thêm sau khi tái đ
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT được dùng trong mã không phải được nạp động"
 
-#: elf/dl-tls.c:923
+#: elf/dl-tls.c:903
 msgid "cannot create TLS data structures"
 msgstr "không thể tạo các cấu trúc dữ liệu TLS"
 
@@ -765,7 +765,7 @@ msgstr "Dùng CẤU_HÌNH làm tập tin cấu hình"
 
 #: elf/ldconfig.c:148
 msgid "Only process directories specified on the command line.  Don't build cache."
-msgstr "Chỉ xử lý các thư mục được ghi rõ trên dòng lệnh. Đừng xây dựng bộ nhớ tạm."
+msgstr "Chỉ xử lý các thư mục được chỉ ra trên dòng lệnh. Đừng xây dựng bộ nhớ tạm."
 
 #: elf/ldconfig.c:149
 msgid "Manually link individual libraries."
@@ -858,7 +858,7 @@ msgstr "Không thể mở thư mục %s"
 #: elf/ldconfig.c:793 elf/ldconfig.c:855 elf/readlib.c:90
 #, c-format
 msgid "Input file %s not found.\n"
-msgstr "Không tìm thấy tập tin nhập vào %s.\n"
+msgstr "Không tìm thấy tập tin đầu vào %s.\n"
 
 #: elf/ldconfig.c:800
 #, c-format
@@ -915,8 +915,8 @@ msgstr "%s:%u: hwcap bị trùng %lu %s"
 msgid "need absolute file name for configuration file when using -r"
 msgstr "dùng tùy chọn “-r” thì cũng cần tên tập tin tuyệt đối cho tập tin cấu hình"
 
-#: elf/ldconfig.c:1191 locale/programs/xmalloc.c:64 malloc/obstack.c:432
-#: malloc/obstack.c:434 posix/getconf.c:1076 posix/getconf.c:1296
+#: elf/ldconfig.c:1191 locale/programs/xmalloc.c:64 malloc/obstack.c:416
+#: malloc/obstack.c:418 posix/getconf.c:1076 posix/getconf.c:1296
 #, c-format
 msgid "memory exhausted"
 msgstr "hết bộ nhớ"
@@ -982,7 +982,7 @@ msgstr "đối số tập tin còn thiếu"
 #. TRANS No such file or directory.  This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
-#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.c:36
+#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.c:37
 msgid "No such file or directory"
 msgstr "Không có tập tin hoặc thư mục như vậy"
 
@@ -1019,7 +1019,7 @@ msgstr "không thể đọc phần đầu của chương trình"
 #: elf/pldd-xx.c:135
 #, c-format
 msgid "cannot read dynamic section"
-msgstr "không thể đọc phần động lực (dynamic) "
+msgstr "không thể đọc phần động"
 
 #: elf/pldd-xx.c:147
 #, c-format
@@ -1041,55 +1041,55 @@ msgstr "không đọc được ánh xạ liên kết"
 msgid "cannot read object name"
 msgstr "không thể đọc tên đối tượng"
 
-#: elf/pldd.c:62
+#: elf/pldd.c:63
 msgid "List dynamic shared objects loaded into process."
 msgstr "Liệt kê các đối tượng chia sẻ động được tải vào một tiến trình."
 
-#: elf/pldd.c:66
+#: elf/pldd.c:67
 msgid "PID"
 msgstr "PID"
 
-#: elf/pldd.c:97
+#: elf/pldd.c:99
 #, c-format
 msgid "Exactly one parameter with process ID required.\n"
 msgstr "Yêu cầu chính xác một tham số với ID tiến trình.\n"
 
-#: elf/pldd.c:109
+#: elf/pldd.c:111
 #, c-format
 msgid "invalid process ID '%s'"
 msgstr "mã số ID tiến trình sai “%s”"
 
-#: elf/pldd.c:117
+#: elf/pldd.c:119
 #, c-format
 msgid "cannot open %s"
 msgstr "không mở được %s"
 
-#: elf/pldd.c:142
+#: elf/pldd.c:144
 #, c-format
 msgid "cannot open %s/task"
 msgstr "không thể mở %s/task"
 
-#: elf/pldd.c:145
+#: elf/pldd.c:147
 #, c-format
 msgid "cannot prepare reading %s/task"
 msgstr "không thể chuẩn bị cho việc đọc %s/task"
 
-#: elf/pldd.c:158
+#: elf/pldd.c:160
 #, c-format
 msgid "invalid thread ID '%s'"
 msgstr "ID tuyến không hợp lệ “%s”"
 
-#: elf/pldd.c:169
+#: elf/pldd.c:171
 #, c-format
 msgid "cannot attach to process %lu"
 msgstr "không thể gán cho tiến trình %lu"
 
-#: elf/pldd.c:261
+#: elf/pldd.c:286
 #, c-format
 msgid "cannot get information about process %lu"
 msgstr "không thể lấy thông tin về tiến trình %lu"
 
-#: elf/pldd.c:274
+#: elf/pldd.c:299
 #, c-format
 msgid "process %lu is no ELF program"
 msgstr "tiến trình %lu không phải là chương trình kiểu ELF"
@@ -1188,7 +1188,7 @@ msgstr "%s: đích không hợp lệ: %s\n"
 msgid "Invalid link from \"%s\" to \"%s\": %s\n"
 msgstr "Liên kết không hợp lệ từ “%s” đến “%s”: %s\n"
 
-#: elf/sotruss.ksh:32
+#: elf/sotruss.sh:32
 #, sh-format
 msgid ""
 "Usage: sotruss [OPTION...] [--] EXECUTABLE [EXECUTABLE-OPTION...]\n"
@@ -1217,23 +1217,23 @@ msgstr ""
 "      --usage             Đưa ra cách dùng dạng ngắn gọn\n"
 "      --version           Hiển thị thông tin về phiên bản"
 
-#: elf/sotruss.ksh:46
+#: elf/sotruss.sh:46
 msgid "Mandatory arguments to long options are also mandatory for any corresponding\\nshort options.\\n"
 msgstr "Các đối số bắt buộc với tùy chọn dài thì cũng bắt buộc với tùy chọn ngắn\\ntương ứng.\\n"
 
-#: elf/sotruss.ksh:55
+#: elf/sotruss.sh:55
 msgid "%s: option requires an argument -- '%s'\\n"
 msgstr "%s: tùy chọn yêu cầu một tham số -- “%s”\\n"
 
-#: elf/sotruss.ksh:61
+#: elf/sotruss.sh:61
 msgid "%s: option is ambiguous; possibilities:"
 msgstr "%s: tùy chọn chưa rõ ràng; khả năng là:"
 
-#: elf/sotruss.ksh:79
+#: elf/sotruss.sh:79
 msgid "Written by %s.\\n"
 msgstr "Tác giả: %s.\\n"
 
-#: elf/sotruss.ksh:86
+#: elf/sotruss.sh:86
 msgid ""
 "Usage: %s [-ef] [-F FROMLIST] [-o FILENAME] [-T TOLIST] [--exit]\n"
 "\t    [--follow] [--from FROMLIST] [--output FILENAME] [--to TOLIST]\n"
@@ -1244,7 +1244,7 @@ msgstr ""
 "\t    [--follow] [--from TỪ_DANH_SÁCH] [--output TÊN_TỆP_TIN] [--to TỚI_DANH_SÁCH]\\n\t    [--help] [--usage] [--version] [--]\n"
 "\t    LỆNH-THỰC-THI [TÙY-CHỌN-LỆNH-THỰC-THI...]\\n"
 
-#: elf/sotruss.ksh:134
+#: elf/sotruss.sh:134
 msgid "%s: unrecognized option '%c%s'\\n"
 msgstr "%s: không nhận ra tùy chọn “%c%s”\\n"
 
@@ -1370,12 +1370,12 @@ msgstr "không thể mở tập tin kết xuất"
 #: iconv/iconv_charmap.c:187 iconv/iconv_prog.c:311
 #, c-format
 msgid "error while closing input `%s'"
-msgstr "gặp lỗi khi đóng dữ liệu nhập vào “%s”"
+msgstr "gặp lỗi khi đóng dữ liệu đầu vào “%s”"
 
 #: iconv/iconv_charmap.c:461
 #, c-format
 msgid "illegal input sequence at position %Zd"
-msgstr "dãy nhập vào cấm ở vị trí %Zd"
+msgstr "dãy đầu vào không hợp lệ tại vị trí %Zd"
 
 #: iconv/iconv_charmap.c:480 iconv/iconv_prog.c:539
 #, c-format
@@ -1386,12 +1386,12 @@ msgstr "dãy ký tự hoặc dời chưa hoàn toàn ở kết thúc của bộ 
 #: iconv/iconv_prog.c:618
 #, c-format
 msgid "error while reading the input"
-msgstr "gặp lỗi khi đọc dữ liệu nhập vào"
+msgstr "gặp lỗi khi đọc dữ liệu đầu vào"
 
 #: iconv/iconv_charmap.c:543 iconv/iconv_prog.c:600
 #, c-format
 msgid "unable to allocate buffer for input"
-msgstr "không thể cấp phát bộ đệm cho dữ liệu nhập vào"
+msgstr "không thể cấp phát bộ đệm cho dữ liệu đầu vào"
 
 #: iconv/iconv_prog.c:59
 msgid "Input/Output format specification:"
@@ -1486,7 +1486,7 @@ msgstr "tiến trình chuyển đổi bị dừng chạy do vấn đề khi ghi 
 #: iconv/iconv_prog.c:535
 #, c-format
 msgid "illegal input sequence at position %ld"
-msgstr "dãy nhập vào không hợp lệ ở vị trí %ld"
+msgstr "dãy đầu vào không hợp lệ ở vị trí %ld"
 
 #: iconv/iconv_prog.c:543
 #, c-format
@@ -2236,7 +2236,7 @@ msgstr "phân loại “digit” (chữ số) không có mục nhập theo nhóm
 #: locale/programs/ld-ctype.c:826
 #, c-format
 msgid "no input digits defined and none of the standard names in the charmap"
-msgstr "chưa định nghĩa chữ số nhập vào hoặc tên tiêu chuẩn trong ánh xạ ký tự"
+msgstr "chưa định nghĩa chữ số đầu vào hoặc tên tiêu chuẩn trong ánh xạ ký tự"
 
 #: locale/programs/ld-ctype.c:891
 #, c-format
@@ -2956,7 +2956,7 @@ msgstr "tên miền địa phương nên chứa chỉ ký tự khả chuyển"
 
 #: locale/programs/locfile.c:979
 msgid "no other keyword shall be specified when `copy' is used"
-msgstr "dùng “copy” (sao chép) thì không ghi rõ từ khoá khác"
+msgstr "dùng “copy” (sao chép) thì không chỉ ra từ khoá khác"
 
 #: locale/programs/locfile.c:993
 #, c-format
@@ -3107,7 +3107,7 @@ msgstr "memusage: tùy chọn “${1##*=}” chưa rõ ràng"
 
 #: malloc/memusage.sh:200
 msgid "memusage: unrecognized option \\`$1'"
-msgstr "memusage: không nhận ra tùy chọn “$1”"
+msgstr "memusage: không nhận ra tùy chọn \\“$1”"
 
 #: malloc/memusage.sh:213
 msgid "No program name given"
@@ -3153,7 +3153,7 @@ msgstr "Tạo đồ họa từ dữ liệu đo hiệu năng sử dụng bộ nh�
 msgid "DATAFILE [OUTFILE]"
 msgstr "TẬP-TIN-DỮ-LIỆU [TẬP-TIN-ĐẦU-RA]"
 
-#: misc/error.c:117
+#: misc/error.c:192
 msgid "Unknown system error"
 msgstr "Gặp lỗi hệ thống không rõ"
 
@@ -3162,7 +3162,7 @@ msgid "unable to free arguments"
 msgstr "không thể giải phóng đối số"
 
 #: nis/nis_error.h:1 nis/ypclnt.c:831 nis/ypclnt.c:919 posix/regcomp.c:133
-#: sysdeps/gnu/errlist.c:20
+#: sysdeps/gnu/errlist.c:21
 msgid "Success"
 msgstr "Thành công"
 
@@ -3203,7 +3203,7 @@ msgid "First/next chain broken"
 msgstr "Móc xích thứ nhất/kế bị hỏng"
 
 #. TRANS Permission denied; the file permissions do not allow the attempted operation.
-#: nis/nis_error.h:11 nis/ypclnt.c:876 sysdeps/gnu/errlist.c:157
+#: nis/nis_error.h:11 nis/ypclnt.c:876 sysdeps/gnu/errlist.c:158
 msgid "Permission denied"
 msgstr "Không đủ quyền truy cập"
 
@@ -3449,7 +3449,7 @@ msgstr "Kerberos.\n"
 #: nis/nis_print.c:195
 #, c-format
 msgid "Unknown (type = %d, bits = %d)\n"
-msgstr "Không rõ (kiểu = %d, bit = %d)\n"
+msgstr "Không rõ (kiểu = %d, bít = %d)\n"
 
 #: nis/nis_print.c:206
 #, c-format
@@ -3458,7 +3458,7 @@ msgstr "\tĐịa chỉ chung (%u)\n"
 
 #: nis/nis_print.c:228
 msgid "Time to live : "
-msgstr "Thời gian hoạt động :"
+msgstr "Thời gian sống: "
 
 #: nis/nis_print.c:230
 msgid "Default Access rights :\n"
@@ -3529,7 +3529,7 @@ msgstr "Kiểu đối tượng đã liên kết: "
 #: nis/nis_print.c:292
 #, c-format
 msgid "Linked to : %s\n"
-msgstr "Được liên kết đến : %s\n"
+msgstr "Được liên kết đến: %s\n"
 
 #: nis/nis_print.c:302
 #, c-format
@@ -3562,7 +3562,7 @@ msgstr "Thư mục       : %s\n"
 #: nis/nis_print.c:328
 #, c-format
 msgid "Owner         : %s\n"
-msgstr "Chủ           : %s\n"
+msgstr "Chủ                   : %s\n"
 
 #: nis/nis_print.c:329
 #, c-format
@@ -3580,7 +3580,7 @@ msgid ""
 "Time to Live  : "
 msgstr ""
 "\n"
-"Thời gian hoạt động: "
+"Thời gian sống: "
 
 #: nis/nis_print.c:335
 #, c-format
@@ -3795,15 +3795,15 @@ msgstr "yp_update: không thể chuyển đổi máy sang netname\n"
 msgid "yp_update: cannot get server address\n"
 msgstr "yp_update: không thể lấy địa chỉ của máy phục vụ\n"
 
-#: nscd/aicache.c:83 nscd/hstcache.c:494
+#: nscd/aicache.c:83 nscd/hstcache.c:485
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
-msgstr "Không tìm thấy “%s” trong bộ nhớ tạm các máy phục vụ !"
+msgstr "Không tìm thấy “%s” trong bộ nhớ tạm các máy phục vụ!"
 
-#: nscd/aicache.c:85 nscd/hstcache.c:496
+#: nscd/aicache.c:85 nscd/hstcache.c:487
 #, c-format
 msgid "Reloading \"%s\" in hosts cache!"
-msgstr "Đang nạp lại “%s” trong bộ nhớ tạm các máy phục vụ !"
+msgstr "Đang nạp lại “%s” trong bộ nhớ tạm các máy phục vụ!"
 
 #: nscd/cache.c:151
 #, c-format
@@ -3814,7 +3814,7 @@ msgstr "thêm mục nhập mới “%s” có kiểu %s cho %s nhớ tạm %s"
 msgid " (first)"
 msgstr " (đầu tiên)"
 
-#: nscd/cache.c:285 nscd/connections.c:1019
+#: nscd/cache.c:285 nscd/connections.c:999
 #, c-format
 msgid "cannot stat() file `%s': %s"
 msgstr "không thể stat() tập tin “%s”: %s"
@@ -3829,242 +3829,239 @@ msgstr "đang xén bộ nhớ tạm %s; thời gian %ld"
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
 msgstr "đang suy xét mục nhập %s “%s”, thời hạn %<PRIu64>"
 
-#: nscd/connections.c:571
+#: nscd/connections.c:552
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
 msgstr "tập tin cơ sở dữ liệu bền bỉ không hợp lệ “%s”: %s"
 
-#: nscd/connections.c:579
+#: nscd/connections.c:560
 msgid "uninitialized header"
 msgstr "phần đầu chưa khởi tạo"
 
-#: nscd/connections.c:584
+#: nscd/connections.c:565
 msgid "header size does not match"
 msgstr "kích cỡ phần đầu không khớp nhau"
 
-#: nscd/connections.c:594
+#: nscd/connections.c:575
 msgid "file size does not match"
 msgstr "kích cỡ tập tin không khớp nhau"
 
-#: nscd/connections.c:611
+#: nscd/connections.c:592
 msgid "verification failed"
 msgstr "gặp lỗi khi thẩm tra"
 
-#: nscd/connections.c:625
+#: nscd/connections.c:606
 #, c-format
 msgid "suggested size of table for database %s larger than the persistent database's table"
 msgstr "kích cỡ bảng đã đệ nghị cho cơ sở dữ liệu %s vẫn lớn hơn bảng của cơ sở dữ liệu bền bỉ"
 
-#: nscd/connections.c:636 nscd/connections.c:721
+#: nscd/connections.c:617 nscd/connections.c:701
 #, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
 msgstr "không thể tạo bộ mô tả chỉ-đọc cho “%s”; không có mmap"
 
-#: nscd/connections.c:652
+#: nscd/connections.c:633
 #, c-format
 msgid "cannot access '%s'"
 msgstr "không thể truy cập đến “%s”"
 
-#: nscd/connections.c:700
+#: nscd/connections.c:681
 #, c-format
 msgid "database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"
 msgstr "cơ sở dữ liệu cho %s bị hỏng hoặc được dùng đồng thời; bạn hãy tự gỡ bỏ %s nếu cần, rồi khởi chạy lại"
 
-#: nscd/connections.c:707
+#: nscd/connections.c:687
 #, c-format
 msgid "cannot create %s; no persistent database used"
 msgstr "không thể tạo %s; không có cơ sở dữ liệu bền bỉ được dùng"
 
-#: nscd/connections.c:710
+#: nscd/connections.c:690
 #, c-format
 msgid "cannot create %s; no sharing possible"
 msgstr "không thể tạo %s; không thể dùng chung"
 
-#: nscd/connections.c:781
+#: nscd/connections.c:761
 #, c-format
 msgid "cannot write to database file %s: %s"
 msgstr "không thể ghi vào tập tin cơ sở dữ liệu %s: %s"
 
-#: nscd/connections.c:820
+#: nscd/connections.c:800
 #, c-format
 msgid "cannot set socket to close on exec: %s; disabling paranoia mode"
 msgstr "không thể đặt ổ cắm sẽ đóng khi thực hiện: %s; đang tắt chế độ rất cẩn thận"
 
-#: nscd/connections.c:869
+#: nscd/connections.c:849
 #, c-format
 msgid "cannot open socket: %s"
 msgstr "không thể mở ổ cắm: %s"
 
-#: nscd/connections.c:889 nscd/connections.c:953
+#: nscd/connections.c:869 nscd/connections.c:933
 #, c-format
 msgid "cannot change socket to nonblocking mode: %s"
 msgstr "không thể chuyển đổi ổ cắm sang chế độ không chặn: %s"
 
-#: nscd/connections.c:897 nscd/connections.c:963
+#: nscd/connections.c:877 nscd/connections.c:943
 #, c-format
 msgid "cannot set socket to close on exec: %s"
 msgstr "không thể đặt ổ cắm sẽ đóng khi thực hiện: %s"
 
-#: nscd/connections.c:910
+#: nscd/connections.c:890
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr "không thể hiệu lực ổ cắm chấp nhận kết nối: %s"
 
-#: nscd/connections.c:1003
+#: nscd/connections.c:983
 #, c-format
 msgid "register trace file %s for database %s"
 msgstr "tập tin đăng ký dấu vết %s cho cơ sở dữ liệu %s"
 
-#: nscd/connections.c:1133
+#: nscd/connections.c:1113
 #, c-format
 msgid "provide access to FD %d, for %s"
 msgstr "cung cấp truy cập vào FD %d, cho %s"
 
-#: nscd/connections.c:1145
+#: nscd/connections.c:1125
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "không thể quản lý phiên bản yêu cầu cũ %d; phiên bản hiện thời là %d"
 
-#: nscd/connections.c:1167
+#: nscd/connections.c:1147
 #, c-format
 msgid "request from %ld not handled due to missing permission"
 msgstr "yêu cầu từ %ld không được xử lý do quyền truy cập bị thiếu"
 
-#: nscd/connections.c:1172
+#: nscd/connections.c:1152
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
 msgstr "yêu cầu từ “%s” [%ld] không được xử lý do quyền truy cập bị thiếu"
 
-#: nscd/connections.c:1177
+#: nscd/connections.c:1157
 msgid "request not handled due to missing permission"
 msgstr "yêu cầu không được xử lý do quyền truy cập bị thiếu"
 
-#: nscd/connections.c:1215 nscd/connections.c:1268
+#: nscd/connections.c:1195 nscd/connections.c:1248
 #, c-format
 msgid "cannot write result: %s"
 msgstr "không thể ghi kết quả: %s"
 
-#: nscd/connections.c:1359
+#: nscd/connections.c:1339
 #, c-format
 msgid "error getting caller's id: %s"
 msgstr "gặp lỗi khi lấy mã số gọi: %s"
 
-#: nscd/connections.c:1419
+#: nscd/connections.c:1399
 #, c-format
 msgid "cannot open /proc/self/cmdline: %s; disabling paranoia mode"
 msgstr "không thể mở “/proc/self/cmdline”: %s; đang tắt chế độ rất cẩn thận"
 
-#: nscd/connections.c:1433
+#: nscd/connections.c:1413
 #, c-format
 msgid "cannot read /proc/self/cmdline: %s; disabling paranoia mode"
 msgstr "không thể đọc “/proc/self/cmdline”: %s; đang tắt chế độ rất cẩn thận"
 
-#: nscd/connections.c:1473
+#: nscd/connections.c:1453
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
 msgstr "không thể chuyển đổi sang UID cũ: %s; đang tắt chế độ rất cẩn thận"
 
-#: nscd/connections.c:1483
+#: nscd/connections.c:1463
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
 msgstr "không thể chuyển đổi sang GID cũ: %s; đang tắt chế độ rất cẩn thận"
 
-#: nscd/connections.c:1496
+#: nscd/connections.c:1476
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
 msgstr "không thể chuyển đổi sang thư mục hoạt động cũ: %s; đang tắt chế độ rất cẩn thận"
 
-#: nscd/connections.c:1542
+#: nscd/connections.c:1522
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
 msgstr "lỗi thực hiện lại: %s; đang tắt chế độ rất cẩn thận"
 
-#: nscd/connections.c:1551
+#: nscd/connections.c:1531
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
 msgstr "không thể chuyển đổi thư mục hoạt động hiện thời sang “/”: %s"
 
-#: nscd/connections.c:1744
+#: nscd/connections.c:1724
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "đọc ngắn khi đọc yêu cầu: %s"
 
-#: nscd/connections.c:1777
+#: nscd/connections.c:1757
 #, c-format
 msgid "key length in request too long: %d"
 msgstr "chiều dài khoá quá dài trong yêu cầu: %d"
 
-#: nscd/connections.c:1790
+#: nscd/connections.c:1770
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "đọc ngắn khi đọc khoá yêu cầu: %s"
 
-#: nscd/connections.c:1800
+#: nscd/connections.c:1780
 #, c-format
 msgid "handle_request: request received (Version = %d) from PID %ld"
 msgstr "handle_request: (quản lý yêu cầu) nhận được yêu cầu (Phiên bản = %d) từ PID %ld"
 
-#: nscd/connections.c:1805
+#: nscd/connections.c:1785
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: (quản lý yêu cầu) nhận được yêu cầu (Phiên bản = %d)"
 
-#: nscd/connections.c:2069 nscd/connections.c:2271
+#: nscd/connections.c:2049 nscd/connections.c:2251
 #, c-format
 msgid "disabled inotify after read error %d"
 msgstr "đã tắt inotify sau khi gặp lỗi đọc %d"
 
-#: nscd/connections.c:2394
+#: nscd/connections.c:2374
 msgid "could not initialize conditional variable"
 msgstr "không thể khởi tạo biến điều kiện"
 
-#: nscd/connections.c:2402
+#: nscd/connections.c:2382
 msgid "could not start clean-up thread; terminating"
 msgstr "không thể bắt đầu nhánh làm sạch nên chấm dứt"
 
-#: nscd/connections.c:2416
+#: nscd/connections.c:2396
 msgid "could not start any worker thread; terminating"
 msgstr "không thể bắt đầu bất cứ nhánh làm việc nào nên chấm dứt"
 
-#: nscd/connections.c:2467 nscd/connections.c:2468 nscd/connections.c:2485
-#: nscd/connections.c:2494 nscd/connections.c:2512 nscd/connections.c:2523
-#: nscd/connections.c:2534
+#: nscd/connections.c:2451 nscd/connections.c:2453 nscd/connections.c:2469
+#: nscd/connections.c:2479 nscd/connections.c:2497 nscd/connections.c:2508
+#: nscd/connections.c:2518
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "Gặp lỗi khi chạy nscd dưới quyền người dùng “%s”"
 
-#: nscd/connections.c:2486
-#, c-format
+#: nscd/connections.c:2471
 msgid "initial getgrouplist failed"
 msgstr "getgrouplist (lấy danh sách nhóm) đầu tiên bị lỗi"
 
-#: nscd/connections.c:2495
-#, c-format
+#: nscd/connections.c:2480
 msgid "getgrouplist failed"
 msgstr "getgrouplist (lấy danh sách nhóm) bị lỗi"
 
-#: nscd/connections.c:2513
-#, c-format
+#: nscd/connections.c:2498
 msgid "setgroups failed"
 msgstr "setgroups (đặt các nhóm) bị lỗi"
 
-#: nscd/grpcache.c:413 nscd/hstcache.c:441 nscd/initgrcache.c:418
-#: nscd/pwdcache.c:391 nscd/servicescache.c:346
+#: nscd/grpcache.c:405 nscd/hstcache.c:432 nscd/initgrcache.c:410
+#: nscd/pwdcache.c:383 nscd/servicescache.c:338
 #, c-format
 msgid "short write in %s: %s"
 msgstr "ghi ngắn trong %s: %s"
 
-#: nscd/grpcache.c:458 nscd/initgrcache.c:77
+#: nscd/grpcache.c:450 nscd/initgrcache.c:77
 #, c-format
 msgid "Haven't found \"%s\" in group cache!"
-msgstr "Không tìm thấy “%s” trong bộ nhớ tạm nhóm !"
+msgstr "Không tìm thấy “%s” trong bộ nhớ tạm nhóm!"
 
-#: nscd/grpcache.c:460 nscd/initgrcache.c:79
+#: nscd/grpcache.c:452 nscd/initgrcache.c:79
 #, c-format
 msgid "Reloading \"%s\" in group cache!"
 msgstr "Đang nạp lại “%s” trong bộ nhớ tạm nhóm!"
 
-#: nscd/grpcache.c:539
+#: nscd/grpcache.c:531
 #, c-format
 msgid "Invalid numeric gid \"%s\"!"
 msgstr "GID thuộc số không hợp lệ “%s”!"
@@ -4079,134 +4076,138 @@ msgstr "đã giải phóng %zu byte trong bộ nhớ tạm %s"
 msgid "no more memory for database '%s'"
 msgstr "không có bộ nhớ còn lại cho cơ sở dữ liệu “%s”"
 
-#: nscd/netgroupcache.c:126
+#: nscd/netgroupcache.c:120
 #, c-format
 msgid "Haven't found \"%s\" in netgroup cache!"
 msgstr "Không tìm thấy “%s” trong bộ nhớ tạm nhóm mạng (netgroup)!"
 
-#: nscd/netgroupcache.c:128
+#: nscd/netgroupcache.c:122
 #, c-format
 msgid "Reloading \"%s\" in netgroup cache!"
 msgstr "Đang nạp lại “%s” trong bộ nhớ tạm nhóm mạng (netgroup)!"
 
-#: nscd/netgroupcache.c:509
+#: nscd/netgroupcache.c:497
 #, c-format
 msgid "Haven't found \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "Không tìm thấy “%s (%s,%s,%s)” trong bộ nhớ tạm nhóm mạng (netgroup)!"
 
-#: nscd/netgroupcache.c:512
+#: nscd/netgroupcache.c:500
 #, c-format
 msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "Đang nạp lại “%s (%s,%s,%s)” trong bộ nhớ tạm nhóm mạng (netgroup)!"
 
-#: nscd/nscd.c:116
+#: nscd/nscd.c:106
 msgid "Read configuration data from NAME"
 msgstr "Đọc tập tin cấu hình từ TÊN"
 
-#: nscd/nscd.c:118
+#: nscd/nscd.c:108
 msgid "Do not fork and display messages on the current tty"
 msgstr "Dòng tạo lại và hiển thị thông điệp trên TTY hiện thời"
 
-#: nscd/nscd.c:120
+#: nscd/nscd.c:110
 msgid "Do not fork, but otherwise behave like a daemon"
 msgstr "Không rẽ nhánh tiến trình (fork), nhưng mặt khác vận hành như một dịch vụ nền (daemon)"
 
-#: nscd/nscd.c:121
+#: nscd/nscd.c:111
 msgid "NUMBER"
 msgstr "SỐ"
 
-#: nscd/nscd.c:121
+#: nscd/nscd.c:111
 msgid "Start NUMBER threads"
 msgstr "Khởi chạy SỐ tuyến trình"
 
-#: nscd/nscd.c:122
+#: nscd/nscd.c:112
 msgid "Shut the server down"
 msgstr "Tắt máy phục vụ"
 
-#: nscd/nscd.c:123
+#: nscd/nscd.c:113
 msgid "Print current configuration statistics"
 msgstr "In thống kê cấu hình hiện thời"
 
-#: nscd/nscd.c:124
+#: nscd/nscd.c:114
 msgid "TABLE"
 msgstr "BẢNG"
 
-#: nscd/nscd.c:125
+#: nscd/nscd.c:115
 msgid "Invalidate the specified cache"
-msgstr "Làm mất hiệu lực bộ nhớ tạm đã ghi rõ"
+msgstr "Làm mất hiệu lực bộ nhớ tạm đã chỉ định"
 
-#: nscd/nscd.c:126
+#: nscd/nscd.c:116
 msgid "TABLE,yes"
 msgstr "BẢNG,có"
 
-#: nscd/nscd.c:127
+#: nscd/nscd.c:117
 msgid "Use separate cache for each user"
 msgstr "Dùng bộ nhớ tạm riêng cho mỗi người dùng"
 
-#: nscd/nscd.c:132
+#: nscd/nscd.c:122
 msgid "Name Service Cache Daemon."
 msgstr "Trình nền nhớ tạm dịch vụ tên."
 
-#: nscd/nscd.c:164 nss/getent.c:1003 nss/makedb.c:206
+#: nscd/nscd.c:155 nss/getent.c:1003 nss/makedb.c:206
 #, c-format
 msgid "wrong number of arguments"
 msgstr "số đối số không đúng"
 
-#: nscd/nscd.c:174
+#: nscd/nscd.c:165
 #, c-format
 msgid "failure while reading configuration file; this is fatal"
 msgstr "gặp lỗi khi đọc tập tin cấu hình: đây là một lỗi nghiêm trọng"
 
-#: nscd/nscd.c:183
+#: nscd/nscd.c:174
 #, c-format
 msgid "already running"
 msgstr "đang chạy"
 
-#: nscd/nscd.c:201
+#: nscd/nscd.c:194
+#, c-format
+msgid "cannot create a pipe to talk to the child"
+msgstr "không thể tạo đường ống để nói chuyện với con"
+
+#: nscd/nscd.c:198
 #, c-format
 msgid "cannot fork"
 msgstr "không thể tạo tiến trình con"
 
-#: nscd/nscd.c:259
-#, c-format
+#: nscd/nscd.c:268
 msgid "cannot change current working directory to \"/\""
 msgstr "không thể chuyển đổi thư mục hoạt động hiện thời sang “/”"
 
-#: nscd/nscd.c:267
+#: nscd/nscd.c:276
 msgid "Could not create log file"
 msgstr "Không thể tạo tập tin ghi lưu"
 
-#: nscd/nscd.c:339 nscd/nscd.c:364 nscd/nscd_stat.c:173
+#: nscd/nscd.c:348 nscd/nscd.c:373 nscd/nscd_stat.c:173
 #, c-format
 msgid "Only root is allowed to use this option!"
-msgstr "Chỉ cho phép ngươi chủ (root) dùng tùy chọn này !"
+msgstr "Chỉ cho phép ngươi chủ (root) dùng tùy chọn này!"
 
-#: nscd/nscd.c:379
+#: nscd/nscd.c:388
 #, c-format
 msgid "'%s' is not a known database"
 msgstr "“%s” không phải là kiểu cơ sở dữ liệu đã biết"
 
-#: nscd/nscd.c:404 nscd/nscd_stat.c:192
+#: nscd/nscd.c:413 nscd/nscd_stat.c:192
 #, c-format
 msgid "write incomplete"
 msgstr "chưa ghi xong"
 
-#: nscd/nscd.c:415
+#: nscd/nscd.c:424
 #, c-format
 msgid "cannot read invalidate ACK"
 msgstr "không thể làm mất hiệu lực ACK"
 
-#: nscd/nscd.c:421
+#: nscd/nscd.c:430
 #, c-format
 msgid "invalidation failed"
 msgstr "gặp lỗi khi thử làm mất hiệu lực"
 
-#: nscd/nscd.c:431
+#: nscd/nscd.c:440
 #, c-format
 msgid "secure services not implemented anymore"
 msgstr "không còn thực hiện lại dịch vụ bảo mật"
 
-#: nscd/nscd.c:462
+#: nscd/nscd.c:471
 #, c-format
 msgid ""
 "Supported tables:\n"
@@ -4221,6 +4222,21 @@ msgstr ""
 "Để tìm hướng dẫn về cách thông báo lỗi, xem tại:\n"
 "%s.\n"
 
+#: nscd/nscd.c:620
+#, c-format
+msgid "'wait' failed\n"
+msgstr "“wait” bị lỗi\n"
+
+#: nscd/nscd.c:627
+#, c-format
+msgid "child exited with status %d\n"
+msgstr "con kết thúc với trạng thái %d\n"
+
+#: nscd/nscd.c:632
+#, c-format
+msgid "child terminated by signal %d\n"
+msgstr "con bị chấm dứt bởi tín hiệu %d\n"
+
 #: nscd/nscd_conf.c:57
 #, c-format
 msgid "database %s is not supported"
@@ -4234,17 +4250,17 @@ msgstr "Lỗi phân tích: %s"
 #: nscd/nscd_conf.c:194
 #, c-format
 msgid "Must specify user name for server-user option"
-msgstr "Phải ghi rõ tên người dùng cho tùy chọn server-user (người dùng máy phục vụ)"
+msgstr "Phải chỉ ra tên người dùng cho tùy chọn server-user (người dùng máy phục vụ)"
 
 #: nscd/nscd_conf.c:201
 #, c-format
 msgid "Must specify user name for stat-user option"
-msgstr "Phải ghi rõ tên người dùng cho tùy chọn stat-user (người dùng thống kê?)"
+msgstr "Phải chỉ ra tên người dùng cho tùy chọn stat-user (người dùng thống kê?)"
 
 #: nscd/nscd_conf.c:258
 #, c-format
 msgid "Must specify value for restart-interval option"
-msgstr "Phải ghi rõ giá trị cho tùy chọn restart-interval (khoảng khởi chạy lại)"
+msgstr "Phải chỉ ra giá trị cho tùy chọn restart-interval (khoảng khởi chạy lại)"
 
 #: nscd/nscd_conf.c:272
 #, c-format
@@ -4388,97 +4404,100 @@ msgstr ""
 "%15<PRIuMAX>  lỗi cấp phát bộ nhớ\n"
 "%15s  kiểm tra “/etc/%s” để tìm thay đổi\n"
 
-#: nscd/pwdcache.c:436
+#: nscd/pwdcache.c:428
 #, c-format
 msgid "Haven't found \"%s\" in password cache!"
-msgstr "Không tìm thấy “%s” trong bộ nhớ tạm mật khẩu !"
+msgstr "Không tìm thấy “%s” trong bộ nhớ tạm mật khẩu!"
 
-#: nscd/pwdcache.c:438
+#: nscd/pwdcache.c:430
 #, c-format
 msgid "Reloading \"%s\" in password cache!"
-msgstr "Đang nạp lại “%s” trong bộ nhớ tạm mật khẩu !"
+msgstr "Đang nạp lại “%s” trong bộ nhớ tạm mật khẩu!"
 
-#: nscd/pwdcache.c:519
+#: nscd/pwdcache.c:511
 #, c-format
 msgid "Invalid numeric uid \"%s\"!"
-msgstr "UID thuộc số không hợp lệ “%s” !"
+msgstr "UID thuộc số không hợp lệ “%s”!"
 
-#: nscd/selinux.c:160
+#: nscd/selinux.c:155
 #, c-format
 msgid "Failed opening connection to the audit subsystem: %m"
 msgstr "Gặp lỗi khi mở kết nối đến hệ thống con kiểm tra chặt chẽ: %m"
 
-#: nscd/selinux.c:181
+#: nscd/selinux.c:176
 msgid "Failed to set keep-capabilities"
 msgstr "Gặp lỗi khi đặt keep-capabilities (giữ các khả năng)"
 
-#: nscd/selinux.c:182 nscd/selinux.c:245
-#, c-format
+#: nscd/selinux.c:177 nscd/selinux.c:240
 msgid "prctl(KEEPCAPS) failed"
 msgstr "prctl(KEEPCAPS) gặp lỗi"
 
-#: nscd/selinux.c:196
+#: nscd/selinux.c:191
 msgid "Failed to initialize drop of capabilities"
 msgstr "Gặp lỗi khi khởi tạo sự bỏ các khả năng"
 
-#: nscd/selinux.c:197
-#, c-format
+#: nscd/selinux.c:192
 msgid "cap_init failed"
 msgstr "cap_init gặp lỗi"
 
-#: nscd/selinux.c:218 nscd/selinux.c:235
+#: nscd/selinux.c:213 nscd/selinux.c:230
 msgid "Failed to drop capabilities"
 msgstr "Gặp lỗi khi bỏ các khả năng"
 
-#: nscd/selinux.c:219 nscd/selinux.c:236
-#, c-format
+#: nscd/selinux.c:214 nscd/selinux.c:231
 msgid "cap_set_proc failed"
 msgstr "cap_set_proc gặp lỗi"
 
-#: nscd/selinux.c:244
+#: nscd/selinux.c:239
 msgid "Failed to unset keep-capabilities"
 msgstr "Lỗi hủy đặt keep-capabilities (giữ các khả năng)"
 
-#: nscd/selinux.c:260
+#: nscd/selinux.c:255
 msgid "Failed to determine if kernel supports SELinux"
 msgstr "Gặp lỗi giải quyết nếu hạt nhân hỗ trợ SELinux"
 
-#: nscd/selinux.c:275
-#, c-format
+#: nscd/selinux.c:270
 msgid "Failed to start AVC thread"
 msgstr "Gặp lỗi khi khởi chạy tuyến trình AVC"
 
-#: nscd/selinux.c:297
-#, c-format
+#: nscd/selinux.c:292
 msgid "Failed to create AVC lock"
 msgstr "Gặp lỗi khi tạo khoá AVC"
 
-#: nscd/selinux.c:337
-#, c-format
+#: nscd/selinux.c:332
 msgid "Failed to start AVC"
 msgstr "Gặp lỗi khi khởi chạy AVC"
 
-#: nscd/selinux.c:339
+#: nscd/selinux.c:334
 msgid "Access Vector Cache (AVC) started"
 msgstr "AVC (truy cập vào bộ nhớ tạm véc-tơ) đã được khởi chạy"
 
-#: nscd/selinux.c:360
+#: nscd/selinux.c:369
+msgid "Error querying policy for undefined object classes or permissions."
+msgstr "Lỗi truy vấn chính sách cho lớp đối tượng chưa được định nghĩa hoặc các quyền."
+
+#: nscd/selinux.c:376
+msgid "Error getting security class for nscd."
+msgstr "Gặp lỗi khi lấy lớp ngữ cảnh an ninh của nscd."
+
+#: nscd/selinux.c:381
+#, c-format
+msgid "Error translating permission name \"%s\" to access vector bit."
+msgstr "Gặp lỗi khi dịch tên quyền hạn “%s” để truy cập bít véc tơ."
+
+#: nscd/selinux.c:391
 msgid "Error getting context of socket peer"
 msgstr "Gặp lỗi lấy ngữ cảnh của đồng đẳng ổ cắm"
 
-#: nscd/selinux.c:365
+#: nscd/selinux.c:396
 msgid "Error getting context of nscd"
 msgstr "Gặp lỗi khi lấy ngữ cảnh của nscd"
 
-#: nscd/selinux.c:371
+#: nscd/selinux.c:402
 msgid "Error getting sid from context"
 msgstr "Gặp lỗi khi lấy sid từ ngữ cảnh"
 
-#: nscd/selinux.c:378
-msgid "compile-time support for database policy missing"
-msgstr "thiếu khả năng hỗ trợ lúc biên dịch chính sách cơ sở dữ liệu"
-
-#: nscd/selinux.c:411
+#: nscd/selinux.c:440
 #, c-format
 msgid ""
 "\n"
@@ -4505,12 +4524,12 @@ msgstr ""
 "%15u  lần thăm dò CAV\n"
 "%15u  lần trượt CAV\n"
 
-#: nscd/servicescache.c:395
+#: nscd/servicescache.c:387
 #, c-format
 msgid "Haven't found \"%s\" in services cache!"
 msgstr "Không tìm thấy “%s” trong bộ nhớ tạm dịch vụ!"
 
-#: nscd/servicescache.c:397
+#: nscd/servicescache.c:389
 #, c-format
 msgid "Reloading \"%s\" in services cache!"
 msgstr "Đang nạp lại “%s” trong bộ nhớ tạm dịch vụ!"
@@ -4611,7 +4630,7 @@ msgstr "không thể tạo tập tin tạm thời"
 #: nss/makedb.c:304
 #, c-format
 msgid "cannot stat newly created file"
-msgstr "không thể lấy trạng thái về tập tin mới được tạo"
+msgstr "không thể lấy thống kê về tập tin mới được tạo"
 
 #: nss/makedb.c:315
 #, c-format
@@ -4656,11 +4675,6 @@ msgstr "tập tin không phải là cơ sở dữ liệu"
 #, c-format
 msgid "cannot set file creation context for `%s'"
 msgstr "không thể đặt ngữ cảnh tạo tập tin cho “%s”"
-
-#: ports/sysdeps/unix/sysv/linux/ia64/makecontext.c:58
-#, c-format
-msgid "makecontext: does not know how to handle more than 8 arguments\n"
-msgstr "makecontext: không biết cách xử lý nhiều hơn 8 đối số\n"
 
 #: posix/getconf.c:1035
 #, c-format
@@ -4869,7 +4883,7 @@ msgstr "Không rõ lỗi bộ giải quyết"
 #: resolv/res_hconf.c:121
 #, c-format
 msgid "%s: line %d: cannot specify more than %d trim domains"
-msgstr "%s: dòng %d: không thể ghi rõ nhiều hơn %d miền trim"
+msgstr "%s: dòng %d: không thể chỉ ra nhiều hơn %d miền trim"
 
 #: resolv/res_hconf.c:142
 #, c-format
@@ -4921,7 +4935,7 @@ msgstr "Lỗi bộ đồng xử lý"
 
 #: stdio-common/psiginfo-data.h:9
 msgid "Internal stack error"
-msgstr "Lỗi nội bộ tràn đống (stack)"
+msgstr "Lỗi nội bộ tràn ngăn xếp (stack)"
 
 #: stdio-common/psiginfo-data.h:12
 msgid "Integer divide by zero"
@@ -5102,7 +5116,7 @@ msgstr "Tín hiệu không rõ %d"
 #: sunrpc/auth_unix.c:111 sunrpc/clnt_tcp.c:123 sunrpc/clnt_udp.c:135
 #: sunrpc/clnt_unix.c:124 sunrpc/svc_tcp.c:188 sunrpc/svc_tcp.c:233
 #: sunrpc/svc_udp.c:162 sunrpc/svc_unix.c:188 sunrpc/svc_unix.c:229
-#: sunrpc/xdr.c:631 sunrpc/xdr.c:791 sunrpc/xdr_array.c:97
+#: sunrpc/xdr.c:631 sunrpc/xdr.c:793 sunrpc/xdr_array.c:97
 #: sunrpc/xdr_rec.c:152 sunrpc/xdr_ref.c:76
 msgid "out of memory\n"
 msgstr "hết bộ nhớ\n"
@@ -5321,12 +5335,12 @@ msgstr "tập tin “%s” đã có và có thể được ghi đè\n"
 #: sunrpc/rpc_main.c:1179
 #, c-format
 msgid "Cannot specify more than one input file!\n"
-msgstr "Không thể ghi rõ nhiều hơn một tập tin nhập vào !\n"
+msgstr "Không thể chỉ ra nhiều hơn một tập tin đầu vào!\n"
 
 #: sunrpc/rpc_main.c:1349
 #, c-format
 msgid "This implementation doesn't support newstyle or MT-safe code!\n"
-msgstr "Bản thực hiện này không hỗ trợ mã kiểu mới hoặc mã an toàn với MT !\n"
+msgstr "Bản thực hiện này không hỗ trợ mã kiểu mới hoặc mã an toàn với MT!\n"
 
 #: sunrpc/rpc_main.c:1358
 #, c-format
@@ -5341,42 +5355,42 @@ msgstr "Không thể sử dụng cờ netid khi không có TIRPC!\n"
 #: sunrpc/rpc_main.c:1374
 #, c-format
 msgid "Cannot use table flags with newstyle!\n"
-msgstr "Không thể sử dụng cờ bảng với mã kiểu mới !\n"
+msgstr "Không thể sử dụng cờ bảng với mã kiểu mới!\n"
 
 #: sunrpc/rpc_main.c:1393
 #, c-format
 msgid "\"infile\" is required for template generation flags.\n"
-msgstr "“tập_tin_nhập” cần thiết cho cờ tạo mẫu.\n"
+msgstr "“tập_tin_đầu_vào” cần thiết cho cờ tạo mẫu.\n"
 
 #: sunrpc/rpc_main.c:1398
 #, c-format
 msgid "Cannot have more than one file generation flag!\n"
-msgstr "Không cho phép nhiều hơn một cờ tạo tập tin !\n"
+msgstr "Không cho phép nhiều hơn một cờ tạo tập tin!\n"
 
 #: sunrpc/rpc_main.c:1407
 #, c-format
 msgid "usage: %s infile\n"
-msgstr "sử dụng: %s tập_tin_nhập\n"
+msgstr "cách dùng: %s tập_tin_đầu_vào\n"
 
 #: sunrpc/rpc_main.c:1408
 #, c-format
 msgid "\t%s [-abkCLNTM][-Dname[=value]] [-i size] [-I [-K seconds]] [-Y path] infile\n"
-msgstr "\t%s [-abkCLNTM][-Dname[=giá_trị]] [-i cỡ] [-I [-K giây]] [-Y đường_dẫn] tập_tin_nhập\n"
+msgstr "\t%s [-abkCLNTM][-Dname[=giá_trị]] [-i cỡ] [-I [-K giây]] [-Y đường_dẫn] tập_tin_đầu_vào\n"
 
 #: sunrpc/rpc_main.c:1410
 #, c-format
 msgid "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o outfile] [infile]\n"
-msgstr "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o tập_tin_xuất] [tập_tin_nhập]\n"
+msgstr "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o tập_tin_xuất] [tập_tin_đầu_vào]\n"
 
 #: sunrpc/rpc_main.c:1412
 #, c-format
 msgid "\t%s [-s nettype]* [-o outfile] [infile]\n"
-msgstr "\t%s [-s nettype]* [-o tập_tin_xuất] [tập_tin_nhập]\n"
+msgstr "\t%s [-s nettype]* [-o tập_tin_xuất] [tập_tin_đầu_vào]\n"
 
 #: sunrpc/rpc_main.c:1413
 #, c-format
 msgid "\t%s [-n netid]* [-o outfile] [infile]\n"
-msgstr "\t%s [-n netid]* [-o tập_tin_xuất] [tập_tin_nhập]\n"
+msgstr "\t%s [-n netid]* [-o tập_tin_xuất] [tập_tin_đầu_vào]\n"
 
 #: sunrpc/rpc_main.c:1421
 #, c-format
@@ -5531,7 +5545,7 @@ msgstr "cần một định danh hoặc hằng"
 
 #: sunrpc/rpc_scan.c:308
 msgid "illegal character in file: "
-msgstr "ký tự không hợp lệ trong tập tin:"
+msgstr "ký tự không hợp lệ trong tập tin: "
 
 #: sunrpc/rpc_scan.c:347 sunrpc/rpc_scan.c:373
 msgid "unterminated string constant"
@@ -5759,7 +5773,7 @@ msgstr "Lỗi phân đoạn"
 #. TRANS @code{SIGPIPE} signal; this signal terminates the program if not handled
 #. TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
 #. TRANS unless it has handled or blocked @code{SIGPIPE}.
-#: sysdeps/generic/siglist.h:38 sysdeps/gnu/errlist.c:359
+#: sysdeps/generic/siglist.h:38 sysdeps/gnu/errlist.c:360
 msgid "Broken pipe"
 msgstr "Ống dẫn bị hỏng"
 
@@ -5837,7 +5851,7 @@ msgstr "Cuộc gọi hệ thống sai"
 
 #: sysdeps/generic/siglist.h:64
 msgid "Stack fault"
-msgstr "Lỗi đống (Stack)"
+msgstr "Lỗi ngăn xếp (Stack)"
 
 #: sysdeps/generic/siglist.h:67
 msgid "Information request"
@@ -5857,12 +5871,12 @@ msgstr "Cửa sổ đã thay đổi"
 
 #. TRANS Operation not permitted; only the owner of the file (or other resource)
 #. TRANS or processes with special privileges can perform the operation.
-#: sysdeps/gnu/errlist.c:25
+#: sysdeps/gnu/errlist.c:26
 msgid "Operation not permitted"
 msgstr "Thao tác không được phép"
 
 #. TRANS No process matches the specified process ID.
-#: sysdeps/gnu/errlist.c:45
+#: sysdeps/gnu/errlist.c:46
 msgid "No such process"
 msgstr "Không có tiến trình như vậy"
 
@@ -5873,12 +5887,12 @@ msgstr "Không có tiến trình như vậy"
 #. TRANS You can choose to have functions resume after a signal that is handled,
 #. TRANS rather than failing with @code{EINTR}; see @ref{Interrupted
 #. TRANS Primitives}.
-#: sysdeps/gnu/errlist.c:60
+#: sysdeps/gnu/errlist.c:61
 msgid "Interrupted system call"
 msgstr "Cuộc gọi hệ thống bị gián đoạn"
 
 #. TRANS Input/output error; usually used for physical read or write errors.
-#: sysdeps/gnu/errlist.c:69
+#: sysdeps/gnu/errlist.c:70
 msgid "Input/output error"
 msgstr "Lỗi vào/ra"
 
@@ -5887,7 +5901,7 @@ msgstr "Lỗi vào/ra"
 #. TRANS This can mean that the device file was installed incorrectly, or that
 #. TRANS the physical device is missing or not correctly attached to the
 #. TRANS computer.
-#: sysdeps/gnu/errlist.c:82
+#: sysdeps/gnu/errlist.c:83
 msgid "No such device or address"
 msgstr "Không có thiết bị hoặc địa chỉ như vậy"
 
@@ -5895,27 +5909,27 @@ msgstr "Không có thiết bị hoặc địa chỉ như vậy"
 #. TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
 #. TRANS File}) occupy too much memory space.  This condition never arises on
 #. TRANS @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.c:94
+#: sysdeps/gnu/errlist.c:95
 msgid "Argument list too long"
 msgstr "Danh sách đối số quá dài"
 
 #. TRANS Invalid executable file format.  This condition is detected by the
 #. TRANS @code{exec} functions; see @ref{Executing a File}.
-#: sysdeps/gnu/errlist.c:104
+#: sysdeps/gnu/errlist.c:105
 msgid "Exec format error"
 msgstr "Lỗi định dạng thực hiện"
 
 #. TRANS Bad file descriptor; for example, I/O on a descriptor that has been
 #. TRANS closed or reading from a descriptor open only for writing (or vice
 #. TRANS versa).
-#: sysdeps/gnu/errlist.c:115
+#: sysdeps/gnu/errlist.c:116
 msgid "Bad file descriptor"
 msgstr "Bộ mô tả tập tin sai"
 
 #. TRANS There are no child processes.  This error happens on operations that are
 #. TRANS supposed to manipulate child processes, when there aren't any processes
 #. TRANS to manipulate.
-#: sysdeps/gnu/errlist.c:126
+#: sysdeps/gnu/errlist.c:127
 msgid "No child processes"
 msgstr "Không có tiến trình con"
 
@@ -5923,69 +5937,69 @@ msgstr "Không có tiến trình con"
 #. TRANS deadlock situation.  The system does not guarantee that it will notice
 #. TRANS all such situations.  This error means you got lucky and the system
 #. TRANS noticed; it might just hang.  @xref{File Locks}, for an example.
-#: sysdeps/gnu/errlist.c:138
+#: sysdeps/gnu/errlist.c:139
 msgid "Resource deadlock avoided"
 msgstr "Tránh tài nguyên bế tắc"
 
 #. TRANS No memory available.  The system cannot allocate more virtual memory
 #. TRANS because its capacity is full.
-#: sysdeps/gnu/errlist.c:148
+#: sysdeps/gnu/errlist.c:149
 msgid "Cannot allocate memory"
 msgstr "Không thể cấp phát bộ nhớ"
 
 #. TRANS Bad address; an invalid pointer was detected.
 #. TRANS On @gnuhurdsystems{}, this error never happens; you get a signal instead.
-#: sysdeps/gnu/errlist.c:167
+#: sysdeps/gnu/errlist.c:168
 msgid "Bad address"
 msgstr "Địa chỉ sai"
 
 #. TRANS A file that isn't a block special file was given in a situation that
 #. TRANS requires one.  For example, trying to mount an ordinary file as a file
 #. TRANS system in Unix gives this error.
-#: sysdeps/gnu/errlist.c:178
+#: sysdeps/gnu/errlist.c:179
 msgid "Block device required"
 msgstr "Cần có thiết bị khối"
 
 #. TRANS Resource busy; a system resource that can't be shared is already in use.
 #. TRANS For example, if you try to delete a file that is the root of a currently
 #. TRANS mounted filesystem, you get this error.
-#: sysdeps/gnu/errlist.c:189
+#: sysdeps/gnu/errlist.c:190
 msgid "Device or resource busy"
 msgstr "Thiết bị hoặc tài nguyên đang bận"
 
 #. TRANS File exists; an existing file was specified in a context where it only
 #. TRANS makes sense to specify a new file.
-#: sysdeps/gnu/errlist.c:199
+#: sysdeps/gnu/errlist.c:200
 msgid "File exists"
 msgstr "Tập tin đã sẵn có"
 
 #. TRANS An attempt to make an improper link across file systems was detected.
 #. TRANS This happens not only when you use @code{link} (@pxref{Hard Links}) but
 #. TRANS also when you rename a file with @code{rename} (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.c:210
+#: sysdeps/gnu/errlist.c:211
 msgid "Invalid cross-device link"
 msgstr "Liên kết thiết bị chéo không hợp lệ"
 
 #. TRANS The wrong type of device was given to a function that expects a
 #. TRANS particular sort of device.
-#: sysdeps/gnu/errlist.c:220
+#: sysdeps/gnu/errlist.c:221
 msgid "No such device"
 msgstr "Không có thiết bị như vậy"
 
 #. TRANS A file that isn't a directory was specified when a directory is required.
-#: sysdeps/gnu/errlist.c:229
+#: sysdeps/gnu/errlist.c:230
 msgid "Not a directory"
 msgstr "Không phải là một thư mục"
 
 #. TRANS File is a directory; you cannot open a directory for writing,
 #. TRANS or create or remove hard links to it.
-#: sysdeps/gnu/errlist.c:239
+#: sysdeps/gnu/errlist.c:240
 msgid "Is a directory"
 msgstr "Là một thư mục"
 
 #. TRANS Invalid argument.  This is used to indicate various kinds of problems
 #. TRANS with passing the wrong argument to a library function.
-#: sysdeps/gnu/errlist.c:249
+#: sysdeps/gnu/errlist.c:250
 msgid "Invalid argument"
 msgstr "Đối số không hợp lệ"
 
@@ -5996,20 +6010,20 @@ msgstr "Đối số không hợp lệ"
 #. TRANS limit that can usually be increased.  If you get this error, you might
 #. TRANS want to increase the @code{RLIMIT_NOFILE} limit or make it unlimited;
 #. TRANS @pxref{Limits on Resources}.
-#: sysdeps/gnu/errlist.c:264
+#: sysdeps/gnu/errlist.c:265
 msgid "Too many open files"
 msgstr "Quá nhiều tập tin đang mở"
 
 #. TRANS There are too many distinct file openings in the entire system.  Note
 #. TRANS that any number of linked channels count as just one file opening; see
 #. TRANS @ref{Linked Channels}.  This error never occurs on @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.c:275
+#: sysdeps/gnu/errlist.c:276
 msgid "Too many open files in system"
 msgstr "Quá nhiều tập tin còn đang mở trong hệ thống"
 
 #. TRANS Inappropriate I/O control operation, such as trying to set terminal
 #. TRANS modes on an ordinary file.
-#: sysdeps/gnu/errlist.c:285
+#: sysdeps/gnu/errlist.c:286
 msgid "Inappropriate ioctl for device"
 msgstr "ioctl không thích hợp với thiết bị"
 
@@ -6018,47 +6032,47 @@ msgstr "ioctl không thích hợp với thiết bị"
 #. TRANS debugger to run a program is considered having it open for writing and
 #. TRANS will cause this error.  (The name stands for ``text file busy''.)  This
 #. TRANS is not an error on @gnuhurdsystems{}; the text is copied as necessary.
-#: sysdeps/gnu/errlist.c:298
+#: sysdeps/gnu/errlist.c:299
 msgid "Text file busy"
 msgstr "Tập tin văn bản đang bận"
 
 #. TRANS File too big; the size of a file would be larger than allowed by the system.
-#: sysdeps/gnu/errlist.c:307
+#: sysdeps/gnu/errlist.c:308
 msgid "File too large"
 msgstr "Tập tin quá lớn"
 
 #. TRANS No space left on device; write operation on a file failed because the
 #. TRANS disk is full.
-#: sysdeps/gnu/errlist.c:317
+#: sysdeps/gnu/errlist.c:318
 msgid "No space left on device"
 msgstr "Không có đủ chỗ trống trên thiết bị"
 
 #. TRANS Invalid seek operation (such as on a pipe).
-#: sysdeps/gnu/errlist.c:326
+#: sysdeps/gnu/errlist.c:327
 msgid "Illegal seek"
 msgstr "Tìm nơi cấm"
 
 #. TRANS An attempt was made to modify something on a read-only file system.
-#: sysdeps/gnu/errlist.c:335
+#: sysdeps/gnu/errlist.c:336
 msgid "Read-only file system"
 msgstr "Hệ thống tập tin chỉ đọc"
 
 #. TRANS Too many links; the link count of a single file would become too large.
 #. TRANS @code{rename} can cause this error if the file being renamed already has
 #. TRANS as many links as it can take (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.c:346
+#: sysdeps/gnu/errlist.c:347
 msgid "Too many links"
 msgstr "Quá nhiều liên kết"
 
 #. TRANS Domain error; used by mathematical functions when an argument value does
 #. TRANS not fall into the domain over which the function is defined.
-#: sysdeps/gnu/errlist.c:369
+#: sysdeps/gnu/errlist.c:370
 msgid "Numerical argument out of domain"
 msgstr "Đối số thuộc số ở ngoại miền"
 
 #. TRANS Range error; used by mathematical functions when the result value is
 #. TRANS not representable because of overflow or underflow.
-#: sysdeps/gnu/errlist.c:379
+#: sysdeps/gnu/errlist.c:380
 msgid "Numerical result out of range"
 msgstr "Kết quả nằm ở ngoại phạm vi"
 
@@ -6091,7 +6105,7 @@ msgstr "Kết quả nằm ở ngoại phạm vi"
 #. TRANS so usually an interactive program should report the error to the user
 #. TRANS and return to its command loop.
 #. TRANS @end itemize
-#: sysdeps/gnu/errlist.c:416
+#: sysdeps/gnu/errlist.c:417
 msgid "Resource temporarily unavailable"
 msgstr "Tài nguyên tạm thời không sẵn sàng"
 
@@ -6100,7 +6114,7 @@ msgstr "Tài nguyên tạm thời không sẵn sàng"
 #. TRANS
 #. TRANS C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
 #. TRANS separate error code.
-#: sysdeps/gnu/errlist.c:429
+#: sysdeps/gnu/errlist.c:430
 msgid "Operation would block"
 msgstr "Thao tác sẽ chặn"
 
@@ -6112,47 +6126,47 @@ msgstr "Thao tác sẽ chặn"
 #. TRANS the object before the call completes return @code{EALREADY}.  You can
 #. TRANS use the @code{select} function to find out when the pending operation
 #. TRANS has completed; @pxref{Waiting for I/O}.
-#: sysdeps/gnu/errlist.c:445
+#: sysdeps/gnu/errlist.c:446
 msgid "Operation now in progress"
 msgstr "Thao tác đang trong tiến trình"
 
 #. TRANS An operation is already in progress on an object that has non-blocking
 #. TRANS mode selected.
-#: sysdeps/gnu/errlist.c:455
+#: sysdeps/gnu/errlist.c:456
 msgid "Operation already in progress"
 msgstr "Thao tác đã đang ở trong tiến trình"
 
 #. TRANS A file that isn't a socket was specified when a socket is required.
-#: sysdeps/gnu/errlist.c:464
+#: sysdeps/gnu/errlist.c:465
 msgid "Socket operation on non-socket"
 msgstr "Thao tác kiểu ổ cắm trên cái không phải ổ cắm"
 
 #. TRANS The size of a message sent on a socket was larger than the supported
 #. TRANS maximum size.
-#: sysdeps/gnu/errlist.c:474
+#: sysdeps/gnu/errlist.c:475
 msgid "Message too long"
 msgstr "Thông điệp quá dài"
 
 #. TRANS The socket type does not support the requested communications protocol.
-#: sysdeps/gnu/errlist.c:483
+#: sysdeps/gnu/errlist.c:484
 msgid "Protocol wrong type for socket"
 msgstr "Giao thức kiểu không đúng cho ổ cắm"
 
 #. TRANS You specified a socket option that doesn't make sense for the
 #. TRANS particular protocol being used by the socket.  @xref{Socket Options}.
-#: sysdeps/gnu/errlist.c:493
+#: sysdeps/gnu/errlist.c:494
 msgid "Protocol not available"
 msgstr "Giao thức không sẵn sàng"
 
 #. TRANS The socket domain does not support the requested communications protocol
 #. TRANS (perhaps because the requested protocol is completely invalid).
 #. TRANS @xref{Creating a Socket}.
-#: sysdeps/gnu/errlist.c:504
+#: sysdeps/gnu/errlist.c:505
 msgid "Protocol not supported"
 msgstr "Giao thức không được hỗ trợ"
 
 #. TRANS The socket type is not supported.
-#: sysdeps/gnu/errlist.c:513
+#: sysdeps/gnu/errlist.c:514
 msgid "Socket type not supported"
 msgstr "Kiểu ổ cắm không được hỗ trợ"
 
@@ -6162,71 +6176,71 @@ msgstr "Kiểu ổ cắm không được hỗ trợ"
 #. TRANS error can happen for many calls when the object does not support the
 #. TRANS particular operation; it is a generic indication that the server knows
 #. TRANS nothing to do for that call.
-#: sysdeps/gnu/errlist.c:527
+#: sysdeps/gnu/errlist.c:528
 msgid "Operation not supported"
 msgstr "Thao tác không được hỗ trợ"
 
 #. TRANS The socket communications protocol family you requested is not supported.
-#: sysdeps/gnu/errlist.c:536
+#: sysdeps/gnu/errlist.c:537
 msgid "Protocol family not supported"
 msgstr "Nhóm giao thức không được hỗ trợ"
 
 #. TRANS The address family specified for a socket is not supported; it is
 #. TRANS inconsistent with the protocol being used on the socket.  @xref{Sockets}.
-#: sysdeps/gnu/errlist.c:546
+#: sysdeps/gnu/errlist.c:547
 msgid "Address family not supported by protocol"
 msgstr "Nhóm địa chỉ không được giao thức hỗ trợ"
 
 #. TRANS The requested socket address is already in use.  @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.c:555
+#: sysdeps/gnu/errlist.c:556
 msgid "Address already in use"
 msgstr "Địa chỉ đang được dùng"
 
 #. TRANS The requested socket address is not available; for example, you tried
 #. TRANS to give a socket a name that doesn't match the local host name.
 #. TRANS @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.c:566
+#: sysdeps/gnu/errlist.c:567
 msgid "Cannot assign requested address"
 msgstr "Không thể gán địa chỉ đã yêu cầu"
 
 #. TRANS A socket operation failed because the network was down.
-#: sysdeps/gnu/errlist.c:575
+#: sysdeps/gnu/errlist.c:576
 msgid "Network is down"
 msgstr "Mạng không hoạt động"
 
 #. TRANS A socket operation failed because the subnet containing the remote host
 #. TRANS was unreachable.
-#: sysdeps/gnu/errlist.c:585
+#: sysdeps/gnu/errlist.c:586
 msgid "Network is unreachable"
 msgstr "Không thể kết nối mạng"
 
 #. TRANS A network connection was reset because the remote host crashed.
-#: sysdeps/gnu/errlist.c:594
+#: sysdeps/gnu/errlist.c:595
 msgid "Network dropped connection on reset"
 msgstr "Mạng đã bỏ kết nối khi đặt lại"
 
 #. TRANS A network connection was aborted locally.
-#: sysdeps/gnu/errlist.c:603
+#: sysdeps/gnu/errlist.c:604
 msgid "Software caused connection abort"
 msgstr "Phần mềm đã gây ra kết nối hủy bỏ"
 
 #. TRANS A network connection was closed for reasons outside the control of the
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
 #. TRANS protocol violation.
-#: sysdeps/gnu/errlist.c:614
+#: sysdeps/gnu/errlist.c:615
 msgid "Connection reset by peer"
 msgstr "Kết nối bị đặt lại bởi ngang hàng"
 
 #. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
 #. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
 #. TRANS other from network operations.
-#: sysdeps/gnu/errlist.c:625
+#: sysdeps/gnu/errlist.c:626
 msgid "No buffer space available"
 msgstr "Không có vùng đệm sẵn sàng"
 
 #. TRANS You tried to connect a socket that is already connected.
 #. TRANS @xref{Connecting}.
-#: sysdeps/gnu/errlist.c:635
+#: sysdeps/gnu/errlist.c:636
 msgid "Transport endpoint is already connected"
 msgstr "Điểm cuối truyền đã được kết nối"
 
@@ -6234,83 +6248,83 @@ msgstr "Điểm cuối truyền đã được kết nối"
 #. TRANS try to transmit data over a socket, without first specifying a
 #. TRANS destination for the data.  For a connectionless socket (for datagram
 #. TRANS protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
-#: sysdeps/gnu/errlist.c:647
+#: sysdeps/gnu/errlist.c:648
 msgid "Transport endpoint is not connected"
 msgstr "Điểm cuối truyền chưa kết nối"
 
 #. TRANS No default destination address was set for the socket.  You get this
 #. TRANS error when you try to transmit data over a connectionless socket,
 #. TRANS without first specifying a destination for the data with @code{connect}.
-#: sysdeps/gnu/errlist.c:658
+#: sysdeps/gnu/errlist.c:659
 msgid "Destination address required"
 msgstr "Địa chỉ đích là bắt buộc phải có"
 
 #. TRANS The socket has already been shut down.
-#: sysdeps/gnu/errlist.c:667
+#: sysdeps/gnu/errlist.c:668
 msgid "Cannot send after transport endpoint shutdown"
 msgstr "Không thể gửi sau khi điểm cuối truyền bị tắt"
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:676
+#: sysdeps/gnu/errlist.c:677
 msgid "Too many references: cannot splice"
 msgstr "Quá nhiều tham chiếu: không thể splice (trao đổi dữ liệu giữa hai tập tin)"
 
 #. TRANS A socket operation with a specified timeout received no response during
 #. TRANS the timeout period.
-#: sysdeps/gnu/errlist.c:686
+#: sysdeps/gnu/errlist.c:687
 msgid "Connection timed out"
 msgstr "Kết nối đã quá hạn"
 
 #. TRANS A remote host refused to allow the network connection (typically because
 #. TRANS it is not running the requested service).
-#: sysdeps/gnu/errlist.c:696
+#: sysdeps/gnu/errlist.c:697
 msgid "Connection refused"
 msgstr "Kết nối bị từ chối"
 
 #. TRANS Too many levels of symbolic links were encountered in looking up a file name.
 #. TRANS This often indicates a cycle of symbolic links.
-#: sysdeps/gnu/errlist.c:706
+#: sysdeps/gnu/errlist.c:707
 msgid "Too many levels of symbolic links"
 msgstr "Quá nhiều cấp liên kết tượng trưng"
 
 #. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
 #. TRANS Files}) or host name too long (in @code{gethostname} or
 #. TRANS @code{sethostname}; @pxref{Host Identification}).
-#: sysdeps/gnu/errlist.c:717
+#: sysdeps/gnu/errlist.c:718
 msgid "File name too long"
 msgstr "Tên tập tin quá dài"
 
 #. TRANS The remote host for a requested network connection is down.
-#: sysdeps/gnu/errlist.c:726
+#: sysdeps/gnu/errlist.c:727
 msgid "Host is down"
 msgstr "Máy không chạy"
 
 #. TRANS The remote host for a requested network connection is not reachable.
-#: sysdeps/gnu/errlist.c:735
+#: sysdeps/gnu/errlist.c:736
 msgid "No route to host"
 msgstr "Không có đường dẫn đến máy"
 
 #. TRANS Directory not empty, where an empty directory was expected.  Typically,
 #. TRANS this error occurs when you are trying to delete a directory.
-#: sysdeps/gnu/errlist.c:745
+#: sysdeps/gnu/errlist.c:746
 msgid "Directory not empty"
 msgstr "Thư mục không rỗng"
 
 #. TRANS This means that the per-user limit on new process would be exceeded by
 #. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
 #. TRANS the @code{RLIMIT_NPROC} limit.
-#: sysdeps/gnu/errlist.c:756
+#: sysdeps/gnu/errlist.c:757
 msgid "Too many processes"
 msgstr "Quá nhiều tiến trình"
 
 #. TRANS The file quota system is confused because there are too many users.
 #. TRANS @c This can probably happen in a GNU system when using NFS.
-#: sysdeps/gnu/errlist.c:766
+#: sysdeps/gnu/errlist.c:767
 msgid "Too many users"
 msgstr "Quá nhiều người dùng"
 
 #. TRANS The user's disk quota was exceeded.
-#: sysdeps/gnu/errlist.c:775
+#: sysdeps/gnu/errlist.c:776
 msgid "Disk quota exceeded"
 msgstr "Vượt quá hạn ngạch đĩa"
 
@@ -6319,7 +6333,7 @@ msgstr "Vượt quá hạn ngạch đĩa"
 #. TRANS for NFS file systems or corruption in other file systems.
 #. TRANS Repairing this condition usually requires unmounting, possibly repairing
 #. TRANS and remounting the file system.
-#: sysdeps/gnu/errlist.c:788
+#: sysdeps/gnu/errlist.c:789
 msgid "Stale file handle"
 msgstr "Bộ xử lý tập tin chớm hỏng"
 
@@ -6327,32 +6341,32 @@ msgstr "Bộ xử lý tập tin chớm hỏng"
 #. TRANS already specifies an NFS-mounted file.
 #. TRANS (This is an error on some operating systems, but we expect it to work
 #. TRANS properly on @gnuhurdsystems{}, making this error code impossible.)
-#: sysdeps/gnu/errlist.c:800
+#: sysdeps/gnu/errlist.c:801
 msgid "Object is remote"
 msgstr "Đối tượng ở xa"
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:809
+#: sysdeps/gnu/errlist.c:810
 msgid "RPC struct is bad"
 msgstr "Cấu trúc RPC sai"
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:818
+#: sysdeps/gnu/errlist.c:819
 msgid "RPC version wrong"
 msgstr "RPC: phiên bản không đúng"
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:827
+#: sysdeps/gnu/errlist.c:828
 msgid "RPC program not available"
 msgstr "RPC: chương trình không sẵn sàng "
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:836
+#: sysdeps/gnu/errlist.c:837
 msgid "RPC program version wrong"
 msgstr "RPC: phiên bản chương trình không đúng"
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:845
+#: sysdeps/gnu/errlist.c:846
 msgid "RPC bad procedure for program"
 msgstr "RPC: thủ tục sai đối với chương trình"
 
@@ -6360,7 +6374,7 @@ msgstr "RPC: thủ tục sai đối với chương trình"
 #. TRANS @ref{File Locks}.  This error is never generated by @gnuhurdsystems{}, but
 #. TRANS it can result from an operation to an NFS server running another
 #. TRANS operating system.
-#: sysdeps/gnu/errlist.c:857
+#: sysdeps/gnu/errlist.c:858
 msgid "No locks available"
 msgstr "Không có khoá sẵn sàng"
 
@@ -6369,17 +6383,17 @@ msgstr "Không có khoá sẵn sàng"
 #. TRANS
 #. TRANS On some systems @code{chmod} returns this error if you try to set the
 #. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
-#: sysdeps/gnu/errlist.c:870
+#: sysdeps/gnu/errlist.c:871
 msgid "Inappropriate file type or format"
 msgstr "Định dạng hoặc kiểu tập tin không thích hợp"
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:879
+#: sysdeps/gnu/errlist.c:880
 msgid "Authentication error"
 msgstr "Lỗi xác thực"
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:888
+#: sysdeps/gnu/errlist.c:889
 msgid "Need authenticator"
 msgstr "Cần xác thực"
 
@@ -6388,7 +6402,7 @@ msgstr "Cần xác thực"
 #. TRANS operating system.  When you get this error, you can be sure that this
 #. TRANS particular function will always fail with @code{ENOSYS} unless you
 #. TRANS install a new version of the C library or the operating system.
-#: sysdeps/gnu/errlist.c:901
+#: sysdeps/gnu/errlist.c:902
 msgid "Function not implemented"
 msgstr "Hàm chưa có đoạn mã thực hiện"
 
@@ -6404,13 +6418,13 @@ msgstr "Hàm chưa có đoạn mã thực hiện"
 #. TRANS
 #. TRANS If the entire function is not available at all in the implementation,
 #. TRANS it returns @code{ENOSYS} instead.
-#: sysdeps/gnu/errlist.c:921
+#: sysdeps/gnu/errlist.c:922
 msgid "Not supported"
 msgstr "Không được hỗ trợ"
 
 #. TRANS While decoding a multibyte character the function came along an invalid
 #. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
-#: sysdeps/gnu/errlist.c:931
+#: sysdeps/gnu/errlist.c:932
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr "Ký tự đa byte hoặc rộng không hợp lệ hoặc chưa hoàn thiện"
 
@@ -6420,80 +6434,80 @@ msgstr "Ký tự đa byte hoặc rộng không hợp lệ hoặc chưa hoàn thi
 #. TRANS error because functions such as @code{read} and @code{write} translate
 #. TRANS it into a @code{SIGTTIN} or @code{SIGTTOU} signal.  @xref{Job Control},
 #. TRANS for information on process groups and these signals.
-#: sysdeps/gnu/errlist.c:945
+#: sysdeps/gnu/errlist.c:946
 msgid "Inappropriate operation for background process"
 msgstr "Thao tác không thích hợp với tiến trình chạy nền"
 
 #. TRANS On @gnuhurdsystems{}, opening a file returns this error when the file is
 #. TRANS translated by a program and the translator program dies while starting
 #. TRANS up, before it has connected to the file.
-#: sysdeps/gnu/errlist.c:956
+#: sysdeps/gnu/errlist.c:957
 msgid "Translator died"
 msgstr "Trình dịch đã chết"
 
 #. TRANS The experienced user will know what is wrong.
 #. TRANS @c This error code is a joke.  Its perror text is part of the joke.
 #. TRANS @c Don't change it.
-#: sysdeps/gnu/errlist.c:967
+#: sysdeps/gnu/errlist.c:968
 msgid "?"
 msgstr "?"
 
 #. TRANS You did @strong{what}?
-#: sysdeps/gnu/errlist.c:976
+#: sysdeps/gnu/errlist.c:977
 msgid "You really blew it this time"
 msgstr "Chắc là một trường hợp sai"
 
 #. TRANS Go home and have a glass of warm, dairy-fresh milk.
-#: sysdeps/gnu/errlist.c:985
+#: sysdeps/gnu/errlist.c:986
 msgid "Computer bought the farm"
 msgstr "Máy tính đã chết"
 
 #. TRANS This error code has no purpose.
-#: sysdeps/gnu/errlist.c:994
+#: sysdeps/gnu/errlist.c:995
 msgid "Gratuitous error"
 msgstr "Lỗi không có lý do"
 
-#: sysdeps/gnu/errlist.c:1002
+#: sysdeps/gnu/errlist.c:1003
 msgid "Bad message"
 msgstr "Thông điệp sai"
 
-#: sysdeps/gnu/errlist.c:1010
+#: sysdeps/gnu/errlist.c:1011
 msgid "Identifier removed"
 msgstr "Định danh bị gỡ bỏ"
 
-#: sysdeps/gnu/errlist.c:1018
+#: sysdeps/gnu/errlist.c:1019
 msgid "Multihop attempted"
 msgstr "Đa nhảy được thử"
 
-#: sysdeps/gnu/errlist.c:1026
+#: sysdeps/gnu/errlist.c:1027
 msgid "No data available"
 msgstr "Không có dữ liệu sẵn sàng"
 
-#: sysdeps/gnu/errlist.c:1034
+#: sysdeps/gnu/errlist.c:1035
 msgid "Link has been severed"
 msgstr "Liên kết đã bị ngắt"
 
-#: sysdeps/gnu/errlist.c:1042
+#: sysdeps/gnu/errlist.c:1043
 msgid "No message of desired type"
 msgstr "Không có thông điệp kiểu đã muốn"
 
-#: sysdeps/gnu/errlist.c:1050
+#: sysdeps/gnu/errlist.c:1051
 msgid "Out of streams resources"
 msgstr "Hết tài nguyên luồng dữ liệu"
 
-#: sysdeps/gnu/errlist.c:1058
+#: sysdeps/gnu/errlist.c:1059
 msgid "Device not a stream"
 msgstr "Thiết bị không phải luồng dữ liệu"
 
-#: sysdeps/gnu/errlist.c:1066
+#: sysdeps/gnu/errlist.c:1067
 msgid "Value too large for defined data type"
 msgstr "Giá trị quá lớn cho kiểu dữ liệu đã định nghĩa"
 
-#: sysdeps/gnu/errlist.c:1074
+#: sysdeps/gnu/errlist.c:1075
 msgid "Protocol error"
 msgstr "Lỗi giao thức"
 
-#: sysdeps/gnu/errlist.c:1082
+#: sysdeps/gnu/errlist.c:1083
 msgid "Timer expired"
 msgstr "Quá hạn"
 
@@ -6501,195 +6515,195 @@ msgstr "Quá hạn"
 #. TRANS completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
 #. TRANS the normal result is for the operations affected to complete with this
 #. TRANS error; @pxref{Cancel AIO Operations}.
-#: sysdeps/gnu/errlist.c:1094
+#: sysdeps/gnu/errlist.c:1095
 msgid "Operation canceled"
 msgstr "Thao tác bị hủy bỏ"
 
-#: sysdeps/gnu/errlist.c:1102
+#: sysdeps/gnu/errlist.c:1103
 msgid "Interrupted system call should be restarted"
 msgstr "Cuộc gọi hệ thống bị gián đoạn nên được khởi chạy lại"
 
-#: sysdeps/gnu/errlist.c:1110
+#: sysdeps/gnu/errlist.c:1111
 msgid "Channel number out of range"
 msgstr "Số thứ tự kênh ở ngoài phạm vi"
 
-#: sysdeps/gnu/errlist.c:1118
+#: sysdeps/gnu/errlist.c:1119
 msgid "Level 2 not synchronized"
 msgstr "Cấp 2 không được đồng bộ"
 
-#: sysdeps/gnu/errlist.c:1126
+#: sysdeps/gnu/errlist.c:1127
 msgid "Level 3 halted"
 msgstr "Cấp 3 bị dừng"
 
-#: sysdeps/gnu/errlist.c:1134
+#: sysdeps/gnu/errlist.c:1135
 msgid "Level 3 reset"
 msgstr "Cấp 3 được đặt lại"
 
-#: sysdeps/gnu/errlist.c:1142
+#: sysdeps/gnu/errlist.c:1143
 msgid "Link number out of range"
 msgstr "Số thứ tự liên kết ở ngoài phạm vi"
 
-#: sysdeps/gnu/errlist.c:1150
+#: sysdeps/gnu/errlist.c:1151
 msgid "Protocol driver not attached"
 msgstr "Trình điều khiển giao thức không được gắn nối"
 
-#: sysdeps/gnu/errlist.c:1158
+#: sysdeps/gnu/errlist.c:1159
 msgid "No CSI structure available"
 msgstr "Không có cấu trúc CSI sẵn sàng"
 
-#: sysdeps/gnu/errlist.c:1166
+#: sysdeps/gnu/errlist.c:1167
 msgid "Level 2 halted"
 msgstr "Cấp 2 bị dừng"
 
-#: sysdeps/gnu/errlist.c:1174
+#: sysdeps/gnu/errlist.c:1175
 msgid "Invalid exchange"
 msgstr "Trao đổi không hợp lệ"
 
-#: sysdeps/gnu/errlist.c:1182
+#: sysdeps/gnu/errlist.c:1183
 msgid "Invalid request descriptor"
 msgstr "Bộ mô tả yêu cầu không hợp lệ"
 
-#: sysdeps/gnu/errlist.c:1190
+#: sysdeps/gnu/errlist.c:1191
 msgid "Exchange full"
 msgstr "Trao đổi đầy đủ"
 
-#: sysdeps/gnu/errlist.c:1198
+#: sysdeps/gnu/errlist.c:1199
 msgid "No anode"
 msgstr "Không có dương cực"
 
-#: sysdeps/gnu/errlist.c:1206
+#: sysdeps/gnu/errlist.c:1207
 msgid "Invalid request code"
 msgstr "Mã yêu cầu không hợp lệ"
 
-#: sysdeps/gnu/errlist.c:1214
+#: sysdeps/gnu/errlist.c:1215
 msgid "Invalid slot"
 msgstr "Khoảng không hợp lệ"
 
-#: sysdeps/gnu/errlist.c:1222
+#: sysdeps/gnu/errlist.c:1223
 msgid "File locking deadlock error"
 msgstr "Lỗi khoá tập tin bế tắc"
 
-#: sysdeps/gnu/errlist.c:1230
+#: sysdeps/gnu/errlist.c:1231
 msgid "Bad font file format"
 msgstr "Định dạng tập tin phông sai"
 
-#: sysdeps/gnu/errlist.c:1238
+#: sysdeps/gnu/errlist.c:1239
 msgid "Machine is not on the network"
 msgstr "Máy không nằm trên mạng"
 
-#: sysdeps/gnu/errlist.c:1246
+#: sysdeps/gnu/errlist.c:1247
 msgid "Package not installed"
 msgstr "Gói chưa được cài đặt"
 
-#: sysdeps/gnu/errlist.c:1254
+#: sysdeps/gnu/errlist.c:1255
 msgid "Advertise error"
 msgstr "Lỗi quảng cáo"
 
-#: sysdeps/gnu/errlist.c:1262
+#: sysdeps/gnu/errlist.c:1263
 msgid "Srmount error"
 msgstr "Lỗi gắn kết Srmount"
 
-#: sysdeps/gnu/errlist.c:1270
+#: sysdeps/gnu/errlist.c:1271
 msgid "Communication error on send"
 msgstr "Lỗi liên lạc khi gửi"
 
-#: sysdeps/gnu/errlist.c:1278
+#: sysdeps/gnu/errlist.c:1279
 msgid "RFS specific error"
 msgstr "Lỗi đặc trưng cho RFS"
 
-#: sysdeps/gnu/errlist.c:1286
+#: sysdeps/gnu/errlist.c:1287
 msgid "Name not unique on network"
 msgstr "Tên không duy nhất trên mạng"
 
-#: sysdeps/gnu/errlist.c:1294
+#: sysdeps/gnu/errlist.c:1295
 msgid "File descriptor in bad state"
 msgstr "Bộ mô tả tập tin ở tình trạng sai"
 
-#: sysdeps/gnu/errlist.c:1302
+#: sysdeps/gnu/errlist.c:1303
 msgid "Remote address changed"
 msgstr "Địa chỉ ở xa đã thay đổi"
 
-#: sysdeps/gnu/errlist.c:1310
+#: sysdeps/gnu/errlist.c:1311
 msgid "Can not access a needed shared library"
 msgstr "Không thể truy cập vào một thư viện dùng chung cần thiết"
 
-#: sysdeps/gnu/errlist.c:1318
+#: sysdeps/gnu/errlist.c:1319
 msgid "Accessing a corrupted shared library"
 msgstr "Đang truy cập vào một thư viện dùng chung bị hỏng"
 
-#: sysdeps/gnu/errlist.c:1326
+#: sysdeps/gnu/errlist.c:1327
 msgid ".lib section in a.out corrupted"
 msgstr "Phần .lib trong a.out bị hỏng"
 
-#: sysdeps/gnu/errlist.c:1334
+#: sysdeps/gnu/errlist.c:1335
 msgid "Attempting to link in too many shared libraries"
 msgstr "Đang thử liên kết trong quá nhiều thư viện dùng chung"
 
-#: sysdeps/gnu/errlist.c:1342
+#: sysdeps/gnu/errlist.c:1343
 msgid "Cannot exec a shared library directly"
 msgstr "Không thể thực hiện trực tiếp một thư viện dùng chung"
 
-#: sysdeps/gnu/errlist.c:1350
+#: sysdeps/gnu/errlist.c:1351
 msgid "Streams pipe error"
 msgstr "Lỗi ống dẫn luồng"
 
-#: sysdeps/gnu/errlist.c:1358
+#: sysdeps/gnu/errlist.c:1359
 msgid "Structure needs cleaning"
 msgstr "Cấu trúc cần làm sạch"
 
-#: sysdeps/gnu/errlist.c:1366
+#: sysdeps/gnu/errlist.c:1367
 msgid "Not a XENIX named type file"
 msgstr "Không phải một tập tin kiểu đặt tên XENIX"
 
-#: sysdeps/gnu/errlist.c:1374
+#: sysdeps/gnu/errlist.c:1375
 msgid "No XENIX semaphores available"
 msgstr "Không có cờ hiệu XENIX sẵn sàng"
 
-#: sysdeps/gnu/errlist.c:1382
+#: sysdeps/gnu/errlist.c:1383
 msgid "Is a named type file"
 msgstr "Là một tập tin kiểu đặt tên"
 
-#: sysdeps/gnu/errlist.c:1390
+#: sysdeps/gnu/errlist.c:1391
 msgid "Remote I/O error"
 msgstr "Lỗi V/R ở xa"
 
-#: sysdeps/gnu/errlist.c:1398
+#: sysdeps/gnu/errlist.c:1399
 msgid "No medium found"
 msgstr "Không tìm đĩa đa phương tiện"
 
-#: sysdeps/gnu/errlist.c:1406
+#: sysdeps/gnu/errlist.c:1407
 msgid "Wrong medium type"
 msgstr "Kiểu đĩa đa phương tiện không đúng"
 
-#: sysdeps/gnu/errlist.c:1414
+#: sysdeps/gnu/errlist.c:1415
 msgid "Required key not available"
 msgstr "Khoá cần thiết không sẵn sàng"
 
-#: sysdeps/gnu/errlist.c:1422
+#: sysdeps/gnu/errlist.c:1423
 msgid "Key has expired"
 msgstr "Khoá đã quá hạn"
 
-#: sysdeps/gnu/errlist.c:1430
+#: sysdeps/gnu/errlist.c:1431
 msgid "Key has been revoked"
 msgstr "Khoá đã bị hủy bỏ"
 
-#: sysdeps/gnu/errlist.c:1438
+#: sysdeps/gnu/errlist.c:1439
 msgid "Key was rejected by service"
 msgstr "Khoá bị dịch vụ từ chối"
 
-#: sysdeps/gnu/errlist.c:1446
+#: sysdeps/gnu/errlist.c:1447
 msgid "Owner died"
 msgstr "Chủ đã chết"
 
-#: sysdeps/gnu/errlist.c:1454
+#: sysdeps/gnu/errlist.c:1455
 msgid "State not recoverable"
 msgstr "Tình trạng không thể phục hồi được"
 
-#: sysdeps/gnu/errlist.c:1462
+#: sysdeps/gnu/errlist.c:1463
 msgid "Operation not possible due to RF-kill"
 msgstr "Thao tác không được bởi vì RF-kill"
 
-#: sysdeps/gnu/errlist.c:1470
+#: sysdeps/gnu/errlist.c:1471
 msgid "Memory page has hardware error"
 msgstr "Trang nhớ có lỗi phần cứng"
 
@@ -6770,6 +6784,11 @@ msgstr "Chuỗi tham số không phải được mã  hóa đúng"
 msgid "%s is for unknown machine %d.\n"
 msgstr "%s là cho máy không rõ %d.\n"
 
+#: sysdeps/unix/sysv/linux/ia64/makecontext.c:58
+#, c-format
+msgid "makecontext: does not know how to handle more than 8 arguments\n"
+msgstr "makecontext: không biết cách xử lý nhiều hơn 8 đối số\n"
+
 #: sysdeps/unix/sysv/linux/lddlibc4.c:60
 #, c-format
 msgid ""
@@ -6789,28 +6808,28 @@ msgstr "không thể mở “%s”"
 msgid "cannot read header from `%s'"
 msgstr "không thể đọc phần đầu từ “%s”"
 
-#: timezone/zdump.c:280
+#: timezone/zdump.c:282
 msgid "lacks alphabetic at start"
 msgstr "thiếu chữ cái ở đầu"
 
-#: timezone/zdump.c:282
+#: timezone/zdump.c:284
 msgid "has fewer than 3 alphabetics"
 msgstr "có ít hơn 3 chữ cái"
 
-#: timezone/zdump.c:284
+#: timezone/zdump.c:286
 msgid "has more than 6 alphabetics"
 msgstr "có nhiều hơn 6 chữ cái"
 
-#: timezone/zdump.c:292
+#: timezone/zdump.c:294
 msgid "differs from POSIX standard"
 msgstr "khác với tiêu chuẩn POSIX"
 
-#: timezone/zdump.c:298
+#: timezone/zdump.c:300
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr "%s: cảnh báo: múi giờ “%s” viết tắt “%s” %s\n"
 
-#: timezone/zdump.c:307
+#: timezone/zdump.c:309
 #, c-format
 msgid ""
 "%s: usage: %s [--version] [--help] [-{vV}] [-{ct} [lo,]hi] zonename ...\n"
@@ -6822,41 +6841,41 @@ msgstr ""
 "Báo lỗi tới %s.\n"
 "Thông báo lỗi dịch cho: <http://translationproject.org/team/vi.html>.\n"
 
-#: timezone/zdump.c:384
+#: timezone/zdump.c:386
 #, c-format
 msgid "%s: wild -c argument %s\n"
 msgstr "%s: đối số “-c” đại diện %s\n"
 
-#: timezone/zdump.c:417
+#: timezone/zdump.c:419
 #, c-format
 msgid "%s: wild -t argument %s\n"
 msgstr "%s: đối số “-t” đại diện %s\n"
 
-#: timezone/zdump.c:506
+#: timezone/zdump.c:508
 msgid "Error writing to standard output"
 msgstr "Gặp lỗi khi ghi vào đầu ra tiêu chuẩn"
 
-#: timezone/zic.c:370
+#: timezone/zic.c:371
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: Hết bộ nhớ: %s\n"
 
-#: timezone/zic.c:410
+#: timezone/zic.c:438
 #, c-format
 msgid "\"%s\", line %d: "
-msgstr "“%s”, dòng %d:"
+msgstr "“%s”, dòng %d: "
 
-#: timezone/zic.c:413
+#: timezone/zic.c:441
 #, c-format
 msgid " (rule from \"%s\", line %d)"
 msgstr " (quy tắc từ “%s”, dòng %d)"
 
-#: timezone/zic.c:432
+#: timezone/zic.c:460
 #, c-format
 msgid "warning: "
 msgstr "cảnh báo: "
 
-#: timezone/zic.c:442
+#: timezone/zic.c:470
 #, c-format
 msgid ""
 "%s: usage is %s [ --version ] [ --help ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n"
@@ -6870,342 +6889,350 @@ msgstr ""
 "Báo lỗi cho %s.\n"
 "Thông báo lỗi dịch cho: <http://translationproject.org/team/vi.html>.\n"
 
-#: timezone/zic.c:477
+#: timezone/zic.c:505
 msgid "wild compilation-time specification of zic_t"
 msgstr "đặc tả thời gian biên dịch đại diện của zic_t"
 
-#: timezone/zic.c:496
+#: timezone/zic.c:524
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "%s: Đã chỉ ra nhiều hơn một tùy chọn “-d”\n"
 
-#: timezone/zic.c:506
+#: timezone/zic.c:534
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "%s: Đã chỉ ra nhiều hơn một tùy chọn “-l”\n"
 
-#: timezone/zic.c:516
+#: timezone/zic.c:544
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: Đã chỉ ra nhiều hơn một tùy chọn “-p”\n"
 
-#: timezone/zic.c:526
+#: timezone/zic.c:554
 #, c-format
 msgid "%s: More than one -y option specified\n"
 msgstr "%s: Đã chỉ ra nhiều hơn một tùy chọn “-y”\n"
 
-#: timezone/zic.c:536
+#: timezone/zic.c:564
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: Đã chỉ ra nhiều hơn một tùy chọn “-L”\n"
 
-#: timezone/zic.c:583
+#: timezone/zic.c:611
 msgid "link to link"
 msgstr "liên kết đến liên kết"
 
-#: timezone/zic.c:650
+#: timezone/zic.c:678
 msgid "hard link failed, symbolic link used"
 msgstr "lỗi cứng không thành công nên dùng liên kết tượng trưng"
 
-#: timezone/zic.c:660
+#: timezone/zic.c:688
 #, c-format
 msgid "%s: Can't read %s: %s\n"
 msgstr "%s: Không thể đọc %s: %s\n"
 
-#: timezone/zic.c:668 timezone/zic.c:1533
+#: timezone/zic.c:696 timezone/zic.c:1595
 #, c-format
 msgid "%s: Can't create %s: %s\n"
 msgstr "%s: Không thể tạo %s: %s\n"
 
-#: timezone/zic.c:676 timezone/zic.c:881
+#: timezone/zic.c:704 timezone/zic.c:939
 #, c-format
 msgid "%s: Error reading %s\n"
 msgstr "%s: Lỗi đọc %s\n"
 
-#: timezone/zic.c:682 timezone/zic.c:1750
+#: timezone/zic.c:710 timezone/zic.c:1792
 #, c-format
 msgid "%s: Error writing %s\n"
 msgstr "%s: Lỗi ghi %s\n"
 
-#: timezone/zic.c:686
+#: timezone/zic.c:714
 msgid "link failed, copy used"
 msgstr "liên kết gặp lỗi nên dùng kiểu sao chép"
 
-#: timezone/zic.c:744 timezone/zic.c:746
+#: timezone/zic.c:802 timezone/zic.c:804
 msgid "same rule name in multiple files"
 msgstr "nhiều tập tin chứa cùng một tên quy tắc"
 
-#: timezone/zic.c:787
+#: timezone/zic.c:845
 msgid "unruly zone"
 msgstr "múi giờ phóng túng"
 
-#: timezone/zic.c:794
+#: timezone/zic.c:852
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "%s trong múi giờ không có quy tắc"
 
-#: timezone/zic.c:814
+#: timezone/zic.c:872
 msgid "standard input"
 msgstr "đầu vào tiêu chuẩn"
 
-#: timezone/zic.c:819
+#: timezone/zic.c:877
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: Không thể mở %s: %s\n"
 
-#: timezone/zic.c:830
+#: timezone/zic.c:888
 msgid "line too long"
 msgstr "dòng quá dài"
 
-#: timezone/zic.c:850
+#: timezone/zic.c:908
 msgid "input line of unknown type"
-msgstr "dòng nhập vào có kiểu không rõ"
+msgstr "dòng đầu vào có kiểu không rõ"
 
-#: timezone/zic.c:866
+#: timezone/zic.c:924
 #, c-format
 msgid "%s: Leap line in non leap seconds file %s\n"
 msgstr "%s: dòng năm nhuận nằm trong tập tin giây không phải năm nhuận %s\n"
 
-#: timezone/zic.c:873 timezone/zic.c:1282 timezone/zic.c:1304
+#: timezone/zic.c:931 timezone/zic.c:1339 timezone/zic.c:1361
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr "%s: không thể phục hồi: giá trị l_value không hợp lệ %d\n"
 
-#: timezone/zic.c:888
+#: timezone/zic.c:946
 #, c-format
 msgid "%s: Error closing %s: %s\n"
 msgstr "%s: Lỗi đóng %s: %s\n"
 
-#: timezone/zic.c:893
+#: timezone/zic.c:951
 msgid "expected continuation line not found"
 msgstr "không tìm thấy đường tiếp tục cần"
 
-#: timezone/zic.c:934 timezone/zic.c:2610 timezone/zic.c:2624
+#: timezone/zic.c:992 timezone/zic.c:2644 timezone/zic.c:2658
 msgid "time overflow"
 msgstr "tràn thời gian"
 
-#: timezone/zic.c:938
-msgid "24:00 not handled by pre-1998 versions of zic"
-msgstr "24:00 không được xử lý bởi phiên bản zic trước năm 1998"
-
-#: timezone/zic.c:941
+#: timezone/zic.c:997
 msgid "values over 24 hours not handled by pre-2007 versions of zic"
 msgstr "giá trị nhiều hơn 24 giờ không được xử lý bởi phiên bản zic trước năm 2007"
 
-#: timezone/zic.c:952
+#: timezone/zic.c:1008
 msgid "wrong number of fields on Rule line"
 msgstr "số trường không đúng trên dòng Quy tắc (Rule)"
 
-#: timezone/zic.c:956
+#: timezone/zic.c:1012
 msgid "nameless rule"
 msgstr "quy tắc không tên"
 
-#: timezone/zic.c:961
+#: timezone/zic.c:1017
 msgid "invalid saved time"
 msgstr "thời gian đã lưu không hợp lệ"
 
-#: timezone/zic.c:978
+#: timezone/zic.c:1034
 msgid "wrong number of fields on Zone line"
 msgstr "số trường không đúng trên dòng Múi Giờ (Zone)"
 
-#: timezone/zic.c:983
+#: timezone/zic.c:1039
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr "Dòng “Zone %s” và tùy chọn “-l” loại từ lẫn nhau"
 
-#: timezone/zic.c:989
+#: timezone/zic.c:1045
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "Dòng “Zone %s” và tùy chọn “-p” loại từ lẫn nhau"
 
-#: timezone/zic.c:997
+#: timezone/zic.c:1053
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %d)"
 msgstr "tên múi giờ trùng %s (tập tin “%s”, dòng %d)"
 
-#: timezone/zic.c:1010
+#: timezone/zic.c:1066
 msgid "wrong number of fields on Zone continuation line"
 msgstr "số trường không đúng trên dòng tiếp tục Múi Giờ (Zone)"
 
-#: timezone/zic.c:1047
+#: timezone/zic.c:1103
 msgid "invalid UT offset"
 msgstr "khoảng bù UT không hợp lệ"
 
-#: timezone/zic.c:1050
+#: timezone/zic.c:1106
 msgid "invalid abbreviation format"
 msgstr "định dạng viết tắt không hợp lệ"
 
-#: timezone/zic.c:1079
+#: timezone/zic.c:1135
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr "Giờ kết thúc dòng tiếp tục Múi Giờ không nằm sau giờ kết thúc của dòng trước"
 
-#: timezone/zic.c:1105
+#: timezone/zic.c:1161
 msgid "wrong number of fields on Leap line"
 msgstr "số trường không đúng trên dòng Leap (năm nhuận)"
 
-#: timezone/zic.c:1114
+#: timezone/zic.c:1170
 msgid "invalid leaping year"
 msgstr "năm nhuận không hợp lệ"
 
-#: timezone/zic.c:1134 timezone/zic.c:1236
+#: timezone/zic.c:1190 timezone/zic.c:1293
 msgid "invalid month name"
 msgstr "tên tháng không hợp lệ"
 
-#: timezone/zic.c:1147 timezone/zic.c:1349 timezone/zic.c:1363
+#: timezone/zic.c:1203 timezone/zic.c:1406 timezone/zic.c:1420
 msgid "invalid day of month"
 msgstr "ngày tháng không hợp lệ"
 
-#: timezone/zic.c:1152
-msgid "time before zero"
-msgstr "thời gian nằm trước số không"
-
-#: timezone/zic.c:1156
+#: timezone/zic.c:1208
 msgid "time too small"
 msgstr "thời gian quá nhỏ"
 
-#: timezone/zic.c:1160
+#: timezone/zic.c:1212
 msgid "time too large"
 msgstr "thời gian quá lớn"
 
-#: timezone/zic.c:1164 timezone/zic.c:1265
+#: timezone/zic.c:1216 timezone/zic.c:1322
 msgid "invalid time of day"
 msgstr "giờ ngày không hợp lệ"
 
-#: timezone/zic.c:1183
+#: timezone/zic.c:1235
 msgid "illegal CORRECTION field on Leap line"
 msgstr "trường CORRECTION (sửa lỗi) cấm trên dòng Leap (năm nhuận)"
 
-#: timezone/zic.c:1188
+#: timezone/zic.c:1240
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr "trường Rolling/Stationary (đang lăn/không di chuyển) cấm trên dòng Leap (năm nhuận)"
 
-#: timezone/zic.c:1202
+#: timezone/zic.c:1246
+msgid "leap second precedes Big Bang"
+msgstr "giây nhảy cách đứng trước “Big Bang”"
+
+#: timezone/zic.c:1259
 msgid "wrong number of fields on Link line"
 msgstr "số trường không đúng trên dòng Link (liên kết)"
 
-#: timezone/zic.c:1206
+#: timezone/zic.c:1263
 msgid "blank FROM field on Link line"
 msgstr "trường FROM (từ) rỗng trên dòng Link (liên kết)"
 
-#: timezone/zic.c:1210
+#: timezone/zic.c:1267
 msgid "blank TO field on Link line"
 msgstr "trường TO (đến) rỗng trên dòng Link (liên kết)"
 
-#: timezone/zic.c:1286
+#: timezone/zic.c:1343
 msgid "invalid starting year"
 msgstr "năm bắt đầu không hợp lệ"
 
-#: timezone/zic.c:1308
+#: timezone/zic.c:1365
 msgid "invalid ending year"
 msgstr "năm kết thúc không hợp lệ"
 
-#: timezone/zic.c:1312
+#: timezone/zic.c:1369
 msgid "starting year greater than ending year"
 msgstr "năm bắt đầu nằm sau nằm kết thúc"
 
-#: timezone/zic.c:1319
+#: timezone/zic.c:1376
 msgid "typed single year"
 msgstr "đã gõ năm riêng lẻ"
 
-#: timezone/zic.c:1354
+#: timezone/zic.c:1411
 msgid "invalid weekday name"
 msgstr "tên ngày tuần không hợp lệ"
 
-#: timezone/zic.c:1523
+#: timezone/zic.c:1530
+msgid "pre-2014 clients may mishandle more than 1200 transition times"
+msgstr "các máy khách trước-2014 có lẽ đã quên không xử lý nhiều hơn 1200 lần quá độ"
+
+#: timezone/zic.c:1585
 #, c-format
 msgid "%s: Can't remove %s: %s\n"
 msgstr "%s: Không thể gỡ bỏ %s: %s\n"
 
-#: timezone/zic.c:2105
+#: timezone/zic.c:2143
 msgid "no POSIX environment variable for zone"
 msgstr "chưa đặt biến môi trường POSIX cho múi giờ"
 
-#: timezone/zic.c:2111
+#: timezone/zic.c:2149
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr "%s: các máy khách trước-%d có lẽ đã giải quyết dấu vết thời gian xa không đúng"
 
-#: timezone/zic.c:2292
+#: timezone/zic.c:2329
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "không thể quyết định từ viết tắt múi giờ cần dùng đúng sau thời gian đích đến"
 
-#: timezone/zic.c:2338 timezone/zic.c:2416
+#: timezone/zic.c:2375 timezone/zic.c:2450
 msgid "too many local time types"
 msgstr "quá nhiều kiểu thời gian địa phương"
 
-#: timezone/zic.c:2374
-msgid "too many transitions?!"
-msgstr "quá nhiều lần chuyển tiếp?!"
-
-#: timezone/zic.c:2389
+#: timezone/zic.c:2423
 msgid "internal error - addtype called with bad isdst"
 msgstr "gặp lỗi nội bộ — addtype (thêm loại) được gọi với isdst sai"
 
-#: timezone/zic.c:2393
+#: timezone/zic.c:2427
 msgid "internal error - addtype called with bad ttisstd"
 msgstr "gặp lỗi nội bộ — addtype (thêm loại) được gọi với ttisstd sai"
 
-#: timezone/zic.c:2397
+#: timezone/zic.c:2431
 msgid "internal error - addtype called with bad ttisgmt"
 msgstr "gặp lỗi nội bộ — addtype (thêm loại) được gọi với ttisgmt sai"
 
-#: timezone/zic.c:2420
+#: timezone/zic.c:2454
 msgid "UT offset out of range"
 msgstr "khoảng bù UT ở ngoài phạm vi"
 
-#: timezone/zic.c:2444
+#: timezone/zic.c:2478
 msgid "too many leap seconds"
 msgstr "quá nhiều giây năm nhuận"
 
-#: timezone/zic.c:2450
+#: timezone/zic.c:2484
 msgid "repeated leap second moment"
 msgstr "lúc giây năm nhuận đã lặp lại"
 
-#: timezone/zic.c:2500
+#: timezone/zic.c:2534
 msgid "Wild result from command execution"
 msgstr "Kết quả rất lạ khi thực hiện câu lệnh"
 
-#: timezone/zic.c:2501
+#: timezone/zic.c:2535
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
 msgstr "%s: câu lệnh là “%s”, kết quả là %d\n"
 
-#: timezone/zic.c:2592
+#: timezone/zic.c:2626
 msgid "Odd number of quotation marks"
 msgstr "Số lẻ các dấu trích dẫn"
 
-#: timezone/zic.c:2669
+#: timezone/zic.c:2703
 msgid "use of 2/29 in non leap-year"
 msgstr "dùng 2/29 trong năm không phải năm nhuận"
 
-#: timezone/zic.c:2704
+#: timezone/zic.c:2738
 msgid "rule goes past start/end of month--will not work with pre-2004 versions of zic"
 msgstr "quy tắc vượt quá kết thúc của tháng nên không hoạt động được với phiên bản zlc được phát hành trước năm 2004"
 
-#: timezone/zic.c:2735
+#: timezone/zic.c:2769
 msgid "time zone abbreviation lacks alphabetic at start"
 msgstr "từ viết tắt múi giờ thiếu chữ cái ở đầu"
 
-#: timezone/zic.c:2737
+#: timezone/zic.c:2771
 msgid "time zone abbreviation has fewer than 3 alphabetics"
 msgstr "từ viết tắt múi giờ phải ít hơn 3 chữ cái"
 
-#: timezone/zic.c:2739
+#: timezone/zic.c:2773
 msgid "time zone abbreviation has too many alphabetics"
 msgstr "từ viết tắt múi giờ chứa quá nhiều chữ cái"
 
-#: timezone/zic.c:2749
+#: timezone/zic.c:2783
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "từ viết tắt múi giờ không tùy theo tiêu chuẩn POSIX"
 
-#: timezone/zic.c:2755
+#: timezone/zic.c:2789
 msgid "too many, or too long, time zone abbreviations"
 msgstr "quá nhiều hoặc quá dài các từ viết tắt múi giờ"
 
-#: timezone/zic.c:2795
+#: timezone/zic.c:2829
 #, c-format
 msgid "%s: Can't create directory %s: %s\n"
 msgstr "%s: Không thể tạo thư mục %s: %s\n"
+
+#~ msgid "compile-time support for database policy missing"
+#~ msgstr "thiếu khả năng hỗ trợ lúc biên dịch chính sách cơ sở dữ liệu"
+
+#~ msgid "24:00 not handled by pre-1998 versions of zic"
+#~ msgstr "24:00 không được xử lý bởi phiên bản zic trước năm 1998"
+
+#~ msgid "time before zero"
+#~ msgstr "thời gian nằm trước số không"
+
+#~ msgid "too many transitions?!"
+#~ msgstr "quá nhiều lần chuyển tiếp?!"
 
 #~ msgid "%s: use of -v on system with floating time_t other than float or double\n"
 #~ msgstr "%s: dùng “-v” trên hệ thống có time_t chấm động khác với số thực dấu chấm động hoặc số chính đôi\n"
