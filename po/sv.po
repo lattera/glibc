@@ -4,9 +4,9 @@
 # Jan Djärv <jan.h.d@swipnet.se>, 1996, 1998, 2001, 2002, 2003, 2006, 2007, 2008, 2009, 2011, 2012, 2013, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.18.90.20140105\n"
-"POT-Creation-Date: 2014-01-05 17:40+1000\n"
-"PO-Revision-Date: 2014-05-06 18:15+0200\n"
+"Project-Id-Version: libc 2.19.90\n"
+"POT-Creation-Date: 2014-08-09 17:06+1000\n"
+"PO-Revision-Date: 2014-08-25 07:01+0200\n"
 "Last-Translator: Jan Djärv <jan.h.d@swipnet.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -31,7 +31,7 @@ msgstr "Skräp i ARGP_HELP_FMT: %s"
 
 #: argp/argp-help.c:1214
 msgid "Mandatory or optional arguments to long options are also mandatory or optional for any corresponding short options."
-msgstr "Obligatoriska respektive valfria argument för långa flaggor är obligatoriska repektive valfria även för korta."
+msgstr "Obligatoriska respektive valfria argument för långa flaggor är obligatoriska respektive valfria även för korta."
 
 #: argp/argp-help.c:1600
 msgid "Usage:"
@@ -66,7 +66,7 @@ msgid "Give a short usage message"
 msgstr "Ge ett kort hjälpmeddelande"
 
 #: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
-#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:115
+#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:105
 #: nss/makedb.c:120
 msgid "NAME"
 msgstr "NAMN"
@@ -143,7 +143,7 @@ msgstr ""
 "[UTFIL [INFIL]...]"
 
 #: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:307
-#: elf/pldd.c:219 elf/sln.c:85 elf/sprof.c:372 iconv/iconv_prog.c:408
+#: elf/pldd.c:244 elf/sln.c:85 elf/sprof.c:372 iconv/iconv_prog.c:408
 #: iconv/iconvconfig.c:379 locale/programs/locale.c:277
 #: locale/programs/localedef.c:376 login/programs/pt_chown.c:88
 #: malloc/memusagestat.c:563 nss/getent.c:969 nss/makedb.c:369
@@ -159,11 +159,11 @@ msgstr ""
 "Rapportera fel eller synpunkter på översättningen till <tp-sv@listor.tp-sv.se>.\n"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:323 elf/ldd.bash.in:38 elf/pldd.c:235 elf/sotruss.ksh:75
+#: elf/ldconfig.c:323 elf/ldd.bash.in:38 elf/pldd.c:260 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:425 iconv/iconvconfig.c:396
 #: locale/programs/locale.c:294 locale/programs/localedef.c:402
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:71
-#: malloc/memusagestat.c:581 nscd/nscd.c:485 nss/getent.c:86 nss/makedb.c:385
+#: malloc/memusagestat.c:581 nscd/nscd.c:494 nss/getent.c:86 nss/makedb.c:385
 #: posix/getconf.c:1103 sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
@@ -177,10 +177,10 @@ msgstr ""
 "ÄNDAMÅL.\n"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:328 elf/pldd.c:240 elf/sprof.c:395 iconv/iconv_prog.c:430
+#: elf/ldconfig.c:328 elf/pldd.c:265 elf/sprof.c:395 iconv/iconv_prog.c:430
 #: iconv/iconvconfig.c:401 locale/programs/locale.c:299
 #: locale/programs/localedef.c:407 malloc/memusage.sh:75
-#: malloc/memusagestat.c:586 nscd/nscd.c:490 nss/getent.c:91 nss/makedb.c:390
+#: malloc/memusagestat.c:586 nscd/nscd.c:499 nss/getent.c:91 nss/makedb.c:390
 #: posix/getconf.c:1108
 #, c-format
 msgid "Written by %s.\n"
@@ -301,8 +301,8 @@ msgstr "ogiltig pekarstorlek"
 msgid "Usage: xtrace [OPTION]... PROGRAM [PROGRAMOPTION]...\\n"
 msgstr "Användning: xtrace [FLAGGA]... PROGRAM [PROGRAMFLAGGA}...\\n"
 
-#: debug/xtrace.sh:32 elf/sotruss.ksh:56 elf/sotruss.ksh:67
-#: elf/sotruss.ksh:135 malloc/memusage.sh:26
+#: debug/xtrace.sh:32 elf/sotruss.sh:56 elf/sotruss.sh:67 elf/sotruss.sh:135
+#: malloc/memusage.sh:26
 msgid "Try \\`%s --help' or \\`%s --usage' for more information.\\n"
 msgstr "Försök med \\\"%s --help\\\" eller \\\"%s --usage\\\" för mer information\\n"
 
@@ -335,7 +335,7 @@ msgstr ""
 "Obligatoriska argument för långa flaggor är obligatoriska  även för\n"
 "motsvarande korta.\n"
 
-#: debug/xtrace.sh:57 elf/ldd.bash.in:55 elf/sotruss.ksh:49
+#: debug/xtrace.sh:57 elf/ldd.bash.in:55 elf/sotruss.sh:49
 #: malloc/memusage.sh:64
 msgid "For bug reporting instructions, please see:\\\\n%s.\\\\n"
 msgstr ""
@@ -433,11 +433,11 @@ msgstr "Misslyckades med att byta åtkomsträttigheter för %s till %#o"
 msgid "Renaming of %s to %s failed"
 msgstr "Namnbyte på %s till %s misslyckades"
 
-#: elf/dl-close.c:383 elf/dl-open.c:470
+#: elf/dl-close.c:385 elf/dl-open.c:470
 msgid "cannot create scope list"
 msgstr "kan inte skapa omfångslista"
 
-#: elf/dl-close.c:776
+#: elf/dl-close.c:770
 msgid "shared object not open"
 msgstr "delat objekt är inte öppnat"
 
@@ -453,18 +453,18 @@ msgstr "substitution av \"dynamic string token\" är tom"
 #, c-format
 msgid "cannot load auxiliary `%s' because of empty dynamic string token substitution\n"
 msgstr ""
-"kan ite ladda extra \"%s\" på grund av att substitution av\n"
+"kan inte ladda extra \"%s\" på grund av att substitution av\n"
 "\"dynamic string token\" är tom\n"
 
-#: elf/dl-deps.c:479
+#: elf/dl-deps.c:467
 msgid "cannot allocate dependency list"
 msgstr "kan inte allokera beroendelista"
 
-#: elf/dl-deps.c:516 elf/dl-deps.c:576
+#: elf/dl-deps.c:504 elf/dl-deps.c:564
 msgid "cannot allocate symbol search list"
 msgstr "kan inte allokera söklista för symboler"
 
-#: elf/dl-deps.c:556
+#: elf/dl-deps.c:544
 msgid "Filters not supported with LD_TRACE_PRELINKING"
 msgstr "Filter stöds ej med LD_TRACE_PRELINKING"
 
@@ -476,15 +476,15 @@ msgstr "FEL I DYNAMISK LÄNKARE!!!"
 msgid "error while loading shared libraries"
 msgstr "fel när delade bibliotek laddades"
 
-#: elf/dl-fptr.c:87 ports/sysdeps/hppa/dl-fptr.c:93
+#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:94
 msgid "cannot map pages for fdesc table"
 msgstr "kan inte minnesmappa sidor för fdesc-tabell"
 
-#: elf/dl-fptr.c:191 ports/sysdeps/hppa/dl-fptr.c:206
+#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:207
 msgid "cannot map pages for fptr table"
 msgstr "kan inte minnesmappa sidor för fptr-tabell"
 
-#: elf/dl-fptr.c:220 ports/sysdeps/hppa/dl-fptr.c:235
+#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:236
 msgid "internal error: symidx out of range of fptr table"
 msgstr "internt fel: symidx är utanför intervallet för fptr-tabellen"
 
@@ -492,163 +492,163 @@ msgstr "internt fel: symidx är utanför intervallet för fptr-tabellen"
 msgid "cannot create capability list"
 msgstr "kan inte skapa egenskapslista"
 
-#: elf/dl-load.c:465
+#: elf/dl-load.c:423
 msgid "cannot allocate name record"
 msgstr "kan inte allokera namnpost"
 
-#: elf/dl-load.c:550 elf/dl-load.c:666 elf/dl-load.c:749 elf/dl-load.c:868
+#: elf/dl-load.c:508 elf/dl-load.c:624 elf/dl-load.c:707 elf/dl-load.c:826
 msgid "cannot create cache for search path"
 msgstr "kan inte skapa cache för sökväg"
 
-#: elf/dl-load.c:641
+#: elf/dl-load.c:599
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "kan inte skapa kopia av RUNPATH/RPATH"
 
-#: elf/dl-load.c:735
+#: elf/dl-load.c:693
 msgid "cannot create search path array"
 msgstr "kan inte skapa sökvägslista"
 
-#: elf/dl-load.c:940
+#: elf/dl-load.c:898
 msgid "cannot stat shared object"
 msgstr "kan inte ta status på delat objekt"
 
-#: elf/dl-load.c:1018
+#: elf/dl-load.c:976
 msgid "cannot open zero fill device"
 msgstr "kan inte öppna nollfyllnadsenhet"
 
-#: elf/dl-load.c:1065 elf/dl-load.c:2348
+#: elf/dl-load.c:1023 elf/dl-load.c:2173
 msgid "cannot create shared object descriptor"
 msgstr "kan inte skapa delad objektdeskriptor"
 
-#: elf/dl-load.c:1084 elf/dl-load.c:1761 elf/dl-load.c:1864
+#: elf/dl-load.c:1042 elf/dl-load.c:1583 elf/dl-load.c:1695
 msgid "cannot read file data"
 msgstr "kan inte läsa fildata"
 
-#: elf/dl-load.c:1130
+#: elf/dl-load.c:1082
 msgid "ELF load command alignment not page-aligned"
 msgstr "ELF-laddkommando är inte på sidgräns"
 
-#: elf/dl-load.c:1137
+#: elf/dl-load.c:1089
 msgid "ELF load command address/offset not properly aligned"
-msgstr "Address/position för ELF-laddkommando är inte på rätt bytegräns"
+msgstr "Adress/position för ELF-laddkommando är inte på rätt bytegräns"
 
-#: elf/dl-load.c:1222
+#: elf/dl-load.c:1173
 msgid "cannot allocate TLS data structures for initial thread"
 msgstr "kan inte skapa TLS-datastrukturer för första tråden"
 
-#: elf/dl-load.c:1245
+#: elf/dl-load.c:1196
 msgid "cannot handle TLS data"
 msgstr "kan inte hantera TLS-data"
 
-#: elf/dl-load.c:1264
+#: elf/dl-load.c:1215
 msgid "object file has no loadable segments"
 msgstr "objektfilen har inga laddbara segment"
 
-#: elf/dl-load.c:1300
-msgid "failed to map segment from shared object"
-msgstr "misslyckades att mappa segment från delat objekt"
-
-#: elf/dl-load.c:1326
+#: elf/dl-load.c:1224 elf/dl-load.c:1675
 msgid "cannot dynamically load executable"
 msgstr "kan inte ladda exekverbar fil dynamiskt"
 
-#: elf/dl-load.c:1389 elf/dl-load.c:1498
-msgid "cannot change memory protections"
-msgstr "kan inte ändra minnesskydd"
-
-#: elf/dl-load.c:1408
-msgid "cannot map zero-fill pages"
-msgstr "kan inte mappa nollfyllda sidor"
-
-#: elf/dl-load.c:1422
+#: elf/dl-load.c:1245
 msgid "object file has no dynamic section"
 msgstr "objektfilen har ingen dynamisk sektion"
 
-#: elf/dl-load.c:1445
+#: elf/dl-load.c:1268
 msgid "shared object cannot be dlopen()ed"
 msgstr "delat objekt kan inte göras dlopen() på"
 
-#: elf/dl-load.c:1458
+#: elf/dl-load.c:1281
 msgid "cannot allocate memory for program header"
 msgstr "kan inte allokera minne för programhuvud"
 
-#: elf/dl-load.c:1475 elf/dl-open.c:195
+#: elf/dl-load.c:1297 elf/dl-open.c:195
 msgid "invalid caller"
 msgstr "ogiltig anropare"
 
-#: elf/dl-load.c:1518
+#: elf/dl-load.c:1320 elf/dl-load.h:130
+msgid "cannot change memory protections"
+msgstr "kan inte ändra minnesskydd"
+
+#: elf/dl-load.c:1340
 msgid "cannot enable executable stack as shared object requires"
 msgstr "kan inte skapa exekverbar stack som delat objekt kräver"
 
-#: elf/dl-load.c:1531
+#: elf/dl-load.c:1353
 msgid "cannot close file descriptor"
 msgstr "kan inte stänga filidentifierare"
 
-#: elf/dl-load.c:1761
+#: elf/dl-load.c:1583
 msgid "file too short"
 msgstr "fil för kort"
 
-#: elf/dl-load.c:1797
+#: elf/dl-load.c:1618
 msgid "invalid ELF header"
 msgstr "ogiltigt ELF-huvud"
 
-#: elf/dl-load.c:1809
+#: elf/dl-load.c:1630
 msgid "ELF file data encoding not big-endian"
 msgstr "Kodning för ELF-fildata är inte rak byteordning"
 
-#: elf/dl-load.c:1811
+#: elf/dl-load.c:1632
 msgid "ELF file data encoding not little-endian"
 msgstr "Kodning för ELF-fildata är inte omvänd byteordning"
 
-#: elf/dl-load.c:1815
+#: elf/dl-load.c:1636
 msgid "ELF file version ident does not match current one"
 msgstr "ELF-filens versionsidentitet stämmer inte med nuvarande"
 
-#: elf/dl-load.c:1819
+#: elf/dl-load.c:1640
 msgid "ELF file OS ABI invalid"
 msgstr "ELF-fil har felaktig version på OS-ABI"
 
-#: elf/dl-load.c:1822
+#: elf/dl-load.c:1643
 msgid "ELF file ABI version invalid"
 msgstr "ELF-fil har felaktig version på ABI"
 
-#: elf/dl-load.c:1825
+#: elf/dl-load.c:1646
 msgid "nonzero padding in e_ident"
-msgstr "ufyllnad med annat än nolltecken i e_ident"
+msgstr "utfyllnad med annat än nolltecken i e_ident"
 
-#: elf/dl-load.c:1828
+#: elf/dl-load.c:1649
 msgid "internal error"
 msgstr "internt fel"
 
-#: elf/dl-load.c:1835
+#: elf/dl-load.c:1656
 msgid "ELF file version does not match current one"
 msgstr "ELF-filens version stämmer inte med nuvarande"
 
-#: elf/dl-load.c:1843
+#: elf/dl-load.c:1664
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "bara ET_DYN och ET_EXEC kan laddas"
 
-#: elf/dl-load.c:1849
+#: elf/dl-load.c:1680
 msgid "ELF file's phentsize not the expected size"
 msgstr "ELF-filens värde på \"phentsize\" är inte den förväntade"
 
-#: elf/dl-load.c:2367
+#: elf/dl-load.c:2192
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "fel ELF-klass: ELFCLASS64"
 
-#: elf/dl-load.c:2368
+#: elf/dl-load.c:2193
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "fel ELF-klass: ELFCLASS32"
 
-#: elf/dl-load.c:2371
+#: elf/dl-load.c:2196
 msgid "cannot open shared object file"
 msgstr "kan inte öppna delad objektfil"
 
-#: elf/dl-lookup.c:753 ports/sysdeps/mips/dl-lookup.c:770
+#: elf/dl-load.h:128
+msgid "failed to map segment from shared object"
+msgstr "misslyckades att mappa segment från delat objekt"
+
+#: elf/dl-load.h:132
+msgid "cannot map zero-fill pages"
+msgstr "kan inte mappa nollfyllda sidor"
+
+#: elf/dl-lookup.c:788
 msgid "relocation error"
 msgstr "fel vid relokering"
 
-#: elf/dl-lookup.c:780 ports/sysdeps/mips/dl-lookup.c:797
+#: elf/dl-lookup.c:815
 msgid "symbol lookup error"
 msgstr "fel vid symboluppslagning"
 
@@ -664,41 +664,41 @@ msgstr "Generationsräknare för TLS slog runt!  Var snäll och rapportera detta
 msgid "cannot load any more object with static TLS"
 msgstr "kan inte ladda fler objekt med statiskt TLS"
 
-#: elf/dl-open.c:602
+#: elf/dl-open.c:599
 msgid "invalid mode for dlopen()"
 msgstr "ogiltiga flaggor för dlopen()"
 
-#: elf/dl-open.c:619
+#: elf/dl-open.c:616
 msgid "no more namespaces available for dlmopen()"
 msgstr "inga fler namnrymder tillgängliga för dlmopen()"
 
-#: elf/dl-open.c:637
+#: elf/dl-open.c:634
 msgid "invalid target namespace in dlmopen()"
 msgstr "ogiltig målnamnrymd för dlmopen()"
 
-#: elf/dl-reloc.c:158
+#: elf/dl-reloc.c:120
 msgid "cannot allocate memory in static TLS block"
 msgstr "kan inte allokera minne i statiskt TLS-block"
 
-#: elf/dl-reloc.c:250
+#: elf/dl-reloc.c:212
 msgid "cannot make segment writable for relocation"
 msgstr "kan inte göra segment skrivbart för relokering"
 
-#: elf/dl-reloc.c:313
+#: elf/dl-reloc.c:275
 #, c-format
 msgid "%s: no PLTREL found in object %s\n"
 msgstr "%s: hittade inga PLTREL i objekt %s\n"
 
-#: elf/dl-reloc.c:324
+#: elf/dl-reloc.c:286
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: slut på minne för att lagra relokeringsresultat för %s\n"
 
-#: elf/dl-reloc.c:340
+#: elf/dl-reloc.c:302
 msgid "cannot restore segment prot after reloc"
 msgstr "kan inte återställa segmenträttigheter efter relokering"
 
-#: elf/dl-reloc.c:369
+#: elf/dl-reloc.c:331
 msgid "cannot apply additional memory protection after relocation"
 msgstr "kan inte applicera extra minnesskydd efter relokering"
 
@@ -706,7 +706,7 @@ msgstr "kan inte applicera extra minnesskydd efter relokering"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT används i kod som inte är dynamiskt laddad"
 
-#: elf/dl-tls.c:923
+#: elf/dl-tls.c:903
 msgid "cannot create TLS data structures"
 msgstr "kan inte skapa datastrukturer för TLS"
 
@@ -910,8 +910,8 @@ msgstr "%s:%u: duplicerad hwcap %lu %s"
 msgid "need absolute file name for configuration file when using -r"
 msgstr "behöver absolut filnamn för konfigurationsfil när -r används"
 
-#: elf/ldconfig.c:1191 locale/programs/xmalloc.c:64 malloc/obstack.c:432
-#: malloc/obstack.c:434 posix/getconf.c:1076 posix/getconf.c:1296
+#: elf/ldconfig.c:1191 locale/programs/xmalloc.c:64 malloc/obstack.c:416
+#: malloc/obstack.c:418 posix/getconf.c:1076 posix/getconf.c:1296
 #, c-format
 msgid "memory exhausted"
 msgstr "minne slut"
@@ -977,7 +977,7 @@ msgstr "filargument saknas"
 #. TRANS No such file or directory.  This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
-#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.c:36
+#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.c:37
 msgid "No such file or directory"
 msgstr "Filen eller katalogen finns inte"
 
@@ -1036,55 +1036,55 @@ msgstr "kan inte läsa länkmappning"
 msgid "cannot read object name"
 msgstr "kan inte läsa objektnamn"
 
-#: elf/pldd.c:62
+#: elf/pldd.c:63
 msgid "List dynamic shared objects loaded into process."
 msgstr "Visa dynamiska bibliotek som laddats i processen."
 
-#: elf/pldd.c:66
+#: elf/pldd.c:67
 msgid "PID"
 msgstr "PID"
 
-#: elf/pldd.c:97
+#: elf/pldd.c:99
 #, c-format
 msgid "Exactly one parameter with process ID required.\n"
 msgstr "Exakt en parameter med process-ID krävs.\n"
 
-#: elf/pldd.c:109
+#: elf/pldd.c:111
 #, c-format
 msgid "invalid process ID '%s'"
 msgstr "ogiltig process-ID \"%s\""
 
-#: elf/pldd.c:117
+#: elf/pldd.c:119
 #, c-format
 msgid "cannot open %s"
 msgstr "kan inte öppna %s"
 
-#: elf/pldd.c:142
+#: elf/pldd.c:144
 #, c-format
 msgid "cannot open %s/task"
 msgstr "kan inte öppna %s/task"
 
-#: elf/pldd.c:145
+#: elf/pldd.c:147
 #, c-format
 msgid "cannot prepare reading %s/task"
 msgstr "kan inte förbereda läsning av %s/task"
 
-#: elf/pldd.c:158
+#: elf/pldd.c:160
 #, c-format
 msgid "invalid thread ID '%s'"
 msgstr "ogiltig tråd-ID \"%s\""
 
-#: elf/pldd.c:169
+#: elf/pldd.c:171
 #, c-format
 msgid "cannot attach to process %lu"
 msgstr "kan inte binda till process %lu"
 
-#: elf/pldd.c:261
+#: elf/pldd.c:286
 #, c-format
 msgid "cannot get information about process %lu"
 msgstr "kan inte hämta information om process %lu"
 
-#: elf/pldd.c:274
+#: elf/pldd.c:299
 #, c-format
 msgid "process %lu is no ELF program"
 msgstr "process %lu är inte ett ELF-program"
@@ -1184,7 +1184,7 @@ msgstr "%s: ogiltigt mål: %s\n"
 msgid "Invalid link from \"%s\" to \"%s\": %s\n"
 msgstr "Ogiltig länk från \"%s\" till \"%s\": %s\n"
 
-#: elf/sotruss.ksh:32
+#: elf/sotruss.sh:32
 #, sh-format
 msgid ""
 "Usage: sotruss [OPTION...] [--] EXECUTABLE [EXECUTABLE-OPTION...]\n"
@@ -1202,7 +1202,7 @@ msgid ""
 msgstr ""
 "Användning: sotruss [FLAGGA...] [--] PROGRAM [PROGRAMFLAGGA...]\n"
 "  -F, --from FRÅNLISTA    Spåra anrop från objekt i FRÅNLISTA\n"
-"  -T, --to TILLLISTA      Spåra anrop till objekt i TILLLISTA\n"
+"  -T, --to TILLISTA      Spåra anrop till objekt i TILLISTA\n"
 "\n"
 "  -e, --exit              Visa även avslut från fuktionsanropen\n"
 "  -f, --follow            Spåra barnprocesser\n"
@@ -1213,35 +1213,35 @@ msgstr ""
 "      --usage             Visa en kort hjälptext\n"
 "      --version           Visa versionsinformation"
 
-#: elf/sotruss.ksh:46
+#: elf/sotruss.sh:46
 msgid "Mandatory arguments to long options are also mandatory for any corresponding\\nshort options.\\n"
-msgstr "Obligatoriska respektive valfria argument för långa flaggor är obligatoriska repektive\\nvalfria även för korta.\\n"
+msgstr "Obligatoriska respektive valfria argument för långa flaggor är obligatoriska respektive\\nvalfria även för korta.\\n"
 
-#: elf/sotruss.ksh:55
+#: elf/sotruss.sh:55
 msgid "%s: option requires an argument -- '%s'\\n"
 msgstr "%s: flaggan kräver ett argument -- \\\"%s\\\"\\n"
 
-#: elf/sotruss.ksh:61
+#: elf/sotruss.sh:61
 msgid "%s: option is ambiguous; possibilities:"
 msgstr "%s: flaggan är tvetydig; alternativ:"
 
-#: elf/sotruss.ksh:79
+#: elf/sotruss.sh:79
 msgid "Written by %s.\\n"
 msgstr "Skrivet av %s.\\n"
 
-#: elf/sotruss.ksh:86
+#: elf/sotruss.sh:86
 msgid ""
 "Usage: %s [-ef] [-F FROMLIST] [-o FILENAME] [-T TOLIST] [--exit]\n"
 "\t    [--follow] [--from FROMLIST] [--output FILENAME] [--to TOLIST]\n"
 "\t    [--help] [--usage] [--version] [--]\n"
 "\t    EXECUTABLE [EXECUTABLE-OPTION...]\\n"
 msgstr ""
-"Användning: %s [-ef] [-F FRÅNLISTA] [-o FILNAMN] [-T TILLLISTA] [--exit]\n"
-"\t    [--follow] [--from FRÅNLISTA] [--output FILNAMN] [--to TILLLISTA]\n"
+"Användning: %s [-ef] [-F FRÅNLISTA] [-o FILNAMN] [-T TILLISTA] [--exit]\n"
+"\t    [--follow] [--from FRÅNLISTA] [--output FILNAMN] [--to TILLISTA]\n"
 "\t    [--help] [--usage] [--version] [--]\n"
 "\t    PROGRAM [PROGRAMFLAGGA...]\\n"
 
-#: elf/sotruss.ksh:134
+#: elf/sotruss.sh:134
 msgid "%s: unrecognized option '%c%s'\\n"
 msgstr "%s: okänd flagga \\\"%c%s\\\"\\n"
 
@@ -1282,7 +1282,7 @@ msgstr "kan inte skapa interna deskriptorer"
 #: elf/sprof.c:554
 #, c-format
 msgid "Reopening shared object `%s' failed"
-msgstr "Öppna delat object \"%s\" igen misslyckades"
+msgstr "Öppna delat objekt \"%s\" igen misslyckades"
 
 #: elf/sprof.c:561 elf/sprof.c:656
 #, c-format
@@ -1924,7 +1924,7 @@ msgstr "%s: syntaxfel"
 #: locale/programs/ld-collate.c:426
 #, c-format
 msgid "`%.*s' already defined in charmap"
-msgstr "\"%.*s\" redan definerad i teckenuppsättning"
+msgstr "\"%.*s\" redan definierad i teckenuppsättning"
 
 #: locale/programs/ld-collate.c:435
 #, c-format
@@ -2398,7 +2398,7 @@ msgstr "%s: tabell för teckenstorlek: %lu byte\n"
 #: locale/programs/ld-identification.c:170
 #, c-format
 msgid "%s: no identification for category `%s'"
-msgstr "%s: ingen idenitifikation för kategori \"%s\""
+msgstr "%s: ingen identifikation för kategori \"%s\""
 
 #: locale/programs/ld-identification.c:351
 #, c-format
@@ -2664,7 +2664,7 @@ msgstr "Symboliska teckennamn definierade i FILE"
 
 #: locale/programs/localedef.c:125
 msgid "Source definitions are found in FILE"
-msgstr "Källdefinitioner finns i FILE"
+msgstr "Källdefinitioner finns i FIL"
 
 #: locale/programs/localedef.c:127
 msgid "FILE contains mapping from symbolic names to UCS4 values"
@@ -3149,7 +3149,7 @@ msgstr "Generera grafik från data från minnesprofilering"
 msgid "DATAFILE [OUTFILE]"
 msgstr "DATAFIL [UTFIL]"
 
-#: misc/error.c:117
+#: misc/error.c:192
 msgid "Unknown system error"
 msgstr "Okänt systemfel"
 
@@ -3158,7 +3158,7 @@ msgid "unable to free arguments"
 msgstr "kan inte avallokera argument"
 
 #: nis/nis_error.h:1 nis/ypclnt.c:831 nis/ypclnt.c:919 posix/regcomp.c:133
-#: sysdeps/gnu/errlist.c:20
+#: sysdeps/gnu/errlist.c:21
 msgid "Success"
 msgstr "Lyckat"
 
@@ -3199,7 +3199,7 @@ msgid "First/next chain broken"
 msgstr "Första/Nästa-kedja bruten"
 
 #. TRANS Permission denied; the file permissions do not allow the attempted operation.
-#: nis/nis_error.h:11 nis/ypclnt.c:876 sysdeps/gnu/errlist.c:157
+#: nis/nis_error.h:11 nis/ypclnt.c:876 sysdeps/gnu/errlist.c:158
 msgid "Permission denied"
 msgstr "Åtkomst nekas"
 
@@ -3257,7 +3257,7 @@ msgstr "Databas för tabell existerar inte"
 
 #: nis/nis_error.h:25
 msgid "Entry/table type mismatch"
-msgstr "Post/tabell-typer är inkompatibila"
+msgstr "Post/tabell-typer är inkompatibla"
 
 #: nis/nis_error.h:26
 msgid "Link points to illegal name"
@@ -3349,7 +3349,7 @@ msgstr "Kan inte skapa process hos server"
 
 #: nis/nis_error.h:48
 msgid "Master server busy, full dump rescheduled."
-msgstr "Huvudserver är upptagen, full dump omskedulerad."
+msgstr "Huvudserver är upptagen, full dump åter schemalagd"
 
 #: nis/nis_local_names.c:121
 #, c-format
@@ -3614,7 +3614,7 @@ msgstr "Objekt nr %d:\n"
 #: nis/nis_print_group_entry.c:116
 #, c-format
 msgid "Group entry for \"%s.%s\" group:\n"
-msgstr "Grupppost för \"%s.%s\" grupp:\n"
+msgstr "Gruppost för \"%s.%s\" grupp:\n"
 
 #: nis/nis_print_group_entry.c:124
 msgid "    Explicit members:\n"
@@ -3790,12 +3790,12 @@ msgstr "yp_update: kan inte omvandla värd till nätnamn\n"
 msgid "yp_update: cannot get server address\n"
 msgstr "yp_update: kan inte hämta serveradress\n"
 
-#: nscd/aicache.c:83 nscd/hstcache.c:494
+#: nscd/aicache.c:83 nscd/hstcache.c:485
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
 msgstr "Hittar inte \"%s\" i värdcache!"
 
-#: nscd/aicache.c:85 nscd/hstcache.c:496
+#: nscd/aicache.c:85 nscd/hstcache.c:487
 #, c-format
 msgid "Reloading \"%s\" in hosts cache!"
 msgstr "Omladdar \"%s\" i värdcache!"
@@ -3809,7 +3809,7 @@ msgstr "lägg till ny post \"%s\" av typen %s för %s till cache%s"
 msgid " (first)"
 msgstr " (första)"
 
-#: nscd/cache.c:285 nscd/connections.c:1019
+#: nscd/cache.c:285 nscd/connections.c:999
 #, c-format
 msgid "cannot stat() file `%s': %s"
 msgstr "kan inte ta status på fil \"%s\": %s"
@@ -3824,242 +3824,239 @@ msgstr "beskär %s cache; tid %ld"
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
 msgstr "överväger %s-post \"%s\", tidsgräns %<PRIu64>"
 
-#: nscd/connections.c:571
+#: nscd/connections.c:552
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
 msgstr "ogiltig persistent databasfil \"%s\": %s"
 
-#: nscd/connections.c:579
+#: nscd/connections.c:560
 msgid "uninitialized header"
 msgstr "oinitierat huvud"
 
-#: nscd/connections.c:584
+#: nscd/connections.c:565
 msgid "header size does not match"
 msgstr "huvudstorlek stämmer inte"
 
-#: nscd/connections.c:594
+#: nscd/connections.c:575
 msgid "file size does not match"
 msgstr "filstorlek stämmer inte"
 
-#: nscd/connections.c:611
+#: nscd/connections.c:592
 msgid "verification failed"
 msgstr "verifikation misslyckades"
 
-#: nscd/connections.c:625
+#: nscd/connections.c:606
 #, c-format
 msgid "suggested size of table for database %s larger than the persistent database's table"
 msgstr "föreslagen storlek på tabellen för databas %s är större än den persistenta databasens tabell"
 
-#: nscd/connections.c:636 nscd/connections.c:721
+#: nscd/connections.c:617 nscd/connections.c:701
 #, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
 msgstr "kan inte skapa läsbar filidentifierare för \"%s\", ingen mmap"
 
-#: nscd/connections.c:652
+#: nscd/connections.c:633
 #, c-format
 msgid "cannot access '%s'"
 msgstr "kan inte komma åt \"%s\""
 
-#: nscd/connections.c:700
+#: nscd/connections.c:681
 #, c-format
 msgid "database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"
 msgstr "databas för %s korrupt eller använd av flera samtidigt; ta bort %s manuellt om det behövs och starta om"
 
-#: nscd/connections.c:707
+#: nscd/connections.c:687
 #, c-format
 msgid "cannot create %s; no persistent database used"
 msgstr "kan inte skapa %s; ingen persistent databas används"
 
-#: nscd/connections.c:710
+#: nscd/connections.c:690
 #, c-format
 msgid "cannot create %s; no sharing possible"
 msgstr "kan inte skapa %s; ingen delning möjlig"
 
-#: nscd/connections.c:781
+#: nscd/connections.c:761
 #, c-format
 msgid "cannot write to database file %s: %s"
 msgstr "kan inte skriva till databasfil %s: %s"
 
-#: nscd/connections.c:820
+#: nscd/connections.c:800
 #, c-format
 msgid "cannot set socket to close on exec: %s; disabling paranoia mode"
 msgstr "kan inte sätta uttag (socket) att stängas vid programstart: %s; kopplar ur paranoialäge"
 
-#: nscd/connections.c:869
+#: nscd/connections.c:849
 #, c-format
 msgid "cannot open socket: %s"
 msgstr "kan inte öppna uttag (socket): %s"
 
-#: nscd/connections.c:889 nscd/connections.c:953
+#: nscd/connections.c:869 nscd/connections.c:933
 #, c-format
 msgid "cannot change socket to nonblocking mode: %s"
 msgstr "kan inte ändra uttag (socket) till icke-blockerande: %s"
 
-#: nscd/connections.c:897 nscd/connections.c:963
+#: nscd/connections.c:877 nscd/connections.c:943
 #, c-format
 msgid "cannot set socket to close on exec: %s"
 msgstr "kan inte sätta uttag (socket) att stängas vid programstart: %s"
 
-#: nscd/connections.c:910
+#: nscd/connections.c:890
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr "kan inte få uttag (socket) att acceptera förbindelser: %s"
 
-#: nscd/connections.c:1003
+#: nscd/connections.c:983
 #, c-format
 msgid "register trace file %s for database %s"
 msgstr "registrera spårningsfil %s för databas %s"
 
-#: nscd/connections.c:1133
+#: nscd/connections.c:1113
 #, c-format
 msgid "provide access to FD %d, for %s"
 msgstr "ge åtkomst till FD %d, för %s"
 
-#: nscd/connections.c:1145
+#: nscd/connections.c:1125
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "kan inte hantera äldre förfrågansversion %d, nuvarande version är %d"
 
-#: nscd/connections.c:1167
+#: nscd/connections.c:1147
 #, c-format
 msgid "request from %ld not handled due to missing permission"
 msgstr "begäran från %ld inte hanterad för att rättigheter saknas"
 
-#: nscd/connections.c:1172
+#: nscd/connections.c:1152
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
 msgstr "begäran från \"%s\" [%ld] inte hanterad för att rättigheter saknas"
 
-#: nscd/connections.c:1177
+#: nscd/connections.c:1157
 msgid "request not handled due to missing permission"
 msgstr "begäran inte hanterad för att rättigheter saknas"
 
-#: nscd/connections.c:1215 nscd/connections.c:1268
+#: nscd/connections.c:1195 nscd/connections.c:1248
 #, c-format
 msgid "cannot write result: %s"
 msgstr "kan inte skriva resultat: %s"
 
-#: nscd/connections.c:1359
+#: nscd/connections.c:1339
 #, c-format
 msgid "error getting caller's id: %s"
 msgstr "kunde inte hämta anropandes identitet: %s"
 
-#: nscd/connections.c:1419
+#: nscd/connections.c:1399
 #, c-format
 msgid "cannot open /proc/self/cmdline: %s; disabling paranoia mode"
 msgstr "kan inte öppna /proc/slef/cmdline: %s, kopplar ur paranoialäge"
 
-#: nscd/connections.c:1433
+#: nscd/connections.c:1413
 #, c-format
 msgid "cannot read /proc/self/cmdline: %s; disabling paranoia mode"
 msgstr "kan inte läsa /proc/self/cmdline: %s, kopplar ur paranoialäge"
 
-#: nscd/connections.c:1473
+#: nscd/connections.c:1453
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
 msgstr "kan inte byta till föregående UID: %s; kopplar ur paranoialäge"
 
-#: nscd/connections.c:1483
+#: nscd/connections.c:1463
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
 msgstr "kan inte byta till föregående GID: %s; kopplar ur paranoialäge"
 
-#: nscd/connections.c:1496
+#: nscd/connections.c:1476
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
 msgstr "kan inte byta till föregående arbetskatalog: %s; kopplar ur paranoialäge"
 
-#: nscd/connections.c:1542
+#: nscd/connections.c:1522
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
 msgstr "återstart misslyckades: %s; kopplar ur paranoialäge"
 
-#: nscd/connections.c:1551
+#: nscd/connections.c:1531
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
-msgstr "kan inte byta aktuell katalog to \"/\": %s"
+msgstr "kan inte byta aktuell katalog till \"/\": %s"
 
-#: nscd/connections.c:1744
+#: nscd/connections.c:1724
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "fattas data vid läsning av begäran: %s"
 
-#: nscd/connections.c:1777
+#: nscd/connections.c:1757
 #, c-format
 msgid "key length in request too long: %d"
 msgstr "nyckellängd i begäran för lång: %d"
 
-#: nscd/connections.c:1790
+#: nscd/connections.c:1770
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "fattas data vid läsning av begäransnyckel: %s"
 
-#: nscd/connections.c:1800
+#: nscd/connections.c:1780
 #, c-format
 msgid "handle_request: request received (Version = %d) from PID %ld"
 msgstr "handle_request: begäran mottagen (Version = %d) från PID %ld"
 
-#: nscd/connections.c:1805
+#: nscd/connections.c:1785
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: begäran mottagen (Version = %d)"
 
-#: nscd/connections.c:2069 nscd/connections.c:2271
+#: nscd/connections.c:2049 nscd/connections.c:2251
 #, c-format
 msgid "disabled inotify after read error %d"
 msgstr "inaktiverade inotify efter läsfel %d"
 
-#: nscd/connections.c:2394
+#: nscd/connections.c:2374
 msgid "could not initialize conditional variable"
 msgstr "kan inte initiera villkorsvariabel"
 
-#: nscd/connections.c:2402
+#: nscd/connections.c:2382
 msgid "could not start clean-up thread; terminating"
 msgstr "kunde inte starta städtråd; avslutar"
 
-#: nscd/connections.c:2416
+#: nscd/connections.c:2396
 msgid "could not start any worker thread; terminating"
 msgstr "kunde inte starta någon arbetstråd; avslutar"
 
-#: nscd/connections.c:2467 nscd/connections.c:2468 nscd/connections.c:2485
-#: nscd/connections.c:2494 nscd/connections.c:2512 nscd/connections.c:2523
-#: nscd/connections.c:2534
+#: nscd/connections.c:2451 nscd/connections.c:2453 nscd/connections.c:2469
+#: nscd/connections.c:2479 nscd/connections.c:2497 nscd/connections.c:2508
+#: nscd/connections.c:2518
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "Misslyckades att köra nscd som användare \"%s\""
 
-#: nscd/connections.c:2486
-#, c-format
+#: nscd/connections.c:2471
 msgid "initial getgrouplist failed"
 msgstr "första getgrouplist misslyckades"
 
-#: nscd/connections.c:2495
-#, c-format
+#: nscd/connections.c:2480
 msgid "getgrouplist failed"
 msgstr "getgrouplist misslyckades"
 
-#: nscd/connections.c:2513
-#, c-format
+#: nscd/connections.c:2498
 msgid "setgroups failed"
 msgstr "setgroups misslyckades"
 
-#: nscd/grpcache.c:413 nscd/hstcache.c:441 nscd/initgrcache.c:418
-#: nscd/pwdcache.c:391 nscd/servicescache.c:346
+#: nscd/grpcache.c:405 nscd/hstcache.c:432 nscd/initgrcache.c:410
+#: nscd/pwdcache.c:383 nscd/servicescache.c:338
 #, c-format
 msgid "short write in %s: %s"
 msgstr "ofullständig skrivning i %s: %s"
 
-#: nscd/grpcache.c:458 nscd/initgrcache.c:77
+#: nscd/grpcache.c:450 nscd/initgrcache.c:77
 #, c-format
 msgid "Haven't found \"%s\" in group cache!"
 msgstr "Hittar inte \"%s\" i gruppcache!"
 
-#: nscd/grpcache.c:460 nscd/initgrcache.c:79
+#: nscd/grpcache.c:452 nscd/initgrcache.c:79
 #, c-format
 msgid "Reloading \"%s\" in group cache!"
 msgstr "Omladdar \"%s\" i gruppcache!"
 
-#: nscd/grpcache.c:539
+#: nscd/grpcache.c:531
 #, c-format
 msgid "Invalid numeric gid \"%s\"!"
 msgstr "Ogiltigt numeriskt gruppid (gid) \"%s\"!"
@@ -4074,134 +4071,138 @@ msgstr "frigorde %zu byte i %s cache"
 msgid "no more memory for database '%s'"
 msgstr "inget mer minne för databas \"%s\""
 
-#: nscd/netgroupcache.c:126
+#: nscd/netgroupcache.c:120
 #, c-format
 msgid "Haven't found \"%s\" in netgroup cache!"
 msgstr "Hittar inte \"%s\" i nätgruppscache!"
 
-#: nscd/netgroupcache.c:128
+#: nscd/netgroupcache.c:122
 #, c-format
 msgid "Reloading \"%s\" in netgroup cache!"
 msgstr "Omladdar \"%s\" i nätgruppscache!"
 
-#: nscd/netgroupcache.c:509
+#: nscd/netgroupcache.c:497
 #, c-format
 msgid "Haven't found \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "Hittar inte \"%s (%s,%s,%s)\" i nätgruppscache!"
 
-#: nscd/netgroupcache.c:512
+#: nscd/netgroupcache.c:500
 #, c-format
 msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "Omladdar \"%s (%s,%s,%s)\" i nätgruppscache!"
 
-#: nscd/nscd.c:116
+#: nscd/nscd.c:106
 msgid "Read configuration data from NAME"
 msgstr "Läs konfigurationsdata från NAMN"
 
-#: nscd/nscd.c:118
+#: nscd/nscd.c:108
 msgid "Do not fork and display messages on the current tty"
 msgstr "Skapa inte barnprocess, visa meddelanden på nuvarande tty"
 
-#: nscd/nscd.c:120
+#: nscd/nscd.c:110
 msgid "Do not fork, but otherwise behave like a daemon"
 msgstr "Skapa inte barnprocess, men i allt annat uppträd som en demon"
 
-#: nscd/nscd.c:121
+#: nscd/nscd.c:111
 msgid "NUMBER"
 msgstr "ANTAL"
 
-#: nscd/nscd.c:121
+#: nscd/nscd.c:111
 msgid "Start NUMBER threads"
 msgstr "Starta ANTAL trådar"
 
-#: nscd/nscd.c:122
+#: nscd/nscd.c:112
 msgid "Shut the server down"
 msgstr "Avsluta servern"
 
-#: nscd/nscd.c:123
+#: nscd/nscd.c:113
 msgid "Print current configuration statistics"
 msgstr "Skriv ut nuvarande konfigurationsstatistik"
 
-#: nscd/nscd.c:124
+#: nscd/nscd.c:114
 msgid "TABLE"
 msgstr "TABELL"
 
-#: nscd/nscd.c:125
+#: nscd/nscd.c:115
 msgid "Invalidate the specified cache"
 msgstr "Invalidera den angivna cachen"
 
-#: nscd/nscd.c:126
+#: nscd/nscd.c:116
 msgid "TABLE,yes"
 msgstr "TABELL,ja"
 
-#: nscd/nscd.c:127
+#: nscd/nscd.c:117
 msgid "Use separate cache for each user"
 msgstr "Använd separat cache för varje användare"
 
-#: nscd/nscd.c:132
+#: nscd/nscd.c:122
 msgid "Name Service Cache Daemon."
 msgstr "Namntjänst cache-demon"
 
-#: nscd/nscd.c:164 nss/getent.c:1003 nss/makedb.c:206
+#: nscd/nscd.c:155 nss/getent.c:1003 nss/makedb.c:206
 #, c-format
 msgid "wrong number of arguments"
 msgstr "fel antal argument"
 
-#: nscd/nscd.c:174
+#: nscd/nscd.c:165
 #, c-format
 msgid "failure while reading configuration file; this is fatal"
 msgstr "kan inte läsa konfigurationsdata, detta är fatalt"
 
-#: nscd/nscd.c:183
+#: nscd/nscd.c:174
 #, c-format
 msgid "already running"
 msgstr "kör redan"
 
-#: nscd/nscd.c:201
+#: nscd/nscd.c:194
+#, c-format
+msgid "cannot create a pipe to talk to the child"
+msgstr "kan inte skapa rör för att prata med barnprocess"
+
+#: nscd/nscd.c:198
 #, c-format
 msgid "cannot fork"
 msgstr "kan inte skapa barnprocess"
 
-#: nscd/nscd.c:259
-#, c-format
+#: nscd/nscd.c:268
 msgid "cannot change current working directory to \"/\""
 msgstr "kan inte byta aktuell katalog till \"/\""
 
-#: nscd/nscd.c:267
+#: nscd/nscd.c:276
 msgid "Could not create log file"
 msgstr "Kunde inte skapa loggfil"
 
-#: nscd/nscd.c:339 nscd/nscd.c:364 nscd/nscd_stat.c:173
+#: nscd/nscd.c:348 nscd/nscd.c:373 nscd/nscd_stat.c:173
 #, c-format
 msgid "Only root is allowed to use this option!"
 msgstr "Bara root har tillåtelse att använda denna operation!"
 
-#: nscd/nscd.c:379
+#: nscd/nscd.c:388
 #, c-format
 msgid "'%s' is not a known database"
 msgstr "\"%s\" är inte en känd databas"
 
-#: nscd/nscd.c:404 nscd/nscd_stat.c:192
+#: nscd/nscd.c:413 nscd/nscd_stat.c:192
 #, c-format
 msgid "write incomplete"
-msgstr "ofullständing skrivning"
+msgstr "ofullständig skrivning"
 
-#: nscd/nscd.c:415
+#: nscd/nscd.c:424
 #, c-format
 msgid "cannot read invalidate ACK"
 msgstr "kan inte läsa ogiltigförklarings-ACK"
 
-#: nscd/nscd.c:421
+#: nscd/nscd.c:430
 #, c-format
 msgid "invalidation failed"
 msgstr "ogiltigförklaring misslyckades"
 
-#: nscd/nscd.c:431
+#: nscd/nscd.c:440
 #, c-format
 msgid "secure services not implemented anymore"
 msgstr "säkra tjänster är inte implementerade längre"
 
-#: nscd/nscd.c:462
+#: nscd/nscd.c:471
 #, c-format
 msgid ""
 "Supported tables:\n"
@@ -4215,6 +4216,21 @@ msgstr ""
 "För felrapporteringsinstruktioner, se:\n"
 "%s.\n"
 "Rapportera fel eller synpunkter på översättningen till <tp-sv@listor.tp-sv.se>.\n"
+
+#: nscd/nscd.c:620
+#, c-format
+msgid "'wait' failed\n"
+msgstr "\"wait\" misslyckades\n"
+
+#: nscd/nscd.c:627
+#, c-format
+msgid "child exited with status %d\n"
+msgstr "barnprocess avslutad med slutstatus %d\n"
+
+#: nscd/nscd.c:632
+#, c-format
+msgid "child terminated by signal %d\n"
+msgstr "barnprocess avbruten av signal %d\n"
 
 #: nscd/nscd_conf.c:57
 #, c-format
@@ -4383,97 +4399,100 @@ msgstr ""
 "%15<PRIuMAX>  antal misslyckade minnesallokeringar\n"
 "%15s  kontrollera /etc/%s för ändringar\n"
 
-#: nscd/pwdcache.c:436
+#: nscd/pwdcache.c:428
 #, c-format
 msgid "Haven't found \"%s\" in password cache!"
 msgstr "Hittar inte \"%s\" i lösenordscache!"
 
-#: nscd/pwdcache.c:438
+#: nscd/pwdcache.c:430
 #, c-format
 msgid "Reloading \"%s\" in password cache!"
 msgstr "Omladdar \"%s\" i lösenordscache!"
 
-#: nscd/pwdcache.c:519
+#: nscd/pwdcache.c:511
 #, c-format
 msgid "Invalid numeric uid \"%s\"!"
 msgstr "Ogiltigt numeriskt användarid (uid) \"%s\"!"
 
-#: nscd/selinux.c:160
+#: nscd/selinux.c:155
 #, c-format
 msgid "Failed opening connection to the audit subsystem: %m"
 msgstr "Misslyckades med att öppna en förbindelse till undersystemet för granskning (audit): %m"
 
-#: nscd/selinux.c:181
+#: nscd/selinux.c:176
 msgid "Failed to set keep-capabilities"
 msgstr "Misslyckades med att sätta \"keep\"-kapabiliteter"
 
-#: nscd/selinux.c:182 nscd/selinux.c:245
-#, c-format
+#: nscd/selinux.c:177 nscd/selinux.c:240
 msgid "prctl(KEEPCAPS) failed"
 msgstr "prctl(KEEPCAPS) misslyckades"
 
-#: nscd/selinux.c:196
+#: nscd/selinux.c:191
 msgid "Failed to initialize drop of capabilities"
 msgstr "Misslyckades med att initiera borttagning av kapabiliteter"
 
-#: nscd/selinux.c:197
-#, c-format
+#: nscd/selinux.c:192
 msgid "cap_init failed"
 msgstr "cap_init misslyckades"
 
-#: nscd/selinux.c:218 nscd/selinux.c:235
+#: nscd/selinux.c:213 nscd/selinux.c:230
 msgid "Failed to drop capabilities"
 msgstr "Misslyckades med att ta bort kapabiliteter"
 
-#: nscd/selinux.c:219 nscd/selinux.c:236
-#, c-format
+#: nscd/selinux.c:214 nscd/selinux.c:231
 msgid "cap_set_proc failed"
 msgstr "cap_set_proc misslyckades"
 
-#: nscd/selinux.c:244
+#: nscd/selinux.c:239
 msgid "Failed to unset keep-capabilities"
 msgstr "Misslyckades med att ta bort \"keep\"-kapabiliteter"
 
-#: nscd/selinux.c:260
+#: nscd/selinux.c:255
 msgid "Failed to determine if kernel supports SELinux"
 msgstr "Misslyckades med att ta reda på om kärnan stödjer SELinux"
 
-#: nscd/selinux.c:275
-#, c-format
+#: nscd/selinux.c:270
 msgid "Failed to start AVC thread"
 msgstr "Misslyckades med att starta AVC-tråd"
 
-#: nscd/selinux.c:297
-#, c-format
+#: nscd/selinux.c:292
 msgid "Failed to create AVC lock"
 msgstr "Misslyckade med att skapa AVC-lås"
 
-#: nscd/selinux.c:337
-#, c-format
+#: nscd/selinux.c:332
 msgid "Failed to start AVC"
 msgstr "Misslyckades med att starta AVC"
 
-#: nscd/selinux.c:339
+#: nscd/selinux.c:334
 msgid "Access Vector Cache (AVC) started"
 msgstr "Access Vector Cache (AVC) startad"
 
-#: nscd/selinux.c:360
+#: nscd/selinux.c:369
+msgid "Error querying policy for undefined object classes or permissions."
+msgstr "Fel när policy för odefinierade objektklasser eller rättigheter hämtades"
+
+#: nscd/selinux.c:376
+msgid "Error getting security class for nscd."
+msgstr "Fel när säkerhetsklass för nscd hämtades"
+
+#: nscd/selinux.c:381
+#, c-format
+msgid "Error translating permission name \"%s\" to access vector bit."
+msgstr "Fel vid översättning av rättighetsnamn \"%s\" till en accessvektorbit."
+
+#: nscd/selinux.c:391
 msgid "Error getting context of socket peer"
 msgstr "Kunde inte hämta kontext för uttagsparter (socket peer)"
 
-#: nscd/selinux.c:365
+#: nscd/selinux.c:396
 msgid "Error getting context of nscd"
 msgstr "Kunde inte hämta kontext för nscd"
 
-#: nscd/selinux.c:371
+#: nscd/selinux.c:402
 msgid "Error getting sid from context"
 msgstr "Kunde inte hämta \"sid\" från kontext"
 
-#: nscd/selinux.c:378
-msgid "compile-time support for database policy missing"
-msgstr "inkompilerat stöd för databaspolicy saknas"
-
-#: nscd/selinux.c:411
+#: nscd/selinux.c:440
 #, c-format
 msgid ""
 "\n"
@@ -4491,7 +4510,7 @@ msgstr ""
 "\n"
 "SELinux AVC Statistik:\n"
 "\n"
-"%15u  postsökingar\n"
+"%15u  postsökningar\n"
 "%15u  postträffar\n"
 "%15u  postmissar\n"
 "%15u  bortkastade poster\n"
@@ -4500,12 +4519,12 @@ msgstr ""
 "%15u  CAV-sonderingar\n"
 "%15u  CAV-missar\n"
 
-#: nscd/servicescache.c:395
+#: nscd/servicescache.c:387
 #, c-format
 msgid "Haven't found \"%s\" in services cache!"
 msgstr "Hittar inte \"%s\" i servicecache!"
 
-#: nscd/servicescache.c:397
+#: nscd/servicescache.c:389
 #, c-format
 msgid "Reloading \"%s\" in services cache!"
 msgstr "Omladdar \"%s\" i servicecache!"
@@ -4555,7 +4574,7 @@ msgstr "Konvertera nyckel till gemener"
 
 #: nss/makedb.c:122
 msgid "Do not print messages while building database"
-msgstr "Skriv inte meddelanden medans databasen byggs"
+msgstr "Skriv inte meddelanden medan databasen byggs"
 
 #: nss/makedb.c:124
 msgid "Print content of database file, one entry a line"
@@ -4651,11 +4670,6 @@ msgstr "fil är inte en databasfil"
 #, c-format
 msgid "cannot set file creation context for `%s'"
 msgstr "kan inte sätta filskaparkontext för \"%s\""
-
-#: ports/sysdeps/unix/sysv/linux/ia64/makecontext.c:58
-#, c-format
-msgid "makecontext: does not know how to handle more than 8 arguments\n"
-msgstr "makecontext: kan inte hantera mer än 8 argument\n"
 
 #: posix/getconf.c:1035
 #, c-format
@@ -4904,11 +4918,11 @@ msgstr "Otillåten fälla"
 
 #: stdio-common/psiginfo-data.h:6
 msgid "Privileged opcode"
-msgstr "Priviligierad opcode"
+msgstr "Privilegierad opcode"
 
 #: stdio-common/psiginfo-data.h:7
 msgid "Privileged register"
-msgstr "Priviligierat register"
+msgstr "Privilegierat register"
 
 #: stdio-common/psiginfo-data.h:8
 msgid "Coprocessor error"
@@ -5097,7 +5111,7 @@ msgstr "Okänd signal %d"
 #: sunrpc/auth_unix.c:111 sunrpc/clnt_tcp.c:123 sunrpc/clnt_udp.c:135
 #: sunrpc/clnt_unix.c:124 sunrpc/svc_tcp.c:188 sunrpc/svc_tcp.c:233
 #: sunrpc/svc_udp.c:162 sunrpc/svc_unix.c:188 sunrpc/svc_unix.c:229
-#: sunrpc/xdr.c:631 sunrpc/xdr.c:791 sunrpc/xdr_array.c:97
+#: sunrpc/xdr.c:631 sunrpc/xdr.c:793 sunrpc/xdr_array.c:97
 #: sunrpc/xdr_rec.c:152 sunrpc/xdr_ref.c:76
 msgid "out of memory\n"
 msgstr "minnet slut\n"
@@ -5754,7 +5768,7 @@ msgstr "Segmenteringsfel"
 #. TRANS @code{SIGPIPE} signal; this signal terminates the program if not handled
 #. TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
 #. TRANS unless it has handled or blocked @code{SIGPIPE}.
-#: sysdeps/generic/siglist.h:38 sysdeps/gnu/errlist.c:359
+#: sysdeps/generic/siglist.h:38 sysdeps/gnu/errlist.c:360
 msgid "Broken pipe"
 msgstr "Brutet rör"
 
@@ -5852,12 +5866,12 @@ msgstr "Ändrat fönster"
 
 #. TRANS Operation not permitted; only the owner of the file (or other resource)
 #. TRANS or processes with special privileges can perform the operation.
-#: sysdeps/gnu/errlist.c:25
+#: sysdeps/gnu/errlist.c:26
 msgid "Operation not permitted"
 msgstr "Operationen inte tillåten"
 
 #. TRANS No process matches the specified process ID.
-#: sysdeps/gnu/errlist.c:45
+#: sysdeps/gnu/errlist.c:46
 msgid "No such process"
 msgstr "Processen finns inte"
 
@@ -5868,12 +5882,12 @@ msgstr "Processen finns inte"
 #. TRANS You can choose to have functions resume after a signal that is handled,
 #. TRANS rather than failing with @code{EINTR}; see @ref{Interrupted
 #. TRANS Primitives}.
-#: sysdeps/gnu/errlist.c:60
+#: sysdeps/gnu/errlist.c:61
 msgid "Interrupted system call"
 msgstr "Avbrutet systemanrop"
 
 #. TRANS Input/output error; usually used for physical read or write errors.
-#: sysdeps/gnu/errlist.c:69
+#: sysdeps/gnu/errlist.c:70
 msgid "Input/output error"
 msgstr "In/ut-fel"
 
@@ -5882,7 +5896,7 @@ msgstr "In/ut-fel"
 #. TRANS This can mean that the device file was installed incorrectly, or that
 #. TRANS the physical device is missing or not correctly attached to the
 #. TRANS computer.
-#: sysdeps/gnu/errlist.c:82
+#: sysdeps/gnu/errlist.c:83
 msgid "No such device or address"
 msgstr "Enheten eller adressen finns inte"
 
@@ -5890,27 +5904,27 @@ msgstr "Enheten eller adressen finns inte"
 #. TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
 #. TRANS File}) occupy too much memory space.  This condition never arises on
 #. TRANS @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.c:94
+#: sysdeps/gnu/errlist.c:95
 msgid "Argument list too long"
 msgstr "Argumentlistan för lång"
 
 #. TRANS Invalid executable file format.  This condition is detected by the
 #. TRANS @code{exec} functions; see @ref{Executing a File}.
-#: sysdeps/gnu/errlist.c:104
+#: sysdeps/gnu/errlist.c:105
 msgid "Exec format error"
 msgstr "Formatfel på körbar fil"
 
 #. TRANS Bad file descriptor; for example, I/O on a descriptor that has been
 #. TRANS closed or reading from a descriptor open only for writing (or vice
 #. TRANS versa).
-#: sysdeps/gnu/errlist.c:115
+#: sysdeps/gnu/errlist.c:116
 msgid "Bad file descriptor"
 msgstr "Felaktig filidentifierare"
 
 #. TRANS There are no child processes.  This error happens on operations that are
 #. TRANS supposed to manipulate child processes, when there aren't any processes
 #. TRANS to manipulate.
-#: sysdeps/gnu/errlist.c:126
+#: sysdeps/gnu/errlist.c:127
 msgid "No child processes"
 msgstr "Inga barnprocesser"
 
@@ -5918,69 +5932,69 @@ msgstr "Inga barnprocesser"
 #. TRANS deadlock situation.  The system does not guarantee that it will notice
 #. TRANS all such situations.  This error means you got lucky and the system
 #. TRANS noticed; it might just hang.  @xref{File Locks}, for an example.
-#: sysdeps/gnu/errlist.c:138
+#: sysdeps/gnu/errlist.c:139
 msgid "Resource deadlock avoided"
 msgstr "Resursdödläge undveks"
 
 #. TRANS No memory available.  The system cannot allocate more virtual memory
 #. TRANS because its capacity is full.
-#: sysdeps/gnu/errlist.c:148
+#: sysdeps/gnu/errlist.c:149
 msgid "Cannot allocate memory"
 msgstr "Kan inte allokera minne"
 
 #. TRANS Bad address; an invalid pointer was detected.
 #. TRANS On @gnuhurdsystems{}, this error never happens; you get a signal instead.
-#: sysdeps/gnu/errlist.c:167
+#: sysdeps/gnu/errlist.c:168
 msgid "Bad address"
 msgstr "Felaktig adress"
 
 #. TRANS A file that isn't a block special file was given in a situation that
 #. TRANS requires one.  For example, trying to mount an ordinary file as a file
 #. TRANS system in Unix gives this error.
-#: sysdeps/gnu/errlist.c:178
+#: sysdeps/gnu/errlist.c:179
 msgid "Block device required"
 msgstr "Blockspecialfil krävs"
 
 #. TRANS Resource busy; a system resource that can't be shared is already in use.
 #. TRANS For example, if you try to delete a file that is the root of a currently
 #. TRANS mounted filesystem, you get this error.
-#: sysdeps/gnu/errlist.c:189
+#: sysdeps/gnu/errlist.c:190
 msgid "Device or resource busy"
 msgstr "Enhet eller resurs upptagen"
 
 #. TRANS File exists; an existing file was specified in a context where it only
 #. TRANS makes sense to specify a new file.
-#: sysdeps/gnu/errlist.c:199
+#: sysdeps/gnu/errlist.c:200
 msgid "File exists"
 msgstr "Filen existerar"
 
 #. TRANS An attempt to make an improper link across file systems was detected.
 #. TRANS This happens not only when you use @code{link} (@pxref{Hard Links}) but
 #. TRANS also when you rename a file with @code{rename} (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.c:210
+#: sysdeps/gnu/errlist.c:211
 msgid "Invalid cross-device link"
 msgstr "Ogiltig länk över skilda enheter"
 
 #. TRANS The wrong type of device was given to a function that expects a
 #. TRANS particular sort of device.
-#: sysdeps/gnu/errlist.c:220
+#: sysdeps/gnu/errlist.c:221
 msgid "No such device"
 msgstr "Enheten finns inte"
 
 #. TRANS A file that isn't a directory was specified when a directory is required.
-#: sysdeps/gnu/errlist.c:229
+#: sysdeps/gnu/errlist.c:230
 msgid "Not a directory"
 msgstr "Inte en katalog"
 
 #. TRANS File is a directory; you cannot open a directory for writing,
 #. TRANS or create or remove hard links to it.
-#: sysdeps/gnu/errlist.c:239
+#: sysdeps/gnu/errlist.c:240
 msgid "Is a directory"
 msgstr "Är en katalog"
 
 #. TRANS Invalid argument.  This is used to indicate various kinds of problems
 #. TRANS with passing the wrong argument to a library function.
-#: sysdeps/gnu/errlist.c:249
+#: sysdeps/gnu/errlist.c:250
 msgid "Invalid argument"
 msgstr "Ogiltigt argument"
 
@@ -5991,20 +6005,20 @@ msgstr "Ogiltigt argument"
 #. TRANS limit that can usually be increased.  If you get this error, you might
 #. TRANS want to increase the @code{RLIMIT_NOFILE} limit or make it unlimited;
 #. TRANS @pxref{Limits on Resources}.
-#: sysdeps/gnu/errlist.c:264
+#: sysdeps/gnu/errlist.c:265
 msgid "Too many open files"
 msgstr "För många öppna filer"
 
 #. TRANS There are too many distinct file openings in the entire system.  Note
 #. TRANS that any number of linked channels count as just one file opening; see
 #. TRANS @ref{Linked Channels}.  This error never occurs on @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.c:275
+#: sysdeps/gnu/errlist.c:276
 msgid "Too many open files in system"
 msgstr "För många öppna filer i systemet"
 
 #. TRANS Inappropriate I/O control operation, such as trying to set terminal
 #. TRANS modes on an ordinary file.
-#: sysdeps/gnu/errlist.c:285
+#: sysdeps/gnu/errlist.c:286
 msgid "Inappropriate ioctl for device"
 msgstr "Olämplig \"ioctl\" för enhet"
 
@@ -6013,47 +6027,47 @@ msgstr "Olämplig \"ioctl\" för enhet"
 #. TRANS debugger to run a program is considered having it open for writing and
 #. TRANS will cause this error.  (The name stands for ``text file busy''.)  This
 #. TRANS is not an error on @gnuhurdsystems{}; the text is copied as necessary.
-#: sysdeps/gnu/errlist.c:298
+#: sysdeps/gnu/errlist.c:299
 msgid "Text file busy"
 msgstr "Kodfil upptagen"
 
 #. TRANS File too big; the size of a file would be larger than allowed by the system.
-#: sysdeps/gnu/errlist.c:307
+#: sysdeps/gnu/errlist.c:308
 msgid "File too large"
 msgstr "För stor fil"
 
 #. TRANS No space left on device; write operation on a file failed because the
 #. TRANS disk is full.
-#: sysdeps/gnu/errlist.c:317
+#: sysdeps/gnu/errlist.c:318
 msgid "No space left on device"
 msgstr "Enheten är full"
 
 #. TRANS Invalid seek operation (such as on a pipe).
-#: sysdeps/gnu/errlist.c:326
+#: sysdeps/gnu/errlist.c:327
 msgid "Illegal seek"
 msgstr "Otillåten sökning"
 
 #. TRANS An attempt was made to modify something on a read-only file system.
-#: sysdeps/gnu/errlist.c:335
+#: sysdeps/gnu/errlist.c:336
 msgid "Read-only file system"
 msgstr "Filsystemet endast läsbart"
 
 #. TRANS Too many links; the link count of a single file would become too large.
 #. TRANS @code{rename} can cause this error if the file being renamed already has
 #. TRANS as many links as it can take (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.c:346
+#: sysdeps/gnu/errlist.c:347
 msgid "Too many links"
 msgstr "För många länkar"
 
 #. TRANS Domain error; used by mathematical functions when an argument value does
 #. TRANS not fall into the domain over which the function is defined.
-#: sysdeps/gnu/errlist.c:369
+#: sysdeps/gnu/errlist.c:370
 msgid "Numerical argument out of domain"
 msgstr "Numeriskt argument är utanför området"
 
 #. TRANS Range error; used by mathematical functions when the result value is
 #. TRANS not representable because of overflow or underflow.
-#: sysdeps/gnu/errlist.c:379
+#: sysdeps/gnu/errlist.c:380
 msgid "Numerical result out of range"
 msgstr "Numeriskt resultat är utanför giltigt område"
 
@@ -6086,7 +6100,7 @@ msgstr "Numeriskt resultat är utanför giltigt område"
 #. TRANS so usually an interactive program should report the error to the user
 #. TRANS and return to its command loop.
 #. TRANS @end itemize
-#: sysdeps/gnu/errlist.c:416
+#: sysdeps/gnu/errlist.c:417
 msgid "Resource temporarily unavailable"
 msgstr "Resursen tillfälligt otillgänglig"
 
@@ -6095,7 +6109,7 @@ msgstr "Resursen tillfälligt otillgänglig"
 #. TRANS
 #. TRANS C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
 #. TRANS separate error code.
-#: sysdeps/gnu/errlist.c:429
+#: sysdeps/gnu/errlist.c:430
 msgid "Operation would block"
 msgstr "Operationen skulle blockera"
 
@@ -6107,47 +6121,47 @@ msgstr "Operationen skulle blockera"
 #. TRANS the object before the call completes return @code{EALREADY}.  You can
 #. TRANS use the @code{select} function to find out when the pending operation
 #. TRANS has completed; @pxref{Waiting for I/O}.
-#: sysdeps/gnu/errlist.c:445
+#: sysdeps/gnu/errlist.c:446
 msgid "Operation now in progress"
 msgstr "Operationen pågår nu"
 
 #. TRANS An operation is already in progress on an object that has non-blocking
 #. TRANS mode selected.
-#: sysdeps/gnu/errlist.c:455
+#: sysdeps/gnu/errlist.c:456
 msgid "Operation already in progress"
 msgstr "Operationen pågår redan"
 
 #. TRANS A file that isn't a socket was specified when a socket is required.
-#: sysdeps/gnu/errlist.c:464
+#: sysdeps/gnu/errlist.c:465
 msgid "Socket operation on non-socket"
 msgstr "Uttagsoperation på icke-uttag (socket)"
 
 #. TRANS The size of a message sent on a socket was larger than the supported
 #. TRANS maximum size.
-#: sysdeps/gnu/errlist.c:474
+#: sysdeps/gnu/errlist.c:475
 msgid "Message too long"
 msgstr "Meddelandet för långt"
 
 #. TRANS The socket type does not support the requested communications protocol.
-#: sysdeps/gnu/errlist.c:483
+#: sysdeps/gnu/errlist.c:484
 msgid "Protocol wrong type for socket"
 msgstr "Fel protokolltyp för uttag (socket)"
 
 #. TRANS You specified a socket option that doesn't make sense for the
 #. TRANS particular protocol being used by the socket.  @xref{Socket Options}.
-#: sysdeps/gnu/errlist.c:493
+#: sysdeps/gnu/errlist.c:494
 msgid "Protocol not available"
 msgstr "Protokollet inte tillgängligt"
 
 #. TRANS The socket domain does not support the requested communications protocol
 #. TRANS (perhaps because the requested protocol is completely invalid).
 #. TRANS @xref{Creating a Socket}.
-#: sysdeps/gnu/errlist.c:504
+#: sysdeps/gnu/errlist.c:505
 msgid "Protocol not supported"
 msgstr "Protokollet stöds ej"
 
 #. TRANS The socket type is not supported.
-#: sysdeps/gnu/errlist.c:513
+#: sysdeps/gnu/errlist.c:514
 msgid "Socket type not supported"
 msgstr "Uttagstyp (socket) stöds ej"
 
@@ -6157,71 +6171,71 @@ msgstr "Uttagstyp (socket) stöds ej"
 #. TRANS error can happen for many calls when the object does not support the
 #. TRANS particular operation; it is a generic indication that the server knows
 #. TRANS nothing to do for that call.
-#: sysdeps/gnu/errlist.c:527
+#: sysdeps/gnu/errlist.c:528
 msgid "Operation not supported"
 msgstr "Operationen stöds ej"
 
 #. TRANS The socket communications protocol family you requested is not supported.
-#: sysdeps/gnu/errlist.c:536
+#: sysdeps/gnu/errlist.c:537
 msgid "Protocol family not supported"
 msgstr "Protokollfamiljen stöds ej"
 
 #. TRANS The address family specified for a socket is not supported; it is
 #. TRANS inconsistent with the protocol being used on the socket.  @xref{Sockets}.
-#: sysdeps/gnu/errlist.c:546
+#: sysdeps/gnu/errlist.c:547
 msgid "Address family not supported by protocol"
 msgstr "Adressfamiljen stöds inte av protokollet"
 
 #. TRANS The requested socket address is already in use.  @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.c:555
+#: sysdeps/gnu/errlist.c:556
 msgid "Address already in use"
 msgstr "Adressen redan upptagen"
 
 #. TRANS The requested socket address is not available; for example, you tried
 #. TRANS to give a socket a name that doesn't match the local host name.
 #. TRANS @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.c:566
+#: sysdeps/gnu/errlist.c:567
 msgid "Cannot assign requested address"
 msgstr "Kan inte tilldela begärd adress"
 
 #. TRANS A socket operation failed because the network was down.
-#: sysdeps/gnu/errlist.c:575
+#: sysdeps/gnu/errlist.c:576
 msgid "Network is down"
 msgstr "Nätverket är nere"
 
 #. TRANS A socket operation failed because the subnet containing the remote host
 #. TRANS was unreachable.
-#: sysdeps/gnu/errlist.c:585
+#: sysdeps/gnu/errlist.c:586
 msgid "Network is unreachable"
 msgstr "Nätverket kan inte nås"
 
 #. TRANS A network connection was reset because the remote host crashed.
-#: sysdeps/gnu/errlist.c:594
+#: sysdeps/gnu/errlist.c:595
 msgid "Network dropped connection on reset"
 msgstr "Nätverket tog bort förbindelsen vid omstart"
 
 #. TRANS A network connection was aborted locally.
-#: sysdeps/gnu/errlist.c:603
+#: sysdeps/gnu/errlist.c:604
 msgid "Software caused connection abort"
 msgstr "Mjukvara orsakade förbindelsebrott"
 
 #. TRANS A network connection was closed for reasons outside the control of the
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
 #. TRANS protocol violation.
-#: sysdeps/gnu/errlist.c:614
+#: sysdeps/gnu/errlist.c:615
 msgid "Connection reset by peer"
 msgstr "Förbindelse borttagen av partnern"
 
 #. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
 #. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
 #. TRANS other from network operations.
-#: sysdeps/gnu/errlist.c:625
+#: sysdeps/gnu/errlist.c:626
 msgid "No buffer space available"
 msgstr "Ingen buffertplats tillgänglig"
 
 #. TRANS You tried to connect a socket that is already connected.
 #. TRANS @xref{Connecting}.
-#: sysdeps/gnu/errlist.c:635
+#: sysdeps/gnu/errlist.c:636
 msgid "Transport endpoint is already connected"
 msgstr "Transportslutpunkten är redan förbunden"
 
@@ -6229,83 +6243,83 @@ msgstr "Transportslutpunkten är redan förbunden"
 #. TRANS try to transmit data over a socket, without first specifying a
 #. TRANS destination for the data.  For a connectionless socket (for datagram
 #. TRANS protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
-#: sysdeps/gnu/errlist.c:647
+#: sysdeps/gnu/errlist.c:648
 msgid "Transport endpoint is not connected"
 msgstr "Transportslutpunkten är inte förbunden"
 
 #. TRANS No default destination address was set for the socket.  You get this
 #. TRANS error when you try to transmit data over a connectionless socket,
 #. TRANS without first specifying a destination for the data with @code{connect}.
-#: sysdeps/gnu/errlist.c:658
+#: sysdeps/gnu/errlist.c:659
 msgid "Destination address required"
 msgstr "Destinationsadress krävs"
 
 #. TRANS The socket has already been shut down.
-#: sysdeps/gnu/errlist.c:667
+#: sysdeps/gnu/errlist.c:668
 msgid "Cannot send after transport endpoint shutdown"
 msgstr "Kan inte skicka efter att transportslutpunkten stängts"
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:676
+#: sysdeps/gnu/errlist.c:677
 msgid "Too many references: cannot splice"
 msgstr "För många referenser: kan inte skarva"
 
 #. TRANS A socket operation with a specified timeout received no response during
 #. TRANS the timeout period.
-#: sysdeps/gnu/errlist.c:686
+#: sysdeps/gnu/errlist.c:687
 msgid "Connection timed out"
 msgstr "Förbindelsen dog ut (timeout)"
 
 #. TRANS A remote host refused to allow the network connection (typically because
 #. TRANS it is not running the requested service).
-#: sysdeps/gnu/errlist.c:696
+#: sysdeps/gnu/errlist.c:697
 msgid "Connection refused"
 msgstr "Förbindelse vägras"
 
 #. TRANS Too many levels of symbolic links were encountered in looking up a file name.
 #. TRANS This often indicates a cycle of symbolic links.
-#: sysdeps/gnu/errlist.c:706
+#: sysdeps/gnu/errlist.c:707
 msgid "Too many levels of symbolic links"
 msgstr "För många nivåer av symboliska länkar"
 
 #. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
 #. TRANS Files}) or host name too long (in @code{gethostname} or
 #. TRANS @code{sethostname}; @pxref{Host Identification}).
-#: sysdeps/gnu/errlist.c:717
+#: sysdeps/gnu/errlist.c:718
 msgid "File name too long"
 msgstr "För långt filnamn"
 
 #. TRANS The remote host for a requested network connection is down.
-#: sysdeps/gnu/errlist.c:726
+#: sysdeps/gnu/errlist.c:727
 msgid "Host is down"
 msgstr "Värddator är nere"
 
 #. TRANS The remote host for a requested network connection is not reachable.
-#: sysdeps/gnu/errlist.c:735
+#: sysdeps/gnu/errlist.c:736
 msgid "No route to host"
 msgstr "Ingen väg till värd"
 
 #. TRANS Directory not empty, where an empty directory was expected.  Typically,
 #. TRANS this error occurs when you are trying to delete a directory.
-#: sysdeps/gnu/errlist.c:745
+#: sysdeps/gnu/errlist.c:746
 msgid "Directory not empty"
 msgstr "Katalog inte tom"
 
 #. TRANS This means that the per-user limit on new process would be exceeded by
 #. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
 #. TRANS the @code{RLIMIT_NPROC} limit.
-#: sysdeps/gnu/errlist.c:756
+#: sysdeps/gnu/errlist.c:757
 msgid "Too many processes"
 msgstr "För många processer"
 
 #. TRANS The file quota system is confused because there are too many users.
 #. TRANS @c This can probably happen in a GNU system when using NFS.
-#: sysdeps/gnu/errlist.c:766
+#: sysdeps/gnu/errlist.c:767
 msgid "Too many users"
 msgstr "För många användare"
 
 #. TRANS The user's disk quota was exceeded.
-#: sysdeps/gnu/errlist.c:775
+#: sysdeps/gnu/errlist.c:776
 msgid "Disk quota exceeded"
 msgstr "Diskkvot överskriden"
 
@@ -6314,7 +6328,7 @@ msgstr "Diskkvot överskriden"
 #. TRANS for NFS file systems or corruption in other file systems.
 #. TRANS Repairing this condition usually requires unmounting, possibly repairing
 #. TRANS and remounting the file system.
-#: sysdeps/gnu/errlist.c:788
+#: sysdeps/gnu/errlist.c:789
 msgid "Stale file handle"
 msgstr "Förlegat filhandtag"
 
@@ -6322,32 +6336,32 @@ msgstr "Förlegat filhandtag"
 #. TRANS already specifies an NFS-mounted file.
 #. TRANS (This is an error on some operating systems, but we expect it to work
 #. TRANS properly on @gnuhurdsystems{}, making this error code impossible.)
-#: sysdeps/gnu/errlist.c:800
+#: sysdeps/gnu/errlist.c:801
 msgid "Object is remote"
 msgstr "Är ett fjärrobjekt"
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:809
+#: sysdeps/gnu/errlist.c:810
 msgid "RPC struct is bad"
 msgstr "RPC-struktur dålig"
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:818
+#: sysdeps/gnu/errlist.c:819
 msgid "RPC version wrong"
 msgstr "RPC-version fel"
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:827
+#: sysdeps/gnu/errlist.c:828
 msgid "RPC program not available"
 msgstr "RPC-programmet inte tillgängligt"
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:836
+#: sysdeps/gnu/errlist.c:837
 msgid "RPC program version wrong"
 msgstr "RPC-programversion fel"
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:845
+#: sysdeps/gnu/errlist.c:846
 msgid "RPC bad procedure for program"
 msgstr "RPC dålig procedur för program"
 
@@ -6355,7 +6369,7 @@ msgstr "RPC dålig procedur för program"
 #. TRANS @ref{File Locks}.  This error is never generated by @gnuhurdsystems{}, but
 #. TRANS it can result from an operation to an NFS server running another
 #. TRANS operating system.
-#: sysdeps/gnu/errlist.c:857
+#: sysdeps/gnu/errlist.c:858
 msgid "No locks available"
 msgstr "Inga lås tillgängliga"
 
@@ -6364,17 +6378,17 @@ msgstr "Inga lås tillgängliga"
 #. TRANS
 #. TRANS On some systems @code{chmod} returns this error if you try to set the
 #. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
-#: sysdeps/gnu/errlist.c:870
+#: sysdeps/gnu/errlist.c:871
 msgid "Inappropriate file type or format"
 msgstr "Filtyp eller format olämplig"
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:879
+#: sysdeps/gnu/errlist.c:880
 msgid "Authentication error"
 msgstr "Äkthetskontroll misslyckades"
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:888
+#: sysdeps/gnu/errlist.c:889
 msgid "Need authenticator"
 msgstr "Behöver äkthetsintygare"
 
@@ -6383,7 +6397,7 @@ msgstr "Behöver äkthetsintygare"
 #. TRANS operating system.  When you get this error, you can be sure that this
 #. TRANS particular function will always fail with @code{ENOSYS} unless you
 #. TRANS install a new version of the C library or the operating system.
-#: sysdeps/gnu/errlist.c:901
+#: sysdeps/gnu/errlist.c:902
 msgid "Function not implemented"
 msgstr "Funktion inte implementerad"
 
@@ -6399,13 +6413,13 @@ msgstr "Funktion inte implementerad"
 #. TRANS
 #. TRANS If the entire function is not available at all in the implementation,
 #. TRANS it returns @code{ENOSYS} instead.
-#: sysdeps/gnu/errlist.c:921
+#: sysdeps/gnu/errlist.c:922
 msgid "Not supported"
 msgstr "Stöds ej"
 
 #. TRANS While decoding a multibyte character the function came along an invalid
 #. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
-#: sysdeps/gnu/errlist.c:931
+#: sysdeps/gnu/errlist.c:932
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr "Ogiltig eller inte komplett flerbyte- eller brett tecken"
 
@@ -6415,80 +6429,80 @@ msgstr "Ogiltig eller inte komplett flerbyte- eller brett tecken"
 #. TRANS error because functions such as @code{read} and @code{write} translate
 #. TRANS it into a @code{SIGTTIN} or @code{SIGTTOU} signal.  @xref{Job Control},
 #. TRANS for information on process groups and these signals.
-#: sysdeps/gnu/errlist.c:945
+#: sysdeps/gnu/errlist.c:946
 msgid "Inappropriate operation for background process"
 msgstr "Operation för bakgrundsprocess olämplig"
 
 #. TRANS On @gnuhurdsystems{}, opening a file returns this error when the file is
 #. TRANS translated by a program and the translator program dies while starting
 #. TRANS up, before it has connected to the file.
-#: sysdeps/gnu/errlist.c:956
+#: sysdeps/gnu/errlist.c:957
 msgid "Translator died"
 msgstr "Översättaren dog"
 
 #. TRANS The experienced user will know what is wrong.
 #. TRANS @c This error code is a joke.  Its perror text is part of the joke.
 #. TRANS @c Don't change it.
-#: sysdeps/gnu/errlist.c:967
+#: sysdeps/gnu/errlist.c:968
 msgid "?"
 msgstr "?"
 
 #. TRANS You did @strong{what}?
-#: sysdeps/gnu/errlist.c:976
+#: sysdeps/gnu/errlist.c:977
 msgid "You really blew it this time"
 msgstr "Du strulade till det den här gången"
 
 #. TRANS Go home and have a glass of warm, dairy-fresh milk.
-#: sysdeps/gnu/errlist.c:985
+#: sysdeps/gnu/errlist.c:986
 msgid "Computer bought the farm"
 msgstr "Datorn packade ihop"
 
 #. TRANS This error code has no purpose.
-#: sysdeps/gnu/errlist.c:994
+#: sysdeps/gnu/errlist.c:995
 msgid "Gratuitous error"
 msgstr "Omotiverat fel"
 
-#: sysdeps/gnu/errlist.c:1002
+#: sysdeps/gnu/errlist.c:1003
 msgid "Bad message"
 msgstr "Felaktigt meddelande"
 
-#: sysdeps/gnu/errlist.c:1010
+#: sysdeps/gnu/errlist.c:1011
 msgid "Identifier removed"
 msgstr "Identifierare borttagen"
 
-#: sysdeps/gnu/errlist.c:1018
+#: sysdeps/gnu/errlist.c:1019
 msgid "Multihop attempted"
 msgstr "Flerhopp försöktes"
 
-#: sysdeps/gnu/errlist.c:1026
+#: sysdeps/gnu/errlist.c:1027
 msgid "No data available"
 msgstr "Inga data tillgängliga"
 
-#: sysdeps/gnu/errlist.c:1034
+#: sysdeps/gnu/errlist.c:1035
 msgid "Link has been severed"
 msgstr "Länken har brutits"
 
-#: sysdeps/gnu/errlist.c:1042
+#: sysdeps/gnu/errlist.c:1043
 msgid "No message of desired type"
 msgstr "Inget meddelande av önskad typ"
 
-#: sysdeps/gnu/errlist.c:1050
+#: sysdeps/gnu/errlist.c:1051
 msgid "Out of streams resources"
 msgstr "Stream-resurserna är slut"
 
-#: sysdeps/gnu/errlist.c:1058
+#: sysdeps/gnu/errlist.c:1059
 msgid "Device not a stream"
 msgstr "Enheten är inte en stream"
 
-#: sysdeps/gnu/errlist.c:1066
+#: sysdeps/gnu/errlist.c:1067
 msgid "Value too large for defined data type"
 msgstr "Värdet för stort för definierad datatyp"
 
-#: sysdeps/gnu/errlist.c:1074
+#: sysdeps/gnu/errlist.c:1075
 msgid "Protocol error"
 msgstr "Protokollfel"
 
-#: sysdeps/gnu/errlist.c:1082
+#: sysdeps/gnu/errlist.c:1083
 msgid "Timer expired"
 msgstr "Klockan ringde"
 
@@ -6496,195 +6510,195 @@ msgstr "Klockan ringde"
 #. TRANS completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
 #. TRANS the normal result is for the operations affected to complete with this
 #. TRANS error; @pxref{Cancel AIO Operations}.
-#: sysdeps/gnu/errlist.c:1094
+#: sysdeps/gnu/errlist.c:1095
 msgid "Operation canceled"
 msgstr "Operationen avbruten"
 
-#: sysdeps/gnu/errlist.c:1102
+#: sysdeps/gnu/errlist.c:1103
 msgid "Interrupted system call should be restarted"
 msgstr "Avbrutet systemanrop borde omstartas"
 
-#: sysdeps/gnu/errlist.c:1110
+#: sysdeps/gnu/errlist.c:1111
 msgid "Channel number out of range"
 msgstr "Kanalnummer utanför giltigt intervall"
 
-#: sysdeps/gnu/errlist.c:1118
+#: sysdeps/gnu/errlist.c:1119
 msgid "Level 2 not synchronized"
 msgstr "Nivå 2 inte synkroniserad"
 
-#: sysdeps/gnu/errlist.c:1126
+#: sysdeps/gnu/errlist.c:1127
 msgid "Level 3 halted"
 msgstr "Nivå 3 stannad"
 
-#: sysdeps/gnu/errlist.c:1134
+#: sysdeps/gnu/errlist.c:1135
 msgid "Level 3 reset"
 msgstr "Nivå 3 omstartad"
 
-#: sysdeps/gnu/errlist.c:1142
+#: sysdeps/gnu/errlist.c:1143
 msgid "Link number out of range"
 msgstr "Länkantal utanför giltigt område"
 
-#: sysdeps/gnu/errlist.c:1150
+#: sysdeps/gnu/errlist.c:1151
 msgid "Protocol driver not attached"
 msgstr "Styrprogram för protokoll inte anslutet"
 
-#: sysdeps/gnu/errlist.c:1158
+#: sysdeps/gnu/errlist.c:1159
 msgid "No CSI structure available"
 msgstr "Inga CSI-strukturer tillgängliga"
 
-#: sysdeps/gnu/errlist.c:1166
+#: sysdeps/gnu/errlist.c:1167
 msgid "Level 2 halted"
 msgstr "Nivå 2 stannad"
 
-#: sysdeps/gnu/errlist.c:1174
+#: sysdeps/gnu/errlist.c:1175
 msgid "Invalid exchange"
 msgstr "Ogiltig växel"
 
-#: sysdeps/gnu/errlist.c:1182
+#: sysdeps/gnu/errlist.c:1183
 msgid "Invalid request descriptor"
 msgstr "Ogiltig frågedeskriptor"
 
-#: sysdeps/gnu/errlist.c:1190
+#: sysdeps/gnu/errlist.c:1191
 msgid "Exchange full"
 msgstr "Växeln full"
 
-#: sysdeps/gnu/errlist.c:1198
+#: sysdeps/gnu/errlist.c:1199
 msgid "No anode"
 msgstr "Ingen anod"
 
-#: sysdeps/gnu/errlist.c:1206
+#: sysdeps/gnu/errlist.c:1207
 msgid "Invalid request code"
 msgstr "Ogiltig åtkomstkod"
 
-#: sysdeps/gnu/errlist.c:1214
+#: sysdeps/gnu/errlist.c:1215
 msgid "Invalid slot"
 msgstr "Ogiltig plats"
 
-#: sysdeps/gnu/errlist.c:1222
+#: sysdeps/gnu/errlist.c:1223
 msgid "File locking deadlock error"
 msgstr "Fillåsning gav dödläge"
 
-#: sysdeps/gnu/errlist.c:1230
+#: sysdeps/gnu/errlist.c:1231
 msgid "Bad font file format"
 msgstr "Felaktigt format på typsnittsfil"
 
-#: sysdeps/gnu/errlist.c:1238
+#: sysdeps/gnu/errlist.c:1239
 msgid "Machine is not on the network"
 msgstr "Maskinen finns inte på nätverket"
 
-#: sysdeps/gnu/errlist.c:1246
+#: sysdeps/gnu/errlist.c:1247
 msgid "Package not installed"
 msgstr "Paketet är inte installerat"
 
-#: sysdeps/gnu/errlist.c:1254
+#: sysdeps/gnu/errlist.c:1255
 msgid "Advertise error"
 msgstr "Annonseringsfel"
 
-#: sysdeps/gnu/errlist.c:1262
+#: sysdeps/gnu/errlist.c:1263
 msgid "Srmount error"
 msgstr "Srmount-fel"
 
-#: sysdeps/gnu/errlist.c:1270
+#: sysdeps/gnu/errlist.c:1271
 msgid "Communication error on send"
 msgstr "Kommunikationsfel vid sändning"
 
-#: sysdeps/gnu/errlist.c:1278
+#: sysdeps/gnu/errlist.c:1279
 msgid "RFS specific error"
 msgstr "RFS-specifikt fel"
 
-#: sysdeps/gnu/errlist.c:1286
+#: sysdeps/gnu/errlist.c:1287
 msgid "Name not unique on network"
 msgstr "Namnet inte unikt i nätverket"
 
-#: sysdeps/gnu/errlist.c:1294
+#: sysdeps/gnu/errlist.c:1295
 msgid "File descriptor in bad state"
 msgstr "Filidentifierare i felaktigt tillstånd"
 
-#: sysdeps/gnu/errlist.c:1302
+#: sysdeps/gnu/errlist.c:1303
 msgid "Remote address changed"
 msgstr "Fjärradress ändrades"
 
-#: sysdeps/gnu/errlist.c:1310
+#: sysdeps/gnu/errlist.c:1311
 msgid "Can not access a needed shared library"
 msgstr "Kan inte komma åt ett nödvändigt delat bibliotek"
 
-#: sysdeps/gnu/errlist.c:1318
+#: sysdeps/gnu/errlist.c:1319
 msgid "Accessing a corrupted shared library"
 msgstr "Öppnar ett korrupt delat bibliotek"
 
-#: sysdeps/gnu/errlist.c:1326
+#: sysdeps/gnu/errlist.c:1327
 msgid ".lib section in a.out corrupted"
 msgstr ".lib-sektion i a.out korrupt"
 
-#: sysdeps/gnu/errlist.c:1334
+#: sysdeps/gnu/errlist.c:1335
 msgid "Attempting to link in too many shared libraries"
 msgstr "Försöker att länka in för många delade bibliotek"
 
-#: sysdeps/gnu/errlist.c:1342
+#: sysdeps/gnu/errlist.c:1343
 msgid "Cannot exec a shared library directly"
 msgstr "Kan inte köra ett delat bibliotek direkt"
 
-#: sysdeps/gnu/errlist.c:1350
+#: sysdeps/gnu/errlist.c:1351
 msgid "Streams pipe error"
 msgstr "Streams-rörfel"
 
-#: sysdeps/gnu/errlist.c:1358
+#: sysdeps/gnu/errlist.c:1359
 msgid "Structure needs cleaning"
 msgstr "Strukturen behöver städas"
 
-#: sysdeps/gnu/errlist.c:1366
+#: sysdeps/gnu/errlist.c:1367
 msgid "Not a XENIX named type file"
 msgstr "Inte en XENIX-namngiven fil"
 
-#: sysdeps/gnu/errlist.c:1374
+#: sysdeps/gnu/errlist.c:1375
 msgid "No XENIX semaphores available"
 msgstr "Inga XENIX-semaforer tillgängliga"
 
-#: sysdeps/gnu/errlist.c:1382
+#: sysdeps/gnu/errlist.c:1383
 msgid "Is a named type file"
 msgstr "Är av typ namnfil"
 
-#: sysdeps/gnu/errlist.c:1390
+#: sysdeps/gnu/errlist.c:1391
 msgid "Remote I/O error"
 msgstr "I/O-fel på fjärrmaskin"
 
-#: sysdeps/gnu/errlist.c:1398
+#: sysdeps/gnu/errlist.c:1399
 msgid "No medium found"
 msgstr "Inget medium funnet"
 
-#: sysdeps/gnu/errlist.c:1406
+#: sysdeps/gnu/errlist.c:1407
 msgid "Wrong medium type"
 msgstr "Fel typ på mediet"
 
-#: sysdeps/gnu/errlist.c:1414
+#: sysdeps/gnu/errlist.c:1415
 msgid "Required key not available"
 msgstr "Obligatorisk nyckel inte tillgänglig"
 
-#: sysdeps/gnu/errlist.c:1422
+#: sysdeps/gnu/errlist.c:1423
 msgid "Key has expired"
 msgstr "Nyckeln har gått ut"
 
-#: sysdeps/gnu/errlist.c:1430
+#: sysdeps/gnu/errlist.c:1431
 msgid "Key has been revoked"
 msgstr "Nyckeln har återkallats"
 
-#: sysdeps/gnu/errlist.c:1438
+#: sysdeps/gnu/errlist.c:1439
 msgid "Key was rejected by service"
 msgstr "Nyckeln accepterades inte av tjänsten"
 
-#: sysdeps/gnu/errlist.c:1446
+#: sysdeps/gnu/errlist.c:1447
 msgid "Owner died"
 msgstr "Ägaren dog"
 
-#: sysdeps/gnu/errlist.c:1454
+#: sysdeps/gnu/errlist.c:1455
 msgid "State not recoverable"
 msgstr "Tillståndet kan inte återskapas"
 
-#: sysdeps/gnu/errlist.c:1462
+#: sysdeps/gnu/errlist.c:1463
 msgid "Operation not possible due to RF-kill"
 msgstr "Operationen inte möjlig p.g.a. RF-kill"
 
-#: sysdeps/gnu/errlist.c:1470
+#: sysdeps/gnu/errlist.c:1471
 msgid "Memory page has hardware error"
 msgstr "Minnessida har hårdvarufel"
 
@@ -6765,6 +6779,11 @@ msgstr "Parametersträng felaktigt kodad"
 msgid "%s is for unknown machine %d.\n"
 msgstr "%s är för en okänd maskin %d.\n"
 
+#: sysdeps/unix/sysv/linux/ia64/makecontext.c:58
+#, c-format
+msgid "makecontext: does not know how to handle more than 8 arguments\n"
+msgstr "makecontext: kan inte hantera mer än 8 argument\n"
+
 #: sysdeps/unix/sysv/linux/lddlibc4.c:60
 #, c-format
 msgid ""
@@ -6784,28 +6803,28 @@ msgstr "kan inte öppna \"%s\""
 msgid "cannot read header from `%s'"
 msgstr "kan inte läsa huvud från \"%s\""
 
-#: timezone/zdump.c:280
+#: timezone/zdump.c:282
 msgid "lacks alphabetic at start"
 msgstr "saknar alfabetiskt tecken i början"
 
-#: timezone/zdump.c:282
+#: timezone/zdump.c:284
 msgid "has fewer than 3 alphabetics"
 msgstr "har färre än 3 alfabetiska tecken"
 
-#: timezone/zdump.c:284
+#: timezone/zdump.c:286
 msgid "has more than 6 alphabetics"
 msgstr "har fler än 6 alfabetiska tecken"
 
-#: timezone/zdump.c:292
+#: timezone/zdump.c:294
 msgid "differs from POSIX standard"
 msgstr "skiljer sig från POSIX-standard"
 
-#: timezone/zdump.c:298
+#: timezone/zdump.c:300
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr "%s: varning: zon \"%s\" förkortning \"%s\": %s\n"
 
-#: timezone/zdump.c:307
+#: timezone/zdump.c:309
 #, c-format
 msgid ""
 "%s: usage: %s [--version] [--help] [-{vV}] [-{ct} [lo,]hi] zonename ...\n"
@@ -6816,41 +6835,41 @@ msgstr ""
 "Rapportera fel till %s.\n"
 "Rapportera fel eller synpunkter på översättningen till <tp-sv@listor.tp-sv.se>.\n"
 
-#: timezone/zdump.c:384
+#: timezone/zdump.c:386
 #, c-format
 msgid "%s: wild -c argument %s\n"
 msgstr "%s: argument \"%s\" till flaggan -c har fel format\n"
 
-#: timezone/zdump.c:417
+#: timezone/zdump.c:419
 #, c-format
 msgid "%s: wild -t argument %s\n"
 msgstr "%s: argument \"%s\" till flaggan -t har fel format\n"
 
-#: timezone/zdump.c:506
+#: timezone/zdump.c:508
 msgid "Error writing to standard output"
 msgstr "Fel vid skrivning till standard ut"
 
-#: timezone/zic.c:370
+#: timezone/zic.c:371
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: Minnet slut: %s\n"
 
-#: timezone/zic.c:410
+#: timezone/zic.c:438
 #, c-format
 msgid "\"%s\", line %d: "
 msgstr "\"%s\", rad %d: "
 
-#: timezone/zic.c:413
+#: timezone/zic.c:441
 #, c-format
 msgid " (rule from \"%s\", line %d)"
 msgstr " (regel från \"%s\", rad %d)"
 
-#: timezone/zic.c:432
+#: timezone/zic.c:460
 #, c-format
 msgid "warning: "
 msgstr "varning: "
 
-#: timezone/zic.c:442
+#: timezone/zic.c:470
 #, c-format
 msgid ""
 "%s: usage is %s [ --version ] [ --help ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n"
@@ -6863,339 +6882,335 @@ msgstr ""
 "Rapportera fel till %s.\n"
 "Rapportera fel eller synpunkter på översättningen till <tp-sv@listor.tp-sv.se>.\n"
 
-#: timezone/zic.c:477
+#: timezone/zic.c:505
 msgid "wild compilation-time specification of zic_t"
 msgstr "definitionen av zic_t vid kompilering är orimlig"
 
-#: timezone/zic.c:496
+#: timezone/zic.c:524
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "%s: Flaggan -d given mer än en gång\n"
 
-#: timezone/zic.c:506
+#: timezone/zic.c:534
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "%s: Flaggan -l given mer än en gång\n"
 
-#: timezone/zic.c:516
+#: timezone/zic.c:544
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: Flaggan -p given mer än en gång\n"
 
-#: timezone/zic.c:526
+#: timezone/zic.c:554
 #, c-format
 msgid "%s: More than one -y option specified\n"
 msgstr "%s: Flaggan -y given mer än en gång\n"
 
-#: timezone/zic.c:536
+#: timezone/zic.c:564
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: Flaggan -L given mer än en gång\n"
 
-#: timezone/zic.c:583
+#: timezone/zic.c:611
 msgid "link to link"
 msgstr "länk till länk"
 
-#: timezone/zic.c:650
+#: timezone/zic.c:678
 msgid "hard link failed, symbolic link used"
 msgstr "hård länk misslyckades, använder symbolisk länk"
 
-#: timezone/zic.c:660
+#: timezone/zic.c:688
 #, c-format
 msgid "%s: Can't read %s: %s\n"
 msgstr "%s: Kan inte läsa %s: %s\n"
 
-#: timezone/zic.c:668 timezone/zic.c:1533
+#: timezone/zic.c:696 timezone/zic.c:1595
 #, c-format
 msgid "%s: Can't create %s: %s\n"
 msgstr "%s: Kan inte skapa %s: %s\n"
 
-#: timezone/zic.c:676 timezone/zic.c:881
+#: timezone/zic.c:704 timezone/zic.c:939
 #, c-format
 msgid "%s: Error reading %s\n"
 msgstr "%s: Fel vid läsning från %s\n"
 
-#: timezone/zic.c:682 timezone/zic.c:1750
+#: timezone/zic.c:710 timezone/zic.c:1792
 #, c-format
 msgid "%s: Error writing %s\n"
 msgstr "%s: Fel vid skrivning till %s\n"
 
-#: timezone/zic.c:686
+#: timezone/zic.c:714
 msgid "link failed, copy used"
 msgstr "länka misslyckades, kopia skapad"
 
-#: timezone/zic.c:744 timezone/zic.c:746
+#: timezone/zic.c:802 timezone/zic.c:804
 msgid "same rule name in multiple files"
 msgstr "samma regelnamn i flera filer"
 
-#: timezone/zic.c:787
+#: timezone/zic.c:845
 msgid "unruly zone"
 msgstr "besvärlig zon"
 
-#: timezone/zic.c:794
+#: timezone/zic.c:852
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "%s i zon utan regler"
 
-#: timezone/zic.c:814
+#: timezone/zic.c:872
 msgid "standard input"
 msgstr "standard in"
 
-#: timezone/zic.c:819
+#: timezone/zic.c:877
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: Kan inte öppna %s: %s\n"
 
-#: timezone/zic.c:830
+#: timezone/zic.c:888
 msgid "line too long"
 msgstr "för lång rad"
 
-#: timezone/zic.c:850
+#: timezone/zic.c:908
 msgid "input line of unknown type"
 msgstr "inrad av okänd typ"
 
-#: timezone/zic.c:866
+#: timezone/zic.c:924
 #, c-format
 msgid "%s: Leap line in non leap seconds file %s\n"
 msgstr "%s: \"Leap\"-rad i fil %s som inte är skottsekundsfil\n"
 
-#: timezone/zic.c:873 timezone/zic.c:1282 timezone/zic.c:1304
+#: timezone/zic.c:931 timezone/zic.c:1339 timezone/zic.c:1361
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr "%s: panik: Ogiltigt l_value %d\n"
 
-#: timezone/zic.c:888
+#: timezone/zic.c:946
 #, c-format
 msgid "%s: Error closing %s: %s\n"
 msgstr "%s: Fel vid stängning av %s: %s\n"
 
-#: timezone/zic.c:893
+#: timezone/zic.c:951
 msgid "expected continuation line not found"
 msgstr "förväntad fortsättningsrad inte funnen"
 
-#: timezone/zic.c:934 timezone/zic.c:2610 timezone/zic.c:2624
+#: timezone/zic.c:992 timezone/zic.c:2644 timezone/zic.c:2658
 msgid "time overflow"
 msgstr "för stort tidsvärde"
 
-#: timezone/zic.c:938
-msgid "24:00 not handled by pre-1998 versions of zic"
-msgstr "24:00 hanteras inte av zic-versioner före 1998"
-
-#: timezone/zic.c:941
+#: timezone/zic.c:997
 msgid "values over 24 hours not handled by pre-2007 versions of zic"
 msgstr "värden större än 24 timmar hanteras inte av zic-versioner före 2007"
 
-#: timezone/zic.c:952
+#: timezone/zic.c:1008
 msgid "wrong number of fields on Rule line"
 msgstr "fel antal fält på \"Rule\"-rad"
 
-#: timezone/zic.c:956
+#: timezone/zic.c:1012
 msgid "nameless rule"
 msgstr "namnlös regel"
 
-#: timezone/zic.c:961
+#: timezone/zic.c:1017
 msgid "invalid saved time"
 msgstr "ogiltig sparad tid"
 
-#: timezone/zic.c:978
+#: timezone/zic.c:1034
 msgid "wrong number of fields on Zone line"
 msgstr "fel antal fält på \"Zone\"-rad"
 
-#: timezone/zic.c:983
+#: timezone/zic.c:1039
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr "\"Zone %s\"-rad och flaggan -l är ömsesidigt uteslutande"
 
-#: timezone/zic.c:989
+#: timezone/zic.c:1045
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "\"Zone %s\"-rad och flaggan -p är ömsesidigt uteslutande"
 
-#: timezone/zic.c:997
+#: timezone/zic.c:1053
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %d)"
 msgstr "dubblerat zonnamn %s (fil \"%s\", rad %d)"
 
-#: timezone/zic.c:1010
+#: timezone/zic.c:1066
 msgid "wrong number of fields on Zone continuation line"
 msgstr "fel antal fält på \"Zone\"-fortsättningsrad"
 
-#: timezone/zic.c:1047
+#: timezone/zic.c:1103
 msgid "invalid UT offset"
 msgstr "ogiltigt UT-tillägg"
 
-#: timezone/zic.c:1050
+#: timezone/zic.c:1106
 msgid "invalid abbreviation format"
 msgstr "ogiltigt förkortningsformat"
 
-#: timezone/zic.c:1079
+#: timezone/zic.c:1135
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr "Zon-fortsättningsradens sluttid är inte efter sluttiden på föregående rad"
 
-#: timezone/zic.c:1105
+#: timezone/zic.c:1161
 msgid "wrong number of fields on Leap line"
 msgstr "fel antal fält på \"Leap\"-rad"
 
-#: timezone/zic.c:1114
+#: timezone/zic.c:1170
 msgid "invalid leaping year"
 msgstr "ogiltigt skottår"
 
-#: timezone/zic.c:1134 timezone/zic.c:1236
+#: timezone/zic.c:1190 timezone/zic.c:1293
 msgid "invalid month name"
 msgstr "ogiltigt månadsnamn"
 
-#: timezone/zic.c:1147 timezone/zic.c:1349 timezone/zic.c:1363
+#: timezone/zic.c:1203 timezone/zic.c:1406 timezone/zic.c:1420
 msgid "invalid day of month"
 msgstr "ogiltig dag i månaden"
 
-#: timezone/zic.c:1152
-msgid "time before zero"
-msgstr "tid före noll"
-
-#: timezone/zic.c:1156
+#: timezone/zic.c:1208
 msgid "time too small"
 msgstr "tid för kort"
 
-#: timezone/zic.c:1160
+#: timezone/zic.c:1212
 msgid "time too large"
 msgstr "tid för lång"
 
-#: timezone/zic.c:1164 timezone/zic.c:1265
+#: timezone/zic.c:1216 timezone/zic.c:1322
 msgid "invalid time of day"
 msgstr "ogiltig tid på dagen"
 
-#: timezone/zic.c:1183
+#: timezone/zic.c:1235
 msgid "illegal CORRECTION field on Leap line"
 msgstr "otillåtet \"CORRECTION\"-fält på \"Leap\"-rad"
 
-#: timezone/zic.c:1188
+#: timezone/zic.c:1240
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr "otillåtet \"Rolling/Stationary\"-fält på \"Leap\"-rad"
 
-#: timezone/zic.c:1202
+#: timezone/zic.c:1246
+msgid "leap second precedes Big Bang"
+msgstr "skottsekund föregår Big Bang"
+
+#: timezone/zic.c:1259
 msgid "wrong number of fields on Link line"
 msgstr "fel antal fält på \"Link\"-rad"
 
-#: timezone/zic.c:1206
+#: timezone/zic.c:1263
 msgid "blank FROM field on Link line"
 msgstr "tomt \"FROM\"-fält på \"Link\"-rad"
 
-#: timezone/zic.c:1210
+#: timezone/zic.c:1267
 msgid "blank TO field on Link line"
 msgstr "tomt \"TO\"-fält på \"Link\"-rad"
 
-#: timezone/zic.c:1286
+#: timezone/zic.c:1343
 msgid "invalid starting year"
 msgstr "ogiltigt startår"
 
-#: timezone/zic.c:1308
+#: timezone/zic.c:1365
 msgid "invalid ending year"
 msgstr "ogiltigt slutår"
 
-#: timezone/zic.c:1312
+#: timezone/zic.c:1369
 msgid "starting year greater than ending year"
 msgstr "startår är större än slutår"
 
-#: timezone/zic.c:1319
+#: timezone/zic.c:1376
 msgid "typed single year"
 msgstr "satte typ på endast ett år"
 
-#: timezone/zic.c:1354
+#: timezone/zic.c:1411
 msgid "invalid weekday name"
 msgstr "ogiltigt veckodagsnamn"
 
-#: timezone/zic.c:1523
+#: timezone/zic.c:1530
+msgid "pre-2014 clients may mishandle more than 1200 transition times"
+msgstr "klienter från före 2014 kan hantera fler än 1200 övergångstider felaktigt"
+
+#: timezone/zic.c:1585
 #, c-format
 msgid "%s: Can't remove %s: %s\n"
 msgstr "%s: Kan inte ta bort %s: %s\n"
 
-#: timezone/zic.c:2105
+#: timezone/zic.c:2143
 msgid "no POSIX environment variable for zone"
 msgstr "ingen POSIX-miljövariabel för zon"
 
-#: timezone/zic.c:2111
+#: timezone/zic.c:2149
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr "%s: klienter före %d kan hantera avlägsna tidsstämplar felaktigt"
 
-#: timezone/zic.c:2292
+#: timezone/zic.c:2329
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "kan inte avgöra tidszonsförkortning att använda just efter \"until\"-tid"
 
-#: timezone/zic.c:2338 timezone/zic.c:2416
+#: timezone/zic.c:2375 timezone/zic.c:2450
 msgid "too many local time types"
 msgstr "för många lokala tidstyper"
 
-#: timezone/zic.c:2374
-msgid "too many transitions?!"
-msgstr "för många övergångar?!"
-
-#: timezone/zic.c:2389
+#: timezone/zic.c:2423
 msgid "internal error - addtype called with bad isdst"
 msgstr "internt fel - addtype anropad med felaktig isdst"
 
-#: timezone/zic.c:2393
+#: timezone/zic.c:2427
 msgid "internal error - addtype called with bad ttisstd"
 msgstr "internt fel - addtype anropad med felaktig ttisstd"
 
-#: timezone/zic.c:2397
+#: timezone/zic.c:2431
 msgid "internal error - addtype called with bad ttisgmt"
 msgstr "internt fel - addtype anropad med felaktig ttisgmt"
 
-#: timezone/zic.c:2420
+#: timezone/zic.c:2454
 msgid "UT offset out of range"
 msgstr "UT-offset utanför giltigt intervall"
 
-#: timezone/zic.c:2444
+#: timezone/zic.c:2478
 msgid "too many leap seconds"
 msgstr "för många skottsekunder"
 
-#: timezone/zic.c:2450
+#: timezone/zic.c:2484
 msgid "repeated leap second moment"
 msgstr "upprepat skottsekundstillfälle"
 
-#: timezone/zic.c:2500
+#: timezone/zic.c:2534
 msgid "Wild result from command execution"
 msgstr "Vilt resultat från kommandokörning"
 
-#: timezone/zic.c:2501
+#: timezone/zic.c:2535
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
 msgstr "%s: kommandot var \"%s\", resultatet blev %d\n"
 
-#: timezone/zic.c:2592
+#: timezone/zic.c:2626
 msgid "Odd number of quotation marks"
 msgstr "Ojämnt antal citationstecken"
 
-#: timezone/zic.c:2669
+#: timezone/zic.c:2703
 msgid "use of 2/29 in non leap-year"
 msgstr "använder 29/2 i icke-skottår"
 
-#: timezone/zic.c:2704
+#: timezone/zic.c:2738
 msgid "rule goes past start/end of month--will not work with pre-2004 versions of zic"
 msgstr "regeln går utanför start/slut på månad, fungerar inte på zic-versioner före 2004"
 
-#: timezone/zic.c:2735
+#: timezone/zic.c:2769
 msgid "time zone abbreviation lacks alphabetic at start"
 msgstr "tidszonsförkortning saknar alfabetiskt tecken i början"
 
-#: timezone/zic.c:2737
+#: timezone/zic.c:2771
 msgid "time zone abbreviation has fewer than 3 alphabetics"
 msgstr "tidszonsförkortning har färre än 3 alfabetiska tecken"
 
-#: timezone/zic.c:2739
+#: timezone/zic.c:2773
 msgid "time zone abbreviation has too many alphabetics"
 msgstr "tidszonsförkortning har för många alfabetiska tecken"
 
-#: timezone/zic.c:2749
+#: timezone/zic.c:2783
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "tidszonsförkortning skiljer sig från POSIX-standarden"
 
-#: timezone/zic.c:2755
+#: timezone/zic.c:2789
 msgid "too many, or too long, time zone abbreviations"
 msgstr "för många eller för långa tidszonförkortningar"
 
-#: timezone/zic.c:2795
+#: timezone/zic.c:2829
 #, c-format
 msgid "%s: Can't create directory %s: %s\n"
 msgstr "%s: Kan inte skapa katalog %s: %s\n"
