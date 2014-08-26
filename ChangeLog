@@ -1,3 +1,10 @@
+2014-08-26  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #17187]
+	* iconv/gconv_trans.c (struct known_trans, search_tree, lock,
+	trans_compare, open_translit, __gconv_translit_find):
+	Remove module loading code.
+
 2014-08-26  Allan McRae  <allan@archlinux.org>
 
 	* po/vi.po: Update Vietnamese translation from translation project.

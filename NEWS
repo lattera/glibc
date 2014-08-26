@@ -23,7 +23,7 @@ Version 2.20
   16966, 16967, 16977, 16978, 16984, 16990, 16996, 17009, 17022, 17031,
   17042, 17048, 17050, 17058, 17061, 17062, 17069, 17075, 17078, 17079,
   17084, 17086, 17088, 17092, 17097, 17125, 17135, 17137, 17150, 17153,
-  17213, 17259, 17261, 17262, 17263.
+  17187, 17213, 17259, 17261, 17262, 17263.
 
 * Reverted change of ABI data structures for s390 and s390x:
   On s390 and s390x the size of struct ucontext and jmp_buf was increased in
@@ -108,6 +108,13 @@ Version 2.20
   handle the new instruction encodings.  This is known to affect Valgrind
   versions up through 3.9 (but will be fixed in the forthcoming 3.10
   release), and might affect other tools that do instruction emulation.
+
+* Support for loadable gconv transliteration modules has been removed.
+  The support for transliteration modules has been non-functional for
+  over a decade, and the removal is prompted by security defects.  The
+  normal gconv conversion modules are still supported.  Transliteration
+  with //TRANSLIT is still possible, and the //IGNORE specifier
+  continues to be  supported. (CVE-2014-5519)
 
 Version 2.19
 
