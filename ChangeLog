@@ -1,3 +1,7 @@
+2014-08-26  Allan McRae  <allan@archlinux.org>
+
+	* po/es.po: Update Spanish translation from translation project.
+
 2014-08-21  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* nptl/Makefile (CFLAGS-pthread_atfork.c): Remove.
