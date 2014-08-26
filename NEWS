@@ -114,7 +114,7 @@ Version 2.20
   over a decade, and the removal is prompted by security defects.  The
   normal gconv conversion modules are still supported.  Transliteration
   with //TRANSLIT is still possible, and the //IGNORE specifier
-  continues to be  supported. (CVE-2014-5519)
+  continues to be  supported. (CVE-2014-5119)
 
 Version 2.19
 
