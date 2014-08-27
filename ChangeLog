@@ -1,3 +1,10 @@
+2014-08-27  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	Simplify atomicity of socket creation in bind.
+
+	* sysdeps/mach/hurd/bind.c (__bind): Use dir_lookup(node, "") instead of
+	looking up the name after linking the file.
+
 2014-08-27  Allan McRae  <allan@archlinux.org>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Update ULPs.
