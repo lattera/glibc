@@ -1,3 +1,14 @@
+2014-08-27  Mark Wielaard  <mjw@redhat.com>
+
+	[BZ #17319]
+	* sysdeps/i386/nptl/tls.h (TLS_INIT_TP): Use INTERNAL_SYSCALL
+	to call set_thread_area instead of hand written asm.
+	(__NR_set_thread_area): Removed define.
+	(TLS_FLAG_WRITABLE): Likewise.
+	(__ASSUME_SET_THREAD_AREA): Remove check.
+	(TLS_EBX_ARG): Remove define.
+	(TLS_LOAD_EBX): Likewise.
+
 2014-08-27  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	Simplify atomicity of socket creation in bind.

@@ -154,29 +154,6 @@ union user_desc_init
   __asm ("movw %w0, %%gs" :: "q" (val))
 # endif
 
-
-# ifndef __NR_set_thread_area
-#  define __NR_set_thread_area 243
-# endif
-# ifndef TLS_FLAG_WRITABLE
-#  define TLS_FLAG_WRITABLE		0x00000001
-# endif
-
-// XXX Enable for the real world.
-#if 0
-# ifndef __ASSUME_SET_THREAD_AREA
-#  error "we need set_thread_area"
-# endif
-#endif
-
-# ifdef __PIC__
-#  define TLS_EBX_ARG "r"
-#  define TLS_LOAD_EBX "xchgl %3, %%ebx\n\t"
-# else
-#  define TLS_EBX_ARG "b"
-#  define TLS_LOAD_EBX
-# endif
-
 #if defined NEED_DL_SYSINFO
 # define INIT_SYSINFO \
   _head->sysinfo = GLRO(dl_sysinfo)
@@ -231,12 +208,8 @@ tls_fill_user_desc (union user_desc_init *desc,
      tls_fill_user_desc (&_segdescr, -1, _thrdescr);			      \
 									      \
      /* Install the TLS.  */						      \
-     asm volatile (TLS_LOAD_EBX						      \
-		   "int $0x80\n\t"					      \
-		   TLS_LOAD_EBX						      \
-		   : "=a" (_result), "=m" (_segdescr.desc.entry_number)	      \
-		   : "0" (__NR_set_thread_area),			      \
-		     TLS_EBX_ARG (&_segdescr.desc), "m" (_segdescr.desc));    \
+     INTERNAL_SYSCALL_DECL (err);					      \
+     _result = INTERNAL_SYSCALL (set_thread_area, err, 1, &_segdescr.desc);   \
 									      \
      if (_result == 0)							      \
        /* We know the index in the GDT, now load the segment register.	      \
