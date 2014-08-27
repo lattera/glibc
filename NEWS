@@ -30,7 +30,7 @@ Version 2.20
   2.19. This change is reverted in 2.20. The introduced 2.19 symbol versions
   of getcontext, setjmp, _setjmp, __sigsetjmp, longjmp, _longjmp, siglongjmp
   are preserved pointing straight to the same implementation as the old ones.
-  Given that, new callers wil simply provide a too-big buffer to these
+  Given that, new callers will simply provide a too-big buffer to these
   functions. Any applications/libraries out there that embed jmp_buf or
   ucontext_t in an ABI-relevant data structure that have already been rebuilt
   against 2.19 headers will have to rebuilt again. This is necessary in any
