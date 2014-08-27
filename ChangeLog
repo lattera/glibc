@@ -1,3 +1,7 @@
+2014-08-27  Allan McRae  <allan@archlinux.org>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Update ULPs.
+
 2014-08-26  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #17187]

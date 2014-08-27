@@ -1964,17 +1964,17 @@ ildouble: 5
 ldouble: 5
 
 Function: "yn_towardzero":
-double: 2
+double: 3
 float: 3
-idouble: 2
+idouble: 3
 ifloat: 3
 ildouble: 5
 ldouble: 5
 
 Function: "yn_upward":
-double: 2
+double: 3
 float: 3
-idouble: 2
+idouble: 3
 ifloat: 3
 ildouble: 4
 ldouble: 4
