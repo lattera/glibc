@@ -129,9 +129,13 @@ __fork (void)
       ports_locked = 1;
 
 
+      /* Keep our SS locked while stopping other threads, so they don't get a
+         chance to have it locked in the copied space.  */
+      __spin_lock (&ss->lock);
       /* Stop all other threads while copying the address space,
 	 so nothing changes.  */
       err = __proc_dostop (_hurd_ports[INIT_PORT_PROC].port, ss->thread);
+      __spin_unlock (&ss->lock);
       if (!err)
 	{
 	  stopped = 1;
