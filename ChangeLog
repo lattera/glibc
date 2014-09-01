@@ -1,3 +1,7 @@
+2014-09-01  Allan McRae  <allan@archlinux.org>
+
+	* po/ca.po: Update Catalan translation from translation project.
+
 2014-08-28  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/fork.c (__fork): Lock SS->lock around
