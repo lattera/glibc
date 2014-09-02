@@ -1,3 +1,8 @@
+2014-09-02  Khem Raj  <raj.khem@gmail.com>
+
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fegetenv.c (fegetenv): Add
+	libm_hidden_ver.
+
 2014-09-01  Allan McRae  <allan@archlinux.org>
 
 	* po/eo.po: Update Esperanto translation from translation project.
