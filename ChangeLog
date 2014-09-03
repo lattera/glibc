@@ -1,3 +1,20 @@
+2014-09-03  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #17325]
+	* iconvdata/ibm1364.c (BODY): Fix check for sentinel.
+	* iconvdata/ibm932.c (BODY): Replace invalid sentinel check with
+	assert.
+	* iconvdata/ibm933.c (BODY): Fix check for sentinel.
+	* iconvdata/ibm935.c (BODY): Likewise.
+	* iconvdata/ibm937.c (BODY): Likewise.
+	* iconvdata/ibm939.c (BODY): Likewise.
+	* iconvdata/ibm943.c (BODY): Replace invalid sentinel check with
+	assert.
+	* iconvdata/Makefile (iconv-test.out): Pass module list to test
+	script.
+	* iconvdata/run-iconv-test.sh: New test loop for checking for
+	decoder crashers.
+
 2014-09-02  Khem Raj  <raj.khem@gmail.com>
 
 	* sysdeps/powerpc/powerpc32/e500/nofpu/fegetenv.c (fegetenv): Add

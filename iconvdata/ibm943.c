@@ -75,11 +75,12 @@
 	  }								      \
 									      \
 	ch = (ch * 0x100) + inptr[1];					      \
+	/* ch was less than 0xfd.  */					      \
+	assert (ch < 0xfd00);						      \
 	while (ch > rp2->end)						      \
 	  ++rp2;							      \
 									      \
-	if (__builtin_expect (rp2 == NULL, 0)				      \
-	    || __builtin_expect (ch < rp2->start, 0)			      \
+	if (__builtin_expect (ch < rp2->start, 0)			      \
 	    || (res = __ibm943db_to_ucs4[ch + rp2->idx],		      \
 	    __builtin_expect (res, '\1') == 0 && ch !=0))		      \
 	  {								      \

@@ -221,7 +221,8 @@ enum
 	  ++rp2;							      \
 									      \
 	uint32_t res;							      \
-	if (__builtin_expect (ch < rp2->start, 0)			      \
+	if (__builtin_expect (rp2->start == 0xffff, 0)			      \
+	    || __builtin_expect (ch < rp2->start, 0)			      \
 	    || (res = DB_TO_UCS4[ch + rp2->idx],			      \
 		__builtin_expect (res, L'\1') == L'\0' && ch != '\0'))	      \
 	  {								      \

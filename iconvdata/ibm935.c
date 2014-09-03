@@ -162,7 +162,7 @@ enum
 	while (ch > rp2->end)						      \
 	  ++rp2;							      \
 									      \
-	if (__builtin_expect (rp2 == NULL, 0)				      \
+	if (__builtin_expect (rp2->start == 0xffff, 0)			      \
 	    || __builtin_expect (ch < rp2->start, 0)			      \
 	    || (res = __ibm935db_to_ucs4[ch + rp2->idx],		      \
 		__builtin_expect (res, L'\1') == L'\0' && ch != '\0'))	      \
