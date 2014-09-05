@@ -657,7 +657,7 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
     value += 0x8000;
 #endif
 
-  value >>= h->right_shift;
+  value = ((long) value) >> h->right_shift;
 
   switch (h->byte_size)
     {
@@ -686,12 +686,17 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
   tile_bundle_bits *p = (tile_bundle_bits *) reloc_addr;
   tile_bundle_bits bits = *p;
 
-#define MUNGE(func) do {                                            \
+#define MUNGE_SIGNED(func, length) do {                             \
     bits = ((bits & ~create_##func (-1)) | create_##func (value));  \
-    if (get_##func (bits) != value)                                 \
+    ElfW(Addr) result = get_##func (bits);                          \
+    int signbits = __WORDSIZE - length;                             \
+    result = (long) (result << signbits) >> signbits;               \
+    if (result != value)                                            \
       _dl_signal_error (0, map->l_name, NULL,                       \
                         "relocation value too large for " #func);   \
   } while (0)
+
+#define MUNGE(func) MUNGE_SIGNED(func, __WORDSIZE)
 
 #define MUNGE_NOCHECK(func)                                     \
   bits = ((bits & ~create_##func (-1)) | create_##func (value))
@@ -700,23 +705,23 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
     {
 #ifdef __tilegx__
     case R_TILEGX_BROFF_X1:
-      MUNGE (BrOff_X1);
+      MUNGE_SIGNED (BrOff_X1, 17);
       break;
     case R_TILEGX_JUMPOFF_X1:
     case R_TILEGX_JUMPOFF_X1_PLT:
-      MUNGE (JumpOff_X1);
+      MUNGE_SIGNED (JumpOff_X1, 27);
       break;
     case R_TILEGX_IMM8_X0:
-      MUNGE (Imm8_X0);
+      MUNGE_SIGNED (Imm8_X0, 8);
       break;
     case R_TILEGX_IMM8_Y0:
-      MUNGE (Imm8_Y0);
+      MUNGE_SIGNED (Imm8_Y0, 8);
       break;
     case R_TILEGX_IMM8_X1:
-      MUNGE (Imm8_X1);
+      MUNGE_SIGNED (Imm8_X1, 8);
       break;
     case R_TILEGX_IMM8_Y1:
-      MUNGE (Imm8_Y1);
+      MUNGE_SIGNED (Imm8_Y1, 8);
       break;
     case R_TILEGX_MT_IMM14_X1:
       MUNGE (MT_Imm14_X1);
@@ -746,7 +751,7 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
     case R_TILEGX_IMM16_X0_HW1_LAST_TLS_GD:
     case R_TILEGX_IMM16_X0_HW0_LAST_TLS_IE:
     case R_TILEGX_IMM16_X0_HW1_LAST_TLS_IE:
-      MUNGE (Imm16_X0);
+      MUNGE_SIGNED (Imm16_X0, 16);
       break;
     case R_TILEGX_IMM16_X1_HW0:
     case R_TILEGX_IMM16_X1_HW1:
@@ -770,7 +775,7 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
     case R_TILEGX_IMM16_X1_HW1_LAST_TLS_GD:
     case R_TILEGX_IMM16_X1_HW0_LAST_TLS_IE:
     case R_TILEGX_IMM16_X1_HW1_LAST_TLS_IE:
-      MUNGE (Imm16_X1);
+      MUNGE_SIGNED (Imm16_X1, 16);
       break;
     case R_TILEGX_MMSTART_X0:
       MUNGE (BFStart_X0);
@@ -792,23 +797,23 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
       break;
 #else
     case R_TILEPRO_BROFF_X1:
-      MUNGE (BrOff_X1);
+      MUNGE_SIGNED (BrOff_X1, 17);
       break;
     case R_TILEPRO_JOFFLONG_X1:
     case R_TILEPRO_JOFFLONG_X1_PLT:
       MUNGE_NOCHECK (JOffLong_X1);   /* holds full 32-bit value */
       break;
     case R_TILEPRO_IMM8_X0:
-      MUNGE (Imm8_X0);
+      MUNGE_SIGNED (Imm8_X0, 8);
       break;
     case R_TILEPRO_IMM8_Y0:
-      MUNGE (Imm8_Y0);
+      MUNGE_SIGNED (Imm8_Y0, 8);
       break;
     case R_TILEPRO_IMM8_X1:
-      MUNGE (Imm8_X1);
+      MUNGE_SIGNED (Imm8_X1, 8);
       break;
     case R_TILEPRO_IMM8_Y1:
-      MUNGE (Imm8_Y1);
+      MUNGE_SIGNED (Imm8_Y1, 8);
       break;
     case R_TILEPRO_MT_IMM15_X1:
       MUNGE (MT_Imm15_X1);
@@ -834,7 +839,7 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
     case R_TILEPRO_IMM16_X0_PCREL:
     case R_TILEPRO_IMM16_X0_TLS_GD:
     case R_TILEPRO_IMM16_X0_TLS_IE:
-      MUNGE (Imm16_X0);
+      MUNGE_SIGNED (Imm16_X0, 16);
       break;
     case R_TILEPRO_IMM16_X1_LO:
     case R_TILEPRO_IMM16_X1_HI:
@@ -854,7 +859,7 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
     case R_TILEPRO_IMM16_X1_PCREL:
     case R_TILEPRO_IMM16_X1_TLS_GD:
     case R_TILEPRO_IMM16_X1_TLS_IE:
-      MUNGE (Imm16_X1);
+      MUNGE_SIGNED (Imm16_X1, 16);
       break;
     case R_TILEPRO_MMSTART_X0:
       MUNGE (MMStart_X0);

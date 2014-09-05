@@ -1,3 +1,9 @@
+2014-09-06  Chris Metcalf  <cmetcalf@tilera.com>
+
+	[BZ #17354]
+	* sysdeps/tile/dl-machine.h (elf_machine_rela): Add a MUNGE_SIGNED
+	macro for handling signed relocations.
+
 2014-09-03  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #17325]
