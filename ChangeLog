@@ -1,5 +1,9 @@
 2014-09-07  Allan McRae  <allan@archlinux.org
 
+	* version.h (RELEASE): Set to "stable".
+	(VERSION): Set to "2.20"
+	* include/features.h (__GLIBC_MINOR__): Set to 20.
+
 	* manual/contrib.texi: Add entries for Wilco Dijkstra and Stefan
 	Liebler.
 
