@@ -55,6 +55,9 @@ committee.
 Thomas Bushnell for his contributions to Hurd.
 
 @item
+Wilco Dijkstra for various fixes.
+
+@item
 Liubov Dmitrieva for optimzed string and math functions on x86-64 and
 x86.
 
@@ -181,6 +184,9 @@ code.
 
 @item
 Chris Leonard for various fixes and enhancements to localedata.
+
+@item
+Stefan Liebler for various fixes.
 
 @item
 Hongjiu Lu for providing the support for a Linux 32-bit runtime
