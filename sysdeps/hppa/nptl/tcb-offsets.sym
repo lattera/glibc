@@ -1,4 +1,4 @@
-#include <sysdep.h>
+#include <pthread.h>
 #include <tls.h>
 
 RESULT			offsetof (struct pthread, result)

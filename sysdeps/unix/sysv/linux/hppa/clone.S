@@ -24,6 +24,7 @@
 #include <sysdep.h>
 #define _ERRNO_H	1
 #include <bits/errno.h>
+#include <tcb-offsets.h>
 
 /* Non-thread code calls __clone with the following parameters:
    int clone(int (*fn)(void *arg),
@@ -131,7 +132,6 @@ ENTRY(__clone)
 	ldwm	-64(%sp), %r4
 
 .LthreadStart:
-#ifdef RESET_PID
 # define CLONE_VM_BIT		23	/* 0x00000100  */
 # define CLONE_THREAD_BIT	15	/* 0x00010000  */
 	/* Load original clone flags.
@@ -150,7 +150,6 @@ ENTRY(__clone)
 	stw	%ret0, PID_THREAD_OFFSET(%r26)
 	stw	%ret0, TID_THREAD_OFFSET(%r26)
 1:
-#endif
 	/* Load up the arguments.  */
 	ldw	-60(%sp), %arg0
 	ldw     -64(%sp), %r22
