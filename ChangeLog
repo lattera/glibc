@@ -1,3 +1,8 @@
+2014-09-08  Allan McRae  <allan@archlinux.org>
+
+	* version.h (RELEASE): Set to "development".
+	(VERSION): Set to "2.20.90"
+
 2014-09-07  Allan McRae  <allan@archlinux.org
 
 	* version.h (RELEASE): Set to "stable".
