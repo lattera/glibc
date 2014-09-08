@@ -1,3 +1,11 @@
+2014-09-10  Florian Weimer  <fweimer@redhat.com>
+
+	* Makeconfig (gccwarn-c): Turn implicit-function-declaration
+	warnings into errors.
+
+	* stdlib/tst-tls-atexit-lib.c: Include <stdlib.h>, for the
+	__cxa_thread_atexit_impl prototype.
+
 2014-09-09  Steve Ellcey  <sellcey@mips.com>
 
 	* sysdeps/mips/preconfigure: Put code inside mips* case statement.
