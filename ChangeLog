@@ -1,5 +1,10 @@
 2014-09-09  Steve Ellcey  <sellcey@mips.com>
 
+	* sysdeps/mips/preconfigure: Put code inside mips* case statement.
+	Fix capitalization of error message.
+
+2014-09-09  Steve Ellcey  <sellcey@mips.com>
+
 	* sysdeps/mips/preconfigure: Modify ABI tests.
 
 2014-09-07  Carlos O'Donell  <carlos@systemhalted.org>
