@@ -1,3 +1,7 @@
+2014-09-09  Steve Ellcey  <sellcey@mips.com>
+
+	* sysdeps/mips/preconfigure: Modify ABI tests.
+
 2014-09-07  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/unix/sysv/linux/hppa/c++-types.data: New file.
