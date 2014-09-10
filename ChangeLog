@@ -1,3 +1,7 @@
+2014-09-10  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/unix/sysv/linux/tile/lowlevellock.h: Remove file.
+
 2014-09-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #17363]
