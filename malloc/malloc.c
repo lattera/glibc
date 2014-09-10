@@ -1418,8 +1418,10 @@ typedef struct malloc_chunk *mbinptr;
         BK->fd = FD;							      \
         if (!in_smallbin_range (P->size)				      \
             && __builtin_expect (P->fd_nextsize != NULL, 0)) {		      \
-            assert (P->fd_nextsize->bk_nextsize == P);			      \
-            assert (P->bk_nextsize->fd_nextsize == P);			      \
+	    if (__builtin_expect (P->fd_nextsize->bk_nextsize != P, 0)	      \
+		|| __builtin_expect (P->bk_nextsize->fd_nextsize != P, 0))    \
+	      malloc_printerr (check_action,				      \
+			       "corrupted double-linked list (not small)", P);\
             if (FD->fd_nextsize == NULL) {				      \
                 if (P->fd_nextsize == P)				      \
                   FD->fd_nextsize = FD->bk_nextsize = FD;		      \

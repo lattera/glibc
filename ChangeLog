@@ -1,3 +1,9 @@
+2014-09-11  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #17344]
+	* malloc/malloc.c (unlink): Turn asserts into a call to
+	malloc_printerr.
+
 2014-09-11  Tim Lammens  <tim.lammens@gmail.com>
 
 	[BZ #17370]
