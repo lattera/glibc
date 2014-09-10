@@ -1,3 +1,9 @@
+2014-09-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #17363]
+	* inet/getnetgrent_r.c (__internal_getnetgrent_r): Try next
+	group if the current group is empty.
+
 2014-09-10  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* benchtests/bench-memset.c (test_main): Add more test from size

@@ -297,7 +297,10 @@ __internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
     {
       status = DL_CALL_FCT (*fct, (datap, buffer, buflen, &errno));
 
-      if (status == NSS_STATUS_RETURN)
+      if (status == NSS_STATUS_RETURN
+	  /* The service returned a NOTFOUND, but there are more groups that we
+	     need to resolve before we give up.  */
+	  || (status == NSS_STATUS_NOTFOUND && datap->needed_groups != NULL))
 	{
 	  /* This was the last one for this group.  Look at next group
 	     if available.  */
