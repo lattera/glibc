@@ -733,6 +733,10 @@ re_string_wchar_at (const re_string_t *pstr, int idx)
 }
 
 # ifndef NOT_IN_libc
+#  ifdef _LIBC
+#   include <locale/weight.h>
+#  endif
+
 static int
 internal_function __attribute__ ((pure, unused))
 re_string_elem_size_at (const re_string_t *pstr, int idx)
@@ -740,7 +744,6 @@ re_string_elem_size_at (const re_string_t *pstr, int idx)
 #  ifdef _LIBC
   const unsigned char *p, *extra;
   const int32_t *table, *indirect;
-#   include <locale/weight.h>
   uint_fast32_t nrules = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
 
   if (nrules != 0)
@@ -751,7 +754,7 @@ re_string_elem_size_at (const re_string_t *pstr, int idx)
       indirect = (const int32_t *) _NL_CURRENT (LC_COLLATE,
 						_NL_COLLATE_INDIRECTMB);
       p = pstr->mbs + idx;
-      findidx (&p, pstr->len - idx);
+      findidx (table, indirect, extra, &p, pstr->len - idx);
       return p - pstr->mbs - idx;
     }
   else

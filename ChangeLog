@@ -1,3 +1,38 @@
+2014-09-11  Kostya Serebryany  <konstantin.s.serebryany@gmail.com>
+	    Roland McGrath  <roland@hack.frob.com>
+
+	* locale/weight.h: Add include guard.
+	(findidx): Make static rather than auto; take new parameters
+	TABLE, INDIRECT, and EXTRA instead of getting them as outer locals.
+	* locale/weightwc.h: Likewise.
+	* posix/fnmatch_loop.c
+	(FCT): Change type of EXTRA from int32_t to wint_t.
+	Don't include either header inside the function.
+	Call FINDIDX rather than findidx, and pass new arguments.
+	#undef FINDIDX at the end of the file.
+	* posix/fnmatch.c [_LIBC]: #include <locale/weight.h> and define
+	FINDIDX before including fnmatch_loop.c for the non-wide version.
+	[_LIBC] [HANDLE_MULTIBYTE]: #define findidx to findidxwc around
+	#include <locale/weightwc.h>, and define FINDIDX to findidxwc
+	for the wide version.
+	* posix/regcomp.c [_LIBC]: #include <locale/weight.h>.
+	(build_equiv_class) [_LIBC]: Don't #include it inside the function.
+	Pass new arguments to findidx.
+	* posix/regexec.c [RE_ENABLE_I18N] [_LIBC]: #include <locale/weight.h>.
+	[RE_ENABLE_I18N] (check_node_accept_bytes) [_LIBC]:
+	Don't #include it inside the function.  Pass new arguments to findidx.
+	* posix/regex_internal.h
+	[!NOT_IN_libc] [_LIBC]: #include <locale/weight.h>.
+	(re_string_elem_size_at): Don't #include it inside the function.
+	Pass new arguments to findidx.
+	* string/strcoll_l.c: #include WEIGHT_H at top level.
+	(get_next_seq): Don't #include it inside the function.
+	Pass new arguments to findidx.
+	(get_next_seq_nocache): Likewise.
+	* string/strxfrm_l.c: #include WEIGHT_H at top level.
+	(STRXFRM): Don't #include it inside the function.
+	Pass new arguments to findidx.
+
 2014-09-11  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #17344]

@@ -41,6 +41,7 @@
 #define CONCAT1(a,b) a##b
 
 #include "../locale/localeinfo.h"
+#include WEIGHT_H
 
 /* Track status while looking for sequences in a string.  */
 typedef struct
@@ -152,7 +153,6 @@ get_next_seq (coll_seq *seq, int nrules, const unsigned char *rulesets,
 	      const USTRING_TYPE *weights, const int32_t *table,
 	      const USTRING_TYPE *extra, const int32_t *indirect)
 {
-#include WEIGHT_H
   size_t val = seq->val = 0;
   int len = seq->len;
   size_t backw_stop = seq->backw_stop;
@@ -194,7 +194,7 @@ get_next_seq (coll_seq *seq, int nrules, const unsigned char *rulesets,
 
 	  while (*us != L('\0'))
 	    {
-	      int32_t tmp = findidx (&us, -1);
+	      int32_t tmp = findidx (table, indirect, extra, &us, -1);
 	      rulearr[idxmax] = tmp >> 24;
 	      idxarr[idxmax] = tmp & 0xffffff;
 	      idxcnt = idxmax++;
@@ -242,7 +242,6 @@ get_next_seq_nocache (coll_seq *seq, int nrules, const unsigned char *rulesets,
 		      const USTRING_TYPE *extra, const int32_t *indirect,
 		      int pass)
 {
-#include WEIGHT_H
   size_t val = seq->val = 0;
   int len = seq->len;
   size_t backw_stop = seq->backw_stop;
@@ -285,7 +284,7 @@ get_next_seq_nocache (coll_seq *seq, int nrules, const unsigned char *rulesets,
 	      us = seq->back_us;
 	      while (i < backw)
 		{
-		  int32_t tmp = findidx (&us, -1);
+		  int32_t tmp = findidx (table, indirect, extra, &us, -1);
 		  idx = tmp & 0xffffff;
 		  i++;
 		}
@@ -300,7 +299,7 @@ get_next_seq_nocache (coll_seq *seq, int nrules, const unsigned char *rulesets,
 
 	  while (*us != L('\0'))
 	    {
-	      int32_t tmp = findidx (&us, -1);
+	      int32_t tmp = findidx (table, indirect, extra, &us, -1);
 	      unsigned char rule = tmp >> 24;
 	      prev_idx = idx;
 	      idx = tmp & 0xffffff;

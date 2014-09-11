@@ -376,7 +376,7 @@ FCT (pattern, string, string_end, no_leading_period, flags, ends, alloca_used)
 			const int32_t *table;
 # if WIDE_CHAR_VERSION
 			const int32_t *weights;
-			const int32_t *extra;
+			const wint_t *extra;
 # else
 			const unsigned char *weights;
 			const unsigned char *extra;
@@ -385,19 +385,12 @@ FCT (pattern, string, string_end, no_leading_period, flags, ends, alloca_used)
 			int32_t idx;
 			const UCHAR *cp = (const UCHAR *) str;
 
-			/* This #include defines a local function!  */
-# if WIDE_CHAR_VERSION
-#  include <locale/weightwc.h>
-# else
-#  include <locale/weight.h>
-# endif
-
 # if WIDE_CHAR_VERSION
 			table = (const int32_t *)
 			  _NL_CURRENT (LC_COLLATE, _NL_COLLATE_TABLEWC);
 			weights = (const int32_t *)
 			  _NL_CURRENT (LC_COLLATE, _NL_COLLATE_WEIGHTWC);
-			extra = (const int32_t *)
+			extra = (const wint_t *)
 			  _NL_CURRENT (LC_COLLATE, _NL_COLLATE_EXTRAWC);
 			indirect = (const int32_t *)
 			  _NL_CURRENT (LC_COLLATE, _NL_COLLATE_INDIRECTWC);
@@ -412,7 +405,7 @@ FCT (pattern, string, string_end, no_leading_period, flags, ends, alloca_used)
 			  _NL_CURRENT (LC_COLLATE, _NL_COLLATE_INDIRECTMB);
 # endif
 
-			idx = findidx (&cp, 1);
+			idx = FINDIDX (table, indirect, extra, &cp, 1);
 			if (idx != 0)
 			  {
 			    /* We found a table entry.  Now see whether the
@@ -422,7 +415,8 @@ FCT (pattern, string, string_end, no_leading_period, flags, ends, alloca_used)
 			    int32_t idx2;
 			    const UCHAR *np = (const UCHAR *) n;
 
-			    idx2 = findidx (&np, string_end - n);
+			    idx2 = FINDIDX (table, indirect, extra,
+					    &np, string_end - n);
 			    if (idx2 != 0
 				&& (idx >> 24) == (idx2 >> 24)
 				&& len == weights[idx2 & 0xffffff])
@@ -1277,3 +1271,4 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 #undef L
 #undef BTOWC
 #undef WIDE_CHAR_VERSION
+#undef FINDIDX

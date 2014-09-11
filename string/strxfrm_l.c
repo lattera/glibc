@@ -41,6 +41,7 @@
 #define CONCAT1(a,b) a##b
 
 #include "../locale/localeinfo.h"
+#include WEIGHT_H
 
 
 #ifndef WIDE_CHAR_VERSION
@@ -103,8 +104,6 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
   size_t idxmax;
   size_t idxcnt;
   int use_malloc;
-
-#include WEIGHT_H
 
   if (nrules == 0)
     {
@@ -174,7 +173,7 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
   idxmax = 0;
   do
     {
-      int32_t tmp = findidx (&usrc, -1);
+      int32_t tmp = findidx (table, indirect, extra, &usrc, -1);
       rulearr[idxmax] = tmp >> 24;
       idxarr[idxmax] = tmp & 0xffffff;
 
