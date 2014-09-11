@@ -1,3 +1,10 @@
+2014-09-23  Will Newton  <will.newton@linaro.org>
+
+	* sysdeps/unix/sysv/linux/arm/bits/hwcap.h: Check for
+	_LINUX_ARM_SYSDEP_H include guard too.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (_SYS_AUXV_H): Remove
+	define.
+
 2014-09-20  Rasmus Villemoes  <rv@rasmusvillemoes.dk>
 
 	* sysdeps/unix/sysv/linux/eventfd.c:

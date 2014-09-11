@@ -40,7 +40,6 @@
 #undef SYS_ify
 #define SYS_ify(syscall_name)	(__NR_##syscall_name)
 
-#define _SYS_AUXV_H 1
 #include <bits/hwcap.h>
 
 #ifdef __ASSEMBLER__
