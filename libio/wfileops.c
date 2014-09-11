@@ -711,6 +711,7 @@ do_ftell_wide (_IO_FILE *fp)
 		return WEOF;
 
 	      offset += outstop - out;
+	      free (out);
 	    }
 
 	  /* We don't trust _IO_read_end to represent the current file offset
