@@ -1,3 +1,8 @@
+2014-09-12  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/posix/sysconf.c (__sysconf): Spell
+	_POSIX_DEVICE_SPECIFIC and _POSIX_DEVICE_SPECIFIC_R correctly.
+
 2014-08-12  Florian Weimer  <fweimer@redhat.com>
 
 	* iconv/gconv_open.c (__gconv_open): Remove transliteration module

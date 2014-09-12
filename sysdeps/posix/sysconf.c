@@ -886,13 +886,13 @@ __sysconf (name)
       return -1;
 #endif
     case _SC_DEVICE_SPECIFIC:
-#if _POSIX_DEVICE_SPCIFIC > 0
+#if _POSIX_DEVICE_SPECIFIC > 0
       return _POSIX_DEVICE_SPECIFIC;
 #else
       return -1;
 #endif
     case _SC_DEVICE_SPECIFIC_R:
-#if _POSIX_DEVICE_SPCIFIC_R > 0
+#if _POSIX_DEVICE_SPECIFIC_R > 0
       return _POSIX_DEVICE_SPECIFIC_R;
 #else
       return -1;
