@@ -213,8 +213,6 @@
    points.  */
 #define STANDARD_TO_LOOP_ERR_HANDLER(Incr) \
   {									      \
-    struct __gconv_trans_data *trans;					      \
-									      \
     result = __GCONV_ILLEGAL_INPUT;					      \
 									      \
     if (irreversible == NULL)						      \
@@ -227,14 +225,10 @@
     UPDATE_PARAMS;							      \
 									      \
     /* First try the transliteration methods.  */			      \
-    for (trans = step_data->__trans; trans != NULL; trans = trans->__next)    \
-      {									      \
-	result = DL_CALL_FCT (trans->__trans_fct,			      \
-			      (step, step_data, trans->__data, *inptrp,	      \
-			       &inptr, inend, &outptr, irreversible));	      \
-	if (result != __GCONV_ILLEGAL_INPUT)				      \
-	  break;							      \
-      }									      \
+    if ((step_data->__flags & __GCONV_TRANSLIT) != 0)			      \
+      result = __gconv_transliterate					      \
+	(step, step_data, *inptrp,					      \
+	 &inptr, inend, &outptr, irreversible);			      \
 									      \
     REINIT_PARAMS;							      \
 									      \

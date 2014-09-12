@@ -403,20 +403,15 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
 	  cc->__cd_in.__cd.__data[0].__flags = __GCONV_IS_LAST;
 	  cc->__cd_in.__cd.__data[0].__statep = &result->_wide_data->_IO_state;
 
-	  /* XXX For now no transliteration.  */
-	  cc->__cd_in.__cd.__data[0].__trans = NULL;
-
 	  cc->__cd_out.__cd.__nsteps = fcts.tomb_nsteps;
 	  cc->__cd_out.__cd.__steps = fcts.tomb;
 
 	  cc->__cd_out.__cd.__data[0].__invocation_counter = 0;
 	  cc->__cd_out.__cd.__data[0].__internal_use = 1;
-	  cc->__cd_out.__cd.__data[0].__flags = __GCONV_IS_LAST;
+	  cc->__cd_out.__cd.__data[0].__flags
+	    = __GCONV_IS_LAST | __GCONV_TRANSLIT;
 	  cc->__cd_out.__cd.__data[0].__statep =
 	    &result->_wide_data->_IO_state;
-
-	  /* And now the transliteration.  */
-	  cc->__cd_out.__cd.__data[0].__trans = &__libio_translit;
 
 	  /* From now on use the wide character callback functions.  */
 	  ((struct _IO_FILE_plus *) fp)->vtable = fp->_wide_data->_wide_vtable;

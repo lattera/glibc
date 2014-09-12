@@ -81,14 +81,6 @@ const struct _IO_codecvt __libio_codecvt =
 };
 
 
-#ifdef _LIBC
-const struct __gconv_trans_data __libio_translit attribute_hidden =
-{
-  .__trans_fct = __gconv_transliterate
-};
-#endif
-
-
 /* Return orientation of stream.  If mode is nonzero try to change
    the orientation first.  */
 #undef _IO_fwide
@@ -146,20 +138,14 @@ _IO_fwide (fp, mode)
 	cc->__cd_in.__cd.__data[0].__flags = __GCONV_IS_LAST;
 	cc->__cd_in.__cd.__data[0].__statep = &fp->_wide_data->_IO_state;
 
-	/* XXX For now no transliteration.  */
-	cc->__cd_in.__cd.__data[0].__trans = NULL;
-
 	cc->__cd_out.__cd.__nsteps = fcts.tomb_nsteps;
 	cc->__cd_out.__cd.__steps = fcts.tomb;
 
 	cc->__cd_out.__cd.__data[0].__invocation_counter = 0;
 	cc->__cd_out.__cd.__data[0].__internal_use = 1;
-	cc->__cd_out.__cd.__data[0].__flags = __GCONV_IS_LAST;
+	cc->__cd_out.__cd.__data[0].__flags
+	  = __GCONV_IS_LAST | __GCONV_TRANSLIT;
 	cc->__cd_out.__cd.__data[0].__statep = &fp->_wide_data->_IO_state;
-
-	/* And now the transliteration.  */
-	cc->__cd_out.__cd.__data[0].__trans
-	  = (struct __gconv_trans_data  *) &__libio_translit;
       }
 #else
 # ifdef _GLIBCPP_USE_WCHAR_T

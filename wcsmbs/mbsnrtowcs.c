@@ -58,7 +58,6 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
   data.__internal_use = 1;
   data.__flags = __GCONV_IS_LAST;
   data.__statep = ps ?: &state;
-  data.__trans = NULL;
 
   if (nmc == 0)
     return 0;

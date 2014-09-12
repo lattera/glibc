@@ -75,7 +75,6 @@ __btowc (c)
       data.__internal_use = 1;
       data.__flags = __GCONV_IS_LAST;
       data.__statep = &data.__state;
-      data.__trans = NULL;
 
       /* Make sure we start in the initial state.  */
       memset (&data.__state, '\0', sizeof (mbstate_t));

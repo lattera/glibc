@@ -52,7 +52,6 @@ __wcsrtombs (dst, src, len, ps)
   data.__internal_use = 1;
   data.__flags = __GCONV_IS_LAST;
   data.__statep = ps ?: &state;
-  data.__trans = NULL;
 
   /* Get the conversion functions.  */
   fcts = get_gconv_fcts (_NL_CURRENT_DATA (LC_CTYPE));

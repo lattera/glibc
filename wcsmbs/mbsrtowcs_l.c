@@ -56,7 +56,6 @@ __mbsrtowcs_l (dst, src, len, ps, l)
   data.__internal_use = 1;
   data.__flags = __GCONV_IS_LAST;
   data.__statep = ps;
-  data.__trans = NULL;
 
   /* Get the conversion functions.  */
   fcts = get_gconv_fcts (l->__locales[LC_CTYPE]);

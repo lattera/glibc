@@ -32,7 +32,6 @@
 int
 __gconv_transliterate (struct __gconv_step *step,
 		       struct __gconv_step_data *step_data,
-		       void *trans_data __attribute__ ((unused)),
 		       const unsigned char *inbufstart,
 		       const unsigned char **inbufp,
 		       const unsigned char *inbufend,
@@ -237,13 +236,4 @@ __gconv_transliterate (struct __gconv_step *step,
   /* Haven't found a match.  */
   return __GCONV_ILLEGAL_INPUT;
 }
-
-int
-internal_function
-__gconv_translit_find (struct trans_struct *trans)
-{
-  /* Transliteration module loading has been removed because it never
-     worked as intended and suffered from a security vulnerability.
-     Consequently, this function always fails.  */
-  return 1;
-}
+libc_hidden_def (__gconv_transliterate)

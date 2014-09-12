@@ -1,3 +1,42 @@
+2014-08-12  Florian Weimer  <fweimer@redhat.com>
+
+	* iconv/gconv_open.c (__gconv_open): Remove transliteration module
+	loading.
+	* iconv/Versions (__gconv_transliterate): Export for use from
+	gconv modules.
+	* iconv/gconv.h (__GCONV_TRANSLIT): New flag.
+	(struct __gconv_trans_data, __gconv_trans_fct,
+	__gconv_trans_context_fct, __gconv_trans_query_fct,
+	__gconv_trans_init_fct, __gconv_trans_end_fct): Remove type
+	definitions.
+	(struct __gconv_step_data): Remove __trans member.
+	(__gconv_transliterate): Declaration moved from gconv_int.h.  No
+	longer hidden.  Remove unused trans_data argument.
+	* iconv/gconv_int.h (struct trans_struct): Remove definition.
+	(__gconv_translit_find): Remove declaration.
+	(__gconv_transliterate): Declaration moved to gconv.h.  Add hidden
+	prototype.
+	* iconv/gconv_close.c (__gconv_close): Remove __trans cleanup.
+	* iconv/gconv_trans.c (__gconv_transliterate): Remove unused
+	trans_data argument.  Add hidden definition.
+	(__gconv_translit_find): Remove.
+	* iconv/loop.c (STANDARD_TO_LOOP_ERR_HANDLER): Call
+	__gconv_transliterate directly if __GCONV_TRANSLIT is set.
+	* iconv/skeleton.c: Remove transliteration initialization.
+	* libio/fileops.c (_IO_new_file_fopen): Adjust struct
+	__gconv_step_data initialization.
+	* libio/iofwide.c (__libio_translit_): Remove.
+	(_IO_fwide): Adjust struct __gconv_step_data initialization.
+	* wcsmbs/btowc.c (__btowc): Likewise.
+	* wcsmbs/mbrtoc16.c (mbrtoc16): Likewise.
+	* wcsmbs/mbrtowc.c (__mbrtowc): Likewise.
+	* wcsmbs/mbsnrtowcs.c (__mbsnrtowcs): Likewise.
+	* wcsmbs/mbsrtowcs_l.c (__mbsrtowcs_l): Likewise.
+	* wcsmbs/wcrtomb.c (__wcrtomb): Likewise.
+	* wcsmbs/wcsnrtombs.c (__wcsnrtombs): Likewise.
+	* wcsmbs/wcsrtombs.c (__wcsrtombs): Likewise.
+	* wcsmbs/wctob.c (wctob): Likewise.
+
 2014-09-12  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #16194]

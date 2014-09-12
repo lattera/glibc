@@ -6,5 +6,8 @@ libc {
   GLIBC_PRIVATE {
     # functions shared with iconv program
     __gconv_get_alias_db; __gconv_get_cache; __gconv_get_modules_db;
+
+    # function used by the gconv modules
+    __gconv_transliterate;
   }
 }

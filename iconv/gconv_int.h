@@ -92,21 +92,6 @@ struct gconv_module
 };
 
 
-/* Internal data structure to represent transliteration module.  */
-struct trans_struct
-{
-  const char *name;
-  struct trans_struct *next;
-
-  const char **csnames;
-  size_t ncsnames;
-  __gconv_trans_fct trans_fct;
-  __gconv_trans_context_fct trans_context_fct;
-  __gconv_trans_init_fct trans_init_fct;
-  __gconv_trans_end_fct trans_end_fct;
-};
-
-
 /* Flags for `gconv_open'.  */
 enum
 {
@@ -258,20 +243,7 @@ extern void __gconv_get_builtin_trans (const char *name,
 				       struct __gconv_step *step)
      internal_function;
 
-/* Try to load transliteration step module.  */
-extern int __gconv_translit_find (struct trans_struct *trans)
-     internal_function;
-
-/* Transliteration using the locale's data.  */
-extern int __gconv_transliterate (struct __gconv_step *step,
-				  struct __gconv_step_data *step_data,
-				  void *trans_data,
-				  const unsigned char *inbufstart,
-				  const unsigned char **inbufp,
-				  const unsigned char *inbufend,
-				  unsigned char **outbufstart,
-				  size_t *irreversible) attribute_hidden;
-
+libc_hidden_proto (__gconv_transliterate)
 
 /* If NAME is an codeset alias expand it.  */
 extern int __gconv_compare_alias (const char *name1, const char *name2)

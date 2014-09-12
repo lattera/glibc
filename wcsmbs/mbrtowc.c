@@ -49,7 +49,6 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   data.__internal_use = 1;
   data.__flags = __GCONV_IS_LAST;
   data.__statep = ps ?: &state;
-  data.__trans = NULL;
 
   /* A first special case is if S is NULL.  This means put PS in the
      initial state.  */
