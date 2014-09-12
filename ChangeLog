@@ -1,3 +1,8 @@
+2014-09-12  Roland McGrath  <roland@hack.frob.com>
+
+	* stdlib/rpmatch.c (try): New function, broken out of ...
+	(rpmatch): ... local function here.  Also, prototypify definition.
+
 2014-09-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/soversions.awk: Do not handle configuration names.

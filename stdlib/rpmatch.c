@@ -22,42 +22,40 @@
 #include <regex.h>
 
 
-int
-rpmatch (response)
-     const char *response;
+/* Match against one of the response patterns, compiling the pattern
+   first if necessary.  */
+static int
+try (const char *response,
+     const int tag, const int match, const int nomatch,
+     const char **lastp, regex_t *re)
 {
-  /* Match against one of the response patterns, compiling the pattern
-     first if necessary.  */
-  auto int try (const int tag, const int match, const int nomatch,
-		const char **lastp, regex_t *re);
-
-  int try (const int tag, const int match, const int nomatch,
-	   const char **lastp, regex_t *re)
+  const char *pattern = nl_langinfo (tag);
+  if (pattern != *lastp)
     {
-      const char *pattern = nl_langinfo (tag);
-      if (pattern != *lastp)
-	{
-	  /* The pattern has changed.  */
-	  if (*lastp)
-	    {
-	      /* Free the old compiled pattern.  */
-	      __regfree (re);
-	      *lastp = NULL;
-	    }
-	  /* Compile the pattern and cache it for future runs.  */
-	  if (__regcomp (re, pattern, REG_EXTENDED) != 0)
-	    return -1;
-	  *lastp = pattern;
-	}
-
-      /* Try the pattern.  */
-      return __regexec (re, response, 0, NULL, 0) == 0 ? match : nomatch;
+      /* The pattern has changed.  */
+      if (*lastp != NULL)
+        {
+          /* Free the old compiled pattern.  */
+          __regfree (re);
+          *lastp = NULL;
+        }
+      /* Compile the pattern and cache it for future runs.  */
+      if (__regcomp (re, pattern, REG_EXTENDED) != 0)
+        return -1;
+      *lastp = pattern;
     }
 
+  /* Try the pattern.  */
+  return __regexec (re, response, 0, NULL, 0) == 0 ? match : nomatch;
+}
+
+int
+rpmatch (const char *response)
+{
   /* We cache the response patterns and compiled regexps here.  */
   static const char *yesexpr, *noexpr;
   static regex_t yesre, nore;
 
-  return (try (YESEXPR, 1, 0, &yesexpr, &yesre) ?:
-	  try (NOEXPR, 0, -1, &noexpr, &nore));
+  return (try (response, YESEXPR, 1, 0, &yesexpr, &yesre) ?:
+	  try (response, NOEXPR, 0, -1, &noexpr, &nore));
 }
