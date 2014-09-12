@@ -1,5 +1,10 @@
 2014-09-12  Roland McGrath  <roland@hack.frob.com>
 
+	* locale/programs/locale.c (show_locale_vars): Inline local function
+	into its sole call site.  Clean up some style nits.
+	(print_item): New function, broken out of ...
+	(show_info): ... local function here.  Clean up style nits.
+
 	* locale/programs/ld-ctype.c (set_one_default): New function, broken
 	out of ...
 	(set_class_defaults): ... local function set_default here.
