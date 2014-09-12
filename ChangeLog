@@ -1,3 +1,11 @@
+2014-09-12  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #16194]
+	* sysdeps/x86/tst-xmmymm.sh: Rename file to...
+	* sysdeps/x86/tst-ld-sse-use.sh: ... this.  Check for zmm
+	register usage.
+	* sysdeps/x86/Makefile: Adjust.
+
 2014-09-11  Kostya Serebryany  <konstantin.s.serebryany@gmail.com>
 	    Roland McGrath  <roland@hack.frob.com>
 

@@ -1,5 +1,5 @@
 #! /bin/bash
-# Make sure no code in ld.so uses xmm/ymm registers on x86-64.
+# Make sure no code in ld.so uses xmm/ymm/zmm registers on x86-64.
 # Copyright (C) 2009-2014 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -24,7 +24,7 @@ NM="$2"
 OBJDUMP="$3"
 READELF="$4"
 
-tmp=$(mktemp ${objpfx}tst-xmmymm.XXXXXX)
+tmp=$(mktemp ${objpfx}tst-ld-sse-use.XXXXXX)
 trap 'rm -f "$tmp"' 1 2 3 15
 
 # List of object files we have to test
@@ -80,12 +80,12 @@ echo "object files needed: $tocheck"
 cp /dev/null "$tmp"
 for f in $tocheck; do
   $OBJDUMP -d "$objpfx"../*/"$f" |
-  awk 'BEGIN { last="" } /^[[:xdigit:]]* <[_[:alnum:]]*>:$/ { fct=substr($2, 2, length($2)-3) } /,%[xy]mm[[:digit:]]*$/ { if (last != fct) { print fct; last=fct} }' |
+  awk 'BEGIN { last="" } /^[[:xdigit:]]* <[_[:alnum:]]*>:$/ { fct=substr($2, 2, length($2)-3) } /,%[xyz]mm[[:digit:]]*$/ { if (last != fct) { print fct; last=fct} }' |
   while read fct; do
     if test "$fct" = "_dl_runtime_profile" -o "$fct" = "_dl_x86_64_restore_sse"; then
       continue;
     fi
-    echo "function $fct in $f modifies xmm/ymm" >> "$tmp"
+    echo "function $fct in $f modifies xmm/ymm/zmm" >> "$tmp"
     result=1
   done
 done
