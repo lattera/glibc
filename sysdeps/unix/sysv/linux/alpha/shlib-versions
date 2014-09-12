@@ -1,14 +1,14 @@
-alpha.*-.*-linux.*	libm=6.1
-alpha.*-.*-linux.*	libc=6.1
+libm=6.1
+libc=6.1
 
-alpha.*-.*-linux.*	ld=ld-linux.so.2
+ld=ld-linux.so.2
 
-alpha.*-.*-linux.*	libdl=2.1
+libdl=2.1
 
-alpha.*-.*-linux.*	libutil=1.1
+libutil=1.1
 
-alpha.*-.*-linux.*	libresolv=2.1
+libresolv=2.1
 
-alpha.*-.*-linux.*	libnsl=1.1
-alpha.*-.*-linux.*	libcrypt=1.1
-alpha.*-.*-linux.*	libBrokenLocale=1.1
+libnsl=1.1
+libcrypt=1.1
+libBrokenLocale=1.1

@@ -1,5 +1,35 @@
 2014-09-12  Joseph Myers  <joseph@codesourcery.com>
 
+	* scripts/soversions.awk: Do not handle configuration names.
+	* Makeconfig ($(common-objpfx)soversions.i): Do not pass cpu,
+	vendor and os variables to soversions.awk.
+	* configure.ac: Do not modify gnu-* host_os.
+	* configure: Regenerated
+	* shlib-versions: Remove first column with configuration names.
+	* nptl/shlib-versions: Likewise.
+	* nptl_db/shlib-versions: Likewise.
+	* sysdeps/hppa/shlib-versions: Likewise.
+	* sysdeps/m68k/shlib-versions: Likewise.
+	* sysdeps/mach/hurd/shlib-versions: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/shlib-versions: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/shlib-versions: Likewise.
+	* sysdeps/unix/sysv/linux/arm/shlib-versions: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/shlib-versions: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/shlib-versions: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/shlib-versions: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/shlib-versions: Likewise.
+	* sysdeps/unix/sysv/linux/mips/shlib-versions: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/shlib-versions:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/shlib-versions: Likewise.
+	* sysdeps/unix/sysv/linux/sh/shlib-versions: Likewise.
+	* sysdeps/unix/sysv/linux/shlib-versions: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/shlib-versions: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/shlib-versions: Likewise.
+	* sysdeps/unix/sysv/linux/tile/shlib-versions: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/shlib-versions: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/shlib-versions: Likewise.
+
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/configure.ac
 	(HAVE_ELFV2_ABI): AC_DEFINE in ELFv2 case.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/configure:

@@ -1,27 +1,27 @@
-mips.*-.*-linux.*	libm=6			GLIBC_2.0 GLIBC_2.2
+libm=6			GLIBC_2.0 GLIBC_2.2
 
 # Working mips versions were never released between 2.0 and 2.2.
-mips.*-.*-linux.*	libc=6			GLIBC_2.0 GLIBC_2.2
+libc=6			GLIBC_2.0 GLIBC_2.2
 
 %ifdef HAVE_MIPS_NAN2008
-mips.*-.*-linux.*	ld=ld-linux-mipsn8.so.1	GLIBC_2.0 GLIBC_2.2
+ld=ld-linux-mipsn8.so.1	GLIBC_2.0 GLIBC_2.2
 %else
-mips.*-.*-linux.*	ld=ld.so.1		GLIBC_2.0 GLIBC_2.2
+ld=ld.so.1		GLIBC_2.0 GLIBC_2.2
 %endif
-mips.*-.*-linux.*	libdl=2			GLIBC_2.0 GLIBC_2.2
+libdl=2			GLIBC_2.0 GLIBC_2.2
 
-mips.*-.*-linux.*	libresolv=2		GLIBC_2.0 GLIBC_2.2
+libresolv=2		GLIBC_2.0 GLIBC_2.2
 
-mips.*-.*-linux.*	libnss_files=2		GLIBC_2.0 GLIBC_2.2
-mips.*-.*-linux.*	libnss_dns=2		GLIBC_2.0 GLIBC_2.2
-mips.*-.*-linux.*	libnss_compat=2		GLIBC_2.0 GLIBC_2.2
-mips.*-.*-linux.*	libnss_nis=2		GLIBC_2.0 GLIBC_2.2
-mips.*-.*-linux.*	libnss_nisplus=2	GLIBC_2.0 GLIBC_2.2
-mips.*-.*-linux.*	libnss_ldap=2		GLIBC_2.0 GLIBC_2.2
-mips.*-.*-linux.*	libnss_hesiod=2		GLIBC_2.0 GLIBC_2.2
+libnss_files=2		GLIBC_2.0 GLIBC_2.2
+libnss_dns=2		GLIBC_2.0 GLIBC_2.2
+libnss_compat=2		GLIBC_2.0 GLIBC_2.2
+libnss_nis=2		GLIBC_2.0 GLIBC_2.2
+libnss_nisplus=2	GLIBC_2.0 GLIBC_2.2
+libnss_ldap=2		GLIBC_2.0 GLIBC_2.2
+libnss_hesiod=2		GLIBC_2.0 GLIBC_2.2
 
-mips.*-.*-linux.*	libnsl=1		GLIBC_2.0 GLIBC_2.2
+libnsl=1		GLIBC_2.0 GLIBC_2.2
 
-mips.*-.*-linux.*	librt=1			GLIBC_2.0 GLIBC_2.2
+librt=1			GLIBC_2.0 GLIBC_2.2
 
-mips.*-.*-linux.*	libpthread=0		GLIBC_2.0 GLIBC_2.2
+libpthread=0		GLIBC_2.0 GLIBC_2.2

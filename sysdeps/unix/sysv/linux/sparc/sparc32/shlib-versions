@@ -1,1 +1,1 @@
-sparc.*-.*-linux.*	ld=ld-linux.so.2
+ld=ld-linux.so.2

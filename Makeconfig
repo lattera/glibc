@@ -964,9 +964,6 @@ soversions-default-setname = $(patsubst %, %,\
 $(common-objpfx)soversions.i: $(..)scripts/soversions.awk \
 			      $(common-objpfx)shlib-versions.v
 	$(AWK) -v default_setname='$(soversions-default-setname)' \
-	       -v cpu='$(config-machine)' \
-	       -v vendor='$(config-vendor)' \
-	       -v os='$(config-os)' \
 	       -f $^ > $@T
 	mv -f $@T $@
 $(common-objpfx)soversions.mk: $(common-objpfx)soversions.i $(..)Makeconfig

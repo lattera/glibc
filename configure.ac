@@ -365,19 +365,6 @@ if test "$build_pt_chown" = yes; then
   AC_DEFINE(HAVE_PT_CHOWN)
 fi
 
-# The way shlib-versions is used to generate soversions.mk uses a
-# fairly simplistic model for name recognition that can't distinguish
-# i486-pc-linux-gnu fully from i486-pc-gnu.  So we mutate a $host_os
-# of `gnu*' here to be `gnu-gnu*' just so that shlib-versions can
-# tell.  This doesn't get used much beyond that, so it's fairly safe.
-case "$host_os" in
-linux*)
-  ;;
-gnu*)
-  host_os=`echo $host_os | sed -e 's/gnu/gnu-gnu/'`
-  ;;
-esac
-
 # We keep the original values in `$config_*' and never modify them, so we
 # can write them unchanged into config.make.  Everything else uses
 # $machine, $vendor, and $os, and changes them whenever convenient.

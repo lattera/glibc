@@ -1,2 +1,2 @@
-.*-.*-linux.*		libm=6
-.*-.*-linux.*		libc=6
+libm=6
+libc=6

@@ -1,1 +1,1 @@
-m68k-.*-linux.*		libgcc_s=2
+libgcc_s=2
