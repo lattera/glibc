@@ -1,3 +1,8 @@
+2014-09-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/gnu/netinet/udp.h (UDP_NO_CHECK6_TX): New macro.
+	(UDP_NO_CHECK6_RX): Likewise.
+
 2014-09-12  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/posix/sysconf.c (__sysconf): Spell
