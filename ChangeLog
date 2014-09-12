@@ -1,5 +1,12 @@
 2014-09-12  Roland McGrath  <roland@hack.frob.com>
 
+	* locale/programs/ld-ctype.c (set_one_default): New function, broken
+	out of ...
+	(set_class_defaults): ... local function set_default here.
+	Define set_default as a macro locally to pass constant parameters.
+	(allocate_arrays, set_class_defaults): Use C99 for scope for each CNT,
+	rather than a shared local.
+
 	* stdlib/rpmatch.c (try): New function, broken out of ...
 	(rpmatch): ... local function here.  Also, prototypify definition.
 
