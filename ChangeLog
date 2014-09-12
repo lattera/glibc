@@ -1,5 +1,10 @@
 2014-09-12  Joseph Myers  <joseph@codesourcery.com>
 
+	* shlib-versions: Remove OS-specific entries.  Moved to files in
+	sysdeps.
+	* sysdeps/mach/hurd/shlib-versions: New file.
+	* sysdeps/unix/sysv/linux/shlib-versions: Likewise.
+
 	* nptl/shlib-versions: Remove architecture-specific entries.
 	Moved to files in sysdeps.
 	* shlib-versions: Likewise.
