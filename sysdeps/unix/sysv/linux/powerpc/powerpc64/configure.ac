@@ -12,6 +12,8 @@ AC_CACHE_CHECK([whether the compiler is using the PowerPC64 ELFv2 ABI],
   ], libc_cv_ppc64_elfv2_abi=yes, libc_cv_ppc64_elfv2_abi=no)])
 if test $libc_cv_ppc64_elfv2_abi = yes; then
   LIBC_CONFIG_VAR([default-abi], [64-v2])
+  # For shlib-versions.
+  AC_DEFINE(HAVE_ELFV2_ABI)
 else
   LIBC_CONFIG_VAR([default-abi], [64-v1])
   # Compiler that do not support ELFv2 ABI does not define _CALL_ELF

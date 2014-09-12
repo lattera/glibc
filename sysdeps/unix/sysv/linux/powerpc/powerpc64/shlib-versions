@@ -1,4 +1,7 @@
-powerpc64-.*-linux.*	DEFAULT			GLIBC_2.3
+%ifdef HAVE_ELFV2_ABI
 powerpc.*le-.*-linux.*	DEFAULT			GLIBC_2.17
-powerpc64-.*-linux.*	libpthread=0		GLIBC_2.3
 powerpc.*le-.*-linux.*	libpthread=0		GLIBC_2.17
+%else
+powerpc64-.*-linux.*	DEFAULT			GLIBC_2.3
+powerpc64-.*-linux.*	libpthread=0		GLIBC_2.3
+%endif

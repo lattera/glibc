@@ -173,6 +173,9 @@ $as_echo "$libc_cv_ppc64_elfv2_abi" >&6; }
 if test $libc_cv_ppc64_elfv2_abi = yes; then
   config_vars="$config_vars
 default-abi = 64-v2"
+  # For shlib-versions.
+  $as_echo "#define HAVE_ELFV2_ABI 1" >>confdefs.h
+
 else
   config_vars="$config_vars
 default-abi = 64-v1"

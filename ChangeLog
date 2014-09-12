@@ -1,5 +1,13 @@
 2014-09-12  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/configure.ac
+	(HAVE_ELFV2_ABI): AC_DEFINE in ELFv2 case.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/configure:
+	Regenerated.
+	* config.h.in (HAVE_ELFV2_ABI): New macro undefine.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/shlib-versions:
+	Condition symbol version definitions on [HAVE_ELFV2_ABI].
+
 	* shlib-versions: Remove OS-specific entries.  Moved to files in
 	sysdeps.
 	* sysdeps/mach/hurd/shlib-versions: New file.

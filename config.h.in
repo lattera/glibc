@@ -257,4 +257,7 @@
 /* Define if using the IEEE 754-2008 NaN encoding on the MIPS target.  */
 #undef HAVE_MIPS_NAN2008
 
+/* The PowerPC64 ELFv2 ABI is being used.  */
+#undef HAVE_ELFV2_ABI
+
 #endif
