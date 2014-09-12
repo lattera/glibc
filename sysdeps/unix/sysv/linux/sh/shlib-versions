@@ -1,0 +1,5 @@
+sh.*-.*-linux.*		libm=6			GLIBC_2.2
+sh.*-.*-linux.*		libc=6			GLIBC_2.2
+sh.*-.*-linux.*		ld=ld-linux.so.2	GLIBC_2.2
+sh.*-.*-.*		libBrokenLocale=1	GLIBC_2.2
+sh.*-.*-linux.*		libpthread=0		GLIBC_2.2

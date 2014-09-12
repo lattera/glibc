@@ -1,5 +1,15 @@
 2014-09-12  Joseph Myers  <joseph@codesourcery.com>
 
+	* nptl/shlib-versions: Remove architecture-specific entries.
+	Moved to files in sysdeps.
+	* shlib-versions: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/shlib-versions: New
+	file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/shlib-versions: Likewise.
+	* sysdeps/unix/sysv/linux/sh/shlib-versions: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/shlib-versions: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/shlib-versions: Likewise.
+
 	* sysdeps/gnu/netinet/udp.h (UDP_NO_CHECK6_TX): New macro.
 	(UDP_NO_CHECK6_RX): Likewise.
 

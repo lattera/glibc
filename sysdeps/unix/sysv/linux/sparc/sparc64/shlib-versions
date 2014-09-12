@@ -1,0 +1,5 @@
+sparc64.*-.*-linux.*	libm=6			GLIBC_2.2
+sparc64.*-.*-linux.*	libc=6			GLIBC_2.2
+sparc64.*-.*-linux.*	ld=ld-linux.so.2	GLIBC_2.2
+sparc64.*-.*-.*		libBrokenLocale=1	GLIBC_2.2
+sparc64.*-.*-linux.*	libpthread=0		GLIBC_2.2
