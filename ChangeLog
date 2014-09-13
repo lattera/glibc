@@ -1,3 +1,9 @@
+2014-09-15  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #17371]
+	* sysdeps/unix/sysv/linux/ifaddrs.c (getifaddrs_internal): Fix
+	last change to handle zero prefix length.
+
 2014-09-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/posix/sysconf.c (__sysconf): Return -1 for

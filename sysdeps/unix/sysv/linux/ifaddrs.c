@@ -770,20 +770,17 @@ getifaddrs_internal (struct ifaddrs **ifap)
 
 		  if (cp != NULL)
 		    {
-		      char c;
 		      unsigned int preflen;
 
-		      if ((max_prefixlen > 0) &&
-			  (ifam->ifa_prefixlen > max_prefixlen))
+		      if (ifam->ifa_prefixlen > max_prefixlen)
 			preflen = max_prefixlen;
 		      else
 			preflen = ifam->ifa_prefixlen;
 
-		      for (i = 0; i < ((preflen - 1) / 8); i++)
+		      for (i = 0; i < preflen / 8; i++)
 			*cp++ = 0xff;
-		      c = 0xff;
-		      c <<= ((128 - preflen) % 8);
-		      *cp = c;
+		      if (preflen % 8)
+			*cp = 0xff << (8 - preflen % 8);
 		    }
 		}
 	    }
