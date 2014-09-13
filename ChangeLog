@@ -1,3 +1,7 @@
+2014-09-13  Allan McRae  <allan@archlinux.org>
+
+	* po/ru.po: Update Russian translation from translation project.
+
 2014-09-12  Roland McGrath  <roland@hack.frob.com>
 
 	* locale/programs/locale.c (show_locale_vars): Inline local function

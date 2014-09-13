@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.19.90\n"
 "POT-Creation-Date: 2014-08-09 17:06+1000\n"
-"PO-Revision-Date: 2014-08-21 14:55+0400\n"
+"PO-Revision-Date: 2014-09-10 16:38+0400\n"
 "Last-Translator: Yuri Kozlov <yuray@komyakino.ru>\n"
 "Language-Team: Russian <gnu@mx.ru>\n"
 "Language: ru\n"
@@ -76,7 +76,7 @@ msgstr "Выдает краткую информацию об использов
 #: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:105
 #: nss/makedb.c:120
 msgid "NAME"
-msgstr "ФАЙЛ"
+msgstr "ИМЯ"
 
 #: argp/argp-parse.c:104
 msgid "Set the program name"
@@ -123,7 +123,7 @@ msgstr ""
 
 #: catgets/gencat.c:110
 msgid "Create C header file NAME containing symbol definitions"
-msgstr "Создает заголовочный ФАЙЛ на Си, содержащий определения символов."
+msgstr "Создает заголовочный файл с ИМЕНЕМ на Си, содержащий определения символов."
 
 #: catgets/gencat.c:112
 msgid "Do not use existing catalog, force new output file"
@@ -131,7 +131,7 @@ msgstr "Не использовать существующий каталог, �
 
 #: catgets/gencat.c:113 nss/makedb.c:120
 msgid "Write output to file NAME"
-msgstr "Записать вывод в ФАЙЛ"
+msgstr "Записать вывод в файл с ИМЕНЕМ"
 
 #: catgets/gencat.c:118
 msgid ""
@@ -4098,7 +4098,7 @@ msgstr "Перезагрузка «%s (%s,%s,%s)» в кэше netgroup!"
 
 #: nscd/nscd.c:106
 msgid "Read configuration data from NAME"
-msgstr "Читать конфигурационные данные из ФАЙЛА"
+msgstr "Читать конфигурационные данные из файла с ИМЕНЕМ"
 
 #: nscd/nscd.c:108
 msgid "Do not fork and display messages on the current tty"
