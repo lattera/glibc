@@ -1,5 +1,20 @@
 2014-11-20  Torvald Riegel  <triegel@redhat.com>
 
+	* include/atomic.h (__atomic_link_error, __atomic_check_size,
+	atomic_thread_fence_acquire, atomic_thread_fence_release,
+	atomic_thread_fence_seq_cst, atomic_load_relaxed,
+	atomic_load_acquire, atomic_store_relaxed, atomic_store_release,
+	atomic_compare_exchange_weak_relaxed,
+	atomic_compare_exchange_weak_acquire,
+	atomic_compare_exchange_weak_release,
+	atomic_exchange_acquire, atomic_exchange_release,
+	atomic_fetch_add_relaxed, atomic_fetch_add_acquire,
+	atomic_fetch_add_release, atomic_fetch_add_acq_rel,
+	atomic_fetch_and_acquire,
+	atomic_fetch_or_relaxed, atomic_fetch_or_acquire): New.
+
+2014-11-20  Torvald Riegel  <triegel@redhat.com>
+
 	* sysdeps/aarch64/bits/atomic.h (__HAVE_64B_ATOMICS,
 	USE_ATOMIC_COMPILER_BUILTINS): Define.
 	* sysdeps/alpha/bits/atomic.h (__HAVE_64B_ATOMICS,
