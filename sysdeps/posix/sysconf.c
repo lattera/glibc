@@ -983,12 +983,10 @@ __sysconf (name)
 #else
       return -1;
 #endif
+    /* _REGEX_VERSION has been removed with IEEE Std 1003.1-2001/Cor 2-2004,
+       item XSH/TC2/D6/137.  */
     case _SC_REGEX_VERSION:
-#if _POSIX_REGEX_VERSION > 0
-      return _POSIX_REGEX_VERSION;
-#else
       return -1;
-#endif
 
     case _SC_SHELL:
 #if _POSIX_SHELL > 0
