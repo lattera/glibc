@@ -1,3 +1,8 @@
+2014-09-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* posix/getconf.c (vars): Add _POSIX_IPV6 and
+	_POSIX_RAW_SOCKETS.
+
 2014-09-13  Allan McRae  <allan@archlinux.org>
 
 	* po/ru.po: Update Russian translation from translation project.

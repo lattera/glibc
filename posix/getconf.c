@@ -1004,6 +1004,13 @@ static const struct conf vars[] =
     { "RAW_SOCKETS", _SC_RAW_SOCKETS, SYSCONF },
 #endif
 
+#ifdef _SC_IPV6
+    { "_POSIX_IPV6", _SC_IPV6, SYSCONF },
+#endif
+#ifdef _SC_RAW_SOCKETS
+    { "_POSIX_RAW_SOCKETS", _SC_RAW_SOCKETS, SYSCONF },
+#endif
+
     { NULL, 0, SYSCONF }
   };
 
