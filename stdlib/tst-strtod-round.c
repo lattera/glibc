@@ -17,6 +17,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+/* Defining _LIBC_TEST ensures long double math functions are
+   declared in the headers.  */
+#define _LIBC_TEST 1
 #include <fenv.h>
 #include <float.h>
 #include <math.h>

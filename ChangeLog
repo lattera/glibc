@@ -1,5 +1,9 @@
 2014-09-30  Will Newton  <will.newton@linaro.org>
 
+	* math/math.h: Define long double math functions if
+	_LIBC_TEST is defined.
+	* stdlib/tst-strtod-round.c: Define _LIBC_TEST.
+
 	* localedata/Makefile: Move assignment to tests-special
 	into an ifdef testing run-built-tests.
 	* timezone/Makefile: Likewise.

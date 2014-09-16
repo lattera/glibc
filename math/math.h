@@ -92,7 +92,8 @@ __BEGIN_DECLS
 # undef	__MATH_PRECNAME
 
 # if !(defined __NO_LONG_DOUBLE_MATH && defined _LIBC) \
-     || defined __LDBL_COMPAT
+     || defined __LDBL_COMPAT \
+     || defined _LIBC_TEST
 #  ifdef __LDBL_COMPAT
 
 #   ifdef __USE_ISOC99
