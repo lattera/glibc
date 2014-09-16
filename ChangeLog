@@ -1,3 +1,26 @@
+2014-09-16  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #6652]
+	* Makeconfig (soversions-default-setname): Remove variable.
+	($(common-objpfx)soversions.i): Don't pass default_setname to
+	soversions.awk.
+	* Makerules ($(common-objpfx)abi-versions.h): Don't pass
+	oldest_abi to abi-versions.awk.
+	* config.h.in (GLIBC_OLDEST_ABI): Remove macro undefine.
+	* config.make.in (oldest-abi): Remove variable.
+	* configure.ac (--enable-oldest-abi): Remove configure option.
+	* configure: Regenerated.
+	* csu/version.c (banner) [GLIBC_OLDEST_ABI]: Remove conditional
+	text.
+	* scripts/abi-versions.awk: Do not handle oldest_abi variable.
+	* scripts/soversions.awk: Do not handle default_setname variable.
+	* sysdeps/mach/hurd/configure.ac: Do not handle oldest_abi
+	variable.
+	* sysdeps/mach/hurd/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/configure.ac: Do not handle oldest_abi
+	variable.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+
 2014-09-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* elf/Makefile (CFLAGS-interp.c): Remove.

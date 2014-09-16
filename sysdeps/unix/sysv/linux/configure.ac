@@ -71,12 +71,6 @@ AC_CHECK_HEADER(linux/fanotify.h,
   [AC_DEFINE(HAVE_LINUX_FANOTIFY_H)], ,
   [/* No default includes.  */])
 
-# The result of the above test for the use of the FDE code is invalid if
-# the user overrides the decision about the minimum ABI.
-if test "$oldest_abi" != default && test "2.2.4" \< "$oldest_abi"; then
-  libc_cv_gcc_unwind_find_fde=no
-fi
-
 if test -n "$sysheaders"; then
   CPPFLAGS=$OLD_CPPFLAGS
 fi

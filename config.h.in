@@ -54,9 +54,6 @@
    directive.  */
 #undef	HAVE_ASM_POPSECTION_DIRECTIVE
 
-/* Defined to the oldest ABI we support, like 2.1.  */
-#undef GLIBC_OLDEST_ABI
-
 /* Define if static NSS modules are wanted.  */
 #undef	DO_STATIC_NSS
 

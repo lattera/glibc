@@ -151,18 +151,6 @@ AC_ARG_ENABLE([profile],
 	      [profile=$enableval],
 	      [profile=no])
 
-AC_ARG_ENABLE([oldest-abi],
-	      AC_HELP_STRING([--enable-oldest-abi=ABI],
-			     [configure the oldest ABI supported @<:@e.g. 2.2@:>@ @<:@default=glibc default@:>@]),
-	      [oldest_abi=$enableval],
-	      [oldest_abi=no])
-if test "$oldest_abi" = yes || test "$oldest_abi" = no; then
-  oldest_abi=default
-else
-  AC_DEFINE_UNQUOTED(GLIBC_OLDEST_ABI, "$oldest_abi")
-fi
-AC_SUBST(oldest_abi)
-
 AC_ARG_ENABLE([hardcoded-path-in-tests],
 	      AC_HELP_STRING([--enable-hardcoded-path-in-tests],
 			     [hardcode newly built glibc path in tests @<:@default=no@:>@]),

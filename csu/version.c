@@ -34,9 +34,6 @@ Compiled by GNU CC version "__VERSION__".\n"
 #ifdef LIBC_ABIS_STRING
 LIBC_ABIS_STRING
 #endif
-#ifdef GLIBC_OLDEST_ABI
-"The oldest ABI supported: " GLIBC_OLDEST_ABI ".\n"
-#endif
 "For bug reporting instructions, please see:\n\
 "REPORT_BUGS_TO".\n";
 

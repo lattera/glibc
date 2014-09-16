@@ -958,13 +958,9 @@ $(common-objpfx)shlib-versions.v.i: \
 		   $(subdir-srcdirs:=/shlib-versions)) \
 	$(..)shlib-versions
 
-soversions-default-setname = $(patsubst %, %,\
-					$(filter-out %_default,\
-						     $(oldest-abi:%=GLIBC_%)))
 $(common-objpfx)soversions.i: $(..)scripts/soversions.awk \
 			      $(common-objpfx)shlib-versions.v
-	$(AWK) -v default_setname='$(soversions-default-setname)' \
-	       -f $^ > $@T
+	$(AWK) -f $^ > $@T
 	mv -f $@T $@
 $(common-objpfx)soversions.mk: $(common-objpfx)soversions.i $(..)Makeconfig
 	(while read which lib number setname; do \

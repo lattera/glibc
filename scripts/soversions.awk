@@ -27,7 +27,7 @@ END {
     if (lib in versions)
       set = versions[lib];
     else {
-      set = default_setname;
+      set = "";
       if (ndefault_set >= 1)
 	set = default_set[1];
     }
