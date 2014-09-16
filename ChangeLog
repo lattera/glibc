@@ -1,5 +1,8 @@
 2014-09-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* posix/getconf.c (vars): Don't check for _[SP]C_* and _CS
+	macros.
+
 	[BZ #17266]
 	* misc/sys/cdefs.h: Define __extern_always_inline for clang
 	4.2 and newer.
