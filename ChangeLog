@@ -1,3 +1,9 @@
+2014-09-30  Will Newton  <will.newton@linaro.org>
+
+	* localedata/Makefile: Move assignment to tests-special
+	into an ifdef testing run-built-tests.
+	* timezone/Makefile: Likewise.
+
 2014-09-29  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/x86/Makefile ($(objpfx)tst-ld-sse-use.out): Run script

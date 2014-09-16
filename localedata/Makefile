@@ -92,14 +92,14 @@ install-others := $(addprefix $(inst_i18ndir)/, \
 
 tests: $(objdir)/iconvdata/gconv-modules
 
+tests-static += tst-langinfo-static
+
+ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)sort-test.out $(objpfx)tst-fmon.out \
 		 $(objpfx)tst-locale.out $(objpfx)tst-rpmatch.out \
 		 $(objpfx)tst-trans.out $(objpfx)tst-ctype.out \
 		 $(objpfx)tst-langinfo.out $(objpfx)tst-langinfo-static.out \
 		 $(objpfx)tst-numeric.out
-tests-static += tst-langinfo-static
-
-ifeq ($(run-built-tests),yes)
 # We have to generate locales
 LOCALES := de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ANSI_X3.4-1968 \
 	   en_US.ISO-8859-1 en_US.UTF-8 ja_JP.EUC-JP da_DK.ISO-8859-1 \
