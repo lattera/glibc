@@ -1,4 +1,9 @@
 2014-09-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #17370]
+	* libio/wfileops.c (do_ftell_wide): Free OUT on error path.
+
+2014-09-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
 	    Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #17266]

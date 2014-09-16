@@ -708,7 +708,10 @@ do_ftell_wide (_IO_FILE *fp)
 		 sequences must be complete since they are accepted as
 		 wchar_t; if not, then that is an error.  */
 	      if (__glibc_unlikely (status != __codecvt_ok))
-		return WEOF;
+		{
+		  free (out);
+		  return WEOF;
+		}
 
 	      offset += outstop - out;
 	      free (out);
