@@ -16,5 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <elf/runtime-linker.h>
+
 const char __invoke_dynamic_linker__[] __attribute__ ((section (".interp")))
   = RUNTIME_LINKER;

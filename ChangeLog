@@ -1,5 +1,10 @@
 2014-09-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* elf/Makefile (CFLAGS-interp.c): Remove.
+	($(elf-objpfx)runtime-linker.h): Generate header with linker
+	path string.
+	* elf/interp.c: Include generated runtime-linker.h
+
 	* Makerules (lib%.so): Don't include $(+interp) in
 	prerequisites.
 	* elf/Makefile (CFLAGS-interp.c): Don't define NOT_IN_libc.
