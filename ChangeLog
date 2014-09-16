@@ -1,3 +1,7 @@
+2014-10-02  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/tilegx/string-endian.h (copy_byte): Optimize.
+
 2014-10-06  Arjun Shankar  <arjun.is@lostca.se>
 
 	* nptl/tst-setuid3.c: Write errors to stdout.

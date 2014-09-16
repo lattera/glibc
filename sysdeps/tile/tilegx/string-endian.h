@@ -36,12 +36,11 @@
 #define REVCZ(x) __insn_ctz(x)
 #endif
 
-/* Create eight copies of the byte in a uint64_t. */
+/* Create eight copies of the byte in a uint64_t.  Byte Shuffle uses
+   the bytes of srcB as the index into the dest vector to select a
+   byte.  With all indices of zero, the first byte is copied into all
+   the other bytes.  */
 static inline uint64_t copy_byte(uint8_t byte)
 {
-  uint64_t word = byte;
-  word = __insn_bfins(word, word, 8, 15);
-  word = __insn_bfins(word, word, 16, 31);
-  word = __insn_bfins(word, word, 32, 63);
-  return word;
+  return __insn_shufflebytes(byte, 0, 0);
 }
