@@ -1,3 +1,19 @@
+2014-09-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #17266]
+	* libio/stdio.h: Check definition of __fortify_function
+	instead of __extern_always_inline to include bits/stdio2.h.
+	* math/bits/math-finite.h [__USE_XOPEN || __USE_ISOC99]: Also
+	check if __extern_always_inline is defined.
+	[__USE_MISC || __USE_XOPEN]: Likewise.
+	[__USE_ISOC99] Likewise.
+	* misc/sys/cdefs.h (__fortify_function): Define only if
+	__extern_always_inline is defined.
+	[!__cplusplus || __GNUC_PREREQ (4,3)]: Revert to defining
+	__extern_always_inline and __extern_inline only for g++-4.3
+	and newer or a compatible gcc.
+
 2014-09-15  Andreas Schwab  <schwab@linux-m68k.org>
 
 	[BZ #17371]

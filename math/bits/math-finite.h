@@ -251,7 +251,8 @@ extern long double __REDIRECT_NTH (lgammal_r, (long double, int *),
 # endif
 #endif
 
-#if defined __USE_XOPEN || defined __USE_ISOC99
+#if ((defined __USE_XOPEN || defined __USE_ISOC99) \
+     && defined __extern_always_inline)
 /* lgamma.  */
 __extern_always_inline double __NTH (lgamma (double __d))
 {
@@ -284,7 +285,8 @@ __extern_always_inline long double __NTH (lgammal (long double __d))
 # endif
 #endif
 
-#if defined __USE_MISC || defined __USE_XOPEN
+#if ((defined __USE_MISC || defined __USE_XOPEN) \
+     && defined __extern_always_inline)
 /* gamma.  */
 __extern_always_inline double __NTH (gamma (double __d))
 {
@@ -422,7 +424,7 @@ extern long double __REDIRECT_NTH (sqrtl, (long double), __sqrtl_finite);
 # endif
 #endif
 
-#ifdef __USE_ISOC99
+#if defined __USE_ISOC99 && defined __extern_always_inline
 /* tgamma.  */
 extern double __gamma_r_finite (double, int *);
 __extern_always_inline double __NTH (tgamma (double __d))

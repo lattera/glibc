@@ -131,7 +131,6 @@
 /* Fortify support.  */
 #define __bos(ptr) __builtin_object_size (ptr, __USE_FORTIFY_LEVEL > 1)
 #define __bos0(ptr) __builtin_object_size (ptr, 0)
-#define __fortify_function __extern_always_inline __attribute_artificial__
 
 #if __GNUC_PREREQ (4,3)
 # define __warndecl(name, msg) \
@@ -318,12 +317,13 @@
 # define __attribute_artificial__ /* Ignore */
 #endif
 
-#ifdef __GNUC__
-/* One of these will be defined if the __gnu_inline__ attribute is
-   available.  In C++, __GNUC_GNU_INLINE__ will be defined even though
-   __inline does not use the GNU inlining rules.  If neither macro is
-   defined, this version of GCC only supports GNU inline semantics. */
-# if defined __GNUC_STDC_INLINE__ || defined __GNUC_GNU_INLINE__
+/* GCC 4.3 and above with -std=c99 or -std=gnu99 implements ISO C99
+   inline semantics, unless -fgnu89-inline is used.  Using __GNUC_STDC_INLINE__
+   or __GNUC_GNU_INLINE is not a good enough check for gcc because gcc versions
+   older than 4.3 may define these macros and still not guarantee GNU inlining
+   semantics.  */
+#if !defined __cplusplus || __GNUC_PREREQ (4,3)
+# if defined __GNUC_STDC_INLINE__ || defined __cplusplus
 #  define __extern_inline extern __inline __attribute__ ((__gnu_inline__))
 #  define __extern_always_inline \
   extern __always_inline __attribute__ ((__gnu_inline__))
@@ -331,9 +331,10 @@
 #  define __extern_inline extern __inline
 #  define __extern_always_inline extern __always_inline
 # endif
-#else /* Not GCC.  */
-# define __extern_inline  /* Ignore */
-# define __extern_always_inline /* Ignore */
+#endif
+
+#ifdef __extern_always_inline
+# define __fortify_function __extern_always_inline __attribute_artificial__
 #endif
 
 /* GCC 4.3 and above allow passing all anonymous arguments of an
