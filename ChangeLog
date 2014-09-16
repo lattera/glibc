@@ -1,5 +1,10 @@
 2014-09-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* Makerules (lib%.so): Don't include $(+interp) in
+	prerequisites.
+	* elf/Makefile (CFLAGS-interp.c): Don't define NOT_IN_libc.
+	* dlfcn/eval.c: Remove file.
+
 	* posix/getconf.c (vars): Don't check for _[SP]C_* and _CS
 	macros.
 

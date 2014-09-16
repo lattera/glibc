@@ -436,7 +436,7 @@ link-libc-deps = $(common-objpfx)libc.so $(common-objpfx)linkobj/libc.so \
 # $(LDLIBS-%.so) may contain -l switches to generate run-time dependencies
 # on other shared objects.  The linking with libc and ld.so is intended
 # to be as similar as possible to a default link with an installed libc.
-lib%.so: lib%_pic.a $(+preinit) $(+postinit) $(+interp) $(link-libc-deps)
+lib%.so: lib%_pic.a $(+preinit) $(+postinit) $(link-libc-deps)
 	$(build-shlib) $(link-libc-args)
 
 define build-shlib-helper
