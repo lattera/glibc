@@ -62,7 +62,6 @@
 # ifndef _RE_DEFINE_LOCALE_FUNCTIONS
 #  define _RE_DEFINE_LOCALE_FUNCTIONS 1
 #   include <locale/localeinfo.h>
-#   include <locale/elem-hash.h>
 #   include <locale/coll-lookup.h>
 # endif
 #endif

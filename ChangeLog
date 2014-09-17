@@ -1,3 +1,7 @@
+2014-11-04  Andreas Schwab  <schwab@suse.de>
+
+	* posix/regex_internal.h: Don't include <locale/elem-hash.h>.
+
 2014-11-03  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power8/memset.S (MTVSRD_V1_R4): Encode
