@@ -1,5 +1,13 @@
 2014-09-17  Joseph Myers  <joseph@codesourcery.com>
 
+	* soft-fp/extended.h: Fix comment formatting.
+	* soft-fp/op-1.h: Likewise.
+	* soft-fp/op-2.h: Likewise.
+	* soft-fp/op-4.h: Likewise.
+	* soft-fp/op-8.h: Likewise.
+	* soft-fp/op-common.h: Likewise.
+	* soft-fp/soft-fp.h: Likewise.
+
 	* soft-fp/op-common.h (_FP_TO_INT): Correct formatting.
 
 2014-09-16  Joseph Myers  <joseph@codesourcery.com>

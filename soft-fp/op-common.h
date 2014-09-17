@@ -45,10 +45,8 @@
    ? (_FP_FRAC_HIGH_##fs (X) & _FP_QNANBIT_SH_##fs)	\
    : !(_FP_FRAC_HIGH_##fs (X) & _FP_QNANBIT_SH_##fs))
 
-/*
- * Finish truly unpacking a native fp value by classifying the kind
- * of fp value and normalizing both the exponent and the fraction.
- */
+/* Finish truly unpacking a native fp value by classifying the kind
+   of fp value and normalizing both the exponent and the fraction.  */
 
 #define _FP_UNPACK_CANONICAL(fs, wc, X)				\
   do								\
@@ -67,7 +65,7 @@
 	    X##_c = FP_CLS_ZERO;				\
 	  else							\
 	    {							\
-	      /* a denormalized number */			\
+	      /* A denormalized number.  */			\
 	      _FP_I_TYPE _FP_UNPACK_CANONICAL_shift;		\
 	      _FP_FRAC_CLZ_##wc (_FP_UNPACK_CANONICAL_shift,	\
 				 X);				\
@@ -87,7 +85,7 @@
 	  else							\
 	    {							\
 	      X##_c = FP_CLS_NAN;				\
-	      /* Check for signaling NaN */			\
+	      /* Check for signaling NaN.  */			\
 	      if (_FP_FRAC_SNANP (fs, X))			\
 		FP_SET_EXCEPTION (FP_EX_INVALID);		\
 	    }							\
@@ -237,12 +235,10 @@
     }								\
   while (0)
 
-/*
- * Before packing the bits back into the native fp result, take care
- * of such mundane things as rounding and overflow.  Also, for some
- * kinds of fp values, the original parts may not have been fully
- * extracted -- but that is ok, we can regenerate them now.
- */
+/* Before packing the bits back into the native fp result, take care
+   of such mundane things as rounding and overflow.  Also, for some
+   kinds of fp values, the original parts may not have been fully
+   extracted -- but that is ok, we can regenerate them now.  */
 
 #define _FP_PACK_CANONICAL(fs, wc, X)					\
   do									\
@@ -262,7 +258,7 @@
 	      _FP_FRAC_SRL_##wc (X, _FP_WORKBITS);			\
 	      if (X##_e >= _FP_EXPMAX_##fs)				\
 		{							\
-		  /* overflow */					\
+		  /* Overflow.  */					\
 		  switch (FP_ROUNDMODE)					\
 		    {							\
 		    case FP_RND_NEAREST:				\
@@ -279,13 +275,13 @@
 		    }							\
 		  if (X##_c == FP_CLS_INF)				\
 		    {							\
-		      /* Overflow to infinity */			\
+		      /* Overflow to infinity.  */			\
 		      X##_e = _FP_EXPMAX_##fs;				\
 		      _FP_FRAC_SET_##wc (X, _FP_ZEROFRAC_##wc);		\
 		    }							\
 		  else							\
 		    {							\
-		      /* Overflow to maximum normal */			\
+		      /* Overflow to maximum normal.  */		\
 		      X##_e = _FP_EXPMAX_##fs - 1;			\
 		      _FP_FRAC_SET_##wc (X, _FP_MAXFRAC_##wc);		\
 		    }							\
@@ -295,7 +291,7 @@
 	    }								\
 	  else								\
 	    {								\
-	      /* we've got a denormalized number */			\
+	      /* We've got a denormalized number.  */			\
 	      int _FP_PACK_CANONICAL_is_tiny = 1;			\
 	      if (_FP_TININESS_AFTER_ROUNDING && X##_e == 0)		\
 		{							\
@@ -332,7 +328,7 @@
 		}							\
 	      else							\
 		{							\
-		  /* underflow to zero */				\
+		  /* Underflow to zero.  */				\
 		  X##_e = 0;						\
 		  if (!_FP_FRAC_ZEROP_##wc (X))				\
 		    {							\
@@ -370,8 +366,7 @@
   while (0)
 
 /* This one accepts raw argument and not cooked,  returns
- * 1 if X is a signaling NaN.
- */
+   1 if X is a signaling NaN.  */
 #define _FP_ISSIGNAN(fs, wc, X)			\
   ({						\
     int _FP_ISSIGNAN_ret = 0;			\
@@ -833,9 +828,7 @@
   while (0)
 
 
-/*
- * Main negation routine.  The input value is raw.
- */
+/* Main negation routine.  The input value is raw.  */
 
 #define _FP_NEG(fs, wc, R, X)			\
   do						\
@@ -847,9 +840,7 @@
   while (0)
 
 
-/*
- * Main multiplication routine.  The input values should be cooked.
- */
+/* Main multiplication routine.  The input values should be cooked.  */
 
 #define _FP_MUL(fs, wc, R, X, Y)				\
   do								\
@@ -1132,9 +1123,7 @@
   while (0)
 
 
-/*
- * Main division routine.  The input values should be cooked.
- */
+/* Main division routine.  The input values should be cooked.  */
 
 #define _FP_DIV(fs, wc, R, X, Y)				\
   do								\
@@ -1197,15 +1186,13 @@
   while (0)
 
 
-/*
- * Main differential comparison routine.  The inputs should be raw not
- * cooked.  The return is -1,0,1 for normal values, 2 otherwise.
- */
+/* Main differential comparison routine.  The inputs should be raw not
+   cooked.  The return is -1,0,1 for normal values, 2 otherwise.  */
 
 #define _FP_CMP(fs, wc, ret, X, Y, un)					\
   do									\
     {									\
-      /* NANs are unordered */						\
+      /* NANs are unordered.  */					\
       if ((X##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (X))	\
 	  || (Y##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (Y)))	\
 	{								\
@@ -1249,7 +1236,7 @@
 #define _FP_CMP_EQ(fs, wc, ret, X, Y)					\
   do									\
     {									\
-      /* NANs are unordered */						\
+      /* NANs are unordered.  */					\
       if ((X##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (X))	\
 	  || (Y##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (Y)))	\
 	{								\
@@ -1274,9 +1261,7 @@
     }									\
   while (0)
 
-/*
- * Main square root routine.  The input value should be cooked.
- */
+/* Main square root routine.  The input value should be cooked.  */
 
 #define _FP_SQRT(fs, wc, R, X)					\
   do								\
@@ -1332,21 +1317,18 @@
     }								\
   while (0)
 
-/*
- * Convert from FP to integer.  Input is raw.
- */
+/* Convert from FP to integer.  Input is raw.  */
 
 /* RSIGNED can have following values:
- * 0:  the number is required to be 0..(2^rsize)-1, if not, NV is set plus
- *     the result is either 0 or (2^rsize)-1 depending on the sign in such
- *     case.
- * 1:  the number is required to be -(2^(rsize-1))..(2^(rsize-1))-1, if not,
- *     NV is set plus the result is either -(2^(rsize-1)) or (2^(rsize-1))-1
- *     depending on the sign in such case.
- * -1: the number is required to be -(2^(rsize-1))..(2^rsize)-1, if not, NV is
- *     set plus the result is either -(2^(rsize-1)) or (2^(rsize-1))-1
- *     depending on the sign in such case.
- */
+   0:  the number is required to be 0..(2^rsize)-1, if not, NV is set plus
+       the result is either 0 or (2^rsize)-1 depending on the sign in such
+       case.
+   1:  the number is required to be -(2^(rsize-1))..(2^(rsize-1))-1, if not,
+       NV is set plus the result is either -(2^(rsize-1)) or (2^(rsize-1))-1
+       depending on the sign in such case.
+   -1: the number is required to be -(2^(rsize-1))..(2^rsize)-1, if not, NV is
+       set plus the result is either -(2^(rsize-1)) or (2^(rsize-1))-1
+       depending on the sign in such case.  */
 #define _FP_TO_INT(fs, wc, r, X, rsize, rsigned)			\
   do									\
     {									\
@@ -1656,9 +1638,7 @@
     }									\
   while (0)
 
-/*
- * Helper primitives.
- */
+/* Helper primitives.  */
 
 /* Count leading zeros in a word.  */
 

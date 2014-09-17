@@ -131,7 +131,7 @@
     }						\
   while (0)
 
-/* Predicates */
+/* Predicates.  */
 #define _FP_FRAC_NEGP_2(X)	((_FP_WS_TYPE) X##_f1 < 0)
 #define _FP_FRAC_ZEROP_2(X)	((X##_f1 | X##_f0) == 0)
 #define _FP_FRAC_OVERP_2(fs, X)	(_FP_FRAC_HIGH_##fs (X) & _FP_OVERFLOW_##fs)
@@ -148,9 +148,7 @@
 #define _FP_MINFRAC_2		0, 1
 #define _FP_MAXFRAC_2		(~(_FP_WS_TYPE) 0), (~(_FP_WS_TYPE) 0)
 
-/*
- * Internals
- */
+/* Internals.  */
 
 #define __FP_FRAC_SET_2(X, I1, I0)	(X##_f0 = I0, X##_f1 = I1)
 
@@ -205,10 +203,8 @@
 
 #endif
 
-/*
- * Unpack the raw bits of a native fp value.  Do not classify or
- * normalize the data.
- */
+/* Unpack the raw bits of a native fp value.  Do not classify or
+   normalize the data.  */
 
 #define _FP_UNPACK_RAW_2(fs, X, val)			\
   do							\
@@ -237,9 +233,7 @@
   while (0)
 
 
-/*
- * Repack the raw bits of a native fp value.
- */
+/* Repack the raw bits of a native fp value.  */
 
 #define _FP_PACK_RAW_2(fs, val, X)		\
   do						\
@@ -269,9 +263,7 @@
   while (0)
 
 
-/*
- * Multiplication algorithms:
- */
+/* Multiplication algorithms: */
 
 /* Given a 1W * 1W => 2W primitive, do the extended multiplication.  */
 
@@ -532,9 +524,7 @@
     }									\
   while (0)
 
-/*
- * Division algorithms:
- */
+/* Division algorithms: */
 
 #define _FP_DIV_MEAT_2_udiv(fs, R, X, Y)				\
   do									\
@@ -563,7 +553,7 @@
 	}								\
 									\
       /* Normalize, i.e. make the most significant bit of the		\
-	 denominator set. */						\
+	 denominator set.  */						\
       _FP_FRAC_SLL_2 (Y, _FP_WFRACXBITS_##fs);				\
 									\
       udiv_qrnnd (R##_f1, _FP_DIV_MEAT_2_udiv_r_f1,			\
@@ -630,11 +620,9 @@
   while (0)
 
 
-/*
- * Square root algorithms:
- * We have just one right now, maybe Newton approximation
- * should be added for those machines where division is fast.
- */
+/* Square root algorithms:
+   We have just one right now, maybe Newton approximation
+   should be added for those machines where division is fast.  */
 
 #define _FP_SQRT_MEAT_2(R, S, T, X, q)				\
   do								\
@@ -678,10 +666,8 @@
   while (0)
 
 
-/*
- * Assembly/disassembly for converting to/from integral types.
- * No shifting or overflow handled here.
- */
+/* Assembly/disassembly for converting to/from integral types.
+   No shifting or overflow handled here.  */
 
 #define _FP_FRAC_ASSEMBLE_2(r, X, rsize)	\
   (void) ((rsize <= _FP_W_TYPE_SIZE)		\
@@ -700,9 +686,7 @@
     }									\
   while (0)
 
-/*
- * Convert FP values between word sizes
- */
+/* Convert FP values between word sizes.  */
 
 #define _FP_FRAC_COPY_1_2(D, S)		(D##_f = S##_f0)
 

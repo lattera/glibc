@@ -232,16 +232,14 @@ union _FP_UNION_E
 # define FP_SQRT_E(R, X)	_FP_SQRT (E, 4, R, X)
 # define FP_FMA_E(R, X, Y, Z)	_FP_FMA (E, 4, 8, R, X, Y, Z)
 
-/*
- * Square root algorithms:
- * We have just one right now, maybe Newton approximation
- * should be added for those machines where division is fast.
- * This has special _E version because standard _4 square
- * root would not work (it has to start normally with the
- * second word and not the first), but as we have to do it
- * anyway, we optimize it by doing most of the calculations
- * in two UWtype registers instead of four.
- */
+/* Square root algorithms:
+   We have just one right now, maybe Newton approximation
+   should be added for those machines where division is fast.
+   This has special _E version because standard _4 square
+   root would not work (it has to start normally with the
+   second word and not the first), but as we have to do it
+   anyway, we optimize it by doing most of the calculations
+   in two UWtype registers instead of four.  */
 
 # define _FP_SQRT_MEAT_E(R, S, T, X, q)			\
   do							\
@@ -458,14 +456,12 @@ union _FP_UNION_E
 # define FP_SQRT_E(R, X)	_FP_SQRT (E, 2, R, X)
 # define FP_FMA_E(R, X, Y, Z)	_FP_FMA (E, 2, 4, R, X, Y, Z)
 
-/*
- * Square root algorithms:
- * We have just one right now, maybe Newton approximation
- * should be added for those machines where division is fast.
- * We optimize it by doing most of the calculations
- * in one UWtype registers instead of two, although we don't
- * have to.
- */
+/* Square root algorithms:
+   We have just one right now, maybe Newton approximation
+   should be added for those machines where division is fast.
+   We optimize it by doing most of the calculations
+   in one UWtype registers instead of two, although we don't
+   have to.  */
 # define _FP_SQRT_MEAT_E(R, S, T, X, q)			\
   do							\
     {							\

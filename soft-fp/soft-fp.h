@@ -38,7 +38,7 @@
 # include "sfp-machine.h"
 #endif
 
-/* Allow sfp-machine to have its own byte order definitions. */
+/* Allow sfp-machine to have its own byte order definitions.  */
 #ifndef __BYTE_ORDER
 # ifdef _LIBC
 #  include <endian.h>
@@ -63,7 +63,7 @@
 # define FP_ROUNDMODE		FP_RND_NEAREST
 #endif
 
-/* By default don't care about exceptions. */
+/* By default don't care about exceptions.  */
 #ifndef FP_EX_INVALID
 # define FP_EX_INVALID		0
 #endif
@@ -119,10 +119,9 @@
 
 #ifndef FP_INHIBIT_RESULTS
 /* By default we write the results always.
- * sfp-machine may override this and e.g.
- * check if some exceptions are unmasked
- * and inhibit it in such a case.
- */
+   sfp-machine may override this and e.g.
+   check if some exceptions are unmasked
+   and inhibit it in such a case.  */
 # define FP_INHIBIT_RESULTS 0
 #endif
 

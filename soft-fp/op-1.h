@@ -73,7 +73,7 @@
 #define _FP_FRAC_DEC_1(X, Y)	(X##_f -= Y##_f)
 #define _FP_FRAC_CLZ_1(z, X)	__FP_CLZ (z, X##_f)
 
-/* Predicates */
+/* Predicates.  */
 #define _FP_FRAC_NEGP_1(X)	((_FP_WS_TYPE) X##_f < 0)
 #define _FP_FRAC_ZEROP_1(X)	(X##_f == 0)
 #define _FP_FRAC_OVERP_1(fs, X)	(X##_f & _FP_OVERFLOW_##fs)
@@ -87,10 +87,8 @@
 #define _FP_MINFRAC_1		1
 #define _FP_MAXFRAC_1		(~(_FP_WS_TYPE) 0)
 
-/*
- * Unpack the raw bits of a native fp value.  Do not classify or
- * normalize the data.
- */
+/* Unpack the raw bits of a native fp value.  Do not classify or
+   normalize the data.  */
 
 #define _FP_UNPACK_RAW_1(fs, X, val)			\
   do							\
@@ -116,9 +114,7 @@
     }							\
   while (0)
 
-/*
- * Repack the raw bits of a native fp value.
- */
+/* Repack the raw bits of a native fp value.  */
 
 #define _FP_PACK_RAW_1(fs, val, X)		\
   do						\
@@ -146,9 +142,7 @@
   while (0)
 
 
-/*
- * Multiplication algorithms:
- */
+/* Multiplication algorithms: */
 
 /* Basic.  Assuming the host word size is >= 2*FRACBITS, we can do the
    multiplication immediately.  */
@@ -203,7 +197,7 @@
       _FP_W_TYPE _FP_MUL_MEAT_DW_1_hard_yh, _FP_MUL_MEAT_DW_1_hard_yl;	\
       _FP_FRAC_DECL_2 (_FP_MUL_MEAT_DW_1_hard_a);			\
 									\
-      /* split the words in half */					\
+      /* Split the words in half.  */					\
       _FP_MUL_MEAT_DW_1_hard_xh = X##_f >> (_FP_W_TYPE_SIZE/2);		\
       _FP_MUL_MEAT_DW_1_hard_xl						\
 	= X##_f & (((_FP_W_TYPE) 1 << (_FP_W_TYPE_SIZE/2)) - 1);	\
@@ -211,7 +205,7 @@
       _FP_MUL_MEAT_DW_1_hard_yl						\
 	= Y##_f & (((_FP_W_TYPE) 1 << (_FP_W_TYPE_SIZE/2)) - 1);	\
 									\
-      /* multiply the pieces */						\
+      /* Multiply the pieces.  */					\
       R##_f0 = _FP_MUL_MEAT_DW_1_hard_xl * _FP_MUL_MEAT_DW_1_hard_yl;	\
       _FP_MUL_MEAT_DW_1_hard_a_f0					\
 	= _FP_MUL_MEAT_DW_1_hard_xh * _FP_MUL_MEAT_DW_1_hard_yl;	\
@@ -219,7 +213,7 @@
 	= _FP_MUL_MEAT_DW_1_hard_xl * _FP_MUL_MEAT_DW_1_hard_yh;	\
       R##_f1 = _FP_MUL_MEAT_DW_1_hard_xh * _FP_MUL_MEAT_DW_1_hard_yh;	\
 									\
-      /* reassemble into two full words */				\
+      /* Reassemble into two full words.  */				\
       if ((_FP_MUL_MEAT_DW_1_hard_a_f0 += _FP_MUL_MEAT_DW_1_hard_a_f1)	\
 	  < _FP_MUL_MEAT_DW_1_hard_a_f1)				\
 	R##_f1 += (_FP_W_TYPE) 1 << (_FP_W_TYPE_SIZE/2);		\
@@ -237,7 +231,7 @@
       _FP_FRAC_DECL_2 (_FP_MUL_MEAT_1_hard_z);				\
       _FP_MUL_MEAT_DW_1_hard (wfracbits, _FP_MUL_MEAT_1_hard_z, X, Y);	\
 									\
-      /* normalize */							\
+      /* Normalize.  */							\
       _FP_FRAC_SRS_2 (_FP_MUL_MEAT_1_hard_z,				\
 		      wfracbits - 1, 2*wfracbits);			\
       R##_f = _FP_MUL_MEAT_1_hard_z_f0;					\
@@ -245,9 +239,7 @@
   while (0)
 
 
-/*
- * Division algorithms:
- */
+/* Division algorithms: */
 
 /* Basic.  Assuming the host word size is >= 2*FRACBITS, we can do the
    division immediately.  Give this macro either _FP_DIV_HELP_imm for
@@ -330,11 +322,9 @@
   while (0)
 
 
-/*
- * Square root algorithms:
- * We have just one right now, maybe Newton approximation
- * should be added for those machines where division is fast.
- */
+/* Square root algorithms:
+   We have just one right now, maybe Newton approximation
+   should be added for those machines where division is fast.  */
 
 #define _FP_SQRT_MEAT_1(R, S, T, X, q)		\
   do						\
@@ -360,17 +350,13 @@
     }						\
   while (0)
 
-/*
- * Assembly/disassembly for converting to/from integral types.
- * No shifting or overflow handled here.
- */
+/* Assembly/disassembly for converting to/from integral types.
+   No shifting or overflow handled here.  */
 
 #define _FP_FRAC_ASSEMBLE_1(r, X, rsize)	(r = X##_f)
 #define _FP_FRAC_DISASSEMBLE_1(X, r, rsize)	(X##_f = r)
 
 
-/*
- * Convert FP values between word sizes
- */
+/* Convert FP values between word sizes.  */
 
 #define _FP_FRAC_COPY_1_1(D, S)		(D##_f = S##_f)
