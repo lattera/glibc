@@ -1,3 +1,8 @@
+2014-09-17  Arjun Shankar  <arjun.is@lostca.se>
+
+	* time/tst-ftime.c: New test.
+	* time/Makefile (tests): Add tst-ftime.
+
 2014-09-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* soft-fp/extended.h: Fix comment formatting.
