@@ -1373,11 +1373,13 @@
 	      r = 1;							\
 	      r <<= rsize - 1;						\
 	      r -= 1 - X##_s;						\
-	    } else {							\
-	    r = 0;							\
-	    if (!X##_s)							\
-	      r = ~r;							\
-	  }								\
+	    }								\
+	  else								\
+	    {								\
+	      r = 0;							\
+	      if (!X##_s)						\
+		r = ~r;							\
+	    }								\
 									\
 	  if (rsigned && X##_s && X##_e == _FP_EXPBIAS_##fs + rsize - 1) \
 	    {								\
