@@ -1,3 +1,7 @@
+2014-09-19  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* stdlib/longlong.h: Add __udiv_w_sdiv prototype.
+
 2014-09-17  Arjun Shankar  <arjun.is@lostca.se>
 
 	* time/tst-ftime.c: New test.
