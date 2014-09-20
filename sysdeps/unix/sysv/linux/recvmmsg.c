@@ -35,7 +35,7 @@
 #ifdef __NR_recvmmsg
 int
 recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
-	  const struct timespec *tmo)
+	  struct timespec *tmo)
 {
   if (SINGLE_THREAD_P)
     return INLINE_SYSCALL (recvmmsg, 5, fd, vmessages, vlen, flags, tmo);
@@ -52,14 +52,14 @@ recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
 # ifndef __ASSUME_RECVMMSG_SOCKETCALL
 extern int __internal_recvmmsg (int fd, struct mmsghdr *vmessages,
 				unsigned int vlen, int flags,
-				const struct timespec *tmo)
+				struct timespec *tmo)
      attribute_hidden;
 
 static int have_recvmmsg;
 
 int
 recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
-	  const struct timespec *tmo)
+	  struct timespec *tmo)
 {
   if (__glibc_likely (have_recvmmsg >= 0))
     {

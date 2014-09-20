@@ -1,3 +1,9 @@
+2014-09-20  Ondřej Bílka  <neleai@seznam.cz>
+
+	* socket/recvmmsg.c (recvmmsg): Drop const argument.
+	* socket/sys/socket.h: Likewise
+	* sysdeps/unix/sysv/linux/recvmmsg.c: Likewise.
+
 2014-09-19  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
 	* stdlib/longlong.h: Add __udiv_w_sdiv prototype.

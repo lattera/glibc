@@ -23,7 +23,7 @@
    Returns the number of bytes read or -1 for errors.  */
 int
 recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
-	  const struct timespec *tmo)
+	  struct timespec *tmo)
 {
   __set_errno (ENOSYS);
   return -1;
