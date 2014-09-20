@@ -1,3 +1,10 @@
+2014-09-20  Rasmus Villemoes  <rv@rasmusvillemoes.dk>
+
+	* sysdeps/unix/sysv/linux/eventfd.c:
+	Make first argument unsigned.
+	* sysdeps/unix/sysv/linux/hppa/sys/eventfd.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/eventfd.h: Likewise.
+
 2014-09-20  Ondřej Bílka  <neleai@seznam.cz>
 
 	* socket/recvmmsg.c (recvmmsg): Drop const argument.

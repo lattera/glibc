@@ -31,7 +31,7 @@ __BEGIN_DECLS
 
 /* Return file descriptor for generic event channel.  Set initial
    value to COUNT.  */
-extern int eventfd (int __count, int __flags) __THROW;
+extern int eventfd (unsigned int __count, int __flags) __THROW;
 
 /* Read event counter and possibly wait for events.  */
 extern int eventfd_read (int __fd, eventfd_t *__value);

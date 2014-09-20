@@ -22,7 +22,7 @@
 
 
 int
-eventfd (int count, int flags)
+eventfd (unsigned int count, int flags)
 {
 #ifdef __NR_eventfd2
   int res = INLINE_SYSCALL (eventfd2, 2, count, flags);
