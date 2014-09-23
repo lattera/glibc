@@ -1,3 +1,21 @@
+2014-09-23  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14138]
+	* sysdeps/unix/sysv/linux/arm/setrlimit.c: Remove file.
+	* sysdeps/unix/sysv/linux/i386/setrlimit.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/setrlimit.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/setrlimit.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setrlimit.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/setrlimit.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list (setrlimit): Add
+	syscall entry for GLIBC_2.2 symbol version.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/syscalls.list (setrlimit):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list
+	(setrlimit): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/syscalls.list (setrlimit):
+	Likewise.
+
 2014-09-23  Will Newton  <will.newton@linaro.org>
 
 	* sysdeps/unix/sysv/linux/arm/bits/hwcap.h: Check for
