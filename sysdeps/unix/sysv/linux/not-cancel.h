@@ -17,48 +17,48 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
+#ifndef NOT_CANCEL_H
+# define NOT_CANCEL_H
 
-#if IS_IN (libc) || IS_IN (libpthread) || IS_IN (librt)
-extern int __open_nocancel (const char *, int, ...) attribute_hidden;
-extern int __close_nocancel (int) attribute_hidden;
-extern int __read_nocancel (int, void *, size_t) attribute_hidden;
-extern int __write_nocancel (int, const void *, size_t) attribute_hidden;
-extern pid_t __waitpid_nocancel (pid_t, int *, int) attribute_hidden;
-extern int __openat_nocancel (int fd, const char *fname, int oflag,
-				mode_t mode) attribute_hidden;
-extern int __openat64_nocancel (int fd, const char *fname, int oflag,
-				  mode_t mode) attribute_hidden;
-#else
-# define __open_nocancel(name, ...) __open (name, __VA_ARGS__)
-# define __close_nocancel(fd) __close (fd)
-# define __read_nocancel(fd, buf, len) __read (fd, buf, len)
-# define __write_nocancel(fd, buf, len) __write (fd, buf, len)
-# define __waitpid_nocancel(pid, stat_loc, options) \
-  __waitpid (pid, stat_loc, options)
-# define __openat_nocancel(fd, fname, oflag, mode) \
-  openat (fd, fname, oflag, mode)
-# define __openat64_nocancel(fd, fname, oflag, mode) \
-  openat64 (fd, fname, oflag, mode)
-#endif
+#include <sysdep.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/syscall.h>
 
 /* Uncancelable open.  */
-#define open_not_cancel(name, flags, mode) \
-   __open_nocancel (name, flags, mode)
-#define open_not_cancel_2(name, flags) \
-   __open_nocancel (name, flags)
+#ifdef __NR_open
+# define open_not_cancel(name, flags, mode) \
+   INLINE_SYSCALL (open, 3, name, flags, mode)
+# define open_not_cancel_2(name, flags) \
+   INLINE_SYSCALL (open, 2, name, flags)
+#else
+# define open_not_cancel(name, flags, mode) \
+   INLINE_SYSCALL (openat, 4, AT_FDCWD, name, flags, mode)
+# define open_not_cancel_2(name, flags) \
+   INLINE_SYSCALL (openat, 3, AT_FDCWD, name, flags)
+#endif
+
+/* Uncancelable read.  */
+#define __read_nocancel(fd, buf, len) \
+  INLINE_SYSCALL (read, 3, fd, buf, len)
+
+/* Uncancelable write.  */
+#define __write_nocancel(fd, buf, len) \
+  INLINE_SYSCALL (write, 3, fd, buf, len)
 
 /* Uncancelable openat.  */
 #define openat_not_cancel(fd, fname, oflag, mode) \
-  __openat_nocancel (fd, fname, oflag, mode)
+  INLINE_SYSCALL (openat, 4, fd, fname, oflag, mode)
 #define openat_not_cancel_3(fd, fname, oflag) \
-  __openat_nocancel (fd, fname, oflag, 0)
+  INLINE_SYSCALL (openat, 3, fd, fname, oflag)
 #define openat64_not_cancel(fd, fname, oflag, mode) \
-  __openat64_nocancel (fd, fname, oflag, mode)
+  INLINE_SYSCALL (openat, 4, fd, fname, oflag | O_LARGEFILE, mode)
 #define openat64_not_cancel_3(fd, fname, oflag) \
-  __openat64_nocancel (fd, fname, oflag, 0)
+  INLINE_SYSCALL (openat, 3, fd, fname, oflag | O_LARGEFILE)
 
 /* Uncancelable close.  */
+#define __close_nocancel(fd) \
+  INLINE_SYSCALL (close, 1, fd)
 #define close_not_cancel(fd) \
   __close_nocancel (fd)
 #define close_not_cancel_no_status(fd) \
@@ -83,17 +83,27 @@ extern int __openat64_nocancel (int fd, const char *fname, int oflag,
   __fcntl_nocancel (fd, cmd, val)
 
 /* Uncancelable waitpid.  */
-#define waitpid_not_cancel(pid, stat_loc, options) \
+#define __waitpid_nocancel(pid, stat_loc, options) \
   INLINE_SYSCALL (wait4, 4, pid, stat_loc, options, NULL)
+#define waitpid_not_cancel(pid, stat_loc, options) \
+  __waitpid_nocancel(pid, stat_loc, options)
 
 /* Uncancelable pause.  */
 #define pause_not_cancel() \
-  __pause_nocancel ()
+  ({ sigset_t set; 							     \
+     int __rc = INLINE_SYSCALL (rt_sigprocmask, 4, SIG_BLOCK, NULL, &set,    \
+				_NSIG / 8);				     \
+     if (__rc == 0)							     \
+       __rc = INLINE_SYSCALL (rt_sigsuspend, 2, &set, _NSIG / 8);	     \
+     __rc;								     \
+  })
 
 /* Uncancelable nanosleep.  */
 #define nanosleep_not_cancel(requested_time, remaining) \
-  __nanosleep_nocancel (requested_time, remaining)
+  INLINE_SYSCALL (nanosleep, 2, requested_time, remaining)
 
 /* Uncancelable sigsuspend.  */
 #define sigsuspend_not_cancel(set) \
-  __sigsuspend_nocancel (set)
+  INLINE_SYSCALL (rt_sigsuspend, 2, set, _NSIG / 8)
+
+#endif /* NOT_CANCEL_H  */

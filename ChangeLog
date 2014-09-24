@@ -1,3 +1,19 @@
+2015-06-04  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/not-cancel.h (open_not_cancel): Rewrite to
+	be an inline implementation regardless of library is built within.
+	(open_not_cancel_2): Likewise.
+	(__read_nocancel): Likewise.
+	(__write_nocancel): Likewise.
+	(openat_not_cancel): Likewise.
+	(openat_not_cancel_3): Likewise.
+	(openat64_not_cancel): Likewise.
+	(openat64_not_cancel_3): Likewise.
+	(__close_nocancel): Likewise.
+	(pause_not_cancel): Likewise.
+	(nanosleep_not_cancel): Likewise.
+	(sigsuspend_not_cancel): Likewise.
+
 2015-06-04  Torvald Riegel  <triegel@redhat.com>
 
 	[BZ #14958]
