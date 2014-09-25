@@ -1,5 +1,7 @@
 2014-10-02  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/tile/memcmp.c: New file.
+
 	* sysdeps/unix/sysv/linux/tile/sysconf.c: New file.
 
 	* sysdeps/tile/tilegx/string-endian.h (STRSHIFT): New macro.
