@@ -1,5 +1,8 @@
 2014-10-02  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/unix/sysv/linux/tile/clone.S (__clone): Fix code
+	to set up frame more cleanly.
+
 	* sysdeps/tile/memcmp.c: New file.
 
 	* sysdeps/unix/sysv/linux/tile/sysconf.c: New file.
