@@ -1,5 +1,12 @@
 2014-09-26  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/shlib-versions: Do not
+	specify symbol version for ld.so.  Do not include entry for
+	libpthread.
+	* sysdeps/unix/sysv/linux/s390/s390-64/shlib-versions: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/shlib-versions: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/shlib-versions: Likewise.
+
 	[BZ #14171]
 	* Makeconfig [$(build-shared) = yes]
 	($(common-objpfx)soversions.mk): Don't handle SONAMEs specified in
