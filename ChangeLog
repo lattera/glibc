@@ -1,3 +1,79 @@
+2014-09-26  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14171]
+	* Makeconfig [$(build-shared) = yes]
+	($(common-objpfx)soversions.mk): Don't handle SONAMEs specified in
+	makefiles.
+	[$(build-shared) = yes && $(soversions.mk-done) = t]
+	($(common-objpfx)gnu/lib-names.h): Remove rule.
+	[$(build-shared) = yes && $(soversions.mk-done) = t]
+	($(common-objpfx)gnu/lib-names.stmp): Likewise.  Split and moved
+	to Makerules.
+	[$(build-shared) = yes && $(soversions.mk-done) = t]
+	(before-compile): Don't append $(common-objpfx)gnu/lib-names.h
+	here.
+	[$(build-shared) = yes && $(soversions.mk-done) = t]
+	(common-generated): Don't append gnu/lib-names.h and
+	gnu/lib-names.stmp here.
+	* Makerules [$(build-shared) = yes && $(soversions.mk-done) = t]
+	(lib-names-h-abi): New variable.
+	[$(build-shared) = yes && $(soversions.mk-done) = t]
+	(lib-names-stmp-abi): Likewise.
+	[$(build-shared) = yes && $(soversions.mk-done) = t &&
+	abi-variants] (before-compile): Append
+	$(common-objpfx)$(lib-names-h-abi).
+	[$(build-shared) = yes && $(soversions.mk-done) = t &&
+	abi-variants] (common-generated): Append gnu/lib-names.h.
+	[$(build-shared) = yes && $(soversions.mk-done) = t &&
+	abi-variants] (install-others-nosubdir): Depend on
+	$(inst_includedir)/$(lib-names-h-abi).
+	[$(build-shared) = yes && $(soversions.mk-done) = t &&
+	abi-variants] ($(common-objpfx)gnu/lib-names.h): New rule.
+	[$(build-shared) = yes && $(soversions.mk-done) = t]
+	($(common-objpfx)$(lib-names-h-abi)): New rule.
+	[$(build-shared) = yes && $(soversions.mk-done) = t]
+	($(common-objpfx)$(lib-names-stmp-abi)): Likewise.
+	[$(build-shared) = yes && $(soversions.mk-done) = t]
+	(common-generated): Append $(lib-names-h-abi) and
+	$(lib-names-stmp-abi).
+	* scripts/lib-names.awk: Do not handle multi being set.
+	* sysdeps/unix/sysv/linux/aarch64/Makefile (abi-lp64-ld-soname):
+	Remove variable.
+	(abi-lp64_be-ld-soname): Likewise.
+	* sysdeps/unix/sysv/linux/arm/Makefile (abi-soft-ld-soname):
+	Likewise.
+	(abi-hard-ld-soname): Likewise.
+	* sysdeps/unix/sysv/linux/i386/shlib-versions: New file.
+	* sysdeps/unix/sysv/linux/mips/Makefile (abi-o32_soft-ld-soname):
+	Remove variable.
+	(abi-o32_hard-ld-soname): Likewise.
+	(abi-o32_soft_2008-ld-soname): Likewise.
+	(abi-o32_hard_2008-ld-soname): Likewise.
+	(abi-n32_soft-ld-soname): Likewise.
+	(abi-n32_hard-ld-soname): Likewise.
+	(abi-n32_soft_2008-ld-soname): Likewise.
+	(abi-n32_hard_2008-ld-soname): Likewise.
+	(abi-n64_soft-ld-soname): Likewise.
+	(abi-n64_hard-ld-soname): Likewise.
+	(abi-n64_soft_2008-ld-soname): Likewise.
+	(abi-n64_hard_2008-ld-soname): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile (abi-64-v1-ld-soname):
+	Likewise.
+	(abi-64-v2-ld-soname): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/shlib-versions: Add
+	ld.so entries.
+	* sysdeps/unix/sysv/linux/s390/Makefile (abi-64-ld-soname): Remove
+	variable.
+	* sysdeps/unix/sysv/linux/s390/s390-64/shlib-versions: Add ld.so
+	entry.
+	* sysdeps/unix/sysv/linux/x86/Makefile (abi-32-ld-soname): Remove
+	variable.
+	(abi-64-ld-soname): Likewise.
+	(abi-x32-ld-soname): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/shlib-versions: Add ld.so
+	entry.
+	* sysdeps/unix/sysv/linux/x86_64/x32/shlib-versions: Likewise.
+
 2014-09-23  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14138]

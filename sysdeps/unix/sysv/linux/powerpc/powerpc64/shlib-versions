@@ -1,7 +1,9 @@
 %ifdef HAVE_ELFV2_ABI
 DEFAULT			GLIBC_2.17
+ld=ld64.so.2		GLIBC_2.17
 libpthread=0		GLIBC_2.17
 %else
 DEFAULT			GLIBC_2.3
+ld=ld64.so.1		GLIBC_2.3
 libpthread=0		GLIBC_2.3
 %endif

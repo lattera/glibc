@@ -27,7 +27,6 @@
 END {
   for (elt in macros) {
     split(elt, x);
-    pfx = multi ? "# define " : "#define ";
-    printf("%-40s%s\n", pfx x[2], macros[elt]);
+    printf("%-40s%s\n", "#define " x[2], macros[elt]);
   }
 }

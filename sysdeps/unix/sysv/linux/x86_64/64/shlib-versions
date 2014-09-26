@@ -1,4 +1,5 @@
 # DEFAULT			Earliest symbol set
 # ---------------		------------------------------
 DEFAULT			GLIBC_2.2.5
+ld=ld-linux-x86-64.so.2	GLIBC_2.2.5
 libpthread=0		GLIBC_2.2.5

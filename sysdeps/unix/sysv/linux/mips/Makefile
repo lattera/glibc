@@ -25,84 +25,72 @@ abi-o32_soft-options := -U_MIPS_SIM -D_MIPS_SIM=1 \
 abi-o32_soft-condition := !defined(__mips_nan2008) \
 			  && defined(__mips_soft_float) \
 			  && (_MIPS_SIM == _MIPS_SIM_ABI32)
-abi-o32_soft-ld-soname := ld.so.1
 abi-o32_hard-options := -U_MIPS_SIM -D_MIPS_SIM=1 \
 			-D__mips_hard_float -U__mips_soft_float \
 			-U__mips_nan2008
 abi-o32_hard-condition := !defined(__mips_nan2008) \
 			  && defined(__mips_hard_float) \
 			  && (_MIPS_SIM == _MIPS_SIM_ABI32)
-abi-o32_hard-ld-soname := ld.so.1
 abi-o32_soft_2008-options := -U_MIPS_SIM -D_MIPS_SIM=1 \
 			     -D__mips_soft_float -U__mips_hard_float \
 			     -D__mips_nan2008
 abi-o32_soft_2008-condition := defined(__mips_nan2008) \
 			       && defined(__mips_soft_float) \
 			       && (_MIPS_SIM == _MIPS_SIM_ABI32)
-abi-o32_soft_2008-ld-soname := ld-linux-mipsn8.so.1
 abi-o32_hard_2008-options := -U_MIPS_SIM -D_MIPS_SIM=1 \
 			     -D__mips_hard_float -U__mips_soft_float \
 			     -D__mips_nan2008
 abi-o32_hard_2008-condition := defined(__mips_nan2008) \
 			       && defined(__mips_hard_float) \
 			       && (_MIPS_SIM == _MIPS_SIM_ABI32)
-abi-o32_hard_2008-ld-soname := ld-linux-mipsn8.so.1
 abi-n32_soft-options := -U_MIPS_SIM -D_MIPS_SIM=2 \
 			-D__mips_soft_float -U__mips_hard_float \
 			-U__mips_nan2008
 abi-n32_soft-condition := !defined(__mips_nan2008) \
 			  && defined(__mips_soft_float) \
 			  && (_MIPS_SIM == _MIPS_SIM_NABI32)
-abi-n32_soft-ld-soname := ld.so.1
 abi-n32_hard-options := -U_MIPS_SIM -D_MIPS_SIM=2 \
 			-D__mips_hard_float -U__mips_soft_float \
 			-U__mips_nan2008
 abi-n32_hard-condition := !defined(__mips_nan2008) \
 			  && defined(__mips_hard_float) \
 			  && (_MIPS_SIM == _MIPS_SIM_NABI32)
-abi-n32_hard-ld-soname := ld.so.1
 abi-n32_soft_2008-options := -U_MIPS_SIM -D_MIPS_SIM=2 \
 			     -D__mips_soft_float -U__mips_hard_float \
 			     -D__mips_nan2008
 abi-n32_soft_2008-condition := defined(__mips_nan2008) \
 			       && defined(__mips_soft_float) \
 			       && (_MIPS_SIM == _MIPS_SIM_NABI32)
-abi-n32_soft_2008-ld-soname := ld-linux-mipsn8.so.1
 abi-n32_hard_2008-options := -U_MIPS_SIM -D_MIPS_SIM=2 \
 			     -D__mips_hard_float -U__mips_soft_float \
 			     -D__mips_nan2008
 abi-n32_hard_2008-condition := defined(__mips_nan2008) \
 			       && defined(__mips_hard_float) \
 			       && (_MIPS_SIM == _MIPS_SIM_NABI32)
-abi-n32_hard_2008-ld-soname := ld-linux-mipsn8.so.1
 abi-n64_soft-options := -U_MIPS_SIM -D_MIPS_SIM=3 \
 			-D__mips_soft_float -U__mips_hard_float \
 			-U__mips_nan2008
 abi-n64_soft-condition := !defined(__mips_nan2008) \
 			  && defined(__mips_soft_float) \
 			  && (_MIPS_SIM == _MIPS_SIM_ABI64)
-abi-n64_soft-ld-soname := ld.so.1
 abi-n64_hard-options := -U_MIPS_SIM -D_MIPS_SIM=3 \
 			-D__mips_hard_float -U__mips_soft_float \
 			-U__mips_nan2008
 abi-n64_hard-condition := !defined(__mips_nan2008) \
 			  && defined(__mips_hard_float) \
 			  && (_MIPS_SIM == _MIPS_SIM_ABI64)
-abi-n64_hard-ld-soname := ld.so.1
 abi-n64_soft_2008-options := -U_MIPS_SIM -D_MIPS_SIM=3 \
 			     -D__mips_soft_float -U__mips_hard_float \
 			     -D__mips_nan2008
 abi-n64_soft_2008-condition := defined(__mips_nan2008) \
 			       && defined(__mips_soft_float) \
 			       && (_MIPS_SIM == _MIPS_SIM_ABI64)
-abi-n64_soft_2008-ld-soname := ld-linux-mipsn8.so.1
 abi-n64_hard_2008-options := -U_MIPS_SIM -D_MIPS_SIM=3 \
 			     -D__mips_hard_float -U__mips_soft_float \
 			     -D__mips_nan2008
 abi-n64_hard_2008-condition := defined(__mips_nan2008) \
 			       && defined(__mips_hard_float) \
 			       && (_MIPS_SIM == _MIPS_SIM_ABI64)
-abi-n64_hard_2008-ld-soname := ld-linux-mipsn8.so.1
 
 ifeq ($(subdir),elf)
 ifeq ($(build-shared),yes)
