@@ -18,6 +18,7 @@
 
 #include <bits/wordsize.h>
 #include <kernel-features.h>
+#include <sysdeps/unix/sysdep.h>
 
 /* Provide the common name to allow more code reuse.  */
 #define __NR__llseek __NR_llseek

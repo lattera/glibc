@@ -37,17 +37,7 @@
 int
 accept4 (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len, int flags)
 {
-  if (SINGLE_THREAD_P)
-    return INLINE_SYSCALL (accept4, 4, fd, addr.__sockaddr__, addr_len, flags);
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  int result = INLINE_SYSCALL (accept4, 4, fd, addr.__sockaddr__, addr_len,
-			       flags);
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
+  return SYSCALL_CANCEL (accept4, fd, addr.__sockaddr__, addr_len, flags);
 }
 #elif defined __NR_socketcall
 # include <socketcall.h>

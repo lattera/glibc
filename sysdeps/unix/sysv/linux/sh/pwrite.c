@@ -35,23 +35,8 @@
 ssize_t
 __libc_pwrite (int fd, const void *buf, size_t count, off_t offset)
 {
-  ssize_t result;
-
-  if (SINGLE_THREAD_P)
-    {
-      result = INLINE_SYSCALL (pwrite, 6, fd, buf, count, 0,
-			       __LONG_LONG_PAIR (offset >> 31, offset));
-      return result;
-    }
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  result = INLINE_SYSCALL (pwrite, 6, fd, buf, count, 0,
-			   __LONG_LONG_PAIR (offset >> 31, offset));
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
+  return SYSCALL_CANCEL (pwrite, fd, buf, count, 0,
+			 __LONG_LONG_PAIR (offset >> 31, offset));
 }
 
 strong_alias (__libc_pwrite, __pwrite)

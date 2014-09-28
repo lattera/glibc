@@ -47,17 +47,7 @@ ppoll (struct pollfd *fds, nfds_t nfds, const struct timespec *timeout,
 
   int result;
 
-  if (SINGLE_THREAD_P)
-    result = INLINE_SYSCALL (ppoll, 5, fds, nfds, timeout, sigmask, _NSIG / 8);
-  else
-    {
-      int oldtype = LIBC_CANCEL_ASYNC ();
-
-      result = INLINE_SYSCALL (ppoll, 5, fds, nfds, timeout, sigmask,
-			       _NSIG / 8);
-
-      LIBC_CANCEL_RESET (oldtype);
-    }
+  result = SYSCALL_CANCEL (ppoll, fds, nfds, timeout, sigmask, _NSIG / 8);
 
 # ifndef __ASSUME_PPOLL
   if (result == -1 && errno == ENOSYS)

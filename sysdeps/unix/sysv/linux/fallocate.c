@@ -25,21 +25,9 @@ int
 fallocate (int fd, int mode, __off_t offset, __off_t len)
 {
 #ifdef __NR_fallocate
-  if (SINGLE_THREAD_P)
-    return INLINE_SYSCALL (fallocate, 6, fd, mode,
-			   __LONG_LONG_PAIR (offset >> 31, offset),
-			   __LONG_LONG_PAIR (len >> 31, len));
-
-  int result;
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  result = INLINE_SYSCALL (fallocate, 6, fd, mode,
-			   __LONG_LONG_PAIR (offset >> 31, offset),
-			   __LONG_LONG_PAIR (len >> 31, len));
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
+  return SYSCALL_CANCEL (fallocate, fd, mode,
+			 __LONG_LONG_PAIR (offset >> 31, offset),
+			 __LONG_LONG_PAIR (len >> 31, len));
 #else
   __set_errno (ENOSYS);
   return -1;

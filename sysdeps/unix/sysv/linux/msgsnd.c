@@ -26,17 +26,7 @@
 int
 __libc_msgsnd (int msqid, const void *msgp, size_t msgsz, int msgflg)
 {
-  if (SINGLE_THREAD_P)
-    return INLINE_SYSCALL (ipc, 5, IPCOP_msgsnd, msqid, msgsz,
-			   msgflg, (void *) msgp);
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  int result = INLINE_SYSCALL (ipc, 5, IPCOP_msgsnd, msqid, msgsz,
-			       msgflg, (void *) msgp);
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
+  return SYSCALL_CANCEL (ipc, IPCOP_msgsnd, msqid, msgsz, msgflg,
+			 (void *) msgp);
 }
 weak_alias (__libc_msgsnd, msgsnd)

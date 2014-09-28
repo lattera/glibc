@@ -34,25 +34,9 @@
 ssize_t
 __libc_pread64 (int fd, void *buf, size_t count, off64_t offset)
 {
-  ssize_t result;
-
-  if (SINGLE_THREAD_P)
-    {
-     result = INLINE_SYSCALL (pread, 6, fd, buf, count, 0,
-			      __LONG_LONG_PAIR ((off_t) (offset >> 32),
-			      (off_t) (offset & 0xffffffff)));
-     return result;
-    }
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  result = INLINE_SYSCALL (pread, 6, fd, buf, count, 0,
-			   __LONG_LONG_PAIR ((off_t) (offset >> 32),
-					     (off_t) (offset & 0xffffffff)));
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
+  return SYSCALL_CANCEL (pread, fd, buf, count, 0,
+			 __LONG_LONG_PAIR ((off_t) (offset >> 32),
+					   (off_t) (offset & 0xffffffff)));
 }
 
 weak_alias (__libc_pread64, __pread64)

@@ -37,34 +37,13 @@
 ssize_t
 __libc_pread64 (int fd, void *buf, size_t count, off64_t offset)
 {
-  ssize_t result;
-
-
-  if (SINGLE_THREAD_P)
-    {
 #if _MIPS_SIM == _ABIN32 || _MIPS_SIM == _ABI64
-      result = INLINE_SYSCALL (pread, 4, fd, buf, count, offset);
+  return SYSCALL_CANCEL (pread, fd, buf, count, offset);
 #else
-     result = INLINE_SYSCALL (pread, 6, fd, buf, count, 0,
-			      __LONG_LONG_PAIR ((off_t) (offset >> 32),
-			      (off_t) (offset & 0xffffffff)));
+  return SYSCALL_CANCEL (pread, fd, buf, count, 0,
+			 __LONG_LONG_PAIR ((off_t) (offset >> 32),
+					   (off_t) (offset & 0xffffffff)));
 #endif
-     return result;
-    }
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-#if _MIPS_SIM == _ABIN32 || _MIPS_SIM == _ABI64
-  result = INLINE_SYSCALL (pread, 4, fd, buf, count, offset);
-#else
-  result = INLINE_SYSCALL (pread, 6, fd, buf, count, 0,
-			   __LONG_LONG_PAIR ((off_t) (offset >> 32),
-					     (off_t) (offset & 0xffffffff)));
-#endif
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
 }
 
 weak_alias (__libc_pread64, __pread64)

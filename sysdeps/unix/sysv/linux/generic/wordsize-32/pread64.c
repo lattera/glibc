@@ -24,29 +24,11 @@
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
-static ssize_t
-do_pread64 (int fd, void *buf, size_t count, off64_t offset)
-{
-  return INLINE_SYSCALL (pread64, __ALIGNMENT_COUNT (5, 6), fd,
-                         buf, count, __ALIGNMENT_ARG
-                         __LONG_LONG_PAIR ((off_t) (offset >> 32),
-                                           (off_t) (offset & 0xffffffff)));
-}
-
-
 ssize_t
 __libc_pread64 (int fd, void *buf, size_t count, off64_t offset)
 {
-  if (SINGLE_THREAD_P)
-    return do_pread64 (fd, buf, count, offset);
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  ssize_t result = do_pread64 (fd, buf, count, offset);
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
+  return SYSCALL_CANCEL (pread64, fd, buf, count, __ALIGNMENT_ARG
+                         __LONG_LONG_PAIR ((off_t) (offset >> 32),
+                                           (off_t) (offset & 0xffffffff)));
 }
-
 weak_alias (__libc_pread64, __pread64) weak_alias (__libc_pread64, pread64)

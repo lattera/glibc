@@ -37,16 +37,7 @@ __libc_open (const char *file, int oflag, ...)
       va_end (arg);
     }
 
-  if (SINGLE_THREAD_P)
-    return INLINE_SYSCALL (openat, 4, AT_FDCWD, file, oflag, mode);
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  int result = INLINE_SYSCALL (openat, 4, AT_FDCWD, file, oflag, mode);
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
+  return SYSCALL_CANCEL (openat, AT_FDCWD, file, oflag, mode);
 }
 libc_hidden_def (__libc_open)
 

@@ -37,18 +37,7 @@ __libc_open64 (const char *file, int oflag, ...)
       va_end (arg);
     }
 
-  if (SINGLE_THREAD_P)
-    return INLINE_SYSCALL (openat, 4, AT_FDCWD, file,
-                           oflag | O_LARGEFILE, mode);
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  int result = INLINE_SYSCALL (openat, 4, AT_FDCWD, file,
-                               oflag | O_LARGEFILE, mode);
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
+  return SYSCALL_CANCEL (openat, AT_FDCWD, file, oflag | O_LARGEFILE, mode);
 }
 weak_alias (__libc_open64, __open64)
 libc_hidden_weak (__open64)

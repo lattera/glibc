@@ -1,3 +1,114 @@
+2015-06-04  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysdep.h [SYSCALL_CANCEL]: New macro: define
+	cancellable syscalls.
+	(SYS_ify): Add guard to no redefine it.
+	(INLINE_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/accept4.c (accept4): Remove
+	LIBC_CANCEL_ASYNC/INLINE_SYSCALL/LIBC_CANCEL_RESET and use
+	SYSCALL_CANCEL instead.
+	* sysdeps/unix/sysv/linux/alpha/fdatasync.c (__fdatasync): Likewise.
+	* sysdeps/unix/sysv/linux/arm/pread.c (__libc_pread): Likewise.
+	* sysdeps/unix/sysv/linux/arm/pread64.c (__libc_pread64): Likewise.
+	* sysdeps/unix/sysv/linux/arm/pwrite.c (__libc_pwrite): Likewise.
+	* sysdeps/unix/sysv/linux/arm/pwrite64.c (__libc_pwrite64): Likewise.
+	* sysdeps/unix/sysv/linux/epoll_pwait.c (epoll_pwait): Likewise.
+	* sysdeps/unix/sysv/linux/fallocate.c (fallocate): Likewise.
+	* sysdeps/unix/sysv/linux/fallocate64.c (fallocate64): Likewise.
+	* sysdeps/unix/sysv/linux/generic/open.c (__libc_open): Likewise.
+	* sysdeps/unix/sysv/linux/generic/open64.c (__libc_open64): Likewise.
+	* sysdeps/unix/sysv/linux/generic/pause.c (__libc_pause): Likewise.
+	* sysdeps/unix/sysv/linux/generic/poll.c (__poll): Likewise.
+	* sysdeps/unix/sysv/linux/generic/recv.c (__libc_recv): Likewise.
+	* sysdeps/unix/sysv/linux/generic/select.c (__select): Likewise.
+	* sysdeps/unix/sysv/linux/generic/send.c (__libc_send): Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/pread.c (__libc_pread):
+	Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/pread64.c
+	(__libc_pread64): Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/preadv.c
+	(__libc_preadv): Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/preadv64.c
+	(__libc_readv64): Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/pwrite.c
+	(__libc_pwrite): Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/pwrite64.c
+	(__libc_pwrite64): Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/pwritev.c
+	(__libc_pwritev): Likewise.
+	* sysdeps/sysv/linux/generic/wordsize-32/pwritev64.c
+	(__libc_pwritev64): Likewise.
+	* sysdeps/unix/sysv/linux/i386/fcntl.c (__libc_fcntl): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/sync_file_range.c
+	(sync_file_range): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/fallocate.c (fallocate):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/fallocate64.c (fallocate64):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread.c (__libc_pread): Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread64.c (__libc_pread64): Likewise.
+	* sysdeps/unix/sysv/linux/mips/pwrite.c (__libc_pwrite): Likewise.
+	* sysdeps/unix/sysv/linux/mips/pwrite64.c (__libc_pwrite64): Likewise.
+	* sysdeps/unix/sysv/linux/msgrcv.c (__libc_msgrcv): Likewise.
+	* sysdeps/unix/sysv/linux/msgsnd.c (__libc_msgsnd): Likewise.
+	* sysdeps/unix/sysv/linux/open64.c (__libc_open64): Likewise.
+	* sysdeps/unix/sysv/linux/openat.c (__libc_openat): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pread.c (__libc_pread):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pread64.c
+	(__libc_read64): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pwrite.c (__libc_write):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pwrite64.c (__libc_write64):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fcntl.c (__libc_fcntl):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pread.c (__libc_pread):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pread64.c
+	(__libc_pread64): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pwrite.c (__libc_pwrite):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pwrite64.c
+	(__libc_pwrite64): Likewise.
+	* sysdeps/sysv/linux/powerpc/powerpc64/sync_file_range.c
+	(sync_file_range): Likewise.
+	* sysdeps/unix/sysv/linux/ppoll.c (ppoll): Likewise.
+	* sysdeps/unix/sysv/linux/pread.c (__libc_pread): Likewise.
+	* sysdeps/unix/sysv/linux/pread64.c (__libc_pread64): Likewise.
+	* sysdeps/unix/sysv/linux/preadv.c (__libc_preadv): Likewise.
+	* sysdeps/unix/sysv/linux/pselect.c (__pselect): Likewise.
+	* sysdeps/unix/sysv/linux/pwrite.c (__libc_pwrite): Likewise.
+	* sysdeps/unix/sysv/linux/pwrite64.c (__libc_pwrite64): Likewise.
+	* sysdeps/unix/sysv/linux/pwritev.c (PWRITEV): Likewise.
+	* sysdeps/unix/sysv/linux/readv.c (__libc_readv): Likewise.
+	* sysdeps/unix/sysv/linux/recvmmsg.c (recvmmsg): Likewise.
+	* sysdeps/unix/sysv/linux/sendmmsg.c (sendmmsg): Likewise.
+	* sysdeps/unix/sysv/linux/sh/pread.c (__libc_pread): Likewise.
+	* sysdeps/unix/sysv/linux/sh/pread64.c (__libc_pread64): Likewise.
+	* sysdeps/unix/sysv/linux/sh/pwrite.c (__libc_pwrite): Likewise.
+	* sysdeps/unix/sysv/linux/sh/pwrite64.c (__libc_pwrite64): Likewise.
+	* sysdeps/unix/sysv/linux/sigsuspend.c (__sigsuspend): Likewise.
+	* sysdeps/unix/sysv/linux/sigtimedwait.c (__sigtimedwait): Likewise.
+	* sysdeps/unix/sysv/linux/sigwaitinfo.c (__sigwaitinfo): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/msgrcv.c (__libc_msgrcv):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sync_file_range.c (sync_file_range):
+	Likewise.
+	* sysdeps/unix/sysv/linux/tcdrain.c (__libc_tcdrain): Likewise.
+	* sysdeps/unix/sysv/linux/timer_routines.c (timer_helper_thread):
+	Likewise.
+	* sysdeps/unix/sysv/linux/wait.c (__libc_wait): Likewise.
+	* sysdeps/unix/sysv/linux/waitid.c (__waitid): Likewise.
+	* sysdeps/unix/sysv/linux/waitpid.c (__libc_waitpid): Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/fallocate.c (fallocate):
+	Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/preadv.c (preadv): Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/pwritev.c (pwritev): Likewise.
+	* sysdeps/unix/sysv/linux/writev.c (__libc_writev): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/recv.c (__libc_recv): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/send.c (__libc_send): Likewise.
+
 2015-06-04  Nathan Lynch  <nathan_lynch@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/Makefile: (sysdep_routines):

@@ -24,6 +24,27 @@
 #define	SYSCALL__(name, args)	PSEUDO (__##name, name, args)
 #define	SYSCALL(name, args)	PSEUDO (name, name, args)
 
+/* Cancellation macros.  */
+#define __SYSCALL_NARGS_X(a,b,c,d,e,f,g,n,...) n
+#define __SYSCALL_NARGS(...) \
+  __SYSCALL_NARGS_X (__VA_ARGS__, 7, 6, 5, 4, 3, 2, 1, 0,)
+
+#define SYSCALL_CANCEL(name, ...) \
+  ({									     \
+    long int sc_ret;							     \
+    if (SINGLE_THREAD_P) 						     \
+      sc_ret = INLINE_SYSCALL (name, __SYSCALL_NARGS(__VA_ARGS__),	     \
+			       __VA_ARGS__);				     \
+    else								     \
+      {									     \
+	int sc_cancel_oldtype = LIBC_CANCEL_ASYNC ();			     \
+	sc_ret = INLINE_SYSCALL (name, __SYSCALL_NARGS (__VA_ARGS__),	     \
+				 __VA_ARGS__);				     \
+        LIBC_CANCEL_RESET (sc_cancel_oldtype);				     \
+      }									     \
+    sc_ret;								     \
+  })
+
 /* Machine-dependent sysdep.h files are expected to define the macro
    PSEUDO (function_name, syscall_name) to emit assembly code to define the
    C-callable function FUNCTION_NAME to do system call SYSCALL_NAME.
@@ -31,7 +52,9 @@
    an instruction such that "MOVE(r1, r0)" works.  ret should be defined
    as the return instruction.  */
 
+#ifndef SYS_ify
 #define SYS_ify(syscall_name) SYS_##syscall_name
+#endif
 
 /* Terminate a system call named SYM.  This is used on some platforms
    to generate correct debugging information.  */
@@ -47,4 +70,6 @@
 
 /* Wrappers around system calls should normally inline the system call code.
    But sometimes it is not possible or implemented and we use this code.  */
+#ifndef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...) __syscall_##name (args)
+#endif

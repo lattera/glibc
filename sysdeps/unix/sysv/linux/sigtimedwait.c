@@ -25,9 +25,9 @@
 
 #ifdef __NR_rt_sigtimedwait
 
-static int
-do_sigtimedwait (const sigset_t *set, siginfo_t *info,
-		 const struct timespec *timeout)
+int
+__sigtimedwait (const sigset_t *set, siginfo_t *info,
+		const struct timespec *timeout)
 {
 #ifdef SIGCANCEL
   sigset_t tmpset;
@@ -51,8 +51,7 @@ do_sigtimedwait (const sigset_t *set, siginfo_t *info,
 
     /* XXX The size argument hopefully will have to be changed to the
        real size of the user-level sigset_t.  */
-  int result = INLINE_SYSCALL (rt_sigtimedwait, 4, set,
-			       info, timeout, _NSIG / 8);
+  int result = SYSCALL_CANCEL (rt_sigtimedwait, set, info, timeout, _NSIG / 8);
 
   /* The kernel generates a SI_TKILL code in si_code in case tkill is
      used.  tkill is transparently used in raise().  Since having
@@ -60,26 +59,6 @@ do_sigtimedwait (const sigset_t *set, siginfo_t *info,
      here.  */
   if (result != -1 && info != NULL && info->si_code == SI_TKILL)
     info->si_code = SI_USER;
-
-  return result;
-}
-
-
-/* Return any pending signal or wait for one for the given time.  */
-int
-__sigtimedwait (const sigset_t *set, siginfo_t *info,
-		const struct timespec *timeout)
-{
-  if (SINGLE_THREAD_P)
-    return do_sigtimedwait (set, info, timeout);
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  /* XXX The size argument hopefully will have to be changed to the
-     real size of the user-level sigset_t.  */
-  int result = do_sigtimedwait (set, info, timeout);
-
-  LIBC_CANCEL_RESET (oldtype);
 
   return result;
 }

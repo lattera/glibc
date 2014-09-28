@@ -43,16 +43,6 @@ __libc_msgrcv (int msqid, void *msgp, size_t msgsz, long int msgtyp,
   tmp.msgp = msgp;
   tmp.msgtyp = msgtyp;
 
-  if (SINGLE_THREAD_P)
-    return INLINE_SYSCALL (ipc, 5, IPCOP_msgrcv, msqid, msgsz, msgflg, &tmp);
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  ssize_t result = INLINE_SYSCALL (ipc, 5, IPCOP_msgrcv, msqid, msgsz, msgflg,
-				   &tmp);
-
-   LIBC_CANCEL_RESET (oldtype);
-
-  return result;
+  return SYSCALL_CANCEL (ipc, IPCOP_msgrcv, msqid, msgsz, msgflg, &tmp);
 }
 weak_alias (__libc_msgrcv, msgrcv)

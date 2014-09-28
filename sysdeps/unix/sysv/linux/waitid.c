@@ -19,15 +19,14 @@
 #include <stddef.h>
 #include <errno.h>
 #include <sys/wait.h>
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 
-static inline int
-do_waitid (idtype_t idtype, id_t id, siginfo_t *infop, int options)
+int
+__waitid (idtype_t idtype, id_t id, siginfo_t *infop, int options)
 {
   /* The unused fifth argument is a `struct rusage *' that we could
      pass if we were using waitid to simulate wait3/wait4.  */
-  return INLINE_SYSCALL (waitid, 5, idtype, id, infop, options, NULL);
+  return SYSCALL_CANCEL (waitid, idtype, id, infop, options, NULL);
 }
-#define NO_DO_WAITID
-
-#include "sysdeps/posix/waitid.c"
+weak_alias (__waitid, waitid)
+strong_alias (__waitid, __libc_waitid)

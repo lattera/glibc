@@ -31,34 +31,13 @@
 #endif
 
 
-static ssize_t
-do_pwrite64 (int fd, const void *buf, size_t count, off64_t offset)
-{
-  ssize_t result;
-
-  result = INLINE_SYSCALL (pwrite, 5, fd, buf, count,
-			   __LONG_LONG_PAIR ((off_t) (offset >> 32),
-					     (off_t) (offset & 0xffffffff)));
-
-  return result;
-}
-
-
 ssize_t
 __libc_pwrite64 (int fd, const void *buf, size_t count, off64_t offset)
 {
-  if (SINGLE_THREAD_P)
-    return do_pwrite64 (fd, buf, count, offset);
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  ssize_t result = do_pwrite64 (fd, buf, count, offset);
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
+  return SYSCALL_CANCEL (pwrite, fd, buf, count,
+			 __LONG_LONG_PAIR ((off_t) (offset >> 32),
+					   (off_t) (offset & 0xffffffff)));
 }
-
 weak_alias (__libc_pwrite64, __pwrite64)
 libc_hidden_weak (__pwrite64)
 weak_alias (__libc_pwrite64, pwrite64)

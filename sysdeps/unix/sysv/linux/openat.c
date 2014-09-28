@@ -68,16 +68,7 @@ __OPENAT (int fd, const char *file, int oflag, ...)
       va_end (arg);
     }
 
-  if (SINGLE_THREAD_P)
-    return OPENAT_NOT_CANCEL (fd, file, oflag, mode);
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  int res = OPENAT_NOT_CANCEL (fd, file, oflag, mode);
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return res;
+  return SYSCALL_CANCEL (openat, fd, file, oflag, mode);
 }
 libc_hidden_def (__OPENAT)
 weak_alias (__OPENAT, OPENAT)

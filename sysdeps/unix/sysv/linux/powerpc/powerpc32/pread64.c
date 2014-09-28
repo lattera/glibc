@@ -26,28 +26,9 @@
 ssize_t
 __libc_pread64 (int fd, void *buf, size_t count, off64_t offset)
 {
-  ssize_t result;
-
-  if (SINGLE_THREAD_P)
-    {
-      /* On PPC32 64bit values are aligned in odd/even register pairs.  */
-      result = INLINE_SYSCALL (pread, 6, fd, buf, count,
-			       0, (long) (offset >> 32),
-			       (long) offset);
-
-      return result;
-    }
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
   /* On PPC32 64bit values are aligned in odd/even register pairs.  */
-  result = INLINE_SYSCALL (pread, 6, fd, buf, count,
-			   0, (long) (offset >> 32),
-			   (long) offset);
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
+  return SYSCALL_CANCEL (pread, fd, buf, count, 0, (long) (offset >> 32),
+			 (long) offset);
 }
 
 weak_alias (__libc_pread64, __pread64)

@@ -28,23 +28,10 @@
 int
 sync_file_range (int fd, __off64_t from, __off64_t to, unsigned int flags)
 {
-  if (SINGLE_THREAD_P)
-    return INLINE_SYSCALL (sync_file_range, 7, fd, 0,
-			   __LONG_LONG_PAIR ((long) (from >> 32), (long) from),
-			   __LONG_LONG_PAIR ((long) (to >> 32), (long) to),
-			   flags);
-
-  int result;
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  result = INLINE_SYSCALL (sync_file_range, 7, fd, 0,
-			   __LONG_LONG_PAIR ((long) (from >> 32), (long) from),
-			   __LONG_LONG_PAIR ((long) (to >> 32), (long) to),
-			   flags);
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
+  return SYSCALL_CANCEL (sync_file_range, fd, 0,
+			 __LONG_LONG_PAIR ((long) (from >> 32), (long) from),
+			 __LONG_LONG_PAIR ((long) (to >> 32), (long) to),
+			 flags);
 }
 #else
 int

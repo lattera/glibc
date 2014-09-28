@@ -36,16 +36,7 @@
 int
 __sendmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags)
 {
-  if (SINGLE_THREAD_P)
-    return INLINE_SYSCALL (sendmmsg, 4, fd, vmessages, vlen, flags);
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  int result = INLINE_SYSCALL (sendmmsg, 4, fd, vmessages, vlen, flags);
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
+  return SYSCALL_CANCEL (sendmmsg, fd, vmessages, vlen, flags);
 }
 libc_hidden_def (__sendmmsg)
 weak_alias (__sendmmsg, sendmmsg)

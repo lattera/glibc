@@ -25,17 +25,7 @@ int
 fallocate64 (int fd, int mode, __off64_t offset, __off64_t len)
 {
 #ifdef __NR_fallocate
-  if (SINGLE_THREAD_P)
-    return INLINE_SYSCALL (fallocate, 4, fd, mode, offset, len);
-
-  int result;
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  result = INLINE_SYSCALL (fallocate, 4, fd, mode, offset, len);
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
+  return SYSCALL_CANCEL (fallocate, fd, mode, offset, len);
 #else
   __set_errno (ENOSYS);
   return -1;

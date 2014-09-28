@@ -53,18 +53,8 @@ PREADV (int fd, const struct iovec *vector, int count, OFF_T offset)
 #ifdef __NR_preadv
   ssize_t result;
 
-  if (SINGLE_THREAD_P)
-    result = INLINE_SYSCALL (preadv, 5, fd, vector, count,
-			     LO_HI_LONG (offset));
-  else
-    {
-      int oldtype = LIBC_CANCEL_ASYNC ();
+  result = SYSCALL_CANCEL (preadv, fd, vector, count, LO_HI_LONG (offset));
 
-      result = INLINE_SYSCALL (preadv, 5, fd, vector, count,
-			       LO_HI_LONG (offset));
-
-      LIBC_CANCEL_RESET (oldtype);
-    }
 # ifdef __ASSUME_PREADV
   return result;
 # endif

@@ -27,8 +27,9 @@
 
 #ifdef __NR_rt_sigtimedwait
 
-static int
-do_sigwaitinfo (const sigset_t *set, siginfo_t *info)
+/* Return any pending signal or wait for one for the given time.  */
+int
+__sigwaitinfo (const sigset_t *set, siginfo_t *info)
 {
 #ifdef SIGCANCEL
   sigset_t tmpset;
@@ -52,8 +53,7 @@ do_sigwaitinfo (const sigset_t *set, siginfo_t *info)
 
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */
-  int result = INLINE_SYSCALL (rt_sigtimedwait, 4, set,
-			       info, NULL, _NSIG / 8);
+  int result = SYSCALL_CANCEL (rt_sigtimedwait, set, info, NULL, _NSIG / 8);
 
   /* The kernel generates a SI_TKILL code in si_code in case tkill is
      used.  tkill is transparently used in raise().  Since having
@@ -65,24 +65,6 @@ do_sigwaitinfo (const sigset_t *set, siginfo_t *info)
   return result;
 }
 
-
-/* Return any pending signal or wait for one for the given time.  */
-int
-__sigwaitinfo (const sigset_t *set, siginfo_t *info)
-{
-  if (SINGLE_THREAD_P)
-    return do_sigwaitinfo (set, info);
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  /* XXX The size argument hopefully will have to be changed to the
-     real size of the user-level sigset_t.  */
-  int result = do_sigwaitinfo (set, info);
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
-}
 libc_hidden_def (__sigwaitinfo)
 weak_alias (__sigwaitinfo, sigwaitinfo)
 #else

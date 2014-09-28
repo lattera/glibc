@@ -37,16 +37,7 @@ int
 recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
 	  struct timespec *tmo)
 {
-  if (SINGLE_THREAD_P)
-    return INLINE_SYSCALL (recvmmsg, 5, fd, vmessages, vlen, flags, tmo);
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  int result = INLINE_SYSCALL (recvmmsg, 5, fd, vmessages, vlen, flags, tmo);
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
+  return SYSCALL_CANCEL (recvmmsg, fd, vmessages, vlen, flags, tmo);
 }
 #elif defined __NR_socketcall
 # include <socketcall.h>

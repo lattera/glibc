@@ -25,29 +25,13 @@
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
-static ssize_t
-do_preadv64 (int fd, const struct iovec *vector, int count, off64_t offset)
-{
-  return INLINE_SYSCALL (preadv, __ALIGNMENT_COUNT (5, 6), fd,
-                         vector, count, __ALIGNMENT_ARG
-                         __LONG_LONG_PAIR ((off_t) (offset >> 32),
-                                           (off_t) (offset & 0xffffffff)));
-}
-
-
 ssize_t
 __libc_preadv64 (int fd, const struct iovec *vector, int count, off64_t offset)
 {
-  if (SINGLE_THREAD_P)
-    return do_preadv64 (fd, vector, count, offset);
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  ssize_t result = do_preadv64 (fd, vector, count, offset);
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
+  return SYSCALL_CANCEL (preadv, fd,
+                         vector, count, __ALIGNMENT_ARG
+                         __LONG_LONG_PAIR ((off_t) (offset >> 32),
+                                           (off_t) (offset & 0xffffffff)));
 }
 
 strong_alias (__libc_preadv64, __preadv64)

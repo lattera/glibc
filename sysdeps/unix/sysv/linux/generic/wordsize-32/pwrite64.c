@@ -24,30 +24,12 @@
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
-static ssize_t
-do_pwrite64 (int fd, const void *buf, size_t count, off64_t offset)
-{
-  return INLINE_SYSCALL (pwrite64, __ALIGNMENT_COUNT (5, 6), fd,
-                         buf, count, __ALIGNMENT_ARG
-                         __LONG_LONG_PAIR ((off_t) (offset >> 32),
-                                           (off_t) (offset & 0xffffffff)));
-}
-
-
 ssize_t
 __libc_pwrite64 (int fd, const void *buf, size_t count, off64_t offset)
 {
-  if (SINGLE_THREAD_P)
-    return do_pwrite64 (fd, buf, count, offset);
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  ssize_t result = do_pwrite64 (fd, buf, count, offset);
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
+  return SYSCALL_CANCEL (pwrite64, fd, buf, count, __ALIGNMENT_ARG
+                         __LONG_LONG_PAIR ((off_t) (offset >> 32),
+                                           (off_t) (offset & 0xffffffff)));
 }
-
 weak_alias (__libc_pwrite64, __pwrite64)
 libc_hidden_weak (__pwrite64) weak_alias (__libc_pwrite64, pwrite64)
