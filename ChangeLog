@@ -1,3 +1,10 @@
+2014-09-29  Carlos O'Donell  <carlos@redhat.com>
+	    Matthew LeGendre  <legendre1@llnl.gov>
+
+	[BZ #17411]
+	* elf/dl-reloc.c (_dl_relocate_object): Allocate correct amount for
+	l_reloc_result.
+
 2014-09-29  Kostya Serebryany  <konstantin.s.serebryany@gmail.com>
 
 	* stdio-common/printf_fp.c

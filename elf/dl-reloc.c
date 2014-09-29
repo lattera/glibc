@@ -279,8 +279,12 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 			      l->l_name);
 	  }
 
-	l->l_reloc_result = calloc (sizeof (l->l_reloc_result[0]),
-				    l->l_info[DT_PLTRELSZ]->d_un.d_val);
+	size_t sizeofrel = l->l_info[DT_PLTREL]->d_un.d_val == DT_RELA
+			   ? sizeof (ElfW(Rela))
+			   : sizeof (ElfW(Rel));
+	size_t relcount = l->l_info[DT_PLTRELSZ]->d_un.d_val / sizeofrel;
+	l->l_reloc_result = calloc (sizeof (l->l_reloc_result[0]), relcount);
+
 	if (l->l_reloc_result == NULL)
 	  {
 	    errstring = N_("\
