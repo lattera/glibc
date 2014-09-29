@@ -1,3 +1,12 @@
+2014-09-29  Kostya Serebryany  <konstantin.s.serebryany@gmail.com>
+
+	* stdio-common/printf_fp.c
+	(hack_digit): New function, broken out of ...
+	(__printf_fp): ... local function here.  Update call sites.
+	hack_digit now takes an additional parameter that is a pointer
+	to a struct of the referenced locals.  Those locals moved inside
+	the struct and references updated.
+
 2014-09-29  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* aclocal.m4: Require autoconf 2.69.
