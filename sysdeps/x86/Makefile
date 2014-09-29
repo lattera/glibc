@@ -5,6 +5,6 @@ CFLAGS-.os += $(if $(filter $(@F),$(patsubst %,%.os,$(all-rtld-routines))),\
 tests-special += $(objpfx)tst-ld-sse-use.out
 $(objpfx)tst-ld-sse-use.out: ../sysdeps/x86/tst-ld-sse-use.sh $(objpfx)ld.so
 	@echo "Checking ld.so for SSE register use.  This will take a few seconds..."
-	$(SHELL) $< $(objpfx) '$(NM)' '$(OBJDUMP)' '$(READELF)' > $@; \
+	$(BASH) $< $(objpfx) '$(NM)' '$(OBJDUMP)' '$(READELF)' > $@; \
 	$(evaluate-test)
 endif

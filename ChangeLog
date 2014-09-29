@@ -1,3 +1,8 @@
+2014-09-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/x86/Makefile ($(objpfx)tst-ld-sse-use.out): Run script
+	with $(BASH) not $(SHELL).
+
 2014-09-29  Carlos O'Donell  <carlos@redhat.com>
 	    Matthew LeGendre  <legendre1@llnl.gov>
 
