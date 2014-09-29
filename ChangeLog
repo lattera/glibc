@@ -1,3 +1,22 @@
+2014-09-29  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* aclocal.m4: Require autoconf 2.69.
+	* configure: Regenerated.
+	* sysdeps/aarch64/configure: Likewise.
+	* sysdeps/alpha/configure: Likewise.
+	* sysdeps/arm/armv7/configure: Likewise.
+	* sysdeps/arm/configure: Likewise.
+	* sysdeps/ia64/configure: Likewise.
+	* sysdeps/mach/configure: Likewise.
+	* sysdeps/mips/configure: Likewise.
+	* sysdeps/s390/configure: Likewise.
+	* sysdeps/unix/sysv/linux/mips/configure: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/configure: Likewise.
+
+	* sysdeps/alpha/configure.ac: Avoid empty lines at the end of
+	file.
+	* sysdeps/ia64/configure.ac: Likewise.
+
 2014-09-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/shlib-versions: Do not
