@@ -84,6 +84,14 @@ wait4		-	wait4		i:iWiP	__wait4		wait4
 
 chown		-	chown		i:sii	__libc_chown	__chown chown
 
+fchownat	-	fchownat	i:isiii	fchownat
+linkat		-	linkat		i:isisi	linkat
+mkdirat		-	mkdirat		i:isi	mkdirat
+readlinkat	-	readlinkat	i:issi	readlinkat
+renameat	-	renameat	i:isis	renameat
+symlinkat	-	symlinkat	i:sis	symlinkat
+unlinkat	-	unlinkat	i:isi	unlinkat
+
 setxattr	-	setxattr	i:sspii	setxattr
 lsetxattr	-	lsetxattr	i:sspii	lsetxattr
 fsetxattr	-	fsetxattr	i:ispii	fsetxattr

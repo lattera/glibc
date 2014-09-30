@@ -1,3 +1,21 @@
+2014-09-30  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14138]
+	* sysdeps/unix/sysv/linux/syscalls.list (fchownat): New syscall.
+	(linkat): Likewise.
+	(mkdirat): Likewise.
+	(readlinkat): Likewise.
+	(renameat): Likewise.
+	(symlinkat): Likewise.
+	(unlinkat): Likewise.
+	* sysdeps/unix/sysv/linux/fchownat.c: Remove file.
+	* sysdeps/unix/sysv/linux/linkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/mkdirat.c: Likewise.
+	* sysdeps/unix/sysv/linux/readlinkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/renameat.c: Likewise.
+	* sysdeps/unix/sysv/linux/symlinkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/unlinkat.c: Likewise.
+
 2014-09-30  Will Newton  <will.newton@linaro.org>
 
 	* math/math.h: Define long double math functions if
