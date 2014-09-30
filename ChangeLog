@@ -1,3 +1,8 @@
+2015-04-02  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #16850]
+	* sysdeps/unix/sysv/linux/aarch64/bits/sigstack.h: New file.
+
 2015-04-02  Mel Gorman  <mgorman@suse.de>
 
 	[BZ #17195]
