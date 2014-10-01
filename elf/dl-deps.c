@@ -138,6 +138,19 @@ cannot load auxiliary `%s' because of empty dynamic string token "	      \
 									      \
     __result; })
 
+static void
+preload (struct list *known, unsigned int *nlist, struct link_map *map)
+{
+  known[*nlist].done = 0;
+  known[*nlist].map = map;
+  known[*nlist].next = &known[*nlist + 1];
+
+  ++*nlist;
+  /* We use `l_reserved' as a mark bit to detect objects we have
+     already put in the search list and avoid adding duplicate
+     elements later in the list.  */
+  map->l_reserved = 1;
+}
 
 void
 internal_function
@@ -155,28 +168,15 @@ _dl_map_object_deps (struct link_map *map,
   const char *errstring;
   const char *objname;
 
-  void preload (struct link_map *map)
-    {
-      known[nlist].done = 0;
-      known[nlist].map = map;
-      known[nlist].next = &known[nlist + 1];
-
-      ++nlist;
-      /* We use `l_reserved' as a mark bit to detect objects we have
-	 already put in the search list and avoid adding duplicate
-	 elements later in the list.  */
-      map->l_reserved = 1;
-    }
-
   /* No loaded object so far.  */
   nlist = 0;
 
   /* First load MAP itself.  */
-  preload (map);
+  preload (known, &nlist, map);
 
   /* Add the preloaded items after MAP but before any of its dependencies.  */
   for (i = 0; i < npreloads; ++i)
-    preload (preloads[i]);
+    preload (known, &nlist, preloads[i]);
 
   /* Terminate the lists.  */
   known[nlist - 1].next = NULL;

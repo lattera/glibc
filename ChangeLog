@@ -1,3 +1,9 @@
+2014-10-01  Kostya Serebryany  <konstantin.s.serebryany@gmail.com>
+
+	* elf/dl-deps.c
+	(preload): New functions broken out of _dl_map_object_deps.
+	(_dl_map_object_deps):  Remove a nested function. Update call sites.
+
 2014-10-01  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14138]
