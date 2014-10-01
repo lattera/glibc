@@ -128,7 +128,7 @@ L(worddiff):
 	subu	t0, v0, t8
 	nor	t1, v0, t9
 	and	t1, t0, t1
-	xor	t0, v0, v1	
+	xor	t0, v0, v1
 	or	t0, t0, t1
 # if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
 	wsbh	t0, t0
