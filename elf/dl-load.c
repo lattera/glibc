@@ -41,6 +41,7 @@
 #include <dl-load.h>
 #include <dl-map-segments.h>
 #include <dl-unmap-segments.h>
+#include <dl-machine-reject-phdr.h>
 
 
 #include <endian.h>
@@ -1682,6 +1683,11 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
 	      goto call_lose;
 	    }
 	}
+
+      if (__glibc_unlikely (elf_machine_reject_phdr_p
+			    (phdr, ehdr->e_phnum, fbp->buf, fbp->len,
+			     loader, fd)))
+	goto close_and_out;
 
       /* Check .note.ABI-tag if present.  */
       for (ph = phdr; ph < &phdr[ehdr->e_phnum]; ++ph)

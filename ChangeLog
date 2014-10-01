@@ -1,3 +1,10 @@
+2014-10-31  Matthew Fortune  <matthew.fortune@imgtec.com>
+
+	* elf/dl-machine-reject-phdr.h: New file.
+	* elf/dl-load.c: #include that.
+	(open_verify): Call elf_machine_reject_phdr_p and ignore the file
+	if that returned true.
+
 2014-10-31  Roland McGrath  <roland@hack.frob.com>
 
 	[BZ #17496]
