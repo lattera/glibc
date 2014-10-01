@@ -1,5 +1,17 @@
 2014-10-02  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/unix/sysv/linux/tile/sysdep.h (INLINE_VSYSCALL): Define
+	INLINE_VSYSCALL, INTERNAL_VSYSCALL, and
+	HAVE_CLOCK_GETTIME_VSYSCALL macros.
+	* sysdeps/unix/sysv/linux/tile/gettimeofday.c (__gettimeofday):
+	Use INLINE_VSYSCALL macro.
+	* sysdeps/unix/sysv/linux/tile/bits/libc-vdso: Add declaration of
+	__vdso_clock_gettime.
+	* sysdeps/unix/sysv/linux/tile/init-first.c
+	(_libc_vdso_platform_setup): Set new __vdso_clock_gettime global.
+	* sysdeps/unix/sysv/linux/tile/Versions (GLIBC_PRIVATE): Add
+	__vdso_clock_gettime.
+
 	* sysdeps/unix/sysv/linux/tile/clone.S (__clone): Fix code
 	to set up frame more cleanly.
 

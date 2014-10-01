@@ -24,12 +24,7 @@
 int
 __gettimeofday (struct timeval *tv, struct timezone *tz)
 {
-#ifdef SHARED
-  /* If the vDSO is available we use it. */
-  if (__vdso_gettimeofday != NULL)
-    return __vdso_gettimeofday (tv, tz);
-#endif
-  return INLINE_SYSCALL (gettimeofday, 2, tv, tz);
+  return INLINE_VSYSCALL (gettimeofday, 2, tv, tz);
 }
 
 libc_hidden_def (__gettimeofday)

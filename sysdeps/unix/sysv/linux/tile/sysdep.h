@@ -202,6 +202,65 @@
   "=R02" (_clobber_r2), "=R03" (_clobber_r3), "=R04" (_clobber_r4),     \
     "=R05" (_clobber_r5), "=R10" (_clobber_r10)
 
+/* This version is for kernels that implement system calls that
+   behave like function calls as far as register saving.
+   It falls back to the syscall in the case that the vDSO doesn't
+   exist or fails for ENOSYS */
+# ifdef SHARED
+#  define INLINE_VSYSCALL(name, nr, args...) \
+  ({									      \
+    __label__ out;							      \
+    __label__ iserr;							      \
+    INTERNAL_SYSCALL_DECL (sc_err);					      \
+    long int sc_ret;							      \
+									      \
+    __typeof (__vdso_##name) vdsop = __vdso_##name;			      \
+    if (vdsop != NULL)							      \
+      {									      \
+        sc_ret = vdsop (args);						      \
+        if (!INTERNAL_SYSCALL_ERROR_P (sc_ret, sc_err))			      \
+          goto out;							      \
+        if (INTERNAL_SYSCALL_ERRNO (sc_ret, sc_err) != ENOSYS)		      \
+          goto iserr;							      \
+      }									      \
+									      \
+    sc_ret = INTERNAL_SYSCALL (name, sc_err, nr, ##args);		      \
+    if (INTERNAL_SYSCALL_ERROR_P (sc_ret, sc_err))			      \
+      {									      \
+      iserr:								      \
+        __set_errno (INTERNAL_SYSCALL_ERRNO (sc_ret, sc_err));		      \
+        sc_ret = -1L;							      \
+      }									      \
+  out:									      \
+    sc_ret;								      \
+  })
+#  define INTERNAL_VSYSCALL(name, err, nr, args...) \
+  ({									      \
+    __label__ out;							      \
+    long int v_ret;							      \
+									      \
+    __typeof (__vdso_##name) vdsop = __vdso_##name;			      \
+    if (vdsop != NULL)							      \
+      {									      \
+        v_ret = vdsop (args);						      \
+        if (!INTERNAL_SYSCALL_ERROR_P (v_ret, err)			      \
+            || INTERNAL_SYSCALL_ERRNO (v_ret, err) != ENOSYS)		      \
+          goto out;							      \
+      }									      \
+    v_ret = INTERNAL_SYSCALL (name, err, nr, ##args);			      \
+  out:									      \
+    v_ret;								      \
+  })
+
+/* List of system calls which are supported as vsyscalls.  */
+#  define HAVE_CLOCK_GETTIME_VSYSCALL	1
+
+# else
+#  define INLINE_VSYSCALL(name, nr, args...) \
+  INLINE_SYSCALL (name, nr, ##args)
+#  define INTERNAL_VSYSCALL(name, err, nr, args...) \
+  INTERNAL_SYSCALL (name, err, nr, ##args)
+# endif
 #endif /* not __ASSEMBLER__ */
 
 /* Pointer mangling support.  */

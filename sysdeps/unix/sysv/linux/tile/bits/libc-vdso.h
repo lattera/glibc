@@ -25,6 +25,8 @@
 extern long int (*__vdso_gettimeofday) (struct timeval *, void *)
   attribute_hidden;
 
+extern long int (*__vdso_clock_gettime) (clockid_t, struct timespec *);
+
 #endif
 
 #endif /* _LIBC_VDSO_H */
