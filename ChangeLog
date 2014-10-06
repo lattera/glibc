@@ -1,3 +1,7 @@
+2014-10-06  Arjun Shankar  <arjun.is@lostca.se>
+
+	* nptl/tst-setuid3.c: Write errors to stdout.
+
 2014-10-01  Kostya Serebryany  <konstantin.s.serebryany@gmail.com>
 
 	* elf/dl-deps.c
