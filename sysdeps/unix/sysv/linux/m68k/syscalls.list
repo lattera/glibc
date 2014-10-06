@@ -1,6 +1,8 @@
 # File name	Caller	Syscall name	Args	Strong name	Weak names
 
 chown		-	chown32		i:sii	__chown		chown
+lchown		-	lchown32	i:sii	__lchown	lchown
+fchown		-	fchown32	i:iii	__fchown	fchown
 waitpid		-	waitpid		Ci:ipi	__waitpid	waitpid	__libc_waitpid
 
 cacheflush	EXTRA	cacheflush	i:iiii	__cacheflush	cacheflush

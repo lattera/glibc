@@ -1,3 +1,18 @@
+2014-10-06  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14138]
+	* sysdeps/unix/sysv/linux/arm/fchown.c: Remove file.
+	* sysdeps/unix/sysv/linux/arm/lchown.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/fchown.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/lchown.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/chown.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list (lchown): Add syscall.
+	(fchown): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/syscalls.list (lchown): Likewise.
+	(fchown): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list (chown):
+	Likewise.
+
 2014-10-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h: Remove file.
