@@ -1,5 +1,22 @@
 2014-10-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/make-syscalls.sh (emit_weak_aliases): Condition
+	compat_symbol calls on [SHARED].
+	* sysdeps/unix/sysv/linux/powerpc/lchown.S: Remove file.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list (oldsetrlimit):
+	Remove.
+	(setrlimit): Add setrlimit@GLIBC_2.0 alias.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/syscalls.list
+	(oldsetrlimit): Remove.
+	(setrlimit): Add setrlimit@GLIBC_2.0 alias.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list
+	(lchown): New syscall entry.
+	(oldsetrlimit): Remove.
+	(setrlimit): Add setrlimit@GLIBC_2.0 alias.
+	* sysdeps/unix/sysv/linux/s390/s390-32/syscalls.list
+	(oldsetrlimit): Remove.
+	(setrlimit): Add setrlimit@GLIBC_2.0 alias.
+
 	[BZ #14138]
 	* sysdeps/unix/sysv/linux/arm/fchown.c: Remove file.
 	* sysdeps/unix/sysv/linux/arm/lchown.c: Likewise.
