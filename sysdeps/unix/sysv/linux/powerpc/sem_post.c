@@ -30,9 +30,9 @@ __new_sem_post (sem_t *sem)
 {
   struct new_sem *isem = (struct new_sem *) sem;
 
-  __asm __volatile (__lll_rel_instr ::: "memory");
+  __asm __volatile (__ARCH_REL_INSTR ::: "memory");
   atomic_increment (&isem->value);
-  __asm __volatile (__lll_acq_instr ::: "memory");
+  __asm __volatile (__ARCH_ACQ_INSTR ::: "memory");
   if (isem->nwaiters > 0)
     {
       int err = lll_futex_wake (&isem->value, 1,
@@ -55,7 +55,7 @@ __old_sem_post (sem_t *sem)
 {
   int *futex = (int *) sem;
 
-  __asm __volatile (__lll_rel_instr ::: "memory");
+  __asm __volatile (__ARCH_REL_INSTR ::: "memory");
   (void) atomic_increment_val (futex);
   /* We always have to assume it is a shared semaphore.  */
   int err = lll_futex_wake (futex, 1, LLL_SHARED);

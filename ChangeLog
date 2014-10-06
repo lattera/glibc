@@ -1,4 +1,14 @@
-2014-10-02  Chris Metcalf  <cmetcalf@tilera.com>
+2014-10-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h: Remove file.
+	* sysdeps/unix/sysv/linux/powerpc/pthread_spin_unlock.c
+	(pthread_spin_unlock): Use __ARCH_REL_INSTR instead of
+	__lll_rel_instr and __ARCH_ACQ_INSTR instead of __lll_acq_instr.
+	* sysdeps/unix/sysv/linux/powerpc/sem_post.c (__new_sem_post):
+	Likewise.
+	(__old_sem_post): Likewise.
+
+2014-10-06  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/unix/sysv/linux/tile/sysdep.h (INLINE_VSYSCALL): Define
 	INLINE_VSYSCALL, INTERNAL_VSYSCALL, and
