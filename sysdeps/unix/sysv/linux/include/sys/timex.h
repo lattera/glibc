@@ -1,4 +1,5 @@
-/* Copyright (C) 1999-2014 Free Software Foundation, Inc.
+/* Internal declarations for sys/timex.h.
+   Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,27 +16,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define ntp_gettime ntp_gettime_redirect
+#ifndef	_INCLUDE_SYS_TIMEX_H
+#define	_INCLUDE_SYS_TIMEX_H	1
 
-#include <sys/timex.h>
+#include_next <sys/timex.h>
 
-#undef ntp_gettime
+libc_hidden_proto (__adjtimex)
 
-#ifndef MOD_OFFSET
-# define modes mode
-#endif
-
-
-int
-ntp_gettime (struct ntptimeval *ntv)
-{
-  struct timex tntx;
-  int result;
-
-  tntx.modes = 0;
-  result = __adjtimex (&tntx);
-  ntv->time = tntx.time;
-  ntv->maxerror = tntx.maxerror;
-  ntv->esterror = tntx.esterror;
-  return result;
-}
+#endif /* sys/timex.h */

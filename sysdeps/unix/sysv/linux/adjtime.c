@@ -41,8 +41,7 @@
 
 #ifndef ADJTIMEX
 #define NO_LOCAL_ADJTIME
-#define ADJTIMEX(x) INTUSE(__adjtimex) (x)
-extern int INTUSE(__adjtimex) (struct timex *__ntx);
+#define ADJTIMEX(x) __adjtimex (x)
 #endif
 
 #ifndef LINKAGE

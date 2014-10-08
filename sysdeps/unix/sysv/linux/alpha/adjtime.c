@@ -86,7 +86,7 @@ compat_symbol (libc, __adjtime_tv32, adjtime, GLIBC_2_0);
 int
 __adjtimex_tv64 (struct timex *tx) { return ADJTIMEX (tx); }
 
-strong_alias (__adjtimex_tv64, __adjtimex_internal);
+libc_hidden_ver (__adjtimex_tv64, __adjtimex)
 strong_alias (__adjtimex_tv64, __adjtimex_tv64p);
 weak_alias (__adjtimex_tv64, ntp_adjtime);
 versioned_symbol (libc, __adjtimex_tv64, __adjtimex, GLIBC_2_1);
