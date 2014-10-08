@@ -182,6 +182,27 @@ check_match (const char *const undef_name,
   return sym;
 }
 
+/* Utility function for do_lookup_unique.  Add a symbol to TABLE.  */
+static void
+enter_unique_sym (struct unique_sym *table, size_t size,
+                  unsigned int hash, const char *name,
+                  const ElfW(Sym) *sym, const struct link_map *map)
+{
+  size_t idx = hash % size;
+  size_t hash2 = 1 + hash % (size - 2);
+  while (table[idx].name != NULL)
+    {
+      idx += hash2;
+      if (idx >= size)
+        idx -= size;
+    }
+
+  table[idx].hashval = hash;
+  table[idx].name = name;
+  table[idx].sym = sym;
+  table[idx].map = map;
+}
+
 /* Utility function for do_lookup_x. Lookup an STB_GNU_UNIQUE symbol
    in the unique symbol table, creating a new entry if necessary.
    Return the matching symbol in RESULT.  */
@@ -191,28 +212,9 @@ do_lookup_unique (const char *undef_name, uint_fast32_t new_hash,
 		  int type_class, const ElfW(Sym) *sym, const char *strtab,
 		  const ElfW(Sym) *ref, const struct link_map *undef_map)
 {
-  /* We have to determine whether we already found a
-     symbol with this name before.  If not then we have to
-     add it to the search table.  If we already found a
-     definition we have to use it.  */
-  void enter (struct unique_sym *table, size_t size,
-	      unsigned int hash, const char *name,
-	      const ElfW(Sym) *sym, const struct link_map *map)
-  {
-    size_t idx = hash % size;
-    size_t hash2 = 1 + hash % (size - 2);
-    while (table[idx].name != NULL)
-      {
-	idx += hash2;
-	if (idx >= size)
-	  idx -= size;
-      }
-
-    table[idx].hashval = hash;
-    table[idx].name = name;
-    table[idx].sym = sym;
-    table[idx].map = map;
-  }
+  /* We have to determine whether we already found a symbol with this
+     name before.  If not then we have to add it to the search table.
+     If we already found a definition we have to use it.  */
 
   struct unique_sym_table *tab
     = &GL(dl_ns)[map->l_ns]._ns_unique_sym_table;
@@ -274,9 +276,9 @@ do_lookup_unique (const char *undef_name, uint_fast32_t new_hash,
 
 	  for (idx = 0; idx < size; ++idx)
 	    if (entries[idx].name != NULL)
-	      enter (newentries, newsize, entries[idx].hashval,
-		     entries[idx].name, entries[idx].sym,
-		     entries[idx].map);
+	      enter_unique_sym (newentries, newsize, entries[idx].hashval,
+                                entries[idx].name, entries[idx].sym,
+                                entries[idx].map);
 
 	  tab->free (entries);
 	  tab->size = newsize;
@@ -317,11 +319,12 @@ do_lookup_unique (const char *undef_name, uint_fast32_t new_hash,
     }
 
   if ((type_class & ELF_RTYPE_CLASS_COPY) != 0)
-    enter (entries, size, new_hash, strtab + sym->st_name, ref,
+    enter_unique_sym (entries, size, new_hash, strtab + sym->st_name, ref,
 	   undef_map);
   else
     {
-      enter (entries, size, new_hash, strtab + sym->st_name, sym, map);
+      enter_unique_sym (entries, size,
+                        new_hash, strtab + sym->st_name, sym, map);
 
       if (map->l_type == lt_loaded)
 	/* Make sure we don't unload this object by

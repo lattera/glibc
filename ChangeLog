@@ -1,3 +1,9 @@
+2014-10-08  Kostya Serebryany  <konstantin.s.serebryany@gmail.com>
+	    Roland McGrath  <roland@hack.frob.com>
+
+	* elf/dl-lookup.c (enter_unique_sym): New function, broken out of ...
+	(do_lookup_unique): ... local function 'enter' here; update callers.
+
 2014-10-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/make-syscalls.sh (emit_weak_aliases): Condition
