@@ -451,33 +451,36 @@ parse_opt (int key, char *arg, struct argp_state *state)
 static char *
 more_help (int key, const char *text, void *input)
 {
-  char *tables, *tp = NULL;
-
   switch (key)
     {
     case ARGP_KEY_HELP_EXTRA:
       {
-	dbtype cnt;
+	/* We print some extra information.  */
 
-	tables = xmalloc (sizeof (dbnames) + 1);
-	for (cnt = 0; cnt < lastdb; cnt++)
+	char *tables = xstrdup (dbnames[0]);
+	for (dbtype i = 1; i < lastdb; ++i)
 	  {
-	    strcat (tables, dbnames[cnt]);
-	    strcat (tables, " ");
+	    char *more_tables;
+	    if (asprintf (&more_tables, "%s %s", tables, dbnames[i]) < 0)
+	      more_tables = NULL;
+	    free (tables);
+	    if (more_tables == NULL)
+	      return NULL;
+	    tables = more_tables;
 	  }
-      }
 
-      /* We print some extra information.  */
-      if (asprintf (&tp, gettext ("\
+	char *tp;
+	if (asprintf (&tp, gettext ("\
 Supported tables:\n\
 %s\n\
 \n\
 For bug reporting instructions, please see:\n\
 %s.\n\
 "), tables, REPORT_BUGS_TO) < 0)
-	tp = NULL;
-      free (tables);
-      return tp;
+	  tp = NULL;
+	free (tables);
+	return tp;
+      }
 
     default:
       break;
@@ -622,15 +625,15 @@ monitor_child (int fd)
 	}
 
       if (WIFEXITED (status))
-        {
-          child_ret = WEXITSTATUS (status);
-          fprintf (stderr, _("child exited with status %d\n"), child_ret);
-        }
+	{
+	  child_ret = WEXITSTATUS (status);
+	  fprintf (stderr, _("child exited with status %d\n"), child_ret);
+	}
       if (WIFSIGNALED (status))
-        {
-          child_ret = WTERMSIG (status);
-          fprintf (stderr, _("child terminated by signal %d\n"), child_ret);
-        }
+	{
+	  child_ret = WTERMSIG (status);
+	  fprintf (stderr, _("child terminated by signal %d\n"), child_ret);
+	}
     }
 
   /* We have the child status, so exit with that code.  */

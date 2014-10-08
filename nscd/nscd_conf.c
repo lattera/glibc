@@ -32,9 +32,6 @@
 #include "dbg_log.h"
 #include "nscd.h"
 
-/* Wrapper functions with error checking for standard functions.  */
-extern char *xstrdup (const char *s);
-
 
 /* Names of the databases.  */
 const char *const dbnames[lastdb] =

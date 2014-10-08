@@ -1,3 +1,11 @@
+2014-10-08  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #17460]
+	* nscd/nscd.c (more_help): Rewrite list of tables collection
+	using xstrdup and asprintf.
+
+	* nscd/nscd_conf.c: Remove local xstrdup declaration.
+
 2014-10-08  Kostya Serebryany  <konstantin.s.serebryany@gmail.com>
 	    Roland McGrath  <roland@hack.frob.com>
 
