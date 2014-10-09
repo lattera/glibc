@@ -1,3 +1,26 @@
+2014-10-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* soft-fp/soft-fp.h (FP_EX_INVALID_SNAN): New macro.
+	(FP_EX_INVALID_IMZ): Likewise.
+	(FP_EX_INVALID_IMZ_FMA): Likewise.
+	(FP_EX_INVALID_ISI): Likewise.
+	(FP_EX_INVALID_ZDZ): Likewise.
+	(FP_EX_INVALID_IDI): Likewise.
+	(FP_EX_INVALID_SQRT): Likewise.
+	(FP_EX_INVALID_CVI): Likewise.
+	(FP_EX_INVALID_VC): Likewise.
+	* soft-fp/op-common.h (_FP_UNPACK_CANONICAL): Specify more precise
+	"invalid" exceptions.
+	(_FP_CHECK_SIGNAN_SEMIRAW): Likewise.
+	(_FP_ADD_INTERNAL): Likewise.
+	(_FP_MUL): Likewise.
+	(_FP_FMA): Likewise.
+	(_FP_DIV): Likewise.
+	(_FP_CMP_CHECK_NAN): Likewise.
+	(_FP_SQRT): Likewise.
+	(_FP_TO_INT): Likewise.
+	(FP_EXTEND): Likewise.
+
 2014-10-09  Allan McRae  <allan@archlinux.org>
 
 	* po/fr.po: Update French translation from translation project.

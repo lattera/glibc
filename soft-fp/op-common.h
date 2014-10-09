@@ -93,7 +93,8 @@
 	      X##_c = FP_CLS_NAN;				\
 	      /* Check for signaling NaN.  */			\
 	      if (_FP_FRAC_SNANP (fs, X))			\
-		FP_SET_EXCEPTION (FP_EX_INVALID);		\
+		FP_SET_EXCEPTION (FP_EX_INVALID			\
+				  | FP_EX_INVALID_SNAN);	\
 	    }							\
 	  break;						\
 	}							\
@@ -144,14 +145,14 @@
 
 /* Check for a semi-raw value being a signaling NaN and raise the
    invalid exception if so.  */
-#define _FP_CHECK_SIGNAN_SEMIRAW(fs, wc, X)	\
-  do						\
-    {						\
-      if (X##_e == _FP_EXPMAX_##fs		\
-	  && !_FP_FRAC_ZEROP_##wc (X)		\
-	  && _FP_FRAC_SNANP_SEMIRAW (fs, X))	\
-	FP_SET_EXCEPTION (FP_EX_INVALID);	\
-    }						\
+#define _FP_CHECK_SIGNAN_SEMIRAW(fs, wc, X)			\
+  do								\
+    {								\
+      if (X##_e == _FP_EXPMAX_##fs				\
+	  && !_FP_FRAC_ZEROP_##wc (X)				\
+	  && _FP_FRAC_SNANP_SEMIRAW (fs, X))			\
+	FP_SET_EXCEPTION (FP_EX_INVALID | FP_EX_INVALID_SNAN);	\
+    }								\
   while (0)
 
 /* Choose a NaN result from an operation on two semi-raw NaN
@@ -764,7 +765,8 @@
 			      R##_s = _FP_NANSIGN_##fs;			\
 			      _FP_FRAC_SET_##wc (R, _FP_NANFRAC_##fs);	\
 			      _FP_FRAC_SLL_##wc (R, _FP_WORKBITS);	\
-			      FP_SET_EXCEPTION (FP_EX_INVALID);		\
+			      FP_SET_EXCEPTION (FP_EX_INVALID		\
+						| FP_EX_INVALID_ISI);	\
 			    }						\
 			  else						\
 			    {						\
@@ -916,7 +918,7 @@
 	  R##_s = _FP_NANSIGN_##fs;				\
 	  R##_c = FP_CLS_NAN;					\
 	  _FP_FRAC_SET_##wc (R, _FP_NANFRAC_##fs);		\
-	  FP_SET_EXCEPTION (FP_EX_INVALID);			\
+	  FP_SET_EXCEPTION (FP_EX_INVALID | FP_EX_INVALID_IMZ);	\
 	  break;						\
 								\
 	default:						\
@@ -1080,7 +1082,7 @@
 	  _FP_FMA_T##_s = _FP_NANSIGN_##fs;				\
 	  _FP_FMA_T##_c = FP_CLS_NAN;					\
 	  _FP_FRAC_SET_##wc (_FP_FMA_T, _FP_NANFRAC_##fs);		\
-	  FP_SET_EXCEPTION (FP_EX_INVALID);				\
+	  FP_SET_EXCEPTION (FP_EX_INVALID | FP_EX_INVALID_IMZ_FMA);	\
 	  break;							\
 									\
 	default:							\
@@ -1125,7 +1127,7 @@
 	      R##_s = _FP_NANSIGN_##fs;					\
 	      R##_c = FP_CLS_NAN;					\
 	      _FP_FRAC_SET_##wc (R, _FP_NANFRAC_##fs);			\
-	      FP_SET_EXCEPTION (FP_EX_INVALID);				\
+	      FP_SET_EXCEPTION (FP_EX_INVALID | FP_EX_INVALID_ISI);	\
 	    }								\
 	  break;							\
 									\
@@ -1199,7 +1201,10 @@
 	  R##_s = _FP_NANSIGN_##fs;				\
 	  R##_c = FP_CLS_NAN;					\
 	  _FP_FRAC_SET_##wc (R, _FP_NANFRAC_##fs);		\
-	  FP_SET_EXCEPTION (FP_EX_INVALID);			\
+	  FP_SET_EXCEPTION (FP_EX_INVALID			\
+			    | (X##_c == FP_CLS_INF		\
+			       ? FP_EX_INVALID_IDI		\
+			       : FP_EX_INVALID_ZDZ));		\
 	  break;						\
 								\
 	default:						\
@@ -1211,19 +1216,36 @@
 
 /* Helper for comparisons.  EX is 0 not to raise exceptions, 1 to
    raise exceptions for signaling NaN operands, 2 to raise exceptions
-   for all NaN operands.  */
+   for all NaN operands.  Conditionals are organized to allow the
+   compiler to optimize away code based on the value of EX.  */
 
-#define _FP_CMP_CHECK_NAN(fs, wc, X, Y, ex)		\
-  do							\
-    {							\
-      if (ex)						\
-	{						\
-	  if ((ex) == 2					\
-	      || _FP_ISSIGNAN (fs, wc, X)		\
-	      || _FP_ISSIGNAN (fs, wc, Y))		\
-	    FP_SET_EXCEPTION (FP_EX_INVALID);		\
-	}						\
-    }							\
+#define _FP_CMP_CHECK_NAN(fs, wc, X, Y, ex)				\
+  do									\
+    {									\
+      /* The arguments are unordered, which may or may not result in	\
+	 an exception.  */						\
+      if (ex)								\
+	{								\
+	  /* At least some cases of unordered arguments result in	\
+	     exceptions; check whether this is one.  */			\
+	  if (FP_EX_INVALID_SNAN || FP_EX_INVALID_VC)			\
+	    {								\
+	      /* Check separately for each case of "invalid"		\
+		 exceptions.  */					\
+	      if ((ex) == 2)						\
+		FP_SET_EXCEPTION (FP_EX_INVALID | FP_EX_INVALID_VC);	\
+	      if (_FP_ISSIGNAN (fs, wc, X)				\
+		  || _FP_ISSIGNAN (fs, wc, Y))				\
+		FP_SET_EXCEPTION (FP_EX_INVALID | FP_EX_INVALID_SNAN);	\
+	    }								\
+	  /* Otherwise, we only need to check whether to raise an	\
+	     exception, not which case or cases it is.  */		\
+	  else if ((ex) == 2						\
+		   || _FP_ISSIGNAN (fs, wc, X)				\
+		   || _FP_ISSIGNAN (fs, wc, Y))				\
+	    FP_SET_EXCEPTION (FP_EX_INVALID);				\
+	}								\
+    }									\
   while (0)
 
 /* Main differential comparison routine.  The inputs should be raw not
@@ -1314,58 +1336,58 @@
 
 /* Main square root routine.  The input value should be cooked.  */
 
-#define _FP_SQRT(fs, wc, R, X)					\
-  do								\
-    {								\
-      _FP_FRAC_DECL_##wc (_FP_SQRT_T);				\
-      _FP_FRAC_DECL_##wc (_FP_SQRT_S);				\
-      _FP_W_TYPE _FP_SQRT_q;					\
-      switch (X##_c)						\
-	{							\
-	case FP_CLS_NAN:					\
-	  _FP_FRAC_COPY_##wc (R, X);				\
-	  R##_s = X##_s;					\
-	  R##_c = FP_CLS_NAN;					\
-	  break;						\
-	case FP_CLS_INF:					\
-	  if (X##_s)						\
-	    {							\
-	      R##_s = _FP_NANSIGN_##fs;				\
-	      R##_c = FP_CLS_NAN; /* NAN */			\
-	      _FP_FRAC_SET_##wc (R, _FP_NANFRAC_##fs);		\
-	      FP_SET_EXCEPTION (FP_EX_INVALID);			\
-	    }							\
-	  else							\
-	    {							\
-	      R##_s = 0;					\
-	      R##_c = FP_CLS_INF; /* sqrt(+inf) = +inf */	\
-	    }							\
-	  break;						\
-	case FP_CLS_ZERO:					\
-	  R##_s = X##_s;					\
-	  R##_c = FP_CLS_ZERO; /* sqrt(+-0) = +-0 */		\
-	  break;						\
-	case FP_CLS_NORMAL:					\
-	  R##_s = 0;						\
-	  if (X##_s)						\
-	    {							\
-	      R##_c = FP_CLS_NAN; /* NAN */			\
-	      R##_s = _FP_NANSIGN_##fs;				\
-	      _FP_FRAC_SET_##wc (R, _FP_NANFRAC_##fs);		\
-	      FP_SET_EXCEPTION (FP_EX_INVALID);			\
-	      break;						\
-	    }							\
-	  R##_c = FP_CLS_NORMAL;				\
-	  if (X##_e & 1)					\
-	    _FP_FRAC_SLL_##wc (X, 1);				\
-	  R##_e = X##_e >> 1;					\
-	  _FP_FRAC_SET_##wc (_FP_SQRT_S, _FP_ZEROFRAC_##wc);	\
-	  _FP_FRAC_SET_##wc (R, _FP_ZEROFRAC_##wc);		\
-	  _FP_SQRT_q = _FP_OVERFLOW_##fs >> 1;			\
-	  _FP_SQRT_MEAT_##wc (R, _FP_SQRT_S, _FP_SQRT_T, X,	\
-			      _FP_SQRT_q);			\
-	}							\
-    }								\
+#define _FP_SQRT(fs, wc, R, X)						\
+  do									\
+    {									\
+      _FP_FRAC_DECL_##wc (_FP_SQRT_T);					\
+      _FP_FRAC_DECL_##wc (_FP_SQRT_S);					\
+      _FP_W_TYPE _FP_SQRT_q;						\
+      switch (X##_c)							\
+	{								\
+	case FP_CLS_NAN:						\
+	  _FP_FRAC_COPY_##wc (R, X);					\
+	  R##_s = X##_s;						\
+	  R##_c = FP_CLS_NAN;						\
+	  break;							\
+	case FP_CLS_INF:						\
+	  if (X##_s)							\
+	    {								\
+	      R##_s = _FP_NANSIGN_##fs;					\
+	      R##_c = FP_CLS_NAN; /* NAN */				\
+	      _FP_FRAC_SET_##wc (R, _FP_NANFRAC_##fs);			\
+	      FP_SET_EXCEPTION (FP_EX_INVALID | FP_EX_INVALID_SQRT);	\
+	    }								\
+	  else								\
+	    {								\
+	      R##_s = 0;						\
+	      R##_c = FP_CLS_INF; /* sqrt(+inf) = +inf */		\
+	    }								\
+	  break;							\
+	case FP_CLS_ZERO:						\
+	  R##_s = X##_s;						\
+	  R##_c = FP_CLS_ZERO; /* sqrt(+-0) = +-0 */			\
+	  break;							\
+	case FP_CLS_NORMAL:						\
+	  R##_s = 0;							\
+	  if (X##_s)							\
+	    {								\
+	      R##_c = FP_CLS_NAN; /* NAN */				\
+	      R##_s = _FP_NANSIGN_##fs;					\
+	      _FP_FRAC_SET_##wc (R, _FP_NANFRAC_##fs);			\
+	      FP_SET_EXCEPTION (FP_EX_INVALID | FP_EX_INVALID_SQRT);	\
+	      break;							\
+	    }								\
+	  R##_c = FP_CLS_NORMAL;					\
+	  if (X##_e & 1)						\
+	    _FP_FRAC_SLL_##wc (X, 1);					\
+	  R##_e = X##_e >> 1;						\
+	  _FP_FRAC_SET_##wc (_FP_SQRT_S, _FP_ZEROFRAC_##wc);		\
+	  _FP_FRAC_SET_##wc (R, _FP_ZEROFRAC_##wc);			\
+	  _FP_SQRT_q = _FP_OVERFLOW_##fs >> 1;				\
+	  _FP_SQRT_MEAT_##wc (R, _FP_SQRT_S, _FP_SQRT_T, X,		\
+			      _FP_SQRT_q);				\
+	}								\
+    }									\
   while (0)
 
 /* Convert from FP to integer.  Input is raw.  */
@@ -1434,12 +1456,17 @@
 			})						\
 		      : 0);						\
 	      if (!_FP_FRAC_ZEROP_##wc (X))				\
-		FP_SET_EXCEPTION (FP_EX_INVALID);			\
+		FP_SET_EXCEPTION (FP_EX_INVALID | FP_EX_INVALID_CVI);	\
 	      else if (_FP_TO_INT_inexact)				\
 		FP_SET_EXCEPTION (FP_EX_INEXACT);			\
 	    }								\
 	  else								\
-	    FP_SET_EXCEPTION (FP_EX_INVALID);				\
+	    FP_SET_EXCEPTION (FP_EX_INVALID				\
+			      | FP_EX_INVALID_CVI			\
+			      | ((FP_EX_INVALID_SNAN			\
+				  && _FP_ISSIGNAN (fs, wc, X))		\
+				 ? FP_EX_INVALID_SNAN			\
+				 : 0));					\
 	}								\
       else								\
 	{								\
@@ -1601,7 +1628,8 @@
 	      if (!_FP_FRAC_ZEROP_##swc (S))				\
 		{							\
 		  if (_FP_FRAC_SNANP (sfs, S))				\
-		    FP_SET_EXCEPTION (FP_EX_INVALID);			\
+		    FP_SET_EXCEPTION (FP_EX_INVALID			\
+				      | FP_EX_INVALID_SNAN);		\
 		  _FP_FRAC_SLL_##dwc (D, (_FP_FRACBITS_##dfs		\
 					  - _FP_FRACBITS_##sfs));	\
 		  _FP_SETQNAN (dfs, dwc, D);				\

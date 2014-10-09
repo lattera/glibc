@@ -83,6 +83,44 @@
 # define FP_EX_DENORM		0
 #endif
 
+/* Sub-exceptions of "invalid".  */
+/* Signaling NaN operand.  */
+#ifndef FP_EX_INVALID_SNAN
+# define FP_EX_INVALID_SNAN	0
+#endif
+/* Inf * 0.  */
+#ifndef FP_EX_INVALID_IMZ
+# define FP_EX_INVALID_IMZ	0
+#endif
+/* fma (Inf, 0, c).  */
+#ifndef FP_EX_INVALID_IMZ_FMA
+# define FP_EX_INVALID_IMZ_FMA	0
+#endif
+/* Inf - Inf.  */
+#ifndef FP_EX_INVALID_ISI
+# define FP_EX_INVALID_ISI	0
+#endif
+/* 0 / 0.  */
+#ifndef FP_EX_INVALID_ZDZ
+# define FP_EX_INVALID_ZDZ	0
+#endif
+/* Inf / Inf.  */
+#ifndef FP_EX_INVALID_IDI
+# define FP_EX_INVALID_IDI	0
+#endif
+/* sqrt (negative).  */
+#ifndef FP_EX_INVALID_SQRT
+# define FP_EX_INVALID_SQRT	0
+#endif
+/* Invalid conversion to integer.  */
+#ifndef FP_EX_INVALID_CVI
+# define FP_EX_INVALID_CVI	0
+#endif
+/* Invalid comparison.  */
+#ifndef FP_EX_INVALID_VC
+# define FP_EX_INVALID_VC	0
+#endif
+
 /* _FP_STRUCT_LAYOUT may be defined as an attribute to determine the
    struct layout variant used for structures where bit-fields are used
    to access specific parts of binary floating-point numbers.  This is
