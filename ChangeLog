@@ -1,5 +1,17 @@
 2014-10-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* soft-fp/soft-fp.h (FP_DENORM_ZERO): New macro.
+	* soft-fp/op-common.h (_FP_UNPACK_CANONICAL): Check
+	FP_DENORM_ZERO.
+	(_FP_CHECK_FLUSH_ZERO): New macro.
+	(_FP_ADD_INTERNAL): Call _FP_CHECK_FLUSH_ZERO.
+	(_FP_CMP): Likewise.
+	(_FP_CMP_EQ): Likewise.
+	(_FP_TO_INT): Do not set inexact for subnormal arguments if
+	FP_DENORM_ZERO.
+	(FP_EXTEND): Call _FP_CHECK_FLUSH_ZERO.
+	(FP_TRUNC): Likewise.
+
 	* soft-fp/op-common.h (_FP_TO_INT): Ensure maximum exponent is
 	treated as invalid conversion, not as normal exponent.
 

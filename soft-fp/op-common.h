@@ -63,6 +63,12 @@
 	case 0:							\
 	  if (_FP_FRAC_ZEROP_##wc (X))				\
 	    X##_c = FP_CLS_ZERO;				\
+	  else if (FP_DENORM_ZERO)				\
+	    {							\
+	      X##_c = FP_CLS_ZERO;				\
+	      _FP_FRAC_SET_##wc (X, _FP_ZEROFRAC_##wc);		\
+	      FP_SET_EXCEPTION (FP_EX_DENORM);			\
+	    }							\
 	  else							\
 	    {							\
 	      /* A denormalized number.  */			\
@@ -98,6 +104,21 @@
    shifted by _FP_WORKBITS but the implicit MSB is not inserted and
    other classification is not done.  */
 #define _FP_UNPACK_SEMIRAW(fs, wc, X)	_FP_FRAC_SLL_##wc (X, _FP_WORKBITS)
+
+/* Check whether a raw or semi-raw input value should be flushed to
+   zero, and flush it to zero if so.  */
+#define _FP_CHECK_FLUSH_ZERO(fs, wc, X)			\
+  do							\
+    {							\
+      if (FP_DENORM_ZERO				\
+	  && X##_e == 0					\
+	  && !_FP_FRAC_ZEROP_##wc (X))			\
+	{						\
+	  _FP_FRAC_SET_##wc (X, _FP_ZEROFRAC_##wc);	\
+	  FP_SET_EXCEPTION (FP_EX_DENORM);		\
+	}						\
+    }							\
+  while (0)
 
 /* A semi-raw value has overflowed to infinity.  Adjust the mantissa
    and exponent appropriately.  */
@@ -387,6 +408,8 @@
 #define _FP_ADD_INTERNAL(fs, wc, R, X, Y, OP)				\
   do									\
     {									\
+      _FP_CHECK_FLUSH_ZERO (fs, wc, X);					\
+      _FP_CHECK_FLUSH_ZERO (fs, wc, Y);					\
       if (X##_s == Y##_s)						\
 	{								\
 	  /* Addition.  */						\
@@ -1222,6 +1245,9 @@
 	  int _FP_CMP_is_zero_x;					\
 	  int _FP_CMP_is_zero_y;					\
 									\
+	  _FP_CHECK_FLUSH_ZERO (fs, wc, X);				\
+	  _FP_CHECK_FLUSH_ZERO (fs, wc, Y);				\
+									\
 	  _FP_CMP_is_zero_x						\
 	    = (!X##_e && _FP_FRAC_ZEROP_##wc (X)) ? 1 : 0;		\
 	  _FP_CMP_is_zero_y						\
@@ -1264,6 +1290,9 @@
 	}								\
       else								\
 	{								\
+	  _FP_CHECK_FLUSH_ZERO (fs, wc, X);				\
+	  _FP_CHECK_FLUSH_ZERO (fs, wc, Y);				\
+									\
 	  ret = !(X##_e == Y##_e					\
 		  && _FP_FRAC_EQ_##wc (X, Y)				\
 		  && (X##_s == Y##_s || (!X##_e && _FP_FRAC_ZEROP_##wc (X)))); \
@@ -1361,7 +1390,8 @@
 	    {								\
 	      if (!_FP_FRAC_ZEROP_##wc (X))				\
 		{							\
-		  FP_SET_EXCEPTION (FP_EX_INEXACT);			\
+		  if (!FP_DENORM_ZERO)					\
+		    FP_SET_EXCEPTION (FP_EX_INEXACT);			\
 		  FP_SET_EXCEPTION (FP_EX_DENORM);			\
 		}							\
 	    }								\
@@ -1540,6 +1570,7 @@
 	{								\
 	  if (S##_e == 0)						\
 	    {								\
+	      _FP_CHECK_FLUSH_ZERO (sfs, swc, S);			\
 	      if (_FP_FRAC_ZEROP_##swc (S))				\
 		D##_e = 0;						\
 	      else if (_FP_EXPBIAS_##dfs				\
@@ -1625,6 +1656,7 @@
 	{								\
 	  if (S##_e == 0)						\
 	    {								\
+	      _FP_CHECK_FLUSH_ZERO (sfs, swc, S);			\
 	      D##_e = 0;						\
 	      if (_FP_FRAC_ZEROP_##swc (S))				\
 		_FP_FRAC_SET_##dwc (D, _FP_ZEROFRAC_##dwc);		\
