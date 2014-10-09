@@ -128,9 +128,6 @@
 #define FP_SET_EXCEPTION(ex)				\
   _fex |= (ex)
 
-#define FP_CLEAR_EXCEPTIONS				\
-  _fex = 0
-
 #define FP_CUR_EXCEPTIONS				\
   (_fex)
 

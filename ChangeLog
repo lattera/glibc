@@ -1,3 +1,19 @@
+2014-10-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* soft-fp/soft-fp.h (FP_CLEAR_EXCEPTIONS): Remove macro.
+	* sysdeps/sparc/sparc32/soft-fp/q_itoq.c: Define FP_NO_EXCEPTIONS.
+	(_Q_itoq): Do not use FP_DECL_EX, FP_CLEAR_EXCEPTIONS or
+	FP_HANDLE_EXCEPTIONS.
+	* sysdeps/sparc/sparc32/soft-fp/q_lltoq.c: Define FP_NO_EXCEPTIONS.
+	(_Q_lltoq): Do not use FP_DECL_EX, FP_CLEAR_EXCEPTIONS or
+	FP_HANDLE_EXCEPTIONS.
+	* sysdeps/sparc/sparc32/soft-fp/q_ulltoq.c: Define FP_NO_EXCEPTIONS.
+	(_Q_ulltoq): Do not use FP_DECL_EX, FP_CLEAR_EXCEPTIONS or
+	FP_HANDLE_EXCEPTIONS.
+	* sysdeps/sparc/sparc32/soft-fp/q_utoq.c: Define FP_NO_EXCEPTIONS.
+	(_Q_utoq): Do not use FP_DECL_EX, FP_CLEAR_EXCEPTIONS or
+	FP_HANDLE_EXCEPTIONS.
+
 2014-10-08  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14132]

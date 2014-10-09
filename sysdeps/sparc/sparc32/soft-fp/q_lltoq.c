@@ -19,19 +19,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#define FP_NO_EXCEPTIONS
 #include "soft-fp.h"
 #include "quad.h"
 
 long double _Q_lltoq(const long long a)
 {
-  FP_DECL_EX;
   FP_DECL_Q(C);
   long double c;
   long long b = a;
 
   FP_FROM_INT_Q(C, b, 64, unsigned long long);
   FP_PACK_RAW_Q(c, C);
-  FP_CLEAR_EXCEPTIONS;
-  FP_HANDLE_EXCEPTIONS;
   return c;
 }
