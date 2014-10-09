@@ -26,7 +26,6 @@ const char *const _sys_siglist[NSIG] =
 #include <siglist.h>
 #undef init_sig
 };
-strong_alias (_sys_siglist, _sys_siglist_internal)
 
 
 const char *const _sys_sigabbrev[NSIG] =

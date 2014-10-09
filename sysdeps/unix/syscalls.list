@@ -7,7 +7,7 @@ adjtime		-	adjtime		i:pp	__adjtime	adjtime
 bind		-	bind		i:ipi	__bind		bind
 chdir		-	chdir		i:s	__chdir		chdir
 chmod		-	chmod		i:si	__chmod		chmod
-chown		-	chown		i:sii	__chown		__chown_internal chown
+chown		-	chown		i:sii	__chown		chown
 chroot		-	chroot		i:s	chroot
 close		-	close		Ci:i	__libc_close	__close close
 connect		-	connect		Ci:ipi	__libc_connect	__connect connect
@@ -17,7 +17,7 @@ dup3		-	dup3		i:iii	__dup3		dup3
 fchdir		-	fchdir		i:i	__fchdir	fchdir
 fchmod		-	fchmod		i:ii	__fchmod	fchmod
 fchown		-	fchown		i:iii	__fchown	fchown
-fcntl		-	fcntl		Ci:iiF	__libc_fcntl	__fcntl __fcntl_internal fcntl
+fcntl		-	fcntl		Ci:iiF	__libc_fcntl	__fcntl fcntl
 fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs
 fsync		-	fsync		Ci:i	__libc_fsync	fsync
 ftruncate	-	ftruncate	i:ii	__ftruncate	ftruncate

@@ -1,5 +1,21 @@
 2014-10-09  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14132]
+	* include/wctype.h [!_ISOMAC] (__iswalpha_l_internal): Remove
+	declaration.
+	[!_ISOMAC] (__iswdigit_l_internal): Likewise.
+	[!_ISOMAC] (__iswspace_l_internal): Likewise.
+	[!_ISOMAC] (__iswxdigit_l_internal): Likewise.
+	[!_ISOMAC] (__iswctype_internal): Likewise.
+	* stdio-common/siglist.c (_sys_siglist_internal): Remove alias.
+	* sysdeps/unix/syscalls.list (chown): Remove __chown_internal
+	alias.
+	(fcntl): Remove __fcntl_internal alias.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list (connect): Remove
+	__connect_internal alias.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list (connect):
+	Likewise.
+
 	* soft-fp/soft-fp.h (FP_DENORM_ZERO): New macro.
 	* soft-fp/op-common.h (_FP_UNPACK_CANONICAL): Check
 	FP_DENORM_ZERO.
