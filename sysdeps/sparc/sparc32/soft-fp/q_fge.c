@@ -30,9 +30,7 @@ int _Q_fge(const long double a, const long double b)
 
   FP_UNPACK_RAW_Q(A, a);
   FP_UNPACK_RAW_Q(B, b);
-  FP_CMP_Q(r, B, A, 3);
-  if (r == 3)
-    FP_SET_EXCEPTION(FP_EX_INVALID);
+  FP_CMP_Q(r, B, A, 3, 2);
   FP_HANDLE_EXCEPTIONS;
 
   return (r <= 0);

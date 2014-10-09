@@ -1,5 +1,60 @@
 2014-10-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* soft-fp/op-common.h (_FP_CMP_CHECK_NAN): New macro.
+	(_FP_CMP): Add extra argument EX.  Call _FP_CMP_CHECK_NAN.
+	(_FP_CMP_EQ): Likewise.
+	(_FP_CMP_UNORD): Likewise.
+	* soft-fp/double.h (FP_CMP_D): Add extra argument EX.
+	(FP_CMP_EQ_D): Likewise.
+	(FP_CMP_UNORD_D): Likewise.
+	* soft-fp/extended.h (FP_CMP_E): Likewise.
+	(FP_CMP_EQ_E): Likewise.
+	(FP_CMP_UNORD_E): Likewise.
+	* soft-fp/quad.h (FP_CMP_Q): Likewise.
+	(FP_CMP_EQ_Q): Likewise.
+	(FP_CMP_UNORD_Q): Likewise.
+	* soft-fp/single.h (FP_CMP_S): Likewise.
+	(FP_CMP_EQ_S): Likewise.
+	(FP_CMP_UNORD_S): Likewise.
+	* soft-fp/eqdf2.c (__eqdf2): Update call to FP_CMP_EQ_D.
+	* soft-fp/eqsf2.c (__eqsf2): Update call to FP_CMP_EQ_S.
+	* soft-fp/eqtf2.c (__eqtf2): Update call to FP_CMP_EQ_Q.
+	* soft-fp/gedf2.c (__gedf2): Update call to FP_CMP_D.
+	* soft-fp/gesf2.c (__gesf2): Update call to FP_CMP_S.
+	* soft-fp/getf2.c (__getf2): Update call to FP_CMP_Q.
+	* soft-fp/ledf2.c (__ledf2): Update call to FP_CMP_D.
+	* soft-fp/lesf2.c (__lesf2): Update call to FP_CMP_S.
+	* soft-fp/letf2.c (__letf2): Update call to FP_CMP_Q.
+	* soft-fp/unorddf2.c (__unorddf2): Update call to FP_CMP_UNORD_D.
+	* soft-fp/unordsf2.c (__unordsf2): Update call to FP_CMP_UNORD_S.
+	* soft-fp/unordtf2.c (__unordtf2): Update call to FP_CMP_UNORD_Q.
+	* sysdeps/alpha/soft-fp/ots_cmpe.c (internal_compare): Update call
+	to FP_CMP_Q.
+	* sysdeps/sparc/sparc32/soft-fp/q_cmp.c (_Q_cmp): Update call to
+	FP_CMP_Q.
+	* sysdeps/sparc/sparc32/soft-fp/q_cmpe.c (_Q_cmpe): Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_feq.c (_Q_feq): Update call to
+	FP_CMP_EQ_Q.
+	* sysdeps/sparc/sparc32/soft-fp/q_fge.c (_Q_fge): Update call to
+	FP_CMP_Q.
+	* sysdeps/sparc/sparc32/soft-fp/q_fgt.c (_Q_fgt): Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_fle.c (_Q_fle): Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_flt.c (_Q_flt): Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_fne.c (_Q_fne): Update call to
+	FP_CMP_EQ_Q.
+	* sysdeps/sparc/sparc64/soft-fp/qp_cmp.c (_Qp_cmp): Update call to
+	FP_CMP_Q.
+	* sysdeps/sparc/sparc64/soft-fp/qp_cmpe.c (_Qp_cmpe): Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_feq.c (_Qp_feq): Update call to
+	FP_CMP_EQ_Q.
+	* sysdeps/sparc/sparc64/soft-fp/qp_fge.c (_Qp_fge): Update call to
+	FP_CMP_Q.
+	* sysdeps/sparc/sparc64/soft-fp/qp_fgt.c (_Qp_fgt): Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_fle.c (_Qp_fle): Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_flt.c (_Qp_flt): Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_fne.c (_Qp_fne): Update call to
+	FP_CMP_EQ_Q.
+
 	* soft-fp/op-common.h (FP_EXTEND): When a subnormal input produces
 	a subnormal result, set the underflow exception if trapping on
 	underflow is enabled.

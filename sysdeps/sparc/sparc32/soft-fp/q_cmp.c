@@ -30,10 +30,8 @@ int _Q_cmp(const long double a, const long double b)
 
   FP_UNPACK_RAW_Q(A, a);
   FP_UNPACK_RAW_Q(B, b);
-  FP_CMP_Q(r, B, A, 3);
+  FP_CMP_Q(r, B, A, 3, 1);
   if (r == -1) r = 2;
-  if (r == 3 && (FP_ISSIGNAN_Q(A) || FP_ISSIGNAN_Q(B)))
-    FP_SET_EXCEPTION(FP_EX_INVALID);
   FP_HANDLE_EXCEPTIONS;
 
   return r;

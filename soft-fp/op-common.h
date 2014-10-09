@@ -1186,10 +1186,28 @@
   while (0)
 
 
-/* Main differential comparison routine.  The inputs should be raw not
-   cooked.  The return is -1,0,1 for normal values, 2 otherwise.  */
+/* Helper for comparisons.  EX is 0 not to raise exceptions, 1 to
+   raise exceptions for signaling NaN operands, 2 to raise exceptions
+   for all NaN operands.  */
 
-#define _FP_CMP(fs, wc, ret, X, Y, un)					\
+#define _FP_CMP_CHECK_NAN(fs, wc, X, Y, ex)		\
+  do							\
+    {							\
+      if (ex)						\
+	{						\
+	  if ((ex) == 2					\
+	      || _FP_ISSIGNAN (fs, wc, X)		\
+	      || _FP_ISSIGNAN (fs, wc, Y))		\
+	    FP_SET_EXCEPTION (FP_EX_INVALID);		\
+	}						\
+    }							\
+  while (0)
+
+/* Main differential comparison routine.  The inputs should be raw not
+   cooked.  The return is -1, 0, 1 for normal values, UN
+   otherwise.  */
+
+#define _FP_CMP(fs, wc, ret, X, Y, un, ex)				\
   do									\
     {									\
       /* NANs are unordered.  */					\
@@ -1197,6 +1215,7 @@
 	  || (Y##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (Y)))	\
 	{								\
 	  ret = un;							\
+	  _FP_CMP_CHECK_NAN (fs, wc, X, Y, ex);				\
 	}								\
       else								\
 	{								\
@@ -1233,7 +1252,7 @@
 
 /* Simplification for strict equality.  */
 
-#define _FP_CMP_EQ(fs, wc, ret, X, Y)					\
+#define _FP_CMP_EQ(fs, wc, ret, X, Y, ex)				\
   do									\
     {									\
       /* NANs are unordered.  */					\
@@ -1241,6 +1260,7 @@
 	  || (Y##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (Y)))	\
 	{								\
 	  ret = 1;							\
+	  _FP_CMP_CHECK_NAN (fs, wc, X, Y, ex);				\
 	}								\
       else								\
 	{								\
@@ -1253,11 +1273,13 @@
 
 /* Version to test unordered.  */
 
-#define _FP_CMP_UNORD(fs, wc, ret, X, Y)				\
+#define _FP_CMP_UNORD(fs, wc, ret, X, Y, ex)				\
   do									\
     {									\
       ret = ((X##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (X))	\
 	     || (Y##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (Y))); \
+      if (ret)								\
+	_FP_CMP_CHECK_NAN (fs, wc, X, Y, ex);				\
     }									\
   while (0)
 

@@ -32,10 +32,8 @@ int _Qp_cmpe(const long double *a, const long double *b)
   FP_INIT_ROUNDMODE;
   FP_UNPACK_RAW_QP(A, a);
   FP_UNPACK_RAW_QP(B, b);
-  FP_CMP_Q(r, B, A, 3);
+  FP_CMP_Q(r, B, A, 3, 2);
   if (r == -1) r = 2;
-  if (r == 3)
-    FP_SET_EXCEPTION(FP_EX_INVALID);
   QP_HANDLE_EXCEPTIONS(
 	__asm (
 "	ldd [%0], %%f52\n"

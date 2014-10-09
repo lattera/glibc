@@ -31,9 +31,7 @@ int _Qp_fne(const long double *a, const long double *b)
   FP_INIT_ROUNDMODE;
   FP_UNPACK_RAW_QP(A, a);
   FP_UNPACK_RAW_QP(B, b);
-  FP_CMP_EQ_Q(r, A, B);
-  if (r && (FP_ISSIGNAN_Q(A) || FP_ISSIGNAN_Q(B)))
-    FP_SET_EXCEPTION(FP_EX_INVALID);
+  FP_CMP_EQ_Q(r, A, B, 1);
 
   QP_HANDLE_EXCEPTIONS(
 	__asm (

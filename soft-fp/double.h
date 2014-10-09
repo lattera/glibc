@@ -177,9 +177,9 @@ union _FP_UNION_D
 # define _FP_SQRT_MEAT_D(R, S, T, X, Q)	_FP_SQRT_MEAT_2 (R, S, T, X, Q)
 # define FP_FMA_D(R, X, Y, Z)		_FP_FMA (D, 2, 4, R, X, Y, Z)
 
-# define FP_CMP_D(r, X, Y, un)		_FP_CMP (D, 2, r, X, Y, un)
-# define FP_CMP_EQ_D(r, X, Y)		_FP_CMP_EQ (D, 2, r, X, Y)
-# define FP_CMP_UNORD_D(r, X, Y)	_FP_CMP_UNORD (D, 2, r, X, Y)
+# define FP_CMP_D(r, X, Y, un, ex)	_FP_CMP (D, 2, r, X, Y, un, ex)
+# define FP_CMP_EQ_D(r, X, Y, ex)	_FP_CMP_EQ (D, 2, r, X, Y, ex)
+# define FP_CMP_UNORD_D(r, X, Y, ex)	_FP_CMP_UNORD (D, 2, r, X, Y, ex)
 
 # define FP_TO_INT_D(r, X, rsz, rsg)	_FP_TO_INT (D, 2, r, X, rsz, rsg)
 # define FP_FROM_INT_D(X, r, rs, rt)	_FP_FROM_INT (D, 2, X, r, rs, rt)
@@ -299,9 +299,9 @@ union _FP_UNION_D
 /* The implementation of _FP_MUL_D and _FP_DIV_D should be chosen by
    the target machine.  */
 
-# define FP_CMP_D(r, X, Y, un)		_FP_CMP (D, 1, r, X, Y, un)
-# define FP_CMP_EQ_D(r, X, Y)		_FP_CMP_EQ (D, 1, r, X, Y)
-# define FP_CMP_UNORD_D(r, X, Y)	_FP_CMP_UNORD (D, 1, r, X, Y)
+# define FP_CMP_D(r, X, Y, un, ex)	_FP_CMP (D, 1, r, X, Y, un, ex)
+# define FP_CMP_EQ_D(r, X, Y, ex)	_FP_CMP_EQ (D, 1, r, X, Y, ex)
+# define FP_CMP_UNORD_D(r, X, Y, ex)	_FP_CMP_UNORD (D, 1, r, X, Y, ex)
 
 # define FP_TO_INT_D(r, X, rsz, rsg)	_FP_TO_INT (D, 1, r, X, rsz, rsg)
 # define FP_FROM_INT_D(X, r, rs, rt)	_FP_FROM_INT (D, 1, X, r, rs, rt)

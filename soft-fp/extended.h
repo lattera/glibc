@@ -287,9 +287,9 @@ union _FP_UNION_E
     }							\
   while (0)
 
-# define FP_CMP_E(r, X, Y, un)		_FP_CMP (E, 4, r, X, Y, un)
-# define FP_CMP_EQ_E(r, X, Y)		_FP_CMP_EQ (E, 4, r, X, Y)
-# define FP_CMP_UNORD_E(r, X, Y)	_FP_CMP_UNORD (E, 4, r, X, Y)
+# define FP_CMP_E(r, X, Y, un, ex)	_FP_CMP (E, 4, r, X, Y, un, ex)
+# define FP_CMP_EQ_E(r, X, Y, ex)	_FP_CMP_EQ (E, 4, r, X, Y, ex)
+# define FP_CMP_UNORD_E(r, X, Y, ex)	_FP_CMP_UNORD (E, 4, r, X, Y, ex)
 
 # define FP_TO_INT_E(r, X, rsz, rsg)	_FP_TO_INT (E, 4, r, X, rsz, rsg)
 # define FP_FROM_INT_E(X, r, rs, rt)	_FP_FROM_INT (E, 4, X, r, rs, rt)
@@ -489,9 +489,9 @@ union _FP_UNION_E
     }							\
   while (0)
 
-# define FP_CMP_E(r, X, Y, un)		_FP_CMP (E, 2, r, X, Y, un)
-# define FP_CMP_EQ_E(r, X, Y)		_FP_CMP_EQ (E, 2, r, X, Y)
-# define FP_CMP_UNORD_E(r, X, Y)	_FP_CMP_UNORD (E, 2, r, X, Y)
+# define FP_CMP_E(r, X, Y, un, ex)	_FP_CMP (E, 2, r, X, Y, un, ex)
+# define FP_CMP_EQ_E(r, X, Y, ex)	_FP_CMP_EQ (E, 2, r, X, Y, ex)
+# define FP_CMP_UNORD_E(r, X, Y, ex)	_FP_CMP_UNORD (E, 2, r, X, Y, ex)
 
 # define FP_TO_INT_E(r, X, rsz, rsg)	_FP_TO_INT (E, 2, r, X, rsz, rsg)
 # define FP_FROM_INT_E(X, r, rs, rt)	_FP_FROM_INT (E, 2, X, r, rs, rt)
