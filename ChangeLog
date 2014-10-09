@@ -1,3 +1,9 @@
+2014-10-09  Kostya Serebryany  <konstantin.s.serebryany@gmail.com>
+
+	* elf/dl-load.c
+	(add_path): New function broken out of _dl_rtld_di_serinfo.
+	(_dl_rtld_di_serinfo): Remove that nested function.  Update call sites.
+
 2014-10-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* soft-fp/double.h [_FP_W_TYPE_SIZE < 64] (FP_UNPACK_RAW_D): Use

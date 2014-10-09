@@ -2201,6 +2201,45 @@ _dl_map_object (struct link_map *loader, const char *name,
 				 &stack_end, nsid);
 }
 
+struct add_path_state
+{
+  bool counting;
+  unsigned int idx;
+  Dl_serinfo *si;
+  char *allocptr;
+};
+
+static void
+add_path (struct add_path_state *p, const struct r_search_path_struct *sps,
+	  unsigned int flags)
+{
+  if (sps->dirs != (void *) -1)
+    {
+      struct r_search_path_elem **dirs = sps->dirs;
+      do
+	{
+	  const struct r_search_path_elem *const r = *dirs++;
+	  if (p->counting)
+	    {
+	      p->si->dls_cnt++;
+	      p->si->dls_size += MAX (2, r->dirnamelen);
+	    }
+	  else
+	    {
+	      Dl_serpath *const sp = &p->si->dls_serpath[p->idx++];
+	      sp->dls_name = p->allocptr;
+	      if (r->dirnamelen < 2)
+		*p->allocptr++ = r->dirnamelen ? '/' : '.';
+	      else
+		p->allocptr = __mempcpy (p->allocptr,
+					  r->dirname, r->dirnamelen - 1);
+	      *p->allocptr++ = '\0';
+	      sp->dls_flags = flags;
+	    }
+	}
+      while (*dirs != NULL);
+    }
+}
 
 void
 internal_function
@@ -2212,38 +2251,15 @@ _dl_rtld_di_serinfo (struct link_map *loader, Dl_serinfo *si, bool counting)
       si->dls_size = 0;
     }
 
-  unsigned int idx = 0;
-  char *allocptr = (char *) &si->dls_serpath[si->dls_cnt];
-  void add_path (const struct r_search_path_struct *sps, unsigned int flags)
-# define add_path(sps, flags) add_path(sps, 0) /* XXX */
+  struct add_path_state p =
     {
-      if (sps->dirs != (void *) -1)
-	{
-	  struct r_search_path_elem **dirs = sps->dirs;
-	  do
-	    {
-	      const struct r_search_path_elem *const r = *dirs++;
-	      if (counting)
-		{
-		  si->dls_cnt++;
-		  si->dls_size += MAX (2, r->dirnamelen);
-		}
-	      else
-		{
-		  Dl_serpath *const sp = &si->dls_serpath[idx++];
-		  sp->dls_name = allocptr;
-		  if (r->dirnamelen < 2)
-		    *allocptr++ = r->dirnamelen ? '/' : '.';
-		  else
-		    allocptr = __mempcpy (allocptr,
-					  r->dirname, r->dirnamelen - 1);
-		  *allocptr++ = '\0';
-		  sp->dls_flags = flags;
-		}
-	    }
-	  while (*dirs != NULL);
-	}
-    }
+      .counting = counting,
+      .idx = 0,
+      .si = si,
+      .allocptr = (char *) &si->dls_serpath[si->dls_cnt]
+    };
+
+# define add_path(p, sps, flags) add_path(p, sps, 0) /* XXX */
 
   /* When the object has the RUNPATH information we don't use any RPATHs.  */
   if (loader->l_info[DT_RUNPATH] == NULL)
@@ -2255,7 +2271,7 @@ _dl_rtld_di_serinfo (struct link_map *loader, Dl_serinfo *si, bool counting)
       do
 	{
 	  if (cache_rpath (l, &l->l_rpath_dirs, DT_RPATH, "RPATH"))
-	    add_path (&l->l_rpath_dirs, XXX_RPATH);
+	    add_path (&p, &l->l_rpath_dirs, XXX_RPATH);
 	  l = l->l_loader;
 	}
       while (l != NULL);
@@ -2266,16 +2282,16 @@ _dl_rtld_di_serinfo (struct link_map *loader, Dl_serinfo *si, bool counting)
 	  l = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
 	  if (l != NULL && l->l_type != lt_loaded && l != loader)
 	    if (cache_rpath (l, &l->l_rpath_dirs, DT_RPATH, "RPATH"))
-	      add_path (&l->l_rpath_dirs, XXX_RPATH);
+	      add_path (&p, &l->l_rpath_dirs, XXX_RPATH);
 	}
     }
 
   /* Try the LD_LIBRARY_PATH environment variable.  */
-  add_path (&env_path_list, XXX_ENV);
+  add_path (&p, &env_path_list, XXX_ENV);
 
   /* Look at the RUNPATH information for this binary.  */
   if (cache_rpath (loader, &loader->l_runpath_dirs, DT_RUNPATH, "RUNPATH"))
-    add_path (&loader->l_runpath_dirs, XXX_RUNPATH);
+    add_path (&p, &loader->l_runpath_dirs, XXX_RUNPATH);
 
   /* XXX
      Here is where ld.so.cache gets checked, but we don't have
@@ -2283,7 +2299,7 @@ _dl_rtld_di_serinfo (struct link_map *loader, Dl_serinfo *si, bool counting)
 
   /* Finally, try the default path.  */
   if (!(loader->l_flags_1 & DF_1_NODEFLIB))
-    add_path (&rtld_search_dirs, XXX_default);
+    add_path (&p, &rtld_search_dirs, XXX_default);
 
   if (counting)
     /* Count the struct size before the string area, which we didn't
