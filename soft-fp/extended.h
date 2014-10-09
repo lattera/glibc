@@ -162,7 +162,7 @@ union _FP_UNION_E
 # define FP_UNPACK_E(X, val)			\
   do						\
     {						\
-      FP_UNPACK_RAW_E (X, val);			\
+      FP_UNPACK_RAW_E (X, (val));		\
       _FP_UNPACK_CANONICAL (E, 4, X);		\
     }						\
   while (0)
@@ -170,7 +170,7 @@ union _FP_UNION_E
 # define FP_UNPACK_EP(X, val)			\
   do						\
     {						\
-      FP_UNPACK_RAW_EP (X, val);		\
+      FP_UNPACK_RAW_EP (X, (val));		\
       _FP_UNPACK_CANONICAL (E, 4, X);		\
     }						\
   while (0)
@@ -178,7 +178,7 @@ union _FP_UNION_E
 # define FP_UNPACK_SEMIRAW_E(X, val)		\
   do						\
     {						\
-      FP_UNPACK_RAW_E (X, val);			\
+      FP_UNPACK_RAW_E (X, (val));		\
       _FP_UNPACK_SEMIRAW (E, 4, X);		\
     }						\
   while (0)
@@ -186,7 +186,7 @@ union _FP_UNION_E
 # define FP_UNPACK_SEMIRAW_EP(X, val)		\
   do						\
     {						\
-      FP_UNPACK_RAW_EP (X, val);		\
+      FP_UNPACK_RAW_EP (X, (val));		\
       _FP_UNPACK_SEMIRAW (E, 4, X);		\
     }						\
   while (0)
@@ -195,7 +195,7 @@ union _FP_UNION_E
   do						\
     {						\
       _FP_PACK_CANONICAL (E, 4, X);		\
-      FP_PACK_RAW_E (val, X);			\
+      FP_PACK_RAW_E ((val), X);			\
     }						\
   while (0)
 
@@ -203,7 +203,7 @@ union _FP_UNION_E
   do						\
     {						\
       _FP_PACK_CANONICAL (E, 4, X);		\
-      FP_PACK_RAW_EP (val, X);			\
+      FP_PACK_RAW_EP ((val), X);		\
     }						\
   while (0)
 
@@ -211,7 +211,7 @@ union _FP_UNION_E
   do						\
     {						\
       _FP_PACK_SEMIRAW (E, 4, X);		\
-      FP_PACK_RAW_E (val, X);			\
+      FP_PACK_RAW_E ((val), X);			\
     }						\
   while (0)
 
@@ -219,7 +219,7 @@ union _FP_UNION_E
   do						\
     {						\
       _FP_PACK_SEMIRAW (E, 4, X);		\
-      FP_PACK_RAW_EP (val, X);			\
+      FP_PACK_RAW_EP ((val), X);		\
     }						\
   while (0)
 
@@ -244,36 +244,36 @@ union _FP_UNION_E
 # define _FP_SQRT_MEAT_E(R, S, T, X, q)			\
   do							\
     {							\
-      q = (_FP_W_TYPE) 1 << (_FP_W_TYPE_SIZE - 1);	\
+      (q) = (_FP_W_TYPE) 1 << (_FP_W_TYPE_SIZE - 1);	\
       _FP_FRAC_SRL_4 (X, (_FP_WORKBITS));		\
       while (q)						\
 	{						\
-	  T##_f[1] = S##_f[1] + q;			\
+	  T##_f[1] = S##_f[1] + (q);			\
 	  if (T##_f[1] <= X##_f[1])			\
 	    {						\
-	      S##_f[1] = T##_f[1] + q;			\
+	      S##_f[1] = T##_f[1] + (q);		\
 	      X##_f[1] -= T##_f[1];			\
-	      R##_f[1] += q;				\
+	      R##_f[1] += (q);				\
 	    }						\
 	  _FP_FRAC_SLL_2 (X, 1);			\
-	  q >>= 1;					\
+	  (q) >>= 1;					\
 	}						\
-      q = (_FP_W_TYPE) 1 << (_FP_W_TYPE_SIZE - 1);	\
+      (q) = (_FP_W_TYPE) 1 << (_FP_W_TYPE_SIZE - 1);	\
       while (q)						\
 	{						\
-	  T##_f[0] = S##_f[0] + q;			\
+	  T##_f[0] = S##_f[0] + (q);			\
 	  T##_f[1] = S##_f[1];				\
 	  if (T##_f[1] < X##_f[1]			\
 	      || (T##_f[1] == X##_f[1]			\
 		  && T##_f[0] <= X##_f[0]))		\
 	    {						\
-	      S##_f[0] = T##_f[0] + q;			\
+	      S##_f[0] = T##_f[0] + (q);		\
 	      S##_f[1] += (T##_f[0] > S##_f[0]);	\
 	      _FP_FRAC_DEC_2 (X, T);			\
-	      R##_f[0] += q;				\
+	      R##_f[0] += (q);				\
 	    }						\
 	  _FP_FRAC_SLL_2 (X, 1);			\
-	  q >>= 1;					\
+	  (q) >>= 1;					\
 	}						\
       _FP_FRAC_SLL_4 (R, (_FP_WORKBITS));		\
       if (X##_f[0] | X##_f[1])				\
@@ -287,12 +287,12 @@ union _FP_UNION_E
     }							\
   while (0)
 
-# define FP_CMP_E(r, X, Y, un, ex)	_FP_CMP (E, 4, r, X, Y, un, ex)
-# define FP_CMP_EQ_E(r, X, Y, ex)	_FP_CMP_EQ (E, 4, r, X, Y, ex)
-# define FP_CMP_UNORD_E(r, X, Y, ex)	_FP_CMP_UNORD (E, 4, r, X, Y, ex)
+# define FP_CMP_E(r, X, Y, un, ex)	_FP_CMP (E, 4, (r), X, Y, (un), (ex))
+# define FP_CMP_EQ_E(r, X, Y, ex)	_FP_CMP_EQ (E, 4, (r), X, Y, (ex))
+# define FP_CMP_UNORD_E(r, X, Y, ex)	_FP_CMP_UNORD (E, 4, (r), X, Y, (ex))
 
-# define FP_TO_INT_E(r, X, rsz, rsg)	_FP_TO_INT (E, 4, r, X, rsz, rsg)
-# define FP_FROM_INT_E(X, r, rs, rt)	_FP_FROM_INT (E, 4, X, r, rs, rt)
+# define FP_TO_INT_E(r, X, rsz, rsg)	_FP_TO_INT (E, 4, (r), X, (rsz), (rsg))
+# define FP_FROM_INT_E(X, r, rs, rt)	_FP_FROM_INT (E, 4, X, (r), (rs), rt)
 
 # define _FP_FRAC_HIGH_E(X)	(X##_f[2])
 # define _FP_FRAC_HIGH_RAW_E(X)	(X##_f[1])
@@ -386,7 +386,7 @@ union _FP_UNION_E
 # define FP_UNPACK_E(X, val)			\
   do						\
     {						\
-      FP_UNPACK_RAW_E (X, val);			\
+      FP_UNPACK_RAW_E (X, (val));		\
       _FP_UNPACK_CANONICAL (E, 2, X);		\
     }						\
   while (0)
@@ -394,7 +394,7 @@ union _FP_UNION_E
 # define FP_UNPACK_EP(X, val)			\
   do						\
     {						\
-      FP_UNPACK_RAW_EP (X, val);		\
+      FP_UNPACK_RAW_EP (X, (val));		\
       _FP_UNPACK_CANONICAL (E, 2, X);		\
     }						\
   while (0)
@@ -402,7 +402,7 @@ union _FP_UNION_E
 # define FP_UNPACK_SEMIRAW_E(X, val)		\
   do						\
     {						\
-      FP_UNPACK_RAW_E (X, val);			\
+      FP_UNPACK_RAW_E (X, (val));		\
       _FP_UNPACK_SEMIRAW (E, 2, X);		\
     }						\
   while (0)
@@ -410,7 +410,7 @@ union _FP_UNION_E
 # define FP_UNPACK_SEMIRAW_EP(X, val)		\
   do						\
     {						\
-      FP_UNPACK_RAW_EP (X, val);		\
+      FP_UNPACK_RAW_EP (X, (val));		\
       _FP_UNPACK_SEMIRAW (E, 2, X);		\
     }						\
   while (0)
@@ -419,7 +419,7 @@ union _FP_UNION_E
   do						\
     {						\
       _FP_PACK_CANONICAL (E, 2, X);		\
-      FP_PACK_RAW_E (val, X);			\
+      FP_PACK_RAW_E ((val), X);			\
     }						\
   while (0)
 
@@ -427,7 +427,7 @@ union _FP_UNION_E
   do						\
     {						\
       _FP_PACK_CANONICAL (E, 2, X);		\
-      FP_PACK_RAW_EP (val, X);			\
+      FP_PACK_RAW_EP ((val), X);		\
     }						\
   while (0)
 
@@ -435,7 +435,7 @@ union _FP_UNION_E
   do						\
     {						\
       _FP_PACK_SEMIRAW (E, 2, X);		\
-      FP_PACK_RAW_E (val, X);			\
+      FP_PACK_RAW_E ((val), X);			\
     }						\
   while (0)
 
@@ -443,7 +443,7 @@ union _FP_UNION_E
   do						\
     {						\
       _FP_PACK_SEMIRAW (E, 2, X);		\
-      FP_PACK_RAW_EP (val, X);			\
+      FP_PACK_RAW_EP ((val), X);		\
     }						\
   while (0)
 
@@ -465,19 +465,19 @@ union _FP_UNION_E
 # define _FP_SQRT_MEAT_E(R, S, T, X, q)			\
   do							\
     {							\
-      q = (_FP_W_TYPE) 1 << (_FP_W_TYPE_SIZE - 1);	\
+      (q) = (_FP_W_TYPE) 1 << (_FP_W_TYPE_SIZE - 1);	\
       _FP_FRAC_SRL_2 (X, (_FP_WORKBITS));		\
       while (q)						\
 	{						\
-	  T##_f0 = S##_f0 + q;				\
+	  T##_f0 = S##_f0 + (q);			\
 	  if (T##_f0 <= X##_f0)				\
 	    {						\
-	      S##_f0 = T##_f0 + q;			\
+	      S##_f0 = T##_f0 + (q);			\
 	      X##_f0 -= T##_f0;				\
-	      R##_f0 += q;				\
+	      R##_f0 += (q);				\
 	    }						\
 	  _FP_FRAC_SLL_1 (X, 1);			\
-	  q >>= 1;					\
+	  (q) >>= 1;					\
 	}						\
       _FP_FRAC_SLL_2 (R, (_FP_WORKBITS));		\
       if (X##_f0)					\
@@ -489,12 +489,12 @@ union _FP_UNION_E
     }							\
   while (0)
 
-# define FP_CMP_E(r, X, Y, un, ex)	_FP_CMP (E, 2, r, X, Y, un, ex)
-# define FP_CMP_EQ_E(r, X, Y, ex)	_FP_CMP_EQ (E, 2, r, X, Y, ex)
-# define FP_CMP_UNORD_E(r, X, Y, ex)	_FP_CMP_UNORD (E, 2, r, X, Y, ex)
+# define FP_CMP_E(r, X, Y, un, ex)	_FP_CMP (E, 2, (r), X, Y, (un), (ex))
+# define FP_CMP_EQ_E(r, X, Y, ex)	_FP_CMP_EQ (E, 2, (r), X, Y, (ex))
+# define FP_CMP_UNORD_E(r, X, Y, ex)	_FP_CMP_UNORD (E, 2, (r), X, Y, (ex))
 
-# define FP_TO_INT_E(r, X, rsz, rsg)	_FP_TO_INT (E, 2, r, X, rsz, rsg)
-# define FP_FROM_INT_E(X, r, rs, rt)	_FP_FROM_INT (E, 2, X, r, rs, rt)
+# define FP_TO_INT_E(r, X, rsz, rsg)	_FP_TO_INT (E, 2, (r), X, (rsz), (rsg))
+# define FP_FROM_INT_E(X, r, rs, rt)	_FP_FROM_INT (E, 2, X, (r), (rs), rt)
 
 # define _FP_FRAC_HIGH_E(X)	(X##_f1)
 # define _FP_FRAC_HIGH_RAW_E(X)	(X##_f0)

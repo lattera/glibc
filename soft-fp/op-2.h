@@ -122,11 +122,11 @@
   do						\
     {						\
       if (X##_f1)				\
-	__FP_CLZ (R, X##_f1);			\
+	__FP_CLZ ((R), X##_f1);			\
       else					\
 	{					\
-	  __FP_CLZ (R, X##_f0);			\
-	  R += _FP_W_TYPE_SIZE;			\
+	  __FP_CLZ ((R), X##_f0);		\
+	  (R) += _FP_W_TYPE_SIZE;		\
 	}					\
     }						\
   while (0)
@@ -156,11 +156,11 @@
   do						\
     {						\
       if (xh)					\
-	__FP_CLZ (R, xh);			\
+	__FP_CLZ ((R), xh);			\
       else					\
 	{					\
-	  __FP_CLZ (R, xl);			\
-	  R += _FP_W_TYPE_SIZE;			\
+	  __FP_CLZ ((R), xl);			\
+	  (R) += _FP_W_TYPE_SIZE;		\
 	}					\
     }						\
   while (0)
@@ -302,13 +302,14 @@
     {									\
       _FP_FRAC_DECL_4 (_FP_MUL_MEAT_2_wide_z);				\
 									\
-      _FP_MUL_MEAT_DW_2_wide (wfracbits, _FP_MUL_MEAT_2_wide_z,		\
+      _FP_MUL_MEAT_DW_2_wide ((wfracbits), _FP_MUL_MEAT_2_wide_z,	\
 			      X, Y, doit);				\
 									\
       /* Normalize since we know where the msb of the multiplicands	\
 	 were (bit B), we know that the msb of the of the product is	\
 	 at either 2B or 2B-1.  */					\
-      _FP_FRAC_SRS_4 (_FP_MUL_MEAT_2_wide_z, wfracbits-1, 2*wfracbits);	\
+      _FP_FRAC_SRS_4 (_FP_MUL_MEAT_2_wide_z, (wfracbits)-1,		\
+		      2*(wfracbits));					\
       R##_f0 = _FP_FRAC_WORD_4 (_FP_MUL_MEAT_2_wide_z, 0);		\
       R##_f1 = _FP_FRAC_WORD_4 (_FP_MUL_MEAT_2_wide_z, 1);		\
     }									\
@@ -375,7 +376,7 @@
     {									\
       _FP_FRAC_DECL_4 (_FP_MUL_MEAT_2_wide_3mul_z);			\
 									\
-      _FP_MUL_MEAT_DW_2_wide_3mul (wfracbits,				\
+      _FP_MUL_MEAT_DW_2_wide_3mul ((wfracbits),				\
 				   _FP_MUL_MEAT_2_wide_3mul_z,		\
 				   X, Y, doit);				\
 									\
@@ -383,7 +384,7 @@
 	 were (bit B), we know that the msb of the of the product is	\
 	 at either 2B or 2B-1.  */					\
       _FP_FRAC_SRS_4 (_FP_MUL_MEAT_2_wide_3mul_z,			\
-		      wfracbits-1, 2*wfracbits);			\
+		      (wfracbits)-1, 2*(wfracbits));			\
       R##_f0 = _FP_FRAC_WORD_4 (_FP_MUL_MEAT_2_wide_3mul_z, 0);		\
       R##_f1 = _FP_FRAC_WORD_4 (_FP_MUL_MEAT_2_wide_3mul_z, 1);		\
     }									\
@@ -409,12 +410,13 @@
     {									\
       _FP_FRAC_DECL_4 (_FP_MUL_MEAT_2_gmp_z);				\
 									\
-      _FP_MUL_MEAT_DW_2_gmp (wfracbits, _FP_MUL_MEAT_2_gmp_z, X, Y);	\
+      _FP_MUL_MEAT_DW_2_gmp ((wfracbits), _FP_MUL_MEAT_2_gmp_z, X, Y);	\
 									\
       /* Normalize since we know where the msb of the multiplicands	\
 	 were (bit B), we know that the msb of the of the product is	\
 	 at either 2B or 2B-1.  */					\
-      _FP_FRAC_SRS_4 (_FP_MUL_MEAT_2_gmp_z, wfracbits-1, 2*wfracbits);	\
+      _FP_FRAC_SRS_4 (_FP_MUL_MEAT_2_gmp_z, (wfracbits)-1,		\
+		      2*(wfracbits));					\
       R##_f0 = _FP_MUL_MEAT_2_gmp_z_f[0];				\
       R##_f1 = _FP_MUL_MEAT_2_gmp_z_f[1];				\
     }									\
@@ -452,7 +454,7 @@
 				       _p240, _q240, _r240, _s240;	\
       UDItype _t240, _u240, _v240, _w240, _x240, _y240 = 0;		\
 									\
-      if (wfracbits < 106 || wfracbits > 120)				\
+      if ((wfracbits) < 106 || (wfracbits) > 120)			\
 	abort ();							\
 									\
       setfetz;								\
@@ -629,31 +631,31 @@
     {								\
       while (q)							\
 	{							\
-	  T##_f1 = S##_f1 + q;					\
+	  T##_f1 = S##_f1 + (q);				\
 	  if (T##_f1 <= X##_f1)					\
 	    {							\
-	      S##_f1 = T##_f1 + q;				\
+	      S##_f1 = T##_f1 + (q);				\
 	      X##_f1 -= T##_f1;					\
-	      R##_f1 += q;					\
+	      R##_f1 += (q);					\
 	    }							\
 	  _FP_FRAC_SLL_2 (X, 1);				\
-	  q >>= 1;						\
+	  (q) >>= 1;						\
 	}							\
-      q = (_FP_W_TYPE) 1 << (_FP_W_TYPE_SIZE - 1);		\
-      while (q != _FP_WORK_ROUND)				\
+      (q) = (_FP_W_TYPE) 1 << (_FP_W_TYPE_SIZE - 1);		\
+      while ((q) != _FP_WORK_ROUND)				\
 	{							\
-	  T##_f0 = S##_f0 + q;					\
+	  T##_f0 = S##_f0 + (q);				\
 	  T##_f1 = S##_f1;					\
 	  if (T##_f1 < X##_f1					\
 	      || (T##_f1 == X##_f1 && T##_f0 <= X##_f0))	\
 	    {							\
-	      S##_f0 = T##_f0 + q;				\
+	      S##_f0 = T##_f0 + (q);				\
 	      S##_f1 += (T##_f0 > S##_f0);			\
 	      _FP_FRAC_DEC_2 (X, T);				\
-	      R##_f0 += q;					\
+	      R##_f0 += (q);					\
 	    }							\
 	  _FP_FRAC_SLL_2 (X, 1);				\
-	  q >>= 1;						\
+	  (q) >>= 1;						\
 	}							\
       if (X##_f0 | X##_f1)					\
 	{							\
@@ -670,20 +672,22 @@
    No shifting or overflow handled here.  */
 
 #define _FP_FRAC_ASSEMBLE_2(r, X, rsize)	\
-  (void) ((rsize <= _FP_W_TYPE_SIZE)		\
-	  ? ({ r = X##_f0; })			\
+  (void) (((rsize) <= _FP_W_TYPE_SIZE)		\
+	  ? ({ (r) = X##_f0; })			\
 	  : ({					\
-	      r = X##_f1;			\
-	      r <<= _FP_W_TYPE_SIZE;		\
-	      r += X##_f0;			\
+	      (r) = X##_f1;			\
+	      (r) <<= _FP_W_TYPE_SIZE;		\
+	      (r) += X##_f0;			\
 	    }))
 
-#define _FP_FRAC_DISASSEMBLE_2(X, r, rsize)				\
-  do									\
-    {									\
-      X##_f0 = r;							\
-      X##_f1 = (rsize <= _FP_W_TYPE_SIZE ? 0 : r >> _FP_W_TYPE_SIZE);	\
-    }									\
+#define _FP_FRAC_DISASSEMBLE_2(X, r, rsize)	\
+  do						\
+    {						\
+      X##_f0 = (r);				\
+      X##_f1 = ((rsize) <= _FP_W_TYPE_SIZE	\
+		? 0				\
+		: (r) >> _FP_W_TYPE_SIZE);	\
+    }						\
   while (0)
 
 /* Convert FP values between word sizes.  */

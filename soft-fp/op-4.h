@@ -151,7 +151,7 @@
   do								\
     {								\
       int _FP_FRAC_SRS_4_sticky;				\
-      _FP_FRAC_SRST_4 (X, _FP_FRAC_SRS_4_sticky, N, size);	\
+      _FP_FRAC_SRST_4 (X, _FP_FRAC_SRS_4_sticky, (N), (size));	\
       X##_f[0] |= _FP_FRAC_SRS_4_sticky;			\
     }								\
   while (0)
@@ -211,21 +211,21 @@
   do						\
     {						\
       if (X##_f[3])				\
-	__FP_CLZ (R, X##_f[3]);			\
+	__FP_CLZ ((R), X##_f[3]);		\
       else if (X##_f[2])			\
 	{					\
-	  __FP_CLZ (R, X##_f[2]);		\
-	  R += _FP_W_TYPE_SIZE;			\
+	  __FP_CLZ ((R), X##_f[2]);		\
+	  (R) += _FP_W_TYPE_SIZE;		\
 	}					\
       else if (X##_f[1])			\
 	{					\
-	  __FP_CLZ (R, X##_f[1]);		\
-	  R += _FP_W_TYPE_SIZE*2;		\
+	  __FP_CLZ ((R), X##_f[1]);		\
+	  (R) += _FP_W_TYPE_SIZE*2;		\
 	}					\
       else					\
 	{					\
-	  __FP_CLZ (R, X##_f[0]);		\
-	  R += _FP_W_TYPE_SIZE*3;		\
+	  __FP_CLZ ((R), X##_f[0]);		\
+	  (R) += _FP_W_TYPE_SIZE*3;		\
 	}					\
     }						\
   while (0)
@@ -425,13 +425,14 @@
     {									\
       _FP_FRAC_DECL_8 (_FP_MUL_MEAT_4_wide_z);				\
 									\
-      _FP_MUL_MEAT_DW_4_wide (wfracbits, _FP_MUL_MEAT_4_wide_z,		\
+      _FP_MUL_MEAT_DW_4_wide ((wfracbits), _FP_MUL_MEAT_4_wide_z,	\
 			      X, Y, doit);				\
 									\
       /* Normalize since we know where the msb of the multiplicands	\
 	 were (bit B), we know that the msb of the of the product is	\
 	 at either 2B or 2B-1.  */					\
-      _FP_FRAC_SRS_8 (_FP_MUL_MEAT_4_wide_z, wfracbits-1, 2*wfracbits);	\
+      _FP_FRAC_SRS_8 (_FP_MUL_MEAT_4_wide_z, (wfracbits)-1,		\
+		      2*(wfracbits));					\
       __FP_FRAC_SET_4 (R, _FP_FRAC_WORD_8 (_FP_MUL_MEAT_4_wide_z, 3),	\
 		       _FP_FRAC_WORD_8 (_FP_MUL_MEAT_4_wide_z, 2),	\
 		       _FP_FRAC_WORD_8 (_FP_MUL_MEAT_4_wide_z, 1),	\
@@ -451,12 +452,13 @@
     {									\
       _FP_FRAC_DECL_8 (_FP_MUL_MEAT_4_gmp_z);				\
 									\
-      _FP_MUL_MEAT_DW_4_gmp (wfracbits, _FP_MUL_MEAT_4_gmp_z, X, Y);	\
+      _FP_MUL_MEAT_DW_4_gmp ((wfracbits), _FP_MUL_MEAT_4_gmp_z, X, Y);	\
 									\
       /* Normalize since we know where the msb of the multiplicands	\
 	 were (bit B), we know that the msb of the of the product is	\
 	 at either 2B or 2B-1.  */					\
-      _FP_FRAC_SRS_8 (_FP_MUL_MEAT_4_gmp_z, wfracbits-1, 2*wfracbits);	\
+      _FP_FRAC_SRS_8 (_FP_MUL_MEAT_4_gmp_z, (wfracbits)-1,		\
+		      2*(wfracbits));					\
       __FP_FRAC_SET_4 (R, _FP_FRAC_WORD_8 (_FP_MUL_MEAT_4_gmp_z, 3),	\
 		       _FP_FRAC_WORD_8 (_FP_MUL_MEAT_4_gmp_z, 2),	\
 		       _FP_FRAC_WORD_8 (_FP_MUL_MEAT_4_gmp_z, 1),	\
@@ -570,37 +572,37 @@
     {									\
       while (q)								\
 	{								\
-	  T##_f[3] = S##_f[3] + q;					\
+	  T##_f[3] = S##_f[3] + (q);					\
 	  if (T##_f[3] <= X##_f[3])					\
 	    {								\
-	      S##_f[3] = T##_f[3] + q;					\
+	      S##_f[3] = T##_f[3] + (q);				\
 	      X##_f[3] -= T##_f[3];					\
-	      R##_f[3] += q;						\
+	      R##_f[3] += (q);						\
 	    }								\
 	  _FP_FRAC_SLL_4 (X, 1);					\
-	  q >>= 1;							\
+	  (q) >>= 1;							\
 	}								\
-      q = (_FP_W_TYPE) 1 << (_FP_W_TYPE_SIZE - 1);			\
+      (q) = (_FP_W_TYPE) 1 << (_FP_W_TYPE_SIZE - 1);			\
       while (q)								\
 	{								\
-	  T##_f[2] = S##_f[2] + q;					\
+	  T##_f[2] = S##_f[2] + (q);					\
 	  T##_f[3] = S##_f[3];						\
 	  if (T##_f[3] < X##_f[3]					\
 	      || (T##_f[3] == X##_f[3] && T##_f[2] <= X##_f[2]))	\
 	    {								\
-	      S##_f[2] = T##_f[2] + q;					\
+	      S##_f[2] = T##_f[2] + (q);				\
 	      S##_f[3] += (T##_f[2] > S##_f[2]);			\
 	      __FP_FRAC_DEC_2 (X##_f[3], X##_f[2],			\
 			       T##_f[3], T##_f[2]);			\
-	      R##_f[2] += q;						\
+	      R##_f[2] += (q);						\
 	    }								\
 	  _FP_FRAC_SLL_4 (X, 1);					\
-	  q >>= 1;							\
+	  (q) >>= 1;							\
 	}								\
-      q = (_FP_W_TYPE) 1 << (_FP_W_TYPE_SIZE - 1);			\
+      (q) = (_FP_W_TYPE) 1 << (_FP_W_TYPE_SIZE - 1);			\
       while (q)								\
 	{								\
-	  T##_f[1] = S##_f[1] + q;					\
+	  T##_f[1] = S##_f[1] + (q);					\
 	  T##_f[2] = S##_f[2];						\
 	  T##_f[3] = S##_f[3];						\
 	  if (T##_f[3] < X##_f[3]					\
@@ -609,34 +611,34 @@
 		      || (T##_f[2] == X##_f[2]				\
 			  && T##_f[1] <= X##_f[1]))))			\
 	    {								\
-	      S##_f[1] = T##_f[1] + q;					\
+	      S##_f[1] = T##_f[1] + (q);				\
 	      S##_f[2] += (T##_f[1] > S##_f[1]);			\
 	      S##_f[3] += (T##_f[2] > S##_f[2]);			\
 	      __FP_FRAC_DEC_3 (X##_f[3], X##_f[2], X##_f[1],		\
 			       T##_f[3], T##_f[2], T##_f[1]);		\
-	      R##_f[1] += q;						\
+	      R##_f[1] += (q);						\
 	    }								\
 	  _FP_FRAC_SLL_4 (X, 1);					\
-	  q >>= 1;							\
+	  (q) >>= 1;							\
 	}								\
-      q = (_FP_W_TYPE) 1 << (_FP_W_TYPE_SIZE - 1);			\
-      while (q != _FP_WORK_ROUND)					\
+      (q) = (_FP_W_TYPE) 1 << (_FP_W_TYPE_SIZE - 1);			\
+      while ((q) != _FP_WORK_ROUND)					\
 	{								\
-	  T##_f[0] = S##_f[0] + q;					\
+	  T##_f[0] = S##_f[0] + (q);					\
 	  T##_f[1] = S##_f[1];						\
 	  T##_f[2] = S##_f[2];						\
 	  T##_f[3] = S##_f[3];						\
 	  if (_FP_FRAC_GE_4 (X, T))					\
 	    {								\
-	      S##_f[0] = T##_f[0] + q;					\
+	      S##_f[0] = T##_f[0] + (q);				\
 	      S##_f[1] += (T##_f[0] > S##_f[0]);			\
 	      S##_f[2] += (T##_f[1] > S##_f[1]);			\
 	      S##_f[3] += (T##_f[2] > S##_f[2]);			\
 	      _FP_FRAC_DEC_4 (X, T);					\
-	      R##_f[0] += q;						\
+	      R##_f[0] += (q);						\
 	    }								\
 	  _FP_FRAC_SLL_4 (X, 1);					\
-	  q >>= 1;							\
+	  (q) >>= 1;							\
 	}								\
       if (!_FP_FRAC_ZEROP_4 (X))					\
 	{								\
@@ -797,25 +799,33 @@
 #define _FP_FRAC_ASSEMBLE_4(r, X, rsize)				\
   do									\
     {									\
-      if (rsize <= _FP_W_TYPE_SIZE)					\
-	r = X##_f[0];							\
-      else if (rsize <= 2*_FP_W_TYPE_SIZE)				\
+      if ((rsize) <= _FP_W_TYPE_SIZE)					\
+	(r) = X##_f[0];							\
+	else if ((rsize) <= 2*_FP_W_TYPE_SIZE)				\
 	{								\
-	  r = X##_f[1];							\
-	  r = (rsize <= _FP_W_TYPE_SIZE ? 0 : r << _FP_W_TYPE_SIZE);	\
-	  r += X##_f[0];						\
+	  (r) = X##_f[1];						\
+	  (r) = ((rsize) <= _FP_W_TYPE_SIZE				\
+		 ? 0							\
+		 : (r) << _FP_W_TYPE_SIZE);				\
+	  (r) += X##_f[0];						\
 	}								\
       else								\
 	{								\
 	  /* I'm feeling lazy so we deal with int == 3words		\
 	     (implausible) and int == 4words as a single case.  */	\
-	  r = X##_f[3];							\
-	  r = (rsize <= _FP_W_TYPE_SIZE ? 0 : r << _FP_W_TYPE_SIZE);	\
-	  r += X##_f[2];						\
-	  r = (rsize <= _FP_W_TYPE_SIZE ? 0 : r << _FP_W_TYPE_SIZE);	\
-	  r += X##_f[1];						\
-	  r = (rsize <= _FP_W_TYPE_SIZE ? 0 : r << _FP_W_TYPE_SIZE);	\
-	  r += X##_f[0];						\
+	  (r) = X##_f[3];						\
+	  (r) = ((rsize) <= _FP_W_TYPE_SIZE				\
+		 ? 0							\
+		 : (r) << _FP_W_TYPE_SIZE);				\
+	  (r) += X##_f[2];						\
+	  (r) = ((rsize) <= _FP_W_TYPE_SIZE				\
+		 ? 0							\
+		 : (r) << _FP_W_TYPE_SIZE);				\
+	  (r) += X##_f[1];						\
+	  (r) = ((rsize) <= _FP_W_TYPE_SIZE				\
+		 ? 0							\
+		 : (r) << _FP_W_TYPE_SIZE);				\
+	  (r) += X##_f[0];						\
 	}								\
     }									\
   while (0)
@@ -824,14 +834,20 @@
 /* Move an integer of size rsize into X's fractional part. We rely on
    the _f[] array consisting of words of size _FP_W_TYPE_SIZE to avoid
    having to mask the values we store into it.  */
-#define _FP_FRAC_DISASSEMBLE_4(X, r, rsize)				\
-  do									\
-    {									\
-      X##_f[0] = r;							\
-      X##_f[1] = (rsize <= _FP_W_TYPE_SIZE ? 0 : r >> _FP_W_TYPE_SIZE);	\
-      X##_f[2] = (rsize <= 2*_FP_W_TYPE_SIZE ? 0 : r >> 2*_FP_W_TYPE_SIZE); \
-      X##_f[3] = (rsize <= 3*_FP_W_TYPE_SIZE ? 0 : r >> 3*_FP_W_TYPE_SIZE); \
-    }									\
+#define _FP_FRAC_DISASSEMBLE_4(X, r, rsize)	\
+  do						\
+    {						\
+      X##_f[0] = (r);				\
+      X##_f[1] = ((rsize) <= _FP_W_TYPE_SIZE	\
+		  ? 0				\
+		  : (r) >> _FP_W_TYPE_SIZE);	\
+      X##_f[2] = ((rsize) <= 2*_FP_W_TYPE_SIZE	\
+		  ? 0				\
+		  : (r) >> 2*_FP_W_TYPE_SIZE);	\
+      X##_f[3] = ((rsize) <= 3*_FP_W_TYPE_SIZE	\
+		  ? 0				\
+		  : (r) >> 3*_FP_W_TYPE_SIZE);	\
+    }						\
   while (0)
 
 #define _FP_FRAC_COPY_4_1(D, S)			\

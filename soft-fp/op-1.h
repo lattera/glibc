@@ -50,8 +50,8 @@
 #define _FP_FRAC_SRL_1(X, N)	(X##_f >>= N)
 
 /* Right shift with sticky-lsb.  */
-#define _FP_FRAC_SRST_1(X, S, N, sz)	__FP_FRAC_SRST_1 (X##_f, S, N, sz)
-#define _FP_FRAC_SRS_1(X, N, sz)	__FP_FRAC_SRS_1 (X##_f, N, sz)
+#define _FP_FRAC_SRST_1(X, S, N, sz)	__FP_FRAC_SRST_1 (X##_f, S, (N), (sz))
+#define _FP_FRAC_SRS_1(X, N, sz)	__FP_FRAC_SRS_1 (X##_f, (N), (sz))
 
 #define __FP_FRAC_SRST_1(X, S, N, sz)			\
   do							\
@@ -71,7 +71,7 @@
 #define _FP_FRAC_ADD_1(R, X, Y)	(R##_f = X##_f + Y##_f)
 #define _FP_FRAC_SUB_1(R, X, Y)	(R##_f = X##_f - Y##_f)
 #define _FP_FRAC_DEC_1(X, Y)	(X##_f -= Y##_f)
-#define _FP_FRAC_CLZ_1(z, X)	__FP_CLZ (z, X##_f)
+#define _FP_FRAC_CLZ_1(z, X)	__FP_CLZ ((z), X##_f)
 
 /* Predicates.  */
 #define _FP_FRAC_NEGP_1(X)	((_FP_WS_TYPE) X##_f < 0)
@@ -157,11 +157,11 @@
 #define _FP_MUL_MEAT_1_imm(wfracbits, R, X, Y)				\
   do									\
     {									\
-      _FP_MUL_MEAT_DW_1_imm (wfracbits, R, X, Y);			\
+      _FP_MUL_MEAT_DW_1_imm ((wfracbits), R, X, Y);			\
       /* Normalize since we know where the msb of the multiplicands	\
 	 were (bit B), we know that the msb of the of the product is	\
 	 at either 2B or 2B-1.  */					\
-      _FP_FRAC_SRS_1 (R, wfracbits-1, 2*wfracbits);			\
+      _FP_FRAC_SRS_1 (R, (wfracbits)-1, 2*(wfracbits));			\
     }									\
   while (0)
 
@@ -178,12 +178,13 @@
   do									\
     {									\
       _FP_FRAC_DECL_2 (_FP_MUL_MEAT_1_wide_Z);				\
-      _FP_MUL_MEAT_DW_1_wide (wfracbits, _FP_MUL_MEAT_1_wide_Z,		\
+      _FP_MUL_MEAT_DW_1_wide ((wfracbits), _FP_MUL_MEAT_1_wide_Z,	\
 			      X, Y, doit);				\
       /* Normalize since we know where the msb of the multiplicands	\
 	 were (bit B), we know that the msb of the of the product is	\
 	 at either 2B or 2B-1.  */					\
-      _FP_FRAC_SRS_2 (_FP_MUL_MEAT_1_wide_Z, wfracbits-1, 2*wfracbits);	\
+      _FP_FRAC_SRS_2 (_FP_MUL_MEAT_1_wide_Z, (wfracbits)-1,		\
+		      2*(wfracbits));					\
       R##_f = _FP_MUL_MEAT_1_wide_Z_f0;					\
     }									\
   while (0)
@@ -225,17 +226,18 @@
     }									\
   while (0)
 
-#define _FP_MUL_MEAT_1_hard(wfracbits, R, X, Y)				\
-  do									\
-    {									\
-      _FP_FRAC_DECL_2 (_FP_MUL_MEAT_1_hard_z);				\
-      _FP_MUL_MEAT_DW_1_hard (wfracbits, _FP_MUL_MEAT_1_hard_z, X, Y);	\
-									\
-      /* Normalize.  */							\
-      _FP_FRAC_SRS_2 (_FP_MUL_MEAT_1_hard_z,				\
-		      wfracbits - 1, 2*wfracbits);			\
-      R##_f = _FP_MUL_MEAT_1_hard_z_f0;					\
-    }									\
+#define _FP_MUL_MEAT_1_hard(wfracbits, R, X, Y)			\
+  do								\
+    {								\
+      _FP_FRAC_DECL_2 (_FP_MUL_MEAT_1_hard_z);			\
+      _FP_MUL_MEAT_DW_1_hard ((wfracbits),			\
+			      _FP_MUL_MEAT_1_hard_z, X, Y);	\
+								\
+      /* Normalize.  */						\
+      _FP_FRAC_SRS_2 (_FP_MUL_MEAT_1_hard_z,			\
+		      (wfracbits) - 1, 2*(wfracbits));		\
+      R##_f = _FP_MUL_MEAT_1_hard_z_f0;				\
+    }								\
   while (0)
 
 
@@ -329,17 +331,17 @@
 #define _FP_SQRT_MEAT_1(R, S, T, X, q)		\
   do						\
     {						\
-      while (q != _FP_WORK_ROUND)		\
+      while ((q) != _FP_WORK_ROUND)		\
 	{					\
-	  T##_f = S##_f + q;			\
+	  T##_f = S##_f + (q);			\
 	  if (T##_f <= X##_f)			\
 	    {					\
-	      S##_f = T##_f + q;		\
+	      S##_f = T##_f + (q);		\
 	      X##_f -= T##_f;			\
-	      R##_f += q;			\
+	      R##_f += (q);			\
 	    }					\
 	  _FP_FRAC_SLL_1 (X, 1);		\
-	  q >>= 1;				\
+	  (q) >>= 1;				\
 	}					\
       if (X##_f)				\
 	{					\
@@ -353,8 +355,8 @@
 /* Assembly/disassembly for converting to/from integral types.
    No shifting or overflow handled here.  */
 
-#define _FP_FRAC_ASSEMBLE_1(r, X, rsize)	(r = X##_f)
-#define _FP_FRAC_DISASSEMBLE_1(X, r, rsize)	(X##_f = r)
+#define _FP_FRAC_ASSEMBLE_1(r, X, rsize)	((r) = X##_f)
+#define _FP_FRAC_DISASSEMBLE_1(X, r, rsize)	(X##_f = (r))
 
 
 /* Convert FP values between word sizes.  */

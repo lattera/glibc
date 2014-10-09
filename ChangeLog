@@ -1,5 +1,159 @@
 2014-10-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* soft-fp/double.h [_FP_W_TYPE_SIZE < 64] (FP_UNPACK_RAW_D): Use
+	parentheses around macro arguments.
+	[_FP_W_TYPE_SIZE < 64] (FP_UNPACK_RAW_DP): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_PACK_RAW_D): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_PACK_RAW_DP): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_UNPACK_D): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_UNPACK_DP): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_UNPACK_SEMIRAW_D): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_UNPACK_SEMIRAW_DP): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_PACK_D): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_PACK_DP): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_PACK_SEMIRAW_D): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_PACK_SEMIRAW_DP): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (_FP_SQRT_MEAT_D): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_CMP_D): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_CMP_EQ_D): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_CMP_UNORD_D): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_TO_INT_D): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_FROM_INT_D): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_UNPACK_RAW_D): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_UNPACK_RAW_DP): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_PACK_RAW_D): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_PACK_RAW_DP): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_UNPACK_D): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_UNPACK_DP): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_UNPACK_SEMIRAW_D): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_UNPACK_SEMIRAW_DP): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_PACK_D): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_PACK_DP): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_PACK_SEMIRAW_D): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_PACK_SEMIRAW_DP): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (_FP_SQRT_MEAT_D): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_CMP_D): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_CMP_EQ_D): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_CMP_UNORD_D): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_TO_INT_D): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_FROM_INT_D): Likewise.
+	* soft-fp/extended.h [_FP_W_TYPE_SIZE < 64] (FP_UNPACK_E):
+	Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_UNPACK_EP): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_UNPACK_SEMIRAW_E): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_UNPACK_SEMIRAW_EP): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_PACK_E): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_PACK_EP): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_PACK_SEMIRAW_E): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_PACK_SEMIRAW_EP): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (_FP_SQRT_MEAT_E): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_CMP_E): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_CMP_EQ_E): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_CMP_UNORD_E): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_TO_INT_E): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_FROM_INT_E): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_UNPACK_E): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_UNPACK_EP): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_UNPACK_SEMIRAW_E): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_UNPACK_SEMIRAW_EP): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_PACK_E): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_PACK_EP): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_PACK_SEMIRAW_E): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_PACK_SEMIRAW_EP): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (_FP_SQRT_MEAT_E): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_CMP_E): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_CMP_EQ_E): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_CMP_UNORD_E): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_TO_INT_E): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_FROM_INT_E): Likewise.
+	* soft-fp/op-1.h (_FP_FRAC_SRST_1): Likewise.
+	(_FP_FRAC_SRS_1): Likewise.
+	(_FP_FRAC_CLZ_1): Likewise.
+	(_FP_MUL_MEAT_1_imm): Likewise.
+	(_FP_MUL_MEAT_1_wide): Likewise.
+	(_FP_MUL_MEAT_1_hard): Likewise.
+	(_FP_SQRT_MEAT_1): Likewise.
+	(_FP_FRAC_ASSEMBLE_1): Likewise.
+	(_FP_FRAC_DISASSEMBLE_1): Likewise.
+	* soft-fp/op-2.h (_FP_FRAC_CLZ_2): Likewise.
+	(__FP_CLZ_2): Likewise.
+	(_FP_MUL_MEAT_2_wide): Likewise.
+	(_FP_MUL_MEAT_2_wide_3mul): Likewise.
+	(_FP_MUL_MEAT_2_gmp): Likewise.
+	(_FP_MUL_MEAT_2_120_240_double): Likewise.
+	(_FP_SQRT_MEAT_2): Likewise.
+	(_FP_FRAC_ASSEMBLE_2): Likewise.
+	(_FP_FRAC_DISASSEMBLE_2): Likewise.
+	* soft-fp/op-4.h (_FP_FRAC_SRS_4): Likewise.
+	(_FP_FRAC_CLZ_4): Likewise.
+	(_FP_MUL_MEAT_4_wide): Likewise.
+	(_FP_MUL_MEAT_4_gmp): Likewise.
+	(_FP_SQRT_MEAT_4): Likewise.
+	(_FP_FRAC_ASSEMBLE_4): Likewise.
+	(_FP_FRAC_DISASSEMBLE_4): Likewise.
+	* soft-fp/op-common.h (_FP_CMP): Likewise.
+	(_FP_CMP_EQ): Likewise.
+	(_FP_CMP_UNORD): Likewise.
+	(_FP_TO_INT): Likewise.
+	(_FP_FROM_INT): Likewise.
+	[!__FP_CLZ] (__FP_CLZ): Likewise.
+	(_FP_DIV_HELP_imm): Likewise.
+	* soft-fp/quad.h [_FP_W_TYPE_SIZE < 64] (FP_UNPACK_RAW_Q):
+	Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_UNPACK_RAW_QP): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_PACK_RAW_Q): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_PACK_RAW_QP): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_UNPACK_Q): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_UNPACK_QP): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_UNPACK_SEMIRAW_Q): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_UNPACK_SEMIRAW_QP): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_PACK_Q): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_PACK_QP): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_PACK_SEMIRAW_Q): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_PACK_SEMIRAW_QP): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (_FP_SQRT_MEAT_Q): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_CMP_Q): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_CMP_EQ_Q): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_CMP_UNORD_Q): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_TO_INT_Q): Likewise.
+	[_FP_W_TYPE_SIZE < 64] (FP_FROM_INT_Q): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_UNPACK_RAW_Q): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_UNPACK_RAW_QP): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_PACK_RAW_Q): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_PACK_RAW_QP): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_UNPACK_Q): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_UNPACK_QP): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_UNPACK_SEMIRAW_Q): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_UNPACK_SEMIRAW_QP): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_PACK_Q): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_PACK_QP): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_PACK_SEMIRAW_Q): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_PACK_SEMIRAW_QP): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (_FP_SQRT_MEAT_Q): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_CMP_Q): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_CMP_EQ_Q): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_CMP_UNORD_Q): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_TO_INT_Q): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_FROM_INT_Q): Likewise.
+	* soft-fp/single.h (FP_UNPACK_RAW_S): Likewise.
+	(FP_UNPACK_RAW_SP): Likewise.
+	(FP_PACK_RAW_S): Likewise.
+	(FP_PACK_RAW_SP): Likewise.
+	(FP_UNPACK_S): Likewise.
+	(FP_UNPACK_SP): Likewise.
+	(FP_UNPACK_SEMIRAW_S): Likewise.
+	(FP_UNPACK_SEMIRAW_SP): Likewise.
+	(FP_PACK_S): Likewise.
+	(FP_PACK_SP): Likewise.
+	(FP_PACK_SEMIRAW_S): Likewise.
+	(FP_PACK_SEMIRAW_SP): Likewise.
+	(_FP_SQRT_MEAT_S): Likewise.
+	(FP_CMP_S): Likewise.
+	(FP_CMP_EQ_S): Likewise.
+	(FP_CMP_UNORD_S): Likewise.
+	(FP_TO_INT_S): Likewise.
+	(FP_FROM_INT_S): Likewise.
+
 	* soft-fp/op-common.h (_FP_TO_INT): Handle rsigned == 2.
 
 	* soft-fp/soft-fp.h (FP_EX_INVALID_SNAN): New macro.

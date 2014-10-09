@@ -1259,8 +1259,8 @@
       if ((X##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (X))	\
 	  || (Y##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (Y)))	\
 	{								\
-	  ret = un;							\
-	  _FP_CMP_CHECK_NAN (fs, wc, X, Y, ex);				\
+	  (ret) = (un);							\
+	  _FP_CMP_CHECK_NAN (fs, wc, X, Y, (ex));			\
 	}								\
       else								\
 	{								\
@@ -1276,23 +1276,23 @@
 	    = (!Y##_e && _FP_FRAC_ZEROP_##wc (Y)) ? 1 : 0;		\
 									\
 	  if (_FP_CMP_is_zero_x && _FP_CMP_is_zero_y)			\
-	    ret = 0;							\
+	    (ret) = 0;							\
 	  else if (_FP_CMP_is_zero_x)					\
-	    ret = Y##_s ? 1 : -1;					\
+	    (ret) = Y##_s ? 1 : -1;					\
 	  else if (_FP_CMP_is_zero_y)					\
-	    ret = X##_s ? -1 : 1;					\
+	    (ret) = X##_s ? -1 : 1;					\
 	  else if (X##_s != Y##_s)					\
-	    ret = X##_s ? -1 : 1;					\
+	    (ret) = X##_s ? -1 : 1;					\
 	  else if (X##_e > Y##_e)					\
-	    ret = X##_s ? -1 : 1;					\
+	    (ret) = X##_s ? -1 : 1;					\
 	  else if (X##_e < Y##_e)					\
-	    ret = X##_s ? 1 : -1;					\
+	    (ret) = X##_s ? 1 : -1;					\
 	  else if (_FP_FRAC_GT_##wc (X, Y))				\
-	    ret = X##_s ? -1 : 1;					\
+	    (ret) = X##_s ? -1 : 1;					\
 	  else if (_FP_FRAC_GT_##wc (Y, X))				\
-	    ret = X##_s ? 1 : -1;					\
+	    (ret) = X##_s ? 1 : -1;					\
 	  else								\
-	    ret = 0;							\
+	    (ret) = 0;							\
 	}								\
     }									\
   while (0)
@@ -1307,17 +1307,18 @@
       if ((X##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (X))	\
 	  || (Y##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (Y)))	\
 	{								\
-	  ret = 1;							\
-	  _FP_CMP_CHECK_NAN (fs, wc, X, Y, ex);				\
+	  (ret) = 1;							\
+	  _FP_CMP_CHECK_NAN (fs, wc, X, Y, (ex));			\
 	}								\
       else								\
 	{								\
 	  _FP_CHECK_FLUSH_ZERO (fs, wc, X);				\
 	  _FP_CHECK_FLUSH_ZERO (fs, wc, Y);				\
 									\
-	  ret = !(X##_e == Y##_e					\
-		  && _FP_FRAC_EQ_##wc (X, Y)				\
-		  && (X##_s == Y##_s || (!X##_e && _FP_FRAC_ZEROP_##wc (X)))); \
+	  (ret) = !(X##_e == Y##_e					\
+		    && _FP_FRAC_EQ_##wc (X, Y)				\
+		    && (X##_s == Y##_s					\
+			|| (!X##_e && _FP_FRAC_ZEROP_##wc (X))));	\
 	}								\
     }									\
   while (0)
@@ -1327,10 +1328,10 @@
 #define _FP_CMP_UNORD(fs, wc, ret, X, Y, ex)				\
   do									\
     {									\
-      ret = ((X##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (X))	\
-	     || (Y##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (Y))); \
+      (ret) = ((X##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (X))	\
+	       || (Y##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (Y))); \
       if (ret)								\
-	_FP_CMP_CHECK_NAN (fs, wc, X, Y, ex);				\
+	_FP_CMP_CHECK_NAN (fs, wc, X, Y, (ex));				\
     }									\
   while (0)
 
@@ -1409,7 +1410,7 @@
     {									\
       if (X##_e < _FP_EXPBIAS_##fs)					\
 	{								\
-	  r = 0;							\
+	  (r) = 0;							\
 	  if (X##_e == 0)						\
 	    {								\
 	      if (!_FP_FRAC_ZEROP_##wc (X))				\
@@ -1422,15 +1423,15 @@
 	  else								\
 	    FP_SET_EXCEPTION (FP_EX_INEXACT);				\
 	}								\
-      else if (rsigned == 2						\
+      else if ((rsigned) == 2						\
 	       && (X##_e						\
 		   >= ((_FP_EXPMAX_##fs					\
-			< _FP_EXPBIAS_##fs + _FP_FRACBITS_##fs + rsize - 1) \
+			< _FP_EXPBIAS_##fs + _FP_FRACBITS_##fs + (rsize) - 1) \
 		       ? _FP_EXPMAX_##fs				\
-		       : _FP_EXPBIAS_##fs + _FP_FRACBITS_##fs + rsize - 1))) \
+		       : _FP_EXPBIAS_##fs + _FP_FRACBITS_##fs + (rsize) - 1))) \
 	{								\
 	  /* Overflow resulting in 0.  */				\
-	  r = 0;							\
+	  (r) = 0;							\
 	  FP_SET_EXCEPTION (FP_EX_INVALID				\
 			    | FP_EX_INVALID_CVI				\
 			    | ((FP_EX_INVALID_SNAN			\
@@ -1438,39 +1439,39 @@
 			       ? FP_EX_INVALID_SNAN			\
 			       : 0));					\
 	}								\
-      else if (rsigned != 2						\
-	       && (X##_e >= (_FP_EXPMAX_##fs < _FP_EXPBIAS_##fs + rsize	\
+      else if ((rsigned) != 2						\
+	       && (X##_e >= (_FP_EXPMAX_##fs < _FP_EXPBIAS_##fs + (rsize) \
 			     ? _FP_EXPMAX_##fs				\
-			     : (_FP_EXPBIAS_##fs + rsize		\
-				- (rsigned > 0 || X##_s)))		\
-		   || (!rsigned && X##_s)))				\
+			     : (_FP_EXPBIAS_##fs + (rsize)		\
+				- ((rsigned) > 0 || X##_s)))		\
+		   || (!(rsigned) && X##_s)))				\
 	{								\
 	  /* Overflow or converting to the most negative integer.  */	\
 	  if (rsigned)							\
 	    {								\
-	      r = 1;							\
-	      r <<= rsize - 1;						\
-	      r -= 1 - X##_s;						\
+	      (r) = 1;							\
+	      (r) <<= (rsize) - 1;					\
+	      (r) -= 1 - X##_s;						\
 	    }								\
 	  else								\
 	    {								\
-	      r = 0;							\
+	      (r) = 0;							\
 	      if (!X##_s)						\
-		r = ~r;							\
+		(r) = ~(r);						\
 	    }								\
 									\
-	  if (_FP_EXPBIAS_##fs + rsize - 1 < _FP_EXPMAX_##fs		\
-	      && rsigned						\
+	  if (_FP_EXPBIAS_##fs + (rsize) - 1 < _FP_EXPMAX_##fs		\
+	      && (rsigned)						\
 	      && X##_s							\
-	      && X##_e == _FP_EXPBIAS_##fs + rsize - 1)			\
+	      && X##_e == _FP_EXPBIAS_##fs + (rsize) - 1)		\
 	    {								\
 	      /* Possibly converting to most negative integer; check the \
 		 mantissa.  */						\
 	      int _FP_TO_INT_inexact = 0;				\
-	      (void) ((_FP_FRACBITS_##fs > rsize)			\
+	      (void) ((_FP_FRACBITS_##fs > (rsize))			\
 		      ? ({						\
 			  _FP_FRAC_SRST_##wc (X, _FP_TO_INT_inexact,	\
-					      _FP_FRACBITS_##fs - rsize, \
+					      _FP_FRACBITS_##fs - (rsize), \
 					      _FP_FRACBITS_##fs);	\
 			  0;						\
 			})						\
@@ -1494,8 +1495,8 @@
 	  _FP_FRAC_HIGH_RAW_##fs (X) |= _FP_IMPLBIT_##fs;		\
 	  if (X##_e >= _FP_EXPBIAS_##fs + _FP_FRACBITS_##fs - 1)	\
 	    {								\
-	      _FP_FRAC_ASSEMBLE_##wc (r, X, rsize);			\
-	      r <<= X##_e - _FP_EXPBIAS_##fs - _FP_FRACBITS_##fs + 1;	\
+	      _FP_FRAC_ASSEMBLE_##wc ((r), X, (rsize));			\
+	      (r) <<= X##_e - _FP_EXPBIAS_##fs - _FP_FRACBITS_##fs + 1; \
 	    }								\
 	  else								\
 	    {								\
@@ -1503,16 +1504,16 @@
 				  (_FP_FRACBITS_##fs + _FP_EXPBIAS_##fs - 1 \
 				   - X##_e),				\
 				  _FP_FRACBITS_##fs);			\
-	      _FP_FRAC_ASSEMBLE_##wc (r, X, rsize);			\
+	      _FP_FRAC_ASSEMBLE_##wc ((r), X, (rsize));			\
 	    }								\
-	  if (rsigned && X##_s)						\
-	    r = -r;							\
-	  if (rsigned == 2 && X##_e >= _FP_EXPBIAS_##fs + rsize - 1)	\
+	  if ((rsigned) && X##_s)					\
+	    (r) = -(r);							\
+	  if ((rsigned) == 2 && X##_e >= _FP_EXPBIAS_##fs + (rsize) - 1) \
 	    {								\
 	      /* Overflow or converting to the most negative integer.  */ \
-	      if (X##_e > _FP_EXPBIAS_##fs + rsize - 1			\
+	      if (X##_e > _FP_EXPBIAS_##fs + (rsize) - 1		\
 		  || !X##_s						\
-		  || r != (((typeof (r)) 1) << (rsize - 1)))		\
+		  || (r) != (((typeof (r)) 1) << ((rsize) - 1)))	\
 		{							\
 		  _FP_TO_INT_inexact = 0;				\
 		  FP_SET_EXCEPTION (FP_EX_INVALID | FP_EX_INVALID_CVI);	\
@@ -1533,11 +1534,11 @@
 	{								\
 	  rtype _FP_FROM_INT_ur;					\
 									\
-	  if ((X##_s = (r < 0)))					\
-	    r = -(rtype) r;						\
+	  if ((X##_s = ((r) < 0)))					\
+	    (r) = -(rtype) (r);						\
 									\
-	  _FP_FROM_INT_ur = (rtype) r;					\
-	  (void) ((rsize <= _FP_W_TYPE_SIZE)				\
+	  _FP_FROM_INT_ur = (rtype) (r);				\
+	  (void) (((rsize) <= _FP_W_TYPE_SIZE)				\
 		  ? ({							\
 		      int _FP_FROM_INT_lz;				\
 		      __FP_CLZ (_FP_FROM_INT_lz,			\
@@ -1545,7 +1546,7 @@
 		      X##_e = (_FP_EXPBIAS_##fs + _FP_W_TYPE_SIZE - 1	\
 			       - _FP_FROM_INT_lz);			\
 		    })							\
-		  : ((rsize <= 2 * _FP_W_TYPE_SIZE)			\
+		  : (((rsize) <= 2 * _FP_W_TYPE_SIZE)			\
 		     ? ({						\
 			 int _FP_FROM_INT_lz;				\
 			 __FP_CLZ_2 (_FP_FROM_INT_lz,			\
@@ -1557,7 +1558,7 @@
 		       })						\
 		     : (abort (), 0)));					\
 									\
-	  if (rsize - 1 + _FP_EXPBIAS_##fs >= _FP_EXPMAX_##fs		\
+	  if ((rsize) - 1 + _FP_EXPBIAS_##fs >= _FP_EXPMAX_##fs		\
 	      && X##_e >= _FP_EXPMAX_##fs)				\
 	    {								\
 	      /* Exponent too big; overflow to infinity.  (May also	\
@@ -1566,11 +1567,11 @@
 	      goto pack_semiraw;					\
 	    }								\
 									\
-	  if (rsize <= _FP_FRACBITS_##fs				\
+	  if ((rsize) <= _FP_FRACBITS_##fs				\
 	      || X##_e < _FP_EXPBIAS_##fs + _FP_FRACBITS_##fs)		\
 	    {								\
 	      /* Exactly representable; shift left.  */			\
-	      _FP_FRAC_DISASSEMBLE_##wc (X, _FP_FROM_INT_ur, rsize);	\
+	      _FP_FRAC_DISASSEMBLE_##wc (X, _FP_FROM_INT_ur, (rsize));	\
 	      if (_FP_EXPBIAS_##fs + _FP_FRACBITS_##fs - 1 - X##_e > 0)	\
 		_FP_FRAC_SLL_##wc (X, (_FP_EXPBIAS_##fs			\
 				       + _FP_FRACBITS_##fs - 1 - X##_e)); \
@@ -1584,10 +1585,10 @@
 		  = ((_FP_FROM_INT_ur >> (X##_e - _FP_EXPBIAS_##fs	\
 					  - _FP_WFRACBITS_##fs + 1))	\
 		     | ((_FP_FROM_INT_ur				\
-			 << (rsize - (X##_e - _FP_EXPBIAS_##fs		\
-				      - _FP_WFRACBITS_##fs + 1)))	\
+			 << ((rsize) - (X##_e - _FP_EXPBIAS_##fs	\
+					- _FP_WFRACBITS_##fs + 1)))	\
 			!= 0));						\
-	      _FP_FRAC_DISASSEMBLE_##wc (X, _FP_FROM_INT_ur, rsize);	\
+	      _FP_FRAC_DISASSEMBLE_##wc (X, _FP_FROM_INT_ur, (rsize));	\
 	      if ((_FP_EXPBIAS_##fs + _FP_WFRACBITS_##fs - 1 - X##_e) > 0) \
 		_FP_FRAC_SLL_##wc (X, (_FP_EXPBIAS_##fs			\
 				       + _FP_WFRACBITS_##fs - 1 - X##_e)); \
@@ -1768,11 +1769,11 @@
   do									\
     {									\
       if (sizeof (_FP_W_TYPE) == sizeof (unsigned int))			\
-	r = __builtin_clz (x);						\
+	(r) = __builtin_clz (x);					\
       else if (sizeof (_FP_W_TYPE) == sizeof (unsigned long))		\
-	r = __builtin_clzl (x);						\
+	(r) = __builtin_clzl (x);					\
       else if (sizeof (_FP_W_TYPE) == sizeof (unsigned long long))	\
-	r = __builtin_clzll (x);					\
+	(r) = __builtin_clzll (x);					\
       else								\
 	abort ();							\
     }									\
@@ -1782,7 +1783,7 @@
 #define _FP_DIV_HELP_imm(q, r, n, d)		\
   do						\
     {						\
-      q = n / d, r = n % d;			\
+      (q) = (n) / (d), (r) = (n) % (d);		\
     }						\
   while (0)
 
