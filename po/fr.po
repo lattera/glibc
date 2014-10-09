@@ -6673,11 +6673,11 @@ msgstr "Erreur d'entrée/sortie sur l'hôte cible"
 
 #: sysdeps/gnu/errlist.c:1399
 msgid "No medium found"
-msgstr "Aucun medium trouvé"
+msgstr "Aucun médium trouvé"
 
 #: sysdeps/gnu/errlist.c:1407
 msgid "Wrong medium type"
-msgstr "Mauvais type de medium"
+msgstr "Mauvais type de médium"
 
 #: sysdeps/gnu/errlist.c:1415
 msgid "Required key not available"
