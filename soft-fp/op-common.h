@@ -1399,6 +1399,8 @@
    1:  the number is required to be -(2^(rsize-1))..(2^(rsize-1))-1, if not,
        NV is set plus the result is either -(2^(rsize-1)) or (2^(rsize-1))-1
        depending on the sign in such case.
+   2:  the number is required to be -(2^(rsize-1))..(2^(rsize-1))-1, if not,
+       NV is set plus the result is reduced modulo 2^rsize.
    -1: the number is required to be -(2^(rsize-1))..(2^rsize)-1, if not, NV is
        set plus the result is either -(2^(rsize-1)) or (2^(rsize-1))-1
        depending on the sign in such case.  */
@@ -1420,10 +1422,28 @@
 	  else								\
 	    FP_SET_EXCEPTION (FP_EX_INEXACT);				\
 	}								\
-      else if (X##_e >= (_FP_EXPMAX_##fs < _FP_EXPBIAS_##fs + rsize	\
-			 ? _FP_EXPMAX_##fs				\
-			 : _FP_EXPBIAS_##fs + rsize - (rsigned > 0 || X##_s)) \
-	       || (!rsigned && X##_s))					\
+      else if (rsigned == 2						\
+	       && (X##_e						\
+		   >= ((_FP_EXPMAX_##fs					\
+			< _FP_EXPBIAS_##fs + _FP_FRACBITS_##fs + rsize - 1) \
+		       ? _FP_EXPMAX_##fs				\
+		       : _FP_EXPBIAS_##fs + _FP_FRACBITS_##fs + rsize - 1))) \
+	{								\
+	  /* Overflow resulting in 0.  */				\
+	  r = 0;							\
+	  FP_SET_EXCEPTION (FP_EX_INVALID				\
+			    | FP_EX_INVALID_CVI				\
+			    | ((FP_EX_INVALID_SNAN			\
+				&& _FP_ISSIGNAN (fs, wc, X))		\
+			       ? FP_EX_INVALID_SNAN			\
+			       : 0));					\
+	}								\
+      else if (rsigned != 2						\
+	       && (X##_e >= (_FP_EXPMAX_##fs < _FP_EXPBIAS_##fs + rsize	\
+			     ? _FP_EXPMAX_##fs				\
+			     : (_FP_EXPBIAS_##fs + rsize		\
+				- (rsigned > 0 || X##_s)))		\
+		   || (!rsigned && X##_s)))				\
 	{								\
 	  /* Overflow or converting to the most negative integer.  */	\
 	  if (rsigned)							\
@@ -1470,6 +1490,7 @@
 	}								\
       else								\
 	{								\
+	  int _FP_TO_INT_inexact = 0;					\
 	  _FP_FRAC_HIGH_RAW_##fs (X) |= _FP_IMPLBIT_##fs;		\
 	  if (X##_e >= _FP_EXPBIAS_##fs + _FP_FRACBITS_##fs - 1)	\
 	    {								\
@@ -1478,17 +1499,27 @@
 	    }								\
 	  else								\
 	    {								\
-	      int _FP_TO_INT_inexact;					\
 	      _FP_FRAC_SRST_##wc (X, _FP_TO_INT_inexact,		\
 				  (_FP_FRACBITS_##fs + _FP_EXPBIAS_##fs - 1 \
 				   - X##_e),				\
 				  _FP_FRACBITS_##fs);			\
-	      if (_FP_TO_INT_inexact)					\
-		FP_SET_EXCEPTION (FP_EX_INEXACT);			\
 	      _FP_FRAC_ASSEMBLE_##wc (r, X, rsize);			\
 	    }								\
 	  if (rsigned && X##_s)						\
 	    r = -r;							\
+	  if (rsigned == 2 && X##_e >= _FP_EXPBIAS_##fs + rsize - 1)	\
+	    {								\
+	      /* Overflow or converting to the most negative integer.  */ \
+	      if (X##_e > _FP_EXPBIAS_##fs + rsize - 1			\
+		  || !X##_s						\
+		  || r != (((typeof (r)) 1) << (rsize - 1)))		\
+		{							\
+		  _FP_TO_INT_inexact = 0;				\
+		  FP_SET_EXCEPTION (FP_EX_INVALID | FP_EX_INVALID_CVI);	\
+		}							\
+	    }								\
+	  if (_FP_TO_INT_inexact)					\
+	    FP_SET_EXCEPTION (FP_EX_INEXACT);				\
 	}								\
     }									\
   while (0)

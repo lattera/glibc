@@ -1,5 +1,7 @@
 2014-10-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* soft-fp/op-common.h (_FP_TO_INT): Handle rsigned == 2.
+
 	* soft-fp/soft-fp.h (FP_EX_INVALID_SNAN): New macro.
 	(FP_EX_INVALID_IMZ): Likewise.
 	(FP_EX_INVALID_IMZ_FMA): Likewise.
