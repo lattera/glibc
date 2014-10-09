@@ -1,5 +1,8 @@
 2014-10-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* soft-fp/op-common.h (_FP_TO_INT): Ensure maximum exponent is
+	treated as invalid conversion, not as normal exponent.
+
 	* soft-fp/op-common.h (_FP_CMP_CHECK_NAN): New macro.
 	(_FP_CMP): Add extra argument EX.  Call _FP_CMP_CHECK_NAN.
 	(_FP_CMP_EQ): Likewise.

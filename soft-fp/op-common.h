@@ -1368,7 +1368,9 @@
 	  else								\
 	    FP_SET_EXCEPTION (FP_EX_INEXACT);				\
 	}								\
-      else if (X##_e >= _FP_EXPBIAS_##fs + rsize - (rsigned > 0 || X##_s) \
+      else if (X##_e >= (_FP_EXPMAX_##fs < _FP_EXPBIAS_##fs + rsize	\
+			 ? _FP_EXPMAX_##fs				\
+			 : _FP_EXPBIAS_##fs + rsize - (rsigned > 0 || X##_s)) \
 	       || (!rsigned && X##_s))					\
 	{								\
 	  /* Overflow or converting to the most negative integer.  */	\
@@ -1385,7 +1387,10 @@
 		r = ~r;							\
 	    }								\
 									\
-	  if (rsigned && X##_s && X##_e == _FP_EXPBIAS_##fs + rsize - 1) \
+	  if (_FP_EXPBIAS_##fs + rsize - 1 < _FP_EXPMAX_##fs		\
+	      && rsigned						\
+	      && X##_s							\
+	      && X##_e == _FP_EXPBIAS_##fs + rsize - 1)			\
 	    {								\
 	      /* Possibly converting to most negative integer; check the \
 		 mantissa.  */						\
