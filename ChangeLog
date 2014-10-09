@@ -1,6 +1,13 @@
 2014-10-09  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14132]
+	* stdlib/cxa_atexit.c (__cxa_atexit): Use libc_hidden_def instead
+	of INTDEF.
+	* include/stdlib.h (__cxa_atexit_internal): Remove declaration.
+	(__cxa_atexit): Use libc_hidden_proto.
+	[!NOT_IN_libc] (__cxa_atexit): Remove macro definition.
+
+	[BZ #14132]
 	* include/wctype.h [!_ISOMAC] (__iswalpha_l_internal): Remove
 	declaration.
 	[!_ISOMAC] (__iswdigit_l_internal): Likewise.

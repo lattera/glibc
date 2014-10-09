@@ -57,7 +57,7 @@ __cxa_atexit (void (*func) (void *), void *arg, void *d)
 {
   return __internal_atexit (func, arg, d, &__exit_funcs);
 }
-INTDEF(__cxa_atexit)
+libc_hidden_def (__cxa_atexit)
 
 
 /* We change global data, so we need locking.  */
