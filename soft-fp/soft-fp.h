@@ -108,9 +108,15 @@
 #endif
 
 /* Initialize any machine-specific state used in
+   FP_TRAPPING_EXCEPTIONS or FP_HANDLE_EXCEPTIONS.  */
+#ifndef FP_INIT_TRAPPING_EXCEPTIONS
+# define FP_INIT_TRAPPING_EXCEPTIONS FP_INIT_ROUNDMODE
+#endif
+
+/* Initialize any machine-specific state used in
    FP_HANDLE_EXCEPTIONS.  */
 #ifndef FP_INIT_EXCEPTIONS
-# define FP_INIT_EXCEPTIONS FP_INIT_ROUNDMODE
+# define FP_INIT_EXCEPTIONS FP_INIT_TRAPPING_EXCEPTIONS
 #endif
 
 #ifndef FP_HANDLE_EXCEPTIONS
@@ -160,6 +166,16 @@
 # undef _FP_TININESS_AFTER_ROUNDING
 # define _FP_TININESS_AFTER_ROUNDING 0
 
+#endif
+
+/* A file using soft-fp may define FP_NO_EXACT_UNDERFLOW before
+   including soft-fp.h to indicate that, although a macro used there
+   could allow for the case of exact underflow requiring the underflow
+   exception to be raised if traps are enabled, for the particular
+   arguments used in that file no exact underflow can occur.  */
+#ifdef FP_NO_EXACT_UNDERFLOW
+# undef FP_TRAPPING_EXCEPTIONS
+# define FP_TRAPPING_EXCEPTIONS 0
 #endif
 
 #define _FP_ROUND_NEAREST(wc, X)				\

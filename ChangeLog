@@ -1,5 +1,18 @@
 2014-10-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* soft-fp/op-common.h (FP_EXTEND): When a subnormal input produces
+	a subnormal result, set the underflow exception if trapping on
+	underflow is enabled.
+	* soft-fp/soft-fp.h (FP_INIT_TRAPPING_EXCEPTIONS): New macro.
+	(FP_INIT_EXCEPTIONS): Default to FP_INIT_TRAPPING_EXCEPTIONS.
+	[FP_NO_EXACT_UNDERFLOW] (FP_TRAPPING_EXCEPTIONS): Undefine and
+	redefine to 0.
+	* soft-fp/extenddftf2.c (FP_NO_EXACT_UNDERFLOW): Define.
+	* soft-fp/extendsfdf2.c (FP_NO_EXACT_UNDERFLOW): Likewise.
+	* soft-fp/extendsftf2.c (FP_NO_EXACT_UNDERFLOW): Likewise.
+	* soft-fp/extendxftf2.c (__extendxftf2): Use
+	FP_INIT_TRAPPING_EXCEPTIONS instead of FP_INIT_ROUNDMODE.
+
 	* soft-fp/soft-fp.h (FP_CLEAR_EXCEPTIONS): Remove macro.
 	* sysdeps/sparc/sparc32/soft-fp/q_itoq.c: Define FP_NO_EXCEPTIONS.
 	(_Q_itoq): Do not use FP_DECL_EX, FP_CLEAR_EXCEPTIONS or

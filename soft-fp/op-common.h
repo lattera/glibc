@@ -1522,6 +1522,8 @@
 		  _FP_FRAC_SLL_##dwc (D, (_FP_FRACBITS_##dfs		\
 					  - _FP_FRACBITS_##sfs));	\
 		  D##_e = 0;						\
+		  if (FP_TRAPPING_EXCEPTIONS & FP_EX_UNDERFLOW)		\
+		    FP_SET_EXCEPTION (FP_EX_UNDERFLOW);			\
 		}							\
 	      else							\
 		{							\
