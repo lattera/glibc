@@ -108,7 +108,7 @@ struct list
 	char *__newp;							      \
 									      \
 	/* DST must not appear in SUID/SGID programs.  */		      \
-	if (INTUSE(__libc_enable_secure))				      \
+	if (__libc_enable_secure)					      \
 	  _dl_signal_error (0, __str, NULL, N_("\
 DST not allowed in SUID/SGID programs"));				      \
 									      \

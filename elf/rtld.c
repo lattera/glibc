@@ -1498,7 +1498,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
       /* Prevent optimizing strsep.  Speed is not important here.  */
       while ((p = (strsep) (&list, " :")) != NULL)
 	if (p[0] != '\0'
-	    && (__builtin_expect (! INTUSE(__libc_enable_secure), 1)
+	    && (__builtin_expect (! __libc_enable_secure, 1)
 		|| strchr (p, '/') == NULL))
 	  npreloads += do_preload (p, main_map, "LD_PRELOAD");
 
@@ -2318,7 +2318,7 @@ process_dl_audit (char *str)
 
   while ((p = (strsep) (&str, ":")) != NULL)
     if (p[0] != '\0'
-	&& (__builtin_expect (! INTUSE(__libc_enable_secure), 1)
+	&& (__builtin_expect (! __libc_enable_secure, 1)
 	    || strchr (p, '/') == NULL))
       {
 	/* This is using the local malloc, not the system malloc.  The
@@ -2352,7 +2352,7 @@ process_envvars (enum mode *modep)
 
   /* This is the default place for profiling data file.  */
   GLRO(dl_profile_output)
-    = &"/var/tmp\0/var/profile"[INTUSE(__libc_enable_secure) ? 9 : 0];
+    = &"/var/tmp\0/var/profile"[__libc_enable_secure ? 9 : 0];
 
   while ((envline = _dl_next_ld_env_entry (&runp)) != NULL)
     {
@@ -2420,7 +2420,7 @@ process_envvars (enum mode *modep)
 	case 9:
 	  /* Test whether we want to see the content of the auxiliary
 	     array passed up from the kernel.  */
-	  if (!INTUSE(__libc_enable_secure)
+	  if (!__libc_enable_secure
 	      && memcmp (envline, "SHOW_AUXV", 9) == 0)
 	    _dl_show_auxv ();
 	  break;
@@ -2434,7 +2434,7 @@ process_envvars (enum mode *modep)
 
 	case 11:
 	  /* Path where the binary is found.  */
-	  if (!INTUSE(__libc_enable_secure)
+	  if (!__libc_enable_secure
 	      && memcmp (envline, "ORIGIN_PATH", 11) == 0)
 	    GLRO(dl_origin_path) = &envline[12];
 	  break;
@@ -2454,7 +2454,7 @@ process_envvars (enum mode *modep)
 	      break;
 	    }
 
-	  if (!INTUSE(__libc_enable_secure)
+	  if (!__libc_enable_secure
 	      && memcmp (envline, "DYNAMIC_WEAK", 12) == 0)
 	    GLRO(dl_dynamic_weak) = 1;
 	  break;
@@ -2465,7 +2465,7 @@ process_envvars (enum mode *modep)
 #ifdef EXTRA_LD_ENVVARS_13
 	  EXTRA_LD_ENVVARS_13
 #endif
-	  if (!INTUSE(__libc_enable_secure)
+	  if (!__libc_enable_secure
 	      && memcmp (envline, "USE_LOAD_BIAS", 13) == 0)
 	    {
 	      GLRO(dl_use_load_bias) = envline[14] == '1' ? -1 : 0;
@@ -2478,7 +2478,7 @@ process_envvars (enum mode *modep)
 
 	case 14:
 	  /* Where to place the profiling data file.  */
-	  if (!INTUSE(__libc_enable_secure)
+	  if (!__libc_enable_secure
 	      && memcmp (envline, "PROFILE_OUTPUT", 14) == 0
 	      && envline[15] != '\0')
 	    GLRO(dl_profile_output) = &envline[15];
@@ -2516,7 +2516,7 @@ process_envvars (enum mode *modep)
 
   /* Extra security for SUID binaries.  Remove all dangerous environment
      variables.  */
-  if (__builtin_expect (INTUSE(__libc_enable_secure), 0))
+  if (__builtin_expect (__libc_enable_secure, 0))
     {
       static const char unsecure_envvars[] =
 #ifdef EXTRA_UNSECURE_ENVVARS

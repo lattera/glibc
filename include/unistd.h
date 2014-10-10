@@ -151,10 +151,7 @@ libc_hidden_proto (__sbrk)
    environment variables that normally affect them.  */
 extern int __libc_enable_secure attribute_relro;
 extern int __libc_enable_secure_decided;
-#ifdef IS_IN_rtld
-/* XXX The #ifdef should go.  */
-extern int __libc_enable_secure_internal attribute_relro attribute_hidden;
-#endif
+rtld_hidden_proto (__libc_enable_secure)
 
 
 /* Various internal function.  */

@@ -262,7 +262,7 @@ _dl_dst_count (const char *name, int is_path)
 	 is $ORIGIN alone) and it must always appear first in path.  */
       ++name;
       if ((len = is_dst (start, name, "ORIGIN", is_path,
-			 INTUSE(__libc_enable_secure))) != 0
+			 __libc_enable_secure)) != 0
 	  || (len = is_dst (start, name, "PLATFORM", is_path, 0)) != 0
 	  || (len = is_dst (start, name, "LIB", is_path, 0)) != 0)
 	++cnt;
@@ -298,10 +298,10 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 
 	  ++name;
 	  if ((len = is_dst (start, name, "ORIGIN", is_path,
-			     INTUSE(__libc_enable_secure))) != 0)
+			     __libc_enable_secure)) != 0)
 	    {
 	      repl = l->l_origin;
-	      check_for_trusted = (INTUSE(__libc_enable_secure)
+	      check_for_trusted = (__libc_enable_secure
 				   && l->l_type == lt_executable);
 	    }
 	  else if ((len = is_dst (start, name, "PLATFORM", is_path, 0)) != 0)
@@ -563,7 +563,7 @@ decompose_rpath (struct r_search_path_struct *sps,
   /* First see whether we must forget the RUNPATH and RPATH from this
      object.  */
   if (__glibc_unlikely (GLRO(dl_inhibit_rpath) != NULL)
-      && !INTUSE(__libc_enable_secure))
+      && !__libc_enable_secure)
     {
       const char *inhp = GLRO(dl_inhibit_rpath);
 
@@ -828,7 +828,7 @@ _dl_init_paths (const char *llp)
 	}
 
       (void) fillin_rpath (llp_tmp, env_path_list.dirs, ":;",
-			   INTUSE(__libc_enable_secure), "LD_LIBRARY_PATH",
+			   __libc_enable_secure, "LD_LIBRARY_PATH",
 			   NULL, l);
 
       if (env_path_list.dirs[0] == NULL)
@@ -1842,7 +1842,7 @@ open_path (const char *name, size_t namelen, int mode,
 	  here_any |= this_dir->status[cnt] != nonexisting;
 
 	  if (fd != -1 && __glibc_unlikely (mode & __RTLD_SECURE)
-	      && INTUSE(__libc_enable_secure))
+	      && __libc_enable_secure)
 	    {
 	      /* This is an extra security effort to make sure nobody can
 		 preload broken shared objects which are in the trusted
@@ -2054,7 +2054,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 #ifdef USE_LDCONFIG
       if (fd == -1
 	  && (__glibc_likely ((mode & __RTLD_SECURE) == 0)
-	      || ! INTUSE(__libc_enable_secure))
+	      || ! __libc_enable_secure)
 	  && __glibc_likely (GLRO(dl_inhibit_cache) == 0))
 	{
 	  /* Check the list of libraries in the file /etc/ld.so.cache,
