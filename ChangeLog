@@ -1,5 +1,8 @@
 2014-10-10  Joseph Myers  <joseph@codesourcery.com>
 
+	* CANCEL-FCT-WAIVE: Remove file.
+	* CANCEL-FILE-WAIVE: Likewise.
+
 	[BZ #14132]
 	* elf/dl-sysdep.c (__libc_enable_secure): Use rtld_hidden_data_def
 	instead of INTVARDEF.
