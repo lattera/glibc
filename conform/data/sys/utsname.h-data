@@ -8,4 +8,5 @@ element {struct utsname} char version []
 element {struct utsname} char machine []
 
 function int uname (struct utsname *)
+allow *_t
 #endif

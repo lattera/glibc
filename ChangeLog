@@ -1,3 +1,29 @@
+2014-10-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/sys/utsname.h-data (*_t): Allow.
+	* conform/data/sys/wait.h-data [POSIX] (uid_t): Do not define.
+	[POSIX] (WEXITED): Do not expect constant.
+	[POSIX] (WSTOPPED): Likewise.
+	[POSIX] (WNOHANG): Likewise.
+	[POSIX] (WNOWAIT): Likewise.
+	[POSIX] (siginfo_t): Do not expect type or elements.
+	[POSIX] (pid_t): Do not expect type.
+	[POSIX] (signal.h): Do not allow header.
+	[POSIX] (sys/resource.h): Likewise.
+	[POSIX] (si_*): Do not allow pattern.
+	[POSIX] (W*): Likewise.
+	[POSIX] (P_*): Likewise.
+	[POSIX] (BUS_*): Likewise.
+	[POSIX] (CLD_*): Likewise.
+	[POSIX] (FPE_*): Likewise.
+	[POSIX] (ILL_*): Likewise.
+	[POSIX] (POLL_*): Likewise.
+	[POSIX] (SEGV_*): Likewise.
+	[POSIX] (SI_*): Likewise.
+	[POSIX] (TRAP_*): Likewise.
+	* conform/Makefile (test-xfail-POSIX/sys/wait.h/conform): New
+	variable.
+
 2014-10-14  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #12926]

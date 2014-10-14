@@ -1,7 +1,6 @@
 #if !defined ISO && !defined ISO99 && !defined ISO11
 #ifdef  POSIX
 # define pid_t __pid_t
-# define uid_t __uid_t
 #endif
 
 constant WNOHANG
@@ -17,13 +16,15 @@ macro WIFSTOPPED
 macro WSTOPSIG
 macro WTERMSIG
 
+# ifndef POSIX
 constant WEXITED
 constant WSTOPPED
-# if !defined POSIX && !defined POSIX2008
+#  ifndef POSIX2008
 constant WCONTINUED
-# endif
+#  endif
 constant WNOHANG
 constant WNOWAIT
+# endif
 
 #if !defined POSIX
 type idtype_t
@@ -33,7 +34,6 @@ constant P_PID
 constant P_PGID
 
 type id_t
-#endif
 
 type siginfo_t
 
@@ -46,6 +46,7 @@ element siginfo_t {void*} si_addr
 element siginfo_t int si_status
 element siginfo_t long si_band
 element siginfo_t {union sigval} si_value
+#endif
 
 #if !defined POSIX && !defined XPG3 && !defined XOPEN2K8 && !defined POSIX2008
 type {struct rusage}
@@ -54,7 +55,9 @@ element {struct rusage} {struct timeval} ru_utime
 element {struct rusage} {struct timeval} ru_stime
 #endif
 
+#if !defined POSIX
 type pid_t
+#endif
 
 function pid_t wait (int*)
 #if !defined POSIX && !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
@@ -65,6 +68,7 @@ function int waitid (idtype_t, id_t, siginfo_t*, int)
 #endif
 function pid_t waitpid (pid_t, int*, int)
 
+#if !defined POSIX
 allow-header signal.h
 allow-header sys/resource.h
 
@@ -79,5 +83,6 @@ allow POLL_
 allow SEGV_
 allow SI_
 allow TRAP_
+#endif
 allow *_t
 #endif
