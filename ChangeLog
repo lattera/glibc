@@ -1,3 +1,9 @@
+2014-10-16  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/soft-fp/sfp-machine.h: Filed moved ...
+	* sysdeps/arm/sfp-machine.h: ... to here.
+	* sysdeps/arm/Implies: Remove arm/soft-fp.
+
 2014-10-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/data/sys/utsname.h-data (*_t): Allow.
