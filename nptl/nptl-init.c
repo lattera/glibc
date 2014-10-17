@@ -329,7 +329,8 @@ __pthread_initialize_minimal_internal (void)
 #endif
     set_robust_list_not_avail ();
 
-#ifndef __ASSUME_PRIVATE_FUTEX
+#ifdef __NR_futex
+# ifndef __ASSUME_PRIVATE_FUTEX
   /* Private futexes are always used (at least internally) so that
      doing the test once this early is beneficial.  */
   {
@@ -345,8 +346,8 @@ __pthread_initialize_minimal_internal (void)
      know the former are not supported.  This also means we know the
      kernel will return ENOSYS for unknown operations.  */
   if (THREAD_GETMEM (pd, header.private_futex) != 0)
-#endif
-#ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+# endif
+# ifndef __ASSUME_FUTEX_CLOCK_REALTIME
     {
       int word = 0;
       /* NB: the syscall actually takes six parameters.  The last is the
@@ -361,6 +362,7 @@ __pthread_initialize_minimal_internal (void)
       if (INTERNAL_SYSCALL_ERRNO (word, err) != ENOSYS)
 	__set_futex_clock_realtime ();
     }
+# endif
 #endif
 
   /* Set initial thread's stack block from 0 up to __libc_stack_end.

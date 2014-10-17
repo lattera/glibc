@@ -1,5 +1,17 @@
 2014-10-17  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/nptl-init.c (__pthread_initialize_minimal_internal):
+	Conditionalize FUTEX_PRIVATE_FLAG and FUTEX_CLOCK_REALTIME probes
+	on [__NR_futex].
+	* nptl/pthread_mutex_init.c (prio_inherit_missing): New function,
+	broken out of ...
+	(__pthread_mutex_init): ... here.  Call it.
+	* nptl/pthread_mutex_lock.c (__pthread_mutex_lock_full):
+	Conditionalize PI cases on [__NR_futex].
+	* nptl/pthread_mutex_timedlock.c (pthread_mutex_timedlock): Likewise.
+	* nptl/pthread_mutex_trylock.c (__pthread_mutex_trylock): Likewise.
+	* nptl/pthread_mutex_unlock.c (__pthread_mutex_unlock_full): Likewise.
+
 	* nptl/nptl-init.c (sighandler_setxid, __xidcmd): Make definitions
 	conditional on [SIGSETXID].
 	(sigcancel_handler): Make definition conditional on [SIGCANCEL].

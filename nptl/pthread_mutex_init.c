@@ -18,6 +18,7 @@
 
 #include <assert.h>
 #include <errno.h>
+#include <stdbool.h>
 #include <string.h>
 #include <kernel-features.h>
 #include "pthreadP.h"
@@ -31,10 +32,26 @@ static const struct pthread_mutexattr default_mutexattr =
   };
 
 
-#ifndef __ASSUME_FUTEX_LOCK_PI
-static int tpi_supported;
+static bool
+prio_inherit_missing (void)
+{
+#ifdef __NR_futex
+# ifndef __ASSUME_FUTEX_LOCK_PI
+  static int tpi_supported;
+  if (__glibc_unlikely (tpi_supported == 0))
+    {
+      int lock = 0;
+      INTERNAL_SYSCALL_DECL (err);
+      int ret = INTERNAL_SYSCALL (futex, err, 4, &lock, FUTEX_UNLOCK_PI, 0, 0);
+      assert (INTERNAL_SYSCALL_ERROR_P (ret, err));
+      tpi_supported = INTERNAL_SYSCALL_ERRNO (ret, err) == ENOSYS ? -1 : 1;
+    }
+  return __glibc_unlikely (tpi_supported < 0);
+# endif
+  return false;
 #endif
-
+  return true;
+}
 
 int
 __pthread_mutex_init (mutex, mutexattr)
@@ -58,19 +75,8 @@ __pthread_mutex_init (mutex, mutexattr)
       break;
 
     case PTHREAD_PRIO_INHERIT << PTHREAD_MUTEXATTR_PROTOCOL_SHIFT:
-#ifndef __ASSUME_FUTEX_LOCK_PI
-      if (__glibc_unlikely (tpi_supported == 0))
-	{
-	  int lock = 0;
-	  INTERNAL_SYSCALL_DECL (err);
-	  int ret = INTERNAL_SYSCALL (futex, err, 4, &lock, FUTEX_UNLOCK_PI,
-				      0, 0);
-	  assert (INTERNAL_SYSCALL_ERROR_P (ret, err));
-	  tpi_supported = INTERNAL_SYSCALL_ERRNO (ret, err) == ENOSYS ? -1 : 1;
-	}
-      if (__glibc_unlikely (tpi_supported < 0))
+      if (__glibc_unlikely (prio_inherit_missing ()))
 	return ENOTSUP;
-#endif
       break;
 
     default:
