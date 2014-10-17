@@ -162,9 +162,11 @@ static
 void
 __nptl_set_robust (struct pthread *self)
 {
+#ifdef __NR_set_robust_list
   INTERNAL_SYSCALL_DECL (err);
   INTERNAL_SYSCALL (set_robust_list, err, 2, &self->robust_head,
 		    sizeof (struct robust_list_head));
+#endif
 }
 
 
