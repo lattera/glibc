@@ -1,3 +1,15 @@
+2014-10-17  Leonhard Holz  <leonhard.holz@web.de>
+
+	[BZ #15884]
+	* string/strcoll_l.c: Don't include stdio.h.
+	(coll_seq): Remove members idxarr and rulearr.
+	(get_next_seq_cached): Remove function.
+	(get_next_seq): Likewise.
+	(get_next_seq_nocache): Rename to get_next_seq.
+	(do_compare): Remove function.
+	(do_compare_nocache): Rename to do_compare.
+	(STRCOLL): Remove weight and rules cache.
+
 2014-10-16  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/soft-fp/sfp-machine.h: Filed moved ...
