@@ -1,5 +1,16 @@
 2014-10-17  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/nptl-init.c (sighandler_setxid, __xidcmd): Make definitions
+	conditional on [SIGSETXID].
+	(sigcancel_handler): Make definition conditional on [SIGCANCEL].
+	(__pthread_initialize_minimal_internal): Set up SIGCANCEL only if it
+	is defined.  Likewise for SIGSETXID.
+	* nptl/allocatestack.c (setxid_mark_thread, setxid_unmark_thread):
+	Conditionalize definitions on [SIGSETXID].
+	(setxid_signal_thread, __nptl_setxid_error, __nptl_setxid): Likewise.
+	* nptl/pthread_create.c (start_thread): Conditionalize SIGCANCEL
+	unblocking on [SIGCANCEL].
+
 	* nptl/nptl-init.c (__nptl_set_robust): Conditionalize body on
 	[__NR_set_robust_list].
 

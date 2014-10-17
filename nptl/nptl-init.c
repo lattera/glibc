@@ -170,6 +170,7 @@ __nptl_set_robust (struct pthread *self)
 }
 
 
+#ifdef SIGCANCEL
 /* For asynchronous cancellation we use a signal.  This is the handler.  */
 static void
 sigcancel_handler (int sig, siginfo_t *si, void *ctx)
@@ -221,8 +222,10 @@ sigcancel_handler (int sig, siginfo_t *si, void *ctx)
       oldval = curval;
     }
 }
+#endif
 
 
+#ifdef SIGSETXID
 struct xid_command *__xidcmd attribute_hidden;
 
 /* We use the SIGSETXID signal in the setuid, setgid, etc. implementations to
@@ -273,6 +276,7 @@ sighandler_setxid (int sig, siginfo_t *si, void *ctx)
   if (atomic_decrement_val (&__xidcmd->cntr) == 0)
     lll_futex_wake (&__xidcmd->cntr, 1, LLL_PRIVATE);
 }
+#endif
 
 
 /* When using __thread for this, we do it in libc so as not
@@ -372,29 +376,38 @@ __pthread_initialize_minimal_internal (void)
      had to set __nptl_initial_report_events.  Propagate its setting.  */
   THREAD_SETMEM (pd, report_events, __nptl_initial_report_events);
 
+#if defined SIGCANCEL || defined SIGSETXID
+  struct sigaction sa;
+  __sigemptyset (&sa.sa_mask);
+
+# ifdef SIGCANCEL
   /* Install the cancellation signal handler.  If for some reason we
      cannot install the handler we do not abort.  Maybe we should, but
      it is only asynchronous cancellation which is affected.  */
-  struct sigaction sa;
   sa.sa_sigaction = sigcancel_handler;
   sa.sa_flags = SA_SIGINFO;
-  __sigemptyset (&sa.sa_mask);
-
   (void) __libc_sigaction (SIGCANCEL, &sa, NULL);
+# endif
 
+# ifdef SIGSETXID
   /* Install the handle to change the threads' uid/gid.  */
   sa.sa_sigaction = sighandler_setxid;
   sa.sa_flags = SA_SIGINFO | SA_RESTART;
-
   (void) __libc_sigaction (SIGSETXID, &sa, NULL);
+# endif
 
   /* The parent process might have left the signals blocked.  Just in
      case, unblock it.  We reuse the signal mask in the sigaction
      structure.  It is already cleared.  */
+# ifdef SIGCANCEL
   __sigaddset (&sa.sa_mask, SIGCANCEL);
+# endif
+# ifdef SIGSETXID
   __sigaddset (&sa.sa_mask, SIGSETXID);
+# endif
   (void) INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_UNBLOCK, &sa.sa_mask,
 			   NULL, _NSIG / 8);
+#endif
 
   /* Get the size of the static and alignment requirements for the TLS
      block.  */
