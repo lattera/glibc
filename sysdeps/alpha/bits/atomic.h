@@ -42,6 +42,9 @@ typedef uintptr_t uatomicptr_t;
 typedef intmax_t atomic_max_t;
 typedef uintmax_t uatomic_max_t;
 
+#define __HAVE_64B_ATOMICS 1
+#define USE_ATOMIC_COMPILER_BUILTINS 0
+
 
 #ifdef UP
 # define __MB		/* nothing */

@@ -21,6 +21,9 @@
 
 #include <arch/spr_def.h>
 
+#define __HAVE_64B_ATOMICS 1
+#define USE_ATOMIC_COMPILER_BUILTINS 0
+
 /* Pick appropriate 8- or 4-byte instruction. */
 #define __atomic_update(mem, v, op)                                     \
   ((__typeof (*(mem))) (__typeof (*(mem) - *(mem)))                     \

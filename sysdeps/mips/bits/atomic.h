@@ -44,6 +44,12 @@ typedef uintmax_t uatomic_max_t;
 #define MIPS_PUSH_MIPS2
 #endif
 
+#if _MIPS_SIM == _ABIO32
+#define __HAVE_64B_ATOMICS 0
+#else
+#define __HAVE_64B_ATOMICS 1
+#endif
+
 /* See the comments in <sys/asm.h> about the use of the sync instruction.  */
 #ifndef MIPS_SYNC
 # define MIPS_SYNC	sync
@@ -85,6 +91,8 @@ typedef uintmax_t uatomic_max_t;
    We still want to use them even with GCC 4.7 for MIPS16 code where we
    have no assembly alternative available and want to avoid the __sync_*
    builtins if at all possible.  */
+
+#define USE_ATOMIC_COMPILER_BUILTINS 1
 
 /* Compare and exchange.
    For all "bool" routines, we return FALSE if exchange succesful.  */
@@ -233,6 +241,8 @@ typedef uintmax_t uatomic_max_t;
 #else /* !__mips16 && !__GNUC_PREREQ (4, 8) */
 /* This implementation using inline assembly will be removed once glibc
    requires GCC 4.8 or later to build.  */
+
+#define USE_ATOMIC_COMPILER_BUILTINS 0
 
 /* Compare and exchange.  For all of the "xxx" routines, we expect a
    "__prev" and a "__cmp" variable to be provided by the enclosing scope,

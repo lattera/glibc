@@ -33,6 +33,9 @@ typedef uintptr_t uatomicptr_t;
 typedef intmax_t atomic_max_t;
 typedef uintmax_t uatomic_max_t;
 
+#define __HAVE_64B_ATOMICS 0
+#define USE_ATOMIC_COMPILER_BUILTINS 0
+
 void __arm_link_error (void);
 
 #ifdef __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4

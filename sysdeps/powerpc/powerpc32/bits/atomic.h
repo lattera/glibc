@@ -33,6 +33,9 @@
 # define MUTEX_HINT_REL
 #endif
 
+#define __HAVE_64B_ATOMICS 0
+#define USE_ATOMIC_COMPILER_BUILTINS 0
+
 /*
  * The 32-bit exchange_bool is different on powerpc64 because the subf
  * does signed 64-bit arithmetic while the lwarx is 32-bit unsigned

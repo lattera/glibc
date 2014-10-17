@@ -43,6 +43,8 @@ typedef uintptr_t uatomicptr_t;
 typedef intmax_t atomic_max_t;
 typedef uintmax_t uatomic_max_t;
 
+#define USE_ATOMIC_COMPILER_BUILTINS 0
+
 
 #define __arch_compare_and_exchange_val_8_acq(mem, newval, oldval) \
   (abort (), (__typeof (*mem)) 0)
@@ -59,6 +61,7 @@ typedef uintmax_t uatomic_max_t;
      __archold; })
 
 #ifdef __s390x__
+# define __HAVE_64B_ATOMICS 1
 # define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
   ({ __typeof (mem) __archmem = (mem);					      \
      __typeof (*mem) __archold = (oldval);				      \
@@ -67,6 +70,7 @@ typedef uintmax_t uatomic_max_t;
 		       : "d" ((long) (newval)), "m" (*__archmem) : "cc", "memory" );    \
      __archold; })
 #else
+# define __HAVE_64B_ATOMICS 0
 /* For 31 bit we do not really need 64-bit compare-and-exchange. We can
    implement them by use of the csd instruction. The straightforward
    implementation causes warnings so we skip the definition for now.  */

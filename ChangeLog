@@ -1,3 +1,48 @@
+2014-11-20  Torvald Riegel  <triegel@redhat.com>
+
+	* sysdeps/aarch64/bits/atomic.h (__HAVE_64B_ATOMICS,
+	USE_ATOMIC_COMPILER_BUILTINS): Define.
+	* sysdeps/alpha/bits/atomic.h (__HAVE_64B_ATOMICS,
+	USE_ATOMIC_COMPILER_BUILTINS): Likewise.
+	* sysdeps/arm/bits/atomic.h (__HAVE_64B_ATOMICS,
+	USE_ATOMIC_COMPILER_BUILTINS): Likewise.
+	* sysdeps/i386/i486/bits/atomic.h (__HAVE_64B_ATOMICS,
+	USE_ATOMIC_COMPILER_BUILTINS): Likewise.
+	* sysdeps/ia64/bits/atomic.h (__HAVE_64B_ATOMICS,
+	USE_ATOMIC_COMPILER_BUILTINS): Likewise.
+	* sysdeps/m68k/coldfire/bits/atomic.h (__HAVE_64B_ATOMICS,
+	USE_ATOMIC_COMPILER_BUILTINS): Likewise.
+	* sysdeps/m68k/m680x0/m68020/bits/atomic.h (__HAVE_64B_ATOMICS,
+	USE_ATOMIC_COMPILER_BUILTINS): Likewise.
+	* sysdeps/microblaze/bits/atomic.h (__HAVE_64B_ATOMICS,
+	USE_ATOMIC_COMPILER_BUILTINS): Likewise.
+	* sysdeps/mips/bits/atomic.h (__HAVE_64B_ATOMICS,
+	USE_ATOMIC_COMPILER_BUILTINS): Likewise.
+	* sysdeps/powerpc/powerpc32/bits/atomic.h (__HAVE_64B_ATOMICS,
+	USE_ATOMIC_COMPILER_BUILTINS): Likewise.
+	* sysdeps/powerpc/powerpc64/bits/atomic.h (__HAVE_64B_ATOMICS,
+	USE_ATOMIC_COMPILER_BUILTINS): Likewise.
+	* sysdeps/s390/bits/atomic.h (__HAVE_64B_ATOMICS,
+	USE_ATOMIC_COMPILER_BUILTINS): Likewise.
+	* sysdeps/sparc/sparc32/bits/atomic.h (__HAVE_64B_ATOMICS,
+	USE_ATOMIC_COMPILER_BUILTINS): Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/bits/atomic.h (__HAVE_64B_ATOMICS,
+	USE_ATOMIC_COMPILER_BUILTINS): Likewise.
+	* sysdeps/sparc/sparc64/bits/atomic.h (__HAVE_64B_ATOMICS,
+	USE_ATOMIC_COMPILER_BUILTINS): Likewise.
+	* sysdeps/tile/tilegx/bits/atomic.h (__HAVE_64B_ATOMICS,
+	USE_ATOMIC_COMPILER_BUILTINS): Likewise.
+	* sysdeps/tile/tilepro/bits/atomic.h (__HAVE_64B_ATOMICS,
+	USE_ATOMIC_COMPILER_BUILTINS): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/atomic.h (__HAVE_64B_ATOMICS,
+	USE_ATOMIC_COMPILER_BUILTINS): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/bits/atomic.h
+	(__HAVE_64B_ATOMICS, USE_ATOMIC_COMPILER_BUILTINS): Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/atomic.h (__HAVE_64B_ATOMICS,
+	USE_ATOMIC_COMPILER_BUILTINS): Likewise.
+	* sysdeps/x86_64/bits/atomic.h (__HAVE_64B_ATOMICS,
+	USE_ATOMIC_COMPILER_BUILTINS): Likewise.
+
 2014-11-19  Roland McGrath  <roland@hack.frob.com>
 
 	* nptl/pthread_create.c (__pthread_create_2_1): Don't try to validate

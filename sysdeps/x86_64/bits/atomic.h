@@ -55,6 +55,12 @@ typedef uintmax_t uatomic_max_t;
 # endif
 #endif
 
+#define __HAVE_64B_ATOMICS 1
+#if __GNUC_PREREQ (4, 7)
+#define USE_ATOMIC_COMPILER_BUILTINS 1
+#else
+#define USE_ATOMIC_COMPILER_BUILTINS 0
+#endif
 
 #define atomic_compare_and_exchange_val_acq(mem, newval, oldval) \
   __sync_val_compare_and_swap (mem, oldval, newval)

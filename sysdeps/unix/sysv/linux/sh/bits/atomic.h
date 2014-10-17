@@ -44,6 +44,9 @@ typedef uintptr_t uatomicptr_t;
 typedef intmax_t atomic_max_t;
 typedef uintmax_t uatomic_max_t;
 
+#define __HAVE_64B_ATOMICS 0
+#define USE_ATOMIC_COMPILER_BUILTINS 0
+
 /* SH kernel has implemented a gUSA ("g" User Space Atomicity) support
    for the user space atomicity. The atomicity macros use this scheme.
 

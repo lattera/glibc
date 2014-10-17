@@ -54,6 +54,9 @@ typedef uintmax_t uatomic_max_t;
 # endif
 #endif
 
+#define __HAVE_64B_ATOMICS 0
+#define USE_ATOMIC_COMPILER_BUILTINS 0
+
 
 #define atomic_compare_and_exchange_val_acq(mem, newval, oldval) \
   __sync_val_compare_and_swap (mem, oldval, newval)
