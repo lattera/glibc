@@ -30,19 +30,6 @@
 
 #define CLONE_SIGNAL		(CLONE_SIGHAND | CLONE_THREAD)
 
-/* The <tls.h> header should define the macro TLS_DEFINE_INIT_TP such that:
-	TLS_DEFINE_INIT_TP (VAR, PD);
-   Declares and initializes a variable VAR with the value that should
-   be passed to the OS thread creation function (e.g. clone) to initialize
-   its TLS state for the 'struct pthread *' PD.  */
-#ifndef TLS_DEFINE_INIT_TP
-/* For a transitional period while all the <tls.h> implementations are
-   getting updated, we define it using the old TLS_VALUE macro.  */
-# define TLS_DEFINE_INIT_TP(tp, pd) void *tp = TLS_VALUE
-# ifndef TLS_VALUE
-#  define TLS_VALUE pd
-# endif
-#endif
 
 #ifndef ARCH_CLONE
 # define ARCH_CLONE __clone

@@ -1,5 +1,7 @@
 2014-10-17  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/createthread.c (TLS_DEFINE_INIT_TP, TLS_VALUE): Macros removed.
+
 	* sysdeps/i386/nptl/tls.h
 	(THREAD_SELF_SYSINFO, THREAD_SYSINFO): Macros removed.
 	[NEED_DL_SYSINFO] (SETUP_THREAD_SYSINFO, CHECK_THREAD_SYSINFO):
