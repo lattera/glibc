@@ -234,7 +234,7 @@ create_thread (struct pthread *pd, const struct pthread_attr *attr,
     }
 
 #ifdef NEED_DL_SYSINFO
-  assert (THREAD_SELF_SYSINFO == THREAD_SYSINFO (pd));
+  CHECK_THREAD_SYSINFO (pd);
 #endif
 
   /* Determine whether the newly created threads has to be started

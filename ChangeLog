@@ -1,5 +1,16 @@
 2014-10-17  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/i386/nptl/tls.h
+	(THREAD_SELF_SYSINFO, THREAD_SYSINFO): Macros removed.
+	[NEED_DL_SYSINFO] (SETUP_THREAD_SYSINFO, CHECK_THREAD_SYSINFO):
+	New macros.
+	* sysdeps/ia64/nptl/tls.h [NEED_DL_SYSINFO]
+	(SETUP_THREAD_SYSINFO, CHECK_THREAD_SYSINFO): New macros.
+	* nptl/allocatestack.c (allocate_stack) [NEED_DL_SYSINFO]:
+	Call SETUP_THREAD_SYSINFO instead of doing an assignment.
+	* nptl/createthread.c (create_thread) [NEED_DL_SYSINFO]:
+	Call CHECK_THREAD_SYSINFO instead of doing an assert.
+
 	* nptl/nptl-init.c (__pthread_initialize_minimal_internal):
 	Conditionalize FUTEX_PRIVATE_FLAG and FUTEX_CLOCK_REALTIME probes
 	on [__NR_futex].

@@ -430,8 +430,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 #endif
 
 #ifdef NEED_DL_SYSINFO
-      /* Copy the sysinfo value from the parent.  */
-      THREAD_SYSINFO(pd) = THREAD_SELF_SYSINFO;
+      SETUP_THREAD_SYSINFO (pd);
 #endif
 
       /* The process ID is also the same as that of the caller.  */
@@ -567,8 +566,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 #endif
 
 #ifdef NEED_DL_SYSINFO
-	  /* Copy the sysinfo value from the parent.  */
-	  THREAD_SYSINFO(pd) = THREAD_SELF_SYSINFO;
+	  SETUP_THREAD_SYSINFO (pd);
 #endif
 
 	  /* Don't allow setxid until cloned.  */
