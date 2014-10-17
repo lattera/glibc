@@ -1,3 +1,8 @@
+2014-10-17  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* string/strcoll_l.c (get_next_seq): Fix up formatting.
+	(do_compare): Likewise.
+
 2014-10-17  Leonhard Holz  <leonhard.holz@web.de>
 
 	[BZ #15884]

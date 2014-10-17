@@ -65,9 +65,9 @@ typedef struct
 /* Get next sequence.  Traverse the string as required.  */
 static void
 get_next_seq (coll_seq *seq, int nrules, const unsigned char *rulesets,
-		      const USTRING_TYPE *weights, const int32_t *table,
-		      const USTRING_TYPE *extra, const int32_t *indirect,
-		      int pass)
+	      const USTRING_TYPE *weights, const int32_t *table,
+	      const USTRING_TYPE *extra, const int32_t *indirect,
+	      int pass)
 {
   size_t val = seq->val = 0;
   int len = seq->len;
@@ -196,7 +196,7 @@ get_next_seq (coll_seq *seq, int nrules, const unsigned char *rulesets,
 /* Compare two sequences.  */
 static int
 do_compare (coll_seq *seq1, coll_seq *seq2, int position,
-		    const USTRING_TYPE *weights)
+	    const USTRING_TYPE *weights)
 {
   int seq1len = seq1->len;
   int seq2len = seq2->len;
