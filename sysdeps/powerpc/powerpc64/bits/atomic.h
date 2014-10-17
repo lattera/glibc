@@ -234,6 +234,7 @@
 #ifndef UP
 # define __ARCH_REL_INSTR	"lwsync"
 #endif
+#define atomic_write_barrier()	__asm ("lwsync" ::: "memory")
 
 /*
  * Include the rest of the atomic ops macros which are common to both

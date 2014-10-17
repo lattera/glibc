@@ -117,6 +117,7 @@
 # ifndef UP
 #  define __ARCH_REL_INSTR	"lwsync"
 # endif
+# define atomic_write_barrier()	__asm ("lwsync" ::: "memory")
 #else
 /*
  * Older powerpc32 processors don't support the new "light weight"
@@ -124,6 +125,7 @@
  * for all powerpc32 applications.
  */
 # define atomic_read_barrier()	__asm ("sync" ::: "memory")
+# define atomic_write_barrier()	__asm ("sync" ::: "memory")
 #endif
 
 /*

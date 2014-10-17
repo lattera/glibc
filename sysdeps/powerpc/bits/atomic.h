@@ -77,7 +77,6 @@ typedef uintmax_t uatomic_max_t;
 #endif
 
 #define atomic_full_barrier()	__asm ("sync" ::: "memory")
-#define atomic_write_barrier()	__asm ("eieio" ::: "memory")
 
 #define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval)	      \
   ({									      \

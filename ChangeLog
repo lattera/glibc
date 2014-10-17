@@ -1,3 +1,11 @@
+2014-10-31  Torvald Riegel  <triegel@redhat.com>
+
+	* sysdeps/powerpc/bits/atomic.h (atomic_write_barrier): Remove and...
+	* sysdeps/powerpc/powerpc32/bits/atomic.h (atomic_write_barrier):
+	... add here and use lwsync or sync ...
+	* sysdeps/powerpc/powerpc64/bits/atomic.h (atomic_write_barrier):
+	... and add here using lwsync.
+
 2014-10-31  Matthew Fortune  <matthew.fortune@imgtec.com>
 
 	* elf/dl-machine-reject-phdr.h: New file.
