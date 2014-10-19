@@ -58,11 +58,13 @@ clear_once_control (void *arg)
    initialization is interrupted, we then fork 2^30 times (30 bits of
    once_control are used for the fork generation), and try to initialize
    again, we can deadlock because we can't distinguish the in-progress and
-   interrupted cases anymore.  */
-int
-__pthread_once (once_control, init_routine)
-     pthread_once_t *once_control;
-     void (*init_routine) (void);
+   interrupted cases anymore.
+   XXX: We split out this slow path because current compilers do not generate
+   as efficient code when the fast path in __pthread_once below is not in a
+   separate function.  */
+static int
+__attribute__ ((noinline))
+__pthread_once_slow (pthread_once_t *once_control, void (*init_routine) (void))
 {
   while (1)
     {
@@ -72,7 +74,7 @@ __pthread_once (once_control, init_routine)
          signals that initialization has finished, we need to see any
          data modifications done during initialization.  */
       val = *once_control;
-      atomic_read_barrier();
+      atomic_read_barrier ();
       do
 	{
 	  /* Check if the initialization has already been done.  */
@@ -120,7 +122,7 @@ __pthread_once (once_control, init_routine)
       /* Mark *once_control as having finished the initialization.  We need
          release memory order here because we need to synchronize with other
          threads that want to use the initialized data.  */
-      atomic_write_barrier();
+      atomic_write_barrier ();
       *once_control = __PTHREAD_ONCE_DONE;
 
       /* Wake up all other threads.  */
@@ -129,6 +131,19 @@ __pthread_once (once_control, init_routine)
     }
 
   return 0;
+}
+
+int
+__pthread_once (pthread_once_t *once_control, void (*init_routine) (void))
+{
+  /* Fast path.  See __pthread_once_slow.  */
+  int val;
+  val = *once_control;
+  atomic_read_barrier ();
+  if (__glibc_likely ((val & __PTHREAD_ONCE_DONE) != 0))
+    return 0;
+  else
+    return __pthread_once_slow (once_control, init_routine);
 }
 weak_alias (__pthread_once, pthread_once)
 hidden_def (__pthread_once)

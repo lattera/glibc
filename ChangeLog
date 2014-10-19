@@ -1,6 +1,14 @@
 2014-10-20  Torvald Riegel  <triegel@redhat.com>
 
 	[BZ #15215]
+	* nptl/pthread_once.c (__pthread_once): Split out fast path to ...
+	(__pthread_once_slow): ... here.
+	* sysdeps/unix/sysv/linux/i386/pthread_once.S: Remove file.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_once.S: Remove file.
+
+2014-10-20  Torvald Riegel  <triegel@redhat.com>
+
+	[BZ #15215]
 	* nptl/pthreadP.h (__PTHREAD_ONCE_INPROGRESS, __PTHREAD_ONCE_DONE,
 	__PTHREAD_ONCE_FORK_GEN_INCR): New.
 	* sysdeps/nptl/fork.c (__libc_fork): Use them.
