@@ -52,7 +52,7 @@ profil		-	profil		i:piii	__profil	profil
 ptrace		-	ptrace		i:iiii	ptrace
 read		-	read		Ci:ibn	__libc_read	__read read
 readlink	-	readlink	i:spi	__readlink	readlink
-readv		-	readv		Ci:ipi	__readv		readv
+readv		-	readv		Ci:ipi	__libc_readv	__readv readv
 reboot		-	reboot		i:i	reboot
 recv		-	recv		Ci:ibni	__libc_recv	recv
 recvfrom	-	recvfrom	Ci:ibniBN	__libc_recvfrom __recvfrom recvfrom
@@ -99,4 +99,4 @@ unlink		-	unlink		i:s	__unlink	unlink
 utimes		-	utimes		i:sp	__utimes	utimes
 vhangup		-	vhangup		i:i	vhangup
 write		-	write		Ci:ibn	__libc_write	__write write
-writev		-	writev		Ci:ipi	__writev	writev
+writev		-	writev		Ci:ipi	__libc_writev	__writev writev

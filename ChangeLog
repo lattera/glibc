@@ -1,3 +1,12 @@
+2014-10-20  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14138]
+	* sysdeps/unix/syscalls.list (readv): Use __libc_readv as strong
+	name.
+	(writev): Use __libc_writev as strong name.
+	* sysdeps/unix/sysv/linux/readv.c: Remove file.
+	* sysdeps/unix/sysv/linux/writev.c: Likewise.
+
 2014-10-17  Roland McGrath  <roland@hack.frob.com>
 
 	* nptl/createthread.c (TLS_DEFINE_INIT_TP, TLS_VALUE): Macros removed.
