@@ -1,5 +1,9 @@
 2014-11-20  Torvald Riegel  <triegel@redhat.com>
 
+	* csu/tst-atomic.c (do_test): Add tests for C11-like atomics.
+
+2014-11-20  Torvald Riegel  <triegel@redhat.com>
+
 	* include/atomic.h (__atomic_link_error, __atomic_check_size,
 	atomic_thread_fence_acquire, atomic_thread_fence_release,
 	atomic_thread_fence_seq_cst, atomic_load_relaxed,
