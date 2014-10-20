@@ -62,7 +62,7 @@ typedef struct __libc_lock_recursive_opaque__ __libc_lock_recursive_t;
 /* Initialize a recursive mutex.  */
 #if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
 # define __libc_lock_init_recursive(NAME) \
-  ((NAME) = (__libc_lock_recursive_t) _LIBC_LOCK_RECURSIVE_INITIALIZER, 0)
+  ((void) ((NAME) = (__libc_lock_recursive_t) _LIBC_LOCK_RECURSIVE_INITIALIZER))
 #else
 # define __libc_lock_init_recursive(NAME) \
   do {									      \

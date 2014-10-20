@@ -126,16 +126,16 @@ typedef pthread_key_t __libc_key_t;
 /* Initialize the named lock variable, leaving it in a consistent, unlocked
    state.  */
 #if !defined NOT_IN_libc || defined IS_IN_libpthread
-# define __libc_lock_init(NAME) ((NAME) = LLL_LOCK_INITIALIZER, 0)
+# define __libc_lock_init(NAME) \
+  ((void) ((NAME) = LLL_LOCK_INITIALIZER))
 #else
 # define __libc_lock_init(NAME) \
   __libc_maybe_call (__pthread_mutex_init, (&(NAME), NULL), 0)
 #endif
 #if defined SHARED && !defined NOT_IN_libc
-/* ((NAME) = (__libc_rwlock_t) PTHREAD_RWLOCK_INITIALIZER, 0) is
-   inefficient.  */
+/* ((NAME) = (__libc_rwlock_t) PTHREAD_RWLOCK_INITIALIZER) is inefficient.  */
 # define __libc_rwlock_init(NAME) \
-  (__builtin_memset (&(NAME), '\0', sizeof (NAME)), 0)
+  ((void) __builtin_memset (&(NAME), '\0', sizeof (NAME)))
 #else
 # define __libc_rwlock_init(NAME) \
   __libc_maybe_call (__pthread_rwlock_init, (&(NAME), NULL), 0)

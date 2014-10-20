@@ -1,3 +1,12 @@
+2014-10-20  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/nptl/bits/libc-lock.h
+	[_LIBC && (!NOT_IN_libc || IS_IN_libpthread)]
+	(__libc_lock_init_recursive): Return void, not 0.
+	* sysdeps/nptl/bits/libc-lockP.h (__libc_lock_init): Likewise.
+	(__libc_rwlock_init): Likewise.
+	* sysdeps/nptl/bits/stdio-lock.h (_IO_lock_init): Likewise.
+
 2014-10-20  Torvald Riegel  <triegel@redhat.com>
 
 	[BZ #15215]
