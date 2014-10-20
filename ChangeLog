@@ -1,5 +1,10 @@
 2014-10-20  Roland McGrath  <roland@hack.frob.com>
 
+	* io/fts.c (dirent_not_directory): New function.
+	(fts_build): Call it.
+
+2014-10-20  Roland McGrath  <roland@hack.frob.com>
+
 	* nptl/version.c (__nptl_main): Use normal __write rather than
 	INTERNAL_SYSCALL.
 	(banner): Update copyright years.

@@ -561,6 +561,16 @@ fts_children(sp, instr)
 	return (sp->fts_child);
 }
 
+static inline int
+dirent_not_directory(const struct dirent *dp)
+{
+#if defined DT_DIR && defined _DIRENT_HAVE_D_TYPE
+        return dp->d_type != DT_DIR && dp->d_type != DT_UNKNOWN;
+#else
+        return 0;
+#endif
+}
+
 /*
  * This is the tricky part -- do not casually change *anything* in here.  The
  * idea is to build the linked list of entries that are used by fts_children
@@ -759,11 +769,7 @@ mem1:				saved_errno = errno;
 				p->fts_info = FTS_NSOK;
 			p->fts_accpath = cur->fts_accpath;
 		} else if (nlinks == 0
-#if defined DT_DIR && defined _DIRENT_HAVE_D_TYPE
-			   || (nostat &&
-			       dp->d_type != DT_DIR && dp->d_type != DT_UNKNOWN)
-#endif
-		    ) {
+                           || (nostat && dirent_not_directory(dp))) {
 			p->fts_accpath =
 			    ISSET(FTS_NOCHDIR) ? p->fts_path : p->fts_name;
 			p->fts_info = FTS_NSOK;
