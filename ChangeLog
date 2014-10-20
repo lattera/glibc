@@ -1,5 +1,10 @@
 2014-11-20  Torvald Riegel  <triegel@redhat.com>
 
+	* nptl/pthread_once.c (clear_once_control, __pthread_once_slow,
+	__pthread_once): Use C11 atomics.
+
+2014-11-20  Torvald Riegel  <triegel@redhat.com>
+
 	* csu/tst-atomic.c (do_test): Add tests for C11-like atomics.
 
 2014-11-20  Torvald Riegel  <triegel@redhat.com>
