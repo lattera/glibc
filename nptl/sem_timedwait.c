@@ -22,6 +22,7 @@
 #include <lowlevellock.h>
 #include <internaltypes.h>
 #include <semaphore.h>
+#include <sys/time.h>
 
 #include <pthreadP.h>
 #include <shlib-compat.h>

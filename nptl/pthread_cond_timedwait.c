@@ -22,6 +22,7 @@
 #include <lowlevellock.h>
 #include <pthread.h>
 #include <pthreadP.h>
+#include <sys/time.h>
 #include <kernel-features.h>
 
 #include <shlib-compat.h>

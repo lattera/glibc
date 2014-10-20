@@ -1,5 +1,12 @@
 2014-10-20  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/pthread_rwlock_timedrdlock.c: #include <sys/time.h> before using
+	gettimeofday.
+	* nptl/pthread_rwlock_timedwrlock.c: Likewise.
+	* nptl/pthread_cond_timedwait.c: Likewise.
+	* nptl/pthread_mutex_timedlock.c: Likewise.
+	* nptl/sem_timedwait.c: Likewise.
+
 	* sysdeps/nptl/bits/libc-lock.h
 	[_LIBC && (!NOT_IN_libc || IS_IN_libpthread)]
 	(__libc_lock_init_recursive): Return void, not 0.

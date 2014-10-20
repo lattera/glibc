@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <time.h>
 #include <sys/param.h>
+#include <sys/time.h>
 #include "pthreadP.h"
 #include <lowlevellock.h>
 #include <not-cancel.h>
