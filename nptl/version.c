@@ -1,4 +1,5 @@
-/* Copyright (C) 2002-2014 Free Software Foundation, Inc.
+/* Entry point for libpthread DSO.
+   Copyright (C) 2002-2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -22,7 +23,7 @@
 
 static const char banner[] =
 #include "banner.h"
-"Copyright (C) 2006 Free Software Foundation, Inc.\n\
+"Copyright (C) 2006-2014 Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.\n\
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\n\
 PARTICULAR PURPOSE.\n"
@@ -32,13 +33,11 @@ PARTICULAR PURPOSE.\n"
 ;
 
 
-extern void __nptl_main (void) __attribute__ ((noreturn));
+/* This is made the e_entry of libpthread.so by LDFLAGS-pthread.so.  */
+__attribute__ ((noreturn))
 void
 __nptl_main (void)
 {
-  INTERNAL_SYSCALL_DECL (err);
-  INTERNAL_SYSCALL (write, err, 3, STDOUT_FILENO, (const char *) banner,
-		    sizeof banner - 1);
-
+  __write (STDOUT_FILENO, (const char *) banner, sizeof banner - 1);
   _exit (0);
 }

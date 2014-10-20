@@ -1,5 +1,9 @@
 2014-10-20  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/version.c (__nptl_main): Use normal __write rather than
+	INTERNAL_SYSCALL.
+	(banner): Update copyright years.
+
 	* nptl/pthread_rwlock_timedrdlock.c: #include <sys/time.h> before using
 	gettimeofday.
 	* nptl/pthread_rwlock_timedwrlock.c: Likewise.
