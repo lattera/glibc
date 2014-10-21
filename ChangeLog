@@ -1,3 +1,7 @@
+2014-10-21  Roland McGrath  <roland@hack.frob.com>
+
+	* nptl/version.c (__nptl_main): Call __libc_write, not __write.
+
 2014-10-20  Roland McGrath  <roland@hack.frob.com>
 
 	* io/fts.c (dirent_not_directory): New function.

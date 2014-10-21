@@ -38,6 +38,6 @@ __attribute__ ((noreturn))
 void
 __nptl_main (void)
 {
-  __write (STDOUT_FILENO, (const char *) banner, sizeof banner - 1);
+  __libc_write (STDOUT_FILENO, banner, sizeof banner - 1);
   _exit (0);
 }
