@@ -91,10 +91,10 @@ ENTRY(STRCMP)
 1:
 #ifdef USE_AS_STRCMP
 	leaq	__strcmp_sse2_unaligned(%rip), %rax
-	testl   $bit_Fast_Unaligned_Load, __cpu_features+CPUID_OFFSET+index_Fast_Unaligned_Load(%rip)
+	testl   $bit_Fast_Unaligned_Load, __cpu_features+FEATURE_OFFSET+index_Fast_Unaligned_Load(%rip)
 	jnz     3f
 #else
-	testl	$bit_Slow_SSE4_2, __cpu_features+CPUID_OFFSET+index_Slow_SSE4_2(%rip)
+	testl	$bit_Slow_SSE4_2, __cpu_features+FEATURE_OFFSET+index_Slow_SSE4_2(%rip)
 	jnz	2f
 	leaq	STRCMP_SSE42(%rip), %rax
 	testl	$bit_SSE4_2, __cpu_features+CPUID_OFFSET+index_SSE4_2(%rip)
@@ -120,7 +120,7 @@ ENTRY(__strcasecmp)
 	testl	$bit_AVX_Usable, __cpu_features+FEATURE_OFFSET+index_AVX_Usable(%rip)
 	jnz	3f
 #  endif
-	testl	$bit_Slow_SSE4_2, __cpu_features+CPUID_OFFSET+index_Slow_SSE4_2(%rip)
+	testl	$bit_Slow_SSE4_2, __cpu_features+FEATURE_OFFSET+index_Slow_SSE4_2(%rip)
 	jnz	2f
 	leaq	__strcasecmp_sse42(%rip), %rax
 	testl	$bit_SSE4_2, __cpu_features+CPUID_OFFSET+index_SSE4_2(%rip)
@@ -146,7 +146,7 @@ ENTRY(__strncasecmp)
 	testl	$bit_AVX_Usable, __cpu_features+FEATURE_OFFSET+index_AVX_Usable(%rip)
 	jnz	3f
 #  endif
-	testl	$bit_Slow_SSE4_2, __cpu_features+CPUID_OFFSET+index_Slow_SSE4_2(%rip)
+	testl	$bit_Slow_SSE4_2, __cpu_features+FEATURE_OFFSET+index_Slow_SSE4_2(%rip)
 	jnz	2f
 	leaq	__strncasecmp_sse42(%rip), %rax
 	testl	$bit_SSE4_2, __cpu_features+CPUID_OFFSET+index_SSE4_2(%rip)

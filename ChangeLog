@@ -1,3 +1,13 @@
+2014-10-27  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #17501]
+	* sysdeps/i386/i686/multiarch/strcasecmp.S (__strcasecmp): Fix
+	check for Slow_SSE4_2 feature bit.
+	* sysdeps/i386/i686/multiarch/strcmp.S (STRCMP): Likewise.
+	* sysdeps/i386/i686/multiarch/strncase.S (__strncasecmp): Likewise.
+	* sysdeps/x86_64/multiarch/strcmp.S (STRCMP, __strcascmp):
+	Likewise.  Fix check for Fast_Unaligned_Load feature bit.
+
 2014-10-24  Roland McGrath  <roland@hack.frob.com>
 
 	* configure.ac: Validate compiler version with a empirical test of
