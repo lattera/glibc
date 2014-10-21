@@ -28,5 +28,4 @@ float __ldexpf(float value, int exp)
 	if(!__finitef(value)||value==(float)0.0) __set_errno (ERANGE);
 	return value;
 }
-INTDEF(__ldexpf)
 weak_alias (__ldexpf, ldexpf)

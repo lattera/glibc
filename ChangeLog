@@ -1,3 +1,8 @@
+2014-10-21  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14132]
+	* math/s_ldexpf.c (__ldexpf): Do not use INTDEF.
+
 2014-10-21  Roland McGrath  <roland@hack.frob.com>
 
 	* nptl/version.c (__nptl_main): Call __libc_write, not __write.
