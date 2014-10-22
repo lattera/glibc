@@ -1,3 +1,8 @@
+2014-10-22  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	[BZ #17485]
+	* sysdeps/unix/sysv/linux/mips/vfork.S (__libc_vfork): Define.
+
 2014-10-21  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14132]

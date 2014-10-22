@@ -108,3 +108,4 @@ L(error):
 
 libc_hidden_def(__vfork)
 weak_alias (__vfork, vfork)
+strong_alias (__vfork, __libc_vfork)
