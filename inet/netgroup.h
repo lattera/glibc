@@ -26,7 +26,7 @@
 struct name_list
 {
   struct name_list *next;
-  char name[0];
+  char name[];
 };
 
 

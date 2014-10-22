@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <libintl.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <sys/mman.h>
 
@@ -136,11 +137,8 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
   char *buffer = NULL;
   size_t nentries = 0;
   size_t group_len = strlen (key) + 1;
-  union
-  {
-    struct name_list elem;
-    char mem[sizeof (struct name_list) + group_len];
-  } first_needed;
+  struct name_list *first_needed
+    = alloca (sizeof (struct name_list) + group_len);
 
   if (netgroup_database == NULL
       && __nss_database_lookup ("netgroup", NULL, NULL, &netgroup_database))
@@ -153,9 +151,9 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
 
   memset (&data, '\0', sizeof (data));
   buffer = xmalloc (buflen);
-  first_needed.elem.next = &first_needed.elem;
-  memcpy (first_needed.elem.name, key, group_len);
-  data.needed_groups = &first_needed.elem;
+  first_needed->next = first_needed;
+  memcpy (first_needed->name, key, group_len);
+  data.needed_groups = first_needed;
 
   while (data.needed_groups != NULL)
     {

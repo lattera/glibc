@@ -324,6 +324,75 @@ main (int argc, char **argv)
 }
 
 
+static void __attribute__ ((noreturn))
+invalidate_db (const char *dbname)
+{
+  int sock = nscd_open_socket ();
+
+  if (sock == -1)
+    exit (EXIT_FAILURE);
+
+  size_t dbname_len = strlen (dbname) + 1;
+  size_t reqlen = sizeof (request_header) + dbname_len;
+  struct
+  {
+    request_header req;
+    char dbname[];
+  } *reqdata = alloca (reqlen);
+
+  reqdata->req.key_len = dbname_len;
+  reqdata->req.version = NSCD_VERSION;
+  reqdata->req.type = INVALIDATE;
+  memcpy (reqdata->dbname, dbname, dbname_len);
+
+  ssize_t nbytes = TEMP_FAILURE_RETRY (send (sock, reqdata, reqlen,
+					     MSG_NOSIGNAL));
+
+  if (nbytes != reqlen)
+    {
+      int err = errno;
+      close (sock);
+      error (EXIT_FAILURE, err, _("write incomplete"));
+    }
+
+  /* Wait for ack.  Older nscd just closed the socket when
+     prune_cache finished, silently ignore that.  */
+  int32_t resp = 0;
+  nbytes = TEMP_FAILURE_RETRY (read (sock, &resp, sizeof (resp)));
+  if (nbytes != 0 && nbytes != sizeof (resp))
+    {
+      int err = errno;
+      close (sock);
+      error (EXIT_FAILURE, err, _("cannot read invalidate ACK"));
+    }
+
+  close (sock);
+
+  if (resp != 0)
+    error (EXIT_FAILURE, resp, _("invalidation failed"));
+
+  exit (0);
+}
+
+static void __attribute__ ((noreturn))
+send_shutdown (void)
+{
+  int sock = nscd_open_socket ();
+
+  if (sock == -1)
+    exit (EXIT_FAILURE);
+
+  request_header req;
+  req.version = NSCD_VERSION;
+  req.type = SHUTDOWN;
+  req.key_len = 0;
+
+  ssize_t nbytes = TEMP_FAILURE_RETRY (send (sock, &req, sizeof req,
+                                             MSG_NOSIGNAL));
+  close (sock);
+  exit (nbytes != sizeof (request_header) ? EXIT_FAILURE : EXIT_SUCCESS);
+}
+
 /* Handle program arguments.  */
 static error_t
 parse_opt (int key, char *arg, struct argp_state *state)
@@ -346,91 +415,34 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case 'K':
       if (getuid () != 0)
 	error (4, 0, _("Only root is allowed to use this option!"));
-      {
-	int sock = nscd_open_socket ();
-
-	if (sock == -1)
-	  exit (EXIT_FAILURE);
-
-	request_header req;
-	req.version = NSCD_VERSION;
-	req.type = SHUTDOWN;
-	req.key_len = 0;
-
-	ssize_t nbytes = TEMP_FAILURE_RETRY (send (sock, &req,
-						   sizeof (request_header),
-						   MSG_NOSIGNAL));
-	close (sock);
-	exit (nbytes != sizeof (request_header) ? EXIT_FAILURE : EXIT_SUCCESS);
-      }
+      else
+        send_shutdown ();
+      break;
 
     case 'g':
       get_stats = true;
       break;
 
     case 'i':
+      {
+        /* Validate the database name.  */
+
+        dbtype cnt;
+        for (cnt = pwddb; cnt < lastdb; ++cnt)
+          if (strcmp (arg, dbnames[cnt]) == 0)
+            break;
+
+        if (cnt == lastdb)
+          {
+            argp_error (state, _("'%s' is not a known database"), arg);
+            return EINVAL;
+          }
+      }
       if (getuid () != 0)
 	error (4, 0, _("Only root is allowed to use this option!"));
       else
-	{
-	  int sock = nscd_open_socket ();
-
-	  if (sock == -1)
-	    exit (EXIT_FAILURE);
-
-	  dbtype cnt;
-	  for (cnt = pwddb; cnt < lastdb; ++cnt)
-	    if (strcmp (arg, dbnames[cnt]) == 0)
-	      break;
-
-	  if (cnt == lastdb)
-	    {
-	      argp_error (state, _("'%s' is not a known database"), arg);
-	      return EINVAL;
-	    }
-
-	  size_t arg_len = strlen (arg) + 1;
-	  struct
-	  {
-	    request_header req;
-	    char arg[arg_len];
-	  } reqdata;
-
-	  reqdata.req.key_len = strlen (arg) + 1;
-	  reqdata.req.version = NSCD_VERSION;
-	  reqdata.req.type = INVALIDATE;
-	  memcpy (reqdata.arg, arg, arg_len);
-
-	  ssize_t nbytes = TEMP_FAILURE_RETRY (send (sock, &reqdata,
-						     sizeof (request_header)
-						     + arg_len,
-						     MSG_NOSIGNAL));
-
-	  if (nbytes != sizeof (request_header) + arg_len)
-	    {
-	      int err = errno;
-	      close (sock);
-	      error (EXIT_FAILURE, err, _("write incomplete"));
-	    }
-
-	  /* Wait for ack.  Older nscd just closed the socket when
-	     prune_cache finished, silently ignore that.  */
-	  int32_t resp = 0;
-	  nbytes = TEMP_FAILURE_RETRY (read (sock, &resp, sizeof (resp)));
-	  if (nbytes != 0 && nbytes != sizeof (resp))
-	    {
-	      int err = errno;
-	      close (sock);
-	      error (EXIT_FAILURE, err, _("cannot read invalidate ACK"));
-	    }
-
-	  close (sock);
-
-	  if (resp != 0)
-	    error (EXIT_FAILURE, resp, _("invalidation failed"));
-
-	  exit (0);
-	}
+        invalidate_db (arg);
+      break;
 
     case 't':
       nthreads = atol (arg);

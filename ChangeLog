@@ -1,5 +1,18 @@
 2014-10-22  Roland McGrath  <roland@hack.frob.com>
 
+	* inet/netgroup.h (struct name_list): Use C99 [] syntax rather than
+	old GNU extension [0] syntax.
+	* nscd/nscd_helper.c (open_socket): Use a flexible array member and
+	alloca rather than an array member with variable length.
+	* nscd/netgroupcache.c (addgetnetgrentX): Likewise.
+	* nscd/nscd.c (invalidate_db): New function, broken out of ...
+	(parse_opt): ... here.  Likewise use alloca there.
+	Validate the -i argument before checking for rootness.
+	(send_shutdown): New function, broken out of ...
+	(parse_opt): ... here.
+
+2014-10-22  Roland McGrath  <roland@hack.frob.com>
+
 	* sysdeps/arm/__longjmp.S [NEED_HWCAP] [IS_IN_rtld]: Use LDST_PCREL
 	macro to get at the _rt_local_ro field.
 	[NEED_HWCAP] [!IS_IN_rtld]: Use LDR_GLOBAL to get at _rtld_global_ro

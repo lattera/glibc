@@ -21,6 +21,7 @@
 #include <fcntl.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
@@ -186,12 +187,12 @@ open_socket (request_type type, const char *key, size_t keylen)
   if (sock < 0)
     return -1;
 
+  size_t real_sizeof_reqdata = sizeof (request_header) + keylen;
   struct
   {
     request_header req;
-    char key[keylen];
-  } reqdata;
-  size_t real_sizeof_reqdata = sizeof (request_header) + keylen;
+    char key[];
+  } *reqdata = alloca (real_sizeof_reqdata);
 
 #ifndef __ASSUME_SOCK_CLOEXEC
 # ifdef SOCK_NONBLOCK
@@ -208,11 +209,11 @@ open_socket (request_type type, const char *key, size_t keylen)
       && errno != EINPROGRESS)
     goto out;
 
-  reqdata.req.version = NSCD_VERSION;
-  reqdata.req.type = type;
-  reqdata.req.key_len = keylen;
+  reqdata->req.version = NSCD_VERSION;
+  reqdata->req.type = type;
+  reqdata->req.key_len = keylen;
 
-  memcpy (reqdata.key, key, keylen);
+  memcpy (reqdata->key, key, keylen);
 
   bool first_try = true;
   struct timeval tvend;
@@ -223,7 +224,7 @@ open_socket (request_type type, const char *key, size_t keylen)
 #ifndef MSG_NOSIGNAL
 # define MSG_NOSIGNAL 0
 #endif
-      ssize_t wres = TEMP_FAILURE_RETRY (__send (sock, &reqdata,
+      ssize_t wres = TEMP_FAILURE_RETRY (__send (sock, reqdata,
 						 real_sizeof_reqdata,
 						 MSG_NOSIGNAL));
       if (__glibc_likely (wres == (ssize_t) real_sizeof_reqdata))
