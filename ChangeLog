@@ -1,3 +1,30 @@
+2014-10-22  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/__longjmp.S [NEED_HWCAP] [IS_IN_rtld]: Use LDST_PCREL
+	macro to get at the _rt_local_ro field.
+	[NEED_HWCAP] [!IS_IN_rtld]: Use LDR_GLOBAL to get at _rtld_global_ro
+	([PIC] case) or _dl_hwcap ([!PIC] case).
+	* sysdeps/arm/setjmp.S: Likewise.
+
+	* config.h.in (ARM_PCREL_MOVW_OK): New macro.
+	* sysdeps/arm/configure.ac: New check to define it.
+	* sysdeps/arm/configure: Regenerated.
+	* sysdeps/arm/sysdep.h [__ASSEMBLER__]: Include <arm-features.h>.
+	(LDST_INDEXED_NOINDEX, LDST_INDEXED_INDEX): New macros.
+	(LDST_INDEXED, LDST_PC_INDEXED): New macros, differing definitions
+	depending on [ARM_NO_INDEX_REGISTER] and [__thumb2__].
+	(LDST_PCREL) [!__thumb2__ && ARCH_HAS_T2 && ARM_PCREL_MOVW_OK]:
+	Use move/movt pair instead of a load.
+	(LDST_GLOBAL): Macro removed.
+	(LDR_GLOBAL): New macro replaces it.
+	(LDR_HIDDEN): New macro.
+	(PTR_MANGLE_LOAD): Use LDR_GLOBAL rather than LDST_GLOBAL.
+	Use LDR_HIDDEN instead for __pointer_chk_guard_local.
+
+	* setjmp/tst-setjmp-static.c: New file.
+	* setjmp/Makefile (tests): Add it.
+	(tests-static): New variable.
+
 2014-10-22  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	[BZ #17485]

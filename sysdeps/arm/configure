@@ -150,8 +150,8 @@ else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #ifdef __ARM_PCS_VFP
-                      yes
-                     #endif
+		      yes
+		     #endif
 
 _ACEOF
 if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
@@ -209,6 +209,54 @@ have-arm-tls-desc = yes"
 else
   config_vars="$config_vars
 have-arm-tls-desc = no"
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether PC-relative relocs in movw/movt work properly" >&5
+$as_echo_n "checking whether PC-relative relocs in movw/movt work properly... " >&6; }
+if ${libc_cv_arm_pcrel_movw+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+cat > conftest.s <<\EOF
+	.syntax unified
+	.arm
+	.arch armv7-a
+
+	.text
+	.globl foo
+	.type foo,%function
+foo:	movw r0, #:lower16:symbol - 1f - 8
+	movt r0, #:upper16:symbol - 1f - 8
+1:	add r0, pc
+	@ And now a case with a local symbol.
+	movw r0, #:lower16:3f - 2f - 8
+	movt r0, #:upper16:3f - 2f - 8
+2:	add r0, pc
+	bx lr
+
+.data
+	.globl symbol
+	.hidden symbol
+symbol:	.long 23
+3:	.long 17
+EOF
+libc_cv_arm_pcrel_movw=no
+${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
+	 -nostartfiles -nostdlib -shared \
+	 -o conftest.so conftest.s 1>&5 2>&5 &&
+LC_ALL=C $READELF -dr conftest.so > conftest.dr 2>&5 &&
+{
+  cat conftest.dr 1>&5
+  fgrep 'TEXTREL
+R_ARM_NONE' conftest.dr > /dev/null || libc_cv_arm_pcrel_movw=yes
+}
+rm -f conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_arm_pcrel_movw" >&5
+$as_echo "$libc_cv_arm_pcrel_movw" >&6; }
+if test $libc_cv_arm_pcrel_movw = yes; then
+  $as_echo "#define ARM_PCREL_MOVW_OK 1" >>confdefs.h
+
 fi
 
 libc_cv_gcc_unwind_find_fde=no

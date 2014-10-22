@@ -28,7 +28,8 @@ routines	:= setjmp sigjmp bsd-setjmp bsd-_setjmp \
 		   longjmp __longjmp jmp-unwind
 
 tests		:= tst-setjmp jmpbug bug269-setjmp tst-setjmp-fp \
-		   tst-sigsetjmp
+		   tst-sigsetjmp tst-setjmp-static
+tests-static	:= tst-setjmp-static
 
 
 include ../Rules

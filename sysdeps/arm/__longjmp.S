@@ -77,21 +77,15 @@ ENTRY (__longjmp)
 
 #ifdef NEED_HWCAP
 # ifdef IS_IN_rtld
-	ldr	a4, 1f
-	ldr	a3, .Lrtld_local_ro
-0:	add	a4, pc, a4
-	add	a4, a4, a3
-	ldr	a4, [a4, #RTLD_GLOBAL_RO_DL_HWCAP_OFFSET]
+	LDST_PCREL (ldr, a4, a3, \
+		    C_SYMBOL_NAME(_rtld_local_ro) \
+		    + RTLD_GLOBAL_RO_DL_HWCAP_OFFSET)
 # else
 #  ifdef PIC
-	ldr	a4, 1f
-	ldr	a3, .Lrtld_global_ro
-0:	add	a4, pc, a4
-	ldr	a4, [a4, a3]
-	ldr	a4, [a4, #RTLD_GLOBAL_RO_DL_HWCAP_OFFSET]
+	LDR_GLOBAL (a4, a3, C_SYMBOL_NAME(_rtld_global_ro), \
+		    RTLD_GLOBAL_RO_DL_HWCAP_OFFSET)
 #  else
-	ldr	a4, .Lhwcap
-	ldr	a4, [a4, #0]
+	LDR_GLOBAL (a4, a3, C_SYMBOL_NAME(_dl_hwcap), 0)
 #  endif
 # endif
 #endif
@@ -137,22 +131,5 @@ ENTRY (__longjmp)
 	moveq	r0, #1		/* can't let setjmp() return zero! */
 
 	DO_RET(lr)
-
-#ifdef NEED_HWCAP
-# ifdef IS_IN_rtld
-1:	.long	_GLOBAL_OFFSET_TABLE_ - 0b - PC_OFS
-.Lrtld_local_ro:
-	.long	C_SYMBOL_NAME(_rtld_local_ro)(GOTOFF)
-# else
-#  ifdef PIC
-1:	.long	_GLOBAL_OFFSET_TABLE_ - 0b - PC_OFS
-.Lrtld_global_ro:
-	.long	C_SYMBOL_NAME(_rtld_global_ro)(GOT)
-#  else
-.Lhwcap:
-	.long	C_SYMBOL_NAME(_dl_hwcap)
-#  endif
-# endif
-#endif
 
 END (__longjmp)

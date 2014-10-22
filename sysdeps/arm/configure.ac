@@ -17,8 +17,8 @@ dnl it.  Until we do, don't define it.
 AC_CACHE_CHECK([whether the compiler is using the ARM hard-float ABI],
   [libc_cv_arm_pcs_vfp],
   [AC_EGREP_CPP(yes,[#ifdef __ARM_PCS_VFP
-                      yes
-                     #endif
+		      yes
+		     #endif
   ], libc_cv_arm_pcs_vfp=yes, libc_cv_arm_pcs_vfp=no)])
 if test $libc_cv_arm_pcs_vfp = yes; then
   AC_DEFINE(HAVE_ARM_PCS_VFP)
@@ -38,6 +38,46 @@ if test $libc_cv_arm_tls_desc = yes; then
   LIBC_CONFIG_VAR([have-arm-tls-desc], [yes])
 else
   LIBC_CONFIG_VAR([have-arm-tls-desc], [no])
+fi
+
+AC_CACHE_CHECK([whether PC-relative relocs in movw/movt work properly],
+	       libc_cv_arm_pcrel_movw, [
+cat > conftest.s <<\EOF
+	.syntax unified
+	.arm
+	.arch armv7-a
+
+	.text
+	.globl foo
+	.type foo,%function
+foo:	movw r0, #:lower16:symbol - 1f - 8
+	movt r0, #:upper16:symbol - 1f - 8
+1:	add r0, pc
+	@ And now a case with a local symbol.
+	movw r0, #:lower16:3f - 2f - 8
+	movt r0, #:upper16:3f - 2f - 8
+2:	add r0, pc
+	bx lr
+
+.data
+	.globl symbol
+	.hidden symbol
+symbol:	.long 23
+3:	.long 17
+EOF
+libc_cv_arm_pcrel_movw=no
+${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
+	 -nostartfiles -nostdlib -shared \
+	 -o conftest.so conftest.s 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD &&
+LC_ALL=C $READELF -dr conftest.so > conftest.dr 2>&AS_MESSAGE_LOG_FD &&
+{
+  cat conftest.dr 1>&AS_MESSAGE_LOG_FD
+  fgrep 'TEXTREL
+R_ARM_NONE' conftest.dr > /dev/null || libc_cv_arm_pcrel_movw=yes
+}
+rm -f conftest*])
+if test $libc_cv_arm_pcrel_movw = yes; then
+  AC_DEFINE([ARM_PCREL_MOVW_OK])
 fi
 
 libc_cv_gcc_unwind_find_fde=no

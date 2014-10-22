@@ -58,21 +58,15 @@ ENTRY (__sigsetjmp)
 #ifdef NEED_HWCAP
 	/* Check if we have a VFP unit.  */
 # ifdef IS_IN_rtld
-	ldr	a3, 1f
-	ldr	a4, .Lrtld_local_ro
-0:	add	a3, pc, a3
-	add	a3, a3, a4
-	ldr	a3, [a3, #RTLD_GLOBAL_RO_DL_HWCAP_OFFSET]
+	LDST_PCREL (ldr, a3, a4, \
+		    C_SYMBOL_NAME(_rtld_local_ro) \
+		    + RTLD_GLOBAL_RO_DL_HWCAP_OFFSET)
 # else
 #  ifdef PIC
-	ldr	a3, 1f
-	ldr	a4, .Lrtld_global_ro
-0:	add	a3, pc, a3
-	ldr	a3, [a3, a4]
-	ldr	a3, [a3, #RTLD_GLOBAL_RO_DL_HWCAP_OFFSET]
+	LDR_GLOBAL (a3, a4, C_SYMBOL_NAME(_rtld_global_ro), \
+		    RTLD_GLOBAL_RO_DL_HWCAP_OFFSET)
 #  else
-	ldr	a3, .Lhwcap
-	ldr	a3, [a3, #0]
+	LDR_GLOBAL (a3, a4, C_SYMBOL_NAME(_dl_hwcap), 0)
 #  endif
 # endif
 #endif
@@ -113,23 +107,6 @@ ENTRY (__sigsetjmp)
 
 	/* Make a tail call to __sigjmp_save; it takes the same args.  */
 	B	PLTJMP(C_SYMBOL_NAME(__sigjmp_save))
-
-#ifdef NEED_HWCAP
-# ifdef IS_IN_rtld
-1:	.long	_GLOBAL_OFFSET_TABLE_ - 0b - PC_OFS
-.Lrtld_local_ro:
-	.long	C_SYMBOL_NAME(_rtld_local_ro)(GOTOFF)
-# else
-#  ifdef PIC
-1:	.long	_GLOBAL_OFFSET_TABLE_ - 0b - PC_OFS
-.Lrtld_global_ro:
-	.long	C_SYMBOL_NAME(_rtld_global_ro)(GOT)
-#  else
-.Lhwcap:
-	.long	C_SYMBOL_NAME(_dl_hwcap)
-#  endif
-# endif
-#endif
 
 END (__sigsetjmp)
 
