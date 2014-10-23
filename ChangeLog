@@ -1,3 +1,7 @@
+2014-11-27  J. Brown  <jb999@gmx.de>
+
+	* sysdeps/x86/bits/string.h: Add recent CPUs.
+
 2014-11-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* misc/tst-pselect.c (do_test): Use sigprocmask instead of
