@@ -1,3 +1,19 @@
+2014-10-23  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14132]
+	* sysdeps/powerpc/powerpc32/libgcc-compat.S (__ashldi3_v_glibc20):
+	Remove macro definition.
+	(__ashrdi3_v_glibc20): Likewise.
+	(__lshrdi3_v_glibc20): Likewise.
+	(__cmpdi2_v_glibc20): Likewise.
+	(__ucmpdi2_v_glibc20): Likewise.
+	[!_SOFT_FLOAT && !__NO_FPRS__] (__fixdfdi_v_glibc20): Likewise.
+	[!_SOFT_FLOAT && !__NO_FPRS__] (__fixsfdi_v_glibc20): Likewise.
+	[!_SOFT_FLOAT && !__NO_FPRS__] (__fixunsdfdi_v_glibc20): Likewise.
+	[!_SOFT_FLOAT && !__NO_FPRS__] (__fixunssfdi_v_glibc20): Likewise.
+	[!_SOFT_FLOAT && !__NO_FPRS__] (__floatdidf_v_glibc20): Likewise.
+	[!_SOFT_FLOAT && !__NO_FPRS__] (__floatdisf_v_glibc20): Likewise.
+
 2014-10-22  Roland McGrath  <roland@hack.frob.com>
 
 	* inet/netgroup.h (struct name_list): Use C99 [] syntax rather than
