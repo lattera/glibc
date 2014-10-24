@@ -36,12 +36,12 @@
 #define	SIGTRAP		5	/* Trace trap (POSIX).  */
 #define	SIGABRT		6	/* Abort (ANSI).  */
 #define	SIGIOT		6	/* IOT trap (4.2 BSD).  */
-#define	SIGEMT		7
+#define	SIGSTKFLT	7	/* Stack fault.  */
 #define	SIGFPE		8	/* Floating-point exception (ANSI).  */
 #define	SIGKILL		9	/* Kill, unblockable (POSIX).  */
 #define	SIGBUS		10	/* BUS error (4.2 BSD).  */
 #define	SIGSEGV		11	/* Segmentation violation (ANSI).  */
-#define SIGSYS		12	/* Bad system call.  */
+#define	SIGXCPU		12	/* CPU limit exceeded (4.2 BSD).  */
 #define	SIGPIPE		13	/* Broken pipe (POSIX).  */
 #define	SIGALRM		14	/* Alarm clock (POSIX).  */
 #define	SIGTERM		15	/* Termination (ANSI).  */
@@ -61,11 +61,9 @@
 #define	SIGTTIN		27	/* Background read from tty (POSIX).  */
 #define	SIGTTOU		28	/* Background write to tty (POSIX).  */
 #define	SIGURG		29	/* Urgent condition on socket (4.2 BSD).  */
-#define SIGLOST		30	/* Operating System Has Lost (HP/UX). */
+#define	SIGXFSZ		30	/* File size limit exceeded (4.2 BSD).  */
+#define SIGSYS		31	/* Bad system call.  */
 #define SIGUNUSED	31
-#define	SIGXCPU		33	/* CPU limit exceeded (4.2 BSD).  */
-#define	SIGXFSZ		34	/* File size limit exceeded (4.2 BSD).  */
-#define	SIGSTKFLT	36	/* Stack fault.  */
 
 #define	_NSIG		65	/* Biggest signal number + 1
 				   (including real-time signals).  */
@@ -75,7 +73,17 @@
 
 /* These are the hard limits of the kernel.  These values should not be
    used directly at user level.  */
-#define __SIGRTMIN	37
+/* In the Linux kernel version 3.17, and glibc 2.21, the signal numbers
+   were rearranged in order to make hppa like every other arch. Previously
+   we started __SIGRTMIN at 37, and that meant several pieces of important
+   software, including systemd, would fail to build. To support systemd we
+   removed SIGEMT and SIGLOST, and rearranged the others according to
+   expected values. This is technically an ABI incompatible change, but
+   because zero applications use SIGSTKFLT, SIGXCPU, SIGXFSZ and SIGSYS
+   nothing broke.  Nothing uses SIGEMT and SIGLOST, and they were present
+   for HPUX compatibility which is no longer supported.  Thus because
+   nothing breaks we don't do any compatibility work here.  */
+#define __SIGRTMIN	32	/* Kernel > 3.17.  */
 #define __SIGRTMAX	(_NSIG - 1)
 
 #endif	/* <signal.h> included.  */

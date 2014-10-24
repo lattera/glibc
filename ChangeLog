@@ -1,3 +1,11 @@
+2014-10-23  Carlos O'Donell  <carlos@systemhalted.org>
+	    Helge Deller <deller@gmx.de>
+
+	[BZ #17508]
+	* sysdeps/unix/sysv/linux/hppa/bits/signum.h: Remove SIGEMT.
+	Define SIGSTKFLT as 7. Define SIGSYS as 31. Define SIGXCPU as 12.
+	Remove SIGLOST. Define SIGXFSZ as 30. Define __SIGRTMIN as 32.
+
 2014-10-23  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14132]
