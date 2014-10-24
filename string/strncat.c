@@ -33,13 +33,11 @@ STRNCAT (char *s1, const char *s2, size_t n)
   char *s = s1;
 
   /* Find the end of S1.  */
-  do
-    c = *s1++;
-  while (c != '\0');
+  s1 += strlen (s1);
 
   /* Make S1 point before next character, so we can increment
      it while memory is read (wins on pipelined cpus).  */
-  s1 -= 2;
+  s1 -= 1;
 
   if (n >= 4)
     {
