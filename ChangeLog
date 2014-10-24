@@ -117,6 +117,11 @@
 
 2014-10-23  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* sysdeps/aarch64/fpu/fsetexcptflg.c (fsetexceptflag):
+	Remove unused include.
+
+2014-10-23  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* sysdeps/aarch64/fpu/feholdexcpt.c (feholdexcept): Remove spaces.
 	* sysdeps/aarch64/fpu/fesetenv.c (fesetenv): Remove spaces.
 	* sysdeps/aarch64/fpu/fesetround.c (fesetround): Remove spaces.

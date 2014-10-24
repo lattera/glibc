@@ -17,7 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
-#include <math.h>
 #include <fpu_control.h>
 
 int
