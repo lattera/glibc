@@ -1,5 +1,10 @@
 2014-10-24  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* sysdeps/aarch64/fpu/feenablxcpt.c (feenableexcept):
+	Simplify logic.
+
+2014-10-24  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* sysdeps/aarch64/fpu/fedisblxcpt.c (fedisableexcept):
 	Simplify logic.
 
