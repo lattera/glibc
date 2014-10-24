@@ -1,5 +1,9 @@
 # File name	Caller	Syscall name	Args	Strong name	Weak names
 
+chown		-	chown32		i:sii	__chown		chown@@GLIBC_2.1
+lchown		-	lchown32	i:sii	__lchown	lchown@@GLIBC_2.0 chown@GLIBC_2.0
+fchown		-	fchown32	i:iii	__fchown	fchown
+
 modify_ldt	EXTRA	modify_ldt	i:ipi	__modify_ldt	modify_ldt
 vm86old		EXTRA	vm86old		i:p	__vm86old	vm86@GLIBC_2.0
 vm86		-	vm86		i:ip	__vm86		vm86@@GLIBC_2.3.4

@@ -1,5 +1,9 @@
 # File name	Caller	Syscall name	Args	Strong name	Weak names
 
+chown		-	chown32		i:sii	__chown		chown@@GLIBC_2.1
+lchown		-	lchown32	i:sii	__lchown	lchown@@GLIBC_2.0 chown@GLIBC_2.0
+fchown		-	fchown32	i:iii	__fchown	fchown
+
 oldgetrlimit	EXTRA	getrlimit	i:ip	__old_getrlimit	getrlimit@GLIBC_2.0
 setrlimit	-	setrlimit	i:ip	__setrlimit	setrlimit@GLIBC_2.0 setrlimit@@GLIBC_2.2
 

@@ -1,3 +1,35 @@
+2014-10-24  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14138]
+	* sysdeps/unix/sysv/linux/i386/chown.c: Remove file.
+	* sysdeps/unix/sysv/linux/i386/fchown.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/lchown.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/chown.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/fchown.c: Remove file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/lchown.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/chown.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/fchown.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/lchown.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/chown.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/fchown.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/lchown.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Versions (GLIBC_2.1): Add
+	__chown.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list (chown): Add syscall.
+	(lchown): Likewise.
+	(fchown): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/syscalls.list (chown):
+	Likewise.
+	(lchown): Likewise.
+	(fchown): Likewise.
+	* sysdeps/unix/sysv/linux/sh/syscalls.list (chown): Likewise.
+	(lchown): Likewise.
+	(fchown): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list (chown):
+	Likewise.
+	(lchown): Likewise.
+	(fchown): Likewise.
+
 2014-10-23  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/aarch64/fpu/feholdexcpt.c (feholdexcept): Remove spaces.

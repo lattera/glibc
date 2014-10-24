@@ -1,5 +1,9 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
+chown		-	chown32		i:sii	__chown		chown
+lchown		-	lchown32	i:sii	__lchown	lchown
+fchown		-	fchown32	i:iii	__fchown	fchown
+
 waitpid		-	waitpid		Ci:ipi	__waitpid	waitpid	__libc_waitpid
 
 prlimit64	EXTRA	prlimit64	i:iipp	prlimit64

@@ -4,6 +4,9 @@ libc {
     __register_frame; __register_frame_table; __deregister_frame;
     __frame_state_for; __register_frame_info_table;
   }
+  GLIBC_2.1 {
+    __chown;
+  }
   GLIBC_2.2 {
     # functions used in other libraries
     __xstat64; __fxstat64; __lxstat64;
