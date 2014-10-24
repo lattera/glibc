@@ -1,5 +1,9 @@
 2014-10-24  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* string/strcat.c (strcat): Improve performance by using strlen/strcpy.
+
+2014-10-24  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* sysdeps/aarch64/fpu/fgetexcptflg.c (fegetexceptflag):
 	Call libc_fetestexcept_aarch64.
 
