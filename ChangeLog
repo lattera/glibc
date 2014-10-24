@@ -1,6 +1,91 @@
 2014-10-24  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14138]
+	* sysdeps/unix/sysv/linux/arm/getegid.c: Remove file.
+	* sysdeps/unix/sysv/linux/arm/geteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/getgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/getgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/getresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/getresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/getuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/geteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/getegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/geteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/getgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/getgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/getresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/getresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/getuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/geteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/getegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/geteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/getgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/getgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/getresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/getresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/getuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/getegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/geteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/getgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/getgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/getuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list (getegid): Add
+	syscall.
+	(geteuid): Likewise.
+	(getgid): Likewise.
+	(getuid): Likewise.
+	(getresgid): Likewise.
+	(getresuid): Likewise.
+	(getgroups): Likewise.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list (getegid): Likewise.
+	(geteuid): Likewise.
+	(getgid): Likewise.
+	(getuid): Likewise.
+	(getresgid): Likewise.
+	(getresuid): Likewise.
+	(getgroups): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/syscalls.list (getegid): Likewise.
+	(geteuid): Likewise.
+	(getgid): Likewise.
+	(getuid): Likewise.
+	(getresgid): Likewise.
+	(getresuid): Likewise.
+	(getgroups): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/syscalls.list (getegid):
+	Likewise.
+	(geteuid): Likewise.
+	(getgid): Likewise.
+	(getuid): Likewise.
+	(getresgid): Likewise.
+	(getresuid): Likewise.
+	(getgroups): Likewise.
+	* sysdeps/unix/sysv/linux/sh/syscalls.list (getegid): Likewise.
+	(geteuid): Likewise.
+	(getgid): Likewise.
+	(getuid): Likewise.
+	(getresgid): Likewise.
+	(getresuid): Likewise.
+	(getgroups): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list (getegid):
+	Likewise.
+	(geteuid): Likewise.
+	(getgid): Likewise.
+	(getuid): Likewise.
+	(getgroups): Likewise.
+
+	[BZ #14138]
 	* sysdeps/unix/sysv/linux/i386/chown.c: Remove file.
 	* sysdeps/unix/sysv/linux/i386/fchown.c: Likewise.
 	* sysdeps/unix/sysv/linux/i386/lchown.c: Likewise.
