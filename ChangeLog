@@ -1,3 +1,8 @@
+2014-10-24  Roland McGrath  <roland@hack.frob.com>
+
+	* inet/htons.c (htons): Prototypify.
+	* inet/htonl.c (htonl): Likewise.
+
 2014-10-24  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* string/strncat.c (strncat): Improve performance by using strlen.

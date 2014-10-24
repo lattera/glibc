@@ -21,8 +21,7 @@
 #undef	ntohs
 
 uint16_t
-htons (x)
-     uint16_t x;
+htons (uint16_t x)
 {
 #if BYTE_ORDER == BIG_ENDIAN
   return x;

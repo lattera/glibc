@@ -22,8 +22,7 @@
 #undef	ntohl
 
 uint32_t
-htonl (x)
-     uint32_t x;
+htonl (uint32_t x)
 {
 #if BYTE_ORDER == BIG_ENDIAN
   return x;
