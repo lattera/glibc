@@ -17,13 +17,11 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
-#include <fpu_control.h>
+#include <get-rounding-mode.h>
 
 int
 fegetround (void)
 {
-  fpu_control_t fpcr;
-  _FPU_GETCW (fpcr);
-  return fpcr & FE_TOWARDZERO;
+  return get_rounding_mode ();
 }
 libm_hidden_def (fegetround)
