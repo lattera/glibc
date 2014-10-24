@@ -17,34 +17,12 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
-#include <fpu_control.h>
+#include <math_private.h>
 
 int
 feholdexcept (fenv_t *envp)
 {
-  fpu_control_t fpcr;
-  fpu_control_t fpcr_new;
-  fpu_fpsr_t fpsr;
-  fpu_fpsr_t fpsr_new;
-
-  _FPU_GETCW (fpcr);
-  envp->__fpcr = fpcr;
-
-  _FPU_GETFPSR (fpsr);
-  envp->__fpsr = fpsr;
-
-  /* Now set all exceptions to non-stop.  */
-  fpcr_new = fpcr & ~(FE_ALL_EXCEPT << FE_EXCEPT_SHIFT);
-
-  /* And clear all exception flags.  */
-  fpsr_new = fpsr & ~FE_ALL_EXCEPT;
-
-  if (fpsr != fpsr_new)
-    _FPU_SETFPSR (fpsr_new);
-
-  if (fpcr != fpcr_new)
-    _FPU_SETCW (fpcr_new);
-
+  libc_feholdexcept_aarch64 (envp);
   return 0;
 }
 libm_hidden_def (feholdexcept)
