@@ -28,7 +28,7 @@ feclearexcept (int excepts)
   excepts &= FE_ALL_EXCEPT;
 
   _FPU_GETFPSR (fpsr);
-  fpsr_new = (fpsr & ~FE_ALL_EXCEPT) | (fpsr & FE_ALL_EXCEPT & ~excepts);
+  fpsr_new = fpsr & ~excepts;
 
   if (fpsr != fpsr_new)
     _FPU_SETFPSR (fpsr_new);
