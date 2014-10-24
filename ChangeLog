@@ -1,5 +1,10 @@
 2014-10-24  Roland McGrath  <roland@hack.frob.com>
 
+	* configure.ac: Validate compiler version with a empirical test of
+	__GNUC__ and __GNUC_MINOR__ predefined values, rather than by grepping
+	$CC -v output.
+	* configure: Regenerated.
+
 	* inet/htons.c (htons): Prototypify.
 	* inet/htonl.c (htonl): Likewise.
 

@@ -910,9 +910,6 @@ AC_CHECK_PROG_VER(LD, $LD, --version,
 
 # These programs are version sensitive.
 AC_CHECK_TOOL_PREFIX
-AC_CHECK_PROG_VER(CC, ${ac_tool_prefix}gcc ${ac_tool_prefix}cc, -v,
-  [version \([egcygnustpi-]*[0-9.]*\)], [4.[4-9].* | 4.[1-9][0-9].* | [5-9].* ],
-  critic_missing="$critic_missing gcc")
 AC_CHECK_PROG_VER(MAKE, gnumake gmake make, --version,
   [GNU Make[^0-9]*\([0-9][0-9.]*\)],
   [3.79* | 3.[89]* | [4-9].* | [1-9][0-9]*], critic_missing="$critic_missing make")
@@ -932,6 +929,16 @@ AC_CHECK_PROG_VER(SED, sed, --version,
 AC_CHECK_PROG_VER(AWK, gawk, --version,
   [GNU Awk[^0-9]*\([0-9][0-9.]*\)],
   [3.1.[2-9]*|3.[2-9]*|[4-9]*], critic_missing="$critic_missing gawk")
+
+AC_CACHE_CHECK([if $CC is sufficient to build libc], libc_cv_compiler_ok, [
+AC_TRY_COMPILE([], [
+#if !defined __GNUC__ || __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 4)
+#error insufficient compiler
+#endif],
+	       [libc_cv_compiler_ok=yes],
+	       [libc_cv_compiler_ok=no])])
+AS_IF([test $libc_cv_compiler_ok != yes],
+      [critic_missing="$critic_missing compiler"])
 
 AC_CHECK_TOOL(NM, nm, false)
 
