@@ -118,6 +118,11 @@
 2014-10-23  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/aarch64/fpu/fsetexcptflg.c (fsetexceptflag):
+	Cleanup logic.
+
+2014-10-23  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* sysdeps/aarch64/fpu/fsetexcptflg.c (fsetexceptflag):
 	Remove unused include.
 
 2014-10-23  Wilco Dijkstra  <wdijkstr@arm.com>
