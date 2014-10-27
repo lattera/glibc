@@ -34,9 +34,11 @@
 
 #include_next <kernel-features.h>
 
-/* The ARM kernel may or may not support
+/* The ARM kernel before 3.14.3 may or may not support
    futex_atomic_cmpxchg_inatomic, depending on kernel
    configuration.  */
-#undef __ASSUME_FUTEX_LOCK_PI
-#undef __ASSUME_REQUEUE_PI
-#undef __ASSUME_SET_ROBUST_LIST
+#if __LINUX_KERNEL_VERSION < 0x030E03
+# undef __ASSUME_FUTEX_LOCK_PI
+# undef __ASSUME_REQUEUE_PI
+# undef __ASSUME_SET_ROBUST_LIST
+#endif
