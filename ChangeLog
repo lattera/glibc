@@ -1,6 +1,9 @@
 2014-11-21  Will Newton  <will.newton@linaro.org>
 	    Andrew Pinski  <andrew.pinski@caviumnetworks.com>
 
+	* sysdeps/aarch64/dl-machine.h (elf_machine_load_address):
+	Refactor inline-asm.  Also add comment.
+
 	* sysdeps/aarch64/bits/link.h (la_aarch64_gnu_pltenter): Use
 	ElfW macro instead of hardcoded Elf64 types.
 	(la_aarch64_gnu_pltenter): Likewise.
