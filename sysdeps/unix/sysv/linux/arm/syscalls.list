@@ -12,6 +12,9 @@ getresgid	-	getresgid32	i:ppp	__getresgid	getresgid
 getresuid	-	getresuid32	i:ppp	__getresuid	getresuid
 getgroups	-	getgroups32	i:ip	__getgroups	getgroups
 
+setfsgid	-	setfsgid32	Ei:i	setfsgid
+setfsuid	-	setfsuid32	Ei:i	setfsuid
+
 prlimit64	EXTRA	prlimit64	i:iipp	prlimit64
 
 fanotify_mark	EXTRA	fanotify_mark	i:iiiiis	fanotify_mark

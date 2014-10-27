@@ -1,3 +1,34 @@
+2014-10-27  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14138]
+	* sysdeps/unix/sysv/linux/arm/setfsgid.c: Remove file.
+	* sysdeps/unix/sysv/linux/arm/setfsuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setfsgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setfsuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/setfsgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/setfsuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setfsgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setfsuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/setfsgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/setfsuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setfsgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setfsuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list (setfsgid): Add
+	syscall.
+	(setfsuid): Likewise.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list (setfsgid): Likewise.
+	(setfsuid): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/syscalls.list (setfsgid): Likewise.
+	(setfsuid): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/syscalls.list (setfsgid):
+	Likewise.
+	(setfsuid): Likewise.
+	* sysdeps/unix/sysv/linux/sh/syscalls.list (setfsgid): Likewise.
+	(setfsuid): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list (setfsgid):
+	Likewise.
+	(setfsuid): Likewise.
+
 2014-10-27  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #17501]

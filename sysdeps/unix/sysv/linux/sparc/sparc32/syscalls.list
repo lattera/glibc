@@ -14,5 +14,8 @@ getresuid	-	getresuid32	3	getresuid
 getresgid	-	getresgid32	3	getresgid
 getgroups	-	getgroups32	i:ip	__getgroups	getgroups
 
+setfsgid	-	setfsgid32	Ei:i	setfsgid
+setfsuid	-	setfsuid32	Ei:i	setfsuid
+
 prlimit64	EXTRA	prlimit64	i:iipp	prlimit64
 fanotify_mark	EXTRA	fanotify_mark	i:iiiiis	fanotify_mark
