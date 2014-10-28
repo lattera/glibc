@@ -1,3 +1,21 @@
+2014-10-28  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14132]
+	* sysdeps/generic/unwind-dw2-fde.c
+	(__register_frame_info_bases_internal): Do not declare.
+	(__register_frame_info_table_bases_internal): Likewise.
+	(__deregister_frame_info_bases_internal): Likewise.
+	(__register_frame_info_bases): Declare and use hidden_proto before
+	definition.  Use hidden_def instead of INTDEF.
+	(__register_frame_info_table_bases): Likewise.
+	(__deregister_frame_info_bases): Likewise.
+	(__register_frame_info): Do not use INTUSE.
+	(__register_frame): Likewise.
+	(__register_frame_info_table): Likewise.
+	(__register_frame_table): Likewise.
+	(__deregister_frame_info): Likewise.
+	(__deregister_frame): Likewise.
+
 2014-10-27  Gratian Crisan  <gratian.crisan@ni.com>
 
 	* sysdeps/unix/sysv/linux/arm/kernel-features.h

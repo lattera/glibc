@@ -60,12 +60,15 @@ __libc_lock_define_initialized (static, object_mutex)
 #define __gthread_mutex_lock(m) __libc_lock_lock (*(m))
 #define __gthread_mutex_unlock(m) __libc_lock_unlock (*(m))
 
-void __register_frame_info_bases_internal (void *begin, struct object *ob,
-					   void *tbase, void *dbase);
-void __register_frame_info_table_bases_internal (void *begin,
-						 struct object *ob,
-						 void *tbase, void *dbase);
-void *__deregister_frame_info_bases_internal (void *begin);
+void __register_frame_info_bases (void *begin, struct object *ob,
+				  void *tbase, void *dbase);
+hidden_proto (__register_frame_info_bases)
+void __register_frame_info_table_bases (void *begin,
+					struct object *ob,
+					void *tbase, void *dbase);
+hidden_proto (__register_frame_info_table_bases)
+void *__deregister_frame_info_bases (void *begin);
+hidden_proto (__deregister_frame_info_bases)
 
 #else
 
@@ -122,12 +125,12 @@ __register_frame_info_bases (void *begin, struct object *ob,
 
   __gthread_mutex_unlock (&object_mutex);
 }
-INTDEF(__register_frame_info_bases)
+hidden_def (__register_frame_info_bases)
 
 void
 __register_frame_info (void *begin, struct object *ob)
 {
-  INTUSE(__register_frame_info_bases) (begin, ob, 0, 0);
+  __register_frame_info_bases (begin, ob, 0, 0);
 }
 
 void
@@ -140,7 +143,7 @@ __register_frame (void *begin)
     return;
 
   ob = (struct object *) malloc (sizeof (struct object));
-  INTUSE(__register_frame_info_bases) (begin, ob, 0, 0);
+  __register_frame_info_bases (begin, ob, 0, 0);
 }
 
 /* Similar, but BEGIN is actually a pointer to a table of unwind entries
@@ -167,19 +170,19 @@ __register_frame_info_table_bases (void *begin, struct object *ob,
 
   __gthread_mutex_unlock (&object_mutex);
 }
-INTDEF(__register_frame_info_table_bases)
+hidden_def (__register_frame_info_table_bases)
 
 void
 __register_frame_info_table (void *begin, struct object *ob)
 {
-  INTUSE(__register_frame_info_table_bases) (begin, ob, 0, 0);
+  __register_frame_info_table_bases (begin, ob, 0, 0);
 }
 
 void
 __register_frame_table (void *begin)
 {
   struct object *ob = (struct object *) malloc (sizeof (struct object));
-  INTUSE(__register_frame_info_table_bases) (begin, ob, 0, 0);
+  __register_frame_info_table_bases (begin, ob, 0, 0);
 }
 
 /* Called from crtbegin.o to deregister the unwind info for an object.  */
@@ -243,12 +246,12 @@ __deregister_frame_info_bases (void *begin)
   __gthread_mutex_unlock (&object_mutex);
   return (void *) ob;
 }
-INTDEF(__deregister_frame_info_bases)
+hidden_def (__deregister_frame_info_bases)
 
 void *
 __deregister_frame_info (void *begin)
 {
-  return INTUSE(__deregister_frame_info_bases) (begin);
+  return __deregister_frame_info_bases (begin);
 }
 
 void
@@ -256,7 +259,7 @@ __deregister_frame (void *begin)
 {
   /* If .eh_frame is empty, we haven't registered.  */
   if (*(uword *) begin != 0)
-    free (INTUSE(__deregister_frame_info_bases) (begin));
+    free (__deregister_frame_info_bases (begin));
 }
 
 
