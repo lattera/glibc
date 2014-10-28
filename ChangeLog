@@ -1,3 +1,10 @@
+2014-10-28  Carlos O'Donell  <carlos@redhat.com>
+
+	* dl-load.c (local_strdup): Remove.
+	(expand_dynamic_string_token): Use __strdup.
+	(decompose_rpath): Likewise.
+	(_dl_map_object): Likewise.
+
 2014-10-28  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14132]

@@ -112,20 +112,6 @@ static const size_t system_dirs_len[] =
   (sizeof (system_dirs_len) / sizeof (system_dirs_len[0]))
 
 
-/* Local version of `strdup' function.  */
-static char *
-local_strdup (const char *s)
-{
-  size_t len = strlen (s) + 1;
-  void *new = malloc (len);
-
-  if (new == NULL)
-    return NULL;
-
-  return (char *) memcpy (new, s, len);
-}
-
-
 static bool
 is_trusted_path (const char *path, size_t len)
 {
@@ -384,7 +370,7 @@ expand_dynamic_string_token (struct link_map *l, const char *s, int is_path)
 
   /* If we do not have to replace anything simply copy the string.  */
   if (__glibc_likely (cnt == 0))
-    return local_strdup (s);
+    return __strdup (s);
 
   /* Determine the length of the substituted string.  */
   total = DL_DST_REQUIRED (l, s, strlen (s), cnt);
@@ -593,7 +579,7 @@ decompose_rpath (struct r_search_path_struct *sps,
     }
 
   /* Make a writable copy.  */
-  copy = local_strdup (rpath);
+  copy = __strdup (rpath);
   if (copy == NULL)
     {
       errstring = N_("cannot create RUNPATH/RPATH copy");
@@ -2101,7 +2087,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 				    false);
 		  if (__glibc_likely (fd != -1))
 		    {
-		      realname = local_strdup (cached);
+		      realname = __strdup (cached);
 		      if (realname == NULL)
 			{
 			  __close (fd);
@@ -2130,7 +2116,7 @@ _dl_map_object (struct link_map *loader, const char *name,
       /* The path may contain dynamic string tokens.  */
       realname = (loader
 		  ? expand_dynamic_string_token (loader, name, 0)
-		  : local_strdup (name));
+		  : __strdup (name));
       if (realname == NULL)
 	fd = -1;
       else
@@ -2164,7 +2150,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 	  static const Elf_Symndx dummy_bucket = STN_UNDEF;
 
 	  /* Allocate a new object map.  */
-	  if ((name_copy = local_strdup (name)) == NULL
+	  if ((name_copy = __strdup (name)) == NULL
 	      || (l = _dl_new_object (name_copy, name, type, loader,
 				      mode, nsid)) == NULL)
 	    {
