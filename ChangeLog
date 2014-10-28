@@ -1,3 +1,7 @@
+2016-01-07  Richard Henderson  <rth@redhat.com>
+
+	* longlong.h [__alpha] (umul_ppmm): Disable for c++.
+
 2016-01-07  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/fxstat64.c (___fxstat64): Change
