@@ -343,8 +343,8 @@ extern uint64_t _dl_hwcap __attribute__((weak));
 #define atomic_write_barrier()						\
   do {									\
      if (__atomic_is_v9)						\
-       /* membar  #StoreLoad | #StoreStore */				\
-       __asm __volatile (".word 0x8143e00a" : : : "memory");		\
+       /* membar  #LoadStore | #StoreStore */				\
+       __asm __volatile (".word 0x8143e00c" : : : "memory");		\
      else								\
        __asm __volatile ("" : : : "memory");				\
   } while (0)

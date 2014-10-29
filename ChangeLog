@@ -1,3 +1,12 @@
+2014-10-31  Torvald Riegel  <triegel@redhat.com>
+
+	* sysdeps/sparc/sparc32/bits/atomic.h (atomic_write_barrier): Use
+	correct barrier instruction.
+	* sysdeps/sparc/sparc32/sparcv9/bits/atomic.h (atomic_write_barrier):
+	Likewise.
+	* sysdeps/sparc/sparc64/bits/atomic.h (atomic_write_barrier):
+	Likewise.
+
 2014-10-30  Roland McGrath  <roland@hack.frob.com>
 
 	* include/ctype.h: Include <ctype/ctype.h> first thing rather than

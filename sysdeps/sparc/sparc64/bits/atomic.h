@@ -117,4 +117,4 @@ typedef uintmax_t uatomic_max_t;
 #define atomic_read_barrier() \
   __asm __volatile ("membar #LoadLoad | #LoadStore" : : : "memory")
 #define atomic_write_barrier() \
-  __asm __volatile ("membar #StoreLoad | #StoreStore" : : : "memory")
+  __asm __volatile ("membar #LoadStore | #StoreStore" : : : "memory")
