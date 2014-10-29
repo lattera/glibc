@@ -535,3 +535,10 @@ typedef uintmax_t uatomic_max_t;
 #define atomic_or(mem, mask) __arch_or_body (LOCK_PREFIX, mem, mask)
 
 #define catomic_or(mem, mask) __arch_or_body (__arch_cprefix, mem, mask)
+
+/* We don't use mfence because it is supposedly slower due to having to
+   provide stronger guarantees (e.g., regarding self-modifying code).  */
+#define atomic_full_barrier() \
+    __asm __volatile (LOCK_PREFIX "orl $0, (%%esp)" ::: "memory")
+#define atomic_read_barrier() __asm ("" ::: "memory")
+#define atomic_write_barrier() __asm ("" ::: "memory")
