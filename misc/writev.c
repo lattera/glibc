@@ -25,7 +25,7 @@
    Operates just like `write' (see <unistd.h>) except that the data
    are taken from VECTOR instead of a contiguous buffer.  */
 ssize_t
-__libc_writev (fd, vector, count)
+__writev (fd, vector, count)
      int fd;
      const struct iovec *vector;
      int count;
@@ -33,7 +33,6 @@ __libc_writev (fd, vector, count)
   __set_errno (ENOSYS);
   return -1;
 }
-strong_alias (__libc_writev, __writev)
-weak_alias (__libc_writev, writev)
+weak_alias (__writev, writev)
 
 stub_warning (writev)

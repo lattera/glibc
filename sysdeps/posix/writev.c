@@ -38,7 +38,7 @@ ifree (char **ptrp)
    Operates just like 'write' (see <unistd.h>) except that the data
    are taken from VECTOR instead of a contiguous buffer.  */
 ssize_t
-__libc_writev (int fd, const struct iovec *vector, int count)
+__writev (int fd, const struct iovec *vector, int count)
 {
   /* Find the total number of bytes to be written.  */
   size_t bytes = 0;
@@ -88,7 +88,4 @@ __libc_writev (int fd, const struct iovec *vector, int count)
 
   return bytes_written;
 }
-#ifndef __libc_writev
-strong_alias (__libc_writev, __writev)
-weak_alias (__libc_writev, writev)
-#endif
+weak_alias (__writev, writev)

@@ -1,3 +1,23 @@
+2014-10-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/sys/uio.h (__libc_readv): Remove declaration.
+	(__libc_writev): Likewise.
+	* misc/readv.c (__libc_readv): Rename to __readv.
+	(__readv): Do not define as alias.
+	(readv): Define as alias of __readv.
+	* misc/writev.c (__libc_writev): Rename to __writev.
+	(__writev): Do not define as alias.
+	(writev): Define as alias of __writev.
+	* sysdeps/posix/readv.c (__libc_readv): Rename to __readv.
+	(__readv): Do not define as alias.
+	(readv): Define unconditionally as alias of __readv.
+	* sysdeps/posix/writev.c (__libc_writev): Rename to __writev.
+	(__writev): Do not define as alias.
+	(writev): Define unconditionally as alias of __writev.
+	* sysdeps/unix/syscalls.list (readv): Do not define __libc_readv
+	name.
+	(writev): Do not define __libc_writev name.
+
 2014-10-30  Roland McGrath  <roland@hack.frob.com>
 
 	* iconv/iconv_charmap.c (add_bytes): Make IN argument pointer to const.
