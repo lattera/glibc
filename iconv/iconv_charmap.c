@@ -232,8 +232,10 @@ charmap_conversion (const char *from_code, struct charmap_t *from_charmap,
 }
 
 
+/* Add the IN->OUT mapping to TBL.  OUT is potentially stored in the table.
+   IN is used only here, so it need not be kept live afterwards.  */
 static void
-add_bytes (struct convtable *tbl, struct charseq *in, struct charseq *out)
+add_bytes (struct convtable *tbl, const struct charseq *in, struct charseq *out)
 {
   int n = 0;
   unsigned int byte;
@@ -266,6 +268,45 @@ add_bytes (struct convtable *tbl, struct charseq *in, struct charseq *out)
     }
 }
 
+/* Try to convert SEQ from WCHAR_T format using CD.
+   Returns a malloc'd struct or NULL.  */
+static struct charseq *
+convert_charseq (iconv_t cd, const struct charseq *seq)
+{
+  struct charseq *result = NULL;
+
+  if (seq->ucs4 != UNINITIALIZED_CHAR_VALUE)
+    {
+      /* There is a chance.  Try the iconv module.  */
+      wchar_t inbuf[1] = { seq->ucs4 };
+      unsigned char outbuf[64];
+      char *inptr = (char *) inbuf;
+      size_t inlen = sizeof (inbuf);
+      char *outptr = (char *) outbuf;
+      size_t outlen = sizeof (outbuf);
+
+      (void) iconv (cd, &inptr, &inlen, &outptr, &outlen);
+
+      if (outptr != (char *) outbuf)
+        {
+          /* We got some output.  Good, use it.  */
+          outlen = sizeof (outbuf) - outlen;
+          assert ((char *) outbuf + outlen == outptr);
+
+          result = xmalloc (sizeof (struct charseq) + outlen);
+          result->name = seq->name;
+          result->ucs4 = seq->ucs4;
+          result->nbytes = outlen;
+          memcpy (result->bytes, outbuf, outlen);
+        }
+
+      /* Clear any possible state left behind.  */
+      (void) iconv (cd, NULL, NULL, NULL, NULL);
+    }
+
+  return result;
+}
+
 
 static struct convtable *
 use_from_charmap (struct charmap_t *from_charmap, const char *to_code)
@@ -290,41 +331,10 @@ use_from_charmap (struct charmap_t *from_charmap, const char *to_code)
   while (iterate_table (&from_charmap->char_table, &ptr, &key, &keylen, &data)
 	 >= 0)
     {
-      struct charseq *in = (struct charseq *) data;
-
-      if (in->ucs4 != UNINITIALIZED_CHAR_VALUE)
-	{
-	  /* There is a chance.  Try the iconv module.  */
-	  wchar_t inbuf[1] = { in->ucs4 };
-	  unsigned char outbuf[64];
-	  char *inptr = (char *) inbuf;
-	  size_t inlen = sizeof (inbuf);
-	  char *outptr = (char *) outbuf;
-	  size_t outlen = sizeof (outbuf);
-
-	  (void) iconv (cd, &inptr, &inlen, &outptr, &outlen);
-
-	  if (outptr != (char *) outbuf)
-	    {
-	      /* We got some output.  Good, use it.  */
-	      struct charseq *newp;
-
-	      outlen = sizeof (outbuf) - outlen;
-	      assert ((char *) outbuf + outlen == outptr);
-
-	      newp = (struct charseq *) xmalloc (sizeof (struct charseq)
-						 + outlen);
-	      newp->name = in->name;
-	      newp->ucs4 = in->ucs4;
-	      newp->nbytes = outlen;
-	      memcpy (newp->bytes, outbuf, outlen);
-
-	      add_bytes (rettbl, in, newp);
-	    }
-
-	  /* Clear any possible state left behind.  */
-	  (void) iconv (cd, NULL, NULL, NULL, NULL);
-	}
+      struct charseq *in = data;
+      struct charseq *newp = convert_charseq (cd, in);
+      if (newp != NULL)
+        add_bytes (rettbl, in, newp);
     }
 
   iconv_close (cd);
@@ -360,49 +370,13 @@ use_to_charmap (const char *from_code, struct charmap_t *to_charmap)
   while (iterate_table (&to_charmap->char_table, &ptr, &key, &keylen, &data)
 	 >= 0)
     {
-      struct charseq *out = (struct charseq *) data;
-
-      if (out->ucs4 != UNINITIALIZED_CHAR_VALUE)
-	{
-	  /* There is a chance.  Try the iconv module.  */
-	  wchar_t inbuf[1] = { out->ucs4 };
-	  unsigned char outbuf[64];
-	  char *inptr = (char *) inbuf;
-	  size_t inlen = sizeof (inbuf);
-	  char *outptr = (char *) outbuf;
-	  size_t outlen = sizeof (outbuf);
-
-	  (void) iconv (cd, &inptr, &inlen, &outptr, &outlen);
-
-	  if (outptr != (char *) outbuf)
-	    {
-	      /* We got some output.  Good, use it.  */
-	      union
-	      {
-		struct charseq seq;
-		struct
-		{
-		  const char *name;
-		  uint32_t ucs4;
-		  int nbytes;
-		  unsigned char bytes[outlen];
-		} mem;
-	      } new;
-
-	      outlen = sizeof (outbuf) - outlen;
-	      assert ((char *) outbuf + outlen == outptr);
-
-	      new.mem.name = out->name;
-	      new.mem.ucs4 = out->ucs4;
-	      new.mem.nbytes = outlen;
-	      memcpy (new.mem.bytes, outbuf, outlen);
-
-	      add_bytes (rettbl, &new.seq, out);
-	    }
-
-	  /* Clear any possible state left behind.  */
-	  (void) iconv (cd, NULL, NULL, NULL, NULL);
-	}
+      struct charseq *out = data;
+      struct charseq *newp = convert_charseq (cd, out);
+      if (newp != NULL)
+        {
+          add_bytes (rettbl, newp, out);
+          free (newp);
+        }
     }
 
   iconv_close (cd);
