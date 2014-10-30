@@ -1,3 +1,20 @@
+2014-10-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/fcntl.h (__libc_creat): Remove declaration.
+	* io/creat.c (__libc_creat): Rename to creat.
+	(creat): Do not define as alias.
+	* sysdeps/unix/sysv/linux/alpha/creat.c (creat64): Define as alias
+	of creat instead of __libc_creat.
+	* sysdeps/unix/sysv/linux/generic/creat.c (__libc_creat): Rename
+	to creat.
+	(creat): Do not define as alias.
+	[__WORDSIZE == 64] (creat64): Define as alias of creat instead of
+	__libc_creat.
+	* sysdeps/unix/sysv/linux/syscalls.list (creat): Do not define
+	__libc_creat name.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list (creat):
+	Likewise.
+
 2014-10-29  Carlos O'Donell  <carlos@redhat.com>
 
 	* manual/llio.texi: Add comments discussing why write() may be

@@ -24,15 +24,14 @@
 
 /* Create FILE with protections MODE.  */
 int
-__libc_creat (const char *file, mode_t mode)
+creat (const char *file, mode_t mode)
 {
   return __open (file, O_WRONLY | O_CREAT | O_TRUNC, mode);
 }
-weak_alias (__libc_creat, creat)
 
 /* __open handles cancellation.  */
 LIBC_CANCEL_HANDLED ();
 
 #if __WORDSIZE == 64
-weak_alias (__libc_creat, creat64)
+weak_alias (creat, creat64)
 #endif

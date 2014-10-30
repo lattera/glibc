@@ -5,4 +5,4 @@
    could have overridden that with a create64.c, but we might as well do
    the right thing and set up creat64 as an alias.  */
 #include <io/creat.c>
-weak_alias(__libc_creat, creat64)
+weak_alias(creat, creat64)

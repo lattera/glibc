@@ -8,7 +8,6 @@ libc_hidden_proto (__open64)
 extern int __libc_open64 (const char *file, int oflag, ...);
 extern int __libc_open (const char *file, int oflag, ...);
 libc_hidden_proto (__libc_open)
-extern int __libc_creat (const char *file, mode_t mode);
 extern int __libc_fcntl (int fd, int cmd, ...);
 #ifndef NO_CANCELLATION
 extern int __fcntl_nocancel (int fd, int cmd, ...) attribute_hidden;
