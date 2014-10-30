@@ -466,6 +466,31 @@ When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} on a
 @comment POSIX.1
 @deftypefun ssize_t write (int @var{filedes}, const void *@var{buffer}, size_t @var{size})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Some say write is thread-unsafe on Linux without O_APPEND.  In the VFS layer
+@c the vfs_write() does no locking around the acquisition of a file offset and
+@c therefore multiple threads / kernel tasks may race and get the same offset
+@c resulting in data loss.
+@c
+@c See:
+@c http://thread.gmane.org/gmane.linux.kernel/397980
+@c http://lwn.net/Articles/180387/
+@c
+@c The counter argument is that POSIX only says that the write starts at the
+@c file position and that the file position is updated *before* the function
+@c returns.  What that really means is that any expectation of atomic writes is
+@c strictly an invention of the interpretation of the reader.  Data loss could
+@c happen if two threads start the write at the same time.  Only writes that
+@c come after the return of another write are guaranteed to follow the other
+@c write.
+@c
+@c The other side of the coin is that POSIX goes on further to say in
+@c "2.9.7 Thread Interactions with Regular File Operations" that threads
+@c should never see interleaving sets of file operations, but it is insane
+@c to do anything like that because it kills performance, so you don't get
+@c those guarantees in Linux.
+@c
+@c So we mark it thread safe, it doesn't blow up, but you might loose
+@c data, and we don't strictly meet the POSIX requirements.
 The @code{write} function writes up to @var{size} bytes from
 @var{buffer} to the file with descriptor @var{filedes}.  The data in
 @var{buffer} is not necessarily a character string and a null character is

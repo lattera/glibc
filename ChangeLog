@@ -1,3 +1,8 @@
+2014-10-29  Carlos O'Donell  <carlos@redhat.com>
+
+	* manual/llio.texi: Add comments discussing why write() may be
+	considered MT-unsafe on Linux.
+
 2014-10-28  Carlos O'Donell  <carlos@redhat.com>
 
 	* dl-load.c (local_strdup): Remove.
