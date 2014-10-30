@@ -1,11 +1,15 @@
 #ifndef _CTYPE_H
 
+#include <ctype/ctype.h>
+
 #ifndef _ISOMAC
 /* Initialize ctype locale data.  */
 extern void __ctype_init (void);
 libc_hidden_proto (__ctype_init)
 
-extern int __isctype (int __c, int __mask);
+/* ctype/ctype.h defined this as a macro and we don't want to #undef it.
+   So defeat macro expansion with parens for this declaration.  */
+extern int (__isctype) (int __c, int __mask);
 
 # ifndef NOT_IN_libc
 
@@ -46,22 +50,18 @@ __ctype_tolower_loc (void)
   return __libc_tsd_address (const int32_t *, CTYPE_TOLOWER);
 }
 
-# endif	/* Not NOT_IN_libc.  */
-#endif
-
-#include <ctype/ctype.h>
-
-#ifndef _ISOMAC
-# if !defined __NO_CTYPE && !defined NOT_IN_libc
+#  ifndef __NO_CTYPE
 /* The spec says that isdigit must only match the decimal digits.  We
    can check this without a memory access.  */
-#  undef isdigit
-#  define isdigit(c) ({ int __c = (c); __c >= '0' && __c <= '9'; })
-#  undef isdigit_l
-#  define isdigit_l(c, l) ({ int __c = (c); __c >= '0' && __c <= '9'; })
-#  undef __isdigit_l
-#  define __isdigit_l(c, l) ({ int __c = (c); __c >= '0' && __c <= '9'; })
-# endif
-#endif
+#   undef isdigit
+#   define isdigit(c) ({ int __c = (c); __c >= '0' && __c <= '9'; })
+#   undef isdigit_l
+#   define isdigit_l(c, l) ({ int __c = (c); __c >= '0' && __c <= '9'; })
+#   undef __isdigit_l
+#   define __isdigit_l(c, l) ({ int __c = (c); __c >= '0' && __c <= '9'; })
+#  endif  /* Not __NO_CTYPE.  */
+
+# endif	/* Not NOT_IN_libc.  */
+#endif  /* Not _ISOMAC.  */
 
 #endif /* ctype.h */

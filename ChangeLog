@@ -1,3 +1,9 @@
+2014-10-30  Roland McGrath  <roland@hack.frob.com>
+
+	* include/ctype.h: Include <ctype/ctype.h> first thing rather than
+	after defining inlines.  Instead, just use parens to defeat macro
+	expansion of __isctype in its declaration.
+
 2014-10-30  Joseph Myers  <joseph@codesourcery.com>
 
 	* include/sys/uio.h (__libc_readv): Remove declaration.
