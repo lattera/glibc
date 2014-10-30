@@ -75,17 +75,32 @@ _IO_wdo_write (fp, data, to_do)
 	{
 	  enum __codecvt_result result;
 	  const wchar_t *new_data;
+	  char mb_buf[MB_LEN_MAX];
+	  char *write_base, *write_ptr, *buf_end;
+
+	  if (fp->_IO_write_ptr - fp->_IO_write_base < sizeof (mb_buf))
+	    {
+	      /* Make sure we have room for at least one multibyte
+		 character.  */
+	      write_ptr = write_base = mb_buf;
+	      buf_end = mb_buf + sizeof (mb_buf);
+	    }
+	  else
+	    {
+	      write_ptr = fp->_IO_write_ptr;
+	      write_base = fp->_IO_write_base;
+	      buf_end = fp->_IO_buf_end;
+	    }
 
 	  /* Now convert from the internal format into the external buffer.  */
 	  result = (*cc->__codecvt_do_out) (cc, &fp->_wide_data->_IO_state,
 					    data, data + to_do, &new_data,
-					    fp->_IO_write_ptr,
-					    fp->_IO_buf_end,
-					    &fp->_IO_write_ptr);
+					    write_ptr,
+					    buf_end,
+					    &write_ptr);
 
 	  /* Write out what we produced so far.  */
-	  if (_IO_new_do_write (fp, fp->_IO_write_base,
-				fp->_IO_write_ptr - fp->_IO_write_base) == EOF)
+	  if (_IO_new_do_write (fp, write_base, write_ptr - write_base) == EOF)
 	    /* Something went wrong.  */
 	    return WEOF;
 

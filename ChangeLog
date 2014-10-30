@@ -1,3 +1,11 @@
+2014-11-03  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #17522]
+	* libio/wfileops.c (_IO_wdo_write): If the file buffer has room
+	for less than MB_LEN_MAX use a local buffer of that size.
+	* libio/tst-fputws.c: New file.
+	* libio/Makefile (tests): Add tst-fputws.
+
 2014-11-01  Jose E. Marchesi  <jose.marchesi@oracle.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sys/ucontext.h (struct fpu): fix
