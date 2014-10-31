@@ -1,3 +1,10 @@
+2014-10-31  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #17496]
+	* Makerules: Move gnu/lib-names.h generation chunk up, to right after
+	gen-as-const-headers chunk.  Add a big scare comment after the last
+	safe place to touch before-compile.
+
 2014-10-31  Joseph Myers  <joseph@codesourcery.com>
 
 	* manual/install.texi (Tools for Compilation): Update autoconf
