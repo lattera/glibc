@@ -1,3 +1,8 @@
+2014-10-31  Joseph Myers  <joseph@codesourcery.com>
+
+	* aclocal.m4 (GLIBC_AUTOCONF_VERSION): Mention need to update
+	install.texi in comment.
+
 2014-10-31  Torvald Riegel  <triegel@redhat.com>
 
 	* sysdeps/powerpc/bits/atomic.h (atomic_write_barrier): Remove and...

@@ -1,6 +1,7 @@
 dnl We require that everyone use exactly the same Autoconf version so that
 dnl the internal functions defined and used by the main configure script
-dnl match those expected by the fragments.
+dnl match those expected by the fragments.  When changing this version,
+dnl install.texi also needs to be updated.
 m4_define([GLIBC_AUTOCONF_VERSION], [2.69])
 m4_if(m4_defn([AC_AUTOCONF_VERSION]), GLIBC_AUTOCONF_VERSION, [],
       [m4_fatal(m4_flatten(
