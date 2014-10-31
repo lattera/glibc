@@ -1,5 +1,9 @@
 2014-10-31  Joseph Myers  <joseph@codesourcery.com>
 
+	* misc/pselect.c [!__pselect] (__libc_pselect): Remove alias.
+	* sysdeps/unix/sysv/linux/pselect.c [__NR_pselect6]
+	(__libc_pselect): Likewise.
+
 	[BZ #14138]
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pread.c: Remove file.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pread64.c: Likewise.

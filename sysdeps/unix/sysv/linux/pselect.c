@@ -89,7 +89,6 @@ __pselect (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
   return result;
 }
 weak_alias (__pselect, pselect)
-strong_alias (__pselect, __libc_pselect)
 
 # ifndef __ASSUME_PSELECT
 #  define __pselect static __generic_pselect
