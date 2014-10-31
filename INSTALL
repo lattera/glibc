@@ -377,7 +377,7 @@ build the GNU C Library:
 
 If you change any of the `configure.ac' files you will also need
 
-   * GNU `autoconf' 2.53 or higher
+   * GNU `autoconf' 2.69 (exactly)
 
 and if you change any of the message translation files you will need
 

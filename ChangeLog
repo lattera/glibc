@@ -1,5 +1,9 @@
 2014-10-31  Joseph Myers  <joseph@codesourcery.com>
 
+	* manual/install.texi (Tools for Compilation): Update autoconf
+	version requirements.
+	* INSTALL: Regenerated.
+
 	* misc/pselect.c [!__pselect] (__libc_pselect): Remove alias.
 	* sysdeps/unix/sysv/linux/pselect.c [__NR_pselect6]
 	(__libc_pselect): Likewise.

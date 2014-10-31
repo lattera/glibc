@@ -427,7 +427,7 @@ If you change any of the @file{configure.ac} files you will also need
 
 @itemize @bullet
 @item
-GNU @code{autoconf} 2.53 or higher
+GNU @code{autoconf} 2.69 (exactly)
 @end itemize
 
 @noindent
