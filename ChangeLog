@@ -1,3 +1,11 @@
+2014-10-31  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14138]
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pread.c: Remove file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pwrite64.c: Likewise.
+
 2014-10-31  Torvald Riegel  <triegel@redhat.com>
 
 	* sysdeps/sparc/sparc32/bits/atomic.h (atomic_write_barrier): Use
