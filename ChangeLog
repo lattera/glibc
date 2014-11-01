@@ -1,3 +1,11 @@
+2014-11-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* posix/nanosleep.c (__libc_nanosleep): Rename to __nanosleep.
+	(__nanosleep): Do not define as alias.
+	(nanosleep): Define as alias of __nanosleep.
+	* sysdeps/unix/sysv/linux/syscalls.list (nanosleep): Remove
+	__libc_nanosleep name.
+
 2014-10-31  Joseph Myers  <joseph@codesourcery.com>
 
 	* aclocal.m4 (GLIBC_AUTOCONF_VERSION): Mention need to update

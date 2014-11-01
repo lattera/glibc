@@ -21,14 +21,13 @@
 
 /* Pause execution for a number of nanoseconds.  */
 int
-__libc_nanosleep (const struct timespec *requested_time,
-		  struct timespec *remaining)
+__nanosleep (const struct timespec *requested_time,
+	     struct timespec *remaining)
 {
   __set_errno (ENOSYS);
   return -1;
 }
 stub_warning (nanosleep)
 
-weak_alias (__libc_nanosleep, __nanosleep)
 libc_hidden_def (__nanosleep)
-weak_alias (__libc_nanosleep, nanosleep)
+weak_alias (__nanosleep, nanosleep)
