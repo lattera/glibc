@@ -1,3 +1,8 @@
+2014-11-01  Jose E. Marchesi  <jose.marchesi@oracle.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sys/ucontext.h (struct fpu): fix
+	the size of the fpu_fr.fpu_dregs[] array.
+
 2014-11-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* posix/nanosleep.c (__libc_nanosleep): Rename to __nanosleep.
