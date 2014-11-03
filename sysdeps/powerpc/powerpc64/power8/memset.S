@@ -17,6 +17,13 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <endian.h>
+
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+#define MTVSRD_V1_R4  .byte 0x66,0x01,0x24,0x7c     /* mtvsrd  v1,r4  */
+#else
+#define MTVSRD_V1_R4  .byte 0x7c,0x24,0x01,0x66
+#endif
 
 /* __ptr_t [r3] memset (__ptr_t s [r3], int c [r4], size_t n [r5]));
    Returns 's'.  */
@@ -142,7 +149,7 @@ L(tail_bytes):
 	   vector instruction to achieve best throughput.  */
 L(huge_vector):
 	/* Replicate set byte to quadword in VMX register.  */
-	mtvsrd	 v1,r4
+	MTVSRD_V1_R4
 	xxpermdi 32,v0,v1,0
 	vspltb	 v2,v0,15
 

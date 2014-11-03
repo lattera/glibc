@@ -1,3 +1,8 @@
+2014-11-03  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power8/memset.S (MTVSRD_V1_R4): Encode
+	mtvsrd instruction in binary form.
+
 2014-11-03  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #17522]
