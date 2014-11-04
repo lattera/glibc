@@ -1525,6 +1525,218 @@
     }									\
   while (0)
 
+/* Convert from floating point to integer, rounding according to the
+   current rounding direction.  Input is raw.  RSIGNED is as for
+   _FP_TO_INT.  */
+#define _FP_TO_INT_ROUND(fs, wc, r, X, rsize, rsigned)			\
+  do									\
+    {									\
+      if (X##_e < _FP_EXPBIAS_##fs)					\
+	{								\
+	  int _FP_TO_INT_ROUND_rounds_away = 0;				\
+	  if (X##_e == 0)						\
+	    {								\
+	      if (_FP_FRAC_ZEROP_##wc (X))				\
+		{							\
+		  (r) = 0;						\
+		  goto _FP_TO_INT_ROUND_done;				\
+		}							\
+	      else							\
+		{							\
+		  FP_SET_EXCEPTION (FP_EX_DENORM);			\
+		  if (FP_DENORM_ZERO)					\
+		    {							\
+		      (r) = 0;						\
+		      goto _FP_TO_INT_ROUND_done;			\
+		    }							\
+		}							\
+	    }								\
+	  /* The result is 0, 1 or -1 depending on the rounding mode;	\
+	     -1 may cause overflow in the unsigned case.  */		\
+	  switch (FP_ROUNDMODE)						\
+	    {								\
+	    case FP_RND_NEAREST:					\
+	      _FP_TO_INT_ROUND_rounds_away				\
+		= (X##_e == _FP_EXPBIAS_##fs - 1			\
+		   && !_FP_FRAC_ZEROP_##wc (X));			\
+	      break;							\
+	    case FP_RND_ZERO:						\
+	      /* _FP_TO_INT_ROUND_rounds_away is already 0.  */		\
+	      break;							\
+	    case FP_RND_PINF:						\
+	      _FP_TO_INT_ROUND_rounds_away = !X##_s;			\
+	      break;							\
+	    case FP_RND_MINF:						\
+	      _FP_TO_INT_ROUND_rounds_away = X##_s;			\
+	      break;							\
+	    }								\
+	  if ((rsigned) == 0 && _FP_TO_INT_ROUND_rounds_away && X##_s)	\
+	    {								\
+	      /* Result of -1 for an unsigned conversion.  */		\
+	      (r) = 0;							\
+	      FP_SET_EXCEPTION (FP_EX_INVALID | FP_EX_INVALID_CVI);	\
+	    }								\
+	  else if ((rsize) == 1 && (rsigned) > 0			\
+		   && _FP_TO_INT_ROUND_rounds_away && !X##_s)		\
+	    {								\
+	      /* Converting to a 1-bit signed bit-field, which cannot	\
+		 represent +1.  */					\
+	      (r) = ((rsigned) == 2 ? -1 : 0);				\
+	      FP_SET_EXCEPTION (FP_EX_INVALID | FP_EX_INVALID_CVI);	\
+	    }								\
+	  else								\
+	    {								\
+	      (r) = (_FP_TO_INT_ROUND_rounds_away			\
+		     ? (X##_s ? -1 : 1)					\
+		     : 0);						\
+	      FP_SET_EXCEPTION (FP_EX_INEXACT);				\
+	    }								\
+	}								\
+      else if ((rsigned) == 2						\
+	       && (X##_e						\
+		   >= ((_FP_EXPMAX_##fs					\
+			< _FP_EXPBIAS_##fs + _FP_FRACBITS_##fs + (rsize) - 1) \
+		       ? _FP_EXPMAX_##fs				\
+		       : _FP_EXPBIAS_##fs + _FP_FRACBITS_##fs + (rsize) - 1))) \
+	{								\
+	  /* Overflow resulting in 0.  */				\
+	  (r) = 0;							\
+	  FP_SET_EXCEPTION (FP_EX_INVALID				\
+			    | FP_EX_INVALID_CVI				\
+			    | ((FP_EX_INVALID_SNAN			\
+				&& _FP_ISSIGNAN (fs, wc, X))		\
+			       ? FP_EX_INVALID_SNAN			\
+			       : 0));					\
+	}								\
+      else if ((rsigned) != 2						\
+	       && (X##_e >= (_FP_EXPMAX_##fs < _FP_EXPBIAS_##fs + (rsize) \
+			     ? _FP_EXPMAX_##fs				\
+			     : (_FP_EXPBIAS_##fs + (rsize)		\
+				- ((rsigned) > 0 && !X##_s)))		\
+		   || ((rsigned) == 0 && X##_s)))			\
+	{								\
+	  /* Definite overflow (does not require rounding to tell).  */	\
+	  if ((rsigned) != 0)						\
+	    {								\
+	      (r) = 1;							\
+	      (r) <<= (rsize) - 1;					\
+	      (r) -= 1 - X##_s;						\
+	    }								\
+	  else								\
+	    {								\
+	      (r) = 0;							\
+	      if (!X##_s)						\
+		(r) = ~(r);						\
+	    }								\
+									\
+	  FP_SET_EXCEPTION (FP_EX_INVALID				\
+			    | FP_EX_INVALID_CVI				\
+			    | ((FP_EX_INVALID_SNAN			\
+				&& _FP_ISSIGNAN (fs, wc, X))		\
+			       ? FP_EX_INVALID_SNAN			\
+			       : 0));					\
+	}								\
+      else								\
+	{								\
+	  /* The value is finite, with magnitude at least 1.  If	\
+	     the conversion is unsigned, the value is positive.		\
+	     If RSIGNED is not 2, the value does not definitely		\
+	     overflow by virtue of its exponent, but may still turn	\
+	     out to overflow after rounding; if RSIGNED is 2, the	\
+	     exponent may be such that the value definitely overflows,	\
+	     but at least one mantissa bit will not be shifted out.  */ \
+	  int _FP_TO_INT_ROUND_inexact = 0;				\
+	  _FP_FRAC_HIGH_RAW_##fs (X) |= _FP_IMPLBIT_##fs;		\
+	  if (X##_e >= _FP_EXPBIAS_##fs + _FP_FRACBITS_##fs - 1)	\
+	    {								\
+	      /* The value is an integer, no rounding needed.  */	\
+	      _FP_FRAC_ASSEMBLE_##wc ((r), X, (rsize));			\
+	      (r) <<= X##_e - _FP_EXPBIAS_##fs - _FP_FRACBITS_##fs + 1; \
+	    }								\
+	  else								\
+	    {								\
+	      /* May need to shift in order to round (unless there	\
+		 are exactly _FP_WORKBITS fractional bits already).  */	\
+	      int _FP_TO_INT_ROUND_rshift				\
+		= (_FP_FRACBITS_##fs + _FP_EXPBIAS_##fs			\
+		   - 1 - _FP_WORKBITS - X##_e);				\
+	      if (_FP_TO_INT_ROUND_rshift > 0)				\
+		_FP_FRAC_SRS_##wc (X, _FP_TO_INT_ROUND_rshift,		\
+				   _FP_WFRACBITS_##fs);			\
+	      else if (_FP_TO_INT_ROUND_rshift < 0)			\
+		_FP_FRAC_SLL_##wc (X, -_FP_TO_INT_ROUND_rshift);	\
+	      /* Round like _FP_ROUND, but setting			\
+		 _FP_TO_INT_ROUND_inexact instead of directly setting	\
+		 the "inexact" exception, since it may turn out we	\
+		 should set "invalid" instead.  */			\
+	      if (_FP_FRAC_LOW_##wc (X) & 7)				\
+		{							\
+		  _FP_TO_INT_ROUND_inexact = 1;				\
+		  switch (FP_ROUNDMODE)					\
+		    {							\
+		    case FP_RND_NEAREST:				\
+		      _FP_ROUND_NEAREST (wc, X);			\
+		      break;						\
+		    case FP_RND_ZERO:					\
+		      _FP_ROUND_ZERO (wc, X);				\
+		      break;						\
+		    case FP_RND_PINF:					\
+		      _FP_ROUND_PINF (wc, X);				\
+		      break;						\
+		    case FP_RND_MINF:					\
+		      _FP_ROUND_MINF (wc, X);				\
+		      break;						\
+		    }							\
+		}							\
+	      _FP_FRAC_SRL_##wc (X, _FP_WORKBITS);			\
+	      _FP_FRAC_ASSEMBLE_##wc ((r), X, (rsize));			\
+	    }								\
+	  if ((rsigned) != 0 && X##_s)					\
+	    (r) = -(r);							\
+	  /* An exponent of RSIZE - 1 always needs testing for		\
+	     overflow (either directly overflowing, or overflowing	\
+	     when rounding up results in 2^RSIZE).  An exponent of	\
+	     RSIZE - 2 can overflow for positive values when rounding	\
+	     up to 2^(RSIZE-1), but cannot overflow for negative	\
+	     values.  Smaller exponents cannot overflow.  */		\
+	  if (X##_e >= (_FP_EXPBIAS_##fs + (rsize) - 1			\
+			- ((rsigned) > 0 && !X##_s)))			\
+	    {								\
+	      if (X##_e > _FP_EXPBIAS_##fs + (rsize) - 1		\
+		  || (X##_e == _FP_EXPBIAS_##fs + (rsize) - 1		\
+		      && (X##_s						\
+			  ? (r) != (((typeof (r)) 1) << ((rsize) - 1))	\
+			  : ((rsigned) > 0 || (r) == 0)))		\
+		  || ((rsigned) > 0					\
+		      && !X##_s						\
+		      && X##_e == _FP_EXPBIAS_##fs + (rsize) - 2	\
+		      && (r) == (((typeof (r)) 1) << ((rsize) - 1))))	\
+		{							\
+		  if ((rsigned) != 2)					\
+		    {							\
+		      if ((rsigned) != 0)				\
+			{						\
+			  (r) = 1;					\
+			  (r) <<= (rsize) - 1;				\
+			  (r) -= 1 - X##_s;				\
+			}						\
+		      else						\
+			{						\
+			  (r) = 0;					\
+			  (r) = ~(r);					\
+			}						\
+		    }							\
+		  _FP_TO_INT_ROUND_inexact = 0;				\
+		  FP_SET_EXCEPTION (FP_EX_INVALID | FP_EX_INVALID_CVI);	\
+		}							\
+	    }								\
+	  if (_FP_TO_INT_ROUND_inexact)					\
+	    FP_SET_EXCEPTION (FP_EX_INEXACT);				\
+	}								\
+    _FP_TO_INT_ROUND_done: ;						\
+    }									\
+  while (0)
+
 /* Convert integer to fp.  Output is raw.  RTYPE is unsigned even if
    input is signed.  */
 #define _FP_FROM_INT(fs, wc, X, r, rsize, rtype)			\

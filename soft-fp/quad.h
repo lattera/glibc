@@ -187,6 +187,8 @@ union _FP_UNION_Q
 # define FP_CMP_UNORD_Q(r, X, Y, ex)	_FP_CMP_UNORD (Q, 4, (r), X, Y, (ex))
 
 # define FP_TO_INT_Q(r, X, rsz, rsg)	_FP_TO_INT (Q, 4, (r), X, (rsz), (rsg))
+# define FP_TO_INT_ROUND_Q(r, X, rsz, rsg)	\
+  _FP_TO_INT_ROUND (Q, 4, (r), X, (rsz), (rsg))
 # define FP_FROM_INT_Q(X, r, rs, rt)	_FP_FROM_INT (Q, 4, X, (r), (rs), rt)
 
 # define _FP_FRAC_HIGH_Q(X)	_FP_FRAC_HIGH_4 (X)
@@ -311,6 +313,8 @@ union _FP_UNION_Q
 # define FP_CMP_UNORD_Q(r, X, Y, ex)	_FP_CMP_UNORD (Q, 2, (r), X, Y, (ex))
 
 # define FP_TO_INT_Q(r, X, rsz, rsg)	_FP_TO_INT (Q, 2, (r), X, (rsz), (rsg))
+# define FP_TO_INT_ROUND_Q(r, X, rsz, rsg)	\
+  _FP_TO_INT_ROUND (Q, 2, (r), X, (rsz), (rsg))
 # define FP_FROM_INT_Q(X, r, rs, rt)	_FP_FROM_INT (Q, 2, X, (r), (rs), rt)
 
 # define _FP_FRAC_HIGH_Q(X)	_FP_FRAC_HIGH_2 (X)

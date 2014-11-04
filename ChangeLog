@@ -1,3 +1,17 @@
+2014-11-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* soft-fp/op-common.h (_FP_TO_INT_ROUND): New macro.
+	* soft-fp/double.h [_FP_W_TYPE_SIZE < 64] (FP_TO_INT_ROUND_D): New
+	macro.
+	[_FP_W_TYPE_SIZE >= 64] (FP_TO_INT_ROUND_D): Likewise.
+	* soft-fp/extended.h [_FP_W_TYPE_SIZE < 64] (FP_TO_INT_ROUND_E):
+	New macro.
+	[_FP_W_TYPE_SIZE >= 64] (FP_TO_INT_ROUND_E): Likewise.
+	* soft-fp/quad.h [_FP_W_TYPE_SIZE < 64] (FP_TO_INT_ROUND_Q): New
+	macro.
+	[_FP_W_TYPE_SIZE >= 64] (FP_TO_INT_ROUND_Q): Likewise.
+	* soft-fp/single.h (FP_TO_INT_ROUND_S): New macro.
+
 2014-11-04  Andreas Schwab  <schwab@suse.de>
 
 	* posix/regex_internal.h: Don't include <locale/elem-hash.h>.

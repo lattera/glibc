@@ -180,6 +180,8 @@ union _FP_UNION_S
 #define FP_CMP_UNORD_S(r, X, Y, ex)	_FP_CMP_UNORD (S, 1, (r), X, Y, (ex))
 
 #define FP_TO_INT_S(r, X, rsz, rsg)	_FP_TO_INT (S, 1, (r), X, (rsz), (rsg))
+#define FP_TO_INT_ROUND_S(r, X, rsz, rsg)	\
+  _FP_TO_INT_ROUND (S, 1, (r), X, (rsz), (rsg))
 #define FP_FROM_INT_S(X, r, rs, rt)	_FP_FROM_INT (S, 1, X, (r), (rs), rt)
 
 #define _FP_FRAC_HIGH_S(X)	_FP_FRAC_HIGH_1 (X)
