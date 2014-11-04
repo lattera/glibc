@@ -169,7 +169,7 @@ DL_STARTING_UP_DEF							\
 ".LC__dl_argc:\n"							\
 "	.tc _dl_argc[TC],_dl_argc\n"					\
 ".LC__dl_argv:\n"							\
-"	.tc _dl_argv_internal[TC],_dl_argv_internal\n"			\
+"	.tc __GI__dl_argv[TC],__GI__dl_argv\n"				\
 ".LC__dl_fini:\n"							\
 "	.tc _dl_fini[TC],_dl_fini\n"					\
 "	.popsection\n"							\

@@ -83,7 +83,7 @@ int _dl_argc attribute_relro attribute_hidden;
 char **_dl_argv attribute_relro = NULL;
 unsigned int _dl_skip_args attribute_relro attribute_hidden;
 #endif
-INTDEF(_dl_argv)
+rtld_hidden_data_def (_dl_argv)
 
 #ifndef THREAD_SET_STACK_GUARD
 /* Only exported for architectures that don't store the stack guard canary
@@ -492,7 +492,7 @@ dlmopen_doit (void *a)
   args->map = _dl_open (args->fname,
 			(RTLD_LAZY | __RTLD_DLOPEN | __RTLD_AUDIT
 			 | __RTLD_SECURE),
-			dl_main, LM_ID_NEWLM, _dl_argc, INTUSE(_dl_argv),
+			dl_main, LM_ID_NEWLM, _dl_argc, _dl_argv,
 			__environ);
 }
 
@@ -804,55 +804,55 @@ dl_main (const ElfW(Phdr) *phdr,
       GL(dl_rtld_map).l_name = rtld_progname;
 
       while (_dl_argc > 1)
-	if (! strcmp (INTUSE(_dl_argv)[1], "--list"))
+	if (! strcmp (_dl_argv[1], "--list"))
 	  {
 	    mode = list;
 	    GLRO(dl_lazy) = -1;	/* This means do no dependency analysis.  */
 
 	    ++_dl_skip_args;
 	    --_dl_argc;
-	    ++INTUSE(_dl_argv);
+	    ++_dl_argv;
 	  }
-	else if (! strcmp (INTUSE(_dl_argv)[1], "--verify"))
+	else if (! strcmp (_dl_argv[1], "--verify"))
 	  {
 	    mode = verify;
 
 	    ++_dl_skip_args;
 	    --_dl_argc;
-	    ++INTUSE(_dl_argv);
+	    ++_dl_argv;
 	  }
-	else if (! strcmp (INTUSE(_dl_argv)[1], "--inhibit-cache"))
+	else if (! strcmp (_dl_argv[1], "--inhibit-cache"))
 	  {
 	    GLRO(dl_inhibit_cache) = 1;
 	    ++_dl_skip_args;
 	    --_dl_argc;
-	    ++INTUSE(_dl_argv);
+	    ++_dl_argv;
 	  }
-	else if (! strcmp (INTUSE(_dl_argv)[1], "--library-path")
+	else if (! strcmp (_dl_argv[1], "--library-path")
 		 && _dl_argc > 2)
 	  {
-	    library_path = INTUSE(_dl_argv)[2];
+	    library_path = _dl_argv[2];
 
 	    _dl_skip_args += 2;
 	    _dl_argc -= 2;
-	    INTUSE(_dl_argv) += 2;
+	    _dl_argv += 2;
 	  }
-	else if (! strcmp (INTUSE(_dl_argv)[1], "--inhibit-rpath")
+	else if (! strcmp (_dl_argv[1], "--inhibit-rpath")
 		 && _dl_argc > 2)
 	  {
-	    GLRO(dl_inhibit_rpath) = INTUSE(_dl_argv)[2];
+	    GLRO(dl_inhibit_rpath) = _dl_argv[2];
 
 	    _dl_skip_args += 2;
 	    _dl_argc -= 2;
-	    INTUSE(_dl_argv) += 2;
+	    _dl_argv += 2;
 	  }
-	else if (! strcmp (INTUSE(_dl_argv)[1], "--audit") && _dl_argc > 2)
+	else if (! strcmp (_dl_argv[1], "--audit") && _dl_argc > 2)
 	  {
-	    process_dl_audit (INTUSE(_dl_argv)[2]);
+	    process_dl_audit (_dl_argv[2]);
 
 	    _dl_skip_args += 2;
 	    _dl_argc -= 2;
-	    INTUSE(_dl_argv) += 2;
+	    _dl_argv += 2;
 	  }
 	else
 	  break;
@@ -886,7 +886,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 
       ++_dl_skip_args;
       --_dl_argc;
-      ++INTUSE(_dl_argv);
+      ++_dl_argv;
 
       /* The initialization of _dl_stack_flags done below assumes the
 	 executable's PT_GNU_STACK may have been honored by the kernel, and
@@ -1800,7 +1800,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	    ElfW(Addr) loadbase;
 	    lookup_t result;
 
-	    result = _dl_lookup_symbol_x (INTUSE(_dl_argv)[i], main_map,
+	    result = _dl_lookup_symbol_x (_dl_argv[i], main_map,
 					  &ref, main_map->l_scope,
 					  NULL, ELF_RTYPE_CLASS_PLT,
 					  DL_LOOKUP_ADD_DEPENDENCY, NULL);
@@ -1808,7 +1808,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	    loadbase = LOOKUP_VALUE_ADDRESS (result);
 
 	    _dl_printf ("%s found at 0x%0*Zd in object at 0x%0*Zd\n",
-			INTUSE(_dl_argv)[i],
+			_dl_argv[i],
 			(int) sizeof ref->st_value * 2,
 			(size_t) ref->st_value,
 			(int) sizeof loadbase * 2, (size_t) loadbase);

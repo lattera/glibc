@@ -641,6 +641,7 @@ extern char **_dl_argv
      attribute_relro
 #endif
      ;
+rtld_hidden_proto (_dl_argv)
 #ifdef IS_IN_rtld
 extern unsigned int _dl_skip_args attribute_hidden
 # ifndef DL_ARGV_NOT_RELRO
@@ -652,15 +653,8 @@ extern unsigned int _dl_skip_args_internal attribute_hidden
      attribute_relro
 # endif
      ;
-extern char **_dl_argv_internal attribute_hidden
-# ifndef DL_ARGV_NOT_RELRO
-     attribute_relro
-# endif
-     ;
-# define rtld_progname (INTUSE(_dl_argv)[0])
-#else
-# define rtld_progname _dl_argv[0]
 #endif
+#define rtld_progname _dl_argv[0]
 
 /* Flag set at startup and cleared when the last initializer has run.  */
 extern int _dl_starting_up;

@@ -54,7 +54,7 @@ _dl_start_user:
 /*  &_dl_argc in 29, &_dl_argv in 27, and _dl_loaded in 28.  */
 	lwz	r28,_rtld_local@got(r31)
 	lwz	r29,_dl_argc@got(r31)
-	lwz	r27,INTUSE(_dl_argv)@got(r31)
+	lwz	r27,__GI__dl_argv@got(r31)
 
 /* Call _dl_init (_dl_loaded, _dl_argc, _dl_argv, _dl_argv+_dl_argc+1). */
 	lwz	r3,0(r28)

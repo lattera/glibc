@@ -108,7 +108,7 @@ _dl_sysdep_start (void **start_argptr,
 #endif
 
   __libc_stack_end = DL_STACK_END (start_argptr);
-  DL_FIND_ARG_COMPONENTS (start_argptr, _dl_argc, INTUSE(_dl_argv), _environ,
+  DL_FIND_ARG_COMPONENTS (start_argptr, _dl_argc, _dl_argv, _environ,
 			  GLRO(dl_auxv));
 
   user_entry = (ElfW(Addr)) ENTRY_POINT;

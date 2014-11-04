@@ -184,16 +184,16 @@ $fixup_stack:							\n\
 	/* Adjust the stack pointer to skip _dl_skip_args words.\n\
 	   This involves copying everything down, since the	\n\
 	   stack pointer must always be 16-byte aligned.  */	\n\
-	ldah	$7, _dl_argv_internal($gp) !gprelhigh		\n\
+	ldah	$7, __GI__dl_argv($gp) !gprelhigh		\n\
 	ldq	$2, 0($sp)					\n\
-	ldq	$5, _dl_argv_internal($7) !gprellow		\n\
+	ldq	$5, __GI__dl_argv($7) !gprellow			\n\
 	subq	$31, $1, $6					\n\
 	subq	$2, $1, $2					\n\
 	s8addq	$6, $5, $5					\n\
 	mov	$sp, $4						\n\
 	s8addq	$1, $sp, $3					\n\
 	stq	$2, 0($sp)					\n\
-	stq	$5, _dl_argv_internal($7) !gprellow		\n\
+	stq	$5, __GI__dl_argv($7) !gprellow			\n\
 	/* Copy down argv.  */					\n\
 0:	ldq	$5, 8($3)					\n\
 	addq	$4, 8, $4					\n\
