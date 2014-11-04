@@ -173,7 +173,7 @@ $fixup_stack_ret:						\n\
 	lda	$18, 8($sp)					\n\
 	s8addq	$17, 8, $19					\n\
 	addq	$19, $18, $19					\n\
-	bsr	$26, _dl_init_internal	!samegp			\n\
+	bsr	$26, _dl_init		!samegp			\n\
 	/* Pass our finalizer function to the user in $0. */	\n\
 	ldah	$0, _dl_fini($gp)	!gprelhigh		\n\
 	lda	$0, _dl_fini($0)	!gprellow		\n\

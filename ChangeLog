@@ -1,6 +1,28 @@
 2014-11-04  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14132]
+	* elf/dl-init.c (_dl_init): Don't use INTDEF.
+	* sysdeps/aarch64/dl-machine.h (RTLD_START): Use _dl_init instead
+	of _dl_init_internal.
+	* sysdeps/alpha/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/arm/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/hppa/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/i386/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/ia64/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/m68k/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/microblaze/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/mips/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/powerpc/powerpc32/dl-start.S (_start): Likewise.
+	* sysdeps/s390/s390-32/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/s390/s390-64/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/sh/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/sparc/sparc32/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/tile/dl-start.S (_start): Likewise.
+	* sysdeps/x86_64/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/x86_64/x32/dl-machine.h (RTLD_START): Likewise.
+
+	[BZ #14132]
 	* sysdeps/generic/ldsodefs.h (_dl_argv): Use rtld_hidden_proto.
 	[IS_IN_rtld] (_dl_argv_internal): Do not declare.
 	(rtld_progname): Make macro definition unconditional.

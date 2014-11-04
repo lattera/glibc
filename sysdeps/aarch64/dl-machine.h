@@ -178,7 +178,7 @@ _dl_start_user:							\n\
 	adrp	x16, _rtld_local				\n\
         add	x16, x16, #:lo12:_rtld_local			\n\
         ldr	x0, [x16]					\n\
-	bl	_dl_init_internal				\n\
+	bl	_dl_init					\n\
 	// load the finalizer function				\n\
 	adrp	x0, _dl_fini					\n\
 	add	x0, x0, #:lo12:_dl_fini				\n\

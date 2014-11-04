@@ -129,7 +129,7 @@ _dl_start_user:\n\
 	addk  r8,r7,r5\n\
 	addik r8,r8,4\n\
 	lwi   r5,r20,_rtld_local@GOTOFF\n\
-	brlid r15,_dl_init_internal\n\
+	brlid r15,_dl_init\n\
 	nop\n\
 	lwi   r5,r1,24\n\
 	lwi   r3,r1,20\n\

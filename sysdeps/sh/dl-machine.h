@@ -188,7 +188,7 @@ _dl_start_user:\n\
 .L_dl_skip_args:\n\
 	.long _dl_skip_args@GOT\n\
 .L_dl_init:\n\
-	.long _dl_init_internal@PLT\n\
+	.long _dl_init@PLT\n\
 .L_dl_loaded:\n\
 	.long _rtld_local@GOT\n\
 .L_dl_fini:\n\

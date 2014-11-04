@@ -145,7 +145,7 @@ _dl_start_user:\n\
 	movq %rdx, %rsi\n\
 	# Save %rsp value in %r13.\n\
 	movq %rsp, %r13\n\
-	# And align stack for the _dl_init_internal call. \n\
+	# And align stack for the _dl_init call. \n\
 	andq $-16, %rsp\n\
 	# _dl_loaded -> rdi\n\
 	movq _rtld_local(%rip), %rdi\n\
@@ -156,7 +156,7 @@ _dl_start_user:\n\
 	# Clear %rbp to mark outermost frame obviously even for constructors.\n\
 	xorl %ebp, %ebp\n\
 	# Call the function to run the initializers.\n\
-	call _dl_init_internal@PLT\n\
+	call _dl_init@PLT\n\
 	# Pass our finalizer function to the user in %rdx, as per ELF ABI.\n\
 	leaq _dl_fini(%rip), %rdx\n\
 	# And make sure %rsp points to argc stored on the stack.\n\

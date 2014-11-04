@@ -130,4 +130,3 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
   INTUSE(_dl_starting_up) = 0;
 #endif
 }
-INTDEF (_dl_init)

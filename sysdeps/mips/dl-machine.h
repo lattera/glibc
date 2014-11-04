@@ -295,14 +295,14 @@ do {									\
 	sll $7, $5, " STRINGXP (PTRLOG) "\n\
 	" STRINGXP(PTR_ADDU) " $7, $7, $6\n\
 	" STRINGXP(PTR_ADDU) " $7, $7, " STRINGXP (PTRSIZE) " \n\
-	# Make sure the stack pointer is aligned for _dl_init_internal.\n\
+	# Make sure the stack pointer is aligned for _dl_init.\n\
 	and $2, $29, -2 * " STRINGXP(SZREG) "\n\
 	move $8, $29\n\
 	" STRINGXP(PTR_SUBIU) " $29, $2, 32\n\
 	" STRINGXP(PTR_S) " $8, (32 - " STRINGXP(SZREG) ")($29)\n\
 	" STRINGXP(SAVE_GP(16)) "\n\
 	# Call the function to run the initializers.\n\
-	jal _dl_init_internal\n\
+	jal _dl_init\n\
 	# Restore the stack pointer for _start.\n\
 	" STRINGXP(PTR_L)  " $29, (32 - " STRINGXP(SZREG) ")($29)\n\
 	# Pass our finalizer function to the user in $2 as per ELF ABI.\n\
@@ -371,7 +371,7 @@ do {									\
 	sll $7, $5, " STRINGXP (PTRLOG) "\n\
 	addu $7, $6\n\
 	addu $7, " STRINGXP (PTRSIZE) "\n\
-	# Make sure the stack pointer is aligned for _dl_init_internal.\n\
+	# Make sure the stack pointer is aligned for _dl_init.\n\
 	li $2, 2 * " STRINGXP (SZREG) "\n\
 	neg $2, $2\n\
 	move $3, $sp\n\
@@ -381,7 +381,7 @@ do {									\
 	move $sp, $2\n\
 	sw $16, 16($sp)\n\
 	# Call the function to run the initializers.\n\
-	lw $2, %call16(_dl_init_internal)($16)\n\
+	lw $2, %call16(_dl_init)($16)\n\
 	move $25, $2\n\
 	jalr $2\n\
 	# Restore the stack pointer for _start.\n\

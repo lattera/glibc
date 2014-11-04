@@ -149,7 +149,7 @@ _dl_start_user:\n\
 	pea 8(%sp)\n\
 	move.l %d1, -(%sp)\n\
 	" PCREL_OP ("move.l", "_rtld_local", "-(%sp)", "%d0", "%pc") "\n\
-	jbsr _dl_init_internal@PLTPC\n\
+	jbsr _dl_init@PLTPC\n\
 	addq.l #8, %sp\n\
 	addq.l #8, %sp\n\
 	| Pass our finalizer function to the user in %a1.\n\

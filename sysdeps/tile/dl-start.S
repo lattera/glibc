@@ -94,7 +94,7 @@ ENTRY (_start)
 	}
 	{
 	 SHL_PTR_ADD r3, r3, r2  /* point r3 at envp */
-	 jal _dl_init_internal
+	 jal _dl_init
 	}
 
 	/* Call user program whose address we saved in r50.
