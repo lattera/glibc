@@ -32,6 +32,8 @@ Version 2.20
   17084, 17086, 17088, 17092, 17097, 17125, 17135, 17137, 17150, 17153,
   17187, 17213, 17259, 17261, 17262, 17263, 17319, 17325, 17354.
 
+* Optimized strchrnul implementation for AArch64.  Contributed by ARM Ltd.
+
 * Reverted change of ABI data structures for s390 and s390x:
   On s390 and s390x the size of struct ucontext and jmp_buf was increased in
   2.19. This change is reverted in 2.20. The introduced 2.19 symbol versions

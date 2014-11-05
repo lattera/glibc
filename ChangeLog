@@ -1,3 +1,7 @@
+2014-11-05  Richard Earnshaw  <rearnsha@arm.com>
+
+	* sysdeps/aarch64/strchrnul.S: New file.
+
 2014-11-05  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power8/memset.S (MTVSRD_V1_R4): Simplify
