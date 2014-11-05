@@ -1,3 +1,27 @@
+2014-11-05  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14132]
+	* include/libc-symbols.h (INTUSE): Remove macro.
+	(INTDEF): Likewise.
+	(INTVARDEF): Likewise.
+	(_INTVARDEF): Likewise.
+	(INTDEF2): Likewise.
+	(INTVARDEF2): Likewise.
+	* elf/rtld.c [!HAVE_INLINED_SYSCALLS] (_dl_starting_up): Use
+	rtld_hidden_def instead of INTVARDEF.
+	* sysdeps/generic/ldsodefs.h [IS_IN_rtld]
+	(_dl_starting_up_internal): Remove declaration.
+	(_dl_starting_up): Use rtld_hidden_proto.
+	* elf/dl-init.c [!HAVE_INLINED_SYSCALLS] (_dl_starting_up): Remove
+	declaration.
+	[!HAVE_INLINED_SYSCALLS] (_dl_starting_up_internal): Likewise.
+	(_dl_init) [!HAVE_INLINED_SYSCALLS]: Don't use INTUSE with
+	_dl_starting_up.
+	* elf/dl-writev.h (_dl_writev): Likewise.
+	* sysdeps/powerpc/powerpc64/dl-machine.h [!HAVE_INLINED_SYSCALLS]
+	(DL_STARTING_UP_DEF): Use __GI__dl_starting_up instead of
+	_dl_starting_up_internal.
+
 2014-11-05  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* stdio-common/tst-fmemopen.c (do_test): Refactor to use

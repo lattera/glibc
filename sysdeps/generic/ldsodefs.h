@@ -659,9 +659,7 @@ extern unsigned int _dl_skip_args_internal attribute_hidden
 /* Flag set at startup and cleared when the last initializer has run.  */
 extern int _dl_starting_up;
 weak_extern (_dl_starting_up)
-#ifdef IS_IN_rtld
-extern int _dl_starting_up_internal attribute_hidden;
-#endif
+rtld_hidden_proto (_dl_starting_up)
 
 /* Random data provided by the kernel.  */
 extern void *_dl_random attribute_hidden attribute_relro;

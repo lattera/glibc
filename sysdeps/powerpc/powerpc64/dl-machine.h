@@ -126,7 +126,7 @@ elf_machine_dynamic (void)
 #else
 # define DL_STARTING_UP_DEF \
 ".LC__dl_starting_up:\n"  \
-"	.tc _dl_starting_up_internal[TC],_dl_starting_up_internal\n"
+"	.tc __GI__dl_starting_up[TC],__GI__dl_starting_up\n"
 #endif
 
 

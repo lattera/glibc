@@ -116,7 +116,7 @@ static struct audit_list
    and will be since that dynamic linker's _dl_start and dl_main will
    never be called.  */
 int _dl_starting_up = 0;
-INTVARDEF(_dl_starting_up)
+rtld_hidden_def (_dl_starting_up)
 #endif
 
 /* This is the structure which defines all variables global to ld.so
@@ -778,7 +778,7 @@ dl_main (const ElfW(Phdr) *phdr,
 
 #ifndef HAVE_INLINED_SYSCALLS
   /* Set up a flag which tells we are just starting.  */
-  INTUSE(_dl_starting_up) = 1;
+  _dl_starting_up = 1;
 #endif
 
   if (*user_entry == (ElfW(Addr)) ENTRY_POINT)

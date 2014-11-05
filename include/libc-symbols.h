@@ -391,26 +391,6 @@ for linking")
 
 #define attribute_relro __attribute__ ((section (".data.rel.ro")))
 
-/* Handling on non-exported internal names.  We have to do this only
-   for shared code.  */
-#ifdef SHARED
-# define INTUSE(name) name##_internal
-# define INTDEF(name) strong_alias (name, name##_internal)
-# define INTVARDEF(name) \
-  _INTVARDEF (name, name##_internal)
-# define _INTVARDEF(name, aliasname) \
-  extern __typeof (name) aliasname __attribute__ ((alias (#name), \
-						   visibility ("hidden")));
-# define INTDEF2(name, newname) strong_alias (name, newname##_internal)
-# define INTVARDEF2(name, newname) _INTVARDEF (name, newname##_internal)
-#else
-# define INTUSE(name) name
-# define INTDEF(name)
-# define INTVARDEF(name)
-# define INTDEF2(name, newname)
-# define INTVARDEF2(name, newname)
-#endif
-
 /* The following macros are used for PLT bypassing within libc.so
    (and if needed other libraries similarly).
    First of all, you need to have the function prototyped somewhere,
