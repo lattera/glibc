@@ -20,11 +20,7 @@
 #include <endian.h>
 #include <math_ldbl_opt.h>
 
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-#define MFVSRD_R3_V1  .byte 0x66,0x00,0x23,0x7c     /* mfvsrd  r3,vs1  */
-#else
-#define MFVSRD_R3_V1  .byte 0x7c,0x23,0x00,0x66     /* mfvsrd  r3,vs1  */
-#endif
+#define MFVSRD_R3_V1  .long 0x7c230066     /* mfvsrd  r3,vs1  */
 
 /* long long [r3] llround (float x [fp1])  */
 

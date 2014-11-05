@@ -17,13 +17,8 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <endian.h>
 
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-#define MTVSRD_V1_R4  .byte 0x66,0x01,0x24,0x7c     /* mtvsrd  v1,r4  */
-#else
-#define MTVSRD_V1_R4  .byte 0x7c,0x24,0x01,0x66
-#endif
+#define MTVSRD_V1_R4  .long 0x7c240166     /* mtvsrd  v1,r4  */
 
 /* __ptr_t [r3] memset (__ptr_t s [r3], int c [r4], size_t n [r5]));
    Returns 's'.  */
