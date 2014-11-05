@@ -1,6 +1,16 @@
 2014-11-04  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14132]
+	* elf/dl-profile.c (_dl_mcount): Use rtld_hidden_def instead of
+	INTDEF.
+	* sysdeps/generic/ldsodefs.h (_dl_mcount_internal): Remove
+	declaration.
+	(_dl_mcount): Use rtld_hidden_proto.
+	* elf/dl-runtime.c (_dl_profile_fixup): Don't use INTUSE with
+	_dl_mcount.
+	* elf/rtld.c (_rtld_global_ro): Likewise.
+
+	[BZ #14132]
 	* elf/dl-init.c (_dl_init): Don't use INTDEF.
 	* sysdeps/aarch64/dl-machine.h (RTLD_START): Use _dl_init instead
 	of _dl_init_internal.

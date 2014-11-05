@@ -598,4 +598,4 @@ _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
  done:
   ;
 }
-INTDEF(_dl_mcount)
+rtld_hidden_def (_dl_mcount)

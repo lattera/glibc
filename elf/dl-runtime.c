@@ -158,7 +158,7 @@ _dl_profile_fixup (
 		   struct link_map *l, ElfW(Word) reloc_arg,
 		   ElfW(Addr) retaddr, void *regs, long int *framesizep)
 {
-  void (*mcount_fct) (ElfW(Addr), ElfW(Addr)) = INTUSE(_dl_mcount);
+  void (*mcount_fct) (ElfW(Addr), ElfW(Addr)) = _dl_mcount;
 
   if (l->l_reloc_result == NULL)
     {

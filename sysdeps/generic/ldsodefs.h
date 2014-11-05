@@ -885,8 +885,7 @@ extern void _dl_start_profile (void) internal_function attribute_hidden;
 
 /* The actual functions used to keep book on the calls.  */
 extern void _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc);
-extern void _dl_mcount_internal (ElfW(Addr) frompc, ElfW(Addr) selfpc)
-     attribute_hidden;
+rtld_hidden_proto (_dl_mcount)
 
 /* This function is simply a wrapper around the _dl_mcount function
    which does not require a FROMPC parameter since this is the
