@@ -31,8 +31,8 @@
 #define SIZE 210000
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   char name[] = "/tmp/widetext.out.XXXXXX";
   char mbbuf[SIZE];
@@ -367,3 +367,6 @@ main (void)
 
   return status;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

@@ -7,8 +7,8 @@
 #include <unistd.h>
 #include <wchar.h>
 
-int
-main (void)
+static int
+do_test (void)
 {
   FILE *fp;
   const char *str = "abcdef";
@@ -79,3 +79,6 @@ main (void)
 
   return result;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

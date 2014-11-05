@@ -76,8 +76,8 @@ report_date_error (int err)
 }
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   int errors = 0;
   size_t i;
@@ -121,3 +121,6 @@ main (void)
     printf ("No errors found.\n");
   return errors != 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

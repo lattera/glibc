@@ -21,8 +21,8 @@
 #include <string.h>
 #include <wchar.h>
 
-int
-main (void)
+static int
+do_test (void)
 {
   const unsigned char buf[] = { 'a', 'b', '\0', 'c', 'd', '\0', 'e' };
   wchar_t out[sizeof (buf)];
@@ -62,3 +62,6 @@ main (void)
     }
   return result;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

@@ -7,8 +7,8 @@
 
 extern __m128i audit_test (__m128i, __m128i, __m128i, __m128i,
 			   __m128i, __m128i, __m128i, __m128i);
-int
-main (void)
+static int
+do_test (void)
 {
   __m128i xmm = _mm_setzero_si128 ();
   __m128i ret = audit_test (xmm, xmm, xmm, xmm, xmm, xmm, xmm, xmm);
@@ -18,3 +18,6 @@ main (void)
 
   return 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../../test-skeleton.c"

@@ -22,8 +22,8 @@
 #include <string.h>
 #include <unistd.h>
 
-int
-main (void)
+static int
+do_test (void)
 {
   char name[] = "/tmp/tst-freopen.XXXXXX";
   const char * const test = "Let's test freopen.\n";
@@ -100,3 +100,6 @@ main (void)
   unlink (name);
   exit (0);
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

@@ -19,8 +19,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-int
-main (void)
+static int
+do_test (void)
 {
   const char *name;
   int retval = 0;
@@ -48,3 +48,6 @@ main (void)
 
   return retval;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

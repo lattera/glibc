@@ -141,8 +141,8 @@ mpn_bitsize (const mp_limb_t *SRC_PTR, mp_size_t SIZE)
    return i * mpbpl + j;
 }
 
-int
-main (void)
+static int
+do_test (void)
 {
   mp1 si, co, x, ox, xt, s2, c2, s3, c3;
   int i;
@@ -277,3 +277,6 @@ main (void)
 
    return (sin_failures == 0 && cos_failures == 0) ? 0 : 1;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

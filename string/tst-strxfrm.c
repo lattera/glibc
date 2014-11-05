@@ -58,8 +58,8 @@ test (const char *locale)
 }
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   int result = 0;
 
@@ -69,3 +69,6 @@ main (void)
 
   return result;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

@@ -12,10 +12,13 @@ matherr (struct exception *s)
   return 1;
 }
 
-int
-main (void)
+static int
+do_test (void)
 {
   _LIB_VERSION = _SVID_;
   acos (2.0);
   return fail;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

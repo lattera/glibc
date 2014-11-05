@@ -33,8 +33,8 @@ static char *flag_output (int flags);
 static char *escape (const char *str, size_t *reslenp, char **resbuf);
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   char *linebuf = NULL;
   size_t linebuflen = 0;
@@ -388,3 +388,6 @@ escape (const char *str, size_t *reslenp, char **resbufp)
 
   return resbuf;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

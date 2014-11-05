@@ -51,8 +51,8 @@ struct
 };
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   int errors = 0;
   size_t i;
@@ -76,3 +76,6 @@ main (void)
 
   return errors != 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

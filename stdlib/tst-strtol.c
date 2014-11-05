@@ -534,8 +534,8 @@ static const struct ltest tests[] =
 /* Prototypes for local functions.  */
 static void expand (char *dst, int c);
 
-int
-main (void)
+static int
+do_test (void)
 {
   const struct ltest *lt;
   char *ep;
@@ -623,3 +623,6 @@ expand (dst, c)
   else
     (void) sprintf (dst, "%#.3o", (unsigned int) c);
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <string.h>
 
-int
-main (void)
+static int
+do_test (void)
 {
   struct in_addr addr4;
   struct in6_addr addr6;
@@ -109,3 +109,6 @@ main (void)
 
   return result;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

@@ -25,8 +25,8 @@
 #include <string.h>
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   const char *strs[2] = { "singular", "plural" };
   unsigned long int i;
@@ -63,3 +63,6 @@ main (void)
 
   return res;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

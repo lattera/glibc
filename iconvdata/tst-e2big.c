@@ -95,10 +95,13 @@ test_tscii (void)
   test ("TSCII", inbuf, sizeof (inbuf), 9);
 }
 
-int
-main (void)
+static int
+do_test (void)
 {
   test_euc_jisx0213 ();
   test_tscii ();
   return 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

@@ -12,8 +12,8 @@
 
 const char input[] = "\x8e\xa1g\x8e\xa2h\x8e\xa3i\x8e\xa4j";
 
-int
-main (void)
+static int
+do_test (void)
 {
   wchar_t buf[1000];
 #define nbuf (sizeof (buf) / sizeof (buf[0]))
@@ -54,3 +54,6 @@ swprintf (.., .., L\"%ls\", \"%ls\") produced \"%ls\", not \"%ls\"\n",	      \
 
   return result;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

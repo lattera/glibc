@@ -1,9 +1,12 @@
 #include <stdlib.h>
 #include <wchar.h>
 
-int
-main (void)
+static int
+do_test (void)
 {
   mbstate_t x;
   return sizeof (x) - sizeof (mbstate_t);
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

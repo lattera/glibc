@@ -26,8 +26,8 @@
 static int check_ascii (const char *locname);
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   int result = 0;
 
@@ -92,3 +92,6 @@ check_ascii (const char *locname)
 
   return res != 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

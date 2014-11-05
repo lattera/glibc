@@ -25,8 +25,8 @@
 #include <stddef.h>
 #include <sys/stat.h>
 
-int
-main (void)
+static int
+do_test (void)
 {
   /* With _FILE_OFFSET_BITS=64 struct stat and struct stat64 should
      be identical.  */
@@ -65,3 +65,6 @@ main (void)
 #endif
   return 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

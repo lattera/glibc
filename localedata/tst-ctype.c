@@ -61,8 +61,8 @@ static struct classes
   }
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   const char *cp;
   const char *cp2;
@@ -447,3 +447,6 @@ punct = %04x  alnum = %04x\n",
   printf ("  No errors for `%s' locale\n\n\n", setlocale (LC_ALL, NULL));
   return 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

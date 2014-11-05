@@ -104,8 +104,8 @@ null_test (void)
 }
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   /* We are allocating blocks with `calloc' and check whether every
      block is completely cleared.  We first try this for some fixed
@@ -123,3 +123,6 @@ main (void)
 
   return 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

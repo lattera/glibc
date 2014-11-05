@@ -25,8 +25,8 @@ verbose_free (void *buf)
   printf ("free (%p)\n", buf);
 }
 
-int
-main (void)
+static int
+do_test (void)
 {
   int result = 0;
   int align = 2;
@@ -62,3 +62,6 @@ main (void)
 
   return result;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

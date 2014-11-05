@@ -5,8 +5,8 @@
   if (p->a != S || p->b != S + 1 || p->c != S + 2)	\
     abort ()
 
-int
-main (void)
+static int
+do_test (void)
 {
   struct A *p;
   check1 ();
@@ -15,3 +15,6 @@ main (void)
 
   exit (0);
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

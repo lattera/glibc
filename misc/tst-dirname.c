@@ -37,8 +37,8 @@ test (const char *input, const char *result)
   return retval;
 }
 
-int
-main (void)
+static int
+do_test (void)
 {
   int result = 0;
 
@@ -67,3 +67,6 @@ main (void)
 
   return result != 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

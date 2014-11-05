@@ -200,8 +200,8 @@ special (void)
 }
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   test (ecvt_tests, ecvt, "ecvt");
   test (fcvt_tests, fcvt, "fcvt");
@@ -211,3 +211,6 @@ main (void)
 
   return error_count;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

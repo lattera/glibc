@@ -8,8 +8,8 @@ __thread struct A local = { 1, 2, 3 };
   if (p->a != S || p->b != S + 1 || p->c != S + 2)	\
     abort ()
 
-int
-main (void)
+static int
+do_test (void)
 {
   struct A *p;
   if (local.a != 1 || local.b != 2 || local.c != 3)
@@ -35,3 +35,6 @@ main (void)
 
   exit (0);
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

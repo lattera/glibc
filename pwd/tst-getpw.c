@@ -25,8 +25,8 @@ check (uid_t uid)
   (void) getpw (uid, buf);
 }
 
-int
-main (void)
+static int
+do_test (void)
 {
   uid_t uid;
 
@@ -38,3 +38,6 @@ main (void)
 
   return 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

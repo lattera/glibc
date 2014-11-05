@@ -194,8 +194,8 @@ decode_inet6_opt (void *eb, socklen_t el)
   return ret;
 }
 
-int
-main (void)
+static int
+do_test (void)
 {
   void *eb;
   socklen_t el;
@@ -206,3 +206,6 @@ main (void)
     return 1;
   return 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

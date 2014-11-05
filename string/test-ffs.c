@@ -21,8 +21,8 @@
 #include <stdio.h>
 #include <string.h>
 
-int
-main (void)
+static int
+do_test (void)
 {
   int failures = 0;
   int i;
@@ -61,3 +61,6 @@ main (void)
 
   return failures;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

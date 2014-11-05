@@ -29,8 +29,8 @@ merror (const char *msg)
   printf ("Error: %s\n", msg);
 }
 
-int
-main (void)
+static int
+do_test (void)
 {
   void *p, *q;
   int save;
@@ -75,3 +75,6 @@ main (void)
 
   return errors != 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

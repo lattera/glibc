@@ -63,8 +63,8 @@ cookieclose (void *cookie)
 }
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   cookie_io_functions_t fcts;
   char buf[1];
@@ -90,3 +90,6 @@ main (void)
 
   return errors != 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

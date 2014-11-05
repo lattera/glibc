@@ -45,8 +45,8 @@ avx512_enabled (void)
 
 extern __m512i audit_test (__m512i, __m512i, __m512i, __m512i,
 			   __m512i, __m512i, __m512i, __m512i);
-int
-main (void)
+static int
+do_test (void)
 {
   /* Run AVX512 test only if AVX512 is supported.  */
   if (avx512_enabled ())
@@ -62,9 +62,12 @@ main (void)
   return 0;
 }
 #else
-int
-main (void)
+static int
+do_test (void)
 {
   return 0;
 }
 #endif
+
+#define TEST_FUNCTION do_test ()
+#include "../../test-skeleton.c"

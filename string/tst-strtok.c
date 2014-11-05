@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
-int
-main (void)
+static int
+do_test (void)
 {
   char buf[1] = { 0 };
   int result = 0;
@@ -21,3 +21,6 @@ main (void)
 
   return result;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

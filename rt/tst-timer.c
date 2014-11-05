@@ -20,8 +20,8 @@
 
 /* This file is only used if there is no other implementation and it should
    means that there is no implementation of POSIX timers.  */
-int
-main (void)
+static int
+do_test (void)
 {
 #ifdef _POSIX_TIMERS
   /* There should be a test.  */
@@ -30,3 +30,6 @@ main (void)
   return 0;
 #endif
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

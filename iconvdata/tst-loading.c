@@ -114,8 +114,8 @@ static const char inbuf[] =
 "     function.  Later modifications of the variable have no effect.\n";
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   size_t count = TEST_ROUNDS;
   int result = 0;
@@ -180,3 +180,6 @@ main (void)
 
   return result;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

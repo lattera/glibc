@@ -356,8 +356,8 @@ setdb (const char *dbname)
 }
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   /*
     setdb ("db");
@@ -376,3 +376,6 @@ main (void)
 
   return (error_count != 0);
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

@@ -20,8 +20,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int
-main (void)
+static int
+do_test (void)
 {
   int pass;
   int ret = 0;
@@ -56,3 +56,6 @@ main (void)
     }
   return ret;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

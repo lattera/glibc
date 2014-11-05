@@ -6,8 +6,8 @@
 #include <sys/mman.h>
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   int result = 0;
   FILE *fp;
@@ -195,3 +195,6 @@ main (void)
   /* That's it.  */
   return result;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

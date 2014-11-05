@@ -23,8 +23,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-int
-main (void)
+static int
+do_test (void)
 {
   char *s;
   int result = 0;
@@ -55,3 +55,6 @@ main (void)
 
   return result;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

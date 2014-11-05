@@ -111,8 +111,8 @@ static struct wprintf_int_test
   (sizeof (wprintf_int_tests) / sizeof (wprintf_int_tests[0]))
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   int cnt;
   int failures;
@@ -246,3 +246,6 @@ main (void)
 
   return status;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

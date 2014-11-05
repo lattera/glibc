@@ -29,8 +29,8 @@ merror (const char *msg)
   printf ("Error: %s\n", msg);
 }
 
-int
-main (void)
+static int
+do_test (void)
 {
   void *p1, *p2;
   void *save_state;
@@ -79,3 +79,6 @@ main (void)
  * c-basic-offset: 2
  * End:
  */
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

@@ -37,8 +37,8 @@ static struct
 };
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   size_t i = 0;
   int errors = 0;
@@ -64,3 +64,6 @@ main (void)
 
   return errors;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

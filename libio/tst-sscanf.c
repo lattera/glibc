@@ -3,8 +3,8 @@
 
 #define WCS_LENGTH 256
 
-int
-main (void)
+static int
+do_test (void)
 {
   const char cnv[] ="%l[abc]";
   const char str[] = "abbcXab";
@@ -18,3 +18,6 @@ main (void)
 
   return result;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

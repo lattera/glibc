@@ -24,8 +24,8 @@
 #include <wchar.h>
 #include <wctype.h>
 
-int
-main (void)
+static int
+do_test (void)
 {
   char buf[30];
   wchar_t wbuf[30];
@@ -68,3 +68,6 @@ main (void)
 
   return errors;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

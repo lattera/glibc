@@ -3,8 +3,8 @@
 #include <string.h>
 #include <time.h>
 
-int
-main (void)
+static int
+do_test (void)
 {
   struct tm time_str, *tm;
   time_t t;
@@ -68,3 +68,6 @@ main (void)
 
   return result;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

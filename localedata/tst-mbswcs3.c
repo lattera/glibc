@@ -38,8 +38,8 @@
     putc ('\n', stdout);						\
   }
 
-int
-main (void)
+static int
+do_test (void)
 {
   unsigned char buf[6] = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
   const unsigned char bufcheck[6] = { 0x25, 0xe2, 0x82, 0xac, 0xce, 0xbb };
@@ -73,3 +73,6 @@ main (void)
 
   return result;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

@@ -4,8 +4,8 @@
 #include <stdlib.h>
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   void *h;
   int (*fp) (int);
@@ -37,3 +37,6 @@ main (void)
 
   return result;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

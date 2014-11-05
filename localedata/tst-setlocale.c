@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 
-int
-main (void)
+static int
+do_test (void)
 {
   char q[30];
   char *s;
@@ -23,3 +23,6 @@ main (void)
 
   return strcmp (s, "de_DE.UTF-8") != 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

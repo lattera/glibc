@@ -1,8 +1,8 @@
 #include <search.h>
 #include <stdio.h>
 
-int
-main (void)
+static int
+do_test (void)
 {
   int a = 1;
   int b = 2;
@@ -29,3 +29,6 @@ main (void)
 
   return 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

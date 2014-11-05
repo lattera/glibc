@@ -20,8 +20,8 @@
 #include <stdio.h>
 #include <sys/types.h>
 
-int
-main (void)
+static int
+do_test (void)
 {
   int retval = 0;
   int i;
@@ -62,3 +62,6 @@ main (void)
 
   return retval;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

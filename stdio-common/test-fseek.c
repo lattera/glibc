@@ -19,8 +19,8 @@
 
 #define TESTFILE "/tmp/test.dat"
 
-int
-main (void)
+static int
+do_test (void)
 {
   FILE *fp;
   int i, j;
@@ -82,3 +82,6 @@ main (void)
   puts ((i > 255) ? "Test succeeded." : "Test FAILED!");
   return (i > 255) ? 0 : 1;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

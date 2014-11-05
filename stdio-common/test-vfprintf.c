@@ -36,8 +36,8 @@ const char *locs[] =
 
 char large[50000];
 
-int
-main (void)
+static int
+do_test (void)
 {
   char buf[25];
   size_t i;
@@ -124,3 +124,6 @@ main (void)
 
   return res;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

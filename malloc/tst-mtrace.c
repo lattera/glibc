@@ -30,8 +30,8 @@ static void print (const void *node, VISIT value, int level);
 static FILE *fp;
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   void *root = NULL;
   size_t linelen = 0;
@@ -100,3 +100,6 @@ print (const void *node, VISIT value, int level)
   if (value == postorder || value == leaf)
     fprintf (fp, "%3d: %s", ++cnt, *(const char **) node);
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

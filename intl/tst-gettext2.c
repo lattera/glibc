@@ -40,8 +40,8 @@ struct data_t strings[] =
 const int lang_cnt = 3;
 const char *lang[] = {"lang1", "lang2", "lang3"};
 
-int
-main (void)
+static int
+do_test (void)
 {
   int i;
 
@@ -70,3 +70,6 @@ main (void)
 
   return 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

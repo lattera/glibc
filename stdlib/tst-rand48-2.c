@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-int
-main (void)
+static int
+do_test (void)
 {
   time_t t = time (NULL);
   int i, ret = 0;
@@ -111,3 +111,6 @@ main (void)
 
   return ret;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

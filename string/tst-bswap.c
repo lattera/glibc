@@ -21,8 +21,8 @@
 
 extern unsigned long long int wash (unsigned long long int a);
 
-int
-main (void)
+static int
+do_test (void)
 {
   int result = 0;
 
@@ -71,3 +71,6 @@ wash (unsigned long long int a)
      regards the argument to the bswap_*() functions as constant.  */
   return a + 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

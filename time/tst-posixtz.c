@@ -28,8 +28,8 @@ struct
     "1999/02/25 15:18:12 dst=0 zone=EST" },
 };
 
-int
-main (void)
+static int
+do_test (void)
 {
   int result = 0;
   size_t cnt;
@@ -116,3 +116,6 @@ main (void)
 
   return result;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

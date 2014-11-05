@@ -31,8 +31,8 @@
 #include <fcntl.h>
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   int status;
   int errors = 0;
@@ -80,3 +80,6 @@ main (void)
     }
   return status;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
