@@ -491,6 +491,11 @@ When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} on a
 @c
 @c So we mark it thread safe, it doesn't blow up, but you might loose
 @c data, and we don't strictly meet the POSIX requirements.
+@c
+@c The fix for file offsets racing was merged in 3.14, the commits were:
+@c 9c225f2655e36a470c4f58dbbc99244c5fc7f2d4, and
+@c d7a15f8d0777955986a2ab00ab181795cab14b01.  Therefore after Linux 3.14 you
+@c should get mostly MT-safe writes.
 The @code{write} function writes up to @var{size} bytes from
 @var{buffer} to the file with descriptor @var{filedes}.  The data in
 @var{buffer} is not necessarily a character string and a null character is

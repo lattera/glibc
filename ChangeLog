@@ -1,5 +1,8 @@
 2014-11-06  Carlos O'Donell  <carlos@redhat.com>
 
+	* manual/llio.texi: Add comment that write safety has been
+	fixed in Linux.
+
 	* elf/Makefile (all-built-dso): Add $(common-objpfx)elf/ld.so.
 	(localplt-build-dso): Add elf/ld.so.
 	* sysdeps/unix/sysv/linux/i386/localplt.data: Add ___tls_get_addr
