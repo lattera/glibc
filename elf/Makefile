@@ -904,7 +904,7 @@ CFLAGS-tst-pie2.c += $(pie-ccflag)
 $(objpfx)tst-pie1: $(objpfx)tst-piemod1.so
 
 ifeq (yes,$(build-shared))
-all-built-dso := $(common-objpfx)libc.so \
+all-built-dso := $(common-objpfx)elf/ld.so $(common-objpfx)libc.so \
 		 $(filter-out $(common-objpfx)linkobj/libc.so, \
 			      $(sort $(wildcard $(addprefix $(common-objpfx), \
 							    */lib*.so \
@@ -963,6 +963,7 @@ common-generated += $(all-built-dso:$(common-objpfx)%=%.jmprel)
 
 localplt-built-dso := $(addprefix $(common-objpfx),\
 				  libc.so \
+				  elf/ld.so \
 				  math/libm.so \
 				  rt/librt.so \
 				  dlfcn/libdl.so \

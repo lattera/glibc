@@ -1,3 +1,28 @@
+2014-11-06  Carlos O'Donell  <carlos@redhat.com>
+
+	* elf/Makefile (all-built-dso): Add $(common-objpfx)elf/ld.so.
+	(localplt-build-dso): Add elf/ld.so.
+	* sysdeps/unix/sysv/linux/i386/localplt.data: Add ___tls_get_addr
+	i.e. 3 underscore version, __libc_memalign, malloc, calloc, realloc,
+	and free for ld.so.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/localplt.data: Add
+	__libc_memalign, malloc, calloc, realloc, and free for ld.so.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/localplt.data:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/localplt.data:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/localplt.data: Likewise.
+	* sysdeps/generic/localplt.data: Add __tls_get_addr i.e. 2 underscore
+	version, __libc_memalign, malloc, calloc, realloc and free for ld.so.
+	* sysdeps/unix/sysv/linux/aarch64/localplt.data: Likewise.
+	* sysdeps/unix/sysv/linux/arm/localplt.data: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/localplt.data: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/localplt.data: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/localplt.data: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/localplt.data: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/localplt.data: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/localplt.data: Likewise.
+
 2014-11-05  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14132]

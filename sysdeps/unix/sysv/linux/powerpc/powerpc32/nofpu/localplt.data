@@ -38,3 +38,11 @@ libm.so: __signbitl
 libm.so: copysignl ?
 libm.so: fabsl
 libm.so: matherr
+# The dynamic loader uses __libc_memalign internally to allocate aligned
+# TLS storage. The other malloc family of functions are expected to allow
+# user symbol interposition.
+ld.so: __libc_memalign
+ld.so: malloc
+ld.so: calloc
+ld.so: realloc
+ld.so: free
