@@ -19,6 +19,7 @@ POINTER_GUARD			(offsetof (tcbhead_t, pointer_guard) - TLS_TCB_OFFSET - sizeof (
 TAR_SAVE			(offsetof (tcbhead_t, tar_save) - TLS_TCB_OFFSET - sizeof (tcbhead_t))
 DSO_SLOT1			(offsetof (tcbhead_t, dso_slot1) - TLS_TCB_OFFSET - sizeof (tcbhead_t))
 DSO_SLOT2			(offsetof (tcbhead_t, dso_slot2) - TLS_TCB_OFFSET - sizeof (tcbhead_t))
+TM_CAPABLE			(offsetof (tcbhead_t, tm_capable) - TLS_TCB_OFFSET - sizeof (tcbhead_t))
 #ifndef __ASSUME_PRIVATE_FUTEX
 PRIVATE_FUTEX_OFFSET		thread_offsetof (header.private_futex)
 #endif

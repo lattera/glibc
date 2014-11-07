@@ -194,6 +194,7 @@
     register long int r11 __asm__ ("r11");				\
     register long int r12 __asm__ ("r12");				\
     LOADARGS_##nr(name, args);						\
+    ABORT_TRANSACTION;							\
     __asm__ __volatile__						\
       ("sc   \n\t"							\
        "mfcr %0"							\

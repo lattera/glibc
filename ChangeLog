@@ -1,5 +1,22 @@
 2014-01-12  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/nptl/tls.h (tcbhead_t): Add tm_capable field.
+	(TLS_INIT_TP): Add tm_capable initialization.
+	(TLS_DEFINE_INIT_TP): Likewise.
+	(THREAD_GET_TM_CAPABLE): New file: get tm_capable field value from
+	TCB.
+	(THREAD_SET_TM_CAPABLE): New file: set tm_capable field value in TCB.
+	* sysdeps/powerpc/nptl/tcb-offsets.sym (TM_CAPABLE): Add field offset
+	calculation.
+	* sysdeps/powerpc/powerpc32/sysdep.h (DO_CALL): Abort hardware
+	transactoion is lock elision is built and TCB tm_capable is set.
+	* sysdeps/powerpc/powerpc64/sysdep.h (DO_CALL): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h
+	(INTERNAL_SYSCALL_NCS): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h
+	(INTERNAL_SYSCALL_NCS): Likewise.
+	* sysdeps/powerpc/sysdep.h (ABORT_TRANSACTION): New define.
+
 	* sysdeps/powerpc/nptl/elide.h: New file: generic lock elision support
 	for powerpc.
 	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h

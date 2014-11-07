@@ -201,6 +201,7 @@
     register long int r7  __asm__ ("r7");				\
     register long int r8  __asm__ ("r8");				\
     LOADARGS_##nr (name, ##args);					\
+    ABORT_TRANSACTION;							\
     __asm__ __volatile__						\
       ("sc\n\t"								\
        "mfcr  %0\n\t"							\

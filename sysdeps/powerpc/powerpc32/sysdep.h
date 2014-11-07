@@ -88,7 +88,23 @@ GOT_LABEL:			;					      \
   cfi_endproc;								      \
   ASM_SIZE_DIRECTIVE(name)
 
+#if ! IS_IN(rtld) && defined (ENABLE_LOCK_ELISION)
+# define ABORT_TRANSACTION \
+    cmpwi    2,0;		\
+    beq      1f;		\
+    lwz      0,TM_CAPABLE(2);	\
+    cmpwi    0,0;		\
+    beq	     1f;		\
+    li	     0,_ABORT_SYSCALL;	\
+    tabort.  0;			\
+    .align 4;			\
+1:
+#else
+# define ABORT_TRANSACTION
+#endif
+
 #define DO_CALL(syscall)						      \
+    ABORT_TRANSACTION							      \
     li 0,syscall;							      \
     sc
 

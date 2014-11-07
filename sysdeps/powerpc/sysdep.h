@@ -21,6 +21,10 @@
  */
 #define _SYSDEPS_SYSDEP_H 1
 #include <bits/hwcap.h>
+#ifdef ENABLE_LOCK_ELISION
+#include <tls.h>
+#include <htm.h>
+#endif
 
 #define PPC_FEATURE_970 (PPC_FEATURE_POWER4 + PPC_FEATURE_HAS_ALTIVEC)
 
@@ -163,5 +167,23 @@
 /* This seems to always be the case on PPC.  */
 #define ALIGNARG(log2) log2
 #define ASM_SIZE_DIRECTIVE(name) .size name,.-name
+
+#else
+
+/* Linux kernel powerpc documentation [1] states issuing a syscall inside a
+   transaction is not recommended and may lead to undefined behavior.  It
+   also states syscalls do not abort transactions.  To avoid such traps,
+   we abort transaction just before syscalls.
+
+   [1] Documentation/powerpc/transactional_memory.txt [Syscalls]  */
+#if !IS_IN(rtld) && defined (ENABLE_LOCK_ELISION)
+# define ABORT_TRANSACTION \
+  ({ 						\
+    if (THREAD_GET_TM_CAPABLE ())		\
+      __builtin_tabort (_ABORT_SYSCALL);	\
+  })
+#else
+# define ABORT_TRANSACTION
+#endif
 
 #endif	/* __ASSEMBLER__ */
