@@ -15,7 +15,7 @@ getgroups	-	getgroups32	i:ip	__getgroups	getgroups
 setfsgid	-	setfsgid32	Ei:i	setfsgid
 setfsuid	-	setfsuid32	Ei:i	setfsuid
 
-waitpid		-	waitpid		Ci:ipi	__waitpid	waitpid	__libc_waitpid
+waitpid		-	waitpid		Ci:ipi	__waitpid	waitpid
 
 prlimit64	EXTRA	prlimit64	i:iipp	prlimit64
 

@@ -1,3 +1,30 @@
+2014-11-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/sys/wait.h (__libc_waitpid): Remove declaration.
+	* posix/waitpid.c (__libc_waitpid): Rename to __waitpid.
+	(__waitpid): Don't define as alias.  Use libc_hidden_def not
+	libc_hidden_weak.
+	(waitpid): Define as alias of __waitpid.
+	* sysdeps/unix/bsd/waitpid.c (__libc_waitpid): Rename to
+	__waitpid.
+	(__waitpid): Don't define as alias.  Use libc_hidden_def not
+	libc_hidden_weak.
+	(waitpid): Define as alias of __waitpid.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list (waitpid): Remove
+	__libc_waitpid alias.
+	* sysdeps/unix/sysv/linux/m68k/syscalls.list (waitpid): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list (waitpid):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/syscalls.list (waitpid): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/syscalls.list (waitpid): Likewise.
+	* sysdeps/unix/sysv/linux/tile/waitpid.S (__libc_waitpid): Remove
+	alias.
+	* sysdeps/unix/sysv/linux/waitpid.c (__libc_waitpid): Rename to
+	__waitpid.
+	(__waitpid): Don't define as alias.  Use libc_hidden_def not
+	libc_hidden_weak.
+	(waitpid): Define as alias of __waitpid.
+
 2014-11-06  Carlos O'Donell  <carlos@redhat.com>
 
 	* manual/llio.texi: Add comment that write safety has been

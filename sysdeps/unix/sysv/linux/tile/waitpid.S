@@ -14,7 +14,5 @@ PSEUDO_END(__waitpid)
 libc_hidden_def (__waitpid)
 weak_alias (__waitpid, waitpid)
 libc_hidden_weak (waitpid)
-weak_alias (__waitpid, __libc_waitpid)
-libc_hidden_weak (__libc_waitpid)
 
 #endif

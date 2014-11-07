@@ -33,11 +33,10 @@
    Return (pid_t) -1 for errors.  If the WUNTRACED bit is set in OPTIONS,
    return status for stopped children; otherwise don't.  */
 pid_t
-__libc_waitpid (pid_t pid, int *stat_loc, int options)
+__waitpid (pid_t pid, int *stat_loc, int options)
 {
   return __wait4 (pid, (union wait *) stat_loc, options, NULL);
 }
 
-weak_alias (__libc_waitpid, __waitpid)
-libc_hidden_weak (__waitpid)
-weak_alias (__libc_waitpid, waitpid)
+libc_hidden_def (__waitpid)
+weak_alias (__waitpid, waitpid)
