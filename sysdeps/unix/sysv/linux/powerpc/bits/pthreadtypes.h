@@ -172,11 +172,13 @@ typedef union
     unsigned int __nr_writers_queued;
     int __writer;
     int __shared;
-    unsigned long int __pad1;
+    unsigned char __rwelision;
+    unsigned char __pad1[7];
     unsigned long int __pad2;
     /* FLAGS must stay at this position in the structure to maintain
        binary compatibility.  */
     unsigned int __flags;
+# define __PTHREAD_RWLOCK_ELISION_EXTRA 0, {0, 0, 0, 0, 0, 0, 0 }
   } __data;
 # else
   struct
@@ -187,20 +189,20 @@ typedef union
     unsigned int __writer_wakeup;
     unsigned int __nr_readers_queued;
     unsigned int __nr_writers_queued;
-    unsigned char __pad1;
+    unsigned char __rwelision;
     unsigned char __pad2;
     unsigned char __shared;
     /* FLAGS must stay at this position in the structure to maintain
        binary compatibility.  */
     unsigned char __flags;
     int __writer;
+#define __PTHREAD_RWLOCK_ELISION_EXTRA 0
   } __data;
 # endif
   char __size[__SIZEOF_PTHREAD_RWLOCK_T];
   long int __align;
 } pthread_rwlock_t;
 
-#define __PTHREAD_RWLOCK_ELISION_EXTRA 0
 
 typedef union
 {

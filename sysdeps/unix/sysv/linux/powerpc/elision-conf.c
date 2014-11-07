@@ -63,6 +63,9 @@ elision_init (int argc __attribute__ ((unused)),
   int elision_available = (GLRO (dl_hwcap2) & PPC_FEATURE2_HAS_HTM) ? 1 : 0;
   __pthread_force_elision = __libc_enable_secure ? 0 : elision_available;
 #endif
+  if (!__pthread_force_elision)
+    /* Disable elision on rwlocks.  */
+    __elision_aconf.try_tbegin = 0;
 }
 
 #ifdef SHARED
