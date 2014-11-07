@@ -1,3 +1,33 @@
+2014-01-12  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/Makefile [nptl]
+	(sysdep_routines): Add lock elision objects.
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h
+	[pthread_mutex_t] (__spins): Rework to add lock elision field.
+	[pthread_mutex_t] (__elision): Add field.
+	[__PTHREAD_SPINS]: Adjust to init lock elision field.
+	* sysdeps/unix/sysv/linux/powerpc/elision-conf.c: New file: lock
+	elision definitions for powerpc.
+	* sysdeps/unix/sysv/linux/powerpc/elision-lock.c: New file:
+	implementation of lock elision for powerpc.
+	* sysdeps/unix/sysv/linux/powerpc/elision-timed.c: New file:
+	implementation of timed lock elision for powerpc.
+	* sysdeps/unix/sysv/linux/powerpc/elision-trylock.c: New file:
+	implementation of trylock with lock elision for powerpc.
+	* sysdeps/unix/sysv/linux/powerpc/elision-unlock.c: New file:
+	implementaion of unlock for lock elision for powerpc.
+	* sysdeps/unix/sysv/linux/powerpc/force-elision.h: New file:
+	automatic enable lock elision for mutexes.
+	* sysdeps/unix/sysv/linux/powerpc/htm.h: New file: hardware
+	transaction execution definitions for powerpc.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h: New file: add TLE
+	definitions.
+	* sysdeps/unix/sysv/linux/powerpc/pthread_mutex_cond_lock.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/pthread_mutex_lock.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/pthread_mutex_timedlock.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/pthread_mutex_trylock.c: Likewise.
+	* NEWS: Update.
+
 2015-01-09  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/posix/shm-directory.c: Use <> rather than ""

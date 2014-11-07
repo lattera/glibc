@@ -19,6 +19,13 @@ Version 2.21
   17745, 17746, 17747, 17748, 17775, 17777, 17780, 17781, 17782, 17791,
   17793, 17796, 17797, 17806
 
+* Added support for TSX lock elision of pthread mutexes on powerpc32, powerpc64
+  and powerpc64le.  This may improve lock scaling of existing programs on
+  HTM capable systems.  The lock elision code is only enabled with
+  --enable-lock-elision=yes.  Also, the TSX lock elision implementation for
+  powerpc will issue a transaction abort on every syscall to avoid side
+  effects being visible outside transactions.
+
 * Optimized strcpy, stpcpy, strchrnul and strrchr implementations for
   AArch64.  Contributed by ARM Ltd.
 
