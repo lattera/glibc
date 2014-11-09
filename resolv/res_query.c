@@ -535,8 +535,7 @@ res_nsearch(res_state statp,
 libresolv_hidden_def (res_nsearch)
 
 /*
- * Perform a call on res_query on the concatenation of name and domain,
- * removing a trailing dot from name if domain is NULL.
+ * Perform a call on res_query on the concatenation of name and domain.
  */
 static int
 __libc_res_nquerydomain(res_state statp,
@@ -561,10 +560,6 @@ __libc_res_nquerydomain(res_state statp,
 		       name, domain?domain:"<Nil>", class, type);
 #endif
 	if (domain == NULL) {
-		/*
-		 * Check for trailing '.';
-		 * copy without '.' if present.
-		 */
 		n = strlen(name);
 
 		/* Decrement N prior to checking it against MAXDNAME
@@ -575,11 +570,7 @@ __libc_res_nquerydomain(res_state statp,
 			RES_SET_H_ERRNO(statp, NO_RECOVERY);
 			return (-1);
 		}
-		if (name[n] == '.') {
-			strncpy(nbuf, name, n);
-			nbuf[n] = '\0';
-		} else
-			longname = name;
+		longname = name;
 	} else {
 		n = strlen(name);
 		d = strlen(domain);

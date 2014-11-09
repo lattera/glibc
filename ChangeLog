@@ -1,5 +1,14 @@
 2014-11-21  Alexandre Oliva <aoliva@redhat.com>
 
+	[BZ #16469]
+	* NEWS: Update.
+	* resolv/res_query.c (__libc_res_nquerydomain): Retain
+	trailing dot.
+	* posix/tst-getaddrinfo5.c: New.
+	* posix/Makefile (tests): Add it.
+
+2014-11-21  Alexandre Oliva <aoliva@redhat.com>
+
 	[BZ #14498]
 	* NEWS: Fixed.
 	* nss/nss_db/db-XXX.c (_nss_db_get##name##_r): Update hidx
