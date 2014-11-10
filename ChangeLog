@@ -1,3 +1,12 @@
+2014-11-10  Andrew Senkevich  <andrew.n.senkevich@gmail.com>
+
+	* configure.ac: Updated check of minimal required version to
+	2.22.
+	* manual/install.texi (Tools for Compilation): Updated version
+	number.
+	* configure: Regenerated.
+	* INSTALL: Likewise.
+
 2014-11-07  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/m68k/localplt.data (ld.so): Remove
