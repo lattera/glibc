@@ -1,3 +1,7 @@
+2014-11-11  Alan Hayward  <alan.hayward@arm.com>
+
+	* sysdeps/unix/sysv/linux/aarch64/bits/ipc.h: New file.
+
 2014-11-10  Renlin Li  <Renlin.Li@arm.com>
 
 	[BZ #17555]
