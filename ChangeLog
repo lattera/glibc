@@ -1,3 +1,8 @@
+2014-11-10  Renlin Li <Renlin.Li@arm.com>
+
+	[BZ #17555]
+	* sysdeps/aarch64/start.S (_start): Delete x29 overwritten assignment.
+
 2014-11-10  Andrew Senkevich  <andrew.n.senkevich@gmail.com>
 
 	* configure.ac: Updated check of minimal required version to

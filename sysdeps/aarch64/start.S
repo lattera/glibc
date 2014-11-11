@@ -47,7 +47,6 @@ _start:
 	/* Create an initial frame with 0 LR and FP */
 	mov	x29, #0
 	mov	x30, #0
-	mov	x29, sp
 
 	/* Setup rtld_fini in argument register */
 	mov	x5, x0
