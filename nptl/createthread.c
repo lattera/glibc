@@ -36,12 +36,6 @@
 #endif
 
 
-#ifndef TLS_MULTIPLE_THREADS_IN_TCB
-/* Pointer to the corresponding variable in libc.  */
-int *__libc_multiple_threads_ptr attribute_hidden;
-#endif
-
-
 static int
 do_clone (struct pthread *pd, const struct pthread_attr *attr,
 	  int clone_flags, int (*fct) (void *), STACK_VARIABLES_PARMS,

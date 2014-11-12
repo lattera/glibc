@@ -37,6 +37,11 @@
 #include <kernel-features.h>
 
 
+#ifndef TLS_MULTIPLE_THREADS_IN_TCB
+/* Pointer to the corresponding variable in libc.  */
+int *__libc_multiple_threads_ptr attribute_hidden;
+#endif
+
 /* Size and alignment of static TLS block.  */
 size_t __static_tls_size;
 size_t __static_tls_align_m1;

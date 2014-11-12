@@ -1,3 +1,9 @@
+2014-11-12  Roland McGrath  <roland@hack.frob.com>
+
+	* nptl/createthread.c [!TLS_MULTIPLE_THREADS_IN_TCB]
+	(__libc_multiple_threads_ptr): Variable moved ...
+	* nptl/nptl-init.c [!TLS_MULTIPLE_THREADS_IN_TCB]: ... here.
+
 2014-11-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/GlibcConform.pm: New file.
