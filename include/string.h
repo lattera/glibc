@@ -113,6 +113,13 @@ libc_hidden_builtin_proto (strspn)
 libc_hidden_builtin_proto (strstr)
 libc_hidden_builtin_proto (ffs)
 
+#if defined NOT_IN_libc || !defined SHARED
+/* Redirect calls to __builtin_mempcpy and __builtin_stpcpy to call
+   __mempcpy and __stpcpy if not inlined.  */
+extern __typeof (mempcpy) mempcpy __asm__ ("__mempcpy");
+extern __typeof (stpcpy) stpcpy __asm__ ("__stpcpy");
+#endif
+
 # ifndef _ISOMAC
 #  ifndef index
 #   define index(s, c)	(strchr ((s), (c)))

@@ -1,5 +1,10 @@
 2014-11-12  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17573]
+	* include/string.h [NOT_IN_libc || !SHARED] (mempcpy): Declare
+	with asm name __mempcpy.
+	[NOT_IN_libc || !SHARED] (stpcpy): Declare with asm name __stpcpy.
+
 	[BZ #17572]
 	* sysdeps/x86_64/rawmemchr.S (rawmemchr): Rename to __rawmemchr
 	and define as weak alias of __rawmemchr.
