@@ -1,5 +1,6 @@
 #! /usr/bin/perl
 
+use GlibcConform;
 use Getopt::Long;
 use POSIX;
 
@@ -31,17 +32,6 @@ if (@headers == ()) {
 	      "fcntl.h", "errno.h", "dlfcn.h", "dirent.h", "ctype.h", "cpio.h",
 	      "complex.h", "assert.h", "arpa/inet.h", "aio.h");
 }
-
-$CFLAGS{"ISO"} = "-ansi";
-$CFLAGS{"ISO99"} = "-std=c99";
-$CFLAGS{"ISO11"} = "-std=c1x -D_ISOC11_SOURCE";
-$CFLAGS{"POSIX"} = "-D_POSIX_C_SOURCE=199912 -ansi";
-$CFLAGS{"XPG3"} = "-ansi -D_XOPEN_SOURCE";
-$CFLAGS{"XPG4"} = "-ansi -D_XOPEN_SOURCE -D_XOPEN_SOURCE_EXTENDED";
-$CFLAGS{"UNIX98"} = "-ansi -D_XOPEN_SOURCE=500";
-$CFLAGS{"XOPEN2K"} = "-std=c99 -D_XOPEN_SOURCE=600";
-$CFLAGS{"XOPEN2K8"} = "-std=c99 -D_XOPEN_SOURCE=700";
-$CFLAGS{"POSIX2008"} = "-std=c99 -D_POSIX_C_SOURCE=200809L";
 
 $CFLAGS_namespace = "$flags -fno-builtin $CFLAGS{$standard} -D_ISOMAC";
 $CFLAGS = "$CFLAGS_namespace '-D__attribute__(x)='";
