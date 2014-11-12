@@ -57,5 +57,6 @@ do_test (void)
 
 #define TIMEOUT 300
 #define EXPECTED_SIGNAL SIGALRM
+#define EXPECTED_STATUS 0
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"

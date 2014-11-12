@@ -383,39 +383,46 @@ main (int argc, char *argv[])
       exit (1);
     }
 
-#ifndef EXPECTED_SIGNAL
-  /* We don't expect any signal.  */
-# define EXPECTED_SIGNAL 0
-#endif
-  if (WTERMSIG (status) != EXPECTED_SIGNAL)
+  /* Process terminated normaly without timeout etc.  */
+  if (WIFEXITED (status))
     {
-      if (EXPECTED_SIGNAL != 0)
-	{
-	  if (WTERMSIG (status) == 0)
-	    printf ("Expected signal '%s' from child, got none\n",
-		    strsignal (EXPECTED_SIGNAL));
-	  else
-	    printf ("Incorrect signal from child: got `%s', need `%s'\n",
-		    strsignal (WTERMSIG (status)),
-		    strsignal (EXPECTED_SIGNAL));
-	}
-      else
-	printf ("Didn't expect signal from child: got `%s'\n",
-		strsignal (WTERMSIG (status)));
-      exit (1);
-    }
-
-  /* Simply exit with the return value of the test.  */
 #ifndef EXPECTED_STATUS
-  return WEXITSTATUS (status);
-#else
-  if (WEXITSTATUS (status) != EXPECTED_STATUS)
-    {
-      printf ("Expected status %d, got %d\n",
-	      EXPECTED_STATUS, WEXITSTATUS (status));
+# ifndef EXPECTED_SIGNAL
+      /* Simply exit with the return value of the test.  */
+      return WEXITSTATUS (status);
+# else
+      printf ("Expected signal '%s' from child, got none\n",
+	      strsignal (EXPECTED_SIGNAL));
       exit (1);
-    }
+# endif
+#else
+      if (WEXITSTATUS (status) != EXPECTED_STATUS)
+        {
+          printf ("Expected status %d, got %d\n",
+	          EXPECTED_STATUS, WEXITSTATUS (status));
+          exit (1);
+        }
 
-  return 0;
+      return 0;
 #endif
+    }
+  /* Process was killed by timer or other signal.  */
+  else
+    {
+#ifndef EXPECTED_SIGNAL
+      printf ("Didn't expect signal from child: got `%s'\n",
+	      strsignal (WTERMSIG (status)));
+      exit (1);
+#else
+      if (WTERMSIG (status) != EXPECTED_SIGNAL)
+	{
+	  printf ("Incorrect signal from child: got `%s', need `%s'\n",
+		  strsignal (WTERMSIG (status)),
+		  strsignal (EXPECTED_SIGNAL));
+	  exit (1);
+	}
+
+      return 0;
+#endif
+    }
 }

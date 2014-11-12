@@ -1,3 +1,10 @@
+2014-11-12  Leonhard Holz  <leonhard.holz@web.de>
+
+	[BZ #17506]
+	* test-skeleton.c (main): Return successful if one of
+	EXPECTED_SIGNAL or EXPECTED_STATUS is met when both given.
+	* string/tst-strcoll-overflow.c: Define expected status.
+
 2014-11-12  Tatiana Udalova  <t.udalova@samsung.com>
 
 	[BZ #17475]
