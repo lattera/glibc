@@ -1,5 +1,21 @@
 2014-11-12  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17584]
+	* dirent/rewinddir.c (rewinddir): Rename to __rewinddir and define
+	as weak alias of __rewinddir.  Don't use libc_hidden_def.
+	(__rewinddir): Use libc_hidden_def.
+	* sysdeps/mach/hurd/rewinddir.c: Rename to __rewinddir and define
+	as weak alias of __rewinddir.  Don't use libc_hidden_def.
+	(__rewinddir): Use libc_hidden_def.
+	* sysdeps/posix/rewinddir.c: Rename to __rewinddir and define as
+	weak alias of __rewinddir.  Don't use libc_hidden_def.
+	(__rewinddir): Use libc_hidden_def.
+	* include/dirent.h (rewinddir): Don't use libc_hidden_proto.
+	(__rewinddir): Use libc_hidden_proto.
+	* sysdeps/posix/getcwd.c [!_LIBC] (__rewinddir): Define to
+	rewinddir.
+	(__getcwd): Use __rewinddir instead of rewinddir.
+
 	[BZ #17583]
 	* libio/fileno.c (fileno): Rename to __fileno and define as weak
 	alias of __fileno.  Use libc_hidden_weak.

@@ -195,6 +195,10 @@ extern char *alloca ();
 #ifndef __GNU_LIBRARY__
 # define __lstat64	stat64
 #endif
+
+#ifndef _LIBC
+# define __rewinddir	rewinddir
+#endif
 
 #ifndef _LIBC
 # define __getcwd getcwd
@@ -390,7 +394,7 @@ __getcwd (buf, size)
 		  if (use_d_ino)
 		    {
 		      use_d_ino = false;
-		      rewinddir (dirstream);
+		      __rewinddir (dirstream);
 		      continue;
 		    }
 

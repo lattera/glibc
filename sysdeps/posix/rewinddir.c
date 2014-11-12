@@ -23,7 +23,7 @@
 
 /* Rewind DIRP to the beginning of the directory.  */
 void
-rewinddir (dirp)
+__rewinddir (dirp)
      DIR *dirp;
 {
 #ifndef NOT_IN_libc
@@ -38,4 +38,5 @@ rewinddir (dirp)
   __libc_lock_unlock (dirp->lock);
 #endif
 }
-libc_hidden_def (rewinddir)
+libc_hidden_def (__rewinddir)
+weak_alias (__rewinddir, rewinddir)

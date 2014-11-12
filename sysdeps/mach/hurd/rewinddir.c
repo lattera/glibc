@@ -22,9 +22,10 @@
 
 /* Rewind DIRP to the beginning of the directory.  */
 void
-rewinddir (dirp)
+__rewinddir (dirp)
      DIR *dirp;
 {
   seekdir (dirp, (off_t) 0L);
 }
-libc_hidden_def (rewinddir)
+libc_hidden_def (__rewinddir)
+weak_alias (__rewinddir, rewinddir)
