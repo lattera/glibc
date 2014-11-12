@@ -68,7 +68,7 @@ ENTRY(__bcopy)
 #ifdef PIC
         al     %r1,.L9-.L8(%r1)     # get address of global offset table
                                     # load address of memmove
-        l      %r1,memmove@GOT12(%r1)
+        l      %r1,memmove@GOT(%r1)
         br     %r1
 .L9:    .long  _GLOBAL_OFFSET_TABLE_-.L8
 #else

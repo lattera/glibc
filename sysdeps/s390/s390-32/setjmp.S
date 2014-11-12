@@ -76,7 +76,7 @@ ENTRY(__sigsetjmp)
 	basr   %r1,0
 .L0:    al     %r1,.L1 - .L0(0,%r1) /* get address of global offset table */
 				    /* get address of __sigjmp_save from got */
-	l      %r1,__sigjmp_save@GOT12(0,%r1)
+	l      %r1,__sigjmp_save@GOT(%r1)
 	br     %r1
 .L1:    .long  _GLOBAL_OFFSET_TABLE_ - .L0
 #else

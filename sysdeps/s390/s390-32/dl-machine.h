@@ -76,7 +76,7 @@ elf_machine_load_address (void)
        "2: l     %0,4(1)\n"
        "   ar    %0,1\n"
        "   al    1,0(1)\n"
-       "   sl    %0,_dl_start@GOT12(1)"
+       "   sl    %0,_dl_start@GOT(1)"
        : "=&d" (addr) : : "1" );
   return addr;
 }
@@ -165,7 +165,7 @@ _dl_start_user:\n\
 	ar    %r12,%r13\n\
 	# See if we were run as a command with the executable file\n\
 	# name as an extra leading argument.\n\
-	l     %r1,_dl_skip_args@GOT12(0,%r12)\n\
+	l     %r1,_dl_skip_args@GOT(%r12)\n\
 	l     %r1,0(%r1)	# load _dl_skip_args\n\
 	ltr   %r1,%r1\n\
 	je    .L4		# Skip the arg adjustment if there were none.\n\

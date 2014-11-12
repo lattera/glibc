@@ -1,3 +1,12 @@
+2012-11-12  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/s390/s390-32/bcopy.S (__bcopy): Use GOT instead of
+	GOT12.
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_load_address):
+	Likewise.
+	(_dl_start_user): Likewise.
+	* sysdeps/s390/s390-32/setjmp.S (__sigsetjmp): Likewise.
+
 2014-11-12  Carlos O'Donell  <carlos@redhat.com>
 	    Siddhesh Poyarekar  <siddhesh@redhat.com>
 
