@@ -170,7 +170,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
     goto ret_free_transitions;
 
   /* Get information about the file we are actually using.  */
-  if (fstat64 (fileno (f), &st) != 0)
+  if (fstat64 (__fileno (f), &st) != 0)
     {
       fclose (f);
       goto ret_free_transitions;
@@ -188,8 +188,8 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   __fsetlocking (f, FSETLOCKING_BYCALLER);
 
  read_again:
-  if (__builtin_expect (fread_unlocked ((void *) &tzhead, sizeof (tzhead),
-					1, f) != 1, 0)
+  if (__builtin_expect (__fread_unlocked ((void *) &tzhead, sizeof (tzhead),
+					  1, f) != 1, 0)
       || memcmp (tzhead.tzh_magic, TZ_MAGIC, sizeof (tzhead.tzh_magic)) != 0)
     goto lose;
 
@@ -248,7 +248,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   tzspec_len = 0;
   if (sizeof (time_t) == 8 && trans_width == 8)
     {
-      off_t rem = st.st_size - ftello (f);
+      off_t rem = st.st_size - __ftello (f);
       if (__builtin_expect (rem < 0
 			    || (size_t) rem < (num_transitions * (8 + 1)
 					       + num_types * 6
@@ -293,17 +293,18 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
 
   if (sizeof (time_t) == 4 || __builtin_expect (trans_width == 8, 1))
     {
-      if (__builtin_expect (fread_unlocked (transitions, trans_width + 1,
-					    num_transitions, f)
+      if (__builtin_expect (__fread_unlocked (transitions, trans_width + 1,
+					      num_transitions, f)
 			    != num_transitions, 0))
 	goto lose;
     }
   else
     {
-      if (__builtin_expect (fread_unlocked (transitions, 4, num_transitions, f)
+      if (__builtin_expect (__fread_unlocked (transitions, 4,
+					      num_transitions, f)
 			    != num_transitions, 0)
-	  || __builtin_expect (fread_unlocked (type_idxs, 1, num_transitions,
-					       f) != num_transitions, 0))
+	  || __builtin_expect (__fread_unlocked (type_idxs, 1, num_transitions,
+						 f) != num_transitions, 0))
 	goto lose;
     }
 
@@ -337,7 +338,8 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
     {
       unsigned char x[4];
       int c;
-      if (__builtin_expect (fread_unlocked (x, 1, sizeof (x), f) != sizeof (x),
+      if (__builtin_expect (__fread_unlocked (x, 1,
+					      sizeof (x), f) != sizeof (x),
 			    0))
 	goto lose;
       c = getc_unlocked (f);
@@ -352,13 +354,13 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
       types[i].offset = (long int) decode (x);
     }
 
-  if (__glibc_unlikely (fread_unlocked (zone_names, 1, chars, f) != chars))
+  if (__glibc_unlikely (__fread_unlocked (zone_names, 1, chars, f) != chars))
     goto lose;
 
   for (i = 0; i < num_leaps; ++i)
     {
       unsigned char x[8];
-      if (__builtin_expect (fread_unlocked (x, 1, trans_width, f)
+      if (__builtin_expect (__fread_unlocked (x, 1, trans_width, f)
 			    != trans_width, 0))
 	goto lose;
       if (sizeof (time_t) == 4 || trans_width == 4)
@@ -366,7 +368,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
       else
 	leaps[i].transition = (time_t) decode64 (x);
 
-      if (__glibc_unlikely (fread_unlocked (x, 1, 4, f) != 4))
+      if (__glibc_unlikely (__fread_unlocked (x, 1, 4, f) != 4))
 	goto lose;
       leaps[i].change = (long int) decode (x);
     }
@@ -396,7 +398,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
     {
       /* Skip over the newline first.  */
       if (getc_unlocked (f) != '\n'
-	  || (fread_unlocked (tzspec, 1, tzspec_len - 1, f)
+	  || (__fread_unlocked (tzspec, 1, tzspec_len - 1, f)
 	      != tzspec_len - 1))
 	tzspec = NULL;
       else
@@ -405,8 +407,8 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   else if (sizeof (time_t) == 4 && tzhead.tzh_version[0] != '\0')
     {
       /* Get the TZ string.  */
-      if (__builtin_expect (fread_unlocked ((void *) &tzhead, sizeof (tzhead),
-					    1, f) != 1, 0)
+      if (__builtin_expect (__fread_unlocked ((void *) &tzhead,
+					      sizeof (tzhead), 1, f) != 1, 0)
 	  || (memcmp (tzhead.tzh_magic, TZ_MAGIC, sizeof (tzhead.tzh_magic))
 	      != 0))
 	goto lose;
@@ -427,14 +429,15 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
 			+ num_isgmt2);
       off_t off;
       if (fseek (f, to_skip, SEEK_CUR) != 0
-	  || (off = ftello (f)) < 0
+	  || (off = __ftello (f)) < 0
 	  || st.st_size < off + 2)
 	goto lose;
 
       tzspec_len = st.st_size - off - 1;
       char *tzstr = alloca (tzspec_len);
       if (getc_unlocked (f) != '\n'
-	  || (fread_unlocked (tzstr, 1, tzspec_len - 1, f) != tzspec_len - 1))
+	  || (__fread_unlocked (tzstr, 1, tzspec_len - 1, f)
+	      != tzspec_len - 1))
 	goto lose;
       tzstr[tzspec_len - 1] = '\0';
       tzspec = __tzstring (tzstr);

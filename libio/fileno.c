@@ -28,7 +28,7 @@
 #include <stdio.h>
 
 int
-fileno (fp)
+__fileno (fp)
      _IO_FILE* fp;
 {
   CHECK_FILE (fp, EOF);
@@ -41,12 +41,14 @@ fileno (fp)
 
   return _IO_fileno (fp);
 }
-libc_hidden_def (fileno)
+libc_hidden_def (__fileno)
+weak_alias (__fileno, fileno)
+libc_hidden_weak (fileno)
 
 #ifdef weak_alias
 /* The fileno implementation for libio does not require locking because
    it only accesses once a single variable and this is already atomic
    (at least at thread level).  Therefore we don't test _IO_MTSAFE_IO here.  */
 
-weak_alias (fileno, fileno_unlocked)
+weak_alias (__fileno, fileno_unlocked)
 #endif

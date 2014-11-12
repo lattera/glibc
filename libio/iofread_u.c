@@ -30,7 +30,7 @@
 #undef fread_unlocked
 
 _IO_size_t
-fread_unlocked (buf, size, count, fp)
+__fread_unlocked (buf, size, count, fp)
      void *buf;
      _IO_size_t size;
      _IO_size_t count;
@@ -44,4 +44,5 @@ fread_unlocked (buf, size, count, fp)
   bytes_read = _IO_sgetn (fp, (char *) buf, bytes_requested);
   return bytes_requested == bytes_read ? count : bytes_read / size;
 }
-libc_hidden_def (fread_unlocked)
+libc_hidden_def (__fread_unlocked)
+weak_alias (__fread_unlocked, fread_unlocked)

@@ -1,3 +1,30 @@
+2014-11-12  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17583]
+	* libio/fileno.c (fileno): Rename to __fileno and define as weak
+	alias of __fileno.  Use libc_hidden_weak.
+	(__fileno): Use libc_hidden_def.
+	[weak_alias] (fileno_unlocked): Define as weak alias of __fileno.
+	* libio/ftello.c (ftello): Rename to __ftello and define as weak
+	alias of __ftello.
+	[__OFF_T_MATCHES_OFF64_T] (ftello64): Define as weak alias of
+	__ftello.
+	* libio/iofread.c [weak_alias && !_IO_MTSAFE_IO]
+	(__fread_unlocked): Define as strong alias of _IO_fread.  Use
+	libc_hidden_def.
+	(fread_unlocked): Don't use libc_hidden_ver.
+	* libio/iofread_u.c (fread_unlocked): Rename to __fread_unlocked
+	and define as weak alias of __fread_unlocked.  Don't use
+	libc_hidden_def.
+	(__fread_unlocked): Use libc_hidden_def.
+	* include/stdio.h (__fileno): Declare.  Use libc_hidden_proto.
+	(ftello): Don't use libc_hidden_proto.
+	(__ftello): Declare.  Use libc_hidden_proto.
+	(fread_unlocked): Don't use libc_hidden_proto.
+	(__fread_unlocked): Declare.  Use libc_hidden_proto.
+	* time/tzfile.c (__tzfile_read): Use __fileno, __fread_unlocked
+	and __ftello instead of fileno, fread_unlocked and ftello.
+
 2012-11-12  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/s390/s390-32/bcopy.S (__bcopy): Use GOT instead of
