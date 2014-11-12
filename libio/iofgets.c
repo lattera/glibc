@@ -73,6 +73,8 @@ _IO_fgets (buf, n, fp)
 weak_alias (_IO_fgets, fgets)
 
 # ifndef _IO_MTSAFE_IO
+strong_alias (_IO_fgets, __fgets_unlocked)
+libc_hidden_def (__fgets_unlocked)
 weak_alias (_IO_fgets, fgets_unlocked)
 libc_hidden_weak (fgets_unlocked)
 # endif

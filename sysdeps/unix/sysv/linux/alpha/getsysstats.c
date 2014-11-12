@@ -47,7 +47,7 @@
 	 the kernel will not generate them.  8192 bytes are really enough. \
 	 If there is no "CPUs ..." line then we are on a UP system.  */	   \
       (RESULT) = 1;							   \
-      while (fgets_unlocked ((BUFFER), sizeof (BUFFER), (FP)) != NULL)	   \
+      while (__fgets_unlocked ((BUFFER), sizeof (BUFFER), (FP)) != NULL)   \
 	if ((sscanf (buffer, "cpus detected : %d", &(RESULT)) == 1)	   \
 	    || (sscanf (buffer, "CPUs probed %d", &(RESULT)) == 1))	   \
 	  break;							   \

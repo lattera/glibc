@@ -155,6 +155,8 @@ extern __typeof (fread_unlocked) __fread_unlocked;
 libc_hidden_proto (__fread_unlocked)
 libc_hidden_proto (fwrite_unlocked)
 libc_hidden_proto (fgets_unlocked)
+extern __typeof (fgets_unlocked) __fgets_unlocked;
+libc_hidden_proto (__fgets_unlocked)
 libc_hidden_proto (fputs_unlocked)
 libc_hidden_proto (fmemopen)
 libc_hidden_proto (open_memstream)

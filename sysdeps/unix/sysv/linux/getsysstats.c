@@ -299,7 +299,7 @@ phys_pages_info (const char *format)
 	 string "processor".  We don't have to fear extremely long
 	 lines since the kernel will not generate them.  8192
 	 bytes are really enough.  */
-      while (fgets_unlocked (buffer, sizeof buffer, fp) != NULL)
+      while (__fgets_unlocked (buffer, sizeof buffer, fp) != NULL)
 	if (sscanf (buffer, format, &result) == 1)
 	  {
 	    result /= (__getpagesize () / 1024);

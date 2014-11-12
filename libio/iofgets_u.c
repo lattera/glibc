@@ -28,7 +28,7 @@
 #include <stdio.h>
 
 char *
-fgets_unlocked (buf, n, fp)
+__fgets_unlocked (buf, n, fp)
      char *buf;
      int n;
      _IO_FILE *fp;
@@ -66,4 +66,6 @@ fgets_unlocked (buf, n, fp)
   fp->_IO_file_flags |= old_error;
   return result;
 }
-libc_hidden_def (fgets_unlocked)
+libc_hidden_def (__fgets_unlocked)
+weak_alias (__fgets_unlocked, fgets_unlocked)
+libc_hidden_weak (fgets_unlocked)
