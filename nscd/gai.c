@@ -28,6 +28,7 @@
 #define __sendto sendto
 #define __strchrnul strchrnul
 #define __getline getline
+#define __qsort_r qsort_r
 /* nscd uses 1MB or 2MB thread stacks.  */
 #define __libc_use_alloca(size) (size <= __MAX_ALLOCA_CUTOFF)
 

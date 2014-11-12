@@ -37,7 +37,8 @@ extern __typeof (secure_getenv) __libc_secure_getenv;
 libc_hidden_proto (__libc_secure_getenv)
 libc_hidden_proto (bsearch)
 libc_hidden_proto (qsort)
-libc_hidden_proto (qsort_r)
+extern __typeof (qsort_r) __qsort_r;
+libc_hidden_proto (__qsort_r)
 libc_hidden_proto (lrand48_r)
 libc_hidden_proto (wctomb)
 

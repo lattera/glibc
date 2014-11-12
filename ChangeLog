@@ -1,5 +1,18 @@
 2014-11-12  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17571]
+	* stdlib/msort.c (qsort_r): Rename to __qsort_r and define as weak
+	alias of __qsort_r.
+	(qsort): Call __qsort_r instead of qsort_r.
+	* include/stdlib.h (qsort_r): Do not call libc_hidden_proto.
+	(__qsort_r): Declare.  Call libc_hidden_proto.
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Call __qsort_r
+	instead of qsort_r.
+	* nscd/gai.c (__qsort_r): Define to qsort_r.
+	* posix/tst-rfc3484.c (__qsort_r): Likewise.
+	* posix/tst-rfc3484-2.c (__qsort_r): Likewise.
+	* posix/tst-rfc3484-3.c (__qsort_r): Likewise.
+
 	[BZ #17570]
 	* malloc/malloc.c (malloc_info): Rename to __malloc_info and
 	define as weak alias of __malloc_info.

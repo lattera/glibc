@@ -2626,11 +2626,11 @@ getaddrinfo (const char *name, const char *service,
 	  __libc_lock_lock (lock);
 	  if (__libc_once_get (old_once) && gaiconf_reload_flag)
 	    gaiconf_reload ();
-	  qsort_r (order, nresults, sizeof (order[0]), rfc3484_sort, &src);
+	  __qsort_r (order, nresults, sizeof (order[0]), rfc3484_sort, &src);
 	  __libc_lock_unlock (lock);
 	}
       else
-	qsort_r (order, nresults, sizeof (order[0]), rfc3484_sort, &src);
+	__qsort_r (order, nresults, sizeof (order[0]), rfc3484_sort, &src);
 
       /* Queue the results up as they come out of sorting.  */
       q = p = results[order[0]].dest_addr;
