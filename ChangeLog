@@ -1,3 +1,10 @@
+2014-11-12  Carlos O'Donell  <carlos@redhat.com>
+	    Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/s390/s390-32/dl-machine.h (_dl_start_user):
+	Move argv and envp down instead of moving argc up.
+	* sysdeps/s390/s390-32/dl-sysdep.h: New file.
+
 2014-11-12  Leonhard Holz  <leonhard.holz@web.de>
 
 	[BZ #17506]
