@@ -1,5 +1,10 @@
 2014-11-12  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17572]
+	* sysdeps/x86_64/rawmemchr.S (rawmemchr): Rename to __rawmemchr
+	and define as weak alias of __rawmemchr.
+	(__rawmemchr): Do not define as strong alias of rawmemchr.
+
 	[BZ #17571]
 	* stdlib/msort.c (qsort_r): Rename to __qsort_r and define as weak
 	alias of __qsort_r.
