@@ -62,6 +62,7 @@ ber_DZ/UTF-8 \
 ber_MA/UTF-8 \
 bg_BG.UTF-8/UTF-8 \
 bg_BG/CP1251 \
+bh_IN.UTF-8/UTF-8 \
 bho_IN/UTF-8 \
 bn_BD/UTF-8 \
 bn_IN/UTF-8 \
@@ -421,6 +422,7 @@ tr_TR/ISO-8859-9 \
 ts_ZA/UTF-8 \
 tt_RU/UTF-8 \
 tt_RU@iqtelif/UTF-8 \
+tu_IN.UTF-8/UTF-8 \
 ug_CN/UTF-8 \
 uk_UA.UTF-8/UTF-8 \
 uk_UA/KOI8-U \

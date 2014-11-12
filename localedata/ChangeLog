@@ -1,3 +1,10 @@
+2014-11-12  Tatiana Udalova  <t.udalova@samsung.com>
+
+	[BZ #17475]
+	* SUPPORTED: Add Bhili and Tulu locales.
+	* locales/tu_IN: New Tulu locale.
+	* locales/bh_IN: New Bhili locale.
+
 2014-07-02  Florian Weimer  <fweimer@redhat.com>
 
 	* tst-setlocale3.c: New file.

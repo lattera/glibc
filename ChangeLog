@@ -1,3 +1,8 @@
+2014-11-12  Tatiana Udalova  <t.udalova@samsung.com>
+
+	[BZ #17475]
+	* locale/iso-639.def: Define Bhili and Tulu language codes.
+
 2014-11-11  Alan Hayward  <alan.hayward@arm.com>
 
 	* sysdeps/unix/sysv/linux/aarch64/bits/ipc.h: New file.
