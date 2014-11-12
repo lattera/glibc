@@ -1,5 +1,9 @@
 2014-11-12  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17589]
+	* intl/localealias.c [_LIBC] (FGETS): Use __fgets_unlocked instead
+	of fgets_unlocked.
+
 	[BZ #17585]
 	* string/memmem.c [!_LIBC] (__memmem): Define to memmem.
 	(memmem): Rename to __memmem and define as weak alias of

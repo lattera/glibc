@@ -84,7 +84,7 @@ __libc_lock_define_initialized (static, lock);
 /* Some optimizations for glibc.  */
 #ifdef _LIBC
 # define FEOF(fp)		feof_unlocked (fp)
-# define FGETS(buf, n, fp)	fgets_unlocked (buf, n, fp)
+# define FGETS(buf, n, fp)	__fgets_unlocked (buf, n, fp)
 #else
 # define FEOF(fp)		feof (fp)
 # define FGETS(buf, n, fp)	fgets (buf, n, fp)
