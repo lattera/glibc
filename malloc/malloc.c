@@ -4993,7 +4993,7 @@ weak_alias (__posix_memalign, posix_memalign)
 
 
 int
-malloc_info (int options, FILE *fp)
+__malloc_info (int options, FILE *fp)
 {
   /* For now, at least.  */
   if (options != 0)
@@ -5166,6 +5166,7 @@ malloc_info (int options, FILE *fp)
 
   return 0;
 }
+weak_alias (__malloc_info, malloc_info)
 
 
 strong_alias (__libc_calloc, __calloc) weak_alias (__libc_calloc, calloc)
