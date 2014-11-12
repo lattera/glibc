@@ -1,5 +1,14 @@
 2014-11-12  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17585]
+	* string/memmem.c [!_LIBC] (__memmem): Define to memmem.
+	(memmem): Rename to __memmem and define as weak alias of
+	__memmem.  Use libc_hidden_weak.
+	(__memmem): Use libc_hidden_def.
+	* include/string.h (__memmem): Declare.  Use libc_hidden_proto.
+	* locale/findlocale.c (valid_locale_name): Use __memmem instead of
+	memmem.
+
 	[BZ #17582]
 	* libio/iofgets.c [weak_alias && !_IO_MTSAFE_IO]
 	(__fgets_unlocked): Add alias of _IO_fgets.  Use libc_hidden_def.
