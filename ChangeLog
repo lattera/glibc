@@ -1,5 +1,13 @@
 2014-11-12  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17574]
+	* wcsmbs/wmemset.c (wmemset): Rename to __wmemset and define as
+	weak alias of __wmemset.  Use libc_hidden_weak.
+	(__wmemset): Use libc_hidden_def.
+	* include/wchar.h (__wmemset): Declare.  Use libc_hidden_proto.
+	* stdio-common/printf_fp.c (___printf_fp): Call __wmemset instead
+	of wmemset.
+
 	[BZ #17573]
 	* include/string.h [NOT_IN_libc || !SHARED] (mempcpy): Declare
 	with asm name __mempcpy.

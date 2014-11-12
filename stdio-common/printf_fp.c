@@ -1112,7 +1112,7 @@ ___printf_fp (FILE *fp,
 	    wstartp[1] = decimalwc;
 	    if (wcp >= wstartp + 2)
 	      {
-		wmemset (wstartp + 6, L'0', wcp - (wstartp + 2));
+		__wmemset (wstartp + 6, L'0', wcp - (wstartp + 2));
 		wcp += 4;
 	      }
 	    else

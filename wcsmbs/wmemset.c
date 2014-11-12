@@ -20,7 +20,7 @@
 
 
 wchar_t *
-wmemset (s, c, n)
+__wmemset (s, c, n)
      wchar_t *s;
      wchar_t c;
      size_t n;
@@ -52,4 +52,6 @@ wmemset (s, c, n)
 
   return s;
 }
-libc_hidden_def (wmemset)
+libc_hidden_def (__wmemset)
+weak_alias (__wmemset, wmemset)
+libc_hidden_weak (wmemset)

@@ -88,8 +88,10 @@ libc_hidden_proto (wcschr)
 libc_hidden_proto (wcscoll)
 libc_hidden_proto (wcspbrk)
 
+extern typeof (wmemset) __wmemset;
 libc_hidden_proto (wmemchr)
 libc_hidden_proto (wmemset)
+libc_hidden_proto (__wmemset)
 
 /* Now define the internal interfaces.  */
 extern int __wcscasecmp (const wchar_t *__s1, const wchar_t *__s2)
