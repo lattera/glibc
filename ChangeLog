@@ -1,5 +1,10 @@
 2014-11-13  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/s390-32/dl-machine.h (RTLD_START):
+	Use numbered labels in inline assembly.
+
+2014-11-13  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/s390-32/setjmp.S (__sigsetjmp):
 	Add setjmp LIBC_PROBE.
 	* sysdeps/s390/s390-64/setjmp.S (__sigsetjmp):

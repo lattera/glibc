@@ -148,7 +148,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 .globl _dl_start_user\n\
 _start:\n\
 	basr  %r13,0\n\
-.L0:    ahi   %r13,.Llit-.L0\n\
+0:      ahi   %r13,.Llit-0b\n\
 	lr    %r2,%r15\n\
 	# Alloc stack frame\n\
 	ahi   %r15,-96\n\
@@ -168,7 +168,7 @@ _dl_start_user:\n\
 	l     %r1,_dl_skip_args@GOT(%r12)\n\
 	l     %r1,0(%r1)	# load _dl_skip_args\n\
 	ltr   %r1,%r1\n\
-	je    .L4		# Skip the arg adjustment if there were none.\n\
+	je    4f		# Skip the arg adjustment if there were none.\n\
 	# Get the original argument count.\n\
 	l     %r0,96(%r15)\n\
 	# Subtract _dl_skip_args from it.\n\
@@ -183,28 +183,28 @@ _dl_start_user:\n\
 	sll   %r0,2\n		# Number of skipped bytes.\n\
 	ar    %r5,%r0		# Source pointer = Dest + Skipped args.\n\
 	# argv copy loop:\n\
-.L1:	l     %r7,0(%r5)	# Load a word from the source.\n\
+1:	l     %r7,0(%r5)	# Load a word from the source.\n\
 	st    %r7,0(%r6)	# Store the word in the destination.\n\
 	ahi   %r5,4\n\
 	ahi   %r6,4\n\
 	ltr   %r7,%r7\n\
-	jne   .L1		# Stop after copying the NULL.\n\
+	jne   1b		# Stop after copying the NULL.\n\
 	# envp copy loop:\n\
-.L2:	l     %r7,0(%r5)	# Load a word from the source.\n\
+2:	l     %r7,0(%r5)	# Load a word from the source.\n\
 	st    %r7,0(%r6)	# Store the word in the destination.\n\
 	ahi   %r5,4\n\
 	ahi   %r6,4\n\
 	ltr   %r7,%r7\n\
-	jne   .L2		# Stop after copying the NULL.\n\
+	jne   2b		# Stop after copying the NULL.\n\
 	# Now we have to zero out the envp entries after NULL to allow\n\
 	# start.S to properly find auxv by skipping zeroes.\n\
 	# zero out loop:\n\
 	lhi   %r7,0\n\
-.L3:	st    %r7,0(%r6)	# Store zero.\n\
+3:	st    %r7,0(%r6)	# Store zero.\n\
 	ahi   %r6,4		# Advance dest pointer.\n\
 	ahi   %r1,-1		# Subtract one from the word count.\n\
 	ltr   %r1,%r1\n\
-	jne    .L3		# Keep copying if the word count is non-zero.\n\
+	jne    3b		# Keep copying if the word count is non-zero.\n\
 	# Adjust _dl_argv\n\
 	la    %r6,100(%r15)\n\
 	l     %r1,_dl_argv@GOT(%r12)\n\
@@ -216,7 +216,7 @@ _dl_start_user:\n\
 	# Call the function to run the initializers.\n\
 	# Load the parameters:\n\
 	# (%r2, %r3, %r4, %r5) = (_dl_loaded, argc, argv, envp)\n\
-.L4:	l     %r2,_rtld_local@GOT(%r12)\n\
+4:	l     %r2,_rtld_local@GOT(%r12)\n\
 	l     %r2,0(%r2)\n\
 	l     %r3,96(%r15)\n\
 	la    %r4,100(%r15)\n\
