@@ -1,5 +1,7 @@
 2014-11-13  Joseph Myers  <joseph@codesourcery.com>
 
+	* stdlib/strtol.c (__strtol): Use prototype definition.
+
 	[BZ #17594]
 	* stdlib/strtol.c (SYM__): New macro.
 	(SYM__1): Likewise.
