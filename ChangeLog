@@ -1,3 +1,12 @@
+2014-11-13  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/s390-32/backtrace.c (__backtrace):
+	Check for unwind_backtrace ==  NULL only in SHARED case.
+	(__backchain_backtrace): Compile only in SHARED case.
+	* sysdeps/s390/s390-64/backtrace.c (__backtrace):
+	Likewise.
+	(__backchain_backtrace): Declare as static.
+
 2014-11-12  Roland McGrath  <roland@hack.frob.com>
 
 	* nptl/createthread.c [!TLS_MULTIPLE_THREADS_IN_TCB]
