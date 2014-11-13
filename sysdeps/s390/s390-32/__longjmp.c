@@ -22,6 +22,7 @@
 #include <bits/setjmp.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <stap-probe.h>
 
 /* Jump to the position specified by ENV, causing the
    setjmp call there to return VAL, or 1 if VAL is 0.  */
@@ -42,17 +43,31 @@ __longjmp (__jmp_buf env, int val)
   register void *r1 __asm ("%r1") = (void *) env;
 #endif
   /* Restore registers and jump back.  */
-  asm volatile ("ld   %%f6,48(%1)\n\t"
-		"ld   %%f4,40(%1)\n\t"
+  asm volatile (
+		/* longjmp probe expects longjmp first argument, second
+		   argument and target address.  */
 #ifdef PTR_DEMANGLE
-		"lm   %%r6,%%r13,0(%1)\n\t"
 		"lm   %%r4,%%r5,32(%1)\n\t"
 		"xr   %%r4,%2\n\t"
 		"xr   %%r5,%2\n\t"
+		LIBC_PROBE_ASM (longjmp, 4@%1 -4@%0 4@%%r4)
+#else
+		LIBC_PROBE_ASM (longjmp, 4@%1 -4@%0 4@%%r14)
+#endif
+
+		/* restore fpregs  */
+		"ld   %%f6,48(%1)\n\t"
+		"ld   %%f4,40(%1)\n\t"
+
+		/* restore gregs and return to jmp_buf target  */
+#ifdef PTR_DEMANGLE
+		"lm   %%r6,%%r13,0(%1)\n\t"
 		"lr   %%r15,%%r5\n\t"
+		LIBC_PROBE_ASM (longjmp_target, 4@%1 -4@%0 4@%%r4)
 		"br   %%r4"
 #else
 		"lm   %%r6,%%r15,0(%1)\n\t"
+		LIBC_PROBE_ASM (longjmp_target, 4@%1 -4@%0 4@%%r14)
 		"br   %%r14"
 #endif
 		: : "r" (r2),

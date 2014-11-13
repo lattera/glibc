@@ -22,6 +22,7 @@
 #define _SETJMP_H
 #include <bits/setjmp.h>
 #include <shlib-compat.h>
+#include <stap-probe.h>
 
 #if !defined IS_IN_rtld
 # if defined SHARED &&  SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)
@@ -53,6 +54,9 @@ END (__setjmp)
 
 ENTRY(__sigsetjmp)
 .Linternal_sigsetjmp:
+	/* setjmp probe expects sig/setjmp first argument (8@%r2), second
+	   argument (-8@%r3) and target address (8@%r14).  */
+	LIBC_PROBE (setjmp, 3, 8@%r2, -4@%r3, 8@%r14)
 #ifdef PTR_MANGLE
 	stmg   %r6,%r13,0(%r2)      /* Store registers in jmp_buf.  */
 	lgr    %r4,%r14

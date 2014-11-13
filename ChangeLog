@@ -1,5 +1,16 @@
 2014-11-13  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/s390-32/setjmp.S (__sigsetjmp):
+	Add setjmp LIBC_PROBE.
+	* sysdeps/s390/s390-64/setjmp.S (__sigsetjmp):
+	Likewise.
+	* sysdeps/s390/s390-32/__longjmp.c (__longjmp):
+	Add longjmp, longjmp_target LIBC_PROBE.
+	* sysdeps/s390/s390-64/__longjmp.c (__longjmp):
+	Likewise.
+
+2014-11-13  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/s390-64/dl-machine.h (elf_machine_rela):
 	Gate the definition of refsym additionally with !RTLD_BOOTSTRAP
 	to get rid of unused variable warning.
