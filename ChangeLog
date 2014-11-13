@@ -1,5 +1,11 @@
 2014-11-13  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/s390-64/dl-machine.h (elf_machine_rela):
+	Gate the definition of refsym additionally with !RTLD_BOOTSTRAP
+	to get rid of unused variable warning.
+
+2014-11-13  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/s390-32/backtrace.c (__backtrace):
 	Check for unwind_backtrace ==  NULL only in SHARED case.
 	(__backchain_backtrace): Compile only in SHARED case.
