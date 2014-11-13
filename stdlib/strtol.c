@@ -82,6 +82,10 @@
 #define INTERNAL(X) INTERNAL1(X)
 #define INTERNAL1(X) __##X##_internal
 
+#define SYM__(X) SYM__1 (X)
+#define SYM__1(X) __ ## X
+#define __strtol SYM__ (strtol)
+
 
 extern INT INTERNAL (__strtol_l) (const STRING_TYPE *, STRING_TYPE **, int,
 				  int, __locale_t);
@@ -100,11 +104,12 @@ libc_hidden_def (INTERNAL (strtol))
 
 
 INT
-strtol (nptr, endptr, base)
+__strtol (nptr, endptr, base)
      const STRING_TYPE *nptr;
      STRING_TYPE **endptr;
      int base;
 {
   return INTERNAL (__strtol_l) (nptr, endptr, base, 0, _NL_CURRENT_LOCALE);
 }
-libc_hidden_def (strtol)
+weak_alias (__strtol, strtol)
+libc_hidden_weak (strtol)
