@@ -1,5 +1,10 @@
 2014-11-14  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/x86_64/fpu/dla.h [__FMA4__ && __GNUC_PREREQ (4, 6)]
+	(DLA_FMS): Make definition conditional only on [__FMA4__].
+	[__FMA4__ && !__GNUC_PREREQ (4, 6)] (DLA_FMS): Remove conditional
+	definition.
+
 	* sysdeps/arm/sysdep.h [PROF && __GNUC_PREREQ(4,4)] (CALL_MCOUNT):
 	Make definition conditional only on [PROF].
 	[PROF && !__GNUC_PREREQ(4,4)] (CALL_MCOUNT): Remove conditional
