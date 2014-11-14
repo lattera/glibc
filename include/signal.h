@@ -10,6 +10,7 @@ libc_hidden_proto (sigfillset)
 libc_hidden_proto (sigaddset)
 libc_hidden_proto (sigdelset)
 libc_hidden_proto (sigismember)
+extern int __sigpause (int sig_or_mask, int is_sig);
 libc_hidden_proto (__sigpause)
 libc_hidden_proto (raise)
 libc_hidden_proto (__libc_current_sigrtmin)
@@ -49,7 +50,6 @@ extern int __libc_sigaction (int sig, const struct sigaction *act,
 			     struct sigaction *oact);
 libc_hidden_proto (__libc_sigaction)
 
-extern int __sigpause (int sig_or_mask, int is_sig);
 extern int __default_sigpause (int mask);
 extern int __xpg_sigpause (int sig);
 

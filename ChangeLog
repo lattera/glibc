@@ -1,3 +1,14 @@
+2014-11-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* signal/signal.h (__sigpause): Only declare if [__USE_XOPEN &&
+	!__GNUC__].
+	* include/signal.h (__sigpause): Move declaration above call to
+	libc_hidden_proto.
+	* conform/Makefile (test-xfail-ISO/signal.h/linknamespace): Remove
+	variable.
+	(test-xfail-ISO99/signal.h/linknamespace): Likewise.
+	(test-xfail-ISO11/signal.h/linknamespace): Likewise.
+
 2014-11-14  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc64/rtld-memcpy.c (NO_MEMPCPY_STPCPY_REDIRECT):

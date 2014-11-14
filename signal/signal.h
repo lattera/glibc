@@ -164,12 +164,12 @@ extern void psiginfo (const siginfo_t *__pinfo, const char *__s);
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern int __sigpause (int __sig_or_mask, int __is_sig);
 
 #ifdef __USE_XOPEN
 # ifdef __GNUC__
 extern int sigpause (int __sig) __asm__ ("__xpg_sigpause");
 # else
+extern int __sigpause (int __sig_or_mask, int __is_sig);
 /* Remove a signal from the signal mask and suspend the process.  */
 #  define sigpause(sig) __sigpause ((sig), 1)
 # endif
