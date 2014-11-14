@@ -41,8 +41,6 @@ extern int __sigtimedwait (const sigset_t *__set, siginfo_t *__info,
 libc_hidden_proto (__sigtimedwait)
 extern int __sigqueue (__pid_t __pid, int __sig,
 		       const union sigval __val);
-extern int __sigvec (int __sig, const struct sigvec *__vec,
-		     struct sigvec *__ovec);
 extern int __sigreturn (struct sigcontext *__scp);
 extern int __sigaltstack (const struct sigaltstack *__ss,
 			  struct sigaltstack *__oss);

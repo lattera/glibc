@@ -1,3 +1,25 @@
+2014-11-14  Roland McGrath  <roland@hack.frob.com>
+
+	* signal/signal.h [__USE_MISC]
+	(struct sigvec): Remove type.
+	(SV_ONSTACK, SV_INTERRUPT, SV_RESETHAND): Remove macros.
+	(sigvec): Remove declaration.
+	* sysdeps/posix/sigvec.c: Moved ...
+	* signal/sigvec.c: ... here, replacing old file.
+	(struct sigvec): New type, copied from old signal.h definition.
+	(SV_ONSTACK, SV_INTERRUPT, SV_RESETHAND): New macros, likewise copied.
+	(__sigvec): Convert definition to prototype.
+	(sigvec): Replace weak_alias with compat_symbol.
+	* signal/Versions (libc: GLIBC_2.21): New version set.
+	* include/signal.h: Remove __sigvec declaration.
+	* sysdeps/unix/bsd/sigvec.c: Remove file.
+	* sysdeps/unix/bsd/syscalls.list: Remove sigvec.
+	* manual/signal.texi (BSD Handler): Remove subsection.
+	Move siginterrupt up to ...
+	(BSD Signal Handling): ... here.  Mark it as XPG rather than BSD.
+	(Blocking in BSD): Fold subsection into its parent.
+	* NEWS: Mention sigvec removal.
+
 2014-11-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/x86_64/fpu/dla.h [__FMA4__ && __GNUC_PREREQ (4, 6)]

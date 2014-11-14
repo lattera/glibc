@@ -3306,101 +3306,15 @@ BSD Unix.
 There are many similarities between the BSD and POSIX signal handling
 facilities, because the POSIX facilities were inspired by the BSD
 facilities.  Besides having different names for all the functions to
-avoid conflicts, the main differences between the two are:
-
-@itemize @bullet
-@item
-BSD Unix represents signal masks as an @code{int} bit mask, rather than
-as a @code{sigset_t} object.
-
-@item
-The BSD facilities use a different default for whether an interrupted
-primitive should fail or resume.  The POSIX facilities make system
-calls fail unless you specify that they should resume.  With the BSD
-facility, the default is to make system calls resume unless you say they
-should fail.  @xref{Interrupted Primitives}.
-@end itemize
+avoid conflicts, the main difference between the two is that BSD Unix
+represents signal masks as an @code{int} bit mask, rather than as a
+@code{sigset_t} object.
 
 The BSD facilities are declared in @file{signal.h}.
 @pindex signal.h
 
-@menu
-* BSD Handler::                 BSD Function to Establish a Handler.
-* Blocking in BSD::             BSD Functions for Blocking Signals.
-@end menu
-
-@node BSD Handler
-@subsection BSD Function to Establish a Handler
-
 @comment signal.h
-@comment BSD
-@deftp {Data Type} {struct sigvec}
-This data type is the BSD equivalent of @code{struct sigaction}
-(@pxref{Advanced Signal Handling}); it is used to specify signal actions
-to the @code{sigvec} function.  It contains the following members:
-
-@table @code
-@item sighandler_t sv_handler
-This is the handler function.
-
-@item int sv_mask
-This is the mask of additional signals to be blocked while the handler
-function is being called.
-
-@item int sv_flags
-This is a bit mask used to specify various flags which affect the
-behavior of the signal.  You can also refer to this field as
-@code{sv_onstack}.
-@end table
-@end deftp
-
-These symbolic constants can be used to provide values for the
-@code{sv_flags} field of a @code{sigvec} structure.  This field is a bit
-mask value, so you bitwise-OR the flags of interest to you together.
-
-@comment signal.h
-@comment BSD
-@deftypevr Macro int SV_ONSTACK
-If this bit is set in the @code{sv_flags} field of a @code{sigvec}
-structure, it means to use the signal stack when delivering the signal.
-@end deftypevr
-
-@comment signal.h
-@comment BSD
-@deftypevr Macro int SV_INTERRUPT
-If this bit is set in the @code{sv_flags} field of a @code{sigvec}
-structure, it means that system calls interrupted by this kind of signal
-should not be restarted if the handler returns; instead, the system
-calls should return with a @code{EINTR} error status.  @xref{Interrupted
-Primitives}.
-@end deftypevr
-
-@comment signal.h
-@comment Sun
-@deftypevr Macro int SV_RESETHAND
-If this bit is set in the @code{sv_flags} field of a @code{sigvec}
-structure, it means to reset the action for the signal back to
-@code{SIG_DFL} when the signal is received.
-@end deftypevr
-
-@comment signal.h
-@comment BSD
-@deftypefun int sigvec (int @var{signum}, const struct sigvec *@var{action}, struct sigvec *@var{old-action})
-@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-@c This is mostly a safe wrapper for sigaction.  The exception are
-@c systems that lack SA_RESETHAND, in which a signal handler wrapper is
-@c used that calls sigaction to reset the handler before calling the
-@c user-supplied handler; it's unlikely that this emulation is used
-@c anywhere, for user-supplied flags and mask don't seem to be used
-@c the way one would expect.
-This function is the equivalent of @code{sigaction} (@pxref{Advanced Signal
-Handling}); it installs the action @var{action} for the signal @var{signum},
-returning information about the previous action in effect for that signal
-in @var{old-action}.
-@end deftypefun
-
-@comment signal.h
-@comment BSD
+@comment XPG
 @deftypefun int siginterrupt (int @var{signum}, int @var{failflag})
 @safety{@prelim{}@mtunsafe{@mtasuconst{:@mtssigintr{}}}@asunsafe{}@acunsafe{@acucorrupt{}}}
 @c This calls sigaction twice, once to get the current sigaction for the
@@ -3416,9 +3330,6 @@ false, signal @var{signum} restarts primitives.  If @var{failflag} is
 true, handling @var{signum} causes these primitives to fail with error
 code @code{EINTR}.  @xref{Interrupted Primitives}.
 @end deftypefun
-
-@node Blocking in BSD
-@subsection BSD Functions for Blocking Signals
 
 @comment signal.h
 @comment BSD
