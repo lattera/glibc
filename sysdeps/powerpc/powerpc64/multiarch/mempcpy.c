@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #ifndef NOT_IN_libc
+# define NO_MEMPCPY_STPCPY_REDIRECT
 # include <string.h>
 # include <shlib-compat.h>
 # include "init-arch.h"

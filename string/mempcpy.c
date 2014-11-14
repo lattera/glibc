@@ -19,6 +19,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#define NO_MEMPCPY_STPCPY_REDIRECT
 #include <string.h>
 
 #undef mempcpy

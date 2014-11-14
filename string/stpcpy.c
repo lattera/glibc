@@ -19,6 +19,7 @@
 # include <config.h>
 #endif
 
+#define NO_MEMPCPY_STPCPY_REDIRECT
 #include <string.h>
 
 #undef __stpcpy

@@ -1,3 +1,18 @@
+2014-11-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/string.h [NO_MEMPCPY_STPCPY_REDIRECT] (mempcpy): Do not
+	redeclare with asm name.
+	[NO_MEMPCPY_STPCPY_REDIRECT] (stpcpy): Likewise.
+	* string/mempcpy.c (NO_MEMPCPY_STPCPY_REDIRECT): Define before
+	including <string.h>.
+	* string/stpcpy.c (NO_MEMPCPY_STPCPY_REDIRECT): Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/mempcpy.c
+	[!NOT_IN_libc] (NO_MEMPCPY_STPCPY_REDIRECT): Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/mempcpy.c
+	[!NOT_IN_libc] (NO_MEMPCPY_STPCPY_REDIRECT): Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/stpcpy.c
+	[SHARED && !NOT_IN_libc] (NO_MEMPCPY_STPCPY_REDIRECT): Likewise.
+
 2014-11-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* stdlib/strtol.c (__strtol): Use prototype definition.

@@ -115,7 +115,8 @@ libc_hidden_builtin_proto (strspn)
 libc_hidden_builtin_proto (strstr)
 libc_hidden_builtin_proto (ffs)
 
-#if defined NOT_IN_libc || !defined SHARED
+#if (defined NOT_IN_libc || !defined SHARED) \
+  && !defined NO_MEMPCPY_STPCPY_REDIRECT
 /* Redirect calls to __builtin_mempcpy and __builtin_stpcpy to call
    __mempcpy and __stpcpy if not inlined.  */
 extern __typeof (mempcpy) mempcpy __asm__ ("__mempcpy");
