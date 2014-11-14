@@ -14,6 +14,10 @@ Version 2.21
   17555, 17570, 17571, 17572, 17573, 17574, 17582, 17583, 17584, 17585,
   17589, 17594.
 
+* The minimum GCC version that can be used to build this version of the GNU
+  C Library is GCC 4.6.  Older GCC versions, and non-GNU compilers, can
+  still be used to compile programs using the GNU C Library.
+
 * New locales: tu_IN, bh_IN.
 
 Version 2.20

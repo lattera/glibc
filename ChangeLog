@@ -1,5 +1,12 @@
 2014-11-14  Joseph Myers  <joseph@codesourcery.com>
 
+	* configure.ac (libc_cv_compiler_ok): Require GCC 4.6 or later.
+	* configure: Regenerated.
+	* manual/install.texi (Tools for Compilation): Document a
+	requirement of GCC 4.6 or later and that GCC 4.9 is the newest
+	compiler verified to work.
+	* INSTALL: Regenerated.
+
 	* include/string.h [NO_MEMPCPY_STPCPY_REDIRECT] (mempcpy): Do not
 	redeclare with asm name.
 	[NO_MEMPCPY_STPCPY_REDIRECT] (stpcpy): Likewise.

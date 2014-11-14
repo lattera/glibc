@@ -329,10 +329,13 @@ build the GNU C Library:
      recommend GNU `make' version 3.79.  All earlier versions have
      severe bugs or lack features.
 
-   * GCC 4.4 or newer, GCC 4.6 recommended
+   * GCC 4.6 or newer
 
-     GCC 4.4 or higher is required; as of this writing, GCC 4.6 is the
-     compiler we advise to use to build the GNU C Library.
+     GCC 4.6 or higher is required.  In general it is recommended to use
+     the newest version of the compiler that is known to work for
+     building the GNU C Library, as newer compilers usually produce
+     better code.  As of release time, GCC 4.9 is the newest compiler
+     verified to work to build the GNU C Library.
 
      You can use whatever compiler you like to compile programs that use
      the GNU C Library.
