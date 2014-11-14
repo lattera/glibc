@@ -1,3 +1,8 @@
+2014-11-14  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc64/rtld-memcpy.c (NO_MEMPCPY_STPCPY_REDIRECT):
+	Define before including <string/memcpy.c> and <string/mempcpy.c>.
+
 2014-11-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* configure.ac (libc_cv_compiler_ok): Require GCC 4.6 or later.
