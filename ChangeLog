@@ -1,5 +1,12 @@
 2014-11-14  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/arm/sysdep.h [PROF && __GNUC_PREREQ(4,4)] (CALL_MCOUNT):
+	Make definition conditional only on [PROF].
+	[PROF && !__GNUC_PREREQ(4,4)] (CALL_MCOUNT): Remove conditional
+	definition.
+	[__GNUC_PREREQ(4,4)] (mcount): Make definition unconditional.
+	[!__GNUC_PREREQ(4,4)] (mcount): Remove conditional definition.
+
 	* signal/signal.h (__sigpause): Only declare if [__USE_XOPEN &&
 	!__GNUC__].
 	* include/signal.h (__sigpause): Move declaration above call to

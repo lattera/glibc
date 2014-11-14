@@ -109,8 +109,7 @@
 
 /* If compiled for profiling, call `mcount' at the start of each function.  */
 #ifdef	PROF
-/* Call __gnu_mcount_nc if GCC >= 4.4.  */
-#if __GNUC_PREREQ(4,4)
+/* Call __gnu_mcount_nc (GCC >= 4.4).  */
 #define CALL_MCOUNT					\
 	push	{lr};					\
 	cfi_adjust_cfa_offset (4);			\
@@ -118,16 +117,6 @@
 	bl	PLTJMP(mcount);				\
 	cfi_adjust_cfa_offset (-4);			\
 	cfi_restore (lr)
-#else /* else call _mcount */
-#define CALL_MCOUNT					\
-	push	{lr};					\
-	cfi_adjust_cfa_offset (4);			\
-	cfi_rel_offset (lr, 0);				\
-	bl	PLTJMP(mcount);				\
-	pops	{lr};					\
-	cfi_adjust_cfa_offset (-4);			\
-	cfi_restore (lr)
-#endif
 #else
 #define CALL_MCOUNT		/* Do nothing.  */
 #endif
@@ -136,11 +125,7 @@
    on this system, the asm identifier `syscall_error' intrudes on the
    C name space.  Make sure we use an innocuous name.  */
 #define	syscall_error	__syscall_error
-#if __GNUC_PREREQ(4,4)
 #define mcount		__gnu_mcount_nc
-#else
-#define mcount		_mcount
-#endif
 
 /* Tag_ABI_align8_preserved: This code preserves 8-byte
    alignment in any callee.  */
