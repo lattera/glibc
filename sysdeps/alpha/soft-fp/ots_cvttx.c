@@ -32,7 +32,7 @@ _OtsConvertFloatTX(double a)
   FP_DECL_EX;
   FP_DECL_D(A);
   FP_DECL_Q(C);
-  FP_DECL_RETURN(c);
+  AXP_DECL_RETURN_Q(c);
 
   FP_UNPACK_RAW_D(A, a);
 #if (2 * _FP_W_TYPE_SIZE) < _FP_FRACBITS_Q
@@ -40,8 +40,8 @@ _OtsConvertFloatTX(double a)
 #else
   FP_EXTEND(Q,D,2,1,C,A);
 #endif
-  FP_PACK_RAW_Q(c, C);
+  AXP_PACK_RAW_Q(c, C);
   FP_HANDLE_EXCEPTIONS;
 
-  FP_RETURN(c);
+  AXP_RETURN_Q(c);
 }

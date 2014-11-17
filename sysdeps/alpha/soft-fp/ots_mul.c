@@ -25,14 +25,14 @@ _OtsMulX(long al, long ah, long bl, long bh, long _round)
 {
   FP_DECL_EX;
   FP_DECL_Q(A); FP_DECL_Q(B); FP_DECL_Q(C);
-  FP_DECL_RETURN(c);
+  AXP_DECL_RETURN_Q(c);
 
   FP_INIT_ROUNDMODE;
-  FP_UNPACK_Q(A, a);
-  FP_UNPACK_Q(B, b);
+  AXP_UNPACK_Q(A, a);
+  AXP_UNPACK_Q(B, b);
   FP_MUL_Q(C, A, B);
-  FP_PACK_Q(c, C);
+  AXP_PACK_Q(c, C);
   FP_HANDLE_EXCEPTIONS;
 
-  FP_RETURN(c);
+  AXP_RETURN_Q(c);
 }

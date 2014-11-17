@@ -27,8 +27,8 @@ internal_equality (long al, long ah, long bl, long bh, long neq)
   FP_DECL_Q(A); FP_DECL_Q(B);
   long r;
 
-  FP_UNPACK_RAW_Q(A, a);
-  FP_UNPACK_RAW_Q(B, b);
+  AXP_UNPACK_RAW_Q(A, a);
+  AXP_UNPACK_RAW_Q(B, b);
 
   if ((A_e == _FP_EXPMAX_Q && !_FP_FRAC_ZEROP_2(A))
        || (B_e == _FP_EXPMAX_Q && !_FP_FRAC_ZEROP_2(B)))

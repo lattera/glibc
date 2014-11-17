@@ -33,7 +33,7 @@ _OtsNintXQ (long al, long ah, long _round)
   _round = _round & 3;
 
   FP_INIT_ROUNDMODE;
-  FP_UNPACK_SEMIRAW_Q(A, a);
+  AXP_UNPACK_SEMIRAW_Q(A, a);
 
   /* Build 0.5 * sign(A) */
   B_e = _FP_EXPBIAS_Q;

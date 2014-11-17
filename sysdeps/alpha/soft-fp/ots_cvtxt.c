@@ -30,7 +30,7 @@ _OtsConvertFloatXT (long al, long ah, long _round)
   double r;
 
   FP_INIT_ROUNDMODE;
-  FP_UNPACK_SEMIRAW_Q(A, a);
+  AXP_UNPACK_SEMIRAW_Q(A, a);
 #if (2 * _FP_W_TYPE_SIZE) < _FP_FRACBITS_Q
   FP_TRUNC(D,Q,2,4,R,A);
 #else

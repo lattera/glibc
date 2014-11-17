@@ -30,9 +30,9 @@ _OtsCvtQX (long a)
 {
   FP_DECL_EX;
   FP_DECL_Q(C);
-  FP_DECL_RETURN(c);
+  AXP_DECL_RETURN_Q(c);
 
   FP_FROM_INT_Q(C, a, 64, unsigned long);
-  FP_PACK_RAW_Q(c, C);
-  FP_RETURN(c);
+  AXP_PACK_RAW_Q(c, C);
+  AXP_RETURN_Q(c);
 }

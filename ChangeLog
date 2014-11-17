@@ -1,3 +1,25 @@
+
+2014-11-17  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/soft-fp/local-soft-fp.h (_FP_UNPACK_RAW_2): Remove.
+	(_FP_PACK_RAW_2): Remove.
+	(AXP_DECL_RETURN_Q): Rename from FP_DECL_RETURN, use _FP_UNION_Q.
+	(AXP_RETURN_Q): Rename from FP_RETURN, use _FP_UNION_Q.
+	(AXP_UNPACK_RAW_Q, AXP_UNPACK_SEMIRAW_Q, AXP_UNPACK_Q): New.
+	(AXP_PACK_RAW_Q, AXP_PACK_SEMIRAW_Q, AXP_PACK_Q): New.
+	* sysdeps/alpha/soft-fp/ots_add.c (_OtsAddX): Update to match.
+	* sysdeps/alpha/soft-fp/ots_cmp.c (internal_equality): Likewise.
+	* sysdeps/alpha/soft-fp/ots_cmpe.c (internal_compare): Likewise.
+	* sysdeps/alpha/soft-fp/ots_cvtqux.c (_OtsCvtQUX): Likewise.
+	* sysdeps/alpha/soft-fp/ots_cvtqx.c (_OtsCvtQX): Likewise.
+	* sysdeps/alpha/soft-fp/ots_cvttx.c (_OtsConvertFloatTX): Likewise.
+	* sysdeps/alpha/soft-fp/ots_cvtxq.c (_OtsCvtXQ): Likewise.
+	* sysdeps/alpha/soft-fp/ots_cvtxt.c (_OtsConvertFloatXT): Likewise.
+	* sysdeps/alpha/soft-fp/ots_div.c (_OtsDivX): Likewise.
+	* sysdeps/alpha/soft-fp/ots_mul.c (_OtsMulX): Likewise.
+	* sysdeps/alpha/soft-fp/ots_nintxq.c (_OtsNintXQ): Likewise.
+	* sysdeps/alpha/soft-fp/ots_sub.c (_OtsSubX): Likewise.
+
 2014-11-14  Roland McGrath  <roland@hack.frob.com>
 
 	* signal/signal.h [__USE_MISC]
