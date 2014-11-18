@@ -156,15 +156,26 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
       if (__glibc_likely (data != NULL))
 	return data;
 
+      /* Nothing in the archive with the given name.  Expanding it as
+	 an alias and retry.  */
+      loc_name = (char *) _nl_expand_alias (*name);
+      if (loc_name != NULL)
+	{
+	  data = _nl_load_locale_from_archive (category, &loc_name);
+	  if (__builtin_expect (data != NULL, 1))
+	    return data;
+	}
+
       /* Nothing in the archive.  Set the default path to search below.  */
       locale_path = _nl_default_locale_path;
       locale_path_len = sizeof _nl_default_locale_path;
     }
+  else
+    /* We really have to load some data.  First see whether the name is
+       an alias.  Please note that this makes it impossible to have "C"
+       or "POSIX" as aliases.  */
+    loc_name = (char *) _nl_expand_alias (*name);
 
-  /* We really have to load some data.  First see whether the name is
-     an alias.  Please note that this makes it impossible to have "C"
-     or "POSIX" as aliases.  */
-  loc_name = (char *) _nl_expand_alias (*name);
   if (loc_name == NULL)
     /* It is no alias.  */
     loc_name = (char *) *name;

@@ -1,3 +1,9 @@
+2015-02-26  Alexandre Oliva <aoliva@redhat.com>
+
+	[BZ #15969]
+	* locale/findlocale.c (_nl_find_locale): Retry archive search
+	after alias expansion.
+
 2015-02-25  Roland McGrath  <roland@hack.frob.com>
 
 	* iconv/tst-iconv3.c (main): Converted to ...
