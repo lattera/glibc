@@ -140,7 +140,7 @@ __mpexp (mp_no *x, mp_no *y, int p)
     }
   __dbl_mp (kf, &mpk, p);
   __dvd (&mpt2, &mpk, &mpt1, p);
-  __add (&mpone, &mpt1, &mpt2, p);
+  __add (&__mpone, &mpt1, &mpt2, p);
 
   /* Raise polynomial value to the power of 2**m. Put result in y.  */
   for (k = 0, j = 0; k < m;)

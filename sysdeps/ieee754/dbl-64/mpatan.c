@@ -83,10 +83,10 @@ __mpatan (mp_no *x, mp_no *y, int p)
     {
       for (i = 0; i < m; i++)
 	{
-	  __add (&mpone, &mpsm, &mpt1, p);
+	  __add (&__mpone, &mpsm, &mpt1, p);
 	  __mpsqrt (&mpt1, &mpt2, p);
 	  __add (&mpt2, &mpt2, &mpt1, p);
-	  __add (&mptwo, &mpsm, &mpt2, p);
+	  __add (&__mptwo, &mpsm, &mpt2, p);
 	  __add (&mpt1, &mpt2, &mpt3, p);
 	  __dvd (&mpsm, &mpt3, &mpt1, p);
 	  __cpy (&mpt1, &mpsm, p);

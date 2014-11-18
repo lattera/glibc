@@ -1,3 +1,42 @@
+2014-11-18  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17616]
+	* sysdeps/ieee754/dbl-64/mpa.c (mpone): Rename to __mpone.
+	(mptwo): Rename to __mptwo.
+	(__inv): Use __mptwo instead of mptwo.
+	* sysdeps/ieee754/dbl-64/mpa.h (mpone): Rename to __mpone.
+	(mptwo): Rename to __mptwo.
+	* sysdeps/ieee754/dbl-64/mpatan.c (__mpatan): Use __mpone instead
+	of mpone and __mptwo instead of mptwo.
+	* sysdeps/ieee754/dbl-64/mpatan2.c (__mpatan2): Use __mpone
+	instead of mpone.
+	* sysdeps/ieee754/dbl-64/mpexp.c (__mpexp): Likewise.
+	* sysdeps/ieee754/dbl-64/mplog.c (__mplog): Likewise.
+	* sysdeps/ieee754/dbl-64/sincos32.c (__c32): Use __mpone instead
+	of mpone and __mptwo instead of mptwo.
+	(__mpranred): Use __mpone instead of mpone.
+	* conform/Makefile (test-xfail-ISO/math.h/linknamespace): Remove
+	variable.
+	(test-xfail-ISO99/complex.h/linknamespace): Likewise.
+	(test-xfail-ISO99/math.h/linknamespace): Likewise.
+	(test-xfail-ISO99/tgmath.h/linknamespace): Likewise.
+	(test-xfail-ISO11/complex.h/linknamespace): Likewise.
+	(test-xfail-ISO11/math.h/linknamespace): Likewise.
+	(test-xfail-ISO11/tgmath.h/linknamespace): Likewise.
+	(test-xfail-XPG3/math.h/linknamespace): Likewise.
+	(test-xfail-XPG4/math.h/linknamespace): Likewise.
+	(test-xfail-POSIX/math.h/linknamespace): Likewise.
+	(test-xfail-UNIX98/math.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K/complex.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K/math.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K/tgmath.h/linknamespace): Likewise.
+	(test-xfail-POSIX2008/complex.h/linknamespace): Likewise.
+	(test-xfail-POSIX2008/math.h/linknamespace): Likewise.
+	(test-xfail-POSIX2008/tgmath.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K8/complex.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K8/math.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K8/tgmath.h/linknamespace): Likewise.
+
 2014-11-18  Tom de Vries  <tom@codesoucery.com>
 
 	* manual/signal.texi (Primitives Interrupted by Signals): In section,

@@ -71,8 +71,8 @@ typedef union
   double d;
 } number;
 
-extern const mp_no mpone;
-extern const mp_no mptwo;
+extern const mp_no __mpone;
+extern const mp_no __mptwo;
 
 #define  X   x->d
 #define  Y   y->d

@@ -58,7 +58,7 @@ __mplog (mp_no *x, mp_no *y, int p)
       mpt1.d[0] = -mpt1.d[0];
       __mpexp (&mpt1, &mpt2, p);
       __mul (x, &mpt2, &mpt1, p);
-      __sub (&mpt1, &mpone, &mpt2, p);
+      __sub (&mpt1, &__mpone, &mpt2, p);
       __add (y, &mpt2, &mpt1, p);
       __cpy (&mpt1, y, p);
     }

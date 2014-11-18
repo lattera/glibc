@@ -50,8 +50,8 @@
 #endif
 
 #ifndef NO__CONST
-const mp_no mpone = { 1, { 1.0, 1.0 } };
-const mp_no mptwo = { 1, { 1.0, 2.0 } };
+const mp_no __mpone = { 1, { 1.0, 1.0 } };
+const mp_no __mptwo = { 1, { 1.0, 2.0 } };
 #endif
 
 #ifndef NO___ACR
@@ -877,7 +877,7 @@ __inv (const mp_no *x, mp_no *y, int p)
     {
       __cpy (y, &w, p);
       __mul (x, &w, y, p);
-      __sub (&mptwo, y, &z, p);
+      __sub (&__mptwo, y, &z, p);
       __mul (&w, &z, y, p);
     }
 }
