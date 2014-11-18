@@ -1,6 +1,12 @@
 2014-11-21  Will Newton  <will.newton@linaro.org>
 	    Andrew Pinski  <andrew.pinski@caviumnetworks.com>
 
+	* sysdeps/aarch64/bits/link.h (la_aarch64_gnu_pltenter): Use
+	ElfW macro instead of hardcoded Elf64 types.
+	(la_aarch64_gnu_pltenter): Likewise.
+	* sysdeps/aarch64/dl-machine.h
+	(elf_machine_runtime_setup): Use ElfW(Addr).
+
 	* elf/elf.h (R_AARCH64_P32_ABS32, R_AARCH64_P32_COPY,
 	R_AARCH64_P32_GLOB_DAT, R_AARCH64_P32_JUMP_SLOT,
 	R_AARCH64_P32_RELATIVE, R_AARCH64_P32_TLS_DTPMOD,

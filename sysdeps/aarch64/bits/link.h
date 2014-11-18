@@ -40,8 +40,8 @@ typedef struct La_aarch64_retval
 } La_aarch64_retval;
 __BEGIN_DECLS
 
-extern Elf64_Addr
-la_aarch64_gnu_pltenter (Elf64_Sym *__sym, unsigned int __ndx,
+extern ElfW(Addr)
+la_aarch64_gnu_pltenter (ElfW(Sym) *__sym, unsigned int __ndx,
 			 uintptr_t *__refcook,
 			 uintptr_t *__defcook,
 			 La_aarch64_regs *__regs,
@@ -50,7 +50,7 @@ la_aarch64_gnu_pltenter (Elf64_Sym *__sym, unsigned int __ndx,
 			 long int *__framesizep);
 
 extern unsigned int
-la_aarch64_gnu_pltexit (Elf64_Sym *__sym, unsigned int __ndx,
+la_aarch64_gnu_pltexit (ElfW(Sym) *__sym, unsigned int __ndx,
 			uintptr_t *__refcook,
 			uintptr_t *__defcook,
 			const La_aarch64_regs *__inregs,
