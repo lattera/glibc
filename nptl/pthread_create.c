@@ -36,10 +36,6 @@
 #include <stap-probe.h>
 
 
-/* Local function to start thread and handle cleanup.  */
-static int start_thread (void *arg);
-
-
 /* Nozero if debugging mode is enabled.  */
 int __pthread_debug;
 
@@ -56,7 +52,27 @@ unsigned int __nptl_nthreads = 1;
 /* Code to allocate and deallocate a stack.  */
 #include "allocatestack.c"
 
-/* Code to create the thread.  */
+/* createthread.c defines this function, and two macros:
+   START_THREAD_DEFN and START_THREAD_SELF (see below).
+
+   create_thread is obliged to initialize PD->stopped_start.  It
+   should be true if the STOPPED_START parameter is true, or if
+   create_thread needs the new thread to synchronize at startup for
+   some other implementation reason.  If PD->stopped_start will be
+   true, then create_thread is obliged to perform the operation
+   "lll_lock (PD->lock, LLL_PRIVATE)" before starting the thread.
+
+   The return value is zero for success or an errno code for failure.
+   If the return value is ENOMEM, that will be translated to EAGAIN,
+   so create_thread need not do that.  On failure, *THREAD_RAN should
+   be set to true iff the thread actually started up and then got
+   cancelled before calling user code (*PD->start_routine), in which
+   case it is responsible for doing its own cleanup.  */
+
+static int create_thread (struct pthread *pd, const struct pthread_attr *attr,
+			  bool stopped_start, STACK_VARIABLES_PARMS,
+			  bool *thread_ran);
+
 #include <createthread.c>
 
 
@@ -228,10 +244,14 @@ __free_tcb (struct pthread *pd)
 }
 
 
-static int
-start_thread (void *arg)
+/* Local function to start thread and handle cleanup.
+   createthread.c defines the macro START_THREAD_DEFN to the
+   declaration that its create_thread function will refer to, and
+   START_THREAD_SELF to the expression to optimally deliver the new
+   thread's THREAD_SELF value.  */
+START_THREAD_DEFN
 {
-  struct pthread *pd = (struct pthread *) arg;
+  struct pthread *pd = START_THREAD_SELF;
 
 #if HP_TIMING_AVAIL
   /* Remember the time when the thread was started.  */
@@ -439,7 +459,24 @@ start_thread (void *arg)
   __exit_thread ();
 
   /* NOTREACHED */
-  return 0;
+}
+
+
+/* Return true iff obliged to report TD_CREATE events.  */
+static bool
+report_thread_creation (struct pthread *pd)
+{
+  if (__glibc_unlikely (THREAD_GETMEM (THREAD_SELF, report_events)))
+    {
+      /* The parent thread is supposed to report events.
+	 Check whether the TD_CREATE event is needed, too.  */
+      const size_t idx = __td_eventword (TD_CREATE);
+      const uint32_t mask = __td_eventmask (TD_CREATE);
+
+      return ((mask & (__nptl_threads_events.event_bits[idx]
+		       | pd->eventbuf.eventmask.event_bits[idx])) != 0);
+    }
+  return false;
 }
 
 
@@ -543,6 +580,15 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
   THREAD_COPY_POINTER_GUARD (pd);
 #endif
 
+  /* Verify the sysinfo bits were copied in allocate_stack if needed.  */
+#ifdef NEED_DL_SYSINFO
+  CHECK_THREAD_SYSINFO (pd);
+#endif
+
+  /* Inform start_thread (above) about cancellation state that might
+     translate into inherited signal state.  */
+  pd->parent_cancelhandling = THREAD_GETMEM (THREAD_SELF, cancelhandling);
+
   /* Determine scheduling parameters for the thread.  */
   if (__builtin_expect ((iattr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0, 0)
       && (iattr->flags & (ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET)) != 0)
@@ -593,8 +639,95 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
 
   LIBC_PROBE (pthread_create, 4, newthread, attr, start_routine, arg);
 
+  /* One more thread.  We cannot have the thread do this itself, since it
+     might exist but not have been scheduled yet by the time we've returned
+     and need to check the value to behave correctly.  We must do it before
+     creating the thread, in case it does get scheduled first and then
+     might mistakenly think it was the only thread.  In the failure case,
+     we momentarily store a false value; this doesn't matter because there
+     is no kosher thing a signal handler interrupting us right here can do
+     that cares whether the thread count is correct.  */
+  atomic_increment (&__nptl_nthreads);
+
+  bool thread_ran = false;
+
   /* Start the thread.  */
-  retval = create_thread (pd, iattr, STACK_VARIABLES_ARGS);
+  if (__glibc_unlikely (report_thread_creation (pd)))
+    {
+      /* Create the thread.  We always create the thread stopped
+	 so that it does not get far before we tell the debugger.  */
+      retval = create_thread (pd, iattr, true, STACK_VARIABLES_ARGS,
+			      &thread_ran);
+      if (retval == 0)
+	{
+	  /* create_thread should have set this so that the logic below can
+	     test it.  */
+	  assert (pd->stopped_start);
+
+	  /* Now fill in the information about the new thread in
+	     the newly created thread's data structure.  We cannot let
+	     the new thread do this since we don't know whether it was
+	     already scheduled when we send the event.  */
+	  pd->eventbuf.eventnum = TD_CREATE;
+	  pd->eventbuf.eventdata = pd;
+
+	  /* Enqueue the descriptor.  */
+	  do
+	    pd->nextevent = __nptl_last_event;
+	  while (atomic_compare_and_exchange_bool_acq (&__nptl_last_event,
+						       pd, pd->nextevent)
+		 != 0);
+
+	  /* Now call the function which signals the event.  */
+	  __nptl_create_event ();
+	}
+    }
+  else
+    retval = create_thread (pd, iattr, false, STACK_VARIABLES_ARGS,
+			    &thread_ran);
+
+  if (__glibc_unlikely (retval != 0))
+    {
+      /* If thread creation "failed", that might mean that the thread got
+	 created and ran a little--short of running user code--but then
+	 create_thread cancelled it.  In that case, the thread will do all
+	 its own cleanup just like a normal thread exit after a successful
+	 creation would do.  */
+
+      if (thread_ran)
+	assert (pd->stopped_start);
+      else
+	{
+	  /* Oops, we lied for a second.  */
+	  atomic_decrement (&__nptl_nthreads);
+
+	  /* Perhaps a thread wants to change the IDs and is waiting for this
+	     stillborn thread.  */
+	  if (__glibc_unlikely (atomic_exchange_acq (&pd->setxid_futex, 0)
+				== -2))
+	    lll_futex_wake (&pd->setxid_futex, 1, LLL_PRIVATE);
+
+	  /* Free the resources.  */
+	  __deallocate_stack (pd);
+	}
+
+      /* We have to translate error codes.  */
+      if (retval == ENOMEM)
+	retval = EAGAIN;
+    }
+  else
+    {
+      if (pd->stopped_start)
+	/* The thread blocked on this lock either because we're doing TD_CREATE
+	   event reporting, or for some other reason that create_thread chose.
+	   Now let it run free.  */
+	lll_unlock (pd->lock, LLL_PRIVATE);
+
+      /* We now have for sure more than one thread.  The main thread might
+	 not yet have the flag set.  No need to set the global variable
+	 again if this is what we use.  */
+      THREAD_SETMEM (THREAD_SELF, header.multiple_threads, 1);
+    }
 
  out:
   if (__glibc_unlikely (free_cpuset))

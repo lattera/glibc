@@ -1,3 +1,27 @@
+2014-11-18  Roland McGrath  <roland@hack.frob.com>
+
+	* nptl/createthread.c: Add proper top-line comment.
+	(do_clone): Folded into ...
+	(create_thread): ... here.  Take new arguments STOPPED_START and
+	THREAD_RAN.  Always set PD->stopped_start to something here.  Don't
+	increment __nptl_threads, do event-reporting logic, do
+	CHECK_THREAD_SYSINFO, or set THREAD_SELF->header.multiple_threads
+	here.  Set *THREAD_RAN after ARCH_CLONE call succeeds.  Don't do any
+	resource cleanup if sched_setaffinity or sched_setscheduler fails,
+	just send SIGCANCEL.
+	* nptl/pthread_create.c: Forward-declare create_thread before
+	including createthread.c.
+	(start_thread): Use new macro START_THREAD_DEFN to replace defining
+	declaration, and new macro START_THREAD_SELF to replace argument.
+	Remove return statement.
+	(report_thread_creation): New function.
+	(__pthread_create_2_1): Use it.  Do TD_CREATE reporting,
+	synchronization logic, and __nptl_nthreads increment here, around
+	calling create_thread.  Do CHECK_THREAD_SYSINFO and initialize
+	PD->parent_cancelhandling here, before create_thread.  When
+	create_thread fails, do __nptl_nthreads decrement, setxid_futex wake,
+	__deallocate_stack, and ENOMEM translation here.
+
 2014-11-18  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17616]
