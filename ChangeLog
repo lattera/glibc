@@ -1,5 +1,7 @@
 2014-11-18  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/createthread.c: New file.
+
 	* nptl/createthread.c: Moved ...
 	* sysdeps/unix/sysv/linux/createthread.c: ... here.
 
