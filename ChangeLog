@@ -1,5 +1,8 @@
 2014-11-18  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/createthread.c: Moved ...
+	* sysdeps/unix/sysv/linux/createthread.c: ... here.
+
 	* nptl/createthread.c: Add proper top-line comment.
 	(do_clone): Folded into ...
 	(create_thread): ... here.  Take new arguments STOPPED_START and
