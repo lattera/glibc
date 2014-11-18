@@ -1,3 +1,22 @@
+2014-11-21  Will Newton  <will.newton@linaro.org>
+	    Andrew Pinski  <andrew.pinski@caviumnetworks.com>
+
+	* elf/elf.h (R_AARCH64_P32_ABS32, R_AARCH64_P32_COPY,
+	R_AARCH64_P32_GLOB_DAT, R_AARCH64_P32_JUMP_SLOT,
+	R_AARCH64_P32_RELATIVE, R_AARCH64_P32_TLS_DTPMOD,
+	R_AARCH64_P32_TLS_DTPREL, R_AARCH64_P32_TLS_TPREL,
+	R_AARCH64_P32_TLSDESC, R_AARCH64_P32_IRELATIVE): Define.
+	(R_AARCH64_TLS_DTPMOD64): Rename to ..
+	(R_AARCH64_TLS_DTPMOD): This.
+	(R_AARCH64_TLS_DTPREL64): Rename to ...
+	(R_AARCH64_TLS_DTPREL): This.
+	(R_AARCH64_TLS_TPREL64): Rename to ...
+	(R_AARCH64_TLS_TPREL): This.
+	* sysdeps/aarch64/dl-machine.h (elf_machine_type_class): Update
+	R_AARCH64_TLS_DTPMOD64, R_AARCH64_TLS_DTPREL64, and
+	R_AARCH64_TLS_TPREL64.
+	(elf_machine_rela): Likewise.
+
 2014-11-21  Torvald Riegel  <triegel@redhat.com>
 
 	* sysdeps/microblaze/bits/atomic.h (__HAVE_64B_ATOMICS): Fix value

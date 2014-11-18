@@ -2362,6 +2362,20 @@ typedef Elf32_Addr Elf32_Conflict;
 /* AArch64 relocs.  */
 
 #define R_AARCH64_NONE            0	/* No relocation.  */
+
+/* ILP32 AArch64 relocs.  */
+#define R_AARCH64_P32_ABS32		  1	/* Direct 32 bit.  */
+#define R_AARCH64_P32_COPY		180	/* Copy symbol at runtime.  */
+#define R_AARCH64_P32_GLOB_DAT		181	/* Create GOT entry.  */
+#define R_AARCH64_P32_JUMP_SLOT		182	/* Create PLT entry.  */
+#define R_AARCH64_P32_RELATIVE		183	/* Adjust by program base.  */
+#define R_AARCH64_P32_TLS_DTPMOD	184	/* Module number, 32 bit.  */
+#define R_AARCH64_P32_TLS_DTPREL	185	/* Module-relative offset, 32 bit.  */
+#define R_AARCH64_P32_TLS_TPREL		186	/* TP-relative offset, 32 bit.  */
+#define R_AARCH64_P32_TLSDESC		187	/* TLS Descriptor.  */
+#define R_AARCH64_P32_IRELATIVE		188	/* STT_GNU_IFUNC relocation. */
+
+/* LP64 AArch64 relocs.  */
 #define R_AARCH64_ABS64         257	/* Direct 64 bit. */
 #define R_AARCH64_ABS32         258	/* Direct 32 bit.  */
 #define R_AARCH64_ABS16		259	/* Direct 16-bit.  */
@@ -2479,9 +2493,9 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_AARCH64_GLOB_DAT     1025	/* Create GOT entry.  */
 #define R_AARCH64_JUMP_SLOT    1026	/* Create PLT entry.  */
 #define R_AARCH64_RELATIVE     1027	/* Adjust by program base.  */
-#define R_AARCH64_TLS_DTPMOD64 1028	/* Module number, 64 bit.  */
-#define R_AARCH64_TLS_DTPREL64 1029	/* Module-relative offset, 64 bit.  */
-#define R_AARCH64_TLS_TPREL64  1030	/* TP-relative offset, 64 bit.  */
+#define R_AARCH64_TLS_DTPMOD   1028	/* Module number, 64 bit.  */
+#define R_AARCH64_TLS_DTPREL   1029	/* Module-relative offset, 64 bit.  */
+#define R_AARCH64_TLS_TPREL    1030	/* TP-relative offset, 64 bit.  */
 #define R_AARCH64_TLSDESC      1031	/* TLS Descriptor.  */
 #define R_AARCH64_IRELATIVE	1032	/* STT_GNU_IFUNC relocation.  */
 

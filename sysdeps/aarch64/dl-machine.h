@@ -188,9 +188,9 @@ _dl_start_user:							\n\
 
 #define elf_machine_type_class(type)					\
   ((((type) == R_AARCH64_JUMP_SLOT ||					\
-     (type) == R_AARCH64_TLS_DTPMOD64 ||				\
-     (type) == R_AARCH64_TLS_DTPREL64 ||				\
-     (type) == R_AARCH64_TLS_TPREL64 ||					\
+     (type) == R_AARCH64_TLS_DTPMOD ||					\
+     (type) == R_AARCH64_TLS_DTPREL ||					\
+     (type) == R_AARCH64_TLS_TPREL ||					\
      (type) == R_AARCH64_TLSDESC) * ELF_RTYPE_CLASS_PLT)		\
    | (((type) == R_AARCH64_COPY) * ELF_RTYPE_CLASS_COPY))
 
@@ -314,7 +314,7 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 	    break;
 	  }
 
-	case R_AARCH64_TLS_DTPMOD64:
+	case R_AARCH64_TLS_DTPMOD:
 #ifdef RTLD_BOOTSTRAP
 	  *reloc_addr = 1;
 #else
@@ -325,12 +325,12 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 #endif
 	  break;
 
-	case R_AARCH64_TLS_DTPREL64:
+	case R_AARCH64_TLS_DTPREL:
 	  if (sym)
 	    *reloc_addr = sym->st_value + reloc->r_addend;
 	  break;
 
-	case R_AARCH64_TLS_TPREL64:
+	case R_AARCH64_TLS_TPREL:
 	  if (sym)
 	    {
 	      CHECK_STATIC_TLS (map, sym_map);
