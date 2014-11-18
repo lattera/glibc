@@ -2139,7 +2139,7 @@ return from that handler will resume a primitive; otherwise, return from
 that handler will cause @code{EINTR}.  @xref{Flags for Sigaction}.
 
 Another way to specify the choice is with the @code{siginterrupt}
-function.  @xref{BSD Handler}.
+function.  @xref{BSD Signal Handling}.
 
 When you don't specify with @code{sigaction} or @code{siginterrupt} what
 a particular handler should do, it uses a default choice.  The default

@@ -1,3 +1,7 @@
+2014-11-18  Tom de Vries  <tom@codesoucery.com>
+
+	* manual/signal.texi (Primitives Interrupted by Signals): In section,
+	replace BSD Handler xref with BSD Signal Handling.
 
 2014-11-17  Richard Henderson  <rth@redhat.com>
 
