@@ -1,4 +1,4 @@
-/* Optimized strpbrk implementation for PowerPC64/POWER7.
+/* Optimized strpbrk implementation for PowerPC64.
    Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -20,7 +20,6 @@
 
 /* char [r3] *strpbrk(const char [r4] *s, const char [r5] *accept)  */
 
-	.machine power7
 EALIGN (strpbrk, 4, 0)
 	CALL_MCOUNT 3
 
@@ -32,43 +31,31 @@ EALIGN (strpbrk, 4, 0)
 	   for fast check if input character should be considered.  For ASCII
 	   or ISO-8859-X character sets it has 256 positions.  */
 
-	/* First the table should be cleared and to avoid unaligned accesses
-	   when using the VSX stores the table address is aligned to 16
-	   bytes.  */
-	xxlxor	v0,v0,v0
-
-	/* PPC64 ELF ABI stack is aligned to 16 bytes  */
+	/* PPC64 ELF ABI stack is aligned to 16 bytes.  */
 	addi 	r9,r1,-256
-
-	li	r5,16
-	li	r6,32
-	li	r8,48
-	addi	r12,r9,64
 	/* Clear the table with 0 values  */
-	stxvw4x v0,r0,r9
-	addi	r11,r9,128
-	addi	r7,r9,192
-	stxvw4x	v0,r9,r5
-	li	r0,1
-	stxvw4x v0,r9,r6
-	stxvw4x v0,r9,r8
-	stxvw4x v0,r0,r12
-	stxvw4x v0,r12,r5
-	stxvw4x v0,r12,r6
-	stxvw4x v0,r12,r8
-	stxvw4x v0,r0,r11
-	stxvw4x v0,r11,r5
-	stxvw4x v0,r11,r6
-	stxvw4x v0,r11,r8
-	stxvw4x v0,r0,r7
-	stxvw4x v0,r7,r5
-	stxvw4x v0,r7,r6
-	stxvw4x v0,r7,r8
+	li	r6, 0
+	li	r7, 4
+	mtctr	r7
+	mr	r8, r9
+	.align 	4
+L(zerohash):
+	std	r6, 0(r8)
+	std	r6, 8(r8)
+	std	r6, 16(r8)
+	std	r6, 24(r8)
+	std	r6, 32(r8)
+	std	r6, 40(r8)
+	std	r6, 48(r8)
+	std	r6, 56(r8)
+	addi	r8, r8, 64
+	bdnz	L(zerohash)
 
 	/* Initialize the table as:
 	   for (i=0; accept[i]; i++
 	     table[accept[i]]] = 1  */
-	.p2align 4,,15
+	li      r0,1
+	.align 4
 L(init_table):
 	stbx	r0,r9,r10
 	lbzu	r10,1(r4)
@@ -93,7 +80,7 @@ L(finish_table):
 	       if (table[input[i++]] == 1)
 	         return (s[i -1] ? s + i - 1: NULL);
 	     }  */
-	.p2align 4
+	.align 4
 L(unroll):
 	lbz	r0,1(r3)
 	lbzx	r8,r9,r0
@@ -121,7 +108,7 @@ L(mainloop):
 L(end):
 	blr
 
-	.p2align 4
+	.align 4
 L(checkend):
 	cmpdi	cr1,r12,0
 	mr	r3,r7
@@ -131,14 +118,14 @@ L(nullfound):
 	li 3,0
 	blr
 
-	.p2align 4
+	.align 4
 L(checkend2):
 	cmpdi	cr7,r0,0
 	mr	r3,r11
 	beq	cr7,L(nullfound)
 	blr
 
-	.p2align 4
+	.align 4
 L(checkend3):
 	cmpdi	cr6,r10,0
 	mr	r3,r5

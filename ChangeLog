@@ -1,5 +1,14 @@
 2014-12-02  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
-	
+
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile [sysdep_routines]:
+	Remove strpbrk objects.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Remove strpbrk implementation.
+	* sysdeps/powerpc/powerpc64/multiarch/strpbrk-ppc64.c: Remove file.
+	* sysdeps/powerpc/powerpc64/multiarch/strpbrk.c: Remove file.
+	* sysdeps/powerpc/powerpc64/power7/strpbrk.S: Remove file.
+	* sysdeps/powerpc/powerpc64/strpbrk.S: New file.
+
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile [sysdep_routines]:
 	Remove strcspn objects.
 	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
