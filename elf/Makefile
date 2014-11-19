@@ -436,13 +436,18 @@ $(objpfx)ldconfig: $(ldconfig-modules:%=$(objpfx)%.o)
 
 SYSCONF-FLAGS := -D'SYSCONFDIR="$(sysconfdir)"'
 CFLAGS-ldconfig.c = $(SYSCONF-FLAGS) -D'LIBDIR="$(libdir)"' \
-		    -D'SLIBDIR="$(slibdir)"' -DIS_IN_ldconfig=1
+		    -D'SLIBDIR="$(slibdir)"' -DIS_IN_ldconfig=1 -DNOT_IN_libc=1
+libof-ldconfig = ldconfig
 CFLAGS-dl-cache.c = $(SYSCONF-FLAGS)
 CFLAGS-cache.c = $(SYSCONF-FLAGS)
 CFLAGS-rtld.c = $(SYSCONF-FLAGS)
 
 CPPFLAGS-.os += $(if $(filter $(@F),$(patsubst %,%.os,$(all-rtld-routines))),\
 		     -DNOT_IN_libc=1 -DIS_IN_rtld=1 -DIN_LIB=rtld)
+
+cpp-srcs-left := $(all-rtld-routines:=.os)
+lib := rtld
+include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(strip $(modules-names))))
 generated += $(addsuffix .so,$(strip $(modules-names)))

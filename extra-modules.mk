@@ -6,4 +6,5 @@
 module := $(firstword $(extra-modules-left))
 extra-modules-left := $(filter-out $(module),$(extra-modules-left))
 
+libof-$(notdir $(module)) := extramodules
 CPPFLAGS-$(module).c += -DNOT_IN_libc

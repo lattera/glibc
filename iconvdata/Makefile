@@ -211,6 +211,7 @@ $(objpfx)iconv-rules: Makefile
 	$(AWK) 'NR == 1 { \
 		  for (i = 1; i <= NF; i++) { \
 		    printf "%s-routines := %s\n", $$i, tolower($$i); \
+		    printf "libof-%s := iconvdata\n", tolower($$i); \
 		    printf "%s-map := gconv.map\n", $$i; \
 		  } \
 		}; \
@@ -272,6 +273,11 @@ endif
 endif
 
 include ../Rules
+
+# Set libof-* for each routine.
+cpp-srcs-left := $(modules) $(generated-modules)
+lib := iconvdata
+include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 
 tst-loading-ENV = MALLOC_TRACE=$(objpfx)tst-loading.mtrace
 $(objpfx)mtrace-tst-loading.out: $(objpfx)tst-loading.out

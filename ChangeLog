@@ -1,3 +1,27 @@
+2014-11-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* Makeconfig (in-module): Get value of libof set for the
+	translation unit.
+	(CPPFLAGS): Use $(in-module).
+	* Makerules: Don't suffix routine names for nonlib.
+	* include/libc-modules.h: New file.
+	* include/libc-symbols.h: Include libc-modules.h
+	(IS_IN): New macro to replace IS_IN_* macros.
+	* elf/Makefile: Set libof-* for each routine.
+	* elf/rtld-Rules: Likewise.
+	* extra-modules.mk: Likewise.
+	* iconv/Makefile: Likewise.
+	* iconvdata/Makefile: Likewise.
+	* locale/Makefile: Likewise.
+	* malloc/Makefile: Likewise.
+	* nss/Makefile: Likewise.
+	* sysdeps/gnu/Makefile: Likewise.
+	* sysdeps/ieee754/ldbl-opt/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/Makefile: Likewise.
+	* sysdeps/s390/s390-64/Makefile: Likewise.
+	* nscd/Makefile: Set libof-* for each routine.  Set CFLAGS and
+	CPPFLAGS for nscd instead of nonlib.
+
 2014-11-18  Roland McGrath  <roland@hack.frob.com>
 
 	* nptl/createthread.c: New file.

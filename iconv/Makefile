@@ -52,11 +52,12 @@ CFLAGS-gconv_cache.c += -DGCONV_DIR='"$(gconvdir)"'
 CFLAGS-gconv_conf.c = -DGCONV_PATH='"$(gconvdir)"'
 CFLAGS-iconvconfig.c = -DGCONV_PATH='"$(gconvdir)"' -DGCONV_DIR='"$(gconvdir)"'
 
-CPPFLAGS-iconv_charmap = -DNOT_IN_libc
-CPPFLAGS-linereader = -DNOT_IN_libc
-CPPFLAGS-strtab = -DNOT_IN_libc
-CPPFLAGS-charmap = -DNOT_IN_libc
-CPPFLAGS-charmap-dir = -DNOT_IN_libc
+CPPFLAGS-iconvprogs = -DNOT_IN_libc
+
+# Set libof-* for each routine.
+cpp-srcs-left := $(iconv_prog-modules) $(iconvconfig-modules)
+lib := iconvprogs
+include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 
 ifeq ($(run-built-tests),yes)
 xtests-special += $(objpfx)test-iconvconfig.out

@@ -96,7 +96,7 @@ CFLAGS-locfile.c = -Wno-write-strings -Wno-char-subscripts
 CFLAGS-charmap-dir.c = -Wno-write-strings
 
 # This makes sure -DNOT_IN_libc et al are passed for all these modules.
-cpp-srcs-left := $(addsuffix .c,$(localedef-modules) $(localedef-aux) \
-				$(locale-modules) $(lib-modules))
+cpp-srcs-left := $(localedef-modules) $(localedef-aux) $(locale-modules) \
+		 $(lib-modules)
 lib := locale-programs
 include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))

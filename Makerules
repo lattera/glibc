@@ -1223,7 +1223,7 @@ xcheck: xtests
 
 all-nonlib = $(strip $(tests) $(xtests) $(test-srcs) $(test-extras) $(others))
 ifneq (,$(all-nonlib))
-cpp-srcs-left = $(all-nonlib:=.c) $(all-nonlib:=.cc)
+cpp-srcs-left = $(all-nonlib)
 lib := nonlib
 include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 endif

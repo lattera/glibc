@@ -20,6 +20,11 @@
 #ifndef _LIBC_SYMBOLS_H
 #define _LIBC_SYMBOLS_H	1
 
+/* Pull in definitions for the MODULE_* macros.  */
+#include <libc-modules.h>
+
+#define IS_IN(lib) (IN_MODULE == MODULE_##lib)
+
 /* This file's macros are included implicitly in the compilation of every
    file in the C library by -imacros.
 
@@ -448,7 +453,7 @@ for linking")
    If the function should be internal to multiple objects, say ld.so and
    libc.so, the best way is to use:
 
-   #if !defined NOT_IN_libc || defined IS_IN_rtld
+   #if IS_IN (libc) || IS_IN (rtld)
    hidden_proto (foo)
    #endif
 
@@ -564,7 +569,7 @@ for linking")
 # define libc_hidden_data_ver(local, name)
 #endif
 
-#ifdef IS_IN_rtld
+#if IS_IN (rtld)
 # define rtld_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define rtld_hidden_tls_proto(name, attrs...) hidden_tls_proto (name, ##attrs)
 # define rtld_hidden_def(name) hidden_def (name)
@@ -584,7 +589,7 @@ for linking")
 # define rtld_hidden_data_ver(local, name)
 #endif
 
-#ifdef IS_IN_libm
+#if IS_IN (libm)
 # define libm_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define libm_hidden_tls_proto(name, attrs...) hidden_tls_proto (name, ##attrs)
 # define libm_hidden_def(name) hidden_def (name)
@@ -604,7 +609,7 @@ for linking")
 # define libm_hidden_data_ver(local, name)
 #endif
 
-#ifdef IS_IN_libresolv
+#if IS_IN (libresolv)
 # define libresolv_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define libresolv_hidden_tls_proto(name, attrs...) \
   hidden_tls_proto (name, ##attrs)
@@ -625,7 +630,7 @@ for linking")
 # define libresolv_hidden_data_ver(local, name)
 #endif
 
-#ifdef IS_IN_librt
+#if IS_IN (librt)
 # define librt_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define librt_hidden_tls_proto(name, attrs...) \
   hidden_tls_proto (name, ##attrs)
@@ -646,7 +651,7 @@ for linking")
 # define librt_hidden_data_ver(local, name)
 #endif
 
-#ifdef IS_IN_libdl
+#if IS_IN (libdl)
 # define libdl_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define libdl_hidden_tls_proto(name, attrs...) \
   hidden_tls_proto (name, ##attrs)
@@ -667,7 +672,7 @@ for linking")
 # define libdl_hidden_data_ver(local, name)
 #endif
 
-#ifdef IS_IN_libnss_files
+#if IS_IN (libnss_files)
 # define libnss_files_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define libnss_files_hidden_tls_proto(name, attrs...) \
   hidden_tls_proto (name, ##attrs)
@@ -688,7 +693,7 @@ for linking")
 # define libnss_files_hidden_data_ver(local, name)
 #endif
 
-#ifdef IS_IN_libnsl
+#if IS_IN (libnsl)
 # define libnsl_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define libnsl_hidden_tls_proto(name, attrs...) \
   hidden_tls_proto (name, ##attrs)
@@ -709,7 +714,7 @@ for linking")
 # define libnsl_hidden_data_ver(local, name)
 #endif
 
-#ifdef IS_IN_libnss_nisplus
+#if IS_IN (libnss_nisplus)
 # define libnss_nisplus_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define libnss_nisplus_hidden_tls_proto(name, attrs...) \
   hidden_tls_proto (name, ##attrs)
@@ -738,7 +743,7 @@ for linking")
 # define HIDDEN_BUILTIN_JUMPTARGET(name) HIDDEN_JUMPTARGET(name)
 #endif
 
-#ifdef IS_IN_libutil
+#if IS_IN (libutil)
 # define libutil_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define libutil_hidden_tls_proto(name, attrs...) \
   hidden_tls_proto (name, ##attrs)

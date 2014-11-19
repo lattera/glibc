@@ -28,6 +28,10 @@ s390x-iconv-modules = ISO-8859-1_CP037_Z900 UTF8_UTF16_Z9 UTF16_UTF32_Z9 UTF8_UT
 extra-modules-left += $(s390x-iconv-modules)
 include extra-module.mk
 
+cpp-srcs-left := $(foreach mod,$(s390x-iconv-modules),$($(mod)-routines))
+lib := iconvdata
+include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
+
 extra-objs      += $(addsuffix .so, $(s390x-iconv-modules))
 install-others  += $(patsubst %, $(inst_gconvdir)/%.so, $(s390x-iconv-modules))
 
