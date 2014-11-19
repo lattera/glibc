@@ -20,54 +20,42 @@
 
 /* size_t [r3] strcspn (const char [r4] *s, const char [r5] *reject)  */
 
-	.machine power7
 EALIGN (strcspn, 4, 0)
 	CALL_MCOUNT 3
 
 	/* The idea to speed up the algorithm is to create a lookup table
 	   for fast check if input character should be considered.  For ASCII
 	   or ISO-8859-X character sets it has 256 positions.  */
-	lbz	r10,0(r4)
-
-	/* First the table should be cleared and to avoid unaligned accesses
-	   when using the VSX stores the table address is aligned to 16
-	   bytes.  */
-	xxlxor	v0,v0,v0
 
 	/* PPC64 ELF ABI stack is aligned to 16 bytes.  */
 	addi 	r9,r1,-256
-
-	li	r8,48
-	li	r5,16
-	li	r6,32
-	cmpdi	cr7,r10,0	/* reject[0] == '\0' ?  */
-	addi	r12,r9,64
 	/* Clear the table with 0 values  */
-	stxvw4x	v0,r0,r9
-	addi	r11,r9,128
-	addi	r7,r9,192
-	stxvw4x v0,r9,r5
-	stxvw4x v0,r9,r6
-	stxvw4x v0,r9,r8
-	stxvw4x v0,r0,r12
-	stxvw4x v0,r12,r5
-	stxvw4x v0,r12,r6
-	stxvw4x v0,r12,r8
-	stxvw4x v0,r0,r11
-	stxvw4x v0,r11,r5
-	stxvw4x v0,r11,r6
-	stxvw4x v0,r11,r8
-	stxvw4x v0,r0,r7
-	stxvw4x v0,r7,r5
-	stxvw4x v0,r7,r6
-	stxvw4x v0,r7,r8
+	li	r6, 0
+	li	r8, 4
+	mtctr	r8
+	mr	r10, r9
+	.align 	4
+L(zerohash):
+	std	r6, 0(r10)
+	std	r6, 8(r10)
+	std	r6, 16(r10)
+	std	r6, 24(r10)
+	std	r6, 32(r10)
+	std	r6, 40(r10)
+	std	r6, 48(r10)
+	std	r6, 56(r10)
+	addi	r10, r10, 64
+	bdnz	L(zerohash)
+
+	lbz	r10,0(r4)
+	cmpdi	cr7,r10,0	/* reject[0] == '\0' ?  */
 	li	r8,1
 	beq     cr7,L(finish_table)  /* If reject[0] == '\0' skip  */
 
 	/* Initialize the table as:
 	   for (i=0; reject[i]; i++
 	     table[reject[i]]] = 1  */
-	.p2align 4,,15
+	.align	4
 L(init_table):
 	stbx	r8,r9,r10
 	lbzu	r10,1(r4)
@@ -93,7 +81,7 @@ L(finish_table):
 	       if (table[input[i++]] == 1)
 	         return i - 1;
 	     }  */
-	.p2align 4,,15
+	.align 4
 L(unroll):
 	lbz	r8,1(r3)
 	addi	r10,r10,4
@@ -121,17 +109,17 @@ L(mainloop):
 	mr	r3,r10
 	blr
 
-	.p2align 4,,15
+	.align 4
 L(end):
 	mr	r3,r6
 	blr
 
-	.p2align 4,,15
+	.align 4
 L(end2):
 	mr	r3,r4
 	blr
 
-	.p2align 4,,15
+	.align 4
 L(end3):
 	mr	r3,r5
 	blr
