@@ -27,6 +27,25 @@
 
 #define IFS " \n\t"
 
+extern void *__dso_handle __attribute__ ((__weak__, __visibility__ ("hidden")));
+extern int __register_atfork (void (*) (void), void (*) (void), void (*) (void), void *);
+
+static int __app_register_atfork (void (*prepare) (void), void (*parent) (void), void (*child) (void))
+{
+  return __register_atfork (prepare, parent, child,
+			    &__dso_handle == NULL ? NULL : __dso_handle);
+}
+
+/* Number of forks seen.  */
+static int registered_forks;
+
+/* For each fork increment the fork count.  */
+static void
+register_fork (void)
+{
+  registered_forks++;
+}
+
 struct test_case_struct
 {
   int retval;
@@ -206,6 +225,12 @@ struct test_case_struct
     { WRDE_SYNTAX, NULL, "$((2+))", 0, 0, { NULL, }, IFS },
     { WRDE_SYNTAX, NULL, "`", 0, 0, { NULL, }, IFS },
     { WRDE_SYNTAX, NULL, "$((010+4+))", 0, 0, { NULL }, IFS },
+    /* Test for CVE-2014-7817. We test 3 combinations of command
+       substitution inside an arithmetic expression to make sure that
+       no commands are executed and error is returned.  */
+    { WRDE_CMDSUB, NULL, "$((`echo 1`))", WRDE_NOCMD, 0, { NULL, }, IFS },
+    { WRDE_CMDSUB, NULL, "$((1+`echo 1`))", WRDE_NOCMD, 0, { NULL, }, IFS },
+    { WRDE_CMDSUB, NULL, "$((1+$((`echo 1`))))", WRDE_NOCMD, 0, { NULL, }, IFS },
 
     { -1, NULL, NULL, 0, 0, { NULL, }, IFS },
   };
@@ -256,6 +281,15 @@ main (int argc, char *argv[])
 	if ((fd = creat (globfile[i], S_IRUSR | S_IWUSR)) == -1
 	    || close (fd))
 	  return -1;
+    }
+
+  /* If we are not allowed to do command substitution, we install
+     fork handlers to verify that no forks happened.  No forks should
+     happen at all if command substitution is disabled.  */
+  if (__app_register_atfork (register_fork, NULL, NULL) != 0)
+    {
+      printf ("Failed to register fork handler.\n");
+      return -1;
     }
 
   for (test = 0; test_case[test].retval != -1; test++)
@@ -367,6 +401,9 @@ testit (struct test_case_struct *tc)
 
   printf ("Test %d (%s): ", ++tests, tc->words);
 
+  if (tc->flags & WRDE_NOCMD)
+    registered_forks = 0;
+
   if (tc->flags & WRDE_APPEND)
     {
       /* initial wordexp() call, to be appended to */
@@ -377,6 +414,13 @@ testit (struct test_case_struct *tc)
 	}
     }
   retval = wordexp (tc->words, &we, tc->flags);
+
+  if ((tc->flags & WRDE_NOCMD)
+      && (registered_forks > 0))
+    {
+	  printf ("FAILED fork called for WRDE_NOCMD\n");
+	  return 1;
+    }
 
   if (tc->flags & WRDE_DOOFFS)
       start_offs = sav_we.we_offs;

@@ -1,3 +1,25 @@
+2014-11-19  Carlos O'Donell  <carlos@redhat.com>
+	    Florian Weimer  <fweimer@redhat.com>
+	    Joseph Myers  <joseph@codesourcery.com>
+	    Adam Conrad  <adconrad@0c3.net>
+	    Andreas Schwab  <schwab@suse.de>
+	    Brooks  <bmoses@google.com>
+
+	[BZ #17625]
+	* wordexp-test.c (__dso_handle): Add prototype.
+	(__register_atfork): Likewise.
+	(__app_register_atfork): New function.
+	(registered_forks): New global.
+	(register_fork): New function.
+	(test_case): Add 3 new tests for WRDE_CMDSUB.
+	(main): Call __app_register_atfork.
+	(testit): If WRDE_NOCMD set registered_forks to zero, run test, and if
+	fork count is non-zero fail the test.
+	* posix/wordexp.c (exec_comm): Return WRDE_CMDSUB if WRDE_NOCMD flag
+	is set.
+	(parse_dollars): Remove check for WRDE_NOCMD.
+	(parse_dquote): Likewise.
+
 2014-11-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* Makeconfig (built-modules): List non-library modules to be
