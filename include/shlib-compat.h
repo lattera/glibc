@@ -41,7 +41,7 @@
 # define SHLIB_COMPAT(lib, introduced, obsoleted)			      \
   _SHLIB_COMPAT (lib, introduced, obsoleted)
 # define _SHLIB_COMPAT(lib, introduced, obsoleted)			      \
-  ((IS_IN_##lib - 0)							      \
+  (IS_IN (lib)								      \
    && (!(ABI_##lib##_##obsoleted - 0)					      \
        || ((ABI_##lib##_##introduced - 0) < (ABI_##lib##_##obsoleted - 0))))
 

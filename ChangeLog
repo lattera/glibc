@@ -1,5 +1,7 @@
 2014-11-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* include/shlib-compat.h (_SHLIB_COMPAT): Use IS_IN.
+
 	* Makeconfig (in-module): Get value of libof set for the
 	translation unit.
 	(CPPFLAGS): Use $(in-module).
