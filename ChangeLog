@@ -1,3 +1,14 @@
+2014-12-02  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile [sysdep_routines]:
+	Remove strspn objetcs.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Remove strspn implementation.
+	* sysdeps/powerpc/powerpc64/multiarch/strspn-power7.S: Remove file.
+	* sysdeps/powerpc/powerpc64/multiarch/strspn-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strspn.S: Remove file.
+	* sysdeps/powerpc/powerpc64/strspn.S: New file.
+
 2014-12-01  James Lemke  <jwlemke@codesourcery.com>
 
 	[BZ #17581]

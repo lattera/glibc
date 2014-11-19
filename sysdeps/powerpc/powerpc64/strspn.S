@@ -1,4 +1,4 @@
-/* Optimized strspn implementation for PowerPC64/POWER7.
+/* Optimized strspn implementation for PowerPC64.
 
    Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
@@ -25,8 +25,6 @@
    > hashing of needle.
    > hashing avoids scanning of duplicate entries in needle
      across the string.
-   > initializing the hash table with Vector instructions
-     by quadword access.
    > unrolling when scanning for character in string
      across hash table.  */
 
@@ -46,55 +44,36 @@
 
 #include <sysdep.h>
 
-#undef strspn
-
-	.machine  power7
 EALIGN(strspn, 4, 0)
-	CALL_MCOUNT 2
+	CALL_MCOUNT 3
 
-	lbz r10, 0(r4)		/* load r10 with needle (r4)  */
-	addi r9, r1, -256	/* r9 is a hash of 256 bytes  */
+	/* PPC64 ELF ABI stack is aligned to 16 bytes.  */
+	addi 	r9,r1,-256
+	/* Clear the table with 0 values  */
+	li	r6, 0
+	li	r8, 4
+	mtctr	r8
+	mr	r10, r9
+	.align 	4
+L(zerohash):
+	std	r6, 0(r10)
+	std	r6, 8(r10)
+	std	r6, 16(r10)
+	std	r6, 24(r10)
+	std	r6, 32(r10)
+	std	r6, 40(r10)
+	std	r6, 48(r10)
+	std	r6, 56(r10)
+	addi	r10, r10, 64
+	bdnz	L(zerohash)
 
-	li r5, 16		/* set r5 = 16 as offset  */
-	li r6, 32		/* set r6 = 32 as offset  */
-	li r8, 48		/* set r8 = 48 as offset  */
-
-/*Iniatliaze hash table with Zeroes in double indexed quadword accesses  */
-	xxlxor v0, v0, v0	/* prepare for initializing hash  */
-
-	stxvd2x v0, r0, r9	/* initialize 1st quadword  */
-	stxvd2x v0, r9, r5
-	stxvd2x v0, r9, r6
-	stxvd2x v0, r9, r8	/* initialize 4th quadword  */
-
-	addi r11, r9, 64	/* r11 is index to hash  */
-
-	stxvd2x v0, r0, r11	/* initialize 5th quadword  */
-	stxvd2x v0, r11, r5
-	stxvd2x v0, r11, r6
-	stxvd2x v0, r11, r8	/* initialize 8th quadword  */
-
-	addi r11, r9, 128	/* r11 is index to hash  */
-
-	stxvd2x v0, r0, r11	/* initialize 9th quadword  */
-	stxvd2x v0, r11, r5
-	stxvd2x v0, r11, r6
-	stxvd2x v0, r11, r8	/* initialize 12th quadword  */
-
-	addi r11, r9, 192	/* r11 is index to hash  */
-
-	stxvd2x v0, r0, r11	/* initialize 13th quadword  */
-	stxvd2x v0, r11, r5
-	stxvd2x v0, r11, r6
-	stxvd2x v0, r11, r8	/* initialize 16th quadword  */
-
+	lbz	r10,0(r4)
 	li r8, 1		/* r8=1, marker into hash if found in
 				   needle  */
-
 	cmpdi cr7, r10, 0	/* accept needle is NULL  */
 	beq cr7, L(skipHashing)	/* if needle is NULL, skip hashing  */
 
-	.p2align 4		/* align section to 16 byte boundary  */
+	.align 4		/* align section to 16 byte boundary  */
 L(hashing):
 	stbx r8, r9, r10	/* update hash with marker for the pivot of
 				   the needle  */
@@ -106,7 +85,7 @@ L(skipHashing):
 	li r10, 0		/* load counter = 0  */
 	b L(beginScan)
 
-	.p2align 4		/* align section to 16 byte boundary  */
+	.align 4		/* align section to 16 byte boundary  */
 L(scanUnroll):
 	lbzx r8, r9, r8		/* load r8 with hash value at index  */
 	cmpwi cr7, r8, 0	/* if we hit marker in hash, we have found
