@@ -20,9 +20,6 @@
 #ifndef _LIBC_SYMBOLS_H
 #define _LIBC_SYMBOLS_H	1
 
-/* Pull in definitions for the MODULE_* macros.  */
-#include <libc-modules.h>
-
 #define IS_IN(lib) (IN_MODULE == MODULE_##lib)
 
 /* This file's macros are included implicitly in the compilation of every

@@ -79,7 +79,8 @@ compile-syscall = $(COMPILE.S) -o $@ -x assembler-with-cpp - \
 
 ifndef avoid-generated
 $(common-objpfx)sysd-syscalls: $(..)sysdeps/unix/make-syscalls.sh \
-			       $(wildcard $(+sysdep_dirs:%=%/syscalls.list))
+			       $(wildcard $(+sysdep_dirs:%=%/syscalls.list)) \
+			       $(common-objpfx)libc-modules.stmp
 	for dir in $(+sysdep_dirs); do \
 	  test -f $$dir/syscalls.list && \
 	  { sysdirs='$(sysdirs)' \

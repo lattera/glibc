@@ -813,10 +813,29 @@ endif	# $(+cflags) == ""
 # of many little headers in the include directory.
 libio-include = -I$(..)libio
 
+# List of non-library modules that we build.
+built-modules = iconvprogs iconvdata ldconfig lddlibc4 libmemusage \
+		libSegFault libpcprofile librpcsvc locale-programs \
+		memusagestat nonlib nscd extramodules libnldbl
+
+# We don't include libc-modules.h when these targets are being built.  These
+# targets don't (and will likely never need to) use the IS_IN facility.  In
+# fact, shlib-versions should not use it because that will create a circular
+# dependency as libc-modules.h is generated from shlib-versions.
+skip-module-cppflags = shlib-versions.v.i Versions.v.i
+
 in-module = $(subst -,_,$(firstword $(libof-$(basename $(@F))) \
 				    $(libof-$(<F)) \
 				    $(libof-$(@F)) \
 				    libc))
+
+module-cppflags-real = -include $(common-objpfx)libc-modules.h \
+		       -DIN_MODULE=MODULE_$(in-module)
+
+# We don't need libc-modules.h and the IN_MODULE definition for
+# shlib-version.v.i.
+module-cppflags = $(if $(filter $(@F),$(skip-module-cppflags)), \
+		       ,$(module-cppflags-real))
 
 # These are the variables that the implicit compilation rules use.
 # Note that we can't use -std=* in CPPFLAGS, because it overrides
@@ -824,9 +843,9 @@ in-module = $(subst -,_,$(firstword $(libof-$(basename $(@F))) \
 # it causes cpp to stop predefining __ASSEMBLER__.
 CPPFLAGS = $(config-extra-cppflags) $(CPPUNDEFS) $(CPPFLAGS-config) \
 	   $($(subdir)-CPPFLAGS) \
-	   $(+includes) $(defines) \
+	   $(+includes) $(defines) $(module-cppflags) \
 	   -include $(..)include/libc-symbols.h $(sysdep-CPPFLAGS) \
-	   $(CPPFLAGS-$(suffix $@)) -DIN_MODULE=MODULE_$(in-module) \
+	   $(CPPFLAGS-$(suffix $@)) \
 	   $(foreach lib,$(libof-$(basename $(@F))) \
 			 $(libof-$(<F)) $(libof-$(@F)),$(CPPFLAGS-$(lib))) \
 	   $(CPPFLAGS-$(<F)) $(CPPFLAGS-$(@F)) $(CPPFLAGS-$(basename $(@F)))
@@ -985,6 +1004,23 @@ endif
 
 postclean-generated += soversions.mk soversions.i \
 		       shlib-versions.v shlib-versions.v.i
+
+before-compile += $(common-objpfx)libc-modules.h
+ifeq ($(soversions.mk-done),t)
+# Generate a header with macro definitions for use with the IS_IN macro.
+# These are the possible values for the IN_MODULE macro defined when building
+# sources, to identify which module the translation unit is going to be built
+# into.
+$(common-objpfx)libc-modules.h: $(common-objpfx)libc-modules.stmp; @:
+$(common-objpfx)libc-modules.stmp: $(..)scripts/gen-libc-modules.awk \
+				   $(common-objpfx)soversions.i
+	$(AWK) -v buildlist="$(subst -,_,$(built-modules))" -f $^ > ${@:stmp=T}
+	$(move-if-change) ${@:stmp=T} ${@:stmp=h}
+	touch $@
+
+endif
+
+common-generated += libc-modules.h libc-modules.stmp
 
 # The name under which the run-time dynamic linker is installed.
 # We are currently going for the convention that `/lib/ld.so.1'

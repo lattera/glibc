@@ -1,5 +1,22 @@
 2014-11-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* Makeconfig (built-modules): List non-library modules to be
+	built.
+	(module-cppflags): Include libc-modules.h for
+	everything except shlib-versions.v.i.
+	(CPPFLAGS): Use it.
+	(before-compile): Add libc-modules.h.
+	($(common-objpfx)libc-modules.h,
+	$(common-objpfx)libc-modules.stmp): New targets.
+	(common-generated): Add libc-modules.h and libc-modules.stmp.
+	($(common-objpfx)Versions.v.i): Depend on libc-modules.h.
+	* include/libc-symbols.h: Don't include libc-modules.h.
+	* include/libc-modules.h: Remove file.
+	* scripts/gen-libc-modules.awk: New script to generate
+	libc-modules.h.
+	* sysdeps/unix/Makefile ($(common-objpfx)sysd-syscalls):
+	Depend on libc-modules.stmp.
+
 	* include/shlib-compat.h (_SHLIB_COMPAT): Use IS_IN.
 
 	* Makeconfig (in-module): Get value of libof set for the
