@@ -437,7 +437,7 @@ $(objpfx)ldconfig: $(ldconfig-modules:%=$(objpfx)%.o)
 
 SYSCONF-FLAGS := -D'SYSCONFDIR="$(sysconfdir)"'
 CFLAGS-ldconfig.c = $(SYSCONF-FLAGS) -D'LIBDIR="$(libdir)"' \
-		    -D'SLIBDIR="$(slibdir)"' -DIS_IN_ldconfig=1 -DNOT_IN_libc=1
+		    -D'SLIBDIR="$(slibdir)"' -DNOT_IN_libc
 libof-ldconfig = ldconfig
 CFLAGS-dl-cache.c = $(SYSCONF-FLAGS)
 CFLAGS-cache.c = $(SYSCONF-FLAGS)
