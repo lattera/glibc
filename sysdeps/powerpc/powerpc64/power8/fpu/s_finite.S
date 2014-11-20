@@ -43,7 +43,7 @@ strong_alias (__finite, __finitef)
 hidden_def (__finitef)
 weak_alias (__finitef, finitef)
 
-#ifdef IS_IN_libm
+#if IS_IN (libm)
 # if LONG_DOUBLE_COMPAT (libm, GLIBC_2_0)
 compat_symbol (libm, __finite, __finitel, GLIBC_2_0)
 compat_symbol (libm, finite, finitel, GLIBC_2_0)

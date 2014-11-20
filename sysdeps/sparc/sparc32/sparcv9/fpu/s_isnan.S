@@ -32,7 +32,7 @@ END (__isnan)
 hidden_def (__isnan)
 weak_alias (__isnan, isnan)
 
-#ifndef IS_IN_libm
+#if !IS_IN (libm)
 # if LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)
 compat_symbol (libc, __isnan, __isnanl, GLIBC_2_0);
 compat_symbol (libc, isnan, isnanl, GLIBC_2_0);

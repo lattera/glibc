@@ -37,7 +37,7 @@ __fmal (long double x, long double y, long double z)
 
        return (x * y) + z;
 }
-#ifdef IS_IN_libm
+#if IS_IN (libm)
 long_double_symbol (libm, __fmal, fmal);
 #else
 long_double_symbol (libc, __fmal, fmal);

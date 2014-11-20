@@ -20,7 +20,7 @@
 #undef weak_alias
 #define weak_alias(name, alias)
 #include <math/w_scalblnl.c>
-#ifdef IS_IN_libm
+#if IS_IN (libm)
 long_double_symbol (libm, __w_scalblnl, scalblnl);
 #else
 long_double_symbol (libc, __w_scalblnl, scalblnl);

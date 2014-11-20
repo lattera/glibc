@@ -1,5 +1,5 @@
 #include <math_ldbl_opt.h>
-#ifndef IS_IN_libm
+#if !IS_IN (libm)
 # undef weak_alias
 # define weak_alias(n,a)
 # undef hidden_def
@@ -7,7 +7,7 @@
 # define __isinfl(arg) ___isinfl(arg)
 #endif
 #include <sysdeps/ieee754/ldbl-128/s_isinfl.c>
-#ifndef IS_IN_libm
+#if !IS_IN (libm)
 # undef __isinfl
 hidden_ver (___isinfl, __isinfl)
 _weak_alias (___isinfl, ____isinfl)

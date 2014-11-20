@@ -46,7 +46,7 @@ ENTRY(__feraiseexcept)
 END(__feraiseexcept)
 	cfi_endproc
 
-#ifdef IS_IN_libm
+#if IS_IN (libm)
 # include <shlib-compat.h>
 # if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
 strong_alias (__feraiseexcept, __old_feraiseexcept)

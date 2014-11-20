@@ -40,7 +40,7 @@ ___finitel (long double x)
 }
 hidden_ver (___finitel, __finitel)
 weak_alias (___finitel, ____finitel)
-#ifdef IS_IN_libm
+#if IS_IN (libm)
 long_double_symbol (libm, ____finitel, finitel);
 long_double_symbol (libm, ___finitel, __finitel);
 #else

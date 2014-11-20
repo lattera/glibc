@@ -31,7 +31,7 @@ ___signbitl (long double x)
   EXTRACT_WORDS64 (e, xhi);
   return e < 0;
 }
-#ifdef IS_IN_libm
+#if IS_IN (libm)
 long_double_symbol (libm, ___signbitl, __signbitl);
 #else
 long_double_symbol (libc, ___signbitl, __signbitl);

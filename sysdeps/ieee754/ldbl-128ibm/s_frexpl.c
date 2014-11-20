@@ -141,7 +141,7 @@ long double __frexpl(long double x, int *eptr)
   *eptr = expon;
   return x;
 }
-#ifdef IS_IN_libm
+#if IS_IN (libm)
 long_double_symbol (libm, __frexpl, frexpl);
 #else
 long_double_symbol (libc, __frexpl, frexpl);

@@ -25,7 +25,7 @@ ENTRY (___signbitl)
 	 srl	%o1, 31, %o0
 END (___signbitl)
 
-#ifdef IS_IN_libm
+#if IS_IN (libm)
 long_double_symbol (libm, ___signbitl, __signbitl);
 #else
 long_double_symbol (libc, ___signbitl, __signbitl);

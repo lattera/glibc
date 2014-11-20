@@ -34,7 +34,7 @@ long double __copysignl(long double x, long double y)
   return x;
 }
 
-#ifdef IS_IN_libm
+#if IS_IN (libm)
 long_double_symbol (libm, __copysignl, copysignl);
 #else
 long_double_symbol (libc, __copysignl, copysignl);

@@ -39,7 +39,7 @@ ___isnanl (long double x)
   return (int) (hx >> 63);
 }
 hidden_ver (___isnanl, __isnanl)
-#ifndef IS_IN_libm
+#if !IS_IN (libm)
 weak_alias (___isnanl, ____isnanl)
 long_double_symbol (libc, ___isnanl, isnanl);
 long_double_symbol (libc, ____isnanl, __isnanl);
