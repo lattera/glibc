@@ -1,5 +1,7 @@
 2014-11-20  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/unwind.c (unwind_cleanup): Use __libc_fatal.
+
 	* nptl/pthread_setcanceltype.c [!SIGCANCEL]: Return ENOTSUP early for
 	PTHREAD_CANCEL_ASYNCHRONOUS.
 	* nptl/pthread_cancel.c [!SIGCANCEL]: Just abort rather than trying to

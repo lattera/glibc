@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <setjmp.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -103,11 +104,7 @@ unwind_cleanup (_Unwind_Reason_Code reason, struct _Unwind_Exception *exc)
 {
   /* When we get here a C++ catch block didn't rethrow the object.  We
      cannot handle this case and therefore abort.  */
-# define STR_N_LEN(str) str, strlen (str)
-  INTERNAL_SYSCALL_DECL (err);
-  INTERNAL_SYSCALL (write, err, 3, STDERR_FILENO,
-		    STR_N_LEN ("FATAL: exception not rethrown\n"));
-  abort ();
+  __libc_fatal ("FATAL: exception not rethrown\n");
 }
 
 #endif	/* have forced unwind */
