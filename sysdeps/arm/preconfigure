@@ -3,28 +3,6 @@
 
 case "$machine" in
 arm*)
-
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-#if !__ARM_EABI__
-#error
-#endif
-int
-main ()
-{
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-
-else
-  as_fn_error $? "Old ABI no longer supported" "$LINENO" 5
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-
   # If the compiler enables unwind tables by default, this causes
   # problems with undefined symbols in -nostdlib link tests.  To
   # avoid this, add -fno-unwind-tables here and remove it in

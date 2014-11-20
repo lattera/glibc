@@ -3,11 +3,6 @@ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 
 case "$machine" in
 arm*)
-  AC_TRY_COMPILE([
-#if !__ARM_EABI__
-#error
-#endif], [], [], [AC_MSG_ERROR([Old ABI no longer supported])])
-
   # If the compiler enables unwind tables by default, this causes
   # problems with undefined symbols in -nostdlib link tests.  To
   # avoid this, add -fno-unwind-tables here and remove it in

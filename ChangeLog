@@ -1,3 +1,8 @@
+2014-11-22  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/arm/preconfigure.ac: Delete EABI check.
+	* sysdeps/arm/preconfigure: Regenerate.
+
 2014-11-21  Roland McGrath  <roland@hack.frob.com>
 
 	* nptl/pthread_create.c (__pthread_create_2_1): Set
