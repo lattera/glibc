@@ -144,6 +144,6 @@ lib := rtld
 include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 
 # This here is the whole point of all the shenanigans.
-rtld-CPPFLAGS := -DNOT_IN_libc=1 -DIS_IN_rtld=1 -DIN_LIB=rtld
+rtld-CPPFLAGS := -DNOT_IN_libc=1 -DIS_IN_rtld=1
 
 endif

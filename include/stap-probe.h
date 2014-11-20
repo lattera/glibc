@@ -40,18 +40,6 @@
    architecture specific and can be found in the gdb and SystemTap
    source code.  */
 
-# ifndef NOT_IN_libc
-#  define IN_LIB	libc
-# elif !defined IN_LIB
-/* This is intentionally defined with extra unquoted commas in it so
-   that macro substitution will bomb out when it is used.  We don't
-   just use #error here, so that this header can be included by
-   other headers that use LIBC_PROBE inside their own macros.  We
-   only want such headers to fail to compile if those macros are
-   actually used in a context where IN_LIB has not been defined.  */
-#  define IN_LIB	,,,missing -DIN_LIB=... -- not extra-lib.mk?,,,
-# endif
-
 # define LIBC_PROBE(name, n, ...)	\
   LIBC_PROBE_1 (MODULE_NAME, name, n, ## __VA_ARGS__)
 

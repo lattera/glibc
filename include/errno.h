@@ -22,7 +22,7 @@
 #  define errno rtld_errno
 extern int rtld_errno attribute_hidden;
 
-# elif !defined NOT_IN_libc || defined IN_LIB
+# elif !defined NOT_IN_libc || IS_IN_LIB
 
 #  include <tls.h>
 
@@ -34,7 +34,7 @@ extern int rtld_errno attribute_hidden;
 #  endif
 extern __thread int errno attribute_tls_model_ie;
 
-# endif	/* !NOT_IN_libc || IN_LIB */
+# endif	/* !NOT_IN_libc || IS_IN_LIB */
 
 # define __set_errno(val) (errno = (val))
 

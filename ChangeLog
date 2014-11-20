@@ -1,5 +1,13 @@
 2014-11-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* elf/Makefile (CPPFLAGS-.os): Remove IN_LIB.
+	* elf/rtld-Rules (rtld-CPPFLAGS): Likewise.
+	* extra-lib.mk (CPPFLAGS-$(lib)): Likewise.
+	* include/libc-symbols.h (IS_IN_LIB): New macro.
+	* include/errno.h: Use IS_IN_LIB instead of IN_LIB.
+	* include/netdb.h: Likewise.
+	* include/stap-probe.h: Remove all uses of IN_LIB.
+
 	* Makeconfig (module-cppflags-real): Define MODULE_NAME
 	instead of IN_MODULE.
 	* include/libc-symbols.h (IN_MODULE): Define using

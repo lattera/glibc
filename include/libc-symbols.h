@@ -23,6 +23,11 @@
 #define IN_MODULE PASTE_NAME (MODULE_, MODULE_NAME)
 #define IS_IN(lib) (IN_MODULE == MODULE_##lib)
 
+/* Returns true if the current module is a versioned library.  Versioned
+   library names culled from shlib-versions files are assigned a MODULE_*
+   value lower than MODULE_LIBS_BEGIN.  */
+#define IS_IN_LIB (IN_MODULE > MODULE_LIBS_BEGIN)
+
 #define PASTE_NAME(a,b)      PASTE_NAME1 (a,b)
 #define PASTE_NAME1(a,b)     a##b
 
