@@ -1,3 +1,11 @@
+2014-11-20  Roland McGrath  <roland@hack.frob.com>
+
+	* nptl/default-sched.h: New file.
+	* sysdeps/unix/sysv/linux/default-sched.h: New file.
+	* nptl/pthread_create.c: Include it.
+	(__pthread_create_2_1): Use collect_default_sched instead of making
+	Linux syscalls here directly.
+
 2014-11-20  Torvald Riegel  <triegel@redhat.com>
 
 	* nptl/pthread_once.c (clear_once_control, __pthread_once_slow,

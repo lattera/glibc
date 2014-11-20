@@ -30,6 +30,7 @@
 #include <resolv.h>
 #include <kernel-features.h>
 #include <exit-thread.h>
+#include <default-sched.h>
 
 #include <shlib-compat.h>
 
@@ -593,26 +594,16 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
   if (__builtin_expect ((iattr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0, 0)
       && (iattr->flags & (ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET)) != 0)
     {
-      INTERNAL_SYSCALL_DECL (scerr);
-
       /* Use the scheduling parameters the user provided.  */
       if (iattr->flags & ATTR_FLAG_POLICY_SET)
 	pd->schedpolicy = iattr->schedpolicy;
-      else if ((pd->flags & ATTR_FLAG_POLICY_SET) == 0)
-	{
-	  pd->schedpolicy = INTERNAL_SYSCALL (sched_getscheduler, scerr, 1, 0);
-	  pd->flags |= ATTR_FLAG_POLICY_SET;
-	}
-
       if (iattr->flags & ATTR_FLAG_SCHED_SET)
         /* The values were validated in pthread_attr_setschedparam.  */
-	memcpy (&pd->schedparam, &iattr->schedparam,
-		sizeof (struct sched_param));
-      else if ((pd->flags & ATTR_FLAG_SCHED_SET) == 0)
-	{
-	  INTERNAL_SYSCALL (sched_getparam, scerr, 2, 0, &pd->schedparam);
-	  pd->flags |= ATTR_FLAG_SCHED_SET;
-	}
+        pd->schedparam = iattr->schedparam;
+
+      if ((pd->flags & (ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET))
+          != (ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET))
+        collect_default_sched (pd);
     }
 
   /* Pass the descriptor to the caller.  */
