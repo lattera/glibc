@@ -1,3 +1,8 @@
+2014-11-19  Roland McGrath  <roland@hack.frob.com>
+
+	* nptl/tst-bad-schedattr.c: New file.
+	* nptl/Makefile (tests): Add it.
+
 2014-11-19  Carlos O'Donell  <carlos@redhat.com>
 	    Florian Weimer  <fweimer@redhat.com>
 	    Joseph Myers  <joseph@codesourcery.com>

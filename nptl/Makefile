@@ -270,7 +270,8 @@ tests = tst-typesizes \
 	tst-vfork1 tst-vfork2 tst-vfork1x tst-vfork2x \
 	tst-getpid1 tst-getpid2 tst-getpid3 \
 	tst-setuid3 \
-	tst-initializers1 $(patsubst %,tst-initializers1-%,c89 gnu89 c99 gnu99)
+	tst-initializers1 $(addprefix tst-initializers1-,c89 gnu89 c99 gnu99) \
+	tst-bad-schedattr
 xtests = tst-setuid1 tst-setuid1-static tst-setuid2 \
 	tst-mutexpp1 tst-mutexpp6 tst-mutexpp10
 test-srcs = tst-oddstacklimit
