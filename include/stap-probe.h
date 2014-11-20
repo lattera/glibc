@@ -30,7 +30,7 @@
 
    Systemtap's header defines the macros STAP_PROBE (provider, name) and
    STAP_PROBEn (provider, name, arg1, ..., argn).  For "provider" we paste
-   in the IN_LIB name (libc, libpthread, etc.) automagically.
+   in MODULE_NAME (libc, libpthread, etc.) automagically.
 
    The format of the arg parameters is discussed here:
 
@@ -53,7 +53,7 @@
 # endif
 
 # define LIBC_PROBE(name, n, ...)	\
-  LIBC_PROBE_1 (IN_LIB, name, n, ## __VA_ARGS__)
+  LIBC_PROBE_1 (MODULE_NAME, name, n, ## __VA_ARGS__)
 
 # define LIBC_PROBE_1(lib, name, n, ...) \
   STAP_PROBE##n (lib, name, ## __VA_ARGS__)
@@ -61,7 +61,7 @@
 # define STAP_PROBE0		STAP_PROBE
 
 # define LIBC_PROBE_ASM(name, template) \
-  STAP_PROBE_ASM (IN_LIB, name, template)
+  STAP_PROBE_ASM (MODULE_NAME, name, template)
 
 # define LIBC_PROBE_ASM_OPERANDS STAP_PROBE_ASM_OPERANDS
 

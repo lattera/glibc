@@ -830,9 +830,9 @@ in-module = $(subst -,_,$(firstword $(libof-$(basename $(@F))) \
 				    libc))
 
 module-cppflags-real = -include $(common-objpfx)libc-modules.h \
-		       -DIN_MODULE=MODULE_$(in-module)
+		       -DMODULE_NAME=$(in-module)
 
-# We don't need libc-modules.h and the IN_MODULE definition for
+# We don't need libc-modules.h and the MODULE_NAME definition for
 # shlib-version.v.i.
 module-cppflags = $(if $(filter $(@F),$(skip-module-cppflags)), \
 		       ,$(module-cppflags-real))
@@ -1008,7 +1008,7 @@ postclean-generated += soversions.mk soversions.i \
 before-compile += $(common-objpfx)libc-modules.h
 ifeq ($(soversions.mk-done),t)
 # Generate a header with macro definitions for use with the IS_IN macro.
-# These are the possible values for the IN_MODULE macro defined when building
+# These are the possible values for the MODULE_NAME macro defined when building
 # sources, to identify which module the translation unit is going to be built
 # into.
 $(common-objpfx)libc-modules.h: $(common-objpfx)libc-modules.stmp; @:

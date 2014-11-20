@@ -20,7 +20,11 @@
 #ifndef _LIBC_SYMBOLS_H
 #define _LIBC_SYMBOLS_H	1
 
+#define IN_MODULE PASTE_NAME (MODULE_, MODULE_NAME)
 #define IS_IN(lib) (IN_MODULE == MODULE_##lib)
+
+#define PASTE_NAME(a,b)      PASTE_NAME1 (a,b)
+#define PASTE_NAME1(a,b)     a##b
 
 /* This file's macros are included implicitly in the compilation of every
    file in the C library by -imacros.

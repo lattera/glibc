@@ -1,3 +1,14 @@
+2014-11-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* Makeconfig (module-cppflags-real): Define MODULE_NAME
+	instead of IN_MODULE.
+	* include/libc-symbols.h (IN_MODULE): Define using
+	MODULE_NAME.
+	(PASTE_NAME, PASTE_NAME1): New macros.
+	* include/stap-probe.h (LIBC_PROBE_1): Use MODULE_NAME instead
+	of IN_LIB.
+	(STAP_PROBE_ASM): Likewise.
+
 2014-11-23  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/i386/init-first.c (posixland_init): Call
