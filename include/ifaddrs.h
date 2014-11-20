@@ -26,7 +26,7 @@ extern void __check_native (uint32_t a1_index, int *a1_native,
 			    uint32_t a2_index, int *a2_native)
   attribute_hidden;
 
-#ifdef IS_IN_nscd
+#if IS_IN (nscd)
 extern uint32_t __bump_nl_timestamp (void) attribute_hidden;
 #endif
 

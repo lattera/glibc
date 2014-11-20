@@ -79,7 +79,7 @@ CFLAGS-nscd_gethst_r.c = -fexceptions
 CFLAGS-nscd_getai.c = -fexceptions
 CFLAGS-nscd_initgroups.c = -fexceptions
 
-CPPFLAGS-nscd += -DIS_IN_nscd=1 -D_FORTIFY_SOURCE=2 -DNOT_IN_libc=1
+CPPFLAGS-nscd += -D_FORTIFY_SOURCE=2 -DNOT_IN_libc
 
 ifeq (yesyes,$(have-fpie)$(build-shared))
 CFLAGS-nscd += $(pie-ccflag)

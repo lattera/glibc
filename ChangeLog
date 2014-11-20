@@ -1,5 +1,10 @@
 2014-11-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* include/ifaddrs.h: Use IS_IN.
+	* inet/check_pf.c: Likewise.
+	* sysdeps/unix/sysv/linux/check_pf.c: Likewise.
+	* nscd/Makefile (CPPFLAGS-nscd): Remove IS_IN_nscd.
+
 	* elf/Makefile (CFLAGS-ldconfig.c): Remove definition of
 	IS_IN_ldconfig.
 	* sysdeps/unix/sysv/linux/x86_64/dl-procinfo.c: Use IS_IN.

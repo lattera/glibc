@@ -62,7 +62,7 @@ __free_in6ai (struct in6addrinfo *in6ai)
 }
 
 
-#ifdef IS_IN_nscd
+#if IS_IN (nscd)
 uint32_t
 __bump_nl_timestamp (void)
 {
