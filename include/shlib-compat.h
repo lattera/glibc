@@ -45,10 +45,6 @@
    && (!(ABI_##lib##_##obsoleted - 0)					      \
        || ((ABI_##lib##_##introduced - 0) < (ABI_##lib##_##obsoleted - 0))))
 
-# ifndef NOT_IN_libc
-#  define IS_IN_libc 1
-# endif
-
 /* That header also defines symbols like `VERSION_libm_GLIBC_2_1' to
    the version set name to use for e.g. symbols first introduced into
    libm in the GLIBC_2.1 version.  Definitions of symbols with explicit

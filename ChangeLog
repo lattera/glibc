@@ -1,5 +1,9 @@
 2014-11-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* include/shlib-compat.h [!NOT_IN_libc]: Remove.
+	* nss/nss_files/files-parse.c (IS_IN_libc): Replace with
+	IS_IN (libc).
+
 	* elf/Makefile (libof-sotruss-lib): Set as extramodules.
 
 	* elf/Makefile (CPPFLAGS-.os): Remove IN_LIB.
