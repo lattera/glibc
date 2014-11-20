@@ -19,7 +19,7 @@
 #include <dlfcn.h>
 #include <ldsodefs.h>
 
-#if !defined SHARED && defined IS_IN_libdl
+#if !defined SHARED && IS_IN (libdl)
 
 int
 dlclose (void *handle)

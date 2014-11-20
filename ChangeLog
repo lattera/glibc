@@ -1,5 +1,15 @@
 2014-11-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* dlfcn/dladdr.c: Use IS_IN.
+	* dlfcn/dladdr1.c: Likewise.
+	* dlfcn/dlclose.c: Likewise.
+	* dlfcn/dlerror.c: Likewise.
+	* dlfcn/dlinfo.c: Likewise.
+	* dlfcn/dlmopen.c: Likewise.
+	* dlfcn/dlopen.c: Likewise.
+	* dlfcn/dlsym.c: Likewise.
+	* dlfcn/dlvsym.c: Likewise.
+
 	* include/ifaddrs.h: Use IS_IN.
 	* inet/check_pf.c: Likewise.
 	* sysdeps/unix/sysv/linux/check_pf.c: Likewise.

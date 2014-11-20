@@ -21,7 +21,7 @@
 #include <ldsodefs.h>
 #include <libintl.h>
 
-#if !defined SHARED && defined IS_IN_libdl
+#if !defined SHARED && IS_IN (libdl)
 
 int
 dlinfo (void *handle, int request, void *arg)

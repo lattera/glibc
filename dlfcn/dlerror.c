@@ -25,7 +25,7 @@
 #include <bits/libc-lock.h>
 #include <ldsodefs.h>
 
-#if !defined SHARED && defined IS_IN_libdl
+#if !defined SHARED && IS_IN (libdl)
 
 char *
 dlerror (void)

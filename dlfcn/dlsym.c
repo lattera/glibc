@@ -21,7 +21,7 @@
 
 #include <ldsodefs.h>
 
-#if !defined SHARED && defined IS_IN_libdl
+#if !defined SHARED && IS_IN (libdl)
 
 void *
 dlsym (void *handle, const char *name)
