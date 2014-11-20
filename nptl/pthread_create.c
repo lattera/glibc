@@ -605,32 +605,13 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
 	}
 
       if (iattr->flags & ATTR_FLAG_SCHED_SET)
+        /* The values were validated in pthread_attr_setschedparam.  */
 	memcpy (&pd->schedparam, &iattr->schedparam,
 		sizeof (struct sched_param));
       else if ((pd->flags & ATTR_FLAG_SCHED_SET) == 0)
 	{
 	  INTERNAL_SYSCALL (sched_getparam, scerr, 2, 0, &pd->schedparam);
 	  pd->flags |= ATTR_FLAG_SCHED_SET;
-	}
-
-      /* Check for valid priorities.  */
-      int minprio = INTERNAL_SYSCALL (sched_get_priority_min, scerr, 1,
-				      iattr->schedpolicy);
-      int maxprio = INTERNAL_SYSCALL (sched_get_priority_max, scerr, 1,
-				      iattr->schedpolicy);
-      if (pd->schedparam.sched_priority < minprio
-	  || pd->schedparam.sched_priority > maxprio)
-	{
-	  /* Perhaps a thread wants to change the IDs and if waiting
-	     for this stillborn thread.  */
-	  if (__builtin_expect (atomic_exchange_acq (&pd->setxid_futex, 0)
-				== -2, 0))
-	    lll_futex_wake (&pd->setxid_futex, 1, LLL_PRIVATE);
-
-	  __deallocate_stack (pd);
-
-	  retval = EINVAL;
-	  goto out;
 	}
     }
 

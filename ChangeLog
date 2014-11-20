@@ -1,5 +1,9 @@
 2014-11-19  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/pthread_create.c (__pthread_create_2_1): Don't try to validate
+	the sched_priority value here.  It was already checked when the user
+	called pthread_attr_setschedparam.
+
 	* nptl/tst-bad-schedattr.c: New file.
 	* nptl/Makefile (tests): Add it.
 
