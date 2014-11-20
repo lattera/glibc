@@ -1,5 +1,10 @@
 2014-11-20  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/pthread_setcanceltype.c [!SIGCANCEL]: Return ENOTSUP early for
+	PTHREAD_CANCEL_ASYNCHRONOUS.
+	* nptl/pthread_cancel.c [!SIGCANCEL]: Just abort rather than trying to
+	send SIGCANCEL.
+
 	* nptl/default-sched.h: New file.
 	* sysdeps/unix/sysv/linux/default-sched.h: New file.
 	* nptl/pthread_create.c: Include it.
