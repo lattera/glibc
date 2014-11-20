@@ -1,5 +1,7 @@
 2014-11-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* extra-lib.mk (CPPFLAGS-$(lib)): Remove IS_IN_$(lib).
+
 	* elf/Makefile (CPPFLAGS-.os): Remove IS_IN_rtld.
 	* elf/dl-open.c: Use IS_IN (rtld) instead if IS_IN_rtld.
 	* elf/rtld-Rules: Likewise.
