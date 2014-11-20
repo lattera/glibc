@@ -1,5 +1,7 @@
 2014-11-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* elf/Makefile (libof-sotruss-lib): Set as extramodules.
+
 	* elf/Makefile (CPPFLAGS-.os): Remove IN_LIB.
 	* elf/rtld-Rules (rtld-CPPFLAGS): Likewise.
 	* extra-lib.mk (CPPFLAGS-$(lib)): Likewise.
