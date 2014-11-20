@@ -21,7 +21,7 @@
 
 #include <sysdeps/unix/sysv/linux/sparc/sysdep.h>
 
-#ifdef IS_IN_rtld
+#if IS_IN (rtld)
 # include <dl-sysdep.h>		/* Defines RTLD_PRIVATE_ERRNO.  */
 #endif
 #include <tls.h>
@@ -140,7 +140,7 @@ ENTRY(name);					\
 #define STACK_BIAS	2047
 
 /* Pointer mangling support.  */
-#ifdef IS_IN_rtld
+#if IS_IN (rtld)
 /* We cannot use the thread descriptor because in ld.so we use setjmp
    earlier than the descriptor is initialized.  */
 #else

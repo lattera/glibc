@@ -1,5 +1,76 @@
 2014-11-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* elf/Makefile (CPPFLAGS-.os): Remove IS_IN_rtld.
+	* elf/dl-open.c: Use IS_IN (rtld) instead if IS_IN_rtld.
+	* elf/rtld-Rules: Likewise.
+	* elf/setup-vdso.h: Likewise.
+	* include/assert.h: Likewise.
+	* include/bits/stdlib-float.h: Likewise.
+	* include/errno.h: Likewise.
+	* include/sys/stat.h: Likewise.
+	* include/unistd.h: Likewise.
+	* sysdeps/aarch64/setjmp.S: Likewise.
+	* sysdeps/alpha/setjmp.S: Likewise.
+	* sysdeps/arm/__longjmp.S: Likewise.
+	* sysdeps/arm/aeabi_unwind_cpp_pr1.c: Likewise.
+	* sysdeps/arm/setjmp.S: Likewise.
+	* sysdeps/arm/sysdep.h: Likewise.
+	* sysdeps/generic/_itoa.h: Likewise.
+	* sysdeps/generic/dl-sysdep.h: Likewise.
+	* sysdeps/generic/ldsodefs.h: Likewise.
+	* sysdeps/i386/dl-tls.h: Likewise.
+	* sysdeps/i386/setjmp.S: Likewise.
+	* sysdeps/m68k/setjmp.c: Likewise.
+	* sysdeps/mach/hurd/dl-execstack.c: Likewise.
+	* sysdeps/mach/hurd/opendir.c: Likewise.
+	* sysdeps/posix/getcwd.c: Likewise.
+	* sysdeps/posix/opendir.c: Likewise.
+	* sysdeps/posix/profil.c: Likewise.
+	* sysdeps/powerpc/dl-procinfo.h: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/init-arch.h: Likewise.
+	* sysdeps/powerpc/powerpc32/setjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc64/__longjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc64/setjmp-common.S: Likewise.
+	* sysdeps/s390/dl-tls.h: Likewise.
+	* sysdeps/s390/s390-32/setjmp.S: Likewise.
+	* sysdeps/s390/s390-64/setjmp.S: Likewise.
+	* sysdeps/sh/sh3/setjmp.S: Likewise.
+	* sysdeps/sh/sh4/setjmp.S: Likewise.
+	* sysdeps/unix/alpha/sysdep.h: Likewise.
+	* sysdeps/unix/arm/sysdep.S: Likewise.
+	* sysdeps/unix/i386/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/getcwd.c: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/setjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/lowlevellock-futex.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/bits/m68k-vdso.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m68k-helpers.S: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/tile/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/tile/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h: Likewise.
+	* sysdeps/unix/x86_64/sysdep.S: Likewise.
+	* sysdeps/x86_64/setjmp.S: Likewise.
+
 	* include/math.h: Use IS_IN instead of IS_IN_libm.
 	* sysdeps/alpha/fpu/s_copysign.c: Likewise.
 	* sysdeps/ieee754/ldbl-128ibm/s_copysignl.c: Likewise.

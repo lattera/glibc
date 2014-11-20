@@ -29,7 +29,7 @@ typedef struct
 
 extern unsigned long __tls_get_offset (unsigned long got_offset);
 
-# ifdef IS_IN_rtld
+# if IS_IN (rtld)
 
 #  include <shlib-compat.h>
 
@@ -78,9 +78,9 @@ __tls_get_offset:\n\
 1:	.long	__tls_get_addr - 0b\n\
 ");
 #  endif
-# else /* IS_IN_rtld */
+# else /* IS_IN (rtld) */
 extern void *__tls_get_addr_internal (tls_index *ti);
-# endif /* !IS_IN_rtld */
+# endif /* !IS_IN (rtld) */
 
 # define GET_ADDR_OFFSET \
   (ti->ti_offset - (unsigned long) __builtin_thread_pointer ())

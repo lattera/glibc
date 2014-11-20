@@ -27,7 +27,7 @@ attribute_hidden
 void
 __aeabi_unwind_cpp_pr0 (void)
 {
-#ifndef IS_IN_rtld
+#if !IS_IN (rtld)
   abort ();
 #endif
 }
@@ -36,7 +36,7 @@ attribute_hidden
 void
 __aeabi_unwind_cpp_pr1 (void)
 {
-#ifndef IS_IN_rtld
+#if !IS_IN (rtld)
   abort ();
 #endif
 }
@@ -45,7 +45,7 @@ attribute_hidden
 void
 __aeabi_unwind_cpp_pr2 (void)
 {
-#ifndef IS_IN_rtld
+#if !IS_IN (rtld)
   abort ();
 #endif
 }

@@ -51,7 +51,7 @@ END (__vdso_read_tp_stub)
    equivalent helper function (which clobbers fewer registers than
    a normal function call) in a vdso; tail call to the
    helper.  */
-# ifdef IS_IN_rtld
+# if IS_IN (rtld)
 /* rtld gets a hidden copy of __m68k_read_tp.  */
 	.hidden __m68k_read_tp
 # endif

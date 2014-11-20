@@ -64,7 +64,7 @@ __profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
 {
   struct sigaction act;
   struct itimerval timer;
-#ifndef IS_IN_rtld
+#if !IS_IN (rtld)
   static struct sigaction oact;
   static struct itimerval otimer;
 # define oact_ptr &oact

@@ -82,7 +82,7 @@ __opendirat (int dfd, const char *name)
 
   int flags = O_RDONLY | O_NONBLOCK | O_DIRECTORY | O_CLOEXEC;
   int fd;
-#ifdef IS_IN_rtld
+#if IS_IN (rtld)
   assert (dfd == AT_FDCWD);
   fd = open_not_cancel_2 (name, flags);
 #else

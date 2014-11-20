@@ -4,7 +4,7 @@
 
 #if defined _ERRNO_H && !defined _ISOMAC && !defined __cplusplus
 
-# ifdef IS_IN_rtld
+# if IS_IN (rtld)
 #  include <dl-sysdep.h>
 #  ifndef RTLD_PRIVATE_ERRNO
 #   error "dl-sysdep.h must define RTLD_PRIVATE_ERRNO!"

@@ -57,7 +57,7 @@ extern void __cpu_relax (void);
 #define BUSY_WAIT_NOP	__cpu_relax ()
 #endif
 
-#if !defined NOT_IN_libc || defined IS_IN_rtld
+#if !defined NOT_IN_libc || IS_IN (rtld)
 /* In libc.so or ld.so all futexes are private.  */
 # ifdef __ASSUME_PRIVATE_FUTEX
 #  define __lll_private_flag(fl, private) \

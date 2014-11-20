@@ -27,7 +27,7 @@
    all the libc functions that ld.so uses are called without PLT and always
    get the versions linked into ld.so rather than the libc ones.  */
 
-#ifdef IS_IN_rtld
+#if IS_IN (rtld)
 # define RTLD_PRIVATE_ERRNO 1
 #else
 # define RTLD_PRIVATE_ERRNO 0

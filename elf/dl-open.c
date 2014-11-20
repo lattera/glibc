@@ -737,7 +737,7 @@ _dl_show_scope (struct link_map *l, int from)
   _dl_debug_printf ("\n");
 }
 
-#ifdef IS_IN_rtld
+#if IS_IN (rtld)
 /* Return non-zero if ADDR lies within one of L's segments.  */
 int
 internal_function

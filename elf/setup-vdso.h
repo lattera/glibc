@@ -99,7 +99,7 @@ setup_vdso (struct link_map *main_map __attribute__ ((unused)),
       /* Add the vDSO to the object list.  */
       _dl_add_to_namespace_list (l, LM_ID_BASE);
 
-# ifdef IS_IN_rtld
+# if IS_IN (rtld)
       /* Rearrange the list so this DSO appears after rtld_map.  */
       assert (l->l_next == NULL);
       assert (l->l_prev == main_map);

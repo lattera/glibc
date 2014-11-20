@@ -519,7 +519,7 @@ asm (".L__X'%ebx = 1\n\t"
 
 
 /* Pointer mangling support.  */
-#ifdef IS_IN_rtld
+#if IS_IN (rtld)
 /* We cannot use the thread descriptor because in ld.so we use setjmp
    earlier than the descriptor is initialized.  Using a global variable
    is too complicated here since we have no PC-relative addressing mode.  */

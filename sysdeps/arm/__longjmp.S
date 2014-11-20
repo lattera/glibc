@@ -76,7 +76,7 @@ ENTRY (__longjmp)
 #endif
 
 #ifdef NEED_HWCAP
-# ifdef IS_IN_rtld
+# if IS_IN (rtld)
 	LDST_PCREL (ldr, a4, a3, \
 		    C_SYMBOL_NAME(_rtld_local_ro) \
 		    + RTLD_GLOBAL_RO_DL_HWCAP_OFFSET)

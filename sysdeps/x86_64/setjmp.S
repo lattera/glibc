@@ -54,7 +54,7 @@ ENTRY (__sigsetjmp)
 #endif
 	movq %rax, (JB_PC*8)(%rdi)
 
-#ifdef IS_IN_rtld
+#if IS_IN (rtld)
 	/* In ld.so we never save the signal mask.  */
 	xorl %eax, %eax
 	retq

@@ -26,7 +26,7 @@
 # include <regdef.h>
 #endif
 
-#ifdef IS_IN_rtld
+#if IS_IN (rtld)
 # include <dl-sysdep.h>         /* Defines RTLD_PRIVATE_ERRNO.  */
 #endif
 
@@ -349,7 +349,7 @@ __LABEL(name)						\
    we don't deoptimize things by placing the pointer check value there.  */
 
 #ifdef __ASSEMBLER__
-# ifdef IS_IN_rtld
+# if IS_IN (rtld)
 #  define PTR_MANGLE(dst, src, tmp)				\
 	ldah	tmp, __pointer_chk_guard_local($29) !gprelhigh;	\
 	ldq	tmp, __pointer_chk_guard_local(tmp) !gprellow;	\
@@ -371,7 +371,7 @@ __LABEL(name)						\
 # define PTR_DEMANGLE2(dst, tmp)  PTR_MANGLE2(dst, dst, tmp)
 #else
 # include <stdint.h>
-# if (defined IS_IN_rtld \
+# if (IS_IN (rtld) \
       || (!defined SHARED && (!defined NOT_IN_libc \
 			      || IS_IN (libpthread))))
 extern uintptr_t __pointer_chk_guard_local attribute_relro attribute_hidden;

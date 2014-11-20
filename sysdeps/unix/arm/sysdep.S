@@ -19,7 +19,7 @@
 #define _ERRNO_H
 #include <bits/errno.h>
 
-#ifdef IS_IN_rtld
+#if IS_IN (rtld)
 # include <dl-sysdep.h>			/* Defines RTLD_PRIVATE_ERRNO.  */
 #endif
 
@@ -36,7 +36,7 @@ __syscall_error:
 	moveq	r0, $EAGAIN	/* Yes; translate it to EAGAIN.  */
 #endif
 
-#ifndef IS_IN_rtld
+#if !IS_IN (rtld)
 	mov	r1, r0
 	GET_TLS (r2)
 	ldr	r2, 1f

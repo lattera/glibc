@@ -21,7 +21,7 @@
    the dl_hwcap field. The assembly is to make the compiler not optimize the
    test (&_rtld_global_ro != NULL), which is always true in ISO C (but not
    in that case since _rtld_global_ro might not been realocated yet).  */
-#if defined(SHARED) && !defined(IS_IN_rtld)
+#if defined(SHARED) && !IS_IN (rtld)
 # define __GLRO(value) \
   ({ volatile void **__p = (volatile void**)(&_rtld_global_ro);	\
     unsigned long int __ret;					\

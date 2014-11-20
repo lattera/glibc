@@ -366,7 +366,7 @@
     _ret; })
 
 /* Pointer mangling support.  */
-#ifdef IS_IN_rtld
+#if IS_IN (rtld)
 /* We cannot use the thread descriptor because in ld.so we use setjmp
    earlier than the descriptor is initialized.  */
 #else

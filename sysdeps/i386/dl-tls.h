@@ -32,7 +32,7 @@ extern void *___tls_get_addr (tls_index *ti)
 extern void *___tls_get_addr_internal (tls_index *ti)
      __attribute__ ((__regparm__ (1))) attribute_hidden;
 
-# ifdef IS_IN_rtld
+# if IS_IN (rtld)
 /* The special thing about the x86 TLS ABI is that we have two
    variants of the __tls_get_addr function with different calling
    conventions.  The GNU version, which we are mostly concerned here,

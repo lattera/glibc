@@ -57,7 +57,7 @@ ENTRY (__sigsetjmp)
 
 #ifdef NEED_HWCAP
 	/* Check if we have a VFP unit.  */
-# ifdef IS_IN_rtld
+# if IS_IN (rtld)
 	LDST_PCREL (ldr, a3, a4, \
 		    C_SYMBOL_NAME(_rtld_local_ro) \
 		    + RTLD_GLOBAL_RO_DL_HWCAP_OFFSET)

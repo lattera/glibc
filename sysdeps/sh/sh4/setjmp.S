@@ -55,7 +55,7 @@ ENTRY (__sigsetjmp)
 	mov.l	r9, @-r4
 	mov.l	r8, @-r4
 
-#ifdef IS_IN_rtld
+#if IS_IN (rtld)
 	/* In ld.so we never save the signal mask.  */
 	rts
 	 mov	#0, r0

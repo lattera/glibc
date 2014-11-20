@@ -30,7 +30,7 @@
 
 /* If we compile the file for use in ld.so we don't need the feature
    that getcwd() allocates the buffers itself.  */
-#ifdef IS_IN_rtld
+#if IS_IN (rtld)
 # define NO_ALLOCATION	1
 #endif
 

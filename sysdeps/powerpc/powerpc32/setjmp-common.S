@@ -69,7 +69,7 @@ ENTRY (__sigsetjmp_symbol)
 	SAVE_GP (29)
 	SAVE_GP (30)
 	SAVE_GP (31)
-#ifdef IS_IN_rtld
+#if IS_IN (rtld)
 	li   r3,0
 	blr
 #else

@@ -444,7 +444,7 @@ CFLAGS-cache.c = $(SYSCONF-FLAGS)
 CFLAGS-rtld.c = $(SYSCONF-FLAGS)
 
 CPPFLAGS-.os += $(if $(filter $(@F),$(patsubst %,%.os,$(all-rtld-routines))),\
-		     -DNOT_IN_libc=1 -DIS_IN_rtld=1)
+		     -DNOT_IN_libc=1)
 
 cpp-srcs-left := $(all-rtld-routines:=.os)
 lib := rtld

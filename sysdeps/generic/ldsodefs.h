@@ -250,7 +250,7 @@ typedef void (*receiver_fct) (int, const char *, const char *);
 # define GL(name) _##name
 #else
 # define EXTERN
-# ifdef IS_IN_rtld
+# if IS_IN (rtld)
 #  define GL(name) _rtld_local._##name
 # else
 #  define GL(name) _rtld_global._##name
@@ -409,7 +409,7 @@ struct rtld_global
 #ifdef SHARED
 };
 # define __rtld_global_attribute__
-# ifdef IS_IN_rtld
+# if IS_IN (rtld)
 #  ifdef HAVE_SDATA_SECTION
 #   define __rtld_local_attribute__ \
 	    __attribute__ ((visibility ("hidden"), section (".sdata")))
@@ -428,7 +428,7 @@ extern struct rtld_global _rtld_global __rtld_global_attribute__;
 #ifndef SHARED
 # define GLRO(name) _##name
 #else
-# ifdef IS_IN_rtld
+# if IS_IN (rtld)
 #  define GLRO(name) _rtld_local_ro._##name
 # else
 #  define GLRO(name) _rtld_global_ro._##name
@@ -587,7 +587,7 @@ struct rtld_global_ro
   EXTERN int _dl_pointer_guard;
 };
 # define __rtld_global_attribute__
-# ifdef IS_IN_rtld
+# if IS_IN (rtld)
 #  define __rtld_local_attribute__ __attribute__ ((visibility ("hidden")))
 extern struct rtld_global_ro _rtld_local_ro
     attribute_relro __rtld_local_attribute__;
@@ -610,7 +610,7 @@ extern const ElfW(Phdr) *_dl_phdr;
 extern size_t _dl_phnum;
 #endif
 
-#ifdef IS_IN_rtld
+#if IS_IN (rtld)
 /* This is the initial value of GL(dl_error_catch_tsd).
    A non-TLS libpthread will change it.  */
 extern void **_dl_initial_error_catch_tsd (void) __attribute__ ((const))
@@ -642,7 +642,7 @@ extern char **_dl_argv
 #endif
      ;
 rtld_hidden_proto (_dl_argv)
-#ifdef IS_IN_rtld
+#if IS_IN (rtld)
 extern unsigned int _dl_skip_args attribute_hidden
 # ifndef DL_ARGV_NOT_RELRO
      attribute_relro

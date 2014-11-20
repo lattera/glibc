@@ -57,7 +57,7 @@ __sigsetjmp (jmp_buf env, int savemask)
 		: : "m" (env[0].__jmpbuf[0].__fpregs[0]));
 #endif
 
-#ifdef IS_IN_rtld
+#if IS_IN (rtld)
   /* In ld.so we never save the signal mask.  */
   return 0;
 #else

@@ -210,7 +210,7 @@ extern char *alloca ();
 
 #ifdef __ASSUME_ATFCTS
 # define __have_atfcts 1
-#elif defined IS_IN_rtld
+#elif IS_IN (rtld)
 static int __rtld_have_atfcts;
 # define __have_atfcts __rtld_have_atfcts
 #endif

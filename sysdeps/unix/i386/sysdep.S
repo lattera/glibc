@@ -19,7 +19,7 @@
 #define _ERRNO_H
 #include <bits/errno.h>
 
-#ifdef IS_IN_rtld
+#if IS_IN (rtld)
 # include <dl-sysdep.h>		/* Defines RTLD_PRIVATE_ERRNO.  */
 #endif
 

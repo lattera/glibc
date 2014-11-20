@@ -24,12 +24,12 @@
 #include <shlib-compat.h>
 #include <stap-probe.h>
 
-#if !defined IS_IN_rtld
+#if !IS_IN (rtld)
 # if defined SHARED &&  SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)
 	/* we need a unique name in case of symbol versioning.  */
 #  define __sigsetjmp __v1__sigsetjmp
 # endif /* if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)  */
-#endif /* !defined IS_IN_rtld  */
+#endif /* !IS_IN (rtld)  */
 
 	/* We include the BSD entry points here as well but we make
 	   them weak.  */
@@ -69,7 +69,7 @@ ENTRY(__sigsetjmp)
 #endif
 	std    %f4,40(%r2)
 	std    %f6,48(%r2)
-#ifdef IS_IN_rtld
+#if IS_IN (rtld)
 	/* In ld.so we never save the signal mask.  */
 	lhi    %r2,0
 	br     %r14
@@ -91,7 +91,7 @@ ENTRY(__sigsetjmp)
 #endif
 END (__sigsetjmp)
 
-#if !defined IS_IN_rtld
+#if !IS_IN (rtld)
 # if defined SHARED &&  SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)
 /* In glibc release 2.19 new versions of setjmp-functions were introduced,
    but were reverted before 2.20. Thus both versions are the same function.  */
@@ -112,4 +112,4 @@ strong_alias (__v1__sigsetjmp, __v2__sigsetjmp);
 versioned_symbol (libc, __v1__sigsetjmp, __sigsetjmp, GLIBC_2_0);
 compat_symbol (libc, __v2__sigsetjmp, __sigsetjmp, GLIBC_2_19);
 # endif /* if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)  */
-#endif /* if !defined IS_IN_rtld  */
+#endif /* if !IS_IN (rtld)  */

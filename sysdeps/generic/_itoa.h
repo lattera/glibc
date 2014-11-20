@@ -46,7 +46,7 @@ extern char *_itoa (unsigned long long int value, char *buflim,
 
 extern const char _itoa_upper_digits[];
 extern const char _itoa_lower_digits[];
-#if !defined NOT_IN_libc || defined IS_IN_rtld
+#if !defined NOT_IN_libc || IS_IN (rtld)
 hidden_proto (_itoa_upper_digits)
 hidden_proto (_itoa_lower_digits)
 #endif

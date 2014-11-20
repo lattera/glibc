@@ -34,7 +34,7 @@ _dl_make_stack_executable (void **stack_endp)
     return EPERM;
   *stack_endp = NULL;
 
-#ifdef IS_IN_rtld
+#if IS_IN (rtld)
   if (__mprotect ((void *)_dl_hurd_data->stack_base, _dl_hurd_data->stack_size,
 		  PROT_READ|PROT_WRITE|PROT_EXEC) != 0)
     return errno;

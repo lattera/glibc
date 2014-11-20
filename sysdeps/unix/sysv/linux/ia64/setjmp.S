@@ -178,7 +178,7 @@ ENTRY(__sigsetjmp)
 	;;
 	st8.nta [r2]=r25		// ar.unat
 	st8.nta [r3]=in0		// &__jmp_buf
-#ifdef IS_IN_rtld
+#if IS_IN (rtld)
 	/* In ld.so we never save the signal mask.  */
 	;;
 #else

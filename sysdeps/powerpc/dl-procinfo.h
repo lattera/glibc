@@ -166,7 +166,7 @@ _dl_string_platform (const char *str)
   return -1;
 }
 
-#ifdef IS_IN_rtld
+#if IS_IN (rtld)
 static inline int
 __attribute__ ((unused))
 _dl_procinfo (unsigned int type, unsigned long int word)

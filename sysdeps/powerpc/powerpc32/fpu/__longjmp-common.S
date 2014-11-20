@@ -35,7 +35,7 @@ ENTRY (__longjmp_symbol)
 	addis	r5,r5,_GLOBAL_OFFSET_TABLE_-got_label@ha
 	addi	r5,r5,_GLOBAL_OFFSET_TABLE_-got_label@l
 #  ifdef SHARED
-#   ifdef IS_IN_rtld
+#   if IS_IN (rtld)
 	/* Inside ld.so we use the local alias to avoid runtime GOT
 	   relocations.  */
 	lwz     r5,_rtld_local_ro@got(r5)
