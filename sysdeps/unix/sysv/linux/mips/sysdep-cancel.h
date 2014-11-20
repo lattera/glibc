@@ -22,7 +22,7 @@
 # include <nptl/pthreadP.h>
 #endif
 
-#if !defined NOT_IN_libc || defined IS_IN_libpthread || IS_IN (librt)
+#if !defined NOT_IN_libc || IS_IN (libpthread) || IS_IN (librt)
 
 # ifdef __PIC__
 #  define PSEUDO_CPLOAD .cpload t9;
@@ -154,7 +154,7 @@
 #  define PSEUDO_JMP(sym) jal sym;
 # endif
 
-# ifdef IS_IN_libpthread
+# if IS_IN (libpthread)
 #  define CENABLE	PSEUDO_JMP (__pthread_enable_asynccancel)
 #  define CDISABLE	PSEUDO_JMP (__pthread_disable_asynccancel)
 # elif IS_IN (librt)

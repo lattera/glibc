@@ -23,7 +23,7 @@
 # include <nptl/pthreadP.h>
 #endif
 
-#if !defined NOT_IN_libc || defined IS_IN_libpthread || IS_IN (librt)
+#if !defined NOT_IN_libc || IS_IN (libpthread) || IS_IN (librt)
 
 # ifdef HAVE_ASM_GLOBAL_DOT_NAME
 #  define DASHDASHPFX(str) .__##str
@@ -99,7 +99,7 @@
 # define DOCARGS_6	std 8,CANCEL_PARM_SAVE+40(1); DOCARGS_5
 # define UNDOCARGS_6	ld 8,CANCEL_PARM_SAVE+40(1); UNDOCARGS_5
 
-# ifdef IS_IN_libpthread
+# if IS_IN (libpthread)
 #  ifdef SHARED
 #   define CENABLE	bl JUMPTARGET(__pthread_enable_asynccancel)
 #   define CDISABLE	bl JUMPTARGET(__pthread_disable_asynccancel)

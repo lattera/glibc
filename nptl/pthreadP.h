@@ -244,7 +244,7 @@ extern int __pthread_debug attribute_hidden;
 
 extern void __pthread_unwind (__pthread_unwind_buf_t *__buf)
      __cleanup_fct_attribute __attribute ((__noreturn__))
-#if !defined SHARED && !defined IS_IN_libpthread
+#if !defined SHARED && !IS_IN (libpthread)
      weak_function
 #endif
      ;
@@ -258,7 +258,7 @@ extern void __pthread_register_cancel (__pthread_unwind_buf_t *__buf)
      __cleanup_fct_attribute;
 extern void __pthread_unregister_cancel (__pthread_unwind_buf_t *__buf)
      __cleanup_fct_attribute;
-#ifdef IS_IN_libpthread
+#if IS_IN (libpthread)
 hidden_proto (__pthread_unwind)
 hidden_proto (__pthread_unwind_next)
 hidden_proto (__pthread_register_cancel)
@@ -302,7 +302,7 @@ __do_cancel (void)
 # define LIBC_CANCEL_HANDLED() \
   __asm (".globl " __SYMBOL_PREFIX "__libc_enable_asynccancel"); \
   __asm (".globl " __SYMBOL_PREFIX "__libc_disable_asynccancel")
-#elif defined IS_IN_libpthread
+#elif IS_IN (libpthread)
 # define LIBC_CANCEL_ASYNC() CANCEL_ASYNC ()
 # define LIBC_CANCEL_RESET(val) CANCEL_RESET (val)
 # define LIBC_CANCEL_HANDLED() \
@@ -347,7 +347,7 @@ extern int __make_stacks_executable (void **stack_endp)
 
 /* longjmp handling.  */
 extern void __pthread_cleanup_upto (__jmp_buf target, char *targetframe);
-#ifdef IS_IN_libpthread
+#if IS_IN (libpthread)
 hidden_proto (__pthread_cleanup_upto)
 #endif
 
@@ -492,7 +492,7 @@ extern int __pthread_enable_asynccancel (void) attribute_hidden;
 extern void __pthread_disable_asynccancel (int oldtype)
      internal_function attribute_hidden;
 
-#ifdef IS_IN_libpthread
+#if IS_IN (libpthread)
 hidden_proto (__pthread_mutex_init)
 hidden_proto (__pthread_mutex_destroy)
 hidden_proto (__pthread_mutex_lock)
@@ -531,7 +531,7 @@ extern int __librt_enable_asynccancel (void) attribute_hidden;
 extern void __librt_disable_asynccancel (int oldtype)
      internal_function attribute_hidden;
 
-#ifdef IS_IN_libpthread
+#if IS_IN (libpthread)
 /* Special versions which use non-exported functions.  */
 extern void __pthread_cleanup_push (struct _pthread_cleanup_buffer *buffer,
 				    void (*routine) (void *), void *arg)

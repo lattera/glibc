@@ -21,7 +21,7 @@
 # include <nptl/pthreadP.h>
 #endif
 
-#if !defined NOT_IN_libc || defined IS_IN_libpthread || IS_IN (librt)
+#if !defined NOT_IN_libc || IS_IN (libpthread) || IS_IN (librt)
 
 # define _IMM12 #-12
 # define _IMM16 #-16
@@ -105,7 +105,7 @@
 # define LOAD_ARGS_5	LOAD_ARGS_4
 # define LOAD_ARGS_6	LOAD_ARGS_5
 
-# ifdef IS_IN_libpthread
+# if IS_IN (libpthread)
 #  define __local_enable_asynccancel	__pthread_enable_asynccancel
 #  define __local_disable_asynccancel	__pthread_disable_asynccancel
 # elif !defined NOT_IN_libc

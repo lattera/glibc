@@ -34,7 +34,7 @@
 #define SYS_ify(syscall_name)	__NR_##syscall_name
 
 #if defined USE_DL_SYSINFO \
-    && (!defined NOT_IN_libc || defined IS_IN_libpthread)
+    && (!defined NOT_IN_libc || IS_IN (libpthread))
 # define I386_USE_SYSENTER	1
 #else
 # undef I386_USE_SYSENTER

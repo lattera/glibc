@@ -21,7 +21,7 @@
 # include <nptl/pthreadP.h>
 #endif
 
-#if !defined NOT_IN_libc || defined IS_IN_libpthread || IS_IN (librt)
+#if !defined NOT_IN_libc || IS_IN (libpthread) || IS_IN (librt)
 
 /* NOTE: We do mark syscalls with unwind annotations, for the benefit of
    cancellation; but they're really only accurate at the point of the
@@ -181,7 +181,7 @@
 # define RESTORE_LR_6				\
 	RESTORE_LR_0
 
-# ifdef IS_IN_libpthread
+# if IS_IN (libpthread)
 #  define CENABLE	bl PLTJMP(__pthread_enable_asynccancel)
 #  define CDISABLE	bl PLTJMP(__pthread_disable_asynccancel)
 #  define __local_multiple_threads __pthread_multiple_threads
@@ -196,7 +196,7 @@
 #  error Unsupported library
 # endif
 
-# if defined IS_IN_libpthread || !defined NOT_IN_libc
+# if IS_IN (libpthread) || !defined NOT_IN_libc
 #  ifndef __ASSEMBLER__
 extern int __local_multiple_threads attribute_hidden;
 #   define SINGLE_THREAD_P __builtin_expect (__local_multiple_threads == 0, 1)

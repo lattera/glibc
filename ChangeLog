@@ -1,5 +1,40 @@
 2014-11-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* nptl/lowlevellock.c: Use IS_IN instead of IS_IN_libpthread.
+	* nptl/pthreadP.h: Likewise.
+	* nptl_db/structs.def: Likewise.
+	* sysdeps/arm/sysdep.h: Likewise.
+	* sysdeps/nptl/bits/libc-lock.h: Likewise.
+	* sysdeps/nptl/bits/libc-lockP.h: Likewise.
+	* sysdeps/sparc/sparc32/lowlevellock.c: Likewise.
+	* sysdeps/unix/alpha/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/nptl/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/not-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/tile/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/tile/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/tile/waitpid.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/cancellation.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep-cancel.h: Likewise.
+
 	* include/mqueue.h: Use IS_IN instead of IS_IN_librt.
 	* nptl/pthreadP.h: Likewise.
 	* sysdeps/unix/sysv/linux/aarch64/sysdep-cancel.h: Likewise.

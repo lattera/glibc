@@ -45,7 +45,7 @@
 #ifndef PIC
 /* For static code, on error jump to __syscall_error directly. */
 # define SYSCALL_ERROR_NAME __syscall_error
-#elif !defined NOT_IN_libc || defined IS_IN_libpthread
+#elif !defined NOT_IN_libc || IS_IN (libpthread)
 /* Use the internal name for libc/libpthread shared objects. */
 # define SYSCALL_ERROR_NAME __GI___syscall_error
 #else

@@ -37,7 +37,7 @@ __lll_lock_wait_private (int *futex)
 
 
 /* These functions don't get included in libc.so  */
-#ifdef IS_IN_libpthread
+#if IS_IN (libpthread)
 void
 __lll_lock_wait (int *futex, int private)
 {

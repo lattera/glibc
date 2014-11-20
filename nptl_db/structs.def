@@ -74,7 +74,7 @@ DB_STRUCT_FIELD (link_map, l_tls_modid)
 DB_STRUCT_ARRAY_FIELD (dtv, dtv)
 #define pointer_val pointer.val /* Field of anonymous struct in dtv_t.  */
 DB_STRUCT_FIELD (dtv_t, pointer_val)
-#if !defined IS_IN_libpthread || TLS_TCB_AT_TP
+#if !IS_IN (libpthread) || TLS_TCB_AT_TP
 DB_STRUCT_FIELD (pthread, dtvp)
 #endif
 

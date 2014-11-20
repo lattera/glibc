@@ -22,7 +22,7 @@
 # include <nptl/pthreadP.h>
 #endif
 
-#if !defined NOT_IN_libc || defined IS_IN_libpthread || IS_IN (librt)
+#if !defined NOT_IN_libc || IS_IN (libpthread) || IS_IN (librt)
 
 # undef PSEUDO
 # define PSEUDO(name, syscall_name, args)				      \
@@ -69,7 +69,7 @@ L(pseudo_check):							      \
 .size	__##syscall_name##_nocancel,.-__##syscall_name##_nocancel;	      \
 L(pseudo_end):
 
-# ifdef IS_IN_libpthread
+# if IS_IN (libpthread)
 #  define CENABLE	__pthread_enable_asynccancel
 #  define CDISABLE	__pthread_disable_asynccancel
 #  define __local_multiple_threads	__pthread_multiple_threads
@@ -111,7 +111,7 @@ L(pseudo_end):
 #define LR7_6		lg %r7,56+160(%r15); \
 			cfi_restore (%r7);
 
-# if defined IS_IN_libpthread || !defined NOT_IN_libc
+# if IS_IN (libpthread) || !defined NOT_IN_libc
 #  ifndef __ASSEMBLER__
 extern int __local_multiple_threads attribute_hidden;
 #   define SINGLE_THREAD_P \

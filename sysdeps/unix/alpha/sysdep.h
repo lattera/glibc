@@ -373,7 +373,7 @@ __LABEL(name)						\
 # include <stdint.h>
 # if (defined IS_IN_rtld \
       || (!defined SHARED && (!defined NOT_IN_libc \
-			      || defined IS_IN_libpthread)))
+			      || IS_IN (libpthread))))
 extern uintptr_t __pointer_chk_guard_local attribute_relro attribute_hidden;
 #  define PTR_MANGLE(var) \
 	(var) = (__typeof (var)) ((uintptr_t) (var) ^ __pointer_chk_guard_local)

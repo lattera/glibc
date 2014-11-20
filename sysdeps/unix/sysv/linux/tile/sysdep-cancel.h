@@ -22,7 +22,7 @@
 # include <nptl/pthreadP.h>
 #endif
 
-#if !defined NOT_IN_libc || defined IS_IN_libpthread || IS_IN (librt)
+#if !defined NOT_IN_libc || IS_IN (libpthread) || IS_IN (librt)
 
 /* Allow hacking in some extra code if desired. */
 #ifndef PSEUDO_EXTRA
@@ -117,7 +117,7 @@
 
 # define STKSPACE	(13 * REGSIZE)
 
-# ifdef IS_IN_libpthread
+# if IS_IN (libpthread)
 #  define CENABLE	jal __pthread_enable_asynccancel
 #  define CDISABLE	jal __pthread_disable_asynccancel
 # elif IS_IN (librt)

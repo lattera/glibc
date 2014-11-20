@@ -344,7 +344,7 @@
 
 /* Pointer mangling support.  */
 #if (defined IS_IN_rtld || \
-     (!defined SHARED && (!defined NOT_IN_libc || defined IS_IN_libpthread)))
+     (!defined SHARED && (!defined NOT_IN_libc || IS_IN (libpthread))))
 # ifdef __ASSEMBLER__
 #  define PTR_MANGLE_LOAD(guard, tmp)					\
   LDR_HIDDEN (guard, tmp, C_SYMBOL_NAME(__pointer_chk_guard_local), 0)

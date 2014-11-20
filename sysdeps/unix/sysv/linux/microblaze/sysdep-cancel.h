@@ -21,7 +21,7 @@
 # include <nptl/pthreadP.h>
 #endif
 
-#if !defined NOT_IN_libc || defined IS_IN_libpthread || IS_IN (librt)
+#if !defined NOT_IN_libc || IS_IN (libpthread) || IS_IN (librt)
 
 # if !IS_IN (librt) || !defined(PIC)
 #  define AC_STACK_SIZE  16  /* space for r15, async_cancel arg and 2 temp words */
@@ -102,7 +102,7 @@ L(pseudo_cancel):                                                    \
 #  define PSEUDO_JMP(sym)  brlid r15, sym; addk r0, r0, r0
 # endif
 
-# ifdef IS_IN_libpthread
+# if IS_IN (libpthread)
 #  define CENABLE PSEUDO_JMP (__pthread_enable_asynccancel)
 #  define CDISABLE  PSEUDO_JMP (__pthread_disable_asynccancel)
 #  define __local_multiple_threads __pthread_multiple_threads
@@ -118,7 +118,7 @@ L(pseudo_cancel):                                                    \
 # endif
 
 
-# if defined IS_IN_libpthread || !defined NOT_IN_libc
+# if IS_IN (libpthread) || !defined NOT_IN_libc
 #  ifndef __ASSEMBLER__
 extern int __local_multiple_threads attribute_hidden;
 #   define SINGLE_THREAD_P __builtin_expect (__local_multiple_threads == 0, 1)
