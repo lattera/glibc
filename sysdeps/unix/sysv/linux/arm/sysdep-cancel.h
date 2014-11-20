@@ -21,7 +21,7 @@
 # include <nptl/pthreadP.h>
 #endif
 
-#if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
+#if !defined NOT_IN_libc || defined IS_IN_libpthread || IS_IN (librt)
 
 /* NOTE: We do mark syscalls with unwind annotations, for the benefit of
    cancellation; but they're really only accurate at the point of the
@@ -189,7 +189,7 @@
 #  define CENABLE	bl PLTJMP(__libc_enable_asynccancel)
 #  define CDISABLE	bl PLTJMP(__libc_disable_asynccancel)
 #  define __local_multiple_threads __libc_multiple_threads
-# elif defined IS_IN_librt
+# elif IS_IN (librt)
 #  define CENABLE	bl PLTJMP(__librt_enable_asynccancel)
 #  define CDISABLE	bl PLTJMP(__librt_disable_asynccancel)
 # else

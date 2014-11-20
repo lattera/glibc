@@ -21,7 +21,7 @@
 # include <nptl/pthreadP.h>
 #endif
 
-#if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
+#if !defined NOT_IN_libc || defined IS_IN_libpthread || IS_IN (librt)
 
 # define _IMM12 #-12
 # define _IMM16 #-16
@@ -111,7 +111,7 @@
 # elif !defined NOT_IN_libc
 #  define __local_enable_asynccancel	__libc_enable_asynccancel
 #  define __local_disable_asynccancel	__libc_disable_asynccancel
-# elif defined IS_IN_librt
+# elif IS_IN (librt)
 #  define __local_enable_asynccancel	__librt_enable_asynccancel
 #  define __local_disable_asynccancel	__librt_disable_asynccancel
 # else

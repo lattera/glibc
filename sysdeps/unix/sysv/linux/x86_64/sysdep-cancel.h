@@ -22,7 +22,7 @@
 # include <nptl/pthreadP.h>
 #endif
 
-#if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
+#if !defined NOT_IN_libc || defined IS_IN_libpthread || IS_IN (librt)
 
 /* The code to disable cancellation depends on the fact that the called
    functions are special.  They don't modify registers other than %rax
@@ -67,7 +67,7 @@
 #  define CENABLE	call __libc_enable_asynccancel;
 #  define CDISABLE	call __libc_disable_asynccancel;
 #  define __local_multiple_threads __libc_multiple_threads
-# elif defined IS_IN_librt
+# elif IS_IN (librt)
 #  define CENABLE	call __librt_enable_asynccancel;
 #  define CDISABLE	call __librt_disable_asynccancel;
 # else

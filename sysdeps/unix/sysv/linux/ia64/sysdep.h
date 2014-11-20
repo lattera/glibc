@@ -62,7 +62,7 @@
 
 #if defined USE_DL_SYSINFO \
 	&& (!defined NOT_IN_libc \
-	    || defined IS_IN_libpthread || defined IS_IN_librt)
+	    || defined IS_IN_libpthread || IS_IN (librt))
 # define IA64_USE_NEW_STUB
 #else
 # undef IA64_USE_NEW_STUB

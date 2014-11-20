@@ -308,7 +308,7 @@ __do_cancel (void)
 # define LIBC_CANCEL_HANDLED() \
   __asm (".globl " __SYMBOL_PREFIX "__pthread_enable_asynccancel"); \
   __asm (".globl " __SYMBOL_PREFIX "__pthread_disable_asynccancel")
-#elif defined IS_IN_librt
+#elif IS_IN (librt)
 # define LIBC_CANCEL_ASYNC() \
   __librt_enable_asynccancel ()
 # define LIBC_CANCEL_RESET(val) \

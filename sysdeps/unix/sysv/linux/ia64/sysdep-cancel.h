@@ -22,7 +22,7 @@
 # include <nptl/pthreadP.h>
 #endif
 
-#if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
+#if !defined NOT_IN_libc || defined IS_IN_libpthread || IS_IN (librt)
 
 # undef PSEUDO
 
@@ -185,7 +185,7 @@ __GC_##name:								      \
 # elif !defined NOT_IN_libc
 #  define CENABLE	br.call.sptk.many b0 = __libc_enable_asynccancel
 #  define CDISABLE	br.call.sptk.many b0 = __libc_disable_asynccancel
-# elif defined IS_IN_librt
+# elif IS_IN (librt)
 #  define CENABLE	br.call.sptk.many b0 = __librt_enable_asynccancel
 #  define CDISABLE	br.call.sptk.many b0 = __librt_disable_asynccancel
 # else
