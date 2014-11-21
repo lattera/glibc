@@ -790,7 +790,7 @@ end of file reached,
 @comment mntent.h
 @comment BSD
 @deftypefun int addmntent (FILE *@var{stream}, const struct mntent *@var{mnt})
-@safety{@prelim{}@mtunsafe{@mtasurace{:stream} @mtslocale{}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
+@safety{@prelim{}@mtsafe{@mtsrace{:stream} @mtslocale{}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 @c addmntent @mtasurace:stream @mtslocale @asucorrupt @acucorrupt
 @c  fseek dup @asucorrupt @acucorrupt [no @aculock]
 @c  encode_name ok

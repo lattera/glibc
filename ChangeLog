@@ -1,3 +1,8 @@
+2014-11-21  Ma Shimiao <mashimiao.fnst@cn.fujitsu.com>
+
+	* manual/sysinfo.texi (addmntent): It is actually MT-Safe,
+	because the potential race is on the user-supplied stream.
+
 2014-11-21  Alexandre Oliva <aoliva@redhat.com>
 
 	* sysdeps/posix/ctermid.c (ctermid): Return a pointer to a
