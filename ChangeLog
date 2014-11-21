@@ -1,3 +1,8 @@
+2014-11-21  Torvald Riegel  <triegel@redhat.com>
+
+	* sysdeps/microblaze/bits/atomic.h (__HAVE_64B_ATOMICS): Fix value
+	by setting it to 0.  64b atomics are not supported currently.
+
 2014-11-21  Alexandre Oliva <aoliva@redhat.com>
 
 	[BZ #16469]
