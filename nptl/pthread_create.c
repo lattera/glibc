@@ -596,10 +596,16 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
     {
       /* Use the scheduling parameters the user provided.  */
       if (iattr->flags & ATTR_FLAG_POLICY_SET)
-	pd->schedpolicy = iattr->schedpolicy;
+        {
+          pd->schedpolicy = iattr->schedpolicy;
+          pd->flags |= ATTR_FLAG_POLICY_SET;
+        }
       if (iattr->flags & ATTR_FLAG_SCHED_SET)
-        /* The values were validated in pthread_attr_setschedparam.  */
-        pd->schedparam = iattr->schedparam;
+        {
+          /* The values were validated in pthread_attr_setschedparam.  */
+          pd->schedparam = iattr->schedparam;
+          pd->flags |= ATTR_FLAG_SCHED_SET;
+        }
 
       if ((pd->flags & (ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET))
           != (ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET))
