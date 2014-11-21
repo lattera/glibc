@@ -84,7 +84,7 @@ $(objpfx)libc/index.html: $(addprefix $(objpfx),$(libc-texi-generated))
 $(objpfx)summary.texi: $(objpfx)stamp-summary ;
 $(objpfx)stamp-summary: summary.awk $(filter-out $(objpfx)summary.texi, \
 					$(texis-path))
-	-$(SHELL) ./check-safety.sh $(filter-out $(objpfx)%, $(texis-path))
+	$(SHELL) ./check-safety.sh $(filter-out $(objpfx)%, $(texis-path))
 	$(AWK) -f $^ | sort -t'' -df -k 1,1 | tr '\014' '\012' \
 		> $(objpfx)summary-tmp
 	$(move-if-change) $(objpfx)summary-tmp $(objpfx)summary.texi

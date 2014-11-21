@@ -1,3 +1,10 @@
+2014-11-21  Alexandre Oliva <aoliva@redhat.com>
+
+	* manual/Makefile ($(objpfx)stamp-summary): Require
+	check-safety.sh to pass.
+	* manual/check-safety.sh: Wish for verification that every
+	@deftypefn and @deftypefun is followed by a @safety remark.
+
 2014-11-20  Roland McGrath  <roland@hack.frob.com>
 
 	* nptl/unwind.c (unwind_cleanup): Use __libc_fatal.

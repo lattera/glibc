@@ -30,6 +30,11 @@ success=:
 # If no arguments are given, take all *.texi files in the current directory.
 test $# != 0 || set *.texi
 
+# FIXME: check that each @deftypefu?n is followed by a @safety note,
+# with nothing but @deftypefu?nx and comment lines in between.  (There
+# might be more stuff too).
+
+
 # Check that all safety remarks have entries for all of MT, AS and AC,
 # in this order, with an optional prelim note before them.
 grep -n '^@safety' "$@" |
