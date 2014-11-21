@@ -927,8 +927,9 @@ this function or to @code{cuserid}.
 @comment stdio.h
 @comment POSIX.1
 @deftypefun {char *} cuserid (char *@var{string})
-@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
-@c cuserid @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@safety{@prelim{}@mtunsafe{@mtasurace{:cuserid/!string} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@c cuserid @mtasurace:cuserid/!string @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
+@c   if string is NULL, cuserid will overwrite and return a static buffer
 @c  geteuid dup ok
 @c  getpwuid_r dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  strncpy dup ok

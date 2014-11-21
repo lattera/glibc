@@ -1,5 +1,11 @@
 2014-11-21  Alexandre Oliva <aoliva@redhat.com>
 
+	* manual/users.texi (cuserid): Fix MT-Safety note for the case
+	of not passing it a buffer.
+	Reported by Peng Haitao.
+
+2014-11-21  Alexandre Oliva <aoliva@redhat.com>
+
 	* manual/Makefile ($(objpfx)stamp-summary): Require
 	check-safety.sh to pass.
 	* manual/check-safety.sh: Wish for verification that every
