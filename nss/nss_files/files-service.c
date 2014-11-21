@@ -44,8 +44,11 @@ DB_LOOKUP (servbyname, ':',
 	   {
 	     /* Must match both protocol (if specified) and name.  */
 	     if (proto != NULL && strcmp (result->s_proto, proto))
-	       continue;
-	     LOOKUP_NAME (s_name, s_aliases)
+	       /* A continue statement here breaks nss_db, because it
+		bypasses advancing to the next db entry, and it
+		doesn't make nss_files any more efficient.  */;
+	     else
+	       LOOKUP_NAME (s_name, s_aliases)
 	   },
 	   const char *name, const char *proto)
 
