@@ -1,5 +1,13 @@
 2014-11-21  Alexandre Oliva <aoliva@redhat.com>
 
+	* sysdeps/posix/ctermid.c (ctermid): Return a pointer to a
+	string literal if not passed a buffer.
+	* manual/job.texi (ctermid): Update reasoning, note deviation
+	from posix, suggest mtasurace when not passed a buffer, for
+	future non-preliminary safety notes.
+
+2014-11-21  Alexandre Oliva <aoliva@redhat.com>
+
 	* manual/users.texi (cuserid): Fix MT-Safety note for the case
 	of not passing it a buffer.
 	Reported by Peng Haitao.

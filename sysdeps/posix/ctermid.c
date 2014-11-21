@@ -19,17 +19,17 @@
 #include <string.h>
 
 
-/* Return the name of the controlling terminal.
-   If S is not NULL, the name is copied into it (it should be at
-   least L_ctermid bytes long), otherwise a static buffer is used.  */
+/* Return the name of the controlling terminal.  If S is not NULL, the
+   name is copied into it (it should be at least L_ctermid bytes
+   long), otherwise we return a pointer to a non-const but read-only
+   string literal, that POSIX states the caller must not modify.  */
 char *
-ctermid (s)
-     char *s;
+ctermid (char *s)
 {
-  static char name[L_ctermid];
+  char *name = (char /*drop const*/ *) "/dev/tty";
 
   if (s == NULL)
-    s = name;
+    return name;
 
-  return strcpy (s, "/dev/tty");
+  return strcpy (s, name);
 }

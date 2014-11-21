@@ -1039,10 +1039,12 @@ The function @code{ctermid} is declared in the header file
 @comment stdio.h
 @comment POSIX.1
 @deftypefun {char *} ctermid (char *@var{string})
-@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@safety{@prelim{}@mtsafe{@mtsposix{/!string}}@assafe{}@acsafe{}}
 @c This function is a stub by default; the actual implementation, for
-@c posix systems, returns an internal buffer if passed a NULL string,
-@c but the internal buffer is always set to /dev/tty.
+@c posix systems, returns a pointer to a string literal if passed a NULL
+@c string.  It's not clear we want to commit to being MT-Safe in the
+@c !string case, so maybe add mtasurace{:ctermid/!string} when we take
+@c prelim out, to make room for using a static buffer in the future.
 The @code{ctermid} function returns a string containing the file name of
 the controlling terminal for the current process.  If @var{string} is
 not a null pointer, it should be an array that can hold at least
