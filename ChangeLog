@@ -1,3 +1,8 @@
+2014-11-23  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/i386/init-first.c (posixland_init): Call
+	__mach_init in dlopened libc.
+
 2014-11-22  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/arm/preconfigure.ac: Delete EABI check.

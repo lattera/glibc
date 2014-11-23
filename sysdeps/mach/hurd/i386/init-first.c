@@ -72,6 +72,11 @@ posixland_init (int argc, char **argv, char **envp)
       /* Set the FPU control word to the proper default value.  */
       __setfpucw (__fpu_control);
     }
+  else
+    {
+      /* Initialize data structures so the additional libc can do RPCs.  */
+      __mach_init ();
+    }
 
   /* Save the command-line arguments.  */
   __libc_argc = argc;
