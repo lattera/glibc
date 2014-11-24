@@ -1,3 +1,8 @@
+2014-09-23  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* string/strcpy.c (strcpy):
+	Improve performance by using strlen and memcpy.
+
 2014-11-24  Leonhard Holz  <leonhard.holz@web.de>
 
 	* string/strcoll_l.c (get_next_seq): __always_inline.

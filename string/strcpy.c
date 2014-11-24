@@ -24,17 +24,6 @@
 char *
 strcpy (char *dest, const char *src)
 {
-  char c;
-  char *s = (char *) src;
-  const ptrdiff_t off = dest - s - 1;
-
-  do
-    {
-      c = *s++;
-      s[off] = c;
-    }
-  while (c != '\0');
-
-  return dest;
+  return memcpy (dest, src, strlen (src) + 1));
 }
 libc_hidden_builtin_def (strcpy)
