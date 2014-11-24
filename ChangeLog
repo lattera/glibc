@@ -1,3 +1,8 @@
+2014-11-24  Leonhard Holz  <leonhard.holz@web.de>
+
+	* string/strcoll_l.c (get_next_seq): __always_inline.
+	* string/strcoll_l.c (do_compare): __always_inline.
+
 2014-11-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* include/bits/stdlib-float.h: Use IS_IN only if _ISOMAC is

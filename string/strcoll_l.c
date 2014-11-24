@@ -63,7 +63,7 @@ typedef struct
 } coll_seq;
 
 /* Get next sequence.  Traverse the string as required.  */
-static void
+static __always_inline void
 get_next_seq (coll_seq *seq, int nrules, const unsigned char *rulesets,
 	      const USTRING_TYPE *weights, const int32_t *table,
 	      const USTRING_TYPE *extra, const int32_t *indirect,
@@ -194,7 +194,7 @@ get_next_seq (coll_seq *seq, int nrules, const unsigned char *rulesets,
 }
 
 /* Compare two sequences.  */
-static int
+static __always_inline int
 do_compare (coll_seq *seq1, coll_seq *seq2, int position,
 	    const USTRING_TYPE *weights)
 {
