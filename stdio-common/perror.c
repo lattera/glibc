@@ -56,7 +56,7 @@ perror (const char *s)
      oriented yet?  In this case we'll create a new stream which is
      using the same underlying file descriptor.  */
   if (__builtin_expect (_IO_fwide (stderr, 0) != 0, 1)
-      || (fd = fileno (stderr)) == -1
+      || (fd = __fileno (stderr)) == -1
       || (fd = __dup (fd)) == -1
       || (fp = fdopen (fd, "w+")) == NULL)
     {

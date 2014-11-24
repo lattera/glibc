@@ -1,3 +1,12 @@
+2014-11-24  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17633]
+	* stdio-common/perror.c (perror): Call __fileno instead of fileno.
+	* conform/Makefile (test-xfail-ISO/stdio.h/linknamespace): Remove
+	variable.
+	(test-xfail-ISO99/stdio.h/linknamespace): Likewise.
+	(test-xfail-ISO11/stdio.h/linknamespace): Likewise.
+
 2014-11-24  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* string/strncpy.c (strncpy): Improve performance by using memset.
