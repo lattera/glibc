@@ -1,3 +1,9 @@
+2015-01-21  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	[BZ #16418]
+	* sysdeps/unix/sysv/linux/powerpc/get_clockfreq.c (__get_clockfreq):
+	Make code racy and cancel safe.
+
 2015-01-21  Carlos O'Donell  <carlos@redhat.com>
 
 	* sysdeps/arm/unwind-resume.h: Fix copyright year.
