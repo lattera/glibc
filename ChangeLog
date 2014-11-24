@@ -1,5 +1,10 @@
 2014-11-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* include/bits/stdlib-float.h: Use IS_IN only if _ISOMAC is
+	defined.
+	* include/mqueue.h: Likewise.
+	* include/stdlib.h: Likewise.
+
 	* stdlib/isomac.c (fmt): Replace NOT_IN_libc with IN_MODULE.
 	(get_null_defines): Adjust.
 	* sunrpc/Makefile: Adjust comment.
