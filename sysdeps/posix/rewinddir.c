@@ -26,7 +26,7 @@ void
 __rewinddir (dirp)
      DIR *dirp;
 {
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
   __libc_lock_lock (dirp->lock);
 #endif
   (void) __lseek (dirp->fd, (off_t) 0, SEEK_SET);
@@ -34,7 +34,7 @@ __rewinddir (dirp)
   dirp->offset = 0;
   dirp->size = 0;
   dirp->errcode = 0;
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
   __libc_lock_unlock (dirp->lock);
 #endif
 }

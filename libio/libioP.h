@@ -902,7 +902,7 @@ _IO_acquire_lock_clear_flags2_fct (_IO_FILE **p)
     _IO_funlockfile (fp);
 }
 
-#if !defined _IO_MTSAFE_IO && !defined NOT_IN_libc
+#if !defined _IO_MTSAFE_IO && IS_IN (libc)
 # define _IO_acquire_lock(_fp)						      \
   do {									      \
     _IO_FILE *_IO_acquire_lock_file = NULL

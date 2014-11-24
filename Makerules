@@ -1228,9 +1228,6 @@ lib := nonlib
 include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 endif
 
-# The include magic above causes those files to use this variable for flags.
-CPPFLAGS-nonlib = -DNOT_IN_libc=1
-
 
 ifeq ($(build-shared),yes)
 # Generate normalized lists of symbols, versions, and data sizes.

@@ -19,7 +19,7 @@
 
 /* for strlen only SHARED version is optimized, for strcat, strncat, strnlen both STATIC and SHARED are optimized */
 
-#if (defined USE_AS_STRNLEN || defined USE_AS_STRCAT || defined SHARED) && !defined NOT_IN_libc
+#if (defined USE_AS_STRNLEN || defined USE_AS_STRCAT || defined SHARED) && IS_IN (libc)
 
 # ifndef USE_AS_STRCAT
 

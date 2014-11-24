@@ -224,7 +224,7 @@ __alloc_dir (int fd, bool close_fd, int flags, const struct stat64 *statp)
     }
 
   dirp->fd = fd;
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
   __libc_lock_init (dirp->lock);
 #endif
   dirp->allocation = allocation;

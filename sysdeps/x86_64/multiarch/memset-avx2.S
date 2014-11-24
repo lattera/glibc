@@ -18,7 +18,7 @@
 
 #include <sysdep.h>
 
-#if !defined NOT_IN_libc
+#if IS_IN (libc)
 
 #include "asm-syntax.h"
 #ifndef MEMSET

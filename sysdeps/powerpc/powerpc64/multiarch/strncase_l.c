@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 # include <string.h>
 # define strncasecmp_l __strncasecmp_l_ppc
 extern __typeof (__strncasecmp_l) __strncasecmp_l_ppc attribute_hidden;
@@ -26,7 +26,7 @@ extern __typeof (__strncasecmp_l) __strncasecmp_l_power7 attribute_hidden;
 #include <string/strncase_l.c>
 #undef strncasecmp_l
 
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 # include <shlib-compat.h>
 # include "init-arch.h"
 

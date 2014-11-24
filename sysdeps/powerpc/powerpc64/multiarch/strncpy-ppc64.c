@@ -22,7 +22,7 @@
 #define weak_alias(name, aliasname) \
   extern __typeof (__strncpy_ppc) aliasname \
     __attribute__ ((weak, alias ("__strncpy_ppc")));
-#if !defined(NOT_IN_libc) && defined(SHARED)
+#if IS_IN (libc) && defined(SHARED)
 # undef libc_hidden_builtin_def
 # define libc_hidden_builtin_def(name) \
   __hidden_ver1(__strncpy_ppc, __GI_strncpy, __strncpy_ppc);

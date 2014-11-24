@@ -18,7 +18,7 @@
 
 #include <pthreadP.h>
 
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 # ifndef TLS_MULTIPLE_THREADS_IN_TCB
 /* Variable set to a nonzero value either if more than one thread runs or ran,
    or if a single-threaded process is trying to cancel itself.  See

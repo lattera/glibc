@@ -176,7 +176,8 @@ static char *macros[] =
 /* Format string to build command to invoke compiler.  */
 static const char fmt[] = "\
 echo \"#include <%s>\" |\
-%s -E -dM -ansi -pedantic %s -D_LIBC -D_ISOMAC -DNOT_IN_libc -I. \
+%s -E -dM -ansi -pedantic %s -D_LIBC -D_ISOMAC \
+-DIN_MODULE=MODULE_extramodules -I. \
 -isystem `%s --print-prog-name=include` - 2> /dev/null > %s";
 
 
@@ -305,7 +306,7 @@ get_null_defines (void)
 	;
       result[result_len] = xstrndup (start, end - start);
 
-      if (strcmp (result[result_len], "NOT_IN_libc") != 0)
+      if (strcmp (result[result_len], "IN_MODULE") != 0)
 	{
 	  if (first)
 	    {

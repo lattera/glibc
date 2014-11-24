@@ -35,7 +35,7 @@
 
 /* We define __rtld_* copies for rtld.
    We need them visible in libc to initialize.  */
-#  if IS_IN (rtld) || !defined NOT_IN_libc
+#  if IS_IN (rtld) || IS_IN (libc)
 extern void *__rtld___vdso_read_tp;
 extern void *__rtld___vdso_atomic_cmpxchg_32;
 extern void *__rtld___vdso_atomic_barrier;
@@ -44,7 +44,7 @@ extern void *__rtld___vdso_atomic_barrier;
 extern void __vdso_read_tp_stub (void);
 extern void __vdso_atomic_cmpxchg_32_stub (void);
 extern void __vdso_atomic_barrier_stub (void);
-#  endif /* IS_IN (rtld) || !NOT_IN_libc */
+#  endif /* IS_IN (rtld) || IS_IN (libc) */
 
 /* RTLD should only use its own copies.  */
 #  if !IS_IN (rtld)

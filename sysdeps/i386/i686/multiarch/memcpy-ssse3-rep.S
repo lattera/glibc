@@ -19,7 +19,7 @@
 
 #include <sysdep.h>
 
-#if !defined NOT_IN_libc \
+#if IS_IN (libc) \
     && (defined SHARED \
 	|| defined USE_AS_MEMMOVE \
 	|| !defined USE_MULTIARCH)

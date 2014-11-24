@@ -19,7 +19,7 @@
 #include <libc-symbols.h>
 #include <sysdep.h>
 
-#if defined NOT_IN_libc
+#if !IS_IN (libc)
 /* Build a non-versioned object for rtld-*.  */
 ENTRY (_setjmp)
 	li r4,0			/* Set second argument to 0.  */
@@ -53,4 +53,4 @@ ENTRY (__vmx_setjmp)
 	b __vmx__sigsetjmp@local
 END (__vmx_setjmp)
 libc_hidden_def (__vmx_setjmp)
-#endif /* !NOT_IN_libc */
+#endif /* IS_IN (libc) */

@@ -27,7 +27,7 @@
    happen before any instructions.  So we use cfi_same_value instead of
    cfi_restore.  */
 
-#if !defined NOT_IN_libc || IS_IN (libpthread) || IS_IN (librt)
+#if IS_IN (libc) || IS_IN (libpthread) || IS_IN (librt)
 
 #ifdef __PIC__
 # undef PSEUDO

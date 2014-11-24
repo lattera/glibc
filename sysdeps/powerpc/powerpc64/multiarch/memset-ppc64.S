@@ -29,7 +29,7 @@ ENTRY (__bzero_ppc)
 END_GEN_TB (__bzero_ppc,TB_TOCLESS)
 
 
-#if defined SHARED && !defined NOT_IN_libc
+#if defined SHARED && IS_IN (libc)
 # undef EALIGN
 # define EALIGN(name, alignt, words)				\
   .section ".text";						\

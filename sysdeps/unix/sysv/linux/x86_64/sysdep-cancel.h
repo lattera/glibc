@@ -22,7 +22,7 @@
 # include <nptl/pthreadP.h>
 #endif
 
-#if !defined NOT_IN_libc || IS_IN (libpthread) || IS_IN (librt)
+#if IS_IN (libc) || IS_IN (libpthread) || IS_IN (librt)
 
 /* The code to disable cancellation depends on the fact that the called
    functions are special.  They don't modify registers other than %rax
@@ -63,7 +63,7 @@
 #  define CENABLE	call __pthread_enable_asynccancel;
 #  define CDISABLE	call __pthread_disable_asynccancel;
 #  define __local_multiple_threads __pthread_multiple_threads
-# elif !defined NOT_IN_libc
+# elif IS_IN (libc)
 #  define CENABLE	call __libc_enable_asynccancel;
 #  define CDISABLE	call __libc_disable_asynccancel;
 #  define __local_multiple_threads __libc_multiple_threads
@@ -74,7 +74,7 @@
 #  error Unsupported library
 # endif
 
-# if IS_IN (libpthread) || !defined NOT_IN_libc
+# if IS_IN (libpthread) || IS_IN (libc)
 #  ifndef __ASSEMBLER__
 extern int __local_multiple_threads attribute_hidden;
 #   define SINGLE_THREAD_P \

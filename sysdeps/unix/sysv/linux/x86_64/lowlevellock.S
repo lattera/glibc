@@ -108,7 +108,7 @@ __lll_lock_wait_private:
 	cfi_endproc
 	.size	__lll_lock_wait_private,.-__lll_lock_wait_private
 
-#ifdef NOT_IN_libc
+#if !IS_IN (libc)
 	.globl	__lll_lock_wait
 	.type	__lll_lock_wait,@function
 	.hidden	__lll_lock_wait
@@ -348,7 +348,7 @@ __lll_unlock_wake_private:
 	cfi_endproc
 	.size	__lll_unlock_wake_private,.-__lll_unlock_wake_private
 
-#ifdef NOT_IN_libc
+#if !IS_IN (libc)
 	.globl	__lll_unlock_wake
 	.type	__lll_unlock_wake,@function
 	.hidden	__lll_unlock_wake

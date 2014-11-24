@@ -20,7 +20,7 @@
 
 #include <shlib-compat.h>
 
-#if !defined NOT_IN_libc && defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)
+#if IS_IN (libc) && defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)
 /* this is a copy from debug/longjmp_chk.c because we need an unique name
    for __longjmp_chk, but it is already named via a define
    for __libc_siglongjmp in debug/longjmp_chk.c.  */

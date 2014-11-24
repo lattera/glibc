@@ -44,7 +44,7 @@ __libc_lock_define_recursive (typedef, _IO_lock_t)
 #define _IO_cleanup_region_end(_doit) \
   __libc_cleanup_region_end (_doit)
 
-#if defined _LIBC && !defined NOT_IN_libc
+#if defined _LIBC && IS_IN (libc)
 # define _IO_acquire_lock(_fp) \
   _IO_cleanup_region_start ((void (*) (void *)) _IO_funlockfile, (_fp));      \
   _IO_flockfile (_fp)

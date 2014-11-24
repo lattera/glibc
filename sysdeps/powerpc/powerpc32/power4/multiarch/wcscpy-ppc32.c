@@ -17,7 +17,7 @@
 
 #include <wchar.h>
 
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 # define WCSCPY  __wcscpy_ppc
 #endif
 

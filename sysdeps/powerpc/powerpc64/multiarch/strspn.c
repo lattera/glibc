@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 # include <string.h>
 # include <shlib-compat.h>
 # include "init-arch.h"

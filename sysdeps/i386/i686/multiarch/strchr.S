@@ -21,7 +21,7 @@
 #include <sysdep.h>
 #include <init-arch.h>
 
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 	.text
 ENTRY(strchr)
 	.type	strchr, @gnu_indirect_function

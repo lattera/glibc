@@ -23,7 +23,7 @@
 
 /* Define multiple versions only for the definition in libc. */
 
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 	.text
 ENTRY(wmemcmp)
 	.type	wmemcmp, @gnu_indirect_function

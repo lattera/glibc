@@ -19,7 +19,7 @@
 /* Define multiple versions only for the definition in lib and for
    DSO.  In static binaries we need memcpy before the initialization
    happened.  */
-#if defined SHARED && !defined NOT_IN_libc
+#if defined SHARED && IS_IN (libc)
 /* Redefine memcpy so that the compiler won't complain about the type
    mismatch with the IFUNC selector in strong_alias, below.  */
 # undef memcpy

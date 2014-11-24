@@ -21,7 +21,7 @@
 
 #define ASI_BLK_INIT_QUAD_LDD_P	0xe2
 
-#if !defined NOT_IN_libc
+#if IS_IN (libc)
 
 	.register	%g2, #scratch
 	.register	%g3, #scratch

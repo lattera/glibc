@@ -226,7 +226,7 @@ extern int __qfcvt_r (long double __value, int __ndigit,
 		      int *__restrict __decpt, int *__restrict __sign,
 		      char *__restrict __buf, size_t __len);
 
-# ifndef NOT_IN_libc
+# if IS_IN (libc)
 #  undef MB_CUR_MAX
 #  define MB_CUR_MAX (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MB_CUR_MAX))
 # endif

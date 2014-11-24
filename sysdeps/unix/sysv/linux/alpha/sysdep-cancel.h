@@ -21,7 +21,7 @@
 # include <nptl/pthreadP.h>
 #endif
 
-#if !defined NOT_IN_libc || IS_IN (libpthread) || IS_IN (librt)
+#if IS_IN (libc) || IS_IN (libpthread) || IS_IN (librt)
 
 /* ??? Assumes that nothing comes between PSEUDO and PSEUDO_END
    besides "ret".  */
@@ -117,7 +117,7 @@ __LABEL($multi_error)						\
 #  define __local_enable_asynccancel	__pthread_enable_asynccancel
 #  define __local_disable_asynccancel	__pthread_disable_asynccancel
 #  define __local_multiple_threads	__pthread_multiple_threads
-# elif !defined NOT_IN_libc
+# elif IS_IN (libc)
 #  define __local_enable_asynccancel	__libc_enable_asynccancel
 #  define __local_disable_asynccancel	__libc_disable_asynccancel
 #  define __local_multiple_threads	__libc_multiple_threads
@@ -136,7 +136,7 @@ __LABEL($multi_error)						\
 #  define CDISABLE	jsr ra, __local_disable_asynccancel; ldgp ra, 0(gp)
 # endif
 
-# if IS_IN (libpthread) || !defined NOT_IN_libc
+# if IS_IN (libpthread) || IS_IN (libc)
 #  ifndef __ASSEMBLER__
 extern int __local_multiple_threads attribute_hidden;
 #   define SINGLE_THREAD_P \

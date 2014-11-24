@@ -372,7 +372,7 @@ __LABEL(name)						\
 #else
 # include <stdint.h>
 # if (IS_IN (rtld) \
-      || (!defined SHARED && (!defined NOT_IN_libc \
+      || (!defined SHARED && (IS_IN (libc) \
 			      || IS_IN (libpthread))))
 extern uintptr_t __pointer_chk_guard_local attribute_relro attribute_hidden;
 #  define PTR_MANGLE(var) \

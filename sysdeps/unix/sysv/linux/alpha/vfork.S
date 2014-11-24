@@ -49,7 +49,7 @@ ENTRY(__libc_vfork)
 
 PSEUDO_END (__libc_vfork)
 
-#if !NOT_IN_libc
+#if IS_IN (libc)
 weak_alias (__libc_vfork, vfork)
 strong_alias (__libc_vfork, __vfork)
 libc_hidden_def (__vfork)

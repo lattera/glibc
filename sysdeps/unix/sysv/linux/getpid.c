@@ -21,7 +21,7 @@
 #include <sysdep.h>
 
 
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 static inline __attribute__((always_inline)) pid_t really_getpid (pid_t oldval);
 
 static inline __attribute__((always_inline)) pid_t
@@ -48,7 +48,7 @@ really_getpid (pid_t oldval)
 pid_t
 __getpid (void)
 {
-#ifdef NOT_IN_libc
+#if !IS_IN (libc)
   INTERNAL_SYSCALL_DECL (err);
   pid_t result = INTERNAL_SYSCALL (getpid, err, 0);
 #else

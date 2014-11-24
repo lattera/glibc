@@ -71,7 +71,7 @@
 #define LLL_SHARED	FUTEX_PRIVATE_FLAG
 
 
-#if !defined NOT_IN_libc || IS_IN (rtld)
+#if IS_IN (libc) || IS_IN (rtld)
 /* In libc.so or ld.so all futexes are private.  */
 # ifdef __ASSUME_PRIVATE_FUTEX
 #  define __lll_private_flag(fl, private) \
@@ -169,7 +169,7 @@
    value is zero.  In case the operation failed, the cmpxchg instruction
    has loaded the current value of the memory work which is guaranteed
    to be nonzero.  */
-#if defined NOT_IN_libc || defined UP
+#if !IS_IN (libc) || defined UP
 # define __lll_trylock_asm LOCK_INSTR "cmpxchgl %2, %1"
 #else
 # define __lll_trylock_asm "cmpl $0, %%gs:%P5\n\t" \
@@ -198,7 +198,7 @@
 		       : "memory");					      \
      ret; })
 
-#if defined NOT_IN_libc || defined UP
+#if !IS_IN (libc) || defined UP
 # define __lll_lock_asm_start LOCK_INSTR "cmpxchgl %1, %2\n\t"
 #else
 # define __lll_lock_asm_start "cmpl $0, %%gs:%P6\n\t"			      \
@@ -324,7 +324,7 @@ extern int __lll_timedlock_elision (int *futex, short *adapt_count,
 		       : "memory");					      \
      result; })
 
-#if defined NOT_IN_libc || defined UP
+#if !IS_IN (libc) || defined UP
 # define __lll_unlock_asm LOCK_INSTR "subl $1, %0\n\t"
 #else
 # define __lll_unlock_asm "cmpl $0, %%gs:%P3\n\t"			      \

@@ -30,7 +30,7 @@
 #  define RETVAL	(0)
 #else
 #  define RETVAL	(-8)
-#  if defined SHARED && !defined USE_MULTIARCH && !defined NOT_IN_libc
+#  if defined SHARED && !defined USE_MULTIARCH && IS_IN (libc)
 #    define memcpy	__memcpy
 #    undef libc_hidden_builtin_def
 #    define libc_hidden_builtin_def(name) \
@@ -44,7 +44,7 @@
 
         .text
 
-#if defined PIC && !defined NOT_IN_libc
+#if defined PIC && IS_IN (libc)
 ENTRY_CHK (__memcpy_chk)
 
 	cmpq	%rdx, %rcx
@@ -253,14 +253,14 @@ L(32after):
 /* Handle blocks smaller than 1/2 L1. */
 
 L(fasttry):				/* first 1/2 L1 */
-#ifndef NOT_IN_libc			/* only up to this algorithm outside of libc.so */
+#if IS_IN (libc)			/* only up to this algorithm outside of libc.so */
 	mov	__x86_data_cache_size_half(%rip), %R11_LP
 	cmpq	%rdx, %r11		/* calculate the smaller of */
 	cmovaq	%rdx, %r11		/* remaining bytes and 1/2 L1 */
 #endif
 
 L(fast):				/* good ol' MOVS */
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 	movq	%r11, %rcx
 	andq	$-8, %r11
 #else
@@ -275,7 +275,7 @@ L(fast):				/* good ol' MOVS */
 	.p2align 4,, 4
 
 L(fastskip):
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 	subq	%r11, %rdx		/* check for more */
 	testq	$-8, %rdx
 	jnz	L(fastafter)
@@ -294,7 +294,7 @@ L(fastskip):
 #endif
 	retq				/* exit */
 
-#ifndef NOT_IN_libc			/* none of the algorithms below for RTLD */
+#if IS_IN (libc)			/* none of the algorithms below for RTLD */
 
 	.p2align 4
 
@@ -570,13 +570,13 @@ L(NTskip):
 #endif
 	retq				/* exit */
 
-#endif /* !NOT_IN_libc */
+#endif /* IS_IN (libc) */
 
 END(memcpy)
 
 #ifndef USE_AS_MEMPCPY
 libc_hidden_builtin_def (memcpy)
-# if defined SHARED && !defined USE_MULTIARCH && !defined NOT_IN_libc
+# if defined SHARED && !defined USE_MULTIARCH && IS_IN (libc)
 #  undef memcpy
 #  include <shlib-compat.h>
 versioned_symbol (libc, __memcpy, memcpy, GLIBC_2_14);

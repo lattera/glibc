@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 # include <string.h>
 # define strcasecmp_l __strcasecmp_l_ppc
 
@@ -27,7 +27,7 @@ extern __typeof (__strcasecmp_l) __strcasecmp_l_power7 attribute_hidden;
 #include <string/strcasecmp_l.c>
 #undef strcasecmp_l
 
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 # include <shlib-compat.h>
 # include "init-arch.h"
 

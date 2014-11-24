@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 # undef memcpy
 /* Redefine memchr so that the compiler won't make the weak_alias point
    to internal hidden definition (__GI_memchr), since PPC32 does not

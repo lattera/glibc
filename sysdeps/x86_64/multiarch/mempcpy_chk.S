@@ -24,7 +24,7 @@
 /* Define multiple versions only for the definition in lib and for
    DSO.  There are no multiarch mempcpy functions for static binaries.
  */
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 # ifdef SHARED
 	.text
 ENTRY(__mempcpy_chk)

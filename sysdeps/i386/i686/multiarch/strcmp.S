@@ -50,7 +50,7 @@
 /* Define multiple versions only for the definition in libc.  Don't
    define multiple versions for strncmp in static library since we
    need strncmp before the initialization happened.  */
-#if (defined SHARED || !defined USE_AS_STRNCMP) && !defined NOT_IN_libc
+#if (defined SHARED || !defined USE_AS_STRNCMP) && IS_IN (libc)
 # ifdef SHARED
 	.text
 ENTRY(STRCMP)

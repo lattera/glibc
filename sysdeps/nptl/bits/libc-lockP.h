@@ -35,7 +35,7 @@
 #include <pthread-functions.h>
 
 /* Mutex type.  */
-#if defined NOT_IN_libc && !IS_IN (libpthread)
+#if !IS_IN (libc) && !IS_IN (libpthread)
 typedef pthread_mutex_t __libc_lock_t;
 #else
 typedef int __libc_lock_t;
@@ -69,7 +69,7 @@ typedef pthread_key_t __libc_key_t;
    initialized locks must be set to one due to the lack of normal
    atomic operations.) */
 
-#if !defined NOT_IN_libc || IS_IN (libpthread)
+#if IS_IN (libc) || IS_IN (libpthread)
 # if LLL_LOCK_INITIALIZER == 0
 #  define __libc_lock_define_initialized(CLASS,NAME) \
   CLASS __libc_lock_t NAME;
@@ -108,7 +108,7 @@ typedef pthread_key_t __libc_key_t;
 #endif
 
 /* Call thread functions through the function pointer table.  */
-#if defined SHARED && !defined NOT_IN_libc
+#if defined SHARED && IS_IN (libc)
 # define PTFAVAIL(NAME) __libc_pthread_functions_init
 # define __libc_ptf_call(FUNC, ARGS, ELSE) \
   (__libc_pthread_functions_init ? PTHFCT_CALL (ptr_##FUNC, ARGS) : ELSE)
@@ -125,14 +125,14 @@ typedef pthread_key_t __libc_key_t;
 
 /* Initialize the named lock variable, leaving it in a consistent, unlocked
    state.  */
-#if !defined NOT_IN_libc || IS_IN (libpthread)
+#if IS_IN (libc) || IS_IN (libpthread)
 # define __libc_lock_init(NAME) \
   ((void) ((NAME) = LLL_LOCK_INITIALIZER))
 #else
 # define __libc_lock_init(NAME) \
   __libc_maybe_call (__pthread_mutex_init, (&(NAME), NULL), 0)
 #endif
-#if defined SHARED && !defined NOT_IN_libc
+#if defined SHARED && IS_IN (libc)
 /* ((NAME) = (__libc_rwlock_t) PTHREAD_RWLOCK_INITIALIZER) is inefficient.  */
 # define __libc_rwlock_init(NAME) \
   ((void) __builtin_memset (&(NAME), '\0', sizeof (NAME)))
@@ -144,13 +144,13 @@ typedef pthread_key_t __libc_key_t;
 /* Finalize the named lock variable, which must be locked.  It cannot be
    used again until __libc_lock_init is called again on it.  This must be
    called on a lock variable before the containing storage is reused.  */
-#if !defined NOT_IN_libc || IS_IN (libpthread)
+#if IS_IN (libc) || IS_IN (libpthread)
 # define __libc_lock_fini(NAME) ((void) 0)
 #else
 # define __libc_lock_fini(NAME) \
   __libc_maybe_call (__pthread_mutex_destroy, (&(NAME)), 0)
 #endif
-#if defined SHARED && !defined NOT_IN_libc
+#if defined SHARED && IS_IN (libc)
 # define __libc_rwlock_fini(NAME) ((void) 0)
 #else
 # define __libc_rwlock_fini(NAME) \
@@ -158,7 +158,7 @@ typedef pthread_key_t __libc_key_t;
 #endif
 
 /* Lock the named lock variable.  */
-#if !defined NOT_IN_libc || IS_IN (libpthread)
+#if IS_IN (libc) || IS_IN (libpthread)
 # ifndef __libc_lock_lock
 #  define __libc_lock_lock(NAME) \
   ({ lll_lock (NAME, LLL_PRIVATE); 0; })
@@ -174,7 +174,7 @@ typedef pthread_key_t __libc_key_t;
   __libc_ptf_call (__pthread_rwlock_wrlock, (&(NAME)), 0)
 
 /* Try to lock the named lock variable.  */
-#if !defined NOT_IN_libc || IS_IN (libpthread)
+#if IS_IN (libc) || IS_IN (libpthread)
 # ifndef __libc_lock_trylock
 #  define __libc_lock_trylock(NAME) \
   lll_trylock (NAME)
@@ -193,7 +193,7 @@ typedef pthread_key_t __libc_key_t;
   __libc_maybe_call (__pthread_mutex_trylock, (&(NAME).mutex), 0)
 
 /* Unlock the named lock variable.  */
-#if !defined NOT_IN_libc || IS_IN (libpthread)
+#if IS_IN (libc) || IS_IN (libpthread)
 # define __libc_lock_unlock(NAME) \
   lll_unlock (NAME, LLL_PRIVATE)
 #else

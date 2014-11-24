@@ -18,7 +18,7 @@
 #include <string.h>
 
 #define MEMMOVE __memmove_ppc
-#if !defined(NOT_IN_libc) && defined(SHARED)
+#if IS_IN (libc) && defined(SHARED)
 # undef libc_hidden_builtin_def
 # define libc_hidden_builtin_def(name)
 #endif

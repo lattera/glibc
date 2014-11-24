@@ -20,7 +20,7 @@
 #include <rtld-global-offsets.h>
 #include <shlib-compat.h>
 
-#if defined NOT_IN_libc
+#if !IS_IN (libc)
 /* Build a non-versioned object for rtld-*.  */
 # define setjmp_symbol setjmp
 # define _setjmp_symbol _setjmp
@@ -28,7 +28,7 @@
 # define __sigjmp_save_symbol __sigjmp_save
 # include "setjmp-common.S"
 
-#else /* !NOT_IN_libc */
+#else /* IS_IN (libc) */
 /* Build a versioned object for libc.  */
 versioned_symbol (libc, __vmxsetjmp, setjmp, GLIBC_2_3_4)
 versioned_symbol (libc, __vmx_setjmp, _setjmp, GLIBC_2_3_4)
@@ -58,4 +58,4 @@ compat_symbol (libc, __novmx__sigsetjmp,__sigsetjmp, GLIBC_2_3)
 #  include "setjmp-common.S"
 strong_alias (__novmxsetjmp, __novmx__setjmp)
 # endif
-#endif /* !NOT_IN_libc */
+#endif /* IS_IN (libc) */

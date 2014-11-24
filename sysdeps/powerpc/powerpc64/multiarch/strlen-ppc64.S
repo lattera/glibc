@@ -18,7 +18,7 @@
 
 #include <sysdep.h>
 
-#if defined SHARED && !defined NOT_IN_libc
+#if defined SHARED && IS_IN (libc)
 # undef ENTRY
 # define ENTRY(name)						\
   .section ".text";						\

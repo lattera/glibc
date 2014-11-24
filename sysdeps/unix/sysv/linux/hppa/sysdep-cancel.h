@@ -22,7 +22,7 @@
 # include <nptl/pthreadP.h>
 #endif
 
-#if !defined NOT_IN_libc || IS_IN (libpthread) || IS_IN (librt)
+#if IS_IN (libc) || IS_IN (libpthread) || IS_IN (librt)
 
 # ifndef NO_ERROR
 #  define NO_ERROR -0x1000
@@ -216,7 +216,7 @@ L(pre_end):						ASM_LINE_SEP	\
 #   define CDISABLE .import __pthread_disable_asynccancel,code ASM_LINE_SEP \
 			bl __pthread_disable_asynccancel,%r2 ASM_LINE_SEP
 #  endif
-# elif !defined NOT_IN_libc
+# elif IS_IN (libc)
 #  ifdef PIC
 #   define CENABLE .import __libc_enable_asynccancel,code ASM_LINE_SEP \
 			bl __libc_enable_asynccancel,%r2 ASM_LINE_SEP
@@ -246,7 +246,7 @@ L(pre_end):						ASM_LINE_SEP	\
 
 # if IS_IN (libpthread)
 #  define __local_multiple_threads __pthread_multiple_threads
-# elif !defined NOT_IN_libc
+# elif IS_IN (libc)
 #  define __local_multiple_threads __libc_multiple_threads
 # elif IS_IN (librt)
 #  define __local_multiple_threads __librt_multiple_threads
@@ -271,7 +271,7 @@ L(pre_end):						ASM_LINE_SEP	\
 # define NO_CANCELLATION 1
 
 #endif
-/* !defined NOT_IN_libc || IS_IN (libpthread) || IS_IN (librt) */
+/* IS_IN (libc) || IS_IN (libpthread) || IS_IN (librt) */
 
 #ifndef __ASSEMBLER__
 # define RTLD_SINGLE_THREAD_P \

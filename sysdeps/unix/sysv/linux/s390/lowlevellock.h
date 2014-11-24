@@ -51,7 +51,7 @@
 #define LLL_SHARED	FUTEX_PRIVATE_FLAG
 
 
-#if !defined NOT_IN_libc || IS_IN (rtld)
+#if IS_IN (libc) || IS_IN (rtld)
 /* In libc.so or ld.so all futexes are private.  */
 # ifdef __ASSUME_PRIVATE_FUTEX
 #  define __lll_private_flag(fl, private) \

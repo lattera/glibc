@@ -19,7 +19,7 @@
 
 #include <sysdep.h>
 
-#if !defined NOT_IN_libc || IS_IN (libpthread) || IS_IN (librt)
+#if IS_IN (libc) || IS_IN (libpthread) || IS_IN (librt)
 extern int __open_nocancel (const char *, int, ...) attribute_hidden;
 extern int __close_nocancel (int) attribute_hidden;
 extern int __read_nocancel (int, void *, size_t) attribute_hidden;

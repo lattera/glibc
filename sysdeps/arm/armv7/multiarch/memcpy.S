@@ -22,7 +22,7 @@
 #include <sysdep.h>
 #include <rtld-global-offsets.h>
 
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 /* Under __ARM_NEON__, memcpy_neon.S defines the name memcpy.  */
 # ifndef __ARM_NEON__
 	.text

@@ -32,7 +32,7 @@
 /* The simplified code below is not set up to handle strncmp() so far.
    Should this become necessary it has to be implemented.  For now
    just report the problem.  */
-# ifdef NOT_IN_libc
+# if !IS_IN (libc)
 #  error "strncmp not implemented so far"
 # endif
 
@@ -51,7 +51,7 @@
 # include "locale-defines.h"
 
 /* No support for strcasecmp outside libc so far since it is not needed.  */
-# ifdef NOT_IN_libc
+# if !IS_IN (libc)
 #  error "strcasecmp_l not implemented so far"
 # endif
 
@@ -60,7 +60,7 @@
 # include "locale-defines.h"
 
 /* No support for strncasecmp outside libc so far since it is not needed.  */
-# ifdef NOT_IN_libc
+# if !IS_IN (libc)
 #  error "strncasecmp_l not implemented so far"
 # endif
 
@@ -126,7 +126,7 @@ libc_hidden_def (__strncasecmp)
 #endif
 
 ENTRY (STRCMP)
-#ifdef NOT_IN_libc
+#if !IS_IN (libc)
 /* Simple version since we can't use SSE registers in ld.so.  */
 L(oop):	movb	(%rdi), %al
 	cmpb	(%rsi), %al
@@ -144,7 +144,7 @@ L(neq):	movl	$1, %eax
 	cmovbl	%ecx, %eax
 	ret
 END (STRCMP)
-#else	/* NOT_IN_libc */
+#else	/* !IS_IN (libc) */
 # ifdef USE_AS_STRCASECMP_L
 	/* We have to fall back on the C implementation for locales
 	   with encodings not matching ASCII for single bytes.  */
@@ -2300,5 +2300,5 @@ LABEL(unaligned_table):
 	.int	LABEL(ashr_14) - LABEL(unaligned_table)
 	.int	LABEL(ashr_15) - LABEL(unaligned_table)
 	.int	LABEL(ashr_0) - LABEL(unaligned_table)
-#endif /* NOT_IN_libc */
+#endif /* !IS_IN (libc) */
 libc_hidden_builtin_def (STRCMP)

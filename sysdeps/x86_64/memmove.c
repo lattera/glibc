@@ -17,7 +17,7 @@
 
 #include "string/memmove.c"
 
-#if !defined memmove && !defined NOT_IN_libc
+#if !defined memmove && IS_IN (libc)
 #include <shlib-compat.h>
 
 #if SHLIB_COMPAT (libc, GLIBC_2_2_5, GLIBC_2_14)

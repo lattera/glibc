@@ -110,7 +110,7 @@ END {
   print "  (sizeof _sys_errlist_internal / sizeof _sys_errlist_internal [0])";
   print "const int _sys_nerr_internal = NERR;"
   print "";
-  print "#if !defined NOT_IN_libc && !defined ERRLIST_NO_COMPAT";
+  print "#if IS_IN (libc) && !defined ERRLIST_NO_COMPAT";
   print "# include <errlist-compat.c>";
   print "#endif";
   print "";

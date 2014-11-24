@@ -36,7 +36,7 @@
 #endif
 
         .text
-#if defined PIC && !defined NOT_IN_libc && !BZERO_P
+#if defined PIC && IS_IN (libc) && !BZERO_P
 ENTRY_CHK (__memset_chk)
 	movl	12(%esp), %eax
 	cmpl	%eax, 16(%esp)
@@ -99,7 +99,7 @@ ENTRY (memset)
 END (memset)
 libc_hidden_builtin_def (memset)
 
-#if defined PIC && !defined NOT_IN_libc && !BZERO_P
+#if defined PIC && IS_IN (libc) && !BZERO_P
 strong_alias (__memset_chk, __memset_zero_constant_len_parameter)
 	.section .gnu.warning.__memset_zero_constant_len_parameter
 	.string "memset used with constant zero length parameter; this could be due to transposed parameters"

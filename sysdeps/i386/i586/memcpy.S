@@ -32,7 +32,7 @@
 #define LEN	SRC+4
 
         .text
-#if defined PIC && !defined NOT_IN_libc
+#if defined PIC && IS_IN (libc)
 ENTRY (__memcpy_chk)
 	movl	12(%esp), %eax
 	cmpl	%eax, 16(%esp)

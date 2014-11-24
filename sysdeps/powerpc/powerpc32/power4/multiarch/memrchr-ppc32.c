@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 # define MEMRCHR  __memrchr_ppc
 # include <string.h>
 extern void *__memrchr_ppc (const void *, int, size_t);

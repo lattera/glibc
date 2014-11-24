@@ -27,7 +27,7 @@
 
        .text
 
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 
 ENTRY(memcmp_z196)
 	.machine "z196"
@@ -93,7 +93,7 @@ END(memcmp_z10)
 
 #include "../memcmp.S"
 
-#ifdef NOT_IN_libc
+#if !IS_IN (libc)
 .globl   memcmp
 .set     memcmp,memcmp_z900
 .weak    bcmp

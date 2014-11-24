@@ -23,7 +23,7 @@
    therefore we get PLTs.  Unnecessarily so.  Changing gcc is a big
    task which might not be worth it so we play tricks with the
    assembler.  */
-#if !defined __ASSEMBLER__ && !defined in_divdi3_c && !defined NOT_IN_libc && defined SHARED
+#if !defined __ASSEMBLER__ && !defined in_divdi3_c && IS_IN (libc) && defined SHARED
 asm ("__divdi3 = __divdi3_internal");
 asm ("__udivdi3 = __udivdi3_internal");
 asm ("__moddi3 = __moddi3_internal");

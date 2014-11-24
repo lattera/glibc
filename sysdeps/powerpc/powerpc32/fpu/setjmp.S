@@ -20,13 +20,13 @@
 #include <rtld-global-offsets.h>
 #include <shlib-compat.h>
 
-#if defined NOT_IN_libc
+#if !IS_IN (libc)
 /* Build a non-versioned object for rtld-*.  */
 # define __sigsetjmp_symbol __sigsetjmp
 # define __sigjmp_save_symbol __sigjmp_save
 # include "setjmp-common.S"
 
-#else /* !NOT_IN_libc */
+#else /* IS_IN (libc) */
 /* Build a versioned object for libc.  */
 versioned_symbol (libc, __vmx__sigsetjmp, __sigsetjmp, GLIBC_2_3_4)
 # define __sigsetjmp_symbol __vmx__sigsetjmp
@@ -43,4 +43,4 @@ compat_symbol (libc, __novmx__sigsetjmp, __sigsetjmp, GLIBC_2_0)
 #  define __sigjmp_save_symbol __novmx__sigjmp_save
 #  include "setjmp-common.S"
 # endif
-#endif /* !NOT_IN_libc */
+#endif /* IS_IN (libc) */

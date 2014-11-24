@@ -18,7 +18,7 @@
 
 #include <sysdep.h>
 
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 # undef EALIGN
 # define EALIGN(name, alignt, words)				\
   .globl C_SYMBOL_NAME(__memcmp_ppc);				\

@@ -46,7 +46,7 @@
 #define STORE(type,src,addr)	type src, [addr]
 #define STORE_INIT(src,addr)	stxa src, [addr] STORE_ASI
 
-#if !defined NOT_IN_libc
+#if IS_IN (libc)
 
 	.register	%g2,#scratch
 	.register	%g3,#scratch

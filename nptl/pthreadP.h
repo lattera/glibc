@@ -292,7 +292,7 @@ __do_cancel (void)
 #define CANCEL_RESET(oldtype) \
   __pthread_disable_asynccancel (oldtype)
 
-#if !defined NOT_IN_libc
+#if IS_IN (libc)
 /* Same as CANCEL_ASYNC, but for use in libc.so.  */
 # define LIBC_CANCEL_ASYNC() \
   __libc_enable_asynccancel ()

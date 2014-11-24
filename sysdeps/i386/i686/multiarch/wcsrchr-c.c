@@ -1,4 +1,4 @@
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 # define wcsrchr  __wcsrchr_ia32
 #endif
 

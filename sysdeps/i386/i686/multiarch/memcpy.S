@@ -24,7 +24,7 @@
 /* Define multiple versions only for the definition in lib and for
    DSO.  In static binaries we need memcpy before the initialization
    happened.  */
-#if defined SHARED && !defined NOT_IN_libc
+#if defined SHARED && IS_IN (libc)
 	.text
 ENTRY(memcpy)
 	.type	memcpy, @gnu_indirect_function

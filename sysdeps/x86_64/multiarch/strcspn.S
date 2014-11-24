@@ -41,7 +41,7 @@
 /* Define multiple versions only for the definition in libc.  Don't
    define multiple versions for strpbrk in static library since we
    need strpbrk before the initialization happened.  */
-#if (defined SHARED || !defined USE_AS_STRPBRK) && !defined NOT_IN_libc
+#if (defined SHARED || !defined USE_AS_STRPBRK) && IS_IN (libc)
 	.text
 ENTRY(STRCSPN)
 	.type	STRCSPN, @gnu_indirect_function

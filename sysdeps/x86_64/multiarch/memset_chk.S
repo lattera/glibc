@@ -21,7 +21,7 @@
 #include <init-arch.h>
 
 /* Define multiple versions only for the definition in lib.  */
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 # if defined SHARED && defined HAVE_AVX2_SUPPORT
 ENTRY(__memset_chk)
 	.type	__memset_chk, @gnu_indirect_function

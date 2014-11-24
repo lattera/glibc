@@ -34,7 +34,7 @@
 #define SYS_ify(syscall_name)	__NR_##syscall_name
 
 #if defined USE_DL_SYSINFO \
-    && (!defined NOT_IN_libc || IS_IN (libpthread))
+    && (IS_IN (libc) || IS_IN (libpthread))
 # define I386_USE_SYSENTER	1
 #else
 # undef I386_USE_SYSENTER
@@ -115,7 +115,7 @@
 
 # elif defined _LIBC_REENTRANT
 
-#  ifndef NOT_IN_libc
+#  if IS_IN (libc)
 #   define SYSCALL_ERROR_ERRNO __libc_errno
 #  else
 #   define SYSCALL_ERROR_ERRNO errno

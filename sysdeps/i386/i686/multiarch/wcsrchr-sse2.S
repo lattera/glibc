@@ -17,7 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 # include <sysdep.h>
 # define CFI_PUSH(REG)	\
 	cfi_adjust_cfa_offset (4);	\

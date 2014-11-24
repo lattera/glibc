@@ -32,7 +32,7 @@
 .text
 ENTRY(__syscall_error)
 #ifndef PIC
-# ifndef NOT_IN_libc
+# if IS_IN (libc)
 #  define SYSCALL_ERROR_ERRNO __libc_errno
 # else
 #  define SYSCALL_ERROR_ERRNO errno
@@ -55,7 +55,7 @@ ENTRY(__syscall_error)
 	lghi	%r2,-1
 	br	%r14
 # else
-#  ifndef NOT_IN_libc
+#  if IS_IN (libc)
 #   define SYSCALL_ERROR_ERRNO __libc_errno
 #  else
 #   define SYSCALL_ERROR_ERRNO errno

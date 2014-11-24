@@ -35,7 +35,7 @@
 # define SRC	DEST+4
 # define LEN	SRC+4
 
-# if defined PIC && !defined NOT_IN_libc
+# if defined PIC && IS_IN (libc)
 ENTRY_CHK (__memmove_chk)
 	movl	12(%esp), %eax
 	cmpl	%eax, 16(%esp)

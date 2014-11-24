@@ -113,7 +113,7 @@
     lghi  %r2,-1;							      \
     br    %r14
 # elif defined _LIBC_REENTRANT
-#  ifndef NOT_IN_libc
+#  if IS_IN (libc)
 #   define SYSCALL_ERROR_ERRNO __libc_errno
 #  else
 #   define SYSCALL_ERROR_ERRNO errno

@@ -228,7 +228,7 @@ L(nzCacheAligned128):
 	ori	r1,r1,0
         stw     rCHR,60(rMEMP3)
 	blt	cr6,L(cacheAligned1)
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 	lfd	0,-128(rMEMP)
 #endif
 	b	L(nzCacheAligned256)
@@ -236,7 +236,7 @@ L(nzCacheAligned128):
 L(nzCacheAligned256):
 	cmplwi	cr1,rLEN,256
 	addi	rMEMP3,rMEMP,64
-#ifdef NOT_IN_libc
+#if !IS_IN (libc)
 /* When we are not in libc we should use only GPRs to avoid the FPU lock
    interrupt.  */
 	stw	rCHR,0(rMEMP)

@@ -23,7 +23,7 @@
 #define STFLE_BITS_Z10  34 /* General instructions extension */
 #define STFLE_BITS_Z196 45 /* Distinct operands, pop ... */
 
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 
 #define IFUNC_RESOLVE(FUNC)						\
   asm (".globl " #FUNC "\n\t"						\

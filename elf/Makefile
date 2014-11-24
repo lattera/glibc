@@ -97,7 +97,6 @@ install-others += $(inst_auditdir)/sotruss-lib.so
 install-bin-script += sotruss
 generated += sotruss
 libof-sotruss-lib = extramodules
-CPPFLAGS-sotruss-lib = -DNOT_IN_libc
 $(objpfx)sotruss-lib.so: $(objpfx)sotruss-lib.os
 	$(build-module-asneeded)
 $(objpfx)sotruss-lib.so: $(common-objpfx)libc.so $(objpfx)ld.so \
@@ -437,14 +436,11 @@ $(objpfx)ldconfig: $(ldconfig-modules:%=$(objpfx)%.o)
 
 SYSCONF-FLAGS := -D'SYSCONFDIR="$(sysconfdir)"'
 CFLAGS-ldconfig.c = $(SYSCONF-FLAGS) -D'LIBDIR="$(libdir)"' \
-		    -D'SLIBDIR="$(slibdir)"' -DNOT_IN_libc
+		    -D'SLIBDIR="$(slibdir)"'
 libof-ldconfig = ldconfig
 CFLAGS-dl-cache.c = $(SYSCONF-FLAGS)
 CFLAGS-cache.c = $(SYSCONF-FLAGS)
 CFLAGS-rtld.c = $(SYSCONF-FLAGS)
-
-CPPFLAGS-.os += $(if $(filter $(@F),$(patsubst %,%.os,$(all-rtld-routines))),\
-		     -DNOT_IN_libc=1)
 
 cpp-srcs-left := $(all-rtld-routines:=.os)
 lib := rtld

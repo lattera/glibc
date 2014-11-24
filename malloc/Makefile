@@ -48,8 +48,6 @@ extra-objs = mcheck-init.o libmcheck.a
 # Include the cleanup handler.
 aux := set-freeres thread-freeres
 
-CPPFLAGS-memusagestat = -DNOT_IN_libc
-
 # The Perl script to analyze the output of the mtrace functions.
 ifneq ($(PERL),no)
 install-bin-script = mtrace

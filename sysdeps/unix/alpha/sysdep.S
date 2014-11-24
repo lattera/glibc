@@ -28,7 +28,7 @@
 	.text
 #endif
 
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 # define SYSCALL_ERROR_ERRNO __libc_errno
 #else
 # define SYSCALL_ERROR_ERRNO errno

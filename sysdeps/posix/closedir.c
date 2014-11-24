@@ -43,7 +43,7 @@ __closedir (DIR *dirp)
 
   fd = dirp->fd;
 
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
   __libc_lock_fini (dirp->lock);
 #endif
 

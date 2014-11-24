@@ -17,7 +17,7 @@
 
 #include <sysdep.h>
 
-#if defined SHARED && !defined NOT_IN_libc
+#if defined SHARED && IS_IN (libc)
 # undef EALIGN
 # define EALIGN(name, alignt, words)				\
   .globl C_SYMBOL_NAME(__strncmp_ppc);			\

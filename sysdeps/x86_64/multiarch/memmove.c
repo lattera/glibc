@@ -17,7 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 # define MEMMOVE __memmove_sse2
 # ifdef SHARED
 #  undef libc_hidden_builtin_def
@@ -41,7 +41,7 @@ extern __typeof (__redirect_memmove) __memmove_avx_unaligned attribute_hidden;
 
 #include "string/memmove.c"
 
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 # include <shlib-compat.h>
 # include "init-arch.h"
 

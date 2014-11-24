@@ -21,7 +21,7 @@
 #include <sysdep.h>
 #include <init-arch.h>
 
-#ifndef  NOT_IN_libc
+#if IS_IN (libc)
 # define CFI_POP(REG) \
 	cfi_adjust_cfa_offset (-4); \
 	cfi_restore (REG)

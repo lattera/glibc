@@ -122,7 +122,7 @@ extern void __init_cpu_features (void) attribute_hidden;
 extern const struct cpu_features *__get_cpu_features (void)
      __attribute__ ((const));
 
-# ifndef NOT_IN_libc
+# if IS_IN (libc)
 #  define __get_cpu_features()	(&__cpu_features)
 # endif
 

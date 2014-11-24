@@ -105,5 +105,3 @@ cpp-srcs-left := $($(lib)-routines) $($(lib)-sysdep_routines)
 ifneq (,$(cpp-srcs-left))
 include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 endif
-
-CPPFLAGS-$(lib) := -DNOT_IN_libc=1

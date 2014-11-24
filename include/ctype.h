@@ -11,7 +11,7 @@ libc_hidden_proto (__ctype_init)
    So defeat macro expansion with parens for this declaration.  */
 extern int (__isctype) (int __c, int __mask);
 
-# ifndef NOT_IN_libc
+# if IS_IN (libc)
 
 /* These accessors are used by the optimized macros to find the
    thread-local cache of ctype information from the current thread's
@@ -61,7 +61,7 @@ __ctype_tolower_loc (void)
 #   define __isdigit_l(c, l) ({ int __c = (c); __c >= '0' && __c <= '9'; })
 #  endif  /* Not __NO_CTYPE.  */
 
-# endif	/* Not NOT_IN_libc.  */
+# endif	/* IS_IN (libc).  */
 #endif  /* Not _ISOMAC.  */
 
 #endif /* ctype.h */

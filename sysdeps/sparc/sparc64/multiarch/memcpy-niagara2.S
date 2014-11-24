@@ -137,7 +137,7 @@
 	LOAD(ldd, base + 0x28, %x5); \
 	LOAD(ldd, base + 0x30, %x6);
 
-#if !defined NOT_IN_libc
+#if IS_IN (libc)
 
 	.register	%g2,#scratch
 	.register	%g3,#scratch

@@ -89,7 +89,7 @@ ENTRY (__brk)
 #endif
 	st	%o0, [%g1]
 #else
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 	call	HIDDEN_JUMPTARGET(__errno_location)
 #else
 	call	__errno_location

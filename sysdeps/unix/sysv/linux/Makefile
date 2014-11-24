@@ -179,7 +179,6 @@ sysdep-rtld-routines += dl-brk dl-sbrk dl-getcwd dl-openat64 dl-opendir \
 			dl-fxstatat64
 
 libof-lddlibc4 = lddlibc4
-CPPFLAGS-lddlibc4 += -DNOT_IN_libc
 
 others += pldd
 install-bin += pldd

@@ -28,7 +28,7 @@
 #define XCC xcc
 #endif
 
-#if !defined NOT_IN_libc
+#if IS_IN (libc)
 
 	.register	%g2,#scratch
 

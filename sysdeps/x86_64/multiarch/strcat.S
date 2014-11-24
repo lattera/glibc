@@ -43,7 +43,7 @@
 
 
 /* Define multiple versions only for the definition in libc.  */
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 	.text
 ENTRY(STRCAT)
 	.type	STRCAT, @gnu_indirect_function

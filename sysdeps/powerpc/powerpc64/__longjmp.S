@@ -20,11 +20,11 @@
 #include <rtld-global-offsets.h>
 #include <shlib-compat.h>
 
-#if defined NOT_IN_libc
+#if !IS_IN (libc)
 /* Build a non-versioned object for rtld-*.  */
 # include "__longjmp-common.S"
 
-#else /* !NOT_IN_libc */
+#else /* IS_IN (libc) */
 strong_alias (__vmx__longjmp, __longjmp)
 # define __longjmp  __vmx__longjmp
 # include "__longjmp-common.S"
@@ -36,4 +36,4 @@ strong_alias (__vmx__longjmp, __longjmp)
 #  define __longjmp  __novmx__longjmp
 #  include "__longjmp-common.S"
 # endif
-#endif /* !NOT_IN_libc */
+#endif /* IS_IN (libc) */

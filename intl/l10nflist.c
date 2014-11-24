@@ -324,7 +324,7 @@ _nl_normalize_codeset (codeset, name_len)
   char *retval;
   char *wp;
   size_t cnt;
-#ifdef NOT_IN_libc
+#if !IS_IN (libc)
   locale_t locale = newlocale (0, "C", NULL);
 #else
 # define locale _nl_C_locobj_ptr

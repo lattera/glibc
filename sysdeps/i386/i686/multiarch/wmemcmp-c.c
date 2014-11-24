@@ -1,6 +1,6 @@
 #include <wchar.h>
 
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 # define WMEMCMP  __wmemcmp_ia32
 #endif
 

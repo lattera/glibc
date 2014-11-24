@@ -53,6 +53,6 @@
  ASM_SIZE_DIRECTIVE(__ieee754_##name);			\
  .type __ieee754_##name, @function
 
-#if defined ASSEMBLER && !defined NOT_IN_libc
+#if defined ASSEMBLER && IS_IN (libc)
 # define __libm_error_support	HIDDEN_JUMPTARGET(__libm_error_support)
 #endif

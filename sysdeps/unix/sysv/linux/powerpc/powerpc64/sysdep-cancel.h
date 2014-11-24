@@ -23,7 +23,7 @@
 # include <nptl/pthreadP.h>
 #endif
 
-#if !defined NOT_IN_libc || IS_IN (libpthread) || IS_IN (librt)
+#if IS_IN (libc) || IS_IN (libpthread) || IS_IN (librt)
 
 # ifdef HAVE_ASM_GLOBAL_DOT_NAME
 #  define DASHDASHPFX(str) .__##str
@@ -107,7 +107,7 @@
 #   define CENABLE	bl JUMPTARGET(__pthread_enable_asynccancel); nop
 #   define CDISABLE	bl JUMPTARGET(__pthread_disable_asynccancel); nop
 #  endif
-# elif !defined NOT_IN_libc
+# elif IS_IN (libc)
 #  ifdef SHARED
 #   define CENABLE	bl JUMPTARGET(__libc_enable_asynccancel)
 #   define CDISABLE	bl JUMPTARGET(__libc_disable_asynccancel)

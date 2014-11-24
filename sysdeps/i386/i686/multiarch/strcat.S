@@ -43,7 +43,7 @@
 /* Define multiple versions only for the definition in libc.  Don't
    define multiple versions for strncat in static library since we
    need strncat before the initialization happened.  */
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 
 # ifdef SHARED
 	.text

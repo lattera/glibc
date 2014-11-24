@@ -27,7 +27,7 @@
 
        .text
 
-#if defined SHARED && !defined NOT_IN_libc
+#if defined SHARED && IS_IN (libc)
 
 ENTRY(memcpy_z196)
         .machine "z196"
@@ -88,7 +88,7 @@ END(memcpy_z10)
 
 #include "../memcpy.S"
 
-#if !defined SHARED || defined NOT_IN_libc
+#if !defined SHARED || !IS_IN (libc)
 .globl   memcpy
 .set     memcpy,memcpy_z900
 #endif

@@ -59,7 +59,7 @@
 /* Define multiple versions only for the definition in libc.  Don't
    define multiple versions for strncpy in static library since we
    need strncpy before the initialization happened.  */
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 
 # ifdef SHARED
 	.text

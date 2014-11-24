@@ -24,7 +24,7 @@
 /* Define multiple versions only for the definition in libc and for the
    DSO.  In static binaries, we need strlen before the initialization
    happened.  */
-#if defined SHARED && !defined NOT_IN_libc
+#if defined SHARED && IS_IN (libc)
 	.text
 ENTRY(strlen)
 	.type	strlen, @gnu_indirect_function

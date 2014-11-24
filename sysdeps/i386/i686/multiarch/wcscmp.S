@@ -24,7 +24,7 @@
 /* Define multiple versions only for the definition in libc and for the
    DSO.  In static binaries, we need wcscmp before the initialization
    happened.  */
-#ifndef  NOT_IN_libc
+#if IS_IN (libc)
 	.text
 ENTRY(wcscmp)
 	.type	wcscmp, @gnu_indirect_function

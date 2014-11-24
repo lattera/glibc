@@ -4,15 +4,15 @@
 
 #ifndef _ISOMAC
 /* Macros for accessing h_errno from inside libc.  */
-# if !defined NOT_IN_libc || IS_IN_LIB
+# if IS_IN_LIB
 #  undef  h_errno
-#  ifndef NOT_IN_libc
+#  if IS_IN (libc)
 #   define h_errno __libc_h_errno
 #  else
 #   define h_errno h_errno	/* For #ifndef h_errno tests.  */
 #  endif
 extern __thread int h_errno attribute_tls_model_ie;
-# endif /* !NOT_IN_libc || IS_IN_LIB */
+# endif /* IS_IN_LIB */
 # define __set_h_errno(x) (h_errno = (x))
 
 libc_hidden_proto (hstrerror)

@@ -52,8 +52,6 @@ CFLAGS-gconv_cache.c += -DGCONV_DIR='"$(gconvdir)"'
 CFLAGS-gconv_conf.c = -DGCONV_PATH='"$(gconvdir)"'
 CFLAGS-iconvconfig.c = -DGCONV_PATH='"$(gconvdir)"' -DGCONV_DIR='"$(gconvdir)"'
 
-CPPFLAGS-iconvprogs = -DNOT_IN_libc
-
 # Set libof-* for each routine.
 cpp-srcs-left := $(iconv_prog-modules) $(iconvconfig-modules)
 lib := iconvprogs

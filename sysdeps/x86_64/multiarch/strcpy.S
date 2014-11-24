@@ -57,7 +57,7 @@
 
 
 /* Define multiple versions only for the definition in libc.  */
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 	.text
 ENTRY(STRCPY)
 	.type	STRCPY, @gnu_indirect_function
