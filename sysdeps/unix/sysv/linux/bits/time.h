@@ -77,6 +77,8 @@ extern long int __sysconf (int);
 #   define CLOCK_REALTIME_ALARM		8
 /* Like CLOCK_BOOTTIME but also wakes suspended system.  */
 #   define CLOCK_BOOTTIME_ALARM		9
+/* Like CLOCK_REALTIME but in International Atomic Time.  */
+#   define CLOCK_TAI			11
 
 /* Flag to indicate time is absolute.  */
 #   define TIMER_ABSTIME		1
