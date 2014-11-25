@@ -343,7 +343,12 @@ FCT (pattern, string, string_end, no_leading_period, flags, ends, alloca_used)
 #ifdef _LIBC
 		else if (c == L('[') && *p == L('='))
 		  {
-		    UCHAR str[1];
+		    /* It's important that STR be a scalar variable rather
+		       than a one-element array, because GCC (at least 4.9.2
+		       -O2 on x86-64) can be confused by the array and
+		       diagnose a "used initialized" in a dead branch in the
+		       findidx function.  */
+		    UCHAR str;
 		    uint32_t nrules =
 		      _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
 		    const CHAR *startp = p;
@@ -355,7 +360,7 @@ FCT (pattern, string, string_end, no_leading_period, flags, ends, alloca_used)
 			c = L('[');
 			goto normal_bracket;
 		      }
-		    str[0] = c;
+		    str = c;
 
 		    c = *++p;
 		    if (c != L('=') || p[1] != L(']'))
@@ -368,7 +373,7 @@ FCT (pattern, string, string_end, no_leading_period, flags, ends, alloca_used)
 
 		    if (nrules == 0)
 		      {
-			if ((UCHAR) *n == str[0])
+			if ((UCHAR) *n == str)
 			  goto matched;
 		      }
 		    else
@@ -383,7 +388,7 @@ FCT (pattern, string, string_end, no_leading_period, flags, ends, alloca_used)
 # endif
 			const int32_t *indirect;
 			int32_t idx;
-			const UCHAR *cp = (const UCHAR *) str;
+			const UCHAR *cp = (const UCHAR *) &str;
 
 # if WIDE_CHAR_VERSION
 			table = (const int32_t *)

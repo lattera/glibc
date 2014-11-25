@@ -1,3 +1,12 @@
+2014-11-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	fnmatch: work around GCC compiler warning bug with uninit var
+	* posix/fnmatch_loop.c (FCT): Use a scalar not a one-item array.
+	This works around a bug with x86-64 GCC 4.9.2 and earlier
+	where 'gcc -O2 -Wmaybe-uninitialized' incorrectly complains
+	"../locale/weightwc.h:93:7: warning: '*((void *)&str+4)' may be
+	used uninitialized in this function [-Wmaybe-uninitialized]".
+
 2014-11-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* posix/bug-regex31.c (main): Return RES not 0.
