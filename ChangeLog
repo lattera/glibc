@@ -1,3 +1,8 @@
+2014-11-25  Anton Blanchard <anton@samba.org>
+
+	* sysdeps/powerpc/bits/atomic.h
+	(__arch_compare_and_exchange_bool_64_rel): Load from mem.
+
 2014-11-24  Sterling Augustine  <saugustine@google.com>
 
 	* sysdeps/x86_64/start.S (_start): Use ENTRY and END macros.

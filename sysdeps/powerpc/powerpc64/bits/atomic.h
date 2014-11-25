@@ -100,7 +100,7 @@
 ({									      \
   unsigned long	__tmp;							      \
   __asm __volatile (__ARCH_REL_INSTR "\n"				      \
-		    "1:	ldarx	%0,0,%2" MUTEX_HINT_REL "\n"		      \
+		    "1:	ldarx	%0,0,%1" MUTEX_HINT_REL "\n"		      \
 		    "	subf.	%0,%2,%0\n"				      \
 		    "	bne	2f\n"					      \
 		    "	stdcx.	%3,0,%1\n"				      \
