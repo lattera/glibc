@@ -33,5 +33,5 @@ main (void)
 
   free (buf);
 
-  return 0;
+  return res;
 }

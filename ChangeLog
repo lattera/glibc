@@ -1,3 +1,7 @@
+2014-11-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* posix/bug-regex31.c (main): Return RES not 0.
+
 2014-11-25  Anton Blanchard <anton@samba.org>
 
 	* sysdeps/powerpc/bits/atomic.h
