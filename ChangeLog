@@ -1,3 +1,19 @@
+2014-11-26  Adhemerval Zanella  <azanella@linux.ibm.com>
+
+	* csu/tst-atomic.c (do_test): Add atomic_exchange_and_add_{acq,rel}
+	tests.
+	* sysdeps/powerpc/bits/atomic.h
+	(__arch_atomic_exchange_and_add_32_acq): Add definition.
+	(__arch_atomic_exchange_and_add_32_rel): Likewise.
+	(atomic_exchange_and_add_acq): Likewise.
+	(atomic_exchange_and_add_rel): Likewise.
+	* sysdeps/powerpc/powerpc32/bits/atomic.h
+	(__arch_atomic_exchange_and_add_64_acq): Add definition.
+	(__arch_atomic_exchange_and_add_64_rel): Likewise.
+	* sysdeps/powerpc/powerpc64/bits/atomic.h
+	(__arch_atomic_exchange_and_add_64_acq): Add definition.
+	(__arch_atomic_exchange_and_add_64_rel): Likewise.
+
 2014-11-26  Torvald Riegel  <triegel@redhat.com>
 
 	* nptl/tpp.c (__init_sched_fifo_prio, __pthread_tpp_change_priority):

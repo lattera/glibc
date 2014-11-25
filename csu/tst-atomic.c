@@ -113,6 +113,22 @@ do_test (void)
       ret = 1;
     }
 
+  mem = 2;
+  if (atomic_exchange_and_add_acq (&mem, 11) != 2
+      || mem != 13)
+    {
+      puts ("atomic_exchange_and_add test failed");
+      ret = 1;
+    }
+
+  mem = 2;
+  if (atomic_exchange_and_add_rel (&mem, 11) != 2
+      || mem != 13)
+    {
+      puts ("atomic_exchange_and_add test failed");
+      ret = 1;
+    }
+
   mem = -21;
   atomic_add (&mem, 22);
   if (mem != 1)

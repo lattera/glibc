@@ -152,6 +152,34 @@ typedef uintmax_t uatomic_max_t;
     __val;								      \
   })
 
+#define __arch_atomic_exchange_and_add_32_acq(mem, value) \
+  ({									      \
+    __typeof (*mem) __val, __tmp;					      \
+    __asm __volatile ("1:	lwarx	%0,0,%3" MUTEX_HINT_ACQ "\n"	      \
+		      "		add	%1,%0,%4\n"			      \
+		      "		stwcx.	%1,0,%3\n"			      \
+		      "		bne-	1b\n"				      \
+		      __ARCH_ACQ_INSTR					      \
+		      : "=&b" (__val), "=&r" (__tmp), "=m" (*mem)	      \
+		      : "b" (mem), "r" (value), "m" (*mem)		      \
+		      : "cr0", "memory");				      \
+    __val;								      \
+  })
+
+#define __arch_atomic_exchange_and_add_32_rel(mem, value) \
+  ({									      \
+    __typeof (*mem) __val, __tmp;					      \
+    __asm __volatile (__ARCH_REL_INSTR "\n"				      \
+		      "1:	lwarx	%0,0,%3" MUTEX_HINT_REL "\n"	      \
+		      "		add	%1,%0,%4\n"			      \
+		      "		stwcx.	%1,0,%3\n"			      \
+		      "		bne-	1b"				      \
+		      : "=&b" (__val), "=&r" (__tmp), "=m" (*mem)	      \
+		      : "b" (mem), "r" (value), "m" (*mem)		      \
+		      : "cr0", "memory");				      \
+    __val;								      \
+  })
+
 #define __arch_atomic_increment_val_32(mem) \
   ({									      \
     __typeof (*(mem)) __val;						      \
@@ -248,6 +276,28 @@ typedef uintmax_t uatomic_max_t;
       __result = __arch_atomic_exchange_and_add_32 (mem, value);	      \
     else if (sizeof (*mem) == 8)					      \
       __result = __arch_atomic_exchange_and_add_64 (mem, value);	      \
+    else 								      \
+       abort ();							      \
+    __result;								      \
+  })
+#define atomic_exchange_and_add_acq(mem, value) \
+  ({									      \
+    __typeof (*(mem)) __result;						      \
+    if (sizeof (*mem) == 4)						      \
+      __result = __arch_atomic_exchange_and_add_32_acq (mem, value);	      \
+    else if (sizeof (*mem) == 8)					      \
+      __result = __arch_atomic_exchange_and_add_64_acq (mem, value);	      \
+    else 								      \
+       abort ();							      \
+    __result;								      \
+  })
+#define atomic_exchange_and_add_rel(mem, value) \
+  ({									      \
+    __typeof (*(mem)) __result;						      \
+    if (sizeof (*mem) == 4)						      \
+      __result = __arch_atomic_exchange_and_add_32_rel (mem, value);	      \
+    else if (sizeof (*mem) == 8)					      \
+      __result = __arch_atomic_exchange_and_add_64_rel (mem, value);	      \
     else 								      \
        abort ();							      \
     __result;								      \

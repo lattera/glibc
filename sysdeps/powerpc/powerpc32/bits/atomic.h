@@ -98,6 +98,12 @@
 #define __arch_atomic_exchange_and_add_64(mem, value) \
     ({ abort (); (*mem) = (value); })
 
+#define __arch_atomic_exchange_and_add_64_acq(mem, value) \
+    ({ abort (); (*mem) = (value); })
+
+#define __arch_atomic_exchange_and_add_64_rel(mem, value) \
+    ({ abort (); (*mem) = (value); })
+
 #define __arch_atomic_increment_val_64(mem) \
     ({ abort (); (*mem)++; })
 
