@@ -1,3 +1,16 @@
+2014-11-26  Torvald Riegel  <triegel@redhat.com>
+
+	* nptl/tpp.c (__init_sched_fifo_prio, __pthread_tpp_change_priority):
+	Change synchronization of __sched_fifo_min_prio and
+	__sched_fifo_max_prio.
+	* nptl/pthread_mutexattr_getprioceiling.c
+	(pthread_mutexattr_getprioceiling): Likewise.
+	* nptl/pthread_mutexattr_setprioceiling.c
+	(pthread_mutexattr_setprioceiling): Likewise.
+	* nptl/pthread_mutex_init.c (__pthread_mutex_init): Likewise.
+	* nptl/pthread_mutex_setprioceiling.c (pthread_mutex_setprioceiling):
+	Likewise.
+
 2014-11-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* setjmp/jmpbug.c (test): Make foo volatile and cast it to

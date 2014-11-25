@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <pthreadP.h>
+#include <atomic.h>
 
 
 int
@@ -35,10 +36,11 @@ pthread_mutexattr_getprioceiling (attr, prioceiling)
 
   if (! ceiling)
     {
-      if (__sched_fifo_min_prio == -1)
+      /* See __init_sched_fifo_prio.  */
+      if (atomic_load_relaxed (&__sched_fifo_min_prio) == -1)
 	__init_sched_fifo_prio ();
-      if (ceiling < __sched_fifo_min_prio)
-	ceiling = __sched_fifo_min_prio;
+      if (ceiling < atomic_load_relaxed (&__sched_fifo_min_prio))
+	ceiling = atomic_load_relaxed (&__sched_fifo_min_prio);
     }
 
   *prioceiling = ceiling;

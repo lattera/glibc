@@ -22,6 +22,7 @@
 #include <string.h>
 #include <kernel-features.h>
 #include "pthreadP.h"
+#include <atomic.h>
 
 #include <stap-probe.h>
 
@@ -117,10 +118,11 @@ __pthread_mutex_init (mutex, mutexattr)
 		    >> PTHREAD_MUTEXATTR_PRIO_CEILING_SHIFT;
       if (! ceiling)
 	{
-	  if (__sched_fifo_min_prio == -1)
+	  /* See __init_sched_fifo_prio.  */
+	  if (atomic_load_relaxed (&__sched_fifo_min_prio) == -1)
 	    __init_sched_fifo_prio ();
-	  if (ceiling < __sched_fifo_min_prio)
-	    ceiling = __sched_fifo_min_prio;
+	  if (ceiling < atomic_load_relaxed (&__sched_fifo_min_prio))
+	    ceiling = atomic_load_relaxed (&__sched_fifo_min_prio);
 	}
       mutex->__data.__lock = ceiling << PTHREAD_MUTEX_PRIO_CEILING_SHIFT;
       break;

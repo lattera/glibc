@@ -23,17 +23,29 @@
 #include <pthreadP.h>
 #include <sched.h>
 #include <stdlib.h>
+#include <atomic.h>
 
 
 int __sched_fifo_min_prio = -1;
 int __sched_fifo_max_prio = -1;
 
+/* We only want to initialize __sched_fifo_min_prio and __sched_fifo_max_prio
+   once.  The standard solution would be similar to pthread_once, but then
+   readers would need to use an acquire fence.  In this specific case,
+   initialization is comprised of just idempotent writes to two variables
+   that have an initial value of -1.  Therefore, we can treat each variable as
+   a separate, at-least-once initialized value.  This enables using just
+   relaxed MO loads and stores, but requires that consumers check for
+   initialization of each value that is to be used; see
+   __pthread_tpp_change_priority for an example.
+ */
 void
 __init_sched_fifo_prio (void)
 {
-  __sched_fifo_max_prio = sched_get_priority_max (SCHED_FIFO);
-  atomic_write_barrier ();
-  __sched_fifo_min_prio = sched_get_priority_min (SCHED_FIFO);
+  atomic_store_relaxed (&__sched_fifo_max_prio,
+			sched_get_priority_max (SCHED_FIFO));
+  atomic_store_relaxed (&__sched_fifo_min_prio,
+			sched_get_priority_min (SCHED_FIFO));
 }
 
 int
@@ -41,49 +53,59 @@ __pthread_tpp_change_priority (int previous_prio, int new_prio)
 {
   struct pthread *self = THREAD_SELF;
   struct priority_protection_data *tpp = THREAD_GETMEM (self, tpp);
+  int fifo_min_prio = atomic_load_relaxed (&__sched_fifo_min_prio);
+  int fifo_max_prio = atomic_load_relaxed (&__sched_fifo_max_prio);
 
   if (tpp == NULL)
     {
-      if (__sched_fifo_min_prio == -1)
-	__init_sched_fifo_prio ();
+      /* See __init_sched_fifo_prio.  We need both the min and max prio,
+         so need to check both, and run initialization if either one is
+         not initialized.  The memory model's write-read coherence rule
+         makes this work.  */
+      if (fifo_min_prio == -1 || fifo_max_prio == -1)
+	{
+	  __init_sched_fifo_prio ();
+	  fifo_min_prio = atomic_load_relaxed (&__sched_fifo_min_prio);
+	  fifo_max_prio = atomic_load_relaxed (&__sched_fifo_max_prio);
+	}
 
       size_t size = sizeof *tpp;
-      size += (__sched_fifo_max_prio - __sched_fifo_min_prio + 1)
+      size += (fifo_max_prio - fifo_min_prio + 1)
 	      * sizeof (tpp->priomap[0]);
       tpp = calloc (size, 1);
       if (tpp == NULL)
 	return ENOMEM;
-      tpp->priomax = __sched_fifo_min_prio - 1;
+      tpp->priomax = fifo_min_prio - 1;
       THREAD_SETMEM (self, tpp, tpp);
     }
 
   assert (new_prio == -1
-	  || (new_prio >= __sched_fifo_min_prio
-	      && new_prio <= __sched_fifo_max_prio));
+	  || (new_prio >= fifo_min_prio
+	      && new_prio <= fifo_max_prio));
   assert (previous_prio == -1
-	  || (previous_prio >= __sched_fifo_min_prio
-	      && previous_prio <= __sched_fifo_max_prio));
+	  || (previous_prio >= fifo_min_prio
+	      && previous_prio <= fifo_max_prio));
 
   int priomax = tpp->priomax;
   int newpriomax = priomax;
   if (new_prio != -1)
     {
-      if (tpp->priomap[new_prio - __sched_fifo_min_prio] + 1 == 0)
+      if (tpp->priomap[new_prio - fifo_min_prio] + 1 == 0)
 	return EAGAIN;
-      ++tpp->priomap[new_prio - __sched_fifo_min_prio];
+      ++tpp->priomap[new_prio - fifo_min_prio];
       if (new_prio > priomax)
 	newpriomax = new_prio;
     }
 
   if (previous_prio != -1)
     {
-      if (--tpp->priomap[previous_prio - __sched_fifo_min_prio] == 0
+      if (--tpp->priomap[previous_prio - fifo_min_prio] == 0
 	  && priomax == previous_prio
 	  && previous_prio > new_prio)
 	{
 	  int i;
-	  for (i = previous_prio - 1; i >= __sched_fifo_min_prio; --i)
-	    if (tpp->priomap[i - __sched_fifo_min_prio])
+	  for (i = previous_prio - 1; i >= fifo_min_prio; --i)
+	    if (tpp->priomap[i - fifo_min_prio])
 	      break;
 	  newpriomax = i;
 	}

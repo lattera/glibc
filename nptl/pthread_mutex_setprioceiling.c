@@ -20,6 +20,7 @@
 #include <stdbool.h>
 #include <errno.h>
 #include <pthreadP.h>
+#include <atomic.h>
 
 
 int
@@ -33,15 +34,19 @@ pthread_mutex_setprioceiling (mutex, prioceiling, old_ceiling)
   if ((mutex->__data.__kind & PTHREAD_MUTEX_PRIO_PROTECT_NP) == 0)
     return EINVAL;
 
-  if (__sched_fifo_min_prio == -1)
+  /* See __init_sched_fifo_prio.  */
+  if (atomic_load_relaxed (&__sched_fifo_min_prio) == -1
+      || atomic_load_relaxed (&__sched_fifo_max_prio) == -1)
     __init_sched_fifo_prio ();
 
-  if (__builtin_expect (prioceiling < __sched_fifo_min_prio, 0)
-      || __builtin_expect (prioceiling > __sched_fifo_max_prio, 0)
-      || __builtin_expect ((prioceiling
+  if (__glibc_unlikely (prioceiling
+			< atomic_load_relaxed (&__sched_fifo_min_prio))
+      || __glibc_unlikely (prioceiling
+			   > atomic_load_relaxed (&__sched_fifo_max_prio))
+      || __glibc_unlikely ((prioceiling
 			    & (PTHREAD_MUTEXATTR_PRIO_CEILING_MASK
 			       >> PTHREAD_MUTEXATTR_PRIO_CEILING_SHIFT))
-			   != prioceiling, 0))
+			   != prioceiling))
     return EINVAL;
 
   /* Check whether we already hold the mutex.  */
