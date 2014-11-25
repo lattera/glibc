@@ -55,11 +55,7 @@
 
 #include <sysdep.h>
 
-	.text
-	.globl _start
-	.type _start,@function
-_start:
-	cfi_startproc
+ENTRY (_start)
 	/* Clearing frame pointer is insufficient, use CFI.  */
 	cfi_undefined (rip)
 	/* Clear the frame pointer.  The ABI suggests this be done, to mark
@@ -123,7 +119,7 @@ _start:
 #endif
 
 	hlt			/* Crash if somehow `exit' does return.	 */
-	cfi_endproc
+END (_start)
 
 /* Define a symbol for the first piece of initialized data.  */
 	.data
