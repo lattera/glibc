@@ -136,7 +136,7 @@ static const struct hex_test hex_tests[] =
   };
 
 static int
-test_hex_in_one_mode (double d, const char *fmt, const char *expected[4],
+test_hex_in_one_mode (double d, const char *fmt, const char *const expected[4],
 		      const char *mode_name)
 {
   char buf[100];
