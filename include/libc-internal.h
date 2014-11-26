@@ -70,4 +70,10 @@ extern void __init_misc (int, char **, char **);
 #define PTR_ALIGN_UP(base, size) \
   ((__typeof__ (base)) ALIGN_UP ((uintptr_t) (base), (size)))
 
+/* Ignore the value of an expression when a cast to void does not
+   suffice (in particular, for a call to a function declared with
+   attribute warn_unused_result).  */
+#define ignore_value(x) \
+  ({ __typeof__ (x) __ignored_value = (x); (void) __ignored_value; })
+
 #endif /* _LIBC_INTERNAL  */
