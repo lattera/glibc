@@ -1,3 +1,11 @@
+2014-12-01  James Lemke  <jwlemke@codesourcery.com>
+
+	[BZ #17581]
+	* malloc/hooks.c
+	(mem2mem_check): Add a terminator to the chain of checking blocks.
+	(malloc_check_get_size): Use it here.
+	(mem2chunk_check): Ditto.
+
 2014-12-01  Rajalakshmi Srinivasaraghavan <raji@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/strtok.S: New file.
