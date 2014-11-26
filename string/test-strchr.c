@@ -44,6 +44,7 @@
 # define MIDDLE_CHAR 127
 # define SMALL_CHAR 23
 # define UCHAR unsigned char
+# define L(s) s
 #else
 # include <wchar.h>
 # define STRCHR wcschr
@@ -53,6 +54,7 @@
 # define MIDDLE_CHAR 1121
 # define SMALL_CHAR 851
 # define UCHAR wchar_t
+# define L(s) L ## s
 #endif
 
 #ifdef USE_FOR_STRCHRNUL
@@ -219,9 +221,9 @@ do_random_tests (void)
 static void
 check1 (void)
 {
-  char s[] __attribute__((aligned(16))) = "\xff";
-  char c = '\xfe';
-  char *exp_result = stupid_STRCHR (s, c);
+  CHAR s[] __attribute__((aligned(16))) = L ("\xff");
+  CHAR c = L ('\xfe');
+  CHAR *exp_result = stupid_STRCHR (s, c);
 
   FOR_EACH_IMPL (impl, 0)
     check_result (impl, s, c, exp_result);

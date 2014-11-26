@@ -1,3 +1,10 @@
+2014-11-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* string/test-strchr.c [!WIDE] (L): New macro.
+	[WIDE] (L): Likewise.
+	(check1): Use CHAR instead of char.  Use L on string and character
+	constants.
+
 2014-11-26  Adhemerval Zanella  <azanella@linux.ibm.com>
 
 	* csu/tst-atomic.c (do_test): Add atomic_exchange_and_add_{acq,rel}
