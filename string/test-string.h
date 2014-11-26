@@ -18,7 +18,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sys/cdefs.h>
-#define TEST_IFUNC
 
 typedef struct
 {
@@ -105,7 +104,7 @@ size_t iterations = 100000;
 #define CALL(impl, ...)	\
   (* (proto_t) (impl)->fn) (__VA_ARGS__)
 
-#if defined TEST_IFUNC && defined TEST_NAME
+#ifdef TEST_NAME
 /* Increase size of FUNC_LIST if assert is triggered at run-time.  */
 static struct libc_ifunc_impl func_list[32];
 static int func_count;
@@ -164,7 +163,7 @@ static impl_t *impl_array;
 static void
 test_init (void)
 {
-#if defined TEST_IFUNC && defined TEST_NAME
+#ifdef TEST_NAME
   func_count = __libc_ifunc_impl_list (TEST_NAME, func_list,
 				       (sizeof func_list
 					/ sizeof func_list[0]));

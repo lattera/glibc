@@ -135,9 +135,6 @@ tests = backtrace-tst tst-longjmp_chk tst-chk1 tst-chk2 tst-chk3 \
 	tst-longjmp_chk2 tst-backtrace2 tst-backtrace3 tst-backtrace4 \
 	tst-backtrace5 tst-backtrace6
 
-tests-ifunc := $(stpcpy_chk strcpy_chk:%=test-%-ifunc)
-tests += $(tests-ifunc)
-
 extra-libs = libSegFault libpcprofile
 extra-libs-others = $(extra-libs)
 

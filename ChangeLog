@@ -1,5 +1,25 @@
 2014-11-26  Joseph Myers  <joseph@codesourcery.com>
 
+	* debug/test-stpcpy_chk-ifunc.c: Remove file.
+	* debug/test-strcpy_chk-ifunc.c: Likewise.
+	* wcsmbs/test-wcschr-ifunc.c: Likewise.
+	* wcsmbs/test-wcscmp-ifunc.c: Likewise.
+	* wcsmbs/test-wcscpy-ifunc.c: Likewise.
+	* wcsmbs/test-wcslen-ifunc.c: Likewise.
+	* wcsmbs/test-wcsrchr-ifunc.c: Likewise.
+	* wcsmbs/test-wmemcmp-ifunc.c: Likewise.
+	* Rules [$(multi-arch) = no] (tests): Do not filter out
+	$(tests-ifunc).
+	[$(multi-arch) = no] (xtests): Do not filter out $(xtests-ifunc).
+	* debug/Makefile (tests-ifunc): Remove variable.
+	(tests): Do not add $(tests-ifunc).
+	* wcsmbs/Makefile (tests-ifunc): Remove variable.
+	(tests): Do not add $(tests-ifunc).
+	* benchtests/bench-string.h (TEST_IFUNC): Remove macro.
+	[TEST_IFUNC]: Remove conditionals.
+	* string/test-string.h (TEST_IFUNC): Remove macro.
+	[TEST_IFUNC]: Remove conditionals.
+
 	* string/test-strchr.c [!WIDE] (L): New macro.
 	[WIDE] (L): Likewise.
 	(check1): Use CHAR instead of char.  Use L on string and character
