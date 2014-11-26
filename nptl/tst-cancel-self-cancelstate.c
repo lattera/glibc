@@ -29,7 +29,7 @@ do_test (void)
   int ret = 0;
   volatile int should_fail = 1;
 
-  pthread_cleanup_push (cleanup, &should_fail);
+  pthread_cleanup_push (cleanup, (void *) &should_fail);
 
   if ((ret = pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, NULL)) != 0)
     {
