@@ -52,9 +52,19 @@ do_test (void)
 
   rewind (fptr);
   ret1 = fwscanf (fptr, L"%c%c", &arg1, &arg2);
+  if (ret1 != 2)
+    {
+      printf ("first fwscanf returned %d, expected 2\n", ret1);
+      return 3;
+    }
 
   rewind (fptr);
   ret2 = fwscanf (fptr, L"%c%n%c", &arg1, &num, &arg2);
+  if (ret2 != 2)
+    {
+      printf ("second fwscanf returned %d, expected 2\n", ret2);
+      return 4;
+    }
 
   if (arg2 != 'd')
     {

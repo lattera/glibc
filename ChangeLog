@@ -1,5 +1,8 @@
 2014-11-26  Joseph Myers  <joseph@codesourcery.com>
 
+	* libio/bug-rewind.c (do_test): Check fwscanf return values.
+	* libio/bug-rewind2.c (do_test): Likewise.
+
 	* debug/test-stpcpy_chk-ifunc.c: Remove file.
 	* debug/test-strcpy_chk-ifunc.c: Likewise.
 	* wcsmbs/test-wcschr-ifunc.c: Likewise.

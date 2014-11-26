@@ -45,6 +45,11 @@ do_test (void)
 
       rewind (fp);
       ret = fwscanf (fp, L"%c", dummy);
+      if (ret != 1)
+	{
+	  printf ("fwscanf returned %d, expected 1\n", ret);
+	  result = 1;
+	}
 
       printf ("current pos = %ld\n", ftell (fp));
       if (ftell (fp) != 1)
