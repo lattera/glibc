@@ -14,7 +14,7 @@ static void
 test (int x)
 {
   jmp_buf buf;
-  char *foo;
+  char *volatile foo;
   int arr[100];
 
   arr[77] = x;
@@ -25,6 +25,7 @@ test (int x)
     }
 
   foo = (char *) alloca (128);
+  (void) foo;
   sub5 (buf);
 }
 

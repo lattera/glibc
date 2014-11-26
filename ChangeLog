@@ -1,3 +1,8 @@
+2014-11-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* setjmp/jmpbug.c (test): Make foo volatile and cast it to
+	void.
+
 2014-11-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* stdio-common/tst-printf-round.c (test_hex_in_one_mode): Make
