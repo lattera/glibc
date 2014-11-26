@@ -79,7 +79,7 @@ long double __frexpl(long double x, int *eptr)
       if (ix == 0
 	  && (int64_t) (hx ^ lx) < 0)
 	{
-	  hx += 1L << 52;
+	  hx += 1LL << 52;
 	  expon -= 1;
 	}
 
@@ -126,7 +126,7 @@ long double __frexpl(long double x, int *eptr)
 		     be wrong since the returned low double will be
 		     zero.  This can happen if the input was
 		     something weird like 0x1p1000 - 0x1p-1000.  */
-		  hx -= 1L << 52;
+		  hx -= 1LL << 52;
 		  expon += 1;
 		}
 	    }

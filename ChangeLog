@@ -1,5 +1,10 @@
 2014-11-26  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16619]
+	[BZ #16740]
+	* sysdeps/ieee754/ldbl-128ibm/s_frexpl.c (__frexpl): Use 1LL << 52
+	instead of 1L << 52.
+
 	* libio/bug-rewind.c (do_test): Check fwscanf return values.
 	* libio/bug-rewind2.c (do_test): Likewise.
 
