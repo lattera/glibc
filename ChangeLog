@@ -1,5 +1,8 @@
 2014-11-26  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/mips/__longjmp.c (____longjmp): Use prototype
+	definition.
+
 	* nptl/tst-cancel-self-cancelstate.c (do_test): Cast argument of
 	pthread_cleanup_push to void *.
 
