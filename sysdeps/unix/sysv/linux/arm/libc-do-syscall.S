@@ -15,6 +15,9 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+/* When this file is built for inclusion in nscd, _FORTIFY_SOURCE is
+   defined but -O is not used, resulting in a warning from features.h.  */
+#undef _FORTIFY_SOURCE
 #include <sysdep.h>
 
 /* Out-of-line syscall stub.  We expect the system call number in ip
