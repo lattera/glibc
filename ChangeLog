@@ -1,3 +1,8 @@
+2014-11-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* nss/tst-nss-test1.c (do_test): Use %td printf format for pointer
+	difference, not %ju.
+
 2014-11-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* include/libc-internal.h (ignore_value): New macro.

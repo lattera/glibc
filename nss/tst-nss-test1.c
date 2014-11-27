@@ -21,7 +21,7 @@ do_test (void)
     if (p->pw_uid != *np || strncmp (p->pw_name, "name", 4) != 0
 	|| atol (p->pw_name + 4) != *np)
       {
-	printf ("passwd entry %ju wrong (%s, %u)\n",
+	printf ("passwd entry %td wrong (%s, %u)\n",
 		np - pwdids, p->pw_name, p->pw_uid);
 	retval = 1;
 	break;
