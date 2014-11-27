@@ -1,3 +1,10 @@
+2014-11-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* string/bits/string3.h (__warn_memset_zero_len): Don't
+	declare for gcc newer than 5.0.
+	(memset): Don't test for zero-length __LEN for gcc newer than
+	5.0.
+
 2014-11-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* stdio-common/tst-fmemopen.c (do_test): Cast st_size values to
