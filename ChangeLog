@@ -1,3 +1,8 @@
+2014-11-27  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* nscd/connections.c: Include libc-internal.h because of macro
+	usage ignore_value.
+
 2014-11-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* string/bits/string3.h (__warn_memset_zero_len): Don't
