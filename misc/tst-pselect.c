@@ -39,9 +39,12 @@ do_test (void)
       return 1;
     }
 
-  if (sigblock (sigmask (SIGUSR1)) != 0)
+  sigset_t ss_usr1;
+  sigemptyset (&ss_usr1);
+  sigaddset (&ss_usr1, SIGUSR1);
+  if (sigprocmask (SIG_BLOCK, &ss_usr1, NULL) != 0)
     {
-      puts ("sigblock failed");
+      puts ("sigprocmask failed");
       return 1;
     }
 

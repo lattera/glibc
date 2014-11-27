@@ -1,5 +1,8 @@
 2014-11-27  Joseph Myers  <joseph@codesourcery.com>
 
+	* misc/tst-pselect.c (do_test): Use sigprocmask instead of
+	sigblock.
+
 	* libio/bug-ungetwc1.c (do_test): Verify results of getwc and
 	feof.
 
