@@ -1,5 +1,8 @@
 2014-11-27  Joseph Myers  <joseph@codesourcery.com>
 
+	* libio/bug-ungetwc1.c (do_test): Verify results of getwc and
+	feof.
+
 	* dlfcn/failtestmod.c (constr): Do not store result of dlsym in a
 	variable.
 

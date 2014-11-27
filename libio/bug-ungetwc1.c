@@ -53,8 +53,22 @@ do_test (void)
   /* Read from the file. */
   fp = fopen (fname, "r");
 
+  size_t i = 0;
   while (!feof (fp))
-    wc = getwc (fp);
+    {
+      wc = getwc (fp);
+      if (i >= sizeof (write_chars))
+	{
+	  printf ("Did not get end-of-file when expected.\n");
+	  return 1;
+	}
+      else if (wc != (write_chars[i] ? write_chars[i] : WEOF))
+	{
+	  printf ("Unexpected %lu from getwc.\n", (unsigned long int) wc);
+	  return 1;
+	}
+      i++;
+    }
   printf ("\nThe end-of-file indicator is set.\n");
 
   /* Unget a wide character. */
@@ -63,7 +77,10 @@ do_test (void)
 
   /* Check the end-of-file indicator. */
   if (feof (fp))
-    printf ("The end-of-file indicator is still set.\n");
+    {
+      printf ("The end-of-file indicator is still set.\n");
+      return 1;
+    }
   else
     printf ("The end-of-file flag is cleared.\n");
 
