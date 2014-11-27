@@ -108,13 +108,13 @@ do_test (void)
 				  MAP_SHARED, fd, 0)) == MAP_FAILED)
     {
       printf ("mmap (NULL, %zu, PROT_READ, MAP_SHARED, %i, 0) failed\n",
-	      fs.st_size, fd);
+	      (size_t) fs.st_size, fd);
       return 5;
     }
 
   if ((fp = fmemopen (mmap_data, fs.st_size, "r")) == NULL)
     {
-      printf ("fmemopen (%p, %zu) failed\n", mmap_data, fs.st_size);
+      printf ("fmemopen (%p, %zu) failed\n", mmap_data, (size_t) fs.st_size);
       return 1;
     }
 

@@ -1,5 +1,8 @@
 2014-11-27  Joseph Myers  <joseph@codesourcery.com>
 
+	* stdio-common/tst-fmemopen.c (do_test): Cast st_size values to
+	size_t for %zu format.
+
 	* nss/tst-nss-test1.c (do_test): Use %td printf format for pointer
 	difference, not %ju.
 
