@@ -1,3 +1,8 @@
+2014-11-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* dlfcn/failtestmod.c (constr): Do not store result of dlsym in a
+	variable.
+
 2014-11-27  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* nscd/connections.c: Include libc-internal.h because of macro

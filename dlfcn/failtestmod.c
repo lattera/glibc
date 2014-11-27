@@ -8,7 +8,6 @@ __attribute__ ((__constructor__))
 constr (void)
 {
   void *handle;
-  void *m;
 
   /* Open the library.  */
   handle = dlopen (NULL, RTLD_NOW);
@@ -19,7 +18,7 @@ constr (void)
     }
 
   /* Get a symbol.  */
-  m = dlsym (handle, "main");
+  dlsym (handle, "main");
   puts ("called dlsym() to get main");
 
   dlclose (handle);
