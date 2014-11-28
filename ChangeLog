@@ -1,3 +1,23 @@
+2014-11-28  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #13862]
+	* elf/dl-tls.c: Include <atomic.h>.
+	(oom): Remove #ifdef SHARED/#endif.
+	(_dl_static_dtv, _dl_initial_dtv): Moved before ...
+	(_dl_resize_dtv): This.  Extracted from _dl_update_slotinfo.
+	(_dl_allocate_tls_init): Resize DTV if the current DTV isn't
+	big enough.
+	(_dl_update_slotinfo): Call _dl_resize_dtv to resize DTV.
+	* nptl/Makefile (tests): Add tst-stack4.
+	(modules-names): Add tst-stack4mod.
+	($(objpfx)tst-stack4): New.
+	(tst-stack4mod.sos): Likewise.
+	($(objpfx)tst-stack4.out): Likewise.
+	($(tst-stack4mod.sos)): Likewise.
+	(clean): Likewise.
+	* nptl/tst-stack4.c: New file.
+	* nptl/tst-stack4mod.c: Likewise.
+
 2014-11-27  J. Brown  <jb999@gmx.de>
 
 	* sysdeps/x86/bits/string.h: Add recent CPUs.

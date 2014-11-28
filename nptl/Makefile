@@ -254,7 +254,7 @@ tests = tst-typesizes \
 	tst-exec1 tst-exec2 tst-exec3 tst-exec4 \
 	tst-exit1 tst-exit2 tst-exit3 \
 	tst-stdio1 tst-stdio2 \
-	tst-stack1 tst-stack2 tst-stack3 tst-pthread-getattr \
+	tst-stack1 tst-stack2 tst-stack3 tst-stack4 tst-pthread-getattr \
 	tst-pthread-attr-affinity \
 	tst-unload \
 	tst-dlsym1 \
@@ -311,7 +311,7 @@ endif
 
 modules-names = tst-atfork2mod tst-tls3mod tst-tls4moda tst-tls4modb \
 		tst-tls5mod tst-tls5moda tst-tls5modb tst-tls5modc \
-		tst-tls5modd tst-tls5mode tst-tls5modf \
+		tst-tls5modd tst-tls5mode tst-tls5modf tst-stack4mod \
 		tst-_res1mod1 tst-_res1mod2 tst-execstack-mod tst-fini1mod
 extra-test-objs += $(addsuffix .os,$(strip $(modules-names))) tst-cleanup4aux.o
 test-extras += $(modules-names) tst-cleanup4aux
@@ -478,6 +478,19 @@ $(objpfx)tst-stack3-mem.out: $(objpfx)tst-stack3.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-stack3.mtrace > $@; \
 	$(evaluate-test)
 generated += tst-stack3-mem.out tst-stack3.mtrace
+
+$(objpfx)tst-stack4: $(libdl) $(shared-thread-library)
+tst-stack4mod.sos=$(shell for i in 0 1 2 3 4 5 6 7 8 9 10 \
+				   11 12 13 14 15 16 17 18 19; do \
+			    for j in 0 1 2 3 4 5 6 7 8 9 10 \
+				     11 12 13 14 15 16 17 18 19; do \
+			      echo $(objpfx)tst-stack4mod-$$i-$$j.so; \
+			    done; done)
+$(objpfx)tst-stack4.out: $(tst-stack4mod.sos)
+$(tst-stack4mod.sos): $(objpfx)tst-stack4mod.so
+	cp -f $< $@
+clean:
+	rm -f $(tst-stack4mod.sos)
 
 $(objpfx)tst-cleanup4: $(objpfx)tst-cleanup4aux.o $(shared-thread-library)
 $(objpfx)tst-cleanupx4: $(objpfx)tst-cleanup4aux.o $(shared-thread-library)

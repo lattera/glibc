@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/param.h>
+#include <atomic.h>
 
 #include <tls.h>
 #include <dl-tls.h>
@@ -34,14 +35,12 @@
 
 
 /* Out-of-memory handler.  */
-#ifdef SHARED
 static void
 __attribute__ ((__noreturn__))
 oom (void)
 {
   _dl_fatal_printf ("cannot allocate memory for thread-local data: ABORT\n");
 }
-#endif
 
 
 size_t
@@ -397,6 +396,53 @@ _dl_allocate_tls_storage (void)
 }
 
 
+#ifndef SHARED
+extern dtv_t _dl_static_dtv[];
+# define _dl_initial_dtv (&_dl_static_dtv[1])
+#endif
+
+static dtv_t *
+_dl_resize_dtv (dtv_t *dtv)
+{
+  /* Resize the dtv.  */
+  dtv_t *newp;
+  /* Load GL(dl_tls_max_dtv_idx) atomically since it may be written to by
+     other threads concurrently.  */
+  size_t newsize
+    = atomic_load_acquire (&GL(dl_tls_max_dtv_idx)) + DTV_SURPLUS;
+  size_t oldsize = dtv[-1].counter;
+
+  if (dtv == GL(dl_initial_dtv))
+    {
+      /* This is the initial dtv that was either statically allocated in
+	 __libc_setup_tls or allocated during rtld startup using the
+	 dl-minimal.c malloc instead of the real malloc.  We can't free
+	 it, we have to abandon the old storage.  */
+
+      newp = malloc ((2 + newsize) * sizeof (dtv_t));
+      if (newp == NULL)
+	oom ();
+      memcpy (newp, &dtv[-1], (2 + oldsize) * sizeof (dtv_t));
+    }
+  else
+    {
+      newp = realloc (&dtv[-1],
+		      (2 + newsize) * sizeof (dtv_t));
+      if (newp == NULL)
+	oom ();
+    }
+
+  newp[0].counter = newsize;
+
+  /* Clear the newly allocated part.  */
+  memset (newp + 2 + oldsize, '\0',
+	  (newsize - oldsize) * sizeof (dtv_t));
+
+  /* Return the generation counter.  */
+  return &newp[1];
+}
+
+
 void *
 internal_function
 _dl_allocate_tls_init (void *result)
@@ -409,6 +455,16 @@ _dl_allocate_tls_init (void *result)
   struct dtv_slotinfo_list *listp;
   size_t total = 0;
   size_t maxgen = 0;
+
+  /* Check if the current dtv is big enough.   */
+  if (dtv[-1].counter < GL(dl_tls_max_dtv_idx))
+    {
+      /* Resize the dtv.  */
+      dtv = _dl_resize_dtv (dtv);
+
+      /* Install this new dtv in the thread data structures.  */
+      INSTALL_DTV (result, &dtv[-1]);
+    }
 
   /* We have to prepare the dtv for all currently loaded modules using
      TLS.  For those which are dynamically loaded we add the values
@@ -491,11 +547,6 @@ _dl_allocate_tls (void *mem)
 }
 rtld_hidden_def (_dl_allocate_tls)
 
-
-#ifndef SHARED
-extern dtv_t _dl_static_dtv[];
-# define _dl_initial_dtv (&_dl_static_dtv[1])
-#endif
 
 void
 internal_function
@@ -645,41 +696,10 @@ _dl_update_slotinfo (unsigned long int req_modid)
 	      assert (total + cnt == modid);
 	      if (dtv[-1].counter < modid)
 		{
-		  /* Reallocate the dtv.  */
-		  dtv_t *newp;
-		  size_t newsize = GL(dl_tls_max_dtv_idx) + DTV_SURPLUS;
-		  size_t oldsize = dtv[-1].counter;
+		  /* Resize the dtv.  */
+		  dtv = _dl_resize_dtv (dtv);
 
-		  assert (map->l_tls_modid <= newsize);
-
-		  if (dtv == GL(dl_initial_dtv))
-		    {
-		      /* This is the initial dtv that was allocated
-			 during rtld startup using the dl-minimal.c
-			 malloc instead of the real malloc.  We can't
-			 free it, we have to abandon the old storage.  */
-
-		      newp = malloc ((2 + newsize) * sizeof (dtv_t));
-		      if (newp == NULL)
-			oom ();
-		      memcpy (newp, &dtv[-1], (2 + oldsize) * sizeof (dtv_t));
-		    }
-		  else
-		    {
-		      newp = realloc (&dtv[-1],
-				      (2 + newsize) * sizeof (dtv_t));
-		      if (newp == NULL)
-			oom ();
-		    }
-
-		  newp[0].counter = newsize;
-
-		  /* Clear the newly allocated part.  */
-		  memset (newp + 2 + oldsize, '\0',
-			  (newsize - oldsize) * sizeof (dtv_t));
-
-		  /* Point dtv to the generation counter.  */
-		  dtv = &newp[1];
+		  assert (modid <= dtv[-1].counter);
 
 		  /* Install this new dtv in the thread data
 		     structures.  */
