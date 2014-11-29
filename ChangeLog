@@ -1,5 +1,7 @@
 2014-11-29  Carlos O'Donell  <carlos@redhat.com>
 
+	* bits/ioctl-types.h: Indent preprocessor directives correctly.
+
 	* nptl/nptl-init.c: Include libc-internal.h.
 	(__pthread_initialize_minimal_internal): Use ROUND_UP.
 
