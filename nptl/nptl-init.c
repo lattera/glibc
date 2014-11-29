@@ -35,7 +35,7 @@
 #include <smp.h>
 #include <lowlevellock.h>
 #include <kernel-features.h>
-
+#include <libc-internal.h>
 
 #ifndef TLS_MULTIPLE_THREADS_IN_TCB
 /* Pointer to the corresponding variable in libc.  */
@@ -451,7 +451,7 @@ __pthread_initialize_minimal_internal (void)
     limit.rlim_cur = minstack;
 
   /* Round the resource limit up to page size.  */
-  limit.rlim_cur = (limit.rlim_cur + pagesz - 1) & -pagesz;
+  limit.rlim_cur = ALIGN_UP (limit.rlim_cur, pagesz);
   lll_lock (__default_pthread_attr_lock, LLL_PRIVATE);
   __default_pthread_attr.stacksize = limit.rlim_cur;
   __default_pthread_attr.guardsize = GLRO (dl_pagesize);

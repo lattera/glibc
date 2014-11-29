@@ -1,5 +1,8 @@
 2014-11-29  Carlos O'Donell  <carlos@redhat.com>
 
+	* nptl/nptl-init.c: Include libc-internal.h.
+	(__pthread_initialize_minimal_internal): Use ROUND_UP.
+
 	* elf/ldconfig.c (search_dir): Expand comment.
 
 2014-11-29  Joseph Myers  <joseph@codesourcery.com>
