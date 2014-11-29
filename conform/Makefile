@@ -124,7 +124,13 @@ linknamespace-symlists-tests := $(addprefix $(objpfx),\
 					    $(linknamespace-symlists-base))
 tests-special += $(linknamespace-symlists-tests)
 
-tests-special += $(objpfx)symlist-stdlibs
+linknamespace-symlist-stdlibs-base := $(foreach std,$(conformtest-standards),\
+						    symlist-stdlibs-$(std))
+linknamespace-symlist-stdlibs-tests := \
+	$(addprefix $(objpfx),\
+		    $(linknamespace-symlist-stdlibs-base))
+
+tests-special += $(linknamespace-symlist-stdlibs-tests)
 
 linknamespace-header-base := $(foreach std,\
 				       $(conformtest-standards),\
@@ -294,21 +300,35 @@ $(linknamespace-symlists-tests): $(objpfx)symlist-%: list-header-symbols.pl
 		> $@ 2> $@.err; \
 	$(evaluate-test)
 
-linknamespace-libs = $(common-objpfx)libc.a $(common-objpfx)math/libm.a \
+linknamespace-libs-isoc = $(common-objpfx)libc.a $(common-objpfx)math/libm.a
+linknamespace-libs = $(linknamespace-libs-isoc) \
 		     $(common-objpfx)rt/librt.a $(static-thread-library)
+linknamespace-libs-ISO = $(linknamespace-libs-isoc)
+linknamespace-libs-ISO99 = $(linknamespace-libs-isoc)
+linknamespace-libs-ISO11 = $(linknamespace-libs-isoc)
+linknamespace-libs-XPG3 = $(linknamespace-libs-isoc)
+linknamespace-libs-XPG4 = $(linknamespace-libs-isoc)
+linknamespace-libs-POSIX = $(linknamespace-libs)
+linknamespace-libs-UNIX98 = $(linknamespace-libs)
+linknamespace-libs-XOPEN2K = $(linknamespace-libs)
+linknamespace-libs-POSIX2008 = $(linknamespace-libs)
+linknamespace-libs-XOPEN2K8 = $(linknamespace-libs)
 
-$(objpfx)symlist-stdlibs: $(linknamespace-libs)
-	LC_ALL=C $(READELF) -W -s $^ > $@; \
+$(linknamespace-symlist-stdlibs-tests): $(objpfx)symlist-stdlibs-%: \
+					$(linknamespace-libs)
+	LC_ALL=C $(READELF) -W -s $(linknamespace-libs-$*) > $@; \
 	$(evaluate-test)
 
 $(linknamespace-header-tests): $(objpfx)%/linknamespace.out: \
-			       linknamespace.pl $(objpfx)symlist-stdlibs
+			       linknamespace.pl \
+			       $(linknamespace-symlist-stdlibs-tests)
 	(set -e; std_hdr=$*; std=$${std_hdr%%/*}; hdr=$${std_hdr#*/}; \
 	 mkdir -p $(@D)/scratch; \
 	 $(PERL) -w $< --tmpdir=$(@D)/scratch --cc='$(CC)' \
 		 --flags='$(conformtest-cc-flags)' --standard=$$std \
 		 --stdsyms=$(objpfx)symlist-$$std --header=$$hdr \
-		 --libsyms='$(objpfx)symlist-stdlibs' --readelf='$(READELF)' \
+		 --libsyms=$(objpfx)symlist-stdlibs-$$std \
+		 --readelf='$(READELF)' \
 		 > $@ 2>&1); \
 	$(evaluate-test)
 
@@ -349,7 +369,6 @@ test-xfail-XPG4/regex.h/linknamespace = yes
 test-xfail-XPG4/search.h/linknamespace = yes
 test-xfail-XPG4/stdio.h/linknamespace = yes
 test-xfail-XPG4/stdlib.h/linknamespace = yes
-test-xfail-XPG4/sys/mman.h/linknamespace = yes
 test-xfail-XPG4/sys/statvfs.h/linknamespace = yes
 test-xfail-XPG4/syslog.h/linknamespace = yes
 test-xfail-XPG4/time.h/linknamespace = yes

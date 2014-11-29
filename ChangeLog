@@ -1,3 +1,31 @@
+2014-11-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/Makefile (linknamespace-symlist-stdlibs-base): New
+	variable.
+	(linknamespace-symlist-stdlibs-tests): Likewise.
+	(tests-special): Append $(linknamespace-symlist-stdlibs-tests)
+	instead of $(objpfx)symlist-stdlibs.
+	(linknamespace-libs-isoc): New variable.
+	(linknamespace-libs): Use $(linknamespace-libs-isoc).
+	(linknamespace-libs-ISO): New variable.
+	(linknamespace-libs-ISO99): Likewise.
+	(linknamespace-libs-ISO11): Likewise.
+	(linknamespace-libs-XPG3): Likewise.
+	(linknamespace-libs-XPG4): Likewise.
+	(linknamespace-libs-POSIX): Likewise.
+	(linknamespace-libs-UNIX98): Likewise.
+	(linknamespace-libs-XOPEN2K): Likewise.
+	(linknamespace-libs-POSIX2008): Likewise.
+	(linknamespace-libs-XOPEN2K8): Likewise.
+	($(objpfx)symlist-stdlibs): Replace by
+	$(linknamespace-symlist-stdlibs-tests).  Use
+	$(linknamespace-libs-$*) as set of libraries.
+	($(linknamespace-header-tests)): Update dependencies.  Use
+	$(objpfx)symlist-stdlibs-$$std for --libsyms argument.
+	(test-xfail-XPG4/sys/mman.h/linknamespace): Remove.
+	* conform/linknamespace.pl: Remove comment about considering
+	definitions of symbols from irrelevant libraries.
+
 2014-11-28  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #13862]

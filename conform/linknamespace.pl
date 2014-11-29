@@ -135,11 +135,6 @@ foreach my $sym (@sym_data) {
 # conditionally and not if the program is limited to standard
 # functionality.  (matherr is an example of such a false positive.)
 #
-# * For strong undefined symbols, all possible definitions are
-# considered, rather than being restricted to libraries that are
-# relevant to the given standard (e.g. not considering any libpthread
-# definitions of ISO C symbols).
-#
 # * If a symbol reference is only brought in by the user using a data
 # symbol rather than a function from the standard library, this will
 # not be detected.
