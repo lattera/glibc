@@ -893,8 +893,30 @@ search_dir (const struct dir_entry *entry)
       /* A link may just point to itself.  */
       if (is_link)
 	{
-	  /* If the path the link points to isn't its soname and it is not
-	     .so symlink for ld(1) only, we treat it as a normal file.  */
+	  /* If the path the link points to isn't its soname or it is not
+	     the .so symlink for ld(1), we treat it as a normal file.
+
+	     You should always do this:
+
+		libfoo.so -> SONAME -> Arbitrary package-chosen name.
+
+	     e.g. libfoo.so -> libfoo.so.1 -> libfooimp.so.9.99.
+	     Given a SONAME of libfoo.so.1.
+
+	     You should *never* do this:
+
+		libfoo.so -> libfooimp.so.9.99
+
+	     If you do, and your SONAME is libfoo.so.1, then libfoo.so
+	     fails to point at the SONAME. In that case ldconfig may consider
+	     libfoo.so as another implementation of SONAME and will create
+	     symlinks against it causing problems when you try to upgrade
+	     or downgrade. The problems will arise because ldconfig will,
+	     depending on directory ordering, creat symlinks against libfoo.so
+	     e.g. libfoo.so.1.2 -> libfoo.so, but when libfoo.so is removed
+	     (typically by the removal of a development pacakge not required
+	     for the runtime) it will break the libfoo.so.1.2 symlink and the
+	     application will fail to start.  */
 	  const char *real_base_name = basename (real_file_name);
 
 	  if (strcmp (real_base_name, soname) != 0)
