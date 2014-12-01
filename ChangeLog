@@ -1,3 +1,8 @@
+2014-12-01  Rajalakshmi Srinivasaraghavan <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/strtok.S: New file.
+	* sysdeps/powerpc/powerpc64/strtok_r.S: New file.
+
 2014-11-29  Carlos O'Donell  <carlos@redhat.com>
 
 	* bits/ioctl-types.h: Indent preprocessor directives correctly.
