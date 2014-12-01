@@ -1,0 +1,169 @@
+comment_char %
+escape_char /
+% Chechen locale for RUSSIAN FEDERATION.
+% Contributed by Kentaroh Noji  Arslanbek Astemirov <s-o-f-t AT mail DOT ru>
+% Charset: UTF-8
+LC_IDENTIFICATION
+title      "Chechen locale for RUSSIAN FEDERATION"
+source       "ANCHR"
+address      "364024, ChR, Grozny, pr-kt of M. Esambayev, 13"
+language  "ce"
+territory "RUSSIAN FEDERATION"
+revision  "1.0"
+date      "2014-08-25"
+%
+category  "ce_RU:2014";LC_IDENTIFICATION
+category  "ce_RU:2014";LC_CTYPE
+category  "ce_RU:2014";LC_COLLATE
+category  "ce_RU:2014";LC_TIME
+category  "ce_RU:2014";LC_NUMERIC
+category  "ce_RU:2014";LC_MONETARY
+category  "ce_RU:2014";LC_PAPER
+category  "ce_RU:2014";LC_MEASUREMENT
+category  "ce_RU:2014";LC_MESSAGES
+category  "ce_RU:2014";LC_NAME
+category  "ce_RU:2014";LC_ADDRESS
+category  "ce_RU:2014";LC_TELEPHONE
+END LC_IDENTIFICATION
+
+LC_CTYPE
+copy "i18n"
+
+translit_start
+include "translit_combining";""
+translit_end
+END LC_CTYPE
+
+LC_COLLATE
+copy "iso14651_t1"
+END LC_COLLATE
+
+LC_TIME
+% Январь, Февраль, Март, Апрель, Май, Июнь, Июль, Август, Сентябрь, Октябрь, Ноябрь, Декабрь
+mon           "<U042F><U043D><U0432><U0430><U0440><U044C>";/
+     "<U0424><U0435><U0432><U0440><U0430><U043B><U044C>";/
+     "<U041C><U0430><U0440><U0442>";/
+     "<U0410><U043F><U0440><U0435><U043B><U044C>";/
+     "<U041C><U0430><U0439>";/
+     "<U0418><U044E><U043D><U044C>";/
+     "<U0418><U044E><U043B><U044C>";/
+     "<U0410><U0432><U0433><U0443><U0441><U0442>";/
+     "<U0421><U0435><U043D><U0442><U044F><U0431><U0440><U044C>";/
+     "<U041E><U043A><U0442><U044F><U0431><U0440><U044C>";/
+     "<U041D><U043E><U044F><U0431><U0440><U044C>";/
+     "<U0414><U0435><U043A><U0430><U0431><U0440><U044C>"
+% янв, фев, мар, апр, май, июн, июл, авг, сен, окт, ноя, дек
+abmon         "<U044F><U043D><U0432>";/
+       "<U0444><U0435><U0432>";/
+       "<U043C><U0430><U0440>";/
+       "<U0430><U043F><U0440>";/
+       "<U043C><U0430><U0439>";/
+       "<U0438><U044E><U043D>";/
+       "<U0438><U044E><U043B>";/
+       "<U0430><U0432><U0433>";/
+       "<U0441><U0435><U043D>";/
+       "<U043E><U043A><U0442>";/
+       "<U043D><U043E><U044F>";/
+       "<U0434><U0435><U043A>"
+% КIиранде , Оршотде , Шинариде , Кхаариде , Еариде , ПIераскаде, Шотде
+day           "<U041A><U0049><U0438><U0440><U0430><U043D><U0434><U0435><U0020>";/
+     "<U041E><U0440><U0448><U043E><U0442><U0434><U0435><U0020>";/
+     "<U0428><U0438><U043D><U0430><U0440><U0438><U0434><U0435><U0020>";/
+     "<U041A><U0445><U0430><U0430><U0440><U0438><U0434><U0435><U0020>";/
+     "<U0415><U0430><U0440><U0438><U0434><U0435><U0020>";/
+     "<U041F><U0049><U0435><U0440><U0430><U0441><U043A><U0430><U0434><U0435>";/
+     "<U0428><U043E><U0442><U0434><U0435>"
+% КI, Ор, Ши , Кх , Еа , ПI , Шо
+abday         "<U041A><U0049>";/
+       "<U041E><U0440>";/
+       "<U0428><U0438><U0020>";/
+       "<U041A><U0445><U0020>";/
+       "<U0415><U0430><U0020>";/
+       "<U041F><U0049><U0020>";/
+       "<U0428><U043E>"
+% %Y %d %b %a %T
+d_t_fmt       "<U0025><U0059><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0061><U0020><U0025><U0054>"
+% %Y.%d.%m
+d_fmt         "<U0025><U0059><U002E><U0025><U0064><U002E><U0025><U006D>"
+% %T
+t_fmt         "<U0025><U0054>"
+%
+am_pm         "";""
+t_fmt_ampm    ""
+END LC_TIME
+
+LC_NUMERIC
+% ,
+decimal_point "<U002C>"
+thousands_sep ""
+% 3;3
+grouping      3;3
+END LC_NUMERIC
+
+LC_MONETARY
+% RUB
+int_curr_symbol    "<U0052><U0055><U0042><U0020>"
+currency_symbol    "<U0440><U0443><U0431>"
+% .
+mon_decimal_point  "<U002E>"
+mon_thousands_sep  "<U00A0>"
+mon_grouping       3;3
+positive_sign      ""
+negative_sign      "<U002D>"
+frac_digits        2
+int_frac_digits    2
+p_cs_precedes      0
+p_sep_by_space     1
+n_cs_precedes      0
+n_sep_by_space     1
+p_sign_posn        1
+n_sign_posn        1
+END LC_MONETARY
+
+LC_PAPER
+height 297
+width  210
+END LC_PAPER
+
+LC_MEASUREMENT
+measurement 1
+END LC_MEASUREMENT
+
+LC_MESSAGES
+% ^[ДдYy].*
+yesexpr "<U005E><U005B><U0414><U0434><U0059><U0079><U005D><U002E><U002A>"
+% ^[МмNn].*
+noexpr  "<U005E><U005B><U041C><U043C><U004E><U006E><U005D><U002E><U002A>"
+END LC_MESSAGES
+
+LC_NAME
+name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
+<U0025><U006D><U0025><U0074><U0025><U0066>"
+END LC_NAME
+
+LC_ADDRESS
+% %f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N
+postal_fmt   "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E><U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073><U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025><U004E><U0025><U007A><U0020><U0025><U0054><U0025><U004E><U0025><U0063><U0025><U004E>"
+% RU
+country_ab2  "<U0052><U0055>"
+% RUS
+country_ab3  "<U0052><U0055><U0053>"
+country_num  643
+% RUS
+country_car  "<U0052><U0055><U0053>"
+% нохчийн мотт
+lang_name    "<U043D><U043E><U0445><U0447><U0438><U0439><U043D><U0020><U043C><U043E><U0442><U0442>"
+% ce
+lang_ab      "<U0063><U0065>"
+% che
+lang_term    "<U0063><U0068><U0065>"
+END LC_ADDRESS
+
+LC_TELEPHONE
+tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
+<U006C>"
+% 0~10
+int_select  "<U0030><U007E><U0031><U0030>"
+% 7
+int_prefix  "<U0037>"
+END LC_TELEPHONE

@@ -1,3 +1,9 @@
+2014-12-01  Pravin Satpute <psatpute@redhat.com>
+
+	[BZ #17192]
+	* locales/ce_RU: New locale Chechen for RUSSIAN FEDERATION.
+	* SUPPORTED: Add ce_RU.
+
 2014-11-12  Tatiana Udalova  <t.udalova@samsung.com>
 
 	[BZ #17475]
