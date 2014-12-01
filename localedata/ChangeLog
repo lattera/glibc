@@ -1,5 +1,9 @@
 2014-12-01  Pravin Satpute <psatpute@redhat.com>
 
+	[BZ #16857]
+	* locales/raj_IN: New locale for raj_IN.
+	* SUPPORTED: Add raj_IN.
+
 	[BZ #17192]
 	* locales/ce_RU: New locale Chechen for RUSSIAN FEDERATION.
 	* SUPPORTED: Add ce_RU.
