@@ -1,5 +1,7 @@
 2014-12-02  Joseph Myers  <joseph@codesourcery.com>
 
+	* nptl/tst-stack4.c (dso_process): Use int not uintptr_t for t.
+
 	* nptl/tst-mutex1.c: Include <stdbool.h>.
 	[!ATTR] (ATTR_NULL): New macro.
 	(do_test): Test !ATTR_NULL instead of ATTR != NULL.

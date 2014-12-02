@@ -56,7 +56,7 @@ dso_process (void * p)
   function fun_vec[DSO_SHARED_FILES];
   char dso_path[DSO_SHARED_FILES][100];
   int dso;
-  uintptr_t t = (uintptr_t) p;
+  int t = (int) (uintptr_t) p;
 
   /* Open DSOs and get a function.  */
   for (dso = 0; dso < DSO_SHARED_FILES; dso++)
