@@ -24,16 +24,17 @@
    network interface on the host machine.  If successful, store the
    list in *IFAP and return 0.  On errors, return -1 and set `errno'.  */
 int
-getifaddrs (struct ifaddrs **ifap)
+__getifaddrs (struct ifaddrs **ifap)
 {
   __set_errno (ENOSYS);
   return -1;
 }
-libc_hidden_def (getifaddrs)
+weak_alias (__getifaddrs, getifaddrs)
+libc_hidden_weak (getifaddrs)
 stub_warning (getifaddrs)
 
 void
-freeifaddrs (struct ifaddrs *ifa)
+__freeifaddrs (struct ifaddrs *ifa)
 {
   if (ifa == NULL)
     return;			/* a la free, why not? */
@@ -41,5 +42,6 @@ freeifaddrs (struct ifaddrs *ifa)
   /* Can't be called properly if getifaddrs never succeeded.  */
   abort ();
 }
-libc_hidden_def (freeifaddrs)
+weak_alias (__freeifaddrs, freeifaddrs)
+libc_hidden_weak (freeifaddrs)
 stub_warning (freeifaddrs)

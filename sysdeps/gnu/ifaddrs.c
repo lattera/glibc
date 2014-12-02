@@ -32,7 +32,7 @@
    network interface on the host machine.  If successful, store the
    list in *IFAP and return 0.  On errors, return -1 and set `errno'.  */
 int
-getifaddrs (struct ifaddrs **ifap)
+__getifaddrs (struct ifaddrs **ifap)
 {
   /* This implementation handles only IPv4 interfaces.
      The various ioctls below will only work on an AF_INET socket.
@@ -150,13 +150,15 @@ getifaddrs (struct ifaddrs **ifap)
 
   return 0;
 }
+weak_alias (__getifaddrs, getifaddrs)
 #ifndef getifaddrs
-libc_hidden_def (getifaddrs)
+libc_hidden_weak (getifaddrs)
 #endif
 
 void
-freeifaddrs (struct ifaddrs *ifa)
+__freeifaddrs (struct ifaddrs *ifa)
 {
   free (ifa);
 }
-libc_hidden_def (freeifaddrs)
+weak_alias (__freeifaddrs, freeifaddrs)
+libc_hidden_weak (freeifaddrs)

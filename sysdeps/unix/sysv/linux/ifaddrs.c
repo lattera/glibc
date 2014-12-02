@@ -819,7 +819,7 @@ getifaddrs_internal (struct ifaddrs **ifap)
    network interface on the host machine.  If successful, store the
    list in *IFAP and return 0.  On errors, return -1 and set `errno'.  */
 int
-getifaddrs (struct ifaddrs **ifap)
+__getifaddrs (struct ifaddrs **ifap)
 {
   int res;
 
@@ -829,12 +829,14 @@ getifaddrs (struct ifaddrs **ifap)
 
   return res;
 }
-libc_hidden_def (getifaddrs)
+weak_alias (__getifaddrs, getifaddrs)
+libc_hidden_weak (getifaddrs)
 
 
 void
-freeifaddrs (struct ifaddrs *ifa)
+__freeifaddrs (struct ifaddrs *ifa)
 {
   free (ifa);
 }
-libc_hidden_def (freeifaddrs)
+weak_alias (__freeifaddrs, freeifaddrs)
+libc_hidden_weak (freeifaddrs)

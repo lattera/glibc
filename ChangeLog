@@ -1,3 +1,24 @@
+2014-12-02  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17668]
+	* inet/ifaddrs.c (getifaddrs): Rename to __getifaddrs and define
+	as weak alias of __getifaddrs.  Use libc_hidden_weak.
+	(freeifaddrs): Rename to __freeifaddrs and define as weak alias of
+	__freeifaddrs.  Use libc_hidden_weak.
+	* sysdeps/gnu/ifaddrs.c (getifaddrs): Rename to __getifaddrs and
+	define as weak alias of __getifaddrs.  Use libc_hidden_weak.
+	(freeifaddrs): Rename to __freeifaddrs and define as weak alias of
+	__freeifaddrs.  Use libc_hidden_weak.
+	* sysdeps/unix/sysv/linux/ifaddrs.c (getifaddrs): Rename to
+	__getifaddrs and define as weak alias of __getifaddrs.  Use
+	libc_hidden_weak.
+	(freeifaddrs): Rename to __freeifaddrs and define as weak alias of
+	__freeifaddrs.  Use libc_hidden_weak.
+	* conform/Makefile (test-xfail-XOPEN2K/net/if.h/linknamespace):
+	Remove variable.
+	(test-xfail-POSIX2008/net/if.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K8/net/if.h/linknamespace): Likewise.
+
 2014-12-02  Petar Jovanovic  <petar.jovanovic@rt-rk.com>
 
 	[BZ #17601]
