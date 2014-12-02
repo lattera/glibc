@@ -1,5 +1,9 @@
 2014-12-02  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17665]
+	* posix/unistd.h [__USE_MISC || (__USE_XOPEN && !__USE_UNIX98)]:
+	Change conditional to [__USE_MISC].
+
 	[BZ #17664]
 	* misc/mntent_r.c (__getmntent_r): Use __fgets_unlocked instead of
 	fgets_unlocked.

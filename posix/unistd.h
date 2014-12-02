@@ -880,7 +880,7 @@ extern int gethostname (char *__name, size_t __len) __THROW __nonnull ((1));
 #endif
 
 
-#if defined __USE_MISC || (defined __USE_XOPEN && !defined __USE_UNIX98)
+#if defined __USE_MISC
 /* Set the name of the current host to NAME, which is LEN bytes long.
    This call is restricted to the super-user.  */
 extern int sethostname (const char *__name, size_t __len)
@@ -935,7 +935,7 @@ extern void setusershell (void) __THROW; /* Rewind and re-read the file.  */
    terminal.  If NOCHDIR is zero, do `chdir ("/")'.  If NOCLOSE is zero,
    redirects stdin, stdout, and stderr to /dev/null.  */
 extern int daemon (int __nochdir, int __noclose) __THROW __wur;
-#endif /* Use misc || X/Open.  */
+#endif /* Use misc.  */
 
 
 #if defined __USE_MISC || (defined __USE_XOPEN && !defined __USE_XOPEN2K)
