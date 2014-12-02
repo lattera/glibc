@@ -127,7 +127,7 @@ __getmntent_r (FILE *stream, struct mntent *mp, char *buffer, int bufsiz)
     {
       char *end_ptr;
 
-      if (fgets_unlocked (buffer, bufsiz, stream) == NULL)
+      if (__fgets_unlocked (buffer, bufsiz, stream) == NULL)
 	{
 	  funlockfile (stream);
 	  return NULL;
@@ -140,7 +140,7 @@ __getmntent_r (FILE *stream, struct mntent *mp, char *buffer, int bufsiz)
 	{
 	  /* Not the whole line was read.  Do it now but forget it.  */
 	  char tmp[1024];
-	  while (fgets_unlocked (tmp, sizeof tmp, stream) != NULL)
+	  while (__fgets_unlocked (tmp, sizeof tmp, stream) != NULL)
 	    if (strchr (tmp, '\n') != NULL)
 	      break;
 	}

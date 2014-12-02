@@ -46,6 +46,10 @@
 #include "res_hconf.h"
 #include <wchar.h>
 
+#if IS_IN (libc)
+# define fgets_unlocked __fgets_unlocked
+#endif
+
 #define _PATH_HOSTCONF	"/etc/host.conf"
 
 /* Environment vars that all user to override default behavior:  */

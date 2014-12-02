@@ -238,7 +238,7 @@ __res_vinit(res_state statp, int preinit) {
 	    /* No threads use this stream.  */
 	    __fsetlocking (fp, FSETLOCKING_BYCALLER);
 	    /* read the config file */
-	    while (fgets_unlocked(buf, sizeof(buf), fp) != NULL) {
+	    while (__fgets_unlocked(buf, sizeof(buf), fp) != NULL) {
 		/* skip comments */
 		if (*buf == ';' || *buf == '#')
 			continue;

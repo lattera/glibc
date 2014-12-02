@@ -1,5 +1,24 @@
 2014-12-02  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17664]
+	* misc/mntent_r.c (__getmntent_r): Use __fgets_unlocked instead of
+	fgets_unlocked.
+	* resolv/res_hconf.c [IS_IN (libc)] (fgets_unlocked): Define to
+	__fgets_unlocked.
+	* resolv/res_init.c (__res_vinit): Use __fgets_unlocked instead of
+	fgets_unlocked.
+	* conform/Makefile (test-xfail-XPG4/sys/statvfs.h/linknamespace):
+	Remove variable.
+	(test-xfail-POSIX/sys/mman.h/linknamespace): Likewise.
+	(test-xfail-UNIX98/sys/mman.h/linknamespace): Likewise.
+	(test-xfail-UNIX98/sys/statvfs.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K/sys/mman.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K/sys/statvfs.h/linknamespace): Likewise.
+	(test-xfail-POSIX2008/sys/mman.h/linknamespace): Likewise.
+	(test-xfail-POSIX2008/sys/statvfs.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K8/sys/mman.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K8/sys/statvfs.h/linknamespace): Likewise.
+
 	* elf/tst-unique4lib.cc (b): Mark with __attribute__ ((used)).
 
 2014-12-02  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
