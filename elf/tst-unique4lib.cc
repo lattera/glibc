@@ -14,4 +14,4 @@ static int a[24] =
     S<23>::i, S<24>::i
   };
 
-static int b = S<1>::j;
+static int b __attribute__ ((used)) = S<1>::j;

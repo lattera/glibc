@@ -1,3 +1,7 @@
+2014-12-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* elf/tst-unique4lib.cc (b): Mark with __attribute__ ((used)).
+
 2014-12-02  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile [sysdep_routines]:
