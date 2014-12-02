@@ -39,7 +39,7 @@ do_test (void)
       return 1;
     }
 
-  char *argv[] = { "program", "--on" };
+  char *argv[] = { (char *) "program", (char *) "--on" };
   int argc = 2;
 
   int c = getopt_long (argc, argv, "12345", opts, NULL);

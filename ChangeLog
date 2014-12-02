@@ -1,5 +1,8 @@
 2014-12-02  Joseph Myers  <joseph@codesourcery.com>
 
+	* posix/tst-getopt_long1.c (do_test): Cast elements of argv array
+	to char *.
+
 	[BZ #17665]
 	* posix/unistd.h [__USE_MISC || (__USE_XOPEN && !__USE_UNIX98)]:
 	Change conditional to [__USE_MISC].
