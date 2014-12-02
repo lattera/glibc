@@ -1,5 +1,11 @@
 2014-12-02  Joseph Myers  <joseph@codesourcery.com>
 
+	* nptl/tst-mutex1.c: Include <stdbool.h>.
+	[!ATTR] (ATTR_NULL): New macro.
+	(do_test): Test !ATTR_NULL instead of ATTR != NULL.
+	* nptl/tst-mutexpi1.c (ATTR_NULL): New macro.
+	* nptl/tst-mutexpp1.c (ATTR_NULL): New macro.
+
 	* posix/tst-getopt_long1.c (do_test): Cast elements of argv array
 	to char *.
 
