@@ -1,3 +1,9 @@
+2014-12-02  Petar Jovanovic  <petar.jovanovic@rt-rk.com>
+
+	[BZ #17601]
+	* sysdeps/mips/start.S (__start): Use indirect jump to call
+	__libc_start_main.
+
 2014-12-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* nptl/tst-stack4.c (dso_process): Use int not uintptr_t for t.
