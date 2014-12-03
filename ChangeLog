@@ -1,3 +1,13 @@
+2014-12-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/list-header-symbols.pl (%extra_syms): Add getdate_err
+	for XPG4, UNIX98, XOPEN2K and XOPEN2K8.
+	* conform/Makefile (test-xfail-XOPEN2K/pthread.h/linknamespace):
+	Remove variable.
+	(test-xfail-XOPEN2K/time.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K8/pthread.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K8/time.h/linknamespace): Likewise.
+
 2014-12-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/Makefile (test-xfail-XOPEN2K/aio.h/linknamespace):
