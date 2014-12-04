@@ -626,16 +626,15 @@ do_ftell_wide (_IO_FILE *fp)
       const wchar_t *wide_read_base;
       const wchar_t *wide_read_ptr;
       const wchar_t *wide_read_end;
-      bool was_writing = ((fp->_wide_data->_IO_write_ptr
-			   > fp->_wide_data->_IO_write_base)
-			  || _IO_in_put_mode (fp));
+      bool unflushed_writes = (fp->_wide_data->_IO_write_ptr
+			       > fp->_wide_data->_IO_write_base);
 
       bool append_mode = (fp->_flags & _IO_IS_APPENDING) == _IO_IS_APPENDING;
 
       /* When we have unflushed writes in append mode, seek to the end of the
 	 file and record that offset.  This is the only time we change the file
 	 stream state and it is safe since the file handle is active.  */
-      if (was_writing && append_mode)
+      if (unflushed_writes && append_mode)
 	{
 	  result = _IO_SYSSEEK (fp, 0, _IO_seek_end);
 	  if (result == _IO_pos_BAD)
@@ -674,7 +673,7 @@ do_ftell_wide (_IO_FILE *fp)
       struct _IO_codecvt *cv = fp->_codecvt;
       int clen = (*cv->__codecvt_do_encoding) (cv);
 
-      if (!was_writing)
+      if (!unflushed_writes)
 	{
 	  if (clen > 0)
 	    {

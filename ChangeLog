@@ -1,3 +1,13 @@
+2914-12-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #17647]
+	* libio/fileops.c (do_ftell): Seek only when there are
+	unflushed writes.
+	* libio/wfileops.c (do_ftell_wide): Likewise.
+	* libio/tst-ftell-active-handler.c (do_ftruncate_test): New
+	test case.
+	(do_one_test): Call it.
+
 2014-12-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/list-header-symbols.pl (%extra_syms): Add getdate_err

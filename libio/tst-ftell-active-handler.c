@@ -88,6 +88,95 @@ static size_t file_len;
 typedef int (*fputs_func_t) (const void *data, FILE *fp);
 fputs_func_t fputs_func;
 
+/* This test verifies that the offset reported by ftell is correct after the
+   file is truncated using ftruncate.  ftruncate does not change the file
+   offset on truncation and hence, SEEK_CUR should continue to point to the
+   old offset and not be changed to the new offset.  */
+static int
+do_ftruncate_test (const char *filename)
+{
+  FILE *fp = NULL;
+  int fd;
+  int ret = 0;
+  struct test
+    {
+      const char *mode;
+      int fd_mode;
+    } test_modes[] = {
+	  {"r+", O_RDWR},
+	  {"w", O_WRONLY},
+	  {"w+", O_RDWR},
+	  {"a", O_WRONLY},
+	  {"a+", O_RDWR}
+    };
+
+  for (int j = 0; j < 2; j++)
+    {
+      for (int i = 0; i < sizeof (test_modes) / sizeof (struct test); i++)
+	{
+	  int fileret;
+	  printf ("\tftruncate: %s (file, \"%s\"): ",
+		  j == 0 ? "fopen" : "fdopen",
+		  test_modes[i].mode);
+
+	  if (j == 0)
+	    fileret = get_handles_fopen (filename, fd, fp, test_modes[i].mode);
+	  else
+	    fileret = get_handles_fdopen (filename, fd, fp,
+					  test_modes[i].fd_mode,
+					  test_modes[i].mode);
+
+	  if (fileret != 0)
+	    return fileret;
+
+	  /* Write some data.  */
+	  size_t written = fputs_func (data, fp);
+
+	  if (written == EOF)
+	    {
+	      printf ("fputs[1] failed to write data\n");
+	      ret |= 1;
+	    }
+
+	  /* Record the offset.  */
+	  long offset = ftell (fp);
+
+	  /* Flush data to allow switching active handles.  */
+	  if (fflush (fp))
+	    {
+	      printf ("Flush failed: %m\n");
+	      ret |= 1;
+	    }
+
+	  /* Now truncate the file.  */
+	  if (ftruncate (fd, 0) != 0)
+	    {
+	      printf ("Failed to truncate file: %m\n");
+	      ret |= 1;
+	    }
+
+	  /* ftruncate does not change the offset, so there is no need to call
+	     anything to be able to switch active handles.  */
+	  long new_offset = ftell (fp);
+
+	  /* The offset should remain unchanged since ftruncate does not update
+	     it.  */
+	  if (offset != new_offset)
+	    {
+	      printf ("Incorrect offset.  Expected %zu, but got %ld\n",
+		      offset, new_offset);
+
+	      ret |= 1;
+	    }
+	  else
+	    printf ("offset = %ld\n", offset);
+
+	  fclose (fp);
+	}
+    }
+
+  return ret;
+}
 /* Test that ftell output after a rewind is correct.  */
 static int
 do_rewind_test (const char *filename)
@@ -481,6 +570,7 @@ do_one_test (const char *filename)
   ret |= do_write_test (filename);
   ret |= do_append_test (filename);
   ret |= do_rewind_test (filename);
+  ret |= do_ftruncate_test (filename);
 
   return ret;
 }
