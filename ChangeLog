@@ -1,3 +1,11 @@
+2014-12-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/list-header-symbols.pl (%extra_syms): Add h_errno for
+	XPG4, UNIX98 and XOPEN2K.
+	* conform/Makefile (test-xfail-XOPEN2K/grp.h/linknamespace):
+	Remove variable.
+	(test-xfail-XOPEN2K/pwd.h/linknamespace): Likewise.
+
 2014-12-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* libio/fileops.c: Use ISO C style for function definitions.

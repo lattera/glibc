@@ -47,14 +47,15 @@ $extra_syms{"XPG3"} = ["errno", "setjmp", "va_end", "environ", "signgam",
 $extra_syms{"XPG4"} = ["errno", "setjmp", "va_end", "environ", "signgam",
 		       "loc1", "loc2", "locs", "sigsetjmp", "optarg",
 		       "optind", "opterr", "optopt", "daylight", "timezone",
-		       "tzname", "getdate_err"];
+		       "tzname", "getdate_err", "h_errno"];
 $extra_syms{"UNIX98"} = ["errno", "setjmp", "va_end", "environ", "signgam",
 			 "loc1", "loc2", "locs", "sigsetjmp", "optarg",
 			 "optind", "opterr", "optopt", "daylight", "timezone",
-			 "tzname", "getdate_err"];
+			 "tzname", "getdate_err", "h_errno"];
 $extra_syms{"XOPEN2K"} = ["errno", "setjmp", "va_end", "environ", "signgam",
 			  "sigsetjmp", "optarg", "optind", "opterr", "optopt",
-			  "daylight", "timezone", "tzname", "getdate_err"];
+			  "daylight", "timezone", "tzname", "getdate_err",
+			  "h_errno"];
 $extra_syms{"XOPEN2K8"} = ["errno", "setjmp", "va_end", "environ", "signgam",
 			   "sigsetjmp", "optarg", "optind", "opterr", "optopt",
 			   "daylight", "timezone", "tzname", "getdate_err"];
