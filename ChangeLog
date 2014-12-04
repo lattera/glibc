@@ -1,5 +1,9 @@
 2914-12-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* libio/fileops.c: Use IOS C style for function definitions.
+	* libio/iofopen.c: Likewise.
+	* libio/wfileops.c: Likewise.
+
 	[BZ #17653]
 	* libio/fileops.c (_IO_new_file_underflow): Unset cached
 	offset on EOF.

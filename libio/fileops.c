@@ -139,8 +139,7 @@ extern struct __gconv_trans_data __libio_translit attribute_hidden;
 
 
 void
-_IO_new_file_init (fp)
-     struct _IO_FILE_plus *fp;
+_IO_new_file_init (struct _IO_FILE_plus *fp)
 {
   /* POSIX.1 allows another file handle to be used to change the position
      of our file descriptor.  Hence we actually don't know the actual
@@ -154,8 +153,7 @@ _IO_new_file_init (fp)
 libc_hidden_ver (_IO_new_file_init, _IO_file_init)
 
 int
-_IO_new_file_close_it (fp)
-     _IO_FILE *fp;
+_IO_new_file_close_it (_IO_FILE *fp)
 {
   int write_status;
   if (!_IO_file_is_open (fp))
@@ -197,9 +195,7 @@ _IO_new_file_close_it (fp)
 libc_hidden_ver (_IO_new_file_close_it, _IO_file_close_it)
 
 void
-_IO_new_file_finish (fp, dummy)
-     _IO_FILE *fp;
-     int dummy;
+_IO_new_file_finish (_IO_FILE *fp, int dummy)
 {
   if (_IO_file_is_open (fp))
     {
@@ -212,13 +208,8 @@ _IO_new_file_finish (fp, dummy)
 libc_hidden_ver (_IO_new_file_finish, _IO_file_finish)
 
 _IO_FILE *
-_IO_file_open (fp, filename, posix_mode, prot, read_write, is32not64)
-     _IO_FILE *fp;
-     const char *filename;
-     int posix_mode;
-     int prot;
-     int read_write;
-     int is32not64;
+_IO_file_open (_IO_FILE *fp, const char *filename, int posix_mode, int prot,
+	       int read_write, int is32not64)
 {
   int fdesc;
 #ifdef _LIBC
@@ -252,11 +243,8 @@ _IO_file_open (fp, filename, posix_mode, prot, read_write, is32not64)
 libc_hidden_def (_IO_file_open)
 
 _IO_FILE *
-_IO_new_file_fopen (fp, filename, mode, is32not64)
-     _IO_FILE *fp;
-     const char *filename;
-     const char *mode;
-     int is32not64;
+_IO_new_file_fopen (_IO_FILE *fp, const char *filename, const char *mode,
+		    int is32not64)
 {
   int oflags = 0, omode;
   int read_write;
@@ -426,9 +414,7 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
 libc_hidden_ver (_IO_new_file_fopen, _IO_file_fopen)
 
 _IO_FILE *
-_IO_new_file_attach (fp, fd)
-     _IO_FILE *fp;
-     int fd;
+_IO_new_file_attach (_IO_FILE *fp, int fd)
 {
   if (_IO_file_is_open (fp))
     return NULL;
@@ -448,10 +434,7 @@ _IO_new_file_attach (fp, fd)
 libc_hidden_ver (_IO_new_file_attach, _IO_file_attach)
 
 _IO_FILE *
-_IO_new_file_setbuf (fp, p, len)
-     _IO_FILE *fp;
-     char *p;
-     _IO_ssize_t len;
+_IO_new_file_setbuf (_IO_FILE *fp, char *p, _IO_ssize_t len)
 {
   if (_IO_default_setbuf (fp, p, len) == NULL)
     return NULL;
@@ -466,10 +449,7 @@ libc_hidden_ver (_IO_new_file_setbuf, _IO_file_setbuf)
 
 
 _IO_FILE *
-_IO_file_setbuf_mmap (fp, p, len)
-     _IO_FILE *fp;
-     char *p;
-     _IO_ssize_t len;
+_IO_file_setbuf_mmap (_IO_FILE *fp, char *p, _IO_ssize_t len)
 {
   _IO_FILE *result;
 
@@ -496,10 +476,7 @@ static _IO_size_t new_do_write (_IO_FILE *, const char *, _IO_size_t);
    Then mark FP as having empty buffers. */
 
 int
-_IO_new_do_write (fp, data, to_do)
-     _IO_FILE *fp;
-     const char *data;
-     _IO_size_t to_do;
+_IO_new_do_write (_IO_FILE *fp, const char *data, _IO_size_t to_do)
 {
   return (to_do == 0
 	  || (_IO_size_t) new_do_write (fp, data, to_do) == to_do) ? 0 : EOF;
@@ -508,10 +485,7 @@ libc_hidden_ver (_IO_new_do_write, _IO_do_write)
 
 static
 _IO_size_t
-new_do_write (fp, data, to_do)
-     _IO_FILE *fp;
-     const char *data;
-     _IO_size_t to_do;
+new_do_write (_IO_FILE *fp, const char *data, _IO_size_t to_do)
 {
   _IO_size_t count;
   if (fp->_flags & _IO_IS_APPENDING)
@@ -541,8 +515,7 @@ new_do_write (fp, data, to_do)
 }
 
 int
-_IO_new_file_underflow (fp)
-     _IO_FILE *fp;
+_IO_new_file_underflow (_IO_FILE *fp)
 {
   _IO_ssize_t count;
 #if 0
@@ -818,9 +791,7 @@ _IO_file_underflow_maybe_mmap (_IO_FILE *fp)
 
 
 int
-_IO_new_file_overflow (f, ch)
-      _IO_FILE *f;
-      int ch;
+_IO_new_file_overflow (_IO_FILE *f, int ch)
 {
   if (f->_flags & _IO_NO_WRITES) /* SET ERROR */
     {
@@ -881,8 +852,7 @@ _IO_new_file_overflow (f, ch)
 libc_hidden_ver (_IO_new_file_overflow, _IO_file_overflow)
 
 int
-_IO_new_file_sync (fp)
-     _IO_FILE *fp;
+_IO_new_file_sync (_IO_FILE *fp)
 {
   _IO_ssize_t delta;
   int retval = 0;
@@ -1000,11 +970,7 @@ do_ftell (_IO_FILE *fp)
 }
 
 _IO_off64_t
-_IO_new_file_seekoff (fp, offset, dir, mode)
-     _IO_FILE *fp;
-     _IO_off64_t offset;
-     int dir;
-     int mode;
+_IO_new_file_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
 {
   _IO_off64_t result;
   _IO_off64_t delta, new_offset;
@@ -1160,11 +1126,7 @@ resync:
 libc_hidden_ver (_IO_new_file_seekoff, _IO_file_seekoff)
 
 _IO_off64_t
-_IO_file_seekoff_mmap (fp, offset, dir, mode)
-     _IO_FILE *fp;
-     _IO_off64_t offset;
-     int dir;
-     int mode;
+_IO_file_seekoff_mmap (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
 {
   _IO_off64_t result;
 
@@ -1235,10 +1197,7 @@ _IO_file_seekoff_maybe_mmap (_IO_FILE *fp, _IO_off64_t offset, int dir,
 }
 
 _IO_ssize_t
-_IO_file_read (fp, buf, size)
-     _IO_FILE *fp;
-     void *buf;
-     _IO_ssize_t size;
+_IO_file_read (_IO_FILE *fp, void *buf, _IO_ssize_t size)
 {
   return (__builtin_expect (fp->_flags2 & _IO_FLAGS2_NOTCANCEL, 0)
 	  ? read_not_cancel (fp->_fileno, buf, size)
@@ -1247,27 +1206,21 @@ _IO_file_read (fp, buf, size)
 libc_hidden_def (_IO_file_read)
 
 _IO_off64_t
-_IO_file_seek (fp, offset, dir)
-     _IO_FILE *fp;
-     _IO_off64_t offset;
-     int dir;
+_IO_file_seek (_IO_FILE *fp, _IO_off64_t offset, int dir)
 {
   return __lseek64 (fp->_fileno, offset, dir);
 }
 libc_hidden_def (_IO_file_seek)
 
 int
-_IO_file_stat (fp, st)
-     _IO_FILE *fp;
-     void *st;
+_IO_file_stat (_IO_FILE *fp, void *st)
 {
   return __fxstat64 (_STAT_VER, fp->_fileno, (struct stat64 *) st);
 }
 libc_hidden_def (_IO_file_stat)
 
 int
-_IO_file_close_mmap (fp)
-     _IO_FILE *fp;
+_IO_file_close_mmap (_IO_FILE *fp)
 {
   /* In addition to closing the file descriptor we have to unmap the file.  */
   (void) __munmap (fp->_IO_buf_base, fp->_IO_buf_end - fp->_IO_buf_base);
@@ -1278,8 +1231,7 @@ _IO_file_close_mmap (fp)
 }
 
 int
-_IO_file_close (fp)
-     _IO_FILE *fp;
+_IO_file_close (_IO_FILE *fp)
 {
   /* Cancelling close should be avoided if possible since it leaves an
      unrecoverable state behind.  */
@@ -1288,10 +1240,7 @@ _IO_file_close (fp)
 libc_hidden_def (_IO_file_close)
 
 _IO_ssize_t
-_IO_new_file_write (f, data, n)
-     _IO_FILE *f;
-     const void *data;
-     _IO_ssize_t n;
+_IO_new_file_write (_IO_FILE *f, const void *data, _IO_ssize_t n)
 {
   _IO_ssize_t to_do = n;
   while (to_do > 0)
@@ -1315,10 +1264,7 @@ _IO_new_file_write (f, data, n)
 }
 
 _IO_size_t
-_IO_new_file_xsputn (f, data, n)
-     _IO_FILE *f;
-     const void *data;
-     _IO_size_t n;
+_IO_new_file_xsputn (_IO_FILE *f, const void *data, _IO_size_t n)
 {
   const char *s = (const char *) data;
   _IO_size_t to_do = n;
@@ -1398,10 +1344,7 @@ _IO_new_file_xsputn (f, data, n)
 libc_hidden_ver (_IO_new_file_xsputn, _IO_file_xsputn)
 
 _IO_size_t
-_IO_file_xsgetn (fp, data, n)
-     _IO_FILE *fp;
-     void *data;
-     _IO_size_t n;
+_IO_file_xsgetn (_IO_FILE *fp, void *data, _IO_size_t n)
 {
   _IO_size_t want, have;
   _IO_ssize_t count;
@@ -1498,12 +1441,8 @@ _IO_file_xsgetn (fp, data, n)
 }
 libc_hidden_def (_IO_file_xsgetn)
 
-static _IO_size_t _IO_file_xsgetn_mmap (_IO_FILE *, void *, _IO_size_t);
 static _IO_size_t
-_IO_file_xsgetn_mmap (fp, data, n)
-     _IO_FILE *fp;
-     void *data;
-     _IO_size_t n;
+_IO_file_xsgetn_mmap (_IO_FILE *fp, void *data, _IO_size_t n)
 {
   _IO_size_t have;
   char *read_ptr = fp->_IO_read_ptr;
@@ -1557,12 +1496,8 @@ _IO_file_xsgetn_mmap (fp, data, n)
   return s - (char *) data;
 }
 
-static _IO_size_t _IO_file_xsgetn_maybe_mmap (_IO_FILE *, void *, _IO_size_t);
 static _IO_size_t
-_IO_file_xsgetn_maybe_mmap (fp, data, n)
-     _IO_FILE *fp;
-     void *data;
-     _IO_size_t n;
+_IO_file_xsgetn_maybe_mmap (_IO_FILE *fp, void *data, _IO_size_t n)
 {
   /* We only get here if this is the first attempt to read something.
      Decide which operations to use and then punt to the chosen one.  */

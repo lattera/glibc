@@ -54,10 +54,7 @@
 /* Convert TO_DO wide character from DATA to FP.
    Then mark FP as having empty buffers. */
 int
-_IO_wdo_write (fp, data, to_do)
-     _IO_FILE *fp;
-     const wchar_t *data;
-     _IO_size_t to_do;
+_IO_wdo_write (_IO_FILE *fp, const wchar_t *data, _IO_size_t to_do)
 {
   struct _IO_codecvt *cc = fp->_codecvt;
 
@@ -131,8 +128,7 @@ libc_hidden_def (_IO_wdo_write)
 
 
 wint_t
-_IO_wfile_underflow (fp)
-     _IO_FILE *fp;
+_IO_wfile_underflow (_IO_FILE *fp)
 {
   struct _IO_codecvt *cd;
   enum __codecvt_result status;
@@ -428,9 +424,7 @@ _IO_wfile_underflow_maybe_mmap (_IO_FILE *fp)
 
 
 wint_t
-_IO_wfile_overflow (f, wch)
-     _IO_FILE *f;
-     wint_t wch;
+_IO_wfile_overflow (_IO_FILE *f, wint_t wch)
 {
   if (f->_flags & _IO_NO_WRITES) /* SET ERROR */
     {
@@ -502,8 +496,7 @@ _IO_wfile_overflow (f, wch)
 libc_hidden_def (_IO_wfile_overflow)
 
 wint_t
-_IO_wfile_sync (fp)
-     _IO_FILE *fp;
+_IO_wfile_sync (_IO_FILE *fp)
 {
   _IO_ssize_t delta;
   wint_t retval = 0;
@@ -767,11 +760,7 @@ do_ftell_wide (_IO_FILE *fp)
 }
 
 _IO_off64_t
-_IO_wfile_seekoff (fp, offset, dir, mode)
-     _IO_FILE *fp;
-     _IO_off64_t offset;
-     int dir;
-     int mode;
+_IO_wfile_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
 {
   _IO_off64_t result;
   _IO_off64_t delta, new_offset;
@@ -982,10 +971,7 @@ libc_hidden_def (_IO_wfile_seekoff)
 
 
 _IO_size_t
-_IO_wfile_xsputn (f, data, n)
-     _IO_FILE *f;
-     const void *data;
-     _IO_size_t n;
+_IO_wfile_xsputn (_IO_FILE *f, const void *data, _IO_size_t n)
 {
   const wchar_t *s = (const wchar_t *) data;
   _IO_size_t to_do = n;
