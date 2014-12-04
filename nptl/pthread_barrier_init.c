@@ -36,6 +36,7 @@ __pthread_barrier_init (barrier, attr, count)
 {
   struct pthread_barrier *ibarrier;
 
+  /* XXX EINVAL is not specified by POSIX as a possible error code.  */
   if (__glibc_unlikely (count == 0))
     return EINVAL;
 
@@ -43,11 +44,6 @@ __pthread_barrier_init (barrier, attr, count)
     = (attr != NULL
        ? iattr = (struct pthread_barrierattr *) attr
        : &default_barrierattr);
-
-  if (iattr->pshared != PTHREAD_PROCESS_PRIVATE
-      && __builtin_expect (iattr->pshared != PTHREAD_PROCESS_SHARED, 0))
-    /* Invalid attribute.  */
-    return EINVAL;
 
   ibarrier = (struct pthread_barrier *) barrier;
 
@@ -57,14 +53,10 @@ __pthread_barrier_init (barrier, attr, count)
   ibarrier->init_count = count;
   ibarrier->curr_event = 0;
 
-#ifdef __ASSUME_PRIVATE_FUTEX
+  /* XXX Don't use FUTEX_SHARED or FUTEX_PRIVATE as long as there are still
+     assembly implementations that expect the value determined below.  */
   ibarrier->private = (iattr->pshared != PTHREAD_PROCESS_PRIVATE
 		       ? 0 : FUTEX_PRIVATE_FLAG);
-#else
-  ibarrier->private = (iattr->pshared != PTHREAD_PROCESS_PRIVATE
-		       ? 0 : THREAD_GETMEM (THREAD_SELF,
-					    header.private_futex));
-#endif
 
   return 0;
 }

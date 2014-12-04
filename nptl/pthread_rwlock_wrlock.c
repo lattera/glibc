@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <sysdep.h>
 #include <lowlevellock.h>
+#include <futex-internal.h>
 #include <pthread.h>
 #include <pthreadP.h>
 #include <stap-probe.h>
@@ -30,6 +31,8 @@ static int __attribute__((noinline))
 __pthread_rwlock_wrlock_slow (pthread_rwlock_t *rwlock)
 {
   int result = 0;
+  int futex_shared =
+      rwlock->__data.__shared == LLL_PRIVATE ? FUTEX_PRIVATE : FUTEX_SHARED;
 
   /* Caller has taken the lock.  */
 
@@ -58,9 +61,11 @@ __pthread_rwlock_wrlock_slow (pthread_rwlock_t *rwlock)
       /* Free the lock.  */
       lll_unlock (rwlock->__data.__lock, rwlock->__data.__shared);
 
-      /* Wait for the writer or reader(s) to finish.  */
-      lll_futex_wait (&rwlock->__data.__writer_wakeup, waitval,
-		      rwlock->__data.__shared);
+      /* Wait for the writer or reader(s) to finish.  We do not check the
+	 return value because we decide how to continue based on the state of
+	 the rwlock.  */
+      futex_wait_simple (&rwlock->__data.__writer_wakeup, waitval,
+			 futex_shared);
 
       /* Get the lock.  */
       lll_lock (rwlock->__data.__lock, rwlock->__data.__shared);

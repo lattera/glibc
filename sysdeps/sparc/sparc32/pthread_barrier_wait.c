@@ -21,6 +21,7 @@
 #include <lowlevellock.h>
 #include <pthreadP.h>
 #include <sparc-nptl.h>
+#include <futex-internal.h>
 
 /* Wait on barrier.  */
 int
@@ -31,6 +32,7 @@ __pthread_barrier_wait (barrier)
     = (union sparc_pthread_barrier *) barrier;
   int result = 0;
   int private = ibarrier->s.pshared ? LLL_SHARED : LLL_PRIVATE;
+  int futex_private = ibarrier->s.pshared ? FUTEX_SHARED : FUTEX_PRIVATE;
 
   /* Make sure we are alone.  */
   lll_lock (ibarrier->b.lock, private);
@@ -46,7 +48,7 @@ __pthread_barrier_wait (barrier)
       ++ibarrier->b.curr_event;
 
       /* Wake up everybody.  */
-      lll_futex_wake (&ibarrier->b.curr_event, INT_MAX, private);
+      futex_wake (&ibarrier->b.curr_event, INT_MAX, futex_private);
 
       /* This is the thread which finished the serialization.  */
       result = PTHREAD_BARRIER_SERIAL_THREAD;
@@ -62,7 +64,7 @@ __pthread_barrier_wait (barrier)
 
       /* Wait for the event counter of the barrier to change.  */
       do
-	lll_futex_wait (&ibarrier->b.curr_event, event, private);
+	futex_wait_simple (&ibarrier->b.curr_event, event, futex_private);
       while (event == ibarrier->b.curr_event);
     }
 

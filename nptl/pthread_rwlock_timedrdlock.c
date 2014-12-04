@@ -19,10 +19,10 @@
 #include <errno.h>
 #include <sysdep.h>
 #include <lowlevellock.h>
+#include <futex-internal.h>
 #include <pthread.h>
 #include <pthreadP.h>
 #include <sys/time.h>
-#include <kernel-features.h>
 #include <stdbool.h>
 
 
@@ -34,6 +34,8 @@ pthread_rwlock_timedrdlock (rwlock, abstime)
 {
   int result = 0;
   bool wake = false;
+  int futex_shared =
+      rwlock->__data.__shared == LLL_PRIVATE ? FUTEX_PRIVATE : FUTEX_SHARED;
 
   /* Make sure we are alone.  */
   lll_lock(rwlock->__data.__lock, rwlock->__data.__shared);
@@ -91,38 +93,6 @@ pthread_rwlock_timedrdlock (rwlock, abstime)
 	  break;
 	}
 
-      /* Work around the fact that the kernel rejects negative timeout values
-	 despite them being valid.  */
-      if (__glibc_unlikely (abstime->tv_sec < 0))
-	{
-	  result = ETIMEDOUT;
-	  break;
-	}
-
-#if (!defined __ASSUME_FUTEX_CLOCK_REALTIME \
-     || !defined lll_futex_timed_wait_bitset)
-      /* Get the current time.  So far we support only one clock.  */
-      struct timeval tv;
-      (void) __gettimeofday (&tv, NULL);
-
-      /* Convert the absolute timeout value to a relative timeout.  */
-      struct timespec rt;
-      rt.tv_sec = abstime->tv_sec - tv.tv_sec;
-      rt.tv_nsec = abstime->tv_nsec - tv.tv_usec * 1000;
-      if (rt.tv_nsec < 0)
-	{
-	  rt.tv_nsec += 1000000000;
-	  --rt.tv_sec;
-	}
-      /* Did we already time out?  */
-      if (rt.tv_sec < 0)
-	{
-	  /* Yep, return with an appropriate error.  */
-	  result = ETIMEDOUT;
-	  break;
-	}
-#endif
-
       /* Remember that we are a reader.  */
       if (++rwlock->__data.__nr_readers_queued == 0)
 	{
@@ -137,17 +107,11 @@ pthread_rwlock_timedrdlock (rwlock, abstime)
       /* Free the lock.  */
       lll_unlock (rwlock->__data.__lock, rwlock->__data.__shared);
 
-      /* Wait for the writer to finish.  */
-#if (!defined __ASSUME_FUTEX_CLOCK_REALTIME \
-     || !defined lll_futex_timed_wait_bitset)
-      err = lll_futex_timed_wait (&rwlock->__data.__readers_wakeup,
-				  waitval, &rt, rwlock->__data.__shared);
-#else
-      err = lll_futex_timed_wait_bitset (&rwlock->__data.__readers_wakeup,
-					 waitval, abstime,
-					 FUTEX_CLOCK_REALTIME,
-					 rwlock->__data.__shared);
-#endif
+      /* Wait for the writer to finish.  We handle ETIMEDOUT below; on other
+	 return values, we decide how to continue based on the state of the
+	 rwlock.  */
+      err = futex_abstimed_wait (&rwlock->__data.__readers_wakeup, waitval,
+				 abstime, futex_shared);
 
       /* Get the lock.  */
       lll_lock (rwlock->__data.__lock, rwlock->__data.__shared);
@@ -155,7 +119,7 @@ pthread_rwlock_timedrdlock (rwlock, abstime)
       --rwlock->__data.__nr_readers_queued;
 
       /* Did the futex call time out?  */
-      if (err == -ETIMEDOUT)
+      if (err == ETIMEDOUT)
 	{
 	  /* Yep, report it.  */
 	  result = ETIMEDOUT;
@@ -167,8 +131,7 @@ pthread_rwlock_timedrdlock (rwlock, abstime)
   lll_unlock (rwlock->__data.__lock, rwlock->__data.__shared);
 
   if (wake)
-    lll_futex_wake (&rwlock->__data.__readers_wakeup, INT_MAX,
-		    rwlock->__data.__shared);
+    futex_wake (&rwlock->__data.__readers_wakeup, INT_MAX, futex_shared);
 
   return result;
 }

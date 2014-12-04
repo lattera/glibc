@@ -35,10 +35,9 @@ __pthread_barrier_init (barrier, attr, count)
   struct pthread_barrierattr *iattr = (struct pthread_barrierattr *) attr;
   if (iattr != NULL)
     {
-      if (iattr->pshared != PTHREAD_PROCESS_PRIVATE
-	  && __builtin_expect (iattr->pshared != PTHREAD_PROCESS_SHARED, 0))
-	/* Invalid attribute.  */
-	return EINVAL;
+      int err = futex_supports_pshared (iattr->pshared);
+      if (err != 0)
+	return err;
     }
 
   ibarrier = (union sparc_pthread_barrier *) barrier;

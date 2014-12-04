@@ -19,6 +19,7 @@
 #include <errno.h>
 #include "pthreadP.h"
 #include <lowlevellock.h>
+#include <futex-internal.h>
 #include <elide.h>
 #include <stdbool.h>
 
@@ -28,6 +29,8 @@ __pthread_rwlock_tryrdlock (pthread_rwlock_t *rwlock)
 {
   int result = EBUSY;
   bool wake = false;
+  int futex_shared =
+      rwlock->__data.__shared == LLL_PRIVATE ? FUTEX_PRIVATE : FUTEX_SHARED;
 
   if (ELIDE_TRYLOCK (rwlock->__data.__rwelision,
 		     rwlock->__data.__lock == 0
@@ -63,8 +66,7 @@ __pthread_rwlock_tryrdlock (pthread_rwlock_t *rwlock)
   lll_unlock (rwlock->__data.__lock, rwlock->__data.__shared);
 
   if (wake)
-    lll_futex_wake (&rwlock->__data.__readers_wakeup, INT_MAX,
-		    rwlock->__data.__shared);
+    futex_wake (&rwlock->__data.__readers_wakeup, INT_MAX, futex_shared);
 
   return result;
 }

@@ -23,14 +23,14 @@
 #include <assert.h>
 #include <signal.h>
 #include <nptl/pthreadP.h>
-#include <lowlevellock.h>
+#include <futex-internal.h>
 
 #define DONT_NEED_GAI_MISC_COND	1
 
 #define GAI_MISC_NOTIFY(waitlist) \
   do {									      \
     if (*waitlist->counterp > 0 && --*waitlist->counterp == 0)		      \
-      lll_futex_wake (waitlist->counterp, 1, LLL_PRIVATE);		      \
+      futex_wake ((unsigned int *) waitlist->counterp, 1, FUTEX_PRIVATE);     \
   } while (0)
 
 #define GAI_MISC_WAIT(result, futex, timeout, cancel) \
@@ -49,9 +49,9 @@
 	int status;							      \
 	do								      \
 	  {								      \
-	    status = lll_futex_timed_wait (futexaddr, oldval, timeout,	      \
-					   LLL_PRIVATE);		      \
-	    if (status != -EWOULDBLOCK)					      \
+	    status = futex_reltimed_wait ((unsigned int *) futexaddr, oldval, \
+					  timeout, FUTEX_PRIVATE);	      \
+	    if (status != EAGAIN)					      \
 	      break;							      \
 									      \
 	    oldval = *futexaddr;					      \
@@ -61,12 +61,12 @@
 	if (cancel)							      \
 	  LIBC_CANCEL_RESET (oldtype);					      \
 									      \
-	if (status == -EINTR)						      \
+	if (status == EINTR)						      \
 	  result = EINTR;						      \
-	else if (status == -ETIMEDOUT)					      \
+	else if (status == ETIMEDOUT)					      \
 	  result = EAGAIN;						      \
 	else								      \
-	  assert (status == 0 || status == -EWOULDBLOCK);		      \
+	  assert (status == 0 || status == EAGAIN);			      \
 									      \
 	pthread_mutex_lock (&__gai_requests_mutex);			      \
       }									      \

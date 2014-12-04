@@ -18,7 +18,7 @@
 
 #include <assert.h>
 #include <atomic.h>
-#include <lowlevellock.h>
+#include <futex-internal.h>
 #include <nacl-interfaces.h>
 #include <nptl/pthreadP.h>
 
@@ -64,7 +64,7 @@ __exit_thread (void)
       assert (NACL_EXITING_TID > 0);
 
       atomic_store_relaxed (&pd->tid, NACL_EXITING_TID);
-      lll_futex_wake (&pd->tid, 1, LLL_PRIVATE);
+      futex_wake ((unsigned int *) &pd->tid, 1, FUTEX_PRIVATE);
     }
 
   /* This clears PD->tid some time after the thread stack can never

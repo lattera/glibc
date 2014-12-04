@@ -30,6 +30,7 @@
 #include <nptl/pthreadP.h>
 #include <fork.h>
 #include <arch-fork.h>
+#include <futex-internal.h>
 
 
 static void
@@ -219,7 +220,7 @@ __libc_fork (void)
 
 	  if (atomic_decrement_and_test (&allp->handler->refcntr)
 	      && allp->handler->need_signal)
-	    lll_futex_wake (&allp->handler->refcntr, 1, LLL_PRIVATE);
+	    futex_wake (&allp->handler->refcntr, 1, FUTEX_PRIVATE);
 
 	  allp = allp->next;
 	}

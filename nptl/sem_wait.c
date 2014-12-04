@@ -17,6 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <lowlevellock.h>	/* lll_futex* used by the old code.  */
 #include "sem_waitcommon.c"
 
 int

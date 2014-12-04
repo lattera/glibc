@@ -1,3 +1,73 @@
+2015-07-10  Torvald Riegel  <triegel@redhat.com>
+
+	* sysdeps/nptl/futex-internal.h: New file.
+	* sysdeps/nacl/futex-internal.h: New file.
+	* sysdeps/unix/sysv/linux/futex-internal.h: New file.
+	* nptl/allocatestack.c (setxid_mark_thread): Use futex wrappers with
+	error checking.
+	(setxid_unmark_thread): Likewise.
+	(__nptl_setxid): Likewise.
+	(__wait_lookup_done): Likewise.
+	* nptl/cancellation.c (__pthread_disable_asynccancel): Likewise.
+	* nptl/nptl-init.c (sighandler_setxid): Likewise.
+	* nptl/pthread_create.c (START_THREAD_DEFN): Likewise.
+	* nptl/pthread_once.c (clear_once_control): Likewise.
+	(__pthread_once_slow): Likewise.
+	* nptl/unregister-atfork.c (__unregister_atfork): Likewise.
+	* sysdeps/nacl/exit-thread.h (__exit_thread): Likewise.
+	* sysdeps/nptl/aio_misc.h (AIO_MISC_NOTIFY, AIO_MISC_WAIT): Likewise.
+	* sysdeps/nptl/fork.c (__libc_fork): Likewise.
+	* sysdeps/nptl/gai_misc.h (GAI_MISC_NOTIFY, GAI_MISC_WAIT): Likewise.
+	* nptl/pthread_rwlock_rdlock.c (__pthread_rwlock_rdlock_slow):
+	Likewise.
+	(__pthread_rwlock_rdlock): Likewise.
+	* nptl/pthread_rwlock_timedrdlock.c (pthread_rwlock_timedrdlock):
+	Likewise.
+	* nptl/pthread_rwlock_timedwrlock.c (pthread_rwlock_timedwrlock):
+	Likewise.
+	* nptl/pthread_rwlock_tryrdlock.c (__pthread_rwlock_tryrdlock):
+	Likewise.
+	* nptl/pthread_rwlock_unlock.c (__pthread_rwlock_unlock): Likewise.
+	* nptl/pthread_rwlock_wrlock.c (__pthread_rwlock_wrlock_slow:
+	Likewise.
+	* nptl/pthread_rwlock_init (__pthread_rwlock_init): Remove
+	__ASSUME_PRIVATE_FUTEX check.
+	* nptl/pthread_rwlockattr_setpshared (pthread_rwlockattr_setpshared):
+	Check that shared futexes are supported.
+	* nptl/pthread_barrier_wait.c (pthread_barrier_wait): Use futex
+	wrappers with error checking.
+	* nptl/pthread_barrier_init.c (pthread_barrier_init): Add comments,
+	remove attribute sanity check and __ASSUME_PRIVATE_FUTEX check.
+	* nptl/pthread_barrierattr_setpshared.c
+	(pthread_barrierattr_setpshared): Check that shared futexes are
+	supported.
+	* nptl/pthread_condattr_setpshared.c (pthread_condattr_setpshared):
+	Likewise.
+	* nptl/pthread_mutexattr_setpshared.c (pthread_mutexattr_setpshared):
+	Likewise.
+	* nptl/sem_init.c (futex_private_if_supported): Remove.
+	(__new_sem_init): Adapt and check that shared futexes are supported.
+	* nptl/sem_open.c (sem_open): Likewise.
+	* nptl/sem_post.c (futex_wake): Remove.
+	* nptl/sem_waitcommon.c (futex_abstimed_wait, futex_wake): Remove.
+	(do_futex_wait): Use futex wrappers with error checking.
+	* nptl/sem_wait.c: Include lowlevellock.h.
+	* sysdeps/sparc/nptl/pthread_barrier_init.c (__pthread_barrier_init):
+	Use futex_supports_pshared.
+	* sysdeps/sparc/nptl/pthread_barrier_wait.c (pthread_barrier_wait):
+	Use futex wrappers with error checking.
+	* sysdeps/sparc/sparc32/pthread_barrier_wait.c (pthread_barrier_wait):
+	Likewise.
+	* sysdeps/sparc/sparc32/sem_init.c (futex_private_if_supported): Remove.
+	* sysdeps/sparc/sparc32/sem_post.c (futex_wake): Likewise.
+	* sysdeps/sparc/sparc32/sem_open.c (sem_open): Use FUTEX_SHARED.
+	* sysdeps/sparc/sparc32/sem_waitcommon.c (futex_abstimed_wait): Remove.
+	(futex_wake): Likewise.
+	(sem_assume_only_signals_cause_futex_EINTR): Likewise.
+	(do_futex_wait): Use futex wrappers with error checking.
+	(__new_sem_wait_slow): Update EINTR handling.
+	* sysdeps/sparc/sparc32/sem_wait.c: Include lowlevellock.h.
+
 2015-07-09  Martin Sebor  <msebor@redhat.com>
 
 	[BZ #18435]

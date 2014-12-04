@@ -58,15 +58,8 @@ __pthread_rwlock_init (rwlock, attr)
 
      If the pshared value is in locking functions XORed with avail
      we get the expected result.  */
-#ifdef __ASSUME_PRIVATE_FUTEX
   rwlock->__data.__shared = (iattr->pshared == PTHREAD_PROCESS_PRIVATE
 			     ? 0 : FUTEX_PRIVATE_FLAG);
-#else
-  rwlock->__data.__shared = (iattr->pshared == PTHREAD_PROCESS_PRIVATE
-			     ? 0
-			     : THREAD_GETMEM (THREAD_SELF,
-					      header.private_futex));
-#endif
 
   return 0;
 }

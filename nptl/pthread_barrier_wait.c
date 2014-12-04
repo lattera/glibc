@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <sysdep.h>
 #include <lowlevellock.h>
+#include <futex-internal.h>
 #include <pthreadP.h>
 
 
@@ -29,9 +30,12 @@ __pthread_barrier_wait (barrier)
 {
   struct pthread_barrier *ibarrier = (struct pthread_barrier *) barrier;
   int result = 0;
+  int lll_private = ibarrier->private ^ FUTEX_PRIVATE_FLAG;
+  int futex_private = (lll_private == LLL_PRIVATE
+		       ? FUTEX_PRIVATE : FUTEX_SHARED);
 
   /* Make sure we are alone.  */
-  lll_lock (ibarrier->lock, ibarrier->private ^ FUTEX_PRIVATE_FLAG);
+  lll_lock (ibarrier->lock, lll_private);
 
   /* One more arrival.  */
   --ibarrier->left;
@@ -44,8 +48,7 @@ __pthread_barrier_wait (barrier)
       ++ibarrier->curr_event;
 
       /* Wake up everybody.  */
-      lll_futex_wake (&ibarrier->curr_event, INT_MAX,
-		      ibarrier->private ^ FUTEX_PRIVATE_FLAG);
+      futex_wake (&ibarrier->curr_event, INT_MAX, futex_private);
 
       /* This is the thread which finished the serialization.  */
       result = PTHREAD_BARRIER_SERIAL_THREAD;
@@ -57,12 +60,11 @@ __pthread_barrier_wait (barrier)
       unsigned int event = ibarrier->curr_event;
 
       /* Before suspending, make the barrier available to others.  */
-      lll_unlock (ibarrier->lock, ibarrier->private ^ FUTEX_PRIVATE_FLAG);
+      lll_unlock (ibarrier->lock, lll_private);
 
       /* Wait for the event counter of the barrier to change.  */
       do
-	lll_futex_wait (&ibarrier->curr_event, event,
-			ibarrier->private ^ FUTEX_PRIVATE_FLAG);
+	futex_wait_simple (&ibarrier->curr_event, event, futex_private);
       while (event == ibarrier->curr_event);
     }
 
@@ -72,7 +74,7 @@ __pthread_barrier_wait (barrier)
   /* If this was the last woken thread, unlock.  */
   if (atomic_increment_val (&ibarrier->left) == init_count)
     /* We are done.  */
-    lll_unlock (ibarrier->lock, ibarrier->private ^ FUTEX_PRIVATE_FLAG);
+    lll_unlock (ibarrier->lock, lll_private);
 
   return result;
 }

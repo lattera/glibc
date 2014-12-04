@@ -34,6 +34,7 @@
 #include <shlib-compat.h>
 #include <smp.h>
 #include <lowlevellock.h>
+#include <futex-internal.h>
 #include <kernel-features.h>
 #include <libc-internal.h>
 #include <pthread-pids.h>
@@ -279,10 +280,10 @@ sighandler_setxid (int sig, siginfo_t *si, void *ctx)
 
   /* And release the futex.  */
   self->setxid_futex = 1;
-  lll_futex_wake (&self->setxid_futex, 1, LLL_PRIVATE);
+  futex_wake (&self->setxid_futex, 1, FUTEX_PRIVATE);
 
   if (atomic_decrement_val (&__xidcmd->cntr) == 0)
-    lll_futex_wake (&__xidcmd->cntr, 1, LLL_PRIVATE);
+    futex_wake ((unsigned int *) &__xidcmd->cntr, 1, FUTEX_PRIVATE);
 }
 #endif
 

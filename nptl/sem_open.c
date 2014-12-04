@@ -30,6 +30,7 @@
 #include <sys/stat.h>
 #include "semaphoreP.h"
 #include <shm-directory.h>
+#include <futex-internal.h>
 
 
 /* Comparison function for search of existing mapping.  */
@@ -141,6 +142,14 @@ sem_open (const char *name, int oflag, ...)
   int fd;
   sem_t *result;
 
+  /* Check that shared futexes are supported.  */
+  int err = futex_supports_pshared (PTHREAD_PROCESS_SHARED);
+  if (err != 0)
+    {
+      __set_errno (err);
+      return SEM_FAILED;
+    }
+
   /* Create the name of the final file in local variable SHM_NAME.  */
   SHM_GET_NAME (EINVAL, SEM_FAILED, SEM_SHM_PREFIX);
 
@@ -201,7 +210,7 @@ sem_open (const char *name, int oflag, ...)
       sem.newsem.nwaiters = 0;
 #endif
       /* This always is a shared semaphore.  */
-      sem.newsem.private = LLL_SHARED;
+      sem.newsem.private = FUTEX_SHARED;
 
       /* Initialize the remaining bytes as well.  */
       memset ((char *) &sem.initsem + sizeof (struct new_sem), '\0',

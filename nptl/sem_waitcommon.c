@@ -20,7 +20,7 @@
 #include <kernel-features.h>
 #include <errno.h>
 #include <sysdep.h>
-#include <lowlevellock.h>
+#include <futex-internal.h>
 #include <internaltypes.h>
 #include <semaphore.h>
 #include <sys/time.h>
@@ -28,110 +28,6 @@
 #include <pthreadP.h>
 #include <shlib-compat.h>
 #include <atomic.h>
-
-/* Wrapper for lll_futex_wait with absolute timeout and error checking.
-   TODO Remove when cleaning up the futex API throughout glibc.  */
-static __always_inline int
-futex_abstimed_wait (unsigned int* futex, unsigned int expected,
-		     const struct timespec* abstime, int private, bool cancel)
-{
-  int err, oldtype;
-  if (abstime == NULL)
-    {
-      if (cancel)
-	oldtype = __pthread_enable_asynccancel ();
-      err = lll_futex_wait (futex, expected, private);
-      if (cancel)
-	__pthread_disable_asynccancel (oldtype);
-    }
-  else
-    {
-#if (defined __ASSUME_FUTEX_CLOCK_REALTIME	\
-     && defined lll_futex_timed_wait_bitset)
-      /* The Linux kernel returns EINVAL for this, but in userspace
-	 such a value is valid.  */
-      if (abstime->tv_sec < 0)
-	return ETIMEDOUT;
-#else
-      struct timeval tv;
-      struct timespec rt;
-      int sec, nsec;
-
-      /* Get the current time.  */
-      __gettimeofday (&tv, NULL);
-
-      /* Compute relative timeout.  */
-      sec = abstime->tv_sec - tv.tv_sec;
-      nsec = abstime->tv_nsec - tv.tv_usec * 1000;
-      if (nsec < 0)
-        {
-          nsec += 1000000000;
-          --sec;
-        }
-
-      /* Already timed out?  */
-      if (sec < 0)
-        return ETIMEDOUT;
-
-      /* Do wait.  */
-      rt.tv_sec = sec;
-      rt.tv_nsec = nsec;
-#endif
-      if (cancel)
-	oldtype = __pthread_enable_asynccancel ();
-#if (defined __ASSUME_FUTEX_CLOCK_REALTIME	\
-     && defined lll_futex_timed_wait_bitset)
-      err = lll_futex_timed_wait_bitset (futex, expected, abstime,
-					 FUTEX_CLOCK_REALTIME, private);
-#else
-      err = lll_futex_timed_wait (futex, expected, &rt, private);
-#endif
-      if (cancel)
-	__pthread_disable_asynccancel (oldtype);
-    }
-  switch (err)
-    {
-    case 0:
-    case -EAGAIN:
-    case -EINTR:
-    case -ETIMEDOUT:
-      return -err;
-
-    case -EFAULT: /* Must have been caused by a glibc or application bug.  */
-    case -EINVAL: /* Either due to wrong alignment or due to the timeout not
-		     being normalized.  Must have been caused by a glibc or
-		     application bug.  */
-    case -ENOSYS: /* Must have been caused by a glibc bug.  */
-    /* No other errors are documented at this time.  */
-    default:
-      abort ();
-    }
-}
-
-/* Wrapper for lll_futex_wake, with error checking.
-   TODO Remove when cleaning up the futex API throughout glibc.  */
-static __always_inline void
-futex_wake (unsigned int* futex, int processes_to_wake, int private)
-{
-  int res = lll_futex_wake (futex, processes_to_wake, private);
-  /* No error.  Ignore the number of woken processes.  */
-  if (res >= 0)
-    return;
-  switch (res)
-    {
-    case -EFAULT: /* Could have happened due to memory reuse.  */
-    case -EINVAL: /* Could be either due to incorrect alignment (a bug in
-		     glibc or in the application) or due to memory being
-		     reused for a PI futex.  We cannot distinguish between the
-		     two causes, and one of them is correct use, so we do not
-		     act in this case.  */
-      return;
-    case -ENOSYS: /* Must have been caused by a glibc bug.  */
-    /* No other errors are documented at this time.  */
-    default:
-      abort ();
-    }
-}
 
 
 /* The semaphore provides two main operations: sem_post adds a token to the
@@ -220,11 +116,12 @@ do_futex_wait (struct new_sem *sem, const struct timespec *abstime)
   int err;
 
 #if __HAVE_64B_ATOMICS
-  err = futex_abstimed_wait ((unsigned int *) &sem->data + SEM_VALUE_OFFSET, 0,
-			     abstime, sem->private, true);
+  err = futex_abstimed_wait_cancelable (
+      (unsigned int *) &sem->data + SEM_VALUE_OFFSET, 0, abstime,
+      sem->private);
 #else
-  err = futex_abstimed_wait (&sem->value, SEM_NWAITERS_MASK, abstime,
-			     sem->private, true);
+  err = futex_abstimed_wait_cancelable (&sem->value, SEM_NWAITERS_MASK,
+					abstime, sem->private);
 #endif
 
   return err;

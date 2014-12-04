@@ -31,6 +31,7 @@
 #include <kernel-features.h>
 #include <exit-thread.h>
 #include <default-sched.h>
+#include <futex-internal.h>
 
 #include <shlib-compat.h>
 
@@ -269,7 +270,7 @@ START_THREAD_DEFN
 
   /* Allow setxid from now onwards.  */
   if (__glibc_unlikely (atomic_exchange_acq (&pd->setxid_futex, 0) == -2))
-    lll_futex_wake (&pd->setxid_futex, 1, LLL_PRIVATE);
+    futex_wake (&pd->setxid_futex, 1, FUTEX_PRIVATE);
 
 #ifdef __NR_set_robust_list
 # ifndef __ASSUME_SET_ROBUST_LIST
@@ -414,7 +415,8 @@ START_THREAD_DEFN
 	  this->__list.__next = NULL;
 
 	  atomic_or (&this->__lock, FUTEX_OWNER_DIED);
-	  lll_futex_wake (&this->__lock, 1, /* XYZ */ LLL_SHARED);
+	  futex_wake ((unsigned int *) &this->__lock, 1,
+		      /* XYZ */ FUTEX_SHARED);
 	}
       while (robust != (void *) &pd->robust_head);
     }
@@ -442,7 +444,11 @@ START_THREAD_DEFN
       /* Some other thread might call any of the setXid functions and expect
 	 us to reply.  In this case wait until we did that.  */
       do
-	lll_futex_wait (&pd->setxid_futex, 0, LLL_PRIVATE);
+	/* XXX This differs from the typical futex_wait_simple pattern in that
+	   the futex_wait condition (setxid_futex) is different from the
+	   condition used in the surrounding loop (cancelhandling).  We need
+	   to check and document why this is correct.  */
+	futex_wait_simple (&pd->setxid_futex, 0, FUTEX_PRIVATE);
       while (pd->cancelhandling & SETXID_BITMASK);
 
       /* Reset the value so that the stack can be reused.  */
@@ -683,7 +689,7 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
 	     stillborn thread.  */
 	  if (__glibc_unlikely (atomic_exchange_acq (&pd->setxid_futex, 0)
 				== -2))
-	    lll_futex_wake (&pd->setxid_futex, 1, LLL_PRIVATE);
+	    futex_wake (&pd->setxid_futex, 1, FUTEX_PRIVATE);
 
 	  /* Free the resources.  */
 	  __deallocate_stack (pd);

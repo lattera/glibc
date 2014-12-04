@@ -19,6 +19,7 @@
 #include <setjmp.h>
 #include <stdlib.h>
 #include "pthreadP.h"
+#include <futex-internal.h>
 
 
 /* The next two functions are similar to pthread_setcanceltype() but
@@ -93,7 +94,8 @@ __pthread_disable_asynccancel (int oldtype)
   while (__builtin_expect ((newval & (CANCELING_BITMASK | CANCELED_BITMASK))
 			   == CANCELING_BITMASK, 0))
     {
-      lll_futex_wait (&self->cancelhandling, newval, LLL_PRIVATE);
+      futex_wait_simple ((unsigned int *) &self->cancelhandling, newval,
+			 FUTEX_PRIVATE);
       newval = THREAD_GETMEM (self, cancelhandling);
     }
 }

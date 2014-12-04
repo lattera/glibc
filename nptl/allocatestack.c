@@ -29,6 +29,7 @@
 #include <tls.h>
 #include <list.h>
 #include <lowlevellock.h>
+#include <futex-internal.h>
 #include <kernel-features.h>
 #include <stack-aliasing.h>
 
@@ -987,7 +988,7 @@ setxid_mark_thread (struct xid_command *cmdp, struct pthread *t)
   if (t->setxid_futex == -1
       && ! atomic_compare_and_exchange_bool_acq (&t->setxid_futex, -2, -1))
     do
-      lll_futex_wait (&t->setxid_futex, -2, LLL_PRIVATE);
+      futex_wait_simple (&t->setxid_futex, -2, FUTEX_PRIVATE);
     while (t->setxid_futex == -2);
 
   /* Don't let the thread exit before the setxid handler runs.  */
@@ -1005,7 +1006,7 @@ setxid_mark_thread (struct xid_command *cmdp, struct pthread *t)
 	  if ((ch & SETXID_BITMASK) == 0)
 	    {
 	      t->setxid_futex = 1;
-	      lll_futex_wake (&t->setxid_futex, 1, LLL_PRIVATE);
+	      futex_wake (&t->setxid_futex, 1, FUTEX_PRIVATE);
 	    }
 	  return;
 	}
@@ -1032,7 +1033,7 @@ setxid_unmark_thread (struct xid_command *cmdp, struct pthread *t)
 
   /* Release the futex just in case.  */
   t->setxid_futex = 1;
-  lll_futex_wake (&t->setxid_futex, 1, LLL_PRIVATE);
+  futex_wake (&t->setxid_futex, 1, FUTEX_PRIVATE);
 }
 
 
@@ -1141,7 +1142,8 @@ __nptl_setxid (struct xid_command *cmdp)
       int cur = cmdp->cntr;
       while (cur != 0)
 	{
-	  lll_futex_wait (&cmdp->cntr, cur, LLL_PRIVATE);
+	  futex_wait_simple ((unsigned int *) &cmdp->cntr, cur,
+			     FUTEX_PRIVATE);
 	  cur = cmdp->cntr;
 	}
     }
@@ -1251,7 +1253,8 @@ __wait_lookup_done (void)
 	continue;
 
       do
-	lll_futex_wait (gscope_flagp, THREAD_GSCOPE_FLAG_WAIT, LLL_PRIVATE);
+	futex_wait_simple ((unsigned int *) gscope_flagp,
+			   THREAD_GSCOPE_FLAG_WAIT, FUTEX_PRIVATE);
       while (*gscope_flagp == THREAD_GSCOPE_FLAG_WAIT);
     }
 
@@ -1273,7 +1276,8 @@ __wait_lookup_done (void)
 	continue;
 
       do
-	lll_futex_wait (gscope_flagp, THREAD_GSCOPE_FLAG_WAIT, LLL_PRIVATE);
+	futex_wait_simple ((unsigned int *) gscope_flagp,
+			   THREAD_GSCOPE_FLAG_WAIT, FUTEX_PRIVATE);
       while (*gscope_flagp == THREAD_GSCOPE_FLAG_WAIT);
     }
 

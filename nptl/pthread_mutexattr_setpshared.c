@@ -18,6 +18,7 @@
 
 #include <errno.h>
 #include <pthreadP.h>
+#include <futex-internal.h>
 
 
 int
@@ -27,9 +28,9 @@ pthread_mutexattr_setpshared (attr, pshared)
 {
   struct pthread_mutexattr *iattr;
 
-  if (pshared != PTHREAD_PROCESS_PRIVATE
-      && __builtin_expect (pshared != PTHREAD_PROCESS_SHARED, 0))
-    return EINVAL;
+  int err = futex_supports_pshared (pshared);
+  if (err != 0)
+    return err;
 
   iattr = (struct pthread_mutexattr *) attr;
 

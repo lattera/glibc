@@ -18,15 +18,16 @@
 
 #include <errno.h>
 #include <pthreadP.h>
+#include <futex-internal.h>
 
 int
 pthread_condattr_setpshared (attr, pshared)
      pthread_condattr_t *attr;
      int pshared;
 {
-  if (pshared != PTHREAD_PROCESS_PRIVATE
-      && __builtin_expect (pshared != PTHREAD_PROCESS_SHARED, 0))
-    return EINVAL;
+  int err = futex_supports_pshared (pshared);
+  if (err != 0)
+    return err;
 
   int *valuep = &((struct pthread_condattr *) attr)->value;
 
