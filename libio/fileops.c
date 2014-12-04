@@ -615,7 +615,13 @@ _IO_new_file_underflow (fp)
   }
   fp->_IO_read_end += count;
   if (count == 0)
-    return EOF;
+    {
+      /* If a stream is read to EOF, the calling application may switch active
+	 handles.  As a result, our offset cache would no longer be valid, so
+	 unset it.  */
+      fp->_offset = _IO_pos_BAD;
+      return EOF;
+    }
   if (fp->_offset != _IO_pos_BAD)
     _IO_pos_adjust (fp->_offset, count);
   return *(unsigned char *) fp->_IO_read_ptr;

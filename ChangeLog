@@ -1,5 +1,15 @@
 2914-12-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	[BZ #17653]
+	* libio/fileops.c (_IO_new_file_underflow): Unset cached
+	offset on EOF.
+	* libio/wfileops.c (_IO_wfile_underflow): Likewise.
+	* libio/tst-ftell-active-handler.c (fgets_func_t): New type.
+	(fgets_func): Function pointer to fgets and fgetws.
+	(do_ftell_test): Add test to verify ftell value after read
+	EOF.
+	(do_test): Set fgets_func.
+
 	* libio/tst-ftell-active-handler.c (do_ftruncate_test): Add
 	O_TRUNC flag for w and w+ modes.
 	(do_rewind_test): Likewise.

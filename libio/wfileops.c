@@ -257,7 +257,10 @@ _IO_wfile_underflow (fp)
   if (count <= 0)
     {
       if (count == 0 && naccbuf == 0)
-	fp->_flags |= _IO_EOF_SEEN;
+	{
+	  fp->_flags |= _IO_EOF_SEEN;
+	  fp->_offset = _IO_pos_BAD;
+	}
       else
 	fp->_flags |= _IO_ERR_SEEN, count = 0;
     }
