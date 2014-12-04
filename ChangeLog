@@ -1,6 +1,6 @@
 2014-12-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
-	* libio/fileops.c: Use IOS C style for function definitions.
+	* libio/fileops.c: Use ISO C style for function definitions.
 	* libio/iofopen.c: Likewise.
 	* libio/wfileops.c: Likewise.
 
