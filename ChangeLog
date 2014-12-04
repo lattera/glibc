@@ -1,3 +1,13 @@
+2014-12-04  Roland McGrath  <roland@hack.frob.com>
+
+	* io/openat64.c: #include <libc-internal.h>
+	(__openat64): Prototypify.  Use ignore_value on MODE.
+	* io/openat.c: Likewise.
+	* misc/reboot.c: #include <libc-internal.h>
+	(reboot): Prototypify.  Use ignore_value on HOWTO.
+	* misc/ptrace.c: #include <libc-internal.h>
+	(ptrace): Prototypify.  Use ignore_value for va_arg'd parameters.
+
 2014-12-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/list-header-symbols.pl (%extra_syms): Add h_errno for

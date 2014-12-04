@@ -19,6 +19,7 @@
 #include <sys/ptrace.h>
 #include <sys/types.h>
 #include <stdarg.h>
+#include <libc-internal.h>
 
 /* Perform process tracing functions.  REQUEST is one of the values
    in <sys/ptrace.h>, and determines the action to be taken.
@@ -30,8 +31,7 @@
      pid_t PID, void *ADDR, int DATA, void *ADDR2
    after PID.  */
 int
-ptrace (request)
-     enum __ptrace_request request;
+ptrace (enum __ptrace_request request, ...)
 {
   pid_t pid;
   void *addr;
@@ -60,32 +60,41 @@ ptrace (request)
     case PTRACE_SETFPREGS:
     case PTRACE_GETFPAREGS:
     case PTRACE_SETFPAREGS:
-      va_start(ap, request);
-      pid = va_arg(ap, pid_t);
-      addr = va_arg(ap, void *);
-      va_end(ap);
+      va_start (ap, request);
+      pid = va_arg (ap, pid_t);
+      addr = va_arg (ap, void *);
+      va_end (ap);
+      ignore_value (pid);
+      ignore_value (addr);
       break;
 
     case PTRACE_POKETEXT:
     case PTRACE_POKEDATA:
     case PTRACE_POKEUSER:
-      va_start(ap, request);
-      pid = va_arg(ap, pid_t);
-      addr = va_arg(ap, void *);
-      data = va_arg(ap, int);
-      va_end(ap);
+      va_start (ap, request);
+      pid = va_arg (ap, pid_t);
+      addr = va_arg (ap, void *);
+      data = va_arg (ap, int);
+      va_end (ap);
+      ignore_value (pid);
+      ignore_value (addr);
+      ignore_value (data);
       break;
 
     case PTRACE_READDATA:
     case PTRACE_WRITEDATA:
     case PTRACE_READTEXT:
     case PTRACE_WRITETEXT:
-      va_start(ap, request);
-      pid = va_arg(ap, pid_t);
-      addr = va_arg(ap, void *);
-      data = va_arg(ap, int);
-      addr2 = va_arg(ap, void *);
-      va_end(ap);
+      va_start (ap, request);
+      pid = va_arg (ap, pid_t);
+      addr = va_arg (ap, void *);
+      data = va_arg (ap, int);
+      addr2 = va_arg (ap, void *);
+      va_end (ap);
+      ignore_value (pid);
+      ignore_value (addr);
+      ignore_value (data);
+      ignore_value (addr2);
       break;
 
     default:
@@ -96,6 +105,5 @@ ptrace (request)
   __set_errno (ENOSYS);
   return -1;
 }
-
 
 stub_warning (ptrace)

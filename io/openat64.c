@@ -21,15 +21,13 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <sys/stat.h>
+#include <libc-internal.h>
 
 /* Open FILE with access OFLAG.  Interpret relative paths relative to
    the directory associated with FD.  If OFLAG includes O_CREAT, a
    third argument is the file protection.  */
 int
-__openat64 (fd, file, oflag)
-     int fd;
-     const char *file;
-     int oflag;
+__openat64 (int fd, const char *file, int oflag, ...)
 {
   int mode;
 
@@ -59,6 +57,8 @@ __openat64 (fd, file, oflag)
       va_start (arg, oflag);
       mode = va_arg (arg, int);
       va_end (arg);
+
+      ignore_value (mode);
     }
 
   __set_errno (ENOSYS);

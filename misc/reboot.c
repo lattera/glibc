@@ -18,15 +18,16 @@
 #include <errno.h>
 #include <unistd.h>
 #include <sys/reboot.h>
+#include <libc-internal.h>
 
 /* Reboot the system.  */
 int
-reboot (howto)
-     int howto;
+reboot (int howto)
 {
+  ignore_value (howto);
+
   __set_errno (ENOSYS);
   return -1;
 }
-
 
 stub_warning (reboot)
