@@ -104,8 +104,8 @@ do_ftruncate_test (const char *filename)
       int fd_mode;
     } test_modes[] = {
 	  {"r+", O_RDWR},
-	  {"w", O_WRONLY},
-	  {"w+", O_RDWR},
+	  {"w", O_WRONLY | O_TRUNC},
+	  {"w+", O_RDWR | O_TRUNC},
 	  {"a", O_WRONLY},
 	  {"a+", O_RDWR}
     };
@@ -189,8 +189,8 @@ do_rewind_test (const char *filename)
       size_t old_off;
       size_t new_off;
     } test_modes[] = {
-	  {"w", O_WRONLY, 0, data_len},
-	  {"w+", O_RDWR, 0, data_len},
+	  {"w", O_WRONLY | O_TRUNC, 0, data_len},
+	  {"w+", O_RDWR | O_TRUNC, 0, data_len},
 	  {"r+", O_RDWR, 0, data_len},
 	  /* The new offsets for 'a' and 'a+' modes have to factor in the
 	     previous writes since they always append to the end of the
@@ -294,8 +294,8 @@ do_ftell_test (const char *filename)
 	  /* In w, w+ and r+ modes, the file position should be at the
 	     beginning of the file.  After the write, the offset should be
 	     updated to data_len.  */
-	  {"w", O_WRONLY, 0, data_len},
-	  {"w+", O_RDWR, 0, data_len},
+	  {"w", O_WRONLY | O_TRUNC, 0, data_len},
+	  {"w+", O_RDWR | O_TRUNC, 0, data_len},
 	  {"r+", O_RDWR, 0, data_len},
 	  /* For the 'a' mode, the initial file position should be the
 	     current end of file. After the write, the offset has data_len
@@ -375,8 +375,8 @@ do_write_test (const char *filename)
       const char *mode;
       int fd_mode;
     } test_modes[] = {
-	  {"w", O_WRONLY},
-	  {"w+", O_RDWR},
+	  {"w", O_WRONLY | O_TRUNC},
+	  {"w+", O_RDWR | O_TRUNC},
 	  {"r+", O_RDWR}
     };
 

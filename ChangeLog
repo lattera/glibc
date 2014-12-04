@@ -1,5 +1,11 @@
 2914-12-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* libio/tst-ftell-active-handler.c (do_ftruncate_test): Add
+	O_TRUNC flag for w and w+ modes.
+	(do_rewind_test): Likewise.
+	(do_ftell_test): Likewise.
+	(do_write_test): Likewise.
+
 	[BZ #17647]
 	* libio/fileops.c (do_ftell): Seek only when there are
 	unflushed writes.
