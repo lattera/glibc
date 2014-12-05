@@ -84,6 +84,7 @@ static const char *char_data = "abcdef";
 static const wchar_t *wide_data = L"abcdef";
 static size_t data_len;
 static size_t file_len;
+static size_t char_len;
 
 typedef int (*fputs_func_t) (const void *data, FILE *fp);
 typedef void *(*fgets_func_t) (void *ws, int n, FILE *fp);
@@ -364,11 +365,11 @@ do_ftell_test (const char *filename)
 	     reading.  */
 	  if (test_modes[i].fd_mode != O_WRONLY)
 	    {
-	      char tmpbuf[data_len];
+	      char tmpbuf[data_len * char_len];
 
 	      rewind (fp);
 
-	      while (fgets_func (tmpbuf, sizeof (tmpbuf), fp) && !feof (fp));
+	      while (fgets_func (tmpbuf, data_len, fp) && !feof (fp));
 
 	      write_ret = write (fd, data, data_len);
 	      if (write_ret != data_len)
@@ -656,6 +657,7 @@ do_test (void)
   fgets_func = (fgets_func_t) fgets;
   data = char_data;
   data_len = strlen (char_data);
+  char_len = sizeof (char);
   ret |= do_one_test (filename);
 
   /* Truncate the file before repeating the tests in wide mode.  */
@@ -678,6 +680,7 @@ do_test (void)
   fgets_func = (fgets_func_t) fgetws;
   data = wide_data;
   data_len = wcslen (wide_data);
+  char_len = sizeof (wchar_t);
   ret |= do_one_test (filename);
 
   return ret;

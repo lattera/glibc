@@ -1,3 +1,8 @@
+2014-12-05  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* libio/tst-ftell-active-handler.c (do_ftell_test): Fix buffer overrun
+	for wide-character tests.
+
 2014-12-04  Roland McGrath  <roland@hack.frob.com>
 
 	* io/openat64.c: #include <libc-internal.h>
