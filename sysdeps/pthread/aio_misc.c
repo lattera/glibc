@@ -631,7 +631,7 @@ handle_fildes_io (void *arg)
 	  struct timespec wakeup_time;
 
 	  ++idle_thread_count;
-	  gettimeofday (&now, NULL);
+	  __gettimeofday (&now, NULL);
 	  wakeup_time.tv_sec = now.tv_sec + optim.aio_idle_time;
 	  wakeup_time.tv_nsec = now.tv_usec * 1000;
 	  if (wakeup_time.tv_nsec >= 1000000000)

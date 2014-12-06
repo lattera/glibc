@@ -1,3 +1,24 @@
+2014-12-06  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17682]
+	* resource/Versions (libc): Add __getrlimit at GLIBC_PRIVATE.
+	* resource/getrlimit.c (__getrlimit): Use libc_hidden_def.
+	* sysdeps/mach/hurd/getrlimit.c (__getrlimit): Likewise.
+	* include/sys/resource.h (__getrlimit): Use libc_hidden_proto.
+	* nptl/nptl-init.c (__pthread_initialize_minimal_internal): Use
+	__getrlimit instead of getrlimit.
+	* nptl/pthread_cond_timedwait.c (__pthread_cond_timedwait): Use
+	__gettimeofday instead of gettimeofday.
+	* nptl/pthread_rwlock_timedrdlock.c (pthread_rwlock_timedrdlock):
+	Likewise.
+	* nptl/pthread_rwlock_timedwrlock.c (pthread_rwlock_timedwrlock):
+	Likewise.
+	* sysdeps/pthread/aio_misc.c (handle_fildes_io): Likewise.
+	* conform/Makefile (test-xfail-POSIX2008/aio.h/linknamespace):
+	Remove variable.
+	(test-xfail-POSIX2008/pthread.h/linknamespace): Likewise.
+	(test-xfail-POSIX2008/time.h/linknamespace): Likewise.
+
 2014-12-05  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* libio/tst-ftell-active-handler.c (do_ftell_test): Fix buffer overrun

@@ -27,6 +27,7 @@ __getrlimit (enum __rlimit_resource resource, struct rlimit *rlimits)
   __set_errno (ENOSYS);
   return -1;
 }
+libc_hidden_def (__getrlimit)
 weak_alias (__getrlimit, getrlimit)
 
 stub_warning (getrlimit)

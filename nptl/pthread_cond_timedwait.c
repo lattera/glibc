@@ -131,7 +131,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 # else
 	/* Get the current time.  So far we support only one clock.  */
 	struct timeval tv;
-	(void) gettimeofday (&tv, NULL);
+	(void) __gettimeofday (&tv, NULL);
 
 	/* Convert the absolute timeout value to a relative timeout.  */
 	rt.tv_sec = abstime->tv_sec - tv.tv_sec;

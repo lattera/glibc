@@ -43,4 +43,5 @@ __getrlimit (enum __rlimit_resource resource, struct rlimit *rlimits)
 
   return 0;
 }
+libc_hidden_def (__getrlimit)
 weak_alias (__getrlimit, getrlimit)

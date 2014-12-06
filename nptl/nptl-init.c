@@ -433,7 +433,7 @@ __pthread_initialize_minimal_internal (void)
   /* Determine the default allowed stack size.  This is the size used
      in case the user does not specify one.  */
   struct rlimit limit;
-  if (getrlimit (RLIMIT_STACK, &limit) != 0
+  if (__getrlimit (RLIMIT_STACK, &limit) != 0
       || limit.rlim_cur == RLIM_INFINITY)
     /* The system limit is not usable.  Use an architecture-specific
        default.  */

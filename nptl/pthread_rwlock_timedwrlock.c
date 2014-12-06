@@ -81,7 +81,7 @@ pthread_rwlock_timedwrlock (rwlock, abstime)
      || !defined lll_futex_timed_wait_bitset)
       /* Get the current time.  So far we support only one clock.  */
       struct timeval tv;
-      (void) gettimeofday (&tv, NULL);
+      (void) __gettimeofday (&tv, NULL);
 
       /* Convert the absolute timeout value to a relative timeout.  */
       struct timespec rt;
