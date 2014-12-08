@@ -1,3 +1,9 @@
+2014-12-10  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #12847]
+	* sysdeps/nptl/fork.c (fresetlockfiles): Skip files with
+	user-controlled locks.
+
 2014-12-10  Richard Earnshaw  <rearnsha@arm.com>
 
 	* sysdeps/aarch64/strchrnul.S (vrepmask): Use a call-clobbered

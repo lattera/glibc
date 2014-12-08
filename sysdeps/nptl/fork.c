@@ -46,7 +46,8 @@ fresetlockfiles (void)
   _IO_ITER i;
 
   for (i = _IO_iter_begin(); i != _IO_iter_end(); i = _IO_iter_next(i))
-    _IO_lock_init (*((_IO_lock_t *) _IO_iter_file(i)->_lock));
+    if ((_IO_iter_file (i)->_flags & _IO_USER_LOCK) == 0)
+      _IO_lock_init (*((_IO_lock_t *) _IO_iter_file(i)->_lock));
 }
 
 
