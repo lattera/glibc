@@ -1,3 +1,7 @@
+2014-12-15  Torvald Riegel  <triegel@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/pthread_once.c: Remove file.
+
 2014-12-15  Jeff Law  <law@redhat.com>
 
 	[BZ #16617]
