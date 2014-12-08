@@ -1,3 +1,8 @@
+2014-12-08  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* libio/tst-ftell-active-handler.c (do_ftell_test): Fix wide-character
+	stack variable alignment.
+
 2014-12-06  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17682]
