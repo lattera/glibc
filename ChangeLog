@@ -1,3 +1,7 @@
+2014-12-09  Torvald Riegel  <triegel@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sh/pthread_once.S: Remove file.
+
 2014-12-08  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* libio/tst-ftell-active-handler.c (do_ftell_test): Fix wide-character
