@@ -2,6 +2,7 @@
 #include <printf.h>
 #include <stdio.h>
 #include <string.h>
+#include <libc-internal.h>
 
 #define V       12345678.12345678
 
@@ -12,9 +13,15 @@ main (int argc, char *argv[])
   char buf[1024];
   int result = 0;
 
+  /* Testing printf_size_info requires using the deprecated
+     register_printf_function, resulting in warnings
+     "'register_printf_function' is deprecated".  */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wdeprecated-declarations");
   /* Register the printf handlers.  */
   register_printf_function ('b', printf_size, printf_size_info);
   register_printf_function ('B', printf_size, printf_size_info);
+  DIAG_POP_NEEDS_COMMENT;
 
 
   sprintf (buf, "%g %b %B %.0b %.0B %.1b %.1B %8.0b %08.0B",

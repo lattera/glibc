@@ -1,5 +1,9 @@
 2014-12-10  Joseph Myers  <joseph@codesourcery.com>
 
+	* stdio-common/tst-printfsz.c: Include <libc-internal.h>.
+	(main): Disable -Wdeprecated-declarations around calls to
+	register_printf_function.
+
 	* stdio-common/tst-unlockedio.c: Include <libc-internal.h>.
 	(do_test): Disable -Wdiv-by-zero around some calls to
 	fwrite_unlocked and fread_unlocked.
