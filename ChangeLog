@@ -1,4 +1,49 @@
 2014-12-10  Joseph Myers  <joseph@codesourcery.com>
+	    Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	[BZ #17634]
+	* wcsmbs/wcschr.c [!WCSCHR] (wcschr): Define as __wcschr.
+	Undefine after defining function.  Define as weak alias of
+	__wcschr.  Use libc_hidden_weak.
+	* include/wchar.h (__wcschr): Declare.  Use libc_hidden_proto.
+	* sysdeps/i386/i686/multiarch/wcschr-c.c [IS_IN (libc) && SHARED]
+	(libc_hidden_def): Also define __GI___wcschr alias.
+	* sysdeps/i386/i686/multiarch/wcschr.S (wcschr): Rename to
+	__wcschr and define as weak alias of __wcschr.
+	* sysdeps/powerpc/power6/wcschr.c [!WCSCHR] (WCSCHR): Define as
+	__wcschr.
+	[!WCSCHR] (DEFAULT_WCSCHR): Define.
+	[DEFAULT_WCSCHR] (__wcschr): Use libc_hidden_def.
+	[DEFAULT_WCSCHR] (wcschr): Define as weak alias of __wcschr.  Use
+	libc_hidden_weak.  Do not use libc_hidden_def.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wcschr-ppc32.c
+	[IS_IN (libc) && SHARED] (libc_hidden_def): Also define
+	__GI___wcschr alias.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wcschr.c
+	[IS_IN (libc)] (wcschr): Define as macro expanding to
+	__redirect_wcschr.
+	[IS_IN (libc)] (__wcschr_ppc): Use __redirect_wcschr in typeof.
+	[IS_IN (libc)] (__wcschr_power6): Likewise.
+	[IS_IN (libc)] (__wcschr_power7): Likewise.
+	[IS_IN (libc)] (__libc_wcschr): New.  Define with libc_ifunc
+	instead of wcschr.
+	[IS_IN (libc)] (wcschr): Undefine and define as weak alias of
+	__libc_wcschr.
+	[!IS_IN (libc)] (libc_hidden_def): Do not undefine and redefine.
+	* sysdeps/powerpc/powerpc64/multiarch/wcschr.c (wcschr): Rename to
+	__wcschr and define as weak alias of __wcschr.  Use
+	libc_hidden_builtin_def.
+	* sysdeps/x86_64/wcschr.S (wcschr): Rename to __wcschr and define
+	as weak alias of __wcschr.  Use libc_hidden_weak.
+	* time/alt_digit.c (_nl_get_walt_digit): Use __wcschr instead of
+	wcschr.
+	* time/era.c (_nl_init_era_entries): Likewise.
+	* conform/Makefile (test-xfail-ISO/time.h/linknamespace): Remove
+	variable.
+	(test-xfail-XPG3/time.h/linknamespace): Likewise.
+	(test-xfail-XPG4/time.h/linknamespace): Likewise.
+
+2014-12-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* libio/tst-ftell-active-handler.c (do_ftruncate_test): Use %ld
 	format for long int variable.

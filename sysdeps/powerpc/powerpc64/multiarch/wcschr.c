@@ -25,12 +25,14 @@ extern __typeof (wcschr) __wcschr_ppc attribute_hidden;
 extern __typeof (wcschr) __wcschr_power6 attribute_hidden;
 extern __typeof (wcschr) __wcschr_power7 attribute_hidden;
 
-libc_ifunc (wcschr,
+libc_ifunc (__wcschr,
 	     (hwcap & PPC_FEATURE_HAS_VSX)
              ? __wcschr_power7 :
 	       (hwcap & PPC_FEATURE_ARCH_2_05)
 	       ? __wcschr_power6
              : __wcschr_ppc);
+weak_alias (__wcschr, wcschr)
+libc_hidden_builtin_def (wcschr)
 #else
 #undef libc_hidden_def
 #define libc_hidden_def(a)

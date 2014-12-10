@@ -19,7 +19,8 @@
 #include <wchar.h>
 
 #ifndef WCSCHR
-# define WCSCHR wcschr
+# define WCSCHR __wcschr
+# define DEFAULT_WCSCHR
 #endif
 
 /* Find the first occurrence of WC in WCS.  */
@@ -86,4 +87,10 @@ WCSCHR (const wchar_t *wcs, const wchar_t wc)
 
   return NULL;
 }
+#ifdef DEFAULT_WCSCHR
+libc_hidden_def (__wcschr)
+weak_alias (__wcschr, wcschr)
+libc_hidden_weak (wcschr)
+#else
 libc_hidden_def (wcschr)
+#endif

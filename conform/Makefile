@@ -345,7 +345,6 @@ test-xfail-XOPEN2K/ndbm.h/linknamespace = yes
 test-xfail-XOPEN2K8/ndbm.h/linknamespace = yes
 
 # Unsorted expected failures.
-test-xfail-ISO/time.h/linknamespace = yes
 test-xfail-ISO99/ctype.h/linknamespace = yes
 test-xfail-ISO11/ctype.h/linknamespace = yes
 test-xfail-XPG3/ctype.h/linknamespace = yes
@@ -354,7 +353,6 @@ test-xfail-XPG3/glob.h/linknamespace = yes
 test-xfail-XPG3/regex.h/linknamespace = yes
 test-xfail-XPG3/search.h/linknamespace = yes
 test-xfail-XPG3/stdio.h/linknamespace = yes
-test-xfail-XPG3/time.h/linknamespace = yes
 test-xfail-XPG3/unistd.h/linknamespace = yes
 test-xfail-XPG3/wordexp.h/linknamespace = yes
 test-xfail-XPG4/ctype.h/linknamespace = yes
@@ -370,7 +368,6 @@ test-xfail-XPG4/search.h/linknamespace = yes
 test-xfail-XPG4/stdio.h/linknamespace = yes
 test-xfail-XPG4/stdlib.h/linknamespace = yes
 test-xfail-XPG4/syslog.h/linknamespace = yes
-test-xfail-XPG4/time.h/linknamespace = yes
 test-xfail-XPG4/unistd.h/linknamespace = yes
 test-xfail-XPG4/wordexp.h/linknamespace = yes
 test-xfail-POSIX/aio.h/linknamespace = yes

@@ -132,7 +132,7 @@ _nl_get_walt_digit (unsigned int number, struct __locale_data *current)
 		data->walt_digits[cnt] = ptr;
 
 		/* Skip digit format. */
-		ptr = wcschr (ptr, L'\0') + 1;
+		ptr = __wcschr (ptr, L'\0') + 1;
 	      }
 	}
     }

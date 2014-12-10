@@ -85,6 +85,12 @@ libc_hidden_proto (wcscmp)
 libc_hidden_proto (wcsftime)
 libc_hidden_proto (wcsspn)
 libc_hidden_proto (wcschr)
+/* The C++ overloading of wcschr means we have to repeat the type to
+   declare __wcschr instead of using typeof, to avoid errors in C++
+   tests.  */
+extern wchar_t *__wcschr (const wchar_t *__wcs, wchar_t __wc)
+     __THROW __attribute_pure__;
+libc_hidden_proto (__wcschr)
 libc_hidden_proto (wcscoll)
 libc_hidden_proto (wcspbrk)
 
