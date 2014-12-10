@@ -1,5 +1,7 @@
 2014-12-10  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/mips32/waitid.c: New file.
+
 	* sysdeps/unix/sysv/linux/mips/mips64/Makefile
 	[$(subdir) == signal] (CFLAGS-sigaction.c): New variable.
 	[$(subdir) == nptl] (CFLAGS-sigaction.c): Likewise.
