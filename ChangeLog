@@ -1,3 +1,11 @@
+2015-03-04  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #17631]
+	* string/string.h (__CORRECT_ISO_CPP_STRING_H_PROTO): Don't define
+	for non-GCC compilers.
+	* string/strings.h (__CORRECT_ISO_CPP_STRINGS_H_PROTO):
+	Likewise.
+
 2015-03-03 Adhemerval Zanellla  <azanella@linux.vnet.ibm.com>
 
 	[BZ #17776]
