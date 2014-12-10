@@ -51,7 +51,7 @@
 2014-12-10  Anders Kaseorg  <andersk@MIT.EDU>
 
 	[BZ #10672]
-	* manual/search.texi: (Array Sort Function): Remove claim how make
+	* manual/search.texi: (Array Sort Function): Remove claim how to make
 	qsort stable.
 
 2014-12-10  Andreas Schwab  <schwab@suse.de>
