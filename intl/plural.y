@@ -1,30 +1,30 @@
 %{
 /* Expression parsing for plural form selection.
    Copyright (C) 2000-2014 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@cygnus.com>, 2000.
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU Lesser General Public License as published by
+   the Free Software Foundation; either version 2.1 of the License, or
+   (at your option) any later version.
 
-   The GNU C Library is distributed in the hope that it will be useful,
+   This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU Lesser General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   You should have received a copy of the GNU Lesser General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-/* The bison generated parser uses alloca.  AIX 3 forces us to put this
-   declaration at the beginning of the file.  The declaration in bison's
-   skeleton file comes too late.  This must come before <config.h>
-   because <config.h> may include arbitrary system headers.  */
+/* For bison < 2.0, the bison generated parser uses alloca.  AIX 3 forces us
+   to put this declaration at the beginning of the file.  The declaration in
+   bison's skeleton file comes too late.  This must come before <config.h>
+   because <config.h> may include arbitrary system headers.
+   This can go away once the AM_INTL_SUBDIR macro requires bison >= 2.0.  */
 #if defined _AIX && !defined __GNUC__
  #pragma alloca
 #endif
+
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -40,42 +40,28 @@
 # define __gettextparse PLURAL_PARSE
 #endif
 
-#define YYLEX_PARAM	&((struct parse_args *) arg)->cp
-#define YYPARSE_PARAM	arg
 %}
-%pure_parser
+%parse-param {struct parse_args *arg}
+%lex-param {struct parse_args *arg}
+%define api.pure full
 %expect 7
 
 %union {
   unsigned long int num;
-  enum operator op;
+  enum expression_operator op;
   struct expression *exp;
 }
 
 %{
 /* Prototypes for local functions.  */
-static struct expression *new_exp PARAMS ((int nargs, enum operator op,
-					   struct expression * const *args));
-static inline struct expression *new_exp_0 PARAMS ((enum operator op));
-static inline struct expression *new_exp_1 PARAMS ((enum operator op,
-						   struct expression *right));
-static struct expression *new_exp_2 PARAMS ((enum operator op,
-					     struct expression *left,
-					     struct expression *right));
-static inline struct expression *new_exp_3 PARAMS ((enum operator op,
-						   struct expression *bexp,
-						   struct expression *tbranch,
-						   struct expression *fbranch));
-static int yylex PARAMS ((YYSTYPE *lval, const char **pexp));
-static void yyerror PARAMS ((const char *str));
+static int yylex (YYSTYPE *lval, struct parse_args *arg);
+static void yyerror (struct parse_args *arg, const char *str);
 
 /* Allocation of expressions.  */
 
 static struct expression *
-new_exp (nargs, op, args)
-     int nargs;
-     enum operator op;
-     struct expression * const *args;
+new_exp (int nargs, enum expression_operator op,
+	 struct expression * const *args)
 {
   int i;
   struct expression *newp;
@@ -104,16 +90,13 @@ new_exp (nargs, op, args)
 }
 
 static inline struct expression *
-new_exp_0 (op)
-     enum operator op;
+new_exp_0 (enum expression_operator op)
 {
   return new_exp (0, op, NULL);
 }
 
 static inline struct expression *
-new_exp_1 (op, right)
-     enum operator op;
-     struct expression *right;
+new_exp_1 (enum expression_operator op, struct expression *right)
 {
   struct expression *args[1];
 
@@ -122,10 +105,8 @@ new_exp_1 (op, right)
 }
 
 static struct expression *
-new_exp_2 (op, left, right)
-     enum operator op;
-     struct expression *left;
-     struct expression *right;
+new_exp_2 (enum expression_operator op, struct expression *left,
+	   struct expression *right)
 {
   struct expression *args[2];
 
@@ -135,11 +116,8 @@ new_exp_2 (op, left, right)
 }
 
 static inline struct expression *
-new_exp_3 (op, bexp, tbranch, fbranch)
-     enum operator op;
-     struct expression *bexp;
-     struct expression *tbranch;
-     struct expression *fbranch;
+new_exp_3 (enum expression_operator op, struct expression *bexp,
+	   struct expression *tbranch, struct expression *fbranch)
 {
   struct expression *args[3];
 
@@ -175,7 +153,7 @@ start:	  exp
 	  {
 	    if ($1 == NULL)
 	      YYABORT;
-	    ((struct parse_args *) arg)->res = $1;
+	    arg->res = $1;
 	  }
 	;
 
@@ -230,8 +208,7 @@ exp:	  exp '?' exp ':' exp
 
 void
 internal_function
-FREE_EXPRESSION (exp)
-     struct expression *exp;
+FREE_EXPRESSION (struct expression *exp)
 {
   if (exp == NULL)
     return;
@@ -257,18 +234,16 @@ FREE_EXPRESSION (exp)
 
 
 static int
-yylex (lval, pexp)
-     YYSTYPE *lval;
-     const char **pexp;
+yylex (YYSTYPE *lval, struct parse_args *arg)
 {
-  const char *exp = *pexp;
+  const char *exp = arg->cp;
   int result;
 
   while (1)
     {
       if (exp[0] == '\0')
 	{
-	  *pexp = exp;
+	  arg->cp = exp;
 	  return YYEOF;
 	}
 
@@ -395,15 +370,14 @@ yylex (lval, pexp)
       break;
     }
 
-  *pexp = exp;
+  arg->cp = exp;
 
   return result;
 }
 
 
 static void
-yyerror (str)
-     const char *str;
+yyerror (struct parse_args *arg, const char *str)
 {
   /* Do nothing.  We don't print error messages here.  */
 }

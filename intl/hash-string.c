@@ -16,6 +16,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+
+/* Specification.  */
 #include "hash-string.h"
 
 
@@ -23,8 +28,7 @@
    [see Aho/Sethi/Ullman, COMPILERS: Principles, Techniques and Tools,
    1986, 1987 Bell Telephone Laboratories, Inc.]  */
 unsigned long int
-__hash_string (str_param)
-     const char *str_param;
+__hash_string (const char *str_param)
 {
   unsigned long int hval, g;
   const char *str = str_param;

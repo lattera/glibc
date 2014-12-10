@@ -1,21 +1,19 @@
 /* Handle list of needed message catalogs
    Copyright (C) 1995-2014 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.org>, 1995.
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU Lesser General Public License as published by
+   the Free Software Foundation; either version 2.1 of the License, or
+   (at your option) any later version.
 
-   The GNU C Library is distributed in the hope that it will be useful,
+   This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU Lesser General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   You should have received a copy of the GNU Lesser General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -33,9 +31,19 @@
 #include "gettextP.h"
 #ifdef _LIBC
 # include <libintl.h>
-# include <bits/libc-lock.h>
 #else
 # include "libgnuintl.h"
+#endif
+
+/* Handle multi-threaded applications.  */
+#ifdef _LIBC
+# include <bits/libc-lock.h>
+# define gl_rwlock_define_initialized __libc_rwlock_define_initialized
+# define gl_rwlock_rdlock __libc_rwlock_rdlock
+# define gl_rwlock_wrlock __libc_rwlock_wrlock
+# define gl_rwlock_unlock __libc_rwlock_unlock
+#else
+# include "lock.h"
 #endif
 
 /* @@ end of prolog @@ */
@@ -48,11 +56,8 @@ static struct loaded_l10nfile *_nl_loaded_domains;
    established bindings.  */
 struct loaded_l10nfile *
 internal_function
-_nl_find_domain (dirname, locale, domainname, domainbinding)
-     const char *dirname;
-     char *locale;
-     const char *domainname;
-     struct binding *domainbinding;
+_nl_find_domain (const char *dirname, char *locale,
+		 const char *domainname, struct binding *domainbinding)
 {
   struct loaded_l10nfile *retval;
   const char *language;
@@ -65,7 +70,7 @@ _nl_find_domain (dirname, locale, domainname, domainbinding)
 
   /* LOCALE can consist of up to four recognized parts for the XPG syntax:
 
-		language[_territory[.codeset]][@modifier]
+		language[_territory][.codeset][@modifier]
 
      Beside the first part all of them are allowed to be missing.  If
      the full specified locale is not found, the less specific one are
@@ -78,15 +83,16 @@ _nl_find_domain (dirname, locale, domainname, domainbinding)
    */
 
   /* We need to protect modifying the _NL_LOADED_DOMAINS data.  */
-  __libc_rwlock_define_initialized (static, lock);
-  __libc_rwlock_rdlock (lock);
+  gl_rwlock_define_initialized (static, lock);
+  gl_rwlock_rdlock (lock);
 
   /* If we have already tested for this locale entry there has to
      be one data set in the list of loaded domains.  */
   retval = _nl_make_l10nflist (&_nl_loaded_domains, dirname,
 			       strlen (dirname) + 1, 0, locale, NULL, NULL,
 			       NULL, NULL, domainname, 0);
-  __libc_rwlock_unlock (lock);
+
+  gl_rwlock_unlock (lock);
 
   if (retval != NULL)
     {
@@ -117,11 +123,23 @@ _nl_find_domain (dirname, locale, domainname, domainbinding)
      done.  */
   alias_value = _nl_expand_alias (locale);
   if (alias_value != NULL)
-    locale = strdupa (alias_value);
+    {
+#if defined _LIBC || defined HAVE_STRDUP
+      locale = strdup (alias_value);
+      if (locale == NULL)
+	return NULL;
+#else
+      size_t len = strlen (alias_value) + 1;
+      locale = (char *) malloc (len);
+      if (locale == NULL)
+	return NULL;
+
+      memcpy (locale, alias_value, len);
+#endif
+    }
 
   /* Now we determine the single parts of the locale name.  First
-     look for the language.  Termination symbols are `_' and `@' if
-     we use XPG4 style, and `_', `+', and `,' if we use CEN syntax.  */
+     look for the language.  Termination symbols are `_', '.', and `@'.  */
   mask = _nl_explode_name (locale, &language, &modifier, &territory,
 			   &codeset, &normalized_codeset);
   if (mask == -1)
@@ -129,7 +147,7 @@ _nl_find_domain (dirname, locale, domainname, domainbinding)
     return NULL;
 
   /* We need to protect modifying the _NL_LOADED_DOMAINS data.  */
-  __libc_rwlock_wrlock (lock);
+  gl_rwlock_wrlock (lock);
 
   /* Create all possible locale entries which might be interested in
      generalization.  */
@@ -137,7 +155,8 @@ _nl_find_domain (dirname, locale, domainname, domainbinding)
 			       strlen (dirname) + 1, mask, language, territory,
 			       codeset, normalized_codeset, modifier,
 			       domainname, 1);
-  __libc_rwlock_unlock (lock);
+
+  gl_rwlock_unlock (lock);
 
   if (retval == NULL)
     /* This means we are out of core.  */
@@ -156,6 +175,10 @@ _nl_find_domain (dirname, locale, domainname, domainbinding)
 	    break;
 	}
     }
+
+  /* The room for an alias was dynamically allocated.  Free it now.  */
+  if (alias_value != NULL)
+    free (locale);
 
 out:
   /* The space for normalized_codeset is dynamically allocated.  Free it.  */

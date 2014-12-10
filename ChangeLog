@@ -1,3 +1,76 @@
+2014-12-11  Will Newton  <will.newton@linaro.org>
+
+	Merge gettext 0.19.3 into intl/.
+
+	This involves a number of cosmetic changes to comments
+	and ANSI function definitions and prototypes throughout
+	all the files. The gettext copyright header is used but
+	with the date ranges taken from the glibc copy.
+
+	* NEWS: Add gettext merge to 2.21.
+	* intl/bindtextdom.c: Switch to gettext copyright.
+	Use ANSI definitions and prototypes.
+	Use gl_* locking primitives rather than __libc_* ones.
+	Use __builtin_expect rather than __glibc_likely/unlikely.
+	* intl/dcgettext.c: Switch to gettext copyright.
+	Use ANSI definitions and prototypes.
+	* intl/dcigettext.c: Switch to gettext copyright.
+	Use ANSI definitions and prototypes.
+	(INTDIV0_RAISES_SIGFPE): New define.
+	Use gl_* locking primitives rather than __libc_* ones.
+	Include eval-plural.h instead of plural-eval.c.
+	Use __builtin_expect rather than __glibc_likely/unlikely.
+	* intl/dcngettext.c: Switch to gettext copyright.
+	Use ANSI definitions and prototypes.
+	* intl/dgettext.c: Likewise.
+	* intl/dngettext.c: Likewise.
+	* intl/plural-eval.c: Renamed to...
+	* intl/eval-plural.h: ...this.
+	* intl/explodename.c: Switch to gettext copyright.
+	Use ANSI definitions and prototypes.
+	(_nl_explode_name): Use strchr instead of __rawmemchr.
+	* intl/finddomain.c: Switch to gettext copyright.
+	Use ANSI definitions and prototypes.
+	Use gl_* locking primitives rather than __libc_* ones.
+	(_nl_find_domain): Use malloc rather than alloca for
+	allocation of temporary locale name.
+	* intl/gettext.c: Switch to gettext copyright.
+	Use ANSI definitions and prototypes.
+	* intl/gettextP.h: Switch to gettext copyright.
+	Use ANSI definitions and prototypes.
+	Use gl_* locking primitives rather than __libc_* ones.
+	* intl/gmo.h: Switch to gettext copyright.
+	(struct sysdep_string): Move struct segment_pair outside of
+	struct definition.
+	* intl/hash-string.c: Use ANSI definitions and prototypes.
+	* intl/hash-string.h: Switch to gettext copyright.
+	Use ANSI definitions and prototypes.
+	* intl/l10nflist.c: Switch to gettext copyright.
+	Use ANSI definitions and prototypes.
+	(_nl_normalize_codeset): Avoid integer overflow.
+	* intl/loadinfo.h: Switch to gettext copyright.
+	Use ANSI definitions and prototypes.
+	(LIBINTL_DLL_EXPORTED): New define.
+	(PATH_SEPARATOR): New define.
+	* intl/loadmsgcat.c: Switch to gettext copyright.
+	* intl/localealias.c: Switch to gettext copyright.
+	Use ANSI definitions and prototypes.
+	(_nl_expand_alias): Use PATH_SEPARATOR.
+	* intl/ngettext.c: Switch to gettext copyright.
+	Use ANSI definitions and prototypes.
+	* intl/plural-exp.c: Likewise.
+	* intl/plural-exp.h: Switch to gettext copyright.
+	Use ANSI definitions and prototypes.
+	(struct expression): Move definition of enum operator outside
+	of struct definition.
+	* intl/plural.c: Regenerate.
+	* intl/plural.y: Switch to gettext copyright.
+	Use ANSI definitions and prototypes.
+	Port to bison 3.0.
+	* intl/textdomain.c: Switch to gettext copyright.
+	Use ANSI definitions and prototypes.
+	Use gl_* locking primitives rather than __libc_* ones.
+
 2014-12-10  Steve Ellcey  <sellcey@imgtec.com>
 
 	* debug/warning-nop.c: Add used atrribute.

@@ -35,6 +35,9 @@ Version 2.21
   4.2BSD interface that inspired the POSIX.1 sigaction interface, which
   programs have been using instead for about 25 years.  Of course, ABI
   compatibility for old binaries using sigvec remains intact.
+
+* Merged gettext 0.19.3 into the intl subdirectory.  This fixes building
+  with newer versions of bison.
 
 Version 2.20
 
