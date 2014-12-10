@@ -76,4 +76,35 @@ extern void __init_misc (int, char **, char **);
 #define ignore_value(x) \
   ({ __typeof__ (x) __ignored_value = (x); (void) __ignored_value; })
 
+/* The macros to control diagnostics are structured like this, rather
+   than a single macro that both pushes and pops diagnostic state and
+   takes the affected code as an argument, because the GCC pragmas
+   work by disabling the diagnostic for a range of source locations
+   and do not work when all the pragmas and the affected code are in a
+   single macro expansion.  */
+
+/* Push diagnostic state.  */
+#define DIAG_PUSH_NEEDS_COMMENT _Pragma ("GCC diagnostic push")
+
+/* Pop diagnostic state.  */
+#define DIAG_POP_NEEDS_COMMENT _Pragma ("GCC diagnostic pop")
+
+#define _DIAG_STR1(s) #s
+#define _DIAG_STR(s) _DIAG_STR1(s)
+
+/* Ignore the diagnostic OPTION.  VERSION is the most recent GCC
+   version for which the diagnostic has been confirmed to appear in
+   the absence of the pragma (in the form MAJOR.MINOR for GCC 4.x,
+   just MAJOR for GCC 5 and later).  Uses of this pragma should be
+   reviewed when the GCC version given is no longer supported for
+   building glibc; the version number should always be on the same
+   source line as the macro name, so such uses can be found with grep.
+   Uses should come with a comment giving more details of the
+   diagnostic, and an architecture on which it is seen if possibly
+   optimization-related and not in architecture-specific code.  This
+   macro should only be used if the diagnostic seems hard to fix (for
+   example, optimization-related false positives).  */
+#define DIAG_IGNORE_NEEDS_COMMENT(version, option)	\
+  _Pragma (_DIAG_STR (GCC diagnostic ignored option))
+
 #endif /* _LIBC_INTERNAL  */

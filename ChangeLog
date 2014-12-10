@@ -1,3 +1,15 @@
+2014-12-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/libc-internal.h (DIAG_PUSH_NEEDS_COMMENT): New macro.
+	(DIAG_POP_NEEDS_COMMENT): Likewise.
+	(_DIAG_STR1): Likewise.
+	(_DIAG_STR): Likewise.
+	(DIAG_IGNORE_NEEDS_COMMENT): Likewise.
+	* stdio-common/bug21.c: Include <libc-internal.h>.
+	(do_test): Disable -Wformat around call to sscanf.
+	* stdio-common/scanf14.c: Include <libc-internal.h>.
+	(main): Disable -Wformat around some calls to scanf functions.
+
 2014-12-09  Torvald Riegel  <triegel@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sh/pthread_once.S: Remove file.
