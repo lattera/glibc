@@ -96,19 +96,21 @@ CFLAGS-tst-longjmp_chk3.c = -fexceptions -fasynchronous-unwind-tables
 CPPFLAGS-tst-longjmp_chk3.c = -D_FORTIFY_SOURCE=1
 
 # We know these tests have problems with format strings, this is what
-# we are testing.  Disable that warning.
-CFLAGS-tst-chk1.c = -Wno-format
-CFLAGS-tst-chk2.c = -Wno-format
-CFLAGS-tst-chk3.c = -Wno-format
-CFLAGS-tst-chk4.cc = -Wno-format
-CFLAGS-tst-chk5.cc = -Wno-format
-CFLAGS-tst-chk6.cc = -Wno-format
-CFLAGS-tst-lfschk1.c = -Wno-format
-CFLAGS-tst-lfschk2.c = -Wno-format
-CFLAGS-tst-lfschk3.c = -Wno-format
-CFLAGS-tst-lfschk4.cc = -Wno-format
-CFLAGS-tst-lfschk5.cc = -Wno-format
-CFLAGS-tst-lfschk6.cc = -Wno-format
+# we are testing.  Disable that warning.  They also generate warnings
+# from warning attributes, which cannot be disabled via pragmas, so
+# require -Wno-error to be used.
+CFLAGS-tst-chk1.c = -Wno-format -Wno-error
+CFLAGS-tst-chk2.c = -Wno-format -Wno-error
+CFLAGS-tst-chk3.c = -Wno-format -Wno-error
+CFLAGS-tst-chk4.cc = -Wno-format -Wno-error
+CFLAGS-tst-chk5.cc = -Wno-format -Wno-error
+CFLAGS-tst-chk6.cc = -Wno-format -Wno-error
+CFLAGS-tst-lfschk1.c = -Wno-format -Wno-error
+CFLAGS-tst-lfschk2.c = -Wno-format -Wno-error
+CFLAGS-tst-lfschk3.c = -Wno-format -Wno-error
+CFLAGS-tst-lfschk4.cc = -Wno-format -Wno-error
+CFLAGS-tst-lfschk5.cc = -Wno-format -Wno-error
+CFLAGS-tst-lfschk6.cc = -Wno-format -Wno-error
 LDLIBS-tst-chk4 = -lstdc++
 LDLIBS-tst-chk5 = -lstdc++
 LDLIBS-tst-chk6 = -lstdc++

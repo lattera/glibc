@@ -1,5 +1,28 @@
 2014-12-10  Joseph Myers  <joseph@codesourcery.com>
 
+	* configure.ac (--disable-werror): New configure option.
+	(enable_werror): New AC_SUBST.
+	* configure: Regenerated.
+	* config.make.in (enable-werror): New variable.
+	* Makeconfig [$(enable-werror) = yes] (+gccwarn): Add -Werror
+	-Wno-error=undef.
+	(+gccwarn-c): Do not use -Werror=implicit-function-declaration.
+	* manual/install.texi (Configuring and compiling): Document
+	--disable-werror.
+	* INSTALL: Regenerated.
+	* debug/Makefile (CFLAGS-tst-chk1.c): Add -Wno-error.
+	(CFLAGS-tst-chk2.c): Likewise.
+	(CFLAGS-tst-chk3.c): Likewise.
+	(CFLAGS-tst-chk4.cc): Likewise.
+	(CFLAGS-tst-chk5.cc): Likewise.
+	(CFLAGS-tst-chk6.cc): Likewise.
+	(CFLAGS-tst-lfschk1.c): Likewise.
+	(CFLAGS-tst-lfschk2.c): Likewise.
+	(CFLAGS-tst-lfschk3.c): Likewise.
+	(CFLAGS-tst-lfschk4.cc): Likewise.
+	(CFLAGS-tst-lfschk5.cc): Likewise.
+	(CFLAGS-tst-lfschk6.cc): Likewise.
+
 	* stdio-common/tst-printfsz.c: Include <libc-internal.h>.
 	(main): Disable -Wdeprecated-declarations around calls to
 	register_printf_function.

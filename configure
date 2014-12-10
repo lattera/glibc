@@ -668,6 +668,7 @@ build_pt_chown
 build_nscd
 link_obsolete_rpc
 libc_cv_nss_crypt
+enable_werror
 all_warnings
 force_install
 bindnow
@@ -767,6 +768,7 @@ enable_force_install
 enable_maintainer_mode
 enable_kernel
 enable_all_warnings
+enable_werror
 enable_multi_arch
 enable_nss_crypt
 enable_obsolete_rpc
@@ -1428,6 +1430,7 @@ Optional Features:
   --enable-kernel=VERSION compile for compatibility with kernel not older than
                           VERSION
   --enable-all-warnings   enable all useful warnings gcc can issue
+  --disable-werror        do not build with -Werror
   --enable-multi-arch     enable single DSO with optimizations for multiple
                           architectures
   --enable-nss-crypt      enable libcrypt to use nss
@@ -3561,6 +3564,15 @@ fi
 # Check whether --enable-all-warnings was given.
 if test "${enable_all_warnings+set}" = set; then :
   enableval=$enable_all_warnings; all_warnings=$enableval
+fi
+
+
+
+# Check whether --enable-werror was given.
+if test "${enable_werror+set}" = set; then :
+  enableval=$enable_werror; enable_werror=$enableval
+else
+  enable_werror=yes
 fi
 
 

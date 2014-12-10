@@ -26,6 +26,9 @@ Version 2.21
   C Library is GCC 4.6.  Older GCC versions, and non-GNU compilers, can
   still be used to compile programs using the GNU C Library.
 
+* The GNU C Library is now built with -Werror by default.  This can be
+  disabled by configuring with --disable-werror.
+
 * New locales: tu_IN, bh_IN, raj_IN, ce_RU.
 
 * The obsolete sigvec function has been removed.  This was the original

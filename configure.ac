@@ -253,6 +253,13 @@ AC_ARG_ENABLE([all-warnings],
 	      [])
 AC_SUBST(all_warnings)
 
+AC_ARG_ENABLE([werror],
+	      AC_HELP_STRING([--disable-werror],
+			     [do not build with -Werror]),
+	      [enable_werror=$enableval],
+	      [enable_werror=yes])
+AC_SUBST(enable_werror)
+
 AC_ARG_ENABLE([multi-arch],
 	      AC_HELP_STRING([--enable-multi-arch],
 			     [enable single DSO with optimizations for multiple architectures]),

@@ -717,7 +717,10 @@ else
 +gccwarn := -Wall -Wwrite-strings -Winline
 endif
 +gccwarn += -Wundef
-+gccwarn-c = -Wstrict-prototypes -Werror=implicit-function-declaration
+ifeq ($(enable-werror),yes)
++gccwarn += -Werror -Wno-error=undef
+endif
++gccwarn-c = -Wstrict-prototypes
 
 # We do not depend on the address of constants in different files to be
 # actually different, so allow the compiler to merge them all.

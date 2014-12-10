@@ -143,6 +143,13 @@ will be used, and CFLAGS sets optimization options for the compiler.
      additional security risks to the system and you should enable it
      only if you understand and accept those risks.
 
+`--disable-werror'
+     By default, the GNU C Library is built with `-Werror'.  If you wish
+     to build without this option (for example, if building with a newer
+     version of GCC than this version of the GNU C Library was tested
+     with, so new warnings cause the build with `-Werror' to fail), you
+     can configure with `--disable-werror'.
+
 `--build=BUILD-SYSTEM'
 `--host=HOST-SYSTEM'
      These options are for cross-compiling.  If you specify both
