@@ -1,5 +1,9 @@
 2014-12-10  Joseph Myers  <joseph@codesourcery.com>
 
+	* stdio-common/tst-unlockedio.c: Include <libc-internal.h>.
+	(do_test): Disable -Wdiv-by-zero around some calls to
+	fwrite_unlocked and fread_unlocked.
+
 	* include/libc-internal.h (DIAG_PUSH_NEEDS_COMMENT): New macro.
 	(DIAG_POP_NEEDS_COMMENT): Likewise.
 	(_DIAG_STR1): Likewise.

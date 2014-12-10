@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <libc-internal.h>
 
 int fd;
 static void do_prepare (void);
@@ -44,6 +45,13 @@ do_test (void)
 
   f = fp;
   cp = blah;
+  /* These tests deliberately use fwrite_unlocked with the size
+     argument specified as 0, which results in "division by zero"
+     warnings from the expansion of that macro (in code that is not
+     evaluated for a size of 0).  This applies to the tests of
+     fread_unlocked below as well.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wdiv-by-zero");
   if (ftello (fp) != 0
       || fwrite_unlocked (blah, blah - blah, strlen (blah), f++) != 0
       || f != fp + 1
@@ -59,6 +67,7 @@ do_test (void)
       puts ("One of fwrite_unlocked tests failed");
       exit (1);
     }
+  DIAG_POP_NEEDS_COMMENT;
 
   if (fwrite_unlocked (blah, 1, strlen (blah) - 2, fp) != strlen (blah) - 2)
     {
@@ -93,6 +102,9 @@ do_test (void)
   f = fp;
   wp = buf;
   memset (buf, ' ', sizeof (buf));
+  /* See explanation above.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wdiv-by-zero");
   if (ftello (fp) != 0
       || fread_unlocked (buf, buf - buf, strlen (blah), f++) != 0
       || f != fp + 1
@@ -109,6 +121,7 @@ do_test (void)
       puts ("One of fread_unlocked tests failed");
       exit (1);
     }
+  DIAG_POP_NEEDS_COMMENT;
 
   if (fread_unlocked (buf, 1, strlen (blah) - 2, fp) != strlen (blah) - 2)
     {
