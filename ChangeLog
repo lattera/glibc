@@ -1,3 +1,7 @@
+2014-12-10  Steve Ellcey  <sellcey@imgtec.com>
+
+	* debug/warning-nop.c: Add used atrribute.
+
 2014-12-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips32/waitid.c: New file.

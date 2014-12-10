@@ -36,6 +36,7 @@
 #include <sys/cdefs.h>
 
 static void
+__attribute__ ((used))
 nop (void)
 {
 }
