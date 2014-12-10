@@ -1,3 +1,8 @@
+2014-12-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* libio/tst-ftell-active-handler.c (do_ftruncate_test): Use %ld
+	format for long int variable.
+
 2014-12-10  Anders Kaseorg  <andersk@MIT.EDU>
 
 	[BZ #10672]

@@ -165,7 +165,7 @@ do_ftruncate_test (const char *filename)
 	     it.  */
 	  if (offset != new_offset)
 	    {
-	      printf ("Incorrect offset.  Expected %zu, but got %ld\n",
+	      printf ("Incorrect offset.  Expected %ld, but got %ld\n",
 		      offset, new_offset);
 
 	      ret |= 1;
