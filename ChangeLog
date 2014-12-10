@@ -1,3 +1,8 @@
+2014-12-10  Richard Earnshaw  <rearnsha@arm.com>
+
+	* sysdeps/aarch64/strchrnul.S (vrepmask): Use a call-clobbered
+	register.
+
 2014-12-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* configure.ac (--disable-werror): New configure option.
