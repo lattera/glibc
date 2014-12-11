@@ -23,6 +23,10 @@ main (int argc, char *argv[])
   register_printf_function ('B', printf_size, printf_size_info);
   DIAG_POP_NEEDS_COMMENT;
 
+  /* All of the formats here use the nonstandard extension specifier
+     just registered, so compiler checking will never grok them.  */
+  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wformat");
+  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wformat-extra-args");
 
   sprintf (buf, "%g %b %B %.0b %.0B %.1b %.1B %8.0b %08.0B",
 	   V, 1025., V, V, V, V, V, V, V, V);

@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <wchar.h>
+#include <libc-internal.h>
 
 static int
 t1 (void)
@@ -28,6 +29,12 @@ t2 (void)
 	  INPUT, FORMAT, retval, (long int) VAR); \
   result |= retval != EXP_RES || VAR != EXP_VAL
 
+  /* This function is testing corner cases of the scanf format string,
+     so they do not all conform to -Wformat's expectations.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wformat");
+  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wformat-extra-args");
+
   SCAN ("12345", "%ld", N, 1, 12345);
   SCAN ("12345", "%llllld", N, 0, -1);
   SCAN ("12345", "%LLLLLd", N, 0, -1);
@@ -42,6 +49,8 @@ t2 (void)
   printf ("sscanf (\"1 1\", \"%%d %%Z\", &n, &N) => %d, n = %d, N = %ld\n", \
 	  retval, n, N); \
   result |= retval != 1 || n != 1 || N != -1;
+
+  DIAG_POP_NEEDS_COMMENT;
 
   return result;
 }

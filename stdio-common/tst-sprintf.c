@@ -45,15 +45,26 @@ do_test (void)
       result = 1;
     }
 
-  if (sprintf (buf, "%67108863.16\"%d", 7) != 14
-      || strcmp (buf, "%67108863.16\"7") != 0)
+  /* We are testing a corner case of the sprintf format string here.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wformat");
+  int n = sprintf (buf, "%67108863.16\"%d", 7);
+  DIAG_POP_NEEDS_COMMENT;
+
+  if (n != 14 || strcmp (buf, "%67108863.16\"7") != 0)
     {
-      printf ("sprintf (buf, \"%%67108863.16\\\"%%d\", 7) produced `%s' output", buf);
+      printf ("sprintf (buf, \"%%67108863.16\\\"%%d\", 7) produced `%s' output",
+              buf);
       result = 1;
     }
 
-  if (sprintf (buf, "%*\"%d", 0x3ffffff, 7) != 11
-      || strcmp (buf, "%67108863\"7") != 0)
+  /* We are testing a corner case of the sprintf format string here.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wformat");
+  n = sprintf (buf, "%*\"%d", 0x3ffffff, 7);
+  DIAG_POP_NEEDS_COMMENT;
+
+  if (n != 11 || strcmp (buf, "%67108863\"7") != 0)
     {
       printf ("sprintf (buf, \"%%*\\\"%%d\", 0x3ffffff, 7) produced `%s' output", buf);
       result = 1;

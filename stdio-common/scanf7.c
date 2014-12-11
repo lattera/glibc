@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <libc-internal.h>
 
 int
 main (int argc, char *argv[])
@@ -14,7 +15,16 @@ main (int argc, char *argv[])
     abort ();
 
   n = -2;
+
+  /* We are testing a corner case of the scanf format string here.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wformat");
+  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wformat-extra-args");
+
   ret = sscanf ("1000", "%llld", &n);
+
+  DIAG_POP_NEEDS_COMMENT;
+
   printf ("%%llld: ret: %d, n: %Ld\n", ret, n);
   if (ret > 0 || n >= 0L)
     abort ();

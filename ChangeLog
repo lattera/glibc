@@ -1,3 +1,25 @@
+2014-12-11  Roland McGrath  <roland@hack.frob.com>
+
+	* stdio-common/tstdiomisc.c (t2): Ignore -Wformat and
+	-Wformat-extra-args warnings for scanf formats.
+	* stdio-common/scanf4.c (main): Ignore -Wformat-zero-length around
+	test of zero-length format (duh).
+	* stdio-common/scanf7.c (main): Ignore -Wformat warnings for
+	corner-case scanf format test.
+	* stdio-common/test-vfprintf.c (do_test): Ignore -Wformat-security for
+	generated fprintf format string.
+	* stdio-common/tst-sprintf.c (do_test): Ignore -Wformat warnings for
+	corner-case sprintf format tests.
+	* stdio-common/tst-printf.c: Ignore -Wformat throughout.
+	* stdio-common/tst-printfsz.c (main): Ignore -Wformat and
+	-Wformat-extra-args warnings throughout.
+	* stdio-common/Makefile (CFLAGS-tstdiomisc.c): Variable removed.
+	(CFLAGS-scanf4.c): Likewise.
+	(CFLAGS-scanf7.c): Likewise.
+	(CFLAGS-tst-sprintf.c): Likewise.
+	(CFLAGS-tst-printf.c): Likewise.
+	(CFLAGS-tst-printfsz.c): Likewise.
+
 2014-12-11  Joseph Myers  <joseph@codesourcery.com>
 
 	* include/cpio.h: New file.

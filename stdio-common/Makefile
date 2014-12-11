@@ -80,11 +80,6 @@ endif
 
 CFLAGS-vfprintf.c = -Wno-uninitialized
 CFLAGS-vfwprintf.c = -Wno-uninitialized
-CFLAGS-tst-printf.c = -Wno-format
-CFLAGS-tstdiomisc.c = -Wno-format
-CFLAGS-scanf4.c = -Wno-format
-CFLAGS-scanf7.c = -Wno-format
-CFLAGS-tst-printfsz.c = -Wno-format
 
 CFLAGS-tmpfile.c = -fexceptions
 CFLAGS-tmpfile64.c = -fexceptions
@@ -115,9 +110,6 @@ CFLAGS-scanf15.c = -I../libio -I../stdlib -I../wcsmbs -I../time -I../string \
 		   -I../wctype
 CFLAGS-scanf17.c = -I../libio -I../stdlib -I../wcsmbs -I../time -I../string \
 		   -I../wctype
-
-# We know the test has a format string problem.
-CFLAGS-tst-sprintf.c = -Wno-format
 
 CPPFLAGS += $(libio-mtsafe)
 
