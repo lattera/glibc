@@ -24,11 +24,12 @@
 
 #define show(expr, nexp, wcexp) \
   n = expr;								  \
-  printf (#expr " -> %Zd", n);						  \
+  printf (#expr " -> %zu", n);						  \
   printf (", wc = %lu", (unsigned long int) wc);			  \
   if (n != (size_t) nexp || wc != wcexp)				  \
     {									  \
-      printf (", expected %Zd and %lu", nexp, (unsigned long int) wcexp); \
+      printf (", expected %zu and %lu", (size_t) nexp,			  \
+	      (unsigned long int) wcexp);				  \
       result = 1;							  \
     }									  \
   putc ('\n', stdout)

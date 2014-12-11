@@ -44,12 +44,12 @@ do_test (void)
     }
 
   wch = towctrans (L'A', t);
-  printf ("towctrans (L'A', t) = %c\n", wch);
+  printf ("towctrans (L'A', t) = %lc\n", wch);
   if (wch != L'B')
     errors = 1;
 
   wch = towctrans (L'B', t);
-  printf ("towctrans (L'B', t) = %c\n", wch);
+  printf ("towctrans (L'B', t) = %lc\n", wch);
   if (wch != L'C')
     errors = 1;
 

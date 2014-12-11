@@ -25,12 +25,12 @@
 #define show(expr, nexp, bufexp) \
   {									\
     size_t res = expr;							\
-    printf (#expr " -> %Zd", res);					\
+    printf (#expr " -> %zu", res);					\
     dst += res;								\
     printf (", dst = buf+%td", dst - (char *) buf);			\
     if (res != nexp || dst != (char *) (bufexp))			\
       {									\
-	printf (", expected %Zd and buf+%td", nexp,			\
+	printf (", expected %zu and buf+%td", (size_t) nexp,		\
 		(bufexp) - (unsigned char *) buf);			\
 	result = 1;							\
       }									\
