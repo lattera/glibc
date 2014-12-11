@@ -1,5 +1,8 @@
 2014-12-11  Joseph Myers  <joseph@codesourcery.com>
 
+	* include/cpio.h: New file.
+	* include/fmtmsg.h: Likewise.
+
 	* tst-mbswcs1.c (show): Use %zu format instead of %Zd.  Cast
 	corresponding format argument to size_t.
 	* tst-mbswcs2.c (show): Likewise.  Use %td format for ptrdiff_t
