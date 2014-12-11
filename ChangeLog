@@ -1,4 +1,10 @@
 2014-12-12  Stefan Liebler  <stli@linux.vnet.ibm.com>
+	    Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* resolv/res_send.c (send_vc): Disable warning resplen may
+	be used uninitialized.
+
+2014-12-12  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* nptl/tst-mutex6.c
 	(ATTR_NULL): New define checks ATTR against NULL.
