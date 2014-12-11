@@ -164,8 +164,8 @@ To sort an array using an arbitrary comparison function, use the
 @comment ISO
 @deftypefun void qsort (void *@var{array}, size_t @var{count}, size_t @var{size}, comparison_fn_t @var{compare})
 @safety{@prelim{}@mtsafe{}@assafe{}@acunsafe{@acucorrupt{}}}
-The @var{qsort} function sorts the array @var{array}.  The array contains
-@var{count} elements, each of which is of size @var{size}.
+The @code{qsort} function sorts the array @var{array}.  The array
+contains @var{count} elements, each of which is of size @var{size}.
 
 The @var{compare} function is used to perform the comparison on the
 array elements.  This function is called with two pointer arguments and
@@ -180,10 +180,12 @@ This can make a difference when the comparison considers only part of
 the elements.  Two elements with the same sort key may differ in other
 respects.
 
-The addresses passed to the comparison function need not correspond with
-the original location of the objects, and need not even lie within the
-original array.  The only way to perform a stable sort with @var{qsort}
-is to first augment the objects with a monotonic counter of some kind.
+Although the object addresses passed to the comparison function lie
+within the array, they need not correspond with the original locations
+of those objects because the sorting algorithm may swap around objects
+in the array before making some comparisons.  The only way to perform
+a stable sort with @code{qsort} is to first augment the objects with a
+monotonic counter of some kind.
 
 Here is a simple example of sorting an array of doubles in numerical
 order, using the comparison function defined above (@pxref{Comparison
