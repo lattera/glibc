@@ -4973,7 +4973,7 @@ __posix_memalign (void **memptr, size_t alignment, size_t size)
   /* Test whether the SIZE argument is valid.  It must be a power of
      two multiple of sizeof (void *).  */
   if (alignment % sizeof (void *) != 0
-      || !powerof2 (alignment / sizeof (void *)) != 0
+      || !powerof2 (alignment / sizeof (void *))
       || alignment == 0)
     return EINVAL;
 

@@ -1,3 +1,7 @@
+2014-12-11  Steve Ellcey  <sellcey@imgtec.com>
+
+	* malloc/malloc.c: Fix powerof2 check.
+
 2014-12-11  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* locale/programs/locfile.h (maybe_swap_uint32):
