@@ -1630,13 +1630,6 @@ module	IBM1155//		INTERNAL		IBM1155		1
 module	INTERNAL		IBM1155//		IBM1155		1
 
 #	from			to			module		cost
-alias	IBM-1155//		IBM1155//
-alias	CP1155//		IBM1155//
-alias	CSIBM1155//		IBM1155//
-module	IBM1155//		INTERNAL		IBM1155		1
-module	INTERNAL		IBM1155//		IBM1155		1
-
-#	from			to			module		cost
 alias	IBM-1156//		IBM1156//
 alias	CP1156//		IBM1156//
 alias	CSIBM1156//		IBM1156//

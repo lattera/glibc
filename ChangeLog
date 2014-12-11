@@ -1,3 +1,7 @@
+2014-12-11  Andreas Schwab  <schwab@suse.de>
+
+	* iconvdata/gconv-modules: Remove duplicate entry.
+
 2014-12-11  Will Newton  <will.newton@linaro.org>
 
 	Merge gettext 0.19.3 into intl/.
