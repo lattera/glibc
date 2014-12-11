@@ -18,7 +18,7 @@ main (void)
     {
       char buf[100];
       regerror (reerr, &re, buf, sizeof buf);
-      error (EXIT_FAILURE, 0, buf);
+      error (EXIT_FAILURE, 0, "%s", buf);
     }
 
   if (regexec (&re, "002", 2, ma, 0) != 0)
@@ -35,7 +35,7 @@ main (void)
     {
       char buf[100];
       regerror (reerr, &re, buf, sizeof buf);
-      error (EXIT_FAILURE, 0, buf);
+      error (EXIT_FAILURE, 0, "%s", buf);
     }
 
   if (regexec (&re, "002", 2, ma, 0) != 0)
