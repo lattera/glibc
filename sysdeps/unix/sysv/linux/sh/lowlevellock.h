@@ -321,7 +321,7 @@ extern int __lll_unlock_wake (int *__futex, int private) attribute_hidden;
     register unsigned long __r5 asm ("r5")				      \
       = __lll_private_flag (FUTEX_WAIT, private);			      \
     register unsigned long __r6 asm ("r6") = (unsigned long) (val);	      \
-    register unsigned long __r7 asm ("r7") = (timeout);			      \
+    register unsigned long __r7 asm ("r7") = (unsigned long) (timeout);	      \
     __asm __volatile (SYSCALL_WITH_INST_PAD				      \
 		      : "=z" (__status)					      \
 		      : "r" (__r3), "r" (__r4), "r" (__r5),		      \

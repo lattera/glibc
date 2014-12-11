@@ -32,11 +32,11 @@
 static inline uintptr_t __attribute__ ((unused))
 _jmpbuf_sp (__jmp_buf regs)
 {
-  uintptr_t sp = regs[0].__regs[7];
+  void *sp = (void *) regs[0].__regs[7];
 #ifdef PTR_DEMANGLE
   PTR_DEMANGLE (sp);
 #endif
-  return sp;
+  return (uintptr_t) sp;
 }
 
 #define _JMPBUF_UNWINDS_ADJ(_jmpbuf, _address, _adj) \

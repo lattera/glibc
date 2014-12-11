@@ -99,7 +99,7 @@ typedef struct
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
 # define TLS_INIT_TP(tcbp) \
-  ({ __asm __volatile ("ldc %0,gbr" : : "r" (tcbp)); 0; })
+  ({ __asm __volatile ("ldc %0,gbr" : : "r" (tcbp)); NULL; })
 
 # define TLS_DEFINE_INIT_TP(tp, pd) void *tp = (pd) + 1
 

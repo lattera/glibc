@@ -144,7 +144,7 @@ register_dump (int fd, struct sigcontext *ctx)
   ADD_STRING ("\n");
 
 #ifdef __SH_FPU_ANY__
-  if (ctx->sc_ownedfp != NULL)
+  if (ctx->sc_ownedfp != 0)
     {
       hexvalue (ctx->sc_fpregs[0], fpregs[0], 8);
       hexvalue (ctx->sc_fpregs[1], fpregs[1], 8);

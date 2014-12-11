@@ -1,3 +1,12 @@
+2014-12-11  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/jmpbuf_unwind.h (_jmpbuf_sp): Declare SP as void
+	pointer and cast to uintptr_t.
+	* sysdeps/sh/nptl/tls.h (TLS_INIT_TP): Use NULL instead of 0.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.h (lll_futex_timed_wait):
+	Add cast to avoid warning.
+	* sysdeps/unix/sysv/linux/sh/register-dump.h: Use 0 instead of NULL.
+
 2014-12-11  Joseph Myers  <joseph@codesourcery.com>
 
 	* nptl/semaphore.h: Move to ...
