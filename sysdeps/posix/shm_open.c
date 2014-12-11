@@ -19,50 +19,41 @@
 #include <unistd.h>
 
 #if ! _POSIX_MAPPED_FILES
-#include <rt/shm_open.c>
+
+# include <rt/shm_open.c>
 
 #else
 
-#include <errno.h>
-#include <sys/mman.h>
-#include <fcntl.h>
-#include <string.h>
-#include <stdlib.h>
-#include <paths.h>
+# include <fcntl.h>
+# include <shm-directory.h>
 
-#define SHMDIR	(_PATH_DEV "shm/")
 
 /* Open shared memory object.  */
 int
 shm_open (const char *name, int oflag, mode_t mode)
 {
-  size_t namelen;
-  char *fname;
-  int fd;
+  SHM_GET_NAME (EINVAL, -1);
 
-  /* Construct the filename.  */
-  while (name[0] == '/')
-    ++name;
+# ifdef O_NOFOLLOW
+  oflag |= O_NOFOLLOW;
+# endif
+# ifdef O_CLOEXEC
+  oflag |= O_CLOEXEC;
+# endif
+  int fd = open (shm_name, oflag, mode);
+  if (fd == -1 && __glibc_unlikely (errno == EISDIR))
+    /* It might be better to fold this error with EINVAL since
+       directory names are just another example for unsuitable shared
+       object names and the standard does not mention EISDIR.  */
+    __set_errno (EINVAL);
 
-  if (name[0] == '\0')
-    {
-      /* The name "/" is not supported.  */
-      __set_errno (EINVAL);
-      return -1;
-    }
-
-  namelen = strlen (name);
-  fname = (char *) __alloca (sizeof SHMDIR - 1 + namelen + 1);
-  __mempcpy (__mempcpy (fname, SHMDIR, sizeof SHMDIR - 1),
-	     name, namelen + 1);
-
-  fd = open (name, oflag, mode);
+# ifndef O_CLOEXEC
   if (fd != -1)
     {
       /* We got a descriptor.  Now set the FD_CLOEXEC bit.  */
       int flags = fcntl (fd, F_GETFD, 0);
 
-      if (__builtin_expect (flags, 0) != -1)
+      if (__glibc_likely (flags != -1))
 	{
 	  flags |= FD_CLOEXEC;
 	  flags = fcntl (fd, F_SETFD, flags);
@@ -77,8 +68,9 @@ shm_open (const char *name, int oflag, mode_t mode)
 	  __set_errno (save_errno);
 	}
     }
+# endif
 
   return fd;
 }
 
-#endif
+#endif  /* _POSIX_MAPPED_FILES */

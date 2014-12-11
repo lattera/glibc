@@ -3,3 +3,7 @@ L_tmpnam  = 20
 TMP_MAX   = 238328
 L_ctermid = 9
 L_cuserid = 9
+
+ifeq ($(subdir),rt)
+librt-routines += shm-directory
+endif

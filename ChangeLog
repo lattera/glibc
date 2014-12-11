@@ -1,3 +1,17 @@
+2014-12-11  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/posix/shm-directory.c: New file.
+	* sysdeps/posix/shm-directory.h: New file.
+	* sysdeps/posix/Makefile [($(subdir) = rt] (librt-routines): Add it.
+	* sysdeps/posix/shm_open.c: Use SHM_GET_NAME.
+	Use O_NOFOLLOW and O_CLOEXEC if available.  Transmute EISDIR to EINVAL.
+	* sysdeps/posix/shm_unlink.c: Use SHM_GET_NAME.
+	Transmute EPERM to EACCES.
+	* sysdeps/unix/sysv/linux/shm-directory.c: New file, most code taken
+	from ...
+	* sysdeps/unix/sysv/linux/shm_open.c: ... here.  File removed.
+	* sysdeps/unix/sysv/linux/shm_unlink.c: File removed.
+
 2014-12-11  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/jmpbuf_unwind.h (_jmpbuf_sp): Declare SP as void

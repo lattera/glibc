@@ -1,5 +1,5 @@
-/* shm_unlink -- remove a POSIX shared memory object.  Generic POSIX version.
-   Copyright (C) 2001-2014 Free Software Foundation, Inc.
+/* Determine directory for shm/sem files.  Generic POSIX version.
+   Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,28 +16,20 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "shm-directory.h"
 #include <unistd.h>
 
-#if ! _POSIX_MAPPED_FILES
-#include <rt/shm_unlink.c>
+#if _POSIX_MAPPED_FILES
 
-#else
+# include <paths.h>
 
-#include <errno.h>
-#include <string.h>
-#include "shm-directory.h"
+# define SHMDIR (_PATH_DEV "shm/")
 
-
-/* Remove shared memory object.  */
-int
-shm_unlink (const char *name)
+const char *
+__shm_directory (size_t *len)
 {
-  SHM_GET_NAME (ENOENT, -1);
-
-  int result = unlink (shm_name);
-  if (result < 0 && errno == EPERM)
-    __set_errno (EACCES);
-  return result;
+  *len = sizeof SHMDIR - 1;
+  return SHMDIR;
 }
 
 #endif
