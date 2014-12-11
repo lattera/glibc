@@ -1,5 +1,10 @@
 2014-12-11  Steve Ellcey  <sellcey@imgtec.com>
 
+	* sysdeps/mips/dl-trampoline.c: Modify switch expression to have
+	integer value instead of boolean.
+
+2014-12-11  Steve Ellcey  <sellcey@imgtec.com>
+
 	* malloc/malloc.c: Fix powerof2 check.
 
 2014-12-11  Stefan Liebler  <stli@linux.vnet.ibm.com>

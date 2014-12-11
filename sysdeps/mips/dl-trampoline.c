@@ -139,7 +139,7 @@ __dl_runtime_resolve (ElfW(Word) sym_index,
   /* FIXME: The symbol versioning stuff is not tested yet.  */
   if (__builtin_expect (ELFW(ST_VISIBILITY) (sym->st_other), 0) == 0)
     {
-      switch (l->l_info[VERSYMIDX (DT_VERSYM)] != NULL)
+      switch (l->l_info[VERSYMIDX (DT_VERSYM)] != NULL ? 1 : 0)
 	{
 	default:
 	  {
