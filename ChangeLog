@@ -1,5 +1,8 @@
 2014-12-11  Roland McGrath  <roland@hack.frob.com>
 
+	* misc/tst-error1.c (do_test): Ignore -Wformat-security for
+	generated error format strings.
+
 	* stdio-common/tstdiomisc.c (t2): Ignore -Wformat and
 	-Wformat-extra-args warnings for scanf formats.
 	* stdio-common/scanf4.c (main): Ignore -Wformat-zero-length around
