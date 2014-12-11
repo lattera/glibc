@@ -1,3 +1,8 @@
+2014-12-11  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	sysdeps/s390/s390-32/dl-machine.h (elf_machine_load_address):
+	Truncating assembler expression to a .long expression.
+
 2014-12-11  Andreas Schwab  <schwab@suse.de>
 
 	* elf/rtld.c (struct map_args): Constify str member.
