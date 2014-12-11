@@ -30,9 +30,6 @@
 #define FORCE_ELISION(m, s)
 #endif
 
-/* We don't force elision in trylock, because this can lead to inconsistent
-   lock state if the lock was actually busy.  */
-
 int
 __pthread_mutex_trylock (mutex)
      pthread_mutex_t *mutex;
