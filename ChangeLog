@@ -1,3 +1,11 @@
+2014-12-15  Will Newton  <will.newton@linaro.org>
+
+	* manual/install.texi: Bump required version of texinfo
+	to 4.7 from 4.5.
+	* INSTALL: Regenerated.
+	* configure.ac: Check for makeinfo version 4.7 and above.
+	* configure: Regenerated.
+
 2014-12-12  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/posix/shm-directory.h (SHM_GET_NAME): Take new argument
