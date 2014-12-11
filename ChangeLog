@@ -1,3 +1,8 @@
+2014-12-11  Adhemerval Zanella  <Azanella@linux.vnet.ibm.com>
+
+	* include/sys/socket.h (__sendmmsg): Add __USE_GNU guards on function
+	prototype.
+
 2014-12-11  Steve Ellcey  <sellcey@imgtec.com>
 
 	* sysdeps/mips/dl-trampoline.c: Modify switch expression to have
