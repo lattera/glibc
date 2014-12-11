@@ -1,3 +1,8 @@
+2014-12-11  Andreas Schwab  <schwab@suse.de>
+
+	* elf/rtld.c (struct map_args): Constify str member.
+	(do_preload): Constify fname argument.
+
 2014-12-11  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c: Remove overflow warnings for

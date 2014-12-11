@@ -441,7 +441,7 @@ struct relocate_args
 struct map_args
 {
   /* Argument to map_doit.  */
-  char *str;
+  const char *str;
   struct link_map *loader;
   int mode;
   /* Return value of map_doit.  */
@@ -651,7 +651,7 @@ _dl_initial_error_catch_tsd (void)
 
 
 static unsigned int
-do_preload (char *fname, struct link_map *main_map, const char *where)
+do_preload (const char *fname, struct link_map *main_map, const char *where)
 {
   const char *objname;
   const char *err_str = NULL;
