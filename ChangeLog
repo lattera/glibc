@@ -1,5 +1,10 @@
 2014-12-11  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* locale/programs/locfile.h (maybe_swap_uint32):
+	Remove inline and add unused attribute.
+
+2014-12-11  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	sysdeps/s390/s390-32/dl-machine.h (elf_machine_load_address):
 	Truncating assembler expression to a .long expression.
 

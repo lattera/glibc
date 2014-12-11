@@ -81,7 +81,8 @@ set_big_endian (bool big_endian)
 
 /* Munge VALUE so that, when stored, it has the correct byte order
    for the output files.  */
-static inline uint32_t
+static uint32_t
+__attribute__ ((unused))
 maybe_swap_uint32 (uint32_t value)
 {
   return swap_endianness_p ? bswap_32 (value) : value;
