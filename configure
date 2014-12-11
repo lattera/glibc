@@ -5330,27 +5330,26 @@ $as_echo "no" >&6; }
 fi
 
 
-# Extract the first word of "bison", so it can be a program name with args.
-set dummy bison; ac_word=$2
+for ac_prog in bison
+do
+  # Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_BISON+:} false; then :
+if ${ac_cv_prog_BISON+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  case $BISON in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_BISON="$BISON" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-as_dummy="$PATH:/usr/local/bin:/usr/bin:/bin"
-for as_dir in $as_dummy
+  if test -n "$BISON"; then
+  ac_cv_prog_BISON="$BISON" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
 do
   IFS=$as_save_IFS
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_BISON="$as_dir/$ac_word$ac_exec_ext"
+    ac_cv_prog_BISON="$ac_prog"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -5358,11 +5357,9 @@ done
   done
 IFS=$as_save_IFS
 
-  test -z "$ac_cv_path_BISON" && ac_cv_path_BISON="no"
-  ;;
-esac
 fi
-BISON=$ac_cv_path_BISON
+fi
+BISON=$ac_cv_prog_BISON
 if test -n "$BISON"; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: $BISON" >&5
 $as_echo "$BISON" >&6; }
@@ -5371,6 +5368,30 @@ else
 $as_echo "no" >&6; }
 fi
 
+
+  test -n "$BISON" && break
+done
+
+if test -z "$BISON"; then
+  ac_verc_fail=yes
+else
+  # Found it, now check the version.
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking version of $BISON" >&5
+$as_echo_n "checking version of $BISON... " >&6; }
+  ac_prog_version=`$BISON --version 2>&1 | sed -n 's/^.*bison (GNU Bison) \([0-9]*\.[0-9.]*\).*$/\1/p'`
+  case $ac_prog_version in
+    '') ac_prog_version="v. ?.??, bad"; ac_verc_fail=yes;;
+    2.7*|[3-9].*|[1-9][0-9]*)
+       ac_prog_version="$ac_prog_version, ok"; ac_verc_fail=no;;
+    *) ac_prog_version="$ac_prog_version, bad"; ac_verc_fail=yes;;
+
+  esac
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_prog_version" >&5
+$as_echo "$ac_prog_version" >&6; }
+fi
+if test $ac_verc_fail = yes; then
+  BISON=no
+fi
 
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for libc-friendly stddef.h" >&5

@@ -393,6 +393,11 @@ and if you change any of the message translation files you will need
 
    * GNU `gettext' 0.10.36 or later
 
+If you wish to regenerate the `yacc' parser code in the `intl'
+subdirectory you will need
+
+   * GNU `bison' 2.7 or later
+
 You may also need these packages if you upgrade your source tree using
 patches, although we try to avoid this.
 

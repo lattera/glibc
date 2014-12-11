@@ -1,3 +1,13 @@
+2014-12-22  Will Newton  <will.newton@linaro.org>
+
+	* manual/install.texi: Document that we require bison 2.7
+	or above.
+	* INSTALL: Regenerate.
+	* configure.ac: Use AC_CHECK_PROG_VER instead of
+	AC_PATH_PROG when checking for bison and check for
+	version 2.7 or above.
+	* configure: Regenerate.
+
 2014-12-21  Chris Metcalf  <cmetcalf@ezchip.com>
 
 	* sysdeps/tile/ffs.c (__ffs): Moved ffsll definition...

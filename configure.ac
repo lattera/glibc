@@ -1048,7 +1048,10 @@ if test "$PERL" != no &&
 fi
 AC_PATH_PROG(INSTALL_INFO, install-info, no,
 	     $PATH:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin)
-AC_PATH_PROG(BISON, bison, no, $PATH:/usr/local/bin:/usr/bin:/bin)
+AC_CHECK_PROG_VER(BISON, bison, --version,
+		  [bison (GNU Bison) \([0-9]*\.[0-9.]*\)],
+		  [2.7*|[3-9].*|[1-9][0-9]*],
+		  BISON=no)
 
 AC_CACHE_CHECK(for libc-friendly stddef.h, libc_cv_friendly_stddef, [dnl
 AC_TRY_COMPILE(dnl

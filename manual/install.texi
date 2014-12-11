@@ -449,6 +449,15 @@ GNU @code{gettext} 0.10.36 or later
 @end itemize
 
 @noindent
+If you wish to regenerate the @code{yacc} parser code in the @file{intl}
+subdirectory you will need
+
+@itemize @bullet
+@item
+GNU @code{bison} 2.7 or later
+@end itemize
+
+@noindent
 You may also need these packages if you upgrade your source tree using
 patches, although we try to avoid this.
 
