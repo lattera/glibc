@@ -1,3 +1,10 @@
+2014-12-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* nptl/semaphore.h: Move to ...
+	* sysdeps/pthread/semaphore.h: ... here.
+	* Makefile (installed-headers): Change nptl/semaphore.h to
+	sysdeps/pthread/semaphore.h.
+
 2014-12-11  Roland McGrath  <roland@hack.frob.com>
 
 	* misc/tst-error1.c (do_test): Ignore -Wformat-security for
