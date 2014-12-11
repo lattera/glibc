@@ -1,3 +1,10 @@
+2014-12-11  Chris Metcalf  <cmetcalf@ezchip.com>
+
+	* sysdeps/tile/tilegx/memset.c (__memcpy): Add
+	inhibit_loop_to_libcall to avoid recursive calls.
+	* sysdeps/tile/tilegx/memcpy.c (__memcpy): Likewise.
+	* sysdeps/tile/tilepro/memcpy.c (__memcpy): Likewise.
+
 2014-12-11  Adhemerval Zanella  <Azanella@linux.vnet.ibm.com>
 
 	* include/sys/socket.h (__sendmmsg): Add __USE_GNU guards on function

@@ -20,7 +20,7 @@
 #include <stdint.h>
 #include <arch/chip.h>
 
-void *
+void * inhibit_loop_to_libcall
 __memset (void *s, int c, size_t n)
 {
   uint32_t *out32;

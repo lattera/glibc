@@ -25,7 +25,7 @@
 /* How many cache lines ahead should we prefetch? */
 #define PREFETCH_LINES_AHEAD 3
 
-void *
+void * inhibit_loop_to_libcall
 __memcpy (void *__restrict dstv, const void *__restrict srcv, size_t n)
 {
   char *__restrict dst1 = (char *) dstv;

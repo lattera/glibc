@@ -21,7 +21,7 @@
 #include <stdint.h>
 #include "string-endian.h"
 
-void *
+void * inhibit_loop_to_libcall
 __memset (void *s, int c, size_t n)
 {
   uint64_t *out64;
