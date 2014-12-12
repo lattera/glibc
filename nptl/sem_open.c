@@ -18,8 +18,6 @@
 
 #include <errno.h>
 #include <fcntl.h>
-#include <mntent.h>
-#include <paths.h>
 #include <pthread.h>
 #include <search.h>
 #include <semaphore.h>
@@ -30,98 +28,8 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
-#include <sys/statfs.h>
-#include <linux_fsinfo.h>
 #include "semaphoreP.h"
-
-
-
-/* Information about the mount point.  */
-struct mountpoint_info mountpoint attribute_hidden;
-
-/* This is the default mount point.  */
-static const char defaultmount[] = "/dev/shm";
-/* This is the default directory.  */
-static const char defaultdir[] = "/dev/shm/sem.";
-
-/* Protect the `mountpoint' variable above.  */
-pthread_once_t __namedsem_once attribute_hidden = PTHREAD_ONCE_INIT;
-
-
-/* Determine where the shmfs is mounted (if at all).  */
-void
-attribute_hidden
-__where_is_shmfs (void)
-{
-  char buf[512];
-  struct statfs f;
-  struct mntent resmem;
-  struct mntent *mp;
-  FILE *fp;
-
-  /* The canonical place is /dev/shm.  This is at least what the
-     documentation tells everybody to do.  */
-  if (__statfs (defaultmount, &f) == 0 && (f.f_type == SHMFS_SUPER_MAGIC
-					   || f.f_type == RAMFS_MAGIC))
-    {
-      /* It is in the normal place.  */
-      mountpoint.dir = (char *) defaultdir;
-      mountpoint.dirlen = sizeof (defaultdir) - 1;
-
-      return;
-    }
-
-  /* OK, do it the hard way.  Look through the /proc/mounts file and if
-     this does not exist through /etc/fstab to find the mount point.  */
-  fp = __setmntent ("/proc/mounts", "r");
-  if (__glibc_unlikely (fp == NULL))
-    {
-      fp = __setmntent (_PATH_MNTTAB, "r");
-      if (__glibc_unlikely (fp == NULL))
-	/* There is nothing we can do.  Blind guesses are not helpful.  */
-	return;
-    }
-
-  /* Now read the entries.  */
-  while ((mp = __getmntent_r (fp, &resmem, buf, sizeof buf)) != NULL)
-    /* The original name is "shm" but this got changed in early Linux
-       2.4.x to "tmpfs".  */
-    if (strcmp (mp->mnt_type, "tmpfs") == 0
-	|| strcmp (mp->mnt_type, "shm") == 0)
-      {
-	/* Found it.  There might be more than one place where the
-           filesystem is mounted but one is enough for us.  */
-	size_t namelen;
-
-	/* First make sure this really is the correct entry.  At least
-	   some versions of the kernel give wrong information because
-	   of the implicit mount of the shmfs for SysV IPC.  */
-	if (__statfs (mp->mnt_dir, &f) != 0 || (f.f_type != SHMFS_SUPER_MAGIC
-						&& f.f_type != RAMFS_MAGIC))
-	  continue;
-
-	namelen = strlen (mp->mnt_dir);
-
-	if (namelen == 0)
-	  /* Hum, maybe some crippled entry.  Keep on searching.  */
-	  continue;
-
-	mountpoint.dir = (char *) malloc (namelen + 4 + 2);
-	if (mountpoint.dir != NULL)
-	  {
-	    char *cp = __mempcpy (mountpoint.dir, mp->mnt_dir, namelen);
-	    if (cp[-1] != '/')
-	      *cp++ = '/';
-	    cp = stpcpy (cp, "sem.");
-	    mountpoint.dirlen = cp - mountpoint.dir;
-	  }
-
-	break;
-      }
-
-  /* Close the stream.  */
-  __endmntent (fp);
-}
+#include <shm-directory.h>
 
 
 /* Comparison function for search of existing mapping.  */
@@ -217,8 +125,9 @@ check_add_mapping (const char *name, size_t namelen, int fd, sem_t *existing)
   if (result != existing && existing != SEM_FAILED && existing != MAP_FAILED)
     {
       /* Do not disturb errno.  */
-      INTERNAL_SYSCALL_DECL (err);
-      INTERNAL_SYSCALL (munmap, err, 2, existing, sizeof (sem_t));
+      int save = errno;
+      munmap (existing, sizeof (sem_t));
+      errno = save;
     }
 
   return result;
@@ -228,42 +137,17 @@ check_add_mapping (const char *name, size_t namelen, int fd, sem_t *existing)
 sem_t *
 sem_open (const char *name, int oflag, ...)
 {
-  char *finalname;
-  sem_t *result = SEM_FAILED;
   int fd;
+  sem_t *result;
 
-  /* Determine where the shmfs is mounted.  */
-  __pthread_once (&__namedsem_once, __where_is_shmfs);
-
-  /* If we don't know the mount points there is nothing we can do.  Ever.  */
-  if (mountpoint.dir == NULL)
-    {
-      __set_errno (ENOSYS);
-      return SEM_FAILED;
-    }
-
-  /* Construct the filename.  */
-  while (name[0] == '/')
-    ++name;
-
-  if (name[0] == '\0')
-    {
-      /* The name "/" is not supported.  */
-      __set_errno (EINVAL);
-      return SEM_FAILED;
-    }
-  size_t namelen = strlen (name) + 1;
-
-  /* Create the name of the final file.  */
-  finalname = (char *) alloca (mountpoint.dirlen + namelen);
-  __mempcpy (__mempcpy (finalname, mountpoint.dir, mountpoint.dirlen),
-	     name, namelen);
+  /* Create the name of the final file in local variable SHM_NAME.  */
+  SHM_GET_NAME (EINVAL, SEM_FAILED, SEM_SHM_PREFIX);
 
   /* If the semaphore object has to exist simply open it.  */
   if ((oflag & O_CREAT) == 0 || (oflag & O_EXCL) == 0)
     {
     try_again:
-      fd = __libc_open (finalname,
+      fd = __libc_open (shm_name,
 			(oflag & ~(O_CREAT|O_ACCMODE)) | O_NOFOLLOW | O_RDWR);
 
       if (fd == -1)
@@ -317,8 +201,8 @@ sem_open (const char *name, int oflag, ...)
       memset ((char *) &sem.initsem + sizeof (struct new_sem), '\0',
 	      sizeof (sem_t) - sizeof (struct new_sem));
 
-      tmpfname = (char *) alloca (mountpoint.dirlen + 6 + 1);
-      char *xxxxxx = __mempcpy (tmpfname, mountpoint.dir, mountpoint.dirlen);
+      tmpfname = __alloca (shm_dirlen + sizeof SEM_SHM_PREFIX + 6);
+      char *xxxxxx = __mempcpy (tmpfname, shm_dir, shm_dirlen);
 
       int retries = 0;
 #define NRETRIES 50
@@ -361,7 +245,7 @@ sem_open (const char *name, int oflag, ...)
 				       fd, 0)) != MAP_FAILED)
 	{
 	  /* Create the file.  Don't overwrite an existing file.  */
-	  if (link (tmpfname, finalname) != 0)
+	  if (link (tmpfname, shm_name) != 0)
 	    {
 	      /* Undo the mapping.  */
 	      (void) munmap (result, sizeof (sem_t));
@@ -402,8 +286,9 @@ sem_open (const char *name, int oflag, ...)
   if (fd != -1)
     {
       /* Do not disturb errno.  */
-      INTERNAL_SYSCALL_DECL (err);
-      INTERNAL_SYSCALL (close, err, 1, fd);
+      int save = errno;
+      __libc_close (fd);
+      errno = save;
     }
 
   return result;

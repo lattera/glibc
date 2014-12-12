@@ -32,7 +32,7 @@
 int
 shm_open (const char *name, int oflag, mode_t mode)
 {
-  SHM_GET_NAME (EINVAL, -1);
+  SHM_GET_NAME (EINVAL, -1, "");
 
 # ifdef O_NOFOLLOW
   oflag |= O_NOFOLLOW;

@@ -34,6 +34,12 @@
 #include <tls.h>
 #include <pthread-functions.h>
 
+#if IS_IN (libpthread)
+/* This gets us the declarations of the __pthread_* internal names,
+   and hidden_proto for them.  */
+# include <nptl/pthreadP.h>
+#endif
+
 /* Mutex type.  */
 #if !IS_IN (libc) && !IS_IN (libpthread)
 typedef pthread_mutex_t __libc_lock_t;
@@ -114,6 +120,12 @@ typedef pthread_key_t __libc_key_t;
   (__libc_pthread_functions_init ? PTHFCT_CALL (ptr_##FUNC, ARGS) : ELSE)
 # define __libc_ptf_call_always(FUNC, ARGS) \
   PTHFCT_CALL (ptr_##FUNC, ARGS)
+#elif IS_IN (libpthread)
+# define PTFAVAIL(NAME) 1
+# define __libc_ptf_call(FUNC, ARGS, ELSE) \
+  FUNC ARGS
+# define __libc_ptf_call_always(FUNC, ARGS) \
+  FUNC ARGS
 #else
 # define PTFAVAIL(NAME) (NAME != NULL)
 # define __libc_ptf_call(FUNC, ARGS, ELSE) \

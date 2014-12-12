@@ -1,5 +1,36 @@
 2014-12-12  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/posix/shm-directory.h (SHM_GET_NAME): Take new argument
+	PREFIX, string constant to insert between directory and name.
+	* sysdeps/posix/shm_open.c: Update caller.
+	* sysdeps/posix/shm_unlink.c: Likewise.
+	* nptl/semaphoreP.h (struct mountpoint_info): Type removed.
+	(__where_is_shmfs, mountpoint, __namedsem_once): Declarations removed.
+	(SEM_SHM_PREFIX): New macro.
+	* sysdeps/posix/Makefile (librt-routines): Add shm-directory only if
+	[$(have-thread-library) = no].
+	* nptl/Makefile (libpthread-routines): Add shm-directory.
+	* nptl/Versions (GLIBC_PRIVATE): Add __shm_directory.
+	* sysdeps/nptl/shm-directory.h: New file.
+	* sysdeps/posix/shm-directory.c
+	[IS_IN (libpthread)] (__shm_directory): Add hidden_def.
+	* sysdeps/unix/sysv/linux/shm-directory.c: Likewise.
+	* nptl/sem_open.c (check_add_mapping): Use munmap function rather than
+	INTERNAL_SYSCALL.
+	(__where_is_shmfs): Function removed.
+	(mountpoint, defaultmount, defaultdir, __namedsem_once):
+	Variables removed.
+	(sem_open): Use __libc_close function rather than INTERNAL_SYSCALL.
+	Use SHM_GET_NAME.
+	* nptl/sem_unlink.c: Prototypify.  Use SHM_GET_NAME.
+
+	* sysdeps/nptl/bits/libc-lockP.h [IS_IN (libpthread)]
+	(PTFAVAIL, __libc_ptf_call, __libc_ptf_call_always): Define as
+	unconditional for use inside libpthread.
+	[IS_IN (libpthread)]: Include <nptl/pthreadP.h>.
+
+2014-12-12  Roland McGrath  <roland@hack.frob.com>
+
 	* nptl/pthread_getaffinity.c: New file.
 	* nptl/pthread_setaffinity.c: New file.
 	* nptl/pthread_getname.c: New file.

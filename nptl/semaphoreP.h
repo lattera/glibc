@@ -19,13 +19,7 @@
 #include <semaphore.h>
 #include "pthreadP.h"
 
-
-/* Mount point of the shared memory filesystem.  */
-struct mountpoint_info
-{
-  char *dir;
-  size_t dirlen;
-};
+#define SEM_SHM_PREFIX  "sem."
 
 /* Keeping track of currently used mappings.  */
 struct inuse_sem
@@ -38,20 +32,12 @@ struct inuse_sem
 };
 
 
-/* Variables used in multiple interfaces.  */
-extern struct mountpoint_info mountpoint attribute_hidden;
-
-extern pthread_once_t __namedsem_once attribute_hidden;
-
 /* The search tree for existing mappings.  */
 extern void *__sem_mappings attribute_hidden;
 
 /* Lock to protect the search tree.  */
 extern int __sem_mappings_lock attribute_hidden;
 
-
-/* Initializer for mountpoint.  */
-extern void __where_is_shmfs (void) attribute_hidden;
 
 /* Comparison function for search in tree with existing mappings.  */
 extern int __sem_search (const void *a, const void *b) attribute_hidden;

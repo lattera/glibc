@@ -32,7 +32,7 @@
 int
 shm_unlink (const char *name)
 {
-  SHM_GET_NAME (ENOENT, -1);
+  SHM_GET_NAME (ENOENT, -1, "");
 
   int result = unlink (shm_name);
   if (result < 0 && errno == EPERM)

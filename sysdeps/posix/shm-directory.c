@@ -31,5 +31,8 @@ __shm_directory (size_t *len)
   *len = sizeof SHMDIR - 1;
   return SHMDIR;
 }
+# if IS_IN (libpthread)
+hidden_def (__shm_directory)
+# endif
 
 #endif

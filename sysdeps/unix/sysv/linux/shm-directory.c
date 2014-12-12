@@ -133,6 +133,9 @@ __shm_directory (size_t *len)
   *len = mountpoint.dirlen;
   return mountpoint.dir;
 }
+#if IS_IN (libpthread)
+hidden_def (__shm_directory)
+#endif
 
 
 /* Make sure the table is freed if we want to free everything before

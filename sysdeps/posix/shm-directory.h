@@ -36,9 +36,10 @@ extern const char *__shm_directory (size_t *len);
    strlen (NAME) + 1.  If NAME is invalid, it sets errno to
    ERRNO_FOR_INVALID and returns RETVAL_FOR_INVALID.  Finally, it defines
    the local variable SHM_NAME, giving the absolute file name of the shm
-   file corresponding to NAME.  */
+   file corresponding to NAME.  PREFIX is a string constant used as a
+   prefix on NAME.  */
 
-#define SHM_GET_NAME(errno_for_invalid, retval_for_invalid)		      \
+#define SHM_GET_NAME(errno_for_invalid, retval_for_invalid, prefix)           \
   size_t shm_dirlen;							      \
   const char *shm_dir = __shm_directory (&shm_dirlen);			      \
   /* If we don't know what directory to use, there is nothing we can do.  */  \
@@ -57,7 +58,9 @@ extern const char *__shm_directory (size_t *len);
       __set_errno (errno_for_invalid);					      \
       return retval_for_invalid;					      \
     }									      \
-  char *shm_name = __alloca (shm_dirlen + namelen);			      \
-  __mempcpy (__mempcpy (shm_name, shm_dir, shm_dirlen), name, namelen)
+  char *shm_name = __alloca (shm_dirlen + sizeof prefix - 1 + namelen);	      \
+  __mempcpy (__mempcpy (__mempcpy (shm_name, shm_dir, shm_dirlen),	      \
+                        prefix, sizeof prefix - 1),			      \
+             name, namelen)
 
 #endif	/* shm-directory.h */
