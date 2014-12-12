@@ -1,3 +1,10 @@
+2014-12-12  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* nptl/tst-mutex6.c
+	(ATTR_NULL): New define checks ATTR against NULL.
+	(do_test): Use !ATTR_NULL instead of ATTR != NULL.
+	* nptl/tst-mutexpp6.c (ATTR_NULL): New define.
+
 2014-12-11  James Lemke  <jwlemke@codesourcery.com>
 
 	[BZ #17581]
@@ -117,7 +124,7 @@
 
 2014-12-11  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
-	sysdeps/s390/s390-32/dl-machine.h (elf_machine_load_address):
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_load_address):
 	Truncating assembler expression to a .long expression.
 
 2014-12-11  Andreas Schwab  <schwab@suse.de>

@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <errno.h>
+#include <stdbool.h>
 
 
 #ifndef ATTR
@@ -28,6 +29,9 @@ pthread_mutexattr_t *attr;
 # define ATTR attr
 #endif
 
+#ifndef ATTR_NULL
+# define ATTR_NULL (ATTR == NULL)
+#endif
 
 static int
 do_test (void)
@@ -35,7 +39,7 @@ do_test (void)
   pthread_mutex_t m;
 
   int e = pthread_mutex_init (&m, ATTR);
-  if (ATTR != NULL && e == ENOTSUP)
+  if (!ATTR_NULL && e == ENOTSUP)
     {
       puts ("cannot support selected type of mutexes");
       e = pthread_mutex_init (&m, NULL);
@@ -46,7 +50,7 @@ do_test (void)
       return 1;
     }
 
-  if (ATTR != NULL && pthread_mutexattr_destroy (ATTR) != 0)
+  if (!ATTR_NULL && pthread_mutexattr_destroy (ATTR) != 0)
     {
       puts ("mutexattr_destroy failed");
       return 1;
