@@ -90,35 +90,31 @@ __malloc_check_init (void)
 
 #define MAGICBYTE(p) ((((size_t) p >> 3) ^ ((size_t) p >> 11)) & 0xFF)
 
-/* Visualize the chunk as being partitioned into blocks of 255 bytes from the
-   highest address of the chunk, downwards.  The end of each block tells us
-   the size of that block, up to the actual size of the requested memory.
-   The last block has a length of zero and is followed by the magic byte.
-   Our magic byte is right at the end of the requested size.  If we don't
-   reach it with this iteration we have witnessed a memory corruption.  */
+/* Visualize the chunk as being partitioned into blocks of 256 bytes from the
+   highest address of the chunk, downwards.  The beginning of each block tells
+   us the size of the previous block, up to the actual size of the requested
+   memory.  Our magic byte is right at the end of the requested size, so we
+   must reach it with this iteration, otherwise we have witnessed a memory
+   corruption.  */
 static size_t
 malloc_check_get_size (mchunkptr p)
 {
-  size_t total_sz, size;
+  size_t size;
   unsigned char c;
   unsigned char magic = MAGICBYTE (p);
 
   assert (using_malloc_checking == 1);
 
-  /* Validate the length-byte chain.  */
-  total_sz = chunksize (p) + (chunk_is_mmapped (p) ? 0 : SIZE_SZ);
-  for (size = total_sz - 1;
-       (c = ((unsigned char *) p)[size]) != 0;
+  for (size = chunksize (p) - 1 + (chunk_is_mmapped (p) ? 0 : SIZE_SZ);
+       (c = ((unsigned char *) p)[size]) != magic;
        size -= c)
     {
-      if (size <= c + 2 * SIZE_SZ)
-	break;
-    }
-  if (c != 0 || ((unsigned char *) p)[--size] != magic)
-    {
-      malloc_printerr (check_action, "malloc_check_get_size: memory corruption",
-		       chunk2mem (p));
-      return 0;
+      if (c <= 0 || size < (c + 2 * SIZE_SZ))
+        {
+          malloc_printerr (check_action, "malloc_check_get_size: memory corruption",
+                           chunk2mem (p));
+          return 0;
+        }
     }
 
   /* chunk2mem size.  */
@@ -134,24 +130,22 @@ mem2mem_check (void *ptr, size_t sz)
 {
   mchunkptr p;
   unsigned char *m_ptr = ptr;
-  size_t user_sz, block_sz, i;
+  size_t i;
 
   if (!ptr)
     return ptr;
 
   p = mem2chunk (ptr);
-  user_sz = chunksize (p) + (chunk_is_mmapped (p) ? 0 : SIZE_SZ);
-  user_sz -= 2 * SIZE_SZ;
-  for (i = user_sz - 1; i > sz; i -= block_sz)
+  for (i = chunksize (p) - (chunk_is_mmapped (p) ? 2 * SIZE_SZ + 1 : SIZE_SZ + 1);
+       i > sz;
+       i -= 0xFF)
     {
-      block_sz = i - (sz + 1);
-      if (block_sz > 0xff)
-	block_sz = 0xff;
-
-      m_ptr[i] = (unsigned char) block_sz;
-
-      if (block_sz == 0)
-	break;
+      if (i - sz < 0x100)
+        {
+          m_ptr[i] = (unsigned char) (i - sz);
+          break;
+        }
+      m_ptr[i] = 0xFF;
     }
   m_ptr[sz] = MAGICBYTE (p);
   return (void *) m_ptr;
@@ -172,12 +166,11 @@ mem2chunk_check (void *mem, unsigned char **magic_p)
     return NULL;
 
   p = mem2chunk (mem);
-  sz = chunksize (p);
-  magic = MAGICBYTE (p);
   if (!chunk_is_mmapped (p))
     {
       /* Must be a chunk in conventional heap memory. */
       int contig = contiguous (&main_arena);
+      sz = chunksize (p);
       if ((contig &&
            ((char *) p < mp_.sbrk_base ||
             ((char *) p + sz) >= (mp_.sbrk_base + main_arena.system_mem))) ||
@@ -187,13 +180,12 @@ mem2chunk_check (void *mem, unsigned char **magic_p)
                                next_chunk (prev_chunk (p)) != p)))
         return NULL;
 
-      for (sz += SIZE_SZ - 1; (c = ((unsigned char *) p)[sz]) != 0; sz -= c)
+      magic = MAGICBYTE (p);
+      for (sz += SIZE_SZ - 1; (c = ((unsigned char *) p)[sz]) != magic; sz -= c)
         {
-	  if (sz <= c + 2 * SIZE_SZ)
-	    break;
+          if (c <= 0 || sz < (c + 2 * SIZE_SZ))
+            return NULL;
         }
-      if (c != 0 || ((unsigned char *) p)[--sz] != magic)
-	return NULL;
     }
   else
     {
@@ -209,16 +201,15 @@ mem2chunk_check (void *mem, unsigned char **magic_p)
            offset < 0x2000) ||
           !chunk_is_mmapped (p) || (p->size & PREV_INUSE) ||
           ((((unsigned long) p - p->prev_size) & page_mask) != 0) ||
-          ((p->prev_size + sz) & page_mask) != 0)
+          ((sz = chunksize (p)), ((p->prev_size + sz) & page_mask) != 0))
         return NULL;
 
-      for (sz -= 1; (c = ((unsigned char *) p)[sz]) != 0; sz -= c)
+      magic = MAGICBYTE (p);
+      for (sz -= 1; (c = ((unsigned char *) p)[sz]) != magic; sz -= c)
         {
-	  if (sz <= c + 2 * SIZE_SZ)
-	    break;
+          if (c <= 0 || sz < (c + 2 * SIZE_SZ))
+            return NULL;
         }
-      if (c != 0 || ((unsigned char *) p)[--sz] != magic)
-	return NULL;
     }
   ((unsigned char *) p)[sz] ^= 0xFF;
   if (magic_p)
