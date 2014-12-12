@@ -1,5 +1,10 @@
 2014-12-12  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/pthread_getaffinity.c: New file.
+	* nptl/pthread_setaffinity.c: New file.
+	* nptl/pthread_getname.c: New file.
+	* nptl/pthread_setname.c: New file.
+
 	* nptl/pthread_create.c (START_THREAD_DEFN)
 	[! __ASSUME_SET_ROBUST_LIST]: Add missing & in lll_futex_wake argument.
 
