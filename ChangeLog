@@ -1,3 +1,8 @@
+2014-12-12  Roland McGrath  <roland@hack.frob.com>
+
+	* nptl/pthread_create.c (START_THREAD_DEFN)
+	[! __ASSUME_SET_ROBUST_LIST]: Add missing & in lll_futex_wake argument.
+
 2014-12-12  Stefan Liebler  <stli@linux.vnet.ibm.com>
 	    Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 

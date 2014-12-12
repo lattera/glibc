@@ -414,7 +414,7 @@ START_THREAD_DEFN
 	  this->__list.__next = NULL;
 
 	  atomic_or (&this->__lock, FUTEX_OWNER_DIED);
-	  lll_futex_wake (this->__lock, 1, /* XYZ */ LLL_SHARED);
+	  lll_futex_wake (&this->__lock, 1, /* XYZ */ LLL_SHARED);
 	}
       while (robust != (void *) &pd->robust_head);
     }
