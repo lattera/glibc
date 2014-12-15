@@ -1,5 +1,9 @@
 2014-12-16  Torvald Riegel  <triegel@redhat.com>
 
+	* misc/tst-mntent2.c (do_test): Fix warning.
+
+2014-12-16  Torvald Riegel  <triegel@redhat.com>
+
 	* elf/tst-unique4lib.cc(a): Mark as used.
 
 2014-12-16  Florian Weimer  <fweimer@redhat.com>

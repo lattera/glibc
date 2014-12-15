@@ -17,7 +17,7 @@ do_test (void)
   mef.mnt_passno = 2;
 
 #define TEST(opt, found) \
-  if (!!hasmntopt (&mef, (opt)) != (found))				\
+  if ((!!hasmntopt (&mef, (opt))) != (found))				\
     {									\
       printf ("Option %s was %sfound\n", (opt), (found) ? "not " : "");	\
       result = 1;							\
