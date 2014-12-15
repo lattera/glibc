@@ -1,3 +1,9 @@
+2014-12-16  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #17630]
+	* resolv/nss_dns/dns-network.c (getanswer_r): Iterate over alias
+	names.
+
 2014-12-16  Allan McRae  <allan@archlinux.org>
 
 	* stdio-common/Makefile (tests): Re-add bug26.

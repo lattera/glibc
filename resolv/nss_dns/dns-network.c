@@ -398,8 +398,8 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
 
 	case BYNAME:
 	  {
-	    char **ap = result->n_aliases++;
-	    while (*ap != NULL)
+	    char **ap;
+	    for (ap = result->n_aliases; *ap != NULL; ++ap)
 	      {
 		/* Check each alias name for being of the forms:
 		   4.3.2.1.in-addr.arpa		= net 1.2.3.4
