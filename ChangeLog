@@ -1,3 +1,24 @@
+2014-12-15  Bernard Ogden  <bernie.ogden@linaro.org>
+
+	* nptl/lowlevellock.c (__lll_lock_wait_private): Add comments.
+	(__lll_lock_wait): Likewise.
+	(__lll_timedlock_wait): Likewise.
+	(__lll_timedwait_tid): Likewise.
+	* nptl/lowlevelrobustlock.c (__lll_robust_lock_wait): Likewise.
+	(__lll_robust_timedlock_wait): Likewise.
+	* sysdeps/nptl/lowlevellock.h (lll_trylock): Likewise.
+	(lll_cond_trylock): Likewise.
+	(__lll_lock): Likewise.
+	(__lll_robust_lock): Likewise.
+	(__lll_cond_lock): Likewise.
+	(lll_robust_cond_lock): Likewise.
+	(__lll_timedlock): Likewise.
+	(__lll_robust_timedlock): Likewise.
+	(__lll_unlock): Likewise.
+	(__lll_robust_unlock): Likewise.
+	(lll_wait_tid): Likewise.
+	(lll_timedwait_tid): Likewise.
+
 2014-12-15  Torvald Riegel  <triegel@redhat.com>
 
 	* nptl/tst-sem4.c (do_test): Start with a fresh semaphore state.

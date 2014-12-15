@@ -27,10 +27,10 @@ void
 __lll_lock_wait_private (int *futex)
 {
   if (*futex == 2)
-    lll_futex_wait (futex, 2, LLL_PRIVATE);
+    lll_futex_wait (futex, 2, LLL_PRIVATE); /* Wait if *futex == 2.  */
 
   while (atomic_exchange_acq (futex, 2) != 0)
-    lll_futex_wait (futex, 2, LLL_PRIVATE);
+    lll_futex_wait (futex, 2, LLL_PRIVATE); /* Wait if *futex == 2.  */
 }
 
 
@@ -40,10 +40,10 @@ void
 __lll_lock_wait (int *futex, int private)
 {
   if (*futex == 2)
-    lll_futex_wait (futex, 2, private);
+    lll_futex_wait (futex, 2, private); /* Wait if *futex == 2.  */
 
   while (atomic_exchange_acq (futex, 2) != 0)
-    lll_futex_wait (futex, 2, private);
+    lll_futex_wait (futex, 2, private); /* Wait if *futex == 2.  */
 }
 
 
@@ -75,7 +75,7 @@ __lll_timedlock_wait (int *futex, const struct timespec *abstime, int private)
       if (rt.tv_sec < 0)
 	return ETIMEDOUT;
 
-      /* Wait.  */
+      /* If *futex == 2, wait until woken or timeout.  */
       lll_futex_timed_wait (futex, 2, &rt, private);
     }
 
@@ -83,6 +83,11 @@ __lll_timedlock_wait (int *futex, const struct timespec *abstime, int private)
 }
 
 
+/* The kernel notifies a process which uses CLONE_CHILD_CLEARTID via futex
+   wake-up when the clone terminates.  The memory location contains the
+   thread ID while the clone is running and is reset to zero by the kernel
+   afterwards.  The kernel up to version 3.16.3 does not use the private futex
+   operations for futex wake-up when the clone terminates.  */
 int
 __lll_timedwait_tid (int *tidp, const struct timespec *abstime)
 {
@@ -113,8 +118,10 @@ __lll_timedwait_tid (int *tidp, const struct timespec *abstime)
       if (rt.tv_sec < 0)
 	return ETIMEDOUT;
 
-      /* Wait until thread terminates.  The kernel so far does not use
-	 the private futex operations for this.  */
+      /* If *tidp == tid, wait until thread terminates or the wait times out.
+         The kernel up to version 3.16.3 does not use the private futex
+         operations for futex wake-up when the clone terminates.
+      */
       if (lll_futex_timed_wait (tidp, tid, &rt, LLL_SHARED) == -ETIMEDOUT)
 	return ETIMEDOUT;
     }

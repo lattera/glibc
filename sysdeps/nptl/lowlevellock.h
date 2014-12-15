@@ -22,9 +22,53 @@
 #include <atomic.h>
 #include <lowlevellock-futex.h>
 
+/* Low-level locks use a combination of atomic operations (to acquire and
+   release lock ownership) and futex operations (to block until the state
+   of a lock changes).  A lock can be in one of three states:
+   0:  not acquired,
+   1:  acquired with no waiters; no other threads are blocked or about to block
+       for changes to the lock state,
+   >1: acquired, possibly with waiters; there may be other threads blocked or
+       about to block for changes to the lock state.
+
+   We expect that the common case is an uncontended lock, so we just need
+   to transition the lock between states 0 and 1; releasing the lock does
+   not need to wake any other blocked threads.  If the lock is contended
+   and a thread decides to block using a futex operation, then this thread
+   needs to first change the state to >1; if this state is observed during
+   lock release, the releasing thread will wake one of the potentially
+   blocked threads.
+
+   Much of this code takes a 'private' parameter.  This may be:
+   LLL_PRIVATE: lock only shared within a process
+   LLL_SHARED:  lock may be shared across processes.
+
+   Condition variables contain an optimization for broadcasts that requeues
+   waiting threads on a lock's futex.  Therefore, there is a special
+   variant of the locks (whose name contains "cond") that makes sure to
+   always set the lock state to >1 and not just 1.
+
+   Robust locks set the lock to the id of the owner.  This allows detection
+   of the case where the owner exits without releasing the lock.  Flags are
+   OR'd with the owner id to record additional information about lock state.
+   Therefore the states of robust locks are:
+    0: not acquired
+   id: acquired (by user identified by id & FUTEX_TID_MASK)
+
+   The following flags may be set in the robust lock value:
+   FUTEX_WAITERS     - possibly has waiters
+   FUTEX_OWNER_DIED  - owning user has exited without releasing the futex.  */
+
+
+/* If LOCK is 0 (not acquired), set to 1 (acquired with no waiters) and return
+   0.  Otherwise leave lock unchanged and return non-zero to indicate that the
+   lock was not acquired.  */
 #define lll_trylock(lock)	\
   atomic_compare_and_exchange_bool_acq (&(lock), 1, 0)
 
+/* If LOCK is 0 (not acquired), set to 2 (acquired, possibly with waiters) and
+   return 0.  Otherwise leave lock unchanged and return non-zero to indicate
+   that the lock was not acquired.  */
 #define lll_cond_trylock(lock)	\
   atomic_compare_and_exchange_bool_acq (&(lock), 2, 0)
 
@@ -35,6 +79,13 @@ extern int __lll_robust_lock_wait (int *futex, int private) attribute_hidden;
 /* This is an expression rather than a statement even though its value is
    void, so that it can be used in a comma expression or as an expression
    that's cast to void.  */
+/* The inner conditional compiles to a call to __lll_lock_wait_private if
+   private is known at compile time to be LLL_PRIVATE, and to a call to
+   __lll_lock_wait otherwise.  */
+/* If FUTEX is 0 (not acquired), set to 1 (acquired with no waiters) and
+   return.  Otherwise, ensure that it is >1 (acquired, possibly with waiters)
+   and then block until we acquire the lock, at which point FUTEX will still be
+   >1.  The lock is always acquired on return.  */
 #define __lll_lock(futex, private)                                      \
   ((void)                                                               \
    ({                                                                   \
@@ -52,6 +103,14 @@ extern int __lll_robust_lock_wait (int *futex, int private) attribute_hidden;
   __lll_lock (&(futex), private)
 
 
+/* If FUTEX is 0 (not acquired), set to ID (acquired with no waiters) and
+   return 0.  Otherwise, ensure that it is set to FUTEX | FUTEX_WAITERS
+   (acquired, possibly with waiters) and block until we acquire the lock.
+   FUTEX will now be ID | FUTEX_WAITERS and we return 0.
+   If the previous owner of the lock dies before we acquire the lock then FUTEX
+   will be the value of id as set by the previous owner, with FUTEX_OWNER_DIED
+   set (FUTEX_WAITERS may or may not be set).  We return this value to indicate
+   that the lock is not acquired.  */
 #define __lll_robust_lock(futex, id, private)                           \
   ({                                                                    \
     int *__futex = (futex);                                             \
@@ -69,6 +128,10 @@ extern int __lll_robust_lock_wait (int *futex, int private) attribute_hidden;
 /* This is an expression rather than a statement even though its value is
    void, so that it can be used in a comma expression or as an expression
    that's cast to void.  */
+/* Unconditionally set FUTEX to 2 (acquired, possibly with waiters).  If FUTEX
+   was 0 (not acquired) then return.  Otherwise, block until the lock is
+   acquired, at which point FUTEX is 2 (acquired, possibly with waiters).  The
+   lock is always acquired on return.  */
 #define __lll_cond_lock(futex, private)                                 \
   ((void)                                                               \
    ({                                                                   \
@@ -79,6 +142,8 @@ extern int __lll_robust_lock_wait (int *futex, int private) attribute_hidden;
 #define lll_cond_lock(futex, private) __lll_cond_lock (&(futex), private)
 
 
+/* As __lll_robust_lock, but set to ID | FUTEX_WAITERS (acquired, possibly with
+   waiters) if FUTEX is 0.  */
 #define lll_robust_cond_lock(futex, id, private)	\
   __lll_robust_lock (&(futex), (id) | FUTEX_WAITERS, private)
 
@@ -88,8 +153,9 @@ extern int __lll_timedlock_wait (int *futex, const struct timespec *,
 extern int __lll_robust_timedlock_wait (int *futex, const struct timespec *,
 					int private) attribute_hidden;
 
-/* Take futex if it is untaken.
-   Otherwise block until either we get the futex or abstime runs out.  */
+
+/* As __lll_lock, but with a timeout.  If the timeout occurs then return
+   ETIMEDOUT.  If ABSTIME is invalid, return EINVAL.  */
 #define __lll_timedlock(futex, abstime, private)                \
   ({                                                            \
     int *__futex = (futex);                                     \
@@ -104,6 +170,8 @@ extern int __lll_robust_timedlock_wait (int *futex, const struct timespec *,
   __lll_timedlock (&(futex), abstime, private)
 
 
+/* As __lll_robust_lock, but with a timeout.  If the timeout occurs then return
+   ETIMEDOUT.  If ABSTIME is invalid, return EINVAL.  */
 #define __lll_robust_timedlock(futex, abstime, id, private)             \
   ({                                                                    \
     int *__futex = (futex);                                             \
@@ -121,6 +189,9 @@ extern int __lll_robust_timedlock_wait (int *futex, const struct timespec *,
 /* This is an expression rather than a statement even though its value is
    void, so that it can be used in a comma expression or as an expression
    that's cast to void.  */
+/* Unconditionally set FUTEX to 0 (not acquired), releasing the lock.  If FUTEX
+   was >1 (acquired, possibly with waiters), then wake any waiters.  The waiter
+   that acquires the lock will set FUTEX to >1.  */
 #define __lll_unlock(futex, private)                    \
   ((void)                                               \
    ({                                                   \
@@ -136,6 +207,9 @@ extern int __lll_robust_timedlock_wait (int *futex, const struct timespec *,
 /* This is an expression rather than a statement even though its value is
    void, so that it can be used in a comma expression or as an expression
    that's cast to void.  */
+/* Unconditionally set FUTEX to 0 (not acquired), releasing the lock.  If FUTEX
+   had FUTEX_WAITERS set then wake any waiters.  The waiter that acquires the
+   lock will set FUTEX_WAITERS.  */
 #define __lll_robust_unlock(futex, private)             \
   ((void)                                               \
    ({                                                   \
@@ -159,15 +233,12 @@ extern int __lll_robust_timedlock_wait (int *futex, const struct timespec *,
 #define LLL_LOCK_INITIALIZER		(0)
 #define LLL_LOCK_INITIALIZER_LOCKED	(1)
 
-/* The states of a lock are:
-    0  -  untaken
-    1  -  taken by one user
-   >1  -  taken by more users */
 
 /* The kernel notifies a process which uses CLONE_CHILD_CLEARTID via futex
-   wakeup when the clone terminates.  The memory location contains the
-   thread ID while the clone is running and is reset to zero
-   afterwards.	*/
+   wake-up when the clone terminates.  The memory location contains the
+   thread ID while the clone is running and is reset to zero by the kernel
+   afterwards.  The kernel up to version 3.16.3 does not use the private futex
+   operations for futex wake-up when the clone terminates.  */
 #define lll_wait_tid(tid) \
   do {					\
     __typeof (tid) __tid;		\
@@ -178,6 +249,8 @@ extern int __lll_robust_timedlock_wait (int *futex, const struct timespec *,
 extern int __lll_timedwait_tid (int *, const struct timespec *)
      attribute_hidden;
 
+/* As lll_wait_tid, but with a timeout.  If the timeout occurs then return
+   ETIMEDOUT.  If ABSTIME is invalid, return EINVAL.  */
 #define lll_timedwait_tid(tid, abstime) \
   ({							\
     int __res = 0;					\
