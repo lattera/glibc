@@ -6,7 +6,7 @@ int S<N>::i = N;
 template<int N>
 const int S<N>::j __attribute__ ((used)) = -1;
 
-static int a[24] =
+static int a[24] __attribute__ ((used)) =
   {
     S<1>::i, S<2>::i, S<3>::i, S<4>::i, S<5>::i, S<6>::i, S<7>::i, S<8>::i,
     S<9>::i, S<10>::i, S<11>::i, S<12>::i, S<13>::i, S<14>::i, S<15>::i,
