@@ -25,6 +25,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <libc-internal.h>
 
 
 const char *locs[] =
