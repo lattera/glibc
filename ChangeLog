@@ -1,3 +1,9 @@
+2014-12-15  Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ #17657]
+	* locale/programs/ld-ctype.c (find_translit2, read_widestring): Return
+	static array.
+
 2014-12-15  Bernard Ogden  <bernie.ogden@linaro.org>
 
 	* nptl/lowlevellock.c (__lll_lock_wait_private): Add comments.

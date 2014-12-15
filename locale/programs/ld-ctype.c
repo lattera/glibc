@@ -114,6 +114,9 @@ struct translit_include_t
   struct translit_include_t *next;
 };
 
+/* Provide some dummy pointer for empty string.  */
+static uint32_t no_str[] = { 0 };
+
 
 /* Sparse table of uint32_t.  */
 #define TABLE idx_table
@@ -1777,7 +1780,7 @@ find_translit2 (struct locale_ctype_t *ctype, const struct charmap_t *charmap,
 
 	  for (wi = tirunp->from; wi <= wch; wi += tirunp->step)
 	    if (wi == wch)
-	      return (uint32_t []) { 0 };
+	      return no_str;
 	}
     }
 
@@ -1831,7 +1834,7 @@ read_widestring (struct linereader *ldfile, struct token *now,
 
   if (now->tok == tok_default_missing)
     /* The special name "" will denote this case.  */
-    wstr = ((uint32_t *) { 0 });
+    wstr = no_str;
   else if (now->tok == tok_bsymbol)
     {
       /* Get the value from the repertoire.  */
@@ -4090,12 +4093,9 @@ allocate_arrays (struct locale_ctype_t *ctype, const struct charmap_t *charmap,
     }
   else
     {
-      /* Provide some dummy pointers since we have nothing to write out.  */
-      static uint32_t no_str = { 0 };
-
-      ctype->translit_from_idx = &no_str;
-      ctype->translit_from_tbl = &no_str;
-      ctype->translit_to_tbl = &no_str;
+      ctype->translit_from_idx = no_str;
+      ctype->translit_from_tbl = no_str;
+      ctype->translit_to_tbl = no_str;
       ctype->translit_idx_size = 0;
       ctype->translit_from_tbl_size = 0;
       ctype->translit_to_tbl_size = 0;
