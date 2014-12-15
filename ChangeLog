@@ -1,3 +1,7 @@
+2014-12-15  Torvald Riegel  <triegel@redhat.com>
+
+	* nptl/tst-mutex5.c (do_test): Do not skip tests if elision is enabled.
+
 2014-12-15  Adhemerval Zanella  <Azanella@linux.vnet.ibm.com>
 
 	* stdio-common/test-vfprintf.c: Include <libc-internal.h>.
