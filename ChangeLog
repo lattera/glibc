@@ -1,3 +1,12 @@
+2014-12-15  Jeff Law  <law@redhat.com>
+
+	[BZ #16617]
+	* stdio-common/vfprintf.c (vfprintf): Allocate large specs array
+	on the heap.  (CVE-2012-3406)
+	* stdio-common/bug23-2.c, stdio-common/bug23-3.c: New file.
+	* stdio-common/bug23-4.c: New file.  Test case by Joseph Myers.
+	* stdio-common/Makefile (tests): Add bug23-2, bug23-3, bug23-4.
+
 2014-12-15  Will Newton  <will.newton@linaro.org>
 
 	* manual/install.texi: Bump required version of texinfo
