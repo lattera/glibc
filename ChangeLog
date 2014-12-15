@@ -1,5 +1,10 @@
 2014-12-16  Torvald Riegel  <triegel@redhat.com>
 
+	* string/tester.c: Include <libc-internal.h>.
+	(test_memset): Ignore -Wmemset-transposed-args.
+
+2014-12-16  Torvald Riegel  <triegel@redhat.com>
+
 	* misc/tst-mntent2.c (do_test): Fix warning.
 
 2014-12-16  Torvald Riegel  <triegel@redhat.com>

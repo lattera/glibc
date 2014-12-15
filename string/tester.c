@@ -32,6 +32,7 @@
 #include <string.h>
 #include <strings.h>
 #include <fcntl.h>
+#include <libc-internal.h>
 
 
 #define	STREQ(a, b)	(strcmp((a), (b)) == 0)
@@ -1303,8 +1304,15 @@ test_memset (void)
   check(memset(one+1, 'x', 3) == one+1, 1);	/* Return value. */
   equal(one, "axxxefgh", 2);		/* Basic test. */
 
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (5, 0)
+  /* GCC 5.0 warns about a zero-length memset because the arguments to memset
+     may be in the wrong order.  But we really want to test this.  */
+  DIAG_IGNORE_NEEDS_COMMENT (5.0, "-Wmemset-transposed-args")
+#endif
   (void) memset(one+2, 'y', 0);
   equal(one, "axxxefgh", 3);		/* Zero-length set. */
+  DIAG_POP_NEEDS_COMMENT;
 
   (void) memset(one+5, 0, 1);
   equal(one, "axxxe", 4);			/* Zero fill. */
