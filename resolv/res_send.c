@@ -429,7 +429,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 				while (ns < MAXNS
 				       && EXT(statp).nsmap[ns] != MAXNS)
 					ns++;
-				if (ns == MAXNS)
+				if (ns >= MAXNS)
 					break;
 				EXT(statp).nsmap[ns] = n;
 				map[n] = ns++;
