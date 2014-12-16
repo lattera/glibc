@@ -1,5 +1,8 @@
 2014-12-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* resolv/res_send.c (__libc_res_nsend): Disable warning 'array
+	subscript above bounds'
+
 	* resolv/res_send.c (__libc_res_nsend): Fix check for nsmap
 	bounds.
 

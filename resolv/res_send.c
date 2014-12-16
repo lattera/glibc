@@ -429,9 +429,15 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 				while (ns < MAXNS
 				       && EXT(statp).nsmap[ns] != MAXNS)
 					ns++;
-				if (ns >= MAXNS)
+				if (ns == MAXNS)
 					break;
+				/* NS never exceeds MAXNS, but gcc 4.9 somehow
+				   does not see this.  */
+				DIAG_PUSH_NEEDS_COMMENT;
+				DIAG_IGNORE_NEEDS_COMMENT (4.9,
+							   "-Warray-bounds");
 				EXT(statp).nsmap[ns] = n;
+				DIAG_POP_NEEDS_COMMENT;
 				map[n] = ns++;
 			}
 		EXT(statp).nscount = n;
