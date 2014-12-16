@@ -1,5 +1,7 @@
 2014-12-16  Arjun Shankar  <arjun.is@lostca.se>
 
+	* libio/tst-fopenloc.c: Use test-skeleton.c.
+
 	* stdlib/tst-bsearch.c: Use test-skeleton.c.
 	(entry): Rename to ITEM.
 	(do_test, comp): Adjust.

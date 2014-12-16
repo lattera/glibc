@@ -29,8 +29,8 @@
 static const char inputfile[] = "../iconvdata/testdata/ISO-8859-1";
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   FILE *fp;
 
@@ -59,3 +59,6 @@ main (void)
 
   return 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
