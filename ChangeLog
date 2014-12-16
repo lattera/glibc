@@ -1,5 +1,15 @@
 2014-12-16  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17719]
+	* sysdeps/x86_64/memrchr.S (memrchr): Rename to __memrchr and
+	define as weak alias of __memrchr.
+	(__memrchr): Do not define as strong alias of memrchr.
+	* conform/Makefile (test-xfail-XPG4/libgen.h/linknamespace):
+	Remove variable.
+	(test-xfail-UNIX98/libgen.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K/libgen.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K8/libgen.h/linknamespace): Likewise.
+
 	[BZ #17717]
 	* inet/if_index.c (if_nametoindex): Rename to __if_nametoindex and
 	define as weak alias of __if_nametoindex.  Use libc_hidden_weak.
