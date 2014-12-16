@@ -1,3 +1,7 @@
+2014-12-16  Arjun Shankar  <arjun.is@lostca.se>
+
+	* stdio-common/tst-fseek.c: Use test-skeleton.c.
+
 2014-12-16  Torvald Riegel  <triegel@redhat.com>
 
 	* string/tester.c: Include <libc-internal.h>.

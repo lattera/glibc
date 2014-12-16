@@ -27,8 +27,8 @@
 #include <sys/stat.h>
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   const char *tmpdir;
   char *fname;
@@ -476,3 +476,7 @@ main (void)
 
   return result;
 }
+
+#define TIMEOUT 3
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
