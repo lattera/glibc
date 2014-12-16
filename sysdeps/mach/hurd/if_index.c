@@ -29,7 +29,7 @@
 /* Return the interface index corresponding to interface IFNAME.
    On error, return 0.  */
 unsigned int
-if_nametoindex (const char *ifname)
+__if_nametoindex (const char *ifname)
 {
   struct ifreq ifr;
   int fd = __opensock ();
@@ -49,11 +49,13 @@ if_nametoindex (const char *ifname)
   __close (fd);
   return ifr.ifr_ifindex;
 }
-libc_hidden_def (if_nametoindex)
+libc_hidden_def (__if_nametoindex)
+weak_alias (__if_nametoindex, if_nametoindex)
+libc_hidden_weak (if_nametoindex)
 
 /* Free the structure IFN returned by if_nameindex.  */
 void
-if_freenameindex (struct if_nameindex *ifn)
+__if_freenameindex (struct if_nameindex *ifn)
 {
   struct if_nameindex *ptr = ifn;
   while (ptr->if_name || ptr->if_index)
@@ -63,12 +65,13 @@ if_freenameindex (struct if_nameindex *ifn)
     }
   free (ifn);
 }
+weak_alias (__if_freenameindex, if_freenameindex)
 
 /* Return an array of if_nameindex structures, one for each network
    interface present, plus one indicating the end of the array.  On
    error, return NULL.  */
 struct if_nameindex *
-if_nameindex (void)
+__if_nameindex (void)
 {
   error_t err = 0;
   char data[2048];
@@ -148,12 +151,13 @@ if_nameindex (void)
   __set_errno (err);
   return idx;
 }
+weak_alias (__if_nameindex, if_nameindex)
 
 /* Store the name of the interface corresponding to index IFINDEX in
    IFNAME (which has space for at least IFNAMSIZ characters).  Return
    IFNAME, or NULL on error.  */
 char *
-if_indextoname (unsigned int ifindex, char *ifname)
+__if_indextoname (unsigned int ifindex, char *ifname)
 {
   struct ifreq ifr;
   int fd = __opensock ();
@@ -175,7 +179,8 @@ if_indextoname (unsigned int ifindex, char *ifname)
   __close (fd);
   return strncpy (ifname, ifr.ifr_name, IFNAMSIZ);
 }
-libc_hidden_def (if_indextoname)
+weak_alias (__if_indextoname, if_indextoname)
+libc_hidden_weak (if_indextoname)
 
 #if 0
 void

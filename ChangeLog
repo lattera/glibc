@@ -1,5 +1,49 @@
 2014-12-16  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17717]
+	* inet/if_index.c (if_nametoindex): Rename to __if_nametoindex and
+	define as weak alias of __if_nametoindex.  Use libc_hidden_weak.
+	(if_indextoname): Rename to __if_indextoname and define as weak
+	alias of __if_indextoname.  Use libc_hidden_weak.
+	(if_freenameindex): Rename to __if_freenameindex and define as
+	weak alias of __if_freenameindex.
+	(if_nameindex): Rename to __if_nameindex and define as weak alias
+	of __if_nameindex.
+	* sysdeps/mach/hurd/if_index.c (if_nametoindex): Rename to
+	__if_nametoindex and define as weak alias of __if_nametoindex.
+	Use libc_hidden_weak.
+	(if_freenameindex): Rename to __if_freenameindex and define as
+	weak alias of __if_freenameindex.
+	(if_nameindex): Rename to __if_nameindex and define as weak alias
+	of __if_nameindex.
+	(if_indextoname): Rename to __if_indextoname and define as weak
+	alias of __if_indextoname.  Use libc_hidden_weak.
+	* sysdeps/unix/sysv/linux/if_index.c (if_nametoindex): Rename to
+	__if_nametoindex and define as weak alias of __if_nametoindex.
+	Use libc_hidden_weak.
+	(if_freenameindex): Rename to __if_freenameindex and define as
+	weak alias of __if_freenameindex.  Use libc_hidden_weak.
+	(if_nameindex_netlink): Use __if_freenameindex instead of
+	if_freenameindex.
+	(if_nameindex): Rename to __if_nameindex and define as weak alias
+	of __if_nameindex.  Use libc_hidden_weak.
+	(if_indextoname): Rename to __if_indextoname and define as weak
+	alias of __if_indextoname.  Use libc_hidden_weak.
+	* include/net/if.h [!_ISOMAC] (__if_nametoindex): Declare and use
+	libc_hidden_proto.
+	[!_ISOMAC] (__if_freenameindex): Likewise.
+	* resolv/res_init.c (__res_vinit): Use __if_nametoindex instead of
+	if_nametoindex.
+	* conform/Makefile (test-xfail-XPG4/grp.h/linknamespace): Remove
+	variable.
+	(test-xfail-XPG4/pwd.h/linknamespace): Likewise.
+	(test-xfail-UNIX98/aio.h/linknamespace): Likewise.
+	(test-xfail-UNIX98/grp.h/linknamespace): Likewise.
+	(test-xfail-UNIX98/pthread.h/linknamespace): Likewise.
+	(test-xfail-UNIX98/pwd.h/linknamespace): Likewise.
+	(test-xfail-UNIX98/sched.h/linknamespace): Likewise.
+	(test-xfail-UNIX98/time.h/linknamespace): Likewise.
+
 	* conform/Makefile (test-xfail-UNIX98/semaphore.h/linknamespace):
 	Remove variable.
 	(test-xfail-XOPEN2K/semaphore.h/linknamespace): Likewise.

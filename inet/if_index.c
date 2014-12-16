@@ -20,35 +20,40 @@
 #include <stddef.h>
 
 unsigned int
-if_nametoindex (const char *ifname)
+__if_nametoindex (const char *ifname)
 {
   __set_errno (ENOSYS);
   return 0;
 }
-libc_hidden_def (if_nametoindex)
+libc_hidden_def (__if_nametoindex)
+weak_alias (__if_nametoindex, if_nametoindex)
+libc_hidden_weak (if_nametoindex)
 stub_warning (if_nametoindex)
 
 char *
-if_indextoname (unsigned int ifindex, char *ifname)
+__if_indextoname (unsigned int ifindex, char *ifname)
 {
   __set_errno (ENOSYS);
   return NULL;
 }
-libc_hidden_def (if_indextoname)
+weak_alias (__if_indextoname, if_indextoname)
+libc_hidden_weak (if_indextoname)
 stub_warning (if_indextoname)
 
 void
-if_freenameindex (struct if_nameindex *ifn)
+__if_freenameindex (struct if_nameindex *ifn)
 {
 }
+weak_alias (__if_freenameindex, if_freenameindex)
 stub_warning (if_freenameindex)
 
 struct if_nameindex *
-if_nameindex (void)
+__if_nameindex (void)
 {
   __set_errno (ENOSYS);
   return NULL;
 }
+weak_alias (__if_nameindex, if_nameindex)
 stub_warning (if_nameindex)
 
 #if 0

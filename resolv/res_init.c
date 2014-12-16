@@ -341,7 +341,7 @@ __res_vinit(res_state statp, int preinit) {
 				    if (IN6_IS_ADDR_LINKLOCAL (&a6)
 					|| IN6_IS_ADDR_MC_LINKLOCAL (&a6)) {
 					sa6->sin6_scope_id
-					  = if_nametoindex (el + 1);
+					  = __if_nametoindex (el + 1);
 					if (sa6->sin6_scope_id != 0)
 					    try_numericscope = 0;
 				    }
