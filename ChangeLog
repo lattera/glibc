@@ -1,3 +1,10 @@
+2014-12-16  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/gnu/unwind-resume.c: #include <sysdep.h>.
+	(init): Apply PTR_MANGLE to pointers before storing them.
+	(_Unwind_Resume, __gcc_personality_v0): Apply PTR_DEMANGLE to pointers
+	before using them.
+
 2014-12-16  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17719]

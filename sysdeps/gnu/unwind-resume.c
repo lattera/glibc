@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <unwind.h>
 #include <gnu/lib-names.h>
+#include <sysdep.h>
 
 static void (*libgcc_s_resume) (struct _Unwind_Exception *exc)
   __attribute__ ((noreturn));
@@ -41,7 +42,9 @@ init (void)
     __libc_fatal (LIBGCC_S_SO
                   " must be installed for pthread_cancel to work\n");
 
+  PTR_MANGLE (resume);
   libgcc_s_resume = resume;
+  PTR_MANGLE (personality);
   libgcc_s_personality = personality;
 }
 
@@ -50,7 +53,10 @@ _Unwind_Resume (struct _Unwind_Exception *exc)
 {
   if (__glibc_unlikely (libgcc_s_resume == NULL))
     init ();
-  (*libgcc_s_resume) (exc);
+
+  __typeof (libgcc_s_resume) resume = libgcc_s_resume;
+  PTR_DEMANGLE (resume);
+  (*resume) (exc);
 }
 
 _Unwind_Reason_Code
@@ -61,6 +67,9 @@ __gcc_personality_v0 (int version, _Unwind_Action actions,
 {
   if (__glibc_unlikely (libgcc_s_personality == NULL))
     init ();
-  return (*libgcc_s_personality) (version, actions, exception_class,
-                                  ue_header, context);
+
+  __typeof (libgcc_s_personality) personality = libgcc_s_personality;
+  PTR_DEMANGLE (personality);
+
+  return (*personality) (version, actions, exception_class, ue_header, context);
 }
