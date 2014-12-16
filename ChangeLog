@@ -1,3 +1,10 @@
+2014-12-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/Makefile (test-xfail-UNIX98/semaphore.h/linknamespace):
+	Remove variable.
+	(test-xfail-XOPEN2K/semaphore.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K8/semaphore.h/linknamespace): Likewise.
+
 2014-12-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* resolv/res_send.c (__libc_res_nsend): Disable warning 'array
