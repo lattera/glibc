@@ -1,3 +1,9 @@
+2015-02-24  Miroslav Lichvar  <mlichvar@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/timex.h: Update version.
+	(struct timex): Update time comment.
+	(ADJ_SETOFFSET): Define.
+
 2015-02-24  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18019]
