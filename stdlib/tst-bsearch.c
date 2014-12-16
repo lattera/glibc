@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <tst-stack-align.h>
 
-struct entry
+struct item
 {
   int val;
   const char *str;
@@ -45,8 +45,8 @@ static int align_check;
 static int
 comp (const void *p1, const void *p2)
 {
-  struct entry *e1 = (struct entry *) p1;
-  struct entry *e2 = (struct entry *) p2;
+  struct item *e1 = (struct item *) p1;
+  struct item *e2 = (struct item *) p2;
 
   if (!align_check)
     align_check = TEST_STACK_ALIGN () ? -1 : 1;
@@ -55,20 +55,20 @@ comp (const void *p1, const void *p2)
 }
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   size_t cnt;
   int result = 0;
-  struct entry key;
-  struct entry *res;
+  struct item key;
+  struct item *res;
 
   for (cnt = 0; cnt < narr; ++cnt)
     {
 
       key.val = arr[cnt].val;
 
-      res = (struct entry *) bsearch (&key, arr, narr, sizeof (arr[0]), comp);
+      res = (struct item *) bsearch (&key, arr, narr, sizeof (arr[0]), comp);
       if (res == NULL)
 	{
 	  printf ("entry %zd not found\n", cnt);
@@ -83,7 +83,7 @@ main (void)
 
   /* And some special tests that shouldn't find any entry.  */
   key.val = -1;
-  res = (struct entry *) bsearch (&key, arr, narr, sizeof (arr[0]), comp);
+  res = (struct item *) bsearch (&key, arr, narr, sizeof (arr[0]), comp);
   if (res != NULL)
     {
       puts ("found an entry that's not there");
@@ -91,7 +91,7 @@ main (void)
     }
 
   key.val = 11;
-  res = (struct entry *) bsearch (&key, arr, narr, sizeof (arr[0]), comp);
+  res = (struct item *) bsearch (&key, arr, narr, sizeof (arr[0]), comp);
   if (res != NULL)
     {
       puts ("found an entry that's not there");
@@ -99,7 +99,7 @@ main (void)
     }
 
   key.val = 11;
-  res = (struct entry *) bsearch (&key, arr, 0, sizeof (arr[0]), comp);
+  res = (struct item *) bsearch (&key, arr, 0, sizeof (arr[0]), comp);
   if (res != NULL)
     {
       puts ("found an entry that's not there");
@@ -111,7 +111,7 @@ main (void)
     {
       key.val = arr[cnt].val;
 
-      res = (struct entry *) bsearch (&key, &arr[5], 1, sizeof (arr[0]), comp);
+      res = (struct item *) bsearch (&key, &arr[5], 1, sizeof (arr[0]), comp);
       if (cnt == 5)
 	{
 	  if (res == NULL)
@@ -148,3 +148,6 @@ main (void)
 
   return result;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

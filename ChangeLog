@@ -1,5 +1,9 @@
 2014-12-16  Arjun Shankar  <arjun.is@lostca.se>
 
+	* stdlib/tst-bsearch.c: Use test-skeleton.c.
+	(entry): Rename to ITEM.
+	(do_test, comp): Adjust.
+
 	* stdio-common/tst-fseek.c: Use test-skeleton.c.
 
 2014-12-16  Torvald Riegel  <triegel@redhat.com>
