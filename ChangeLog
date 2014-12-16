@@ -1,16 +1,3 @@
-2014-12-16  Roland McGrath  <roland@hack.frob.com>
-
-	* nptl/unwind.c: Use pragma to turn on -fexceptions.
-	* sysdeps/nptl/unwind-forcedunwind.c: Use pragma to turn on
-	-fexceptions and -fasynchronous-unwind-tables.
-	* sysdeps/unix/sysv/linux/arm/unwind-forcedunwind.c: Likewise.
-	* sysdeps/gnu/unwind-resume.c: Likewise.
-	* nptl/Makefile (CFLAGS-unwind.c, CFLAGS-unwind-forcedunwind.c):
-	Variables removed.
-	* sysdeps/gnu/Makefile
-	[$(subdir) = csu] (CFLAGS-unwind-resume.c): Likewise.
-	[$(subdir) = rt] (CFLAGS-rt-unwind-resume.c): Likewise.
-
 2014-12-16  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17719]

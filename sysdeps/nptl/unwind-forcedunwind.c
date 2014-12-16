@@ -23,8 +23,6 @@
 #include <sysdep.h>
 #include <gnu/lib-names.h>
 
-#pragma GCC optimize ("-fexceptions", "-fasynchronous-unwind-tables")
-
 static void *libgcc_s_handle;
 static void (*libgcc_s_resume) (struct _Unwind_Exception *exc);
 static _Unwind_Reason_Code (*libgcc_s_personality)

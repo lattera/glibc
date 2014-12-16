@@ -79,9 +79,11 @@ endif
 ifeq ($(subdir),csu)
 routines += unwind-resume
 shared-only-routines += unwind-resume
+CFLAGS-unwind-resume.c += -fexceptions -fasynchronous-unwind-tables
 endif
 
 ifeq ($(subdir),rt)
 librt-sysdep_routines += rt-unwind-resume
 librt-shared-only-routines += rt-unwind-resume
+CFLAGS-rt-unwind-resume.c += -fexceptions -fasynchronous-unwind-tables
 endif
