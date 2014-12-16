@@ -25,6 +25,8 @@
 #include "pthreadP.h"
 #include <jmpbuf-unwind.h>
 
+#pragma GCC optimize "-fexceptions"
+
 #ifdef HAVE_FORCED_UNWIND
 
 #ifdef _STACK_GROWS_DOWN

@@ -146,9 +146,6 @@ libpthread-static-only-routines = pthread_atfork
 
 # nptl-init.c contains sigcancel_handler().
 CFLAGS-nptl-init.c = -fexceptions -fasynchronous-unwind-tables
-# The unwind code itself,
-CFLAGS-unwind.c = -fexceptions
-CFLAGS-unwind-forcedunwind.c = -fexceptions -fasynchronous-unwind-tables
 
 # The following three functions must be async-cancel safe.
 CFLAGS-pthread_cancel.c = -fexceptions -fasynchronous-unwind-tables
