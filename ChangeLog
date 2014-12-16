@@ -1,3 +1,7 @@
+2014-12-16  Allan McRae  <allan@archlinux.org>
+
+	* stdio-common/Makefile (tests): Re-add bug26.
+
 2014-12-15  Ondřej Bílka  <neleai@seznam.cz>
 
 	[BZ #17657]
