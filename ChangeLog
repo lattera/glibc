@@ -1,5 +1,10 @@
 2014-12-17  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/nptl/gai_misc.h (__gai_start_notify_thread):
+	Use pthread_sigmask rather than INTERNAL_SYSCALL.
+	Use assert_perror to check its return value.
+	(__gai_create_helper_thread): Likewise.
+
 	* inet/if_index.c (__if_freenameindex): Add libc_hidden_def.
 
 	* malloc/malloc.c (alloc_perturb, free_perturb): Remove inline keyword.

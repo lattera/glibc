@@ -81,8 +81,8 @@ __gai_start_notify_thread (void)
 {
   sigset_t ss;
   sigemptyset (&ss);
-  INTERNAL_SYSCALL_DECL (err);
-  INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_SETMASK, &ss, NULL, _NSIG / 8);
+  int sigerr = pthread_sigmask (SIG_SETMASK, &ss, NULL);
+  assert_perror (sigerr);
 }
 
 extern inline int
@@ -105,14 +105,14 @@ __gai_create_helper_thread (pthread_t *threadp, void *(*tf) (void *),
   sigset_t ss;
   sigset_t oss;
   sigfillset (&ss);
-  INTERNAL_SYSCALL_DECL (err);
-  INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_SETMASK, &ss, &oss, _NSIG / 8);
+  int sigerr = pthread_sigmask (SIG_SETMASK, &ss, &oss);
+  assert_perror (sigerr);
 
   int ret = pthread_create (threadp, &attr, tf, arg);
 
   /* Restore the signal mask.  */
-  INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_SETMASK, &oss, NULL,
-		    _NSIG / 8);
+  sigerr = pthread_sigmask (SIG_SETMASK, &oss, NULL);
+  assert_perror (sigerr);
 
   (void) pthread_attr_destroy (&attr);
   return ret;
