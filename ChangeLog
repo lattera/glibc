@@ -1,5 +1,15 @@
 2014-12-19  Torvald Riegel  <triegel@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/lowlevellock-futex.h: New file.
+	Contains futex constants and functions moved over from ...
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: ... here.  Include
+	<lowlevellock-futex.h>.
+	(lll_wait_tid): Use lll_futex_wait instead of assembly code.
+	(lll_timedwait_tid): Add comments and parentheses around macro
+	arguments.
+
+2014-12-19  Torvald Riegel  <triegel@redhat.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Include
 	<lowlevellock-futex.h>.  Remove FUTEX_* constants defined there.
 	(__lll_private_flag): Remove.
