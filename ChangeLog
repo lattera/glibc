@@ -1,5 +1,11 @@
 2014-12-17  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* stdio-common/bug-vfprintf-nargs.c (do_test):
+	Cast value to intptr_t to avoid format warning
+	for usage with PRIdPTR printing macro.
+
+2014-12-17  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* libio/tst-widetext.c (do_test):
 	Use format type %td instead of %Zd for ptrdiff_t
 	in order to avoid format warning.

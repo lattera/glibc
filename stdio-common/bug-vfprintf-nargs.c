@@ -65,7 +65,8 @@ do_test (void)
      test this on 32-bit systems.  */
   if (sizeof (long int) == 4)
     {
-      sprintf (buf, "%%1$d %%%" PRIdPTR "$d", UINT32_MAX / sizeof (int));
+      sprintf (buf, "%%1$d %%%" PRIdPTR "$d",
+	       (intptr_t) (UINT32_MAX / sizeof (int)));
       if (format_failed (buf, "1 %$d") != 0)
         rc = 1;
     }
