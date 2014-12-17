@@ -1,3 +1,7 @@
+2014-12-17  Steve Ellcey  <sellcey@imgtec.com>
+
+	* inet/getnetgrent_r.c: Move while loop to be inside if statement.
+
 2014-12-17  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* stdio-common/bug-vfprintf-nargs.c (do_test):

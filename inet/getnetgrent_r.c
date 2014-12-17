@@ -281,8 +281,8 @@ __internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
     {
 #ifdef USE_NSCD
       /* This bogus function pointer is a special marker left by
-         __nscd_setnetgrent to tell us to use the data it left
-         before considering any modules.  */
+	 __nscd_setnetgrent to tell us to use the data it left
+	 before considering any modules.  */
       if (datap->nip == (service_user *) -1l)
 	fct = nscd_getnetgrent;
       else
@@ -291,74 +291,73 @@ __internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
 	  fct = __nss_lookup_function (datap->nip, "getnetgrent_r");
 	  no_more = fct == NULL;
 	}
-    }
 
-  while (! no_more)
-    {
-      status = DL_CALL_FCT (*fct, (datap, buffer, buflen, &errno));
-
-      if (status == NSS_STATUS_RETURN
-	  /* The service returned a NOTFOUND, but there are more groups that we
-	     need to resolve before we give up.  */
-	  || (status == NSS_STATUS_NOTFOUND && datap->needed_groups != NULL))
+      while (! no_more)
 	{
-	  /* This was the last one for this group.  Look at next group
-	     if available.  */
-	  int found = 0;
-	  while (datap->needed_groups != NULL && ! found)
-	    {
-	      struct name_list *tmp = datap->needed_groups;
-	      datap->needed_groups = datap->needed_groups->next;
-	      tmp->next = datap->known_groups;
-	      datap->known_groups = tmp;
+	  status = DL_CALL_FCT (*fct, (datap, buffer, buflen, &errno));
 
-	      found = __internal_setnetgrent_reuse (datap->known_groups->name,
-						    datap, errnop);
+	  if (status == NSS_STATUS_RETURN
+	      /* The service returned a NOTFOUND, but there are more groups that
+		 we need to resolve before we give up.  */
+	      || (status == NSS_STATUS_NOTFOUND && datap->needed_groups != NULL))
+	    {
+	      /* This was the last one for this group.  Look at next group
+		 if available.  */
+	      int found = 0;
+	      while (datap->needed_groups != NULL && ! found)
+		{
+		  struct name_list *tmp = datap->needed_groups;
+		  datap->needed_groups = datap->needed_groups->next;
+		  tmp->next = datap->known_groups;
+		  datap->known_groups = tmp;
+
+		  found = __internal_setnetgrent_reuse (datap->known_groups->name,
+							datap, errnop);
+		}
+
+	      if (found && datap->nip != NULL)
+		{
+		  fct = __nss_lookup_function (datap->nip, "getnetgrent_r");
+		  if (fct != NULL)
+		    continue;
+		}
 	    }
-
-	  if (found && datap->nip != NULL)
+	  else if (status == NSS_STATUS_SUCCESS && datap->type == group_val)
 	    {
-	      fct = __nss_lookup_function (datap->nip, "getnetgrent_r");
-	      if (fct != NULL)
+	      /* The last entry was a name of another netgroup.  */
+	      struct name_list *namep;
+
+	      /* Ignore if we've seen the name before.  */
+	      for (namep = datap->known_groups; namep != NULL;
+		   namep = namep->next)
+		if (strcmp (datap->val.group, namep->name) == 0)
+		  break;
+	      if (namep == NULL)
+		for (namep = datap->needed_groups; namep != NULL;
+		     namep = namep->next)
+		  if (strcmp (datap->val.group, namep->name) == 0)
+		    break;
+	      if (namep != NULL)
+		/* Really ignore.  */
 		continue;
+
+	      size_t group_len = strlen (datap->val.group) + 1;
+	      namep = (struct name_list *) malloc (sizeof (struct name_list)
+						  + group_len);
+	      if (namep == NULL)
+		/* We are out of memory.  */
+		status = NSS_STATUS_RETURN;
+	      else
+		{
+		  namep->next = datap->needed_groups;
+		  memcpy (namep->name, datap->val.group, group_len);
+		  datap->needed_groups = namep;
+		  /* And get the next entry.  */
+		  continue;
+		}
 	    }
+	  break;
 	}
-      else if (status == NSS_STATUS_SUCCESS && datap->type == group_val)
-	{
-	  /* The last entry was a name of another netgroup.  */
-	  struct name_list *namep;
-
-	  /* Ignore if we've seen the name before.  */
-	  for (namep = datap->known_groups; namep != NULL;
-	       namep = namep->next)
-	    if (strcmp (datap->val.group, namep->name) == 0)
-	      break;
-	  if (namep == NULL)
-	    for (namep = datap->needed_groups; namep != NULL;
-		 namep = namep->next)
-	      if (strcmp (datap->val.group, namep->name) == 0)
-		break;
-	  if (namep != NULL)
-	    /* Really ignore.  */
-	    continue;
-
-	  size_t group_len = strlen (datap->val.group) + 1;
-	  namep = (struct name_list *) malloc (sizeof (struct name_list)
-					       + group_len);
-	  if (namep == NULL)
-	    /* We are out of memory.  */
-	    status = NSS_STATUS_RETURN;
-	  else
-	    {
-	      namep->next = datap->needed_groups;
-	      memcpy (namep->name, datap->val.group, group_len);
-	      datap->needed_groups = namep;
-	      /* And get the next entry.  */
-	      continue;
-	    }
-	}
-
-      break;
     }
 
   if (status == NSS_STATUS_SUCCESS)
@@ -382,7 +381,7 @@ __getnetgrent_r (char **hostp, char **userp, char **domainp,
   __libc_lock_lock (lock);
 
   status = __internal_getnetgrent_r (hostp, userp, domainp, &dataset,
-                                     buffer, buflen, &errno);
+				     buffer, buflen, &errno);
 
   __libc_lock_unlock (lock);
 
