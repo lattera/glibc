@@ -1,3 +1,25 @@
+2014-12-19  Torvald Riegel  <triegel@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sh/libc-lowlevellock.S: Remove file.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/lowlevelrobustlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_barrier_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_broadcast.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_signal.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedrdlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedwrlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_rdlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_unlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_wrlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sh4/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sem_post.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sem_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sem_trywait.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sem_wait.S: Likewise.
+
 2014-12-19  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/x32/Makefile: New file.
