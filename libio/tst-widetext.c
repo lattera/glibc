@@ -291,7 +291,7 @@ do_test (void)
     {
       if (fgetws (wcp, &wc2buf[wcsize] - wcp + 1, fp) == NULL)
 	{
-	  printf ("%u: short read using fgetws (only %Zd of %Zd)\n",
+	  printf ("%u: short read using fgetws (only %td of %Zd)\n",
 		  __LINE__, wcp - wc2buf, wcsize);
 	  status = 1;
 	  break;
