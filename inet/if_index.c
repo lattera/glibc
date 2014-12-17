@@ -44,6 +44,7 @@ void
 __if_freenameindex (struct if_nameindex *ifn)
 {
 }
+libc_hidden_def (__if_freenameindex)
 weak_alias (__if_freenameindex, if_freenameindex)
 stub_warning (if_freenameindex)
 

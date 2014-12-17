@@ -1,5 +1,7 @@
 2014-12-17  Roland McGrath  <roland@hack.frob.com>
 
+	* inet/if_index.c (__if_freenameindex): Add libc_hidden_def.
+
 	* malloc/malloc.c (alloc_perturb, free_perturb): Remove inline keyword.
 
 2014-12-17  Joseph Myers  <joseph@codesourcery.com>
