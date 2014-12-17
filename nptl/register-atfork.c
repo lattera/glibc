@@ -23,6 +23,8 @@
 #include <atomic.h>
 
 
+struct fork_handler *__fork_handlers;
+
 /* Lock to protect allocation and deallocation of fork handlers.  */
 int __fork_lock = LLL_LOCK_INITIALIZER;
 

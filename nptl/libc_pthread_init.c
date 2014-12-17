@@ -28,6 +28,9 @@
 #include <ldsodefs.h>
 
 
+unsigned long int *__fork_generation_pointer;
+
+
 #ifdef TLS_MULTIPLE_THREADS_IN_TCB
 void
 #else

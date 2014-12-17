@@ -32,14 +32,6 @@
 #include <arch-fork.h>
 
 
-unsigned long int *__fork_generation_pointer;
-
-
-
-/* The single linked list of all currently registered fork handlers.  */
-struct fork_handler *__fork_handlers;
-
-
 static void
 fresetlockfiles (void)
 {

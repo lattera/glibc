@@ -1,5 +1,10 @@
 2014-12-17  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/nptl/fork.c (__fork_generation_pointer): Variable moved ...
+	* nptl/libc_pthread_init.c: ... here.
+	* sysdeps/nptl/fork.c (__fork_handlers): Variable moved ...
+	* nptl/register-atfork.c: ... here.
+
 	* sysdeps/nptl/gai_misc.h (__gai_start_notify_thread):
 	Use pthread_sigmask rather than INTERNAL_SYSCALL.
 	Use assert_perror to check its return value.
