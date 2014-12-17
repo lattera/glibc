@@ -1,5 +1,21 @@
 2014-12-19  Torvald Riegel  <triegel@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Include
+	<lowlevellock-futex.h>.  Remove FUTEX_* constants defined there.
+	(__lll_private_flag): Remove.
+	(lll_futex_wait): Likewise.
+	(lll_futex_timed_wait): Likewise.
+	(lll_futex_wake): Likewise.
+	(lll_futex_requeue): Likewise.
+	(lll_wait_tid): Use lll_futex_wait instead of assembly code.
+	(__lll_timedwait_tid): Spell out argument names.
+	(lll_timedwait_tid): Add comments and parentheses around macro
+	arguments.
+	* sysdeps/unix/sysv/linux/lowlevellock-futex.h: Make FUTEX_* constants,
+	LLL_SHARED and LLL_PRIVATE usable from assembly code.
+
+2014-12-19  Torvald Riegel  <triegel@redhat.com>
+
 	* sysdeps/unix/sysv/linux/sh/libc-lowlevellock.S: Remove file.
 	* sysdeps/unix/sysv/linux/sh/lowlevellock.S: Likewise.
 	* sysdeps/unix/sysv/linux/sh/lowlevellock.h: Likewise.

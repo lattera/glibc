@@ -45,58 +45,12 @@
 # endif
 #endif
 
+#include <lowlevellock-futex.h>
+
+/* XXX Remove when no assembler code uses futexes anymore.  */
 #define SYS_futex		__NR_futex
-#define FUTEX_WAIT		0
-#define FUTEX_WAKE		1
-#define FUTEX_CMP_REQUEUE	4
-#define FUTEX_WAKE_OP		5
-#define FUTEX_LOCK_PI		6
-#define FUTEX_UNLOCK_PI		7
-#define FUTEX_TRYLOCK_PI	8
-#define FUTEX_WAIT_BITSET	9
-#define FUTEX_WAKE_BITSET	10
-#define FUTEX_WAIT_REQUEUE_PI	11
-#define FUTEX_CMP_REQUEUE_PI	12
-#define FUTEX_PRIVATE_FLAG	128
-#define FUTEX_CLOCK_REALTIME	256
-
-#define FUTEX_BITSET_MATCH_ANY	0xffffffff
-
-#define FUTEX_OP_CLEAR_WAKE_IF_GT_ONE	((4 << 24) | 1)
-
-/* Values for 'private' parameter of locking macros.  Yes, the
-   definition seems to be backwards.  But it is not.  The bit will be
-   reversed before passing to the system call.  */
-#define LLL_PRIVATE	0
-#define LLL_SHARED	FUTEX_PRIVATE_FLAG
 
 #ifndef __ASSEMBLER__
-
-#if IS_IN (libc) || IS_IN (rtld)
-/* In libc.so or ld.so all futexes are private.  */
-# ifdef __ASSUME_PRIVATE_FUTEX
-#  define __lll_private_flag(fl, private) \
-  ((fl) | FUTEX_PRIVATE_FLAG)
-# else
-#  define __lll_private_flag(fl, private) \
-  ((fl) | THREAD_GETMEM (THREAD_SELF, header.private_futex))
-# endif
-#else
-# ifdef __ASSUME_PRIVATE_FUTEX
-#  define __lll_private_flag(fl, private) \
-  (((fl) | FUTEX_PRIVATE_FLAG) ^ (private))
-# else
-#  define __lll_private_flag(fl, private) \
-  (__builtin_constant_p (private)					      \
-   ? ((private) == 0							      \
-      ? ((fl) | THREAD_GETMEM (THREAD_SELF, header.private_futex))	      \
-      : (fl))								      \
-   : ({ unsigned int __fl = ((private) ^ FUTEX_PRIVATE_FLAG);		      \
-	asm ("andl %%fs:%P1, %0" : "+r" (__fl)				      \
-	     : "i" (offsetof (struct pthread, header.private_futex)));	      \
-	__fl | (fl); }))
-# endif
-#endif
 
 /* Initializer for lock.  */
 #define LLL_LOCK_INITIALIZER		(0)
@@ -105,39 +59,6 @@
 
 /* Delay in spinlock loop.  */
 #define BUSY_WAIT_NOP	  asm ("rep; nop")
-
-#define lll_futex_wait(futex, val, private) \
-  lll_futex_timed_wait(futex, val, NULL, private)
-
-
-#define lll_futex_timed_wait(futex, val, timeout, private) \
-  ({									      \
-    register const struct timespec *__to __asm ("r10") = timeout;	      \
-    int __status;							      \
-    register __typeof (val) _val __asm ("edx") = (val);			      \
-    __asm __volatile ("syscall"						      \
-		      : "=a" (__status)					      \
-		      : "0" (SYS_futex), "D" (futex),			      \
-			"S" (__lll_private_flag (FUTEX_WAIT, private)),	      \
-			"d" (_val), "r" (__to)				      \
-		      : "memory", "cc", "r11", "cx");			      \
-    __status;								      \
-  })
-
-
-#define lll_futex_wake(futex, nr, private) \
-  ({									      \
-    int __status;							      \
-    register __typeof (nr) _nr __asm ("edx") = (nr);			      \
-    LIBC_PROBE (lll_futex_wake, 3, futex, nr, private);                       \
-    __asm __volatile ("syscall"						      \
-		      : "=a" (__status)					      \
-		      : "0" (SYS_futex), "D" (futex),			      \
-			"S" (__lll_private_flag (FUTEX_WAKE, private)),	      \
-			"d" (_nr)					      \
-		      : "memory", "cc", "r10", "r11", "cx");		      \
-    __status;								      \
-  })
 
 
 /* NB: in the lll_trylock macro we simply return the value in %eax
@@ -378,58 +299,38 @@ extern int __lll_timedlock_elision (int *futex, short *adapt_count,
     }									      \
   while (0)
 
-/* Returns non-zero if error happened, zero if success.  */
-#define lll_futex_requeue(ftx, nr_wake, nr_move, mutex, val, private) \
-  ({ int __res;								      \
-     register int __nr_move __asm ("r10") = nr_move;			      \
-     register void *__mutex __asm ("r8") = mutex;			      \
-     register int __val __asm ("r9") = val;				      \
-     __asm __volatile ("syscall"					      \
-		       : "=a" (__res)					      \
-		       : "0" (__NR_futex), "D" ((void *) ftx),		      \
-			 "S" (__lll_private_flag (FUTEX_CMP_REQUEUE,	      \
-						  private)), "d" (nr_wake),   \
-			 "r" (__nr_move), "r" (__mutex), "r" (__val)	      \
-		       : "cx", "r11", "cc", "memory");			      \
-     __res < 0; })
-
 #define lll_islocked(futex) \
   (futex != LLL_LOCK_INITIALIZER)
 
 
 /* The kernel notifies a process which uses CLONE_CHILD_CLEARTID via futex
-   wakeup when the clone terminates.  The memory location contains the
-   thread ID while the clone is running and is reset to zero
-   afterwards.
-
-   The macro parameter must not have any side effect.  */
+   wake-up when the clone terminates.  The memory location contains the
+   thread ID while the clone is running and is reset to zero by the kernel
+   afterwards.  The kernel up to version 3.16.3 does not use the private futex
+   operations for futex wake-up when the clone terminates.  */
 #define lll_wait_tid(tid) \
-  do {									      \
-    int __ignore;							      \
-    register __typeof (tid) _tid asm ("edx") = (tid);			      \
-    if (_tid != 0)							      \
-      __asm __volatile ("xorq %%r10, %%r10\n\t"				      \
-			"1:\tmovq %2, %%rax\n\t"			      \
-			"syscall\n\t"					      \
-			"cmpl $0, (%%rdi)\n\t"				      \
-			"jne 1b"					      \
-			: "=&a" (__ignore)				      \
-			: "S" (FUTEX_WAIT), "i" (SYS_futex), "D" (&tid),      \
-			  "d" (_tid)					      \
-			: "memory", "cc", "r10", "r11", "cx");		      \
+  do {					\
+    __typeof (tid) __tid;		\
+    while ((__tid = (tid)) != 0)	\
+      lll_futex_wait (&(tid), __tid, LLL_SHARED);\
   } while (0)
 
-extern int __lll_timedwait_tid (int *tid, const struct timespec *abstime)
+extern int __lll_timedwait_tid (int *, const struct timespec *)
      attribute_hidden;
+
+/* As lll_wait_tid, but with a timeout.  If the timeout occurs then return
+   ETIMEDOUT.  If ABSTIME is invalid, return EINVAL.
+   XXX Note that this differs from the generic version in that we do the
+   error checking here and not in __lll_timedwait_tid.  */
 #define lll_timedwait_tid(tid, abstime) \
   ({									      \
     int __result = 0;							      \
-    if (tid != 0)							      \
+    if ((tid) != 0)							      \
       {									      \
-	if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)	      \
+	if ((abstime)->tv_nsec < 0 || (abstime)->tv_nsec >= 1000000000)	      \
 	  __result = EINVAL;						      \
 	else								      \
-	  __result = __lll_timedwait_tid (&tid, abstime);		      \
+	  __result = __lll_timedwait_tid (&(tid), (abstime));		      \
       }									      \
     __result; })
 

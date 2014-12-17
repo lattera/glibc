@@ -19,10 +19,11 @@
 #ifndef _LOWLEVELLOCK_FUTEX_H
 #define _LOWLEVELLOCK_FUTEX_H	1
 
+#ifndef __ASSEMBLER__
 #include <sysdep.h>
 #include <tls.h>
 #include <kernel-features.h>
-
+#endif
 
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
@@ -48,6 +49,7 @@
 #define LLL_PRIVATE	0
 #define LLL_SHARED	FUTEX_PRIVATE_FLAG
 
+#ifndef __ASSEMBLER__
 
 #if IS_IN (libc) || IS_IN (rtld)
 /* In libc.so or ld.so all futexes are private.  */
@@ -133,5 +135,6 @@
 					 private),                      \
 		     nr_wake, nr_move, mutex, val)
 
+#endif  /* !__ASSEMBLER__  */
 
 #endif  /* lowlevellock-futex.h */
