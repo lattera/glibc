@@ -1,3 +1,23 @@
+2014-12-17  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17722]
+	* inet/inet_mkadr.c (inet_makeaddr): Rename to __inet_makeaddr and
+	define as weak alias of __inet_makeaddr.
+	* resolv/inet_addr.c (inet_addr): Rename to __inet_addr and define
+	as weak alias of __inet_addr.
+	* resolv/inet_pton.c (inet_pton): Rename to __inet_pton and define
+	as weak alias of __inet_pton.  Use libc_hidden_weak.
+	* include/arpa/inet.h (__inet_pton): Declare.  Use
+	libc_hidden_proto.
+	(inet_makeaddr): Don't use libc_hidden_proto.
+	(__inet_makeaddr): Declare.  Use libc_hidden_proto.
+	* resolv/res_init.c (__res_vinit): Use __inet_pton instead of
+	inet_pton.  Use __inet_makeaddr instead of inet_makeaddr.
+	* conform/Makefile (test-xfail-POSIX/pthread.h/linknamespace):
+	Remove variable.
+	(test-xfail-POSIX/sched.h/linknamespace): Likewise.
+	(test-xfail-POSIX/time.h/linknamespace): Likewise.
+
 2014-12-17  Steve Ellcey  <sellcey@imgtec.com>
 
 	* inet/getnetgrent_r.c: Move while loop to be inside if statement.

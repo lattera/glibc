@@ -90,13 +90,14 @@ static const char rcsid[] = "$BINDId: inet_addr.c,v 8.11 1999/10/13 16:39:25 vix
  * The value returned is in network order.
  */
 in_addr_t
-inet_addr(const char *cp) {
+__inet_addr(const char *cp) {
 	struct in_addr val;
 
 	if (__inet_aton(cp, &val))
 		return (val.s_addr);
 	return (INADDR_NONE);
 }
+weak_alias (__inet_addr, inet_addr)
 
 /*
  * Check whether "cp" is a valid ascii representation

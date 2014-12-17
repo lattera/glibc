@@ -324,7 +324,7 @@ __res_vinit(res_state statp, int preinit) {
 			if ((el = strchr(cp, SCOPE_DELIMITER)) != NULL)
 			    *el = '\0';
 			if ((*cp != '\0') &&
-			    (inet_pton(AF_INET6, cp, &a6) > 0)) {
+			    (__inet_pton(AF_INET6, cp, &a6) > 0)) {
 			    struct sockaddr_in6 *sa6;
 
 			    sa6 = malloc(sizeof(*sa6));
@@ -428,7 +428,7 @@ __res_vinit(res_state statp, int preinit) {
 	    (void) fclose(fp);
 	}
 	if (__builtin_expect(statp->nscount == 0, 0)) {
-	    statp->nsaddr.sin_addr = inet_makeaddr(IN_LOOPBACKNET, 1);
+	    statp->nsaddr.sin_addr = __inet_makeaddr(IN_LOOPBACKNET, 1);
 	    statp->nsaddr.sin_family = AF_INET;
 	    statp->nsaddr.sin_port = htons(NAMESERVER_PORT);
 	    statp->nscount = 1;

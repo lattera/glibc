@@ -7,6 +7,9 @@ libc_hidden_proto (__inet_aton)
 libc_hidden_proto (inet_aton)
 libc_hidden_proto (inet_ntop)
 libc_hidden_proto (inet_pton)
-libc_hidden_proto (inet_makeaddr)
+extern __typeof (inet_pton) __inet_pton;
+libc_hidden_proto (__inet_pton)
+extern __typeof (inet_makeaddr) __inet_makeaddr;
+libc_hidden_proto (__inet_makeaddr)
 libc_hidden_proto (inet_netof)
 #endif

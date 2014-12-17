@@ -49,7 +49,7 @@ static int inet_pton6 (const char *src, u_char *dst) internal_function;
  *	Paul Vixie, 1996.
  */
 int
-inet_pton(af, src, dst)
+__inet_pton(af, src, dst)
 	int af;
 	const char *src;
 	void *dst;
@@ -65,7 +65,9 @@ inet_pton(af, src, dst)
 	}
 	/* NOTREACHED */
 }
-libc_hidden_def (inet_pton)
+libc_hidden_def (__inet_pton)
+weak_alias (__inet_pton, inet_pton)
+libc_hidden_weak (inet_pton)
 
 /* int
  * inet_pton4(src, dst)
