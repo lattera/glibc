@@ -1,5 +1,9 @@
 2015-01-09  Torvald Riegel <triegel@redhat.com>
 
+	* sysdeps/unix/sysv/linux/microblaze/lowlevellock.h: Delete file.
+
+2015-01-09  Torvald Riegel <triegel@redhat.com>
+
 	* sysdeps/unix/sysv/linux/microblaze/pthread_once.c: Delete file.
 
 2015-01-09  David Holsgrove  <david.holsgrove@xilinx.com>
