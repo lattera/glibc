@@ -1,3 +1,7 @@
+2015-07-30  Torvald Riegel  <triegel@redhat.com>
+
+	* sysdeps/unix/sysv/linux/hppa/lowlevellock.h: Remove file.
+
 2015-07-30  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/hppa/bits/sigaction.h: Include bits/wordsize.h.
