@@ -20,7 +20,7 @@
 #include <sigcontextinfo.h>
 
 static void
-profil_counter (int signo, SIGCONTEXT scp)
+__profil_counter (int signo, SIGCONTEXT scp)
 {
   profil_count((void *) ((unsigned long) GET_PC (scp) & 0x7fffffffUL));
 }

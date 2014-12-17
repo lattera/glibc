@@ -20,7 +20,7 @@
    and the interrupted PC is easily findable in the `struct sigcontext'.  */
 
 static void
-profil_counter (int signr, int code, struct sigcontext *scp)
+__profil_counter (int signr, int code, struct sigcontext *scp)
 {
   profil_count ((void *) scp->sc_pc);
 }

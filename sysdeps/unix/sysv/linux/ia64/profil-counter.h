@@ -20,7 +20,7 @@
    and the interrupted PC is easily findable in the `struct sigcontext'.  */
 
 static void
-profil_counter (int signr, siginfo_t *si, struct sigcontext *scp)
+__profil_counter (int signr, siginfo_t *si, struct sigcontext *scp)
 {
   unsigned long ip = scp->sc_ip & ~0X3ULL, slot = scp->sc_ip & 0x3ull;
 

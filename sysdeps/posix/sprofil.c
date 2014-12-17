@@ -175,17 +175,17 @@ profil_count_uint (void *pcp)
   profil_count (pcp, 1);
 }
 
-/* Get the machine-dependent definition of `profil_counter', the signal
+/* Get the machine-dependent definition of `__profil_counter', the signal
    handler for SIGPROF.  It calls `profil_count' (above) with the PC of the
    interrupted code.  */
-#define profil_counter		profil_counter_ushort
+#define __profil_counter	__profil_counter_ushort
 #define profil_count(pc)	profil_count (pc, 0)
 #include <profil-counter.h>
 
-#undef profil_counter
+#undef __profil_counter
 #undef profil_count
 
-#define profil_counter		profil_counter_uint
+#define __profil_counter	__profil_counter_uint
 #define profil_count(pc)	profil_count (pc, 1)
 #include <profil-counter.h>
 
@@ -334,9 +334,9 @@ __sprofil (struct prof *profp, int profcnt, struct timeval *tvp,
 
   /* Install SIGPROF handler.  */
   if (flags & PROF_UINT)
-    act.sa_handler = (sighandler_t) &profil_counter_uint;
+    act.sa_handler = (sighandler_t) &__profil_counter_uint;
   else
-    act.sa_handler = (sighandler_t) &profil_counter_ushort;
+    act.sa_handler = (sighandler_t) &__profil_counter_ushort;
   act.sa_flags = SA_RESTART;
   __sigfillset (&act.sa_mask);
   if (__sigaction (SIGPROF, &act, &prof_info.saved_action) < 0)

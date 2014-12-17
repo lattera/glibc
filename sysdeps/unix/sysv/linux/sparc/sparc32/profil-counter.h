@@ -19,7 +19,10 @@
 #include <signal.h>
 
 void
-profil_counter (int signo, struct sigcontext *si)
+__profil_counter (int signo, struct sigcontext *si)
 {
   profil_count ((void *) si->si_regs.pc);
 }
+#ifndef __profil_counter
+weak_alias (__profil_counter, profil_counter)
+#endif

@@ -1,5 +1,45 @@
 2014-12-17  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17725]
+	* sysdeps/generic/profil-counter.h (profil_counter): Rename to
+	__profil_counter.
+	* sysdeps/unix/sysv/linux/hppa/profil-counter.h (profil_counter):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/profil-counter.h (profil_counter):
+	Likewise.
+	* sysdeps/unix/sysv/linux/ia64/profil-counter.h (profil_counter):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/profil-counter.h
+	(profil_counter): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/profil-counter.h
+	(profil_counter): Likewise.
+	* sysdeps/unix/sysv/linux/sh/profil-counter.h (profil_counter):
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/profil-counter.h (profil_counter):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/profil-counter.h
+	(profil_counter): Likewise.
+	* sysdeps/unix/sysv/linux/arm/profil-counter.h (profil_counter):
+	Likewise.
+	[!__profil_counter] (profil_counter): Define as weak alias of
+	__profil_counter.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/profil-counter.h
+	(profil_counter): Rename to __profil_counter.
+	[!__profil_counter] (profil_counter): Define as weak alias of
+	__profil_counter.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/profil-counter.h
+	(profil_counter): Rename to __profil_counter.
+	[!__profil_counter] (profil_counter): Define as weak alias of
+	__profil_counter.
+	* sysdeps/posix/profil.c: Update comment referring to
+	profil_counter.
+	(__profil): Use __profil_counter instead of profil_counter.
+	* sysdeps/posix/sprofil.c (profil_counter): Rename to
+	__profil_counter.  Use __profil_counter_ushort and
+	__profil_counter_uint in definitions.
+	(__sprofil): Use __profil_counter_uint and __profil_counter_ushort
+	instead of profil_counter_uint and profil_counter_ushort.
+
 	[BZ #17722]
 	* inet/inet_mkadr.c (inet_makeaddr): Rename to __inet_makeaddr and
 	define as weak alias of __inet_makeaddr.

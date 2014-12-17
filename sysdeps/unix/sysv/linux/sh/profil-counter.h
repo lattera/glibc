@@ -19,7 +19,7 @@
 #include <signal.h>
 
 static void
-profil_counter (int signo, int _a2, int _a3, int _a4, struct sigcontext sc)
+__profil_counter (int signo, int _a2, int _a3, int _a4, struct sigcontext sc)
 {
   void *pc;
   pc = (void *) sc.sc_pc;
