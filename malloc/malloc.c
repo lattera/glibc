@@ -1854,14 +1854,14 @@ static int check_action = DEFAULT_CHECK_ACTION;
 
 static int perturb_byte;
 
-static inline void
+static void
 alloc_perturb (char *p, size_t n)
 {
   if (__glibc_unlikely (perturb_byte))
     memset (p, perturb_byte ^ 0xff, n);
 }
 
-static inline void
+static void
 free_perturb (char *p, size_t n)
 {
   if (__glibc_unlikely (perturb_byte))
