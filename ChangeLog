@@ -1,3 +1,7 @@
+2014-12-17  Andreas Schwab  <schwab@suse.de>
+
+	* nscd/mem.c (gc): Add size_t cast to match printf format.
+
 2014-12-16  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/gnu/unwind-resume.c: #include <sysdep.h>.
