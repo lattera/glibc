@@ -574,23 +574,23 @@ do_append_test (const char *filename)
 
   if (seek_ret != new_seek_ret)
     {
-      printf ("incorrectly modified file offset to %ld, should be %ld",
-	      new_seek_ret, seek_ret);
+      printf ("incorrectly modified file offset to %jd, should be %jd",
+	      (intmax_t)  new_seek_ret, (intmax_t) seek_ret);
       ret |= 1;
     }
   else
-    printf ("retained current file offset %ld", seek_ret);
+    printf ("retained current file offset %jd", (intmax_t) seek_ret);
 
   new_seek_ret = ftello (fp);
 
   if (seek_ret != new_seek_ret)
     {
-      printf (", ftello reported incorrect offset %ld, should be %ld\n",
-	      new_seek_ret, seek_ret);
+      printf (", ftello reported incorrect offset %jd, should be %jd\n",
+	      (intmax_t) new_seek_ret, (intmax_t) seek_ret);
       ret |= 1;
     }
   else
-    printf (", ftello reported correct offset %ld\n", seek_ret);
+    printf (", ftello reported correct offset %jd\n", (intmax_t) seek_ret);
 
   fclose (fp);
 
