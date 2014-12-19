@@ -21,14 +21,15 @@ do_test (void)
   off_t o = ftello (fp);
   if (o != nstr)
     {
-      printf ("first ftello returned %ld, expected %zu\n", o, nstr);
+      printf ("first ftello returned %jd, expected %zu\n",
+	      (intmax_t) o, nstr);
       result = 1;
     }
   rewind (fp);
   o = ftello (fp);
   if (o != 0)
     {
-      printf ("second ftello returned %ld, expected 0\n", o);
+      printf ("second ftello returned %jd, expected 0\n", (intmax_t) o);
       result = 1;
     }
   if (fseeko (fp, 0, SEEK_END) != 0)
@@ -39,7 +40,8 @@ do_test (void)
   o = ftello (fp);
   if (o != nstr)
     {
-      printf ("third ftello returned %ld, expected %zu\n", o, nstr);
+      printf ("third ftello returned %jd, expected %zu\n",
+	      (intmax_t) o, nstr);
       result = 1;
     }
   rewind (fp);
@@ -50,7 +52,8 @@ do_test (void)
   o = ftello (fp);
   if (o != nstr2)
     {
-      printf ("fourth ftello returned %ld, expected %zu\n", o, nstr2);
+      printf ("fourth ftello returned %jd, expected %zu\n",
+	      (intmax_t) o, nstr2);
       result = 1;
     }
   fclose (fp);
