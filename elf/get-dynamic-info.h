@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <assert.h>
+#include <libc-internal.h>
 
 #ifndef RESOLVE_MAP
 static
@@ -47,7 +48,15 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 	info[dyn->d_tag] = dyn;
       else if (dyn->d_tag >= DT_LOPROC &&
 	       dyn->d_tag < DT_LOPROC + DT_THISPROCNUM)
-	info[dyn->d_tag - DT_LOPROC + DT_NUM] = dyn;
+	{
+	  /* This does not violate the array bounds of l->l_info, but
+	     gcc 4.6 on sparc somehow does not see this.  */
+	  DIAG_PUSH_NEEDS_COMMENT;
+	  DIAG_IGNORE_NEEDS_COMMENT (4.6,
+				     "-Warray-bounds");
+	  info[dyn->d_tag - DT_LOPROC + DT_NUM] = dyn;
+	  DIAG_POP_NEEDS_COMMENT;
+	}
       else if ((d_tag_utype) DT_VERSIONTAGIDX (dyn->d_tag) < DT_VERSIONTAGNUM)
 	info[VERSYMIDX (dyn->d_tag)] = dyn;
       else if ((d_tag_utype) DT_EXTRATAGIDX (dyn->d_tag) < DT_EXTRANUM)

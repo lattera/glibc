@@ -1,3 +1,8 @@
+2014-12-19  David S. Miller  <davem@davemloft.net>
+
+	* get-dynamic-info.h (elf_get_dynamic_info): Ignore -Warray-bounds for a
+	link_map->l_info array access.
+
 2014-12-19  Chris Metcalf  <cmetcalf@ezchip.com>
 
 	* iconvdata/tst-loading.c (TIMEOUT): Increase timeout 10 sec.
