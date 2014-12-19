@@ -69,7 +69,7 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 	     for denormalized number.  If it is one, the number is according
 	     to Intel's specification an invalid number.  We make the
 	     representation unique by explicitly clearing this bit.  */
-	  res_ptr[N - 1] &= ~(1L << ((LDBL_MANT_DIG - 1) % BITS_PER_MP_LIMB));
+	  res_ptr[N - 1] &= ~((mp_limb_t) 1 << ((LDBL_MANT_DIG - 1) % BITS_PER_MP_LIMB));
 
 	  if (res_ptr[N - 1] != 0)
 	    {

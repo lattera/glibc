@@ -1,3 +1,8 @@
+2014-12-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/ldbl2mpn.c (__mpn_extract_long_double): Replace
+	1L with (mp_limb_t) 1.
+
 2014-12-17  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/nptl/fork.c (__fork_generation_pointer): Variable moved ...
