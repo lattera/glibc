@@ -126,8 +126,8 @@ main (int argc, char ** argv)
     strcpy (envstring, "TZ=Europe/London");
     putenv (envstring);
     t = mktime (&tmBuf);
-    snprintf (buf, sizeof (buf), "TZ=%s %ld %d %d %d %d %d %d %d %d %d",
-	      getenv ("TZ"), t,
+    snprintf (buf, sizeof (buf), "TZ=%s %jd %d %d %d %d %d %d %d %d %d",
+	      getenv ("TZ"), (intmax_t) t,
 	      tmBuf.tm_sec, tmBuf.tm_min, tmBuf.tm_hour,
 	      tmBuf.tm_mday, tmBuf.tm_mon, tmBuf.tm_year,
 	      tmBuf.tm_wday, tmBuf.tm_yday, tmBuf.tm_isdst);
@@ -149,8 +149,8 @@ main (int argc, char ** argv)
     strcpy (envstring, "TZ=GMT");
     /* No putenv call needed!  */
     t = mktime (&tmBuf);
-    snprintf (buf, sizeof (buf), "TZ=%s %ld %d %d %d %d %d %d %d %d %d",
-	      getenv ("TZ"), t,
+    snprintf (buf, sizeof (buf), "TZ=%s %jd %d %d %d %d %d %d %d %d %d",
+	      getenv ("TZ"), (intmax_t) t,
 	      tmBuf.tm_sec, tmBuf.tm_min, tmBuf.tm_hour,
 	      tmBuf.tm_mday, tmBuf.tm_mon, tmBuf.tm_year,
 	      tmBuf.tm_wday, tmBuf.tm_yday, tmBuf.tm_isdst);
