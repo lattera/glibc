@@ -39,7 +39,8 @@ do_test (void)
       char buf[100];
       struct tm *tmp;
 
-      printf ("TZ = \"%s\", time = %ld => ", tests[cnt].tz, tests[cnt].when);
+      printf ("TZ = \"%s\", time = %jd => ", tests[cnt].tz,
+	      (intmax_t) tests[cnt].when);
       fflush (stdout);
 
       setenv ("TZ", tests[cnt].tz, 1);

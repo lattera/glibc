@@ -25,6 +25,8 @@
 	* stdio-common/tst-fmemopen2.c (do_test): Replace %ld with %jd
 	and cast to intmax_t.
 	* sysdeps/pthread/tst-timer.c (main): Likewise.
+	* time/clocktest.c (main): Likewise.
+	* time/tst-posixtz.c (do_test): Likewise.
 
 2014-12-30  Andrew Senkevich  <andrew.senkevich@intel.com>
 	    H.J. Lu  <hongjiu.lu@intel.com>
