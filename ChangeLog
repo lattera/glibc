@@ -1,5 +1,8 @@
 2014-12-19  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/sparc32/soft-fp/q_neg.c (_Q_neg): Use a union to
+	access the quad as both a long double and as a series of 4 words.
+
 	* get-dynamic-info.h (elf_get_dynamic_info): Ignore -Warray-bounds for a
 	link_map->l_info array access.
 
