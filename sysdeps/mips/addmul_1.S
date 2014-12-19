@@ -42,7 +42,12 @@ ENTRY (__mpn_addmul_1)
 
 	/* warm up phase 1 */
 	addiu	$5,$5,4
+#if __mips_isa_rev < 6
 	multu	$8,$7
+#else
+	mulu	$11,$8,$7
+	muhu	$12,$8,$7
+#endif
 
 	addiu	$6,$6,-1
 	beq	$6,$0,L(LC0)
@@ -53,11 +58,21 @@ ENTRY (__mpn_addmul_1)
 	lw	$8,0($5)	/* load new s1 limb as early as possible */
 
 L(Loop):	lw	$10,0($4)
+#if __mips_isa_rev < 6
 	mflo	$3
 	mfhi	$9
+#else
+	move	$3,$11
+	move	$9,$12
+#endif
 	addiu	$5,$5,4
 	addu	$3,$3,$2	/* add old carry limb to low product limb */
+#if __mips_isa_rev < 6
 	multu	$8,$7
+#else
+	mulu	$11,$8,$7
+	muhu	$12,$8,$7
+#endif
 	lw	$8,0($5)	/* load new s1 limb as early as possible */
 	addiu	$6,$6,-1	/* decrement loop counter */
 	sltu	$2,$3,$2	/* carry from previous addition -> $2 */
@@ -71,11 +86,21 @@ L(Loop):	lw	$10,0($4)
 
 	/* cool down phase 1 */
 L(LC1):	lw	$10,0($4)
+#if __mips_isa_rev < 6
 	mflo	$3
 	mfhi	$9
+#else
+	move	$3,$11
+	move	$9,$12
+#endif
 	addu	$3,$3,$2
 	sltu	$2,$3,$2
+#if __mips_isa_rev < 6
 	multu	$8,$7
+#else
+	mulu	$11,$8,$7
+	muhu	$12,$8,$7
+#endif
 	addu	$3,$10,$3
 	sltu	$10,$3,$10
 	addu	$2,$2,$10
@@ -85,8 +110,13 @@ L(LC1):	lw	$10,0($4)
 
 	/* cool down phase 0 */
 L(LC0):	lw	$10,0($4)
+#if __mips_isa_rev < 6
 	mflo	$3
 	mfhi	$9
+#else
+	move	$3,$11
+	move	$9,$12
+#endif
 	addu	$3,$3,$2
 	sltu	$2,$3,$2
 	addu	$3,$10,$3
