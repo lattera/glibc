@@ -17,10 +17,6 @@
 
 #include <string.h>
 
-#ifdef _LIBC
-# include <memcopy.h>
-#endif
-
 #ifndef STRNCAT
 # undef strncat
 # define STRNCAT  strncat
@@ -29,52 +25,15 @@
 char *
 STRNCAT (char *s1, const char *s2, size_t n)
 {
-  char c;
   char *s = s1;
 
   /* Find the end of S1.  */
   s1 += strlen (s1);
 
-  /* Make S1 point before next character, so we can increment
-     it while memory is read (wins on pipelined cpus).  */
-  s1 -= 1;
+  size_t ss = __strnlen (s2, n);
 
-  if (n >= 4)
-    {
-      size_t n4 = n >> 2;
-      do
-	{
-	  c = *s2++;
-	  *++s1 = c;
-	  if (c == '\0')
-	    return s;
-	  c = *s2++;
-	  *++s1 = c;
-	  if (c == '\0')
-	    return s;
-	  c = *s2++;
-	  *++s1 = c;
-	  if (c == '\0')
-	    return s;
-	  c = *s2++;
-	  *++s1 = c;
-	  if (c == '\0')
-	    return s;
-	} while (--n4 > 0);
-      n &= 3;
-    }
-
-  while (n > 0)
-    {
-      c = *s2++;
-      *++s1 = c;
-      if (c == '\0')
-	return s;
-      n--;
-    }
-
-  if (c != '\0')
-    *++s1 = '\0';
+  s1[ss] = '\0';
+  memcpy (s1, s2, ss);
 
   return s;
 }
