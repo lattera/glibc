@@ -90,13 +90,13 @@ main (void)
 
   setvbuf (stdout, 0, _IOLBF, 0);
 
-  printf ("clock_gettime returned %d, timespec = { %ld, %ld }\n",
-	  retval, ts.tv_sec, ts.tv_nsec);
+  printf ("clock_gettime returned %d, timespec = { %jd, %jd }\n",
+	  retval, (intmax_t) ts.tv_sec, (intmax_t) ts.tv_nsec);
 
   retval = clock_getres (CLOCK_REALTIME, &ts);
 
-  printf ("clock_getres returned %d, timespec = { %ld, %ld }\n",
-	  retval, ts.tv_sec, ts.tv_nsec);
+  printf ("clock_getres returned %d, timespec = { %jd, %jd }\n",
+	  retval, (intmax_t) ts.tv_sec, (intmax_t) ts.tv_nsec);
 
   if (timer_create (CLOCK_REALTIME, &sigev1, &timer_sig) != 0)
     {
