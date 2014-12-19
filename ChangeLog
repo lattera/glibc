@@ -1,3 +1,9 @@
+2014-12-30  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #17732]
+	* io/test-utime.c (main): Replace %ld with %jd and cast to
+	intmax_t.
+
 2014-12-30  Andrew Senkevich  <andrew.senkevich@intel.com>
 	    H.J. Lu  <hongjiu.lu@intel.com>
 

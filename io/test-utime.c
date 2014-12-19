@@ -109,25 +109,29 @@ main (int argc, char *argv[])
 
   if (st.st_mtime != ut.modtime)
     {
-      printf ("modtime %ld != %ld\n", st.st_mtime, ut.modtime);
+      printf ("modtime %jd != %jd\n",
+	      (intmax_t) st.st_mtime, (intmax_t) ut.modtime);
       return 1;
     }
 
   if (st.st_atime != ut.actime)
     {
-      printf ("actime %ld != %ld\n", st.st_atime, ut.actime);
+      printf ("actime %jd != %jd\n",
+	      (intmax_t) st.st_atime, (intmax_t) ut.actime);
       return 1;
     }
 
   if (stnow.st_mtime < now1 || stnow.st_mtime > now2)
     {
-      printf ("modtime %ld <%ld >%ld\n", stnow.st_mtime, now1, now2);
+      printf ("modtime %jd <%jd >%jd\n",
+	      (intmax_t) stnow.st_mtime, (intmax_t) now1, (intmax_t) now2);
       return 1;
     }
 
   if (stnow.st_atime < now1 || stnow.st_atime > now2)
     {
-      printf ("actime %ld <%ld >%ld\n", stnow.st_atime, now1, now2);
+      printf ("actime %jd <%jd >%jd\n",
+	      (intmax_t) stnow.st_atime, (intmax_t) now1, (intmax_t) now2);
       return 1;
     }
 
