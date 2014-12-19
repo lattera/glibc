@@ -4,6 +4,8 @@
 	* io/test-utime.c (main): Replace %ld with %jd and cast to
 	intmax_t.
 	* libio/tst-ftell-active-handler.c (do_append_test): Likewise.
+	* nptl/tst-mutex5.c: Include <stdint.h>.
+	(do_test): Replace %ld with %jd and cast to intmax_t.
 
 2014-12-30  Andrew Senkevich  <andrew.senkevich@intel.com>
 	    H.J. Lu  <hongjiu.lu@intel.com>

@@ -22,6 +22,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <sys/time.h>
+#include <stdint.h>
 #include <config.h>
 
 
@@ -132,8 +133,8 @@ do_test (void)
 
       if (tv2.tv_sec < 2)
 	{
-	  printf ("premature timeout: %ld.%06ld difference\n",
-		  tv2.tv_sec, tv2.tv_usec);
+	  printf ("premature timeout: %jd.%06jd difference\n",
+		  (intmax_t) tv2.tv_sec, (intmax_t) tv2.tv_usec);
 	  return 1;
 	}
     }
