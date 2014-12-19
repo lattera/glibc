@@ -83,8 +83,13 @@ static void __attribute_used__ __mcount (u_long frompc, u_long selfpc)
 #endif
 
 #if _MIPS_SIM == _ABIN32
-# define PTR_ADDU_STRING "add" /* no u */
-# define PTR_SUBU_STRING "sub" /* no u */
+# if __mips_isa_rev < 6
+#  define PTR_ADDU_STRING "add" /* no u */
+#  define PTR_SUBU_STRING "sub" /* no u */
+# else
+#  define PTR_ADDU_STRING "addu"
+#  define PTR_SUBU_STRING "subu"
+# endif
 #elif _MIPS_SIM == _ABI64
 # define PTR_ADDU_STRING "daddu"
 # define PTR_SUBU_STRING "dsubu"

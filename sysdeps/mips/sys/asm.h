@@ -416,12 +416,19 @@ symbol		=	value
 #if _MIPS_SIM == _ABIN32
 # define PTR_ADD	add
 # define PTR_ADDI	addi
-# define PTR_ADDU	add /* no u */
-# define PTR_ADDIU	addi /* no u */
 # define PTR_SUB	sub
 # define PTR_SUBI	subi
+#if __mips_isa_rev < 6
+# define PTR_ADDU	add /* no u */
+# define PTR_ADDIU	addi /* no u */
 # define PTR_SUBU	sub /* no u */
 # define PTR_SUBIU	sub /* no u */
+#else
+# define PTR_ADDU       addu
+# define PTR_ADDIU      addiu
+# define PTR_SUBU       subu
+# define PTR_SUBIU      subu
+#endif
 # define PTR_L		lw
 # define PTR_LA		la
 # define PTR_S		sw
