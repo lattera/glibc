@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <stdint.h>
 
 
 /* We want to see output immediately.  */
@@ -51,8 +52,8 @@ clock_test (clockid_t cl)
 	  result = 1;
 	}
       else
-	printf ("clock %d: resolution = %ld.%09ld secs\n",
-		cl, ts.tv_sec, ts.tv_nsec);
+	printf ("clock %d: resolution = %jd.%09jd secs\n",
+		cl, (intmax_t) ts.tv_sec, (intmax_t) ts.tv_nsec);
     }
   else
     {
@@ -76,8 +77,8 @@ clock_test (clockid_t cl)
 	    }
 	  else
 	    {
-	      printf ("clock %d: time = %ld.%09ld secs\n",
-		      cl, ts.tv_sec, ts.tv_nsec);
+	      printf ("clock %d: time = %jd.%09jd secs\n",
+		      cl, (intmax_t) ts.tv_sec, (intmax_t) ts.tv_nsec);
 
 	      if (memcmp (&ts, &old_ts, sizeof ts) == 0)
 		{

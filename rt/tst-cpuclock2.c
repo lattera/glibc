@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <unistd.h>
+#include <stdint.h>
 
 #if (_POSIX_THREADS - 0) <= 0
 
@@ -221,8 +222,9 @@ do_test (void)
       result = 1;
       return 1;
     }
-  printf ("live thread clock %lx resolution %lu.%.9lu\n",
-	  (unsigned long int) th_clock, res.tv_sec, res.tv_nsec);
+  printf ("live thread clock %lx resolution %ju.%.9ju\n",
+	  (unsigned long int) th_clock,
+	  (uintmax_t) res.tv_sec, (uintmax_t) res.tv_nsec);
 
   struct timespec process_before, process_after;
   if (clock_gettime (process_clock, &process_before) < 0)
@@ -239,8 +241,8 @@ do_test (void)
 	      (unsigned long int) th_clock, strerror (errno));
       return 1;
     }
-  printf ("live thread before sleep => %lu.%.9lu\n",
-	  before.tv_sec, before.tv_nsec);
+  printf ("live thread before sleep => %ju.%.9ju\n",
+	  (uintmax_t) before.tv_sec, (uintmax_t) before.tv_nsec);
 
   struct timespec me_before, me_after;
   if (clock_gettime (my_thread_clock, &me_before) < 0)
@@ -249,8 +251,8 @@ do_test (void)
 	      (unsigned long int) my_thread_clock, strerror (errno));
       return 1;
     }
-  printf ("self thread before sleep => %lu.%.9lu\n",
-	  me_before.tv_sec, me_before.tv_nsec);
+  printf ("self thread before sleep => %ju.%.9ju\n",
+	  (uintmax_t) me_before.tv_sec, (uintmax_t) me_before.tv_nsec);
 
   struct timespec sleeptime = { .tv_nsec = 500000000 };
   if (nanosleep (&sleeptime, NULL) != 0)
@@ -265,8 +267,8 @@ do_test (void)
 	      (unsigned long int) th_clock, strerror (errno));
       return 1;
     }
-  printf ("live thread after sleep => %lu.%.9lu\n",
-	  after.tv_sec, after.tv_nsec);
+  printf ("live thread after sleep => %ju.%.9ju\n",
+	  (uintmax_t) after.tv_sec, (uintmax_t) after.tv_nsec);
 
   if (clock_gettime (process_clock, &process_after) < 0)
     {
@@ -281,8 +283,8 @@ do_test (void)
 	      (unsigned long int) my_thread_clock, strerror (errno));
       return 1;
     }
-  printf ("self thread after sleep => %lu.%.9lu\n",
-	  me_after.tv_sec, me_after.tv_nsec);
+  printf ("self thread after sleep => %ju.%.9ju\n",
+	  (uintmax_t) me_after.tv_sec, (uintmax_t) me_after.tv_nsec);
 
   unsigned long long int th_diff = tsdiff (&before, &after);
   unsigned long long int pdiff = tsdiff (&process_before, &process_after);

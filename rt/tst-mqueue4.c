@@ -139,9 +139,10 @@ do_test (void)
       || attr.mq_msgsize != 2
       || attr.mq_curmsgs != 2)
     {
-      printf ("mq_getattr returned unexpected { .mq_flags = %ld,\n"
-	      ".mq_maxmsg = %ld, .mq_msgsize = %ld, .mq_curmsgs = %ld }\n",
-	      attr.mq_flags, attr.mq_maxmsg, attr.mq_msgsize, attr.mq_curmsgs);
+      printf ("mq_getattr returned unexpected { .mq_flags = %jd,\n"
+	      ".mq_maxmsg = %jd, .mq_msgsize = %jd, .mq_curmsgs = %jd }\n",
+	      (intmax_t) attr.mq_flags, (intmax_t) attr.mq_maxmsg,
+	      (intmax_t) attr.mq_msgsize, (intmax_t) attr.mq_curmsgs);
       result = 1;
     }
 
@@ -215,9 +216,10 @@ do_test (void)
       || attr.mq_msgsize != 2
       || attr.mq_curmsgs != 1)
     {
-      printf ("mq_getattr returned unexpected { .mq_flags = %ld,\n"
-	      ".mq_maxmsg = %ld, .mq_msgsize = %ld, .mq_curmsgs = %ld }\n",
-	      attr.mq_flags, attr.mq_maxmsg, attr.mq_msgsize, attr.mq_curmsgs);
+      printf ("mq_getattr returned unexpected { .mq_flags = %jd,\n"
+	      ".mq_maxmsg = %jd, .mq_msgsize = %jd, .mq_curmsgs = %jd }\n",
+	      (intmax_t) attr.mq_flags, (intmax_t) attr.mq_maxmsg,
+	      (intmax_t) attr.mq_msgsize, (intmax_t) attr.mq_curmsgs);
       result = 1;
     }
 

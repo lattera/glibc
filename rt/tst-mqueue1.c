@@ -26,6 +26,7 @@
 #include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
+#include <stdint.h>
 #include "tst-mqueue.h"
 
 static int
@@ -46,20 +47,21 @@ check_attrs (struct mq_attr *attr, int nonblock, long cnt)
   if (attr->mq_maxmsg != 10 || attr->mq_msgsize != 1)
     {
       printf ("attributes don't match those passed to mq_open\n"
-	      "mq_maxmsg %ld, mq_msgsize %ld\n",
-	      attr->mq_maxmsg, attr->mq_msgsize);
+	      "mq_maxmsg %jd, mq_msgsize %jd\n",
+	      (intmax_t) attr->mq_maxmsg, (intmax_t) attr->mq_msgsize);
       result = 1;
     }
 
   if ((attr->mq_flags & O_NONBLOCK) != nonblock)
     {
-      printf ("mq_flags %lx != %x\n", (attr->mq_flags & O_NONBLOCK), nonblock);
+      printf ("mq_flags %jx != %x\n",
+	      (intmax_t) (attr->mq_flags & O_NONBLOCK), nonblock);
       result = 1;
     }
 
   if (attr->mq_curmsgs != cnt)
     {
-      printf ("mq_curmsgs %ld != %ld\n", attr->mq_curmsgs, cnt);
+      printf ("mq_curmsgs %jd != %ld\n", (intmax_t) attr->mq_curmsgs, cnt);
       result = 1;
     }
 

@@ -23,6 +23,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <stdint.h>
 #if _POSIX_THREADS
 # include <pthread.h>
 
@@ -168,9 +169,9 @@ check_ts (const char *name, const struct timespec *start,
       || (end->tv_sec == ts.tv_sec && end->tv_nsec < ts.tv_nsec))
     {
       printf ("\
-*** timer %s invoked too soon: %ld.%09ld instead of expected %ld.%09ld\n",
-	      name, (long) end->tv_sec, end->tv_nsec,
-	      (long) ts.tv_sec, ts.tv_nsec);
+*** timer %s invoked too soon: %ld.%09jd instead of expected %ld.%09jd\n",
+	      name, (long) end->tv_sec, (intmax_t) end->tv_nsec,
+	      (long) ts.tv_sec, (intmax_t) ts.tv_nsec);
       return 1;
     }
   else
@@ -200,8 +201,8 @@ do_test (void)
       result = 1;
     }
   else
-    printf ("clock_gettime returned timespec = { %ld, %ld }\n",
-	    (long) ts.tv_sec, ts.tv_nsec);
+    printf ("clock_gettime returned timespec = { %ld, %jd }\n",
+	    (long) ts.tv_sec, (intmax_t) ts.tv_nsec);
 
   if (clock_getres (TEST_CLOCK, &ts) != 0)
     {
@@ -209,8 +210,8 @@ do_test (void)
       result = 1;
     }
   else
-    printf ("clock_getres returned timespec = { %ld, %ld }\n",
-	    (long) ts.tv_sec, ts.tv_nsec);
+    printf ("clock_getres returned timespec = { %ld, %jd }\n",
+	    (long) ts.tv_sec, (intmax_t) ts.tv_nsec);
 
   struct sigevent ev;
   memset (&ev, 0x11, sizeof (ev));
@@ -488,9 +489,9 @@ do_test (void)
 	   || it.it_interval.tv_sec || it.it_interval.tv_nsec)
     {
       printf ("\
-*** timer_gettime timer_none returned { %ld.%09ld, %ld.%09ld }\n",
-	      (long) it.it_value.tv_sec, it.it_value.tv_nsec,
-	      (long) it.it_interval.tv_sec, it.it_interval.tv_nsec);
+*** timer_gettime timer_none returned { %ld.%09jd, %ld.%09jd }\n",
+	      (long) it.it_value.tv_sec, (intmax_t) it.it_value.tv_nsec,
+	      (long) it.it_interval.tv_sec, (intmax_t) it.it_interval.tv_nsec);
       result = 1;
     }
 
@@ -603,8 +604,8 @@ do_test (void)
   else if (it.it_interval.tv_sec || it.it_interval.tv_nsec != 100000000)
     {
       printf ("\
-!!! second timer_gettime timer_none returned it_interval %ld.%09ld\n",
-	      (long) it.it_interval.tv_sec, it.it_interval.tv_nsec);
+!!! second timer_gettime timer_none returned it_interval %ld.%09jd\n",
+	      (long) it.it_interval.tv_sec, (intmax_t) it.it_interval.tv_nsec);
       /* FIXME: For now disabled.
       result = 1; */
     }

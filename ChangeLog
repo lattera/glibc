@@ -8,6 +8,20 @@
 	(do_test): Replace %ld with %jd and cast to intmax_t.
 	* posix/tst-regex.c (run_test): Likewise.
 	(run_test_backwards): Likewise.
+	* rt/tst-clock.c: Include <stdint.h>.
+	(clock_test): Replace %ld with %jd and cast to intmax_t.
+	* rt/tst-cpuclock1.c: Include <stdint.h>.
+	(do_test): Replace %lu with %ju and cast to uintmax_t.
+	* rt/tst-cpuclock2.c: Include <stdint.h>.
+	(do_test): Replace %lu with %ju and cast to uintmax_t.
+	* rt/tst-mqueue1.c: Include <stdint.h>.
+	(check_attrs): Replace %ld with %jd and cast to intmax_t.
+	* rt/tst-mqueue3.c (fct): Replace %ld with %jd and cast to
+	intmax_t.
+	* rt/tst-mqueue4.c (do_test): Likewise.
+	* rt/tst-timer4.c: Include <stdint.h>.
+	(check_ts): Replace %ld with %jd and cast to intmax_t.
+	(do_test): Likewise.
 
 2014-12-30  Andrew Senkevich  <andrew.senkevich@intel.com>
 	    H.J. Lu  <hongjiu.lu@intel.com>

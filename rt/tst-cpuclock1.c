@@ -24,6 +24,7 @@
 #include <string.h>
 #include <errno.h>
 #include <signal.h>
+#include <stdint.h>
 #include <sys/wait.h>
 
 /* This function is intended to rack up both user and system time.  */
@@ -119,8 +120,9 @@ do_test (void)
       result = 1;
       goto done;
     }
-  printf ("live PID %d clock %lx resolution %lu.%.9lu\n",
-	  child, (unsigned long int) child_clock, res.tv_sec, res.tv_nsec);
+  printf ("live PID %d clock %lx resolution %ju.%.9ju\n",
+	  child, (unsigned long int) child_clock,
+	  (uintmax_t) res.tv_sec, (uintmax_t) res.tv_nsec);
 
   struct timespec before, after;
   if (clock_gettime (child_clock, &before) < 0)
@@ -131,8 +133,8 @@ do_test (void)
       goto done;
     }
   /* Should be close to 0.0.  */
-  printf ("live PID %d before sleep => %lu.%.9lu\n",
-	  child, before.tv_sec, before.tv_nsec);
+  printf ("live PID %d before sleep => %ju.%.9ju\n",
+	  child, (uintmax_t) before.tv_sec, (uintmax_t) before.tv_nsec);
 
   struct timespec sleeptime = { .tv_nsec = 500000000 };
   if (nanosleep (&sleeptime, NULL) != 0)
@@ -150,8 +152,8 @@ do_test (void)
       goto done;
     }
   /* Should be close to 0.5.  */
-  printf ("live PID %d after sleep => %lu.%.9lu\n",
-	  child, after.tv_sec, after.tv_nsec);
+  printf ("live PID %d after sleep => %ju.%.9ju\n",
+	  child, (uintmax_t) after.tv_sec, (uintmax_t) after.tv_nsec);
 
   struct timespec diff = { .tv_sec = after.tv_sec - before.tv_sec,
 			   .tv_nsec = after.tv_nsec - before.tv_nsec };
@@ -164,8 +166,8 @@ do_test (void)
       || diff.tv_nsec > 600000000
       || diff.tv_nsec < 100000000)
     {
-      printf ("before - after %lu.%.9lu outside reasonable range\n",
-	      diff.tv_sec, diff.tv_nsec);
+      printf ("before - after %ju.%.9ju outside reasonable range\n",
+	      (uintmax_t) diff.tv_sec, (uintmax_t) diff.tv_nsec);
       result = 1;
     }
 
@@ -203,8 +205,8 @@ do_test (void)
 	      || d.tv_nsec < sleeptime.tv_nsec
 	      || d.tv_nsec > sleeptime.tv_nsec * 2)
 	    {
-	      printf ("nanosleep time %lu.%.9lu outside reasonable range\n",
-		      d.tv_sec, d.tv_nsec);
+	      printf ("nanosleep time %ju.%.9ju outside reasonable range\n",
+		      (uintmax_t) d.tv_sec, (uintmax_t) d.tv_nsec);
 	      result = 1;
 	    }
 	}
@@ -236,8 +238,8 @@ do_test (void)
       goto done;
     }
   /* Should be close to 0.6.  */
-  printf ("dead PID %d => %lu.%.9lu\n",
-	  child, dead.tv_sec, dead.tv_nsec);
+  printf ("dead PID %d => %ju.%.9ju\n",
+	  child, (uintmax_t) dead.tv_sec, (uintmax_t) dead.tv_nsec);
 
   diff.tv_sec = dead.tv_sec - after.tv_sec;
   diff.tv_nsec = dead.tv_nsec - after.tv_nsec;
@@ -248,8 +250,8 @@ do_test (void)
     }
   if (diff.tv_sec != 0 || diff.tv_nsec > 200000000)
     {
-      printf ("dead - after %lu.%.9lu outside reasonable range\n",
-	      diff.tv_sec, diff.tv_nsec);
+      printf ("dead - after %ju.%.9ju outside reasonable range\n",
+	      (uintmax_t) diff.tv_sec, (uintmax_t) diff.tv_nsec);
       result = 1;
     }
 
@@ -265,9 +267,9 @@ do_test (void)
 
   if (clock_gettime (child_clock, &dead) == 0)
     {
-      printf ("clock_gettime on reaped PID %d clock %lx => %lu%.9lu\n",
+      printf ("clock_gettime on reaped PID %d clock %lx => %ju%.9ju\n",
 	      child, (unsigned long int) child_clock,
-	      dead.tv_sec, dead.tv_nsec);
+	      (uintmax_t) dead.tv_sec, (uintmax_t) dead.tv_nsec);
       result = 1;
     }
   else
@@ -280,9 +282,9 @@ do_test (void)
 
   if (clock_getres (child_clock, &dead) == 0)
     {
-      printf ("clock_getres on reaped PID %d clock %lx => %lu%.9lu\n",
+      printf ("clock_getres on reaped PID %d clock %lx => %ju%.9ju\n",
 	      child, (unsigned long int) child_clock,
-	      dead.tv_sec, dead.tv_nsec);
+	      (uintmax_t) dead.tv_sec, (uintmax_t) dead.tv_nsec);
       result = 1;
     }
   else
