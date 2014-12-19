@@ -6,6 +6,8 @@
 	* libio/tst-ftell-active-handler.c (do_append_test): Likewise.
 	* nptl/tst-mutex5.c: Include <stdint.h>.
 	(do_test): Replace %ld with %jd and cast to intmax_t.
+	* posix/tst-regex.c (run_test): Likewise.
+	(run_test_backwards): Likewise.
 
 2014-12-30  Andrew Senkevich  <andrew.senkevich@intel.com>
 	    H.J. Lu  <hongjiu.lu@intel.com>

@@ -274,8 +274,8 @@ run_test (const char *expr, const char *mem, size_t memlen, int icase,
 	      finish.tv_sec -= start.tv_sec;
 	    }
 
-	  printf ("elapsed time: %ld.%09ld sec\n",
-		  finish.tv_sec, finish.tv_nsec);
+	  printf ("elapsed time: %jd.%09jd sec\n",
+		  (intmax_t) finish.tv_sec, (intmax_t) finish.tv_nsec);
 	}
     }
 
@@ -327,8 +327,8 @@ run_test (const char *expr, const char *mem, size_t memlen, int icase,
 		mintime = finish;
 	    }
 	}
-      printf ("elapsed time: %ld.%09ld sec\n",
-	      mintime.tv_sec, mintime.tv_nsec);
+      printf ("elapsed time: %jd.%09jd sec\n",
+	      (intmax_t) mintime.tv_sec, (intmax_t) mintime.tv_nsec);
     }
 #endif
 
@@ -420,8 +420,8 @@ run_test_backwards (const char *expr, const char *mem, size_t memlen,
 	      finish.tv_sec -= start.tv_sec;
 	    }
 
-	  printf ("elapsed time: %ld.%09ld sec\n",
-		  finish.tv_sec, finish.tv_nsec);
+	  printf ("elapsed time: %jd.%09jd sec\n",
+		  (intmax_t) finish.tv_sec, (intmax_t) finish.tv_nsec);
 	}
     }
 
@@ -489,8 +489,8 @@ run_test_backwards (const char *expr, const char *mem, size_t memlen,
 		mintime = finish;
 	    }
 	}
-      printf ("elapsed time: %ld.%09ld sec\n",
-	      mintime.tv_sec, mintime.tv_nsec);
+      printf ("elapsed time: %jd.%09jd sec\n",
+	      (intmax_t) mintime.tv_sec, (intmax_t) mintime.tv_nsec);
     }
 #endif
 
