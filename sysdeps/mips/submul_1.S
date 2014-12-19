@@ -48,7 +48,6 @@ ENTRY (__mpn_submul_1)
 	mulu	$11,$8,$7
 	muhu	$12,$8,$7
 #endif
-	
 
 	addiu	$6,$6,-1
 	beq	$6,$0,L(LC0)
