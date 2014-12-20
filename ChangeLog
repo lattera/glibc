@@ -1,3 +1,7 @@
+2014-12-20  Chris Metcalf  <cmetcalf@ezchip.com>
+
+	* sysdeps/unix/sysv/linux/tile/localplt.data: New file.
+
 2014-12-19  Chris Metcalf  <cmetcalf@ezchip.com>
 
 	* sysdeps/tile/tilegx/strstr.c (STRSTR): Call __strnlen, not
