@@ -27,6 +27,7 @@
   (!memchr ((h) + (h_l), '\0', (j) + (n_l) - (h_l))	\
    && ((h_l) = (j) + (n_l)))
 #include "str-two-way.h"
+typeof(two_way_short_needle) two_way_short_needle __attribute__((unused));
 
 #undef strstr
 
@@ -238,7 +239,7 @@ STRSTR (const char *haystack_start, const char *needle_start)
     }
 
   /* Fail if NEEDLE is longer than HAYSTACK.  */
-  if (strnlen (haystack, needle_len) < needle_len)
+  if (__strnlen (haystack, needle_len) < needle_len)
     return NULL;
 
   /* Perform the search.  Abstract memory is considered to be an array
