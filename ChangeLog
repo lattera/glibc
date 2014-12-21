@@ -1,3 +1,8 @@
+2014-12-21  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/dl-machine.h (RTLD_START): Remove @PLTPC from
+	_dl_init call.
+
 2014-12-21  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/dl-machine.h (_dl_start_user): Remove @PLT
