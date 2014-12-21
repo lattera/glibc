@@ -221,7 +221,7 @@ _dl_start_user:\n\
 	# Clear %ebp, so that even constructors have terminated backchain.\n\
 	xorl %ebp, %ebp\n\
 	# Call the function to run the initializers.\n\
-	call _dl_init@PLT\n\
+	call _dl_init\n\
 	# Pass our finalizer function to the user in %edx, as per ELF ABI.\n\
 	leal _dl_fini@GOTOFF(%ebx), %edx\n\
 	# Restore %esp _start expects.\n\

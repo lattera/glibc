@@ -156,7 +156,7 @@ _dl_start_user:\n\
 	# Clear %rbp to mark outermost frame obviously even for constructors.\n\
 	xorl %ebp, %ebp\n\
 	# Call the function to run the initializers.\n\
-	call _dl_init@PLT\n\
+	call _dl_init\n\
 	# Pass our finalizer function to the user in %rdx, as per ELF ABI.\n\
 	leaq _dl_fini(%rip), %rdx\n\
 	# And make sure %rsp points to argc stored on the stack.\n\
