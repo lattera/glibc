@@ -3,7 +3,6 @@
 	* sysdeps/i386/dl-machine.h (_dl_start_user): Remove @PLT
 	from "call _dl_init@PLT".
 	* sysdeps/x86_64/dl-machine.h (_dl_start_user): Likewise.
-	from "call _dl_init@PLT".
 
 2014-12-21  Anders Kaseorg  <andersk@mit.edu>
 
