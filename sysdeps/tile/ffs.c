@@ -30,16 +30,7 @@ weak_alias (__ffs, ffs)
 libc_hidden_def (__ffs)
 libc_hidden_builtin_def (ffs)
 
-#undef ffsll
-int
-ffsll (long long x)
-{
-  return __builtin_ffsll (x);
-}
-
-#undef ffsl
 #if ULONG_MAX == UINT_MAX
+#undef ffsl
 weak_alias (__ffs, ffsl)
-#else
-weak_alias (ffsll, ffsl)
 #endif

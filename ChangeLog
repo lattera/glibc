@@ -1,5 +1,8 @@
 2014-12-21  Chris Metcalf  <cmetcalf@ezchip.com>
 
+	* sysdeps/tile/ffs.c (__ffs): Moved ffsll definition...
+	* sysdeps/tile/ffsll.c (ffsll): To here.
+
 	* sysdeps/unix/sysv/linux/tile/localplt.data: Removed.
 
 2014-12-21  H.J. Lu  <hongjiu.lu@intel.com>
