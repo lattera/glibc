@@ -128,7 +128,7 @@ _dl_tlsdesc_dynamic:
 	movq	%r10, 40(%rsp)
 	movq	%r11, 48(%rsp)
 	/* %rdi already points to the tlsinfo data structure.  */
-	call	__tls_get_addr@PLT
+	call	HIDDEN_JUMPTARGET (__tls_get_addr)
 	movq	8(%rsp), %rdx
 	movq	16(%rsp), %rcx
 	movq	24(%rsp), %r8

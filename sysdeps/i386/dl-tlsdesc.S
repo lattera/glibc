@@ -126,10 +126,7 @@ _dl_tlsdesc_dynamic:
 	.p2align 4,,7
 .Lslow:
 	cfi_adjust_cfa_offset (28)
-	movl	%ebx, 16(%esp)
-	LOAD_PIC_REG (bx)
-	call	___tls_get_addr@PLT
-	movl	16(%esp), %ebx
+	call	HIDDEN_JUMPTARGET (___tls_get_addr)
 	jmp	.Lret
 	cfi_endproc
 	.size	_dl_tlsdesc_dynamic, .-_dl_tlsdesc_dynamic

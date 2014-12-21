@@ -1,3 +1,17 @@
+2014-12-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/dl-tls.c (__tls_get_addr): Provide the hidden definition
+	if not defined.
+	* sysdeps/i386/dl-tls.h (___tls_get_addr): Provide the hidden
+	definition.
+	* sysdeps/i386/dl-tlsdesc.S (_dl_tlsdesc_dynamic): Call the
+	hidden ___tls_get_addr.
+	* sysdeps/x86_64/dl-tlsdesc.S (_dl_tlsdesc_dynamic): Call the
+	hidden __tls_get_addr.
+	* sysdeps/generic/localplt.data (__tls_get_addr): Removed.
+	* sysdeps/unix/sysv/linux/i386/localplt.data (___tls_get_addr):
+	Likewise.
+
 2014-12-21  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/dl-machine.h (RTLD_START): Remove @PLTPC from
