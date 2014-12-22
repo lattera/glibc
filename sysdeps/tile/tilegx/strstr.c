@@ -154,7 +154,7 @@ STRSTR2 (const char *haystack_start, const char *needle)
       /* Look for a terminating '\0'.  */
       zero_matches = __insn_v1cmpeqi (v, 0);
       uint64_t byte1_matches = __insn_v1cmpeq (v, byte1);
-      if (__builtin_expect (zero_matches, 0))
+      if (__builtin_expect (zero_matches != 0, 0))
 	{
 	  /* This is the last vector.  Don't worry about matches
 	     crossing into the next vector.  Shift the second byte

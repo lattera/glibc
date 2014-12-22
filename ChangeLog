@@ -1,3 +1,9 @@
+2014-12-22  Chris Metcalf  <cmetcalf@ezchip.com>
+
+	[BZ #17746]
+	* sysdeps/tile/tilegx/strstr.c (STRSTR2): Remove implicit boolean
+	conversion.
+
 2014-12-22  Steve Ellcey  <sellcey@imgtec.com>
 
 	* sysdeps/unix/mips/sysdep.h (__mips_isa_rev): Set
