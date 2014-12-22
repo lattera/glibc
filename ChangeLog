@@ -56,6 +56,7 @@
 
 2014-12-21  Chris Metcalf  <cmetcalf@ezchip.com>
 
+	[BZ #17745]
 	* sysdeps/tile/ffs.c (__ffs): Moved ffsll definition...
 	* sysdeps/tile/ffsll.c (ffsll): To here.
 
@@ -97,6 +98,7 @@
 
 2014-12-19  Chris Metcalf  <cmetcalf@ezchip.com>
 
+	[BZ #17744]
 	* sysdeps/tile/tilegx/strstr.c (STRSTR): Call __strnlen, not
 	strnlen.
 
