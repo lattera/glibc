@@ -1,3 +1,12 @@
+2014-12-22  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17733]
+	* sysdeps/unix/sysv/linux/bind.S (NO_WEAK_ALIAS): Do not define.
+	(__bind): Do not define as weak alias.
+	* sysdeps/unix/sysv/linux/getsockname.S (NO_WEAK_ALIAS): Do not
+	define.
+	(__getsockname): Do not define as weak alias.
+
 2014-12-22  Will Newton  <will.newton@linaro.org>
 
 	* manual/install.texi: Document that we require bison 2.7
