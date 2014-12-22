@@ -33,7 +33,7 @@ jn (int n, double x)
   return __ieee754_jn (n, x);
 }
 #ifdef NO_LONG_DOUBLE
-strong_alias (jn, jnl)
+weak_alias (jn, jnl)
 #endif
 
 
@@ -64,5 +64,5 @@ yn (int n, double x)
   return __ieee754_yn (n, x);
 }
 #ifdef NO_LONG_DOUBLE
-strong_alias (yn, ynl)
+weak_alias (yn, ynl)
 #endif

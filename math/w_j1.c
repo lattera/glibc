@@ -33,7 +33,7 @@ j1 (double x)
   return __ieee754_j1 (x);
 }
 #ifdef NO_LONG_DOUBLE
-strong_alias (j1, j1l)
+weak_alias (j1, j1l)
 #endif
 
 
@@ -64,5 +64,5 @@ y1 (double x)
   return __ieee754_y1 (x);
 }
 #ifdef NO_LONG_DOUBLE
-strong_alias (y1, y1l)
+weak_alias (y1, y1l)
 #endif

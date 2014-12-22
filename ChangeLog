@@ -1,5 +1,11 @@
 2014-12-22  Chris Metcalf  <cmetcalf@ezchip.com>
 
+	[BZ #17747]
+	* math/w_j0.c [defined NO_LONG_DOUBLE] (j0, y0): Convert strong
+	alias to weak alias for j0l, y0l.
+	* math/w_j1.c [defined NO_LONG_DOUBLE] (j1, y1): Likewise.
+	* math/w_jn.c [defined NO_LONG_DOUBLE] (jn, yn): Likewise.
+
 	[BZ #17746]
 	* sysdeps/tile/tilegx/strstr.c (STRSTR2): Remove implicit boolean
 	conversion.
