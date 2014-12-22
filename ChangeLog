@@ -83,6 +83,26 @@
 	* sysdeps/tile/tilegx/strstr.c (STRSTR): Call __strnlen, not
 	strnlen.
 
+2014-12-19  Steve Ellcey  <sellcey@imgtec.com>
+
+	* sysdeps/mips/addmul_1.S (__mpn_addmul_1): Use mulu/muhu instead
+	of multu on MIPSr6.
+	* sysdeps/mips/mul_1.S (__mpn_mul_1): Ditto.
+	* sysdeps/mips/submul_1.S (__mpn_submul_1): Ditto.
+	* sysdeps/mips/mips64/addmul_1.S (__mpn_addmul_1): Ditto.
+	* sysdeps/mips/mips64/mul_1.S (__mpn_mul_1): Ditto.
+	* sysdeps/mips/mips64/submul_1.S (__mpn_submul_1): Ditto.
+
+2014-12-19  Steve Ellcey  <sellcey@imgtec.com>
+
+	* sysdeps/mips/sys/asm.h (PTR_ADDU): Use addu on mips32r6/mips64r6.
+	(PTR_ADDIU): Use addiu for mips32r6/mips64r6.
+	(PTR_SUBU): Use subu for mips32r6/mips64r6.
+	(PTR_SUBIU): Use subu for mips32r6/mips64r6 (subiu does not exist).
+	* sysdeps/mips/machine-gmon.h (PTR_ADDU_STRING) Use addu for 
+	mips32r6/mips64r6.
+	(PTR_SUBU_STRING) Use subu for mips32r6/mips64r6.
+
 2014-12-19  Ondřej Bílka  <neleai@seznam.cz>
 
 	* string/strncat.c (STRNCAT): Simplify implementation.
