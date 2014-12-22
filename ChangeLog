@@ -99,7 +99,7 @@
 	(PTR_ADDIU): Use addiu for mips32r6/mips64r6.
 	(PTR_SUBU): Use subu for mips32r6/mips64r6.
 	(PTR_SUBIU): Use subu for mips32r6/mips64r6 (subiu does not exist).
-	* sysdeps/mips/machine-gmon.h (PTR_ADDU_STRING) Use addu for 
+	* sysdeps/mips/machine-gmon.h (PTR_ADDU_STRING) Use addu for
 	mips32r6/mips64r6.
 	(PTR_SUBU_STRING) Use subu for mips32r6/mips64r6.
 
