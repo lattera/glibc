@@ -1,5 +1,10 @@
 2014-12-22  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* sysdeps/aarch64/fpu/fesetenv.c (fesetenv):
+	Optimize to reduce FPCR/FPSR accesses.
+
+2014-12-22  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* sysdeps/aarch64/fpu/ftestexcept.c (fetestexcept):
 	Call libc_fetestexcept_aarch64.
 
