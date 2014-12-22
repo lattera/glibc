@@ -1,3 +1,15 @@
+2014-12-22  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17724]
+	* sysdeps/ieee754/k_standard.c: Don't include <float.h>.
+	(__kernel_standard_f): Remove.  Moved to k_standardf.c.
+	(__kernel_standard_l): Remove.  Moved to k_standardl.c with
+	(char *) casts added.
+	* sysdeps/ieee754/k_standardf.c: New file.
+	* sysdeps/ieee754/k_standardl.c: Likewise.
+	* math/Makefile (libm-support): Remove k_standard.
+	(libm-calls): Add k_standard.
+
 2014-12-22  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/aarch64/fpu/feenablxcpt.c (feenableexcept):
