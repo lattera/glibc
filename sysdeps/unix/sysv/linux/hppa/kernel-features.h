@@ -32,9 +32,9 @@
 # define __ASSUME_SENDMMSG_SYSCALL	1
 #endif
 
-#include_next <kernel-features.h>
-
-/* hppa did not get the utimes syscall until 3.14.  */
-#if __LINUX_KERNEL_VERSION < 0x030e00
-# undef __ASSUME_UTIMES
+/* Support for the utimes syscall was added in 3.14.  */
+#if __LINUX_KERNEL_VERSION >= 0x030e00
+# define __ASSUME_UTIMES		1
 #endif
+
+#include_next <kernel-features.h>

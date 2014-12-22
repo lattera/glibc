@@ -20,40 +20,16 @@
 #include <utime.h>
 #include <sys/time.h>
 #include <sysdep.h>
-#include <kernel-features.h>
 
+
+/* Consider moving to syscalls.list.  */
 
 /* Change the access time of FILE to TVP[0] and
    the modification time of FILE to TVP[1].  */
 int
 __utimes (const char *file, const struct timeval tvp[2])
 {
-#ifdef __NR_utimes
-  int result = INLINE_SYSCALL (utimes, 2, file, tvp);
-# ifndef __ASSUME_UTIMES
-  if (result != -1 || errno != ENOSYS)
-# endif
-    return result;
-#endif
-
-  /* The utimes() syscall does not exist or is not available in the
-     used kernel.  Use utime().  For this we have to convert to the
-     data format utime() expects.  */
-#ifndef __ASSUME_UTIMES
-  struct utimbuf buf;
-  struct utimbuf *times;
-
-  if (tvp != NULL)
-    {
-      times = &buf;
-      buf.actime = tvp[0].tv_sec + tvp[0].tv_usec / 1000000;
-      buf.modtime = tvp[1].tv_sec + tvp[1].tv_usec / 1000000;
-    }
-  else
-    times = NULL;
-
-  return INLINE_SYSCALL (utime, 2, file, times);
-#endif
+  return INLINE_SYSCALL (utimes, 2, file, tvp);
 }
 
 weak_alias (__utimes, utimes)

@@ -29,6 +29,3 @@
 #define __ASSUME_SENDMMSG_SYSCALL       1
 
 #include_next <kernel-features.h>
-
-/* asm-generic architectures do not have the utimes syscall.  */
-#undef __ASSUME_UTIMES

@@ -61,12 +61,6 @@
 /* The statfs64 syscalls are available in 2.5.74 (but not for alpha).  */
 #define __ASSUME_STATFS64	1
 
-/* The utimes syscall has been available for some architectures
-   forever.  For x86 it was introduced after 2.5.75, for x86-64,
-   ppc, and ppc64 it was introduced in 2.6.0-test3, for s390 it was
-   introduced in 2.6.21-rc5.  */
-#define __ASSUME_UTIMES	1
-
 /* pselect/ppoll were introduced just after 2.6.16-rc1.  On x86_64 and
    SH this appeared first in 2.6.19-rc1, on ia64 in 2.6.22-rc1.  */
 #define __ASSUME_PSELECT	1

@@ -1,3 +1,20 @@
+2014-12-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_UTIMES): Do
+	not define.
+	* sysdeps/unix/sysv/linux/utimes.c: Do not include
+	<kernel-features.h>.
+	(__utimes) [__NR_utimes]: Make code unconditional.
+	(__utimes) [!__ASSUME_UTIMES]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/aarch64/kernel-features.h
+	(__ASSUME_UTIMES): Do not undefine.
+	* sysdeps/unix/sysv/linux/tile/kernel-features.h
+	(__ASSUME_UTIMES): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/kernel-features.h
+	(__ASSUME_UTIMES): Define for [__LINUX_KERNEL_VERSION >= 0x030e00]
+	instead of undefining for [__LINUX_KERNEL_VERSION < 0x030e00].
+	* sysdeps/unix/sysv/linux/hppa/utimes.c: New file.
+
 2014-12-22  Steve Ellcey  <sellcey@imgtec.com>
 
 	* sysdeps/mips/memcpy.S: Fix preprocessor indentation.
