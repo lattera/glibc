@@ -17,31 +17,16 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
+#include <math_private.h>
 #include <fpu_control.h>
 
 int
 fesetround (int round)
 {
-  fpu_control_t fpcr;
-  fpu_control_t fpcr_new;
+  if (round & ~_FPU_FPCR_RM_MASK)
+    return 1;
 
-  switch (round)
-    {
-    case FE_TONEAREST:
-    case FE_UPWARD:
-    case FE_DOWNWARD:
-    case FE_TOWARDZERO:
-      _FPU_GETCW (fpcr);
-      fpcr_new = (fpcr & ~FE_TOWARDZERO) | round;
-
-      if (fpcr != fpcr_new)
-	_FPU_SETCW (fpcr_new);
-      return 0;
-
-    default:
-      return 1;
-    }
-
-  return 1;
+  libc_fesetround_aarch64 (round);
+  return 0;
 }
 libm_hidden_def (fesetround)

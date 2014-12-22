@@ -1,3 +1,8 @@
+2014-12-22  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* sysdeps/aarch64/fpu/fesetround.c (fesetround):
+	Call libc_fesetround_aarch64.
+
 2014-12-22  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17733]
