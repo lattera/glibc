@@ -78,4 +78,8 @@
 # define L(label) .L ## label
 #endif
 
+#ifndef __mips_isa_rev
+# define __mips_isa_rev 0
+#endif
+
 #endif

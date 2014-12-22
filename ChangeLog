@@ -1,3 +1,8 @@
+2014-12-22  Steve Ellcey  <sellcey@imgtec.com>
+
+	* sysdeps/unix/mips/sysdep.h (__mips_isa_rev): Set
+	to zero if not already defined.
+
 2014-12-22  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17724]
