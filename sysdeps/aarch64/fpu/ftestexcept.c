@@ -17,16 +17,11 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
-#include <fpu_control.h>
+#include <math_private.h>
 
 int
 fetestexcept (int excepts)
 {
-  fpu_fpsr_t fpsr;
-
-  /* Get current exceptions.  */
-  _FPU_GETFPSR (fpsr);
-
-  return fpsr & excepts & FE_ALL_EXCEPT;
+  return libc_fetestexcept_aarch64 (excepts);
 }
 libm_hidden_def (fetestexcept)
