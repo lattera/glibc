@@ -16,67 +16,67 @@
    <http://www.gnu.org/licenses/>.  */
 
 #ifdef ANDROID_CHANGES
-#include "machine/asm.h"
-#include "machine/regdef.h"
-#define USE_MEMMOVE_FOR_OVERLAP
-#define PREFETCH_LOAD_HINT PREFETCH_HINT_LOAD_STREAMED
-#define PREFETCH_STORE_HINT PREFETCH_HINT_PREPAREFORSTORE
+# include "machine/asm.h"
+# include "machine/regdef.h"
+# define USE_MEMMOVE_FOR_OVERLAP
+# define PREFETCH_LOAD_HINT PREFETCH_HINT_LOAD_STREAMED
+# define PREFETCH_STORE_HINT PREFETCH_HINT_PREPAREFORSTORE
 #elif _LIBC
-#include <sysdep.h>
-#include <regdef.h>
-#include <sys/asm.h>
-#define PREFETCH_LOAD_HINT PREFETCH_HINT_LOAD_STREAMED
-#define PREFETCH_STORE_HINT PREFETCH_HINT_PREPAREFORSTORE
+# include <sysdep.h>
+# include <regdef.h>
+# include <sys/asm.h>
+# define PREFETCH_LOAD_HINT PREFETCH_HINT_LOAD_STREAMED
+# define PREFETCH_STORE_HINT PREFETCH_HINT_PREPAREFORSTORE
 #elif _COMPILING_NEWLIB
-#include "machine/asm.h"
-#include "machine/regdef.h"
-#define PREFETCH_LOAD_HINT PREFETCH_HINT_LOAD_STREAMED
-#define PREFETCH_STORE_HINT PREFETCH_HINT_PREPAREFORSTORE
+# include "machine/asm.h"
+# include "machine/regdef.h"
+# define PREFETCH_LOAD_HINT PREFETCH_HINT_LOAD_STREAMED
+# define PREFETCH_STORE_HINT PREFETCH_HINT_PREPAREFORSTORE
 #else
-#include <regdef.h>
-#include <sys/asm.h>
+# include <regdef.h>
+# include <sys/asm.h>
 #endif
 
 #if (_MIPS_ISA == _MIPS_ISA_MIPS4) || (_MIPS_ISA == _MIPS_ISA_MIPS5) || \
     (_MIPS_ISA == _MIPS_ISA_MIPS32) || (_MIPS_ISA == _MIPS_ISA_MIPS64)
-#ifndef DISABLE_PREFETCH
-#define USE_PREFETCH
-#endif
+# ifndef DISABLE_PREFETCH
+#  define USE_PREFETCH
+# endif
 #endif
 
 #if defined(_MIPS_SIM) && ((_MIPS_SIM == _ABI64) || (_MIPS_SIM == _ABIN32))
-#ifndef DISABLE_DOUBLE
-#define USE_DOUBLE
-#endif
+# ifndef DISABLE_DOUBLE
+#  define USE_DOUBLE
+# endif
 #endif
 
 
 
 /* Some asm.h files do not have the L macro definition.  */
 #ifndef L
-#if _MIPS_SIM == _ABIO32
-# define L(label) $L ## label
-#else
-# define L(label) .L ## label
-#endif
+# if _MIPS_SIM == _ABIO32
+#  define L(label) $L ## label
+# else
+#  define L(label) .L ## label
+# endif
 #endif
 
 /* Some asm.h files do not have the PTR_ADDIU macro definition.  */
 #ifndef PTR_ADDIU
-#ifdef USE_DOUBLE
-#define PTR_ADDIU	daddiu
-#else
-#define PTR_ADDIU	addiu
-#endif
+# ifdef USE_DOUBLE
+#  define PTR_ADDIU	daddiu
+# else
+#  define PTR_ADDIU	addiu
+# endif
 #endif
 
 /* Some asm.h files do not have the PTR_SRA macro definition.  */
 #ifndef PTR_SRA
-#ifdef USE_DOUBLE
-#define PTR_SRA		dsra
-#else
-#define PTR_SRA		sra
-#endif
+# ifdef USE_DOUBLE
+#  define PTR_SRA		dsra
+# else
+#  define PTR_SRA		sra
+# endif
 #endif
 
 
@@ -126,12 +126,12 @@
  * If we have not picked out what hints to use at this point use the
  * standard load and store prefetch hints.
  */
-#ifndef PREFETCH_STORE_HINT
-# define PREFETCH_STORE_HINT PREFETCH_HINT_STORE
-#endif
-#ifndef PREFETCH_LOAD_HINT
-# define PREFETCH_LOAD_HINT PREFETCH_HINT_LOAD
-#endif
+# ifndef PREFETCH_STORE_HINT
+#  define PREFETCH_STORE_HINT PREFETCH_HINT_STORE
+# endif
+# ifndef PREFETCH_LOAD_HINT
+#  define PREFETCH_LOAD_HINT PREFETCH_HINT_LOAD
+# endif
 
 /*
  * We double everything when USE_DOUBLE is true so we do 2 prefetches to
@@ -139,43 +139,43 @@
  * prefetch brings in 32 bytes.
  */
 
-#ifdef USE_DOUBLE
-# define PREFETCH_CHUNK 64
-# define PREFETCH_FOR_LOAD(chunk, reg) \
+# ifdef USE_DOUBLE
+#  define PREFETCH_CHUNK 64
+#  define PREFETCH_FOR_LOAD(chunk, reg) \
  pref PREFETCH_LOAD_HINT, (chunk)*64(reg); \
  pref PREFETCH_LOAD_HINT, ((chunk)*64)+32(reg)
-# define PREFETCH_FOR_STORE(chunk, reg) \
+#  define PREFETCH_FOR_STORE(chunk, reg) \
  pref PREFETCH_STORE_HINT, (chunk)*64(reg); \
  pref PREFETCH_STORE_HINT, ((chunk)*64)+32(reg)
-#else
-# define PREFETCH_CHUNK 32
-# define PREFETCH_FOR_LOAD(chunk, reg) \
+# else
+#  define PREFETCH_CHUNK 32
+#  define PREFETCH_FOR_LOAD(chunk, reg) \
  pref PREFETCH_LOAD_HINT, (chunk)*32(reg)
-# define PREFETCH_FOR_STORE(chunk, reg) \
+#  define PREFETCH_FOR_STORE(chunk, reg) \
  pref PREFETCH_STORE_HINT, (chunk)*32(reg)
-#endif
+# endif
 /* MAX_PREFETCH_SIZE is the maximum size of a prefetch, it must not be less
  * than PREFETCH_CHUNK, the assumed size of each prefetch.  If the real size
  * of a prefetch is greater than MAX_PREFETCH_SIZE and the PREPAREFORSTORE
  * hint is used, the code will not work correctly.  If PREPAREFORSTORE is not
  * used then MAX_PREFETCH_SIZE does not matter.  */
-#define MAX_PREFETCH_SIZE 128
+# define MAX_PREFETCH_SIZE 128
 /* PREFETCH_LIMIT is set based on the fact that we never use an offset greater
  * than 5 on a STORE prefetch and that a single prefetch can never be larger
  * than MAX_PREFETCH_SIZE.  We add the extra 32 when USE_DOUBLE is set because
  * we actually do two prefetches in that case, one 32 bytes after the other.  */
-#ifdef USE_DOUBLE
-# define PREFETCH_LIMIT (5 * PREFETCH_CHUNK) + 32 + MAX_PREFETCH_SIZE
-#else
-# define PREFETCH_LIMIT (5 * PREFETCH_CHUNK) + MAX_PREFETCH_SIZE
-#endif
-#if (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE) \
+# ifdef USE_DOUBLE
+#  define PREFETCH_LIMIT (5 * PREFETCH_CHUNK) + 32 + MAX_PREFETCH_SIZE
+# else
+#  define PREFETCH_LIMIT (5 * PREFETCH_CHUNK) + MAX_PREFETCH_SIZE
+# endif
+# if (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE) \
     && ((PREFETCH_CHUNK * 4) < MAX_PREFETCH_SIZE)
 /* We cannot handle this because the initial prefetches may fetch bytes that
  * are before the buffer being copied.  We start copies with an offset
  * of 4 so avoid this situation when using PREPAREFORSTORE.  */
 #error "PREFETCH_CHUNK is too large and/or MAX_PREFETCH_SIZE is too small."
-#endif
+# endif
 #else /* USE_PREFETCH not defined */
 # define PREFETCH_FOR_LOAD(offset, reg)
 # define PREFETCH_FOR_STORE(offset, reg)
@@ -183,7 +183,7 @@
 
 /* Allow the routine to be named something else if desired.  */
 #ifndef MEMCPY_NAME
-#define MEMCPY_NAME memcpy
+# define MEMCPY_NAME memcpy
 #endif
 
 /* We use these 32/64 bit registers as temporaries to do the copying.  */
@@ -192,15 +192,15 @@
 #define REG2 t2
 #define REG3 t3
 #if defined(_MIPS_SIM) && ((_MIPS_SIM == _ABIO32) || (_MIPS_SIM == _ABIO64))
-#  define REG4 t4
-#  define REG5 t5
-#  define REG6 t6
-#  define REG7 t7
+# define REG4 t4
+# define REG5 t5
+# define REG6 t6
+# define REG7 t7
 #else
-#  define REG4 ta0
-#  define REG5 ta1
-#  define REG6 ta2
-#  define REG7 ta3
+# define REG4 ta0
+# define REG5 ta1
+# define REG6 ta2
+# define REG7 ta3
 #endif
 
 /* We load/store 64 bits at a time when USE_DOUBLE is true.
@@ -208,44 +208,44 @@
  * conflicts with system header files.  */
 
 #ifdef USE_DOUBLE
-#  define C_ST	sd
-#  define C_LD	ld
-#if __MIPSEB
+# define C_ST	sd
+# define C_LD	ld
+# if __MIPSEB
 #  define C_LDHI	ldl	/* high part is left in big-endian	*/
 #  define C_STHI	sdl	/* high part is left in big-endian	*/
 #  define C_LDLO	ldr	/* low part is right in big-endian	*/
 #  define C_STLO	sdr	/* low part is right in big-endian	*/
-#else
+# else
 #  define C_LDHI	ldr	/* high part is right in little-endian	*/
 #  define C_STHI	sdr	/* high part is right in little-endian	*/
 #  define C_LDLO	ldl	/* low part is left in little-endian	*/
 #  define C_STLO	sdl	/* low part is left in little-endian	*/
-#endif
+# endif
 #else
-#  define C_ST	sw
-#  define C_LD	lw
-#if __MIPSEB
+# define C_ST	sw
+# define C_LD	lw
+# if __MIPSEB
 #  define C_LDHI	lwl	/* high part is left in big-endian	*/
 #  define C_STHI	swl	/* high part is left in big-endian	*/
 #  define C_LDLO	lwr	/* low part is right in big-endian	*/
 #  define C_STLO	swr	/* low part is right in big-endian	*/
-#else
+# else
 #  define C_LDHI	lwr	/* high part is right in little-endian	*/
 #  define C_STHI	swr	/* high part is right in little-endian	*/
 #  define C_LDLO	lwl	/* low part is left in little-endian	*/
 #  define C_STLO	swl	/* low part is left in little-endian	*/
-#endif
+# endif
 #endif
 
 /* Bookkeeping values for 32 vs. 64 bit mode.  */
 #ifdef USE_DOUBLE
-#  define NSIZE 8
-#  define NSIZEMASK 0x3f
-#  define NSIZEDMASK 0x7f
+# define NSIZE 8
+# define NSIZEMASK 0x3f
+# define NSIZEDMASK 0x7f
 #else
-#  define NSIZE 4
-#  define NSIZEMASK 0x1f
-#  define NSIZEDMASK 0x3f
+# define NSIZE 4
+# define NSIZEMASK 0x1f
+# define NSIZEDMASK 0x3f
 #endif
 #define UNIT(unit) ((unit)*NSIZE)
 #define UNITM1(unit) (((unit)*NSIZE)-1)
@@ -339,22 +339,22 @@ L(aligned):
 	PREFETCH_FOR_STORE (3, a0)
 #endif
 #if defined(RETURN_FIRST_PREFETCH) && defined(USE_PREFETCH)
-#if PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE
+# if PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE
 	sltu    v1,t9,a0
 	bgtz    v1,L(skip_set)
 	nop
 	PTR_ADDIU v0,a0,(PREFETCH_CHUNK*4)
 L(skip_set):
-#else
+# else
 	PTR_ADDIU v0,a0,(PREFETCH_CHUNK*1)
-#endif
+# endif
 #endif
 #if defined(RETURN_LAST_PREFETCH) && defined(USE_PREFETCH) \
     && (PREFETCH_STORE_HINT != PREFETCH_HINT_PREPAREFORSTORE)
 	PTR_ADDIU v0,a0,(PREFETCH_CHUNK*3)
-#ifdef USE_DOUBLE
+# ifdef USE_DOUBLE
 	PTR_ADDIU v0,v0,32
-#endif
+# endif
 #endif
 L(loop16w):
 	C_LD	t0,UNIT(0)(a1)
@@ -367,9 +367,9 @@ L(loop16w):
 	PREFETCH_FOR_STORE (5, a0)
 #if defined(RETURN_LAST_PREFETCH) && defined(USE_PREFETCH)
 	PTR_ADDIU v0,a0,(PREFETCH_CHUNK*5)
-#ifdef USE_DOUBLE
+# ifdef USE_DOUBLE
 	PTR_ADDIU v0,v0,32
-#endif
+# endif
 #endif
 L(skip_pref):
 	C_LD	REG2,UNIT(2)(a1)
@@ -523,15 +523,15 @@ L(ua_chk16w):
 	PREFETCH_FOR_STORE (3, a0)
 #endif
 #if defined(RETURN_FIRST_PREFETCH) && defined(USE_PREFETCH)
-#if (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE)
+# if (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE)
 	sltu    v1,t9,a0
 	bgtz    v1,L(ua_skip_set)
 	nop
 	PTR_ADDIU v0,a0,(PREFETCH_CHUNK*4)
 L(ua_skip_set):
-#else
+# else
 	PTR_ADDIU v0,a0,(PREFETCH_CHUNK*1)
-#endif
+# endif
 #endif
 L(ua_loop16w):
 	PREFETCH_FOR_LOAD  (3, a1)
@@ -671,7 +671,7 @@ L(ua_smallCopy_loop):
 	.set	reorder
 END(MEMCPY_NAME)
 #ifndef ANDROID_CHANGES
-#ifdef _LIBC
+# ifdef _LIBC
 libc_hidden_builtin_def (MEMCPY_NAME)
-#endif
+# endif
 #endif
