@@ -1,3 +1,7 @@
+2014-12-23  Florian Weimer  <fweimer@redhat.com>
+
+	* iconvdata/run-iconv-test.sh: Actually test iconv modules.
+
 2014-12-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_UTIMES): Do

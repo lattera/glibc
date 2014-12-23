@@ -189,7 +189,7 @@ printf '\016\377\377\377\377\377\377\377' > $temp1
 for from in $iconv_modules ; do
     echo $ac_n "test decoder $from $ac_c"
     PROG=`eval echo $ICONV`
-    if $PROG < $temp1 >/dev/null 2>&1 ; then
+    if $PROG -f $from -t UTF8 < $temp1 >/dev/null 2>&1 ; then
 	: # fall through
     else
 	status=$?
