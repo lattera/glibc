@@ -1,3 +1,7 @@
+2014-12-23  Richard Earnshaw  <rearnsha@arm.com>
+
+	* string/stpcpy.c (__stpcpy): Rewrite using strlen and memcpy.
+
 2014-12-23  Florian Weimer  <fweimer@redhat.com>
 
 	* iconvdata/run-iconv-test.sh: Actually test iconv modules.

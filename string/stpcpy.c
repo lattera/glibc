@@ -35,14 +35,8 @@ __stpcpy (dest, src)
      char *dest;
      const char *src;
 {
-  char *d = dest;
-  const char *s = src;
-
-  do
-    *d++ = *s;
-  while (*s++ != '\0');
-
-  return d - 1;
+  size_t len = strlen (src);
+  return memcpy (dest, src, len + 1) + len;
 }
 #ifdef libc_hidden_def
 libc_hidden_def (__stpcpy)
