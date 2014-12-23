@@ -1,6 +1,15 @@
 2015-01-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile [sysdep_routines]: Add
+	strncat-power8 object.
+	* sysdeps/powerpc/powerpc64/multiarch/strcat.c (strcat): Add
+	__strcat_power8 implementation.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add __strcat_power8 implementation.
+	* sysdeps/powerpc/powerpc64/multiarch/strcat-power8.c: New file:
+	optimized strcat for power8.
+
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile [sysdep_routines]: Add
 	strcpy-power8 and stpcpy-power8 objects.
 	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
 	(__libc_ifunc_impl_list): Add __strcpy_power8 and __stpcpy_power8

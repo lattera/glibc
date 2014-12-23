@@ -23,9 +23,12 @@
 
 extern __typeof (strcat) __strcat_ppc attribute_hidden;
 extern __typeof (strcat) __strcat_power7 attribute_hidden;
+extern __typeof (strcat) __strcat_power8 attribute_hidden;
 
 libc_ifunc (strcat,
-            (hwcap & PPC_FEATURE_HAS_VSX)
-            ? __strcat_power7
+            (hwcap2 & PPC_FEATURE2_ARCH_2_07)
+            ? __strcat_power8 :
+              (hwcap & PPC_FEATURE_HAS_VSX)
+              ? __strcat_power7
             : __strcat_ppc);
 #endif
