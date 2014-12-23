@@ -1,5 +1,5 @@
-/* Multiple versions of strcpy. PowerPC64 version.
-   Copyright (C) 2013-2015 Free Software Foundation, Inc.
+/* Optimized stpcpy implementation for PowerPC64/POWER8.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,19 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined SHARED && IS_IN (libc)
-# include <string.h>
-# include <shlib-compat.h>
-# include "init-arch.h"
+#define USE_AS_STPCPY
+#include <sysdeps/powerpc/powerpc64/power8/strcpy.S>
 
-extern __typeof (strcpy) __strcpy_ppc attribute_hidden;
-extern __typeof (strcpy) __strcpy_power7 attribute_hidden;
-extern __typeof (strcpy) __strcpy_power8 attribute_hidden;
-
-libc_ifunc (strcpy,
-            (hwcap2 & PPC_FEATURE2_ARCH_2_07)
-            ? __strcpy_power8 :
-              (hwcap & PPC_FEATURE_HAS_VSX)
-              ? __strcpy_power7
-            : __strcpy_ppc);
-#endif
+weak_alias (__stpcpy, stpcpy)
+libc_hidden_def (__stpcpy)
+libc_hidden_builtin_def (stpcpy)

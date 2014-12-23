@@ -83,6 +83,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/powerpc/powerpc64/multiarch/strcpy.c.  */
   IFUNC_IMPL (i, name, strcpy,
+	      IFUNC_IMPL_ADD (array, i, strcpy, hwcap2 & PPC_FEATURE2_ARCH_2_07,
+			      __strcpy_power8)
 	      IFUNC_IMPL_ADD (array, i, strcpy, hwcap & PPC_FEATURE_HAS_VSX,
 			      __strcpy_power7)
 	      IFUNC_IMPL_ADD (array, i, strcpy, 1,
@@ -90,6 +92,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/powerpc/powerpc64/multiarch/stpcpy.c.  */
   IFUNC_IMPL (i, name, stpcpy,
+	      IFUNC_IMPL_ADD (array, i, stpcpy, hwcap2 & PPC_FEATURE2_ARCH_2_07,
+			      __stpcpy_power8)
 	      IFUNC_IMPL_ADD (array, i, stpcpy, hwcap & PPC_FEATURE_HAS_VSX,
 			      __stpcpy_power7)
 	      IFUNC_IMPL_ADD (array, i, stpcpy, 1,

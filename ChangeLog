@@ -1,3 +1,22 @@
+2015-01-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile [sysdep_routines]: Add
+	strcpy-power8 and stpcpy-power8 objects.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add __strcpy_power8 and __stpcpy_power8
+	implementations.
+	* sysdeps/powerpc/powerpc64/multiarch/stpcpy-power8.S: New file:
+	multiarch stpcpy implementation for POWER8.
+	* sysdeps/powerpc/powerpc64/multiarch/strcpy-power8.S: New file;
+	multiarch strcpy implementation for POWER8.
+	* sysdeps/powerpc/powerpc64/multiarch/strcpy.c (strcpy): Add
+	__strcpy_power8 function.
+	* sysdeps/powerpc/powerpc64/power8/stpcpy.S: New file: optimized
+	stpcpy for POWER8.
+	* sysdeps/powerpc/powerpc64/power8/strcpy.S: New file: optimized
+	strcpy for POWER8.
+	* NEWS: Update.
+
 2015-01-13  Leonhard Holz  <leonhard.holz@web.de>
 
 	[BZ #16009]
