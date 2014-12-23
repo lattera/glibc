@@ -1,5 +1,9 @@
 2015-01-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/strncat-power7.c: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strncat-power7.S: Remove file.
+	* sysdeps/powerpc/powerpc64/power7/strncat.S: Likewise.
+
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile [sysdep_routines]: Add
 	strncat-power8 object.
 	* sysdeps/powerpc/powerpc64/multiarch/strcat.c (strcat): Add
