@@ -1,3 +1,8 @@
+2015-01-09  David Holsgrove  <david.holsgrove@xilinx.com>
+
+	* sysdeps/microblaze/nptl/tls.h (TLS_INIT_TP): Use NULL instead
+	of 0.
+
 2015-01-08  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/pthread/timer_routines.c: Fix <pthreadP.h> include to use
