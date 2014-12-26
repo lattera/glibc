@@ -1,5 +1,8 @@
 2014-12-26  Chris Metcalf  <cmetcalf@ezchip.com>
 
+	* sysdeps/unix/sysv/linux/clock_settime.c (SYSDEP_SETTIME): Remove
+	definitions of INTERNAL_VSYSCALL and INLINE_VSYSCALL.
+
 	* sysdeps/unix/sysv/linux/tile/sysdep.h
 	(HAVE_CLOCK_GETTIME_VSYSCALL): Move definition out of
 	assembly-specific section to avoid a redefinition warning.
