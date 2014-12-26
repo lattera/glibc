@@ -1,5 +1,9 @@
 2014-12-26  Chris Metcalf  <cmetcalf@ezchip.com>
 
+	* sysdeps/unix/sysv/linux/tile/sysdep.h
+	(HAVE_CLOCK_GETTIME_VSYSCALL): Move definition out of
+	assembly-specific section to avoid a redefinition warning.
+
 	* sysdeps/tile/jmpbuf-unwind.h (_JMPBUF_CFA_UNWINDS_ADJ): Cast to
 	long before casting to pointer to avoid a cast warning.
 

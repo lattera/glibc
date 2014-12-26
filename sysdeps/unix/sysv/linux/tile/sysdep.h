@@ -252,9 +252,6 @@
     v_ret;								      \
   })
 
-/* List of system calls which are supported as vsyscalls.  */
-#  define HAVE_CLOCK_GETTIME_VSYSCALL	1
-
 # else
 #  define INLINE_VSYSCALL(name, nr, args...) \
   INLINE_SYSCALL (name, nr, ##args)
@@ -262,6 +259,9 @@
   INTERNAL_SYSCALL (name, err, nr, ##args)
 # endif
 #endif /* not __ASSEMBLER__ */
+
+/* List of system calls which are supported as vsyscalls.  */
+#define HAVE_CLOCK_GETTIME_VSYSCALL	1
 
 /* Pointer mangling support.  */
 #if IS_IN (rtld)
