@@ -1,5 +1,8 @@
 2014-12-26  Chris Metcalf  <cmetcalf@ezchip.com>
 
+	* sysdeps/tile/math_private.h (fegetenv, fesetenv, feupdateenv,
+	fegetround): Add no-op macros to avoid linknamespace issues.
+
 	* sysdeps/unix/sysv/linux/clock_settime.c (SYSDEP_SETTIME): Remove
 	definitions of INTERNAL_VSYSCALL and INLINE_VSYSCALL.
 

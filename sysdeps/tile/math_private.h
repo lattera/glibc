@@ -27,5 +27,9 @@
 
 #define feraiseexcept(excepts)			({ 0; })
 #define feclearexcept(exc)			({ 0; })
+#define fegetenv(env)				({ (void) (env); 0; })
+#define fesetenv(env)				({ (void) (env); 0; })
+#define feupdateenv(env)			({ (void) (env); 0; })
+#define fegetround()				({ FE_TONEAREST; })
 
 #endif
