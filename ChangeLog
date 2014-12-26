@@ -1,3 +1,8 @@
+2014-12-26  Chris Metcalf  <cmetcalf@ezchip.com>
+
+	* sysdeps/tile/jmpbuf-unwind.h (_JMPBUF_CFA_UNWINDS_ADJ): Cast to
+	long before casting to pointer to avoid a cast warning.
+
 2014-12-23  Chris Metcalf  <cmetcalf@ezchip.com>
 
 	* sysdeps/tile/tilegx/Implies: New file.
