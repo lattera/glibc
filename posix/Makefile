@@ -99,7 +99,7 @@ others		:= getconf
 install-bin	:= getconf
 install-others-programs	:= $(inst_libexecdir)/getconf
 
-before-compile	+= testcases.h ptestcases.h posix-conf-vars-def.h
+before-compile	+= testcases.h ptestcases.h $(objpfx)posix-conf-vars-def.h
 
 # So they get cleaned up.
 generated += $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
