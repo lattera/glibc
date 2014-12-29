@@ -528,7 +528,7 @@ environment SPEC.\n\n"));
   /* Check for the specifications we know.  */
   if (spec != NULL)
     {
-      int i;
+      size_t i;
       for (i = 0; i < nspecs; ++i)
 	if (strcmp (spec, specs[i].name) == 0)
 	  break;

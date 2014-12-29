@@ -1,5 +1,9 @@
 2014-12-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* posix/getconf.c (main): Use size_t for type of I.
+	* scripts-gen-posix-conf-vars.awk (END): Use size_t for type of
+	NSPEC.
+
 	* posix/posix-conf-vars.list (SPEC:XBS5): Add sysconf prefix.
 	* posix/confstr.c: Define NEED_SPEC_ARRAY to 0.
 	* posix/posix-envs.def: Likewise.

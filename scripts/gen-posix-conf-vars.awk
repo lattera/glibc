@@ -84,6 +84,6 @@ END {
     printf "    { \"%s\", %s },\n", s, spec[s]
   }
   print "  };"
-  print "static const int nspecs = sizeof (specs) / sizeof (specs[0]);"
+  print "static const size_t nspecs = sizeof (specs) / sizeof (specs[0]);"
   print "#endif"
 }
