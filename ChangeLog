@@ -1,5 +1,14 @@
 2014-12-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* posix/posix-conf-vars.list (SPEC:XBS5): Add sysconf prefix.
+	* posix/confstr.c: Define NEED_SPEC_ARRAY to 0.
+	* posix/posix-envs.def: Likewise.
+	* sysdeps/posix/sysconf.c: Likewise.
+	* posix/getconf.c: Define NEED_SPEC_ARRAY to 1.
+	(specs): Remove array.
+	* scripts/gen-posix-conf-vars.awk: Support generation of specs
+	array.
+
 	* posix/posix-conf-vars.list: Add _POSIX sysconf namespace.
 	* sysdeps/posix/sysconf.c: Include posix-conf-vars.h.
 	(__sysconf): Use CONF_IS_* macros.

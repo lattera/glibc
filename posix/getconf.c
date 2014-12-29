@@ -26,6 +26,9 @@
 #include "../version.h"
 #define PACKAGE _libc_intl_domainname
 
+#define NEED_SPEC_ARRAY 1
+#include <posix-conf-vars.h>
+
 struct conf
   {
     const char *name;
@@ -386,23 +389,6 @@ static const struct conf vars[] =
     { NULL, 0, SYSCONF }
   };
 
-
-static const struct { const char *name; int num; } specs[] =
-  {
-    { "XBS5_ILP32_OFF32", _SC_XBS5_ILP32_OFF32 },
-    { "XBS5_ILP32_OFFBIG", _SC_XBS5_ILP32_OFFBIG },
-    { "XBS5_LP64_OFF64", _SC_XBS5_LP64_OFF64 },
-    { "XBS5_LPBIG_OFFBIG", _SC_XBS5_LPBIG_OFFBIG },
-    { "POSIX_V6_ILP32_OFF32", _SC_V6_ILP32_OFF32 },
-    { "POSIX_V6_ILP32_OFFBIG", _SC_V6_ILP32_OFFBIG },
-    { "POSIX_V6_LP64_OFF64", _SC_V6_LP64_OFF64 },
-    { "POSIX_V6_LPBIG_OFFBIG", _SC_V6_LPBIG_OFFBIG },
-    { "POSIX_V7_ILP32_OFF32", _SC_V7_ILP32_OFF32 },
-    { "POSIX_V7_ILP32_OFFBIG", _SC_V7_ILP32_OFFBIG },
-    { "POSIX_V7_LP64_OFF64", _SC_V7_LP64_OFF64 },
-    { "POSIX_V7_LPBIG_OFFBIG", _SC_V7_LPBIG_OFFBIG },
-  };
-static const int nspecs = sizeof (specs) / sizeof (specs[0]);
 
 extern const char *__progname;
 

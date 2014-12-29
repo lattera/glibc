@@ -31,8 +31,8 @@
 #include <sys/types.h>
 #include <regex.h>
 
+#define NEED_SPEC_ARRAY 0
 #include <posix-conf-vars.h>
-
 
 #define NEED_CHECK_SPEC \
   (!defined _XBS5_ILP32_OFF32 || !defined _XBS5_ILP32_OFFBIG \

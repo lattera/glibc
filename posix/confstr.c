@@ -21,6 +21,8 @@
 #include <string.h>
 #include <confstr.h>
 #include "../version.h"
+
+#define NEED_SPEC_ARRAY 0
 #include <posix-conf-vars.h>
 
 /* If BUF is not NULL and LEN > 0, fill in at most LEN - 1 bytes

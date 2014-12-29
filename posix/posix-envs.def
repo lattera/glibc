@@ -42,6 +42,7 @@
    defined.  These are called with arguments V5, V6, V7 before and
    after the relevant groups of environments.  */
 
+#define NEED_SPEC_ARRAY 0
 #include <posix-conf-vars.h>
 
 START_ENV_GROUP (V7)

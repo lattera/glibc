@@ -1,7 +1,8 @@
 # Configuration variables identified by getconf.  The heading of each section
-# is of the format TYPE PREFIX with the opening curly brace on the same line.
-# TYPE can either be SYSCONF, PATHCONF, CONFSTR or SPEC.  Variable names are
-# put one on each line with a curly brace on its own line ending the section.
+# is of the format TYPE PREFIX SC_PREFIX with the opening curly brace on the
+# same line.  TYPE can either be SYSCONF, PATHCONF, CONFSTR or SPEC.  In the
+# absence of SC_PREFIX, _SC is used as the SC_PREFIX.  Variable names are put
+# one on each line with a curly brace on its own line ending the section.
 
 SPEC POSIX {
   V6_ILP32_OFF32
@@ -104,7 +105,7 @@ SYSCONF POSIX {
   RAW_SOCKETS
 }
 
-SPEC XBS5 {
+SPEC XBS5 _SC_XBS5 {
   ILP32_OFF32
   ILP32_OFFBIG
   LP64_OFF64
