@@ -1,3 +1,15 @@
+2014-12-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* posix/Makefile (before-compile): Add posix-conf-vars-def.h.
+	($(objpfx)posix-conf-vars-def.h): New target.
+	* posix/posix-conf-vars.list: New file.
+	* posix/posix-conf-vars.h: New file.
+	* posix/confstr.c: Include posix-conf-vars.h.
+	(confstr): Use CONF_IS_* macros.
+	* posix/posix-envs.def: Include posix-conf-vars.h.  Use
+	CONF_IS_* macros.
+	* scripts/gen-posix-conf-vars.awk: New file.
+
 2014-12-26  Chris Metcalf  <cmetcalf@ezchip.com>
 
 	* sysdeps/tile/math_private.h (fegetenv, fesetenv, feupdateenv,

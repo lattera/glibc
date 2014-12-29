@@ -21,6 +21,7 @@
 #include <string.h>
 #include <confstr.h>
 #include "../version.h"
+#include <posix-conf-vars.h>
 
 /* If BUF is not NULL and LEN > 0, fill in at most LEN - 1 bytes
    of BUF with the value corresponding to NAME and zero-terminate BUF.
@@ -100,9 +101,9 @@ confstr (name, buf, len)
     case _CS_POSIX_V6_ILP32_OFF32_CFLAGS:
     case _CS_POSIX_V7_ILP32_OFF32_CFLAGS:
 #ifdef __ILP32_OFF32_CFLAGS
-# if _POSIX_V7_ILP32_OFF32 == -1
+# if CONF_IS_DEFINED_UNSET (_POSIX_V7_ILP32_OFF32)
 #  error "__ILP32_OFF32_CFLAGS should not be defined"
-# elif !defined _POSIX_V7_ILP32_OFF32
+# elif CONF_IS_UNDEFINED (_POSIX_V7_ILP32_OFF32)
       if (__sysconf (_SC_V7_ILP32_OFF32) < 0)
 	break;
 # endif
@@ -115,9 +116,9 @@ confstr (name, buf, len)
     case _CS_POSIX_V6_ILP32_OFFBIG_CFLAGS:
     case _CS_POSIX_V7_ILP32_OFFBIG_CFLAGS:
 #ifdef __ILP32_OFFBIG_CFLAGS
-# if _POSIX_V7_ILP32_OFFBIG == -1
+# if CONF_IS_DEFINED_UNSET (_POSIX_V7_ILP32_OFFBIG)
 #  error "__ILP32_OFFBIG_CFLAGS should not be defined"
-# elif !defined _POSIX_V7_ILP32_OFFBIG
+# elif CONF_IS_UNDEFINED (_POSIX_V7_ILP32_OFFBIG)
       if (__sysconf (_SC_V7_ILP32_OFFBIG) < 0)
 	break;
 # endif
@@ -130,9 +131,9 @@ confstr (name, buf, len)
     case _CS_POSIX_V6_LP64_OFF64_CFLAGS:
     case _CS_POSIX_V7_LP64_OFF64_CFLAGS:
 #ifdef __LP64_OFF64_CFLAGS
-# if _POSIX_V7_LP64_OFF64 == -1
+# if CONF_IS_DEFINED_UNSET (_POSIX_V7_LP64_OFF64)
 #  error "__LP64_OFF64_CFLAGS should not be defined"
-# elif !defined _POSIX_V7_LP64_OFF64
+# elif CONF_IS_UNDEFINED (_POSIX_V7_LP64_OFF64)
       if (__sysconf (_SC_V7_LP64_OFF64) < 0)
 	break;
 # endif
@@ -145,9 +146,9 @@ confstr (name, buf, len)
     case _CS_POSIX_V6_ILP32_OFF32_LDFLAGS:
     case _CS_POSIX_V7_ILP32_OFF32_LDFLAGS:
 #ifdef __ILP32_OFF32_LDFLAGS
-# if _POSIX_V7_ILP32_OFF32 == -1
+# if CONF_IS_DEFINED_UNSET (_POSIX_V7_ILP32_OFF32 )
 #  error "__ILP32_OFF32_LDFLAGS should not be defined"
-# elif !defined _POSIX_V7_ILP32_OFF32
+# elif CONF_IS_UNDEFINED (_POSIX_V7_ILP32_OFF32)
       if (__sysconf (_SC_V7_ILP32_OFF32) < 0)
 	break;
 # endif
@@ -160,9 +161,9 @@ confstr (name, buf, len)
     case _CS_POSIX_V6_ILP32_OFFBIG_LDFLAGS:
     case _CS_POSIX_V7_ILP32_OFFBIG_LDFLAGS:
 #ifdef __ILP32_OFFBIG_LDFLAGS
-# if _POSIX_V7_ILP32_OFFBIG == -1
+# if CONF_IS_DEFINED_UNSET (_POSIX_V7_ILP32_OFFBIG)
 #  error "__ILP32_OFFBIG_LDFLAGS should not be defined"
-# elif !defined _POSIX_V7_ILP32_OFFBIG
+# elif CONF_IS_UNDEFINED (_POSIX_V7_ILP32_OFFBIG)
       if (__sysconf (_SC_V7_ILP32_OFFBIG) < 0)
 	break;
 # endif
@@ -175,9 +176,9 @@ confstr (name, buf, len)
     case _CS_POSIX_V6_LP64_OFF64_LDFLAGS:
     case _CS_POSIX_V7_LP64_OFF64_LDFLAGS:
 #ifdef __LP64_OFF64_LDFLAGS
-# if _POSIX_V7_LP64_OFF64 == -1
+# if CONF_IS_DEFINED_UNSET (_POSIX_V7_LP64_OFF64)
 #  error "__LP64_OFF64_LDFLAGS should not be defined"
-# elif !defined _POSIX_V7_LP64_OFF64
+# elif CONF_IS_UNDEFINED (_POSIX_V7_LP64_OFF64)
       if (__sysconf (_SC_V7_LP64_OFF64) < 0)
 	break;
 # endif
@@ -188,7 +189,8 @@ confstr (name, buf, len)
 
     case _CS_LFS_CFLAGS:
     case _CS_LFS_LINTFLAGS:
-#if _POSIX_V6_ILP32_OFF32 == 1 && _POSIX_V6_ILP32_OFFBIG == 1
+#if (CONF_IS_DEFINED_SET (_POSIX_V6_ILP32_OFF32) \
+     && CONF_IS_DEFINED_SET (_POSIX_V6_ILP32_OFFBIG))
 # define __LFS_CFLAGS "-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
       /* Signal that we want the new ABI.  */
       string = __LFS_CFLAGS;
