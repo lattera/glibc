@@ -1,5 +1,9 @@
 2014-12-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* posix/posix-conf-vars.list: Add _POSIX sysconf namespace.
+	* sysdeps/posix/sysconf.c: Include posix-conf-vars.h.
+	(__sysconf): Use CONF_IS_* macros.
+
 	* posix/Makefile (before-compile): Add posix-conf-vars-def.h.
 	($(objpfx)posix-conf-vars-def.h): New target.
 	* posix/posix-conf-vars.list: New file.

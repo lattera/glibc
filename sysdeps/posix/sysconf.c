@@ -31,6 +31,8 @@
 #include <sys/types.h>
 #include <regex.h>
 
+#include <posix-conf-vars.h>
+
 
 #define NEED_CHECK_SPEC \
   (!defined _XBS5_ILP32_OFF32 || !defined _XBS5_ILP32_OFFBIG \
@@ -95,112 +97,112 @@ __sysconf (name)
       return MAX (__tzname_max (), _POSIX_TZNAME_MAX);
 
     case _SC_JOB_CONTROL:
-#if _POSIX_JOB_CONTROL > 0
+#if CONF_IS_DEFINED_SET (_POSIX_JOB_CONTROL)
       return _POSIX_JOB_CONTROL;
 #else
       return -1;
 #endif
 
     case _SC_SAVED_IDS:
-#if _POSIX_SAVED_IDS > 0
+#if CONF_IS_DEFINED_SET (_POSIX_SAVED_IDS)
       return 1;
 #else
       return -1;
 #endif
 
     case _SC_REALTIME_SIGNALS:
-#if _POSIX_REALTIME_SIGNALS > 0
+#if CONF_IS_DEFINED_SET (_POSIX_REALTIME_SIGNALS)
       return _POSIX_REALTIME_SIGNALS;
 #else
       return -1;
 #endif
 
     case _SC_PRIORITY_SCHEDULING:
-#if _POSIX_PRIORITY_SCHEDULING > 0
+#if CONF_IS_DEFINED_SET (_POSIX_PRIORITY_SCHEDULING)
       return _POSIX_PRIORITY_SCHEDULING;
 #else
       return -1;
 #endif
 
     case _SC_TIMERS:
-#if _POSIX_TIMERS > 0
+#if CONF_IS_DEFINED_SET (_POSIX_TIMERS)
       return _POSIX_TIMERS;
 #else
       return -1;
 #endif
 
     case _SC_ASYNCHRONOUS_IO:
-#if _POSIX_ASYNCHRONOUS_IO > 0
+#if CONF_IS_DEFINED_SET (_POSIX_ASYNCHRONOUS_IO)
       return _POSIX_ASYNCHRONOUS_IO;
 #else
       return -1;
 #endif
 
     case _SC_PRIORITIZED_IO:
-#if _POSIX_PRIORITIZED_IO > 0
+#if CONF_IS_DEFINED_SET (_POSIX_PRIORITIZED_IO)
       return _POSIX_PRIORITIZED_IO;
 #else
       return -1;
 #endif
 
     case _SC_SYNCHRONIZED_IO:
-#if _POSIX_SYNCHRONIZED_IO > 0
+#if CONF_IS_DEFINED_SET (_POSIX_SYNCHRONIZED_IO)
       return _POSIX_SYNCHRONIZED_IO;
 #else
       return -1;
 #endif
 
     case _SC_FSYNC:
-#if _POSIX_FSYNC > 0
+#if CONF_IS_DEFINED_SET (_POSIX_FSYNC)
       return _POSIX_FSYNC;
 #else
       return -1;
 #endif
 
     case _SC_MAPPED_FILES:
-#if _POSIX_MAPPED_FILES > 0
+#if CONF_IS_DEFINED_SET (_POSIX_MAPPED_FILES)
       return _POSIX_MAPPED_FILES;
 #else
       return -1;
 #endif
 
     case _SC_MEMLOCK:
-#if _POSIX_MEMLOCK > 0
+#if CONF_IS_DEFINED_SET (_POSIX_MEMLOCK)
       return _POSIX_MEMLOCK;
 #else
       return -1;
 #endif
 
     case _SC_MEMLOCK_RANGE:
-#if _POSIX_MEMLOCK_RANGE > 0
+#if CONF_IS_DEFINED_SET (_POSIX_MEMLOCK_RANGE)
       return _POSIX_MEMLOCK_RANGE;
 #else
       return -1;
 #endif
 
     case _SC_MEMORY_PROTECTION:
-#if _POSIX_MEMORY_PROTECTION > 0
+#if CONF_IS_DEFINED_SET (_POSIX_MEMORY_PROTECTION)
       return _POSIX_MEMORY_PROTECTION;
 #else
       return -1;
 #endif
 
     case _SC_MESSAGE_PASSING:
-#if _POSIX_MESSAGE_PASSING > 0
+#if CONF_IS_DEFINED_SET (_POSIX_MESSAGE_PASSING)
       return _POSIX_MESSAGE_PASSING;
 #else
       return -1;
 #endif
 
     case _SC_SEMAPHORES:
-#if _POSIX_SEMAPHORES > 0
+#if CONF_IS_DEFINED_SET (_POSIX_SEMAPHORES)
       return _POSIX_SEMAPHORES;
 #else
       return -1;
 #endif
 
     case _SC_SHARED_MEMORY_OBJECTS:
-#if _POSIX_SHARED_MEMORY_OBJECTS > 0
+#if CONF_IS_DEFINED_SET (_POSIX_SHARED_MEMORY_OBJECTS)
       return _POSIX_SHARED_MEMORY_OBJECTS;
 #else
       return -1;
@@ -353,49 +355,49 @@ __sysconf (name)
 #endif
 
     case _SC_PII:
-#if _POSIX_PII > 0
+#if CONF_IS_DEFINED_SET (_POSIX_PII)
       return 1;
 #else
       return -1;
 #endif
 
     case _SC_PII_XTI:
-#if _POSIX_PII_XTI > 0
+#if CONF_IS_DEFINED_SET (_POSIX_PII_XTI)
       return 1;
 #else
       return -1;
 #endif
 
     case _SC_PII_SOCKET:
-#if _POSIX_PII_SOCKET > 0
+#if CONF_IS_DEFINED_SET (_POSIX_PII_SOCKET)
       return 1;
 #else
       return -1;
 #endif
 
     case _SC_PII_INTERNET:
-#if _POSIX_PII_INTERNET > 0
+#if CONF_IS_DEFINED_SET (_POSIX_PII_INTERNET)
       return 1;
 #else
       return -1;
 #endif
 
     case _SC_PII_OSI:
-#if _POSIX_PII_OSI > 0
+#if CONF_IS_DEFINED_SET (_POSIX_PII_OSI)
       return 1;
 #else
       return -1;
 #endif
 
     case _SC_POLL:
-#if _POSIX_POLL > 0
+#if CONF_IS_DEFINED_SET (_POSIX_POLL)
       return 1;
 #else
       return -1;
 #endif
 
     case _SC_SELECT:
-#if _POSIX_SELECT > 0
+#if CONF_IS_DEFINED_SET (_POSIX_SELECT)
       return 1;
 #else
       return -1;
@@ -410,35 +412,35 @@ __sysconf (name)
 #endif
 
     case _SC_PII_INTERNET_STREAM:
-#if _POSIX_PII_INTERNET_STREAM > 0
+#if CONF_IS_DEFINED_SET (_POSIX_PII_INTERNET_STREAM)
       return 1;
 #else
       return -1;
 #endif
 
     case _SC_PII_INTERNET_DGRAM:
-#if _POSIX_PII_INTERNET_DGRAM > 0
+#if CONF_IS_DEFINED_SET (_POSIX_PII_INTERNET_DGRAM)
       return 1;
 #else
       return -1;
 #endif
 
     case _SC_PII_OSI_COTS:
-#if _POSIX_PII_OSI_COTS > 0
+#if CONF_IS_DEFINED_SET (_POSIX_PII_OSI_COTS)
       return 1;
 #else
       return -1;
 #endif
 
     case _SC_PII_OSI_CLTS:
-#if _POSIX_PII_OSI_CLTS > 0
+#if CONF_IS_DEFINED_SET (_POSIX_PII_OSI_CLTS)
       return 1;
 #else
       return -1;
 #endif
 
     case _SC_PII_OSI_M:
-#if _POSIX_PII_OSI_M > 0
+#if CONF_IS_DEFINED_SET (_POSIX_PII_OSI_M)
       return 1;
 #else
       return -1;
@@ -519,14 +521,14 @@ __sysconf (name)
 
       /* POSIX 1003.1c (POSIX Threads).  */
     case _SC_THREADS:
-#if _POSIX_THREADS > 0
+#if CONF_IS_DEFINED_SET (_POSIX_THREADS)
       return _POSIX_THREADS;
 #else
       return -1;
 #endif
 
     case _SC_THREAD_SAFE_FUNCTIONS:
-#if _POSIX_THREAD_SAFE_FUNCTIONS > 0
+#if CONF_IS_DEFINED_SET (_POSIX_THREAD_SAFE_FUNCTIONS)
       return _POSIX_THREAD_SAFE_FUNCTIONS;
 #else
       return -1;
@@ -553,7 +555,7 @@ __sysconf (name)
 #endif
 
     case _SC_THREAD_DESTRUCTOR_ITERATIONS:
-#if _POSIX_THREAD_DESTRUCTOR_ITERATIONS > 0
+#if CONF_IS_DEFINED_SET (_POSIX_THREAD_DESTRUCTOR_ITERATIONS)
       return _POSIX_THREAD_DESTRUCTOR_ITERATIONS;
 #else
       return -1;
@@ -581,42 +583,42 @@ __sysconf (name)
 #endif
 
     case _SC_THREAD_ATTR_STACKADDR:
-#if _POSIX_THREAD_ATTR_STACKADDR > 0
+#if CONF_IS_DEFINED_SET (_POSIX_THREAD_ATTR_STACKADDR)
       return _POSIX_THREAD_ATTR_STACKADDR;
 #else
       return -1;
 #endif
 
     case _SC_THREAD_ATTR_STACKSIZE:
-#if _POSIX_THREAD_ATTR_STACKSIZE > 0
+#if CONF_IS_DEFINED_SET (_POSIX_THREAD_ATTR_STACKSIZE)
       return _POSIX_THREAD_ATTR_STACKSIZE;
 #else
       return -1;
 #endif
 
     case _SC_THREAD_PRIORITY_SCHEDULING:
-#if _POSIX_THREAD_PRIORITY_SCHEDULING > 0
+#if CONF_IS_DEFINED_SET (_POSIX_THREAD_PRIORITY_SCHEDULING)
       return _POSIX_THREAD_PRIORITY_SCHEDULING;
 #else
       return -1;
 #endif
 
     case _SC_THREAD_PRIO_INHERIT:
-#if _POSIX_THREAD_PRIO_INHERIT > 0
+#if CONF_IS_DEFINED_SET (_POSIX_THREAD_PRIO_INHERIT)
       return _POSIX_THREAD_PRIO_INHERIT;
 #else
       return -1;
 #endif
 
     case _SC_THREAD_PRIO_PROTECT:
-#if _POSIX_THREAD_PRIO_PROTECT > 0
+#if CONF_IS_DEFINED_SET (_POSIX_THREAD_PRIO_PROTECT)
       return _POSIX_THREAD_PRIO_PROTECT;
 #else
       return -1;
 #endif
 
     case _SC_THREAD_PROCESS_SHARED:
-#if _POSIX_THREAD_PROCESS_SHARED > 0
+#if CONF_IS_DEFINED_SET (_POSIX_THREAD_PROCESS_SHARED)
       return _POSIX_THREAD_PROCESS_SHARED;
 #else
       return -1;
@@ -833,152 +835,152 @@ __sysconf (name)
 #endif
 
     case _SC_ADVISORY_INFO:
-#if _POSIX_ADVISORY_INFO > 0
+#if CONF_IS_DEFINED_SET (_POSIX_ADVISORY_INFO)
       return _POSIX_ADVISORY_INFO;
 #else
       return -1;
 #endif
 
     case _SC_BARRIERS:
-#if _POSIX_BARRIERS > 0
+#if CONF_IS_DEFINED_SET (_POSIX_BARRIERS)
       return _POSIX_BARRIERS;
 #else
       return -1;
 #endif
 
     case _SC_BASE:
-#if _POSIX_BASE > 0
+#if CONF_IS_DEFINED_SET (_POSIX_BASE)
       return _POSIX_BASE;
 #else
       return -1;
 #endif
     case _SC_C_LANG_SUPPORT:
-#if _POSIX_C_LANG_SUPPORT > 0
+#if CONF_IS_DEFINED_SET (_POSIX_C_LANG_SUPPORT)
       return _POSIX_C_LANG_SUPPORT;
 #else
       return -1;
 #endif
     case _SC_C_LANG_SUPPORT_R:
-#if _POSIX_C_LANG_SUPPORT_R > 0
+#if CONF_IS_DEFINED_SET (_POSIX_C_LANG_SUPPORT_R)
       return _POSIX_C_LANG_SUPPORT_R;
 #else
       return -1;
 #endif
 
     case _SC_CLOCK_SELECTION:
-#if _POSIX_CLOCK_SELECTION > 0
+#if CONF_IS_DEFINED_SET (_POSIX_CLOCK_SELECTION)
       return _POSIX_CLOCK_SELECTION;
 #else
       return -1;
 #endif
 
     case _SC_CPUTIME:
-#if _POSIX_CPUTIME > 0
+#if CONF_IS_DEFINED_SET (_POSIX_CPUTIME)
       return _POSIX_CPUTIME;
 #else
       return -1;
 #endif
 
     case _SC_DEVICE_IO:
-#if _POSIX_DEVICE_IO > 0
+#if CONF_IS_DEFINED_SET (_POSIX_DEVICE_IO)
       return _POSIX_DEVICE_IO;
 #else
       return -1;
 #endif
     case _SC_DEVICE_SPECIFIC:
-#if _POSIX_DEVICE_SPECIFIC > 0
+#if CONF_IS_DEFINED_SET (_POSIX_DEVICE_SPECIFIC)
       return _POSIX_DEVICE_SPECIFIC;
 #else
       return -1;
 #endif
     case _SC_DEVICE_SPECIFIC_R:
-#if _POSIX_DEVICE_SPECIFIC_R > 0
+#if CONF_IS_DEFINED_SET (_POSIX_DEVICE_SPECIFIC_R)
       return _POSIX_DEVICE_SPECIFIC_R;
 #else
       return -1;
 #endif
 
     case _SC_FD_MGMT:
-#if _POSIX_FD_MGMT > 0
+#if CONF_IS_DEFINED_SET (_POSIX_FD_MGMT)
       return _POSIX_FD_MGMT;
 #else
       return -1;
 #endif
 
     case _SC_FIFO:
-#if _POSIX_FIFO > 0
+#if CONF_IS_DEFINED_SET (_POSIX_FIFO)
       return _POSIX_FIFO;
 #else
       return -1;
 #endif
     case _SC_PIPE:
-#if _POSIX_PIPE > 0
+#if CONF_IS_DEFINED_SET (_POSIX_PIPE)
       return _POSIX_PIPE;
 #else
       return -1;
 #endif
 
     case _SC_FILE_ATTRIBUTES:
-#if _POSIX_FILE_ATTRIBUTES > 0
+#if CONF_IS_DEFINED_SET (_POSIX_FILE_ATTRIBUTES)
       return _POSIX_FILE_ATTRIBUTES;
 #else
       return -1;
 #endif
     case _SC_FILE_LOCKING:
-#if _POSIX_FILE_LOCKING > 0
+#if CONF_IS_DEFINED_SET (_POSIX_FILE_LOCKING)
       return _POSIX_FILE_LOCKING;
 #else
       return -1;
 #endif
     case _SC_FILE_SYSTEM:
-#if _POSIX_FILE_SYSTEM > 0
+#if CONF_IS_DEFINED_SET (_POSIX_FILE_SYSTEM)
       return _POSIX_FILE_SYSTEM;
 #else
       return -1;
 #endif
 
     case _SC_MONOTONIC_CLOCK:
-#if _POSIX_MONOTONIC_CLOCK
+#if CONF_IS_DEFINED_SET (_POSIX_MONOTONIC_CLOCK)
       return _POSIX_MONOTONIC_CLOCK;
 #else
       return -1;
 #endif
 
     case _SC_MULTI_PROCESS:
-#if _POSIX_MULTI_PROCESS > 0
+#if CONF_IS_DEFINED_SET (_POSIX_MULTI_PROCESS)
       return _POSIX_MULTI_PROCESS;
 #else
       return -1;
 #endif
     case _SC_SINGLE_PROCESS:
-#if _POSIX_SINGLE_PROCESS > 0
+#if CONF_IS_DEFINED_SET (_POSIX_SINGLE_PROCESS)
       return _POSIX_SINGLE_PROCESS;
 #else
       return -1;
 #endif
 
     case _SC_NETWORKING:
-#if _POSIX_NETWORKING > 0
+#if CONF_IS_DEFINED_SET (_POSIX_NETWORKING)
       return _POSIX_NETWORKING;
 #else
       return -1;
 #endif
 
     case _SC_READER_WRITER_LOCKS:
-#if _POSIX_READER_WRITER_LOCKS > 0
+#if CONF_IS_DEFINED_SET (_POSIX_READER_WRITER_LOCKS)
       return _POSIX_READER_WRITER_LOCKS;
 #else
       return -1;
 #endif
     case _SC_SPIN_LOCKS:
-#if _POSIX_SPIN_LOCKS > 0
+#if CONF_IS_DEFINED_SET (_POSIX_SPIN_LOCKS)
       return _POSIX_SPIN_LOCKS;
 #else
       return -1;
 #endif
 
     case _SC_REGEXP:
-#if _POSIX_REGEXP > 0
+#if CONF_IS_DEFINED_SET (_POSIX_REGEXP)
       return _POSIX_REGEXP;
 #else
       return -1;
@@ -989,81 +991,81 @@ __sysconf (name)
       return -1;
 
     case _SC_SHELL:
-#if _POSIX_SHELL > 0
+#if CONF_IS_DEFINED_SET (_POSIX_SHELL)
       return _POSIX_SHELL;
 #else
       return -1;
 #endif
 
     case _SC_SIGNALS:
-#ifdef _POSIX_SIGNALS
+#if CONF_IS_DEFINED (_POSIX_SIGNALS)
       return _POSIX_SIGNALS;
 #else
       return -1;
 #endif
 
     case _SC_SPAWN:
-#if _POSIX_SPAWN > 0
+#if CONF_IS_DEFINED_SET (_POSIX_SPAWN)
       return _POSIX_SPAWN;
 #else
       return -1;
 #endif
 
     case _SC_SPORADIC_SERVER:
-#if _POSIX_SPORADIC_SERVER > 0
+#if CONF_IS_DEFINED_SET (_POSIX_SPORADIC_SERVER)
       return _POSIX_SPORADIC_SERVER;
 #else
       return -1;
 #endif
     case _SC_THREAD_SPORADIC_SERVER:
-#if _POSIX_THREAD_SPORADIC_SERVER > 0
+#if CONF_IS_DEFINED_SET (_POSIX_THREAD_SPORADIC_SERVER)
       return _POSIX_THREAD_SPORADIC_SERVER;
 #else
       return -1;
 #endif
 
     case _SC_SYSTEM_DATABASE:
-#if _POSIX_SYSTEM_DATABASE > 0
+#if CONF_IS_DEFINED_SET (_POSIX_SYSTEM_DATABASE)
       return _POSIX_SYSTEM_DATABASE;
 #else
       return -1;
 #endif
     case _SC_SYSTEM_DATABASE_R:
-#if _POSIX_SYSTEM_DATABASE_R > 0
+#if CONF_IS_DEFINED_SET (_POSIX_SYSTEM_DATABASE_R)
       return _POSIX_SYSTEM_DATABASE_R;
 #else
       return -1;
 #endif
 
     case _SC_THREAD_CPUTIME:
-#if _POSIX_THREAD_CPUTIME > 0
+#if CONF_IS_DEFINED_SET (_POSIX_THREAD_CPUTIME)
       return _POSIX_THREAD_CPUTIME;
 #else
       return -1;
 #endif
 
     case _SC_TIMEOUTS:
-#if _POSIX_TIMEOUTS > 0
+#if CONF_IS_DEFINED_SET (_POSIX_TIMEOUTS)
       return _POSIX_TIMEOUTS;
 #else
       return -1;
 #endif
 
     case _SC_TYPED_MEMORY_OBJECTS:
-#if _POSIX_TYPED_MEMORY_OBJECTS > 0
+#if CONF_IS_DEFINED_SET (_POSIX_TYPED_MEMORY_OBJECTS)
       return _POSIX_TYPED_MEMORY_OBJECTS;
 #else
       return -1;
 #endif
 
     case _SC_USER_GROUPS:
-#if _POSIX_USER_GROUPS > 0
+#if CONF_IS_DEFINED_SET (_POSIX_USER_GROUPS)
       return _POSIX_USER_GROUPS;
 #else
       return -1;
 #endif
     case _SC_USER_GROUPS_R:
-#if _POSIX_USER_GROUPS_R > 0
+#if CONF_IS_DEFINED_SET (_POSIX_USER_GROUPS_R)
       return _POSIX_USER_GROUPS_R;
 #else
       return -1;
@@ -1128,25 +1130,25 @@ __sysconf (name)
 #endif
 
     case _SC_TRACE:
-#if _POSIX_TRACE > 0
+#if CONF_IS_DEFINED_SET (_POSIX_TRACE)
       return _POSIX_TRACE;
 #else
       return -1;
 #endif
     case _SC_TRACE_EVENT_FILTER:
-#if _POSIX_TRACE_EVENT_FILTER > 0
+#if CONF_IS_DEFINED_SET (_POSIX_TRACE_EVENT_FILTER)
       return _POSIX_TRACE_EVENT_FILTER;
 #else
       return -1;
 #endif
     case _SC_TRACE_INHERIT:
-#if _POSIX_TRACE_INHERIT > 0
+#if CONF_IS_DEFINED_SET (_POSIX_TRACE_INHERIT)
       return _POSIX_TRACE_INHERIT;
 #else
       return -1;
 #endif
     case _SC_TRACE_LOG:
-#if _POSIX_TRACE_LOG > 0
+#if CONF_IS_DEFINED_SET (_POSIX_TRACE_LOG)
       return _POSIX_TRACE_LOG;
 #else
       return -1;
@@ -1183,14 +1185,14 @@ __sysconf (name)
       return 0;
 
     case _SC_IPV6:
-#if _POSIX_IPV6 > 0
+#if CONF_IS_DEFINED_SET (_POSIX_IPV6)
       return _POSIX_IPV6;
 #else
       return -1;
 #endif
 
     case _SC_RAW_SOCKETS:
-#if _POSIX_RAW_SOCKETS > 0
+#if CONF_IS_DEFINED_SET (_POSIX_RAW_SOCKETS)
       return _POSIX_RAW_SOCKETS;
 #else
       return -1;
