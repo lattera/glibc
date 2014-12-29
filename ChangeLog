@@ -1,3 +1,28 @@
+2014-12-30  Andrew Senkevich  <andrew.senkevich@intel.com>
+	    H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/bcopy-sse2-unaligned.S: New file.
+	* sysdeps/i386/i686/multiarch/memcpy-sse2-unaligned.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memmove-sse2-unaligned.S: Likewise.
+	* sysdeps/i386/i686/multiarch/mempcpy-sse2-unaligned.S: Likewise.
+	* sysdeps/i386/i686/multiarch/bcopy.S: Select the sse2_unaligned
+	version if bit_Fast_Unaligned_Load is set.
+	* sysdeps/i386/i686/multiarch/memcpy.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memcpy_chk.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memmove.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memmove_chk.S: Likewise.
+	* sysdeps/i386/i686/multiarch/mempcpy.S: Likewise.
+	* sysdeps/i386/i686/multiarch/mempcpy_chk.S: Likewise.
+	* sysdeps/i386/i686/multiarch/Makefile (sysdep_routines): Add
+	bcopy-sse2-unaligned, memcpy-sse2-unaligned,
+	memmove-sse2-unaligned and mempcpy-sse2-unaligned.
+	* sysdeps/i386/i686/multiarch/ifunc-impl-list.c (MAX_IFUNC): Set
+	to 4.
+	(__libc_ifunc_impl_list): Test __bcopy_sse2_unaligned,
+	__memmove_chk_sse2_unaligned, __memmove_sse2_unaligned,
+	__memcpy_chk_sse2_unaligned, __memcpy_sse2_unaligned,
+	__mempcpy_chk_sse2_unaligned, and __mempcpy_sse2_unaligned.
+
 2014-12-29  Chris Metcalf  <cmetcalf@ezchip.com>
 
 	* sysdeps/unix/sysv/linux/tst-setgetname.c (do_test): Use #ifndef

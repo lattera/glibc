@@ -36,6 +36,11 @@ ENTRY(memcpy)
 	jne	1f
 	call	__init_cpu_features
 1:	leal	__memcpy_ia32@GOTOFF(%ebx), %eax
+	testl	$bit_SSE2, CPUID_OFFSET+index_SSE2+__cpu_features@GOTOFF(%ebx)
+	jz	2f
+	leal	__memcpy_sse2_unaligned@GOTOFF(%ebx), %eax
+	testl	$bit_Fast_Unaligned_Load, FEATURE_OFFSET+index_Fast_Unaligned_Load+__cpu_features@GOTOFF(%ebx)
+	jnz	2f
 	testl	$bit_SSSE3, CPUID_OFFSET+index_SSSE3+__cpu_features@GOTOFF(%ebx)
 	jz	2f
 	leal	__memcpy_ssse3@GOTOFF(%ebx), %eax

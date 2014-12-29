@@ -23,7 +23,7 @@
 #include "init-arch.h"
 
 /* Maximum number of IFUNC implementations.  */
-#define MAX_IFUNC	3
+#define MAX_IFUNC	4
 
 /* Fill ARRAY of MAX elements with IFUNC implementations for function
    NAME and return the number of valid entries.  */
@@ -41,6 +41,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, bcopy, HAS_SSSE3,
 			      __bcopy_ssse3_rep)
 	      IFUNC_IMPL_ADD (array, i, bcopy, HAS_SSSE3, __bcopy_ssse3)
+	      IFUNC_IMPL_ADD (array, i, bcopy, HAS_SSE2,
+			      __bcopy_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, bcopy, 1, __bcopy_ia32))
 
   /* Support sysdeps/i386/i686/multiarch/bzero.S.  */
@@ -69,6 +71,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memmove_chk_ssse3_rep)
 	      IFUNC_IMPL_ADD (array, i, __memmove_chk, HAS_SSSE3,
 			      __memmove_chk_ssse3)
+	      IFUNC_IMPL_ADD (array, i, __memmove_chk, HAS_SSE2,
+			      __memmove_chk_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, __memmove_chk, 1,
 			      __memmove_chk_ia32))
 
@@ -78,6 +82,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memmove_ssse3_rep)
 	      IFUNC_IMPL_ADD (array, i, memmove, HAS_SSSE3,
 			      __memmove_ssse3)
+	      IFUNC_IMPL_ADD (array, i, memmove, HAS_SSE2,
+			      __memmove_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, memmove, 1, __memmove_ia32))
 
   /* Support sysdeps/i386/i686/multiarch/memrchr.S.  */
@@ -268,6 +274,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memcpy_chk_ssse3_rep)
 	      IFUNC_IMPL_ADD (array, i, __memcpy_chk, HAS_SSSE3,
 			      __memcpy_chk_ssse3)
+	      IFUNC_IMPL_ADD (array, i, __memcpy_chk, HAS_SSE2,
+			      __memcpy_chk_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, __memcpy_chk, 1,
 			      __memcpy_chk_ia32))
 
@@ -276,6 +284,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memcpy, HAS_SSSE3,
 			      __memcpy_ssse3_rep)
 	      IFUNC_IMPL_ADD (array, i, memcpy, HAS_SSSE3, __memcpy_ssse3)
+	      IFUNC_IMPL_ADD (array, i, memcpy, HAS_SSE2,
+			      __memcpy_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_ia32))
 
   /* Support sysdeps/i386/i686/multiarch/mempcpy_chk.S.  */
@@ -284,6 +294,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __mempcpy_chk_ssse3_rep)
 	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk, HAS_SSSE3,
 			      __mempcpy_chk_ssse3)
+	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk, HAS_SSE2,
+			      __mempcpy_chk_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk, 1,
 			      __mempcpy_chk_ia32))
 
@@ -293,6 +305,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __mempcpy_ssse3_rep)
 	      IFUNC_IMPL_ADD (array, i, mempcpy, HAS_SSSE3,
 			      __mempcpy_ssse3)
+	      IFUNC_IMPL_ADD (array, i, mempcpy, HAS_SSE2,
+			      __mempcpy_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, mempcpy, 1, __mempcpy_ia32))
 
   /* Support sysdeps/i386/i686/multiarch/strlen.S.  */
