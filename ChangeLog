@@ -1,5 +1,11 @@
 2015-01-09  David Holsgrove  <david.holsgrove@xilinx.com>
 
+	* sysdeps/microblaze/nptl/tls.h (__microblaze_get_thread_area): Function
+	removed.
+	(READ_THREAD_POINTER): Use __microblaze_thread_area instead.
+
+2015-01-09  David Holsgrove  <david.holsgrove@xilinx.com>
+
 	* sysdeps/microblaze/nptl/tls.h (TLS_INIT_TP): Use NULL instead
 	of 0.
 

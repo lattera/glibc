@@ -59,14 +59,9 @@ typedef struct
   void *private;
 } tcbhead_t;
 
-static inline void *__microblaze_get_thread_area (void)
-{
-  register void * volatile __microblaze_thread_area asm ("r21");
-  return (void *) __microblaze_thread_area;
-}
-
-# define READ_THREAD_POINTER() \
-  ({ __microblaze_get_thread_area(); })
+#define READ_THREAD_POINTER() \
+  ({ register void *__microblaze_thread_area asm ("r21"); \
+     __microblaze_thread_area; })
 
 /* This is the size of the initial TCB.  */
 # define TLS_INIT_TCB_SIZE  sizeof (tcbhead_t)
