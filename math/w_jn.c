@@ -47,13 +47,13 @@ yn (int n, double x)
       if (x < 0.0)
 	{
 	  /* d = zero/(x-x) */
-	  feraiseexcept (FE_INVALID);
+	  __feraiseexcept (FE_INVALID);
 	  return __kernel_standard (n, x, 13);
 	}
       else if (x == 0.0)
 	{
 	  /* d = -one/(x-x) */
-	  feraiseexcept (FE_DIVBYZERO);
+	  __feraiseexcept (FE_DIVBYZERO);
 	  return __kernel_standard (n, x, 12);
 	}
       else if (_LIB_VERSION != _POSIX_)

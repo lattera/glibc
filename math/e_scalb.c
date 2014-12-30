@@ -27,7 +27,7 @@ invalid_fn (double x, double fn)
 {
   if (__rint (fn) != fn)
     {
-      feraiseexcept (FE_INVALID);
+      __feraiseexcept (FE_INVALID);
       return __nan ("");
     }
   else if (fn > 65000.0)

@@ -23,7 +23,7 @@
 
 
 int
-feraiseexcept (int excepts)
+__feraiseexcept (int excepts)
 {
   /* Fail if a VFP unit isn't present unless nothing needs to be done.  */
   if (!ARM_HAVE_VFP)
@@ -102,4 +102,6 @@ feraiseexcept (int excepts)
       return 0;
     }
 }
-libm_hidden_def (feraiseexcept)
+libm_hidden_def (__feraiseexcept)
+weak_alias (__feraiseexcept, feraiseexcept)
+libm_hidden_weak (feraiseexcept)

@@ -23,7 +23,7 @@
 #include <math.h>
 
 int
-feraiseexcept (int excepts)
+__feraiseexcept (int excepts)
 {
   if (excepts == 0)
     return 0;
@@ -70,4 +70,6 @@ feraiseexcept (int excepts)
 
   return 0;
 }
-libm_hidden_def (feraiseexcept)
+libm_hidden_def (__feraiseexcept)
+weak_alias (__feraiseexcept, feraiseexcept)
+libm_hidden_weak (feraiseexcept)

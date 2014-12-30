@@ -37,7 +37,7 @@ fexceptadd (float d, float e)
 
 
 int
-feraiseexcept (int excepts)
+__feraiseexcept (int excepts)
 {
   /* Raise exceptions represented by EXPECTS.  But we must raise only
      one signal at a time.  It is important that if the overflow/underflow
@@ -69,4 +69,6 @@ feraiseexcept (int excepts)
   /* Success.  */
   return 0;
 }
-libm_hidden_def (feraiseexcept)
+libm_hidden_def (__feraiseexcept)
+weak_alias (__feraiseexcept, feraiseexcept)
+libm_hidden_weak (feraiseexcept)

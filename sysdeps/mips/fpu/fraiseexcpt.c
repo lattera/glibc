@@ -22,7 +22,7 @@
 #include <fpu_control.h>
 
 int
-feraiseexcept (int excepts)
+__feraiseexcept (int excepts)
 {
   fpu_control_t cw;
 
@@ -43,4 +43,6 @@ feraiseexcept (int excepts)
   return 0;
 }
 
-libm_hidden_def (feraiseexcept)
+libm_hidden_def (__feraiseexcept)
+weak_alias (__feraiseexcept, feraiseexcept)
+libm_hidden_weak (feraiseexcept)

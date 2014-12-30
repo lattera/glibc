@@ -21,7 +21,7 @@
 #include <float.h>
 
 int
-feraiseexcept (int excepts)
+__feraiseexcept (int excepts)
 {
   int fpsr;
   const float fp_zero = 0.0;
@@ -88,4 +88,6 @@ feraiseexcept (int excepts)
 
   return 0;
 }
-libm_hidden_def (feraiseexcept)
+libm_hidden_def (__feraiseexcept)
+weak_alias (__feraiseexcept, feraiseexcept)
+libm_hidden_weak (feraiseexcept)

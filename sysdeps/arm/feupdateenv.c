@@ -46,7 +46,7 @@ feupdateenv (const fenv_t *envp)
 
       /* Raise the exceptions if enabled in the new FP state.  */
       if (excepts & (new_fpscr >> FE_EXCEPT_SHIFT))
-	return feraiseexcept (excepts);
+	return __feraiseexcept (excepts);
 
       return 0;
     }
@@ -69,7 +69,7 @@ feupdateenv (const fenv_t *envp)
 
   /* Raise the exceptions if enabled in the new FP state.  */
   if (excepts & (new_fpscr >> FE_EXCEPT_SHIFT))
-    return feraiseexcept (excepts);
+    return __feraiseexcept (excepts);
 
   return 0;
 }

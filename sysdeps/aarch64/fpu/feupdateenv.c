@@ -45,7 +45,7 @@ feupdateenv (const fenv_t *envp)
         _FPU_SETFPSR (fpsr_new);
 
       if (excepts & (fpcr_new >> FE_EXCEPT_SHIFT))
-        return feraiseexcept (excepts);
+        return __feraiseexcept (excepts);
 
       return 0;
     }
@@ -80,7 +80,7 @@ feupdateenv (const fenv_t *envp)
     }
 
   if (excepts & (fpcr_new >> FE_EXCEPT_SHIFT))
-    return feraiseexcept (excepts);
+    return __feraiseexcept (excepts);
 
   return 0;
 }

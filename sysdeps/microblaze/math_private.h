@@ -28,6 +28,7 @@
 #include_next <math_private.h>
 
 #define feraiseexcept(excepts)                 ({ 0; })
+#define __feraiseexcept(excepts)               ({ 0; })
 #define feclearexcept(exc)                     ({ 0; })
 
 #endif

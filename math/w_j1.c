@@ -47,13 +47,13 @@ y1 (double x)
       if (x < 0.0)
 	{
 	  /* d = zero/(x-x) */
-	  feraiseexcept (FE_INVALID);
+	  __feraiseexcept (FE_INVALID);
 	  return __kernel_standard (x, x, 11);
 	}
       else if (x == 0.0)
 	{
 	  /* d = -one/(x-x) */
-	  feraiseexcept (FE_DIVBYZERO);
+	  __feraiseexcept (FE_DIVBYZERO);
 	  return __kernel_standard (x, x, 10);
 	}
       else if (_LIB_VERSION != _POSIX_)

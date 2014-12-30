@@ -1,7 +1,6 @@
-/* Raise given exceptions.
+/* Wrapper for x86 bits/fenv.h for use when building glibc.
    Copyright (C) 1997-2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,21 +16,27 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <fenv.h>
-#include <shlib-compat.h>
+#include_next <bits/fenv.h>
 
-int
-__feraiseexcept (int excepts)
+/* Ensure __feraiseexcept calls in glibc are optimized the same as
+   feraiseexcept calls.  */
+
+#ifdef __USE_EXTERN_INLINES
+__BEGIN_DECLS
+
+extern int __REDIRECT_NTH (____feraiseexcept_renamed, (int), __feraiseexcept);
+__extern_inline int
+__NTH (__feraiseexcept (int __excepts))
 {
-  /* This always fails unless nothing needs to be done.  */
-  return (excepts != 0);
-}
-#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__feraiseexcept, __old_feraiseexcept)
-compat_symbol (libm, __old_feraiseexcept, feraiseexcept, GLIBC_2_1);
-#endif
-libm_hidden_def (__feraiseexcept)
-libm_hidden_ver (__feraiseexcept, feraiseexcept)
-versioned_symbol (libm, __feraiseexcept, feraiseexcept, GLIBC_2_2);
+  if (__builtin_constant_p (__excepts)
+      && (__excepts & ~(FE_INVALID | FE_DIVBYZERO)) == 0)
+    {
+      __feraiseexcept_invalid_divbyzero (__excepts);
+      return 0;
+    }
 
-stub_warning (feraiseexcept)
+  return ____feraiseexcept_renamed (__excepts);
+}
+
+__END_DECLS
+#endif

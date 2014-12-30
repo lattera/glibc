@@ -15,6 +15,7 @@ extern int __fesetenv (const fenv_t *__envp);
 extern int __feupdateenv (const fenv_t *__envp);
 
 libm_hidden_proto (feraiseexcept)
+libm_hidden_proto (__feraiseexcept)
 libm_hidden_proto (fegetenv)
 libm_hidden_proto (fegetround)
 libm_hidden_proto (fesetenv)

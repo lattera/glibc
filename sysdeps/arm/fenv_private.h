@@ -129,7 +129,7 @@ libc_feupdateenv_test_vfp (const fenv_t *envp, int ex)
 
   /* Raise the exceptions if enabled in the new FP state.  */
   if (__glibc_unlikely (excepts & (new_fpscr >> FE_EXCEPT_SHIFT)))
-    feraiseexcept (excepts);
+    __feraiseexcept (excepts);
 
   return excepts & ex;
 }

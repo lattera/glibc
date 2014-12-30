@@ -32,7 +32,7 @@ feupdateenv (const fenv_t *envp)
   fesetenv (envp);
 
   /* Raise the saved exceptions.  */
-  feraiseexcept ((int) (fpsr >> 13) & FE_ALL_EXCEPT);
+  __feraiseexcept ((int) (fpsr >> 13) & FE_ALL_EXCEPT);
 
   /* Success.  */
   return 0;

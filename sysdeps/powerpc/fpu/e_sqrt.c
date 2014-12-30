@@ -142,12 +142,12 @@ __slow_ieee754_sqrt (double x)
       /* For some reason, some PowerPC32 processors don't implement
 	 FE_INVALID_SQRT.  */
 #ifdef FE_INVALID_SQRT
-      feraiseexcept (FE_INVALID_SQRT);
+      __feraiseexcept (FE_INVALID_SQRT);
 
       fenv_union_t u = { .fenv = fegetenv_register () };
       if ((u.l & FE_INVALID) == 0)
 #endif
-	feraiseexcept (FE_INVALID);
+	__feraiseexcept (FE_INVALID);
       x = a_nan.value;
     }
   return f_wash (x);

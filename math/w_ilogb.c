@@ -31,7 +31,7 @@ __ilogb (double x)
       || __builtin_expect (r == INT_MAX, 0))
     {
       __set_errno (EDOM);
-      feraiseexcept (FE_INVALID);
+      __feraiseexcept (FE_INVALID);
     }
   return r;
 }

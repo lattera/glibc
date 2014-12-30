@@ -29,7 +29,7 @@ __acos (double x)
       && _LIB_VERSION != _IEEE_)
     {
       /* acos(|x|>1) */
-      feraiseexcept (FE_INVALID);
+      __feraiseexcept (FE_INVALID);
       return __kernel_standard (x, x, 1);
     }
 

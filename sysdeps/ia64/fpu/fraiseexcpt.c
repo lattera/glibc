@@ -24,7 +24,7 @@
 #include <unistd.h>
 
 int
-feraiseexcept (int excepts)
+__feraiseexcept (int excepts)
 {
   double tmp;
   double dummy;
@@ -75,4 +75,6 @@ feraiseexcept (int excepts)
   /* Success.  */
   return 0;
 }
-libm_hidden_def (feraiseexcept)
+libm_hidden_def (__feraiseexcept)
+weak_alias (__feraiseexcept, feraiseexcept)
+libm_hidden_weak (feraiseexcept)

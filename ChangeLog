@@ -1,3 +1,70 @@
+2014-12-30  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17723]
+	* include/fenv.h (__feraiseexcept): Use libm_hidden_proto.
+	* math/fraiseexcpt.c (__feraiseexcept): Use libm_hidden_def.
+	* sysdeps/aarch64/fpu/fraiseexcpt.c (feraiseexcept): Rename to
+	__feraiseexcept and define as weak alias of __feraiseexcept.  Use
+	libm_hidden_weak.
+	* sysdeps/arm/fraiseexcpt.c (feraiseexcept): Likewise.
+	* sysdeps/hppa/fpu/fraiseexcpt.c (feraiseexcept): Likewise.
+	* sysdeps/i386/fpu/fraiseexcpt.c (__feraiseexcept): Use
+	libm_hidden_def.
+	* sysdeps/ia64/fpu/fraiseexcpt.c (feraiseexcept): Rename to
+	__feraiseexcept and define as weak alias of __feraiseexcept.  Use
+	libm_hidden_weak.
+	* sysdeps/m68k/coldfire/fpu/fraiseexcpt.c (feraiseexcept):
+	Likewise.
+	* sysdeps/microblaze/math_private.h (__feraiseexcept): New macro.
+	* sysdeps/mips/fpu/fraiseexcpt.c (feraiseexcept): Rename to
+	__feraiseexcept and define as weak alias of __feraiseexcept.  Use
+	libm_hidden_weak.
+	* sysdeps/powerpc/fpu/fraiseexcpt.c (__feraiseexcept): Use
+	libm_hidden_def.
+	* sysdeps/powerpc/nofpu/fraiseexcpt.c (__feraiseexcept): Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fraiseexcpt.c
+	(__feraiseexcept): Likewise.
+	* sysdeps/s390/fpu/fraiseexcpt.c (feraiseexcept): Rename to
+	__feraiseexcept and define as weak alias of __feraiseexcept.  Use
+	libm_hidden_weak.
+	* sysdeps/sh/sh4/fpu/fraiseexcpt.c (feraiseexcept): Likewise.
+	* sysdeps/sparc/fpu/fraiseexcpt.c (__feraiseexcept): Use
+	libm_hidden_def.
+	* sysdeps/tile/math_private.h (__feraiseexcept): New macro.
+	* sysdeps/unix/sysv/linux/alpha/fraiseexcpt.S (__feraiseexcept):
+	Use libm_hidden_def.
+	* sysdeps/x86_64/fpu/fraiseexcpt.c (__feraiseexcept): Use
+	libm_hidden_def.
+	(feraiseexcept): Define as weak not strong alias.  Use
+	libm_hidden_weak.
+	* sysdeps/x86/fpu/bits/fenv.h (__feraiseexcept_invalid_divbyzero):
+	New inline function.  Factored out of ...
+	(feraiseexcept): ... here.  Use __feraiseexcept_invalid_divbyzero.
+	* sysdeps/x86/fpu/include/bits/fenv.h: New file.
+	* math/e_scalb.c (invalid_fn): Call __feraiseexcept instead of
+	feraiseexcept.
+	* math/w_acos.c (__acos): Likewise.
+	* math/w_asin.c (__asin): Likewise.
+	* math/w_ilogb.c (__ilogb): Likewise.
+	* math/w_j0.c (y0): Likewise.
+	* math/w_j1.c (y1): Likewise.
+	* math/w_jn.c (yn): Likewise.
+	* math/w_log.c (__log): Likewise.
+	* math/w_log10.c (__log10): Likewise.
+	* sysdeps/aarch64/fpu/feupdateenv.c (feupdateenv): Likewise.
+	* sysdeps/aarch64/fpu/math_private.h
+	(libc_feupdateenv_test_aarch64): Likewise.
+	* sysdeps/alpha/fpu/feupdateenv.c (__feupdateenv): Likewise.
+	* sysdeps/arm/fenv_private.h (libc_feupdateenv_test_vfp): Likewise.
+	* sysdeps/arm/feupdateenv.c (feupdateenv): Likewise.
+	* sysdeps/ia64/fpu/feupdateenv.c (feupdateenv): Likewise.
+	* sysdeps/m68k/fpu/feupdateenv.c (__feupdateenv): Likewise.
+	* sysdeps/mips/fpu/feupdateenv.c (feupdateenv): Likewise.
+	* sysdeps/powerpc/fpu/e_sqrt.c (__slow_ieee754_sqrt): Likewise.
+	* sysdeps/s390/fpu/feupdateenv.c (feupdateenv): Likewise.
+	* sysdeps/sh/sh4/fpu/feupdateenv.c (feupdateenv): Likewise.
+	* sysdeps/sparc/fpu/feupdateenv.c (__feupdateenv): Likewise.
+
 2014-12-30  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #17732]

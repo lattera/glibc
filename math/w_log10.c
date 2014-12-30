@@ -29,12 +29,12 @@ __log10 (double x)
     {
       if (x == 0.0)
 	{
-	  feraiseexcept (FE_DIVBYZERO);
+	  __feraiseexcept (FE_DIVBYZERO);
 	  return __kernel_standard (x, x, 18); /* log10(0) */
 	}
       else
 	{
-	  feraiseexcept (FE_INVALID);
+	  __feraiseexcept (FE_INVALID);
 	  return __kernel_standard (x, x, 19); /* log10(x<0) */
 	}
     }

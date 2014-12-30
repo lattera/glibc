@@ -34,7 +34,7 @@ __feupdateenv (const fenv_t *envp)
   /* Raise the safed exception.  Incidently for us the implementation
      defined format of the values in objects of type fexcept_t is the
      same as the ones specified using the FE_* constants.  */
-  feraiseexcept ((int) tmp);
+  __feraiseexcept ((int) tmp);
 
   /* Success.  */
   return 0;
