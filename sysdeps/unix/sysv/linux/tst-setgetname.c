@@ -101,7 +101,7 @@ do_test (int argc, char **argv)
     {
       res = get_self_comm (gettid (), name_check, TASK_COMM_LEN);
 
-#if !__ASSUME_PROC_PID_TASK_COMM
+#ifndef __ASSUME_PROC_PID_TASK_COMM
       /* On this first test we look for ENOENT to be returned from
          get_self_comm to indicate that the kernel is older than
          2.6.33 and doesn't contain comm within the proc structure.

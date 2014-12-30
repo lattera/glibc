@@ -1,5 +1,9 @@
 2014-12-29  Chris Metcalf  <cmetcalf@ezchip.com>
 
+	* sysdeps/unix/sysv/linux/tst-setgetname.c (do_test): Use #ifndef
+	instead of #if to avoid a Wundef warning.
+	* stdlib/tst-limits.c (do_test): Likewise.
+
 	* sysdeps/tile/math_private.h (fetestexcept): Add macro to
 	parallel other exception macros.
 	(fegetenv): Convert from macro to extern inline so that it applies

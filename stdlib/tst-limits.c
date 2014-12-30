@@ -58,7 +58,7 @@ do_test (void)
   /* Values from POSIX and Unix.  */
 #ifdef PAGESIZE
   TEST (PAGESIZE, "d", getpagesize ());
-#elif PAGE_SIZE
+#elif defined (PAGE_SIZE)
   TEST (PAGE_SIZE, "d", getpagesize ());
 #endif
 
