@@ -1,3 +1,10 @@
+2014-12-30  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #17775]
+	* sysdeps/i386/dl-machine.h (PI_STATIC_AND_HIDDEN): Removed.
+	(elf_machine_dynamic) [!PI_STATIC_AND_HIDDEN]: Likewise.
+	(elf_machine_load_address) [!PI_STATIC_AND_HIDDEN]: Likewise.
+
 2014-12-30  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	* sysdeps/i386/tls-macros.h: Include <features.h>.

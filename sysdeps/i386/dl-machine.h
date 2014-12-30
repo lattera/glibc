@@ -34,8 +34,6 @@ elf_machine_matches_host (const Elf32_Ehdr *ehdr)
 }
 
 
-#ifdef PI_STATIC_AND_HIDDEN
-
 /* Return the link-time address of _DYNAMIC.  Conveniently, this is the
    first element of the GOT, a special entry that is never relocated.  */
 static inline Elf32_Addr __attribute__ ((unused, const))
@@ -58,37 +56,6 @@ elf_machine_load_address (void)
   extern Elf32_Dyn bygotoff[] asm ("_DYNAMIC") attribute_hidden;
   return (Elf32_Addr) &bygotoff - elf_machine_dynamic ();
 }
-
-#else  /* Without .hidden support, we can't compile the code above.  */
-
-/* Return the link-time address of _DYNAMIC.  Conveniently, this is the
-   first element of the GOT.  This must be inlined in a function which
-   uses global data.  */
-static inline Elf32_Addr __attribute__ ((unused))
-elf_machine_dynamic (void)
-{
-  register Elf32_Addr *got asm ("%ebx");
-  return *got;
-}
-
-
-/* Return the run-time load address of the shared object.  */
-static inline Elf32_Addr __attribute__ ((unused))
-elf_machine_load_address (void)
-{
-  /* It doesn't matter what variable this is, the reference never makes
-     it to assembly.  We need a dummy reference to some global variable
-     via the GOT to make sure the compiler initialized %ebx in time.  */
-  extern int _dl_argc;
-  Elf32_Addr addr;
-  asm ("leal _dl_start@GOTOFF(%%ebx), %0\n"
-       "subl _dl_start@GOT(%%ebx), %0"
-       : "=r" (addr) : "m" (_dl_argc) : "cc");
-  return addr;
-}
-
-#endif
-
 
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
