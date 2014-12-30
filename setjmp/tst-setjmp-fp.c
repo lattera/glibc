@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static jmp_buf env;
+static jmp_buf __attribute__ ((unused)) env;
 static int result = 0;
 
 #if defined FE_TONEAREST && defined FE_TOWARDZERO

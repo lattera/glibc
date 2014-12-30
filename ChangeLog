@@ -1,3 +1,17 @@
+2014-12-30  Chris Metcalf  <cmetcalf@ezchip.com>
+
+	* math/test-fenv.c (test_single_exception, set_single_exc,
+	feenv_nomask_test, feenv_mask_test, feexcp_nomask_test,
+	feexcp_mask_test, feenable_test, fe_single_test): Add
+	[!FE_ALL_EXCEPT] test so these routines are not compiled in the
+	case where they are not used.
+	* math/libm-test.inc: Likewise.
+	* setjmp/test-setjmp-fp.c: Mark attribute ((unused)) on variable
+	unused in the absence of FP rounding/exception support.
+	* stdio-common/tst-printf-round.c: Likewise.
+	* stdlib/tst-strtod-round.c: Likewise.
+	* stdlib/tst-strtod-underflow.c: Likewise.
+
 2014-12-30  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17723]

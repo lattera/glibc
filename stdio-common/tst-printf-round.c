@@ -164,7 +164,7 @@ test_hex_in_one_mode (double d, const char *fmt, const char *const expected[4],
 static int
 do_test (void)
 {
-  int save_round_mode = fegetround ();
+  int save_round_mode __attribute__ ((unused)) = fegetround ();
   int result = 0;
 
   for (size_t i = 0; i < sizeof (dec_tests) / sizeof (dec_tests[0]); i++)

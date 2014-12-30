@@ -590,6 +590,7 @@ print_complex_max_error (const char *func_name)
 }
 
 
+#if FE_ALL_EXCEPT
 /* Test whether a given exception was raised.  */
 static void
 test_single_exception (const char *test_name,
@@ -598,7 +599,7 @@ test_single_exception (const char *test_name,
 		       int fe_flag,
 		       const char *flag_name)
 {
-#ifndef TEST_INLINE
+# ifndef TEST_INLINE
   int ok = 1;
   if (exception & exc_flag)
     {
@@ -634,9 +635,9 @@ test_single_exception (const char *test_name,
   if (!ok)
     ++noErrors;
 
-#endif
+# endif
 }
-
+#endif
 
 /* Test whether exceptions given by EXCEPTION are raised.  Ignore thereby
    allowed but not required exceptions.

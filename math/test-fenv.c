@@ -54,6 +54,7 @@
 
 static int count_errors;
 
+#if FE_ALL_EXCEPT
 /* Test whether a given exception was raised.  */
 static void
 test_single_exception (short int exception,
@@ -84,6 +85,7 @@ test_single_exception (short int exception,
         }
     }
 }
+#endif
 
 static void
 test_exceptions (const char *test_name, short int exception,
@@ -164,6 +166,7 @@ test_rounding (const char *test_name, int rounding_mode)
 }
 
 
+#if FE_ALL_EXCEPT
 static void
 set_single_exc (const char *test_name, int fe_exc, fexcept_t exception)
 {
@@ -195,6 +198,7 @@ set_single_exc (const char *test_name, int fe_exc, fexcept_t exception)
   feclearexcept (exception);
   test_exceptions (str, ALL_EXC ^ fe_exc, 0);
 }
+#endif
 
 static void
 fe_tests (void)
@@ -227,11 +231,12 @@ fe_tests (void)
 #endif
 }
 
+#if FE_ALL_EXCEPT
 /* Test that program aborts with no masked interrupts */
 static void
 feenv_nomask_test (const char *flag_name, int fe_exc)
 {
-#if defined FE_NOMASK_ENV
+# if defined FE_NOMASK_ENV
   int status;
   pid_t pid;
 
@@ -247,13 +252,13 @@ feenv_nomask_test (const char *flag_name, int fe_exc)
   pid = fork ();
   if (pid == 0)
     {
-#ifdef RLIMIT_CORE
+#  ifdef RLIMIT_CORE
       /* Try to avoid dumping core.  */
       struct rlimit core_limit;
       core_limit.rlim_cur = 0;
       core_limit.rlim_max = 0;
       setrlimit (RLIMIT_CORE, &core_limit);
-#endif
+#  endif
 
       fesetenv (FE_NOMASK_ENV);
       feraiseexcept (fe_exc);
@@ -284,7 +289,7 @@ feenv_nomask_test (const char *flag_name, int fe_exc)
 	++count_errors;
       }
   }
-#endif
+# endif
 }
 
 /* Test that program doesn't abort with default environment */
@@ -613,6 +618,7 @@ fe_single_test (const char *flag_name, int fe_exc)
   feenv_mask_test (flag_name, fe_exc);
   feenable_test (flag_name, fe_exc);
 }
+#endif
 
 
 static void

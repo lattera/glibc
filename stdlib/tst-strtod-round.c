@@ -7874,7 +7874,7 @@ test_in_one_mode (const char *s, const struct test_results *expected,
 static int
 do_test (void)
 {
-  int save_round_mode = fegetround ();
+  int save_round_mode __attribute__ ((unused)) = fegetround ();
   int result = 0;
   for (size_t i = 0; i < sizeof (tests) / sizeof (tests[0]); i++)
     {
