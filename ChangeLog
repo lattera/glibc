@@ -1,5 +1,11 @@
 2014-12-29  Chris Metcalf  <cmetcalf@ezchip.com>
 
+	* sysdeps/tile/math_private.h (fetestexcept): Add macro to
+	parallel other exception macros.
+	(fegetenv): Convert from macro to extern inline so that it applies
+	retroactively to inline functions already seen by the compiler.
+	(fesetenv, feupdateenv, fegetround, fesetround): Likewise.
+
 	* posix/Makefile (before-compile): Use $(objpfx) for
 	posix-conf-vars-def.h.
 

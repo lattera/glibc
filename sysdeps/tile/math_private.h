@@ -27,9 +27,11 @@
 
 #define feraiseexcept(excepts)			({ 0; })
 #define feclearexcept(exc)			({ 0; })
-#define fegetenv(env)				({ (void) (env); 0; })
-#define fesetenv(env)				({ (void) (env); 0; })
-#define feupdateenv(env)			({ (void) (env); 0; })
-#define fegetround()				({ FE_TONEAREST; })
+#define fetestexcept(exc)			({ 0; })
+extern inline int fegetenv (fenv_t *__e)	{ return 0; }
+extern inline int fesetenv (const fenv_t *__e)	{ return 0; }
+extern inline int feupdateenv (const fenv_t *__e) { return 0; }
+extern inline int fegetround (void)		{ return FE_TONEAREST; }
+extern inline int fesetround (int __d)		{ return 0; }
 
 #endif
