@@ -1,3 +1,5 @@
+#include <features.h> /* For __GNUC_PREREQ.  */
+
 #define TLS_LE(x) \
   ({ int *__l;								      \
      asm ("movl %%gs:0,%0\n\t"						      \
@@ -5,7 +7,7 @@
 	  : "=r" (__l));						      \
      __l; })
 
-#ifdef PIC
+#if defined PIC && !__GNUC_PREREQ (5,0)
 # define TLS_IE(x) \
   ({ int *__l;								      \
      asm ("movl %%gs:0,%0\n\t"						      \
@@ -27,7 +29,7 @@
      __l; })
 #endif
 
-#ifdef PIC
+#if defined PIC && !__GNUC_PREREQ (5,0)
 # define TLS_LD(x) \
   ({ int *__l, __c, __d;						      \
      asm ("leal " #x "@tlsldm(%%ebx),%%eax\n\t"				      \
@@ -51,7 +53,7 @@
      __l; })
 #endif
 
-#ifdef PIC
+#if defined PIC && !__GNUC_PREREQ (5,0)
 # define TLS_GD(x) \
   ({ int *__l, __c, __d;						      \
      asm ("leal " #x "@tlsgd(%%ebx),%%eax\n\t"				      \

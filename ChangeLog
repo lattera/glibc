@@ -1,3 +1,13 @@
+2014-12-30  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	* sysdeps/i386/tls-macros.h: Include <features.h>.
+	(TLS_LE): Use non-PIC version for GCC >= 5.0.
+	(TLS_IE): Likewise.
+	(TLS_LD): Likewise.
+	(TLS_GD): Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (check_consistency): Don't
+	define for GCC >= 5.0.
+
 2014-12-30  Chris Metcalf  <cmetcalf@ezchip.com>
 
 	* math/test-fenv.c (test_single_exception, set_single_exc,

@@ -502,7 +502,7 @@ asm (".L__X'%ebx = 1\n\t"
 #endif
 
 /* Consistency check for position-independent code.  */
-#ifdef __PIC__
+#if defined __PIC__ && !__GNUC_PREREQ (5,0)
 # define check_consistency()						      \
   ({ int __res;								      \
      __asm__ __volatile__						      \
