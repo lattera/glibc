@@ -20,7 +20,7 @@
 #include <fpu_control.h>
 
 int
-fegetenv (fenv_t *envp)
+__fegetenv (fenv_t *envp)
 {
   fpu_control_t temp;
   _FPU_GETCW (temp);
@@ -29,4 +29,6 @@ fegetenv (fenv_t *envp)
 
   return 0;
 }
-libm_hidden_def (fegetenv)
+libm_hidden_def (__fegetenv)
+weak_alias (__fegetenv, fegetenv)
+libm_hidden_weak (fegetenv)

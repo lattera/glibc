@@ -22,7 +22,7 @@
 
 
 int
-fegetenv (fenv_t *envp)
+__fegetenv (fenv_t *envp)
 {
   fpu_control_t fpscr;
 
@@ -34,4 +34,6 @@ fegetenv (fenv_t *envp)
   envp->__cw = fpscr;
   return 0;
 }
-libm_hidden_def (fegetenv)
+libm_hidden_def (__fegetenv)
+weak_alias (__fegetenv, fegetenv)
+libm_hidden_weak (fegetenv)

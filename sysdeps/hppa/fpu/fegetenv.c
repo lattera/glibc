@@ -21,7 +21,7 @@
 #include <string.h>
 
 int
-fegetenv (fenv_t *envp)
+__fegetenv (fenv_t *envp)
 {
   unsigned long long buf[4], *bufptr = buf;
 
@@ -32,4 +32,6 @@ fegetenv (fenv_t *envp)
   memcpy(envp, buf, sizeof (*envp));
   return 0;
 }
-libm_hidden_def (fegetenv)
+libm_hidden_def (__fegetenv)
+weak_alias (__fegetenv, fegetenv)
+libm_hidden_weak (fegetenv)

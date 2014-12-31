@@ -20,10 +20,12 @@
 #include <fenv.h>
 
 int
-fegetenv (fenv_t *envp)
+__fegetenv (fenv_t *envp)
 {
   __asm__ __volatile__ ("mov.m %0=ar.fpsr" : "=r" (*envp));
 
   return 0;
 }
-libm_hidden_def (fegetenv)
+libm_hidden_def (__fegetenv)
+weak_alias (__fegetenv, fegetenv)
+libm_hidden_weak (fegetenv)

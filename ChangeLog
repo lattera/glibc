@@ -1,3 +1,36 @@
+2014-12-31  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17748]
+	* include/fenv.h (__fegetenv): Use libm_hidden_proto.
+	* math/fegetenv.c (__fegetenv): Use libm_hidden_def.
+	* sysdeps/aarch64/fpu/fegetenv.c (fegetenv): Rename to __fegetenv
+	and define as weak alias of __fegetenv.  Use libm_hidden_weak.
+	* sysdeps/alpha/fpu/fegetenv.c (__fegetenv): Use libm_hidden_def.
+	* sysdeps/arm/fegetenv.c (fegetenv): Rename to __fegetenv and
+	define as weak alias of __fegetenv.  Use libm_hidden_weak.
+	* sysdeps/hppa/fpu/fegetenv.c (fegetenv): Likewise.
+	* sysdeps/i386/fpu/fegetenv.c (__fegetenv): Use libm_hidden_def.
+	* sysdeps/ia64/fpu/fegetenv.c (fegetenv): Rename to __fegetenv and
+	define as weak alias of __fegetenv.  Use libm_hidden_weak.
+	* sysdeps/m68k/fpu/fegetenv.c (__fegetenv): Use libm_hidden_def.
+	* sysdeps/mips/fpu/fegetenv.c (fegetenv): Rename to __fegetenv and
+	define as weak alias of __fegetenv.  Use libm_hidden_weak.
+	* sysdeps/powerpc/fpu/fegetenv.c (__fegetenv): Use
+	libm_hidden_def.
+	* sysdeps/powerpc/nofpu/fegetenv.c (__fegetenv): Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fegetenv.c (__fegetenv):
+	Likewise.
+	* sysdeps/s390/fpu/fegetenv.c (fegetenv): Rename to __fegetenv and
+	define as weak alias of __fegetenv.  Use libm_hidden_weak.
+	* sysdeps/sh/sh4/fpu/fegetenv.c (fegetenv): Likewise.
+	* sysdeps/sparc/fpu/fegetenv.c (__fegetenv): Use libm_hidden_def.
+	* sysdeps/tile/math_private.h (__fegetenv): New inline function.
+	* sysdeps/x86_64/fpu/fegetenv.c (fegetenv): Rename to __fegetenv
+	and define as weak alias of __fegetenv.  Use libm_hidden_weak.
+	* sysdeps/generic/math_private.h (libc_feholdsetround_ctx): Use
+	__fegetenv instead of fegetenv.
+	(libc_feholdsetround_noex_ctx): Likewise.
+
 2014-12-31  Matthew Fortune  <matthew.fortune@imgtec.com>
 
 	* elf/elf.h (PT_MIPS_ABIFLAGS): Define.

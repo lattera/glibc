@@ -19,7 +19,7 @@
 #include <fenv.h>
 
 int
-fegetenv (fenv_t *envp)
+__fegetenv (fenv_t *envp)
 {
   __asm__ ("fnstenv %0\n"
 	   /* fnstenv changes the exception mask, so load back the
@@ -30,4 +30,6 @@ fegetenv (fenv_t *envp)
   /* Success.  */
   return 0;
 }
-libm_hidden_def (fegetenv)
+libm_hidden_def (__fegetenv)
+weak_alias (__fegetenv, fegetenv)
+libm_hidden_weak (fegetenv)

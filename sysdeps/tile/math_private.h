@@ -30,6 +30,7 @@
 #define feclearexcept(exc)			({ 0; })
 #define fetestexcept(exc)			({ 0; })
 extern inline int fegetenv (fenv_t *__e)	{ return 0; }
+extern inline int __fegetenv (fenv_t *__e)	{ return 0; }
 extern inline int fesetenv (const fenv_t *__e)	{ return 0; }
 extern inline int feupdateenv (const fenv_t *__e) { return 0; }
 extern inline int fegetround (void)		{ return FE_TONEAREST; }
