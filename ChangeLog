@@ -1,3 +1,8 @@
+2014-12-31  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* scripts/gen-posix-conf-vars.awk: Don't use multi-dimensional
+	arrays.
+
 2014-12-30  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #17775]
