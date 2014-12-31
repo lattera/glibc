@@ -18,7 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
-#include <fenv_libc.h>
+#include <fenv.h>
 #include <math_ldbl_opt.h>
 #include <float.h>
 #include <ieee754.h>
@@ -49,7 +49,7 @@ __lrintl (long double x)
 #endif
     )
     {
-      save_round = __fegetround ();
+      save_round = fegetround ();
 
 #if __LONG_MAX__ == 2147483647
       long long llhi = (long long) xh;

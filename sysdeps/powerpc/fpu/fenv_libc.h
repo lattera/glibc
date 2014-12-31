@@ -76,15 +76,6 @@ typedef union
 
 
 static inline int
-__fegetround (void)
-{
-  int result;
-  asm volatile ("mcrfs 7,7\n\t"
-		"mfcr  %0" : "=r"(result) : : "cr7");
-  return result & 3;
-}
-
-static inline int
 __fesetround (int round)
 {
   if ((unsigned int) round < 2)

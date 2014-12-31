@@ -18,7 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
-#include <fenv_libc.h>
+#include <fenv.h>
 #include <math_ldbl_opt.h>
 #include <float.h>
 #include <ieee754.h>
@@ -43,7 +43,7 @@ __llrintl (long double x)
 #endif
     )
     {
-      save_round = __fegetround ();
+      save_round = fegetround ();
 
       if (__glibc_unlikely ((xh == -(double) (-__LONG_LONG_MAX__ - 1))))
 	{

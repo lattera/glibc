@@ -1,3 +1,25 @@
+2014-12-31  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/bits/fenvinline.h (fegetround): Rename macro to
+	__fegetround and redefine to call __fegetround.  Remove condition
+	on [!__NO_MATH_INLINES].
+	* sysdeps/powerpc/fpu/fenv_libc.h (__fegetround): Remove inline
+	function.
+	* sysdeps/powerpc/nofpu/fenv_libc.h: Remove file.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fenv_libc.h (__fegetround):
+	Remove macro.
+	* sysdeps/ieee754/ldbl-128ibm/s_llrintl.c: Include <fenv.h>
+	instead of <fenv_libc.h>.
+	(__llrintl): Call fegetround instead of __fegetround.
+	* sysdeps/ieee754/ldbl-128ibm/s_llroundl.c: Include <fenv.h>
+	instead of <fenv_libc.h>.
+	* sysdeps/ieee754/ldbl-128ibm/s_lrintl.c: Likewise.
+	(__lrintl): Call fegetround instead of __fegetround.
+	* sysdeps/ieee754/ldbl-128ibm/s_lroundl.c: Include <fenv.h>
+	instead of <fenv_libc.h>.
+	* sysdeps/ieee754/ldbl-128ibm/s_rintl.c: Likewise.
+	(__rintl): Call fegetround instead of __fegetround.
+
 2014-12-31  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* scripts/gen-posix-conf-vars.awk: Don't use multi-dimensional

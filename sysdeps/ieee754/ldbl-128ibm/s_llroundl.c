@@ -18,7 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
-#include <fenv_libc.h>
+#include <fenv.h>
 #include <math_ldbl_opt.h>
 #include <float.h>
 #include <ieee754.h>

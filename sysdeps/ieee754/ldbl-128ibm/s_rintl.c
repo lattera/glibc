@@ -21,7 +21,7 @@
    when it's coded in C.  */
 
 #include <math.h>
-#include <fenv_libc.h>
+#include <fenv.h>
 #include <math_ldbl_opt.h>
 #include <float.h>
 #include <ieee754.h>
@@ -40,7 +40,7 @@ __rintl (long double x)
 					     __builtin_inf ()), 1))
     {
       double orig_xh;
-      int save_round = __fegetround ();
+      int save_round = fegetround ();
 
       /* Long double arithmetic, including the canonicalisation below,
 	 only works in round-to-nearest mode.  */
