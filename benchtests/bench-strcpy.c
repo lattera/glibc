@@ -171,6 +171,22 @@ test_main (void)
       do_test (i, i, 8 << i, BIG_CHAR);
     }
 
+  for (i = 16; i <= 512; i+=4)
+    {
+      do_test (0, 4, i, SMALL_CHAR);
+      do_test (4, 0, i, BIG_CHAR);
+      do_test (4, 4, i, SMALL_CHAR);
+      do_test (2, 2, i, BIG_CHAR);
+      do_test (2, 6, i, SMALL_CHAR);
+      do_test (6, 2, i, BIG_CHAR);
+      do_test (1, 7, i, SMALL_CHAR);
+      do_test (7, 1, i, BIG_CHAR);
+      do_test (3, 4, i, SMALL_CHAR);
+      do_test (4, 3, i, BIG_CHAR);
+      do_test (5, 7, i, SMALL_CHAR);
+      do_test (7, 5, i, SMALL_CHAR);
+    }
+
   return ret;
 }
 

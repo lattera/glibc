@@ -1,3 +1,10 @@
+2014-12-31  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+	    Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power7/strcpy.S (strcpy): Optimize unaligned
+	path.
+	* benchtests/bench-strcpy.c (test_main): Add more unaligned inputs.
+
 2014-12-31  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/bits/fenvinline.h (fegetround): Rename macro to
