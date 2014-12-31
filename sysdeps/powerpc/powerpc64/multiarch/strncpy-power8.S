@@ -1,5 +1,5 @@
-/* Multiple versions of stpncpy. PowerPC64 version.
-   Copyright (C) 2014-2015 Free Software Foundation, Inc.
+/* Optimized strncpy implementation for POWER8.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,21 +16,25 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
-# include <string.h>
-# include <shlib-compat.h>
-# include "init-arch.h"
+#include <sysdep.h>
 
-extern __typeof (__stpncpy) __stpncpy_ppc attribute_hidden;
-extern __typeof (__stpncpy) __stpncpy_power7 attribute_hidden;
-extern __typeof (__stpncpy) __stpncpy_power8 attribute_hidden;
+#undef EALIGN
+#define EALIGN(name, alignt, words)				\
+  .section ".text";						\
+  ENTRY_2(__strncpy_power8)					\
+  .align ALIGNARG(alignt);					\
+  EALIGN_W_##words;						\
+  BODY_LABEL(__strncpy_power8):					\
+  cfi_startproc;						\
+  LOCALENTRY(__strncpy_power8)
 
-libc_ifunc (__stpncpy,
-            (hwcap2 & PPC_FEATURE2_ARCH_2_07)
-            ? __stpncpy_power8 :
-              (hwcap & PPC_FEATURE_HAS_VSX)
-              ? __stpncpy_power7
-            : __stpncpy_ppc);
+#undef END
+#define END(name)						\
+  cfi_endproc;							\
+  TRACEBACK(__strncpy_power8)					\
+  END_2(__strncpy_power8)
 
-weak_alias (__stpncpy, stpncpy)
-#endif
+#undef libc_hidden_builtin_def
+#define libc_hidden_builtin_def(name)
+
+#include <sysdeps/powerpc/powerpc64/power8/strncpy.S>
