@@ -1,3 +1,7 @@
+2015-01-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* scripts/gen-posix-conf-vars.awk (END): Don't use sprintf.
+
 2014-12-31  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17748]

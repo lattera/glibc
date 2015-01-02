@@ -68,11 +68,8 @@ END {
 
     # Build a name -> sysconf number associative array to print a C array at
     # the end.
-    if (prefix_conf[c] == "SPEC") {
-      name = sprintf ("%s", c)
-      num = sprintf ("%s_%s", sc_prefixes[c], conf[c])
-      spec[name] = num
-    }
+    if (prefix_conf[c] == "SPEC")
+      spec[c] = sc_prefixes[c] "_" conf[c]
   }
 
   # Print the specification array.  Define the macro NEED_SPEC_ARRAY before
