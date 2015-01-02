@@ -1,5 +1,9 @@
 2015-01-02  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17782]
+	* sysdeps/unix/sysv/linux/mips/bits/termios.h (TIOCSER_TEMT):
+	Condition macro definition on [__USE_MISC].
+
 	[BZ #17781]
 	* sysdeps/unix/sysv/linux/mips/bits/sigaction.h
 	(struct sigaction): Change type of sa_flags field to int.
