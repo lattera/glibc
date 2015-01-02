@@ -1,5 +1,7 @@
 2015-01-02  Joseph Myers  <joseph@codesourcery.com>
 
+	* nptl/version.c (banner): Use single year in copyright notice.
+
 	* NEWS: Update copyright dates.
 	* catgets/gencat.c (print_version): Likewise.
 	* csu/version.c (banner): Likewise.
