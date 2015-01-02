@@ -1,6 +1,6 @@
 /* Make sure dlopen/dlclose are not marked as leaf functions.
 
-   Copyright (C) 2013-2014 Free Software Foundation, Inc.
+   Copyright (C) 2013-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Mike Frysinger <vapier@gentoo.org>
 

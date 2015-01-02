@@ -1,6 +1,6 @@
 /* memset implementation for the dynamic linker.  This is separate from the
    libc implementation to avoid writing to SSE registers.
-   Copyright (C) 2013-2014 Free Software Foundation, Inc.
+   Copyright (C) 2013-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

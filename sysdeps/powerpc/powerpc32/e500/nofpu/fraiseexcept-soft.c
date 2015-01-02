@@ -1,5 +1,5 @@
 /* Raise given exceptions.  e500 version for use from soft-fp.
-   Copyright (C) 2004-2014 Free Software Foundation, Inc.
+   Copyright (C) 2004-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Aldy Hernandez <aldyh@redhat.com>, 2004.
 

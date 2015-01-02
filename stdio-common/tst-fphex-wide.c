@@ -1,6 +1,6 @@
 /* Test program for %a wprintf formats.
    This file is part of the GNU C Library.
-   Copyright (C) 2012-2014 Free Software Foundation, Inc.
+   Copyright (C) 2012-2015 Free Software Foundation, Inc.
    Contributed by Marek Polacek <polacek@redhat.com>, 2012.
 
    The GNU C Library is free software; you can redistribute it and/or

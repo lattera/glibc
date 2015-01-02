@@ -1,5 +1,5 @@
 # Test data for tst-nomeric, which checks it's implementation in glibc
-# Copyright (C) 2003-2014 Free Software Foundation, Inc.
+# Copyright (C) 2003-2015 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Petter Reinholdtsen <pere@hungry.com>, 2003
 # Based on code by Jochen Hein <jochen.hein@delphi.central.de>, 1997.

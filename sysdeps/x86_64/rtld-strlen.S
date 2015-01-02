@@ -1,5 +1,5 @@
 /* strlen(str) -- determine the length of the string STR.
-   Copyright (C) 2002-2014 Free Software Foundation, Inc.
+   Copyright (C) 2002-2015 Free Software Foundation, Inc.
    Based on i486 version contributed by Ulrich Drepper <drepper@redhat.com>.
    This file is part of the GNU C Library.
 

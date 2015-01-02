@@ -1,6 +1,6 @@
 /* PowerPC64 __mpn_addmul_1 -- Multiply a limb vector with a limb and subtract
    the result to a second limb vector.
-   Copyright (C) 2013-2014 Free Software Foundation, Inc.
+   Copyright (C) 2013-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

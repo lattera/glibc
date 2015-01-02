@@ -1,5 +1,5 @@
 /* Implement simple hashing table with string based keys.
-   Copyright (C) 1994-2014 Free Software Foundation, Inc.
+   Copyright (C) 1994-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, October 1994.
 

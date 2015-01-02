@@ -1,6 +1,6 @@
 /* rawmemchr (str, ch) -- Return pointer to first occurrence of CH in STR.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994-2014 Free Software Foundation, Inc.
+   Copyright (C) 1994-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
    Optimised a little by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>

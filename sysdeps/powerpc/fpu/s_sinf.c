@@ -1,5 +1,5 @@
 /* s_sinf.c -- float version of s_sin.c.
-   Copyright (C) 2011-2014 Free Software Foundation, Inc.
+   Copyright (C) 2011-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Adhemerval Zanella <azanella@br.ibm.com>, 2011
 

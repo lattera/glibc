@@ -1,3 +1,11 @@
+2015-01-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* All files with FSF copyright notices: Update copyright dates
+	using scripts/update-copyrights.
+	* intl/plural.c: Regenerated.
+	* locale/programs/charmap-kw.h: Likewise.
+	* locale/programs/locfile-kw.h: Likewise.
+
 2015-01-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* scripts/gen-posix-conf-vars.awk (END): Don't use sprintf.

@@ -1,5 +1,5 @@
 /* Directory entry structure `struct dirent'.  4.4BSD/Generic version.
-   Copyright (C) 1996-2014 Free Software Foundation, Inc.
+   Copyright (C) 1996-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

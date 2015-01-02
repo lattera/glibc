@@ -1,5 +1,5 @@
 /* Header for nscd SELinux access controls.
-   Copyright (C) 2004-2014 Free Software Foundation, Inc.
+   Copyright (C) 2004-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Matthew Rickard <mjricka@epoch.ncsc.mil>, 2004.
 

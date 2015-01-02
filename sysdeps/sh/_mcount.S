@@ -1,5 +1,5 @@
 /* Machine-specific calling sequence for `mcount' profiling function.  SuperH
-   Copyright (C) 2001-2014 Free Software Foundation, Inc.
+   Copyright (C) 2001-2015 Free Software Foundation, Inc.
    Contributed by NIIBE Yutaka <gniibe@m17n.org>
    This file is part of the GNU C Library.
 

@@ -1,6 +1,6 @@
 /* Multiple versions of addmul_1
 
-   Copyright (C) 2013-2014 Free Software Foundation, Inc.
+   Copyright (C) 2013-2015 Free Software Foundation, Inc.
    Contributed by David S. Miller (davem@davemloft.net)
    This file is part of the GNU C Library.
 

@@ -1,5 +1,5 @@
 /* Test for the STOP parameter of re_match_2 and re_search_2.
-   Copyright (C) 2002-2014 Free Software Foundation, Inc.
+   Copyright (C) 2002-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Stepan Kasal <kasal@math.cas.cz>, 2002.
 

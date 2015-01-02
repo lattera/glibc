@@ -1,6 +1,6 @@
 /* Dump the character classes and character maps of a locale to a bunch
    of individual files which can be processed with diff, sed etc.
-   Copyright (C) 2000-2014 Free Software Foundation, Inc.
+   Copyright (C) 2000-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Bruno Haible <haible@clisp.cons.org>, 2000.
 

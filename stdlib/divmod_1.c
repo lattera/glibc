@@ -6,7 +6,7 @@
 
    QUOT_PTR and DIVIDEND_PTR might point to the same limb.
 
-Copyright (C) 1991-2014 Free Software Foundation, Inc.
+Copyright (C) 1991-2015 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 

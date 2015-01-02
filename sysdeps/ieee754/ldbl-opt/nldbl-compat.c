@@ -1,5 +1,5 @@
 /* *printf* family compatibility routines for IEEE double as long double
-   Copyright (C) 2006-2014 Free Software Foundation, Inc.
+   Copyright (C) 2006-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@cygnus.com>, 2006.
 

@@ -1,7 +1,7 @@
 /* Return arc hyperbole sine for long double value, with the imaginary
    part of the result possibly adjusted for use in computing other
    functions.
-   Copyright (C) 1997-2014 Free Software Foundation, Inc.
+   Copyright (C) 1997-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
