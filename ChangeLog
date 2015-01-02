@@ -1,5 +1,10 @@
 2015-01-02  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17780]
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h (struct flock)
+	[!__USE_FILE_OFFSET64 && _MIPS_SIM != _ABI64]: Rename pad field to
+	__glibc_reserved0.
+
 	* nptl/version.c (banner): Use single year in copyright notice.
 
 	* NEWS: Update copyright dates.

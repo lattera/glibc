@@ -84,7 +84,7 @@ struct flock
 #if ! defined __USE_FILE_OFFSET64 && _MIPS_SIM != _ABI64
     /* The 64-bit flock structure, used by the n64 ABI, and for 64-bit
        flock in o32 and n32, never has this field.  */
-    long int pad[4];
+    long int __glibc_reserved0[4];
 #endif
   };
 typedef struct flock flock_t;
