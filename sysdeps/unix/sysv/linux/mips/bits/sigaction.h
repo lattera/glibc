@@ -24,7 +24,7 @@
 struct sigaction
   {
     /* Special flags.  */
-    unsigned int sa_flags;
+    int sa_flags;
 
     /* Signal handler.  */
 #ifdef __USE_POSIX199309

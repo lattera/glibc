@@ -1,5 +1,9 @@
 2015-01-02  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17781]
+	* sysdeps/unix/sysv/linux/mips/bits/sigaction.h
+	(struct sigaction): Change type of sa_flags field to int.
+
 	[BZ #17780]
 	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h (struct flock)
 	[!__USE_FILE_OFFSET64 && _MIPS_SIM != _ABI64]: Rename pad field to
