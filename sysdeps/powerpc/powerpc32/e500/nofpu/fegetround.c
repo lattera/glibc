@@ -18,13 +18,14 @@
 
 #include <fenv_libc.h>
 
-#undef fegetround
 int
-fegetround (void)
+__fegetround (void)
 {
   unsigned long fpescr;
 
   fpescr = fegetenv_register ();
   return fpescr & 3;
 }
-libm_hidden_def (fegetround)
+libm_hidden_def (__fegetround)
+weak_alias (__fegetround, fegetround)
+libm_hidden_weak (fegetround)

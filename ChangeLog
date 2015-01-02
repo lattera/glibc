@@ -1,5 +1,38 @@
 2015-01-02  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17748]
+	* include/fenv.h (__fegetround): Declare.  Use libm_hidden_proto.
+	* math/fegetround.c (fegetround): Rename to __fegetround and
+	define as weak alias of __fegetround.  Use libm_hidden_weak.
+	* sysdeps/aarch64/fpu/fegetround.c (fegetround): Likewise.
+	* sysdeps/alpha/fpu/fegetround.c (fegetround): Likewise.
+	* sysdeps/arm/fegetround.c (fegetround): Likewise.
+	* sysdeps/hppa/fpu/fegetround.c (fegetround): Likewise.
+	* sysdeps/i386/fpu/fegetround.c (fegetround): Likewise.
+	* sysdeps/ia64/fpu/fegetround.c (fegetround): Likewise.
+	* sysdeps/m68k/fpu/fegetround.c (fegetround): Likewise.
+	* sysdeps/mips/fpu/fegetround.c (fegetround): Likewise.
+	* sysdeps/powerpc/fpu/fegetround.c (fegetround): Likewise.
+	Undefine after rather than before function definition; use
+	parentheses around function name in definition.
+	(__fegetround): Also undefine macro after function definition.
+	* sysdeps/powerpc/nofpu/fegetround.c (fegetround): Rename to
+	__fegetround and define as weak alias of __fegetround.  Use
+	libm_hidden_weak.  Do not undefine as macro.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fegetround.c (fegetround):
+	Likewise.
+	* sysdeps/s390/fpu/fegetround.c (fegetround): Rename to
+	__fegetround and define as weak alias of __fegetround.  Use
+	libm_hidden_weak.
+	* sysdeps/sh/sh4/fpu/fegetround.c (fegetround): Likewise.
+	* sysdeps/sparc/fpu/fegetround.c (fegetround): Likewise.
+	* sysdeps/tile/math_private.h (__fegetround): New inline function.
+	* sysdeps/x86_64/fpu/fegetround.c (fegetround): Rename to
+	__fegetround and define as weak alias of __fegetround.  Use
+	libm_hidden_weak.
+	* sysdeps/ieee754/dbl-64/e_sqrt.c (__ieee754_sqrt): Use
+	__fegetround instead of fegetround.
+
 	[BZ #17782]
 	* sysdeps/unix/sysv/linux/mips/bits/termios.h (TIOCSER_TEMT):
 	Condition macro definition on [__USE_MISC].

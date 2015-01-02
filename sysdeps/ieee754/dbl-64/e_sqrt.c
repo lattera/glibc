@@ -66,7 +66,7 @@ __ieee754_sqrt (double x)
   /*----------------- 2^-1022  <= | x |< 2^1024  -----------------*/
   if (k > 0x000fffff && k < 0x7ff00000)
     {
-      int rm = fegetround ();
+      int rm = __fegetround ();
       fenv_t env;
       libc_feholdexcept_setround (&env, FE_TONEAREST);
       double ret;

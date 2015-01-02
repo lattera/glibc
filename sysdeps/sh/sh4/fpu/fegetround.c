@@ -21,7 +21,7 @@
 #include <fpu_control.h>
 
 int
-fegetround (void)
+__fegetround (void)
 {
   fpu_control_t cw;
 
@@ -30,4 +30,6 @@ fegetround (void)
 
   return cw & 0x1;
 }
-libm_hidden_def (fegetround)
+libm_hidden_def (__fegetround)
+weak_alias (__fegetround, fegetround)
+libm_hidden_weak (fegetround)

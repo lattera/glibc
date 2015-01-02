@@ -20,7 +20,7 @@
 #include <fenv.h>
 
 int
-fegetround (void)
+__fegetround (void)
 {
 #ifdef FE_TONEAREST
   return FE_TONEAREST;
@@ -28,5 +28,7 @@ fegetround (void)
   return 0;
 #endif
 }
-libm_hidden_def (fegetround)
+libm_hidden_def (__fegetround)
+weak_alias (__fegetround, fegetround)
+libm_hidden_weak (fegetround)
 stub_warning (fegetround)

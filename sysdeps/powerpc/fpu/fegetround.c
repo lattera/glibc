@@ -18,10 +18,13 @@
 
 #include <fenv_libc.h>
 
-#undef fegetround
 int
-fegetround (void)
+(__fegetround) (void)
 {
   return __fegetround();
 }
-libm_hidden_def (fegetround)
+#undef fegetround
+#undef __fegetround
+libm_hidden_def (__fegetround)
+weak_alias (__fegetround, fegetround)
+libm_hidden_weak (fegetround)

@@ -20,10 +20,11 @@
 #include "soft-fp.h"
 #include "soft-supp.h"
 
-#undef fegetround
 int
-fegetround (void)
+__fegetround (void)
 {
   return __sim_round_mode_thread;
 }
-libm_hidden_def (fegetround)
+libm_hidden_def (__fegetround)
+weak_alias (__fegetround, fegetround)
+libm_hidden_weak (fegetround)

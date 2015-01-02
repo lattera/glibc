@@ -20,7 +20,7 @@
 #include <fenv_libc.h>
 
 int
-fegetround (void)
+__fegetround (void)
 {
   unsigned long fpcr;
 
@@ -28,4 +28,6 @@ fegetround (void)
 
   return (fpcr >> FPCR_ROUND_SHIFT) & 3;
 }
-libm_hidden_def (fegetround)
+libm_hidden_def (__fegetround)
+weak_alias (__fegetround, fegetround)
+libm_hidden_weak (fegetround)

@@ -21,7 +21,7 @@
 #include <fpu_control.h>
 
 int
-fegetround (void)
+__fegetround (void)
 {
   fexcept_t cw;
 
@@ -29,4 +29,6 @@ fegetround (void)
 
   return cw & FPC_RM_MASK;
 }
-libm_hidden_def (fegetround)
+libm_hidden_def (__fegetround)
+weak_alias (__fegetround, fegetround)
+libm_hidden_weak (fegetround)

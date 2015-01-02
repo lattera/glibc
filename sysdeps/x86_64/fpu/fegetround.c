@@ -20,7 +20,7 @@
 #include <fenv.h>
 
 int
-fegetround (void)
+__fegetround (void)
 {
   int cw;
   /* We only check the x87 FPU unit.  The SSE unit should be the same
@@ -30,4 +30,6 @@ fegetround (void)
 
   return cw & 0xc00;
 }
-libm_hidden_def (fegetround)
+libm_hidden_def (__fegetround)
+weak_alias (__fegetround, fegetround)
+libm_hidden_weak (fegetround)

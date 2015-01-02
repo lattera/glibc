@@ -34,6 +34,7 @@ extern inline int __fegetenv (fenv_t *__e)	{ return 0; }
 extern inline int fesetenv (const fenv_t *__e)	{ return 0; }
 extern inline int feupdateenv (const fenv_t *__e) { return 0; }
 extern inline int fegetround (void)		{ return FE_TONEAREST; }
+extern inline int __fegetround (void)		{ return FE_TONEAREST; }
 extern inline int fesetround (int __d)		{ return 0; }
 
 #endif
