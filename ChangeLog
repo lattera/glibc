@@ -1,3 +1,18 @@
+2015-01-05  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17777]
+	* sysdeps/unix/sysv/linux/wordsize-64/posix_fadvise.c
+	(posix_fadvise64): Define as weak alias not strong alias.
+	* sysdeps/unix/sysv/linux/wordsize-64/posix_fallocate.c
+	(posix_fallocate64): Likewise.
+	* conform/Makefile (test-xfail-XOPEN2K/fcntl.h/linknamespace):
+	Remove variable.
+	(test-xfail-XOPEN2K/mqueue.h/linknamespace): Likewise.
+	(test-xfail-POSIX2008/fcntl.h/linknamespace): Likewise.
+	(test-xfail-POSIX2008/mqueue.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K8/fcntl.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K8/mqueue.h/linknamespace): Likewise.
+
 2015-01-05  Matthew Fortune  <matthew.fortune@imgtec.com>
 
 	[BZ #16191]

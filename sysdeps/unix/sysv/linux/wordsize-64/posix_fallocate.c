@@ -61,4 +61,4 @@ posix_fallocate (int fd, __off_t offset, __off_t len)
 
   return internal_fallocate (fd, offset, len);
 }
-strong_alias (posix_fallocate, posix_fallocate64)
+weak_alias (posix_fallocate, posix_fallocate64)

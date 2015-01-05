@@ -37,4 +37,4 @@ posix_fadvise (int fd, off_t offset, off_t len, int advise)
   return ENOSYS;
 #endif
 }
-strong_alias (posix_fadvise, posix_fadvise64)
+weak_alias (posix_fadvise, posix_fadvise64)
