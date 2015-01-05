@@ -1,3 +1,12 @@
+2015-01-05  Matthew Fortune  <matthew.fortune@imgtec.com>
+
+	[BZ #16191]
+	* NEWS: Mention bug fix.
+	* sysdeps/unix/sysv/linux/mips/sys/user.h (PAGE_SHIFT): Remove.
+	(PAGE_SIZE, PAGE_MASK, NBPG, UPAGES): Likewise.
+	(HOST_TEXT_START_ADDR, HOST_DATA_START_ADDR): Likewise.
+	(HOST_STACK_END_ADDR): Likewise.
+
 2015-01-02  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17748]
