@@ -1,3 +1,11 @@
+2015-01-09  Matthew Fortune <matthew.fortune@imgtec.com>
+
+	[BZ #17791]
+	* NEWS: Mention bug fix.
+	* sysdepsysdeps/unix/sysv/linux/microblaze/sys/user.h
+	(PAGE_SHIFT, PAGE_SIZE, PAGE_MASK, NBPG, UPAGES): Remove.
+	(HOST_TEXT_START_ADDR, HOST_STACK_END_ADDR): Remove.
+
 2015-01-09  Torvald Riegel <triegel@redhat.com>
 
 	* sysdeps/unix/sysv/linux/microblaze/lowlevellock.h: Delete file.
