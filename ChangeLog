@@ -1,5 +1,10 @@
 2015-01-05  Steve Ellcey  <sellcey@imgtec.com>
 
+	* sysdeps/mips/memset.S (memset): Modify for mips32r6/mips64r6
+	to avoid using stl/str to align destination.
+
+2015-01-05  Steve Ellcey  <sellcey@imgtec.com>
+
 	* sysdeps/mips/memcpy.S: Add support for mips32r6/mips64r6.
 
 2015-01-05  Joseph Myers  <joseph@codesourcery.com>
