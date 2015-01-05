@@ -1,3 +1,12 @@
+2015-01-05  Chris Metcalf  <cmetcalf@ezchip.com>
+
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_llround.c [!defined _LP64
+	&& REGISTER_CAST_INT32_TO_INT64]: Provide explicit lround()
+	function with cast from llround().
+	* sysdeps/tile/sysdep.h (REGISTER_CAST_INT32_TO_INT64): Define.
+	* sysdeps/x86_64/x32/sysdep.h (REGISTER_CAST_INT32_TO_INT64):
+	Define.
+
 2015-01-05  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17793]

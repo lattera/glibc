@@ -108,3 +108,7 @@
 #endif
 
 #endif /* __ASSEMBLER__ */
+
+/* On tilegx, 32-bit values must have their high 32 bits sign extended;
+   random values are not allowed.  */
+#define REGISTER_CAST_INT32_TO_INT64 1

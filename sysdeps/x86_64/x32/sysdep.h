@@ -90,3 +90,7 @@
 # define R15_LP	"r15d"
 
 #endif	/* __ASSEMBLER__ */
+
+/* On x32, it is not required to normalize a 64-bit value before using
+   it as a 32-bit value.  */
+#define REGISTER_CAST_INT32_TO_INT64 0
