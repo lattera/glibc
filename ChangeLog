@@ -1,3 +1,10 @@
+2015-02-15  Matthew Fortune <Matthew.Fortune@imgtec.com>
+
+	[BZ #17792]
+	* sysdeps/unix/sysv/linux/ia64/sys/user.h (NBPG): Remove.
+	(UPAGES, HOST_TEXT_START_ADDR, HOST_DATA_START_ADDR,
+	HOST_STACK_END_ADDR): Likewise.
+
 2015-02-13  Steve Ellcey  <sellcey@imgtec.com>
 
 	* sysdeps/mips/bits/endian.h (__MIPSEB): Use #ifdef instead of #if.
