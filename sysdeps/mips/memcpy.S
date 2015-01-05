@@ -51,6 +51,13 @@
 #endif
 
 
+#if __mips_isa_rev > 5
+# if (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE)
+#  undef PREFETCH_STORE_HINT
+#  define PREFETCH_STORE_HINT PREFETCH_HINT_STORE_STREAMED
+# endif
+# define R6_CODE
+#endif
 
 /* Some asm.h files do not have the L macro definition.  */
 #ifndef L
@@ -79,6 +86,14 @@
 # endif
 #endif
 
+/* New R6 instructions that may not be in asm.h.  */
+#ifndef PTR_LSA
+# if _MIPS_SIM == _ABI64
+#  define PTR_LSA	dlsa
+# else
+#  define PTR_LSA	lsa
+# endif
+#endif
 
 /*
  * Using PREFETCH_HINT_LOAD_STREAMED instead of PREFETCH_LOAD on load
@@ -221,6 +236,7 @@
 #  define C_LDLO	ldl	/* low part is left in little-endian	*/
 #  define C_STLO	sdl	/* low part is left in little-endian	*/
 # endif
+# define C_ALIGN	dalign	/* r6 align instruction			*/
 #else
 # define C_ST	sw
 # define C_LD	lw
@@ -235,6 +251,7 @@
 #  define C_LDLO	lwl	/* low part is left in little-endian	*/
 #  define C_STLO	swl	/* low part is left in little-endian	*/
 # endif
+# define C_ALIGN	align	/* r6 align instruction			*/
 #endif
 
 /* Bookkeeping values for 32 vs. 64 bit mode.  */
@@ -285,6 +302,9 @@ L(memcpy):
 #else
 	move	v0,a0
 #endif
+
+#ifndef R6_CODE
+
 /*
  * If src and dst have different alignments, go to L(unaligned), if they
  * have the same alignment (but are not actually aligned) do a partial
@@ -305,6 +325,74 @@ L(memcpy):
 	C_STHI	t8,0(a0)
 	PTR_ADDU a0,a0,a3
 
+#else /* R6_CODE */
+
+/*
+ * Align the destination and hope that the source gets aligned too.  If it
+ * doesn't we jump to L(r6_unaligned*) to do unaligned copies using the r6
+ * align instruction.
+ */
+	andi	t8,a0,7
+	lapc	t9,L(atable)
+	PTR_LSA	t9,t8,t9,2
+	jrc	t9
+L(atable):
+	bc	L(lb0)
+	bc	L(lb7)
+	bc	L(lb6)
+	bc	L(lb5)
+	bc	L(lb4)
+	bc	L(lb3)
+	bc	L(lb2)
+	bc	L(lb1)
+L(lb7):
+	lb	a3, 6(a1)
+	sb	a3, 6(a0)
+L(lb6):
+	lb	a3, 5(a1)
+	sb	a3, 5(a0)
+L(lb5):
+	lb	a3, 4(a1)
+	sb	a3, 4(a0)
+L(lb4):
+	lb	a3, 3(a1)
+	sb	a3, 3(a0)
+L(lb3):
+	lb	a3, 2(a1)
+	sb	a3, 2(a0)
+L(lb2):
+	lb	a3, 1(a1)
+	sb	a3, 1(a0)
+L(lb1):
+	lb	a3, 0(a1)
+	sb	a3, 0(a0)
+
+	li	t9,8
+	subu	t8,t9,t8
+	PTR_SUBU a2,a2,t8
+	PTR_ADDU a0,a0,t8
+	PTR_ADDU a1,a1,t8
+L(lb0):
+
+	andi	t8,a1,(NSIZE-1)
+	lapc	t9,L(jtable)
+	PTR_LSA	t9,t8,t9,2
+	jrc	t9
+L(jtable):
+        bc      L(aligned)
+        bc      L(r6_unaligned1)
+        bc      L(r6_unaligned2)
+        bc      L(r6_unaligned3)
+# ifdef USE_DOUBLE
+        bc      L(r6_unaligned4)
+        bc      L(r6_unaligned5)
+        bc      L(r6_unaligned6)
+        bc      L(r6_unaligned7)
+# endif
+#endif /* R6_CODE */
+
+L(aligned):
+
 /*
  * Now dst/src are both aligned to (word or double word) aligned addresses
  * Set a2 to count how many bytes we have to copy after all the 64/128 byte
@@ -313,7 +401,6 @@ L(memcpy):
  * equals a3.
  */
 
-L(aligned):
 	andi	t8,a2,NSIZEDMASK /* any whole 64-byte/128-byte chunks? */
 	beq	a2,t8,L(chkw)	 /* if a2==t8, no 64-byte/128-byte chunks */
 	PTR_SUBU a3,a2,t8	 /* subtract from a2 the reminder */
@@ -363,8 +450,12 @@ L(loop16w):
 	bgtz	v1,L(skip_pref)
 #endif
 	C_LD	t1,UNIT(1)(a1)
+#ifdef R6_CODE
+	PREFETCH_FOR_STORE (2, a0)
+#else
 	PREFETCH_FOR_STORE (4, a0)
 	PREFETCH_FOR_STORE (5, a0)
+#endif
 #if defined(RETURN_LAST_PREFETCH) && defined(USE_PREFETCH)
 	PTR_ADDIU v0,a0,(PREFETCH_CHUNK*5)
 # ifdef USE_DOUBLE
@@ -378,8 +469,11 @@ L(skip_pref):
 	C_LD	REG5,UNIT(5)(a1)
 	C_LD	REG6,UNIT(6)(a1)
 	C_LD	REG7,UNIT(7)(a1)
-        PREFETCH_FOR_LOAD (4, a1)
-
+#ifdef R6_CODE
+	PREFETCH_FOR_LOAD (3, a1)
+#else
+	PREFETCH_FOR_LOAD (4, a1)
+#endif
 	C_ST	t0,UNIT(0)(a0)
 	C_ST	t1,UNIT(1)(a0)
 	C_ST	REG2,UNIT(2)(a0)
@@ -397,7 +491,9 @@ L(skip_pref):
 	C_LD	REG5,UNIT(13)(a1)
 	C_LD	REG6,UNIT(14)(a1)
 	C_LD	REG7,UNIT(15)(a1)
+#ifndef R6_CODE
         PREFETCH_FOR_LOAD (5, a1)
+#endif
 	C_ST	t0,UNIT(8)(a0)
 	C_ST	t1,UNIT(9)(a0)
 	C_ST	REG2,UNIT(10)(a0)
@@ -476,6 +572,8 @@ L(lastbloop):
 L(leave):
 	j	ra
 	nop
+
+#ifndef R6_CODE
 /*
  * UNALIGNED case, got here with a3 = "negu a0"
  * This code is nearly identical to the aligned code above
@@ -510,38 +608,38 @@ L(ua_chk16w):
 	PTR_SUBU a3,a2,t8	 /* subtract from a2 the reminder */
 	PTR_ADDU a3,a0,a3	 /* Now a3 is the final dst after loop */
 
-#if defined(USE_PREFETCH) && (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE)
+# if defined(USE_PREFETCH) && (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE)
 	PTR_ADDU t0,a0,a2	  /* t0 is the "past the end" address */
 	PTR_SUBU t9,t0,PREFETCH_LIMIT /* t9 is the "last safe pref" address */
-#endif
+# endif
 	PREFETCH_FOR_LOAD  (0, a1)
 	PREFETCH_FOR_LOAD  (1, a1)
 	PREFETCH_FOR_LOAD  (2, a1)
-#if defined(USE_PREFETCH) && (PREFETCH_STORE_HINT != PREFETCH_HINT_PREPAREFORSTORE)
+# if defined(USE_PREFETCH) && (PREFETCH_STORE_HINT != PREFETCH_HINT_PREPAREFORSTORE)
 	PREFETCH_FOR_STORE (1, a0)
 	PREFETCH_FOR_STORE (2, a0)
 	PREFETCH_FOR_STORE (3, a0)
-#endif
-#if defined(RETURN_FIRST_PREFETCH) && defined(USE_PREFETCH)
-# if (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE)
+# endif
+# if defined(RETURN_FIRST_PREFETCH) && defined(USE_PREFETCH)
+#  if (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE)
 	sltu    v1,t9,a0
 	bgtz    v1,L(ua_skip_set)
 	nop
 	PTR_ADDIU v0,a0,(PREFETCH_CHUNK*4)
 L(ua_skip_set):
-# else
+#  else
 	PTR_ADDIU v0,a0,(PREFETCH_CHUNK*1)
+#  endif
 # endif
-#endif
 L(ua_loop16w):
 	PREFETCH_FOR_LOAD  (3, a1)
 	C_LDHI	t0,UNIT(0)(a1)
 	C_LDHI	t1,UNIT(1)(a1)
 	C_LDHI	REG2,UNIT(2)(a1)
-#if defined(USE_PREFETCH) && (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE)
+# if defined(USE_PREFETCH) && (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE)
 	sltu	v1,t9,a0
 	bgtz	v1,L(ua_skip_pref)
-#endif
+# endif
 	C_LDHI	REG3,UNIT(3)(a1)
 	PREFETCH_FOR_STORE (4, a0)
 	PREFETCH_FOR_STORE (5, a0)
@@ -666,6 +764,59 @@ L(ua_smallCopy_loop):
 
 	j	ra
 	nop
+
+#else /* R6_CODE */
+
+# if __MIPSEB
+#  define SWAP_REGS(X,Y) X, Y
+#  define ALIGN_OFFSET(N) (N)
+# else
+#  define SWAP_REGS(X,Y) Y, X
+#  define ALIGN_OFFSET(N) (NSIZE-N)
+# endif
+# define R6_UNALIGNED_WORD_COPY(BYTEOFFSET) \
+	andi	REG7, a2, (NSIZE-1);/* REG7 is # of bytes to by bytes.     */ \
+	beq	REG7, a2, L(lastb); /* Check for bytes to copy by word	   */ \
+	PTR_SUBU a3, a2, REG7;	/* a3 is number of bytes to be copied in   */ \
+				/* (d)word chunks.			   */ \
+	move	a2, REG7;	/* a2 is # of bytes to copy byte by byte   */ \
+				/* after word loop is finished.		   */ \
+	PTR_ADDU REG6, a0, a3;	/* REG6 is the dst address after loop.	   */ \
+	PTR_SUBU REG2, a1, t8;	/* REG2 is the aligned src address.	   */ \
+	PTR_ADDU a1, a1, a3;	/* a1 is addr of source after word loop.   */ \
+	C_LD	t0, UNIT(0)(REG2);  /* Load first part of source.	   */ \
+L(r6_ua_wordcopy##BYTEOFFSET):						      \
+	C_LD	t1, UNIT(1)(REG2);  /* Load second part of source.	   */ \
+	C_ALIGN	REG3, SWAP_REGS(t1,t0), ALIGN_OFFSET(BYTEOFFSET);	      \
+	PTR_ADDIU a0, a0, UNIT(1);  /* Increment destination pointer.	   */ \
+	PTR_ADDIU REG2, REG2, UNIT(1); /* Increment aligned source pointer.*/ \
+	move	t0, t1;		/* Move second part of source to first.	   */ \
+	bne	a0, REG6,L(r6_ua_wordcopy##BYTEOFFSET);			      \
+	C_ST	REG3, UNIT(-1)(a0);					      \
+	j	L(lastb);						      \
+	nop
+
+	/* We are generating R6 code, the destination is 4 byte aligned and
+	   the source is not 4 byte aligned. t8 is 1, 2, or 3 depending on the
+           alignment of the source.  */
+
+L(r6_unaligned1):
+	R6_UNALIGNED_WORD_COPY(1)
+L(r6_unaligned2):
+	R6_UNALIGNED_WORD_COPY(2)
+L(r6_unaligned3):
+	R6_UNALIGNED_WORD_COPY(3)
+# ifdef USE_DOUBLE
+L(r6_unaligned4):
+	R6_UNALIGNED_WORD_COPY(4)
+L(r6_unaligned5):
+	R6_UNALIGNED_WORD_COPY(5)
+L(r6_unaligned6):
+	R6_UNALIGNED_WORD_COPY(6)
+L(r6_unaligned7):
+	R6_UNALIGNED_WORD_COPY(7)
+# endif
+#endif /* R6_CODE */
 
 	.set	at
 	.set	reorder
