@@ -1,5 +1,20 @@
 2015-01-05  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17635]
+	* ctype/ctype-c99.c: New file.  isblank implementation moved from
+	...
+	* ctype/ctype-extn.c: ... here.
+	(__isblank_l): Move to ...
+	* ctype/ctype-c99_l.c: ... here.  New file.
+	* ctype/Makefile (routines): Add ctype-c99 and ctype-c99_l.
+	* conform/Makefile (test-xfail-ISO99/ctype.h/linknamespace):
+	Remove variable.
+	(test-xfail-ISO11/ctype.h/linknamespace): Likewise.
+	(test-xfail-XPG3/ctype.h/linknamespace): Likewise.
+	(test-xfail-XPG4/ctype.h/linknamespace): Likewise.
+	(test-xfail-UNIX98/ctype.h/linknamespace): Likewise.
+	(test-xfail-POSIX2008/ctype.h/linknamespace): Likewise.
+
 	[BZ #17777]
 	* sysdeps/unix/sysv/linux/wordsize-64/posix_fadvise.c
 	(posix_fadvise64): Define as weak alias not strong alias.

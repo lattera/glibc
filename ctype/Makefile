@@ -24,7 +24,7 @@ include ../Makeconfig
 
 headers	:= ctype.h
 
-routines	:= ctype ctype-extn ctype_l isctype
+routines	:= ctype ctype-c99 ctype-extn ctype-c99_l ctype_l isctype
 aux		:= ctype-info
 
 tests	:= test_ctype

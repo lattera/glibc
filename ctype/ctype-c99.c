@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2015 Free Software Foundation, Inc.
+/* External function version of isblank.
+   Copyright (C) 1991-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,34 +19,8 @@
 #define	__NO_CTYPE
 #include <ctype.h>
 
-#define __ctype_tolower \
-  ((int32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOLOWER) + 128)
-#define __ctype_toupper \
-  ((int32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOUPPER) + 128)
-
-/* Real function versions of the non-ANSI ctype functions.  */
-
 int
-_tolower (int c)
+isblank (int c)
 {
-  return __ctype_tolower[c];
+  return __isctype (c, _ISblank);
 }
-int
-_toupper (int c)
-{
-  return __ctype_toupper[c];
-}
-
-int
-toascii (int c)
-{
-  return __toascii (c);
-}
-weak_alias (toascii, __toascii_l)
-
-int
-isascii (int c)
-{
-  return __isascii (c);
-}
-weak_alias (isascii, __isascii_l)
