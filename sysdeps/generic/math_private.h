@@ -399,7 +399,7 @@ extern long double __gamma_productl (long double x, long double x_eps,
 static __always_inline void
 default_libc_feholdexcept (fenv_t *e)
 {
-  (void) feholdexcept (e);
+  (void) __feholdexcept (e);
 }
 
 #ifndef libc_feholdexcept
@@ -431,7 +431,7 @@ default_libc_fesetround (int r)
 static __always_inline void
 default_libc_feholdexcept_setround (fenv_t *e, int r)
 {
-  feholdexcept (e);
+  __feholdexcept (e);
   fesetround (r);
 }
 

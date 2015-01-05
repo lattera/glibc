@@ -20,7 +20,7 @@
 #include <fenv.h>
 
 int
-feholdexcept (fenv_t *envp)
+__feholdexcept (fenv_t *envp)
 {
   fenv_t fpsr;
   /* Save the current state.  */
@@ -38,4 +38,6 @@ feholdexcept (fenv_t *envp)
   /* Success.  */
   return 0;
 }
-libm_hidden_def (feholdexcept)
+libm_hidden_def (__feholdexcept)
+weak_alias (__feholdexcept, feholdexcept)
+libm_hidden_weak (feholdexcept)

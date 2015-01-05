@@ -14,6 +14,7 @@ extern int __fegetenv (fenv_t *__envp);
 extern int __fesetenv (const fenv_t *__envp);
 extern int __feupdateenv (const fenv_t *__envp);
 extern __typeof (fegetround) __fegetround;
+extern __typeof (feholdexcept) __feholdexcept;
 
 libm_hidden_proto (feraiseexcept)
 libm_hidden_proto (__feraiseexcept)
@@ -24,6 +25,7 @@ libm_hidden_proto (__fegetround)
 libm_hidden_proto (fesetenv)
 libm_hidden_proto (fesetround)
 libm_hidden_proto (feholdexcept)
+libm_hidden_proto (__feholdexcept)
 libm_hidden_proto (feupdateenv)
 libm_hidden_proto (fetestexcept)
 libm_hidden_proto (feclearexcept)

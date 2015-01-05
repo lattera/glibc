@@ -20,7 +20,7 @@
 #include <fenv.h>
 
 int
-feholdexcept (fenv_t *envp)
+__feholdexcept (fenv_t *envp)
 {
   fexcept_t fpcr, fpsr;
 
@@ -42,4 +42,6 @@ feholdexcept (fenv_t *envp)
 
   return 0;
 }
-libm_hidden_def (feholdexcept);
+libm_hidden_def (__feholdexcept)
+weak_alias (__feholdexcept, feholdexcept)
+libm_hidden_weak (feholdexcept)
