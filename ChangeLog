@@ -1,5 +1,12 @@
 2015-01-05  Chris Metcalf  <cmetcalf@ezchip.com>
 
+        * sysdeps/unix/sysv/linux/tile/bits/libc-vdso.h: Fix return type
+        for __vdso_* functions in declarations.
+        * sysdeps/unix/sysv/linux/tile/init-first.c: Likewise for
+        definitions.
+        * sysdeps/unix/sysv/linux/tile/sysdep.h (INLINE_VSYSCALL,
+        INTERNAL_VSYSCALL): Use struct return types to check for error.
+
 	* sysdeps/ieee754/dbl-64/wordsize-64/s_llround.c [!defined _LP64
 	&& REGISTER_CAST_INT32_TO_INT64]: Provide explicit lround()
 	function with cast from llround().

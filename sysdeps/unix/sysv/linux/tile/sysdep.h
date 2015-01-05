@@ -217,7 +217,9 @@
     __typeof (__vdso_##name) vdsop = __vdso_##name;			      \
     if (vdsop != NULL)							      \
       {									      \
-        sc_ret = vdsop (args);						      \
+        struct syscall_return_value rv = vdsop (args);			      \
+        sc_ret = rv.value;						      \
+        sc_err = rv.error;						      \
         if (!INTERNAL_SYSCALL_ERROR_P (sc_ret, sc_err))			      \
           goto out;							      \
         if (INTERNAL_SYSCALL_ERRNO (sc_ret, sc_err) != ENOSYS)		      \
@@ -242,7 +244,9 @@
     __typeof (__vdso_##name) vdsop = __vdso_##name;			      \
     if (vdsop != NULL)							      \
       {									      \
-        v_ret = vdsop (args);						      \
+        struct syscall_return_value rv = vdsop (args);			      \
+        v_ret = rv.value;						      \
+        err = rv.error;							      \
         if (!INTERNAL_SYSCALL_ERROR_P (v_ret, err)			      \
             || INTERNAL_SYSCALL_ERRNO (v_ret, err) != ENOSYS)		      \
           goto out;							      \

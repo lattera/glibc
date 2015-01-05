@@ -22,10 +22,18 @@
 
 #ifdef SHARED
 
-extern long int (*__vdso_gettimeofday) (struct timeval *, void *)
+struct syscall_return_value
+{
+  long int value;
+  long int error;
+};
+
+extern struct syscall_return_value (*__vdso_gettimeofday) (struct timeval *,
+                                                           void *)
   attribute_hidden;
 
-extern long int (*__vdso_clock_gettime) (clockid_t, struct timespec *);
+extern struct syscall_return_value (*__vdso_clock_gettime) (clockid_t,
+                                                            struct timespec *);
 
 #endif
 
