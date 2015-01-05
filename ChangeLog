@@ -1,3 +1,10 @@
+2015-01-05  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17796]
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/posix_fadvise.c
+	[!SHLIB_COMPAT(libc, GLIBC_2_2, GLIBC_2_3_3)] (posix_fadvise64):
+	Define as weak alias not strong alias.
+
 2015-01-05  Steve Ellcey  <sellcey@imgtec.com>
 
 	* sysdeps/mips/dl-machine.h (elf_machine_load_address): Replace
