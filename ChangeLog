@@ -1,3 +1,31 @@
+2015-01-05  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/generic/unwind-resume.h: New file.
+	* sysdeps/gnu/unwind-resume.c: Include it.
+	(libgcc_s_personality): Use PERSONALITY_PROTO macro for the prototype.
+	(__gcc_personality_v0): Likewise, and PERSONALITY_ARGS for the callee
+	argument list.
+	(libgcc_s_resume): Variable renamed to __libgcc_s_resume, made hidden
+	global rather than static.
+	(_Unwind_Resume): Update user.
+	Conditionalize definition on [!HAVE_ARCH_UNWIND_RESUME].
+	(init): Likewise.  Renamed to __libgcc_s_init, made hidden global
+	rather than static.  Add __attribute__ ((cold)).
+	(_Unwind_Resume, __gcc_personality_v0): Update callers.
+	* sysdeps/nptl/unwind-forcedunwind.c: Likewise.
+	* sysdeps/arm/arm-unwind-resume.S: New file.
+	* sysdeps/arm/rt-arm-unwind-resume.S: New file.
+	* sysdeps/arm/pt-arm-unwind-resume.S: New file.
+	* sysdeps/arm/Makefile [$(subdir) = csu]
+	(sysdep_routines, shared-only-routines): Add arm-unwind-resume.
+	[$(subdir) = rt] (librt-sysdep_routines, librt-shared-only-routines):
+	Add rt-arm-unwind-resume.
+	[$(subdir) = nptl]
+	(libpthread-sysdep_routines, libpthread-shared-only-routines):
+	Add pt-arm-unwind-resume.
+	* sysdeps/unix/sysv/linux/arm/unwind-resume.c: File removed.
+	* sysdeps/unix/sysv/linux/arm/unwind-forcedunwind.c: File removed.
+
 2015-01-05  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17748]

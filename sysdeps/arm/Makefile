@@ -50,6 +50,9 @@ shared-only-routines += libc-aeabi_read_tp
 # cantunwind marker.  There's one in start.S.  To make sure we reach it, add
 # unwind tables for __libc_start_main.
 CFLAGS-libc-start.c += -fexceptions
+
+sysdep_routines += arm-unwind-resume
+shared-only-routines += arm-unwind-resume
 endif
 
 ifeq ($(subdir),gmon)
@@ -61,6 +64,11 @@ CFLAGS-backtrace.c += -funwind-tables
 endif
 
 ifeq ($(subdir),rt)
-librt-sysdep_routines += rt-aeabi_unwind_cpp_pr1
-librt-shared-only-routines += rt-aeabi_unwind_cpp_pr1
+librt-sysdep_routines += rt-aeabi_unwind_cpp_pr1 rt-arm-unwind-resume
+librt-shared-only-routines += rt-aeabi_unwind_cpp_pr1 rt-arm-unwind-resume
+endif
+
+ifeq ($(subdir),nptl)
+libpthread-sysdep_routines += pt-arm-unwind-resume
+libpthread-shared-only-routines += pt-arm-unwind-resume
 endif

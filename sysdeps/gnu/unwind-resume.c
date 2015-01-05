@@ -21,15 +21,16 @@
 #include <unwind.h>
 #include <gnu/lib-names.h>
 #include <sysdep.h>
+#include <unwind-resume.h>
 
-static void (*libgcc_s_resume) (struct _Unwind_Exception *exc)
-  __attribute__ ((noreturn));
-static _Unwind_Reason_Code (*libgcc_s_personality)
-  (int, _Unwind_Action, _Unwind_Exception_Class, struct _Unwind_Exception *,
-   struct _Unwind_Context *);
 
-static void
-init (void)
+void (*__libgcc_s_resume) (struct _Unwind_Exception *exc)
+  attribute_hidden __attribute__ ((noreturn));
+
+static _Unwind_Reason_Code (*libgcc_s_personality) PERSONALITY_PROTO;
+
+void attribute_hidden __attribute__ ((cold))
+__libgcc_s_init (void)
 {
   void *resume, *personality;
   void *handle;
@@ -43,33 +44,31 @@ init (void)
                   " must be installed for pthread_cancel to work\n");
 
   PTR_MANGLE (resume);
-  libgcc_s_resume = resume;
+  __libgcc_s_resume = resume;
   PTR_MANGLE (personality);
   libgcc_s_personality = personality;
 }
 
+#if !HAVE_ARCH_UNWIND_RESUME
 void
 _Unwind_Resume (struct _Unwind_Exception *exc)
 {
-  if (__glibc_unlikely (libgcc_s_resume == NULL))
-    init ();
+  if (__glibc_unlikely (__libgcc_s_resume == NULL))
+    __libgcc_s_init ();
 
-  __typeof (libgcc_s_resume) resume = libgcc_s_resume;
+  __typeof (__libgcc_s_resume) resume = __libgcc_s_resume;
   PTR_DEMANGLE (resume);
   (*resume) (exc);
 }
+#endif
 
 _Unwind_Reason_Code
-__gcc_personality_v0 (int version, _Unwind_Action actions,
-		      _Unwind_Exception_Class exception_class,
-                      struct _Unwind_Exception *ue_header,
-                      struct _Unwind_Context *context)
+__gcc_personality_v0 PERSONALITY_PROTO
 {
   if (__glibc_unlikely (libgcc_s_personality == NULL))
-    init ();
+    __libgcc_s_init ();
 
   __typeof (libgcc_s_personality) personality = libgcc_s_personality;
   PTR_DEMANGLE (personality);
-
-  return (*personality) (version, actions, exception_class, ue_header, context);
+  return (*personality) PERSONALITY_ARGS;
 }
