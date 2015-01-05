@@ -1,3 +1,9 @@
+2015-01-05  Steve Ellcey  <sellcey@imgtec.com>
+
+	* sysdeps/mips/dl-machine.h (elf_machine_load_address): Replace
+	bltzal with addiupc.
+	(RTLD_START): Ditto.
+
 2015-01-05  Chris Metcalf  <cmetcalf@ezchip.com>
 
         * sysdeps/unix/sysv/linux/tile/bits/libc-vdso.h: Fix return type
