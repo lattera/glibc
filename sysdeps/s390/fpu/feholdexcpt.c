@@ -20,7 +20,7 @@
 #include <fenv_libc.h>
 #include <fpu_control.h>
 
-int feholdexcept (fenv_t *envp)
+int __feholdexcept (fenv_t *envp)
 {
   fexcept_t fpc;
   /* Store the environment.  */
@@ -32,4 +32,6 @@ int feholdexcept (fenv_t *envp)
   _FPU_SETCW ((fpc & ~(FE_ALL_EXCEPT << FPC_EXCEPTION_MASK_SHIFT)));
   return 0;
 }
-libm_hidden_def (feholdexcept)
+libm_hidden_def (__feholdexcept)
+weak_alias (__feholdexcept, feholdexcept)
+libm_hidden_weak (feholdexcept)

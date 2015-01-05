@@ -21,7 +21,7 @@
 
 
 int
-feholdexcept (fenv_t *envp)
+__feholdexcept (fenv_t *envp)
 {
   /* Fail if a VFP unit isn't present.  */
   if (!ARM_HAVE_VFP)
@@ -30,4 +30,6 @@ feholdexcept (fenv_t *envp)
   libc_feholdexcept_vfp (envp);
   return 0;
 }
-libm_hidden_def (feholdexcept)
+libm_hidden_def (__feholdexcept)
+weak_alias (__feholdexcept, feholdexcept)
+libm_hidden_weak (feholdexcept)

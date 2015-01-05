@@ -1,3 +1,30 @@
+2015-01-05  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17748]
+	* include/fenv.h (__feholdexcept): Declare.  Use
+	libm_hidden_proto.
+	* math/feholdexcpt.c (feholdexcept): Rename to __feholdexcept and
+	define as weak alias of __feholdexcept.  Use libm_hidden_weak.
+	* sysdeps/aarch64/fpu/feholdexcpt.c (feholdexcept): Likewise.
+	* sysdeps/alpha/fpu/feholdexcpt.c (feholdexcept): Likewise.
+	* sysdeps/arm/feholdexcpt.c (feholdexcept): Likewise.
+	* sysdeps/hppa/fpu/feholdexcpt.c (feholdexcept): Likewise.
+	* sysdeps/i386/fpu/feholdexcpt.c (feholdexcept): Likewise.
+	* sysdeps/ia64/fpu/feholdexcpt.c (feholdexcept): Likewise.
+	* sysdeps/m68k/fpu/feholdexcpt.c (feholdexcept): Likewise.
+	* sysdeps/mips/fpu/feholdexcpt.c (feholdexcept): Likewise.
+	* sysdeps/powerpc/fpu/feholdexcpt.c (feholdexcept): Likewise.
+	* sysdeps/powerpc/nofpu/feholdexcpt.c (feholdexcept): Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/feholdexcpt.c
+	(feholdexcept): Likewise.
+	* sysdeps/s390/fpu/feholdexcpt.c (feholdexcept): Likewise.
+	* sysdeps/sh/sh4/fpu/feholdexcpt.c (feholdexcept): Likewise.
+	* sysdeps/sparc/fpu/feholdexcpt.c (feholdexcept): Likewise.
+	* sysdeps/x86_64/fpu/feholdexcpt.c (feholdexcept): Likewise.
+	* sysdeps/generic/math_private.h (default_libc_feholdexcept): Use
+	__feholdexcept instead of feholdexcept.
+	(default_libc_feholdexcept_setround): Likewise.
+
 2015-01-05  Steve Ellcey  <sellcey@imgtec.com>
 
 	* sysdeps/mips/memcpy.S: Add support for mips32r6/mips64r6.
