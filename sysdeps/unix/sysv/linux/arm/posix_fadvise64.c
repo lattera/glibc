@@ -35,4 +35,4 @@ __posix_fadvise64_l64 (int fd, off64_t offset, off64_t len, int advise)
     return 0;
   return INTERNAL_SYSCALL_ERRNO (ret, err);
 }
-strong_alias (__posix_fadvise64_l64, posix_fadvise64);
+weak_alias (__posix_fadvise64_l64, posix_fadvise64);

@@ -1,5 +1,9 @@
 2015-01-05  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17793]
+	* sysdeps/unix/sysv/linux/arm/posix_fadvise64.c (posix_fadvise64):
+	Define as weak alias not strong alias.
+
 	[BZ #17635]
 	* ctype/ctype-c99.c: New file.  isblank implementation moved from
 	...
