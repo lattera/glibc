@@ -153,9 +153,9 @@ __res_vinit(res_state statp, int preinit) {
 	char *cp, **pp;
 	int n;
 	char buf[BUFSIZ];
-	int nserv = 0;    /* number of nameserver records read from file */
+	int nserv = 0;    /* number of IPv4 nameservers read from file */
 #ifdef _LIBC
-	int nservall = 0; /* number of NS records read, nserv IPv4 only */
+	int nservall = 0; /* number of (IPv4 + IPV6) nameservers read from file */
 #endif
 	int haveenv = 0;
 	int havesearch = 0;

@@ -1,3 +1,8 @@
+2015-01-06  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* resolv/res_init.c (__res_vinit): Improve comments about nserv
+	and nservall.
+
 2015-01-06  Ondřej Bílka  <neleai@seznam.cz>
 
 	* sysdeps/unix/sysv/linux/check_pf.c (make_request):
