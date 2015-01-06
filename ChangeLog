@@ -1,3 +1,12 @@
+2015-01-08  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/futimens.c (futimens): Use address of first
+	timespec struct member in syscall macro.
+	* sysdeps/unix/sysv/linux/utimensat.c (utimensat): Likewise.
+	* sysdeps/unix/sysv/linux/futimesat.c (futimesat): Use address of
+	first timeval struct member in syscall macro.
+	* sysdeps/unix/sysv/linux/utimes.c (__utimeS): Likewise.
+
 2015-01-07  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17748]

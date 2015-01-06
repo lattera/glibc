@@ -28,13 +28,11 @@
 /* Change the access time of FILE relative to FD to TVP[0] and
    the modification time of FILE to TVP[1].  */
 int
-futimesat (fd, file, tvp)
-     int fd;
-     const char *file;
-     const struct timeval tvp[2];
+futimesat (int fd, const char *file, const struct timeval tvp[2])
 {
   if (file == NULL)
     return __futimes (fd, tvp);
 
-  return INLINE_SYSCALL (futimesat, 3, fd, file, tvp);
+  /* Avoid implicit array coercion in syscall macros.  */
+  return INLINE_SYSCALL (futimesat, 3, fd, file, &tvp[0]);
 }

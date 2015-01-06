@@ -37,7 +37,8 @@ futimens (int fd, const struct timespec tsp[2])
       __set_errno (EBADF);
       return -1;
     }
-  return INLINE_SYSCALL (utimensat, 4, fd, NULL, tsp, 0);
+  /* Avoid implicit array coercion in syscall macros.  */
+  return INLINE_SYSCALL (utimensat, 4, fd, NULL, &tsp[0], 0);
 #else
   __set_errno (ENOSYS);
   return -1;

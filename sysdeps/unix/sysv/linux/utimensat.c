@@ -35,7 +35,8 @@ utimensat (int fd, const char *file, const struct timespec tsp[2],
       return -1;
     }
 #ifdef __NR_utimensat
-  return INLINE_SYSCALL (utimensat, 4, fd, file, tsp, flags);
+  /* Avoid implicit array coercion in syscall macros.  */
+  return INLINE_SYSCALL (utimensat, 4, fd, file, &tsp[0], flags);
 #else
   __set_errno (ENOSYS);
   return -1;
