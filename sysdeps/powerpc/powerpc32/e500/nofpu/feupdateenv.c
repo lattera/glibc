@@ -28,7 +28,7 @@ __feupdateenv (const fenv_t *envp)
   exc = fegetenv_register () & SPEFSCR_ALL_EXCEPT;
 
   /* Install new environment.  */
-  fesetenv (envp);
+  __fesetenv (envp);
 
   /* Raise (if appropriate) saved exceptions. */
   __feraiseexcept_spe (exc);

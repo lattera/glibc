@@ -20,7 +20,7 @@
 #include <fpu_control.h>
 
 int
-fesetenv (const fenv_t *envp)
+__fesetenv (const fenv_t *envp)
 {
   if (envp == FE_DFL_ENV)
       _FPU_SETCW (_FPU_DEFAULT);
@@ -31,4 +31,6 @@ fesetenv (const fenv_t *envp)
     }
   return 0;
 }
-libm_hidden_def (fesetenv)
+libm_hidden_def (__fesetenv)
+weak_alias (__fesetenv, fesetenv)
+libm_hidden_weak (fesetenv)

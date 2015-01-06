@@ -462,7 +462,7 @@ default_libc_feholdexcept_setround (fenv_t *e, int r)
 static __always_inline void
 default_libc_fesetenv (fenv_t *e)
 {
-  (void) fesetenv (e);
+  (void) __fesetenv (e);
 }
 
 #ifndef libc_fesetenv
@@ -626,7 +626,7 @@ static __always_inline void
 libc_feresetround_noex_ctx (struct rm_ctx *ctx)
 {
   /* Restore exception flags and rounding mode.  */
-  fesetenv (&ctx->env);
+  __fesetenv (&ctx->env);
 }
 
 # define libc_feholdsetroundf_ctx libc_feholdsetround_ctx

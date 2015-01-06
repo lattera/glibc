@@ -31,7 +31,7 @@ feupdateenv (const fenv_t *envp)
 
   /* Raise the exceptions since the last call to feholdenv  */
   /* re install saved environment.  */
-  fesetenv (envp);
+  __fesetenv (envp);
   __feraiseexcept ((int) temp);
 
   /* Success.  */

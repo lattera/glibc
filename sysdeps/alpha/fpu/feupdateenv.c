@@ -28,7 +28,7 @@ __feupdateenv (const fenv_t *envp)
   tmp = __ieee_get_fp_control ();
 
   /* Install new environment.  */
-  fesetenv (envp);
+  __fesetenv (envp);
 
   /* Raise the saved exception.  Incidently for us the implementation
      defined format of the values in objects of type fexcept_t is the

@@ -31,7 +31,7 @@ __feupdateenv (const fenv_t *envp)
   saved_exceptions = __sim_exceptions_thread;
 
   /* Set environment.  */
-  fesetenv (envp);
+  __fesetenv (envp);
 
   /* Raise old exceptions.  */
   __sim_exceptions_thread |= saved_exceptions;

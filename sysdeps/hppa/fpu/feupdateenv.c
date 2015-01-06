@@ -33,7 +33,7 @@ feupdateenv (const fenv_t *envp)
   /* Currently raised exceptions not cleared */
   temp.__status_word |= s.sw[0] & (FE_ALL_EXCEPT << 27);
   /* Install new environment.  */
-  fesetenv (&temp);
+  __fesetenv (&temp);
   /* Success.  */
   return 0;
 }

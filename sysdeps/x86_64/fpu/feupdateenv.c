@@ -30,7 +30,7 @@ __feupdateenv (const fenv_t *envp)
   temp = (temp | xtemp) & FE_ALL_EXCEPT;
 
   /* Install new environment.  */
-  fesetenv (envp);
+  __fesetenv (envp);
 
   /* Raise the saved exception.  Incidently for us the implementation
      defined format of the values in objects of type fexcept_t is the

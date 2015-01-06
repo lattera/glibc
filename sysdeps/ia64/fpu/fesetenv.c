@@ -20,7 +20,7 @@
 #include <fenv.h>
 
 int
-fesetenv (const fenv_t *envp)
+__fesetenv (const fenv_t *envp)
 {
   fenv_t env;
 
@@ -38,4 +38,6 @@ fesetenv (const fenv_t *envp)
 
   return 0;
 }
-libm_hidden_def (fesetenv)
+libm_hidden_def (__fesetenv)
+weak_alias (__fesetenv, fesetenv)
+libm_hidden_weak (fesetenv)

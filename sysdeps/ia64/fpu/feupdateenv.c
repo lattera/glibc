@@ -29,7 +29,7 @@ feupdateenv (const fenv_t *envp)
   __asm__ __volatile__ ("mov.m %0=ar.fpsr" : "=r" (fpsr));
 
   /* Install new environment.  */
-  fesetenv (envp);
+  __fesetenv (envp);
 
   /* Raise the saved exceptions.  */
   __feraiseexcept ((int) (fpsr >> 13) & FE_ALL_EXCEPT);

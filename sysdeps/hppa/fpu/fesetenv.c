@@ -22,7 +22,7 @@
 #include <fenv.h>
 
 int
-fesetenv (const fenv_t *envp)
+__fesetenv (const fenv_t *envp)
 {
   union { unsigned long long buf[4]; fenv_t env; } temp;
   unsigned long long *bufptr;
@@ -60,4 +60,6 @@ fesetenv (const fenv_t *envp)
   /* Success.  */
   return 0;
 }
-libm_hidden_def (fesetenv)
+libm_hidden_def (__fesetenv)
+weak_alias (__fesetenv, fesetenv)
+libm_hidden_weak (fesetenv)

@@ -1,3 +1,49 @@
+2015-01-06  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17748]
+	* include/fenv.h (__fesetenv): Use libm_hidden_proto.
+	* math/fesetenv.c (__fesetenv): Use libm_hidden_def.
+	* sysdeps/aarch64/fpu/fesetenv.c (fesetenv): Rename to __fesetenv
+	and define as weak alias of __fesetenv.  Use libm_hidden_weak.
+	* sysdeps/alpha/fpu/fesetenv.c (__fesetenv): Use libm_hidden_def.
+	* sysdeps/arm/fesetenv.c (fesetenv): Rename to __fesetenv and
+	define as weak alias of __fesetenv.  Use libm_hidden_weak.
+	* sysdeps/hppa/fpu/fesetenv.c (fesetenv): Likewise.
+	* sysdeps/i386/fpu/fesetenv.c (__fesetenv): Use libm_hidden_def.
+	* sysdeps/ia64/fpu/fesetenv.c (fesetenv): Rename to __fesetenv and
+	define as weak alias of __fesetenv.  Use libm_hidden_weak.
+	* sysdeps/m68k/fpu/fesetenv.c (__fesetenv): Use libm_hidden_def.
+	* sysdeps/mips/fpu/fesetenv.c (fesetenv): Rename to __fesetenv and
+	define as weak alias of __fesetenv.  Use libm_hidden_weak.
+	* sysdeps/powerpc/fpu/fesetenv.c (__fesetenv): Use
+	libm_hidden_def.
+	* sysdeps/powerpc/nofpu/fesetenv.c (__fesetenv): Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fesetenv.c (__fesetenv):
+	Likewise.
+	* sysdeps/s390/fpu/fesetenv.c (fesetenv): Rename to __fesetenv and
+	define as weak alias of __fesetenv.  Use libm_hidden_weak.
+	* sysdeps/sh/sh4/fpu/fesetenv.c (fesetenv): Likewise.
+	* sysdeps/sparc/fpu/fesetenv.c (__fesetenv): Use libm_hidden_def.
+	* sysdeps/tile/math_private.h (__fesetenv): New inline function.
+	* sysdeps/x86_64/fpu/fesetenv.c (fesetenv): Rename to __fesetenv
+	and define as weak alias of __fesetenv.  Use libm_hidden_weak.
+	* sysdeps/generic/math_private.h (default_libc_fesetenv): Use
+	__fesetenv instead of fesetenv.
+	(libc_feresetround_noex_ctx): Likewise.
+	* sysdeps/alpha/fpu/feupdateenv.c (__feupdateenv): Likewise.
+	* sysdeps/hppa/fpu/feupdateenv.c (feupdateenv): Likewise.
+	* sysdeps/i386/fpu/feupdateenv.c (__feupdateenv): Likewise.
+	* sysdeps/ia64/fpu/feupdateenv.c (feupdateenv): Likewise.
+	* sysdeps/m68k/fpu/feupdateenv.c (__feupdateenv): Likewise.
+	* sysdeps/mips/fpu/feupdateenv.c (feupdateenv): Likewise.
+	* sysdeps/powerpc/nofpu/feupdateenv.c (__feupdateenv): Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/feupdateenv.c
+	(__feupdateenv): Likewise.
+	* sysdeps/s390/fpu/feupdateenv.c (feupdateenv): Likewise.
+	* sysdeps/sh/sh4/fpu/feupdateenv.c (feupdateenv): Likewise.
+	* sysdeps/sparc/fpu/feupdateenv.c (__feupdateenv): Likewise.
+	* sysdeps/x86_64/fpu/feupdateenv.c (__feupdateenv): Likewise.
+
 2015-01-06  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #17806]
