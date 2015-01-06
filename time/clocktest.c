@@ -30,7 +30,7 @@ main (int argc, char ** argv)
 
   printf ("%jd clock ticks per second (start=%jd,stop=%jd)\n",
 	  (intmax_t) (stop - start), (intmax_t) start, (intmax_t) stop);
-  printf ("CLOCKS_PER_SEC=%ld, sysconf(_SC_CLK_TCK)=%ld\n",
-	  CLOCKS_PER_SEC, sysconf(_SC_CLK_TCK));
+  printf ("CLOCKS_PER_SEC=%jd, sysconf(_SC_CLK_TCK)=%ld\n",
+	  (intmax_t) CLOCKS_PER_SEC, sysconf(_SC_CLK_TCK));
   return 0;
 }

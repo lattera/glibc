@@ -1,3 +1,13 @@
+2015-01-06  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #17797]
+	* bits/time.h (CLOCKS_PER_SEC): Changed to ((clock_t) 1000000).
+	* sysdeps/unix/sysv/linux/bits/time.h (CLOCKS_PER_SEC): Likewise.
+	* sysdeps/unix/sysv/linux/clock.c (clock): _Static_assert
+	CLOCKS_PER_SEC == 1000000.
+	* time/clocktest.c (main): Replace %ld with %jd and cast to
+	intmax_t.
+
 2015-01-05  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/generic/unwind-resume.h: New file.
