@@ -1,3 +1,14 @@
+2015-01-06  Andrew Senkevich  <andrew.n.senkevich@gmail.com>
+
+	* math/Makefile (CFLAGS-test-float.c): Remove -frounding-math.
+	(CFLAGS-test-double.c): Likewise.
+	(CFLAGS-test-ldouble.c): Likewise.
+	(CPPFLAGS-test-ifloat.c): Likewise.
+	(CPPFLAGS-test-idouble.c): Likewise.
+	(CPPFLAGS-test-ildoubl.c): Likewise.
+	(CFLAGS-test-test-fenv.c): Remove variable.
+	(CFLAGS-test-misc.c): Likewise.
+
 2015-01-06  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #17797]
