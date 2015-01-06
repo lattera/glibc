@@ -53,6 +53,26 @@ Version 2.21
 
 * Merged gettext 0.19.3 into the intl subdirectory.  This fixes building
   with newer versions of bison.
+
+* Support for MIPS o32 FPXX, FP64A and FP64 ABI Extensions.
+  The original MIPS o32 hard-float ABI requires an FPU where double-precision
+  registers overlay two consecutive single-precision registers.  MIPS32R2
+  introduced a new FPU mode (FR=1) where double-precision registers extend the
+  corresponding single-precision registers which is incompatible with the
+  o32 hard-float ABI.  The MIPS SIMD ASE and the MIPSR6 architecture both
+  require the use of FR=1 making a transition necessary.  New o32 ABI
+  extensions enable users to migrate over time from the original o32 ABI
+  through to the updated o32 FP64 ABI.  To achieve this the dynamic linker now
+  tracks the ABI of any loaded object and verifies that new objects are
+  compatible.  Mode transitions will also be requested as required and
+  unsupportable objects will be rejected.  The ABI checks include both soft and
+  hard float ABIs for o32, n32 and n64.
+
+  GCC 5 with GNU binutils 2.25 onwards:
+  It is strongly recommended that all o32 system libraries are built using the
+  new o32 FPXX ABI (-mfpxx) to facilitate the transition as this is compatible
+  with the original and all new o32 ABI extensions.  Configure a MIPS GCC
+  compiler using --with-fp-32=xx to set this by default.
 
 Version 2.20
 
