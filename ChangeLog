@@ -1,5 +1,6 @@
 2015-01-06  Aurelien Jarno  <aurelien@aurel32.net>
 
+	[BZ #17806]
 	* resolv/res_init.c (__res_iclose): Only clear nsinit if the
 	addresses have been freed.
 
