@@ -1,3 +1,8 @@
+2015-01-06  Ondřej Bílka  <neleai@seznam.cz>
+
+	* sysdeps/unix/sysv/linux/check_pf.c (make_request):
+	Clean up check_pf allocation pattern. addresses
+
 2015-01-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* nptl/pthread_cancel.c (pthread_cancel): Use ANSI prototype.
