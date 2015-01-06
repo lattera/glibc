@@ -48,11 +48,7 @@ static ssize_t PWRITEV_REPLACEMENT (int, const struct iovec *,
 
 
 ssize_t
-PWRITEV (fd, vector, count, offset)
-     int fd;
-     const struct iovec *vector;
-     int count;
-     OFF_T offset;
+PWRITEV (int fd, const struct iovec *vector, int count, OFF_T offset)
 {
 #ifdef __NR_pwritev
   ssize_t result;

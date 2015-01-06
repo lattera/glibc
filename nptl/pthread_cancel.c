@@ -25,8 +25,7 @@
 
 
 int
-pthread_cancel (th)
-     pthread_t th;
+pthread_cancel (pthread_t th)
 {
   volatile struct pthread *pd = (volatile struct pthread *) th;
 

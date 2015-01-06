@@ -37,9 +37,7 @@ cleanup (void *arg)
 
 
 int
-pthread_join (threadid, thread_return)
-     pthread_t threadid;
-     void **thread_return;
+pthread_join (pthread_t threadid, void **thread_return)
 {
   struct pthread *pd = (struct pthread *) threadid;
 

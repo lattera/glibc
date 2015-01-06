@@ -23,12 +23,8 @@
 #include <sys/syscall.h>
 
 ssize_t
-__libc_msgrcv (msqid, msgp, msgsz, msgtyp, msgflg)
-     int msqid;
-     void *msgp;
-     size_t msgsz;
-     long int msgtyp;
-     int msgflg;
+__libc_msgrcv (int msqid, void *msgp, size_t msgsz, long int msgtyp,
+	       int msgflg)
 {
   if (SINGLE_THREAD_P)
     return INLINE_SYSCALL (ipc, 6, IPCOP_msgrcv, msqid, msgsz, msgflg,

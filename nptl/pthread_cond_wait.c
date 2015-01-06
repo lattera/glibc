@@ -98,9 +98,7 @@ __condvar_cleanup (void *arg)
 
 
 int
-__pthread_cond_wait (cond, mutex)
-     pthread_cond_t *cond;
-     pthread_mutex_t *mutex;
+__pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex)
 {
   struct _pthread_cleanup_buffer buffer;
   struct _condvar_cleanup_buffer cbuffer;

@@ -149,11 +149,7 @@ OUR_WAITID (idtype_t idtype, id_t id, siginfo_t *infop, int options)
 
 
 int
-__waitid (idtype, id, infop, options)
-     idtype_t idtype;
-     id_t id;
-     siginfo_t *infop;
-     int options;
+__waitid (idtype_t idtype, id_t id, siginfo_t *infop, int options)
 {
   if (SINGLE_THREAD_P)
     return do_waitid (idtype, id, infop, options);

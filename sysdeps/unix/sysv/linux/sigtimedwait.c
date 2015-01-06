@@ -67,10 +67,8 @@ do_sigtimedwait (const sigset_t *set, siginfo_t *info,
 
 /* Return any pending signal or wait for one for the given time.  */
 int
-__sigtimedwait (set, info, timeout)
-     const sigset_t *set;
-     siginfo_t *info;
-     const struct timespec *timeout;
+__sigtimedwait (const sigset_t *set, siginfo_t *info,
+		const struct timespec *timeout)
 {
   if (SINGLE_THREAD_P)
     return do_sigtimedwait (set, info, timeout);

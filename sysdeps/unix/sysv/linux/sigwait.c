@@ -86,9 +86,7 @@ do_sigwait (const sigset_t *set, int *sig)
 }
 
 int
-__sigwait (set, sig)
-     const sigset_t *set;
-     int *sig;
+__sigwait (const sigset_t *set, int *sig)
 {
   if (SINGLE_THREAD_P)
     return do_sigwait (set, sig);

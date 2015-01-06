@@ -24,11 +24,7 @@
 #include <sys/syscall.h>
 
 int
-__libc_msgsnd (msqid, msgp, msgsz, msgflg)
-     int msqid;
-     const void *msgp;
-     size_t msgsz;
-     int msgflg;
+__libc_msgsnd (int msqid, const void *msgp, size_t msgsz, int msgflg)
 {
   if (SINGLE_THREAD_P)
     return INLINE_SYSCALL (ipc, 5, IPCOP_msgsnd, msqid, msgsz,

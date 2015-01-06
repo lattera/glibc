@@ -48,11 +48,7 @@ static ssize_t PREADV_REPLACEMENT (int, const struct iovec *,
 
 
 ssize_t
-PREADV (fd, vector, count, offset)
-     int fd;
-     const struct iovec *vector;
-     int count;
-     OFF_T offset;
+PREADV (int fd, const struct iovec *vector, int count, OFF_T offset)
 {
 #ifdef __NR_preadv
   ssize_t result;

@@ -35,11 +35,7 @@ do_pread (int fd, void *buf, size_t count, off_t offset)
 }
 
 ssize_t
-__libc_pread (fd, buf, count, offset)
-     int fd;
-     void *buf;
-     size_t count;
-     off_t offset;
+__libc_pread (int fd, void *buf, size_t count, off_t offset)
 {
   if (SINGLE_THREAD_P)
     return do_pread (fd, buf, count, offset);

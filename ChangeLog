@@ -1,3 +1,57 @@
+2015-01-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* nptl/pthread_cancel.c (pthread_cancel): Use ANSI prototype.
+	* nptl/pthread_cond_timedwait.c (__pthread_cond_timedwait): Likewise.
+	* nptl/pthread_cond_wait.c (__pthread_cond_wait): Likewise.
+	* nptl/pthread_exit.c (__pthread_exit): Likewise.
+	* nptl/pthread_join.c (pthread_join): Likewise.
+	* nptl/pthread_timedjoin.c (pthread_timedjoin_np): Likewise.
+	* sysdeps/posix/waitid.c (__waitid): Likewise.
+	* sysdeps/unix/sysv/linux/arm/pread.c (__libc_pread): Likewise.
+	* sysdeps/unix/sysv/linux/arm/pread64.c (__libc_pread64): Likewise.
+	* sysdeps/unix/sysv/linux/arm/pwrite.c (__libc_pwrite): Likewise.
+	* sysdeps/unix/sysv/linux/arm/pwrite64.c (__libc_pwrite64): Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/pread.c (__libc_pread):
+	Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/pread64.c
+	(__libc_pread64): Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/pwrite.c
+	(__libc_pwrite): Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/pwrite64.c
+	(__libc_pwrite64): Likewsie.
+	* sysdeps/unix/sysv/linux/mips/pread.c (__libc_pread): Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread64.c (__libc_pread64): Likewise.
+	* sysdeps/unix/sysv/linux/mips/pwrite.c (__libc_pwrite): Likewise.
+	* sysdeps/unix/sysv/linux/mips/pwrite64.c (__libc_pwrite64): Likewise.
+	* sysdeps/unix/sysv/linux/msgrcv.c (__libc_msgrcv): Likewise.
+	* sysdeps/unix/sysv/linux/msgsnd.c (__libc_msgsnd): Likewise.
+	* sysdeps/unix/sysv/linux/openat.c (OPENAT_NOT_CANCEL): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pread.c (__libc_pread):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pread64.c
+	(__libc_pread64): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pwrite.c (__libc_pwrite):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pwrite64.c
+	(__libc_pwrite64): Likewise.
+	* sysdeps/unix/sysv/linux/pread.c (__libc_pread): Likewise.
+	* sysdeps/unix/sysv/linux/pread64.c (__libc_pread64): Likewise.
+	* sysdeps/unix/sysv/linux/preadv.c (PREADV): Likewise.
+	* sysdeps/unix/sysv/linux/pthread_kill.c (__pthread_kill): Likewise.
+	* sysdeps/unix/sysv/linux/pwrite.c (__libc_pwrite): Likewise.
+	* sysdeps/unix/sysv/linux/pwrite64.c (__libc_pwrite64): Likewise.
+	* sysdeps/unix/sysv/linux/pwritev.c (__libc_pwritev): Likewise.
+	* sysdeps/unix/sysv/linux/sh/pread.c (__libc_pread): Likewise.
+	* sysdeps/unix/sysv/linux/sh/pread64.c (__libc_pread64): Likewise.
+	* sysdeps/unix/sysv/linux/sh/pwrite.c (__libc_pwrite): Likewise.
+	* sysdeps/unix/sysv/linux/sh/pwrite64.c (__libc_write64): Likewise.
+	* sysdeps/unix/sysv/linux/sigsuspend.c (__sigsuspend): Likewise.
+	* sysdeps/unix/sysv/linux/sigtimedwait.c (__sigtimedwait): Likewise.
+	* sysdeps/unix/sysv/linux/sigwait.c (__sigwait): Likewise.
+	* sysdeps/unix/sysv/linux/sigwaitinfo.c (__sigwaitinfo): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/msgrcv.c (__libc_msgrcv):
+	Likewise.
+
 2015-01-06  Andrew Senkevich  <andrew.n.senkevich@gmail.com>
 
 	* math/Makefile (CFLAGS-test-float.c): Remove -frounding-math.

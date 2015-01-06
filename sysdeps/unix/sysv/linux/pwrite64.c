@@ -45,11 +45,7 @@ do_pwrite64 (int fd, const void *buf, size_t count, off64_t offset)
 
 
 ssize_t
-__libc_pwrite64 (fd, buf, count, offset)
-     int fd;
-     const void *buf;
-     size_t count;
-     off64_t offset;
+__libc_pwrite64 (int fd, const void *buf, size_t count, off64_t offset)
 {
   if (SINGLE_THREAD_P)
     return do_pwrite64 (fd, buf, count, offset);

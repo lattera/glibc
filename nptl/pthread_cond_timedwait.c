@@ -49,10 +49,8 @@ struct _condvar_cleanup_buffer
 };
 
 int
-__pthread_cond_timedwait (cond, mutex, abstime)
-     pthread_cond_t *cond;
-     pthread_mutex_t *mutex;
-     const struct timespec *abstime;
+__pthread_cond_timedwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
+			  const struct timespec *abstime)
 {
   struct _pthread_cleanup_buffer buffer;
   struct _condvar_cleanup_buffer cbuffer;

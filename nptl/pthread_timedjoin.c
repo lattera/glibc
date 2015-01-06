@@ -30,10 +30,8 @@ cleanup (void *arg)
 
 
 int
-pthread_timedjoin_np (threadid, thread_return, abstime)
-     pthread_t threadid;
-     void **thread_return;
-     const struct timespec *abstime;
+pthread_timedjoin_np (pthread_t threadid, void **thread_return,
+		      const struct timespec *abstime)
 {
   struct pthread *self;
   struct pthread *pd = (struct pthread *) threadid;
