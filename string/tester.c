@@ -1305,10 +1305,10 @@ test_memset (void)
   equal(one, "axxxefgh", 2);		/* Basic test. */
 
   DIAG_PUSH_NEEDS_COMMENT;
-#if __GNUC_PREREQ (5, 0)
-  /* GCC 5.0 warns about a zero-length memset because the arguments to memset
+#if __GNUC_PREREQ (4, 9)
+  /* GCC 4.9 warns about a zero-length memset because the arguments to memset
      may be in the wrong order.  But we really want to test this.  */
-  DIAG_IGNORE_NEEDS_COMMENT (5.0, "-Wmemset-transposed-args")
+  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wmemset-transposed-args")
 #endif
   (void) memset(one+2, 'y', 0);
   equal(one, "axxxefgh", 3);		/* Zero-length set. */
