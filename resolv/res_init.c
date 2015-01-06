@@ -621,7 +621,8 @@ __res_iclose(res_state statp, bool free_addr) {
 				statp->_u._ext.nsaddrs[ns] = NULL;
 			}
 		}
-	statp->_u._ext.nsinit = 0;
+	if (free_addr)
+		statp->_u._ext.nsinit = 0;
 }
 libc_hidden_def (__res_iclose)
 
