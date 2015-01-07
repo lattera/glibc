@@ -1,6 +1,16 @@
 2015-01-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile [sysdep_routines]:
+	Add strcmp-power8 object.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add __strcmp_power8 implementation.
+	* sysdeps/powerpc/powerpc64/multiarch/strcmp-power8.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strcmp.c (strcmp): Add
+	__strcmp_power8 implementation.
+	* sysdeps/powerpc/powerpc64/power8/strcmp.S: New file.
+	* NEWS: Update.
+
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile [sysdep_routines]:
 	Add strncpy-power8 and stpncpy-power8 objects.
 	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
 	(__libc_ifunc_impl_list): Add __strncpy_power8 and stpncpy_power8

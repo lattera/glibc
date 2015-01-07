@@ -18,7 +18,7 @@ sysdep_routines += memcpy-power7 memcpy-a2 memcpy-power6 memcpy-cell \
 		   strrchr-power7 strrchr-ppc64 strncat-power7 strncat-ppc64 \
 		   strncpy-power7 strncpy-ppc64 \
 		   stpncpy-power8 stpncpy-power7 stpncpy-ppc64 \
-		   strcmp-power7 strcmp-ppc64 \
+		   strcmp-power8 strcmp-power7 strcmp-ppc64 \
 		   strcat-power8 strcat-power7 strcat-ppc64 memmove-power7 \
 		   memmove-ppc64 bcopy-ppc64 strncpy-power8
 
