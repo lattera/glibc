@@ -1,3 +1,11 @@
+2015-01-06  Vladimir A. Nazarenko  <naszar@ya.ru>
+
+.	[BZ #17273]
+	* misc/mntent_r.c (__getmntent_r): Cut off trailing spaces
+	and tabs from buffer before parsing fstab entry.
+	* misc/tst-mntent.c (main): Add test for mount entry with
+	trailing spaces and tabs.
+
 2015-01-06  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17748]

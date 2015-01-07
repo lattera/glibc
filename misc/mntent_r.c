@@ -135,7 +135,11 @@ __getmntent_r (FILE *stream, struct mntent *mp, char *buffer, int bufsiz)
 
       end_ptr = strchr (buffer, '\n');
       if (end_ptr != NULL)	/* chop newline */
-	*end_ptr = '\0';
+	{
+	  while (end_ptr[-1] == ' ' || end_ptr[-1] == '\t')
+            end_ptr--;
+	  *end_ptr = '\0';
+	}
       else
 	{
 	  /* Not the whole line was read.  Do it now but forget it.  */
