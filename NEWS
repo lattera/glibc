@@ -19,6 +19,9 @@ Version 2.21
   17744, 17745, 17746, 17747, 17775, 17777, 17780, 17781, 17782, 17793,
   17796, 17797, 17806
 
+* Optimized strchrnul and strrchr implementations for AArch64.
+  Contributed by ARM Ltd.
+
 * i386 memcpy functions optimized with SSE2 unaligned load/store.
 
 * CVE-2104-7817 The wordexp function could ignore the WRDE_NOCMD flag
@@ -70,8 +73,6 @@ Version 2.20
   17042, 17048, 17050, 17058, 17061, 17062, 17069, 17075, 17078, 17079,
   17084, 17086, 17088, 17092, 17097, 17125, 17135, 17137, 17150, 17153,
   17187, 17213, 17259, 17261, 17262, 17263, 17319, 17325, 17354.
-
-* Optimized strchrnul implementation for AArch64.  Contributed by ARM Ltd.
 
 * Reverted change of ABI data structures for s390 and s390x:
   On s390 and s390x the size of struct ucontext and jmp_buf was increased in
