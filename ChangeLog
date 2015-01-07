@@ -1,3 +1,9 @@
+2015-01-07  Chris Metcalf  <cmetcalf@ezchip.com>
+
+	* posix/regcomp.c (parse_bracket_exp): Initialize type to
+	COLL_SYM in a couple of places to avoid uninitialized variable
+	wanings on tilegx gcc 4.8.2.
+
 2015-01-07  Richard Earnshaw  <rearnsha@arm.com>
 
 	* sysdeps/aarch64/strcpy.S: New file.
