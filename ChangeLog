@@ -1,3 +1,9 @@
+2015-01-07  Eric Biggers  <ebiggers3@gmail.com>
+
+	[BZ #17658]
+	* stdlib/setenv.c: Fix memory leak when setting large,
+	duplicate string.
+
 2015-01-06  Vladimir A. Nazarenko  <naszar@ya.ru>
 
 .	[BZ #17273]

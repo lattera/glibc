@@ -217,6 +217,13 @@ __add_to_environ (name, value, combined, replace)
 	      /* And remember the value.  */
 	      STORE_VALUE (np);
 	    }
+#ifdef USE_TSEARCH
+	  else
+	    {
+	      if (__glibc_unlikely (! use_alloca))
+		free (new_value);
+	    }
+#endif
 	}
 
       *ep = np;
