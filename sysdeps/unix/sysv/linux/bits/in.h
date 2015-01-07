@@ -23,10 +23,10 @@
 
 /* If the application has already included linux/in6.h from a linux-based
    kernel then we will not define the IPv6 IPPROTO_* defines, in6_addr (nor the
-   defines), sockaddr_in6, or ipv6_mreq.  The ABI used by the linux-kernel and
-   glibc match exactly.  Neither the linux kernel nor glibc should break this
-   ABI without coordination.  */
-#ifdef _UAPI_LINUX_IN6_H
+   defines), sockaddr_in6, or ipv6_mreq. Same for in6_ptkinfo or ip6_mtuinfo
+   in linux/ipv6.h. The ABI used by the linux-kernel and glibc match exactly.
+   Neither the linux kernel nor glibc should break this ABI without coordination.  */
+#if defined _UAPI_LINUX_IN6_H || defined _UAPI_IPV6_H
 /* This is not quite the same API since the kernel always defines s6_addr16 and
    s6_addr32. This is not a violation of POSIX since POSIX says "at least the
    following member" and that holds true.  */

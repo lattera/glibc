@@ -530,6 +530,7 @@ extern int bindresvport6 (int __sockfd, struct sockaddr_in6 *__sock_in)
 #ifdef __USE_GNU
 struct cmsghdr;			/* Forward declaration.  */
 
+#ifndef __USE_KERNEL_IPV6_DEFS
 /* IPv6 packet information.  */
 struct in6_pktinfo
   {
@@ -543,7 +544,7 @@ struct ip6_mtuinfo
     struct sockaddr_in6 ip6m_addr; /* dst address including zone ID */
     uint32_t ip6m_mtu;		   /* path MTU in host byte order */
   };
-
+#endif /* !__USE_KERNEL_IPV6_DEFS */
 
 /* Obsolete hop-by-hop and Destination Options Processing (RFC 2292).  */
 extern int inet6_option_space (int __nbytes)

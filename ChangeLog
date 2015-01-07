@@ -1,3 +1,11 @@
+2015-02-25  Cong Wang  <xiyou.wangcong@gmail.com>
+
+	[BZ #15850]
+	* inet/netinet/in.h [!__USE_KERNEL_IPV6_DEFS]: Put in6_pktinfo
+	and ip6_mtuinfo definitions here.
+	* sysdeps/unix/sysv/linux/bits/in.h [_UAPI_IPV6_H]: Wrap code
+	in this define too.  Update comment.
+
 2015-02-24  Benno Schulenberg  <bensberg@justemail.net>
 
 	* elf/sprof.c (load_shobj): Tweak error message to match others.
