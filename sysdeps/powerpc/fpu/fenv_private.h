@@ -57,7 +57,7 @@ libc_feholdexcept_ppc (fenv_t *envp)
 static __always_inline void
 libc_fesetround_ppc (int r)
 {
-  __fesetround (r);
+  __fesetround_inline (r);
 }
 
 static __always_inline void

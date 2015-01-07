@@ -21,7 +21,7 @@
 #include "soft-supp.h"
 
 int
-fesetround (int round)
+__fesetround (int round)
 {
   if ((unsigned int) round > FE_DOWNWARD)
     return 1;
@@ -31,4 +31,6 @@ fesetround (int round)
 
   return 0;
 }
-libm_hidden_def (fesetround)
+libm_hidden_def (__fesetround)
+weak_alias (__fesetround, fesetround)
+libm_hidden_weak (fesetround)

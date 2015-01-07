@@ -21,7 +21,7 @@
 #include <fpu_control.h>
 
 int
-fesetround (int round)
+__fesetround (int round)
 {
   if ((round|FPC_RM_MASK) != FPC_RM_MASK)
     {
@@ -34,4 +34,6 @@ fesetround (int round)
 
   return 0;
 }
-libm_hidden_def (fesetround)
+libm_hidden_def (__fesetround)
+weak_alias (__fesetround, fesetround)
+libm_hidden_weak (fesetround)

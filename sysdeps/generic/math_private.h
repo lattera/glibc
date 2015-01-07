@@ -415,7 +415,7 @@ default_libc_feholdexcept (fenv_t *e)
 static __always_inline void
 default_libc_fesetround (int r)
 {
-  (void) fesetround (r);
+  (void) __fesetround (r);
 }
 
 #ifndef libc_fesetround
@@ -432,7 +432,7 @@ static __always_inline void
 default_libc_feholdexcept_setround (fenv_t *e, int r)
 {
   __feholdexcept (e);
-  fesetround (r);
+  __fesetround (r);
 }
 
 #ifndef libc_feholdexcept_setround
@@ -599,7 +599,7 @@ libc_feholdsetround_ctx (struct rm_ctx *ctx, int round)
     {
       ctx->updated_status = true;
       __fegetenv (&ctx->env);
-      fesetround (round);
+      __fesetround (round);
     }
 }
 
@@ -619,7 +619,7 @@ libc_feholdsetround_noex_ctx (struct rm_ctx *ctx, int round)
 
   /* Update rounding mode only if different.  */
   if (__glibc_unlikely (round != get_rounding_mode ()))
-    fesetround (round);
+    __fesetround (round);
 }
 
 static __always_inline void

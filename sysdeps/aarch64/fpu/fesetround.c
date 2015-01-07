@@ -21,7 +21,7 @@
 #include <fpu_control.h>
 
 int
-fesetround (int round)
+__fesetround (int round)
 {
   if (round & ~_FPU_FPCR_RM_MASK)
     return 1;
@@ -29,4 +29,6 @@ fesetround (int round)
   libc_fesetround_aarch64 (round);
   return 0;
 }
-libm_hidden_def (fesetround)
+libm_hidden_def (__fesetround)
+weak_alias (__fesetround, fesetround)
+libm_hidden_weak (fesetround)

@@ -1,6 +1,44 @@
 2015-01-06  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17748]
+	* include/fenv.h (__fesetround): Declare.  Use libm_hidden_proto.
+	* math/fesetround.c (fesetround): Rename to __fesetround and
+	define as weak alias of __fesetround.  Use libm_hidden_weak.
+	* sysdeps/aarch64/fpu/fesetround.c (fesetround): Likewise.
+	* sysdeps/alpha/fpu/fesetround.c (fesetround): Likewise.
+	* sysdeps/arm/fesetround.c (fesetround): Likewise.
+	* sysdeps/hppa/fpu/fesetround.c (fesetround): Likewise.
+	* sysdeps/i386/fpu/fesetround.c (fesetround): Likewise.
+	* sysdeps/ia64/fpu/fesetround.c (fesetround): Likewise.
+	* sysdeps/m68k/fpu/fesetround.c (fesetround): Likewise.
+	* sysdeps/mips/fpu/fesetround.c (fesetround): Likewise.
+	* sysdeps/powerpc/fpu/fenv_libc.h (__fesetround): Rename to
+	__fesetround_inline.
+	* sysdeps/powerpc/fpu/fenv_private.h (libc_fesetround_ppc): Call
+	__fesetround_inline instead of __fesetround.
+	* sysdeps/powerpc/fpu/fesetround.c (fesetround): Rename to
+	__fesetround and define as weak alias of __fesetround.  Use
+	libm_hidden_weak.  Call __fesetround_inline instead of
+	__fesetround.
+	* sysdeps/powerpc/nofpu/fesetround.c (fesetround): Rename to
+	__fesetround and define as weak alias of __fesetround.  Use
+	libm_hidden_weak.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fesetround.c (fesetround):
+	Likewise.
+	* sysdeps/s390/fpu/fesetround.c (fesetround): Likewise.
+	* sysdeps/sh/sh4/fpu/fesetround.c (fesetround): Likewise.
+	* sysdeps/sparc/fpu/fesetround.c (fesetround): Likewise.
+	* sysdeps/tile/math_private.h (__fesetround): New inline function.
+	* sysdeps/x86_64/fpu/fesetround.c (fesetround): Rename to
+	__fesetround and define as weak alias of __fesetround.  Use
+	libm_hidden_weak.
+	* sysdeps/generic/math_private.h (default_libc_fesetround): Call
+	__fesetround instead of fesetround.
+	(default_libc_feholdexcept_setround): Likewise.
+	(libc_feholdsetround_ctx): Likewise.
+	(libc_feholdsetround_noex_ctx): Likewise.
+
+	[BZ #17748]
 	* include/fenv.h (__fesetenv): Use libm_hidden_proto.
 	* math/fesetenv.c (__fesetenv): Use libm_hidden_def.
 	* sysdeps/aarch64/fpu/fesetenv.c (fesetenv): Rename to __fesetenv

@@ -76,7 +76,7 @@ typedef union
 
 
 static inline int
-__fesetround (int round)
+__fesetround_inline (int round)
 {
   if ((unsigned int) round < 2)
     {
