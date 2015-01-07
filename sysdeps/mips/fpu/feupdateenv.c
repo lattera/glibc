@@ -21,7 +21,7 @@
 #include <fpu_control.h>
 
 int
-feupdateenv (const fenv_t *envp)
+__feupdateenv (const fenv_t *envp)
 {
   int temp;
 
@@ -40,4 +40,6 @@ feupdateenv (const fenv_t *envp)
   /* Success.  */
   return 0;
 }
-libm_hidden_def (feupdateenv)
+libm_hidden_def (__feupdateenv)
+weak_alias (__feupdateenv, feupdateenv)
+libm_hidden_weak (feupdateenv)

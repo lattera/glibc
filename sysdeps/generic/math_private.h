@@ -478,7 +478,7 @@ default_libc_fesetenv (fenv_t *e)
 static __always_inline void
 default_libc_feupdateenv (fenv_t *e)
 {
-  (void) feupdateenv (e);
+  (void) __feupdateenv (e);
 }
 
 #ifndef libc_feupdateenv
@@ -499,7 +499,7 @@ static __always_inline int
 default_libc_feupdateenv_test (fenv_t *e, int ex)
 {
   int ret = fetestexcept (ex);
-  feupdateenv (e);
+  __feupdateenv (e);
   return ret;
 }
 
@@ -608,7 +608,7 @@ libc_feresetround_ctx (struct rm_ctx *ctx)
 {
   /* Restore the rounding mode if updated.  */
   if (__glibc_unlikely (ctx->updated_status))
-    feupdateenv (&ctx->env);
+    __feupdateenv (&ctx->env);
 }
 
 static __always_inline void

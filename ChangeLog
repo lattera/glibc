@@ -1,3 +1,46 @@
+2015-01-07  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17748]
+	* include/fenv.h (__feupdateenv): Use libm_hidden_proto.
+	* math/feupdateenv.c (__feupdateenv): Use libm_hidden_def.
+	* sysdeps/aarch64/fpu/feupdateenv.c (feupdateenv): Rename to
+	__feupdateenv and define as weak alias of __feupdateenv.  Use
+	libm_hidden_weak.
+	* sysdeps/alpha/fpu/feupdateenv.c (__feupdateenv): Use
+	libm_hidden_def.
+	* sysdeps/arm/feupdateenv.c (feupdateenv): Rename to __feupdateenv
+	and define as weak alias of __feupdateenv.  Use libm_hidden_weak.
+	* sysdeps/hppa/fpu/feupdateenv.c (feupdateenv): Likewise.
+	* sysdeps/i386/fpu/feupdateenv.c (__feupdateenv): Use
+	libm_hidden_def.
+	* sysdeps/ia64/fpu/feupdateenv.c (feupdateenv): Rename to
+	__feupdateenv and define as weak alias of __feupdateenv.  Use
+	libm_hidden_weak.
+	* sysdeps/m68k/fpu/feupdateenv.c (__feupdateenv): Use
+	libm_hidden_def.
+	* sysdeps/mips/fpu/feupdateenv.c (feupdateenv): Rename to
+	__feupdateenv and define as weak alias of __feupdateenv.  Use
+	libm_hidden_weak.
+	* sysdeps/powerpc/fpu/feupdateenv.c (__feupdateenv): Use
+	libm_hidden_def.
+	* sysdeps/powerpc/nofpu/feupdateenv.c (__feupdateenv): Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/feupdateenv.c
+	(__feupdateenv): Likewise.
+	* sysdeps/s390/fpu/feupdateenv.c (feupdateenv): Rename to
+	__feupdateenv and define as weak alias of __feupdateenv.  Use
+	libm_hidden_weak.
+	* sysdeps/sh/sh4/fpu/feupdateenv.c (feupdateenv): Likewise.
+	* sysdeps/sparc/fpu/feupdateenv.c (__feupdateenv): Use
+	libm_hidden_def.
+	* sysdeps/tile/math_private.h (__feupdateenv): New inline
+	function.
+	* sysdeps/x86_64/fpu/feupdateenv.c (__feupdateenv): Use
+	libm_hidden_def.
+	* sysdeps/generic/math_private.h (default_libc_feupdateenv): Call
+	__feupdateenv instead of feupdateenv.
+	(default_libc_feupdateenv_test): Likewise.
+	(libc_feresetround_ctx): Likewise.
+
 2015-01-07  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/mips/pread.c (__libc_pread): Fix function
