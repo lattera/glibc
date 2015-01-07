@@ -1,5 +1,11 @@
 2015-01-07  Richard Earnshaw  <rearnsha@arm.com>
 
+	* sysdeps/aarch64/strcpy.S: New file.
+	* sysdeps/aarch64/stpcpy.S: New file.
+	* NEWS: Updated.
+
+2015-01-07  Richard Earnshaw  <rearnsha@arm.com>
+
 	* sysdeps/aarch64/strrchr.S: New file.
 	* NEWS: Updated.
 

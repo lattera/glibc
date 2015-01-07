@@ -19,8 +19,8 @@ Version 2.21
   17744, 17745, 17746, 17747, 17775, 17777, 17780, 17781, 17782, 17793,
   17796, 17797, 17806
 
-* Optimized strchrnul and strrchr implementations for AArch64.
-  Contributed by ARM Ltd.
+* Optimized strcpy, stpcpy, strchrnul and strrchr implementations for
+  AArch64.  Contributed by ARM Ltd.
 
 * i386 memcpy functions optimized with SSE2 unaligned load/store.
 
