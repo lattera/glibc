@@ -1,3 +1,8 @@
+2015-01-07  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/mips/pread.c (__libc_pread): Fix function
+	prototype.
+
 2015-01-07  Chris Metcalf  <cmetcalf@ezchip.com>
 
 	* posix/regcomp.c (parse_bracket_exp): Initialize type to
