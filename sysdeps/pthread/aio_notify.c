@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <aio_misc.h>
+#include <signal.h>
 
 #ifndef aio_start_notify_thread
 # define aio_start_notify_thread() do { } while (0)

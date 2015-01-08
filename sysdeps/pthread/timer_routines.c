@@ -29,7 +29,7 @@
 #include <sys/syscall.h>
 
 #include "posix-timer.h"
-#include <pthreadP.h>
+#include <nptl/pthreadP.h>
 
 
 /* Number of threads used.  */

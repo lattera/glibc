@@ -1,5 +1,9 @@
 2015-01-08  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/pthread/timer_routines.c: Fix <pthreadP.h> include to use
+	<nptl/pthreadP.h> instead.
+	* sysdeps/pthread/aio_notify.c: Include <signal.h> for raise decl.
+
 	* signal/allocrtsig.c (RESERVED_SIGRT): New macro, defined to 0 if not
 	already defined.
 	[__SIGRTMIN] (init): Function removed.
