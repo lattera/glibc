@@ -26,7 +26,7 @@ nptl_db-version = 1.0
 extra-libs = libthread_db
 extra-libs-others := $(extra-libs)
 
-headers         = thread_db.h
+headers         = thread_db.h sys/procfs.h
 
 libthread_db-routines = td_init td_log td_ta_new td_ta_delete \
 			td_ta_get_nthreads td_ta_get_ph \

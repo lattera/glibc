@@ -1,5 +1,9 @@
 2015-01-08  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/nptl/sys/procfs.h: New file.
+	* nptl_db/Makefile (headers): Add it.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Don't add it.
+
 	* nptl/pthreadP.h (check_cpuset_attr): Moved ...
 	* sysdeps/unix/sysv/linux/check-cpuset.h: ... to this new file.
 	* nptl/pthread_attr_setaffinity.c: Include it.
