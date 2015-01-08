@@ -619,6 +619,7 @@ tst-exec4-ARGS = $(host-test-program-cmd)
 $(objpfx)tst-execstack: $(libdl)
 $(objpfx)tst-execstack.out: $(objpfx)tst-execstack-mod.so
 LDFLAGS-tst-execstack = -Wl,-z,noexecstack
+CFLAGS-tst-execstack-mod.c += -Wno-trampolines
 
 $(objpfx)tst-fini1mod.so: $(shared-thread-library)
 

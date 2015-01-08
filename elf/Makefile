@@ -861,6 +861,8 @@ $(objpfx)tst-execstack-needed: $(objpfx)tst-execstack-mod.so
 LDFLAGS-tst-execstack-needed = -Wl,-z,noexecstack
 
 LDFLAGS-tst-execstack-prog = -Wl,-z,execstack
+CFLAGS-tst-execstack-prog.c += -Wno-trampolines
+CFLAGS-tst-execstack-mod.c += -Wno-trampolines
 endif
 
 LDFLAGS-tst-array2 = $(no-as-needed)
