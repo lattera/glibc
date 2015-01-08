@@ -140,7 +140,9 @@ static const struct pthread_functions pthread_functions =
     .ptr_nthreads = &__nptl_nthreads,
     .ptr___pthread_unwind = &__pthread_unwind,
     .ptr__nptl_deallocate_tsd = __nptl_deallocate_tsd,
+# ifdef SIGSETXID
     .ptr__nptl_setxid = __nptl_setxid,
+# endif
     /* For now only the stack cache needs to be freed.  */
     .ptr_freeres = nptl_freeres,
     .ptr_set_robust = __nptl_set_robust
