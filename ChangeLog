@@ -1,5 +1,25 @@
 2015-01-08  Roland McGrath  <roland@hack.frob.com>
 
+	* signal/allocrtsig.c (RESERVED_SIGRT): New macro, defined to 0 if not
+	already defined.
+	[__SIGRTMIN] (init): Function removed.
+	[__SIGRTMIN] (initialized): Variable removed.
+	[!__SIGRTMIN] (current_rtmin, current_rtmax): Variables removed.
+	[__SIGRTMIN] (current_rtmin, current_rtmax): Initialize to
+	__SIGRTMIN + RESERVED_SIGRT and __SIGRTMAX, respectively.
+	(__libc_current_sigrtmin) [__SIGRTMIN]: Don't call init.
+	(__libc_current_sigrtmin) [!__SIGRTMIN]: Just return -1.
+	(__libc_current_sigrtmin): Add __libc_current_sigrtmin_private alias.
+	(__libc_current_sigrtmax) [__SIGRTMIN]: Don't call init.
+	(__libc_current_sigrtmax) [!__SIGRTMIN]: Just return -1.
+	(__libc_current_sigrtmax): Add __libc_current_sigrtmax_private alias.
+	(__libc_allocate_rtsig) [__SIGRTMIN]: Don't call init.
+	(__libc_allocate_rtsig): Add __libc_allocate_rtsig_private alias.
+	* sysdeps/nptl/allocrtsig.c: New file.
+	* sysdeps/unix/sysv/linux/allocrtsig.c: File removed.
+	* sysdeps/unix/sysv/linux/testrtsig.h: File removed.
+	* sysdeps/generic/testrtsig.h: File removed.
+
 	* nptl/pthread_sigmask.c [SIGCANCEL || SIGTIMER || SIGSETXID]: #error.
 	(pthread_sigmask): Call sigprocmask, not __sigprocmask.
 
