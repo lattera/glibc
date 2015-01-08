@@ -23,8 +23,7 @@
 #include <string.h>
 #include <pthreadP.h>
 #include <shlib-compat.h>
-
-
+#include <check-cpuset.h>
 
 
 int
