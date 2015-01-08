@@ -1,5 +1,8 @@
 2015-01-08  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/pthread_sigmask.c [SIGCANCEL || SIGTIMER || SIGSETXID]: #error.
+	(pthread_sigmask): Call sigprocmask, not __sigprocmask.
+
 	* nptl/nptl-init.c (pthread_functions): Conditionalize
 	.ptr__nptl_setxid initialization on [SIGSETXID].
 
