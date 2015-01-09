@@ -25,122 +25,96 @@
 
 /* int [r3] strcmp (const char *s1 [r3], const char *s2 [r4])  */
 
+	.machine	power7
 EALIGN (strcmp, 4, 0)
 	CALL_MCOUNT 2
 
 	or r9, r3, r4
 	rldicl. r10, r9, 0, 61	/* are s1 and s2 8 byte aligned..?  */
 	bne cr0, L(process_unaligned_bytes)
+	li	r5, 0
 
+	.align 4
 /* process input parameters on double word aligned boundary  */
-	ld r9, 0(r4)		/* load s2 at offset=0  */
-	li r10, 0		/* load mask=0  */
-	cmpb r10, r9, r10	/* compare bytes at s2 with mask  */
-	cmpdi cr7, r10, 0	/* is NULL found ..? is end of string HIT  */
-	bne cr7, L(process_unaligned_bytes)	/* process byte by byte  */
-
-	ld r10, 0(r3)		/* load s1 at offset=0  */
-	li r8, 0		/* load mask=0  */
-	cmpb r8, r10, r8	/* compare bytes at s1 with mask  */
-	cmpdi cr7, r8, 0	/* is NULL found ..? is end of string HIT  */
-	bne cr7, L(process_unaligned_bytes)	/* process byte by byte  */
-
-/*s1 and s2 does not contain NULL now , so compare all 8 bytes in a GO  */
-	cmpb r9, r10, r9	/* compare s1 and s2  */
-	cmpdi cr7, r9, -1	/* compare result with 0xFFFFFFFFFFFFFFFF  */
-	bne cr7, L(process_unaligned_bytes)	/* s1,s2 mismatch found  */
-
-	addi r5, r3, 8		/* save next offset of s2  */
-	addi r11, r4, 8		/* save next offset of s1  */
-	ld r8, 8(r4)		/* load s2 at offset=8  */
-	li r9, 0		/* load mask=0  */
-	cmpb r9, r8, r9		/* compare bytes at s2 with mask  */
-	cmpdi cr7, r9, 0	/* NULL found ..?  */
-	bne cr7, L(processBytes)/* update input and process bytes one by one  */
-
-	mr r9, r4		/* save s2  */
-	li r10, 0		/* load mask=0  */
-
-	ld r7, 8(r3)		/* load s1 at offset=8  */
-	cmpb r6, r7, r10	/* compare bytes at s1 with mask  */
-	cmpdi cr7, r6, 0	/* is NULL found  */
-	bne cr7, L(processBytes)/* mismatch, so process one by one  */
-
 L(unrollDword):
-	cmpb r8, r7, r8		/* compare s1 and s2  */
-	cmpdi cr7, r8, -1	/* compare result with 0xFFFFFFFFFFFFFFFF  */
-	bne cr7, L(processBytes)/* mismatch with s1 and s2  */
+	ld	r8,0(r3)
+	ld	r10,0(r4)
+	cmpb	r7,r8,r5
+	cmpdi	cr7,r7,0
+	mr	r9,r7
+	bne 	cr7,L(null_found)
+	cmpld	cr7,r8,r10
+	bne	cr7,L(different)
 
-	addi r5, r3, 16		/* save offset=16 of s1  */
-	addi r4, r9, 16		/* save offset=16 of s2  */
-	ld r8, 16(r9)		/* load s2 at offset=16  */
-	cmpb r7, r8, r10	/* compare bytes at s2 with mask  */
-	cmpdi cr7, r7, 0	/* NULL found  ..?  */
-	bne cr7, L(update2processBytes)
+	ld	r8,8(r3)
+	ld	r10,8(r4)
+	cmpb	r7,r8,r5
+	cmpdi	cr7,r7,0
+	mr	r9,r7
+	bne 	cr7,L(null_found)
+	cmpld	cr7,r8,r10
+	bne	cr7,L(different)
 
-	ld r7, 16(r3)		/* load s1 at offset=16  */
-	cmpb r6, r7, r10	/* check s1 for end of string  */
-	cmpdi cr7, r6, 0	/* end of s1 ?,then handle byte by byte  */
-	bne 7,L(update2processBytes)
+	ld	r8,16(r3)
+	ld	r10,16(r4)
+	cmpb	r7,r8,r5
+	cmpdi	cr7,r7,0
+	mr	r9,r7
+	bne 	cr7,L(null_found)
+	cmpld	cr7,r8,r10
+	bne	cr7,L(different)
 
-	cmpb r8, r7, r8		/* compare s1 and s2 double words  */
-	cmpdi cr7, r8, -1	/* compare results with 0xFFFFFFFFFFFFFFFF  */
-	bne cr7,L(update2processBytes)
+	ld	r8,24(r3)
+	ld	r10,24(r4)
+	cmpb	r7,r8,r5
+	cmpdi	cr7,r7,0
+	mr	r9,r7
+	bne 	cr7,L(null_found)
+	cmpld	cr7,r8,r10
+	bne	cr7,L(different)
 
-	addi r5, r3, 24		/* update s1 to offset=24  */
-	addi r4, r9, 24		/* update s2 to offset=24  */
+	addi r3, r3, 32
+	addi r4, r4, 32
+	beq cr7, L(unrollDword)
 
-	ld r8, 24(r9)		/* load s2  */
-	cmpb r7, r8, r10	/* compare s2 for NULL  */
-	cmpdi cr7, r7, 0	/* verify if s2 is ending now  */
-	bne cr7,L(update2processBytes)
+	.align 4
+L(null_found):
+#ifdef __LITTLE_ENDIAN__
+	neg	r7,r9
+	and	r9,r9,r7
+	li	r7,-1
+	cntlzd	r9,r9
+	subfic	r9,r9,71
+	sld	r9,r7,r9
+#else
+	cntlzd	r9,r9
+	li	r7,-1
+	addi	r9,r9,8
+	srd	r9,r7,r9
+#endif
+	or	r8,r8,r9
+	or	r10,r10,r9
 
-	ld r7, 24(r3)		/* load s1 at offset=24  */
-	cmpb r6, r7, r10	/* verify for NULL  */
-	cmpdi cr7, r6, 0	/* is NULL found  */
-	bne cr7, L(update2processBytes)
+L(different):
+	cmpb	r9,r8,r10
+#ifdef __LITTLE_ENDIAN__
+	addi	r7,r9,1
+	andc	r9,r7,r9
+	cntlzd	r9,r9
+	subfic	r9,r9,63
+#else
+	not	r9,r9
+	cntlzd	r9,r9
+	subfic	r9,r9,56
+#endif
+	srd	r3,r8,r9
+	srd	r10,r10,r9
+	rldicl	r10,r10,0,56
+	rldicl	r3,r3,0,56
+	subf	r3,r10,r3
+	blr
 
-	cmpb r8, r7, r8		/* compare s1 and s2  */
-	cmpdi cr7, r8, -1	/* are s1 and s2 same ..?  */
-	bne cr7, L(update2processBytes)
-
-	addi r7, r9, 32		/* update s2 to next double word  */
-	addi r3, r3, 32		/* update s1 to next double word  */
-
-	ld r8, 32(r9)		/* load s2  */
-	mr r4, r7		/* save s2  */
-	cmpb r6, r8, r10	/* compare s2 with NULL  */
-	cmpdi cr7, r6, 0	/* end of s2 ..? */
-	bne cr7, L(process_unaligned_bytes)
-
-	ld r6, 0(r3)		/* load and compare s1 for NULL  */
-	cmpb r5, r6, r10
-	cmpdi cr7, r5, 0
-	bne cr7, L(process_unaligned_bytes)
-
-	cmpb r8, r6, r8		/* compare s1 and s2  */
-	cmpdi cr7, r8, -1
-	bne cr7, L(process_unaligned_bytes)
-
-	addi r5, r3, 8		/* increment s1 and d2 here  */
-	addi r11, r9, 40
-
-	ld r8, 40(r9)		/* process s2 now  */
-	cmpb r9, r8, r10
-	cmpdi cr7, r9, 0
-	bne cr7, L(processBytes)
-
-	mr r9, r7
-	ld r7, 8(r3)		/* process s1 now  */
-	cmpb r6, r7, r10
-	cmpdi cr7, r6, 0
-	beq cr7, L(unrollDword)	/* unroll to compare s1 and s2  */
-
-L(processBytes):
-	mr r4, r11		/* update input params  */
-	mr r3, r5
-
-	.p2align 4
+	.align 4
 L(process_unaligned_bytes):
 	lbz r9, 0(r3)		/* load byte from s1  */
 	lbz r10, 0(r4)		/* load byte from s2  */
@@ -172,24 +146,19 @@ L(process_unaligned_bytes):
 	addi r4, r4, 4		/* increment s2 by unroll factor  */
 	beq cr6, L(process_unaligned_bytes)	/* unroll byte processing  */
 
-	.p2align 4
+	.align 4
 L(ComputeDiff):
 	extsw r9, r9
 	subf r10, r10, r9	/* compute s1 - s2  */
 	extsw r3, r10
 	blr			/* return  */
 
-	.p2align 4
+	.align 4
 L(diffOfNULL):
 	li r9, 0
 	subf r10, r10, r9	/* compute s1 - s2  */
 	extsw r3, r10		/* sign extend result  */
 	blr			/* return  */
-
-	.p2align 4
-L(update2processBytes):
-	mr r3, r5		/* update and proceed  */
-	b L(process_unaligned_bytes)
 
 END (strcmp)
 libc_hidden_builtin_def (strcmp)

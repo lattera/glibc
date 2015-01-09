@@ -1,3 +1,9 @@
+2015-01-13  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+	    Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power7/strcmp.S (strcmp): Optimize
+	trailing byte check.
+
 2015-01-13  David S. Miller  <davem@davemloft.net>
 
 	* include/signal.h (__sigreturn): Guard with __USE_MISC.
