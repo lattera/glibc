@@ -122,8 +122,7 @@ elf_machine_lazy_rel (struct link_map *map,
 	ranges[0].size = (map)->l_info[DT_##RELOC##SZ]->d_un.d_val;	      \
 	if (map->l_info[VERSYMIDX (DT_##RELOC##COUNT)] != NULL)		      \
 	  ranges[0].nrelative						      \
-	    = MIN (map->l_info[VERSYMIDX (DT_##RELOC##COUNT)]->d_un.d_val,    \
-		   ranges[0].size / sizeof (ElfW(reloc)));		      \
+	    = map->l_info[VERSYMIDX (DT_##RELOC##COUNT)]->d_un.d_val;	      \
       }									      \
     if ((map)->l_info[DT_PLTREL]					      \
 	&& (!test_rel || (map)->l_info[DT_PLTREL]->d_un.d_val == DT_##RELOC)) \

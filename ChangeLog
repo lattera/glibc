@@ -1,3 +1,8 @@
+2015-01-09  Chung-Lin Tang  <cltang@codesourcery.com>
+
+	* elf/dynamic-link.h (_ELF_DYNAMIC_DO_RELOC): Remove MIN() and
+	assign raw DT_REL[A]COUNT value to ranges[0].nrelative.
+
 2015-01-09  Matthew Fortune <matthew.fortune@imgtec.com>
 
 	[BZ #17791]
