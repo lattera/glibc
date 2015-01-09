@@ -1,3 +1,14 @@
+2015-01-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/strncmp-power8.S: New file.
+	* sysdeps/powerpc/powerpc64/power8/strncmp.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile [sysdep_routines]: Add
+	strncmp-power8 object.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add __strncmp_power8 implementation.
+	* sysdeps/powerpc/powerpc64/multiarch/strncmp.c (strncmp): Likewise.
+	* NEWS: Update.
+
 2015-01-13  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 	    Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
