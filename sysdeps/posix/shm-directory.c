@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "shm-directory.h"
+#include <shm-directory.h>
 #include <unistd.h>
 
 #if _POSIX_MAPPED_FILES

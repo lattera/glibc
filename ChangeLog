@@ -1,3 +1,8 @@
+2015-01-09  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/posix/shm-directory.c: Use <> rather than ""
+	for #include of <shm-directory.h>.
+
 2015-01-09  Chung-Lin Tang  <cltang@codesourcery.com>
 
 	* elf/dynamic-link.h (_ELF_DYNAMIC_DO_RELOC): Remove MIN() and
