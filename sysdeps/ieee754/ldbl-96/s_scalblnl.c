@@ -25,7 +25,7 @@
 #include <math_private.h>
 
 static const long double
-two63   =  4.50359962737049600000e+15,
+two63   =  0x1p63L,
 twom63  =  1.08420217248550443400e-19,
 huge   = 1.0e+4900L,
 tiny   = 1.0e-4900L;
@@ -40,7 +40,7 @@ __scalblnl (long double x, long int n)
 	    if ((lx|(hx&0x7fffffff))==0) return x; /* +-0 */
 	    x *= two63;
 	    GET_LDOUBLE_EXP(es,x);
-	    k = (hx&0x7fff) - 63;
+	    k = (es&0x7fff) - 63;
 	    }
 	if (__builtin_expect(k==0x7fff, 0)) return x+x;	/* NaN or Inf */
 	if (__builtin_expect(n< -50000, 0))

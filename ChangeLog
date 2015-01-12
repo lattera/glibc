@@ -1,3 +1,13 @@
+2015-01-12  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17834]
+	* sysdeps/ieee754/ldbl-96/s_scalblnl.c (two63): Change value to
+	0x1p63L.
+	(__scalblnl): Get new exponent of adjusted subnormal value from ES
+	not HX.
+	* math/libm-test.inc (scalbn_test_data): Add more tests.
+	(scalbln_test_data): Likewise.
+
 2015-01-12  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 	    Stefani Seibold  <stefani@seibold.net>
 
