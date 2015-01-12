@@ -1,4 +1,4 @@
-2014-01-12  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+2015-01-12  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/nptl/tls.h (tcbhead_t): Add tm_capable field.
 	(TLS_INIT_TP): Add tm_capable initialization.
