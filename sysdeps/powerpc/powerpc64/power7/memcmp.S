@@ -26,18 +26,48 @@
 EALIGN (memcmp, 4, 0)
 	CALL_MCOUNT 3
 
-#define rRTN	r3
-#define rSTR1	r3	/* first string arg */
-#define rSTR2	r4	/* second string arg */
-#define rN	r5	/* max string length */
-#define rWORD1	r6	/* current word in s1 */
-#define rWORD2	r7	/* current word in s2 */
-#define rWORD3	r8	/* next word in s1 */
-#define rWORD4	r9	/* next word in s2 */
-#define rWORD5	r10	/* next word in s1 */
-#define rWORD6	r11	/* next word in s2 */
-#define rWORD7	r30	/* next word in s1 */
-#define rWORD8	r31	/* next word in s2 */
+#define rRTN		r3
+#define rSTR1		r3	/* first string arg */
+#define rSTR2		r4	/* second string arg */
+#define rN		r5	/* max string length */
+#define rWORD1		r6	/* current word in s1 */
+#define rWORD2		r7	/* current word in s2 */
+#define rWORD3		r8	/* next word in s1 */
+#define rWORD4		r9	/* next word in s2 */
+#define rWORD5		r10	/* next word in s1 */
+#define rWORD6		r11	/* next word in s2 */
+
+#define rOFF8		r20	/* 8 bytes offset.  */
+#define rOFF16  	r21	/* 16 bytes offset.  */
+#define rOFF24		r22	/* 24 bytes offset.  */
+#define rOFF32		r23	/* 24 bytes offset.  */
+#define rWORD6_SHIFT	r24	/* Left rotation temp for rWORD8.  */
+#define rWORD4_SHIFT	r25	/* Left rotation temp for rWORD6.  */
+#define rWORD2_SHIFT	r26	/* Left rotation temp for rWORD4.  */
+#define rWORD8_SHIFT	r27	/* Left rotation temp for rWORD2.  */
+#define rSHR		r28	/* Unaligned shift right count.  */
+#define rSHL		r29	/* Unaligned shift left count.  */
+#define rWORD7		r30	/* next word in s1 */
+#define rWORD8		r31	/* next word in s2 */
+
+#define rWORD8SAVE	(-8)
+#define rWORD7SAVE	(-16)
+#define rOFF8SAVE	(-24)
+#define rOFF16SAVE	(-32)
+#define rOFF24SAVE	(-40)
+#define rOFF32SAVE	(-48)
+#define rSHRSAVE	(-56)
+#define rSHLSAVE	(-64)
+#define rWORD8SHIFTSAVE	(-72)
+#define rWORD2SHIFTSAVE	(-80)
+#define rWORD4SHIFTSAVE	(-88)
+#define rWORD6SHIFTSAVE	(-96)
+
+#ifdef __LITTLE_ENDIAN__
+# define LD	ldbrx
+#else
+# define LD	ldx
+#endif
 
 	xor	r0, rSTR2, rSTR1
 	cmpldi	cr6, rN, 0
@@ -51,10 +81,24 @@ EALIGN (memcmp, 4, 0)
 /* If less than 8 bytes or not aligned, use the unaligned
    byte loop.  */
 	blt	cr1, L(bytealigned)
-	std	rWORD8, -8(r1)
-	cfi_offset(rWORD8, -8)
-	std	rWORD7, -16(r1)
-	cfi_offset(rWORD7, -16)
+	std	rWORD8, rWORD8SAVE(r1)
+	cfi_offset(rWORD8, rWORD8SAVE)
+	std	rWORD7, rWORD7SAVE(r1)
+	cfi_offset(rWORD7, rWORD7SAVE)
+	std	rOFF8, rOFF8SAVE(r1)
+	cfi_offset(rWORD7, rOFF8SAVE)
+	std	rOFF16, rOFF16SAVE(r1)
+	cfi_offset(rWORD7, rOFF16SAVE)
+	std	rOFF24, rOFF24SAVE(r1)
+	cfi_offset(rWORD7, rOFF24SAVE)
+	std	rOFF32, rOFF32SAVE(r1)
+	cfi_offset(rWORD7, rOFF32SAVE)
+
+	li	rOFF8,8
+	li	rOFF16,16
+	li	rOFF24,24
+	li	rOFF32,32
+
 	bne	L(unaligned)
 /* At this point we know both strings have the same alignment and the
    compare length is at least 8 bytes.  r12 contains the low order
@@ -79,15 +123,8 @@ L(samealignment):
 	sldi	rWORD6, r12, 3
 	srdi	r0, rN, 5	/* Divide by 32 */
 	andi.	r12, rN, 24	/* Get the DW remainder */
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD1, 0, rSTR1
-	ldbrx	rWORD2, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD1, 0(rSTR1)
-	ld	rWORD2, 0(rSTR2)
-#endif
+	LD	rWORD1, 0, rSTR1
+	LD	rWORD2, 0, rSTR2
 	cmpldi	cr1, r12, 16
 	cmpldi	cr7, rN, 32
 	clrldi	rN, rN, 61
@@ -104,15 +141,8 @@ L(dsP1):
 	cmpld	cr5, rWORD5, rWORD6
 	blt	cr7, L(dP1x)
 /* Do something useful in this cycle since we have to branch anyway.  */
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD1, 0, rSTR1
-	ldbrx	rWORD2, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD1, 8(rSTR1)
-	ld	rWORD2, 8(rSTR2)
-#endif
+	LD	rWORD1, rOFF8, rSTR1
+	LD	rWORD2, rOFF8, rSTR2
 	cmpld	cr7, rWORD1, rWORD2
 	b	L(dP1e)
 /* Remainder is 16 */
@@ -123,15 +153,8 @@ L(dPs2):
 	cmpld	cr6, rWORD5, rWORD6
 	blt	cr7, L(dP2x)
 /* Do something useful in this cycle since we have to branch anyway.  */
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD7, 0, rSTR1
-	ldbrx	rWORD8, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD7, 8(rSTR1)
-	ld	rWORD8, 8(rSTR2)
-#endif
+	LD	rWORD7, rOFF8, rSTR1
+	LD	rWORD8, rOFF8, rSTR2
 	cmpld	cr5, rWORD7, rWORD8
 	b	L(dP2e)
 /* Remainder is 24 */
@@ -173,72 +196,43 @@ L(dP1):
    change any on the early exit path.  The key here is the non-early
    exit path only cares about the condition code (cr5), not about which
    register pair was used.  */
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD5, 0, rSTR1
-	ldbrx	rWORD6, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD5, 0(rSTR1)
-	ld	rWORD6, 0(rSTR2)
-#endif
+	LD	rWORD5, 0, rSTR1
+	LD	rWORD6, 0, rSTR2
 	cmpld	cr5, rWORD5, rWORD6
 	blt	cr7, L(dP1x)
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD1, 0, rSTR1
-	ldbrx	rWORD2, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD1, 8(rSTR1)
-	ld	rWORD2, 8(rSTR2)
-#endif
+	LD	rWORD1, rOFF8, rSTR1
+	LD	rWORD2, rOFF8, rSTR2
 	cmpld	cr7, rWORD1, rWORD2
 L(dP1e):
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD3, 0, rSTR1
-	ldbrx	rWORD4, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD3, 16(rSTR1)
-	ld	rWORD4, 16(rSTR2)
-#endif
+	LD	rWORD3, rOFF16, rSTR1
+	LD	rWORD4, rOFF16, rSTR2
 	cmpld	cr1, rWORD3, rWORD4
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD5, 0, rSTR1
-	ldbrx	rWORD6, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD5, 24(rSTR1)
-	ld	rWORD6, 24(rSTR2)
-#endif
+	LD	rWORD5, rOFF24, rSTR1
+	LD	rWORD6, rOFF24, rSTR2
 	cmpld	cr6, rWORD5, rWORD6
 	bne	cr5, L(dLcr5x)
 	bne	cr7, L(dLcr7x)
 
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD7, 0, rSTR1
-	ldbrx	rWORD8, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ldu	rWORD7, 32(rSTR1)
-	ldu	rWORD8, 32(rSTR2)
-#endif
+	LD	rWORD7, rOFF32, rSTR1
+	LD	rWORD8, rOFF32, rSTR2
+	addi	rSTR1, rSTR1, 32
+	addi	rSTR2, rSTR2, 32
 	bne	cr1, L(dLcr1)
 	cmpld	cr5, rWORD7, rWORD8
 	bdnz	L(dLoop)
 	bne	cr6, L(dLcr6)
-	ld	rWORD8, -8(r1)
-	ld	rWORD7, -16(r1)
+	ld	rWORD8, rWORD8SAVE(r1)
+	ld	rWORD7, rWORD7SAVE(r1)
 	.align	3
 L(dP1x):
 	sldi.	r12, rN, 3
 	bne	cr5, L(dLcr5x)
 	subfic	rN, r12, 64	/* Shift count is 64 - (rN * 8).  */
 	bne	L(d00)
+	ld	rOFF8,  rOFF8SAVE(r1)
+	ld	rOFF16, rOFF16SAVE(r1)
+	ld	rOFF24, rOFF24SAVE(r1)
+	ld	rOFF32, rOFF32SAVE(r1)
 	li	rRTN, 0
 	blr
 
@@ -246,79 +240,41 @@ L(dP1x):
 	.align	4
 L(dP2):
 	mtctr	r0
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD5, 0, rSTR1
-	ldbrx	rWORD6, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD5, 0(rSTR1)
-	ld	rWORD6, 0(rSTR2)
-#endif
+	LD	rWORD5, 0, rSTR1
+	LD	rWORD6, 0, rSTR2
 	cmpld	cr6, rWORD5, rWORD6
 	blt	cr7, L(dP2x)
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD7, 0, rSTR1
-	ldbrx	rWORD8, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD7, 8(rSTR1)
-	ld	rWORD8, 8(rSTR2)
-#endif
+	LD	rWORD7, rOFF8, rSTR1
+	LD	rWORD8, rOFF8, rSTR2
 	cmpld	cr5, rWORD7, rWORD8
 L(dP2e):
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD1, 0, rSTR1
-	ldbrx	rWORD2, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD1, 16(rSTR1)
-	ld	rWORD2, 16(rSTR2)
-#endif
+	LD	rWORD1, rOFF16, rSTR1
+	LD	rWORD2, rOFF16, rSTR2
 	cmpld	cr7, rWORD1, rWORD2
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD3, 0, rSTR1
-	ldbrx	rWORD4, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD3, 24(rSTR1)
-	ld	rWORD4, 24(rSTR2)
-#endif
+	LD	rWORD3, rOFF24, rSTR1
+	LD	rWORD4, rOFF24, rSTR2
 	cmpld	cr1, rWORD3, rWORD4
-#ifndef __LITTLE_ENDIAN__
 	addi	rSTR1, rSTR1, 8
 	addi	rSTR2, rSTR2, 8
-#endif
 	bne	cr6, L(dLcr6)
 	bne	cr5, L(dLcr5)
 	b	L(dLoop2)
-/* Again we are on a early exit path (16-23 byte compare), we want to
-   only use volatile registers and avoid restoring non-volatile
-   registers.  */
 	.align	4
 L(dP2x):
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD3, 0, rSTR1
-	ldbrx	rWORD4, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD3, 8(rSTR1)
-	ld	rWORD4, 8(rSTR2)
-#endif
+	LD	rWORD3, rOFF8, rSTR1
+	LD	rWORD4, rOFF8, rSTR2
 	cmpld	cr1, rWORD3, rWORD4
 	sldi.	r12, rN, 3
 	bne	cr6, L(dLcr6x)
-#ifndef __LITTLE_ENDIAN__
 	addi	rSTR1, rSTR1, 8
 	addi	rSTR2, rSTR2, 8
-#endif
 	bne	cr1, L(dLcr1x)
 	subfic	rN, r12, 64	/* Shift count is 64 - (rN * 8).  */
 	bne	L(d00)
+	ld	rOFF8,  rOFF8SAVE(r1)
+	ld	rOFF16, rOFF16SAVE(r1)
+	ld	rOFF24, rOFF24SAVE(r1)
+	ld	rOFF32, rOFF32SAVE(r1)
 	li	rRTN, 0
 	blr
 
@@ -326,52 +282,22 @@ L(dP2x):
 	.align	4
 L(dP3):
 	mtctr	r0
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD3, 0, rSTR1
-	ldbrx	rWORD4, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD3, 0(rSTR1)
-	ld	rWORD4, 0(rSTR2)
-#endif
+	LD	rWORD3, 0, rSTR1
+	LD	rWORD4, 0, rSTR2
 	cmpld	cr1, rWORD3, rWORD4
 L(dP3e):
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD5, 0, rSTR1
-	ldbrx	rWORD6, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD5, 8(rSTR1)
-	ld	rWORD6, 8(rSTR2)
-#endif
+	LD	rWORD5, rOFF8, rSTR1
+	LD	rWORD6, rOFF8, rSTR2
 	cmpld	cr6, rWORD5, rWORD6
 	blt	cr7, L(dP3x)
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD7, 0, rSTR1
-	ldbrx	rWORD8, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD7, 16(rSTR1)
-	ld	rWORD8, 16(rSTR2)
-#endif
+	LD	rWORD7, rOFF16, rSTR1
+	LD	rWORD8, rOFF16, rSTR2
 	cmpld	cr5, rWORD7, rWORD8
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD1, 0, rSTR1
-	ldbrx	rWORD2, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD1, 24(rSTR1)
-	ld	rWORD2, 24(rSTR2)
-#endif
+	LD	rWORD1, rOFF24, rSTR1
+	LD	rWORD2, rOFF24, rSTR2
 	cmpld	cr7, rWORD1, rWORD2
-#ifndef __LITTLE_ENDIAN__
 	addi	rSTR1, rSTR1, 16
 	addi	rSTR2, rSTR2, 16
-#endif
 	bne	cr1, L(dLcr1)
 	bne	cr6, L(dLcr6)
 	b	L(dLoop1)
@@ -380,26 +306,21 @@ L(dP3e):
    registers.  */
 	.align	4
 L(dP3x):
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD1, 0, rSTR1
-	ldbrx	rWORD2, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD1, 16(rSTR1)
-	ld	rWORD2, 16(rSTR2)
-#endif
+	LD	rWORD1, rOFF16, rSTR1
+	LD	rWORD2, rOFF16, rSTR2
 	cmpld	cr7, rWORD1, rWORD2
 	sldi.	r12, rN, 3
 	bne	cr1, L(dLcr1x)
-#ifndef __LITTLE_ENDIAN__
 	addi	rSTR1, rSTR1, 16
 	addi	rSTR2, rSTR2, 16
-#endif
 	bne	cr6, L(dLcr6x)
 	subfic	rN, r12, 64	/* Shift count is 64 - (rN * 8).  */
 	bne	cr7, L(dLcr7x)
 	bne	L(d00)
+	ld	rOFF8,  rOFF8SAVE(r1)
+	ld	rOFF16, rOFF16SAVE(r1)
+	ld	rOFF24, rOFF24SAVE(r1)
+	ld	rOFF32, rOFF32SAVE(r1)
 	li	rRTN, 0
 	blr
 
@@ -407,46 +328,20 @@ L(dP3x):
 	.align	4
 L(dP4):
 	mtctr	r0
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD1, 0, rSTR1
-	ldbrx	rWORD2, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD1, 0(rSTR1)
-	ld	rWORD2, 0(rSTR2)
-#endif
+	LD	rWORD1, 0, rSTR1
+	LD	rWORD2, 0, rSTR2
 	cmpld	cr7, rWORD1, rWORD2
 L(dP4e):
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD3, 0, rSTR1
-	ldbrx	rWORD4, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD3, 8(rSTR1)
-	ld	rWORD4, 8(rSTR2)
-#endif
+	LD	rWORD3, rOFF8, rSTR1
+	LD	rWORD4, rOFF8, rSTR2
 	cmpld	cr1, rWORD3, rWORD4
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD5, 0, rSTR1
-	ldbrx	rWORD6, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD5, 16(rSTR1)
-	ld	rWORD6, 16(rSTR2)
-#endif
+	LD	rWORD5, rOFF16, rSTR1
+	LD	rWORD6, rOFF16, rSTR2
 	cmpld	cr6, rWORD5, rWORD6
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD7, 0, rSTR1
-	ldbrx	rWORD8, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ldu	rWORD7, 24(rSTR1)
-	ldu	rWORD8, 24(rSTR2)
-#endif
+	LD	rWORD7, rOFF24, rSTR1
+	LD	rWORD8, rOFF24, rSTR2
+	addi	rSTR1, rSTR1, 24
+	addi	rSTR2, rSTR2, 24
 	cmpld	cr5, rWORD7, rWORD8
 	bne	cr7, L(dLcr7)
 	bne	cr1, L(dLcr1)
@@ -454,51 +349,25 @@ L(dP4e):
 /* This is the primary loop */
 	.align	4
 L(dLoop):
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD1, 0, rSTR1
-	ldbrx	rWORD2, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD1, 8(rSTR1)
-	ld	rWORD2, 8(rSTR2)
-#endif
+	LD	rWORD1, rOFF8, rSTR1
+	LD	rWORD2, rOFF8, rSTR2
 	cmpld	cr1, rWORD3, rWORD4
 	bne	cr6, L(dLcr6)
 L(dLoop1):
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD3, 0, rSTR1
-	ldbrx	rWORD4, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD3, 16(rSTR1)
-	ld	rWORD4, 16(rSTR2)
-#endif
+	LD	rWORD3, rOFF16, rSTR1
+	LD	rWORD4, rOFF16, rSTR2
 	cmpld	cr6, rWORD5, rWORD6
 	bne	cr5, L(dLcr5)
 L(dLoop2):
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD5, 0, rSTR1
-	ldbrx	rWORD6, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD5, 24(rSTR1)
-	ld	rWORD6, 24(rSTR2)
-#endif
+	LD	rWORD5, rOFF24, rSTR1
+	LD	rWORD6, rOFF24, rSTR2
 	cmpld	cr5, rWORD7, rWORD8
 	bne	cr7, L(dLcr7)
 L(dLoop3):
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD7, 0, rSTR1
-	ldbrx	rWORD8, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ldu	rWORD7, 32(rSTR1)
-	ldu	rWORD8, 32(rSTR2)
-#endif
+	LD	rWORD7, rOFF32, rSTR1
+	LD	rWORD8, rOFF32, rSTR2
+	addi	rSTR1, rSTR1, 32
+	addi	rSTR2, rSTR2, 32
 	bne	cr1, L(dLcr1)
 	cmpld	cr7, rWORD1, rWORD2
 	bdnz	L(dLoop)
@@ -519,62 +388,75 @@ L(d14):
 	sldi.	r12, rN, 3
 	bne	cr5, L(dLcr5)
 L(d04):
-	ld	rWORD8, -8(r1)
-	ld	rWORD7, -16(r1)
+	ld	rWORD8, rWORD8SAVE(r1)
+	ld	rWORD7, rWORD7SAVE(r1)
 	subfic	rN, r12, 64	/* Shift count is 64 - (rN * 8).  */
-	beq	L(zeroLength)
+	beq	L(duzeroLength)
 /* At this point we have a remainder of 1 to 7 bytes to compare.  Since
    we are aligned it is safe to load the whole double word, and use
    shift right double to eliminate bits beyond the compare length.  */
 L(d00):
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD1, 0, rSTR1
-	ldbrx	rWORD2, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD1, 8(rSTR1)
-	ld	rWORD2, 8(rSTR2)
-#endif
+	LD	rWORD1, rOFF8, rSTR1
+	LD	rWORD2, rOFF8, rSTR2
 	srd	rWORD1, rWORD1, rN
 	srd	rWORD2, rWORD2, rN
 	cmpld	cr7, rWORD1, rWORD2
 	bne	cr7, L(dLcr7x)
+	ld	rOFF8,  rOFF8SAVE(r1)
+	ld	rOFF16, rOFF16SAVE(r1)
+	ld	rOFF24, rOFF24SAVE(r1)
+	ld	rOFF32, rOFF32SAVE(r1)
 	li	rRTN, 0
 	blr
 
 	.align	4
 L(dLcr7):
-	ld	rWORD8, -8(r1)
-	ld	rWORD7, -16(r1)
+	ld	rWORD8, rWORD8SAVE(r1)
+	ld	rWORD7, rWORD7SAVE(r1)
 L(dLcr7x):
+	ld	rOFF8,  rOFF8SAVE(r1)
+	ld	rOFF16, rOFF16SAVE(r1)
+	ld	rOFF24, rOFF24SAVE(r1)
+	ld	rOFF32, rOFF32SAVE(r1)
 	li	rRTN, 1
 	bgtlr	cr7
 	li	rRTN, -1
 	blr
 	.align	4
 L(dLcr1):
-	ld	rWORD8, -8(r1)
-	ld	rWORD7, -16(r1)
+	ld	rWORD8, rWORD8SAVE(r1)
+	ld	rWORD7, rWORD7SAVE(r1)
 L(dLcr1x):
+	ld	rOFF8,  rOFF8SAVE(r1)
+	ld	rOFF16, rOFF16SAVE(r1)
+	ld	rOFF24, rOFF24SAVE(r1)
+	ld	rOFF32, rOFF32SAVE(r1)
 	li	rRTN, 1
 	bgtlr	cr1
 	li	rRTN, -1
 	blr
 	.align	4
 L(dLcr6):
-	ld	rWORD8, -8(r1)
-	ld	rWORD7, -16(r1)
+	ld	rWORD8, rWORD8SAVE(r1)
+	ld	rWORD7, rWORD7SAVE(r1)
 L(dLcr6x):
+	ld	rOFF8,  rOFF8SAVE(r1)
+	ld	rOFF16, rOFF16SAVE(r1)
+	ld	rOFF24, rOFF24SAVE(r1)
+	ld	rOFF32, rOFF32SAVE(r1)
 	li	rRTN, 1
 	bgtlr	cr6
 	li	rRTN, -1
 	blr
 	.align	4
 L(dLcr5):
-	ld	rWORD8, -8(r1)
-	ld	rWORD7, -16(r1)
+	ld	rWORD8, rWORD8SAVE(r1)
+	ld	rWORD7, rWORD7SAVE(r1)
 L(dLcr5x):
+	ld	rOFF8,  rOFF8SAVE(r1)
+	ld	rOFF16, rOFF16SAVE(r1)
+	ld	rOFF24, rOFF24SAVE(r1)
+	ld	rOFF32, rOFF32SAVE(r1)
 	li	rRTN, 1
 	bgtlr	cr5
 	li	rRTN, -1
@@ -583,10 +465,6 @@ L(dLcr5x):
 	.align	4
 L(bytealigned):
 	mtctr	rN
-#if 0
-/* Huh?  We've already branched on cr6!  */
-	beq	cr6, L(zeroLength)
-#endif
 
 /* We need to prime this loop.  This loop is swing modulo scheduled
    to avoid pipe delays.  The dependent instruction latencies (load to
@@ -685,6 +563,7 @@ L(b11):
 L(bx12):
 	sub	rRTN, rWORD1, rWORD2
 	blr
+
 	.align	4
 L(zeroLength):
 	li	rRTN, 0
@@ -705,42 +584,36 @@ L(zeroLength):
    we need to adjust the length (rN) and special case the loop
    versioning for the first DW. This ensures that the loop count is
    correct and the first DW (shifted) is in the expected resister pair.  */
-#define rSHL		r29	/* Unaligned shift left count.  */
-#define rSHR		r28	/* Unaligned shift right count.  */
-#define rWORD8_SHIFT	r27	/* Left rotation temp for rWORD2.  */
-#define rWORD2_SHIFT	r26	/* Left rotation temp for rWORD4.  */
-#define rWORD4_SHIFT	r25	/* Left rotation temp for rWORD6.  */
-#define rWORD6_SHIFT	r24	/* Left rotation temp for rWORD8.  */
 L(unaligned):
-	std	rSHL, -24(r1)
-	cfi_offset(rSHL, -24)
+	std	rSHL, rSHLSAVE(r1)
+	cfi_offset(rSHL, rSHLSAVE)
 	clrldi	rSHL, rSTR2, 61
 	beq	cr6, L(duzeroLength)
-	std	rSHR, -32(r1)
-	cfi_offset(rSHR, -32)
+	std	rSHR, rSHRSAVE(r1)
+	cfi_offset(rSHR, rSHRSAVE)
 	beq	cr5, L(DWunaligned)
-	std	rWORD8_SHIFT, -40(r1)
-	cfi_offset(rWORD8_SHIFT, -40)
+	std	rWORD8_SHIFT, rWORD8SHIFTSAVE(r1)
+	cfi_offset(rWORD8_SHIFT, rWORD8SHIFTSAVE)
 /* Adjust the logical start of rSTR2 to compensate for the extra bits
    in the 1st rSTR1 DW.  */
 	sub	rWORD8_SHIFT, rSTR2, r12
 /* But do not attempt to address the DW before that DW that contains
    the actual start of rSTR2.  */
 	clrrdi	rSTR2, rSTR2, 3
-	std	rWORD2_SHIFT, -48(r1)
-	cfi_offset(rWORD2_SHIFT, -48)
+	std	rWORD2_SHIFT, rWORD2SHIFTSAVE(r1)
+	cfi_offset(rWORD2_SHIFT, rWORD2SHIFTSAVE)
 /* Compute the left/right shift counts for the unaligned rSTR2,
    compensating for the logical (DW aligned) start of rSTR1.  */
 	clrldi	rSHL, rWORD8_SHIFT, 61
 	clrrdi	rSTR1, rSTR1, 3
-	std	rWORD4_SHIFT, -56(r1)
-	cfi_offset(rWORD4_SHIFT, -56)
+	std	rWORD4_SHIFT, rWORD4SHIFTSAVE(r1)
+	cfi_offset(rWORD4_SHIFT, rWORD4SHIFTSAVE)
 	sldi	rSHL, rSHL, 3
 	cmpld	cr5, rWORD8_SHIFT, rSTR2
 	add	rN, rN, r12
 	sldi	rWORD6, r12, 3
-	std	rWORD6_SHIFT, -64(r1)
-	cfi_offset(rWORD6_SHIFT, -64)
+	std	rWORD6_SHIFT, rWORD6SHIFTSAVE(r1)
+	cfi_offset(rWORD6_SHIFT, rWORD6SHIFTSAVE)
 	subfic	rSHR, rSHL, 64
 	srdi	r0, rN, 5	/* Divide by 32 */
 	andi.	r12, rN, 24	/* Get the DW remainder */
@@ -750,25 +623,13 @@ L(unaligned):
    this may cross a page boundary and cause a page fault.  */
 	li	rWORD8, 0
 	blt	cr5, L(dus0)
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD8, 0, rSTR2
+	LD	rWORD8, 0, rSTR2
 	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD8, 0(rSTR2)
-	addi	rSTR2, rSTR2, 8
-#endif
 	sld	rWORD8, rWORD8, rSHL
 
 L(dus0):
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD1, 0, rSTR1
-	ldbrx	rWORD2, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD1, 0(rSTR1)
-	ld	rWORD2, 0(rSTR2)
-#endif
+	LD	rWORD1, 0, rSTR1
+	LD	rWORD2, 0, rSTR2
 	cmpldi	cr1, r12, 16
 	cmpldi	cr7, rN, 32
 	srd	r12, rWORD2, rSHR
@@ -796,12 +657,7 @@ L(dusP1):
 	beq	L(duZeroReturn)
 	li	r0, 0
 	ble	cr7, L(dutrim)
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD2, 0, rSTR2
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD2, 8(rSTR2)
-#endif
+	LD	rWORD2, rOFF8, rSTR2
 	srd	r0, rWORD2, rSHR
 	b	L(dutrim)
 /* Remainder is 16 */
@@ -832,27 +688,21 @@ L(duPs4):
    compare length is at least 8 bytes.  */
 	.align	4
 L(DWunaligned):
-	std	rWORD8_SHIFT, -40(r1)
-	cfi_offset(rWORD8_SHIFT, -40)
+	std	rWORD8_SHIFT, rWORD8SHIFTSAVE(r1)
+	cfi_offset(rWORD8_SHIFT, rWORD8SHIFTSAVE)
 	clrrdi	rSTR2, rSTR2, 3
-	std	rWORD2_SHIFT, -48(r1)
-	cfi_offset(rWORD2_SHIFT, -48)
+	std	rWORD2_SHIFT, rWORD2SHIFTSAVE(r1)
+	cfi_offset(rWORD2_SHIFT, rWORD2SHIFTSAVE)
 	srdi	r0, rN, 5	/* Divide by 32 */
-	std	rWORD4_SHIFT, -56(r1)
-	cfi_offset(rWORD4_SHIFT, -56)
+	std	rWORD4_SHIFT, rWORD4SHIFTSAVE(r1)
+	cfi_offset(rWORD4_SHIFT, rWORD4SHIFTSAVE)
 	andi.	r12, rN, 24	/* Get the DW remainder */
-	std	rWORD6_SHIFT, -64(r1)
-	cfi_offset(rWORD6_SHIFT, -64)
+	std	rWORD6_SHIFT, rWORD6SHIFTSAVE(r1)
+	cfi_offset(rWORD6_SHIFT, rWORD6SHIFTSAVE)
 	sldi	rSHL, rSHL, 3
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD6, 0, rSTR2
+	LD	rWORD6, 0, rSTR2
+	LD	rWORD8, rOFF8, rSTR2
 	addi	rSTR2, rSTR2, 8
-	ldbrx	rWORD8, 0, rSTR2
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD6, 0(rSTR2)
-	ldu	rWORD8, 8(rSTR2)
-#endif
 	cmpldi	cr1, r12, 16
 	cmpldi	cr7, rN, 32
 	clrldi	rN, rN, 61
@@ -867,52 +717,26 @@ L(DWunaligned):
 	.align	4
 L(duP1):
 	srd	r12, rWORD8, rSHR
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD7, 0, rSTR1
-	addi	rSTR1, rSTR1, 8
-#else
-	ld	rWORD7, 0(rSTR1)
-#endif
+	LD	rWORD7, 0, rSTR1
 	sld	rWORD8_SHIFT, rWORD8, rSHL
 	or	rWORD8, r12, rWORD6_SHIFT
 	blt	cr7, L(duP1x)
 L(duP1e):
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD1, 0, rSTR1
-	ldbrx	rWORD2, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD1, 8(rSTR1)
-	ld	rWORD2, 8(rSTR2)
-#endif
+	LD	rWORD1, rOFF8, rSTR1
+	LD	rWORD2, rOFF8, rSTR2
 	cmpld	cr5, rWORD7, rWORD8
 	srd	r0, rWORD2, rSHR
 	sld	rWORD2_SHIFT, rWORD2, rSHL
 	or	rWORD2, r0, rWORD8_SHIFT
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD3, 0, rSTR1
-	ldbrx	rWORD4, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD3, 16(rSTR1)
-	ld	rWORD4, 16(rSTR2)
-#endif
+	LD	rWORD3, rOFF16, rSTR1
+	LD	rWORD4, rOFF16, rSTR2
 	cmpld	cr7, rWORD1, rWORD2
 	srd	r12, rWORD4, rSHR
 	sld	rWORD4_SHIFT, rWORD4, rSHL
 	bne	cr5, L(duLcr5)
 	or	rWORD4, r12, rWORD2_SHIFT
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD5, 0, rSTR1
-	ldbrx	rWORD6, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD5, 24(rSTR1)
-	ld	rWORD6, 24(rSTR2)
-#endif
+	LD	rWORD5, rOFF24, rSTR1
+	LD	rWORD6, rOFF24, rSTR2
 	cmpld	cr1, rWORD3, rWORD4
 	srd	r0, rWORD6, rSHR
 	sld	rWORD6_SHIFT, rWORD6, rSHL
@@ -932,82 +756,47 @@ L(duP1x):
 	beq	L(duZeroReturn)
 	li	r0, 0
 	ble	cr7, L(dutrim)
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD2, 0, rSTR2
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD2, 8(rSTR2)
-#endif
+	LD	rWORD2, rOFF8, rSTR2
 	srd	r0, rWORD2, rSHR
 	b	L(dutrim)
 /* Remainder is 16 */
 	.align	4
 L(duP2):
 	srd	r0, rWORD8, rSHR
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD5, 0, rSTR1
-	addi	rSTR1, rSTR1, 8
-#else
-	ld	rWORD5, 0(rSTR1)
-#endif
+	LD	rWORD5, 0, rSTR1
 	or	rWORD6, r0, rWORD6_SHIFT
 	sld	rWORD6_SHIFT, rWORD8, rSHL
 L(duP2e):
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD7, 0, rSTR1
-	ldbrx	rWORD8, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD7, 8(rSTR1)
-	ld	rWORD8, 8(rSTR2)
-#endif
+	LD	rWORD7, rOFF8, rSTR1
+	LD	rWORD8, rOFF8, rSTR2
 	cmpld	cr6, rWORD5, rWORD6
 	srd	r12, rWORD8, rSHR
 	sld	rWORD8_SHIFT, rWORD8, rSHL
 	or	rWORD8, r12, rWORD6_SHIFT
 	blt	cr7, L(duP2x)
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD1, 0, rSTR1
-	ldbrx	rWORD2, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD1, 16(rSTR1)
-	ld	rWORD2, 16(rSTR2)
-#endif
+	LD	rWORD1, rOFF16, rSTR1
+	LD	rWORD2, rOFF16, rSTR2
 	cmpld	cr5, rWORD7, rWORD8
 	bne	cr6, L(duLcr6)
 	srd	r0, rWORD2, rSHR
 	sld	rWORD2_SHIFT, rWORD2, rSHL
 	or	rWORD2, r0, rWORD8_SHIFT
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD3, 0, rSTR1
-	ldbrx	rWORD4, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD3, 24(rSTR1)
-	ld	rWORD4, 24(rSTR2)
-#endif
+	LD	rWORD3, rOFF24, rSTR1
+	LD	rWORD4, rOFF24, rSTR2
 	cmpld	cr7, rWORD1, rWORD2
 	bne	cr5, L(duLcr5)
 	srd	r12, rWORD4, rSHR
 	sld	rWORD4_SHIFT, rWORD4, rSHL
 	or	rWORD4, r12, rWORD2_SHIFT
-#ifndef __LITTLE_ENDIAN__
 	addi	rSTR1, rSTR1, 8
 	addi	rSTR2, rSTR2, 8
-#endif
 	cmpld	cr1, rWORD3, rWORD4
 	b	L(duLoop2)
 	.align	4
 L(duP2x):
 	cmpld	cr5, rWORD7, rWORD8
-#ifndef __LITTLE_ENDIAN__
 	addi	rSTR1, rSTR1, 8
 	addi	rSTR2, rSTR2, 8
-#endif
 	bne	cr6, L(duLcr6)
 	sldi.	rN, rN, 3
 	bne	cr5, L(duLcr5)
@@ -1015,12 +804,7 @@ L(duP2x):
 	beq	L(duZeroReturn)
 	li	r0, 0
 	ble	cr7, L(dutrim)
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD2, 0, rSTR2
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD2, 8(rSTR2)
-#endif
+	LD	rWORD2, rOFF8, rSTR2
 	srd	r0, rWORD2, rSHR
 	b	L(dutrim)
 
@@ -1028,73 +812,39 @@ L(duP2x):
 	.align	4
 L(duP3):
 	srd	r12, rWORD8, rSHR
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD3, 0, rSTR1
-	addi	rSTR1, rSTR1, 8
-#else
-	ld	rWORD3, 0(rSTR1)
-#endif
+	LD	rWORD3, 0, rSTR1
 	sld	rWORD4_SHIFT, rWORD8, rSHL
 	or	rWORD4, r12, rWORD6_SHIFT
 L(duP3e):
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD5, 0, rSTR1
-	ldbrx	rWORD6, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD5, 8(rSTR1)
-	ld	rWORD6, 8(rSTR2)
-#endif
+	LD	rWORD5, rOFF8, rSTR1
+	LD	rWORD6, rOFF8, rSTR2
 	cmpld	cr1, rWORD3, rWORD4
 	srd	r0, rWORD6, rSHR
 	sld	rWORD6_SHIFT, rWORD6, rSHL
 	or	rWORD6, r0, rWORD4_SHIFT
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD7, 0, rSTR1
-	ldbrx	rWORD8, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD7, 16(rSTR1)
-	ld	rWORD8, 16(rSTR2)
-#endif
+	LD	rWORD7, rOFF16, rSTR1
+	LD	rWORD8, rOFF16, rSTR2
 	cmpld	cr6, rWORD5, rWORD6
 	bne	cr1, L(duLcr1)
 	srd	r12, rWORD8, rSHR
 	sld	rWORD8_SHIFT, rWORD8, rSHL
 	or	rWORD8, r12, rWORD6_SHIFT
 	blt	cr7, L(duP3x)
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD1, 0, rSTR1
-	ldbrx	rWORD2, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD1, 24(rSTR1)
-	ld	rWORD2, 24(rSTR2)
-#endif
+	LD	rWORD1, rOFF24, rSTR1
+	LD	rWORD2, rOFF24, rSTR2
 	cmpld	cr5, rWORD7, rWORD8
 	bne	cr6, L(duLcr6)
 	srd	r0, rWORD2, rSHR
 	sld	rWORD2_SHIFT, rWORD2, rSHL
 	or	rWORD2, r0, rWORD8_SHIFT
-#ifndef __LITTLE_ENDIAN__
 	addi	rSTR1, rSTR1, 16
 	addi	rSTR2, rSTR2, 16
-#endif
 	cmpld	cr7, rWORD1, rWORD2
 	b	L(duLoop1)
 	.align	4
 L(duP3x):
-#ifndef __LITTLE_ENDIAN__
 	addi	rSTR1, rSTR1, 16
 	addi	rSTR2, rSTR2, 16
-#endif
-#if 0
-/* Huh?  We've already branched on cr1!  */
-	bne	cr1, L(duLcr1)
-#endif
 	cmpld	cr5, rWORD7, rWORD8
 	bne	cr6, L(duLcr6)
 	sldi.	rN, rN, 3
@@ -1103,12 +853,7 @@ L(duP3x):
 	beq	L(duZeroReturn)
 	li	r0, 0
 	ble	cr7, L(dutrim)
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD2, 0, rSTR2
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD2, 8(rSTR2)
-#endif
+	LD	rWORD2, rOFF8, rSTR2
 	srd	r0, rWORD2, rSHR
 	b	L(dutrim)
 
@@ -1117,51 +862,27 @@ L(duP3x):
 L(duP4):
 	mtctr	r0
 	srd	r0, rWORD8, rSHR
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD1, 0, rSTR1
-	addi	rSTR1, rSTR1, 8
-#else
-	ld	rWORD1, 0(rSTR1)
-#endif
+	LD	rWORD1, 0, rSTR1
 	sld	rWORD2_SHIFT, rWORD8, rSHL
 	or	rWORD2, r0, rWORD6_SHIFT
 L(duP4e):
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD3, 0, rSTR1
-	ldbrx	rWORD4, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD3, 8(rSTR1)
-	ld	rWORD4, 8(rSTR2)
-#endif
+	LD	rWORD3, rOFF8, rSTR1
+	LD	rWORD4, rOFF8, rSTR2
 	cmpld	cr7, rWORD1, rWORD2
 	srd	r12, rWORD4, rSHR
 	sld	rWORD4_SHIFT, rWORD4, rSHL
 	or	rWORD4, r12, rWORD2_SHIFT
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD5, 0, rSTR1
-	ldbrx	rWORD6, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD5, 16(rSTR1)
-	ld	rWORD6, 16(rSTR2)
-#endif
+	LD	rWORD5, rOFF16, rSTR1
+	LD	rWORD6, rOFF16, rSTR2
 	cmpld	cr1, rWORD3, rWORD4
 	bne	cr7, L(duLcr7)
 	srd	r0, rWORD6, rSHR
 	sld	rWORD6_SHIFT, rWORD6, rSHL
 	or	rWORD6, r0, rWORD4_SHIFT
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD7, 0, rSTR1
-	ldbrx	rWORD8, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ldu	rWORD7, 24(rSTR1)
-	ldu	rWORD8, 24(rSTR2)
-#endif
+	LD	rWORD7, rOFF24, rSTR1
+	LD	rWORD8, rOFF24, rSTR2
+	addi	rSTR1, rSTR1, 24
+	addi	rSTR2, rSTR2, 24
 	cmpld	cr6, rWORD5, rWORD6
 	bne	cr1, L(duLcr1)
 	srd	r12, rWORD8, rSHR
@@ -1172,60 +893,34 @@ L(duP4e):
 /* This is the primary loop */
 	.align	4
 L(duLoop):
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD1, 0, rSTR1
-	ldbrx	rWORD2, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD1, 8(rSTR1)
-	ld	rWORD2, 8(rSTR2)
-#endif
+	LD	rWORD1, rOFF8, rSTR1
+	LD	rWORD2, rOFF8, rSTR2
 	cmpld	cr1, rWORD3, rWORD4
 	bne	cr6, L(duLcr6)
 	srd	r0, rWORD2, rSHR
 	sld	rWORD2_SHIFT, rWORD2, rSHL
 	or	rWORD2, r0, rWORD8_SHIFT
 L(duLoop1):
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD3, 0, rSTR1
-	ldbrx	rWORD4, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD3, 16(rSTR1)
-	ld	rWORD4, 16(rSTR2)
-#endif
+	LD	rWORD3, rOFF16, rSTR1
+	LD	rWORD4, rOFF16, rSTR2
 	cmpld	cr6, rWORD5, rWORD6
 	bne	cr5, L(duLcr5)
 	srd	r12, rWORD4, rSHR
 	sld	rWORD4_SHIFT, rWORD4, rSHL
 	or	rWORD4, r12, rWORD2_SHIFT
 L(duLoop2):
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD5, 0, rSTR1
-	ldbrx	rWORD6, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD5, 24(rSTR1)
-	ld	rWORD6, 24(rSTR2)
-#endif
+	LD	rWORD5, rOFF24, rSTR1
+	LD	rWORD6, rOFF24, rSTR2
 	cmpld	cr5, rWORD7, rWORD8
 	bne	cr7, L(duLcr7)
 	srd	r0, rWORD6, rSHR
 	sld	rWORD6_SHIFT, rWORD6, rSHL
 	or	rWORD6, r0, rWORD4_SHIFT
 L(duLoop3):
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD7, 0, rSTR1
-	ldbrx	rWORD8, 0, rSTR2
-	addi	rSTR1, rSTR1, 8
-	addi	rSTR2, rSTR2, 8
-#else
-	ldu	rWORD7, 32(rSTR1)
-	ldu	rWORD8, 32(rSTR2)
-#endif
+	LD	rWORD7, rOFF32, rSTR1
+	LD	rWORD8, rOFF32, rSTR2
+	addi	rSTR1, rSTR1, 32
+	addi	rSTR2, rSTR2, 32
 	cmpld	cr7, rWORD1, rWORD2
 	bne	cr1, L(duLcr1)
 	srd	r12, rWORD8, rSHR
@@ -1234,10 +929,6 @@ L(duLoop3):
 	bdnz	L(duLoop)
 
 L(duL4):
-#if 0
-/* Huh?  We've already branched on cr1!  */
-	bne	cr1, L(duLcr1)
-#endif
 	cmpld	cr1, rWORD3, rWORD4
 	bne	cr6, L(duLcr6)
 	cmpld	cr6, rWORD5, rWORD6
@@ -1264,99 +955,102 @@ L(du14):
 	beq	L(duZeroReturn)
 	li	r0, 0
 	ble	cr7, L(dutrim)
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD2, 0, rSTR2
-	addi	rSTR2, rSTR2, 8
-#else
-	ld	rWORD2, 8(rSTR2)
-#endif
+	LD	rWORD2, rOFF8, rSTR2
 	srd	r0, rWORD2, rSHR
 	.align	4
 L(dutrim):
-#ifdef __LITTLE_ENDIAN__
-	ldbrx	rWORD1, 0, rSTR1
-#else
-	ld	rWORD1, 8(rSTR1)
-#endif
+	LD	rWORD1, rOFF8, rSTR1
 	ld	rWORD8, -8(r1)
 	subfic	rN, rN, 64	/* Shift count is 64 - (rN * 8).  */
 	or	rWORD2, r0, rWORD8_SHIFT
-	ld	rWORD7, -16(r1)
-	ld	rSHL, -24(r1)
+	ld	rWORD7, rWORD7SAVE(r1)
+	ld	rSHL, rSHLSAVE(r1)
 	srd	rWORD1, rWORD1, rN
 	srd	rWORD2, rWORD2, rN
-	ld	rSHR, -32(r1)
-	ld	rWORD8_SHIFT, -40(r1)
+	ld	rSHR, rSHRSAVE(r1)
+	ld	rWORD8_SHIFT, rWORD8SHIFTSAVE(r1)
 	li	rRTN, 0
 	cmpld	cr7, rWORD1, rWORD2
-	ld	rWORD2_SHIFT, -48(r1)
-	ld	rWORD4_SHIFT, -56(r1)
+	ld	rWORD2_SHIFT, rWORD2SHIFTSAVE(r1)
+	ld	rWORD4_SHIFT, rWORD4SHIFTSAVE(r1)
 	beq	cr7, L(dureturn24)
 	li	rRTN, 1
-	ld	rWORD6_SHIFT, -64(r1)
+	ld	rWORD6_SHIFT, rWORD6SHIFTSAVE(r1)
+	ld	rOFF8,  rOFF8SAVE(r1)
+	ld	rOFF16, rOFF16SAVE(r1)
+	ld	rOFF24, rOFF24SAVE(r1)
+	ld	rOFF32, rOFF32SAVE(r1)
 	bgtlr	cr7
 	li	rRTN, -1
 	blr
 	.align	4
 L(duLcr7):
-	ld	rWORD8, -8(r1)
-	ld	rWORD7, -16(r1)
+	ld	rWORD8, rWORD8SAVE(r1)
+	ld	rWORD7, rWORD7SAVE(r1)
 	li	rRTN, 1
 	bgt	cr7, L(dureturn29)
-	ld	rSHL, -24(r1)
-	ld	rSHR, -32(r1)
+	ld	rSHL, rSHLSAVE(r1)
+	ld	rSHR, rSHRSAVE(r1)
 	li	rRTN, -1
 	b	L(dureturn27)
 	.align	4
 L(duLcr1):
-	ld	rWORD8, -8(r1)
-	ld	rWORD7, -16(r1)
+	ld	rWORD8, rWORD8SAVE(r1)
+	ld	rWORD7, rWORD7SAVE(r1)
 	li	rRTN, 1
 	bgt	cr1, L(dureturn29)
-	ld	rSHL, -24(r1)
-	ld	rSHR, -32(r1)
+	ld	rSHL, rSHLSAVE(r1)
+	ld	rSHR, rSHRSAVE(r1)
 	li	rRTN, -1
 	b	L(dureturn27)
 	.align	4
 L(duLcr6):
-	ld	rWORD8, -8(r1)
-	ld	rWORD7, -16(r1)
+	ld	rWORD8, rWORD8SAVE(r1)
+	ld	rWORD7, rWORD7SAVE(r1)
 	li	rRTN, 1
 	bgt	cr6, L(dureturn29)
-	ld	rSHL, -24(r1)
-	ld	rSHR, -32(r1)
+	ld	rSHL, rSHLSAVE(r1)
+	ld	rSHR, rSHRSAVE(r1)
 	li	rRTN, -1
 	b	L(dureturn27)
 	.align	4
 L(duLcr5):
-	ld	rWORD8, -8(r1)
-	ld	rWORD7, -16(r1)
+	ld	rWORD8, rWORD8SAVE(r1)
+	ld	rWORD7, rWORD7SAVE(r1)
 	li	rRTN, 1
 	bgt	cr5, L(dureturn29)
-	ld	rSHL, -24(r1)
-	ld	rSHR, -32(r1)
+	ld	rSHL, rSHLSAVE(r1)
+	ld	rSHR, rSHRSAVE(r1)
 	li	rRTN, -1
 	b	L(dureturn27)
+
 	.align	3
 L(duZeroReturn):
 	li	rRTN, 0
 	.align	4
 L(dureturn):
-	ld	rWORD8, -8(r1)
-	ld	rWORD7, -16(r1)
+	ld	rWORD8, rWORD8SAVE(r1)
+	ld	rWORD7, rWORD7SAVE(r1)
 L(dureturn29):
-	ld	rSHL, -24(r1)
-	ld	rSHR, -32(r1)
+	ld	rSHL, rSHLSAVE(r1)
+	ld	rSHR, rSHRSAVE(r1)
 L(dureturn27):
-	ld	rWORD8_SHIFT, -40(r1)
-L(dureturn26):
-	ld	rWORD2_SHIFT, -48(r1)
-L(dureturn25):
-	ld	rWORD4_SHIFT, -56(r1)
+	ld	rWORD8_SHIFT, rWORD8SHIFTSAVE(r1)
+	ld	rWORD2_SHIFT, rWORD2SHIFTSAVE(r1)
+	ld	rWORD4_SHIFT, rWORD4SHIFTSAVE(r1)
 L(dureturn24):
-	ld	rWORD6_SHIFT, -64(r1)
+	ld	rWORD6_SHIFT, rWORD6SHIFTSAVE(r1)
+	ld	rOFF8,  rOFF8SAVE(r1)
+	ld	rOFF16, rOFF16SAVE(r1)
+	ld	rOFF24, rOFF24SAVE(r1)
+	ld	rOFF32, rOFF32SAVE(r1)
 	blr
+
 L(duzeroLength):
+	ld	rOFF8,  rOFF8SAVE(r1)
+	ld	rOFF16, rOFF16SAVE(r1)
+	ld	rOFF24, rOFF24SAVE(r1)
+	ld	rOFF32, rOFF32SAVE(r1)
 	li	rRTN, 0
 	blr
 
