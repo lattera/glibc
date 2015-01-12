@@ -1,5 +1,14 @@
 2015-01-12  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17803]
+	* sysdeps/ieee754/ldbl-96/s_scalblnl.c (twom63): Rename to
+	twom64.  Adjust value to 0x1p-64L.
+	(__scalblnl): Only return standard underflowing result for K <=
+	-64 not K <= -63; adjust exponent for underflowing result by 64
+	not 63.
+	* math/libm-test.inc (scalbn_test_data): Add more tests.
+	(scalbln_test_data): Likewise.
+
 	[BZ #17834]
 	* sysdeps/ieee754/ldbl-96/s_scalblnl.c (two63): Change value to
 	0x1p63L.

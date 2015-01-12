@@ -26,7 +26,7 @@
 
 static const long double
 two63   =  0x1p63L,
-twom63  =  1.08420217248550443400e-19,
+twom64  =  0x1p-64L,
 huge   = 1.0e+4900L,
 tiny   = 1.0e-4900L;
 
@@ -52,9 +52,9 @@ __scalblnl (long double x, long int n)
 	k = k+n;
 	if (__builtin_expect(k > 0, 1))		/* normal result */
 	    {SET_LDOUBLE_EXP(x,(es&0x8000)|k); return x;}
-	if (k <= -63)
+	if (k <= -64)
 	    return tiny*__copysignl(tiny,x); 	/*underflow*/
-	k += 63;				/* subnormal result */
+	k += 64;				/* subnormal result */
 	SET_LDOUBLE_EXP(x,(es&0x8000)|k);
-	return x*twom63;
+	return x*twom64;
 }
