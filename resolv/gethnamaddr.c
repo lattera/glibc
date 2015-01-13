@@ -672,8 +672,8 @@ gethostbyaddr(addr, len, af)
 		return (NULL);
 	}
 	if (af == AF_INET6 && len == IN6ADDRSZ &&
-	    (!bcmp(uaddr, mapped, sizeof mapped) ||
-	     !bcmp(uaddr, tunnelled, sizeof tunnelled))) {
+	    (!memcmp(uaddr, mapped, sizeof mapped) ||
+	     !memcmp(uaddr, tunnelled, sizeof tunnelled))) {
 		/* Unmap. */
 		addr += sizeof mapped;
 		uaddr += sizeof mapped;
@@ -922,7 +922,7 @@ _gethtbyaddr(addr, len, af)
 
 	_sethtent(0);
 	while ((p = _gethtent()))
-		if (p->h_addrtype == af && !bcmp(p->h_addr, addr, len))
+		if (p->h_addrtype == af && !memcmp(p->h_addr, addr, len))
 			break;
 	_endhtent();
 	return (p);

@@ -1,3 +1,12 @@
+2015-01-13  Roland McGrath  <roland@hack.frob.com>
+
+	* login/logout.c (logout): Use memset rather than bzero.
+	* nis/nss_compat/compat-pwd.c (getpwent_next_file): Likewise.
+	* nis/nss_compat/compat-spwd.c (getspent_next_file): Likewise.
+	* resolv/gethnamaddr.c (gethostbyaddr): Use memcmp rather than bcmp.
+	(_gethtbyaddr): Likewise.
+	* locale/programs/simple-hash.c (bcopy): Macro removed.
+
 2015-01-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile [sysdep_routines]:

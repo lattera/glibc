@@ -42,10 +42,6 @@
 # define BITSPERBYTE 8
 #endif
 
-#ifndef bcopy
-# define bcopy(s, d, n)	memcpy ((d), (s), (n))
-#endif
-
 #define hashval_t uint32_t
 #include "hashval.h"
 

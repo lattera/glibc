@@ -578,7 +578,7 @@ getpwent_next_file (struct passwd *result, ent_t *ent,
 	  char *user, *host, *domain;
 	  struct __netgrent netgrdata;
 
-	  bzero (&netgrdata, sizeof (struct __netgrent));
+	  memset (&netgrdata, 0, sizeof (struct __netgrent));
 	  __internal_setnetgrent (&result->pw_name[2], &netgrdata);
 	  while (__internal_getnetgrent_r (&host, &user, &domain, &netgrdata,
 					   buf2, sizeof (buf2), errnop))

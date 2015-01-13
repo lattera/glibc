@@ -45,9 +45,9 @@ logout (const char *line)
   if (getutline_r (&tmp, &utbuf, &ut) >= 0)
     {
       /* Clear information about who & from where.  */
-      bzero (ut->ut_name, sizeof ut->ut_name);
+      memset (ut->ut_name, '\0', sizeof ut->ut_name);
 #if _HAVE_UT_HOST - 0
-      bzero (ut->ut_host, sizeof ut->ut_host);
+      memset (ut->ut_host, '\0', sizeof ut->ut_host);
 #endif
 #if _HAVE_UT_TV - 0
       struct timeval tv;
