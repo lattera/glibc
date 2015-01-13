@@ -1,3 +1,7 @@
+2015-01-13  David S. Miller  <davem@davemloft.net>
+
+	* include/signal.h (__sigreturn): Guard with __USE_MISC.
+
 2015-01-13  Roland McGrath  <roland@hack.frob.com>
 
 	* login/logout.c (logout): Use memset rather than bzero.
