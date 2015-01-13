@@ -23,7 +23,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
+/* Keep in sync with string/strxfrm_l.c.  */
+#define SMALL_STR_SIZE 4095
 
 struct lines
 {
@@ -37,6 +40,7 @@ int
 main (int argc, char *argv[])
 {
   int result = 0;
+  bool nocache = false;
   size_t nstrings, nstrings_max;
   struct lines *strings;
   char *line = NULL;
@@ -44,7 +48,18 @@ main (int argc, char *argv[])
   size_t n;
 
   if (argc < 2)
-    error (1, 0, "usage: %s <random seed>", argv[0]);
+    error (1, 0, "usage: %s <random seed> [-nocache]", argv[0]);
+
+  if (argc == 3)
+    {
+      if (strcmp (argv[2], "-nocache") == 0)
+	nocache = true;
+      else
+	{
+	  printf ("Unknown option %s!\n", argv[2]);
+	  exit (1);
+	}
+    }
 
   setlocale (LC_ALL, "");
 
@@ -59,9 +74,9 @@ main (int argc, char *argv[])
 
   while (1)
     {
-      char saved, *newp;
-      int needed;
-      int l;
+      char saved, *word, *newp;
+      size_t l, line_len, needed;
+
       if (getline (&line, &len, stdin) < 0)
 	break;
 
@@ -83,10 +98,35 @@ main (int argc, char *argv[])
 
       saved = line[l];
       line[l] = '\0';
-      needed = strxfrm (NULL, line, 0);
+
+      if (nocache)
+	{
+	  line_len = strlen (line);
+	  word = malloc (line_len + SMALL_STR_SIZE + 1);
+	  if (word == NULL)
+	    {
+	      printf ("malloc failed: %m\n");
+	      exit (1);
+	    }
+	  memset (word, ' ', SMALL_STR_SIZE);
+	  memcpy (word + SMALL_STR_SIZE, line, line_len);
+	  word[line_len + SMALL_STR_SIZE] = '\0';
+	}
+      else
+        word = line;
+
+      needed = strxfrm (NULL, word, 0);
       newp = malloc (needed + 1);
-      strxfrm (newp, line, needed + 1);
+      if (newp == NULL)
+	{
+	  printf ("malloc failed: %m\n");
+	  exit (1);
+	}
+      strxfrm (newp, word, needed + 1);
       strings[nstrings].xfrm = newp;
+
+      if (nocache)
+	free (word);
       line[l] = saved;
       ++nstrings;
     }

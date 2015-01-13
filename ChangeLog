@@ -1,3 +1,19 @@
+2015-01-13  Leonhard Holz  <leonhard.holz@web.de>
+
+	[BZ #16009]
+	* string/strxfrm_l.c (STRXFRM): Allocate fixed size cache for
+	weights and rules. Use do_xfrm_cached if data fits in cache,
+	do_xfrm otherwise.  Moved former main loop to...
+	* (do_xfrm_cached): New function.
+	* (do_xfrm): Non-caching version of do_xfrm_cached. Uses
+	find_idx, find_position and stack_push.
+	* (find_idx): New function.
+	* (find_position): Likewise.
+	* localedata/sort-test.sh: Added test run for do_xfrm.
+	* localedata/xfrm-test.c (main): Added command line option
+	-nocache to run the test with strings that are too large for
+	the STRXFRM cache.
+
 2015-01-13  Torvald Riegel  <triegel@redhat.com>
 
 	* sysdeps/nptl/fork.c (__libc_fork): Provide address of futex
