@@ -219,7 +219,7 @@ __libc_fork (void)
 
 	  if (atomic_decrement_and_test (&allp->handler->refcntr)
 	      && allp->handler->need_signal)
-	    lll_futex_wake (allp->handler->refcntr, 1, LLL_PRIVATE);
+	    lll_futex_wake (&allp->handler->refcntr, 1, LLL_PRIVATE);
 
 	  allp = allp->next;
 	}

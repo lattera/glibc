@@ -1,3 +1,8 @@
+2015-01-13  Torvald Riegel  <triegel@redhat.com>
+
+	* sysdeps/nptl/fork.c (__libc_fork): Provide address of futex
+	variable to lll_futex_wake call, not the value itself.
+
 2015-01-12  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17803]
