@@ -1,3 +1,9 @@
+2015-01-14  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17748]
+	* sysdeps/powerpc/nofpu/feholdexcpt.c (__feholdexcept): Call
+	__fesetenv instead of fesetenv.
+
 2015-01-14  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/s390/dl-tls.h [IS_IN (rtld)]: Define __tls_get_addr

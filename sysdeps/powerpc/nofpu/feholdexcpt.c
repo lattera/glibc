@@ -36,7 +36,7 @@ __feholdexcept (fenv_t *envp)
   u.l[1] = FE_ALL_EXCEPT;
 
   /* Put the new state in effect.  */
-  fesetenv (&u.fenv);
+  __fesetenv (&u.fenv);
 
   return 0;
 }
