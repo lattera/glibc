@@ -33,6 +33,13 @@ extern unsigned long __tls_get_offset (unsigned long got_offset);
 
 #  include <shlib-compat.h>
 
+/* dl-tls.c declares __tls_get_addr as an exported symbol if it is not defined
+   as a macro.  It seems suitable to do that in the generic code because all
+   architectures other than s390 export __tls_get_addr.  The declaration causes
+   problems in s390 though, so we define __tls_get_addr here to avoid declaring
+   __tls_get_addr again.  */
+#  define __tls_get_addr __tls_get_addr
+
 extern void *__tls_get_addr (tls_index *ti) attribute_hidden;
 /* Make a temporary alias of __tls_get_addr to remove the hidden
    attribute.  Then export __tls_get_addr as __tls_get_addr_internal

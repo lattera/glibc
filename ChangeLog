@@ -1,3 +1,8 @@
+2015-01-14  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/s390/dl-tls.h [IS_IN (rtld)]: Define __tls_get_addr
+	macro.
+
 2015-01-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power7/memcmp.S (memcmp): Fix performance
