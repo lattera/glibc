@@ -29,7 +29,7 @@
 
 #if IS_IN (libc)
 
-ENTRY(memset_z196)
+ENTRY(__memset_z196)
 	.machine "z196"
 	.machinemode "zarch_nohighgprs"
         llgfr   %r4,%r4
@@ -49,7 +49,7 @@ ENTRY(memset_z196)
         br      %r14
 .L_Z196_1:
 	cgfi	%r5,1048576
-	jh	memset_mvcle	   # Switch to mvcle for >256MB
+	jh	__memset_mvcle	   # Switch to mvcle for >256MB
 .L_Z196_2:
         pfd     2,1024(%r1)
         mvc     1(256,%r1),0(%r1)
@@ -59,9 +59,9 @@ ENTRY(memset_z196)
         j       .L_Z196_3
 .L_Z196_17:
         mvc     1(1,%r1),0(%r1)
-END(memset_z196)
+END(__memset_z196)
 
-ENTRY(memset_z10)
+ENTRY(__memset_z10)
 	.machine "z10"
 	.machinemode "zarch_nohighgprs"
         llgfr   %r4,%r4
@@ -78,7 +78,7 @@ ENTRY(memset_z10)
         br      %r14
 .L_Z10_15:
 	cgfi	%r5,163840          # Switch to mvcle for >40MB
-	jh	memset_mvcle
+	jh	__memset_mvcle
 .L_Z10_14:
         pfd     2,1024(%r1)
         mvc     1(256,%r1),0(%r1)
@@ -87,9 +87,9 @@ ENTRY(memset_z10)
         j       .L_Z10_3
 .L_Z10_18:
         mvc     1(1,%r1),0(%r1)
-END(memset_z10)
+END(__memset_z10)
 
-ENTRY(memset_mvcle)
+ENTRY(__memset_mvcle)
 	ahi	%r4,2               # take back the change done by the caller
 	lr      %r0,%r2             # save source address
 	lr      %r1,%r3             # move pad byte to R1
@@ -101,7 +101,7 @@ ENTRY(memset_mvcle)
 	lr      %r2,%r0             # return value is source address
 .L1:
 	br      %r14
-END(memset_mvcle)
+END(__memset_mvcle)
 
 #endif
 
@@ -109,5 +109,5 @@ END(memset_mvcle)
 
 #if !IS_IN (libc)
 .globl   memset
-.set     memset,memset_g5
+.set     memset,__memset_g5
 #endif

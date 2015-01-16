@@ -29,7 +29,7 @@
        .text
 
 #ifdef USE_MULTIARCH
-ENTRY(memset_z900)
+ENTRY(__memset_z900)
 #else
 ENTRY(memset)
 #endif
@@ -57,7 +57,7 @@ ENTRY(memset)
 .L_Z900_18:
         mvc     1(1,%r1),0(%r1)
 #ifdef USE_MULTIARCH
-END(memset_z900)
+END(__memset_z900)
 #else
 END(memset)
 libc_hidden_builtin_def (memset)

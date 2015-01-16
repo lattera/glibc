@@ -29,7 +29,7 @@
 
 #if IS_IN (libc)
 
-ENTRY(memcmp_z196)
+ENTRY(__memcmp_z196)
 	.machine "z196"
 	.machinemode "zarch_nohighgprs"
         ltr     %r4,%r4
@@ -61,9 +61,9 @@ ENTRY(memcmp_z196)
         br      %r14
 .L_Z196_14:
         clc     0(1,%r3),0(%r2)
-END(memcmp_z196)
+END(__memcmp_z196)
 
-ENTRY(memcmp_z10)
+ENTRY(__memcmp_z10)
 	.machine "z10"
 	.machinemode "zarch_nohighgprs"
         ltr     %r4,%r4
@@ -90,7 +90,7 @@ ENTRY(memcmp_z10)
         j       .L_Z10_3
 .L_Z10_15:
         clc     0(1,%r3),0(%r2)
-END(memcmp_z10)
+END(__memcmp_z10)
 
 #endif
 
@@ -98,7 +98,7 @@ END(memcmp_z10)
 
 #if !IS_IN (libc)
 .globl   memcmp
-.set     memcmp,memcmp_g5
+.set     memcmp,__memcmp_g5
 .weak    bcmp
-.set	 bcmp,memcmp_g5
+.set	 bcmp,__memcmp_g5
 #endif

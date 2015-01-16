@@ -27,7 +27,7 @@
 
        .text
 #ifdef USE_MULTIARCH
-ENTRY(memcmp_z900)
+ENTRY(__memcmp_z900)
 #else
 ENTRY(memcmp)
 #endif
@@ -56,7 +56,7 @@ ENTRY(memcmp)
 .L_Z900_15:
         clc     0(1,%r3),0(%r2)
 #ifdef USE_MULTIARCH
-END(memcmp_z900)
+END(__memcmp_z900)
 #else
 END(memcmp)
 libc_hidden_builtin_def (memcmp)

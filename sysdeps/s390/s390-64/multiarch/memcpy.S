@@ -29,7 +29,7 @@
 
 #if defined SHARED && IS_IN (libc)
 
-ENTRY(memcpy_z196)
+ENTRY(__memcpy_z196)
         .machine "z196"
         ltgr    %r4,%r4
         je      .L_Z196_4
@@ -44,7 +44,7 @@ ENTRY(memcpy_z196)
         br      %r14
 .L_Z196_5:
         cgfi    %r5,262144      # Switch to mvcle for copies >64MB
-        jh      memcpy_mvcle
+        jh      __memcpy_mvcle
 .L_Z196_2:
         pfd     1,768(%r3)
         pfd     2,768(%r1)
@@ -56,9 +56,9 @@ ENTRY(memcpy_z196)
         j       .L_Z196_3
 .L_Z196_14:
         mvc     0(1,%r1),0(%r3)
-END(memcpy_z196)
+END(__memcpy_z196)
 
-ENTRY(memcpy_z10)
+ENTRY(__memcpy_z10)
 	.machine "z10"
         cgije   %r4,0,.L_Z10_4
         aghi    %r4,-1
@@ -71,7 +71,7 @@ ENTRY(memcpy_z10)
         br      %r14
 .L_Z10_13:
         cgfi    %r5,65535	# Switch to mvcle for copies >16MB
-        jh      memcpy_mvcle
+        jh      __memcpy_mvcle
 .L_Z10_12:
         pfd     1,768(%r3)
         pfd     2,768(%r1)
@@ -82,7 +82,7 @@ ENTRY(memcpy_z10)
         j       .L_Z10_3
 .L_Z10_15:
         mvc     0(1,%r1),0(%r3)
-END(memcpy_z10)
+END(__memcpy_z10)
 
 #endif
 
@@ -90,5 +90,5 @@ END(memcpy_z10)
 
 #if !defined SHARED || !IS_IN (libc)
 .globl   memcpy
-.set     memcpy,memcpy_z900
+.set     memcpy,__memcpy_z900
 #endif

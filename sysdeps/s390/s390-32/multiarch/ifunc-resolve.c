@@ -28,17 +28,17 @@
 #define IFUNC_RESOLVE(FUNC)						\
   asm (".globl " #FUNC "\n\t"						\
        ".type  " #FUNC ",@gnu_indirect_function\n\t"			\
-       ".set   " #FUNC ",resolve_" #FUNC "\n\t"				\
+       ".set   " #FUNC ",__resolve_" #FUNC "\n\t"			\
        ".globl __GI_" #FUNC "\n\t"					\
        ".set   __GI_" #FUNC "," #FUNC "\n");				\
 									\
   /* Make the declarations of the optimized functions hidden in order
      to prevent GOT slots being generated for them. */			\
-  extern void *FUNC##_z196 attribute_hidden;				\
-  extern void *FUNC##_z10 attribute_hidden;				\
-  extern void *FUNC##_g5 attribute_hidden;				\
+  extern void *__##FUNC##_z196 attribute_hidden;			\
+  extern void *__##FUNC##_z10 attribute_hidden;				\
+  extern void *__##FUNC##_g5 attribute_hidden;				\
 									\
-  void *resolve_##FUNC (unsigned long int dl_hwcap)			\
+  void *__resolve_##FUNC (unsigned long int dl_hwcap)			\
   {									\
     if ((dl_hwcap & HWCAP_S390_STFLE)					\
 	&& (dl_hwcap & HWCAP_S390_ZARCH)				\
@@ -53,11 +53,11 @@
 		     : : "cc");						\
 									\
 	if ((stfle_bits & (1ULL << (63 - STFLE_BITS_Z196))) != 0)	\
-	  return &FUNC##_z196;						\
+	  return &__##FUNC##_z196;					\
 	else if ((stfle_bits & (1ULL << (63 - STFLE_BITS_Z10))) != 0)	\
-	  return &FUNC##_z10;						\
+	  return &__##FUNC##_z10;					\
       }									\
-    return &FUNC##_g5;							\
+    return &__##FUNC##_g5;						\
   }
 
 IFUNC_RESOLVE(memset)

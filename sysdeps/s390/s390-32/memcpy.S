@@ -26,7 +26,7 @@
      %r4 = number of bytes to copy.  */
 
 #ifdef USE_MULTIARCH
-ENTRY(memcpy_g5)
+ENTRY(__memcpy_g5)
 #else
 ENTRY(memcpy)
 #endif
@@ -49,7 +49,7 @@ ENTRY(memcpy)
         br      %r14
 .L_G5_13:
         chi	%r5,4096             # Switch to mvcle for copies >1MB
-        jh	memcpy_mvcle
+        jh	__memcpy_mvcle
 .L_G5_12:
         mvc     0(256,%r1),0(%r3)
         la      %r1,256(%r1)
@@ -60,13 +60,13 @@ ENTRY(memcpy)
 .L_G5_17:
         mvc     0(1,%r1),0(%r3)
 #ifdef USE_MULTIARCH
-END(memcpy_g5)
+END(__memcpy_g5)
 #else
 END(memcpy)
 libc_hidden_builtin_def (memcpy)
 #endif
 
-ENTRY(memcpy_mvcle)
+ENTRY(__memcpy_mvcle)
        # Using as standalone function will result in unexpected
        # results since the length field is incremented by 1 in order to
        # compensate the changes already done in the functions above.
@@ -79,4 +79,4 @@ ENTRY(memcpy_mvcle)
        jo      .L_MVCLE_1
        lr      %r2,%r1             # return destination address
        br      %r14
-END(memcpy_mvcle)
+END(__memcpy_mvcle)

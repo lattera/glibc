@@ -1,3 +1,65 @@
+2015-01-16  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	[BZ #17848]
+	* sysdeps/s390/s390-32/memcmp.S
+	(memcmp_g5): Rename to __memcmp_g5.
+	* sysdeps/s390/s390-32/memcpy.S
+	(memcpy_g5): Rename to __memcpy_g5.
+	Jump to __memcpy_mvcle instead of memcpy_mvcle.
+	(memcpy_mvcle) Rename to __memcpy_mvcle.
+	* sysdeps/s390/s390-32/memset.S
+	(memset_g5): Rename to __memset_g5.
+	* sysdeps/s390/s390-32/multiarch/ifunc-resolve.c
+	(IFUNC_RESOLVE): Prefix ifunc-resolve function
+	and use prefixed functions.
+	* sysdeps/s390/s390-32/multiarch/memcmp.S
+	(memcmp_z196): Rename to __memcmp_z196.
+	(memcmp_z10): Rename to __memcmp_z10.
+	(memcmp): Set alias to __memcmp_g5.
+	(bcmp): Set alias to __memcmp_g5.
+	* sysdeps/s390/s390-32/multiarch/memcpy.S
+	(memcpy_z196): Rename to __memcpy_z196.
+	Jump to __memcpy_mvcle instead of memcpy_mvcle.
+	(memcpy_z10): Rename to __memcpy_z10.
+	Jump to __memcpy_mvcle instead of memcpy_mvcle.
+	(memcpy): Set alias to __memcpy_g5.
+	* sysdeps/s390/s390-32/multiarch/memset.S
+	(memset_z196): Rename to __memset_z196.
+	Jump to __memset_mvcle instead of memset_mvcle.
+	(memset_z10): Rename to __memset_z10.
+	Jump to __memset_mvcle instead of memset_mvcle.
+	(memset_mvcle) Rename to __memset_mvcle.
+	(memset): Set alias to __memset_g5.
+	* sysdeps/s390/s390-64/memcmp.S
+	(memcmp_z900): Rename to __memcmp_z900.
+	* sysdeps/s390/s390-64/memcpy.S
+	(memcpy_z900): Rename to __memcpy_z900.
+	Jump to __memcpy_mvcle instead of memcpy_mvcle.
+	(memcpy_mvcle) Rename to __memcpy_mvcle.
+	* sysdeps/s390/s390-64/memset.S
+	(memset_z900): Rename to __memset_z900.
+	* sysdeps/s390/s390-64/multiarch/ifunc-resolve.c
+	(IFUNC_RESOLVE): Prefix ifunc-resolve function
+	and use prefixed functions.
+	* sysdeps/s390/s390-64/multiarch/memcmp.S
+	(memcmp_z196): Rename to __memcmp_z196.
+	(memcmp_z10): Rename to __memcmp_z10.
+	(memcmp): Set alias to __memcmp_z900.
+	(bcmp): Set alias to __memcmp_z900.
+	* sysdeps/s390/s390-64/multiarch/memcpy.S
+	(memcpy_z196): Rename to __memcpy_z196.
+	Jump to __memcpy_mvcle instead of memcpy_mvcle.
+	(memcpy_z10): Rename to __memcpy_z10.
+	Jump to __memcpy_mvcle instead of memcpy_mvcle.
+	(memcpy): Set alias to __memcpy_z900.
+	* sysdeps/s390/s390-64/multiarch/memset.S
+	(memset_z196): Rename to __memset_z196.
+	Jump to __memset_mvcle instead of memset_mvcle.
+	(memset_z10): Rename to __memset_z10.
+	Jump to __memset_mvcle instead of memset_mvcle.
+	(memset_mvcle) Rename to __memset_mvcle.
+	(memset): Set alias to __memset_z900.
+
 2015-01-14  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17748]

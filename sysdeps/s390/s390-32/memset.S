@@ -28,7 +28,7 @@
        .text
 
 #ifdef USE_MULTIARCH
-ENTRY(memset_g5)
+ENTRY(__memset_g5)
 #else
 ENTRY(memset)
 #endif
@@ -58,7 +58,7 @@ ENTRY(memset)
 .L_G5_20:
         mvc     1(1,%r1),0(%r1)
 #ifdef USE_MULTIARCH
-END(memset_g5)
+END(__memset_g5)
 #else
 END(memset)
 libc_hidden_builtin_def (memset)
