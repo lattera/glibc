@@ -1,5 +1,24 @@
 2015-01-16  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	[BZ #17844]
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutent.c
+	(getutent): Use weak_alias in non SHARED case
+	and default_symbol_version in SHARED case.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutent_r.c
+	(getutent_r, pututline): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutid.c
+	(getutid): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutid_r.c
+	(getutid_r): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutline.c
+	(getutline): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutline_r.c
+	(getutline_r): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/updwtmp.c
+	(updwtmp): Likewise.
+
+2015-01-16  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	[BZ #17848]
 	* sysdeps/s390/s390-32/memcmp.S
 	(memcmp_g5): Rename to __memcmp_g5.

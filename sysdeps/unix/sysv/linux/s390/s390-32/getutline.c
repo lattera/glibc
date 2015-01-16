@@ -21,8 +21,12 @@
 
 #include "utmp-compat.h"
 
-#undef weak_alias
-#define weak_alias(n,a)
+#if defined SHARED
+# undef weak_alias
+# define weak_alias(n,a)
+#endif
 #include "login/getutline.c"
 
+#if defined SHARED
 default_symbol_version (__getutline, getutline, UTMP_COMPAT_BASE);
+#endif

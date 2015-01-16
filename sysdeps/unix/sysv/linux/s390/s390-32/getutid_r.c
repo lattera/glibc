@@ -24,8 +24,12 @@
 #include "utmp-compat.h"
 #include "utmp-private.h"
 
-#undef weak_alias
-#define weak_alias(n,a)
+#if defined SHARED
+# undef weak_alias
+# define weak_alias(n,a)
+#endif
 #include "login/getutid_r.c"
 
+#if defined SHARED
 default_symbol_version (__getutid_r, getutid_r, UTMP_COMPAT_BASE);
+#endif
