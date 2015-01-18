@@ -1,0 +1,333 @@
+# Begin of automatic generation
+
+# Maximal error of functions:
+Function: "acosh":
+double: 1
+idouble: 1
+
+Function: "asinh":
+double: 1
+float: 1
+ifloat: 1
+
+Function: "atan2":
+float: 1
+ifloat: 1
+
+Function: "atanh":
+float: 1
+ifloat: 1
+
+Function: Real part of "cacos":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+
+Function: Imaginary part of "cacos":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+
+Function: Real part of "cacosh":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+
+Function: Imaginary part of "cacosh":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+
+Function: Real part of "casin":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: Imaginary part of "casin":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+
+Function: Real part of "casinh":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+
+Function: Imaginary part of "casinh":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: Real part of "catan":
+float: 1
+ifloat: 1
+
+Function: Imaginary part of "catan":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: Real part of "catanh":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: Imaginary part of "catanh":
+float: 1
+ifloat: 1
+
+Function: "cbrt":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: Real part of "ccos":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: Imaginary part of "ccos":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: Real part of "ccosh":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: Imaginary part of "ccosh":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: Real part of "cexp":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+
+Function: Imaginary part of "cexp":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+
+Function: Real part of "clog":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: Imaginary part of "clog":
+float: 1
+ifloat: 1
+
+Function: Real part of "clog10":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+
+Function: Imaginary part of "clog10":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: "cos":
+float: 1
+ifloat: 1
+
+Function: "cosh":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: Real part of "cpow":
+double: 2
+float: 4
+idouble: 2
+ifloat: 4
+
+Function: Imaginary part of "cpow":
+float: 2
+ifloat: 2
+
+Function: Real part of "csin":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: Real part of "csinh":
+float: 1
+ifloat: 1
+
+Function: Imaginary part of "csinh":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: Real part of "csqrt":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: Imaginary part of "csqrt":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: Real part of "ctan":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: Imaginary part of "ctan":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+
+Function: Real part of "ctanh":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+
+Function: Imaginary part of "ctanh":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+
+Function: "erf":
+double: 1
+idouble: 1
+
+Function: "erfc":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: "exp10":
+double: 1
+idouble: 1
+
+Function: "expm1":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: "gamma":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: "hypot":
+double: 1
+idouble: 1
+
+Function: "j0":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+
+Function: "j1":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+
+Function: "jn":
+double: 4
+float: 4
+idouble: 4
+ifloat: 4
+
+Function: "lgamma":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: "log":
+float: 1
+ifloat: 1
+
+Function: "log10":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+
+Function: "log1p":
+float: 1
+ifloat: 1
+
+Function: "pow":
+float: 1
+ifloat: 1
+
+Function: "pow10":
+double: 1
+idouble: 1
+
+Function: "sin":
+float: 1
+ifloat: 1
+
+Function: "sincos":
+float: 1
+ifloat: 1
+
+Function: "tgamma":
+double: 4
+float: 3
+idouble: 4
+ifloat: 3
+
+Function: "y0":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+
+Function: "y1":
+double: 3
+float: 2
+idouble: 3
+ifloat: 2
+
+Function: "yn":
+double: 3
+float: 2
+idouble: 3
+ifloat: 2
+
+# end of automatic generation

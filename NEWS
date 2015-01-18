@@ -19,6 +19,8 @@ Version 2.21
   17744, 17745, 17746, 17747, 17748, 17775, 17777, 17780, 17781, 17782,
   17791, 17793, 17796, 17797, 17803, 17806, 17834, 17844, 17848
 
+* Port to Altera Nios II has been contributed by Mentor Graphics.
+
 * Optimized strcpy, stpcpy, strncpy, stpncpy, strcmp, and strncmp
   implementations for powerpc64/powerpc64le.
   Implemented by Adhemerval Zanella (IBM).

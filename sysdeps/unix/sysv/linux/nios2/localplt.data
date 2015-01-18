@@ -1,0 +1,35 @@
+libc.so: realloc
+libc.so: __eqsf2
+libc.so: __floatsisf
+libc.so: __ltdf2
+libc.so: __gedf2
+libc.so: malloc
+libc.so: __nesf2
+libc.so: memalign
+libc.so: __mulsf3
+libc.so: __floatunsisf
+libc.so: __addsf3
+libc.so: __fixsfsi
+libc.so: __subsf3
+libc.so: calloc
+libc.so: __muldf3
+libc.so: __signbit
+libc.so: free
+libc.so: __subdf3
+libc.so: __adddf3
+libc.so: __divdf3
+libc.so: __floatsidf
+libc.so: __divsf3
+libc.so: __nedf2
+libc.so: __eqdf2
+libm.so: __signbitf
+libm.so: __signbit
+libm.so: matherr
+# The dynamic loader uses __libc_memalign internally to allocate aligned
+# TLS storage. The other malloc family of functions are expected to allow
+# user symbol interposition.
+ld.so: __libc_memalign
+ld.so: malloc
+ld.so: calloc
+ld.so: realloc
+ld.so: free

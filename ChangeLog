@@ -1,3 +1,107 @@
+2015-01-18  Chung-Lin Tang  <cltang@codesourcery.com>
+	    Sandra Loosemore  <sandra@codesourcery.com>
+	    Andrew Jenner  <andrew@codesourcery.com>
+	    Joseph Myers  <joseph@codesourcery.com>
+	    Nathan Sidwell  <nathan@codesourcery.com>
+
+	* NEWS: Mention new Nios II port.
+	* sysdeps/nios2/Implies: New file.
+	* sysdeps/nios2/Makefile: New file.
+	* sysdeps/nios2/Subdirs: New file.
+	* sysdeps/nios2/Versions: New file.
+	* sysdeps/nios2/__longjmp.S: New file.
+	* sysdeps/nios2/abort-instr.h: New file.
+	* sysdeps/nios2/backtrace.c: New file.
+	* sysdeps/nios2/bits/endian.h: New file.
+	* sysdeps/nios2/bits/fenv.h: New file.
+	* sysdeps/nios2/bits/link.h: New file.
+	* sysdeps/nios2/bits/setjmp.h: New file.
+	* sysdeps/nios2/bsd-_setjmp.S: New file.
+	* sysdeps/nios2/bsd-setjmp.S: New file.
+	* sysdeps/nios2/configure: New generated file.
+	* sysdeps/nios2/configure.ac: New file.
+	* sysdeps/nios2/crti.S: New file.
+	* sysdeps/nios2/crtn.S: New file.
+	* sysdeps/nios2/dl-init.c: New file.
+	* sysdeps/nios2/dl-machine.h: New file.
+	* sysdeps/nios2/dl-sysdep.h: New file.
+	* sysdeps/nios2/dl-tls.h: New file.
+	* sysdeps/nios2/dl-trampoline.S: New file.
+	* sysdeps/nios2/gccframe.h: New file.
+	* sysdeps/nios2/gmp-mparam.h: New file.
+	* sysdeps/nios2/jmpbuf-offsets.h: New file.
+	* sysdeps/nios2/jmpbuf-unwind.h: New file.
+	* sysdeps/nios2/ldsodefs.h: New file.
+	* sysdeps/nios2/libc-tls.c: New file.
+	* sysdeps/nios2/libm-test-ulps: New file.
+	* sysdeps/nios2/machine-gmon.h: New file.
+	* sysdeps/nios2/math-tests.h: New file.
+	* sysdeps/nios2/math_private.h: New file.
+	* sysdeps/nios2/memusage.h: New file.
+	* sysdeps/nios2/nptl/Makefile: New file.
+	* sysdeps/nios2/nptl/bits/pthreadtypes.h: New file.
+	* sysdeps/nios2/nptl/bits/semaphore.h: New file.
+	* sysdeps/nios2/nptl/pthread_spin_lock.c: New file.
+	* sysdeps/nios2/nptl/pthreaddef.h: New file.
+	* sysdeps/nios2/nptl/tcb-offsets.sym: New file.
+	* sysdeps/nios2/nptl/tls.h: New file.
+	* sysdeps/nios2/preconfigure: New file.
+	* sysdeps/nios2/s_fma.c: New file.
+	* sysdeps/nios2/s_fmaf.c: New file.
+	* sysdeps/nios2/setjmp.S: New file.
+	* sysdeps/nios2/sfp-machine.h: New file.
+	* sysdeps/nios2/sotruss-lib.c: New file.
+	* sysdeps/nios2/stackguard-macros.h: New file.
+	* sysdeps/nios2/stackinfo.h: New file.
+	* sysdeps/nios2/start.S: New file.
+	* sysdeps/nios2/sysdep.h: New file.
+	* sysdeps/nios2/tls-macros.h: New file.
+	* sysdeps/nios2/tst-audit.h: New file.
+	* sysdeps/unix/sysv/linux/nios2/Implies: New file.
+	* sysdeps/unix/sysv/linux/nios2/Makefile: New file.
+	* sysdeps/unix/sysv/linux/nios2/Versions: New file.
+	* sysdeps/unix/sysv/linux/nios2/arch-fork.h: New file.
+	* sysdeps/unix/sysv/linux/nios2/bits/atomic.h: New file.
+	* sysdeps/unix/sysv/linux/nios2/bits/mman.h: New file.
+	* sysdeps/unix/sysv/linux/nios2/cacheflush.c: New file.
+	* sysdeps/unix/sysv/linux/nios2/clone.S: New file.
+	* sysdeps/unix/sysv/linux/nios2/configure: New generated file.
+	* sysdeps/unix/sysv/linux/nios2/configure.ac: New file.
+	* sysdeps/unix/sysv/linux/nios2/getcontext.S: New file.
+	* sysdeps/unix/sysv/linux/nios2/kernel-features.h: New file.
+	* sysdeps/unix/sysv/linux/nios2/kernel_rt_sigframe.h: New file.
+	* sysdeps/unix/sysv/linux/nios2/makecontext.c: New file.
+	* sysdeps/unix/sysv/linux/nios2/profil-counter.h: New file.
+	* sysdeps/unix/sysv/linux/nios2/setcontext.S: New file.
+	* sysdeps/unix/sysv/linux/nios2/shlib-versions: New file.
+	* sysdeps/unix/sysv/linux/nios2/sigcontextinfo.h: New file.
+	* sysdeps/unix/sysv/linux/nios2/swapcontext.S: New file.
+	* sysdeps/unix/sysv/linux/nios2/sys/cachectl.h: New file.
+	* sysdeps/unix/sysv/linux/nios2/sys/procfs.h: New file.
+	* sysdeps/unix/sysv/linux/nios2/sys/ucontext.h: New file.
+	* sysdeps/unix/sysv/linux/nios2/sys/user.h: New file.
+	* sysdeps/unix/sysv/linux/nios2/syscall.S: New file.
+	* sysdeps/unix/sysv/linux/nios2/sysdep-cancel.h: New file.
+	* sysdeps/unix/sysv/linux/nios2/sysdep.S: New file.
+	* sysdeps/unix/sysv/linux/nios2/sysdep.h: New file.
+	* sysdeps/unix/sysv/linux/nios2/ucontext_i.sym: New file.
+	* sysdeps/unix/sysv/linux/nios2/vfork.S: New file.
+	* sysdeps/unix/sysv/linux/nios2/c++-types.data: New file.
+	* sysdeps/unix/sysv/linux/nios2/ld.abilist: New file.
+	* sysdeps/unix/sysv/linux/nios2/libBrokenLocale.abilist: New file.
+	* sysdeps/unix/sysv/linux/nios2/libanl.abilist: New file.
+	* sysdeps/unix/sysv/linux/nios2/libc.abilist: New file.
+	* sysdeps/unix/sysv/linux/nios2/libcrypt.abilist: New file.
+	* sysdeps/unix/sysv/linux/nios2/libdl.abilist: New file.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: New file.
+	* sysdeps/unix/sysv/linux/nios2/libnsl.abilist: New file.
+	* sysdeps/unix/sysv/linux/nios2/libpthread.abilist: New file.
+	* sysdeps/unix/sysv/linux/nios2/libresolv.abilist: New file.
+	* sysdeps/unix/sysv/linux/nios2/librt.abilist: New file.
+	* sysdeps/unix/sysv/linux/nios2/libthread_db.abilist: New file.
+	* sysdeps/unix/sysv/linux/nios2/libutil.abilist: New file.
+	* sysdeps/unix/sysv/linux/nios2/localplt.data: New file.
+
 2015-01-16  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	[BZ #17844]
