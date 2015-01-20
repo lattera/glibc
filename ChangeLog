@@ -1,3 +1,9 @@
+2015-02-09  Adhemerval Zanellla  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile [sysdep_routines]:
+	Remove wide chars objects.
+	[wcsmbs]: New rule for wide char objects.
+
 2015-02-09  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #17912]
