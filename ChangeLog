@@ -1,3 +1,55 @@
+2015-01-21  Torvald Riegel  <triegel@redhat.com>
+	    Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #12674]
+	* nptl/sem_waitcommon.c: New file.
+	* nptl/sem_wait.c: Include sem_waitcommon.c.
+	(__sem_wait_cleanup, do_futex_wait): Remove.
+	(__new_sem_wait): Adapt.
+	(__new_sem_trywait): New function.
+	(__old_sem_trywait): Moved here from nptl/sem_trywait.c.
+	* nptl/sem_timedwait.c: Include sem_waitcommon.c.
+	(__sem_wait_cleanup, do_futex_timed_wait): Remove.
+	(sem_timedwait): Adapt.
+	* nptl/sem_post.c (__new_sem_post): Adapt.
+	(futex_wake): New function.
+	(__old_sem_post): Add release MO fence.
+	* nptl/sem_open.c (sem_open): Adapt.
+	* nptl/sem_init.c (__new_sem_init): Adapt.
+	(futex_private_if_supported): New function.
+	* nptl/sem_getvalue.c (__new_sem_getvalue): Adapt.
+	(__old_sem_getvalue): Add using previous code.
+	* sysdeps/nptl/internaltypes.h: Adapt.
+	* nptl/tst-sem13.c (do_test): Adapt.
+	* nptl/tst-sem11.c (main): Adapt.
+	* nptl/sem_trywait.c: Remove.
+	* nptl/DESIGN-sem.txt: Remove.
+	* nptl/Makefile (libpthread-routines): Remove sem_trywait.
+	(gen-as-const-headers): Remove structsem.sym.
+	* nptl/structsem.sym: Remove.
+	* sysdeps/unix/sysv/linux/alpha/sem_post.c: Remove.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_post.S: Remove.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_timedwait.S: Remove.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_trywait.S: Remove.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_wait.S: Remove.
+	* sysdeps/unix/sysv/linux/i386/i586/sem_post.S: Remove.
+	* sysdeps/unix/sysv/linux/i386/i586/sem_timedwait.S: Remove.
+	* sysdeps/unix/sysv/linux/i386/i586/sem_trywait.S: Remove.
+	* sysdeps/unix/sysv/linux/i386/i586/sem_wait.S: Remove.
+	* sysdeps/unix/sysv/linux/i386/i686/sem_post.S: Remove.
+	* sysdeps/unix/sysv/linux/i386/i686/sem_timedwait.S: Remove.
+	* sysdeps/unix/sysv/linux/i386/i686/sem_trywait.S: Remove.
+	* sysdeps/unix/sysv/linux/i386/i686/sem_wait.S: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/sem_post.c: Remove.
+	* sysdeps/unix/sysv/linux/sh/sem_post.S: Remove.
+	* sysdeps/unix/sysv/linux/sh/sem_timedwait.S: Remove.
+	* sysdeps/unix/sysv/linux/sh/sem_trywait.S: Remove.
+	* sysdeps/unix/sysv/linux/sh/sem_wait.S: Remove.
+	* sysdeps/unix/sysv/linux/x86_64/sem_post.S: Remove.
+	* sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S: Remove.
+	* sysdeps/unix/sysv/linux/x86_64/sem_trywait.S: Remove.
+	* sysdeps/unix/sysv/linux/x86_64/sem_wait.S: Remove.
+
 2015-01-20  Carlos O'Donell  <carlos@redhat.com>
 
 	* INSTALL: Regenerated.

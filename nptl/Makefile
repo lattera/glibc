@@ -100,7 +100,7 @@ libpthread-routines = nptl-init vars events version \
 		      sem_init sem_destroy \
 		      sem_open sem_close sem_unlink \
 		      sem_getvalue \
-		      sem_wait sem_trywait sem_timedwait sem_post \
+		      sem_wait sem_timedwait sem_post \
 		      cleanup cleanup_defer cleanup_compat \
 		      cleanup_defer_compat unwind \
 		      pt-longjmp pt-cleanup\
@@ -283,8 +283,7 @@ tests-nolibpthread = tst-unload
 gen-as-const-headers = pthread-errnos.sym \
 		       lowlevelcond.sym lowlevelrwlock.sym \
 		       lowlevelbarrier.sym unwindbuf.sym \
-		       lowlevelrobustlock.sym pthread-pi-defines.sym \
-		       structsem.sym
+		       lowlevelrobustlock.sym pthread-pi-defines.sym
 
 
 LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst

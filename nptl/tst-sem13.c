@@ -33,9 +33,14 @@ do_test (void)
       perror ("sem_timedwait did not fail with EINVAL");
       return 1;
     }
-  if (u.ns.nwaiters != 0)
+#if __HAVE_64B_ATOMICS
+  unsigned int nwaiters = (u.ns.data >> SEM_NWAITERS_SHIFT);
+#else
+  unsigned int nwaiters = u.ns.nwaiters;
+#endif
+  if (nwaiters != 0)
     {
-      printf ("sem_timedwait modified nwaiters: %ld\n", u.ns.nwaiters);
+      printf ("sem_timedwait modified nwaiters: %d\n", nwaiters);
       return 1;
     }
 
@@ -52,9 +57,14 @@ do_test (void)
       perror ("2nd sem_timedwait did not fail with ETIMEDOUT");
       return 1;
     }
-  if (u.ns.nwaiters != 0)
+#if __HAVE_64B_ATOMICS
+  nwaiters = (u.ns.data >> SEM_NWAITERS_SHIFT);
+#else
+  nwaiters = u.ns.nwaiters;
+#endif
+  if (nwaiters != 0)
     {
-      printf ("2nd sem_timedwait modified nwaiters: %ld\n", u.ns.nwaiters);
+      printf ("2nd sem_timedwait modified nwaiters: %d\n", nwaiters);
       return 1;
     }
 
