@@ -1,5 +1,9 @@
 2015-02-09  Adhemerval Zanellla  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/bcopy-ppc64.c (__bcopy_ppc):
+	Rewrite to call __memmove_ppc instead of include default
+	implementation.
+
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile [sysdep_routines]:
 	Remove wide chars objects.
 	[wcsmbs]: New rule for wide char objects.
