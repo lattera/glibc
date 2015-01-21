@@ -2051,7 +2051,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 	{
 	  /* Check the list of libraries in the file /etc/ld.so.cache,
 	     for compatibility with Linux's ldconfig program.  */
-	  const char *cached = _dl_load_cache_lookup (name);
+	  char *cached = _dl_load_cache_lookup (name);
 
 	  if (cached != NULL)
 	    {
@@ -2075,6 +2075,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 		      if (memcmp (cached, dirp, system_dirs_len[cnt]) == 0)
 			{
 			  /* The prefix matches.  Don't use the entry.  */
+			  free (cached);
 			  cached = NULL;
 			  break;
 			}
@@ -2092,14 +2093,9 @@ _dl_map_object (struct link_map *loader, const char *name,
 				    LA_SER_CONFIG, mode, &found_other_class,
 				    false);
 		  if (__glibc_likely (fd != -1))
-		    {
-		      realname = __strdup (cached);
-		      if (realname == NULL)
-			{
-			  __close (fd);
-			  fd = -1;
-			}
-		    }
+		    realname = cached;
+		  else
+		    free (cached);
 		}
 	    }
 	}

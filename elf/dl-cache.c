@@ -174,9 +174,12 @@ _dl_cache_libcmp (const char *p1, const char *p2)
 
 /* Look up NAME in ld.so.cache and return the file name stored there, or null
    if none is found.  The cache is loaded if it was not already.  If loading
-   the cache previously failed there will be no more attempts to load it.  */
-
-const char *
+   the cache previously failed there will be no more attempts to load it.
+   The caller is responsible for freeing the returned string.  The ld.so.cache
+   may be unmapped at any time by a completing recursive dlopen and
+   this function must take care that it does not return references to
+   any data in the mapping.  */
+char *
 internal_function
 _dl_load_cache_lookup (const char *name)
 {
@@ -289,7 +292,17 @@ _dl_load_cache_lookup (const char *name)
       && best != NULL)
     _dl_debug_printf ("  trying file=%s\n", best);
 
-  return best;
+  if (best == NULL)
+    return NULL;
+
+  /* The double copy is *required* since malloc may be interposed
+     and call dlopen itself whose completion would unmap the data
+     we are accessing. Therefore we must make the copy of the
+     mapping data without using malloc.  */
+  char *temp;
+  temp = alloca (strlen (best) + 1);
+  strcpy (temp, best);
+  return strdup (temp);
 }
 
 #ifndef MAP_COPY

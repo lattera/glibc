@@ -905,8 +905,8 @@ extern const struct r_strlenpair *_dl_important_hwcaps (const char *platform,
      internal_function;
 
 /* Look up NAME in ld.so.cache and return the file name stored there,
-   or null if none is found.  */
-extern const char *_dl_load_cache_lookup (const char *name)
+   or null if none is found.  Caller must free returned string.  */
+extern char *_dl_load_cache_lookup (const char *name)
      internal_function;
 
 /* If the system does not support MAP_COPY we cannot leave the file open

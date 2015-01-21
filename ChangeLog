@@ -1,3 +1,22 @@
+2015-01-21  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #17702]
+	* dlfcn/Makefile (tests): Add tst-rec-dlopen.
+	(modules-names): Add moddummy1 and moddummy2.
+	($(objpfx)tst-rec-dlopen): Define.
+	* dlfcn/moddummy1.c: New file.
+	* dlfcn/moddummy2.c: New file.
+	* dlfcn/tst-rec-dlopen.c: New file.
+	* elf/dl-cache.c (_dl_load_cache_lookup):
+	Return char*. Copy result with alloca/strcpy/strdup.
+	* elf/dl-load.c (_dl_map_object): _dl_load_cached_lookup
+	returns char*. Free cached. If not saving realname
+	free cached.
+	* elf/dl-open.c (dl_open_worker): Do not assert that
+	_r_debug->r_state is RT_CONSISTENT.
+	* sysdeps/generic/ldsodefs.h: _dl_load_cache_lookup
+	returns char*.
+
 2015-01-21  Torvald Riegel  <triegel@redhat.com>
 	    Carlos O'Donell  <carlos@redhat.com>
 
