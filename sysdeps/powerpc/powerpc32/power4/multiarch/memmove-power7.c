@@ -17,6 +17,17 @@
    not, see <http://www.gnu.org/licenses/>.  */
 
 #include <string.h>
+#include <memcopy.h>
+
+extern __typeof (_wordcopy_fwd_aligned) _wordcopy_fwd_aligned_power7;
+extern __typeof (_wordcopy_fwd_dest_aligned) _wordcopy_fwd_dest_aligned_power7;
+extern __typeof (_wordcopy_bwd_aligned) _wordcopy_bwd_aligned_power7;
+extern __typeof (_wordcopy_bwd_dest_aligned) _wordcopy_bwd_dest_aligned_power7;
+
+#define _wordcopy_fwd_aligned       _wordcopy_fwd_aligned_power7
+#define _wordcopy_fwd_dest_aligned  _wordcopy_fwd_dest_aligned_power7
+#define _wordcopy_bwd_aligned       _wordcopy_bwd_aligned_power7
+#define _wordcopy_bwd_dest_aligned  _wordcopy_bwd_dest_aligned_power7
 
 extern __typeof (memcpy) __memcpy_power7;
 #define memcpy __memcpy_power7

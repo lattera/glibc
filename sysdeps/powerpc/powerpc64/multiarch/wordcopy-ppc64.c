@@ -15,8 +15,4 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
 #include <sysdeps/powerpc/powerpc32/power4/multiarch/wordcopy-ppc32.c>
-#else
-#include <string/wordcopy.c>
-#endif

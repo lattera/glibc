@@ -1,6 +1,18 @@
 2015-02-09  Adhemerval Zanellla  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power4/multiarch/Makefile
+	[sysdep_routines]: Remove wordcopy-power6 object.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memmove-power7.c
+	(__memmove_power7): Use local call for wordcopy and memcpy symbols.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wordcopy-ppc32.c
+	(__memmove_ppc32): Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wordcopy-power6.c: Remove
+	file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wordcopy.c: Remove file.
+	* sysdeps/powerpc/powerpc64/multiarch/wordcopy-ppc64.c [IS_IN (libc)]:
+	Remove preprocessor.
+
+	* sysdeps/powerpc/powerpc32/power4/multiarch/Makefile
 	[sysdep_routines]: Remove wide chars objects.
 	[wcsmbs]: New rule for wide char objects.
 
