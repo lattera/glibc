@@ -1,5 +1,9 @@
 2015-01-21  Carlos O'Donell  <carlos@redhat.com>
 
+	* sysdeps/arm/unwind-resume.h: Fix copyright year.
+	* dlfcn/tst-rec-dlopen.c: Fix incorrect copyright year and
+	attribution.
+
 	* pwd/tst-getpw.c: Rewrite.
 
 	[BZ #17702]
