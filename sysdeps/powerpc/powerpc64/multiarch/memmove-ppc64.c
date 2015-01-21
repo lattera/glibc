@@ -16,13 +16,27 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <string.h>
+#include <memcopy.h>
 
+extern __typeof (_wordcopy_fwd_aligned) _wordcopy_fwd_aligned_ppc;
+extern __typeof (_wordcopy_fwd_dest_aligned) _wordcopy_fwd_dest_aligned_ppc;
+extern __typeof (_wordcopy_bwd_aligned) _wordcopy_bwd_aligned_ppc;
+extern __typeof (_wordcopy_bwd_dest_aligned) _wordcopy_bwd_dest_aligned_ppc;
+
+#define _wordcopy_fwd_aligned       _wordcopy_fwd_aligned_ppc
+#define _wordcopy_fwd_dest_aligned  _wordcopy_fwd_dest_aligned_ppc
+#define _wordcopy_bwd_aligned       _wordcopy_bwd_aligned_ppc
+#define _wordcopy_bwd_dest_aligned  _wordcopy_bwd_dest_aligned_ppc
+
+extern __typeof (memmove) __memmove_ppc attribute_hidden;
 #define MEMMOVE __memmove_ppc
+
+extern __typeof (memcpy) __memcpy_ppc attribute_hidden;
+#define memcpy __memcpy_ppc
+
 #if IS_IN (libc) && defined(SHARED)
 # undef libc_hidden_builtin_def
 # define libc_hidden_builtin_def(name)
 #endif
-
-extern __typeof (memmove) __memmove_ppc attribute_hidden;
 
 #include <string/memmove.c>

@@ -1,6 +1,15 @@
 2015-02-09  Adhemerval Zanellla  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile [sysdep_routines]:
+	Remove wordcopy-power6 obejct.
+	* sysdeps/powerpc/powerpc64/multiarch/memmove-ppc64.c (__memmove_ppc):
+	Use local call for wordcopy and memcpy symbols.
+	* sysdeps/powerpc/powerpc64/multiarch/wordcopy-power6.c: Remove file.
+	* sysdeps/powerpc/powerpc64/multiarch/wordcopy-ppc64.c: Add default
+	implementation for loader.
+	* sysdeps/powerpc/powerpc64/multiarch/wordcopy.c: Remove file.
+
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile [sysdep_routines]:
 	Remove wordcopy-power7 object.
 	* sysdeps/powerpc/powerpc64/multiarch/wordcopy-power7.c: Remove file.
 	* sysdeps/powerpc/powerpc64/multiarch/wordcopy.c
