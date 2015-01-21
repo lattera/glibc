@@ -1,5 +1,7 @@
 2015-01-21  Carlos O'Donell  <carlos@redhat.com>
 
+	* pwd/tst-getpw.c: Rewrite.
+
 	[BZ #17702]
 	* dlfcn/Makefile (tests): Add tst-rec-dlopen.
 	(modules-names): Add moddummy1 and moddummy2.
