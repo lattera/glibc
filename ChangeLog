@@ -1,5 +1,7 @@
 2015-01-20  Carlos O'Donell  <carlos@redhat.com>
 
+	* INSTALL: Regenerated.
+
 	* po/libc.pot: Regenerated.
 
 2015-01-18  Chung-Lin Tang  <cltang@codesourcery.com>
