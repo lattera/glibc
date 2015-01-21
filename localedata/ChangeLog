@@ -1,3 +1,7 @@
+2015-01-21  Marek Polacek  <polacek@redhat.com>
+
+	* tests-mbwc/tst_wcscpy.c (tst_wcscpy): Fix condition.
+
 2015-01-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* All files with FSF copyright notices: Update copyright dates

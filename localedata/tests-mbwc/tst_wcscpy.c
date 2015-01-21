@@ -41,7 +41,7 @@ tst_wcscpy (FILE * fp, int debug_flg)
 	  ws_ex = TST_EXPECT (wcscpy).ws;
 
 	  for (err = 0, i = 0;
-	       (ws1[i] != 0L || ws_ex[i] != 0L) && i < WCSSIZE; i++)
+	       i < WCSSIZE && (ws1[i] != 0L || ws_ex[i] != 0L); i++)
 	    {
 	      if (debug_flg)
 		{
