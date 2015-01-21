@@ -1,5 +1,14 @@
 2015-02-09  Adhemerval Zanellla  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile [sysdep_routines]:
+	Remove wordcopy-power7 object.
+	* sysdeps/powerpc/powerpc64/multiarch/wordcopy-power7.c: Remove file.
+	* sysdeps/powerpc/powerpc64/multiarch/wordcopy.c
+	(_wordcopy_fwd_aligned): Remove POWER7 specialization.
+	(_wordcopy_fwd_dest_aligned): Likewise.
+	(_wordcopy_bwd_aligned): Likewise.
+	(_wordcopy_bwd_dest_aligned): Likewise.
+
 	* sysdeps/powerpc/powerpc64/multiarch/bcopy-ppc64.c (__bcopy_ppc):
 	Rewrite to call __memmove_ppc instead of include default
 	implementation.

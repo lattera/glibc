@@ -26,14 +26,10 @@ extern __typeof (_wordcopy_fwd_aligned) _wordcopy_fwd_aligned_ppc
 attribute_hidden;
 extern __typeof (_wordcopy_fwd_aligned) _wordcopy_fwd_aligned_power6
 attribute_hidden;
-extern __typeof (_wordcopy_fwd_aligned) _wordcopy_fwd_aligned_power7
-attribute_hidden;
 
 libc_ifunc (_wordcopy_fwd_aligned,
-            (hwcap & PPC_FEATURE_HAS_VSX)
-            ? _wordcopy_fwd_aligned_power7 :
-	      (hwcap & PPC_FEATURE_ARCH_2_05)
-              ? _wordcopy_fwd_aligned_power6
+	    (hwcap & PPC_FEATURE_ARCH_2_05)
+            ? _wordcopy_fwd_aligned_power6
             : _wordcopy_fwd_aligned_ppc);
 
 
@@ -41,14 +37,10 @@ extern __typeof (_wordcopy_fwd_dest_aligned) _wordcopy_fwd_dest_aligned_ppc
 attribute_hidden;
 extern __typeof (_wordcopy_fwd_dest_aligned) _wordcopy_fwd_dest_aligned_power6
 attribute_hidden;
-extern __typeof (_wordcopy_fwd_dest_aligned) _wordcopy_fwd_dest_aligned_power7
-attribute_hidden;
 
 libc_ifunc (_wordcopy_fwd_dest_aligned,
-            (hwcap & PPC_FEATURE_HAS_VSX)
-            ? _wordcopy_fwd_dest_aligned_power7 :
-	      (hwcap & PPC_FEATURE_ARCH_2_05)
-              ? _wordcopy_fwd_dest_aligned_power6
+	    (hwcap & PPC_FEATURE_ARCH_2_05)
+            ? _wordcopy_fwd_dest_aligned_power6
             : _wordcopy_fwd_dest_aligned_ppc);
 
 
@@ -56,14 +48,10 @@ extern __typeof (_wordcopy_bwd_aligned) _wordcopy_bwd_aligned_ppc
 attribute_hidden;
 extern __typeof (_wordcopy_bwd_aligned) _wordcopy_bwd_aligned_power6
 attribute_hidden;
-extern __typeof (_wordcopy_bwd_aligned) _wordcopy_bwd_aligned_power7
-attribute_hidden;
 
 libc_ifunc (_wordcopy_bwd_aligned,
-            (hwcap & PPC_FEATURE_HAS_VSX)
-            ? _wordcopy_bwd_aligned_power7 :
-	      (hwcap & PPC_FEATURE_ARCH_2_05)
-              ? _wordcopy_bwd_aligned_power6
+	    (hwcap & PPC_FEATURE_ARCH_2_05)
+            ? _wordcopy_bwd_aligned_power6
             : _wordcopy_bwd_aligned_ppc);
 
 
@@ -71,14 +59,10 @@ extern __typeof (_wordcopy_bwd_dest_aligned) _wordcopy_bwd_dest_aligned_ppc
 attribute_hidden;
 extern __typeof (_wordcopy_bwd_dest_aligned) _wordcopy_bwd_dest_aligned_power6
 attribute_hidden;
-extern __typeof (_wordcopy_bwd_dest_aligned) _wordcopy_bwd_dest_aligned_power7
-attribute_hidden;
 
 libc_ifunc (_wordcopy_bwd_dest_aligned,
-            (hwcap & PPC_FEATURE_HAS_VSX)
-            ? _wordcopy_bwd_dest_aligned_power7 :
-	      (hwcap & PPC_FEATURE_ARCH_2_05)
-              ? _wordcopy_bwd_dest_aligned_power6
+	    (hwcap & PPC_FEATURE_ARCH_2_05)
+            ? _wordcopy_bwd_dest_aligned_power6
             : _wordcopy_bwd_dest_aligned_ppc);
 
 #else

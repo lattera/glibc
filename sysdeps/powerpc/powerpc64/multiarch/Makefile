@@ -11,7 +11,7 @@ sysdep_routines += memcpy-power7 memcpy-a2 memcpy-power6 memcpy-cell \
 		   strncmp-power8 strncmp-power7 strncmp-power4 strncmp-ppc64 \
 		   strchr-power7 strchr-ppc64 \
 		   strchrnul-power7 strchrnul-ppc64 \
-		   wordcopy-power7 wordcopy-power6 wordcopy-ppc64 \
+		   wordcopy-power6 wordcopy-ppc64 \
 		   strcpy-power8 strcpy-power7 strcpy-ppc64 stpcpy-power8 \
 		   stpcpy-power7 stpcpy-ppc64 \
 		   strrchr-power7 strrchr-ppc64 strncat-power7 strncat-ppc64 \
@@ -23,7 +23,6 @@ sysdep_routines += memcpy-power7 memcpy-a2 memcpy-power6 memcpy-cell \
 
 CFLAGS-strncase-power7.c += -mcpu=power7 -funroll-loops
 CFLAGS-strncase_l-power7.c += -mcpu=power7 -funroll-loops
-CFLAGS-wordcopy-power7.c += -mcpu=power7
 CFLAGS-wordcopy-power6.c += -mcpu=power6
 endif
 
