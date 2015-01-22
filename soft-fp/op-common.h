@@ -414,6 +414,7 @@
       if (X##_s == Y##_s)						\
 	{								\
 	  /* Addition.  */						\
+	  __label__ add1, add2, add3, add_done;				\
 	  R##_s = X##_s;						\
 	  int _FP_ADD_INTERNAL_ediff = X##_e - Y##_e;			\
 	  if (_FP_ADD_INTERNAL_ediff > 0)				\
@@ -599,6 +600,7 @@
       else								\
 	{								\
 	  /* Subtraction.  */						\
+	  __label__ sub1, sub2, sub3, norm, sub_done;			\
 	  int _FP_ADD_INTERNAL_ediff = X##_e - Y##_e;			\
 	  if (_FP_ADD_INTERNAL_ediff > 0)				\
 	    {								\
@@ -933,6 +935,7 @@
 #define _FP_FMA(fs, wc, dwc, R, X, Y, Z)				\
   do									\
     {									\
+      __label__ done_fma;						\
       FP_DECL_##fs (_FP_FMA_T);						\
       _FP_FMA_T##_s = X##_s ^ Y##_s;					\
       _FP_FMA_T##_e = X##_e + Y##_e + 1;				\
@@ -1531,6 +1534,7 @@
 #define _FP_TO_INT_ROUND(fs, wc, r, X, rsize, rsigned)			\
   do									\
     {									\
+      __label__ _FP_TO_INT_ROUND_done;					\
       if (X##_e < _FP_EXPBIAS_##fs)					\
 	{								\
 	  int _FP_TO_INT_ROUND_rounds_away = 0;				\
@@ -1742,6 +1746,7 @@
 #define _FP_FROM_INT(fs, wc, X, r, rsize, rtype)			\
   do									\
     {									\
+      __label__ pack_semiraw;						\
       if (r)								\
 	{								\
 	  rtype _FP_FROM_INT_ur;					\

@@ -1,3 +1,11 @@
+2015-01-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* soft-fp/op-common.h (_FP_ADD_INTERNAL): Declare labels with
+	__label__.
+	(_FP_FMA): Likewise.
+	(_FP_TO_INT_ROUND): Likewise.
+	(_FP_FROM_INT): Likewise.
+
 2015-01-21  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ #16418]
