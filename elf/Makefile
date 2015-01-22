@@ -1017,6 +1017,8 @@ $(objpfx)tst-audit1.out: $(objpfx)tst-auditmod1.so
 tst-audit1-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
 
 $(objpfx)tst-audit2.out: $(objpfx)tst-auditmod1.so
+# Prevent GCC-5 from translating a malloc/memset pair into calloc
+CFLAGS-tst-audit2.c += -fno-builtin
 tst-audit2-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
 
 $(objpfx)tst-audit9: $(libdl)

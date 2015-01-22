@@ -1,3 +1,7 @@
+2015-02-23  Andreas Schwab  <schwab@suse.de>
+
+	* elf/Makefile (CFLAGS-tst-audit2.c): Define.
+
 2015-02-22  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #17269]
