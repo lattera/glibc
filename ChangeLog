@@ -1,5 +1,8 @@
 2015-01-23  Roland McGrath  <roland@hack.frob.com>
 
+	* inet/if_index.c (if_nameindex): Add missing libc_hidden_weak.
+	(if_freenameindex): Likewise.
+
 	* resource/getrlimit64.c: Add missing libc_hidden_def.
 
 2015-01-22  Joseph Myers  <joseph@codesourcery.com>

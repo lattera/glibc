@@ -46,6 +46,7 @@ __if_freenameindex (struct if_nameindex *ifn)
 }
 libc_hidden_def (__if_freenameindex)
 weak_alias (__if_freenameindex, if_freenameindex)
+libc_hidden_weak (if_freenameindex)
 stub_warning (if_freenameindex)
 
 struct if_nameindex *
@@ -55,6 +56,7 @@ __if_nameindex (void)
   return NULL;
 }
 weak_alias (__if_nameindex, if_nameindex)
+libc_hidden_weak (if_nameindex)
 stub_warning (if_nameindex)
 
 #if 0
