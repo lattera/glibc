@@ -40,3 +40,4 @@ getrlimit64 (enum __rlimit_resource resource, struct rlimit64 *rlimits)
 
   return 0;
 }
+libc_hidden_def (getrlimit64)
