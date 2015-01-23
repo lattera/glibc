@@ -623,7 +623,9 @@ resolve_ifunc (Elf64_Addr value,
       opd.fd_func = func->fd_func + sym_map->l_addr;
       opd.fd_toc = func->fd_toc + sym_map->l_addr;
       opd.fd_aux = func->fd_aux;
-      value = (Elf64_Addr) &opd;
+      /* GCC 4.9+ eliminates the branch as dead code, force the odp set
+         dependency.  */
+      asm ("" : "=r" (value) : "0" (&opd), "X" (opd));
     }
 #endif
 #endif
