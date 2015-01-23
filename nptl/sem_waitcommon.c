@@ -187,7 +187,7 @@ __sem_wait_cleanup (void *arg)
 
 #if __HAVE_64B_ATOMICS
   /* Stop being registered as a waiter.  See below for MO.  */
-  atomic_fetch_add_relaxed (&sem->data, -(1UL << SEM_NWAITERS_SHIFT));
+  atomic_fetch_add_relaxed (&sem->data, -((uint64_t) 1 << SEM_NWAITERS_SHIFT));
 #else
   __sem_wait_32_finish (sem);
 #endif
@@ -263,8 +263,8 @@ __new_sem_wait_slow (struct new_sem *sem, const struct timespec *abstime)
 #if __HAVE_64B_ATOMICS
   /* Add a waiter.  Relaxed MO is sufficient because we can rely on the
      ordering provided by the RMW operations we use.  */
-  unsigned long d = atomic_fetch_add_relaxed (&sem->data,
-      1UL << SEM_NWAITERS_SHIFT);
+  uint64_t d = atomic_fetch_add_relaxed (&sem->data,
+      (uint64_t) 1 << SEM_NWAITERS_SHIFT);
 
   pthread_cleanup_push (__sem_wait_cleanup, sem);
 
@@ -304,7 +304,7 @@ __new_sem_wait_slow (struct new_sem *sem, const struct timespec *abstime)
 	      err = -1;
 	      /* Stop being registered as a waiter.  */
 	      atomic_fetch_add_relaxed (&sem->data,
-		  -(1UL << SEM_NWAITERS_SHIFT));
+		  -((uint64_t) 1 << SEM_NWAITERS_SHIFT));
 	      break;
 	    }
 	  /* Relaxed MO is sufficient; see below.  */
@@ -320,7 +320,7 @@ __new_sem_wait_slow (struct new_sem *sem, const struct timespec *abstime)
 	     up-to-date value; the futex_wait or the CAS perform the real
 	     work.  */
 	  if (atomic_compare_exchange_weak_acquire (&sem->data,
-	      &d, d - 1 - (1UL << SEM_NWAITERS_SHIFT)))
+	      &d, d - 1 - ((uint64_t) 1 << SEM_NWAITERS_SHIFT)))
 	    {
 	      err = 0;
 	      break;

@@ -65,7 +65,7 @@ __new_sem_post (sem_t *sem)
      added tokens before (the release sequence includes atomic RMW operations
      by other threads).  */
   /* TODO Use atomic_fetch_add to make it scale better than a CAS loop?  */
-  unsigned long int d = atomic_load_relaxed (&isem->data);
+  uint64_t d = atomic_load_relaxed (&isem->data);
   do
     {
       if ((d & SEM_VALUE_MASK) == SEM_VALUE_MAX)

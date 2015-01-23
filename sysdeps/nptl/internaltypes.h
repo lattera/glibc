@@ -155,7 +155,7 @@ struct new_sem
 # endif
 # define SEM_NWAITERS_SHIFT 32
 # define SEM_VALUE_MASK (~(unsigned int)0)
-  unsigned long int data;
+  uint64_t data;
   int private;
   int pad;
 #else
