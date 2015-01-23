@@ -1,5 +1,9 @@
 2015-01-24  Adhemerval Zanellla  <azanella@linux.vnet.ibm.com>
 
+	[BZ #17869]
+	* sysdeps/powerpc/powerpc64/power8/memset.S: Use power7 instead of
+	power8 in .machine directive.
+
 	[BZ #17868]
 	* sysdeps/powerpc/powerpc64/dl-machine.h (resolve_ifunc): Force value
 	set dependency from opd value.

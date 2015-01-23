@@ -23,7 +23,10 @@
 /* __ptr_t [r3] memset (__ptr_t s [r3], int c [r4], size_t n [r5]));
    Returns 's'.  */
 
-	.machine power8
+	/* No need to use .machine power8 since mtvsrd is already
+	   handled by the define.  It avoid breakage on binutils
+	   that does not support this machine specifier.  */
+	.machine power7
 EALIGN (memset, 5, 0)
 	CALL_MCOUNT 3
 
