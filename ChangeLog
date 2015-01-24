@@ -1,7 +1,8 @@
 2015-01-23  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features):
-	Treat model numbers 0x4a/0x4d as Intel Silvermont architecture.
+	Treat model numbers 0x4a/0x4d/0x5a/0x5d as Intel Silvermont
+	architecture.
 
 2015-01-23  H.J. Lu  <hongjiu.lu@intel.com>
 
