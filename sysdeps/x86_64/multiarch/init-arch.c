@@ -79,6 +79,8 @@ __init_cpu_features (void)
 	      break;
 
 	    case 0x37:
+	    case 0x4a:
+	    case 0x4d:
 	      /* Unaligned load versions are faster than SSSE3
 		 on Silvermont.  */
 #if index_Fast_Unaligned_Load != index_Prefer_PMINUB_for_stringop
