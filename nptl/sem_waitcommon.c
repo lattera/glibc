@@ -228,7 +228,7 @@ __new_sem_wait_fast (struct new_sem *sem, int definitive_result)
      and the failure path of the CAS.  If the weak CAS fails and we need a
      definitive result, retry.  */
 #if __HAVE_64B_ATOMICS
-  unsigned long d = atomic_load_relaxed (&sem->data);
+  uint64_t d = atomic_load_relaxed (&sem->data);
   do
     {
       if ((d & SEM_VALUE_MASK) == 0)

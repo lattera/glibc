@@ -5,6 +5,7 @@
 	with uint64_t.
 	* nptl/sem_waitcommon.c (__sem_wait_cleanup): Replace 1UL with
 	(uint64_t) 1.
+	(__new_sem_wait_fast): Replace unsigned long with uint64_t.
 	(__new_sem_wait_slow): Replace unsigned long int with uint64_t.
 	Replace 1UL with (uint64_t) 1.
 	* sysdeps/nptl/internaltypes.h (new_sem): Replace unsigned long
