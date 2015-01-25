@@ -1,5 +1,10 @@
 2015-01-25  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h (lll_futex_requeue):
+	Mark _retval as used.
+	(lll_futex_wake_unlock): Likewise.
+	(lll_futex_timed_wait_requeue_pi): Likewise.
+
 	* sysdeps/unix/sysv/linux/m68k/coldfire/bits/atomic.h
 	(atomic_compare_and_exchange_val_acq): Use uint32_t for the
 	register variables.
