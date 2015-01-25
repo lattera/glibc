@@ -1,3 +1,7 @@
+2015-02-24  Benno Schulenberg  <bensberg@justemail.net>
+
+	* elf/sprof.c (load_shobj): Tweak error message to match others.
+
 2015-02-24  Kevin Easton  <kevin@guarana.org>
 
 	[BZ #16145] (partial fix)
