@@ -1,3 +1,7 @@
+2015-01-29  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/nptl/allocrtsig.c: Include <signal.h>.
+
 2015-01-29  Siddhesh Poyarekar <siddhesh@redhat.com>
 
 	[BZ #17892]

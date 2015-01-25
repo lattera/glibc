@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <signal.h>
 #include <nptl/pthreadP.h>
 
 /* Up to three special signals might be used privately by libpthread.
