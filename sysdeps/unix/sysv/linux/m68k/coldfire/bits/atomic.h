@@ -50,9 +50,9 @@ typedef uintmax_t uatomic_max_t;
     __typeof (mem) _mem = mem;						\
     __typeof (oldval) _oldval = oldval;					\
     __typeof (newval) _newval = newval;					\
-    register __typeof (mem) _a0 asm ("a0") = _mem;			\
-    register __typeof (oldval) _d0 asm ("d0") = _oldval;		\
-    register __typeof (newval) _d1 asm ("d1") = _newval;		\
+    register uint32_t *_a0 asm ("a0") = (uint32_t *) _mem;		\
+    register uint32_t _d0 asm ("d0") = (uint32_t) _oldval;		\
+    register uint32_t _d1 asm ("d1") = (uint32_t) _newval;		\
     void *tmp;								\
 									\
     asm ("movel #_GLOBAL_OFFSET_TABLE_@GOTPC, %2\n\t"			\
@@ -63,7 +63,7 @@ typedef uintmax_t uatomic_max_t;
 	 "jsr (%2)\n\t"							\
 	 : "+d" (_d0), "+m" (*_a0), "=&a" (tmp)				\
 	 : "a" (_a0), "d" (_d1));					\
-    _d0;								\
+    (__typeof (oldval)) _d0;						\
   })
 #else
 # define atomic_compare_and_exchange_val_acq(mem, newval, oldval)	\
@@ -73,16 +73,15 @@ typedef uintmax_t uatomic_max_t;
     __typeof (mem) _mem = mem;						\
     __typeof (oldval) _oldval = oldval;					\
     __typeof (newval) _newval = newval;					\
-    register __typeof (oldval) _d0 asm ("d0")				\
-      = (__typeof (oldval)) SYS_ify (atomic_cmpxchg_32);		\
-    register __typeof (mem) _a0 asm ("a0") = _mem;			\
-    register __typeof (oldval) _d2 asm ("d2") = _oldval;		\
-    register __typeof (newval) _d1 asm ("d1") = _newval;		\
+    register uint32_t _d0 asm ("d0") = SYS_ify (atomic_cmpxchg_32);	\
+    register uint32_t *_a0 asm ("a0") = (uint32_t *) _mem;		\
+    register uint32_t _d2 asm ("d2") = (uint32_t) _oldval;		\
+    register uint32_t _d1 asm ("d1") = (uint32_t) _newval;		\
 									\
     asm ("trap #0"							\
 	 : "+d" (_d0), "+m" (*_a0)					\
 	 : "a" (_a0), "d" (_d2), "d" (_d1));				\
-    _d0;								\
+    (__typeof (oldval)) _d0;						\
   })
 #endif
 

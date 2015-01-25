@@ -1,5 +1,9 @@
 2015-01-25  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* sysdeps/unix/sysv/linux/m68k/coldfire/bits/atomic.h
+	(atomic_compare_and_exchange_val_acq): Use uint32_t for the
+	register variables.
+
 	* sysdeps/m68k/m680x0/fpu/fraiseexcpt.c (__feraiseexcept): Use
 	libm_hidden_def.
 
