@@ -1,5 +1,8 @@
 2015-01-25  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* sysdeps/m68k/m680x0/fpu/fraiseexcpt.c (__feraiseexcept): Use
+	libm_hidden_def.
+
 	* sysdeps/m68k/bits/byteswap.h (__bswap_16, __bswap_32)
 	(__bswap_64): Mark as __always_inline.
 
