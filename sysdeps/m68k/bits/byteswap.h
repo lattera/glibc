@@ -29,7 +29,7 @@
 #define __bswap_constant_16(x) \
   ((((x) >> 8) & 0xffu) | (((x) & 0xffu) << 8))
 
-static __inline unsigned short int
+static __always_inline unsigned short int
 __bswap_16 (unsigned short int __bsx)
 {
   return __bswap_constant_16 (__bsx);
@@ -41,7 +41,7 @@ __bswap_16 (unsigned short int __bsx)
    (((x) & 0x0000ff00u) <<  8) | (((x) & 0x000000ffu) << 24))
 
 #if !defined(__mcoldfire__)
-static __inline unsigned int
+static __always_inline unsigned int
 __bswap_32 (unsigned int __bsx)
 {
   if (__builtin_constant_p (__bsx))
@@ -53,7 +53,7 @@ __bswap_32 (unsigned int __bsx)
   return __bsx;
 }
 #else
-static __inline unsigned int
+static __always_inline unsigned int
 __bswap_32 (unsigned int __bsx)
 {
   return __bswap_constant_32 (__bsx);
@@ -75,7 +75,7 @@ __bswap_32 (unsigned int __bsx)
 
 /* Swap bytes in 64 bit value.  */
 __extension__
-static __inline unsigned long long
+static __always_inline unsigned long long
 __bswap_64 (unsigned long long __bsx)
 {
   if (__builtin_constant_p (__bsx))
