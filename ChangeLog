@@ -1,3 +1,8 @@
+2015-01-27  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* iconv/loop.c: Suppress array out of bound warning caused by GCC
+	bug (GCC BZ #64739).
+
 2015-01-25  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h (lll_futex_requeue):

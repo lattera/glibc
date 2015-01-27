@@ -56,7 +56,7 @@
 #include <sys/param.h>		/* For MIN.  */
 #define __need_size_t
 #include <stddef.h>
-
+#include <libc-internal.h>
 
 /* We have to provide support for machines which are not able to handled
    unaligned memory accesses.  Some of the character encodings have
@@ -392,8 +392,14 @@ SINGLE(LOOPFCT) (struct __gconv_step *step,
     {
       *inptrp = inend;
 #  ifdef STORE_REST
+
+      /* Building with -O3 GCC emits a `array subscript is above array
+	 bounds' warning.  GCC BZ #64739 has been opened for this.  */
+      DIAG_PUSH_NEEDS_COMMENT;
+      DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Warray-bounds");
       while (inptr < inend)
 	bytebuf[inlen++] = *inptr++;
+      DIAG_POP_NEEDS_COMMENT;
 
       inptr = bytebuf;
       inptrp = &inptr;
