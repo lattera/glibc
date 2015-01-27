@@ -1,3 +1,20 @@
+2015-01-28  Adhemerval Zanellla  <azanella@linux.vnet.ibm.com>
+
+	[BZ #16576]
+	* sysdeps/powerpc/fpu/math_private.h [__CPU_HAS_FSQRT]: Remove define
+	and use _ARCH_PPCSQ instead.
+	(__ieee754_sqrt): Likewise.
+	(__ieee754_sqrtf): Likewise.
+	* sysdeps/powerpc/fpu/e_sqrt.c (__slow_ieee754_sqrt): Build only if
+	_ARCH_PPCSQ is defined.
+	(__ieee754_sqrt): Use _ARCH_PPCSQ to select wheter to use hardware
+	fsqrt instruction.
+	* sysdeps/powerpc/fpu/e_sqrtf.c (__ieee754_sqrtf): Build only if
+	_ARCH_PPCSQ is defined.
+	(__ieee754_sqrtf): Use _ARCH_PPCSQ to select wheter to use hardware
+	fsqrts instruction.
+	* sysdeps/powerpc/powerpc64/fpu/e_sqrt.c: Remove file.
+
 2015-01-27  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
 	* iconv/loop.c: Suppress array out of bound warning caused by GCC

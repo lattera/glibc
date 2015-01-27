@@ -24,6 +24,7 @@
 #include <sysdep.h>
 #include <ldsodefs.h>
 
+#ifndef _ARCH_PPCSQ
 static const double almost_half = 0.5000000000000001;	/* 0.5 + 2^-53 */
 static const ieee_float_shape_type a_nan = {.word = 0x7fc00000 };
 static const ieee_float_shape_type a_inf = {.word = 0x7f800000 };
@@ -152,6 +153,7 @@ __slow_ieee754_sqrt (double x)
     }
   return f_wash (x);
 }
+#endif /* _ARCH_PPCSQ  */
 
 #undef __ieee754_sqrt
 double
@@ -159,16 +161,11 @@ __ieee754_sqrt (double x)
 {
   double z;
 
-  /* If the CPU is 64-bit we can use the optional FP instructions.  */
-  if (__CPU_HAS_FSQRT)
-    {
-      /* Volatile is required to prevent the compiler from moving the
-	 fsqrt instruction above the branch.  */
-      __asm __volatile ("	fsqrt	%0,%1\n"
-				:"=f" (z):"f" (x));
-    }
-  else
-    z = __slow_ieee754_sqrt (x);
+#ifdef _ARCH_PPCSQ
+  asm ("fsqrt %0,%1\n" :"=f" (z):"f" (x));
+#else
+  z = __slow_ieee754_sqrt (x);
+#endif
 
   return z;
 }
