@@ -40,7 +40,7 @@ __fesetexceptflag (const fexcept_t *flagp, int excepts)
      This may cause floating-point exceptions if the restored state
      requests it.  */
   if (n.l != u.l)
-    fesetenv_register (u.fenv);
+    fesetenv_register (n.fenv);
 
   /* Deal with FE_INVALID_SOFTWARE not being implemented on some chips.  */
   if (flag & FE_INVALID)

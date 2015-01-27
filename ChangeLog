@@ -1,5 +1,9 @@
 2015-01-28  Adhemerval Zanellla  <azanella@linux.vnet.ibm.com>
 
+	[BZ #17885]
+	* sysdeps/powerpc/fpu/fsetexcptflg.c (__fesetexceptflag): Fix correct
+	value to set as new flag.
+
 	[BZ #16576]
 	* sysdeps/powerpc/fpu/math_private.h [__CPU_HAS_FSQRT]: Remove define
 	and use _ARCH_PPCSQ instead.
