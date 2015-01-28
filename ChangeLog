@@ -1,3 +1,8 @@
+2015-01-28  Chris Metcalf  <cmetcalf@ezchip.com>
+
+	* sysdeps/tile/tilegx/bits/atomic.h [!_LP64] (__HAVE_64B_ATOMICS):
+	Define to 0.
+
 2015-01-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/bits/atomic.h [_MIPS_SIM == _ABIN32]
