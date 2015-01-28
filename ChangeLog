@@ -1,3 +1,12 @@
+2015-03-03 Adhemerval Zanellla  <azanella@linux.vnet.ibm.com>
+
+	[BZ #17776]
+	* sysdeps/powerpc/bits/fenvinline.h (feraiseexcept): Convert input to
+	integer before bitwise and assembly operations.
+	(feclearexcept): Likewise.
+	* math/test-fenvinline.c: New file.
+	* math/Makefile: Add test-fenvinline test.
+
 2015-03-03  Alan Modra  <amodra@gmail.com>
 
 	[BZ #16512]

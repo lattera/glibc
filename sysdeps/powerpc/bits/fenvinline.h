@@ -34,29 +34,41 @@
 
 /* Inline definition for feraiseexcept.  */
 #  define feraiseexcept(__excepts) \
-  ((__builtin_constant_p (__excepts)					      \
-    && ((__excepts) & ((__excepts)-1)) == 0				      \
-    && (__excepts) != FE_INVALID)					      \
-   ? ((__excepts) != 0							      \
-      ? (__extension__ ({ __asm__ __volatile__				      \
-			  ("mtfsb1 %s0"					      \
-			   : : "i#*X"(__builtin_ffs (__excepts)));	      \
-			  0; }))					      \
-      : 0)								      \
-   : (feraiseexcept) (__excepts))
+  (__extension__  ({ 							      \
+    int __e = __excepts;						      \
+    int __ret;								      \
+    if (__builtin_constant_p (__e)					      \
+        && (__e & (__e - 1)) == 0					      \
+        && __e != FE_INVALID)						      \
+      {									      \
+	if (__e != 0)							      \
+	  __asm__ __volatile__ ("mtfsb1 %s0"				      \
+				: : "i#*X" (__builtin_ffs (__e)));	      \
+        __ret = 0;							      \
+      }									      \
+    else								      \
+      __ret = feraiseexcept (__e);					      \
+    __ret;								      \
+  }))
 
 /* Inline definition for feclearexcept.  */
 #  define feclearexcept(__excepts) \
-  ((__builtin_constant_p (__excepts)					      \
-    && ((__excepts) & ((__excepts)-1)) == 0				      \
-    && (__excepts) != FE_INVALID)					      \
-   ? ((__excepts) != 0							      \
-      ? (__extension__ ({ __asm__ __volatile__				      \
-			  ("mtfsb0 %s0"					      \
-			   : : "i#*X"(__builtin_ffs (__excepts)));	      \
-			  0; }))					      \
-      : 0)								      \
-   : (feclearexcept) (__excepts))
+  (__extension__  ({ 							      \
+    int __e = __excepts;						      \
+    int __ret;								      \
+    if (__builtin_constant_p (__e)					      \
+        && (__e & (__e - 1)) == 0					      \
+        && __e != FE_INVALID)						      \
+      {									      \
+	if (__e != 0)							      \
+	  __asm__ __volatile__ ("mtfsb0 %s0"				      \
+				: : "i#*X" (__builtin_ffs (__e)));	      \
+        __ret = 0;							      \
+      }									      \
+    else								      \
+      __ret = feclearexcept (__e);					      \
+    __ret;								      \
+  }))
 
 # endif /* !__NO_MATH_INLINES.  */
 
