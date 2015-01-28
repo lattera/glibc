@@ -1,3 +1,8 @@
+2015-02-12  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power7/strncpy.S (strncpy): Optimize
+	unaligned path.
+
 2015-02-12  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/htm.h [TABORT]: Fix encoding for

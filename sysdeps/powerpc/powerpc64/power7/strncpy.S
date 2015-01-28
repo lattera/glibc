@@ -72,9 +72,9 @@ EALIGN(FUNC_NAME, 4, 0)
 
 	mr r9, r3		/* save r3 into r9 for use  */
 	mr r18, r3		/* save r3 for retCode of strncpy  */
-	bne 0, L(byte_by_byte)
+	bne 0, L(unaligned)
 
-
+L(aligned):
 	srdi r11, r5, 3		/* compute count for CTR ; count = n/8  */
 	cmpldi cr7, r11, 3	/* if count > 4 ; perform unrolling 4 times  */
 	ble 7, L(update1)
@@ -332,6 +332,382 @@ L(HopBy8):
 	addi r5, r5, -8		/* decrement length 'n' by 8  */
 	addi r0, r11, -1	/* decrement loop counter  */
 	b L(dWordUnrollOFF)
+
+L(unaligned):
+	cmpdi	r5, 16		/* Proceed byte by byte for less than 16  */
+	ble	L(byte_by_byte)
+	rldicl	r7, r3, 0, 61
+	rldicl	r6, r4, 0, 61
+	cmpdi	r6, 0	/* Check src alignment */
+	beq	L(srcaligndstunalign)
+	/* src is unaligned */
+	rlwinm	r10, r4, 3,26,28	/* Calculate padding.  */
+	clrrdi	r4, r4, 3	/* Align the addr to dw boundary */
+	ld	r8, 0(r4)	/* Load doubleword from memory.  */
+	li	r0, 0
+	/* Discard bits not part of the string */
+#ifdef __LITTLE_ENDIAN__
+	srd	r7, r8, r10
+#else
+	sld	r7, r8, r10
+#endif
+	cmpb	r0, r7, r0	/* Compare each byte against null */
+	/* Discard bits not part of the string */
+#ifdef __LITTLE_ENDIAN__
+	sld	r0, r0, r10
+#else
+	srd	r0, r0, r10
+#endif
+	cmpdi	r0, 0
+	bne     L(bytebybyte)	/* if it has null, copy byte by byte */
+	subfic	r6, r6, 8
+	rlwinm	r12, r3, 3,26,28	/* Calculate padding in bits.  */
+	rldicl	r9, r3, 0, 61	/* Calculate padding in bytes. */
+	addi	r3, r3, -1
+
+	cmpdi	r12, 0	/* check dest alignment */
+	beq     L(srcunaligndstalign)
+
+	/* both src and dst unaligned */
+#ifdef __LITTLE_ENDIAN__
+	sld	r8, r7, r10
+	mr	r11, r10
+	addi	r11, r11, -8	/* Adjust byte pointer on loaded dw */
+#else
+	srd	r8, r7, r10
+	subfic	r11, r10, 64
+#endif
+	/* dst alignment is greater then src alignment? */
+	cmpd    cr7, r12, r10
+	ble     cr7, L(dst_align_small)
+	/* src alignment is less than dst */
+
+	/* Calculate the dst alignment difference  */
+	subfic	r7, r9, 8
+	mtctr	r7
+
+	/* Write until dst is aligned  */
+	cmpdi	r0, r7, 4
+	blt     L(storebyte1)	/* less than 4, store byte by byte  */
+	beq     L(equal1)	/* if its 4, store word  */
+	addi	r0, r7, -4	/* greater than 4, so stb and stw  */
+	mtctr	r0
+L(storebyte1):
+#ifdef __LITTLE_ENDIAN__
+	addi	r11, r11, 8	/* Adjust byte pointer on loaded dw  */
+#else
+	addi	r11, r11, -8
+#endif
+	srd	r7, r8, r11
+	stbu	r7, 1(r3)
+	addi	r5, r5, -1
+	bdnz    L(storebyte1)
+
+	subfic	r7, r9, 8	/* Check the remaining bytes  */
+	cmpdi	r0, r7, 4
+	blt     L(proceed1)
+
+	.align 4
+L(equal1):
+#ifdef __LITTLE_ENDIAN__
+	addi	r11, r11, 8	/* Adjust byte pointer on loaded dw  */
+	srd	r7, r8, r11
+#else
+	subfic	r11, r11, 64
+	sld	r7, r8, r11
+	srdi	r7, r7, 32
+#endif
+	stw	r7, 1(r3)
+	addi	r3, r3, 4
+	addi	r5, r5, -4
+
+L(proceed1):
+	mr	r7, r8
+	/* calculate the Left over bytes to be written  */
+	subfic	r11, r10, 64
+	subfic	r12, r12, 64
+	subf	r12, r12, r11	/* remaining bytes on second dw  */
+	subfic	r10, r12, 64	/* remaining bytes on first dw  */
+	subfic	r9, r9, 8
+	subf	r6, r9, r6	/* recalculate padding  */
+L(srcunaligndstalign):
+	addi	r3, r3, 1
+	subfic	r12, r10, 64	/* remaining bytes on second dw  */
+	addi	r4, r4, 8
+	li	r0,0
+	b       L(storedouble)
+
+	.align 4
+L(dst_align_small):
+	mtctr	r6
+	/* Write until src is aligned  */
+L(storebyte2):
+#ifdef __LITTLE_ENDIAN__
+	addi	r11, r11, 8	/* Adjust byte pointer on dw  */
+#else
+	addi	r11, r11, -8
+#endif
+	srd	r7, r8, r11
+	stbu	r7, 1(r3)
+	addi	r5, r5, -1
+	bdnz    L(storebyte2)
+
+	addi	r4, r4, 8	/* Increment src pointer  */
+	addi	r3, r3, 1	/* Increment dst pointer  */
+	mr	r9, r3
+	li	r8, 0
+	cmpd    cr7, r12, r10
+	beq     cr7, L(aligned)
+	rldicl	r6, r3, 0, 61	/* Recalculate padding */
+	mr	r7, r6
+
+	/* src is algined */
+L(srcaligndstunalign):
+	mr	r9, r3
+	mr	r6, r7
+	ld	r8, 0(r4)
+	subfic	r10, r7, 8
+	mr	r7, r8
+	li	r0, 0	/* Check null */
+	cmpb	r0, r8, r0
+	cmpdi	r0, 0
+	bne     L(byte_by_byte)	/* Do byte by byte if there is NULL  */
+	rlwinm	r12, r3, 3,26,28	/* Calculate padding  */
+	addi	r3, r3, -1
+	/* write byte by byte until aligned  */
+#ifdef __LITTLE_ENDIAN__
+	li	r11, -8
+#else
+	li	r11, 64
+#endif
+	mtctr	r10
+	cmpdi	r0, r10, 4
+	blt     L(storebyte)
+	beq     L(equal)
+	addi	r0, r10, -4
+	mtctr	r0
+L(storebyte):
+#ifdef __LITTLE_ENDIAN__
+	addi	r11, r11, 8	/* Adjust byte pointer on  dw  */
+#else
+	addi	r11, r11, -8
+#endif
+	srd	r7, r8, r11
+	stbu	r7, 1(r3)
+	addi	r5, r5, -1
+	bdnz    L(storebyte)
+
+	cmpdi	r0, r10, 4
+	blt     L(align)
+
+	.align 4
+L(equal):
+#ifdef __LITTLE_ENDIAN__
+	addi	r11, r11, 8
+	srd	r7, r8, r11
+#else
+	subfic	r11, r11, 64
+	sld	r7, r8, r11
+	srdi	r7, r7, 32
+#endif
+	stw	r7, 1(r3)
+	addi	r5, r5, -4
+	addi	r3, r3, 4
+L(align):
+	addi	r3, r3, 1
+	addi	r4, r4, 8	/* Increment src pointer  */
+	subfic	r10, r12, 64
+	li	r0, 0
+	/* dst addr aligned to 8 */
+L(storedouble):
+	cmpdi	r5, 8
+	ble	L(null1)
+	ld	r7, 0(r4)	/* load next dw  */
+	cmpb	r0, r7, r0
+	cmpdi	r0, 0	/* check for null on each new dw  */
+	bne     L(null)
+#ifdef __LITTLE_ENDIAN__
+	srd	r9, r8, r10	/* bytes from first dw  */
+	sld	r11, r7, r12	/* bytes from second dw  */
+#else
+	sld	r9, r8, r10
+	srd	r11, r7, r12
+#endif
+	or	r11, r9, r11	/* make as a single dw  */
+	std	r11, 0(r3)	/* store as std on aligned addr  */
+	mr	r8, r7		/* still few bytes left to be written  */
+	addi	r3, r3, 8	/* increment dst addr  */
+	addi	r4, r4, 8	/* increment src addr  */
+	addi	r5, r5, -8
+	b       L(storedouble)	/* Loop until NULL  */
+
+	.align 4
+
+/* We've hit the end of the string.  Do the rest byte-by-byte.  */
+L(null):
+	addi	r3, r3, -1
+	mr	r10, r12
+	mtctr	r6
+#ifdef __LITTLE_ENDIAN__
+	subfic	r10, r10, 64
+	addi	r10, r10, -8
+#endif
+	cmpdi	r0, r5, 4
+	blt	L(loop)
+	cmpdi	r0, r6, 4
+	blt     L(loop)
+
+	/* we can still use stw if leftover >= 4  */
+#ifdef __LITTLE_ENDIAN__
+	addi	r10, r10, 8
+	srd	r11, r8, r10
+#else
+	subfic	r10, r10, 64
+	sld	r11, r8, r10
+	srdi	r11, r11, 32
+#endif
+	stw	r11, 1(r3)
+	addi	r5, r5, -4
+	addi	r3, r3, 4
+	cmpdi	r0, r5, 0
+	beq	L(g1)
+	cmpdi	r0, r6, 4
+	beq     L(bytebybyte1)
+	addi	r10, r10, 32
+#ifdef __LITTLE_ENDIAN__
+	addi	r10, r10, -8
+#else
+	subfic	r10, r10, 64
+#endif
+	addi	r0, r6, -4
+	mtctr	r0
+	/* remaining byte by byte part of first dw  */
+L(loop):
+#ifdef __LITTLE_ENDIAN__
+	addi	r10, r10, 8
+#else
+	addi	r10, r10, -8
+#endif
+	srd	r0, r8, r10
+	stbu	r0, 1(r3)
+	addi	r5, r5, -1
+	cmpdi	r0, r5, 0
+	beq	L(g1)
+	bdnz    L(loop)
+L(bytebybyte1):
+	addi	r3, r3, 1
+	/* remaining byte by byte part of second dw   */
+L(bytebybyte):
+	addi	r3, r3, -8
+	addi	r4, r4, -1
+
+#ifdef __LITTLE_ENDIAN__
+	extrdi. r0, r7, 8, 56
+	stbu	r7, 8(r3)
+	addi	r5, r5, -1
+	beq	L(g2)
+	cmpdi	r5, 0
+	beq	L(g1)
+	extrdi. r0, r7, 8, 48
+	stbu	r0, 1(r3)
+	addi	r5, r5, -1
+	beq	L(g2)
+	cmpdi	r5, 0
+	beq	L(g1)
+	extrdi. r0, r7, 8, 40
+	stbu	r0, 1(r3)
+	addi	r5, r5, -1
+	beq	L(g2)
+	cmpdi	r5, 0
+	beq	L(g1)
+	extrdi. r0, r7, 8, 32
+	stbu	r0, 1(r3)
+	addi	r5, r5, -1
+	beq	L(g2)
+	cmpdi	r5, 0
+	beq	L(g1)
+	extrdi. r0, r7, 8, 24
+	stbu	r0, 1(r3)
+	addi	r5, r5, -1
+	beq	L(g2)
+	cmpdi	r5, 0
+	beq	L(g1)
+	extrdi. r0, r7, 8, 16
+	stbu	r0, 1(r3)
+	addi	r5, r5, -1
+	beq	L(g2)
+	cmpdi	r5, 0
+	beq	L(g1)
+	extrdi. r0, r7, 8, 8
+	stbu	r0, 1(r3)
+	addi	r5, r5, -1
+	beq	L(g2)
+	cmpdi	r5, 0
+	beq	L(g1)
+	extrdi	r0, r7, 8, 0
+	stbu	r0, 1(r3)
+	addi	r5, r5, -1
+	b	L(g2)
+#else
+	extrdi. r0, r7, 8, 0
+	stbu	r0, 8(r3)
+	addi	r5, r5, -1
+	beq	L(g2)
+	cmpdi	r5, 0
+	beq	L(g1)
+	extrdi. r0, r7, 8, 8
+	stbu	r0, 1(r3)
+	addi	r5, r5, -1
+	beq	L(g2)
+	cmpdi	r5, 0
+	beq	L(g1)
+	extrdi. r0, r7, 8, 16
+	stbu	r0, 1(r3)
+	addi	r5, r5, -1
+	beq	L(g2)
+	cmpdi	r5, 0
+	beq	L(g1)
+	extrdi. r0, r7, 8, 24
+	stbu	r0, 1(r3)
+	addi	r5, r5, -1
+	beq	L(g2)
+	cmpdi	r5, 0
+	beq	L(g1)
+	extrdi. r0, r7, 8, 32
+	stbu	r0, 1(r3)
+	addi	r5, r5, -1
+	beq	L(g2)
+	cmpdi	r5, 0
+	beq	L(g1)
+	extrdi. r0, r7, 8, 40
+	stbu	r0, 1(r3)
+	addi	r5, r5, -1
+	beq	L(g2)
+	cmpdi	r5, 0
+	beq	L(g1)
+	extrdi. r0, r7, 8, 48
+	stbu	r0, 1(r3)
+	addi	r5, r5, -1
+	beq	L(g2)
+	cmpdi	r5, 0
+	beq	L(g1)
+	stbu	r7, 1(r3)
+	addi	r5, r5, -1
+	b	L(g2)
+#endif
+L(g1):
+#ifdef USE_AS_STPNCPY
+	addi	r3, r3, 1
+#endif
+L(g2):
+	addi	r3, r3, 1
+	mr	r19, r3
+	mr	r8, r5
+	b	L(zeroFill)
+L(null1):
+	mr	r9, r3
+	subf	r4, r6, r4
+	b	L(byte_by_byte)
 END(FUNC_NAME)
 #ifndef USE_AS_STPNCPY
 libc_hidden_builtin_def (strncpy)
