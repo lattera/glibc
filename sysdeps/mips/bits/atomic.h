@@ -44,7 +44,7 @@ typedef uintmax_t uatomic_max_t;
 #define MIPS_PUSH_MIPS2
 #endif
 
-#if _MIPS_SIM == _ABIO32
+#if _MIPS_SIM == _ABIO32 || _MIPS_SIM == _ABIN32
 #define __HAVE_64B_ATOMICS 0
 #else
 #define __HAVE_64B_ATOMICS 1
