@@ -713,12 +713,12 @@
 	(R_NIOS2_CACHE_OPX,R_NIOS2_IMM6,R_NIOS2_IMM8,R_NIOS2_HI16): Likewise.
 	(R_NIOS2_LO16,R_NIOS2_HIADJ16,R_NIOS2_BFD_RELOC_32): Likewise.
 	(R_NIOS2_BFD_RELOC_16,R_NIOS2_BFD_RELOC_8,R_NIOS2_GPREL): Likewise.
-        (R_NIOS2_GNU_VTINHERIT,R_NIOS2_GNU_VTENTRY,R_NIOS2_UJMP): Likewise.
-        (R_NIOS2_CJMP,R_NIOS2_CALLR,R_NIOS2_ALIGN,R_NIOS2_GOT16): Likewise.
-        (R_NIOS2_CALL16,R_NIOS2_GOTOFF_LO,R_NIOS2_GOTOFF_HA): Likewise.
-        (R_NIOS2_PCREL_LO,R_NIOS2_PCREL_HA,R_NIOS2_TLS_GD16): Likewise.
-        (R_NIOS2_TLS_LDM16,R_NIOS2_TLS_LDO16,R_NIOS2_TLS_IE16): Likewise.
-        (R_NIOS2_TLS_LE16,R_NIOS2_TLS_DTPMOD,R_NIOS2_TLS_DTPREL): Likewise.
+	(R_NIOS2_GNU_VTINHERIT,R_NIOS2_GNU_VTENTRY,R_NIOS2_UJMP): Likewise.
+	(R_NIOS2_CJMP,R_NIOS2_CALLR,R_NIOS2_ALIGN,R_NIOS2_GOT16): Likewise.
+	(R_NIOS2_CALL16,R_NIOS2_GOTOFF_LO,R_NIOS2_GOTOFF_HA): Likewise.
+	(R_NIOS2_PCREL_LO,R_NIOS2_PCREL_HA,R_NIOS2_TLS_GD16): Likewise.
+	(R_NIOS2_TLS_LDM16,R_NIOS2_TLS_LDO16,R_NIOS2_TLS_IE16): Likewise.
+	(R_NIOS2_TLS_LE16,R_NIOS2_TLS_DTPMOD,R_NIOS2_TLS_DTPREL): Likewise.
 	(R_NIOS2_TLS_TPREL,R_NIOS2_COPY,R_NIOS2_GLOB_DAT): Likewise.
 	(R_NIOS2_JUMP_SLOT,R_NIOS2_RELATIVE,R_NIOS2_GOTOFF): Likewise.
 	(R_NIOS2_CALL26_NOAT,R_NIOS2_GOT_LO,R_NIOS2_GOT_HA): Likewise.
@@ -1066,12 +1066,12 @@
 
 2015-01-05  Chris Metcalf  <cmetcalf@ezchip.com>
 
-        * sysdeps/unix/sysv/linux/tile/bits/libc-vdso.h: Fix return type
-        for __vdso_* functions in declarations.
-        * sysdeps/unix/sysv/linux/tile/init-first.c: Likewise for
-        definitions.
-        * sysdeps/unix/sysv/linux/tile/sysdep.h (INLINE_VSYSCALL,
-        INTERNAL_VSYSCALL): Use struct return types to check for error.
+	* sysdeps/unix/sysv/linux/tile/bits/libc-vdso.h: Fix return type
+	for __vdso_* functions in declarations.
+	* sysdeps/unix/sysv/linux/tile/init-first.c: Likewise for
+	definitions.
+	* sysdeps/unix/sysv/linux/tile/sysdep.h (INLINE_VSYSCALL,
+	INTERNAL_VSYSCALL): Use struct return types to check for error.
 
 	* sysdeps/ieee754/dbl-64/wordsize-64/s_llround.c [!defined _LP64
 	&& REGISTER_CAST_INT32_TO_INT64]: Provide explicit lround()
