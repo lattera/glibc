@@ -1,3 +1,8 @@
+2015-01-29  Siddhesh Poyarekar <siddhesh@redhat.com>
+
+	[BZ #17892]
+	* nscd/nscd_stat.c (send_stats): Initialize DATA.
+
 2015-01-28  Martin Sebor  <msebor@redhat.com>
 
 	* math/README.libm-test: Clarify. Add "How to read the test output."

@@ -94,6 +94,8 @@ send_stats (int fd, struct database_dyn dbs[lastdb])
   struct statdata data;
   int cnt;
 
+  memset (&data, 0, sizeof (data));
+
   memcpy (data.version, compilation, sizeof (compilation));
   data.debug_level = debug_level;
   data.runtime = time (NULL) - start_time;
