@@ -1,3 +1,7 @@
+2015-01-28  Martin Sebor  <msebor@redhat.com>
+
+	* math/README.libm-test: Clarify. Add "How to read the test output."
+
 2015-01-28  Chris Metcalf  <cmetcalf@ezchip.com>
 
 	* sysdeps/tile/tilegx/bits/atomic.h [!_LP64] (__HAVE_64B_ATOMICS):
