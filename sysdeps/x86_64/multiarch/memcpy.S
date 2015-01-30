@@ -33,7 +33,7 @@ ENTRY(__new_memcpy)
 	jne	1f
 	call	__init_cpu_features
 1:	leaq	__memcpy_avx_unaligned(%rip), %rax
-	testl	$bit_AVX_Usable, __cpu_features+FEATURE_OFFSET+index_AVX_Usable(%rip)
+	testl	$bit_AVX_Fast_Unaligned_Load, __cpu_features+FEATURE_OFFSET+index_AVX_Fast_Unaligned_Load(%rip)
 	jz 1f
 	ret
 1:	leaq	__memcpy_sse2(%rip), %rax

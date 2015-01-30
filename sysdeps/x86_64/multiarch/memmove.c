@@ -49,7 +49,7 @@ extern __typeof (__redirect_memmove) __memmove_avx_unaligned attribute_hidden;
    ifunc symbol properly.  */
 extern __typeof (__redirect_memmove) __libc_memmove;
 libc_ifunc (__libc_memmove,
-	    HAS_AVX
+	    HAS_AVX_FAST_UNALIGNED_LOAD
 	    ? __memmove_avx_unaligned
 	    : (HAS_SSSE3
 	       ? (HAS_FAST_COPY_BACKWARD

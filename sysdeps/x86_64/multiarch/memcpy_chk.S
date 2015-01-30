@@ -39,7 +39,7 @@ ENTRY(__memcpy_chk)
 	testl	$bit_Fast_Copy_Backward, __cpu_features+FEATURE_OFFSET+index_Fast_Copy_Backward(%rip)
 	jz	2f
 	leaq	__memcpy_chk_ssse3_back(%rip), %rax
-	testl   $bit_AVX_Usable, __cpu_features+FEATURE_OFFSET+index_AVX_Usable(%rip)
+	testl   $bit_AVX_Fast_Unaligned_Load, __cpu_features+FEATURE_OFFSET+index_AVX_Fast_Unaligned_Load(%rip)
 	jz  2f
 	leaq    __memcpy_chk_avx_unaligned(%rip), %rax
 2:	ret

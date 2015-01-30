@@ -1,3 +1,21 @@
+2015-01-30  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #17801]
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features):
+	Set the bit_AVX_Fast_Unaligned_Load bit for AVX2.
+	* sysdeps/x86_64/multiarch/init-arch.h (bit_AVX_Fast_Unaligned_Load):
+	New.
+	(index_AVX_Fast_Unaligned_Load): Likewise.
+	(HAS_AVX_FAST_UNALIGNED_LOAD): Likewise.
+	* sysdeps/x86_64/multiarch/memcpy.S (__new_memcpy): Check the
+	bit_AVX_Fast_Unaligned_Load bit instead of the bit_AVX_Usable bit.
+	* sysdeps/x86_64/multiarch/memcpy_chk.S (__memcpy_chk): Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy.S (__mempcpy): Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy_chk.S (__mempcpy_chk): Likewise.
+	* sysdeps/x86_64/multiarch/memmove.c (__libc_memmove): Replace
+	HAS_AVX with HAS_AVX_FAST_UNALIGNED_LOAD.
+	* sysdeps/x86_64/multiarch/memmove_chk.c (__memmove_chk): Likewise.
+
 2015-01-29  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/nptl/allocrtsig.c: Include <signal.h>.

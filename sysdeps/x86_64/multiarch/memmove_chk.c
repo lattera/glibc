@@ -30,7 +30,7 @@ extern __typeof (__memmove_chk) __memmove_chk_avx_unaligned attribute_hidden;
 #include "debug/memmove_chk.c"
 
 libc_ifunc (__memmove_chk,
-	    HAS_AVX ? __memmove_chk_avx_unaligned :
+	    HAS_AVX_FAST_UNALIGNED_LOAD ? __memmove_chk_avx_unaligned :
 	    (HAS_SSSE3
 	    ? (HAS_FAST_COPY_BACKWARD
 	       ? __memmove_chk_ssse3_back : __memmove_chk_ssse3)
