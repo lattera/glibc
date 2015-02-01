@@ -17,19 +17,30 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
-#include <string.h>
 #include <semaphore.h>
-#include <lowlevellock.h>
 #include <shlib-compat.h>
 #include "semaphoreP.h"
 #include <kernel-features.h>
-#include <sparc-nptl.h>
+
+/* Returns FUTEX_PRIVATE if pshared is zero and private futexes are supported;
+   returns FUTEX_SHARED otherwise.
+   TODO Remove when cleaning up the futex API throughout glibc.  */
+static __always_inline int
+futex_private_if_supported (int pshared)
+{
+  if (pshared != 0)
+    return LLL_SHARED;
+#ifdef __ASSUME_PRIVATE_FUTEX
+  return LLL_PRIVATE;
+#else
+  return THREAD_GETMEM (THREAD_SELF, header.private_futex)
+      ^ FUTEX_PRIVATE_FLAG;
+#endif
+}
+
 
 int
-__new_sem_init (sem, pshared, value)
-     sem_t *sem;
-     int pshared;
-     unsigned int value;
+__new_sem_init (sem_t *sem, int pshared, unsigned int value)
 {
   /* Parameter sanity check.  */
   if (__glibc_unlikely (value > SEM_VALUE_MAX))
@@ -39,17 +50,14 @@ __new_sem_init (sem, pshared, value)
     }
 
   /* Map to the internal type.  */
-  struct sparc_new_sem *isem = (struct sparc_new_sem *) sem;
+  struct new_sem *isem = (struct new_sem *) sem;
 
-  /* Use the values the user provided.  */
-  memset (isem, '\0', sizeof (*isem));
-  isem->value = value;
-#ifdef __ASSUME_PRIVATE_FUTEX
-  isem->private = pshared ? 0 : FUTEX_PRIVATE_FLAG;
-#else
-  isem->private = pshared ? 0 : THREAD_GETMEM (THREAD_SELF,
-					       header.private_futex);
-#endif
+  /* Use the values the caller provided.  */
+  isem->value = value << SEM_VALUE_SHIFT;
+  isem->pad = 0;
+  isem->nwaiters = 0;
+
+  isem->private = futex_private_if_supported (pshared);
 
   return 0;
 }
@@ -73,18 +81,13 @@ __old_sem_init (sem, pshared, value)
     }
 
   /* Map to the internal type.  */
-  struct sparc_old_sem *isem = (struct sparc_old_sem *) sem;
+  struct old_sem *isem = (struct old_sem *) sem;
 
   /* Use the value the user provided.  */
-  memset (isem, '\0', sizeof (*isem));
   isem->value = value;
 
-#ifdef __ASSUME_PRIVATE_FUTEX
-  isem->private = pshared ? 0 : FUTEX_PRIVATE_FLAG;
-#else
-  isem->private = pshared ? 0 : THREAD_GETMEM (THREAD_SELF,
-					       header.private_futex);
-#endif
+  /* We cannot store the PSHARED attribute.  So we always use the
+     operations needed for shared semaphores.  */
 
   return 0;
 }

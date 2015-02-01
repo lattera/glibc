@@ -1,1 +1,1 @@
-#include <sysdeps/sparc/nptl/sem_wait.c>
+#include <nptl/sem_wait.c>

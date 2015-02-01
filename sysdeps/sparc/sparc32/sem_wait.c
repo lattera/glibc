@@ -17,151 +17,36 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <sysdep.h>
-#include <lowlevellock.h>
-#include <internaltypes.h>
-#include <semaphore.h>
-
-#include <pthreadP.h>
-#include <shlib-compat.h>
-#include <sparc-nptl.h>
-
-void
-attribute_hidden
-__sem_wait_cleanup (void *arg)
-{
-  struct sparc_new_sem *isem = (struct sparc_new_sem *) arg;
-
-  if (__atomic_is_v9)
-    atomic_decrement (&isem->nwaiters);
-  else
-    {
-      __sparc32_atomic_do_lock24 (&isem->lock);
-      isem->nwaiters--;
-      __sparc32_atomic_do_unlock24 (&isem->lock);
-    }
-}
-
-/* This is in a seperate function in order to make sure gcc
-   puts the call site into an exception region, and thus the
-   cleanups get properly run.  */
-static int
-__attribute__ ((noinline))
-do_futex_wait (struct sparc_new_sem *isem)
-{
-  int err, oldtype = __pthread_enable_asynccancel ();
-
-  err = lll_futex_wait (&isem->value, 0, isem->private ^ FUTEX_PRIVATE_FLAG);
-
-  __pthread_disable_asynccancel (oldtype);
-  return err;
-}
+#include "sem_waitcommon.c"
 
 int
 __new_sem_wait (sem_t *sem)
 {
-  struct sparc_new_sem *isem = (struct sparc_new_sem *) sem;
-  int err;
-  int val;
-
-  if (__atomic_is_v9)
-    val = atomic_decrement_if_positive (&isem->value);
-  else
-    {
-      __sparc32_atomic_do_lock24 (&isem->lock);
-      val = isem->value;
-      if (val > 0)
-	isem->value = val - 1;
-      else
-	isem->nwaiters++;
-      __sparc32_atomic_do_unlock24 (&isem->lock);
-    }
-
-  if (val > 0)
+  if (__new_sem_wait_fast ((struct new_sem *) sem, 0) == 0)
     return 0;
-
-  if (__atomic_is_v9)
-    atomic_increment (&isem->nwaiters);
   else
-    /* Already done above while still holding isem->lock.  */;
-
-  pthread_cleanup_push (__sem_wait_cleanup, isem);
-
-  while (1)
-    {
-      err = do_futex_wait(isem);
-      if (err != 0 && err != -EWOULDBLOCK)
-	{
-	  __set_errno (-err);
-	  err = -1;
-	  break;
-	}
-
-      if (__atomic_is_v9)
-	val = atomic_decrement_if_positive (&isem->value);
-      else
-	{
-	  __sparc32_atomic_do_lock24 (&isem->lock);
-	  val = isem->value;
-	  if (val > 0)
-	    isem->value = val - 1;
-	  __sparc32_atomic_do_unlock24 (&isem->lock);
-	}
-
-      if (val > 0)
-	{
-	  err = 0;
-	  break;
-	}
-    }
-
-  pthread_cleanup_pop (0);
-
-  if (__atomic_is_v9)
-    atomic_decrement (&isem->nwaiters);
-  else
-    {
-      __sparc32_atomic_do_lock24 (&isem->lock);
-      isem->nwaiters--;
-      __sparc32_atomic_do_unlock24 (&isem->lock);
-    }
-
-  return err;
+    return __new_sem_wait_slow((struct new_sem *) sem, NULL);
 }
 versioned_symbol (libpthread, __new_sem_wait, sem_wait, GLIBC_2_1);
-
 
 #if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_1)
 int
 attribute_compat_text_section
 __old_sem_wait (sem_t *sem)
 {
-  struct sparc_old_sem *isem = (struct sparc_old_sem *) sem;
+  int *futex = (int *) sem;
   int err;
-  int val;
 
   do
     {
-      if (__atomic_is_v9)
-	val = atomic_decrement_if_positive (&isem->value);
-      else
-	{
-	  __sparc32_atomic_do_lock24 (&isem->lock);
-	  val = isem->value;
-	  if (val > 0)
-	    isem->value = val - 1;
-	  __sparc32_atomic_do_unlock24 (&isem->lock);
-	}
-
-      if (val > 0)
+      if (atomic_decrement_if_positive (futex) > 0)
 	return 0;
 
       /* Enable asynchronous cancellation.  Required by the standard.  */
       int oldtype = __pthread_enable_asynccancel ();
 
-      err = lll_futex_wait (&isem->value, 0,
-			    isem->private ^ FUTEX_PRIVATE_FLAG);
+      /* Always assume the semaphore is shared.  */
+      err = lll_futex_wait (futex, 0, LLL_SHARED);
 
       /* Disable asynchronous cancellation.  */
       __pthread_disable_asynccancel (oldtype);
@@ -173,4 +58,35 @@ __old_sem_wait (sem_t *sem)
 }
 
 compat_symbol (libpthread, __old_sem_wait, sem_wait, GLIBC_2_0);
+#endif
+
+int
+__new_sem_trywait (sem_t *sem)
+{
+  /* We must not fail spuriously, so require a definitive result even if this
+     may lead to a long execution time.  */
+  if (__new_sem_wait_fast ((struct new_sem *) sem, 1) == 0)
+    return 0;
+  __set_errno (EAGAIN);
+  return -1;
+}
+versioned_symbol (libpthread, __new_sem_trywait, sem_trywait, GLIBC_2_1);
+#if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_1)
+int
+__old_sem_trywait (sem_t *sem)
+{
+  int *futex = (int *) sem;
+  int val;
+
+  if (*futex > 0)
+    {
+      val = atomic_decrement_if_positive (futex);
+      if (val > 0)
+	return 0;
+    }
+
+  __set_errno (EAGAIN);
+  return -1;
+}
+compat_symbol (libpthread, __old_sem_trywait, sem_trywait, GLIBC_2_0);
 #endif

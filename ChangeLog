@@ -1,3 +1,27 @@
+2015-01-31  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/nptl/sem_init.c: Delete.
+	* sysdeps/sparc/nptl/sem_post.c: Delete.
+	* sysdeps/sparc/nptl/sem_timedwait.c: Delete.
+	* sysdeps/sparc/nptl/sem_wait.c: Delete.
+	* sysdeps/sparc/sparc32/sem_init.c: New file.
+	* sysdeps/sparc/sparc32/sem_waitcommon.c: New file.
+	* sysdeps/sparc/sparc32/sem_open.c: Generic nptl version with
+	padding explicitly initialized.
+	* sysdeps/sparc/sparc32/sem_post.c: Generic nptl version using
+	padding for in-semaphore spinlock.
+	* sysdeps/sparc/sparc32/sem_wait.c: Likewise.
+	* sysdeps/sparc/sparc32/sem_trywait.c: Delete.
+	* sysdeps/sparc/sparc32/sem_timedwait.c: Delete.
+	* sysdeps/sparc/sparc32/sparcv9/sem_init.c: New file.
+	* sysdeps/sparc/sparc32/sparcv9/sem_open.c: New file.
+	* sysdeps/sparc/sparc32/sparcv9/sem_post.c: New file.
+	* sysdeps/sparc/sparc32/sparcv9/sem_waitcommon.c: New file.
+	* sysdeps/sparc/sparc32/sparcv9/sem_wait.c: Redirect to nptl
+	version.
+	* sysdeps/sparc/sparc32/sparcv9/sem_timedwait.c: Delete.
+	* sysdeps/sparc/sparc32/sparcv9/sem_trywait.c: Delete.
+
 2015-01-30  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #17801]
