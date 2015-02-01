@@ -1,3 +1,9 @@
+2015-02-09  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #17912]
+	* sysdeps/unix/sysv/linux/bits/fcntl-linux.h (__O_TMPFILE): Define
+	in terms of __O_DIRECTORY.
+
 2015-02-08  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* time/getdate.c: Include <stdbool.h>.
