@@ -1,5 +1,11 @@
 2015-01-31  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/sparc32/bits/atomic.h
+	(__sparc32_atomic_do_unlock24): Put the memory barrier before the
+	unlock not after it.
+	(__v9_compare_and_exchange_val_32_acq): Use unions to avoid getting
+	volatile register usage warnings from the compiler.
+
 	* sysdeps/sparc/nptl/sem_init.c: Delete.
 	* sysdeps/sparc/nptl/sem_post.c: Delete.
 	* sysdeps/sparc/nptl/sem_timedwait.c: Delete.
