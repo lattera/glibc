@@ -1,3 +1,30 @@
+2015-03-11  Adhemerval Zanellla  <azanella@linux.vnet.ibm.com>
+
+	* config.h.in [HAVE_ASM_GLOBAL_DOT_NAME]: Remove define.
+	* include/libc-symbols.h [HAVE_ASM_GLOBAL_DOT_NAME] (strong_alias):
+	Remove define.
+	[HAVE_ASM_GLOBAL_DOT_NAME] (strong_data_alias): Likewise.
+	[HAVE_ASM_GLOBAL_DOT_NAME] (weak_alias): Likewise.
+	[HAVE_ASM_GLOBAL_DOT_NAME] (_symbol_version): Likewise.
+	[HAVE_ASM_GLOBAL_DOT_NAME] (_default_symbol_version): Likewise.
+	[HAVE_ASM_GLOBAL_DOT_NAME] (HIDDEN_JUMPTARGET): Likewise.
+	* nptl_db/db-symbols.h [HAVE_ASM_GLOBAL_DOT_NAME] (DOT): Remove
+	define.
+	* nptl_db/td_symbol_list.c (td_lookup): Remove
+	HAVE_ASM_GLOBAL_DOT_NAME code.
+	* sysdeps/powerpc/powerpc64/configure.ac: Remove
+	HAVE_ASM_GLOBAL_DOT_NAME check.
+	* sysdeps/powerpc/powerpc64/configure: Regenerate.
+	* sysdeps/powerpc/powerpc64/sysdep.h [HAVE_ASM_GLOBAL_DOT_NAME]
+	(DOT_LABEL): Remove define.
+	[HAVE_ASM_GLOBAL_DOT_NAME] (BODY_LABEL): Likewise.
+	[HAVE_ASM_GLOBAL_DOT_NAME] (ENTRY_2): Likewise.
+	[HAVE_ASM_GLOBAL_DOT_NAME] (END_2): Likewise.
+	* sysdeps/powerpc/powerpc64/tls-macros.h [HAVE_ASM_GLOBAL_DOT_NAME]
+	(__TLS_GET_ADDR): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h
+	[HAVE_ASM_GLOBAL_DOT_NAME] (DASHDASHPFX): Likewise.
+
 2015-03-11  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #18111]

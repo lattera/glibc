@@ -48,13 +48,5 @@ td_lookup (struct ps_prochandle *ps, int idx, psaddr_t *sym_addr)
   result = ps_pglobal_lookup (ps, LIBPTHREAD_SO, symbol_list_arr[idx],
 			      sym_addr);
 
-#ifdef HAVE_ASM_GLOBAL_DOT_NAME
-  /* For PowerPC, 64-bit uses dot symbols but 32-bit does not.
-     We could be a 64-bit libthread_db debugging a 32-bit libpthread.  */
-  if (result == PS_NOSYM && symbol_list_arr[idx][0] == '.')
-    result = ps_pglobal_lookup (ps, LIBPTHREAD_SO, &symbol_list_arr[idx][1],
-				sym_addr);
-#endif
-
   return result;
 }

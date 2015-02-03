@@ -96,17 +96,6 @@
 # define ASM_LINE_SEP ;
 #endif
 
-#ifdef HAVE_ASM_GLOBAL_DOT_NAME
-# ifndef C_SYMBOL_DOT_NAME
-#  if defined __GNUC__ && defined __GNUC_MINOR__ \
-      && (__GNUC__ << 16) + __GNUC_MINOR__ >= (3 << 16) + 1
-#   define C_SYMBOL_DOT_NAME(name) .name
-#  else
-#   define C_SYMBOL_DOT_NAME(name) .##name
-#  endif
-# endif
-#endif
-
 #ifndef __ASSEMBLER__
 /* GCC understands weak symbols and aliases; use its interface where
    possible, instead of embedded assembly language.  */
@@ -142,64 +131,28 @@
 #else /* __ASSEMBLER__ */
 
 # ifdef HAVE_ASM_SET_DIRECTIVE
-#  ifdef HAVE_ASM_GLOBAL_DOT_NAME
-#   define strong_alias(original, alias)				\
-  .globl C_SYMBOL_NAME (alias) ASM_LINE_SEP		\
-  .set C_SYMBOL_NAME (alias),C_SYMBOL_NAME (original) ASM_LINE_SEP	\
-  .globl C_SYMBOL_DOT_NAME (alias) ASM_LINE_SEP		\
-  .set C_SYMBOL_DOT_NAME (alias),C_SYMBOL_DOT_NAME (original)
-#   define strong_data_alias(original, alias)				\
+#  define strong_alias(original, alias)				\
   .globl C_SYMBOL_NAME (alias) ASM_LINE_SEP		\
   .set C_SYMBOL_NAME (alias),C_SYMBOL_NAME (original)
-#  else
-#   define strong_alias(original, alias)				\
-  .globl C_SYMBOL_NAME (alias) ASM_LINE_SEP		\
-  .set C_SYMBOL_NAME (alias),C_SYMBOL_NAME (original)
-#   define strong_data_alias(original, alias) strong_alias(original, alias)
-#  endif
+#  define strong_data_alias(original, alias) strong_alias(original, alias)
 # else
-#  ifdef HAVE_ASM_GLOBAL_DOT_NAME
-#   define strong_alias(original, alias)				\
-  .globl C_SYMBOL_NAME (alias) ASM_LINE_SEP		\
-  C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original) ASM_LINE_SEP		\
-  .globl C_SYMBOL_DOT_NAME (alias) ASM_LINE_SEP		\
-  C_SYMBOL_DOT_NAME (alias) = C_SYMBOL_DOT_NAME (original)
-#   define strong_data_alias(original, alias)				\
+#  define strong_alias(original, alias)				\
   .globl C_SYMBOL_NAME (alias) ASM_LINE_SEP		\
   C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
-#  else
-#   define strong_alias(original, alias)				\
-  .globl C_SYMBOL_NAME (alias) ASM_LINE_SEP		\
-  C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
-#   define strong_data_alias(original, alias) strong_alias(original, alias)
-#  endif
+#  define strong_data_alias(original, alias) strong_alias(original, alias)
 # endif
 
 # ifdef HAVE_ASM_WEAKEXT_DIRECTIVE
-#  ifdef HAVE_ASM_GLOBAL_DOT_NAME
-#   define weak_alias(original, alias)					\
-  .weakext C_SYMBOL_NAME (alias), C_SYMBOL_NAME (original) ASM_LINE_SEP \
-  .weakext C_SYMBOL_DOT_NAME (alias), C_SYMBOL_DOT_NAME (original)
-#  else
-#   define weak_alias(original, alias)					\
+#  define weak_alias(original, alias)					\
   .weakext C_SYMBOL_NAME (alias), C_SYMBOL_NAME (original)
-#  endif
 #  define weak_extern(symbol)						\
   .weakext C_SYMBOL_NAME (symbol)
 
 # else /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
 
-#  ifdef HAVE_ASM_GLOBAL_DOT_NAME
-#   define weak_alias(original, alias)					\
-  .weak C_SYMBOL_NAME (alias) ASM_LINE_SEP				\
-  C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original) ASM_LINE_SEP		\
-  .weak C_SYMBOL_DOT_NAME (alias) ASM_LINE_SEP				\
-  C_SYMBOL_DOT_NAME (alias) = C_SYMBOL_DOT_NAME (original)
-#  else
-#   define weak_alias(original, alias)					\
+#  define weak_alias(original, alias)					\
   .weak C_SYMBOL_NAME (alias) ASM_LINE_SEP				\
   C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
-#  endif
 
 #  define weak_extern(symbol)						\
   .weak C_SYMBOL_NAME (symbol)
@@ -358,33 +311,15 @@ for linking")
 # define default_symbol_version(real, name, version) \
      _default_symbol_version(real, name, version)
 # ifdef __ASSEMBLER__
-#  ifdef HAVE_ASM_GLOBAL_DOT_NAME
-#   define _symbol_version(real, name, version) \
-     .symver real, name##@##version ASM_LINE_SEP			\
-     .symver C_SYMBOL_DOT_NAME(real), C_SYMBOL_DOT_NAME(name##@##version)
-#   define _default_symbol_version(real, name, version) \
-     .symver real, name##@##@##version ASM_LINE_SEP			\
-     .symver C_SYMBOL_DOT_NAME(real), C_SYMBOL_DOT_NAME(name##@##@##version)
-#  else
-#   define _symbol_version(real, name, version) \
+#  define _symbol_version(real, name, version) \
      .symver real, name##@##version
-#   define _default_symbol_version(real, name, version) \
+#  define _default_symbol_version(real, name, version) \
      .symver real, name##@##@##version
-#  endif
 # else
-#  ifdef HAVE_ASM_GLOBAL_DOT_NAME
-#   define _symbol_version(real, name, version) \
-     __asm__ (".symver " #real "," #name "@" #version "\n\t"	\
-	      ".symver ." #real ",." #name "@" #version)
-#   define _default_symbol_version(real, name, version) \
-     __asm__ (".symver " #real "," #name "@@" #version "\n\t"	\
-	      ".symver ." #real ",." #name "@@" #version)
-#  else
-#   define _symbol_version(real, name, version) \
+#  define _symbol_version(real, name, version) \
      __asm__ (".symver " #real "," #name "@" #version)
-#   define _default_symbol_version(real, name, version) \
+#  define _default_symbol_version(real, name, version) \
      __asm__ (".symver " #real "," #name "@@" #version)
-#  endif
 # endif
 #else
 # define symbol_version(real, name, version)
@@ -527,11 +462,7 @@ for linking")
 #  define hidden_data_def(name)	strong_data_alias (name, __GI_##name)
 #  define hidden_data_weak(name)	hidden_data_def (name)
 #  define hidden_data_ver(local, name) strong_data_alias (local, __GI_##name)
-#  ifdef HAVE_ASM_GLOBAL_DOT_NAME
-#   define HIDDEN_JUMPTARGET(name) .__GI_##name
-#  else
-#   define HIDDEN_JUMPTARGET(name) __GI_##name
-#  endif
+#  define HIDDEN_JUMPTARGET(name) __GI_##name
 # endif
 #else
 # ifndef __ASSEMBLER__

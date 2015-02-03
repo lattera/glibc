@@ -17,11 +17,9 @@
 	  : "=r" (__result) );						      \
      __result;								      \
   })
-#ifdef HAVE_ASM_GLOBAL_DOT_NAME
-# define __TLS_GET_ADDR ".__tls_get_addr"
-#else
-# define __TLS_GET_ADDR "__tls_get_addr"
-#endif
+
+#define __TLS_GET_ADDR "__tls_get_addr"
+
 /* PowerPC64 Local Dynamic TLS access.  */
 #define TLS_LD(x)							      \
   ({ int * __result;							      \

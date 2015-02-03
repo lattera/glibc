@@ -25,11 +25,7 @@
 
 #if IS_IN (libc) || IS_IN (libpthread) || IS_IN (librt)
 
-# ifdef HAVE_ASM_GLOBAL_DOT_NAME
-#  define DASHDASHPFX(str) .__##str
-# else
-#  define DASHDASHPFX(str) __##str
-# endif
+# define DASHDASHPFX(str) __##str
 
 #if _CALL_ELF == 2
 #define CANCEL_FRAMESIZE (FRAME_MIN_SIZE+16+48)
