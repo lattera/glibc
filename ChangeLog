@@ -1,5 +1,8 @@
 2015-02-09  Adhemerval Zanellla  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/configure.ac: Remove file.
+	* sysdeps/powerpc/configure: Likewise.
+
 	* sysdeps/powerpc/powerpc32/power4/multiarch/Makefile
 	[sysdep_routines]: Remove wordcopy-power6 object.
 	* sysdeps/powerpc/powerpc32/power4/multiarch/memmove-power7.c
