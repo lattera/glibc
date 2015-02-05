@@ -1,3 +1,9 @@
+2015-02-07  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Add ersatz _Static_assert on older C hosts
+	* misc/sys/cdefs.h (_Static_assert): Define a substitute, if on a
+	pre-C11 C platform that is not known to support _Static_assert.
+
 2015-02-07  Richard Braun  <rbraun@sceen.net>
 
 	* hurd/hurd/signal.h (_hurd_critical_section_lock): Don't unlock

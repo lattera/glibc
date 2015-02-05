@@ -113,7 +113,6 @@ __END_DECLS
 
 
 #if defined __USE_ISOC11 && !defined __cplusplus
-/* Static assertion.  Requires support in the compiler.  */
 # undef static_assert
 # define static_assert _Static_assert
 #endif

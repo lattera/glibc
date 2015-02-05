@@ -399,6 +399,14 @@
 # endif
 #endif
 
+#if (!defined _Static_assert && !defined __cplusplus \
+     && (defined __STDC_VERSION__ ? __STDC_VERSION__ : 0) < 201112 \
+     && (!__GNUC_PREREQ (4, 6) || defined __STRICT_ANSI__))
+# define _Static_assert(expr, diagnostic) \
+    extern int (*__Static_assert_function (void)) \
+      [!!sizeof (struct { int __error_if_negative: (expr) ? 2 : -1; })]
+#endif
+
 #include <bits/wordsize.h>
 
 #if defined __LONG_DOUBLE_MATH_OPTIONAL && defined __NO_LONG_DOUBLE_MATH
