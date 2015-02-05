@@ -35,7 +35,7 @@ static void __attribute_used__ __mcount_internal (u_long frompc, u_long selfpc)
   "callr r2\n\t"
 #else
 #define NIOS2_MCOUNT_CALL			\
-  "call\tmcount_internal\n\t"
+  "call\t__mcount_internal\n\t"
 #endif
 
 #define MCOUNT						\

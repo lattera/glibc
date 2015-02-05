@@ -1,3 +1,8 @@
+2015-02-05  Chung-Lin Tang  <cltang@codesourcery.com>
+
+	* sysdeps/nios2/machine-gmon.h (NIOS2_MCOUNT_CALL): Correct name of
+	called function in non-PIC case.
+
 2015-01-31  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/bits/atomic.h
