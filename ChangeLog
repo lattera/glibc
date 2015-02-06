@@ -1,3 +1,7 @@
+2015-02-06  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/unix/sysv/linux/hppa/pthread.h: Sync with pthread.h.
+
 2015-02-05  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #16618]
