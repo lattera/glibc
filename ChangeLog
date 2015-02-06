@@ -1,3 +1,23 @@
+2015-02-05  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/hppa/Makefile (CFLAGS-dl-fptr.c): Add -Wno-error.
+	* sysdeps/hppa/bits/setjmp.h: Union is named __jmp_buf_internal_tag.
+	* sysdeps/hppa/dl-irel.h: Remove #warning.
+	* sysdeps/hppa/entry.h: Provide prototype for
+	__canonicalize_funcptr_for_compare and cast argument.
+	* sysdeps/hppa/fpu/fegetexcept.c (fegetexcept): Add semicolon.
+	* sysdeps/hppa/fpu/ftestexcept.c (fetestexcept): Likewise.
+	* sysdeps/hppa/sotruss-lib.c: New file.
+	* sysdeps/unix/sysv/linux/hppa/bits/atomic.h
+	(atomic_compare_and_exchange_val_acq): Use __typeof__.
+	(atomic_compare_and_exchange_bool_acq): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/mmap.c: Use weak alias.
+	* sysdeps/unix/sysv/linux/hppa/pthread.h: Include pthread.h.
+
+	* sysdeps/unix/sysv/linux/hppa/syscall.S: Delete file.
+	* sysdeps/unix/sysv/linux/hppa/sysdep.c: Move syscall from here...
+	* sysdeps/unix/sysv/linux/hppa/syscall.c: ... to here.
+
 2015-02-05  Chung-Lin Tang  <cltang@codesourcery.com>
 
 	* sysdeps/nios2/machine-gmon.h (NIOS2_MCOUNT_CALL): Correct name of

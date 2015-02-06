@@ -22,7 +22,7 @@
 int
 fegetexcept (void)
 {
-  union { unsigned long long l; unsigned int sw[2] } s;
+  union { unsigned long long l; unsigned int sw[2]; } s;
 
   /* Get the current status word. */
   __asm__ ("fstd %%fr0,0(%1)	\n\t"

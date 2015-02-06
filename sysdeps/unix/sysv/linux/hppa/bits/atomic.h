@@ -67,7 +67,7 @@ typedef uintmax_t uatomic_max_t;
 # define atomic_compare_and_exchange_val_acq(mem, newval, oldval)	\
   ({									\
      volatile int lws_errno;						\
-     volatile int lws_ret;						\
+     __typeof__ (*mem) lws_ret;						\
      asm volatile(							\
 	"0:					\n\t"			\
 	"copy	%2, %%r26			\n\t"			\
@@ -96,10 +96,10 @@ typedef uintmax_t uatomic_max_t;
 
 # define atomic_compare_and_exchange_bool_acq(mem, newval, oldval)	\
   ({									\
-     int ret;								\
+     __typeof__ (*mem) ret;						\
      ret = atomic_compare_and_exchange_val_acq(mem, newval, oldval);	\
      /* Return 1 if it was already acquired.  */			\
-     (ret != (int)oldval);						\
+     (ret != oldval);							\
    })
 #else
 # error __ASSUME_LWS_CAS is required to build glibc.

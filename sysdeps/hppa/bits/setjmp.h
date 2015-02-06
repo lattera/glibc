@@ -38,9 +38,9 @@
    * 10 x 64-bit fprs in this order:
      - fr12-fr21 (callee saves)
    Note: We have 8 bytes of free space for future uses.  */
-typedef union
+typedef union __jmp_buf_internal_tag
   {
-    struct __jmp_buf_internal_tag
+    struct
       {
 	int __r3;
 	int __pad0;

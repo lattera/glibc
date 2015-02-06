@@ -27,8 +27,7 @@
 
 #define ELF_MACHINE_IREL	1
 
-/* Implement enough to get the build going again.  */
-#warning "NEED STT_GNU_IFUNC IMPLEMENTATION"
+/* There is no IFUNC implementation yet. Add stubs to allow builds.  */
 
 static inline struct fdesc
 __attribute ((always_inline))
