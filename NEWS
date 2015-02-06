@@ -60,7 +60,7 @@ Version 2.21
 
 * CVE-2104-7817 The wordexp function could ignore the WRDE_NOCMD flag
   under certain input conditions resulting in the execution of a shell for
-  command substitution when the applicaiton did not request it. The
+  command substitution when the application did not request it. The
   implementation now checks WRDE_NOCMD immediately before executing the
   shell and returns the error WRDE_CMDSUB as expected.
 
