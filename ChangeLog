@@ -1,5 +1,12 @@
 2015-02-06  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17932]
+	* soft-fp/op-common.h (_FP_FMA): Set exponent of result in case
+	where multiplication results in zero and third argument is finite
+	and nonzero.
+	* math/auto-libm-test-in: Add more tests of fma.
+	* math/auto-libm-test-out: Regenerated.
+
 	* soft-fp/op-common.h (_FP_CMP_CHECK_DENORM): New macro.
 	(_FP_CMP_CHECK_FLUSH_ZERO): Likewise.
 	(_FP_CMP): Use_FP_CMP_CHECK_DENORM and _FP_CMP_CHECK_FLUSH_ZERO.

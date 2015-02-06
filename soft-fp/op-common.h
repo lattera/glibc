@@ -1116,6 +1116,7 @@
 	  R##_s = Z##_s;						\
 	  _FP_FRAC_COPY_##wc (R, Z);					\
 	  R##_c = Z##_c;						\
+	  R##_e = Z##_e;						\
 	  break;							\
 									\
 	case _FP_CLS_COMBINE (FP_CLS_INF, FP_CLS_INF):			\

@@ -1024,6 +1024,16 @@ fma 1.0 -1.0 1.0
 fma -1.0 1.0 1.0
 fma -1.0 -1.0 -1.0
 
+fma 0 0 1
+fma 0 0 2
+fma 0 0 max
+fma 0 1 1
+fma 1 0 1
+fma 0 1 2
+fma 1 0 2
+fma 0 1 max
+fma 1 0 max
+
 # Bug 6801: errno setting may be missing.
 fma min min 0 missing-errno
 fma min min -0 missing-errno
