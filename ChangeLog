@@ -1,5 +1,8 @@
 2015-02-06  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/tst-cleanup2.c (do_test): Use signal rather than sigaction.
+	Drop trailing \n from perror argument.  Use return rather than exit.
+
 	* nptl/tst-cancel20.c (do_test): Conditionalize SA_SIGINFO-using tests
 	on [SA_SIGINFO].
 	* nptl/tst-cancel21.c (do_test): Likewise.

@@ -40,16 +40,11 @@ do_test (void)
      array.  Mark the return value as volatile so that it gets reloaded on
      return.  */
   volatile int ret = 0;
-  struct sigaction sa;
 
-  sa.sa_handler = sig_handler;
-  sigemptyset (&sa.sa_mask);
-  sa.sa_flags = SA_SIGINFO;
-
-  if (sigaction (SIGSEGV, &sa, 0))
+  if (signal (SIGSEGV, &sig_handler) == SIG_ERR)
     {
-      perror ("installing SIGSEGV handler\n");
-      exit (1);
+      perror ("installing SIGSEGV handler");
+      return 1;
     }
 
   puts ("Attempting to sprintf to null ptr");
