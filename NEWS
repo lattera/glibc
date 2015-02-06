@@ -27,10 +27,11 @@ Version 2.21
   17801, 17803, 17806, 17834, 17844, 17848, 17868, 17869, 17870, 17885,
   17892.
 
-* CVE-2015-1472 Under certain conditions wscanf can allocate too little
-  memory for the to-be-scanned arguments and overflow the allocated
-  buffer.  The implementation now correctly computes the required buffer
-  size when using malloc.
+* CVE-2015-1472 CVE-2015-1473 Under certain conditions wscanf can allocate
+  too little memory for the to-be-scanned arguments and overflow the
+  allocated buffer.  The implementation now correctly computes the required
+  buffer size when using malloc, and switches to malloc from alloca as
+  intended.
 
 * A new semaphore algorithm has been implemented in generic C code for all
   machines. Previous custom assembly implementations of semaphore were
