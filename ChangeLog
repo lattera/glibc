@@ -1,5 +1,9 @@
 2015-02-06  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/tst-join5.c: Drop #include <sys/syscall.h>.
+	(wait_code): New function replaces macro.
+	Call nanosleep rather than syscall.
+
 	* nptl/pt-system.c: Rewritten.  Put everything under
 	[SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_22)].
 	Use IFUNC to redirect when possible.

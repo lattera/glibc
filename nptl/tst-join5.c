@@ -22,15 +22,15 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
-#include <sys/syscall.h>
 
 
-#define wait_code()							      \
-  do {									      \
-    struct timespec ts = { .tv_sec = 0, .tv_nsec = 200000000 };		      \
-    while (syscall (__NR_nanosleep, &ts, &ts) < 0)			      \
-      /* nothing */;							      \
-  } while (0)
+static void
+wait_code (void)
+{
+  struct timespec ts = { .tv_sec = 0, .tv_nsec = 200000000 };
+  while (nanosleep (&ts, &ts) < 0)
+    ;
+}
 
 
 #ifdef WAIT_IN_CHILD
