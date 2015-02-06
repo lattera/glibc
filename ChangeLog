@@ -1,5 +1,11 @@
 2015-02-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* soft-fp/op-common.h (_FP_CMP_CHECK_DENORM): New macro.
+	(_FP_CMP_CHECK_FLUSH_ZERO): Likewise.
+	(_FP_CMP): Use_FP_CMP_CHECK_DENORM and _FP_CMP_CHECK_FLUSH_ZERO.
+	(_FP_CMP_EQ): Likewise.
+	(_FP_CMP_UNORD): Use _FP_CMP_CHECK_DENORM.
+
 	* soft-fp/op-common.h (FP_EXTEND): Rename to _FP_EXTEND_CNAN with
 	extra argument CHECK_NAN.  Redefine as wrapper around
 	_FP_EXTEND_CNAN.

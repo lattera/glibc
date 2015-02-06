@@ -1251,6 +1251,46 @@
     }									\
   while (0)
 
+/* Helper for comparisons.  If denormal operands would raise an
+   exception, check for them, and flush to zero as appropriate
+   (otherwise, we need only check and flush to zero if it might affect
+   the result, which is done later with _FP_CMP_CHECK_FLUSH_ZERO).  */
+#define _FP_CMP_CHECK_DENORM(fs, wc, X, Y)				\
+  do									\
+    {									\
+      if (FP_EX_DENORM != 0)						\
+	{								\
+	  /* We must ensure the correct exceptions are raised for	\
+	     denormal operands, even though this may not affect the	\
+	     result of the comparison.  */				\
+	  if (FP_DENORM_ZERO)						\
+	    {								\
+	      _FP_CHECK_FLUSH_ZERO (fs, wc, X);				\
+	      _FP_CHECK_FLUSH_ZERO (fs, wc, Y);				\
+	    }								\
+	  else								\
+	    {								\
+	      if ((X##_e == 0 && !_FP_FRAC_ZEROP_##wc (X))		\
+		  || (Y##_e == 0 && !_FP_FRAC_ZEROP_##wc (Y)))		\
+		FP_SET_EXCEPTION (FP_EX_DENORM);			\
+	    }								\
+	}								\
+    }									\
+  while (0)
+
+/* Helper for comparisons.  Check for flushing denormals for zero if
+   we didn't need to check earlier for any denormal operands.  */
+#define _FP_CMP_CHECK_FLUSH_ZERO(fs, wc, X, Y)	\
+  do						\
+    {						\
+      if (FP_EX_DENORM == 0)			\
+	{					\
+	  _FP_CHECK_FLUSH_ZERO (fs, wc, X);	\
+	  _FP_CHECK_FLUSH_ZERO (fs, wc, Y);	\
+	}					\
+    }						\
+  while (0)
+
 /* Main differential comparison routine.  The inputs should be raw not
    cooked.  The return is -1, 0, 1 for normal values, UN
    otherwise.  */
@@ -1258,6 +1298,7 @@
 #define _FP_CMP(fs, wc, ret, X, Y, un, ex)				\
   do									\
     {									\
+      _FP_CMP_CHECK_DENORM (fs, wc, X, Y);				\
       /* NANs are unordered.  */					\
       if ((X##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (X))	\
 	  || (Y##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (Y)))	\
@@ -1270,8 +1311,7 @@
 	  int _FP_CMP_is_zero_x;					\
 	  int _FP_CMP_is_zero_y;					\
 									\
-	  _FP_CHECK_FLUSH_ZERO (fs, wc, X);				\
-	  _FP_CHECK_FLUSH_ZERO (fs, wc, Y);				\
+	  _FP_CMP_CHECK_FLUSH_ZERO (fs, wc, X, Y);			\
 									\
 	  _FP_CMP_is_zero_x						\
 	    = (!X##_e && _FP_FRAC_ZEROP_##wc (X)) ? 1 : 0;		\
@@ -1306,6 +1346,7 @@
 #define _FP_CMP_EQ(fs, wc, ret, X, Y, ex)				\
   do									\
     {									\
+      _FP_CMP_CHECK_DENORM (fs, wc, X, Y);				\
       /* NANs are unordered.  */					\
       if ((X##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (X))	\
 	  || (Y##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (Y)))	\
@@ -1315,8 +1356,7 @@
 	}								\
       else								\
 	{								\
-	  _FP_CHECK_FLUSH_ZERO (fs, wc, X);				\
-	  _FP_CHECK_FLUSH_ZERO (fs, wc, Y);				\
+	  _FP_CMP_CHECK_FLUSH_ZERO (fs, wc, X, Y);			\
 									\
 	  (ret) = !(X##_e == Y##_e					\
 		    && _FP_FRAC_EQ_##wc (X, Y)				\
@@ -1331,6 +1371,7 @@
 #define _FP_CMP_UNORD(fs, wc, ret, X, Y, ex)				\
   do									\
     {									\
+      _FP_CMP_CHECK_DENORM (fs, wc, X, Y);				\
       (ret) = ((X##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (X))	\
 	       || (Y##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc (Y))); \
       if (ret)								\
