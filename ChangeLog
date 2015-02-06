@@ -1,5 +1,21 @@
 2015-02-06  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/tst-align2.c: Moved ...
+	* sysdeps/unix/sysv/linux/tst-align-clone.c: ... here.
+	* nptl/Makefile (tests): Remove tst-align2.
+	* sysdeps/unix/sysv/linux/Makefile
+	[$(subdir) = nptl] (tests): Add tst-align-clone.
+	* nptl/tst-getpid1.c: Moved ...
+	* sysdeps/unix/sysv/linux/tst-getpid1.c: ... here.
+	* nptl/tst-getpid2.c: Moved ...
+	* sysdeps/unix/sysv/linux/tst-getpid2.c: ... here.
+	* nptl/Makefile (tests): Move tst-getpid1 and tst-getpid2 ...
+	* sysdeps/unix/sysv/linux/Makefile
+	[$(subdir) = nptl] (tests): ... here.
+	* nptl/Makefile (tst-getpid2-ENV): Move variable ...
+	* sysdeps/unix/sysv/linux/Makefile
+	[$(subdir) = nptl] (tst-getpid2-ENV): ... here.
+
 	* nptl/tst-cleanup2.c (do_test): Use signal rather than sigaction.
 	Drop trailing \n from perror argument.  Use return rather than exit.
 

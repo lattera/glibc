@@ -229,7 +229,7 @@ tests = tst-typesizes \
 	tst-sem1 tst-sem2 tst-sem3 tst-sem4 tst-sem5 tst-sem6 tst-sem7 \
 	tst-sem8 tst-sem9 tst-sem10 tst-sem11 tst-sem12 tst-sem13 tst-sem14 \
 	tst-barrier1 tst-barrier2 tst-barrier3 tst-barrier4 \
-	tst-align tst-align2 tst-align3 \
+	tst-align tst-align3 \
 	tst-basic1 tst-basic2 tst-basic3 tst-basic4 tst-basic5 tst-basic6 \
 	tst-basic7 \
 	tst-kill1 tst-kill2 tst-kill3 tst-kill4 tst-kill5 tst-kill6 \
@@ -269,7 +269,7 @@ tests = tst-typesizes \
 	tst-backtrace1 \
 	tst-abstime \
 	tst-vfork1 tst-vfork2 tst-vfork1x tst-vfork2x \
-	tst-getpid1 tst-getpid2 tst-getpid3 \
+	tst-getpid3 \
 	tst-setuid3 \
 	tst-initializers1 $(addprefix tst-initializers1-,c89 gnu89 c99 gnu99) \
 	tst-bad-schedattr
@@ -462,11 +462,6 @@ CFLAGS-tst-initializers1-gnu99.c = $(CFLAGS-tst-initializers1-<)
 tst-cancel7-ARGS = --command "exec $(host-test-program-cmd)"
 tst-cancelx7-ARGS = $(tst-cancel7-ARGS)
 tst-umask1-ARGS = $(objpfx)tst-umask1.temp
-
-# In this test, we create a CLONE_VM "thread" that shares TLS storage
-# with the original thread. Both threads then race in ld.so with lazy PLT
-# resolution. Avoid this race by disabling lazy binding. BZ #11214.
-tst-getpid2-ENV = LD_BIND_NOW=1
 
 $(objpfx)tst-atfork2: $(libdl) $(shared-thread-library)
 LDFLAGS-tst-atfork2 = -rdynamic

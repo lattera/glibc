@@ -196,5 +196,10 @@ CFLAGS-gai.c += -DNEED_NETLINK
 endif
 
 ifeq ($(subdir),nptl)
-tests += tst-setgetname
+tests += tst-setgetname tst-align-clone tst-getpid1 tst-getpid2
+
+# In this test, we create a CLONE_VM "thread" that shares TLS storage
+# with the original thread. Both threads then race in ld.so with lazy PLT
+# resolution. Avoid this race by disabling lazy binding. BZ #11214.
+tst-getpid2-ENV = LD_BIND_NOW=1
 endif
