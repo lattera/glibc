@@ -7,6 +7,7 @@
 	* sysdeps/unix/sysv/linux/hppa/pthread.h: Sync with pthread.h.
 
 2015-02-05  Paul Pluzhnikov  <ppluzhnikov@google.com>
+	    Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #16618]
 	* stdio-common/tst-sscanf.c (main): Test for buffer overflow.
