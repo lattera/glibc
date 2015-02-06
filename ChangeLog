@@ -1,5 +1,10 @@
 2015-02-06  Roland McGrath  <roland@hack.frob.com>
 
+	* posix/tst-getlogin.c: Move to ...
+	* login/tst-getlogin.c: ... here.
+	* posix/Makefile (tests): Move tst-getlogin to ...
+	* login/Makefile (tests): ... here.
+
 	* libio/tst-atime.c (do_test): Move local variables SV and E
 	inside [ST_NOATIME] conditional.
 
