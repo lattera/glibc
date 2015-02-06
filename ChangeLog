@@ -1,5 +1,12 @@
 2015-02-06  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/tst-cancel20.c (do_test): Conditionalize SA_SIGINFO-using tests
+	on [SA_SIGINFO].
+	* nptl/tst-cancel21.c (do_test): Likewise.
+	* debug/tst-backtrace6.c: Include <signal.h> first thing.
+	Conditionalize inclusion of tst-backtrace5.c on [SA_SIGINFO].
+	[!SA_SIGINFO]: Make it a stub test.
+
 	* misc/tst-pselect.c (do_test): Don't set SA_NOCLDWAIT in sa_flags for
 	SIGCHLD; it's redundant	with SIG_IGN as sa_handler.
 

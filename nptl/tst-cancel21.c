@@ -257,6 +257,7 @@ do_test (void)
   if (do_one_test ())
     return 1;
 
+#ifdef SA_SIGINFO
   sa.sa_sigaction = (void (*)(int, siginfo_t *, void *)) sh;
   sigemptyset (&sa.sa_mask);
   sa.sa_flags = SA_SIGINFO;
@@ -284,6 +285,7 @@ do_test (void)
   puts ("sa_flags = SA_SIGINFO|SA_ONSTACK test");
   if (do_one_test ())
     return 1;
+#endif
 
   return 0;
 }
