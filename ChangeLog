@@ -1,3 +1,11 @@
+2015-02-05  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #16618]
+	* stdio-common/tst-sscanf.c (main): Test for buffer overflow.
+	* stdio-common/vfscanf.c (_IO_vfscanf_internal): Compute needed
+	size in bytes. Store needed elements in wpmax. Use needed size
+	in bytes for extend_alloca.
+
 2015-02-05  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* manual/install.texi: Latest tested versions are GCC 4.9.2,
