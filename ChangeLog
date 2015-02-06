@@ -1,3 +1,9 @@
+2015-02-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* soft-fp/op-common.h (FP_EXTEND): Rename to _FP_EXTEND_CNAN with
+	extra argument CHECK_NAN.  Redefine as wrapper around
+	_FP_EXTEND_CNAN.
+
 2015-02-06  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* version.h (RELEASE): Set to "stable".

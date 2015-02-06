@@ -1825,8 +1825,10 @@
 
 
 /* Extend from a narrower floating-point format to a wider one.  Input
-   and output are raw.  */
-#define FP_EXTEND(dfs, sfs, dwc, swc, D, S)				\
+   and output are raw.  If CHECK_NAN, then signaling NaNs are
+   converted to quiet with the "invalid" exception raised; otherwise
+   signaling NaNs remain signaling with no exception.  */
+#define _FP_EXTEND_CNAN(dfs, sfs, dwc, swc, D, S, check_nan)		\
   do									\
     {									\
       if (_FP_FRACBITS_##dfs < _FP_FRACBITS_##sfs			\
@@ -1876,17 +1878,21 @@
 	      D##_e = _FP_EXPMAX_##dfs;					\
 	      if (!_FP_FRAC_ZEROP_##swc (S))				\
 		{							\
-		  if (_FP_FRAC_SNANP (sfs, S))				\
+		  if (check_nan && _FP_FRAC_SNANP (sfs, S))		\
 		    FP_SET_EXCEPTION (FP_EX_INVALID			\
 				      | FP_EX_INVALID_SNAN);		\
 		  _FP_FRAC_SLL_##dwc (D, (_FP_FRACBITS_##dfs		\
 					  - _FP_FRACBITS_##sfs));	\
-		  _FP_SETQNAN (dfs, dwc, D);				\
+		  if (check_nan)					\
+		    _FP_SETQNAN (dfs, dwc, D);				\
 		}							\
 	    }								\
 	}								\
     }									\
   while (0)
+
+#define FP_EXTEND(dfs, sfs, dwc, swc, D, S)		\
+    _FP_EXTEND_CNAN (dfs, sfs, dwc, swc, D, S, 1)
 
 /* Truncate from a wider floating-point format to a narrower one.
    Input and output are semi-raw.  */
