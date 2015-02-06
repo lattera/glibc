@@ -1,5 +1,46 @@
 2015-02-05  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* manual/install.texi: Latest tested versions are GCC 4.9.2,
+	binutls 2.25, and texinfo 5.2.
+	* INSTALL: Regenerate.
+	* sysdeps/nios2/configure: Regenerate.
+	* sysdeps/unix/sysv/linux/nios2/configure: Regenerate.
+	* manual/contrib.texi: Update.
+	* po/be.po: Update.
+	* po/bg.po: Update.
+	* po/ca.po: Update.
+	* po/cs.po: Update.
+	* po/da.po: Update.
+	* po/de.po: Update.
+	* po/el.po: Update.
+	* po/eo.po: Update.
+	* po/es.po: Update.
+	* po/fi.po: Update.
+	* po/fr.po: Update.
+	* po/gl.po: Update.
+	* po/hr.po: Update.
+	* po/hu.po: Update.
+	* po/ia.po: Update.
+	* po/id.po: Update.
+	* po/it.po: Update.
+	* po/ja.po: Update.
+	* po/ko.po: Update.
+	* po/lt.po: Update.
+	* po/nb.po: Update.
+	* po/nl.po: Update.
+	* po/pl.po: Update.
+	* po/pt_BR.po: Update.
+	* po/ru.po: Update.
+	* po/rw.po: Update.
+	* po/sk.po: Update.
+	* po/sl.po: Update.
+	* po/sv.po: Update.
+	* po/tr.po: Update.
+	* po/uk.po: Update.
+	* po/vi.po: Update.
+	* po/zh_CN.po: Update.
+	* po/zh_TW.po: Update.
+
 	* sysdeps/hppa/Makefile (CFLAGS-dl-fptr.c): Add -Wno-error.
 	* sysdeps/hppa/bits/setjmp.h: Union is named __jmp_buf_internal_tag.
 	* sysdeps/hppa/dl-irel.h: Remove #warning.

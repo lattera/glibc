@@ -85,6 +85,10 @@ and wide-character support functions (@file{wctype.h}, @file{wchar.h}, etc.).
 @end itemize
 
 @item
+Richard Earnshaw for continued support and fixes to the various ARM
+machine files.
+
+@item
 Paul Eggert for the @code{mktime} function and for his direction as
 part of @theglibc{} steering committee.
 
@@ -280,6 +284,9 @@ framework for performance benchmarking of functions.
 Tom Quinn for contributing the startup code to support SunOS shared
 libraries and the port to SGI machines running Irix 4
 (@code{mips-sgi-irix4}).
+
+@item
+Torvald Riegel for the implementation of a new semaphore algorithm.
 
 @item
 Pravin Satpute for writing sorting rules for some Indian languages.

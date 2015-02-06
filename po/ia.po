@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.17-pre1\n"
-"POT-Creation-Date: 2012-12-07 15:10-0500\n"
+"POT-Creation-Date: 2015-01-20 22:14-0500\n"
 "PO-Revision-Date: 2013-04-26 04:10+0400\n"
 "Last-Translator: Nik Kalach <nik.kalach@inbox.ru>\n"
 "Language-Team: Interlingua <translation-team-ia@lists.sourceforge.net>\n"
@@ -65,32 +65,42 @@ msgstr "Monstrar iste lista de adjuta"
 msgid "Give a short usage message"
 msgstr "Monstrar un breve message de usage"
 
-#: argp/argp-parse.c:103
+#: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
+#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:105
+#: nss/makedb.c:120
+msgid "NAME"
+msgstr "NOMINE"
+
+#: argp/argp-parse.c:104
 msgid "Set the program name"
 msgstr "Assignar le nomine del programma"
 
 #: argp/argp-parse.c:105
+msgid "SECS"
+msgstr ""
+
+#: argp/argp-parse.c:106
 msgid "Hang for SECS seconds (default 3600)"
 msgstr "Pender durante SECS secundas (3600 per predefinition)"
 
-#: argp/argp-parse.c:166
+#: argp/argp-parse.c:167
 msgid "Print program version"
 msgstr "Monstrar le version del programma"
 
-#: argp/argp-parse.c:182
+#: argp/argp-parse.c:183
 msgid "(PROGRAM ERROR) No version known!?"
 msgstr "(ERROR DEL PROGRAMMA) Version incognite!?"
 
-#: argp/argp-parse.c:622
+#: argp/argp-parse.c:623
 #, c-format
 msgid "%s: Too many arguments\n"
 msgstr "%s: Tro de argumentos\n"
 
-#: argp/argp-parse.c:765
+#: argp/argp-parse.c:766
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(ERROR DEL PROGRAMMA) Le option se deberea haber recognoscite!?"
 
-#: assert/assert-perr.c:36
+#: assert/assert-perr.c:35
 #, c-format
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr "%s%s%s:%u: %s%sError impreviste: %s.\n"
@@ -104,10 +114,6 @@ msgstr ""
 "%s%s%s:%u: %s%sInsuccesso del assertion `%s'.\n"
 "%n"
 
-#: catgets/gencat.c:109 catgets/gencat.c:113 nscd/nscd.c:115 nss/makedb.c:119
-msgid "NAME"
-msgstr "NOMINE"
-
 #: catgets/gencat.c:110
 msgid "Create C header file NAME containing symbol definitions"
 msgstr "Crear un file de titulos C, NOMINE, que contine le definitiones de symbolos"
@@ -116,7 +122,7 @@ msgstr "Crear un file de titulos C, NOMINE, que contine le definitiones de symbo
 msgid "Do not use existing catalog, force new output file"
 msgstr "Non utilisar le catalogo existente, fortiar le generation de un nove file de output"
 
-#: catgets/gencat.c:113 nss/makedb.c:119
+#: catgets/gencat.c:113 nss/makedb.c:120
 msgid "Write output to file NAME"
 msgstr "Mitter le output in le file NOMINE"
 
@@ -136,12 +142,12 @@ msgstr ""
 "-o FILE-OUTPUT [FILE-INPUT]...\n"
 "[FILE-OUTPUT [FILE-INPUT]...]"
 
-#: catgets/gencat.c:235 debug/pcprofiledump.c:208 elf/ldconfig.c:302
-#: elf/pldd.c:222 elf/sln.c:85 elf/sprof.c:371 iconv/iconv_prog.c:408
-#: iconv/iconvconfig.c:383 locale/programs/locale.c:279
-#: locale/programs/localedef.c:363 login/programs/pt_chown.c:88
-#: malloc/memusagestat.c:536 nscd/nscd.c:459 nss/getent.c:965 nss/makedb.c:371
-#: posix/getconf.c:1121 sunrpc/rpcinfo.c:691
+#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:307
+#: elf/pldd.c:244 elf/sln.c:85 elf/sprof.c:372 iconv/iconv_prog.c:408
+#: iconv/iconvconfig.c:379 locale/programs/locale.c:277
+#: locale/programs/localedef.c:376 login/programs/pt_chown.c:88
+#: malloc/memusagestat.c:563 nss/getent.c:969 nss/makedb.c:369
+#: posix/getconf.c:486 sunrpc/rpcinfo.c:691
 #: sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
 msgid ""
@@ -151,13 +157,13 @@ msgstr ""
 "Pro le instructiones a reportar errores, consulta:\n"
 "%s.\n"
 
-#: catgets/gencat.c:251 debug/pcprofiledump.c:224 debug/xtrace.sh:64
-#: elf/ldconfig.c:318 elf/ldd.bash.in:38 elf/pldd.c:238 elf/sotruss.ksh:75
-#: elf/sprof.c:388 iconv/iconv_prog.c:425 iconv/iconvconfig.c:400
-#: locale/programs/locale.c:296 locale/programs/localedef.c:389
+#: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
+#: elf/ldconfig.c:323 elf/ldd.bash.in:38 elf/pldd.c:260 elf/sotruss.sh:75
+#: elf/sprof.c:389 iconv/iconv_prog.c:425 iconv/iconvconfig.c:396
+#: locale/programs/locale.c:294 locale/programs/localedef.c:402
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:71
-#: malloc/memusagestat.c:552 nscd/nscd.c:475 nss/getent.c:86 nss/makedb.c:387
-#: posix/getconf.c:1103 sysdeps/unix/sysv/linux/lddlibc4.c:68
+#: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:86 nss/makedb.c:385
+#: posix/getconf.c:468 sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -168,123 +174,123 @@ msgstr ""
 "Isto es software libere; vide le fontes pro le conditiones de reproduction.\n"
 "NULLE garantia; atque pro MERCABILETATE o APTITUDE PRO UN PROPOSITO PARTICULAR.\n"
 
-#: catgets/gencat.c:256 debug/pcprofiledump.c:229 debug/xtrace.sh:68
-#: elf/ldconfig.c:323 elf/pldd.c:243 elf/sprof.c:394 iconv/iconv_prog.c:430
-#: iconv/iconvconfig.c:405 locale/programs/locale.c:301
-#: locale/programs/localedef.c:394 malloc/memusage.sh:75
-#: malloc/memusagestat.c:557 nscd/nscd.c:480 nss/getent.c:91 nss/makedb.c:392
-#: posix/getconf.c:1108
+#: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
+#: elf/ldconfig.c:328 elf/pldd.c:265 elf/sprof.c:395 iconv/iconv_prog.c:430
+#: iconv/iconvconfig.c:401 locale/programs/locale.c:299
+#: locale/programs/localedef.c:407 malloc/memusage.sh:75
+#: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:91 nss/makedb.c:390
+#: posix/getconf.c:473
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Scribite per %s.\n"
 
-#: catgets/gencat.c:287
+#: catgets/gencat.c:281
 msgid "*standard input*"
 msgstr "*input standard*"
 
-#: catgets/gencat.c:293 iconv/iconv_charmap.c:169 iconv/iconv_prog.c:293
-#: nss/makedb.c:248
+#: catgets/gencat.c:287 iconv/iconv_charmap.c:167 iconv/iconv_prog.c:293
+#: nss/makedb.c:246
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "impossibile de aperir le file de entrata `%s'"
 
-#: catgets/gencat.c:422 catgets/gencat.c:497
+#: catgets/gencat.c:416 catgets/gencat.c:491
 msgid "illegal set number"
 msgstr "numero de collection impermissibile"
 
-#: catgets/gencat.c:449
+#: catgets/gencat.c:443
 msgid "duplicate set definition"
 msgstr "duple definition de collection"
 
-#: catgets/gencat.c:451 catgets/gencat.c:623 catgets/gencat.c:675
+#: catgets/gencat.c:445 catgets/gencat.c:617 catgets/gencat.c:669
 msgid "this is the first definition"
 msgstr "isto es le prime definition"
 
-#: catgets/gencat.c:522
+#: catgets/gencat.c:516
 #, c-format
 msgid "unknown set `%s'"
 msgstr "collection `%s' incognite"
 
-#: catgets/gencat.c:563
+#: catgets/gencat.c:557
 msgid "invalid quote character"
 msgstr "character de citation incorrecte"
 
-#: catgets/gencat.c:576
+#: catgets/gencat.c:570
 #, c-format
 msgid "unknown directive `%s': line ignored"
 msgstr "directiva `%s' incognite: linea ignorate"
 
-#: catgets/gencat.c:621
+#: catgets/gencat.c:615
 msgid "duplicated message number"
 msgstr "numero de message duplicate"
 
-#: catgets/gencat.c:672
+#: catgets/gencat.c:666
 msgid "duplicated message identifier"
 msgstr "identificator de message duplicate"
 
-#: catgets/gencat.c:729
+#: catgets/gencat.c:723
 msgid "invalid character: message ignored"
 msgstr "character incorrecte: message ignorate"
 
-#: catgets/gencat.c:772
+#: catgets/gencat.c:766
 msgid "invalid line"
 msgstr "linea incorrecte"
 
-#: catgets/gencat.c:826
+#: catgets/gencat.c:820
 msgid "malformed line ignored"
 msgstr "linea malformate ignorate"
 
-#: catgets/gencat.c:990 catgets/gencat.c:1031
+#: catgets/gencat.c:984 catgets/gencat.c:1025
 #, c-format
 msgid "cannot open output file `%s'"
 msgstr "impossibile de aperir le file de output `%s'"
 
-#: catgets/gencat.c:1193 locale/programs/linereader.c:559
+#: catgets/gencat.c:1187 locale/programs/linereader.c:560
 msgid "invalid escape sequence"
 msgstr "sequentia de escappamento incorrecte"
 
-#: catgets/gencat.c:1215
+#: catgets/gencat.c:1209
 msgid "unterminated message"
 msgstr "message non terminate"
 
-#: catgets/gencat.c:1239
+#: catgets/gencat.c:1233
 #, c-format
 msgid "while opening old catalog file"
 msgstr "durante del apertura del vetule file de catalogo"
 
-#: catgets/gencat.c:1330
+#: catgets/gencat.c:1324
 #, c-format
 msgid "conversion modules not available"
 msgstr "modulos de conversion indisponibile"
 
-#: catgets/gencat.c:1356
+#: catgets/gencat.c:1350
 #, c-format
 msgid "cannot determine escape character"
 msgstr "impossibile de determinar le character de escappamento"
 
-#: debug/pcprofiledump.c:52
+#: debug/pcprofiledump.c:53
 msgid "Don't buffer output"
 msgstr "non accumular resultatos in le buffer de output"
 
-#: debug/pcprofiledump.c:57
+#: debug/pcprofiledump.c:58
 msgid "Dump information generated by PC profiling."
 msgstr "Discargar information generate durante le profilage PC."
 
-#: debug/pcprofiledump.c:60
+#: debug/pcprofiledump.c:61
 msgid "[FILE]"
 msgstr "[FILE]"
 
-#: debug/pcprofiledump.c:107
+#: debug/pcprofiledump.c:108
 #, c-format
 msgid "cannot open input file"
 msgstr "impossibile de aperir le file de entrata"
 
-#: debug/pcprofiledump.c:114
+#: debug/pcprofiledump.c:115
 #, c-format
 msgid "cannot read header"
 msgstr "impossibile de leger le testa"
 
-#: debug/pcprofiledump.c:178
+#: debug/pcprofiledump.c:179
 #, c-format
 msgid "invalid pointer size"
 msgstr "Dimension de punctator incorrecte"
@@ -293,8 +299,8 @@ msgstr "Dimension de punctator incorrecte"
 msgid "Usage: xtrace [OPTION]... PROGRAM [PROGRAMOPTION]...\\n"
 msgstr "Usage: xtrace [OPTION]... PROGRAMMA [OPTION-DE-PROGRAMMA]...\\n"
 
-#: debug/xtrace.sh:32 elf/sotruss.ksh:56 elf/sotruss.ksh:67
-#: elf/sotruss.ksh:135 malloc/memusage.sh:26
+#: debug/xtrace.sh:32 elf/sotruss.sh:56 elf/sotruss.sh:67 elf/sotruss.sh:135
+#: malloc/memusage.sh:26
 msgid "Try \\`%s --help' or \\`%s --usage' for more information.\\n"
 msgstr "Tenta \\`%s --help' o \\`%s --usage' pro plus de information.\\n"
 
@@ -328,7 +334,7 @@ msgstr ""
 "Le argumentos obligatori pro le optiones longe es anque obligatori pro le optiones curte correspondente.\n"
 "\n"
 
-#: debug/xtrace.sh:57 elf/ldd.bash.in:55 elf/sotruss.ksh:49
+#: debug/xtrace.sh:57 elf/ldd.bash.in:55 elf/sotruss.sh:49
 #: malloc/memusage.sh:64
 msgid "For bug reporting instructions, please see:\\\\n%s.\\\\n"
 msgstr "Pro le instructiones a reportar errores, consulta:\\\\n%s.\\\\n"
@@ -371,64 +377,64 @@ msgstr "modo invalide"
 msgid "invalid mode parameter"
 msgstr "parametro de modo incorrecte"
 
-#: elf/cache.c:68
+#: elf/cache.c:69
 msgid "unknown"
 msgstr "incognite"
 
-#: elf/cache.c:121
+#: elf/cache.c:135
 msgid "Unknown OS"
 msgstr "Systema operative incognite"
 
-#: elf/cache.c:126
+#: elf/cache.c:140
 #, c-format
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", ABI del systema operative: %s %d.%d.%d"
 
-#: elf/cache.c:143 elf/ldconfig.c:1309
+#: elf/cache.c:157 elf/ldconfig.c:1340
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Impossibile de aperir le file de cache %s\n"
 
-#: elf/cache.c:157
+#: elf/cache.c:171
 #, c-format
 msgid "mmap of cache file failed.\n"
 msgstr "mmap sur le file de cache ha fallite.\n"
 
-#: elf/cache.c:161 elf/cache.c:175
+#: elf/cache.c:175 elf/cache.c:189
 #, c-format
 msgid "File is not a cache file.\n"
 msgstr "Le file non es un file de cache.\n"
 
-#: elf/cache.c:208 elf/cache.c:218
+#: elf/cache.c:222 elf/cache.c:232
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr "%d bibliothecas trovate in le cache `%s'\n"
 
-#: elf/cache.c:412
+#: elf/cache.c:426
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "Impossibile de crear le file de cache temporari %s"
 
-#: elf/cache.c:420 elf/cache.c:430 elf/cache.c:434 elf/cache.c:439
+#: elf/cache.c:434 elf/cache.c:444 elf/cache.c:448 elf/cache.c:453
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "Insuccesso al scriber le datos de cache"
 
-#: elf/cache.c:444
+#: elf/cache.c:458
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "Insuccesso del modification del derectos de accesso de %s a %#o"
 
-#: elf/cache.c:449
+#: elf/cache.c:463
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "Insuccesso del cambiamento de nomine %s a %s"
 
-#: elf/dl-close.c:378 elf/dl-open.c:474
+#: elf/dl-close.c:385 elf/dl-open.c:470
 msgid "cannot create scope list"
 msgstr "impossibile de crear un lista de ambito"
 
-#: elf/dl-close.c:771
+#: elf/dl-close.c:770
 msgid "shared object not open"
 msgstr "objecto condivise non aperte"
 
@@ -445,211 +451,211 @@ msgstr "substitution de DST vacue"
 msgid "cannot load auxiliary `%s' because of empty dynamic string token substitution\n"
 msgstr "impossibile de cargar le `%s' auxiliar a causa del substitution de DST vacue\n"
 
-#: elf/dl-deps.c:483
+#: elf/dl-deps.c:467
 msgid "cannot allocate dependency list"
 msgstr "impossibile de allocar un lista de dependentias "
 
-#: elf/dl-deps.c:520 elf/dl-deps.c:580
+#: elf/dl-deps.c:504 elf/dl-deps.c:564
 msgid "cannot allocate symbol search list"
 msgstr "impossibile de allocar un lista pro le cerca de symbolos"
 
-#: elf/dl-deps.c:560
+#: elf/dl-deps.c:544
 msgid "Filters not supported with LD_TRACE_PRELINKING"
 msgstr "Filtros non es supportate con LD_TRACE_PRELINKING"
 
-#: elf/dl-error.c:76
+#: elf/dl-error.c:77
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "PROBLEMA CON LE EDITOR DE LIGAMINES DYNAMIC!!!"
 
-#: elf/dl-error.c:123
+#: elf/dl-error.c:127
 msgid "error while loading shared libraries"
 msgstr "error durante le cargamento del bibliothecas condivise"
 
-#: elf/dl-fptr.c:87 ports/sysdeps/hppa/dl-fptr.c:93
+#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:94
 msgid "cannot map pages for fdesc table"
 msgstr "impossibile de effectuar mmap pro le tabula fdesc"
 
-#: elf/dl-fptr.c:191 ports/sysdeps/hppa/dl-fptr.c:206
+#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:207
 msgid "cannot map pages for fptr table"
 msgstr "impossibile de effectuar mmap pro le tabula fptr"
 
-#: elf/dl-fptr.c:220 ports/sysdeps/hppa/dl-fptr.c:235
+#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:236
 msgid "internal error: symidx out of range of fptr table"
 msgstr "error interne: symidx es in exterior del tabula fptr"
 
-#: elf/dl-hwcaps.c:173 elf/dl-hwcaps.c:185
+#: elf/dl-hwcaps.c:184 elf/dl-hwcaps.c:196
 msgid "cannot create capability list"
 msgstr "impossibile de crear un lista de capabilitates"
 
-#: elf/dl-load.c:471
+#: elf/dl-load.c:410
 msgid "cannot allocate name record"
 msgstr "impossibile de allocar un entrata de nomine"
 
-#: elf/dl-load.c:548 elf/dl-load.c:664 elf/dl-load.c:749 elf/dl-load.c:862
+#: elf/dl-load.c:495 elf/dl-load.c:611 elf/dl-load.c:694 elf/dl-load.c:813
 msgid "cannot create cache for search path"
 msgstr "impossibile de crear un cache pro le percurso de cerca"
 
-#: elf/dl-load.c:639
+#: elf/dl-load.c:586
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "impossibile de crear un copia de RUNPATH/RPATH"
 
-#: elf/dl-load.c:735
+#: elf/dl-load.c:680
 msgid "cannot create search path array"
 msgstr "impossibile de crear un array del percurso de cerca"
 
-#: elf/dl-load.c:934
+#: elf/dl-load.c:885
 msgid "cannot stat shared object"
 msgstr "impossibile de effectuar stat sur le objecto condivise"
 
-#: elf/dl-load.c:1012
+#: elf/dl-load.c:963
 msgid "cannot open zero fill device"
 msgstr "impossibile de aperir un dispositovo de impletion con zeros"
 
-#: elf/dl-load.c:1059 elf/dl-load.c:2339
+#: elf/dl-load.c:1010 elf/dl-load.c:2165
 msgid "cannot create shared object descriptor"
 msgstr "impossibile de crear un descriptor de objecto condivise"
 
-#: elf/dl-load.c:1078 elf/dl-load.c:1751 elf/dl-load.c:1854
+#: elf/dl-load.c:1029 elf/dl-load.c:1570 elf/dl-load.c:1682
 msgid "cannot read file data"
 msgstr "impossibile de leger datos del file"
 
-#: elf/dl-load.c:1124
+#: elf/dl-load.c:1069
 msgid "ELF load command alignment not page-aligned"
 msgstr "Le commando de cargar ELF non es alineate a un pagina"
 
-#: elf/dl-load.c:1131
+#: elf/dl-load.c:1076
 msgid "ELF load command address/offset not properly aligned"
 msgstr "Le adresso o displaciamento del commando de cargar ELF non es alineate correctemente"
 
-#: elf/dl-load.c:1216
+#: elf/dl-load.c:1160
 msgid "cannot allocate TLS data structures for initial thread"
 msgstr "impossibile de allocar le structura de datos TLS pro le filo initial"
 
-#: elf/dl-load.c:1239
+#: elf/dl-load.c:1183
 msgid "cannot handle TLS data"
 msgstr "impossibile de tractar datos TLS"
 
-#: elf/dl-load.c:1258
+#: elf/dl-load.c:1202
 msgid "object file has no loadable segments"
 msgstr "le file de objecto non ha segmentos cargabile"
 
-#: elf/dl-load.c:1294
-msgid "failed to map segment from shared object"
-msgstr "insuccesso de mmap sur un objecto condivise"
-
-#: elf/dl-load.c:1320
+#: elf/dl-load.c:1211 elf/dl-load.c:1662
 msgid "cannot dynamically load executable"
 msgstr "impossibile de cargar dynamicamente un executabile"
 
-#: elf/dl-load.c:1383
-msgid "cannot change memory protections"
-msgstr "impossibile de modificar le protection de memoria"
-
-#: elf/dl-load.c:1402
-msgid "cannot map zero-fill pages"
-msgstr "impossibile de mmap paginas del dispositivo de impletion con zeros"
-
-#: elf/dl-load.c:1416
+#: elf/dl-load.c:1232
 msgid "object file has no dynamic section"
 msgstr "le file de objecto non ha un section dynamic"
 
-#: elf/dl-load.c:1439
+#: elf/dl-load.c:1255
 msgid "shared object cannot be dlopen()ed"
 msgstr "le objecto condivise non pote esser aperite via dlopen()"
 
-#: elf/dl-load.c:1452
+#: elf/dl-load.c:1268
 msgid "cannot allocate memory for program header"
 msgstr "impossibile de allocar le memoria pro un testa de programma"
 
-#: elf/dl-load.c:1469 elf/dl-open.c:180
+#: elf/dl-load.c:1284 elf/dl-open.c:195
 msgid "invalid caller"
 msgstr "appellante invalide"
 
-#: elf/dl-load.c:1508
+#: elf/dl-load.c:1307 elf/dl-load.h:130
+msgid "cannot change memory protections"
+msgstr "impossibile de modificar le protection de memoria"
+
+#: elf/dl-load.c:1327
 msgid "cannot enable executable stack as shared object requires"
 msgstr "impossibile de habilitar un pila executabile como le objecto condivise necessita"
 
-#: elf/dl-load.c:1521
+#: elf/dl-load.c:1340
 msgid "cannot close file descriptor"
 msgstr "impossibile de clauder un descriptor de file"
 
-#: elf/dl-load.c:1751
+#: elf/dl-load.c:1570
 msgid "file too short"
 msgstr "file troppo curte"
 
-#: elf/dl-load.c:1787
+#: elf/dl-load.c:1605
 msgid "invalid ELF header"
 msgstr "testa ELF incorrecte"
 
-#: elf/dl-load.c:1799
+#: elf/dl-load.c:1617
 msgid "ELF file data encoding not big-endian"
 msgstr "le codification de datos del file ELF non es big-endian"
 
-#: elf/dl-load.c:1801
+#: elf/dl-load.c:1619
 msgid "ELF file data encoding not little-endian"
 msgstr "le codification de datos del file ELF non es little-endian"
 
-#: elf/dl-load.c:1805
+#: elf/dl-load.c:1623
 msgid "ELF file version ident does not match current one"
 msgstr "le identificator de version del file ELF non corresponde con le version actual"
 
-#: elf/dl-load.c:1809
+#: elf/dl-load.c:1627
 msgid "ELF file OS ABI invalid"
 msgstr "ABI de systema operative del file ELF invalide"
 
-#: elf/dl-load.c:1812
+#: elf/dl-load.c:1630
 msgid "ELF file ABI version invalid"
 msgstr "Version de ABI del file ELF invalide"
 
-#: elf/dl-load.c:1815
+#: elf/dl-load.c:1633
 msgid "nonzero padding in e_ident"
 msgstr "impletion con non-zeros in e_ident"
 
-#: elf/dl-load.c:1818
+#: elf/dl-load.c:1636
 msgid "internal error"
 msgstr "error interne"
 
-#: elf/dl-load.c:1825
+#: elf/dl-load.c:1643
 msgid "ELF file version does not match current one"
 msgstr "Le version del file ELF non corresponde con le version actual"
 
-#: elf/dl-load.c:1833
+#: elf/dl-load.c:1651
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "solo ET_DYN e ET_EXEC pote esser cargate"
 
-#: elf/dl-load.c:1839
+#: elf/dl-load.c:1667
 msgid "ELF file's phentsize not the expected size"
 msgstr "Le valor `phentsize' del file ELF non concorda con le expectation"
 
-#: elf/dl-load.c:2358
+#: elf/dl-load.c:2184
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "classe ELF incorrecte: ELFCLASS64"
 
-#: elf/dl-load.c:2359
+#: elf/dl-load.c:2185
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "classe ELF incorrecte: ELFCLASS32"
 
-#: elf/dl-load.c:2362
+#: elf/dl-load.c:2188
 msgid "cannot open shared object file"
 msgstr "impossibile de aperir un file de objecto condivise"
 
-#: elf/dl-lookup.c:757 ports/sysdeps/mips/dl-lookup.c:774
+#: elf/dl-load.h:128
+msgid "failed to map segment from shared object"
+msgstr "insuccesso de mmap sur un objecto condivise"
+
+#: elf/dl-load.h:132
+msgid "cannot map zero-fill pages"
+msgstr "impossibile de mmap paginas del dispositivo de impletion con zeros"
+
+#: elf/dl-lookup.c:791
 msgid "relocation error"
 msgstr "error de relocation"
 
-#: elf/dl-lookup.c:786 ports/sysdeps/mips/dl-lookup.c:803
+#: elf/dl-lookup.c:818
 msgid "symbol lookup error"
 msgstr "error de cerca de symbolo"
 
-#: elf/dl-open.c:110
+#: elf/dl-open.c:102
 msgid "cannot extend global scope"
 msgstr "impossibile de extender le ambito global"
 
-#: elf/dl-open.c:524
+#: elf/dl-open.c:520
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "Le contator de generation TLS ha permitite! Reporta iste problema."
 
-#: elf/dl-open.c:546
+#: elf/dl-open.c:542
 msgid "cannot load any more object with static TLS"
 msgstr "impossibile de cargar necun altere objectos con TLS static"
 
@@ -669,33 +675,33 @@ msgstr "spatio de nomines de destination invalide in dlmopen()"
 msgid "cannot allocate memory in static TLS block"
 msgstr "impossibile de allocar memoria in un bloco TLS static"
 
-#: elf/dl-reloc.c:213
+#: elf/dl-reloc.c:212
 msgid "cannot make segment writable for relocation"
 msgstr "impossibile de render un segmento scribibile pro le relocation"
 
-#: elf/dl-reloc.c:276
+#: elf/dl-reloc.c:275
 #, c-format
 msgid "%s: no PLTREL found in object %s\n"
 msgstr "%s: necun PLTREL trovate in le objecto %s\n"
 
-#: elf/dl-reloc.c:287
+#: elf/dl-reloc.c:290
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: memoria exhauste pro immagazinar le resultatos de relocation pro %s\n"
 
-#: elf/dl-reloc.c:303
+#: elf/dl-reloc.c:306
 msgid "cannot restore segment prot after reloc"
 msgstr "impossibile de restabilir le protection del segmento post le relocation"
 
-#: elf/dl-reloc.c:332
+#: elf/dl-reloc.c:335
 msgid "cannot apply additional memory protection after relocation"
 msgstr "impossibile de applicar le protection de memoria additional post le relocation"
 
-#: elf/dl-sym.c:163
+#: elf/dl-sym.c:153
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT usate in le codice non cargate dynamicamente"
 
-#: elf/dl-tls.c:875
+#: elf/dl-tls.c:933
 msgid "cannot create TLS data structures"
 msgstr "impossibile de crear structuras de datos TLS"
 
@@ -703,224 +709,224 @@ msgstr "impossibile de crear structuras de datos TLS"
 msgid "version lookup error"
 msgstr "error de cerca de version"
 
-#: elf/dl-version.c:297
+#: elf/dl-version.c:296
 msgid "cannot allocate version reference table"
 msgstr "impossibile de allocar le tabula de referentias a versiones"
 
-#: elf/ldconfig.c:140
+#: elf/ldconfig.c:141
 msgid "Print cache"
 msgstr "Monstrar le cache"
 
-#: elf/ldconfig.c:141
+#: elf/ldconfig.c:142
 msgid "Generate verbose messages"
 msgstr "Monstrar messages in modo verbose"
 
-#: elf/ldconfig.c:142
+#: elf/ldconfig.c:143
 msgid "Don't build cache"
 msgstr "Non construer le cache"
 
-#: elf/ldconfig.c:143
+#: elf/ldconfig.c:144
 msgid "Don't generate links"
 msgstr "Non generar le ligamines"
 
-#: elf/ldconfig.c:144
+#: elf/ldconfig.c:145
 msgid "Change to and use ROOT as root directory"
 msgstr "Passar a RADICE e utilisar lo como un directorio de radice"
 
-#: elf/ldconfig.c:144
+#: elf/ldconfig.c:145
 msgid "ROOT"
 msgstr "RADICE"
 
-#: elf/ldconfig.c:145
+#: elf/ldconfig.c:146
 msgid "CACHE"
 msgstr "CACHE"
 
-#: elf/ldconfig.c:145
+#: elf/ldconfig.c:146
 msgid "Use CACHE as cache file"
 msgstr "Utilisar CACHE como un file de cache"
 
-#: elf/ldconfig.c:146
+#: elf/ldconfig.c:147
 msgid "CONF"
 msgstr "CONF"
 
-#: elf/ldconfig.c:146
+#: elf/ldconfig.c:147
 msgid "Use CONF as configuration file"
 msgstr "Utilisar CONF como un file de configuration"
 
-#: elf/ldconfig.c:147
+#: elf/ldconfig.c:148
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "Tractar solo le directorios specificate in le linea de commando. Non construer le cache."
 
-#: elf/ldconfig.c:148
+#: elf/ldconfig.c:149
 msgid "Manually link individual libraries."
 msgstr "Ligar manualmente le bibliothecas individual."
 
-#: elf/ldconfig.c:149
+#: elf/ldconfig.c:150
 msgid "FORMAT"
 msgstr "FORMATO"
 
-#: elf/ldconfig.c:149
+#: elf/ldconfig.c:150
 msgid "Format to use: new, old or compat (default)"
 msgstr "Formato a usar: `new', `old' o `compat' (predefinition)"
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:151
 msgid "Ignore auxiliary cache file"
 msgstr "Ignorar le file de cache auxiliar"
 
-#: elf/ldconfig.c:158
+#: elf/ldconfig.c:159
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "Configurar le associationes de tempore de execution del editor de ligamines dynamic."
 
-#: elf/ldconfig.c:341
+#: elf/ldconfig.c:346
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "Percurso `%s' fornite plus de un vice"
 
-#: elf/ldconfig.c:381
+#: elf/ldconfig.c:386
 #, c-format
 msgid "%s is not a known library type"
 msgstr "%s non es un typo de bibliotheca cognite"
 
-#: elf/ldconfig.c:409
+#: elf/ldconfig.c:414
 #, c-format
 msgid "Can't stat %s"
 msgstr "Impossibile de effectuar stat sur %s"
 
-#: elf/ldconfig.c:483
+#: elf/ldconfig.c:488
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "Impossibile de effectuar stat sur %s\n"
 
-#: elf/ldconfig.c:493
+#: elf/ldconfig.c:498
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s non es un ligamine symbolic\n"
 
-#: elf/ldconfig.c:512
+#: elf/ldconfig.c:517
 #, c-format
 msgid "Can't unlink %s"
 msgstr "Impossibile de efectuar unlink sur %s"
 
-#: elf/ldconfig.c:518
+#: elf/ldconfig.c:523
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "Impossibile de crear un ligamine de %s a %s"
 
-#: elf/ldconfig.c:524
+#: elf/ldconfig.c:529
 msgid " (changed)\n"
 msgstr " (cambiate)\n"
 
-#: elf/ldconfig.c:526
+#: elf/ldconfig.c:531
 msgid " (SKIPPED)\n"
 msgstr " (OMITTITE)\n"
 
-#: elf/ldconfig.c:581
+#: elf/ldconfig.c:586
 #, c-format
 msgid "Can't find %s"
 msgstr "Impossibile de trovar %s"
 
-#: elf/ldconfig.c:597 elf/ldconfig.c:770 elf/ldconfig.c:829 elf/ldconfig.c:863
+#: elf/ldconfig.c:602 elf/ldconfig.c:775 elf/ldconfig.c:834 elf/ldconfig.c:868
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Impossibile de effectuar lstat sur %s"
 
-#: elf/ldconfig.c:604
+#: elf/ldconfig.c:609
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "Le file %s es ignorate proque illo non es un file regular."
 
-#: elf/ldconfig.c:613
+#: elf/ldconfig.c:618
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "Ligamine non create proque il non esseva possibile trovar le so-nomine pro %s"
 
-#: elf/ldconfig.c:696
+#: elf/ldconfig.c:701
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Impossibile de aperir le directorio %s"
 
-#: elf/ldconfig.c:788 elf/ldconfig.c:850 elf/readlib.c:90
+#: elf/ldconfig.c:793 elf/ldconfig.c:855 elf/readlib.c:90
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Le file de entrata %s non trovate.\n"
 
-#: elf/ldconfig.c:795
+#: elf/ldconfig.c:800
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Impossibile de effectuar stat sur %s"
 
-#: elf/ldconfig.c:924
+#: elf/ldconfig.c:951
 #, c-format
 msgid "libc5 library %s in wrong directory"
 msgstr "bibliotheca libc5 %s es in un directorio incorrecte"
 
-#: elf/ldconfig.c:927
+#: elf/ldconfig.c:954
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "bibliotheca libc6 %s es in un directorio incorrecte"
 
-#: elf/ldconfig.c:930
+#: elf/ldconfig.c:957
 #, c-format
 msgid "libc4 library %s in wrong directory"
 msgstr "bibliotheca libc4 %s es in un directorio incorrecte"
 
-#: elf/ldconfig.c:958
+#: elf/ldconfig.c:985
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "Le bibliothecas %s e %s es in le directorio %s ha le mesme so-nomine, ma lor typo es differente."
 
-#: elf/ldconfig.c:1067
+#: elf/ldconfig.c:1094
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "Advertimento: ignorar le file de configuration que non pote esser aperite: %s"
 
-#: elf/ldconfig.c:1133
+#: elf/ldconfig.c:1160
 #, c-format
 msgid "%s:%u: bad syntax in hwcap line"
 msgstr "%s:%u: syntaxe incorrecte in le linea hwcap"
 
-#: elf/ldconfig.c:1139
+#: elf/ldconfig.c:1166
 #, c-format
 msgid "%s:%u: hwcap index %lu above maximum %u"
 msgstr "%s:%u: le indice hwcap %lu superpassa le maximo %u"
 
-#: elf/ldconfig.c:1146 elf/ldconfig.c:1154
+#: elf/ldconfig.c:1173 elf/ldconfig.c:1181
 #, c-format
 msgid "%s:%u: hwcap index %lu already defined as %s"
 msgstr "%s:%u: le indice hwcap %lu jam definite como %s"
 
-#: elf/ldconfig.c:1157
+#: elf/ldconfig.c:1184
 #, c-format
 msgid "%s:%u: duplicate hwcap %lu %s"
 msgstr "%s:%u: hwcap duplicate %lu %s"
 
-#: elf/ldconfig.c:1179
+#: elf/ldconfig.c:1206
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "il es necessari usar le nomine absolute pro le file de configuration quando on utilisa -r"
 
-#: elf/ldconfig.c:1186 locale/programs/xmalloc.c:65 malloc/obstack.c:433
-#: malloc/obstack.c:435 posix/getconf.c:1076 posix/getconf.c:1296
+#: elf/ldconfig.c:1213 locale/programs/xmalloc.c:64 malloc/obstack.c:416
+#: malloc/obstack.c:418 posix/getconf.c:441 posix/getconf.c:661
 #, c-format
 msgid "memory exhausted"
 msgstr "memoria exhaurite"
 
-#: elf/ldconfig.c:1218
+#: elf/ldconfig.c:1245
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: impossibile de leger le directorio %s"
 
-#: elf/ldconfig.c:1262
+#: elf/ldconfig.c:1289
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "percurso relative `%s' usate pro construer le cache"
 
-#: elf/ldconfig.c:1288
+#: elf/ldconfig.c:1319
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Impossibile de effectuar chdir a /"
 
-#: elf/ldconfig.c:1329
+#: elf/ldconfig.c:1360
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Impossibile de aperir le directorio de files de cache %s\n"
@@ -955,38 +961,38 @@ msgstr "ldd: le option \\`$1' es ambigue"
 msgid "unrecognized option"
 msgstr "option non recognoscite"
 
-#: elf/ldd.bash.in:88 elf/ldd.bash.in:126
+#: elf/ldd.bash.in:88 elf/ldd.bash.in:125
 msgid "Try \\`ldd --help' for more information."
 msgstr "Tenta \\`ldd --help' pro plus de information."
 
-#: elf/ldd.bash.in:125
+#: elf/ldd.bash.in:124
 msgid "missing file arguments"
 msgstr "argumentos de file mancante"
 
 #. TRANS No such file or directory.  This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
-#: elf/ldd.bash.in:148 sysdeps/gnu/errlist.c:36
+#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.c:37
 msgid "No such file or directory"
 msgstr "Necun tal file o directorio"
 
-#: elf/ldd.bash.in:151 inet/rcmd.c:488
+#: elf/ldd.bash.in:150 inet/rcmd.c:488
 msgid "not regular file"
 msgstr "le file non es regular"
 
-#: elf/ldd.bash.in:154
+#: elf/ldd.bash.in:153
 msgid "warning: you do not have execution permission for"
 msgstr "advertimento: permission a exequer manca pro"
 
-#: elf/ldd.bash.in:183
+#: elf/ldd.bash.in:182
 msgid "\tnot a dynamic executable"
 msgstr "\tnon es un executabile dynamic"
 
-#: elf/ldd.bash.in:191
+#: elf/ldd.bash.in:190
 msgid "exited with unknown exit code"
 msgstr "ha sortite con le codice de retorno incognite"
 
-#: elf/ldd.bash.in:196
+#: elf/ldd.bash.in:195
 msgid "error: you do not have read permission for"
 msgstr "error: permission a leger manca pro"
 
@@ -1025,55 +1031,55 @@ msgstr "impossibile de leger le mappa de ligamines"
 msgid "cannot read object name"
 msgstr "impossibile de leger le nomine de objecto"
 
-#: elf/pldd.c:65
+#: elf/pldd.c:63
 msgid "List dynamic shared objects loaded into process."
 msgstr "Monstrar objectos condivise dynamic incargate in le processo."
 
-#: elf/pldd.c:69
+#: elf/pldd.c:67
 msgid "PID"
 msgstr "PID"
 
-#: elf/pldd.c:100
+#: elf/pldd.c:99
 #, c-format
 msgid "Exactly one parameter with process ID required.\n"
 msgstr "Un parametro exactemente con le identificator de processo es necessari.\n"
 
-#: elf/pldd.c:112
+#: elf/pldd.c:111
 #, c-format
 msgid "invalid process ID '%s'"
 msgstr "identificator de processo invalide '%s'"
 
-#: elf/pldd.c:120
+#: elf/pldd.c:119
 #, c-format
 msgid "cannot open %s"
 msgstr "impossibile de aperir %s"
 
-#: elf/pldd.c:145
+#: elf/pldd.c:144
 #, c-format
 msgid "cannot open %s/task"
 msgstr "impossibile de aperir %s/task"
 
-#: elf/pldd.c:148
+#: elf/pldd.c:147
 #, c-format
 msgid "cannot prepare reading %s/task"
 msgstr "impossibile de preparar a leger %s/task"
 
-#: elf/pldd.c:161
+#: elf/pldd.c:160
 #, c-format
 msgid "invalid thread ID '%s'"
 msgstr "identificator de filo invalide '%s'"
 
-#: elf/pldd.c:172
+#: elf/pldd.c:171
 #, c-format
 msgid "cannot attach to process %lu"
 msgstr "impossibile de attaccar al processo %lu"
 
-#: elf/pldd.c:264
+#: elf/pldd.c:286
 #, c-format
 msgid "cannot get information about process %lu"
 msgstr "impossibile de obtener le information super le processo %lu"
 
-#: elf/pldd.c:277
+#: elf/pldd.c:299
 #, c-format
 msgid "process %lu is no ELF program"
 msgstr "le processo %lu non es un programma ELF"
@@ -1172,7 +1178,7 @@ msgstr "%s: destination invalide: %s\n"
 msgid "Invalid link from \"%s\" to \"%s\": %s\n"
 msgstr "Ligamine invalide de \"%s\" a \"%s\": %s\n"
 
-#: elf/sotruss.ksh:32
+#: elf/sotruss.sh:32
 #, sh-format
 msgid ""
 "Usage: sotruss [OPTION...] [--] EXECUTABLE [EXECUTABLE-OPTION...]\n"
@@ -1201,23 +1207,23 @@ msgstr ""
 "      --usage             Monstrar un breve message de usage\n"
 "      --version           Monstrar le version del programma"
 
-#: elf/sotruss.ksh:46
+#: elf/sotruss.sh:46
 msgid "Mandatory arguments to long options are also mandatory for any corresponding\\nshort options.\\n"
 msgstr "Le argumentos obligatori del optiones longe es anque obligatori pro le optiones\\ncurte correspondente.\\n"
 
-#: elf/sotruss.ksh:55
+#: elf/sotruss.sh:55
 msgid "%s: option requires an argument -- '%s'\\n"
 msgstr "%s: option require un argumento -- '%s'\\n"
 
-#: elf/sotruss.ksh:61
+#: elf/sotruss.sh:61
 msgid "%s: option is ambiguous; possibilities:"
 msgstr "%s: option es ambigue; possibilitates:"
 
-#: elf/sotruss.ksh:79
+#: elf/sotruss.sh:79
 msgid "Written by %s.\\n"
 msgstr "Scribite per %s.\\n"
 
-#: elf/sotruss.ksh:86
+#: elf/sotruss.sh:86
 msgid ""
 "Usage: %s [-ef] [-F FROMLIST] [-o FILENAME] [-T TOLIST] [--exit]\n"
 "\t    [--follow] [--from FROMLIST] [--output FILENAME] [--to TOLIST]\n"
@@ -1229,151 +1235,151 @@ msgstr ""
 "\t    [--help] [--usage] [--version] [--]\n"
 "\t    EXECUTABILE [OPTION-DEL-EXECUTABILE...]\\n"
 
-#: elf/sotruss.ksh:134
+#: elf/sotruss.sh:134
 msgid "%s: unrecognized option '%c%s'\\n"
 msgstr "%s: option non recognoscite '%c%s'\\n"
 
-#: elf/sprof.c:76
+#: elf/sprof.c:77
 msgid "Output selection:"
 msgstr "Selection del output:"
 
-#: elf/sprof.c:78
+#: elf/sprof.c:79
 msgid "print list of count paths and their number of use"
 msgstr "monstrar un lista de percursos de contar e le numero de lor usos"
 
-#: elf/sprof.c:80
+#: elf/sprof.c:81
 msgid "generate flat profile with counts and ticks"
 msgstr "generar un profilo plan con contatores e marcos de tempore"
 
-#: elf/sprof.c:81
+#: elf/sprof.c:82
 msgid "generate call graph"
 msgstr "generar le grapho de appellos"
 
-#: elf/sprof.c:88
+#: elf/sprof.c:89
 msgid "Read and display shared object profiling data."
 msgstr "Leger e monstrar le datos de profilage del objecto condivise."
 
-#: elf/sprof.c:93
+#: elf/sprof.c:94
 msgid "SHOBJ [PROFDATA]"
 msgstr "OBJCONDIV [DATOSPROF]"
 
-#: elf/sprof.c:432
+#: elf/sprof.c:433
 #, c-format
 msgid "failed to load shared object `%s'"
 msgstr "insuccesso del cargamento del objecto condivise `%s'"
 
-#: elf/sprof.c:441
+#: elf/sprof.c:442
 #, c-format
 msgid "cannot create internal descriptors"
 msgstr "impossibile de crear descriptores interne"
 
-#: elf/sprof.c:553
+#: elf/sprof.c:554
 #, c-format
 msgid "Reopening shared object `%s' failed"
 msgstr "Insuccesso del apertura del objecto condivise `%s'"
 
-#: elf/sprof.c:560 elf/sprof.c:655
+#: elf/sprof.c:561 elf/sprof.c:656
 #, c-format
 msgid "reading of section headers failed"
 msgstr "insuccesso del lectura de testas de section"
 
-#: elf/sprof.c:568 elf/sprof.c:663
+#: elf/sprof.c:569 elf/sprof.c:664
 #, c-format
 msgid "reading of section header string table failed"
 msgstr "insuccesso del lectura del tabula de catenas de testa de section"
 
-#: elf/sprof.c:594
+#: elf/sprof.c:595
 #, c-format
 msgid "*** Cannot read debuginfo file name: %m\n"
 msgstr "*** Impossibile de leger le nonime de file debuginfo: %m\n"
 
-#: elf/sprof.c:615
+#: elf/sprof.c:616
 #, c-format
 msgid "cannot determine file name"
 msgstr "impossibile de determinar le nomine de file"
 
-#: elf/sprof.c:648
+#: elf/sprof.c:649
 #, c-format
 msgid "reading of ELF header failed"
 msgstr "insuccesso del lectura del testa ELF"
 
-#: elf/sprof.c:684
+#: elf/sprof.c:685
 #, c-format
 msgid "*** The file `%s' is stripped: no detailed analysis possible\n"
 msgstr "*** Le file `%s' es dismarcate: necun analyse detaliate possibile\n"
 
-#: elf/sprof.c:714
+#: elf/sprof.c:715
 #, c-format
 msgid "failed to load symbol data"
 msgstr "insuccesso de cargamento del datos de symbolo"
 
-#: elf/sprof.c:779
+#: elf/sprof.c:780
 #, c-format
 msgid "cannot load profiling data"
 msgstr "impossibile de cargar le datos de profilage"
 
-#: elf/sprof.c:788
+#: elf/sprof.c:789
 #, c-format
 msgid "while stat'ing profiling data file"
 msgstr "durante stat sur le file de datos de profilage"
 
-#: elf/sprof.c:796
+#: elf/sprof.c:797
 #, c-format
 msgid "profiling data file `%s' does not match shared object `%s'"
 msgstr "le file de datos de profilage `%s' non corresponde al objecto condivise `%s'"
 
-#: elf/sprof.c:807
+#: elf/sprof.c:808
 #, c-format
 msgid "failed to mmap the profiling data file"
 msgstr "insuccesso de mmap sur le file de datos de profilage"
 
-#: elf/sprof.c:815
+#: elf/sprof.c:816
 #, c-format
 msgid "error while closing the profiling data file"
 msgstr "error al clauder le file de datos de profilage"
 
-#: elf/sprof.c:824 elf/sprof.c:922
+#: elf/sprof.c:825 elf/sprof.c:923
 #, c-format
 msgid "cannot create internal descriptor"
 msgstr "impossibile de crear un descriptor interne"
 
-#: elf/sprof.c:898
+#: elf/sprof.c:899
 #, c-format
 msgid "`%s' is no correct profile data file for `%s'"
 msgstr "`%s' non es un file de datos de profilage correcte pro `%s'"
 
-#: elf/sprof.c:1079 elf/sprof.c:1137
+#: elf/sprof.c:1080 elf/sprof.c:1138
 #, c-format
 msgid "cannot allocate symbol data"
 msgstr "impossibile de allocar le datos de symbolo"
 
-#: iconv/iconv_charmap.c:143 iconv/iconv_prog.c:448
+#: iconv/iconv_charmap.c:141 iconv/iconv_prog.c:448
 #, c-format
 msgid "cannot open output file"
 msgstr "impossibile de aperir le file de output"
 
-#: iconv/iconv_charmap.c:189 iconv/iconv_prog.c:311
+#: iconv/iconv_charmap.c:187 iconv/iconv_prog.c:311
 #, c-format
 msgid "error while closing input `%s'"
 msgstr "error al clauder le input `%s'"
 
-#: iconv/iconv_charmap.c:463
+#: iconv/iconv_charmap.c:435
 #, c-format
 msgid "illegal input sequence at position %Zd"
 msgstr "sequentia de entrata non permittite al position %Zd"
 
-#: iconv/iconv_charmap.c:482 iconv/iconv_prog.c:539
+#: iconv/iconv_charmap.c:454 iconv/iconv_prog.c:539
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr "character o sequentia de cambiamento incomplete al fin de buffer"
 
-#: iconv/iconv_charmap.c:527 iconv/iconv_charmap.c:563 iconv/iconv_prog.c:582
+#: iconv/iconv_charmap.c:499 iconv/iconv_charmap.c:535 iconv/iconv_prog.c:582
 #: iconv/iconv_prog.c:618
 #, c-format
 msgid "error while reading the input"
 msgstr "error al leger le entrata"
 
-#: iconv/iconv_charmap.c:545 iconv/iconv_prog.c:600
+#: iconv/iconv_charmap.c:517 iconv/iconv_prog.c:600
 #, c-format
 msgid "unable to allocate buffer for input"
 msgstr "impossibile de allocar un buffer pro le entrata"
@@ -1398,13 +1404,22 @@ msgstr "Information:"
 msgid "list all known coded character sets"
 msgstr "monstrar tote le codificationes de characteres cognite"
 
-#: iconv/iconv_prog.c:64 locale/programs/localedef.c:126
+#: iconv/iconv_prog.c:64 locale/programs/localedef.c:129
 msgid "Output control:"
 msgstr "Gerentia del output:"
 
 #: iconv/iconv_prog.c:65
 msgid "omit invalid characters from output"
 msgstr "omitter characteres invalide del output"
+
+#: iconv/iconv_prog.c:66 iconv/iconvconfig.c:128
+#: locale/programs/localedef.c:122 locale/programs/localedef.c:124
+#: locale/programs/localedef.c:126 locale/programs/localedef.c:147
+#: malloc/memusagestat.c:56
+#, fuzzy
+#| msgid "[FILE]"
+msgid "FILE"
+msgstr "[FILE]"
 
 #: iconv/iconv_prog.c:66
 msgid "output file"
@@ -1477,8 +1492,16 @@ msgid "unknown iconv() error %d"
 msgstr "error incognite %d de iconv()"
 
 #: iconv/iconv_prog.c:791
+#, fuzzy
+#| msgid ""
+#| "The following list contain all the coded character sets known.  This does\n"
+#| "not necessarily mean that all combinations of these names can be used for\n"
+#| "the FROM and TO command line parameters.  One coded character set can be\n"
+#| "listed with several different names (aliases).\n"
+#| "\n"
+#| "  "
 msgid ""
-"The following list contain all the coded character sets known.  This does\n"
+"The following list contains all the coded character sets known.  This does\n"
 "not necessarily mean that all combinations of these names can be used for\n"
 "the FROM and TO command line parameters.  One coded character set can be\n"
 "listed with several different names (aliases).\n"
@@ -1500,34 +1523,38 @@ msgstr "Creation de un modulo de cargamento rapide del file de configuration ico
 msgid "[DIR...]"
 msgstr "[DIR...]"
 
-#: iconv/iconvconfig.c:126
+#: iconv/iconvconfig.c:126 locale/programs/localedef.c:133
+msgid "PATH"
+msgstr ""
+
+#: iconv/iconvconfig.c:127
 msgid "Prefix used for all file accesses"
 msgstr "Prefixo usate pro omne accessos a files"
 
-#: iconv/iconvconfig.c:127
+#: iconv/iconvconfig.c:128
 msgid "Put output in FILE instead of installed location (--prefix does not apply to FILE)"
 msgstr "Mitter le output in FILE in loco del location de installation (--prefix non se applica a FILE)"
 
-#: iconv/iconvconfig.c:131
+#: iconv/iconvconfig.c:132
 msgid "Do not search standard directories, only those on the command line"
 msgstr "Non cercar le directorios standard, ma solo illos indicate sur le linea de commando"
 
-#: iconv/iconvconfig.c:303
+#: iconv/iconvconfig.c:299
 #, c-format
 msgid "Directory arguments required when using --nostdlib"
 msgstr "Argumentos de directorio se require quando se usa --nostdlib"
 
-#: iconv/iconvconfig.c:345 locale/programs/localedef.c:287
+#: iconv/iconvconfig.c:341 locale/programs/localedef.c:294
 #, c-format
 msgid "no output file produced because warnings were issued"
 msgstr "necun file de output producite a causa de advertimentos reportate"
 
-#: iconv/iconvconfig.c:434
+#: iconv/iconvconfig.c:430
 #, c-format
 msgid "while inserting in search tree"
 msgstr "durante le insertion in un arbore de cerca"
 
-#: iconv/iconvconfig.c:1243
+#: iconv/iconvconfig.c:1239
 #, c-format
 msgid "cannot generate output file"
 msgstr "impossibile de generar un file de output"
@@ -1614,789 +1641,790 @@ msgstr "Elimina le contrasigno o face le file non legibile per alteres."
 msgid "Unknown .netrc keyword %s"
 msgstr "Parola clave .netrc incognite %s"
 
-#: libidn/nfkc.c:462
+#: libidn/nfkc.c:463
 msgid "Character out of range for UTF-8"
 msgstr "Character es foras de intervallo pro UTF-8"
 
-#: locale/programs/charmap-dir.c:58
+#: locale/programs/charmap-dir.c:57
 #, c-format
 msgid "cannot read character map directory `%s'"
 msgstr "impossibile de leger le directorio de tabula de characteres `%s'"
 
-#: locale/programs/charmap.c:137
+#: locale/programs/charmap.c:138
 #, c-format
 msgid "character map file `%s' not found"
 msgstr "file del tabula de characteres `%s' non trovate"
 
-#: locale/programs/charmap.c:194
+#: locale/programs/charmap.c:195
 #, c-format
 msgid "default character map file `%s' not found"
 msgstr "file predefinite del tabula de characteres `%s' non trovate"
 
-#: locale/programs/charmap.c:257
+#: locale/programs/charmap.c:258
 #, c-format
 msgid "character map `%s' is not ASCII compatible, locale not ISO C compliant\n"
 msgstr "le tabula de characteres `%s' non es compatibile con ASCII, le localitate non es conforme a ISO C\n"
 
-#: locale/programs/charmap.c:336
+#: locale/programs/charmap.c:337
 #, c-format
 msgid "%s: <mb_cur_max> must be greater than <mb_cur_min>\n"
 msgstr "%s: <mb_cur_max> debe esser grande que <mb_cur_min>\n"
 
-#: locale/programs/charmap.c:356 locale/programs/charmap.c:373
-#: locale/programs/repertoire.c:173
+#: locale/programs/charmap.c:357 locale/programs/charmap.c:374
+#: locale/programs/repertoire.c:174
 #, c-format
 msgid "syntax error in prolog: %s"
 msgstr "error de syntaxe in prologo: %s"
 
-#: locale/programs/charmap.c:357
+#: locale/programs/charmap.c:358
 msgid "invalid definition"
 msgstr "definition incorrecte"
 
-#: locale/programs/charmap.c:374 locale/programs/locfile.c:125
-#: locale/programs/locfile.c:152 locale/programs/repertoire.c:174
+#: locale/programs/charmap.c:375 locale/programs/locfile.c:131
+#: locale/programs/locfile.c:158 locale/programs/repertoire.c:175
 msgid "bad argument"
 msgstr "argumento incorrecte"
 
-#: locale/programs/charmap.c:402
+#: locale/programs/charmap.c:403
 #, c-format
 msgid "duplicate definition of <%s>"
 msgstr "definition duplicate de <%s>"
 
-#: locale/programs/charmap.c:409
+#: locale/programs/charmap.c:410
 #, c-format
 msgid "value for <%s> must be 1 or greater"
 msgstr "le valor de <%s> debe esser plus grande o equl a 1"
 
-#: locale/programs/charmap.c:421
+#: locale/programs/charmap.c:422
 #, c-format
 msgid "value of <%s> must be greater or equal than the value of <%s>"
 msgstr "le valor de <%s> debe esser plus grande o equal al valor de <%s>"
 
-#: locale/programs/charmap.c:444 locale/programs/repertoire.c:182
+#: locale/programs/charmap.c:445 locale/programs/repertoire.c:183
 #, c-format
 msgid "argument to <%s> must be a single character"
 msgstr "le argumento de <%s> debe esser un sol character"
 
-#: locale/programs/charmap.c:470
+#: locale/programs/charmap.c:471
 msgid "character sets with locking states are not supported"
 msgstr "collectiones de characteres con le fixation de statos non es supportate"
 
-#: locale/programs/charmap.c:497 locale/programs/charmap.c:551
-#: locale/programs/charmap.c:583 locale/programs/charmap.c:677
-#: locale/programs/charmap.c:732 locale/programs/charmap.c:773
-#: locale/programs/charmap.c:814
+#: locale/programs/charmap.c:498 locale/programs/charmap.c:552
+#: locale/programs/charmap.c:584 locale/programs/charmap.c:678
+#: locale/programs/charmap.c:733 locale/programs/charmap.c:774
+#: locale/programs/charmap.c:815
 #, c-format
 msgid "syntax error in %s definition: %s"
 msgstr "error de syntaxe in le definition de %s: %s"
 
-#: locale/programs/charmap.c:498 locale/programs/charmap.c:678
-#: locale/programs/charmap.c:774 locale/programs/repertoire.c:229
+#: locale/programs/charmap.c:499 locale/programs/charmap.c:679
+#: locale/programs/charmap.c:775 locale/programs/repertoire.c:230
 msgid "no symbolic name given"
 msgstr "necun nomine symbolic fornite"
 
-#: locale/programs/charmap.c:552
+#: locale/programs/charmap.c:553
 msgid "invalid encoding given"
 msgstr "codification invalide specificate"
 
-#: locale/programs/charmap.c:561
+#: locale/programs/charmap.c:562
 msgid "too few bytes in character encoding"
 msgstr "tro pauc de bytes in le codification de characteres"
 
-#: locale/programs/charmap.c:563
+#: locale/programs/charmap.c:564
 msgid "too many bytes in character encoding"
 msgstr "troppo de bytes in le codification de characteres"
 
-#: locale/programs/charmap.c:585 locale/programs/charmap.c:733
-#: locale/programs/charmap.c:816 locale/programs/repertoire.c:295
+#: locale/programs/charmap.c:586 locale/programs/charmap.c:734
+#: locale/programs/charmap.c:817 locale/programs/repertoire.c:296
 msgid "no symbolic name given for end of range"
 msgstr "necun nomine symbolic fornite pro le fin del intervallo"
 
-#: locale/programs/charmap.c:609 locale/programs/ld-address.c:601
-#: locale/programs/ld-collate.c:2766 locale/programs/ld-collate.c:3924
-#: locale/programs/ld-ctype.c:2255 locale/programs/ld-ctype.c:3006
-#: locale/programs/ld-identification.c:451
-#: locale/programs/ld-measurement.c:237 locale/programs/ld-messages.c:331
-#: locale/programs/ld-monetary.c:942 locale/programs/ld-name.c:306
-#: locale/programs/ld-numeric.c:367 locale/programs/ld-paper.c:240
-#: locale/programs/ld-telephone.c:312 locale/programs/ld-time.c:1220
-#: locale/programs/repertoire.c:312
+#: locale/programs/charmap.c:610 locale/programs/ld-address.c:528
+#: locale/programs/ld-collate.c:2626 locale/programs/ld-collate.c:3784
+#: locale/programs/ld-ctype.c:2162 locale/programs/ld-ctype.c:2913
+#: locale/programs/ld-identification.c:368
+#: locale/programs/ld-measurement.c:215 locale/programs/ld-messages.c:298
+#: locale/programs/ld-monetary.c:740 locale/programs/ld-name.c:264
+#: locale/programs/ld-numeric.c:326 locale/programs/ld-paper.c:214
+#: locale/programs/ld-telephone.c:278 locale/programs/ld-time.c:943
+#: locale/programs/repertoire.c:313
 #, c-format
 msgid "%1$s: definition does not end with `END %1$s'"
 msgstr "%1$s: le definition non termina con `END %1$s'"
 
-#: locale/programs/charmap.c:642
+#: locale/programs/charmap.c:643
 msgid "only WIDTH definitions are allowed to follow the CHARMAP definition"
 msgstr "solo le definitiones WIDTH es permittite sequer le definition CHARMAP"
 
-#: locale/programs/charmap.c:650 locale/programs/charmap.c:713
+#: locale/programs/charmap.c:651 locale/programs/charmap.c:714
 #, c-format
 msgid "value for %s must be an integer"
 msgstr "le valor de %s debe esser un numero integre"
 
-#: locale/programs/charmap.c:841
+#: locale/programs/charmap.c:842
 #, c-format
 msgid "%s: error in state machine"
 msgstr "%s: error in le automato de statos finite"
 
-#: locale/programs/charmap.c:849 locale/programs/ld-address.c:617
-#: locale/programs/ld-collate.c:2763 locale/programs/ld-collate.c:4117
-#: locale/programs/ld-ctype.c:2252 locale/programs/ld-ctype.c:3023
-#: locale/programs/ld-identification.c:467
-#: locale/programs/ld-measurement.c:253 locale/programs/ld-messages.c:347
-#: locale/programs/ld-monetary.c:958 locale/programs/ld-name.c:322
-#: locale/programs/ld-numeric.c:383 locale/programs/ld-paper.c:256
-#: locale/programs/ld-telephone.c:328 locale/programs/ld-time.c:1236
-#: locale/programs/locfile.c:825 locale/programs/repertoire.c:323
+#: locale/programs/charmap.c:850 locale/programs/ld-address.c:544
+#: locale/programs/ld-collate.c:2623 locale/programs/ld-collate.c:3977
+#: locale/programs/ld-ctype.c:2159 locale/programs/ld-ctype.c:2930
+#: locale/programs/ld-identification.c:384
+#: locale/programs/ld-measurement.c:231 locale/programs/ld-messages.c:314
+#: locale/programs/ld-monetary.c:756 locale/programs/ld-name.c:280
+#: locale/programs/ld-numeric.c:342 locale/programs/ld-paper.c:230
+#: locale/programs/ld-telephone.c:294 locale/programs/ld-time.c:959
+#: locale/programs/locfile.c:1000 locale/programs/repertoire.c:324
 #, c-format
 msgid "%s: premature end of file"
 msgstr "%s: fin prematur de file"
 
-#: locale/programs/charmap.c:868 locale/programs/charmap.c:879
+#: locale/programs/charmap.c:869 locale/programs/charmap.c:880
 #, c-format
 msgid "unknown character `%s'"
 msgstr "character incognite `%s'"
 
-#: locale/programs/charmap.c:887
+#: locale/programs/charmap.c:888
 #, c-format
 msgid "number of bytes for byte sequence of beginning and end of range not the same: %d vs %d"
 msgstr "le numero de bytes in le sequentia de initio e de fin del intervallo non es le mesme: %d contra %d"
 
-#: locale/programs/charmap.c:992 locale/programs/ld-collate.c:3043
-#: locale/programs/repertoire.c:418
+#: locale/programs/charmap.c:993 locale/programs/ld-collate.c:2903
+#: locale/programs/repertoire.c:419
 msgid "invalid names for character range"
 msgstr "nomines invalide pro un intervallo de characteres"
 
-#: locale/programs/charmap.c:1004 locale/programs/repertoire.c:430
+#: locale/programs/charmap.c:1005 locale/programs/repertoire.c:431
 msgid "hexadecimal range format should use only capital characters"
 msgstr "le formato hexadecimal de un intervallo debe utilisar solmente litteras capital"
 
-#: locale/programs/charmap.c:1022 locale/programs/repertoire.c:448
+#: locale/programs/charmap.c:1023 locale/programs/repertoire.c:449
 #, c-format
 msgid "<%s> and <%s> are invalid names for range"
 msgstr "<%s> e <%s> es nomines invalide pro un intervallo"
 
-#: locale/programs/charmap.c:1028 locale/programs/repertoire.c:455
+#: locale/programs/charmap.c:1029 locale/programs/repertoire.c:456
 msgid "upper limit in range is smaller than lower limit"
 msgstr "le limite alte in le intervallo es plus parve que le limite basse"
 
-#: locale/programs/charmap.c:1086
+#: locale/programs/charmap.c:1087
 msgid "resulting bytes for range not representable."
 msgstr "le bytes resultante pro le intervallo non es representabile."
 
-#: locale/programs/ld-address.c:134 locale/programs/ld-collate.c:1557
-#: locale/programs/ld-ctype.c:420 locale/programs/ld-identification.c:132
-#: locale/programs/ld-measurement.c:93 locale/programs/ld-messages.c:96
-#: locale/programs/ld-monetary.c:193 locale/programs/ld-name.c:93
-#: locale/programs/ld-numeric.c:97 locale/programs/ld-paper.c:90
-#: locale/programs/ld-telephone.c:93 locale/programs/ld-time.c:158
+#: locale/programs/ld-address.c:135 locale/programs/ld-collate.c:1565
+#: locale/programs/ld-ctype.c:465 locale/programs/ld-identification.c:133
+#: locale/programs/ld-measurement.c:94 locale/programs/ld-messages.c:97
+#: locale/programs/ld-monetary.c:193 locale/programs/ld-name.c:94
+#: locale/programs/ld-numeric.c:98 locale/programs/ld-paper.c:91
+#: locale/programs/ld-telephone.c:94 locale/programs/ld-time.c:159
 #, c-format
 msgid "No definition for %s category found"
 msgstr "Necun definition trovate pro le categoria %s"
 
-#: locale/programs/ld-address.c:145 locale/programs/ld-address.c:183
-#: locale/programs/ld-address.c:201 locale/programs/ld-address.c:230
-#: locale/programs/ld-address.c:302 locale/programs/ld-address.c:321
-#: locale/programs/ld-address.c:334 locale/programs/ld-identification.c:145
-#: locale/programs/ld-measurement.c:104 locale/programs/ld-monetary.c:205
+#: locale/programs/ld-address.c:146 locale/programs/ld-address.c:184
+#: locale/programs/ld-address.c:202 locale/programs/ld-address.c:231
+#: locale/programs/ld-address.c:303 locale/programs/ld-address.c:322
+#: locale/programs/ld-address.c:335 locale/programs/ld-identification.c:146
+#: locale/programs/ld-measurement.c:105 locale/programs/ld-monetary.c:205
 #: locale/programs/ld-monetary.c:249 locale/programs/ld-monetary.c:265
-#: locale/programs/ld-monetary.c:277 locale/programs/ld-name.c:104
-#: locale/programs/ld-name.c:141 locale/programs/ld-numeric.c:111
-#: locale/programs/ld-numeric.c:125 locale/programs/ld-paper.c:101
-#: locale/programs/ld-paper.c:110 locale/programs/ld-telephone.c:104
-#: locale/programs/ld-telephone.c:161 locale/programs/ld-time.c:174
-#: locale/programs/ld-time.c:195
+#: locale/programs/ld-monetary.c:277 locale/programs/ld-name.c:105
+#: locale/programs/ld-name.c:142 locale/programs/ld-numeric.c:112
+#: locale/programs/ld-numeric.c:126 locale/programs/ld-paper.c:102
+#: locale/programs/ld-paper.c:111 locale/programs/ld-telephone.c:105
+#: locale/programs/ld-telephone.c:162 locale/programs/ld-time.c:175
+#: locale/programs/ld-time.c:196
 #, c-format
 msgid "%s: field `%s' not defined"
 msgstr "%s: le campo `%s' non es definite"
 
-#: locale/programs/ld-address.c:157 locale/programs/ld-address.c:209
-#: locale/programs/ld-address.c:239 locale/programs/ld-address.c:277
-#: locale/programs/ld-name.c:116 locale/programs/ld-telephone.c:116
+#: locale/programs/ld-address.c:158 locale/programs/ld-address.c:210
+#: locale/programs/ld-address.c:240 locale/programs/ld-address.c:278
+#: locale/programs/ld-name.c:117 locale/programs/ld-telephone.c:117
 #, c-format
 msgid "%s: field `%s' must not be empty"
 msgstr "%s: le campo `%s' non debe esser vacue"
 
-#: locale/programs/ld-address.c:169
+#: locale/programs/ld-address.c:170
 #, c-format
 msgid "%s: invalid escape `%%%c' sequence in field `%s'"
 msgstr "%s: sequentia de escappata `%%%c' invalide in le campo `%s'"
 
-#: locale/programs/ld-address.c:220
+#: locale/programs/ld-address.c:221
 #, c-format
 msgid "%s: terminology language code `%s' not defined"
 msgstr "%s: le codice de lingua `%s' pro le usage terminologic non es definite"
 
-#: locale/programs/ld-address.c:245
+#: locale/programs/ld-address.c:246
 #, c-format
 msgid "%s: field `%s' must not be defined"
 msgstr "%s: le campo `%s' non debe esser definite"
 
-#: locale/programs/ld-address.c:259 locale/programs/ld-address.c:288
+#: locale/programs/ld-address.c:260 locale/programs/ld-address.c:289
 #, c-format
 msgid "%s: language abbreviation `%s' not defined"
 msgstr "%s: le abbreviation de lingua `%s' non es definite"
 
-#: locale/programs/ld-address.c:266 locale/programs/ld-address.c:294
-#: locale/programs/ld-address.c:328 locale/programs/ld-address.c:340
+#: locale/programs/ld-address.c:267 locale/programs/ld-address.c:295
+#: locale/programs/ld-address.c:329 locale/programs/ld-address.c:341
 #, c-format
 msgid "%s: `%s' value does not match `%s' value"
 msgstr "%s: le valor de `%s' non corresponde al valor de `%s'"
 
-#: locale/programs/ld-address.c:313
+#: locale/programs/ld-address.c:314
 #, c-format
 msgid "%s: numeric country code `%d' not valid"
 msgstr "%s: le codice numeric de pais `%d' non es valide"
 
-#: locale/programs/ld-address.c:509 locale/programs/ld-address.c:546
-#: locale/programs/ld-address.c:584 locale/programs/ld-ctype.c:2630
-#: locale/programs/ld-identification.c:363
-#: locale/programs/ld-measurement.c:220 locale/programs/ld-messages.c:300
-#: locale/programs/ld-monetary.c:700 locale/programs/ld-monetary.c:735
-#: locale/programs/ld-monetary.c:776 locale/programs/ld-name.c:279
-#: locale/programs/ld-numeric.c:262 locale/programs/ld-paper.c:223
-#: locale/programs/ld-telephone.c:287 locale/programs/ld-time.c:1125
-#: locale/programs/ld-time.c:1167
+#: locale/programs/ld-address.c:436 locale/programs/ld-address.c:473
+#: locale/programs/ld-address.c:511 locale/programs/ld-ctype.c:2537
+#: locale/programs/ld-identification.c:280
+#: locale/programs/ld-measurement.c:198 locale/programs/ld-messages.c:267
+#: locale/programs/ld-monetary.c:495 locale/programs/ld-monetary.c:530
+#: locale/programs/ld-monetary.c:571 locale/programs/ld-name.c:237
+#: locale/programs/ld-numeric.c:218 locale/programs/ld-paper.c:197
+#: locale/programs/ld-telephone.c:253 locale/programs/ld-time.c:848
+#: locale/programs/ld-time.c:890
 #, c-format
 msgid "%s: field `%s' declared more than once"
 msgstr "%s: le campo `%s' es declarate plus de un vice"
 
-#: locale/programs/ld-address.c:513 locale/programs/ld-address.c:551
-#: locale/programs/ld-identification.c:367 locale/programs/ld-messages.c:310
-#: locale/programs/ld-monetary.c:704 locale/programs/ld-monetary.c:739
-#: locale/programs/ld-name.c:283 locale/programs/ld-numeric.c:266
-#: locale/programs/ld-telephone.c:291 locale/programs/ld-time.c:1019
-#: locale/programs/ld-time.c:1088 locale/programs/ld-time.c:1130
+#: locale/programs/ld-address.c:440 locale/programs/ld-address.c:478
+#: locale/programs/ld-identification.c:284 locale/programs/ld-messages.c:277
+#: locale/programs/ld-monetary.c:499 locale/programs/ld-monetary.c:534
+#: locale/programs/ld-name.c:241 locale/programs/ld-numeric.c:222
+#: locale/programs/ld-telephone.c:257 locale/programs/ld-time.c:742
+#: locale/programs/ld-time.c:811 locale/programs/ld-time.c:853
 #, c-format
 msgid "%s: unknown character in field `%s'"
 msgstr "%s: character incognite in le campo `%s'"
 
-#: locale/programs/ld-address.c:598 locale/programs/ld-collate.c:3922
-#: locale/programs/ld-ctype.c:3003 locale/programs/ld-identification.c:448
-#: locale/programs/ld-measurement.c:234 locale/programs/ld-messages.c:329
-#: locale/programs/ld-monetary.c:940 locale/programs/ld-name.c:304
-#: locale/programs/ld-numeric.c:365 locale/programs/ld-paper.c:238
-#: locale/programs/ld-telephone.c:310 locale/programs/ld-time.c:1218
+#: locale/programs/ld-address.c:525 locale/programs/ld-collate.c:3782
+#: locale/programs/ld-ctype.c:2910 locale/programs/ld-identification.c:365
+#: locale/programs/ld-measurement.c:212 locale/programs/ld-messages.c:296
+#: locale/programs/ld-monetary.c:738 locale/programs/ld-name.c:262
+#: locale/programs/ld-numeric.c:324 locale/programs/ld-paper.c:212
+#: locale/programs/ld-telephone.c:276 locale/programs/ld-time.c:941
 #, c-format
 msgid "%s: incomplete `END' line"
 msgstr "%s: linea `END' incomplete"
 
-#: locale/programs/ld-address.c:608 locale/programs/ld-collate.c:543
-#: locale/programs/ld-collate.c:595 locale/programs/ld-collate.c:891
-#: locale/programs/ld-collate.c:904 locale/programs/ld-collate.c:2732
-#: locale/programs/ld-collate.c:2753 locale/programs/ld-collate.c:4107
-#: locale/programs/ld-ctype.c:1984 locale/programs/ld-ctype.c:2242
-#: locale/programs/ld-ctype.c:2828 locale/programs/ld-ctype.c:3014
-#: locale/programs/ld-identification.c:458
-#: locale/programs/ld-measurement.c:244 locale/programs/ld-messages.c:338
-#: locale/programs/ld-monetary.c:949 locale/programs/ld-name.c:313
-#: locale/programs/ld-numeric.c:374 locale/programs/ld-paper.c:247
-#: locale/programs/ld-telephone.c:319 locale/programs/ld-time.c:1227
+#: locale/programs/ld-address.c:535 locale/programs/ld-collate.c:551
+#: locale/programs/ld-collate.c:603 locale/programs/ld-collate.c:899
+#: locale/programs/ld-collate.c:912 locale/programs/ld-collate.c:2592
+#: locale/programs/ld-collate.c:2613 locale/programs/ld-collate.c:3967
+#: locale/programs/ld-ctype.c:1891 locale/programs/ld-ctype.c:2149
+#: locale/programs/ld-ctype.c:2735 locale/programs/ld-ctype.c:2921
+#: locale/programs/ld-identification.c:375
+#: locale/programs/ld-measurement.c:222 locale/programs/ld-messages.c:305
+#: locale/programs/ld-monetary.c:747 locale/programs/ld-name.c:271
+#: locale/programs/ld-numeric.c:333 locale/programs/ld-paper.c:221
+#: locale/programs/ld-telephone.c:285 locale/programs/ld-time.c:950
 #, c-format
 msgid "%s: syntax error"
 msgstr "%s: error de syntaxe"
 
-#: locale/programs/ld-collate.c:418
+#: locale/programs/ld-collate.c:426
 #, c-format
 msgid "`%.*s' already defined in charmap"
 msgstr "`%.*s' jam definite in le tabula de characteres"
 
-#: locale/programs/ld-collate.c:427
+#: locale/programs/ld-collate.c:435
 #, c-format
 msgid "`%.*s' already defined in repertoire"
 msgstr "`%.*s' jam definite in repertoire"
 
-#: locale/programs/ld-collate.c:434
+#: locale/programs/ld-collate.c:442
 #, c-format
 msgid "`%.*s' already defined as collating symbol"
 msgstr "`%.*s' jam definite como symbolo de collation"
 
-#: locale/programs/ld-collate.c:441
+#: locale/programs/ld-collate.c:449
 #, c-format
 msgid "`%.*s' already defined as collating element"
 msgstr "`%.*s' jam definite como elemento de collation"
 
-#: locale/programs/ld-collate.c:472 locale/programs/ld-collate.c:498
+#: locale/programs/ld-collate.c:480 locale/programs/ld-collate.c:506
 #, c-format
 msgid "%s: `forward' and `backward' are mutually excluding each other"
 msgstr "%s: `forward' e `backward' son mutualmente exclusive"
 
-#: locale/programs/ld-collate.c:482 locale/programs/ld-collate.c:508
-#: locale/programs/ld-collate.c:524
+#: locale/programs/ld-collate.c:490 locale/programs/ld-collate.c:516
+#: locale/programs/ld-collate.c:532
 #, c-format
 msgid "%s: `%s' mentioned more than once in definition of weight %d"
 msgstr "%s: `%s' mentionate plus de un vice in le definition del peso %d"
 
-#: locale/programs/ld-collate.c:580
+#: locale/programs/ld-collate.c:588
 #, c-format
 msgid "%s: too many rules; first entry only had %d"
 msgstr "%s: tro de regulas; le prime entrata habeva solmente %d"
 
-#: locale/programs/ld-collate.c:616
+#: locale/programs/ld-collate.c:624
 #, c-format
 msgid "%s: not enough sorting rules"
 msgstr "%s: il non ha sufficiente regulas a assortir"
 
-#: locale/programs/ld-collate.c:781
+#: locale/programs/ld-collate.c:789
 #, c-format
 msgid "%s: empty weight string not allowed"
 msgstr "%s: catena de peso vacue non es permittite"
 
-#: locale/programs/ld-collate.c:876
+#: locale/programs/ld-collate.c:884
 #, c-format
 msgid "%s: weights must use the same ellipsis symbol as the name"
 msgstr "%s: le pesos debe usar le mesmo symbolo de ellipse que le nomine"
 
-#: locale/programs/ld-collate.c:932
+#: locale/programs/ld-collate.c:940
 #, c-format
 msgid "%s: too many values"
 msgstr "%s: tro de valores"
 
-#: locale/programs/ld-collate.c:1052 locale/programs/ld-collate.c:1227
+#: locale/programs/ld-collate.c:1060 locale/programs/ld-collate.c:1235
 #, c-format
 msgid "order for `%.*s' already defined at %s:%Zu"
 msgstr "le ordine pro `%.*s' jam es definite in %s:%Zu"
 
-#: locale/programs/ld-collate.c:1102
+#: locale/programs/ld-collate.c:1110
 #, c-format
 msgid "%s: the start and the end symbol of a range must stand for characters"
 msgstr "%s: le symbolos de initio e de fin de un intervallo debe representar characteres"
 
-#: locale/programs/ld-collate.c:1129
+#: locale/programs/ld-collate.c:1137
 #, c-format
 msgid "%s: byte sequences of first and last character must have the same length"
 msgstr "%s: le sequentias de bytes del prime e del ultime characteres debe haber le mesme longitude"
 
-#: locale/programs/ld-collate.c:1171
+#: locale/programs/ld-collate.c:1179
 #, c-format
 msgid "%s: byte sequence of first character of range is not lower than that of the last character"
 msgstr "%s: le sequentia de bytes del prime character del intervallo non es plus parve que illo del ultime character"
 
-#: locale/programs/ld-collate.c:1296
+#: locale/programs/ld-collate.c:1304
 #, c-format
 msgid "%s: symbolic range ellipsis must not directly follow `order_start'"
 msgstr "%s: le ellipse de intervallo symbolic non debe sequer directemente `order_start'"
 
-#: locale/programs/ld-collate.c:1300
+#: locale/programs/ld-collate.c:1308
 #, c-format
 msgid "%s: symbolic range ellipsis must not be directly followed by `order_end'"
 msgstr "%s: le ellipse de intervallo symbolic non debe esser sequite directemente per `order_end'"
 
-#: locale/programs/ld-collate.c:1320 locale/programs/ld-ctype.c:1501
+#: locale/programs/ld-collate.c:1328 locale/programs/ld-ctype.c:1408
 #, c-format
 msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "`%s' e `%.*s' non es nomines valide pro un intervallo symbolic"
 
-#: locale/programs/ld-collate.c:1370 locale/programs/ld-collate.c:3858
+#: locale/programs/ld-collate.c:1378 locale/programs/ld-collate.c:3718
 #, c-format
 msgid "%s: order for `%.*s' already defined at %s:%Zu"
 msgstr "%s: le ordine pro `%.*s' jam es definite in %s:%Zu"
 
-#: locale/programs/ld-collate.c:1379
+#: locale/programs/ld-collate.c:1387
 #, c-format
 msgid "%s: `%s' must be a character"
 msgstr "%s: `%s' debe esser un character"
 
-#: locale/programs/ld-collate.c:1574
+#: locale/programs/ld-collate.c:1582
 #, c-format
 msgid "%s: `position' must be used for a specific level in all sections or none"
 msgstr "%s: `position' debe utilisar se pro un nivello specific in tote le sectiones o in necun"
 
-#: locale/programs/ld-collate.c:1599
+#: locale/programs/ld-collate.c:1607
 #, c-format
 msgid "symbol `%s' not defined"
 msgstr "le symbolo `%s' non es definite"
 
-#: locale/programs/ld-collate.c:1675 locale/programs/ld-collate.c:1781
+#: locale/programs/ld-collate.c:1683 locale/programs/ld-collate.c:1789
 #, c-format
 msgid "symbol `%s' has the same encoding as"
 msgstr "le symbolo `%s' ha le mesme codification que"
 
-#: locale/programs/ld-collate.c:1679 locale/programs/ld-collate.c:1785
+#: locale/programs/ld-collate.c:1687 locale/programs/ld-collate.c:1793
 #, c-format
 msgid "symbol `%s'"
 msgstr "le symbolo `%s'"
 
-#: locale/programs/ld-collate.c:1827
+#: locale/programs/ld-collate.c:1833
 #, c-format
 msgid "no definition of `UNDEFINED'"
 msgstr "nulle definition de `UNDEFINED'"
 
-#: locale/programs/ld-collate.c:1856
+#: locale/programs/ld-collate.c:1862
 #, c-format
 msgid "too many errors; giving up"
 msgstr "tro de errores; abandono"
 
-#: locale/programs/ld-collate.c:2658 locale/programs/ld-collate.c:4046
+#: locale/programs/ld-collate.c:2518 locale/programs/ld-collate.c:3906
 #, c-format
 msgid "%s: nested conditionals not supported"
 msgstr "%s: le conditionales annidate non es supportate"
 
-#: locale/programs/ld-collate.c:2676
-#, c-format
-msgid "%s: more then one 'else'"
+#: locale/programs/ld-collate.c:2536
+#, fuzzy, c-format
+#| msgid "%s: more then one 'else'"
+msgid "%s: more than one 'else'"
 msgstr "%s: plus de un 'else'"
 
-#: locale/programs/ld-collate.c:2851
+#: locale/programs/ld-collate.c:2711
 #, c-format
 msgid "%s: duplicate definition of `%s'"
 msgstr "%s: definition duplicate de `%s'"
 
-#: locale/programs/ld-collate.c:2887
+#: locale/programs/ld-collate.c:2747
 #, c-format
 msgid "%s: duplicate declaration of section `%s'"
 msgstr "%s: declaration duplicate del section `%s'"
 
-#: locale/programs/ld-collate.c:3023
+#: locale/programs/ld-collate.c:2883
 #, c-format
 msgid "%s: unknown character in collating symbol name"
 msgstr "%s: character incognite in le nomine de un symbolo de collation"
 
-#: locale/programs/ld-collate.c:3152
+#: locale/programs/ld-collate.c:3012
 #, c-format
 msgid "%s: unknown character in equivalent definition name"
 msgstr "%s: character incognite in le nomine de un definition de equivalente"
 
-#: locale/programs/ld-collate.c:3163
+#: locale/programs/ld-collate.c:3023
 #, c-format
 msgid "%s: unknown character in equivalent definition value"
 msgstr "%s: character incognite in le valor de un definition de equivalente"
 
-#: locale/programs/ld-collate.c:3173
+#: locale/programs/ld-collate.c:3033
 #, c-format
 msgid "%s: unknown symbol `%s' in equivalent definition"
 msgstr "%s: symbolo incognite `%s' in un definition de equivalente"
 
-#: locale/programs/ld-collate.c:3182
+#: locale/programs/ld-collate.c:3042
 msgid "error while adding equivalent collating symbol"
 msgstr "error durante le addition de un symbolo de collation equivalente"
 
-#: locale/programs/ld-collate.c:3220
+#: locale/programs/ld-collate.c:3080
 #, c-format
 msgid "duplicate definition of script `%s'"
 msgstr "definition duplicate del scriptura `%s'"
 
-#: locale/programs/ld-collate.c:3268
+#: locale/programs/ld-collate.c:3128
 #, c-format
 msgid "%s: unknown section name `%.*s'"
 msgstr "%s: nomine de section incognite `%.*s'"
 
-#: locale/programs/ld-collate.c:3297
+#: locale/programs/ld-collate.c:3157
 #, c-format
 msgid "%s: multiple order definitions for section `%s'"
 msgstr "%s: multiple definitiones de ordine pro le section `%s'"
 
-#: locale/programs/ld-collate.c:3325
+#: locale/programs/ld-collate.c:3185
 #, c-format
 msgid "%s: invalid number of sorting rules"
 msgstr "%s: le numero de regulas a assortir es incorrecte"
 
-#: locale/programs/ld-collate.c:3352
+#: locale/programs/ld-collate.c:3212
 #, c-format
 msgid "%s: multiple order definitions for unnamed section"
 msgstr "%s: multiple definitiones de ordine pro un section innominate"
 
-#: locale/programs/ld-collate.c:3407 locale/programs/ld-collate.c:3537
-#: locale/programs/ld-collate.c:3900
+#: locale/programs/ld-collate.c:3267 locale/programs/ld-collate.c:3397
+#: locale/programs/ld-collate.c:3760
 #, c-format
 msgid "%s: missing `order_end' keyword"
 msgstr "%s: parola clave `order_end' mancante"
 
-#: locale/programs/ld-collate.c:3470
+#: locale/programs/ld-collate.c:3330
 #, c-format
 msgid "%s: order for collating symbol %.*s not yet defined"
 msgstr "%s: ordine non ancora definite pro le symbolo de collation %.*s"
 
-#: locale/programs/ld-collate.c:3488
+#: locale/programs/ld-collate.c:3348
 #, c-format
 msgid "%s: order for collating element %.*s not yet defined"
 msgstr "%s: ordine non ancora definite pro le elemento de collation %.*s"
 
-#: locale/programs/ld-collate.c:3499
+#: locale/programs/ld-collate.c:3359
 #, c-format
 msgid "%s: cannot reorder after %.*s: symbol not known"
 msgstr "%s: impossibile de reordinar post %.*s: symbolo incognite"
 
-#: locale/programs/ld-collate.c:3551 locale/programs/ld-collate.c:3912
+#: locale/programs/ld-collate.c:3411 locale/programs/ld-collate.c:3772
 #, c-format
 msgid "%s: missing `reorder-end' keyword"
 msgstr "%s: parola clave `reorder-end' mancante"
 
-#: locale/programs/ld-collate.c:3585 locale/programs/ld-collate.c:3783
+#: locale/programs/ld-collate.c:3445 locale/programs/ld-collate.c:3643
 #, c-format
 msgid "%s: section `%.*s' not known"
 msgstr "%s: section `%.*s' incognite"
 
-#: locale/programs/ld-collate.c:3650
+#: locale/programs/ld-collate.c:3510
 #, c-format
 msgid "%s: bad symbol <%.*s>"
 msgstr "%s: symbolo invalide <%.*s>"
 
-#: locale/programs/ld-collate.c:3846
+#: locale/programs/ld-collate.c:3706
 #, c-format
 msgid "%s: cannot have `%s' as end of ellipsis range"
 msgstr "%s: impossibile de haber `%s' como fin de un intervallo de ellipse"
 
-#: locale/programs/ld-collate.c:3896
+#: locale/programs/ld-collate.c:3756
 #, c-format
 msgid "%s: empty category description not allowed"
 msgstr "%s: le description de categoria vacue non es permittite"
 
-#: locale/programs/ld-collate.c:3915
+#: locale/programs/ld-collate.c:3775
 #, c-format
 msgid "%s: missing `reorder-sections-end' keyword"
 msgstr "%s: parola clave `reorder-sections-end' mancante"
 
-#: locale/programs/ld-collate.c:4079
+#: locale/programs/ld-collate.c:3939
 #, c-format
 msgid "%s: '%s' without matching 'ifdef' or 'ifndef'"
 msgstr "%s: '%s' sin correspondente 'ifdef' o 'ifndef'"
 
-#: locale/programs/ld-collate.c:4097
+#: locale/programs/ld-collate.c:3957
 #, c-format
 msgid "%s: 'endif' without matching 'ifdef' or 'ifndef'"
 msgstr "%s: 'endif' sin correspondente 'ifdef' o 'ifndef'"
 
-#: locale/programs/ld-ctype.c:439
+#: locale/programs/ld-ctype.c:484
 #, c-format
 msgid "No character set name specified in charmap"
 msgstr "Necun nomine de collection de characteres es specificate in le tabula de characteres"
 
-#: locale/programs/ld-ctype.c:468
+#: locale/programs/ld-ctype.c:513
 #, c-format
 msgid "character L'\\u%0*x' in class `%s' must be in class `%s'"
 msgstr "le character L'\\u%0*x' del classe `%s' debe esser in le classe `%s'"
 
-#: locale/programs/ld-ctype.c:483
+#: locale/programs/ld-ctype.c:528
 #, c-format
 msgid "character L'\\u%0*x' in class `%s' must not be in class `%s'"
 msgstr "le character L'\\u%0*x' del classe `%s' non debe esser in le classe `%s'"
 
-#: locale/programs/ld-ctype.c:497 locale/programs/ld-ctype.c:555
+#: locale/programs/ld-ctype.c:542 locale/programs/ld-ctype.c:600
 #, c-format
 msgid "internal error in %s, line %u"
 msgstr "error interne in %s, linea %u"
 
-#: locale/programs/ld-ctype.c:526
+#: locale/programs/ld-ctype.c:571
 #, c-format
 msgid "character '%s' in class `%s' must be in class `%s'"
 msgstr "le character '%s' del classe `%s' debe esser in le classe `%s'"
 
-#: locale/programs/ld-ctype.c:542
+#: locale/programs/ld-ctype.c:587
 #, c-format
 msgid "character '%s' in class `%s' must not be in class `%s'"
 msgstr "le character '%s' del classe `%s' non debe esser in le classe `%s'"
 
-#: locale/programs/ld-ctype.c:572 locale/programs/ld-ctype.c:610
+#: locale/programs/ld-ctype.c:617 locale/programs/ld-ctype.c:655
 #, c-format
 msgid "<SP> character not in class `%s'"
 msgstr "le character <SP> non es in le classe `%s'"
 
-#: locale/programs/ld-ctype.c:584 locale/programs/ld-ctype.c:621
+#: locale/programs/ld-ctype.c:629 locale/programs/ld-ctype.c:666
 #, c-format
 msgid "<SP> character must not be in class `%s'"
 msgstr "le character <SP> non debe esser in le classe `%s'"
 
-#: locale/programs/ld-ctype.c:599
+#: locale/programs/ld-ctype.c:644
 #, c-format
 msgid "character <SP> not defined in character map"
 msgstr "le character <SP> non es definite in le tabula de characteres"
 
-#: locale/programs/ld-ctype.c:735
+#: locale/programs/ld-ctype.c:780
 #, c-format
 msgid "`digit' category has not entries in groups of ten"
 msgstr "le categoria `digit' non ha entratas in gruppos de dece"
 
-#: locale/programs/ld-ctype.c:784
+#: locale/programs/ld-ctype.c:829
 #, c-format
 msgid "no input digits defined and none of the standard names in the charmap"
 msgstr "necun cifras de entrata definite e necun del nomines standard in le tabula de characteres"
 
-#: locale/programs/ld-ctype.c:849
+#: locale/programs/ld-ctype.c:894
 #, c-format
 msgid "not all characters used in `outdigit' are available in the charmap"
 msgstr "non tote le characteres usate in `outdigit' es disponibile in le tabula de characteres"
 
-#: locale/programs/ld-ctype.c:866
+#: locale/programs/ld-ctype.c:911
 #, c-format
 msgid "not all characters used in `outdigit' are available in the repertoire"
 msgstr "non tote le characteres usate in `outdigit' es disponibile in le repertoire"
 
-#: locale/programs/ld-ctype.c:1269
+#: locale/programs/ld-ctype.c:1176
 #, c-format
 msgid "character class `%s' already defined"
 msgstr "le classe de characteres `%s' jam ha essite definite"
 
-#: locale/programs/ld-ctype.c:1275
+#: locale/programs/ld-ctype.c:1182
 #, c-format
 msgid "implementation limit: no more than %Zd character classes allowed"
 msgstr "limite de implementation: il se non permitte plus de %Zd classes de characteres"
 
-#: locale/programs/ld-ctype.c:1301
+#: locale/programs/ld-ctype.c:1208
 #, c-format
 msgid "character map `%s' already defined"
 msgstr "le mappa de characteres `%s' jam ha essite definite"
 
-#: locale/programs/ld-ctype.c:1307
+#: locale/programs/ld-ctype.c:1214
 #, c-format
 msgid "implementation limit: no more than %d character maps allowed"
 msgstr "limite de implementation: il se non permitte plus de %d mappas de characteres"
 
-#: locale/programs/ld-ctype.c:1572 locale/programs/ld-ctype.c:1697
-#: locale/programs/ld-ctype.c:1803 locale/programs/ld-ctype.c:2493
-#: locale/programs/ld-ctype.c:3489
+#: locale/programs/ld-ctype.c:1479 locale/programs/ld-ctype.c:1604
+#: locale/programs/ld-ctype.c:1710 locale/programs/ld-ctype.c:2400
+#: locale/programs/ld-ctype.c:3397
 #, c-format
 msgid "%s: field `%s' does not contain exactly ten entries"
 msgstr "%s: le campo `%s' non contine exactemente dece entratas"
 
-#: locale/programs/ld-ctype.c:1600 locale/programs/ld-ctype.c:2174
+#: locale/programs/ld-ctype.c:1507 locale/programs/ld-ctype.c:2081
 #, c-format
 msgid "to-value <U%0*X> of range is smaller than from-value <U%0*X>"
 msgstr "le valor final <U%0*X> del intervallo es plus parve que le valor initial <U%0*X>"
 
-#: locale/programs/ld-ctype.c:1727
+#: locale/programs/ld-ctype.c:1634
 msgid "start and end character sequence of range must have the same length"
 msgstr "le sequantias de characteres initial e final del intervallo debe haber le mesme longitude"
 
-#: locale/programs/ld-ctype.c:1734
+#: locale/programs/ld-ctype.c:1641
 msgid "to-value character sequence is smaller than from-value sequence"
 msgstr "le sequentia de characteres del valor final es plus parve que le sequentia del valor initial"
 
-#: locale/programs/ld-ctype.c:2094 locale/programs/ld-ctype.c:2145
+#: locale/programs/ld-ctype.c:2001 locale/programs/ld-ctype.c:2052
 msgid "premature end of `translit_ignore' definition"
 msgstr "le fin prematur del definition de `translit_ignore'"
 
-#: locale/programs/ld-ctype.c:2100 locale/programs/ld-ctype.c:2151
-#: locale/programs/ld-ctype.c:2193
+#: locale/programs/ld-ctype.c:2007 locale/programs/ld-ctype.c:2058
+#: locale/programs/ld-ctype.c:2100
 msgid "syntax error"
 msgstr "error de syntaxe"
 
-#: locale/programs/ld-ctype.c:2326
+#: locale/programs/ld-ctype.c:2233
 #, c-format
 msgid "%s: syntax error in definition of new character class"
 msgstr "%s: error de syntaxe in le definition de un nove classe de characteres"
 
-#: locale/programs/ld-ctype.c:2341
+#: locale/programs/ld-ctype.c:2248
 #, c-format
 msgid "%s: syntax error in definition of new character map"
 msgstr "%s: error de syntaxe in le definition de un nove mappa de characteres"
 
-#: locale/programs/ld-ctype.c:2515
+#: locale/programs/ld-ctype.c:2422
 msgid "ellipsis range must be marked by two operands of same type"
 msgstr "le intervallo de ellipse debe ser marcate per duo operandos del mesme typo"
 
-#: locale/programs/ld-ctype.c:2524
+#: locale/programs/ld-ctype.c:2431
 msgid "with symbolic name range values the absolute ellipsis `...' must not be used"
 msgstr "con intervallo definite per nomines symbolic le ellipse absolute `...' non debe ser utilisate"
 
-#: locale/programs/ld-ctype.c:2539
+#: locale/programs/ld-ctype.c:2446
 msgid "with UCS range values one must use the hexadecimal symbolic ellipsis `..'"
 msgstr "con intervallo definite per UCS on debe usar le ellipse symbolic hexadecimal `..'"
 
-#: locale/programs/ld-ctype.c:2553
+#: locale/programs/ld-ctype.c:2460
 msgid "with character code range values one must use the absolute ellipsis `...'"
 msgstr "con intervallo definite per codices de characteres on debe usar le ellipse absolute `...'"
 
-#: locale/programs/ld-ctype.c:2704
+#: locale/programs/ld-ctype.c:2611
 #, c-format
 msgid "duplicated definition for mapping `%s'"
 msgstr "definition duplicate del tabula `%s'"
 
-#: locale/programs/ld-ctype.c:2790 locale/programs/ld-ctype.c:2934
+#: locale/programs/ld-ctype.c:2697 locale/programs/ld-ctype.c:2841
 #, c-format
 msgid "%s: `translit_start' section does not end with `translit_end'"
 msgstr "%s: le section `translit_start' non fini con `translit_end'"
 
-#: locale/programs/ld-ctype.c:2885
+#: locale/programs/ld-ctype.c:2792
 #, c-format
 msgid "%s: duplicate `default_missing' definition"
 msgstr "%s: definition duplicate de `default_missing'"
 
-#: locale/programs/ld-ctype.c:2890
+#: locale/programs/ld-ctype.c:2797
 msgid "previous definition was here"
 msgstr "le definition previe era hic"
 
-#: locale/programs/ld-ctype.c:2912
+#: locale/programs/ld-ctype.c:2819
 #, c-format
 msgid "%s: no representable `default_missing' definition found"
 msgstr "%s: necun definition `default_missing' representabile trovate"
 
-#: locale/programs/ld-ctype.c:3065 locale/programs/ld-ctype.c:3149
-#: locale/programs/ld-ctype.c:3169 locale/programs/ld-ctype.c:3190
-#: locale/programs/ld-ctype.c:3211 locale/programs/ld-ctype.c:3232
-#: locale/programs/ld-ctype.c:3253 locale/programs/ld-ctype.c:3293
-#: locale/programs/ld-ctype.c:3314 locale/programs/ld-ctype.c:3381
-#: locale/programs/ld-ctype.c:3423 locale/programs/ld-ctype.c:3448
+#: locale/programs/ld-ctype.c:2962 locale/programs/ld-ctype.c:3059
+#: locale/programs/ld-ctype.c:3079 locale/programs/ld-ctype.c:3100
+#: locale/programs/ld-ctype.c:3121 locale/programs/ld-ctype.c:3142
+#: locale/programs/ld-ctype.c:3163 locale/programs/ld-ctype.c:3203
+#: locale/programs/ld-ctype.c:3224 locale/programs/ld-ctype.c:3289
+#: locale/programs/ld-ctype.c:3331 locale/programs/ld-ctype.c:3356
 #, c-format
 msgid "%s: character `%s' not defined while needed as default value"
 msgstr "%s: le character `%s' non es definite quando illo es necesse como valor predefinite"
 
-#: locale/programs/ld-ctype.c:3070 locale/programs/ld-ctype.c:3154
-#: locale/programs/ld-ctype.c:3174 locale/programs/ld-ctype.c:3195
-#: locale/programs/ld-ctype.c:3216 locale/programs/ld-ctype.c:3237
-#: locale/programs/ld-ctype.c:3258 locale/programs/ld-ctype.c:3298
-#: locale/programs/ld-ctype.c:3319 locale/programs/ld-ctype.c:3386
+#: locale/programs/ld-ctype.c:2967 locale/programs/ld-ctype.c:3064
+#: locale/programs/ld-ctype.c:3084 locale/programs/ld-ctype.c:3105
+#: locale/programs/ld-ctype.c:3126 locale/programs/ld-ctype.c:3147
+#: locale/programs/ld-ctype.c:3168 locale/programs/ld-ctype.c:3208
+#: locale/programs/ld-ctype.c:3229 locale/programs/ld-ctype.c:3294
 #, c-format
 msgid "%s: character `%s' in charmap not representable with one byte"
 msgstr "%s: le character `%s' in tabula de characteres non es representabile con un byte"
 
-#: locale/programs/ld-ctype.c:3430 locale/programs/ld-ctype.c:3455
+#: locale/programs/ld-ctype.c:3338 locale/programs/ld-ctype.c:3363
 #, c-format
 msgid "%s: character `%s' needed as default value not representable with one byte"
 msgstr "%s: le character `%s' requirite como valor predefinite non es representabile con un byte"
 
-#: locale/programs/ld-ctype.c:3511
+#: locale/programs/ld-ctype.c:3419
 #, c-format
 msgid "no output digits defined and none of the standard names in the charmap"
 msgstr "necun cifras de output es definite e nihil del nomines standard es in le tabula de characteres"
 
-#: locale/programs/ld-ctype.c:3802
+#: locale/programs/ld-ctype.c:3668
 #, c-format
 msgid "%s: transliteration data from locale `%s' not available"
 msgstr "%s: le datos de transliteration del localitate `%s' non es disponibile"
 
-#: locale/programs/ld-ctype.c:3903
+#: locale/programs/ld-ctype.c:3768
 #, c-format
 msgid "%s: table for class \"%s\": %lu bytes\n"
 msgstr "%s: tabula pro le classe \"%s\": %lu bytes\n"
 
-#: locale/programs/ld-ctype.c:3972
+#: locale/programs/ld-ctype.c:3833
 #, c-format
 msgid "%s: table for map \"%s\": %lu bytes\n"
 msgstr "%s: tabula de characteres \"%s\": %lu bytes\n"
 
-#: locale/programs/ld-ctype.c:4105
+#: locale/programs/ld-ctype.c:3958
 #, c-format
 msgid "%s: table for width: %lu bytes\n"
 msgstr "%s: tabula pro le largor: %lu bytes\n"
 
-#: locale/programs/ld-identification.c:169
+#: locale/programs/ld-identification.c:170
 #, c-format
 msgid "%s: no identification for category `%s'"
 msgstr "%s: nulle identification pro le categoria `%s'"
 
-#: locale/programs/ld-identification.c:434
+#: locale/programs/ld-identification.c:351
 #, c-format
 msgid "%s: duplicate category version definition"
 msgstr "%s: definition duplicate de version de categoria"
 
-#: locale/programs/ld-measurement.c:112
+#: locale/programs/ld-measurement.c:113
 #, c-format
 msgid "%s: invalid value for field `%s'"
 msgstr "%s: valor invalide pro le campo `%s'"
 
-#: locale/programs/ld-messages.c:113 locale/programs/ld-messages.c:147
+#: locale/programs/ld-messages.c:114 locale/programs/ld-messages.c:148
 #, c-format
 msgid "%s: field `%s' undefined"
 msgstr "%s: le campo `%s' non es definite"
 
-#: locale/programs/ld-messages.c:120 locale/programs/ld-messages.c:154
-#: locale/programs/ld-monetary.c:255 locale/programs/ld-numeric.c:117
+#: locale/programs/ld-messages.c:121 locale/programs/ld-messages.c:155
+#: locale/programs/ld-monetary.c:255 locale/programs/ld-numeric.c:118
 #, c-format
 msgid "%s: value for field `%s' must not be an empty string"
 msgstr "%s: le valor pro le campo `%s' non debe esser un catena vacue"
 
-#: locale/programs/ld-messages.c:136 locale/programs/ld-messages.c:170
+#: locale/programs/ld-messages.c:137 locale/programs/ld-messages.c:171
 #, c-format
 msgid "%s: no correct regular expression for field `%s': %s"
 msgstr "%s: necun expression regular correcte pro le campo `%s': %s"
@@ -2416,145 +2444,145 @@ msgstr "%s: le valor del campo `int_curr_symbol' non corresponde a un nomine val
 msgid "%s: value for field `%s' must be in range %d...%d"
 msgstr "%s: le valor pro le campo `%s' debe esser del intervallo %d...%d"
 
-#: locale/programs/ld-monetary.c:746 locale/programs/ld-numeric.c:273
+#: locale/programs/ld-monetary.c:541 locale/programs/ld-numeric.c:229
 #, c-format
 msgid "%s: value for field `%s' must be a single character"
 msgstr "%s: le valor pro le campo `%s' debe esser un singule character"
 
-#: locale/programs/ld-monetary.c:843 locale/programs/ld-numeric.c:317
+#: locale/programs/ld-monetary.c:638 locale/programs/ld-numeric.c:273
 #, c-format
 msgid "%s: `-1' must be last entry in `%s' field"
 msgstr "%s: `-1' debe esser le ultime entrata in le campo `%s'"
 
-#: locale/programs/ld-monetary.c:865 locale/programs/ld-numeric.c:334
+#: locale/programs/ld-monetary.c:660 locale/programs/ld-numeric.c:290
 #, c-format
 msgid "%s: values for field `%s' must be smaller than 127"
 msgstr "%s: le valores pro le campo `%s' debe esser plus parve que 127"
 
-#: locale/programs/ld-monetary.c:908
+#: locale/programs/ld-monetary.c:706
 msgid "conversion rate value cannot be zero"
 msgstr "le valor del rata de conversion non pote esser zero"
 
-#: locale/programs/ld-name.c:128 locale/programs/ld-telephone.c:125
-#: locale/programs/ld-telephone.c:148
+#: locale/programs/ld-name.c:129 locale/programs/ld-telephone.c:126
+#: locale/programs/ld-telephone.c:149
 #, c-format
 msgid "%s: invalid escape sequence in field `%s'"
 msgstr "%s: sequentia de escappata invalide in le campo `%s'"
 
-#: locale/programs/ld-time.c:246
+#: locale/programs/ld-time.c:247
 #, c-format
 msgid "%s: direction flag in string %Zd in `era' field is not '+' nor '-'"
 msgstr "%s: le indicator de direction in le catena %Zd in le campo `era' non es '+' ni '-'"
 
-#: locale/programs/ld-time.c:257
+#: locale/programs/ld-time.c:258
 #, c-format
 msgid "%s: direction flag in string %Zd in `era' field is not a single character"
 msgstr "%s: le indication de direction in le catena %Zd in le campo `era' non es un singule character"
 
-#: locale/programs/ld-time.c:270
+#: locale/programs/ld-time.c:271
 #, c-format
 msgid "%s: invalid number for offset in string %Zd in `era' field"
 msgstr "%s: numero invalide pro displaciamento in le catena %Zd in le campo `era'"
 
-#: locale/programs/ld-time.c:278
+#: locale/programs/ld-time.c:279
 #, c-format
 msgid "%s: garbage at end of offset value in string %Zd in `era' field"
 msgstr "%s: datos superflue al fin del valor de displaciamento in le catena %Zd in le campo `era'"
 
-#: locale/programs/ld-time.c:329
+#: locale/programs/ld-time.c:330
 #, c-format
 msgid "%s: invalid starting date in string %Zd in `era' field"
 msgstr "%s: data initial invalide in le catena %Zd in le campo `era'"
 
-#: locale/programs/ld-time.c:338
+#: locale/programs/ld-time.c:339
 #, c-format
 msgid "%s: garbage at end of starting date in string %Zd in `era' field "
 msgstr "%s: datos superflue al fin del data initial in le catena %Zd in le campo `era' "
 
-#: locale/programs/ld-time.c:357
+#: locale/programs/ld-time.c:358
 #, c-format
 msgid "%s: starting date is invalid in string %Zd in `era' field"
 msgstr "%s: le data de comenciamento es invalide in le catena %Zd in le campo `era'"
 
-#: locale/programs/ld-time.c:406 locale/programs/ld-time.c:434
+#: locale/programs/ld-time.c:407 locale/programs/ld-time.c:435
 #, c-format
 msgid "%s: invalid stopping date in string %Zd in `era' field"
 msgstr "%s: data final invalide in le catena %Zd in le campo `era'"
 
-#: locale/programs/ld-time.c:415
+#: locale/programs/ld-time.c:416
 #, c-format
 msgid "%s: garbage at end of stopping date in string %Zd in `era' field"
 msgstr "%s: datos superflue al fin del data final in le catena %Zd in le campo `era'"
 
-#: locale/programs/ld-time.c:443
+#: locale/programs/ld-time.c:444
 #, c-format
 msgid "%s: missing era name in string %Zd in `era' field"
 msgstr "%s: nomine de era mancante in le catena %Zd in le campo `era'"
 
-#: locale/programs/ld-time.c:455
+#: locale/programs/ld-time.c:456
 #, c-format
 msgid "%s: missing era format in string %Zd in `era' field"
 msgstr "%s: formato de era mancante in le catena %Zd in le campo `era'"
 
-#: locale/programs/ld-time.c:496
+#: locale/programs/ld-time.c:497
 #, c-format
 msgid "%s: third operand for value of field `%s' must not be larger than %d"
 msgstr "%s: le tertie operando pro le valor del campo `%s' non debe esser plus grande que %d"
 
-#: locale/programs/ld-time.c:504 locale/programs/ld-time.c:512
-#: locale/programs/ld-time.c:520
+#: locale/programs/ld-time.c:505 locale/programs/ld-time.c:513
+#: locale/programs/ld-time.c:521
 #, c-format
 msgid "%s: values for field `%s' must not be larger than %d"
 msgstr "%s: valores pro le campo `%s' non debe plus grande que %d"
 
-#: locale/programs/ld-time.c:1003
+#: locale/programs/ld-time.c:726
 #, c-format
 msgid "%s: too few values for field `%s'"
 msgstr "%s: insufficiente numero de valores pro le campo `%s'"
 
-#: locale/programs/ld-time.c:1048
+#: locale/programs/ld-time.c:771
 msgid "extra trailing semicolon"
 msgstr "puncto e virgula superflue al fin"
 
-#: locale/programs/ld-time.c:1051
+#: locale/programs/ld-time.c:774
 #, c-format
 msgid "%s: too many values for field `%s'"
 msgstr "%s: tro de valores pro le campo `%s'"
 
-#: locale/programs/linereader.c:129
+#: locale/programs/linereader.c:130
 msgid "trailing garbage at end of line"
 msgstr "datos superflue al fin de catena"
 
-#: locale/programs/linereader.c:297
+#: locale/programs/linereader.c:298
 msgid "garbage at end of number"
 msgstr "datos superflue al fin del numero"
 
-#: locale/programs/linereader.c:409
+#: locale/programs/linereader.c:410
 msgid "garbage at end of character code specification"
 msgstr "datos superflue al fin del specification del codice de character"
 
-#: locale/programs/linereader.c:495
+#: locale/programs/linereader.c:496
 msgid "unterminated symbolic name"
 msgstr "nomine symbolic sin termination"
 
-#: locale/programs/linereader.c:622
+#: locale/programs/linereader.c:623
 msgid "illegal escape sequence at end of string"
 msgstr "sequentia de escappamento non permittite al fin de catena"
 
-#: locale/programs/linereader.c:626 locale/programs/linereader.c:854
+#: locale/programs/linereader.c:627 locale/programs/linereader.c:855
 msgid "unterminated string"
 msgstr "catena sin termination"
 
-#: locale/programs/linereader.c:668
+#: locale/programs/linereader.c:669
 msgid "non-symbolic character value should not be used"
 msgstr "un valor de character non-symbolic non deberea usar se"
 
-#: locale/programs/linereader.c:815
+#: locale/programs/linereader.c:816
 #, c-format
 msgid "symbol `%.*s' not in charmap"
 msgstr "le symbolo `%.*s' non es in tabula de characteres"
 
-#: locale/programs/linereader.c:836
+#: locale/programs/linereader.c:837
 #, c-format
 msgid "symbol `%.*s' not in repertoire map"
 msgstr "le symbolo `%.*s' non es in le repertoire"
@@ -2564,39 +2592,39 @@ msgstr "le symbolo `%.*s' non es in le repertoire"
 msgid "unknown name \"%s\""
 msgstr "nomine incognite \"%s\""
 
-#: locale/programs/locale.c:74
+#: locale/programs/locale.c:72
 msgid "System information:"
 msgstr "Information del systema:"
 
-#: locale/programs/locale.c:76
+#: locale/programs/locale.c:74
 msgid "Write names of available locales"
 msgstr "Monstrar le nomines del localitates disponibile"
 
-#: locale/programs/locale.c:78
+#: locale/programs/locale.c:76
 msgid "Write names of available charmaps"
 msgstr "Monstrar le nomines del tabulas de characteres disponibile"
 
-#: locale/programs/locale.c:79
+#: locale/programs/locale.c:77
 msgid "Modify output format:"
 msgstr "Modificar le formate de output:"
 
-#: locale/programs/locale.c:80
+#: locale/programs/locale.c:78
 msgid "Write names of selected categories"
 msgstr "Monstrar le nomines del categorias seligite"
 
-#: locale/programs/locale.c:81
+#: locale/programs/locale.c:79
 msgid "Write names of selected keywords"
 msgstr "Monstrar le nomines del parolas claves seligite"
 
-#: locale/programs/locale.c:82
+#: locale/programs/locale.c:80
 msgid "Print more information"
 msgstr "Monstrar information plus detaliate"
 
-#: locale/programs/locale.c:87
+#: locale/programs/locale.c:85
 msgid "Get locale-specific information."
 msgstr "Obtener le information specific pro un localitate"
 
-#: locale/programs/locale.c:90
+#: locale/programs/locale.c:88
 msgid ""
 "NAME\n"
 "[-a|-m]"
@@ -2604,104 +2632,114 @@ msgstr ""
 "NOMINE\n"
 "[-a|-m]"
 
-#: locale/programs/locale.c:194
+#: locale/programs/locale.c:192
 #, c-format
 msgid "Cannot set LC_CTYPE to default locale"
 msgstr "Impossibile de initialisar LC_CTYPE al localitate predefinite"
 
-#: locale/programs/locale.c:196
+#: locale/programs/locale.c:194
 #, c-format
 msgid "Cannot set LC_MESSAGES to default locale"
 msgstr "Impossibile de initialisar LC_MESSAGE al localitate predefinite"
 
-#: locale/programs/locale.c:209
+#: locale/programs/locale.c:207
 #, c-format
 msgid "Cannot set LC_COLLATE to default locale"
 msgstr "Impossibile de initialisar LC_COLLATE al localitate predefinite"
 
-#: locale/programs/locale.c:225
+#: locale/programs/locale.c:223
 #, c-format
 msgid "Cannot set LC_ALL to default locale"
 msgstr "Impossibile de initialisar LC_ALL al localitate predefinite"
 
-#: locale/programs/locale.c:521
+#: locale/programs/locale.c:519
 #, c-format
 msgid "while preparing output"
 msgstr "durante le preparation de output"
 
-#: locale/programs/localedef.c:119
+#: locale/programs/localedef.c:121
 msgid "Input Files:"
 msgstr "Files de input:"
 
-#: locale/programs/localedef.c:121
+#: locale/programs/localedef.c:123
 msgid "Symbolic character names defined in FILE"
 msgstr "Nomines symbolic de characteres es in FILE"
 
-#: locale/programs/localedef.c:122
+#: locale/programs/localedef.c:125
 msgid "Source definitions are found in FILE"
 msgstr "Le definitiones fontal es in FILE"
 
-#: locale/programs/localedef.c:124
+#: locale/programs/localedef.c:127
 msgid "FILE contains mapping from symbolic names to UCS4 values"
 msgstr "FILE contine mappage del nomines symbolic al valores UCS4"
 
-#: locale/programs/localedef.c:128
+#: locale/programs/localedef.c:131
 msgid "Create output even if warning messages were issued"
 msgstr "Crear le output etsi advertimentos era emittite"
 
-#: locale/programs/localedef.c:129
+#: locale/programs/localedef.c:132
 msgid "Create old-style tables"
 msgstr "Crear le tabellas de vetule stilo"
 
-#: locale/programs/localedef.c:130
+#: locale/programs/localedef.c:133
 msgid "Optional output file prefix"
 msgstr "Prefixo optional del file de output"
 
-#: locale/programs/localedef.c:131
-msgid "Be strictly POSIX conform"
+#: locale/programs/localedef.c:134
+#, fuzzy
+#| msgid "Be strictly POSIX conform"
+msgid "Strictly conform to POSIX"
 msgstr "Conformar se strictemente a POSIX"
 
-#: locale/programs/localedef.c:133
+#: locale/programs/localedef.c:136
 msgid "Suppress warnings and information messages"
 msgstr "Supprimer advertimentos e messages informative"
 
-#: locale/programs/localedef.c:134
+#: locale/programs/localedef.c:137
 msgid "Print more messages"
 msgstr "Monstrar plus de messages"
 
-#: locale/programs/localedef.c:135
+#: locale/programs/localedef.c:138
 msgid "Archive control:"
 msgstr "Gerentia del archivo:"
 
-#: locale/programs/localedef.c:137
+#: locale/programs/localedef.c:140
 msgid "Don't add new data to archive"
 msgstr "Non adder nove datos al archivo"
 
-#: locale/programs/localedef.c:139
+#: locale/programs/localedef.c:142
 msgid "Add locales named by parameters to archive"
 msgstr "Adder al archivo le localitates designate per parametros"
 
-#: locale/programs/localedef.c:140
+#: locale/programs/localedef.c:143
 msgid "Replace existing archive content"
 msgstr "Reimplaciar le contento existente del archivo"
 
-#: locale/programs/localedef.c:142
+#: locale/programs/localedef.c:145
 msgid "Remove locales named by parameters from archive"
 msgstr "Remover del archivo le localitates designate per parametros"
 
-#: locale/programs/localedef.c:143
+#: locale/programs/localedef.c:146
 msgid "List content of archive"
 msgstr "Monstrar le contento del archivo"
 
-#: locale/programs/localedef.c:145
+#: locale/programs/localedef.c:148
 msgid "locale.alias file to consult when making archive"
 msgstr "Le file locale.alias a consultar durante le creation del archivo"
 
 #: locale/programs/localedef.c:150
+msgid "Generate little-endian output"
+msgstr ""
+
+#: locale/programs/localedef.c:152
+msgid "Generate big-endian output"
+msgstr ""
+
+#: locale/programs/localedef.c:157
 msgid "Compile locale specification"
 msgstr "Compilar le specification de localitate"
 
-#: locale/programs/localedef.c:153
+#: locale/programs/localedef.c:160
 msgid ""
 "NAME\n"
 "[--add-to-archive|--delete-from-archive] FILE...\n"
@@ -2711,28 +2749,28 @@ msgstr ""
 "[--add-to-archive|--delete-from-archive] FILE...\n"
 "--list-archive [FILE]"
 
-#: locale/programs/localedef.c:228
+#: locale/programs/localedef.c:235
 #, c-format
 msgid "cannot create directory for output files"
 msgstr ""
 
-#: locale/programs/localedef.c:239
+#: locale/programs/localedef.c:246
 #, c-format
 msgid "FATAL: system does not define `_POSIX2_LOCALEDEF'"
 msgstr ""
 
-#: locale/programs/localedef.c:253 locale/programs/localedef.c:269
-#: locale/programs/localedef.c:601 locale/programs/localedef.c:621
+#: locale/programs/localedef.c:260 locale/programs/localedef.c:276
+#: locale/programs/localedef.c:614 locale/programs/localedef.c:634
 #, c-format
 msgid "cannot open locale definition file `%s'"
 msgstr ""
 
-#: locale/programs/localedef.c:281
+#: locale/programs/localedef.c:288
 #, c-format
 msgid "cannot write output files to `%s'"
 msgstr ""
 
-#: locale/programs/localedef.c:367
+#: locale/programs/localedef.c:380
 #, c-format
 msgid ""
 "System's directory for character maps : %s\n"
@@ -2741,207 +2779,207 @@ msgid ""
 "%s"
 msgstr ""
 
-#: locale/programs/localedef.c:569
+#: locale/programs/localedef.c:582
 #, c-format
 msgid "circular dependencies between locale definitions"
 msgstr ""
 
-#: locale/programs/localedef.c:575
+#: locale/programs/localedef.c:588
 #, c-format
 msgid "cannot add already read locale `%s' a second time"
 msgstr ""
 
-#: locale/programs/locarchive.c:113 locale/programs/locarchive.c:347
-#: nss/makedb.c:290
-#, c-format
-msgid "cannot create temporary file"
-msgstr ""
+#: locale/programs/locarchive.c:133 locale/programs/locarchive.c:380
+#, fuzzy, c-format
+#| msgid "Can't create temporary cache file %s"
+msgid "cannot create temporary file: %s"
+msgstr "Impossibile de crear le file de cache temporari %s"
 
-#: locale/programs/locarchive.c:143 locale/programs/locarchive.c:393
+#: locale/programs/locarchive.c:167 locale/programs/locarchive.c:430
 #, c-format
 msgid "cannot initialize archive file"
 msgstr ""
 
-#: locale/programs/locarchive.c:150 locale/programs/locarchive.c:400
+#: locale/programs/locarchive.c:174 locale/programs/locarchive.c:437
 #, c-format
 msgid "cannot resize archive file"
 msgstr ""
 
-#: locale/programs/locarchive.c:163 locale/programs/locarchive.c:413
-#: locale/programs/locarchive.c:619
+#: locale/programs/locarchive.c:189 locale/programs/locarchive.c:452
+#: locale/programs/locarchive.c:674
 #, c-format
 msgid "cannot map archive header"
 msgstr ""
 
-#: locale/programs/locarchive.c:185
+#: locale/programs/locarchive.c:211
 #, c-format
 msgid "failed to create new locale archive"
 msgstr ""
 
-#: locale/programs/locarchive.c:197
+#: locale/programs/locarchive.c:223
 #, c-format
 msgid "cannot change mode of new locale archive"
 msgstr ""
 
-#: locale/programs/locarchive.c:296
+#: locale/programs/locarchive.c:324
 #, c-format
 msgid "cannot read data from locale archive"
 msgstr ""
 
-#: locale/programs/locarchive.c:327
+#: locale/programs/locarchive.c:355
 #, c-format
 msgid "cannot map locale archive file"
 msgstr ""
 
-#: locale/programs/locarchive.c:421
+#: locale/programs/locarchive.c:460
 #, c-format
 msgid "cannot lock new archive"
 msgstr ""
 
-#: locale/programs/locarchive.c:485
+#: locale/programs/locarchive.c:529
 #, c-format
 msgid "cannot extend locale archive file"
 msgstr ""
 
-#: locale/programs/locarchive.c:494
+#: locale/programs/locarchive.c:538
 #, c-format
 msgid "cannot change mode of resized locale archive"
 msgstr ""
 
-#: locale/programs/locarchive.c:502
+#: locale/programs/locarchive.c:546
 #, c-format
 msgid "cannot rename new archive"
 msgstr ""
 
-#: locale/programs/locarchive.c:555
+#: locale/programs/locarchive.c:608
 #, c-format
 msgid "cannot open locale archive \"%s\""
 msgstr ""
 
-#: locale/programs/locarchive.c:560
+#: locale/programs/locarchive.c:613
 #, c-format
 msgid "cannot stat locale archive \"%s\""
 msgstr ""
 
-#: locale/programs/locarchive.c:579
+#: locale/programs/locarchive.c:632
 #, c-format
 msgid "cannot lock locale archive \"%s\""
 msgstr ""
 
-#: locale/programs/locarchive.c:602
+#: locale/programs/locarchive.c:655
 #, c-format
 msgid "cannot read archive header"
 msgstr ""
 
-#: locale/programs/locarchive.c:666
+#: locale/programs/locarchive.c:728
 #, c-format
 msgid "locale '%s' already exists"
 msgstr ""
 
-#: locale/programs/locarchive.c:928 locale/programs/locarchive.c:943
-#: locale/programs/locarchive.c:955 locale/programs/locarchive.c:967
-#: locale/programs/locfile.c:343
+#: locale/programs/locarchive.c:1003 locale/programs/locarchive.c:1018
+#: locale/programs/locarchive.c:1030 locale/programs/locarchive.c:1042
+#: locale/programs/locfile.c:350
 #, c-format
 msgid "cannot add to locale archive"
 msgstr ""
 
-#: locale/programs/locarchive.c:1125
+#: locale/programs/locarchive.c:1206
 #, c-format
 msgid "locale alias file `%s' not found"
 msgstr ""
 
-#: locale/programs/locarchive.c:1275
+#: locale/programs/locarchive.c:1357
 #, c-format
 msgid "Adding %s\n"
 msgstr ""
 
-#: locale/programs/locarchive.c:1281
+#: locale/programs/locarchive.c:1363
 #, c-format
 msgid "stat of \"%s\" failed: %s: ignored"
 msgstr ""
 
-#: locale/programs/locarchive.c:1287
+#: locale/programs/locarchive.c:1369
 #, c-format
 msgid "\"%s\" is no directory; ignored"
 msgstr ""
 
-#: locale/programs/locarchive.c:1294
+#: locale/programs/locarchive.c:1376
 #, c-format
 msgid "cannot open directory \"%s\": %s: ignored"
 msgstr ""
 
-#: locale/programs/locarchive.c:1366
+#: locale/programs/locarchive.c:1448
 #, c-format
 msgid "incomplete set of locale files in \"%s\""
 msgstr ""
 
-#: locale/programs/locarchive.c:1430
+#: locale/programs/locarchive.c:1512
 #, c-format
 msgid "cannot read all files in \"%s\": ignored"
 msgstr ""
 
-#: locale/programs/locarchive.c:1500
+#: locale/programs/locarchive.c:1584
 #, c-format
 msgid "locale \"%s\" not in archive"
 msgstr ""
 
-#: locale/programs/locfile.c:131
+#: locale/programs/locfile.c:137
 #, c-format
 msgid "argument to `%s' must be a single character"
 msgstr ""
 
-#: locale/programs/locfile.c:251
+#: locale/programs/locfile.c:257
 msgid "syntax error: not inside a locale definition section"
 msgstr ""
 
-#: locale/programs/locfile.c:625
+#: locale/programs/locfile.c:800
 #, c-format
 msgid "cannot open output file `%s' for category `%s'"
 msgstr ""
 
-#: locale/programs/locfile.c:649
+#: locale/programs/locfile.c:824
 #, c-format
 msgid "failure while writing data for category `%s'"
 msgstr ""
 
-#: locale/programs/locfile.c:745
+#: locale/programs/locfile.c:920
 #, c-format
 msgid "cannot create output file `%s' for category `%s'"
 msgstr ""
 
-#: locale/programs/locfile.c:781
+#: locale/programs/locfile.c:956
 msgid "expecting string argument for `copy'"
 msgstr ""
 
-#: locale/programs/locfile.c:785
+#: locale/programs/locfile.c:960
 msgid "locale name should consist only of portable characters"
 msgstr ""
 
-#: locale/programs/locfile.c:804
+#: locale/programs/locfile.c:979
 msgid "no other keyword shall be specified when `copy' is used"
 msgstr ""
 
-#: locale/programs/locfile.c:818
+#: locale/programs/locfile.c:993
 #, c-format
 msgid "`%1$s' definition does not end with `END %1$s'"
 msgstr ""
 
-#: locale/programs/repertoire.c:228 locale/programs/repertoire.c:269
-#: locale/programs/repertoire.c:294
+#: locale/programs/repertoire.c:229 locale/programs/repertoire.c:270
+#: locale/programs/repertoire.c:295
 #, c-format
 msgid "syntax error in repertoire map definition: %s"
 msgstr ""
 
-#: locale/programs/repertoire.c:270
+#: locale/programs/repertoire.c:271
 msgid "no <Uxxxx> or <Uxxxxxxxx> value given"
 msgstr ""
 
-#: locale/programs/repertoire.c:330
+#: locale/programs/repertoire.c:331
 #, c-format
 msgid "cannot save new repertoire map"
 msgstr ""
 
-#: locale/programs/repertoire.c:341
+#: locale/programs/repertoire.c:342
 #, c-format
 msgid "repertoire map file `%s' not found"
 msgstr ""
@@ -2969,23 +3007,23 @@ msgstr ""
 msgid "needs to be installed setuid `root'"
 msgstr ""
 
-#: malloc/mcheck.c:348
+#: malloc/mcheck.c:346
 msgid "memory is consistent, library is buggy\n"
 msgstr ""
 
-#: malloc/mcheck.c:351
+#: malloc/mcheck.c:349
 msgid "memory clobbered before allocated block\n"
 msgstr ""
 
-#: malloc/mcheck.c:354
+#: malloc/mcheck.c:352
 msgid "memory clobbered past end of allocated block\n"
 msgstr ""
 
-#: malloc/mcheck.c:357
+#: malloc/mcheck.c:355
 msgid "block freed twice\n"
 msgstr ""
 
-#: malloc/mcheck.c:360
+#: malloc/mcheck.c:358
 msgid "bogus mcheck_status, library is buggy\n"
 msgstr ""
 
@@ -3042,39 +3080,47 @@ msgstr ""
 msgid "No program name given"
 msgstr ""
 
-#: malloc/memusagestat.c:55
+#: malloc/memusagestat.c:56
 msgid "Name output file"
 msgstr ""
 
-#: malloc/memusagestat.c:56
-msgid "Title string used in output graphic"
+#: malloc/memusagestat.c:57
+msgid "STRING"
 msgstr ""
 
 #: malloc/memusagestat.c:57
+msgid "Title string used in output graphic"
+msgstr ""
+
+#: malloc/memusagestat.c:58
 msgid "Generate output linear to time (default is linear to number of function calls)"
 msgstr ""
 
-#: malloc/memusagestat.c:59
+#: malloc/memusagestat.c:62
 msgid "Also draw graph for total memory consumption"
 msgstr ""
 
-#: malloc/memusagestat.c:60
+#: malloc/memusagestat.c:63
+msgid "VALUE"
+msgstr ""
+
+#: malloc/memusagestat.c:64
 msgid "Make output graphic VALUE pixels wide"
 msgstr ""
 
-#: malloc/memusagestat.c:61
+#: malloc/memusagestat.c:65
 msgid "Make output graphic VALUE pixels high"
 msgstr ""
 
-#: malloc/memusagestat.c:66
+#: malloc/memusagestat.c:70
 msgid "Generate graphic from memory profiling data"
 msgstr ""
 
-#: malloc/memusagestat.c:69
+#: malloc/memusagestat.c:73
 msgid "DATAFILE [OUTFILE]"
 msgstr ""
 
-#: misc/error.c:117
+#: misc/error.c:192
 msgid "Unknown system error"
 msgstr ""
 
@@ -3082,8 +3128,8 @@ msgstr ""
 msgid "unable to free arguments"
 msgstr ""
 
-#: nis/nis_error.h:1 nis/ypclnt.c:832 nis/ypclnt.c:920 posix/regcomp.c:131
-#: sysdeps/gnu/errlist.c:20
+#: nis/nis_error.h:1 nis/ypclnt.c:831 nis/ypclnt.c:919 posix/regcomp.c:137
+#: sysdeps/gnu/errlist.c:21
 msgid "Success"
 msgstr ""
 
@@ -3124,7 +3170,7 @@ msgid "First/next chain broken"
 msgstr ""
 
 #. TRANS Permission denied; the file permissions do not allow the attempted operation.
-#: nis/nis_error.h:11 nis/ypclnt.c:877 sysdeps/gnu/errlist.c:157
+#: nis/nis_error.h:11 nis/ypclnt.c:876 sysdeps/gnu/errlist.c:158
 msgid "Permission denied"
 msgstr ""
 
@@ -3281,307 +3327,307 @@ msgstr ""
 msgid "LOCAL entry for UID %d in directory %s not unique\n"
 msgstr ""
 
-#: nis/nis_print.c:50
+#: nis/nis_print.c:51
 msgid "UNKNOWN"
 msgstr ""
 
-#: nis/nis_print.c:108
+#: nis/nis_print.c:109
 msgid "BOGUS OBJECT\n"
 msgstr ""
 
-#: nis/nis_print.c:111
+#: nis/nis_print.c:112
 msgid "NO OBJECT\n"
 msgstr ""
 
-#: nis/nis_print.c:114
+#: nis/nis_print.c:115
 msgid "DIRECTORY\n"
 msgstr ""
 
-#: nis/nis_print.c:117
+#: nis/nis_print.c:118
 msgid "GROUP\n"
 msgstr ""
 
-#: nis/nis_print.c:120
+#: nis/nis_print.c:121
 msgid "TABLE\n"
 msgstr ""
 
-#: nis/nis_print.c:123
+#: nis/nis_print.c:124
 msgid "ENTRY\n"
 msgstr ""
 
-#: nis/nis_print.c:126
+#: nis/nis_print.c:127
 msgid "LINK\n"
 msgstr ""
 
-#: nis/nis_print.c:129
+#: nis/nis_print.c:130
 msgid "PRIVATE\n"
 msgstr ""
 
-#: nis/nis_print.c:132
+#: nis/nis_print.c:133
 msgid "(Unknown object)\n"
-msgstr ""
-
-#: nis/nis_print.c:166
-#, c-format
-msgid "Name : `%s'\n"
 msgstr ""
 
 #: nis/nis_print.c:167
 #, c-format
+msgid "Name : `%s'\n"
+msgstr ""
+
+#: nis/nis_print.c:168
+#, c-format
 msgid "Type : %s\n"
 msgstr ""
 
-#: nis/nis_print.c:172
+#: nis/nis_print.c:173
 msgid "Master Server :\n"
 msgstr ""
 
-#: nis/nis_print.c:174
+#: nis/nis_print.c:175
 msgid "Replicate :\n"
 msgstr ""
 
-#: nis/nis_print.c:175
+#: nis/nis_print.c:176
 #, c-format
 msgid "\tName       : %s\n"
 msgstr ""
 
-#: nis/nis_print.c:176
+#: nis/nis_print.c:177
 msgid "\tPublic Key : "
 msgstr ""
 
-#: nis/nis_print.c:180
+#: nis/nis_print.c:181
 msgid "None.\n"
 msgstr ""
 
-#: nis/nis_print.c:183
+#: nis/nis_print.c:184
 #, c-format
 msgid "Diffie-Hellmann (%d bits)\n"
 msgstr ""
 
-#: nis/nis_print.c:188
+#: nis/nis_print.c:189
 #, c-format
 msgid "RSA (%d bits)\n"
 msgstr ""
 
-#: nis/nis_print.c:191
+#: nis/nis_print.c:192
 msgid "Kerberos.\n"
 msgstr ""
 
-#: nis/nis_print.c:194
+#: nis/nis_print.c:195
 #, c-format
 msgid "Unknown (type = %d, bits = %d)\n"
 msgstr ""
 
-#: nis/nis_print.c:205
+#: nis/nis_print.c:206
 #, c-format
 msgid "\tUniversal addresses (%u)\n"
 msgstr ""
 
-#: nis/nis_print.c:227
+#: nis/nis_print.c:228
 msgid "Time to live : "
 msgstr ""
 
-#: nis/nis_print.c:229
+#: nis/nis_print.c:230
 msgid "Default Access rights :\n"
 msgstr ""
 
-#: nis/nis_print.c:238
+#: nis/nis_print.c:239
 #, c-format
 msgid "\tType         : %s\n"
 msgstr ""
 
-#: nis/nis_print.c:239
+#: nis/nis_print.c:240
 msgid "\tAccess rights: "
 msgstr ""
 
-#: nis/nis_print.c:253
+#: nis/nis_print.c:254
 msgid "Group Flags :"
 msgstr ""
 
-#: nis/nis_print.c:256
+#: nis/nis_print.c:257
 msgid ""
 "\n"
 "Group Members :\n"
 msgstr ""
 
-#: nis/nis_print.c:268
+#: nis/nis_print.c:269
 #, c-format
 msgid "Table Type          : %s\n"
 msgstr ""
 
-#: nis/nis_print.c:269
+#: nis/nis_print.c:270
 #, c-format
 msgid "Number of Columns   : %d\n"
 msgstr ""
 
-#: nis/nis_print.c:270
+#: nis/nis_print.c:271
 #, c-format
 msgid "Character Separator : %c\n"
 msgstr ""
 
-#: nis/nis_print.c:271
+#: nis/nis_print.c:272
 #, c-format
 msgid "Search Path         : %s\n"
 msgstr ""
 
-#: nis/nis_print.c:272
+#: nis/nis_print.c:273
 msgid "Columns             :\n"
 msgstr ""
 
-#: nis/nis_print.c:275
+#: nis/nis_print.c:276
 #, c-format
 msgid "\t[%d]\tName          : %s\n"
 msgstr ""
 
-#: nis/nis_print.c:277
+#: nis/nis_print.c:278
 msgid "\t\tAttributes    : "
 msgstr ""
 
-#: nis/nis_print.c:279
+#: nis/nis_print.c:280
 msgid "\t\tAccess Rights : "
 msgstr ""
 
-#: nis/nis_print.c:289
+#: nis/nis_print.c:290
 msgid "Linked Object Type : "
 msgstr ""
 
-#: nis/nis_print.c:291
+#: nis/nis_print.c:292
 #, c-format
 msgid "Linked to : %s\n"
 msgstr ""
 
-#: nis/nis_print.c:301
+#: nis/nis_print.c:302
 #, c-format
 msgid "\tEntry data of type %s\n"
 msgstr ""
 
-#: nis/nis_print.c:304
+#: nis/nis_print.c:305
 #, c-format
 msgid "\t[%u] - [%u bytes] "
 msgstr ""
 
-#: nis/nis_print.c:307
+#: nis/nis_print.c:308
 msgid "Encrypted data\n"
 msgstr ""
 
-#: nis/nis_print.c:309
+#: nis/nis_print.c:310
 msgid "Binary data\n"
-msgstr ""
-
-#: nis/nis_print.c:325
-#, c-format
-msgid "Object Name   : %s\n"
 msgstr ""
 
 #: nis/nis_print.c:326
 #, c-format
-msgid "Directory     : %s\n"
+msgid "Object Name   : %s\n"
 msgstr ""
 
 #: nis/nis_print.c:327
 #, c-format
-msgid "Owner         : %s\n"
+msgid "Directory     : %s\n"
 msgstr ""
 
 #: nis/nis_print.c:328
 #, c-format
-msgid "Group         : %s\n"
+msgid "Owner         : %s\n"
 msgstr ""
 
 #: nis/nis_print.c:329
+#, c-format
+msgid "Group         : %s\n"
+msgstr ""
+
+#: nis/nis_print.c:330
 msgid "Access Rights : "
 msgstr ""
 
-#: nis/nis_print.c:331
+#: nis/nis_print.c:332
 #, c-format
 msgid ""
 "\n"
 "Time to Live  : "
 msgstr ""
 
-#: nis/nis_print.c:334
+#: nis/nis_print.c:335
 #, c-format
 msgid "Creation Time : %s"
 msgstr ""
 
-#: nis/nis_print.c:336
+#: nis/nis_print.c:337
 #, c-format
 msgid "Mod. Time     : %s"
 msgstr ""
 
-#: nis/nis_print.c:337
+#: nis/nis_print.c:338
 msgid "Object Type   : "
 msgstr ""
 
-#: nis/nis_print.c:357
+#: nis/nis_print.c:358
 #, c-format
 msgid "    Data Length = %u\n"
 msgstr ""
 
-#: nis/nis_print.c:371
+#: nis/nis_print.c:372
 #, c-format
 msgid "Status            : %s\n"
 msgstr ""
 
-#: nis/nis_print.c:372
+#: nis/nis_print.c:373
 #, c-format
 msgid "Number of objects : %u\n"
 msgstr ""
 
-#: nis/nis_print.c:376
+#: nis/nis_print.c:377
 #, c-format
 msgid "Object #%d:\n"
 msgstr ""
 
-#: nis/nis_print_group_entry.c:117
+#: nis/nis_print_group_entry.c:116
 #, c-format
 msgid "Group entry for \"%s.%s\" group:\n"
 msgstr ""
 
-#: nis/nis_print_group_entry.c:125
+#: nis/nis_print_group_entry.c:124
 msgid "    Explicit members:\n"
 msgstr ""
 
-#: nis/nis_print_group_entry.c:130
+#: nis/nis_print_group_entry.c:129
 msgid "    No explicit members\n"
 msgstr ""
 
-#: nis/nis_print_group_entry.c:133
+#: nis/nis_print_group_entry.c:132
 msgid "    Implicit members:\n"
 msgstr ""
 
-#: nis/nis_print_group_entry.c:138
+#: nis/nis_print_group_entry.c:137
 msgid "    No implicit members\n"
 msgstr ""
 
-#: nis/nis_print_group_entry.c:141
+#: nis/nis_print_group_entry.c:140
 msgid "    Recursive members:\n"
 msgstr ""
 
-#: nis/nis_print_group_entry.c:146
+#: nis/nis_print_group_entry.c:145
 msgid "    No recursive members\n"
 msgstr ""
 
-#: nis/nis_print_group_entry.c:149
+#: nis/nis_print_group_entry.c:148
 msgid "    Explicit nonmembers:\n"
 msgstr ""
 
-#: nis/nis_print_group_entry.c:154
+#: nis/nis_print_group_entry.c:153
 msgid "    No explicit nonmembers\n"
 msgstr ""
 
-#: nis/nis_print_group_entry.c:157
+#: nis/nis_print_group_entry.c:156
 msgid "    Implicit nonmembers:\n"
 msgstr ""
 
-#: nis/nis_print_group_entry.c:162
+#: nis/nis_print_group_entry.c:161
 msgid "    No implicit nonmembers\n"
 msgstr ""
 
-#: nis/nis_print_group_entry.c:165
+#: nis/nis_print_group_entry.c:164
 msgid "    Recursive nonmembers:\n"
 msgstr ""
 
-#: nis/nis_print_group_entry.c:170
+#: nis/nis_print_group_entry.c:169
 msgid "    No recursive nonmembers\n"
 msgstr ""
 
@@ -3623,100 +3669,100 @@ msgstr ""
 msgid "netname2user: should not have uid 0"
 msgstr ""
 
-#: nis/ypclnt.c:835
+#: nis/ypclnt.c:834
 msgid "Request arguments bad"
 msgstr ""
 
-#: nis/ypclnt.c:838
+#: nis/ypclnt.c:837
 msgid "RPC failure on NIS operation"
 msgstr ""
 
-#: nis/ypclnt.c:841
+#: nis/ypclnt.c:840
 msgid "Can't bind to server which serves this domain"
 msgstr ""
 
-#: nis/ypclnt.c:844
+#: nis/ypclnt.c:843
 msgid "No such map in server's domain"
 msgstr ""
 
-#: nis/ypclnt.c:847
+#: nis/ypclnt.c:846
 msgid "No such key in map"
 msgstr ""
 
-#: nis/ypclnt.c:850
+#: nis/ypclnt.c:849
 msgid "Internal NIS error"
 msgstr ""
 
-#: nis/ypclnt.c:853
+#: nis/ypclnt.c:852
 msgid "Local resource allocation failure"
 msgstr ""
 
-#: nis/ypclnt.c:856
+#: nis/ypclnt.c:855
 msgid "No more records in map database"
 msgstr ""
 
-#: nis/ypclnt.c:859
+#: nis/ypclnt.c:858
 msgid "Can't communicate with portmapper"
 msgstr ""
 
-#: nis/ypclnt.c:862
+#: nis/ypclnt.c:861
 msgid "Can't communicate with ypbind"
 msgstr ""
 
-#: nis/ypclnt.c:865
+#: nis/ypclnt.c:864
 msgid "Can't communicate with ypserv"
 msgstr ""
 
-#: nis/ypclnt.c:868
+#: nis/ypclnt.c:867
 msgid "Local domain name not set"
 msgstr ""
 
-#: nis/ypclnt.c:871
+#: nis/ypclnt.c:870
 msgid "NIS map database is bad"
 msgstr ""
 
-#: nis/ypclnt.c:874
+#: nis/ypclnt.c:873
 msgid "NIS client/server version mismatch - can't supply service"
 msgstr ""
 
-#: nis/ypclnt.c:880
+#: nis/ypclnt.c:879
 msgid "Database is busy"
 msgstr ""
 
-#: nis/ypclnt.c:883
+#: nis/ypclnt.c:882
 msgid "Unknown NIS error code"
 msgstr ""
 
-#: nis/ypclnt.c:923
+#: nis/ypclnt.c:922
 msgid "Internal ypbind error"
 msgstr ""
 
-#: nis/ypclnt.c:926
+#: nis/ypclnt.c:925
 msgid "Domain not bound"
 msgstr ""
 
-#: nis/ypclnt.c:929
+#: nis/ypclnt.c:928
 msgid "System resource allocation failure"
 msgstr ""
 
-#: nis/ypclnt.c:932
+#: nis/ypclnt.c:931
 msgid "Unknown ypbind error"
 msgstr ""
 
-#: nis/ypclnt.c:973
+#: nis/ypclnt.c:972
 msgid "yp_update: cannot convert host to netname\n"
 msgstr ""
 
-#: nis/ypclnt.c:991
+#: nis/ypclnt.c:990
 msgid "yp_update: cannot get server address\n"
 msgstr ""
 
-#: nscd/aicache.c:82 nscd/hstcache.c:493
+#: nscd/aicache.c:83 nscd/hstcache.c:485
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
 msgstr ""
 
-#: nscd/aicache.c:84 nscd/hstcache.c:495
+#: nscd/aicache.c:85 nscd/hstcache.c:487
 #, c-format
 msgid "Reloading \"%s\" in hosts cache!"
 msgstr ""
@@ -3730,7 +3776,7 @@ msgstr ""
 msgid " (first)"
 msgstr ""
 
-#: nscd/cache.c:285 nscd/connections.c:1002
+#: nscd/cache.c:285 nscd/connections.c:1000
 #, c-format
 msgid "cannot stat() file `%s': %s"
 msgstr ""
@@ -3745,242 +3791,239 @@ msgstr ""
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
 msgstr ""
 
-#: nscd/connections.c:570
+#: nscd/connections.c:553
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
 msgstr ""
 
-#: nscd/connections.c:578
+#: nscd/connections.c:561
 msgid "uninitialized header"
 msgstr ""
 
-#: nscd/connections.c:583
+#: nscd/connections.c:566
 msgid "header size does not match"
 msgstr ""
 
-#: nscd/connections.c:593
+#: nscd/connections.c:576
 msgid "file size does not match"
 msgstr ""
 
-#: nscd/connections.c:610
+#: nscd/connections.c:593
 msgid "verification failed"
 msgstr ""
 
-#: nscd/connections.c:624
+#: nscd/connections.c:607
 #, c-format
 msgid "suggested size of table for database %s larger than the persistent database's table"
 msgstr ""
 
-#: nscd/connections.c:635 nscd/connections.c:720
+#: nscd/connections.c:618 nscd/connections.c:702
 #, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
 msgstr ""
 
-#: nscd/connections.c:651
+#: nscd/connections.c:634
 #, c-format
 msgid "cannot access '%s'"
 msgstr ""
 
-#: nscd/connections.c:699
+#: nscd/connections.c:682
 #, c-format
 msgid "database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"
 msgstr ""
 
-#: nscd/connections.c:706
+#: nscd/connections.c:688
 #, c-format
 msgid "cannot create %s; no persistent database used"
 msgstr ""
 
-#: nscd/connections.c:709
+#: nscd/connections.c:691
 #, c-format
 msgid "cannot create %s; no sharing possible"
 msgstr ""
 
-#: nscd/connections.c:780
+#: nscd/connections.c:762
 #, c-format
 msgid "cannot write to database file %s: %s"
 msgstr ""
 
-#: nscd/connections.c:819
+#: nscd/connections.c:801
 #, c-format
 msgid "cannot set socket to close on exec: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:868
+#: nscd/connections.c:850
 #, c-format
 msgid "cannot open socket: %s"
 msgstr ""
 
-#: nscd/connections.c:888 nscd/connections.c:952
+#: nscd/connections.c:870 nscd/connections.c:934
 #, c-format
 msgid "cannot change socket to nonblocking mode: %s"
 msgstr ""
 
-#: nscd/connections.c:896 nscd/connections.c:962
+#: nscd/connections.c:878 nscd/connections.c:944
 #, c-format
 msgid "cannot set socket to close on exec: %s"
 msgstr ""
 
-#: nscd/connections.c:909
+#: nscd/connections.c:891
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr ""
 
-#: nscd/connections.c:986
+#: nscd/connections.c:984
 #, c-format
 msgid "register trace file %s for database %s"
 msgstr ""
 
-#: nscd/connections.c:1116
+#: nscd/connections.c:1114
 #, c-format
 msgid "provide access to FD %d, for %s"
 msgstr ""
 
-#: nscd/connections.c:1128
+#: nscd/connections.c:1126
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr ""
 
-#: nscd/connections.c:1150
+#: nscd/connections.c:1148
 #, c-format
 msgid "request from %ld not handled due to missing permission"
 msgstr ""
 
-#: nscd/connections.c:1155
+#: nscd/connections.c:1153
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
 msgstr ""
 
-#: nscd/connections.c:1160
+#: nscd/connections.c:1158
 msgid "request not handled due to missing permission"
 msgstr ""
 
-#: nscd/connections.c:1198 nscd/connections.c:1251
+#: nscd/connections.c:1196 nscd/connections.c:1249
 #, c-format
 msgid "cannot write result: %s"
 msgstr ""
 
-#: nscd/connections.c:1342
+#: nscd/connections.c:1340
 #, c-format
 msgid "error getting caller's id: %s"
 msgstr ""
 
-#: nscd/connections.c:1402
+#: nscd/connections.c:1400
 #, c-format
 msgid "cannot open /proc/self/cmdline: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1416
+#: nscd/connections.c:1414
 #, c-format
 msgid "cannot read /proc/self/cmdline: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1456
+#: nscd/connections.c:1454
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1466
+#: nscd/connections.c:1464
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1479
+#: nscd/connections.c:1477
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1525
+#: nscd/connections.c:1523
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1534
+#: nscd/connections.c:1532
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
 msgstr ""
 
-#: nscd/connections.c:1727
+#: nscd/connections.c:1725
 #, c-format
 msgid "short read while reading request: %s"
 msgstr ""
 
-#: nscd/connections.c:1760
+#: nscd/connections.c:1758
 #, c-format
 msgid "key length in request too long: %d"
 msgstr ""
 
-#: nscd/connections.c:1773
+#: nscd/connections.c:1771
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr ""
 
-#: nscd/connections.c:1782
+#: nscd/connections.c:1781
 #, c-format
 msgid "handle_request: request received (Version = %d) from PID %ld"
 msgstr ""
 
-#: nscd/connections.c:1787
+#: nscd/connections.c:1786
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr ""
 
-#: nscd/connections.c:1999 nscd/connections.c:2227
+#: nscd/connections.c:2050 nscd/connections.c:2252
 #, c-format
 msgid "disabled inotify after read error %d"
 msgstr ""
 
-#: nscd/connections.c:2374
+#: nscd/connections.c:2375
 msgid "could not initialize conditional variable"
 msgstr ""
 
-#: nscd/connections.c:2382
+#: nscd/connections.c:2383
 msgid "could not start clean-up thread; terminating"
 msgstr ""
 
-#: nscd/connections.c:2396
+#: nscd/connections.c:2397
 msgid "could not start any worker thread; terminating"
 msgstr ""
 
-#: nscd/connections.c:2447 nscd/connections.c:2448 nscd/connections.c:2465
-#: nscd/connections.c:2474 nscd/connections.c:2492 nscd/connections.c:2503
-#: nscd/connections.c:2514
+#: nscd/connections.c:2452 nscd/connections.c:2454 nscd/connections.c:2470
+#: nscd/connections.c:2480 nscd/connections.c:2498 nscd/connections.c:2509
+#: nscd/connections.c:2519
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr ""
 
-#: nscd/connections.c:2466
-#, c-format
+#: nscd/connections.c:2472
 msgid "initial getgrouplist failed"
 msgstr ""
 
-#: nscd/connections.c:2475
-#, c-format
+#: nscd/connections.c:2481
 msgid "getgrouplist failed"
 msgstr ""
 
-#: nscd/connections.c:2493
-#, c-format
+#: nscd/connections.c:2499
 msgid "setgroups failed"
 msgstr ""
 
-#: nscd/grpcache.c:407 nscd/hstcache.c:440 nscd/initgrcache.c:411
+#: nscd/grpcache.c:405 nscd/hstcache.c:432 nscd/initgrcache.c:410
 #: nscd/pwdcache.c:383 nscd/servicescache.c:338
 #, c-format
 msgid "short write in %s: %s"
 msgstr ""
 
-#: nscd/grpcache.c:452 nscd/initgrcache.c:77
+#: nscd/grpcache.c:450 nscd/initgrcache.c:77
 #, c-format
 msgid "Haven't found \"%s\" in group cache!"
 msgstr ""
 
-#: nscd/grpcache.c:454 nscd/initgrcache.c:79
+#: nscd/grpcache.c:452 nscd/initgrcache.c:79
 #, c-format
 msgid "Reloading \"%s\" in group cache!"
 msgstr ""
 
-#: nscd/grpcache.c:533
+#: nscd/grpcache.c:531
 #, c-format
 msgid "Invalid numeric gid \"%s\"!"
 msgstr ""
@@ -3995,96 +4038,101 @@ msgstr ""
 msgid "no more memory for database '%s'"
 msgstr ""
 
-#: nscd/netgroupcache.c:77
+#: nscd/netgroupcache.c:121
 #, c-format
 msgid "Haven't found \"%s\" in netgroup cache!"
 msgstr ""
 
-#: nscd/netgroupcache.c:79
+#: nscd/netgroupcache.c:123
 #, c-format
 msgid "Reloading \"%s\" in netgroup cache!"
 msgstr ""
 
-#: nscd/netgroupcache.c:467
+#: nscd/netgroupcache.c:495
 #, c-format
 msgid "Haven't found \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr ""
 
-#: nscd/netgroupcache.c:470
+#: nscd/netgroupcache.c:498
 #, c-format
 msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr ""
 
-#: nscd/nscd.c:116
+#: nscd/nscd.c:106
 msgid "Read configuration data from NAME"
 msgstr ""
 
-#: nscd/nscd.c:118
+#: nscd/nscd.c:108
 msgid "Do not fork and display messages on the current tty"
 msgstr ""
 
-#: nscd/nscd.c:120
+#: nscd/nscd.c:110
 msgid "Do not fork, but otherwise behave like a daemon"
 msgstr ""
 
-#: nscd/nscd.c:121
+#: nscd/nscd.c:111
 msgid "NUMBER"
 msgstr ""
 
-#: nscd/nscd.c:121
+#: nscd/nscd.c:111
 msgid "Start NUMBER threads"
 msgstr ""
 
-#: nscd/nscd.c:122
+#: nscd/nscd.c:112
 msgid "Shut the server down"
 msgstr ""
 
-#: nscd/nscd.c:123
+#: nscd/nscd.c:113
 msgid "Print current configuration statistics"
 msgstr ""
 
-#: nscd/nscd.c:124
+#: nscd/nscd.c:114
 msgid "TABLE"
 msgstr ""
 
-#: nscd/nscd.c:125
+#: nscd/nscd.c:115
 msgid "Invalidate the specified cache"
 msgstr ""
 
-#: nscd/nscd.c:126
+#: nscd/nscd.c:116
 msgid "TABLE,yes"
 msgstr ""
 
-#: nscd/nscd.c:127
+#: nscd/nscd.c:117
 msgid "Use separate cache for each user"
 msgstr ""
 
-#: nscd/nscd.c:132
+#: nscd/nscd.c:122
 msgid "Name Service Cache Daemon."
 msgstr ""
 
-#: nscd/nscd.c:164 nss/getent.c:999 nss/makedb.c:208
+#: nscd/nscd.c:155 nss/getent.c:1003 nss/makedb.c:206
 #, c-format
 msgid "wrong number of arguments"
 msgstr ""
 
-#: nscd/nscd.c:174
+#: nscd/nscd.c:165
 #, c-format
 msgid "failure while reading configuration file; this is fatal"
 msgstr ""
 
-#: nscd/nscd.c:183
+#: nscd/nscd.c:174
 #, c-format
 msgid "already running"
 msgstr ""
 
-#: nscd/nscd.c:201 nscd/nscd.c:259
+#: nscd/nscd.c:194
+#, fuzzy, c-format
+#| msgid "cannot create cache for search path"
+msgid "cannot create a pipe to talk to the child"
+msgstr "impossibile de crear un cache pro le percurso de cerca"
+
+#: nscd/nscd.c:198
 #, c-format
 msgid "cannot fork"
 msgstr ""
 
 #: nscd/nscd.c:268
-#, c-format
 msgid "cannot change current working directory to \"/\""
 msgstr ""
 
@@ -4092,72 +4140,103 @@ msgstr ""
 msgid "Could not create log file"
 msgstr ""
 
-#: nscd/nscd.c:348 nscd/nscd.c:373 nscd/nscd_stat.c:173
-#, c-format
-msgid "Only root is allowed to use this option!"
-msgstr ""
-
-#: nscd/nscd.c:388
-#, c-format
-msgid "'%s' is not a known database"
-msgstr ""
-
-#: nscd/nscd.c:413 nscd/nscd_stat.c:192
+#: nscd/nscd.c:355 nscd/nscd_stat.c:192
 #, c-format
 msgid "write incomplete"
 msgstr ""
 
-#: nscd/nscd.c:424
+#: nscd/nscd.c:366
 #, c-format
 msgid "cannot read invalidate ACK"
 msgstr ""
 
-#: nscd/nscd.c:430
+#: nscd/nscd.c:372
 #, c-format
 msgid "invalidation failed"
 msgstr ""
 
-#: nscd/nscd.c:440
+#: nscd/nscd.c:417 nscd/nscd.c:442 nscd/nscd_stat.c:173
+#, c-format
+msgid "Only root is allowed to use this option!"
+msgstr ""
+
+#: nscd/nscd.c:437
+#, c-format
+msgid "'%s' is not a known database"
+msgstr ""
+
+#: nscd/nscd.c:452
 #, c-format
 msgid "secure services not implemented anymore"
 msgstr ""
 
-#: nscd/nscd_conf.c:57
+#: nscd/nscd.c:485
+#, fuzzy, c-format
+#| msgid ""
+#| "For bug reporting instructions, please see:\n"
+#| "%s.\n"
+msgid ""
+"Supported tables:\n"
+"%s\n"
+"\n"
+"For bug reporting instructions, please see:\n"
+"%s.\n"
+msgstr ""
+"Pro le instructiones a reportar errores, consulta:\n"
+"%s.\n"
+
+#: nscd/nscd.c:635
+#, fuzzy, c-format
+#| msgid "lstat failed"
+msgid "'wait' failed\n"
+msgstr "insuccesso de lstat"
+
+#: nscd/nscd.c:642
+#, c-format
+msgid "child exited with status %d\n"
+msgstr ""
+
+#: nscd/nscd.c:647
+#, c-format
+msgid "child terminated by signal %d\n"
+msgstr ""
+
+#: nscd/nscd_conf.c:54
 #, c-format
 msgid "database %s is not supported"
 msgstr ""
 
-#: nscd/nscd_conf.c:108
+#: nscd/nscd_conf.c:105
 #, c-format
 msgid "Parse error: %s"
 msgstr ""
 
-#: nscd/nscd_conf.c:194
+#: nscd/nscd_conf.c:191
 #, c-format
 msgid "Must specify user name for server-user option"
 msgstr ""
 
-#: nscd/nscd_conf.c:201
+#: nscd/nscd_conf.c:198
 #, c-format
 msgid "Must specify user name for stat-user option"
 msgstr ""
 
-#: nscd/nscd_conf.c:258
+#: nscd/nscd_conf.c:255
 #, c-format
 msgid "Must specify value for restart-interval option"
 msgstr ""
 
-#: nscd/nscd_conf.c:272
+#: nscd/nscd_conf.c:269
 #, c-format
 msgid "Unknown option: %s %s %s"
 msgstr ""
 
-#: nscd/nscd_conf.c:285
+#: nscd/nscd_conf.c:282
 #, c-format
 msgid "cannot get current working directory: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/nscd_conf.c:305
+#: nscd/nscd_conf.c:302
 #, c-format
 msgid "maximum file size for %s database too small"
 msgstr ""
@@ -4272,82 +4351,85 @@ msgstr ""
 msgid "Invalid numeric uid \"%s\"!"
 msgstr ""
 
-#: nscd/selinux.c:160
+#: nscd/selinux.c:155
 #, c-format
 msgid "Failed opening connection to the audit subsystem: %m"
 msgstr ""
 
-#: nscd/selinux.c:181
+#: nscd/selinux.c:176
 msgid "Failed to set keep-capabilities"
 msgstr ""
 
-#: nscd/selinux.c:182 nscd/selinux.c:245
-#, c-format
+#: nscd/selinux.c:177 nscd/selinux.c:240
 msgid "prctl(KEEPCAPS) failed"
 msgstr ""
 
-#: nscd/selinux.c:196
+#: nscd/selinux.c:191
 msgid "Failed to initialize drop of capabilities"
 msgstr ""
 
-#: nscd/selinux.c:197
-#, c-format
+#: nscd/selinux.c:192
 msgid "cap_init failed"
 msgstr ""
 
-#: nscd/selinux.c:218 nscd/selinux.c:235
+#: nscd/selinux.c:213 nscd/selinux.c:230
 msgid "Failed to drop capabilities"
 msgstr ""
 
-#: nscd/selinux.c:219 nscd/selinux.c:236
-#, c-format
+#: nscd/selinux.c:214 nscd/selinux.c:231
 msgid "cap_set_proc failed"
 msgstr ""
 
-#: nscd/selinux.c:244
+#: nscd/selinux.c:239
 msgid "Failed to unset keep-capabilities"
 msgstr ""
 
-#: nscd/selinux.c:260
+#: nscd/selinux.c:255
 msgid "Failed to determine if kernel supports SELinux"
 msgstr ""
 
-#: nscd/selinux.c:275
-#, c-format
+#: nscd/selinux.c:270
 msgid "Failed to start AVC thread"
 msgstr ""
 
-#: nscd/selinux.c:297
-#, c-format
+#: nscd/selinux.c:292
 msgid "Failed to create AVC lock"
 msgstr ""
 
-#: nscd/selinux.c:337
-#, c-format
+#: nscd/selinux.c:332
 msgid "Failed to start AVC"
 msgstr ""
 
-#: nscd/selinux.c:339
+#: nscd/selinux.c:334
 msgid "Access Vector Cache (AVC) started"
 msgstr ""
 
-#: nscd/selinux.c:360
+#: nscd/selinux.c:369
+msgid "Error querying policy for undefined object classes or permissions."
+msgstr ""
+
+#: nscd/selinux.c:376
+msgid "Error getting security class for nscd."
+msgstr ""
+
+#: nscd/selinux.c:381
+#, c-format
+msgid "Error translating permission name \"%s\" to access vector bit."
+msgstr ""
+
+#: nscd/selinux.c:391
 msgid "Error getting context of socket peer"
 msgstr ""
 
-#: nscd/selinux.c:365
+#: nscd/selinux.c:396
 msgid "Error getting context of nscd"
 msgstr ""
 
-#: nscd/selinux.c:371
+#: nscd/selinux.c:402
 msgid "Error getting sid from context"
 msgstr ""
 
-#: nscd/selinux.c:378
-msgid "compile-time support for database policy missing"
-msgstr ""
-
-#: nscd/selinux.c:411
+#: nscd/selinux.c:440
 #, c-format
 msgid ""
 "\n"
@@ -4378,6 +4460,12 @@ msgid "database [key ...]"
 msgstr ""
 
 #: nss/getent.c:58
+#, fuzzy
+#| msgid "CONF"
+msgid "CONFIG"
+msgstr "CONF"
+
+#: nss/getent.c:58
 msgid "Service configuration to be used"
 msgstr ""
 
@@ -4394,131 +4482,131 @@ msgstr ""
 msgid "Enumeration not supported on %s\n"
 msgstr ""
 
-#: nss/getent.c:913
+#: nss/getent.c:917
 #, c-format
 msgid "Unknown database name"
 msgstr ""
 
-#: nss/getent.c:943
+#: nss/getent.c:947
 msgid "Supported databases:\n"
 msgstr ""
 
-#: nss/getent.c:1009
+#: nss/getent.c:1013
 #, c-format
 msgid "Unknown database: %s\n"
 msgstr ""
 
-#: nss/makedb.c:118
+#: nss/makedb.c:119
 msgid "Convert key to lower case"
 msgstr ""
 
-#: nss/makedb.c:121
+#: nss/makedb.c:122
 msgid "Do not print messages while building database"
 msgstr ""
 
-#: nss/makedb.c:123
+#: nss/makedb.c:124
 msgid "Print content of database file, one entry a line"
 msgstr ""
 
-#: nss/makedb.c:124
+#: nss/makedb.c:125
 msgid "CHAR"
 msgstr ""
 
-#: nss/makedb.c:125
+#: nss/makedb.c:126
 msgid "Generated line not part of iteration"
 msgstr ""
 
-#: nss/makedb.c:130
+#: nss/makedb.c:131
 msgid "Create simple database from textual input."
 msgstr ""
 
-#: nss/makedb.c:133
+#: nss/makedb.c:134
 msgid ""
 "INPUT-FILE OUTPUT-FILE\n"
 "-o OUTPUT-FILE INPUT-FILE\n"
 "-u INPUT-FILE"
 msgstr ""
 
-#: nss/makedb.c:229
+#: nss/makedb.c:227
 #, c-format
 msgid "cannot open database file `%s'"
 msgstr ""
 
-#: nss/makedb.c:274
+#: nss/makedb.c:272
 #, c-format
 msgid "no entries to be processed"
 msgstr ""
 
-#: nss/makedb.c:284
+#: nss/makedb.c:282
 #, c-format
 msgid "cannot create temporary file name"
 msgstr ""
 
-#: nss/makedb.c:306
+#: nss/makedb.c:288
+#, c-format
+msgid "cannot create temporary file"
+msgstr ""
+
+#: nss/makedb.c:304
 #, c-format
 msgid "cannot stat newly created file"
 msgstr ""
 
-#: nss/makedb.c:317
+#: nss/makedb.c:315
 #, c-format
 msgid "cannot rename temporary file"
 msgstr ""
 
-#: nss/makedb.c:533 nss/makedb.c:556
+#: nss/makedb.c:531 nss/makedb.c:554
 #, c-format
 msgid "cannot create search tree"
 msgstr ""
 
-#: nss/makedb.c:562
+#: nss/makedb.c:560
 msgid "duplicate key"
 msgstr ""
 
-#: nss/makedb.c:574
+#: nss/makedb.c:572
 #, c-format
 msgid "problems while reading `%s'"
 msgstr ""
 
-#: nss/makedb.c:801
+#: nss/makedb.c:799
 #, c-format
 msgid "failed to write new database file"
 msgstr ""
 
-#: nss/makedb.c:814
+#: nss/makedb.c:812
 #, c-format
 msgid "cannot stat database file"
 msgstr ""
 
-#: nss/makedb.c:819
+#: nss/makedb.c:817
 #, c-format
 msgid "cannot map database file"
 msgstr ""
 
-#: nss/makedb.c:822
+#: nss/makedb.c:820
 #, c-format
 msgid "file not a database file"
 msgstr ""
 
-#: nss/makedb.c:873
+#: nss/makedb.c:871
 #, c-format
 msgid "cannot set file creation context for `%s'"
 msgstr ""
 
-#: ports/sysdeps/unix/sysv/linux/ia64/makecontext.c:62
-#, c-format
-msgid "makecontext: does not know how to handle more than 8 arguments\n"
-msgstr ""
-
-#: posix/getconf.c:1035
+#: posix/getconf.c:400
 #, c-format
 msgid "Usage: %s [-v specification] variable_name [pathname]\n"
 msgstr ""
 
-#: posix/getconf.c:1038
+#: posix/getconf.c:403
 #, c-format
 msgid "       %s -a [pathname]\n"
 msgstr ""
 
-#: posix/getconf.c:1114
+#: posix/getconf.c:479
 #, c-format
 msgid ""
 "Usage: getconf [-v SPEC] VAR\n"
@@ -4530,150 +4618,150 @@ msgid ""
 "\n"
 msgstr ""
 
-#: posix/getconf.c:1172
+#: posix/getconf.c:537
 #, c-format
 msgid "unknown specification \"%s\""
 msgstr ""
 
-#: posix/getconf.c:1224
+#: posix/getconf.c:589
 #, c-format
 msgid "Couldn't execute %s"
 msgstr ""
 
-#: posix/getconf.c:1268 posix/getconf.c:1284
+#: posix/getconf.c:633 posix/getconf.c:649
 msgid "undefined"
 msgstr ""
 
-#: posix/getconf.c:1306
+#: posix/getconf.c:671
 #, c-format
 msgid "Unrecognized variable `%s'"
 msgstr ""
 
-#: posix/getopt.c:593 posix/getopt.c:622
+#: posix/getopt.c:592 posix/getopt.c:621
 #, c-format
 msgid "%s: option '%s' is ambiguous; possibilities:"
 msgstr ""
 
-#: posix/getopt.c:663 posix/getopt.c:667
+#: posix/getopt.c:662 posix/getopt.c:666
 #, c-format
 msgid "%s: option '--%s' doesn't allow an argument\n"
 msgstr ""
 
-#: posix/getopt.c:676 posix/getopt.c:681
+#: posix/getopt.c:675 posix/getopt.c:680
 #, c-format
 msgid "%s: option '%c%s' doesn't allow an argument\n"
 msgstr ""
 
-#: posix/getopt.c:724 posix/getopt.c:743
+#: posix/getopt.c:723 posix/getopt.c:742
 #, c-format
 msgid "%s: option '--%s' requires an argument\n"
 msgstr ""
 
-#: posix/getopt.c:781 posix/getopt.c:784
+#: posix/getopt.c:780 posix/getopt.c:783
 #, c-format
 msgid "%s: unrecognized option '--%s'\n"
 msgstr ""
 
-#: posix/getopt.c:792 posix/getopt.c:795
+#: posix/getopt.c:791 posix/getopt.c:794
 #, c-format
 msgid "%s: unrecognized option '%c%s'\n"
 msgstr ""
 
-#: posix/getopt.c:844 posix/getopt.c:847
+#: posix/getopt.c:843 posix/getopt.c:846
 #, c-format
 msgid "%s: invalid option -- '%c'\n"
 msgstr ""
 
-#: posix/getopt.c:900 posix/getopt.c:917 posix/getopt.c:1127
-#: posix/getopt.c:1145
+#: posix/getopt.c:899 posix/getopt.c:916 posix/getopt.c:1126
+#: posix/getopt.c:1144
 #, c-format
 msgid "%s: option requires an argument -- '%c'\n"
 msgstr ""
 
-#: posix/getopt.c:973 posix/getopt.c:989
+#: posix/getopt.c:972 posix/getopt.c:988
 #, c-format
 msgid "%s: option '-W %s' is ambiguous\n"
 msgstr ""
 
-#: posix/getopt.c:1013 posix/getopt.c:1031
+#: posix/getopt.c:1012 posix/getopt.c:1030
 #, c-format
 msgid "%s: option '-W %s' doesn't allow an argument\n"
 msgstr ""
 
-#: posix/getopt.c:1052 posix/getopt.c:1070
+#: posix/getopt.c:1051 posix/getopt.c:1069
 #, c-format
 msgid "%s: option '-W %s' requires an argument\n"
 msgstr ""
 
-#: posix/regcomp.c:134
+#: posix/regcomp.c:140
 msgid "No match"
 msgstr ""
 
-#: posix/regcomp.c:137
+#: posix/regcomp.c:143
 msgid "Invalid regular expression"
 msgstr ""
 
-#: posix/regcomp.c:140
+#: posix/regcomp.c:146
 msgid "Invalid collation character"
 msgstr ""
 
-#: posix/regcomp.c:143
+#: posix/regcomp.c:149
 msgid "Invalid character class name"
 msgstr ""
 
-#: posix/regcomp.c:146
+#: posix/regcomp.c:152
 msgid "Trailing backslash"
 msgstr ""
 
-#: posix/regcomp.c:149
+#: posix/regcomp.c:155
 msgid "Invalid back reference"
 msgstr ""
 
-#: posix/regcomp.c:152
+#: posix/regcomp.c:158
 msgid "Unmatched [ or [^"
 msgstr ""
 
-#: posix/regcomp.c:155
+#: posix/regcomp.c:161
 msgid "Unmatched ( or \\("
 msgstr ""
 
-#: posix/regcomp.c:158
+#: posix/regcomp.c:164
 msgid "Unmatched \\{"
 msgstr ""
 
-#: posix/regcomp.c:161
+#: posix/regcomp.c:167
 msgid "Invalid content of \\{\\}"
 msgstr ""
 
-#: posix/regcomp.c:164
+#: posix/regcomp.c:170
 msgid "Invalid range end"
 msgstr ""
 
-#: posix/regcomp.c:167
+#: posix/regcomp.c:173
 msgid "Memory exhausted"
 msgstr ""
 
-#: posix/regcomp.c:170
+#: posix/regcomp.c:176
 msgid "Invalid preceding regular expression"
 msgstr ""
 
-#: posix/regcomp.c:173
+#: posix/regcomp.c:179
 msgid "Premature end of regular expression"
 msgstr ""
 
-#: posix/regcomp.c:176
+#: posix/regcomp.c:182
 msgid "Regular expression too big"
 msgstr ""
 
-#: posix/regcomp.c:179
+#: posix/regcomp.c:185
 msgid "Unmatched ) or \\)"
 msgstr ""
 
-#: posix/regcomp.c:679
+#: posix/regcomp.c:685
 msgid "No previous regular expression"
 msgstr ""
 
-#: posix/wordexp.c:1830
+#: posix/wordexp.c:1844
 msgid "parameter null or not set"
 msgstr ""
 
@@ -4705,27 +4793,27 @@ msgstr ""
 msgid "Unknown resolver error"
 msgstr ""
 
-#: resolv/res_hconf.c:122
+#: resolv/res_hconf.c:125
 #, c-format
 msgid "%s: line %d: cannot specify more than %d trim domains"
 msgstr ""
 
-#: resolv/res_hconf.c:143
+#: resolv/res_hconf.c:146
 #, c-format
 msgid "%s: line %d: list delimiter not followed by domain"
 msgstr ""
 
-#: resolv/res_hconf.c:202
+#: resolv/res_hconf.c:205
 #, c-format
 msgid "%s: line %d: expected `on' or `off', found `%s'\n"
 msgstr ""
 
-#: resolv/res_hconf.c:245
+#: resolv/res_hconf.c:248
 #, c-format
 msgid "%s: line %d: bad command `%s'\n"
 msgstr ""
 
-#: resolv/res_hconf.c:280
+#: resolv/res_hconf.c:283
 #, c-format
 msgid "%s: line %d: ignoring trailing garbage `%s'\n"
 msgstr ""
@@ -4831,7 +4919,7 @@ msgid "Child has terminated abnormally and did not create a core file"
 msgstr ""
 
 #: stdio-common/psiginfo-data.h:37
-msgid "Child hat terminated abnormally and created a core file"
+msgid "Child has terminated abnormally and created a core file"
 msgstr ""
 
 #: stdio-common/psiginfo-data.h:38
@@ -4920,7 +5008,7 @@ msgstr ""
 msgid "Unknown signal"
 msgstr ""
 
-#: string/_strerror.c:46 sysdeps/mach/_strerror.c:86
+#: string/_strerror.c:45 sysdeps/mach/_strerror.c:86
 msgid "Unknown error "
 msgstr ""
 
@@ -4938,11 +5026,11 @@ msgstr ""
 msgid "Unknown signal %d"
 msgstr ""
 
-#: sunrpc/auth_unix.c:111 sunrpc/clnt_tcp.c:123 sunrpc/clnt_udp.c:134
+#: sunrpc/auth_unix.c:111 sunrpc/clnt_tcp.c:123 sunrpc/clnt_udp.c:135
 #: sunrpc/clnt_unix.c:124 sunrpc/svc_tcp.c:188 sunrpc/svc_tcp.c:233
 #: sunrpc/svc_udp.c:162 sunrpc/svc_unix.c:188 sunrpc/svc_unix.c:229
-#: sunrpc/xdr.c:630 sunrpc/xdr.c:790 sunrpc/xdr_array.c:97
-#: sunrpc/xdr_rec.c:151 sunrpc/xdr_ref.c:76
+#: sunrpc/xdr.c:631 sunrpc/xdr.c:793 sunrpc/xdr_array.c:97
+#: sunrpc/xdr_rec.c:152 sunrpc/xdr_ref.c:76
 msgid "out of memory\n"
 msgstr ""
 
@@ -5105,239 +5193,256 @@ msgstr ""
 msgid "Cannot receive reply to broadcast"
 msgstr ""
 
-#: sunrpc/rpc_main.c:277
+#: sunrpc/rpc_main.c:281
 #, c-format
 msgid "%s: output would overwrite %s\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:284
+#: sunrpc/rpc_main.c:288
 #, c-format
 msgid "%s: unable to open %s: %m\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:296
+#: sunrpc/rpc_main.c:300
 #, c-format
 msgid "%s: while writing output %s: %m"
 msgstr ""
 
-#: sunrpc/rpc_main.c:332 sunrpc/rpc_main.c:371
+#: sunrpc/rpc_main.c:336 sunrpc/rpc_main.c:375
 #, c-format
 msgid "cannot find C preprocessor: %s\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:407
+#: sunrpc/rpc_main.c:411
 #, c-format
 msgid "%s: C preprocessor failed with signal %d\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:410
+#: sunrpc/rpc_main.c:414
 #, c-format
 msgid "%s: C preprocessor failed with exit code %d\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:450
+#: sunrpc/rpc_main.c:454
 #, c-format
 msgid "illegal nettype: `%s'\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1085
+#: sunrpc/rpc_main.c:1089
 #, c-format
 msgid "rpcgen: too many defines\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1097
+#: sunrpc/rpc_main.c:1101
 #, c-format
 msgid "rpcgen: arglist coding error\n"
 msgstr ""
 
 #. TRANS: the file will not be removed; this is an
 #. TRANS: informative message.
-#: sunrpc/rpc_main.c:1130
+#: sunrpc/rpc_main.c:1134
 #, c-format
 msgid "file `%s' already exists and may be overwritten\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1175
+#: sunrpc/rpc_main.c:1179
 #, c-format
 msgid "Cannot specify more than one input file!\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1345
+#: sunrpc/rpc_main.c:1349
 #, c-format
 msgid "This implementation doesn't support newstyle or MT-safe code!\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1354
+#: sunrpc/rpc_main.c:1358
 #, c-format
 msgid "Cannot use netid flag with inetd flag!\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1363
+#: sunrpc/rpc_main.c:1367
 #, c-format
 msgid "Cannot use netid flag without TIRPC!\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1370
+#: sunrpc/rpc_main.c:1374
 #, c-format
 msgid "Cannot use table flags with newstyle!\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1389
+#: sunrpc/rpc_main.c:1393
 #, c-format
 msgid "\"infile\" is required for template generation flags.\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1394
+#: sunrpc/rpc_main.c:1398
 #, c-format
 msgid "Cannot have more than one file generation flag!\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1403
+#: sunrpc/rpc_main.c:1407
 #, c-format
 msgid "usage: %s infile\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1404
+#: sunrpc/rpc_main.c:1408
 #, c-format
 msgid "\t%s [-abkCLNTM][-Dname[=value]] [-i size] [-I [-K seconds]] [-Y path] infile\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1406
+#: sunrpc/rpc_main.c:1410
 #, c-format
 msgid "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o outfile] [infile]\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1408
+#: sunrpc/rpc_main.c:1412
 #, c-format
 msgid "\t%s [-s nettype]* [-o outfile] [infile]\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1409
+#: sunrpc/rpc_main.c:1413
 #, c-format
 msgid "\t%s [-n netid]* [-o outfile] [infile]\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1417
+#: sunrpc/rpc_main.c:1421
 #, c-format
 msgid "options:\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1418
+#: sunrpc/rpc_main.c:1422
 #, c-format
 msgid "-a\t\tgenerate all files, including samples\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1419
+#: sunrpc/rpc_main.c:1423
 #, c-format
 msgid "-b\t\tbackward compatibility mode (generates code for SunOS 4.1)\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1420
+#: sunrpc/rpc_main.c:1424
 #, c-format
 msgid "-c\t\tgenerate XDR routines\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1421
+#: sunrpc/rpc_main.c:1425
 #, c-format
 msgid "-C\t\tANSI C mode\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1422
+#: sunrpc/rpc_main.c:1426
 #, c-format
 msgid "-Dname[=value]\tdefine a symbol (same as #define)\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1423
+#: sunrpc/rpc_main.c:1427
 #, c-format
 msgid "-h\t\tgenerate header file\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1424
+#: sunrpc/rpc_main.c:1428
 #, c-format
 msgid "-i size\t\tsize at which to start generating inline code\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1425
+#: sunrpc/rpc_main.c:1429
 #, c-format
 msgid "-I\t\tgenerate code for inetd support in server (for SunOS 4.1)\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1426
+#: sunrpc/rpc_main.c:1430
 #, c-format
 msgid "-K seconds\tserver exits after K seconds of inactivity\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1427
+#: sunrpc/rpc_main.c:1431
 #, c-format
 msgid "-l\t\tgenerate client side stubs\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1428
+#: sunrpc/rpc_main.c:1432
 #, c-format
 msgid "-L\t\tserver errors will be printed to syslog\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1429
+#: sunrpc/rpc_main.c:1433
 #, c-format
 msgid "-m\t\tgenerate server side stubs\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1430
+#: sunrpc/rpc_main.c:1434
 #, c-format
 msgid "-M\t\tgenerate MT-safe code\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1431
+#: sunrpc/rpc_main.c:1435
 #, c-format
 msgid "-n netid\tgenerate server code that supports named netid\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1432
+#: sunrpc/rpc_main.c:1436
 #, c-format
 msgid "-N\t\tsupports multiple arguments and call-by-value\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1433
+#: sunrpc/rpc_main.c:1437
 #, c-format
 msgid "-o outfile\tname of the output file\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1434
+#: sunrpc/rpc_main.c:1438
 #, c-format
 msgid "-s nettype\tgenerate server code that supports named nettype\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1435
+#: sunrpc/rpc_main.c:1439
 #, c-format
 msgid "-Sc\t\tgenerate sample client code that uses remote procedures\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1436
+#: sunrpc/rpc_main.c:1440
 #, c-format
 msgid "-Ss\t\tgenerate sample server code that defines remote procedures\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1437
+#: sunrpc/rpc_main.c:1441
 #, c-format
 msgid "-Sm \t\tgenerate makefile template \n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1438
+#: sunrpc/rpc_main.c:1442
 #, c-format
 msgid "-t\t\tgenerate RPC dispatch table\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1439
+#: sunrpc/rpc_main.c:1443
 #, c-format
 msgid "-T\t\tgenerate code to support RPC dispatch tables\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1440
+#: sunrpc/rpc_main.c:1444
 #, c-format
 msgid "-Y path\t\tdirectory name to find C preprocessor (cpp)\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1442
+#: sunrpc/rpc_main.c:1445
+#, c-format
+msgid "-5\t\tSysVr4 compatibility mode\n"
+msgstr ""
+
+#: sunrpc/rpc_main.c:1446
+#, fuzzy, c-format
+#| msgid "Give this help list"
+msgid "--help\t\tgive this help list\n"
+msgstr "Monstrar iste lista de adjuta"
+
+#: sunrpc/rpc_main.c:1447
+#, fuzzy, c-format
+#| msgid "Print program version"
+msgid "--version\tprint program version\n"
+msgstr "Monstrar le version del programma"
+
+#: sunrpc/rpc_main.c:1449
 #, c-format
 msgid ""
 "\n"
@@ -5579,7 +5684,7 @@ msgstr ""
 #. TRANS @code{SIGPIPE} signal; this signal terminates the program if not handled
 #. TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
 #. TRANS unless it has handled or blocked @code{SIGPIPE}.
-#: sysdeps/generic/siglist.h:38 sysdeps/gnu/errlist.c:359
+#: sysdeps/generic/siglist.h:38 sysdeps/gnu/errlist.c:360
 msgid "Broken pipe"
 msgstr ""
 
@@ -5677,12 +5782,12 @@ msgstr ""
 
 #. TRANS Operation not permitted; only the owner of the file (or other resource)
 #. TRANS or processes with special privileges can perform the operation.
-#: sysdeps/gnu/errlist.c:25
+#: sysdeps/gnu/errlist.c:26
 msgid "Operation not permitted"
 msgstr ""
 
 #. TRANS No process matches the specified process ID.
-#: sysdeps/gnu/errlist.c:45
+#: sysdeps/gnu/errlist.c:46
 msgid "No such process"
 msgstr ""
 
@@ -5693,12 +5798,12 @@ msgstr ""
 #. TRANS You can choose to have functions resume after a signal that is handled,
 #. TRANS rather than failing with @code{EINTR}; see @ref{Interrupted
 #. TRANS Primitives}.
-#: sysdeps/gnu/errlist.c:60
+#: sysdeps/gnu/errlist.c:61
 msgid "Interrupted system call"
 msgstr ""
 
 #. TRANS Input/output error; usually used for physical read or write errors.
-#: sysdeps/gnu/errlist.c:69
+#: sysdeps/gnu/errlist.c:70
 msgid "Input/output error"
 msgstr ""
 
@@ -5707,7 +5812,7 @@ msgstr ""
 #. TRANS This can mean that the device file was installed incorrectly, or that
 #. TRANS the physical device is missing or not correctly attached to the
 #. TRANS computer.
-#: sysdeps/gnu/errlist.c:82
+#: sysdeps/gnu/errlist.c:83
 msgid "No such device or address"
 msgstr ""
 
@@ -5715,27 +5820,27 @@ msgstr ""
 #. TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
 #. TRANS File}) occupy too much memory space.  This condition never arises on
 #. TRANS @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.c:94
+#: sysdeps/gnu/errlist.c:95
 msgid "Argument list too long"
 msgstr ""
 
 #. TRANS Invalid executable file format.  This condition is detected by the
 #. TRANS @code{exec} functions; see @ref{Executing a File}.
-#: sysdeps/gnu/errlist.c:104
+#: sysdeps/gnu/errlist.c:105
 msgid "Exec format error"
 msgstr ""
 
 #. TRANS Bad file descriptor; for example, I/O on a descriptor that has been
 #. TRANS closed or reading from a descriptor open only for writing (or vice
 #. TRANS versa).
-#: sysdeps/gnu/errlist.c:115
+#: sysdeps/gnu/errlist.c:116
 msgid "Bad file descriptor"
 msgstr ""
 
 #. TRANS There are no child processes.  This error happens on operations that are
 #. TRANS supposed to manipulate child processes, when there aren't any processes
 #. TRANS to manipulate.
-#: sysdeps/gnu/errlist.c:126
+#: sysdeps/gnu/errlist.c:127
 msgid "No child processes"
 msgstr ""
 
@@ -5743,69 +5848,69 @@ msgstr ""
 #. TRANS deadlock situation.  The system does not guarantee that it will notice
 #. TRANS all such situations.  This error means you got lucky and the system
 #. TRANS noticed; it might just hang.  @xref{File Locks}, for an example.
-#: sysdeps/gnu/errlist.c:138
+#: sysdeps/gnu/errlist.c:139
 msgid "Resource deadlock avoided"
 msgstr ""
 
 #. TRANS No memory available.  The system cannot allocate more virtual memory
 #. TRANS because its capacity is full.
-#: sysdeps/gnu/errlist.c:148
+#: sysdeps/gnu/errlist.c:149
 msgid "Cannot allocate memory"
 msgstr ""
 
 #. TRANS Bad address; an invalid pointer was detected.
 #. TRANS On @gnuhurdsystems{}, this error never happens; you get a signal instead.
-#: sysdeps/gnu/errlist.c:167
+#: sysdeps/gnu/errlist.c:168
 msgid "Bad address"
 msgstr ""
 
 #. TRANS A file that isn't a block special file was given in a situation that
 #. TRANS requires one.  For example, trying to mount an ordinary file as a file
 #. TRANS system in Unix gives this error.
-#: sysdeps/gnu/errlist.c:178
+#: sysdeps/gnu/errlist.c:179
 msgid "Block device required"
 msgstr ""
 
 #. TRANS Resource busy; a system resource that can't be shared is already in use.
 #. TRANS For example, if you try to delete a file that is the root of a currently
 #. TRANS mounted filesystem, you get this error.
-#: sysdeps/gnu/errlist.c:189
+#: sysdeps/gnu/errlist.c:190
 msgid "Device or resource busy"
 msgstr ""
 
 #. TRANS File exists; an existing file was specified in a context where it only
 #. TRANS makes sense to specify a new file.
-#: sysdeps/gnu/errlist.c:199
+#: sysdeps/gnu/errlist.c:200
 msgid "File exists"
 msgstr ""
 
 #. TRANS An attempt to make an improper link across file systems was detected.
 #. TRANS This happens not only when you use @code{link} (@pxref{Hard Links}) but
 #. TRANS also when you rename a file with @code{rename} (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.c:210
+#: sysdeps/gnu/errlist.c:211
 msgid "Invalid cross-device link"
 msgstr ""
 
 #. TRANS The wrong type of device was given to a function that expects a
 #. TRANS particular sort of device.
-#: sysdeps/gnu/errlist.c:220
+#: sysdeps/gnu/errlist.c:221
 msgid "No such device"
 msgstr ""
 
 #. TRANS A file that isn't a directory was specified when a directory is required.
-#: sysdeps/gnu/errlist.c:229
+#: sysdeps/gnu/errlist.c:230
 msgid "Not a directory"
 msgstr ""
 
 #. TRANS File is a directory; you cannot open a directory for writing,
 #. TRANS or create or remove hard links to it.
-#: sysdeps/gnu/errlist.c:239
+#: sysdeps/gnu/errlist.c:240
 msgid "Is a directory"
 msgstr ""
 
 #. TRANS Invalid argument.  This is used to indicate various kinds of problems
 #. TRANS with passing the wrong argument to a library function.
-#: sysdeps/gnu/errlist.c:249
+#: sysdeps/gnu/errlist.c:250
 msgid "Invalid argument"
 msgstr ""
 
@@ -5816,20 +5921,20 @@ msgstr ""
 #. TRANS limit that can usually be increased.  If you get this error, you might
 #. TRANS want to increase the @code{RLIMIT_NOFILE} limit or make it unlimited;
 #. TRANS @pxref{Limits on Resources}.
-#: sysdeps/gnu/errlist.c:264
+#: sysdeps/gnu/errlist.c:265
 msgid "Too many open files"
 msgstr ""
 
 #. TRANS There are too many distinct file openings in the entire system.  Note
 #. TRANS that any number of linked channels count as just one file opening; see
 #. TRANS @ref{Linked Channels}.  This error never occurs on @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.c:275
+#: sysdeps/gnu/errlist.c:276
 msgid "Too many open files in system"
 msgstr ""
 
 #. TRANS Inappropriate I/O control operation, such as trying to set terminal
 #. TRANS modes on an ordinary file.
-#: sysdeps/gnu/errlist.c:285
+#: sysdeps/gnu/errlist.c:286
 msgid "Inappropriate ioctl for device"
 msgstr ""
 
@@ -5838,47 +5943,47 @@ msgstr ""
 #. TRANS debugger to run a program is considered having it open for writing and
 #. TRANS will cause this error.  (The name stands for ``text file busy''.)  This
 #. TRANS is not an error on @gnuhurdsystems{}; the text is copied as necessary.
-#: sysdeps/gnu/errlist.c:298
+#: sysdeps/gnu/errlist.c:299
 msgid "Text file busy"
 msgstr ""
 
 #. TRANS File too big; the size of a file would be larger than allowed by the system.
-#: sysdeps/gnu/errlist.c:307
+#: sysdeps/gnu/errlist.c:308
 msgid "File too large"
 msgstr ""
 
 #. TRANS No space left on device; write operation on a file failed because the
 #. TRANS disk is full.
-#: sysdeps/gnu/errlist.c:317
+#: sysdeps/gnu/errlist.c:318
 msgid "No space left on device"
 msgstr ""
 
 #. TRANS Invalid seek operation (such as on a pipe).
-#: sysdeps/gnu/errlist.c:326
+#: sysdeps/gnu/errlist.c:327
 msgid "Illegal seek"
 msgstr ""
 
 #. TRANS An attempt was made to modify something on a read-only file system.
-#: sysdeps/gnu/errlist.c:335
+#: sysdeps/gnu/errlist.c:336
 msgid "Read-only file system"
 msgstr ""
 
 #. TRANS Too many links; the link count of a single file would become too large.
 #. TRANS @code{rename} can cause this error if the file being renamed already has
 #. TRANS as many links as it can take (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.c:346
+#: sysdeps/gnu/errlist.c:347
 msgid "Too many links"
 msgstr ""
 
 #. TRANS Domain error; used by mathematical functions when an argument value does
 #. TRANS not fall into the domain over which the function is defined.
-#: sysdeps/gnu/errlist.c:369
+#: sysdeps/gnu/errlist.c:370
 msgid "Numerical argument out of domain"
 msgstr ""
 
 #. TRANS Range error; used by mathematical functions when the result value is
 #. TRANS not representable because of overflow or underflow.
-#: sysdeps/gnu/errlist.c:379
+#: sysdeps/gnu/errlist.c:380
 msgid "Numerical result out of range"
 msgstr ""
 
@@ -5911,7 +6016,7 @@ msgstr ""
 #. TRANS so usually an interactive program should report the error to the user
 #. TRANS and return to its command loop.
 #. TRANS @end itemize
-#: sysdeps/gnu/errlist.c:416
+#: sysdeps/gnu/errlist.c:417
 msgid "Resource temporarily unavailable"
 msgstr ""
 
@@ -5920,7 +6025,7 @@ msgstr ""
 #. TRANS
 #. TRANS C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
 #. TRANS separate error code.
-#: sysdeps/gnu/errlist.c:429
+#: sysdeps/gnu/errlist.c:430
 msgid "Operation would block"
 msgstr ""
 
@@ -5932,47 +6037,47 @@ msgstr ""
 #. TRANS the object before the call completes return @code{EALREADY}.  You can
 #. TRANS use the @code{select} function to find out when the pending operation
 #. TRANS has completed; @pxref{Waiting for I/O}.
-#: sysdeps/gnu/errlist.c:445
+#: sysdeps/gnu/errlist.c:446
 msgid "Operation now in progress"
 msgstr ""
 
 #. TRANS An operation is already in progress on an object that has non-blocking
 #. TRANS mode selected.
-#: sysdeps/gnu/errlist.c:455
+#: sysdeps/gnu/errlist.c:456
 msgid "Operation already in progress"
 msgstr ""
 
 #. TRANS A file that isn't a socket was specified when a socket is required.
-#: sysdeps/gnu/errlist.c:464
+#: sysdeps/gnu/errlist.c:465
 msgid "Socket operation on non-socket"
 msgstr ""
 
 #. TRANS The size of a message sent on a socket was larger than the supported
 #. TRANS maximum size.
-#: sysdeps/gnu/errlist.c:474
+#: sysdeps/gnu/errlist.c:475
 msgid "Message too long"
 msgstr ""
 
 #. TRANS The socket type does not support the requested communications protocol.
-#: sysdeps/gnu/errlist.c:483
+#: sysdeps/gnu/errlist.c:484
 msgid "Protocol wrong type for socket"
 msgstr ""
 
 #. TRANS You specified a socket option that doesn't make sense for the
 #. TRANS particular protocol being used by the socket.  @xref{Socket Options}.
-#: sysdeps/gnu/errlist.c:493
+#: sysdeps/gnu/errlist.c:494
 msgid "Protocol not available"
 msgstr ""
 
 #. TRANS The socket domain does not support the requested communications protocol
 #. TRANS (perhaps because the requested protocol is completely invalid).
 #. TRANS @xref{Creating a Socket}.
-#: sysdeps/gnu/errlist.c:504
+#: sysdeps/gnu/errlist.c:505
 msgid "Protocol not supported"
 msgstr ""
 
 #. TRANS The socket type is not supported.
-#: sysdeps/gnu/errlist.c:513
+#: sysdeps/gnu/errlist.c:514
 msgid "Socket type not supported"
 msgstr ""
 
@@ -5982,71 +6087,71 @@ msgstr ""
 #. TRANS error can happen for many calls when the object does not support the
 #. TRANS particular operation; it is a generic indication that the server knows
 #. TRANS nothing to do for that call.
-#: sysdeps/gnu/errlist.c:527
+#: sysdeps/gnu/errlist.c:528
 msgid "Operation not supported"
 msgstr ""
 
 #. TRANS The socket communications protocol family you requested is not supported.
-#: sysdeps/gnu/errlist.c:536
+#: sysdeps/gnu/errlist.c:537
 msgid "Protocol family not supported"
 msgstr ""
 
 #. TRANS The address family specified for a socket is not supported; it is
 #. TRANS inconsistent with the protocol being used on the socket.  @xref{Sockets}.
-#: sysdeps/gnu/errlist.c:546
+#: sysdeps/gnu/errlist.c:547
 msgid "Address family not supported by protocol"
 msgstr ""
 
 #. TRANS The requested socket address is already in use.  @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.c:555
+#: sysdeps/gnu/errlist.c:556
 msgid "Address already in use"
 msgstr ""
 
 #. TRANS The requested socket address is not available; for example, you tried
 #. TRANS to give a socket a name that doesn't match the local host name.
 #. TRANS @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.c:566
+#: sysdeps/gnu/errlist.c:567
 msgid "Cannot assign requested address"
 msgstr ""
 
 #. TRANS A socket operation failed because the network was down.
-#: sysdeps/gnu/errlist.c:575
+#: sysdeps/gnu/errlist.c:576
 msgid "Network is down"
 msgstr ""
 
 #. TRANS A socket operation failed because the subnet containing the remote host
 #. TRANS was unreachable.
-#: sysdeps/gnu/errlist.c:585
+#: sysdeps/gnu/errlist.c:586
 msgid "Network is unreachable"
 msgstr ""
 
 #. TRANS A network connection was reset because the remote host crashed.
-#: sysdeps/gnu/errlist.c:594
+#: sysdeps/gnu/errlist.c:595
 msgid "Network dropped connection on reset"
 msgstr ""
 
 #. TRANS A network connection was aborted locally.
-#: sysdeps/gnu/errlist.c:603
+#: sysdeps/gnu/errlist.c:604
 msgid "Software caused connection abort"
 msgstr ""
 
 #. TRANS A network connection was closed for reasons outside the control of the
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
 #. TRANS protocol violation.
-#: sysdeps/gnu/errlist.c:614
+#: sysdeps/gnu/errlist.c:615
 msgid "Connection reset by peer"
 msgstr ""
 
 #. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
 #. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
 #. TRANS other from network operations.
-#: sysdeps/gnu/errlist.c:625
+#: sysdeps/gnu/errlist.c:626
 msgid "No buffer space available"
 msgstr ""
 
 #. TRANS You tried to connect a socket that is already connected.
 #. TRANS @xref{Connecting}.
-#: sysdeps/gnu/errlist.c:635
+#: sysdeps/gnu/errlist.c:636
 msgid "Transport endpoint is already connected"
 msgstr ""
 
@@ -6054,124 +6159,125 @@ msgstr ""
 #. TRANS try to transmit data over a socket, without first specifying a
 #. TRANS destination for the data.  For a connectionless socket (for datagram
 #. TRANS protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
-#: sysdeps/gnu/errlist.c:647
+#: sysdeps/gnu/errlist.c:648
 msgid "Transport endpoint is not connected"
 msgstr ""
 
 #. TRANS No default destination address was set for the socket.  You get this
 #. TRANS error when you try to transmit data over a connectionless socket,
 #. TRANS without first specifying a destination for the data with @code{connect}.
-#: sysdeps/gnu/errlist.c:658
+#: sysdeps/gnu/errlist.c:659
 msgid "Destination address required"
 msgstr ""
 
 #. TRANS The socket has already been shut down.
-#: sysdeps/gnu/errlist.c:667
+#: sysdeps/gnu/errlist.c:668
 msgid "Cannot send after transport endpoint shutdown"
 msgstr ""
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:676
+#: sysdeps/gnu/errlist.c:677
 msgid "Too many references: cannot splice"
 msgstr ""
 
 #. TRANS A socket operation with a specified timeout received no response during
 #. TRANS the timeout period.
-#: sysdeps/gnu/errlist.c:686
+#: sysdeps/gnu/errlist.c:687
 msgid "Connection timed out"
 msgstr ""
 
 #. TRANS A remote host refused to allow the network connection (typically because
 #. TRANS it is not running the requested service).
-#: sysdeps/gnu/errlist.c:696
+#: sysdeps/gnu/errlist.c:697
 msgid "Connection refused"
 msgstr ""
 
 #. TRANS Too many levels of symbolic links were encountered in looking up a file name.
 #. TRANS This often indicates a cycle of symbolic links.
-#: sysdeps/gnu/errlist.c:706
+#: sysdeps/gnu/errlist.c:707
 msgid "Too many levels of symbolic links"
 msgstr ""
 
 #. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
 #. TRANS Files}) or host name too long (in @code{gethostname} or
 #. TRANS @code{sethostname}; @pxref{Host Identification}).
-#: sysdeps/gnu/errlist.c:717
+#: sysdeps/gnu/errlist.c:718
 msgid "File name too long"
 msgstr ""
 
 #. TRANS The remote host for a requested network connection is down.
-#: sysdeps/gnu/errlist.c:726
+#: sysdeps/gnu/errlist.c:727
 msgid "Host is down"
 msgstr ""
 
 #. TRANS The remote host for a requested network connection is not reachable.
-#: sysdeps/gnu/errlist.c:735
+#: sysdeps/gnu/errlist.c:736
 msgid "No route to host"
 msgstr ""
 
 #. TRANS Directory not empty, where an empty directory was expected.  Typically,
 #. TRANS this error occurs when you are trying to delete a directory.
-#: sysdeps/gnu/errlist.c:745
+#: sysdeps/gnu/errlist.c:746
 msgid "Directory not empty"
 msgstr ""
 
 #. TRANS This means that the per-user limit on new process would be exceeded by
 #. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
 #. TRANS the @code{RLIMIT_NPROC} limit.
-#: sysdeps/gnu/errlist.c:756
+#: sysdeps/gnu/errlist.c:757
 msgid "Too many processes"
 msgstr ""
 
 #. TRANS The file quota system is confused because there are too many users.
 #. TRANS @c This can probably happen in a GNU system when using NFS.
-#: sysdeps/gnu/errlist.c:766
+#: sysdeps/gnu/errlist.c:767
 msgid "Too many users"
 msgstr ""
 
 #. TRANS The user's disk quota was exceeded.
-#: sysdeps/gnu/errlist.c:775
+#: sysdeps/gnu/errlist.c:776
 msgid "Disk quota exceeded"
 msgstr ""
 
-#. TRANS Stale NFS file handle.  This indicates an internal confusion in the NFS
-#. TRANS system which is due to file system rearrangements on the server host.
-#. TRANS Repairing this condition usually requires unmounting and remounting
-#. TRANS the NFS file system on the local host.
-#: sysdeps/gnu/errlist.c:787
-msgid "Stale NFS file handle"
+#. TRANS Stale file handle.  This indicates an internal confusion in the
+#. TRANS file system which is due to file system rearrangements on the server host
+#. TRANS for NFS file systems or corruption in other file systems.
+#. TRANS Repairing this condition usually requires unmounting, possibly repairing
+#. TRANS and remounting the file system.
+#: sysdeps/gnu/errlist.c:789
+msgid "Stale file handle"
 msgstr ""
 
 #. TRANS An attempt was made to NFS-mount a remote file system with a file name that
 #. TRANS already specifies an NFS-mounted file.
 #. TRANS (This is an error on some operating systems, but we expect it to work
 #. TRANS properly on @gnuhurdsystems{}, making this error code impossible.)
-#: sysdeps/gnu/errlist.c:799
+#: sysdeps/gnu/errlist.c:801
 msgid "Object is remote"
 msgstr ""
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:808
+#: sysdeps/gnu/errlist.c:810
 msgid "RPC struct is bad"
 msgstr ""
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:817
+#: sysdeps/gnu/errlist.c:819
 msgid "RPC version wrong"
 msgstr ""
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:826
+#: sysdeps/gnu/errlist.c:828
 msgid "RPC program not available"
 msgstr ""
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:835
+#: sysdeps/gnu/errlist.c:837
 msgid "RPC program version wrong"
 msgstr ""
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:844
+#: sysdeps/gnu/errlist.c:846
 msgid "RPC bad procedure for program"
 msgstr ""
 
@@ -6179,7 +6285,7 @@ msgstr ""
 #. TRANS @ref{File Locks}.  This error is never generated by @gnuhurdsystems{}, but
 #. TRANS it can result from an operation to an NFS server running another
 #. TRANS operating system.
-#: sysdeps/gnu/errlist.c:856
+#: sysdeps/gnu/errlist.c:858
 msgid "No locks available"
 msgstr ""
 
@@ -6188,17 +6294,17 @@ msgstr ""
 #. TRANS
 #. TRANS On some systems @code{chmod} returns this error if you try to set the
 #. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
-#: sysdeps/gnu/errlist.c:869
+#: sysdeps/gnu/errlist.c:871
 msgid "Inappropriate file type or format"
 msgstr ""
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:878
+#: sysdeps/gnu/errlist.c:880
 msgid "Authentication error"
 msgstr ""
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:887
+#: sysdeps/gnu/errlist.c:889
 msgid "Need authenticator"
 msgstr ""
 
@@ -6207,7 +6313,7 @@ msgstr ""
 #. TRANS operating system.  When you get this error, you can be sure that this
 #. TRANS particular function will always fail with @code{ENOSYS} unless you
 #. TRANS install a new version of the C library or the operating system.
-#: sysdeps/gnu/errlist.c:900
+#: sysdeps/gnu/errlist.c:902
 msgid "Function not implemented"
 msgstr ""
 
@@ -6223,13 +6329,13 @@ msgstr ""
 #. TRANS
 #. TRANS If the entire function is not available at all in the implementation,
 #. TRANS it returns @code{ENOSYS} instead.
-#: sysdeps/gnu/errlist.c:920
+#: sysdeps/gnu/errlist.c:922
 msgid "Not supported"
 msgstr ""
 
 #. TRANS While decoding a multibyte character the function came along an invalid
 #. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
-#: sysdeps/gnu/errlist.c:930
+#: sysdeps/gnu/errlist.c:932
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr ""
 
@@ -6239,80 +6345,80 @@ msgstr ""
 #. TRANS error because functions such as @code{read} and @code{write} translate
 #. TRANS it into a @code{SIGTTIN} or @code{SIGTTOU} signal.  @xref{Job Control},
 #. TRANS for information on process groups and these signals.
-#: sysdeps/gnu/errlist.c:944
+#: sysdeps/gnu/errlist.c:946
 msgid "Inappropriate operation for background process"
 msgstr ""
 
 #. TRANS On @gnuhurdsystems{}, opening a file returns this error when the file is
 #. TRANS translated by a program and the translator program dies while starting
 #. TRANS up, before it has connected to the file.
-#: sysdeps/gnu/errlist.c:955
+#: sysdeps/gnu/errlist.c:957
 msgid "Translator died"
 msgstr ""
 
 #. TRANS The experienced user will know what is wrong.
 #. TRANS @c This error code is a joke.  Its perror text is part of the joke.
 #. TRANS @c Don't change it.
-#: sysdeps/gnu/errlist.c:966
+#: sysdeps/gnu/errlist.c:968
 msgid "?"
 msgstr ""
 
 #. TRANS You did @strong{what}?
-#: sysdeps/gnu/errlist.c:975
+#: sysdeps/gnu/errlist.c:977
 msgid "You really blew it this time"
 msgstr ""
 
 #. TRANS Go home and have a glass of warm, dairy-fresh milk.
-#: sysdeps/gnu/errlist.c:984
+#: sysdeps/gnu/errlist.c:986
 msgid "Computer bought the farm"
 msgstr ""
 
 #. TRANS This error code has no purpose.
-#: sysdeps/gnu/errlist.c:993
+#: sysdeps/gnu/errlist.c:995
 msgid "Gratuitous error"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1001
+#: sysdeps/gnu/errlist.c:1003
 msgid "Bad message"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1009
+#: sysdeps/gnu/errlist.c:1011
 msgid "Identifier removed"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1017
+#: sysdeps/gnu/errlist.c:1019
 msgid "Multihop attempted"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1025
+#: sysdeps/gnu/errlist.c:1027
 msgid "No data available"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1033
+#: sysdeps/gnu/errlist.c:1035
 msgid "Link has been severed"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1041
+#: sysdeps/gnu/errlist.c:1043
 msgid "No message of desired type"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1049
+#: sysdeps/gnu/errlist.c:1051
 msgid "Out of streams resources"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1057
+#: sysdeps/gnu/errlist.c:1059
 msgid "Device not a stream"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1065
+#: sysdeps/gnu/errlist.c:1067
 msgid "Value too large for defined data type"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1073
+#: sysdeps/gnu/errlist.c:1075
 msgid "Protocol error"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1081
+#: sysdeps/gnu/errlist.c:1083
 msgid "Timer expired"
 msgstr ""
 
@@ -6320,195 +6426,195 @@ msgstr ""
 #. TRANS completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
 #. TRANS the normal result is for the operations affected to complete with this
 #. TRANS error; @pxref{Cancel AIO Operations}.
-#: sysdeps/gnu/errlist.c:1093
+#: sysdeps/gnu/errlist.c:1095
 msgid "Operation canceled"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1101
+#: sysdeps/gnu/errlist.c:1103
 msgid "Interrupted system call should be restarted"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1109
+#: sysdeps/gnu/errlist.c:1111
 msgid "Channel number out of range"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1117
+#: sysdeps/gnu/errlist.c:1119
 msgid "Level 2 not synchronized"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1125
+#: sysdeps/gnu/errlist.c:1127
 msgid "Level 3 halted"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1133
+#: sysdeps/gnu/errlist.c:1135
 msgid "Level 3 reset"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1141
+#: sysdeps/gnu/errlist.c:1143
 msgid "Link number out of range"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1149
+#: sysdeps/gnu/errlist.c:1151
 msgid "Protocol driver not attached"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1157
+#: sysdeps/gnu/errlist.c:1159
 msgid "No CSI structure available"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1165
+#: sysdeps/gnu/errlist.c:1167
 msgid "Level 2 halted"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1173
+#: sysdeps/gnu/errlist.c:1175
 msgid "Invalid exchange"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1181
+#: sysdeps/gnu/errlist.c:1183
 msgid "Invalid request descriptor"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1189
+#: sysdeps/gnu/errlist.c:1191
 msgid "Exchange full"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1197
+#: sysdeps/gnu/errlist.c:1199
 msgid "No anode"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1205
+#: sysdeps/gnu/errlist.c:1207
 msgid "Invalid request code"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1213
+#: sysdeps/gnu/errlist.c:1215
 msgid "Invalid slot"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1221
+#: sysdeps/gnu/errlist.c:1223
 msgid "File locking deadlock error"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1229
+#: sysdeps/gnu/errlist.c:1231
 msgid "Bad font file format"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1237
+#: sysdeps/gnu/errlist.c:1239
 msgid "Machine is not on the network"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1245
+#: sysdeps/gnu/errlist.c:1247
 msgid "Package not installed"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1253
+#: sysdeps/gnu/errlist.c:1255
 msgid "Advertise error"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1261
+#: sysdeps/gnu/errlist.c:1263
 msgid "Srmount error"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1269
+#: sysdeps/gnu/errlist.c:1271
 msgid "Communication error on send"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1277
+#: sysdeps/gnu/errlist.c:1279
 msgid "RFS specific error"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1285
+#: sysdeps/gnu/errlist.c:1287
 msgid "Name not unique on network"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1293
+#: sysdeps/gnu/errlist.c:1295
 msgid "File descriptor in bad state"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1301
+#: sysdeps/gnu/errlist.c:1303
 msgid "Remote address changed"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1309
+#: sysdeps/gnu/errlist.c:1311
 msgid "Can not access a needed shared library"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1317
+#: sysdeps/gnu/errlist.c:1319
 msgid "Accessing a corrupted shared library"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1325
+#: sysdeps/gnu/errlist.c:1327
 msgid ".lib section in a.out corrupted"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1333
+#: sysdeps/gnu/errlist.c:1335
 msgid "Attempting to link in too many shared libraries"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1341
+#: sysdeps/gnu/errlist.c:1343
 msgid "Cannot exec a shared library directly"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1349
+#: sysdeps/gnu/errlist.c:1351
 msgid "Streams pipe error"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1357
+#: sysdeps/gnu/errlist.c:1359
 msgid "Structure needs cleaning"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1365
+#: sysdeps/gnu/errlist.c:1367
 msgid "Not a XENIX named type file"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1373
+#: sysdeps/gnu/errlist.c:1375
 msgid "No XENIX semaphores available"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1381
+#: sysdeps/gnu/errlist.c:1383
 msgid "Is a named type file"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1389
+#: sysdeps/gnu/errlist.c:1391
 msgid "Remote I/O error"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1397
+#: sysdeps/gnu/errlist.c:1399
 msgid "No medium found"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1405
+#: sysdeps/gnu/errlist.c:1407
 msgid "Wrong medium type"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1413
+#: sysdeps/gnu/errlist.c:1415
 msgid "Required key not available"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1421
+#: sysdeps/gnu/errlist.c:1423
 msgid "Key has expired"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1429
+#: sysdeps/gnu/errlist.c:1431
 msgid "Key has been revoked"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1437
+#: sysdeps/gnu/errlist.c:1439
 msgid "Key was rejected by service"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1445
+#: sysdeps/gnu/errlist.c:1447
 msgid "Owner died"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1453
+#: sysdeps/gnu/errlist.c:1455
 msgid "State not recoverable"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1461
+#: sysdeps/gnu/errlist.c:1463
 msgid "Operation not possible due to RF-kill"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1469
+#: sysdeps/gnu/errlist.c:1471
 msgid "Memory page has hardware error"
 msgstr ""
 
@@ -6589,6 +6695,11 @@ msgstr ""
 msgid "%s is for unknown machine %d.\n"
 msgstr ""
 
+#: sysdeps/unix/sysv/linux/ia64/makecontext.c:58
+#, c-format
+msgid "makecontext: does not know how to handle more than 8 arguments\n"
+msgstr ""
+
 #: sysdeps/unix/sysv/linux/lddlibc4.c:60
 #, c-format
 msgid ""
@@ -6606,69 +6717,71 @@ msgstr ""
 msgid "cannot read header from `%s'"
 msgstr ""
 
-#: timezone/zdump.c:246
+#: timezone/zdump.c:282
 msgid "lacks alphabetic at start"
 msgstr ""
 
-#: timezone/zdump.c:248
+#: timezone/zdump.c:284
 msgid "has fewer than 3 alphabetics"
 msgstr ""
 
-#: timezone/zdump.c:250
+#: timezone/zdump.c:286
 msgid "has more than 6 alphabetics"
 msgstr ""
 
-#: timezone/zdump.c:258
+#: timezone/zdump.c:294
 msgid "differs from POSIX standard"
 msgstr ""
 
-#: timezone/zdump.c:264
+#: timezone/zdump.c:300
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr ""
 
-#: timezone/zdump.c:273
+#: timezone/zdump.c:309
 #, c-format
 msgid ""
-"%s: usage is %s [ --version ] [ --help ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n"
+"%s: usage: %s [--version] [--help] [-{vV}] [-{ct} [lo,]hi] zonename ...\n"
 "\n"
 "Report bugs to %s.\n"
 msgstr ""
 
-#: timezone/zdump.c:340
+#: timezone/zdump.c:386
 #, c-format
 msgid "%s: wild -c argument %s\n"
 msgstr ""
 
-#: timezone/zdump.c:426
+#: timezone/zdump.c:419
+#, fuzzy, c-format
+#| msgid "%s: Too many arguments\n"
+msgid "%s: wild -t argument %s\n"
+msgstr "%s: Tro de argumentos\n"
+
+#: timezone/zdump.c:508
 msgid "Error writing to standard output"
 msgstr ""
 
-#: timezone/zdump.c:439
-#, c-format
-msgid "%s: use of -v on system with floating time_t other than float or double\n"
-msgstr ""
-
-#: timezone/zic.c:361
+#: timezone/zic.c:371
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr ""
 
-#: timezone/zic.c:401
+#: timezone/zic.c:438
 #, c-format
-msgid "\"%s\", line %d: %s"
+msgid "\"%s\", line %d: "
 msgstr ""
 
-#: timezone/zic.c:404
+#: timezone/zic.c:441
 #, c-format
 msgid " (rule from \"%s\", line %d)"
 msgstr ""
 
-#: timezone/zic.c:415
+#: timezone/zic.c:460
+#, c-format
 msgid "warning: "
 msgstr ""
 
-#: timezone/zic.c:425
+#: timezone/zic.c:470
 #, c-format
 msgid ""
 "%s: usage is %s [ --version ] [ --help ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n"
@@ -6677,335 +6790,338 @@ msgid ""
 "Report bugs to %s.\n"
 msgstr ""
 
-#: timezone/zic.c:460
+#: timezone/zic.c:505
 msgid "wild compilation-time specification of zic_t"
 msgstr ""
 
-#: timezone/zic.c:479
+#: timezone/zic.c:524
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr ""
 
-#: timezone/zic.c:489
+#: timezone/zic.c:534
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr ""
 
-#: timezone/zic.c:499
+#: timezone/zic.c:544
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr ""
 
-#: timezone/zic.c:509
+#: timezone/zic.c:554
 #, c-format
 msgid "%s: More than one -y option specified\n"
 msgstr ""
 
-#: timezone/zic.c:519
+#: timezone/zic.c:564
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr ""
 
-#: timezone/zic.c:566
+#: timezone/zic.c:611
 msgid "link to link"
 msgstr ""
 
-#: timezone/zic.c:629
+#: timezone/zic.c:678
 msgid "hard link failed, symbolic link used"
 msgstr ""
 
-#: timezone/zic.c:637
-#, c-format
-msgid "%s: Can't link from %s to %s: %s\n"
-msgstr ""
+#: timezone/zic.c:688
+#, fuzzy, c-format
+#| msgid "Can't stat %s\n"
+msgid "%s: Can't read %s: %s\n"
+msgstr "Impossibile de effectuar stat sur %s\n"
 
-#: timezone/zic.c:697 timezone/zic.c:699
-msgid "same rule name in multiple files"
-msgstr ""
-
-#: timezone/zic.c:740
-msgid "unruly zone"
-msgstr ""
-
-#: timezone/zic.c:747
-#, c-format
-msgid "%s in ruleless zone"
-msgstr ""
-
-#: timezone/zic.c:767
-msgid "standard input"
-msgstr ""
-
-#: timezone/zic.c:772
-#, c-format
-msgid "%s: Can't open %s: %s\n"
-msgstr ""
-
-#: timezone/zic.c:783
-msgid "line too long"
-msgstr ""
-
-#: timezone/zic.c:803
-msgid "input line of unknown type"
-msgstr ""
-
-#: timezone/zic.c:819
-#, c-format
-msgid "%s: Leap line in non leap seconds file %s\n"
-msgstr ""
-
-#: timezone/zic.c:826 timezone/zic.c:1243 timezone/zic.c:1265
-#, c-format
-msgid "%s: panic: Invalid l_value %d\n"
-msgstr ""
-
-#: timezone/zic.c:834
-#, c-format
-msgid "%s: Error reading %s\n"
-msgstr ""
-
-#: timezone/zic.c:841
-#, c-format
-msgid "%s: Error closing %s: %s\n"
-msgstr ""
-
-#: timezone/zic.c:846
-msgid "expected continuation line not found"
-msgstr ""
-
-#: timezone/zic.c:887 timezone/zic.c:2411 timezone/zic.c:2425
-msgid "time overflow"
-msgstr ""
-
-#: timezone/zic.c:891
-msgid "24:00 not handled by pre-1998 versions of zic"
-msgstr ""
-
-#: timezone/zic.c:894
-msgid "values over 24 hours not handled by pre-2007 versions of zic"
-msgstr ""
-
-#: timezone/zic.c:905
-msgid "wrong number of fields on Rule line"
-msgstr ""
-
-#: timezone/zic.c:909
-msgid "nameless rule"
-msgstr ""
-
-#: timezone/zic.c:914
-msgid "invalid saved time"
-msgstr ""
-
-#: timezone/zic.c:932
-msgid "wrong number of fields on Zone line"
-msgstr ""
-
-#: timezone/zic.c:938
-#, c-format
-msgid "\"Zone %s\" line and -l option are mutually exclusive"
-msgstr ""
-
-#: timezone/zic.c:946
-#, c-format
-msgid "\"Zone %s\" line and -p option are mutually exclusive"
-msgstr ""
-
-#: timezone/zic.c:958
-#, c-format
-msgid "duplicate zone name %s (file \"%s\", line %d)"
-msgstr ""
-
-#: timezone/zic.c:972
-msgid "wrong number of fields on Zone continuation line"
-msgstr ""
-
-#: timezone/zic.c:1009
-msgid "invalid UTC offset"
-msgstr ""
-
-#: timezone/zic.c:1012
-msgid "invalid abbreviation format"
-msgstr ""
-
-#: timezone/zic.c:1041
-msgid "Zone continuation line end time is not after end time of previous line"
-msgstr ""
-
-#: timezone/zic.c:1066
-msgid "wrong number of fields on Leap line"
-msgstr ""
-
-#: timezone/zic.c:1075
-msgid "invalid leaping year"
-msgstr ""
-
-#: timezone/zic.c:1095 timezone/zic.c:1197
-msgid "invalid month name"
-msgstr ""
-
-#: timezone/zic.c:1108 timezone/zic.c:1310 timezone/zic.c:1324
-msgid "invalid day of month"
-msgstr ""
-
-#: timezone/zic.c:1113
-msgid "time before zero"
-msgstr ""
-
-#: timezone/zic.c:1117
-msgid "time too small"
-msgstr ""
-
-#: timezone/zic.c:1121
-msgid "time too large"
-msgstr ""
-
-#: timezone/zic.c:1125 timezone/zic.c:1226
-msgid "invalid time of day"
-msgstr ""
-
-#: timezone/zic.c:1144
-msgid "illegal CORRECTION field on Leap line"
-msgstr ""
-
-#: timezone/zic.c:1149
-msgid "illegal Rolling/Stationary field on Leap line"
-msgstr ""
-
-#: timezone/zic.c:1163
-msgid "wrong number of fields on Link line"
-msgstr ""
-
-#: timezone/zic.c:1167
-msgid "blank FROM field on Link line"
-msgstr ""
-
-#: timezone/zic.c:1171
-msgid "blank TO field on Link line"
-msgstr ""
-
-#: timezone/zic.c:1247
-msgid "invalid starting year"
-msgstr ""
-
-#: timezone/zic.c:1269
-msgid "invalid ending year"
-msgstr ""
-
-#: timezone/zic.c:1273
-msgid "starting year greater than ending year"
-msgstr ""
-
-#: timezone/zic.c:1280
-msgid "typed single year"
-msgstr ""
-
-#: timezone/zic.c:1315
-msgid "invalid weekday name"
-msgstr ""
-
-#: timezone/zic.c:1481
-#, c-format
-msgid "%s: Can't remove %s: %s\n"
-msgstr ""
-
-#: timezone/zic.c:1491
+#: timezone/zic.c:696 timezone/zic.c:1595
 #, c-format
 msgid "%s: Can't create %s: %s\n"
 msgstr ""
 
-#: timezone/zic.c:1683
+#: timezone/zic.c:704 timezone/zic.c:939
+#, c-format
+msgid "%s: Error reading %s\n"
+msgstr ""
+
+#: timezone/zic.c:710 timezone/zic.c:1792
 #, c-format
 msgid "%s: Error writing %s\n"
 msgstr ""
 
-#: timezone/zic.c:1964
+#: timezone/zic.c:714
+msgid "link failed, copy used"
+msgstr ""
+
+#: timezone/zic.c:802 timezone/zic.c:804
+msgid "same rule name in multiple files"
+msgstr ""
+
+#: timezone/zic.c:845
+msgid "unruly zone"
+msgstr ""
+
+#: timezone/zic.c:852
+#, c-format
+msgid "%s in ruleless zone"
+msgstr ""
+
+#: timezone/zic.c:872
+msgid "standard input"
+msgstr ""
+
+#: timezone/zic.c:877
+#, c-format
+msgid "%s: Can't open %s: %s\n"
+msgstr ""
+
+#: timezone/zic.c:888
+msgid "line too long"
+msgstr ""
+
+#: timezone/zic.c:908
+msgid "input line of unknown type"
+msgstr ""
+
+#: timezone/zic.c:924
+#, c-format
+msgid "%s: Leap line in non leap seconds file %s\n"
+msgstr ""
+
+#: timezone/zic.c:931 timezone/zic.c:1339 timezone/zic.c:1361
+#, c-format
+msgid "%s: panic: Invalid l_value %d\n"
+msgstr ""
+
+#: timezone/zic.c:946
+#, c-format
+msgid "%s: Error closing %s: %s\n"
+msgstr ""
+
+#: timezone/zic.c:951
+msgid "expected continuation line not found"
+msgstr ""
+
+#: timezone/zic.c:992 timezone/zic.c:2644 timezone/zic.c:2658
+msgid "time overflow"
+msgstr ""
+
+#: timezone/zic.c:997
+msgid "values over 24 hours not handled by pre-2007 versions of zic"
+msgstr ""
+
+#: timezone/zic.c:1008
+msgid "wrong number of fields on Rule line"
+msgstr ""
+
+#: timezone/zic.c:1012
+msgid "nameless rule"
+msgstr ""
+
+#: timezone/zic.c:1017
+msgid "invalid saved time"
+msgstr ""
+
+#: timezone/zic.c:1034
+msgid "wrong number of fields on Zone line"
+msgstr ""
+
+#: timezone/zic.c:1039
+#, c-format
+msgid "\"Zone %s\" line and -l option are mutually exclusive"
+msgstr ""
+
+#: timezone/zic.c:1045
+#, c-format
+msgid "\"Zone %s\" line and -p option are mutually exclusive"
+msgstr ""
+
+#: timezone/zic.c:1053
+#, c-format
+msgid "duplicate zone name %s (file \"%s\", line %d)"
+msgstr ""
+
+#: timezone/zic.c:1066
+msgid "wrong number of fields on Zone continuation line"
+msgstr ""
+
+#: timezone/zic.c:1103
+#, fuzzy
+#| msgid "invalid mode"
+msgid "invalid UT offset"
+msgstr "modo invalide"
+
+#: timezone/zic.c:1106
+msgid "invalid abbreviation format"
+msgstr ""
+
+#: timezone/zic.c:1135
+msgid "Zone continuation line end time is not after end time of previous line"
+msgstr ""
+
+#: timezone/zic.c:1161
+msgid "wrong number of fields on Leap line"
+msgstr ""
+
+#: timezone/zic.c:1170
+msgid "invalid leaping year"
+msgstr ""
+
+#: timezone/zic.c:1190 timezone/zic.c:1293
+msgid "invalid month name"
+msgstr ""
+
+#: timezone/zic.c:1203 timezone/zic.c:1406 timezone/zic.c:1420
+msgid "invalid day of month"
+msgstr ""
+
+#: timezone/zic.c:1208
+msgid "time too small"
+msgstr ""
+
+#: timezone/zic.c:1212
+msgid "time too large"
+msgstr ""
+
+#: timezone/zic.c:1216 timezone/zic.c:1322
+msgid "invalid time of day"
+msgstr ""
+
+#: timezone/zic.c:1235
+msgid "illegal CORRECTION field on Leap line"
+msgstr ""
+
+#: timezone/zic.c:1240
+msgid "illegal Rolling/Stationary field on Leap line"
+msgstr ""
+
+#: timezone/zic.c:1246
+msgid "leap second precedes Big Bang"
+msgstr ""
+
+#: timezone/zic.c:1259
+msgid "wrong number of fields on Link line"
+msgstr ""
+
+#: timezone/zic.c:1263
+msgid "blank FROM field on Link line"
+msgstr ""
+
+#: timezone/zic.c:1267
+msgid "blank TO field on Link line"
+msgstr ""
+
+#: timezone/zic.c:1343
+msgid "invalid starting year"
+msgstr ""
+
+#: timezone/zic.c:1365
+msgid "invalid ending year"
+msgstr ""
+
+#: timezone/zic.c:1369
+msgid "starting year greater than ending year"
+msgstr ""
+
+#: timezone/zic.c:1376
+msgid "typed single year"
+msgstr ""
+
+#: timezone/zic.c:1411
+msgid "invalid weekday name"
+msgstr ""
+
+#: timezone/zic.c:1530
+msgid "pre-2014 clients may mishandle more than 1200 transition times"
+msgstr ""
+
+#: timezone/zic.c:1585
+#, c-format
+msgid "%s: Can't remove %s: %s\n"
+msgstr ""
+
+#: timezone/zic.c:2143
 msgid "no POSIX environment variable for zone"
 msgstr ""
 
-#: timezone/zic.c:2131
+#: timezone/zic.c:2149
+#, c-format
+msgid "%s: pre-%d clients may mishandle distant timestamps"
+msgstr ""
+
+#: timezone/zic.c:2329
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr ""
 
-#: timezone/zic.c:2175
-msgid "too many transitions?!"
-msgstr ""
-
-#: timezone/zic.c:2190
-msgid "internal error - addtype called with bad isdst"
-msgstr ""
-
-#: timezone/zic.c:2194
-msgid "internal error - addtype called with bad ttisstd"
-msgstr ""
-
-#: timezone/zic.c:2198
-msgid "internal error - addtype called with bad ttisgmt"
-msgstr ""
-
-#: timezone/zic.c:2217
+#: timezone/zic.c:2375 timezone/zic.c:2450
 msgid "too many local time types"
 msgstr ""
 
-#: timezone/zic.c:2221
-msgid "UTC offset out of range"
+#: timezone/zic.c:2423
+msgid "internal error - addtype called with bad isdst"
 msgstr ""
 
-#: timezone/zic.c:2245
+#: timezone/zic.c:2427
+msgid "internal error - addtype called with bad ttisstd"
+msgstr ""
+
+#: timezone/zic.c:2431
+msgid "internal error - addtype called with bad ttisgmt"
+msgstr ""
+
+#: timezone/zic.c:2454
+msgid "UT offset out of range"
+msgstr ""
+
+#: timezone/zic.c:2478
 msgid "too many leap seconds"
 msgstr ""
 
-#: timezone/zic.c:2251
+#: timezone/zic.c:2484
 msgid "repeated leap second moment"
 msgstr ""
 
-#: timezone/zic.c:2301
+#: timezone/zic.c:2534
 msgid "Wild result from command execution"
 msgstr ""
 
-#: timezone/zic.c:2302
+#: timezone/zic.c:2535
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
 msgstr ""
 
-#: timezone/zic.c:2393
+#: timezone/zic.c:2626
 msgid "Odd number of quotation marks"
 msgstr ""
 
-#: timezone/zic.c:2470
+#: timezone/zic.c:2703
 msgid "use of 2/29 in non leap-year"
 msgstr ""
 
-#: timezone/zic.c:2505
+#: timezone/zic.c:2738
 msgid "rule goes past start/end of month--will not work with pre-2004 versions of zic"
 msgstr ""
 
-#: timezone/zic.c:2536
+#: timezone/zic.c:2769
 msgid "time zone abbreviation lacks alphabetic at start"
 msgstr ""
 
-#: timezone/zic.c:2538
+#: timezone/zic.c:2771
 msgid "time zone abbreviation has fewer than 3 alphabetics"
 msgstr ""
 
-#: timezone/zic.c:2540
+#: timezone/zic.c:2773
 msgid "time zone abbreviation has too many alphabetics"
 msgstr ""
 
-#: timezone/zic.c:2550
+#: timezone/zic.c:2783
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr ""
 
-#: timezone/zic.c:2562
+#: timezone/zic.c:2789
 msgid "too many, or too long, time zone abbreviations"
 msgstr ""
 
-#: timezone/zic.c:2602
+#: timezone/zic.c:2829
 #, c-format
 msgid "%s: Can't create directory %s: %s\n"
-msgstr ""
-
-#: timezone/zic.c:2623
-#, c-format
-msgid "%s: %d did not sign extend correctly\n"
 msgstr ""

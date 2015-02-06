@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.18.90.20140105\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2014-01-05 17:40+1000\n"
+"POT-Creation-Date: 2015-01-20 22:14-0500\n"
 "PO-Revision-Date: 2014-02-02 16:58+0100\n"
 "Last-Translator: Primož Peterlin <primozz.peterlin@gmail.com>\n"
 "Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
@@ -67,7 +67,7 @@ msgid "Give a short usage message"
 msgstr "Poda kratka navodila za uporabo"
 
 #: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
-#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:115
+#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:105
 #: nss/makedb.c:120
 msgid "NAME"
 msgstr "IME"
@@ -142,11 +142,11 @@ msgstr ""
 "[IZHODNA_DATOTEKA [VHODNA_DATOTEKA]...]"
 
 #: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:307
-#: elf/pldd.c:219 elf/sln.c:85 elf/sprof.c:372 iconv/iconv_prog.c:408
+#: elf/pldd.c:244 elf/sln.c:85 elf/sprof.c:372 iconv/iconv_prog.c:408
 #: iconv/iconvconfig.c:379 locale/programs/locale.c:277
 #: locale/programs/localedef.c:376 login/programs/pt_chown.c:88
 #: malloc/memusagestat.c:563 nss/getent.c:969 nss/makedb.c:369
-#: posix/getconf.c:1121 sunrpc/rpcinfo.c:691
+#: posix/getconf.c:486 sunrpc/rpcinfo.c:691
 #: sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
 msgid ""
@@ -157,12 +157,12 @@ msgstr ""
 "%s.\n"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:323 elf/ldd.bash.in:38 elf/pldd.c:235 elf/sotruss.ksh:75
+#: elf/ldconfig.c:323 elf/ldd.bash.in:38 elf/pldd.c:260 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:425 iconv/iconvconfig.c:396
 #: locale/programs/locale.c:294 locale/programs/localedef.c:402
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:71
-#: malloc/memusagestat.c:581 nscd/nscd.c:485 nss/getent.c:86 nss/makedb.c:385
-#: posix/getconf.c:1103 sysdeps/unix/sysv/linux/lddlibc4.c:68
+#: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:86 nss/makedb.c:385
+#: posix/getconf.c:468 sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -175,11 +175,11 @@ msgstr ""
 "niti jamstev USTREZNOSTI ZA PRODAJO ali PRIMERNOSTI ZA RABO.\n"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:328 elf/pldd.c:240 elf/sprof.c:395 iconv/iconv_prog.c:430
+#: elf/ldconfig.c:328 elf/pldd.c:265 elf/sprof.c:395 iconv/iconv_prog.c:430
 #: iconv/iconvconfig.c:401 locale/programs/locale.c:299
 #: locale/programs/localedef.c:407 malloc/memusage.sh:75
-#: malloc/memusagestat.c:586 nscd/nscd.c:490 nss/getent.c:91 nss/makedb.c:390
-#: posix/getconf.c:1108
+#: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:91 nss/makedb.c:390
+#: posix/getconf.c:473
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Avtor(ica): %s.\n"
@@ -299,8 +299,8 @@ msgstr "neveljavna velikost kazalca"
 msgid "Usage: xtrace [OPTION]... PROGRAM [PROGRAMOPTION]...\\n"
 msgstr "Uporaba: xtrace [IZBIRA]... PROGRAM [IZBIRA_PROGRAMA]...\\n"
 
-#: debug/xtrace.sh:32 elf/sotruss.ksh:56 elf/sotruss.ksh:67
-#: elf/sotruss.ksh:135 malloc/memusage.sh:26
+#: debug/xtrace.sh:32 elf/sotruss.sh:56 elf/sotruss.sh:67 elf/sotruss.sh:135
+#: malloc/memusage.sh:26
 msgid "Try \\`%s --help' or \\`%s --usage' for more information.\\n"
 msgstr "Poskusite »%s --help« ali »%s --usage« za izčrpnejša navodila.\\n"
 
@@ -332,7 +332,7 @@ msgstr ""
 "\n"
 "Argumenti, navedeni kot obvezni pri dolgi obliki izbire, so obvezni tudi za kratko.\n"
 
-#: debug/xtrace.sh:57 elf/ldd.bash.in:55 elf/sotruss.ksh:49
+#: debug/xtrace.sh:57 elf/ldd.bash.in:55 elf/sotruss.sh:49
 #: malloc/memusage.sh:64
 msgid "For bug reporting instructions, please see:\\\\n%s.\\\\n"
 msgstr "Za napotke glede javljanja napak prosim poglejte:\\\\n%s.\\\\n"
@@ -388,7 +388,7 @@ msgstr "Neznan OS"
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", OS ABI: %s %d.%d.%d"
 
-#: elf/cache.c:157 elf/ldconfig.c:1318
+#: elf/cache.c:157 elf/ldconfig.c:1340
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Ni mogoče odpreti predpomnilniške datoteke %s\n"
@@ -428,11 +428,11 @@ msgstr "Sprememba pravic dostopa za %s na %#o ni uspela"
 msgid "Renaming of %s to %s failed"
 msgstr "Preimenovanje %s v %s ni uspelo"
 
-#: elf/dl-close.c:383 elf/dl-open.c:470
+#: elf/dl-close.c:385 elf/dl-open.c:470
 msgid "cannot create scope list"
 msgstr "seznama področja ni mogoče ustvariti"
 
-#: elf/dl-close.c:776
+#: elf/dl-close.c:770
 msgid "shared object not open"
 msgstr "deljeni predmet ni odprt"
 
@@ -449,15 +449,15 @@ msgstr "prazna zamenjava dinamičnega niza žetonov"
 msgid "cannot load auxiliary `%s' because of empty dynamic string token substitution\n"
 msgstr "pomožne datoteke »%s« ni mogoče naložiti zaradi prazne zamenjave dinamičnega niza žetonov\n"
 
-#: elf/dl-deps.c:479
+#: elf/dl-deps.c:467
 msgid "cannot allocate dependency list"
 msgstr "seznama odvisnosti ni mogoče dodeliti"
 
-#: elf/dl-deps.c:516 elf/dl-deps.c:576
+#: elf/dl-deps.c:504 elf/dl-deps.c:564
 msgid "cannot allocate symbol search list"
 msgstr "seznama iskalnih simbolov ni mogoče dodeliti"
 
-#: elf/dl-deps.c:556
+#: elf/dl-deps.c:544
 msgid "Filters not supported with LD_TRACE_PRELINKING"
 msgstr "Pri LD_TRACE_PRELINKING filtri niso podprti"
 
@@ -469,15 +469,15 @@ msgstr "NAPAKA DINAMIČNEGA POVEZOVALNIKA!!!"
 msgid "error while loading shared libraries"
 msgstr "napaka ob nalaganju deljene knjižnice"
 
-#: elf/dl-fptr.c:87 ports/sysdeps/hppa/dl-fptr.c:93
+#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:94
 msgid "cannot map pages for fdesc table"
 msgstr "strani za tabelo fdesc ni mogoče preslikati"
 
-#: elf/dl-fptr.c:191 ports/sysdeps/hppa/dl-fptr.c:206
+#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:207
 msgid "cannot map pages for fptr table"
 msgstr "strani za tabelo fptr ni mogoče preslikati"
 
-#: elf/dl-fptr.c:220 ports/sysdeps/hppa/dl-fptr.c:235
+#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:236
 msgid "internal error: symidx out of range of fptr table"
 msgstr "interna napaka: symidx je izven obsega tabele fptr"
 
@@ -485,163 +485,163 @@ msgstr "interna napaka: symidx je izven obsega tabele fptr"
 msgid "cannot create capability list"
 msgstr "seznama sposobnosti ni mogoče ustvariti"
 
-#: elf/dl-load.c:465
+#: elf/dl-load.c:410
 msgid "cannot allocate name record"
 msgstr "zapisa imena ni mogoče dodeliti"
 
-#: elf/dl-load.c:550 elf/dl-load.c:666 elf/dl-load.c:749 elf/dl-load.c:868
+#: elf/dl-load.c:495 elf/dl-load.c:611 elf/dl-load.c:694 elf/dl-load.c:813
 msgid "cannot create cache for search path"
 msgstr "predpomnilnika za iskalno pot ni mogoče ustvariti"
 
-#: elf/dl-load.c:641
+#: elf/dl-load.c:586
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "kopije RUNPATH/RPATH ni mogoče ustvariti"
 
-#: elf/dl-load.c:735
+#: elf/dl-load.c:680
 msgid "cannot create search path array"
 msgstr "polja iskalnih poti ni mogoče ustvariti"
 
-#: elf/dl-load.c:940
+#: elf/dl-load.c:885
 msgid "cannot stat shared object"
 msgstr "statusa deljenega predmeta ni mogoče ugotoviti"
 
-#: elf/dl-load.c:1018
+#: elf/dl-load.c:963
 msgid "cannot open zero fill device"
 msgstr "ni mogoče odpreti naprave /dev/zero"
 
-#: elf/dl-load.c:1065 elf/dl-load.c:2348
+#: elf/dl-load.c:1010 elf/dl-load.c:2165
 msgid "cannot create shared object descriptor"
 msgstr "deljenega predmetnega deskriptorja ni mogoče ustvariti"
 
-#: elf/dl-load.c:1084 elf/dl-load.c:1761 elf/dl-load.c:1864
+#: elf/dl-load.c:1029 elf/dl-load.c:1570 elf/dl-load.c:1682
 msgid "cannot read file data"
 msgstr "podatkov datoteke ni mogoče prebrati"
 
-#: elf/dl-load.c:1130
+#: elf/dl-load.c:1069
 msgid "ELF load command alignment not page-aligned"
 msgstr "poravnava ukaza ELF za nalaganje ni poravnana s stranjo"
 
-#: elf/dl-load.c:1137
+#: elf/dl-load.c:1076
 msgid "ELF load command address/offset not properly aligned"
 msgstr "naslov/odmik ukaza ELF za nalaganje ni primerno poravnan"
 
-#: elf/dl-load.c:1222
+#: elf/dl-load.c:1160
 msgid "cannot allocate TLS data structures for initial thread"
 msgstr "podatkovnih struktur TLS za začetno nit ni mogoče dodeliti"
 
-#: elf/dl-load.c:1245
+#: elf/dl-load.c:1183
 msgid "cannot handle TLS data"
 msgstr "rokovanje s podatki TLS ni mogoče"
 
-#: elf/dl-load.c:1264
+#: elf/dl-load.c:1202
 msgid "object file has no loadable segments"
 msgstr "predmetna datoteka nima včitljivega segmenta"
 
-#: elf/dl-load.c:1300
-msgid "failed to map segment from shared object"
-msgstr "preslikava segmenta iz deljenega predmeta ni uspela"
-
-#: elf/dl-load.c:1326
+#: elf/dl-load.c:1211 elf/dl-load.c:1662
 msgid "cannot dynamically load executable"
 msgstr "dinamično nalaganje izvedljive datoteke ni mogoče"
 
-#: elf/dl-load.c:1389 elf/dl-load.c:1498
-msgid "cannot change memory protections"
-msgstr "sprememba zaščite pomnilnika ni mogoča"
-
-#: elf/dl-load.c:1408
-msgid "cannot map zero-fill pages"
-msgstr "ničelnih strani ni mogoče preslikati"
-
-#: elf/dl-load.c:1422
+#: elf/dl-load.c:1232
 msgid "object file has no dynamic section"
 msgstr "predmetna datoteka nima dinamične sekcije"
 
-#: elf/dl-load.c:1445
+#: elf/dl-load.c:1255
 msgid "shared object cannot be dlopen()ed"
 msgstr "dlopen() na deljenih predmetih ni mogoč"
 
-#: elf/dl-load.c:1458
+#: elf/dl-load.c:1268
 msgid "cannot allocate memory for program header"
 msgstr "dodelitev pomnilnika za glavo programa ni mogoča"
 
-#: elf/dl-load.c:1475 elf/dl-open.c:195
+#: elf/dl-load.c:1284 elf/dl-open.c:195
 msgid "invalid caller"
 msgstr "neveljaven klicatelj"
 
-#: elf/dl-load.c:1518
+#: elf/dl-load.c:1307 elf/dl-load.h:130
+msgid "cannot change memory protections"
+msgstr "sprememba zaščite pomnilnika ni mogoča"
+
+#: elf/dl-load.c:1327
 msgid "cannot enable executable stack as shared object requires"
 msgstr "izvedljivega sklada ni mogoče omogočiti, kot to zahteva deljeni predmet"
 
-#: elf/dl-load.c:1531
+#: elf/dl-load.c:1340
 msgid "cannot close file descriptor"
 msgstr "datotečnega deskriptorja ni mogoče zapreti"
 
-#: elf/dl-load.c:1761
+#: elf/dl-load.c:1570
 msgid "file too short"
 msgstr "datoteka je prekratka"
 
-#: elf/dl-load.c:1797
+#: elf/dl-load.c:1605
 msgid "invalid ELF header"
 msgstr "neveljavna glava ELF"
 
-#: elf/dl-load.c:1809
+#: elf/dl-load.c:1617
 msgid "ELF file data encoding not big-endian"
 msgstr "kodiranje podatkov datoteke ELF ni »big-endian«"
 
-#: elf/dl-load.c:1811
+#: elf/dl-load.c:1619
 msgid "ELF file data encoding not little-endian"
 msgstr "kodiranje podatkov datoteke ELF ni »little-endian«"
 
-#: elf/dl-load.c:1815
+#: elf/dl-load.c:1623
 msgid "ELF file version ident does not match current one"
 msgstr "identifikator različice datoteke ELF se ne ujema s trenutnim"
 
-#: elf/dl-load.c:1819
+#: elf/dl-load.c:1627
 msgid "ELF file OS ABI invalid"
 msgstr "OS ABI datoteke ELF ni veljaven"
 
-#: elf/dl-load.c:1822
+#: elf/dl-load.c:1630
 msgid "ELF file ABI version invalid"
 msgstr "različica ABI datoteke ELF ni veljavna"
 
-#: elf/dl-load.c:1825
+#: elf/dl-load.c:1633
 msgid "nonzero padding in e_ident"
 msgstr "neničelno zapolnjenje pri e_ident"
 
-#: elf/dl-load.c:1828
+#: elf/dl-load.c:1636
 msgid "internal error"
 msgstr "interna napaka"
 
-#: elf/dl-load.c:1835
+#: elf/dl-load.c:1643
 msgid "ELF file version does not match current one"
 msgstr "različica datoteke ELF se ne ujema s trenutno"
 
-#: elf/dl-load.c:1843
+#: elf/dl-load.c:1651
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "samo ET_DYN in ET_EXEC je mogoče naložiti"
 
-#: elf/dl-load.c:1849
+#: elf/dl-load.c:1667
 msgid "ELF file's phentsize not the expected size"
 msgstr "phentsize datoteke ELF ni pričakovane velikosti"
 
-#: elf/dl-load.c:2367
+#: elf/dl-load.c:2184
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "napačen razred ELF: ELFCLASS64"
 
-#: elf/dl-load.c:2368
+#: elf/dl-load.c:2185
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "napačen razred ELF: ELFCLASS32"
 
-#: elf/dl-load.c:2371
+#: elf/dl-load.c:2188
 msgid "cannot open shared object file"
 msgstr "deljene predmetne datoteke ni mogoče odpreti"
 
-#: elf/dl-lookup.c:753 ports/sysdeps/mips/dl-lookup.c:770
+#: elf/dl-load.h:128
+msgid "failed to map segment from shared object"
+msgstr "preslikava segmenta iz deljenega predmeta ni uspela"
+
+#: elf/dl-load.h:132
+msgid "cannot map zero-fill pages"
+msgstr "ničelnih strani ni mogoče preslikati"
+
+#: elf/dl-lookup.c:791
 msgid "relocation error"
 msgstr "napaka pri premikanju"
 
-#: elf/dl-lookup.c:780 ports/sysdeps/mips/dl-lookup.c:797
+#: elf/dl-lookup.c:818
 msgid "symbol lookup error"
 msgstr "napaka pri iskanju simbola"
 
@@ -657,41 +657,41 @@ msgstr "Zapletanje števca generacij TLS! Prosim, javite to napako."
 msgid "cannot load any more object with static TLS"
 msgstr "nobenega predmeta s statičnim TLS ni več mogoče naložiti"
 
-#: elf/dl-open.c:602
+#: elf/dl-open.c:599
 msgid "invalid mode for dlopen()"
 msgstr "neveljavni način za dlopen()"
 
-#: elf/dl-open.c:619
+#: elf/dl-open.c:616
 msgid "no more namespaces available for dlmopen()"
 msgstr "nobenega imenskega prostora za dlmopen() ni več na voljo"
 
-#: elf/dl-open.c:637
+#: elf/dl-open.c:634
 msgid "invalid target namespace in dlmopen()"
 msgstr "neveljavni ciljni imenski prostor pri dlmopen()"
 
-#: elf/dl-reloc.c:158
+#: elf/dl-reloc.c:120
 msgid "cannot allocate memory in static TLS block"
 msgstr "ni mogoče dodeliti pomnilnika v statičnem bloku TLS"
 
-#: elf/dl-reloc.c:250
+#: elf/dl-reloc.c:212
 msgid "cannot make segment writable for relocation"
 msgstr "segmenta se ne da odščititi za pisanje pred premikom"
 
-#: elf/dl-reloc.c:313
+#: elf/dl-reloc.c:275
 #, c-format
 msgid "%s: no PLTREL found in object %s\n"
 msgstr "%s: v predmetu %s ni najti PLTREL\n"
 
-#: elf/dl-reloc.c:324
+#: elf/dl-reloc.c:290
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: pomnilnika ni dovolj za shranjevanje rezultatov premikanja %s\n"
 
-#: elf/dl-reloc.c:340
+#: elf/dl-reloc.c:306
 msgid "cannot restore segment prot after reloc"
 msgstr "zaščite segmenta po premiku ni mogoče povrniti"
 
-#: elf/dl-reloc.c:369
+#: elf/dl-reloc.c:335
 msgid "cannot apply additional memory protection after relocation"
 msgstr "dodatne zaščite pomnilnika po premiku ni mogoče uporabiti"
 
@@ -699,7 +699,7 @@ msgstr "dodatne zaščite pomnilnika po premiku ni mogoče uporabiti"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT uporabljen v kodi se ni dinamično naložil"
 
-#: elf/dl-tls.c:923
+#: elf/dl-tls.c:933
 msgid "cannot create TLS data structures"
 msgstr "podatkovnih struktur TLS ni mogoče ustvariti"
 
@@ -853,52 +853,52 @@ msgstr "Vhodne datoteke %s ni moč najti.\n"
 msgid "Cannot stat %s"
 msgstr "Statusa %s ni moč ugotoviti"
 
-#: elf/ldconfig.c:929
+#: elf/ldconfig.c:951
 #, c-format
 msgid "libc5 library %s in wrong directory"
 msgstr "knjižnica libc5 %s v napačnem imeniku"
 
-#: elf/ldconfig.c:932
+#: elf/ldconfig.c:954
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "knjižnica libc6 %s v napačnem imeniku"
 
-#: elf/ldconfig.c:935
+#: elf/ldconfig.c:957
 #, c-format
 msgid "libc4 library %s in wrong directory"
 msgstr "knjižnica libc4 %s v napačnem imeniku"
 
-#: elf/ldconfig.c:963
+#: elf/ldconfig.c:985
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "knjižnici %s in %s v imeniku %s imata isti soname, a sta različnega tipa."
 
-#: elf/ldconfig.c:1072
+#: elf/ldconfig.c:1094
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "Opozorilo: nastavitvene datoteke ni mogoče prebrati in se je ne upošteva: %s"
 
-#: elf/ldconfig.c:1138
+#: elf/ldconfig.c:1160
 #, c-format
 msgid "%s:%u: bad syntax in hwcap line"
 msgstr "%s:%u: skladenjska napaka v vrstici hwcap"
 
-#: elf/ldconfig.c:1144
+#: elf/ldconfig.c:1166
 #, c-format
 msgid "%s:%u: hwcap index %lu above maximum %u"
 msgstr "%s:%u: kazalec hwcap %lu nad največjim %u"
 
-#: elf/ldconfig.c:1151 elf/ldconfig.c:1159
+#: elf/ldconfig.c:1173 elf/ldconfig.c:1181
 #, c-format
 msgid "%s:%u: hwcap index %lu already defined as %s"
 msgstr "%s:%u: kazalec hwcap %lu je že definiran kot %s"
 
-#: elf/ldconfig.c:1162
+#: elf/ldconfig.c:1184
 #, c-format
 msgid "%s:%u: duplicate hwcap %lu %s"
 msgstr "%s:%u: podvojeni hwcap %lu %s"
 
-#: elf/ldconfig.c:1184
+#: elf/ldconfig.c:1206
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "ob izbiri -r je potrebo absolutno ime za nastavitveno datoteko"
@@ -909,28 +909,28 @@ msgstr "ob izbiri -r je potrebo absolutno ime za nastavitveno datoteko"
 # ! INEXACT
 # #-#-#-#-#  gettext-tools-0.18.3.sl.po (GNU gettext-tools 0.18.3)  #-#-#-#-#
 #  Morda ,,Zmanjkalo pomnilnika''?
-#: elf/ldconfig.c:1191 locale/programs/xmalloc.c:64 malloc/obstack.c:432
-#: malloc/obstack.c:434 posix/getconf.c:1076 posix/getconf.c:1296
+#: elf/ldconfig.c:1213 locale/programs/xmalloc.c:64 malloc/obstack.c:416
+#: malloc/obstack.c:418 posix/getconf.c:441 posix/getconf.c:661
 #, c-format
 msgid "memory exhausted"
 msgstr "pomnilnik porabljen"
 
-#: elf/ldconfig.c:1223
+#: elf/ldconfig.c:1245
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: imenika %s ni mogoče prebrati"
 
-#: elf/ldconfig.c:1267
+#: elf/ldconfig.c:1289
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "relativna pot »%s« uporabljena za izgradnjo predpomnilnika"
 
-#: elf/ldconfig.c:1297
+#: elf/ldconfig.c:1319
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Sprememba imenika na / ni mogoča"
 
-#: elf/ldconfig.c:1338
+#: elf/ldconfig.c:1360
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Ni mogoče odpreti imenika %s s predpomnilniško datoteko\n"
@@ -976,7 +976,7 @@ msgstr "manjkajoči argumenti datoteke"
 #. TRANS No such file or directory.  This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
-#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.c:36
+#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.c:37
 msgid "No such file or directory"
 msgstr "Datoteka ali imenik s tem imenom ne obstaja"
 
@@ -1035,55 +1035,55 @@ msgstr "preslikave povezav ni mogoče prebrati"
 msgid "cannot read object name"
 msgstr "imena predmeta ni mogoče prebrati"
 
-#: elf/pldd.c:62
+#: elf/pldd.c:63
 msgid "List dynamic shared objects loaded into process."
 msgstr "Izpiši seznam dinamičnih deljenih predmetov, naloženih v proces."
 
-#: elf/pldd.c:66
+#: elf/pldd.c:67
 msgid "PID"
 msgstr "PID"
 
-#: elf/pldd.c:97
+#: elf/pldd.c:99
 #, c-format
 msgid "Exactly one parameter with process ID required.\n"
 msgstr "Zahtevan je natančno en parameter z ID procesa.\n"
 
-#: elf/pldd.c:109
+#: elf/pldd.c:111
 #, c-format
 msgid "invalid process ID '%s'"
 msgstr "neveljavna identifikacijska številka procesa »%s«"
 
-#: elf/pldd.c:117
+#: elf/pldd.c:119
 #, c-format
 msgid "cannot open %s"
 msgstr "ni mogoče odpreti %s"
 
-#: elf/pldd.c:142
+#: elf/pldd.c:144
 #, c-format
 msgid "cannot open %s/task"
 msgstr "ni mogoče odpreti %s/task"
 
-#: elf/pldd.c:145
+#: elf/pldd.c:147
 #, c-format
 msgid "cannot prepare reading %s/task"
 msgstr "ni mogoče pripraviti %s/task za branje"
 
-#: elf/pldd.c:158
+#: elf/pldd.c:160
 #, c-format
 msgid "invalid thread ID '%s'"
 msgstr "neveljavna identifikacijska številka niti »%s«"
 
-#: elf/pldd.c:169
+#: elf/pldd.c:171
 #, c-format
 msgid "cannot attach to process %lu"
 msgstr "pripenjanje k procesu %lu ni mogoče"
 
-#: elf/pldd.c:261
+#: elf/pldd.c:286
 #, c-format
 msgid "cannot get information about process %lu"
 msgstr "informacije o procesu %lu niso na voljo"
 
-#: elf/pldd.c:274
+#: elf/pldd.c:299
 #, c-format
 msgid "process %lu is no ELF program"
 msgstr "proces %lu ni program ELF"
@@ -1180,7 +1180,7 @@ msgstr "%s: neveljaven cilj: %s\n"
 msgid "Invalid link from \"%s\" to \"%s\": %s\n"
 msgstr ""
 
-#: elf/sotruss.ksh:32
+#: elf/sotruss.sh:32
 #, sh-format
 msgid ""
 "Usage: sotruss [OPTION...] [--] EXECUTABLE [EXECUTABLE-OPTION...]\n"
@@ -1197,23 +1197,23 @@ msgid ""
 "      --version           Print program version"
 msgstr ""
 
-#: elf/sotruss.ksh:46
+#: elf/sotruss.sh:46
 msgid "Mandatory arguments to long options are also mandatory for any corresponding\\nshort options.\\n"
 msgstr "Argumenti, navedeni kot obvezni ali neobvezni pri dolgi obliki izbire, so\\nobvezni ali neobvezni tudi pri vseh odgovarjajočih kratkih oblikah.\\n"
 
-#: elf/sotruss.ksh:55
+#: elf/sotruss.sh:55
 msgid "%s: option requires an argument -- '%s'\\n"
 msgstr "%s: izbira zahteva argument -- »%s«\\n"
 
-#: elf/sotruss.ksh:61
+#: elf/sotruss.sh:61
 msgid "%s: option is ambiguous; possibilities:"
 msgstr "%s: izbira ni enopomenska; možnosti so:"
 
-#: elf/sotruss.ksh:79
+#: elf/sotruss.sh:79
 msgid "Written by %s.\\n"
 msgstr "Avtor(ica): %s.\\n"
 
-#: elf/sotruss.ksh:86
+#: elf/sotruss.sh:86
 msgid ""
 "Usage: %s [-ef] [-F FROMLIST] [-o FILENAME] [-T TOLIST] [--exit]\n"
 "\t    [--follow] [--from FROMLIST] [--output FILENAME] [--to TOLIST]\n"
@@ -1221,7 +1221,7 @@ msgid ""
 "\t    EXECUTABLE [EXECUTABLE-OPTION...]\\n"
 msgstr ""
 
-#: elf/sotruss.ksh:134
+#: elf/sotruss.sh:134
 msgid "%s: unrecognized option '%c%s'\\n"
 msgstr "%s: neprepoznana izbira »%c%s«\\n"
 
@@ -1351,23 +1351,23 @@ msgstr "izhodne datoteke ni mogoče odpreti"
 msgid "error while closing input `%s'"
 msgstr "napaka pri zapiranju vhoda »%s«"
 
-#: iconv/iconv_charmap.c:461
+#: iconv/iconv_charmap.c:435
 #, c-format
 msgid "illegal input sequence at position %Zd"
 msgstr ""
 
-#: iconv/iconv_charmap.c:480 iconv/iconv_prog.c:539
+#: iconv/iconv_charmap.c:454 iconv/iconv_prog.c:539
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr "nepopolni znak ali pomično zaporedje na koncu medpomnilnika"
 
-#: iconv/iconv_charmap.c:525 iconv/iconv_charmap.c:561 iconv/iconv_prog.c:582
+#: iconv/iconv_charmap.c:499 iconv/iconv_charmap.c:535 iconv/iconv_prog.c:582
 #: iconv/iconv_prog.c:618
 #, c-format
 msgid "error while reading the input"
 msgstr "napaka pri branju vhoda"
 
-#: iconv/iconv_charmap.c:543 iconv/iconv_prog.c:600
+#: iconv/iconv_charmap.c:517 iconv/iconv_prog.c:600
 #, c-format
 msgid "unable to allocate buffer for input"
 msgstr "vhodnega medpomnilnika ni mogoče dodeliti"
@@ -1719,7 +1719,7 @@ msgstr ""
 
 #: locale/programs/charmap.c:610 locale/programs/ld-address.c:528
 #: locale/programs/ld-collate.c:2626 locale/programs/ld-collate.c:3784
-#: locale/programs/ld-ctype.c:2159 locale/programs/ld-ctype.c:2910
+#: locale/programs/ld-ctype.c:2162 locale/programs/ld-ctype.c:2913
 #: locale/programs/ld-identification.c:368
 #: locale/programs/ld-measurement.c:215 locale/programs/ld-messages.c:298
 #: locale/programs/ld-monetary.c:740 locale/programs/ld-name.c:264
@@ -1746,7 +1746,7 @@ msgstr "%s: napaka pri krajšanju"
 
 #: locale/programs/charmap.c:850 locale/programs/ld-address.c:544
 #: locale/programs/ld-collate.c:2623 locale/programs/ld-collate.c:3977
-#: locale/programs/ld-ctype.c:2156 locale/programs/ld-ctype.c:2927
+#: locale/programs/ld-ctype.c:2159 locale/programs/ld-ctype.c:2930
 #: locale/programs/ld-identification.c:384
 #: locale/programs/ld-measurement.c:231 locale/programs/ld-messages.c:314
 #: locale/programs/ld-monetary.c:756 locale/programs/ld-name.c:280
@@ -1792,7 +1792,7 @@ msgid "resulting bytes for range not representable."
 msgstr "vrednost %s je tolikšna, da ni strojno predstavljiva"
 
 #: locale/programs/ld-address.c:135 locale/programs/ld-collate.c:1565
-#: locale/programs/ld-ctype.c:462 locale/programs/ld-identification.c:133
+#: locale/programs/ld-ctype.c:465 locale/programs/ld-identification.c:133
 #: locale/programs/ld-measurement.c:94 locale/programs/ld-messages.c:97
 #: locale/programs/ld-monetary.c:193 locale/programs/ld-name.c:94
 #: locale/programs/ld-numeric.c:98 locale/programs/ld-paper.c:91
@@ -1856,7 +1856,7 @@ msgid "%s: numeric country code `%d' not valid"
 msgstr ""
 
 #: locale/programs/ld-address.c:436 locale/programs/ld-address.c:473
-#: locale/programs/ld-address.c:511 locale/programs/ld-ctype.c:2534
+#: locale/programs/ld-address.c:511 locale/programs/ld-ctype.c:2537
 #: locale/programs/ld-identification.c:280
 #: locale/programs/ld-measurement.c:198 locale/programs/ld-messages.c:267
 #: locale/programs/ld-monetary.c:495 locale/programs/ld-monetary.c:530
@@ -1879,7 +1879,7 @@ msgid "%s: unknown character in field `%s'"
 msgstr "zablodeli znak v določilu polja"
 
 #: locale/programs/ld-address.c:525 locale/programs/ld-collate.c:3782
-#: locale/programs/ld-ctype.c:2907 locale/programs/ld-identification.c:365
+#: locale/programs/ld-ctype.c:2910 locale/programs/ld-identification.c:365
 #: locale/programs/ld-measurement.c:212 locale/programs/ld-messages.c:296
 #: locale/programs/ld-monetary.c:738 locale/programs/ld-name.c:262
 #: locale/programs/ld-numeric.c:324 locale/programs/ld-paper.c:212
@@ -1892,8 +1892,8 @@ msgstr ""
 #: locale/programs/ld-collate.c:603 locale/programs/ld-collate.c:899
 #: locale/programs/ld-collate.c:912 locale/programs/ld-collate.c:2592
 #: locale/programs/ld-collate.c:2613 locale/programs/ld-collate.c:3967
-#: locale/programs/ld-ctype.c:1888 locale/programs/ld-ctype.c:2146
-#: locale/programs/ld-ctype.c:2732 locale/programs/ld-ctype.c:2918
+#: locale/programs/ld-ctype.c:1891 locale/programs/ld-ctype.c:2149
+#: locale/programs/ld-ctype.c:2735 locale/programs/ld-ctype.c:2921
 #: locale/programs/ld-identification.c:375
 #: locale/programs/ld-measurement.c:222 locale/programs/ld-messages.c:305
 #: locale/programs/ld-monetary.c:747 locale/programs/ld-name.c:271
@@ -1989,7 +1989,7 @@ msgstr ""
 msgid "%s: symbolic range ellipsis must not be directly followed by `order_end'"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1328 locale/programs/ld-ctype.c:1405
+#: locale/programs/ld-collate.c:1328 locale/programs/ld-ctype.c:1408
 #, c-format
 msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr ""
@@ -2165,216 +2165,216 @@ msgstr "Najdeno »~%c« brez ujemajočega »~%c«."
 msgid "%s: 'endif' without matching 'ifdef' or 'ifndef'"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:481
+#: locale/programs/ld-ctype.c:484
 #, c-format
 msgid "No character set name specified in charmap"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:510
+#: locale/programs/ld-ctype.c:513
 #, c-format
 msgid "character L'\\u%0*x' in class `%s' must be in class `%s'"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:525
+#: locale/programs/ld-ctype.c:528
 #, c-format
 msgid "character L'\\u%0*x' in class `%s' must not be in class `%s'"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:539 locale/programs/ld-ctype.c:597
+#: locale/programs/ld-ctype.c:542 locale/programs/ld-ctype.c:600
 #, fuzzy, c-format
 msgid "internal error in %s, line %u"
 msgstr "interna napaka"
 
-#: locale/programs/ld-ctype.c:568
+#: locale/programs/ld-ctype.c:571
 #, c-format
 msgid "character '%s' in class `%s' must be in class `%s'"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:584
+#: locale/programs/ld-ctype.c:587
 #, c-format
 msgid "character '%s' in class `%s' must not be in class `%s'"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:614 locale/programs/ld-ctype.c:652
+#: locale/programs/ld-ctype.c:617 locale/programs/ld-ctype.c:655
 #, fuzzy, c-format
 msgid "<SP> character not in class `%s'"
 msgstr "neveljavni razred znakov %s"
 
-#: locale/programs/ld-ctype.c:626 locale/programs/ld-ctype.c:663
+#: locale/programs/ld-ctype.c:629 locale/programs/ld-ctype.c:666
 #, c-format
 msgid "<SP> character must not be in class `%s'"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:641
+#: locale/programs/ld-ctype.c:644
 #, fuzzy, c-format
 msgid "character <SP> not defined in character map"
 msgstr "razmejilni znak je dolg več kot en bajt"
 
-#: locale/programs/ld-ctype.c:777
+#: locale/programs/ld-ctype.c:780
 #, c-format
 msgid "`digit' category has not entries in groups of ten"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:826
+#: locale/programs/ld-ctype.c:829
 #, c-format
 msgid "no input digits defined and none of the standard names in the charmap"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:891
+#: locale/programs/ld-ctype.c:894
 #, c-format
 msgid "not all characters used in `outdigit' are available in the charmap"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:908
+#: locale/programs/ld-ctype.c:911
 #, c-format
 msgid "not all characters used in `outdigit' are available in the repertoire"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:1173
+#: locale/programs/ld-ctype.c:1176
 #, c-format
 msgid "character class `%s' already defined"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:1179
+#: locale/programs/ld-ctype.c:1182
 #, c-format
 msgid "implementation limit: no more than %Zd character classes allowed"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:1205
+#: locale/programs/ld-ctype.c:1208
 #, fuzzy, c-format
 msgid "character map `%s' already defined"
 msgstr "znakovna enota"
 
-#: locale/programs/ld-ctype.c:1211
+#: locale/programs/ld-ctype.c:1214
 #, c-format
 msgid "implementation limit: no more than %d character maps allowed"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:1476 locale/programs/ld-ctype.c:1601
-#: locale/programs/ld-ctype.c:1707 locale/programs/ld-ctype.c:2397
-#: locale/programs/ld-ctype.c:3393
+#: locale/programs/ld-ctype.c:1479 locale/programs/ld-ctype.c:1604
+#: locale/programs/ld-ctype.c:1710 locale/programs/ld-ctype.c:2400
+#: locale/programs/ld-ctype.c:3397
 #, c-format
 msgid "%s: field `%s' does not contain exactly ten entries"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:1504 locale/programs/ld-ctype.c:2078
+#: locale/programs/ld-ctype.c:1507 locale/programs/ld-ctype.c:2081
 #, c-format
 msgid "to-value <U%0*X> of range is smaller than from-value <U%0*X>"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:1631
+#: locale/programs/ld-ctype.c:1634
 msgid "start and end character sequence of range must have the same length"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:1638
+#: locale/programs/ld-ctype.c:1641
 msgid "to-value character sequence is smaller than from-value sequence"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:1998 locale/programs/ld-ctype.c:2049
+#: locale/programs/ld-ctype.c:2001 locale/programs/ld-ctype.c:2052
 #, fuzzy
 msgid "premature end of `translit_ignore' definition"
 msgstr "Predčasen zaključek regularnega izraza"
 
-#: locale/programs/ld-ctype.c:2004 locale/programs/ld-ctype.c:2055
-#: locale/programs/ld-ctype.c:2097
+#: locale/programs/ld-ctype.c:2007 locale/programs/ld-ctype.c:2058
+#: locale/programs/ld-ctype.c:2100
 msgid "syntax error"
 msgstr "napaka v skladnji"
 
-#: locale/programs/ld-ctype.c:2230
+#: locale/programs/ld-ctype.c:2233
 #, c-format
 msgid "%s: syntax error in definition of new character class"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:2245
+#: locale/programs/ld-ctype.c:2248
 #, c-format
 msgid "%s: syntax error in definition of new character map"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:2419
+#: locale/programs/ld-ctype.c:2422
 msgid "ellipsis range must be marked by two operands of same type"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:2428
+#: locale/programs/ld-ctype.c:2431
 msgid "with symbolic name range values the absolute ellipsis `...' must not be used"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:2443
+#: locale/programs/ld-ctype.c:2446
 msgid "with UCS range values one must use the hexadecimal symbolic ellipsis `..'"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:2457
+#: locale/programs/ld-ctype.c:2460
 msgid "with character code range values one must use the absolute ellipsis `...'"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:2608
+#: locale/programs/ld-ctype.c:2611
 #, fuzzy, c-format
 msgid "duplicated definition for mapping `%s'"
 msgstr "podvojena definicija sporočila"
 
-#: locale/programs/ld-ctype.c:2694 locale/programs/ld-ctype.c:2838
+#: locale/programs/ld-ctype.c:2697 locale/programs/ld-ctype.c:2841
 #, c-format
 msgid "%s: `translit_start' section does not end with `translit_end'"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:2789
+#: locale/programs/ld-ctype.c:2792
 #, fuzzy, c-format
 msgid "%s: duplicate `default_missing' definition"
 msgstr "podvojena definicija sporočila"
 
-#: locale/programs/ld-ctype.c:2794
+#: locale/programs/ld-ctype.c:2797
 msgid "previous definition was here"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:2816
+#: locale/programs/ld-ctype.c:2819
 #, c-format
 msgid "%s: no representable `default_missing' definition found"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:2969 locale/programs/ld-ctype.c:3053
-#: locale/programs/ld-ctype.c:3073 locale/programs/ld-ctype.c:3094
-#: locale/programs/ld-ctype.c:3115 locale/programs/ld-ctype.c:3136
-#: locale/programs/ld-ctype.c:3157 locale/programs/ld-ctype.c:3197
-#: locale/programs/ld-ctype.c:3218 locale/programs/ld-ctype.c:3285
-#: locale/programs/ld-ctype.c:3327 locale/programs/ld-ctype.c:3352
+#: locale/programs/ld-ctype.c:2962 locale/programs/ld-ctype.c:3059
+#: locale/programs/ld-ctype.c:3079 locale/programs/ld-ctype.c:3100
+#: locale/programs/ld-ctype.c:3121 locale/programs/ld-ctype.c:3142
+#: locale/programs/ld-ctype.c:3163 locale/programs/ld-ctype.c:3203
+#: locale/programs/ld-ctype.c:3224 locale/programs/ld-ctype.c:3289
+#: locale/programs/ld-ctype.c:3331 locale/programs/ld-ctype.c:3356
 #, c-format
 msgid "%s: character `%s' not defined while needed as default value"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:2974 locale/programs/ld-ctype.c:3058
-#: locale/programs/ld-ctype.c:3078 locale/programs/ld-ctype.c:3099
-#: locale/programs/ld-ctype.c:3120 locale/programs/ld-ctype.c:3141
-#: locale/programs/ld-ctype.c:3162 locale/programs/ld-ctype.c:3202
-#: locale/programs/ld-ctype.c:3223 locale/programs/ld-ctype.c:3290
+#: locale/programs/ld-ctype.c:2967 locale/programs/ld-ctype.c:3064
+#: locale/programs/ld-ctype.c:3084 locale/programs/ld-ctype.c:3105
+#: locale/programs/ld-ctype.c:3126 locale/programs/ld-ctype.c:3147
+#: locale/programs/ld-ctype.c:3168 locale/programs/ld-ctype.c:3208
+#: locale/programs/ld-ctype.c:3229 locale/programs/ld-ctype.c:3294
 #, c-format
 msgid "%s: character `%s' in charmap not representable with one byte"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:3334 locale/programs/ld-ctype.c:3359
+#: locale/programs/ld-ctype.c:3338 locale/programs/ld-ctype.c:3363
 #, c-format
 msgid "%s: character `%s' needed as default value not representable with one byte"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:3415
+#: locale/programs/ld-ctype.c:3419
 #, c-format
 msgid "no output digits defined and none of the standard names in the charmap"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:3662
+#: locale/programs/ld-ctype.c:3668
 #, c-format
 msgid "%s: transliteration data from locale `%s' not available"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:3762
+#: locale/programs/ld-ctype.c:3768
 #, fuzzy, c-format
 msgid "%s: table for class \"%s\": %lu bytes\n"
 msgstr "%s: Zapisanih samo %lu od skupno %lu bajtov"
 
-#: locale/programs/ld-ctype.c:3827
+#: locale/programs/ld-ctype.c:3833
 #, c-format
 msgid "%s: table for map \"%s\": %lu bytes\n"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:3956
+#: locale/programs/ld-ctype.c:3958
 #, c-format
 msgid "%s: table for width: %lu bytes\n"
 msgstr ""
@@ -3119,7 +3119,7 @@ msgstr ""
 msgid "DATAFILE [OUTFILE]"
 msgstr ""
 
-#: misc/error.c:117
+#: misc/error.c:192
 msgid "Unknown system error"
 msgstr "Neznana sistemska napaka"
 
@@ -3128,8 +3128,8 @@ msgstr "Neznana sistemska napaka"
 msgid "unable to free arguments"
 msgstr "preveč argumentov datoteke"
 
-#: nis/nis_error.h:1 nis/ypclnt.c:831 nis/ypclnt.c:919 posix/regcomp.c:133
-#: sysdeps/gnu/errlist.c:20
+#: nis/nis_error.h:1 nis/ypclnt.c:831 nis/ypclnt.c:919 posix/regcomp.c:137
+#: sysdeps/gnu/errlist.c:21
 msgid "Success"
 msgstr "Uspešno"
 
@@ -3172,7 +3172,7 @@ msgid "First/next chain broken"
 msgstr ""
 
 #. TRANS Permission denied; the file permissions do not allow the attempted operation.
-#: nis/nis_error.h:11 nis/ypclnt.c:876 sysdeps/gnu/errlist.c:157
+#: nis/nis_error.h:11 nis/ypclnt.c:876 sysdeps/gnu/errlist.c:158
 msgid "Permission denied"
 msgstr ""
 
@@ -3786,12 +3786,12 @@ msgstr ""
 msgid "yp_update: cannot get server address\n"
 msgstr ""
 
-#: nscd/aicache.c:83 nscd/hstcache.c:494
+#: nscd/aicache.c:83 nscd/hstcache.c:485
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
 msgstr ""
 
-#: nscd/aicache.c:85 nscd/hstcache.c:496
+#: nscd/aicache.c:85 nscd/hstcache.c:487
 #, c-format
 msgid "Reloading \"%s\" in hosts cache!"
 msgstr ""
@@ -3805,7 +3805,7 @@ msgstr ""
 msgid " (first)"
 msgstr ""
 
-#: nscd/cache.c:285 nscd/connections.c:1019
+#: nscd/cache.c:285 nscd/connections.c:1000
 #, fuzzy, c-format
 msgid "cannot stat() file `%s': %s"
 msgstr "ni mogoče ugotoviti statistike %s: %s"
@@ -3820,246 +3820,246 @@ msgstr ""
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
 msgstr ""
 
-#: nscd/connections.c:571
+#: nscd/connections.c:553
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
 msgstr ""
 
-#: nscd/connections.c:579
+#: nscd/connections.c:561
 #, fuzzy
 msgid "uninitialized header"
 msgstr "neveljavna vrednost glave %s"
 
-#: nscd/connections.c:584
+#: nscd/connections.c:566
 #, fuzzy
 msgid "header size does not match"
 msgstr "Del %s ne ustreza %s"
 
-#: nscd/connections.c:594
+#: nscd/connections.c:576
 #, fuzzy
 msgid "file size does not match"
 msgstr "Del %s ne ustreza %s"
 
-#: nscd/connections.c:611
+#: nscd/connections.c:593
 #, fuzzy
 msgid "verification failed"
 msgstr "primerjanje nizov ni uspelo"
 
-#: nscd/connections.c:625
+#: nscd/connections.c:607
 #, c-format
 msgid "suggested size of table for database %s larger than the persistent database's table"
 msgstr ""
 
-#: nscd/connections.c:636 nscd/connections.c:721
+#: nscd/connections.c:618 nscd/connections.c:702
 #, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
 msgstr ""
 
-#: nscd/connections.c:652
+#: nscd/connections.c:634
 #, fuzzy, c-format
 msgid "cannot access '%s'"
 msgstr "dostop do %s ni mogoč"
 
-#: nscd/connections.c:700
+#: nscd/connections.c:682
 #, c-format
 msgid "database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"
 msgstr ""
 
-#: nscd/connections.c:707
+#: nscd/connections.c:688
 #, c-format
 msgid "cannot create %s; no persistent database used"
 msgstr ""
 
-#: nscd/connections.c:710
+#: nscd/connections.c:691
 #, fuzzy, c-format
 msgid "cannot create %s; no sharing possible"
 msgstr "začasne datoteke ni mogoče ustvariti"
 
-#: nscd/connections.c:781
+#: nscd/connections.c:762
 #, fuzzy, c-format
 msgid "cannot write to database file %s: %s"
 msgstr "ni mogoče ustvariti posebne datoteke %s"
 
-#: nscd/connections.c:820
+#: nscd/connections.c:801
 #, c-format
 msgid "cannot set socket to close on exec: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:869
+#: nscd/connections.c:850
 #, fuzzy, c-format
 msgid "cannot open socket: %s"
 msgstr "ni mogoče odpreti %s"
 
-#: nscd/connections.c:889 nscd/connections.c:953
+#: nscd/connections.c:870 nscd/connections.c:934
 #, fuzzy, c-format
 msgid "cannot change socket to nonblocking mode: %s"
 msgstr "%s: ne-blokirnega načina ni mogoče spremeniti"
 
-#: nscd/connections.c:897 nscd/connections.c:963
+#: nscd/connections.c:878 nscd/connections.c:944
 #, fuzzy, c-format
 msgid "cannot set socket to close on exec: %s"
 msgstr "ni mogoče nastaviti časa za »%s«"
 
-#: nscd/connections.c:910
+#: nscd/connections.c:891
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr ""
 
-#: nscd/connections.c:1003
+#: nscd/connections.c:984
 #, c-format
 msgid "register trace file %s for database %s"
 msgstr ""
 
-#: nscd/connections.c:1133
+#: nscd/connections.c:1114
 #, c-format
 msgid "provide access to FD %d, for %s"
 msgstr ""
 
-#: nscd/connections.c:1145
+#: nscd/connections.c:1126
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr ""
 
-#: nscd/connections.c:1167
+#: nscd/connections.c:1148
 #, c-format
 msgid "request from %ld not handled due to missing permission"
 msgstr ""
 
-#: nscd/connections.c:1172
+#: nscd/connections.c:1153
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
 msgstr ""
 
-#: nscd/connections.c:1177
+#: nscd/connections.c:1158
 msgid "request not handled due to missing permission"
 msgstr ""
 
-#: nscd/connections.c:1215 nscd/connections.c:1268
+#: nscd/connections.c:1196 nscd/connections.c:1249
 #, fuzzy, c-format
 msgid "cannot write result: %s"
 msgstr "Pisanje na %s ni možno"
 
-#: nscd/connections.c:1359
+#: nscd/connections.c:1340
 #, fuzzy, c-format
 msgid "error getting caller's id: %s"
 msgstr "napaka pri čakanju na %s"
 
-#: nscd/connections.c:1419
+#: nscd/connections.c:1400
 #, c-format
 msgid "cannot open /proc/self/cmdline: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1433
+#: nscd/connections.c:1414
 #, c-format
 msgid "cannot read /proc/self/cmdline: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1473
+#: nscd/connections.c:1454
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1483
+#: nscd/connections.c:1464
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1496
+#: nscd/connections.c:1477
 #, fuzzy, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
 msgstr "imenik %s ni dosegljiv"
 
-#: nscd/connections.c:1542
+#: nscd/connections.c:1523
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1551
+#: nscd/connections.c:1532
 #, fuzzy, c-format
 msgid "cannot change current working directory to \"/\": %s"
 msgstr "korenskega imenika ni mogoče prestaviti na %s"
 
-#: nscd/connections.c:1744
+#: nscd/connections.c:1725
 #, fuzzy, c-format
 msgid "short read while reading request: %s"
 msgstr "napaka pri branju \"%s\""
 
-#: nscd/connections.c:1777
+#: nscd/connections.c:1758
 #, c-format
 msgid "key length in request too long: %d"
 msgstr ""
 
-#: nscd/connections.c:1790
+#: nscd/connections.c:1771
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr ""
 
-#: nscd/connections.c:1800
+#: nscd/connections.c:1781
 #, c-format
 msgid "handle_request: request received (Version = %d) from PID %ld"
 msgstr ""
 
-#: nscd/connections.c:1805
+#: nscd/connections.c:1786
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr ""
 
-#: nscd/connections.c:2069 nscd/connections.c:2271
+#: nscd/connections.c:2050 nscd/connections.c:2252
 #, c-format
 msgid "disabled inotify after read error %d"
 msgstr ""
 
-#: nscd/connections.c:2394
+#: nscd/connections.c:2375
 msgid "could not initialize conditional variable"
 msgstr ""
 
-#: nscd/connections.c:2402
+#: nscd/connections.c:2383
 msgid "could not start clean-up thread; terminating"
 msgstr ""
 
-#: nscd/connections.c:2416
+#: nscd/connections.c:2397
 msgid "could not start any worker thread; terminating"
 msgstr ""
 
-#: nscd/connections.c:2467 nscd/connections.c:2468 nscd/connections.c:2485
-#: nscd/connections.c:2494 nscd/connections.c:2512 nscd/connections.c:2523
-#: nscd/connections.c:2534
+#: nscd/connections.c:2452 nscd/connections.c:2454 nscd/connections.c:2470
+#: nscd/connections.c:2480 nscd/connections.c:2498 nscd/connections.c:2509
+#: nscd/connections.c:2519
 #, fuzzy, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "nastavitev novega uporabnika %s ni uspela"
 
-#: nscd/connections.c:2486
-#, fuzzy, c-format
+#: nscd/connections.c:2472
+#, fuzzy
 msgid "initial getgrouplist failed"
 msgstr "neveljaven seznam skupin %s"
 
-#: nscd/connections.c:2495
-#, fuzzy, c-format
+#: nscd/connections.c:2481
+#, fuzzy
 msgid "getgrouplist failed"
 msgstr "pisanje ni uspelo"
 
-#: nscd/connections.c:2513
-#, fuzzy, c-format
+#: nscd/connections.c:2499
+#, fuzzy
 msgid "setgroups failed"
 msgstr "odpiranje ni uspelo"
 
-#: nscd/grpcache.c:413 nscd/hstcache.c:441 nscd/initgrcache.c:418
-#: nscd/pwdcache.c:391 nscd/servicescache.c:346
+#: nscd/grpcache.c:405 nscd/hstcache.c:432 nscd/initgrcache.c:410
+#: nscd/pwdcache.c:383 nscd/servicescache.c:338
 #, fuzzy, c-format
 msgid "short write in %s: %s"
 msgstr "napaka v %s: %s"
 
-#: nscd/grpcache.c:458 nscd/initgrcache.c:77
+#: nscd/grpcache.c:450 nscd/initgrcache.c:77
 #, c-format
 msgid "Haven't found \"%s\" in group cache!"
 msgstr ""
 
-#: nscd/grpcache.c:460 nscd/initgrcache.c:79
+#: nscd/grpcache.c:452 nscd/initgrcache.c:79
 #, c-format
 msgid "Reloading \"%s\" in group cache!"
 msgstr ""
 
-#: nscd/grpcache.c:539
+#: nscd/grpcache.c:531
 #, fuzzy, c-format
 msgid "Invalid numeric gid \"%s\"!"
 msgstr "neveljavno število %s"
@@ -4074,135 +4074,140 @@ msgstr ""
 msgid "no more memory for database '%s'"
 msgstr ""
 
-#: nscd/netgroupcache.c:126
+#: nscd/netgroupcache.c:121
 #, c-format
 msgid "Haven't found \"%s\" in netgroup cache!"
 msgstr ""
 
-#: nscd/netgroupcache.c:128
+#: nscd/netgroupcache.c:123
 #, c-format
 msgid "Reloading \"%s\" in netgroup cache!"
 msgstr ""
 
-#: nscd/netgroupcache.c:509
+#: nscd/netgroupcache.c:495
 #, c-format
 msgid "Haven't found \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr ""
 
-#: nscd/netgroupcache.c:512
+#: nscd/netgroupcache.c:498
 #, c-format
 msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr ""
 
-#: nscd/nscd.c:116
+#: nscd/nscd.c:106
 msgid "Read configuration data from NAME"
 msgstr ""
 
-#: nscd/nscd.c:118
+#: nscd/nscd.c:108
 msgid "Do not fork and display messages on the current tty"
 msgstr ""
 
-#: nscd/nscd.c:120
+#: nscd/nscd.c:110
 msgid "Do not fork, but otherwise behave like a daemon"
 msgstr ""
 
-#: nscd/nscd.c:121
+#: nscd/nscd.c:111
 msgid "NUMBER"
 msgstr "N"
 
-#: nscd/nscd.c:121
+#: nscd/nscd.c:111
 msgid "Start NUMBER threads"
 msgstr ""
 
-#: nscd/nscd.c:122
+#: nscd/nscd.c:112
 msgid "Shut the server down"
 msgstr ""
 
-#: nscd/nscd.c:123
+#: nscd/nscd.c:113
 msgid "Print current configuration statistics"
 msgstr ""
 
-#: nscd/nscd.c:124
+#: nscd/nscd.c:114
 msgid "TABLE"
 msgstr ""
 
-#: nscd/nscd.c:125
+#: nscd/nscd.c:115
 msgid "Invalidate the specified cache"
 msgstr ""
 
-#: nscd/nscd.c:126
+#: nscd/nscd.c:116
 msgid "TABLE,yes"
 msgstr ""
 
-#: nscd/nscd.c:127
+#: nscd/nscd.c:117
 msgid "Use separate cache for each user"
 msgstr ""
 
-#: nscd/nscd.c:132
+#: nscd/nscd.c:122
 msgid "Name Service Cache Daemon."
 msgstr ""
 
-#: nscd/nscd.c:164 nss/getent.c:1003 nss/makedb.c:206
+#: nscd/nscd.c:155 nss/getent.c:1003 nss/makedb.c:206
 #, c-format
 msgid "wrong number of arguments"
 msgstr "napačno število argumentov"
 
-#: nscd/nscd.c:174
+#: nscd/nscd.c:165
 #, c-format
 msgid "failure while reading configuration file; this is fatal"
 msgstr ""
 
-#: nscd/nscd.c:183
+#: nscd/nscd.c:174
 #, c-format
 msgid "already running"
 msgstr ""
 
-#: nscd/nscd.c:201
+#: nscd/nscd.c:194
+#, fuzzy, c-format
+msgid "cannot create a pipe to talk to the child"
+msgstr "imenika %s ni mogoče ustvariti"
+
+#: nscd/nscd.c:198
 #, c-format
 msgid "cannot fork"
 msgstr "vejitev ni mogoča"
 
-#: nscd/nscd.c:259
-#, fuzzy, c-format
+#: nscd/nscd.c:268
+#, fuzzy
 msgid "cannot change current working directory to \"/\""
 msgstr "trenutnega imenika ni mogoče povrniti"
 
-#: nscd/nscd.c:267
+#: nscd/nscd.c:276
 #, fuzzy
 msgid "Could not create log file"
 msgstr "%s: Ni mogoče ustvariti datoteke"
 
-#: nscd/nscd.c:339 nscd/nscd.c:364 nscd/nscd_stat.c:173
-#, c-format
-msgid "Only root is allowed to use this option!"
-msgstr ""
-
-#: nscd/nscd.c:379
-#, fuzzy, c-format
-msgid "'%s' is not a known database"
-msgstr "%s ni ime obstoječega uporabnika"
-
-#: nscd/nscd.c:404 nscd/nscd_stat.c:192
+#: nscd/nscd.c:355 nscd/nscd_stat.c:192
 #, fuzzy, c-format
 msgid "write incomplete"
 msgstr "POZOR: Arhiv nepopoln"
 
-#: nscd/nscd.c:415
+#: nscd/nscd.c:366
 #, fuzzy, c-format
 msgid "cannot read invalidate ACK"
 msgstr "ure s stvarnim časom ni moč prebrati"
 
-#: nscd/nscd.c:421
+#: nscd/nscd.c:372
 #, fuzzy, c-format
 msgid "invalidation failed"
 msgstr "pretvorba niza ni uspela"
 
-#: nscd/nscd.c:431
+#: nscd/nscd.c:417 nscd/nscd.c:442 nscd/nscd_stat.c:173
+#, c-format
+msgid "Only root is allowed to use this option!"
+msgstr ""
+
+#: nscd/nscd.c:437
+#, fuzzy, c-format
+msgid "'%s' is not a known database"
+msgstr "%s ni ime obstoječega uporabnika"
+
+#: nscd/nscd.c:452
 #, c-format
 msgid "secure services not implemented anymore"
 msgstr ""
 
-#: nscd/nscd.c:462
+#: nscd/nscd.c:485
 #, fuzzy, c-format
 msgid ""
 "Supported tables:\n"
@@ -4214,42 +4219,59 @@ msgstr ""
 "Za navodila o prijavljanju napak prosim poglejte:\n"
 "%s.\n"
 
-#: nscd/nscd_conf.c:57
+#: nscd/nscd.c:635
+#, fuzzy, c-format
+#| msgid "lstat failed"
+msgid "'wait' failed\n"
+msgstr "lstat ni uspel"
+
+#: nscd/nscd.c:642
+#, c-format
+msgid "child exited with status %d\n"
+msgstr ""
+
+#: nscd/nscd.c:647
+#, fuzzy, c-format
+#| msgid "Interrupted by a signal"
+msgid "child terminated by signal %d\n"
+msgstr "Prekinjeno s signalom"
+
+#: nscd/nscd_conf.c:54
 #, fuzzy, c-format
 msgid "database %s is not supported"
 msgstr "Zbirka %s je v %s obliki.\n"
 
-#: nscd/nscd_conf.c:108
+#: nscd/nscd_conf.c:105
 #, fuzzy, c-format
 msgid "Parse error: %s"
 msgstr "napaka pri branju: %s"
 
-#: nscd/nscd_conf.c:194
+#: nscd/nscd_conf.c:191
 #, fuzzy, c-format
 msgid "Must specify user name for server-user option"
 msgstr "navesti morate izbiro izravnalnega načina"
 
-#: nscd/nscd_conf.c:201
+#: nscd/nscd_conf.c:198
 #, fuzzy, c-format
 msgid "Must specify user name for stat-user option"
 msgstr "navesti morate izbiro izravnalnega načina"
 
-#: nscd/nscd_conf.c:258
+#: nscd/nscd_conf.c:255
 #, fuzzy, c-format
 msgid "Must specify value for restart-interval option"
 msgstr "navesti morate izbiro izravnalnega načina"
 
-#: nscd/nscd_conf.c:272
+#: nscd/nscd_conf.c:269
 #, fuzzy, c-format
 msgid "Unknown option: %s %s %s"
 msgstr "neznana izbira pri ukazu »s«"
 
-#: nscd/nscd_conf.c:285
+#: nscd/nscd_conf.c:282
 #, fuzzy, c-format
 msgid "cannot get current working directory: %s; disabling paranoia mode"
 msgstr "trenutnega imenika ni mogoče povrniti"
 
-#: nscd/nscd_conf.c:305
+#: nscd/nscd_conf.c:302
 #, c-format
 msgid "maximum file size for %s database too small"
 msgstr ""
@@ -4349,101 +4371,109 @@ msgid ""
 "%15s  check /etc/%s for changes\n"
 msgstr ""
 
-#: nscd/pwdcache.c:436
+#: nscd/pwdcache.c:428
 #, c-format
 msgid "Haven't found \"%s\" in password cache!"
 msgstr ""
 
-#: nscd/pwdcache.c:438
+#: nscd/pwdcache.c:430
 #, c-format
 msgid "Reloading \"%s\" in password cache!"
 msgstr ""
 
-#: nscd/pwdcache.c:519
+#: nscd/pwdcache.c:511
 #, fuzzy, c-format
 msgid "Invalid numeric uid \"%s\"!"
 msgstr "neveljavno število %s"
 
-#: nscd/selinux.c:160
+#: nscd/selinux.c:155
 #, c-format
 msgid "Failed opening connection to the audit subsystem: %m"
 msgstr ""
 
-#: nscd/selinux.c:181
+#: nscd/selinux.c:176
 #, fuzzy
 msgid "Failed to set keep-capabilities"
 msgstr "nastavitev spremenljivke okolja %s ni uspela"
 
-#: nscd/selinux.c:182 nscd/selinux.c:245
-#, c-format
+#: nscd/selinux.c:177 nscd/selinux.c:240
 msgid "prctl(KEEPCAPS) failed"
 msgstr ""
 
-#: nscd/selinux.c:196
+#: nscd/selinux.c:191
 #, fuzzy
 msgid "Failed to initialize drop of capabilities"
 msgstr "Inicializacija porazdeljene zgoščevalne tabele ni uspela"
 
-#: nscd/selinux.c:197
-#, fuzzy, c-format
+#: nscd/selinux.c:192
+#, fuzzy
 msgid "cap_init failed"
 msgstr "poizvedba po statusu ni uspela"
 
-#: nscd/selinux.c:218 nscd/selinux.c:235
+#: nscd/selinux.c:213 nscd/selinux.c:230
 #, fuzzy
 msgid "Failed to drop capabilities"
 msgstr "Celotna ovržba privilegijev ni uspela"
 
-#: nscd/selinux.c:219 nscd/selinux.c:236
-#, fuzzy, c-format
+#: nscd/selinux.c:214 nscd/selinux.c:231
+#, fuzzy
 msgid "cap_set_proc failed"
 msgstr "zapiranje ni uspelo"
 
-#: nscd/selinux.c:244
+#: nscd/selinux.c:239
 #, fuzzy
 msgid "Failed to unset keep-capabilities"
 msgstr "ni mogoče odnastaviti spremenljivke %s"
 
-#: nscd/selinux.c:260
+#: nscd/selinux.c:255
 msgid "Failed to determine if kernel supports SELinux"
 msgstr ""
 
-#: nscd/selinux.c:275
-#, fuzzy, c-format
+#: nscd/selinux.c:270
+#, fuzzy
 msgid "Failed to start AVC thread"
 msgstr "branje statistike %s ni uspelo"
 
-#: nscd/selinux.c:297
-#, fuzzy, c-format
+#: nscd/selinux.c:292
+#, fuzzy
 msgid "Failed to create AVC lock"
 msgstr "ni mogoče ustvariti trde povezave %s"
 
-#: nscd/selinux.c:337
-#, fuzzy, c-format
+#: nscd/selinux.c:332
+#, fuzzy
 msgid "Failed to start AVC"
 msgstr "branje statistike %s ni uspelo"
 
-#: nscd/selinux.c:339
+#: nscd/selinux.c:334
 msgid "Access Vector Cache (AVC) started"
 msgstr ""
 
-#: nscd/selinux.c:360
+#: nscd/selinux.c:369
+msgid "Error querying policy for undefined object classes or permissions."
+msgstr ""
+
+#: nscd/selinux.c:376
+msgid "Error getting security class for nscd."
+msgstr ""
+
+#: nscd/selinux.c:381
+#, c-format
+msgid "Error translating permission name \"%s\" to access vector bit."
+msgstr ""
+
+#: nscd/selinux.c:391
 msgid "Error getting context of socket peer"
 msgstr ""
 
-#: nscd/selinux.c:365
+#: nscd/selinux.c:396
 msgid "Error getting context of nscd"
 msgstr ""
 
-#: nscd/selinux.c:371
+#: nscd/selinux.c:402
 msgid "Error getting sid from context"
 msgstr ""
 
-#: nscd/selinux.c:378
-msgid "compile-time support for database policy missing"
-msgstr ""
-
-#: nscd/selinux.c:411
+#: nscd/selinux.c:440
 #, c-format
 msgid ""
 "\n"
@@ -4459,12 +4489,12 @@ msgid ""
 "%15u  CAV misses\n"
 msgstr ""
 
-#: nscd/servicescache.c:395
+#: nscd/servicescache.c:387
 #, c-format
 msgid "Haven't found \"%s\" in services cache!"
 msgstr ""
 
-#: nscd/servicescache.c:397
+#: nscd/servicescache.c:389
 #, c-format
 msgid "Reloading \"%s\" in services cache!"
 msgstr ""
@@ -4609,22 +4639,17 @@ msgstr ""
 msgid "cannot set file creation context for `%s'"
 msgstr "nastavitev privzetega konteksta datoteke za %s ni uspela"
 
-#: ports/sysdeps/unix/sysv/linux/ia64/makecontext.c:58
-#, c-format
-msgid "makecontext: does not know how to handle more than 8 arguments\n"
-msgstr ""
-
-#: posix/getconf.c:1035
+#: posix/getconf.c:400
 #, c-format
 msgid "Usage: %s [-v specification] variable_name [pathname]\n"
 msgstr ""
 
-#: posix/getconf.c:1038
+#: posix/getconf.c:403
 #, c-format
 msgid "       %s -a [pathname]\n"
 msgstr ""
 
-#: posix/getconf.c:1114
+#: posix/getconf.c:479
 #, c-format
 msgid ""
 "Usage: getconf [-v SPEC] VAR\n"
@@ -4636,21 +4661,21 @@ msgid ""
 "\n"
 msgstr ""
 
-#: posix/getconf.c:1172
+#: posix/getconf.c:537
 #, fuzzy, c-format
 msgid "unknown specification \"%s\""
 msgstr "določilo širine"
 
-#: posix/getconf.c:1224
+#: posix/getconf.c:589
 #, fuzzy, c-format
 msgid "Couldn't execute %s"
 msgstr "ni mogoče izvesti %s"
 
-#: posix/getconf.c:1268 posix/getconf.c:1284
+#: posix/getconf.c:633 posix/getconf.c:649
 msgid "undefined"
 msgstr "nedoločeno"
 
-#: posix/getconf.c:1306
+#: posix/getconf.c:671
 #, fuzzy, c-format
 msgid "Unrecognized variable `%s'"
 msgstr "neprepoznan operand %s"
@@ -4711,47 +4736,47 @@ msgstr "%s: izbira »-W %s« ne dovoljuje argumenta\n"
 msgid "%s: option '-W %s' requires an argument\n"
 msgstr "%s: izbira »-W %s« zahteva argument\n"
 
-#: posix/regcomp.c:136
+#: posix/regcomp.c:140
 msgid "No match"
 msgstr "Brez zadetkov"
 
-#: posix/regcomp.c:139
+#: posix/regcomp.c:143
 msgid "Invalid regular expression"
 msgstr "Neveljaven regularen izraz"
 
-#: posix/regcomp.c:142
+#: posix/regcomp.c:146
 msgid "Invalid collation character"
 msgstr "Neveljaven razvrščevalni znak"
 
-#: posix/regcomp.c:145
+#: posix/regcomp.c:149
 msgid "Invalid character class name"
 msgstr "Neveljavno ime razreda znakov"
 
-#: posix/regcomp.c:148
+#: posix/regcomp.c:152
 msgid "Trailing backslash"
 msgstr "Zaključna obrnjena poševnica"
 
-#: posix/regcomp.c:151
+#: posix/regcomp.c:155
 msgid "Invalid back reference"
 msgstr "Neveljaven povratni sklic"
 
-#: posix/regcomp.c:154
+#: posix/regcomp.c:158
 msgid "Unmatched [ or [^"
 msgstr "Uklepaj [ ali [^ brez para"
 
-#: posix/regcomp.c:157
+#: posix/regcomp.c:161
 msgid "Unmatched ( or \\("
 msgstr "Uklepaj ( ali \\( brez para"
 
-#: posix/regcomp.c:160
+#: posix/regcomp.c:164
 msgid "Unmatched \\{"
 msgstr "Uklepaj \\{ brez para"
 
-#: posix/regcomp.c:163
+#: posix/regcomp.c:167
 msgid "Invalid content of \\{\\}"
 msgstr "Neveljavna vsebina \\{\\}"
 
-#: posix/regcomp.c:166
+#: posix/regcomp.c:170
 msgid "Invalid range end"
 msgstr "Neveljavna zgornja meja razpona"
 
@@ -4759,31 +4784,31 @@ msgstr "Neveljavna zgornja meja razpona"
 # ! INEXACT
 # #-#-#-#-#  gnulib-3.0.0.6062.a6b16.sl.po (gnulib 3.0.0.6062.a6b16)  #-#-#-#-#
 # ! INEXACT
-#: posix/regcomp.c:169
+#: posix/regcomp.c:173
 msgid "Memory exhausted"
 msgstr "Pomnilnik porabljen"
 
-#: posix/regcomp.c:172
+#: posix/regcomp.c:176
 msgid "Invalid preceding regular expression"
 msgstr "Neveljaven predhodni regularni izraz"
 
-#: posix/regcomp.c:175
+#: posix/regcomp.c:179
 msgid "Premature end of regular expression"
 msgstr "Predčasen zaključek regularnega izraza"
 
-#: posix/regcomp.c:178
+#: posix/regcomp.c:182
 msgid "Regular expression too big"
 msgstr "Regularni izraz je preobsežen"
 
-#: posix/regcomp.c:181
+#: posix/regcomp.c:185
 msgid "Unmatched ) or \\)"
 msgstr "Zaklepaj ) ali \\) brez para"
 
-#: posix/regcomp.c:681
+#: posix/regcomp.c:685
 msgid "No previous regular expression"
 msgstr "Manjkajoč prejšnji regularni izraz"
 
-#: posix/wordexp.c:1840
+#: posix/wordexp.c:1844
 msgid "parameter null or not set"
 msgstr ""
 
@@ -4820,27 +4845,27 @@ msgstr "interna napaka"
 msgid "Unknown resolver error"
 msgstr "Neznana sistemska napaka"
 
-#: resolv/res_hconf.c:121
+#: resolv/res_hconf.c:125
 #, c-format
 msgid "%s: line %d: cannot specify more than %d trim domains"
 msgstr ""
 
-#: resolv/res_hconf.c:142
+#: resolv/res_hconf.c:146
 #, c-format
 msgid "%s: line %d: list delimiter not followed by domain"
 msgstr ""
 
-#: resolv/res_hconf.c:201
+#: resolv/res_hconf.c:205
 #, c-format
 msgid "%s: line %d: expected `on' or `off', found `%s'\n"
 msgstr ""
 
-#: resolv/res_hconf.c:244
+#: resolv/res_hconf.c:248
 #, c-format
 msgid "%s: line %d: bad command `%s'\n"
 msgstr ""
 
-#: resolv/res_hconf.c:279
+#: resolv/res_hconf.c:283
 #, c-format
 msgid "%s: line %d: ignoring trailing garbage `%s'\n"
 msgstr ""
@@ -5076,7 +5101,7 @@ msgstr "Neznani signal %d"
 #: sunrpc/auth_unix.c:111 sunrpc/clnt_tcp.c:123 sunrpc/clnt_udp.c:135
 #: sunrpc/clnt_unix.c:124 sunrpc/svc_tcp.c:188 sunrpc/svc_tcp.c:233
 #: sunrpc/svc_udp.c:162 sunrpc/svc_unix.c:188 sunrpc/svc_unix.c:229
-#: sunrpc/xdr.c:631 sunrpc/xdr.c:791 sunrpc/xdr_array.c:97
+#: sunrpc/xdr.c:631 sunrpc/xdr.c:793 sunrpc/xdr_array.c:97
 #: sunrpc/xdr_rec.c:152 sunrpc/xdr_ref.c:76
 #, fuzzy
 msgid "out of memory\n"
@@ -5754,7 +5779,7 @@ msgstr "Napaka segmentacije"
 #. TRANS @code{SIGPIPE} signal; this signal terminates the program if not handled
 #. TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
 #. TRANS unless it has handled or blocked @code{SIGPIPE}.
-#: sysdeps/generic/siglist.h:38 sysdeps/gnu/errlist.c:359
+#: sysdeps/generic/siglist.h:38 sysdeps/gnu/errlist.c:360
 msgid "Broken pipe"
 msgstr "Prekinjen cevovod"
 
@@ -5852,12 +5877,12 @@ msgstr "Zamenjano okno"
 
 #. TRANS Operation not permitted; only the owner of the file (or other resource)
 #. TRANS or processes with special privileges can perform the operation.
-#: sysdeps/gnu/errlist.c:25
+#: sysdeps/gnu/errlist.c:26
 msgid "Operation not permitted"
 msgstr "Operacija ni dovoljena"
 
 #. TRANS No process matches the specified process ID.
-#: sysdeps/gnu/errlist.c:45
+#: sysdeps/gnu/errlist.c:46
 msgid "No such process"
 msgstr "Tak proces ne obstaja"
 
@@ -5868,12 +5893,12 @@ msgstr "Tak proces ne obstaja"
 #. TRANS You can choose to have functions resume after a signal that is handled,
 #. TRANS rather than failing with @code{EINTR}; see @ref{Interrupted
 #. TRANS Primitives}.
-#: sysdeps/gnu/errlist.c:60
+#: sysdeps/gnu/errlist.c:61
 msgid "Interrupted system call"
 msgstr "Prekinjen sistemski klic"
 
 #. TRANS Input/output error; usually used for physical read or write errors.
-#: sysdeps/gnu/errlist.c:69
+#: sysdeps/gnu/errlist.c:70
 msgid "Input/output error"
 msgstr "Vhodno/izhodna napaka"
 
@@ -5882,7 +5907,7 @@ msgstr "Vhodno/izhodna napaka"
 #. TRANS This can mean that the device file was installed incorrectly, or that
 #. TRANS the physical device is missing or not correctly attached to the
 #. TRANS computer.
-#: sysdeps/gnu/errlist.c:82
+#: sysdeps/gnu/errlist.c:83
 msgid "No such device or address"
 msgstr "Taka naprava ali naslov ne obstaja"
 
@@ -5890,27 +5915,27 @@ msgstr "Taka naprava ali naslov ne obstaja"
 #. TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
 #. TRANS File}) occupy too much memory space.  This condition never arises on
 #. TRANS @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.c:94
+#: sysdeps/gnu/errlist.c:95
 msgid "Argument list too long"
 msgstr "Seznam argumentov je predolg"
 
 #. TRANS Invalid executable file format.  This condition is detected by the
 #. TRANS @code{exec} functions; see @ref{Executing a File}.
-#: sysdeps/gnu/errlist.c:104
+#: sysdeps/gnu/errlist.c:105
 msgid "Exec format error"
 msgstr "Napaka v zapisu izvedljive datoteke"
 
 #. TRANS Bad file descriptor; for example, I/O on a descriptor that has been
 #. TRANS closed or reading from a descriptor open only for writing (or vice
 #. TRANS versa).
-#: sysdeps/gnu/errlist.c:115
+#: sysdeps/gnu/errlist.c:116
 msgid "Bad file descriptor"
 msgstr "Nepravilni datotečni deskriptor"
 
 #. TRANS There are no child processes.  This error happens on operations that are
 #. TRANS supposed to manipulate child processes, when there aren't any processes
 #. TRANS to manipulate.
-#: sysdeps/gnu/errlist.c:126
+#: sysdeps/gnu/errlist.c:127
 msgid "No child processes"
 msgstr "Proces naslednik ne obstaja"
 
@@ -5918,69 +5943,69 @@ msgstr "Proces naslednik ne obstaja"
 #. TRANS deadlock situation.  The system does not guarantee that it will notice
 #. TRANS all such situations.  This error means you got lucky and the system
 #. TRANS noticed; it might just hang.  @xref{File Locks}, for an example.
-#: sysdeps/gnu/errlist.c:138
+#: sysdeps/gnu/errlist.c:139
 msgid "Resource deadlock avoided"
 msgstr "Blokada virov preprečena"
 
 #. TRANS No memory available.  The system cannot allocate more virtual memory
 #. TRANS because its capacity is full.
-#: sysdeps/gnu/errlist.c:148
+#: sysdeps/gnu/errlist.c:149
 msgid "Cannot allocate memory"
 msgstr "Pomnilnika ni mogoče dodeliti"
 
 #. TRANS Bad address; an invalid pointer was detected.
 #. TRANS On @gnuhurdsystems{}, this error never happens; you get a signal instead.
-#: sysdeps/gnu/errlist.c:167
+#: sysdeps/gnu/errlist.c:168
 msgid "Bad address"
 msgstr "Nepravilni naslov"
 
 #. TRANS A file that isn't a block special file was given in a situation that
 #. TRANS requires one.  For example, trying to mount an ordinary file as a file
 #. TRANS system in Unix gives this error.
-#: sysdeps/gnu/errlist.c:178
+#: sysdeps/gnu/errlist.c:179
 msgid "Block device required"
 msgstr "Potrebuje se bločna enota"
 
 #. TRANS Resource busy; a system resource that can't be shared is already in use.
 #. TRANS For example, if you try to delete a file that is the root of a currently
 #. TRANS mounted filesystem, you get this error.
-#: sysdeps/gnu/errlist.c:189
+#: sysdeps/gnu/errlist.c:190
 msgid "Device or resource busy"
 msgstr "Naprava ali vir je v rabi"
 
 #. TRANS File exists; an existing file was specified in a context where it only
 #. TRANS makes sense to specify a new file.
-#: sysdeps/gnu/errlist.c:199
+#: sysdeps/gnu/errlist.c:200
 msgid "File exists"
 msgstr "Datoteka že obstaja"
 
 #. TRANS An attempt to make an improper link across file systems was detected.
 #. TRANS This happens not only when you use @code{link} (@pxref{Hard Links}) but
 #. TRANS also when you rename a file with @code{rename} (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.c:210
+#: sysdeps/gnu/errlist.c:211
 msgid "Invalid cross-device link"
 msgstr "Neveljavna povezava med napravami"
 
 #. TRANS The wrong type of device was given to a function that expects a
 #. TRANS particular sort of device.
-#: sysdeps/gnu/errlist.c:220
+#: sysdeps/gnu/errlist.c:221
 msgid "No such device"
 msgstr "Takšna naprava ne obstaja"
 
 #. TRANS A file that isn't a directory was specified when a directory is required.
-#: sysdeps/gnu/errlist.c:229
+#: sysdeps/gnu/errlist.c:230
 msgid "Not a directory"
 msgstr "Ni imenik"
 
 #. TRANS File is a directory; you cannot open a directory for writing,
 #. TRANS or create or remove hard links to it.
-#: sysdeps/gnu/errlist.c:239
+#: sysdeps/gnu/errlist.c:240
 msgid "Is a directory"
 msgstr "Je imenik"
 
 #. TRANS Invalid argument.  This is used to indicate various kinds of problems
 #. TRANS with passing the wrong argument to a library function.
-#: sysdeps/gnu/errlist.c:249
+#: sysdeps/gnu/errlist.c:250
 msgid "Invalid argument"
 msgstr "Neveljavni argument"
 
@@ -5991,20 +6016,20 @@ msgstr "Neveljavni argument"
 #. TRANS limit that can usually be increased.  If you get this error, you might
 #. TRANS want to increase the @code{RLIMIT_NOFILE} limit or make it unlimited;
 #. TRANS @pxref{Limits on Resources}.
-#: sysdeps/gnu/errlist.c:264
+#: sysdeps/gnu/errlist.c:265
 msgid "Too many open files"
 msgstr "Preveč odpretih datotek"
 
 #. TRANS There are too many distinct file openings in the entire system.  Note
 #. TRANS that any number of linked channels count as just one file opening; see
 #. TRANS @ref{Linked Channels}.  This error never occurs on @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.c:275
+#: sysdeps/gnu/errlist.c:276
 msgid "Too many open files in system"
 msgstr "Preveč odprtih datotek v sistemu"
 
 #. TRANS Inappropriate I/O control operation, such as trying to set terminal
 #. TRANS modes on an ordinary file.
-#: sysdeps/gnu/errlist.c:285
+#: sysdeps/gnu/errlist.c:286
 msgid "Inappropriate ioctl for device"
 msgstr "Neprimeren ioctl za napravo"
 
@@ -6013,47 +6038,47 @@ msgstr "Neprimeren ioctl za napravo"
 #. TRANS debugger to run a program is considered having it open for writing and
 #. TRANS will cause this error.  (The name stands for ``text file busy''.)  This
 #. TRANS is not an error on @gnuhurdsystems{}; the text is copied as necessary.
-#: sysdeps/gnu/errlist.c:298
+#: sysdeps/gnu/errlist.c:299
 msgid "Text file busy"
 msgstr "Besedilna datoteka je v rabi"
 
 #. TRANS File too big; the size of a file would be larger than allowed by the system.
-#: sysdeps/gnu/errlist.c:307
+#: sysdeps/gnu/errlist.c:308
 msgid "File too large"
 msgstr "Prevelika datoteka"
 
 #. TRANS No space left on device; write operation on a file failed because the
 #. TRANS disk is full.
-#: sysdeps/gnu/errlist.c:317
+#: sysdeps/gnu/errlist.c:318
 msgid "No space left on device"
 msgstr "Na napravi ni več prostora"
 
 #. TRANS Invalid seek operation (such as on a pipe).
-#: sysdeps/gnu/errlist.c:326
+#: sysdeps/gnu/errlist.c:327
 msgid "Illegal seek"
 msgstr "Nedovoljeno iskanje"
 
 #. TRANS An attempt was made to modify something on a read-only file system.
-#: sysdeps/gnu/errlist.c:335
+#: sysdeps/gnu/errlist.c:336
 msgid "Read-only file system"
 msgstr "Datotečni sistem je zgolj za branje"
 
 #. TRANS Too many links; the link count of a single file would become too large.
 #. TRANS @code{rename} can cause this error if the file being renamed already has
 #. TRANS as many links as it can take (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.c:346
+#: sysdeps/gnu/errlist.c:347
 msgid "Too many links"
 msgstr "Preveč povezav"
 
 #. TRANS Domain error; used by mathematical functions when an argument value does
 #. TRANS not fall into the domain over which the function is defined.
-#: sysdeps/gnu/errlist.c:369
+#: sysdeps/gnu/errlist.c:370
 msgid "Numerical argument out of domain"
 msgstr "Številčni argument izven domene"
 
 #. TRANS Range error; used by mathematical functions when the result value is
 #. TRANS not representable because of overflow or underflow.
-#: sysdeps/gnu/errlist.c:379
+#: sysdeps/gnu/errlist.c:380
 msgid "Numerical result out of range"
 msgstr "Številčni rezultat izven obsega"
 
@@ -6086,7 +6111,7 @@ msgstr "Številčni rezultat izven obsega"
 #. TRANS so usually an interactive program should report the error to the user
 #. TRANS and return to its command loop.
 #. TRANS @end itemize
-#: sysdeps/gnu/errlist.c:416
+#: sysdeps/gnu/errlist.c:417
 msgid "Resource temporarily unavailable"
 msgstr "Vir začasno ni na razpolago"
 
@@ -6095,7 +6120,7 @@ msgstr "Vir začasno ni na razpolago"
 #. TRANS
 #. TRANS C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
 #. TRANS separate error code.
-#: sysdeps/gnu/errlist.c:429
+#: sysdeps/gnu/errlist.c:430
 msgid "Operation would block"
 msgstr "Operacija bi blokirala"
 
@@ -6107,47 +6132,47 @@ msgstr "Operacija bi blokirala"
 #. TRANS the object before the call completes return @code{EALREADY}.  You can
 #. TRANS use the @code{select} function to find out when the pending operation
 #. TRANS has completed; @pxref{Waiting for I/O}.
-#: sysdeps/gnu/errlist.c:445
+#: sysdeps/gnu/errlist.c:446
 msgid "Operation now in progress"
 msgstr "Operacija je v teku"
 
 #. TRANS An operation is already in progress on an object that has non-blocking
 #. TRANS mode selected.
-#: sysdeps/gnu/errlist.c:455
+#: sysdeps/gnu/errlist.c:456
 msgid "Operation already in progress"
 msgstr "Operacija je že v teku"
 
 #. TRANS A file that isn't a socket was specified when a socket is required.
-#: sysdeps/gnu/errlist.c:464
+#: sysdeps/gnu/errlist.c:465
 msgid "Socket operation on non-socket"
 msgstr "Operacija vtičnice na ne-vtičnici"
 
 #. TRANS The size of a message sent on a socket was larger than the supported
 #. TRANS maximum size.
-#: sysdeps/gnu/errlist.c:474
+#: sysdeps/gnu/errlist.c:475
 msgid "Message too long"
 msgstr "Sporočilo je predolgo"
 
 #. TRANS The socket type does not support the requested communications protocol.
-#: sysdeps/gnu/errlist.c:483
+#: sysdeps/gnu/errlist.c:484
 msgid "Protocol wrong type for socket"
 msgstr "Napačna vrsta protokola za vtičnico"
 
 #. TRANS You specified a socket option that doesn't make sense for the
 #. TRANS particular protocol being used by the socket.  @xref{Socket Options}.
-#: sysdeps/gnu/errlist.c:493
+#: sysdeps/gnu/errlist.c:494
 msgid "Protocol not available"
 msgstr "Protokol ni na voljo"
 
 #. TRANS The socket domain does not support the requested communications protocol
 #. TRANS (perhaps because the requested protocol is completely invalid).
 #. TRANS @xref{Creating a Socket}.
-#: sysdeps/gnu/errlist.c:504
+#: sysdeps/gnu/errlist.c:505
 msgid "Protocol not supported"
 msgstr "Protokol ni podprt"
 
 #. TRANS The socket type is not supported.
-#: sysdeps/gnu/errlist.c:513
+#: sysdeps/gnu/errlist.c:514
 msgid "Socket type not supported"
 msgstr "Vrsta vtičnice ni podprta"
 
@@ -6157,71 +6182,71 @@ msgstr "Vrsta vtičnice ni podprta"
 #. TRANS error can happen for many calls when the object does not support the
 #. TRANS particular operation; it is a generic indication that the server knows
 #. TRANS nothing to do for that call.
-#: sysdeps/gnu/errlist.c:527
+#: sysdeps/gnu/errlist.c:528
 msgid "Operation not supported"
 msgstr "Operacija ni podprta"
 
 #. TRANS The socket communications protocol family you requested is not supported.
-#: sysdeps/gnu/errlist.c:536
+#: sysdeps/gnu/errlist.c:537
 msgid "Protocol family not supported"
 msgstr "Družina protokolov ni podprta"
 
 #. TRANS The address family specified for a socket is not supported; it is
 #. TRANS inconsistent with the protocol being used on the socket.  @xref{Sockets}.
-#: sysdeps/gnu/errlist.c:546
+#: sysdeps/gnu/errlist.c:547
 msgid "Address family not supported by protocol"
 msgstr "Protokol ne podpira družine naslovov"
 
 #. TRANS The requested socket address is already in use.  @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.c:555
+#: sysdeps/gnu/errlist.c:556
 msgid "Address already in use"
 msgstr "Naslov je že v rabi"
 
 #. TRANS The requested socket address is not available; for example, you tried
 #. TRANS to give a socket a name that doesn't match the local host name.
 #. TRANS @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.c:566
+#: sysdeps/gnu/errlist.c:567
 msgid "Cannot assign requested address"
 msgstr "Zahtevanega naslova ni mogoče dodeliti"
 
 #. TRANS A socket operation failed because the network was down.
-#: sysdeps/gnu/errlist.c:575
+#: sysdeps/gnu/errlist.c:576
 msgid "Network is down"
 msgstr "Omrežje ni dejavno"
 
 #. TRANS A socket operation failed because the subnet containing the remote host
 #. TRANS was unreachable.
-#: sysdeps/gnu/errlist.c:585
+#: sysdeps/gnu/errlist.c:586
 msgid "Network is unreachable"
 msgstr "Omrežje ni dostopno"
 
 #. TRANS A network connection was reset because the remote host crashed.
-#: sysdeps/gnu/errlist.c:594
+#: sysdeps/gnu/errlist.c:595
 msgid "Network dropped connection on reset"
 msgstr "Omrežje je prekinilo povezavo ob vnovičnem zagonu"
 
 #. TRANS A network connection was aborted locally.
-#: sysdeps/gnu/errlist.c:603
+#: sysdeps/gnu/errlist.c:604
 msgid "Software caused connection abort"
 msgstr "Programsko povzročena prekinitev povezave"
 
 #. TRANS A network connection was closed for reasons outside the control of the
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
 #. TRANS protocol violation.
-#: sysdeps/gnu/errlist.c:614
+#: sysdeps/gnu/errlist.c:615
 msgid "Connection reset by peer"
 msgstr ""
 
 #. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
 #. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
 #. TRANS other from network operations.
-#: sysdeps/gnu/errlist.c:625
+#: sysdeps/gnu/errlist.c:626
 msgid "No buffer space available"
 msgstr "Prostor za medpomnilnik ni na voljo"
 
 #. TRANS You tried to connect a socket that is already connected.
 #. TRANS @xref{Connecting}.
-#: sysdeps/gnu/errlist.c:635
+#: sysdeps/gnu/errlist.c:636
 #, fuzzy
 msgid "Transport endpoint is already connected"
 msgstr "priklopna točka %s je bila že prečesana"
@@ -6230,44 +6255,44 @@ msgstr "priklopna točka %s je bila že prečesana"
 #. TRANS try to transmit data over a socket, without first specifying a
 #. TRANS destination for the data.  For a connectionless socket (for datagram
 #. TRANS protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
-#: sysdeps/gnu/errlist.c:647
+#: sysdeps/gnu/errlist.c:648
 msgid "Transport endpoint is not connected"
 msgstr ""
 
 #. TRANS No default destination address was set for the socket.  You get this
 #. TRANS error when you try to transmit data over a connectionless socket,
 #. TRANS without first specifying a destination for the data with @code{connect}.
-#: sysdeps/gnu/errlist.c:658
+#: sysdeps/gnu/errlist.c:659
 #, fuzzy
 msgid "Destination address required"
 msgstr "regularni izraz z nezaključenim naslovom"
 
 #. TRANS The socket has already been shut down.
-#: sysdeps/gnu/errlist.c:667
+#: sysdeps/gnu/errlist.c:668
 msgid "Cannot send after transport endpoint shutdown"
 msgstr ""
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:676
+#: sysdeps/gnu/errlist.c:677
 msgid "Too many references: cannot splice"
 msgstr ""
 
 #. TRANS A socket operation with a specified timeout received no response during
 #. TRANS the timeout period.
-#: sysdeps/gnu/errlist.c:686
+#: sysdeps/gnu/errlist.c:687
 #, fuzzy
 msgid "Connection timed out"
 msgstr " pretečeno.\n"
 
 #. TRANS A remote host refused to allow the network connection (typically because
 #. TRANS it is not running the requested service).
-#: sysdeps/gnu/errlist.c:696
+#: sysdeps/gnu/errlist.c:697
 msgid "Connection refused"
 msgstr ""
 
 #. TRANS Too many levels of symbolic links were encountered in looking up a file name.
 #. TRANS This often indicates a cycle of symbolic links.
-#: sysdeps/gnu/errlist.c:706
+#: sysdeps/gnu/errlist.c:707
 #, fuzzy
 msgid "Too many levels of symbolic links"
 msgstr "ni mogoče ustvariti simbolne povezave %s"
@@ -6275,24 +6300,24 @@ msgstr "ni mogoče ustvariti simbolne povezave %s"
 #. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
 #. TRANS Files}) or host name too long (in @code{gethostname} or
 #. TRANS @code{sethostname}; @pxref{Host Identification}).
-#: sysdeps/gnu/errlist.c:717
+#: sysdeps/gnu/errlist.c:718
 #, fuzzy
 msgid "File name too long"
 msgstr "Ime datoteke %s%s predolgo"
 
 #. TRANS The remote host for a requested network connection is down.
-#: sysdeps/gnu/errlist.c:726
+#: sysdeps/gnu/errlist.c:727
 msgid "Host is down"
 msgstr ""
 
 #. TRANS The remote host for a requested network connection is not reachable.
-#: sysdeps/gnu/errlist.c:735
+#: sysdeps/gnu/errlist.c:736
 msgid "No route to host"
 msgstr ""
 
 #. TRANS Directory not empty, where an empty directory was expected.  Typically,
 #. TRANS this error occurs when you are trying to delete a directory.
-#: sysdeps/gnu/errlist.c:745
+#: sysdeps/gnu/errlist.c:746
 #, fuzzy
 msgid "Directory not empty"
 msgstr "imenik ni iznešen"
@@ -6300,20 +6325,20 @@ msgstr "imenik ni iznešen"
 #. TRANS This means that the per-user limit on new process would be exceeded by
 #. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
 #. TRANS the @code{RLIMIT_NPROC} limit.
-#: sysdeps/gnu/errlist.c:756
+#: sysdeps/gnu/errlist.c:757
 #, fuzzy
 msgid "Too many processes"
 msgstr "preveč znakov v množici"
 
 #. TRANS The file quota system is confused because there are too many users.
 #. TRANS @c This can probably happen in a GNU system when using NFS.
-#: sysdeps/gnu/errlist.c:766
+#: sysdeps/gnu/errlist.c:767
 #, fuzzy
 msgid "Too many users"
 msgstr "preveč argumentov"
 
 #. TRANS The user's disk quota was exceeded.
-#: sysdeps/gnu/errlist.c:775
+#: sysdeps/gnu/errlist.c:776
 #, fuzzy
 msgid "Disk quota exceeded"
 msgstr "Presežena omejitev dolžine datoteke"
@@ -6323,7 +6348,7 @@ msgstr "Presežena omejitev dolžine datoteke"
 #. TRANS for NFS file systems or corruption in other file systems.
 #. TRANS Repairing this condition usually requires unmounting, possibly repairing
 #. TRANS and remounting the file system.
-#: sysdeps/gnu/errlist.c:788
+#: sysdeps/gnu/errlist.c:789
 msgid "Stale file handle"
 msgstr ""
 
@@ -6331,34 +6356,34 @@ msgstr ""
 #. TRANS already specifies an NFS-mounted file.
 #. TRANS (This is an error on some operating systems, but we expect it to work
 #. TRANS properly on @gnuhurdsystems{}, making this error code impossible.)
-#: sysdeps/gnu/errlist.c:800
+#: sysdeps/gnu/errlist.c:801
 msgid "Object is remote"
 msgstr ""
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:809
+#: sysdeps/gnu/errlist.c:810
 msgid "RPC struct is bad"
 msgstr ""
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:818
+#: sysdeps/gnu/errlist.c:819
 msgid "RPC version wrong"
 msgstr ""
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:827
+#: sysdeps/gnu/errlist.c:828
 #, fuzzy
 msgid "RPC program not available"
 msgstr "funkcija iconv ni na voljo"
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:836
+#: sysdeps/gnu/errlist.c:837
 #, fuzzy
 msgid "RPC program version wrong"
 msgstr "izpis izdaje programa"
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:845
+#: sysdeps/gnu/errlist.c:846
 msgid "RPC bad procedure for program"
 msgstr ""
 
@@ -6366,7 +6391,7 @@ msgstr ""
 #. TRANS @ref{File Locks}.  This error is never generated by @gnuhurdsystems{}, but
 #. TRANS it can result from an operation to an NFS server running another
 #. TRANS operating system.
-#: sysdeps/gnu/errlist.c:857
+#: sysdeps/gnu/errlist.c:858
 msgid "No locks available"
 msgstr ""
 
@@ -6375,17 +6400,17 @@ msgstr ""
 #. TRANS
 #. TRANS On some systems @code{chmod} returns this error if you try to set the
 #. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
-#: sysdeps/gnu/errlist.c:870
+#: sysdeps/gnu/errlist.c:871
 msgid "Inappropriate file type or format"
 msgstr ""
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:879
+#: sysdeps/gnu/errlist.c:880
 msgid "Authentication error"
 msgstr "Overitvena napaka"
 
 #. TRANS ???
-#: sysdeps/gnu/errlist.c:888
+#: sysdeps/gnu/errlist.c:889
 msgid "Need authenticator"
 msgstr ""
 
@@ -6394,7 +6419,7 @@ msgstr ""
 #. TRANS operating system.  When you get this error, you can be sure that this
 #. TRANS particular function will always fail with @code{ENOSYS} unless you
 #. TRANS install a new version of the C library or the operating system.
-#: sysdeps/gnu/errlist.c:901
+#: sysdeps/gnu/errlist.c:902
 #, fuzzy
 msgid "Function not implemented"
 msgstr "ne upoštevamo izbire %s (ni podprto)"
@@ -6411,14 +6436,14 @@ msgstr "ne upoštevamo izbire %s (ni podprto)"
 #. TRANS
 #. TRANS If the entire function is not available at all in the implementation,
 #. TRANS it returns @code{ENOSYS} instead.
-#: sysdeps/gnu/errlist.c:921
+#: sysdeps/gnu/errlist.c:922
 #, fuzzy
 msgid "Not supported"
 msgstr "ai_family ni podprt"
 
 #. TRANS While decoding a multibyte character the function came along an invalid
 #. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
-#: sysdeps/gnu/errlist.c:931
+#: sysdeps/gnu/errlist.c:932
 #, fuzzy
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr "Neveljaven razvrščevalni znak"
@@ -6429,86 +6454,86 @@ msgstr "Neveljaven razvrščevalni znak"
 #. TRANS error because functions such as @code{read} and @code{write} translate
 #. TRANS it into a @code{SIGTTIN} or @code{SIGTTOU} signal.  @xref{Job Control},
 #. TRANS for information on process groups and these signals.
-#: sysdeps/gnu/errlist.c:945
+#: sysdeps/gnu/errlist.c:946
 msgid "Inappropriate operation for background process"
 msgstr ""
 
 #. TRANS On @gnuhurdsystems{}, opening a file returns this error when the file is
 #. TRANS translated by a program and the translator program dies while starting
 #. TRANS up, before it has connected to the file.
-#: sysdeps/gnu/errlist.c:956
+#: sysdeps/gnu/errlist.c:957
 msgid "Translator died"
 msgstr ""
 
 #. TRANS The experienced user will know what is wrong.
 #. TRANS @c This error code is a joke.  Its perror text is part of the joke.
 #. TRANS @c Don't change it.
-#: sysdeps/gnu/errlist.c:967
+#: sysdeps/gnu/errlist.c:968
 msgid "?"
 msgstr ""
 
 #. TRANS You did @strong{what}?
-#: sysdeps/gnu/errlist.c:976
+#: sysdeps/gnu/errlist.c:977
 msgid "You really blew it this time"
 msgstr ""
 
 #. TRANS Go home and have a glass of warm, dairy-fresh milk.
-#: sysdeps/gnu/errlist.c:985
+#: sysdeps/gnu/errlist.c:986
 msgid "Computer bought the farm"
 msgstr ""
 
 #. TRANS This error code has no purpose.
-#: sysdeps/gnu/errlist.c:994
+#: sysdeps/gnu/errlist.c:995
 #, fuzzy
 msgid "Gratuitous error"
 msgstr "napaka pri pisanju"
 
-#: sysdeps/gnu/errlist.c:1002
+#: sysdeps/gnu/errlist.c:1003
 #, fuzzy
 msgid "Bad message"
 msgstr "%d prevedenih sporočil"
 
-#: sysdeps/gnu/errlist.c:1010
+#: sysdeps/gnu/errlist.c:1011
 msgid "Identifier removed"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1018
+#: sysdeps/gnu/errlist.c:1019
 msgid "Multihop attempted"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1026
+#: sysdeps/gnu/errlist.c:1027
 #, fuzzy
 msgid "No data available"
 msgstr "Na voljo"
 
-#: sysdeps/gnu/errlist.c:1034
+#: sysdeps/gnu/errlist.c:1035
 msgid "Link has been severed"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1042
+#: sysdeps/gnu/errlist.c:1043
 msgid "No message of desired type"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1050
+#: sysdeps/gnu/errlist.c:1051
 msgid "Out of streams resources"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1058
+#: sysdeps/gnu/errlist.c:1059
 #, fuzzy
 msgid "Device not a stream"
 msgstr "Številka enote izven obsega"
 
-#: sysdeps/gnu/errlist.c:1066
+#: sysdeps/gnu/errlist.c:1067
 #, fuzzy
 msgid "Value too large for defined data type"
 msgstr "vrednost je prevelika, da bi bila lahko pretvorjena: %s"
 
-#: sysdeps/gnu/errlist.c:1074
+#: sysdeps/gnu/errlist.c:1075
 #, fuzzy
 msgid "Protocol error"
 msgstr "napaka pri pisanju"
 
-#: sysdeps/gnu/errlist.c:1082
+#: sysdeps/gnu/errlist.c:1083
 #, fuzzy
 msgid "Timer expired"
 msgstr "Iztek virtualne štoparice"
@@ -6517,213 +6542,213 @@ msgstr "Iztek virtualne štoparice"
 #. TRANS completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
 #. TRANS the normal result is for the operations affected to complete with this
 #. TRANS error; @pxref{Cancel AIO Operations}.
-#: sysdeps/gnu/errlist.c:1094
+#: sysdeps/gnu/errlist.c:1095
 #, fuzzy
 msgid "Operation canceled"
 msgstr "Način delovanja:\n"
 
-#: sysdeps/gnu/errlist.c:1102
+#: sysdeps/gnu/errlist.c:1103
 msgid "Interrupted system call should be restarted"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1110
+#: sysdeps/gnu/errlist.c:1111
 #, fuzzy
 msgid "Channel number out of range"
 msgstr "%s: številka vrstice izven razpona"
 
-#: sysdeps/gnu/errlist.c:1118
+#: sysdeps/gnu/errlist.c:1119
 msgid "Level 2 not synchronized"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1126
+#: sysdeps/gnu/errlist.c:1127
 msgid "Level 3 halted"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1134
+#: sysdeps/gnu/errlist.c:1135
 msgid "Level 3 reset"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1142
+#: sysdeps/gnu/errlist.c:1143
 #, fuzzy
 msgid "Link number out of range"
 msgstr "%s: številka vrstice izven razpona"
 
-#: sysdeps/gnu/errlist.c:1150
+#: sysdeps/gnu/errlist.c:1151
 msgid "Protocol driver not attached"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1158
+#: sysdeps/gnu/errlist.c:1159
 msgid "No CSI structure available"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1166
+#: sysdeps/gnu/errlist.c:1167
 msgid "Level 2 halted"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1174
+#: sysdeps/gnu/errlist.c:1175
 #, fuzzy
 msgid "Invalid exchange"
 msgstr "Neveljavna zgornja meja razpona"
 
-#: sysdeps/gnu/errlist.c:1182
+#: sysdeps/gnu/errlist.c:1183
 #, fuzzy
 msgid "Invalid request descriptor"
 msgstr "Neveljavna smer iskanja"
 
-#: sysdeps/gnu/errlist.c:1190
+#: sysdeps/gnu/errlist.c:1191
 msgid "Exchange full"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1198
+#: sysdeps/gnu/errlist.c:1199
 msgid "No anode"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1206
+#: sysdeps/gnu/errlist.c:1207
 #, fuzzy
 msgid "Invalid request code"
 msgstr "Neveljavna dolžina zapisa"
 
-#: sysdeps/gnu/errlist.c:1214
+#: sysdeps/gnu/errlist.c:1215
 #, fuzzy
 msgid "Invalid slot"
 msgstr "Neveljaven odmik pri seek"
 
-#: sysdeps/gnu/errlist.c:1222
+#: sysdeps/gnu/errlist.c:1223
 #, fuzzy
 msgid "File locking deadlock error"
 msgstr "Opazna napaka zaradi dolgih imen"
 
-#: sysdeps/gnu/errlist.c:1230
+#: sysdeps/gnu/errlist.c:1231
 msgid "Bad font file format"
 msgstr "Okvarjen zapis datoteke s pisavo"
 
-#: sysdeps/gnu/errlist.c:1238
+#: sysdeps/gnu/errlist.c:1239
 msgid "Machine is not on the network"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1246
+#: sysdeps/gnu/errlist.c:1247
 msgid "Package not installed"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1254
+#: sysdeps/gnu/errlist.c:1255
 #, fuzzy
 msgid "Advertise error"
 msgstr "napaka pri pisanju"
 
-#: sysdeps/gnu/errlist.c:1262
+#: sysdeps/gnu/errlist.c:1263
 #, fuzzy
 msgid "Srmount error"
 msgstr "napaka pri pisanju"
 
-#: sysdeps/gnu/errlist.c:1270
+#: sysdeps/gnu/errlist.c:1271
 msgid "Communication error on send"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1278
+#: sysdeps/gnu/errlist.c:1279
 msgid "RFS specific error"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1286
+#: sysdeps/gnu/errlist.c:1287
 msgid "Name not unique on network"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1294
+#: sysdeps/gnu/errlist.c:1295
 msgid "File descriptor in bad state"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1302
+#: sysdeps/gnu/errlist.c:1303
 #, fuzzy
 msgid "Remote address changed"
 msgstr "regularni izraz z nezaključenim naslovom"
 
-#: sysdeps/gnu/errlist.c:1310
+#: sysdeps/gnu/errlist.c:1311
 msgid "Can not access a needed shared library"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1318
+#: sysdeps/gnu/errlist.c:1319
 msgid "Accessing a corrupted shared library"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1326
+#: sysdeps/gnu/errlist.c:1327
 msgid ".lib section in a.out corrupted"
 msgstr ""
 
 # POZOR! Grdo!
-#: sysdeps/gnu/errlist.c:1334
+#: sysdeps/gnu/errlist.c:1335
 #, fuzzy
 msgid "Attempting to link in too many shared libraries"
 msgstr "Simbolne povezave poskusimo dearhivirati kot trde"
 
-#: sysdeps/gnu/errlist.c:1342
+#: sysdeps/gnu/errlist.c:1343
 #, fuzzy
 msgid "Cannot exec a shared library directly"
 msgstr "Ni mogoče pognati lupine %s"
 
-#: sysdeps/gnu/errlist.c:1350
+#: sysdeps/gnu/errlist.c:1351
 #, fuzzy
 msgid "Streams pipe error"
 msgstr "Sistemska napaka"
 
-#: sysdeps/gnu/errlist.c:1358
+#: sysdeps/gnu/errlist.c:1359
 msgid "Structure needs cleaning"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1366
+#: sysdeps/gnu/errlist.c:1367
 msgid "Not a XENIX named type file"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1374
+#: sysdeps/gnu/errlist.c:1375
 msgid "No XENIX semaphores available"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1382
+#: sysdeps/gnu/errlist.c:1383
 msgid "Is a named type file"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1390
+#: sysdeps/gnu/errlist.c:1391
 msgid "Remote I/O error"
 msgstr "Oddaljena V/I napaka"
 
-#: sysdeps/gnu/errlist.c:1398
+#: sysdeps/gnu/errlist.c:1399
 msgid "No medium found"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1406
+#: sysdeps/gnu/errlist.c:1407
 msgid "Wrong medium type"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1414
+#: sysdeps/gnu/errlist.c:1415
 #, fuzzy
 msgid "Required key not available"
 msgstr "exec/tcp: Storitev ni dosegljiva"
 
-#: sysdeps/gnu/errlist.c:1422
+#: sysdeps/gnu/errlist.c:1423
 msgid "Key has expired"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1430
+#: sysdeps/gnu/errlist.c:1431
 #, fuzzy
 msgid "Key has been revoked"
 msgstr "%s: Imenik je bil preimenovan"
 
-#: sysdeps/gnu/errlist.c:1438
+#: sysdeps/gnu/errlist.c:1439
 msgid "Key was rejected by service"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1446
+#: sysdeps/gnu/errlist.c:1447
 msgid "Owner died"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1454
+#: sysdeps/gnu/errlist.c:1455
 msgid "State not recoverable"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1462
+#: sysdeps/gnu/errlist.c:1463
 #, fuzzy
 msgid "Operation not possible due to RF-kill"
 msgstr "Operacija ni podprta"
 
-#: sysdeps/gnu/errlist.c:1470
+#: sysdeps/gnu/errlist.c:1471
 msgid "Memory page has hardware error"
 msgstr ""
 
@@ -6804,6 +6829,11 @@ msgstr "Parametrični niz nepravilno kodiran"
 msgid "%s is for unknown machine %d.\n"
 msgstr ""
 
+#: sysdeps/unix/sysv/linux/ia64/makecontext.c:58
+#, c-format
+msgid "makecontext: does not know how to handle more than 8 arguments\n"
+msgstr ""
+
 #: sysdeps/unix/sysv/linux/lddlibc4.c:60
 #, c-format
 msgid ""
@@ -6823,28 +6853,28 @@ msgstr "ni mogoče odpreti »%s«"
 msgid "cannot read header from `%s'"
 msgstr "ni mogoče prebrati imen datotek iz %s"
 
-#: timezone/zdump.c:280
+#: timezone/zdump.c:282
 msgid "lacks alphabetic at start"
 msgstr ""
 
-#: timezone/zdump.c:282
+#: timezone/zdump.c:284
 msgid "has fewer than 3 alphabetics"
 msgstr ""
 
-#: timezone/zdump.c:284
+#: timezone/zdump.c:286
 msgid "has more than 6 alphabetics"
 msgstr ""
 
-#: timezone/zdump.c:292
+#: timezone/zdump.c:294
 msgid "differs from POSIX standard"
 msgstr "se razlikuje od standarda POSIX"
 
-#: timezone/zdump.c:298
+#: timezone/zdump.c:300
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr ""
 
-#: timezone/zdump.c:307
+#: timezone/zdump.c:309
 #, c-format
 msgid ""
 "%s: usage: %s [--version] [--help] [-{vV}] [-{ct} [lo,]hi] zonename ...\n"
@@ -6852,17 +6882,17 @@ msgid ""
 "Report bugs to %s.\n"
 msgstr ""
 
-#: timezone/zdump.c:384
+#: timezone/zdump.c:386
 #, fuzzy, c-format
 msgid "%s: wild -c argument %s\n"
 msgstr "neveljavni --%s argument %s"
 
-#: timezone/zdump.c:417
+#: timezone/zdump.c:419
 #, fuzzy, c-format
 msgid "%s: wild -t argument %s\n"
 msgstr "neveljavni --%s argument %s"
 
-#: timezone/zdump.c:506
+#: timezone/zdump.c:508
 msgid "Error writing to standard output"
 msgstr "Napaka pri pisanju na standardni izhod"
 
@@ -6870,27 +6900,27 @@ msgstr "Napaka pri pisanju na standardni izhod"
 # ! INEXACT
 # #-#-#-#-#  gnulib-3.0.0.6062.a6b16.sl.po (gnulib 3.0.0.6062.a6b16)  #-#-#-#-#
 # ! INEXACT
-#: timezone/zic.c:370
+#: timezone/zic.c:371
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: Pomnilnik porabljen: %s\n"
 
-#: timezone/zic.c:410
+#: timezone/zic.c:438
 #, fuzzy, c-format
 msgid "\"%s\", line %d: "
 msgstr "%s: datoteka %s vrstica %lu: %s\n"
 
-#: timezone/zic.c:413
+#: timezone/zic.c:441
 #, c-format
 msgid " (rule from \"%s\", line %d)"
 msgstr ""
 
-#: timezone/zic.c:432
+#: timezone/zic.c:460
 #, c-format
 msgid "warning: "
 msgstr "opozorilo: "
 
-#: timezone/zic.c:442
+#: timezone/zic.c:470
 #, c-format
 msgid ""
 "%s: usage is %s [ --version ] [ --help ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n"
@@ -6899,376 +6929,378 @@ msgid ""
 "Report bugs to %s.\n"
 msgstr ""
 
-#: timezone/zic.c:477
+#: timezone/zic.c:505
 msgid "wild compilation-time specification of zic_t"
 msgstr ""
 
-#: timezone/zic.c:496
+#: timezone/zic.c:524
 #, fuzzy, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "nobena izbira za pretvorbo ni podana"
 
-#: timezone/zic.c:506
+#: timezone/zic.c:534
 #, fuzzy, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "nobena izbira za pretvorbo ni podana"
 
-#: timezone/zic.c:516
+#: timezone/zic.c:544
 #, fuzzy, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "nobena izbira za pretvorbo ni podana"
 
-#: timezone/zic.c:526
+#: timezone/zic.c:554
 #, fuzzy, c-format
 msgid "%s: More than one -y option specified\n"
 msgstr "nobena izbira za pretvorbo ni podana"
 
-#: timezone/zic.c:536
+#: timezone/zic.c:564
 #, fuzzy, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "nobena izbira za pretvorbo ni podana"
 
-#: timezone/zic.c:583
+#: timezone/zic.c:611
 #, fuzzy
 msgid "link to link"
 msgstr " povezava na %s\n"
 
-#: timezone/zic.c:650
+#: timezone/zic.c:678
 #, fuzzy
 msgid "hard link failed, symbolic link used"
 msgstr "ni mogoče prebrati simbolne povezave %s"
 
-#: timezone/zic.c:660
+#: timezone/zic.c:688
 #, fuzzy, c-format
 msgid "%s: Can't read %s: %s\n"
 msgstr "%s: ni mogoče ustvariti %s: %s\n"
 
-#: timezone/zic.c:668 timezone/zic.c:1533
+#: timezone/zic.c:696 timezone/zic.c:1595
 #, c-format
 msgid "%s: Can't create %s: %s\n"
 msgstr "%s: ni mogoče ustvariti %s: %s\n"
 
-#: timezone/zic.c:676 timezone/zic.c:881
+#: timezone/zic.c:704 timezone/zic.c:939
 #, fuzzy, c-format
 msgid "%s: Error reading %s\n"
 msgstr "napaka pri branju %s"
 
-#: timezone/zic.c:682 timezone/zic.c:1750
+#: timezone/zic.c:710 timezone/zic.c:1792
 #, c-format
 msgid "%s: Error writing %s\n"
 msgstr "%s: napaka pri pisanju na %s\n"
 
-#: timezone/zic.c:686
+#: timezone/zic.c:714
 #, fuzzy
 msgid "link failed, copy used"
 msgstr "ni mogoče prebrati simbolne povezave %s"
 
-#: timezone/zic.c:744 timezone/zic.c:746
+#: timezone/zic.c:802 timezone/zic.c:804
 #, fuzzy
 msgid "same rule name in multiple files"
 msgstr "ključ %lu je številčen in se razteza prek več polj"
 
-#: timezone/zic.c:787
+#: timezone/zic.c:845
 msgid "unruly zone"
 msgstr ""
 
-#: timezone/zic.c:794
+#: timezone/zic.c:852
 #, c-format
 msgid "%s in ruleless zone"
 msgstr ""
 
-#: timezone/zic.c:814
+#: timezone/zic.c:872
 msgid "standard input"
 msgstr "standardni vhod"
 
-#: timezone/zic.c:819
+#: timezone/zic.c:877
 #, fuzzy, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: %s ni mogoče prebrati: %s\n"
 
-#: timezone/zic.c:830
+#: timezone/zic.c:888
 #, fuzzy
 msgid "line too long"
 msgstr "vrstica z argumenti je predolga"
 
-#: timezone/zic.c:850
+#: timezone/zic.c:908
 #, fuzzy
 msgid "input line of unknown type"
 msgstr "vhodna vrstica je predolga"
 
-#: timezone/zic.c:866
+#: timezone/zic.c:924
 #, c-format
 msgid "%s: Leap line in non leap seconds file %s\n"
 msgstr ""
 
-#: timezone/zic.c:873 timezone/zic.c:1282 timezone/zic.c:1304
+#: timezone/zic.c:931 timezone/zic.c:1339 timezone/zic.c:1361
 #, fuzzy, c-format
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr "neveljavna vrednost polja %s"
 
-#: timezone/zic.c:888
+#: timezone/zic.c:946
 #, fuzzy, c-format
 msgid "%s: Error closing %s: %s\n"
 msgstr "%s: Napaka pri zapiranju"
 
-#: timezone/zic.c:893
+#: timezone/zic.c:951
 msgid "expected continuation line not found"
 msgstr ""
 
-#: timezone/zic.c:934 timezone/zic.c:2610 timezone/zic.c:2624
+#: timezone/zic.c:992 timezone/zic.c:2644 timezone/zic.c:2658
 #, fuzzy
 msgid "time overflow"
 msgstr "prekoračitev sklada"
 
-#: timezone/zic.c:938
-msgid "24:00 not handled by pre-1998 versions of zic"
-msgstr ""
-
-#: timezone/zic.c:941
+#: timezone/zic.c:997
 msgid "values over 24 hours not handled by pre-2007 versions of zic"
 msgstr ""
 
-#: timezone/zic.c:952
+#: timezone/zic.c:1008
 #, fuzzy
 msgid "wrong number of fields on Rule line"
 msgstr "neveljavno število preskočenih polj"
 
-#: timezone/zic.c:956
+#: timezone/zic.c:1012
 msgid "nameless rule"
 msgstr ""
 
-#: timezone/zic.c:961
+#: timezone/zic.c:1017
 #, fuzzy
 msgid "invalid saved time"
 msgstr "neveljavna specifikacija"
 
-#: timezone/zic.c:978
+#: timezone/zic.c:1034
 #, fuzzy
 msgid "wrong number of fields on Zone line"
 msgstr "neveljavno število preskočenih polj"
 
-#: timezone/zic.c:983
+#: timezone/zic.c:1039
 #, fuzzy, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr ""
 "\n"
 "Izbiri -r in -s se medsebojno izključujeta.\n"
 
-#: timezone/zic.c:989
+#: timezone/zic.c:1045
 #, fuzzy, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr ""
 "\n"
 "Izbiri -r in -s se medsebojno izključujeta.\n"
 
-#: timezone/zic.c:997
+#: timezone/zic.c:1053
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %d)"
 msgstr ""
 
-#: timezone/zic.c:1010
+#: timezone/zic.c:1066
 msgid "wrong number of fields on Zone continuation line"
 msgstr ""
 
-#: timezone/zic.c:1047
+#: timezone/zic.c:1103
 #, fuzzy
 msgid "invalid UT offset"
 msgstr "Neveljaven odmik pri seek"
 
-#: timezone/zic.c:1050
+#: timezone/zic.c:1106
 #, fuzzy
 msgid "invalid abbreviation format"
 msgstr "neveljavna oblika datuma %s"
 
-#: timezone/zic.c:1079
+#: timezone/zic.c:1135
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr ""
 
-#: timezone/zic.c:1105
+#: timezone/zic.c:1161
 #, fuzzy
 msgid "wrong number of fields on Leap line"
 msgstr "neveljavno število preskočenih polj"
 
-#: timezone/zic.c:1114
+#: timezone/zic.c:1170
 #, fuzzy
 msgid "invalid leaping year"
 msgstr "neveljavni padajoči razpon"
 
-#: timezone/zic.c:1134 timezone/zic.c:1236
+#: timezone/zic.c:1190 timezone/zic.c:1293
 #, fuzzy
 msgid "invalid month name"
 msgstr "napačna zaščita"
 
-#: timezone/zic.c:1147 timezone/zic.c:1349 timezone/zic.c:1363
+#: timezone/zic.c:1203 timezone/zic.c:1406 timezone/zic.c:1420
 #, fuzzy
 msgid "invalid day of month"
 msgstr "neveljavna oblika datuma %s"
 
-#: timezone/zic.c:1152
-#, fuzzy
-msgid "time before zero"
-msgstr "pred -le"
-
-#: timezone/zic.c:1156
+#: timezone/zic.c:1208
 #, fuzzy
 msgid "time too small"
 msgstr "Medpomnilnik za argumente premajhen"
 
-#: timezone/zic.c:1160
+#: timezone/zic.c:1212
 #, fuzzy
 msgid "time too large"
 msgstr "%s je preveliko"
 
-#: timezone/zic.c:1164 timezone/zic.c:1265
+#: timezone/zic.c:1216 timezone/zic.c:1322
 #, fuzzy
 msgid "invalid time of day"
 msgstr "neveljavno število bajtov"
 
-#: timezone/zic.c:1183
+#: timezone/zic.c:1235
 msgid "illegal CORRECTION field on Leap line"
 msgstr ""
 
-#: timezone/zic.c:1188
+#: timezone/zic.c:1240
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr ""
 
-#: timezone/zic.c:1202
+#: timezone/zic.c:1246
+msgid "leap second precedes Big Bang"
+msgstr ""
+
+#: timezone/zic.c:1259
 #, fuzzy
 msgid "wrong number of fields on Link line"
 msgstr "neveljavno število preskočenih polj"
 
-#: timezone/zic.c:1206
+#: timezone/zic.c:1263
 msgid "blank FROM field on Link line"
 msgstr ""
 
-#: timezone/zic.c:1210
+#: timezone/zic.c:1267
 msgid "blank TO field on Link line"
 msgstr ""
 
-#: timezone/zic.c:1286
+#: timezone/zic.c:1343
 #, fuzzy
 msgid "invalid starting year"
 msgstr "neveljavna začetna številka vrstice: %s"
 
-#: timezone/zic.c:1308
+#: timezone/zic.c:1365
 #, fuzzy
 msgid "invalid ending year"
 msgstr "neveljaven vrstni red bajtov: %s"
 
-#: timezone/zic.c:1312
+#: timezone/zic.c:1369
 msgid "starting year greater than ending year"
 msgstr ""
 
-#: timezone/zic.c:1319
+#: timezone/zic.c:1376
 msgid "typed single year"
 msgstr ""
 
-#: timezone/zic.c:1354
+#: timezone/zic.c:1411
 #, fuzzy
 msgid "invalid weekday name"
 msgstr "neveljavni padajoči razpon"
 
-#: timezone/zic.c:1523
+#: timezone/zic.c:1530
+msgid "pre-2014 clients may mishandle more than 1200 transition times"
+msgstr ""
+
+#: timezone/zic.c:1585
 #, c-format
 msgid "%s: Can't remove %s: %s\n"
 msgstr "%s: ni mogoče odstraniti %s: %s\n"
 
-#: timezone/zic.c:2105
+#: timezone/zic.c:2143
 #, fuzzy
 msgid "no POSIX environment variable for zone"
 msgstr "nastavitev spremenljivke okolja %s ni uspela"
 
-#: timezone/zic.c:2111
+#: timezone/zic.c:2149
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr ""
 
-#: timezone/zic.c:2292
+#: timezone/zic.c:2329
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr ""
 
-#: timezone/zic.c:2338 timezone/zic.c:2416
+#: timezone/zic.c:2375 timezone/zic.c:2450
 #, fuzzy
 msgid "too many local time types"
 msgstr "preveč predlog"
 
-#: timezone/zic.c:2374
-#, fuzzy
-msgid "too many transitions?!"
-msgstr "preveč vrstic na vhodu"
-
-#: timezone/zic.c:2389
+#: timezone/zic.c:2423
 msgid "internal error - addtype called with bad isdst"
 msgstr ""
 
-#: timezone/zic.c:2393
+#: timezone/zic.c:2427
 msgid "internal error - addtype called with bad ttisstd"
 msgstr ""
 
-#: timezone/zic.c:2397
+#: timezone/zic.c:2431
 msgid "internal error - addtype called with bad ttisgmt"
 msgstr ""
 
-#: timezone/zic.c:2420
+#: timezone/zic.c:2454
 #, fuzzy
 msgid "UT offset out of range"
 msgstr "Odmik pri seek izven obsega"
 
-#: timezone/zic.c:2444
+#: timezone/zic.c:2478
 #, fuzzy
 msgid "too many leap seconds"
 msgstr "preveč argumentov datoteke"
 
-#: timezone/zic.c:2450
+#: timezone/zic.c:2484
 msgid "repeated leap second moment"
 msgstr ""
 
-#: timezone/zic.c:2500
+#: timezone/zic.c:2534
 msgid "Wild result from command execution"
 msgstr ""
 
-#: timezone/zic.c:2501
+#: timezone/zic.c:2535
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
 msgstr ""
 
-#: timezone/zic.c:2592
+#: timezone/zic.c:2626
 #, fuzzy
 msgid "Odd number of quotation marks"
 msgstr "neveljavno število primerjanih bajtov"
 
-#: timezone/zic.c:2669
+#: timezone/zic.c:2703
 msgid "use of 2/29 in non leap-year"
 msgstr ""
 
-#: timezone/zic.c:2704
+#: timezone/zic.c:2738
 msgid "rule goes past start/end of month--will not work with pre-2004 versions of zic"
 msgstr ""
 
-#: timezone/zic.c:2735
+#: timezone/zic.c:2769
 msgid "time zone abbreviation lacks alphabetic at start"
 msgstr ""
 
-#: timezone/zic.c:2737
+#: timezone/zic.c:2771
 msgid "time zone abbreviation has fewer than 3 alphabetics"
 msgstr ""
 
-#: timezone/zic.c:2739
+#: timezone/zic.c:2773
 msgid "time zone abbreviation has too many alphabetics"
 msgstr ""
 
-#: timezone/zic.c:2749
+#: timezone/zic.c:2783
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr ""
 
-#: timezone/zic.c:2755
+#: timezone/zic.c:2789
 msgid "too many, or too long, time zone abbreviations"
 msgstr ""
 
-#: timezone/zic.c:2795
+#: timezone/zic.c:2829
 #, fuzzy, c-format
 msgid "%s: Can't create directory %s: %s\n"
 msgstr "imenika %s ni mogoče ustvariti"
+
+#, fuzzy
+#~ msgid "time before zero"
+#~ msgstr "pred -le"
+
+#, fuzzy
+#~ msgid "too many transitions?!"
+#~ msgstr "preveč vrstic na vhodu"
 
 #, fuzzy
 #~ msgid "%s: Can't link from %s to %s: %s\n"
