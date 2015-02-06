@@ -30,9 +30,8 @@ do_test (void)
   itval.it_value.tv_nsec = 0;
 
   sigev.sigev_notify = SIGEV_THREAD;
-  sigev.sigev_signo = SIGRTMIN;
   sigev.sigev_notify_function = thread;
-  sigev.sigev_notify_attributes = 0;
+  sigev.sigev_notify_attributes = NULL;
   sigev.sigev_value.sival_ptr = (void *) &timerId;
 
   for (i = 0; i < 100; i++)

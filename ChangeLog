@@ -1,5 +1,8 @@
 2015-02-06  Roland McGrath  <roland@hack.frob.com>
 
+	* rt/tst-timer2.c (do_test): Don't initialize SIGEV.sigev_signo, which
+	will not be used.  Use NULL rather than 0 for .sigev_notify_attributes.
+
 	* nptl/tst-align2.c: Moved ...
 	* sysdeps/unix/sysv/linux/tst-align-clone.c: ... here.
 	* nptl/Makefile (tests): Remove tst-align2.
