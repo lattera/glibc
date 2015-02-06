@@ -31,8 +31,6 @@ do_test (void)
     }
 
   sa.sa_handler = SIG_IGN;
-  sa.sa_flags = SA_NOCLDWAIT;
-
   if (sigaction (SIGCHLD, &sa, NULL) != 0)
     {
       puts ("2nd sigaction failed");

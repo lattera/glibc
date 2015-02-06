@@ -1,5 +1,8 @@
 2015-02-06  Roland McGrath  <roland@hack.frob.com>
 
+	* misc/tst-pselect.c (do_test): Don't set SA_NOCLDWAIT in sa_flags for
+	SIGCHLD; it's redundant	with SIG_IGN as sa_handler.
+
 	* posix/tst-getlogin.c: Move to ...
 	* login/tst-getlogin.c: ... here.
 	* posix/Makefile (tests): Move tst-getlogin to ...
