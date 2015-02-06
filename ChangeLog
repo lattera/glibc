@@ -1,5 +1,10 @@
 2015-02-06  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/arm/sysdep.h [!PROF] [ARCH_HAS_T2 && !PIC] (LDR_GLOBAL):
+	Use sfi_breg on ldr.
+	[!PROF] [ARCH_HAS_T2 && PIC && ARM_PCREL_MOVW_OK] (LDR_GLOBAL):
+	Likewise.
+
 	* nptl/tst-cancel25.c (tf2): Test for SIGCANCEL being blocked only if
 	it's defined.
 	* nptl/tst-signal7.c (do_test): Test SIGCANCEL only if it's defined.
