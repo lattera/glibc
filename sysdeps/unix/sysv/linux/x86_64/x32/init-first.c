@@ -21,9 +21,7 @@
 # include <libc-vdso.h>
 
 long int (*__vdso_clock_gettime) (clockid_t, struct timespec *)
-  __attribute__ ((nocommon));
-libc_hidden_proto (__vdso_clock_gettime)
-libc_hidden_data_def (__vdso_clock_gettime)
+  attribute_hidden;
 
 static inline void
 _libc_vdso_platform_setup (void)

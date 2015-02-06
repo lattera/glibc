@@ -1,5 +1,19 @@
 2015-02-06  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S: Remove all
+	code under [!__ASSUME_FUTEX_CLOCK_REALTIME], since that is defined
+	unconditionally nowadays.  This included the only reference to
+	__vdso_clock_gettime that appears outside libc proper.
+	* sysdeps/unix/sysv/linux/x86_64/Versions (libc: GLIBC_PRIVATE):
+	Remove version set (containing only __vdso_clock_gettime).
+	* sysdeps/unix/sysv/linux/x86/libc-vdso.h (__vdso_clock_gettime):
+	Add attribute_hidden.
+	* sysdeps/unix/sysv/linux/i386/init-first.c (__vdso_clock_gettime):
+	Likewise.  Drop __attribute__ ((nocommon)), libc_hidden_proto, and
+	libc_hidden_data_def.
+	* sysdeps/unix/sysv/linux/x86_64/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/init-first.c: Likewise.
+
 	* inet/Versions (libc: GLIBC_2.0): Move getrpcbyname, getrpcbyname_r,
 	getrpcbynumber, getrpcbynumber_r, getrpcent, getrpcent_r, endrpcent,
 	setrpcent, and getrpcport to ...

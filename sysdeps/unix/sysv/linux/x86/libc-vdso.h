@@ -24,7 +24,8 @@
 
 #ifdef SHARED
 
-extern long int (*__vdso_clock_gettime) (clockid_t, struct timespec *);
+extern long int (*__vdso_clock_gettime) (clockid_t, struct timespec *)
+  attribute_hidden;
 
 #endif
 

@@ -23,9 +23,7 @@
 # include <libc-vdso.h>
 
 long int (*__vdso_clock_gettime) (clockid_t, struct timespec *)
-  __attribute__ ((nocommon));
-libc_hidden_proto (__vdso_clock_gettime)
-libc_hidden_data_def (__vdso_clock_gettime)
+  attribute_hidden;
 
 static long int
 clock_gettime_syscall (clockid_t id, struct timespec *tp)
