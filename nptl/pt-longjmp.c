@@ -1,4 +1,5 @@
-/* Copyright (C) 2002-2015 Free Software Foundation, Inc.
+/* ABI compatibility for 'longjmp' and 'siglongjmp' symbols in libpthread ABI.
+   Copyright (C) 2002-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -17,12 +18,55 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <setjmp.h>
-#include <stdlib.h>
-#include "pthreadP.h"
+#include <shlib-compat.h>
 
-void
-longjmp (jmp_buf env, int val)
+/* libpthread once had its own longjmp (and siglongjmp alias), though there
+   was no apparent reason for it.  There is no use in having a separate
+   symbol in libpthread, but the historical ABI requires it.  For static
+   linking, there is no need to provide anything here--the libc version
+   will be linked in.  For shared library ABI compatibility, there must be
+   longjmp and siglongjmp symbols in libpthread.so; so we define them using
+   IFUNC to redirect to the libc function.  */
+
+#if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_22)
+
+# if HAVE_IFUNC
+
+static __typeof (longjmp) *
+__attribute__ ((used))
+longjmp_resolve (void)
+{
+  return &__libc_longjmp;
+}
+
+#  ifdef HAVE_ASM_SET_DIRECTIVE
+#   define DEFINE_LONGJMP(name) \
+  asm (".set " #name ", longjmp_resolve\n" \
+       ".globl " #name "\n" \
+       ".type " #name ", %gnu_indirect_function");
+#  else
+#   define DEFINE_LONGJMP(name) \
+  asm (#name " = longjmp_resolve\n" \
+       ".globl " #name "\n" \
+       ".type " #name ", %gnu_indirect_function");
+#  endif
+
+# else  /* !HAVE_IFUNC */
+
+static void __attribute__ ((noreturn, used))
+longjmp_compat (jmp_buf env, int val)
 {
   __libc_longjmp (env, val);
 }
-weak_alias (longjmp, siglongjmp)
+
+# define DEFINE_LONGJMP(name) strong_alias (longjmp_compat, name)
+
+# endif  /* HAVE_IFUNC */
+
+DEFINE_LONGJMP (longjmp_ifunc)
+compat_symbol (libpthread, longjmp_ifunc, longjmp, GLIBC_2_0);
+
+DEFINE_LONGJMP (siglongjmp_ifunc)
+compat_symbol (libpthread, siglongjmp_ifunc, siglongjmp, GLIBC_2_0);
+
+#endif
