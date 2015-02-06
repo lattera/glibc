@@ -1,5 +1,7 @@
 2015-02-06  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/tst-kill5.c (do_test): Use INT_MAX rather than SIGRTMAX + 10.
+
 	* nptl/tst-join5.c: Drop #include <sys/syscall.h>.
 	(wait_code): New function replaces macro.
 	Call nanosleep rather than syscall.
