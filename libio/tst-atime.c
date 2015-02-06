@@ -23,8 +23,6 @@ do_test (void)
   int ch;
   struct stat st1;
   struct stat st2;
-  struct statvfs sv;
-  int e;
 
   buf = (char *) malloc (strlen (test_dir) + sizeof "/tst-atime.XXXXXX");
   if (buf == NULL)
@@ -44,7 +42,8 @@ do_test (void)
 #ifdef ST_NOATIME
   /* Make sure the filesystem doesn't have the noatime option set.  If
      statvfs is not available just continue.  */
-  e = fstatvfs (fd, &sv);
+  struct statvfs sv;
+  int e = fstatvfs (fd, &sv);
   if (e != ENOSYS)
     {
       if (e != 0)

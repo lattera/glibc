@@ -1,5 +1,8 @@
 2015-02-06  Roland McGrath  <roland@hack.frob.com>
 
+	* libio/tst-atime.c (do_test): Move local variables SV and E
+	inside [ST_NOATIME] conditional.
+
 	* dirent/tst-fdopendir.c (O_NOATIME): If not defined, #define to 0.
 
 	* nptl/tst-kill5.c (do_test): Use INT_MAX rather than SIGRTMAX + 10.
