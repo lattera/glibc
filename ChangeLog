@@ -1,5 +1,7 @@
 2015-02-06  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/tst-locale1.c (useless): Use SIGRTMIN only if it's defined.
+
 	* rt/tst-timer2.c (do_test): Don't initialize SIGEV.sigev_signo, which
 	will not be used.  Use NULL rather than 0 for .sigev_notify_attributes.
 
