@@ -21,8 +21,13 @@ libc {
     clnt_perror; clnt_spcreateerror; clnt_sperrno; clnt_sperror;
     clntraw_create; clnttcp_create; clntudp_bufcreate; clntudp_create;
 
+    # e*
+    endrpcent;
+
     # g*
     get_myaddress; getpublickey; getsecretkey;
+    getrpcbyname; getrpcbyname_r; getrpcbynumber; getrpcbynumber_r;
+    getrpcent; getrpcent_r; getrpcport;
 
     # p*
     pmap_getmaps; pmap_getport; pmap_rmtcall; pmap_set; pmap_unset;
@@ -31,6 +36,7 @@ libc {
     registerrpc;
 
     # s*
+    setrpcent;
     svc_exit; svc_getreq; svc_getreqset; svc_register; svc_run;
     svc_sendreply; svc_unregister; svcerr_auth; svcerr_decode;
     svcerr_noproc; svcerr_noprog; svcerr_progvers; svcerr_systemerr;
@@ -105,6 +111,9 @@ libc {
   GLIBC_2.1.1 {
     xdr_hyper; xdr_u_hyper; xdr_longlong_t; xdr_u_longlong_t;
     xdr_int64_t; xdr_uint64_t;
+  }
+  GLIBC_2.1.2 {
+    getrpcbyname_r; getrpcbynumber_r; getrpcent_r;
   }
   GLIBC_2.2 {
     svc_getreq_common; svc_getreq_poll; svc_max_pollfd; svc_pollfd;

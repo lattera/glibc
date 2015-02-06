@@ -76,6 +76,8 @@ routines := auth_none authuxprot bindrsvprt clnt_raw clnt_simp \
 	    pmap_rmt rpc_prot rpc_common rpc_cmsg svc_auth svc_authux svc_raw \
 	    svc_simple xdr_float xdr_rec publickey authdes_prot \
 	    des_crypt des_impl des_soft key_prot openchild rtime svcauth_des \
+	    getrpcent getrpcbyname getrpcbynumber \
+	    getrpcent_r getrpcbyname_r getrpcbynumber_r \
 	    clnt_unix svc_unix create_xid $(need-export-routines)
 ifneq ($(link-obsolete-rpc),yes)
 # We only add the RPC for compatibility to libc.so.

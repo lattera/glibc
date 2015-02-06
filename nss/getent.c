@@ -700,6 +700,7 @@ protocols_keys (int number, char *key[])
   return result;
 }
 
+#if HAVE_SUNRPC
 /* Now is all for rpc */
 static void
 print_rpc (struct rpcent *rpc)
@@ -745,6 +746,7 @@ rpc_keys (int number, char *key[])
 
   return result;
 }
+#endif
 
 /* for services */
 static void
@@ -884,7 +886,9 @@ D(netgroup)
 D(networks)
 D(passwd)
 D(protocols)
+#if HAVE_SUNRPC
 D(rpc)
+#endif
 D(services)
 D(shadow)
 #undef D

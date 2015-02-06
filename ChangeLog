@@ -1,5 +1,33 @@
 2015-02-06  Roland McGrath  <roland@hack.frob.com>
 
+	* inet/Versions (libc: GLIBC_2.0): Move getrpcbyname, getrpcbyname_r,
+	getrpcbynumber, getrpcbynumber_r, getrpcent, getrpcent_r, endrpcent,
+	setrpcent, and getrpcport to ...
+	* sunrpc/Versions (libc: GLIBC_2.0): ... here.
+	* inet/Versions (libc: GLIBC_2.1.2): Move getrpcbyname_r,
+	getrpcbynumber_r, and getrpcent_r to ...
+	* sunrpc/Versions (libc: GLIBC_2.1.2): ... this new set.
+	* inet/getrpcbyname.c: Moved ...
+	* sunrpc/getrpcbyname.c: ... here.
+	* inet/getrpcbyname_r.c: Moved ...
+	* sunrpc/getrpcbyname_r.c: ... here.
+	* inet/getrpcbynumber.c: Moved ...
+	* sunrpc/getrpcbynumber.c: ... here.
+	* inet/getrpcbynumber_r.c: Moved ...
+	* sunrpc/getrpcbynumber_r.c: ... here.
+	* inet/getrpcent.c: Moved ...
+	* sunrpc/getrpcent.c: ... here.
+	* inet/getrpcent_r.c: Moved ...
+	* sunrpc/getrpcent_r.c: ... here.
+	* inet/Makefile (routines): Move those to ...
+	* sunrpc/Makefile (routines): ... here.
+	* nss/Makefile (databases): Add key and rpc only if sunrpc appears in
+	the $(subdirs) list.
+	(CPPFLAGS-getent.c): New variable.  Pass -D option to set HAVE_SUNRPC
+	to 0 or 1, indicating whether sunrpc appears in the $(subdirs) list.
+	* nss/getent.c (print_rpc, rpc_keys): Conditionalize on [HAVE_SUNRPC].
+	(databases): Conditionalize rpc entry on [HAVE_SUNRPC].
+
 	* elf/Makefile (routines): Include $(all-dl-routines), not just
 	$(dl-routines).
 	(rtld-routines): Likewise.  Use = rather than :=.

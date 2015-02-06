@@ -7,8 +7,7 @@ libc {
     rexecoptions;
 
     # e*
-    endaliasent; endhostent; endnetent; endnetgrent; endprotoent; endrpcent;
-    endservent;
+    endaliasent; endhostent; endnetent; endnetgrent; endprotoent; endservent;
 
     # e*
     ether_aton; ether_aton_r; ether_hostton; ether_line; ether_ntoa;
@@ -21,9 +20,8 @@ libc {
     gethostent_r; getnetbyaddr; getnetbyaddr_r; getnetbyname;
     getnetbyname_r; getnetent; getnetent_r; getnetgrent; getnetgrent_r;
     getprotobyname; getprotobyname_r; getprotobynumber;
-    getprotobynumber_r; getprotoent; getprotoent_r; getrpcbyname;
-    getrpcbyname_r; getrpcbynumber; getrpcbynumber_r; getrpcent; getrpcent_r;
-    getrpcport; getservbyname; getservbyname_r; getservbyport;
+    getprotobynumber_r; getprotoent; getprotoent_r;
+    getservbyname; getservbyname_r; getservbyport;
     getservbyport_r; getservent; getservent_r;
 
     # h*
@@ -41,7 +39,7 @@ libc {
     rcmd; rexec; rresvport; ruserok; ruserpass;
 
     # s*
-    setaliasent; setnetent; setnetgrent; setprotoent; setrpcent; setservent;
+    setaliasent; setnetent; setnetgrent; setprotoent; setservent;
   }
   GLIBC_2.1 {
     # variables in normal name space
@@ -55,8 +53,7 @@ libc {
     getaliasbyname_r; getaliasent_r; gethostbyaddr_r; gethostbyname2_r;
     gethostbyname_r; gethostent_r; getnetbyaddr_r; getnetbyname_r;
     getnetent_r; getnetgrent_r; getprotobyname_r; getprotobynumber_r;
-    getprotoent_r; getrpcbyname_r; getrpcbynumber_r; getrpcent_r;
-    getservbyname_r;
+    getprotoent_r; getservbyname_r;
   }
   GLIBC_2.2 {
     # i*
