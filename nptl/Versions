@@ -266,6 +266,9 @@ libpthread {
   GLIBC_2.20 {
   }
 
+  GLIBC_2.22 {
+  }
+
   GLIBC_PRIVATE {
     __pthread_initialize_minimal;
     __pthread_clock_gettime; __pthread_clock_settime;

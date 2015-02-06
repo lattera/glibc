@@ -1,5 +1,10 @@
 2015-02-06  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/pt-fork.c: Rewritten.  Put everything under
+	[SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_22)].
+	Use IFUNC to redirect when possible.
+	* nptl/Versions (libpthread: GLIBC_2.22): New (empty) version set.
+
 	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S: Remove all
 	code under [!__ASSUME_FUTEX_CLOCK_REALTIME], since that is defined
 	unconditionally nowadays.  This included the only reference to
