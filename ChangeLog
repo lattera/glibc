@@ -1,3 +1,30 @@
+2015-02-06  Roland McGrath  <roland@hack.frob.com>
+
+	* elf/Makefile (routines): Include $(all-dl-routines), not just
+	$(dl-routines).
+	(rtld-routines): Likewise.  Use = rather than :=.
+	* sysdeps/aarch64/Makefile [$(subdir) = elf]
+	(sysdep_routines, sysdep-rtld-routines): Don't add tlsdesc and
+	dl-tlsdesc to these; sysdep-dl-routines alone is enough.
+	* sysdeps/arm/Makefile: Likewise.
+	* sysdeps/i386/Makefile: Likewise.
+	* sysdeps/x86_64/Makefile: Likewise.
+	* sysdeps/hppa/Makefile [$(subdir) = elf]
+	(sysdep_routines, sysdep-rtld-routines): Don't add
+	$(sysdep-dl-routines) to these.
+	* sysdeps/ia64/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/Makefile [$(subdir) = elf]
+	[$(build-shared) = yes] (sysdep_routines, sysdep-rtld-routines):
+	Don't add dl-static to these; sysdep-dl-routines alone is enough.
+	* sysdeps/unix/sysv/linux/m68k/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/mips/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/tile/Makefile: Likewise.
+	* sysdeps/powerpc/Makefile [$(subdir) = elf]
+	(sysdep_routines, sysdep-rtld-routines): Don't add dl-machine to
+	these; sysdep-dl-routines alone is enough.
+
 2015-02-06  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17932]

@@ -26,8 +26,6 @@ CFLAGS-rtld.c += -mdisable-fpregs
 sysdep-dl-routines += dl-symaddr dl-fptr
 # dl-fptr.c needs a complete rewrite to fix ISO C aliasing violations.
 CFLAGS-dl-fptr.c = -Wno-error
-sysdep_routines += $(sysdep-dl-routines)
-sysdep-rtld-routines += $(sysdep-dl-routines)
 endif
 
 ifeq ($(subdir),csu)

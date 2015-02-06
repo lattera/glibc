@@ -22,7 +22,7 @@ subdir		:= elf
 include ../Makeconfig
 
 headers		= elf.h bits/elfclass.h link.h bits/link.h
-routines	= $(dl-routines) dl-support dl-iteratephdr \
+routines	= $(all-dl-routines) dl-support dl-iteratephdr \
 		  dl-addr enbl-secure dl-profstub \
 		  dl-origin dl-libc dl-sym dl-tsd dl-sysdep
 
@@ -43,7 +43,7 @@ shared-only-routines += dl-caller
 
 # ld.so uses those routines, plus some special stuff for being the program
 # interpreter and operating independent of libc.
-rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-environ dl-minimal
+rtld-routines	= rtld $(all-dl-routines) dl-sysdep dl-environ dl-minimal
 all-rtld-routines = $(rtld-routines) $(sysdep-rtld-routines)
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables

@@ -3,8 +3,8 @@ static-gnulib-arch = $(elf-objpfx)libgcc-stubs.a
 
 ifeq ($(subdir),elf)
 sysdep-dl-routines += tlsdesc dl-tlsdesc
-sysdep_routines += aeabi_unwind_cpp_pr1 find_exidx tlsdesc dl-tlsdesc
-sysdep-rtld-routines += aeabi_unwind_cpp_pr1 tlsdesc dl-tlsdesc
+sysdep_routines += aeabi_unwind_cpp_pr1 find_exidx
+sysdep-rtld-routines += aeabi_unwind_cpp_pr1
 shared-only-routines += aeabi_unwind_cpp_pr1
 
 $(objpfx)libgcc-stubs.a: $(objpfx)aeabi_unwind_cpp_pr1.os
