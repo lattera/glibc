@@ -27,6 +27,7 @@ do_test (void)
 {
   int result = 0;
 
+#ifdef SIGCANCEL
   errno = 0;
   if (sigaction (SIGCANCEL, NULL, NULL) == 0)
     {
@@ -38,7 +39,9 @@ do_test (void)
       puts ("sigaction(SIGCANCEL) did not set errno to EINVAL");
       result = 1;
     }
+#endif
 
+#ifdef SIGSETXID
   errno = 0;
   if (sigaction (SIGSETXID, NULL, NULL) == 0)
     {
@@ -50,6 +53,7 @@ do_test (void)
       puts ("sigaction(SIGSETXID) did not set errno to EINVAL");
       result = 1;
     }
+#endif
 
   return result;
 }

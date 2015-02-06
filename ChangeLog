@@ -1,5 +1,10 @@
 2015-02-06  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/tst-cancel25.c (tf2): Test for SIGCANCEL being blocked only if
+	it's defined.
+	* nptl/tst-signal7.c (do_test): Test SIGCANCEL only if it's defined.
+	Test SIGSETXID only if it's defined.
+
 	* nptl/tst-locale1.c (useless): Use SIGRTMIN only if it's defined.
 
 	* rt/tst-timer2.c (do_test): Don't initialize SIGEV.sigev_signo, which
