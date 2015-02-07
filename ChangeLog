@@ -27,6 +27,8 @@
 	__mach_msg.  If that returns MACH_RCV_INTERRUPTED, set ERR to EINTR.
 	* hurd/hurdselect.c (_hurd_select): Remove unreachable check for
 	MACH_RCV_TIMED_OUT.
+	* hurd/hurd/signal.h (_hurd_self_sigstate): Explicit cast from void *
+	to struct hurd_sigstate **.
 
 	[BZ #4719]
 	* sysdeps/mach/hurd/bits/ioctls.h (_IOT__IOTBASE_long, _IOT_char,

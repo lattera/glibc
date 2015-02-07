@@ -132,7 +132,7 @@ extern struct hurd_sigstate *_hurd_self_sigstate (void)
 _HURD_SIGNAL_H_EXTERN_INLINE struct hurd_sigstate *
 _hurd_self_sigstate (void)
 {
-  struct hurd_sigstate **location =
+  struct hurd_sigstate **location = (struct hurd_sigstate **)
     (void *) __hurd_threadvar_location (_HURD_THREADVAR_SIGSTATE);
   if (*location == NULL)
     *location = _hurd_thread_sigstate (__mach_thread_self ());
