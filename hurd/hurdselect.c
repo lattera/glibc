@@ -407,13 +407,6 @@ _hurd_select (int nfds,
 	    }
 	}
 
-      if (err == MACH_RCV_TIMED_OUT)
-	/* This is the normal value for ERR.  We might have timed out and
-	   read no messages.  Otherwise, after receiving the first message,
-	   we poll for more messages.  We receive with a timeout of 0 to
-	   effect a poll, so ERR is MACH_RCV_TIMED_OUT when the poll finds no
-	   message waiting.  */
-	err = 0;
       if (msgerr == MACH_RCV_INTERRUPTED)
 	/* Interruption on our side (e.g. signal reception).  */
 	err = EINTR;
