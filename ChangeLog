@@ -17,6 +17,8 @@
 	* hurd/hurd/resource.h (MACH_PRIORITY_TO_NICE,
 	NICE_TO_MACH_PRIORITY): Align nice levels on Mach priorities from 5 to
 	45.
+	* hurd/hurdselect.c (_hurd_select): Pass MACH_RCV_INTERRUPT to
+	__mach_msg.  If that returns MACH_RCV_INTERRUPTED, set ERR to EINTR.
 
 2015-02-06  Roland McGrath  <roland@hack.frob.com>
 

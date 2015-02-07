@@ -335,7 +335,7 @@ _hurd_select (int nfds,
       mach_msg_option_t options = (timeout == NULL ? 0 : MACH_RCV_TIMEOUT);
       error_t msgerr;
       while ((msgerr = __mach_msg (&msg.head,
-				   MACH_RCV_MSG | options,
+				   MACH_RCV_MSG | MACH_RCV_INTERRUPT | options,
 				   0, sizeof msg, portset, to,
 				   MACH_PORT_NULL)) == MACH_MSG_SUCCESS)
 	{
@@ -414,6 +414,9 @@ _hurd_select (int nfds,
 	   effect a poll, so ERR is MACH_RCV_TIMED_OUT when the poll finds no
 	   message waiting.  */
 	err = 0;
+      if (msgerr == MACH_RCV_INTERRUPTED)
+	/* Interruption on our side (e.g. signal reception).  */
+	err = EINTR;
 
       if (got)
 	/* At least one descriptor is known to be ready now, so we will
