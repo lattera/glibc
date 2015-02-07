@@ -148,9 +148,26 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 #define	_IOT_SIMPLE(type)	_IOT (_IOTS (type), 1, 0, 0, 0, 0)
 
 /* Basic C types.  */
-#define	_IOT__IOTBASE_int	_IOT_SIMPLE (int)
 #define	_IOT__IOTBASE_char	_IOT_SIMPLE (char)
 #define	_IOT__IOTBASE_short	_IOT_SIMPLE (short)
+#define	_IOT__IOTBASE_int	_IOT_SIMPLE (int)
+#define	_IOT__IOTBASE_long	_IOT_SIMPLE (long)
+#define	_IOT_char		_IOT_SIMPLE (char)
+#define	_IOT_short		_IOT_SIMPLE (short)
+#define	_IOT_int		_IOT_SIMPLE (int)
+#define	_IOT_long		_IOT_SIMPLE (long)
+
+#define	_IOT__IOTBASE_int8_t	_IOT_SIMPLE (int8_t)
+#define	_IOT__IOTBASE_uint8_t	_IOT_SIMPLE (uint8_t)
+#define	_IOT__IOTBASE_int16_t	_IOT_SIMPLE (int16_t)
+#define	_IOT__IOTBASE_uint16_t	_IOT_SIMPLE (uint16_t)
+#define	_IOT__IOTBASE_int32_t	_IOT_SIMPLE (int32_t)
+#define	_IOT__IOTBASE_uint32_t	_IOT_SIMPLE (uint32_t)
+#define	_IOT__IOTBASE_int64_t	_IOT_SIMPLE (int64_t)
+#define	_IOT__IOTBASE_uint64_t	_IOT_SIMPLE (uint64_t)
+
+#define	_IOT__IOTBASE_size_t	_IOT_SIMPLE (size_t)
+#define	_IOT__IOTBASE_ssize_t	_IOT_SIMPLE (ssize_t)
 
 
 /* Standard flavors of ioctls.
@@ -172,6 +189,10 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 #define _IOTBASE_struct
 #define _IOC_ENCODE_TYPE_1(typespec)	_IOC_ENCODE_TYPE_2(typespec)
 #define _IOC_ENCODE_TYPE_2(typespec)	_IOT_##typespec
+
+/* Also, ignore signedness.  */
+#define	_IOTBASE_unsigned
+#define	_IOTBASE_signed
 
 
 /* ioctls verbatim from 4.4 <sys/ioctl.h>.  */
