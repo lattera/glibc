@@ -97,6 +97,13 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 	  }
 	switch (prot & (PROT_READ|PROT_WRITE))
 	  {
+	  /* Although it apparently doesn't make sense to map a file with
+	     protection set to PROT_NONE, it is actually sometimes done.
+	     In particular, that's how localedef reserves some space for
+	     the locale archive file, the rationale being that some
+	     implementations take into account whether the mapping is
+	     anonymous or not when selecting addresses.  */
+	  case PROT_NONE:
 	  case PROT_READ:
 	    memobj = robj;
 	    if (wobj != MACH_PORT_NULL)
@@ -126,8 +133,8 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 		return (__ptr_t) (long int) __hurd_fail (EACCES);
 	      }
 	    break;
-	  default:		/* impossible */
-	    return 0;
+	  default:
+	    __builtin_unreachable ();
 	  }
 	break;
 	/* XXX handle MAP_NOEXTEND */

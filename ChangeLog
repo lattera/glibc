@@ -2,6 +2,7 @@
 
 	* hurd/hurd/signal.h (_hurd_critical_section_lock): Don't unlock
 	sigstate.
+	* sysdeps/mach/hurd/mmap.c (__mmap): Also handle PROT_NONE case.
 
 2015-02-07  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
