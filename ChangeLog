@@ -2,6 +2,16 @@
 
 	* sysdeps/pthread/aio_misc.c [!AIO_PRIO_DELTA_MAX]: Do not check
 	priority against unexistent AIO_PRIO_DELTA_MAX.
+	* misc/chflags.c (chflags): Set flags parameter type to unsigned long
+	instead of int.
+	* misc/fchflags.c (fchflags): Likewise.
+	* sysdeps/mach/hurd/chflags.c (chflags): Likewise.
+	* sysdeps/mach/hurd/fchflags.c (fchflags): Likewise.
+	* sysdeps/mach/hurd/bits/stat.h [__USE_MISC] (UF_SETTABLE, UF_NODUMP,
+	UF_IMMUTABLE, UF_APPEND, UF_OPAQUE, UF_NOUNLINK, SF_SETTABLE,
+	SF_ARCHIVED, SF_IMMUTABLE, SF_APPEND, SF_NOUNLINK, SF_SNAPSHOT):
+	Declare macros.
+	[__USE_MISC] (chflags, fchflags): Declare functions.
 
 2015-02-06  Roland McGrath  <roland@hack.frob.com>
 

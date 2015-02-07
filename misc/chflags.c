@@ -21,12 +21,12 @@
 
 /* Change the flags of FILE to FLAGS.  */
 
-int chflags (const char *file, int flags) __THROW;
+int chflags (const char *file, unsigned long int flags) __THROW;
 
 int
 chflags (file, flags)
      const char *file;
-     int flags;
+     unsigned long int flags;
 {
   if (file == NULL)
     {

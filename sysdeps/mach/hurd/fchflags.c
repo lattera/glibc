@@ -25,7 +25,7 @@
 
 /* XXX should be __fchflags? */
 int
-fchflags (int fd, int flags)
+fchflags (int fd, unsigned long int flags)
 {
   error_t err;
 

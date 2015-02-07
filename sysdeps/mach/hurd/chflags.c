@@ -24,7 +24,7 @@
 
 /* XXX shouldn't this be __chflags? */
 int
-chflags (const char *file, int flags)
+chflags (const char *file, unsigned long int flags)
 {
   error_t err;
   file_t port = __file_name_lookup (file, 0, 0);

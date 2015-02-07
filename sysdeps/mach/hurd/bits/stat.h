@@ -222,9 +222,37 @@ struct stat64
 			   S_IUSEUNK|S_IUNKNOWN|07777))
 #endif
 
-/* Default file creation mask (umask).  */
 #ifdef	__USE_MISC
+/* Default file creation mask (umask).  */
 # define CMASK		0022
+
+/* Definitions of flags stored in file flags word.  */
+
+/* Super-user and owner changeable flags.  */
+# define UF_SETTABLE	0x0000ffff	/* mask of owner changeable flags */
+# define UF_NODUMP	0x00000001	/* do not dump file */
+# define UF_IMMUTABLE	0x00000002	/* file may not be changed */
+# define UF_APPEND	0x00000004	/* writes to file may only append */
+# define UF_OPAQUE	0x00000008	/* directory is opaque wrt. union */
+# define UF_NOUNLINK	0x00000010	/* file may not be removed or renamed */
+
+/* Super-user changeable flags.  */
+# define SF_SETTABLE	0xffff0000	/* mask of superuser changeable flags */
+# define SF_ARCHIVED	0x00010000	/* file is archived */
+# define SF_IMMUTABLE	0x00020000	/* file may not be changed */
+# define SF_APPEND	0x00040000	/* writes to file may only append */
+# define SF_NOUNLINK	0x00100000	/* file may not be removed or renamed */
+# define SF_SNAPSHOT	0x00200000	/* snapshot inode */
+
+__BEGIN_DECLS
+
+/* Set file flags for FILE to FLAGS.  */
+extern int chflags (__const char *__file, unsigned long int __flags) __THROW;
+
+/* Set file flags of the file referred to by FD to FLAGS.  */
+extern int fchflags (int __fd, unsigned long int __flags) __THROW;
+
+__END_DECLS
 #endif
 
 #endif	/* bits/stat.h */

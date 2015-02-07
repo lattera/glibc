@@ -21,12 +21,12 @@
 
 /* Change the flags of the file referenced by FD to FLAGS.  */
 
-int fchflags (int fd, int flags) __THROW;
+int fchflags (int fd, unsigned long int flags) __THROW;
 
 int
 fchflags (fd, flags)
      int fd;
-     int flags;
+     unsigned long int flags;
 {
   if (fd < 0)
     {
