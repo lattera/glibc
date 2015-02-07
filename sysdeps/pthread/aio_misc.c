@@ -311,7 +311,10 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
   if (operation == LIO_SYNC || operation == LIO_DSYNC)
     aiocbp->aiocb.aio_reqprio = 0;
   else if (aiocbp->aiocb.aio_reqprio < 0
-	   || aiocbp->aiocb.aio_reqprio > AIO_PRIO_DELTA_MAX)
+#ifdef AIO_PRIO_DELTA_MAX
+	   || aiocbp->aiocb.aio_reqprio > AIO_PRIO_DELTA_MAX
+#endif
+	   )
     {
       /* Invalid priority value.  */
       __set_errno (EINVAL);

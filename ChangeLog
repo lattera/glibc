@@ -1,3 +1,8 @@
+2015-02-07  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/pthread/aio_misc.c [!AIO_PRIO_DELTA_MAX]: Do not check
+	priority against unexistent AIO_PRIO_DELTA_MAX.
+
 2015-02-06  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/sysdep.h [!PROF] [ARCH_HAS_T2 && !PIC] (LDR_GLOBAL):
