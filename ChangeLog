@@ -14,6 +14,9 @@
 	[__USE_MISC] (chflags, fchflags): Declare functions.
 	* hurd/hurdselect.c (_hurd_select): In the poll case, do not return
 	EINVAL when nfds is greater than FD_SETSIZE.
+	* hurd/hurd/resource.h (MACH_PRIORITY_TO_NICE,
+	NICE_TO_MACH_PRIORITY): Align nice levels on Mach priorities from 5 to
+	45.
 
 2015-02-06  Roland McGrath  <roland@hack.frob.com>
 

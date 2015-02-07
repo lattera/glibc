@@ -42,8 +42,8 @@ extern error_t _hurd_priority_which_map (enum __priority_which which, int who,
 
 /* Convert between Mach priority values and the priority
    values used by getpriority, setpriority, and nice.  */
-#define MACH_PRIORITY_TO_NICE(prio) (2 * ((prio) - 12))
-#define NICE_TO_MACH_PRIORITY(nice) (12 + ((nice) / 2))
+#define MACH_PRIORITY_TO_NICE(prio) ((prio) - 25)
+#define NICE_TO_MACH_PRIORITY(nice) ((nice) + 25)
 
 
 
