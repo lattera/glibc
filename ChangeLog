@@ -12,6 +12,8 @@
 	SF_ARCHIVED, SF_IMMUTABLE, SF_APPEND, SF_NOUNLINK, SF_SNAPSHOT):
 	Declare macros.
 	[__USE_MISC] (chflags, fchflags): Declare functions.
+	* hurd/hurdselect.c (_hurd_select): In the poll case, do not return
+	EINVAL when nfds is greater than FD_SETSIZE.
 
 2015-02-06  Roland McGrath  <roland@hack.frob.com>
 

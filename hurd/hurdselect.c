@@ -67,7 +67,7 @@ _hurd_select (int nfds,
   assert (sizeof (union typeword) == sizeof (mach_msg_type_t));
   assert (sizeof (uint32_t) == sizeof (mach_msg_type_t));
 
-  if (nfds < 0 || nfds > FD_SETSIZE)
+  if (nfds < 0 || (pollfds == NULL && nfds > FD_SETSIZE))
     {
       errno = EINVAL;
       return -1;
