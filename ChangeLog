@@ -1,3 +1,8 @@
+2015-02-07  Richard Braun  <rbraun@sceen.net>
+
+	* hurd/hurd/signal.h (_hurd_critical_section_lock): Don't unlock
+	sigstate.
+
 2015-02-07  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/pthread/aio_misc.c [!AIO_PRIO_DELTA_MAX]: Do not check
