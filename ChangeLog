@@ -1,8 +1,10 @@
 2015-02-08  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* time/getdate.c: Include <stdbool.h>.
-	* sysdeps/gnu/unwind-resume.c [!PTR_DEMANGLE] (_Unwind_Resume,
-	__gcc_personality_v0): Do not call PTR_DEMANGLE.
+	* sysdeps/gnu/unwind-resume.c [!PTR_MANGLE] (__libgcc_s_init): Do not
+	call PTR_MANGLE.
+	[!PTR_DEMANGLE] (_Unwind_Resume, __gcc_personality_v0): Do not call
+	PTR_DEMANGLE.
 
 2015-02-07  Paul Eggert  <eggert@cs.ucla.edu>
 

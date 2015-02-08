@@ -43,9 +43,13 @@ __libgcc_s_init (void)
     __libc_fatal (LIBGCC_S_SO
                   " must be installed for pthread_cancel to work\n");
 
+#ifdef PTR_MANGLE
   PTR_MANGLE (resume);
+#endif
   __libgcc_s_resume = resume;
+#ifdef PTR_MANGLE
   PTR_MANGLE (personality);
+#endif
   libgcc_s_personality = personality;
 }
 
