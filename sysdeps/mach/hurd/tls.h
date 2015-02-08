@@ -22,7 +22,9 @@
 #ifndef __ASSEMBLER__
 
 # include <stddef.h>
+# include <stdint.h>
 # include <stdbool.h>
+# include <sysdep.h>
 # include <mach/mig_errors.h>
 # include <mach.h>
 

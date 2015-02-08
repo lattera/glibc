@@ -36,6 +36,7 @@
 	* hurd/hurd/signal.h (_hurd_self_sigstate,
 	_hurd_critical_section_lock, _hurd_critical_section_unlock):
 	Explicit casts from void *.
+	* sysdeps/mach/hurd/tls.h: Include <stdint.h> and <sysdep.h>.
 
 	[BZ #4719]
 	* sysdeps/mach/hurd/bits/ioctls.h (_IOT__IOTBASE_long, _IOT_char,
