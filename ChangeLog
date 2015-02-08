@@ -45,6 +45,16 @@
 	_IOT__IOTBASE_uint64_t, _IOT__IOTBASE_size_t, _IOT__IOTBASE_ssize_t,
 	_IOTBASE_unsigned, _IOTBASE_signed): Define macros.
 
+	[BZ #17944]
+	* hurd/hurdsocket.h: New file, defines _hurd_sun_path_dupa which
+	duplicates ADDR->sun_path with sockaddr LEN limitation.
+	* sysdeps/mach/hurd/connect.c: Include <string.h>
+	(__connect): Give result of _hurd_sun_path_dupa to name lookup.
+	* sysdeps/mach/hurd/sendmsg.c: Likewise.
+	* sysdeps/mach/hurd/sendto.c: Likewise.
+	* sysdeps/mach/hurd/bind.c: Call _hurd_sun_path_dupa instead of
+	implementing it by hand.
+
 2015-02-06  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/sysdep.h [!PROF] [ARCH_HAS_T2 && !PIC] (LDR_GLOBAL):

@@ -24,6 +24,7 @@
 #include <hurd/fd.h>
 #include <hurd/ifsock.h>
 #include <hurd/socket.h>
+#include "hurd/hurdsocket.h"
 
 /* Send a message described MESSAGE on socket FD.
    Returns the number of bytes sent, or -1 for errors.  */
@@ -104,9 +105,10 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
     {
       if (addr->sun_family == AF_LOCAL)
 	{
+	  char *name = _hurd_sun_path_dupa (addr, addr_len);
 	  /* For the local domain, we must look up the name as a file
 	     and talk to it with the ifsock protocol.  */
-	  file_t file = __file_name_lookup (addr->sun_path, 0, 0);
+	  file_t file = __file_name_lookup (name, 0, 0);
 	  if (file == MACH_PORT_NULL)
 	    {
 	      if (dealloc)
