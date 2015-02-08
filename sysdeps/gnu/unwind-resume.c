@@ -57,7 +57,9 @@ _Unwind_Resume (struct _Unwind_Exception *exc)
     __libgcc_s_init ();
 
   __typeof (__libgcc_s_resume) resume = __libgcc_s_resume;
+#ifdef PTR_DEMANGLE
   PTR_DEMANGLE (resume);
+#endif
   (*resume) (exc);
 }
 #endif
@@ -69,6 +71,8 @@ __gcc_personality_v0 PERSONALITY_PROTO
     __libgcc_s_init ();
 
   __typeof (libgcc_s_personality) personality = libgcc_s_personality;
+#ifdef PTR_DEMANGLE
   PTR_DEMANGLE (personality);
+#endif
   return (*personality) PERSONALITY_ARGS;
 }
