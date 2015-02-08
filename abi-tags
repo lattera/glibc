@@ -18,7 +18,7 @@
 
 .*-.*-linux.*		0	2.0.0	# earliest compatible kernel version
 
-.*-.*-gnu-gnu.*		1	0.0.0
+.*-.*-gnu.*		1	0.0.0
 
 .*-sun-solaris2.*	2	2.0.0	# just an arbitrary value
 

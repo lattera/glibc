@@ -37,6 +37,7 @@
 	_hurd_critical_section_lock, _hurd_critical_section_unlock):
 	Explicit casts from void *.
 	* sysdeps/mach/hurd/tls.h: Include <stdint.h> and <sysdep.h>.
+	* abi-tags: Rename gnu-gnu os into gnu.
 
 	[BZ #4719]
 	* sysdeps/mach/hurd/bits/ioctls.h (_IOT__IOTBASE_long, _IOT_char,
