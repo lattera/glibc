@@ -1,5 +1,8 @@
 2015-02-09  Adhemerval Zanellla  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/configure.ac: Remove R_PPC_REL16 check.
+	* sysdeps/powerpc/powerpc32/configure: Regenerated.
+
 	* sysdeps/powerpc/configure.ac: Remove file.
 	* sysdeps/powerpc/configure: Likewise.
 
