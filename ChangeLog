@@ -1,3 +1,17 @@
+2015-02-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/soft-fp/sfp-machine.h: Move to ....
+	* sysdeps/mips/mips32/sfp-machine.h: ... here.
+	* sysdeps/mips/mips64/soft-fp/Makefile: Move to ....
+	* sysdeps/mips/mips64/Makefile: ... here.
+	* sysdeps/mips/mips64/soft-fp/e_sqrtl.c: Move to ....
+	* sysdeps/mips/mips64/e_sqrtl.c: ... here.
+	* sysdeps/mips/mips64/soft-fp/sfp-machine.h: Move to ....
+	* sysdeps/mips/mips64/sfp-machine.h: ... here.
+	* sysdeps/mips/mips32/Implies: Remove mips/soft-fp.
+	* sysdeps/mips/mips64/n32/Implies: Remove mips/mips64/soft-fp.
+	* sysdeps/mips/mips64/n64/Implies: Likewise.
+
 2015-02-10  Roland McGrath  <roland@hack.frob.com>
 
 	* math/test-snan.c: Drop unnecessary #include's of <stdlib.h>,
