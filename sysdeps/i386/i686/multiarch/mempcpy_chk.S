@@ -36,8 +36,8 @@ ENTRY(__mempcpy_chk)
 	cmpl	$0, KIND_OFFSET+__cpu_features@GOTOFF(%ebx)
 	jne	1f
 	call	__init_cpu_features
-	leal	__mempcpy_chk_ia32@GOTOFF(%ebx), %eax
-1:	testl	$bit_SSE2, CPUID_OFFSET+index_SSE2+__cpu_features@GOTOFF(%ebx)
+1:	leal	__mempcpy_chk_ia32@GOTOFF(%ebx), %eax
+	testl	$bit_SSE2, CPUID_OFFSET+index_SSE2+__cpu_features@GOTOFF(%ebx)
 	jz	2f
 	leal	__mempcpy_chk_sse2_unaligned@GOTOFF(%ebx), %eax
 	testl	$bit_Fast_Unaligned_Load, FEATURE_OFFSET+index_Fast_Unaligned_Load+__cpu_features@GOTOFF(%ebx)

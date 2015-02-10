@@ -1,3 +1,9 @@
+2015-02-10  Evangelos Foutras  <evangelos@foutrelis.com>
+
+	[BZ #17949]
+	* sysdeps/i386/i686/multiarch/mempcpy_chk.S: Fix position of
+	jump label.
+
 2015-02-09  Adhemerval Zanellla  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/configure.ac: Remove R_PPC_REL16 check.
