@@ -1,3 +1,23 @@
+2015-02-10  Roland McGrath  <roland@hack.frob.com>
+
+	* math/test-snan.c: Drop unnecessary #include's of <stdlib.h>,
+	<sys/time.h>, <string.h>, and <errno.h>.
+	(dest_offset, dest_address, value, zero): Remove unused variables.
+	(ldouble): Remove typedef.
+	(myFPsighandler): Use simple handler signature, not SA_SIGINFO
+	signature.  Pass 1 to siglongjmp rather than 0 (which is converted to
+	1).  Fix code style.
+	(set_sigaction_FP, remove_sigaction_FP): Functions removed.
+	(check): Function removed.
+	(CHECK): New macro.
+	(TEST_FUNC): Fix code style.  Use CHECK macro rather than repeating
+	boilerplate feclearexcept + feenableexcept + sigsetjmp code.
+	Don't call set_sigaction_FP and remove_sigaction_FP here.
+	(ldouble_test): Just use 'long double' as macro argument, no need for
+	the 'ldouble' typedef.
+	(do_test): Set up SIGFPE handler at start, using plain signal rather
+	than sigaction.  Fix code style.
+
 2015-02-10  Evangelos Foutras  <evangelos@foutrelis.com>
 
 	[BZ #17949]
