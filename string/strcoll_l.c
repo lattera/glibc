@@ -30,7 +30,6 @@
 # define USTRING_TYPE unsigned char
 # define STRCOLL __strcoll_l
 # define STRCMP strcmp
-# define STRLEN strlen
 # define WEIGHT_H "../locale/weight.h"
 # define SUFFIX	MB
 # define L(arg) arg

@@ -1,3 +1,10 @@
+2015-02-11  Leonhard Holz  <leonhard.holz@web.de>
+
+	* string/strxfrm_l.c: Remove #define STRCMP.
+	* string/strcoll_l.c: Remove #define STRLEN.
+	* wcsmbs/wcsxfrm_l.c: Remove #define STRCMP.
+	* wcsmbs/wcscoll_l.c: Remove #define STRLEN.
+
 2015-02-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/soft-fp/sfp-machine.h: Move to ....
