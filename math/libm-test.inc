@@ -9335,9 +9335,9 @@ sin_test (void)
 
 static const struct test_fFF_11_data sincos_test_data[] =
   {
-    TEST_fFF_11 (sincos, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION),
-    TEST_fFF_11 (sincos, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION),
-    TEST_fFF_11 (sincos, qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),
+    TEST_fFF_11 (sincos, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_fFF_11 (sincos, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_fFF_11 (sincos, qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_fFF_11 (sincos),
   };

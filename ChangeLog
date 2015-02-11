@@ -1,3 +1,18 @@
+2015-02-11  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15467]
+	* sysdeps/ieee754/dbl-64/s_sincos.c: Include <errno.h>.
+	(__sincos): Set errno to EDOM for infinite argument.
+	* sysdeps/ieee754/flt-32/s_sincosf.c: Include <errno.h>.
+	(SINCOSF_FUNC): Set errno to EDOM for infinite argument.
+	* sysdeps/ieee754/ldbl-128/s_sincosl.c: Include <errno.h>.
+	(__sincosl): Set errno to EDOM for infinite argument.
+	* sysdeps/ieee754/ldbl-128ibm/s_sincosl.c: Include <errno.h>.
+	(__sincosl): Set errno to EDOM for infinite argument.
+	* sysdeps/ieee754/ldbl-96/s_sincosl.c: Include <errno.h>.
+	(__sincosl): Set errno to EDOM for infinite argument.
+	* math/libm-test.inc (sincos_test_data): Test errno setting.
+
 2015-02-11  Leonhard Holz  <leonhard.holz@web.de>
 
 	* string/strxfrm_l.c: Remove #define STRCMP.
