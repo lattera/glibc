@@ -1,3 +1,9 @@
+2015-02-11  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* abi-tags: Revert ae20c9a: rename back gnu into gnu-gnu.
+	* configure.ac, configure: Revert ba90e05: modify gnu-* host_os back
+	into gnu-gnu, and update comment to refer to abi-tags.
+
 2015-02-11  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15467]
