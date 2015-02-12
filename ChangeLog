@@ -1,3 +1,9 @@
+2015-02-12  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17964]
+	* sysdeps/powerpc/fpu/e_sqrt.c (__slow_ieee754_sqrt): Use
+	__builtin_fma instead of relying on contraction of a * b + c.
+
 2015-02-12  Roland McGrath  <roland@hack.frob.com>
 
 	* Makeconfig (ASFLAGS): Add -Werror=undef.
