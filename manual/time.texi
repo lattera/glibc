@@ -104,7 +104,7 @@ The @code{struct timeval} structure represents an elapsed time.  It is
 declared in @file{sys/time.h} and has the following members:
 
 @table @code
-@item long int tv_sec
+@item time_t tv_sec
 This represents the number of whole seconds of elapsed time.
 
 @item long int tv_usec
@@ -123,7 +123,7 @@ The @code{struct timespec} structure represents an elapsed time.  It is
 declared in @file{time.h} and has the following members:
 
 @table @code
-@item long int tv_sec
+@item time_t tv_sec
 This represents the number of whole seconds of elapsed time.
 
 @item long int tv_nsec

@@ -1,3 +1,9 @@
+2015-02-12  Rüdiger Sonderfeld  <ruediger@c-plusplus.net>
+
+	[BZ #17965]
+	* manual/time.texi (Elapsed Time): tv_sec is of type time_t in
+	both struct timeval and struct timespec.
+
 2015-02-12  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16560]
