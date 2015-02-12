@@ -60,7 +60,7 @@
 #define TBEGIN ".long 0x7c00051d"
 #define TEND   ".long 0x7c00055d"
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-# define TABORT ".byte 0x1d,0x07,%1,0x1d"
+# define TABORT ".byte 0x1d,0x07,%1,0x7c"
 #else
 # define TABORT ".byte 0x7c,%1,0x07,0x1d"
 #endif
