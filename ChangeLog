@@ -1,5 +1,10 @@
 2015-02-12  Roland McGrath  <roland@hack.frob.com>
 
+	* Makeconfig (ASFLAGS): Add -Werror=undef.
+	* sysdeps/arm/Versions (libc: GLIBC_2.19): New (empty) version set.
+	* sysdeps/unix/make-syscalls.sh: Always emit #define's for
+	SYSCALL_CANCELLABLE, SYSCALL_NOERRNO, SYSCALL_ERRVAL, to 1 or 0.
+
 	* Makeconfig (after-link): New variable.
 	(+link-pie, +link-pie-tests): Use it.
 	(+link-static, +link-static-tests): Likewise.

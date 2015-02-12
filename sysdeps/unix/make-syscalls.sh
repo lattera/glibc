@@ -250,14 +250,10 @@ while read file srcfile caller syscall args strong weak; do
 	\$(make-target-directory)
 	(echo '#define SYSCALL_NAME $syscall'; \\
 	 echo '#define SYSCALL_NARGS $nargs'; \\
-	 echo '#define SYSCALL_SYMBOL $strong'; \\"
-  [ $cancellable = 0 ] || echo "\
-	 echo '#define SYSCALL_CANCELLABLE 1'; \\"
-  [ $noerrno = 0 ] || echo "\
-	 echo '#define SYSCALL_NOERRNO 1'; \\"
-  [ $errval = 0 ] || echo "\
-	 echo '#define SYSCALL_ERRVAL 1'; \\"
-  echo "\
+	 echo '#define SYSCALL_SYMBOL $strong'; \\
+	 echo '#define SYSCALL_CANCELLABLE $cancellable'; \\
+	 echo '#define SYSCALL_NOERRNO $noerrno'; \\
+	 echo '#define SYSCALL_ERRVAL $errval'; \\
 	 echo '#include <syscall-template.S>'; \\"
   ;;
   esac

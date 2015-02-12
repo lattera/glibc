@@ -17,4 +17,8 @@ libc {
   GLIBC_2.8 {
     __gnu_mcount_nc;
   }
+  GLIBC_2.19 {
+    # This set has to exist in some Versions file so we can use 2.19 in
+    # SHLIB_COMPAT.  Since it didn't exist anywhere else, we add it here.
+  }
 }
