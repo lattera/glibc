@@ -387,6 +387,14 @@ LDFLAGS.so += $(hashstyle-LDFLAGS)
 LDFLAGS-rtld += $(hashstyle-LDFLAGS)
 endif
 
+# Command to run after every final link (executable or shared object).
+# This is invoked with $(call after-link,...), so it should operate on
+# the file $1.  This can be set to do some sort of post-processing on
+# binaries, or to perform some sort of static sanity check.
+ifndef after-link
+after-link =
+endif
+
 # Command for linking PIE programs with the C library.
 ifndef +link-pie
 +link-pie-before-libc = $(CC) -pie -Wl,-O1 -nostdlib -nostartfiles -o $@ \
@@ -400,10 +408,15 @@ ifndef +link-pie
 			  $(common-objpfx)libc% $(+postinit),$^) \
 	     $(link-extra-libs)
 +link-pie-after-libc = $(+postctorS) $(+postinit)
-+link-pie = $(+link-pie-before-libc) $(rtld-LDFLAGS) $(link-libc) \
-	    $(+link-pie-after-libc)
-+link-pie-tests = $(+link-pie-before-libc) $(rtld-tests-LDFLAGS) \
-		  $(link-libc-tests) $(+link-pie-after-libc)
+define +link-pie
+$(+link-pie-before-libc) $(rtld-LDFLAGS) $(link-libc) $(+link-pie-after-libc)
+$(call after-link,$@)
+endef
+define +link-pie-tests
+$(+link-pie-before-libc) $(rtld-tests-LDFLAGS) $(link-libc-tests) \
+			 $(+link-pie-after-libc)
+$(call after-link,$@)
+endef
 endif
 # Command for statically linking programs with the C library.
 ifndef +link-static
@@ -417,10 +430,14 @@ ifndef +link-static
 			   $(common-objpfx)libc% $(+postinit),$^) \
 	      $(link-extra-libs-static)
 +link-static-after-libc = $(+postctorT) $(+postinit)
-+link-static = $(+link-static-before-libc) $(link-libc-static) \
-	       $(+link-static-after-libc)
-+link-static-tests = $(+link-static-before-libc) $(link-libc-static-tests) \
-		     $(+link-static-after-libc)
+define +link-static
+$(+link-static-before-libc) $(link-libc-static) $(+link-static-after-libc)
+$(call after-link,$@)
+endef
+define +link-static-tests
+$(+link-static-before-libc) $(link-libc-static-tests) $(+link-static-after-libc)
+$(call after-link,$@)
+endef
 endif
 # Commands for linking programs with the C library.
 ifndef +link
@@ -436,10 +453,15 @@ ifeq (yes,$(build-shared))
 			   $(common-objpfx)libc% $(+postinit),$^) \
 	      $(link-extra-libs)
 +link-after-libc = $(+postctor) $(+postinit)
-+link = $(+link-before-libc) $(rtld-LDFLAGS) $(link-libc) \
-	$(+link-after-libc)
-+link-tests = $(+link-before-libc) $(rtld-tests-LDFLAGS) \
-	      $(link-libc-tests) $(+link-after-libc)
+define +link
+$(+link-before-libc) $(rtld-LDFLAGS) $(link-libc) $(+link-after-libc)
+$(call after-link,$@)
+endef
+define +link-tests
+$(+link-before-libc) $(rtld-tests-LDFLAGS) $(link-libc-tests) \
+		     $(+link-after-libc)
+$(call after-link,$@)
+endef
 else
 +link = $(+link-static)
 +link-tests = $(+link-static-tests)

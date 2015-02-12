@@ -505,6 +505,7 @@ link-libc-deps = $(common-objpfx)libc.so $(common-objpfx)linkobj/libc.so \
 # to be as similar as possible to a default link with an installed libc.
 lib%.so: lib%_pic.a $(+preinit) $(+postinit) $(link-libc-deps)
 	$(build-shlib) $(link-libc-args)
+	$(call after-link,$@)
 
 define build-shlib-helper
 $(LINK.o) -shared $(static-libgcc) -Wl,-O1 $(sysdep-LDFLAGS) \
@@ -580,12 +581,14 @@ endef
 define build-module
 $(build-module-helper) -o $@ $(shlib-lds-flags) \
 	  $(csu-objpfx)abi-note.o $(build-module-objlist) $(link-libc-args)
+$(call after-link,$@)
 endef
 define build-module-asneeded
 $(build-module-helper) -o $@ $(shlib-lds-flags) \
 	  $(csu-objpfx)abi-note.o \
 	  -Wl,--as-needed $(build-module-objlist) -Wl,--no-as-needed \
 	  $(link-libc-args)
+$(call after-link,$@)
 endef
 
 build-module-helper-objlist = \
@@ -666,6 +669,7 @@ $(common-objpfx)libc.so: $(elf-objpfx)soinit.os \
 			 $(elf-objpfx)ld.so \
 			 $(shlib-lds)
 	$(build-shlib)
+	$(call after-link,$@)
 
 $(common-objpfx)linkobj/libc.so: $(elf-objpfx)soinit.os \
 			 $(common-objpfx)linkobj/libc_pic.a \
@@ -674,6 +678,7 @@ $(common-objpfx)linkobj/libc.so: $(elf-objpfx)soinit.os \
 			 $(elf-objpfx)ld.so \
 			 $(shlib-lds)
 	$(build-shlib)
+	$(call after-link,$@)
 
 ifeq ($(build-shared),yes)
 $(common-objpfx)libc.so: $(common-objpfx)libc.map

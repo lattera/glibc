@@ -1,3 +1,14 @@
+2015-02-12  Roland McGrath  <roland@hack.frob.com>
+
+	* Makeconfig (after-link): New variable.
+	(+link-pie, +link-pie-tests): Use it.
+	(+link-static, +link-static-tests): Likewise.
+	(+link, +link-tests): Likewise.
+	* Makerules (build-module, build-module-asneeded): Likewise.
+	(lib%.so, $(common-objpfx)libc.so, $(common-objpfx)linkobj/libc.so):
+	Likewise.
+	* elf/Makefile ($(objpfx)ld.so): Likewise.
+
 2015-02-12  Rüdiger Sonderfeld  <ruediger@c-plusplus.net>
 
 	[BZ #17965]
