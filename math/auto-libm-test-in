@@ -938,6 +938,24 @@ exp2 1023
 exp2 -1074
 exp2 16383
 exp2 -16400
+exp2 0x1p-10
+exp2 -0x1p-10
+exp2 0x1p-20
+exp2 -0x1p-20
+exp2 0x1p-30
+exp2 -0x1p-30
+exp2 0x1p-40
+exp2 -0x1p-40
+exp2 0x1p-50
+exp2 -0x1p-50
+exp2 0x1p-60
+exp2 -0x1p-60
+exp2 0x1p-100
+exp2 -0x1p-100
+exp2 min
+exp2 -min
+exp2 min_subnorm
+exp2 -min_subnorm
 
 expm1 0
 expm1 -0

@@ -18,7 +18,15 @@ ENTRY(__ieee754_exp2l)
 	andb	%ah, %dh
 	cmpb	$0x05, %dh
 	je	1f			/* Is +-Inf, jump.  */
-	fld	%st
+	movzwl	4+8(%esp), %eax
+	andl	$0x7fff, %eax
+	cmpl	$0x3fbe, %eax
+	jge	3f
+	/* Argument's exponent below -65, result rounds to 1.  */
+	fld1
+	faddp
+	ret
+3:	fld	%st
 	frndint				/* int(x) */
 	fsubr	%st,%st(1)		/* fract(x) */
 	fxch

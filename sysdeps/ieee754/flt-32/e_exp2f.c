@@ -54,6 +54,9 @@ __ieee754_exp2f (float x)
       float rx, x22, result;
       union ieee754_float ex2_u, scale_u;
 
+      if (fabsf (x) < FLT_EPSILON / 4.0f)
+	return 1.0f + x;
+
       {
 	SET_RESTORE_ROUND_NOEXF (FE_TONEAREST);
 

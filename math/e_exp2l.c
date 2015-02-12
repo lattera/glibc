@@ -20,6 +20,13 @@
 #include <math_private.h>
 #include <float.h>
 
+/* To avoid spurious underflows, use this definition to treat IBM long
+   double as approximating an IEEE-style format.  */
+#if LDBL_MANT_DIG == 106
+# undef LDBL_EPSILON
+# define LDBL_EPSILON 0x1p-106L
+#endif
+
 long double
 __ieee754_exp2l (long double x)
 {
@@ -31,6 +38,8 @@ __ieee754_exp2l (long double x)
 	{
 	  int intx = (int) x;
 	  long double fractx = x - intx;
+	  if (fabsl (fractx) < LDBL_EPSILON / 4.0L)
+	    return __scalbnl (1.0L + fractx, intx);
 	  return __scalbnl (__ieee754_expl (M_LN2l * fractx), intx);
 	}
       else

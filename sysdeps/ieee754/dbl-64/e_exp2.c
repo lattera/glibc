@@ -61,6 +61,9 @@ __ieee754_exp2 (double x)
       double rx, x22, result;
       union ieee754_double ex2_u, scale_u;
 
+      if (fabs (x) < DBL_EPSILON / 4.0)
+	return 1.0 + x;
+
       {
 	SET_RESTORE_ROUND_NOEX (FE_TONEAREST);
 

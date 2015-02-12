@@ -1,3 +1,18 @@
+2015-02-12  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16560]
+	* math/e_exp2l.c [LDBL_MANT_DIG == 106] (LDBL_EPSILON): Undefine
+	and redefine.
+	(__ieee754_exp2l): Do not multiply small fractional parts by
+	M_LN2l.
+	* sysdeps/i386/fpu/e_exp2l.S (__ieee754_exp2l): Just add 1 to
+	small argument.
+	* sysdeps/ieee754/dbl-64/e_exp2.c (__ieee754_exp2): Likewise.
+	* sysdeps/ieee754/flt-32/e_exp2f.c (__ieee754_exp2f): Likewise.
+	* sysdeps/x86_64/fpu/e_exp2l.S (__ieee754_exp2l): Likewise.
+	* math/auto-libm-test-in: Add more tests of exp2.
+	* math/auto-libm-test-out: Regenerated.
+
 2015-02-12  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power7/strncpy.S (strncpy): Optimize
