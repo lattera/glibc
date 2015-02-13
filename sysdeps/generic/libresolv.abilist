@@ -1,0 +1,2 @@
+# This is a placeholder file.  This configuration needs its own
+# sysdeps/.../libresolv.abilist file to make the test pass.

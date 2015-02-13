@@ -1,3 +1,17 @@
+2015-02-13  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/generic/c++-types.data: New file.
+	* sysdeps/generic/ld.abilist: New file.
+	* sysdeps/generic/libBrokenLocale.abilist: New file.
+	* sysdeps/generic/libanl.abilist: New file.
+	* sysdeps/generic/libc.abilist: New file.
+	* sysdeps/generic/libcrypt.abilist: New file.
+	* sysdeps/generic/libdl.abilist: New file.
+	* sysdeps/generic/libm.abilist: New file.
+	* sysdeps/generic/libpthread.abilist: New file.
+	* sysdeps/generic/libresolv.abilist: New file.
+	* sysdeps/generic/librt.abilist: New file.
+
 2015-02-13  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17569]
