@@ -1,3 +1,7 @@
+2015-02-13  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/init_array/pt-crti.S: New file.
+
 2015-02-13  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17967]
