@@ -1,3 +1,9 @@
+2015-02-12  J William Piggott  <elseifthen@gmx.com>
+
+	[BZ #17969]
+	* manual/time.texi: correct the zoneinfo path in the TZ Variable
+	node.
+
 2015-02-12  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17964]

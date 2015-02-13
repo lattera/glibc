@@ -2509,11 +2509,11 @@ rule for choosing the default time zone, so there is little we can say
 about them.
 
 @cindex time zone database
-@pindex /share/lib/zoneinfo
+@pindex /usr/share/zoneinfo
 @pindex zoneinfo
 If @var{characters} begins with a slash, it is an absolute file name;
 otherwise the library looks for the file
-@w{@file{/share/lib/zoneinfo/@var{characters}}}.  The @file{zoneinfo}
+@w{@file{/usr/share/zoneinfo/@var{characters}}}.  The @file{zoneinfo}
 directory contains data files describing local time zones in many
 different parts of the world.  The names represent major cities, with
 subdirectories for geographical areas; for example,
