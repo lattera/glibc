@@ -55,7 +55,7 @@ __remquo (double x, double y, int *quo)
       return zero * x;
     }
 
-  INSERT_WORDS64 (x, hx);
+  x = fabs (x);
   INSERT_WORDS64 (y, hy);
   cquo = 0;
 

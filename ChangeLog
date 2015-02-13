@@ -1,3 +1,15 @@
+2015-02-13  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17569]
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_remquo.c (__remquo):
+	Compute absolute value of x as modified by fmod, not original
+	value of x.
+	* math/libm-test.inc (RUN_TEST_ffI_f1): Rename to
+	RUN_TEST_ffI_f1_mod8.  Check extra return value mod 8.
+	(RUN_TEST_LOOP_ffI_f1): Rename to RUN_TEST_LOOP_ffI_f1_mod8.  Call
+	RUN_TEST_ffI_f1_mod8.
+	(remquo_test_data): Add more tests.
+
 2015-02-13  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/init_array/pt-crti.S: New file.

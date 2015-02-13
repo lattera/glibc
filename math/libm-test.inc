@@ -1461,9 +1461,9 @@ struct test_fFF_11_data
 		      (ARRAY)[i].RM_##ROUNDING_MODE.extra_test,		\
 		      (ARRAY)[i].RM_##ROUNDING_MODE.extra_expected);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
-#define RUN_TEST_ffI_f1(ARG_STR, FUNC_NAME, ARG1, ARG2, EXPECTED,	\
-			EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,		\
-			EXTRA_EXPECTED)					\
+#define RUN_TEST_ffI_f1_mod8(ARG_STR, FUNC_NAME, ARG1, ARG2, EXPECTED,	\
+			     EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,		\
+			     EXTRA_EXPECTED)				\
   do									\
     if (enable_test (EXCEPTIONS))					\
       {									\
@@ -1474,22 +1474,22 @@ struct test_fFF_11_data
 		     EXPECTED, EXCEPTIONS);				\
 	EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);				\
 	if (EXTRA_TEST)							\
-	  check_int (extra1_name, EXTRA_VAR, EXTRA_EXPECTED, 0);	\
+	  check_int (extra1_name, (EXTRA_VAR) % 8, EXTRA_EXPECTED, 0);	\
 	EXTRA_OUTPUT_TEST_CLEANUP (1);					\
 	COMMON_TEST_CLEANUP;						\
       }									\
   while (0)
-#define RUN_TEST_LOOP_ffI_f1(FUNC_NAME, ARRAY, ROUNDING_MODE,		\
-			     EXTRA_VAR)					\
+#define RUN_TEST_LOOP_ffI_f1_mod8(FUNC_NAME, ARRAY, ROUNDING_MODE,	\
+				  EXTRA_VAR)				\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
-      RUN_TEST_ffI_f1 ((ARRAY)[i].arg_str, FUNC_NAME,			\
-		       (ARRAY)[i].arg1, (ARRAY)[i].arg2,		\
-		       (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
-		       (ARRAY)[i].RM_##ROUNDING_MODE.exceptions,	\
-		       EXTRA_VAR,					\
-		       (ARRAY)[i].RM_##ROUNDING_MODE.extra_test,	\
-		       (ARRAY)[i].RM_##ROUNDING_MODE.extra_expected);	\
+      RUN_TEST_ffI_f1_mod8 ((ARRAY)[i].arg_str, FUNC_NAME,		\
+			    (ARRAY)[i].arg1, (ARRAY)[i].arg2,		\
+			    (ARRAY)[i].RM_##ROUNDING_MODE.expected,	\
+			    (ARRAY)[i].RM_##ROUNDING_MODE.exceptions,	\
+			    EXTRA_VAR,					\
+			    (ARRAY)[i].RM_##ROUNDING_MODE.extra_test,	\
+			    (ARRAY)[i].RM_##ROUNDING_MODE.extra_expected); \
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_c_c(ARG_STR, FUNC_NAME, ARGR, ARGC, EXPR, EXPC,	\
 		     EXCEPTIONS)					\
@@ -8759,6 +8759,11 @@ static const struct test_ffI_f1_data remquo_test_data[] =
 
     TEST_ffI_f1 (remquo, 5, 2, 1, 2, NO_INEXACT_EXCEPTION),
     TEST_ffI_f1 (remquo, 3, 2, -1, 2, NO_INEXACT_EXCEPTION),
+
+    TEST_ffI_f1 (remquo, 3419, 360, 179, 1, NO_INEXACT_EXCEPTION),
+    TEST_ffI_f1 (remquo, -3419, 360, -179, -1, NO_INEXACT_EXCEPTION),
+    TEST_ffI_f1 (remquo, 3419, -360, 179, -1, NO_INEXACT_EXCEPTION),
+    TEST_ffI_f1 (remquo, -3419, -360, -179, 1, NO_INEXACT_EXCEPTION),
   };
 
 static void
@@ -8766,7 +8771,7 @@ remquo_test (void)
 {
   int x;
 
-  ALL_RM_TEST (remquo, 1, remquo_test_data, RUN_TEST_LOOP_ffI_f1, END, x);
+  ALL_RM_TEST (remquo, 1, remquo_test_data, RUN_TEST_LOOP_ffI_f1_mod8, END, x);
 }
 
 static const struct test_f_f_data rint_test_data[] =
