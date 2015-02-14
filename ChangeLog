@@ -1,3 +1,9 @@
+2015-02-13  Steve Ellcey  <sellcey@imgtec.com>
+
+	* sysdeps/mips/bits/endian.h (__MIPSEB): Use #ifdef instead of #if.
+	* sysdeps/mips/memcpy.S (__MIPSEB): Ditto.
+	* sysdeps/mips/memset.S (__MIPSEB): Ditto.
+
 2015-02-13  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/generic/c++-types.data: New file.

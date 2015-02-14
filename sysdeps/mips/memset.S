@@ -170,14 +170,14 @@
 
 #ifdef USE_DOUBLE
 # define C_ST	sd
-# if __MIPSEB
+# ifdef __MIPSEB
 #  define C_STHI	sdl	/* high part is left in big-endian	*/
 # else
 #  define C_STHI	sdr	/* high part is right in little-endian	*/
 # endif
 #else
 # define C_ST	sw
-# if __MIPSEB
+# ifdef __MIPSEB
 #  define C_STHI	swl	/* high part is left in big-endian	*/
 # else
 #  define C_STHI	swr	/* high part is right in little-endian	*/

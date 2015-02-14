@@ -225,7 +225,7 @@
 #ifdef USE_DOUBLE
 # define C_ST	sd
 # define C_LD	ld
-# if __MIPSEB
+# ifdef __MIPSEB
 #  define C_LDHI	ldl	/* high part is left in big-endian	*/
 #  define C_STHI	sdl	/* high part is left in big-endian	*/
 #  define C_LDLO	ldr	/* low part is right in big-endian	*/
@@ -240,7 +240,7 @@
 #else
 # define C_ST	sw
 # define C_LD	lw
-# if __MIPSEB
+# ifdef __MIPSEB
 #  define C_LDHI	lwl	/* high part is left in big-endian	*/
 #  define C_STHI	swl	/* high part is left in big-endian	*/
 #  define C_LDLO	lwr	/* low part is right in big-endian	*/
@@ -767,7 +767,7 @@ L(ua_smallCopy_loop):
 
 #else /* R6_CODE */
 
-# if __MIPSEB
+# ifdef __MIPSEB
 #  define SWAP_REGS(X,Y) X, Y
 #  define ALIGN_OFFSET(N) (N)
 # else

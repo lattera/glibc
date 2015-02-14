@@ -5,7 +5,7 @@
 # error "Never use <bits/endian.h> directly; include <endian.h> instead."
 #endif
 
-#if __MIPSEB
+#ifdef __MIPSEB
 # define __BYTE_ORDER __BIG_ENDIAN
 #endif
 #if __MIPSEL
