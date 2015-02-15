@@ -40,7 +40,15 @@ pthread_cond_t cond;
 
 void cleanup (void *u)
 {
-  /* pthread_cond_wait should always return with the mutex locked.  */
+  /* pthread_cond_wait should always return with the mutex locked.  The
+     pthread_mutex_unlock implementation does not actually check whether we
+     own the mutex for several mutex kinds, so check this explicitly.  */
+  int ret = pthread_mutex_trylock (&mutex);
+  if (ret != EDEADLK && ret != EBUSY)
+    {
+      printf ("mutex not locked in cleanup %d\n", ret);
+      abort ();
+    }
   if (pthread_mutex_unlock (&mutex))
     abort ();
 }
