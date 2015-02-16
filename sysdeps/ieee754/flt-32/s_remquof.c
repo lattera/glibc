@@ -59,12 +59,12 @@ __remquof (float x, float y, int *quo)
   y  = fabsf (y);
   cquo = 0;
 
-  if (x >= 4 * y)
+  if (hy <= 0x7e7fffff && x >= 4 * y)
     {
       x -= 4 * y;
       cquo += 4;
     }
-  if (x >= 2 * y)
+  if (hy <= 0x7effffff && x >= 2 * y)
     {
       x -= 2 * y;
       cquo += 2;

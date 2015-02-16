@@ -60,12 +60,12 @@ __remquo (double x, double y, int *quo)
   y = fabs (y);
   cquo = 0;
 
-  if (x >= 4 * y)
+  if (hy <= 0x7fcfffff && x >= 4 * y)
     {
       x -= 4 * y;
       cquo += 4;
     }
-  if (x >= 2 * y)
+  if (hy <= 0x7fdfffff && x >= 2 * y)
     {
       x -= 2 * y;
       cquo += 2;

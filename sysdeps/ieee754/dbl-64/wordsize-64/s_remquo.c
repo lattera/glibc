@@ -59,12 +59,12 @@ __remquo (double x, double y, int *quo)
   INSERT_WORDS64 (y, hy);
   cquo = 0;
 
-  if (x >= 4 * y)
+  if (hy <= UINT64_C(0x7fcfffffffffffff) && x >= 4 * y)
     {
       x -= 4 * y;
       cquo += 4;
     }
-  if (x >= 2 * y)
+  if (hy <= UINT64_C(0x7fdfffffffffffff) && x >= 2 * y)
     {
       x -= 2 * y;
       cquo += 2;

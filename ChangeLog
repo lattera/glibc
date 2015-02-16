@@ -1,5 +1,16 @@
 2015-02-16  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17978]
+	* sysdeps/ieee754/dbl-64/s_remquo.c (__remquo): Do not form
+	products 4 * y and 2 * y where those would overflow.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_remquo.c (__remquo):
+	Likewise.
+	* sysdeps/ieee754/flt-32/s_remquof.c (__remquof): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_remquol.c (__remquol): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_remquol.c (__remquol): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_remquol.c (__remquol): Likewise.
+	* math/libm-test.inc (remquo_test_data): Add more tests.
+
 	* sysdeps/mips/sgidefs.h [!_ABIO64] (_ABIO64): New macro.
 
 	* sysdeps/mips/memcpy.S [_COMPILING_NEWLIB]: Change condition to

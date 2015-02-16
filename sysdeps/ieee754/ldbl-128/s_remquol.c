@@ -61,12 +61,12 @@ __remquol (long double x, long double y, int *quo)
   y  = fabsl (y);
   cquo = 0;
 
-  if (x >= 4 * y)
+  if (hy <= 0x7ffcffffffffffffLL && x >= 4 * y)
     {
       x -= 4 * y;
       cquo += 4;
     }
-  if (x >= 2 * y)
+  if (hy <= 0x7ffdffffffffffffLL && x >= 2 * y)
     {
       x -= 2 * y;
       cquo += 2;
