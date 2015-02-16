@@ -418,7 +418,7 @@ symbol		=	value
 # define PTR_ADDI	addi
 # define PTR_SUB	sub
 # define PTR_SUBI	subi
-#if __mips_isa_rev < 6
+#if !defined __mips_isa_rev || __mips_isa_rev < 6
 # define PTR_ADDU	add /* no u */
 # define PTR_ADDIU	addi /* no u */
 # define PTR_SUBU	sub /* no u */

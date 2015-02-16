@@ -1,3 +1,8 @@
+2015-02-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/sys/asm.h [__mips_isa_rev < 6]: Change condition to
+	[!defined __mips_isa_rev || __mips_isa_rev < 6].
+
 2015-02-16  Torvald Riegel  <triegel@redhat.com>
 
 	* nptl/tst-cond25.c (cleanup): Explicitly check that the mutex is
