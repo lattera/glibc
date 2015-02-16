@@ -1,5 +1,10 @@
 2015-02-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/mips/memcpy.S [_COMPILING_NEWLIB]: Change condition to
+	[defined _COMPILING_NEWLIB].
+	* sysdeps/mips/memset.S [_COMPILING_NEWLIB]: Likewise.
+	* sysdeps/mips/strcmp.S [_COMPILING_NEWLIB]: Likewise.
+
 	* sysdeps/mips/sys/asm.h [__mips_isa_rev < 6]: Change condition to
 	[!defined __mips_isa_rev || __mips_isa_rev < 6].
 
