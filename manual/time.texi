@@ -2520,7 +2520,8 @@ subdirectories for geographical areas; for example,
 @file{America/New_York}, @file{Europe/London}, @file{Asia/Hong_Kong}.
 These data files are installed by the system administrator, who also
 sets @file{/etc/localtime} to point to the data file for the local time
-zone.  @Theglibc{} comes with a large database of time zone
+zone.  The files typically come from the @url{http://www.iana.org/time-zones,
+Time Zone Database} of time zone and daylight saving time
 information for most regions of the world, which is maintained by a
 community of volunteers and put in the public domain.
 

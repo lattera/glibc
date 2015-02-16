@@ -1,3 +1,8 @@
+2015-02-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* manual/time.texi (TZ Variable): glibc no longer comes with tzdata.
+	Problem reported by J William Piggott.
+
 2015-02-16  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17978]
