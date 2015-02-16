@@ -1,5 +1,7 @@
 2015-02-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/mips/sgidefs.h [!_ABIO64] (_ABIO64): New macro.
+
 	* sysdeps/mips/memcpy.S [_COMPILING_NEWLIB]: Change condition to
 	[defined _COMPILING_NEWLIB].
 	* sysdeps/mips/memset.S [_COMPILING_NEWLIB]: Likewise.
