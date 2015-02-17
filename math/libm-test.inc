@@ -8818,6 +8818,16 @@ static const struct test_ffI_f1_data remquo_test_data[] =
     TEST_ffI_f1 (remquo, -1, -max_value / 4, -1, 0, NO_INEXACT_EXCEPTION),
     TEST_ffI_f1 (remquo, -1, max_value / 8, -1, 0, NO_INEXACT_EXCEPTION),
     TEST_ffI_f1 (remquo, -1, -max_value / 8, -1, 0, NO_INEXACT_EXCEPTION),
+
+    TEST_ffI_f1 (remquo, max_value, max_value / 2, plus_zero, 2, NO_INEXACT_EXCEPTION),
+    TEST_ffI_f1 (remquo, max_value, -max_value / 2, plus_zero, -2, NO_INEXACT_EXCEPTION),
+    TEST_ffI_f1 (remquo, -max_value, max_value / 2, minus_zero, -2, NO_INEXACT_EXCEPTION),
+    TEST_ffI_f1 (remquo, -max_value, -max_value / 2, minus_zero, 2, NO_INEXACT_EXCEPTION),
+
+    TEST_ffI_f1 (remquo, 2, 1, plus_zero, 2, NO_INEXACT_EXCEPTION),
+    TEST_ffI_f1 (remquo, 2, -1, plus_zero, -2, NO_INEXACT_EXCEPTION),
+    TEST_ffI_f1 (remquo, -2, 1, minus_zero, -2, NO_INEXACT_EXCEPTION),
+    TEST_ffI_f1 (remquo, -2, -1, minus_zero, 2, NO_INEXACT_EXCEPTION),
   };
 
 static void

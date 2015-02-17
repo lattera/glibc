@@ -101,6 +101,9 @@ __remquo (double x, double y, int *quo)
 
   *quo = qs ? -cquo : cquo;
 
+  /* Ensure correct sign of zero result in round-downward mode.  */
+  if (x == 0.0)
+    x = 0.0;
   if (sx)
     x = -x;
   return x;

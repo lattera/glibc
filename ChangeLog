@@ -1,3 +1,17 @@
+2015-02-16  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17987]
+	* sysdeps/ieee754/dbl-64/s_remquo.c (__remquo): Ensure sign of
+	zero result does not depend on the sign resulting from
+	subtraction.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_remquo.c (__remquo):
+	Likewise.
+	* sysdeps/ieee754/flt-32/s_remquof.c (__remquof): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_remquol.c (__remquol): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_remquol.c (__remquol): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_remquol.c (__remquol): Likewise.
+	* math/libm-test.inc (remquo_test_data): Add more tests.
+
 2015-02-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* manual/time.texi (TZ Variable): glibc no longer comes with tzdata.

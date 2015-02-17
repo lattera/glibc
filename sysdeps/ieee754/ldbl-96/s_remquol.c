@@ -101,6 +101,9 @@ __remquol (long double x, long double p, int *quo)
 
   *quo = qs ? -cquo : cquo;
 
+  /* Ensure correct sign of zero result in round-downward mode.  */
+  if (x == 0.0L)
+    x = 0.0L;
   if (sx)
     x = -x;
   return x;

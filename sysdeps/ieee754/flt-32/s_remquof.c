@@ -100,6 +100,9 @@ __remquof (float x, float y, int *quo)
 
   *quo = qs ? -cquo : cquo;
 
+  /* Ensure correct sign of zero result in round-downward mode.  */
+  if (x == 0.0f)
+    x = 0.0f;
   if (sx)
     x = -x;
   return x;
