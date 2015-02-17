@@ -1,5 +1,10 @@
 2015-02-17  Steve Ellcey  <sellcey@imgtec.com>
 
+	* sysdeps/mips/memcpy.S: Move R6 PREFETCH_STORE_HINT check.
+	* sysdeps/mips/memset.S: Ditto.
+
+2015-02-17  Steve Ellcey  <sellcey@imgtec.com>
+
 	* sysdeps/mips/bits/endian.h (__MIPSEL): Use #ifdef instead of #if.
 
 2015-02-17  Stefan Liebler  <stli@linux.vnet.ibm.com>

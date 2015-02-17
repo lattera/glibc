@@ -54,13 +54,6 @@
 # endif
 #endif
 
-#if __mips_isa_rev > 5
-# if (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE)
-#  undef PREFETCH_STORE_HINT
-#  define PREFETCH_STORE_HINT PREFETCH_HINT_STORE_STREAMED
-# endif
-# define R6_CODE
-#endif
 
 /* Some asm.h files do not have the L macro definition.  */
 #ifndef L
@@ -157,6 +150,14 @@
 # endif
 #else /* USE_PREFETCH not defined */
 # define PREFETCH_FOR_STORE(offset, reg)
+#endif
+
+#if __mips_isa_rev > 5
+# if (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE)
+#  undef PREFETCH_STORE_HINT
+#  define PREFETCH_STORE_HINT PREFETCH_HINT_STORE_STREAMED
+# endif
+# define R6_CODE
 #endif
 
 /* Allow the routine to be named something else if desired.  */
