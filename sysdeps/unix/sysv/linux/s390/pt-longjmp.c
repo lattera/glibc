@@ -20,25 +20,14 @@
 
 #include  <shlib-compat.h>
 
-#if defined SHARED && SHLIB_COMPAT (libpthread, GLIBC_2_19, GLIBC_2_20)
-	/* we need a unique name in case of symbol versioning.  */
-# define longjmp __v1longjmp
-#endif /* defined SHARED && SHLIB_COMPAT (libpthread, GLIBC_2_19, GLIBC_2_20))  */
-
 #include <nptl/pt-longjmp.c>
 
-#if defined SHARED && SHLIB_COMPAT (libpthread, GLIBC_2_19, GLIBC_2_20)
+#if SHLIB_COMPAT (libpthread, GLIBC_2_19, GLIBC_2_20)
 /* In glibc release 2.19 new versions of longjmp-functions were introduced,
    but were reverted before 2.20. Thus both versions are the same function.  */
 
-# undef longjmp
-
-strong_alias (__v1longjmp, __v2longjmp)
-versioned_symbol (libpthread, __v1longjmp, longjmp, GLIBC_2_0);
+DEFINE_LONGJMP (__v2longjmp)
 compat_symbol (libpthread, __v2longjmp, longjmp, GLIBC_2_19);
-
-weak_alias (siglongjmp, __v1siglongjmp)
-weak_alias (siglongjmp, __v2siglongjmp)
-versioned_symbol (libpthread, __v1siglongjmp, siglongjmp, GLIBC_2_0);
+DEFINE_LONGJMP (__v2siglongjmp)
 compat_symbol (libpthread, __v2siglongjmp, siglongjmp, GLIBC_2_19);
-#endif /* defined SHARED && SHLIB_COMPAT (libpthread, GLIBC_2_19, GLIBC_2_20))  */
+#endif /* SHLIB_COMPAT (libpthread, GLIBC_2_19, GLIBC_2_20))  */

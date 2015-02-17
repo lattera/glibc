@@ -1,3 +1,11 @@
+2015-02-17  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/pt-longjmp.c
+	(__v1longjmp): Remove versioned symbol.
+	(__v1siglongjmp): Remove alias and versioned symbol.
+	(__v2longjmp): Use DEFINE_LONGJMP instead of alias.
+	(__v2siglongjmp): Likewise.
+
 2015-02-16  Torvald Riegel  <triegel@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h: Remove file.
