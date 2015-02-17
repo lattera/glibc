@@ -8,6 +8,6 @@
 #ifdef __MIPSEB
 # define __BYTE_ORDER __BIG_ENDIAN
 #endif
-#if __MIPSEL
+#ifdef __MIPSEL
 # define __BYTE_ORDER __LITTLE_ENDIAN
 #endif
