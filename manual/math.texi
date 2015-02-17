@@ -1313,7 +1313,9 @@ exact value passed as the input.  Exceptions are raised appropriately
 for this value and in accordance with IEEE 754 / ISO C / POSIX
 semantics, and it is then rounded according to the current rounding
 direction to the result that is returned to the user.  @code{errno}
-may also be set (@pxref{Math Error Reporting}).
+may also be set (@pxref{Math Error Reporting}).  (The ``inexact''
+exception may be raised, or not raised, even if this is inconsistent
+with the infinite-precision value.)
 
 @item
 For the IBM @code{long double} format, as used on PowerPC GNU/Linux,
@@ -1344,11 +1346,16 @@ subnormal (in each case, with the correct sign), according to the
 current rounding direction and with the underflow exception raised.
 
 @item
-Where the mathematical result underflows and is not exactly
-representable as a floating-point value, the underflow exception is
-raised (so there may be spurious underflow exceptions in cases where
-the underflowing result is exact, but not missing underflow exceptions
-in cases where it is inexact).
+Where the mathematical result underflows (before rounding) and is not
+exactly representable as a floating-point value, the function does not
+behave as if the computed infinite-precision result is an exact value
+in the subnormal range.  This means that the underflow exception is
+raised other than possibly for cases where the mathematical result is
+very close to the underflow threshold and the function behaves as if
+it computes an infinite-precision result that does not underflow.  (So
+there may be spurious underflow exceptions in cases where the
+underflowing result is exact, but not missing underflow exceptions in
+cases where it is inexact.)
 
 @item
 @Theglibc{} does not aim for functions to satisfy other properties of
