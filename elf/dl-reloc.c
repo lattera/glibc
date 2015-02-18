@@ -26,6 +26,7 @@
 #include <sys/types.h>
 #include <_itoa.h>
 #include "dynamic-link.h"
+#include <libc-internal.h>
 
 /* Statistics function.  */
 #ifdef SHARED
@@ -74,9 +75,9 @@ _dl_try_allocate_static_tls (struct link_map *map)
   map->l_tls_offset = GL(dl_tls_static_used) = offset;
 #elif TLS_DTV_AT_TP
   /* dl_tls_static_used includes the TCB at the beginning.  */
-  size_t offset = (((GL(dl_tls_static_used)
-		     - map->l_tls_firstbyte_offset
-		     + map->l_tls_align - 1) & -map->l_tls_align)
+  size_t offset = (ALIGN_UP(GL(dl_tls_static_used)
+			    - map->l_tls_firstbyte_offset,
+			    map->l_tls_align)
 		   + map->l_tls_firstbyte_offset);
   size_t used = offset + map->l_tls_blocksize;
 
@@ -201,11 +202,10 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	    struct textrels *newp;
 
 	    newp = (struct textrels *) alloca (sizeof (*newp));
-	    newp->len = (((ph->p_vaddr + ph->p_memsz + GLRO(dl_pagesize) - 1)
-			  & ~(GLRO(dl_pagesize) - 1))
-			 - (ph->p_vaddr & ~(GLRO(dl_pagesize) - 1)));
-	    newp->start = ((ph->p_vaddr & ~(GLRO(dl_pagesize) - 1))
-			   + (caddr_t) l->l_addr);
+	    newp->len = ALIGN_UP (ph->p_vaddr + ph->p_memsz, GLRO(dl_pagesize))
+			- ALIGN_DOWN (ph->p_vaddr, GLRO(dl_pagesize));
+	    newp->start = PTR_ALIGN_DOWN (ph->p_vaddr, GLRO(dl_pagesize))
+			  + (caddr_t) l->l_addr;
 
 	    if (__mprotect (newp->start, newp->len, PROT_READ|PROT_WRITE) < 0)
 	      {
@@ -324,11 +324,13 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 void internal_function
 _dl_protect_relro (struct link_map *l)
 {
-  ElfW(Addr) start = ((l->l_addr + l->l_relro_addr)
-		      & ~(GLRO(dl_pagesize) - 1));
-  ElfW(Addr) end = ((l->l_addr + l->l_relro_addr + l->l_relro_size)
-		    & ~(GLRO(dl_pagesize) - 1));
-
+  ElfW(Addr) start = ALIGN_DOWN((l->l_addr
+				 + l->l_relro_addr),
+				GLRO(dl_pagesize));
+  ElfW(Addr) end = ALIGN_DOWN((l->l_addr
+			       + l->l_relro_addr
+			       + l->l_relro_size),
+			      GLRO(dl_pagesize));
   if (start != end
       && __mprotect ((void *) start, end - start, PROT_READ) < 0)
     {

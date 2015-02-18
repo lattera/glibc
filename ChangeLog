@@ -1,3 +1,19 @@
+2015-02-17  Carlos O'Donell  <carlos@redhat.com>
+
+	* dl-reloc.c: Inlucde libc-internal.h.
+	(_dl_try_allocate_static_tls): Call ALIGN_UP.
+	(_dl_relocate_object): Call ALIGN_UP, ALIGN_DOWN, and PTR_ALIGN_DOWN.
+	(_dl_protect_relro): Call ALIGN_UP and ALIGN_DOWN.
+	* malloc/arena.c (new_heap): Use pagesize. Call ALIGN_UP.
+	(grow_heap): Likewise.
+	* malloc/malloc.c: Include libc-internal.h.
+	(do_check_malloc): Call powerof2.
+	(sysmalloc): Use pagesize. Call ALIGN_UP.
+	(systrim): Use pagesize.
+	(mremap_chunk): Use pagesize. Call ALIGN_UP.
+	(__libc_valloc): Use pagesize.
+	(__libc_pvalloc): Use pagesize. Call ALIGN_UP.
+
 2015-02-17  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17991]

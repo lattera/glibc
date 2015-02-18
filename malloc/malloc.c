@@ -241,6 +241,9 @@
 /* For MIN, MAX, powerof2.  */
 #include <sys/param.h>
 
+/* For ALIGN_UP.  */
+#include <libc-internal.h>
+
 
 /*
   Debugging:
@@ -2111,7 +2114,7 @@ do_check_malloc_state (mstate av)
     return;
 
   /* pagesize is a power of 2 */
-  assert ((GLRO (dl_pagesize) & (GLRO (dl_pagesize) - 1)) == 0);
+  assert (powerof2(GLRO (dl_pagesize)));
 
   /* A contiguous main_arena is consistent with sbrk_base.  */
   if (av == &main_arena && contiguous (av))
@@ -2266,7 +2269,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
   unsigned long remainder_size;   /* its size */
 
 
-  size_t pagemask = GLRO (dl_pagesize) - 1;
+  size_t pagesize = GLRO (dl_pagesize);
   bool tried_mmap = false;
 
 
@@ -2292,9 +2295,9 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
          need for further alignments unless we have have high alignment.
        */
       if (MALLOC_ALIGNMENT == 2 * SIZE_SZ)
-        size = (nb + SIZE_SZ + pagemask) & ~pagemask;
+        size = ALIGN_UP (nb + SIZE_SZ, pagesize);
       else
-        size = (nb + SIZE_SZ + MALLOC_ALIGN_MASK + pagemask) & ~pagemask;
+        size = ALIGN_UP (nb + SIZE_SZ + MALLOC_ALIGN_MASK, pagesize);
       tried_mmap = true;
 
       /* Don't try if size wraps around 0 */
@@ -2367,7 +2370,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
   assert ((old_top == initial_top (av) && old_size == 0) ||
           ((unsigned long) (old_size) >= MINSIZE &&
            prev_inuse (old_top) &&
-           ((unsigned long) old_end & pagemask) == 0));
+           ((unsigned long) old_end & (pagesize - 1)) == 0));
 
   /* Precondition: not enough current space to satisfy nb request */
   assert ((unsigned long) (old_size) < (unsigned long) (nb + MINSIZE));
@@ -2447,7 +2450,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
          previous calls. Otherwise, we correct to page-align below.
        */
 
-      size = (size + pagemask) & ~pagemask;
+      size = ALIGN_UP (size, pagesize);
 
       /*
          Don't try to call MORECORE if argument is so big as to appear
@@ -2481,7 +2484,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
 
           /* Cannot merge with old top, so add its size back in */
           if (contiguous (av))
-            size = (size + old_size + pagemask) & ~pagemask;
+            size = ALIGN_UP (size + old_size, pagesize);
 
           /* If we are relying on mmap as backup, then use larger units */
           if ((unsigned long) (size) < (unsigned long) (MMAP_AS_MORECORE_SIZE))
@@ -2587,7 +2590,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
 
                   /* Extend the end address to hit a page boundary */
                   end_misalign = (INTERNAL_SIZE_T) (brk + size + correction);
-                  correction += ((end_misalign + pagemask) & ~pagemask) - end_misalign;
+                  correction += (ALIGN_UP (end_misalign, pagesize)) - end_misalign;
 
                   assert (correction >= 0);
                   snd_brk = (char *) (MORECORE (correction));
@@ -2738,10 +2741,10 @@ systrim (size_t pad, mstate av)
   long released;         /* Amount actually released */
   char *current_brk;     /* address returned by pre-check sbrk call */
   char *new_brk;         /* address returned by post-check sbrk call */
-  size_t pagesz;
+  size_t pagesize;
   long top_area;
 
-  pagesz = GLRO (dl_pagesize);
+  pagesize = GLRO (dl_pagesize);
   top_size = chunksize (av->top);
 
   top_area = top_size - MINSIZE - 1;
@@ -2749,7 +2752,7 @@ systrim (size_t pad, mstate av)
     return 0;
 
   /* Release in pagesize units, keeping at least one page */
-  extra = (top_area - pad) & ~(pagesz - 1);
+  extra = (top_area - pad) & ~(pagesize - 1);
 
   if (extra == 0)
     return 0;
@@ -2834,7 +2837,7 @@ static mchunkptr
 internal_function
 mremap_chunk (mchunkptr p, size_t new_size)
 {
-  size_t page_mask = GLRO (dl_pagesize) - 1;
+  size_t pagesize = GLRO (dl_pagesize);
   INTERNAL_SIZE_T offset = p->prev_size;
   INTERNAL_SIZE_T size = chunksize (p);
   char *cp;
@@ -2843,7 +2846,7 @@ mremap_chunk (mchunkptr p, size_t new_size)
   assert (((size + offset) & (GLRO (dl_pagesize) - 1)) == 0);
 
   /* Note the extra SIZE_SZ overhead as in mmap_chunk(). */
-  new_size = (new_size + offset + SIZE_SZ + page_mask) & ~page_mask;
+  new_size = ALIGN_UP (new_size + offset + SIZE_SZ, pagesize);
 
   /* No need to remap if the number of pages does not change.  */
   if (size + offset == new_size)
@@ -3122,8 +3125,8 @@ __libc_valloc (size_t bytes)
     ptmalloc_init ();
 
   void *address = RETURN_ADDRESS (0);
-  size_t pagesz = GLRO (dl_pagesize);
-  return _mid_memalign (pagesz, bytes, address);
+  size_t pagesize = GLRO (dl_pagesize);
+  return _mid_memalign (pagesize, bytes, address);
 }
 
 void *
@@ -3133,18 +3136,17 @@ __libc_pvalloc (size_t bytes)
     ptmalloc_init ();
 
   void *address = RETURN_ADDRESS (0);
-  size_t pagesz = GLRO (dl_pagesize);
-  size_t page_mask = GLRO (dl_pagesize) - 1;
-  size_t rounded_bytes = (bytes + page_mask) & ~(page_mask);
+  size_t pagesize = GLRO (dl_pagesize);
+  size_t rounded_bytes = ALIGN_UP (bytes, pagesize);
 
   /* Check for overflow.  */
-  if (bytes > SIZE_MAX - 2 * pagesz - MINSIZE)
+  if (bytes > SIZE_MAX - 2 * pagesize - MINSIZE)
     {
       __set_errno (ENOMEM);
       return 0;
     }
 
-  return _mid_memalign (pagesz, rounded_bytes, address);
+  return _mid_memalign (pagesize, rounded_bytes, address);
 }
 
 void *

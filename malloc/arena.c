@@ -510,7 +510,7 @@ static heap_info *
 internal_function
 new_heap (size_t size, size_t top_pad)
 {
-  size_t page_mask = GLRO (dl_pagesize) - 1;
+  size_t pagesize = GLRO (dl_pagesize);
   char *p1, *p2;
   unsigned long ul;
   heap_info *h;
@@ -523,7 +523,7 @@ new_heap (size_t size, size_t top_pad)
     return 0;
   else
     size = HEAP_MAX_SIZE;
-  size = (size + page_mask) & ~page_mask;
+  size = ALIGN_UP (size, pagesize);
 
   /* A memory region aligned to a multiple of HEAP_MAX_SIZE is needed.
      No swap space needs to be reserved for the following large
@@ -588,10 +588,10 @@ new_heap (size_t size, size_t top_pad)
 static int
 grow_heap (heap_info *h, long diff)
 {
-  size_t page_mask = GLRO (dl_pagesize) - 1;
+  size_t pagesize = GLRO (dl_pagesize);
   long new_size;
 
-  diff = (diff + page_mask) & ~page_mask;
+  diff = ALIGN_UP (diff, pagesize);
   new_size = (long) h->size + diff;
   if ((unsigned long) new_size > (unsigned long) HEAP_MAX_SIZE)
     return -1;
