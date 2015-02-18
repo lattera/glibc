@@ -1,3 +1,8 @@
+2015-02-18  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* malloc/malloc.c (__libc_malloc): Consolidate arena_lookup and
+	arena_lock into a single arena_get.
+
 2015-02-17  Carlos O'Donell  <carlos@redhat.com>
 
 	* dl-reloc.c: Inlucde libc-internal.h.

@@ -2886,9 +2886,8 @@ __libc_malloc (size_t bytes)
   if (__builtin_expect (hook != NULL, 0))
     return (*hook)(bytes, RETURN_ADDRESS (0));
 
-  arena_lookup (ar_ptr);
+  arena_get (ar_ptr, bytes);
 
-  arena_lock (ar_ptr, bytes);
   if (!ar_ptr)
     return 0;
 
