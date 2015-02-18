@@ -1,3 +1,8 @@
+2015-02-17  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* libio/fileops.c: Add missing sys/mman.h
+	* libio/iopopen.c: Add missing fcntl.h, remove redundant unistd.h
+
 2015-02-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* manual/math.texi (Errors in Math Functions): Clarify goals

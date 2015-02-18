@@ -29,11 +29,11 @@
 # define _POSIX_SOURCE
 #endif
 #include "libioP.h"
+#include <fcntl.h>
 #include <signal.h>
 #include <unistd.h>
 #include <stdlib.h>
 #ifdef _LIBC
-# include <unistd.h>
 # include <shlib-compat.h>
 # include <not-cancel.h>
 #endif

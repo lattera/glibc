@@ -32,6 +32,7 @@
 #include "libioP.h"
 #include <assert.h>
 #include <fcntl.h>
+#include <sys/mman.h>
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/stat.h>
