@@ -25,8 +25,8 @@
 # include <sysdeps/unix/sysv/linux/getrlimit64.c>
 # undef getrlimit64
 
-versioned_symbol (libc, __new_getrlimit64, getrlimit64, GLIBC_2_19);
-strong_alias (__new_getrlimit64, __GI_getrlimit64)
+versioned_symbol (libc, __getrlimit64, getrlimit64, GLIBC_2_19);
+strong_alias (__getrlimit64, __GI_getrlimit64)
 
 # if SHLIB_COMPAT (libc, GLIBC_2_2, GLIBC_2_19)
 
@@ -45,7 +45,7 @@ __old_getrlimit64 (enum __rlimit_resource resource,
 {
   struct rlimit64 krlimits;
 
-  if (__new_getrlimit64 (resource, &krlimits) < 0)
+  if (__getrlimit64 (resource, &krlimits) < 0)
     return -1;
 
   if (krlimits.rlim_cur == RLIM64_INFINITY)

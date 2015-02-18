@@ -1,3 +1,32 @@
+2015-02-17  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17991]
+	* include/sys/resource.h (__getrlimit64): Declare.  Use
+	libc_hidden_proto.
+	* resource/getrlimit64.c (getrlimit64): Rename to __getrlimit64
+	and define as weak alias of __getrlimit64.  Use libc_hidden_weak.
+	* sysdeps/posix/spawni.c (__spawni): Call __getrlimit64 instead of
+	getrlimit64.
+	* sysdeps/unix/sysv/linux/getrlimit64.c (getrlimit64): Rename to
+	__getrlimit64.
+	[!getrlimit64] (getrlimit64): Define as weak alias of
+	__getrlimit64.  Use libc_hidden_weak.
+	* sysdeps/unix/sysv/linux/i386/getrlimit64.c (getrlimit64): Define
+	using __getrlimit64 not __new_getrlimit64.
+	(__GI_getrlimit64): Likewise.
+	* sysdeps/unix/sysv/linux/mips/getrlimit64.c (getrlimit64):
+	Likewise.
+	(__GI_getrlimit64): Likewise.
+	(__old_getrlimit64): Use __getrlimit64 not __new_getrlimit64.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/syscalls.list
+	(getrlimit): Add __getrlimit64 alias.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list (getrlimit):
+	Likewise.
+	* conform/Makefile (test-xfail-XOPEN2K/spawn.h/linknamespace):
+	Remove variable.
+	(test-xfail-POSIX2008/spawn.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K8/spawn.h/linknamespace): Likewise.
+
 2015-02-17  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* libio/fileops.c: Add missing sys/mman.h
