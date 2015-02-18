@@ -93,14 +93,13 @@ atan 0x1p-5
 atan 2.5
 atan 10
 atan 1e6
-# Bug 15319: underflow exception may be missing.
-atan 0x1p-100 missing-underflow
-atan 0x1p-600 missing-underflow
-atan 0x1p-10000 missing-underflow
-atan min missing-underflow
-atan -min missing-underflow
-atan min_subnorm missing-underflow
-atan -min_subnorm missing-underflow
+atan 0x1p-100
+atan 0x1p-600
+atan 0x1p-10000
+atan min
+atan -min
+atan min_subnorm
+atan -min_subnorm
 
 # atan2 (0,x) == 0 for x > 0.
 atan2 0 1
@@ -156,13 +155,20 @@ atan2 min -max
 atan2 -min -max
 atan2 min_subnorm -max
 atan2 -min_subnorm -max
-# Bug 15319: underflow exception may be missing.
-atan2 1 max missing-underflow
-atan2 -1 max missing-underflow
-atan2 min max missing-underflow
-atan2 -min max missing-underflow
-atan2 min_subnorm max missing-underflow
-atan2 -min_subnorm max missing-underflow
+atan2 1 max
+atan2 -1 max
+atan2 min max
+atan2 -min max
+atan2 min_subnorm max
+atan2 -min_subnorm max
+atan2 min 1
+atan2 -min 1
+atan2 min_subnorm 1
+atan2 -min_subnorm 1
+atan2 min -1
+atan2 -min -1
+atan2 min_subnorm -1
+atan2 -min_subnorm -1
 
 atanh 0
 atanh -0

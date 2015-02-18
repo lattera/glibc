@@ -324,10 +324,10 @@ ildouble: 2
 ldouble: 2
 
 Function: Real part of "casin_downward":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
 ildouble: 2
 ldouble: 2
 
@@ -357,9 +357,9 @@ ldouble: 5
 
 Function: Real part of "casin_upward":
 double: 2
-float: 1
+float: 2
 idouble: 2
-ifloat: 1
+ifloat: 2
 ildouble: 2
 ldouble: 2
 
@@ -396,10 +396,10 @@ ildouble: 5
 ldouble: 5
 
 Function: Imaginary part of "casinh_downward":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
 ildouble: 2
 ldouble: 2
 
@@ -429,9 +429,9 @@ ldouble: 5
 
 Function: Imaginary part of "casinh_upward":
 double: 2
-float: 1
+float: 2
 idouble: 2
-ifloat: 1
+ifloat: 2
 ildouble: 2
 ldouble: 2
 

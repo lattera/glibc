@@ -1,3 +1,55 @@
+2015-02-18  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15319]
+	* sysdeps/i386/fpu/e_atan2.S (dbl_min): New object.
+	(MO): New macro.
+	(__ieee754_atan2): For results with small absolute value, force
+	underflow exception and remove excess range and precision from
+	return value.
+	* sysdeps/i386/fpu/e_atan2f.S (flt_min): New object.
+	(MO): New macro.
+	(__ieee754_atan2f): For results with small absolute value, force
+	underflow exception and remove excess range and precision from
+	return value.
+	* sysdeps/i386/fpu/s_atan.S (dbl_min): New object.
+	(MO): New macro.
+	(__atan): For results with small absolute value, force underflow
+	exception and remove excess range and precision from return value.
+	* sysdeps/i386/fpu/s_atanf.S (flt_min): New object.
+	(MO): New macro.
+	(__atanf): For results with small absolute value, force underflow
+	exception and remove excess range and precision from return value.
+	* sysdeps/ieee754/dbl-64/e_atan2.c: Include <float.h> and
+	<math.h>.
+	(__ieee754_atan2): Force underflow exception for results with
+	small absolute value.
+	* sysdeps/ieee754/dbl-64/s_atan.c: Include <float.h> and
+	<math_private.h>.
+	(atan): Force underflow exception for results with small absolute
+	value.
+	* sysdeps/ieee754/flt-32/s_atanf.c: Include <float.h>.
+	(__atanf): Force underflow exception for results with small
+	absolute value.
+	* sysdeps/ieee754/ldbl-128/s_atanl.c: Include <float.h> and
+	<math.h>.
+	(__atanl): Force underflow exception for results with small
+	absolute value.
+	* sysdeps/ieee754/ldbl-128ibm/s_atanl.c: Include <float.h>.
+	(__atanl): Force underflow exception for results with small
+	absolute value.
+	* sysdeps/x86/fpu/bits/mathinline.h
+	[!__SSE2_MATH__ && !__x86_64__ && __LIBC_INTERNAL_MATH_INLINES]
+	(__ieee754_atan2): Only define inline for long double.
+	* sysdeps/x86_64/fpu/multiarch/e_atan2.c
+	[HAVE_FMA4_SUPPORT || HAVE_AVX_SUPPORT]: Include <math.h>.
+	* math/auto-libm-test-in: Do not mark underflow exceptions as
+	possibly missing for bug 15319.  Add more tests of atan2.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (casin_test_data): Do not mark underflow
+	exceptions as possibly missing for bug 15319.
+	(casinh_test_data): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+
 2015-02-18  Steve Ellcey  <sellcey@imgtec.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/endian.h: Remove.

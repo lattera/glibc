@@ -41,7 +41,9 @@
 #include "MathLib.h"
 #include "uatan.tbl"
 #include "atnat.h"
+#include <float.h>
 #include <math.h>
+#include <math_private.h>
 #include <stap-probe.h>
 
 void __mpatan (mp_no *, mp_no *, int);	/* see definition in mpatan.c */
@@ -85,7 +87,14 @@ atan (double x)
       if (u < B)
 	{
 	  if (u < A)
-	    return x;
+	    {
+	      if (u < DBL_MIN)
+		{
+		  double force_underflow = x * x;
+		  math_force_eval (force_underflow);
+		}
+	      return x;
+	    }
 	  else
 	    {			/* A <= u < B */
 	      v = x * x;

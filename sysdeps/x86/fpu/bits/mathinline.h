@@ -965,12 +965,12 @@ __NTH (__finite (double __x))
 /* This code is used internally in the GNU libc.  */
 # ifdef __LIBC_INTERNAL_MATH_INLINES
 __inline_mathop (__ieee754_sqrt, "fsqrt")
-__inline_mathcode2 (__ieee754_atan2, __y, __x,
-		    register long double __value;
-		    __asm __volatile__ ("fpatan\n\t"
-					: "=t" (__value)
-					: "0" (__x), "u" (__y) : "st(1)");
-		    return __value;)
+__inline_mathcode2_ (long double, __ieee754_atan2l, __y, __x,
+		     register long double __value;
+		     __asm __volatile__ ("fpatan\n\t"
+					 : "=t" (__value)
+					 : "0" (__x), "u" (__y) : "st(1)");
+		     return __value;)
 # endif
 
 #endif /* !__SSE2_MATH__ && !__x86_64__ */

@@ -59,6 +59,8 @@
     <http://www.gnu.org/licenses/>.  */
 
 
+#include <float.h>
+#include <math.h>
 #include <math_private.h>
 
 /* arctan(k/8), k = 0, ..., 82 */
@@ -200,6 +202,11 @@ __atanl (long double x)
 
   if (k <= 0x3fc50000) /* |x| < 2**-58 */
     {
+      if (fabsl (x) < LDBL_MIN)
+	{
+	  long double force_underflow = x * x;
+	  math_force_eval (force_underflow);
+	}
       /* Raise inexact. */
       if (huge + x > 0.0)
 	return x;
