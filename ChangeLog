@@ -1,3 +1,28 @@
+2015-02-18  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17996]
+	* include/search.h (hcreate_r): Don't use libc_hidden_proto.
+	(hdestroy_r): Likewise.
+	(hsearch_r): Likewise.
+	(__hcreate_r): Declare and use libc_hidden_proto.
+	(__hdestroy_r): Likewise.
+	(__hsearch_r): Likewise.
+	* misc/hsearch.c (hsearch): Call __hsearch_r instead of hsearch_r.
+	(hcreate): Call __hcreate_r instead of hcreate_r.
+	(__hdestroy): Call __hdestroy_r instead of hdestroy_r.
+	* misc/hsearch_r.c (hcreate_r): Rename to __hcreate_r and define
+	as weak alias of __hcreate_r.
+	(hdestroy_r): Rename to __hdestroy_r and define as weak alias of
+	__hdestroy_r.
+	(hsearch_r): Rename to __hsearch_r and define as weak alias of
+	__hsearch_r.
+	* conform/Makefile (test-xfail-XPG3/search.h/linknamespace):
+	Remove variable.
+	(test-xfail-XPG4/search.h/linknamespace): Likewise.
+	(test-xfail-UNIX98/search.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K/search.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K8/search.h/linknamespace): Likewise.
+
 2015-02-18  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* malloc/malloc.c (__libc_malloc): Consolidate arena_lookup and

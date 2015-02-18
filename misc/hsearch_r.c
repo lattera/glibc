@@ -62,7 +62,7 @@ isprime (unsigned int number)
    The contents of the table is zeroed, especially the field used
    becomes zero.  */
 int
-hcreate_r (nel, htab)
+__hcreate_r (nel, htab)
      size_t nel;
      struct hsearch_data *htab;
 {
@@ -97,13 +97,14 @@ hcreate_r (nel, htab)
   /* everything went alright */
   return 1;
 }
-libc_hidden_def (hcreate_r)
+libc_hidden_def (__hcreate_r)
+weak_alias (__hcreate_r, hcreate_r)
 
 
 /* After using the hash table it has to be destroyed. The used memory can
    be freed and the local static variable can be marked as not used.  */
 void
-hdestroy_r (htab)
+__hdestroy_r (htab)
      struct hsearch_data *htab;
 {
   /* Test for correct arguments.  */
@@ -119,7 +120,8 @@ hdestroy_r (htab)
   /* the sign for an existing table is an value != NULL in htable */
   htab->table = NULL;
 }
-libc_hidden_def (hdestroy_r)
+libc_hidden_def (__hdestroy_r)
+weak_alias (__hdestroy_r, hdestroy_r)
 
 
 /* This is the search function. It uses double hashing with open addressing.
@@ -136,7 +138,7 @@ libc_hidden_def (hdestroy_r)
    equality of the stored and the parameter value. This helps to prevent
    unnecessary expensive calls of strcmp.  */
 int
-hsearch_r (item, action, retval, htab)
+__hsearch_r (item, action, retval, htab)
      ENTRY item;
      ACTION action;
      ENTRY **retval;
@@ -224,4 +226,5 @@ hsearch_r (item, action, retval, htab)
   *retval = NULL;
   return 0;
 }
-libc_hidden_def (hsearch_r)
+libc_hidden_def (__hsearch_r)
+weak_alias (__hsearch_r, hsearch_r)

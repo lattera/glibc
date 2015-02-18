@@ -2,9 +2,12 @@
 #include <misc/search.h>
 
 #ifndef _ISOMAC
-libc_hidden_proto (hcreate_r)
-libc_hidden_proto (hdestroy_r)
-libc_hidden_proto (hsearch_r)
+extern __typeof (hcreate_r) __hcreate_r;
+libc_hidden_proto (__hcreate_r)
+extern __typeof (hdestroy_r) __hdestroy_r;
+libc_hidden_proto (__hdestroy_r)
+extern __typeof (hsearch_r) __hsearch_r;
+libc_hidden_proto (__hsearch_r)
 libc_hidden_proto (lfind)
 
 /* Now define the internal interfaces.  */

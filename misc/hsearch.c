@@ -30,7 +30,7 @@ hsearch (item, action)
 {
   ENTRY *result;
 
-  (void) hsearch_r (item, action, &result, &htab);
+  (void) __hsearch_r (item, action, &result, &htab);
 
   return result;
 }
@@ -40,14 +40,14 @@ int
 hcreate (nel)
      size_t nel;
 {
-  return hcreate_r (nel, &htab);
+  return __hcreate_r (nel, &htab);
 }
 
 
 void
 __hdestroy (void)
 {
-  hdestroy_r (&htab);
+  __hdestroy_r (&htab);
 }
 weak_alias (__hdestroy, hdestroy)
 
