@@ -1,3 +1,14 @@
+2015-05-21  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #13028]
+	[BZ #17053]
+	* resolv/res_init.c (__res_vinit): Remove use of ext.nsmap member
+	of struct __res_state.
+	* resolv/res_send.c (__libc_res_nsend): Likewise.
+	(get_nsaddr): New function.
+	(res_ourserver_p, send_vc, reopen): Use it instead of accessing
+	statp directly.
+
 2015-05-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/GlibcConform.pm ($CFLAGS{"POSIX"}): Use
