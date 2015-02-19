@@ -28,7 +28,7 @@
 
 #ifndef SCANDIR
 # define SCANDIR scandir
-# define SCANDIRAT scandirat
+# define SCANDIRAT __scandirat
 # define DIRENT_TYPE struct dirent
 #endif
 

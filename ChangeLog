@@ -1,3 +1,18 @@
+2015-02-19  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17999]
+	* dirent/scandir.c [!SCANDIR] (SCANDIRAT): Define to __scandirat
+	instead of scandirat.
+	* dirent/scandirat.c [!SCANDIRAT] (SCANDIRAT): Likewise.
+	[!SCANDIRAT] (SCANDIRAT_WEAK_ALIAS): Define.
+	[SCANDIRAT_WEAK_ALIAS] (scandirat): Define as weak alias of
+	__scandirat.
+	* include/dirent.h (scandirat): Do not use libc_hidden_proto.
+	(__scandirat): Declare.  Use libc_hidden_proto.
+	* conform/Makefile (test-xfail-POSIX2008/dirent.h/linknamespace):
+	Remove variable.
+	(test-xfail-XOPEN2K8/dirent.h/linknamespace): Likewise.
+
 2015-02-18  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15319]

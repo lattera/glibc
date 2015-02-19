@@ -30,9 +30,10 @@
 #include <bits/libc-lock.h>
 
 #ifndef SCANDIRAT
-# define SCANDIRAT scandirat
+# define SCANDIRAT __scandirat
 # define READDIR __readdir
 # define DIRENT_TYPE struct dirent
+# define SCANDIRAT_WEAK_ALIAS
 #endif
 
 #ifndef SKIP_SCANDIR_CANCEL
@@ -148,6 +149,9 @@ SCANDIRAT (dfd, dir, namelist, select, cmp)
   return c.cnt;
 }
 libc_hidden_def (SCANDIRAT)
+#ifdef SCANDIRAT_WEAK_ALIAS
+weak_alias (__scandirat, scandirat)
+#endif
 
 #ifdef _DIRENT_MATCHES_DIRENT64
 weak_alias (scandirat, scandirat64)

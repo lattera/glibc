@@ -50,7 +50,8 @@ extern void __scandir_cancel_handler (void *arg);
 extern __typeof (rewinddir) __rewinddir;
 
 libc_hidden_proto (__rewinddir)
-libc_hidden_proto (scandirat)
+extern __typeof (scandirat) __scandirat;
+libc_hidden_proto (__scandirat)
 libc_hidden_proto (scandirat64)
 # endif
 
