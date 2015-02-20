@@ -9,8 +9,15 @@ Version 2.22
 
 * The following bugs are resolved with this release:
 
-  4719, 15319, 15467, 15790, 16560, 17569, 17792, 17912, 17932, 17944,
-  17949, 17964, 17965, 17967, 17969, 17978, 17987, 17991, 17996, 17999.
+  4719, 13064, 14094, 15319, 15467, 15790, 16560, 17569, 17588, 17792,
+  17912, 17932, 17944, 17949, 17964, 17965, 17967, 17969, 17978, 17987,
+  17991, 17996, 17998, 17999.
+
+* Character encoding and ctype tables were updated to Unicode 7.0.0, using
+  new generator scripts contributed by Pravin Satpute and Mike FABIAN (Red
+  Hat).  These updates cause user visible changes, such as the fix for bug
+  17998.
+
 
 Version 2.21
 

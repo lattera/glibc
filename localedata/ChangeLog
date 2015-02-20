@@ -1,3 +1,30 @@
+2015-02-20  Alexandre Oliva <aoliva@redhat.com>
+
+	[BZ #17588]
+	[BZ #13064]
+	[BZ #14094]
+	[BZ #17998]
+	* unicode-gen/Makefile: New.
+	* unicode-gen/unicode-license.txt: New, from Unicode.
+	* unicode-gen/UnicodeData.txt: New, from Unicode.
+	* unicode-gen/DerivedCoreProperties.txt: New, from Unicode.
+	* unicode-gen/EastAsianWidth.txt: New, from Unicode.
+	* unicode-gen/gen_unicode_ctype.py: New generator, from Mike
+	FABIAN <mfabian@redhat.com>.
+	* unicode-gen/ctype_compatibility.py: New verifier, from
+	Pravin Satpute <psatpute@redhat.com> and Mike FABIAN.
+	* unicode-gen/ctype_compatibility_test_cases.py: New verifier
+	module, from Mike FABIAN.
+	* unicode-gen/utf8_gen.py: New generator, from Pravin Satpute
+	and Mike FABIAN.
+	* unicode-gen/utf8_compatibility.py: New verifier, from Pravin
+	Satpute and Mike FABIAN.
+	* charmaps/UTF-8: Update.
+	* locales/i18n: Update.
+	* gen-unicode-ctype.c: Remove.
+	* tst-ctype-de_DE.ISO-8859-1.in: Adjust, islower now returns
+	true for ordinal indicators.
+
 2015-01-21  Marek Polacek  <polacek@redhat.com>
 
 	* tests-mbwc/tst_wcscpy.c (tst_wcscpy): Fix condition.
