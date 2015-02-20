@@ -1815,7 +1815,7 @@
 			 X##_e = (_FP_EXPBIAS_##fs + 2 * _FP_W_TYPE_SIZE - 1 \
 				  - _FP_FROM_INT_lz);			\
 		       })						\
-		     : (abort (), 0)));					\
+		     : ({ abort (); 0; })));				\
 									\
 	  if ((rsize) - 1 + _FP_EXPBIAS_##fs >= _FP_EXPMAX_##fs		\
 	      && X##_e >= _FP_EXPMAX_##fs)				\

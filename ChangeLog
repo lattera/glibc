@@ -1,3 +1,8 @@
+2015-02-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* soft-fp/op-common.h (_FP_FROM_INT): Wrap call to abort in
+	expression inside statement expression.
+
 2015-02-20  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/lowlevellock.h: Include
