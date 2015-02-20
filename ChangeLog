@@ -1,3 +1,9 @@
+2015-03-03  Alan Modra  <amodra@gmail.com>
+
+	[BZ #16512]
+	* scripts/localplt.awk: Strip off symbol version.
+	* NEWS: Mention bug fix.
+
 2015-03-02  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/pthread/timer_routines.c

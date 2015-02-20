@@ -35,11 +35,11 @@ in_relocs && relocs_offset == jmprel_offset && NF >= 5 {
   # Relocations against GNU_IFUNC symbols are not shown as an hexadecimal
   # value, but rather as the resolver symbol followed by ().
   if ($4 ~ /\(\)/) {
-    print whatfile, $5
+    print whatfile, gensub(/@.*/, "", "g", $5)
   } else {
     symval = strtonum("0x" $4);
     if (symval != 0)
-      print whatfile, $5
+      print whatfile, gensub(/@.*/, "", "g", $5)
   }
 }
 
