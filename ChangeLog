@@ -1,3 +1,12 @@
+2015-02-20  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h: Include
+	<sysdeps/nptl/lowlevellock.h> and remove macros and
+	functions that are now defined there.
+	(SYS_futex): Remove.
+	(lll_compare_and_swap): Remove.
+	* sysdeps/s390/bits/atomic.h (atomic_exchange_acq): Define.
+
 2015-02-19  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17999]

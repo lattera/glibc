@@ -77,3 +77,44 @@ typedef uintmax_t uatomic_max_t;
 # define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
   (abort (), (__typeof (*mem)) 0)
 #endif
+
+/* Store NEWVALUE in *MEM and return the old value.  */
+/* On s390, the atomic_exchange_acq is different from generic implementation,
+   because the generic one does not use the condition-code of cs-instruction
+   to determine if looping is needed. Instead it saves the old-value and
+   compares it against old-value returned by cs-instruction.  */
+#ifdef __s390x__
+# define atomic_exchange_acq(mem, newvalue)				\
+  ({ __typeof (mem) __atg5_memp = (mem);				\
+    __typeof (*(mem)) __atg5_oldval = *__atg5_memp;			\
+    __typeof (*(mem)) __atg5_value = (newvalue);			\
+    if (sizeof (*mem) == 4)						\
+      __asm __volatile ("0: cs %0,%2,%1\n"				\
+			"   jl 0b"					\
+			: "+d" (__atg5_oldval), "=Q" (*__atg5_memp)	\
+			: "d" (__atg5_value), "m" (*__atg5_memp)	\
+			: "cc", "memory" );				\
+     else if (sizeof (*mem) == 8)					\
+       __asm __volatile ("0: csg %0,%2,%1\n"				\
+			 "   jl 0b"					\
+			 : "+d" ( __atg5_oldval), "=Q" (*__atg5_memp)	\
+			 : "d" ((long) __atg5_value), "m" (*__atg5_memp) \
+			 : "cc", "memory" );				\
+     else								\
+       abort ();							\
+     __atg5_oldval; })
+#else
+# define atomic_exchange_acq(mem, newvalue)				\
+  ({ __typeof (mem) __atg5_memp = (mem);				\
+    __typeof (*(mem)) __atg5_oldval = *__atg5_memp;			\
+    __typeof (*(mem)) __atg5_value = (newvalue);			\
+    if (sizeof (*mem) == 4)						\
+      __asm __volatile ("0: cs %0,%2,%1\n"				\
+			"   jl 0b"					\
+			: "+d" (__atg5_oldval), "=Q" (*__atg5_memp)	\
+			: "d" (__atg5_value), "m" (*__atg5_memp)	\
+			: "cc", "memory" );				\
+    else								\
+      abort ();								\
+    __atg5_oldval; })
+#endif
