@@ -95,8 +95,11 @@ _IO_wstr_overflow (fp, c)
 	  wchar_t *old_buf = fp->_wide_data->_IO_buf_base;
 	  size_t old_wblen = _IO_wblen (fp);
 	  _IO_size_t new_size = 2 * old_wblen + 100;
-	  if (new_size < old_wblen)
+
+	  if (__glibc_unlikely (new_size < old_wblen)
+	      || __glibc_unlikely (new_size > SIZE_MAX / sizeof (wchar_t)))
 	    return EOF;
+
 	  new_buf
 	    = (wchar_t *) (*((_IO_strfile *) fp)->_s._allocate_buffer) (new_size
 									* sizeof (wchar_t));
@@ -186,6 +189,9 @@ enlarge_userbuf (_IO_FILE *fp, _IO_off64_t offset, int reading)
     return 1;
 
   _IO_size_t newsize = offset + 100;
+  if (__glibc_unlikely (newsize > SIZE_MAX / sizeof (wchar_t)))
+    return 1;
+
   wchar_t *oldbuf = wd->_IO_buf_base;
   wchar_t *newbuf
     = (wchar_t *) (*((_IO_strfile *) fp)->_s._allocate_buffer) (newsize
