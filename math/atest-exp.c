@@ -191,6 +191,6 @@ do_test (void)
    return failures == 0 ? 0 : 1;
 }
 
-#define TIMEOUT 10
+#define TIMEOUT 200
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"

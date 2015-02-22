@@ -1,3 +1,10 @@
+2015-02-22  Chung-Lin Tang  <cltang@codesourcery.com>
+
+	* libio/tst-memstream2.c (TIMEOUT): Define as 100.
+	* math/atest-exp.c (TIMEOUT): Adjust to 200.
+	* math/atest-exp2.c (TIMEOUT): Adjust to 300.
+	* math/atest-sincos.c (TIMEOUT): Adjust to 600.
+
 2015-02-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* soft-fp/op-common.h (_FP_FROM_INT): Wrap call to abort in
