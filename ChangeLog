@@ -1,3 +1,8 @@
+2015-02-23  Alexandre Oliva <aoliva@redhat.com>
+
+	* include/stdc-predef.h (__STDC_ISO_10646__): Update to
+	201304L, for Unicode 7.
+
 2015-02-23  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #17836]

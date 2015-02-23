@@ -1,3 +1,14 @@
+2015-02-23  Alexandre Oliva <aoliva@redhat.com>
+
+	* unicode-gen/ctype_compatibility.py: Use date ranges in
+	copyright notice.
+	* unicode-gen/ctype_compatibility_test_cases.py: Likewise.
+	* unicode-gen/gen_unicode_ctype.py: Likewise.
+	* unicode-gen/utf8_compatibility.py: Likewise.
+	* unicode-gen/utf8_gen.py: Likewise.  Use upper case for
+	global variables, use tuples for global constant arrays.  From
+	Mike FABIAN.  Suggested by Mike Frysinger <vapier@gentoo.org>.
+
 2015-02-20  Alexandre Oliva <aoliva@redhat.com>
 
 	[BZ #17588]

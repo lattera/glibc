@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-# Copyright (C) 2014, 2015 Free Software Foundation, Inc.
+# Copyright (C) 2014-2015 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 # The GNU C Library is free software; you can redistribute it and/or
@@ -33,21 +33,21 @@ import re
 # Auxiliary tables for Hangul syllable names, see the Unicode 3.0 book,
 # sections 3.11 and 4.4.
 
-jamo_initial_short_name = [
+JAMO_INITIAL_SHORT_NAME = (
     'G', 'GG', 'N', 'D', 'DD', 'R', 'M', 'B', 'BB', 'S', 'SS', '', 'J', 'JJ',
     'C', 'K', 'T', 'P', 'H'
-]
+)
 
-jamo_medial_short_name = [
+JAMO_MEDIAL_SHORT_NAME = (
     'A', 'AE', 'YA', 'YAE', 'EO', 'E', 'YEO', 'YE', 'O', 'WA', 'WAE', 'OE',
     'YO', 'U', 'WEO', 'WE', 'WI', 'YU', 'EU', 'YI', 'I'
-]
+)
 
-jamo_final_short_name = [
+JAMO_FINAL_SHORT_NAME = (
     '', 'G', 'GG', 'GS', 'N', 'NI', 'NH', 'D', 'L', 'LG', 'LM', 'LB', 'LS',
     'LT', 'LP', 'LH', 'M', 'B', 'BS', 'S', 'SS', 'NG', 'J', 'C', 'K', 'T',
     'P', 'H'
-]
+)
 
 def ucs_symbol(code_point):
     '''Return the UCS symbol string for a Unicode character.'''
@@ -74,9 +74,9 @@ def process_range(start, end, outfile, name):
             index2, index3 = divmod(i - 0xaC00, 28)
             index1, index2 = divmod(index2, 21)
             hangul_syllable_name = 'HANGUL SYLLABLE ' \
-                                   + jamo_initial_short_name[index1] \
-                                   + jamo_medial_short_name[index2] \
-                                   + jamo_final_short_name[index3]
+                                   + JAMO_INITIAL_SHORT_NAME[index1] \
+                                   + JAMO_MEDIAL_SHORT_NAME[index2] \
+                                   + JAMO_FINAL_SHORT_NAME[index3]
             outfile.write('{:<11s} {:<12s} {:s}\n'.format(
                 ucs_symbol(i), convert_to_hex(i),
                 hangul_syllable_name))

@@ -49,9 +49,14 @@
 # define __STDC_IEC_559_COMPLEX__	1
 #endif
 
-/* wchar_t uses ISO/IEC 10646 (2nd ed., published 2011-03-15) /
-   Unicode 6.0.  */
-#define __STDC_ISO_10646__		201103L
+/* wchar_t uses Unicode 7.0.0.  Version 7.0 of the Unicode Standard is
+   synchronized with ISO/IEC 10646:2012, plus Amendments 1 (published
+   on April, 2013) and 2 (not yet published as of February, 2015).
+   Additionally, it includes the accelerated publication of U+20BD
+   RUBLE SIGN.  Therefore Unicode 7.0.0 is between 10646:2012 and
+   10646:2014, and so we use the date ISO/IEC 10646:2012 Amd.1 was
+   published.  */
+#define __STDC_ISO_10646__		201304L
 
 /* We do not support C11 <threads.h>.  */
 #define __STDC_NO_THREADS__		1
