@@ -1,3 +1,12 @@
+2015-02-23  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #17836]
+	* csu/Makefile (extra-objs): Add gmon-start.o if not builing
+	shared library.  Add gmon-start.os otherwise.
+	($(objpfx)g$(start-installed-name)): Use $(objpfx)S%
+	$(objpfx)gmon-start.os if builing shared library.
+	($(objpfx)g$(static-start-installed-name)): Likewise.
+
 2015-02-23  Andreas Schwab  <schwab@suse.de>
 
 	* elf/Makefile (CFLAGS-tst-audit2.c): Define.
