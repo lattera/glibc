@@ -1,3 +1,7 @@
+2015-02-24  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/hppa/sysdep.h: Include dl-sysdep.h.
+
 2015-02-23  Alexandre Oliva <aoliva@redhat.com>
 
 	* include/stdc-predef.h (__STDC_ISO_10646__): Update to
