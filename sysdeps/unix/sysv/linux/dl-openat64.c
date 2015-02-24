@@ -28,7 +28,7 @@ openat64 (dfd, file, oflag)
      const char *file;
      int oflag;
 {
-  assert ((oflag & O_CREAT) == 0);
+  assert (!__OPEN_NEEDS_MODE (oflag));
 
 #ifdef __NR_openat
   return INLINE_SYSCALL (openat, 3, dfd, file, oflag | O_LARGEFILE);

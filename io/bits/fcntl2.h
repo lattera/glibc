@@ -20,7 +20,7 @@
 # error "Never include <bits/fcntl2.h> directly; use <fcntl.h> instead."
 #endif
 
-/* Check that calls to open and openat with O_CREAT set have an
+/* Check that calls to open and openat with O_CREAT or O_TMPFILE set have an
    appropriate third/fourth parameter.  */
 #ifndef __USE_FILE_OFFSET64
 extern int __open_2 (const char *__path, int __oflag) __nonnull ((1));
@@ -35,7 +35,7 @@ extern int __REDIRECT (__open_alias, (const char *__path, int __oflag, ...),
 __errordecl (__open_too_many_args,
 	     "open can be called either with 2 or 3 arguments, not more");
 __errordecl (__open_missing_mode,
-	     "open with O_CREAT in second argument needs 3 arguments");
+	     "open with O_CREAT or O_TMPFILE in second argument needs 3 arguments");
 
 __fortify_function int
 open (const char *__path, int __oflag, ...)
@@ -45,7 +45,7 @@ open (const char *__path, int __oflag, ...)
 
   if (__builtin_constant_p (__oflag))
     {
-      if ((__oflag & O_CREAT) != 0 && __va_arg_pack_len () < 1)
+      if (__OPEN_NEEDS_MODE (__oflag) && __va_arg_pack_len () < 1)
 	{
 	  __open_missing_mode ();
 	  return __open_2 (__path, __oflag);
@@ -67,7 +67,7 @@ extern int __REDIRECT (__open64_alias, (const char *__path, int __oflag,
 __errordecl (__open64_too_many_args,
 	     "open64 can be called either with 2 or 3 arguments, not more");
 __errordecl (__open64_missing_mode,
-	     "open64 with O_CREAT in second argument needs 3 arguments");
+	     "open64 with O_CREAT or O_TMPFILE in second argument needs 3 arguments");
 
 __fortify_function int
 open64 (const char *__path, int __oflag, ...)
@@ -77,7 +77,7 @@ open64 (const char *__path, int __oflag, ...)
 
   if (__builtin_constant_p (__oflag))
     {
-      if ((__oflag & O_CREAT) != 0 && __va_arg_pack_len () < 1)
+      if (__OPEN_NEEDS_MODE (__oflag) && __va_arg_pack_len () < 1)
 	{
 	  __open64_missing_mode ();
 	  return __open64_2 (__path, __oflag);
@@ -111,7 +111,7 @@ extern int __REDIRECT (__openat_alias, (int __fd, const char *__path,
 __errordecl (__openat_too_many_args,
 	     "openat can be called either with 3 or 4 arguments, not more");
 __errordecl (__openat_missing_mode,
-	     "openat with O_CREAT in third argument needs 4 arguments");
+	     "openat with O_CREAT or O_TMPFILE in third argument needs 4 arguments");
 
 __fortify_function int
 openat (int __fd, const char *__path, int __oflag, ...)
@@ -121,7 +121,7 @@ openat (int __fd, const char *__path, int __oflag, ...)
 
   if (__builtin_constant_p (__oflag))
     {
-      if ((__oflag & O_CREAT) != 0 && __va_arg_pack_len () < 1)
+      if (__OPEN_NEEDS_MODE (__oflag) && __va_arg_pack_len () < 1)
 	{
 	  __openat_missing_mode ();
 	  return __openat_2 (__fd, __path, __oflag);
@@ -145,7 +145,7 @@ extern int __REDIRECT (__openat64_alias, (int __fd, const char *__path,
 __errordecl (__openat64_too_many_args,
 	     "openat64 can be called either with 3 or 4 arguments, not more");
 __errordecl (__openat64_missing_mode,
-	     "openat64 with O_CREAT in third argument needs 4 arguments");
+	     "openat64 with O_CREAT or O_TMPFILE in third argument needs 4 arguments");
 
 __fortify_function int
 openat64 (int __fd, const char *__path, int __oflag, ...)
@@ -155,7 +155,7 @@ openat64 (int __fd, const char *__path, int __oflag, ...)
 
   if (__builtin_constant_p (__oflag))
     {
-      if ((__oflag & O_CREAT) != 0 && __va_arg_pack_len () < 1)
+      if (__OPEN_NEEDS_MODE (__oflag) && __va_arg_pack_len () < 1)
 	{
 	  __openat64_missing_mode ();
 	  return __openat64_2 (__fd, __path, __oflag);

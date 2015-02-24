@@ -23,7 +23,7 @@
 #include <stdio.h>
 
 
-/* Open FILE with access OFLAG.  If OFLAG includes O_CREAT,
+/* Open FILE with access OFLAG.  If O_CREAT or O_TMPFILE is in OFLAG,
    a third argument is the file protection.  */
 int
 __libc_open (file, oflag)
@@ -38,7 +38,7 @@ __libc_open (file, oflag)
       return -1;
     }
 
-  if (oflag & O_CREAT)
+  if (__OPEN_NEEDS_MODE (oflag))
     {
       va_list arg;
       va_start(arg, oflag);

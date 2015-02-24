@@ -22,8 +22,8 @@
 int
 __open_2 (const char *file, int oflag)
 {
-  if (oflag & O_CREAT)
-    __fortify_fail ("invalid open call: O_CREAT without mode");
+  if (__OPEN_NEEDS_MODE (oflag))
+    __fortify_fail ("invalid open call: O_CREAT or O_TMPFILE without mode");
 
   return __open (file, oflag);
 }

@@ -22,7 +22,7 @@
 #include <hurd.h>
 #include <hurd/fd.h>
 
-/* Open FILE with access OFLAG.  If OFLAG includes O_CREAT,
+/* Open FILE with access OFLAG.  If O_CREAT or O_TMPFILE is in OFLAG,
    a third argument is the file protection.  */
 int
 __libc_open (const char *file, int oflag, ...)
@@ -30,7 +30,7 @@ __libc_open (const char *file, int oflag, ...)
   mode_t mode;
   io_t port;
 
-  if (oflag & O_CREAT)
+  if (__OPEN_NEEDS_MODE (oflag))
     {
       va_list arg;
       va_start (arg, oflag);

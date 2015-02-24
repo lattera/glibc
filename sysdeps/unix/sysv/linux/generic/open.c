@@ -22,14 +22,14 @@
 #include <stdio.h>
 #include <sysdep-cancel.h>
 
-/* Open FILE with access OFLAG.  If OFLAG includes O_CREAT,
+/* Open FILE with access OFLAG.  If O_CREAT or O_TMPFILE is in OFLAG,
    a third argument is the file protection.  */
 int
 __libc_open (const char *file, int oflag, ...)
 {
   int mode = 0;
 
-  if (oflag & O_CREAT)
+  if (__OPEN_NEEDS_MODE (oflag))
     {
       va_list arg;
       va_start (arg, oflag);
@@ -59,7 +59,7 @@ __open_nocancel (const char *file, int oflag, ...)
 {
   int mode = 0;
 
-  if (oflag & O_CREAT)
+  if (__OPEN_NEEDS_MODE (oflag))
     {
       va_list arg;
       va_start (arg, oflag);

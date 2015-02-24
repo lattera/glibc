@@ -1,3 +1,27 @@
+2015-02-24  Eric Rannaud  <e@nanocritical.com>
+
+	[BZ #17523]
+	* io/fcntl.h (__OPEN_NEEDS_MODE): New macro.
+	* io/bits/fcntl2.h (open): Use it.
+	(openat): Likewise.
+	* io/open.c (__libc_open): Likewise.
+	* io/open64.c (__libc_open64): Likewise.
+	* io/open64_2.c (__open64_2): Likewise.
+	* io/open_2.c (__open_2): Likewise.
+	* io/openat.c (__openat): Likewise.
+	* io/openat64.c (__openat64): Likewise.
+	* io/openat64_2.c (__openat64_2): Likewise.
+	* io/openat_2.c (__openat_2): Likewise.
+	* sysdeps/mach/hurd/open.c (__libc_open): Likewise.
+	* sysdeps/mach/hurd/openat.c (__openat): Likewise.
+	* sysdeps/posix/open64.c (__libc_open64): Likewise.
+	* sysdeps/unix/sysv/linux/dl-openat64.c (openat64): Likewise.
+	* sysdeps/unix/sysv/linux/generic/open.c (__libc_open): Likewise.
+	(__open_nocancel): Likewise.
+	* sysdeps/unix/sysv/linux/generic/open64.c (__libc_open64): Likewise.
+	* sysdeps/unix/sysv/linux/open64.c (__libc_open64): Likewise.
+	* sysdeps/unix/sysv/linux/openat.c (__OPENAT): Likewise.
+
 2015-02-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #14841]
