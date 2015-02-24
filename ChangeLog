@@ -1,3 +1,9 @@
+2015-02-24  Mike Frysinger  <vapier@gentoo.org>
+
+	* include/alloca.h [_STACK_GROWS_DOWN] (extend_alloca): Add
+	parenthesis around the buf assignment.
+	[_STACK_GROWS_UP] (extend_alloca): Add a char* cast.
+
 2015-02-24  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16783]

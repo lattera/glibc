@@ -28,7 +28,7 @@ libc_hidden_proto (__libc_alloca_cutoff)
 # define extend_alloca(buf, len, newlen) \
   (__typeof (buf)) ({ size_t __newlen = stackinfo_alloca_round (newlen);      \
 		      char *__newbuf = __alloca (__newlen);		      \
-		      if (__newbuf + __newlen == (char *) buf)		      \
+		      if (__newbuf + __newlen == (char *) (buf))	      \
 			len += __newlen;				      \
 		      else						      \
 			len = __newlen;					      \
@@ -37,7 +37,7 @@ libc_hidden_proto (__libc_alloca_cutoff)
 # define extend_alloca(buf, len, newlen) \
   (__typeof (buf)) ({ size_t __newlen = stackinfo_alloca_round (newlen);      \
 		      char *__newbuf = __alloca (__newlen);		      \
-		      char *__buf = (buf);				      \
+		      char *__buf = (char *) (buf);			      \
 		      if (__buf + len == __newbuf)			      \
 			{						      \
 			  len += __newlen;				      \
