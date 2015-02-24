@@ -353,7 +353,15 @@ _IO_new_file_fopen (_IO_FILE *fp, const char *filename, const char *mode,
 	  struct gconv_fcts fcts;
 	  struct _IO_codecvt *cc;
 	  char *endp = __strchrnul (cs + 5, ',');
-	  char ccs[endp - (cs + 5) + 3];
+	  char *ccs = malloc (endp - (cs + 5) + 3);
+
+	  if (ccs == NULL)
+	    {
+	      int malloc_err = errno;  /* Whatever malloc failed with.  */
+	      (void) _IO_file_close_it (fp);
+	      __set_errno (malloc_err);
+	      return NULL;
+	    }
 
 	  *((char *) __mempcpy (ccs, cs + 5, endp - (cs + 5))) = '\0';
 	  strip (ccs, ccs);
@@ -365,9 +373,12 @@ _IO_new_file_fopen (_IO_FILE *fp, const char *filename, const char *mode,
 		 This means we cannot proceed since the user explicitly asked
 		 for these.  */
 	      (void) _IO_file_close_it (fp);
+	      free (ccs);
 	      __set_errno (EINVAL);
 	      return NULL;
 	    }
+
+	  free (ccs);
 
 	  assert (fcts.towc_nsteps == 1);
 	  assert (fcts.tomb_nsteps == 1);

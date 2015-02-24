@@ -1,3 +1,9 @@
+2015-02-24  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #17916]
+	* libio/fileops.c (_IO_new_file_fopen): Limit stack use
+	* libio/tst-fopenloc.c (do_test, do_bz17916): Add a large ccs= test
+
 2015-02-24  Eric Rannaud  <e@nanocritical.com>
 
 	[BZ #17523]

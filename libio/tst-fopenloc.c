@@ -24,10 +24,36 @@
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
+#include <sys/resource.h>
 
 
 static const char inputfile[] = "../iconvdata/testdata/ISO-8859-1";
 
+static
+int do_bz17916 (void)
+{
+  /* BZ #17916 -- check invalid large ccs= case.  */
+  struct rlimit rl;
+  getrlimit (RLIMIT_STACK, &rl);
+  rl.rlim_cur = 1024 * 1024;
+  setrlimit (RLIMIT_STACK, &rl);
+
+  const size_t sz = 2 * 1024 * 1024;
+  char *ccs = malloc (sz);
+  strcpy (ccs, "r,ccs=");
+  memset (ccs + 6, 'A', sz - 6 - 1);
+  ccs[sz - 1] = '\0';
+
+  FILE *fp = fopen (inputfile, ccs);
+  if (fp != NULL)
+    {
+      printf ("unxpected success\n");
+      return 1;
+    }
+  free (ccs);
+
+  return 0;
+}
 
 static int
 do_test (void)
@@ -57,7 +83,7 @@ do_test (void)
 
   fclose (fp);
 
-  return 0;
+  return do_bz17916 ();
 }
 
 #define TEST_FUNCTION do_test ()
