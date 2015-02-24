@@ -820,26 +820,19 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  linebuflen -= n;
 	  continue;
 	}
-      if (__builtin_expect (type == T_SIG, 0)
-	  || __builtin_expect (type == T_KEY, 0)
-	  || __builtin_expect (type == T_NXT, 0))
-	{
-	  /* We don't support DNSSEC yet.  For now, ignore the record
-	     and send a low priority message to syslog.  */
-	  syslog (LOG_DEBUG | LOG_AUTH,
-	       "gethostby*.getanswer: asked for \"%s %s %s\", got type \"%s\"",
-		  qname, p_class (C_IN), p_type(qtype), p_type (type));
-	  cp += n;
-	  continue;
-	}
 
       if (type == T_A && qtype == T_AAAA && map)
 	have_to_map = 1;
       else if (__glibc_unlikely (type != qtype))
 	{
-	  syslog (LOG_NOTICE | LOG_AUTH,
-	       "gethostby*.getanswer: asked for \"%s %s %s\", got type \"%s\"",
-		  qname, p_class (C_IN), p_type (qtype), p_type (type));
+	  /* Log a low priority message if we get an unexpected record, but
+	     skip it if we are using DNSSEC since it uses many different types
+	     in responses that do not match QTYPE.  */
+	  if ((_res.options & RES_USE_DNSSEC) == 0)
+	    syslog (LOG_NOTICE | LOG_AUTH,
+		    "gethostby*.getanswer: asked for \"%s %s %s\", "
+		    "got type \"%s\"",
+		    qname, p_class (C_IN), p_type (qtype), p_type (type));
 	  cp += n;
 	  continue;			/* XXX - had_error++ ? */
 	}

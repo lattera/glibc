@@ -1,3 +1,10 @@
+2015-02-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #14841]
+	* resolv/gethnamaddr.c (getanswer): Skip logging if
+	RES_USE_DNSSEC is set.
+	* resolv/nss_dns/dns-host.c (getanswer_r): Likewise.
+
 2015-02-24  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/hppa/sysdep.h: Include dl-sysdep.h.
