@@ -1,3 +1,13 @@
+2015-02-24  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16783]
+	* sysdeps/i386/fpu/e_scalb.S (__ieee754_scalb): Do not handle
+	arguments (NaN, -Inf) the same as (+/-Inf, -Inf).
+	* sysdeps/i386/fpu/e_scalbf.S (__ieee754_scalbf): Likewise.
+	* sysdeps/i386/fpu/e_scalbl.S (__ieee754_scalbl): Likewise.
+	* sysdeps/x86_64/fpu/e_scalbl.S (__ieee754_scalbl): Likewise.
+	* math/libm-test.inc (scalb_test_data): Add more tests.
+
 2015-02-24  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #17916]

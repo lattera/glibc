@@ -67,8 +67,10 @@ ENTRY(__ieee754_scalbl)
 	fstp	%st
 	fstp	%st
 	andl	$0x8000, %edx
+	andl	$0x0228, %eax
+	cmpl	$0x0028, %eax
+	je	4f
 	andl	$8, %eax
-	jnz	4f
 	shrl	$11, %edx
 	addl	%edx, %eax
 	fldl	MOX(zero_nan, %eax, 1)
