@@ -21,6 +21,9 @@
 #include <asm/unistd.h>
 #include <sysdeps/generic/sysdep.h>
 
+/* Defines RTLD_PRIVATE_ERRNO.  */
+#include <dl-sysdep.h>
+
 /* In order to get __set_errno() definition in INLINE_SYSCALL.  */
 #ifndef __ASSEMBLER__
 #include <errno.h>
