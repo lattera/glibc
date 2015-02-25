@@ -1,3 +1,13 @@
+2015-04-15  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* wcsmbs/wcschr.c [WCSCHR] (wcschr): Define as __wcschr.  Remove
+	conditionals for weak_alias and libc_hidden_weak.
+	* sysdeps/i386/i686/multiarch/wcschr-c.c [libc]: Undefine
+	libc_hidden_weak and weak_alias.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wcschr-ppc32.c [libc]:
+	Undefine libc_hidden_weak. Define libc_hidden_def for SHARED builds
+	and weak_alias for static one.
+
 2015-04-15  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Regenerate from scratch.
