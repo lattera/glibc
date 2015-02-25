@@ -1,3 +1,8 @@
+2015-02-25  Roland McGrath  <roland@hack.frob.com>
+
+	* iconv/gconv_conf.c (__gconv_get_path): Don't crash if __getcwd
+	returns a null pointer.
+
 2015-02-25  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/memmove-ppc64.c: Define memcpy
