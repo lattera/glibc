@@ -29,8 +29,8 @@
 
 static const char inputfile[] = "../iconvdata/testdata/ISO-8859-1";
 
-static
-int do_bz17916 (void)
+static int
+do_bz17916 (void)
 {
   /* BZ #17916 -- check invalid large ccs= case.  */
   struct rlimit rl;
