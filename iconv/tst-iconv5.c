@@ -38,7 +38,7 @@ struct convcode
 };
 
 /* test builtin transformation */
-struct convcode testcode[] = {
+static const struct convcode testcode[] = {
   {"ASCII", "ASCII"},
   {"UTF-8", "ASCII"},
   {"UCS-2BE", "ASCII"},
@@ -47,9 +47,9 @@ struct convcode testcode[] = {
   {"UCS-4LE", "ASCII"},
 };
 
-int number = (int) sizeof (testcode) / sizeof (struct convcode);
+static const int number = (int) sizeof (testcode) / sizeof (struct convcode);
 
-int
+static int
 convert (const char *tocode, const char *fromcode, char *inbufp,
 	 size_t inbytesleft, char *outbufp, size_t outbytesleft)
 {
@@ -88,8 +88,8 @@ convert (const char *tocode, const char *fromcode, char *inbufp,
 }
 
 
-int
-test_unalign (struct convcode *codes, char *str, int len)
+static int
+test_unalign (const struct convcode *codes, const char *str, int len)
 {
   struct unalign *inbufp, *outbufp;
   char *inbuf, *outbuf;
@@ -137,8 +137,8 @@ test_unalign (struct convcode *codes, char *str, int len)
   return 0;
 }
 
-int
-main (int argc, char *argv[])
+static int
+do_test (void)
 {
   int i;
   int ret = 0;
@@ -151,7 +151,11 @@ main (int argc, char *argv[])
       printf ("iconv: %s <-> %s: ok\n",
 	      testcode[i].fromcode, testcode[i].tocode);
     }
-  printf ("Succeeded.\n");
+  if (ret == 0)
+    printf ("Succeeded.\n");
 
   return ret;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

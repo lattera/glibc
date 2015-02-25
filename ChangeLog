@@ -1,5 +1,13 @@
 2015-02-25  Roland McGrath  <roland@hack.frob.com>
 
+	* iconv/tst-iconv5.c (testcode, number): Make variables static const.
+	(convert): Make function static.
+	(test_unalign): Likewise.  Add const to argument pointee types.
+	(main): Replace with static function do_test.
+	Print "Succeeded." only if RET is zero.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+
 	* iconv/gconv_conf.c (__gconv_get_path): Don't crash if __getcwd
 	returns a null pointer.
 
