@@ -1,3 +1,13 @@
+2015-02-24  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18019]
+	* sysdeps/ieee754/ldbl-128ibm/e_acoshl.c (__ieee754_acoshl): Use
+	2**56 not 2**28 as threshold for log (2x) formula.
+	* math/auto-libm-test-in: Add more tests of acosh.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2015-02-24  Mike Frysinger  <vapier@gentoo.org>
 
 	* include/alloca.h [_STACK_GROWS_DOWN] (extend_alloca): Add

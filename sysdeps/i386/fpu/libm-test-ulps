@@ -21,6 +21,10 @@ Function: "acos_upward":
 ildouble: 1
 ldouble: 1
 
+Function: "acosh":
+ildouble: 1
+ldouble: 1
+
 Function: "acosh_downward":
 ildouble: 2
 ldouble: 2

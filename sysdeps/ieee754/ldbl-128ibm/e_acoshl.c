@@ -44,14 +44,14 @@ __ieee754_acoshl(long double x)
 	EXTRACT_WORDS64 (lx, xlo);
 	if(hx<0x3ff0000000000000LL) {		/* x < 1 */
 	    return (x-x)/(x-x);
-	} else if(hx >=0x41b0000000000000LL) {	/* x > 2**28 */
+	} else if(hx >=0x4370000000000000LL) {	/* x >= 2**56 */
 	    if(hx >=0x7ff0000000000000LL) {	/* x is inf of NaN */
 		return x+x;
 	    } else
 		return __ieee754_logl(x)+ln2;	/* acosh(huge)=log(2x) */
 	} else if (((hx-0x3ff0000000000000LL)|(lx&0x7fffffffffffffffLL))==0) {
 	    return 0.0;			/* acosh(1) = 0 */
-	} else if (hx > 0x4000000000000000LL) {	/* 2**28 > x > 2 */
+	} else if (hx > 0x4000000000000000LL) {	/* 2**56 > x > 2 */
 	    t=x*x;
 	    return __ieee754_logl(2.0*x-one/(x+__ieee754_sqrtl(t-one)));
 	} else {			/* 1<x<2 */
