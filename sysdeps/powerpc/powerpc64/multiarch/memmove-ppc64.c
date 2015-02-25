@@ -32,7 +32,9 @@ extern __typeof (memmove) __memmove_ppc attribute_hidden;
 #define MEMMOVE __memmove_ppc
 
 extern __typeof (memcpy) __memcpy_ppc attribute_hidden;
-#define memcpy __memcpy_ppc
+#ifdef SHARED
+# define memcpy __memcpy_ppc
+#endif
 
 #if IS_IN (libc) && defined(SHARED)
 # undef libc_hidden_builtin_def

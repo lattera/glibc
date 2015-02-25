@@ -1,3 +1,8 @@
+2015-02-25  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/memmove-ppc64.c: Define memcpy
+	to __memcpy_ppc only for static builds.
+
 2015-02-25  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18020]
