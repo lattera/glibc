@@ -1,3 +1,9 @@
+2015-02-24  Kevin Easton  <kevin@guarana.org>
+
+	[BZ #16145] (partial fix)
+	* time/tzset.c (__tz_convert): Unlock tzset_lock earlier
+	to reduce lock contention.
+
 2015-02-24  Miroslav Lichvar  <mlichvar@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/timex.h: Update version.
