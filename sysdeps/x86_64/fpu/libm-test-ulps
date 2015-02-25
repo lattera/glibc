@@ -86,33 +86,34 @@ ldouble: 1
 Function: "asinh":
 double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "asinh_downward":
-double: 1
+double: 2
 float: 2
-idouble: 1
-ifloat: 1
-ildouble: 1
+idouble: 2
+ifloat: 2
+ildouble: 3
 ldouble: 3
 
 Function: "asinh_towardzero":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 2
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 3
+ldouble: 3
 
 Function: "asinh_upward":
 double: 2
 float: 1
-idouble: 1
+idouble: 2
 ifloat: 1
-ildouble: 2
-ldouble: 2
+ildouble: 3
+ldouble: 3
 
 Function: "atan2":
 float: 1

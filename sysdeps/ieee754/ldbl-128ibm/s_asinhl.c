@@ -44,15 +44,15 @@ long double __asinhl(long double x)
 	EXTRACT_WORDS64 (hx, xhi);
 	ix = hx&0x7fffffffffffffffLL;
 	if(ix>=0x7ff0000000000000LL) return x+x;	/* x is inf or NaN */
-	if(ix< 0x3e20000000000000LL) {	/* |x|<2**-29 */
+	if(ix< 0x3c70000000000000LL) {	/* |x|<2**-56 */
 	    if(huge+x>one) return x;	/* return x inexact except 0 */
 	}
-	if(ix>0x41b0000000000000LL) {	/* |x| > 2**28 */
+	if(ix>0x4370000000000000LL) {	/* |x| > 2**56 */
 	    w = __ieee754_logl(fabsl(x))+ln2;
-	} else if (ix>0x4000000000000000LL) {	/* 2**28 > |x| > 2.0 */
+	} else if (ix>0x4000000000000000LL) {	/* 2**56 >= |x| > 2.0 */
 	    t = fabs(x);
 	    w = __ieee754_logl(2.0*t+one/(__ieee754_sqrtl(x*x+one)+t));
-	} else {		/* 2.0 > |x| > 2**-29 */
+	} else {		/* 2.0 >= |x| >= 2**-56 */
 	    t = x*x;
 	    w =__log1pl(fabsl(x)+t/(one+__ieee754_sqrtl(one+t)));
 	}
