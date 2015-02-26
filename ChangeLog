@@ -1,3 +1,11 @@
+2015-02-26  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18029]
+	* sysdeps/ieee754/ldbl-128ibm/e_ilogbl.c (__ieee754_ilogbl):
+	Adjust exponent of power of 2 down when low part has opposite
+	sign.
+	* math/libm-test.inc (ilogb_test_data): Add more tests.
+
 2015-02-26  Alexandre Oliva  <aoliva@redhat.com>
 
 	[BZ #15969]

@@ -7219,6 +7219,11 @@ static const struct test_f_i_data ilogb_test_data[] =
     TEST_f_i (ilogb, 1024, 10, NO_INEXACT_EXCEPTION),
     TEST_f_i (ilogb, -2000, 10, NO_INEXACT_EXCEPTION),
 
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 57
+    TEST_f_i (ilogb, 0x1.ffffffffffffffp1L, 1, NO_INEXACT_EXCEPTION),
+    TEST_f_i (ilogb, -0x1.ffffffffffffffp1L, 1, NO_INEXACT_EXCEPTION),
+#endif
+
     /* ilogb (0.0) == FP_ILOGB0 plus invalid exception  */
     TEST_f_i (ilogb, 0.0, FP_ILOGB0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     /* ilogb (qNaN) == FP_ILOGBNAN plus invalid exception  */
