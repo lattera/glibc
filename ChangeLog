@@ -1,5 +1,10 @@
 2015-02-25  Roland McGrath  <roland@hack.frob.com>
 
+	* iconv/tst-iconv3.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+
 	* iconv/tst-iconv5.c (testcode, number): Make variables static const.
 	(convert): Make function static.
 	(test_unalign): Likewise.  Add const to argument pointee types.
