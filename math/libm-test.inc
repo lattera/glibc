@@ -7868,6 +7868,11 @@ static const struct test_f_f_data logb_test_data[] =
     TEST_f_f (logb, 0x1p-16400L, -16400, NO_INEXACT_EXCEPTION),
     TEST_f_f (logb, 0x.00000000001p-16382L, -16426, NO_INEXACT_EXCEPTION),
 #endif
+
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 57
+    TEST_f_f (logb, 0x1.ffffffffffffffp1L, 1, NO_INEXACT_EXCEPTION),
+    TEST_f_f (logb, -0x1.ffffffffffffffp1L, 1, NO_INEXACT_EXCEPTION),
+#endif
   };
 
 static void
