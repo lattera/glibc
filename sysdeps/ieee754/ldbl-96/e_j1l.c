@@ -359,6 +359,7 @@ pone (long double x)
 
   GET_LDOUBLE_WORDS (se, i0, i1, x);
   ix = se & 0x7fff;
+  /* ix >= 0x4000 for all calls to this function.  */
   if (ix >= 0x4002) /* x >= 8 */
     {
       p = pr8;
@@ -377,7 +378,7 @@ pone (long double x)
 	  p = pr3;
 	  q = ps3;
 	}
-      else if (ix >= 0x4000)	/* x better be >= 2 */
+      else	/* x >= 2 */
 	{
 	  p = pr2;
 	  q = ps2;
@@ -505,6 +506,7 @@ qone (long double x)
 
   GET_LDOUBLE_WORDS (se, i0, i1, x);
   ix = se & 0x7fff;
+  /* ix >= 0x4000 for all calls to this function.  */
   if (ix >= 0x4002)		/* x >= 8 */
     {
       p = qr8;
@@ -523,7 +525,7 @@ qone (long double x)
 	  p = qr3;
 	  q = qs3;
 	}
-      else if (ix >= 0x4000)	/* x better be >= 2 */
+      else	/* x >= 2 */
 	{
 	  p = qr2;
 	  q = qs2;

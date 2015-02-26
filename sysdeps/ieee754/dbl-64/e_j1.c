@@ -305,6 +305,7 @@ pone (double x)
   int32_t ix;
   GET_HIGH_WORD (ix, x);
   ix &= 0x7fffffff;
+  /* ix >= 0x40000000 for all calls to this function.  */
   if (ix >= 0x41b00000)
     {
       return one;
@@ -321,7 +322,7 @@ pone (double x)
     {
       p = pr3; q = ps3;
     }
-  else if (ix >= 0x40000000)
+  else
     {
       p = pr2; q = ps2;
     }
@@ -424,6 +425,7 @@ qone (double x)
   int32_t ix;
   GET_HIGH_WORD (ix, x);
   ix &= 0x7fffffff;
+  /* ix >= 0x40000000 for all calls to this function.  */
   if (ix >= 0x41b00000)
     {
       return .375 / x;
@@ -440,7 +442,7 @@ qone (double x)
     {
       p = qr3; q = qs3;
     }
-  else if (ix >= 0x40000000)
+  else
     {
       p = qr2; q = qs2;
     }

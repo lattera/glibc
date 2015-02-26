@@ -356,6 +356,7 @@ pzero (long double x)
 
   GET_LDOUBLE_WORDS (se, i0, i1, x);
   ix = se & 0x7fff;
+  /* ix >= 0x4000 for all calls to this function.  */
   if (ix >= 0x4002)
     {
       p = pR8;
@@ -374,7 +375,7 @@ pzero (long double x)
 	  p = pR3;
 	  q = pS3;
 	}
-      else if (ix >= 0x4000)	/* x better be >= 2 */
+      else	/* x >= 2 */
 	{
 	  p = pR2;
 	  q = pS2;
@@ -493,6 +494,7 @@ qzero (long double x)
 
   GET_LDOUBLE_WORDS (se, i0, i1, x);
   ix = se & 0x7fff;
+  /* ix >= 0x4000 for all calls to this function.  */
   if (ix >= 0x4002)		/* x >= 8 */
     {
       p = qR8;
@@ -511,7 +513,7 @@ qzero (long double x)
 	  p = qR3;
 	  q = qS3;
 	}
-      else if (ix >= 0x4000)	/* x better be >= 2 */
+      else	/* x >= 2 */
 	{
 	  p = qR2;
 	  q = qS2;
