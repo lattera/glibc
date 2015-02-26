@@ -1,5 +1,14 @@
 2015-02-26  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18038]
+	[BZ #18039]
+	* sysdeps/ieee754/ldbl-128/e_acosl.c (__ieee754_acosl): Only
+	return pi/2 for arguments below 0x1p-113L.
+	* sysdeps/ieee754/ldbl-128ibm/e_acosl.c (__ieee754_acosl): Only
+	return pi/2 for arguments below 0x1p-106L.
+	* math/auto-libm-test-in: Add more tests of acos.
+	* math/auto-libm-test-out: Regenerated.
+
 	[BZ #16351]
 	* sysdeps/i386/fpu/e_asin.S (dbl_min): New object.
 	(MO): New macro.

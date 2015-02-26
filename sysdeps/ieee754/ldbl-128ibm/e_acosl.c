@@ -169,7 +169,7 @@ __ieee754_acosl (long double x)
     }
   if (a < 0.5L)
     {
-      if (a < 6.938893903907228e-18L)	/* |x| < 2**-57 */
+      if (a < 0x1p-106L)
 	return pio2_hi + pio2_lo;
       if (a < 0.4375L)
 	{
