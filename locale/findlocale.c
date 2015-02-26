@@ -161,7 +161,8 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
       loc_name = (char *) _nl_expand_alias (*name);
       if (loc_name != NULL)
 	{
-	  data = _nl_load_locale_from_archive (category, &loc_name);
+	  data = _nl_load_locale_from_archive (category,
+					       (const char **) &loc_name);
 	  if (__builtin_expect (data != NULL, 1))
 	    return data;
 	}

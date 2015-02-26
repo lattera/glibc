@@ -1,4 +1,8 @@
-2015-02-26  Alexandre Oliva <aoliva@redhat.com>
+2015-02-26  Alexandre Oliva  <aoliva@redhat.com>
+
+	[BZ #15969]
+	* locale/findlocale.c (_nl_find_locale): Fix constness error in
+	the previous change.
 
 	[BZ #15969]
 	* locale/findlocale.c (_nl_find_locale): Retry archive search
