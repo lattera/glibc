@@ -21,9 +21,11 @@
 int
 do_test (void)
 {
-  const char *pattern = "[[:alpha:]'[:alpha:]\0]";
-
-  return fnmatch (pattern, "a", 0) != FNM_NOMATCH;
+  if (fnmatch ("[[:alpha:]'[:alpha:]\0]", "a", 0) != FNM_NOMATCH)
+    return 1;
+  if (fnmatch ("[a[.\0.]]", "a", 0) != FNM_NOMATCH)
+    return 1;
+  return 0;
 }
 
 #define TEST_FUNCTION do_test ()

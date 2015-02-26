@@ -945,14 +945,13 @@ FCT (pattern, string, string_end, no_leading_period, flags, ends, alloca_used)
 		  }
 		else if (c == L('[') && *p == L('.'))
 		  {
-		    ++p;
 		    while (1)
 		      {
 			c = *++p;
-			if (c == '\0')
+			if (c == L('\0'))
 			  return FNM_NOMATCH;
 
-			if (*p == L('.') && p[1] == L(']'))
+			if (c == L('.') && p[1] == L(']'))
 			  break;
 		      }
 		    p += 2;
