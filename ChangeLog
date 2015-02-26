@@ -1,5 +1,35 @@
 2015-02-26  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16351]
+	* sysdeps/i386/fpu/e_asin.S (dbl_min): New object.
+	(MO): New macro.
+	(__ieee754_asin): Force underflow exception for results with small
+	absolute value.
+	* sysdeps/i386/fpu/e_asinf.S (flt_min): New object.
+	(MO): New macro.
+	(__ieee754_asinf): Force underflow exception for results with
+	small absolute value.
+	* sysdeps/ieee754/dbl-64/e_asin.c: Include <float.h> and <math.h>.
+	(__ieee754_asin): Force underflow exception for results with small
+	absolute value.
+	* sysdeps/ieee754/flt-32/e_asinf.c: Include <float.h>.
+	(__ieee754_asinf): Force underflow exception for results with
+	small absolute value.
+	* sysdeps/ieee754/ldbl-128/e_asinl.c: Include <float.h>.
+	(__ieee754_asinl): Force underflow exception for results with
+	small absolute value.
+	* sysdeps/ieee754/ldbl-128ibm/e_asinl.c: Include <float.h>.
+	(__ieee754_asinl): Force underflow exception for results with
+	small absolute value.
+	* sysdeps/ieee754/ldbl-96/e_asinl.c: Include <float.h>.
+	(__ieee754_asinl): Force underflow exception for results with
+	small absolute value.
+	* sysdeps/x86_64/fpu/multiarch/e_asin.c [HAVE_FMA4_SUPPORT]:
+	Include <math.h>.
+	* math/auto-libm-test-in: Do not mark underflow exceptions as
+	possibly missing for bug 16351.
+	* math/auto-libm-test-out: Regenerated.
+
 	[BZ #18030]
 	* sysdeps/ieee754/ldbl-128ibm/s_logbl.c (__logbl): Adjust exponent
 	of power of 2 down when low part has opposite sign.

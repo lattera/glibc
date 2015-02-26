@@ -39,6 +39,7 @@
 static char rcsid[] = "$NetBSD: e_asinf.c,v 1.5 1995/05/12 04:57:25 jtc Exp $";
 #endif
 
+#include <float.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -72,6 +73,11 @@ float __ieee754_asinf(float x)
 	    return (x-x)/(x-x);		/* asin(|x|>1) is NaN */
 	} else if (ix<0x3f000000) {	/* |x|<0.5 */
 	    if(ix<0x32000000) {		/* if |x| < 2**-27 */
+		if (fabsf (x) < FLT_MIN)
+		  {
+		    float force_underflow = x * x;
+		    math_force_eval (force_underflow);
+		  }
 		if(huge+x>one) return x;/* return x with inexact if x!=0*/
 	    } else {
 		t = x*x;

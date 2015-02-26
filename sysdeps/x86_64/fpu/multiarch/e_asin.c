@@ -1,5 +1,6 @@
 #ifdef HAVE_FMA4_SUPPORT
 # include <init-arch.h>
+# include <math.h>
 # include <math_private.h>
 
 extern double __ieee754_acos_sse2 (double);

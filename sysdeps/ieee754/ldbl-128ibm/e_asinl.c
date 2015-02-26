@@ -59,6 +59,7 @@
  */
 
 
+#include <float.h>
 #include <math.h>
 #include <math_private.h>
 long double sqrtl (long double);
@@ -146,6 +147,11 @@ __ieee754_asinl (long double x)
     {
       if (a < 6.938893903907228e-18L) /* |x| < 2**-57 */
 	{
+	  if (fabsl (x) < LDBL_MIN)
+	    {
+	      long double force_underflow = x * x;
+	      math_force_eval (force_underflow);
+	    }
 	  if (huge + x > one)
 	    return x;		/* return x with inexact if x!=0 */
 	}

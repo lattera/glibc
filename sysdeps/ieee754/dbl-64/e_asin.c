@@ -39,6 +39,8 @@
 #include "powtwo.tbl"
 #include "MathLib.h"
 #include "uasncs.h"
+#include <float.h>
+#include <math.h>
 #include <math_private.h>
 
 #ifndef SECTION
@@ -67,7 +69,15 @@ __ieee754_asin(double x){
   m = u.i[HIGH_HALF];
   k = 0x7fffffff&m;              /* no sign */
 
-  if (k < 0x3e500000) return x;  /* for x->0 => sin(x)=x */
+  if (k < 0x3e500000)
+    {
+      if (fabs (x) < DBL_MIN)
+	{
+	  double force_underflow = x * x;
+	  math_force_eval (force_underflow);
+	}
+      return x;  /* for x->0 => sin(x)=x */
+    }
   /*----------------------2^-26 <= |x| < 2^ -3    -----------------*/
   else
   if (k < 0x3fc00000) {

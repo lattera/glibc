@@ -91,11 +91,10 @@ asin 0x0.ffffffffffffp0
 asin -0x0.ffffffffffffp0
 asin 0x0.ffffffffffffffffp0
 asin -0x0.ffffffffffffffffp0
-# Bug 16351: underflow exception may be missing.
-asin min missing-underflow
-asin -min missing-underflow
-asin min_subnorm missing-underflow
-asin -min_subnorm missing-underflow
+asin min
+asin -min
+asin min_subnorm
+asin -min_subnorm
 
 asinh 0
 asinh -0
