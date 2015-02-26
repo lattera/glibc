@@ -1,5 +1,10 @@
 2015-02-26  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/ieee754/k_standard.c (CSTR): New macro.
+	(__kernel_standard): Use CSTR macro when setting exc.name.
+	* sysdeps/ieee754/Makefile [$(subdir) = math]
+	(CFLAGS-k_standard.c): Remove variable.
+
 	* sysdeps/ieee754/dbl-64/e_j0.c (pzero): Change last case for
 	setting p and q from "else if" to "else".
 	(qzero): Likewise.
