@@ -150,6 +150,8 @@ ildouble: 2
 ldouble: 1
 
 Function: "atanh_towardzero":
+double: 1
+float: 1
 idouble: 1
 ifloat: 1
 ildouble: 4

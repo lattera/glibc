@@ -300,7 +300,38 @@ atanh 0.25
 atanh 0x1p-5
 atanh 0x1p-10
 atanh 0x1.2345p-20
+atanh 0x1p-8
+atanh 0x1p-9
+atanh 0x1p-10
+atanh 0x1p-11
+atanh 0x1p-12
+atanh 0x1p-13
+atanh 0x1p-24
+atanh 0x1p-25
+atanh 0x1p-26
+atanh 0x1p-27
+atanh 0x1p-28
+atanh 0x1p-29
+atanh 0x1p-30
+atanh 0x1p-31
+atanh 0x1p-32
+atanh 0x1p-33
+atanh 0x1p-48
+atanh 0x1p-49
+atanh 0x1p-50
+atanh 0x1p-51
+atanh 0x1p-52
+atanh 0x1p-53
+atanh 0x1p-54
+atanh 0x1p-55
+atanh 0x1p-56
+atanh 0x1p-57
+atanh 0x1p-58
+atanh 0x1p-59
+atanh 0x1p-100
 # Bug 16352: underflow exception may be missing.
+atanh 0x1p-500 missing-underflow
+atanh 0x1p-5000 missing-underflow
 atanh min missing-underflow
 atanh -min missing-underflow
 atanh min_subnorm missing-underflow

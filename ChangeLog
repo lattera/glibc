@@ -1,3 +1,16 @@
+2015-02-27  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18046]
+	[BZ #18047]
+	* sysdeps/ieee754/ldbl-128ibm/e_atanhl.c (__ieee754_atanhl): Use
+	0x1p-56L as threshold for just returning the argument.
+	* sysdeps/ieee754/ldbl-96/e_atanhl.c (__ieee754_atanhl): Use
+	0x1p-32L as threshold for just returning the argument.
+	* math/auto-libm-test-in: Add more tests of atanh.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulp: Likewise.
+
 2015-02-27  Wilco Dijkstra  wdijkstr@arm.com
 
 	* string/bcopy.c (bcopy): Call memmove for performance.
