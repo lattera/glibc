@@ -17,66 +17,13 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <string.h>
-#include <memcopy.h>
 
 #undef __bzero
 
 /* Set N bytes of S to 0.  */
 void
-__bzero (s, len)
-     void *s;
-     size_t len;
+__bzero (void *s, size_t len)
 {
-  long int dstp = (long int) s;
-  const op_t zero = 0;
-
-  if (len >= 8)
-    {
-      size_t xlen;
-
-      /* There are at least some bytes to zero.  No need to test
-	 for LEN == 0 in this alignment loop.  */
-      while (dstp % OPSIZ != 0)
-	{
-	  ((byte *) dstp)[0] = 0;
-	  dstp += 1;
-	  len -= 1;
-	}
-
-      /* Write 8 op_t per iteration until less than 8 op_t remain.  */
-      xlen = len / (OPSIZ * 8);
-      while (xlen != 0)
-	{
-	  ((op_t *) dstp)[0] = zero;
-	  ((op_t *) dstp)[1] = zero;
-	  ((op_t *) dstp)[2] = zero;
-	  ((op_t *) dstp)[3] = zero;
-	  ((op_t *) dstp)[4] = zero;
-	  ((op_t *) dstp)[5] = zero;
-	  ((op_t *) dstp)[6] = zero;
-	  ((op_t *) dstp)[7] = zero;
-	  dstp += 8 * OPSIZ;
-	  xlen -= 1;
-	}
-      len %= OPSIZ * 8;
-
-      /* Write 1 op_t per iteration until less than op_t remain.  */
-      xlen = len / OPSIZ;
-      while (xlen != 0)
-	{
-	  ((op_t *) dstp)[0] = zero;
-	  dstp += OPSIZ;
-	  xlen -= 1;
-	}
-      len %= OPSIZ;
-    }
-
-  /* Write the last few bytes.  */
-  while (len != 0)
-    {
-      ((byte *) dstp)[0] = 0;
-      dstp += 1;
-      len -= 1;
-    }
+  memset (s, '\0', len);
 }
 weak_alias (__bzero, bzero)

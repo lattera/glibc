@@ -1,3 +1,7 @@
+2015-02-27  Wilco Dijkstra  wdijkstr@arm.com
+
+	* string/bzero.c (__bzero): Call memset for performance.
+
 2015-02-27  John David Anglin  <dave.anglin@bell.net>
 
 	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h (__O_SYNC): Change
