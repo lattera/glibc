@@ -17,12 +17,8 @@
 
 #include <string.h>
 
-#define	memmove		bcopy
-#define	rettype		void
-#define	RETURN(s)	return
-#define	a1		src
-#define	a1const		const
-#define	a2		dest
-#define	a2const
-
-#include <string/memmove.c>
+void
+bcopy (const void *src, void *dest, size_t len)
+{
+  memmove (dest, src, len);
+}
