@@ -105,6 +105,7 @@ __kernel_standard(double x, double y, int type)
 	SET_HIGH_WORD(inf,0x7ff00000);	/* set inf to infinite */
 #endif
 
+	/* The SVID struct exception uses a field "char *name;".  */
 #define CSTR(func) ((char *) (type < 100				\
 			      ? func					\
 			      : (type < 200 ? func "f" : func "l")))
