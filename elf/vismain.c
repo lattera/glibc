@@ -15,6 +15,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+/* This file must be compiled as PIE to avoid copy relocation when
+   accessing protected symbols defined in shared libaries since copy
+   relocation doesn't work with protected symbols and linker in
+   binutils 2.26 enforces this rule.  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

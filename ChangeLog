@@ -1,3 +1,11 @@
+2015-02-27  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #17711]
+	* elf/Makefile (tests): Add vismain only if PIE is enabled.
+	(tests-pie): Add vismain.
+	(CFLAGS-vismain.c): New.
+	* elf/vismain.c: Add comments for PIE requirement.
+
 2015-02-27  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18046]

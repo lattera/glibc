@@ -130,7 +130,7 @@ endif
 tests += $(tests-static)
 ifeq (yes,$(build-shared))
 tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
-	 constload1 order vismain noload filter unload \
+	 constload1 order noload filter unload \
 	 reldep reldep2 reldep3 reldep4 nodelete nodelete2 \
 	 nodlopen nodlopen2 neededtest neededtest2 \
 	 neededtest3 neededtest4 unload2 lateglobal initfirst global \
@@ -218,6 +218,9 @@ ifeq (yesyes,$(have-fpie)$(build-shared))
 modules-names += tst-piemod1
 tests += tst-pie1 tst-pie2
 tests-pie += tst-pie1 tst-pie2
+tests += vismain
+tests-pie += vismain
+CFLAGS-vismain.c = $(PIE-ccflag)
 endif
 modules-execstack-yes = tst-execstack-mod
 extra-test-objs += $(addsuffix .os,$(strip $(modules-names)))
