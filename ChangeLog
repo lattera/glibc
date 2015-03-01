@@ -2,8 +2,10 @@
 
 	* stdio-common/vfprintf.c (THOUSANDS_SEP_T): New typedef.
 	(group_number, vfprintf): Use it.
-        (JUMP_TABLE_BASE_LABEL): New preprocessor macro.
-        (JUMP, REF): Use it.
+	(JUMP_TABLE_BASE_LABEL): New preprocessor macro.
+	(JUMP, REF): Use it.
+	(WORK_BUFFER_SIZE): New enum constant.
+	(process_arg, vfprintf): Use it.
 
 2015-03-06  Rical Jasan  <ricaljasan@pacific.net>
 

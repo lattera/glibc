@@ -196,9 +196,11 @@ typedef wchar_t THOUSANDS_SEP_T;
 #endif
 
 
-/* Global variables.  */
+/* Global constants.  */
 static const CHAR_T null[] = L_("(null)");
 
+/* Size of the work_buffer variable (in characters, not bytes.  */
+enum { WORK_BUFFER_SIZE = 1000 };
 
 /* Helper function to provide temporary buffering for unbuffered streams.  */
 static int buffered_vfprintf (FILE *stream, const CHAR_T *fmt, va_list)
@@ -235,7 +237,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   const UCHAR_T *end_of_spec;
 
   /* Buffer intermediate results.  */
-  CHAR_T work_buffer[1000];
+  CHAR_T work_buffer[WORK_BUFFER_SIZE];
   CHAR_T *workstart = NULL;
   CHAR_T *workend;
 
@@ -986,7 +988,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       /* Print description of error ERRNO.  */				      \
       string =								      \
 	(CHAR_T *) __strerror_r (save_errno, (char *) work_buffer,	      \
-				 sizeof work_buffer);			      \
+				 WORK_BUFFER_SIZE * sizeof (CHAR_T));	      \
       is_long = 0;		/* This is no wide-char string.  */	      \
       goto LABEL (print_string)
 
@@ -1366,7 +1368,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       CHAR_T spec;
 
       workstart = NULL;
-      workend = &work_buffer[sizeof (work_buffer) / sizeof (CHAR_T)];
+      workend = work_buffer + WORK_BUFFER_SIZE;
 
       /* Get current character in format string.  */
       JUMP (*++f, step0_jumps);
@@ -1465,7 +1467,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    goto all_done;
 	  }
 
-	if (width >= sizeof (work_buffer) / sizeof (work_buffer[0]) - 32)
+	if (width >= WORK_BUFFER_SIZE - 32)
 	  {
 	    /* We have to use a special buffer.  The "32" is just a safe
 	       bet for all the output which is not counted in the width.  */
@@ -1498,7 +1500,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  goto all_done;
 	}
 
-      if (width >= sizeof (work_buffer) / sizeof (work_buffer[0]) - 32)
+      if (width >= WORK_BUFFER_SIZE - 32)
 	{
 	  /* We have to use a special buffer.  The "32" is just a safe
 	     bet for all the output which is not counted in the width.  */
@@ -1564,8 +1566,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	}
       else
 	prec = 0;
-      if (prec > width
-	  && prec > sizeof (work_buffer) / sizeof (work_buffer[0]) - 32)
+      if (prec > width && prec > WORK_BUFFER_SIZE - 32)
 	{
 	  if (__glibc_unlikely (prec >= INT_MAX / sizeof (CHAR_T) - 32))
 	    {
@@ -1935,7 +1936,7 @@ do_positional:
 	CHAR_T spec = specs[nspecs_done].info.spec;
 
 	workstart = NULL;
-	workend = &work_buffer[sizeof (work_buffer) / sizeof (CHAR_T)];
+	workend = work_buffer + WORK_BUFFER_SIZE;
 
 	/* Fill in last information.  */
 	if (specs[nspecs_done].width_arg != -1)
@@ -1969,8 +1970,7 @@ do_positional:
 	  }
 
 	/* Maybe the buffer is too small.  */
-	if (MAX (prec, width) + 32 > (int) (sizeof (work_buffer)
-					    / sizeof (CHAR_T)))
+	if (MAX (prec, width) + 32 > WORK_BUFFER_SIZE)
 	  {
 	    if (__libc_use_alloca ((MAX (prec, width) + 32)
 				   * sizeof (CHAR_T)))
