@@ -304,7 +304,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  spec = (ChExpr);						      \
 	  offset = NOT_IN_JUMP_RANGE (spec) ? REF (form_unknown)	      \
 	    : table[CHAR_CLASS (spec)];					      \
-	  ptr = &&do_form_unknown + offset;				      \
+	  ptr = &&JUMP_TABLE_BASE_LABEL + offset;			      \
 	  goto *ptr;							      \
 	}								      \
       while (0)
@@ -1329,7 +1329,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   do
     {
 #ifdef SHARED
-# define REF(Name) &&do_##Name - &&do_form_unknown
+# define JUMP_TABLE_BASE_LABEL do_form_unknown
+# define REF(Name) (&&do_##Name - &&JUMP_TABLE_BASE_LABEL)
 #else
 # define REF(Name) &&do_##Name
 #endif
@@ -1897,7 +1898,9 @@ do_positional:
       {
 #undef REF
 #ifdef SHARED
-# define REF(Name) &&do2_##Name - &&do_form_unknown
+# undef JUMP_TABLE_BASE_LABEL
+# define JUMP_TABLE_BASE_LABEL do2_form_unknown
+# define REF(Name) (&&do2_##Name - &&JUMP_TABLE_BASE_LABEL)
 #else
 # define REF(Name) &&do2_##Name
 #endif
