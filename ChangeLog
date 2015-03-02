@@ -1,3 +1,8 @@
+2015-03-02  Florian Weimer  <fweimer@redhat.com>
+
+	* nis/nss_nis/nis-initgroups.c (_nss_nis_initgroups_dyn):
+	Return error status.
+
 2015-02-27  Alexandre Oliva <aoliva@redhat.com>
 
 	[BZ #15969]
