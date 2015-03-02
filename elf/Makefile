@@ -362,7 +362,7 @@ $(objpfx)interp.os: $(elf-objpfx)runtime-linker.h
 
 $(elf-objpfx)runtime-linker.h: $(elf-objpfx)runtime-linker.st; @:
 $(elf-objpfx)runtime-linker.st: $(common-objpfx)config.make
-	$(name-target-directory)
+	$(make-target-directory)
 	echo '#define RUNTIME_LINKER "$(rtlddir)/$(rtld-installed-name)"' \
 		> ${@:st=T}
 	$(move-if-change) ${@:st=T} ${@:st=h}

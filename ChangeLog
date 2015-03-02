@@ -1,3 +1,8 @@
+2015-03-02  Andreas Schwab  <schwab@suse.de>
+
+	* elf/Makefile ($(elf-objpfx)runtime-linker.st): Fix typo in
+	variable name.
+
 2015-03-02  Florian Weimer  <fweimer@redhat.com>
 
 	* nis/nss_nis/nis-initgroups.c (_nss_nis_initgroups_dyn):
