@@ -1,3 +1,16 @@
+2015-03-02  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17779]
+	* sysdeps/unix/sysv/linux/hppa/kernel-features.h
+	[__LINUX_KERNEL_VERSION < 0x020625] (__ASSUME_PRLIMIT64):
+	Undefine.
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	[__LINUX_KERNEL_VERSION < 0x020625] (__ASSUME_PRLIMIT64):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/kernel-features.h
+	[__LINUX_KERNEL_VERSION < 0x020625] (__ASSUME_PRLIMIT64):
+	Likewise.
+
 2015-03-02  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #18036]

@@ -45,6 +45,11 @@
 # undef __ASSUME_SET_ROBUST_LIST
 #endif
 
+/* The prlimit64 syscall was added for MicroBlaze in 2.6.37.  */
+#if __LINUX_KERNEL_VERSION < 0x020625
+# undef __ASSUME_PRLIMIT64
+#endif
+
 /* Support for the pselect6, preadv and pwritev syscalls was added in
    3.15.  */
 #if __LINUX_KERNEL_VERSION < 0x030f00

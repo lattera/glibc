@@ -40,3 +40,8 @@
 
 /* SH does not have a 64-bit inode field.  */
 #undef __ASSUME_ST_INO_64_BIT
+
+/* The prlimit64 syscall was added for SH in 2.6.37.  */
+#if __LINUX_KERNEL_VERSION < 0x020625
+# undef __ASSUME_PRLIMIT64
+#endif
