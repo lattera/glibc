@@ -54,9 +54,9 @@ int __timer_init_failed;
 struct thread_node __timer_signal_thread_rclk;
 
 /* Lists to keep free and used timers and threads.  */
-struct list_head timer_free_list;
-struct list_head thread_free_list;
-struct list_head thread_active_list;
+static struct list_head timer_free_list;
+static struct list_head thread_free_list;
+static struct list_head thread_active_list;
 
 
 #ifdef __NR_rt_sigqueueinfo
