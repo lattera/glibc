@@ -1,3 +1,9 @@
+2015-03-02  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #18036]
+	* posix/fnmatch_loop.c (END): Detect invalid pattern.
+	* posix/tst-fnmatch3.c (do_bz18036): Add test case.
+
 2015-03-02  Andreas Schwab  <schwab@suse.de>
 
 	* elf/Makefile ($(elf-objpfx)runtime-linker.st): Fix typo in

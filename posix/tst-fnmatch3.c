@@ -17,6 +17,26 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <fnmatch.h>
+#include <sys/mman.h>
+#include <string.h>
+#include <unistd.h>
+
+int
+do_bz18036 (void)
+{
+  const char p[] = "**(!()";
+  const int pagesize = getpagesize ();
+
+  char *pattern = mmap (0, 2 * pagesize, PROT_READ|PROT_WRITE,
+                        MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+  if (pattern == MAP_FAILED) return 1;
+
+  mprotect (pattern + pagesize, pagesize, PROT_NONE);
+  memset (pattern, ' ', pagesize);
+  strcpy (pattern, p);
+
+  return fnmatch (pattern, p, FNM_EXTMATCH);
+}
 
 int
 do_test (void)
@@ -25,7 +45,7 @@ do_test (void)
     return 1;
   if (fnmatch ("[a[.\0.]]", "a", 0) != FNM_NOMATCH)
     return 1;
-  return 0;
+  return do_bz18036 ();
 }
 
 #define TEST_FUNCTION do_test ()

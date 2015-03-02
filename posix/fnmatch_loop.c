@@ -1036,7 +1036,12 @@ END (const CHAR *pattern)
       }
     else if ((*p == L('?') || *p == L('*') || *p == L('+') || *p == L('@')
 	      || *p == L('!')) && p[1] == L('('))
-      p = END (p + 1);
+      {
+	p = END (p + 1);
+	if (*p == L('\0'))
+	  /* This is an invalid pattern.  */
+	  return pattern;
+      }
     else if (*p == L(')'))
       break;
 
