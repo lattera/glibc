@@ -144,7 +144,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 unload3 unload4 unload5 unload6 unload7 unload8 tst-global1 order2 \
 	 tst-audit1 tst-audit2 tst-audit8 tst-audit9 \
 	 tst-stackguard1 tst-addr1 tst-thrlock \
-	 tst-unique1 tst-unique2 tst-unique3 tst-unique4 \
+	 tst-unique1 tst-unique2 $(if $(CXX),tst-unique3 tst-unique4) \
 	 tst-initorder tst-initorder2 tst-relsort1 tst-null-argv \
 	 tst-ptrguard1
 #	 reldep9
@@ -205,8 +205,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-unique1mod1 tst-unique1mod2 \
 		tst-unique2mod1 tst-unique2mod2 \
 		tst-auditmod9a tst-auditmod9b \
-		tst-unique3lib tst-unique3lib2 \
-		tst-unique4lib \
+		$(if $(CXX),tst-unique3lib tst-unique3lib2 tst-unique4lib) \
 		tst-initordera1 tst-initorderb1 \
 		tst-initordera2 tst-initorderb2 \
 		tst-initordera3 tst-initordera4 \

@@ -9,6 +9,8 @@
 	(tests, tests-static): Likewise for tst-cancel24-static.
 	* debug/Makefile (tests): Likewise for tst-chk4, tst-chk5, tst-chk6,
 	tst-lfschk4, tst-lfschk5, and tst-lfschk6.
+	* elf/Makefile (tests, modules-names): Likewise for tst-unique3,
+	tst-unique3lib, tst-unique3lib2, tst-unique4, and tst-unique4lib.
 
 2015-03-04  Andreas Schwab  <schwab@suse.de>
 
