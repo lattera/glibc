@@ -24,7 +24,9 @@
 #include <unistd.h>
 
 
-#define N 2
+#ifdef SIGRTMIN
+
+# define N 2
 static pthread_barrier_t bar;
 static struct
 {
@@ -187,5 +189,9 @@ do_test (void)
   return 0;
 }
 
-#define TEST_FUNCTION do_test ()
+# define TEST_FUNCTION do_test ()
+
+#else
+# define TEST_FUNCTION 0
+#endif
 #include "../test-skeleton.c"

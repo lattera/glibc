@@ -25,13 +25,14 @@
 #include <unistd.h>
 
 
-/* Number of different signalss to use.  Also is the number of
-   threads.  */
-#define N 10
+#ifdef SIGRTMIN
+
+/* Number of different signals to use.  Also is the number of threads.  */
+# define N 10
 /* Maximum number of threads in flight at any one time.  */
-#define INFLIGHT 5
+# define INFLIGHT 5
 /* Number of signals sent in total.  */
-#define ROUNDS 10000
+# define ROUNDS 10000
 
 
 static int received[N][N];
@@ -255,6 +256,11 @@ do_test (void)
   return result;
 }
 
-#define TIMEOUT 10
-#define TEST_FUNCTION do_test ()
+# define TIMEOUT 10
+# define TEST_FUNCTION do_test ()
+
+#else
+# define TEST_FUNCTION 0
+#endif
+
 #include "../test-skeleton.c"

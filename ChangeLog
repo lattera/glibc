@@ -1,5 +1,14 @@
 2015-03-04  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/tst-cancel4.c (tf_sigpause) [!SIGCANCEL]: Call pause instead of
+	__xpg_sigpause.
+	* nptl/tst-signal3.c: Conditionalize body on [SIGRTMIN].
+	* nptl/tst-signal6.c: Likewise.
+	* rt/tst-mqueue5.c: Conditionalize body on [SIGRTMIN && SA_SIGINFO].
+	* rt/tst-timer4.c: Conditionalize body on [SA_SIGINFO].
+
+2015-03-04  Roland McGrath  <roland@hack.frob.com>
+
 	* configure.ac (libc_cv_cxx_link_ok): New check.
 	Reset CXX to empty if it fails to link.
 	* configure: Regenerated.
