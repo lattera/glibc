@@ -1,3 +1,15 @@
+2015-03-04  Roland McGrath  <roland@hack.frob.com>
+
+	* configure.ac (libc_cv_cxx_link_ok): New check.
+	Reset CXX to empty if it fails to link.
+	* configure: Regenerated.
+	* dlfcn/Makefile (tests, modules-names): Add bug-atexit3 and
+	bug-atexit3-lib only if $(CXX) is nonempty.
+	* nptl/Makefile (tests): Likewise for tst-cancel24.
+	(tests, tests-static): Likewise for tst-cancel24-static.
+	* debug/Makefile (tests): Likewise for tst-chk4, tst-chk5, tst-chk6,
+	tst-lfschk4, tst-lfschk5, and tst-lfschk6.
+
 2015-03-04  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #17631]

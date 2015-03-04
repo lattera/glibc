@@ -50,9 +50,18 @@ if test $host != $build; then
 fi
 AC_SUBST(cross_compiling)
 AC_PROG_CPP
+AC_CHECK_TOOL(READELF, readelf, false)
+
 # We need the C++ compiler only for testing.
 AC_PROG_CXX
-AC_CHECK_TOOL(READELF, readelf, false)
+# It's useless to us if it can't link programs (e.g. missing -lstdc++).
+AC_CACHE_CHECK([whether $CXX can link programs], libc_cv_cxx_link_ok, [dnl
+AC_LANG_PUSH([C++])
+AC_LINK_IFELSE([AC_LANG_PROGRAM([], [])],
+	       [libc_cv_cxx_link_ok=yes],
+	       [libc_cv_cxx_link_ok=no])
+AC_LANG_POP([C++])])
+AS_IF([test $libc_cv_cxx_link_ok != yes], [CXX=])
 
 if test "`cd $srcdir; /bin/pwd`" = "`/bin/pwd`"; then
   AC_MSG_ERROR([you must configure in a separate build directory])
