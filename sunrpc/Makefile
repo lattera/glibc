@@ -96,7 +96,7 @@ rpcgen-objs = rpc_main.o rpc_hout.o rpc_cout.o rpc_parse.o \
 extra-objs = $(rpcgen-objs) $(addprefix cross-,$(rpcgen-objs))
 others += rpcgen
 
-tests = tst-xdrmem tst-xdrmem2
+tests = tst-xdrmem tst-xdrmem2 test-rpcent
 xtests := tst-getmyaddr
 
 ifeq ($(have-thread-library),yes)

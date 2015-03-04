@@ -1,13 +1,18 @@
 2015-03-04  Roland McGrath  <roland@hack.frob.com>
 
+	* nss/test-netdb.c: Don't #include <rpc/netdb.h>.
+	(setdb): Don't call __nss_configure_lookup for "rpc".
+	(do_test): Don't call test_rpc.
+	(output_rpcent, test_rpc): Functions moved ...
+	* sunrpc/test-rpcent.c: ... to this new file.
+	* sunrpc/Makefile (tests): Add it.
+
 	* nptl/tst-cancel4.c (tf_sigpause) [!SIGCANCEL]: Call pause instead of
 	__xpg_sigpause.
 	* nptl/tst-signal3.c: Conditionalize body on [SIGRTMIN].
 	* nptl/tst-signal6.c: Likewise.
 	* rt/tst-mqueue5.c: Conditionalize body on [SIGRTMIN && SA_SIGINFO].
 	* rt/tst-timer4.c: Conditionalize body on [SA_SIGINFO].
-
-2015-03-04  Roland McGrath  <roland@hack.frob.com>
 
 	* configure.ac (libc_cv_cxx_link_ok): New check.
 	Reset CXX to empty if it fails to link.
