@@ -1361,9 +1361,6 @@ given error code; the precise text varies from system to system.  With
 messages or embedded newlines.  Each error message begins with a capital
 letter and does not include any terminating punctuation.
 
-@strong{Compatibility Note:} The @code{strerror} function was introduced
-in @w{ISO C89}.  Many older C systems do not support this function yet.
-
 @cindex program name
 @cindex name of running program
 Many programs that don't read input from the terminal are designed to

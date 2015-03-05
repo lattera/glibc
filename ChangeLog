@@ -1,3 +1,8 @@
+2015-03-06  Mike Frysinger  <vapier@gentoo.org>
+
+	* manual/errno.texi (Error Messages): Delete strerror ISO C89
+	compatibility note.
+
 2015-03-05  Roland McGrath  <roland@hack.frob.com>
 
 	* Makeconfig (test-wrapper-env-only): New variable.
