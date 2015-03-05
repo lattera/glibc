@@ -186,9 +186,11 @@ ifneq "$(strip $(tests) $(xtests) $(test-srcs))" ""
 # These are the implicit rules for making test outputs
 # from the test programs and whatever input files are present.
 
-make-test-out = $(test-wrapper-env) \
-		$(run-program-env) \
-		$($*-ENV) $(host-test-program-cmd) $($*-ARGS)
+define make-test-out
+$(if $($*-ENV-only),$(test-wrapper-env-only) $($*-ENV-only),\
+     $(test-wrapper-env) $(run-program-env) $($*-ENV)) \
+$(host-test-program-cmd) $($*-ARGS)
+endef
 $(objpfx)%.out: %.input $(objpfx)%
 	$(make-test-out) > $@ < $(word 1,$^); \
 	$(evaluate-test)

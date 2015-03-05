@@ -611,6 +611,11 @@ endif
 ifndef test-wrapper-env
 test-wrapper-env = $(test-wrapper) env
 endif
+# Likewise, but the program's environment will be empty except for any
+# explicit <variable>=<value> assignments preceding the program name.
+ifndef test-wrapper-env-only
+test-wrapper-env-only = $(test-wrapper) env -i
+endif
 
 # Whether to run test programs built for the library's host system.
 ifndef run-built-tests

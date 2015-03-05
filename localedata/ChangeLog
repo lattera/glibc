@@ -1,3 +1,14 @@
+2015-03-04  Roland McGrath  <roland@hack.frob.com>
+
+	* bug-setlocale1.c (do_test): Remove argument handling and
+	self-exec'ing logic.  Just expect to be run with the right
+	variables (and nothing else) directly in the environment instead.
+	(TEST_FUNCTION): Don't pass arguments to do_test.
+	* Makefile (bug-setlocale1-ARGS, bug-setlocale1-static-ARGS):
+	Variables removed.
+	(bug-setlocale1-ENV-only, bug-setlocale1-static-ENV-only):
+	New variables.
+
 2015-02-23  Alexandre Oliva <aoliva@redhat.com>
 
 	* unicode-gen/ctype_compatibility.py: Use date ranges in

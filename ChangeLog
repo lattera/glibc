@@ -1,3 +1,10 @@
+2015-03-05  Roland McGrath  <roland@hack.frob.com>
+
+	* Makeconfig (test-wrapper-env-only): New variable.
+	* Rules (make-test-out): If variable $*-ENV-only is nonempty,
+	then use that with $(test-wrapper-env-only) rather than using
+	$(test-wrapper-env) $(run-program-env) $($*-ENV).
+
 2015-03-05  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18082]

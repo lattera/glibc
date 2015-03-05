@@ -237,8 +237,8 @@ $(objpfx)mtrace-tst-leaks.out: $(objpfx)tst-leaks.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks.mtrace > $@; \
 	$(evaluate-test)
 
-bug-setlocale1-ARGS = -- $(host-test-program-cmd)
-bug-setlocale1-static-ARGS = $(bug-setlocale1-ARGS)
+bug-setlocale1-ENV-only = LOCPATH=$(objpfx) LC_CTYPE=de_DE.UTF-8
+bug-setlocale1-static-ENV-only = $(bug-setlocale1-ENV-only)
 
 $(objdir)/iconvdata/gconv-modules:
 	$(MAKE) -C ../iconvdata subdir=iconvdata $@
