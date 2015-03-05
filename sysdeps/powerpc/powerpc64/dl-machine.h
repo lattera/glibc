@@ -245,7 +245,7 @@ BODY_PREFIX "_dl_start_user:\n"						\
 "	" END_2(_dl_start_user) "\n"					\
 "	.popsection");
 
-/* ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to
+/* ELF_RTYPE_CLASS_COPY iff TYPE should not be allowed to resolve to
    one of the main executable's symbols, as for a COPY reloc.
 
    To make function pointer comparisons work on most targets, the

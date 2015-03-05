@@ -227,7 +227,7 @@ $fixup_stack:							\n\
    or TLS variables, so undefined references should not be allowed
    to define the value.
 
-   ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve
+   ELF_RTYPE_CLASS_COPY iff TYPE should not be allowed to resolve
    to one of the main executable's symbols, as for a COPY reloc.
    This is unused on Alpha.  */
 

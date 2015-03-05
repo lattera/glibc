@@ -130,7 +130,7 @@ __elf_preferred_address(struct link_map *loader, size_t maplength,
 
 /* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry, so
    PLT entries should not be allowed to define the value.
-   ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
+   ELF_RTYPE_CLASS_COPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
 /* We never want to use a PLT entry as the destination of a
    reloc, when what is being relocated is a branch. This is

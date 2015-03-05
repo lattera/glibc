@@ -1,3 +1,32 @@
+2015-03-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18082]
+	* sysdeps/alpha/dl-machine.h (elf_machine_type_class): Replace
+	ELF_RTYPE_CLASS_NOCOPY with ELF_RTYPE_CLASS_COPY in comments.
+	* sysdeps/arm/dl-machine.h (elf_machine_type_class): Likewise.
+	* sysdeps/hppa/dl-machine.h (elf_machine_type_class): Likewise.
+	* sysdeps/i386/dl-machine.h (elf_machine_type_class): Likewise.
+	* sysdeps/ia64/dl-machine.h (elf_machine_type_class): Likewise.
+	* sysdeps/m68k/dl-machine.h (elf_machine_type_class): Likewise.
+	* sysdeps/microblaze/dl-machine.h (elf_machine_type_class):
+	Likewise.
+	* sysdeps/nios2/dl-machine.h (elf_machine_type_class): Likewise.
+	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_type_class):
+	Likewise.
+	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_type_class):
+	Likewise.
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_type_class):
+	Likewise.
+	* sysdeps/s390/s390-64/dl-machine.h (elf_machine_type_class):
+	Likewise.
+	* sysdeps/sh/dl-machine.h (elf_machine_type_class): Likewise.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_type_class):
+	Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_type_class):
+	Likewise.
+	* sysdeps/tile/dl-machine.h (elf_machine_type_class): Likewise.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_type_class): Likewise.
+
 2015-03-04  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/generic/netinet/if_ether.h: Don't #include <features.h>.
