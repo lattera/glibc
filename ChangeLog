@@ -1,5 +1,9 @@
 2015-03-04  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/generic/netinet/if_ether.h: Don't #include <features.h>.
+	(ETH_ALEN): New macro.
+	(struct ether_addr): Use it for length of ether_addr_octet.
+
 	* nss/test-netdb.c: Don't #include <rpc/netdb.h>.
 	(setdb): Don't call __nss_configure_lookup for "rpc".
 	(do_test): Don't call test_rpc.

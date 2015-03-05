@@ -16,17 +16,17 @@
    <http://www.gnu.org/licenses/>.  */
 
 #ifndef __NETINET_IF_ETHER_H
-
 #define __NETINET_IF_ETHER_H	1
-#include <features.h>
 
 #include <sys/types.h>
+
+#define ETH_ALEN	6	/* Octets in one ethernet address.  */
 
 /* This is a name for the 48 bit ethernet address available on many
    systems.  */
 struct ether_addr
 {
-  u_int8_t ether_addr_octet[6];
+  u_int8_t ether_addr_octet[ETH_ALEN];
 } __attribute__ ((__packed__));
 
 #endif /* netinet/if_ether.h */
