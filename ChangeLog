@@ -1,3 +1,11 @@
+2015-03-06  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/ifuncdep2.c (global): Replace
+	__attribute__((visibility("protected"))) with
+	asm (".protected global").
+	* elf/ifuncmod1.c (global): Likewise.
+	* elf/ifuncmod5.c (global): Likewise.
+
 2015-03-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* soft-fp/soft-fp.h [!_LIBC && __KERNEL__]: Include
