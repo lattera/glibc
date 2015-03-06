@@ -81,6 +81,7 @@
 # define CHAR_T		char
 # define UCHAR_T	unsigned char
 # define INT_T		int
+typedef const char *THOUSANDS_SEP_T;
 # define L_(Str)	Str
 # define ISDIGIT(Ch)	((unsigned int) ((Ch) - '0') < 10)
 # define STR_LEN(Str)	strlen (Str)
@@ -108,6 +109,7 @@
 /* This is a hack!!!  There should be a type uwchar_t.  */
 # define UCHAR_T	unsigned int /* uwchar_t */
 # define INT_T		wint_t
+typedef wchar_t THOUSANDS_SEP_T;
 # define L_(Str)	L##Str
 # define ISDIGIT(Ch)	((unsigned int) ((Ch) - L'0') < 10)
 # define STR_LEN(Str)	__wcslen (Str)
@@ -207,25 +209,15 @@ static int printf_unknown (FILE *, const struct printf_info *,
 			   const void *const *) __THROW;
 
 /* Group digits of number string.  */
-#ifdef COMPILE_WPRINTF
-static CHAR_T *group_number (CHAR_T *, CHAR_T *, const char *, wchar_t)
+static CHAR_T *group_number (CHAR_T *, CHAR_T *, const char *, THOUSANDS_SEP_T)
      __THROW internal_function;
-#else
-static CHAR_T *group_number (CHAR_T *, CHAR_T *, const char *, const char *)
-     __THROW internal_function;
-#endif
-
 
 /* The function itself.  */
 int
 vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 {
   /* The character used as thousands separator.  */
-#ifdef COMPILE_WPRINTF
-  wchar_t thousands_sep = L'\0';
-#else
-  const char *thousands_sep = NULL;
-#endif
+  THOUSANDS_SEP_T thousands_sep = 0;
 
   /* The string describing the size of groups of digits.  */
   const char *grouping;
@@ -2150,12 +2142,7 @@ printf_unknown (FILE *s, const struct printf_info *info,
 static CHAR_T *
 internal_function
 group_number (CHAR_T *w, CHAR_T *rear_ptr, const char *grouping,
-#ifdef COMPILE_WPRINTF
-	      wchar_t thousands_sep
-#else
-	      const char *thousands_sep
-#endif
-	      )
+	      THOUSANDS_SEP_T thousands_sep)
 {
   int len;
   CHAR_T *src, *s;
