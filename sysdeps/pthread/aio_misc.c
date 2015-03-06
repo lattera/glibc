@@ -593,14 +593,6 @@ handle_fildes_io (void *arg)
 	  /* Get the mutex.  */
 	  pthread_mutex_lock (&__aio_requests_mutex);
 
-	  /* In theory we would need here a write memory barrier since the
-	     callers test using aio_error() whether the request finished
-	     and once this value != EINPROGRESS the field __return_value
-	     must be committed to memory.
-
-	     But since the pthread_mutex_lock call involves write memory
-	     barriers as well it is not necessary.  */
-
 	  if (aiocbp->aiocb.__return_value == -1)
 	    aiocbp->aiocb.__error_code = errno;
 	  else
