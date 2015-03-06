@@ -1,3 +1,11 @@
+2015-03-06  Rical Jasan  <ricaljasan@pacific.net>
+
+	* manual/errno.texi (Error Messages): Complete example function
+	by adding missing #define.
+	(program_invocation_name): Add statement indicating GNU
+	extension and reference which header file declares the variable.
+	(program_invocation_short_name): Likewise.
+
 2015-03-06  Mike Frysinger  <vapier@gentoo.org>
 
 	* manual/errno.texi (Error Messages): Delete strerror ISO C89

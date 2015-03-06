@@ -1377,6 +1377,8 @@ This variable's value is the name that was used to invoke the program
 running in the current process.  It is the same as @code{argv[0]}.  Note
 that this is not necessarily a useful file name; often it contains no
 directory names.  @xref{Program Arguments}.
+
+This variable is a GNU extension and is declared in @file{errno.h}.
 @end deftypevar
 
 @comment errno.h
@@ -1386,17 +1388,19 @@ This variable's value is the name that was used to invoke the program
 running in the current process, with directory names removed.  (That is
 to say, it is the same as @code{program_invocation_name} minus
 everything up to the last slash, if any.)
+
+This variable is a GNU extension and is declared in @file{errno.h}.
 @end deftypevar
 
 The library initialization code sets up both of these variables before
 calling @code{main}.
 
-@strong{Portability Note:} These two variables are GNU extensions.  If
-you want your program to work with non-GNU libraries, you must save the
-value of @code{argv[0]} in @code{main}, and then strip off the directory
-names yourself.  We added these extensions to make it possible to write
-self-contained error-reporting subroutines that require no explicit
-cooperation from @code{main}.
+@strong{Portability Note:} If you want your program to work with
+non-GNU libraries, you must save the value of @code{argv[0]} in
+@code{main}, and then strip off the directory names yourself.  We
+added these extensions to make it possible to write self-contained
+error-reporting subroutines that require no explicit cooperation from
+@code{main}.
 
 Here is an example showing how to handle failure to open a file
 correctly.  The function @code{open_sesame} tries to open the named file
@@ -1410,6 +1414,8 @@ save it in a local variable instead, because those other library
 functions might overwrite @code{errno} in the meantime.
 
 @smallexample
+#define _GNU_SOURCE
+
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
