@@ -1,3 +1,9 @@
+2015-03-06  Roland McGrath  <roland@hack.frob.com>
+
+	* manual/install.texi (Configuring and compiling):
+	Document test-wrapper-env-only.
+	* INSTALL: Regenerated.
+
 2015-03-06  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #18043]

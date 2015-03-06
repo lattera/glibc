@@ -254,7 +254,12 @@ program that runs a newly built program with environment variable
 assignments in effect, those assignments being specified as 'VAR=VALUE'
 before the name of the program to be run.  If multiple assignments to
 the same variable are specified, the last assignment specified must take
-precedence.
+precedence.  Similarly, if 'TEST-WRAPPER env -i' will not work to run a
+program with an environment completely empty of variables except those
+directly assigned, then 'test-wrapper-env-only' must be set; its use has
+the same syntax as 'test-wrapper-env', the only difference in its
+semantics being starting with an empty set of environment variables
+rather than the ambient set.
 
 Installing the C Library
 ========================
