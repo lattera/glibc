@@ -1,3 +1,9 @@
+2015-03-06  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #18043]
+	* posix/wordexp.c (parse_param): Fix buffer overflow.
+	* posix/wordexp-test.c (do_bz18043): Add test case.
+
 2015-03-06  Vincent Bernat  <vincent@bernat.im>
 
 	* time/tst-strptime2.c (do_test): Ensure failing tests are

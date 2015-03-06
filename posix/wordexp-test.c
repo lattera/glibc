@@ -17,6 +17,7 @@
 
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/mman.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <pwd.h>
@@ -249,6 +250,33 @@ command_line_test (const char *words)
     printf ("we_wordv[%d] = \"%s\"\n", i, we.we_wordv[i]);
 }
 
+static int
+do_bz18043 (void)
+{
+  const int pagesize = getpagesize ();
+  char *start = mmap (0, 2 * pagesize, PROT_READ|PROT_WRITE,
+		      MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+
+  if (start == MAP_FAILED)
+    return 1;
+
+  if (mprotect (start + pagesize, pagesize, PROT_NONE))
+    return 2;
+
+  const char word[] = "${";
+  char *word_start = start + pagesize - sizeof (word);
+  memcpy (word_start, word, sizeof (word));
+
+  wordexp_t w;
+  if (wordexp (word_start, &w, 0) != WRDE_SYNTAX)
+    return 3;
+
+  if (munmap (start, 2 * pagesize) != 0)
+    return 4;
+
+  return 0;
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -369,6 +397,9 @@ main (int argc, char *argv[])
   rmdir (tmpdir);
 
   printf ("tests failed: %d\n", fail);
+
+  if (do_bz18043 ())
+    ++fail;
 
   return fail != 0;
 }

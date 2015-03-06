@@ -1299,7 +1299,7 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 	}
       while (isdigit(words[++*offset]));
     }
-  else if (strchr ("*@$", words[*offset]) != NULL)
+  else if (words[*offset] != '\0' && strchr ("*@$", words[*offset]) != NULL)
     {
       /* Special parameter. */
       special = 1;
