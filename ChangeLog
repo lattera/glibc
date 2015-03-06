@@ -13,7 +13,6 @@
 2015-03-06  Samuel Thibault  <samuel.thibault@inria.fr>
 
 	Fix aio_error thread-safety.
-
 	* sysdeps/pthread/aio_error.c: New file
 	* sysdeps/pthread/aio_misc.c: Remove optimistic comment about
 	synchronization.
