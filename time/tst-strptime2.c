@@ -52,10 +52,7 @@ do_test (void)
 	}
     }
 
-  if (result == 0)
-    puts ("all OK");
-
-  return 0;
+  return result;
 }
 
 #define TEST_FUNCTION do_test ()

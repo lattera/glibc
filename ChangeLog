@@ -1,3 +1,9 @@
+2015-03-06  Vincent Bernat  <vincent@bernat.im>
+
+	* time/tst-strptime2.c (do_test): Ensure failing tests are
+	reported correctly.
+	* time/tst-strptime3.c (do_test): Likewise.
+
 2015-03-06  Samuel Thibault  <samuel.thibault@inria.fr>
 
 	Fix aio_error thread-safety.
