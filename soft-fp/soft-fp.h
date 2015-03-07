@@ -51,6 +51,17 @@
 # endif
 #endif
 
+/* In the Linux kernel, some architectures have a single function that
+   uses different kinds of unpacking and packing depending on the
+   instruction being emulated, meaning it is not readily visible to
+   the compiler that variables from _FP_DECL and _FP_FRAC_DECL_*
+   macros are only used in cases where they were initialized.  */
+#ifdef __KERNEL__
+# define _FP_ZERO_INIT		= 0
+#else
+# define _FP_ZERO_INIT
+#endif
+
 #define _FP_WORKBITS		3
 #define _FP_WORK_LSB		((_FP_W_TYPE) 1 << 3)
 #define _FP_WORK_ROUND		((_FP_W_TYPE) 1 << 2)

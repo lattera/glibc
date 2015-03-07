@@ -29,10 +29,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define _FP_DECL(wc, X)				\
-  _FP_I_TYPE X##_c __attribute__ ((unused));	\
-  _FP_I_TYPE X##_s __attribute__ ((unused));	\
-  _FP_I_TYPE X##_e __attribute__ ((unused));	\
+#define _FP_DECL(wc, X)						\
+  _FP_I_TYPE X##_c __attribute__ ((unused)) _FP_ZERO_INIT;	\
+  _FP_I_TYPE X##_s __attribute__ ((unused)) _FP_ZERO_INIT;	\
+  _FP_I_TYPE X##_e __attribute__ ((unused)) _FP_ZERO_INIT;	\
   _FP_FRAC_DECL_##wc (X)
 
 /* Test whether the qNaN bit denotes a signaling NaN.  */

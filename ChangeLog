@@ -1,3 +1,11 @@
+2015-03-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* soft-fp/soft-fp.h (_FP_ZERO_INIT): New macro.  Define depending
+	on [__KERNEL__].
+	* soft-fp/op-1.h (_FP_FRAC_DECL_1): Use _FP_ZERO_INIT.
+	* soft-fp/op-2.h (_FP_FRAC_DECL_2): Likewise.
+	* soft-fp/op-common.h (_FP_DECL): Likewise.
+
 2015-03-06  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/ifuncdep2.c (global): Replace

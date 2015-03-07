@@ -30,7 +30,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define _FP_FRAC_DECL_1(X)	_FP_W_TYPE X##_f
+#define _FP_FRAC_DECL_1(X)	_FP_W_TYPE X##_f _FP_ZERO_INIT
 #define _FP_FRAC_COPY_1(D, S)	(D##_f = S##_f)
 #define _FP_FRAC_SET_1(X, I)	(X##_f = I)
 #define _FP_FRAC_HIGH_1(X)	(X##_f)
