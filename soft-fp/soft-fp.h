@@ -35,7 +35,7 @@
 #ifdef _LIBC
 # include <sfp-machine.h>
 #elif defined __KERNEL__
-/* The Linux kernel uses <asm/*.h> names for architecture-specific
+/* The Linux kernel uses asm/ names for architecture-specific
    files.  */
 # include <asm/sfp-machine.h>
 #else
