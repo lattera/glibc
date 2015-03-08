@@ -203,4 +203,10 @@ void *__libc_getspecific (__libc_key_t key);
 
 #endif /* _CTHREADS_ */
 
+/* Hide the definitions which are only supposed to be used inside libc in
+   a separate file.  This file is not present in the installation!  */
+#ifdef _LIBC
+# include <bits/libc-lockP.h>
+#endif
+
 #endif	/* bits/libc-lock.h */

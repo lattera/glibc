@@ -1,3 +1,8 @@
+2015-03-08  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/bits/libc-lock.h [_LIBC]: Include
+	<bits/libc-lockP.h>
+
 2015-03-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* soft-fp/soft-fp.h (_FP_ZERO_INIT): New macro.  Define depending
