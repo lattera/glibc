@@ -1,3 +1,10 @@
+2015-03-08  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #16734]
+	* libio/genops.c (_IO_unbuffer_all): Renamed from _IO_unbuffer_write.
+	Cleanup read-only streams as well.
+	(_IO_cleanup): Call _IO_unbuffer_all instead of _IO_unbuffer_write.
+
 2015-03-08  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/bits/libc-lock.h [_LIBC]: Include

@@ -935,23 +935,21 @@ weak_alias (_IO_flush_all_linebuffered, _flushlbf)
    the atexit routine, just like _IO_cleanup.  The problem is we do
    not know whether the freeres code is called first or _IO_cleanup.
    if the former is the case, we set the DEALLOC_BUFFER variable to
-   true and _IO_unbuffer_write will take care of the rest.  If
-   _IO_unbuffer_write is called first we add the streams to a list
+   true and _IO_unbuffer_all will take care of the rest.  If
+   _IO_unbuffer_all is called first we add the streams to a list
    which the freeres function later can walk through.  */
-static void _IO_unbuffer_write (void);
+static void _IO_unbuffer_all (void);
 
 static bool dealloc_buffers;
 static _IO_FILE *freeres_list;
 
 static void
-_IO_unbuffer_write (void)
+_IO_unbuffer_all (void)
 {
   struct _IO_FILE *fp;
   for (fp = (_IO_FILE *) _IO_list_all; fp; fp = fp->_chain)
     {
       if (! (fp->_flags & _IO_UNBUFFERED)
-	  && (! (fp->_flags & _IO_NO_WRITES)
-	      || (fp->_flags & _IO_IS_APPENDING))
 	  /* Iff stream is un-orientated, it wasn't used. */
 	  && fp->_mode != 0)
 	{
@@ -1019,7 +1017,7 @@ _IO_cleanup (void)
 
      The following will make the standard streambufs be unbuffered,
      which forces any output from late destructors to be written out. */
-  _IO_unbuffer_write ();
+  _IO_unbuffer_all ();
 
   return result;
 }
