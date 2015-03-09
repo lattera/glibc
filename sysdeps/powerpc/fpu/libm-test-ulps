@@ -33,24 +33,35 @@ ldouble: 2
 
 Function: "acosh":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "acosh_downward":
+double: 1
 float: 1
-ildouble: 1
-ldouble: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
 
 Function: "acosh_towardzero":
+double: 1
 float: 1
-ildouble: 1
-ldouble: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
 
 Function: "acosh_upward":
 double: 1
-ildouble: 1
-ldouble: 2
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 3
+ldouble: 3
 
 Function: "asin":
 ildouble: 2
@@ -87,33 +98,34 @@ ldouble: 2
 Function: "asinh":
 double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "asinh_downward":
-double: 1
+double: 2
 float: 2
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
+idouble: 2
+ifloat: 2
+ildouble: 5
+ldouble: 5
 
 Function: "asinh_towardzero":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 5
+ldouble: 5
 
 Function: "asinh_upward":
 double: 2
 float: 1
-idouble: 1
+idouble: 2
 ifloat: 1
-ildouble: 1
-ldouble: 3
+ildouble: 4
+ldouble: 4
 
 Function: "atan":
 double: 1
@@ -174,7 +186,9 @@ ildouble: 1
 ldouble: 1
 
 Function: "atanh":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
@@ -188,7 +202,9 @@ ildouble: 1
 ldouble: 1
 
 Function: "atanh_towardzero":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
@@ -426,8 +442,8 @@ double: 2
 float: 1
 idouble: 2
 ifloat: 1
-ildouble: 4
-ldouble: 4
+ildouble: 6
+ldouble: 6
 
 Function: Imaginary part of "casin_upward":
 double: 4
@@ -498,8 +514,8 @@ double: 2
 float: 2
 idouble: 2
 ifloat: 2
-ildouble: 4
-ldouble: 4
+ildouble: 6
+ldouble: 6
 
 Function: Real part of "catan":
 float: 4
@@ -560,8 +576,8 @@ double: 3
 float: 3
 idouble: 3
 ifloat: 3
-ildouble: 5
-ldouble: 5
+ildouble: 8
+ldouble: 8
 
 Function: Real part of "catanh":
 double: 4
@@ -582,8 +598,8 @@ double: 2
 float: 2
 idouble: 2
 ifloat: 2
-ildouble: 3
-ldouble: 3
+ildouble: 5
+ldouble: 5
 
 Function: Imaginary part of "catanh_downward":
 double: 1
@@ -932,16 +948,16 @@ double: 2
 float: 1
 idouble: 2
 ifloat: 1
-ildouble: 2
-ldouble: 2
+ildouble: 4
+ldouble: 4
 
 Function: "cos_downward":
 double: 1
 float: 2
 idouble: 1
 ifloat: 2
-ildouble: 3
-ldouble: 3
+ildouble: 5
+ldouble: 5
 
 Function: "cos_tonearest":
 float: 1
@@ -954,16 +970,16 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 3
-ldouble: 3
+ildouble: 4
+ldouble: 4
 
 Function: "cos_upward":
 double: 1
 float: 2
 idouble: 1
 ifloat: 2
-ildouble: 4
-ldouble: 4
+ildouble: 5
+ldouble: 5
 
 Function: "cosh":
 double: 1
@@ -1512,8 +1528,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 3
-ldouble: 3
+ildouble: 4
+ldouble: 4
 
 Function: "exp2":
 ildouble: 2
@@ -1572,8 +1588,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "expm1_tonearest":
 double: 1
@@ -1588,8 +1604,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 2
-ldouble: 2
+ildouble: 3
+ldouble: 3
 
 Function: "expm1_upward":
 double: 1
@@ -1612,8 +1628,8 @@ ildouble: 2
 ldouble: 2
 
 Function: "fma_upward":
-ildouble: 2
-ldouble: 2
+ildouble: 3
+ldouble: 3
 
 Function: "gamma":
 double: 1
@@ -1922,8 +1938,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 3
-ldouble: 3
+ildouble: 4
+ldouble: 4
 
 Function: "pow_downward":
 double: 1
@@ -2020,8 +2036,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 6
-ldouble: 6
+ildouble: 7
+ldouble: 7
 
 Function: "sinh":
 ildouble: 1
@@ -2120,8 +2136,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "tanh_towardzero":
 double: 1
