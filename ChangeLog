@@ -1,3 +1,11 @@
+2015-03-09  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #18043]
+	* posix/wordexp-test.c (test_case): Add test for BZ #18043
+	(do_bz18043): Delete.
+	(at_page_end): New.
+	(testit): Refactor to have words at the edge of unreadable page.
+
 2015-03-08  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #16734]
