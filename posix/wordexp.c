@@ -1343,7 +1343,8 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 	  break;
 
 	case ':':
-	  if (strchr ("-=?+", words[1 + *offset]) == NULL)
+	  if (words[1 + *offset] == '\0'
+	      || strchr ("-=?+", words[1 + *offset]) == NULL)
 	    goto syntax;
 
 	  colon_seen = 1;

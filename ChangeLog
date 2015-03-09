@@ -1,5 +1,11 @@
 2015-03-09  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
+	[BZ #18043]
+	* posix/wordexp.c (parse_param): Fix buffer overflow.
+	* posix/wordexp-test.c (test_case): Add test case.
+
+2015-03-09  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
 	[BZ #18042]
 	* posix/wordexp.c (parse_backtick): Fix off-by-one.
 	* posix/wordexp-test.c (test_case): Add test for BZ #18042.

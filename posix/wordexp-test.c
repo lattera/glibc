@@ -234,8 +234,9 @@ struct test_case_struct
     { WRDE_CMDSUB, NULL, "$((1+`echo 1`))", WRDE_NOCMD, 0, { NULL, }, IFS },
     { WRDE_CMDSUB, NULL, "$((1+$((`echo 1`))))", WRDE_NOCMD, 0, { NULL, }, IFS },
 
-    { WRDE_SYNTAX, NULL, "`\\", 0, 0, { NULL, }, IFS },  /* BZ 18042  */
-    { WRDE_SYNTAX, NULL, "${", 0, 0, { NULL, }, IFS },   /* BZ 18043  */
+    { WRDE_SYNTAX, NULL, "`\\", 0, 0, { NULL, }, IFS },     /* BZ 18042  */
+    { WRDE_SYNTAX, NULL, "${", 0, 0, { NULL, }, IFS },      /* BZ 18043  */
+    { WRDE_SYNTAX, NULL, "L${a:", 0, 0, { NULL, }, IFS },   /* BZ 18043#c4  */
 
     { -1, NULL, NULL, 0, 0, { NULL, }, IFS },
   };
