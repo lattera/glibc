@@ -2143,7 +2143,6 @@ parse_backtick (char **word, size_t *word_length, size_t *max_length,
 	      break;
 	    }
 
-	  ++(*offset);
 	  error = parse_backslash (&comm, &comm_length, &comm_maxlen, words,
 				   offset);
 
