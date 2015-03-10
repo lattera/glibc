@@ -1,5 +1,22 @@
 2015-03-10  Roland McGrath  <roland@hack.frob.com>
 
+	* scripts/evaluate-test.sh: Grok exit code 77 as UNSUPPORTED and exit
+	with 0 in that case.
+	* Makefile (summarize-tests): New canned sequence, factored out of
+	commands for targets tests and xtests.  Display summary lines that
+	don't start with PASS: or XFAIL: rather than ones that do start with
+	ERROR: or FAIL:.  Make the commands fail if any summary lines fail
+	to start with X?PASS: or XFAIL: or UNSUPPORTED: rather than if any
+	do start with ERROR: or FAIL:.
+	* dlfcn/Makefile (tests): Add bug-atexit3 back here unconditionally
+	(except for [$(build-shared) = yes]).
+	(tests-unsupported) [$(CXX) empty]: Add bug-atexit3.
+	(LDLIBS-bug-atexit3-lib.so): Conditionalize on [$(CXX) nonempty].
+	($(objpfx)bug-atexit3, $(objpfx)bug-atexit3.out): Likewise.
+	* nptl/Makefile: Revert 2015-03-04 changes.
+	[$(CXX) empty] (tests-unsupported): New variable.
+	* debug/Makefile: Likewise.
+
 	* posix/regcomp.c: Fix comment typos and formatting to harmonize with
 	gnulib file.  Replace __attribute with __attribute__ throughout.
 

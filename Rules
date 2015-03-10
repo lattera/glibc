@@ -198,6 +198,18 @@ $(objpfx)%.out: /dev/null $(objpfx)%	# Make it 2nd arg for canned sequence.
 	$(make-test-out) > $@; \
 	$(evaluate-test)
 
+# tests-unsupported lists tests that we will not try to build at all in
+# this configuration.  Note this runs every time because it does not
+# actually create its target.  The dependency on Makefile is meant to
+# ensure that it runs after a Makefile change to add a test to the list
+# when it previously ran and produced a .out file (probably for a failure).
+ifneq "$(strip $(tests-unsupported))" ""
+$(tests-unsupported:%=$(objpfx)%.out): $(objpfx)%.out: Makefile
+	@rm -f $@
+	$(..)scripts/evaluate-test.sh $(patsubst $(common-objpfx)%.out,%,$@) \
+				      77 false false > $(@:.out=.test-result)
+endif
+
 endif	# tests
 
 

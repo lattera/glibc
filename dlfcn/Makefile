@@ -36,7 +36,7 @@ endif
 ifeq (yes,$(build-shared))
 tests = glrefmain failtest tst-dladdr default errmsg1 tstcxaatexit \
 	bug-dlopen1 bug-dlsym1 tst-dlinfo bug-atexit1 bug-atexit2 \
-	tstatexit bug-dl-leaf tst-rec-dlopen
+	bug-atexit3 tstatexit bug-dl-leaf tst-rec-dlopen
 endif
 modules-names = glreflib1 glreflib2 glreflib3 failtestmod defaultmod1 \
 		defaultmod2 errmsg1mod modatexit modcxaatexit \
@@ -59,8 +59,9 @@ tststatic4-ENV = $(tststatic-ENV)
 tststatic5-ENV = $(tststatic-ENV)
 
 ifneq (,$(CXX))
-tests += bug-atexit3
 modules-names += bug-atexit3-lib
+else
+tests-unsupported += bug-atexit3
 endif
 endif
 
@@ -136,9 +137,11 @@ $(objpfx)bug-atexit1.out: $(objpfx)bug-atexit1-lib.so
 $(objpfx)bug-atexit2: $(libdl)
 $(objpfx)bug-atexit2.out: $(objpfx)bug-atexit2-lib.so
 
+ifneq (,$(CXX))
 LDLIBS-bug-atexit3-lib.so = -lstdc++ -lgcc_eh
 $(objpfx)bug-atexit3: $(libdl)
 $(objpfx)bug-atexit3.out: $(objpfx)bug-atexit3-lib.so
+endif
 
 $(objpfx)bug-dl-leaf: $(objpfx)bug-dl-leaf-lib.so
 $(objpfx)bug-dl-leaf.out: $(objpfx)bug-dl-leaf-lib-cb.so

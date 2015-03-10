@@ -245,8 +245,8 @@ tests = tst-typesizes \
 	tst-cancel6 tst-cancel7 tst-cancel8 tst-cancel9 tst-cancel10 \
 	tst-cancel11 tst-cancel12 tst-cancel13 tst-cancel14 tst-cancel15 \
 	tst-cancel16 tst-cancel17 tst-cancel18 tst-cancel19 tst-cancel20 \
-	tst-cancel21 tst-cancel22 tst-cancel23 $(if $(CXX),tst-cancel24) \
-	tst-cancel25 tst-cancel-self tst-cancel-self-cancelstate \
+	tst-cancel21 tst-cancel22 tst-cancel23 tst-cancel24 tst-cancel25 \
+	tst-cancel-self tst-cancel-self-cancelstate \
 	tst-cancel-self-canceltype tst-cancel-self-testcancel \
 	tst-cleanup0 tst-cleanup1 tst-cleanup2 tst-cleanup3 tst-cleanup4 \
 	tst-flock1 tst-flock2 \
@@ -364,18 +364,13 @@ link-libc-static := $(common-objpfx)libc.a $(static-gnulib) \
 		    $(common-objpfx)libc.a
 
 tests-static += tst-locale1 tst-locale2 tst-stackguard1-static \
-		tst-cancel21-static tst-cond8-static \
+		tst-cancel21-static tst-cancel24-static tst-cond8-static \
 		tst-mutex8-static tst-mutexpi8-static tst-sem11-static \
 		tst-sem12-static
-tests += tst-stackguard1-static tst-cancel21-static \
+tests += tst-stackguard1-static tst-cancel21-static tst-cancel24-static \
 	 tst-cond8-static tst-mutex8-static tst-mutexpi8-static \
 	 tst-sem11-static tst-sem12-static
 xtests-static += tst-setuid1-static
-
-ifneq (,$(CXX))
-tests += tst-cancel24-static
-tests-static += tst-cancel24-static
-endif
 
 # These tests are linked with libc before libpthread
 tests-reverse += tst-cancel5 tst-cancel23 tst-vfork1x tst-vfork2x
@@ -386,6 +381,11 @@ ifeq ($(build-shared),yes)
 tests-special += $(objpfx)tst-tls6.out $(objpfx)tst-cleanup0-cmp.out \
 		 $(objpfx)tst-cancel-wrappers.out
 endif
+endif
+
+ifeq (,$(CXX))
+# These tests require a C++ compiler and runtime.
+tests-unsupported += tst-cancel24 tst-cancel24-static
 endif
 
 include ../Rules

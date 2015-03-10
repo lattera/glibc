@@ -316,6 +316,13 @@ $(objpfx)begin-end-check.out: scripts/begin-end-check.pl
 	$(evaluate-test)
 endif
 
+define summarize-tests
+@egrep -v '^(PASS|XFAIL):' $(objpfx)$1 || true
+@echo "Summary of test results$2:"
+@sed 's/:.*//' < $(objpfx)$1 | sort | uniq -c
+@egrep -q -v '^(X?PASS|XFAIL|UNSUPPORTED):' $(objpfx)$1 && false
+endef
+
 tests-special-notdir = $(patsubst $(objpfx)%, %, $(tests-special))
 tests: $(tests-special)
 	$(..)scripts/merge-test-results.sh -s $(objpfx) "" \
@@ -324,22 +331,12 @@ tests: $(tests-special)
 	$(..)scripts/merge-test-results.sh -t $(objpfx) subdir-tests.sum \
 	  $(sort $(subdirs) .) \
 	  > $(objpfx)tests.sum
-	@grep '^ERROR:' $(objpfx)tests.sum || true
-	@grep '^FAIL:' $(objpfx)tests.sum || true
-	@echo "Summary of test results:"
-	@sed 's/:.*//' < $(objpfx)tests.sum | sort | uniq -c
-	@if grep -q '^ERROR:' $(objpfx)tests.sum; then exit 1; fi
-	@if grep -q '^FAIL:' $(objpfx)tests.sum; then exit 1; fi
+	$(call summarize-tests,tests.sum)
 xtests:
 	$(..)scripts/merge-test-results.sh -t $(objpfx) subdir-xtests.sum \
 	  $(sort $(subdirs)) \
 	  > $(objpfx)xtests.sum
-	@grep '^ERROR:' $(objpfx)xtests.sum || true
-	@grep '^FAIL:' $(objpfx)xtests.sum || true
-	@echo "Summary of test results for extra tests:"
-	@sed 's/:.*//' < $(objpfx)xtests.sum | sort | uniq -c
-	@if grep -q '^ERROR:' $(objpfx)xtests.sum; then exit 1; fi
-	@if grep -q '^FAIL:' $(objpfx)xtests.sum; then exit 1; fi
+	$(call summarize-tests,xtests.sum, for extra tests)
 
 # The realclean target is just like distclean for the parent, but we want
 # the subdirs to know the difference in case they care.
