@@ -1,3 +1,8 @@
+2015-03-10  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/dbl-64/Makefile (CFLAGS-e_pow.c): Add
+	$(config-cflags-nofma).
+
 2015-03-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* soft-fp/double.h [SOFT_FP_DOUBLE_H]: New multiple-include guard.
