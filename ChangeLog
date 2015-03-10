@@ -1,3 +1,17 @@
+2015-03-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* soft-fp/double.h [SOFT_FP_DOUBLE_H]: New multiple-include guard.
+	* soft-fp/extended.h [SOFT_FP_EXTENDED_H]: Likewise.
+	* soft-fp/op-1.h [SOFT_FP_OP_1_H]: Likewise.
+	* soft-fp/op-2.h [SOFT_FP_OP_2_H]: Likewise.
+	* soft-fp/op-4.h [SOFT_FP_OP_4_H]: Likewise.
+	* soft-fp/op-8.h [SOFT_FP_OP_8_H]: Likewise.
+	* soft-fp/op-common.h [SOFT_FP_OP_COMMON_H]: Likewise.
+	* soft-fp/quad.h [SOFT_FP_QUAD_H]: Likewise.
+	* soft-fp/single.h [SOFT_FP_SINGLE_H]: Likewise.
+	* soft-fp/soft-fp.h (SOFT_FP_H): Define to 1 rather than empty.
+	Add comment on closing #endif.
+
 2015-03-09  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* posix/wordexp.c (CHAR_IN_SET): New macro.

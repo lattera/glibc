@@ -30,6 +30,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef SOFT_FP_DOUBLE_H
+#define SOFT_FP_DOUBLE_H	1
+
 #if _FP_W_TYPE_SIZE < 32
 # error "Here's a nickel kid.  Go buy yourself a real computer."
 #endif
@@ -316,3 +319,5 @@ union _FP_UNION_D
 # define _FP_FRAC_HIGH_DW_D(X)	_FP_FRAC_HIGH_2 (X)
 
 #endif /* W_TYPE_SIZE < 64 */
+
+#endif /* !SOFT_FP_DOUBLE_H */

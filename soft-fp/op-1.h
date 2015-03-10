@@ -30,6 +30,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef SOFT_FP_OP_1_H
+#define SOFT_FP_OP_1_H	1
+
 #define _FP_FRAC_DECL_1(X)	_FP_W_TYPE X##_f _FP_ZERO_INIT
 #define _FP_FRAC_COPY_1(D, S)	(D##_f = S##_f)
 #define _FP_FRAC_SET_1(X, I)	(X##_f = I)
@@ -362,3 +365,5 @@
 /* Convert FP values between word sizes.  */
 
 #define _FP_FRAC_COPY_1_1(D, S)		(D##_f = S##_f)
+
+#endif /* !SOFT_FP_OP_1_H */

@@ -29,6 +29,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef SOFT_FP_OP_8_H
+#define SOFT_FP_OP_8_H	1
+
 /* We need just a few things from here for op-4, if we ever need some
    other macros, they can be added.  */
 #define _FP_FRAC_DECL_8(X)	_FP_W_TYPE X##_f[8]
@@ -143,3 +146,5 @@
       X##_f[0] |= (_FP_FRAC_SRS_8_s != 0);				\
     }									\
   while (0)
+
+#endif /* !SOFT_FP_OP_8_H */

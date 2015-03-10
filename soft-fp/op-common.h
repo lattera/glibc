@@ -29,6 +29,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef SOFT_FP_OP_COMMON_H
+#define SOFT_FP_OP_COMMON_H	1
+
 #define _FP_DECL(wc, X)						\
   _FP_I_TYPE X##_c __attribute__ ((unused)) _FP_ZERO_INIT;	\
   _FP_I_TYPE X##_s __attribute__ ((unused)) _FP_ZERO_INIT;	\
@@ -2109,3 +2112,5 @@
 #define _FP_DIV_MEAT_1_loop(fs, R, X, Y)  _FP_DIV_MEAT_N_loop (fs, 1, R, X, Y)
 #define _FP_DIV_MEAT_2_loop(fs, R, X, Y)  _FP_DIV_MEAT_N_loop (fs, 2, R, X, Y)
 #define _FP_DIV_MEAT_4_loop(fs, R, X, Y)  _FP_DIV_MEAT_N_loop (fs, 4, R, X, Y)
+
+#endif /* !SOFT_FP_OP_COMMON_H */

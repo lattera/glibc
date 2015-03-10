@@ -30,7 +30,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #ifndef SOFT_FP_H
-#define SOFT_FP_H
+#define SOFT_FP_H	1
 
 #ifdef _LIBC
 # include <sfp-machine.h>
@@ -337,4 +337,4 @@ typedef USItype UHWtype;
 extern void abort (void);
 #endif
 
-#endif
+#endif /* !SOFT_FP_H */

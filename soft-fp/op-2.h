@@ -30,6 +30,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef SOFT_FP_OP_2_H
+#define SOFT_FP_OP_2_H	1
+
 #define _FP_FRAC_DECL_2(X)				\
   _FP_W_TYPE X##_f0 _FP_ZERO_INIT, X##_f1 _FP_ZERO_INIT
 #define _FP_FRAC_COPY_2(D, S)	(D##_f0 = S##_f0, D##_f1 = S##_f1)
@@ -698,3 +701,5 @@
 #define _FP_FRAC_COPY_2_1(D, S)		((D##_f0 = S##_f), (D##_f1 = 0))
 
 #define _FP_FRAC_COPY_2_2(D, S)		_FP_FRAC_COPY_2 (D, S)
+
+#endif /* !SOFT_FP_OP_2_H */

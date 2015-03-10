@@ -30,6 +30,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef SOFT_FP_OP_4_H
+#define SOFT_FP_OP_4_H	1
+
 #define _FP_FRAC_DECL_4(X)	_FP_W_TYPE X##_f[4]
 #define _FP_FRAC_COPY_4(D, S)			\
   (D##_f[0] = S##_f[0], D##_f[1] = S##_f[1],	\
@@ -868,3 +871,5 @@
   while (0)
 
 #define _FP_FRAC_COPY_4_4(D, S)	_FP_FRAC_COPY_4 (D, S)
+
+#endif /* !SOFT_FP_OP_4_H */
