@@ -1,3 +1,8 @@
+2015-03-10  Roland McGrath  <roland@hack.frob.com>
+
+	* posix/regcomp.c: Fix comment typos and formatting to harmonize with
+	gnulib file.  Replace __attribute with __attribute__ throughout.
+
 2015-03-10  Carlos O'Donell  <carlos@redhat.com>
 
 	* sysdeps/hppa/fpu/libm-test-ulps: Update.
