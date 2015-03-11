@@ -51,6 +51,15 @@
 # endif
 #endif
 
+/* For unreachable default cases in switch statements over bitwise OR
+   of FP_CLS_* values.  */
+#if (defined __GNUC__							\
+     && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5)))
+# define _FP_UNREACHABLE	__builtin_unreachable ()
+#else
+# define _FP_UNREACHABLE	abort ()
+#endif
+
 /* In the Linux kernel, some architectures have a single function that
    uses different kinds of unpacking and packing depending on the
    instruction being emulated, meaning it is not readily visible to

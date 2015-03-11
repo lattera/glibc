@@ -927,7 +927,7 @@
 	  break;						\
 								\
 	default:						\
-	  abort ();						\
+	  _FP_UNREACHABLE;					\
 	}							\
     }								\
   while (0)
@@ -1092,7 +1092,7 @@
 	  break;							\
 									\
 	default:							\
-	  abort ();							\
+	  _FP_UNREACHABLE;						\
 	}								\
 									\
       /* T = X * Y is zero, infinity or NaN.  */			\
@@ -1148,7 +1148,7 @@
 	  break;							\
 									\
 	default:							\
-	  abort ();							\
+	  _FP_UNREACHABLE;						\
 	}								\
     done_fma: ;								\
     }									\
@@ -1215,7 +1215,7 @@
 	  break;						\
 								\
 	default:						\
-	  abort ();						\
+	  _FP_UNREACHABLE;					\
 	}							\
     }								\
   while (0)

@@ -1,3 +1,11 @@
+2015-03-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* soft-fp/soft-fp.h (_FP_UNREACHABLE): New macro.
+	* soft-fp/op-common.h (_FP_MUL): Use _FP_UNREACHABLE instead of
+	abort.
+	(_FP_FMA): Likewise.
+	(_FP_DIV): Likewise.
+
 2015-03-10  Roland McGrath  <roland@hack.frob.com>
 
 	* scripts/evaluate-test.sh: Grok exit code 77 as UNSUPPORTED and exit
