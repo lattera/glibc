@@ -1915,7 +1915,7 @@ envsubst:
 	  if (pattern && !value)
 	    goto no_space;
 
-	  __setenv (env, value, 1);
+	  __setenv (env, value ?: "", 1);
 	  break;
 
 	default:

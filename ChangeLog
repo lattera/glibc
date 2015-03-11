@@ -1,3 +1,8 @@
+2015-03-11  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #18043]
+	* posix/wordexp.c (parse_param): Don't call setenv(..., NULL, 1).
+
 2015-03-11  Adhemerval Zanellla  <azanella@linux.vnet.ibm.com>
 
 	* config.h.in [HAVE_ASM_GLOBAL_DOT_NAME]: Remove define.
