@@ -29,8 +29,8 @@ __feholdexcept (fenv_t *envp)
   /* Store the environment.  */
   bufptr = clear.buf;
   __asm__ (
-	   "fstd,ma %%fr0,8(%1)\n"
-	   : "=m" (clear), "+r" (bufptr) : : "%r0");
+	   "fstd %%fr0,0(%1)\n"
+	   : "=m" (clear) : "r" (bufptr) : "%r0");
   memcpy (envp, &clear.env, sizeof (fenv_t));
 
   /* Clear exception queues */
@@ -40,11 +40,9 @@ __feholdexcept (fenv_t *envp)
   /* Now clear all flags  */
   clear.env.__status_word &= ~(FE_ALL_EXCEPT << 27);
 
-  /* Load the new environment. Note: fr0 must load last to enable T-bit
-     Thus we start bufptr at the end and work backwards */
-  bufptr = (unsigned long long *)((unsigned int)(clear.buf) + sizeof(unsigned int)*4);
+  /* Load the new environment. Note: fr0 must load last to enable T-bit.  */
   __asm__ (
-	   "fldd,mb -8(%0),%%fr0\n"
+	   "fldd 0(%0),%%fr0\n"
 	   : : "r" (bufptr), "m" (clear) : "%r0");
 
   return 0;

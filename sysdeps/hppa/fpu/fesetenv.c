@@ -33,7 +33,7 @@ __fesetenv (const fenv_t *envp)
      we want to use from the environment specified by the parameter.  */
   bufptr = temp.buf;
   __asm__ (
-	   "fstd,ma %%fr0,8(%1)\n"
+	   "fstd %%fr0,0(%1)\n"
 	   : "=m" (temp) : "r" (bufptr) : "%r0");
 
   temp.env.__status_word &= ~(FE_ALL_EXCEPT
@@ -54,7 +54,7 @@ __fesetenv (const fenv_t *envp)
      we take advantage of that to load in reverse order so fr0
      is loaded last and T-Bit is enabled. */
   __asm__ (
-	   "fldd,mb -8(%1),%%fr0\n"
+	   "fldd 0(%1),%%fr0\n"
 	   : : "m" (temp), "r" (bufptr) : "%r0" );
 
   /* Success.  */
