@@ -351,6 +351,7 @@
 
 2015-02-27  John David Anglin  <dave.anglin@bell.net>
 
+	[BZ #18068]
 	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h (__O_SYNC): Change
 	to 00100000.
 
