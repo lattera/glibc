@@ -29,9 +29,22 @@ __feupdateenv (const fenv_t *envp)
   __asm__ ("fstd %%fr0,0(%1)	\n\t"
            "fldd 0(%1),%%fr0	\n\t"
 	   : "=m" (s.l) : "r" (&s.l));
-  memcpy(&temp, envp, sizeof(fenv_t));
-  /* Currently raised exceptions not cleared */
-  temp.__status_word |= s.sw[0] & (FE_ALL_EXCEPT << 27);
+
+  /* Given environment with exception flags not cleared.  */
+  if ((envp != FE_DFL_ENV) && (envp != FE_NOMASK_ENV))
+    {
+      memcpy(&temp, envp, sizeof(fenv_t));
+      temp.__status_word |= s.sw[0] & (FE_ALL_EXCEPT << 27);
+    }
+
+  /* Default environment with exception flags not cleared.  */
+  if (envp == FE_DFL_ENV)
+    temp.__status_word = s.sw[0] & (FE_ALL_EXCEPT << 27);
+
+  /* All traps enabled and current exception flags not cleared.  */
+  if (envp == FE_NOMASK_ENV)
+    temp.__status_word = (s.sw[0] & (FE_ALL_EXCEPT << 27)) | FE_ALL_EXCEPT;
+
   /* Install new environment.  */
   __fesetenv (&temp);
   /* Success.  */

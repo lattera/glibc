@@ -19,7 +19,7 @@
 #ifndef _FPU_CONTROL_H
 #define _FPU_CONTROL_H
 
-/* Masking of interrupts */
+/* Masking of interrupts.  */
 #define _FPU_MASK_PM	0x00000001	/* Inexact (I) */
 #define _FPU_MASK_UM	0x00000002	/* Underflow (U) */
 #define _FPU_MASK_OM	0x00000004	/* Overflow (O) */
@@ -30,6 +30,8 @@
 #define _FPU_HPPA_MASK_RM	0x00000600	/* Rounding mode mask */
 /* Masking of interrupt enable bits.  */
 #define _FPU_HPPA_MASK_INT	0x0000001f	/* Interrupt mask */
+/* Shift by 27 to install flag bits.  */
+#define _FPU_HPPA_SHIFT_FLAGS	27
 
 /* There are no reserved bits in the PA fpsr (though some are undefined).  */
 #define _FPU_RESERVED	0x00000000
@@ -55,6 +57,9 @@ typedef unsigned int fpu_control_t;
 #define _FPU_SETCW(cw) \
 ({										\
   union { __extension__ unsigned long long __fpreg; unsigned int __halfreg[2]; } __fullfp;	\
+  /* Get the current status word and set the control word.  */			\
+  __asm__ ("fstd %%fr0,0(%1)\n\t"						\
+	   : "=m" (__fullfp.__fpreg) : "r" (&__fullfp.__fpreg) : "%r0");	\
   __fullfp.__halfreg[0] = cw;							\
   __asm__ ("fldd 0(%1),%%fr0\n\t"						\
 	   : : "m" (__fullfp.__fpreg), "r" (&__fullfp.__fpreg) : "%r0" );	\

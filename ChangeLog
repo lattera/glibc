@@ -1,3 +1,12 @@
+2015-03-11  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #18111]
+	* sysdeps/hppa/fpu/fpu_control.h (_FPU_HPPA_SHIFT_FLAGS): Define.
+	(_FPU_SETCW): Initialize cw from fpsr before storing.
+	* sysdeps/hppa/fpu/fsetexcptflg.c: Include fpu_control.h
+	(fesetexceptflag): Rewrite using fpu_control.h.
+	* sysdeps/hppa/fpu/feupdateenv.c: Handle FE_DFL_ENV, and FE_NOMASK_ENV.
+
 2015-03-11  John David Anglin  <danglin@gcc.gnu.org>
 
 	[BZ #18110]
