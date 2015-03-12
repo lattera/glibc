@@ -1,5 +1,21 @@
 2015-03-12  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	[BZ #18080]
+	* sysdeps/unix/sysv/linux/s390/s390-32/setcontext.S
+	(__setcontext): Use SIG_SETMASK instead of SIG_BLOCK.
+	* sysdeps/unix/sysv/linux/s390/s390-64/setcontext.S
+	(__setcontext): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/swapcontext.S
+	(__swapcontext): Use SIG_SETMASK instead of SIG_BLOCK.
+	Call rt_sigprocmask syscall one time to set new signal mask
+	and retrieve the current signal mask instead of two calls.
+	* sysdeps/unix/sysv/linux/s390/s390-64/swapcontext.S
+	(__swapcontext): Likewise.
+	* stdlib/Makefile (tests): Add new testcase tst-setcontext2.
+	* stdlib/tst-setcontext2.c: New file.
+
+2015-03-12  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/fpu/libm-test-ulps: Regenerate.
 
 2015-03-11  Aurelien Jarno  <aurelien@aurel32.net>

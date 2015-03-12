@@ -66,11 +66,11 @@ test-srcs	:= tst-fmtmsg
 tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   test-canon test-canon2 tst-strtoll tst-environ	    \
 		   tst-xpg-basename tst-random tst-random2 tst-bsearch	    \
-		   tst-limits tst-rand48 bug-strtod tst-setcontext	    \
-		   test-a64l tst-qsort tst-system testmb2 bug-strtod2	    \
-		   tst-atof1 tst-atof2 tst-strtod2 tst-strtod3 tst-rand48-2 \
-		   tst-makecontext tst-strtod4 tst-strtod5 tst-qsort2	    \
-		   tst-makecontext2 tst-strtod6 tst-unsetenv1		    \
+		   tst-limits tst-rand48 bug-strtod tst-setcontext          \
+		   tst-setcontext2 test-a64l tst-qsort tst-system testmb2   \
+		   bug-strtod2 tst-atof1 tst-atof2 tst-strtod2 tst-strtod3  \
+		   tst-rand48-2 tst-makecontext tst-strtod4 tst-strtod5     \
+		   tst-qsort2 tst-makecontext2 tst-strtod6 tst-unsetenv1    \
 		   tst-makecontext3 bug-getcontext bug-fmtmsg1		    \
 		   tst-secure-getenv tst-strtod-overflow tst-strtod-round   \
 		   tst-tininess tst-strtod-underflow tst-tls-atexit

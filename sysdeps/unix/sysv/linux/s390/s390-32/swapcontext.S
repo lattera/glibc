@@ -24,7 +24,7 @@
 /*  __swapcontext (ucontext_t *oucp, const ucontext_t *ucp)
 
   Saves the machine context in oucp such that when it is activated,
-  it appears as if __swapcontextt() returned again, restores the
+  it appears as if __swapcontext() returned again, restores the
   machine context in ucp and thereby resumes execution in that
   context.
 
@@ -38,13 +38,6 @@ ENTRY(__swapcontext)
 	   rt_sigprocmask is ok.  */
 	lr	%r1,%r2
 	lr      %r0,%r3
-
-	/* sigprocmask (SIG_BLOCK, NULL, &sc->sc_mask).  */
-	la      %r2,SIG_BLOCK
-	slr	%r3,%r3
-	la	%r4,SC_MASK(%r1)
-	lhi	%r5,_NSIG8
-	svc	SYS_ify(rt_sigprocmask)
 
 	/* Store fpu context.  */
 	stfpc   SC_FPC(%r1)
@@ -74,11 +67,12 @@ ENTRY(__swapcontext)
 	/* Store general purpose registers.  */
 	stm     %r0,%r15,SC_GPRS(%r1)
 
-	/* sigprocmask (SIG_SETMASK, &sc->sc_mask, NULL).  */
-	la      %r2,SIG_BLOCK
+	/* rt_sigprocmask (SIG_SETMASK, &ucp->uc_sigmask, &oucp->uc_sigmask,
+	   sigsetsize).  */
+	la      %r2,SIG_SETMASK
 	lr	%r5,%r0
 	la	%r3,SC_MASK(%r5)
-	slr	%r4,%r4
+	la	%r4,SC_MASK(%r1)
 	lhi	%r5,_NSIG8
 	svc	SYS_ify(rt_sigprocmask)
 

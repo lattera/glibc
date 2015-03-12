@@ -34,7 +34,7 @@ ENTRY(__setcontext)
 	lr	%r1,%r2
 
 	/* rt_sigprocmask (SIG_SETMASK, &sc->sc_mask, NULL, sigsetsize).  */
-	la      %r2,SIG_BLOCK
+	la      %r2,SIG_SETMASK
 	la	%r3,SC_MASK(%r1)
 	slr	%r4,%r4
 	lhi	%r5,_NSIG8
