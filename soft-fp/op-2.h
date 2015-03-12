@@ -458,8 +458,8 @@
 				       _p240, _q240, _r240, _s240;	\
       UDItype _t240, _u240, _v240, _w240, _x240, _y240 = 0;		\
 									\
-      if ((wfracbits) < 106 || (wfracbits) > 120)			\
-	abort ();							\
+      _FP_STATIC_ASSERT ((wfracbits) >= 106 && (wfracbits) <= 120,	\
+			 "wfracbits out of range");			\
 									\
       setfetz;								\
 									\

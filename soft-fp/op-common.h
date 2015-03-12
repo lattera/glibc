@@ -1800,6 +1800,8 @@
 	    (r) = -(rtype) (r);						\
 									\
 	  _FP_FROM_INT_ur = (rtype) (r);				\
+	  _FP_STATIC_ASSERT ((rsize) <= 2 * _FP_W_TYPE_SIZE,		\
+			     "rsize too large");			\
 	  (void) (((rsize) <= _FP_W_TYPE_SIZE)				\
 		  ? ({							\
 		      int _FP_FROM_INT_lz;				\
@@ -1808,17 +1810,15 @@
 		      X##_e = (_FP_EXPBIAS_##fs + _FP_W_TYPE_SIZE - 1	\
 			       - _FP_FROM_INT_lz);			\
 		    })							\
-		  : (((rsize) <= 2 * _FP_W_TYPE_SIZE)			\
-		     ? ({						\
-			 int _FP_FROM_INT_lz;				\
-			 __FP_CLZ_2 (_FP_FROM_INT_lz,			\
-				     (_FP_W_TYPE) (_FP_FROM_INT_ur	\
-						   >> _FP_W_TYPE_SIZE), \
-				     (_FP_W_TYPE) _FP_FROM_INT_ur);	\
-			 X##_e = (_FP_EXPBIAS_##fs + 2 * _FP_W_TYPE_SIZE - 1 \
-				  - _FP_FROM_INT_lz);			\
-		       })						\
-		     : ({ abort (); 0; })));				\
+		  : ({						\
+		      int _FP_FROM_INT_lz;				\
+		      __FP_CLZ_2 (_FP_FROM_INT_lz,			\
+				  (_FP_W_TYPE) (_FP_FROM_INT_ur		\
+						>> _FP_W_TYPE_SIZE),	\
+				  (_FP_W_TYPE) _FP_FROM_INT_ur);	\
+		      X##_e = (_FP_EXPBIAS_##fs + 2 * _FP_W_TYPE_SIZE - 1 \
+			       - _FP_FROM_INT_lz);			\
+		    }));						\
 									\
 	  if ((rsize) - 1 + _FP_EXPBIAS_##fs >= _FP_EXPMAX_##fs		\
 	      && X##_e >= _FP_EXPMAX_##fs)				\
@@ -1876,12 +1876,18 @@
 #define _FP_EXTEND_CNAN(dfs, sfs, dwc, swc, D, S, check_nan)		\
   do									\
     {									\
-      if (_FP_FRACBITS_##dfs < _FP_FRACBITS_##sfs			\
-	  || (_FP_EXPMAX_##dfs - _FP_EXPBIAS_##dfs			\
-	      < _FP_EXPMAX_##sfs - _FP_EXPBIAS_##sfs)			\
-	  || (_FP_EXPBIAS_##dfs < _FP_EXPBIAS_##sfs + _FP_FRACBITS_##sfs - 1 \
-	      && _FP_EXPBIAS_##dfs != _FP_EXPBIAS_##sfs))		\
-	abort ();							\
+      _FP_STATIC_ASSERT (_FP_FRACBITS_##dfs >= _FP_FRACBITS_##sfs,	\
+			 "destination mantissa narrower than source");	\
+      _FP_STATIC_ASSERT ((_FP_EXPMAX_##dfs - _FP_EXPBIAS_##dfs		\
+			  >= _FP_EXPMAX_##sfs - _FP_EXPBIAS_##sfs),	\
+			 "destination max exponent smaller"		\
+			 " than source");				\
+      _FP_STATIC_ASSERT (((_FP_EXPBIAS_##dfs				\
+			   >= (_FP_EXPBIAS_##sfs			\
+			       + _FP_FRACBITS_##sfs - 1))		\
+			  || (_FP_EXPBIAS_##dfs == _FP_EXPBIAS_##sfs)), \
+			 "source subnormals do not all become normal,"	\
+			 " but bias not the same");			\
       D##_s = S##_s;							\
       _FP_FRAC_COPY_##dwc##_##swc (D, S);				\
       if (_FP_EXP_NORMAL (sfs, swc, S))					\
@@ -1944,10 +1950,14 @@
 #define FP_TRUNC(dfs, sfs, dwc, swc, D, S)				\
   do									\
     {									\
-      if (_FP_FRACBITS_##sfs < _FP_FRACBITS_##dfs			\
-	  || (_FP_EXPBIAS_##sfs < _FP_EXPBIAS_##dfs + _FP_FRACBITS_##dfs - 1 \
-	      && _FP_EXPBIAS_##sfs != _FP_EXPBIAS_##dfs))		\
-	abort ();							\
+      _FP_STATIC_ASSERT (_FP_FRACBITS_##sfs >= _FP_FRACBITS_##dfs,	\
+			 "destination mantissa wider than source");	\
+      _FP_STATIC_ASSERT (((_FP_EXPBIAS_##sfs				\
+			   >= (_FP_EXPBIAS_##dfs			\
+			       + _FP_FRACBITS_##dfs - 1))		\
+			  || _FP_EXPBIAS_##sfs == _FP_EXPBIAS_##dfs),	\
+			 "source subnormals do not all become same,"	\
+			 " but bias not the same");			\
       D##_s = S##_s;							\
       if (_FP_EXP_NORMAL (sfs, swc, S))					\
 	{								\
@@ -2036,14 +2046,18 @@
 # define __FP_CLZ(r, x)							\
   do									\
     {									\
+      _FP_STATIC_ASSERT ((sizeof (_FP_W_TYPE) == sizeof (unsigned int)	\
+			  || (sizeof (_FP_W_TYPE)			\
+			      == sizeof (unsigned long))		\
+			  || (sizeof (_FP_W_TYPE)			\
+			      == sizeof (unsigned long long))),		\
+			 "_FP_W_TYPE size unsupported for clz");	\
       if (sizeof (_FP_W_TYPE) == sizeof (unsigned int))			\
 	(r) = __builtin_clz (x);					\
       else if (sizeof (_FP_W_TYPE) == sizeof (unsigned long))		\
 	(r) = __builtin_clzl (x);					\
-      else if (sizeof (_FP_W_TYPE) == sizeof (unsigned long long))	\
+      else /* sizeof (_FP_W_TYPE) == sizeof (unsigned long long).  */	\
 	(r) = __builtin_clzll (x);					\
-      else								\
-	abort ();							\
     }									\
   while (0)
 #endif /* ndef __FP_CLZ */

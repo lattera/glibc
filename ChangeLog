@@ -1,3 +1,16 @@
+2015-03-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* soft-fp/soft-fp.h (_FP_STATIC_ASSERT): New macro.
+	[_LIBC]: Do not include <stdlib.h>.
+	[!_LIBC] (abort): Remove declaration.
+	* soft-fp/op-2.h (_FP_MUL_MEAT_2_120_240_double): Use
+	_FP_STATIC_ASSERT instead of conditionally calling abort.
+	* soft-fp/op-common.h (_FP_FROM_INT): Likewise.
+	(_FP_EXTEND_CNAN): Likewise.
+	(FP_TRUNC): Likewise.
+	(__FP_CLZ): Likewise.
+	* sysdeps/powerpc/nofpu/flt-rounds.c: Include <stdlib.h>.
+
 2015-03-12  Yaakov Selkowitz  <yselkowi@redhat.com>
 
 	* manual/string.texi (XPG basename): Fix prototype.

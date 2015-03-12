@@ -60,6 +60,17 @@
 # define _FP_UNREACHABLE	abort ()
 #endif
 
+#if ((defined __GNUC__							\
+      && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)))	\
+     || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 201112L))
+# define _FP_STATIC_ASSERT(expr, msg)		\
+  _Static_assert ((expr), msg)
+#else
+# define _FP_STATIC_ASSERT(expr, msg)					\
+  extern int (*__Static_assert_function (void))				\
+    [!!sizeof (struct { int __error_if_negative: (expr) ? 2 : -1; })]
+#endif
+
 /* In the Linux kernel, some architectures have a single function that
    uses different kinds of unpacking and packing depending on the
    instruction being emulated, meaning it is not readily visible to
@@ -338,12 +349,6 @@ typedef USItype UHWtype;
 # else
 #  include "longlong.h"
 # endif
-#endif
-
-#ifdef _LIBC
-# include <stdlib.h>
-#else
-extern void abort (void);
 #endif
 
 #endif /* !SOFT_FP_H */
