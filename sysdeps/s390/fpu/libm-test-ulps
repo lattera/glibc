@@ -19,19 +19,33 @@ idouble: 1
 
 Function: "acosh":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
+ildouble: 1
 ldouble: 1
 
 Function: "acosh_downward":
+double: 1
 float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
 ldouble: 1
 
 Function: "acosh_towardzero":
+double: 1
 float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
 ldouble: 1
 
 Function: "acosh_upward":
 double: 1
+float: 1
+idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
@@ -70,33 +84,34 @@ ldouble: 2
 Function: "asinh":
 double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "asinh_downward":
-double: 1
+double: 2
 float: 2
-idouble: 1
-ifloat: 1
+idouble: 2
+ifloat: 2
 ildouble: 2
 ldouble: 2
 
 Function: "asinh_towardzero":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
 ildouble: 2
 ldouble: 2
 
 Function: "asinh_upward":
 double: 2
 float: 1
-idouble: 1
+idouble: 2
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "atan":
 double: 1
@@ -157,7 +172,9 @@ ildouble: 1
 ldouble: 1
 
 Function: "atanh":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
@@ -171,7 +188,9 @@ ildouble: 1
 ldouble: 1
 
 Function: "atanh_towardzero":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1

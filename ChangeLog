@@ -1,3 +1,7 @@
+2015-03-12  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/fpu/libm-test-ulps: Regenerate.
+
 2015-03-11  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #18093]
