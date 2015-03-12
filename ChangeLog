@@ -1,3 +1,9 @@
+2015-03-11  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #18093]
+	* elf/cache.c (load_aux_cache): Regenerate the cache if it has
+	the wrong size.
+
 2015-03-11  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #18043]
