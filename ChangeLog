@@ -1,3 +1,7 @@
+2015-03-12  Yaakov Selkowitz  <yselkowi@redhat.com>
+
+	* manual/string.texi (XPG basename): Fix prototype.
+
 2015-03-12  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	[BZ #18080]

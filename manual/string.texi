@@ -2258,7 +2258,7 @@ on different systems.
 
 @comment libgen.h
 @comment XPG
-@deftypefun {char *} basename (const char *@var{path})
+@deftypefun {char *} basename (char *@var{path})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This is the standard XPG defined @code{basename}.  It is similar in
 spirit to the GNU version, but may modify the @var{path} by removing
