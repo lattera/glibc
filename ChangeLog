@@ -1,3 +1,8 @@
+2015-03-13  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* stdlib/setenv.c (__add_to_environ):
+	Dump core quickly if setenv (..., NULL, ...) is called.
+
 2015-03-13  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/tls-macros.h: Include <sysdep.h>.

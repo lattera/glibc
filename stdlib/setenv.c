@@ -114,8 +114,16 @@ __add_to_environ (name, value, combined, replace)
 {
   char **ep;
   size_t size;
+
+  /* Compute lengths before locking, so that the critical section is
+     less of a performance bottleneck.  VALLEN is needed only if
+     COMBINED is non-null.  Also, testing COMBINED instead of VALUE
+     causes setenv (..., NULL, ...) to dump core now instead of
+     corrupting memory later.  */
   const size_t namelen = strlen (name);
-  const size_t vallen = value != NULL ? strlen (value) + 1 : 0;
+  size_t vallen;
+  if (combined != NULL)
+    vallen = strlen (value) + 1;
 
   LOCK;
 
