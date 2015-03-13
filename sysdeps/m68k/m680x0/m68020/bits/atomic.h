@@ -139,8 +139,8 @@ typedef uintmax_t uatomic_max_t;
 	 __typeof (mem) __memp = (mem);					      \
 	 __asm __volatile ("1: move%.l %0,%1;"				      \
 			   "   move%.l %R0,%R1;"			      \
-			   "   add%.l %2,%1;"				      \
-			   "   addx%.l %R2,%R1;"			      \
+			   "   add%.l %R2,%R1;"				      \
+			   "   addx%.l %2,%1;"				      \
 			   "   cas2%.l %0:%R0,%1:%R1,(%3):(%4);"	      \
 			   "   jbne 1b"					      \
 			   : "=d" (__result), "=&d" (__temp)		      \
@@ -170,8 +170,8 @@ typedef uintmax_t uatomic_max_t;
 		__typeof (*(mem)) __temp;				      \
 		__asm __volatile ("1: move%.l %0,%1;"			      \
 				  "   move%.l %R0,%R1;"			      \
-				  "   add%.l %2,%1;"			      \
-				  "   addx%.l %R2,%R1;"			      \
+				  "   add%.l %R2,%R1;"			      \
+				  "   addx%.l %2,%1;"			      \
 				  "   cas2%.l %0:%R0,%1:%R1,(%3):(%4);"	      \
 				  "   jbne 1b"				      \
 				  : "=d" (__oldval), "=&d" (__temp)	      \
@@ -199,8 +199,8 @@ typedef uintmax_t uatomic_max_t;
 	 __typeof (*(mem)) __temp;					      \
 	 __asm __volatile ("1: move%.l %1,%2;"				      \
 			   "   move%.l %R1,%R2;"			      \
-			   "   addq%.l %#1,%2;"				      \
-			   "   addx%.l %5,%R2;"				      \
+			   "   addq%.l %#1,%R2;"			      \
+			   "   addx%.l %5,%2;"				      \
 			   "   seq %0;"					      \
 			   "   cas2%.l %1:%R1,%2:%R2,(%3):(%4);"	      \
 			   "   jbne 1b"					      \
@@ -230,8 +230,8 @@ typedef uintmax_t uatomic_max_t;
 	 __typeof (*(mem)) __temp;					      \
 	 __asm __volatile ("1: move%.l %1,%2;"				      \
 			   "   move%.l %R1,%R2;"			      \
-			   "   subq%.l %#1,%2;"				      \
-			   "   subx%.l %5,%R2;"				      \
+			   "   subq%.l %#1,%R2;"			      \
+			   "   subx%.l %5,%2;"				      \
 			   "   seq %0;"					      \
 			   "   cas2%.l %1:%R1,%2:%R2,(%3):(%4);"	      \
 			   "   jbne 1b"					      \

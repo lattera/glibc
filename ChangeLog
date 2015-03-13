@@ -1,3 +1,10 @@
+2015-03-14  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #18128]
+	* sysdeps/m68k/m680x0/m68020/bits/atomic.h (atomic_exchange_and_add)
+	(atomic_add, atomic_increment_and_test)
+	(atomic_decrement_and_test): Fix 64-bit arithmetic.
+
 2015-03-13  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* stdlib/setenv.c (__add_to_environ):
