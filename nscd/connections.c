@@ -957,6 +957,44 @@ cannot change socket to nonblocking mode: %s"),
     finish_drop_privileges ();
 }
 
+#ifdef HAVE_INOTIFY
+#define TRACED_FILE_MASK (IN_DELETE_SELF | IN_CLOSE_WRITE | IN_MOVE_SELF)
+#define TRACED_DIR_MASK (IN_DELETE_SELF | IN_CREATE | IN_MOVED_TO | IN_MOVE_SELF)
+void
+install_watches (struct traced_file *finfo)
+{
+  /* Use inotify support if we have it.  */
+  if (finfo->inotify_descr[TRACED_FILE] < 0)
+    finfo->inotify_descr[TRACED_FILE] = inotify_add_watch (inotify_fd,
+							   finfo->fname,
+							   TRACED_FILE_MASK);
+  if (finfo->inotify_descr[TRACED_FILE] < 0)
+    {
+      dbg_log (_("disabled inotify-based monitoring for file `%s': %s"),
+		 finfo->fname, strerror (errno));
+      return;
+    }
+  dbg_log (_("monitoring file `%s` (%d)"),
+	   finfo->fname, finfo->inotify_descr[TRACED_FILE]);
+  /* Additionally listen for events in the file's parent directory.
+     We do this because the file to be watched might be
+     deleted and then added back again.  When it is added back again
+     we must re-add the watch.  We must also cover IN_MOVED_TO to
+     detect a file being moved into the directory.  */
+  if (finfo->inotify_descr[TRACED_DIR] < 0)
+    finfo->inotify_descr[TRACED_DIR] = inotify_add_watch (inotify_fd,
+							  finfo->dname,
+							  TRACED_DIR_MASK);
+  if (finfo->inotify_descr[TRACED_DIR] < 0)
+    {
+      dbg_log (_("disabled inotify-based monitoring for directory `%s': %s"),
+		 finfo->fname, strerror (errno));
+      return;
+    }
+  dbg_log (_("monitoring directory `%s` (%d)"),
+	   finfo->dname, finfo->inotify_descr[TRACED_DIR]);
+}
+#endif
 
 /* Register the file in FINFO as a traced file for the database DBS[DBIX].
 
@@ -981,30 +1019,22 @@ register_traced_file (size_t dbidx, struct traced_file *finfo)
     return;
 
   if (__glibc_unlikely (debug_level > 0))
-    dbg_log (_("register trace file %s for database %s"),
+    dbg_log (_("monitoring file %s for database %s"),
 	     finfo->fname, dbnames[dbidx]);
 
 #ifdef HAVE_INOTIFY
-  if (inotify_fd < 0
-      || (finfo->inotify_descr = inotify_add_watch (inotify_fd, finfo->fname,
-						    IN_DELETE_SELF
-						    | IN_MODIFY)) < 0)
+  install_watches (finfo);
 #endif
+  struct stat64 st;
+  if (stat64 (finfo->fname, &st) < 0)
     {
-      /* We need the modification date of the file.  */
-      struct stat64 st;
-
-      if (stat64 (finfo->fname, &st) < 0)
-	{
-	  /* We cannot stat() the file, disable file checking.  */
-	  dbg_log (_("cannot stat() file `%s': %s"),
-		   finfo->fname, strerror (errno));
-	  return;
-	}
-
-      finfo->inotify_descr = -1;
-      finfo->mtime = st.st_mtime;
+      /* We cannot stat() the file. Set mtime to zero and try again later.  */
+      dbg_log (_("stat failed for file `%s'; will try again later: %s"),
+	       finfo->fname, strerror (errno));
+      finfo->mtime = 0;
     }
+  else
+    finfo->mtime = st.st_mtime;
 
   /* Queue up the file name.  */
   finfo->next = dbs[dbidx].traced_files;
@@ -1029,20 +1059,27 @@ invalidate_cache (char *key, int fd)
   for (number = pwddb; number < lastdb; ++number)
     if (strcmp (key, dbnames[number]) == 0)
       {
-	if (number == hstdb)
+	struct traced_file *runp = dbs[number].traced_files;
+	while (runp != NULL)
 	  {
-	    struct traced_file *runp = dbs[hstdb].traced_files;
-	    while (runp != NULL)
-	      if (runp->call_res_init)
-		{
-		  res_init ();
-		  break;
-		}
-	      else
-		runp = runp->next;
+	    /* Make sure we reload from file when checking mtime.  */
+	    runp->mtime = 0;
+#ifdef HAVE_INOTIFY
+	    /* During an invalidation we try to reload the traced
+	       file watches.  This allows the user to re-sync if
+	       inotify events were lost.  Similar to what we do during
+	       pruning.  */
+	    install_watches (runp);
+#endif
+	    if (runp->call_res_init)
+	      {
+		res_init ();
+		break;
+	      }
+	    runp = runp->next;
 	  }
 	break;
-    }
+      }
 
   if (number == lastdb)
     {
@@ -1880,11 +1917,28 @@ union __inev
   char buf[sizeof (struct inotify_event) + PATH_MAX];
 };
 
+/* Returns 0 if the file is there otherwise -1.  */
+int
+check_file (struct traced_file *finfo)
+{
+  struct stat64 st;
+  /* We could check mtime and if different re-add
+     the watches, and invalidate the database, but we
+     don't because we are called from inotify_check_files
+     which should be doing that work.  If sufficient inotify
+     events were lost then the next pruning or invalidation
+     will do the stat and mtime check.  We don't do it here to
+     keep the logic simple.  */
+  if (stat64 (finfo->fname, &st) < 0)
+    return -1;
+  return 0;
+}
+
 /* Process the inotify event in INEV. If the event matches any of the files
    registered with a database then mark that database as requiring its cache
    to be cleared. We indicate the cache needs clearing by setting
    TO_CLEAR[DBCNT] to true for the matching database.  */
-static inline void
+static void
 inotify_check_files (bool *to_clear, union __inev *inev)
 {
   /* Check which of the files changed.  */
@@ -1894,16 +1948,124 @@ inotify_check_files (bool *to_clear, union __inev *inev)
 
       while (finfo != NULL)
 	{
-	  /* Inotify event watch descriptor matches.  */
-	  if (finfo->inotify_descr == inev->i.wd)
+	  /* The configuration file was moved or deleted.
+	     We stop watching it at that point, and reinitialize.  */
+	  if (finfo->inotify_descr[TRACED_FILE] == inev->i.wd
+	      && ((inev->i.mask & IN_MOVE_SELF)
+		  || (inev->i.mask & IN_DELETE_SELF)
+		  || (inev->i.mask & IN_IGNORED)))
 	    {
-	      /* Mark cache as needing to be cleared and reinitialize.  */
+	      int ret;
+	      bool moved = (inev->i.mask & IN_MOVE_SELF) != 0;
+
+	      if (check_file (finfo) == 0)
+	        {
+		  dbg_log (_("ignored inotify event for `%s` (file exists)"),
+			   finfo->fname);
+		  return;
+		}
+
+	      dbg_log (_("monitored file `%s` was %s, removing watch"),
+		       finfo->fname, moved ? "moved" : "deleted");
+	      /* File was moved out, remove the watch.  Watches are
+		 automatically removed when the file is deleted.  */
+	      if (moved)
+		{
+		  ret = inotify_rm_watch (inotify_fd, inev->i.wd);
+		  if (ret < 0)
+		    dbg_log (_("failed to remove file watch `%s`: %s"),
+			     finfo->fname, strerror (errno));
+		}
+	      finfo->inotify_descr[TRACED_FILE] = -1;
 	      to_clear[dbcnt] = true;
 	      if (finfo->call_res_init)
 	        res_init ();
 	      return;
 	    }
+	  /* The configuration file was open for writing and has just closed.
+	     We reset the cache and reinitialize.  */
+	  if (finfo->inotify_descr[TRACED_FILE] == inev->i.wd
+	      && inev->i.mask & IN_CLOSE_WRITE)
+	    {
+	      /* Mark cache as needing to be cleared and reinitialize.  */
+	      dbg_log (_("monitored file `%s` was written to"), finfo->fname);
+	      to_clear[dbcnt] = true;
+	      if (finfo->call_res_init)
+	        res_init ();
+	      return;
+	    }
+	  /* The parent directory was moved or deleted.  We trigger one last
+	     invalidation.  At the next pruning or invalidation we may add
+	     this watch back if the file is present again.  */
+	  if (finfo->inotify_descr[TRACED_DIR] == inev->i.wd
+	      && ((inev->i.mask & IN_DELETE_SELF)
+		  || (inev->i.mask & IN_MOVE_SELF)
+		  || (inev->i.mask & IN_IGNORED)))
+	    {
+	      bool moved = (inev->i.mask & IN_MOVE_SELF) != 0;
+	      /* The directory watch may have already been removed
+		 but we don't know so we just remove it again and
+		 ignore the error.  Then we remove the file watch.
+		 Note: watches are automatically removed for deleted
+		 files.  */
+	      if (moved)
+		inotify_rm_watch (inotify_fd, inev->i.wd);
+	      if (finfo->inotify_descr[TRACED_FILE] != -1)
+		{
+		  dbg_log (_("monitored parent directory `%s` was %s, removing watch on `%s`"),
+			   finfo->dname, moved ? "moved" : "deleted", finfo->fname);
+		  if (inotify_rm_watch (inotify_fd, finfo->inotify_descr[TRACED_FILE]) < 0)
+		    dbg_log (_("failed to remove file watch `%s`: %s"),
+			     finfo->dname, strerror (errno));
+		}
+	      finfo->inotify_descr[TRACED_FILE] = -1;
+	      finfo->inotify_descr[TRACED_DIR] = -1;
+	      to_clear[dbcnt] = true;
+	      if (finfo->call_res_init)
+	        res_init ();
+	      /* Continue to the next entry since this might be the
+		 parent directory for multiple registered files and
+		 we want to remove watches for all registered files.  */
+	      continue;
+	    }
+	  /* The parent directory had a create or moved to event.  */
+	  if (finfo->inotify_descr[TRACED_DIR] == inev->i.wd
+	      && ((inev->i.mask & IN_MOVED_TO)
+		  || (inev->i.mask & IN_CREATE))
+	      && strcmp (inev->i.name, finfo->sfname) == 0)
+	    {
+	      /* We detected a directory change.  We look for the creation
+		 of the file we are tracking or the move of the same file
+		 into the directory.  */
+	      int ret;
+	      dbg_log (_("monitored file `%s` was %s, adding watch"),
+		       finfo->fname,
+		       inev->i.mask & IN_CREATE ? "created" : "moved into place");
+	      /* File was moved in or created.  Regenerate the watch.  */
+	      if (finfo->inotify_descr[TRACED_FILE] != -1)
+		inotify_rm_watch (inotify_fd,
+				  finfo->inotify_descr[TRACED_FILE]);
 
+	      ret = inotify_add_watch (inotify_fd,
+				       finfo->fname,
+				       TRACED_FILE_MASK);
+	      if (ret < 0)
+		dbg_log (_("failed to add file watch `%s`: %s"),
+			 finfo->fname, strerror (errno));
+
+	      finfo->inotify_descr[TRACED_FILE] = ret;
+
+	      /* The file is new or moved so mark cache as needing to
+		 be cleared and reinitialize.  */
+	      to_clear[dbcnt] = true;
+	      if (finfo->call_res_init)
+		res_init ();
+
+	      /* Done re-adding the watch.  Don't return, we may still
+		 have other files in this same directory, same watch
+		 descriptor, and need to process them.  */
+	    }
+	  /* Other events are ignored, and we move on to the next file.  */
 	  finfo = finfo->next;
         }
     }
@@ -1923,6 +2085,51 @@ clear_db_cache (bool *to_clear)
 	pthread_mutex_unlock (&dbs[dbcnt].prune_lock);
 	pthread_cond_signal (&dbs[dbcnt].prune_cond);
       }
+}
+
+int
+handle_inotify_events (void)
+{
+  bool to_clear[lastdb] = { false, };
+  union __inev inev;
+
+  /* Read all inotify events for files registered via
+     register_traced_file().  */
+  while (1)
+    {
+      /* Potentially read multiple events into buf.  */
+      ssize_t nb = TEMP_FAILURE_RETRY (read (inotify_fd,
+					     &inev.buf,
+					     sizeof (inev)));
+      if (nb < (ssize_t) sizeof (struct inotify_event))
+	{
+	  /* Not even 1 event.  */
+	  if (__glibc_unlikely (nb == -1 && errno != EAGAIN))
+	    return -1;
+	  /* Done reading events that are ready.  */
+	  break;
+	}
+      /* Process all events.  The normal inotify interface delivers
+	 complete events on a read and never a partial event.  */
+      char *eptr = &inev.buf[0];
+      ssize_t count;
+      while (1)
+	{
+	  /* Check which of the files changed.  */
+	  inotify_check_files (to_clear, &inev);
+	  count = sizeof (struct inotify_event) + inev.i.len;
+	  eptr += count;
+	  nb -= count;
+	  if (nb >= (ssize_t) sizeof (struct inotify_event))
+	    memcpy (&inev, eptr, nb);
+	  else
+	    break;
+	}
+      continue;
+    }
+  /* Actually perform the cache clearing.  */
+  clear_db_cache (to_clear);
+  return 0;
 }
 
 #endif
@@ -2031,42 +2238,20 @@ main_loop_poll (void)
 	    {
 	      if (conns[1].revents != 0)
 		{
-		  bool to_clear[lastdb] = { false, };
-		  union __inev inev;
-
-		  /* Read all inotify events for files registered via
-		     register_traced_file().  */
-		  while (1)
+		  int ret;
+		  ret = handle_inotify_events ();
+		  if (ret == -1)
 		    {
-		      ssize_t nb = TEMP_FAILURE_RETRY (read (inotify_fd, &inev,
-							     sizeof (inev)));
-		      if (nb < (ssize_t) sizeof (struct inotify_event))
-			{
-			  if (__builtin_expect (nb == -1 && errno != EAGAIN,
-						0))
-			    {
-			      /* Something went wrong when reading the inotify
-				 data.  Better disable inotify.  */
-			      dbg_log (_("\
-disabled inotify after read error %d"),
-				       errno);
-			      conns[1].fd = -1;
-			      firstfree = 1;
-			      if (nused == 2)
-				nused = 1;
-			      close (inotify_fd);
-			      inotify_fd = -1;
-			    }
-			  break;
-			}
-
-		      /* Check which of the files changed.  */
-		      inotify_check_files (to_clear, &inev);
+		      /* Something went wrong when reading the inotify
+			 data.  Better disable inotify.  */
+		      dbg_log (_("disabled inotify-based monitoring after read error %d"), errno);
+		      conns[1].fd = -1;
+		      firstfree = 1;
+		      if (nused == 2)
+			nused = 1;
+		      close (inotify_fd);
+		      inotify_fd = -1;
 		    }
-
-		  /* Actually perform the cache clearing.  */
-		  clear_db_cache (to_clear);
-
 		  --n;
 		}
 
@@ -2234,37 +2419,18 @@ main_loop_epoll (int efd)
 # ifdef HAVE_INOTIFY
 	else if (revs[cnt].data.fd == inotify_fd)
 	  {
-	    bool to_clear[lastdb] = { false, };
-	    union __inev inev;
-
-	    /* Read all inotify events for files registered via
-	       register_traced_file().  */
-	    while (1)
+	    int ret;
+	    ret = handle_inotify_events ();
+	    if (ret == -1)
 	      {
-		ssize_t nb = TEMP_FAILURE_RETRY (read (inotify_fd, &inev,
-						 sizeof (inev)));
-		if (nb < (ssize_t) sizeof (struct inotify_event))
-		  {
-		    if (__glibc_unlikely (nb == -1 && errno != EAGAIN))
-		      {
-			/* Something went wrong when reading the inotify
-			   data.  Better disable inotify.  */
-			dbg_log (_("disabled inotify after read error %d"),
-				 errno);
-			(void) epoll_ctl (efd, EPOLL_CTL_DEL, inotify_fd,
-					  NULL);
-			close (inotify_fd);
-			inotify_fd = -1;
-		      }
-		    break;
-		  }
-
-		/* Check which of the files changed.  */
-		inotify_check_files(to_clear, &inev);
+		/* Something went wrong when reading the inotify
+		   data.  Better disable inotify.  */
+		dbg_log (_("disabled inotify-based monitoring after read error %d"), errno);
+		(void) epoll_ctl (efd, EPOLL_CTL_DEL, inotify_fd, NULL);
+		close (inotify_fd);
+		inotify_fd = -1;
+		break;
 	      }
-
-	    /* Actually perform the cache clearing.  */
-	    clear_db_cache (to_clear);
 	  }
 # endif
 # ifdef HAVE_NETLINK
@@ -2301,7 +2467,9 @@ main_loop_epoll (int efd)
 	  no reply in too long of a time.  */
       time_t laststart = now - ACCEPT_TIMEOUT;
       assert (starttime[sock] == 0);
+# ifdef HAVE_INOTIFY
       assert (inotify_fd == -1 || starttime[inotify_fd] == 0);
+# endif
       assert (nl_status_fd == -1 || starttime[nl_status_fd] == 0);
       for (int cnt = highest; cnt > STDERR_FILENO; --cnt)
 	if (starttime[cnt] != 0 && starttime[cnt] < laststart)

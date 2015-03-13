@@ -272,28 +272,38 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
       while (runp != NULL)
 	{
 #ifdef HAVE_INOTIFY
-	  if (runp->inotify_descr == -1)
+	  if (runp->inotify_descr[TRACED_FILE] == -1)
 #endif
 	    {
 	      struct stat64 st;
 
 	      if (stat64 (runp->fname, &st) < 0)
 		{
+		  /* Print a diagnostic that the traced file was missing.
+		     We must not disable tracing since the file might return
+		     shortly and we want to reload it at the next pruning.
+		     Disabling tracing here would go against the configuration
+		     as specified by the user via check-files.  */
 		  char buf[128];
-		  /* We cannot stat() the file, disable file checking if the
-		     file does not exist.  */
-		  dbg_log (_("cannot stat() file `%s': %s"),
+		  dbg_log (_("checking for monitored file `%s': %s"),
 			   runp->fname, strerror_r (errno, buf, sizeof (buf)));
-		  if (errno == ENOENT)
-		    table->check_file = 0;
 		}
 	      else
 		{
-		  if (st.st_mtime != table->file_mtime)
+		  /* This must be `!=` to catch cases where users turn the
+		     clocks back and we still want to detect any time difference
+		     in mtime.  */
+		  if (st.st_mtime != runp->mtime)
 		    {
-		      /* The file changed.  Invalidate all entries.  */
+		      dbg_log (_("monitored file `%s` changed (mtime)"),
+			       runp->fname);
+		      /* The file changed. Invalidate all entries.  */
 		      now = LONG_MAX;
-		      table->file_mtime = st.st_mtime;
+		      runp->mtime = st.st_mtime;
+#ifdef HAVE_INOTIFY
+		      /* Attempt to install a watch on the file.  */
+		      install_watches (runp);
+#endif
 		    }
 		}
 	    }

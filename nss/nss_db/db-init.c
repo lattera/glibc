@@ -22,35 +22,25 @@
 #include <nscd/nscd.h>
 #include <string.h>
 
-static union
-{
-  struct traced_file file;
-  char buf[sizeof (struct traced_file) + sizeof (_PATH_VARDB "passwd.db")];
-} pwd_traced_file;
+#define PWD_FILENAME (_PATH_VARDB "passwd.db")
+define_traced_file (pwd, PWD_FILENAME);
 
-static union
-{
-  struct traced_file file;
-  char buf[sizeof (struct traced_file) + sizeof (_PATH_VARDB "group.db")];
-} grp_traced_file;
+#define GRP_FILENAME (_PATH_VARDB "group.db")
+define_traced_file (grp, GRP_FILENAME);
 
-static union
-{
-  struct traced_file file;
-  char buf[sizeof (struct traced_file) + sizeof (_PATH_VARDB "services.db")];
-} serv_traced_file;
-
+#define SERV_FILENAME (_PATH_VARDB "services.db")
+define_traced_file (serv, SERV_FILENAME);
 
 void
 _nss_db_init (void (*cb) (size_t, struct traced_file *))
 {
-  strcpy (pwd_traced_file.file.fname,_PATH_VARDB  "passwd.db");
+  init_traced_file (&pwd_traced_file.file, PWD_FILENAME, 0);
   cb (pwddb, &pwd_traced_file.file);
 
-  strcpy (grp_traced_file.file.fname, _PATH_VARDB "group.db");
+  init_traced_file (&grp_traced_file.file, GRP_FILENAME, 0);
   cb (grpdb, &grp_traced_file.file);
 
-  strcpy (serv_traced_file.file.fname, _PATH_VARDB "services.db");
+  init_traced_file (&serv_traced_file.file, SERV_FILENAME, 0);
   cb (servdb, &serv_traced_file.file);
 }
 

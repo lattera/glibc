@@ -61,17 +61,67 @@ typedef enum
    80% of the thread stack size.  */
 #define MAX_STACK_USE ((8 * NSCD_THREAD_STACKSIZE) / 10)
 
-
-/* Registered filename used to fill database.  */
+/* Records the file registered per database that when changed
+   or modified requires invalidating the database.  */
 struct traced_file
 {
+  /* Tracks the last modified time of the traced file.  */
   time_t mtime;
+  /* Support multiple registered files per database.  */
   struct traced_file *next;
   int call_res_init;
-  int inotify_descr;
+  /* Requires Inotify support to do anything useful.  */
+#define TRACED_FILE	0
+#define TRACED_DIR	1
+  int inotify_descr[2];
+# ifndef PATH_MAX
+#  define PATH_MAX 1024
+# endif
+  /* The parent directory is used to scan for creation/deletion.  */
+  char dname[PATH_MAX];
+  /* Just the name of the file with no directory component.  */
+  char *sfname;
+  /* The full-path name of the registered file.  */
   char fname[];
 };
 
+/* Initialize a `struct traced_file`.  As input we need the name
+   of the file, and if invalidation requires calling res_init.
+   If CRINIT is 1 then res_init will be called after invalidation
+   or if the traced file is changed in any way, otherwise it will
+   not.  */
+static inline void
+init_traced_file(struct traced_file *file, const char *fname, int crinit)
+{
+   char *dname;
+   file->mtime = 0;
+   file->inotify_descr[TRACED_FILE] = -1;
+   file->inotify_descr[TRACED_DIR] = -1;
+   strcpy (file->fname, fname);
+   /* Compute the parent directory name and store a copy.  The copy makes
+      it much faster to add/remove watches while nscd is running instead
+      of computing this over and over again in a temp buffer.  */
+   file->dname[0] = '\0';
+   dname = strrchr (fname, '/');
+   if (dname != NULL)
+     {
+       size_t len = (size_t)(dname - fname);
+       if (len > sizeof (file->dname))
+	 abort ();
+       strncpy (file->dname, file->fname, len);
+       file->dname[len] = '\0';
+     }
+   /* The basename is the name just after the last forward slash.  */
+   file->sfname = &dname[1];
+   file->call_res_init = crinit;
+}
+
+#define define_traced_file(id, filename) 			\
+static union							\
+{								\
+  struct traced_file file;					\
+  char buf[sizeof (struct traced_file) + sizeof (filename)];	\
+} id##_traced_file;
 
 /* Structure describing dynamic part of one database.  */
 struct database_dyn
@@ -90,7 +140,6 @@ struct database_dyn
   int propagate;
   struct traced_file *traced_files;
   const char *db_filename;
-  time_t file_mtime;
   size_t suggested_module;
   size_t max_db_size;
 
@@ -211,6 +260,9 @@ void do_exit (int child_ret, int errnum, const char *format, ...);
 /* connections.c */
 extern void nscd_init (void);
 extern void register_traced_file (size_t dbidx, struct traced_file *finfo);
+#ifdef HAVE_INOTIFY
+extern void install_watches (struct traced_file *finfo);
+#endif
 extern void close_sockets (void);
 extern void start_threads (void) __attribute__ ((__noreturn__));
 

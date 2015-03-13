@@ -1,3 +1,27 @@
+2015-03-13  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #14906]
+	* nscd/cache.c (prune_cache): Use TRACED_FILE. Compare and update
+	traced file mtime. Use consistent log message.
+	* nscd/connections.c [HAVE_INOTIFY] (install_watches): New function.
+	(register_traced_file): Call install_watches. Always set mtime.
+	(invalidate_cache): Iterate over all trace files. Call install_watches.
+	(inotify_check_files): Don't inline. Handle watching parent
+	directories and configuration file movement in and out.
+	(handle_inotify_events): New function.
+	(main_loop_poll): Call handle_inotify_events.
+	(main_loop_epoll): Likewise.
+	* nscd/nscd.h: Define TRACED_FILE, TRACED_DIR, and PATH_MAX.
+	(struct traced_file): Use array of inotify fds. Add parent directory,
+	and basename.
+	(struct database_dyn): Remove unused file_mtime.
+	(init_traced_file): New inline function.
+	(define_traced_file): New macro.
+	* nss/nss_db/db-init.c: Use define_traced_file.
+	(_nss_db_init): Use init_traced_file.
+	* nss/nss_files/files-init.c: Use define_traced_file.
+	(_nss_files_init): Use init_traced_file.
+
 2015-03-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* soft-fp/soft-fp.h (_FP_STATIC_ASSERT): New macro.
