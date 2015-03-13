@@ -1,3 +1,11 @@
+2015-03-13  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/tls-macros.h: Include <sysdep.h>.
+	(GET_SPECIAL_RELOC, GET_SPECIAL_PCREL): New macros to encapsulate
+	all the necessary asm magic in one place.
+	(TLS_LE, TLS_IE, TLS_LD, TLS_GD): Rewritten as C expressions
+	using those.
+
 2015-03-13  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #14906]

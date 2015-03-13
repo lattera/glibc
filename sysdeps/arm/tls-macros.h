@@ -1,78 +1,72 @@
-#ifdef __thumb2__
-#define ARM_PC_OFFSET "4"
-#else
-#define ARM_PC_OFFSET "8"
-#endif
-
-#define TLS_LE(x)					\
-  ({ int *__result;					\
-     void *tp = __builtin_thread_pointer ();		\
-     asm ("ldr %0, 1f; "				\
-	  "add %0, %1, %0; "				\
-	  "b 2f; "					\
-	  ".align 2; "					\
-	  "1: .word " #x "(tpoff); "			\
-	  "2: "						\
-	  : "=&r" (__result) : "r" (tp));		\
-     __result; })
+#include <sysdep.h>                     /* For ARCH_HAS_T2.  */
 
 #ifdef __thumb2__
-#define TLS_IE(x)					\
-  ({ int *__result;					\
-     void *tp = __builtin_thread_pointer ();		\
-     asm ("ldr %0, 1f; "				\
-	  "3: add %0, pc, %0;"				\
-	  "ldr %0, [%0];"				\
-	  "add %0, %1, %0; "				\
-	  "b 2f; "					\
-	  ".align 2; "					\
-	  "1: .word " #x "(gottpoff) + (. - 3b - 4); "	\
-	  "2: "						\
-	  : "=&r" (__result) : "r" (tp));		\
-     __result; })
+# define ARM_PC_OFFSET "4"
 #else
-#define TLS_IE(x)					\
-  ({ int *__result;					\
-     void *tp = __builtin_thread_pointer ();		\
-     asm ("ldr %0, 1f; "				\
-	  "3: ldr %0, [pc, %0];"			\
-	  "add %0, %1, %0; "				\
-	  "b 2f; "					\
-	  ".align 2; "					\
-	  "1: .word " #x "(gottpoff) + (. - 3b - 8); "	\
-	  "2: "						\
-	  : "=&r" (__result) : "r" (tp));		\
-     __result; })
+# define ARM_PC_OFFSET "8"
 #endif
 
-#define TLS_LD(x)					\
-  ({ char *__result;					\
-     int __offset;					\
-     extern void *__tls_get_addr (void *);		\
-     asm ("ldr %0, 2f; "				\
-	  "1: add %0, pc, %0; "				\
-	  "b 3f; "					\
-	  ".align 2; "					\
-	  "2: .word " #x "(tlsldm) + (. - 1b - "ARM_PC_OFFSET"); "	\
-	  "3: "						\
-	  : "=r" (__result));				\
-     __result = (char *)__tls_get_addr (__result);	\
-     asm ("ldr %0, 1f; "				\
-	  "b 2f; "					\
-	  ".align 2; "					\
-	  "1: .word " #x "(tlsldo); "			\
-	  "2: "						\
-	  : "=r" (__offset));				\
-     (int *) (__result + __offset); })
+/* Returns the address of data containing ".word SYMBOL(RELOC)".  */
+#if defined (ARCH_HAS_T2) && !defined (PIC)
+# define GET_SPECIAL_RELOC(symbol, reloc)			\
+  ({								\
+    int *__##symbol##_rodata;					\
+    asm ("movw %0, #:lower16:1f\n"				\
+	 "movt %0, #:upper16:1f\n"				\
+	 ".pushsection .rodata.cst4, \"aM\", %%progbits, 4\n"	\
+	 ".balign 4\n"						\
+	 "1: .word " #symbol "(" #reloc ")\n"			\
+	 ".popsection"						\
+	 : "=r" (__##symbol##_rodata));				\
+    __##symbol##_rodata;					\
+  })
+#elif defined (ARCH_HAS_T2) && defined (PIC) && ARM_PCREL_MOVW_OK
+# define GET_SPECIAL_RELOC(symbol, reloc)			\
+  ({								\
+    int *__##symbol##_rodata;					\
+    asm ("movw %0, #:lower16:1f - 2f - " ARM_PC_OFFSET "\n"	\
+	 "movt %0, #:upper16:1f - 2f - " ARM_PC_OFFSET "\n"	\
+	 ".pushsection .rodata.cst4, \"aM\", %%progbits, 4\n"	\
+	 ".balign 4\n"						\
+	 "1: .word " #symbol "(" #reloc ")\n"			\
+	 ".popsection\n"					\
+	 "2: add %0, %0, pc"					\
+	 : "=r" (__##symbol##_rodata));				\
+    __##symbol##_rodata;					\
+  })
+#else
+# define GET_SPECIAL_RELOC(symbol, reloc)			\
+  ({								\
+    int *__##symbol##_rodata;					\
+    asm ("adr %0, 1f\n"						\
+	 "b 2f\n"						\
+	 ".balign 4\n"						\
+	 "1: .word " #symbol "(" #reloc ")\n"			\
+	 "2:"							\
+	 : "=r" (__##symbol##_rodata));				\
+    __##symbol##_rodata;					\
+  })
+#endif
 
-#define TLS_GD(x)					\
-  ({ int *__result;					\
-     extern void *__tls_get_addr (void *);		\
-     asm ("ldr %0, 2f; "				\
-	  "1: add %0, pc, %0; "				\
-	  "b 3f; "					\
-	  ".align 2; "					\
-	  "2: .word " #x "(tlsgd) + (. - 1b - "ARM_PC_OFFSET"); "	\
-	  "3: "						\
-	  : "=r" (__result));				\
-     (int *)__tls_get_addr (__result); })
+/* Returns the pointer value (SYMBOL(RELOC) + pc - PC_OFS).  */
+#define GET_SPECIAL_PCREL(symbol, reloc)				\
+  ({									\
+    int *__##symbol##_rodata = GET_SPECIAL_RELOC (symbol, reloc);	\
+    (void *) ((int) __##symbol##_rodata + *__##symbol##_rodata);	\
+  })
+
+#define TLS_LE(x)						\
+  (__builtin_thread_pointer () + *GET_SPECIAL_RELOC (x, tpoff))
+
+#define TLS_IE(x)						\
+  ((int *) (__builtin_thread_pointer ()				\
+	    + *(int *) GET_SPECIAL_PCREL (x, gottpoff)))
+
+extern void *__tls_get_addr (void *);
+
+#define TLS_LD(x)						\
+  ((int *) (__tls_get_addr (GET_SPECIAL_PCREL (x, tlsldm))	\
+	    + *GET_SPECIAL_RELOC (x, tlsldo)))
+
+#define TLS_GD(x)						\
+  ((int *) __tls_get_addr (GET_SPECIAL_PCREL (x, tlsgd)))
