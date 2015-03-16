@@ -1,3 +1,7 @@
+2015-03-15  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* stdlib/setenv.c (__add_to_environ): Revert previous change.
+
 2015-03-14  Andreas Schwab  <schwab@linux-m68k.org>
 
 	[BZ #18128]
