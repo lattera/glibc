@@ -1,3 +1,8 @@
+2015-03-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18134]
+	* sysdeps/x86_64/dl-trampoline.S (PRESERVE_BND_REGS_PREFIX): New.
+
 2015-03-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* stdlib/setenv.c (__add_to_environ): Revert previous change.

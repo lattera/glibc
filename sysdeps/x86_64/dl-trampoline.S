@@ -30,6 +30,7 @@
 /* X32 saves RCX, RDX, RSI, RDI, R8 and R9 plus RAX.  */
 # define REGISTER_SAVE_AREA	(8 * 7)
 # define REGISTER_SAVE_RAX	0
+# define PRESERVE_BND_REGS_PREFIX
 #else
 /* X86-64 saves RCX, RDX, RSI, RDI, R8 and R9 plus RAX as well as BND0,
    BND1, BND2, BND3.  */
@@ -40,6 +41,11 @@
 # define REGISTER_SAVE_BND2	(REGISTER_SAVE_BND1 + 16)
 # define REGISTER_SAVE_BND3	(REGISTER_SAVE_BND2 + 16)
 # define REGISTER_SAVE_RAX	(REGISTER_SAVE_BND3 + 16)
+# ifdef HAVE_MPX_SUPPORT
+#  define PRESERVE_BND_REGS_PREFIX bnd
+# else
+#  define PRESERVE_BND_REGS_PREFIX .byte 0xf2
+# endif
 #endif
 #define REGISTER_SAVE_RCX	(REGISTER_SAVE_RAX + 8)
 #define REGISTER_SAVE_RDX	(REGISTER_SAVE_RCX + 8)
@@ -112,6 +118,8 @@ _dl_runtime_resolve:
 	# Adjust stack(PLT did 2 pushes)
 	addq $(REGISTER_SAVE_AREA + 16), %rsp
 	cfi_adjust_cfa_offset(-(REGISTER_SAVE_AREA + 16))
+	# Preserve bound registers.
+	PRESERVE_BND_REGS_PREFIX
 	jmp *%r11		# Jump to function address.
 	cfi_endproc
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve
