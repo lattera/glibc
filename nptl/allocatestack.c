@@ -1190,7 +1190,6 @@ __nptl_setxid (struct xid_command *cmdp)
 static inline void __attribute__((always_inline))
 init_one_static_tls (struct pthread *curp, struct link_map *map)
 {
-  dtv_t *dtv = GET_DTV (TLS_TPADJ (curp));
 # if TLS_TCB_AT_TP
   void *dest = (char *) curp - map->l_tls_offset;
 # elif TLS_DTV_AT_TP
@@ -1199,11 +1198,9 @@ init_one_static_tls (struct pthread *curp, struct link_map *map)
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
 
-  /* Fill in the DTV slot so that a later LD/GD access will find it.  */
-  dtv[map->l_tls_modid].pointer.val = dest;
-  dtv[map->l_tls_modid].pointer.is_static = true;
-
-  /* Initialize the memory.  */
+  /* We cannot delay the initialization of the Static TLS area, since
+     it can be accessed with LE or IE, but since the DTV is only used
+     by GD and LD, we can delay its update to avoid a race.  */
   memset (__mempcpy (dest, map->l_tls_initimage, map->l_tls_initimage_size),
 	  '\0', map->l_tls_blocksize - map->l_tls_initimage_size);
 }

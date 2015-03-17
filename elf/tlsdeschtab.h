@@ -42,7 +42,7 @@ eq_tlsdesc (void *p, void *q)
   return tdp->tlsinfo.ti_offset == tdq->tlsinfo.ti_offset;
 }
 
-inline static int
+inline static size_t
 map_generation (struct link_map *map)
 {
   size_t idx = map->l_tls_modid;
@@ -58,7 +58,7 @@ map_generation (struct link_map *map)
 	     we can assume that, if the generation count is zero, we
 	     still haven't determined the generation count for this
 	     module.  */
-	  if (listp->slotinfo[idx].gen)
+	  if (listp->slotinfo[idx].map == map && listp->slotinfo[idx].gen)
 	    return listp->slotinfo[idx].gen;
 	  else
 	    break;

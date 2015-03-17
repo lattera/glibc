@@ -1,3 +1,50 @@
+2015-03-17  Alexandre Oliva <aoliva@redhat.com>
+
+	[BZ #17090]
+	[BZ #17620]
+	[BZ #17621]
+	[BZ #17628]
+	* NEWS: Update.
+	* elf/dl-tls.c (_dl_update_slotinfo): Clean up outdated DTV
+	entries with Static TLS too.  Skip entries past the end of the
+	allocated DTV, from Alan Modra.
+	(tls_get_addr_tail): Update to glibc_likely/unlikely.  Move
+	Static TLS DTV entry set up from...
+	(_dl_allocate_tls_init): ... here (fix modid assertion), ...
+	* elf/dl-reloc.c (_dl_nothread_init_static_tls): ... here...
+	* nptl/allocatestack.c (init_one_static_tls): ... and here...
+	* elf/dlopen.c (dl_open_worker): Drop l_tls_modid upper bound
+	for Static TLS.
+	* elf/tlsdeschtab.h (map_generation): Return size_t.  Check
+	that the slot we find is associated with the given map before
+	using its generation count.
+	* nptl_db/db_info.c: Include ldsodefs.h.
+	(rtld_global, dtv_slotinfo_list, dtv_slotinfo): New typedefs.
+	* nptl_db/structs.def (DB_RTLD_VARIABLE): New macro.
+	(DB_MAIN_VARIABLE, DB_RTLD_GLOBAL_FIELD): Likewise.
+	(link_map::l_tls_offset): New struct field.
+	(dtv_t::counter): Likewise.
+	(rtld_global): New struct.
+	(_rtld_global): New rtld variable.
+	(dl_tls_dtv_slotinfo_list): New rtld global field.
+	(dtv_slotinfo_list): New struct.
+	(dtv_slotinfo): Likewise.
+	* nptl_db/td_symbol_list.c: Drop gnu/lib-names.h include.
+	(td_lookup): Rename to...
+	(td_mod_lookup): ... this.  Use new mod parameter instead of
+	LIBPTHREAD_SO.
+	* nptl_db/td_thr_tlsbase.c: Include link.h.
+	(dtv_slotinfo_list, dtv_slotinfo): New functions.
+	(td_thr_tlsbase): Check DTV generation.  Compute Static TLS
+	addresses even if the DTV is out of date or missing them.
+	* nptl_db/fetch-value.c (_td_locate_field): Do not refuse to
+	index zero-length arrays.
+	* nptl_db/thread_dbP.h: Include gnu/lib-names.h.
+	(td_lookup): Make it a macro implemented in terms of...
+	(td_mod_lookup): ... this declaration.
+	* nptl_db/db-symbols.awk (DB_RTLD_VARIABLE): Override.
+	(DB_MAIN_VARIABLE): Likewise.
+
 2015-03-16  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18134]

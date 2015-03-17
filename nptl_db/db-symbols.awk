@@ -2,6 +2,8 @@
 # we've just built.  It checks for all the symbols used in td_symbol_list.
 
 BEGIN {
+%define DB_RTLD_VARIABLE(name) /* Nothing. */
+%define DB_MAIN_VARIABLE(name) /* Nothing. */
 %define DB_LOOKUP_NAME(idx, name)		required[STRINGIFY (name)] = 1;
 %define DB_LOOKUP_NAME_TH_UNIQUE(idx, name)	th_unique[STRINGIFY (name)] = 1;
 %include "db-symbols.h"

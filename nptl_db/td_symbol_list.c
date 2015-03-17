@@ -18,7 +18,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <assert.h>
-#include <gnu/lib-names.h>
 #include "thread_dbP.h"
 
 static const char *symbol_list_arr[] =
@@ -41,12 +40,12 @@ td_symbol_list (void)
 
 
 ps_err_e
-td_lookup (struct ps_prochandle *ps, int idx, psaddr_t *sym_addr)
+td_mod_lookup (struct ps_prochandle *ps, const char *mod,
+	       int idx, psaddr_t *sym_addr)
 {
   ps_err_e result;
   assert (idx >= 0 && idx < SYM_NUM_MESSAGES);
-  result = ps_pglobal_lookup (ps, LIBPTHREAD_SO, symbol_list_arr[idx],
-			      sym_addr);
+  result = ps_pglobal_lookup (ps, mod, symbol_list_arr[idx], sym_addr);
 
   return result;
 }

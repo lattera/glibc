@@ -533,17 +533,7 @@ TLS generation counter wrapped!  Please report this."));
 	  && imap->l_tls_blocksize > 0)
 	{
 	  /* For static TLS we have to allocate the memory here and
-	     now.  This includes allocating memory in the DTV.  But we
-	     cannot change any DTV other than our own.  So, if we
-	     cannot guarantee that there is room in the DTV we don't
-	     even try it and fail the load.
-
-	     XXX We could track the minimum DTV slots allocated in
-	     all threads.  */
-	  if (! RTLD_SINGLE_THREAD_P && imap->l_tls_modid > DTV_SURPLUS)
-	    _dl_signal_error (0, "dlopen", NULL, N_("\
-cannot load any more object with static TLS"));
-
+	     now, but we can delay updating the DTV.  */
 	  imap->l_need_tls_init = 0;
 #ifdef SHARED
 	  /* Update the slot information data for at least the

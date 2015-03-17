@@ -69,7 +69,8 @@ _td_locate_field (td_thragent_t *ta,
 	}
     }
 
-  if (idx != 0 && idx - (psaddr_t) 0 > DB_DESC_NELEM (desc))
+  if (idx != 0 && DB_DESC_NELEM (desc) != 0
+      && idx - (psaddr_t) 0 > DB_DESC_NELEM (desc))
     /* This is an internal indicator to callers with nonzero IDX
        that the IDX value is too big.  */
     return TD_NOAPLIC;

@@ -29,6 +29,7 @@
 #include "thread_db.h"
 #include "../nptl/pthreadP.h"  	/* This is for *_BITMASK only.  */
 #include <list.h>
+#include <gnu/lib-names.h>
 
 /* Indeces for the symbol names.  */
 enum
@@ -139,11 +140,11 @@ ta_ok (const td_thragent_t *ta)
 }
 
 
-/* Internal wrapper around ps_pglobal_lookup.  */
-extern ps_err_e td_lookup (struct ps_prochandle *ps,
-			   int idx, psaddr_t *sym_addr) attribute_hidden;
-
-
+/* Internal wrappers around ps_pglobal_lookup.  */
+extern ps_err_e td_mod_lookup (struct ps_prochandle *ps, const char *modname,
+			       int idx, psaddr_t *sym_addr) attribute_hidden;
+#define td_lookup(ps, idx, sym_addr) \
+  td_mod_lookup ((ps), LIBPTHREAD_SO, (idx), (sym_addr))
 
 
 /* Store in psaddr_t VAR the address of inferior's symbol NAME.  */
