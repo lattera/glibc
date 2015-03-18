@@ -17,6 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <kernel-features.h>
 #include <errno.h>
 #include <sysdep.h>
 #include <lowlevellock.h>
@@ -45,6 +46,13 @@ futex_abstimed_wait (unsigned int* futex, unsigned int expected,
     }
   else
     {
+#if (defined __ASSUME_FUTEX_CLOCK_REALTIME	\
+     && defined lll_futex_timed_wait_bitset)
+      /* The Linux kernel returns EINVAL for this, but in userspace
+	 such a value is valid.  */
+      if (abstime->tv_sec < 0)
+	return ETIMEDOUT;
+#else
       struct timeval tv;
       struct timespec rt;
       int sec, nsec;
@@ -68,9 +76,16 @@ futex_abstimed_wait (unsigned int* futex, unsigned int expected,
       /* Do wait.  */
       rt.tv_sec = sec;
       rt.tv_nsec = nsec;
+#endif
       if (cancel)
 	oldtype = __pthread_enable_asynccancel ();
+#if (defined __ASSUME_FUTEX_CLOCK_REALTIME	\
+     && defined lll_futex_timed_wait_bitset)
+      err = lll_futex_timed_wait_bitset (futex, expected, abstime,
+					 FUTEX_CLOCK_REALTIME, private);
+#else
       err = lll_futex_timed_wait (futex, expected, &rt, private);
+#endif
       if (cancel)
 	__pthread_disable_asynccancel (oldtype);
     }

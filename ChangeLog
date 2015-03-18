@@ -1,3 +1,12 @@
+2015-03-18  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18138]
+	* nptl/sem_waitcommon.c: Include <kernel-features.h>.
+	(futex_abstimed_wait)
+	[__ASSUME_FUTEX_CLOCK_REALTIME && lll_futex_timed_wait_bitset]:
+	Use lll_futex_timed_wait_bitset with FUTEX_CLOCK_REALTIME instead
+	of lll_futex_timed_wait.
+
 2015-03-18  Brad Hubbard  <bhubbard@redhat.com>
 
 	[BZ #17542]
