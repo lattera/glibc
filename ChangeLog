@@ -1,3 +1,8 @@
+2015-03-18  Brad Hubbard  <bhubbard@redhat.com>
+
+	[BZ #17542]
+	* sunrpc/svc.c (xprt_register): Use calloc to allocate xports.
+
 2015-03-17  Alexandre Oliva <aoliva@redhat.com>
 
 	[BZ #17090]

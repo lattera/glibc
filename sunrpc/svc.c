@@ -97,8 +97,8 @@ xprt_register (SVCXPRT *xprt)
 
   if (xports == NULL)
     {
-      xports = (SVCXPRT **) malloc (_rpc_dtablesize () * sizeof (SVCXPRT *));
-      if (xports == NULL) /* Don´t add handle */
+      xports = (SVCXPRT **) calloc (_rpc_dtablesize (), sizeof (SVCXPRT *));
+      if (xports == NULL) /* Don't add handle */
 	return;
     }
 
