@@ -1,3 +1,9 @@
+2015-03-19  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/memcpy.S [ARM_ALWAYS_BX]: Fix computed-jump calculations
+	to account for alignment padding.
+	* sysdeps/arm/memmove.S: Likewise.
+
 2015-03-19  Chris Metcalf  <cmetcalf@ezchip.com>
 
 	* sysdeps/unix/sysv/linux/generic/README: New file.
