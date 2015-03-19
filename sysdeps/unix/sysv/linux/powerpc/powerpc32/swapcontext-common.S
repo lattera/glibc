@@ -301,14 +301,9 @@ ENTRY(__CONTEXT_FUNC_NAME)
 
 #  ifdef PIC
 	mflr    r8
-#   ifdef HAVE_ASM_PPC_REL16
 	SETUP_GOT_ACCESS(r7,got_label)
 	addis	r7,r7,_GLOBAL_OFFSET_TABLE_-got_label@ha
 	addi	r7,r7,_GLOBAL_OFFSET_TABLE_-got_label@l
-#   else
-	bl      _GLOBAL_OFFSET_TABLE_@local-4
-	mflr    r7
-#   endif
 	mtlr    r8
 #   ifdef SHARED
 	lwz     r7,_rtld_global_ro@got(r7)
