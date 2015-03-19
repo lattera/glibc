@@ -1,3 +1,7 @@
+2015-03-19  Chris Metcalf  <cmetcalf@ezchip.com>
+
+	* sysdeps/unix/sysv/linux/generic/README: New file.
+
 2015-03-18  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18138]
