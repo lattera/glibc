@@ -9840,6 +9840,7 @@
 	for powerpc*-*soft.
 	* configure: Regenerated.
 
+	[BZ #11505]
 	* configure.ac (libc_cv_asm_cfi_directives): Remove configure
 	test.
 	* configure: Regenerated.
