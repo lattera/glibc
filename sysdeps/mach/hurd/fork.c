@@ -507,7 +507,7 @@ __fork (void)
 				    MACHINE_THREAD_STATE_FLAVOR,
 				    (natural_t *) &state, &statecount))
 	LOSE;
-#if STACK_GROWTH_UP
+#ifdef STACK_GROWTH_UP
 #define THREADVAR_SPACE (__hurd_threadvar_max \
 			 * sizeof *__hurd_sightread_variables)
       if (__hurd_sigthread_stack_base == 0)

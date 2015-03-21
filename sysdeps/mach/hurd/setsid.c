@@ -20,6 +20,7 @@
 #include <hurd.h>
 #include <hurd/port.h>
 #include <hurd/fd.h>
+#include <hurd/ioctl.h>
 
 /* Create a new session with the calling process as its leader.
    The process group IDs of the session and the calling process

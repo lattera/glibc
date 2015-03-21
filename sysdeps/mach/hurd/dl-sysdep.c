@@ -96,9 +96,9 @@ static vm_size_t fmhs;
 static void unfmh(void){
 __vm_deallocate(__mach_task_self(),fmha,fmhs);}
 static void fmh(void) {
-    error_t err;int x;mach_port_t p;
+    error_t err;int x;vm_offset_t o;mach_port_t p;
     vm_address_t a=0x08000000U,max=VM_MAX_ADDRESS;
-    while (!(err=__vm_region(__mach_task_self(),&a,&fmhs,&x,&x,&x,&x,&p,&x))){
+    while (!(err=__vm_region(__mach_task_self(),&a,&fmhs,&x,&x,&x,&x,&p,&o))){
       __mach_port_deallocate(__mach_task_self(),p);
       if (a+fmhs>=0x80000000U){
 	max=a; break;}

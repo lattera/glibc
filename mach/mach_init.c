@@ -36,7 +36,7 @@ __mach_init (void)
   __mach_task_self_ = (__mach_task_self) ();
   __mig_init (0);
 
-#if HAVE_HOST_PAGE_SIZE
+#ifdef HAVE_HOST_PAGE_SIZE
   if (err = __host_page_size (__mach_host_self (), &__vm_page_size))
     _exit (err);
 #else

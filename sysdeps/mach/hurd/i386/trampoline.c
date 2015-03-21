@@ -35,7 +35,6 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
   void trampoline (void);
   void rpc_wait_trampoline (void);
   void firewall (void);
-  extern const void _hurd_intr_rpc_msg_in_trap;
   extern const void _hurd_intr_rpc_msg_cx_sp;
   extern const void _hurd_intr_rpc_msg_sp_restored;
   void *volatile sigsp;

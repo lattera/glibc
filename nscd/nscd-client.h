@@ -25,6 +25,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
+#include <time.h>
 #include <sys/types.h>
 #include <atomic.h>
 #include <nscd-types.h>

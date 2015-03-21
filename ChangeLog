@@ -2,6 +2,26 @@
 
 	* sysdeps/mach/hurd/Makefile ($(common-objpfx)errnos.d): Depend on
 	libc-modules.h
+	* sysdeps/mach/hurd/i386/trampoline.c (_hurd_setup_sighandler): Remove
+	unused declaration of _hurd_intr_rpc_msg_in_trap.
+	* mach/mach_init.c (__mach_init): Test whether HAVE_HOST_PAGE_SIZE is
+	defined instead of whether it is non-zero.
+	* sysdeps/mach/hurd/i386/intr-msg.h (INTR_MSG_TRAP): Use "+m"
+	input constraint instead of both input and output constraint.  Use ecx
+	clobber instead of %ecx.
+	* sysdeps/mach/hurd/malloc-machine.h (mutex_init, mutex_lock,
+	mutex_unlock): Use a statement expression instead of an expression list.
+	* sysdeps/mach/hurd/setitimer.c (_hurd_itimer_thread_stack_size): Set
+	type to vm_size_t instead of vm_address_t.
+	* sysdeps/mach/hurd/fork.c (__fork): Test whether STACK_GROWTH_UP is
+	defined instead of whether it is non-zero.
+	* hurd/hurd/ioctl.h (_hurd_locked_install_cttyid): New declaration.
+	* sysdeps/mach/hurd/setsid.c: Include <hurd/ioctl.h>.
+	* sysdeps/mach/hurd/mmap.c (__mmap): Use 0 instead of NULL for
+	comparisons with mapaddr.
+	* nscd/nscd-client.h: Include <time.h>.
+	* sysdeps/mach/hurd/dl-sysdep.c (fmh): Pass vm_offset_t dummy
+	9th parameter to __vm_region instead of int.
 
 2015-03-19  Roland McGrath  <roland@hack.frob.com>
 

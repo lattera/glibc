@@ -33,7 +33,7 @@ mach_port_t _hurd_itimer_port;	/* Port the timer thread blocks on.  */
 thread_t _hurd_itimer_thread;	/* Thread waiting for timeout.  */
 int _hurd_itimer_thread_suspended; /* Nonzero if that thread is suspended.  */
 vm_address_t _hurd_itimer_thread_stack_base; /* Base of its stack.  */
-vm_address_t _hurd_itimer_thread_stack_size; /* Size of its stack.  */
+vm_size_t _hurd_itimer_thread_stack_size; /* Size of its stack.  */
 struct timeval _hurd_itimer_started; /* Time the thread started waiting.  */
 
 static void

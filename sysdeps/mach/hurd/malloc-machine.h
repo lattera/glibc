@@ -33,13 +33,13 @@
 #define mutex_t struct mutex
 
 #undef mutex_init
-#define mutex_init(m) (__mutex_init(m), 0)
+#define mutex_init(m) ({ __mutex_init(m); 0; })
 
 #undef mutex_lock
-#define mutex_lock(m) (__mutex_lock(m), 0)
+#define mutex_lock(m) ({ __mutex_lock(m); 0; })
 
 #undef mutex_unlock
-#define mutex_unlock(m) (__mutex_unlock(m), 0)
+#define mutex_unlock(m) ({ __mutex_unlock(m); 0; })
 
 #define mutex_trylock(m) (!__mutex_trylock(m))
 

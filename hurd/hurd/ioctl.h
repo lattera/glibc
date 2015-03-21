@@ -68,6 +68,11 @@ extern int hurd_register_ioctl_handler (int first_request, int last_request,
   _HURD_HANDLE_IOCTLS_1 (handler, ioctl, ioctl, ioctl##_only)
 
 
+/* Install a new CTTYID port, atomically updating the dtable appropriately.
+   This consumes the send right passed in.  */
+
+void _hurd_locked_install_cttyid (mach_port_t cttyid);
+
 /* Lookup the handler for the given ioctl request.  */
 
 ioctl_handler_t _hurd_lookup_ioctl_handler (int request);
