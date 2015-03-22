@@ -23,6 +23,9 @@
 	* sysdeps/mach/hurd/dl-sysdep.c (fmh): Pass vm_offset_t dummy
 	9th parameter to __vm_region instead of int.
 	* bits/termios.h [!__USE_MISC] (EXTPROC): Do not define.
+	* scripts/check-local-headers.sh (exclude): Add device/,
+	hurd/hurd_types.h, hurd/ioctl_types.h, hurd/paths.h, hurd/ioctls.defs,
+	cthreads.h.
 
 2015-03-19  Roland McGrath  <roland@hack.frob.com>
 
