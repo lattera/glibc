@@ -22,6 +22,7 @@
 	* nscd/nscd-client.h: Include <time.h>.
 	* sysdeps/mach/hurd/dl-sysdep.c (fmh): Pass vm_offset_t dummy
 	9th parameter to __vm_region instead of int.
+	* bits/termios.h [!__USE_MISC] (EXTPROC): Do not define.
 
 2015-03-19  Roland McGrath  <roland@hack.frob.com>
 

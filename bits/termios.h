@@ -230,7 +230,9 @@ struct termios
 #endif
 #define	_IEXTEN	(1 << 10)	/* Enable DISCARD and LNEXT.  */
 #define	IEXTEN	_IEXTEN
-#define	EXTPROC	(1 << 11)	/* External processing.  */
+#ifdef	__USE_MISC
+# define EXTPROC	(1 << 11)	/* External processing.  */
+#endif
 #define	_TOSTOP	(1 << 22)	/* Send SIGTTOU for background output.  */
 #define	TOSTOP	_TOSTOP
 #ifdef	__USE_MISC
