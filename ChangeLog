@@ -1,3 +1,9 @@
+2015-03-23  Roland McGrath  <roland@hack.frob.com>
+
+	* libio/iofdopen.c: Move FD_FLAGS declaration into its first use,
+	inside [F_GETFL].  Remove POSIX_MODE local variable, just test the
+	_IO_IS_APPENDING bit in READ_WRITE instead.
+
 2015-03-23  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/unix/sysv/linux/pthread_setaffinity.c

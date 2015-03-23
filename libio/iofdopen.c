@@ -46,7 +46,6 @@ _IO_new_fdopen (fd, mode)
      const char *mode;
 {
   int read_write;
-  int posix_mode = 0;
   struct locked_FILE
   {
     struct _IO_FILE_plus fp;
@@ -55,7 +54,6 @@ _IO_new_fdopen (fd, mode)
 #endif
     struct _IO_wide_data wd;
   } *new_f;
-  int fd_flags;
   int i;
   int use_mmap = 0;
 
@@ -73,7 +71,6 @@ _IO_new_fdopen (fd, mode)
       read_write = _IO_NO_READS;
       break;
     case 'a':
-      posix_mode = O_APPEND;
       read_write = _IO_NO_READS|_IO_IS_APPENDING;
       break;
     default:
@@ -101,7 +98,7 @@ _IO_new_fdopen (fd, mode)
       break;
     }
 #ifdef F_GETFL
-  fd_flags = _IO_fcntl (fd, F_GETFL);
+  int fd_flags = _IO_fcntl (fd, F_GETFL);
 #ifndef O_ACCMODE
 #define O_ACCMODE (O_RDONLY|O_WRONLY|O_RDWR)
 #endif
@@ -120,9 +117,9 @@ _IO_new_fdopen (fd, mode)
      Realtime Extensions], Rationale B.8.3.3
      Open a Stream on a File Descriptor says:
 
-         Although not explicitly required by POSIX.1, a good
-         implementation of append ("a") mode would cause the
-         O_APPEND flag to be set.
+	 Although not explicitly required by POSIX.1, a good
+	 implementation of append ("a") mode would cause the
+	 O_APPEND flag to be set.
 
      (Historical implementations [such as Solaris2] do a one-time
      seek in fdopen.)
@@ -131,7 +128,7 @@ _IO_new_fdopen (fd, mode)
      though that would seem consistent) because that would be more
      likely to break historical programs.
      */
-  if ((posix_mode & O_APPEND) && !(fd_flags & O_APPEND))
+  if ((read_write & _IO_IS_APPENDING) && !(fd_flags & O_APPEND))
     {
       do_seek = true;
 #ifdef F_SETFL
