@@ -237,6 +237,7 @@ struct test_case_struct
     { WRDE_SYNTAX, NULL, "`\\", 0, 0, { NULL, }, IFS },     /* BZ 18042  */
     { WRDE_SYNTAX, NULL, "${", 0, 0, { NULL, }, IFS },      /* BZ 18043  */
     { WRDE_SYNTAX, NULL, "L${a:", 0, 0, { NULL, }, IFS },   /* BZ 18043#c4  */
+    { WRDE_SYNTAX, NULL, "$[1/0]", WRDE_NOCMD, 0, {NULL, }, IFS }, /* BZ 18100 */
 
     { -1, NULL, NULL, 0, 0, { NULL, }, IFS },
   };
@@ -361,6 +362,45 @@ main (int argc, char *argv[])
       if (testit (&ts))
 	++fail;
     }
+
+  /* Integer overflow in division.  */
+  {
+    static const char *const numbers[] = {
+      "0",
+      "1",
+      "65536",
+      "2147483648",
+      "4294967296"
+      "9223372036854775808",
+      "18446744073709551616",
+      "170141183460469231731687303715884105728",
+      "340282366920938463463374607431768211456",
+      NULL
+    };
+
+    for (const char *const *num = numbers; *num; ++num)
+      {
+	wordexp_t p;
+	char pattern[256];
+	snprintf (pattern, sizeof (pattern), "$[(-%s)/(-1)]", *num);
+	int ret = wordexp (pattern, &p, WRDE_NOCMD);
+	if (ret == 0)
+	  {
+	    if (p.we_wordc != 1 || strcmp (p.we_wordv[0], *num) != 0)
+	      {
+		printf ("Integer overflow for \"%s\" failed", pattern);
+		++fail;
+	      }
+	    wordfree (&p);
+	  }
+	else if (ret != WRDE_SYNTAX)
+	  {
+	    printf ("Integer overflow for \"%s\" failed with %d",
+		    pattern, ret);
+	    ++fail;
+	  }
+      }
+  }
 
   puts ("tests completed, now cleaning up");
 

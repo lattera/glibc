@@ -2006,7 +2006,8 @@ allocate room for.
 @comment POSIX.2
 @item WRDE_SYNTAX
 There was a syntax error in the input string.  For example, an unmatched
-quoting character is a syntax error.
+quoting character is a syntax error.  This error code is also used to
+signal division by zero and overflow in arithmetic expansion.
 @end table
 @end deftypefun
 

@@ -617,6 +617,10 @@ eval_expr_multdiv (char **expr, long int *result)
 	  if (eval_expr_val (expr, &arg) != 0)
 	    return WRDE_SYNTAX;
 
+	  /* Division by zero or integer overflow.  */
+	  if (arg == 0 || (arg == -1 && *result == LONG_MIN))
+	    return WRDE_SYNTAX;
+
 	  *result /= arg;
 	}
       else break;

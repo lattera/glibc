@@ -1,3 +1,13 @@
+2015-03-23  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #18100]
+	* posix/wordexp.c (eval_expr_multdiv): Check for division by zero
+	and integer overflow.
+	* posix/wordexp-test.c (test_case): Add divide-by-zero test.
+	(main): Add integer overflow tests.
+	* manual/pattern.texi (Calling Wordexp): Document additional use
+	for WRDE_SYNTAX.
+
 2015-03-23  Alan Modra  <amodra@gmail.com>
 
 	* config.h.in: Remove HAVE_ASM_PPC_REL16.
