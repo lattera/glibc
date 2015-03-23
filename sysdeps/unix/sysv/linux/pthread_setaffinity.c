@@ -16,7 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <alloca.h>
 #include <errno.h>
 #include <pthreadP.h>
 #include <sysdep.h>
@@ -27,26 +26,30 @@
 size_t __kernel_cpumask_size attribute_hidden;
 
 
-/* Determine the current affinity.  As a side affect we learn
-   about the size of the cpumask_t in the kernel.  */
+/* Determine the size of cpumask_t in the kernel.  */
 int
 __determine_cpumask_size (pid_t tid)
 {
-  INTERNAL_SYSCALL_DECL (err);
+  size_t psize;
   int res;
 
-  size_t psize = 128;
-  void *p = alloca (psize);
+  for (psize = 128; ; psize *= 2)
+    {
+      char buf[psize];
+      INTERNAL_SYSCALL_DECL (err);
 
-  while (res = INTERNAL_SYSCALL (sched_getaffinity, err, 3, tid, psize, p),
-	 INTERNAL_SYSCALL_ERROR_P (res, err)
-	 && INTERNAL_SYSCALL_ERRNO (res, err) == EINVAL)
-    p = extend_alloca (p, psize, 2 * psize);
+      res = INTERNAL_SYSCALL (sched_getaffinity, err, 3, tid, psize, buf);
+      if (INTERNAL_SYSCALL_ERROR_P (res, err))
+	{
+	  if (INTERNAL_SYSCALL_ERRNO (res, err) != EINVAL)
+	    return INTERNAL_SYSCALL_ERRNO (res, err);
+	}
+      else
+	break;
+    }
 
-  if (res == 0 || INTERNAL_SYSCALL_ERROR_P (res, err))
-    return INTERNAL_SYSCALL_ERRNO (res, err);
-
-  __kernel_cpumask_size = res;
+  if (res != 0)
+    __kernel_cpumask_size = res;
 
   return 0;
 }

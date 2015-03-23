@@ -1,5 +1,11 @@
 2015-03-23  Florian Weimer  <fweimer@redhat.com>
 
+	* sysdeps/unix/sysv/linux/pthread_setaffinity.c
+	(__determine_cpumask_size): Replace extend_alloca with a
+	variable-length array.  Do not treat res == 0 as an error.
+
+2015-03-23  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #18100]
 	* posix/wordexp.c (eval_expr_multdiv): Check for division by zero
 	and integer overflow.
