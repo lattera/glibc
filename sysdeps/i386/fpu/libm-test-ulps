@@ -1709,20 +1709,21 @@ ldouble: 2
 
 Function: "sinh":
 ildouble: 1
+ldouble: 1
 
 Function: "sinh_downward":
-ildouble: 1
-ldouble: 1
+ildouble: 3
+ldouble: 4
 
 Function: "sinh_towardzero":
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 3
 
 Function: "sinh_upward":
 double: 1
 float: 1
-ildouble: 1
-ldouble: 1
+ildouble: 4
+ldouble: 4
 
 Function: "tan":
 float: 1
