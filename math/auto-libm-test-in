@@ -1656,6 +1656,12 @@ log2 2.0
 log2 16.0
 log2 256.0
 log2 0.75
+log2 0x1.28d3b4p+0
+log2 0xe.d99dap-4
+log2 0x1.63d202d04392cp+0
+log2 0xf.d9ce0b1a50e08p-4
+log2 0x1.07465bdc7e41b52ep+0
+log2 0xf.4dfb4p-48
 log2 min
 log2 min_subnorm
 
