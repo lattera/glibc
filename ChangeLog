@@ -1,5 +1,8 @@
 2015-03-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/i386/fpu/libm-test-ulps: Regenerated.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	* math/auto-libm-test-in: Add more tests of log2.
 	* math/auto-libm-test-out: Regenerated.
 	* sysdeps/i386/fpu/libm-test-ulps: Update.
