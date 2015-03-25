@@ -8,6 +8,9 @@ sysdep-dl-routines += dl-machine
 sysdep_routines += dl-machine
 # extra shared linker files to link only into dl-allobjs.so
 sysdep-rtld-routines += dl-machine
+# Don't optimize GD tls sequence to LE.
+LDFLAGS-tst-tlsopt-powerpc += -Wl,--no-tls-optimize
+tests += tst-tlsopt-powerpc
 endif
 
 ifeq ($(subdir),setjmp)

@@ -25,11 +25,14 @@
    an attempt to allocate it in surplus space on the fly.  If that
    can't be done, we fall back to the error that DF_STATIC_TLS is
    intended to produce.  */
+#define HAVE_STATIC_TLS(map, sym_map)					\
+    (__builtin_expect ((sym_map)->l_tls_offset != NO_TLS_OFFSET		\
+		       && ((sym_map)->l_tls_offset			\
+			   != FORCED_DYNAMIC_TLS_OFFSET), 1))
+
 #define CHECK_STATIC_TLS(map, sym_map)					\
     do {								\
-      if (__builtin_expect ((sym_map)->l_tls_offset == NO_TLS_OFFSET	\
-			    || ((sym_map)->l_tls_offset			\
-				== FORCED_DYNAMIC_TLS_OFFSET), 0))	\
+      if (!HAVE_STATIC_TLS (map, sym_map))				\
 	_dl_allocate_static_tls (sym_map);				\
     } while (0)
 

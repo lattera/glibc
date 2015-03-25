@@ -9,3 +9,6 @@ GLIBC_2.17
  free F
  malloc F
  realloc F
+GLIBC_2.22
+ GLIBC_2.22 A
+ __tls_get_addr_opt F

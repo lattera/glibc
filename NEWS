@@ -17,6 +17,10 @@ Version 2.22
   18039, 18042, 18043, 18046, 18047, 18068, 18080, 18093, 18100, 18104,
   18110, 18111, 18128, 18138.
 
+* A powerpc and powerpc64 optimization for TLS, similar to TLS descriptors
+  for LD and GD on x86 and x86-64, has been implemented.  You will need
+  binutils-2.24 or later to enable this optimization.
+
 * Character encoding and ctype tables were updated to Unicode 7.0.0, using
   new generator scripts contributed by Pravin Satpute and Mike FABIAN (Red
   Hat).  These updates cause user visible changes, such as the fix for bug

@@ -1,5 +1,24 @@
 2015-03-25  Alan Modra  <amodra@gmail.com>
 
+	* NEWS: Advertise TLS optimization.
+	* elf/elf.h (R_PPC_TLSGD, R_PPC_TLSLD, DT_PPC_OPT, PPC_OPT_TLS): Define.
+	(DT_PPC_NUM): Increment.
+	* elf/dynamic-link.h (HAVE_STATIC_TLS): Define.
+	(CHECK_STATIC_TLS): Use here.
+	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_rela): Optimize
+	TLS descriptors.
+	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/powerpc/dl-tls.c: New file.
+	* sysdeps/powerpc/Versions: Add __tls_get_addr_opt.
+	* sysdeps/powerpc/tst-tlsopt-powerpc.c: New tls test.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile: Add new test.
+	Build tst-tlsmod2.so with --no-tls-get-addr-optimize.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ld.abilist: Update.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ld-le.abilist: Likewise.
+
+2015-03-25  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/powerpc64/configure.ac: Correct "linker support
 	for overlapping .opd entries" to "support...".
 	* sysdeps/powerpc/powerpc64/configure: Regenerate

@@ -10,6 +10,9 @@ GLIBC_2.1
  GLIBC_2.1 A
  __libc_stack_end D 0x4
  _dl_mcount F
+GLIBC_2.22
+ GLIBC_2.22 A
+ __tls_get_addr_opt F
 GLIBC_2.3
  GLIBC_2.3 A
  __tls_get_addr F

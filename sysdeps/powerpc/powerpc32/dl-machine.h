@@ -333,6 +333,32 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 # endif
 
     case R_PPC_DTPMOD32:
+      if (map->l_info[DT_PPC(OPT)]
+	  && (map->l_info[DT_PPC(OPT)]->d_un.d_val & PPC_OPT_TLS))
+	{
+	  if (!NOT_BOOTSTRAP)
+	    {
+	      reloc_addr[0] = 0;
+	      reloc_addr[1] = (sym_map->l_tls_offset - TLS_TP_OFFSET
+			       + TLS_DTV_OFFSET);
+	      break;
+	    }
+	  else if (sym_map != NULL)
+	    {
+# ifndef SHARED
+	      CHECK_STATIC_TLS (map, sym_map);
+# else
+	      if (TRY_STATIC_TLS (map, sym_map))
+# endif
+		{
+		  reloc_addr[0] = 0;
+		  /* Set up for local dynamic.  */
+		  reloc_addr[1] = (sym_map->l_tls_offset - TLS_TP_OFFSET
+				   + TLS_DTV_OFFSET);
+		  break;
+		}
+	    }
+	}
       if (!NOT_BOOTSTRAP)
 	/* During startup the dynamic linker is always index 1.  */
 	*reloc_addr = 1;
@@ -342,6 +368,28 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	*reloc_addr = sym_map->l_tls_modid;
       break;
     case R_PPC_DTPREL32:
+      if (map->l_info[DT_PPC(OPT)]
+	  && (map->l_info[DT_PPC(OPT)]->d_un.d_val & PPC_OPT_TLS))
+	{
+	  if (!NOT_BOOTSTRAP)
+	    {
+	      *reloc_addr = TLS_TPREL_VALUE (sym_map, sym, reloc);
+	      break;
+	    }
+	  else if (sym_map != NULL)
+	    {
+	      /* This reloc is always preceded by R_PPC_DTPMOD32.  */
+# ifndef SHARED
+	      assert (HAVE_STATIC_TLS (map, sym_map));
+# else
+	      if (HAVE_STATIC_TLS (map, sym_map))
+# endif
+		{
+		  *reloc_addr = TLS_TPREL_VALUE (sym_map, sym, reloc);
+		  break;
+		}
+	    }
+	}
       /* During relocation all TLS symbols are defined and used.
 	 Therefore the offset is already correct.  */
       if (NOT_BOOTSTRAP && sym_map != NULL)

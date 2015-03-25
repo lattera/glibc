@@ -20,6 +20,8 @@ ifeq ($(build-shared),yes)
 # This is needed for DSO loading from static binaries.
 sysdep-dl-routines += dl-static
 endif
+# Otherwise tst-tls-dlinfo fails due to tst-tlsmod2.so using static tls.
+LDFLAGS-tst-tlsmod2.so += -Wl,--no-tls-get-addr-optimize
 endif
 
 ifeq ($(subdir),misc)

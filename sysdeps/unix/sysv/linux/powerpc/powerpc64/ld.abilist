@@ -1,3 +1,6 @@
+GLIBC_2.22
+ GLIBC_2.22 A
+ __tls_get_addr_opt F
 GLIBC_2.3
  GLIBC_2.3 A
  __libc_memalign F
