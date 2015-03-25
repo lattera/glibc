@@ -44,10 +44,9 @@ Version 2.22
   Hat).  These updates cause user visible changes, such as the fix for bug
   17998.
 
-* CVE-2014-8121 The NSS files backend would reset the file pointer used by
-  the get*ent functions if any of the query functions for the same database
-  are used during the iteration, causing a denial-of-service condition in
-  some applications.
+* CVE-2014-8121 The NSS backends shared internal state between the getXXent
+  and getXXbyYY NSS calls for the same database, causing a denial-of-service
+  condition in some applications.
 
 Version 2.21
 

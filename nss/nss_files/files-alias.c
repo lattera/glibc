@@ -33,23 +33,23 @@
 /* Locks the static variables in this file.  */
 __libc_lock_define_initialized (static, lock)
 
-/* Maintenance of the shared stream open on the database file.  */
+/* Maintenance of the stream open on the database file.  For getXXent
+   operations the stream needs to be held open across calls, the other
+   getXXbyYY operations all use their own stream.  */
 
 static FILE *stream;
-static fpos_t position;
-static enum { nouse, getent, getby } last_use;
 
 
 static enum nss_status
-internal_setent (void)
+internal_setent (FILE **stream)
 {
   enum nss_status status = NSS_STATUS_SUCCESS;
 
-  if (stream == NULL)
+  if (*stream == NULL)
     {
-      stream = fopen ("/etc/aliases", "rce");
+      *stream = fopen ("/etc/aliases", "rce");
 
-      if (stream == NULL)
+      if (*stream == NULL)
 	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
       else
 	{
@@ -62,7 +62,7 @@ internal_setent (void)
 	      int result;
 	      int flags;
 
-	      result = flags = fcntl (fileno (stream), F_GETFD, 0);
+	      result = flags = fcntl (fileno (*stream), F_GETFD, 0);
 	      if (result >= 0)
 		{
 # ifdef O_CLOEXEC
@@ -72,14 +72,14 @@ internal_setent (void)
 # endif
 		    {
 		      flags |= FD_CLOEXEC;
-		      result = fcntl (fileno (stream), F_SETFD, flags);
+		      result = fcntl (fileno (*stream), F_SETFD, flags);
 		    }
 		}
 	      if (result < 0)
 		{
 		  /* Something went wrong.  Close the stream and return a
 		     failure.  */
-		  fclose (stream);
+		  fclose (*stream);
 		  stream = NULL;
 		  status = NSS_STATUS_UNAVAIL;
 		}
@@ -88,7 +88,7 @@ internal_setent (void)
 	}
     }
   else
-    rewind (stream);
+    rewind (*stream);
 
   return status;
 }
@@ -102,16 +102,7 @@ _nss_files_setaliasent (void)
 
   __libc_lock_lock (lock);
 
-  status = internal_setent ();
-
-  if (status == NSS_STATUS_SUCCESS && fgetpos (stream, &position) < 0)
-    {
-      fclose (stream);
-      stream = NULL;
-      status = NSS_STATUS_UNAVAIL;
-    }
-
-  last_use = getent;
+  status = internal_setent (&stream);
 
   __libc_lock_unlock (lock);
 
@@ -121,12 +112,12 @@ _nss_files_setaliasent (void)
 
 /* Close the database file.  */
 static void
-internal_endent (void)
+internal_endent (FILE **stream)
 {
-  if (stream != NULL)
+  if (*stream != NULL)
     {
-      fclose (stream);
-      stream = NULL;
+      fclose (*stream);
+      *stream = NULL;
     }
 }
 
@@ -137,7 +128,7 @@ _nss_files_endaliasent (void)
 {
   __libc_lock_lock (lock);
 
-  internal_endent ();
+  internal_endent (&stream);
 
   __libc_lock_unlock (lock);
 
@@ -146,7 +137,7 @@ _nss_files_endaliasent (void)
 
 /* Parsing the database file into `struct aliasent' data structures.  */
 static enum nss_status
-get_next_alias (const char *match, struct aliasent *result,
+get_next_alias (FILE *stream, const char *match, struct aliasent *result,
 		char *buffer, size_t buflen, int *errnop)
 {
   enum nss_status status = NSS_STATUS_NOTFOUND;
@@ -397,35 +388,16 @@ _nss_files_getaliasent_r (struct aliasent *result, char *buffer, size_t buflen,
 
   /* Be prepared that the set*ent function was not called before.  */
   if (stream == NULL)
-    status = internal_setent ();
+    status = internal_setent (&stream);
 
   if (status == NSS_STATUS_SUCCESS)
     {
-      /* If the last use was not by the getent function we need the
-	 position the stream.  */
-      if (last_use != getent)
-	{
-	  if (fsetpos (stream, &position) < 0)
-	    status = NSS_STATUS_UNAVAIL;
-	  else
-	    last_use = getent;
-	}
+      result->alias_local = 1;
 
-      if (status == NSS_STATUS_SUCCESS)
-	{
-	  result->alias_local = 1;
-
-	  /* Read lines until we get a definite result.  */
-	  do
-	    status = get_next_alias (NULL, result, buffer, buflen, errnop);
-	  while (status == NSS_STATUS_RETURN);
-
-	  /* If we successfully read an entry remember this position.  */
-	  if (status == NSS_STATUS_SUCCESS)
-	    fgetpos (stream, &position);
-	  else
-	    last_use = nouse;
-	}
+      /* Read lines until we get a definite result.  */
+      do
+	status = get_next_alias (stream, NULL, result, buffer, buflen, errnop);
+      while (status == NSS_STATUS_RETURN);
     }
 
   __libc_lock_unlock (lock);
@@ -440,6 +412,7 @@ _nss_files_getaliasbyname_r (const char *name, struct aliasent *result,
 {
   /* Return next entry in host file.  */
   enum nss_status status = NSS_STATUS_SUCCESS;
+  FILE *stream = NULL;
 
   if (name == NULL)
     {
@@ -447,11 +420,8 @@ _nss_files_getaliasbyname_r (const char *name, struct aliasent *result,
       return NSS_STATUS_UNAVAIL;
     }
 
-  __libc_lock_lock (lock);
-
-  /* Open the stream or rest it.  */
-  status = internal_setent ();
-  last_use = getby;
+  /* Open the stream.  */
+  status = internal_setent (&stream);
 
   if (status == NSS_STATUS_SUCCESS)
     {
@@ -459,13 +429,11 @@ _nss_files_getaliasbyname_r (const char *name, struct aliasent *result,
 
       /* Read lines until we get a definite result.  */
       do
-	status = get_next_alias (name, result, buffer, buflen, errnop);
+	status = get_next_alias (stream, name, result, buffer, buflen, errnop);
       while (status == NSS_STATUS_RETURN);
     }
 
-  internal_endent ();
-
-  __libc_lock_unlock (lock);
+  internal_endent (&stream);
 
   return status;
 }

@@ -194,9 +194,6 @@ _nss_compat_setgrent (int stayopen)
 static enum nss_status
 internal_endgrent (ent_t *ent)
 {
-  if (nss_endgrent)
-    nss_endgrent ();
-
   if (ent->stream != NULL)
     {
       fclose (ent->stream);
@@ -221,6 +218,9 @@ _nss_compat_endgrent (void)
   enum nss_status result;
 
   __libc_lock_lock (lock);
+
+  if (nss_endgrent)
+    nss_endgrent ();
 
   result = internal_endgrent (&ext_ent);
 

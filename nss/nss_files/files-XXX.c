@@ -60,24 +60,23 @@
 /* Locks the static variables in this file.  */
 __libc_lock_define_initialized (static, lock)
 
-/* Maintenance of the shared stream open on the database file.  */
+/* Maintenance of the stream open on the database file.  For getXXent
+   operations the stream needs to be held open across calls, the other
+   getXXbyYY operations all use their own stream.  */
 
 static FILE *stream;
-static fpos_t position;
-static enum { nouse, getent, getby } last_use;
-static int keep_stream;
 
 /* Open database file if not already opened.  */
 static enum nss_status
-internal_setent (int stayopen)
+internal_setent (FILE **stream)
 {
   enum nss_status status = NSS_STATUS_SUCCESS;
 
-  if (stream == NULL)
+  if (*stream == NULL)
     {
-      stream = fopen (DATAFILE, "rce");
+      *stream = fopen (DATAFILE, "rce");
 
-      if (stream == NULL)
+      if (*stream == NULL)
 	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
       else
 	{
@@ -90,7 +89,7 @@ internal_setent (int stayopen)
 	      int result;
 	      int flags;
 
-	      result = flags = fcntl (fileno (stream), F_GETFD, 0);
+	      result = flags = fcntl (fileno (*stream), F_GETFD, 0);
 	      if (result >= 0)
 		{
 # ifdef O_CLOEXEC
@@ -100,15 +99,15 @@ internal_setent (int stayopen)
 # endif
 		    {
 		      flags |= FD_CLOEXEC;
-		      result = fcntl (fileno (stream), F_SETFD, flags);
+		      result = fcntl (fileno (*stream), F_SETFD, flags);
 		    }
 		}
 	      if (result < 0)
 		{
 		  /* Something went wrong.  Close the stream and return a
 		     failure.  */
-		  fclose (stream);
-		  stream = NULL;
+		  fclose (*stream);
+		  *stream = NULL;
 		  status = NSS_STATUS_UNAVAIL;
 		}
 	    }
@@ -116,11 +115,7 @@ internal_setent (int stayopen)
 	}
     }
   else
-    rewind (stream);
-
-  /* Remember STAYOPEN flag.  */
-  if (stream != NULL)
-    keep_stream |= stayopen;
+    rewind (*stream);
 
   return status;
 }
@@ -134,16 +129,7 @@ CONCAT(_nss_files_set,ENTNAME) (int stayopen)
 
   __libc_lock_lock (lock);
 
-  status = internal_setent (1);
-
-  if (status == NSS_STATUS_SUCCESS && fgetpos (stream, &position) < 0)
-    {
-      fclose (stream);
-      stream = NULL;
-      status = NSS_STATUS_UNAVAIL;
-    }
-
-  last_use = getent;
+  status = internal_setent (&stream);
 
   __libc_lock_unlock (lock);
 
@@ -153,12 +139,12 @@ CONCAT(_nss_files_set,ENTNAME) (int stayopen)
 
 /* Close the database file.  */
 static void
-internal_endent (void)
+internal_endent (FILE **stream)
 {
-  if (stream != NULL)
+  if (*stream != NULL)
     {
-      fclose (stream);
-      stream = NULL;
+      fclose (*stream);
+      *stream = NULL;
     }
 }
 
@@ -169,10 +155,7 @@ CONCAT(_nss_files_end,ENTNAME) (void)
 {
   __libc_lock_lock (lock);
 
-  internal_endent ();
-
-  /* Reset STAYOPEN flag.  */
-  keep_stream = 0;
+  internal_endent (&stream);
 
   __libc_lock_unlock (lock);
 
@@ -227,7 +210,7 @@ get_contents (char *linebuf, size_t len, FILE *stream)
 
 /* Parsing the database file into `struct STRUCTURE' data structures.  */
 static enum nss_status
-internal_getent (struct STRUCTURE *result,
+internal_getent (FILE *stream, struct STRUCTURE *result,
 		 char *buffer, size_t buflen, int *errnop H_ERRNO_PROTO
 		 EXTRA_ARGS_DECL)
 {
@@ -300,45 +283,14 @@ CONCAT(_nss_files_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
     {
       int save_errno = errno;
 
-      status = internal_setent (0);
+      status = internal_setent (&stream);
 
       __set_errno (save_errno);
-
-      if (status == NSS_STATUS_SUCCESS && fgetpos (stream, &position) < 0)
-	{
-	  fclose (stream);
-	  stream = NULL;
-	  status = NSS_STATUS_UNAVAIL;
-	}
     }
 
   if (status == NSS_STATUS_SUCCESS)
-    {
-      /* If the last use was not by the getent function we need the
-	 position the stream.  */
-      if (last_use != getent)
-	{
-	  if (fsetpos (stream, &position) < 0)
-	    status = NSS_STATUS_UNAVAIL;
-	  else
-	    last_use = getent;
-	}
-
-      if (status == NSS_STATUS_SUCCESS)
-	{
-	  status = internal_getent (result, buffer, buflen, errnop
-				    H_ERRNO_ARG EXTRA_ARGS_VALUE);
-
-	  /* Remember this position if we were successful.  If the
-	     operation failed we give the user a chance to repeat the
-	     operation (perhaps the buffer was too small).  */
-	  if (status == NSS_STATUS_SUCCESS)
-	    fgetpos (stream, &position);
-	  else
-	    /* We must make sure we reposition the stream the next call.  */
-	    last_use = nouse;
-	}
-    }
+    status = internal_getent (stream, result, buffer, buflen, errnop
+			      H_ERRNO_ARG EXTRA_ARGS_VALUE);
 
   __libc_lock_unlock (lock);
 
@@ -364,27 +316,20 @@ _nss_files_get##name##_r (proto,					      \
 			  size_t buflen, int *errnop H_ERRNO_PROTO)	      \
 {									      \
   enum nss_status status;						      \
+  FILE *stream = NULL;							      \
 									      \
-  __libc_lock_lock (lock);						      \
-									      \
-  /* Reset file pointer to beginning or open file.  */			      \
-  status = internal_setent (keep_stream);				      \
+  /* Open file.  */							      \
+  status = internal_setent (&stream);					      \
 									      \
   if (status == NSS_STATUS_SUCCESS)					      \
     {									      \
-      /* Tell getent function that we have repositioned the file pointer.  */ \
-      last_use = getby;							      \
-									      \
-      while ((status = internal_getent (result, buffer, buflen, errnop	      \
+      while ((status = internal_getent (stream, result, buffer, buflen, errnop \
 					H_ERRNO_ARG EXTRA_ARGS_VALUE))	      \
 	     == NSS_STATUS_SUCCESS)					      \
 	{ break_if_match }						      \
 									      \
-      if (! keep_stream)						      \
-	internal_endent ();						      \
+      internal_endent (&stream);					      \
     }									      \
-									      \
-  __libc_lock_unlock (lock);						      \
 									      \
   return status;							      \
 }

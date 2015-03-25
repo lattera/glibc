@@ -1,3 +1,41 @@
+2015-05-11  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #18007]
+	* nis/nss_compat/compat-grp.c (internal_endgrent): Don't call
+	nss_endgrent.
+	(_nss_compat_endgrent): Call nss_endgrent.
+	* nis/nss_compat/compat-pwd.c (internal_endpwent): Don't call
+	nss_endpwent.
+	(_nss_compat_endpwent): Call nss_endpwent.
+	* nis/nss_compat/compat-spwd.c (internal_setspent): Add parameter
+	needent, call nss_setspent only if non-zero.
+	(_nss_compat_setspent, _nss_compat_getspent_r): Pass non-zero.
+	(internal_endspent): Don't call nss_endspent.
+	(_nss_compat_endspent): Call nss_endspent.
+	* nss/nss_files/files-XXX.c (position, last_use, keep_stream):
+	Remove.  All uses removed.
+	(internal_setent): Remove parameter stayopen, add parameter
+	stream.  Use it instead of global variable.
+	(CONCAT(_nss_files_set,ENTNAME)): Pass global stream.
+	(internal_endent, internal_getent): Add parameter stream.  Use it
+	instead of global variable.
+	(CONCAT(_nss_files_end,ENTNAME))
+	(CONCAT(_nss_files_get,ENTNAME_r)): Pass global stream.
+	(_nss_files_get##name##_r): Pass local stream.  Remove locking.
+	* nss/nss_files/files-alias.c (position, last_use): Remove.  All
+	uses removed.
+	(internal_setent, internal_endent): Add parameter stream.  Use it
+	instead of global variable.
+	(_nss_files_setaliasent, _nss_files_endaliasent): Pass global
+	stream.
+	(get_next_alias): Add parameter stream.
+	(_nss_files_getaliasent_r): Pass global stream.
+	(_nss_files_getaliasbyname_r): Pass local stream.  Remove locking.
+	* nss/nss_files/files-hosts.c (_nss_files_gethostbyname3_r)
+	(_nss_files_gethostbyname4_r): Pass local stream to
+	internal_setent, internal_getent and internal_endent.  Remove
+	locking.
+
 2015-05-11  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* tst-strfmon1.c (tests): Update expected currency symbol.
