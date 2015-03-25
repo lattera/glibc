@@ -304,6 +304,17 @@ asm (".L__X'%ebx = 1\n\t"
      ".endif\n\t"
      ".endm\n\t");
 
+/* Six-argument syscalls use an out-of-line helper, because an inline
+   asm using all registers apart from %esp cannot work reliably and
+   the assembler does not support describing an asm that saves and
+   restores %ebp itself as a separate stack frame.  This structure
+   stores the arguments not passed in registers; %edi is passed with a
+   pointer to this structure.  */
+struct libc_do_syscall_args
+{
+  int ebx, edi, ebp;
+};
+
 /* Define a macro which expands inline into the wrapper code for a system
    call.  */
 #undef INLINE_SYSCALL
@@ -325,11 +336,42 @@ asm (".L__X'%ebx = 1\n\t"
    The _NCS variant allows non-constant syscall numbers but it is not
    possible to use more than four parameters.  */
 #undef INTERNAL_SYSCALL
-#ifdef I386_USE_SYSENTER
-# ifdef SHARED
-#  define INTERNAL_SYSCALL(name, err, nr, args...) \
+#define INTERNAL_SYSCALL_MAIN_0(name, err, args...) \
+    INTERNAL_SYSCALL_MAIN_INLINE(name, err, 0, args)
+#define INTERNAL_SYSCALL_MAIN_1(name, err, args...) \
+    INTERNAL_SYSCALL_MAIN_INLINE(name, err, 1, args)
+#define INTERNAL_SYSCALL_MAIN_2(name, err, args...) \
+    INTERNAL_SYSCALL_MAIN_INLINE(name, err, 2, args)
+#define INTERNAL_SYSCALL_MAIN_3(name, err, args...) \
+    INTERNAL_SYSCALL_MAIN_INLINE(name, err, 3, args)
+#define INTERNAL_SYSCALL_MAIN_4(name, err, args...) \
+    INTERNAL_SYSCALL_MAIN_INLINE(name, err, 4, args)
+#define INTERNAL_SYSCALL_MAIN_5(name, err, args...) \
+    INTERNAL_SYSCALL_MAIN_INLINE(name, err, 5, args)
+/* Each object using 6-argument inline syscalls must include a
+   definition of __libc_do_syscall.  */
+#define INTERNAL_SYSCALL_MAIN_6(name, err, arg1, arg2, arg3,		\
+				arg4, arg5, arg6)			\
+  struct libc_do_syscall_args _xv =					\
+    {									\
+      (int) (arg1),							\
+      (int) (arg5),							\
+      (int) (arg6)							\
+    };									\
+    asm volatile (							\
+    "movl %1, %%eax\n\t"						\
+    "call __libc_do_syscall"						\
+    : "=a" (resultvar)							\
+    : "i" (__NR_##name), "c" (arg2), "d" (arg3), "S" (arg4), "D" (&_xv) \
+    : "memory", "cc")
+#define INTERNAL_SYSCALL(name, err, nr, args...) \
   ({									      \
     register unsigned int resultvar;					      \
+    INTERNAL_SYSCALL_MAIN_##nr (name, err, args);			      \
+    (int) resultvar; })
+#ifdef I386_USE_SYSENTER
+# ifdef SHARED
+#  define INTERNAL_SYSCALL_MAIN_INLINE(name, err, nr, args...) \
     EXTRAVAR_##nr							      \
     asm volatile (							      \
     LOADARGS_##nr							      \
@@ -338,8 +380,7 @@ asm (".L__X'%ebx = 1\n\t"
     RESTOREARGS_##nr							      \
     : "=a" (resultvar)							      \
     : "i" (__NR_##name), "i" (offsetof (tcbhead_t, sysinfo))		      \
-      ASMFMT_##nr(args) : "memory", "cc");				      \
-    (int) resultvar; })
+      ASMFMT_##nr(args) : "memory", "cc")
 #  define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
   ({									      \
     register unsigned int resultvar;					      \
@@ -353,9 +394,7 @@ asm (".L__X'%ebx = 1\n\t"
       ASMFMT_##nr(args) : "memory", "cc");				      \
     (int) resultvar; })
 # else
-#  define INTERNAL_SYSCALL(name, err, nr, args...) \
-  ({									      \
-    register unsigned int resultvar;					      \
+#  define INTERNAL_SYSCALL_MAIN_INLINE(name, err, nr, args...) \
     EXTRAVAR_##nr							      \
     asm volatile (							      \
     LOADARGS_##nr							      \
@@ -363,8 +402,7 @@ asm (".L__X'%ebx = 1\n\t"
     "call *_dl_sysinfo\n\t"						      \
     RESTOREARGS_##nr							      \
     : "=a" (resultvar)							      \
-    : "i" (__NR_##name) ASMFMT_##nr(args) : "memory", "cc");		      \
-    (int) resultvar; })
+    : "i" (__NR_##name) ASMFMT_##nr(args) : "memory", "cc")
 #  define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
   ({									      \
     register unsigned int resultvar;					      \
@@ -378,9 +416,7 @@ asm (".L__X'%ebx = 1\n\t"
     (int) resultvar; })
 # endif
 #else
-# define INTERNAL_SYSCALL(name, err, nr, args...) \
-  ({									      \
-    register unsigned int resultvar;					      \
+# define INTERNAL_SYSCALL_MAIN_INLINE(name, err, nr, args...) \
     EXTRAVAR_##nr							      \
     asm volatile (							      \
     LOADARGS_##nr							      \
@@ -388,8 +424,7 @@ asm (".L__X'%ebx = 1\n\t"
     "int $0x80\n\t"							      \
     RESTOREARGS_##nr							      \
     : "=a" (resultvar)							      \
-    : "i" (__NR_##name) ASMFMT_##nr(args) : "memory", "cc");		      \
-    (int) resultvar; })
+    : "i" (__NR_##name) ASMFMT_##nr(args) : "memory", "cc")
 # define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
   ({									      \
     register unsigned int resultvar;					      \

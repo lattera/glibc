@@ -14,6 +14,11 @@ ifeq ($(subdir),io)
 sysdep_routines += call_sync_file_range
 endif
 
+# libpthread uses six-argument inline syscalls.
+ifeq ($(subdir),nptl)
+libpthread-sysdep_routines += libc-do-syscall
+endif
+
 ifeq ($(subdir),resource)
 sysdep_routines += oldgetrlimit64
 endif

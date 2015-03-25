@@ -48,7 +48,7 @@
 #include <lowlevellock-futex.h>
 
 /* XXX Remove when no assembler code uses futexes anymore.  */
-#define SYS_futex		240
+#define SYS_futex		__NR_futex
 
 #ifndef __ASSEMBLER__
 

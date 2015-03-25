@@ -1,3 +1,25 @@
+2015-03-25  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18138]
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (struct
+	libc_do_syscall_args): New structure.
+	(INTERNAL_SYSCALL_MAIN_0): New macro.
+	(INTERNAL_SYSCALL_MAIN_1): Likewise.
+	(INTERNAL_SYSCALL_MAIN_2): Likewise.
+	(INTERNAL_SYSCALL_MAIN_3): Likewise.
+	(INTERNAL_SYSCALL_MAIN_4): Likewise.
+	(INTERNAL_SYSCALL_MAIN_5): Likewise.
+	(INTERNAL_SYSCALL_MAIN_6): Likewise.  Call __libc_do_syscall.
+	(INTERNAL_SYSCALL): Define to use INTERNAL_SYSCALL_MAIN_##nr.
+	Replace conditional definitions by conditional definitions of ....
+	(INTERNAL_SYSCALL_MAIN_INLINE): ... this.  New macro.
+	* sysdeps/unix/sysv/linux/i386/libc-do-syscall.S: New file.
+	* sysdeps/unix/sysv/linux/i386/Makefile [$(subdir) = nptl]
+	(libpthread-sysdep_routines): Add libc-do-syscall.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock-futex.h: Remove file.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h (SYS_futex): Define
+	to __NR_futex not 240.
+
 2015-03-25  Alan Modra  <amodra@gmail.com>
 
 	* NEWS: Advertise TLS optimization.
