@@ -1414,32 +1414,32 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "expm1_downward":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 4
+ldouble: 4
 
 Function: "expm1_towardzero":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 2
-ldouble: 2
+ildouble: 3
+ldouble: 3
 
 Function: "expm1_upward":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 2
-ldouble: 2
+ildouble: 3
+ldouble: 3
 
 Function: "gamma":
 double: 1

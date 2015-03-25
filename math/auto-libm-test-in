@@ -1166,6 +1166,10 @@ expm1 0x1p-64
 expm1 -0x1p-64
 expm1 0x1p-100
 expm1 -0x1p-100
+expm1 0xe.4152ac57cd1ea7ap-60
+expm1 0x6.660247486aed8p-4
+expm1 0x6.289a78p-4
+expm1 0x6.1b4d318238d4a2a8p-4
 # Bug 16353: underflow exception may be missing
 expm1 0x4.0000000000000028p-16384 missing-underflow
 
