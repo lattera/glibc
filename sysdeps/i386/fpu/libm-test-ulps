@@ -33,7 +33,15 @@ Function: "acosh_upward":
 ildouble: 1
 ldouble: 1
 
+Function: "asin":
+ildouble: 1
+ldouble: 1
+
 Function: "asin_downward":
+ildouble: 1
+ldouble: 1
+
+Function: "asin_towardzero":
 ildouble: 1
 ldouble: 1
 
