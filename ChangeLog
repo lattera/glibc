@@ -1,3 +1,9 @@
+2015-03-25  Alan Modra  <amodra@gmail.com>
+
+	* sysdeps/powerpc/powerpc64/configure.ac: Correct "linker support
+	for overlapping .opd entries" to "support...".
+	* sysdeps/powerpc/powerpc64/configure: Regenerate
+
 2015-03-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Add more tests of acos.

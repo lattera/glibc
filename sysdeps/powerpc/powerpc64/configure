@@ -1,8 +1,8 @@
 # This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
  # Local configure fragment for sysdeps/powerpc/powerpc64.
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for linker support for overlapping .opd entries" >&5
-$as_echo_n "checking for linker support for overlapping .opd entries... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for support for overlapping .opd entries" >&5
+$as_echo_n "checking for support for overlapping .opd entries... " >&6; }
 if ${libc_cv_overlapping_opd+:} false; then :
   $as_echo_n "(cached) " >&6
 else

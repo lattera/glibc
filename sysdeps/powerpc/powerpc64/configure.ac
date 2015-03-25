@@ -1,7 +1,7 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/powerpc/powerpc64.
 
-AC_CACHE_CHECK(for linker support for overlapping .opd entries,
+AC_CACHE_CHECK(for support for overlapping .opd entries,
 libc_cv_overlapping_opd, [dnl
 libc_cv_overlapping_opd=no
 echo 'void foo (void) {}' > conftest.c
