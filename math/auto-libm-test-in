@@ -111,6 +111,9 @@ acosh 0x1p59
 acosh 0x1p100
 acosh 0x1p500
 acosh 0x1p5000
+acosh 0x1.80a368p+0
+acosh 0x1.0b9d3e9fc19fbp+0
+acosh 0x1.11eab6p+0
 acosh max no-test-inline
 
 asin 0
@@ -205,6 +208,14 @@ asinh 0x1p-57
 asinh 0x1p-58
 asinh 0x1p-59
 asinh 0x1p-100
+asinh -0x3.d26bb4p-4
+asinh -0x3.bdeef4p-4
+asinh -0x7.fc7fc8p-8
+asinh -0x3.b94a52e6913c2p-4
+asinh 0x7.d8e5a8p-4
+asinh -0x7.63a06320c42e4p-4
+asinh 0x6.f4a93p-4
+asinh -0x7.88bcc8p-4
 # Bug 16350: underflow exception may be missing.
 asinh 0x1p-500 missing-underflow
 asinh 0x1p-5000 missing-underflow
@@ -340,6 +351,15 @@ atanh 0x1p-57
 atanh 0x1p-58
 atanh 0x1p-59
 atanh 0x1p-100
+atanh -0x6.e6c77p-20
+atanh 0x3.2ca824p-4
+atanh -0x1.cc1d66p-4
+atanh -0xf.cd3809ca8fd28p-4 no-test-inline
+atanh -0x1.04f386p-4
+atanh -0x2.084568p-4
+atanh -0x3.e0a5d8p-4
+atanh 0x3.dfb1f5db0ceccp-4
+atanh 0x2.251b2a64c85dep-4
 # Bug 16352: underflow exception may be missing.
 atanh 0x1p-500 missing-underflow
 atanh 0x1p-5000 missing-underflow

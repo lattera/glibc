@@ -36,32 +36,32 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "acosh_downward":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 2
-ldouble: 2
+ildouble: 4
+ldouble: 4
 
 Function: "acosh_towardzero":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 2
-ldouble: 2
+ildouble: 4
+ldouble: 4
 
 Function: "acosh_upward":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 3
+ldouble: 3
 
 Function: "asin":
 float: 1
@@ -98,32 +98,32 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "asinh_downward":
-double: 2
-float: 2
-idouble: 2
-ifloat: 2
-ildouble: 3
-ldouble: 3
+double: 3
+float: 3
+idouble: 3
+ifloat: 3
+ildouble: 5
+ldouble: 5
 
 Function: "asinh_towardzero":
 double: 2
 float: 2
 idouble: 2
 ifloat: 2
-ildouble: 3
-ldouble: 3
+ildouble: 4
+ldouble: 4
 
 Function: "asinh_upward":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-ildouble: 3
-ldouble: 3
+double: 3
+float: 3
+idouble: 3
+ifloat: 3
+ildouble: 4
+ldouble: 4
 
 Function: "atan2":
 float: 1
@@ -184,32 +184,32 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
-
-Function: "atanh_downward":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
 ildouble: 2
 ldouble: 2
+
+Function: "atanh_downward":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 5
+ldouble: 5
 
 Function: "atanh_towardzero":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
+ifloat: 2
+ildouble: 4
+ldouble: 4
 
 Function: "atanh_upward":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
+ildouble: 4
+ldouble: 4
 
 Function: Real part of "cacos":
 double: 1
