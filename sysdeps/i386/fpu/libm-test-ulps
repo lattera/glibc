@@ -38,8 +38,8 @@ ildouble: 1
 ldouble: 1
 
 Function: "asin_downward":
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "asin_towardzero":
 ildouble: 1

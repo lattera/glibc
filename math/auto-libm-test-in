@@ -132,6 +132,7 @@ asin -0x2.18915cp-4
 asin -0x3.746774p-4
 asin -0x3.1c54d10e5c844p-4
 asin 0xf.c9675fa6fe69f12p-4
+asin -0xa.fc5afp-4
 asin min
 asin -min
 asin min_subnorm
