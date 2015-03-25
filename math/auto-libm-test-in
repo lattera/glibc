@@ -64,6 +64,12 @@ acos -0x1p-65
 acos -0x1p-85
 acos -0x1p-105
 acos -0x1p-125
+acos -0x2.0089a4p-4
+acos 0xf.04aeep-4
+acos 0x5.dd258006121b8p-4
+acos -0x2.35f051e70dbc4p-4
+acos 0xe.9a5c0d7fabb9aa1p-4
+acos 0xe.17513589de79b75p-4
 acos min
 acos -min
 acos min_subnorm

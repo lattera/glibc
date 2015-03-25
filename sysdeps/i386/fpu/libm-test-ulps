@@ -6,16 +6,16 @@ ildouble: 1
 ldouble: 1
 
 Function: "acos_downward":
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "acos_towardzero":
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "acos_upward":
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "acosh":
 ildouble: 1
