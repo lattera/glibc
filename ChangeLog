@@ -1,3 +1,10 @@
+2015-03-26  Alan Modra  <amodra@gmail.com>
+
+	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_fixup_plt):
+	Don't segfault if ifunc resolver returns a NULL.  Do set plt to
+	zero for undefined weak.
+	(elf_machine_plt_conflict): Similarly.
+
 2015-03-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Add more tests of acosh, asinh and

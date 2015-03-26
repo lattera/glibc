@@ -472,19 +472,32 @@ elf_machine_fixup_plt (struct link_map *map, lookup_t sym_map,
   Elf64_FuncDesc *plt = (Elf64_FuncDesc *) reloc_addr;
   Elf64_FuncDesc *rel = (Elf64_FuncDesc *) finaladdr;
   Elf64_Addr offset = 0;
+  Elf64_FuncDesc zero_fd = {0, 0, 0};
 
   PPC_DCBT (&plt->fd_aux);
   PPC_DCBT (&plt->fd_func);
-  PPC_DCBT (&rel->fd_aux);
-  PPC_DCBT (&rel->fd_func);
 
-  /* If sym_map is NULL, it's a weak undefined sym;  Leave the plt zero.  */
+  /* If sym_map is NULL, it's a weak undefined sym;  Set the plt to
+     zero.  finaladdr should be zero already in this case, but guard
+     against invalid plt relocations with non-zero addends.  */
   if (sym_map == NULL)
-    return 0;
+    finaladdr = 0;
+
+  /* Don't die here if finaladdr is zero, die if this plt entry is
+     actually called.  Makes a difference when LD_BIND_NOW=1.
+     finaladdr may be zero for a weak undefined symbol, or when an
+     ifunc resolver returns zero.  */
+  if (finaladdr == 0)
+    rel = &zero_fd;
+  else
+    {
+      PPC_DCBT (&rel->fd_aux);
+      PPC_DCBT (&rel->fd_func);
+    }
 
   /* If the opd entry is not yet relocated (because it's from a shared
      object that hasn't been processed yet), then manually reloc it.  */
-  if (map != sym_map && !sym_map->l_relocated
+  if (finaladdr != 0 && map != sym_map && !sym_map->l_relocated
 #if !defined RTLD_BOOTSTRAP && defined SHARED
       /* Bootstrap map doesn't have l_relocated set for it.  */
       && sym_map != &GL(dl_rtld_map)
@@ -522,6 +535,13 @@ elf_machine_plt_conflict (struct link_map *map, lookup_t sym_map,
 #if _CALL_ELF != 2
   Elf64_FuncDesc *plt = (Elf64_FuncDesc *) reloc_addr;
   Elf64_FuncDesc *rel = (Elf64_FuncDesc *) finaladdr;
+  Elf64_FuncDesc zero_fd = {0, 0, 0};
+
+  if (sym_map == NULL)
+    finaladdr = 0;
+
+  if (finaladdr == 0)
+    rel = &zero_fd;
 
   plt->fd_func = rel->fd_func;
   plt->fd_aux = rel->fd_aux;
