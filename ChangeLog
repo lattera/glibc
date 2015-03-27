@@ -1,3 +1,10 @@
+2015-03-27  Roland McGrath  <roland@hack.frob.com>
+
+	* dlfcn/tststatic.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+
 2015-03-26  Alan Modra  <amodra@gmail.com>
 
 	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_fixup_plt):

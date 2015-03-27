@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int
-main (void)
+static int
+do_test (void)
 {
   void *handle;
   int (*test) (int);
@@ -33,3 +33,6 @@ main (void)
   dlclose (handle);
   return 0;
 }
+
+#define TEST_FUNCTION   do_test ()
+#include "../test-skeleton.c"
