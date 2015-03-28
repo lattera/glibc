@@ -250,7 +250,7 @@ typedef struct
 #endif
 
 
-/* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
+/* Set member of the thread descriptor directly.  */
 # define THREAD_SETMEM(descr, member, value) \
   ({ if (sizeof (descr->member) == 1)					      \
        asm volatile ("movb %b0,%%fs:%P1" :				      \
@@ -273,7 +273,7 @@ typedef struct
        }})
 
 
-/* Set member of the thread descriptor directly.  */
+/* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
 # define THREAD_SETMEM_NC(descr, member, idx, value) \
   ({ if (sizeof (descr->member[0]) == 1)				      \
        asm volatile ("movb %b0,%%fs:%P1(%q2)" :				      \

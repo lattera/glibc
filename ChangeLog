@@ -1,3 +1,9 @@
+2015-03-27  Martin Galvan  <martin.galvan@tallertechnologies.com>
+
+	* sysdeps/i386/nptl/tls.h: Swap comments between THREAD_SETMEM and
+	THREAD_SETMEM_NC.
+	* sysdeps/x86_64/nptl/tls.h: Ditto.
+
 2015-03-27  Roland McGrath  <roland@hack.frob.com>
 
 	* dlfcn/tststatic.c (main): Converted to ...

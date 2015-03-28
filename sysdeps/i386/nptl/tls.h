@@ -316,7 +316,8 @@ tls_fill_user_desc (union user_desc_init *desc,
      __value; })
 
 
-/* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
+
+/* Set member of the thread descriptor directly.  */
 # define THREAD_SETMEM(descr, member, value) \
   ({ if (sizeof (descr->member) == 1)					      \
        asm volatile ("movb %b0,%%gs:%P1" :				      \
@@ -341,7 +342,7 @@ tls_fill_user_desc (union user_desc_init *desc,
        }})
 
 
-/* Set member of the thread descriptor directly.  */
+/* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
 # define THREAD_SETMEM_NC(descr, member, idx, value) \
   ({ if (sizeof (descr->member[0]) == 1)				      \
        asm volatile ("movb %b0,%%gs:%P1(%2)" :				      \
