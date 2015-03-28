@@ -1,3 +1,8 @@
+2015-03-28  Martin Galvan  <martin.galvan@tallertechnologies.com>
+
+	* sysdeps/nptl/pthread.h: Remove duplicate definition of
+	PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP.
+
 2015-03-27  Martin Galvan  <martin.galvan@tallertechnologies.com>
 
 	* sysdeps/i386/nptl/tls.h: Swap comments between THREAD_SETMEM and
