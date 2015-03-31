@@ -1,5 +1,11 @@
 2015-03-31  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #18185]
+	* sysdeps/x86_64/cacheinfo.c (init_cacheinfo): Limit threads
+	sharing L2 cache to 2 for Silvermont/Knights Landing.
+
+2015-03-31  H.J. Lu  <hongjiu.lu@intel.com>
+
 	[BZ #17711]
 	* config.make.in (have-protected-data): New.
 	* configure.ac: Check linker support for protected data symbol.

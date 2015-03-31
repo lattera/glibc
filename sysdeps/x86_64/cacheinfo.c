@@ -585,6 +585,10 @@ init_cacheinfo (void)
       __cpuid (1, eax, ebx_1, ecx, edx);
 #endif
 
+      unsigned int family = (eax >> 8) & 0x0f;
+      unsigned int model = (eax >> 4) & 0x0f;
+      unsigned int extended_model = (eax >> 12) & 0xf0;
+
 #ifndef DISABLE_PREFERRED_MEMORY_INSTRUCTION
       /* Intel prefers SSSE3 instructions for memory/string routines
 	 if they are available.  */
@@ -647,6 +651,25 @@ init_cacheinfo (void)
 		}
 	    }
 	  threads += 1;
+	  if (threads > 2 && level == 2 && family == 6)
+	    {
+	      model += extended_model;
+	      switch (model)
+		{
+		case 0x57:
+		  /* Knights Landing has L2 cache shared by 2 cores.  */
+		case 0x37:
+		case 0x4a:
+		case 0x4d:
+		case 0x5a:
+		case 0x5d:
+		  /* Silvermont has L2 cache shared by 2 cores.  */
+		  threads = 2;
+		  break;
+		default:
+		  break;
+		}
+	    }
 	}
       else
 	{
