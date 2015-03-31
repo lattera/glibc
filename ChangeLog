@@ -1,3 +1,23 @@
+2015-03-31  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #17711]
+	* elf/dl-lookup.c (do_lookup_x): When UNDEF_MAP is NULL, which
+	indicates it is called from do_lookup_x on relocation against
+	protected data, skip the data definion in the executable from
+	copy reloc.
+	(_dl_lookup_symbol_x): Pass ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA,
+	instead of ELF_RTYPE_CLASS_PLT, to do_lookup_x for
+	EXTERN_PROTECTED_DATA relocation against STT_OBJECT symbol.
+	* sysdeps/generic/ldsodefs.h * (ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA):
+	New.  Defined to 4 if DL_EXTERN_PROTECTED_DATA is defined,
+	otherwise to 0.
+	* sysdeps/i386/dl-lookupcfg.h (DL_EXTERN_PROTECTED_DATA): New.
+	* sysdeps/i386/dl-machine.h (elf_machine_type_class): Set class
+	to ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA for R_386_GLOB_DAT.
+	* sysdeps/x86_64/dl-lookupcfg.h (DL_EXTERN_PROTECTED_DATA): New.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_type_class): Set class
+	to ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA for R_X86_64_GLOB_DAT.
+
 2015-03-28  Martin Galvan  <martin.galvan@tallertechnologies.com>
 
 	* sysdeps/nptl/pthread.h: Remove duplicate definition of

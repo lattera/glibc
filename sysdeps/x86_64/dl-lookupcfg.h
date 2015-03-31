@@ -20,6 +20,10 @@
 
 #include_next <dl-lookupcfg.h>
 
+/* Address of protected data defined in the shared library may be
+   external due to copy relocation.   */
+#define DL_EXTERN_PROTECTED_DATA
+
 struct link_map;
 
 extern void internal_function _dl_unmap (struct link_map *map);

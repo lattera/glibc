@@ -105,12 +105,22 @@ typedef struct link_map *lookup_t;
    satisfied by any symbol in the executable.  Some architectures do
    not support copy relocations.  In this case we define the macro to
    zero so that the code for handling them gets automatically optimized
-   out.  */
+   out.  ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA means address of protected
+   data defined in the shared library may be external, i.e., due to copy
+   relocation.  */
 #define ELF_RTYPE_CLASS_PLT 1
 #ifndef DL_NO_COPY_RELOCS
 # define ELF_RTYPE_CLASS_COPY 2
 #else
 # define ELF_RTYPE_CLASS_COPY 0
+#endif
+/* If DL_EXTERN_PROTECTED_DATA is defined, address of protected data
+   defined in the shared library may be external, i.e., due to copy
+   relocation.   */
+#ifdef DL_EXTERN_PROTECTED_DATA
+# define ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA 4
+#else
+# define ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA 0
 #endif
 
 /* ELF uses the PF_x macros to specify the segment permissions, mmap

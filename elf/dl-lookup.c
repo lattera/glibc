@@ -463,6 +463,59 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
       if (sym != NULL)
 	{
 	found_it:
+	  /* When UNDEF_MAP is NULL, which indicates we are called from
+	     do_lookup_x on relocation against protected data, we skip
+	     the data definion in the executable from copy reloc.  */
+	  if (ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA
+	      && undef_map == NULL
+	      && map->l_type == lt_executable
+	      && type_class == ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA)
+	    {
+	      const ElfW(Sym) *s;
+	      unsigned int i;
+
+#if ! ELF_MACHINE_NO_RELA
+	      if (map->l_info[DT_RELA] != NULL
+		  && map->l_info[DT_RELASZ] != NULL
+		  && map->l_info[DT_RELASZ]->d_un.d_val != 0)
+		{
+		  const ElfW(Rela) *rela
+		    = (const ElfW(Rela) *) D_PTR (map, l_info[DT_RELA]);
+		  unsigned int rela_count
+		    = map->l_info[DT_RELASZ]->d_un.d_val / sizeof (*rela);
+
+		  for (i = 0; i < rela_count; i++, rela++)
+		    if (elf_machine_type_class (ELFW(R_TYPE) (rela->r_info))
+			== ELF_RTYPE_CLASS_COPY)
+		      {
+			s = &symtab[ELFW(R_SYM) (rela->r_info)];
+			if (!strcmp (strtab + s->st_name, undef_name))
+			  goto skip;
+		      }
+		}
+#endif
+#if ! ELF_MACHINE_NO_REL
+	      if (map->l_info[DT_REL] != NULL
+		  && map->l_info[DT_RELSZ] != NULL
+		  && map->l_info[DT_RELSZ]->d_un.d_val != 0)
+		{
+		  const ElfW(Rel) *rel
+		    = (const ElfW(Rel) *) D_PTR (map, l_info[DT_REL]);
+		  unsigned int rel_count
+		    = map->l_info[DT_RELSZ]->d_un.d_val / sizeof (*rel);
+
+		  for (i = 0; i < rel_count; i++, rel++)
+		    if (elf_machine_type_class (ELFW(R_TYPE) (rel->r_info))
+			== ELF_RTYPE_CLASS_COPY)
+		      {
+			s = &symtab[ELFW(R_SYM) (rel->r_info)];
+			if (!strcmp (strtab + s->st_name, undef_name))
+			  goto skip;
+		      }
+		}
+#endif
+	    }
+
 	  switch (ELFW(ST_BIND) (sym->st_info))
 	    {
 	    case STB_WEAK:
@@ -494,6 +547,7 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 	    }
 	}
 
+skip:
       /* If this current map is the one mentioned in the verneed entry
 	 and we have not found a weak entry, it is a bug.  */
       if (symidx == STN_UNDEF && version != NULL && version->filename != NULL
@@ -844,7 +898,12 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 	  for (scope = symbol_scope; *scope != NULL; i = 0, ++scope)
 	    if (do_lookup_x (undef_name, new_hash, &old_hash, *ref,
 			     &protected_value, *scope, i, version, flags,
-			     skip_map, ELF_RTYPE_CLASS_PLT, NULL) != 0)
+			     skip_map,
+			     (ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA
+			      && ELFW(ST_TYPE) ((*ref)->st_info) == STT_OBJECT
+			      && type_class == ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA)
+			     ? ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA
+			     : ELF_RTYPE_CLASS_PLT, NULL) != 0)
 	      break;
 
 	  if (protected_value.s != NULL && protected_value.m != undef_map)

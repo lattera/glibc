@@ -170,7 +170,10 @@ _dl_start_user:\n\
    TLS variable, so undefined references should not be allowed to
    define the value.
    ELF_RTYPE_CLASS_COPY iff TYPE should not be allowed to resolve to one
-   of the main executable's symbols, as for a COPY reloc.  */
+   of the main executable's symbols, as for a COPY reloc.
+   ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA iff TYPE describes relocation may
+   against protected data whose address be external due to copy relocation.
+ */
 #define elf_machine_type_class(type)					      \
   ((((type) == R_X86_64_JUMP_SLOT					      \
      || (type) == R_X86_64_DTPMOD64					      \
@@ -178,7 +181,8 @@ _dl_start_user:\n\
      || (type) == R_X86_64_TPOFF64					      \
      || (type) == R_X86_64_TLSDESC)					      \
     * ELF_RTYPE_CLASS_PLT)						      \
-   | (((type) == R_X86_64_COPY) * ELF_RTYPE_CLASS_COPY))
+   | (((type) == R_X86_64_COPY) * ELF_RTYPE_CLASS_COPY)			      \
+   | (((type) == R_X86_64_GLOB_DAT) * ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA))
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_X86_64_JUMP_SLOT
