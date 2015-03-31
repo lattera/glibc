@@ -634,6 +634,7 @@ libc_cv_z_combreloc
 ASFLAGS_config
 libc_cv_Bgroup
 libc_cv_cc_with_libunwind
+libc_cv_protected_data
 BISON
 INSTALL_INFO
 PERL
@@ -5732,6 +5733,45 @@ $as_echo "$libc_cv_visibility_attribute" >&6; }
     as_fn_error $? "compiler support for visibility attribute is required" "$LINENO" 5
   fi
 fi
+
+if test $libc_cv_visibility_attribute = yes; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking linker support for protected data symbol" >&5
+$as_echo_n "checking linker support for protected data symbol... " >&6; }
+if ${libc_cv_protected_data+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.c <<EOF
+		  int bar __attribute__ ((visibility ("protected"))) = 1;
+EOF
+		  libc_cv_protected_data=no
+		  if { ac_try='${CC-cc} -nostdlib -nostartfiles -fPIC -shared conftest.c -o conftest.so'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then
+		    cat > conftest.c <<EOF
+		    extern int bar;
+		    int main (void) { return bar; }
+EOF
+		    if { ac_try='${CC-cc} -nostdlib -nostartfiles conftest.c -o conftest conftest.so'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then
+		      libc_cv_protected_data=yes
+		    fi
+		  fi
+		  rm -f conftest.*
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_protected_data" >&5
+$as_echo "$libc_cv_protected_data" >&6; }
+else
+  libc_cv_protected_data=no
+fi
+
 
 if test $libc_cv_visibility_attribute = yes; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for broken __attribute__((visibility()))" >&5

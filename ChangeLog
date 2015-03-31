@@ -1,6 +1,25 @@
 2015-03-31  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #17711]
+	* config.make.in (have-protected-data): New.
+	* configure.ac: Check linker support for protected data symbol.
+	* configure: Regenerated.
+	* elf/Makefile (modules-names): Add tst-protected1moda and
+	tst-protected1modb if $(have-protected-data) is yes.
+	(tests): Add tst-protected1a and tst-protected1b if
+	$(have-protected-data) is yes.
+	($(objpfx)tst-protected1a): New.
+	($(objpfx)tst-protected1b): Likewise.
+	(tst-protected1modb.so-no-z-defs): Likewise.
+	* elf/tst-protected1a.c: New file.
+	* elf/tst-protected1b.c: Likewise.
+	* elf/tst-protected1mod.h: Likewise.
+	* elf/tst-protected1moda.c: Likewise.
+	* elf/tst-protected1modb.c: Likewise.
+
+2015-03-31  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #17711]
 	* elf/dl-lookup.c (do_lookup_x): When UNDEF_MAP is NULL, which
 	indicates it is called from do_lookup_x on relocation against
 	protected data, skip the data definion in the executable from

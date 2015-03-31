@@ -1220,6 +1220,29 @@ EOF
 fi
 
 if test $libc_cv_visibility_attribute = yes; then
+  AC_CACHE_CHECK(linker support for protected data symbol,
+		 libc_cv_protected_data,
+		 [cat > conftest.c <<EOF
+		  int bar __attribute__ ((visibility ("protected"))) = 1;
+EOF
+		  libc_cv_protected_data=no
+		  if AC_TRY_COMMAND(${CC-cc} -nostdlib -nostartfiles -fPIC -shared conftest.c -o conftest.so); then
+		    cat > conftest.c <<EOF
+		    extern int bar;
+		    int main (void) { return bar; }
+EOF
+		    if AC_TRY_COMMAND(${CC-cc} -nostdlib -nostartfiles conftest.c -o conftest conftest.so); then
+		      libc_cv_protected_data=yes
+		    fi
+		  fi
+		  rm -f conftest.*
+		 ])
+else
+  libc_cv_protected_data=no
+fi
+AC_SUBST(libc_cv_protected_data)
+
+if test $libc_cv_visibility_attribute = yes; then
   AC_CACHE_CHECK(for broken __attribute__((visibility())),
 		 libc_cv_broken_visibility_attribute,
 		 [cat > conftest.c <<EOF
