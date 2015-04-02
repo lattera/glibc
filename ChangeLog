@@ -1,3 +1,7 @@
+2015-04-02  Florian Weimer  <fweimer@redhat.com>
+
+	* include/libc-internal.h (libc_max_align_t): Define.
+
 2015-04-02  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #16850]
