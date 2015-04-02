@@ -658,7 +658,7 @@ heap_trim (heap_info *heap, size_t pad)
   unsigned long pagesz = GLRO (dl_pagesize);
   mchunkptr top_chunk = top (ar_ptr), p, bck, fwd;
   heap_info *prev_heap;
-  long new_size, top_size, extra, prev_size, misalign;
+  long new_size, top_size, top_area, extra, prev_size, misalign;
 
   /* Can this heap go away completely? */
   while (top_chunk == chunk_at_offset (heap, sizeof (*heap)))
@@ -694,9 +694,16 @@ heap_trim (heap_info *heap, size_t pad)
       set_head (top_chunk, new_size | PREV_INUSE);
       /*check_chunk(ar_ptr, top_chunk);*/
     }
+
+  /* Uses similar logic for per-thread arenas as the main arena with systrim
+     by preserving the top pad and at least a page.  */
   top_size = chunksize (top_chunk);
-  extra = (top_size - pad - MINSIZE - 1) & ~(pagesz - 1);
-  if (extra < (long) pagesz)
+  top_area = top_size - MINSIZE - 1;
+  if (top_area <= pad)
+    return 0;
+
+  extra = ALIGN_DOWN(top_area - pad, pagesz);
+  if ((unsigned long) extra < mp_.trim_threshold)
     return 0;
 
   /* Try to shrink. */
