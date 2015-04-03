@@ -1,3 +1,9 @@
+2015-04-03  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	[BZ #17596]
+	* wcsmbs/mbrtowc.c (__mbrtowc): Add check for n=0.
+	* wcsmbs/mbrtoc16.c (mbrtoc16): Likewise.
+
 2015-04-02  Florian Weimer  <fweimer@redhat.com>
 
 	* include/libc-internal.h (libc_max_align_t): Define.
