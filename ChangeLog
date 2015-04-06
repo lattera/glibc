@@ -3,6 +3,9 @@
 	* sysdeps/unix/alpha/sysdep.h: Unconditionally include dl-sysdep.h.
 	* sysdeps/alpha/fpu/libm-test-ulps: Update.
 
+	* math/test-fenvinline.c (feenable_test): Cast fe_exc to
+	unsigned int before printing.
+
 2015-04-03  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	[BZ #17596]

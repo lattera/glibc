@@ -249,7 +249,7 @@ feenable_test (const char *flag_name, fexcept_t fe_exc)
   if (excepts != fe_exc)
     {
       printf ("Test: fedisableexcept (%s) failed, return should be 0x%x, is 0x%x\n",
-              flag_name, fe_exc, excepts);
+              flag_name, (unsigned int)fe_exc, excepts);
       ++count_errors;
     }
 
@@ -284,7 +284,7 @@ feenable_test (const char *flag_name, fexcept_t fe_exc)
   if (excepts != fe_exc)
     {
       printf ("Test: fedisableexcept (%s) failed, return should be 0x%x, is 0x%x\n",
-              flag_name, fe_exc, excepts);
+              flag_name, (unsigned int)fe_exc, excepts);
       ++count_errors;
     }
 #endif
