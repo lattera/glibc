@@ -1,3 +1,7 @@
+2015-04-06  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/alpha/sysdep.h: Unconditionally include dl-sysdep.h.
+
 2015-04-03  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	[BZ #17596]

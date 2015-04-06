@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdeps/unix/sysdep.h>
+#include <dl-sysdep.h>         /* Defines RTLD_PRIVATE_ERRNO.  */
 
 #ifdef __ASSEMBLER__
 
@@ -25,11 +26,6 @@
 #else
 # include <regdef.h>
 #endif
-
-#if IS_IN (rtld)
-# include <dl-sysdep.h>         /* Defines RTLD_PRIVATE_ERRNO.  */
-#endif
-
 
 #define __LABEL(x)	x##:
 
