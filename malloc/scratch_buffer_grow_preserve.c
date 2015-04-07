@@ -18,6 +18,7 @@
 
 #include <scratch_buffer.h>
 #include <errno.h>
+#include <string.h>
 
 bool
 __libc_scratch_buffer_grow_preserve (struct scratch_buffer *buffer)

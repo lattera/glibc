@@ -1,5 +1,9 @@
 2015-04-07  Florian Weimer  <fweimer@redhat.com>
 
+	* malloc/scratch_buffer_grow_preserve.c: Include <string.h>
+
+2015-04-07  Florian Weimer  <fweimer@redhat.com>
+
 	* include/scratch_buffer.h: New file.
 	* malloc/scratch_buffer_grow.c: Likewise.
 	* malloc/scratch_buffer_grow_preserve.c: Likewise.
