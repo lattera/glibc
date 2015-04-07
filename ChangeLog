@@ -1,3 +1,16 @@
+2015-04-07  Florian Weimer  <fweimer@redhat.com>
+
+	* include/scratch_buffer.h: New file.
+	* malloc/scratch_buffer_grow.c: Likewise.
+	* malloc/scratch_buffer_grow_preserve.c: Likewise.
+	* malloc/scratch_buffer_set_array_size.c: Likewise.
+	* malloc/tst-scratch_buffer.c: Likewise.
+	* malloc/Makefile (routines): Add scratch_buffer_grow.
+	(tests): Add test case.
+	* malloc/Versions (GLIBC_PRIVATE): Export
+	__libc_scratch_buffer_grow, __libc_scratch_buffer_grow_preserve,
+	__libc_scratch_buffer_set_array_size.
+
 2015-04-06  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/alpha/sysdep.h: Unconditionally include dl-sysdep.h.
