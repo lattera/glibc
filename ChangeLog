@@ -1,3 +1,8 @@
+2015-04-07  James Cowgill  <james410@cowgill.org.uk>
+
+	[BZ #17930]
+	* sysdeps/unix/sysv/linux/mips/bits/shm.h (SHM_NORESERVE): Define.
+
 2015-04-07  Florian Weimer  <fweimer@redhat.com>
 
 	* malloc/scratch_buffer_grow_preserve.c: Include <string.h>
