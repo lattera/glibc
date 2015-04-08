@@ -373,6 +373,8 @@ atanh -0x2.084568p-4
 atanh -0x3.e0a5d8p-4
 atanh 0x3.dfb1f5db0ceccp-4
 atanh 0x2.251b2a64c85dep-4
+atanh -0x2.e3458cp-4
+atanh 0x3.91d9f3c80c72d7acp-4
 # Bug 16352: underflow exception may be missing.
 atanh 0x1p-500 missing-underflow
 atanh 0x1p-5000 missing-underflow

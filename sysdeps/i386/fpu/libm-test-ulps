@@ -135,14 +135,14 @@ ldouble: 1
 
 Function: "atanh":
 ildouble: 3
-ldouble: 2
+ldouble: 3
 
 Function: "atanh_downward":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 2
+ildouble: 3
 ldouble: 4
 
 Function: "atanh_towardzero":
@@ -156,7 +156,7 @@ ldouble: 3
 Function: "atanh_upward":
 idouble: 1
 ifloat: 1
-ildouble: 4
+ildouble: 5
 ldouble: 4
 
 Function: "cabs":

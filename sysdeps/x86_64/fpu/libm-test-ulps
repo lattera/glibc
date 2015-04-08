@@ -190,8 +190,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 2
-ldouble: 2
+ildouble: 3
+ldouble: 3
 
 Function: "atanh_downward":
 double: 2
@@ -202,9 +202,9 @@ ildouble: 5
 ldouble: 5
 
 Function: "atanh_towardzero":
-double: 1
+double: 2
 float: 2
-idouble: 1
+idouble: 2
 ifloat: 2
 ildouble: 4
 ldouble: 4
