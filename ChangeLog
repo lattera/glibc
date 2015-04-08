@@ -1,3 +1,11 @@
+2015-04-08  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18197]
+	* sysdeps/ieee754/dbl-64/s_atan.c: Include <fenv.h>.
+	(atan): Set FE_TONEAREST mode for internal computations.
+	* math/auto-libm-test-in: Add more tests of atan.
+	* math/auto-libm-test-out: Regenerated.
+
 2015-04-07  James Cowgill  <james410@cowgill.org.uk>
 
 	[BZ #17930]

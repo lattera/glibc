@@ -240,6 +240,8 @@ atan 1e6
 atan 0x1p-100
 atan 0x1p-600
 atan 0x1p-10000
+atan -0x3.b02d84p-4
+atan -0x3.3fb708p-4
 atan min
 atan -min
 atan min_subnorm
