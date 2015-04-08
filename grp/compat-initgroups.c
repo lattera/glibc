@@ -14,7 +14,6 @@ compat_call (service_user *nip, const char *user, gid_t group, long int *start,
 	     long int *size, gid_t **groupsp, long int limit, int *errnop)
 {
   struct group grpbuf;
-  size_t buflen = __sysconf (_SC_GETGR_R_SIZE_MAX);
   enum nss_status status;
   set_function setgrent_fct;
   get_function getgrent_fct;
@@ -35,30 +34,22 @@ compat_call (service_user *nip, const char *user, gid_t group, long int *start,
 
   endgrent_fct = __nss_lookup_function (nip, "endgrent");
 
-  char *tmpbuf = __alloca (buflen);
-  bool use_malloc = false;
+  struct scratch_buffer tmpbuf;
+  scratch_buffer_init (&tmpbuf);
   enum nss_status result = NSS_STATUS_SUCCESS;
 
   do
     {
       while ((status = DL_CALL_FCT (getgrent_fct,
-				     (&grpbuf, tmpbuf, buflen, errnop)),
+				     (&grpbuf, tmpbuf.data, tmpbuf.length,
+				      errnop)),
 	      status == NSS_STATUS_TRYAGAIN)
 	     && *errnop == ERANGE)
         {
-	  if (__libc_use_alloca (buflen * 2))
-	    tmpbuf = extend_alloca (tmpbuf, buflen, buflen * 2);
-	  else
+	  if (!scratch_buffer_grow (&tmpbuf))
 	    {
-	      buflen *= 2;
-	      char *newbuf = realloc (use_malloc ? tmpbuf : NULL, buflen);
-	      if (newbuf == NULL)
-		{
-		  result = NSS_STATUS_TRYAGAIN;
-		  goto done;
-		}
-	      use_malloc = true;
-	      tmpbuf = newbuf;
+	      result = NSS_STATUS_TRYAGAIN;
+	      goto done;
 	    }
         }
 
@@ -116,8 +107,7 @@ compat_call (service_user *nip, const char *user, gid_t group, long int *start,
   while (status == NSS_STATUS_SUCCESS);
 
  done:
-  if (use_malloc)
-    free (tmpbuf);
+  scratch_buffer_free (&tmpbuf);
 
   if (endgrent_fct)
     DL_CALL_FCT (endgrent_fct, ());

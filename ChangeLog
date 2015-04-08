@@ -3,6 +3,12 @@
 	* elf/pldd.c (main): Rewrite to use struct
 	scratch_buffer instead of extend_alloca.
 	* elf/pldd-xx.c (find_maps): Likewise.
+	* grp/initgroups.c: Include <scratch_buffer.h> instead of
+	<alloca.h>.
+	* grp/compat-initgroups.c (compat_call): Rewrite to use struct
+	scratch_buffer instead of extend_alloca.
+	* nscd/initgrcache.c: Include <scratch_buffer.h>, now needed by
+	grp/compat-initgroups.c.
 
 2015-04-08  Joseph Myers  <joseph@codesourcery.com>
 
