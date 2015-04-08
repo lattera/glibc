@@ -1,3 +1,9 @@
+2015-04-08  Florian Weimer  <fweimer@redhat.com>
+
+	* elf/pldd.c (main): Rewrite to use struct
+	scratch_buffer instead of extend_alloca.
+	* elf/pldd-xx.c (find_maps): Likewise.
+
 2015-04-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Add more tests of cbrt.

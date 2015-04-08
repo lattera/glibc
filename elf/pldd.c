@@ -35,6 +35,7 @@
 #include <sys/ptrace.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#include <scratch_buffer.h>
 
 #include <ldsodefs.h>
 #include <version.h>
@@ -118,18 +119,25 @@ main (int argc, char *argv[])
   if (dfd == -1)
     error (EXIT_FAILURE, errno, gettext ("cannot open %s"), buf);
 
-  size_t exesize = 1024;
-#ifdef PATH_MAX
-  exesize = PATH_MAX;
-#endif
-  exe = alloca (exesize);
+  struct scratch_buffer exebuf;
+  scratch_buffer_init (&exebuf);
   ssize_t nexe;
-  while ((nexe = readlinkat (dfd, "exe", exe, exesize)) == exesize)
-    extend_alloca (exe, exesize, 2 * exesize);
+  while ((nexe = readlinkat (dfd, "exe",
+			     exebuf.data, exebuf.length)) == exebuf.length)
+    {
+      if (!scratch_buffer_grow (&exebuf))
+	{
+	  nexe = -1;
+	  break;
+	}
+    }
   if (nexe == -1)
     exe = (char *) "<program name undetermined>";
   else
-    exe[nexe] = '\0';
+    {
+      exe = exebuf.data;
+      exe[nexe] = '\0';
+    }
 
   /* Stop all threads since otherwise the list of loaded modules might
      change while we are reading it.  */

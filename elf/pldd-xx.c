@@ -186,35 +186,43 @@ E(find_maps) (pid_t pid, void *auxv, size_t auxv_size)
   printf ("%lu:\t%s\n", (unsigned long int) pid, exe);
 
   /* Iterate over the list of objects and print the information.  */
-  size_t strsize = 256;
-  char *str = alloca (strsize);
+  struct scratch_buffer tmpbuf;
+  scratch_buffer_init (&tmpbuf);
+  int status = 0;
   do
     {
       struct E(link_map) m;
       if (pread64 (memfd, &m, sizeof (m), list) != sizeof (m))
 	{
 	  error (0, 0, gettext ("cannot read link map"));
-	  return EXIT_FAILURE;
+	  status = EXIT_FAILURE;
+	  goto out;
 	}
 
       EW(Addr) name_offset = m.l_name;
     again:
       while (1)
 	{
-	  ssize_t n = pread64 (memfd, str, strsize, name_offset);
+	  ssize_t n = pread64 (memfd, tmpbuf.data, tmpbuf.length, name_offset);
 	  if (n == -1)
 	    {
 	      error (0, 0, gettext ("cannot read object name"));
-	      return EXIT_FAILURE;
+	      status = EXIT_FAILURE;
+	      goto out;
 	    }
 
-	  if (memchr (str, '\0', n) != NULL)
+	  if (memchr (tmpbuf.data, '\0', n) != NULL)
 	    break;
 
-	  str = extend_alloca (str, strsize, strsize * 2);
+	  if (!scratch_buffer_grow (&tmpbuf))
+	    {
+	      error (0, 0, gettext ("cannot allocate buffer for object name"));
+	      status = EXIT_FAILURE;
+	      goto out;
+	    }
 	}
 
-      if (str[0] == '\0' && name_offset == m.l_name
+      if (((char *)tmpbuf.data)[0] == '\0' && name_offset == m.l_name
 	  && m.l_libname != 0)
 	{
 	  /* Try the l_libname element.  */
@@ -227,14 +235,16 @@ E(find_maps) (pid_t pid, void *auxv, size_t auxv_size)
 	}
 
       /* Skip over the executable.  */
-      if (str[0] != '\0')
-	printf ("%s\n", str);
+      if (((char *)tmpbuf.data)[0] != '\0')
+	printf ("%s\n", (char *)tmpbuf.data);
 
       list = m.l_next;
     }
   while (list != 0);
 
-  return 0;
+ out:
+  scratch_buffer_free (&tmpbuf);
+  return status;
 }
 
 
