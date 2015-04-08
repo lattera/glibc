@@ -442,6 +442,10 @@ cbrt 0.75
 cbrt 0x1p16383
 cbrt 0x1p-16383
 cbrt 1e5
+cbrt 0x3.132634p+0
+cbrt -0xc.8d0442f2f0d1p-492
+cbrt -0xa.6b142p+40
+cbrt -0x1.f28ab85f3580ap-128
 cbrt max
 cbrt -max
 cbrt min
