@@ -16,7 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <alloca.h>
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -30,6 +29,7 @@
 #include <nsswitch.h>
 #include <bits/libc-lock.h>
 #include <kernel-features.h>
+#include <scratch_buffer.h>
 
 static service_user *ni;
 /* Type of the lookup function.  */
@@ -528,46 +528,31 @@ _nss_compat_initgroups_dyn (const char *user, gid_t group, long int *start,
 			    long int *size, gid_t **groupsp, long int limit,
 			    int *errnop)
 {
-  size_t buflen = sysconf (_SC_GETPW_R_SIZE_MAX);
-  char *tmpbuf;
   enum nss_status status;
   ent_t intern = { true, false, false, NULL, {NULL, 0, 0} };
-  bool use_malloc = false;
 
   status = internal_setgrent (&intern);
   if (status != NSS_STATUS_SUCCESS)
     return status;
 
-  tmpbuf = __alloca (buflen);
+  struct scratch_buffer tmpbuf;
+  scratch_buffer_init (&tmpbuf);
 
   do
     {
-      while ((status = internal_getgrent_r (&intern, tmpbuf, buflen,
+      while ((status = internal_getgrent_r (&intern, tmpbuf.data, tmpbuf.length,
 					    user, group, start, size,
 					    groupsp, limit, errnop))
 	     == NSS_STATUS_TRYAGAIN && *errnop == ERANGE)
-        if (__libc_use_alloca (buflen * 2))
-          tmpbuf = extend_alloca (tmpbuf, buflen, 2 * buflen);
-        else
-          {
-            buflen *= 2;
-            char *newbuf = realloc (use_malloc ? tmpbuf : NULL, buflen);
-            if (newbuf == NULL)
-              {
-                status = NSS_STATUS_TRYAGAIN;
-                goto done;
-              }
-            use_malloc = true;
-            tmpbuf = newbuf;
-          }
+        if (!scratch_buffer_grow (&tmpbuf))
+	    goto done;
     }
   while (status == NSS_STATUS_SUCCESS);
 
   status = NSS_STATUS_SUCCESS;
 
  done:
-  if (use_malloc)
-    free (tmpbuf);
+  scratch_buffer_free (&tmpbuf);
 
   internal_endgrent (&intern);
 
