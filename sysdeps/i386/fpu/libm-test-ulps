@@ -283,6 +283,10 @@ ifloat: 2
 ildouble: 2
 ldouble: 2
 
+Function: "carg":
+ildouble: 1
+ldouble: 1
+
 Function: "carg_downward":
 double: 1
 float: 1
@@ -827,9 +831,9 @@ ldouble: 1
 
 Function: Real part of "clog_upward":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 2
 ldouble: 2
 

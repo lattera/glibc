@@ -41,6 +41,7 @@
 #include "MathLib.h"
 #include "uatan.tbl"
 #include "atnat2.h"
+#include <fenv.h>
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
@@ -192,6 +193,7 @@ __ieee754_atan2 (double y, double x)
 	return mhpi.d;
     }
 
+  SET_RESTORE_ROUND (FE_TONEAREST);
   /* either x/y or y/x is very close to zero */
   ax = (x < 0) ? -x : x;
   ay = (y < 0) ? -y : y;

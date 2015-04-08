@@ -287,6 +287,14 @@ atan2 0.390625 .00029
 atan2 1.390625 0.9296875
 atan2 -0.00756827042671106339 -.001792735857538728036
 atan2 0x1.00000000000001p0 0x1.00000000000001p0
+atan2 0x4.c3841p-4 0x2.f2f308p+0
+atan2 -0xe.cf143p-40 0xd.3de7ap-36
+atan2 0x5.576cf8p-4 0x2.21e65p+0
+atan2 -0x4.29411p-4 0x1.f4755cp+0
+atan2 -0xa.b4101p+20 -0xf.9c4c8p-4
+atan2 0x4.251bb8p-4 0x7.40ac68p+0
+atan2 0x1.47239ep+68 0xa.3ac3cp+68
+atan2 -0x6.b0794p-4 0x3.8ff10cp+0
 atan2 min min
 atan2 min -min
 atan2 -min min
@@ -409,6 +417,14 @@ carg -0 2.0
 carg 0 -2.0
 # carg (-0 + i y) == -pi/2 for y < 0.
 carg -0 -2.0
+carg 0x2.f2f308p+0 0x4.c3841p-4
+carg 0xd.3de7ap-36 -0xe.cf143p-40
+carg 0x2.21e65p+0 0x5.576cf8p-4
+carg 0x1.f4755cp+0 -0x4.29411p-4
+carg -0xf.9c4c8p-4 -0xa.b4101p+20
+carg 0x7.40ac68p+0 0x4.251bb8p-4
+carg 0xa.3ac3cp+68 0x1.47239ep+68
+carg 0x3.8ff10cp+0 -0x6.b0794p-4
 
 cbrt 0.0
 cbrt -0
@@ -523,6 +539,15 @@ cexp min -min_subnorm spurious-underflow:ldbl-96-intel:x86 spurious-underflow:ld
 
 clog 0.75 1.25
 clog -2 -3
+
+clog 0x2.f2f308p+0 0x4.c3841p-4
+clog 0xd.3de7ap-36 -0xe.cf143p-40
+clog 0x2.21e65p+0 0x5.576cf8p-4
+clog 0x1.f4755cp+0 -0x4.29411p-4
+clog -0xf.9c4c8p-4 -0xa.b4101p+20
+clog 0x7.40ac68p+0 0x4.251bb8p-4
+clog 0xa.3ac3cp+68 0x1.47239ep+68
+clog 0x3.8ff10cp+0 -0x6.b0794p-4
 
 clog 0x1.fffffep+127 0x1.fffffep+127
 clog 0x1.fffffep+127 1.0
@@ -642,6 +667,15 @@ clog 0x1415bcaf2105940d49a636e98ae59p-115 0x7e6a150adfcd1b0921d44b31f40f4p-115
 
 clog10 0.75 1.25
 clog10 -2 -3
+
+clog10 0x2.f2f308p+0 0x4.c3841p-4
+clog10 0xd.3de7ap-36 -0xe.cf143p-40
+clog10 0x2.21e65p+0 0x5.576cf8p-4
+clog10 0x1.f4755cp+0 -0x4.29411p-4
+clog10 -0xf.9c4c8p-4 -0xa.b4101p+20
+clog10 0x7.40ac68p+0 0x4.251bb8p-4
+clog10 0xa.3ac3cp+68 0x1.47239ep+68
+clog10 0x3.8ff10cp+0 -0x6.b0794p-4
 
 clog10 0x1.fffffep+127 0x1.fffffep+127
 clog10 0x1.fffffep+127 1.0
