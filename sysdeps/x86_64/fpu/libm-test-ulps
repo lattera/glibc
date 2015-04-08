@@ -211,6 +211,30 @@ ifloat: 3
 ildouble: 4
 ldouble: 4
 
+Function: "cabs":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+
+Function: "cabs_downward":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+
+Function: "cabs_towardzero":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+
+Function: "cabs_upward":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+
 Function: Real part of "cacos":
 double: 1
 float: 2

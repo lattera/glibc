@@ -1,5 +1,10 @@
 2015-04-08  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/auto-libm-test-in: Add more tests of cabs.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	[BZ #18210]
 	[BZ #18211]
 	* sysdeps/ieee754/dbl-64/e_atan2.c: Include <fenv.h>.

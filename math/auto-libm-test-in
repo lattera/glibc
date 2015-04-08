@@ -396,6 +396,12 @@ cabs 1.0 0
 cabs -5.7e7 0
 cabs 5.7e7 0
 cabs 0.75 1.25
+cabs -0x1.34be3p-4 -0xc.56623p+0
+cabs -0x1.2b0ff8p+28 -0x2.549fc4p+16
+cabs -0x1.0932cp-80 -0x2.51109p-24
+cabs -0x1.055fb2p+48 0x9.1ce86p+24
+cabs -0x1.26a566p+120 0x4.017b28p+92
+cabs -0x1.0eda54p+28 0xb.09476p+0
 
 # carg (x + i 0) == 0 for x > 0.
 carg 2.0 0
