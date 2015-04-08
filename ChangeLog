@@ -11,6 +11,7 @@
 	grp/compat-initgroups.c.
 	* nis/nss_compat/compat-initgroups.c (_nss_compat_initgroups_dyn):
 	Rewrite to use struct scratch_buffer instead of extend_alloca.
+	* inet/getnameinfo.c (nrl_domainname, getnameinfo): Likewise.
 
 2015-04-08  Joseph Myers  <joseph@codesourcery.com>
 
