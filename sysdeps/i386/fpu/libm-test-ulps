@@ -77,6 +77,10 @@ ifloat: 1
 ildouble: 5
 ldouble: 4
 
+Function: "atan":
+ildouble: 1
+ldouble: 1
+
 Function: "atan2":
 ildouble: 1
 ldouble: 1

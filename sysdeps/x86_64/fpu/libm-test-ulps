@@ -125,6 +125,12 @@ ifloat: 3
 ildouble: 4
 ldouble: 4
 
+Function: "atan":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
 Function: "atan2":
 float: 1
 ifloat: 1
@@ -173,9 +179,9 @@ ldouble: 1
 
 Function: "atan_upward":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 
