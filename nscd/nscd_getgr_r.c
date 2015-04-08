@@ -31,6 +31,7 @@
 #include <sys/un.h>
 #include <not-cancel.h>
 #include <_itoa.h>
+#include <scratch_buffer.h>
 
 #include "nscd-client.h"
 #include "nscd_proto.h"
@@ -89,7 +90,8 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
   int gc_cycle;
   int nretries = 0;
   const uint32_t *len = NULL;
-  size_t lensize = 0;
+  struct scratch_buffer lenbuf;
+  scratch_buffer_init (&lenbuf);
 
   /* If the mapping is available, try to search there instead of
      communicating with the nscd.  */
@@ -200,14 +202,10 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	  else
 	    {
 	      /* Allocate array to store lengths.  */
-	      if (lensize == 0)
-		{
-		  lensize = gr_resp.gr_mem_cnt * sizeof (uint32_t);
-		  len = (uint32_t *) alloca (lensize);
-		}
-	      else if (gr_resp.gr_mem_cnt * sizeof (uint32_t) > lensize)
-		len = extend_alloca (len, lensize,
-				     gr_resp.gr_mem_cnt * sizeof (uint32_t));
+	      if (!scratch_buffer_set_array_size
+		  (&lenbuf, gr_resp.gr_mem_cnt, sizeof (uint32_t)))
+		goto out_close;
+	      len = lenbuf.data;
 
 	      vec[0].iov_base = (void *) len;
 	      vec[0].iov_len = gr_resp.gr_mem_cnt * sizeof (uint32_t);
@@ -325,6 +323,8 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       if (retval != -1)
 	goto retry;
     }
+
+  scratch_buffer_free (&lenbuf);
 
   return retval;
 }
