@@ -564,6 +564,11 @@ clog 0x7.40ac68p+0 0x4.251bb8p-4
 clog 0xa.3ac3cp+68 0x1.47239ep+68
 clog 0x3.8ff10cp+0 -0x6.b0794p-4
 
+clog 0xa.a39ffp-4 -0x2.360c38p-4
+clog 0x6.9a4569067b6ecp-4 0xb.0a30d15e7d798p-4
+clog -0x1.105436p+0 -0x6.66396df3cc7ap-4
+clog -0x2.c90b952282392dep-4 0x1.43cda16634cc7046p+0
+
 clog 0x1.fffffep+127 0x1.fffffep+127
 clog 0x1.fffffep+127 1.0
 clog 0x1p-149 0x1p-149
@@ -691,6 +696,17 @@ clog10 -0xf.9c4c8p-4 -0xa.b4101p+20
 clog10 0x7.40ac68p+0 0x4.251bb8p-4
 clog10 0xa.3ac3cp+68 0x1.47239ep+68
 clog10 0x3.8ff10cp+0 -0x6.b0794p-4
+
+clog10 0x2.83f8ap+0 -0xb.0b529p-4
+clog10 -0x2.eb21fcp-4 -0x6.59bbc8p-4
+clog10 -0x3.3f7fc4p-4 0xb.ba599p-4
+clog10 0x1.cd1ab2p-124 -0x8p-152
+clog10 0xa.32054p-4 0x2.c7e71cp-4
+clog10 -0x5.9ecf8c7b5a0f4p-4 0xa.a945e5f8761c8p-4
+clog10 0x1.7a858p+0 -0x6.d940dp-4
+clog10 -0x2.51320d99da5a2p-4 0x3.b8176p-4
+clog10 -0x1.25c2d3e172df8p+0 0
+clog10 0x1.0c684e35d0b2ap+0 -0x7.37df8a65c28fp-4
 
 clog10 0x1.fffffep+127 0x1.fffffep+127
 clog10 0x1.fffffep+127 1.0
