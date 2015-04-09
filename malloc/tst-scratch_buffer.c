@@ -130,8 +130,8 @@ do_test (void)
 	      && unchanged_array_size (&buf, 0, -1)
 	      && unchanged_array_size (&buf, 1ULL << 16, 0)
 	      && unchanged_array_size (&buf, 0, 1ULL << 16)
-	      && unchanged_array_size (&buf, 1ULL << 32, 0)
-	      && unchanged_array_size (&buf, 0, 1ULL << 32)))
+	      && unchanged_array_size (&buf, (size_t) (1ULL << 32), 0)
+	      && unchanged_array_size (&buf, 0, (size_t) (1ULL << 32))))
 	  return 1;
 	if (!scratch_buffer_grow (&buf))
 	  {
