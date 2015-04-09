@@ -412,11 +412,12 @@ AC_ARG_WITH([cpu],
   esac
 ])
 
+# An preconfigure script can set this when it wants to disable the sanity
+# check below.
+libc_config_ok=no
+
 dnl Let sysdeps/*/preconfigure act here, like they can in add-ons.
 LIBC_PRECONFIGURE([$srcdir], [for sysdeps])
-
-# An add-on can set this when it wants to disable the sanity check below.
-libc_config_ok=no
 
 dnl Having this here, though empty, makes sure that if add-ons' fragments
 dnl do AC_CONFIG_SUBDIRS([some-dir]), which just sets $subdirs, then

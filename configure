@@ -3878,6 +3878,10 @@ if test "${with_cpu+set}" = set; then :
 fi
 
 
+# An preconfigure script can set this when it wants to disable the sanity
+# check below.
+libc_config_ok=no
+
 if frags=`ls -d $srcdir/sysdeps/*/preconfigure 2> /dev/null`
 then
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for sysdeps preconfigure fragments" >&5
@@ -3890,9 +3894,6 @@ $as_echo_n "checking for sysdeps preconfigure fragments... " >&6; }
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: " >&5
 $as_echo "" >&6; }
 fi
-
-# An add-on can set this when it wants to disable the sanity check below.
-libc_config_ok=no
 
 subdirs="$subdirs "
 

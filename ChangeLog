@@ -1,5 +1,9 @@
 2015-04-09  Roland McGrath  <roland@hack.frob.com>
 
+	* configure.ac (libc_config_ok): Initialize before reading
+	preconfigure scripts, not after.
+	* configure: Regenerated.
+
 	* test-skeleton.c (TIMEOUT): Move #define to top level.
 	(main): Grok environment variable TEST_DIRECT.  If set, print
 	test expectation details into that file and then behave as if
