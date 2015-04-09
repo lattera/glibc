@@ -1,5 +1,8 @@
 2015-04-09  Roland McGrath  <roland@hack.frob.com>
 
+	* Makeconfig (module-cppflags): Exclude all .v.i files.
+	(skip-module-cppflags): Variable removed.
+
 	* configure.ac (libc_config_ok): Initialize before reading
 	preconfigure scripts, not after.
 	* configure: Regenerated.

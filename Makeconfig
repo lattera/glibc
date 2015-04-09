@@ -848,12 +848,6 @@ built-modules = iconvprogs iconvdata ldconfig lddlibc4 libmemusage \
 		libSegFault libpcprofile librpcsvc locale-programs \
 		memusagestat nonlib nscd extramodules libnldbl
 
-# We don't include libc-modules.h when these targets are being built.  These
-# targets don't (and will likely never need to) use the IS_IN facility.  In
-# fact, shlib-versions should not use it because that will create a circular
-# dependency as libc-modules.h is generated from shlib-versions.
-skip-module-cppflags = shlib-versions.v.i Versions.v.i
-
 in-module = $(subst -,_,$(firstword $(libof-$(basename $(@F))) \
 				    $(libof-$(<F)) \
 				    $(libof-$(@F)) \
@@ -862,10 +856,12 @@ in-module = $(subst -,_,$(firstword $(libof-$(basename $(@F))) \
 module-cppflags-real = -include $(common-objpfx)libc-modules.h \
 		       -DMODULE_NAME=$(in-module)
 
-# We don't need libc-modules.h and the MODULE_NAME definition for
-# shlib-version.v.i.
-module-cppflags = $(if $(filter $(@F),$(skip-module-cppflags)), \
-		       ,$(module-cppflags-real))
+# We don't need libc-modules.h and the MODULE_NAME definition for .v.i
+# files.  These targets don't (and will likely never need to) use the IS_IN
+# facility.  In fact, shlib-versions should not use it because that will
+# create a circular dependency as libc-modules.h is generated from
+# shlib-versions.
+module-cppflags = $(if $(filter %.v.i,$(@F)),,$(module-cppflags-real))
 
 # These are the variables that the implicit compilation rules use.
 # Note that we can't use -std=* in CPPFLAGS, because it overrides
