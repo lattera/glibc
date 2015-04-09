@@ -45,6 +45,11 @@
 # define TEST_DATA_LIMIT (64 << 20) /* Data limit (bytes) to run with.  */
 #endif
 
+#ifndef TIMEOUT
+  /* Default timeout is two seconds.  */
+# define TIMEOUT 2
+#endif
+
 #define OPT_DIRECT 1000
 #define OPT_TESTDIR 1001
 
@@ -293,7 +298,7 @@ main (int argc, char *argv[])
   /* Make sure we see all message, even those on stdout.  */
   setvbuf (stdout, NULL, _IONBF, 0);
 
-  /* make sure temporary files are deleted.  */
+  /* Make sure temporary files are deleted.  */
   atexit (delete_temp_files);
 
   /* Correct for the possible parameters.  */
@@ -305,6 +310,46 @@ main (int argc, char *argv[])
 #ifdef PREPARE
   PREPARE (argc, argv);
 #endif
+
+  const char *envstr_direct = getenv ("TEST_DIRECT");
+  if (envstr_direct != NULL)
+    {
+      FILE *f = fopen (envstr_direct, "w");
+      if (f == NULL)
+        {
+          printf ("cannot open TEST_DIRECT output file '%s': %m\n",
+                  envstr_direct);
+          exit (1);
+        }
+
+      fprintf (f, "timeout=%u\ntimeoutfactor=%u\n", TIMEOUT, timeoutfactor);
+#ifdef EXPECTED_STATUS
+      fprintf (f, "exit=%u\n", EXPECTED_STATUS);
+#endif
+#ifdef EXPECTED_SIGNAL
+      switch (EXPECTED_SIGNAL)
+        {
+        default: abort ();
+# define init_sig(signo, name, text) \
+        case signo: fprintf (f, "signal=%s\n", name); break;
+# include <siglist.h>
+# undef init_sig
+        }
+#endif
+
+      if (temp_name_list != NULL)
+        {
+          fprintf (f, "temp_files=(\n");
+          for (struct temp_name_list *n = temp_name_list;
+               n != NULL;
+               n = (struct temp_name_list *) n->q.q_forw)
+            fprintf (f, "  '%s'\n", n->name);
+          fprintf (f, ")\n");
+        }
+
+      fclose (f);
+      direct = 1;
+    }
 
   /* If we are not expected to fork run the function immediately.  */
   if (direct)
@@ -359,10 +404,6 @@ main (int argc, char *argv[])
     }
 
   /* Set timeout.  */
-#ifndef TIMEOUT
-  /* Default timeout is two seconds.  */
-# define TIMEOUT 2
-#endif
   signal (SIGALRM, signal_handler);
   alarm (TIMEOUT * timeoutfactor);
 

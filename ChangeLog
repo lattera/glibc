@@ -1,3 +1,10 @@
+2015-04-09  Roland McGrath  <roland@hack.frob.com>
+
+	* test-skeleton.c (TIMEOUT): Move #define to top level.
+	(main): Grok environment variable TEST_DIRECT.  If set, print
+	test expectation details into that file and then behave as if
+	given --direct.
+
 2015-04-09  Florian Weimer  <fweimer@redhat.com>
 
 	* malloc/tst-scratch_buffer.c (do_test): Suppress truncation
