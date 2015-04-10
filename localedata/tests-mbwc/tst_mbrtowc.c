@@ -26,7 +26,7 @@ tst_mbrtowc (FILE * fp, int debug_flg)
     TST_HEAD_LOCALE (mbrtowc, S_MBRTOWC);
     TST_DO_REC (mbrtowc)
     {
-      if (mbrtowc (NULL, "", 0, &t) != 0)
+      if (mbrtowc (NULL, "", 0, &t) != -2)
 	{
 	  err_count++;
 	  Result (C_FAILURE, S_MBRTOWC, CASE_3,

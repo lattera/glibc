@@ -1,3 +1,10 @@
+2015-04-10  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* tests-mbwc/dat_mbrlen.c (tst_mbrlen_loc): Change expected
+	result to -2 in case of n == 0.
+	* tests-mbwc/tst_mbrtowc.c (tst_mbrtowc): Check result against
+	-2 instead of 0.
+
 2015-03-04  Roland McGrath  <roland@hack.frob.com>
 
 	* bug-setlocale1.c (do_test): Remove argument handling and
