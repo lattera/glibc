@@ -1,3 +1,11 @@
+2015-04-10  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18247]
+	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Decrease minimum
+	decimal exponent by 1.
+	* stdlib/tst-strtod-round-data: Add more tests.
+	* stdlib/tst-strtod-round.c (tests): Regenerated.
+
 2015-04-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Add more tests of clog and clog10.

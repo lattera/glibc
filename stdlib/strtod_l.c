@@ -1189,7 +1189,16 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
   if (__glibc_unlikely (exponent > MAX_10_EXP + 1 - (intmax_t) int_no))
     return overflow_value (negative);
 
-  if (__glibc_unlikely (exponent < MIN_10_EXP - (DIG + 1)))
+  /* 10^(MIN_10_EXP-1) is not normal.  Thus, 10^(MIN_10_EXP-1) /
+     2^MANT_DIG is below half the least subnormal, so anything with a
+     base-10 exponent less than the base-10 exponent (which is
+     MIN_10_EXP - 1 - ceil(MANT_DIG*log10(2))) of that value
+     underflows.  DIG is floor((MANT_DIG-1)log10(2)), so an exponent
+     below MIN_10_EXP - (DIG + 3) underflows.  But EXPONENT is
+     actually an exponent multiplied only by a fractional part, not an
+     integer part, so an exponent below MIN_10_EXP - (DIG + 2)
+     underflows.  */
+  if (__glibc_unlikely (exponent < MIN_10_EXP - (DIG + 2)))
     return underflow_value (negative);
 
   if (int_no > 0)
@@ -1356,7 +1365,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 
     assert (dig_no > int_no
 	    && exponent <= 0
-	    && exponent >= MIN_10_EXP - (DIG + 1));
+	    && exponent >= MIN_10_EXP - (DIG + 2));
 
     /* We need to compute MANT_DIG - BITS fractional bits that lie
        within the mantissa of the result, the following bit for
