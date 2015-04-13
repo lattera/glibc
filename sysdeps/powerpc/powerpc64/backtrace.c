@@ -20,7 +20,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <signal.h>
-#include <bits/libc-vdso.h>
+#include <libc-vdso.h>
 
 /* This is the stack layout we see with every stack frame.
    Note that every routine is required by the ABI to lay out the stack

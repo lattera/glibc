@@ -21,7 +21,7 @@
 
 #undef __gettimeofday
 
-#include <bits/libc-vdso.h>
+#include <libc-vdso.h>
 
 /* Get the current time of day and timezone information,
    putting it into *tv and *tz.  If tz is null, *tz is not filled.

@@ -17,7 +17,7 @@
 
 #include <sched.h>
 #include <sysdep.h>
-#include <bits/libc-vdso.h>
+#include <libc-vdso.h>
 
 
 int

@@ -21,7 +21,7 @@
 #include <time.h>
 #include <hp-timing.h>
 
-#include <bits/libc-vdso.h>
+#include <libc-vdso.h>
 
 /* Get the current time of day and timezone information,
    putting it into *TV and *TZ.  If TZ is NULL, *TZ is not filled.

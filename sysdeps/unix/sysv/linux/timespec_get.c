@@ -22,7 +22,7 @@
 # undef INTERNAL_VSYSCALL
 # define INTERNAL_VSYSCALL INTERNAL_SYSCALL
 #else
-# include <bits/libc-vdso.h>
+# include <libc-vdso.h>
 #endif
 
 #ifndef INTERNAL_GETTIME

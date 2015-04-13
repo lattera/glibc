@@ -1,3 +1,31 @@
+2015-04-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* nptl/pthread_cond_timedwait.c: Change include bits/libc-vdso.h to just
+	libc-vdso.h.
+	* sysdeps/powerpc/powerpc32/backtrace.c: Likewise.
+	* sysdeps/powerpc/powerpc64/backtrace.c: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/clock_getres.c: Likewise.
+	* sysdeps/unix/sysv/linux/clock_gettime.c: Likewise.
+	* sysdeps/unix/sysv/linux/gettimeofday.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/get_clockfreq.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/gettimeofday.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sched_getcpu.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/time.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/tile/gettimeofday.c: Likewise.
+	* sysdeps/unix/sysv/linux/tile/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/timespec_get.c: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/bits/libc-vdso.h: Move to ...
+	* sysdeps/unix/sysv/linux/aarch64/libc-vdso.h: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/bits/libc-vdso.h: Move to ...
+	* sysdeps/unix/sysv/linux/powerpc/libc-vdso.h: ... here.
+	* sysdeps/unix/sysv/linux/s390/bits/libc-vdso.h: Move to ...
+	* sysdeps/unix/sysv/linux/s390/libc-vdso.h: ... here.
+	* sysdeps/unix/sysv/linux/tile/bits/libc-vdso.h: Move to ...
+	* sysdeps/unix/sysv/linux/tile/libc-vdso.h: ... here.
+
 2015-04-19  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* stdlib/setenv.c (__add_to_environ):

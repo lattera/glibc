@@ -17,7 +17,7 @@
 
 #ifdef SHARED
 #include <dl-vdso.h>
-#include <bits/libc-vdso.h>
+#include <libc-vdso.h>
 
 struct syscall_return_value (*__vdso_gettimeofday) (struct timeval *, void *)
   attribute_hidden;

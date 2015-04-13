@@ -23,7 +23,7 @@
 #include <unistd.h>
 #include <libc-internal.h>
 #include <sysdep.h>
-#include <bits/libc-vdso.h>
+#include <libc-vdso.h>
 #include <not-cancel.h>
 
 hp_timing_t

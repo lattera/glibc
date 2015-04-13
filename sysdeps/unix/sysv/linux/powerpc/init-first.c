@@ -21,7 +21,7 @@
 # undef __gettimeofday
 # undef __clock_gettime
 # undef __clock_getres
-# include <bits/libc-vdso.h>
+# include <libc-vdso.h>
 
 void *__vdso_gettimeofday attribute_hidden;
 void *__vdso_clock_gettime;

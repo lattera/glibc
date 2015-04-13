@@ -21,7 +21,7 @@
 # include <time.h>
 # include <sysdep.h>
 # include <dl-vdso.h>
-# include <bits/libc-vdso.h>
+# include <libc-vdso.h>
 # include <dl-machine.h>
 
 void *time_ifunc (void) asm ("time");

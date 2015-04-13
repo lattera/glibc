@@ -33,7 +33,7 @@
 # undef INLINE_VSYSCALL
 # define INLINE_VSYSCALL INLINE_SYSCALL
 #else
-# include <bits/libc-vdso.h>
+# include <libc-vdso.h>
 #endif
 
 /* Cleanup handler, defined in pthread_cond_wait.c.  */
