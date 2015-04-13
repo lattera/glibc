@@ -7798,10 +7798,10 @@ log10_test (void)
 
 static const struct test_f_f_data log1p_test_data[] =
   {
-    TEST_f_f (log1p, -1, minus_infty, DIVIDE_BY_ZERO_EXCEPTION),
-    TEST_f_f (log1p, -2, qnan_value, INVALID_EXCEPTION),
-    TEST_f_f (log1p, -max_value, qnan_value, INVALID_EXCEPTION),
-    TEST_f_f (log1p, minus_infty, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (log1p, -1, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (log1p, -2, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (log1p, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (log1p, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
 
     TEST_f_f (log1p, plus_infty, plus_infty),
     TEST_f_f (log1p, qnan_value, qnan_value, NO_INEXACT_EXCEPTION),

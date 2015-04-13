@@ -75,4 +75,3 @@ ENTRY(__log1pl)
 	ret
 
 END (__log1pl)
-weak_alias (__log1pl, log1pl)

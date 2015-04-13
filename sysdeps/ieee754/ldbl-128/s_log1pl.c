@@ -253,5 +253,3 @@ __log1pl (long double xm1)
   z = z + e * C1;
   return (z);
 }
-
-weak_alias (__log1pl, log1pl)

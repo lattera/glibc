@@ -63,4 +63,3 @@ ENTRY(__log1pf)
 	ret
 
 END (__log1pf)
-weak_alias (__log1pf, log1pf)

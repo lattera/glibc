@@ -189,8 +189,3 @@ __log1p (double x)
   else
     return k * ln2_hi - ((hfsq - (s * (hfsq + R) + (k * ln2_lo + c))) - f);
 }
-weak_alias (__log1p, log1p)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__log1p, __log1pl)
-weak_alias (__log1p, log1pl)
-#endif

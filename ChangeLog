@@ -1,3 +1,33 @@
+2015-04-13  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	[BZ #6792]
+	* math/w_log1p.c: New file.
+	* math/w_log1pf.c: Likewise.
+	* math/w_log1pl.c: Likewise.
+	* math/Makefile (libm-calls): Add w_log1p.
+	* math/s_log1pl.c (log1pl): Remove weak_alias.
+	* sysdeps/i386/fpu/s_log1p.S (log1p): Likewise.
+	* sysdeps/i386/fpu/s_log1pf.S (log1pf): Likewise.
+	* sysdeps/i386/fpu/s_log1pl.S (log1pl): Likewise.
+	* sysdeps/x86_64/fpu/s_log1pl.S (log1pl): Likewise.
+	* sysdeps/ieee754/dbl-64/s_log1p.c (log1p): Likewise.
+	[NO_LONG_DOUBLE] (log1pl): Likewise.
+	* sysdeps/ieee754/flt-32/s_log1pf.c (log1pf): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_log1pl.c (log1pl): Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_log1pl.c
+	(log1p): Remove long_double_symbol.
+	* sysdeps/ieee754/ldbl-128ibm/s_log1pl.c (log1pl): Likewise.
+	* sysdeps/ieee754/ldbl-64-128/w_log1pl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/w_log1pl.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_log1p.c: Define empty weak_alias to
+	remove weak_alias for corresponding log1p function.
+	* sysdeps/m68k/m680x0/fpu/s_log1pf.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_log1pl.c: Likewise.
+	* sysdeps/ia64/fpu/w_log1p.c: New file.
+	* sysdeps/ia64/fpu/w_log1pf.c: Likewise.
+	* sysdeps/ia64/fpu/w_log1pl.c: Likewise.
+	* math/libm-test.inc (log1p_test_data):	Add errno expectations.
+
 2015-04-10  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18247]

@@ -9,6 +9,5 @@ __log1pl (long double x)
   __set_errno (ENOSYS);
   return 0.0;
 }
-weak_alias (__log1pl, log1pl)
 
 stub_warning (log1pl)
