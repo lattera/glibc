@@ -42,7 +42,7 @@ routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 	    isoc99_swscanf isoc99_vswscanf \
 	    mbrtoc16 c16rtomb
 
-strop-tests :=  wcscmp wmemcmp wcslen wcschr wcsrchr wcscpy
+strop-tests :=  wcscmp wcsncmp wmemcmp wcslen wcschr wcsrchr wcscpy
 tests := tst-wcstof wcsmbs-tst1 tst-wcsnlen tst-btowc tst-mbrtowc \
 	 tst-wcrtomb tst-wcpncpy tst-mbsrtowcs tst-wchar-h tst-mbrtowc2 \
 	 tst-c16c32-1 wcsatcliff $(addprefix test-,$(strop-tests))

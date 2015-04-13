@@ -1,4 +1,4 @@
-/* Test and measure strncmp functions.
+/* Test strncmp and wcsncmp functions.
    Copyright (C) 1999-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
@@ -18,17 +18,80 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define TEST_MAIN
-#define TEST_NAME "strncmp"
+#ifdef WIDE
+# define TEST_NAME "wcsncmp"
+#else
+# define TEST_NAME "strncmp"
+#endif
 #include "test-string.h"
 
-typedef int (*proto_t) (const char *, const char *, size_t);
-int simple_strncmp (const char *, const char *, size_t);
-int stupid_strncmp (const char *, const char *, size_t);
+#ifdef WIDE
+# include <wchar.h>
 
-IMPL (stupid_strncmp, 0)
-IMPL (simple_strncmp, 0)
-IMPL (strncmp, 1)
+# define L(str) L##str
+# define STRNCMP wcsncmp
+# define STRCPY wcscpy
+# define STRDUP wcsdup
+# define MEMCPY wmemcpy
+# define SIMPLE_STRNCMP simple_wcsncmp
+# define STUPID_STRNCMP stupid_wcsncmp
+# define CHAR wchar_t
+# define UCHAR wchar_t
+# define CHARBYTES 4
+# define CHAR__MAX WCHAR_MAX
+# define CHAR__MIN WCHAR_MIN
 
+/* Wcsncmp uses signed semantics for comparison, not unsigned.
+   Avoid using substraction since possible overflow */
+int
+simple_wcsncmp (const CHAR *s1, const CHAR *s2, size_t n)
+{
+  wchar_t c1, c2;
+
+  while (n--)
+    {
+      c1 = *s1++;
+      c2 = *s2++;
+      if (c1 == L('\0') || c1 != c2)
+	return c1 > c2 ? 1 : (c1 < c2 ? -1 : 0);
+    }
+  return 0;
+}
+
+int
+stupid_wcsncmp (const CHAR *s1, const CHAR *s2, size_t n)
+{
+  wchar_t c1, c2;
+  size_t ns1 = wcsnlen (s1, n) + 1, ns2 = wcsnlen (s2, n) + 1;
+
+  n = ns1 < n ? ns1 : n;
+  n = ns2 < n ? ns2 : n;
+
+  while (n--)
+    {
+      c1 = *s1++;
+      c2 = *s2++;
+      if (c1 != c2)
+	return c1 > c2 ? 1 : -1;
+    }
+  return 0;
+}
+
+#else
+# define L(str) str
+# define STRNCMP strncmp
+# define STRCPY strcpy
+# define STRDUP strdup
+# define MEMCPY memcpy
+# define SIMPLE_STRNCMP simple_strncmp
+# define STUPID_STRNCMP stupid_strncmp
+# define CHAR char
+# define UCHAR unsigned char
+# define CHARBYTES 1
+# define CHAR__MAX CHAR_MAX
+# define CHAR__MIN CHAR_MIN
+
+/* Strncmp uses unsigned semantics for comparison. */
 int
 simple_strncmp (const char *s1, const char *s2, size_t n)
 {
@@ -51,8 +114,17 @@ stupid_strncmp (const char *s1, const char *s2, size_t n)
   return ret;
 }
 
+#endif
+
+typedef int (*proto_t) (const CHAR *, const CHAR *, size_t);
+
+IMPL (STUPID_STRNCMP, 0)
+IMPL (SIMPLE_STRNCMP, 0)
+IMPL (STRNCMP, 1)
+
+
 static int
-check_result (impl_t *impl, const char *s1, const char *s2, size_t n,
+check_result (impl_t *impl, const CHAR *s1, const CHAR *s2, size_t n,
 	     int exp_result)
 {
   int result = CALL (impl, s1, s2, n);
@@ -70,7 +142,7 @@ check_result (impl_t *impl, const char *s1, const char *s2, size_t n,
 }
 
 static void
-do_one_test (impl_t *impl, const char *s1, const char *s2, size_t n,
+do_one_test (impl_t *impl, const CHAR *s1, const CHAR *s2, size_t n,
 	     int exp_result)
 {
   if (check_result (impl, s1, s2, n, exp_result) < 0)
@@ -82,12 +154,12 @@ do_test_limit (size_t align1, size_t align2, size_t len, size_t n, int max_char,
 	 int exp_result)
 {
   size_t i, align_n;
-  char *s1, *s2;
+  CHAR *s1, *s2;
 
   if (n == 0)
     {
-      s1 = (char*)(buf1 + page_size);
-      s2 = (char*)(buf2 + page_size);
+      s1 = (CHAR *) (buf1 + page_size);
+      s2 = (CHAR *) (buf2 + page_size);
 
       FOR_EACH_IMPL (impl, 0)
 	do_one_test (impl, s1, s2, n, 0);
@@ -97,16 +169,16 @@ do_test_limit (size_t align1, size_t align2, size_t len, size_t n, int max_char,
 
   align1 &= 15;
   align2 &= 15;
-  align_n = (page_size - n) & 15;
+  align_n = (page_size - n * CHARBYTES) & 15;
 
-  s1 = (char*)(buf1 + page_size - n);
-  s2 = (char*)(buf2 + page_size - n);
+  s1 = (CHAR *) (buf1 + page_size - n * CHARBYTES);
+  s2 = (CHAR *) (buf2 + page_size - n * CHARBYTES);
 
   if (align1 < align_n)
-    s1 -= (align_n - align1);
+    s1 = (CHAR *) ((char *) s1 - (align_n - align1));
 
   if (align2 < align_n)
-    s2 -= (align_n - align2);
+    s2 = (CHAR *) ((char *) s2 - (align_n - align2));
 
   for (i = 0; i < n; i++)
     s1[i] = s2[i] = 1 + 23 * i % max_char;
@@ -130,24 +202,24 @@ do_test (size_t align1, size_t align2, size_t len, size_t n, int max_char,
 	 int exp_result)
 {
   size_t i;
-  char *s1, *s2;
+  CHAR *s1, *s2;
 
   if (n == 0)
     return;
 
-  align1 &= 7;
-  if (align1 + n + 1 >= page_size)
+  align1 &= 63;
+  if (align1 + (n + 1) * CHARBYTES >= page_size)
     return;
 
-  align2 &= 7;
-  if (align2 + n + 1 >= page_size)
+  align2 &= 63;
+  if (align2 + (n + 1) * CHARBYTES >= page_size)
     return;
 
-  s1 = (char*)(buf1 + align1);
-  s2 = (char*)(buf2 + align2);
+  s1 = (CHAR *) (buf1 + align1);
+  s2 = (CHAR *) (buf2 + align2);
 
   for (i = 0; i < n; i++)
-    s1[i] = s2[i] = 1 + 23 * i % max_char;
+    s1[i] = s2[i] = 1 + (23 << ((CHARBYTES - 1) * 8)) * i % max_char;
 
   s1[n] = 24 + exp_result;
   s2[n] = 23;
@@ -161,19 +233,20 @@ do_test (size_t align1, size_t align2, size_t len, size_t n, int max_char,
     s2[n - 1] -= exp_result;
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, (char*)s1, (char*)s2, n, exp_result);
+    do_one_test (impl, s1, s2, n, exp_result);
 }
 
 static void
-do_page_test (size_t offset1, size_t offset2, char *s2)
+do_page_test (size_t offset1, size_t offset2, CHAR *s2)
 {
-  char *s1;
+  CHAR *s1;
   int exp_result;
 
-  if (offset1 >= page_size || offset2 >= page_size)
+  if (offset1 * CHARBYTES  >= page_size || offset2 * CHARBYTES >= page_size)
     return;
 
-  s1 = (char *) (buf1 + offset1);
+  s1 = (CHAR *) buf1;
+  s1 += offset1;
   s2 += offset2;
 
   exp_result= *s1;
@@ -191,8 +264,8 @@ do_random_tests (void)
   size_t i, j, n, align1, align2, pos, len1, len2, size;
   int result;
   long r;
-  unsigned char *p1 = buf1 + page_size - 512;
-  unsigned char *p2 = buf2 + page_size - 512;
+  UCHAR *p1 = (UCHAR *) (buf1 + page_size - 512 * CHARBYTES);
+  UCHAR *p2 = (UCHAR *) (buf2 + page_size - 512 * CHARBYTES);
 
   for (n = 0; n < ITERATIONS; n++)
     {
@@ -240,7 +313,7 @@ do_random_tests (void)
 	}
 
       result = 0;
-      memcpy (p2 + align2, p1 + align1, pos);
+      MEMCPY (p2 + align2, p1 + align1, pos);
       if (pos < len1)
 	{
 	  if (p2[align2 + pos] == p1[align1 + pos])
@@ -263,7 +336,7 @@ do_random_tests (void)
 
       FOR_EACH_IMPL (impl, 1)
 	{
-	  r = CALL (impl, (char*)(p1 + align1), (char*)(p2 + align2), size);
+	  r = CALL (impl, (CHAR *) (p1 + align1), (CHAR *) (p2 + align2), size);
 	  /* Test whether on 64-bit architectures where ABI requires
 	     callee to promote has the promotion been done.  */
 	  asm ("" : "=g" (r) : "0" (r));
@@ -282,19 +355,26 @@ do_random_tests (void)
 static void
 check1 (void)
 {
-  char *s1 = (char *)(buf1 + 0xb2c);
-  char *s2 = (char *)(buf1 + 0xfd8);
-  size_t i;
+  CHAR *s1 = (CHAR *) (buf1 + 0xb2c);
+  CHAR *s2 = (CHAR *) (buf1 + 0xfd8);
+  size_t i, offset;
   int exp_result;
 
-  strcpy(s1, "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrs");
-  strcpy(s2, "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkLMNOPQRSTUV");
+  STRCPY(s1, L("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrs"));
+  STRCPY(s2, L("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkLMNOPQRSTUV"));
 
-  for (i = 0; i < 80; i++)
+  /* Check possible overflow bug for wcsncmp */
+  s1[4] = CHAR__MAX;
+  s2[4] = CHAR__MIN;
+
+  for (offset = 0; offset < 6; offset++)
     {
-      exp_result = simple_strncmp (s1, s2, i);
-      FOR_EACH_IMPL (impl, 0)
-	 check_result (impl, s1, s2, i, exp_result);
+      for (i = 0; i < 80; i++)
+	{
+	  exp_result = SIMPLE_STRNCMP (s1 + offset, s2 + offset, i);
+	  FOR_EACH_IMPL (impl, 0)
+	    check_result (impl, s1 + offset, s2 + offset, i, exp_result);
+	}
     }
 }
 
@@ -302,17 +382,17 @@ static void
 check2 (void)
 {
   size_t i;
-  char *s1, *s2;
+  CHAR *s1, *s2;
 
-  s1 = (char *) buf1;
-  for (i = 0; i < page_size - 1; i++)
+  s1 = (CHAR *) buf1;
+  for (i = 0; i < (page_size / CHARBYTES) - 1; i++)
     s1[i] = 23;
   s1[i] = 0;
 
-  s2 = strdup (s1);
+  s2 = STRDUP (s1);
 
   for (i = 0; i < 64; ++i)
-    do_page_test (3990 + i, 2635, s2);
+    do_page_test ((3988 / CHARBYTES) + i, (2636 / CHARBYTES), s2);
 
   free (s2);
 }

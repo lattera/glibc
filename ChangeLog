@@ -1,5 +1,19 @@
 2015-04-13  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	[BZ #18206]
+	* wcsmbs/wcsncmp.c (wcsncmp): Compare as wchar_t, not wint_t.
+	  Use signed comparision instead of substraction to avoid
+	  overflow bug.
+	* localedata/tests-mbwc/tst_wcsncmp.c (tst_wcsncmp):
+	  Take the sign of ret.
+	* localedata/tests-mbwc/dat_wcsncmp.c (tst_wcsncmp_loc):
+	  Do not expect precise return values. Only the sign matters.
+	* wcsmbs/Makefile (strop-tests): Add wcsncmp.
+	* wcsmbs/test-wcsncmp.c: New File.
+	* string/test-strncmp.c: Add wcsncmp support.
+
+2015-04-13  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	[BZ #6792]
 	* math/w_log1p.c: New file.
 	* math/w_log1pf.c: Likewise.
