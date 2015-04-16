@@ -1,3 +1,8 @@
+2015-04-16  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h: Make use of
+	lowlevellock-futex.h
+
 2015-04-16  Chris Metcalf  <cmetcalf@ezchip.com>
 
 	* sysdeps/tile/configure.ac: New file.
