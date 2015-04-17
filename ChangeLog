@@ -1,5 +1,10 @@
 2015-04-17  Roland McGrath  <roland@hack.frob.com>
 
+	* elf/dl-close.c (_dl_close_worker) [DL_NNS == 1]: Just assert that
+	IMAP->l_prev cannot be null, and #if out the code for the contrary
+	case, avoiding 'assert (nsid != LM_ID_BASE)' making the compiler
+	believe that NS (&_dl_ns[NSID]) could point outside the array.
+
 	* elf/dl-open.c (_dl_open): Use __glibc_unlikely in invalid namespace
 	check.  Reject NSID < 0 and NSID >= dl_nns, and check for DL_NNS==1,
 	before using NSID as an index.
