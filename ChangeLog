@@ -1,3 +1,10 @@
+2015-04-17  Il'ya Malakhov <ilmalakhov@yandex.ru>
+
+	[BZ #17825]
+	* sysdeps/sparc/sparc64/memchr.S: Fix signedness handling of length.
+	* sysdeps/sparc/sparc64/memcmp.S: Likewise.
+	* sysdeps/sparc/sparc64/strncmp.S: Likewise.
+
 2015-04-17  Roland McGrath  <roland@hack.frob.com>
 
 	Add preliminary port to Google Native Client on ARM.

@@ -51,7 +51,7 @@ ENTRY(memcmp)
 2:	mov		%g1, %o3			/* IEU0		Group		*/
 	subcc		%o2, 8, %o2			/* IEU1				*/
 
-	bl,pn		%XCC, 5f			/* CTI				*/
+	bcs,pn		%XCC, 5f			/* CTI				*/
 	 ldxa		[%o0] ASI_PNF, %g1		/* Load		Group		*/
 	mov		%g2, %o4			/* IEU0				*/
 	ldxa		[%o0 + %o1] ASI_PNF, %g2	/* Load		Group		*/
@@ -125,7 +125,7 @@ ENTRY(memcmp)
 
 	ldxa		[%o0] ASI_PNF, %g5		/* Load				*/
 	subcc		%o2, 8, %o2			/* IEU1		Group		*/
-	bl,pn		%XCC, 6b			/* CTI				*/
+	bcs,pn		%XCC, 6b			/* CTI				*/
 	 or		%o4, %o5, %o4			/* IEU0				*/
 
 	cmp		%o3, %o4			/* IEU1		Group		*/

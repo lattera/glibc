@@ -72,7 +72,7 @@ ENTRY(strncmp)
 
 	add		%o0, 8, %o0			/* IEU1				*/
 2:	subcc		%o2, 8, %o2			/* IEU1		Group		*/
-	bl,pn		%XCC, 5f			/* CTI				*/
+	bcs,pn		%XCC, 5f			/* CTI				*/
 	 add		%o1, 8, %o1			/* IEU0				*/
 
 	sub		%g4, %g1, %g3			/* IEU0		Group		*/
@@ -310,7 +310,7 @@ ENTRY(strncmp)
 	addcc		%o0, 8, %o0			/* IEU1				*/
 	srlx		%o4, %g6, %o5			/* IEU0				*/
 	subcc		%o2, 8, %o2			/* IEU1		Group		*/
-	bl,pn		%XCC, 5b			/* CTI				*/
+	bcs,pn		%XCC, 5b			/* CTI				*/
 
 	 or		%o3, %o5, %o3			/* IEU0				*/
 	cmp		%g4, %o3			/* IEU1		Group		*/
