@@ -23,18 +23,26 @@
 # undef __clock_getres
 # include <libc-vdso.h>
 
-void (*__vdso_gettimeofday) (struct timeval *, void *) attribute_hidden;
-void (*__vdso_clock_gettime) (clockid_t, struct timespec *);
-void (*__vdso_clock_getres) (clockid_t, struct timespec *);
+int (*VDSO_SYMBOL(gettimeofday)) (struct timeval *, void *) attribute_hidden;
+int (*VDSO_SYMBOL(clock_gettime)) (clockid_t, struct timespec *);
+int (*VDSO_SYMBOL(clock_getres)) (clockid_t, struct timespec *);
 
 static inline void
 _libc_vdso_platform_setup (void)
 {
   PREPARE_VERSION (linux2639, "LINUX_2.6.39", 123718537);
 
-  __vdso_gettimeofday  = _dl_vdso_vsym ("__kernel_gettimeofday",  &linux2639);
-  __vdso_clock_gettime = _dl_vdso_vsym ("__kernel_clock_gettime", &linux2639);
-  __vdso_clock_getres  = _dl_vdso_vsym ("__kernel_clock_getres",  &linux2639);
+  void *p = _dl_vdso_vsym ("__kernel_gettimeofday", &linux2639);
+  PTR_MANGLE (p);
+  VDSO_SYMBOL(gettimeofday) = p;
+
+  p = _dl_vdso_vsym ("__kernel_clock_gettime", &linux2639);
+  PTR_MANGLE (p);
+  VDSO_SYMBOL(clock_gettime) = p;
+
+  p = _dl_vdso_vsym ("__kernel_clock_getres", &linux2639);
+  PTR_MANGLE (p);
+  VDSO_SYMBOL(clock_getres) = p;
 }
 
 # define VDSO_SETUP _libc_vdso_platform_setup

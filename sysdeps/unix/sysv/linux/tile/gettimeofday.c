@@ -19,7 +19,9 @@
 #include <stddef.h>
 #include <sys/time.h>
 #include <time.h>
-#include <libc-vdso.h>
+
+#define HAVE_VSYSCALL
+#include <sysdep-vdso.h>
 
 int
 __gettimeofday (struct timeval *tv, struct timezone *tz)

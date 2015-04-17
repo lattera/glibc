@@ -21,23 +21,10 @@
 #include <time.h>
 #include "kernel-posix-cpu-timers.h"
 
-#ifndef HAVE_CLOCK_GETTIME_VSYSCALL
-# undef INTERNAL_VSYSCALL
-# define INTERNAL_VSYSCALL INTERNAL_SYSCALL
-# undef INLINE_VSYSCALL
-# define INLINE_VSYSCALL INLINE_SYSCALL
-#else
-# include <libc-vdso.h>
+#ifdef HAVE_CLOCK_GETTIME_VSYSCALL
+# define HAVE_VSYSCALL
 #endif
-
-#ifndef SYSCALL_GETTIME
-# define SYSCALL_GETTIME(id, tp) \
-  INLINE_VSYSCALL (clock_gettime, 2, id, tp)
-#endif
-#ifndef INTERNAL_GETTIME
-# define INTERNAL_GETTIME(id, tp) \
-  INTERNAL_VSYSCALL (clock_gettime, err, 2, id, tp)
-#endif
+#include <sysdep-vdso.h>
 
 /* The REALTIME and MONOTONIC clock are definitely supported in the
    kernel.  */
@@ -45,7 +32,7 @@
   SYSDEP_GETTIME_CPUTIME;						      \
   case CLOCK_REALTIME:							      \
   case CLOCK_MONOTONIC:							      \
-    retval = SYSCALL_GETTIME (clock_id, tp);				      \
+    retval = INLINE_VSYSCALL (clock_gettime, 2, clock_id, tp);		      \
     break
 
 /* We handled the REALTIME clock here.  */
@@ -53,7 +40,7 @@
 #define HANDLED_CPUTIME	1
 
 #define SYSDEP_GETTIME_CPU(clock_id, tp) \
-  retval = SYSCALL_GETTIME (clock_id, tp); \
+  retval = INLINE_VSYSCALL (clock_gettime, 2, clock_id, tp); \
   break
 #define SYSDEP_GETTIME_CPUTIME	/* Default catches them too.  */
 

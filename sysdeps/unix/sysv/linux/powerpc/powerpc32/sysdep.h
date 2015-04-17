@@ -50,77 +50,6 @@
 
 # include <errno.h>
 
-# ifdef SHARED
-#  define INLINE_VSYSCALL(name, nr, args...) \
-  ({									      \
-    __label__ out;							      \
-    __label__ iserr;							      \
-    INTERNAL_SYSCALL_DECL (sc_err);					      \
-    long int sc_ret;							      \
-									      \
-    if (__vdso_##name != NULL)						      \
-      {									      \
-	sc_ret =							      \
-	  INTERNAL_VSYSCALL_NCS (__vdso_##name, sc_err, long int, nr, ##args);\
-	if (!INTERNAL_SYSCALL_ERROR_P (sc_ret, sc_err))			      \
-	  goto out;							      \
-	if (INTERNAL_SYSCALL_ERRNO (sc_ret, sc_err) != ENOSYS)		      \
-	  goto iserr;							      \
-      }									      \
-									      \
-    sc_ret = INTERNAL_SYSCALL (name, sc_err, nr, ##args);		      \
-    if (INTERNAL_SYSCALL_ERROR_P (sc_ret, sc_err))			      \
-      {									      \
-      iserr:								      \
-        __set_errno (INTERNAL_SYSCALL_ERRNO (sc_ret, sc_err));		      \
-        sc_ret = -1L;							      \
-      }									      \
-  out:									      \
-    sc_ret;								      \
-  })
-# else
-#  define INLINE_VSYSCALL(name, nr, args...) \
-  INLINE_SYSCALL (name, nr, ##args)
-# endif
-
-# ifdef SHARED
-#  define INTERNAL_VSYSCALL(name, err, nr, args...) \
-  ({									      \
-    __label__ out;							      \
-    long int v_ret;							      \
-									      \
-    if (__vdso_##name != NULL)						      \
-      {									      \
-	v_ret =								      \
-	  INTERNAL_VSYSCALL_NCS (__vdso_##name, err, long int, nr, ##args);   \
-	if (!INTERNAL_SYSCALL_ERROR_P (v_ret, err)			      \
-	    || INTERNAL_SYSCALL_ERRNO (v_ret, err) != ENOSYS)		      \
-	  goto out;							      \
-      }									      \
-    v_ret = INTERNAL_SYSCALL (name, err, nr, ##args);			      \
-  out:									      \
-    v_ret;								      \
-  })
-# else
-#  define INTERNAL_VSYSCALL(name, err, nr, args...) \
-  INTERNAL_SYSCALL (name, err, nr, ##args)
-# endif
-
-# define INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK(name, err, type, nr, args...)  \
-  ({									      \
-    type sc_ret = ENOSYS;						      \
-									      \
-    if (__vdso_##name != NULL)						      \
-      sc_ret = INTERNAL_VSYSCALL_NCS (__vdso_##name, err, type, nr, ##args);  \
-    else								      \
-      err = 1 << 28;							      \
-    sc_ret;								      \
-  })
-
-/* List of system calls which are supported as vsyscalls.  */
-# define HAVE_CLOCK_GETRES_VSYSCALL	1
-# define HAVE_CLOCK_GETTIME_VSYSCALL	1
-
 /* Define a macro which expands inline into the wrapper code for a VDSO
    call. This use is for internal calls that do not need to handle errors
    normally. It will never touch errno.
@@ -128,7 +57,7 @@
    function call, with the exception of LR (which is needed for the
    "sc; bnslr+" sequence) and CR (where only CR0.SO is clobbered to signal
    an error return status).  */
-# define INTERNAL_VSYSCALL_NCS(funcptr, err, type, nr, args...) \
+# define INTERNAL_VSYSCALL_CALL_TYPE(funcptr, err, nr, type, args...)	      \
   ({									      \
     register void *r0  __asm__ ("r0");					      \
     register long int r3  __asm__ ("r3");				      \
@@ -154,6 +83,9 @@
     __asm__ __volatile__ ("" : "=r" (rval) : "r" (r3), "r" (r4));	      \
     rval;								      \
   })
+
+#define INTERNAL_VSYSCALL_CALL(funcptr, err, nr, args...) \
+  INTERNAL_VSYSCALL_CALL_TYPE(funcptr, err, nr, long int, args)
 
 # undef INLINE_SYSCALL
 # define INLINE_SYSCALL(name, nr, args...)				\
@@ -215,6 +147,25 @@
 
 # undef INTERNAL_SYSCALL_ERRNO
 # define INTERNAL_SYSCALL_ERRNO(val, err)     (val)
+
+# define INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK(name, err, type, nr, args...)  \
+  ({									      \
+    type sc_ret = ENOSYS;						      \
+									      \
+    __typeof (__vdso_##name) vdsop = __vdso_##name;			      \
+    PTR_DEMANGLE (vdsop);						      \
+    if (vdsop != NULL)							      \
+      sc_ret = 								      \
+        INTERNAL_VSYSCALL_CALL_TYPE (vdsop, err, nr, type, ##args);	      \
+    else								      \
+      err = 1 << 28;							      \
+    sc_ret;								      \
+  })
+
+/* List of system calls which are supported as vsyscalls.  */
+# define HAVE_CLOCK_GETRES_VSYSCALL	1
+# define HAVE_CLOCK_GETTIME_VSYSCALL	1
+
 
 # define LOADARGS_0(name, dummy)					      \
 	r0 = name

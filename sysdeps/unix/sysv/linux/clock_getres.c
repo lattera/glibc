@@ -21,14 +21,10 @@
 #include <time.h>
 #include "kernel-posix-cpu-timers.h"
 
-#ifndef HAVE_CLOCK_GETRES_VSYSCALL
-# undef INTERNAL_VSYSCALL
-# define INTERNAL_VSYSCALL INTERNAL_SYSCALL
-# undef INLINE_VSYSCALL
-# define INLINE_VSYSCALL INLINE_SYSCALL
-#else
-# include <libc-vdso.h>
+#ifdef HAVE_CLOCK_GETRES_VSYSCALL
+# define HAVE_VSYSCALL
 #endif
+#include <sysdep-vdso.h>
 
 #define SYSCALL_GETRES \
   retval = INLINE_VSYSCALL (clock_getres, 2, clock_id, res); \

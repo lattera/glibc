@@ -61,74 +61,17 @@
 
 #endif /* __ASSEMBLER__ */
 
-/* This version is for kernels that implement system calls that
-   behave like function calls as far as register saving.
-   It falls back to the syscall in the case that the vDSO doesn't
-   exist or fails for ENOSYS */
-#ifdef SHARED
-# define INLINE_VSYSCALL(name, nr, args...) \
-  ({									      \
-    __label__ out;							      \
-    __label__ iserr;							      \
-    INTERNAL_SYSCALL_DECL (sc_err);					      \
-    long int sc_ret;							      \
-									      \
-    if (__vdso_##name != NULL)						      \
-      {									      \
-	sc_ret =							      \
-	  INTERNAL_VSYSCALL_NCS (__vdso_##name, sc_err, long int, nr, ##args);\
-	if (!INTERNAL_SYSCALL_ERROR_P (sc_ret, sc_err))			      \
-	  goto out;							      \
-	if (INTERNAL_SYSCALL_ERRNO (sc_ret, sc_err) != ENOSYS)		      \
-	  goto iserr;							      \
-      }									      \
-									      \
-    sc_ret = INTERNAL_SYSCALL (name, sc_err, nr, ##args);		      \
-    if (INTERNAL_SYSCALL_ERROR_P (sc_ret, sc_err))			      \
-      {									      \
-      iserr:								      \
-        __set_errno (INTERNAL_SYSCALL_ERRNO (sc_ret, sc_err));		      \
-        sc_ret = -1L;							      \
-      }									      \
-  out:									      \
-    sc_ret;								      \
-  })
-#else
-# define INLINE_VSYSCALL(name, nr, args...) \
-  INLINE_SYSCALL (name, nr, ##args)
-#endif
-
-#ifdef SHARED
-# define INTERNAL_VSYSCALL(name, err, nr, args...) \
-  ({									      \
-    __label__ out;							      \
-    long int v_ret;							      \
-									      \
-    if (__vdso_##name != NULL)						      \
-      {									      \
-	v_ret =								      \
-	  INTERNAL_VSYSCALL_NCS (__vdso_##name, err, long int, nr, ##args);   \
-	if (!INTERNAL_SYSCALL_ERROR_P (v_ret, err)			      \
-	    || INTERNAL_SYSCALL_ERRNO (v_ret, err) != ENOSYS)		      \
-	  goto out;							      \
-      }									      \
-    v_ret = INTERNAL_SYSCALL (name, err, nr, ##args);			      \
-  out:									      \
-    v_ret;								      \
-  })
-#else
-# define INTERNAL_VSYSCALL(name, err, nr, args...) \
-  INTERNAL_SYSCALL (name, err, nr, ##args)
-#endif
-
 /* This version is for internal uses when there is no desire
    to set errno */
 #define INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK(name, err, type, nr, args...)   \
   ({									      \
     type sc_ret = ENOSYS;						      \
 									      \
-    if (__vdso_##name != NULL)						      \
-      sc_ret = INTERNAL_VSYSCALL_NCS (__vdso_##name, err, type, nr, ##args);  \
+    __typeof (__vdso_##name) vdsop = __vdso_##name;			      \
+    PTR_DEMANGLE (vdsop);						      \
+    if (vdsop != NULL)							      \
+      sc_ret =								      \
+        INTERNAL_VSYSCALL_CALL_TYPE (vdsop, err, type, nr, ##args);	      \
     else								      \
       err = 1 << 28;							      \
     sc_ret;								      \
@@ -144,7 +87,7 @@
    gave back in the non-error (CR0.SO cleared) case, otherwise (CR0.SO set)
    the negation of the return value in the kernel gets reverted.  */
 
-#define INTERNAL_VSYSCALL_NCS(funcptr, err, type, nr, args...) \
+#define INTERNAL_VSYSCALL_CALL_TYPE(funcptr, err, type, nr, args...)    \
   ({									\
     register void *r0  __asm__ ("r0");					\
     register long int r3  __asm__ ("r3");				\
@@ -167,6 +110,9 @@
     __asm__ __volatile__ ("" : "=r" (rval) : "r" (r3));		        \
     rval;								\
   })
+
+#define INTERNAL_VSYSCALL_CALL(funcptr, err, nr, args...)		\
+  INTERNAL_VSYSCALL_CALL_TYPE(funcptr, err, long int, nr, args)
 
 #undef INLINE_SYSCALL
 

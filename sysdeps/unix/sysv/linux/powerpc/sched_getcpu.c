@@ -17,8 +17,7 @@
 
 #include <sched.h>
 #include <sysdep.h>
-#include <libc-vdso.h>
-
+#include <sysdep-vdso.h>
 
 int
 sched_getcpu (void)

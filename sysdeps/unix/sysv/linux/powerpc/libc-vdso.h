@@ -22,23 +22,21 @@
 
 #ifdef SHARED
 
-extern void *__vdso_gettimeofday attribute_hidden;
+#include <sysdep-vdso.h>
 
-extern void *__vdso_clock_gettime;
-
-extern void *__vdso_clock_getres;
-
-extern void *__vdso_get_tbfreq;
-
-extern void *__vdso_getcpu;
-
-extern void *__vdso_time;
+extern int (*VDSO_SYMBOL(gettimeofday)) (struct timeval *, void *)
+  attribute_hidden;
+extern int (*VDSO_SYMBOL(clock_gettime)) (clockid_t, struct timespec *);
+extern int (*VDSO_SYMBOL(clock_getres)) (clockid_t, struct timespec *);
+extern unsigned long long (*VDSO_SYMBOL(get_tbfreq)) (void);
+extern int (*VDSO_SYMBOL(getcpu)) (unsigned *, unsigned *);
+extern time_t (*VDSO_SYMBOL(time)) (time_t *);
 
 #if defined(__PPC64__) || defined(__powerpc64__)
-extern void *__vdso_sigtramp_rt64;
+extern void *VDSO_SYMBOL(sigtramp_rt64);
 #else
-extern void *__vdso_sigtramp32;
-extern void *__vdso_sigtramp_rt32;
+extern void *VDSO_SYMBOL(sigtramp32);
+extern void *VDSO_SYMBOL(sigtramp_rt32);
 #endif
 
 #if (defined(__PPC64__) || defined(__powerpc64__)) && _CALL_ELF != 2

@@ -21,10 +21,12 @@
 
 #ifdef SHARED
 
-extern void (*__vdso_gettimeofday) (struct timeval *, void *)
+# include <sysdep-vdso.h>
+
+extern int (*VDSO_SYMBOL(gettimeofday)) (struct timeval *, void *)
    attribute_hidden;
-extern void (*__vdso_clock_gettime) (clockid_t, struct timespec *);
-extern void (*__vdso_clock_getres) (clockid_t, struct timespec *);
+extern int (*VDSO_SYMBOL(clock_gettime)) (clockid_t, struct timespec *);
+extern int (*VDSO_SYMBOL(clock_getres)) (clockid_t, struct timespec *);
 
 #endif
 

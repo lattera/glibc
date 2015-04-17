@@ -1,3 +1,124 @@
+2015-05-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/aarch64/gettimeofday.c (HAVE_VSYSCALL):
+	Define and include sysdep-vdso.h.
+	* sysdeps/unix/sysv/linux/s390/gettimeofday.c (HAVE_VSYSCALL):
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/gettimeofday.c (HAVE_VSYSCALL):
+	Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/init-first.c (__vdso_gettimeofday):
+	Define with VDSO_SYMBOL and use PTR_MANGLE.
+	(__vdso_clock_gettime): Likewise.
+	(__vdso_clock_getres): Likewise.
+	(_libc_vdso_platform_setup): Likewise.
+	* sysdeps/unix/sysv/linux/i386/init-first.c (__vdso_clock_gettime):
+	Likewise.
+	(_libc_vdso_platform_setup): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/init-first.c (__vdso_gettimeofday):
+	Likewise.
+	(__vdso_clock_gettime): Likewise.
+	(__vdso_clock_getres): Likewise.
+	(__vdso_get_tbfreq): Likewise.
+	(__vdso_getcpu): Likewise.
+	(__vdso_time): Likewise.
+	(__vdso_sigtramp_rt64): Likewise.
+	(__vdso_signtramp32): Likewise.
+	(__vdso_sigtramp_rt32): Likewise.
+	(_libc_vdso_platform_setup): Likewise.
+	* sysdeps/unix/sysv/linux/s390/init-first.c (__vdso_gettimeofay):
+	Likewise.
+	(__vdso_clock_gettime): Likewise.
+	(__vdso_clock_getres): Likewise.
+	(_libc_vdso_platform_setup): Likewise.
+	* sysdeps/unix/sysv/linux/tile/init-first.c (__vdso_gettimeofday):
+	Likewise.
+	(__vdso_clock_gettime): Likewise.
+	(_libc_vdso_platform_setup): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/init-first.c (__vdso_clock_gettime):
+	Likewise.
+	(__vdso_getcpu): Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/libc-vdso.h (__vdso_gettimeoday):
+	Use VDSO_SYMBOL macro to define.
+	(__vdso_clock_gettime): Likewise.
+	(__vdso_clock_getres): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/libc-vdso.h (__vdso_gettimeofday):
+	Likewise.
+	(__vdso_clock_gettime): Likewise.
+	(__vdso_clock_getres): Likewise.
+	(__vdso_get_tbfreq): Likewise.
+	(__vdso_getcpu): Likewise.
+	(__vdso_time): Likewise.
+	(__vdso_sigtramp_rt64): Likewise.
+	(__vdso_signtramp32): Likewise.
+	(__vdso_sigtramp_rt32): Likewise.
+	* sysdeps/unix/sysv/linux/s390/libc-vdso.h (__vdso_gettimeofday):
+	Likewise.
+	(__vdso_clock_gettime): Likewise.
+	(__vdso_clock_getres): Likewise.
+	* sysdeps/unix/sysv/linux/tile/libc-vdso.h (__vdso_gettimeofday):
+	Likewise.
+	(__vdso_clock_gettime): Likewise.
+	* sysdeps/unix/sysv/linux/x86/libc-vdso.h (__vdso_clock_gettime):
+	Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/sysdep.h (INLINE_VSYSCALL):  Remove
+	macro.
+	(INTERNAL_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h (INLINE_VSYSCALL):
+	Remove macro.
+	(INTERNAL_VSYSCALL): Likewise.
+	(INTERNAL_VSYSCALL_NCS): Likewise.
+	(INTERNAL_VSYSCALL_CALL): New macro.
+	(INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK): Use PTR_DEMANGLE.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h (INLINE_VSYSCALL):
+	Likewise.
+	(INTERNAL_VSYSCALL): Likewise.
+	(INTERNAL_VSYSCALL_NCS): Likewise.
+	(INTERNAL_VSYSCALL_CALL): New macro.
+	(INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK): Use PTR_DEMANGLE.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h
+	(INLINE_VSYSCALL): Remove macro.
+	(INTERNAL_VSYSCALL): Remove macro.
+	(INTERNAL_VSYSCALL_NCS): Remove macro.
+	(INTERNAL_VSYSCALL_CALL): New macro.
+	(INTERNAL_VSYSCALL_CALL_TYPE): New macro.
+	(INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK): Use INTERNAL_VSYSCALL_CALL.
+	(INTERNAL_VSYSCALL_NCS_TYPE): Likewise.
+	(HAVE_CLOCK_GETRES_VSYSCALL): New define.
+	(HAVE_CLOCK_GETTIME_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h
+	(INLINE_VSYSCALL): Remove macro.
+	(INTERNAL_VSYSCALL): Likewise.
+	(INTERNAL_VSYSCALL_NCS): Likewise.
+	(INTERNAL_VSYSCALL_CALL): New macro.
+	(INTERNAL_VSYSCALL_CALL_TYPE): Likewise.
+	(INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK): Use INTERNAL_VSYSCALL_CALL and
+	PTR_DEMANGLE on vDSO pointer.
+	(INTERNAL_VSYSCALL_NCS_TYPE): Likewise.
+	* sysdeps/unix/sysv/linux/tile/sysdep.h (INLINE_VSYSCALL): Remove
+	macro.
+	(INTERNAL_SYSCALL): Likewise.
+	(INTERNAL_VSYSCALL_NCS): Remove macro.
+	(INTERNAL_VSYSCALL_CALL): New macro.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (INLINE_VSYSCALL):
+	Remove macro.
+	(INTERNAL_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sched_getcpu.c: Include
+	sysdep-vdso.h instead of libc-vdso.h.
+	* sysdeps/unix/sysv/linux/clock_getres.c (INTERNAL_VSYSCALL): Remove
+	definition.
+	(INLINE_VSYSCALL): Likewise.
+	(HAVE_VSYSCALL) [HAVE_CLOCK_GETRES_VSYSCALL]: Define.
+	* sysdeps/unix/sysv/linux/clock_gettime.c (INTERNAL_VSYSCALL): Remove
+	definition.
+	(INLINE_VSYSCALL): Likewise.
+	(INTERNAL_VSYSCALL): Likewise.
+	(HAVE_VSYSCALL) [HAVE_CLOCK_GETTIME_VSYSCALL]: Define.
+	* sysdeps/unix/sysv/linux/timespec_get.c
+	(INTERNAL_VSYSCALL) [HAVE_CLOCK_GETTIME_VSYSCALL]: Define.
+	(timespec_get): Use ANSI prototype.
+	* sysdeps/unix/sysv/linux/sysdep-vdso.h: New file: default vDSO macros
+	and definition for Linux.
+
 2015-05-25  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	* elf/Makefile (localplt-built-dso): libmvec added to localplt test.

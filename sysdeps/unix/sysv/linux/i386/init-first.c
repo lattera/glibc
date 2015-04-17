@@ -20,9 +20,9 @@
 # include <time.h>
 # include <sysdep.h>
 # include <dl-vdso.h>
-# include <libc-vdso.h>
+# include <sysdep-vdso.h>
 
-long int (*__vdso_clock_gettime) (clockid_t, struct timespec *)
+long int (*VDSO_SYMBOL (clock_gettime)) (clockid_t, struct timespec *)
   attribute_hidden;
 
 static long int
@@ -41,7 +41,7 @@ __vdso_platform_setup (void)
   if (p == NULL)
     p = clock_gettime_syscall;
   PTR_MANGLE (p);
-  __vdso_clock_gettime = p;
+  VDSO_SYMBOL (clock_gettime) = p;
 }
 
 # define VDSO_SETUP __vdso_platform_setup

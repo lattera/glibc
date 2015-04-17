@@ -19,21 +19,27 @@
 #include <dl-vdso.h>
 #include <libc-vdso.h>
 
-struct syscall_return_value (*__vdso_gettimeofday) (struct timeval *, void *)
+struct syscall_return_value (*VDSO_SYMBOL(gettimeofday)) (struct timeval *,
+							  void *)
   attribute_hidden;
 
-struct syscall_return_value (*__vdso_clock_gettime) (clockid_t,
-                                                     struct timespec *)
+struct syscall_return_value (*VDSO_SYMBOL(clock_gettime)) (clockid_t,
+                                                           struct timespec *)
   __attribute__ ((nocommon));
-strong_alias (__vdso_clock_gettime, __GI___vdso_clock_gettime attribute_hidden)
 
 
 static inline void
 _libc_vdso_platform_setup (void)
 {
   PREPARE_VERSION (linux26, "LINUX_2.6", 61765110);
-  __vdso_gettimeofday = _dl_vdso_vsym ("__vdso_gettimeofday", &linux26);
-  __vdso_clock_gettime = _dl_vdso_vsym ("__vdso_clock_gettime", &linux26);
+
+  void *p = _dl_vdso_vsym ("__vdso_gettimeofday", &linux26);
+  PTR_MANGLE (p);
+  VDSO_SYMBOL (gettimeofday) = p;
+
+  p = _dl_vdso_vsym ("__vdso_clock_gettime", &linux26);
+  PTR_MANGLE (p);
+  VDSO_SYMBOL (clock_gettime) = p;
 }
 
 #define VDSO_SETUP _libc_vdso_platform_setup

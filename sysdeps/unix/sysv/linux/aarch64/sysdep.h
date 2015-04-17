@@ -151,74 +151,10 @@
 
 #else /* not __ASSEMBLER__ */
 
-# ifdef SHARED
-#  define INLINE_VSYSCALL(name, nr, args...)				      \
-  ({									      \
-    __label__ out;							      \
-    __label__ iserr;							      \
-    long sc_ret;							      \
-    INTERNAL_SYSCALL_DECL (sc_err);					      \
-									      \
-    if (__vdso_##name != NULL)						      \
-      {									      \
-	sc_ret = INTERNAL_VSYSCALL_NCS (__vdso_##name, sc_err, nr, ##args);   \
-	if (!INTERNAL_SYSCALL_ERROR_P (sc_ret, sc_err))			      \
-	  goto out;							      \
-	if (INTERNAL_SYSCALL_ERRNO (sc_ret, sc_err) != ENOSYS)		      \
-	  goto iserr;							      \
-      }									      \
-									      \
-    sc_ret = INTERNAL_SYSCALL (name, sc_err, nr, ##args);		      \
-    if (INTERNAL_SYSCALL_ERROR_P (sc_ret, sc_err))			      \
-      {									      \
-      iserr:								      \
-        __set_errno (INTERNAL_SYSCALL_ERRNO (sc_ret, sc_err));		      \
-        sc_ret = -1L;							      \
-      }									      \
-  out:									      \
-    sc_ret;								      \
-  })
-# else
-#  define INLINE_VSYSCALL(name, nr, args...) \
-  INLINE_SYSCALL (name, nr, ##args)
-# endif
-
-# ifdef SHARED
-#  define INTERNAL_VSYSCALL(name, err, nr, args...)			      \
-  ({									      \
-    __label__ out;							      \
-    long v_ret;								      \
-									      \
-    if (__vdso_##name != NULL)						      \
-      {									      \
-	v_ret = INTERNAL_VSYSCALL_NCS (__vdso_##name, err, nr, ##args);	      \
-	if (!INTERNAL_SYSCALL_ERROR_P (v_ret, err)			      \
-	    || INTERNAL_SYSCALL_ERRNO (v_ret, err) != ENOSYS)		      \
-	  goto out;							      \
-      }									      \
-    v_ret = INTERNAL_SYSCALL (name, err, nr, ##args);			      \
-  out:									      \
-    v_ret;								      \
-  })
-# else
-#  define INTERNAL_VSYSCALL(name, err, nr, args...) \
-  INTERNAL_SYSCALL (name, err, nr, ##args)
-# endif
 
 /* List of system calls which are supported as vsyscalls.  */
 # define HAVE_CLOCK_GETRES_VSYSCALL	1
 # define HAVE_CLOCK_GETTIME_VSYSCALL	1
-
-# define INTERNAL_VSYSCALL_NCS(funcptr, err, nr, args...)	\
-  ({								\
-    LOAD_ARGS_##nr (args)					\
-    asm volatile ("blr %1"					\
-		  : "=r" (_x0)					\
-		  : "r" (funcptr) ASM_ARGS_##nr			\
-		  : "x30", "memory");				\
-    (long) _x0;							\
-  })
-
 
 /* Define a macro which expands into the inline wrapper code for a system
    call.  */

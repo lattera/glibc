@@ -22,9 +22,10 @@
 # include <dl-vdso.h>
 # include <libc-vdso.h>
 
-long int (*__vdso_clock_gettime) (clockid_t, struct timespec *)
+long int (*VDSO_SYMBOL(clock_gettime)) (clockid_t, struct timespec *)
   attribute_hidden;
-long int (*__vdso_getcpu) (unsigned *, unsigned *, void *) attribute_hidden;
+long int (*VDSO_SYMBOL(getcpu)) (unsigned *, unsigned *, void *)
+  attribute_hidden;
 
 extern long int __syscall_clock_gettime (clockid_t, struct timespec *);
 
@@ -38,7 +39,7 @@ __vdso_platform_setup (void)
   if (p == NULL)
     p = __syscall_clock_gettime;
   PTR_MANGLE (p);
-  __vdso_clock_gettime = p;
+  VDSO_SYMBOL(clock_gettime) = p;
 
   p = _dl_vdso_vsym ("__vdso_getcpu", &linux26);
   /* If the vDSO is not available we fall back on the old vsyscall.  */
@@ -46,7 +47,7 @@ __vdso_platform_setup (void)
   if (p == NULL)
     p = (void *) VSYSCALL_ADDR_vgetcpu;
   PTR_MANGLE (p);
-  __vdso_getcpu = p;
+  VDSO_SYMBOL(getcpu) = p;
 }
 
 # define VDSO_SETUP __vdso_platform_setup
