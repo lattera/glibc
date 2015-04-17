@@ -17,6 +17,7 @@
 
 #include <time.h>
 #include <sysdep.h>
+#include <errno.h>
 
 #ifdef HAVE_CLOCK_GETTIME_VSYSCALL
 # define HAVE_VSYSCALL
