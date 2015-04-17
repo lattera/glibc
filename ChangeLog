@@ -1,3 +1,9 @@
+2015-04-17  Roland McGrath  <roland@hack.frob.com>
+
+	* elf/dl-open.c (_dl_open): Use __glibc_unlikely in invalid namespace
+	check.  Reject NSID < 0 and NSID >= dl_nns, and check for DL_NNS==1,
+	before using NSID as an index.
+
 2015-04-17  Il'ya Malakhov <ilmalakhov@yandex.ru>
 
 	[BZ #17825]
