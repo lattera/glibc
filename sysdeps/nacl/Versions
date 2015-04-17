@@ -1,0 +1,21 @@
+ld {
+  GLIBC_PRIVATE {
+    __nacl_irt_*;
+  }
+}
+
+libc {
+  GLIBC_2.22 {
+    nacl_interface_query;
+  }
+
+  GLIBC_PRIVATE {
+    # These are used by libpthread.
+    __libc_write;
+    __libc_open;
+    __libc_close;
+    __libc_fork;
+
+    __nacl_irt_*;
+  }
+}

@@ -1,0 +1,18 @@
+GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
+# Local configure fragment for sysdeps/nacl.
+
+nacl_probe_file=native_client/src/trusted/service_runtime/include/sys/errno.h
+
+# sysheaders is set by the --with-headers=... option to configure.
+# For NaCl, we require that the option be given and point to the
+# native_client/.. source tree directory.
+test -n "$sysheaders" || {
+  AC_MSG_ERROR([must supply --with-headers=DIR with native_client source tree])
+}
+test -r "$sysheaders/$nacl_probe_file" || {
+  AC_MSG_ERROR([$sysheaders does not appear to be a native_client source tree])
+}
+
+# nscd is extremely useless in the NaCl context.
+build_nscd=no
+use_nscd=no

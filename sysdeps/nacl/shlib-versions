@@ -1,0 +1,9 @@
+# DEFAULT			Earliest symbol set
+# -------			-------------------
+DEFAULT				GLIBC_2.22
+
+# Library=version		Earliest symbol set (optional)
+# ---------------		------------------------------
+
+libc=0.1
+libm=0.1

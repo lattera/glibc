@@ -1,0 +1,7 @@
+# GNU C Library preconfigure fragment for sysdeps/nacl
+
+case "$config_machine-$config_os" in
+arm*-nacl*)
+  libc_config_ok=yes
+  ;;
+esac

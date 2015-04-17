@@ -1,0 +1,25 @@
+/* Might as well be -*- C -*-.
+
+   This generates a makefile that sets the variable pairs
+   nacl-MODULE-mandatory-interfaces and nacl-MODULE-optional-interfaces
+   based on the nacl-interface-list.h list.  */
+
+%define NACL_MANDATORY_INTERFACE(module, id, type)       \
+  nacl-mandatory-interfaces += module-type
+%define NACL_OPTIONAL_INTERFACE(module, id, type) \
+  nacl-optional-interfaces += module-type
+
+%include "nacl-interface-list.h"
+
+%undef NACL_MANDATORY_INTERFACE
+%undef NACL_OPTIONAL_INTERFACE
+
+%define NACL_MANDATORY_INTERFACE(module, id, type)	\
+  nacl-module-type-string := id
+%define NACL_OPTIONAL_INTERFACE(module, id, type)	\
+  nacl-module-type-string := id
+
+%include "nacl-interface-list.h"
+
+%undef NACL_MANDATORY_INTERFACE
+%undef NACL_OPTIONAL_INTERFACE

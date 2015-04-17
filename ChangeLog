@@ -1,3 +1,10 @@
+2015-04-17  Roland McGrath  <roland@hack.frob.com>
+
+	Add preliminary port to Google Native Client on ARM.
+	* abi-tags (.*-.*-nacl.*): New entry.
+	* sysdeps/arm/nacl: New directory.
+	* sysdeps/nacl: New directory.
+
 2015-04-16  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h: Make use of
