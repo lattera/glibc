@@ -1,3 +1,19 @@
+2015-05-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/aarch64/gettimeofday.c: Remove file.
+	* sysdeps/unix/sysv/linux/s390/gettimeofday.c: Likewise.
+	* sysdeps/unix/sysv/linux/tile/gettimeofday.c: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/sysdep.h
+	(HAVE_GETTIMEOFDAY_VSYSCALL): Define.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h
+	(HAVE_GETTIMEOFDAY_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h
+	(HAVE_GETTIMEOFDAY_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/tile/sysdep.h
+	(HAVE_GETTIMEOFDAY_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/gettimeofday.c: New file: gettimeofday
+	using vDSO syscall macro.
+
 2015-05-26  Andriy Rysin  <arysin@gmail.com>
 
 	[BZ #17293]

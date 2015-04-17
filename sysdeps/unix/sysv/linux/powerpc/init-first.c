@@ -18,9 +18,6 @@
 
 #ifdef SHARED
 # include <dl-vdso.h>
-# undef __gettimeofday
-# undef __clock_gettime
-# undef __clock_getres
 # include <libc-vdso.h>
 
 int (*VDSO_SYMBOL(gettimeofday)) (struct timeval *, void *)
