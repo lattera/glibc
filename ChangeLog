@@ -1,3 +1,9 @@
+2015-04-19  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* stdlib/setenv.c (__add_to_environ):
+	Dump core quickly if setenv (..., NULL, ...) is called.
+	This time, do it the right way, and pacify GCC with a pragma.
+
 2015-04-17  Roland McGrath  <roland@hack.frob.com>
 
 	* elf/dl-close.c (_dl_close_worker) [DL_NNS == 1]: Just assert that
