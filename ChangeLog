@@ -1,3 +1,11 @@
+2015-06-04  Torvald Riegel  <triegel@redhat.com>
+
+	[BZ #18324]
+	* nptl/pthread_rwlock_timedwrlock.c (pthread_rwlock_timedwrlock): Add
+	missing wake-up of readers.
+	* nptl/tst-rwlock15.c: New file.
+	* nptl/Makefile (tests): Add new test.
+
 2015-06-03  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/nacl/nacl-interfaces.c (try_supply): New static function.
