@@ -199,7 +199,7 @@ __kernel_casinh (__complex__ double x, int adj)
       if (adj)
 	{
 	  double t = __real__ y;
-	  __real__ y = copysign (__imag__ y, __imag__ x);
+	  __real__ y = __copysign (__imag__ y, __imag__ x);
 	  __imag__ y = t;
 	}
 

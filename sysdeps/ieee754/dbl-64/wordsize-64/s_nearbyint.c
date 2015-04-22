@@ -46,7 +46,7 @@ __nearbyint(double x)
 		double t =  w-TWO52[sx];
 		math_opt_barrier(t);
 		libc_fesetenv (&env);
-		return copysign(t, x);
+		return __copysign (t, x);
 	    }
 	} else {
 	    if(j0==0x400) return x+x;	/* inf or NaN */
