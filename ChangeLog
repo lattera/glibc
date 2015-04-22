@@ -1,3 +1,25 @@
+2015-06-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h
+	(HAVE_GETCPU_VSYSCALL): Define.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h
+	(HAVE_GETCPU_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sched_getcpu.c: Remove file.
+	* sysdeps/unix/sysv/linux/sched_getcpu.c
+	(HAVE_VSYSCALL) [HAVE_GETCPU_VSYSCALL]: Define.
+	(sched_getcpu): Use INLINE_VSYSCALL instead of INLINE_SYSCALL.
+	* sysdeps/unix/sysv/linux/x86/libc-vdso.h (getcpu): Add vDSO
+	prototype.
+	* sysdeps/unix/sysv/linux/x86_64/init-first.c
+	(__vdso_platform_setup): Remove vsyscall getcpu fallback.
+	* sysdeps/unix/sysv/linux/x86_64/sched_getcpu.S: Remove file.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (HAVE_GETCPU_VSYSCALL):
+	Define.
+	* sysdeps/unix/sysv/linux/x86_64/x32/Makefile: Remove file.
+	* sysdeps/unix/sysv/linux/x86_64/x32/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/sched_getcpu-static.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/sched_getcpu.S: Likewise.
+
 2015-06-09  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	* sysdeps/x86_64/fpu/Makefile: New file.

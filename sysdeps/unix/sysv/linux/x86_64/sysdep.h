@@ -255,6 +255,7 @@
 /* List of system calls which are supported as vsyscalls.  */
 # define HAVE_CLOCK_GETTIME_VSYSCALL    1
 # define HAVE_GETTIMEOFDAY_VSYSCALL     1
+# define HAVE_GETCPU_VSYSCALL		1
 
 # define LOAD_ARGS_0()
 # define LOAD_REGS_0
