@@ -1,3 +1,19 @@
+2015-06-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/i386/gettimeofday.c
+	(__gettimeofday_syscall): Remove vsyscall fallback.
+	* sysdeps/unix/sysv/linux/i386/time.c (__time_syscall): Likewise.
+	* sysdeps/unix/sysv/linux/x86/gettimeofday.c (__gettimeofday_syscall):
+	Add syscall fallback function.
+	(gettimeofday_ifunc): Use __gettimeofday_syscall as fallback mechanism
+	if vDSO is not present.
+	* sysdeps/unix/sysv/linux/x86/time.c (__time_syscall): Add syscall
+	fallback function.
+	(time_ifunc): Use __time_syscall as fallback mechanism if vDSO is not
+	present.
+	* sysdeps/unix/sysv/linux/x86_64/gettimeofday.c: Remove file.
+	* sysdeps/unix/sysv/linux/x86_64/time.c: Likewise.
+
 2015-06-09  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18497]
