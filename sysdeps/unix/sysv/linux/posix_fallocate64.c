@@ -16,7 +16,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <fcntl.h>
-#include <kernel-features.h>
 #include <sysdep.h>
 
 extern int __posix_fallocate64_l64 (int fd, __off64_t offset, __off64_t len);
@@ -24,40 +23,20 @@ extern int __posix_fallocate64_l64 (int fd, __off64_t offset, __off64_t len);
 #include <sysdeps/posix/posix_fallocate64.c>
 #undef __posix_fallocate64_l64
 
-#if !defined __ASSUME_FALLOCATE && defined __NR_fallocate
-/* Defined in posix_fallocate.c.  */
-extern int __have_fallocate attribute_hidden;
-#endif
-
-
 /* Reserve storage for the data of the file associated with FD.  */
 int
 __posix_fallocate64_l64 (int fd, __off64_t offset, __off64_t len)
 {
-#ifdef __NR_fallocate
-# ifndef __ASSUME_FALLOCATE
-  if (__glibc_likely (__have_fallocate >= 0))
-# endif
-    {
-      INTERNAL_SYSCALL_DECL (err);
-      int res = INTERNAL_SYSCALL (fallocate, err, 6, fd, 0,
-				  __LONG_LONG_PAIR ((long int) (offset >> 32),
-						    (long int) offset),
-				  __LONG_LONG_PAIR ((long int) (len >> 32),
-						    (long int) len));
+  INTERNAL_SYSCALL_DECL (err);
+  int res = INTERNAL_SYSCALL (fallocate, err, 6, fd, 0,
+			      __LONG_LONG_PAIR ((long int) (offset >> 32),
+						(long int) offset),
+			      __LONG_LONG_PAIR ((long int) (len >> 32),
+						(long int) len));
 
-      if (! INTERNAL_SYSCALL_ERROR_P (res, err))
-	return 0;
-
-# ifndef __ASSUME_FALLOCATE
-      if (__glibc_unlikely (INTERNAL_SYSCALL_ERRNO (res, err) == ENOSYS))
-	__have_fallocate = -1;
-      else
-# endif
-	if (INTERNAL_SYSCALL_ERRNO (res, err) != EOPNOTSUPP)
-	  return INTERNAL_SYSCALL_ERRNO (res, err);
-    }
-#endif
-
+  if (! INTERNAL_SYSCALL_ERROR_P (res, err))
+    return 0;
+  if (INTERNAL_SYSCALL_ERRNO (res, err) != EOPNOTSUPP)
+    return INTERNAL_SYSCALL_ERRNO (res, err);
   return internal_fallocate64 (fd, offset, len);
 }

@@ -23,6 +23,8 @@
 #include <sysdeps/posix/posix_fallocate.c>
 #undef posix_fallocate
 
+/* The alpha architecture introduced the fallocate system call in
+   2.6.33-rc1, so we still need the fallback code.  */
 #if !defined __ASSUME_FALLOCATE && defined __NR_fallocate
 static int __have_fallocate;
 #endif

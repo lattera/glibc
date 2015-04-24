@@ -1,5 +1,18 @@
 2015-05-05  Florian Weimer  <fweimer@redhat.com>
 
+	* sysdeps/unix/sysv/linux/posix_fallocate.c (posix_fallocate):
+	Assume __ASSUME_FALLOCATE is always true.
+	* sysdeps/unix/sysv/linux/posix_fallocate64.c
+	(__posix_fallocate64_l64): Likweise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/posix_fallocate.c
+	(posix_fallocate): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/posix_fallocate64.c
+	(__posix_fallocate64_l64): Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/posix_fallocate.c
+	[!__ASSUME_FALLOCATE]: Add comment.
+
+2015-05-05  Florian Weimer  <fweimer@redhat.com>
+
 	* sysdeps/unix/sysv/linux/i386/Makefile
 	(sysdep_routines) [$(subdir) = misc]: Remove call_fallocate.
 	(sysdep_routines) [$(subdir) = io]: Add libc-do-syscall.
