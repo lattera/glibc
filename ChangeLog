@@ -1,5 +1,9 @@
 2015-04-24  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/fpu/libm-test-upls: Regenerate.
+
+2015-04-24  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* NEWS: Mention sysconf() cache information support for s390.
 	* sysdeps/unix/sysv/linux/s390/sysconf.c: New File.
 
