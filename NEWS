@@ -18,6 +18,9 @@ Version 2.22
   18080, 18093, 18100, 18104, 18110, 18111, 18128, 18138, 18185, 18197,
   18206, 18210, 18211, 18247, 18287.
 
+* Cache information can be queried via sysconf() function on s390 e.g. with
+  _SC_LEVEL1_ICACHE_SIZE as argument.
+
 * A buffer overflow in gethostbyname_r and related functions performing DNS
   requests has been fixed.  If the NSS functions were called with a
   misaligned buffer, the buffer length change due to pointer alignment was

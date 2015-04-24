@@ -1,3 +1,8 @@
+2015-04-24  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* NEWS: Mention sysconf() cache information support for s390.
+	* sysdeps/unix/sysv/linux/s390/sysconf.c: New File.
+
 2015-04-22  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* math/k_casinh.c (__kernel_casinh): Use __copysign.
