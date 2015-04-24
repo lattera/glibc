@@ -1,5 +1,32 @@
 2015-04-24  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #17715]
+	* time/tzfile.c (__tzfile_read): Check for large values of
+	tzh_ttisstdcnt and tzh_ttisgmtcnt.  Use malloc instead of alloca.
+	* time/tzset.c (__tzstring_len): New function, based on the old
+	__tzstring function.
+	(__tzstring): Call __tzstring_len.
+	(parse_tzname): New helper function extracted from
+	__tzset_parse_tz.  Call __tzstring_len, without making a copy of
+	the input string.
+	(parse_offset): New helper function extracted from
+	__tzset_parse_tz.  Replace switch with fallthrough with
+	initialization before sscanf.
+	(parse_rule): Likewise.
+	(__tzset_parse_tz): Rewrite using the new helper functions.  Use
+	new-style function definition.
+	* timezone/Makefile (tests): Add tst-tzset.
+	(tst-tzset.out): Dependencies on time zone files.
+	(tst-tzset-ENV): Set TZDIR.
+	(testdata/XT%): Copy crafted time zone files.
+	* timezone/README: Mention crafted time zone files.
+	* timezone/testdata/XT1, timezone/testdata/XT2,
+	timezone/testdata/XT3, timezone/testdata/XT4: New time zone test
+	files.
+	* timezone/tst-tzset.c: New test.
+
+2015-04-24  Florian Weimer  <fweimer@redhat.com>
+
 	* Makeconfig (+gccwarn): Remove -Winline.
 
 2015-04-24  Stefan Liebler  <stli@linux.vnet.ibm.com>

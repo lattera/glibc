@@ -18,6 +18,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <bits/libc-lock.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -82,15 +83,14 @@ struct tzstring_l
 
 static struct tzstring_l *tzstring_list;
 
-/* Allocate a permanent home for S.  It will never be moved or deallocated,
-   but may share space with other strings.
-   Don't modify the returned string. */
-char *
-__tzstring (const char *s)
+/* Allocate a permanent home for the first LEN characters of S.  It
+   will never be moved or deallocated, but may share space with other
+   strings.  Don't modify the returned string. */
+static char *
+__tzstring_len (const char *s, size_t len)
 {
   char *p;
   struct tzstring_l *t, *u, *new;
-  size_t len = strlen (s);
 
   /* Walk the list and look for a match.  If this string is the same
      as the end of an already-allocated string, it can share space. */
@@ -98,7 +98,7 @@ __tzstring (const char *s)
     if (len <= t->len)
       {
 	p = &t->data[t->len - len];
-	if (strcmp (s, p) == 0)
+	if (memcmp (s, p, len) == 0)
 	  return p;
       }
 
@@ -109,7 +109,8 @@ __tzstring (const char *s)
 
   new->next = NULL;
   new->len = len;
-  strcpy (new->data, s);
+  memcpy (new->data, s, len);
+  new->data[len] = '\0';
 
   if (u)
     u->next = new;
@@ -117,6 +118,15 @@ __tzstring (const char *s)
     tzstring_list = new;
 
   return new->data;
+}
+
+/* Allocate a permanent home for S.  It will never be moved or
+   deallocated, but may share space with other strings.  Don't modify
+   the returned string. */
+char *
+__tzstring (const char *s)
+{
+  return __tzstring_len (s, strlen (s));
 }
 
 /* Maximum length of a timezone name.  tzset_internal keeps this up to date
@@ -164,234 +174,215 @@ compute_offset (unsigned int ss, unsigned int mm, unsigned int hh)
   return min (ss, 59) + min (mm, 59) * 60 + min (hh, 24) * 60 * 60;
 }
 
+/* Parses the time zone name at *TZP, and writes a pointer to an
+   interned string to tz_rules[WHICHRULE].name.  On success, advances
+   *TZP, and returns true.  Returns false otherwise.  */
+static bool
+parse_tzname (const char **tzp, int whichrule)
+{
+  const char *start = *tzp;
+  const char *p = start;
+  while (('a' <= *p && *p <= 'z')
+	 || ('A' <= *p && *p <= 'Z'))
+      ++p;
+  size_t len = p - start;
+  if (len < 3)
+    {
+      p = *tzp;
+      if (__glibc_unlikely (*p++ != '<'))
+	return false;
+      start = p;
+      while (('a' <= *p && *p <= 'z')
+	     || ('A' <= *p && *p <= 'Z')
+	     || ('0' <= *p && *p <= '9')
+	     || *p == '+' || *p == '-')
+	++p;
+      len = p - start;
+      if (*p++ != '>' || len < 3)
+	return false;
+    }
+  tz_rules[whichrule].name = __tzstring_len (start, len);
+  *tzp = p;
+  return true;
+}
+
+/* Parses the time zone offset at *TZP, and writes it to
+   tz_rules[WHICHRULE].offset.  Returns true if the parse was
+   successful.  */
+static bool
+parse_offset (const char **tzp, int whichrule)
+{
+  const char *tz = *tzp;
+  if (whichrule == 0
+      && (*tz == '\0' || (*tz != '+' && *tz != '-' && !isdigit (*tz))))
+    return false;
+
+  long sign;
+  if (*tz == '-' || *tz == '+')
+    sign = *tz++ == '-' ? 1L : -1L;
+  else
+    sign = -1L;
+  *tzp = tz;
+
+  unsigned short int hh;
+  unsigned short mm = 0;
+  unsigned short ss = 0;
+  int consumed = 0;
+  if (sscanf (tz, "%hu%n:%hu%n:%hu%n",
+	      &hh, &consumed, &mm, &consumed, &ss, &consumed) > 0)
+    tz_rules[whichrule].offset = sign * compute_offset (ss, mm, hh);
+  else
+    /* Nothing could be parsed. */
+    if (whichrule == 0)
+      {
+	/* Standard time defaults to offset zero.  */
+	tz_rules[0].offset = 0;
+	return false;
+      }
+      else
+	/* DST defaults to one hour later than standard time.  */
+	tz_rules[1].offset = tz_rules[0].offset + (60 * 60);
+  *tzp = tz + consumed;
+  return true;
+}
+
+/* Parses the standard <-> DST rules at *TZP.  Updates
+   tz_rule[WHICHRULE].  On success, advances *TZP and returns true.
+   Otherwise, returns false.  */
+static bool
+parse_rule (const char **tzp, int whichrule)
+{
+  const char *tz = *tzp;
+  tz_rule *tzr = &tz_rules[whichrule];
+
+  /* Ignore comma to support string following the incorrect
+     specification in early POSIX.1 printings.  */
+  tz += *tz == ',';
+
+  /* Get the date of the change.  */
+  if (*tz == 'J' || isdigit (*tz))
+    {
+      char *end;
+      tzr->type = *tz == 'J' ? J1 : J0;
+      if (tzr->type == J1 && !isdigit (*++tz))
+	return false;
+      unsigned long int d = strtoul (tz, &end, 10);
+      if (end == tz || d > 365)
+	return false;
+      if (tzr->type == J1 && d == 0)
+	return false;
+      tzr->d = d;
+      tz = end;
+    }
+  else if (*tz == 'M')
+    {
+      tzr->type = M;
+      int consumed;
+      if (sscanf (tz, "M%hu.%hu.%hu%n",
+		  &tzr->m, &tzr->n, &tzr->d, &consumed) != 3
+	  || tzr->m < 1 || tzr->m > 12
+	  || tzr->n < 1 || tzr->n > 5 || tzr->d > 6)
+	return false;
+      tz += consumed;
+    }
+  else if (*tz == '\0')
+    {
+      /* Daylight time rules in the U.S. are defined in the U.S. Code,
+	 Title 15, Chapter 6, Subchapter IX - Standard Time.  These
+	 dates were established by Congress in the Energy Policy Act
+	 of 2005 [Pub. L. no. 109-58, 119 Stat 594 (2005)].
+	 Below is the equivalent of "M3.2.0,M11.1.0" [/2 not needed
+	 since 2:00AM is the default].  */
+      tzr->type = M;
+      if (tzr == &tz_rules[0])
+	{
+	  tzr->m = 3;
+	  tzr->n = 2;
+	  tzr->d = 0;
+	}
+      else
+	{
+	  tzr->m = 11;
+	  tzr->n = 1;
+	  tzr->d = 0;
+	}
+    }
+  else
+    return false;
+
+  if (*tz != '\0' && *tz != '/' && *tz != ',')
+    return false;
+  else if (*tz == '/')
+    {
+      /* Get the time of day of the change.  */
+      int negative;
+      ++tz;
+      if (*tz == '\0')
+	return false;
+      negative = *tz == '-';
+      tz += negative;
+      /* Default to 2:00 AM.  */
+      unsigned short hh = 2;
+      unsigned short mm = 0;
+      unsigned short ss = 0;
+      int consumed = 0;
+      sscanf (tz, "%hu%n:%hu%n:%hu%n",
+	      &hh, &consumed, &mm, &consumed, &ss, &consumed);;
+      tz += consumed;
+      tzr->secs = (negative ? -1 : 1) * ((hh * 60 * 60) + (mm * 60) + ss);
+    }
+  else
+    /* Default to 2:00 AM.  */
+    tzr->secs = 2 * 60 * 60;
+
+  tzr->computed_for = -1;
+  *tzp = tz;
+  return true;
+}
 
 /* Parse the POSIX TZ-style string.  */
 void
-__tzset_parse_tz (tz)
-     const char *tz;
+__tzset_parse_tz (const char *tz)
 {
-  unsigned short int hh, mm, ss;
-
   /* Clear out old state and reset to unnamed UTC.  */
   memset (tz_rules, '\0', sizeof tz_rules);
   tz_rules[0].name = tz_rules[1].name = "";
 
   /* Get the standard timezone name.  */
-  char *tzbuf = strdupa (tz);
-
-  int consumed;
-  if (sscanf (tz, "%[A-Za-z]%n", tzbuf, &consumed) != 1)
+  if (parse_tzname (&tz, 0) && parse_offset (&tz, 0))
     {
-      /* Check for the quoted version.  */
-      char *wp = tzbuf;
-      if (__glibc_unlikely (*tz++ != '<'))
-	goto out;
-
-      while (isalnum (*tz) || *tz == '+' || *tz == '-')
-	*wp++ = *tz++;
-      if (__glibc_unlikely (*tz++ != '>' || wp - tzbuf < 3))
-	goto out;
-      *wp = '\0';
-    }
-  else if (__glibc_unlikely (consumed < 3))
-    goto out;
-  else
-    tz += consumed;
-
-  tz_rules[0].name = __tzstring (tzbuf);
-
-  /* Figure out the standard offset from UTC.  */
-  if (*tz == '\0' || (*tz != '+' && *tz != '-' && !isdigit (*tz)))
-    goto out;
-
-  if (*tz == '-' || *tz == '+')
-    tz_rules[0].offset = *tz++ == '-' ? 1L : -1L;
-  else
-    tz_rules[0].offset = -1L;
-  switch (sscanf (tz, "%hu%n:%hu%n:%hu%n",
-		  &hh, &consumed, &mm, &consumed, &ss, &consumed))
-    {
-    default:
-      tz_rules[0].offset = 0;
-      goto out;
-    case 1:
-      mm = 0;
-    case 2:
-      ss = 0;
-    case 3:
-      break;
-    }
-  tz_rules[0].offset *= compute_offset (ss, mm, hh);
-  tz += consumed;
-
-  /* Get the DST timezone name (if any).  */
-  if (*tz != '\0')
-    {
-      if (sscanf (tz, "%[A-Za-z]%n", tzbuf, &consumed) != 1)
+      /* Get the DST timezone name (if any).  */
+      if (*tz != '\0')
 	{
-	  /* Check for the quoted version.  */
-	  char *wp = tzbuf;
-	  const char *rp = tz;
-	  if (__glibc_unlikely (*rp++ != '<'))
-	    /* Punt on name, set up the offsets.  */
-	    goto done_names;
-
-	  while (isalnum (*rp) || *rp == '+' || *rp == '-')
-	    *wp++ = *rp++;
-	  if (__glibc_unlikely (*rp++ != '>' || wp - tzbuf < 3))
-	    /* Punt on name, set up the offsets.  */
-	    goto done_names;
-	  *wp = '\0';
-	  tz = rp;
-	}
-      else if (__glibc_unlikely (consumed < 3))
-	/* Punt on name, set up the offsets.  */
-	goto done_names;
-      else
-	tz += consumed;
-
-      tz_rules[1].name = __tzstring (tzbuf);
-
-      /* Figure out the DST offset from GMT.  */
-      if (*tz == '-' || *tz == '+')
-	tz_rules[1].offset = *tz++ == '-' ? 1L : -1L;
-      else
-	tz_rules[1].offset = -1L;
-
-      switch (sscanf (tz, "%hu%n:%hu%n:%hu%n",
-		      &hh, &consumed, &mm, &consumed, &ss, &consumed))
-	{
-	default:
-	  /* Default to one hour later than standard time.  */
-	  tz_rules[1].offset = tz_rules[0].offset + (60 * 60);
-	  break;
-
-	case 1:
-	  mm = 0;
-	case 2:
-	  ss = 0;
-	case 3:
-	  tz_rules[1].offset *= compute_offset (ss, mm, hh);
-	  tz += consumed;
-	  break;
-	}
-      if (*tz == '\0' || (tz[0] == ',' && tz[1] == '\0'))
-	{
-	  /* There is no rule.  See if there is a default rule file.  */
-	  __tzfile_default (tz_rules[0].name, tz_rules[1].name,
-			    tz_rules[0].offset, tz_rules[1].offset);
-	  if (__use_tzfile)
+	  if (parse_tzname (&tz, 1))
 	    {
-	      free (old_tz);
-	      old_tz = NULL;
-	      return;
+	      parse_offset (&tz, 1);
+	      if (*tz == '\0' || (tz[0] == ',' && tz[1] == '\0'))
+		{
+		  /* There is no rule.  See if there is a default rule
+		     file.  */
+		  __tzfile_default (tz_rules[0].name, tz_rules[1].name,
+				    tz_rules[0].offset, tz_rules[1].offset);
+		  if (__use_tzfile)
+		    {
+		      free (old_tz);
+		      old_tz = NULL;
+		      return;
+		    }
+		}
 	    }
-	}
-    }
-  else
-    {
-      /* There is no DST.  */
-      tz_rules[1].name = tz_rules[0].name;
-      tz_rules[1].offset = tz_rules[0].offset;
-      goto out;
-    }
-
- done_names:
-  /* Figure out the standard <-> DST rules.  */
-  for (unsigned int whichrule = 0; whichrule < 2; ++whichrule)
-    {
-      tz_rule *tzr = &tz_rules[whichrule];
-
-      /* Ignore comma to support string following the incorrect
-	 specification in early POSIX.1 printings.  */
-      tz += *tz == ',';
-
-      /* Get the date of the change.  */
-      if (*tz == 'J' || isdigit (*tz))
-	{
-	  char *end;
-	  tzr->type = *tz == 'J' ? J1 : J0;
-	  if (tzr->type == J1 && !isdigit (*++tz))
-	    goto out;
-	  unsigned long int d = strtoul (tz, &end, 10);
-	  if (end == tz || d > 365)
-	    goto out;
-	  if (tzr->type == J1 && d == 0)
-	    goto out;
-	  tzr->d = d;
-	  tz = end;
-	}
-      else if (*tz == 'M')
-	{
-	  tzr->type = M;
-	  if (sscanf (tz, "M%hu.%hu.%hu%n",
-		      &tzr->m, &tzr->n, &tzr->d, &consumed) != 3
-	      || tzr->m < 1 || tzr->m > 12
-	      || tzr->n < 1 || tzr->n > 5 || tzr->d > 6)
-	    goto out;
-	  tz += consumed;
-	}
-      else if (*tz == '\0')
-	{
-         /* Daylight time rules in the U.S. are defined in the
-            U.S. Code, Title 15, Chapter 6, Subchapter IX - Standard
-            Time.  These dates were established by Congress in the
-            Energy Policy Act of 2005 [Pub. L. no. 109-58, 119 Stat 594
-            (2005)].
-	    Below is the equivalent of "M3.2.0,M11.1.0" [/2 not needed
-	    since 2:00AM is the default].  */
-	  tzr->type = M;
-	  if (tzr == &tz_rules[0])
-	    {
-	      tzr->m = 3;
-	      tzr->n = 2;
-	      tzr->d = 0;
-	    }
-	  else
-	    {
-	      tzr->m = 11;
-	      tzr->n = 1;
-	      tzr->d = 0;
-	    }
+	  /* Figure out the standard <-> DST rules.  */
+	  if (parse_rule (&tz, 0))
+	    parse_rule (&tz, 1);
 	}
       else
-	goto out;
-
-      if (*tz != '\0' && *tz != '/' && *tz != ',')
-	goto out;
-      else if (*tz == '/')
 	{
-	  /* Get the time of day of the change.  */
-	  int negative;
-	  ++tz;
-	  if (*tz == '\0')
-	    goto out;
-	  negative = *tz == '-';
-	  tz += negative;
-	  consumed = 0;
-	  switch (sscanf (tz, "%hu%n:%hu%n:%hu%n",
-			  &hh, &consumed, &mm, &consumed, &ss, &consumed))
-	    {
-	    default:
-	      hh = 2;		/* Default to 2:00 AM.  */
-	    case 1:
-	      mm = 0;
-	    case 2:
-	      ss = 0;
-	    case 3:
-	      break;
-	    }
-	  tz += consumed;
-	  tzr->secs = (negative ? -1 : 1) * ((hh * 60 * 60) + (mm * 60) + ss);
+	  /* There is no DST.  */
+	  tz_rules[1].name = tz_rules[0].name;
+	  tz_rules[1].offset = tz_rules[0].offset;
 	}
-      else
-	/* Default to 2:00 AM.  */
-	tzr->secs = 2 * 60 * 60;
-
-      tzr->computed_for = -1;
     }
 
- out:
   update_vars ();
 }
 

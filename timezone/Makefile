@@ -25,7 +25,7 @@ include ../Makeconfig
 extra-objs := scheck.o ialloc.o
 
 others	:= zdump zic
-tests	:= test-tz tst-timezone
+tests	:= test-tz tst-timezone tst-tzset
 
 # pacificnew doesn't compile; if it is to be used, it should be included in
 # northamerica.
@@ -90,9 +90,11 @@ $(objpfx)tst-timezone.out: $(addprefix $(testdata)/, \
 				       Australia/Melbourne \
 				       America/Sao_Paulo Asia/Tokyo \
 				       Europe/London)
+$(objpfx)tst-tzset.out: $(addprefix $(testdata)/XT, 1 2 3 4)
 
 test-tz-ENV = TZDIR=$(testdata)
 tst-timezone-ENV = TZDIR=$(testdata)
+tst-tzset-ENV = TZDIR=$(testdata)
 
 # Note this must come second in the deps list for $(built-program-cmd) to work.
 zic-deps = $(objpfx)zic $(leapseconds) yearistype
@@ -114,6 +116,8 @@ $(testdata)/America/Sao_Paulo: southamerica $(zic-deps)
 $(testdata)/Asia/Tokyo: asia $(zic-deps)
 	$(build-testdata)
 
+$(testdata)/XT%: testdata/XT%
+	cp $< $@
 
 $(objpfx)tzselect: tzselect.ksh $(common-objpfx)config.make
 	sed -e 's|/bin/bash|$(BASH)|' \

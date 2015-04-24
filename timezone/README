@@ -15,3 +15,6 @@ version of the tzcode and tzdata packages.
 
 These packages may be found at ftp://ftp.iana.org/tz/releases/.  Commentary
 should be addressed to tz@iana.org.
+
+The subdirectory testdata contains manually edited data files for
+regression testing purposes.
