@@ -1,3 +1,8 @@
+2015-04-24  Florian Weimer  <fweimer@redhat.com>
+
+	* io/posix_fallocate.c (posix_fallocate): Do not set errno.
+	* io/posix_fallocate64.c (posix_fallocate64): Likewise.
+
 2015-04-24  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/configure.ac (PI_STATIC_AND_HIDDEN): Define it.

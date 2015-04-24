@@ -23,7 +23,6 @@
 int
 posix_fallocate64 (int fd, __off64_t offset, __off64_t len)
 {
-  __set_errno (ENOSYS);
-  return -1;
+  return ENOSYS;
 }
 stub_warning (posix_fallocate64)
