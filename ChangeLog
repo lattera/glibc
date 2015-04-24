@@ -1,3 +1,8 @@
+2015-04-24  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/configure.ac (PI_STATIC_AND_HIDDEN): Define it.
+	* sysdeps/arm/configure: Regenerated.
+
 2015-04-24  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #17715]

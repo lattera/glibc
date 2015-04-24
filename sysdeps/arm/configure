@@ -1,7 +1,8 @@
 # This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
  # Local configure fragment for sysdeps/arm.
 
-#AC_DEFINE(PI_STATIC_AND_HIDDEN)
+$as_echo "#define PI_STATIC_AND_HIDDEN 1" >>confdefs.h
+
 
 # We check to see if the compiler and flags are
 # selecting the hard-float ABI and if they are then
