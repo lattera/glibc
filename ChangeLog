@@ -1,3 +1,7 @@
+2015-04-24  Florian Weimer  <fweimer@redhat.com>
+
+	* Makeconfig (+gccwarn): Remove -Winline.
+
 2015-04-24  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/fpu/libm-test-upls: Regenerate.

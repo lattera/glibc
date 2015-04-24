@@ -739,9 +739,9 @@ endif
 
 # Extra flags to pass to GCC.
 ifeq ($(all-warnings),yes)
-+gccwarn := -Wall -Wwrite-strings -Winline -Wcast-qual -Wbad-function-cast -Wmissing-noreturn -Wmissing-prototypes -Wmissing-declarations -Wcomment -Wcomments -Wtrigraphs -Wsign-compare -Wfloat-equal -Wmultichar
++gccwarn := -Wall -Wwrite-strings -Wcast-qual -Wbad-function-cast -Wmissing-noreturn -Wmissing-prototypes -Wmissing-declarations -Wcomment -Wcomments -Wtrigraphs -Wsign-compare -Wfloat-equal -Wmultichar
 else
-+gccwarn := -Wall -Wwrite-strings -Winline
++gccwarn := -Wall -Wwrite-strings
 endif
 +gccwarn += -Wundef
 ifeq ($(enable-werror),yes)
