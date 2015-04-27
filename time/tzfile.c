@@ -270,7 +270,8 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
       if (__glibc_unlikely (tzspec_len == 0 || tzspec_len - 1 < num_isgmt))
 	goto lose;
       tzspec_len -= num_isgmt + 1;
-      if (__glibc_unlikely (SIZE_MAX - total_size < tzspec_len))
+      if (__glibc_unlikely (tzspec_len == 0
+			    || SIZE_MAX - total_size < tzspec_len))
 	goto lose;
     }
   if (__glibc_unlikely (SIZE_MAX - total_size - tzspec_len < extra))

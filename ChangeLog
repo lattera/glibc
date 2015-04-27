@@ -1,3 +1,8 @@
+2015-04-27  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ#18333]
+	* time/tzset.c (__tzfile_read): Check tzspec_len == 0.
+
 2015-04-27  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ#18333]
