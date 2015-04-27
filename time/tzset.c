@@ -201,7 +201,12 @@ parse_tzname (const char **tzp, int whichrule)
       if (*p++ != '>' || len < 3)
 	return false;
     }
-  tz_rules[whichrule].name = __tzstring_len (start, len);
+
+  const char *name = __tzstring_len (start, len);
+  if (name == NULL)
+    return false;
+  tz_rules[whichrule].name = name;
+
   *tzp = p;
   return true;
 }

@@ -73,7 +73,7 @@ static const char *test_dir;
 struct temp_name_list
 {
   struct qelem q;
-  const char *name;
+  char *name;
 } *temp_name_list;
 
 /* Add temporary files in list.  */
@@ -83,14 +83,17 @@ add_temp_file (const char *name)
 {
   struct temp_name_list *newp
     = (struct temp_name_list *) calloc (sizeof (*newp), 1);
-  if (newp != NULL)
+  char *newname = strdup (name);
+  if (newp != NULL && newname != NULL)
     {
-      newp->name = name;
+      newp->name = newname;
       if (temp_name_list == NULL)
 	temp_name_list = (struct temp_name_list *) &newp->q;
       else
 	insque (newp, temp_name_list);
     }
+  else
+    free (newp);
 }
 
 /* Delete all temporary files.  */
@@ -100,11 +103,19 @@ delete_temp_files (void)
   while (temp_name_list != NULL)
     {
       remove (temp_name_list->name);
-      temp_name_list = (struct temp_name_list *) temp_name_list->q.q_forw;
+      free (temp_name_list->name);
+
+      struct temp_name_list *next
+	= (struct temp_name_list *) temp_name_list->q.q_forw;
+      free (temp_name_list);
+      temp_name_list = next;
     }
 }
 
-/* Create a temporary file.  */
+/* Create a temporary file.  Return the opened file descriptor on
+   success, or -1 on failure.  Write the file name to *FILENAME if
+   FILENAME is not NULL.  In this case, the caller is expected to free
+   *FILENAME.  */
 static int
 __attribute__ ((unused))
 create_temp_file (const char *base, char **filename)
@@ -132,6 +143,8 @@ create_temp_file (const char *base, char **filename)
   add_temp_file (fname);
   if (filename != NULL)
     *filename = fname;
+  else
+    free (fname);
 
   return fd;
 }

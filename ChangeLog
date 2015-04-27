@@ -1,3 +1,14 @@
+2015-04-27  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ#18333]
+	* time/tzset.c (parse_tzname): Return error on memory allocation
+	failure.
+	* test-skeleton.c (struct temp_name_list): Change type of name
+	member to non-const.
+	(add_temp_file): Create a copy of the file name.
+	(delete_temp_files): Deallocate memory.
+	(create_temp_file): Add comment.
+
 2015-04-24  Florian Weimer  <fweimer@redhat.com>
 
 	* io/posix_fallocate.c (posix_fallocate): Do not set errno.
