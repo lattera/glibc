@@ -15,10 +15,9 @@ libc.so: malloc
 libc.so: memalign
 libc.so: realloc
 libm.so: matherr
-# The dynamic loader needs __tls_get_addr for TLS, and uses __libc_memalign
-# internally to allocate aligned TLS storage. The other malloc family of
-# functions are expected to allow user symbol interposition.
-ld.so: __tls_get_addr
+# The dynamic loader uses __libc_memalign internally to allocate
+# aligned TLS storage. The other malloc family of functions are
+# expected to allow user symbol interposition.
 ld.so: __libc_memalign
 ld.so: malloc
 ld.so: calloc

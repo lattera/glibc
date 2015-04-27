@@ -1,3 +1,9 @@
+2015-04-27  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/localplt.data: Remove
+	__tls_get_addr.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/localplt.data: Likewise.
+
 2015-04-27  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ#18333]
