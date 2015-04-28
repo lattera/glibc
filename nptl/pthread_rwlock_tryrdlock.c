@@ -20,12 +20,14 @@
 #include "pthreadP.h"
 #include <lowlevellock.h>
 #include <elide.h>
+#include <stdbool.h>
 
 
 int
 __pthread_rwlock_tryrdlock (pthread_rwlock_t *rwlock)
 {
   int result = EBUSY;
+  bool wake = false;
 
   if (ELIDE_TRYLOCK (rwlock->__data.__rwelision,
 		     rwlock->__data.__lock == 0
@@ -45,10 +47,24 @@ __pthread_rwlock_tryrdlock (pthread_rwlock_t *rwlock)
 	  result = EAGAIN;
 	}
       else
-	result = 0;
+	{
+	  result = 0;
+	  /* See pthread_rwlock_rdlock.  */
+	  if (rwlock->__data.__nr_readers == 1
+	      && rwlock->__data.__nr_readers_queued > 0
+	      && rwlock->__data.__nr_writers_queued > 0)
+	    {
+	      ++rwlock->__data.__readers_wakeup;
+	      wake = true;
+	    }
+	}
     }
 
   lll_unlock (rwlock->__data.__lock, rwlock->__data.__shared);
+
+  if (wake)
+    lll_futex_wake (&rwlock->__data.__readers_wakeup, INT_MAX,
+		    rwlock->__data.__shared);
 
   return result;
 }

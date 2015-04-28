@@ -1,5 +1,19 @@
 2015-06-04  Torvald Riegel  <triegel@redhat.com>
 
+	[BZ #14958]
+	* nptl/pthread_rwlock_rdlock.c (__pthread_rwlock_rdlock): Add missing
+	wake-up.
+	(__pthread_rwlock_rdlock_slow): Likewise.
+	* nptl/pthread_rwlock_timedrdlock.c (pthread_rwlock_timedrdlock):
+	Likewise.
+	* nptl/pthread_rwlock_tryrdlock.c (__pthread_rwlock_tryrdlock):
+	Likewise.
+	* nptl/pthread_rwlock_unlock.c (__pthread_rwlock_unlock): Add comments.
+	* nptl/tst-rwlock16.c: New file.
+	* nptl/Makefile (tests): Add new test.
+
+2015-06-04  Torvald Riegel  <triegel@redhat.com>
+
 	[BZ #18324]
 	* nptl/pthread_rwlock_timedwrlock.c (pthread_rwlock_timedwrlock): Add
 	missing wake-up of readers.

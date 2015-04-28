@@ -23,6 +23,7 @@
 #include <pthreadP.h>
 #include <sys/time.h>
 #include <kernel-features.h>
+#include <stdbool.h>
 
 
 /* Try to acquire read lock for RWLOCK or return after specfied time.  */
@@ -32,6 +33,7 @@ pthread_rwlock_timedrdlock (rwlock, abstime)
      const struct timespec *abstime;
 {
   int result = 0;
+  bool wake = false;
 
   /* Make sure we are alone.  */
   lll_lock(rwlock->__data.__lock, rwlock->__data.__shared);
@@ -52,6 +54,17 @@ pthread_rwlock_timedrdlock (rwlock, abstime)
 	      /* Overflow on number of readers.	 */
 	      --rwlock->__data.__nr_readers;
 	      result = EAGAIN;
+	    }
+	  else
+	    {
+	      /* See pthread_rwlock_rdlock.  */
+	      if (rwlock->__data.__nr_readers == 1
+		  && rwlock->__data.__nr_readers_queued > 0
+		  && rwlock->__data.__nr_writers_queued > 0)
+		{
+		  ++rwlock->__data.__readers_wakeup;
+		  wake = true;
+		}
 	    }
 
 	  break;
@@ -152,6 +165,10 @@ pthread_rwlock_timedrdlock (rwlock, abstime)
 
   /* We are done, free the lock.  */
   lll_unlock (rwlock->__data.__lock, rwlock->__data.__shared);
+
+  if (wake)
+    lll_futex_wake (&rwlock->__data.__readers_wakeup, INT_MAX,
+		    rwlock->__data.__shared);
 
   return result;
 }

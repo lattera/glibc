@@ -40,8 +40,13 @@ __pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
     rwlock->__data.__writer = 0;
   else
     --rwlock->__data.__nr_readers;
+  /* If there are still readers present, we do not yet need to wake writers
+     nor are responsible to wake any readers.  */
   if (rwlock->__data.__nr_readers == 0)
     {
+      /* Note that if there is a blocked writer, we effectively make it
+	 responsible for waking any readers because we don't wake readers in
+	 this case.  */
       if (rwlock->__data.__nr_writers_queued)
 	{
 	  ++rwlock->__data.__writer_wakeup;
