@@ -1,3 +1,7 @@
+2015-04-28  Mark Wielaard  <mjw@redhat.com>
+
+	* elf/elf.h (SHF_EXCLUDE): Use unsigned 1 for shift.
+
 2015-04-27  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/localplt.data: Remove
