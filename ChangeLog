@@ -1,3 +1,11 @@
+2015-04-28  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18346]
+	* sysdeps/ieee754/ldbl-128/s_roundl.c (__roundl): Handle all
+	exponents less than 48 as cases where high part of mantissa needs
+	examining to determine whether argument is integral.
+	* math/libm-test.inc (round_test_data): Add more tests.
+
 2015-04-28  Mark Wielaard  <mjw@redhat.com>
 
 	* elf/elf.h (SHF_EXCLUDE): Use unsigned 1 for shift.

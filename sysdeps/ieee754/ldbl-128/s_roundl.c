@@ -34,7 +34,7 @@ __roundl (long double x)
 
   GET_LDOUBLE_WORDS64 (i0, i1, x);
   j0 = ((i0 >> 48) & 0x7fff) - 0x3fff;
-  if (j0 < 31)
+  if (j0 < 48)
     {
       if (j0 < 0)
 	{

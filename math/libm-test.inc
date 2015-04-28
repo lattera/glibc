@@ -9012,6 +9012,17 @@ static const struct test_f_f_data round_test_data[] =
     TEST_f_f (round, 2097152.5, 2097153),
     TEST_f_f (round, -2097152.5, -2097153),
 
+#ifndef TEST_FLOAT
+    TEST_f_f (round, 0xffffffffffff.0p0L, 0xffffffffffff.0p0L),
+    TEST_f_f (round, 0xffffffffffff.4p0L, 0xffffffffffff.0p0L),
+    TEST_f_f (round, 0xffffffffffff.8p0L, 0x1000000000000.0p0L),
+    TEST_f_f (round, 0xffffffffffff.cp0L, 0x1000000000000.0p0L),
+    TEST_f_f (round, -0xffffffffffff.0p0L, -0xffffffffffff.0p0L),
+    TEST_f_f (round, -0xffffffffffff.4p0L, -0xffffffffffff.0p0L),
+    TEST_f_f (round, -0xffffffffffff.8p0L, -0x1000000000000.0p0L),
+    TEST_f_f (round, -0xffffffffffff.cp0L, -0x1000000000000.0p0L),
+#endif
+
 #ifdef TEST_LDOUBLE
     /* The result can only be represented in long double.  */
     TEST_f_f (round, 4503599627370495.5L, 4503599627370496.0L),
