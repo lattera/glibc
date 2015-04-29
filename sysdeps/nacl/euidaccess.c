@@ -20,8 +20,10 @@
 
 /* Test for access to FILE.  */
 int
-euidaccess (const char *file, int type)
+__euidaccess (const char *file, int type)
 {
   /* No NaCl process will ever be set-ID, so access and euidaccess are one.  */
   return __access (file, type);
 }
+weak_alias (__euidaccess, euidaccess)
+weak_alias (__euidaccess, eaccess)
