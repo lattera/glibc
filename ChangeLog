@@ -1,5 +1,8 @@
 2015-04-29  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/nacl/bits/typesizes.h (__CLOCK_T_TYPE): Use __SLONGWORD_TYPE.
+	* sysdeps/nacl/nacl-interfaces.h (nacl_abi_clock_t): Use clock_t.
+
 	* sysdeps/nacl/euidaccess.c (euidaccess): Renamed to __euidaccess.
 	(euidaccess, eaccess): Define as weak aliases.
 

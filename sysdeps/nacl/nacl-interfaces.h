@@ -41,8 +41,9 @@ typedef struct dirent nacl_abi_dirent_t;
 typedef struct timeval nacl_abi_timeval_t;
 typedef struct timespec nacl_abi_timespec_t;
 
-/* XXX change clock_t? */
-typedef uint32_t nacl_abi_clock_t;
+/* This is unsigned in the IRT ABI, but it's traditionally 'long int',
+   so we stick with that.  */
+typedef clock_t nacl_abi_clock_t;
 
 typedef int32_t nacl_abi_blkcnt_t;
 
