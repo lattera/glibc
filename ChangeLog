@@ -1,3 +1,10 @@
+2015-04-29  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/nacl/bits/typesizes.h (__SUSECONDS_T_TYPE): Use
+	__SLONGWORD_TYPE rather than __S32_TYPE.  They are the same size,
+	but __suseconds_t is often 'long int' so some sources assume that
+	type is being used (e.g. they use %ld to print tv_usec).
+
 2015-04-29  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #18007]
