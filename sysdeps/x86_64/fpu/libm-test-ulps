@@ -1176,12 +1176,12 @@ ildouble: 3
 ldouble: 3
 
 Function: Real part of "csqrt":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 2
+ldouble: 2
 
 Function: Imaginary part of "csqrt":
 double: 1
@@ -1192,6 +1192,14 @@ ildouble: 1
 ldouble: 1
 
 Function: Real part of "csqrt_downward":
+double: 4
+float: 4
+idouble: 4
+ifloat: 4
+ildouble: 4
+ldouble: 4
+
+Function: Imaginary part of "csqrt_downward":
 double: 3
 float: 3
 idouble: 3
@@ -1199,45 +1207,37 @@ ifloat: 3
 ildouble: 3
 ldouble: 3
 
-Function: Imaginary part of "csqrt_downward":
-double: 2
-float: 2
-idouble: 2
-ifloat: 2
-ildouble: 2
-ldouble: 2
-
 Function: Real part of "csqrt_towardzero":
-double: 2
-float: 2
-idouble: 2
-ifloat: 2
-ildouble: 2
-ldouble: 2
-
-Function: Imaginary part of "csqrt_towardzero":
-double: 2
-float: 2
-idouble: 2
-ifloat: 2
-ildouble: 2
-ldouble: 2
-
-Function: Real part of "csqrt_upward":
 double: 3
-float: 2
+float: 3
 idouble: 3
-ifloat: 2
+ifloat: 3
 ildouble: 3
 ldouble: 3
 
+Function: Imaginary part of "csqrt_towardzero":
+double: 3
+float: 3
+idouble: 3
+ifloat: 3
+ildouble: 3
+ldouble: 3
+
+Function: Real part of "csqrt_upward":
+double: 4
+float: 4
+idouble: 4
+ifloat: 4
+ildouble: 4
+ldouble: 4
+
 Function: Imaginary part of "csqrt_upward":
-double: 2
-float: 2
-idouble: 2
-ifloat: 2
-ildouble: 2
-ldouble: 2
+double: 3
+float: 3
+idouble: 3
+ifloat: 3
+ildouble: 3
+ldouble: 3
 
 Function: Real part of "ctan":
 double: 1

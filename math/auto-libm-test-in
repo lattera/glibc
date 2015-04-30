@@ -940,6 +940,20 @@ csqrt -2 3
 # Principal square root should be returned (i.e., non-negative real part).
 csqrt 0 -1
 
+csqrt -0xe.6432ap-4 0xe.8175p-4
+csqrt -0x4.d01448p-4 -0x7.c1915p+0
+csqrt -0xd.e1d5fp-4 -0x1.054226p+4
+csqrt 0x5.39e238p+0 -0x4.576278p-4
+csqrt -0xe.735dbp+0 -0x5.26cb98p+40
+csqrt -0x7.915fafbe9f588p-4 -0x2.5e01bcp+0
+csqrt 0xe.229827fe17d08p-4 0xd.849ecp-4
+csqrt -0x4.d0144005d7af4p-4 -0x7.c19148p+0
+csqrt 0x8p-152 0x7.8p-148
+csqrt -0x4.82773b736291p-4 -0x1.bcb7cep+0
+csqrt 0xf.fffffp+124 0xe.7e0c2p+116
+csqrt -0x4.15ca1p+0 -0x8p-152
+csqrt 0xf.a24adp+28 0x8.0f148p+36
+
 csqrt 0x1.fffffep+127 0x1.fffffep+127
 csqrt 0x1.fffffep+127 1.0
 csqrt 0x1p-149 0x1p-149
