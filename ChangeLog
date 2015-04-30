@@ -1,5 +1,10 @@
 2015-04-30  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/auto-libm-test-in: Add more tests of cosh and sinh.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	* sysdeps/unix/sysv/linux/mips/mips32/waitid.c: Remove file.
 
 2015-04-29  Roland McGrath  <roland@hack.frob.com>

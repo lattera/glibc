@@ -879,6 +879,7 @@ cosh 0x1p-20
 cosh -1
 cosh 50
 cosh -0xb.60713p+0
+cosh -0x3.cee48p+0
 # GCC bug 59666: results on directed rounding may be incorrect.
 cosh max no-test-inline xfail-rounding:ldbl-128ibm
 cosh -max no-test-inline xfail-rounding:ldbl-128ibm
@@ -2202,6 +2203,10 @@ sinh -0x7.a8c5f68c81fae5dp-4
 sinh 0x3.4a037p-4
 sinh -0x3.eba6dbcbeceb2p-4
 sinh -0x2.55f63p+0
+sinh -0x3.ca68c96337692p-4
+sinh -0x3.92da05a85024b314p-4
+sinh -0x3.3e6292ed442d450cp-4
+sinh 0x7.6e259d2436fc4p-4
 
 sqrt 0
 sqrt -0
