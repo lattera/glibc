@@ -1,3 +1,7 @@
+2015-04-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips32/waitid.c: Remove file.
+
 2015-04-29  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/nacl/bits/typesizes.h (__CLOCK_T_TYPE): Use __SLONGWORD_TYPE.
