@@ -367,12 +367,37 @@ typedef struct
 					   required */
 #define SHF_GROUP	     (1 << 9)	/* Section is member of a group.  */
 #define SHF_TLS		     (1 << 10)	/* Section hold thread-local data.  */
+#define SHF_COMPRESSED	     (1 << 11)	/* Section with compressed data. */
 #define SHF_MASKOS	     0x0ff00000	/* OS-specific.  */
 #define SHF_MASKPROC	     0xf0000000	/* Processor-specific */
 #define SHF_ORDERED	     (1 << 30)	/* Special ordering requirement
 					   (Solaris).  */
 #define SHF_EXCLUDE	     (1U << 31)	/* Section is excluded unless
 					   referenced or allocated (Solaris).*/
+
+/* Section compression header.  Used when SHF_COMPRESSED is set.  */
+
+typedef struct
+{
+  Elf32_Word	ch_type;	/* Compression format.  */
+  Elf32_Word	ch_size;	/* Uncompressed data size.  */
+  Elf32_Word	ch_addralign;	/* Uncompressed data alignment.  */
+} Elf32_Chdr;
+
+typedef struct
+{
+  Elf64_Word	ch_type;	/* Compression format.  */
+  Elf64_Word	ch_reserved;
+  Elf64_Xword	ch_size;	/* Uncompressed data size.  */
+  Elf64_Xword	ch_addralign;	/* Uncompressed data alignment.  */
+} Elf64_Chdr;
+
+/* Legal values for ch_type (compression algorithm).  */
+#define ELFCOMPRESS_ZLIB	1	   /* ZLIB/DEFLATE algorithm.  */
+#define ELFCOMPRESS_LOOS	0x60000000 /* Start of OS-specific.  */
+#define ELFCOMPRESS_HIOS	0x6fffffff /* End of OS-specific.  */
+#define ELFCOMPRESS_LOPROC	0x70000000 /* Start of processor-specific.  */
+#define ELFCOMPRESS_HIPROC	0x7fffffff /* End of processor-specific.  */
 
 /* Section group handling.  */
 #define GRP_COMDAT	0x1		/* Mark group as COMDAT.  */

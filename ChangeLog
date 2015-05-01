@@ -1,3 +1,8 @@
+2015-05-01  Mark Wielaard  <mjw@redhat.com>
+
+	* elf/elf.h: Add SHF_COMPRESSED section flag, Elf32_Chdr and
+	Elf64_Chdr structs and ELFCOMPRESS constants.
+
 2015-05-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Add more tests of exp, exp10, exp2 and
