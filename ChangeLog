@@ -1,5 +1,9 @@
 2015-05-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/auto-libm-test-in: Add another test of pow.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
+
 	* math/auto-libm-test-in: Add more tests of lgamma.
 	* math/auto-libm-test-out: Regenerated.
 	* sysdeps/i386/fpu/libm-test-ulps: Update.

@@ -1816,8 +1816,8 @@ ildouble: 1
 ldouble: 1
 
 Function: "pow":
-float: 1
-ifloat: 1
+float: 3
+ifloat: 3
 ildouble: 1
 ldouble: 1
 
@@ -1853,25 +1853,25 @@ ldouble: 2
 
 Function: "pow_downward":
 double: 1
-float: 1
+float: 3
 idouble: 1
-ifloat: 1
+ifloat: 3
 ildouble: 4
 ldouble: 4
 
 Function: "pow_towardzero":
 double: 1
-float: 1
+float: 4
 idouble: 1
-ifloat: 1
+ifloat: 4
 ildouble: 1
 ldouble: 1
 
 Function: "pow_upward":
 double: 1
-float: 1
+float: 4
 idouble: 1
-ifloat: 1
+ifloat: 4
 ildouble: 2
 ldouble: 2
 
