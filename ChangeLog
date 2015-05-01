@@ -1,3 +1,7 @@
+2015-05-01  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* config.h.in (HAVE_AARCH64_BE): Add.
+
 2015-04-30  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Add more tests of csqrt.

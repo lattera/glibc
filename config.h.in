@@ -111,6 +111,9 @@
    include/libc-symbols.h that avoid PLT slots in the shared objects.  */
 #undef	NO_HIDDEN
 
+/* AArch64 big endian ABI */
+#undef HAVE_AARCH64_BE
+
 
 /* Defined to some form of __attribute__ ((...)) if the compiler supports
    a different, more efficient calling convention.  */
