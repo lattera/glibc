@@ -1759,6 +1759,14 @@ lgamma -0x1p-16445
 lgamma 0x1p-16494
 lgamma -0x1p-16494
 
+lgamma 0x8.8d2d5p+0
+lgamma 0x1.6a324ap+52
+lgamma 0x9.62f59p+0
+lgamma 0xa.d55d6b4d78e28p+0
+lgamma 0x8.d6315p+0
+lgamma 0xb.2e679p+0
+lgamma 0xb.01191p+0
+
 log 1
 log e
 log 1/e
