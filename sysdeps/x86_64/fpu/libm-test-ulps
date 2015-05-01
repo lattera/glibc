@@ -956,8 +956,8 @@ ldouble: 2
 Function: "cos_towardzero":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "cos_upward":
 double: 1
@@ -1910,8 +1910,8 @@ ldouble: 2
 Function: "sincos_towardzero":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "sincos_upward":
 double: 1

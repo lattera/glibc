@@ -865,6 +865,7 @@ cos min
 cos -min
 cos min_subnorm
 cos -min_subnorm
+cos -0x3.3de320f6be87ep+1020
 
 cosh 0
 cosh -0
@@ -2241,6 +2242,7 @@ sin 8
 sin 9
 sin 10
 sin 0x1.2001469775ce6p32
+sin -0x3.3de320f6be87ep+1020
 
 sincos 0
 sincos -0
@@ -2260,6 +2262,7 @@ sincos 0x1.fffff8p+127
 sincos 0x1.fffffep+127
 sincos 0x1p+50
 sincos 0x1p+28
+sincos -0x3.3de320f6be87ep+1020
 
 sinh 0
 sinh -0
