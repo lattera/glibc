@@ -2014,12 +2014,12 @@ ildouble: 4
 ldouble: 4
 
 Function: "tgamma":
-double: 4
-float: 3
-idouble: 4
-ifloat: 3
-ildouble: 4
-ldouble: 4
+double: 9
+float: 4
+idouble: 9
+ifloat: 4
+ildouble: 6
+ldouble: 6
 
 Function: "y0":
 double: 2

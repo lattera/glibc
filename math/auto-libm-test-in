@@ -2870,6 +2870,10 @@ tgamma 0x6.db8c603359a971081bc4a2e9dfd4p+8
 tgamma 1e3
 tgamma -100000.5
 
+tgamma -0x3.06644cp+0
+tgamma -0x6.fe4636e0c5064p+0
+tgamma -0x7.a13d7a2945cd5718p+0
+
 y0 0.125
 y0 0.75
 y0 1.0
