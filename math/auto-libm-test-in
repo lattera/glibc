@@ -1768,6 +1768,11 @@ log 0.75
 log min
 log min_subnorm
 
+log 0xb.0d5dfp-4
+log 0x1.6c3f6p+0
+log 0xa.ae688p-4
+log 0x1.017f8ap+44
+
 log10 1
 log10 0.1
 log10 10.0
@@ -1777,6 +1782,12 @@ log10 e
 log10 0.75
 log10 min
 log10 min_subnorm
+
+log10 0x9.ad6e3p-4
+log10 0x1.7163aep+0
+log10 0xa.9d0d4p-4
+log10 0x1.251ec6p+0
+log10 0x1.022e82p+0
 
 log1p 0
 log1p -0
@@ -1797,6 +1808,16 @@ log1p 0x1p100
 log1p 0x1p1000
 log1p max
 
+log1p 0x7.2a4368p-4
+log1p 0x6.d3a118p-4
+log1p 0x5.03f228p+0
+log1p 0x7.264963888ac9p-4
+log1p 0x8.786bdp-4
+log1p 0x7.89dc17790eeb4p-4
+log1p 0x9.81ccf8887c24a7bp-4
+log1p 0xa.5028608bd65f38dp-4
+log1p 0x5.bf78873e20a2d468p-4
+
 log2 1
 log2 e
 log2 2.0
@@ -1809,6 +1830,8 @@ log2 0x1.63d202d04392cp+0
 log2 0xf.d9ce0b1a50e08p-4
 log2 0x1.07465bdc7e41b52ep+0
 log2 0xf.4dfb4p-48
+log2 0x1.0a588ep+0
+log2 0xb.e77c6p-4
 log2 min
 log2 min_subnorm
 

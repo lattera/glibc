@@ -1710,58 +1710,60 @@ ildouble: 1
 ldouble: 1
 
 Function: "log10_downward":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 2
+ldouble: 2
 
 Function: "log10_towardzero":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 2
+ldouble: 2
 
 Function: "log10_upward":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
 ildouble: 1
 ldouble: 1
 
 Function: "log1p":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "log1p_downward":
-double: 1
+double: 2
 float: 1
-idouble: 1
+idouble: 2
 ifloat: 1
-ildouble: 2
-ldouble: 2
+ildouble: 3
+ldouble: 3
 
 Function: "log1p_towardzero":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 3
+ldouble: 3
 
 Function: "log1p_upward":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 3
+ldouble: 3
 
 Function: "log2":
 double: 1
@@ -1780,34 +1782,36 @@ ildouble: 1
 ldouble: 1
 
 Function: "log2_towardzero":
-double: 1
+double: 2
 float: 2
-idouble: 1
+idouble: 2
 ifloat: 2
 ildouble: 1
 ldouble: 1
 
 Function: "log2_upward":
 double: 3
-float: 2
+float: 3
 idouble: 3
-ifloat: 2
+ifloat: 3
 ildouble: 1
 ldouble: 1
 
 Function: "log_downward":
-float: 1
-ifloat: 1
-ildouble: 1
-ldouble: 1
+float: 2
+ifloat: 2
+ildouble: 2
+ldouble: 2
 
 Function: "log_towardzero":
-ildouble: 1
-ldouble: 1
+float: 2
+ifloat: 2
+ildouble: 2
+ldouble: 2
 
 Function: "log_upward":
-float: 1
-ifloat: 1
+float: 2
+ifloat: 2
 ildouble: 1
 ldouble: 1
 
