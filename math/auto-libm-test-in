@@ -2408,6 +2408,8 @@ tan 7
 tan 8
 tan 9
 tan 10
+tan -0x1.062a48p+0
+tan -0x1.4f69cp+0
 
 tanh 0
 tanh -0

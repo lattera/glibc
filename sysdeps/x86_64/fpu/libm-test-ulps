@@ -1952,6 +1952,8 @@ ildouble: 5
 ldouble: 5
 
 Function: "tan":
+float: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
@@ -1960,16 +1962,16 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "tan_towardzero":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "tan_upward":
 double: 1
