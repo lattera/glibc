@@ -2418,6 +2418,16 @@ tanh -0.75
 tanh 1.0
 tanh -1.0
 tanh 0x1p-57
+tanh 0xe.6c659p-4
+tanh 0x8.c259ep-4
+tanh 0x6.5821dp-4
+tanh 0x8.7c9e5p-4
+tanh -0x3.b60d7cp-4
+tanh 0x7.b9985p-4
+tanh 0x7.a18e8p-4
+tanh -0x2.6082fp-4
+tanh 0xe.05031p-16
+tanh 0x3.c80eaa7adaa3p-4
 
 tgamma 0.5
 tgamma -0.5

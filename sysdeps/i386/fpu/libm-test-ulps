@@ -1829,25 +1829,29 @@ ifloat: 1
 ildouble: 2
 ldouble: 2
 
+Function: "tanh":
+ildouble: 2
+ldouble: 2
+
 Function: "tanh_downward":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 3
-ldouble: 1
+ildouble: 4
+ldouble: 3
 
 Function: "tanh_towardzero":
 double: 1
 float: 1
-ildouble: 2
-ldouble: 1
+ildouble: 3
+ldouble: 3
 
 Function: "tanh_upward":
 double: 1
 float: 1
-ildouble: 2
-ldouble: 1
+ildouble: 5
+ldouble: 4
 
 Function: "tgamma":
 double: 4
