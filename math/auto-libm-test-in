@@ -1165,6 +1165,9 @@ exp -min
 exp min_subnorm
 exp -min_subnorm
 
+exp -0x1.760cd14774bd9p+0
+exp 0x1.4bed28p+0
+
 exp10 0
 exp10 -0
 exp10 3
@@ -1208,6 +1211,10 @@ exp10 -min
 exp10 min_subnorm
 exp10 -min_subnorm
 
+exp10 0xd.f73d6p-4
+exp10 0x1.cc6776p+0
+exp10 0x5.b00bcd891ffe56fp+0
+
 exp2 0
 exp2 -0
 exp2 10
@@ -1243,6 +1250,13 @@ exp2 min
 exp2 -min
 exp2 min_subnorm
 exp2 -min_subnorm
+
+exp2 0xb.71754p-4
+exp2 0xd.d77dp+0
+exp2 0xc.122c4p-4
+exp2 -0x1.567cc8p+0
+exp2 -0x1.bbbd76p+0
+exp2 -0x1.3045fep+8
 
 expm1 0
 expm1 -0
@@ -1297,6 +1311,7 @@ expm1 0xe.4152ac57cd1ea7ap-60
 expm1 0x6.660247486aed8p-4
 expm1 0x6.289a78p-4
 expm1 0x6.1b4d318238d4a2a8p-4
+expm1 0x5.fb8dc64e91a74p-4
 # Bug 16353: underflow exception may be missing
 expm1 0x4.0000000000000028p-16384 missing-underflow
 
