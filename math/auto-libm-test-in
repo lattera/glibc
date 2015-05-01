@@ -1087,6 +1087,10 @@ erf 108
 erf 1000
 erf max
 
+erf -0x1.ddaea4p+0
+erf -0x1.2b1f68p+0
+erf 0x1.44e722p+0
+
 erfc 0.0
 erfc -0
 erfc 0.125
@@ -1110,6 +1114,16 @@ erfc 107
 erfc 108
 erfc 1000
 erfc max
+
+erfc 0x1.8a0c64p+0
+erfc 0x1.8a0c62p+0
+erfc 0x1.64dafap+0
+erfc 0x6.88fb08p+0
+erfc 0xd.361d9p-4
+erfc 0x8.c66b44ca40038p+0
+erfc 0x2.586f1cp+0
+erfc 0xb.acb72p+0
+erfc 0xb.227499103357d84p+0
 
 exp 0
 exp -0

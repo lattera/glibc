@@ -1285,6 +1285,20 @@ ldouble: 3
 
 Function: "erf":
 double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "erf_downward":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+
+Function: "erf_towardzero":
+double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
@@ -1295,33 +1309,35 @@ ldouble: 1
 
 Function: "erfc":
 double: 1
+float: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
 
 Function: "erfc_downward":
 double: 1
 float: 2
 idouble: 1
 ifloat: 2
-ildouble: 3
-ldouble: 3
+ildouble: 4
+ldouble: 4
 
 Function: "erfc_towardzero":
 double: 1
 float: 2
 idouble: 1
 ifloat: 2
-ildouble: 2
-ldouble: 2
-
-Function: "erfc_upward":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
 ildouble: 3
 ldouble: 3
+
+Function: "erfc_upward":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 4
+ldouble: 4
 
 Function: "exp10":
 ildouble: 1
