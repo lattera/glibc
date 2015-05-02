@@ -771,9 +771,9 @@ ldouble: 2
 
 Function: Real part of "clog10_downward":
 double: 4
-float: 3
+float: 4
 idouble: 4
-ifloat: 3
+ifloat: 4
 ildouble: 7
 ldouble: 7
 
@@ -787,9 +787,9 @@ ldouble: 2
 
 Function: Real part of "clog10_towardzero":
 double: 4
-float: 3
+float: 4
 idouble: 4
-ifloat: 3
+ifloat: 4
 ildouble: 7
 ldouble: 7
 
@@ -798,8 +798,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 2
-ldouble: 2
+ildouble: 3
+ldouble: 3
 
 Function: Real part of "clog10_upward":
 double: 4
@@ -814,8 +814,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 2
-ldouble: 2
+ildouble: 3
+ldouble: 3
 
 Function: Real part of "clog_downward":
 double: 4
@@ -872,8 +872,8 @@ ldouble: 1
 Function: "cos_downward":
 double: 1
 idouble: 1
-ildouble: 2
-ldouble: 2
+ildouble: 3
+ldouble: 3
 
 Function: "cos_towardzero":
 double: 1
@@ -1328,8 +1328,8 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
-ildouble: 3
-ldouble: 3
+ildouble: 4
+ldouble: 4
 
 Function: "erfc_upward":
 double: 2
@@ -1766,8 +1766,8 @@ ldouble: 1
 Function: "sincos_downward":
 double: 1
 idouble: 1
-ildouble: 2
-ldouble: 2
+ildouble: 3
+ldouble: 3
 
 Function: "sincos_towardzero":
 double: 1
@@ -1838,8 +1838,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 4
-ldouble: 3
+ildouble: 5
+ldouble: 4
 
 Function: "tanh_towardzero":
 double: 1

@@ -245,6 +245,7 @@ atan -0x3.3fb708p-4
 atan -0x2.3249ap+0
 atan -0x1.363f46p+0
 atan -0x1.ad4c0ap+0
+atan -0x3.eb8e18p+0
 atan min
 atan -min
 atan min_subnorm
@@ -569,6 +570,10 @@ clog 0x6.9a4569067b6ecp-4 0xb.0a30d15e7d798p-4
 clog -0x1.105436p+0 -0x6.66396df3cc7ap-4
 clog -0x2.c90b952282392dep-4 0x1.43cda16634cc7046p+0
 
+clog -0x9.93d164127d9fp-4 0x7.c5c8d8p-4
+clog -0xa.5920ap-4 -0x6.2cda5p-4
+clog 0xd.d05c38ebb1b4p+60 -0x3.c22fdp+44
+
 clog 0x1.fffffep+127 0x1.fffffep+127
 clog 0x1.fffffep+127 1.0
 clog 0x1p-149 0x1p-149
@@ -707,6 +712,10 @@ clog10 0x1.7a858p+0 -0x6.d940dp-4
 clog10 -0x2.51320d99da5a2p-4 0x3.b8176p-4
 clog10 -0x1.25c2d3e172df8p+0 0
 clog10 0x1.0c684e35d0b2ap+0 -0x7.37df8a65c28fp-4
+
+clog10 -0x9.93d164127d9fp-4 0x7.c5c8d8p-4
+clog10 -0xa.5920ap-4 -0x6.2cda5p-4
+clog10 0xd.d05c38ebb1b4p+60 -0x3.c22fdp+44
 
 clog10 0x1.fffffep+127 0x1.fffffep+127
 clog10 0x1.fffffep+127 1.0
@@ -866,6 +875,7 @@ cos -min
 cos min_subnorm
 cos -min_subnorm
 cos -0x3.3de320f6be87ep+1020
+cos 0xe.9f1e5bc3bb88p+112
 
 cosh 0
 cosh -0
@@ -954,6 +964,8 @@ csqrt -0x4.82773b736291p-4 -0x1.bcb7cep+0
 csqrt 0xf.fffffp+124 0xe.7e0c2p+116
 csqrt -0x4.15ca1p+0 -0x8p-152
 csqrt 0xf.a24adp+28 0x8.0f148p+36
+csqrt 0x1.f9610ap+4 0x9.87716p+4
+csqrt 0x5.9cc21p-4 -0x1.fb1ec91b40dcdp+0
 
 csqrt 0x1.fffffep+127 0x1.fffffep+127
 csqrt 0x1.fffffep+127 1.0
@@ -1091,6 +1103,7 @@ erf max
 erf -0x1.ddaea4p+0
 erf -0x1.2b1f68p+0
 erf 0x1.44e722p+0
+erf -0x1.3a0d48p+0
 
 erfc 0.0
 erfc -0
@@ -1125,6 +1138,9 @@ erfc 0x8.c66b44ca40038p+0
 erfc 0x2.586f1cp+0
 erfc 0xb.acb72p+0
 erfc 0xb.227499103357d84p+0
+erfc 0xd.28abfp-4
+erfc 0x1.5289fep+0
+erfc 0x4.b48498p+0
 
 exp 0
 exp -0
@@ -1258,6 +1274,7 @@ exp2 0xc.122c4p-4
 exp2 -0x1.567cc8p+0
 exp2 -0x1.bbbd76p+0
 exp2 -0x1.3045fep+8
+exp2 0xa.87b8bp+0
 
 expm1 0
 expm1 -0
@@ -1767,6 +1784,7 @@ lgamma 0xa.d55d6b4d78e28p+0
 lgamma 0x8.d6315p+0
 lgamma 0xb.2e679p+0
 lgamma 0xb.01191p+0
+lgamma 0xb.26fdap+0
 
 log 1
 log e
@@ -1826,6 +1844,7 @@ log1p 0x7.89dc17790eeb4p-4
 log1p 0x9.81ccf8887c24a7bp-4
 log1p 0xa.5028608bd65f38dp-4
 log1p 0x5.bf78873e20a2d468p-4
+log1p 0x7.aa5198p-4
 
 log2 1
 log2 e
@@ -2243,6 +2262,7 @@ sin 9
 sin 10
 sin 0x1.2001469775ce6p32
 sin -0x3.3de320f6be87ep+1020
+sin 0xe.9f1e5bc3bb88p+112
 
 sincos 0
 sincos -0
@@ -2263,6 +2283,7 @@ sincos 0x1.fffffep+127
 sincos 0x1p+50
 sincos 0x1p+28
 sincos -0x3.3de320f6be87ep+1020
+sincos 0xe.9f1e5bc3bb88p+112
 
 sinh 0
 sinh -0
@@ -2428,6 +2449,7 @@ tanh 0x7.a18e8p-4
 tanh -0x2.6082fp-4
 tanh 0xe.05031p-16
 tanh 0x3.c80eaa7adaa3p-4
+tanh 0x2.00f9857616524p-4
 
 tgamma 0.5
 tgamma -0.5
@@ -2873,6 +2895,7 @@ tgamma -100000.5
 tgamma -0x3.06644cp+0
 tgamma -0x6.fe4636e0c5064p+0
 tgamma -0x7.a13d7a2945cd5718p+0
+tgamma -0x1.4a5caap+4
 
 y0 0.125
 y0 0.75
