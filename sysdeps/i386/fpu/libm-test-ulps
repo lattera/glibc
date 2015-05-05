@@ -157,7 +157,7 @@ Function: "atanh_upward":
 idouble: 1
 ifloat: 1
 ildouble: 5
-ldouble: 4
+ldouble: 5
 
 Function: "cabs":
 ildouble: 1
@@ -742,12 +742,12 @@ ildouble: 1
 ldouble: 1
 
 Function: Real part of "clog":
-double: 2
+double: 3
 float: 2
-idouble: 2
+idouble: 3
 ifloat: 2
-ildouble: 3
-ldouble: 3
+ildouble: 4
+ldouble: 4
 
 Function: Imaginary part of "clog":
 double: 1
@@ -770,12 +770,12 @@ ildouble: 2
 ldouble: 2
 
 Function: Real part of "clog10_downward":
-double: 4
+double: 5
 float: 4
-idouble: 4
+idouble: 5
 ifloat: 4
-ildouble: 7
-ldouble: 7
+ildouble: 8
+ldouble: 8
 
 Function: Imaginary part of "clog10_downward":
 double: 1
@@ -786,12 +786,12 @@ ildouble: 2
 ldouble: 2
 
 Function: Real part of "clog10_towardzero":
-double: 4
+double: 5
 float: 4
-idouble: 4
+idouble: 5
 ifloat: 4
-ildouble: 7
-ldouble: 7
+ildouble: 8
+ldouble: 8
 
 Function: Imaginary part of "clog10_towardzero":
 double: 1
@@ -802,10 +802,10 @@ ildouble: 3
 ldouble: 3
 
 Function: Real part of "clog10_upward":
-double: 4
-float: 4
-idouble: 4
-ifloat: 4
+double: 5
+float: 5
+idouble: 5
+ifloat: 5
 ildouble: 6
 ldouble: 6
 
@@ -818,12 +818,12 @@ ildouble: 3
 ldouble: 3
 
 Function: Real part of "clog_downward":
-double: 4
+double: 5
 float: 5
-idouble: 4
+idouble: 5
 ifloat: 5
-ildouble: 5
-ldouble: 5
+ildouble: 7
+ldouble: 7
 
 Function: Imaginary part of "clog_downward":
 double: 1
@@ -834,12 +834,12 @@ ildouble: 1
 ldouble: 1
 
 Function: Real part of "clog_towardzero":
-double: 4
+double: 5
 float: 5
-idouble: 4
+idouble: 5
 ifloat: 5
-ildouble: 5
-ldouble: 5
+ildouble: 8
+ldouble: 8
 
 Function: Imaginary part of "clog_towardzero":
 double: 1
@@ -1108,8 +1108,8 @@ ildouble: 2
 ldouble: 2
 
 Function: Imaginary part of "csqrt":
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: Real part of "csqrt_downward":
 double: 1
@@ -1128,8 +1128,8 @@ ldouble: 3
 Function: Real part of "csqrt_towardzero":
 double: 1
 idouble: 1
-ildouble: 3
-ldouble: 3
+ildouble: 4
+ldouble: 4
 
 Function: Imaginary part of "csqrt_towardzero":
 double: 1
@@ -1422,8 +1422,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 3
-ldouble: 3
+ildouble: 4
+ldouble: 4
 
 Function: "expm1_upward":
 double: 1
