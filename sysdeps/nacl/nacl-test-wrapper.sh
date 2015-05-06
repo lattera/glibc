@@ -79,7 +79,7 @@ sdk_tools="${NACL_SDK_ROOT}/tools"
 NACL_BOOTSTRAP="${sdk_tools}/nacl_helper_bootstrap_${arch}"
 NACL_SEL_LDR="${sdk_tools}/sel_ldr_${arch}"
 NACL_IRT="${sdk_tools}/irt_core_${arch}.nexe"
-NACL_LOADER="${sdk_tools}/loader_${arch}.nexe"
+NACL_LOADER="${sdk_tools}/elf_loader_${arch}.nexe"
 
 if [ ! -x "$NACL_BOOTSTRAP" -o ! -x "$NACL_SEL_LDR" ]; then
   echo >&2 "$0: sel_ldr_${arch} and/or nacl_helper_bootstrap_${arch} missing"

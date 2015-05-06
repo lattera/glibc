@@ -1,3 +1,8 @@
+2015-05-06  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/nacl/nacl-test-wrapper.sh (NACL_LOADER):
+	Use elf_loader_${arch}.nexe rather than loader_${arch}.nexe.
+
 2015-05-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Add more tests of acosh, atanh, cos,
