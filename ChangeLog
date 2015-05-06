@@ -1,3 +1,7 @@
+2015-05-06  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* sysdeps/aarch64/libm-test-ulps: Update.
+
 2015-05-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Add more tests of acosh, atanh, clog,
