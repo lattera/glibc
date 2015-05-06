@@ -1,3 +1,11 @@
+2015-05-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/auto-libm-test-in: Add more tests of acosh, atanh, cos,
+	csqrt, erfc, sin and sincos.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2015-05-06  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/aarch64/libm-test-ulps: Update.

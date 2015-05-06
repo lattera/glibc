@@ -115,6 +115,7 @@ acosh 0x1.80a368p+0
 acosh 0x1.0b9d3e9fc19fbp+0
 acosh 0x1.11eab6p+0
 acosh 0x1.0fffaap+0
+acosh 0x1.068e0eca105a6p+0
 acosh max no-test-inline
 
 asin 0
@@ -378,6 +379,8 @@ atanh 0x2.251b2a64c85dep-4
 atanh -0x2.e3458cp-4
 atanh 0x3.91d9f3c80c72d7acp-4
 atanh -0x2.6c52c26567198p-4
+atanh 0x3.a274ecp-4
+atanh -0x3.f0f519a687b64p-8
 # Bug 16352: underflow exception may be missing.
 atanh 0x1p-500 missing-underflow
 atanh 0x1p-5000 missing-underflow
@@ -888,6 +891,7 @@ cos min_subnorm
 cos -min_subnorm
 cos -0x3.3de320f6be87ep+1020
 cos 0xe.9f1e5bc3bb88p+112
+cos 0x4.7857dp+68
 
 cosh 0
 cosh -0
@@ -981,6 +985,7 @@ csqrt 0x5.9cc21p-4 -0x1.fb1ec91b40dcdp+0
 csqrt -0x7.31291c9fdae04p-160 -0x8p-152
 csqrt 0x1.d60caep+0 0x7.a7d468p+0
 csqrt -0xb.e2bc1cd6eaa7p-180 0x8p-152
+csqrt 0xd.25d559ac5baap-168 0x8p-152
 
 csqrt 0x1.fffffep+127 0x1.fffffep+127
 csqrt 0x1.fffffep+127 1.0
@@ -1157,6 +1162,7 @@ erfc 0xd.28abfp-4
 erfc 0x1.5289fep+0
 erfc 0x4.b48498p+0
 erfc 0x2.f8646cp+0
+erfc 0x1.514548p+0
 
 exp 0
 exp -0
@@ -2284,6 +2290,7 @@ sin 10
 sin 0x1.2001469775ce6p32
 sin -0x3.3de320f6be87ep+1020
 sin 0xe.9f1e5bc3bb88p+112
+sin 0x4.7857dp+68
 
 sincos 0
 sincos -0
@@ -2305,6 +2312,7 @@ sincos 0x1p+50
 sincos 0x1p+28
 sincos -0x3.3de320f6be87ep+1020
 sincos 0xe.9f1e5bc3bb88p+112
+sincos 0x4.7857dp+68
 
 sinh 0
 sinh -0

@@ -18,19 +18,19 @@ ildouble: 2
 ldouble: 2
 
 Function: "acosh":
-ildouble: 2
+ildouble: 4
 ldouble: 2
 
 Function: "acosh_downward":
-ildouble: 4
+ildouble: 6
 ldouble: 4
 
 Function: "acosh_towardzero":
-ildouble: 4
+ildouble: 6
 ldouble: 4
 
 Function: "acosh_upward":
-ildouble: 3
+ildouble: 4
 ldouble: 3
 
 Function: "asin":
@@ -1756,8 +1756,8 @@ ldouble: 1
 Function: "sin_upward":
 double: 1
 idouble: 1
-ildouble: 2
-ldouble: 2
+ildouble: 3
+ldouble: 3
 
 Function: "sincos":
 ildouble: 1
@@ -1778,8 +1778,8 @@ ldouble: 2
 Function: "sincos_upward":
 double: 1
 idouble: 1
-ildouble: 2
-ldouble: 2
+ildouble: 3
+ldouble: 3
 
 Function: "sinh":
 ildouble: 2

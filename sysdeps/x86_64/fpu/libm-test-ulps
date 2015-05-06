@@ -33,9 +33,9 @@ ldouble: 2
 
 Function: "acosh":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 2
 ldouble: 2
 
@@ -56,9 +56,9 @@ ildouble: 4
 ldouble: 4
 
 Function: "acosh_upward":
-double: 1
+double: 2
 float: 1
-idouble: 1
+idouble: 2
 ifloat: 1
 ildouble: 3
 ldouble: 3
@@ -187,16 +187,16 @@ ldouble: 1
 
 Function: "atanh":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 3
 ldouble: 3
 
 Function: "atanh_downward":
-double: 2
+double: 3
 float: 2
-idouble: 2
+idouble: 3
 ifloat: 2
 ildouble: 5
 ldouble: 5
@@ -1200,9 +1200,9 @@ ildouble: 4
 ldouble: 4
 
 Function: Imaginary part of "csqrt_downward":
-double: 3
+double: 4
 float: 3
-idouble: 3
+idouble: 4
 ifloat: 3
 ildouble: 3
 ldouble: 3
@@ -1216,9 +1216,9 @@ ildouble: 4
 ldouble: 4
 
 Function: Imaginary part of "csqrt_towardzero":
-double: 3
+double: 4
 float: 3
-idouble: 3
+idouble: 4
 ifloat: 3
 ildouble: 3
 ldouble: 3
@@ -1425,9 +1425,9 @@ ldouble: 4
 
 Function: "erfc_upward":
 double: 4
-float: 5
+float: 6
 idouble: 4
-ifloat: 5
+ifloat: 6
 ildouble: 4
 ldouble: 4
 
@@ -1906,8 +1906,8 @@ ldouble: 1
 Function: "sin_upward":
 double: 1
 idouble: 1
-ildouble: 2
-ldouble: 2
+ildouble: 3
+ldouble: 3
 
 Function: "sincos":
 ildouble: 1
@@ -1928,8 +1928,8 @@ ldouble: 2
 Function: "sincos_upward":
 double: 1
 idouble: 1
-ildouble: 2
-ldouble: 2
+ildouble: 3
+ldouble: 3
 
 Function: "sinh":
 double: 1
