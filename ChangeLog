@@ -1,5 +1,15 @@
 2015-05-06  Roland McGrath  <roland@hack.frob.com>
 
+	[BZ #18383]
+	* elf/tst-tlsalign.c: New file.
+	* elf/tst-tlsalign-static.c: New file.
+	* elf/tst-tlsalign-lib.c: New file.
+	* elf/Makefile [$(build-shared) = yes] (tests): Add tst-tlsalign.
+	(tests-static): Add tst-tlsalign-static.
+	(modules-names): Add tst-tlsalign-lib.
+	(test-xfail-tst-tlsalign): New variable.
+	(test-xfail-tst-tlsalign-static): New variable.
+
 	* sysdeps/nacl/nacl-test-wrapper.sh (NACL_LOADER):
 	Use elf_loader_${arch}.nexe rather than loader_${arch}.nexe.
 

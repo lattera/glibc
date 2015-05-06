@@ -121,7 +121,7 @@ tests = tst-tls1 tst-tls2 tst-tls9 tst-leaks1 \
 	tst-auxv
 tests-static = tst-tls1-static tst-tls2-static tst-stackguard1-static \
 	       tst-leaks1-static tst-array1-static tst-array5-static \
-	       tst-ptrguard1-static tst-dl-iter-static
+	       tst-ptrguard1-static tst-dl-iter-static tst-tlsalign-static
 ifeq (yes,$(build-shared))
 tests-static += tst-tls9-static
 tst-tls9-static-ENV = \
@@ -146,7 +146,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-stackguard1 tst-addr1 tst-thrlock \
 	 tst-unique1 tst-unique2 $(if $(CXX),tst-unique3 tst-unique4) \
 	 tst-initorder tst-initorder2 tst-relsort1 tst-null-argv \
-	 tst-ptrguard1
+	 tst-ptrguard1 tst-tlsalign
 #	 reldep9
 ifeq ($(build-hardcoded-path-in-tests),yes)
 tests += tst-dlopen-aout
@@ -212,7 +212,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-initorder2a tst-initorder2b tst-initorder2c \
 		tst-initorder2d \
 		tst-relsort1mod1 tst-relsort1mod2 tst-array2dep \
-		tst-array5dep tst-null-argv-lib
+		tst-array5dep tst-null-argv-lib \
+		tst-tlsalign-lib
 ifeq (yes,$(have-protected-data))
 modules-names += tst-protected1moda tst-protected1modb
 tests += tst-protected1a tst-protected1b
@@ -525,6 +526,11 @@ $(objpfx)tst-initordera3.so: $(objpfx)tst-initorderb2.so $(objpfx)tst-initorderb
 $(objpfx)tst-initordera4.so: $(objpfx)tst-initordera3.so
 $(objpfx)tst-initorder: $(objpfx)tst-initordera4.so $(objpfx)tst-initordera1.so $(objpfx)tst-initorderb2.so
 $(objpfx)tst-null-argv: $(objpfx)tst-null-argv-lib.so
+$(objpfx)tst-tlsalign: $(objpfx)tst-tlsalign-lib.so
+
+# BZ#18383: broken on at least ARM (both) and x86-64 (static only).
+test-xfail-tst-tlsalign = yes
+test-xfail-tst-tlsalign-static = yes
 
 tst-null-argv-ENV = LD_DEBUG=all LD_DEBUG_OUTPUT=$(objpfx)tst-null-argv.debug.out
 LDFLAGS-nodel2mod3.so = $(no-as-needed)
