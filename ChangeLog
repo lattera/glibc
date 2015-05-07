@@ -1,3 +1,12 @@
+2015-06-24  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18383]
+	* csu/libc-tls.c (__libc_setup_tls) [TLS_TCB_AT_TP]: Align
+	TCB_OFFSET to MAX_ALIGN, not just TCBALIGN.  Add comment.
+	* elf/Makefile (test-xfail-tst-tlsalign{,-static}): Remove
+	comment for i386/x86-64.
+	(test-xfail-tst-tlsalign-extern-static): Removed.
+
 2015-06-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/test-double.h: New file.
