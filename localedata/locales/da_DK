@@ -149,7 +149,7 @@ END LC_CTYPE
 
 LC_MONETARY
 int_curr_symbol         "<U0044><U004B><U004B><U0020>"
-currency_symbol         "<U006B><U0072>"
+currency_symbol         "<U006B><U0072><U002E>"
 mon_decimal_point       "<U002C>"
 mon_thousands_sep       "<U002E>"
 mon_grouping            3;3

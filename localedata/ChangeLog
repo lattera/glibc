@@ -1,3 +1,8 @@
+2015-05-07  Christian Schmidt  <glibc@chsc.dk>
+
+	[BZ #17692]
+	* locales/da_DK: Update currency_symbol.
+
 2015-04-10  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* tests-mbwc/dat_mbrlen.c (tst_mbrlen_loc): Change expected
