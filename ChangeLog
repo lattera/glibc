@@ -1,3 +1,7 @@
+2015-05-08  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/nacl/gethostname.c: New file.
+
 2015-05-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Add more tests of csqrt, lgamma, log10
