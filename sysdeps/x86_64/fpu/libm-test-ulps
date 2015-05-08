@@ -1228,8 +1228,8 @@ double: 5
 float: 4
 idouble: 5
 ifloat: 4
-ildouble: 4
-ldouble: 4
+ildouble: 5
+ldouble: 5
 
 Function: Imaginary part of "csqrt_upward":
 double: 3
@@ -1560,16 +1560,16 @@ double: 4
 float: 3
 idouble: 4
 ifloat: 3
-ildouble: 5
-ldouble: 5
+ildouble: 6
+ldouble: 6
 
 Function: "gamma_towardzero":
 double: 4
 float: 3
 idouble: 4
 ifloat: 3
-ildouble: 5
-ldouble: 5
+ildouble: 6
+ldouble: 6
 
 Function: "gamma_upward":
 double: 4
@@ -1688,16 +1688,16 @@ double: 4
 float: 3
 idouble: 4
 ifloat: 3
-ildouble: 5
-ldouble: 5
+ildouble: 6
+ldouble: 6
 
 Function: "lgamma_towardzero":
 double: 4
 float: 3
 idouble: 4
 ifloat: 3
-ildouble: 5
-ldouble: 5
+ildouble: 6
+ldouble: 6
 
 Function: "lgamma_upward":
 double: 4
@@ -1723,9 +1723,9 @@ ldouble: 1
 
 Function: "log10_downward":
 double: 2
-float: 2
+float: 3
 idouble: 2
-ifloat: 2
+ifloat: 3
 ildouble: 2
 ldouble: 2
 
@@ -1932,9 +1932,9 @@ ildouble: 3
 ldouble: 3
 
 Function: "sinh":
-double: 1
+double: 2
 float: 2
-idouble: 1
+idouble: 2
 ifloat: 2
 ildouble: 2
 ldouble: 2

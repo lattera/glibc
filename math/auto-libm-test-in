@@ -986,6 +986,7 @@ csqrt -0x7.31291c9fdae04p-160 -0x8p-152
 csqrt 0x1.d60caep+0 0x7.a7d468p+0
 csqrt -0xb.e2bc1cd6eaa7p-180 0x8p-152
 csqrt 0xd.25d559ac5baap-168 0x8p-152
+csqrt -0x9.0a61a7b482d28p-168 -0x8p-152
 
 csqrt 0x1.fffffep+127 0x1.fffffep+127
 csqrt 0x1.fffffep+127 1.0
@@ -1810,6 +1811,7 @@ lgamma 0x8.d6315p+0
 lgamma 0xb.2e679p+0
 lgamma 0xb.01191p+0
 lgamma 0xb.26fdap+0
+lgamma 0xb.4ad0ap+0
 
 log 1
 log e
@@ -1841,6 +1843,7 @@ log10 0xa.9d0d4p-4
 log10 0x1.251ec6p+0
 log10 0x1.022e82p+0
 log10 0x9.b3727e3feb538p-4
+log10 0xf.bf1b2p-4
 
 log1p 0
 log1p -0
@@ -2337,6 +2340,7 @@ sinh -0x3.3e6292ed442d450cp-4
 sinh 0x7.6e259d2436fc4p-4
 sinh 0x3.d6e088p-4
 sinh -0x7.688eap-4
+sinh -0xd.dce79p-4
 
 sqrt 0
 sqrt -0
