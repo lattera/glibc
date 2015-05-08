@@ -91,7 +91,7 @@ ENTRY(__startcontext)
 	bne     PLTJMP(__setcontext)
 
 	@ New context was 0 - exit
-	b       PLTJMP(HIDDEN_JUMPTARGET(_exit))
+	b       PLTJMP(HIDDEN_JUMPTARGET(exit))
 END(__startcontext)
 
 #ifdef PIC

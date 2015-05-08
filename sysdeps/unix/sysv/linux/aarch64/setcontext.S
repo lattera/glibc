@@ -125,5 +125,5 @@ weak_alias (__setcontext, setcontext)
 ENTRY (__startcontext)
 	mov	x0, x19
 	cbnz	x0, __setcontext
-1:	b       HIDDEN_JUMPTARGET (_exit)
+1:	b       HIDDEN_JUMPTARGET (exit)
 END (__startcontext)

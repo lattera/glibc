@@ -1,3 +1,16 @@
+2015-05-08  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #18125]
+	* stdlib/tst-setcontext3.c: New file.
+	* stdlib/tst-setcontext3.sh: New file.
+	* stdlib/Makefile (tests): Add tst-setcontext3.
+	(tst-setcontext3.out): Custom rule to run tst-setcontext3.sh
+	to verify test program created output file.
+	* sysdeps/unix/sysv/linux/aarch64/setcontext.S: Call exit.
+	* sysdeps/unix/sysv/linux/arm/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/setcontext.S: Likewise.
+
 2015-05-06  Roland McGrath  <roland@hack.frob.com>
 
 	[BZ #18383]

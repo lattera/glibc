@@ -73,7 +73,8 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   tst-qsort2 tst-makecontext2 tst-strtod6 tst-unsetenv1    \
 		   tst-makecontext3 bug-getcontext bug-fmtmsg1		    \
 		   tst-secure-getenv tst-strtod-overflow tst-strtod-round   \
-		   tst-tininess tst-strtod-underflow tst-tls-atexit
+		   tst-tininess tst-strtod-underflow tst-tls-atexit	    \
+		   tst-setcontext3
 tests-static	:= tst-secure-getenv
 
 modules-names	= tst-tls-atexit-lib
@@ -157,3 +158,9 @@ tst-tls-atexit-lib.so-no-z-defs = yes
 
 $(objpfx)tst-tls-atexit: $(shared-thread-library) $(libdl)
 $(objpfx)tst-tls-atexit.out: $(objpfx)tst-tls-atexit-lib.so
+
+$(objpfx)tst-setcontext3.out: tst-setcontext3.sh $(objpfx)tst-setcontext3
+	$(SHELL) $< $(common-objpfx) '$(test-program-prefix-before-env)' \
+		 '$(run-program-env)' '$(test-program-prefix-after-env)' \
+		 $(common-objpfx)stdlib/; \
+	$(evaluate-test)

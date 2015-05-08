@@ -89,15 +89,15 @@ ENTRY(__startcontext)
 	mov	r4, r16
 	bne	r4, zero, __setcontext
 
-	/* If uc_link == zero, call _exit.  */
+	/* If uc_link == zero, call exit.  */
 #ifdef PIC
 	nextpc	r22
 1:	movhi	r8, %hiadj(_gp_got - 1b)
 	addi	r8, r8, %lo(_gp_got - 1b)
 	add	r22, r22, r8
-	ldw	r8, %call(HIDDEN_JUMPTARGET(_exit))(r22)
+	ldw	r8, %call(HIDDEN_JUMPTARGET(exit))(r22)
 	jmp	r8
 #else
-	jmpi	_exit
+	jmpi	exit
 #endif
 END(__startcontext)
