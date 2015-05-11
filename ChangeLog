@@ -1,3 +1,11 @@
+2015-05-11  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18397]
+	* sysdeps/mips/mips32/fpu/fpu_control.c: Move to ....
+	* sysdeps/mips/mips32/fpu/fpucw-helpers.c: ... here.  Include
+	<fpu_control.h> instead of <math/fpu_control.c>.
+	* sysdeps/mips/mips32/fpu/Makefile: New file.
+
 2015-05-11  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #18007]

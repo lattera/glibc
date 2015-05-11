@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math/fpu_control.c>
+#include <fpu_control.h>
 
 fpu_control_t
 __mips_fpu_getcw (void)
