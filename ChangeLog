@@ -1,3 +1,14 @@
+2015-05-12  Leonhard Holz <leonhard.holz@web.de>
+
+	* locale/categories.def: Define _NL_COLLATE_ENCODING_TYPE.
+	* locale/langinfo.h: Add _NL_COLLATE_ENCODING_TYPE to attribute list.
+	* locale/localeinfo.h: Add enum collation_encoding_type.
+	* locale/C-collate.c: Set _NL_COLLATE_ENCODING_TYPE to 8bit.
+	* programs/ld-collate.c (collate_output): Add encoding type info.
+	* string/strcoll_l.c (STRDIFF): New function.
+	* (STRCOLL): Use STRDIFF to skip over equal prefix.
+	* wcsmbs/wcscoll_l.c: Define STRDIFF.
+
 2015-05-11  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18397]

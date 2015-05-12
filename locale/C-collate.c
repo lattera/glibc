@@ -144,6 +144,8 @@ const struct __locale_data _nl_C_LC_COLLATE attribute_hidden =
     /* _NL_COLLATE_COLLSEQWC */
     { .string = (const char *) collseqwc },
     /* _NL_COLLATE_CODESET */
-    { .string = _nl_C_codeset }
+    { .string = _nl_C_codeset },
+    /* _NL_COLLATE_ENCODING_TYPE */
+    { .word = __cet_8bit }
   }
 };

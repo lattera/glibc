@@ -255,6 +255,7 @@ enum
   _NL_COLLATE_COLLSEQMB,
   _NL_COLLATE_COLLSEQWC,
   _NL_COLLATE_CODESET,
+  _NL_COLLATE_ENCODING_TYPE,
   _NL_NUM_LC_COLLATE,
 
   /* LC_CTYPE category: character classification.

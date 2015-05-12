@@ -110,6 +110,14 @@ enum coll_sort_rule
   sort_mask
 };
 
+/* Collation encoding type.  */
+enum collation_encoding_type
+{
+  __cet_other,
+  __cet_8bit,
+  __cet_utf8
+};
+
 /* We can map the types of the entries into a few categories.  */
 enum value_type
 {
