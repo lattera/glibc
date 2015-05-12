@@ -107,11 +107,7 @@ LOCALES := de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ANSI_X3.4-1968 \
 	   nb_NO.ISO-8859-1 nn_NO.ISO-8859-1 tr_TR.UTF-8 cs_CZ.UTF-8 \
 	   zh_TW.EUC-TW fa_IR.UTF-8 fr_FR.UTF-8 ja_JP.UTF-8 si_LK.UTF-8 \
 	   tr_TR.ISO-8859-9 en_GB.UTF-8
-LOCALE_SRCS := $(shell echo "$(LOCALES)"|sed 's/\([^ .]*\)[^ ]*/\1/g')
-CHARMAPS := $(shell echo "$(LOCALES)" | \
-		    sed -e 's/[^ .]*[.]\([^ ]*\)/\1/g' -e s/SJIS/SHIFT_JIS/g)
-CTYPE_FILES = $(addsuffix /LC_CTYPE,$(LOCALES))
-tests-special += $(addprefix $(objpfx),$(CTYPE_FILES))
+include ../gen-locales.mk
 endif
 
 include ../Rules
@@ -129,16 +125,6 @@ $(inst_i18ndir)/locales/%: locales/% $(+force); $(do-install)
 
 ifeq ($(run-built-tests),yes)
 generated-dirs += $(LOCALES)
-
-# Dependency for the locale files.  We actually make it depend only on
-# one of the files.
-$(addprefix $(objpfx),$(CTYPE_FILES)): %: \
-  gen-locale.sh $(common-objpfx)locale/localedef Makefile \
-  $(addprefix charmaps/,$(CHARMAPS)) $(addprefix locales/,$(LOCALE_SRCS))
-	@$(SHELL) gen-locale.sh $(common-objpfx) \
-		  '$(built-program-cmd-before-env)' '$(run-program-env)' \
-		  '$(built-program-cmd-after-env)' $@; \
-	$(evaluate-test)
 
 $(addsuffix .out,$(addprefix $(objpfx),$(tests))): %: \
   $(addprefix $(objpfx),$(CTYPE_FILES))

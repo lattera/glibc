@@ -30,7 +30,7 @@ generate_locale ()
   charmap=$1
   input=$2
   out=$3
-  if ${localedef_before_env} ${run_program_env} I18NPATH=. \
+  if ${localedef_before_env} ${run_program_env} I18NPATH=../localedata \
      ${localedef_after_env} --quiet -c -f $charmap -i $input \
 			    ${common_objpfx}localedata/$out
   then

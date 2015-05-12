@@ -1,3 +1,11 @@
+2015-05-12  Leonhard Holz  <leonhard.holz@web.de>
+
+	* gen-locales.mk: New Makefile snippet to generate locales.
+	* localedata/Makefile: Use gen-locales.mk for locale
+	generation.
+	* localedata/gen-locale.sh (generate_locale): Make path to
+	charmaps independent of current working directory.
+
 2015-05-07  Christian Schmidt  <glibc@chsc.dk>
 
 	[BZ #17692]
