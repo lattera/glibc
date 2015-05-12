@@ -1,3 +1,32 @@
+2015-05-13  Leonhard Holz  <leonhard.holz@web.de>
+
+	* benchtests/bench-strcoll.c: New benchmark.
+	* benchtests/Makefile: Generate locales and run benchmark.
+	* benchtests/strcoll-inputs/filelist#C: New benchmark input file.
+	* benchtests/strcoll-inputs/filelist#en_US.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#ar_SA.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#cs_CZ.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#da_DK.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#el_GR.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#en_GB.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#en_US.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#es_ES.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#fr_FR.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#hi_IN.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#hu_HU.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#is_IS.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#it_IT.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#iw_IL.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#ja_JP.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#pl_PL.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#pt_PT.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#ru_RU.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#sr_RS.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#sv_SE.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#tr_TR.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#vi_VN.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#zh_CN.UTF-8: Likewise.
+
 2015-05-12  Ondřej Bílka  <neleai@seznam.cz>
 
 	* sysdeps/x86_64/multiarch/strcspn.S: Remove plt indirection.
