@@ -1,3 +1,8 @@
+2015-06-09 Marko Myllynen  <myllynen@redhat.com>
+
+	* locale/C-ctype.c (PREDEFINED_CLASSES): Remove.
+	* locale/programs/ld-ctype.c: Likewise.
+
 2015-06-08  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	* sysdeps/x86_64/multiarch/init-arch.h (bit_AVX512F_Usable,

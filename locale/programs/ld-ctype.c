@@ -43,15 +43,6 @@
 #include <assert.h>
 
 
-#ifdef PREDEFINED_CLASSES
-/* These are the extra bits not in wctype.h since these are not preallocated
-   classes.  */
-# define _ISwspecial1	(1 << 29)
-# define _ISwspecial2	(1 << 30)
-# define _ISwspecial3	(1 << 31)
-#endif
-
-
 /* The bit used for representing a special class.  */
 #define BITPOS(class) ((class) - tok_upper)
 #define BIT(class) (_ISbit (BITPOS (class)))
@@ -337,26 +328,6 @@ ctype_startup (struct linereader *lr, struct localedef_t *locale,
 	  ctype_class_new (lr, ctype, "cntrl");
 	  ctype_class_new (lr, ctype, "punct");
 	  ctype_class_new (lr, ctype, "alnum");
-#ifdef PREDEFINED_CLASSES
-	  /* The following are extensions from ISO 14652.  */
-	  ctype_class_new (lr, ctype, "left_to_right");
-	  ctype_class_new (lr, ctype, "right_to_left");
-	  ctype_class_new (lr, ctype, "num_terminator");
-	  ctype_class_new (lr, ctype, "num_separator");
-	  ctype_class_new (lr, ctype, "segment_separator");
-	  ctype_class_new (lr, ctype, "block_separator");
-	  ctype_class_new (lr, ctype, "direction_control");
-	  ctype_class_new (lr, ctype, "sym_swap_layout");
-	  ctype_class_new (lr, ctype, "char_shape_selector");
-	  ctype_class_new (lr, ctype, "num_shape_selector");
-	  ctype_class_new (lr, ctype, "non_spacing");
-	  ctype_class_new (lr, ctype, "non_spacing_level3");
-	  ctype_class_new (lr, ctype, "normal_connect");
-	  ctype_class_new (lr, ctype, "r_connect");
-	  ctype_class_new (lr, ctype, "no_connect");
-	  ctype_class_new (lr, ctype, "no_connect-space");
-	  ctype_class_new (lr, ctype, "vowel_connect");
-#endif
 
 	  ctype->class_collection_max = charmap->mb_cur_max == 1 ? 256 : 512;
 	  ctype->class_collection
@@ -368,18 +339,13 @@ ctype_startup (struct linereader *lr, struct localedef_t *locale,
 	  ctype->last_map_idx = MAX_NR_CHARMAP;
 	  ctype_map_new (lr, ctype, "toupper", charmap);
 	  ctype_map_new (lr, ctype, "tolower", charmap);
-#ifdef PREDEFINED_CLASSES
-	  ctype_map_new (lr, ctype, "tosymmetric", charmap);
-#endif
 
 	  /* Fill first 256 entries in `toXXX' arrays.  */
 	  for (cnt = 0; cnt < 256; ++cnt)
 	    {
 	      ctype->map_collection[0][cnt] = cnt;
 	      ctype->map_collection[1][cnt] = cnt;
-#ifdef PREDEFINED_CLASSES
-	      ctype->map_collection[2][cnt] = cnt;
-#endif
+
 	      ctype->map256_collection[0][cnt] = cnt;
 	      ctype->map256_collection[1][cnt] = cnt;
 	    }
@@ -2269,24 +2235,10 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
 		  break;
 	      if (cnt >= ctype->nr_charclass)
 		{
-#ifdef PREDEFINED_CLASSES
-		  if (now->val.str.lenmb == 8
-		      && memcmp ("special1", now->val.str.startmb, 8) == 0)
-		    class_bit = _ISwspecial1;
-		  else if (now->val.str.lenmb == 8
-		      && memcmp ("special2", now->val.str.startmb, 8) == 0)
-		    class_bit = _ISwspecial2;
-		  else if (now->val.str.lenmb == 8
-		      && memcmp ("special3", now->val.str.startmb, 8) == 0)
-		    class_bit = _ISwspecial3;
-		  else
-#endif
-		    {
-		      /* OK, it's a new class.  */
-		      ctype_class_new (ldfile, ctype, now->val.str.startmb);
+		  /* OK, it's a new class.  */
+		  ctype_class_new (ldfile, ctype, now->val.str.startmb);
 
-		      class_bit = _ISwbit (ctype->nr_charclass - 1);
-		    }
+		  class_bit = _ISwbit (ctype->nr_charclass - 1);
 		}
 	      else
 		{
@@ -2874,31 +2826,6 @@ previous definition was here")));
 	      free (now->val.str.startmb);
 	      goto read_mapping;
             }
-#ifdef PREDEFINED_CLASSES
-	  if (strcmp (now->val.str.startmb, "special1") == 0)
-	    {
-	      class_bit = _ISwspecial1;
-	      free (now->val.str.startmb);
-	      goto read_charclass;
-	    }
-	  if (strcmp (now->val.str.startmb, "special2") == 0)
-	    {
-	      class_bit = _ISwspecial2;
-	      free (now->val.str.startmb);
-	      goto read_charclass;
-	    }
-	  if (strcmp (now->val.str.startmb, "special3") == 0)
-	    {
-	      class_bit = _ISwspecial3;
-	      free (now->val.str.startmb);
-	      goto read_charclass;
-	    }
-	  if (strcmp (now->val.str.startmb, "tosymmetric") == 0)
-	    {
-	      mapidx = 2;
-	      goto read_mapping;
-	    }
-#endif
 	  break;
 
 	case tok_end:

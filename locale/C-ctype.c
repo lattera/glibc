@@ -569,22 +569,9 @@ const struct __locale_data _nl_C_LC_CTYPE attribute_hidden =
     { .string = NULL },
     /* _NL_CTYPE_CLASS_NAMES */
     { .string = "upper\0" "lower\0" "alpha\0" "digit\0" "xdigit\0" "space\0"
-	      "print\0" "graph\0" "blank\0" "cntrl\0" "punct\0"  "alnum\0"
-#ifdef PREDEFINED_CLASSES
-	      "left_to_right\0" "right_to_left\0" "num_terminator\0"
-	      "num_separator\0" "segment_separator\0" "block_separator\0"
-	      "direction_control\0" "sym_swap_layout\0" "char_shape_selector\0"
-	      "num_shape_selector\0" "non_spacing\0" "non_spacing_level3\0"
-	      "r_connect\0" "no_connect\0" "no_connect-space\0"
-	      "vowel_connect\0"
-#endif
-    },
+		"print\0" "graph\0" "blank\0" "cntrl\0" "punct\0"  "alnum\0" },
     /* _NL_CTYPE_MAP_NAMES */
-    { .string = "toupper\0" "tolower\0"
-#ifdef PREDEFINED_CLASSES
-      "tosymmetric\0"
-#endif
-    },
+    { .string = "toupper\0" "tolower\0" },
     /* _NL_CTYPE_WIDTH */
     { .string = (const char *) _nl_C_LC_CTYPE_width.header },
     /* _NL_CTYPE_MB_CUR_MAX */
