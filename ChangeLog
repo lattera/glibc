@@ -1,3 +1,10 @@
+2015-05-12  Roland McGrath  <roland@hack.frob.com>
+
+	* posix/uname-values.h: New file.
+	* posix/uname.c: Include that instead of <config-name.h>.
+	* sysdeps/nacl/uname-values.h: New file.
+	* sysdeps/arm/nacl/uname-values.h: New file.
+
 2015-05-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/linknamespace.pl (list_syms): Remove \[.*?\] before
