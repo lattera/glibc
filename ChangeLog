@@ -1,3 +1,8 @@
+2015-05-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/linknamespace.pl (list_syms): Remove \[.*?\] before
+	splitting into fields.
+
 2015-05-12  Leonhard Holz <leonhard.holz@web.de>
 
 	* locale/categories.def: Define _NL_COLLATE_ENCODING_TYPE.

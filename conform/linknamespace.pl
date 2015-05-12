@@ -68,6 +68,9 @@ sub list_syms {
       next;
     }
     s/^\s*//;
+    # Architecture-specific st_other bits appear inside [] and disrupt
+    # the format of readelf output.
+    s/\[.*?\]//;
     my (@fields) = split (/\s+/, $_);
     if (@fields < 8) {
       next;
