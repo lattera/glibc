@@ -6,23 +6,10 @@
 % author: Pablo Saratxaga, and Roozbeh Pournader
 % email: pablo@mandrakesoft.com, roozbeh@sina.sharif.ac.ir
 
-% I think the mnemonic for upper space (0xA0) should be different from
-% lower space (0x20). Because the semantics are different, although they
-% are mapped to a single Unicode character. This is specially important
-% when specifying LC_CTYPE. Because we need to distinguish the characters.
-% Also, their BIDI behaviour is different of course. This is true also
-% of other characters like punctuations, etc.
 % Please note that the Unicode equivalents of the Persian part (0x80..0xFF)
 % are for compatiblity purposes only. I have also changed the fourth
 % column consisting of names to reflect the difference. The names are
 % invented on the pattern of Unicode character names. --RP
-%
-% NOTE: Some entries were missing in the mnemonics.ds file; We invented our
-% own. Those are: <zwnj>, <zwj>, <!+>, <Rl>, <%+>, <.+>, <,f>, <(+>,
-% <)+>, <*X+>, <+f>, <-f>, <.f>, <//f>, <0f>..<9f>, <:f>, <<f>, <=f>,
-% </>f>, <kf>, <yf>, <)/>+>, <<(+>, <!)+>, <(!+>, <<<+>, </>/>+>, <*+>,
-% <!!+>, and <////+>. Also, all character sequences
-% <NU>..<US>, <SP>, <DT> have counter-parts <NU+>..<US+>, <SP+>, <DT+>
 
 CHARMAP
 <U0000>     /x00         NULL (NUL)

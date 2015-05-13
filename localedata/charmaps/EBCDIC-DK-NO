@@ -2,7 +2,6 @@
 <comment_char> %
 <escape_char> /
 % version: 1.0
-% repertoiremap: mnemonic,ds
 %  source: IBM 3270 Char Set Ref Ch 10, GA27-2837-9, April 1987
 
 CHARMAP
