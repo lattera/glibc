@@ -274,7 +274,7 @@ while read file srcfile caller syscall args strong weak; do
     vdso_symver=`echo "$vdso_symver" | sed 's/\./_/g'`
     echo "\
 \$(foreach p,\$(sysd-rules-targets),\$(objpfx)\$(patsubst %,\$p,$file).os): \\
-		\$(..)sysdeps/unix/make-syscalls.sh\
+		\$(..)sysdeps/unix/make-syscalls.sh
 	\$(make-target-directory)
 	(echo '#include <dl-vdso.h>'; \\
 	 echo 'extern void *${strong}_ifunc (void) __asm (\"${strong}\");'; \\
