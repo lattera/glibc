@@ -1,5 +1,23 @@
 2015-05-13  Roland McGrath  <roland@hack.frob.com>
 
+	* dirent/scandir64-tail.c: New file.
+	* dirent/Makefile (routines): Add them.
+	* include/dirent.h (__scandir_tail, __scandir64_tail): Declare them.
+	* dirent/scandir.c [!SCANDIR] (SCANDIRAT): Macro removed.
+	[!SCANDIR] (SCANDIR_TAIL): New macro.
+	(SCANDIR): Call __opendir and __scandir_tail, not __scandirat.
+	* dirent/scandir64.c [!_DIRENT_MATCHES_DIRENT64]
+	(SCANDIRAT): Macro removed.
+	(SCANDIR_TAIL): New macro.
+	* dirent/scandirat.c [!SCANDIRAT] (READDIR): Macro removed.
+	[!SCANDIRAT] (SCANDIR_TAIL): New macro.
+	(SCANDIRAT): Just call __opendirat and __scandir_tail.
+	* dirent/scandirat64.c [!_DIRENT_MATCHES_DIRENT64]
+	(READDIR): Macro removed.
+	(SCANDIR_TAIL): New macro.
+	* sysdeps/unix/sysv/linux/i386/scandir64.c (READDIR): Macro removed.
+	(SCANDIR_TAIL): New macro.
+
 	* dirent/scandirat.c (__scandir_cancel_handler): Function moved ...
 	* dirent/scandir-cancel.c: ... to this new file.
 	* dirent/Makefile (routines): Add it.

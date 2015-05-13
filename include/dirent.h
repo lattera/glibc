@@ -49,6 +49,26 @@ extern DIR *__alloc_dir (int fd, bool close_fd, int flags,
 extern __typeof (rewinddir) __rewinddir;
 
 extern void __scandir_cancel_handler (void *arg) attribute_hidden;
+extern int __scandir_tail (DIR *dp,
+			   struct dirent ***namelist,
+			   int (*select) (const struct dirent *),
+			   int (*cmp) (const struct dirent **,
+				       const struct dirent **))
+  internal_function attribute_hidden;
+#  ifdef _DIRENT_MATCHES_DIRENT64
+#   define __scandir64_tail (dp, namelist, select, cmp)         \
+  __scandir_tail (dp, (struct dirent ***) (namelist),           \
+		  (int (*) (const struct dirent *)) (select),   \
+		  (int (*) (const struct dirent **,             \
+			    const struct dirent **)) (cmp))
+#  else
+extern int __scandir64_tail (DIR *dp,
+			     struct dirent64 ***namelist,
+			     int (*select) (const struct dirent64 *),
+			     int (*cmp) (const struct dirent64 **,
+					 const struct dirent64 **))
+  internal_function attribute_hidden;
+#  endif
 
 libc_hidden_proto (__rewinddir)
 extern __typeof (scandirat) __scandirat;

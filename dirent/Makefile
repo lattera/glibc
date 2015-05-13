@@ -27,7 +27,8 @@ routines	:= opendir closedir readdir readdir_r rewinddir \
 		   seekdir telldir scandir alphasort versionsort \
 		   getdents getdents64 dirfd readdir64 readdir64_r scandir64 \
 		   alphasort64 versionsort64 fdopendir \
-		   scandirat scandirat64 scandir-cancel
+		   scandirat scandirat64 \
+		   scandir-cancel scandir-tail scandir64-tail
 
 tests	   := list tst-seekdir opendir-tst1 bug-readdir1 tst-fdopendir \
 	      tst-fdopendir2 tst-scandir tst-scandir64

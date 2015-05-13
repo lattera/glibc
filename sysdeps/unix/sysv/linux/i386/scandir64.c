@@ -17,22 +17,21 @@
 
 #include <dirent.h>
 
-#define SCANDIR __scandir64
-#define SCANDIRAT scandirat64
-#define READDIR __readdir64
-#define DIRENT_TYPE struct dirent64
+#define SCANDIR		__scandir64
+#define SCANDIR_TAIL	__scandir64_tail
+#define DIRENT_TYPE	struct dirent64
 
 #include <dirent/scandir.c>
 
-#undef SCANDIR
-#undef READDIR
-#undef DIRENT_TYPE
+#undef	SCANDIR
+#undef	SCANDIR_TAIL
+#undef	DIRENT_TYPE
 
 #include <shlib-compat.h>
 
 versioned_symbol (libc, __scandir64, scandir64, GLIBC_2_2);
 
-#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
+#if SHLIB_COMPAT (libc, GLIBC_2_1, GLIBC_2_2)
 # include <string.h>
 # include <errno.h>
 # include "olddirent.h"

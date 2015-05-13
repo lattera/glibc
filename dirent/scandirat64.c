@@ -20,10 +20,10 @@
 /* scandirat.c defines scandirat64 as an alias if _DIRENT_MATCHES_DIRENT64.  */
 #ifndef _DIRENT_MATCHES_DIRENT64
 
-#define SCANDIRAT scandirat64
-#define READDIR __readdir64
-#define DIRENT_TYPE struct dirent64
+# define SCANDIRAT      scandirat64
+# define SCANDIR_TAIL   __scandir64_tail
+# define DIRENT_TYPE    struct dirent64
 
-#include "scandirat.c"
+# include <scandirat.c>
 
 #endif

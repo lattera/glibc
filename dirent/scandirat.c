@@ -24,114 +24,20 @@
 
 #undef  scandirat64
 
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
-#include <bits/libc-lock.h>
-
 #ifndef SCANDIRAT
-# define SCANDIRAT __scandirat
-# define READDIR __readdir
-# define DIRENT_TYPE struct dirent
+# define SCANDIRAT	__scandirat
+# define SCANDIR_TAIL	__scandir_tail
+# define DIRENT_TYPE	struct dirent
 # define SCANDIRAT_WEAK_ALIAS
 #endif
 
-
 int
-SCANDIRAT (dfd, dir, namelist, select, cmp)
-     int dfd;
-     const char *dir;
-     DIRENT_TYPE ***namelist;
-     int (*select) (const DIRENT_TYPE *);
-     int (*cmp) (const DIRENT_TYPE **, const DIRENT_TYPE **);
+SCANDIRAT (int dfd, const char *dir,
+	   DIRENT_TYPE ***namelist,
+	   int (*select) (const DIRENT_TYPE *),
+	   int (*cmp) (const DIRENT_TYPE **, const DIRENT_TYPE **))
 {
-  DIR *dp = __opendirat (dfd, dir);
-  DIRENT_TYPE **v = NULL;
-  size_t vsize = 0;
-  struct scandir_cancel_struct c;
-  DIRENT_TYPE *d;
-  int save;
-
-  if (dp == NULL)
-    return -1;
-
-  save = errno;
-  __set_errno (0);
-
-  c.dp = dp;
-  c.v = NULL;
-  c.cnt = 0;
-  __libc_cleanup_push (__scandir_cancel_handler, &c);
-
-  while ((d = READDIR (dp)) != NULL)
-    {
-      int use_it = select == NULL;
-
-      if (! use_it)
-	{
-	  use_it = select (d);
-	  /* The select function might have changed errno.  It was
-	     zero before and it need to be again to make the latter
-	     tests work.  */
-	  __set_errno (0);
-	}
-
-      if (use_it)
-	{
-	  DIRENT_TYPE *vnew;
-	  size_t dsize;
-
-	  /* Ignore errors from select or readdir */
-	  __set_errno (0);
-
-	  if (__glibc_unlikely (c.cnt == vsize))
-	    {
-	      DIRENT_TYPE **new;
-	      if (vsize == 0)
-		vsize = 10;
-	      else
-		vsize *= 2;
-	      new = (DIRENT_TYPE **) realloc (v, vsize * sizeof (*v));
-	      if (new == NULL)
-		break;
-	      v = new;
-	      c.v = (void *) v;
-	    }
-
-	  dsize = &d->d_name[_D_ALLOC_NAMLEN (d)] - (char *) d;
-	  vnew = (DIRENT_TYPE *) malloc (dsize);
-	  if (vnew == NULL)
-	    break;
-
-	  v[c.cnt++] = (DIRENT_TYPE *) memcpy (vnew, d, dsize);
-	}
-    }
-
-  if (__builtin_expect (errno, 0) != 0)
-    {
-      save = errno;
-
-      while (c.cnt > 0)
-	free (v[--c.cnt]);
-      free (v);
-      c.cnt = -1;
-    }
-  else
-    {
-      /* Sort the list if we have a comparison function to sort with.  */
-      if (cmp != NULL)
-	qsort (v, c.cnt, sizeof (*v),
-	       (int (*) (const void *, const void *)) cmp);
-
-      *namelist = v;
-    }
-
-  __libc_cleanup_pop (0);
-
-  (void) __closedir (dp);
-  __set_errno (save);
-
-  return c.cnt;
+  return SCANDIR_TAIL (__opendirat (dfd, dir), namelist, select, cmp);
 }
 libc_hidden_def (SCANDIRAT)
 #ifdef SCANDIRAT_WEAK_ALIAS
