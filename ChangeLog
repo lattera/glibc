@@ -1,3 +1,8 @@
+2015-05-13  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* sysdeps/aarch64/tls-macros.h (TLS_GD): Add "cc" to the clobber
+	list.
+
 2015-05-13  Leonhard Holz  <leonhard.holz@web.de>
 
 	* benchtests/bench-strcoll.c: New benchmark.
