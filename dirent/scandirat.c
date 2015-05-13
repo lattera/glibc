@@ -36,21 +36,6 @@
 # define SCANDIRAT_WEAK_ALIAS
 #endif
 
-#ifndef SKIP_SCANDIR_CANCEL
-void
-__scandir_cancel_handler (void *arg)
-{
-  struct scandir_cancel_struct *cp = arg;
-  size_t i;
-  void **v = cp->v;
-
-  for (i = 0; i < cp->cnt; ++i)
-    free (v[i]);
-  free (v);
-  (void) __closedir (cp->dp);
-}
-#endif
-
 
 int
 SCANDIRAT (dfd, dir, namelist, select, cmp)

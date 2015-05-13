@@ -1,5 +1,13 @@
 2015-05-13  Roland McGrath  <roland@hack.frob.com>
 
+	* dirent/scandirat.c (__scandir_cancel_handler): Function moved ...
+	* dirent/scandir-cancel.c: ... to this new file.
+	* dirent/Makefile (routines): Add it.
+	* dirent/scandirat64.c (SKIP_SCANDIR_CANCEL): Macro removed.
+	* sysdeps/unix/sysv/linux/i386/scandir64.c
+	(SKIP_SCANDIR_CANCEL): Macro removed.
+	* include/dirent.h (__scandir_cancel_handler): Add attribute_hidden.
+
 	* dirent/tst-scandir.c: New file.
 	* dirent/tst-scandir64.c: New file.
 	* dirent/Makefile (tests): Add them.

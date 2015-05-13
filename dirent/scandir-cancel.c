@@ -1,4 +1,5 @@
-/* Copyright (C) 2000-2015 Free Software Foundation, Inc.
+/* Cancellation handler used in scandir* implementations.
+   Copyright (C) 1992-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,13 +18,14 @@
 
 #include <dirent.h>
 
-/* scandirat.c defines scandirat64 as an alias if _DIRENT_MATCHES_DIRENT64.  */
-#ifndef _DIRENT_MATCHES_DIRENT64
+void
+__scandir_cancel_handler (void *arg)
+{
+  struct scandir_cancel_struct *cp = arg;
+  void **v = cp->v;
 
-#define SCANDIRAT scandirat64
-#define READDIR __readdir64
-#define DIRENT_TYPE struct dirent64
-
-#include "scandirat.c"
-
-#endif
+  for (size_t i = 0; i < cp->cnt; ++i)
+    free (v[i]);
+  free (v);
+  (void) __closedir (cp->dp);
+}
