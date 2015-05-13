@@ -1,5 +1,7 @@
 2015-05-13  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/nacl/fdopendir.c: New file.
+
 	* dirent/scandir-tail.c: New file.
 	* dirent/scandir64-tail.c: New file.
 	* dirent/Makefile (routines): Add them.
