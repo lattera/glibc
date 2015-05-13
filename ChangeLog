@@ -1,7 +1,9 @@
 2015-05-13  Roland McGrath  <roland@hack.frob.com>
 
+	* dirent/scandir-tail.c: New file.
 	* dirent/scandir64-tail.c: New file.
 	* dirent/Makefile (routines): Add them.
+	(CFLAGS-scandir-tail.c, CFLAGS-scandir64-tail.c): New variables.
 	* include/dirent.h (__scandir_tail, __scandir64_tail): Declare them.
 	* dirent/scandir.c [!SCANDIR] (SCANDIRAT): Macro removed.
 	[!SCANDIR] (SCANDIR_TAIL): New macro.
