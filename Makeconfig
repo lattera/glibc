@@ -498,7 +498,7 @@ link-libc = $(link-libc-rpath-link) $(link-libc-before-gnulib) $(gnulib)
 link-libc-tests = $(link-libc-tests-rpath-link) \
 		  $(link-libc-before-gnulib) $(gnulib-tests)
 # This is how to find at build-time things that will be installed there.
-rpath-dirs = math elf dlfcn nss nis rt resolv crypt
+rpath-dirs = math elf dlfcn nss nis rt resolv crypt mathvec
 rpath-link = \
 $(common-objdir):$(subst $(empty) ,:,$(patsubst ../$(subdir),.,$(rpath-dirs:%=$(common-objpfx)%)))
 else
@@ -1074,8 +1074,10 @@ endif
 
 ifeq ($(build-shared),yes)
 libm = $(common-objpfx)math/libm.so$(libm.so-version)
+libmvec = $(common-objpfx)mathvec/libmvec.so$(libmvec.so-version)
 else
 libm = $(common-objpfx)math/libm.a
+libmvec = $(common-objpfx)mathvec/libmvec.a
 endif
 
 # These are the subdirectories containing the library source.  The order
@@ -1085,7 +1087,7 @@ all-subdirs = csu assert ctype locale intl catgets math setjmp signal	    \
 	      stdlib stdio-common libio malloc string wcsmbs time dirent    \
 	      grp pwd posix io termios resource misc socket sysvipc gmon    \
 	      gnulib iconv iconvdata wctype manual shadow gshadow po argp   \
-	      crypt localedata timezone rt conform debug		    \
+	      crypt localedata timezone rt conform debug mathvec	    \
 	      $(add-on-subdirs) dlfcn elf
 
 ifndef avoid-generated

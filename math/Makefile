@@ -86,6 +86,22 @@ generated += $(foreach s,.c .S l.c l.S f.c f.S,$(calls:s_%=m_%$s))
 routines = $(calls) $(calls:=f) $(long-c-$(long-double-fcts))
 long-c-yes = $(calls:=l)
 
+ifeq ($(build-mathvec),yes)
+# We need to install libm.so as linker script
+# for more comfortable use of vector math library.
+install-lib-ldscripts := libm.so
+install_subdir: $(inst_libdir)/libm.so
+$(inst_libdir)/libm.so: $(common-objpfx)format.lds \
+			$(libm) \
+			$(libmvec) \
+			$(+force)
+	(echo '/* GNU ld script'; echo '*/';\
+	 cat $<; \
+	 echo 'GROUP ( $(slibdir)/libm.so$(libm.so-version) ' \
+	      'AS_NEEDED ( $(slibdir)/libmvec.so$(libmvec.so-version) ) )' \
+	) > $@
+endif
+
 # Rules for the test suite.
 tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
 	test-misc test-fpucw test-fpucw-ieee tst-definitions test-tgmath \

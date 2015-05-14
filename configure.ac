@@ -381,6 +381,12 @@ gnu*)
   ;;
 esac
 
+AC_ARG_ENABLE([mathvec],
+	      [AS_HELP_STRING([--enable-mathvec],
+	      [Enable building and installing mathvec @<:@default depends on architecture@:>@])],
+	      [build_mathvec=$enableval],
+	      [build_mathvec=notset])
+
 # We keep the original values in `$config_*' and never modify them, so we
 # can write them unchanged into config.make.  Everything else uses
 # $machine, $vendor, and $os, and changes them whenever convenient.
@@ -1993,6 +1999,11 @@ for dir in $sysnames; do
     . $dest/configure
   fi
 done
+
+if test x"$build_mathvec" = xnotset; then
+  build_mathvec=no
+fi
+LIBC_CONFIG_VAR([build-mathvec], [$build_mathvec])
 
 AC_SUBST(libc_extra_cflags)
 AC_SUBST(libc_extra_cppflags)

@@ -777,6 +777,7 @@ enable_systemtap
 enable_build_nscd
 enable_nscd
 enable_pt_chown
+enable_mathvec
 with_cpu
 '
       ac_precious_vars='build_alias
@@ -1441,6 +1442,8 @@ Optional Features:
   --disable-build-nscd    disable building and installing the nscd daemon
   --disable-nscd          library functions will not contact the nscd daemon
   --enable-pt_chown       Enable building and installing pt_chown
+  --enable-mathvec        Enable building and installing mathvec [default
+                          depends on architecture]
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -3844,6 +3847,14 @@ gnu*)
   host_os=`echo $host_os | sed -e 's/gnu/gnu-gnu/'`
   ;;
 esac
+
+# Check whether --enable-mathvec was given.
+if test "${enable_mathvec+set}" = set; then :
+  enableval=$enable_mathvec; build_mathvec=$enableval
+else
+  build_mathvec=notset
+fi
+
 
 # We keep the original values in `$config_*' and never modify them, so we
 # can write them unchanged into config.make.  Everything else uses
@@ -7214,6 +7225,12 @@ $as_echo "running configure fragment for $dir" >&6; }
     . $dest/configure
   fi
 done
+
+if test x"$build_mathvec" = xnotset; then
+  build_mathvec=no
+fi
+config_vars="$config_vars
+build-mathvec = $build_mathvec"
 
 
 

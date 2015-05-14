@@ -1,5 +1,14 @@
 2015-05-14  Andrew Senkevich  <andrew.senkevich@intel.com>
 
+	* Makeconfig (rpath-dirs, all-subdirs): Added mathvec folder.
+	(libmvec): New variable.
+	* configure.ac: Added option for mathvec build.
+	* configure: Regenerated.
+	* mathvec/Depend: New file.
+	* mathvec/Makefile: New file.
+	* shlib-versions: Added libmvec.
+	* math/Makefile: Added rule for libm.so	installation.
+
 	* bits/math-vector.h: New file.
 	* bits/libm-simd-decl-stubs.h: New header.
 	* math/Makefile (headers): Added new header

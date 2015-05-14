@@ -71,3 +71,6 @@ libanl=1
 # This defines the libgcc soname version this glibc is to load for
 # asynchronous cancellation to work correctly.
 libgcc_s=1
+
+# The vector math library
+libmvec=1
