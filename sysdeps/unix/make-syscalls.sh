@@ -272,28 +272,33 @@ while read file srcfile caller syscall args strong weak; do
     vdso_symbol="${vdso_syscall%@*}"
     vdso_symver="${vdso_syscall#*@}"
     vdso_symver=`echo "$vdso_symver" | sed 's/\./_/g'`
-    echo "\
+    cat <<EOF
+
 \$(foreach p,\$(sysd-rules-targets),\$(objpfx)\$(patsubst %,\$p,$file).os): \\
 		\$(..)sysdeps/unix/make-syscalls.sh
 	\$(make-target-directory)
 	(echo '#include <dl-vdso.h>'; \\
-	 echo 'extern void *${strong}_ifunc (void) __asm (\"${strong}\");'; \\
+	 echo 'extern void *${strong}_ifunc (void) __asm ("${strong}");'; \\
 	 echo 'void *'; \\
 	 echo '${strong}_ifunc (void)'; \\
 	 echo '{'; \\
 	 echo '  PREPARE_VERSION_KNOWN (symver, ${vdso_symver});'; \\
-	 echo '  return _dl_vdso_vsym (\"${vdso_symbol}\", &symver);'; \\
+	 echo '  return _dl_vdso_vsym ("${vdso_symbol}", &symver);'; \\
 	 echo '}'; \\
-	 echo 'asm (\".type ${strong}, %gnu_indirect_function\");'; \\"
+	 echo 'asm (".type ${strong}, %gnu_indirect_function");'; \\
+EOF
     # This is doing "libc_hidden_def (${strong})", but the compiler
     # doesn't know that we've defined ${strong} in the same file, so
     # we can't do it the normal way.
-    echo "\
-	 echo 'asm (\".globl __GI_${strong}\\n\"'; \\
-	 echo '     \"__GI_${strong} = ${strong}\");'; \\"
+    cat <<EOF
+	 echo 'asm (".globl __GI_${strong}");'; \\
+	 echo 'asm ("__GI_${strong} = ${strong}");'; \\
+EOF
     emit_weak_aliases
-    echo '	) | $(compile-stdin.c) '"\
-\$(foreach p,\$(patsubst %$file,%,\$(basename \$(@F))),\$(\$(p)CPPFLAGS))"
+    cat <<EOF
+	) | \$(compile-stdin.c) \
+\$(foreach p,\$(patsubst %$file,%,\$(basename \$(@F))),\$(\$(p)CPPFLAGS))
+EOF
   fi
 
   if test $shared_only = t; then

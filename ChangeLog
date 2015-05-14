@@ -1,3 +1,8 @@
+2015-05-14  Jakub Bogusz  <qboosh@pld-linux.org>
+	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/make-syscalls.sh: Remove non-portable echo usage.
+
 2015-05-14  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	* Makeconfig (rpath-dirs, all-subdirs): Added mathvec folder.
