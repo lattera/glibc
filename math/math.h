@@ -27,6 +27,9 @@
 
 __BEGIN_DECLS
 
+/* Get machine-dependent vector math functions declarations.  */
+#include <bits/math-vector.h>
+
 /* Get machine-dependent HUGE_VAL value (returned on overflow).
    On all IEEE754 machines, this is +Infinity.  */
 #include <bits/huge_val.h>
@@ -48,6 +51,12 @@ __BEGIN_DECLS
    actual math functions.  These macros are used for those prototypes,
    so we can easily declare each function as both `name' and `__name',
    and can declare the float versions `namef' and `__namef'.  */
+
+#define __SIMD_DECL(function) __CONCAT (__DECL_SIMD_, function)
+
+#define __MATHCALL_VEC(function, suffix, args) 	\
+  __SIMD_DECL (__MATH_PRECNAME (function, suffix)) \
+  __MATHCALL (function, suffix, args)
 
 #define __MATHCALL(function,suffix, args)	\
   __MATHDECL (_Mdouble_,function,suffix, args)

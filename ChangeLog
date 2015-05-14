@@ -1,5 +1,11 @@
 2015-05-14  Andrew Senkevich  <andrew.senkevich@intel.com>
 
+	* bits/math-vector.h: New file.
+	* bits/libm-simd-decl-stubs.h: New header.
+	* math/Makefile (headers): Added new header
+	libm-simd-decl-stubs.h.
+	* math/math.h (__MATHCALL_VEC): New macro.
+
 	* math/gen-libm-have-vector-test.sh: Script generates series of macros
 	for conditions in testing functions.
 	* math/Makefile: Added call of libm-have-vector-test.sh.
