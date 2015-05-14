@@ -1,5 +1,10 @@
 2015-05-14  Andrew Senkevich  <andrew.senkevich@intel.com>
 
+	* math/gen-libm-have-vector-test.sh: Script generates series of macros
+	for conditions in testing functions.
+	* math/Makefile: Added call of libm-have-vector-test.sh.
+	* math/libm-test.inc (HAVE_VECTOR): New macros.
+
 	* math/libm-test.inc: START refactored.
 	* math/test-double.c (TEST_MATHVEC): Add define.
 	* math/test-float.c: Likewise.

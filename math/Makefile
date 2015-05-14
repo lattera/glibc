@@ -103,7 +103,7 @@ libm-tests = test-float test-double $(test-longdouble-$(long-double-fcts)) \
 libm-tests.o = $(addsuffix .o,$(libm-tests))
 
 tests += $(libm-tests)
-libm-tests-generated = libm-test-ulps.h libm-test.c
+libm-tests-generated = libm-test-ulps.h libm-have-vector-test.h libm-test.c
 generated += $(libm-tests-generated) libm-test.stmp
 
 # This is needed for dependencies
@@ -114,9 +114,10 @@ ulps-file = $(firstword $(wildcard $(sysdirs:%=%/libm-test-ulps)))
 $(addprefix $(objpfx), $(libm-tests-generated)): $(objpfx)libm-test.stmp
 
 $(objpfx)libm-test.stmp: $(ulps-file) libm-test.inc gen-libm-test.pl \
-			 auto-libm-test-out
+			 gen-libm-have-vector-test.sh auto-libm-test-out
 	$(make-target-directory)
 	$(PERL) gen-libm-test.pl -u $< -o "$(objpfx)"
+	$(SHELL) gen-libm-have-vector-test.sh > $(objpfx)libm-have-vector-test.h
 	@echo > $@
 
 $(objpfx)test-float.o: $(objpfx)libm-test.stmp
