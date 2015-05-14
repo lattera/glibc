@@ -1302,8 +1302,8 @@ struct test_fFF_11_data
     if (enable_test (EXCEPTIONS))					\
       {									\
 	COMMON_TEST_SETUP (ARG_STR);					\
-	check_float (test_name, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
-		     EXCEPTIONS);					\
+	check_float (test_name,	FUNC_TEST (FUNC_NAME) (ARG),		\
+		     EXPECTED, EXCEPTIONS);				\
 	COMMON_TEST_CLEANUP;						\
       }									\
   while (0)
@@ -1320,7 +1320,7 @@ struct test_fFF_11_data
     if (enable_test (EXCEPTIONS))				\
       {								\
 	COMMON_TEST_SETUP (ARG_STR);				\
-	check_float (test_name, FUNC (FUNC_NAME) (ARG1, ARG2),	\
+	check_float (test_name, FUNC_TEST (FUNC_NAME) (ARG1, ARG2),	\
 		     EXPECTED, EXCEPTIONS);			\
 	COMMON_TEST_CLEANUP;					\
       }								\
@@ -1347,7 +1347,7 @@ struct test_fFF_11_data
     if (enable_test (EXCEPTIONS))					\
       {									\
 	COMMON_TEST_SETUP (ARG_STR);					\
-	check_float (test_name, FUNC (FUNC_NAME) (ARG1, ARG2, ARG3),	\
+	check_float (test_name, FUNC_TEST (FUNC_NAME) (ARG1, ARG2, ARG3),	\
 		     EXPECTED, EXCEPTIONS);				\
 	COMMON_TEST_CLEANUP;						\
       }									\
@@ -1367,7 +1367,7 @@ struct test_fFF_11_data
       {									\
 	COMMON_TEST_SETUP (ARG_STR);					\
 	check_float (test_name,						\
-		     FUNC (FUNC_NAME) (BUILD_COMPLEX (ARG1, ARG2)),	\
+		     FUNC_TEST (FUNC_NAME) (BUILD_COMPLEX (ARG1, ARG2)),\
 		     EXPECTED, EXCEPTIONS);				\
 	COMMON_TEST_CLEANUP;						\
       }									\
@@ -1388,7 +1388,7 @@ struct test_fFF_11_data
       {									\
 	COMMON_TEST_SETUP (ARG_STR);					\
 	(EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;			\
-	check_float (test_name, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
+	check_float (test_name, FUNC_TEST (FUNC_NAME) (ARG), EXPECTED,	\
 		     EXCEPTIONS);					\
 	EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);				\
 	if (EXTRA_TEST)							\
@@ -1415,7 +1415,7 @@ struct test_fFF_11_data
       {									\
 	COMMON_TEST_SETUP (ARG_STR);					\
 	(EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;			\
-	check_float (test_name, FUNC (FUNC_NAME) (ARG, &(EXTRA_VAR)),	\
+	check_float (test_name, FUNC_TEST (FUNC_NAME) (ARG, &(EXTRA_VAR)),	\
 		     EXPECTED, EXCEPTIONS);				\
 	EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);				\
 	if (EXTRA_TEST)							\
@@ -1442,7 +1442,7 @@ struct test_fFF_11_data
       {									\
 	COMMON_TEST_SETUP (ARG_STR);					\
 	(EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;			\
-	check_float (test_name, FUNC (FUNC_NAME) (ARG, &(EXTRA_VAR)),	\
+	check_float (test_name, FUNC_TEST (FUNC_NAME) (ARG, &(EXTRA_VAR)),	\
 		     EXPECTED, EXCEPTIONS);				\
 	EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);				\
 	if (EXTRA_TEST)							\
@@ -1470,7 +1470,7 @@ struct test_fFF_11_data
 	COMMON_TEST_SETUP (ARG_STR);					\
 	(EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;			\
 	check_float (test_name,						\
-		     FUNC (FUNC_NAME) (ARG1, ARG2, &(EXTRA_VAR)),	\
+		     FUNC_TEST (FUNC_NAME) (ARG1, ARG2, &(EXTRA_VAR)),	\
 		     EXPECTED, EXCEPTIONS);				\
 	EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);				\
 	if (EXTRA_TEST)							\
@@ -1498,7 +1498,7 @@ struct test_fFF_11_data
       {									\
 	COMMON_TEST_SETUP (ARG_STR);					\
 	check_complex (test_name,					\
-		       FUNC (FUNC_NAME) (BUILD_COMPLEX (ARGR, ARGC)),	\
+		       FUNC_TEST (FUNC_NAME) (BUILD_COMPLEX (ARGR, ARGC)),	\
 		       BUILD_COMPLEX (EXPR, EXPC), EXCEPTIONS);		\
 	COMMON_TEST_CLEANUP;						\
       }									\
@@ -1519,8 +1519,8 @@ struct test_fFF_11_data
       {									\
 	COMMON_TEST_SETUP (ARG_STR);					\
 	check_complex (test_name,					\
-		       FUNC (FUNC_NAME) (BUILD_COMPLEX (ARG1R, ARG1C),	\
-					 BUILD_COMPLEX (ARG2R, ARG2C)),	\
+		       FUNC_TEST (FUNC_NAME) (BUILD_COMPLEX (ARG1R, ARG1C),	\
+					      BUILD_COMPLEX (ARG2R, ARG2C)),	\
 		       BUILD_COMPLEX (EXPR, EXPC), EXCEPTIONS);		\
 	COMMON_TEST_CLEANUP;						\
       }									\
@@ -1540,7 +1540,7 @@ struct test_fFF_11_data
     if (enable_test (EXCEPTIONS))					\
       {									\
 	COMMON_TEST_SETUP (ARG_STR);					\
-	check_int (test_name, FUNC (FUNC_NAME) (ARG), EXPECTED,		\
+	check_int (test_name, FUNC_TEST (FUNC_NAME) (ARG), EXPECTED,	\
 		   EXCEPTIONS);						\
 	COMMON_TEST_CLEANUP;						\
       }									\
@@ -1593,7 +1593,7 @@ struct test_fFF_11_data
     if (enable_test (EXCEPTIONS))					\
       {									\
 	COMMON_TEST_SETUP (ARG_STR);					\
-	check_bool (test_name, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
+	check_bool (test_name, FUNC_TEST (FUNC_NAME) (ARG), EXPECTED,	\
 		    EXCEPTIONS);					\
 	COMMON_TEST_CLEANUP;						\
       }									\
@@ -1627,7 +1627,7 @@ struct test_fFF_11_data
     if (enable_test (EXCEPTIONS))					\
       {									\
 	COMMON_TEST_SETUP (ARG_STR);					\
-	check_long (test_name, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
+	check_long (test_name, FUNC_TEST (FUNC_NAME) (ARG), EXPECTED,	\
 		    EXCEPTIONS);					\
 	COMMON_TEST_CLEANUP;						\
       }									\
@@ -1644,8 +1644,8 @@ struct test_fFF_11_data
     if (enable_test (EXCEPTIONS))					\
       {									\
 	COMMON_TEST_SETUP (ARG_STR);					\
-	check_longlong (test_name, FUNC (FUNC_NAME) (ARG), EXPECTED,	\
-			EXCEPTIONS);					\
+	check_longlong (test_name, FUNC_TEST (FUNC_NAME) (ARG),		\
+			EXPECTED, EXCEPTIONS);				\
 	COMMON_TEST_CLEANUP;						\
       }									\
   while (0)
@@ -1664,7 +1664,7 @@ struct test_fFF_11_data
     if (enable_test (EXCEPTIONS))					\
       {									\
 	COMMON_TEST_SETUP (ARG_STR);					\
-	FUNC (FUNC_NAME) (ARG, &(EXTRA1_VAR), &(EXTRA2_VAR));		\
+	FUNC_TEST (FUNC_NAME) (ARG, &(EXTRA1_VAR), &(EXTRA2_VAR));	\
 	EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);				\
 	if (EXTRA1_TEST)						\
 	  check_float (extra1_name, EXTRA1_VAR, EXTRA1_EXPECTED,	\

@@ -1,3 +1,13 @@
+2015-05-14  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	* math/test-double.c (FUNC_TEST): New macro.
+	* math/test-float.c: Likewise.
+	* math/test-idouble.c: Likewise.
+	* math/test-ifloat.c: Likewise.
+	* math/test-ildoubl.c: Likewise.
+	* math/test-ldouble.c: Likewise.
+	* math/libm-test.inc: Use FUNC_TEST for name of	tested functions.
+
 2015-05-13  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/nacl/fdopendir.c: New file.

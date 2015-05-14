@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define FUNC(function) function ## f
+#define FUNC_TEST(function) FUNC (function)
 #define FLOAT float
 #define TEST_MSG "testing float (inline functions)\n"
 #define MATHCONST(x) x
