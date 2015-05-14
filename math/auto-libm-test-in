@@ -1850,11 +1850,10 @@ log1p -0
 log1p e-1
 log1p -0.25
 log1p -0.875
-# Bug 16339: underflow exception may be missing.
-log1p min missing-underflow
-log1p min_subnorm missing-underflow
-log1p -min missing-underflow
-log1p -min_subnorm missing-underflow
+log1p min
+log1p min_subnorm
+log1p -min
+log1p -min_subnorm
 log1p 0x1p10
 log1p 0x1p20
 log1p 0x1p30

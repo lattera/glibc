@@ -17,6 +17,13 @@ RCSID("$NetBSD: s_log1pf.S,v 1.4 1995/05/09 00:13:05 jtc Exp $")
 limit:	.float 0.29
 one:	.float 1.0
 
+	.section .rodata.cst4,"aM",@progbits,4
+
+	.p2align 2
+	.type flt_min,@object
+flt_min:	.byte 0, 0, 0x80, 0
+	ASM_SIZE_DIRECTIVE(flt_min)
+
 /*
  * Use the fyl2xp1 function when the argument is in the range -0.29 to 0.29,
  * otherwise fyl2x with the needed extra computation.
@@ -55,7 +62,25 @@ ENTRY(__log1pf)
 	ret
 
 2:	fyl2xp1
-	ret
+#ifdef PIC
+	flds	flt_min@GOTOFF(%edx)
+#else
+	flds	flt_min
+#endif
+	fld	%st(1)
+	fabs
+	fucompp
+	fnstsw
+	sahf
+	jnc	1f
+	subl	$4, %esp
+	cfi_adjust_cfa_offset (4)
+	fld	%st(0)
+	fmul	%st(0)
+	fstps	(%esp)
+	addl	$4, %esp
+	cfi_adjust_cfa_offset (-4)
+1:	ret
 
 3:	jp	4b		// in case x is ±Inf
 	fstp	%st(1)
