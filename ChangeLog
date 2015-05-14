@@ -1,5 +1,16 @@
 2015-05-14  Andrew Senkevich  <andrew.senkevich@intel.com>
 
+	* math/libm-test.inc: START refactored.
+	* math/test-double.c (TEST_MATHVEC): Add define.
+	* math/test-float.c: Likewise.
+	* math/test-idouble.c: Likewise.
+	* math/test-ifloat.c: Likewise.
+	* math/test-ildoubl.c: Likewise.
+	* math/test-ldouble.c: Likewise.
+	* sysdeps/generic/math-tests-arch.h
+	(INIT_ARCH_EXT, CHECK_ARCH_EXT): New helper macros for runtime
+	architecture check.
+
 	* math/test-double.c (FUNC_TEST): New macro.
 	* math/test-float.c: Likewise.
 	* math/test-idouble.c: Likewise.

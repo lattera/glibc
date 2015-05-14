@@ -126,6 +126,7 @@
 #include <argp.h>
 #include <tininess.h>
 #include <math-tests.h>
+#include <math-tests-arch.h>
 
 /* Structure for ulp data for a function, or the real or imaginary
    part of a function.  */
@@ -685,7 +686,7 @@ static void
 test_single_errno (const char *test_name, int errno_value,
 		   int expected_value, const char *expected_name)
 {
-#ifndef TEST_INLINE
+#if !defined TEST_INLINE && !TEST_MATHVEC
   if (errno_value == expected_value)
     {
       if (print_screen (1))
@@ -1691,9 +1692,18 @@ struct test_fFF_11_data
 		       (ARRAY)[i].RM_##ROUNDING_MODE.extra2_expected);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
 
+#if !TEST_MATHVEC
+# define VEC_SUFF
+#endif
+
+#define STR_CONCAT(a, b, c) __STRING (a##b##c)
+#define STR_CON3(a, b, c) STR_CONCAT (a, b, c)
+
 /* Start and end the tests for a given function.  */
-#define START(FUNC, EXACT)			\
-  const char *this_func = #FUNC;		\
+#define START(FUNC, SUFF, EXACT)				\
+  CHECK_ARCH_EXT;						\
+  if (TEST_MATHVEC) return;					\
+  const char *this_func = STR_CON3 (FUNC, SUFF, VEC_SUFF);	\
   init_max_error (this_func, EXACT)
 #define END					\
   print_max_error (this_func)
@@ -1706,28 +1716,28 @@ struct test_fFF_11_data
     {									\
       do								\
 	{								\
-	  START (FUNC, EXACT);						\
+	  START (FUNC,, EXACT);						\
 	  LOOP_MACRO (FUNC, ARRAY, , ## __VA_ARGS__);			\
 	  END_MACRO;							\
 	}								\
       while (0);							\
       do								\
 	{								\
-	  START (FUNC ## _downward, EXACT);				\
+	  START (FUNC, _downward, EXACT);				\
 	  LOOP_MACRO (FUNC, ARRAY, FE_DOWNWARD, ## __VA_ARGS__);	\
 	  END_MACRO;							\
 	}								\
       while (0);							\
       do								\
 	{								\
-	  START (FUNC ## _towardzero, EXACT);				\
+	  START (FUNC, _towardzero, EXACT);				\
 	  LOOP_MACRO (FUNC, ARRAY, FE_TOWARDZERO, ## __VA_ARGS__);	\
 	  END_MACRO;							\
 	}								\
       while (0);							\
       do								\
 	{								\
-	  START (FUNC ## _upward, EXACT);				\
+	  START (FUNC, _upward, EXACT);				\
 	  LOOP_MACRO (FUNC, ARRAY, FE_UPWARD, ## __VA_ARGS__);		\
 	  END_MACRO;							\
 	}								\
@@ -6025,7 +6035,7 @@ static const struct test_c_c_data cexp_test_data[] =
 static void
 cexp_test (void)
 {
-  START (cexp, 0);
+  START (cexp,, 0);
   RUN_TEST_LOOP_c_c (cexp, cexp_test_data, );
   END_COMPLEX;
 }
@@ -7544,7 +7554,7 @@ static const struct test_if_f_data jn_test_data[] =
 static void
 jn_test (void)
 {
-  START (jn, 0);
+  START (jn,, 0);
   RUN_TEST_LOOP_if_f (jn, jn_test_data, );
   END;
 }
@@ -9517,7 +9527,7 @@ static const struct test_f_f_data tgamma_test_data[] =
 static void
 tgamma_test (void)
 {
-  START (tgamma, 0);
+  START (tgamma,, 0);
   RUN_TEST_LOOP_f_f (tgamma, tgamma_test_data, );
   END;
 }
@@ -9966,6 +9976,8 @@ main (int argc, char **argv)
 
   initialize ();
   printf (TEST_MSG);
+
+  INIT_ARCH_EXT;
 
   check_ulp ();
 

@@ -26,6 +26,7 @@
 #define PRINTF_XEXPR "a"
 #define PRINTF_NEXPR "f"
 #define TEST_DOUBLE 1
+#define TEST_MATHVEC 0
 
 #ifndef __NO_MATH_INLINES
 # define __NO_MATH_INLINES

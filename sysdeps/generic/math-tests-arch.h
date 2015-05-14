@@ -1,6 +1,6 @@
-/* Copyright (C) 1997-2015 Free Software Foundation, Inc.
+/* Runtime architecture check for math tests.
+   Copyright (C) 2014-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Andreas Jaeger <aj@suse.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,20 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define FUNC(function) function ## f
-#define FUNC_TEST(function) FUNC (function)
-#define FLOAT float
-#define TEST_MSG "testing float (without inline functions)\n"
-#define MATHCONST(x) x
-#define CHOOSE(Clongdouble,Cdouble,Cfloat,Cinlinelongdouble,Cinlinedouble,Cinlinefloat) Cfloat
-#define PRINTF_EXPR "e"
-#define PRINTF_XEXPR "a"
-#define PRINTF_NEXPR "f"
-#define TEST_FLOAT 1
-#define TEST_MATHVEC 0
-
-#ifndef __NO_MATH_INLINES
-# define __NO_MATH_INLINES
-#endif
-
-#include "libm-test.c"
+/* These macros used for architecture check in math tests runtime.
+   INIT_ARCH_EXT should set up for example some global variable which is
+   checked by CHECK_ARCH_EXT which produces return from individual test to
+   prevent run on hardware not supported by tested function implementation. */
+#define INIT_ARCH_EXT
+#define CHECK_ARCH_EXT

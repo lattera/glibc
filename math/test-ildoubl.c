@@ -27,6 +27,7 @@
 #define PRINTF_NEXPR "Lf"
 #define TEST_INLINE
 #define TEST_LDOUBLE 1
+#define TEST_MATHVEC 0
 
 #ifdef __NO_MATH_INLINES
 # undef __NO_MATH_INLINES
