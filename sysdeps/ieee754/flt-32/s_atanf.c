@@ -60,7 +60,7 @@ float __atanf(float x)
 
 	GET_FLOAT_WORD(hx,x);
 	ix = hx&0x7fffffff;
-	if(ix>=0x50800000) {	/* if |x| >= 2^34 */
+	if(ix>=0x4c000000) {	/* if |x| >= 2^25 */
 	    if(ix>0x7f800000)
 		return x+x;		/* NaN */
 	    if(hx>0) return  atanhi[3]+atanlo[3];

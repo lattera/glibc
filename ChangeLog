@@ -1,5 +1,11 @@
 2015-05-14  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18196]
+	* sysdeps/ieee754/flt-32/s_atanf.c (__atanf): Use 2^25 not 2^34 as
+	threshold for large arguments.
+	* math/auto-libm-test-in: Add another test of atan.
+	* math/auto-libm-test-out: Regenerated.
+
 	[BZ #16339]
 	* sysdeps/i386/fpu/s_log1p.S (dbl_min): New object.
 	(__log1p): Force underflow exception for results with small

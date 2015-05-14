@@ -239,6 +239,7 @@ atan 0x1p-5
 atan 2.5
 atan 10
 atan 1e6
+atan 0x1p31
 atan 0x1p-100
 atan 0x1p-600
 atan 0x1p-10000
