@@ -35,6 +35,13 @@ limit:	.double 0.29
 ln2_2:	.tfloat 0.3465735902799726547086160
 	ASM_SIZE_DIRECTIVE(ln2_2)
 
+	.section .rodata.cst8,"aM",@progbits,8
+
+	.p2align 3
+	.type dbl_min,@object
+dbl_min:	.byte 0, 0, 0, 0, 0, 0, 0x10, 0
+	ASM_SIZE_DIRECTIVE(dbl_min)
+
 #ifdef PIC
 #define MO(op) op##@GOTOFF(%edx)
 #else
@@ -81,7 +88,18 @@ ENTRY(__ieee754_atanh)
 	sahf
 	jae	4f
 	fyl2xp1			// 0.5*ln2*ld(1+2*|x|+(2*|x|^2)/(1-|x|))
-	jecxz	3f
+	fcoml	MO(dbl_min)
+	fnstsw
+	sahf
+	jae	8f
+	subl	$8, %esp
+	cfi_adjust_cfa_offset (8)
+	fld	%st(0)
+	fmul	%st(0)
+	fstpl	(%esp)
+	addl	$8, %esp
+	cfi_adjust_cfa_offset (-8)
+8:	jecxz	3f
 	fchs			// 0.5*ln2*ld(1+2*x+(2*x^2)/(1-x))
 3:	ret
 

@@ -32,6 +32,7 @@
  *
  */
 
+#include <float.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -57,7 +58,15 @@ __ieee754_atanhl(long double x)
 	    else
 	      return (x-x)/(x-x);
 	  }
-	if(ix<0x3fc60000 && (huge+x)>zero) return x;	/* x < 2^-57 */
+	if(ix<0x3fc60000 && (huge+x)>zero)	/* x < 2^-57 */
+	  {
+	    if (fabsl (x) < LDBL_MIN)
+	      {
+		long double force_underflow = x * x;
+		math_force_eval (force_underflow);
+	      }
+	    return x;
+	  }
 
 	if(ix<0x3ffe0000) {		/* x < 0.5 */
 	    t = u.value+u.value;

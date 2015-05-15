@@ -1,5 +1,31 @@
 2015-05-15  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16352]
+	* sysdeps/i386/fpu/e_atanh.S (dbl_min): New object.
+	(__ieee754_atanh): Force underflow exception for results with
+	small absolute value.
+	* sysdeps/i386/fpu/e_atanhf.S (flt_min): New object.
+	(__ieee754_atanhf): Force underflow exception for results with
+	small absolute value.
+	* sysdeps/ieee754/dbl-64/e_atanh.c: Include <float.h>.
+	(__ieee754_atanh): Force underflow exception for results with
+	small absolute value.
+	* sysdeps/ieee754/flt-32/e_atanhf.c: Include <float.h>.
+	(__ieee754_atanhf): Force underflow exception for results with
+	small absolute value.
+	* sysdeps/ieee754/ldbl-128/e_atanhl.c: Include <float.h>.
+	(__ieee754_atanhl): Force underflow exception for results with
+	small absolute value.
+	* sysdeps/ieee754/ldbl-128ibm/e_atanhl.c: Include <float.h>.
+	(__ieee754_atanhl): Force underflow exception for results with
+	small absolute value.
+	* sysdeps/ieee754/ldbl-96/e_atanhl.c: Include <float.h>.
+	(__ieee754_atanhl): Force underflow exception for results with
+	small absolute value.
+	* math/auto-libm-test-in: Do not allow missing underflow
+	exceptions from atanh.
+	* math/auto-libm-test-out: Regenerated.
+
 	[BZ #18221]
 	* sysdeps/ieee754/flt-32/k_tanf.c (__kernel_tanf): Use 2**-13 not
 	2**-28 as threshold for returning x or +/- 1/x.

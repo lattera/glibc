@@ -382,13 +382,12 @@ atanh 0x3.91d9f3c80c72d7acp-4
 atanh -0x2.6c52c26567198p-4
 atanh 0x3.a274ecp-4
 atanh -0x3.f0f519a687b64p-8
-# Bug 16352: underflow exception may be missing.
-atanh 0x1p-500 missing-underflow
-atanh 0x1p-5000 missing-underflow
-atanh min missing-underflow
-atanh -min missing-underflow
-atanh min_subnorm missing-underflow
-atanh -min_subnorm missing-underflow
+atanh 0x1p-500
+atanh 0x1p-5000
+atanh min
+atanh -min
+atanh min_subnorm
+atanh -min_subnorm
 
 # cabs (x,y) == cabs (y,x).
 cabs 0.75 12.390625

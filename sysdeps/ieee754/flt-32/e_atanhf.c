@@ -35,6 +35,7 @@
 
  */
 
+#include <float.h>
 #include <inttypes.h>
 #include <math.h>
 #include <math_private.h>
@@ -51,6 +52,11 @@ __ieee754_atanhf (float x)
       if (__glibc_unlikely (xa < 0x1.0p-28f))
 	{
 	  math_force_eval (huge + x);
+	  if (fabsf (x) < FLT_MIN)
+	    {
+	      float force_underflow = x * x;
+	      math_force_eval (force_underflow);
+	    }
 	  return x;
 	}
 
