@@ -169,7 +169,7 @@ float __erfcf(float x)
 	}
 
 	if(ix < 0x3f580000) {		/* |x|<0.84375 */
-	    if(ix < 0x23800000)  	/* |x|<2**-56 */
+	    if(ix < 0x32800000)  	/* |x|<2**-26 */
 		return one-x;
 	    z = x*x;
 	    r = pp0+z*(pp1+z*(pp2+z*(pp3+z*pp4)));

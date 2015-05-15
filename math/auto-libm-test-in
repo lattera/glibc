@@ -1129,6 +1129,8 @@ erf -0x1.3a0d48p+0
 
 erfc 0.0
 erfc -0
+erfc 0x1p-55
+erfc -0x1p-55
 erfc 0.125
 erfc 0.75
 erfc 1.25
