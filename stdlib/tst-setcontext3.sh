@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/sh
 # Bug 18125: Test the exit functionality of setcontext().
 # Copyright (C) 2015 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
@@ -29,14 +29,12 @@ test_pre="${test_program_prefix_before_env} ${run_program_env}"
 test="${test_program_prefix_after_env} ${objpfx}tst-setcontext3"
 out=${objpfx}tst-setcontext3.out
 
-tempfiles=()
 cleanup() {
-  rm -f "${tempfiles[@]}"
+  rm -f $tempfile
 }
 trap cleanup 0
 
 tempfile=$(mktemp "tst-setcontext3.XXXXXXXXXX")
-tempfiles+=("$tempfile")
 
 # We want to run the test program and see if secontext called
 # exit() and wrote out the test file we specified.  If the
