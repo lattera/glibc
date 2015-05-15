@@ -42,6 +42,7 @@
 #include "endian.h"
 #include "mpa.h"
 #include "sincos32.h"
+#include <math.h>
 #include <math_private.h>
 #include <stap-probe.h>
 
@@ -318,7 +319,7 @@ __mpranred (double x, mp_no *y, int p)
   int i, k, n;
   mp_no a, b, c;
 
-  if (ABS (x) < 2.8e14)
+  if (fabs (x) < 2.8e14)
     {
       t = (x * hpinv.d + toint.d);
       xn = t - toint.d;

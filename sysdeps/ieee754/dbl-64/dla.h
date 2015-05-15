@@ -17,6 +17,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <math.h>
+
 /***********************************************************************/
 /*MODULE_NAME: dla.h                                                   */
 /*                                                                     */
@@ -44,7 +46,7 @@
 /* z+zz = x+y exactly.                                                 */
 
 #define  EADD(x,y,z,zz)  \
-	   z=(x)+(y);  zz=(ABS(x)>ABS(y)) ? (((x)-(z))+(y)) : (((y)-(z))+(x));
+	   z=(x)+(y);  zz=(fabs(x)>fabs(y)) ? (((x)-(z))+(y)) : (((y)-(z))+(x));
 
 
 /* Exact subtraction of two single-length floating point numbers, Dekker. */
@@ -52,7 +54,7 @@
 /* z+zz = x-y exactly.                                                    */
 
 #define  ESUB(x,y,z,zz)  \
-	   z=(x)-(y);  zz=(ABS(x)>ABS(y)) ? (((x)-(z))-(y)) : ((x)-((y)+(z)));
+	   z=(x)-(y);  zz=(fabs(x)>fabs(y)) ? (((x)-(z))-(y)) : ((x)-((y)+(z)));
 
 
 /* Exact multiplication of two single-length floating point numbers,   */
@@ -94,7 +96,7 @@
 /* storage variables of type double.                                    */
 
 #define  ADD2(x, xx, y, yy, z, zz, r, s)                   \
-  r = (x) + (y);  s = (ABS (x) > ABS (y)) ?                \
+  r = (x) + (y);  s = (fabs (x) > fabs (y)) ?                \
 		      (((((x) - r) + (y)) + (yy)) + (xx)) : \
 		      (((((y) - r) + (x)) + (xx)) + (yy));  \
   z = r + s;  zz = (r - z) + s;
@@ -107,7 +109,7 @@
 /* storage variables of type double.                                      */
 
 #define  SUB2(x, xx, y, yy, z, zz, r, s)                   \
-  r = (x) - (y);  s = (ABS (x) > ABS (y)) ?                \
+  r = (x) - (y);  s = (fabs (x) > fabs (y)) ?                \
 		      (((((x) - r) - (y)) - (yy)) + (xx)) : \
 		      ((((x) - ((y) + r)) + (xx)) - (yy));  \
   z = r + s;  zz = (r - z) + s;
@@ -144,16 +146,16 @@
 
 #define  ADD2A(x, xx, y, yy, z, zz, r, rr, s, ss, u, uu, w)                 \
   r = (x) + (y);                                                            \
-  if (ABS (x) > ABS (y)) { rr = ((x) - r) + (y);  s = (rr + (yy)) + (xx); } \
+  if (fabs (x) > fabs (y)) { rr = ((x) - r) + (y);  s = (rr + (yy)) + (xx); } \
   else               { rr = ((y) - r) + (x);  s = (rr + (xx)) + (yy); }     \
   if (rr != 0.0) {                                                          \
       z = r + s;  zz = (r - z) + s; }                                       \
   else {                                                                    \
-      ss = (ABS (xx) > ABS (yy)) ? (((xx) - s) + (yy)) : (((yy) - s) + (xx));\
+      ss = (fabs (xx) > fabs (yy)) ? (((xx) - s) + (yy)) : (((yy) - s) + (xx));\
       u = r + s;                                                            \
-      uu = (ABS (r) > ABS (s))   ? ((r - u) + s)   : ((s - u) + r);         \
+      uu = (fabs (r) > fabs (s))   ? ((r - u) + s)   : ((s - u) + r);         \
       w = uu + ss;  z = u + w;                                              \
-      zz = (ABS (u) > ABS (w))   ? ((u - z) + w)   : ((w - z) + u); }
+      zz = (fabs (u) > fabs (w))   ? ((u - z) + w)   : ((w - z) + u); }
 
 
 /* Double-length subtraction, slower but more accurate than SUB2.            */
@@ -165,13 +167,13 @@
 
 #define  SUB2A(x, xx, y, yy, z, zz, r, rr, s, ss, u, uu, w)                   \
   r = (x) - (y);                                                              \
-  if (ABS (x) > ABS (y)) { rr = ((x) - r) - (y);  s = (rr - (yy)) + (xx); }   \
+  if (fabs (x) > fabs (y)) { rr = ((x) - r) - (y);  s = (rr - (yy)) + (xx); }   \
   else               { rr = (x) - ((y) + r);  s = (rr + (xx)) - (yy); }       \
   if (rr != 0.0) {                                                            \
       z = r + s;  zz = (r - z) + s; }                                         \
   else {                                                                      \
-      ss = (ABS (xx) > ABS (yy)) ? (((xx) - s) - (yy)) : ((xx) - ((yy) + s)); \
+      ss = (fabs (xx) > fabs (yy)) ? (((xx) - s) - (yy)) : ((xx) - ((yy) + s)); \
       u = r + s;                                                              \
-      uu = (ABS (r) > ABS (s))   ? ((r - u) + s)   : ((s - u) + r);           \
+      uu = (fabs (r) > fabs (s))   ? ((r - u) + s)   : ((s - u) + r);           \
       w = uu + ss;  z = u + w;                                                \
-      zz = (ABS (u) > ABS (w))   ? ((u - z) + w)   : ((w - z) + u); }
+      zz = (fabs (u) > fabs (w))   ? ((u - z) + w)   : ((w - z) + u); }

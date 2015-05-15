@@ -1,3 +1,27 @@
+2015-05-15  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* stdio-common/printf_fp.c (___printf_fp): Use abs.
+	* stdlib/gmp-impl.h (ABS): Remove define.  (ABSIZ): Remove.
+	* sysdeps/ieee754/dbl-64/branred.c (__branred): Use fabs.
+	* sysdeps/ieee754/dbl-64/dla.h (EADD): Use fabs.
+	(ESUB): Use fabs.  (ADD2): Use fabs.  (SUB2): Use fabs.
+	(ADD2A): Use fabs.  (SUB2A): Use fabs.
+	* sysdeps/ieee754/dbl-64/e_asin.c (__ieee754_asin): Use fabs.
+	* sysdeps/ieee754/dbl-64/e_log.c (__ieee754_log): Use fabs.
+	* sysdeps/ieee754/dbl-64/e_pow.c (__ieee754_pow): Use fabs.
+	(log1): Use fabs.  (my_log2): Use fabs.
+	* sysdeps/ieee754/dbl-64/e_remainder.c (__ieee754_remainder): Use fabs.
+	* sysdeps/ieee754/dbl-64/mpa.h (ABS): Remove define.
+	* sysdeps/ieee754/dbl-64/mpatan.c (__mpatan): Use fabs.
+	* sysdeps/ieee754/dbl-64/mydefs.h (ABS): Remove define.
+	* sysdeps/ieee754/dbl-64/s_sin.c (__sin): Use fabs.
+	(__cos): Use fabs.  (slow): Use fabs.  (slow2): Use fabs.
+	(sloww): Use fabs.  (sloww1): Use fabs.  (sloww2): Use fabs.
+	(bslow1): Use fabs.  (bslow2): Use fabs.  (cslow2): Use fabs.
+	(csloww): Use fabs.  (csloww1): Use fabs.  (csloww2): Use fabs.
+	* sysdeps/ieee754/dbl-64/sincos32.c (__mpranred): Use fabs.
+	* sysdeps/x86_64/fpu/multiarch/e_log.c: add math.h include.
+
 2015-05-15  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18217]

@@ -30,7 +30,6 @@
 typedef int int4;
 typedef union { int4 i[2]; double x; } mynumber;
 
-#define ABS(x)   (((x) > 0) ? (x) : -(x))
 #define max(x, y)  (((y) > (x)) ? (y) : (x))
 #define min(x, y)  (((y) < (x)) ? (y) : (x))
 #endif

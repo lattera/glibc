@@ -64,7 +64,6 @@ along with the GNU MP Library; see the file COPYING.LIB.  If not, see
 #define inline			/* Empty */
 #endif
 
-#define ABS(x) (x >= 0 ? x : -x)
 #ifndef MIN
 #define MIN(l,o) ((l) < (o) ? (l) : (o))
 #endif
@@ -74,7 +73,6 @@ along with the GNU MP Library; see the file COPYING.LIB.  If not, see
 
 /* Field access macros.  */
 #define SIZ(x) ((x)->_mp_size)
-#define ABSIZ(x) ABS (SIZ (x))
 #define PTR(x) ((x)->_mp_d)
 #define EXP(x) ((x)->_mp_exp)
 #define PREC(x) ((x)->_mp_prec)

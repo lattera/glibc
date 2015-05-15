@@ -449,7 +449,7 @@ ___printf_fp (FILE *fp,
      efficient to use variables of the fixed maximum size but because this
      would be really big it could lead to memory problems.  */
   {
-    mp_size_t bignum_size = ((ABS (p.exponent) + BITS_PER_MP_LIMB - 1)
+    mp_size_t bignum_size = ((abs (p.exponent) + BITS_PER_MP_LIMB - 1)
 			     / BITS_PER_MP_LIMB
 			     + (LDBL_MANT_DIG / BITS_PER_MP_LIMB > 2 ? 8 : 4))
 			    * sizeof (mp_limb_t);

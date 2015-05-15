@@ -97,7 +97,7 @@ __ieee754_pow (double x, double y)
 
 	/* Avoid internal underflow for tiny y.  The exact value of y does
 	   not matter if |y| <= 2**-64.  */
-	if (ABS (y) < 0x1p-64)
+	if (fabs (y) < 0x1p-64)
 	  y = y < 0 ? -0x1p-64 : 0x1p-64;
 	z = log1 (x, &aa, &error);	/* x^y  =e^(y log (X)) */
 	t = y * CN;
@@ -110,7 +110,7 @@ __ieee754_pow (double x, double y)
 	aa = y2 * a1 + y * a2;
 	a1 = a + aa;
 	a2 = (a - a1) + aa;
-	error = error * ABS (y);
+	error = error * fabs (y);
 	t = __exp1 (a1, a2, 1.9e16 * error);	/* return -10 or 0 if wasn't computed exactly */
 	retval = (t > 0) ? t : power1 (x, y);
       }
@@ -127,7 +127,7 @@ __ieee754_pow (double x, double y)
       if (((v.i[HIGH_HALF] & 0x7fffffff) == 0x7ff00000 && v.i[LOW_HALF] != 0)
 	  || (v.i[HIGH_HALF] & 0x7fffffff) > 0x7ff00000)	/* NaN */
 	return y;
-      if (ABS (y) > 1.0e20)
+      if (fabs (y) > 1.0e20)
 	return (y > 0) ? 0 : 1.0 / 0.0;
       k = checkint (y);
       if (k == -1)
@@ -232,7 +232,7 @@ power1 (double x, double y)
   aa = ((y1 * a1 - a) + y1 * a2 + y2 * a1) + y2 * a2 + aa * y;
   a1 = a + aa;
   a2 = (a - a1) + aa;
-  error = error * ABS (y);
+  error = error * fabs (y);
   t = __exp1 (a1, a2, 1.9e16 * error);
   return (t >= 0) ? t : __slowpow (x, y, z);
 }
@@ -292,7 +292,7 @@ log1 (double x, double *delta, double *error)
 							   * (r7 + t * r8)))))
 		- 0.5 * t2 * (t + t1));
 	  res = e1 + e2;
-	  *error = 1.0e-21 * ABS (t);
+	  *error = 1.0e-21 * fabs (t);
 	  *delta = (e1 - res) + e2;
 	  return res;
 	}			/* |x-1| < 1.5*2**-10  */
@@ -398,7 +398,7 @@ my_log2 (double x, double *delta, double *error)
       e2 = ((((t - e1) + z) + zz) + t * t * t
 	    * (ss3 + t * (s4 + t * (s5 + t * (s6 + t * (s7 + t * s8))))));
       res = e1 + e2;
-      *error = 1.0e-25 * ABS (t);
+      *error = 1.0e-25 * fabs (t);
       *delta = (e1 - res) + e2;
       return res;
     }

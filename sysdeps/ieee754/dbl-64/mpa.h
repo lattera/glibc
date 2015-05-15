@@ -81,8 +81,6 @@ extern const mp_no __mptwo;
 #define  EY  y->e
 #define  EZ  z->e
 
-#define ABS(x)   ((x) <  0  ? -(x) : (x))
-
 #ifndef RADIXI
 # define  RADIXI    0x1.0p-24		/* 2^-24   */
 #endif

@@ -38,6 +38,7 @@
 #include <dla.h>
 #include "mpa.h"
 #include "MathLib.h"
+#include <math.h>
 #include <math_private.h>
 #include <stap-probe.h>
 
@@ -93,7 +94,7 @@ __ieee754_log (double x)
   /* Regular values of x */
 
   w = x - 1;
-  if (__glibc_likely (ABS (w) > U03))
+  if (__glibc_likely (fabs (w) > U03))
     goto case_03;
 
   /* log (1) is +0 in all rounding modes.  */

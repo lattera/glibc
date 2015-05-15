@@ -32,6 +32,7 @@
 
 #include "endian.h"
 #include "mpa.h"
+#include <math.h>
 
 #ifndef SECTION
 # define SECTION
@@ -65,7 +66,7 @@ __mpatan (mp_no *x, mp_no *y, int p)
   else
     {
       __mp_dbl (x, &dx, p);
-      dx = ABS (dx);
+      dx = fabs (dx);
       for (m = 6; m > 0; m--)
 	{
 	  if (dx > __atan_xm[m].d)
