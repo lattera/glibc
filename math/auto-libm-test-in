@@ -1757,6 +1757,7 @@ lgamma 0.5
 lgamma -0.5
 lgamma 0.7
 lgamma 1.2
+lgamma 0x3.8p56
 lgamma 0x1p-5
 lgamma -0x1p-5
 lgamma 0x1p-10

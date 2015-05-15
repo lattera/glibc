@@ -1,3 +1,11 @@
+2015-05-15  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18220]
+	* sysdeps/ieee754/flt-32/e_lgammaf_r.c (__ieee754_lgammaf_r): Use
+	2**26 not 2**58 as threshold for returning x * (log (x) - 1).
+	* math/auto-libm-test-in: Add another test of lgamma.
+	* math/auto-libm-test-out: Regenerated.
+
 2015-05-15  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* stdio-common/printf_fp.c (___printf_fp): Use abs.

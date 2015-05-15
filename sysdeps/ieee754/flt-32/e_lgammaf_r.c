@@ -219,15 +219,15 @@ __ieee754_lgammaf_r(float x, int *signgamp)
 	    case 3: z *= (y+(float)2.0);	/* FALLTHRU */
 		    r += __ieee754_logf(z); break;
 	    }
-    /* 8.0 <= x < 2**58 */
-	} else if (ix < 0x5c800000) {
+    /* 8.0 <= x < 2**26 */
+	} else if (ix < 0x4c800000) {
 	    t = __ieee754_logf(x);
 	    z = one/x;
 	    y = z*z;
 	    w = w0+z*(w1+y*(w2+y*(w3+y*(w4+y*(w5+y*w6)))));
 	    r = (x-half)*(t-one)+w;
 	} else
-    /* 2**58 <= x <= inf */
+    /* 2**26 <= x <= inf */
 	    r =  x*(__ieee754_logf(x)-one);
 	if(hx<0) r = nadj - r;
 	return r;
