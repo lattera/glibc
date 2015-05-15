@@ -1,5 +1,11 @@
 2015-05-15  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18221]
+	* sysdeps/ieee754/flt-32/k_tanf.c (__kernel_tanf): Use 2**-13 not
+	2**-28 as threshold for returning x or +/- 1/x.
+	* math/auto-libm-test-in: Add more tests of tan.
+	* math/auto-libm-test-out: Regenerated.
+
 	[BZ #18220]
 	* sysdeps/ieee754/flt-32/e_lgammaf_r.c (__ieee754_lgammaf_r): Use
 	2**26 not 2**58 as threshold for returning x * (log (x) - 1).
