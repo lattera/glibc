@@ -1,3 +1,8 @@
+2015-05-12  Marko Myllynen  <myllynen@redhat.com>
+
+	* locales/bo_CN (LC_NAME): Fix compilation.
+	* locales/bo_IN (LC_NAME): Likewise.
+
 2015-05-12  Leonhard Holz  <leonhard.holz@web.de>
 
 	* gen-locales.mk: New Makefile snippet to generate locales.

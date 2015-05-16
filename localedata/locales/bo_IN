@@ -71,7 +71,7 @@ END LC_MEASUREMENT
 
 LC_NAME
 % FIXME
-name_fmt	""
+name_fmt	" "
 % name_gen	"FIXME"
 % name_miss	"FIXME"
 % name_mr	"FIXME"
