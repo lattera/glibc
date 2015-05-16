@@ -1,4 +1,8 @@
-2015-05-12  Marko Myllynen  <myllynen@redhat.com>
+2015-05-16  Carlos O'Donell  <carlos@redhat.com>
+
+	* Makefile (INSTALL-SUPPORTED-LOCALES): Fail if localedef fails.
+
+2015-05-16  Marko Myllynen  <myllynen@redhat.com>
 
 	* locales/bo_CN (LC_NAME): Fix compilation.
 	* locales/bo_IN (LC_NAME): Likewise.

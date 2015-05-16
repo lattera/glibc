@@ -212,8 +212,8 @@ $(INSTALL-SUPPORTED-LOCALES): install-locales-dir
 	input=`echo $$locale | sed 's/\([^.]*\)[^@]*\(.*\)/\1\2/'`; \
 	$(LOCALEDEF) --alias-file=../intl/locale.alias \
 		     -i locales/$$input -c -f charmaps/$$charset \
-		     $(addprefix --prefix=,$(install_root)) $$locale; \
-	echo ' done'; \
+		     $(addprefix --prefix=,$(install_root)) $$locale \
+	&& echo ' done'; \
 
 tst-setlocale-ENV = LC_ALL=ja_JP.EUC-JP
 tst-wctype-ENV = LC_ALL=ja_JP.EUC-JP
