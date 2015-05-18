@@ -1,3 +1,21 @@
+2015-05-18  Florian Weimer  <fweimer@redhat.com>
+
+	* libio/libioP.h (_IO_MEMBER_TYPE, _IO_CAST_FIELD_ACCESS)
+	(_IO_JUMPS_FILE_plus): New.
+	(_IO_WIDE_JUMPS, _IO_CHECK_WIDE, _IO_JUMPS_FUNC): Use
+	_IO_CAST_FIELD_ACCESS.
+	* libio/fileops.c (libc_hidden_def, _IO_file_setbuf_mmap,
+	mmap_remap_check, decide_maybe_mmap): Use _IO_JUMPS_FILE_plus.
+	* libio/freopen.c (freopen): Likewise.
+	* libio/freopen64.c (freopen64): Likewise.
+	* libio/iofopen.c (__fopen_maybe_mmap): Likewise.
+	* libio/iofopncook.c (_IO_old_fopencookie): Likewise.
+	* libio/iofwide.c (_IO_fwide): Likewise.
+	* libio/memstream.c (open_memstream): Likewise.
+	* libio/oldiofdopen.c (_IO_old_fdopen): Likewise.
+	* libio/oldiofopen.c (_IO_old_fopen): Likewise.
+	* libio/oldiopopen.c (_IO_old_popen): Likewise.
+
 2015-05-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/dbl-64/e_lgamma_r.c: Include <libc-internal.h>.

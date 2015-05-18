@@ -32,6 +32,8 @@
 
    FIXME: All of the C++ cruft eventually needs to go away.  */
 
+#include <stddef.h>
+
 #include <errno.h>
 #ifndef __set_errno
 # define __set_errno(Val) errno = (Val)
@@ -104,17 +106,30 @@ extern "C" {
 # define _IO_JUMPS_OFFSET 0
 #endif
 
+/* Type of MEMBER in struct type TYPE.  */
+#define _IO_MEMBER_TYPE(TYPE, MEMBER) __typeof__ (((TYPE){}).MEMBER)
+
+/* Essentially ((TYPE *) THIS)->MEMBER, but avoiding the aliasing
+   violation in case THIS has a different pointer type.  */
+#define _IO_CAST_FIELD_ACCESS(THIS, TYPE, MEMBER) \
+  (*(_IO_MEMBER_TYPE (TYPE, MEMBER) *)(((char *) (THIS)) \
+  + offsetof(TYPE, MEMBER)))
+
 #define _IO_JUMPS(THIS) (THIS)->vtable
-#define _IO_WIDE_JUMPS(THIS) ((struct _IO_FILE *) (THIS))->_wide_data->_wide_vtable
-#define _IO_CHECK_WIDE(THIS) (((struct _IO_FILE *) (THIS))->_wide_data != NULL)
+#define _IO_JUMPS_FILE_plus(THIS) \
+  _IO_CAST_FIELD_ACCESS ((THIS), struct _IO_FILE_plus, vtable)
+#define _IO_WIDE_JUMPS(THIS) \
+  _IO_CAST_FIELD_ACCESS ((THIS), struct _IO_FILE, _wide_data)->_wide_vtable
+#define _IO_CHECK_WIDE(THIS) \
+  (_IO_CAST_FIELD_ACCESS ((THIS), struct _IO_FILE, _wide_data) != NULL)
 
 #if _IO_JUMPS_OFFSET
 # define _IO_JUMPS_FUNC(THIS) \
- (*(struct _IO_jump_t **) ((void *) &_IO_JUMPS ((struct _IO_FILE_plus *) (THIS)) \
+ (*(struct _IO_jump_t **) ((void *) &_IO_JUMPS_FILE_plus (THIS) \
 			   + (THIS)->_vtable_offset))
 # define _IO_vtable_offset(THIS) (THIS)->_vtable_offset
 #else
-# define _IO_JUMPS_FUNC(THIS) _IO_JUMPS ((struct _IO_FILE_plus *) (THIS))
+# define _IO_JUMPS_FUNC(THIS) _IO_JUMPS_FILE_plus (THIS)
 # define _IO_vtable_offset(THIS) 0
 #endif
 #define _IO_WIDE_JUMPS_FUNC(THIS) _IO_WIDE_JUMPS(THIS)

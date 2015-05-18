@@ -50,7 +50,7 @@ freopen64 (filename, mode, fp)
 			   ? fd_to_filename (fd) : filename);
   fp->_flags2 |= _IO_FLAGS2_NOCLOSE;
   _IO_file_close_it (fp);
-  _IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_file_jumps;
+  _IO_JUMPS_FILE_plus (fp) = &_IO_file_jumps;
   if (_IO_vtable_offset (fp) == 0 && fp->_wide_data != NULL)
     fp->_wide_data->_wide_vtable = &_IO_wfile_jumps;
   result = _IO_file_fopen (fp, gfilename, mode, 0);

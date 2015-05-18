@@ -184,7 +184,7 @@ _IO_fwide (fp, mode)
 #endif
 
       /* From now on use the wide character callback functions.  */
-      ((struct _IO_FILE_plus *) fp)->vtable = fp->_wide_data->_wide_vtable;
+      _IO_JUMPS_FILE_plus (fp) = fp->_wide_data->_wide_vtable;
     }
 
   /* Set the mode now.  */

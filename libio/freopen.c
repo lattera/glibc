@@ -59,14 +59,14 @@ freopen (filename, mode, fp)
 	 to the old libio may be passed into shared C library and wind
 	 up here. */
       _IO_old_file_close_it (fp);
-      _IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_old_file_jumps;
+      _IO_JUMPS_FILE_plus (fp) = &_IO_old_file_jumps;
       result = _IO_old_file_fopen (fp, gfilename, mode);
     }
   else
 #endif
     {
       _IO_file_close_it (fp);
-      _IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_file_jumps;
+      _IO_JUMPS_FILE_plus (fp) = &_IO_file_jumps;
       if (_IO_vtable_offset (fp) == 0 && fp->_wide_data != NULL)
 	fp->_wide_data->_wide_vtable = &_IO_wfile_jumps;
       result = _IO_file_fopen (fp, gfilename, mode, 1);

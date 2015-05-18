@@ -46,9 +46,9 @@ __fopen_maybe_mmap (_IO_FILE *fp)
 	 vanilla file operations and reset the jump table accordingly.  */
 
       if (fp->_mode <= 0)
-	_IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_file_jumps_maybe_mmap;
+	_IO_JUMPS_FILE_plus (fp) = &_IO_file_jumps_maybe_mmap;
       else
-	_IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_wfile_jumps_maybe_mmap;
+	_IO_JUMPS_FILE_plus (fp) = &_IO_wfile_jumps_maybe_mmap;
       fp->_wide_data->_wide_vtable = &_IO_wfile_jumps_maybe_mmap;
     }
 #endif

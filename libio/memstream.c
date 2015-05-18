@@ -89,7 +89,7 @@ open_memstream (bufloc, sizeloc)
       return NULL;
     }
   _IO_init (&new_f->fp._sf._sbf._f, 0);
-  _IO_JUMPS ((struct _IO_FILE_plus *) &new_f->fp._sf._sbf) = &_IO_mem_jumps;
+  _IO_JUMPS_FILE_plus (&new_f->fp._sf._sbf) = &_IO_mem_jumps;
   _IO_str_init_static_internal (&new_f->fp._sf, buf, _IO_BUFSIZ, buf);
   new_f->fp._sf._sbf._f._flags &= ~_IO_USER_BUF;
   new_f->fp._sf._s._allocate_buffer = (_IO_alloc_type) malloc;

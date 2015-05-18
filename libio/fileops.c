@@ -414,7 +414,7 @@ _IO_new_file_fopen (_IO_FILE *fp, const char *filename, const char *mode,
 	    &result->_wide_data->_IO_state;
 
 	  /* From now on use the wide character callback functions.  */
-	  ((struct _IO_FILE_plus *) fp)->vtable = fp->_wide_data->_wide_vtable;
+	  _IO_JUMPS_FILE_plus (fp) = fp->_wide_data->_wide_vtable;
 
 	  /* Set the mode now.  */
 	  result->_mode = 1;
@@ -466,7 +466,7 @@ _IO_file_setbuf_mmap (_IO_FILE *fp, char *p, _IO_ssize_t len)
   _IO_FILE *result;
 
   /* Change the function table.  */
-  _IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_file_jumps;
+  _IO_JUMPS_FILE_plus (fp) = &_IO_file_jumps;
   fp->_wide_data->_wide_vtable = &_IO_wfile_jumps;
 
   /* And perform the normal operation.  */
@@ -475,7 +475,7 @@ _IO_file_setbuf_mmap (_IO_FILE *fp, char *p, _IO_ssize_t len)
   /* If the call failed, restore to using mmap.  */
   if (result == NULL)
     {
-      _IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_file_jumps_mmap;
+      _IO_JUMPS_FILE_plus (fp) = &_IO_file_jumps_mmap;
       fp->_wide_data->_wide_vtable = &_IO_wfile_jumps_mmap;
     }
 
@@ -703,9 +703,9 @@ mmap_remap_check (_IO_FILE *fp)
       fp->_IO_buf_base = fp->_IO_buf_end = NULL;
       _IO_setg (fp, NULL, NULL, NULL);
       if (fp->_mode <= 0)
-	_IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_file_jumps;
+	_IO_JUMPS_FILE_plus (fp) = &_IO_file_jumps;
       else
-	_IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_wfile_jumps;
+	_IO_JUMPS_FILE_plus (fp) = &_IO_wfile_jumps;
       fp->_wide_data->_wide_vtable = &_IO_wfile_jumps;
 
       return 1;
@@ -773,9 +773,9 @@ decide_maybe_mmap (_IO_FILE *fp)
 	      fp->_offset = st.st_size;
 
 	      if (fp->_mode <= 0)
-		_IO_JUMPS ((struct _IO_FILE_plus *)fp) = &_IO_file_jumps_mmap;
+		_IO_JUMPS_FILE_plus (fp) = &_IO_file_jumps_mmap;
 	      else
-		_IO_JUMPS ((struct _IO_FILE_plus *)fp) = &_IO_wfile_jumps_mmap;
+		_IO_JUMPS_FILE_plus (fp) = &_IO_wfile_jumps_mmap;
 	      fp->_wide_data->_wide_vtable = &_IO_wfile_jumps_mmap;
 
 	      return;
@@ -786,9 +786,9 @@ decide_maybe_mmap (_IO_FILE *fp)
   /* We couldn't use mmap, so revert to the vanilla file operations.  */
 
   if (fp->_mode <= 0)
-    _IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_file_jumps;
+    _IO_JUMPS_FILE_plus (fp) = &_IO_file_jumps;
   else
-    _IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_wfile_jumps;
+    _IO_JUMPS_FILE_plus (fp) = &_IO_wfile_jumps;
   fp->_wide_data->_wide_vtable = &_IO_wfile_jumps;
 }
 

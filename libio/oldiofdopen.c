@@ -113,7 +113,7 @@ _IO_old_fdopen (fd, mode)
   new_f->fp.file._file._lock = &new_f->lock;
 #endif
   _IO_old_init (&new_f->fp.file._file, 0);
-  _IO_JUMPS ((struct _IO_FILE_plus *) &new_f->fp) = &_IO_old_file_jumps;
+  _IO_JUMPS_FILE_plus (&new_f->fp) = &_IO_old_file_jumps;
   _IO_old_file_init ((struct _IO_FILE_plus *) &new_f->fp);
 #if  !_IO_UNIFIED_JUMPTABLES
   new_f->fp.vtable = NULL;
