@@ -18,6 +18,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <limits.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <dirent.h>
@@ -81,83 +82,122 @@ tryopen_o_directory (void)
 #endif
 
 
-DIR *
-internal_function
-__opendirat (int dfd, const char *name)
+static bool
+invalid_name (const char *name)
 {
-  struct stat64 statbuf;
-  struct stat64 *statp = NULL;
-
-  if (__builtin_expect (name[0], '\1') == '\0')
+  if (__glibc_unlikely (name[0] == '\0'))
     {
       /* POSIX.1-1990 says an empty name gets ENOENT;
 	 but `open' might like it fine.  */
       __set_errno (ENOENT);
-      return NULL;
+      return true;
     }
+  return false;
+}
 
+
+static bool
+need_isdir_precheck (void)
+{
 #ifdef O_DIRECTORY
   /* Test whether O_DIRECTORY works.  */
   if (o_directory_works == 0)
     tryopen_o_directory ();
 
   /* We can skip the expensive `stat' call if O_DIRECTORY works.  */
-  if (o_directory_works < 0)
+  return o_directory_works > 0;
 #endif
+  return true;
+}
+
+
+static int
+opendir_oflags (void)
+{
+  int flags = O_RDONLY|O_NDELAY|EXTRA_FLAGS|O_LARGEFILE;
+#ifdef O_CLOEXEC
+  flags |= O_CLOEXEC;
+#endif
+  return flags;
+}
+
+
+static DIR *
+opendir_tail (int fd)
+{
+  if (__glibc_unlikely (fd < 0))
+    return NULL;
+
+  /* Now make sure this really is a directory and nothing changed since the
+     `stat' call.  The S_ISDIR check is superfluous if O_DIRECTORY works,
+     but it's cheap and we need the stat call for st_blksize anyway.  */
+  struct stat64 statbuf;
+  if (__glibc_unlikely (__fxstat64 (_STAT_VER, fd, &statbuf) < 0))
+    goto lose;
+  if (__glibc_unlikely (! S_ISDIR (statbuf.st_mode)))
+    {
+      __set_errno (ENOTDIR);
+    lose:
+      close_not_cancel_no_status (fd);
+      return NULL;
+    }
+
+  return __alloc_dir (fd, true, 0, &statbuf);
+}
+
+
+#if IS_IN (libc)
+DIR *
+internal_function
+__opendirat (int dfd, const char *name)
+{
+  if (__glibc_unlikely (invalid_name (name)))
+    return NULL;
+
+  if (need_isdir_precheck ())
     {
       /* We first have to check whether the name is for a directory.  We
 	 cannot do this after the open() call since the open/close operation
 	 performed on, say, a tape device might have undesirable effects.  */
-      if (__builtin_expect (__xstat64 (_STAT_VER, name, &statbuf), 0) < 0)
+      struct stat64 statbuf;
+      if (__glibc_unlikely (__fxstatat64 (_STAT_VER, dfd, name,
+					  &statbuf, 0) < 0))
 	return NULL;
       if (__glibc_unlikely (! S_ISDIR (statbuf.st_mode)))
 	{
 	  __set_errno (ENOTDIR);
 	  return NULL;
-	 }
-    }
-
-  int flags = O_RDONLY|O_NDELAY|EXTRA_FLAGS|O_LARGEFILE;
-#ifdef O_CLOEXEC
-  flags |= O_CLOEXEC;
-#endif
-  int fd;
-#if IS_IN (rtld)
-  assert (dfd == AT_FDCWD);
-  fd = open_not_cancel_2 (name, flags);
-#else
-  fd = openat_not_cancel_3 (dfd, name, flags);
-#endif
-  if (__builtin_expect (fd, 0) < 0)
-    return NULL;
-
-#ifdef O_DIRECTORY
-  if (o_directory_works <= 0)
-#endif
-    {
-      /* Now make sure this really is a directory and nothing changed since
-	 the `stat' call.  */
-      if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &statbuf), 0) < 0)
-	goto lose;
-      if (__glibc_unlikely (! S_ISDIR (statbuf.st_mode)))
-	{
-	  __set_errno (ENOTDIR);
-	lose:
-	  close_not_cancel_no_status (fd);
-	  return NULL;
 	}
-      statp = &statbuf;
     }
 
-  return __alloc_dir (fd, true, 0, statp);
+  return opendir_tail (openat_not_cancel_3 (dfd, name, opendir_oflags ()));
 }
+#endif
 
 
 /* Open a directory stream on NAME.  */
 DIR *
 __opendir (const char *name)
 {
-  return __opendirat (AT_FDCWD, name);
+  if (__glibc_unlikely (invalid_name (name)))
+    return NULL;
+
+  if (need_isdir_precheck ())
+    {
+      /* We first have to check whether the name is for a directory.  We
+	 cannot do this after the open() call since the open/close operation
+	 performed on, say, a tape device might have undesirable effects.  */
+      struct stat64 statbuf;
+      if (__glibc_unlikely (__xstat64 (_STAT_VER, name, &statbuf) < 0))
+	return NULL;
+      if (__glibc_unlikely (! S_ISDIR (statbuf.st_mode)))
+	{
+	  __set_errno (ENOTDIR);
+	  return NULL;
+	}
+    }
+
+  return opendir_tail (open_not_cancel_2 (name, opendir_oflags ()));
 }
 weak_alias (__opendir, opendir)
 

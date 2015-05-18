@@ -1,3 +1,19 @@
+2015-05-18  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/posix/opendir.c: Include <stdbool.h>.
+	(invalid_name): New function, broken out of ...
+	(__opendirat): ... here.  Call it.
+	(need_isdir_precheck): New function, broken out of ...
+	(__opendirat): ... here.  Call it.
+	Use __fxstatat64, not __xstatat64.
+	(opendir_oflags): New function, broken out of ...
+	(__opendirat): ... here.  Call it.
+	(opendir_tail): New function, broken out of ...
+	(__opendirat): ... here.  Call it.
+	(__opendir): Call invalid_name, need_isdir_precheck, __xstat64, and
+	opendir_tail, rather than punting to __opendirat.
+	(__opendirat): Conditionalize function definition on [IS_IN (libc)].
+
 2015-05-18  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* .gitignore: Ignore generated *.pyc.
