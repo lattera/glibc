@@ -43,3 +43,4 @@ core
 /linuxthreads
 /linuxthreads_db
 /rtkaio
+*.pyc
