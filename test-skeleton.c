@@ -352,8 +352,9 @@ main (int argc, char *argv[])
 
       if (temp_name_list != NULL)
         {
+          struct temp_name_list *n;
           fprintf (f, "temp_files=(\n");
-          for (struct temp_name_list *n = temp_name_list;
+          for (n = temp_name_list;
                n != NULL;
                n = (struct temp_name_list *) n->q.q_forw)
             fprintf (f, "  '%s'\n", n->name);

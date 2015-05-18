@@ -30,8 +30,8 @@ pthread_rwlock_t rwl_writer
   = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP;
 pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 
-int
-main (void)
+static int
+do_test (void)
 {
   if (mtx_normal.__data.__kind != PTHREAD_MUTEX_TIMED_NP)
     return 1;
@@ -55,3 +55,6 @@ main (void)
       return 7;
   return 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

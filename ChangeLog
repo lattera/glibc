@@ -1,3 +1,9 @@
+2015-05-18  Arjun Shankar  <arjun.is@lostca.se>
+
+	* include/stdio.h: Define __need_wint_t.
+	* test-skeleton.c: Avoid `for' loop initial declaration.
+	* nptl/tst-initializers1.c: Use test-skeleton.c.
+
 2015-05-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #18418]

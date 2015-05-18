@@ -76,6 +76,7 @@ extern FILE *__old_tmpfile (void);
 
 
 #  define __need_size_t
+#  define __need_wint_t
 #  include <stddef.h>
 /* Generate a unique file name (and possibly open it).  */
 extern int __path_search (char *__tmpl, size_t __tmpl_len,
