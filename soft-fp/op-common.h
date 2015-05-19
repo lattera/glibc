@@ -1794,12 +1794,11 @@
       __label__ pack_semiraw;						\
       if (r)								\
 	{								\
-	  rtype _FP_FROM_INT_ur;					\
+	  rtype _FP_FROM_INT_ur = (r);					\
 									\
 	  if ((X##_s = ((r) < 0)))					\
-	    (r) = -(rtype) (r);						\
+	    _FP_FROM_INT_ur = -_FP_FROM_INT_ur;				\
 									\
-	  _FP_FROM_INT_ur = (rtype) (r);				\
 	  _FP_STATIC_ASSERT ((rsize) <= 2 * _FP_W_TYPE_SIZE,		\
 			     "rsize too large");			\
 	  (void) (((rsize) <= _FP_W_TYPE_SIZE)				\
