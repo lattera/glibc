@@ -56,6 +56,16 @@ ENTRY(__ieee754_atanhl)
 	andl	$0x7fff, %eax
 	cmpl	$0x7fff, %eax
 	je	5f
+	cmpl	$0x3fdf, %eax
+	jge	7f
+	// Exponent below -32; return x, with underflow if subnormal.
+	fldt	4(%esp)
+	cmpl	$0, %eax
+	jne	8f
+	fld	%st(0)
+	fmul	%st(0)
+	fstp	%st(0)
+8:	ret
 7:
 
 #ifdef PIC
