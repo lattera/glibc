@@ -1,3 +1,12 @@
+2015-05-19  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #18434]
+	* nptl/tst-sem15.c: New file.
+	* nptl/Makefile (tests): Add it.
+	* nptl/sem_post.c (__new_sem_post) [!__HAVE_64B_ATOMICS]:
+	s/<</>>/ to fix typo in EOVERFLOW check.
+	* sysdeps/sparc/sparc32/sem_post.c (__new_sem_post): Likewise.
+
 2015-05-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* manual/strings.texi (envz_remove): Fix typo in safety

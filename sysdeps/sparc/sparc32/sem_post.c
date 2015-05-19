@@ -60,19 +60,19 @@ __new_sem_post (sem_t *sem)
   int private = isem->private;
   unsigned int v;
 
-  __sparc32_atomic_do_lock24(&isem->pad);
+  __sparc32_atomic_do_lock24 (&isem->pad);
 
   v = isem->value;
-  if ((v << SEM_VALUE_SHIFT) == SEM_VALUE_MAX)
+  if ((v >> SEM_VALUE_SHIFT) == SEM_VALUE_MAX)
     {
-      __sparc32_atomic_do_unlock24(&isem->pad);
+      __sparc32_atomic_do_unlock24 (&isem->pad);
 
       __set_errno (EOVERFLOW);
       return -1;
     }
   isem->value = v + (1 << SEM_VALUE_SHIFT);
 
-  __sparc32_atomic_do_unlock24(&isem->pad);
+  __sparc32_atomic_do_unlock24 (&isem->pad);
 
   if ((v & SEM_NWAITERS_MASK) != 0)
     futex_wake (&isem->value, 1, private);

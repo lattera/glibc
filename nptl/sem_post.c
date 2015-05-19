@@ -84,14 +84,14 @@ __new_sem_post (sem_t *sem)
   unsigned int v = atomic_load_relaxed (&isem->value);
   do
     {
-      if ((v << SEM_VALUE_SHIFT) == SEM_VALUE_MAX)
+      if ((v >> SEM_VALUE_SHIFT) == SEM_VALUE_MAX)
 	{
 	  __set_errno (EOVERFLOW);
 	  return -1;
 	}
     }
-  while (!atomic_compare_exchange_weak_release (&isem->value,
-      &v, v + (1 << SEM_VALUE_SHIFT)));
+  while (!atomic_compare_exchange_weak_release
+	 (&isem->value, &v, v + (1 << SEM_VALUE_SHIFT)));
 
   /* If there is any potentially blocked waiter, wake one of them.  */
   if ((v & SEM_NWAITERS_MASK) != 0)
