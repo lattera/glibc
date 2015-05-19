@@ -1,5 +1,7 @@
 2015-05-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* Makefile (summarize-tests): Fix return value on success.
+
 	* manual/string.texi (Envz Functions): Add envz_remove.
 
 2015-05-18  Roland McGrath  <roland@hack.frob.com>

@@ -320,7 +320,7 @@ define summarize-tests
 @egrep -v '^(PASS|XFAIL):' $(objpfx)$1 || true
 @echo "Summary of test results$2:"
 @sed 's/:.*//' < $(objpfx)$1 | sort | uniq -c
-@egrep -q -v '^(X?PASS|XFAIL|UNSUPPORTED):' $(objpfx)$1 && false
+@! egrep -q -v '^(X?PASS|XFAIL|UNSUPPORTED):' $(objpfx)$1
 endef
 
 tests-special-notdir = $(patsubst $(objpfx)%, %, $(tests-special))
