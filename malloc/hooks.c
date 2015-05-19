@@ -88,11 +88,22 @@ __malloc_check_init (void)
    overruns.  The goal here is to avoid obscure crashes due to invalid
    usage, unlike in the MALLOC_DEBUG code. */
 
-#define MAGICBYTE(p) ((((size_t) p >> 3) ^ ((size_t) p >> 11)) & 0xFF)
+static unsigned char
+magicbyte (const void *p)
+{
+  unsigned char magic;
 
-/* Visualize the chunk as being partitioned into blocks of 256 bytes from the
-   highest address of the chunk, downwards.  The beginning of each block tells
-   us the size of the previous block, up to the actual size of the requested
+  magic = (((uintptr_t) p >> 3) ^ ((uintptr_t) p >> 11)) & 0xFF;
+  /* Do not return 1.  See the comment in mem2mem_check().  */
+  if (magic == 1)
+    ++magic;
+  return magic;
+}
+
+
+/* Visualize the chunk as being partitioned into blocks of 255 bytes from the
+   highest address of the chunk, downwards.  The end of each block tells
+   us the size of that block, up to the actual size of the requested
    memory.  Our magic byte is right at the end of the requested size, so we
    must reach it with this iteration, otherwise we have witnessed a memory
    corruption.  */
@@ -101,7 +112,7 @@ malloc_check_get_size (mchunkptr p)
 {
   size_t size;
   unsigned char c;
-  unsigned char magic = MAGICBYTE (p);
+  unsigned char magic = magicbyte (p);
 
   assert (using_malloc_checking == 1);
 
@@ -123,32 +134,36 @@ malloc_check_get_size (mchunkptr p)
 }
 
 /* Instrument a chunk with overrun detector byte(s) and convert it
-   into a user pointer with requested size sz. */
+   into a user pointer with requested size req_sz. */
 
 static void *
 internal_function
-mem2mem_check (void *ptr, size_t sz)
+mem2mem_check (void *ptr, size_t req_sz)
 {
   mchunkptr p;
   unsigned char *m_ptr = ptr;
-  size_t i;
+  size_t max_sz, block_sz, i;
+  unsigned char magic;
 
   if (!ptr)
     return ptr;
 
   p = mem2chunk (ptr);
-  for (i = chunksize (p) - (chunk_is_mmapped (p) ? 2 * SIZE_SZ + 1 : SIZE_SZ + 1);
-       i > sz;
-       i -= 0xFF)
+  magic = magicbyte (p);
+  max_sz = chunksize (p) - 2 * SIZE_SZ;
+  if (!chunk_is_mmapped (p))
+    max_sz += SIZE_SZ;
+  for (i = max_sz - 1; i > req_sz; i -= block_sz)
     {
-      if (i - sz < 0x100)
-        {
-          m_ptr[i] = (unsigned char) (i - sz);
-          break;
-        }
-      m_ptr[i] = 0xFF;
+      block_sz = MIN (i - req_sz, 0xff);
+      /* Don't allow the magic byte to appear in the chain of length bytes.
+         For the following to work, magicbyte cannot return 0x01.  */
+      if (block_sz == magic)
+        --block_sz;
+
+      m_ptr[i] = block_sz;
     }
-  m_ptr[sz] = MAGICBYTE (p);
+  m_ptr[req_sz] = magic;
   return (void *) m_ptr;
 }
 
@@ -167,11 +182,12 @@ mem2chunk_check (void *mem, unsigned char **magic_p)
     return NULL;
 
   p = mem2chunk (mem);
+  sz = chunksize (p);
+  magic = magicbyte (p);
   if (!chunk_is_mmapped (p))
     {
       /* Must be a chunk in conventional heap memory. */
       int contig = contiguous (&main_arena);
-      sz = chunksize (p);
       if ((contig &&
            ((char *) p < mp_.sbrk_base ||
             ((char *) p + sz) >= (mp_.sbrk_base + main_arena.system_mem))) ||
@@ -181,10 +197,9 @@ mem2chunk_check (void *mem, unsigned char **magic_p)
                                next_chunk (prev_chunk (p)) != p)))
         return NULL;
 
-      magic = MAGICBYTE (p);
       for (sz += SIZE_SZ - 1; (c = ((unsigned char *) p)[sz]) != magic; sz -= c)
         {
-          if (c <= 0 || sz < (c + 2 * SIZE_SZ))
+          if (c == 0 || sz < (c + 2 * SIZE_SZ))
             return NULL;
         }
     }
@@ -202,13 +217,12 @@ mem2chunk_check (void *mem, unsigned char **magic_p)
            offset < 0x2000) ||
           !chunk_is_mmapped (p) || (p->size & PREV_INUSE) ||
           ((((unsigned long) p - p->prev_size) & page_mask) != 0) ||
-          ((sz = chunksize (p)), ((p->prev_size + sz) & page_mask) != 0))
+          ((p->prev_size + sz) & page_mask) != 0)
         return NULL;
 
-      magic = MAGICBYTE (p);
       for (sz -= 1; (c = ((unsigned char *) p)[sz]) != magic; sz -= c)
         {
-          if (c <= 0 || sz < (c + 2 * SIZE_SZ))
+          if (c == 0 || sz < (c + 2 * SIZE_SZ))
             return NULL;
         }
     }

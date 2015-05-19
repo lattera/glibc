@@ -1,3 +1,12 @@
+2015-05-19  James Lemke  <jwlemke@codesourcery.com>
+
+	[BZ #17581]
+	* malloc/hooks.c
+	(magicbyte): Convert to a function and avoid returning 0x01.
+	(mem2mem_check): Avoid using a length byte equal to the magic byte.
+	(mem2chunk_check): Fix unsigned comparisons to zero.
+	Hoist defs of sz and magic.
+
 2015-05-19  Richard Henderson  <rth@redhat.com>
 
 	* soft-fp/op-common.h (_FP_FROM_INT): Don't write to R.
