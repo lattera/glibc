@@ -2791,7 +2791,7 @@ updating @code{*@var{envz}} and @code{*@var{envz_len}}.
 @comment envz.h
 @comment GNU
 @deftypefun {void} envz_remove (char **@var{envz}, size_t *@var{envz_len}, const char *@var{name})
-@safety{@prelim{}@mtsafe{}@asunsafe{@acsuheap{}}@acunsafe{@acsmem{}}}
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 The @code{envz_remove} function removes an entry named @var{name} from
 @var{envz}, updating @code{*@var{envz}} and @code{*@var{envz_len}}.
 @end deftypefun

@@ -1,3 +1,8 @@
+2015-05-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* manual/strings.texi (envz_remove): Fix typo in safety
+	annotations.
+
 2015-05-19  Paul Eggert  <eggert@cs.ucla.edu>
 	    Steve Ellcey  <sellcey@imgtec.com>
 
