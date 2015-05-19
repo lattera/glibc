@@ -1,5 +1,34 @@
 2015-05-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	[BZ #16159]
+	* malloc/Makefile (tests): New test case tst-malloc-backtrace.
+	* malloc/arena.c (arena_lock): Check if arena is corrupt.
+	(reused_arena): Find a non-corrupt arena.
+	(heap_trim): Pass arena to unlink.
+	* malloc/hooks.c (malloc_check_get_size): Pass arena to
+	malloc_printerr.
+	(top_check): Likewise.
+	(free_check): Likewise.
+	(realloc_check): Likewise.
+	* malloc/malloc.c (malloc_printerr): Add arena argument.
+	(unlink): Likewise.
+	(munmap_chunk): Adjust.
+	(ARENA_CORRUPTION_BIT): New macro.
+	(arena_is_corrupt): Likewise.
+	(set_arena_corrupt): Likewise.
+	(sysmalloc): Use mmap if there are no usable arenas.
+	(_int_malloc): Likewise.
+	(__libc_malloc): Don't fail if arena_get returns NULL.
+	(_mid_memalign): Likewise.
+	(__libc_calloc): Likewise.
+	(__libc_realloc): Adjust for additional argument to
+	malloc_printerr.
+	(_int_free): Likewise.
+	(malloc_consolidate): Likewise.
+	(_int_realloc): Likewise.
+	(_int_memalign): Don't touch corrupt arenas.
+	* malloc/tst-malloc-backtrace.c: New test case.
+
 	* Makefile (summarize-tests): Fix return value on success.
 
 	* manual/string.texi (Envz Functions): Add envz_remove.
