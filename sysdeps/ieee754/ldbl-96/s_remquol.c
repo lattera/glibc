@@ -44,7 +44,7 @@ __remquol (long double x, long double p, int *quo)
     return (x * p) / (x * p); 			/* p = 0 */
   if ((ex == 0x7fff)				/* x not finite */
       || ((ep == 0x7fff)			/* p is NaN */
-	  && ((hp | lp) != 0)))
+	  && (((hp & 0x7fffffff) | lp) != 0)))
     return (x * p) / (x * p);
 
   if (ep <= 0x7ffb)

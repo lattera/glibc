@@ -1,5 +1,11 @@
 2015-05-19  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18244]
+	* sysdeps/ieee754/ldbl-96/s_remquol.c (__remquol): Ignore explicit
+	high mantissa bit when testing whether P is a NaN.
+	* math/libm-test.inc (remainder_test_data): Add more tests.
+	(remquo_test_data): Likewise.
+
 	[BZ #18049]
 	* sysdeps/i386/fpu/e_atanhl.S (__ieee754_atanhl): For exponents
 	below -32, return the argument, with underflow if subnormal.
