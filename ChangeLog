@@ -1,3 +1,9 @@
+2015-05-20  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* math/s_cproj.c: Add include "math_private.h".
+	* math/s_cprojf.c: Likewise.
+	* math/s_cprojl.c: Likewise.
+
 2015-05-19  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18244]
