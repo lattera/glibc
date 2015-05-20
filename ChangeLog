@@ -1,5 +1,8 @@
 2015-05-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/GlibcConform.pm ($CFLAGS{"POSIX"}): Use
+	-D_POSIX_C_SOURCE=199506L.
+
 	* conform/data/locale.h-data [POSIX] (LC_MESSAGES): Require.
 
 	* conform/data/unistd.h-data (_POSIX_VERSION): Require.

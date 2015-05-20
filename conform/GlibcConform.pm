@@ -28,7 +28,7 @@ require Exporter;
 $CFLAGS{"ISO"} = "-ansi";
 $CFLAGS{"ISO99"} = "-std=c99";
 $CFLAGS{"ISO11"} = "-std=c1x -D_ISOC11_SOURCE";
-$CFLAGS{"POSIX"} = "-D_POSIX_C_SOURCE=199912 -ansi";
+$CFLAGS{"POSIX"} = "-D_POSIX_C_SOURCE=199506L -ansi";
 $CFLAGS{"XPG3"} = "-ansi -D_XOPEN_SOURCE";
 $CFLAGS{"XPG4"} = "-ansi -D_XOPEN_SOURCE -D_XOPEN_SOURCE_EXTENDED";
 $CFLAGS{"UNIX98"} = "-ansi -D_XOPEN_SOURCE=500";
