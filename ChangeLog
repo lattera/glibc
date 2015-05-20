@@ -1,3 +1,8 @@
+2015-07-07  Cyril Hrubis <chrubis@suse.cz>
+
+	[BZ #18592]
+	* misc/sbrk.c: Set errno to ENOMEM on overflow.
+
 2015-07-06  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/aarch64/fpu/math_private.h (__ieee754_sqrt):
