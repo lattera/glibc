@@ -36,6 +36,7 @@
 #include <lowlevellock.h>
 #include <kernel-features.h>
 #include <libc-internal.h>
+#include <pthread-pids.h>
 
 #ifndef TLS_MULTIPLE_THREADS_IN_TCB
 /* Pointer to the corresponding variable in libc.  */
@@ -311,10 +312,7 @@ __pthread_initialize_minimal_internal (void)
 
   /* Minimal initialization of the thread descriptor.  */
   struct pthread *pd = THREAD_SELF;
-#ifdef __NR_set_tid_address
-  INTERNAL_SYSCALL_DECL (err);
-  pd->pid = pd->tid = INTERNAL_SYSCALL (set_tid_address, err, 1, &pd->tid);
-#endif
+  __pthread_initialize_pids (pd);
   THREAD_SETMEM (pd, specific[0], &pd->specific_1stblock[0]);
   THREAD_SETMEM (pd, user_stack, true);
   if (LLL_LOCK_INITIALIZER != 0)

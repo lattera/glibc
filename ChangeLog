@@ -1,5 +1,15 @@
 2015-05-20  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/nacl/pthread-pids.h: New file.
+	* sysdeps/nacl/createthread.c: Include <pthread-pids.h>.
+	(create_thread): Use __nacl_get_tid to initialize PD->tid.
+
+	* nptl/pthread-pids.h: New file.
+	* sysdeps/unix/sysv/linux/pthread-pids.h: New file.
+	* nptl/nptl-init.c: Include <pthread-pids.h>.
+	(__pthread_initialize_minimal_internal):
+	Call __pthread_initialize_pids instead of set_tid_address syscall.
+
 	* sysdeps/unix/sysv/linux/usleep.c: Moved to ...
 	* sysdeps/posix/usleep.c: ... here.
 

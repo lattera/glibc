@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <nacl-interfaces.h>
+#include <pthread-pids.h>
 
 /* See the comments in pthread_create.c for the requirements for these
    two macros and the create_thread function.  */
@@ -33,6 +34,8 @@ static int
 create_thread (struct pthread *pd, const struct pthread_attr *attr,
 	       bool stopped_start, STACK_VARIABLES_PARMS, bool *thread_ran)
 {
+  pd->tid = __nacl_get_tid (pd);
+
   pd->stopped_start = stopped_start;
   if (__glibc_unlikely (stopped_start))
     /* We make sure the thread does not run far by forcing it to get a
