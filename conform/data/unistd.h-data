@@ -6,32 +6,49 @@
 # define pid_t __pid_t
 #endif
 
-optional-constant _POSIX_VERSION
-optional-constant _POSIX2_C_VERSION
+constant _POSIX_VERSION
+#if defined POSIX || defined XPG3 || defined XPG4 || defined UNIX98
+constant _POSIX2_C_VERSION
+#endif
+#ifndef POSIX
 optional-constant _XOPEN_VERSION
 optional-constant _XOPEN_XCU_VERSION
+#endif
 
+#ifndef POSIX
 optional-constant _POSIX2_C_BIND
+#endif
 optional-constant _POSIX2_CHAR_TERM
 optional-constant _POSIX2_LOCALEDEF
 optional-constant _POSIX2_UPE
+#ifndef POSIX
 optional-constant _POSIX2_VERSION
+#endif
 
+#ifndef POSIX
 optional-constant _XOPEN_XPG2
 optional-constant _XOPEN_XPG3
 optional-constant _XOPEN_XPG4
 optional-constant _XOPEN_UNIX
+#endif
 
+#ifndef POSIX
 optional-constant _POSIX_ADVISORY_INFO
+#endif
 optional-constant _POSIX_ASYNCHRONOUS_IO
+#ifndef POSIX
 optional-constant _POSIX_BARRIERS
+#endif
 optional-constant _POSIX_CHOWN_RESTRICTED
+#ifndef POSIX
 optional-constant _POSIX_CLOCK_SELECTION
 optional-constant _POSIX_CPUTIME
+#endif
 optional-constant _POSIX_NO_TRUNC
 optional-constant _POSIX_VDISABLE
 optional-constant _POSIX_SAVED_IDS
 optional-constant _POSIX_JOB_CONTROL
+#ifndef POSIX
 optional-constant _POSIX_MONOTONIC_CLOCK
 optional-constant _POSIX_READER_WRITER_LOCKS
 optional-constant _POSIX_SHELL
@@ -40,13 +57,16 @@ optional-constant _POSIX_SPIN_LOCKS
 optional-constant _POSIX_SPORADIC_SERVER
 optional-constant _POSIX_THREAD_CPUTIME
 optional-constant _POSIX_TYPED_MEMORY_OBJECTS
+#endif
 
 optional-constant _POSIX_THREADS
 optional-constant _POSIX_THREAD_ATTR_STACKADDR
 optional-constant _POSIX_THREAD_ATTR_STACKSIZE
 optional-constant _POSIX_THREAD_PROCESS_SHARED
 optional-constant _POSIX_THREAD_SAFE_FUNCTIONS
+#ifndef POSIX
 optional-constant _POSIX_THREAD_SPORADIC_SERVER
+#endif
 
 # ifdef XOPEN2K
 optional-constant _POSIX_V6_ILP32_OFF32
@@ -74,11 +94,12 @@ optional-constant _XOPEN_REALTIME_THREADS
 optional-constant _XOPEN_SHM
 optional-constant _XOPEN_STREAMS
 # endif
+# ifndef POSIX
 allow _XBS5_ILP32_OFF32
 allow _XBS5_ILP32_OFBIG
 allow _XBS5_LP64_OFF64
 allow _XBS5_LPBIG_OFFBIG
-optional-constant _POSIX_ASYNCHRONOUS_IO
+#endif
 optional-constant _POSIX_MEMLOCK
 optional-constant _POSIX_MEMLOCK_RANGE
 optional-constant _POSIX_MESSAGE_PASSING
@@ -88,7 +109,9 @@ optional-constant _POSIX_SEMAPHORES
 optional-constant _POSIX_SHARED_MEMORY_OBJECTS
 optional-constant _POSIX_SYNCHRONIZED_IO
 optional-constant _POSIX_TIMERS
+#ifndef POSIX
 optional-constant _POSIX_TIMEOUTS
+#endif
 
 optional-constant _POSIX_FSYNC
 optional-constant _POSIX_MAPPED_FILES
@@ -104,14 +127,18 @@ optional-constant _POSIX_ASYNC_IO
 optional-constant _POSIX_PRIO_IO
 optional-constant _POSIX_SYNC_IO
 
+#ifndef POSIX
 optional-constant _POSIX2_PBS
 optional-constant _POSIX2_PBS_ACCOUNTING
 optional-constant _POSIX2_PBS_CHECKPOINT
 optional-constant _POSIX2_PBS_LOCATE
 optional-constant _POSIX2_PBS_MESSAGE
 optional-constant _POSIX2_PBS_TRACK
+#endif
 
+#ifndef POSIX
 optional-constant _POSIX_TIMESTAMP_RESOLUTION
+#endif
 
 constant NULL
 
@@ -121,6 +148,7 @@ constant X_OK
 constant F_OK
 
 constant _CS_PATH
+#ifndef POSIX
 constant _CS_XBS5_ILP32_OFF32_CFLAGS
 constant _CS_XBS5_ILP32_OFF32_LDFLAGS
 constant _CS_XBS5_ILP32_OFF32_LIBS
@@ -137,23 +165,31 @@ constant _CS_XBS5_LPBIG_OFFBIG_CFLAGS
 constant _CS_XBS5_LPBIG_OFFBIG_LDFLAGS
 constant _CS_XBS5_LPBIG_OFFBIG_LIBS
 constant _CS_XBS5_LPBIG_OFFBIG_LINTFLAGS
+#endif
 
 constant SEEK_SET
 constant SEEK_CUR
 constant SEEK_END
 
+#ifndef POSIX
 constant _SC_2_C_BIND
+#endif
 constant _SC_2_C_DEV
+#ifndef POSIX
 constant _SC_2_C_VERSION
+#endif
+constant _SC_2_CHAR_TERM
 constant _SC_2_FORT_DEV
 constant _SC_2_FORT_RUN
 constant _SC_2_LOCALEDEF
+#ifndef POSIX
 constant _SC_2_PBS
 constant _SC_2_PBS_ACCOUNTING
 constant _SC_2_PBS_CHECKPOINT
 constant _SC_2_PBS_LOCATE
 constant _SC_2_PBS_MESSAGE
 constant _SC_2_PBS_TRACK
+#endif
 constant _SC_2_SW_DEV
 constant _SC_2_UPE
 constant _SC_2_VERSION
@@ -162,31 +198,41 @@ constant _SC_AIO_LISTIO_MAX
 constant _SC_AIO_MAX
 constant _SC_AIO_PRIO_DELTA_MAX
 constant _SC_ASYNCHRONOUS_IO
+#ifndef POSIX
 constant _SC_ATEXIT_MAX
 constant _SC_BARRIERS
 constant _SC_BASE
+#endif
 constant _SC_BC_BASE_MAX
 constant _SC_BC_DIM_MAX
 constant _SC_BC_SCALE_MAX
 constant _SC_BC_STRING_MAX
 constant _SC_CHILD_MAX
 constant _SC_CLK_TCK
+#ifndef POSIX
 constant _SC_CLOCK_SELECTION
+#endif
 constant _SC_COLL_WEIGHTS_MAX
 constant _SC_DELAYTIMER_MAX
+#ifndef POSIX
 constant _SC_DEVICE_IO
 constant _SC_DEVICE_SPECIFIC
 constant _SC_DEVICE_SPECIFIC_R
+#endif
 constant _SC_EXPR_NEST_MAX
+#ifndef POSIX
 constant _SC_FD_MGMT
 constant _SC_FIFO
 constant _SC_FILE_ATTRIBUTES
 constant _SC_FILE_LOCKING
 constant _SC_FILE_SYSTEM
+#endif
 constant _SC_FSYNC
 constant _SC_GETGR_R_SIZE_MAX
 constant _SC_GETPW_R_SIZE_MAX
+#ifndef POSIX
 constant _SC_IOV_MAX
+#endif
 constant _SC_JOB_CONTROL
 constant _SC_LINE_MAX
 constant _SC_LOGIN_NAME_MAX
@@ -195,33 +241,47 @@ constant _SC_MEMLOCK
 constant _SC_MEMLOCK_RANGE
 constant _SC_MEMORY_PROTECTION
 constant _SC_MESSAGE_PASSING
+#ifndef POSIX
 constant _SC_MONOTONIC_CLOCK
+#endif
 constant _SC_MQ_OPEN_MAX
 constant _SC_MQ_PRIO_MAX
+#ifndef POSIX
 constant _SC_NETWORKING
+#endif
 constant _SC_NGROUPS_MAX
 constant _SC_OPEN_MAX
 constant _SC_PAGESIZE
+#ifndef POSIX
 constant _SC_PAGE_SIZE
 constant _SC_PASS_MAX
 constant _SC_PIPE
+#endif
 constant _SC_PRIORITIZED_IO
 constant _SC_PRIORITY_SCHEDULING
 constant _SC_RE_DUP_MAX
+#ifndef POSIX
 constant _SC_READER_WRITER_LOCKS
+#endif
 constant _SC_REALTIME_SIGNALS
+#ifndef POSIX
 constant _SC_REGEXP
+#endif
 constant _SC_RTSIG_MAX
 constant _SC_SAVED_IDS
 constant _SC_SEMAPHORES
 constant _SC_SEM_NSEMS_MAX
 constant _SC_SEM_VALUE_MAX
 constant _SC_SHARED_MEMORY_OBJECTS
+#ifndef POSIX
 constant _SC_SHELL
 constant _SC_SIGNALS
+#endif
 constant _SC_SIGQUEUE_MAX
+#ifndef POSIX
 constant _SC_SINGLE_PROCESS
 constant _SC_SPIN_LOCKS
+#endif
 constant _SC_STREAM_MAX
 constant _SC_SYNCHRONIZED_IO
 constant _SC_THREADS
@@ -239,10 +299,14 @@ constant _SC_THREAD_THREADS_MAX
 constant _SC_TIMERS
 constant _SC_TIMER_MAX
 constant _SC_TTY_NAME_MAX
+#ifndef POSIX
 constant _SC_TYPED_MEMORY_OBJECTS
+#endif
 constant _SC_TZNAME_MAX
+#ifndef POSIX
 constant _SC_USER_GROUPS
 constant _SC_USER_GROUPS_R
+#endif
 # ifdef XOPEN2K
 constant _SC_V6_ILP32_OFF32
 constant _SC_V6_ILP32_OFFBIG
@@ -267,11 +331,13 @@ constant _SC_XOPEN_LEGACY
 constant _SC_XOPEN_REALTIME
 constant _SC_XOPEN_REALTIME_THREADS
 # endif
+# ifndef POSIX
 constant _SC_STREAMS
 constant _SC_XBS5_ILP32_OFF32
 constant _SC_XBS5_ILP32_OFFBIG
 constant _SC_XBS5_LP64_OFF64
 constant _SC_XBS5_LPBIG_OFFBIG
+# endif
 # ifdef XOPEN2K
 constant _CS_POSIX_V6_ILP32_OFF32_CFLAGS
 constant _CS_POSIX_V6_ILP32_OFF32_LDFLAGS
@@ -304,8 +370,10 @@ constant _CS_POSIX_V7_LPBIG_OFFBIG_LIBS
 constant _CS_POSIX_V7_WIDTH_RESTRICTED_ENVS
 constant _CS_V7_ENV
 # endif
+# ifndef POSIX
 constant _SC_THREAD_ROBUST_PRIO_INHERIT
 constant _SC_THREAD_ROBUST_PRIO_PROTECT
+#endif
 
 #if !defined POSIX && !defined POSIX2008
 constant F_LOCK
@@ -316,7 +384,9 @@ constant F_TLOCK
 
 constant _PC_ASYNC_IO
 constant _PC_CHOWN_RESTRICTED
+#ifndef POSIX
 constant _PC_FILESIZEBITS
+#endif
 constant _PC_LINK_MAX
 constant _PC_MAX_CANON
 constant _PC_MAX_INPUT
@@ -325,10 +395,12 @@ constant _PC_NO_TRUNC
 constant _PC_PATH_MAX
 constant _PC_PIPE_BUF
 constant _PC_PRIO_IO
+#ifndef POSIX
 constant _PC_REC_INCR_XFER_SIZE
 constant _PC_REC_MAX_XFER_SIZE
 constant _PC_REC_MIN_XFER_SIZE
 constant _PC_REC_XFER_ALIGN
+#endif
 constant _PC_SYNC_IO
 constant _PC_VDISABLE
 
@@ -338,10 +410,12 @@ constant STDERR_FILENO
 
 type size_t
 type ssize_t
+#ifndef POSIX
 type uid_t
 type gid_t
 type off_t
 type pid_t
+#endif
 
 #if !defined POSIX
 type useconds_t
@@ -367,6 +441,9 @@ function {char*} crypt (const char*, const char*)
 #if defined XPG3 || defined XPG4 || defined UNIX98
 function {char*} ctermid (char*)
 function {char*} cuserid (char*)
+#endif
+#ifdef POSIX
+allow cuserid
 #endif
 function int dup (int)
 function int dup2 (int, int)
