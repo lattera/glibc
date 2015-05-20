@@ -1,5 +1,7 @@
 2015-05-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/locale.h-data [POSIX] (LC_MESSAGES): Require.
+
 	* conform/data/unistd.h-data (_POSIX_VERSION): Require.
 	(_POSIX2_C_VERSION): Require if [POSIX || XPG3 || XPG4 || UNIX98].
 	Do not mention otherwise.
