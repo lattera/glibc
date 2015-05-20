@@ -1,3 +1,13 @@
+2015-05-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/i386/Makefile [$(subdir) = misc)]: Remove
+	call_pselect6 object.
+	[$(subdir) = io]: Remove call_sync_file_range object.
+	* sysdeps/unix/sysv/linux/i386/call_pselect6.S: Remove file.
+	* sysdeps/unix/sysv/linux/i386/call_sync_file_range.S: Remove file.
+	* sysdeps/unix/sysv/linux/i386/pselect.c: Remove file.
+	* sysdeps/unix/sysv/linux/i386/sync_file_range.c: Remove file.
+
 2015-05-20  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* math/s_cproj.c: Add include "math_private.h".

@@ -2,7 +2,7 @@
 default-abi := 32
 
 ifeq ($(subdir),misc)
-sysdep_routines += ioperm iopl vm86 call_pselect6
+sysdep_routines += ioperm iopl vm86
 endif
 
 ifeq ($(subdir),elf)
@@ -12,7 +12,7 @@ endif
 
 # fallocate, posix_fallocate use six-argument inline syscalls.
 ifeq ($(subdir),io)
-sysdep_routines += call_sync_file_range libc-do-syscall
+sysdep_routines += libc-do-syscall
 endif
 
 # libpthread uses six-argument inline syscalls.
