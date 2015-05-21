@@ -1,5 +1,10 @@
 2015-05-21  Florian Weimer  <fweimer@redhat.com>
 
+	* stdio-common/vfprintf.c (LABEL, JUMP_TABLE_BASE_LABEL, REF):
+	Adjust jump table label generation macros.
+
+2015-05-21  Florian Weimer  <fweimer@redhat.com>
+
 	* stdio-common/vfprintf.c (vfprintf): Move local variables
 	args_malloced, specs, specs_malloced, and the code after
 	do_positional to the printf_positional function.

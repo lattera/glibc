@@ -233,9 +233,12 @@ static const uint8_t jump_table[] =
 
 #define NOT_IN_JUMP_RANGE(Ch) ((Ch) < L_(' ') || (Ch) > L_('z'))
 #define CHAR_CLASS(Ch) (jump_table[(INT_T) (Ch) - L_(' ')])
+#define LABEL(Name) do_##Name
 #ifdef SHARED
   /* 'int' is enough and it saves some space on 64 bit systems.  */
 # define JUMP_TABLE_TYPE const int
+# define JUMP_TABLE_BASE_LABEL do_form_unknown
+# define REF(Name) &&do_##Name - &&JUMP_TABLE_BASE_LABEL
 # define JUMP(ChExpr, table)						      \
       do								      \
 	{								      \
@@ -250,6 +253,7 @@ static const uint8_t jump_table[] =
       while (0)
 #else
 # define JUMP_TABLE_TYPE const void *const
+# define REF(Name) &&do_##Name
 # define JUMP(ChExpr, table)						      \
       do								      \
 	{								      \
@@ -1328,13 +1332,6 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   /* Process whole format string.  */
   do
     {
-#ifdef SHARED
-# define JUMP_TABLE_BASE_LABEL do_form_unknown
-# define REF(Name) (&&do_##Name - &&JUMP_TABLE_BASE_LABEL)
-#else
-# define REF(Name) &&do_##Name
-#endif
-#define LABEL(Name) do_##Name
       STEP0_3_TABLE;
       STEP4_TABLE;
 
@@ -1928,16 +1925,6 @@ printf_positional (_IO_FILE *s, const CHAR_T *format, int readonly_format,
   /* Now walk through all format specifiers and process them.  */
   for (; (size_t) nspecs_done < nspecs; ++nspecs_done)
     {
-#undef REF
-#ifdef SHARED
-# undef JUMP_TABLE_BASE_LABEL
-# define JUMP_TABLE_BASE_LABEL do2_form_unknown
-# define REF(Name) (&&do2_##Name - &&JUMP_TABLE_BASE_LABEL)
-#else
-# define REF(Name) &&do2_##Name
-#endif
-#undef LABEL
-#define LABEL(Name) do2_##Name
       STEP4_TABLE;
 
       int is_negative;
