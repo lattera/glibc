@@ -1,5 +1,15 @@
 2015-05-21  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/ieee754/dbl-64/e_lgamma_r.c: Include <libc-internal.h>.
+	(__ieee754_lgamma_r): Ignore uninitialized warnings around use of
+	NADJ.
+	* sysdeps/ieee754/flt-32/e_lgammaf_r.c: Include <libc-internal.h>.
+	(__ieee754_lgammaf_r): Ignore uninitialized warnings around use of
+	NADJ.
+	* sysdeps/ieee754/ldbl-96/e_lgammal_r.c: Include <libc-internal.h>.
+	(__ieee754_lgammal_r): Ignore uninitialized warnings around use of
+	NADJ.
+
 	* sysdeps/ieee754/dbl-64/mpa.c (norm): Remove if condition on
 	(p == 4) case.
 

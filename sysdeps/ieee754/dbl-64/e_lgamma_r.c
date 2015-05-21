@@ -77,6 +77,7 @@
  *
  */
 
+#include <libc-internal.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -294,7 +295,18 @@ __ieee754_lgamma_r(double x, int *signgamp)
 	} else
     /* 2**58 <= x <= inf */
 	    r =  x*(__ieee754_log(x)-one);
+	/* NADJ is set for negative arguments but not otherwise,
+	   resulting in warnings that it may be used uninitialized
+	   although in the cases where it is used it has always been
+	   set.  */
+	DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (4, 7)
+	DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wmaybe-uninitialized");
+#else
+	DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wuninitialized");
+#endif
 	if(hx<0) r = nadj - r;
+	DIAG_POP_NEEDS_COMMENT;
 	return r;
 }
 strong_alias (__ieee754_lgamma_r, __lgamma_r_finite)
