@@ -1,5 +1,12 @@
 2015-05-21  Florian Weimer  <fweimer@redhat.com>
 
+	* stdio-common/vfprintf.c (vfprintf): Move local variables
+	args_malloced, specs, specs_malloced, and the code after
+	do_positional to the printf_positional function.
+	(printf_positional): New function.
+
+2015-05-21  Florian Weimer  <fweimer@redhat.com>
+
 	* stdio-common/vfprintf.c (jump_table): Move out of the vfprintf
 	function.
 	(NOT_IN_JUMP_RANGE, CHAR_CLASS, LABEL, REF, JUMP, STEP0_3_TABLE,
