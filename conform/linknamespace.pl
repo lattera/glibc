@@ -46,9 +46,12 @@ close (STDSYMS) || die ("close $stdsyms_file: $!\n");
 # linkage when stdio.h included (and possibly not then), not
 # generally.
 #
+# * Bug 18442: re_syntax_options wrongly brought in by regcomp and
+# used by re_comp.
+#
 # * False positive: matherr only used conditionally.
 #
-@whitelist = qw(signgam stdin stdout stderr matherr);
+@whitelist = qw(signgam stdin stdout stderr re_syntax_options matherr);
 foreach my $sym (@whitelist) {
   $stdsyms{$sym} = 1;
 }
