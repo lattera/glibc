@@ -1,5 +1,8 @@
 2015-05-21  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/ieee754/dbl-64/mpa.c (norm): Remove if condition on
+	(p == 4) case.
+
 	* conform/linknamespace.pl (@whitelist): Add re_syntax_options.
 	* conform/Makefile (test-xfail-UNIX98/regex.h/linknamespace):
 	Remove variable.

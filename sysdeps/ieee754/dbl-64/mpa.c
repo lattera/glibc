@@ -119,7 +119,8 @@ __cpy (const mp_no *x, mp_no *y, int p)
 
 #ifndef NO___MP_DBL
 /* Convert a multiple precision number *X into a double precision
-   number *Y, normalized case  (|x| >= 2**(-1022))).  */
+   number *Y, normalized case (|x| >= 2**(-1022))).  X has precision
+   P, which is positive.  */
 static void
 norm (const mp_no *x, double *y, int p)
 {
@@ -135,7 +136,7 @@ norm (const mp_no *x, double *y, int p)
 	c = X[1] + R * X[2];
       else if (p == 3)
 	c = X[1] + R * (X[2] + R * X[3]);
-      else if (p == 4)
+      else /* p == 4.  */
 	c = (X[1] + R * X[2]) + R * R * (X[3] + R * X[4]);
     }
   else
