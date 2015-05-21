@@ -1,3 +1,10 @@
+2015-05-21  Carlos O'Donell  <carlos@redhat.com>
+
+	* benchtests/Makefile (stdio-common-bench): Define.
+	(benchset): Add stdio-common-bench.
+	* sprintf-inputs: New file.
+	* sprintf-source.c: New file.
+
 2015-05-21  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #13028]

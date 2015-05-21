@@ -48,7 +48,9 @@ include ../gen-locales.mk
 
 stdlib-bench := strtod
 
-benchset := $(string-bench-all) $(stdlib-bench)
+stdio-common-bench := sprintf
+
+benchset := $(string-bench-all) $(stdlib-bench) $(stdio-common-bench)
 
 CFLAGS-bench-ffs.c += -fno-builtin
 CFLAGS-bench-ffsll.c += -fno-builtin
