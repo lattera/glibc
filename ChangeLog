@@ -1,3 +1,11 @@
+2015-05-21  Florian Weimer  <fweimer@redhat.com>
+
+	* stdio-common/vfprintf.c (jump_table): Move out of the vfprintf
+	function.
+	(NOT_IN_JUMP_RANGE, CHAR_CLASS, LABEL, REF, JUMP, STEP0_3_TABLE,
+	STEP4_TABLE, process_arg): Move macro definitions
+	out of the vfprintf function.  (Cosmetic change only.)
+
 2015-05-21  Carlos O'Donell  <carlos@redhat.com>
 
 	* benchtests/Makefile (stdio-common-bench): Define.

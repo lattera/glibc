@@ -202,71 +202,9 @@ static const CHAR_T null[] = L_("(null)");
 /* Size of the work_buffer variable (in characters, not bytes.  */
 enum { WORK_BUFFER_SIZE = 1000 };
 
-/* Helper function to provide temporary buffering for unbuffered streams.  */
-static int buffered_vfprintf (FILE *stream, const CHAR_T *fmt, va_list)
-     __THROW __attribute__ ((noinline)) internal_function;
-
-/* Handle unknown format specifier.  */
-static int printf_unknown (FILE *, const struct printf_info *,
-			   const void *const *) __THROW;
-
-/* Group digits of number string.  */
-static CHAR_T *group_number (CHAR_T *, CHAR_T *, const char *, THOUSANDS_SEP_T)
-     __THROW internal_function;
-
-/* The function itself.  */
-int
-vfprintf (FILE *s, const CHAR_T *format, va_list ap)
-{
-  /* The character used as thousands separator.  */
-  THOUSANDS_SEP_T thousands_sep = 0;
-
-  /* The string describing the size of groups of digits.  */
-  const char *grouping;
-
-  /* Place to accumulate the result.  */
-  int done;
-
-  /* Current character in format string.  */
-  const UCHAR_T *f;
-
-  /* End of leading constant string.  */
-  const UCHAR_T *lead_str_end;
-
-  /* Points to next format specifier.  */
-  const UCHAR_T *end_of_spec;
-
-  /* Buffer intermediate results.  */
-  CHAR_T work_buffer[WORK_BUFFER_SIZE];
-  CHAR_T *workstart = NULL;
-  CHAR_T *workend;
-
-  /* We have to save the original argument pointer.  */
-  va_list ap_save;
-
-  /* Count number of specifiers we already processed.  */
-  int nspecs_done;
-
-  /* For the %m format we may need the current `errno' value.  */
-  int save_errno = errno;
-
-  /* 1 if format is in read-only memory, -1 if it is in writable memory,
-     0 if unknown.  */
-  int readonly_format = 0;
-
-  /* For the argument descriptions, which may be allocated on the heap.  */
-  void *args_malloced = NULL;
-
-  /* For positional argument handling.  */
-  struct printf_spec *specs;
-
-  /* Track if we malloced the SPECS array and thus must free it.  */
-  bool specs_malloced = false;
-
-  /* This table maps a character into a number representing a
-     class.  In each step there is a destination label for each
-     class.  */
-  static const uint8_t jump_table[] =
+/* This table maps a character into a number representing a class.  In
+   each step there is a destination label for each class.  */
+static const uint8_t jump_table[] =
   {
     /* ' ' */  1,            0,            0, /* '#' */  4,
 	       0, /* '%' */ 14,            0, /* '\''*/  6,
@@ -1266,6 +1204,67 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       }									      \
       break;
 #endif
+
+/* Helper function to provide temporary buffering for unbuffered streams.  */
+static int buffered_vfprintf (FILE *stream, const CHAR_T *fmt, va_list)
+     __THROW __attribute__ ((noinline)) internal_function;
+
+/* Handle unknown format specifier.  */
+static int printf_unknown (FILE *, const struct printf_info *,
+			   const void *const *) __THROW;
+
+/* Group digits of number string.  */
+static CHAR_T *group_number (CHAR_T *, CHAR_T *, const char *, THOUSANDS_SEP_T)
+     __THROW internal_function;
+
+/* The function itself.  */
+int
+vfprintf (FILE *s, const CHAR_T *format, va_list ap)
+{
+  /* The character used as thousands separator.  */
+  THOUSANDS_SEP_T thousands_sep = 0;
+
+  /* The string describing the size of groups of digits.  */
+  const char *grouping;
+
+  /* Place to accumulate the result.  */
+  int done;
+
+  /* Current character in format string.  */
+  const UCHAR_T *f;
+
+  /* End of leading constant string.  */
+  const UCHAR_T *lead_str_end;
+
+  /* Points to next format specifier.  */
+  const UCHAR_T *end_of_spec;
+
+  /* Buffer intermediate results.  */
+  CHAR_T work_buffer[WORK_BUFFER_SIZE];
+  CHAR_T *workstart = NULL;
+  CHAR_T *workend;
+
+  /* We have to save the original argument pointer.  */
+  va_list ap_save;
+
+  /* Count number of specifiers we already processed.  */
+  int nspecs_done;
+
+  /* For the %m format we may need the current `errno' value.  */
+  int save_errno = errno;
+
+  /* 1 if format is in read-only memory, -1 if it is in writable memory,
+     0 if unknown.  */
+  int readonly_format = 0;
+
+  /* For the argument descriptions, which may be allocated on the heap.  */
+  void *args_malloced = NULL;
+
+  /* For positional argument handling.  */
+  struct printf_spec *specs;
+
+  /* Track if we malloced the SPECS array and thus must free it.  */
+  bool specs_malloced = false;
 
   /* Orient the stream.  */
 #ifdef ORIENT
