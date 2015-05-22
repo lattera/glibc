@@ -1,5 +1,12 @@
 2015-05-22  Joseph Myers  <joseph@codesourcery.com>
 
+	* soft-fp/fmadf4.c: Include <libc-internal.h>.
+	(__fma): Ignore uninitialized warnings around packing.
+	* soft-fp/fmasf4.c: Include <libc-internal.h>.
+	(__fmaf): Ignore uninitialized warnings around packing.
+	* soft-fp/fmatf4.c: Include <libc-internal.h>.
+	(__fmal): Ignore uninitialized warnings around packing.
+
 	* sysdeps/ieee754/ldbl-128/k_tanl.c: Include <libc-internal.h>.
 	(__kernel_tanl): Ignore uninitialized warnings around use of SIGN.
 	* sysdeps/ieee754/ldbl-128ibm/k_tanl.c: Include <libc-internal.h>.
