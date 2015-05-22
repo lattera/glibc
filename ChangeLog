@@ -1,3 +1,15 @@
+2015-05-22  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18444]
+	* string/basename.c (basename): Rename to __basename and define as
+	weak alias of __basename.  Use libc_hidden_weak.
+	* include/string.h (__basename): Declare.  Use libc_hidden_proto.
+	* sysdeps/unix/sysv/linux/pathconf.c (distinguish_extX): Call
+	__basename instead of basename.
+	* conform/Makefile (test-xfail-POSIX2008/unistd.h/linknamespace):
+	Remove variable.
+	(test-xfail-XOPEN2K8/unistd.h/linknamespace): Likewise.
+
 2015-05-18  Florian Weimer  <fweimer@redhat.com>
 
 	* libio/libioP.h (_IO_MEMBER_TYPE, _IO_CAST_FIELD_ACCESS)

@@ -79,7 +79,7 @@ distinguish_extX (const struct statfs *fsbuf, const char *file, int fd)
   if (n != -1 && n < sizeof (path))
     {
       path[n] = '\0';
-      char *base = strdupa (basename (path));
+      char *base = strdupa (__basename (path));
       __snprintf (path, sizeof (path), "/sys/fs/ext4/%s", base);
 
       return __access (path, F_OK) == 0 ? EXT4_LINK_MAX : EXT2_LINK_MAX;

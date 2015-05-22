@@ -82,6 +82,8 @@ libc_hidden_proto (__strndup)
 libc_hidden_proto (__strerror_r)
 libc_hidden_proto (__strverscmp)
 libc_hidden_proto (basename)
+extern char *__basename (const char *__filename) __THROW __nonnull ((1));
+libc_hidden_proto (__basename)
 libc_hidden_proto (strcoll)
 libc_hidden_proto (__strcoll_l)
 libc_hidden_proto (__strxfrm_l)
