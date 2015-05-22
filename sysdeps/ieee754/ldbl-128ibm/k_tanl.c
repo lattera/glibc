@@ -56,6 +56,7 @@
  *		       = 1 - 2*(tan(y) - (tan(y)^2)/(1+tan(y)))
  */
 
+#include <libc-internal.h>
 #include <math.h>
 #include <math_private.h>
 static const long double
@@ -129,8 +130,19 @@ __kernel_tanl (long double x, long double y, int iy)
     {
       v = (long double) iy;
       w = (v - 2.0 * (x - (w * w / (w + v) - r)));
+      /* SIGN is set for arguments that reach this code, but not
+	 otherwise, resulting in warnings that it may be used
+	 uninitialized although in the cases where it is used it has
+	 always been set.  */
+      DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (4, 7)
+      DIAG_IGNORE_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
+#else
+      DIAG_IGNORE_NEEDS_COMMENT (5, "-Wuninitialized");
+#endif
       if (sign < 0)
 	w = -w;
+      DIAG_POP_NEEDS_COMMENT;
       return w;
     }
   if (iy == 1)
