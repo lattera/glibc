@@ -874,7 +874,7 @@ __erfcl (long double x)
 	  y = C19b + z * neval (z, RNr19, NRNr19) / deval (z, RDr19, NRDr19);
 	  y += C19a;
 	  break;
-	case 9:
+	default: /* i == 9.  */
 	  z = x - 1.125L;
 	  y = C20b + z * neval (z, RNr20, NRNr20) / deval (z, RDr20, NRDr20);
 	  y += C20a;

@@ -1,5 +1,9 @@
 2015-05-22  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/ieee754/ldbl-128/s_erfl.c (__erfcl): Make case 9 in
+	switch statement into default case.
+	* sysdeps/ieee754/ldbl-128ibm/s_erfl.c (__erfcl): Likewise.
+
 	* sysdeps/ieee754/ldbl-128/e_asinl.c (__ieee754_asinl): Don't use
 	a conditional in forcing "inexact".
 	* sysdeps/ieee754/ldbl-128ibm/e_asinl.c (__ieee754_asinl):
