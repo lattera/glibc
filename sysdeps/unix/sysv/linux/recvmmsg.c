@@ -49,12 +49,15 @@ recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
   return result;
 }
 #elif defined __NR_socketcall
-# ifndef __ASSUME_RECVMMSG_SOCKETCALL
-extern int __internal_recvmmsg (int fd, struct mmsghdr *vmessages,
-				unsigned int vlen, int flags,
-				struct timespec *tmo)
-     attribute_hidden;
-
+# include <socketcall.h>
+# ifdef __ASSUME_RECVMMSG_SOCKETCALL
+int
+recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
+	  struct timespec *tmo)
+{
+  return SOCKETCALL_CANCEL (recvmmsg, fd, vmessages, vlen, flags, tmo);
+}
+# else
 static int have_recvmmsg;
 
 int
@@ -63,7 +66,8 @@ recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
 {
   if (__glibc_likely (have_recvmmsg >= 0))
     {
-      int ret = __internal_recvmmsg (fd, vmessages, vlen, flags, tmo);
+      int ret = SOCKETCALL_CANCEL (recvmmsg, fd, vmessages, vlen, flags,
+				   tmo);
       /* The kernel returns -EINVAL for unknown socket operations.
 	 We need to convert that error to an ENOSYS error.  */
       if (__builtin_expect (ret < 0, 0)
@@ -74,7 +78,7 @@ recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
 	     descriptor and all other parameters cleared.  This call
 	     will not cause any harm and it will return
 	     immediately.  */
-	  ret = __internal_recvmmsg (-1, 0, 0, 0, 0);
+	  ret = SOCKETCALL_CANCEL (invalid, -1);
 	  if (errno == EINVAL)
 	    {
 	      have_recvmmsg = -1;
@@ -92,10 +96,7 @@ recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
   __set_errno (ENOSYS);
   return -1;
 }
-# else
-/* When __ASSUME_RECVMMSG_SOCKETCALL recvmmsg is defined in
-   internal_recvmmsg.S.  */
-# endif
+# endif /* __ASSUME_RECVMMSG_SOCKETCALL  */
 #else
 # include <socket/recvmmsg.c>
 #endif

@@ -200,6 +200,12 @@ CFLAGS-open64.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pause.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-recv.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-send.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-accept.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-sendto.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-sendmsg.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-connect.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-recvmsg.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-recvfrom.c = -fexceptions -fasynchronous-unwind-tables
 
 CFLAGS-pt-system.c = -fexceptions
 

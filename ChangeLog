@@ -1,3 +1,90 @@
+2015-05-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* nptl/Makefile (CFLAGS-accept.c): Add -fexceptions and
+	-fasynchronous-unwind-tables.
+	(CFLAGS-sendto.c): Likewise.
+	(CFLAGS-sendmsg.c): Likewise.
+	(CFLAGS-connect.c): Likewise.
+	(CFLAGS-recvmsg.c): Likewise.
+	(CFLAGS-recvfrom.c): Likewise.
+	* sysdeps/unix/sysv/linux/socketcall.h (SOCKOP_invalid): Define.
+	(SOCKETCALL): New macro: non-cancellable socketcall.
+	(SOCKETCALL_CANCEL): New macro: cancellable socketcall.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir) = socket]: Remove
+	internal_accept4, internal_recvmmsg, and internal_sendmmsg rules.
+	* sysdeps/unix/sysv/linux/accept.c: New file.
+	* sysdeps/unix/sysv/linux/bind.c: Likewise.
+	* sysdeps/unix/sysv/linux/connect.c: Likewise.
+	* sysdeps/unix/sysv/linux/getpeername.c: Likewise.
+	* sysdeps/unix/sysv/linux/getsockname.c: Likewise.
+	* sysdeps/unix/sysv/linux/getsockopt.c: Likewise.
+	* sysdeps/unix/sysv/linux/listen.c: Likewise.
+	* sysdeps/unix/sysv/linux/recv.c: Likewise.
+	* sysdeps/unix/sysv/linux/recvfrom.c: Likewise.
+	* sysdeps/unix/sysv/linux/recvmsg.c: Likewise.
+	* sysdeps/unix/sysv/linux/send.c: Likewise.
+	* sysdeps/unix/sysv/linux/sendmsg.c: Likewise.
+	* sysdeps/unix/sysv/linux/sendto.c: Likewise.
+	* sysdeps/unix/sysv/linux/setsockopt.c: Likewise.
+	* sysdeps/unix/sysv/linux/shutdown.c: Likewise.
+	* sysdeps/unix/sysv/linux/socket.c: Likewise.
+	* sysdeps/unix/sysv/linux/socketpair.c: Likewise.
+	* sysdeps/unix/sysv/linux/recvmmsg.c (__internal_recvmmsg): Remove
+	prototype.
+	(recvmmsg) [__ASSUME_RECVMMSG_SOCKETCALL]: Add C based implementation.
+	(recvmmsg) [!__ASSUME_RECVMMSG_SOCKETCALL]: Use SOCKETCALL_CANCEL macro
+	instead of __internal_xxx function.
+	* sysdeps/unix/sysv/linux/accept4.c (__internal_accept4): Remove
+	prototype.
+	(accept4) [__ASSUME_ACCEPT4_SOCKETCALL]: Add C based implementation.
+	(accept4) [!__ASSUME_ACCEPT4_SOCKETCALL]: Use SOCKETCALL_CANCEL macro
+	instead of __internal_xxx function.
+	* sysdeps/unix/sysv/linux/sendmmsg.c (__internal_sendmmsg): Remove
+	prototype.
+	(sendmmsg) [__ASSUME_SENDMMSG_SOCKETCALL]: Add C based implementation.
+	(sendmmsg) [!__ASSUME_SENDMMSG_SOCKETCALL]: Use SOCKETCALL_CANCEL macro
+	instead of __internal_xxx function.
+	* sysdeps/unix/sysv/linux/accept.S: Remove file.
+	* sysdeps/unix/sysv/linux/bind.S: Likewise.
+	* sysdeps/unix/sysv/linux/connect.S: Likewise.
+	* sysdeps/unix/sysv/linux/getpeername.S: Likewise.
+	* sysdeps/unix/sysv/linux/getsockname.S: Likewise.
+	* sysdeps/unix/sysv/linux/getsockopt.S: Likewise.
+	* sysdeps/unix/sysv/linux/arm/internal_accept4.S: Likewise.
+	* sysdeps/unix/sysv/linux/arm/internal_recvmmsg.S: Likewise.
+	* sysdeps/unix/sysv/linux/arm/internal_sendmmsg.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/accept4.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/internal_accept4.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/internal_accept4.S: Likewise.
+	* sysdeps/unix/sysv/linux/internal_recvmmsg.S: Likewise.
+	* sysdeps/unix/sysv/linux/internal_sendmmsg.S: Likewise.
+	* sysdeps/unix/sysv/linux/listen.S: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/internal_accept4.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/internal_recvmmsg.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/internal_sendmmsg.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/recv.S: Likewise.
+	* sysdeps/unix/sysv/linux/recvfrom.S: Likewise.
+	* sysdeps/unix/sysv/linux/recvmsg.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/send.S: Likewise.
+	* sysdeps/unix/sysv/linux/sendmsg.S: Likewise.
+	* sysdeps/unix/sysv/linux/sendto.S: Likewise.
+	* sysdeps/unix/sysv/linux/setsockopt.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/shutdown.S: Likewise.
+	* sysdeps/unix/sysv/linux/socketpair.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Adjust comment on how
+	socketcall is implemented in GLIBC.
+
 2015-05-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* soft-fp/fmadf4.c: Include <libc-internal.h>.

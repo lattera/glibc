@@ -50,11 +50,14 @@ __sendmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags)
 libc_hidden_def (__sendmmsg)
 weak_alias (__sendmmsg, sendmmsg)
 #elif defined __NR_socketcall
-# ifndef __ASSUME_SENDMMSG_SOCKETCALL
-extern int __internal_sendmmsg (int fd, struct mmsghdr *vmessages,
-				unsigned int vlen, int flags)
-     attribute_hidden;
-
+# include <socketcall.h>
+# ifdef __ASSUME_SENDMMSG_SOCKETCALL
+int
+__sendmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags)
+{
+  return SOCKETCALL_CANCEL (sendmmsg, fd, vmessages, vlen, flags);
+}
+# else
 static int have_sendmmsg;
 
 int
@@ -62,7 +65,7 @@ __sendmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags)
 {
   if (__glibc_likely (have_sendmmsg >= 0))
     {
-      int ret = __internal_sendmmsg (fd, vmessages, vlen, flags);
+      int ret = SOCKETCALL_CANCEL (sendmmsg, fd, vmessages, vlen, flags);
       /* The kernel returns -EINVAL for unknown socket operations.
 	 We need to convert that error to an ENOSYS error.  */
       if (__builtin_expect (ret < 0, 0)
@@ -73,7 +76,7 @@ __sendmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags)
 	     descriptor and all other parameters cleared.  This call
 	     will not cause any harm and it will return
 	     immediately.  */
-	  ret = __internal_sendmmsg (-1, 0, 0, 0);
+	  ret = SOCKETCALL_CANCEL (invalid, -1);
 	  if (errno == EINVAL)
 	    {
 	      have_sendmmsg = -1;
@@ -91,12 +94,9 @@ __sendmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags)
   __set_errno (ENOSYS);
   return -1;
 }
+# endif /* __ASSUME_SENDMMSG_SOCKETCALL  */
 libc_hidden_def (__sendmmsg)
 weak_alias (__sendmmsg, sendmmsg)
-# else
-/* When __ASSUME_SENDMMSG_SOCKETCALL sendmmsg is defined in
-   internal_sendmmsg.S.  */
-# endif
 #else
 # include <socket/sendmmsg.c>
 #endif

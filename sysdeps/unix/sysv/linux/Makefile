@@ -11,10 +11,6 @@ ifeq ($(subdir),malloc)
 CFLAGS-malloc.c += -DMORECORE_CLEARS=2
 endif
 
-ifeq ($(subdir),socket)
-sysdep_routines += internal_accept4 internal_recvmmsg internal_sendmmsg
-endif
-
 ifeq ($(subdir),misc)
 include $(firstword $(wildcard $(sysdirs:=/sysctl.mk)))
 
