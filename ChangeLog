@@ -1,3 +1,9 @@
+2015-05-22  Roland McGrath  <roland@hack.frob.com>
+
+	* nptl/nptl-init.c (__pthread_initialize_minimal_internal):
+	Use a separate INTERNAL_SYSCALL_DECL (err); in a local scope
+	for each INTERNAL_SYSCALL use.
+
 2015-05-22  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #438]

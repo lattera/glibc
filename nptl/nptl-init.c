@@ -322,19 +322,22 @@ __pthread_initialize_minimal_internal (void)
 #endif
 
   /* Initialize the robust mutex data.  */
+  {
 #ifdef __PTHREAD_MUTEX_HAVE_PREV
-  pd->robust_prev = &pd->robust_head;
+    pd->robust_prev = &pd->robust_head;
 #endif
-  pd->robust_head.list = &pd->robust_head;
+    pd->robust_head.list = &pd->robust_head;
 #ifdef __NR_set_robust_list
-  pd->robust_head.futex_offset = (offsetof (pthread_mutex_t, __data.__lock)
-				  - offsetof (pthread_mutex_t,
-					      __data.__list.__next));
-  int res = INTERNAL_SYSCALL (set_robust_list, err, 2, &pd->robust_head,
-			      sizeof (struct robust_list_head));
-  if (INTERNAL_SYSCALL_ERROR_P (res, err))
+    pd->robust_head.futex_offset = (offsetof (pthread_mutex_t, __data.__lock)
+				    - offsetof (pthread_mutex_t,
+						__data.__list.__next));
+    INTERNAL_SYSCALL_DECL (err);
+    int res = INTERNAL_SYSCALL (set_robust_list, err, 2, &pd->robust_head,
+				sizeof (struct robust_list_head));
+    if (INTERNAL_SYSCALL_ERROR_P (res, err))
 #endif
-    set_robust_list_not_avail ();
+      set_robust_list_not_avail ();
+  }
 
 #ifdef __NR_futex
 # ifndef __ASSUME_PRIVATE_FUTEX
@@ -342,6 +345,7 @@ __pthread_initialize_minimal_internal (void)
      doing the test once this early is beneficial.  */
   {
     int word = 0;
+    INTERNAL_SYSCALL_DECL (err);
     word = INTERNAL_SYSCALL (futex, err, 3, &word,
 			    FUTEX_WAKE | FUTEX_PRIVATE_FLAG, 1);
     if (!INTERNAL_SYSCALL_ERROR_P (word, err))
@@ -362,6 +366,7 @@ __pthread_initialize_minimal_internal (void)
 	 is irrelevant.  Given that passing six parameters is difficult
 	 on some architectures we just pass whatever random value the
 	 calling convention calls for to the kernel.  It causes no harm.  */
+      INTERNAL_SYSCALL_DECL (err);
       word = INTERNAL_SYSCALL (futex, err, 5, &word,
 			       FUTEX_WAIT_BITSET | FUTEX_CLOCK_REALTIME
 			       | FUTEX_PRIVATE_FLAG, 1, NULL, 0);
@@ -414,8 +419,11 @@ __pthread_initialize_minimal_internal (void)
 # ifdef SIGSETXID
   __sigaddset (&sa.sa_mask, SIGSETXID);
 # endif
-  (void) INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_UNBLOCK, &sa.sa_mask,
-			   NULL, _NSIG / 8);
+  {
+    INTERNAL_SYSCALL_DECL (err);
+    (void) INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_UNBLOCK, &sa.sa_mask,
+			     NULL, _NSIG / 8);
+  }
 #endif
 
   /* Get the size of the static and alignment requirements for the TLS
