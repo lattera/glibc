@@ -1,3 +1,11 @@
+2015-08-05  Daniel Marjamäki  <daniel.marjamaki@evidente.se>
+
+	[BZ #18265]
+	* wcsmbs/wchar.h (wcscat): Add __nonnull attribute.
+	(wcsncat): Likewise.
+	(wcscmp): Likewise.
+	(wcsncmp): Likewise.
+
 2015-08-05  Mike Frysinger  <vapier@gentoo.org>
 
 	* test-skeleton.c (usage): New function.

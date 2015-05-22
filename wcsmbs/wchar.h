@@ -155,18 +155,19 @@ extern wchar_t *wcsncpy (wchar_t *__restrict __dest,
 
 /* Append SRC onto DEST.  */
 extern wchar_t *wcscat (wchar_t *__restrict __dest,
-			const wchar_t *__restrict __src) __THROW;
+			const wchar_t *__restrict __src)
+     __THROW __nonnull ((1, 2));
 /* Append no more than N wide-characters of SRC onto DEST.  */
 extern wchar_t *wcsncat (wchar_t *__restrict __dest,
 			 const wchar_t *__restrict __src, size_t __n)
-     __THROW;
+     __THROW __nonnull ((1, 2));
 
 /* Compare S1 and S2.  */
 extern int wcscmp (const wchar_t *__s1, const wchar_t *__s2)
-     __THROW __attribute_pure__;
+     __THROW __attribute_pure__ __nonnull ((1, 2));
 /* Compare N wide-characters of S1 and S2.  */
 extern int wcsncmp (const wchar_t *__s1, const wchar_t *__s2, size_t __n)
-     __THROW __attribute_pure__;
+     __THROW __attribute_pure__ __nonnull ((1, 2));
 __END_NAMESPACE_STD
 
 #ifdef __USE_XOPEN2K8
