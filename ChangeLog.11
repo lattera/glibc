@@ -1733,7 +1733,7 @@
 2000-09-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* manual/errno.texi: Correct error text for ENXIO.
-	Reported by Jörg Schilling <schilling@fokus.gmd.de>.
+	Reported by JÃ¶rg Schilling <schilling@fokus.gmd.de>.
 
 2000-09-27  Jes Sorensen  <jes@linuxcare.com>
 

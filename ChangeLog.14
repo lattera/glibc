@@ -4149,7 +4149,7 @@
 	* sysdeps/x86_64/fpu/s_ilogbl.S: New file.
 	* sysdeps/x86_64/fpu/e_remainderl.S: New file.
 
-	* math/libm-test.inc (floor_test): Test also ±0.25.
+	* math/libm-test.inc (floor_test): Test also Â±0.25.
 	(ceil_test): Test -0.25.
 
 2003-11-17  Ulrich Drepper  <drepper@redhat.com>
@@ -4658,7 +4658,7 @@
 	(hol_entry_long_iterate): Change __attribute to __attribute__.
 	(_help, __argp_error, __argp_failure) [!_LIBC && (HAVE_FLOCKFILE
 	&& HAVE_FUNLOCKFILE)]: Protect call to flockfile and funlockfile.
-	(__argp_basename) [!_LIBC]: New. Taken from LSH, by Niels Möller,
+	(__argp_basename) [!_LIBC]: New. Taken from LSH, by Niels MÃ¶ller,
 	modified after comments from Ulrich Drepper.
 	(__argp_short_program_name): Ditto.
 	(__argp_state_help, __argp_error, __argp_failure): Use it.
@@ -12372,7 +12372,7 @@
 	* elf/reldep6.c: Create relocation dependency before closing the first
 	module.
 
-2003-01-10  Guido Günther  <agx@sigxcpu.org>
+2003-01-10  Guido GÃ¼nther  <agx@sigxcpu.org>
 
 	* sysdeps/unix/mips/fork.S: Add PSEUDO_END.
 	* sysdeps/unix/mips/brk.S: Likewise.
@@ -15234,7 +15234,7 @@
 
 	* manual/examples/dir.c: Don't include <stddef.h>.
 	* manual/examples/select.c: Include <errno.h> for TEMP_FAILURE_RETRY.
-	Reported by Frédéric Delanoy <delanoy_f@yahoo.com>.
+	Reported by FrÃ©dÃ©ric Delanoy <delanoy_f@yahoo.com>.
 
 2002-11-02  H.J. Lu  <hjl@gnu.org>
 
