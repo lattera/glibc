@@ -158,8 +158,9 @@ __ieee754_asinl (long double x)
 	      long double force_underflow = x * x;
 	      math_force_eval (force_underflow);
 	    }
-	  if (huge + x > one)
-	    return x;		/* return x with inexact if x!=0 */
+	  long double force_inexact = huge + x;
+	  math_force_eval (force_inexact);
+	  return x;		/* return x with inexact if x!=0 */
 	}
       else
 	{

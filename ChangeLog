@@ -1,3 +1,10 @@
+2015-05-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/ldbl-128/e_asinl.c (__ieee754_asinl): Don't use
+	a conditional in forcing "inexact".
+	* sysdeps/ieee754/ldbl-128ibm/e_asinl.c (__ieee754_asinl):
+	Likewise.
+
 2015-05-22  Roland McGrath  <roland@hack.frob.com>
 
 	* nptl/nptl-init.c (__pthread_initialize_minimal_internal):
