@@ -1,3 +1,13 @@
+2015-05-22  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Remove obsolete aliases that broke 'locale -a'
+	[BZ #18412]
+	* intl/locale.alias: Remove obsolete aliases "bokmål" and "français"
+	which caused 'locale -a' to output Latin-1 data in UTF-8 locales,
+	breaking some applications that use 'locale -a' output.
+	Change the encoding of this file from Latin-1 to ASCII to avoid
+	other potential problems with people grepping this file.
+
 2015-05-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* nptl/Makefile (CFLAGS-accept.c): Add -fexceptions and
