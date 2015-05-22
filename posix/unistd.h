@@ -66,6 +66,9 @@ __BEGIN_DECLS
 /* The utilities on GNU systems also correspond to this version.  */
 #define _POSIX2_VERSION	__POSIX2_THIS_VERSION
 
+/* This symbol was required until the 2001 edition of POSIX.  */
+#define	_POSIX2_C_VERSION	__POSIX2_THIS_VERSION
+
 /* If defined, the implementation supports the
    C Language Bindings Option.  */
 #define	_POSIX2_C_BIND	__POSIX2_THIS_VERSION

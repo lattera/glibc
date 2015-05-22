@@ -1,5 +1,10 @@
 2015-05-22  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #438]
+	* posix/unistd.h (_POSIX2_C_VERSION): New macro.
+	* conform/Makefile (test-xfail-POSIX/unistd.h/conform): Remove
+	variable.
+
 	[BZ #18444]
 	* string/basename.c (basename): Rename to __basename and define as
 	weak alias of __basename.  Use libc_hidden_weak.
