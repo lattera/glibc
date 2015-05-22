@@ -113,7 +113,7 @@ extern "C" {
    violation in case THIS has a different pointer type.  */
 #define _IO_CAST_FIELD_ACCESS(THIS, TYPE, MEMBER) \
   (*(_IO_MEMBER_TYPE (TYPE, MEMBER) *)(((char *) (THIS)) \
-  + offsetof(TYPE, MEMBER)))
+				       + offsetof(TYPE, MEMBER)))
 
 #define _IO_JUMPS(THIS) (THIS)->vtable
 #define _IO_JUMPS_FILE_plus(THIS) \
