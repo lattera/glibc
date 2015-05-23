@@ -258,21 +258,13 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
     ELF_DYNAMIC_RELOCATE (l, lazy, consider_profiling, skip_ifunc);
 
 #ifndef PROF
-    if (__glibc_unlikely (consider_profiling))
+    if (__glibc_unlikely (consider_profiling)
+	&& l->l_info[DT_PLTRELSZ] != NULL)
       {
 	/* Allocate the array which will contain the already found
 	   relocations.  If the shared object lacks a PLT (for example
 	   if it only contains lead function) the l_info[DT_PLTRELSZ]
 	   will be NULL.  */
-	if (l->l_info[DT_PLTRELSZ] == NULL)
-	  {
-	    errstring = N_("%s: no PLTREL found in object %s\n");
-	  fatal:
-	    _dl_fatal_printf (errstring,
-			      RTLD_PROGNAME,
-			      l->l_name);
-	  }
-
 	size_t sizeofrel = l->l_info[DT_PLTREL]->d_un.d_val == DT_RELA
 			   ? sizeof (ElfW(Rela))
 			   : sizeof (ElfW(Rel));
@@ -283,7 +275,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	  {
 	    errstring = N_("\
 %s: out of memory to store relocation results for %s\n");
-	    goto fatal;
+	    _dl_fatal_printf (errstring, RTLD_PROGNAME, l->l_name);
 	  }
       }
 #endif

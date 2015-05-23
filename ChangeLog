@@ -1,3 +1,9 @@
+2015-05-22  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18410]
+	* elf/dl-reloc.c (_dl_relocate_object): Don't issue an error
+	for missing DT_PLTRELSZ.
+
 2015-05-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Remove obsolete aliases that broke 'locale -a'
