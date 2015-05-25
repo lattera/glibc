@@ -990,6 +990,9 @@ localplt-built-dso := $(addprefix $(common-objpfx),\
 				  resolv/libresolv.so \
 				  crypt/libcrypt.so \
 		       )
+ifeq ($(build-mathvec),yes)
+localplt-built-dso += $(addprefix $(common-objpfx), mathvec/libmvec.so)
+endif
 ifeq ($(have-thread-library),yes)
 localplt-built-dso += $(filter-out %_nonshared.a, $(shared-thread-library))
 endif

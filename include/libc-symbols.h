@@ -546,6 +546,26 @@ for linking")
 # define libm_hidden_data_ver(local, name)
 #endif
 
+#if IS_IN (libmvec)
+# define libmvec_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
+# define libmvec_hidden_tls_proto(name, attrs...) hidden_tls_proto (name, ##attrs)
+# define libmvec_hidden_def(name) hidden_def (name)
+# define libmvec_hidden_weak(name) hidden_weak (name)
+# define libmvec_hidden_ver(local, name) hidden_ver (local, name)
+# define libmvec_hidden_data_def(name) hidden_data_def (name)
+# define libmvec_hidden_data_weak(name) hidden_data_weak (name)
+# define libmvec_hidden_data_ver(local, name) hidden_data_ver (local, name)
+#else
+# define libmvec_hidden_proto(name, attrs...)
+# define libmvec_hidden_tls_proto(name, attrs...)
+# define libmvec_hidden_def(name)
+# define libmvec_hidden_weak(name)
+# define libmvec_hidden_ver(local, name)
+# define libmvec_hidden_data_def(name)
+# define libmvec_hidden_data_weak(name)
+# define libmvec_hidden_data_ver(local, name)
+#endif
+
 #if IS_IN (libresolv)
 # define libresolv_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define libresolv_hidden_tls_proto(name, attrs...) \
