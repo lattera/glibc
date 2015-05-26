@@ -36,17 +36,18 @@ __lll_timedlock_wait (int *futex, const struct timespec *abstime, int private)
     return EINVAL;
 
   /* Try locking.  */
-  int result = 0;
   while (atomic_exchange_acq (futex, 2) != 0)
     {
       /* If *futex == 2, wait until woken or timeout.  */
-      result = __nacl_irt_futex.futex_wait_abs ((volatile int *) futex, 2,
-						abstime);
-      if (__glibc_likely (result == 0)
-	  || __glibc_likely (result == ETIMEDOUT))
-	break;
-      assert (result == EAGAIN);
+      int err = __nacl_irt_futex.futex_wait_abs ((volatile int *) futex, 2,
+						 abstime);
+      if (err != 0)
+	{
+	  if (__glibc_likely (err == ETIMEDOUT))
+	    return err;
+	  assert (err == EAGAIN);
+	}
     }
 
-  return result;
+  return 0;
 }
