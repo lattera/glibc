@@ -106,6 +106,7 @@ libpthread-routines = nptl-init vars events version \
 		      pt-longjmp pt-cleanup\
 		      cancellation \
 		      lowlevellock lowlevelrobustlock \
+		      lll_timedlock_wait lll_timedwait_tid \
 		      pt-fork pt-vfork \
 		      ptw-write ptw-read ptw-close ptw-fcntl ptw-accept \
 		      ptw-connect ptw-recv ptw-recvfrom ptw-recvmsg ptw-send \
