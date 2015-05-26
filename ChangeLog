@@ -1,5 +1,7 @@
 2015-05-26  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/nacl/lll_timedlock_wait.c: New file.
+
 	* nptl/lowlevellock.c (__lll_timedlock_wait): Moved ...
 	* nptl/lll_timedlock_wait.c: ... to this new file.
 	* nptl/Makefile (libpthread-routines): Add it.
