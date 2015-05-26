@@ -39,6 +39,11 @@ element {struct stat} off_t st_size
 element {struct stat} time_t st_atime
 element {struct stat} time_t st_mtime
 element {struct stat} time_t st_ctime
+#if defined XOPEN2K8 || defined POSIX2008
+element {struct stat} {struct timespec} st_atim
+element {struct stat} {struct timespec} st_mtim
+element {struct stat} {struct timespec} st_ctim
+#endif
 #if !defined POSIX && !defined POSIX2008
 element {struct stat} blksize_t st_blksize
 element {struct stat} blkcnt_t st_blocks

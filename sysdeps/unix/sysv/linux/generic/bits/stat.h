@@ -66,7 +66,7 @@ struct stat
     __blksize_t st_blksize;	/* Optimal block size for I/O.  */
     int __pad2;
     __field64(__blkcnt_t, __blkcnt64_t, st_blocks);  /* 512-byte blocks */
-#ifdef __USE_MISC
+#ifdef __USE_XOPEN2K8
     /* Nanosecond resolution timestamps are stored in a format
        equivalent to 'struct timespec'.  This is the type used
        whenever possible but the Unix namespace rules do not allow the
@@ -107,7 +107,7 @@ struct stat64
     __blksize_t st_blksize;	/* Optimal block size for I/O.  */
     int __pad2;
     __blkcnt64_t st_blocks;	/* Nr. 512-byte blocks allocated.  */
-#ifdef __USE_MISC
+#ifdef __USE_XOPEN2K8
     /* Nanosecond resolution timestamps are stored in a format
        equivalent to 'struct timespec'.  This is the type used
        whenever possible but the Unix namespace rules do not allow the

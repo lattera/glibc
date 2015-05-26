@@ -1,3 +1,17 @@
+2015-05-26  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	[BZ #18234]
+	* conform/data/sys/stat.h-data (struct stat): Add tests for st_atim,
+	st_mtim and st_ctim members.
+	* sysdeps/nacl/bits/stat.h (struct stat, struct stat64): Make
+	st_atim, st_ctim, st_mtim visible under __USE_XOPEN2K8 only.
+	* sysdeps/unix/sysv/linux/generic/bits/stat.h (struct stat,):
+	(struct stat64): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/stat.h (struct stat,):
+	(struct stat64): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/bits/stat.h (struct stat,):
+	(struct stat64): Likewise.
+
 2015-05-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/aarch64/gettimeofday.c (HAVE_VSYSCALL):
