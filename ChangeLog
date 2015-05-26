@@ -1,3 +1,8 @@
+2015-05-26  Andriy Rysin  <arysin@gmail.com>
+
+	[BZ #17293]
+	* uk_UA: Fix sorting order for Ukrainian locale
+
 2015-05-26  Marko Myllynen  <myllynen@redhat.com>
 
 	* stdlib/monetary.h: Fix comment.

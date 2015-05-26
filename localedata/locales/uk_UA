@@ -340,70 +340,14 @@ copy "<U0069><U0073><U006F><U0031><U0034><U0036><U0035><U0031><U005F><U0074><U00
 % Ukrainian ghe is missing in iso14651_t1
 collating-symbol <UKR-GHE>
 
-% Soft sign and apostrophe must be ignored during sorting because they are
-% just signs, not real letters.
+% Apostrophe must be ignored during sorting because it's just a sign, not a
+% real letter.
 % ( "<U006E><U0060>"=="<U006E>", "<U0027><U0079><U0061>"=="<U0079><U0061>", etc. )
 %
 % Apostrophe already ignored by iso14651_t1.
 %
-% Soft sign '<U044C>' may follow only this set of nine characters [<U0432><U0434><U0437><U043B><U043D><U0440><U0441><U0442><U0446>].
-% It only softens pronunciation of these characters so it's should not impact
-% sorting.
-
-
-collating-symbol <V+SS>
-collating-element <V-SS> from "<U0412><U042C>"
-collating-element <V-ss> from "<U0412><U044C>"
-collating-element <v-SS> from "<U0432><U042C>"
-collating-element <v-ss> from "<U0432><U044C>"
-
-collating-symbol <D+SS>
-collating-element <D-SS> from "<U0414><U042C>"
-collating-element <D-ss> from "<U0414><U044C>"
-collating-element <d-SS> from "<U0434><U042C>"
-collating-element <d-ss> from "<U0434><U044C>"
-
-collating-symbol <Z+SS>
-collating-element <Z-SS> from "<U0417><U042C>"
-collating-element <Z-ss> from "<U0417><U044C>"
-collating-element <z-SS> from "<U0437><U042C>"
-collating-element <z-ss> from "<U0437><U044C>"
-
-collating-symbol <L+SS>
-collating-element <L-SS> from "<U041B><U042C>"
-collating-element <L-ss> from "<U041B><U044C>"
-collating-element <l-SS> from "<U043B><U042C>"
-collating-element <l-ss> from "<U043B><U044C>"
-
-collating-symbol <N+SS>
-collating-element <N-SS> from "<U041D><U042C>"
-collating-element <N-ss> from "<U041D><U044C>"
-collating-element <n-SS> from "<U043D><U042C>"
-collating-element <n-ss> from "<U043D><U044C>"
-
-collating-symbol <R+SS>
-collating-element <R-SS> from "<U0420><U042C>"
-collating-element <R-ss> from "<U0420><U044C>"
-collating-element <r-SS> from "<U0440><U042C>"
-collating-element <r-ss> from "<U0440><U044C>"
-
-collating-symbol <S+SS>
-collating-element <S-SS> from "<U0421><U042C>"
-collating-element <S-ss> from "<U0421><U044C>"
-collating-element <s-SS> from "<U0441><U042C>"
-collating-element <s-ss> from "<U0441><U044C>"
-
-collating-symbol <T+SS>
-collating-element <T-SS> from "<U0422><U042C>"
-collating-element <T-ss> from "<U0422><U044C>"
-collating-element <t-SS> from "<U0442><U042C>"
-collating-element <t-ss> from "<U0442><U044C>"
-
-collating-symbol <TSE+SS>
-collating-element <TS-SS> from "<U0426><U042C>"
-collating-element <TS-ss> from "<U0426><U044C>"
-collating-element <ts-SS> from "<U0446><U042C>"
-collating-element <ts-ss> from "<U0446><U044C>"
+% In the official alphabet the soft sign is a letter and has a hard position in
+% the order.
 
 
 collating-symbol <CAP-MIN>
@@ -489,11 +433,9 @@ reorder-after <U0434>
 <U0455> "<U003C><U0043><U0059><U0052><U002D><U0044><U0045><U003E><U003C><U0043><U0059><U0052><U002D><U005A><U0045><U003E>";"<U003C><U004C><U0049><U0047><U003E><U003C><U004C><U0049><U0047><U003E>";"<U003C><U004D><U0049><U004E><U003E><U003C><U004D><U0049><U004E><U003E>";IGNORE % CYR-DZE
 
 reorder-after <U0435>
-<U0454> <CYR-IE>;<UKR-IE>;<MIN>;IGNORE
 <U0451> <CYR-IE>;<CYR-IO>;<MIN>;IGNORE
 <U044D> <CYR-IE>;<CYR-E>;<MIN>;IGNORE
 reorder-after <U0415>
-<U0404> <CYR-IE>;<UKR-IE>;<CAP>;IGNORE
 <U0401> <CYR-IE>;<CYR-IO>;<CAP>;IGNORE
 <U042D> <CYR-IE>;<CYR-E>;<CAP>;IGNORE
 
