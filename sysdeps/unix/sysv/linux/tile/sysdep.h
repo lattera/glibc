@@ -78,16 +78,17 @@
 /* Define a macro which expands inline into the wrapper code for a system
    call.  */
 # undef INLINE_SYSCALL
-# define INLINE_SYSCALL(name, nr, args...) \
+# define INLINE_SYSCALL(name, nr, args...)                              \
   ({                                                                    \
-    INTERNAL_SYSCALL_DECL (err);                                        \
-    unsigned long val = INTERNAL_SYSCALL (name, err, nr, args);         \
-    if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (val, err), 0))      \
-      {                                                                 \
-	__set_errno (INTERNAL_SYSCALL_ERRNO (val, err));                \
-        val = -1;                                                       \
-      }                                                                 \
-    (long) val; })
+    INTERNAL_SYSCALL_DECL (_sc_err);                                    \
+    unsigned long _sc_val = INTERNAL_SYSCALL (name, _sc_err, nr, args); \
+    if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (_sc_val, _sc_err), 0)) \
+    {                                                                   \
+      __set_errno (INTERNAL_SYSCALL_ERRNO (_sc_val, _sc_err));          \
+      _sc_val = -1;                                                     \
+    }                                                                   \
+    (long) _sc_val;                                                     \
+  })
 
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL(name, err, nr, args...)        \
@@ -203,11 +204,11 @@
     "=R05" (_clobber_r5), "=R10" (_clobber_r10)
 
 
-#define INTERNAL_VSYSCALL_CALL(funcptr, err, nr, args...)		     \
-  ({									     \
-     struct syscall_return_value rv = funcptr (args);			     \
-     err = rv.error;							     \
-     rv.value;								     \
+#define INTERNAL_VSYSCALL_CALL(funcptr, err, nr, args...)               \
+  ({                                                                    \
+    struct syscall_return_value _sc_rv = funcptr (args);                \
+    err = _sc_rv.error;                                                 \
+    _sc_rv.value;                                                       \
   })
 
 /* List of system calls which are supported as vsyscalls.  */

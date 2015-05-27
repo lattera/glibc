@@ -1,3 +1,9 @@
+2015-05-26  Chris Metcalf  <cmetcalf@ezchip.com>
+
+	* sysdeps/unix/sysv/linux/tile/sysdep.h (INLINE_SYSCALL):
+	Avoid using variables in #defines that might cause shadowing.
+	(INTERNAL_VSYSCALL_CALL): Likewise.
+
 2015-05-26  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/nacl/lll_timedlock_wait.c: New file.
