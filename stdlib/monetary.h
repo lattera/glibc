@@ -34,7 +34,7 @@ typedef __ssize_t ssize_t;
 
 __BEGIN_DECLS
 
-/* Formatting a monetary value according to the given locale.  */
+/* Formatting a monetary value according to the current locale.  */
 extern ssize_t strfmon (char *__restrict __s, size_t __maxsize,
 			const char *__restrict __format, ...)
      __THROW __attribute_format_strfmon__ (3, 4);
@@ -42,7 +42,7 @@ extern ssize_t strfmon (char *__restrict __s, size_t __maxsize,
 #ifdef __USE_XOPEN2K8
 # include <xlocale.h>
 
-/* Formatting a monetary value according to the current locale.  */
+/* Formatting a monetary value according to the given locale.  */
 extern ssize_t strfmon_l (char *__restrict __s, size_t __maxsize,
 			  __locale_t __loc,
 			  const char *__restrict __format, ...)

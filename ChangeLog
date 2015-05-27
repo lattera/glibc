@@ -1,3 +1,7 @@
+2015-05-27  Marko Myllynen  <myllynen@redhat.com>
+
+	* stdlib/monetary.h: Fix comment.
+
 2015-05-26  Chris Metcalf  <cmetcalf@ezchip.com>
 
 	* sysdeps/unix/sysv/linux/tile/sysdep.h (INLINE_SYSCALL):
