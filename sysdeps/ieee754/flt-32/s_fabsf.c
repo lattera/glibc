@@ -22,13 +22,9 @@ static char rcsid[] = "$NetBSD: s_fabsf.c,v 1.4 1995/05/10 20:47:15 jtc Exp $";
  */
 
 #include <math.h>
-#include <math_private.h>
 
 float __fabsf(float x)
 {
-	u_int32_t ix;
-	GET_FLOAT_WORD(ix,x);
-	SET_FLOAT_WORD(x,ix&0x7fffffff);
-        return x;
+  return __builtin_fabsf (x);
 }
 weak_alias (__fabsf, fabsf)
