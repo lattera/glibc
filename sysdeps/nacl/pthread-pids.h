@@ -50,6 +50,9 @@ __nacl_get_tid (struct pthread *pd)
   assert ((id & 1) == 0);
   assert (sizeof id == sizeof tid);
   assert (tid > 0);
+  /* This ensures that NACL_EXITING_TID (lowlevellock.h) can never
+     be a valid TID value.  */
+  assert ((tid & 1) == 0);
   return tid;
 }
 

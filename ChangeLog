@@ -1,5 +1,13 @@
 2015-05-28  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/nacl/exit-thread.h (__exit_thread): If not detached,
+	set THREAD_SELF->tid to a magic value and futex-wake it.
+	Pass its address to the thread_exit system call.
+	* sysdeps/nacl/pthread-pids.h (__nacl_get_tid): Assert that TID's low
+	bit is clear.
+	* sysdeps/nacl/lowlevellock.h: New file.
+	* sysdeps/nacl/lll_timedwait_tid.c: New file.
+
 	* sysdeps/nacl/lowlevellock-futex.h (lll_futex_timed_wait):
 	Add TIMEOUT to current time, don't subtract it.
 
