@@ -1,3 +1,8 @@
+2015-05-28  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/nacl/lowlevellock-futex.h (lll_futex_timed_wait):
+	Add TIMEOUT to current time, don't subtract it.
+
 2015-05-28  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18422]

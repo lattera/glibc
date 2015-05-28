@@ -40,26 +40,26 @@
 /* Wait until a lll_futex_wake call on FUTEXP, or TIMEOUT elapses.  */
 #define lll_futex_timed_wait(futexp, val, timeout, private)             \
   ({                                                                    \
-    /* This timeout is relative, but the IRT call wants it absolute.  */ \
+    /* This timeout is relative, but the IRT call wants it absolute.  */\
     const struct timespec *_to = (timeout);                             \
     struct timespec _ts;                                                \
     int _err = 0;                                                       \
     if (_to != NULL                                                     \
-        && __glibc_likely ((_err = __nacl_irt_clock.clock_gettime	\
-                            (CLOCK_REALTIME, &_ts)) == 0))		\
+	&& __glibc_likely ((_err = __nacl_irt_clock.clock_gettime	\
+			    (CLOCK_REALTIME, &_ts)) == 0))		\
       {                                                                 \
-        _ts.tv_sec -= _to->tv_sec;                                      \
-        _ts.tv_nsec -= _to->tv_nsec;                                    \
-        while (_ts.tv_nsec < 0)                                         \
-          {                                                             \
-            _ts.tv_nsec += 1000000000;                                  \
-            --_ts.tv_sec;                                               \
-          }                                                             \
-        _to = &_ts;                                                     \
+	_ts.tv_sec += _to->tv_sec;                                      \
+	_ts.tv_nsec += _to->tv_nsec;                                    \
+	while (_ts.tv_nsec >= 1000000000)                               \
+	  {                                                             \
+	    _ts.tv_nsec -= 1000000000;                                  \
+	    ++_ts.tv_sec;                                               \
+	  }                                                             \
+	_to = &_ts;                                                     \
       }                                                                 \
     if (_err == 0)                                                      \
       _err = __nacl_irt_futex.futex_wait_abs				\
-        ((volatile int *) (futexp), val, _to);                          \
+	((volatile int *) (futexp), val, _to);                          \
     -_err;                                                              \
   })
 
