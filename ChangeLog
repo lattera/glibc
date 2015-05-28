@@ -1,3 +1,14 @@
+2015-05-28  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18422]
+	* Makefile ($(objpfx)tst-audit2): Depend on $(libdl).
+	($(objpfx)tst-audit2.out): Also depend on
+	$(objpfx)tst-auditmod9b.so.
+	* elf/tst-audit2.c: Include <dlfcn.h>.
+	(calloc_called): New.
+	(calloc): Allow to be called more than once.
+	(do_test): dllopen/dlclose $ORIGIN/tst-auditmod9b.so.
+
 2015-05-28  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/ieee754/dbl-64/s_fabs.c: (__fabs): Call __builtin_fabs.
