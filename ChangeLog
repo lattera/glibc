@@ -1,3 +1,7 @@
+2015-05-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
+
 2015-05-28  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/nacl/exit-thread.h (__exit_thread): If not detached,
