@@ -1,5 +1,9 @@
 2015-07-08  Mike Frysinger  <vapier@gentoo.org>
 
+	* nscd/selinux.c: Delete selinux/flask.h include.
+
+2015-07-08  Mike Frysinger  <vapier@gentoo.org>
+
 	[BZ #18641]
 	* pwd/pwd.h (fgetpwent): Add __nonnull markings.
 	(putpwent): Likewise.
