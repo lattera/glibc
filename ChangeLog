@@ -1,3 +1,14 @@
+2015-07-08  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #18641]
+	* pwd/pwd.h (fgetpwent): Add __nonnull markings.
+	(putpwent): Likewise.
+	(getpwnam): Likewise.
+	(getpwent_r): Likewise.
+	(getpwuid_r): Likewise.
+	(getpwnam_r): Likewise.
+	(fgetpwent_r): Likewise.
+
 2015-06-18  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #18557]
