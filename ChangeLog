@@ -1,3 +1,11 @@
+2015-06-01  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* benchtests/scripts/import_bench.py: New file.
+	* benchtests/scripts/validate_benchout.py: Import import_bench
+	instead of jsonschema.
+	(validate_bench): Remove function.
+	(main): Use import_bench.
+
 2015-06-01  Steve Ellcey  <sellcey@imgtec.com>
 
 	* resolv/res_hconf.c (_res_hconf_reorder_addrs): Use a union to
