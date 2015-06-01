@@ -1,5 +1,11 @@
 2015-06-01  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* benchtests/scripts/compare_bench.py: New file.
+	* benchtests/scripts/import_bench.py (mean): New function.
+	(split_list): Likewise.
+	(do_for_all_timings): Likewise.
+	(compress_timings): Likewise.
+
 	* benchtests/scripts/import_bench.py: New file.
 	* benchtests/scripts/validate_benchout.py: Import import_bench
 	instead of jsonschema.
