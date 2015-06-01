@@ -1,3 +1,12 @@
+2015-03-11  Martin Sebor  <msebor@redhat.com>
+
+	[BZ #18116]
+        * sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S
+        (__setcontext): Use extended four-operand version of mtsf whenever
+	possible.
+        * sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S
+        (__novec_swapcontext): Likewise.
+
 2015-06-01  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* benchtests/scripts/compare_bench.py: New file.

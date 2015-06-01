@@ -173,24 +173,34 @@ ENTRY(__novec_swapcontext)
   lfd  fp0,(SIGCONTEXT_FP_REGS+(32*8))(r31)
   lfd  fp31,(SIGCONTEXT_FP_REGS+(PT_R31*8))(r31)
   lfd  fp30,(SIGCONTEXT_FP_REGS+(PT_R30*8))(r31)
+
 # ifdef _ARCH_PWR6
   /* Use the extended four-operand version of the mtfsf insn.  */
-  mtfsf  0xff,fp0,1,0
-# else
   .machine push
   .machine "power6"
+
+  mtfsf  0xff,fp0,1,0
+
+  .machine pop
+# else
   /* Availability of DFP indicates a 64-bit FPSCR.  */
   andi.  r6,r8,PPC_FEATURE_HAS_DFP
   beq    5f
-  /* Use the extended four-operand version of the mtfsf insn.  */
+
+  .machine push
+  .machine "power6"
+
   mtfsf  0xff,fp0,1,0
+
+  .machine pop
+
   b      6f
   /* Continue to operate on the FPSCR as if it were 32-bits.  */
 5:
   mtfsf  0xff,fp0
 6:
-  .machine pop
 #endif /* _ARCH_PWR6 */
+
   lfd  fp29,(SIGCONTEXT_FP_REGS+(PT_R29*8))(r31)
   lfd  fp28,(SIGCONTEXT_FP_REGS+(PT_R28*8))(r31)
   lfd  fp27,(SIGCONTEXT_FP_REGS+(PT_R27*8))(r31)
@@ -652,24 +662,34 @@ L(has_no_vec2):
   lfd  fp0,(SIGCONTEXT_FP_REGS+(32*8))(r31)
   lfd  fp31,(SIGCONTEXT_FP_REGS+(PT_R31*8))(r31)
   lfd  fp30,(SIGCONTEXT_FP_REGS+(PT_R30*8))(r31)
+
 # ifdef _ARCH_PWR6
   /* Use the extended four-operand version of the mtfsf insn.  */
-  mtfsf  0xff,fp0,1,0
-# else
   .machine push
   .machine "power6"
+
+  mtfsf  0xff,fp0,1,0
+
+  .machine pop
+# else
   /* Availability of DFP indicates a 64-bit FPSCR.  */
   andi.  r6,r8,PPC_FEATURE_HAS_DFP
   beq    7f
-  /* Use the extended four-operand version of the mtfsf insn.  */
+
+  .machine push
+  .machine "power6"
+
   mtfsf  0xff,fp0,1,0
+
+  .machine pop
+
   b      8f
   /* Continue to operate on the FPSCR as if it were 32-bits.  */
 7:
   mtfsf  0xff,fp0
 8:
-  .machine pop
 #endif /* _ARCH_PWR6 */
+
   lfd  fp29,(SIGCONTEXT_FP_REGS+(PT_R29*8))(r31)
   lfd  fp28,(SIGCONTEXT_FP_REGS+(PT_R28*8))(r31)
   lfd  fp27,(SIGCONTEXT_FP_REGS+(PT_R27*8))(r31)
