@@ -439,18 +439,24 @@ _res_hconf_reorder_addrs (struct hostent *hp)
 	  for (cur_ifr = ifr, i = 0; i < num;
 	       cur_ifr = __if_nextreq (cur_ifr), ++i)
 	    {
+	      union
+	      {
+		struct sockaddr sa;
+		struct sockaddr_in sin;
+	      } ss;
+
 	      if (cur_ifr->ifr_addr.sa_family != AF_INET)
 		continue;
 
 	      ifaddrs[new_num_ifs].addrtype = AF_INET;
-	      ifaddrs[new_num_ifs].u.ipv4.addr =
-		((struct sockaddr_in *) &cur_ifr->ifr_addr)->sin_addr.s_addr;
+	      ss.sa = cur_ifr->ifr_addr;
+	      ifaddrs[new_num_ifs].u.ipv4.addr = ss.sin.sin_addr.s_addr;
 
 	      if (__ioctl (sd, SIOCGIFNETMASK, cur_ifr) < 0)
 		continue;
 
-	      ifaddrs[new_num_ifs].u.ipv4.mask =
-		((struct sockaddr_in *) &cur_ifr->ifr_netmask)->sin_addr.s_addr;
+	      ss.sa = cur_ifr->ifr_netmask;
+	      ifaddrs[new_num_ifs].u.ipv4.mask = ss.sin.sin_addr.s_addr;
 
 	      /* Now we're committed to this entry.  */
 	      ++new_num_ifs;
