@@ -29,9 +29,9 @@ ldouble: 1
 
 Function: "acosh":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 
@@ -52,9 +52,9 @@ ildouble: 1
 ldouble: 1
 
 Function: "acosh_upward":
-double: 1
+double: 2
 float: 1
-idouble: 1
+idouble: 2
 ifloat: 1
 ildouble: 2
 ldouble: 2
@@ -183,16 +183,16 @@ ldouble: 1
 
 Function: "atanh":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 2
 ldouble: 2
 
 Function: "atanh_downward":
-double: 2
+double: 3
 float: 2
-idouble: 2
+idouble: 3
 ifloat: 2
 ildouble: 3
 ldouble: 3
@@ -1210,9 +1210,9 @@ ildouble: 3
 ldouble: 3
 
 Function: Imaginary part of "csqrt_downward":
-double: 3
+double: 4
 float: 3
-idouble: 3
+idouble: 4
 ifloat: 3
 ildouble: 2
 ldouble: 2
@@ -1226,9 +1226,9 @@ ildouble: 2
 ldouble: 2
 
 Function: Imaginary part of "csqrt_towardzero":
-double: 3
+double: 4
 float: 3
-idouble: 3
+idouble: 4
 ifloat: 3
 ildouble: 2
 ldouble: 2
@@ -1572,8 +1572,8 @@ double: 3
 float: 3
 idouble: 3
 ifloat: 3
-ildouble: 2
-ldouble: 2
+ildouble: 3
+ldouble: 3
 
 Function: "hypot":
 double: 1
@@ -1700,8 +1700,8 @@ double: 3
 float: 3
 idouble: 3
 ifloat: 3
-ildouble: 2
-ldouble: 2
+ildouble: 3
+ldouble: 3
 
 Function: "log":
 float: 1
@@ -1719,9 +1719,9 @@ ldouble: 1
 
 Function: "log10_downward":
 double: 2
-float: 2
+float: 3
 idouble: 2
-ifloat: 2
+ifloat: 3
 ildouble: 1
 ldouble: 1
 
@@ -1894,16 +1894,16 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
-ildouble: 1
-ldouble: 1
+ildouble: 3
+ldouble: 3
 
 Function: "sin_towardzero":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "sin_upward":
 double: 1
@@ -1932,8 +1932,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "sincos_upward":
 double: 1
@@ -1944,9 +1944,9 @@ ildouble: 2
 ldouble: 2
 
 Function: "sinh":
-double: 1
+double: 2
 float: 2
-idouble: 1
+idouble: 2
 ifloat: 2
 ildouble: 1
 ldouble: 1

@@ -1,3 +1,7 @@
+2015-06-02  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* sysdeps/aarch64/libm-test-ulps: Update.
+
 2015-06-01  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/i386/sysdep.h (HAVE_CLOCK_GETTIME_VSYSCALL):
