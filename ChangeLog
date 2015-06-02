@@ -1,3 +1,8 @@
+2015-06-02  Roland McGrath  <roland@hack.frob.com>
+
+	* stdlib/setenv.c [__GNUC__,__GNUC_MINOR__ < 4,7]: Use
+	"-Wuninitialized" rather than "-Wmaybe-uninitialized" in pragma.
+
 2015-06-02  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/aarch64/libm-test-ulps: Update.
