@@ -1,3 +1,15 @@
+2015-06-02  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18469]
+	* wctype/wcfuncs.c (towlower): Rename to __towlower and define as
+	weak alias of __towlower.  Use libc_hidden_weak.
+	(towupper): Rename to __towupper and define as weak alias of
+	__towupper.  Use libc_hidden_weak.
+	* include/wctype.h (__towlower): Declare.  Use libc_hidden_proto.
+	(__towupper): Likewise.
+	* posix/fnmatch.c [HANDLE_MULTIBYTE && _LIBC] (FOLD): Use
+	__towlower instead of towlower.
+
 2015-06-02  Roland McGrath  <roland@hack.frob.com>
 
 	* stdlib/setenv.c [__GNUC__,__GNUC_MINOR__ < 4,7]: Use

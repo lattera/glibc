@@ -229,7 +229,7 @@ __wcschrnul (s, c)
 # if HANDLE_MULTIBYTE
 /* Note that this evaluates C many times.  */
 #  ifdef _LIBC
-#   define FOLD(c) ((flags & FNM_CASEFOLD) ? towlower (c) : (c))
+#   define FOLD(c) ((flags & FNM_CASEFOLD) ? __towlower (c) : (c))
 #  else
 #   define FOLD(c) ((flags & FNM_CASEFOLD) && ISUPPER (c) ? towlower (c) : (c))
 #  endif

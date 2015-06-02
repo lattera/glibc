@@ -60,6 +60,8 @@ extern __typeof (iswupper_l) __iswupper_l;
 extern __typeof (iswxdigit_l) __iswxdigit_l;
 extern __typeof (towlower_l) __towlower_l;
 extern __typeof (towupper_l) __towupper_l;
+extern __typeof (towlower) __towlower __THROW __attribute_pure__;
+extern __typeof (towupper) __towupper __THROW __attribute_pure__;
 
 libc_hidden_proto (__towctrans)
 libc_hidden_proto (__iswctype)
@@ -77,6 +79,8 @@ libc_hidden_proto (__iswupper_l)
 libc_hidden_proto (__iswxdigit_l)
 libc_hidden_proto (__towlower_l)
 libc_hidden_proto (__towupper_l)
+libc_hidden_proto (__towlower)
+libc_hidden_proto (__towupper)
 
 /* The spec says that isdigit must only match the decimal digits.  We
    can check this without a memory access.  */
