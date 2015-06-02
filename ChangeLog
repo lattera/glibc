@@ -1,5 +1,14 @@
 2015-06-02  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h (INLINE_SYSCALL):
+	Use variable name _sc_err instead of err.
+	[__mips16] (INTERNAL_SYSCALL_NCS): Use variable name _sc_ret
+	instead of ret.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h
+	(INLINE_SYSCALL): Use variable name _sc_err instead of err.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h
+	(INLINE_SYSCALL): Likewise.
+
 	* string/strnlen.c [!STRNLEN] (__strnlen): Use libc_hidden_def.
 	* include/string.h (__strnlen): Use libc_hidden_proto.
 	* sysdeps/aarch64/strnlen.S (__strnlen): Use libc_hidden_def.

@@ -47,11 +47,11 @@
    call.  */
 #undef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...)				\
-  ({ INTERNAL_SYSCALL_DECL(err);					\
-     long result_var = INTERNAL_SYSCALL (name, err, nr, args);		\
-     if ( INTERNAL_SYSCALL_ERROR_P (result_var, err) )			\
+  ({ INTERNAL_SYSCALL_DECL (_sc_err);					\
+     long result_var = INTERNAL_SYSCALL (name, _sc_err, nr, args);	\
+     if ( INTERNAL_SYSCALL_ERROR_P (result_var, _sc_err) )		\
        {								\
-	 __set_errno (INTERNAL_SYSCALL_ERRNO (result_var, err));	\
+	 __set_errno (INTERNAL_SYSCALL_ERRNO (result_var, _sc_err));	\
 	 result_var = -1L;						\
        }								\
      result_var; })
