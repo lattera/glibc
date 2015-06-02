@@ -1,3 +1,15 @@
+2015-06-02  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #18383]
+	* elf/tst-tlsalign-extern.c: New file.
+	* elf/tst-tlsalign-extern-static.c: New file.
+	* elf/tst-tlsalign-vars.c: New file.
+	* elf/Makefile (tests-static): Add tst-tlsalign-extern-static.
+	[$(build-shared) = yes] (tests): Add tst-tlsalign-extern.
+	($(objpfx)tst-tlsalign-extern): Depend on tst-tlsalign-vars.o.
+	($(objpfx)tst-tlsalign-extern-static): Likewise.
+	(test-xfail-tst-tlsalign-extern-static): New variable.
+
 2015-06-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h (INLINE_SYSCALL):
