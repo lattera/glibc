@@ -31,6 +31,9 @@
  cfi_endproc;							\
  ASM_SIZE_DIRECTIVE(__strnlen_power7)
 
+#undef libc_hidden_def
+#define libc_hidden_def(name)
+
 #undef libc_hidden_builtin_def
 #define libc_hidden_builtin_def(name)
 

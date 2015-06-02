@@ -52,5 +52,6 @@ __strnlen (const char *s, size_t maxlen)
   size_t len = ((const char *) p) + (CFZ (bits) >> 3) - s;
   return (len < maxlen ? len : maxlen);
 }
+libc_hidden_def (__strnlen)
 weak_alias (__strnlen, strnlen)
 libc_hidden_def (strnlen)

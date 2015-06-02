@@ -1,5 +1,19 @@
 2015-06-02  Joseph Myers  <joseph@codesourcery.com>
 
+	* string/strnlen.c [!STRNLEN] (__strnlen): Use libc_hidden_def.
+	* include/string.h (__strnlen): Use libc_hidden_proto.
+	* sysdeps/aarch64/strnlen.S (__strnlen): Use libc_hidden_def.
+	* sysdeps/i386/i686/multiarch/strnlen-c.c [SHARED]
+	(libc_hidden_def): Define __GI___strnlen as well as __GI_strnlen.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/strnlen-power7.S
+	(libc_hidden_def): Undefine and redefine.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/strnlen-ppc32.c
+	[SHARED] (libc_hidden_def): Define __GI___strnlen as well as
+	__GI_strnlen.
+	* sysdeps/powerpc/powerpc32/power7/strnlen.S (__strnlen): Use
+	libc_hidden_def.
+	* sysdeps/tile/tilegx/strnlen.c (__strnlen): Likewise.
+
 	[BZ #18469]
 	* wctype/wcfuncs.c (towlower): Rename to __towlower and define as
 	weak alias of __towlower.  Use libc_hidden_weak.

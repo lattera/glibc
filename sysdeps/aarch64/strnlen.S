@@ -157,5 +157,6 @@ L(hit_limit):
 	mov	len, limit
 	RET
 END (__strnlen)
+libc_hidden_def (__strnlen)
 weak_alias (__strnlen, strnlen)
 libc_hidden_def (strnlen)
