@@ -33,7 +33,7 @@ routines = alloca_cutoff forward libc-lowlevellock libc-cancellation \
 	   register-atfork unregister-atfork
 shared-only-routines = forward
 
-libpthread-routines = nptl-init vars events version \
+libpthread-routines = nptl-init vars events version pt-interp \
 		      pthread_create pthread_exit pthread_detach \
 		      pthread_join pthread_tryjoin pthread_timedjoin \
 		      pthread_self pthread_equal pthread_yield \
@@ -138,7 +138,8 @@ libpthread-routines = nptl-init vars events version \
 #		      pthread_setgid pthread_setegid pthread_setregid \
 #		      pthread_setresgid
 
-libpthread-shared-only-routines = version pt-allocrtsig unwind-forcedunwind
+libpthread-shared-only-routines = version pt-interp pt-allocrtsig \
+				  unwind-forcedunwind
 libpthread-static-only-routines = pthread_atfork
 
 # Since cancellation handling is in large parts handled using exceptions
@@ -608,6 +609,8 @@ $(objpfx)banner.h: Banner
 generated += banner.h
 # Give libpthread.so an entry point and make it directly runnable itself.
 LDFLAGS-pthread.so += -e __nptl_main
+# pt-interp.c exists just to get the runtime linker path into libpthread.so.
+$(objpfx)pt-interp.os: $(common-objpfx)runtime-linker.h
 endif
 
 ifeq ($(run-built-tests),yes)

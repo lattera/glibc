@@ -1,3 +1,12 @@
+2015-06-10  Gleb Fotengauer-Malinovskiy  <glebfm@altlinux.org>
+
+	[BZ #18479]
+	* nptl/pt-interp.c: New file.
+	* nptl/Makefile (libpthread-routines, libpthread-shared-only-routines):
+	Add pt-interp.
+	[[$(build-shared) = yes] ($(objpfx)pt-interp.os): Depend on
+	$(common-objpfx)runtime-linker.h.
+
 2015-06-10  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* Makeconfig (+interp): Remove unused variable.
