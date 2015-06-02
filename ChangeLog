@@ -1,3 +1,8 @@
+2015-06-05  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* malloc/tst-malloc-backtrace.c (do_test): Redirect libc fatal
+	errors to stderr.
+
 2015-06-05  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #15661]

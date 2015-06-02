@@ -30,11 +30,21 @@ call_free (void *ptr)
   *(size_t *)(ptr - sizeof (size_t)) = 1;
 }
 
+int do_test (void);
+
+#define TEST_FUNCTION do_test ()
+#define EXPECTED_SIGNAL SIGABRT
+
+#include "../test-skeleton.c"
+
 int
 do_test (void)
 {
   void *ptr1 = malloc (SIZE);
   void *ptr2 = malloc (SIZE);
+
+  /* Avoid unwanted output to TTY after an expected memory corruption.  */
+  ignore_stderr();
 
   call_free (ptr1);
   ptr1 = malloc (SIZE);
@@ -43,8 +53,3 @@ do_test (void)
      doesn't optimize out that malloc call.  */
   return (ptr1 == ptr2);
 }
-
-#define TEST_FUNCTION do_test ()
-#define EXPECTED_SIGNAL SIGABRT
-
-#include "../test-skeleton.c"

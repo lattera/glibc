@@ -218,6 +218,22 @@ signal_handler (int sig __attribute__ ((unused)))
   exit (1);
 }
 
+/* Avoid all the buffer overflow messages on stderr.  */
+static void
+__attribute__ ((unused))
+ignore_stderr (void)
+{
+  int fd = open (_PATH_DEVNULL, O_WRONLY);
+  if (fd == -1)
+    close (STDERR_FILENO);
+  else
+    {
+      dup2 (fd, STDERR_FILENO);
+      close (fd);
+    }
+  setenv ("LIBC_FATAL_STDERR_", "1", 1);
+}
+
 /* Set fortification error handler.  Used when tests want to verify that bad
    code is caught by the library.  */
 static void
@@ -231,17 +247,7 @@ set_fortify_handler (void (*handler) (int sig))
   sigemptyset (&sa.sa_mask);
 
   sigaction (SIGABRT, &sa, NULL);
-
-  /* Avoid all the buffer overflow messages on stderr.  */
-  int fd = open (_PATH_DEVNULL, O_WRONLY);
-  if (fd == -1)
-    close (STDERR_FILENO);
-  else
-    {
-      dup2 (fd, STDERR_FILENO);
-      close (fd);
-    }
-  setenv ("LIBC_FATAL_STDERR_", "1", 1);
+  ignore_stderr ();
 }
 
 /* We provide the entry point here.  */
