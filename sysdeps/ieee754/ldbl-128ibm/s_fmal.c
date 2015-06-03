@@ -26,7 +26,7 @@ __fmal (long double x, long double y, long double z)
 	/* An IBM long double 128 is really just 2 IEEE64 doubles, and in
 	 * the case of inf/nan only the first double counts. So we use the
 	 * (double) cast to avoid any data movement.   */
-       if ((finite ((double)x) && finite ((double)y)) && isinf ((double)z))
+       if ((isfinite ((double)x) && isfinite ((double)y)) && isinf ((double)z))
                return (z);
 
        /* If z is zero and x are y are nonzero, compute the result

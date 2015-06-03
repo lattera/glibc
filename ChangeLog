@@ -1,5 +1,12 @@
 2015-06-03  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* sysdeps/ieee754/ldbl-128ibm/s_fmal.c (__fmal): Replace finite with
+	isfinite.
+	* sysdeps/ieee754/ldbl-96/s_fma.c (__fma): Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-finite.c (__finitel): Likewise.
+
+2015-06-03  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* math/e_exp10.c: Replace __isinf*, __isnan*, __finite* and
 	__signbit* with standard C99 macros.
 	* math/e_exp10l.c: Likewise.

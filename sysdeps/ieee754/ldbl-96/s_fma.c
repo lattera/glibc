@@ -34,7 +34,7 @@ __fma (double x, double y, double z)
     {
       /* If z is Inf, but x and y are finite, the result should be
 	 z rather than NaN.  */
-      if (finite (x) && finite (y))
+      if (isfinite (x) && isfinite (y))
 	return (z + x) + y;
       return (x * y) + z;
     }
