@@ -121,3 +121,45 @@ __nacl_initialize_interfaces (void)
   initialize_mandatory_interfaces ();
   initialize_optional_interfaces ();
 }
+
+
+static bool
+try_supply (const struct nacl_interface *const start,
+	    const struct nacl_interface *const stop,
+	    uintptr_t *all_tables,
+	    const char *ident, size_t ident_len,
+	    const void *table, size_t tablesize)
+{
+  const struct nacl_interface *i = start;
+  uintptr_t *t = all_tables;
+  while (i < stop)
+    {
+      if (i->table_size == tablesize
+	  && i->namelen == ident_len
+	  && !memcmp (i->name, ident, ident_len))
+	{
+	  memcpy (t, table, tablesize);
+	  return true;
+	}
+
+      t = next_nacl_table (t, i);
+      i = next_nacl_interface (i);
+    }
+
+  return false;
+}
+
+internal_function
+bool
+PASTE_NAME (__nacl_supply_interface_, MODULE_NAME)
+  (const char *ident, size_t ident_len, const void *table, size_t tablesize)
+{
+  return (try_supply (__start_nacl_mandatory_interface_names,
+		      __stop_nacl_mandatory_interface_names,
+		      __start_nacl_mandatory_interface_tables,
+		      ident, ident_len, table, tablesize)
+	  || try_supply (__start_nacl_optional_interface_names,
+			 __stop_nacl_optional_interface_names,
+			 __start_nacl_optional_interface_tables,
+			 ident, ident_len, table, tablesize));
+}

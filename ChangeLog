@@ -1,3 +1,15 @@
+2015-06-03  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/nacl/nacl-interfaces.c (try_supply): New static function.
+	(PASTE_NAME (__nacl_supply_interface_, MODULE_NAME)): New function.
+	* sysdeps/nacl/nacl-interfaces.h: Declare __nacl_supply_interface_libc
+	and __nacl_supply_interface_rtld.
+	* sysdeps/nacl/nacl_interface_ext_supply.c: New file.
+	* sysdeps/nacl/Makefile [$(subdir) = csu] (sysdep_routines): Add it.
+	* sysdeps/nacl/Versions (ld: GLIBC_PRIVATE):
+	Add __nacl_supply_interface_rtld.
+	(libc: GLIBC_2.22): Add nacl_interface_ext_supply.
+
 2015-06-03  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/ieee754/ldbl-128ibm/s_fmal.c (__fmal): Replace finite with

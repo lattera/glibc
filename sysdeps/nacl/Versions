@@ -1,12 +1,14 @@
 ld {
   GLIBC_PRIVATE {
     __nacl_irt_*;
+    __nacl_supply_interface_rtld;
   }
 }
 
 libc {
   GLIBC_2.22 {
     nacl_interface_query;
+    nacl_interface_ext_supply;
   }
 
   GLIBC_PRIVATE {

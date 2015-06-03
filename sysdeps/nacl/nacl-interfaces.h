@@ -20,6 +20,7 @@
 #define _NACL_INTERFACES_H	1
 
 #include <errno.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <sys/types.h>
@@ -73,7 +74,7 @@ next_nacl_interface (const struct nacl_interface *i)
 {
   uintptr_t align = __alignof (*i);
   return (const void *) (((uintptr_t) &i->name[i->namelen] + align - 1)
-                         & -align);
+			 & -align);
 }
 
 #if IS_IN (libpthread)
@@ -94,6 +95,12 @@ next_nacl_interface (const struct nacl_interface *i)
 #undef	NACL_OPTIONAL_INTERFACE
 
 extern void __nacl_initialize_interfaces (void) attribute_hidden;
+extern bool __nacl_supply_interface_libc (const char *ident, size_t ident_len,
+					  const void *table, size_t tablesize)
+  internal_function attribute_hidden;
+extern bool __nacl_supply_interface_rtld (const char *ident, size_t ident_len,
+					  const void *table, size_t tablesize);
+  internal_function;
 
 /* Convenience function for handling IRT call return values.  */
 static inline int

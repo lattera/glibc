@@ -108,7 +108,7 @@ test-wrapper-env = $(test-wrapper-env-only)
 test-wrapper = $(test-wrapper-env) --
 
 ifeq ($(subdir),csu)
-sysdep_routines += nacl_interface_query \
+sysdep_routines += nacl_interface_query nacl_interface_ext_supply \
 		   nacl-interfaces $(call nacl-routines-of,libc)
 endif
 
