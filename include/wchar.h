@@ -87,7 +87,7 @@ libc_hidden_proto (wcsspn)
 libc_hidden_proto (wcschr)
 /* The C++ overloading of wcschr means we have to repeat the type to
    declare __wcschr instead of using typeof, to avoid errors in C++
-   tests.  */
+   tests.  The same applies to __wmemchr.  */
 extern wchar_t *__wcschr (const wchar_t *__wcs, wchar_t __wc)
      __THROW __attribute_pure__;
 libc_hidden_proto (__wcschr)
@@ -95,7 +95,10 @@ libc_hidden_proto (wcscoll)
 libc_hidden_proto (wcspbrk)
 
 extern typeof (wmemset) __wmemset;
+extern wchar_t *__wmemchr (const wchar_t *__s, wchar_t __c, size_t __n)
+     __THROW __attribute_pure__;
 libc_hidden_proto (wmemchr)
+libc_hidden_proto (__wmemchr)
 libc_hidden_proto (wmemset)
 libc_hidden_proto (__wmemset)
 

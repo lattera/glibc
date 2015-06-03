@@ -1,3 +1,12 @@
+2015-06-03  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18468]
+	* wcsmbs/wmemchr.c (wmemchr): Rename to __wmemchr and define as
+	weak alias of __wmemchr.  Use libc_hidden_weak.
+	* include/wchar.h (__wmemchr): Declare.  Use libc_hidden_proto.
+	* posix/fnmatch.c [HANDLE_MULTIBYTE] (MEMCHR): Use __wmemchr
+	instead of wmemchr.
+
 2015-06-02  Roland McGrath  <roland@hack.frob.com>
 
 	[BZ #18383]

@@ -245,7 +245,7 @@ __wcschrnul (s, c)
 #  define STRLEN(S) __wcslen (S)
 #  define STRCAT(D, S) __wcscat (D, S)
 #  define MEMPCPY(D, S, N) __wmempcpy (D, S, N)
-#  define MEMCHR(S, C, N) wmemchr (S, C, N)
+#  define MEMCHR(S, C, N) __wmemchr (S, C, N)
 #  define STRCOLL(S1, S2) wcscoll (S1, S2)
 #  define WIDE_CHAR_VERSION 1
 /* Change the name the header defines so it doesn't conflict with

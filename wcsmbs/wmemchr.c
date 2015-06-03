@@ -19,7 +19,7 @@
 #include <wchar.h>
 
 wchar_t *
-wmemchr (s, c, n)
+__wmemchr (s, c, n)
      const wchar_t *s;
      wchar_t c;
      size_t n;
@@ -59,4 +59,6 @@ wmemchr (s, c, n)
 
   return NULL;
 }
-libc_hidden_def (wmemchr)
+libc_hidden_def (__wmemchr)
+weak_alias (__wmemchr, wmemchr)
+libc_hidden_weak (wmemchr)
