@@ -1,5 +1,21 @@
 2015-06-03  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18470]
+	* posix/fnmatch.c (fnmatch) [_LIBC]: Call __strnlen instead of
+	strnlen.
+	* conform/Makefile (test-xfail-XPG3/fnmatch.h/linknamespace):
+	Remove variable.
+	(test-xfail-XPG4/fnmatch.h/linknamespace): Likewise.
+	(test-xfail-POSIX/fnmatch.h/linknamespace): Likewise.
+	(test-xfail-POSIX/glob.h/linknamespace): Likewise.
+	(test-xfail-POSIX/wordexp.h/linknamespace): Likewise.
+	(test-xfail-UNIX98/fnmatch.h/linknamespace): Likewise.
+	(test-xfail-UNIX98/glob.h/linknamespace): Likewise.
+	(test-xfail-UNIX98/wordexp.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K/fnmatch.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K/glob.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K/wordexp.h/linknamespace): Likewise.
+
 	[BZ #18468]
 	* wcsmbs/wmemchr.c (wmemchr): Rename to __wmemchr and define as
 	weak alias of __wmemchr.  Use libc_hidden_weak.

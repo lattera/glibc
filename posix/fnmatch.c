@@ -348,7 +348,7 @@ fnmatch (pattern, string, flags)
       memset (&ps, '\0', sizeof (ps));
       p = pattern;
 #ifdef _LIBC
-      n = strnlen (pattern, 1024);
+      n = __strnlen (pattern, 1024);
 #else
       n = strlen (pattern);
 #endif
@@ -392,7 +392,7 @@ fnmatch (pattern, string, flags)
 
       assert (mbsinit (&ps));
 #ifdef _LIBC
-      n = strnlen (string, 1024);
+      n = __strnlen (string, 1024);
 #else
       n = strlen (string);
 #endif
