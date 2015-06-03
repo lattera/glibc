@@ -25,7 +25,7 @@ long double
 __sinhl (long double x)
 {
 	long double z = __ieee754_sinhl (x);
-	if (__builtin_expect (!__finitel (z), 0) && __finitel (x)
+	if (__builtin_expect (!isfinite (z), 0) && isfinite (x)
 	    && _LIB_VERSION != _IEEE_)
 	    return __kernel_standard_l (x, x, 225); /* sinh overflow */
 

@@ -22,8 +22,8 @@ double
 __hypot (double x, double y)
 {
 	double z = __ieee754_hypot(x,y);
-	if(__builtin_expect(!__finite(z), 0)
-	   && __finite(x) && __finite(y) && _LIB_VERSION != _IEEE_)
+	if(__builtin_expect(!isfinite(z), 0)
+	   && isfinite(x) && isfinite(y) && _LIB_VERSION != _IEEE_)
 	    return __kernel_standard(x, y, 4); /* hypot overflow */
 
 	return z;

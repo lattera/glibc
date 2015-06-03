@@ -23,7 +23,7 @@
 long double
 __ieee754_exp10l (long double arg)
 {
-  if (__finitel (arg) && arg < LDBL_MIN_10_EXP - LDBL_DIG - 10)
+  if (isfinite (arg) && arg < LDBL_MIN_10_EXP - LDBL_DIG - 10)
     return LDBL_MIN * LDBL_MIN;
   else
     /* This is a very stupid and inprecise implementation.  It'll get

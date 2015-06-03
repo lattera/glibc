@@ -126,7 +126,7 @@ __printf_size (FILE *fp, const struct printf_info *info,
       fpnum.ldbl = *(const long double *) args[0];
 
       /* Check for special values: not a number or infinity.  */
-      if (__isnanl (fpnum.ldbl))
+      if (isnan (fpnum.ldbl))
 	{
 	  special = "nan";
 	  wspecial = L"nan";
@@ -151,7 +151,7 @@ __printf_size (FILE *fp, const struct printf_info *info,
       fpnum.dbl.d = *(const double *) args[0];
 
       /* Check for special values: not a number or infinity.  */
-      if (__isnan (fpnum.dbl.d))
+      if (isnan (fpnum.dbl.d))
 	{
 	  special = "nan";
 	  wspecial = L"nan";

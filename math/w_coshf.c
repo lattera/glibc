@@ -25,7 +25,7 @@ float
 __coshf (float x)
 {
 	float z = __ieee754_coshf (x);
-	if (__builtin_expect (!__finitef (z), 0) && __finitef (x)
+	if (__builtin_expect (!isfinite (z), 0) && isfinite (x)
 	    && _LIB_VERSION != _IEEE_)
 		return __kernel_standard_f (x, x, 105); /* cosh overflow */
 

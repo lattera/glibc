@@ -69,7 +69,7 @@ __cbrtl (long double x)
   int e, rem, sign;
   long double z;
 
-  if (!__finitel (x))
+  if (!isfinite (x))
     return x + x;
 
   if (x == 0)

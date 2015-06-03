@@ -25,19 +25,19 @@ float
 __powf (float x, float y)
 {
   float z = __ieee754_powf (x, y);
-  if (__glibc_unlikely (!__finitef (z)))
+  if (__glibc_unlikely (!isfinite (z)))
     {
       if (_LIB_VERSION != _IEEE_)
 	{
-	  if (__isnanf (x))
+	  if (isnan (x))
 	    {
 	      if (y == 0.0f)
 		/* pow(NaN,0.0) */
 		return __kernel_standard_f (x, y, 142);
 	    }
-	  else if (__finitef (x) && __finitef (y))
+	  else if (isfinite (x) && isfinite (y))
 	    {
-	      if (__isnanf (z))
+	      if (isnan (z))
 		/* pow neg**non-int */
 		return __kernel_standard_f (x, y, 124);
 	      else if (x == 0.0f && y < 0.0f)
@@ -55,7 +55,7 @@ __powf (float x, float y)
 	    }
 	}
     }
-  else if (__builtin_expect (z == 0.0f, 0) && __finitef (x) && __finitef (y)
+  else if (__builtin_expect (z == 0.0f, 0) && isfinite (x) && isfinite (y)
 	   && _LIB_VERSION != _IEEE_)
     {
       if (x == 0.0f)

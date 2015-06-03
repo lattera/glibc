@@ -680,7 +680,7 @@ __ieee754_j0l (long double x)
 {
   long double xx, xinv, z, p, q, c, s, cc, ss;
 
-  if (! __finitel (x))
+  if (! isfinite (x))
     {
       if (x != x)
 	return x;
@@ -826,7 +826,7 @@ long double
 {
   long double xx, xinv, z, p, q, c, s, cc, ss;
 
-  if (! __finitel (x))
+  if (! isfinite (x))
     {
       if (x != x)
 	return x;

@@ -6,5 +6,5 @@ int
 attribute_hidden
 __signbitl (double x)
 {
-  return __signbit (x);
+  return signbit (x);
 }

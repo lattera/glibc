@@ -26,8 +26,8 @@ __lgammaf(float x)
 					 global variable.  */
 				      ? &signgam
 				      : &local_signgam);
-	if(__builtin_expect(!__finitef(y), 0)
-	   && __finitef(x) && _LIB_VERSION != _IEEE_)
+	if(__builtin_expect(!isfinite(y), 0)
+	   && isfinite(x) && _LIB_VERSION != _IEEE_)
 		return __kernel_standard_f(x, x,
 					   __floorf(x)==x&&x<=0.0f
 					   ? 115 /* lgamma pole */

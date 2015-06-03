@@ -217,7 +217,7 @@ __ieee754_exp (double x)
 	  retval = res * binexp.x * t256.x;
 	else
 	  retval = __slowexp (x);
-	if (__isinf (retval))
+	if (isinf (retval))
 	  goto ret_huge;
 	else
 	  goto ret;

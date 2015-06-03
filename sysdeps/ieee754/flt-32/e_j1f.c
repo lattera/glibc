@@ -137,7 +137,7 @@ __ieee754_y1f(float x)
 	}
 	if(__builtin_expect(ix<=0x33000000, 0)) {    /* x < 2**-25 */
 	    z = -tpi / x;
-	    if (__isinff (z))
+	    if (isinf (z))
 		__set_errno (ERANGE);
 	    return z;
 	}

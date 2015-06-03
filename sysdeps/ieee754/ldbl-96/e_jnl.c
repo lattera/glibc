@@ -378,7 +378,7 @@ __ieee754_ynl (int n, long double x)
 	  }
       }
     /* If B is +-Inf, set up errno accordingly.  */
-    if (! __finitel (b))
+    if (! isfinite (b))
       __set_errno (ERANGE);
     if (sign > 0)
       ret = b;
@@ -386,7 +386,7 @@ __ieee754_ynl (int n, long double x)
       ret = -b;
   }
  out:
-  if (__isinfl (ret))
+  if (isinf (ret))
     ret = __copysignl (LDBL_MAX, ret) * LDBL_MAX;
   return ret;
 }

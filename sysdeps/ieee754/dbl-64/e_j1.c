@@ -207,7 +207,7 @@ __ieee754_y1 (double x)
   if (__glibc_unlikely (ix <= 0x3c900000))              /* x < 2**-54 */
     {
       z = -tpi / x;
-      if (__isinf (z))
+      if (isinf (z))
 	__set_errno (ERANGE);
       return z;
     }

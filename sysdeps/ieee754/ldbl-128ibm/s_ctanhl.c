@@ -35,7 +35,7 @@ __ctanhl (__complex__ long double x)
 
   if (!isfinite (__real__ x) || !isfinite (__imag__ x))
     {
-      if (__isinfl (__real__ x))
+      if (isinf (__real__ x))
 	{
 	  __real__ res = __copysignl (1.0L, __real__ x);
 	  __imag__ res = __copysignl (0.0L, __imag__ x);
@@ -50,7 +50,7 @@ __ctanhl (__complex__ long double x)
 	  __imag__ res = __nanl ("");
 
 #ifdef FE_INVALID
-	  if (__isinfl (__imag__ x))
+	  if (isinf (__imag__ x))
 	    feraiseexcept (FE_INVALID);
 #endif
 	}

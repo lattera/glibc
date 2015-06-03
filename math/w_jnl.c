@@ -56,7 +56,7 @@ long double __jnl(int n, long double x)	/* wrapper jnl */
 	z = __ieee754_jnl(n,x);
 	if (_LIB_VERSION == _IEEE_
 	    || _LIB_VERSION == _POSIX_
-	    || __isnanl(x))
+	    || isnan(x))
 	  return z;
 	if(fabsl(x)>X_TLOSS) {
 	    return __kernel_standard_l((double)n,x,238); /* jn(|x|>X_TLOSS,n) */
@@ -73,7 +73,7 @@ long double __ynl(int n, long double x)	/* wrapper ynl */
 #else
 	long double z;
 	z = __ieee754_ynl(n,x);
-	if(_LIB_VERSION == _IEEE_ || __isnanl(x) ) return z;
+	if(_LIB_VERSION == _IEEE_ || isnan(x) ) return z;
         if(x <= 0.0){
                 if(x==0.0)
                     /* d= -one/(x-x); */

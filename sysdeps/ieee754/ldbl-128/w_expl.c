@@ -31,9 +31,9 @@ long double __expl(long double x)	/* wrapper exp */
 	return __ieee754_expl(x);
 #else
 	long double z = __ieee754_expl (x);
-	if (__glibc_unlikely (!__finitel (z) || z == 0)
-	    && __finitel (x) && _LIB_VERSION != _IEEE_)
-	  return __kernel_standard_l (x, x, 206 + !!__signbitl (x));
+	if (__glibc_unlikely (!isfinite (z) || z == 0)
+	    && isfinite (x) && _LIB_VERSION != _IEEE_)
+	  return __kernel_standard_l (x, x, 206 + !!signbit (x));
 
 	return z;
 #endif

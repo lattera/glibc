@@ -24,9 +24,9 @@ static char rcsid[] = "$NetBSD: $";
 
 long double __ldexpl(long double value, int exp)
 {
-	if(!__finitel(value)||value==0.0) return value;
+	if(!isfinite(value)||value==0.0) return value;
 	value = __scalbnl(value,exp);
-	if(!__finitel(value)||value==0.0) __set_errno (ERANGE);
+	if(!isfinite(value)||value==0.0) __set_errno (ERANGE);
 	return value;
 }
 weak_alias (__ldexpl, ldexpl)

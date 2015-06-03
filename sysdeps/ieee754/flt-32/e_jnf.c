@@ -208,12 +208,12 @@ __ieee754_ynf(int n, float x)
 	    a = temp;
 	}
 	/* If B is +-Inf, set up errno accordingly.  */
-	if (! __finitef (b))
+	if (! isfinite (b))
 	  __set_errno (ERANGE);
 	if(sign>0) ret = b; else ret = -b;
     }
  out:
-    if (__isinff (ret))
+    if (isinf (ret))
 	ret = __copysignf (FLT_MAX, ret) * FLT_MAX;
     return ret;
 }

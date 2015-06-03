@@ -165,7 +165,7 @@ __printf_fphex (FILE *fp,
       fpnum.ldbl = *(const long double *) args[0];
 
       /* Check for special values: not a number or infinity.  */
-      if (__isnanl (fpnum.ldbl))
+      if (isnan (fpnum.ldbl))
 	{
 	  if (isupper (info->spec))
 	    {
@@ -202,7 +202,7 @@ __printf_fphex (FILE *fp,
       fpnum.dbl.d = *(const double *) args[0];
 
       /* Check for special values: not a number or infinity.  */
-      if (__isnan (fpnum.dbl.d))
+      if (isnan (fpnum.dbl.d))
 	{
 	  negative = fpnum.dbl.ieee.negative != 0;
 	  if (isupper (info->spec))

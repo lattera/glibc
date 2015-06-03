@@ -28,10 +28,10 @@ float
 __exp10f (float x)
 {
   float z = __ieee754_exp10f (x);
-  if (__builtin_expect (!__finitef (z) || z == 0, 0)
-      && __finitef (x) && _LIB_VERSION != _IEEE_)
+  if (__builtin_expect (!isfinite (z) || z == 0, 0)
+      && isfinite (x) && _LIB_VERSION != _IEEE_)
     /* exp10f overflow (146) if x > 0, underflow (147) if x < 0.  */
-    return __kernel_standard_f (x, x, 146 + !!__signbitf (x));
+    return __kernel_standard_f (x, x, 146 + !!signbit (x));
 
   return z;
 }

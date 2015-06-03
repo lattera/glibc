@@ -28,10 +28,10 @@ long double
 __exp10l (long double x)
 {
   long double z = __ieee754_exp10l (x);
-  if (__builtin_expect (!__finitel (z) || z == 0, 0)
-      && __finitel (x) && _LIB_VERSION != _IEEE_)
+  if (__builtin_expect (!isfinite (z) || z == 0, 0)
+      && isfinite (x) && _LIB_VERSION != _IEEE_)
     /* exp10l overflow (246) if x > 0, underflow (247) if x < 0.  */
-    return __kernel_standard_l (x, x, 246 + !!__signbitl (x));
+    return __kernel_standard_l (x, x, 246 + !!signbit (x));
 
   return z;
 }

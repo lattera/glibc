@@ -35,7 +35,7 @@ __ctanl (__complex__ long double x)
 
   if (!isfinite (__real__ x) || !isfinite (__imag__ x))
     {
-      if (__isinfl (__imag__ x))
+      if (isinf (__imag__ x))
 	{
 	  __real__ res = __copysignl (0.0, __real__ x);
 	  __imag__ res = __copysignl (1.0, __imag__ x);

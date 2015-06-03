@@ -24,7 +24,7 @@ long double
 __fmodl (long double x, long double y)
 {
   if (__builtin_expect (__isinf_nsl (x) || y == 0.0L, 0)
-      && _LIB_VERSION != _IEEE_ && !__isnanl (y) && !__isnanl (x))
+      && _LIB_VERSION != _IEEE_ && !isnan (y) && !isnan (x))
     /* fmod(+-Inf,y) or fmod(x,0) */
     return __kernel_standard_l (x, y, 227);
 

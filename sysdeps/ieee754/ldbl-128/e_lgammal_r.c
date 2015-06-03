@@ -770,12 +770,12 @@ __ieee754_lgammal_r (long double x, int *signgamp)
 
   *signgamp = 1;
 
-  if (! __finitel (x))
+  if (! isfinite (x))
     return x * x;
 
   if (x == 0.0L)
     {
-      if (__signbitl (x))
+      if (signbit (x))
 	*signgamp = -1;
     }
 

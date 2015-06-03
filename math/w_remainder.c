@@ -24,8 +24,8 @@
 double
 __remainder (double x, double y)
 {
-  if (((__builtin_expect (y == 0.0, 0) && ! __isnan (x))
-       || (__builtin_expect (__isinf_ns (x), 0) && ! __isnan (y)))
+  if (((__builtin_expect (y == 0.0, 0) && ! isnan (x))
+       || (__builtin_expect (__isinf_ns (x), 0) && ! isnan (y)))
       && _LIB_VERSION != _IEEE_)
     return __kernel_standard (x, y, 28); /* remainder domain */
 

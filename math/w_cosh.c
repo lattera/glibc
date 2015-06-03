@@ -21,7 +21,7 @@ double
 __cosh (double x)
 {
 	double z = __ieee754_cosh (x);
-	if (__builtin_expect (!__finite (z), 0) && __finite (x)
+	if (__builtin_expect (!isfinite (z), 0) && isfinite (x)
 	    && _LIB_VERSION != _IEEE_)
 		return __kernel_standard (x, x, 5); /* cosh overflow */
 

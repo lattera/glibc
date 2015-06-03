@@ -25,19 +25,19 @@ long double
 __powl (long double x, long double y)
 {
   long double z = __ieee754_powl (x, y);
-  if (__glibc_unlikely (!__finitel (z)))
+  if (__glibc_unlikely (!isfinite (z)))
     {
       if (_LIB_VERSION != _IEEE_)
 	{
-	  if (__isnanl (x))
+	  if (isnan (x))
 	    {
 	      if (y == 0.0L)
 		/* pow(NaN,0.0) */
 		return __kernel_standard_l (x, y, 242);
 	    }
-	  else if (__finitel (x) && __finitel (y))
+	  else if (isfinite (x) && isfinite (y))
 	    {
-	      if (__isnanl (z))
+	      if (isnan (z))
 		/* pow neg**non-int */
 		return __kernel_standard_l (x, y, 224);
 	      else if (x == 0.0L && y < 0.0L)
@@ -55,7 +55,7 @@ __powl (long double x, long double y)
 	    }
 	}
     }
-  else if (__builtin_expect (z == 0.0L, 0) && __finitel (x) && __finitel (y)
+  else if (__builtin_expect (z == 0.0L, 0) && isfinite (x) && isfinite (y)
 	   && _LIB_VERSION != _IEEE_)
     {
       if (x == 0.0L)

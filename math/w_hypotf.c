@@ -25,8 +25,8 @@ float
 __hypotf(float x, float y)
 {
 	float z = __ieee754_hypotf(x,y);
-	if(__builtin_expect(!__finitef(z), 0)
-	   && __finitef(x) && __finitef(y) && _LIB_VERSION != _IEEE_)
+	if(__builtin_expect(!isfinite(z), 0)
+	   && isfinite(x) && isfinite(y) && _LIB_VERSION != _IEEE_)
 	    /* hypot overflow */
 	    return __kernel_standard_f(x, y, 104);
 

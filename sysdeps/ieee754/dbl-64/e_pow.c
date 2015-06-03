@@ -115,7 +115,7 @@ __ieee754_pow (double x, double y)
 	retval = (t > 0) ? t : power1 (x, y);
       }
 
-      if (__isinf (retval))
+      if (isinf (retval))
 	retval = huge * huge;
       else if (retval == 0)
 	retval = tiny * tiny;
@@ -180,7 +180,7 @@ __ieee754_pow (double x, double y)
 	    SET_RESTORE_ROUND (FE_TONEAREST);
 	    retval = -__ieee754_pow (-x, y);
 	  }
-	  if (__isinf (retval))
+	  if (isinf (retval))
 	    retval = -huge * huge;
 	  else if (retval == 0)
 	    retval = -tiny * tiny;

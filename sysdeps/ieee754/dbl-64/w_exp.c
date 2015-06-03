@@ -24,9 +24,9 @@ double
 __exp (double x)
 {
   double z = __ieee754_exp (x);
-  if (__builtin_expect (!__finite (z) || z == 0, 0)
-      && __finite (x) && _LIB_VERSION != _IEEE_)
-    return __kernel_standard (x, x, 6 + !!__signbit (x));
+  if (__builtin_expect (!isfinite (z) || z == 0, 0)
+      && isfinite (x) && _LIB_VERSION != _IEEE_)
+    return __kernel_standard (x, x, 6 + !!signbit (x));
 
   return z;
 }

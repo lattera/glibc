@@ -24,9 +24,9 @@ float
 __expf (float x)
 {
   float z = __ieee754_expf (x);
-  if (__builtin_expect (!__finitef (z) || z == 0, 0)
-      && __finitef (x) && _LIB_VERSION != _IEEE_)
-    return __kernel_standard_f (x, x, 106 + !!__signbitf (x));
+  if (__builtin_expect (!isfinite (z) || z == 0, 0)
+      && isfinite (x) && _LIB_VERSION != _IEEE_)
+    return __kernel_standard_f (x, x, 106 + !!signbit (x));
 
   return z;
 }

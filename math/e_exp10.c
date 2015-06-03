@@ -23,7 +23,7 @@
 double
 __ieee754_exp10 (double arg)
 {
-  if (__finite (arg) && arg < DBL_MIN_10_EXP - DBL_DIG - 10)
+  if (isfinite (arg) && arg < DBL_MIN_10_EXP - DBL_DIG - 10)
     return DBL_MIN * DBL_MIN;
   else
     /* This is a very stupid and inprecise implementation.  It'll get

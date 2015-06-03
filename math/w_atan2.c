@@ -34,7 +34,7 @@ __atan2 (double y, double x)
     return __kernel_standard (y, x, 3); /* atan2(+-0,+-0) */
 
   z = __ieee754_atan2 (y, x);
-  if (__glibc_unlikely (z == 0.0 && y != 0.0 && __finite (x)))
+  if (__glibc_unlikely (z == 0.0 && y != 0.0 && isfinite (x)))
     __set_errno (ERANGE);
   return z;
 }

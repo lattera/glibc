@@ -11,7 +11,7 @@ long double __expl(long double x)	/* wrapper exp  */
   z = __ieee754_expl(x);
   if (_LIB_VERSION == _IEEE_)
     return z;
-  if (__finitel(x))
+  if (isfinite(x))
     {
       if (x >= o_thres)
 	return __kernel_standard_l(x,x,206); /* exp overflow  */

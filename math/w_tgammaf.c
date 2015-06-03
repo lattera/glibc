@@ -23,8 +23,8 @@ __tgammaf(float x)
 	int local_signgam;
 	float y = __ieee754_gammaf_r(x,&local_signgam);
 
-	if(__glibc_unlikely (!__finitef (y) || y == 0)
-	   && (__finitef (x) || __isinff (x) < 0)
+	if(__glibc_unlikely (!isfinite (y) || y == 0)
+	   && (isfinite (x) || isinf (x) < 0)
 	   && _LIB_VERSION != _IEEE_) {
 	  if (x == (float)0.0)
 	    /* tgammaf pole */

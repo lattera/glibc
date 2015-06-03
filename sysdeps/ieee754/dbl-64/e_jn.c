@@ -319,7 +319,7 @@ __ieee754_yn (int n, double x)
 	    a = temp;
 	  }
 	/* If B is +-Inf, set up errno accordingly.  */
-	if (!__finite (b))
+	if (!isfinite (b))
 	  __set_errno (ERANGE);
       }
     if (sign > 0)
@@ -328,7 +328,7 @@ __ieee754_yn (int n, double x)
       ret = -b;
   }
  out:
-  if (__isinf (ret))
+  if (isinf (ret))
     ret = __copysign (DBL_MAX, ret) * DBL_MAX;
   return ret;
 }

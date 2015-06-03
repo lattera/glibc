@@ -45,7 +45,7 @@ __ieee754_exp2l (long double x)
       else
 	{
 	  /* Underflow or exact zero.  */
-	  if (__isinfl (x))
+	  if (isinf (x))
 	    return 0;
 	  else
 	    return LDBL_MIN * LDBL_MIN;

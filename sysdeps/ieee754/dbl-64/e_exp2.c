@@ -48,7 +48,7 @@ __ieee754_exp2 (double x)
       /* Exceptional cases:  */
       if (__glibc_unlikely (!isgreaterequal (x, lomark)))
 	{
-	  if (__isinf (x))
+	  if (isinf (x))
 	    /* e^-inf == 0, with no error.  */
 	    return 0;
 	  else

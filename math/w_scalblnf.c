@@ -23,12 +23,12 @@
 float
 __w_scalblnf (float x, long int n)
 {
-  if (!__finitef (x) || x == 0.0f)
+  if (!isfinite (x) || x == 0.0f)
     return x;
 
   x = __scalblnf (x, n);
 
-  if (!__finitef (x) || x == 0.0f)
+  if (!isfinite (x) || x == 0.0f)
     __set_errno (ERANGE);
 
   return x;

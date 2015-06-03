@@ -333,7 +333,7 @@ ___printf_fp (FILE *fp,
 
       /* Check for special values: not a number or infinity.  */
       int res;
-      if (__isnanl (fpnum.ldbl))
+      if (isnan (fpnum.ldbl))
 	{
 	  is_neg = signbit (fpnum.ldbl);
 	  if (isupper (info->spec))
@@ -378,7 +378,7 @@ ___printf_fp (FILE *fp,
 
       /* Check for special values: not a number or infinity.  */
       int res;
-      if (__isnan (fpnum.dbl))
+      if (isnan (fpnum.dbl))
 	{
 	  union ieee754_double u = { .d = fpnum.dbl };
 	  is_neg = u.ieee.negative != 0;

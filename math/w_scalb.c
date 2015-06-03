@@ -27,9 +27,9 @@ sysv_scalb (double x, double fn)
 {
   double z = __ieee754_scalb (x, fn);
 
-  if (__glibc_unlikely (__isinf (z)))
+  if (__glibc_unlikely (isinf (z)))
     {
-      if (__finite (x))
+      if (isfinite (x))
 	return __kernel_standard (x, fn, 32); /* scalb overflow */
       else
 	__set_errno (ERANGE);
@@ -51,11 +51,11 @@ __scalb (double x, double fn)
     {
       double z = __ieee754_scalb (x, fn);
 
-      if (__glibc_unlikely (!__finite (z) || z == 0.0))
+      if (__glibc_unlikely (!isfinite (z) || z == 0.0))
 	{
-	  if (__isnan (z))
+	  if (isnan (z))
 	    {
-	      if (!__isnan (x) && !__isnan (fn))
+	      if (!isnan (x) && !isnan (fn))
 		__set_errno (EDOM);
 	    }
 	  else if (__isinf_ns (z))

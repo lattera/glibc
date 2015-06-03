@@ -33,8 +33,8 @@ __lgammal(long double x)
 					       global variable.  */
 					    ? &signgam
 					    : &local_signgam);
-	if(__builtin_expect(!__finitel(y), 0)
-	   && __finitel(x) && _LIB_VERSION != _IEEE_)
+	if(__builtin_expect(!isfinite(y), 0)
+	   && isfinite(x) && _LIB_VERSION != _IEEE_)
 		return __kernel_standard_l(x, x,
 					   __floorl(x)==x&&x<=0.0L
 					   ? 215 /* lgamma pole */

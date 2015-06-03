@@ -23,12 +23,12 @@
 long double
 __w_scalblnl (long double x, long int n)
 {
-  if (!__finitel (x) || x == 0.0L)
+  if (!isfinite (x) || x == 0.0L)
     return x;
 
   x = __scalblnl (x, n);
 
-  if (!__finitel (x) || x == 0.0L)
+  if (!isfinite (x) || x == 0.0L)
     __set_errno (ERANGE);
 
   return x;
