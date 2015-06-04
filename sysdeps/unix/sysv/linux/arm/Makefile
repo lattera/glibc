@@ -1,4 +1,5 @@
 ifeq ($(subdir),elf)
+sysdep_routines += dl-vdso
 sysdep-rtld-routines += aeabi_read_tp libc-do-syscall
 endif
 

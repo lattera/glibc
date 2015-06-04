@@ -1,3 +1,18 @@
+2015-06-04  Nathan Lynch  <nathan_lynch@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/Makefile: (sysdep_routines):
+	Include dl-vdso.
+	* sysdeps/unix/sysv/linux/arm/init-first.c: New file:
+	Use VDSO routines for gettimeofday, clock_gettime if
+	available.
+	* sysdeps/unix/sysv/linux/arm/libc-vdso.h: New file:
+	Declare VDSO symbols.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h:
+	[HAVE_GETTIMEOFDAY_VSYSCALL]: Define.
+	[HAVE_CLOCK_GETTIME_VSYSCALL]: Define.
+	* sysdeps/unix/sysv/linux/arm/Versions: Add
+	__vdso_clock_gettime.
+
 2015-06-04  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/not-cancel.h (open_not_cancel): Rewrite to

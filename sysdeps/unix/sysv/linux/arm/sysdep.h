@@ -387,6 +387,10 @@ __local_syscall_error:						\
 #undef INTERNAL_SYSCALL_ERRNO
 #define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))
 
+/* List of system calls which are supported as vsyscalls.  */
+#define HAVE_CLOCK_GETTIME_VSYSCALL	1
+#define HAVE_GETTIMEOFDAY_VSYSCALL	1
+
 #define LOAD_ARGS_0()
 #define ASM_ARGS_0
 #define LOAD_ARGS_1(a1)				\
