@@ -18,26 +18,36 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <stdint.h>
+#include <sys/fcntl.h>
 #include <sys/stat.h>
 #include <sys/statfs.h>
 
-/* Reserve storage for the data of the file associated with FD.  */
+/* Reserve storage for the data of the file associated with FD.  This
+   emulation is far from perfect, but the kernel cannot do not much
+   better for network file systems, either.  */
 
 int
 posix_fallocate (int fd, __off_t offset, __off_t len)
 {
   struct stat64 st;
-  struct statfs f;
 
-  /* `off_t' is a signed type.  Therefore we can determine whether
-     OFFSET + LEN is too large if it is a negative value.  */
   if (offset < 0 || len < 0)
     return EINVAL;
-  if (offset + len < 0)
+
+  /* Perform overflow check.  The outer cast relies on a GCC
+     extension.  */
+  if ((__off_t) ((uint64_t) offset) + ((uint64_t) len) < 0)
     return EFBIG;
 
-  /* First thing we have to make sure is that this is really a regular
-     file.  */
+  /* pwrite below will not do the right thing in O_APPEND mode.  */
+  {
+    int flags = __fcntl (fd, F_GETFL, 0);
+    if (flags < 0 || (flags & O_APPEND) != 0)
+      return EBADF;
+  }
+
+  /* We have to make sure that this is really a regular file.  */
   if (__fxstat64 (_STAT_VER, fd, &st) != 0)
     return EBADF;
   if (S_ISFIFO (st.st_mode))
@@ -47,6 +57,8 @@ posix_fallocate (int fd, __off_t offset, __off_t len)
 
   if (len == 0)
     {
+      /* This is racy, but there is no good way to satisfy a
+	 zero-length allocation request.  */
       if (st.st_size < offset)
 	{
 	  int ret = __ftruncate (fd, offset);
@@ -58,19 +70,36 @@ posix_fallocate (int fd, __off_t offset, __off_t len)
       return 0;
     }
 
-  /* We have to know the block size of the filesystem to get at least some
-     sort of performance.  */
-  if (__fstatfs (fd, &f) != 0)
-    return errno;
+  /* Minimize data transfer for network file systems, by issuing
+     single-byte write requests spaced by the file system block size.
+     (Most local file systems have fallocate support, so this fallback
+     code is not used there.)  */
 
-  /* Try to play safe.  */
-  if (f.f_bsize == 0)
-    f.f_bsize = 512;
+  unsigned increment;
+  {
+    struct statfs64 f;
 
-  /* Write something to every block.  */
-  for (offset += (len - 1) % f.f_bsize; len > 0; offset += f.f_bsize)
+    if (__fstatfs64 (fd, &f) != 0)
+      return errno;
+    if (f.f_bsize == 0)
+      increment = 512;
+    else if (f.f_bsize < 4096)
+      increment = f.f_bsize;
+    else
+      /* NFS does not propagate the block size of the underlying
+	 storage and may report a much larger value which would still
+	 leave holes after the loop below, so we cap the increment at
+	 4096.  */
+      increment = 4096;
+  }
+
+  /* Write a null byte to every block.  This is racy; we currently
+     lack a better option.  Compare-and-swap against a file mapping
+     might additional local races, but requires interposition of a
+     signal handler to catch SIGBUS.  */
+  for (offset += (len - 1) % increment; len > 0; offset += increment)
     {
-      len -= f.f_bsize;
+      len -= increment;
 
       if (offset < st.st_size)
 	{

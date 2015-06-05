@@ -1723,6 +1723,7 @@ modify the attributes of a file.
                                  access a file.
 * File Times::                  About the time attributes of a file.
 * File Size::			Manually changing the size of a file.
+* Storage Allocation::          Allocate backing storage for files.
 @end menu
 
 @node Attribute Meanings
@@ -3232,6 +3233,99 @@ is extended.  Note the it is extended by a round number of pages.  This
 is a requirement of @code{mmap}.  The program has to keep track of the
 real size, and when it has finished a final @code{ftruncate} call should
 set the real size of the file.
+
+@node Storage Allocation
+@subsection Storage Allocation
+@cindex allocating file storage
+@cindex file allocation
+@cindex storage allocating
+
+@cindex file fragmentation
+@cindex fragmentation of files
+@cindex sparse files
+@cindex files, sparse
+Most file systems support allocating large files in a non-contiguous
+fashion: the file is split into @emph{fragments} which are allocated
+sequentially, but the fragments themselves can be scattered across the
+disk.  File systems generally try to avoid such fragmentation because it
+decreases performance, but if a file gradually increases in size, there
+might be no other option than to fragment it.  In addition, many file
+systems support @emph{sparse files} with @emph{holes}: regions of null
+bytes for which no backing storage has been allocated by the file
+system.  When the holes are finally overwritten with data, fragmentation
+can occur as well.
+
+Explicit allocation of storage for yet-unwritten parts of the file can
+help the system to avoid fragmentation.  Additionally, if storage
+pre-allocation fails, it is possible to report the out-of-disk error
+early, often without filling up the entire disk.  However, due to
+deduplication, copy-on-write semantics, and file compression, such
+pre-allocation may not reliably prevent the out-of-disk-space error from
+occurring later.  Checking for write errors is still required, and
+writes to memory-mapped regions created with @code{mmap} can still
+result in @code{SIGBUS}.
+
+@deftypefun int posix_fallocate (int @var{fd}, off_t @var{offset}, off_t @var{length})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c If the file system does not support allocation,
+@c @code{posix_fallocate} has a race with file extension (if
+@c @var{length} is zero) or with concurrent writes of non-NUL bytes (if
+@c @var{length} is positive).
+
+Allocate backing store for the region of @var{length} bytes starting at
+byte @var{offset} in the file for the descriptor @var{fd}.  The file
+length is increased to @samp{@var{length} + @var{offset}} if necessary.
+
+@var{fd} must be a regular file opened for writing, or @code{EBADF} is
+returned.  If there is insufficient disk space to fulfill the allocation
+request, @code{ENOSPC} is returned.
+
+@strong{Note:} If @code{fallocate} is not available (because the file
+system does not support it), @code{posix_fallocate} is emulated, which
+has the following drawbacks:
+
+@itemize @bullet
+@item
+It is very inefficient because all file system blocks in the requested
+range need to be examined (even if they have been allocated before) and
+potentially rewritten.  In contrast, with proper @code{fallocate}
+support (see below), the file system can examine the internal file
+allocation data structures and eliminate holes directly, maybe even
+using unwritten extents (which are pre-allocated but uninitialized on
+disk).
+
+@item
+There is a race condition if another thread or process modifies the
+underlying file in the to-be-allocated area.  Non-null bytes could be
+overwritten with null bytes.
+
+@item
+If @var{fd} has been opened with the @code{O_APPEND} flag, the function
+will fail with an @code{errno} value of @code{EBADF}.
+
+@item
+If @var{length} is zero, @code{ftruncate} is used to increase the file
+size as requested, without allocating file system blocks.  There is a
+race condition which means that @code{ftruncate} can accidentally
+truncate the file if it has been extended concurrently.
+@end itemize
+
+On Linux, if an application does not benefit from emulation or if the
+emulation is harmful due to its inherent race conditions, the
+application can use the Linux-specific @code{fallocate} function, with a
+zero flag argument.  For the @code{fallocate} function, @theglibc{} does
+not perform allocation emulation if the file system does not support
+allocation.  Instead, an @code{EOPNOTSUPP} is returned to the caller.
+
+@end deftypefun
+
+@deftypefun int posix_fallocate64 (int @var{fd}, off64_t @var{length}, off64_t @var{offset})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+
+This function is a variant of @code{posix_fallocate64} which accepts
+64-bit file offsets on all platforms.
+
+@end deftypefun
 
 @node Making Special Files
 @section Making Special Files
