@@ -123,6 +123,16 @@ $(common-objpfx)libc-abis.stamp: $(..)scripts/gen-libc-abis \
 common-generated += $(common-objpfx)libc-abis.h
 endif # avoid-generated
 
+ifeq (yes,$(build-shared))
+$(common-objpfx)runtime-linker.h: $(common-objpfx)runtime-linker.stamp; @:
+$(common-objpfx)runtime-linker.stamp: $(common-objpfx)config.make
+	$(make-target-directory)
+	echo '#define RUNTIME_LINKER "$(rtlddir)/$(rtld-installed-name)"' \
+		> ${@:stamp=T}
+	$(move-if-change) ${@:stamp=T} ${@:stamp=h}
+	touch $@
+endif
+
 # Make sure the subdirectory for object files gets created.
 ifdef objpfx
 ifeq (,$(wildcard $(objpfx).))

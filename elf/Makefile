@@ -365,16 +365,10 @@ $(objpfx)ld.so: $(objpfx)librtld.os $(ld-map)
 	  | $(AWK) '($$7 ~ /^UND(|EF)$$/ && $$1 != "0:" && $$4 != "REGISTER") { print; p=1 } END { exit p != 0 }'
 	mv -f $@.new $@
 
+ifeq (yes,$(build-shared))
 # interp.c exists just to get the runtime linker path into libc.so.
-$(objpfx)interp.os: $(elf-objpfx)runtime-linker.h
-
-$(elf-objpfx)runtime-linker.h: $(elf-objpfx)runtime-linker.st; @:
-$(elf-objpfx)runtime-linker.st: $(common-objpfx)config.make
-	$(make-target-directory)
-	echo '#define RUNTIME_LINKER "$(rtlddir)/$(rtld-installed-name)"' \
-		> ${@:st=T}
-	$(move-if-change) ${@:st=T} ${@:st=h}
-	touch $@
+$(objpfx)interp.os: $(common-objpfx)runtime-linker.h
+endif
 
 ifneq (ld.so,$(rtld-installed-name))
 # Make sure ld.so.1 exists in the build directory so we can link

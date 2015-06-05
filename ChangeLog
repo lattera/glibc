@@ -1,3 +1,15 @@
+2015-06-10  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* Makeconfig (+interp): Remove unused variable.
+	* elf/Makefile ($(objpfx)interp.os): Define for [$(build-shared) = yes]
+	only.  Depend on $(common-objpfx)runtime-linker.h instead of
+	$(elf-objpfx)runtime-linker.h.
+	($(elf-objpfx)runtime-linker.h): Rename to
+	$(common-objpfx)runtime-linker.h and move ...
+	* Makerules [$(build-shared) = yes]: ... here.
+	* elf/interp.c: Include <runtime-linker.h> instead of
+	<elf/runtime-linker.h>.
+
 2015-06-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/i386/gettimeofday.c
