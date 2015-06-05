@@ -1,5 +1,15 @@
 2015-06-05  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18483]
+	* signal/signal.h [__USE_XOPEN2K] (psignal): Change condition to
+	[__USE_XOPEN2K8].  Remove redundant #endif.
+	[__USE_XOPEN2K] (psiginfo): Change condition to [__USE_XOPEN2K8].
+	Remove redundant #if.
+	* conform/Makefile (test-xfail-XOPEN2K/signal.h/linknamespace):
+	Remove variable.
+	(test-xfail-XOPEN2K/sys/wait.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K/ucontext.h/linknamespace): Likewise.
+
 	[BZ #18495]
 	* wctype/wcfuncs.c (__iswalnum): Use libc_hidden_def.
 	(__iswlower): Likewise.

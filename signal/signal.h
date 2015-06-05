@@ -146,12 +146,10 @@ extern __sighandler_t ssignal (int __sig, __sighandler_t __handler)
 extern int gsignal (int __sig) __THROW;
 #endif /* Use misc.  */
 
-#ifdef __USE_XOPEN2K
+#ifdef __USE_XOPEN2K8
 /* Print a message describing the meaning of the given signal number.  */
 extern void psignal (int __sig, const char *__s);
-#endif /* Use POSIX 2008.  */
 
-#ifdef __USE_XOPEN2K
 /* Print a message describing the meaning of the given signal information.  */
 extern void psiginfo (const siginfo_t *__pinfo, const char *__s);
 #endif /* POSIX 2008.  */
