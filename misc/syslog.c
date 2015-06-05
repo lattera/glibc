@@ -164,7 +164,7 @@ __vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
 		pri |= LogFacility;
 
 	/* Build the message in a memory-buffer stream.  */
-	f = open_memstream (&buf, &bufsize);
+	f = __open_memstream (&buf, &bufsize);
 	if (f == NULL)
 	  {
 	    /* We cannot get a stream.  There is not much we can do but

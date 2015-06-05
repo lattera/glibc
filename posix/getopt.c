@@ -585,7 +585,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 	      char *buf = NULL;
 	      size_t buflen = 0;
 
-	      FILE *fp = open_memstream (&buf, &buflen);
+	      FILE *fp = __open_memstream (&buf, &buflen);
 	      if (fp != NULL)
 		{
 		  fprintf (fp,

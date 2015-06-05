@@ -1,5 +1,20 @@
 2015-06-05  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18498]
+	* libio/memstream.c (open_memstream): Rename to __open_memstream
+	and define as weak alias of __open_memstream.
+	* include/stdio.h (__open_memstream): Declare.  Use
+	libc_hidden_proto.
+	(open_memstream): Don't use libc_hidden_proto.
+	* misc/syslog.c (__vsyslog_chk): Call __open_memstream instead of
+	open_memstream.
+	* posix/getopt.c (_getopt_internal_r): Likewise.
+	* conform/Makefile (test-xfail-XPG3/stdio.h/linknamespace): Remove
+	variable.
+	(test-xfail-XPG4/stdio.h/linknamespace): Likewise.
+	(test-xfail-UNIX98/stdio.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K/unistd.h/linknamespace): Likewise.
+
 	[BZ #18496]
 	* posix/regex_internal.c (build_wcs_upper_buffer): Call __wcrtomb
 	instead of wcrtomb.

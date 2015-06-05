@@ -61,7 +61,7 @@ static const struct _IO_jump_t _IO_mem_jumps =
    necessary.  *BUFLOC and *SIZELOC are updated with the buffer's location
    and the number of characters written on fflush or fclose.  */
 _IO_FILE *
-open_memstream (bufloc, sizeloc)
+__open_memstream (bufloc, sizeloc)
      char **bufloc;
      _IO_size_t *sizeloc;
 {
@@ -100,7 +100,8 @@ open_memstream (bufloc, sizeloc)
 
   return (_IO_FILE *) &new_f->fp._sf._sbf;
 }
-libc_hidden_def (open_memstream)
+libc_hidden_def (__open_memstream)
+weak_alias (__open_memstream, open_memstream)
 
 
 static int
