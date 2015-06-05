@@ -6,6 +6,7 @@
 2015-06-05  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #15661]
+	[BZ #17322]
 	* sysdeps/posix/posix_fallocate64.c (__posix_fallocate64_l64):
 	Check for overflow properly.  Check for O_APPEND.  Ignore large
 	file system block sizes.  Add comments about problems.
