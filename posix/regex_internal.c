@@ -317,7 +317,7 @@ build_wcs_upper_buffer (re_string_t *pstr)
 		  size_t mbcdlen;
 
 		  wcu = __towupper (wc);
-		  mbcdlen = wcrtomb (buf, wcu, &prev_st);
+		  mbcdlen = __wcrtomb (buf, wcu, &prev_st);
 		  if (BE (mbclen == mbcdlen, 1))
 		    memcpy (pstr->mbs + byte_idx, buf, mbclen);
 		  else
@@ -387,7 +387,7 @@ build_wcs_upper_buffer (re_string_t *pstr)
 		size_t mbcdlen;
 
 		wcu = __towupper (wc);
-		mbcdlen = wcrtomb ((char *) buf, wcu, &prev_st);
+		mbcdlen = __wcrtomb ((char *) buf, wcu, &prev_st);
 		if (BE (mbclen == mbcdlen, 1))
 		  memcpy (pstr->mbs + byte_idx, buf, mbclen);
 		else if (mbcdlen != (size_t) -1)

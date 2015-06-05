@@ -1,5 +1,9 @@
 2015-06-05  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18496]
+	* posix/regex_internal.c (build_wcs_upper_buffer): Call __wcrtomb
+	instead of wcrtomb.
+
 	[BZ #18483]
 	* signal/signal.h [__USE_XOPEN2K] (psignal): Change condition to
 	[__USE_XOPEN2K8].  Remove redundant #endif.
