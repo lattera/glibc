@@ -1,3 +1,17 @@
+2015-06-05  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18495]
+	* wctype/wcfuncs.c (__iswalnum): Use libc_hidden_def.
+	(__iswlower): Likewise.
+	* include/wctype.h (__iswalnum): Declare.  Use libc_hidden_proto.
+	(__iswlower): Likewise.
+	* posix/regcomp.c (re_compile_fastmap_iter): Call __towlower
+	instead of towlower.
+	* posix/regex_internal.c (build_wcs_upper_buffer): Call __iswlower
+	instead of iswlower.  Call __towupper instead of towupper.
+	* posix/regex_internal.h (IS_WIDE_WORD_CHAR): Call __iswalnum
+	instead of iswalnum.
+
 2015-06-05  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* malloc/tst-malloc-backtrace.c (do_test): Redirect libc fatal

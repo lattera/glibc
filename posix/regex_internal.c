@@ -312,11 +312,11 @@ build_wcs_upper_buffer (re_string_t *pstr)
 	  if (BE (mbclen + 2 > 2, 1))
 	    {
 	      wchar_t wcu = wc;
-	      if (iswlower (wc))
+	      if (__iswlower (wc))
 		{
 		  size_t mbcdlen;
 
-		  wcu = towupper (wc);
+		  wcu = __towupper (wc);
 		  mbcdlen = wcrtomb (buf, wcu, &prev_st);
 		  if (BE (mbclen == mbcdlen, 1))
 		    memcpy (pstr->mbs + byte_idx, buf, mbclen);
@@ -382,11 +382,11 @@ build_wcs_upper_buffer (re_string_t *pstr)
 	if (BE (mbclen + 2 > 2, 1))
 	  {
 	    wchar_t wcu = wc;
-	    if (iswlower (wc))
+	    if (__iswlower (wc))
 	      {
 		size_t mbcdlen;
 
-		wcu = towupper (wc);
+		wcu = __towupper (wc);
 		mbcdlen = wcrtomb ((char *) buf, wcu, &prev_st);
 		if (BE (mbclen == mbcdlen, 1))
 		  memcpy (pstr->mbs + byte_idx, buf, mbclen);

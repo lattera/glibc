@@ -471,7 +471,7 @@ typedef struct bin_tree_storage_t bin_tree_storage_t;
 
 #define IS_WORD_CHAR(ch) (isalnum (ch) || (ch) == '_')
 #define IS_NEWLINE(ch) ((ch) == NEWLINE_CHAR)
-#define IS_WIDE_WORD_CHAR(ch) (iswalnum (ch) || (ch) == L'_')
+#define IS_WIDE_WORD_CHAR(ch) (__iswalnum (ch) || (ch) == L'_')
 #define IS_WIDE_NEWLINE(ch) ((ch) == WIDE_NEWLINE_CHAR)
 
 #define NOT_SATISFY_PREV_CONSTRAINT(constraint,context) \

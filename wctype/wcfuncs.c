@@ -38,6 +38,7 @@
 
 #undef iswalnum
 func (alnum, __ISwalnum)
+libc_hidden_def (__iswalnum)
 libc_hidden_weak (iswalnum)
 #undef iswalpha
 func (alpha, __ISwalpha)
@@ -51,6 +52,7 @@ func (digit, __ISwdigit)
 libc_hidden_weak (iswdigit)
 #undef iswlower
 func (lower, __ISwlower)
+libc_hidden_def (__iswlower)
 libc_hidden_weak (iswlower)
 #undef iswgraph
 func (graph, __ISwgraph)
