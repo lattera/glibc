@@ -57,7 +57,7 @@ extern boolean_t __swtch (void);
 extern boolean_t swtch_pri (int priority);
 extern boolean_t __swtch_pri (int priority);
 
-/* Attempt to context switch the current thread of the processor.  Try
+/* Attempt to context switch the current thread off the processor.  Try
    to run NEW_THREAD next, ignoring normal scheduling policies.  The
    OPTION value comes from <mach/thread_switch.h>.  If OPTION is
    SWITCH_OPTION_WAIT, then block the current thread for TIME
