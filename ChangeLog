@@ -1,3 +1,7 @@
+2015-06-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/stdio.h (__open_memstream): Say "C++ tests" in comment.
+
 2015-06-06  Justus Winter  <4winter@informatik.uni-hamburg.de>
 
 	* mach/mach/mach_traps.h (thread_switch): Fix typo in comment.

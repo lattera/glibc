@@ -161,7 +161,7 @@ libc_hidden_proto (__fgets_unlocked)
 libc_hidden_proto (fputs_unlocked)
 libc_hidden_proto (fmemopen)
 /* The prototype needs repeating instead of using __typeof to use
-   __THROW in C++.  */
+   __THROW in C++ tests.  */
 extern FILE *__open_memstream (char **, size_t *) __THROW __wur;
 libc_hidden_proto (__open_memstream)
 libc_hidden_proto (__libc_fatal)
