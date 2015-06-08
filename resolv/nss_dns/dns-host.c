@@ -800,6 +800,10 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 
       if (qtype == T_PTR && type == T_CNAME)
 	{
+	  /* A CNAME could also have a TTL entry.  */
+	  if (ttlp != NULL && ttl < *ttlp)
+	      *ttlp = ttl;
+
 	  n = dn_expand (answer->buf, end_of_message, cp, tbuf, sizeof tbuf);
 	  if (__glibc_unlikely (n < 0 || res_dnok (tbuf) == 0))
 	    {
@@ -863,6 +867,8 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	      ++had_error;
 	      break;
 	    }
+	  if (ttlp != NULL && ttl < *ttlp)
+	      *ttlp = ttl;
 	  /* bind would put multiple PTR records as aliases, but we don't do
 	     that.  */
 	  result->h_name = bp;

@@ -1,3 +1,9 @@
+2015-06-22  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #18513]
+	* resolv/nss_dns/dns-host.c (getanswer_r): Record TTL also for
+	PTR queries.
+
 2015-06-22  Leonhard Holz  <leonhard.holz@web.de>
 
 	* string/strcoll_l.c (STRCOLL): Remove unnecessary memset.
