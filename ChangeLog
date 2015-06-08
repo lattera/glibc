@@ -1,5 +1,10 @@
 2015-07-10  Torvald Riegel  <triegel@redhat.com>
 
+	* nptl/sem_waitcommon.c (__new_sem_wait_slow): Update comments.
+	(sem_assume_only_signals_cause_futex_EINTR): Remove.
+
+2015-07-10  Torvald Riegel  <triegel@redhat.com>
+
 	* sysdeps/nptl/futex-internal.h: New file.
 	* sysdeps/nacl/futex-internal.h: New file.
 	* sysdeps/unix/sysv/linux/futex-internal.h: New file.

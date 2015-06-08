@@ -78,14 +78,6 @@
    requirement because the semaphore must not be destructed while any sem_wait
    is still executing.  */
 
-/* Set this to true if you assume that, in contrast to current Linux futex
-   documentation, lll_futex_wake can return -EINTR only if interrupted by a
-   signal, not spuriously due to some other reason.
-   TODO Discuss EINTR conditions with the Linux kernel community.  For
-   now, we set this to true to not change behavior of semaphores compared
-   to previous glibc builds.  */
-static const int sem_assume_only_signals_cause_futex_EINTR = 1;
-
 #if !__HAVE_64B_ATOMICS
 static void
 __sem_wait_32_finish (struct new_sem *sem);
@@ -191,26 +183,12 @@ __new_sem_wait_slow (struct new_sem *sem, const struct timespec *abstime)
 	     wake-up, or due to a change in the number of tokens.  We retry in
 	     these cases.
 	     If we timed out, forward this to the caller.
-	     EINTR could be either due to being interrupted by a signal, or
-	     due to a spurious wake-up.  Thus, we cannot distinguish between
-	     both, and are not allowed to return EINTR to the caller but have
-	     to retry; this is because we may not have been interrupted by a
-	     signal.  However, if we assume that only signals cause a futex
-	     return of EINTR, we forward EINTR to the caller.
-
-	     Retrying on EINTR is technically always allowed because to
-	     reliably interrupt sem_wait with a signal, the signal handler
-	     must call sem_post (which is AS-Safe).  In executions where the
-	     signal handler does not do that, the implementation can correctly
-	     claim that sem_wait hadn't actually started to execute yet, and
-	     thus the signal never actually interrupted sem_wait.  We make no
-	     timing guarantees, so the program can never observe that sem_wait
-	     actually did start to execute.  Thus, in a correct program, we
-	     can expect a signal that wanted to interrupt the sem_wait to have
-	     provided a token, and can just try to grab this token if
-	     futex_wait returns EINTR.  */
-	  if (err == ETIMEDOUT ||
-	      (err == EINTR && sem_assume_only_signals_cause_futex_EINTR))
+	     EINTR is returned if we are interrupted by a signal; we
+	     forward this to the caller.  (See futex_wait and related
+	     documentation.  Before Linux 2.6.22, EINTR was also returned on
+	     spurious wake-ups; we only support more recent Linux versions,
+	     so do not need to consider this here.)  */
+	  if (err == ETIMEDOUT || err == EINTR)
 	    {
 	      __set_errno (err);
 	      err = -1;
@@ -302,8 +280,7 @@ __new_sem_wait_slow (struct new_sem *sem, const struct timespec *abstime)
 	    {
 	      /* See __HAVE_64B_ATOMICS variant.  */
 	      err = do_futex_wait(sem, abstime);
-	      if (err == ETIMEDOUT ||
-		  (err == EINTR && sem_assume_only_signals_cause_futex_EINTR))
+	      if (err == ETIMEDOUT || err == EINTR)
 		{
 		  __set_errno (err);
 		  err = -1;
