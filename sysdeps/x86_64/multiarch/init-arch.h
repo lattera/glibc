@@ -26,6 +26,8 @@
 #define bit_Slow_SSE4_2			(1 << 9)
 #define bit_AVX2_Usable			(1 << 10)
 #define bit_AVX_Fast_Unaligned_Load	(1 << 11)
+#define bit_AVX512F_Usable		(1 << 12)
+#define bit_AVX512DQ_Usable		(1 << 13)
 
 /* CPUID Feature flags.  */
 
@@ -43,10 +45,15 @@
 /* COMMON_CPUID_INDEX_7.  */
 #define bit_RTM		(1 << 11)
 #define bit_AVX2	(1 << 5)
+#define bit_AVX512F	(1 << 16)
+#define bit_AVX512DQ	(1 << 17)
 
 /* XCR0 Feature flags.  */
 #define bit_XMM_state  (1 << 1)
 #define bit_YMM_state  (2 << 1)
+#define bit_Opmask_state	(1 << 5)
+#define bit_ZMM0_15_state	(1 << 6)
+#define bit_ZMM16_31_state	(1 << 7)
 
 /* The integer bit array index for the first set of internal feature bits.  */
 # define FEATURE_INDEX_1 0
@@ -76,6 +83,8 @@
 # define index_Slow_SSE4_2		FEATURE_INDEX_1*FEATURE_SIZE
 # define index_AVX2_Usable		FEATURE_INDEX_1*FEATURE_SIZE
 # define index_AVX_Fast_Unaligned_Load	FEATURE_INDEX_1*FEATURE_SIZE
+# define index_AVX512F_Usable		FEATURE_INDEX_1*FEATURE_SIZE
+# define index_AVX512DQ_Usable		FEATURE_INDEX_1*FEATURE_SIZE
 
 #else	/* __ASSEMBLER__ */
 
@@ -152,6 +161,10 @@ extern const struct cpu_features *__get_cpu_features (void)
   HAS_CPUID_FLAG (COMMON_CPUID_INDEX_7, ebx, bit_RTM)
 # define CPUID_AVX2 \
   HAS_CPUID_FLAG (COMMON_CPUID_INDEX_7, ebx, bit_AVX2)
+# define CPUID_AVX512F \
+  HAS_CPUID_FLAG (COMMON_CPUID_INDEX_7, ebx, bit_AVX512F)
+# define CPUID_AVX512DQ \
+  HAS_CPUID_FLAG (COMMON_CPUID_INDEX_7, ebx, bit_AVX512DQ)
 
 /* HAS_* evaluates to true if we may use the feature at runtime.  */
 # define HAS_SSE2	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, edx, bit_SSE2)
@@ -172,6 +185,8 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define index_Slow_SSE4_2		FEATURE_INDEX_1
 # define index_AVX2_Usable		FEATURE_INDEX_1
 # define index_AVX_Fast_Unaligned_Load	FEATURE_INDEX_1
+# define index_AVX512F_Usable		FEATURE_INDEX_1
+# define index_AVX512DQ_Usable		FEATURE_INDEX_1
 
 # define HAS_ARCH_FEATURE(name) \
   ((__get_cpu_features ()->feature[index_##name] & (bit_##name)) != 0)
@@ -182,6 +197,8 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define HAS_FAST_UNALIGNED_LOAD	HAS_ARCH_FEATURE (Fast_Unaligned_Load)
 # define HAS_AVX			HAS_ARCH_FEATURE (AVX_Usable)
 # define HAS_AVX2			HAS_ARCH_FEATURE (AVX2_Usable)
+# define HAS_AVX512F			HAS_ARCH_FEATURE (AVX512F_Usable)
+# define HAS_AVX512DQ			HAS_ARCH_FEATURE (AVX512DQ_Usable)
 # define HAS_FMA			HAS_ARCH_FEATURE (FMA_Usable)
 # define HAS_FMA4			HAS_ARCH_FEATURE (FMA4_Usable)
 # define HAS_AVX_FAST_UNALIGNED_LOAD	HAS_ARCH_FEATURE (AVX_Fast_Unaligned_Load)

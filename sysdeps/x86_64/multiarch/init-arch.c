@@ -179,6 +179,23 @@ __init_cpu_features (void)
 	  if (CPUID_AVX2)
 	    __cpu_features.feature[index_AVX2_Usable]
 	      |= bit_AVX2_Usable | bit_AVX_Fast_Unaligned_Load;
+	  /* Check if OPMASK state, upper 256-bit of ZMM0-ZMM15 and
+	     ZMM16-ZMM31 state are enabled.  */
+	  if ((xcrlow & (bit_Opmask_state | bit_ZMM0_15_state
+			 | bit_ZMM16_31_state)) ==
+	      (bit_Opmask_state | bit_ZMM0_15_state | bit_ZMM16_31_state))
+	    {
+	      /* Determine if AVX512F is usable.  */
+	      if (CPUID_AVX512F)
+		{
+		  __cpu_features.feature[index_AVX512F_Usable]
+		    |= bit_AVX512F_Usable;
+		  /* Determine if AVX512DQ is usable.  */
+		  if (CPUID_AVX512DQ)
+		    __cpu_features.feature[index_AVX512DQ_Usable]
+		      |= bit_AVX512DQ_Usable;
+		}
+	    }
 	  /* Determine if FMA is usable.  */
 	  if (CPUID_FMA)
 	    __cpu_features.feature[index_FMA_Usable] |= bit_FMA_Usable;

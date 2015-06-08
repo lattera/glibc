@@ -1,3 +1,11 @@
+2015-06-08  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	* sysdeps/x86_64/multiarch/init-arch.h (bit_AVX512F_Usable,
+	bit_AVX512DQ_Usable, bit_Opmask_state, bit_ZMM0_15_state,
+	bit_ZMM16_31_state): New macro.
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features):
+	Check and set bit_AVX512F_Usable, bit_AVX512DQ_Usable.
+
 2015-06-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* include/stdio.h (__open_memstream): Say "C++ tests" in comment.
