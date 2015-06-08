@@ -699,7 +699,7 @@ heap_trim (heap_info *heap, size_t pad)
      by preserving the top pad and at least a page.  */
   top_size = chunksize (top_chunk);
   top_area = top_size - MINSIZE - 1;
-  if (top_area <= pad)
+  if (top_area < 0 || (size_t) top_area <= pad)
     return 0;
 
   extra = ALIGN_DOWN(top_area - pad, pagesz);

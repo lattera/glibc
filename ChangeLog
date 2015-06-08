@@ -1,3 +1,9 @@
+2015-06-26  Mel Gorman  <mgorman@suse.de>
+
+	[BZ #18502]
+	* malloc/arena.c (heap_trim): Don't try to shrink a heap that is
+	already minimal.
+
 2015-06-26  Matthew Fortune  <matthew.fortune@imgtec.com>
 
 	* elf/elf.h (DT_MIPS_RLD_MAP_REL): New macro.
