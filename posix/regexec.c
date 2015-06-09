@@ -3968,8 +3968,8 @@ check_node_accept_bytes (const re_dfa_t *dfa, int node_idx,
 	    {
 	      cmp_buf[0] = cset->range_starts[i];
 	      cmp_buf[4] = cset->range_ends[i];
-	      if (wcscoll (cmp_buf, cmp_buf + 2) <= 0
-		  && wcscoll (cmp_buf + 2, cmp_buf + 4) <= 0)
+	      if (__wcscoll (cmp_buf, cmp_buf + 2) <= 0
+		  && __wcscoll (cmp_buf + 2, cmp_buf + 4) <= 0)
 		{
 		  match_len = char_len;
 		  goto check_node_accept_bytes_match;

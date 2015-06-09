@@ -1,5 +1,35 @@
 2015-06-09  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18497]
+	* wcsmbs/wcscmp.c [!WCSCMP] (WCSCMP): Define as __wcscmp instead
+	of wcscmp.
+	(wcscmp): Define as weak alias of WCSCMP.
+	* wcsmbs/wcscoll.c (STRCOLL): Define as __wcscoll instead of
+	wcscoll.
+	(USE_HIDDEN_DEF): Define.
+	[!USE_IN_EXTENDED_LOCALE_MODEL] (wcscoll): Define as weak alias of
+	__wcscoll.  Don't use libc_hidden_weak.
+	* wcsmbs/wcscoll_l.c (STRCMP): Define as __wcscmp instead of
+	wcscmp.
+	* sysdeps/i386/i686/multiarch/wcscmp-c.c
+	[SHARED] (libc_hidden_def): Define __GI___wcscmp instead of
+	__GI_wcscmp.
+	(weak_alias): Undefine and redefine.
+	* sysdeps/i386/i686/multiarch/wcscmp.S (wcscmp): Rename to
+	__wcscmp and define as weak alias of __wcscmp.
+	* sysdeps/x86_64/wcscmp.S (wcscmp): Likewise.
+	* include/wchar.h (__wcscmp): Declare.  Use libc_hidden_proto.
+	(__wcscoll): Likewise.
+	(wcscmp): Don't use libc_hidden_proto.
+	(wcscoll): Likewise.
+	* posix/regcomp.c (build_range_exp): Call __wcscoll instead of
+	wcscoll.
+	* posix/regexec.c (check_node_accept_bytes): Likewise.
+	* conform/Makefile (test-xfail-XPG3/regex.h/linknamespace): Remove
+	variable.
+	(test-xfail-XPG4/regex.h/linknamespace): Likewise.
+	(test-xfail-POSIX/regex.h/linknamespace): Likewise.
+
 	[BZ #18507]
 	* sysdeps/unix/sysv/linux/fstatvfs.c (fstatvfs): Rename to
 	__fstatvfs and define as weak alias of __fstatvfs.  Use

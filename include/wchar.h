@@ -81,17 +81,22 @@ libc_hidden_proto (vswscanf)
 
 libc_hidden_proto (mbrtowc)
 libc_hidden_proto (wcrtomb)
-libc_hidden_proto (wcscmp)
+extern int __wcscmp (const wchar_t *__s1, const wchar_t *__s2)
+     __THROW __attribute_pure__;
+libc_hidden_proto (__wcscmp)
 libc_hidden_proto (wcsftime)
 libc_hidden_proto (wcsspn)
 libc_hidden_proto (wcschr)
 /* The C++ overloading of wcschr means we have to repeat the type to
    declare __wcschr instead of using typeof, to avoid errors in C++
-   tests.  The same applies to __wmemchr.  */
+   tests; in addition, __THROW cannot be used with a function type
+   from typeof in C++.  The same applies to __wmemchr and, as regards
+   __THROW, to __wcscmp and __wcscoll.  */
 extern wchar_t *__wcschr (const wchar_t *__wcs, wchar_t __wc)
      __THROW __attribute_pure__;
 libc_hidden_proto (__wcschr)
-libc_hidden_proto (wcscoll)
+extern int __wcscoll (const wchar_t *__s1, const wchar_t *__s2) __THROW;
+libc_hidden_proto (__wcscoll)
 libc_hidden_proto (wcspbrk)
 
 extern typeof (wmemset) __wmemset;

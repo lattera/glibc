@@ -24,7 +24,7 @@
 #define USTRING_TYPE wint_t
 #define STRCOLL __wcscoll_l
 #define STRDIFF __wcsdiff
-#define STRCMP wcscmp
+#define STRCMP __wcscmp
 #define WEIGHT_H "../locale/weightwc.h"
 #define SUFFIX	WC
 #define L(arg) L##arg

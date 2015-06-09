@@ -346,20 +346,17 @@ test-xfail-XOPEN2K8/ndbm.h/linknamespace = yes
 
 # Unsorted expected failures.
 test-xfail-XPG3/glob.h/linknamespace = yes
-test-xfail-XPG3/regex.h/linknamespace = yes
 test-xfail-XPG3/unistd.h/linknamespace = yes
 test-xfail-XPG3/wordexp.h/linknamespace = yes
 test-xfail-XPG4/fmtmsg.h/linknamespace = yes
 test-xfail-XPG4/glob.h/linknamespace = yes
 test-xfail-XPG4/netdb.h/linknamespace = yes
-test-xfail-XPG4/regex.h/linknamespace = yes
 test-xfail-XPG4/stdlib.h/linknamespace = yes
 test-xfail-XPG4/syslog.h/linknamespace = yes
 test-xfail-XPG4/unistd.h/linknamespace = yes
 test-xfail-XPG4/wordexp.h/linknamespace = yes
 test-xfail-POSIX/aio.h/linknamespace = yes
 test-xfail-POSIX/mqueue.h/linknamespace = yes
-test-xfail-POSIX/regex.h/linknamespace = yes
 test-xfail-POSIX/semaphore.h/linknamespace = yes
 test-xfail-UNIX98/fmtmsg.h/linknamespace = yes
 test-xfail-UNIX98/mqueue.h/linknamespace = yes

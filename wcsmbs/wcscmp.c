@@ -19,7 +19,7 @@
 #include <wchar.h>
 
 #ifndef WCSCMP
-# define WCSCMP wcscmp
+# define WCSCMP __wcscmp
 #endif
 
 /* Compare S1 and S2, returning less than, equal to or
@@ -44,3 +44,4 @@ WCSCMP (s1, s2)
   return c1 < c2 ? -1 : 1;
 }
 libc_hidden_def (WCSCMP)
+weak_alias (WCSCMP, wcscmp)

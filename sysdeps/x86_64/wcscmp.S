@@ -22,7 +22,7 @@
 /* Note: wcscmp uses signed comparison, not unsighed as in strcmp function. */
 
 	.text
-ENTRY (wcscmp)
+ENTRY (__wcscmp)
 /*
 	* This implementation uses SSE to compare up to 16 bytes at a time.
 */
@@ -945,5 +945,6 @@ L(equal):
 	xor	%rax, %rax
 	ret
 
-END (wcscmp)
-libc_hidden_def (wcscmp)
+END (__wcscmp)
+libc_hidden_def (__wcscmp)
+weak_alias (__wcscmp, wcscmp)
