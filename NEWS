@@ -50,6 +50,14 @@ Version 2.22
 * CVE-2014-8121 The NSS backends shared internal state between the getXXent
   and getXXbyYY NSS calls for the same database, causing a denial-of-service
   condition in some applications.
+
+* Added vector math library named libmvec with the following vectorized x86_64
+  implementations: cos.
+  The library can be disabled with --disable-mathvec. Use of the functions is
+  enabled with -fopenmp -ffast-math starting from -O1 for GCC version >= 4.9.0.
+  The library is linked in as needed when using -lm (no need to specify -lmvec
+  explicitly).
+  Visit <https://sourceware.org/glibc/wiki/libmvec> for detailed information.
 
 Version 2.21
 

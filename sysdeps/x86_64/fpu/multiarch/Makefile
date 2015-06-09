@@ -51,3 +51,8 @@ CFLAGS-slowexp-avx.c = -msse2avx -DSSE2AVX
 CFLAGS-s_tan-avx.c = -msse2avx -DSSE2AVX
 endif
 endif
+
+ifeq ($(subdir),mathvec)
+libmvec-sysdep_routines += svml_d_cos2_core_sse4 svml_d_cos4_core_avx2 \
+			   svml_d_cos8_core_avx512
+endif

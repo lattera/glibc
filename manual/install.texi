@@ -181,6 +181,10 @@ version of GCC than this version of @theglibc{} was tested with, so
 new warnings cause the build with @option{-Werror} to fail), you can
 configure with @option{--disable-werror}.
 
+@item --disable-mathvec
+By default for x86_64, @theglibc{} is built with vector math library.
+Use this option to disable vector math library.
+
 @item --build=@var{build-system}
 @itemx --host=@var{host-system}
 These options are for cross-compiling.  If you specify both options and

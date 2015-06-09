@@ -149,6 +149,10 @@ will be used, and CFLAGS sets optimization options for the compiler.
      with, so new warnings cause the build with '-Werror' to fail), you
      can configure with '--disable-werror'.
 
+'--disable-mathvec'
+     By default for x86_64, the GNU C Library is built with vector math
+     library.  Use this option to disable vector math library.
+
 '--build=BUILD-SYSTEM'
 '--host=HOST-SYSTEM'
      These options are for cross-compiling.  If you specify both options

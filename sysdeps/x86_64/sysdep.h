@@ -25,6 +25,13 @@
 
 /* Syntactic details of assembler.  */
 
+/* This macro is for setting proper CFI with DW_CFA_expression describing
+   the register as saved relative to %rsp instead of relative to the CFA.
+   Expression is DW_OP_drop, DW_OP_breg7 (%rsp is register 7), sleb128 offset
+   from %rsp.  */
+#define cfi_offset_rel_rsp(regn, off)	.cfi_escape 0x10, regn, 0x4, 0x13, \
+					0x77, off & 0x7F | 0x80, off >> 7
+
 /* ELF uses byte-counts for .align, most others use log2 of count of bytes.  */
 #define ALIGNARG(log2) 1<<log2
 #define ASM_SIZE_DIRECTIVE(name) .size name,.-name;

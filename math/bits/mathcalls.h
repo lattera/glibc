@@ -60,7 +60,7 @@ __MATHCALL (atan,, (_Mdouble_ __x));
 __MATHCALL (atan2,, (_Mdouble_ __y, _Mdouble_ __x));
 
 /* Cosine of X.  */
-__MATHCALL (cos,, (_Mdouble_ __x));
+__MATHCALL_VEC (cos,, (_Mdouble_ __x));
 /* Sine of X.  */
 __MATHCALL (sin,, (_Mdouble_ __x));
 /* Tangent of X.  */

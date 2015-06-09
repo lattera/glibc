@@ -99,6 +99,10 @@ if test $libc_cv_cc_avx2 = yes; then
 fi
 LIBC_CONFIG_VAR([config-cflags-avx2], [$libc_cv_cc_avx2])
 
+if test x"$build_mathvec" = xnotset; then
+  build_mathvec=yes
+fi
+
 dnl It is always possible to access static and hidden symbols in an
 dnl position independent way.
 AC_DEFINE(PI_STATIC_AND_HIDDEN)

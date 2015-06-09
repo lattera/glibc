@@ -1,3 +1,33 @@
+2015-06-09  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	* sysdeps/x86_64/fpu/Makefile: New file.
+	* sysdeps/x86_64/fpu/Versions: New file.
+	* sysdeps/x86_64/fpu/svml_d_cos_data.S: New file.
+	* sysdeps/x86_64/fpu/svml_d_cos_data.h: New file.
+	* sysdeps/x86_64/fpu/svml_d_cos2_core.S: New file.
+	* sysdeps/x86_64/fpu/svml_d_cos4_core.S: New file.
+	* sysdeps/x86_64/fpu/svml_d_cos4_core_avx.S: New file.
+	* sysdeps/x86_64/fpu/svml_d_cos8_core.S: New file.
+	* sysdeps/x86_64/fpu/svml_d_wrapper_impl.h: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cos2_core.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cos2_core_sse4.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cos4_core.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cos4_core_avx2.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cos8_core.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cos8_core_avx512.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/Makefile (libmvec-sysdep_routines): Added
+	build of SSE, AVX2 and AVX512 IFUNC versions.
+	* sysdeps/x86/fpu/bits/math-vector.h: Added SIMD declaration for cos.
+	* math/bits/mathcalls.h: Added cos declaration with __MATHCALL_VEC.
+	* sysdeps/x86_64/configure.ac: Options for libmvec build.
+	* sysdeps/x86_64/configure: Regenerated.
+	* sysdeps/x86_64/sysdep.h (cfi_offset_rel_rsp): New macro.
+	* sysdeps/unix/sysv/linux/x86_64/libmvec.abilist: New file.
+	* manual/install.texi (Configuring and compiling): Document
+	--disable-mathvec.
+	* INSTALL: Regenerated.
+	* NEWS: Mention addition of libmvec and x86_64 vector cos.
+
 2015-06-09 Marko Myllynen  <myllynen@redhat.com>
 
 	* locale/C-ctype.c (PREDEFINED_CLASSES): Remove.
