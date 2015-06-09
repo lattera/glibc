@@ -25,6 +25,7 @@ print_defs()
   echo "#if defined TEST_VECTOR_$1 && TEST_VECTOR_$1"
   echo "# define HAVE_VECTOR_$1 1"
   echo "# define ${1}_VEC_SUFF WRAPPER_NAME ($1)"
+  echo "WRAPPER_DECL$2 (WRAPPER_NAME ($1))"
   echo "#else"
   echo "# define HAVE_VECTOR_$1 0"
   echo "# define ${1}_VEC_SUFF $1"
@@ -32,10 +33,16 @@ print_defs()
   echo
 }
 
-for func in $(grep ALL_RM_TEST libm-test.inc | grep -v define | sed -r "s/.*\(//; s/,.*//"); do
+for func in $(cat libm-test.inc | grep ALL_RM_TEST | grep -v define | grep -v RUN_TEST_LOOP_ff_f | sed -r "s/.*\(//; s/,.*//" ); do
   print_defs ${func}
   print_defs ${func}f
   print_defs ${func}l
+done
+
+for func in $(cat libm-test.inc | grep ALL_RM_TEST | grep RUN_TEST_LOOP_ff_f | sed -r "s/.*\(//; s/,.*//" ); do
+  print_defs ${func} "_ff"
+  print_defs ${func}f "_ff"
+  print_defs ${func}l "_ff"
 done
 
 # When all functions will use ALL_RM_TEST instead of using START directly,

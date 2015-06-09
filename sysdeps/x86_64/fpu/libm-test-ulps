@@ -965,6 +965,18 @@ idouble: 1
 ildouble: 2
 ldouble: 2
 
+Function: "cos_vlen2":
+double: 1
+
+Function: "cos_vlen4":
+double: 1
+
+Function: "cos_vlen4_avx2":
+double: 1
+
+Function: "cos_vlen8":
+double: 1
+
 Function: "cosh":
 double: 1
 float: 1

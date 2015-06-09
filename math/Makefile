@@ -115,8 +115,9 @@ tests-static = test-fpucw-static test-fpucw-ieee-static
 test-longdouble-yes = test-ldouble test-ildoubl
 
 ifneq (no,$(PERL))
+libm-vec-tests = $(addprefix test-,$(libmvec-tests))
 libm-tests = test-float test-double $(test-longdouble-$(long-double-fcts)) \
-	test-ifloat test-idouble
+	test-ifloat test-idouble $(libm-vec-tests)
 libm-tests.o = $(addsuffix .o,$(libm-tests))
 
 tests += $(libm-tests)
@@ -143,7 +144,21 @@ $(objpfx)test-double.o: $(objpfx)libm-test.stmp
 $(objpfx)test-idouble.o: $(objpfx)libm-test.stmp
 $(objpfx)test-ldouble.o: $(objpfx)libm-test.stmp
 $(objpfx)test-ildoubl.o: $(objpfx)libm-test.stmp
+$(addprefix $(objpfx), $(addsuffix .o, $(libm-vec-tests))): $(objpfx)libm-test.stmp
 endif
+
+libm-test-fast-math-cflags = -fno-builtin -D__FAST_MATH__ -DTEST_FAST_MATH
+libm-test-vec-cflags = $(libm-test-fast-math-cflags) -fno-inline \
+		       -ffloat-store -D_OPENMP=201307 -Wno-unknown-pragmas
+
+CFLAGS-test-double-vlen2.c = $(libm-test-vec-cflags)
+CFLAGS-test-double-vlen2-wrappers.c = $(double-vlen2-arch-ext-cflags)
+
+CFLAGS-test-double-vlen4.c = $(libm-test-vec-cflags)
+CFLAGS-test-double-vlen4-wrappers.c = $(double-vlen4-arch-ext-cflags)
+
+CFLAGS-test-double-vlen8.c = $(libm-test-vec-cflags)
+CFLAGS-test-double-vlen8-wrappers.c = $(double-vlen8-arch-ext-cflags)
 
 CFLAGS-test-float.c = -fno-inline -ffloat-store -fno-builtin
 CFLAGS-test-double.c = -fno-inline -ffloat-store -fno-builtin
@@ -155,12 +170,12 @@ CFLAGS-test-tgmath.c = -fno-builtin
 CFLAGS-test-tgmath2.c = -fno-builtin
 CFLAGS-test-tgmath-ret.c = -fno-builtin
 CFLAGS-test-powl.c = -fno-builtin
-CPPFLAGS-test-ifloat.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__ \
-			 -DTEST_FAST_MATH -fno-builtin
-CPPFLAGS-test-idouble.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__ \
-			  -DTEST_FAST_MATH -fno-builtin
-CPPFLAGS-test-ildoubl.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__ \
-			  -DTEST_FAST_MATH -fno-builtin
+CPPFLAGS-test-ifloat.c = -U__LIBC_INTERNAL_MATH_INLINES \
+			 $(libm-test-fast-math-cflags)
+CPPFLAGS-test-idouble.c = -U__LIBC_INTERNAL_MATH_INLINES \
+			  $(libm-test-fast-math-cflags)
+CPPFLAGS-test-ildoubl.c = -U__LIBC_INTERNAL_MATH_INLINES \
+			  $(libm-test-fast-math-cflags)
 
 
 # The -lieee module sets the _LIB_VERSION_ switch to IEEE mode
@@ -236,8 +251,10 @@ $(objpfx)libieee.a: $(objpfx)ieee-math.o
 	$(patsubst %/,cd % &&,$(objpfx)) \
 	$(LN_S) $(<F) $(@F)
 
-$(addprefix $(objpfx),$(filter-out $(tests-static),$(tests))): $(libm)
+$(addprefix $(objpfx),$(filter-out $(tests-static) $(libm-vec-tests),$(tests))): $(libm)
 $(addprefix $(objpfx),$(tests-static)): $(objpfx)libm.a
+$(addprefix $(objpfx), $(libm-vec-tests)): $(objpfx)%: $(libm) $(libmvec) \
+					   $(objpfx)init-arch.o $(objpfx)%-wrappers.o
 
 gmp-objs = $(patsubst %,$(common-objpfx)stdlib/%.o,\
 		      add_n sub_n cmp addmul_1 mul_1 mul_n divmod_1 \
