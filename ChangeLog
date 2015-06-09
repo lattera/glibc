@@ -68,6 +68,22 @@
 	* sysdeps/x86/fpu/bits/math-vector.h: Added SIMD declaration for cosf.
 	* NEWS: Mention addition of x86_64 vector cosf.
 
+	* math/Makefile: Added CFLAGS for new tests.
+	* math/test-float-vlen16.h: New file.
+	* math/test-float-vlen4.h: New file.
+	* math/test-float-vlen8.h: New file.
+	* math/test-double-vlen2.h: Fixed 2 argument macro and comment.
+	* sysdeps/x86_64/fpu/Makefile: Added new tests and variables.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Regenerated.
+	* sysdeps/x86_64/fpu/test-float-vlen16-wrappers.c: New file.
+	* sysdeps/x86_64/fpu/test-float-vlen16.c: New file.
+	* sysdeps/x86_64/fpu/test-float-vlen4-wrappers.c: New file.
+	* sysdeps/x86_64/fpu/test-float-vlen4.c: New file.
+	* sysdeps/x86_64/fpu/test-float-vlen8-avx2-wrappers.c: New file.
+	* sysdeps/x86_64/fpu/test-float-vlen8-avx2.c: New file.
+	* sysdeps/x86_64/fpu/test-float-vlen8-wrappers.c: New file.
+	* sysdeps/x86_64/fpu/test-float-vlen8.c: New file.
+
 2015-06-09 Marko Myllynen  <myllynen@redhat.com>
 
 	* locale/C-ctype.c (PREDEFINED_CLASSES): Remove.

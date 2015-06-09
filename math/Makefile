@@ -160,6 +160,15 @@ CFLAGS-test-double-vlen4-wrappers.c = $(double-vlen4-arch-ext-cflags)
 CFLAGS-test-double-vlen8.c = $(libm-test-vec-cflags)
 CFLAGS-test-double-vlen8-wrappers.c = $(double-vlen8-arch-ext-cflags)
 
+CFLAGS-test-float-vlen4.c = $(libm-test-vec-cflags)
+CFLAGS-test-float-vlen4-wrappers.c = $(float-vlen4-arch-ext-cflags)
+
+CFLAGS-test-float-vlen8.c = $(libm-test-vec-cflags)
+CFLAGS-test-float-vlen8-wrappers.c = $(float-vlen8-arch-ext-cflags)
+
+CFLAGS-test-float-vlen16.c = $(libm-test-vec-cflags)
+CFLAGS-test-float-vlen16-wrappers.c = $(float-vlen16-arch-ext-cflags)
+
 CFLAGS-test-float.c = -fno-inline -ffloat-store -fno-builtin
 CFLAGS-test-double.c = -fno-inline -ffloat-store -fno-builtin
 CFLAGS-test-ldouble.c = -fno-inline -ffloat-store -fno-builtin
