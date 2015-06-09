@@ -26,7 +26,7 @@ extern void __internal_statvfs (const char *name, struct statvfs *buf,
 
 
 int
-statvfs (const char *file, struct statvfs *buf)
+__statvfs (const char *file, struct statvfs *buf)
 {
   struct statfs fsbuf;
 
@@ -40,4 +40,5 @@ statvfs (const char *file, struct statvfs *buf)
   /* We signal success if the statfs call succeeded.  */
   return 0;
 }
-libc_hidden_def (statvfs)
+weak_alias (__statvfs, statvfs)
+libc_hidden_weak (statvfs)

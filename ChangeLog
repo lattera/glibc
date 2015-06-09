@@ -1,3 +1,20 @@
+2015-06-09  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18507]
+	* sysdeps/unix/sysv/linux/fstatvfs.c (fstatvfs): Rename to
+	__fstatvfs and define as weak alias of __fstatvfs.  Use
+	libc_hidden_weak.
+	* sysdeps/unix/sysv/linux/statvfs.c (statvs): Rename to __statvfs
+	and define as weak alias of __statvfs.  Use libc_hidden_weak.
+	* sysdeps/unix/sysv/linux/wordsize-64/fstatvfs.c (__fstatvfs64):
+	Define as alias of __fstatvfs, not fstatvfs.
+	(fstatvfs64): Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/statvfs.c (__statvfs64):
+	Define as alias of __statvfs, not statvfs.
+	(statvfs64): Likewise.
+	* conform/Makefile (test-xfail-POSIX/unistd.h/linknamespace):
+	Remove variable.
+
 2015-06-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h

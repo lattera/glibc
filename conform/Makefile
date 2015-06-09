@@ -361,7 +361,6 @@ test-xfail-POSIX/aio.h/linknamespace = yes
 test-xfail-POSIX/mqueue.h/linknamespace = yes
 test-xfail-POSIX/regex.h/linknamespace = yes
 test-xfail-POSIX/semaphore.h/linknamespace = yes
-test-xfail-POSIX/unistd.h/linknamespace = yes
 test-xfail-UNIX98/fmtmsg.h/linknamespace = yes
 test-xfail-UNIX98/mqueue.h/linknamespace = yes
 test-xfail-UNIX98/netdb.h/linknamespace = yes
