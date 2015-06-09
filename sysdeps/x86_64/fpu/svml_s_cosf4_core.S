@@ -1,4 +1,4 @@
-/* Platform-specific SIMD declarations of math functions.
+/* Function cosf vectorized with SSE2, wrapper version.
    Copyright (C) 2014-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,21 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _MATH_H
-# error "Never include <bits/math-vector.h> directly;\
- include <math.h> instead."
-#endif
+#include <sysdep.h>
+#include "svml_s_wrapper_impl.h"
 
-/* Get default empty definitions for simd declarations.  */
-#include <bits/libm-simd-decl-stubs.h>
+	.text
+ENTRY (_ZGVbN4v_cosf)
+WRAPPER_IMPL_SSE2 cosf
+END (_ZGVbN4v_cosf)
 
-#if defined __x86_64__ && defined __FAST_MATH__
-# if defined _OPENMP && _OPENMP >= 201307
-/* OpenMP case.  */
-#  define __DECL_SIMD_x86_64 _Pragma ("omp declare simd notinbranch")
-#  undef __DECL_SIMD_cos
-#  define __DECL_SIMD_cos __DECL_SIMD_x86_64
-#  undef __DECL_SIMD_cosf
-#  define __DECL_SIMD_cosf __DECL_SIMD_x86_64
-# endif
+#ifndef USE_MULTIARCH
+ libmvec_hidden_def (_ZGVbN4v_cosf)
 #endif

@@ -1,4 +1,4 @@
-/* Platform-specific SIMD declarations of math functions.
+/* Multiple versions of vectorized cosf, vector length is 4.
    Copyright (C) 2014-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,21 +16,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _MATH_H
-# error "Never include <bits/math-vector.h> directly;\
- include <math.h> instead."
-#endif
+#include <sysdep.h>
+#include <init-arch.h>
 
-/* Get default empty definitions for simd declarations.  */
-#include <bits/libm-simd-decl-stubs.h>
+	.text
+ENTRY (_ZGVbN4v_cosf)
+        .type   _ZGVbN4v_cosf, @gnu_indirect_function
+        cmpl    $0, KIND_OFFSET+__cpu_features(%rip)
+        jne     1f
+        call    __init_cpu_features
+1:      leaq    _ZGVbN4v_cosf_sse4(%rip), %rax
+        testl   $bit_SSE4_1, __cpu_features+CPUID_OFFSET+index_SSE4_1(%rip)
+        jz      2f
+        ret
+2:      leaq    _ZGVbN4v_cosf_sse2(%rip), %rax
+        ret
+END (_ZGVbN4v_cosf)
+libmvec_hidden_def (_ZGVbN4v_cosf)
 
-#if defined __x86_64__ && defined __FAST_MATH__
-# if defined _OPENMP && _OPENMP >= 201307
-/* OpenMP case.  */
-#  define __DECL_SIMD_x86_64 _Pragma ("omp declare simd notinbranch")
-#  undef __DECL_SIMD_cos
-#  define __DECL_SIMD_cos __DECL_SIMD_x86_64
-#  undef __DECL_SIMD_cosf
-#  define __DECL_SIMD_cosf __DECL_SIMD_x86_64
-# endif
-#endif
+#define _ZGVbN4v_cosf _ZGVbN4v_cosf_sse2
+#include "../svml_s_cosf4_core.S"
