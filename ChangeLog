@@ -1,3 +1,8 @@
+2015-06-11  Florian Weimer  <fweimer@redhat.com>
+
+	* nptl/pthread_key_create.c (__pthread_key_create): Fix typo in
+	comment.
+
 2015-06-10  Gleb Fotengauer-Malinovskiy  <glebfm@altlinux.org>
 
 	[BZ #18479]

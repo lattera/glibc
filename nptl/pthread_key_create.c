@@ -26,7 +26,7 @@ __pthread_key_create (key, destr)
      pthread_key_t *key;
      void (*destr) (void *);
 {
-  /* Find a slot in __pthread_kyes which is unused.  */
+  /* Find a slot in __pthread_keys which is unused.  */
   for (size_t cnt = 0; cnt < PTHREAD_KEYS_MAX; ++cnt)
     {
       uintptr_t seq = __pthread_keys[cnt].seq;
