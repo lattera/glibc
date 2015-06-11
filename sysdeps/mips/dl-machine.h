@@ -68,10 +68,17 @@
    in l_info array.  */
 #define DT_MIPS(x) (DT_MIPS_##x - DT_LOPROC + DT_NUM)
 
-/* If there is a DT_MIPS_RLD_MAP entry in the dynamic section, fill it in
-   with the run-time address of the r_debug structure  */
+/* If there is a DT_MIPS_RLD_MAP_REL or DT_MIPS_RLD_MAP entry in the dynamic
+   section, fill in the debug map pointer with the run-time address of the
+   r_debug structure.  */
 #define ELF_MACHINE_DEBUG_SETUP(l,r) \
-do { if ((l)->l_info[DT_MIPS (RLD_MAP)]) \
+do { if ((l)->l_info[DT_MIPS (RLD_MAP_REL)]) \
+       { \
+	 char *ptr = (char *)(l)->l_info[DT_MIPS (RLD_MAP_REL)]; \
+	 ptr += (l)->l_info[DT_MIPS (RLD_MAP_REL)]->d_un.d_val; \
+	 *(ElfW(Addr) *)ptr = (ElfW(Addr)) (r); \
+       } \
+     else if ((l)->l_info[DT_MIPS (RLD_MAP)]) \
        *(ElfW(Addr) *)((l)->l_info[DT_MIPS (RLD_MAP)]->d_un.d_ptr) = \
        (ElfW(Addr)) (r); \
    } while (0)

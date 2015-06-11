@@ -1,3 +1,10 @@
+2015-06-26  Matthew Fortune  <matthew.fortune@imgtec.com>
+
+	* elf/elf.h (DT_MIPS_RLD_MAP_REL): New macro.
+	(DT_MIPS_NUM): Update.
+	* sysdeps/mips/dl-machine.h (ELF_MACHINE_DEBUG_SETUP): Handle
+	DT_MIPS_RLD_MAP_REL.
+
 2015-06-25  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16559]
