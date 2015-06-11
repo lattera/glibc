@@ -1,3 +1,8 @@
+2015-06-11  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	* configure.ac: More strict check for AVX512 assembler support.
+	* configure: Regenerated.
+
 2015-06-11  Florian Weimer  <fweimer@redhat.com>
 
 	* nptl/pthread_key_create.c (__pthread_key_create): Fix typo in

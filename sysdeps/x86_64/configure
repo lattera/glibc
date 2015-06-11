@@ -102,6 +102,7 @@ if ${libc_cv_asm_avx512+:} false; then :
 else
   cat > conftest.s <<\EOF
         vmovdqu64 %zmm0, (%rsp)
+        vandpd (%rax), %zmm6, %zmm1
 EOF
 if { ac_try='${CC-cc} -c $ASFLAGS conftest.s 1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5

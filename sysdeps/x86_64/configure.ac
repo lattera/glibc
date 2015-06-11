@@ -27,6 +27,7 @@ dnl Check if asm supports AVX512.
 AC_CACHE_CHECK(for AVX512 support in assembler, libc_cv_asm_avx512, [dnl
 cat > conftest.s <<\EOF
         vmovdqu64 %zmm0, (%rsp)
+        vandpd (%rax), %zmm6, %zmm1
 EOF
 if AC_TRY_COMMAND(${CC-cc} -c $ASFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD); then
   libc_cv_asm_avx512=yes
