@@ -1929,6 +1929,18 @@ idouble: 1
 ildouble: 3
 ldouble: 3
 
+Function: "sin_vlen2":
+double: 2
+
+Function: "sin_vlen4":
+double: 2
+
+Function: "sin_vlen4_avx2":
+double: 2
+
+Function: "sin_vlen8":
+double: 2
+
 Function: "sincos":
 ildouble: 1
 ldouble: 1

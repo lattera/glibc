@@ -1,4 +1,4 @@
-/* Wrapper part of tests for AVX2 ISA versions of vector math functions.
+/* Function sin vectorized with AVX2, wrapper version.
    Copyright (C) 2014-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,14 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-double-vlen4.h"
-#include "test-vec-loop.h"
-#include <immintrin.h>
+#include <sysdep.h>
+#include "svml_d_wrapper_impl.h"
 
-#undef VEC_SUFF
-#define VEC_SUFF _vlen4_avx2
+	.text
+ENTRY (_ZGVdN4v_sin)
+WRAPPER_IMPL_AVX _ZGVbN2v_sin
+END (_ZGVdN4v_sin)
 
-#define VEC_TYPE __m256d
-
-VECTOR_WRAPPER (WRAPPER_NAME (cos), _ZGVdN4v_cos)
-VECTOR_WRAPPER (WRAPPER_NAME (sin), _ZGVdN4v_sin)
+#ifndef USE_MULTIARCH
+ libmvec_hidden_def (_ZGVdN4v_sin)
+#endif

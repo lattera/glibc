@@ -32,5 +32,7 @@
 #  define __DECL_SIMD_cos __DECL_SIMD_x86_64
 #  undef __DECL_SIMD_cosf
 #  define __DECL_SIMD_cosf __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_sin
+#  define __DECL_SIMD_sin __DECL_SIMD_x86_64
 # endif
 #endif

@@ -23,3 +23,4 @@
 #define VEC_TYPE __m256d
 
 VECTOR_WRAPPER (WRAPPER_NAME (cos), _ZGVcN4v_cos)
+VECTOR_WRAPPER (WRAPPER_NAME (sin), _ZGVcN4v_sin)

@@ -19,6 +19,7 @@
 #include "test-double-vlen8.h"
 
 #define TEST_VECTOR_cos 1
+#define TEST_VECTOR_sin 1
 
 #define REQUIRE_AVX512F
 

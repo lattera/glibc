@@ -1,10 +1,14 @@
 GLIBC_2.22
  GLIBC_2.22 A
  _ZGVbN2v_cos F
+ _ZGVbN2v_sin F
  _ZGVbN4v_cosf F
  _ZGVcN4v_cos F
+ _ZGVcN4v_sin F
  _ZGVcN8v_cosf F
  _ZGVdN4v_cos F
+ _ZGVdN4v_sin F
  _ZGVdN8v_cosf F
  _ZGVeN16v_cosf F
  _ZGVeN8v_cos F
+ _ZGVeN8v_sin F

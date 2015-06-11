@@ -19,5 +19,6 @@
 #include "test-double-vlen2.h"
 
 #define TEST_VECTOR_cos 1
+#define TEST_VECTOR_sin 1
 
 #include "libm-test.c"

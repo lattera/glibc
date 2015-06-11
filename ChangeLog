@@ -3,6 +3,37 @@
 	* configure.ac: More strict check for AVX512 assembler support.
 	* configure: Regenerated.
 
+	* bits/libm-simd-decl-stubs.h: Added stubs for sin.
+	* math/bits/mathcalls.h: Added sin declaration with __MATHCALL_VEC.
+	* sysdeps/unix/sysv/linux/x86_64/libmvec.abilist: New versions added.
+	* sysdeps/x86/fpu/bits/math-vector.h: SIMD declaration for sin.
+	* sysdeps/x86_64/fpu/Makefile (libmvec-support): Added new files.
+	* sysdeps/x86_64/fpu/Versions: New versions added.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Regenerated.
+	* sysdeps/x86_64/fpu/multiarch/Makefile (libmvec-sysdep_routines): Added
+	build of SSE, AVX2 and AVX512 IFUNC versions.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin2_core.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin2_core_sse4.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin4_core.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin4_core_avx2.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin8_core.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin8_core_avx512.S: New file.
+	* sysdeps/x86_64/fpu/svml_d_sin2_core.S: New file.
+	* sysdeps/x86_64/fpu/svml_d_sin4_core.S: New file.
+	* sysdeps/x86_64/fpu/svml_d_sin4_core_avx.S: New file.
+	* sysdeps/x86_64/fpu/svml_d_sin8_core.S: New file.
+	* sysdeps/x86_64/fpu/svml_d_sin_data.S: New file.
+	* sysdeps/x86_64/fpu/svml_d_sin_data.h: New file.
+	* sysdeps/x86_64/fpu/test-double-vlen2-wrappers.c: Added vector sin test.
+	* sysdeps/x86_64/fpu/test-double-vlen2.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen4-avx2-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen4-avx2.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen4-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen4.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen8-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen8.c: Likewise.
+	* NEWS: Mention addition of x86_64 vector sin.
+
 2015-06-11  Florian Weimer  <fweimer@redhat.com>
 
 	* nptl/pthread_key_create.c (__pthread_key_create): Fix typo in

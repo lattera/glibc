@@ -1,7 +1,9 @@
 ifeq ($(subdir),mathvec)
 libmvec-support += svml_d_cos2_core svml_d_cos4_core_avx \
 		   svml_d_cos4_core svml_d_cos8_core \
-		   svml_d_cos_data svml_s_cosf4_core svml_s_cosf8_core_avx \
+		   svml_d_cos_data svml_d_sin2_core svml_d_sin4_core_avx \
+		   svml_d_sin4_core svml_d_sin8_core svml_d_sin_data \
+		   svml_s_cosf4_core svml_s_cosf8_core_avx \
 		   svml_s_cosf8_core svml_s_cosf16_core svml_s_cosf_data \
 		   init-arch
 endif

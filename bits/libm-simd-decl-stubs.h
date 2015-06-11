@@ -37,4 +37,8 @@
 #define __DECL_SIMD_cosf
 #define __DECL_SIMD_cosl
 
+#define __DECL_SIMD_sin
+#define __DECL_SIMD_sinf
+#define __DECL_SIMD_sinl
+
 #endif
