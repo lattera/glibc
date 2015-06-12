@@ -561,8 +561,8 @@ extern int rresvport_af (int *__alport, sa_family_t __af);
 #endif
 
 
-/* Extension from POSIX.1g.  */
-#ifdef	__USE_POSIX
+/* Extension from POSIX.1:2001.  */
+#ifdef __USE_XOPEN2K
 /* Structure to contain information about address of a service provider.  */
 struct addrinfo
 {

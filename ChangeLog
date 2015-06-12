@@ -1,5 +1,37 @@
 2015-06-12  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18529]
+	* resolv/netdb.h [__USE_POSIX]: Change condition to
+	[__USE_XOPEN2K].
+	* conform/data/netdb.h-data [XPG4 || UNIX98] (struct addrinfo): Do
+	not expect.
+	[XPG4 || UNIX98] (AI_PASSIVE): Likewise.
+	[XPG4 || UNIX98] (AI_CANONNAME): Likewise.
+	[XPG4 || UNIX98] (AI_NUMERICHOST): Likewise.
+	[XPG4 || UNIX98] (AI_V4MAPPED): Likewise.
+	[XPG4 || UNIX98] (AI_ALL): Likewise.
+	[XPG4 || UNIX98] (AI_ADDRCONFIG): Likewise.
+	[XPG4 || UNIX98] (AI_NUMERICSERV): Likewise.
+	[XPG4 || UNIX98] (NI_NOFQDN): Likewise.
+	[XPG4 || UNIX98] (NI_NUMERICHOST): Likewise.
+	[XPG4 || UNIX98] (NI_NAMEREQD): Likewise.
+	[XPG4 || UNIX98] (NI_NUMERICSERV): Likewise.
+	[XPG4 || UNIX98] (NI_DGRAM): Likewise.
+	[XPG4 || UNIX98] (EAI_AGAIN): Likewise.
+	[XPG4 || UNIX98] (EAI_BADFLAGS): Likewise.
+	[XPG4 || UNIX98] (EAI_FAIL): Likewise.
+	[XPG4 || UNIX98] (EAI_FAMILY): Likewise.
+	[XPG4 || UNIX98] (EAI_MEMORY): Likewise.
+	[XPG4 || UNIX98] (EAI_NONAME): Likewise.
+	[XPG4 || UNIX98] (EAI_SERVICE): Likewise.
+	[XPG4 || UNIX98] (EAI_SOCKTYPE): Likewise.
+	[XPG4 || UNIX98] (EAI_SYSTEM): Likewise.
+	[XPG4 || UNIX98] (EAI_SYSTEM): Likewise.
+	[XPG4 || UNIX98] (freeaddrinfo): Likewise.
+	[XPG4 || UNIX98] (gai_strerror): Likewise.
+	[XPG4 || UNIX98] (getaddrinfo): Likewise.
+	[XPG4 || UNIX98] (getnameinfo): Likewise.
+
 	[BZ #18528]
 	* grp/grp.h (endgrent): Condition on [__USE_MISC ||
 	__USE_XOPEN_EXTENDED], not [__USE_XOPEN_EXTENDED ||
