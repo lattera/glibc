@@ -1,5 +1,13 @@
 2015-06-12  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18519]
+	* posix/Versions (libc): Export __libc_pread at version
+	GLIBC_PRIVATE.
+	* sysdeps/pthread/aio_misc.c (handle_fildes_io): Call __libc_pread
+	instead of pread.
+	* conform/Makefile (test-xfail-POSIX/aio.h/linknamespace): Remove
+	variable.
+
 	[BZ #18522]
 	* misc/efgcvt_r.c
 	[LONG_DOUBLE_COMPAT (libc, GLIBC_2_0) && !LONG_DOUBLE_CVT]

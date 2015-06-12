@@ -135,6 +135,6 @@ libc {
     execvpe;
   }
   GLIBC_PRIVATE {
-    __libc_fork; __libc_pwrite;
+    __libc_fork; __libc_pread; __libc_pwrite;
   }
 }

@@ -536,10 +536,11 @@ handle_fildes_io (void *arg)
 						 aiocbp->aiocb64.aio_offset));
 	      else
 		aiocbp->aiocb.__return_value =
-		  TEMP_FAILURE_RETRY (pread (fildes,
-					     (void *) aiocbp->aiocb.aio_buf,
-					     aiocbp->aiocb.aio_nbytes,
-					     aiocbp->aiocb.aio_offset));
+		  TEMP_FAILURE_RETRY (__libc_pread (fildes,
+						    (void *)
+						    aiocbp->aiocb.aio_buf,
+						    aiocbp->aiocb.aio_nbytes,
+						    aiocbp->aiocb.aio_offset));
 
 	      if (aiocbp->aiocb.__return_value == -1 && errno == ESPIPE)
 		/* The Linux kernel is different from others.  It returns

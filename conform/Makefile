@@ -354,7 +354,6 @@ test-xfail-XPG4/netdb.h/linknamespace = yes
 test-xfail-XPG4/syslog.h/linknamespace = yes
 test-xfail-XPG4/unistd.h/linknamespace = yes
 test-xfail-XPG4/wordexp.h/linknamespace = yes
-test-xfail-POSIX/aio.h/linknamespace = yes
 test-xfail-POSIX/mqueue.h/linknamespace = yes
 test-xfail-POSIX/semaphore.h/linknamespace = yes
 test-xfail-UNIX98/fmtmsg.h/linknamespace = yes
