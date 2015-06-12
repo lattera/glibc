@@ -170,7 +170,6 @@ test-xfail-XOPEN2K8/ndbm.h/conform = yes
 # Unsorted expected failures.
 test-xfail-XPG3/fcntl.h/conform = yes
 test-xfail-XPG3/ftw.h/conform = yes
-test-xfail-XPG3/grp.h/conform = yes
 test-xfail-XPG3/langinfo.h/conform = yes
 test-xfail-XPG3/limits.h/conform = yes
 test-xfail-XPG3/pwd.h/conform = yes
@@ -361,7 +360,6 @@ test-xfail-UNIX98/wchar.h/linknamespace = yes
 test-xfail-XOPEN2K/fmtmsg.h/linknamespace = yes
 test-xfail-XOPEN2K/netdb.h/linknamespace = yes
 test-xfail-XOPEN2K/syslog.h/linknamespace = yes
-test-xfail-POSIX2008/grp.h/linknamespace = yes
 test-xfail-POSIX2008/netdb.h/linknamespace = yes
 test-xfail-POSIX2008/semaphore.h/linknamespace = yes
 test-xfail-XOPEN2K8/fmtmsg.h/linknamespace = yes

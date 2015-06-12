@@ -1,5 +1,18 @@
 2015-06-12  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18528]
+	* grp/grp.h (endgrent): Condition on [__USE_MISC ||
+	__USE_XOPEN_EXTENDED], not [__USE_XOPEN_EXTENDED ||
+	__USE_XOPEN2K8].
+	(getgrent): Likewise.
+	* conform/data/grp.h-data [XPG3 || POSIX2008] (getgrent): Do not
+	expect.
+	[XPG3 || POSIX2008] (endgrent): Likewise.
+	[XPG3] (setgrent): Likewise.
+	* conform/Makefile (test-xfail-XPG3/grp.h/conform): Remove
+	variable.
+	(test-xfail-POSIX2008/grp.h/linknamespace): Likewise.
+
 	[BZ #18527]
 	* login/getlogin_r.c (getlogin_r): Rename to __getlogin_r and
 	define as weak alias of __getlogin_r.  Use libc_hidden_weak.
