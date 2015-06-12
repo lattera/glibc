@@ -295,11 +295,13 @@ headers from libraries other than the GNU C Library yourself after
 installing the library.
 
    You can install the GNU C Library somewhere other than where you
-configured it to go by setting the 'install_root' variable on the
-command line for 'make install'.  The value of this variable is
+configured it to go by setting the 'DESTDIR' GNU standard make variable
+on the command line for 'make install'.  The value of this variable is
 prepended to all the paths for installation.  This is useful when
 setting up a chroot environment or preparing a binary distribution.  The
-directory should be specified with an absolute file name.
+directory should be specified with an absolute file name.  Installing
+with the 'prefix' and 'exec_prefix' GNU standard make variables set is
+not supported.
 
    The GNU C Library includes a daemon called 'nscd', which you may or
 may not want to run.  'nscd' caches name service lookups; it can

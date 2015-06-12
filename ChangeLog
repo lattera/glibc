@@ -1,3 +1,13 @@
+2015-06-12  Martin Sebor  <msebor@redhat.com>
+
+	[BZ #18512]
+	* Makerules (check-install-supported): New target.
+	(install): Add check-install-supported as a dependency.
+	* manual/install.texi (Installing the C Library): Document
+	that overriding prefix and exec_prefix is not supported.
+	Mention DESTDIR.
+	* INSTALL: Regenerate from the above.
+
 2015-06-12  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18519]

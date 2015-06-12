@@ -916,6 +916,26 @@ endef
 installed-libcs := $(foreach o,$(filter-out .os,$(object-suffixes-for-libc)),\
 			     $(inst_libdir)/$(patsubst %,$(libtype$o),\
 						     $(libprefix)$(libc-name)))
+
+.PHONY: check-install-supported
+check-install-supported:
+
+# Check to see if the prefix or exec_prefix GNU standard variable
+# has been overridden on the command line and, if so, fail with
+# an error message since doing so is not supported (set DESTDIR
+# instead).
+ifeq ($(origin prefix),command line)
+check-install-supported:
+	$(error Overriding prefix is not supported. Set DESTDIR instead.)
+endif
+
+ifeq ($(origin exec_prefix),command line)
+check-install-supported:
+	$(error Overriding exec_prefix is not supported. Set DESTDIR instead.)
+endif
+
+install: check-install-supported
+
 install: $(installed-libcs)
 $(installed-libcs): $(inst_libdir)/lib$(libprefix)%: lib $(+force)
 	$(make-target-directory)

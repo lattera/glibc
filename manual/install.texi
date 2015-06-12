@@ -333,12 +333,14 @@ headers, but nothing else.  If you do this, you will need to restore
 any headers from libraries other than @theglibc{} yourself after installing the
 library.
 
-You can install @theglibc{} somewhere other than where you configured it to go
-by setting the @code{install_root} variable on the command line for
-@samp{make install}.  The value of this variable is prepended to all the
-paths for installation.  This is useful when setting up a chroot
-environment or preparing a binary distribution.  The directory should be
-specified with an absolute file name.
+You can install @theglibc{} somewhere other than where you configured
+it to go by setting the @code{DESTDIR} GNU standard make variable on
+the command line for @samp{make install}.  The value of this variable
+is prepended to all the paths for installation.  This is useful when
+setting up a chroot environment or preparing a binary distribution.
+The directory should be specified with an absolute file name. Installing
+with the @code{prefix} and @code{exec_prefix} GNU standard make variables
+set is not supported.
 
 @Theglibc{} includes a daemon called @code{nscd}, which you
 may or may not want to run.  @code{nscd} caches name service lookups; it
