@@ -1,5 +1,16 @@
 2015-06-12  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18530]
+	* libio/iofputs.c [!_IO_MTSAFE_IO] (__fputs_unlocked): Define as
+	strong alias of _IO_fputs.  Use libc_hidden_def.
+	* libio/iofputs_u.c (fputs_unlocked): Rename to __fputs_unlocked
+	and define as weak alias of __fputs_unlocked.  Use
+	libc_hidden_weak.
+	* include/stdio.h (__fputs_unlocked): Declare.  Use
+	libc_hidden_proto.
+	* misc/syslog.c (__vsyslog_chk): Call __fputs_unlocked instead of
+	fputs_unlocked.
+
 	[BZ #18529]
 	* resolv/netdb.h [__USE_POSIX]: Change condition to
 	[__USE_XOPEN2K].

@@ -159,6 +159,8 @@ libc_hidden_proto (fgets_unlocked)
 extern __typeof (fgets_unlocked) __fgets_unlocked;
 libc_hidden_proto (__fgets_unlocked)
 libc_hidden_proto (fputs_unlocked)
+extern __typeof (fputs_unlocked) __fputs_unlocked;
+libc_hidden_proto (__fputs_unlocked)
 libc_hidden_proto (fmemopen)
 /* The prototype needs repeating instead of using __typeof to use
    __THROW in C++ tests.  */

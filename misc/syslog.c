@@ -202,7 +202,7 @@ __vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
 	    if (LogTag == NULL)
 	      LogTag = __progname;
 	    if (LogTag != NULL)
-	      fputs_unlocked (LogTag, f);
+	      __fputs_unlocked (LogTag, f);
 	    if (LogStat & LOG_PID)
 	      fprintf (f, "[%d]", (int) __getpid ());
 	    if (LogTag != NULL)
