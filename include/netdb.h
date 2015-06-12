@@ -9,7 +9,7 @@
 #  if IS_IN (libc)
 #   define h_errno __libc_h_errno
 #  else
-#   define h_errno h_errno	/* For #ifndef h_errno tests.  */
+#   define h_errno __h_errno
 #  endif
 extern __thread int h_errno attribute_tls_model_ie;
 # endif /* IS_IN_LIB */

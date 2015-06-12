@@ -24,7 +24,7 @@ libc {
   GLIBC_PRIVATE {
     __gai_sigqueue;
 
-    h_errno; __resp;
+    __h_errno; __resp;
 
     __res_maybe_init; __res_iclose;
   }

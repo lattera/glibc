@@ -1,3 +1,17 @@
+2015-06-12  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18520]
+	* inet/herrno.c (h_errno): Rename to __h_errno.
+	(__libc_h_errno): Define as alias of __h_errno not h_errno.
+	* include/netdb.h [IS_IN_LIB && !IS_IN (libc)] (h_errno): Define
+	to __h_errno instead of h_errno.
+	* nptl/herrno.c (h_errno): Rename to __h_errno.
+	(__h_errno_location): Refer to __h_errno not h_errno.
+	* resolv/Versions (h_errno): Rename to __h_errno.
+	* conform/Makefile (test-xfail-XOPEN2K8/grp.h/linknamespace):
+	Remove variable.
+	(test-xfail-XOPEN2K8/pwd.h/linknamespace): Likewise.
+
 2015-06-11  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	* configure.ac: More strict check for AVX512 assembler support.

@@ -373,7 +373,5 @@ test-xfail-POSIX2008/grp.h/linknamespace = yes
 test-xfail-POSIX2008/netdb.h/linknamespace = yes
 test-xfail-POSIX2008/semaphore.h/linknamespace = yes
 test-xfail-XOPEN2K8/fmtmsg.h/linknamespace = yes
-test-xfail-XOPEN2K8/grp.h/linknamespace = yes
 test-xfail-XOPEN2K8/netdb.h/linknamespace = yes
-test-xfail-XOPEN2K8/pwd.h/linknamespace = yes
 test-xfail-XOPEN2K8/syslog.h/linknamespace = yes
