@@ -251,13 +251,13 @@ __APPEND (FUNC_PREFIX, ecvt_r) (value, ndigit, decpt, sign, buf, len)
 #  define cvt_symbol(symbol) \
   cvt_symbol_1 (libc, __APPEND (FUNC_PREFIX, symbol), \
 	      APPEND (q, symbol), GLIBC_2_0); \
-  strong_alias (__APPEND (FUNC_PREFIX, symbol), APPEND (FUNC_PREFIX, symbol))
+  weak_alias (__APPEND (FUNC_PREFIX, symbol), APPEND (FUNC_PREFIX, symbol))
 #  define cvt_symbol_1(lib, local, symbol, version) \
   compat_symbol (lib, local, symbol, version)
 # endif
 #else
 # define cvt_symbol(symbol) \
-  strong_alias (__APPEND (FUNC_PREFIX, symbol), APPEND (FUNC_PREFIX, symbol))
+  weak_alias (__APPEND (FUNC_PREFIX, symbol), APPEND (FUNC_PREFIX, symbol))
 #endif
 cvt_symbol(fcvt_r);
 cvt_symbol(ecvt_r);

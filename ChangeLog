@@ -1,5 +1,15 @@
 2015-06-12  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18522]
+	* misc/efgcvt_r.c
+	[LONG_DOUBLE_COMPAT (libc, GLIBC_2_0) && !LONG_DOUBLE_CVT]
+	(cvt_symbol): Use weak_alias instead of strong_alias.
+	[LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)] (cvt_symbol): Likewise.
+	* conform/Makefile (test-xfail-XPG4/stdlib.h/linknamespace):
+	Remove variable.
+	(test-xfail-UNIX98/stdlib.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K/stdlib.h/linknamespace): Likewise.
+
 	[BZ #18520]
 	* inet/herrno.c (h_errno): Rename to __h_errno.
 	(__libc_h_errno): Define as alias of __h_errno not h_errno.
