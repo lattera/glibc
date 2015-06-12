@@ -964,31 +964,6 @@ first_weekday 2
 % Define the first workday relative to the <week> keyword
 first_workday 2
 
-% Zymovyj CHas (winter time) or z.ch. (or nothing)
-% Litnij CHas (summer time) or l.ch.
-%
-% ( or EET/EEST (Easter Europe [Summer] Time) )
-% ( or Europe/Kyiv (or Kiev, in Russian) )
-%
-% Format:
-%
-% <ZoneName><Offset><ZoneName><Offset>,<rule>,<rule>[,...]
-%
-%  ZoneName - at least 3 letters, up to 10
-%  Offset - (+|-)hh[:mm[:ss]]
-%     - - time zone is east of Prime Meridian
-%     + - time zone is west of Prime Meridian
-%  rule: <date>[/time[/year]]
-%   date:
-%     J<JulianDay> , 1-365 (without 29.02)
-%     <JulianDay> , 0-364 (without 29.02)
-%     M<m>.<n>.<d> - m - month(1-12)
-%                    n - week(1-5)
-%                    d - day of week(0-7), day zero and day seven is Sunday
-%   time - the same as <offset> (but without leading +/-)
-%
-timezone "<U0437><U002E><U0447><U002E><U002D><U0030><U0032><U003A><U0030><U0030><U043B><U002E><U0447><U002E><U002D><U0030><U0033><U003A><U0030><U0030><U002C><U004D><U0033><U002E><U0035><U002E><U0030><U002F><U0030><U0033><U003A><U0030><U0030><U002C><U004D><U0031><U0030><U002E><U0035><U002E><U0030><U002F><U0030><U0034><U003A><U0030><U0030>"
-
 % Example:
 %
 %           traven`         cherven`
