@@ -34,7 +34,7 @@
 STATIC
 #endif
 int
-getlogin_r (name, name_len)
+__getlogin_r (name, name_len)
      char *name;
      size_t name_len;
 {
@@ -99,5 +99,7 @@ getlogin_r (name, name_len)
   return result;
 }
 #ifndef STATIC
-libc_hidden_def (getlogin_r)
+libc_hidden_def (__getlogin_r)
+weak_alias (__getlogin_r, getlogin_r)
+libc_hidden_weak (getlogin_r)
 #endif

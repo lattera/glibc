@@ -1,3 +1,20 @@
+2015-06-12  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18527]
+	* login/getlogin_r.c (getlogin_r): Rename to __getlogin_r and
+	define as weak alias of __getlogin_r.  Use libc_hidden_weak.
+	* sysdeps/mach/hurd/getlogin_r.c (getlogin_r): Likewise.
+	* sysdeps/unix/getlogin_r.c (getlogin_r): Likewise.
+	* sysdeps/unix/sysv/linux/getlogin_r.c (getlogin_r): Likewise.
+	* include/unistd.h (__getlogin_r): Declare.  Use
+	libc_hidden_proto.
+	* posix/glob.c (glob): Call __getlogin_r instead of getlogin_r.
+	* conform/Makefile (test-xfail-XPG3/glob.h/linknamespace): Remove
+	variable.
+	(test-xfail-XPG3/wordexp.h/linknamespace): Likewise.
+	(test-xfail-XPG4/glob.h/linknamespace): Likewise.
+	(test-xfail-XPG4/wordexp.h/linknamespace): Likewise.
+
 2015-06-12  Martin Sebor  <msebor@redhat.com>
 
 	[BZ #18512]

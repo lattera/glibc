@@ -14,6 +14,8 @@ libc_hidden_proto (execvp)
 libc_hidden_proto (getpid)
 libc_hidden_proto (getsid)
 libc_hidden_proto (getdomainname)
+extern __typeof (getlogin_r) __getlogin_r  __nonnull ((1));
+libc_hidden_proto (__getlogin_r)
 libc_hidden_proto (getlogin_r)
 libc_hidden_proto (seteuid)
 libc_hidden_proto (setegid)

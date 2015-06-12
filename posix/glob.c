@@ -619,7 +619,7 @@ glob (pattern, flags, errfunc, pglob)
 		buflen = 20;
 	      name = alloca_account (buflen, alloca_used);
 
-	      success = getlogin_r (name, buflen) == 0;
+	      success = __getlogin_r (name, buflen) == 0;
 	      if (success)
 		{
 		  struct passwd *p;

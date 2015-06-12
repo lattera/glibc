@@ -21,9 +21,9 @@
 
 #define STATIC static
 static int getlogin_r_fd0 (char *name, size_t namesize);
-#define getlogin_r getlogin_r_fd0
+#define __getlogin_r getlogin_r_fd0
 #include <sysdeps/unix/getlogin_r.c>
-#undef getlogin_r
+#undef __getlogin_r
 
 
 /* Try to determine login name from /proc/self/loginuid and return 0
@@ -109,7 +109,7 @@ __getlogin_r_loginuid (name, namesize)
    code.  Otherwise return 0.  */
 
 int
-getlogin_r (name, namesize)
+__getlogin_r (name, namesize)
      char *name;
      size_t namesize;
 {
@@ -119,4 +119,6 @@ getlogin_r (name, namesize)
 
   return getlogin_r_fd0 (name, namesize);
 }
-libc_hidden_def (getlogin_r)
+libc_hidden_def (__getlogin_r)
+weak_alias (__getlogin_r, getlogin_r)
+libc_hidden_weak (getlogin_r)
