@@ -1,3 +1,12 @@
+2015-06-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/list-header-symbols.pl (%extra_syms): Add in6addr_any
+	and in6addr_loopback for XOPEN2K, XOPEN2K8 and POSIX2008.
+	* conform/Makefile (test-xfail-XOPEN2K/netdb.h/linknamespace):
+	Remove variable.
+	(test-xfail-POSIX2008/netdb.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K8/netdb.h/linknamespace): Likewise.
+
 2015-06-12  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18530]
