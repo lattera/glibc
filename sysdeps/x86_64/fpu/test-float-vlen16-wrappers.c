@@ -23,3 +23,4 @@
 #define VEC_TYPE __m512
 
 VECTOR_WRAPPER (WRAPPER_NAME (cosf), _ZGVeN16v_cosf)
+VECTOR_WRAPPER (WRAPPER_NAME (sinf), _ZGVeN16v_sinf)

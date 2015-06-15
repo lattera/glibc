@@ -1,4 +1,4 @@
-/* Tests for SSE ISA versions of vector math functions.
+/* Multiple versions of vectorized sinf, vector length is 8.
    Copyright (C) 2014-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -10,15 +10,29 @@
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-float-vlen4.h"
+#include <sysdep.h>
+#include <init-arch.h>
 
-#define TEST_VECTOR_cosf 1
-#define TEST_VECTOR_sinf 1
+	.text
+ENTRY (_ZGVdN8v_sinf)
+        .type   _ZGVdN8v_sinf, @gnu_indirect_function
+        cmpl    $0, KIND_OFFSET+__cpu_features(%rip)
+        jne     1f
+        call    __init_cpu_features
+1:      leaq    _ZGVdN8v_sinf_avx2(%rip), %rax
+        testl   $bit_AVX2_Usable, __cpu_features+FEATURE_OFFSET+index_AVX2_Usable(%rip)
+        jz      2f
+        ret
+2:      leaq    _ZGVdN8v_sinf_sse_wrapper(%rip), %rax
+        ret
+END (_ZGVdN8v_sinf)
+libmvec_hidden_def (_ZGVdN8v_sinf)
 
-#include "libm-test.c"
+#define _ZGVdN8v_sinf _ZGVdN8v_sinf_sse_wrapper
+#include "../svml_s_sinf8_core.S"

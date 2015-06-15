@@ -1929,17 +1929,25 @@ idouble: 1
 ildouble: 3
 ldouble: 3
 
+Function: "sin_vlen16":
+float: 1
+
 Function: "sin_vlen2":
 double: 2
 
 Function: "sin_vlen4":
 double: 2
+float: 1
 
 Function: "sin_vlen4_avx2":
 double: 2
 
 Function: "sin_vlen8":
 double: 2
+float: 1
+
+Function: "sin_vlen8_avx2":
+float: 1
 
 Function: "sincos":
 ildouble: 1

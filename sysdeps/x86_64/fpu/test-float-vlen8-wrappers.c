@@ -23,3 +23,4 @@
 #define VEC_TYPE __m256
 
 VECTOR_WRAPPER (WRAPPER_NAME (cosf), _ZGVcN8v_cosf)
+VECTOR_WRAPPER (WRAPPER_NAME (sinf), _ZGVcN8v_sinf)

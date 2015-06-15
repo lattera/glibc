@@ -22,6 +22,7 @@
 #define VEC_SUFF _vlen8_avx2
 
 #define TEST_VECTOR_cosf 1
+#define TEST_VECTOR_sinf 1
 
 #define REQUIRE_AVX2
 

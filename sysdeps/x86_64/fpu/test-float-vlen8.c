@@ -19,5 +19,6 @@
 #include "test-float-vlen8.h"
 
 #define TEST_VECTOR_cosf 1
+#define TEST_VECTOR_sinf 1
 
 #include "libm-test.c"
