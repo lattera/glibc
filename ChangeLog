@@ -1,5 +1,18 @@
 2015-06-17  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18540]
+	* libio/iofflush.c [!_IO_MTSAFE_IO] (__fflush_unlocked): Define as
+	strong alias of _IO_fflush.  Use libc_hidden_def.
+	* libio/iofflush_u.c (fflush_unlocked): Rename to
+	__fflush_unlocked and define as weak alias of __fflush_unlocked.
+	Use libc_hidden_weak.
+	* include/stdio.h (__fflush_unlocked): Declare.  Use
+	libc_hidden_proto.
+	* misc/getpass.c (getpass): Call __fflush_unlocked instead of
+	fflush_unlocked.
+	* conform/Makefile (test-xfail-UNIX98/unistd.h/linknamespace):
+	Remove variable.
+
 	[BZ #18539]
 	* stdlib/fmtmsg.c (addseverity): Rename to __addseverity and
 	define as weak alias of __addseverity.

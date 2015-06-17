@@ -155,6 +155,8 @@ extern __typeof (ftello) __ftello;
 libc_hidden_proto (__ftello)
 libc_hidden_proto (fflush)
 libc_hidden_proto (fflush_unlocked)
+extern __typeof (fflush_unlocked) __fflush_unlocked;
+libc_hidden_proto (__fflush_unlocked)
 extern __typeof (fread_unlocked) __fread_unlocked;
 libc_hidden_proto (__fread_unlocked)
 libc_hidden_proto (fwrite_unlocked)

@@ -50,6 +50,8 @@ weak_alias (_IO_fflush, fflush)
 libc_hidden_weak (fflush)
 
 #ifndef _IO_MTSAFE_IO
+strong_alias (_IO_fflush, __fflush_unlocked)
+libc_hidden_def (__fflush_unlocked)
 weak_alias (_IO_fflush, fflush_unlocked)
 libc_hidden_weak (fflush_unlocked)
 #endif
