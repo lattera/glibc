@@ -150,7 +150,7 @@ __END_NAMESPACE_C99
 
 _Mdouble_BEGIN_NAMESPACE
 /* Return X to the Y power.  */
-__MATHCALL (pow,, (_Mdouble_ __x, _Mdouble_ __y));
+__MATHCALL_VEC (pow,, (_Mdouble_ __x, _Mdouble_ __y));
 
 /* Return the square root of X.  */
 __MATHCALL (sqrt,, (_Mdouble_ __x));

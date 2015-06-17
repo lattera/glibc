@@ -49,4 +49,7 @@
 #define __DECL_SIMD_expf
 #define __DECL_SIMD_expl
 
+#define __DECL_SIMD_pow
+#define __DECL_SIMD_powf
+#define __DECL_SIMD_powl
 #endif

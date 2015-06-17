@@ -1,4 +1,4 @@
-/* Wrapper part of tests for AVX-512 versions of vector math functions.
+/* Multiple versions of vectorized pow.
    Copyright (C) 2014-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,14 +16,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-double-vlen8.h"
-#include "test-vec-loop.h"
-#include <immintrin.h>
+#include <sysdep.h>
+#include <init-arch.h>
 
-#define VEC_TYPE __m512d
+	.text
+ENTRY (_ZGVbN2vv_pow)
+        .type   _ZGVbN2vv_pow, @gnu_indirect_function
+        cmpl    $0, KIND_OFFSET+__cpu_features(%rip)
+        jne     1f
+        call    __init_cpu_features
+1:      leaq    _ZGVbN2vv_pow_sse4(%rip), %rax
+        testl   $bit_SSE4_1, __cpu_features+CPUID_OFFSET+index_SSE4_1(%rip)
+        jz      2f
+        ret
+2:      leaq    _ZGVbN2vv_pow_sse2(%rip), %rax
+        ret
+END (_ZGVbN2vv_pow)
+libmvec_hidden_def (_ZGVbN2vv_pow)
 
-VECTOR_WRAPPER (WRAPPER_NAME (cos), _ZGVeN8v_cos)
-VECTOR_WRAPPER (WRAPPER_NAME (sin), _ZGVeN8v_sin)
-VECTOR_WRAPPER (WRAPPER_NAME (log), _ZGVeN8v_log)
-VECTOR_WRAPPER (WRAPPER_NAME (exp), _ZGVeN8v_exp)
-VECTOR_WRAPPER_ff (WRAPPER_NAME (pow), _ZGVeN8vv_pow)
+#define _ZGVbN2vv_pow _ZGVbN2vv_pow_sse2
+#include "../svml_d_pow2_core.S"

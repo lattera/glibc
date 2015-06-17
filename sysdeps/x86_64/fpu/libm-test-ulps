@@ -1947,6 +1947,18 @@ ifloat: 4
 ildouble: 2
 ldouble: 2
 
+Function: "pow_vlen2":
+double: 1
+
+Function: "pow_vlen4":
+double: 1
+
+Function: "pow_vlen4_avx2":
+double: 1
+
+Function: "pow_vlen8":
+double: 1
+
 Function: "sin":
 ildouble: 1
 ldouble: 1
