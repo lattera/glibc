@@ -10,7 +10,8 @@ libmvec-support += svml_d_cos2_core svml_d_cos4_core_avx \
 		   svml_d_log2_core svml_d_log4_core_avx svml_d_log4_core \
 		   svml_d_log8_core svml_d_log_data svml_s_logf4_core \
 		   svml_s_logf8_core_avx svml_s_logf8_core svml_s_logf16_core \
-		   svml_s_logf_data \
+		   svml_s_logf_data svml_d_exp2_core svml_d_exp4_core_avx \
+		   svml_d_exp4_core svml_d_exp8_core svml_d_exp_data \
 		   init-arch
 endif
 

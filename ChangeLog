@@ -1,5 +1,37 @@
 2015-06-17  Andrew Senkevich  <andrew.senkevich@intel.com>
 
+	* bits/libm-simd-decl-stubs.h: Added stubs for exp.
+	* math/bits/mathcalls.h: Added exp declaration with __MATHCALL_VEC.
+	* sysdeps/unix/sysv/linux/x86_64/libmvec.abilist: New versions added.
+	* sysdeps/x86/fpu/bits/math-vector.h: Added SIMD declaration and asm
+	redirections for exp.
+	* sysdeps/x86_64/fpu/Makefile (libmvec-support): Added new files.
+	* sysdeps/x86_64/fpu/Versions: New versions added.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Regenerated.
+	* sysdeps/x86_64/fpu/multiarch/Makefile (libmvec-sysdep_routines): Added
+	build of SSE, AVX2 and AVX512 IFUNC versions.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp2_core.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp2_core_sse4.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp4_core.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp4_core_avx2.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp8_core.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp8_core_avx512.S: New file.
+	* sysdeps/x86_64/fpu/svml_d_exp2_core.S: New file.
+	* sysdeps/x86_64/fpu/svml_d_exp4_core.S: New file.
+	* sysdeps/x86_64/fpu/svml_d_exp4_core_avx.S: New file.
+	* sysdeps/x86_64/fpu/svml_d_exp8_core.S: New file.
+	* sysdeps/x86_64/fpu/svml_d_exp_data.S: New file.
+	* sysdeps/x86_64/fpu/svml_d_exp_data.h: New file.
+	* sysdeps/x86_64/fpu/test-double-vlen2-wrappers.c: Added vector exp test.
+	* sysdeps/x86_64/fpu/test-double-vlen2.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen4-avx2-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen4-avx2.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen4-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen4.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen8-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen8.c: Likewise.
+	* NEWS: Mention addition of x86_64 vector exp.
+
 	* sysdeps/unix/sysv/linux/x86_64/libmvec.abilist: New symbols added.
 	* sysdeps/x86/fpu/bits/math-vector.h: Added SIMD declaration and asm
 	redirections for logf.

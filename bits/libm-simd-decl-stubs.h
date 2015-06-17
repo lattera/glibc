@@ -45,4 +45,8 @@
 #define __DECL_SIMD_logf
 #define __DECL_SIMD_logl
 
+#define __DECL_SIMD_exp
+#define __DECL_SIMD_expf
+#define __DECL_SIMD_expl
+
 #endif

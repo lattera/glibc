@@ -1,4 +1,4 @@
-/* Wrapper part of tests for AVX ISA versions of vector math functions.
+/* Multiple versions of vectorized exp.
    Copyright (C) 2014-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,13 +16,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-double-vlen4.h"
-#include "test-vec-loop.h"
-#include <immintrin.h>
+#include <sysdep.h>
+#include <init-arch.h>
 
-#define VEC_TYPE __m256d
+	.text
+ENTRY (_ZGVbN2v_exp)
+        .type   _ZGVbN2v_exp, @gnu_indirect_function
+        cmpl    $0, KIND_OFFSET+__cpu_features(%rip)
+        jne     1f
+        call    __init_cpu_features
+1:      leaq    _ZGVbN2v_exp_sse4(%rip), %rax
+        testl   $bit_SSE4_1, __cpu_features+CPUID_OFFSET+index_SSE4_1(%rip)
+        jz      2f
+        ret
+2:      leaq    _ZGVbN2v_exp_sse2(%rip), %rax
+        ret
+END (_ZGVbN2v_exp)
+libmvec_hidden_def (_ZGVbN2v_exp)
 
-VECTOR_WRAPPER (WRAPPER_NAME (cos), _ZGVcN4v_cos)
-VECTOR_WRAPPER (WRAPPER_NAME (sin), _ZGVcN4v_sin)
-VECTOR_WRAPPER (WRAPPER_NAME (log), _ZGVcN4v_log)
-VECTOR_WRAPPER (WRAPPER_NAME (exp), _ZGVcN4v_exp)
+#define _ZGVbN2v_exp _ZGVbN2v_exp_sse2
+#include "../svml_d_exp2_core.S"

@@ -1,18 +1,21 @@
 GLIBC_2.22
  GLIBC_2.22 A
  _ZGVbN2v_cos F
+ _ZGVbN2v_exp F
  _ZGVbN2v_log F
  _ZGVbN2v_sin F
  _ZGVbN4v_cosf F
  _ZGVbN4v_logf F
  _ZGVbN4v_sinf F
  _ZGVcN4v_cos F
+ _ZGVcN4v_exp F
  _ZGVcN4v_log F
  _ZGVcN4v_sin F
  _ZGVcN8v_cosf F
  _ZGVcN8v_logf F
  _ZGVcN8v_sinf F
  _ZGVdN4v_cos F
+ _ZGVdN4v_exp F
  _ZGVdN4v_log F
  _ZGVdN4v_sin F
  _ZGVdN8v_cosf F
@@ -22,5 +25,6 @@ GLIBC_2.22
  _ZGVeN16v_logf F
  _ZGVeN16v_sinf F
  _ZGVeN8v_cos F
+ _ZGVeN8v_exp F
  _ZGVeN8v_log F
  _ZGVeN8v_sin F

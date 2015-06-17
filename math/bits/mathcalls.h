@@ -97,7 +97,7 @@ __END_NAMESPACE_C99
 
 _Mdouble_BEGIN_NAMESPACE
 /* Exponential function of X.  */
-__MATHCALL (exp,, (_Mdouble_ __x));
+__MATHCALL_VEC (exp,, (_Mdouble_ __x));
 
 /* Break VALUE into a normalized fraction and an integral power of 2.  */
 __MATHCALL (frexp,, (_Mdouble_ __x, int *__exponent));

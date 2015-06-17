@@ -1,4 +1,4 @@
-/* Wrapper part of tests for AVX ISA versions of vector math functions.
+/* Function exp vectorized in AVX ISA as wrapper to SSE4 ISA version.
    Copyright (C) 2014-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,13 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-double-vlen4.h"
-#include "test-vec-loop.h"
-#include <immintrin.h>
+#include <sysdep.h>
+#include "svml_d_wrapper_impl.h"
 
-#define VEC_TYPE __m256d
-
-VECTOR_WRAPPER (WRAPPER_NAME (cos), _ZGVcN4v_cos)
-VECTOR_WRAPPER (WRAPPER_NAME (sin), _ZGVcN4v_sin)
-VECTOR_WRAPPER (WRAPPER_NAME (log), _ZGVcN4v_log)
-VECTOR_WRAPPER (WRAPPER_NAME (exp), _ZGVcN4v_exp)
+	.text
+ENTRY (_ZGVcN4v_exp)
+WRAPPER_IMPL_AVX _ZGVbN2v_exp
+END (_ZGVcN4v_exp)
