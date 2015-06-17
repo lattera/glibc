@@ -348,4 +348,3 @@ test-xfail-XPG3/unistd.h/linknamespace = yes
 test-xfail-XPG4/unistd.h/linknamespace = yes
 test-xfail-POSIX/mqueue.h/linknamespace = yes
 test-xfail-UNIX98/mqueue.h/linknamespace = yes
-test-xfail-UNIX98/wchar.h/linknamespace = yes

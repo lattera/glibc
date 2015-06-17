@@ -1,5 +1,14 @@
 2015-06-17  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18542]
+	* libio/iovswscanf.c (__vswscanf): Use libc_hidden_def.
+	(vswscanf): Use ldbl_weak_alias instead of ldbl_strong_alias
+	* include/wchar.h (__vswscanf): Declare.  Use libc_hidden_proto.
+	* libio/swscanf.c (__swscanf): Call __vswscanf instead of
+	vswscanf.
+	* conform/Makefile (test-xfail-UNIX98/wchar.h/linknamespace):
+	Remove variable.
+
 	[BZ #18540]
 	* libio/iofflush.c [!_IO_MTSAFE_IO] (__fflush_unlocked): Define as
 	strong alias of _IO_fflush.  Use libc_hidden_def.

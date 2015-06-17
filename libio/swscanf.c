@@ -28,7 +28,7 @@ __swscanf (const wchar_t *s, const wchar_t *format, ...)
   int done;
 
   va_start (arg, format);
-  done = vswscanf (s, format, arg);
+  done = __vswscanf (s, format, arg);
   va_end (arg);
 
   return done;
