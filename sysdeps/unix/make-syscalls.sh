@@ -128,11 +128,11 @@ emit_weak_aliases()
       !*)
 	name=`echo $name | sed 's/.//'`
 	echo "	 echo 'strong_alias ($strong, $name)'; \\"
-	echo "	 echo 'libc_hidden_def ($name)'; \\"
+	echo "	 echo 'hidden_def ($name)'; \\"
 	;;
       *)
 	echo "	 echo 'weak_alias ($strong, $name)'; \\"
-	echo "	 echo 'libc_hidden_weak ($name)'; \\"
+	echo "	 echo 'hidden_weak ($name)'; \\"
 	;;
     esac
   done
@@ -287,7 +287,7 @@ while read file srcfile caller syscall args strong weak; do
 	 echo '}'; \\
 	 echo 'asm (".type ${strong}, %gnu_indirect_function");'; \\
 EOF
-    # This is doing "libc_hidden_def (${strong})", but the compiler
+    # This is doing "hidden_def (${strong})", but the compiler
     # doesn't know that we've defined ${strong} in the same file, so
     # we can't do it the normal way.
     cat <<EOF

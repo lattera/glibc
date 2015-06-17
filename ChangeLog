@@ -1,5 +1,16 @@
 2015-06-17  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/make-syscalls.sh (emit_weak_aliases): Use
+	hidden_def and hidden_weak instead of libc_hidden_def and
+	libc_hidden_weak.
+	(top level): Refer to hidden_def in comment.
+	* sysdeps/unix/syscall-template.S (syscall_hidden_def): New
+	macro.  Use it instead of libc_hidden_def.
+	* sysdeps/unix/sysv/linux/syscalls.list (mq_timedsend): Do not
+	specify __GI_* name explicitly.
+	(mq_timedreceive): Likewise.
+	(mq_setattr): Likewise.
+
 	[BZ #18544]
 	* nptl/pthread_barrier_init.c (pthread_barrier_init): Rename to
 	__pthread_barrier_init and define as weak alias of

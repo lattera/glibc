@@ -47,6 +47,9 @@
 # include <sysdep.h>
 #endif
 
+/* This indirection is needed so that SYMBOL gets macro-expanded.  */
+#define syscall_hidden_def(SYMBOL)		hidden_def (SYMBOL)
+
 #define T_PSEUDO(SYMBOL, NAME, N)		PSEUDO (SYMBOL, NAME, N)
 #define T_PSEUDO_NOERRNO(SYMBOL, NAME, N)	PSEUDO_NOERRNO (SYMBOL, NAME, N)
 #define T_PSEUDO_ERRVAL(SYMBOL, NAME, N)	PSEUDO_ERRVAL (SYMBOL, NAME, N)
@@ -84,4 +87,4 @@ T_PSEUDO_END (SYSCALL_SYMBOL)
 
 #endif
 
-libc_hidden_def (SYSCALL_SYMBOL)
+syscall_hidden_def (SYSCALL_SYMBOL)
