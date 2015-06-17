@@ -53,20 +53,20 @@ ttyslot (void)
 
 	name = __alloca (buflen);
 
-	setttyent();
+	__setttyent();
 	for (cnt = 0; cnt < 3; ++cnt)
 		if (__ttyname_r (cnt, name, buflen) == 0) {
 			if ((p = rindex(name, '/')))
 				++p;
 			else
 				p = name;
-			for (slot = 1; (ttyp = getttyent()); ++slot)
+			for (slot = 1; (ttyp = __getttyent()); ++slot)
 				if (!strcmp(ttyp->ty_name, p)) {
-					endttyent();
+					__endttyent();
 					return(slot);
 				}
 			break;
 		}
-	endttyent();
+	__endttyent();
 	return(0);
 }

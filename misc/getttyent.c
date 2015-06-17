@@ -44,24 +44,24 @@ static char zapchar;
 static FILE *tf;
 
 struct ttyent *
-getttynam(tty)
-	const char *tty;
+__getttynam (const char *tty)
 {
 	struct ttyent *t;
 
-	setttyent();
-	while ((t = getttyent()))
+	__setttyent();
+	while ((t = __getttyent()))
 		if (!strcmp(tty, t->ty_name))
 			break;
-	endttyent();
+	__endttyent();
 	return (t);
 }
+weak_alias (__getttynam, getttynam)
 
 static char *skip (char *) __THROW internal_function;
 static char *value (char *) __THROW internal_function;
 
 struct ttyent *
-getttyent (void)
+__getttyent (void)
 {
 	static struct ttyent tty;
 	int c;
@@ -69,11 +69,11 @@ getttyent (void)
 #define	MAXLINELENGTH	100
 	static char line[MAXLINELENGTH];
 
-	if (!tf && !setttyent())
+	if (!tf && !__setttyent())
 		return (NULL);
 	flockfile (tf);
 	for (;;) {
-		if (!fgets_unlocked(p = line, sizeof(line), tf)) {
+		if (!__fgets_unlocked(p = line, sizeof(line), tf)) {
 			funlockfile (tf);
 			return (NULL);
 		}
@@ -131,7 +131,8 @@ getttyent (void)
 		*p = '\0';
 	return (&tty);
 }
-libc_hidden_def (getttyent)
+libc_hidden_def (__getttyent)
+weak_alias (__getttyent, getttyent)
 
 #define	QUOTED	1
 
@@ -184,7 +185,7 @@ value(p)
 }
 
 int
-setttyent (void)
+__setttyent (void)
 {
 
 	if (tf) {
@@ -197,10 +198,11 @@ setttyent (void)
 	}
 	return (0);
 }
-libc_hidden_def (setttyent)
+libc_hidden_def (__setttyent)
+weak_alias (__setttyent, setttyent)
 
 int
-endttyent (void)
+__endttyent (void)
 {
 	int rval;
 
@@ -211,4 +213,5 @@ endttyent (void)
 	}
 	return (1);
 }
-libc_hidden_def (endttyent)
+libc_hidden_def (__endttyent)
+weak_alias (__endttyent, endttyent)

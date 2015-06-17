@@ -1,5 +1,28 @@
 2015-06-17  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18547]
+	* misc/getttyent.c (getttynam): Rename to __getttynam and define
+	as weak alias of __getttynam.  Use prototype function definition.
+	Call __setttyent, __getttyent and __endttyent instead of
+	setttyent, getttyent and endttyent.
+	(getttyent): Rename to __getttyent and define as weak alias of
+	__getttyent.  Call __setttyent instead of setttyent.  Call
+	__fgets_unlocked instead of fgets_unlocked.
+	(setttyent): Rename to __setttyent and define as weak alias of
+	__setttyent.
+	(endttyent): Rename to __endttyent and define as weak alias of
+	__endttyent.
+	* include/ttyent.h (__getttyent): Declare.  Use libc_hidden_proto.
+	(__setttyent): Likewise.
+	(__endttyent): Likewise.
+	(getttyent): Don't use libc_hidden_proto.
+	(setttyent): Likewise.
+	(endttyent): Likewise.
+	* misc/ttyslot.c (ttyslot): Call __setttyent, __getttyent and
+	__endttyent instead of setttyent, getttyent and endttyent.
+	* conform/Makefile (test-xfail-XPG4/unistd.h/linknamespace):
+	Remove variable.
+
 	[BZ #18546]
 	* socket/recv.c (__recv): Use libc_hidden_def.
 	* socket/socket.c (__socket): Likewise.
