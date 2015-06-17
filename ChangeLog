@@ -1,5 +1,23 @@
 2015-06-17  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18545]
+	* rt/mq_timedreceive.c (mq_timedreceive): Rename to
+	__mq_timedreceive and define as alias of __mq_timedreceive.  Use
+	hidden_weak.
+	* rt/mq_timedsend.c (mq_timedsend): Rename to __mq_timedsend and
+	define as alias of __mq_timedsend.  Use hidden_weak.
+	* sysdeps/unix/sysv/linux/syscalls.list (mq_timedsend): Use
+	__mq_timedsend as strong name.
+	(mq_timedreceive): Use __mq_timedreceive as strong name.
+	* include/mqueue.h (__mq_timedsend): Declare.  Use hidden_proto.
+	(__mq_timedreceive): Likewise.
+	* sysdeps/unix/sysv/linux/mq_receive.c (mq_receive): Call
+	__mq_timedreceive instead of mq_timedreceive.
+	* sysdeps/unix/sysv/linux/mq_send.c (mq_send): Call __mq_timedsend
+	instead of mq_timedsend.
+	* conform/Makefile (test-xfail-UNIX98/mqueue.h/linknamespace):
+	Remove variable.
+
 	* sysdeps/unix/make-syscalls.sh (emit_weak_aliases): Use
 	hidden_def and hidden_weak instead of libc_hidden_def and
 	libc_hidden_weak.
