@@ -1,5 +1,10 @@
 2015-06-17  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
+	* sysdeps/aarch64/dl-tlsdesc.S (_dl_tlsdesc_return_lazy): Fix
+	cfi_adjust_cfa_offset argument.
+	(_dl_tlsdesc_undefweak, _dl_tlsdesc_dynamic): Likewise.
+	(_dl_tlsdesc_resolve_rela, _dl_tlsdesc_resolve_hold): Likewise.
+
 	[BZ #18034]
 	* sysdeps/aarch64/dl-tlsdesc.h (_dl_tlsdesc_return_lazy): Declare.
 	* sysdeps/aarch64/dl-tlsdesc.S (_dl_tlsdesc_return_lazy): Define.
