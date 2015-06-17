@@ -46,6 +46,9 @@ extern ptrdiff_t attribute_hidden
 _dl_tlsdesc_return (struct tlsdesc *);
 
 extern ptrdiff_t attribute_hidden
+_dl_tlsdesc_return_lazy (struct tlsdesc *);
+
+extern ptrdiff_t attribute_hidden
 _dl_tlsdesc_undefweak (struct tlsdesc *);
 
 extern ptrdiff_t attribute_hidden

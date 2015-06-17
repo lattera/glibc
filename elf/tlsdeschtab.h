@@ -20,6 +20,8 @@
 #ifndef TLSDESCHTAB_H
 # define TLSDESCHTAB_H 1
 
+#include <atomic.h>
+
 # ifdef SHARED
 
 #  include <inline-hashtab.h>
@@ -138,17 +140,17 @@ _dl_make_tlsdesc_dynamic (struct link_map *map, size_t ti_offset)
 static int
 _dl_tlsdesc_resolve_early_return_p (struct tlsdesc volatile *td, void *caller)
 {
-  if (caller != td->entry)
+  if (caller != atomic_load_relaxed (&td->entry))
     return 1;
 
   __rtld_lock_lock_recursive (GL(dl_load_lock));
-  if (caller != td->entry)
+  if (caller != atomic_load_relaxed (&td->entry))
     {
       __rtld_lock_unlock_recursive (GL(dl_load_lock));
       return 1;
     }
 
-  td->entry = _dl_tlsdesc_resolve_hold;
+  atomic_store_relaxed (&td->entry, _dl_tlsdesc_resolve_hold);
 
   return 0;
 }

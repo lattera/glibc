@@ -1,3 +1,18 @@
+2015-06-17  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	[BZ #18034]
+	* sysdeps/aarch64/dl-tlsdesc.h (_dl_tlsdesc_return_lazy): Declare.
+	* sysdeps/aarch64/dl-tlsdesc.S (_dl_tlsdesc_return_lazy): Define.
+	(_dl_tlsdesc_undefweak): Guarantee TLSDESC entry and argument load-load
+	ordering using ldar.
+	(_dl_tlsdesc_dynamic): Likewise.
+	(_dl_tlsdesc_return_lazy): Likewise.
+	* sysdeps/aarch64/tlsdesc.c (_dl_tlsdesc_resolve_rela_fixup): Use
+	relaxed atomics instead of volatile and synchronize with release store.
+	(_dl_tlsdesc_resolve_hold_fixup): Use relaxed atomics instead of
+	volatile.
+	* elf/tlsdeschtab.h (_dl_tlsdesc_resolve_early_return_p): Likewise.
+
 2015-06-15  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/libmvec.abilist: New symbols added.

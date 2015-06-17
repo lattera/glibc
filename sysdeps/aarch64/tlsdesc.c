@@ -25,6 +25,7 @@
 #include <dl-tlsdesc.h>
 #include <dl-unmap-segments.h>
 #include <tlsdeschtab.h>
+#include <atomic.h>
 
 /* The following functions take an entry_check_offset argument.  It's
    computed by the caller as an offset between its entry point and the
@@ -39,11 +40,15 @@
 
 void
 attribute_hidden
-_dl_tlsdesc_resolve_rela_fixup (struct tlsdesc volatile *td,
-				struct link_map *l)
+_dl_tlsdesc_resolve_rela_fixup (struct tlsdesc *td, struct link_map *l)
 {
-  const ElfW(Rela) *reloc = td->arg;
+  const ElfW(Rela) *reloc = atomic_load_relaxed (&td->arg);
 
+  /* After GL(dl_load_lock) is grabbed only one caller can see td->entry in
+     initial state in _dl_tlsdesc_resolve_early_return_p, other concurrent
+     callers will return and retry calling td->entry.  The updated td->entry
+     synchronizes with the single writer so all read accesses here can use
+     relaxed order.  */
   if (_dl_tlsdesc_resolve_early_return_p
       (td, (void*)(D_PTR (l, l_info[ADDRIDX (DT_TLSDESC_PLT)]) + l->l_addr)))
     return;
@@ -86,8 +91,10 @@ _dl_tlsdesc_resolve_rela_fixup (struct tlsdesc volatile *td,
 
   if (!sym)
     {
-      td->arg = (void*) reloc->r_addend;
-      td->entry = _dl_tlsdesc_undefweak;
+      atomic_store_relaxed (&td->arg, (void *) reloc->r_addend);
+      /* This release store synchronizes with the ldar acquire load
+	 instruction in _dl_tlsdesc_undefweak.  */
+      atomic_store_release (&td->entry, _dl_tlsdesc_undefweak);
     }
   else
     {
@@ -96,16 +103,22 @@ _dl_tlsdesc_resolve_rela_fixup (struct tlsdesc volatile *td,
 #  else
       if (!TRY_STATIC_TLS (l, result))
 	{
-	  td->arg = _dl_make_tlsdesc_dynamic (result, sym->st_value
+	  void *p = _dl_make_tlsdesc_dynamic (result, sym->st_value
 					      + reloc->r_addend);
-	  td->entry = _dl_tlsdesc_dynamic;
+	  atomic_store_relaxed (&td->arg, p);
+	  /* This release store synchronizes with the ldar acquire load
+	     instruction in _dl_tlsdesc_dynamic.  */
+	  atomic_store_release (&td->entry, _dl_tlsdesc_dynamic);
 	}
       else
 #  endif
 	{
-	  td->arg = (void*) (sym->st_value + result->l_tls_offset
+	  void *p = (void*) (sym->st_value + result->l_tls_offset
 			     + reloc->r_addend);
-	  td->entry = _dl_tlsdesc_return;
+	  atomic_store_relaxed (&td->arg, p);
+	  /* This release store synchronizes with the ldar acquire load
+	     instruction in _dl_tlsdesc_return_lazy.  */
+	  atomic_store_release (&td->entry, _dl_tlsdesc_return_lazy);
 	}
     }
 
@@ -120,11 +133,10 @@ _dl_tlsdesc_resolve_rela_fixup (struct tlsdesc volatile *td,
 
 void
 attribute_hidden
-_dl_tlsdesc_resolve_hold_fixup (struct tlsdesc volatile *td,
-				void *caller)
+_dl_tlsdesc_resolve_hold_fixup (struct tlsdesc *td, void *caller)
 {
   /* Maybe we're lucky and can return early.  */
-  if (caller != td->entry)
+  if (caller != atomic_load_relaxed (&td->entry))
     return;
 
   /* Locking here will stop execution until the running resolver runs
