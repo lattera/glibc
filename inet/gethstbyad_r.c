@@ -32,7 +32,7 @@
    be performed.  */
 #define PREPROCESS \
   if (len == sizeof (struct in6_addr)					      \
-      && __builtin_expect (memcmp (&in6addr_any, addr,			      \
+      && __builtin_expect (memcmp (&__in6addr_any, addr,		      \
 				   sizeof (struct in6_addr)), 1) == 0)	      \
     {									      \
       *h_errnop = HOST_NOT_FOUND;					      \

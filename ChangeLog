@@ -1,3 +1,19 @@
+2015-06-17  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18532]
+	* inet/in6_addr.c (in6addr_any): Rename to __in6addr_any and
+	define as weak alias of __in6addr_any.  Use libc_hidden_data_weak.
+	(in6addr_loopback): Rename to __in6addr_loopback and define as
+	weak alias of __in6addr_loopback.  Use libc_hidden_data_weak.
+	* include/netinet/in.h (__in6addr_loopback): Declare.  Use
+	libc_hidden_proto.
+	(__in6addr_any): Likewise.
+	* inet/gethstbyad_r.c (PREPROCESS): Use __in6addr_any instead of
+	in6addr_any.
+	* conform/Makefile (test-xfail-XPG4/netdb.h/linknamespace): Remove
+	variable.
+	(test-xfail-UNIX98/netdb.h/linknamespace): Likewise.
+
 2015-06-17  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	* bits/libm-simd-decl-stubs.h: Added stubs for pow.
