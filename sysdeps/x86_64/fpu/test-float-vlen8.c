@@ -21,5 +21,6 @@
 #define TEST_VECTOR_cosf 1
 #define TEST_VECTOR_sinf 1
 #define TEST_VECTOR_logf 1
+#define TEST_VECTOR_expf 1
 
 #include "libm-test.c"

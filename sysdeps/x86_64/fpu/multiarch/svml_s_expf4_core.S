@@ -1,4 +1,4 @@
-/* Tests for AVX-512 ISA versions of vector math functions.
+/* Multiple versions of vectorized expf.
    Copyright (C) 2014-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,13 +16,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-float-vlen16.h"
+#include <sysdep.h>
+#include <init-arch.h>
 
-#define TEST_VECTOR_cosf 1
-#define TEST_VECTOR_sinf 1
-#define TEST_VECTOR_logf 1
-#define TEST_VECTOR_expf 1
+	.text
+ENTRY (_ZGVbN4v_expf)
+        .type   _ZGVbN4v_expf, @gnu_indirect_function
+        cmpl    $0, KIND_OFFSET+__cpu_features(%rip)
+        jne     1f
+        call    __init_cpu_features
+1:      leaq    _ZGVbN4v_expf_sse4(%rip), %rax
+        testl   $bit_SSE4_1, __cpu_features+CPUID_OFFSET+index_SSE4_1(%rip)
+        jz      2f
+        ret
+2:      leaq    _ZGVbN4v_expf_sse2(%rip), %rax
+        ret
+END (_ZGVbN4v_expf)
+libmvec_hidden_def (_ZGVbN4v_expf)
 
-#define REQUIRE_AVX512F
-
-#include "libm-test.c"
+#define _ZGVbN4v_expf _ZGVbN4v_expf_sse2
+#include "../svml_s_expf4_core.S"

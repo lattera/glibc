@@ -1,4 +1,4 @@
-/* Tests for AVX-512 ISA versions of vector math functions.
+/* Offsets for data table for vector function expf.
    Copyright (C) 2014-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,13 +16,30 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-float-vlen16.h"
+#ifndef S_EXPF_DATA_H
+#define S_EXPF_DATA_H
 
-#define TEST_VECTOR_cosf 1
-#define TEST_VECTOR_sinf 1
-#define TEST_VECTOR_logf 1
-#define TEST_VECTOR_expf 1
+#define __sInvLn2                     	0
+#define __sShifter                    	64
+#define __sLn2hi                      	128
+#define __sLn2lo                      	192
+#define __iBias                       	256
+#define __sPC0                        	320
+#define __sPC1                        	384
+#define __sPC2                        	448
+#define __sPC3                        	512
+#define __sPC4                        	576
+#define __sPC5                        	640
+#define __iAbsMask                    	704
+#define __iDomainRange                	768
 
-#define REQUIRE_AVX512F
+.macro float_vector offset value
+.if .-__svml_sexp_data != \offset
+.err
+.endif
+.rept 16
+.long \value
+.endr
+.endm
 
-#include "libm-test.c"
+#endif
