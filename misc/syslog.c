@@ -298,7 +298,7 @@ __vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
 		if (LogStat & LOG_CONS &&
 		    (fd = __open(_PATH_CONSOLE, O_WRONLY|O_NOCTTY, 0)) >= 0)
 		  {
-		    dprintf (fd, "%s\r\n", buf + msgoff);
+		    __dprintf (fd, "%s\r\n", buf + msgoff);
 		    (void)__close(fd);
 		  }
 	      }

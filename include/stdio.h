@@ -135,6 +135,9 @@ extern int _IO_new_fgetpos (_IO_FILE *, _IO_fpos_t *);
 #  endif
 
 libc_hidden_proto (dprintf)
+extern __typeof (dprintf) __dprintf
+     __attribute__ ((__format__ (__printf__, 2, 3)));
+libc_hidden_proto (__dprintf)
 libc_hidden_proto (fprintf)
 libc_hidden_proto (vfprintf)
 libc_hidden_proto (sprintf)

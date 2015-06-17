@@ -1,5 +1,17 @@
 2015-06-17  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18534]
+	* stdio-common/dprintf.c (__dprintf): Use libc_hidden_def.
+	(dprintf): Define as a weak alias of __dprintf, not a strong
+	alias.
+	* include/stdio.h (__dprintf): Declare.  Use libc_hidden_proto.
+	* misc/syslog.c (__vsyslog_chk): Call __dprintf instead of
+	dprintf.
+	* conform/Makefile (test-xfail-XPG4/syslog.h/linknamespace):
+	Remove variable.
+	(test-xfail-UNIX98/syslog.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K/syslog.h/linknamespace): Likewise.
+
 	[BZ #18533]
 	* misc/syslog.c (vsyslog): Define as a weak alias of __vsyslog,
 	not a strong alias.

@@ -35,5 +35,6 @@ __dprintf (int d, const char *format, ...)
 
   return done;
 }
+libc_hidden_def (__dprintf)
 ldbl_hidden_def (__dprintf, dprintf)
-ldbl_strong_alias (__dprintf, dprintf)
+ldbl_weak_alias (__dprintf, dprintf)
