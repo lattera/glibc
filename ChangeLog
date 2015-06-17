@@ -1,5 +1,29 @@
 2015-06-17  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18553]
+	* resource/getpriority.c (getpriority): Rename to __getpriority
+	and define as weak alias of __getpriority.
+	* resource/setpriority.c (setpriority): Rename to __setpriority
+	and define as weak alias of __setpriority.
+	* sysdeps/mach/hurd/getpriority.c (getpriority): Rename to
+	__getpriority and define as weak alias of __getpriority.
+	* sysdeps/mach/hurd/setpriority.c (setpriority): Rename to
+	__setpriority and define as weak alias of __setpriority.
+	* sysdeps/unix/syscalls.list (getpriority): Use __getpriority as
+	strong name.
+	(setpriority): Use __setpriority as strong name.
+	* sysdeps/unix/sysv/linux/getpriority.c (getpriority): Rename to
+	__getpriority and define as weak alias of __getpriority.
+	* include/sys/resource.h (__getpriority): Declare.  Use
+	libc_hidden_proto.
+	(__setpriority): Likewise.
+	(getpriority): Don't use libc_hidden_proto.
+	(setpriority): Likewise.
+	* sysdeps/posix/nice.c (nice): Call __getpriority instead of
+	getpriority.  Call __setpriority instead of setpriority.
+	* conform/Makefile (test-xfail-XPG3/unistd.h/linknamespace):
+	Remove variable.
+
 	[BZ #18547]
 	* misc/getttyent.c (getttynam): Rename to __getttynam and define
 	as weak alias of __getttynam.  Use prototype function definition.

@@ -21,7 +21,7 @@
 /* Set the priority of all processes specified by WHICH and WHO
    to PRIO.  Returns 0 on success, -1 on errors.  */
 int
-setpriority (enum __priority_which which, id_t who, int prio)
+__setpriority (enum __priority_which which, id_t who, int prio)
 {
   error_t err;
   error_t pidloser, priloser;
@@ -94,4 +94,5 @@ setpriority (enum __priority_which which, id_t who, int prio)
 
   return err ? __hurd_fail (err) : 0;
 }
-libc_hidden_def (setpriority)
+libc_hidden_def (__setpriority)
+weak_alias (__setpriority, setpriority)

@@ -29,7 +29,7 @@ gethostname	-	gethostname	i:bn	__gethostname	gethostname
 getitimer	-	getitimer	i:ip	__getitimer	getitimer
 getpeername	-	getpeername	i:ibN	__getpeername	getpeername
 getpid		-	getpid		Ei:	__getpid	getpid
-getpriority	-	getpriority	i:ii	getpriority
+getpriority	-	getpriority	i:ii	__getpriority	getpriority
 getrlimit	-	getrlimit	i:ip	__getrlimit	getrlimit
 getrusage	-	getrusage	i:ip	__getrusage	getrusage
 getsockname	-	getsockname	i:ibN	__getsockname	getsockname
@@ -72,7 +72,7 @@ sethostid	-	sethostid	i:i	sethostid
 sethostname	-	sethostname	i:pi	sethostname
 setitimer	-	setitimer	i:ipp	__setitimer	setitimer
 setpgid		-	setpgrp		i:ii	__setpgid	setpgid
-setpriority	-	setpriority	i:iii	setpriority
+setpriority	-	setpriority	i:iii	__setpriority	setpriority
 setregid	-	setregid	i:ii	__setregid	setregid
 setreuid	-	setreuid	i:ii	__setreuid	setreuid
 setrlimit	-	setrlimit	i:ip	__setrlimit setrlimit

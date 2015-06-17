@@ -23,13 +23,14 @@
    or user (as specified by WHO) is used.  A lower priority number means higher
    priority.  Priorities range from PRIO_MIN to PRIO_MAX.  */
 int
-getpriority (which, who)
+__getpriority (which, who)
      enum __priority_which which;
      id_t who;
 {
   __set_errno (ENOSYS);
   return -1;
 }
-libc_hidden_def (getpriority)
+libc_hidden_def (__getpriority)
+weak_alias (__getpriority, getpriority)
 
 stub_warning (getpriority)

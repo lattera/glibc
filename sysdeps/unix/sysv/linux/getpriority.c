@@ -32,7 +32,7 @@
    priority.  Priorities range from PRIO_MIN to PRIO_MAX.  */
 
 int
-getpriority (enum __priority_which which, id_t who)
+__getpriority (enum __priority_which which, id_t who)
 {
   int res;
 
@@ -41,4 +41,5 @@ getpriority (enum __priority_which which, id_t who)
     res = PZERO - res;
   return res;
 }
-libc_hidden_def (getpriority)
+libc_hidden_def (__getpriority)
+weak_alias (__getpriority, getpriority)
