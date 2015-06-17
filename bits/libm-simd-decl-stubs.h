@@ -41,4 +41,8 @@
 #define __DECL_SIMD_sinf
 #define __DECL_SIMD_sinl
 
+#define __DECL_SIMD_log
+#define __DECL_SIMD_logf
+#define __DECL_SIMD_logl
+
 #endif

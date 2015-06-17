@@ -106,7 +106,7 @@ __MATHCALL (frexp,, (_Mdouble_ __x, int *__exponent));
 __MATHCALL (ldexp,, (_Mdouble_ __x, int __exponent));
 
 /* Natural logarithm of X.  */
-__MATHCALL (log,, (_Mdouble_ __x));
+__MATHCALL_VEC (log,, (_Mdouble_ __x));
 
 /* Base-ten logarithm of X.  */
 __MATHCALL (log10,, (_Mdouble_ __x));

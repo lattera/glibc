@@ -1,4 +1,4 @@
-/* Wrapper part of tests for AVX-512 versions of vector math functions.
+/* Multiple versions of vectorized log.
    Copyright (C) 2014-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,12 +16,24 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-double-vlen8.h"
-#include "test-vec-loop.h"
-#include <immintrin.h>
+#include <sysdep.h>
+#include <init-arch.h>
 
-#define VEC_TYPE __m512d
+	.text
+ENTRY (_ZGVeN8v_log)
+        .type   _ZGVeN8v_log, @gnu_indirect_function
+        cmpl    $0, KIND_OFFSET+__cpu_features(%rip)
+        jne     1
+        call    __init_cpu_features
+1:      leaq    _ZGVeN8v_log_skx(%rip), %rax
+        testl   $bit_AVX512DQ_Usable, __cpu_features+FEATURE_OFFSET+index_AVX512DQ_Usable(%rip)
+        jnz     3
+2:      leaq    _ZGVeN8v_log_knl(%rip), %rax
+        testl   $bit_AVX512F_Usable, __cpu_features+FEATURE_OFFSET+index_AVX512F_Usable(%rip)
+        jnz     3
+        leaq    _ZGVeN8v_log_avx2_wrapper(%rip), %rax
+3:      ret
+END (_ZGVeN8v_log)
 
-VECTOR_WRAPPER (WRAPPER_NAME (cos), _ZGVeN8v_cos)
-VECTOR_WRAPPER (WRAPPER_NAME (sin), _ZGVeN8v_sin)
-VECTOR_WRAPPER (WRAPPER_NAME (log), _ZGVeN8v_log)
+#define _ZGVeN8v_log _ZGVeN8v_log_avx2_wrapper
+#include "../svml_d_log8_core.S"

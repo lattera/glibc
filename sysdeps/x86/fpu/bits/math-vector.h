@@ -36,5 +36,17 @@
 #  define __DECL_SIMD_sin __DECL_SIMD_x86_64
 #  undef __DECL_SIMD_sinf
 #  define __DECL_SIMD_sinf __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_log
+#  define __DECL_SIMD_log __DECL_SIMD_x86_64
+
+/* Workaround to exclude unnecessary symbol aliases in libmvec
+   while GCC creates the vector names based on scalar asm name.
+   Corresponding discussion started at
+   <https://gcc.gnu.org/ml/gcc/2015-06/msg00173.html>.  */
+__asm__ ("_ZGVbN2v___log_finite = _ZGVbN2v_log");
+__asm__ ("_ZGVcN4v___log_finite = _ZGVcN4v_log");
+__asm__ ("_ZGVdN4v___log_finite = _ZGVdN4v_log");
+__asm__ ("_ZGVeN8v___log_finite = _ZGVeN8v_log");
+
 # endif
 #endif

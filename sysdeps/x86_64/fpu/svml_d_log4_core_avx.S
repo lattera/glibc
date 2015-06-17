@@ -1,4 +1,4 @@
-/* Wrapper part of tests for AVX-512 versions of vector math functions.
+/* Function log vectorized in AVX ISA as wrapper to SSE4 ISA version.
    Copyright (C) 2014-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,12 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-double-vlen8.h"
-#include "test-vec-loop.h"
-#include <immintrin.h>
+#include <sysdep.h>
+#include "svml_d_wrapper_impl.h"
 
-#define VEC_TYPE __m512d
-
-VECTOR_WRAPPER (WRAPPER_NAME (cos), _ZGVeN8v_cos)
-VECTOR_WRAPPER (WRAPPER_NAME (sin), _ZGVeN8v_sin)
-VECTOR_WRAPPER (WRAPPER_NAME (log), _ZGVeN8v_log)
+	.text
+ENTRY (_ZGVcN4v_log)
+WRAPPER_IMPL_AVX _ZGVbN2v_log
+END (_ZGVcN4v_log)
