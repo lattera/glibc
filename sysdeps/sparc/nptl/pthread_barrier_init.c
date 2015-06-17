@@ -22,7 +22,7 @@
 #include <sparc-nptl.h>
 
 int
-pthread_barrier_init (barrier, attr, count)
+__pthread_barrier_init (barrier, attr, count)
      pthread_barrier_t *barrier;
      const pthread_barrierattr_t *attr;
      unsigned int count;
@@ -53,3 +53,4 @@ pthread_barrier_init (barrier, attr, count)
 
   return 0;
 }
+weak_alias (__pthread_barrier_init, pthread_barrier_init)

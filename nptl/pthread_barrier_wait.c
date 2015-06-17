@@ -24,7 +24,7 @@
 
 /* Wait on barrier.  */
 int
-pthread_barrier_wait (barrier)
+__pthread_barrier_wait (barrier)
      pthread_barrier_t *barrier;
 {
   struct pthread_barrier *ibarrier = (struct pthread_barrier *) barrier;
@@ -76,3 +76,4 @@ pthread_barrier_wait (barrier)
 
   return result;
 }
+weak_alias (__pthread_barrier_wait, pthread_barrier_wait)

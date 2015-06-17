@@ -22,10 +22,10 @@
 
 	.text
 
-	.globl	pthread_barrier_wait
-	.type	pthread_barrier_wait,@function
+	.globl	__pthread_barrier_wait
+	.type	__pthread_barrier_wait,@function
 	.align	16
-pthread_barrier_wait:
+__pthread_barrier_wait:
 	cfi_startproc
 	pushl	%ebx
 	cfi_adjust_cfa_offset(4)
@@ -183,4 +183,5 @@ pthread_barrier_wait:
 	call	__lll_unlock_wake
 	jmp	10b
 	cfi_endproc
-	.size	pthread_barrier_wait,.-pthread_barrier_wait
+	.size	__pthread_barrier_wait,.-__pthread_barrier_wait
+weak_alias (__pthread_barrier_wait, pthread_barrier_wait)

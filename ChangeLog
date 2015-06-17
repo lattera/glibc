@@ -1,5 +1,32 @@
 2015-06-17  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18544]
+	* nptl/pthread_barrier_init.c (pthread_barrier_init): Rename to
+	__pthread_barrier_init and define as weak alias of
+	__pthread_barrier_init.
+	* sysdeps/sparc/nptl/pthread_barrier_init.c
+	(pthread_barrier_init): Likewise.
+	* nptl/pthread_barrier_wait.c (pthread_barrier_wait): Rename to
+	__pthread_barrier_wait and define as weak alias of
+	__pthread_barrier_wait.
+	* sysdeps/sparc/nptl/pthread_barrier_wait.c
+	(pthread_barrier_wait): Likewise.
+	* sysdeps/sparc/sparc32/pthread_barrier_wait.c
+	(pthread_barrier_wait): Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_barrier_wait.S
+	(pthread_barrier_wait): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_barrier_wait.S
+	(pthread_barrier_wait): Likewise.
+	* nptl/Versions (libpthread): Export __pthread_barrier_init and
+	__pthread_barrier_wait at version GLIBC_PRIVATE.
+	* include/pthread.h (__pthread_barrier_init): Declare.
+	(__pthread_barrier_wait): Likewise.
+	* sysdeps/unix/sysv/linux/mq_notify.c (notification_function):
+	Call __pthread_barrier_wait instead of pthread_barrier_wait.
+	(helper_thread): Likewise.
+	(init_mq_netlink): Call __pthread_barrier_init instead of
+	pthread_barrier_init.
+
 	[BZ #18542]
 	* libio/iovswscanf.c (__vswscanf): Use libc_hidden_def.
 	(vswscanf): Use ldbl_weak_alias instead of ldbl_strong_alias

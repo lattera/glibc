@@ -92,7 +92,7 @@ notification_function (void *arg)
   union sigval param = data->param;
 
   /* Let the parent go.  */
-  (void) pthread_barrier_wait (&notify_barrier);
+  (void) __pthread_barrier_wait (&notify_barrier);
 
   /* Make the thread detached.  */
   (void) pthread_detach (pthread_self ());
@@ -132,7 +132,7 @@ helper_thread (void *arg)
 				== 0, 0))
 	    /* Since we passed a pointer to DATA to the new thread we have
 	       to wait until it is done with it.  */
-	    (void) pthread_barrier_wait (&notify_barrier);
+	    (void) __pthread_barrier_wait (&notify_barrier);
 	}
       else if (data.raw[NOTIFY_COOKIE_LEN - 1] == NOTIFY_REMOVED)
 	/* The only state we keep is the copy of the thread attributes.  */
@@ -166,7 +166,7 @@ init_mq_netlink (void)
   int err = 1;
 
   /* Initialize the barrier.  */
-  if (__builtin_expect (pthread_barrier_init (&notify_barrier, NULL, 2) == 0,
+  if (__builtin_expect (__pthread_barrier_init (&notify_barrier, NULL, 2) == 0,
 			0))
     {
       /* Create the helper thread.  */
