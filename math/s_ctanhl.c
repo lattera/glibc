@@ -23,6 +23,13 @@
 #include <math_private.h>
 #include <float.h>
 
+/* To avoid spurious underflows, use this definition to treat IBM long
+   double as approximating an IEEE-style format.  */
+#if LDBL_MANT_DIG == 106
+# undef LDBL_EPSILON
+# define LDBL_EPSILON 0x1p-106L
+#endif
+
 __complex__ long double
 __ctanhl (__complex__ long double x)
 {

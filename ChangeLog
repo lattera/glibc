@@ -1,5 +1,13 @@
 2015-06-17  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/s_ctanhl.c [LDBL_MANT_DIG == 106] (LDBL_EPSILON): Undefine
+	and redefine.
+	* math/s_ctanl.c [LDBL_MANT_DIG == 106] (LDBL_EPSILON): Undefine
+	and redefine.
+	* sysdeps/ieee754/ldbl-128ibm/s_cprojl.c: Remove file.
+	* sysdeps/ieee754/ldbl-128ibm/s_ctanhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_ctanl.c: Likewise.
+
 	[BZ #18553]
 	* resource/getpriority.c (getpriority): Rename to __getpriority
 	and define as weak alias of __getpriority.
