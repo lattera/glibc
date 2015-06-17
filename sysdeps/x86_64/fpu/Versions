@@ -5,5 +5,6 @@ libmvec {
     _ZGVbN2v_log; _ZGVcN4v_log; _ZGVdN4v_log; _ZGVeN8v_log;
     _ZGVbN4v_cosf; _ZGVcN8v_cosf; _ZGVdN8v_cosf; _ZGVeN16v_cosf;
     _ZGVbN4v_sinf; _ZGVcN8v_sinf; _ZGVdN8v_sinf; _ZGVeN16v_sinf;
+    _ZGVbN4v_logf; _ZGVcN8v_logf; _ZGVdN8v_logf; _ZGVeN16v_logf;
   }
 }

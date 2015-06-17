@@ -1,4 +1,4 @@
-/* Tests for AVX2 ISA versions of vector math functions.
+/* Multiple versions of vectorized logf.
    Copyright (C) 2014-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,15 +16,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-float-vlen8.h"
+#include <sysdep.h>
+#include <init-arch.h>
 
-#undef VEC_SUFF
-#define VEC_SUFF _vlen8_avx2
+	.text
+ENTRY (_ZGVbN4v_logf)
+        .type   _ZGVbN4v_logf, @gnu_indirect_function
+        cmpl    $0, KIND_OFFSET+__cpu_features(%rip)
+        jne     1f
+        call    __init_cpu_features
+1:      leaq    _ZGVbN4v_logf_sse4(%rip), %rax
+        testl   $bit_SSE4_1, __cpu_features+CPUID_OFFSET+index_SSE4_1(%rip)
+        jz      2f
+        ret
+2:      leaq    _ZGVbN4v_logf_sse2(%rip), %rax
+        ret
+END (_ZGVbN4v_logf)
+libmvec_hidden_def (_ZGVbN4v_logf)
 
-#define TEST_VECTOR_cosf 1
-#define TEST_VECTOR_sinf 1
-#define TEST_VECTOR_logf 1
-
-#define REQUIRE_AVX2
-
-#include "libm-test.c"
+#define _ZGVbN4v_logf _ZGVbN4v_logf_sse2
+#include "../svml_s_logf4_core.S"

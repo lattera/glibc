@@ -1,4 +1,4 @@
-/* Tests for AVX2 ISA versions of vector math functions.
+/* Function logf vectorized with AVX-512. Wrapper to AVX2 version.
    Copyright (C) 2014-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,15 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-float-vlen8.h"
+#include <sysdep.h>
+#include "svml_s_wrapper_impl.h"
 
-#undef VEC_SUFF
-#define VEC_SUFF _vlen8_avx2
-
-#define TEST_VECTOR_cosf 1
-#define TEST_VECTOR_sinf 1
-#define TEST_VECTOR_logf 1
-
-#define REQUIRE_AVX2
-
-#include "libm-test.c"
+	.text
+ENTRY (_ZGVeN16v_logf)
+WRAPPER_IMPL_AVX512 _ZGVdN8v_logf
+END (_ZGVeN16v_logf)

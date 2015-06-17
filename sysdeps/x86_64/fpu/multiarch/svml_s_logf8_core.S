@@ -1,4 +1,4 @@
-/* Tests for AVX2 ISA versions of vector math functions.
+/* Multiple versions of vectorized logf.
    Copyright (C) 2014-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -10,21 +10,29 @@
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-float-vlen8.h"
+#include <sysdep.h>
+#include <init-arch.h>
 
-#undef VEC_SUFF
-#define VEC_SUFF _vlen8_avx2
+	.text
+ENTRY (_ZGVdN8v_logf)
+        .type   _ZGVdN8v_logf, @gnu_indirect_function
+        cmpl    $0, KIND_OFFSET+__cpu_features(%rip)
+        jne     1f
+        call    __init_cpu_features
+1:      leaq    _ZGVdN8v_logf_avx2(%rip), %rax
+        testl   $bit_AVX2_Usable, __cpu_features+FEATURE_OFFSET+index_AVX2_Usable(%rip)
+        jz      2f
+        ret
+2:      leaq    _ZGVdN8v_logf_sse_wrapper(%rip), %rax
+        ret
+END (_ZGVdN8v_logf)
+libmvec_hidden_def (_ZGVdN8v_logf)
 
-#define TEST_VECTOR_cosf 1
-#define TEST_VECTOR_sinf 1
-#define TEST_VECTOR_logf 1
-
-#define REQUIRE_AVX2
-
-#include "libm-test.c"
+#define _ZGVdN8v_logf _ZGVdN8v_logf_sse_wrapper
+#include "../svml_s_logf8_core.S"

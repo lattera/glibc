@@ -1847,17 +1847,25 @@ ifloat: 2
 ildouble: 1
 ldouble: 1
 
+Function: "log_vlen16":
+float: 3
+
 Function: "log_vlen2":
 double: 1
 
 Function: "log_vlen4":
 double: 1
+float: 3
 
 Function: "log_vlen4_avx2":
 double: 1
 
 Function: "log_vlen8":
 double: 1
+float: 3
+
+Function: "log_vlen8_avx2":
+float: 2
 
 Function: "pow":
 float: 3
