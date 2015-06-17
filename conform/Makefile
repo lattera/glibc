@@ -345,12 +345,8 @@ test-xfail-XOPEN2K8/ndbm.h/linknamespace = yes
 
 # Unsorted expected failures.
 test-xfail-XPG3/unistd.h/linknamespace = yes
-test-xfail-XPG4/fmtmsg.h/linknamespace = yes
 test-xfail-XPG4/unistd.h/linknamespace = yes
 test-xfail-POSIX/mqueue.h/linknamespace = yes
-test-xfail-UNIX98/fmtmsg.h/linknamespace = yes
 test-xfail-UNIX98/mqueue.h/linknamespace = yes
 test-xfail-UNIX98/unistd.h/linknamespace = yes
 test-xfail-UNIX98/wchar.h/linknamespace = yes
-test-xfail-XOPEN2K/fmtmsg.h/linknamespace = yes
-test-xfail-XOPEN2K8/fmtmsg.h/linknamespace = yes

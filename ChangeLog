@@ -1,5 +1,14 @@
 2015-06-17  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18539]
+	* stdlib/fmtmsg.c (addseverity): Rename to __addseverity and
+	define as weak alias of __addseverity.
+	* conform/Makefile (test-xfail-XPG4/fmtmsg.h/linknamespace):
+	Remove variable.
+	(test-xfail-UNIX98/fmtmsg.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K/fmtmsg.h/linknamespace): Likewise.
+	(test-xfail-XOPEN2K8/fmtmsg.h/linknamespace): Likewise.
+
 	[BZ #18536]
 	* misc/tsearch.c (__tsearch): Use libc_hidden_def.
 	(__tfind): Likewise.

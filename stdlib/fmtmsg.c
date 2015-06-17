@@ -347,7 +347,7 @@ internal_addseverity (int severity, const char *string)
 
 /* Add new severity level or remove old one.  */
 int
-addseverity (int severity, const char *string)
+__addseverity (int severity, const char *string)
 {
   int result;
 
@@ -366,6 +366,7 @@ addseverity (int severity, const char *string)
 
   return result;
 }
+weak_alias (__addseverity, addseverity)
 
 
 libc_freeres_fn (free_mem)
