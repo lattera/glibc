@@ -51,7 +51,7 @@ sem_close (sem)
   /* Locate the entry for the mapping the caller provided.  */
   rec = NULL;
   the_sem = sem;
-  twalk (__sem_mappings, walker);
+  __twalk (__sem_mappings, walker);
   if  (rec != NULL)
     {
       /* Check the reference counter.  If it is going to be zero, free
@@ -59,7 +59,7 @@ sem_close (sem)
       if (--rec->refcnt == 0)
 	{
 	  /* Remove the record from the tree.  */
-	  (void) tdelete (rec, &__sem_mappings, __sem_search);
+	  (void) __tdelete (rec, &__sem_mappings, __sem_search);
 
 	  result = munmap (rec->sem, sizeof (sem_t));
 

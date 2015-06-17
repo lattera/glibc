@@ -79,7 +79,8 @@ check_add_mapping (const char *name, size_t namelen, int fd, sem_t *existing)
       fake->dev = st.st_dev;
       fake->ino = st.st_ino;
 
-      struct inuse_sem **foundp = tfind (fake, &__sem_mappings, __sem_search);
+      struct inuse_sem **foundp = __tfind (fake, &__sem_mappings,
+					   __sem_search);
       if (foundp != NULL)
 	{
 	  /* There is already a mapping.  Use it.  */
@@ -108,7 +109,7 @@ check_add_mapping (const char *name, size_t namelen, int fd, sem_t *existing)
 
 	      /* Insert the new value.  */
 	      if (existing != MAP_FAILED
-		  && tsearch (newp, &__sem_mappings, __sem_search) != NULL)
+		  && __tsearch (newp, &__sem_mappings, __sem_search) != NULL)
 		/* Successful.  */
 		result = existing;
 	      else

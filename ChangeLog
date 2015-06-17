@@ -1,5 +1,25 @@
 2015-06-17  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18536]
+	* misc/tsearch.c (__tsearch): Use libc_hidden_def.
+	(__tfind): Likewise.
+	(__tdelete): Likewise.
+	(__twalk): Likewise.
+	* misc/Versions (libc): Add __tdelete, __tfind, __tsearch and
+	__twalk to GLIBC_PRIVATE.
+	* include/search.h (__tsearch): Use libc_hidden_proto.
+	(__tfind): Likewise.
+	(__tdelete): Likewise.
+	(__twalk): Likewise.
+	* nptl/sem_close.c (sem_close): Call __twalk instead of twalk.
+	Call __tdelete instead of tdelete.
+	* nptl/sem_open.c (check_add_mapping): Call __tfind instead of
+	tfind.  Call __tsearch instead of tsearch.
+	* sysdeps/sparc/sparc32/sem_open.c (check_add_mapping): Likewise.
+	* conform/Makefile (test-xfail-POSIX/semaphore.h/linknamespace):
+	Remove variable.
+	(test-xfail-POSIX2008/semaphore.h/linknamespace): Likewise.
+
 	[BZ #18534]
 	* stdio-common/dprintf.c (__dprintf): Use libc_hidden_def.
 	(dprintf): Define as a weak alias of __dprintf, not a strong
