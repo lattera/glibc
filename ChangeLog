@@ -1,5 +1,11 @@
 2015-06-17  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18533]
+	* misc/syslog.c (vsyslog): Define as a weak alias of __vsyslog,
+	not a strong alias.
+	* conform/Makefile (test-xfail-XOPEN2K8/syslog.h/linknamespace):
+	Remove variable.
+
 	[BZ #18532]
 	* inet/in6_addr.c (in6addr_any): Rename to __in6addr_any and
 	define as weak alias of __in6addr_any.  Use libc_hidden_data_weak.

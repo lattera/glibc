@@ -324,7 +324,7 @@ __vsyslog(int pri, const char *fmt, va_list ap)
   __vsyslog_chk (pri, -1, fmt, ap);
 }
 ldbl_hidden_def (__vsyslog, vsyslog)
-ldbl_strong_alias (__vsyslog, vsyslog)
+ldbl_weak_alias (__vsyslog, vsyslog)
 
 static struct sockaddr_un SyslogAddr;	/* AF_UNIX address of local logger */
 

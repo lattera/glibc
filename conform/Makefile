@@ -359,4 +359,3 @@ test-xfail-XOPEN2K/fmtmsg.h/linknamespace = yes
 test-xfail-XOPEN2K/syslog.h/linknamespace = yes
 test-xfail-POSIX2008/semaphore.h/linknamespace = yes
 test-xfail-XOPEN2K8/fmtmsg.h/linknamespace = yes
-test-xfail-XOPEN2K8/syslog.h/linknamespace = yes
