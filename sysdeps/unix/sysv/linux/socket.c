@@ -26,4 +26,5 @@ __socket (int fd, int type, int domain)
 {
   return SOCKETCALL (socket, fd, type, domain);
 }
+libc_hidden_def (__socket)
 weak_alias (__socket, socket)

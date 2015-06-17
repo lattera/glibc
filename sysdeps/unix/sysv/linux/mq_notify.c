@@ -117,8 +117,8 @@ helper_thread (void *arg)
     {
       union notify_data data;
 
-      ssize_t n = recv (netlink_socket, &data, sizeof (data),
-			MSG_NOSIGNAL | MSG_WAITALL);
+      ssize_t n = __recv (netlink_socket, &data, sizeof (data),
+			  MSG_NOSIGNAL | MSG_WAITALL);
       if (n < NOTIFY_COOKIE_LEN)
 	continue;
 
@@ -157,7 +157,7 @@ init_mq_netlink (void)
   if (netlink_socket == -1)
     {
       /* Just a normal netlink socket, not bound.  */
-      netlink_socket = socket (AF_NETLINK, SOCK_RAW | SOCK_CLOEXEC, 0);
+      netlink_socket = __socket (AF_NETLINK, SOCK_RAW | SOCK_CLOEXEC, 0);
       /* No need to do more if we have no socket.  */
       if (netlink_socket == -1)
 	return;

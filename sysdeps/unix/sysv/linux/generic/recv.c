@@ -28,4 +28,5 @@ __libc_recv (int sockfd, void *buffer, size_t len, int flags)
 			 NULL, NULL);
 }
 strong_alias (__libc_recv, __recv)
+libc_hidden_def (__recv)
 weak_alias (__libc_recv, recv)

@@ -8,7 +8,8 @@
    protocol PROTOCOL.  If PROTOCOL is zero, one is chosen automatically.
    Returns a file descriptor for the new socket, or -1 for errors.  */
 extern int __socket (int __domain, int __type,
-		     int __protocol) attribute_hidden;
+		     int __protocol);
+libc_hidden_proto (__socket)
 
 /* Create two new sockets, of type TYPE in domain DOMAIN and using
    protocol PROTOCOL, which are connected to each other, and put file
@@ -64,8 +65,8 @@ libc_hidden_proto (__connect)
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern ssize_t __recv (int __fd, void *__buf, size_t __n, int __flags)
-     attribute_hidden;
+extern ssize_t __recv (int __fd, void *__buf, size_t __n, int __flags);
+libc_hidden_proto (__recv)
 
 /* Send N bytes of BUF on socket FD to peer at address ADDR (which is
    ADDR_LEN bytes long).  Returns the number sent, or -1 for errors.  */

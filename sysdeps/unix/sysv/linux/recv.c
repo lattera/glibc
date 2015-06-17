@@ -29,3 +29,4 @@ __libc_recv (int fd, void *buf, size_t len, int flags)
 }
 weak_alias (__libc_recv, recv)
 weak_alias (__libc_recv, __recv)
+libc_hidden_weak (__recv)

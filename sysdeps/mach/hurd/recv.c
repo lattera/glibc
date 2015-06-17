@@ -60,4 +60,5 @@ __recv (fd, buf, n, flags)
 
   return nread;
 }
+libc_hidden_def (__recv)
 weak_alias (__recv, recv)

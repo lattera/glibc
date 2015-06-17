@@ -30,6 +30,7 @@ __recv (fd, buf, n, flags)
   __set_errno (ENOSYS);
   return -1;
 }
+libc_hidden_def (__recv)
 weak_alias (__recv, recv)
 
 stub_warning (recv)

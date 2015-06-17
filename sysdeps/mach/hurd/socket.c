@@ -64,4 +64,5 @@ __socket (domain, type, protocol)
   return _hurd_intern_fd (sock, O_IGNORE_CTTY, 1);
 }
 
+libc_hidden_def (__socket)
 weak_alias (__socket, socket)

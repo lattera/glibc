@@ -346,4 +346,3 @@ test-xfail-XOPEN2K8/ndbm.h/linknamespace = yes
 # Unsorted expected failures.
 test-xfail-XPG3/unistd.h/linknamespace = yes
 test-xfail-XPG4/unistd.h/linknamespace = yes
-test-xfail-POSIX/mqueue.h/linknamespace = yes

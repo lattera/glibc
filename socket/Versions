@@ -39,5 +39,6 @@ libc {
   }
   GLIBC_PRIVATE {
     __sendmmsg;
+    __recv; __socket;
   }
 }

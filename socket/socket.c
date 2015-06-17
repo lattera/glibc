@@ -32,5 +32,6 @@ __socket (domain, type, protocol)
 }
 
 
+libc_hidden_def (__socket)
 weak_alias (__socket, socket)
 stub_warning (socket)

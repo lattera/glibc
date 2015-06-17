@@ -1,5 +1,27 @@
 2015-06-17  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18546]
+	* socket/recv.c (__recv): Use libc_hidden_def.
+	* socket/socket.c (__socket): Likewise.
+	* sysdeps/mach/hurd/recv.c (__recv): Likewise.
+	* sysdeps/mach/hurd/socket.c (__socket): Likewise.
+	* sysdeps/unix/sysv/linux/generic/recv.c (__recv): Likewise.
+	* sysdeps/unix/sysv/linux/recv.c (__recv): Use libc_hidden_weak.
+	* sysdeps/unix/sysv/linux/socket.c (__socket): Use
+	libc_hidden_def.
+	* sysdeps/unix/sysv/linux/x86_64/recv.c (__recv): Use
+	libc_hidden_weak.
+	* include/sys/socket.h (__socket): Do not use attribute_hidden.
+	Use libc_hidden_proto.
+	(__recv): Likewise.
+	* socket/Versions (libc): Export __recv and __socket at version
+	GLIBC_PRIVATE.
+	* sysdeps/unix/sysv/linux/mq_notify.c (helper_thread): Call __recv
+	instead of recv.
+	(init_mq_netlink): Call __socket instead of socket.
+	* conform/Makefile (test-xfail-POSIX/mqueue.h/linknamespace):
+	Remove variable.
+
 	[BZ #18545]
 	* rt/mq_timedreceive.c (mq_timedreceive): Rename to
 	__mq_timedreceive and define as alias of __mq_timedreceive.  Use
