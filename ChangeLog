@@ -1,5 +1,16 @@
 2015-06-23  Dmitry V. Levin  <ldv@altlinux.org>
 
+	[BZ #17977]
+	* resolv/res_hconf.c (_res_hconf_reorder_addrs): Fix unlocking
+	when initializing interface list, based on the bug analysis
+	and the patch proposed by Eric Newton.
+	* resolv/tst-res_hconf_reorder.c: New test.
+	* resolv/Makefile [$(have-thread-library) = yes] (tests): Add
+	tst-res_hconf_reorder.
+	($(objpfx)tst-res_hconf_reorder): Depend on $(libdl)
+	and $(shared-thread-library).
+	(tst-res_hconf_reorder-ENV): New variable.
+
 	* resolv/res_hconf.c (_res_hconf_reorder_addrs): Fix typo
 	in comment.
 
