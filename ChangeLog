@@ -1,3 +1,22 @@
+2015-06-18  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18558]
+	* sysdeps/unix/sysv/linux/bits/in.h (MCAST_JOIN_GROUP): Remove
+	unconditional definition.
+	(MCAST_BLOCK_SOURCE): Likewise.
+	(MCAST_UNBLOCK_SOURCE): Likewise.
+	(MCAST_LEAVE_GROUP): Likewise.
+	(MCAST_JOIN_SOURCE_GROUP): Likewise.
+	(MCAST_LEAVE_SOURCE_GROUP): Likewise.
+	(MCAST_MSFILTER): Likewise.
+	* conform/Makefile (test-xfail-XOPEN2K/arpa/inet.h/conform):
+	Remove variable.
+	(test-xfail-XOPEN2K/netdb.h/conform): Likewise.
+	(test-xfail-XOPEN2K/netinet/in.h/conform): Likewise.
+	(test-xfail-XOPEN2K8/arpa/inet.h/conform): Likewise.
+	(test-xfail-XOPEN2K8/netdb.h/conform): Likewise.
+	(test-xfail-XOPEN2K8/netinet/in.h/conform): Likewise.
+
 2015-06-18  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	* NEWS: Mention addition of x86_64 vector sincosf.
