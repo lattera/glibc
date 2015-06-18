@@ -1,5 +1,18 @@
 2015-06-18  Joseph Myers  <joseph@codesourcery.com>
 
+	* include/bits/ipc.h: Remove file.
+	* conform/Makefile (test-xfail-XPG3/sys/msg.h/conform): Remove
+	variable.
+	(test-xfail-XPG3/sys/shm.h/conform): Likewise.
+	(test-xfail-XPG4/sys/msg.h/conform): Likewise.
+	(test-xfail-XPG4/sys/shm.h/conform): Likewise.
+	(test-xfail-UNIX98/sys/msg.h/conform): Likewise.
+	(test-xfail-UNIX98/sys/shm.h/conform): Likewise.
+	(test-xfail-XOPEN2K/sys/msg.h/conform): Likewise.
+	(test-xfail-XOPEN2K/sys/shm.h/conform): Likewise.
+	(test-xfail-XOPEN2K8/sys/msg.h/conform): Likewise.
+	(test-xfail-XOPEN2K8/sys/shm.h/conform): Likewise.
+
 	* math/auto-libm-test-in: Remove spurious underflow allowance for
 	tests of cexp.
 	* math/auto-libm-test-out: Regenerated.
