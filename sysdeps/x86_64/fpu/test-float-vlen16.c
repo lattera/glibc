@@ -22,6 +22,7 @@
 #define TEST_VECTOR_sinf 1
 #define TEST_VECTOR_logf 1
 #define TEST_VECTOR_expf 1
+#define TEST_VECTOR_powf 1
 
 #define REQUIRE_AVX512F
 

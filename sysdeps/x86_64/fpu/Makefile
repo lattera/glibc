@@ -15,7 +15,8 @@ libmvec-support += svml_d_cos2_core svml_d_cos4_core_avx \
 		   svml_s_expf4_core svml_s_expf8_core_avx svml_s_expf8_core \
 		   svml_s_expf16_core svml_s_expf_data svml_d_pow2_core \
 		   svml_d_pow4_core_avx svml_d_pow4_core svml_d_pow8_core \
-		   svml_d_pow_data \
+		   svml_d_pow_data svml_s_powf4_core svml_s_powf8_core_avx \
+		   svml_s_powf8_core svml_s_powf16_core svml_s_powf_data \
 		   init-arch
 endif
 

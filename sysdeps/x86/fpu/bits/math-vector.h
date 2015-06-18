@@ -46,6 +46,8 @@
 #  define __DECL_SIMD_expf __DECL_SIMD_x86_64
 #  undef __DECL_SIMD_pow
 #  define __DECL_SIMD_pow __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_powf
+#  define __DECL_SIMD_powf __DECL_SIMD_x86_64
 
 /* Workaround to exclude unnecessary symbol aliases in libmvec
    while GCC creates the vector names based on scalar asm name.
@@ -71,6 +73,10 @@ __asm__ ("_ZGVbN2vv___pow_finite = _ZGVbN2vv_pow");
 __asm__ ("_ZGVcN4vv___pow_finite = _ZGVcN4vv_pow");
 __asm__ ("_ZGVdN4vv___pow_finite = _ZGVdN4vv_pow");
 __asm__ ("_ZGVeN8vv___pow_finite = _ZGVeN8vv_pow");
+__asm__ ("_ZGVbN4vv___powf_finite = _ZGVbN4vv_powf");
+__asm__ ("_ZGVcN8vv___powf_finite = _ZGVcN8vv_powf");
+__asm__ ("_ZGVdN8vv___powf_finite = _ZGVdN8vv_powf");
+__asm__ ("_ZGVeN16vv___powf_finite = _ZGVeN16vv_powf");
 
 # endif
 #endif

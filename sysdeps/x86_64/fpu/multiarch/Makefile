@@ -66,5 +66,7 @@ libmvec-sysdep_routines += svml_d_cos2_core_sse4 svml_d_cos4_core_avx2 \
 			   svml_d_exp4_core_avx2 svml_d_exp8_core_avx512 \
 			   svml_s_expf4_core_sse4 svml_s_expf8_core_avx2 \
 			   svml_s_expf16_core_avx512 svml_d_pow2_core_sse4 \
-			   svml_d_pow4_core_avx2 svml_d_pow8_core_avx512
+			   svml_d_pow4_core_avx2 svml_d_pow8_core_avx512 \
+			   svml_s_powf4_core_sse4 svml_s_powf8_core_avx2 \
+			   svml_s_powf16_core_avx512
 endif

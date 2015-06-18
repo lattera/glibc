@@ -1,3 +1,39 @@
+2015-06-18  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/libmvec.abilist: New symbols added.
+	* sysdeps/x86/fpu/bits/math-vector.h: Added SIMD declaration and asm
+	redirections for powf.
+	* sysdeps/x86_64/fpu/Makefile (libmvec-support): Added new files.
+	* sysdeps/x86_64/fpu/Versions: New versions added.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Regenerated.
+	* sysdeps/x86_64/fpu/multiarch/Makefile (libmvec-sysdep_routines):
+	Added build of SSE, AVX2 and AVX512 IFUNC versions.
+	* sysdeps/x86_64/fpu/svml_s_wrapper_impl.h: Added 2 argument wrappers.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_powf16_core.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_powf16_core_avx512.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_powf4_core.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_powf4_core_sse4.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_powf8_core.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_powf8_core_avx2.S: New file.
+	* sysdeps/x86_64/fpu/svml_s_powf16_core.S: New file.
+	* sysdeps/x86_64/fpu/svml_s_powf4_core.S: New file.
+	* sysdeps/x86_64/fpu/svml_s_powf8_core.S: New file.
+	* sysdeps/x86_64/fpu/svml_s_powf8_core_avx.S: New file.
+	* sysdeps/x86_64/fpu/svml_s_powf_data.S: New file.
+	* sysdeps/x86_64/fpu/svml_s_powf_data.h: New file.
+	* sysdeps/x86_64/fpu/test-float-vlen16-wrappers.c: Vector powf tests.
+	* sysdeps/x86_64/fpu/test-float-vlen16.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen4-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen4.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen8-avx2-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen8-avx2.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen8-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen8.c: Likewise.
+	* math/test-float-vlen16.h: Fixed 2 argument macro.
+	* math/test-float-vlen4.h: Likewise.
+	* math/test-float-vlen8.h: Likewise.
+	* NEWS: Mention addition of x86_64 vector powf.
+
 2015-06-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/s_ctanhl.c [LDBL_MANT_DIG == 106] (LDBL_EPSILON): Undefine

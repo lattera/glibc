@@ -1,4 +1,4 @@
-/* Wrapper part of tests for AVX-512 ISA versions of vector math functions.
+/* Multiple versions of vectorized powf.
    Copyright (C) 2014-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,14 +16,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-float-vlen16.h"
-#include "test-vec-loop.h"
-#include <immintrin.h>
+#include <sysdep.h>
+#include <init-arch.h>
 
-#define VEC_TYPE __m512
+	.text
+ENTRY (_ZGVbN4vv_powf)
+        .type   _ZGVbN4vv_powf, @gnu_indirect_function
+        cmpl    $0, KIND_OFFSET+__cpu_features(%rip)
+        jne     1f
+        call    __init_cpu_features
+1:      leaq    _ZGVbN4vv_powf_sse4(%rip), %rax
+        testl   $bit_SSE4_1, __cpu_features+CPUID_OFFSET+index_SSE4_1(%rip)
+        jz      2f
+        ret
+2:      leaq    _ZGVbN4vv_powf_sse2(%rip), %rax
+        ret
+END (_ZGVbN4vv_powf)
+libmvec_hidden_def (_ZGVbN4vv_powf)
 
-VECTOR_WRAPPER (WRAPPER_NAME (cosf), _ZGVeN16v_cosf)
-VECTOR_WRAPPER (WRAPPER_NAME (sinf), _ZGVeN16v_sinf)
-VECTOR_WRAPPER (WRAPPER_NAME (logf), _ZGVeN16v_logf)
-VECTOR_WRAPPER (WRAPPER_NAME (expf), _ZGVeN16v_expf)
-VECTOR_WRAPPER_ff (WRAPPER_NAME (powf), _ZGVeN16vv_powf)
+#define _ZGVbN4vv_powf _ZGVbN4vv_powf_sse2
+#include "../svml_s_powf4_core.S"

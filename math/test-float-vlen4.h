@@ -58,8 +58,8 @@ FLOAT scalar_func (FLOAT x)			\
 }
 
 // Wrapper from scalar 2 argument function to vector one.
-#define VECTOR_WRAPPER_ff(scalar_func, vector_func) \
-extern VEC_TYPE vector_func (VEC_TYPE);		\
+#define VECTOR_WRAPPER_ff(scalar_func, vector_func) 	\
+extern VEC_TYPE vector_func (VEC_TYPE, VEC_TYPE);	\
 FLOAT scalar_func (FLOAT x, FLOAT y)		\
 {						\
   int i;					\
