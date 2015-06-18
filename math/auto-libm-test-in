@@ -559,9 +559,8 @@ cexp 1e6 0
 cexp 1e6 min
 cexp 1e6 -min
 
-# Bug 16348: spurious underflow may occur.
-cexp min min_subnorm spurious-underflow:ldbl-96-intel:x86 spurious-underflow:ldbl-96-intel:x86_64
-cexp min -min_subnorm spurious-underflow:ldbl-96-intel:x86 spurious-underflow:ldbl-96-intel:x86_64
+cexp min min_subnorm
+cexp min -min_subnorm
 
 clog 0.75 1.25
 clog -2 -3

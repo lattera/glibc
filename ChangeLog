@@ -1,5 +1,9 @@
 2015-06-18  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/auto-libm-test-in: Remove spurious underflow allowance for
+	tests of cexp.
+	* math/auto-libm-test-out: Regenerated.
+
 	[BZ #18558]
 	* sysdeps/unix/sysv/linux/bits/in.h (MCAST_JOIN_GROUP): Remove
 	unconditional definition.
