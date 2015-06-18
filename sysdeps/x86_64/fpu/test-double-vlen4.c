@@ -20,6 +20,7 @@
 
 #define TEST_VECTOR_cos 1
 #define TEST_VECTOR_sin 1
+#define TEST_VECTOR_sincos 1
 #define TEST_VECTOR_log 1
 #define TEST_VECTOR_exp 1
 #define TEST_VECTOR_pow 1

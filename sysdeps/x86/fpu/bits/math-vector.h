@@ -36,6 +36,8 @@
 #  define __DECL_SIMD_sin __DECL_SIMD_x86_64
 #  undef __DECL_SIMD_sinf
 #  define __DECL_SIMD_sinf __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_sincos
+#  define __DECL_SIMD_sincos __DECL_SIMD_x86_64
 #  undef __DECL_SIMD_log
 #  define __DECL_SIMD_log __DECL_SIMD_x86_64
 #  undef __DECL_SIMD_logf

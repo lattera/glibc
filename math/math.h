@@ -58,6 +58,10 @@ __BEGIN_DECLS
   __SIMD_DECL (__MATH_PRECNAME (function, suffix)) \
   __MATHCALL (function, suffix, args)
 
+#define __MATHDECL_VEC(type, function,suffix, args) \
+  __SIMD_DECL (__MATH_PRECNAME (function, suffix)) \
+  __MATHDECL(type, function,suffix, args)
+
 #define __MATHCALL(function,suffix, args)	\
   __MATHDECL (_Mdouble_,function,suffix, args)
 #define __MATHDECL(type, function,suffix, args) \

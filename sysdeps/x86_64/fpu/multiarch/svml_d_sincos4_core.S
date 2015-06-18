@@ -1,4 +1,4 @@
-/* Tests for AVX-512 versions of vector math functions.
+/* Multiple versions of vectorized sincos.
    Copyright (C) 2014-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,15 +16,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-double-vlen8.h"
+#include <sysdep.h>
+#include <init-arch.h>
 
-#define TEST_VECTOR_cos 1
-#define TEST_VECTOR_sin 1
-#define TEST_VECTOR_sincos 1
-#define TEST_VECTOR_log 1
-#define TEST_VECTOR_exp 1
-#define TEST_VECTOR_pow 1
+	.text
+ENTRY (_ZGVdN4vvv_sincos)
+        .type   _ZGVdN4vvv_sincos, @gnu_indirect_function
+        cmpl    $0, KIND_OFFSET+__cpu_features(%rip)
+        jne     1f
+        call    __init_cpu_features
+1:      leaq    _ZGVdN4vvv_sincos_avx2(%rip), %rax
+        testl   $bit_AVX2_Usable, __cpu_features+FEATURE_OFFSET+index_AVX2_Usable(%rip)
+        jz      2f
+        ret
+2:      leaq    _ZGVdN4vvv_sincos_sse_wrapper(%rip), %rax
+        ret
+END (_ZGVdN4vvv_sincos)
+libmvec_hidden_def (_ZGVdN4vvv_sincos)
 
-#define REQUIRE_AVX512F
-
-#include "libm-test.c"
+#define _ZGVdN4vvv_sincos _ZGVdN4vvv_sincos_sse_wrapper
+#include "../svml_d_sincos4_core.S"

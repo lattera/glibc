@@ -2031,6 +2031,18 @@ idouble: 1
 ildouble: 3
 ldouble: 3
 
+Function: "sincos_vlen2":
+double: 1
+
+Function: "sincos_vlen4":
+double: 1
+
+Function: "sincos_vlen4_avx2":
+double: 1
+
+Function: "sincos_vlen8":
+double: 1
+
 Function: "sinh":
 double: 2
 float: 2

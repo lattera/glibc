@@ -7,6 +7,8 @@ libmvec-support += svml_d_cos2_core svml_d_cos4_core_avx \
 		   svml_s_cosf8_core svml_s_cosf16_core svml_s_cosf_data \
 		   svml_s_sinf4_core svml_s_sinf8_core_avx \
 		   svml_s_sinf8_core svml_s_sinf16_core svml_s_sinf_data \
+		   svml_d_sincos2_core svml_d_sincos4_core_avx \
+		   svml_d_sincos4_core svml_d_sincos8_core svml_d_sincos_data \
 		   svml_d_log2_core svml_d_log4_core_avx svml_d_log4_core \
 		   svml_d_log8_core svml_d_log_data svml_s_logf4_core \
 		   svml_s_logf8_core_avx svml_s_logf8_core svml_s_logf16_core \

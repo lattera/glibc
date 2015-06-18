@@ -54,7 +54,8 @@ FLOAT scalar_func (FLOAT x)			\
   VEC_TYPE mx;					\
   INIT_VEC_LOOP (mx, x, 4);			\
   VEC_TYPE mr = vector_func (mx);		\
-  TEST_VEC_LOOP (4);				\
+  TEST_VEC_LOOP (mr, 4);			\
+  return ((FLOAT) mr[0]);			\
 }
 
 // Wrapper from scalar 2 argument function to vector one.
@@ -67,5 +68,6 @@ FLOAT scalar_func (FLOAT x, FLOAT y)		\
   INIT_VEC_LOOP (mx, x, 4);			\
   INIT_VEC_LOOP (my, y, 4);			\
   VEC_TYPE mr = vector_func (mx, my);		\
-  TEST_VEC_LOOP (4);				\
+  TEST_VEC_LOOP (mr, 4);			\
+  return ((FLOAT) mr[0]);			\
 }

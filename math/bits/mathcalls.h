@@ -78,8 +78,8 @@ _Mdouble_END_NAMESPACE
 
 #ifdef __USE_GNU
 /* Cosine and sine of X.  */
-__MATHDECL (void,sincos,,
-	    (_Mdouble_ __x, _Mdouble_ *__sinx, _Mdouble_ *__cosx));
+__MATHDECL_VEC (void,sincos,,
+		(_Mdouble_ __x, _Mdouble_ *__sinx, _Mdouble_ *__cosx));
 #endif
 
 #if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99

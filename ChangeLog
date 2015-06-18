@@ -1,5 +1,48 @@
 2015-06-18  Andrew Senkevich  <andrew.senkevich@intel.com>
 
+	* NEWS: Mention addition of x86_64 vector sincos.
+	* bits/libm-simd-decl-stubs.h: Added stubs for sincos.
+	* math/math.h (__MATHDECL_VEC): New macro.
+	* math/bits/mathcalls.h: Added sincos declaration with __MATHDECL_VEC.
+	* math/gen-libm-have-vector-test.sh: Added generation of sincos wrapper
+	declaration under condition.
+	* math/test-vec-loop.h (TEST_VEC_LOOP): Refactored.
+	* math/test-double-vlen2.h: Added wrapper for sincos tests, reflected
+	TEST_VEC_LOOP change.
+	* math/test-double-vlen4.h: Likewise.
+	* math/test-double-vlen8.h: Likewise.
+	* math/test-float-vlen16.h: Reflected TEST_VEC_LOOP change.
+	* math/test-float-vlen4.h: Likewise.
+	* math/test-float-vlen8.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/libmvec.abilist: New symbols added.
+	* sysdeps/x86/fpu/bits/math-vector.h: Added sincos SIMD declaration.
+	* sysdeps/x86_64/fpu/Makefile (libmvec-support): Added new files.
+	* sysdeps/x86_64/fpu/Versions: New versions added.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Regenerated.
+	* sysdeps/x86_64/fpu/multiarch/Makefile (libmvec-sysdep_routines):
+	Added build of SSE, AVX2 and AVX512 IFUNC versions.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos2_core.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos2_core_sse4.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos4_core.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos4_core_avx2.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos8_core.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos8_core_avx512.S: New file.
+	* sysdeps/x86_64/fpu/svml_d_sincos2_core.S: New file.
+	* sysdeps/x86_64/fpu/svml_d_sincos4_core.S: New file.
+	* sysdeps/x86_64/fpu/svml_d_sincos4_core_avx.S: New file.
+	* sysdeps/x86_64/fpu/svml_d_sincos8_core.S: New file.
+	* sysdeps/x86_64/fpu/svml_d_sincos_data.S: New file.
+	* sysdeps/x86_64/fpu/svml_d_sincos_data.h: New file.
+	* sysdeps/x86_64/fpu/svml_d_wrapper_impl.h: Added wrappers for sincos.
+	* sysdeps/x86_64/fpu/test-double-vlen2-wrappers.c: Vector sincos tests.
+	* sysdeps/x86_64/fpu/test-double-vlen2.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen4-avx2-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen4-avx2.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen4-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen4.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen8-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen8.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/x86_64/libmvec.abilist: New symbols added.
 	* sysdeps/x86/fpu/bits/math-vector.h: Added SIMD declaration and asm
 	redirections for powf.

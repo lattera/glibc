@@ -17,17 +17,17 @@
    <http://www.gnu.org/licenses/>.  */
 
 /* This macro is used in VECTOR_WRAPPER macros for vector tests.  */
-#define TEST_VEC_LOOP(len) 					\
+#define TEST_VEC_LOOP(vec, len) 				\
   do								\
     {								\
       for (i = 1; i < len; i++)					\
         {							\
-          if ((FLOAT) mr[0] != (FLOAT) mr[i])			\
+          if ((FLOAT) vec[0] != (FLOAT) vec[i])			\
             {							\
-              return ((FLOAT) mr[0] + 0.1);			\
+              vec[0] = (FLOAT) vec[0] + 0.1;			\
+	      break;						\
             }							\
         }							\
-      return ((FLOAT) mr[0]);					\
     }								\
   while (0)
 

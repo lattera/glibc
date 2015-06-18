@@ -1,4 +1,4 @@
-/* Tests for AVX-512 versions of vector math functions.
+/* Function sincos vectorized with AVX2, wrapper version.
    Copyright (C) 2014-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,15 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-double-vlen8.h"
+#include <sysdep.h>
+#include "svml_d_wrapper_impl.h"
 
-#define TEST_VECTOR_cos 1
-#define TEST_VECTOR_sin 1
-#define TEST_VECTOR_sincos 1
-#define TEST_VECTOR_log 1
-#define TEST_VECTOR_exp 1
-#define TEST_VECTOR_pow 1
+	.text
+ENTRY (_ZGVdN4vvv_sincos)
+WRAPPER_IMPL_AVX_fFF _ZGVbN2vvv_sincos
+END (_ZGVdN4vvv_sincos)
 
-#define REQUIRE_AVX512F
-
-#include "libm-test.c"
+#ifndef USE_MULTIARCH
+ libmvec_hidden_def (_ZGVdN4vvv_sincos)
+#endif
