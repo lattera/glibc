@@ -1,5 +1,38 @@
 2015-06-18  Andrew Senkevich  <andrew.senkevich@intel.com>
 
+	* NEWS: Mention addition of x86_64 vector sincosf.
+	* math/test-float-vlen16.h: Added wrapper for sincosf tests.
+	* math/test-float-vlen4.h: Likewise.
+	* math/test-float-vlen8.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/libmvec.abilist: New symbols added.
+	* sysdeps/x86/fpu/bits/math-vector.h: Added sincosf SIMD declaration.
+	* sysdeps/x86_64/fpu/Makefile (libmvec-support): Added new files.
+	* sysdeps/x86_64/fpu/Versions: New versions added.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Regenerated.
+	* sysdeps/x86_64/fpu/multiarch/Makefile (libmvec-sysdep_routines):
+	Added build of SSE, AVX2 and AVX512 IFUNC versions.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf16_core.S
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf16_core_avx512.S
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf4_core.S
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf4_core_sse4.S
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf8_core.S
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf8_core_avx2.S
+	* sysdeps/x86_64/fpu/svml_s_sincosf16_core.S
+	* sysdeps/x86_64/fpu/svml_s_sincosf4_core.S
+	* sysdeps/x86_64/fpu/svml_s_sincosf8_core.S
+	* sysdeps/x86_64/fpu/svml_s_sincosf8_core_avx.S
+	* sysdeps/x86_64/fpu/svml_s_sincosf_data.S: New file.
+	* sysdeps/x86_64/fpu/svml_s_sincosf_data.h: New file.
+	* sysdeps/x86_64/fpu/svml_s_wrapper_impl.h: Added 3 argument wrappers.
+	* sysdeps/x86_64/fpu/test-float-vlen16.c: : Vector sincosf tests.
+	* sysdeps/x86_64/fpu/test-float-vlen16-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen4-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen4.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen8-avx2-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen8-avx2.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen8-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen8.c: Likewise.
+
 	* NEWS: Mention addition of x86_64 vector sincos.
 	* bits/libm-simd-decl-stubs.h: Added stubs for sincos.
 	* math/math.h (__MATHDECL_VEC): New macro.

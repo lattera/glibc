@@ -1,4 +1,4 @@
-/* Tests for AVX2 ISA versions of vector math functions.
+/* Function sincosf vectorized with SSE2.
    Copyright (C) 2014-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,18 +16,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-float-vlen8.h"
 
-#undef VEC_SUFF
-#define VEC_SUFF _vlen8_avx2
+#include <sysdep.h>
+#include "svml_s_wrapper_impl.h"
 
-#define TEST_VECTOR_cosf 1
-#define TEST_VECTOR_sinf 1
-#define TEST_VECTOR_sincosf 1
-#define TEST_VECTOR_logf 1
-#define TEST_VECTOR_expf 1
-#define TEST_VECTOR_powf 1
+	.text
+ENTRY (_ZGVbN4vvv_sincosf)
+WRAPPER_IMPL_SSE2_fFF sincosf
+END (_ZGVbN4vvv_sincosf)
 
-#define REQUIRE_AVX2
-
-#include "libm-test.c"
+#ifndef USE_MULTIARCH
+ libmvec_hidden_def (_ZGVbN4vvv_sincosf)
+#endif

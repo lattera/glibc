@@ -44,6 +44,7 @@
 
 #define WRAPPER_DECL(function) extern FLOAT function (FLOAT);
 #define WRAPPER_DECL_ff(function) extern FLOAT function (FLOAT, FLOAT);
+#define WRAPPER_DECL_fFF(function) extern void function (FLOAT, FLOAT *, FLOAT *);
 
 // Wrapper from scalar to vector function with vector length 4.
 #define VECTOR_WRAPPER(scalar_func, vector_func) \
@@ -70,4 +71,20 @@ FLOAT scalar_func (FLOAT x, FLOAT y)		\
   VEC_TYPE mr = vector_func (mx, my);		\
   TEST_VEC_LOOP (mr, 4);			\
   return ((FLOAT) mr[0]);			\
+}
+
+// Wrapper from scalar 3 argument function to vector one.
+#define VECTOR_WRAPPER_fFF(scalar_func, vector_func) 	\
+extern void vector_func (VEC_TYPE, VEC_TYPE *, VEC_TYPE *);	\
+void scalar_func (FLOAT x, FLOAT * r, FLOAT * r1)		\
+{						\
+  int i;					\
+  VEC_TYPE mx, mr, mr1;				\
+  INIT_VEC_LOOP (mx, x, 4);			\
+  vector_func (mx, &mr, &mr1);			\
+  TEST_VEC_LOOP (mr, 4);			\
+  TEST_VEC_LOOP (mr1, 4);			\
+  *r = (FLOAT) mr[0];				\
+  *r1 = (FLOAT) mr1[0];				\
+  return;					\
 }
