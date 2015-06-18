@@ -1,5 +1,29 @@
 2015-06-18  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16350]
+	* sysdeps/i386/fpu/s_asinh.S (__asinh): Force underflow exception
+	for arguments with small absolute value.
+	* sysdeps/i386/fpu/s_asinhf.S (__asinhf): Likewise.
+	* sysdeps/i386/fpu/s_asinhl.S (__asinhl): Likewise.
+	* sysdeps/ieee754/dbl-64/s_asinh.c: Include <float.h>.
+	(__asinh): Force underflow exception for arguments with small
+	absolute value.
+	* sysdeps/ieee754/flt-32/s_asinhf.c: Include <float.h>.
+	(__asinhf): Force underflow exception for arguments with small
+	absolute value.
+	* sysdeps/ieee754/ldbl-128/s_asinhl.c: Include <float.h>.
+	(__asinhl): Force underflow exception for arguments with small
+	absolute value.
+	* sysdeps/ieee754/ldbl-128ibm/s_asinhl.c: Include <float.h>.
+	(__asinhl): Force underflow exception for arguments with small
+	absolute value.
+	* sysdeps/ieee754/ldbl-96/s_asinhl.c: Include <float.h>.
+	(__asinhl): Force underflow exception for arguments with small
+	absolute value.
+	* math/auto-libm-test-in: Do not mark underflow exceptions as
+	possibly missing for bug 16350.
+	* math/auto-libm-test-out: Regenerated.
+
 	* include/bits/ipc.h: Remove file.
 	* conform/Makefile (test-xfail-XPG3/sys/msg.h/conform): Remove
 	variable.

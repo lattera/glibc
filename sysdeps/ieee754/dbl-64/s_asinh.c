@@ -21,6 +21,7 @@
  *		 := sign(x)*log1p(|x| + x^2/(1 + sqrt(1+x^2)))
  */
 
+#include <float.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -38,6 +39,11 @@ __asinh (double x)
   ix = hx & 0x7fffffff;
   if (__glibc_unlikely (ix < 0x3e300000))                  /* |x|<2**-28 */
     {
+      if (fabs (x) < DBL_MIN)
+	{
+	  double force_underflow = x * x;
+	  math_force_eval (force_underflow);
+	}
       if (huge + x > one)
 	return x;                       /* return x inexact except 0 */
     }

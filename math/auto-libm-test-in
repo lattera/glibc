@@ -218,13 +218,12 @@ asinh 0x7.d8e5a8p-4
 asinh -0x7.63a06320c42e4p-4
 asinh 0x6.f4a93p-4
 asinh -0x7.88bcc8p-4
-# Bug 16350: underflow exception may be missing.
-asinh 0x1p-500 missing-underflow
-asinh 0x1p-5000 missing-underflow
-asinh min missing-underflow
-asinh -min missing-underflow
-asinh min_subnorm missing-underflow
-asinh -min_subnorm missing-underflow
+asinh 0x1p-500
+asinh 0x1p-5000
+asinh min
+asinh -min
+asinh min_subnorm
+asinh -min_subnorm
 asinh max no-test-inline
 asinh -max no-test-inline
 

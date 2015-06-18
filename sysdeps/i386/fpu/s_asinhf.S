@@ -100,7 +100,16 @@ ENTRY(__asinhf)
 4:	fld	%st			// x : x
 	faddl	MO(huge)		// huge+x : x
 	fstp	%st(0)			// x
-	ret
+	cmpl	$0x00800000, %eax
+	jae	8f
+	subl	$4, %esp
+	cfi_adjust_cfa_offset (4)
+	fld	%st(0)
+	fmul	%st(0)
+	fstps	(%esp)
+	addl	$4, %esp
+	cfi_adjust_cfa_offset (-4)
+8:	ret
 
 	// |x| > 2^14 => y = sign(x) * (log(|x|) + log(2))
 	.align ALIGNARG(4)
