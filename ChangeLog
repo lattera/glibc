@@ -1,3 +1,9 @@
+2015-06-19  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	* sysdeps/ieee754/ldbl-opt/s_sin.c (__DECL_SIMD_sincos_disable,
+	__DECL_SIMD_sincos_disablef, __DECL_SIMD_sincos_disablel): Added empty
+	definitions for proper unfolding of __MATHDECL_VEC.
+
 2015-06-19  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* benchtests/bench-strcoll.c:
