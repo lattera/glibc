@@ -1,5 +1,11 @@
 2015-06-19  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* benchtests/bench-strcoll.c:
+	Include string.h.
+	(main): Remove unused variable res.
+
+2015-06-19  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* timezone/Makefile (%/UTC %/Universal):
 	Generate test-result files for UTC and Universal.
 
