@@ -115,7 +115,8 @@ macro MOREDATA
 function int isastream (int)
 function int getmsg (int, struct strbuf*, struct strbuf*, int*)
 function int getpmsg (int, struct strbuf*, struct strbuf*, int*, int*)
-function int ioctl (int, int, ...)
+// Bug 14362: wrong type for ioctl.
+xfail-function int ioctl (int, int, ...)
 function int putmsg (int, const struct strbuf*, const struct strbuf*, int)
 function int putpmsg (int, const struct strbuf*, const struct strbuf*, int, int)
 function int fattach (int, const char*)

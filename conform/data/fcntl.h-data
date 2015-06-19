@@ -113,10 +113,11 @@ function int posix_fallocate (int, off_t, off_t)
 #endif
 
 #if defined XOPEN2K8 || defined POSIX2008
-constant O_TTY_INIT
+// Bug 18228: O_TTY_INIT, O_EXEC, O_SEARCH missing.
+xfail-constant O_TTY_INIT
 constant O_CLOEXEC
-constant O_EXEC
-constant O_SEARCH
+xfail-constant O_EXEC
+xfail-constant O_SEARCH
 constant O_DIRECTORY
 constant O_NOFOLLOW
 constant F_DUPFD_CLOEXEC

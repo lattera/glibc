@@ -5,7 +5,8 @@ element {struct ipc_perm} uid_t uid
 element {struct ipc_perm} gid_t gid
 element {struct ipc_perm} uid_t cuid
 element {struct ipc_perm} gid_t cgid
-element {struct ipc_perm} mode_t mode
+// Bug 18231: wrong type for mode member.
+xfail-element {struct ipc_perm} mode_t mode
 
 type uid_t
 type gid_t

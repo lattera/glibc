@@ -6,7 +6,10 @@ element {struct utmpx} char ut_id []
 element {struct utmpx} char ut_line []
 element {struct utmpx} pid_t ut_pid
 element {struct utmpx} {short int} ut_type
-element {struct utmpx} {struct timeval} ut_tv
+// Layout chosen to be compatible on 32-bit and 64-bit bi-arch
+// systems, which is incompatible with the standard type (see bug
+// 18235).
+xfail-element {struct utmpx} {struct timeval} ut_tv
 
 type pid_t
 

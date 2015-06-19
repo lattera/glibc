@@ -1,3 +1,46 @@
+2015-06-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/conformtest.pl ($xerrors): New variable.
+	(note_error): New function.
+	(compiletest): New argument $xfail.  Use not_error.
+	(runtest): Likewise.
+	(top level): Handle xfail- lines.  Update calls to compiletest and
+	runtest.  Handle xfail- and optional- in headers listed with
+	allow-header.
+	* conform/data/fcntl.h-data (O_TTY_INIT): Use xfail-.
+	(O_EXEC): Likewise.
+	(O_SEARCH): Likewise.
+	* conform/data/stropts.h-data (ioctl): Likewise.
+	* conform/data/sys/ipc.h-data (ipc_perm.mode): Likewise.
+	* conform/data/sys/sem.h-data (semid_ds.sem_nsems): Likewise.
+	* conform/data/sys/socket.h-data (msghdr.msg_iovlen): Likewise.
+	(msghdr.msg_controllen): Likewise.
+	(cmsghdr.cmsg_len): Likewise.
+	* conform/data/utmpx.h-data (utmpx.ut_tv): Likewise.
+	* conform/Makefile (test-xfail-XPG3/sys/ipc.h/conform): Remove
+	variable.
+	(test-xfail-XPG3/sys/sem.h/conform): Likewise.
+	(test-xfail-XPG4/stropts.h/conform): Likewise.
+	(test-xfail-XPG4/sys/ipc.h/conform): Likewise.
+	(test-xfail-XPG4/sys/sem.h/conform): Likewise.
+	(test-xfail-XPG4/sys/socket.h/conform): Likewise.
+	(test-xfail-UNIX98/stropts.h/conform): Likewise.
+	(test-xfail-UNIX98/sys/ipc.h/conform): Likewise.
+	(test-xfail-UNIX98/sys/sem.h/conform): Likewise.
+	(test-xfail-UNIX98/sys/socket.h/conform): Likewise.
+	(test-xfail-XOPEN2K/stropts.h/conform): Likewise.
+	(test-xfail-XOPEN2K/sys/ipc.h/conform): Likewise.
+	(test-xfail-XOPEN2K/sys/sem.h/conform): Likewise.
+	(test-xfail-XOPEN2K/sys/socket.h/conform): Likewise.
+	(test-xfail-XOPEN2K/utmpx.h/conform): Likewise.
+	(test-xfail-POSIX2008/fcntl.h/conform): Likewise.
+	(test-xfail-POSIX2008/stropts.h/conform): Likewise.
+	(test-xfail-XOPEN2K8/fcntl.h/conform): Likewise.
+	(test-xfail-XOPEN2K8/stropts.h/conform): Likewise.
+	(test-xfail-XOPEN2K8/sys/ipc.h/conform): Likewise.
+	(test-xfail-XOPEN2K8/sys/sem.h/conform): Likewise.
+	(test-xfail-XOPEN2K8/sys/socket.h/conform): Likewise.
+
 2015-06-19  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	* sysdeps/ieee754/ldbl-opt/s_sin.c (__DECL_SIMD_sincos_disable,
