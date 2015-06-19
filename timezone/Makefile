@@ -107,6 +107,12 @@ $(testdata)/Etc/UTC: etcetera $(zic-deps)
 # Two separate targets built separately can collide if in parallel.
 %/UTC %/Universal: simplebackw $(zic-deps) %/Etc/UTC
 	$(build-testdata)
+	{ test -r $(@D)/Universal.test-result \
+	&& cp $(@D)/Universal.test-result $(@D)/UTC.test-result \
+	&& sed -i 's/Universal/UTC/' $(@D)/UTC.test-result ; exit 0; }
+	{ test -r $(@D)/UTC.test-result \
+	&& cp $(@D)/UTC.test-result $(@D)/Universal.test-result \
+	&& sed -i 's/UTC/Universal/' $(@D)/Universal.test-result ; exit 0; }
 $(testdata)/%/Berlin $(testdata)/%/London: europe $(zic-deps)
 	$(build-testdata)
 $(testdata)/Australia/Melbourne: australasia $(zic-deps)
