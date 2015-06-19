@@ -1,5 +1,11 @@
 2015-06-19  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/sys/select.h-data [XOPEN2K8] (pselect): Expect.
+	* conform/Makefile (test-xfail-XOPEN2K8/sys/select.h/conform):
+	Remove variable.
+	(test-xfail-XOPEN2K8/sys/time.h/conform): Likewise.
+	(test-xfail-XOPEN2K8/utmpx.h/conform).
+
 	* conform/conformtest.pl ($xerrors): New variable.
 	(note_error): New function.
 	(compiletest): New argument $xfail.  Use not_error.

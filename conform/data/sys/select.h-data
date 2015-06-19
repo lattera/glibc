@@ -24,7 +24,7 @@ macro FD_ZERO
 
 macro FD_SETSIZE
 
-#if defined XOPEN2K || defined POSIX2008
+#if defined XOPEN2K || defined POSIX2008 || defined XOPEN2K8
 function int pselect (int, fd_set*, fd_set*, fd_set*, const struct timespec*, const sigset_t*)
 #endif
 function int select (int, fd_set*, fd_set*, fd_set*, struct timeval*)
