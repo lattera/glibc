@@ -1191,6 +1191,7 @@ exp -7.4444006192138124e+02
 exp -0x1.75f113c30b1c8p+9
 exp -max
 exp -11342.8125
+exp -0x2.c5b2319c4843acc0p12
 exp 0x1p-10
 exp -0x1p-10
 exp 0x1p-20
@@ -1223,8 +1224,8 @@ exp10 305
 exp10 -305
 # GCC bug 59666: results on directed rounding may be incorrect.
 exp10 4932 xfail-rounding:ldbl-128ibm
-# Bug 16361: underflow exception may be misssing
-exp10 -4932 missing-underflow:ldbl-96-intel:x86 missing-underflow:ldbl-96-intel:x86_64
+exp10 -4932
+exp10 -0x1.343793004f503232p12
 # GCC bug 59666: results on directed rounding may be incorrect.
 exp10 1e5 xfail-rounding:ldbl-128ibm
 exp10 -1e5
