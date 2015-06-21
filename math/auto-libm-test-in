@@ -1364,6 +1364,10 @@ expm1 0x5.fb8dc64e91a74p-4
 expm1 0x3.735f497c4e67535cp-4
 # Bug 16353: underflow exception may be missing
 expm1 0x4.0000000000000028p-16384 missing-underflow
+expm1 min missing-underflow
+expm1 -min missing-underflow
+expm1 min_subnorm missing-underflow
+expm1 -min_subnorm missing-underflow
 
 fma 1.0 2.0 3.0
 fma 1.25 0.75 0.0625

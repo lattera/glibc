@@ -1,5 +1,13 @@
 2015-06-21  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18569]
+	* sysdeps/i386/fpu/e_expl.S (IEEE754_EXPL) [USE_AS_EXPM1L]: Force
+	underflow and return argument in case of subnormal argument.
+	* sysdeps/x86_64/fpu/e_expl.S (IEEE754_EXPL) [USE_AS_EXPM1L]:
+	Likewise.
+	* math/auto-libm-test-in: Add more tests of expm1.
+	* math/auto-libm-test-out: Regenerated.
+
 	[BZ #16361]
 	* sysdeps/i386/fpu/e_expl.S [!USE_AS_EXPM1L] (cmin): New object.
 	(IEEE754_EXPL) [!USE_AS_EXPM1L]: Force underflow exception for

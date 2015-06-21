@@ -122,6 +122,12 @@ ENTRY(IEEE754_EXPL)
 	   normal.  */
 	cmpl	$0x0001, %eax
 	jge	2f
+	/* Force underflow and return the argument, to avoid wrong signs
+	   of zero results from the code below in some rounding modes.  */
+	fld	%st
+	fmul	%st
+	fstp	%st
+	jmp	2f
 #else
 	movzwl	4+8(%esp), %eax
 	andl	$0x7fff, %eax
