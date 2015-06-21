@@ -2,10 +2,10 @@
 
 	[BZ #16361]
 	* sysdeps/i386/fpu/e_expl.S [!USE_AS_EXPM1L] (cmin): New object.
-	[!USE_AS_EXPM1L] (IEEE754_EXPL): Force underflow exception for
+	(IEEE754_EXPL) [!USE_AS_EXPM1L]: Force underflow exception for
 	tiny results.
 	* sysdeps/x86_64/fpu/e_expl.S [!USE_AS_EXPM1L] (cmin): New object.
-	[!USE_AS_EXPM1L] (IEEE754_EXPL): Force underflow exception for
+	(IEEE754_EXPL) [!USE_AS_EXPM1L]: Force underflow exception for
 	tiny results.
 	* math/auto-libm-test-in: Add more tests of exp and exp10.  Do not
 	mark underflow exceptions as possibly missing for bug 16361.
