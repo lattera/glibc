@@ -421,7 +421,7 @@ _res_hconf_reorder_addrs (struct hostent *hp)
       /* Get lock.  */
       __libc_lock_lock (lock);
 
-      /* Recheck, somebody else might have done the work by done.  */
+      /* Recheck, somebody else might have done the work by now.  */
       if (num_ifs <= 0)
 	{
 	  int new_num_ifs = 0;
