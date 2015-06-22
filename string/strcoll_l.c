@@ -315,8 +315,11 @@ STRCOLL (const STRING_TYPE *s1, const STRING_TYPE *s2, __locale_t l)
   int result = 0, rule = 0;
 
   coll_seq seq1, seq2;
-  memset (&seq1, 0, sizeof (seq1));
-  seq2 = seq1;
+  seq1.len = 0;
+  seq1.idxmax = 0;
+  seq1.rule = 0;
+  seq2.len = 0;
+  seq2.idxmax = 0;
 
   for (int pass = 0; pass < nrules; ++pass)
     {

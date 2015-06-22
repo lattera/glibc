@@ -1,5 +1,7 @@
 2015-06-22  Leonhard Holz  <leonhard.holz@web.de>
 
+	* string/strcoll_l.c (STRCOLL): Remove unnecessary memset.
+
 	* string/strcoll_l.c: Remove unused struct element idxnow.
 
 2015-06-21  Joseph Myers  <joseph@codesourcery.com>
