@@ -37,6 +37,13 @@ one:	.double 1.0
 l2e:	.tfloat 1.442695040888963407359924681002
 	ASM_SIZE_DIRECTIVE(l2e)
 
+	.section .rodata.cst8,"aM",@progbits,8
+
+	.p2align 3
+	.type dbl_min,@object
+dbl_min:	.byte 0, 0, 0, 0, 0, 0, 0x10, 0
+	ASM_SIZE_DIRECTIVE(dbl_min)
+
 #ifdef PIC
 #define MO(op) op##@GOTOFF(%edx)
 #else
@@ -74,6 +81,21 @@ ENTRY(__expm1)
 #ifdef	PIC
 	LOAD_PIC_REG (dx)
 #endif
+	fld	%st
+	fabs
+	fcoml	MO(dbl_min)
+	fstp	%st
+	fnstsw
+	sahf
+	jae	5f
+	subl	$8, %esp
+	cfi_adjust_cfa_offset (8)
+	fld	%st(0)
+	fmul	%st(0)
+	fstpl	(%esp)
+	addl	$8, %esp
+	cfi_adjust_cfa_offset (-8)
+	ret
 
 5:	fldt	MO(l2e)		// log2(e) : x
 	fmulp			// log2(e)*x

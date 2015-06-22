@@ -1,3 +1,24 @@
+2015-06-22  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16353]
+	* sysdeps/i386/fpu/s_expm1.S (dbl_min): New object.
+	(__expm1): Force underflow exception for arguments with small
+	absolute value.
+	* sysdeps/i386/fpu/s_expm1f.S (flt_min): New object.
+	(__expm1f): Force underflow exception for arguments with small
+	absolute value.
+	* sysdeps/ieee754/dbl-64/s_expm1.c: Include <float.h>.
+	(__expm1): Force underflow exception for arguments with small
+	absolute value.
+	* sysdeps/ieee754/flt-32/s_expm1f.c: Include <float.h>.
+	(__expm1f): Force underflow exception for arguments with small
+	absolute value.
+	* sysdeps/ieee754/dbl-64/wordsize-64/e_cosh.c (__ieee754_cosh):
+	Check for small arguments before calling __expm1.
+	* math/auto-libm-test-in: Do not mark underflow exceptions as
+	possibly missing for bug 16353.
+	* math/auto-libm-test-out: Regenerated.
+
 2015-06-22  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #18513]

@@ -50,9 +50,10 @@ __ieee754_cosh (double x)
 	if (ix < 0x40360000) {
 	    /* |x| in [0,0.5*ln2], return 1+expm1(|x|)^2/(2*exp(|x|)) */
 		if(ix<0x3fd62e43) {
+		    if (ix<0x3c800000)			/* cosh(tiny) = 1 */
+		      return one;
 		    t = __expm1(fabs(x));
 		    w = one+t;
-		    if (ix<0x3c800000) return w;	/* cosh(tiny) = 1 */
 		    return one+(t*t)/(w+w);
 		}
 

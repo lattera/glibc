@@ -14,6 +14,7 @@
  */
 
 #include <errno.h>
+#include <float.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -80,6 +81,11 @@ __expm1f(float x)
 	    c  = (hi-x)-lo;
 	}
 	else if(hx < 0x33000000) {	/* when |x|<2**-25, return x */
+	    if (fabsf (x) < FLT_MIN)
+	      {
+		float force_underflow = x * x;
+		math_force_eval (force_underflow);
+	      }
 	    t = huge+x;	/* return x with inexact flags when x!=0 */
 	    return x - (t-(huge+x));
 	}
