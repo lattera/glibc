@@ -62,7 +62,6 @@ typedef struct
   int len;			/* Length of the current sequence.  */
   size_t val;			/* Position of the sequence relative to the
 				   previous non-ignored sequence.  */
-  size_t idxnow;		/* Current index in sequences.  */
   size_t idxmax;		/* Maximum index in sequences.  */
   size_t idxcnt;		/* Current count of indices.  */
   size_t backw;			/* Current Backward sequence index.  */
