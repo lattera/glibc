@@ -144,7 +144,6 @@ $(objpfx)test-double.o: $(objpfx)libm-test.stmp
 $(objpfx)test-idouble.o: $(objpfx)libm-test.stmp
 $(objpfx)test-ldouble.o: $(objpfx)libm-test.stmp
 $(objpfx)test-ildoubl.o: $(objpfx)libm-test.stmp
-$(addprefix $(objpfx), $(addsuffix .o, $(libm-vec-tests))): $(objpfx)libm-test.stmp
 endif
 
 libm-test-fast-math-cflags = -fno-builtin -D__FAST_MATH__ -DTEST_FAST_MATH
@@ -196,6 +195,9 @@ extra-objs += libieee.a ieee-math.o
 include ../Rules
 
 ifneq (no,$(PERL))
+# This must come after the inclusion of sysdeps Makefiles via Rules.
+$(addprefix $(objpfx), $(addsuffix .o, $(libm-vec-tests))): $(objpfx)libm-test.stmp
+
 # Run the math programs to automatically generate ULPs files.
 .PHONY: regen-ulps
 

@@ -1,3 +1,9 @@
+2015-06-23  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/Makefile [$(PERL) != no]
+	($(addprefix $(objpfx), $(addsuffix .o, $(libm-vec-tests)))): Move
+	dependency on libm-test.stmp below the inclusion of Rules.
+
 2015-06-23  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	* sysdeps/x86_64/fpu/Makefile (libmvec-support): Fixed files list.
