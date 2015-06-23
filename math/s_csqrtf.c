@@ -118,12 +118,28 @@ __csqrtf (__complex__ float x)
 	  if (__real__ x > 0)
 	    {
 	      r = __ieee754_sqrtf (0.5f * (d + __real__ x));
-	      s = 0.5f * (__imag__ x / r);
+	      if (scale == 1 && fabsf (__imag__ x) < 1.0f)
+		{
+		  /* Avoid possible intermediate underflow.  */
+		  s = __imag__ x / r;
+		  r = __scalbnf (r, scale);
+		  scale = 0;
+		}
+	      else
+		s = 0.5f * (__imag__ x / r);
 	    }
 	  else
 	    {
 	      s = __ieee754_sqrtf (0.5f * (d - __real__ x));
-	      r = fabsf (0.5f * (__imag__ x / s));
+	      if (scale == 1 && fabsf (__imag__ x) < 1.0f)
+		{
+		  /* Avoid possible intermediate underflow.  */
+		  r = fabsf (__imag__ x / s);
+		  s = __scalbnf (s, scale);
+		  scale = 0;
+		}
+	      else
+		r = fabsf (0.5f * (__imag__ x / s));
 	    }
 
 	  if (scale)

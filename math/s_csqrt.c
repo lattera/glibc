@@ -118,12 +118,28 @@ __csqrt (__complex__ double x)
 	  if (__real__ x > 0)
 	    {
 	      r = __ieee754_sqrt (0.5 * (d + __real__ x));
-	      s = 0.5 * (__imag__ x / r);
+	      if (scale == 1 && fabs (__imag__ x) < 1.0)
+		{
+		  /* Avoid possible intermediate underflow.  */
+		  s = __imag__ x / r;
+		  r = __scalbn (r, scale);
+		  scale = 0;
+		}
+	      else
+		s = 0.5 * (__imag__ x / r);
 	    }
 	  else
 	    {
 	      s = __ieee754_sqrt (0.5 * (d - __real__ x));
-	      r = fabs (0.5 * (__imag__ x / s));
+	      if (scale == 1 && fabs (__imag__ x) < 1.0)
+		{
+		  /* Avoid possible intermediate underflow.  */
+		  r = fabs (__imag__ x / s);
+		  s = __scalbn (s, scale);
+		  scale = 0;
+		}
+	      else
+		r = fabs (0.5 * (__imag__ x / s));
 	    }
 
 	  if (scale)

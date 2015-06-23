@@ -1108,6 +1108,8 @@ ildouble: 2
 ldouble: 2
 
 Function: Imaginary part of "csqrt":
+double: 1
+idouble: 1
 ildouble: 2
 ldouble: 2
 

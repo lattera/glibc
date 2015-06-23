@@ -118,12 +118,28 @@ __csqrtl (__complex__ long double x)
 	  if (__real__ x > 0)
 	    {
 	      r = __ieee754_sqrtl (0.5L * (d + __real__ x));
-	      s = 0.5L * (__imag__ x / r);
+	      if (scale == 1 && fabsl (__imag__ x) < 1.0L)
+		{
+		  /* Avoid possible intermediate underflow.  */
+		  s = __imag__ x / r;
+		  r = __scalbnl (r, scale);
+		  scale = 0;
+		}
+	      else
+		s = 0.5L * (__imag__ x / r);
 	    }
 	  else
 	    {
 	      s = __ieee754_sqrtl (0.5L * (d - __real__ x));
-	      r = fabsl (0.5L * (__imag__ x / s));
+	      if (scale == 1 && fabsl (__imag__ x) < 1.0L)
+		{
+		  /* Avoid possible intermediate underflow.  */
+		  r = fabsl (__imag__ x / s);
+		  s = __scalbnl (s, scale);
+		  scale = 0;
+		}
+	      else
+		r = fabsl (0.5L * (__imag__ x / s));
 	    }
 
 	  if (scale)

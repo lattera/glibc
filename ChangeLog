@@ -1,5 +1,14 @@
 2015-06-23  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18371]
+	* math/s_csqrt.c (__csqrt): Avoid multiplication by 0.5 where
+	intermediate but not final result might underflow.
+	* math/s_csqrtf.c (__csqrtf): Likewise.
+	* math/s_csqrtl.c (__csqrtl): Likewise.
+	* math/auto-libm-test-in: Add more tests of csqrt.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+
 	[BZ #18219]
 	* sysdeps/ieee754/dbl-64/e_exp2.c (__ieee754_exp2): Reduce
 	threshold on absolute value of exponent for which scaling is used.
