@@ -17,7 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include "svml_d_cos_data.h"
+#include "svml_d_trig_data.h"
 #include "svml_d_wrapper_impl.h"
 
 	.text
@@ -45,7 +45,7 @@ WRAPPER_IMPL_AVX512 _ZGVdN4v_cos
         cfi_def_cfa_register (%rbp)
         andq      $-64, %rsp
         subq      $1280, %rsp
-        movq      __svml_dcos_data@GOTPCREL(%rip), %rax
+        movq      __svml_d_trig_data@GOTPCREL(%rip), %rax
 
 /* R = X - N*Pi1 */
         vmovaps   %zmm0, %zmm7
@@ -259,7 +259,7 @@ WRAPPER_IMPL_AVX512 _ZGVdN4v_cos
         cfi_def_cfa_register (%rbp)
         andq      $-64, %rsp
         subq      $1280, %rsp
-        movq      __svml_dcos_data@GOTPCREL(%rip), %rax
+        movq      __svml_d_trig_data@GOTPCREL(%rip), %rax
 
 /* R = X - N*Pi1 */
         vmovaps   %zmm0, %zmm8

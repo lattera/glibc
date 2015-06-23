@@ -17,7 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include "svml_d_sin_data.h"
+#include "svml_d_trig_data.h"
 
 	.text
 ENTRY (_ZGVdN4v_sin_avx2)
@@ -40,7 +40,7 @@ ENTRY (_ZGVdN4v_sin_avx2)
         cfi_def_cfa_register (%rbp)
         andq      $-64, %rsp
         subq      $448, %rsp
-        movq      __svml_dsin_data@GOTPCREL(%rip), %rax
+        movq      __svml_d_trig_data@GOTPCREL(%rip), %rax
         vmovdqa   %ymm0, %ymm4
         vmovupd __dAbsMask(%rax), %ymm2
         vmovupd __dInvPI(%rax), %ymm6
@@ -80,17 +80,17 @@ ENTRY (_ZGVdN4v_sin_avx2)
 
 /* R = R^SignRes : update sign of reduced argument */
         vxorpd    %ymm5, %ymm1, %ymm6
-        vmovupd __dC7(%rax), %ymm1
-        vfmadd213pd __dC6(%rax), %ymm0, %ymm1
-        vfmadd213pd __dC5(%rax), %ymm0, %ymm1
-        vfmadd213pd __dC4(%rax), %ymm0, %ymm1
+        vmovupd   __dC7_sin(%rax), %ymm1
+        vfmadd213pd __dC6_sin(%rax), %ymm0, %ymm1
+        vfmadd213pd __dC5_sin(%rax), %ymm0, %ymm1
+        vfmadd213pd __dC4_sin(%rax), %ymm0, %ymm1
 
 /* Poly = C3+R2*(C4+R2*(C5+R2*(C6+R2*C7))) */
-        vfmadd213pd __dC3(%rax), %ymm0, %ymm1
+        vfmadd213pd __dC3_sin(%rax), %ymm0, %ymm1
 
 /* Poly = R2*(C1+R2*(C2+R2*Poly)) */
-        vfmadd213pd __dC2(%rax), %ymm0, %ymm1
-        vfmadd213pd __dC1(%rax), %ymm0, %ymm1
+        vfmadd213pd __dC2_sin(%rax), %ymm0, %ymm1
+        vfmadd213pd __dC1_sin(%rax), %ymm0, %ymm1
 
 /* SignX - sign bit of X */
         vandnpd   %ymm4, %ymm2, %ymm7

@@ -17,7 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include "svml_d_cos_data.h"
 #include "svml_d_wrapper_impl.h"
 
 	.text
