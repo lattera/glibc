@@ -32,6 +32,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <fenv.h>
 #include <float.h>
 #include <errno.h>
 
@@ -47,31 +48,14 @@ __kernel_standard_l (long double x, long double y, int type)
 {
   double dx, dy;
   struct exception exc;
+  fenv_t env;
 
-  if (isfinite (x))
-    {
-      long double ax = fabsl (x);
-      if (ax > DBL_MAX)
-	dx = __copysignl (DBL_MAX, x);
-      else if (ax > 0 && ax < DBL_MIN)
-	dx = __copysignl (DBL_MIN, x);
-      else
-	dx = x;
-    }
-  else
-    dx = x;
-  if (isfinite (y))
-    {
-      long double ay = fabsl (y);
-      if (ay > DBL_MAX)
-	dy = __copysignl (DBL_MAX, y);
-      else if (ay > 0 && ay < DBL_MIN)
-	dy = __copysignl (DBL_MIN, y);
-      else
-	dy = y;
-    }
-  else
-    dy = y;
+  feholdexcept (&env);
+  dx = x;
+  dy = y;
+  math_force_eval (dx);
+  math_force_eval (dy);
+  fesetenv (&env);
 
   switch (type)
     {

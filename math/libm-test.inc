@@ -7115,12 +7115,16 @@ static const struct test_ff_f_data fmod_test_data[] =
 
     /* fmod (+inf, y) == qNaN plus invalid exception.  */
     TEST_ff_f (fmod, plus_infty, 3, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (fmod, plus_infty, -1.1L, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     /* fmod (-inf, y) == qNaN plus invalid exception.  */
     TEST_ff_f (fmod, minus_infty, 3, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (fmod, minus_infty, -1.1L, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     /* fmod (x, +0) == qNaN plus invalid exception.  */
     TEST_ff_f (fmod, 3, 0, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (fmod, -1.1L, 0, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     /* fmod (x, -0) == qNaN plus invalid exception.  */
     TEST_ff_f (fmod, 3, minus_zero, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (fmod, -1.1L, minus_zero, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
 
     /* fmod (x, +inf) == x for x not infinite.  */
     TEST_ff_f (fmod, 3.0, plus_infty, 3.0, NO_INEXACT_EXCEPTION),
@@ -8719,6 +8723,8 @@ static const struct test_ff_f_data remainder_test_data[] =
   {
     TEST_ff_f (remainder, 1, 0, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_ff_f (remainder, 1, minus_zero, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, -1.1L, 0, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, -1.1L, minus_zero, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_ff_f (remainder, plus_zero, plus_zero, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_ff_f (remainder, plus_zero, minus_zero, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_ff_f (remainder, minus_zero, plus_zero, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
@@ -8726,12 +8732,14 @@ static const struct test_ff_f_data remainder_test_data[] =
     TEST_ff_f (remainder, plus_infty, minus_zero, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_ff_f (remainder, plus_infty, 0, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_ff_f (remainder, plus_infty, 1, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, plus_infty, 1.1L, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_ff_f (remainder, plus_infty, 2, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_ff_f (remainder, plus_infty, plus_infty, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_ff_f (remainder, plus_infty, minus_infty, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_ff_f (remainder, minus_infty, minus_zero, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_ff_f (remainder, minus_infty, 0, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_ff_f (remainder, minus_infty, 1, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_f (remainder, minus_infty, 1.1L, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_ff_f (remainder, minus_infty, 2, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_ff_f (remainder, minus_infty, plus_infty, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_ff_f (remainder, minus_infty, minus_infty, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
@@ -9507,6 +9515,7 @@ static const struct test_f_f_data sqrt_test_data[] =
 
     /* sqrt (x) == qNaN plus invalid exception for x < 0.  */
     TEST_f_f (sqrt, -1, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (sqrt, -1.1L, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (sqrt, -max_value, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (sqrt, minus_infty, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
 

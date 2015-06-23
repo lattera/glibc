@@ -1,3 +1,15 @@
+2015-06-23  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18245]
+	[BZ #18583]
+	* sysdeps/ieee754/k_standardl.c: Include <fenv.h>.
+	(__kernel_standard_l): Use feholdexcept and fesetenv around
+	conversion to double instead of special-casing overflow and
+	underflow.
+	* math/libm-test.inc (fmod_test_data): Add more tests.
+	(remainder_test_data): Likewise.
+	(sqrt_test_data): Likewise.
+
 2015-06-23  Torvald Riegel  <triegel@redhat.com>
 
 	[BZ #17403]
