@@ -378,7 +378,7 @@ __nscd_acquire_maplock (volatile struct locked_map_ptr *mapptr)
       if (__glibc_unlikely (++cnt > 5))
 	return false;
 
-      atomic_delay ();
+      atomic_spin_nop ();
     }
 
   return true;

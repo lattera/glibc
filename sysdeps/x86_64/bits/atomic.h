@@ -410,7 +410,7 @@ typedef uintmax_t uatomic_max_t;
      __result; })
 
 
-#define atomic_delay() asm ("rep; nop")
+#define atomic_spin_nop() asm ("rep; nop")
 
 
 #define __arch_and_body(lock, mem, mask) \

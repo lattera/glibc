@@ -754,9 +754,10 @@ void __atomic_link_error (void);
 
 #endif /* !USE_ATOMIC_COMPILER_BUILTINS  */
 
-
-#ifndef atomic_delay
-# define atomic_delay() do { /* nothing */ } while (0)
+/* This operation does not affect synchronization semantics but can be used
+   in the body of a spin loop to potentially improve its efficiency.  */
+#ifndef atomic_spin_nop
+# define atomic_spin_nop() do { /* nothing */ } while (0)
 #endif
 
 #endif	/* atomic.h */

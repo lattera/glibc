@@ -1,3 +1,26 @@
+2015-06-30  Torvald Riegel  <triegel@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h (BUSY_WAIT_NOP): Remove.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h (BUSY_WAIT_NOP):
+	Likewise.
+	* sysdeps/i386/i486/bits/atomic.h (atomic_delay): Rename to
+	atomic_spin_nop.
+	* sysdeps/x86_64/bits/atomic.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h (BUSY_WAIT_NOP): Rename
+	to atomic_spin_nop and move ...
+	* sysdeps/sparc/sparc32/sparcv9/bits/atomic.h (atomic_spin_nop):
+	... here and ...
+	* sysdeps/sparc/sparc64/bits/atomic.h: ... here.
+	* nptl/pthread_mutex_lock.c (__pthread_mutex_lock): Use
+	atomic_spin_nop instead of BUSY_WAIT_NOP.
+	* nptl/pthread_mutex_timedlock.c (__pthread_mutex_timedlock):
+	Likewise.
+	* sysdeps/nacl/lll_timedwait_tid.c (__lll_timedwait_tid): Likewise.
+	* sysdeps/nacl/lowlevellock.h (BUSY_WAIT_NOP): Remove.
+	(lll_wait_tid): Use atomic_spin_nop instead of BUSY_WAIT_NOP.
+	* nscd/nscd-client.h (__nscd_acquire_maplock): Use atomic_spin_nop
+	instead of atomic_delay.
+
 2015-06-29  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18613]

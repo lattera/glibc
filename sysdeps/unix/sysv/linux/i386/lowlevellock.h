@@ -58,10 +58,6 @@
 #define LLL_LOCK_INITIALIZER_WAITERS	(2)
 
 
-/* Delay in spinlock loop.  */
-#define BUSY_WAIT_NOP	asm ("rep; nop")
-
-
 /* NB: in the lll_trylock macro we simply return the value in %eax
    after the cmpxchg instruction.  In case the operation succeded this
    value is zero.  In case the operation failed, the cmpxchg instruction

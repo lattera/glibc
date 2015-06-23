@@ -25,12 +25,6 @@
 #include <atomic.h>
 #include <kernel-features.h>
 
-#ifndef __sparc32_atomic_do_lock
-/* Delay in spinlock loop.  */
-extern void __cpu_relax (void);
-#define BUSY_WAIT_NOP	__cpu_relax ()
-#endif
-
 #include <lowlevellock-futex.h>
 
 static inline int

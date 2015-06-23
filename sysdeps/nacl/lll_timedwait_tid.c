@@ -40,7 +40,7 @@ __lll_timedwait_tid (int *tidp, const struct timespec *abstime)
 	   finish quick enough that the timeout doesn't matter.  If any
 	   thread ever stays in this state for long, there is something
 	   catastrophically wrong.  */
-	BUSY_WAIT_NOP;
+	atomic_spin_nop ();
       else
 	{
 	  assert (tid > 0);
