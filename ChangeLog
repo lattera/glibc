@@ -1,3 +1,12 @@
+2015-06-23  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18219]
+	* sysdeps/ieee754/dbl-64/e_exp2.c (__ieee754_exp2): Reduce
+	threshold on absolute value of exponent for which scaling is used.
+	* sysdeps/ieee754/flt-32/e_exp2f.c (__ieee754_exp2f): Likewise.
+	* math/auto-libm-test-in: Add more tests of exp2.
+	* math/auto-libm-test-out: Regenerated.
+
 2015-06-23  Dmitry V. Levin  <ldv@altlinux.org>
 
 	[BZ #17977]

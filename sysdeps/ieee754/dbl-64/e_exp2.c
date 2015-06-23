@@ -96,7 +96,9 @@ __ieee754_exp2 (double x)
 	/* 3. Compute ex2 = 2^(t/512+e+ex).  */
 	ex2_u.d = exp2_accuratetable[tval & 511];
 	tval >>= 9;
-	unsafe = abs (tval) >= -DBL_MIN_EXP - 1;
+	/* x2 is an integer multiple of 2^-54; avoid intermediate
+	   underflow from the calculation of x22 * x.  */
+	unsafe = abs (tval) >= -DBL_MIN_EXP - 56;
 	ex2_u.ieee.exponent += tval >> unsafe;
 	scale_u.d = 1.0;
 	scale_u.ieee.exponent += tval - (tval >> unsafe);

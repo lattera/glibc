@@ -1271,9 +1271,16 @@ exp2 max
 exp2 -max
 exp2 0.75
 exp2 100.5
+exp2 -116.5
+exp2 -123.5
+exp2 -124.5
+exp2 -125.5
 exp2 127
 exp2 -149
 exp2 1000.25
+exp2 -1019.5
+exp2 -1020.5
+exp2 -1021.5
 exp2 1023
 exp2 -1074
 exp2 16383
