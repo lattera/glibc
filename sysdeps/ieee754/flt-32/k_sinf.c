@@ -17,6 +17,7 @@
 static char rcsid[] = "$NetBSD: k_sinf.c,v 1.4 1995/05/10 20:46:33 jtc Exp $";
 #endif
 
+#include <float.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -36,7 +37,15 @@ float __kernel_sinf(float x, float y, int iy)
 	GET_FLOAT_WORD(ix,x);
 	ix &= 0x7fffffff;			/* high word of x */
 	if(ix<0x32000000)			/* |x| < 2**-27 */
-	   {if((int)x==0) return x;}		/* generate inexact */
+	  {
+	    if (fabsf (x) < FLT_MIN)
+	      {
+		float force_underflow = x * x;
+		math_force_eval (force_underflow);
+	      }
+	    if ((int) x == 0)
+	      return x;		/* generate inexact */
+	  }
 	z	=  x*x;
 	v	=  z*x;
 	r	=  S2+z*(S3+z*(S4+z*(S5+z*S6)));

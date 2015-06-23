@@ -48,6 +48,7 @@
 
 
 #include <errno.h>
+#include <float.h>
 #include "endian.h"
 #include "mydefs.h"
 #include "usncs.h"
@@ -295,7 +296,14 @@ __sin (double x)
   m = u.i[HIGH_HALF];
   k = 0x7fffffff & m;		/* no sign           */
   if (k < 0x3e500000)		/* if x->0 =>sin(x)=x */
-    retval = x;
+    {
+      if (fabs (x) < DBL_MIN)
+	{
+	  double force_underflow = x * x;
+	  math_force_eval (force_underflow);
+	}
+      retval = x;
+    }
  /*---------------------------- 2^-26 < |x|< 0.25 ----------------------*/
   else if (k < 0x3fd00000)
     {

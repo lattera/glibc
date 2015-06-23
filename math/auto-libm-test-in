@@ -2317,6 +2317,10 @@ sin 0x1.2001469775ce6p32
 sin -0x3.3de320f6be87ep+1020
 sin 0xe.9f1e5bc3bb88p+112
 sin 0x4.7857dp+68
+sin min
+sin -min
+sin min_subnorm
+sin -min_subnorm
 
 sincos 0
 sincos -0
@@ -2339,6 +2343,10 @@ sincos 0x1p+28
 sincos -0x3.3de320f6be87ep+1020
 sincos 0xe.9f1e5bc3bb88p+112
 sincos 0x4.7857dp+68
+sincos min
+sincos -min
+sincos min_subnorm
+sincos -min_subnorm
 
 sinh 0
 sinh -0

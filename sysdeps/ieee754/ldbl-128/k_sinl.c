@@ -17,6 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <float.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -90,7 +91,14 @@ __kernel_sinl(long double x, long double y, int iy)
       /* Argument is small enough to approximate it by a Chebyshev
 	 polynomial of degree 17.  */
       if (tix < 0x3fc60000)		/* |x| < 2^-57 */
-	if (!((int)x)) return x;	/* generate inexact */
+	{
+	  if (fabsl (x) < LDBL_MIN)
+	    {
+	      long double force_underflow = x * x;
+	      math_force_eval (force_underflow);
+	    }
+	  if (!((int)x)) return x;	/* generate inexact */
+	}
       z = x * x;
       return x + (x * (z*(SIN1+z*(SIN2+z*(SIN3+z*(SIN4+
 		       z*(SIN5+z*(SIN6+z*(SIN7+z*SIN8)))))))));

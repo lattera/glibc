@@ -1,5 +1,34 @@
 2015-06-23  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16526]
+	[BZ #16538]
+	* sysdeps/ieee754/dbl-64/s_sin.c: Include <float.h>.
+	(__sin): Force underflow exception for arguments with small
+	absolute value.
+	* sysdeps/ieee754/flt-32/k_sinf.c: Include <float.h>.
+	(__kernel_sinf): Force underflow exception for arguments with
+	small absolute value.
+	* sysdeps/ieee754/ldbl-128/k_sincosl.c: Include <float.h>.
+	(__kernel_sincosl): Force underflow exception for arguments with
+	small absolute value.
+	* sysdeps/ieee754/ldbl-128/k_sinl.c: Include <float.h>.
+	(__kernel_sinl): Force underflow exception for arguments with
+	small absolute value.
+	* sysdeps/ieee754/ldbl-128ibm/k_sincosl.c: Include <float.h>.
+	(__kernel_sincosl): Force underflow exception for arguments with
+	small absolute value.
+	* sysdeps/ieee754/ldbl-128ibm/k_sinl.c: Include <float.h>.
+	(__kernel_sinl): Force underflow exception for arguments with
+	small absolute value.
+	* sysdeps/ieee754/ldbl-96/k_sinl.c: Include <float.h>.
+	(__kernel_sinl): Force underflow exception for arguments with
+	small absolute value.
+	* sysdeps/powerpc/fpu/k_sinf.c: Include <float.h>.
+	(__kernel_sinf): Force underflow exception for arguments with
+	small absolute value.
+	* math/auto-libm-test-in: Add more tests of sin and sincos.
+	* math/auto-libm-test-out: Regenerated.
+
 	[BZ #18245]
 	[BZ #18583]
 	* sysdeps/ieee754/k_standardl.c: Include <fenv.h>.
