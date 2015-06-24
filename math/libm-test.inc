@@ -24,7 +24,6 @@
    Macros:
    FUNC(function): converts general function name (like cos) to
    name with correct suffix (e.g. cosl or cosf)
-   MATHCONST(x):   like FUNC but for constants (e.g convert 0.0 to 0.0L)
    FLOAT:	   floating point type to test
    - TEST_MSG:	   informal message to be displayed
    CHOOSE(Clongdouble,Cdouble,Cfloat,Cinlinelongdouble,Cinlinedouble,Cinlinefloat):

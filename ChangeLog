@@ -1,3 +1,226 @@
+2015-06-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/test-double.h: New file.
+	* math/test-float.h: Likewise.
+	* math/test-ldouble.h: Likewise.
+	* math/test-math-inline.h: Likewise.
+	* math/test-math-no-inline.h: Likewise.
+	* math/test-math-scalar.h: Likewise.
+	* math/test-math-vector.h: Likewise.
+	* math/test-vec-loop.h: Remove file.  Contents moved into
+	test-math-vector.h.
+	* math/libm-test.inc (MATHCONST): Do not document macro.
+	* math/test-double.c: Include test-double.h, test-math-no-inline.h
+	and test-math-scalar.h.
+	(FUNC): Remove macro.
+	(FUNC_TEST): Likewise.
+	(FLOAT): Likewise.
+	(MATHCONST): Likewise.
+	(PRINTF_EXPR): Likewise.
+	(PRINTF_XEXPR): Likewise.
+	(PRINTF_NEXPR): Likewise.
+	(TEST_DOUBLE): Likewise.
+	(TEST_MATHVEC): Likewise.
+	(__NO_MATH_INLINES): Likewise.
+	* math/test-float.c: Include test-float.h, test-math-no-inline.h
+	and test-math-scalar.h.
+	(FUNC): Remove macro.
+	(FUNC_TEST): Likewise.
+	(FLOAT): Likewise.
+	(MATHCONST): Likewise.
+	(PRINTF_EXPR): Likewise.
+	(PRINTF_XEXPR): Likewise.
+	(PRINTF_NEXPR): Likewise.
+	(TEST_FLOAT): Likewise.
+	(TEST_MATHVEC): Likewise.
+	(__NO_MATH_INLINES): Likewise.
+	* math/test-idouble.c: Include test-double.h, test-math-inline.h
+	and test-math-scalar.h.
+	(FUNC): Remove macro.
+	(FUNC_TEST): Likewise.
+	(FLOAT): Likewise.
+	(MATHCONST): Likewise.
+	(PRINTF_EXPR): Likewise.
+	(PRINTF_XEXPR): Likewise.
+	(PRINTF_NEXPR): Likewise.
+	(TEST_DOUBLE): Likewise.
+	(TEST_MATHVEC): Likewise.
+	(TEST_INLINE): Likewise.
+	(__NO_MATH_INLINES): Likewise.
+	* math/test-ifloat.c: Include test-float.h, test-math-inline.h and
+	test-math-scalar.h.
+	(FUNC): Remove macro.
+	(FUNC_TEST): Likewise.
+	(FLOAT): Likewise.
+	(MATHCONST): Likewise.
+	(PRINTF_EXPR): Likewise.
+	(PRINTF_XEXPR): Likewise.
+	(PRINTF_NEXPR): Likewise.
+	(TEST_FLOAT): Likewise.
+	(TEST_MATHVEC): Likewise.
+	(TEST_INLINE): Likewise.
+	(__NO_MATH_INLINES): Likewise.
+	* math/test-ildoubl.c: Include test-ldouble.h, test-math-inline.h
+	and test-math-scalar.h.
+	(FUNC): Remove macro.
+	(FUNC_TEST): Likewise.
+	(FLOAT): Likewise.
+	(MATHCONST): Likewise.
+	(PRINTF_EXPR): Likewise.
+	(PRINTF_XEXPR): Likewise.
+	(PRINTF_NEXPR): Likewise.
+	(TEST_LDOUBLE): Likewise.
+	(TEST_MATHVEC): Likewise.
+	(TEST_INLINE): Likewise.
+	(__NO_MATH_INLINES): Likewise.
+	* math/test-ldouble.c: Include test-ldouble.h,
+	test-math-no-inline.h and test-math-scalar.h.
+	(FUNC): Remove macro.
+	(FUNC_TEST): Likewise.
+	(FLOAT): Likewise.
+	(MATHCONST): Likewise.
+	(PRINTF_EXPR): Likewise.
+	(PRINTF_XEXPR): Likewise.
+	(PRINTF_NEXPR): Likewise.
+	(TEST_LDOUBLE): Likewise.
+	(TEST_MATHVEC): Likewise.
+	(__NO_MATH_INLINES): Likewise.
+	* math/test-double-vlen2.h: Include test-double.h,
+	test-math-no-inline.h and test-math-vector.h.
+	(FLOAT): Remove macro.
+	(FUNC): Likewise.
+	(MATHCONST): Likewise.
+	(PRINTF_EXPR): Likewise.
+	(PRINTF_XEXPR): Likewise.
+	(PRINTF_NEXPR): Likewise.
+	(TEST_DOUBLE): Likewise.
+	(TEST_MATHVEC): Likewise.
+	(__NO_MATH_INLINES): Likewise.
+	(CNCT): Likewise.
+	(CONCAT): Likewise.
+	(WRAPPER_NAME): Likewise.
+	(WRAPPER_DECL): Likewise.
+	(WRAPPER_DECL_ff): Likewise.
+	(WRAPPER_DECL_fFF): Likewise.
+	(VECTOR_WRAPPER): Likewise.
+	(VECTOR_WRAPPER_ff): Likewise.
+	(VECTOR_WRAPPER_fFF): Likewise.
+	(VEC_LEN): New macro.
+	* math/test-double-vlen4.h: Include test-double.h,
+	test-math-no-inline.h and test-math-vector.h.
+	(FLOAT): Remove macro.
+	(FUNC): Likewise.
+	(MATHCONST): Likewise.
+	(PRINTF_EXPR): Likewise.
+	(PRINTF_XEXPR): Likewise.
+	(PRINTF_NEXPR): Likewise.
+	(TEST_DOUBLE): Likewise.
+	(TEST_MATHVEC): Likewise.
+	(__NO_MATH_INLINES): Likewise.
+	(CNCT): Likewise.
+	(CONCAT): Likewise.
+	(WRAPPER_NAME): Likewise.
+	(WRAPPER_DECL): Likewise.
+	(WRAPPER_DECL_ff): Likewise.
+	(WRAPPER_DECL_fFF): Likewise.
+	(VECTOR_WRAPPER): Likewise.
+	(VECTOR_WRAPPER_ff): Likewise.
+	(VECTOR_WRAPPER_fFF): Likewise.
+	(VEC_LEN): New macro.
+	* math/test-double-vlen8.h: Include test-double.h,
+	test-math-no-inline.h and test-math-vector.h.
+	(FLOAT): Remove macro.
+	(FUNC): Likewise.
+	(MATHCONST): Likewise.
+	(PRINTF_EXPR): Likewise.
+	(PRINTF_XEXPR): Likewise.
+	(PRINTF_NEXPR): Likewise.
+	(TEST_DOUBLE): Likewise.
+	(TEST_MATHVEC): Likewise.
+	(__NO_MATH_INLINES): Likewise.
+	(CNCT): Likewise.
+	(CONCAT): Likewise.
+	(WRAPPER_NAME): Likewise.
+	(WRAPPER_DECL): Likewise.
+	(WRAPPER_DECL_ff): Likewise.
+	(WRAPPER_DECL_fFF): Likewise.
+	(VECTOR_WRAPPER): Likewise.
+	(VECTOR_WRAPPER_ff): Likewise.
+	(VECTOR_WRAPPER_fFF): Likewise.
+	(VEC_LEN): New macro.
+	* math/test-float-vlen4.h: Include test-float.h,
+	test-math-no-inline.h and test-math-vector.h.
+	(FLOAT): Remove macro.
+	(FUNC): Likewise.
+	(MATHCONST): Likewise.
+	(PRINTF_EXPR): Likewise.
+	(PRINTF_XEXPR): Likewise.
+	(PRINTF_NEXPR): Likewise.
+	(TEST_FLOAT): Likewise.
+	(TEST_MATHVEC): Likewise.
+	(__NO_MATH_INLINES): Likewise.
+	(CNCT): Likewise.
+	(CONCAT): Likewise.
+	(WRAPPER_NAME): Likewise.
+	(WRAPPER_DECL): Likewise.
+	(WRAPPER_DECL_ff): Likewise.
+	(WRAPPER_DECL_fFF): Likewise.
+	(VECTOR_WRAPPER): Likewise.
+	(VECTOR_WRAPPER_ff): Likewise.
+	(VECTOR_WRAPPER_fFF): Likewise.
+	(VEC_LEN): New macro.
+	* math/test-float-vlen8.h: Include test-float.h,
+	test-math-no-inline.h and test-math-vector.h.
+	(FLOAT): Remove macro.
+	(FUNC): Likewise.
+	(MATHCONST): Likewise.
+	(PRINTF_EXPR): Likewise.
+	(PRINTF_XEXPR): Likewise.
+	(PRINTF_NEXPR): Likewise.
+	(TEST_FLOAT): Likewise.
+	(TEST_MATHVEC): Likewise.
+	(__NO_MATH_INLINES): Likewise.
+	(CNCT): Likewise.
+	(CONCAT): Likewise.
+	(WRAPPER_NAME): Likewise.
+	(WRAPPER_DECL): Likewise.
+	(WRAPPER_DECL_ff): Likewise.
+	(WRAPPER_DECL_fFF): Likewise.
+	(VECTOR_WRAPPER): Likewise.
+	(VECTOR_WRAPPER_ff): Likewise.
+	(VECTOR_WRAPPER_fFF): Likewise.
+	(VEC_LEN): New macro.
+	* math/test-float-vlen16.h: Include test-float.h,
+	test-math-no-inline.h and test-math-vector.h.
+	(FLOAT): Remove macro.
+	(FUNC): Likewise.
+	(MATHCONST): Likewise.
+	(PRINTF_EXPR): Likewise.
+	(PRINTF_XEXPR): Likewise.
+	(PRINTF_NEXPR): Likewise.
+	(TEST_FLOAT): Likewise.
+	(TEST_MATHVEC): Likewise.
+	(__NO_MATH_INLINES): Likewise.
+	(CNCT): Likewise.
+	(CONCAT): Likewise.
+	(WRAPPER_NAME): Likewise.
+	(WRAPPER_DECL): Likewise.
+	(WRAPPER_DECL_ff): Likewise.
+	(WRAPPER_DECL_fFF): Likewise.
+	(VECTOR_WRAPPER): Likewise.
+	(VECTOR_WRAPPER_ff): Likewise.
+	(VECTOR_WRAPPER_fFF): Likewise.
+	(VEC_LEN): New macro.
+	* sysdeps/x86_64/fpu/test-double-vlen2-wrappers.c: Do not include
+	test-vec-loop.h.
+	* sysdeps/x86_64/fpu/test-double-vlen4-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen4-avx2-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen8-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen4-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen8-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen8-avx2-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen16-wrappers.c: Likewise.
+
 2015-06-24  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/nacl/glob.c (getlogin_r): Macro renamed to ...

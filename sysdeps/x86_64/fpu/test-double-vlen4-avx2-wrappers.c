@@ -17,7 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include "test-double-vlen4.h"
-#include "test-vec-loop.h"
 #include <immintrin.h>
 
 #undef VEC_SUFF

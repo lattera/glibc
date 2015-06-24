@@ -1,5 +1,5 @@
-/* Wrapper part of tests for AVX ISA versions of vector math functions.
-   Copyright (C) 2014-2015 Free Software Foundation, Inc.
+/* Common definitions for libm tests for double.
+   Copyright (C) 1997-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,14 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-float-vlen8.h"
-#include <immintrin.h>
-
-#define VEC_TYPE __m256
-
-VECTOR_WRAPPER (WRAPPER_NAME (cosf), _ZGVcN8v_cosf)
-VECTOR_WRAPPER (WRAPPER_NAME (sinf), _ZGVcN8v_sinf)
-VECTOR_WRAPPER_fFF (WRAPPER_NAME (sincosf), _ZGVcN8vvv_sincosf)
-VECTOR_WRAPPER (WRAPPER_NAME (logf), _ZGVcN8v_logf)
-VECTOR_WRAPPER (WRAPPER_NAME (expf), _ZGVcN8v_expf)
-VECTOR_WRAPPER_ff (WRAPPER_NAME (powf), _ZGVcN8vv_powf)
+#define FUNC(function) function
+#define FLOAT double
+#define PRINTF_EXPR "e"
+#define PRINTF_XEXPR "a"
+#define PRINTF_NEXPR "f"
+#define TEST_DOUBLE 1

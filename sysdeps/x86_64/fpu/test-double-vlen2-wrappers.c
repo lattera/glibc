@@ -17,7 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include "test-double-vlen2.h"
-#include "test-vec-loop.h"
 #include <immintrin.h>
 
 #define VEC_TYPE __m128d

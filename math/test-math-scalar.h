@@ -1,5 +1,5 @@
-/* Loop macro used in vector math functions tests.
-   Copyright (C) 2014-2015 Free Software Foundation, Inc.
+/* Common definitions for libm tests for scalar functions.
+   Copyright (C) 1997-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,27 +16,5 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* This macro is used in VECTOR_WRAPPER macros for vector tests.  */
-#define TEST_VEC_LOOP(vec, len) 				\
-  do								\
-    {								\
-      for (i = 1; i < len; i++)					\
-        {							\
-          if ((FLOAT) vec[0] != (FLOAT) vec[i])			\
-            {							\
-              vec[0] = (FLOAT) vec[0] + 0.1;			\
-	      break;						\
-            }							\
-        }							\
-    }								\
-  while (0)
-
-#define INIT_VEC_LOOP(vec, val, len)				\
-  do								\
-    {								\
-      for (i = 0; i < len; i++)					\
-        {							\
-          vec[i] = val;						\
-        }							\
-    }								\
-  while (0)
+#define FUNC_TEST(function) FUNC (function)
+#define TEST_MATHVEC 0

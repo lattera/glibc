@@ -16,21 +16,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define FUNC(function) function ## f
-#define FUNC_TEST(function) FUNC (function)
-#define FLOAT float
-#define TEST_MSG "testing float (inline functions)\n"
-#define MATHCONST(x) x
-#define CHOOSE(Clongdouble,Cdouble,Cfloat,Cinlinelongdouble,Cinlinedouble,Cinlinefloat) Cinlinefloat
-#define PRINTF_EXPR "e"
-#define PRINTF_XEXPR "a"
-#define PRINTF_NEXPR "f"
-#define TEST_FLOAT 1
-#define TEST_MATHVEC 0
-#define TEST_INLINE 1
+#include "test-float.h"
+#include "test-math-inline.h"
+#include "test-math-scalar.h"
 
-#ifdef __NO_MATH_INLINES
-# undef __NO_MATH_INLINES
-#endif
+#define TEST_MSG "testing float (inline functions)\n"
+#define CHOOSE(Clongdouble,Cdouble,Cfloat,Cinlinelongdouble,Cinlinedouble,Cinlinefloat) Cinlinefloat
 
 #include "libm-test.c"
