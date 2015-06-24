@@ -955,15 +955,65 @@ cpow 0.75 1.25 1.0 1.0 xfail-rounding
 cpow 0.75 1.25 1.0 0.0
 cpow 0.75 1.25 0.0 1.0
 
+csin 0.0 0.0
+csin -0 0.0
+csin 0.0 -0
+csin -0 -0
+
+csin 0.75 1.25
+csin -2 -3
+
+csin 0.75 89.5
+csin 0.75 -89.5
+csin -0.75 89.5
+csin -0.75 -89.5
+csin 0.75 710.5
+csin 0.75 -710.5
+csin -0.75 710.5
+csin -0.75 -710.5
+csin 0.75 11357.25
+csin 0.75 -11357.25
+csin -0.75 11357.25
+csin -0.75 -11357.25
+
 csin 0.75 1e6
 csin 0.75 -1e6
 csin -0.75 1e6
 csin -0.75 -1e6
 
+csin 0x1p-149 180
+csin 0x1p-1074 1440
+csin 0x1p-16434 22730
+
+csinh 0.0 0.0
+csinh -0 0.0
+csinh 0.0 -0
+csinh -0 -0
+
+csinh 0.75 1.25
+csinh -2 -3
+
+csinh 89.5 0.75
+csinh -89.5 0.75
+csinh 89.5 -0.75
+csinh -89.5 -0.75
+csinh 710.5 0.75
+csinh -710.5 0.75
+csinh 710.5 -0.75
+csinh -710.5 -0.75
+csinh 11357.25 0.75
+csinh -11357.25 0.75
+csinh 11357.25 -0.75
+csinh -11357.25 -0.75
+
 csinh 1e6 0.75
 csinh -1e6 0.75
 csinh 1e6 -0.75
 csinh -1e6 -0.75
+
+csinh 180 0x1p-149
+csinh 1440 0x1p-1074
+csinh 22730 0x1p-16434
 
 csqrt 0 0
 csqrt 0 -0

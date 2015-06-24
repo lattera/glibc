@@ -1,5 +1,11 @@
 2015-06-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/auto-libm-test-in: Add more tests of csin and csinh.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (csin_test_data): Remove tests moved to
+	auto-libm-test-in.
+	(csinh_test_data): Likewise.
+
 	[BZ #18593]
 	* math/s_csin.c (__csin): Negate before rather than after possibly
 	overflowing multiplication.
