@@ -1,3 +1,25 @@
+2015-06-24  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	* sysdeps/x86_64/fpu/Makefile (libmvec-support): Fixed files list.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_cosf4_core_sse4.S: Renamed variable
+	and included header.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_cosf8_core_avx2.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_cosf16_core_avx512.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sinf4_core_sse4.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sinf8_core_avx2.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sinf16_core_avx512.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf4_core_sse4.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf8_core_avx2.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf16_core_avx512.S: Likewise.
+	* sysdeps/x86_64/fpu/svml_s_trig_data.S: New file.
+	* sysdeps/x86_64/fpu/svml_s_trig_data.h: Likewise.
+	* sysdeps/x86_64/fpu/svml_s_cosf_data.S: Removed file.
+	* sysdeps/x86_64/fpu/svml_s_cosf_data.h: Likewise.
+	* sysdeps/x86_64/fpu/svml_s_sinf_data.S: Likewise.
+	* sysdeps/x86_64/fpu/svml_s_sinf_data.h: Likewise.
+	* sysdeps/x86_64/fpu/svml_s_sincosf_data.S: Likewise.
+	* sysdeps/x86_64/fpu/svml_s_sincosf_data.h: Likewise.
+
 2015-06-23  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16526]

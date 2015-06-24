@@ -18,7 +18,7 @@
 
 
 #include <sysdep.h>
-#include "svml_s_sinf_data.h"
+#include "svml_s_trig_data.h"
 
 	.text
 ENTRY(_ZGVbN4v_sinf_sse4)
@@ -53,7 +53,7 @@ ENTRY(_ZGVbN4v_sinf_sse4)
         andq      $-64, %rsp
         subq      $320, %rsp
         movaps    %xmm0, %xmm5
-        movq      __svml_ssin_data@GOTPCREL(%rip), %rax
+        movq      __svml_s_trig_data@GOTPCREL(%rip), %rax
         movups    __sAbsMask(%rax), %xmm2
 
 /* b) Remove sign using AND operation */

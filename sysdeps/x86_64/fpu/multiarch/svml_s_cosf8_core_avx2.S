@@ -18,7 +18,7 @@
 
 
 #include <sysdep.h>
-#include "svml_s_cosf_data.h"
+#include "svml_s_trig_data.h"
 
 	.text
 ENTRY (_ZGVdN8v_cosf_avx2)
@@ -51,7 +51,7 @@ ENTRY (_ZGVdN8v_cosf_avx2)
         cfi_def_cfa_register (%rbp)
         andq      $-64, %rsp
         subq      $448, %rsp
-        movq      __svml_scos_data@GOTPCREL(%rip), %rax
+        movq      __svml_s_trig_data@GOTPCREL(%rip), %rax
         vmovaps   %ymm0, %ymm2
         vmovups __sRShifter(%rax), %ymm5
         vmovups __sPI1_FMA(%rax), %ymm7

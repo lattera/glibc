@@ -17,7 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include "svml_s_cosf_data.h"
+#include "svml_s_trig_data.h"
 #include "svml_s_wrapper_impl.h"
 
 	.text
@@ -54,7 +54,7 @@ WRAPPER_IMPL_AVX512 _ZGVdN8v_cosf
         cfi_def_cfa_register (%rbp)
         andq      $-64, %rsp
         subq      $1280, %rsp
-        movq      __svml_scos_data@GOTPCREL(%rip), %rdx
+        movq      __svml_s_trig_data@GOTPCREL(%rip), %rdx
 
 /*
   h) Subtract Y*PI from X argument, where PI divided to 4 parts:
@@ -271,7 +271,7 @@ WRAPPER_IMPL_AVX512 _ZGVdN8v_cosf
         cfi_def_cfa_register (%rbp)
         andq      $-64, %rsp
         subq      $1280, %rsp
-        movq      __svml_scos_data@GOTPCREL(%rip), %rax
+        movq      __svml_s_trig_data@GOTPCREL(%rip), %rax
 
 /*
   h) Subtract Y*PI from X argument, where PI divided to 4 parts:

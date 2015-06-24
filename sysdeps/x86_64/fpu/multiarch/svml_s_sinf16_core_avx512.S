@@ -17,7 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include "svml_s_sinf_data.h"
+#include "svml_s_trig_data.h"
 #include "svml_s_wrapper_impl.h"
 
 	.text
@@ -55,7 +55,7 @@ WRAPPER_IMPL_AVX512 _ZGVdN8v_sinf
         cfi_def_cfa_register (%rbp)
         andq      $-64, %rsp
         subq      $1280, %rsp
-        movq      __svml_ssin_data@GOTPCREL(%rip), %rax
+        movq      __svml_s_trig_data@GOTPCREL(%rip), %rax
 
 /* Check for large and special values */
         movl      $-1, %edx
@@ -277,7 +277,7 @@ WRAPPER_IMPL_AVX512 _ZGVdN8v_sinf
         cfi_def_cfa_register (%rbp)
         andq      $-64, %rsp
         subq      $1280, %rsp
-        movq      __svml_ssin_data@GOTPCREL(%rip), %rax
+        movq      __svml_s_trig_data@GOTPCREL(%rip), %rax
 
 /* Check for large and special values */
         vmovups   .L_2il0floatpacket.11(%rip), %zmm14

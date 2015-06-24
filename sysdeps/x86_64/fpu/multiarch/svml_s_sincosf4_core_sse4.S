@@ -17,7 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include "svml_s_sincosf_data.h"
+#include "svml_s_trig_data.h"
 
 	.text
 ENTRY (_ZGVbN4vvv_sincosf_sse4)
@@ -56,7 +56,7 @@ ENTRY (_ZGVbN4vvv_sincosf_sse4)
         cfi_def_cfa_register (%rbp)
         andq      $-64, %rsp
         subq      $320, %rsp
-        movq      __svml_ssincos_data@GOTPCREL(%rip), %rax
+        movq      __svml_s_trig_data@GOTPCREL(%rip), %rax
         movups    %xmm12, 176(%rsp)
         movups    %xmm9, 160(%rsp)
         movups __sAbsMask(%rax), %xmm12

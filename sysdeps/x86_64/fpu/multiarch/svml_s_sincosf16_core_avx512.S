@@ -17,7 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include "svml_s_sincosf_data.h"
+#include "svml_s_trig_data.h"
 #include "svml_s_wrapper_impl.h"
 
 /*
@@ -60,7 +60,7 @@ WRAPPER_IMPL_AVX512_fFF _ZGVdN8vvv_sincosf
         cfi_def_cfa_register (%rbp)
         andq      $-64, %rsp
         subq      $1344, %rsp
-        movq      __svml_ssincos_data@GOTPCREL(%rip), %rax
+        movq      __svml_s_trig_data@GOTPCREL(%rip), %rax
         vmovaps   %zmm0, %zmm2
         movl      $-1, %edx
         vmovups __sAbsMask(%rax), %zmm0
@@ -280,7 +280,7 @@ WRAPPER_IMPL_AVX512_fFF _ZGVdN8vvv_sincosf
         cfi_def_cfa_register (%rbp)
         andq      $-64, %rsp
         subq      $1344, %rsp
-        movq      __svml_ssincos_data@GOTPCREL(%rip), %rax
+        movq      __svml_s_trig_data@GOTPCREL(%rip), %rax
         vmovaps   %zmm0, %zmm4
         vmovups __sAbsMask(%rax), %zmm3
         vmovups __sInvPI(%rax), %zmm5

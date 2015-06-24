@@ -17,7 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include "svml_s_cosf_data.h"
+#include "svml_s_trig_data.h"
 
 	.text
 ENTRY (_ZGVbN4v_cosf_sse4)
@@ -51,7 +51,7 @@ ENTRY (_ZGVbN4v_cosf_sse4)
         andq      $-64, %rsp
         subq      $320, %rsp
         movaps    %xmm0, %xmm4
-        movq      __svml_scos_data@GOTPCREL(%rip), %rax
+        movq      __svml_s_trig_data@GOTPCREL(%rip), %rax
         movups __sHalfPI(%rax), %xmm1
         movups __sRShifter(%rax), %xmm5
 
