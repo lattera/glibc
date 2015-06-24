@@ -39,7 +39,7 @@ __cexpl (__complex__ long double x)
 	  const int t = (int) ((LDBL_MAX_EXP - 1) * M_LN2l);
 	  long double sinix, cosix;
 
-	  if (__glibc_likely (icls != FP_SUBNORMAL))
+	  if (__glibc_likely (fabsl (__imag__ x) > LDBL_MIN))
 	    {
 	      __sincosl (__imag__ x, &sinix, &cosix);
 	    }
@@ -115,7 +115,7 @@ __cexpl (__complex__ long double x)
 	    {
 	      long double sinix, cosix;
 
-	      if (__glibc_likely (icls != FP_SUBNORMAL))
+	      if (__glibc_likely (fabsl (__imag__ x) > LDBL_MIN))
 	        {
 		  __sincosl (__imag__ x, &sinix, &cosix);
 	        }

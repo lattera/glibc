@@ -39,7 +39,7 @@ __ccosh (__complex__ double x)
 	  const int t = (int) ((DBL_MAX_EXP - 1) * M_LN2);
 	  double sinix, cosix;
 
-	  if (__glibc_likely (icls != FP_SUBNORMAL))
+	  if (__glibc_likely (fabs (__imag__ x) > DBL_MIN))
 	    {
 	      __sincos (__imag__ x, &sinix, &cosix);
 	    }
@@ -113,7 +113,7 @@ __ccosh (__complex__ double x)
 	  /* Imaginary part is finite.  */
 	  double sinix, cosix;
 
-	  if (__glibc_likely (icls != FP_SUBNORMAL))
+	  if (__glibc_likely (fabs (__imag__ x) > DBL_MIN))
 	    {
 	      __sincos (__imag__ x, &sinix, &cosix);
 	    }

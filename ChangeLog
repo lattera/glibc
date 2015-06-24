@@ -1,3 +1,32 @@
+2015-06-24  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18594]
+	* math/s_ccosh.c (__ccosh): Compare with least normal value
+	instead of comparing class with FP_SUBNORMAL.
+	* math/s_ccoshf.c (__ccoshf): Likewise.
+	* math/s_ccoshl.c (__ccoshl): Likewise.
+	* math/s_cexp.c (__cexp): Likewise.
+	* math/s_cexpf.c (__cexpf): Likewise.
+	* math/s_cexpl.c (__cexpl): Likewise.
+	* math/s_csin.c (__csin): Likewise.
+	* math/s_csinf.c (__csinf): Likewise.
+	* math/s_csinh.c (__csinh): Likewise.
+	* math/s_csinhf.c (__csinhf): Likewise.
+	* math/s_csinhl.c (__csinhl): Likewise.
+	* math/s_csinl.c (__csinl): Likewise.
+	* math/s_ctan.c (__ctan): Likewise.
+	* math/s_ctanf.c (__ctanf): Likewise.
+	* math/s_ctanh.c (__ctanh): Likewise.
+	* math/s_ctanhf.c (__ctanhf): Likewise.
+	* math/s_ctanhl.c (__ctanhl): Likewise.
+	* math/s_ctanl.c (__ctanl): Likewise.
+	* math/auto-libm-test-in: Add more tests of ccos, ccosh, cexp,
+	csin, csinh, ctan and ctanh.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (cexp_test): Use ALL_RM_TEST.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2015-06-24  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/tst-getcpu.c (do_test): When sched_getcpu

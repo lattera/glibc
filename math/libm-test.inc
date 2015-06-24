@@ -6040,9 +6040,7 @@ static const struct test_c_c_data cexp_test_data[] =
 static void
 cexp_test (void)
 {
-  START (cexp,, 0);
-  RUN_TEST_LOOP_c_c (cexp, cexp_test_data, );
-  END_COMPLEX;
+  ALL_RM_TEST (cexp, 0, cexp_test_data, RUN_TEST_LOOP_c_c, END_COMPLEX);
 }
 
 

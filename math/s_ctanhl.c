@@ -60,12 +60,11 @@ __ctanhl (__complex__ long double x)
       long double sinix, cosix;
       long double den;
       const int t = (int) ((LDBL_MAX_EXP - 1) * M_LN2l / 2);
-      int icls = fpclassify (__imag__ x);
 
       /* tanh(x+iy) = (sinh(2x) + i*sin(2y))/(cosh(2x) + cos(2y))
 	 = (sinh(x)*cosh(x) + i*sin(y)*cos(y))/(sinh(x)^2 + cos(y)^2).  */
 
-      if (__glibc_likely (icls != FP_SUBNORMAL))
+      if (__glibc_likely (fabsl (__imag__ x) > LDBL_MIN))
 	{
 	  __sincosl (__imag__ x, &sinix, &cosix);
 	}

@@ -53,12 +53,11 @@ __ctan (__complex__ double x)
       double sinrx, cosrx;
       double den;
       const int t = (int) ((DBL_MAX_EXP - 1) * M_LN2 / 2);
-      int rcls = fpclassify (__real__ x);
 
       /* tan(x+iy) = (sin(2x) + i*sinh(2y))/(cos(2x) + cosh(2y))
 	 = (sin(x)*cos(x) + i*sinh(y)*cosh(y)/(cos(x)^2 + sinh(y)^2). */
 
-      if (__glibc_likely (rcls != FP_SUBNORMAL))
+      if (__glibc_likely (fabs (__real__ x) > DBL_MIN))
 	{
 	  __sincos (__real__ x, &sinrx, &cosrx);
 	}

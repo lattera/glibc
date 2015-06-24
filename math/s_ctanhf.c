@@ -57,7 +57,7 @@ __ctanhf (__complex__ float x)
       /* tanh(x+iy) = (sinh(2x) + i*sin(2y))/(cosh(2x) + cos(2y))
 	 = (sinh(x)*cosh(x) + i*sin(y)*cos(y))/(sinh(x)^2 + cos(y)^2).  */
 
-      if (__glibc_likely (fpclassify(__imag__ x) != FP_SUBNORMAL))
+      if (__glibc_likely (fabsf (__imag__ x) > FLT_MIN))
 	{
 	  __sincosf (__imag__ x, &sinix, &cosix);
 	}

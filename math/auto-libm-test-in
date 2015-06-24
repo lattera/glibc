@@ -496,6 +496,11 @@ ccos 0x1p-16434 22730
 ccos min_subnorm_p120 0x1p-120
 ccos 0x1p-120 min_subnorm_p120
 
+ccos min 1
+ccos -min 1
+ccos min_subnorm 80
+ccos -min_subnorm 80
+
 ccosh 0.0 0.0
 ccosh -0 0.0
 ccosh 0.0 -0
@@ -523,6 +528,11 @@ ccosh 22730 0x1p-16434
 
 ccosh min_subnorm_p120 0x1p-120
 ccosh 0x1p-120 min_subnorm_p120
+
+ccosh 1 min
+ccosh 1 -min
+ccosh 80 min_subnorm
+ccosh 80 -min_subnorm
 
 cexp 0 0
 cexp -0 0
@@ -557,6 +567,11 @@ cexp 22730 0x1p-16434
 cexp 1e6 0
 cexp 1e6 min
 cexp 1e6 -min
+
+cexp 1 min
+cexp 1 -min
+cexp 80 min_subnorm
+cexp 80 -min_subnorm
 
 cexp min min_subnorm
 cexp min -min_subnorm
@@ -985,6 +1000,11 @@ csin 0x1p-149 180
 csin 0x1p-1074 1440
 csin 0x1p-16434 22730
 
+csin min 1
+csin -min 1
+csin min_subnorm 80
+csin -min_subnorm 80
+
 csinh 0.0 0.0
 csinh -0 0.0
 csinh 0.0 -0
@@ -1014,6 +1034,11 @@ csinh -1e6 -0.75
 csinh 180 0x1p-149
 csinh 1440 0x1p-1074
 csinh 22730 0x1p-16434
+
+csinh 1 min
+csinh 1 -min
+csinh 80 min_subnorm
+csinh 80 -min_subnorm
 
 csqrt 0 0
 csqrt 0 -0
@@ -1132,6 +1157,12 @@ ctan 0x1.921fb6p+0 0x1p-149
 ctan 0x1.921fb54442d18p+0 0x1p-1074
 ctan 0x1.921fb54442d1846ap+0 0x1p-16445
 
+# Bug 18595: underflow exception may be missing
+ctan min 0 missing-underflow
+ctan -min 0 missing-underflow
+ctan min_subnorm 0 missing-underflow
+ctan -min_subnorm 0 missing-underflow
+
 ctanh 0 0
 ctanh 0 -0
 ctanh -0 0
@@ -1165,6 +1196,12 @@ ctanh -50000 -50000 xfail-rounding:ldbl-128ibm
 ctanh 0x1p-149 0x1.921fb6p+0
 ctanh 0x1p-1074 0x1.921fb54442d18p+0
 ctanh 0x1p-16445 0x1.921fb54442d1846ap+0
+
+# Bug 18595: underflow exception may be missing
+ctanh 0 min missing-underflow
+ctanh 0 -min missing-underflow
+ctanh 0 min_subnorm missing-underflow
+ctanh 0 -min_subnorm missing-underflow
 
 erf 0
 erf -0

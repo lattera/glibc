@@ -42,7 +42,7 @@ __csinl (__complex__ long double x)
 	  const int t = (int) ((LDBL_MAX_EXP - 1) * M_LN2l);
 	  long double sinix, cosix;
 
-	  if (__glibc_likely (rcls != FP_SUBNORMAL))
+	  if (__glibc_likely (__real__ x > LDBL_MIN))
 	    {
 	      __sincosl (__real__ x, &sinix, &cosix);
 	    }
@@ -136,7 +136,7 @@ __csinl (__complex__ long double x)
 	  /* Real part is finite.  */
 	  long double sinix, cosix;
 
-	  if (__glibc_likely (rcls != FP_SUBNORMAL))
+	  if (__glibc_likely (__real__ x > LDBL_MIN))
 	    {
 	      __sincosl (__real__ x, &sinix, &cosix);
 	    }

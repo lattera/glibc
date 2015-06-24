@@ -42,7 +42,7 @@ __csin (__complex__ double x)
 	  const int t = (int) ((DBL_MAX_EXP - 1) * M_LN2);
 	  double sinix, cosix;
 
-	  if (__glibc_likely (rcls != FP_SUBNORMAL))
+	  if (__glibc_likely (__real__ x > DBL_MIN))
 	    {
 	      __sincos (__real__ x, &sinix, &cosix);
 	    }
@@ -136,7 +136,7 @@ __csin (__complex__ double x)
 	  /* Real part is finite.  */
 	  double sinix, cosix;
 
-	  if (__glibc_likely (rcls != FP_SUBNORMAL))
+	  if (__glibc_likely (__real__ x > DBL_MIN))
 	    {
 	      __sincos (__real__ x, &sinix, &cosix);
 	    }

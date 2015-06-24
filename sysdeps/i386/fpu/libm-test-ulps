@@ -668,6 +668,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: Imaginary part of "ccosh":
 double: 1
@@ -740,6 +742,54 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+
+Function: Real part of "cexp_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 3
+ldouble: 3
+
+Function: Imaginary part of "cexp_downward":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 3
+ldouble: 3
+
+Function: Real part of "cexp_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 3
+ldouble: 3
+
+Function: Imaginary part of "cexp_towardzero":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+ildouble: 3
+ldouble: 3
+
+Function: Real part of "cexp_upward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Imaginary part of "cexp_upward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 3
+ldouble: 3
 
 Function: Real part of "clog":
 double: 3
@@ -1052,6 +1102,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: Real part of "csinh_downward":
 double: 1

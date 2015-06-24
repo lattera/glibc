@@ -42,7 +42,7 @@ __csinhf (__complex__ float x)
 	  const int t = (int) ((FLT_MAX_EXP - 1) * M_LN2);
 	  float sinix, cosix;
 
-	  if (__glibc_likely (icls != FP_SUBNORMAL))
+	  if (__glibc_likely (fabsf (__imag__ x) > FLT_MIN))
 	    {
 	      __sincosf (__imag__ x, &sinix, &cosix);
 	    }
@@ -130,7 +130,7 @@ __csinhf (__complex__ float x)
 	  /* Imaginary part is finite.  */
 	  float sinix, cosix;
 
-	  if (__glibc_likely (icls != FP_SUBNORMAL))
+	  if (__glibc_likely (fabsf (__imag__ x) > FLT_MIN))
 	    {
 	      __sincosf (__imag__ x, &sinix, &cosix);
 	    }
