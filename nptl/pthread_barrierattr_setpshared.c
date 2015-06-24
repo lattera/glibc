@@ -24,15 +24,11 @@
 int
 pthread_barrierattr_setpshared (pthread_barrierattr_t *attr, int pshared)
 {
-  struct pthread_barrierattr *iattr;
-
   int err = futex_supports_pshared (pshared);
   if (err != 0)
     return err;
 
-  iattr = (struct pthread_barrierattr *) attr;
-
-  iattr->pshared = pshared;
+  ((struct pthread_barrierattr *) attr)->pshared = pshared;
 
   return 0;
 }

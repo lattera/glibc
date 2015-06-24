@@ -18,7 +18,7 @@
 
 #include <errno.h>
 #include "pthreadP.h"
-#include <lowlevellock.h>
+#include <futex-internal.h>
 #include <kernel-features.h>
 
 
@@ -34,8 +34,10 @@ __pthread_barrier_init (pthread_barrier_t *barrier,
 {
   struct pthread_barrier *ibarrier;
 
-  /* XXX EINVAL is not specified by POSIX as a possible error code.  */
-  if (__glibc_unlikely (count == 0))
+  /* XXX EINVAL is not specified by POSIX as a possible error code for COUNT
+     being too large.  See pthread_barrier_wait for the reason for the
+     comparison with BARRIER_IN_THRESHOLD.  */
+  if (__glibc_unlikely (count == 0 || count >= BARRIER_IN_THRESHOLD))
     return EINVAL;
 
   const struct pthread_barrierattr *iattr
@@ -46,15 +48,12 @@ __pthread_barrier_init (pthread_barrier_t *barrier,
   ibarrier = (struct pthread_barrier *) barrier;
 
   /* Initialize the individual fields.  */
-  ibarrier->lock = LLL_LOCK_INITIALIZER;
-  ibarrier->left = count;
-  ibarrier->init_count = count;
-  ibarrier->curr_event = 0;
-
-  /* XXX Don't use FUTEX_SHARED or FUTEX_PRIVATE as long as there are still
-     assembly implementations that expect the value determined below.  */
-  ibarrier->private = (iattr->pshared != PTHREAD_PROCESS_PRIVATE
-		       ? 0 : FUTEX_PRIVATE_FLAG);
+  ibarrier->in = 0;
+  ibarrier->out = 0;
+  ibarrier->count = count;
+  ibarrier->current_round = 0;
+  ibarrier->shared = (iattr->pshared == PTHREAD_PROCESS_PRIVATE
+		      ? FUTEX_PRIVATE : FUTEX_SHARED);
 
   return 0;
 }

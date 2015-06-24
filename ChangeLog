@@ -1,3 +1,30 @@
+2016-01-15  Torvald Riegel  <triegel@redhat.com>
+
+	[BZ #13065]
+	* nptl/pthread_barrier_wait.c (__pthread_barrier_wait): Replace with
+	new implementation.
+	* nptl/pthread_barrier_destroy.c (pthread_barrier_destroy): Likewise.
+	* nptl/pthread_barrier_init.c (__pthread_barrier_init): Adapt.
+	* sysdeps/nptl/internaltypes.h (pthread_barrier): Adapt.
+	(BARRIER_IN_THRESHOLD): New macro.
+	* nptl/pthread_barrierattr_setpshared.c
+	(pthread_barrierattr_setpshared): Clean up.
+	* nptl/tst-barrier4.c: Correct comment.
+	* nptl/tst-barrier5.c: New file.
+	* nptl/Makefile (tests): Add nptl/tst-barrier5.c.
+	(gen-as-const-headers): Remove lowlevelbarrier.sym.
+	* sysdeps/unix/sysv/linux/i386/pthread_barrier_wait.S: Remove.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_barrier_wait.S: Remove.
+	* nptl/lowlevelbarrier.sym: Remove.
+	* nptl/DESIGN-barrier.txt: Remove.
+	* sysdeps/sparc/nptl/pthread_barrier_destroy.c: Remove.
+	* sysdeps/sparc/nptl/pthread_barrier_init.c: Remove.
+	* sysdeps/sparc/nptl/pthread_barrier_wait.c: Remove.
+	* sysdeps/sparc/sparc32/pthread_barrier_wait.c: Replace with build
+	error.
+	* sysdeps/sparc/sparc32/sparcv9/pthread_barrier_wait.c: Use generic
+	implementation.
+
 2016-01-15  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* rt/tst-mqueue5.c (thr): Cleanup misleading comment.

@@ -241,7 +241,7 @@ tests = tst-typesizes \
 	tst-sem1 tst-sem2 tst-sem3 tst-sem4 tst-sem5 tst-sem6 tst-sem7 \
 	tst-sem8 tst-sem9 tst-sem10 tst-sem11 tst-sem12 tst-sem13 tst-sem14 \
 	tst-sem15 \
-	tst-barrier1 tst-barrier2 tst-barrier3 tst-barrier4 \
+	tst-barrier1 tst-barrier2 tst-barrier3 tst-barrier4 tst-barrier5 \
 	tst-align tst-align3 \
 	tst-basic1 tst-basic2 tst-basic3 tst-basic4 tst-basic5 tst-basic6 \
 	tst-basic7 \
@@ -302,7 +302,7 @@ tests-nolibpthread = tst-unload
 
 gen-as-const-headers = pthread-errnos.sym \
 		       lowlevelcond.sym lowlevelrwlock.sym \
-		       lowlevelbarrier.sym unwindbuf.sym \
+		       unwindbuf.sym \
 		       lowlevelrobustlock.sym pthread-pi-defines.sym
 
 

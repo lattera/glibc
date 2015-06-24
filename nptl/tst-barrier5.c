@@ -1,6 +1,5 @@
-/* Copyright (C) 2004-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2004-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,11 +15,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* This tests destruction of a barrier right after waiting on it.  */
+/* This tests the barrier reset mechanism.  */
 #include <errno.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <internaltypes.h>
 
 
 static pthread_barrier_t b1;
@@ -28,14 +28,21 @@ static pthread_barrier_t b2;
 
 
 #define N 20
+#define ROUNDS_PER_RUN 20
+#define START ((BARRIER_IN_THRESHOLD / N - ROUNDS_PER_RUN / 2) * N)
 
 static void *
 tf (void *arg)
 {
-  int round = 0;
+  int runs = 0;
 
-  while (round++ < 30)
+  while (runs++ < 30)
     {
+      /* In each run, we execute a number of rounds and initialize the barrier
+	 so that we will go over the reset threshold with those rounds.  */
+      for (int rounds = 0; rounds < ROUNDS_PER_RUN; rounds++)
+	pthread_barrier_wait (&b1);
+
       if (pthread_barrier_wait (&b1) == PTHREAD_BARRIER_SERIAL_THREAD)
 	{
 	  pthread_barrier_destroy (&b1);
@@ -44,7 +51,19 @@ tf (void *arg)
 	      puts ("tf: 1st barrier_init failed");
 	      exit (1);
 	    }
+	  puts ("b1 reinitialized");
+	  /* Trigger a reset.  */
+	  struct pthread_barrier *bar = (struct pthread_barrier *) &b1;
+	  bar->in = START;
+	  bar->out = START;
+	  /* We deliberately don't set bar->current_round so that we also
+	     test whether the helping for the updates of current_round
+	     works correctly.  */
 	}
+
+      /* Same as above, just for b2.  */
+      for (int rounds = 0; rounds < ROUNDS_PER_RUN; rounds++)
+	pthread_barrier_wait (&b2);
 
       if (pthread_barrier_wait (&b2) == PTHREAD_BARRIER_SERIAL_THREAD)
 	{
@@ -54,6 +73,11 @@ tf (void *arg)
 	      puts ("tf: 2nd barrier_init failed");
 	      exit (1);
 	    }
+	  puts ("b2 reinitialized");
+	  /* Trigger a reset.  See above.  */
+	  struct pthread_barrier *bar = (struct pthread_barrier *) &b2;
+	  bar->in = START;
+	  bar->out = START;
 	}
     }
 

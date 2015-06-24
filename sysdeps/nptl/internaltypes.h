@@ -92,15 +92,18 @@ struct pthread_rwlockattr
 };
 
 
-/* Barrier data structure.  */
+/* Barrier data structure.  See pthread_barrier_wait for a description
+   of how these fields are used.  */
 struct pthread_barrier
 {
-  unsigned int curr_event;
-  int lock;
-  unsigned int left;
-  unsigned int init_count;
-  int private;
+  unsigned int in;
+  unsigned int current_round;
+  unsigned int count;
+  int shared;
+  unsigned int out;
 };
+/* See pthread_barrier_wait for a description.  */
+#define BARRIER_IN_THRESHOLD (UINT_MAX/2)
 
 
 /* Barrier variable attribute data structure.  */

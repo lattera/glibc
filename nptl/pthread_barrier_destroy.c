@@ -18,25 +18,44 @@
 
 #include <errno.h>
 #include "pthreadP.h"
-#include <lowlevellock.h>
+#include <atomic.h>
+#include <futex-internal.h>
 
 
 int
 pthread_barrier_destroy (pthread_barrier_t *barrier)
 {
-  struct pthread_barrier *ibarrier;
-  int result = EBUSY;
+  struct pthread_barrier *bar = (struct pthread_barrier *) barrier;
 
-  ibarrier = (struct pthread_barrier *) barrier;
+  /* Destroying a barrier is only allowed if no thread is blocked on it.
+     Thus, there is no unfinished round, and all modifications to IN will
+     have happened before us (either because the calling thread took part
+     in the most recent round and thus synchronized-with all other threads
+     entering, or the program ensured this through other synchronization).
+     We must wait until all threads that entered so far have confirmed that
+     they have exited as well.  To get the notification, pretend that we have
+     reached the reset threshold.  */
+  unsigned int count = bar->count;
+  unsigned int max_in_before_reset = BARRIER_IN_THRESHOLD
+				   - BARRIER_IN_THRESHOLD % count;
+  /* Relaxed MO sufficient because the program must have ensured that all
+     modifications happen-before this load (see above).  */
+  unsigned int in = atomic_load_relaxed (&bar->in);
+  /* Trigger reset.  The required acquire MO is below.  */
+  if (atomic_fetch_add_relaxed (&bar->out, max_in_before_reset - in) < in)
+    {
+      /* Not all threads confirmed yet that they have exited, so another
+	 thread will perform a reset.  Wait until that has happened.  */
+      while (in != 0)
+	{
+	  futex_wait_simple (&bar->in, in, bar->shared);
+	  in = atomic_load_relaxed (&bar->in);
+	}
+    }
+  /* We must ensure that memory reuse happens after all prior use of the
+     barrier (specifically, synchronize-with the reset of the barrier or the
+     confirmation of threads leaving the barrier).  */
+  atomic_thread_fence_acquire ();
 
-  lll_lock (ibarrier->lock, ibarrier->private ^ FUTEX_PRIVATE_FLAG);
-
-  if (__glibc_likely (ibarrier->left == ibarrier->init_count))
-    /* The barrier is not used anymore.  */
-    result = 0;
-  else
-    /* Still used, return with an error.  */
-    lll_unlock (ibarrier->lock, ibarrier->private ^ FUTEX_PRIVATE_FLAG);
-
-  return result;
+  return 0;
 }
