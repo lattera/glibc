@@ -16,11 +16,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <unistd.h>			/* Declares getlogin_r.  */
+#include <unistd.h>			/* Declares __getlogin_r.  */
 
 /* We do not have getlogin_r in the library at all for NaCl.
    Define it away so the glob code does not try to use it.  */
-#define getlogin_r(name, len)		(ENOSYS)
+#define __getlogin_r(name, len)		(ENOSYS)
 
 /* Fetch the version that defines glob64 as an alias.  */
 #include <sysdeps/wordsize-64/glob.c>

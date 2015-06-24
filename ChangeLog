@@ -1,3 +1,8 @@
+2015-06-24  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/nacl/glob.c (getlogin_r): Macro renamed to ...
+	(__getlogin_r): ... this.
+
 2015-06-24  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18594]
