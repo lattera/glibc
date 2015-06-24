@@ -52,6 +52,9 @@ __csinhf (__complex__ float x)
 	      cosix = 1.0f;
 	    }
 
+	  if (negate)
+	    cosix = -cosix;
+
 	  if (fabsf (__real__ x) > t)
 	    {
 	      float exp_t = __ieee754_expf (t);
@@ -85,9 +88,6 @@ __csinhf (__complex__ float x)
 	      __real__ retval = __ieee754_sinhf (__real__ x) * cosix;
 	      __imag__ retval = __ieee754_coshf (__real__ x) * sinix;
 	    }
-
-	  if (negate)
-	    __real__ retval = -__real__ retval;
 
 	  if (fabsf (__real__ retval) < FLT_MIN)
 	    {

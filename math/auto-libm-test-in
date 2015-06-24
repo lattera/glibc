@@ -955,6 +955,16 @@ cpow 0.75 1.25 1.0 1.0 xfail-rounding
 cpow 0.75 1.25 1.0 0.0
 cpow 0.75 1.25 0.0 1.0
 
+csin 0.75 1e6
+csin 0.75 -1e6
+csin -0.75 1e6
+csin -0.75 -1e6
+
+csinh 1e6 0.75
+csinh -1e6 0.75
+csinh 1e6 -0.75
+csinh -1e6 -0.75
+
 csqrt 0 0
 csqrt 0 -0
 csqrt -0 0

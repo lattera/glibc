@@ -52,6 +52,9 @@ __csinl (__complex__ long double x)
 	      cosix = 1.0;
 	    }
 
+	  if (negate)
+	    sinix = -sinix;
+
 	  if (fabsl (__imag__ x) > t)
 	    {
 	      long double exp_t = __ieee754_expl (t);
@@ -85,9 +88,6 @@ __csinl (__complex__ long double x)
 	      __real__ retval = __ieee754_coshl (__imag__ x) * sinix;
 	      __imag__ retval = __ieee754_sinhl (__imag__ x) * cosix;
 	    }
-
-	  if (negate)
-	    __real__ retval = -__real__ retval;
 
 	  if (fabsl (__real__ retval) < LDBL_MIN)
 	    {

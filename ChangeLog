@@ -1,5 +1,19 @@
 2015-06-24  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18593]
+	* math/s_csin.c (__csin): Negate before rather than after possibly
+	overflowing multiplication.
+	* math/s_csinf.c (__csinf): Likewise.
+	* math/s_csinh.c (__csinh): Likewise.
+	* math/s_csinhf.c (__csinhf): Likewise.
+	* math/s_csinhl.c (__csinhl): Likewise.
+	* math/s_csinl.c (__csinl): Likewise.
+	* math/auto-libm-test-in: Add some tests of csin and csinh.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (csin_test_data): Use AUTO_TESTS_c_c.
+	(csinh_test_data): Likewise.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
+
 	[BZ #18586]
 	* sysdeps/ieee754/ldbl-128/e_expl.c (__ieee754_expl): Force
 	underflow exception for small results.

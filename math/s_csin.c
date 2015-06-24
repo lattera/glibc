@@ -52,6 +52,9 @@ __csin (__complex__ double x)
 	      cosix = 1.0;
 	    }
 
+	  if (negate)
+	    sinix = -sinix;
+
 	  if (fabs (__imag__ x) > t)
 	    {
 	      double exp_t = __ieee754_exp (t);
@@ -85,9 +88,6 @@ __csin (__complex__ double x)
 	      __real__ retval = __ieee754_cosh (__imag__ x) * sinix;
 	      __imag__ retval = __ieee754_sinh (__imag__ x) * cosix;
 	    }
-
-	  if (negate)
-	    __real__ retval = -__real__ retval;
 
 	  if (fabs (__real__ retval) < DBL_MIN)
 	    {

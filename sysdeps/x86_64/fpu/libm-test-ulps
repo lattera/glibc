@@ -1120,9 +1120,9 @@ ildouble: 3
 ldouble: 3
 
 Function: Real part of "csin_upward":
-double: 1
+double: 2
 float: 3
-idouble: 1
+idouble: 2
 ifloat: 3
 ildouble: 3
 ldouble: 3
@@ -1148,9 +1148,9 @@ idouble: 1
 ifloat: 1
 
 Function: Real part of "csinh_downward":
-double: 1
+double: 2
 float: 2
-idouble: 1
+idouble: 2
 ifloat: 2
 ildouble: 3
 ldouble: 3

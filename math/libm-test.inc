@@ -6466,6 +6466,8 @@ static const struct test_c_c_data csin_test_data[] =
     TEST_c_c (csin, 0x1p-16434L, 22730, 1.217853148905605987081057582351152052687e4924L, plus_oflow, OVERFLOW_EXCEPTION),
 #endif
 
+    AUTO_TESTS_c_c (csin),
+
     TEST_c_c (csin, min_subnorm_value, min_value, min_subnorm_value, min_value, UNDERFLOW_EXCEPTION),
     TEST_c_c (csin, min_value, min_subnorm_value, min_value, min_subnorm_value, UNDERFLOW_EXCEPTION),
   };
@@ -6562,6 +6564,8 @@ static const struct test_c_c_data csinh_test_data[] =
 #if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
     TEST_c_c (csinh, 22730, 0x1p-16434L, plus_oflow, 1.217853148905605987081057582351152052687e4924L, OVERFLOW_EXCEPTION),
 #endif
+
+    AUTO_TESTS_c_c (csinh),
 
     TEST_c_c (csinh, min_subnorm_value, min_value, min_subnorm_value, min_value, UNDERFLOW_EXCEPTION),
     TEST_c_c (csinh, min_value, min_subnorm_value, min_value, min_subnorm_value, UNDERFLOW_EXCEPTION),
