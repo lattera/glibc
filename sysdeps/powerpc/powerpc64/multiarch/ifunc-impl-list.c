@@ -322,5 +322,14 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strcat, 1,
 			     __strcat_ppc))
 
+  /* Support sysdeps/powerpc/powerpc64/multiarch/strstr.c.  */
+  IFUNC_IMPL (i, name, strstr,
+             IFUNC_IMPL_ADD (array, i, strstr,
+                             hwcap & PPC_FEATURE_HAS_VSX,
+                             __strstr_power7)
+             IFUNC_IMPL_ADD (array, i, strstr, 1,
+                             __strstr_ppc))
+
+
   return i;
 }

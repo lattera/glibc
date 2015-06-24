@@ -1,3 +1,13 @@
+2015-07-16  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Add strstr-power7
+	and strstr-ppc64..
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strstr.S: New File.
+	* sysdeps/powerpc/powerpc64/multiarch/strstr-power7.S: New File.
+	* sysdeps/powerpc/powerpc64/multiarch/strstr-ppc64.c: New File.
+	* sysdeps/powerpc/powerpc64/multiarch/strstr.c: New File.
+
 2015-07-16  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/hppa/Versions (GLIBC_PRIVATE): Delete _dl_unmap.
