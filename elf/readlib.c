@@ -63,6 +63,13 @@ static struct known_names known_libs[] =
 };
 
 
+/* Check if string corresponds to a GDB Python file.  */
+static bool
+is_gdb_python_file (const char *name)
+{
+  size_t len = strlen (name);
+  return len > 7 && strcmp (name + len - 7, "-gdb.py") == 0;
+}
 
 /* Returns 0 if everything is ok, != 0 in case of error.  */
 int
@@ -157,7 +164,8 @@ process_file (const char *real_file_name, const char *file_name,
 	 beginning of the file.  */
       size_t len = MIN (statbuf.st_size, 512);
       if (memmem (file_contents, len, "GROUP", 5) == NULL
-	  && memmem (file_contents, len, "GNU ld script", 13) == NULL)
+	  && memmem (file_contents, len, "GNU ld script", 13) == NULL
+	  && !is_gdb_python_file (file_name))
 	error (0, 0, _("%s is not an ELF file - it has the wrong magic bytes at the start.\n"),
 	       file_name);
       ret = 1;

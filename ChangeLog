@@ -1,3 +1,10 @@
+2015-06-24  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18585]
+	* elf/readlib.c (is_gdb_python_file): New.
+	(process_file): Don't issue errors on filenames with -gdb.py
+	suffix.
+
 2015-06-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Add more tests of csin and csinh.
