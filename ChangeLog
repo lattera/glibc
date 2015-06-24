@@ -34,8 +34,8 @@
 2015-06-24  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	* sysdeps/x86_64/fpu/Makefile (libmvec-support): Fixed files list.
-	* sysdeps/x86_64/fpu/multiarch/svml_s_cosf4_core_sse4.S: Renamed variable
-	and included header.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_cosf4_core_sse4.S: Renamed
+	variable and included header.
 	* sysdeps/x86_64/fpu/multiarch/svml_s_cosf8_core_avx2.S: Likewise.
 	* sysdeps/x86_64/fpu/multiarch/svml_s_cosf16_core_avx512.S: Likewise.
 	* sysdeps/x86_64/fpu/multiarch/svml_s_sinf4_core_sse4.S: Likewise.
@@ -830,7 +830,8 @@
 	* sysdeps/x86_64/fpu/svml_d_log8_core.S: New file.
 	* sysdeps/x86_64/fpu/svml_d_log_data.S: New file.
 	* sysdeps/x86_64/fpu/svml_d_log_data.h: New file.
-	* sysdeps/x86_64/fpu/test-double-vlen2-wrappers.c: Added vector log test.
+	* sysdeps/x86_64/fpu/test-double-vlen2-wrappers.c: Added vector log
+	test.
 	* sysdeps/x86_64/fpu/test-double-vlen2.c: Likewise.
 	* sysdeps/x86_64/fpu/test-double-vlen4-avx2-wrappers.c: Likewise.
 	* sysdeps/x86_64/fpu/test-double-vlen4-avx2.c: Likewise.
@@ -1027,8 +1028,8 @@
 	* sysdeps/x86_64/fpu/Makefile (libmvec-support): Added new files.
 	* sysdeps/x86_64/fpu/Versions: New versions added.
 	* sysdeps/x86_64/fpu/libm-test-ulps: Regenerated.
-	* sysdeps/x86_64/fpu/multiarch/Makefile (libmvec-sysdep_routines): Added
-	build of SSE, AVX2 and AVX512 IFUNC versions.
+	* sysdeps/x86_64/fpu/multiarch/Makefile (libmvec-sysdep_routines):
+	Added build of SSE, AVX2 and AVX512 IFUNC versions.
 	* sysdeps/x86_64/fpu/multiarch/svml_d_sin2_core.S: New file.
 	* sysdeps/x86_64/fpu/multiarch/svml_d_sin2_core_sse4.S: New file.
 	* sysdeps/x86_64/fpu/multiarch/svml_d_sin4_core.S: New file.
@@ -1041,7 +1042,8 @@
 	* sysdeps/x86_64/fpu/svml_d_sin8_core.S: New file.
 	* sysdeps/x86_64/fpu/svml_d_sin_data.S: New file.
 	* sysdeps/x86_64/fpu/svml_d_sin_data.h: New file.
-	* sysdeps/x86_64/fpu/test-double-vlen2-wrappers.c: Added vector sin test.
+	* sysdeps/x86_64/fpu/test-double-vlen2-wrappers.c: Added vector sin
+	test.
 	* sysdeps/x86_64/fpu/test-double-vlen2.c: Likewise.
 	* sysdeps/x86_64/fpu/test-double-vlen4-avx2-wrappers.c: Likewise.
 	* sysdeps/x86_64/fpu/test-double-vlen4-avx2.c: Likewise.
@@ -1179,8 +1181,8 @@
 	* sysdeps/x86_64/fpu/multiarch/svml_d_cos4_core_avx2.S: New file.
 	* sysdeps/x86_64/fpu/multiarch/svml_d_cos8_core.S: New file.
 	* sysdeps/x86_64/fpu/multiarch/svml_d_cos8_core_avx512.S: New file.
-	* sysdeps/x86_64/fpu/multiarch/Makefile (libmvec-sysdep_routines): Added
-	build of SSE, AVX2 and AVX512 IFUNC versions.
+	* sysdeps/x86_64/fpu/multiarch/Makefile (libmvec-sysdep_routines):
+	Added build of SSE, AVX2 and AVX512 IFUNC versions.
 	* sysdeps/x86/fpu/bits/math-vector.h: Added SIMD declaration for cos.
 	* math/bits/mathcalls.h: Added cos declaration with __MATHCALL_VEC.
 	* sysdeps/x86_64/configure.ac: Options for libmvec build.
@@ -1226,8 +1228,8 @@
 	* sysdeps/x86_64/fpu/svml_s_wrapper_impl.h: New file.
 	* sysdeps/x86_64/fpu/svml_s_cosf_data.S: New file.
 	* sysdeps/x86_64/fpu/svml_s_cosf_data.h: New file.
-	* sysdeps/x86_64/fpu/multiarch/Makefile (libmvec-sysdep_routines): Added
-	build of SSE, AVX2 and AVX512 IFUNC versions.
+	* sysdeps/x86_64/fpu/multiarch/Makefile (libmvec-sysdep_routines):
+	Added build of SSE, AVX2 and AVX512 IFUNC versions.
 	* sysdeps/unix/sysv/linux/x86_64/libmvec.abilist: New versions added.
 	* sysdeps/x86/fpu/bits/math-vector.h: Added SIMD declaration for cosf.
 	* NEWS: Mention addition of x86_64 vector cosf.
