@@ -1,3 +1,9 @@
+2015-06-24  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18586]
+	* sysdeps/ieee754/ldbl-128/e_expl.c (__ieee754_expl): Force
+	underflow exception for small results.
+
 2015-06-24  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	* sysdeps/x86_64/fpu/Makefile (libmvec-support): Fixed files list.
