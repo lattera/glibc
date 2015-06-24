@@ -1,3 +1,8 @@
+2015-06-24  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/tst-getcpu.c (do_test): When sched_getcpu
+	return value is wrong, print the expected value too.
+
 2015-06-24  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18585]
