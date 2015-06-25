@@ -2075,6 +2075,19 @@ fi
 rm -f conftest.*])
 AC_SUBST(libc_cv_pic_default)
 
+AC_CACHE_CHECK([whether -fPIE is default], libc_cv_pie_default,
+[libc_cv_pie_default=yes
+cat > conftest.c <<EOF
+#if defined __PIE__ || defined __pie__ || defined PIE || defined pie
+# error PIE is default.
+#endif
+EOF
+if eval "${CC-cc} -S conftest.c 2>&AS_MESSAGE_LOG_FD 1>&AS_MESSAGE_LOG_FD"; then
+  libc_cv_pie_default=no
+fi
+rm -f conftest.*])
+AC_SUBST(libc_cv_pie_default)
+
 AC_SUBST(profile)
 AC_SUBST(static_nss)
 

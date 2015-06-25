@@ -151,6 +151,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 #	 reldep9
 ifeq ($(build-hardcoded-path-in-tests),yes)
 tests += tst-dlopen-aout
+LDFLAGS-tst-dlopen-aout = $(no-pie-ldflag)
 endif
 test-srcs = tst-pathopt
 selinux-enabled := $(shell cat /selinux/enforce 2> /dev/null)

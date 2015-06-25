@@ -1,3 +1,15 @@
+2015-06-25  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #17841]
+	* Makeconfig (no-pie-ldflag): New.
+	(+link): Set to $(+link-pie) if default to PIE.
+	(+link-tests): Set to $(+link-pie-tests) if default to PIE.
+	* config.make.in (build-pie-default): New.
+	* configure.ac (libc_cv_pie_default): New.  Set to yes if -fPIE
+	is default.  AC_SUBST.
+	* configure: Regenerated.
+	* elf/Makefile (LDFLAGS-tst-dlopen-aout): New.
+
 2015-06-24  Roland McGrath  <roland@hack.frob.com>
 
 	* nptl/descr.h (struct pthread): Change type of field setxid_futex

@@ -596,6 +596,7 @@ mach_interface_list
 DEFINES
 static_nss
 profile
+libc_cv_pie_default
 libc_cv_pic_default
 shared
 static
@@ -7315,6 +7316,26 @@ rm -f conftest.*
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_pic_default" >&5
 $as_echo "$libc_cv_pic_default" >&6; }
+
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether -fPIE is default" >&5
+$as_echo_n "checking whether -fPIE is default... " >&6; }
+if ${libc_cv_pie_default+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  libc_cv_pie_default=yes
+cat > conftest.c <<EOF
+#if defined __PIE__ || defined __pie__ || defined PIE || defined pie
+# error PIE is default.
+#endif
+EOF
+if eval "${CC-cc} -S conftest.c 2>&5 1>&5"; then
+  libc_cv_pie_default=no
+fi
+rm -f conftest.*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_pie_default" >&5
+$as_echo "$libc_cv_pie_default" >&6; }
 
 
 

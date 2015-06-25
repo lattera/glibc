@@ -442,6 +442,11 @@ endif
 # Commands for linking programs with the C library.
 ifndef +link
 ifeq (yes,$(build-shared))
+ifeq (yes,$(build-pie-default))
+no-pie-ldflag = -no-pie
++link = $(+link-pie)
++link-tests = $(+link-pie-tests)
+else
 +link-before-libc = $(CC) -nostdlib -nostartfiles -o $@ \
 	      $(sysdep-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F)) \
 	      $(combreloc-LDFLAGS) $(relro-LDFLAGS) $(hashstyle-LDFLAGS) \
@@ -462,6 +467,7 @@ $(+link-before-libc) $(rtld-tests-LDFLAGS) $(link-libc-tests) \
 		     $(+link-after-libc)
 $(call after-link,$@)
 endef
+endif
 else
 +link = $(+link-static)
 +link-tests = $(+link-static-tests)
