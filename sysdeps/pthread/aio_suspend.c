@@ -94,13 +94,13 @@ cleanup (void *arg)
 #ifdef DONT_NEED_AIO_MISC_COND
 static int
 __attribute__ ((noinline))
-do_aio_misc_wait(int *cntr, const struct timespec *timeout)
+do_aio_misc_wait (unsigned int *cntr, const struct timespec *timeout)
 {
-	int result = 0;
+  int result = 0;
 
-	AIO_MISC_WAIT(result, *cntr, timeout, 1);
+  AIO_MISC_WAIT (result, *cntr, timeout, 1);
 
-	return result;
+  return result;
 }
 #endif
 
@@ -124,7 +124,7 @@ aio_suspend (list, nent, timeout)
   int cnt;
   bool any = false;
   int result = 0;
-  int cntr = 1;
+  unsigned int cntr = 1;
 
   /* Request the mutex.  */
   pthread_mutex_lock (&__aio_requests_mutex);
@@ -180,7 +180,7 @@ aio_suspend (list, nent, timeout)
       pthread_cleanup_push (cleanup, &clparam);
 
 #ifdef DONT_NEED_AIO_MISC_COND
-      result = do_aio_misc_wait(&cntr, timeout);
+      result = do_aio_misc_wait (&cntr, timeout);
 #else
       if (timeout == NULL)
 	result = pthread_cond_wait (&cond, &__aio_requests_mutex);

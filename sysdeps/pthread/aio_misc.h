@@ -51,7 +51,7 @@ struct waitlist
 #endif
     int *result;
 
-    volatile int *counterp;
+    volatile unsigned int *counterp;
     /* The next field is used in asynchronous `lio_listio' operations.  */
     struct sigevent *sigevp;
 #ifdef BROKEN_THREAD_SIGNALS

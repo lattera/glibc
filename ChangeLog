@@ -1,3 +1,14 @@
+2015-06-24  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/pthread/aio_misc.h (struct waitlist): Change type of field
+	counterp to 'volatile unsigned int *'.
+	* sysdeps/pthread/aio_suspend.c [DONT_NEED_AIO_MISC_COND]
+	(do_aio_misc_wait): Give argument CNTR type 'unsigned int *'.
+	(aio_suspend): Give local variable CNTR type 'unsigned int'.
+	* sysdeps/pthread/lio_listio.c (lio_listio_internal):
+	Give local variable TOTAL type 'volatile unsigned int'.
+	(struct async_waitlist): Change type of field counter to 'unsigned int'.
+
 2015-06-24  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18383]

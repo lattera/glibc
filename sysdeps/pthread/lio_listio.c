@@ -35,7 +35,7 @@
 /* We need this special structure to handle asynchronous I/O.  */
 struct async_waitlist
   {
-    int counter;
+    unsigned int counter;
     struct sigevent sigev;
     struct waitlist list[0];
   };
@@ -61,7 +61,7 @@ lio_listio_internal (int mode, struct aiocb *const list[], int nent,
   struct sigevent defsigev;
   struct requestlist *requests[nent];
   int cnt;
-  volatile int total = 0;
+  volatile unsigned int total = 0;
   int result = 0;
 
   if (sig == NULL)
@@ -83,7 +83,7 @@ lio_listio_internal (int mode, struct aiocb *const list[], int nent,
 
 	requests[cnt] = __aio_enqueue_request ((aiocb_union *) list[cnt],
 					       (list[cnt]->aio_lio_opcode
-					        | LIO_OPCODE_BASE));
+						| LIO_OPCODE_BASE));
 
 	if (requests[cnt] != NULL)
 	  /* Successfully enqueued.  */
