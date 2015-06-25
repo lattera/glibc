@@ -28,7 +28,7 @@
 /* We need this special structure to handle asynchronous I/O.  */
 struct async_waitlist
   {
-    int counter;
+    unsigned int counter;
     struct sigevent sigev;
     struct waitlist list[0];
   };
@@ -40,7 +40,7 @@ getaddrinfo_a (int mode, struct gaicb *list[], int ent, struct sigevent *sig)
   struct sigevent defsigev;
   struct requestlist *requests[ent];
   int cnt;
-  volatile int total = 0;
+  volatile unsigned int total = 0;
   int result = 0;
 
   /* Check arguments.  */

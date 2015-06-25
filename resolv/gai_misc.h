@@ -31,7 +31,7 @@ struct waitlist
 #ifndef DONT_NEED_GAI_MISC_COND
     pthread_cond_t *cond;
 #endif
-    volatile int *counterp;
+    volatile unsigned int *counterp;
     /* The next field is used in asynchronous `lio_listio' operations.  */
     struct sigevent *sigevp;
     /* XXX See requestlist, it's used to work around the broken signal

@@ -35,8 +35,8 @@
 
 #define GAI_MISC_WAIT(result, futex, timeout, cancel) \
   do {									      \
-    volatile int *futexaddr = &futex;					      \
-    int oldval = futex;							      \
+    volatile unsigned int *futexaddr = &futex;				      \
+    unsigned int oldval = futex;					      \
 									      \
     if (oldval != 0)							      \
       {									      \

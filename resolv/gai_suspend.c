@@ -35,7 +35,7 @@ gai_suspend (const struct gaicb *const list[], int ent,
   pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 #endif
   int cnt;
-  int cntr = 1;
+  unsigned int cntr = 1;
   int none = 1;
   int result;
 

@@ -1,5 +1,15 @@
 2015-06-24  Roland McGrath  <roland@hack.frob.com>
 
+	* resolv/gai_misc.h (struct waitlist): Change type of field
+	counterp to 'volatile unsigned int *'.
+	* sysdeps/nptl/gai_misc.h (GAI_MISC_WAIT): Use unsigned types for
+	FUTEXADDR and OLDVAL.
+	* resolv/getaddrinfo_a.c (getaddrinfo_a):
+	Give local variable TOTAL type 'volatile unsigned int'.
+	(struct async_waitlist): Change type of field counter to 'unsigned int'.
+	* resolv/gai_suspend.c (gai_suspend):
+	Give local variable CNTR type 'unsigned int'.
+
 	* sysdeps/pthread/aio_misc.h (struct waitlist): Change type of field
 	counterp to 'volatile unsigned int *'.
 	* sysdeps/pthread/aio_suspend.c [DONT_NEED_AIO_MISC_COND]
