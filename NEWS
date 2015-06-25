@@ -61,8 +61,8 @@ Version 2.22
   pow, powf.
   The library can be disabled with --disable-mathvec. Use of the functions is
   enabled with -fopenmp -ffast-math starting from -O1 for GCC version >= 4.9.0.
-  The library is linked in as needed when using -lm (no need to specify -lmvec
-  explicitly).
+  Shared library libmvec.so is linked in as needed when using -lm (no need to
+  specify -lmvec explicitly for not static builds).
   Visit <https://sourceware.org/glibc/wiki/libmvec> for detailed information.
 
 Version 2.21

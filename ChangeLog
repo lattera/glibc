@@ -1,3 +1,7 @@
+2015-06-25  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	* NEWS: Fixed description of link with vector math library.
+
 2015-06-25  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #18549]
