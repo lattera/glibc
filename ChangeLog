@@ -1,3 +1,9 @@
+2015-06-25  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #18549]
+	* libio/fmemopen.c (fmemopen_write): Fix bounds check for ENOSPC.
+	* libio/test-fmemopen.c (do_test): Add test for it.
+
 2015-06-25  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #17841]
