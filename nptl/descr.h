@@ -328,7 +328,7 @@ struct pthread
   int lock;
 
   /* Lock for synchronizing setxid calls.  */
-  int setxid_futex;
+  unsigned int setxid_futex;
 
 #if HP_TIMING_AVAIL
   /* Offset of the CPU clock at start thread start time.  */

@@ -1,5 +1,8 @@
 2015-06-24  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/descr.h (struct pthread): Change type of field setxid_futex
+	to 'unsigned int'.
+
 	* resolv/gai_misc.h (struct waitlist): Change type of field
 	counterp to 'volatile unsigned int *'.
 	* sysdeps/nptl/gai_misc.h (GAI_MISC_WAIT): Use unsigned types for
