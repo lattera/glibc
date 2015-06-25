@@ -1767,6 +1767,30 @@ ifloat: 4
 ildouble: 4
 ldouble: 4
 
+Function: "jn_downward":
+double: 5
+float: 5
+idouble: 5
+ifloat: 5
+ildouble: 4
+ldouble: 4
+
+Function: "jn_towardzero":
+double: 5
+float: 5
+idouble: 5
+ifloat: 5
+ildouble: 5
+ldouble: 5
+
+Function: "jn_upward":
+double: 5
+float: 5
+idouble: 5
+ifloat: 5
+ildouble: 5
+ldouble: 5
+
 Function: "lgamma":
 double: 2
 float: 2

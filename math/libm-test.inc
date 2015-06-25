@@ -7486,9 +7486,7 @@ static const struct test_if_f_data jn_test_data[] =
 static void
 jn_test (void)
 {
-  START (jn,, 0);
-  RUN_TEST_LOOP_if_f (jn, jn_test_data, );
-  END;
+  ALL_RM_TEST (jn, 0, jn_test_data, RUN_TEST_LOOP_if_f, END);
 }
 
 

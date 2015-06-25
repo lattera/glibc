@@ -73,7 +73,7 @@ __ieee754_jnl (int n, long double x)
 {
   uint32_t se, lx;
   int32_t i, ix, sgn;
-  long double a, b, temp, di;
+  long double a, b, temp, di, ret;
   long double z, w;
   double xhi;
 
@@ -106,192 +106,198 @@ __ieee754_jnl (int n, long double x)
   sgn = (n & 1) & (se >> 31);	/* even n -- 0, odd n -- sign(x) */
   x = fabsl (x);
 
-  if (x == 0.0L || ix >= 0x7ff00000)	/* if x is 0 or inf */
-    b = zero;
-  else if ((long double) n <= x)
-    {
-      /* Safe to use J(n+1,x)=2n/x *J(n,x)-J(n-1,x) */
-      if (ix >= 0x52d00000)
-	{			/* x > 2**302 */
+  {
+    SET_RESTORE_ROUNDL (FE_TONEAREST);
+    if (x == 0.0L || ix >= 0x7ff00000)	/* if x is 0 or inf */
+      return sgn == 1 ? -zero : zero;
+    else if ((long double) n <= x)
+      {
+	/* Safe to use J(n+1,x)=2n/x *J(n,x)-J(n-1,x) */
+	if (ix >= 0x52d00000)
+	  {			/* x > 2**302 */
 
-	  /* ??? Could use an expansion for large x here.  */
+	    /* ??? Could use an expansion for large x here.  */
 
-	  /* (x >> n**2)
-	   *      Jn(x) = cos(x-(2n+1)*pi/4)*sqrt(2/x*pi)
-	   *      Yn(x) = sin(x-(2n+1)*pi/4)*sqrt(2/x*pi)
-	   *      Let s=sin(x), c=cos(x),
-	   *          xn=x-(2n+1)*pi/4, sqt2 = sqrt(2),then
-	   *
-	   *             n    sin(xn)*sqt2    cos(xn)*sqt2
-	   *          ----------------------------------
-	   *             0     s-c             c+s
-	   *             1    -s-c            -c+s
-	   *             2    -s+c            -c-s
-	   *             3     s+c             c-s
-	   */
-	  long double s;
-	  long double c;
-	  __sincosl (x, &s, &c);
-	  switch (n & 3)
-	    {
-	    case 0:
-	      temp = c + s;
-	      break;
-	    case 1:
-	      temp = -c + s;
-	      break;
-	    case 2:
-	      temp = -c - s;
-	      break;
-	    case 3:
-	      temp = c - s;
-	      break;
-	    }
-	  b = invsqrtpi * temp / __ieee754_sqrtl (x);
-	}
-      else
-	{
-	  a = __ieee754_j0l (x);
-	  b = __ieee754_j1l (x);
-	  for (i = 1; i < n; i++)
-	    {
-	      temp = b;
-	      b = b * ((long double) (i + i) / x) - a;	/* avoid underflow */
-	      a = temp;
-	    }
-	}
-    }
-  else
-    {
-      if (ix < 0x3e100000)
-	{			/* x < 2**-29 */
-	  /* x is tiny, return the first Taylor expansion of J(n,x)
-	   * J(n,x) = 1/n!*(x/2)^n  - ...
-	   */
-	  if (n >= 33)		/* underflow, result < 10^-300 */
-	    b = zero;
-	  else
-	    {
-	      temp = x * 0.5;
-	      b = temp;
-	      for (a = one, i = 2; i <= n; i++)
-		{
-		  a *= (long double) i;	/* a = n! */
-		  b *= temp;	/* b = (x/2)^n */
-		}
-	      b = b / a;
-	    }
-	}
-      else
-	{
-	  /* use backward recurrence */
-	  /*                      x      x^2      x^2
-	   *  J(n,x)/J(n-1,x) =  ----   ------   ------   .....
-	   *                      2n  - 2(n+1) - 2(n+2)
-	   *
-	   *                      1      1        1
-	   *  (for large x)   =  ----  ------   ------   .....
-	   *                      2n   2(n+1)   2(n+2)
-	   *                      -- - ------ - ------ -
-	   *                       x     x         x
-	   *
-	   * Let w = 2n/x and h=2/x, then the above quotient
-	   * is equal to the continued fraction:
-	   *                  1
-	   *      = -----------------------
-	   *                     1
-	   *         w - -----------------
-	   *                        1
-	   *              w+h - ---------
-	   *                     w+2h - ...
-	   *
-	   * To determine how many terms needed, let
-	   * Q(0) = w, Q(1) = w(w+h) - 1,
-	   * Q(k) = (w+k*h)*Q(k-1) - Q(k-2),
-	   * When Q(k) > 1e4      good for single
-	   * When Q(k) > 1e9      good for double
-	   * When Q(k) > 1e17     good for quadruple
-	   */
-	  /* determine k */
-	  long double t, v;
-	  long double q0, q1, h, tmp;
-	  int32_t k, m;
-	  w = (n + n) / (long double) x;
-	  h = 2.0L / (long double) x;
-	  q0 = w;
-	  z = w + h;
-	  q1 = w * z - 1.0L;
-	  k = 1;
-	  while (q1 < 1.0e17L)
-	    {
-	      k += 1;
-	      z += h;
-	      tmp = z * q1 - q0;
-	      q0 = q1;
-	      q1 = tmp;
-	    }
-	  m = n + n;
-	  for (t = zero, i = 2 * (n + k); i >= m; i -= 2)
-	    t = one / (i / x - t);
-	  a = t;
-	  b = one;
-	  /*  estimate log((2/x)^n*n!) = n*log(2/x)+n*ln(n)
-	   *  Hence, if n*(log(2n/x)) > ...
-	   *  single 8.8722839355e+01
-	   *  double 7.09782712893383973096e+02
-	   *  long double 1.1356523406294143949491931077970765006170e+04
-	   *  then recurrent value may overflow and the result is
-	   *  likely underflow to zero
-	   */
-	  tmp = n;
-	  v = two / x;
-	  tmp = tmp * __ieee754_logl (fabsl (v * tmp));
+	    /* (x >> n**2)
+	     *      Jn(x) = cos(x-(2n+1)*pi/4)*sqrt(2/x*pi)
+	     *      Yn(x) = sin(x-(2n+1)*pi/4)*sqrt(2/x*pi)
+	     *      Let s=sin(x), c=cos(x),
+	     *          xn=x-(2n+1)*pi/4, sqt2 = sqrt(2),then
+	     *
+	     *             n    sin(xn)*sqt2    cos(xn)*sqt2
+	     *          ----------------------------------
+	     *             0     s-c             c+s
+	     *             1    -s-c            -c+s
+	     *             2    -s+c            -c-s
+	     *             3     s+c             c-s
+	     */
+	    long double s;
+	    long double c;
+	    __sincosl (x, &s, &c);
+	    switch (n & 3)
+	      {
+	      case 0:
+		temp = c + s;
+		break;
+	      case 1:
+		temp = -c + s;
+		break;
+	      case 2:
+		temp = -c - s;
+		break;
+	      case 3:
+		temp = c - s;
+		break;
+	      }
+	    b = invsqrtpi * temp / __ieee754_sqrtl (x);
+	  }
+	else
+	  {
+	    a = __ieee754_j0l (x);
+	    b = __ieee754_j1l (x);
+	    for (i = 1; i < n; i++)
+	      {
+		temp = b;
+		b = b * ((long double) (i + i) / x) - a;	/* avoid underflow */
+		a = temp;
+	      }
+	  }
+      }
+    else
+      {
+	if (ix < 0x3e100000)
+	  {			/* x < 2**-29 */
+	    /* x is tiny, return the first Taylor expansion of J(n,x)
+	     * J(n,x) = 1/n!*(x/2)^n  - ...
+	     */
+	    if (n >= 33)		/* underflow, result < 10^-300 */
+	      b = zero;
+	    else
+	      {
+		temp = x * 0.5;
+		b = temp;
+		for (a = one, i = 2; i <= n; i++)
+		  {
+		    a *= (long double) i;	/* a = n! */
+		    b *= temp;	/* b = (x/2)^n */
+		  }
+		b = b / a;
+	      }
+	  }
+	else
+	  {
+	    /* use backward recurrence */
+	    /*                      x      x^2      x^2
+	     *  J(n,x)/J(n-1,x) =  ----   ------   ------   .....
+	     *                      2n  - 2(n+1) - 2(n+2)
+	     *
+	     *                      1      1        1
+	     *  (for large x)   =  ----  ------   ------   .....
+	     *                      2n   2(n+1)   2(n+2)
+	     *                      -- - ------ - ------ -
+	     *                       x     x         x
+	     *
+	     * Let w = 2n/x and h=2/x, then the above quotient
+	     * is equal to the continued fraction:
+	     *                  1
+	     *      = -----------------------
+	     *                     1
+	     *         w - -----------------
+	     *                        1
+	     *              w+h - ---------
+	     *                     w+2h - ...
+	     *
+	     * To determine how many terms needed, let
+	     * Q(0) = w, Q(1) = w(w+h) - 1,
+	     * Q(k) = (w+k*h)*Q(k-1) - Q(k-2),
+	     * When Q(k) > 1e4      good for single
+	     * When Q(k) > 1e9      good for double
+	     * When Q(k) > 1e17     good for quadruple
+	     */
+	    /* determine k */
+	    long double t, v;
+	    long double q0, q1, h, tmp;
+	    int32_t k, m;
+	    w = (n + n) / (long double) x;
+	    h = 2.0L / (long double) x;
+	    q0 = w;
+	    z = w + h;
+	    q1 = w * z - 1.0L;
+	    k = 1;
+	    while (q1 < 1.0e17L)
+	      {
+		k += 1;
+		z += h;
+		tmp = z * q1 - q0;
+		q0 = q1;
+		q1 = tmp;
+	      }
+	    m = n + n;
+	    for (t = zero, i = 2 * (n + k); i >= m; i -= 2)
+	      t = one / (i / x - t);
+	    a = t;
+	    b = one;
+	    /*  estimate log((2/x)^n*n!) = n*log(2/x)+n*ln(n)
+	     *  Hence, if n*(log(2n/x)) > ...
+	     *  single 8.8722839355e+01
+	     *  double 7.09782712893383973096e+02
+	     *  long double 1.1356523406294143949491931077970765006170e+04
+	     *  then recurrent value may overflow and the result is
+	     *  likely underflow to zero
+	     */
+	    tmp = n;
+	    v = two / x;
+	    tmp = tmp * __ieee754_logl (fabsl (v * tmp));
 
-	  if (tmp < 1.1356523406294143949491931077970765006170e+04L)
-	    {
-	      for (i = n - 1, di = (long double) (i + i); i > 0; i--)
-		{
-		  temp = b;
-		  b *= di;
-		  b = b / x - a;
-		  a = temp;
-		  di -= two;
-		}
-	    }
-	  else
-	    {
-	      for (i = n - 1, di = (long double) (i + i); i > 0; i--)
-		{
-		  temp = b;
-		  b *= di;
-		  b = b / x - a;
-		  a = temp;
-		  di -= two;
-		  /* scale b to avoid spurious overflow */
-		  if (b > 1e100L)
-		    {
-		      a /= b;
-		      t /= b;
-		      b = one;
-		    }
-		}
-	    }
-	  /* j0() and j1() suffer enormous loss of precision at and
-	   * near zero; however, we know that their zero points never
-	   * coincide, so just choose the one further away from zero.
-	   */
-	  z = __ieee754_j0l (x);
-	  w = __ieee754_j1l (x);
-	  if (fabsl (z) >= fabsl (w))
-	    b = (t * z / b);
-	  else
-	    b = (t * w / a);
-	}
-    }
-  if (sgn == 1)
-    return -b;
-  else
-    return b;
+	    if (tmp < 1.1356523406294143949491931077970765006170e+04L)
+	      {
+		for (i = n - 1, di = (long double) (i + i); i > 0; i--)
+		  {
+		    temp = b;
+		    b *= di;
+		    b = b / x - a;
+		    a = temp;
+		    di -= two;
+		  }
+	      }
+	    else
+	      {
+		for (i = n - 1, di = (long double) (i + i); i > 0; i--)
+		  {
+		    temp = b;
+		    b *= di;
+		    b = b / x - a;
+		    a = temp;
+		    di -= two;
+		    /* scale b to avoid spurious overflow */
+		    if (b > 1e100L)
+		      {
+			a /= b;
+			t /= b;
+			b = one;
+		      }
+		  }
+	      }
+	    /* j0() and j1() suffer enormous loss of precision at and
+	     * near zero; however, we know that their zero points never
+	     * coincide, so just choose the one further away from zero.
+	     */
+	    z = __ieee754_j0l (x);
+	    w = __ieee754_j1l (x);
+	    if (fabsl (z) >= fabsl (w))
+	      b = (t * z / b);
+	    else
+	      b = (t * w / a);
+	  }
+      }
+    if (sgn == 1)
+      ret = -b;
+    else
+      ret = b;
+  }
+  if (ret == 0)
+    ret = __copysignl (LDBL_MIN, ret) * LDBL_MIN;
+  return ret;
 }
 strong_alias (__ieee754_jnl, __jnl_finite)
 

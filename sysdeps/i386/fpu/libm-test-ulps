@@ -1613,6 +1613,30 @@ ifloat: 3
 ildouble: 4
 ldouble: 4
 
+Function: "jn_downward":
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
+ildouble: 4
+ldouble: 4
+
+Function: "jn_towardzero":
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
+ildouble: 5
+ldouble: 5
+
+Function: "jn_upward":
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
+ildouble: 5
+ldouble: 5
+
 Function: "lgamma":
 double: 1
 float: 1

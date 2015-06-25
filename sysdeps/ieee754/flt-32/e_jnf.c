@@ -27,6 +27,8 @@ static const float zero  =  0.0000000000e+00;
 float
 __ieee754_jnf(int n, float x)
 {
+    float ret;
+    {
 	int32_t i,hx,ix, sgn;
 	float a, b, temp, di;
 	float z, w;
@@ -47,8 +49,9 @@ __ieee754_jnf(int n, float x)
 	if(n==1) return(__ieee754_j1f(x));
 	sgn = (n&1)&(hx>>31);	/* even n -- 0, odd n -- sign(x) */
 	x = fabsf(x);
+	SET_RESTORE_ROUNDF (FE_TONEAREST);
 	if(__builtin_expect(ix==0||ix>=0x7f800000, 0))	/* if x is 0 or inf */
-	    b = zero;
+	    return sgn == 1 ? -zero : zero;
 	else if((float)n<=x) {
 		/* Safe to use J(n+1,x)=2n/x *J(n,x)-J(n-1,x) */
 	    a = __ieee754_j0f(x);
@@ -163,7 +166,11 @@ __ieee754_jnf(int n, float x)
 		  b = (t * w / a);
 	    }
 	}
-	if(sgn==1) return -b; else return b;
+	if(sgn==1) ret = -b; else ret = b;
+    }
+    if (ret == 0)
+	ret = __copysignf (FLT_MIN, ret) * FLT_MIN;
+    return ret;
 }
 strong_alias (__ieee754_jnf, __jnf_finite)
 

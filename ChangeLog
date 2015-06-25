@@ -1,3 +1,18 @@
+2015-06-25  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16559]
+	[BZ #18602]
+	* sysdeps/ieee754/dbl-64/e_jn.c (__ieee754_jn): Set
+	round-to-nearest internally then recompute results that
+	underflowed to zero in the original rounding mode.
+	* sysdeps/ieee754/flt-32/e_jnf.c (__ieee754_jnf): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_jnl.c (__ieee754_jnl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_jnl.c (__ieee754_jnl): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_jnl.c (__ieee754_jnl): Likewise
+	* math/libm-test.inc (jn_test): Use ALL_RM_TEST.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2015-06-25  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	* NEWS: Fixed description of link with vector math library.
