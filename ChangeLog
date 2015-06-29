@@ -1,5 +1,12 @@
 2015-06-29  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18612]
+	* sysdeps/ieee754/ldbl-128/e_j1l.c (__ieee754_j1l): For small
+	arguments, just return 0.5 times the argument, with underflow
+	forced as needed.
+	* math/auto-libm-test-in: Add more tests of j1.
+	* math/auto-libm-test-out: Regenerated.
+
 	[BZ #16559]
 	* sysdeps/ieee754/dbl-64/e_j1.c: Include <float.h>.
 	(__ieee754_j1): Force underflow exception for small results.

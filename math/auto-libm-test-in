@@ -1812,6 +1812,9 @@ j1 0x1.ff00000000002p+840
 j1 0x1p1023
 j1 0x1p16382
 j1 0x1p16383
+j1 0x1p-100
+j1 0x1p-600
+j1 0x1p-10000
 # Bug 18611: errno setting may be missing.
 j1 min missing-errno
 j1 -min missing-errno

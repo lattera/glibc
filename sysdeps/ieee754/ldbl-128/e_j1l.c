@@ -697,6 +697,16 @@ __ieee754_j1l (long double x)
   if (x == 0.0L)
     return x;
   xx = fabsl (x);
+  if (xx <= 0x1p-58L)
+    {
+      long double ret = x * 0.5L;
+      if (fabsl (ret) < LDBL_MIN)
+	{
+	  long double force_underflow = ret * ret;
+	  math_force_eval (force_underflow);
+	}
+      return ret;
+    }
   if (xx <= 2.0L)
     {
       /* 0 <= x <= 2 */
