@@ -1,5 +1,41 @@
 2015-06-29  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18613]
+	* sysdeps/ieee754/dbl-64/e_gamma_r.c (gamma_positive): Take log of
+	X_ADJ not X when adjusting exponent.
+	(__ieee754_gamma_r): Do intermediate computations in
+	round-to-nearest then adjust overflowing and underflowing results
+	as needed.
+	* sysdeps/ieee754/flt-32/e_gammaf_r.c (gammaf_positive): Take log
+	of X_ADJ not X when adjusting exponent.
+	(__ieee754_gammaf_r): Do intermediate computations in
+	round-to-nearest then adjust overflowing and underflowing results
+	as needed.
+	* sysdeps/ieee754/ldbl-128/e_gammal_r.c (gammal_positive): Take
+	log of X_ADJ not X when adjusting exponent.
+	(__ieee754_gammal_r): Do intermediate computations in
+	round-to-nearest then adjust overflowing and underflowing results
+	as needed.  Use 1.0L not 1.0f as numerator of division.
+	* sysdeps/ieee754/ldbl-128ibm/e_gammal_r.c (gammal_positive): Take
+	log of X_ADJ not X when adjusting exponent.
+	(__ieee754_gammal_r): Do intermediate computations in
+	round-to-nearest then adjust overflowing and underflowing results
+	as needed.  Use 1.0L not 1.0f as numerator of division.
+	* sysdeps/ieee754/ldbl-96/e_gammal_r.c (gammal_positive): Take log
+	of X_ADJ not X when adjusting exponent.
+	(__ieee754_gammal_r): Do intermediate computations in
+	round-to-nearest then adjust overflowing and underflowing results
+	as needed.  Use 1.0L not 1.0f as numerator of division.
+	* math/libm-test.inc (tgamma_test_data): Remove one test.  Moved
+	to auto-libm-test-in.
+	(tgamma_test): Use ALL_RM_TEST.
+	* math/auto-libm-test-in: Add one test of tgamma.  Mark some other
+	tests of tgamma with spurious-overflow.
+	* math/auto-libm-test-out: Regenerated.
+	* math/gen-libm-have-vector-test.sh: Do not check for START.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	[BZ #18612]
 	* sysdeps/ieee754/ldbl-128/e_j1l.c (__ieee754_j1l): For small
 	arguments, just return 0.5 times the argument, with underflow

@@ -9484,7 +9484,6 @@ tanh_test (void)
 static const struct test_f_f_data tgamma_test_data[] =
   {
     TEST_f_f (tgamma, plus_infty, plus_infty),
-    TEST_f_f (tgamma, max_value, plus_infty, OVERFLOW_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f (tgamma, 0, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f (tgamma, minus_zero, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     /* tgamma (x) == qNaN plus invalid exception for integer x <= 0.  */
@@ -9499,9 +9498,7 @@ static const struct test_f_f_data tgamma_test_data[] =
 static void
 tgamma_test (void)
 {
-  START (tgamma,, 0);
-  RUN_TEST_LOOP_f_f (tgamma, tgamma_test_data, );
-  END;
+  ALL_RM_TEST (tgamma, 0, tgamma_test_data, RUN_TEST_LOOP_f_f, END);
 }
 
 

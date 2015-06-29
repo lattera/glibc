@@ -108,7 +108,7 @@ gammal_positive (long double x, int *exp2_adj)
 			 * __ieee754_expl (-x_adj)
 			 * __ieee754_sqrtl (2 * M_PIl / x_adj)
 			 / prod);
-      exp_adj += x_eps * __ieee754_logl (x);
+      exp_adj += x_eps * __ieee754_logl (x_adj);
       long double bsum = gamma_coeff[NCOEFF - 1];
       long double x_adj2 = x_adj * x_adj;
       for (size_t i = 1; i <= NCOEFF - 1; i++)
@@ -123,6 +123,7 @@ __ieee754_gammal_r (long double x, int *signgamp)
 {
   int64_t hx;
   double xhi;
+  long double ret;
 
   xhi = ldbl_high (x);
   EXTRACT_WORDS64 (hx, xhi);
@@ -159,35 +160,58 @@ __ieee754_gammal_r (long double x, int *signgamp)
       *signgamp = 0;
       return LDBL_MAX * LDBL_MAX;
     }
-  else if (x > 0.0L)
-    {
-      *signgamp = 0;
-      int exp2_adj;
-      long double ret = gammal_positive (x, &exp2_adj);
-      return __scalbnl (ret, exp2_adj);
-    }
-  else if (x >= -0x1p-110L)
-    {
-      *signgamp = 0;
-      return 1.0f / x;
-    }
   else
     {
-      long double tx = __truncl (x);
-      *signgamp = (tx == 2.0L * __truncl (tx / 2.0L)) ? -1 : 1;
-      if (x <= -191.0L)
-	/* Underflow.  */
-	return LDBL_MIN * LDBL_MIN;
-      long double frac = tx - x;
-      if (frac > 0.5L)
-	frac = 1.0L - frac;
-      long double sinpix = (frac <= 0.25L
-			    ? __sinl (M_PIl * frac)
-			    : __cosl (M_PIl * (0.5L - frac)));
-      int exp2_adj;
-      long double ret = M_PIl / (-x * sinpix
-				 * gammal_positive (-x, &exp2_adj));
-      return __scalbnl (ret, -exp2_adj);
+      SET_RESTORE_ROUNDL (FE_TONEAREST);
+      if (x > 0.0L)
+	{
+	  *signgamp = 0;
+	  int exp2_adj;
+	  ret = gammal_positive (x, &exp2_adj);
+	  ret = __scalbnl (ret, exp2_adj);
+	}
+      else if (x >= -0x1p-110L)
+	{
+	  *signgamp = 0;
+	  ret = 1.0L / x;
+	}
+      else
+	{
+	  long double tx = __truncl (x);
+	  *signgamp = (tx == 2.0L * __truncl (tx / 2.0L)) ? -1 : 1;
+	  if (x <= -191.0L)
+	    /* Underflow.  */
+	    ret = LDBL_MIN * LDBL_MIN;
+	  else
+	    {
+	      long double frac = tx - x;
+	      if (frac > 0.5L)
+		frac = 1.0L - frac;
+	      long double sinpix = (frac <= 0.25L
+				    ? __sinl (M_PIl * frac)
+				    : __cosl (M_PIl * (0.5L - frac)));
+	      int exp2_adj;
+	      ret = M_PIl / (-x * sinpix
+			     * gammal_positive (-x, &exp2_adj));
+	      ret = __scalbnl (ret, -exp2_adj);
+	    }
+	}
     }
+  if (isinf (ret) && x != 0)
+    {
+      if (*signgamp < 0)
+	return -(-__copysignl (LDBL_MAX, ret) * LDBL_MAX);
+      else
+	return __copysignl (LDBL_MAX, ret) * LDBL_MAX;
+    }
+  else if (ret == 0)
+    {
+      if (*signgamp < 0)
+	return -(-__copysignl (LDBL_MIN, ret) * LDBL_MIN);
+      else
+	return __copysignl (LDBL_MIN, ret) * LDBL_MIN;
+    }
+  else
+    return ret;
 }
 strong_alias (__ieee754_gammal_r, __gammal_r_finite)

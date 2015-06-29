@@ -1932,12 +1932,36 @@ ildouble: 5
 ldouble: 4
 
 Function: "tgamma":
-double: 6
-float: 4
-idouble: 6
-ifloat: 4
-ildouble: 6
-ldouble: 6
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
+ildouble: 3
+ldouble: 3
+
+Function: "tgamma_downward":
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
+ildouble: 3
+ldouble: 3
+
+Function: "tgamma_towardzero":
+double: 3
+float: 3
+idouble: 3
+ifloat: 3
+ildouble: 3
+ldouble: 3
+
+Function: "tgamma_upward":
+double: 3
+float: 3
+idouble: 3
+ifloat: 3
+ildouble: 3
+ldouble: 3
 
 Function: "y0":
 double: 1

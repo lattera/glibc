@@ -2222,12 +2222,36 @@ ildouble: 4
 ldouble: 4
 
 Function: "tgamma":
-double: 9
+double: 4
 float: 5
-idouble: 9
+idouble: 4
 ifloat: 5
-ildouble: 6
-ldouble: 6
+ildouble: 3
+ldouble: 3
+
+Function: "tgamma_downward":
+double: 4
+float: 4
+idouble: 4
+ifloat: 4
+ildouble: 3
+ldouble: 3
+
+Function: "tgamma_towardzero":
+double: 5
+float: 5
+idouble: 5
+ifloat: 5
+ildouble: 3
+ldouble: 3
+
+Function: "tgamma_upward":
+double: 5
+float: 5
+idouble: 5
+ifloat: 5
+ildouble: 3
+ldouble: 3
 
 Function: "y0":
 double: 2

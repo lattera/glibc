@@ -50,11 +50,3 @@ for func in $(cat libm-test.inc | grep ALL_RM_TEST | grep RUN_TEST_LOOP_fFF_11 |
   print_defs ${func}f "_fFF"
   print_defs ${func}l "_fFF"
 done
-
-# When all functions will use ALL_RM_TEST instead of using START directly,
-# this code can be removed.
-for func in $(grep 'START.*;$' libm-test.inc | sed -r "s/.*\(//; s/,.*//"); do
-  print_defs ${func}
-  print_defs ${func}f
-  print_defs ${func}l
-done

@@ -97,7 +97,7 @@ gammaf_positive (float x, int *exp2_adj)
 		   * __ieee754_expf (-x_adj)
 		   * __ieee754_sqrtf (2 * (float) M_PI / x_adj)
 		   / prod);
-      exp_adj += x_eps * __ieee754_logf (x);
+      exp_adj += x_eps * __ieee754_logf (x_adj);
       float bsum = gamma_coeff[NCOEFF - 1];
       float x_adj2 = x_adj * x_adj;
       for (size_t i = 1; i <= NCOEFF - 1; i++)
@@ -111,6 +111,10 @@ float
 __ieee754_gammaf_r (float x, int *signgamp)
 {
   int32_t hx;
+#if FLT_EVAL_METHOD != 0
+  volatile
+#endif
+  float ret;
 
   GET_FLOAT_WORD (hx, x);
 
@@ -145,37 +149,69 @@ __ieee754_gammaf_r (float x, int *signgamp)
     {
       /* Overflow.  */
       *signgamp = 0;
-      return FLT_MAX * FLT_MAX;
-    }
-  else if (x > 0.0f)
-    {
-      *signgamp = 0;
-      int exp2_adj;
-      float ret = gammaf_positive (x, &exp2_adj);
-      return __scalbnf (ret, exp2_adj);
-    }
-  else if (x >= -FLT_EPSILON / 4.0f)
-    {
-      *signgamp = 0;
-      return 1.0f / x;
+      ret = FLT_MAX * FLT_MAX;
+      return ret;
     }
   else
     {
-      float tx = __truncf (x);
-      *signgamp = (tx == 2.0f * __truncf (tx / 2.0f)) ? -1 : 1;
-      if (x <= -42.0f)
-	/* Underflow.  */
-	return FLT_MIN * FLT_MIN;
-      float frac = tx - x;
-      if (frac > 0.5f)
-	frac = 1.0f - frac;
-      float sinpix = (frac <= 0.25f
-		      ? __sinf ((float) M_PI * frac)
-		      : __cosf ((float) M_PI * (0.5f - frac)));
-      int exp2_adj;
-      float ret = (float) M_PI / (-x * sinpix
-				  * gammaf_positive (-x, &exp2_adj));
-      return __scalbnf (ret, -exp2_adj);
+      SET_RESTORE_ROUNDF (FE_TONEAREST);
+      if (x > 0.0f)
+	{
+	  *signgamp = 0;
+	  int exp2_adj;
+	  float tret = gammaf_positive (x, &exp2_adj);
+	  ret = __scalbnf (tret, exp2_adj);
+	}
+      else if (x >= -FLT_EPSILON / 4.0f)
+	{
+	  *signgamp = 0;
+	  ret = 1.0f / x;
+	}
+      else
+	{
+	  float tx = __truncf (x);
+	  *signgamp = (tx == 2.0f * __truncf (tx / 2.0f)) ? -1 : 1;
+	  if (x <= -42.0f)
+	    /* Underflow.  */
+	    ret = FLT_MIN * FLT_MIN;
+	  else
+	    {
+	      float frac = tx - x;
+	      if (frac > 0.5f)
+		frac = 1.0f - frac;
+	      float sinpix = (frac <= 0.25f
+			      ? __sinf ((float) M_PI * frac)
+			      : __cosf ((float) M_PI * (0.5f - frac)));
+	      int exp2_adj;
+	      float tret = (float) M_PI / (-x * sinpix
+					   * gammaf_positive (-x, &exp2_adj));
+	      ret = __scalbnf (tret, -exp2_adj);
+	    }
+	}
     }
+  if (isinf (ret) && x != 0)
+    {
+      if (*signgamp < 0)
+	{
+	  ret = -__copysignf (FLT_MAX, ret) * FLT_MAX;
+	  ret = -ret;
+	}
+      else
+	ret = __copysignf (FLT_MAX, ret) * FLT_MAX;
+      return ret;
+    }
+  else if (ret == 0)
+    {
+      if (*signgamp < 0)
+	{
+	  ret = -__copysignf (FLT_MIN, ret) * FLT_MIN;
+	  ret = -ret;
+	}
+      else
+	ret = __copysignf (FLT_MIN, ret) * FLT_MIN;
+      return ret;
+    }
+  else
+    return ret;
 }
 strong_alias (__ieee754_gammaf_r, __gammaf_r_finite)
