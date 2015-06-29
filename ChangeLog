@@ -1,5 +1,20 @@
 2015-06-29  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16559]
+	* sysdeps/ieee754/dbl-64/e_j1.c: Include <float.h>.
+	(__ieee754_j1): Force underflow exception for small results.
+	* sysdeps/ieee754/dbl-64/e_jn.c (__ieee754_jn): Likewise.
+	* sysdeps/ieee754/flt-32/e_j1f.c: Include <float.h>.
+	(__ieee754_j1f): Force underflow exception for small results.
+	* sysdeps/ieee754/flt-32/e_jnf.c (__ieee754_jnf): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_jnl.c (__ieee754_jnl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_jnl.c (__ieee754_jnl): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_j1l.c: Include <float.h>.
+	(__ieee754_j1l): Force underflow exception for small results.
+	* sysdeps/ieee754/ldbl-96/e_jnl.c (__ieee754_jnl): Likewise.
+	* math/auto-libm-test-in: Add more tests of j1 and jn.
+	* math/auto-libm-test-out: Regenerated.
+
 	* sysdeps/unix/sysv/linux/bits/in.h (IP_CHECKSUM): New macro.
 	* sysdeps/unix/sysv/linux/bits/socket.h (PF_IB): Likewise.
 	(PF_MPLS): Likewise.

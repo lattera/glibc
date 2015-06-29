@@ -170,6 +170,10 @@ __ieee754_jnf(int n, float x)
     }
     if (ret == 0)
 	ret = __copysignf (FLT_MIN, ret) * FLT_MIN;
+    else if (fabsf (ret) < FLT_MIN) {
+	float force_underflow = ret * ret;
+	math_force_eval (force_underflow);
+    }
     return ret;
 }
 strong_alias (__ieee754_jnf, __jnf_finite)
