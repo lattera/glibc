@@ -1,3 +1,14 @@
+2015-06-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/bits/in.h (IP_CHECKSUM): New macro.
+	* sysdeps/unix/sysv/linux/bits/socket.h (PF_IB): Likewise.
+	(PF_MPLS): Likewise.
+	(AF_IB): Likewise.
+	(AF_MPLS): Likewise.
+	* sysdeps/unix/sysv/linux/sys/mount.h (MS_LAZYTIME): New enum
+	value and macro.
+	(MS_RMT_MASK): Include MS_LAZYTIME.
+
 2015-06-26  Mel Gorman  <mgorman@suse.de>
 
 	[BZ #18502]

@@ -78,6 +78,8 @@ enum
 #define MS_I_VERSION	MS_I_VERSION
   MS_STRICTATIME = 1 << 24,	/* Always perform atime updates.  */
 #define MS_STRICTATIME	MS_STRICTATIME
+  MS_LAZYTIME = 1 << 25,	/* Update the on-disk [acm]times lazily.  */
+#define MS_LAZYTIME	MS_LAZYTIME
   MS_ACTIVE = 1 << 30,
 #define MS_ACTIVE	MS_ACTIVE
   MS_NOUSER = 1 << 31
@@ -85,7 +87,8 @@ enum
 };
 
 /* Flags that can be altered by MS_REMOUNT  */
-#define MS_RMT_MASK (MS_RDONLY|MS_SYNCHRONOUS|MS_MANDLOCK|MS_I_VERSION)
+#define MS_RMT_MASK (MS_RDONLY|MS_SYNCHRONOUS|MS_MANDLOCK|MS_I_VERSION \
+		     |MS_LAZYTIME)
 
 
 /* Magic mount flag number. Has to be or-ed to the flag values.  */
