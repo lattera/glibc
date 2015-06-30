@@ -1,5 +1,8 @@
 2015-06-30  Torvald Riegel  <triegel@redhat.com>
 
+	* nptl/DESIGN-systemtap-probes.txt: Remove lll_lock_wait,
+	lll_lock_wait_private and lll_futex_wake probes.
+
 	* sysdeps/unix/sysv/linux/i386/lowlevellock.h (BUSY_WAIT_NOP): Remove.
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h (BUSY_WAIT_NOP):
 	Likewise.

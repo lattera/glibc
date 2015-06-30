@@ -53,22 +53,6 @@ rdlock_acquire_read - probe for pthread_rwlock_rdlock after successfully getting
 rwlock_unlock - probe for pthread_rwlock_unlock
               arg1 = address of rw lock
 
-lll_lock_wait - probe in low-level (assembly language) locking code, only fired
-                when futex/FUTEX_WAIT is called (i.e. when trying to acquire a
-                contented lock)
-              arg1 = pointer to futex
-              arg2 = flags passed to the futex system call
-lll_lock_wait_private - probe in low-level (assembly language) locking code,
-                        only fired when futex/FUTEX_WAIT is called (i.e. when
-                        trying to acquire a contented lock)
-                      arg1 = pointer to futex
-
-lll_futex_wake - probe in low-level (assembly language) locking code, only fired
-                 when futex (FUTEX_WAKE) is called
-               arg1 = pointer to futex
-               arg2 = number of processes to wake
-               arg3 = additional flags
-
 Condition variable Probes
 =========================
 cond_init - probe for pthread_cond_init
