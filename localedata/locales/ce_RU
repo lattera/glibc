@@ -7,7 +7,7 @@ LC_IDENTIFICATION
 title      "Chechen locale for RUSSIAN FEDERATION"
 source       "ANCHR"
 address      "364024, ChR, Grozny, pr-kt of M. Esambayev, 13"
-language  "ce"
+language  "Chechen"
 territory "RUSSIAN FEDERATION"
 revision  "1.0"
 date      "2014-08-25"
@@ -90,14 +90,12 @@ t_fmt         "<U0025><U0054>"
 %
 am_pm         "";""
 t_fmt_ampm    ""
+first_weekday 2
+first_workday 2
 END LC_TIME
 
 LC_NUMERIC
-% ,
-decimal_point "<U002C>"
-thousands_sep ""
-% 3;3
-grouping      3;3
+copy "ru_RU"
 END LC_NUMERIC
 
 LC_MONETARY

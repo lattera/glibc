@@ -1,3 +1,10 @@
+2015-08-07  Arslanbek Astemirov  <astemirow@mail.ru>
+
+	[BZ #18618]
+	* locales/ce_RU (LC_IDENTIFICATION): Fix language.
+	(LC_TIME): Set first_weekday and first_workday.
+	(LC_NUMERIC): Copy ru_RU.
+
 2015-07-21  Khem Raj  <raj.khem@gmail.com>
 
 	[BZ #17475]
