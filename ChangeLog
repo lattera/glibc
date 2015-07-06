@@ -1,3 +1,9 @@
+2015-08-05  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/arm/mmap.c: Add file.
+	* sysdeps/unix/sysv/linux/arm/mmap.S: Remove file.
+	* sysdeps/unix/sysv/linux/arm/mmap64.S: Likewise.
+
 2015-08-05  Marko Myllynen  <myllynen@redhat.com>
 
 	[BZ #18525]
