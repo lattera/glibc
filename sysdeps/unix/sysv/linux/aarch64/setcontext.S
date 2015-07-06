@@ -97,10 +97,10 @@ ENTRY (__setcontext)
 
 	/* Restore the FP SIMD context.  */
 	add	x3, x2, #oV0 + 8 * SZVREG
-	ldp	 d8,  d9, [x3], #2 * SZVREG
-	ldp	d10, d11, [x3], #2 * SZVREG
-	ldp	d12, d13, [x3], #2 * SZVREG
-	ldp	d14, d15, [x3], #2 * SZVREG
+	ldp	 q8,  q9, [x3], #2 * SZVREG
+	ldp	q10, q11, [x3], #2 * SZVREG
+	ldp	q12, q13, [x3], #2 * SZVREG
+	ldp	q14, q15, [x3], #2 * SZVREG
 
 	add	x3, x2, oFPSR
 

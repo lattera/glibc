@@ -1,3 +1,11 @@
+2015-07-06  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* sysdeps/unix/sysv/linux/aarch64/getcontext.S (__getcontext): Use q
+	registers instead of d ones so the layout is kernel abi compatible.
+	* sysdeps/unix/sysv/linux/aarch64/setcontext.S (__setcontext): Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/swapcontext.S (__swapcontext):
+	Likewise.
+
 2015-07-02  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/aarch64/libm-test-ulps: Regenerated.
