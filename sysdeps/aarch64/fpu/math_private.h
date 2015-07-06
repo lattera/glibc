@@ -22,6 +22,22 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
+extern __always_inline double
+__ieee754_sqrt (double d)
+{
+  double res;
+  asm __volatile__ ("fsqrt   %d0, %d1" : "=w" (res) : "w" (d));
+  return res;
+}
+
+extern __always_inline float
+__ieee754_sqrtf (float s)
+{
+  float res;
+  asm __volatile__ ("fsqrt   %s0, %s1" : "=w" (res) : "w" (s));
+  return res;
+}
+
 static __always_inline void
 libc_feholdexcept_aarch64 (fenv_t *envp)
 {

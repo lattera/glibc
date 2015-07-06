@@ -1,5 +1,14 @@
 2015-07-06  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* sysdeps/aarch64/fpu/math_private.h (__ieee754_sqrt):
+	New function.  (__ieee754_sqrtf): New function.
+	* sysdeps/aarch64/fpu/e_sqrt.c (__ieee754_sqrt):
+	New function.
+	* sysdeps/aarch64/fpu/e_sqrtf.c (__ieee754_sqrtf):
+	New function.
+
+2015-07-06  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* sysdeps/ieee754/support.c: Remove unused file.
 
 2015-07-06  Szabolcs Nagy  <szabolcs.nagy@arm.com>
