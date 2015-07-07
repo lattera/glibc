@@ -65,8 +65,6 @@ __old_semctl (int semid, int semnum, int cmd, ...)
   union semun arg;
   va_list ap;
 
-  va_start (ap, cmd);
-
   /* Get the argument only if required.  */
   arg.buf = NULL;
   switch (cmd)
@@ -84,8 +82,6 @@ __old_semctl (int semid, int semnum, int cmd, ...)
       va_end (ap);
       break;
     }
-
-  va_end (ap);
 
   return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd,
 			 &arg);
@@ -99,8 +95,6 @@ __new_semctl (int semid, int semnum, int cmd, ...)
   union semun arg;
   va_list ap;
 
-  va_start (ap, cmd);
-
   /* Get the argument only if required.  */
   arg.buf = NULL;
   switch (cmd)
@@ -118,8 +112,6 @@ __new_semctl (int semid, int semnum, int cmd, ...)
       va_end (ap);
       break;
     }
-
-  va_end (ap);
 
   return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd | __IPC_64,
 			 &arg);

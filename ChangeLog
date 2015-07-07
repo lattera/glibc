@@ -1,5 +1,9 @@
 2015-09-16  Andreas Schwab  <schwab@suse.de>
 
+	[BZ #17244]
+	* sysdeps/unix/sysv/linux/semctl.c (__old_semctl, __new_semctl):
+	Remove extra va_start/va_end calls.
+
 	[BZ #17243]
 	* posix/execl.c (execl): Add missing va_end.
 	* posix/execle.c (execle): Likewise.
