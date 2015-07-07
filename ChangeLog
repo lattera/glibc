@@ -1,5 +1,15 @@
 2015-07-07  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/i386/Makefile (gen-as-const-headers)[elf]: Add
+	link-defines.sym.
+	* sysdeps/i386/dl-trampoline.S: Include <link-defines.h>.
+	(_dl_runtime_profile): Use LONG_DOUBLE_SIZE, LRV_SIZE,
+	LRV_EAX_OFFSET, LRV_EDX_OFFSET, LRV_ST0_OFFSET, LRV_ST1_OFFSET
+	and LR_SIZE.
+	* sysdeps/i386/link-defines.sym: New file.
+
+2015-07-07  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/i386/Makefile (tests)[elf]: Add tst-audit3.
 	(modules-names): Add tst-auditmod3a tst-auditmod3b.
 	($(objpfx)tst-audit3): New rule.

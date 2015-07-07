@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <link-defines.h>
 
 	.text
 	.globl _dl_runtime_resolve
@@ -161,24 +162,32 @@ _dl_runtime_profile:
 	    +4      free
 	   %esp     free
 	*/
-	subl $20, %esp
-	cfi_adjust_cfa_offset (20)
-	movl %eax, (%esp)
-	movl %edx, 4(%esp)
-	fstpt 8(%esp)
-	fstpt 20(%esp)
+#if LONG_DOUBLE_SIZE != 12
+# error "long double size must be 12 bytes"
+#endif
+	# Allocate space for La_i86_retval and subtract 12 free bytes.
+	subl $(LRV_SIZE - 12), %esp
+	cfi_adjust_cfa_offset (LRV_SIZE - 12)
+	movl %eax, LRV_EAX_OFFSET(%esp)
+	movl %edx, LRV_EDX_OFFSET(%esp)
+	fstpt LRV_ST0_OFFSET(%esp)
+	fstpt LRV_ST1_OFFSET(%esp)
 	pushl %esp
 	cfi_adjust_cfa_offset (4)
-	leal 36(%esp), %ecx
-	movl 56(%esp), %eax
-	movl 60(%esp), %edx
+	# Address of La_i86_regs area.
+	leal (LRV_SIZE + 4)(%esp), %ecx
+	# PLT2
+	movl (LRV_SIZE + 4 + LR_SIZE)(%esp), %eax
+	# PLT1
+	movl (LRV_SIZE + 4 + LR_SIZE + 4)(%esp), %edx
 	call _dl_call_pltexit
-	movl (%esp), %eax
-	movl 4(%esp), %edx
-	fldt 20(%esp)
-	fldt 8(%esp)
-	addl $60, %esp
-	cfi_adjust_cfa_offset (-60)
+	movl LRV_EAX_OFFSET(%esp), %eax
+	movl LRV_EDX_OFFSET(%esp), %edx
+	fldt LRV_ST1_OFFSET(%esp)
+	fldt LRV_ST0_OFFSET(%esp)
+	# Restore stack before return.
+	addl $(LRV_SIZE + 4 + LR_SIZE + 4), %esp
+	cfi_adjust_cfa_offset (-(LRV_SIZE + 4 + LR_SIZE + 4))
 	ret
 	cfi_endproc
 	.size _dl_runtime_profile, .-_dl_runtime_profile

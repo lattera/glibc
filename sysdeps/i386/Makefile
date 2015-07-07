@@ -33,6 +33,7 @@ sysdep-CFLAGS += -mpreferred-stack-boundary=4
 else
 ifeq ($(subdir),csu)
 sysdep-CFLAGS += -mpreferred-stack-boundary=4
+gen-as-const-headers += link-defines.sym
 else
 # Likewise, any function which calls user callbacks
 uses-callbacks += -mpreferred-stack-boundary=4
