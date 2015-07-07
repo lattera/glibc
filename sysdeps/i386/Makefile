@@ -66,6 +66,13 @@ endif
 
 ifeq ($(subdir),elf)
 sysdep-dl-routines += tlsdesc dl-tlsdesc
+
+tests += tst-audit3
+modules-names += tst-auditmod3a tst-auditmod3b
+
+$(objpfx)tst-audit3: $(objpfx)tst-auditmod3a.so
+$(objpfx)tst-audit3.out: $(objpfx)tst-auditmod3b.so
+tst-audit3-ENV = LD_AUDIT=$(objpfx)tst-auditmod3b.so
 endif
 
 ifeq ($(subdir),csu)
