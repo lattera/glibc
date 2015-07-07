@@ -164,3 +164,5 @@ $(objpfx)tst-setcontext3.out: tst-setcontext3.sh $(objpfx)tst-setcontext3
 		 '$(run-program-env)' '$(test-program-prefix-after-env)' \
 		 $(common-objpfx)stdlib/; \
 	$(evaluate-test)
+
+$(objpfx)tst-makecontext: $(libdl)

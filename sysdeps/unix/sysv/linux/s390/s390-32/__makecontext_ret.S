@@ -17,6 +17,14 @@
 
 #include <sysdep.h>
 
+/* We do not want .eh_frame info so that __makecontext_ret stops unwinding
+   if backtrace was called within a context created by makecontext. (There
+   is also no .eh_frame info for _start or thread_start.)  */
+#undef cfi_startproc
+#define cfi_startproc
+#undef cfi_endproc
+#define cfi_endproc
+
 ENTRY(__makecontext_ret)
 	basr  %r14,%r7
 	ltr   %r8,%r8			/* Check whether uc_link is 0.  */

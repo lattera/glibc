@@ -1,5 +1,20 @@
 2015-07-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	[BZ #18508]
+	* stdlib/Makefile ($(objpfx)tst-makecontext3):
+	Depend on $(libdl).
+	* stdlib/tst-makecontext.c (cf): Test if _Unwind_Backtrace
+	is not called infinitely times.
+	(backtrace_helper): New function.
+	(trace_arg): New struct.
+	(st1): Enlarge stack size.
+	* sysdeps/unix/sysv/linux/s390/s390-32/__makecontext_ret.S:
+	(__makecontext_ret): Omit cfi_startproc and cfi_endproc.
+	* sysdeps/unix/sysv/linux/s390/s390-64/__makecontext_ret.S:
+	Likewise.
+
+2015-07-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/fpu/libm-test-ulps: Regenerated.
 
 2015-07-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
