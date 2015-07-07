@@ -1,3 +1,9 @@
+2015-07-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/bits/sem.h:
+	Include sys/types.h instead of bits/types.h.
+	Remove inclusion of bits/wordsize.h.
+
 2015-07-07  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/tst-auditmod10b.c (la_symbind32): New.
