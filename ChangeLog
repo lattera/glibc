@@ -1,5 +1,9 @@
 2015-07-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/fpu/libm-test-ulps: Regenerated.
+
+2015-07-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/unix/sysv/linux/s390/bits/sem.h:
 	Include sys/types.h instead of bits/types.h.
 	Remove inclusion of bits/wordsize.h.
