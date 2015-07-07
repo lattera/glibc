@@ -50,6 +50,7 @@ execl (const char *path, const char *arg, ...)
 	    {
 	      if (argv != initial_argv)
 		free (argv);
+	      va_end (args);
 	      return -1;
 	    }
 	  if (argv == initial_argv)

@@ -1,3 +1,10 @@
+2015-09-16  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #17243]
+	* posix/execl.c (execl): Add missing va_end.
+	* posix/execle.c (execle): Likewise.
+	* posix/execlp.c (execlp): Likewise.
+
 2015-09-15  Roland McGrath  <roland@hack.frob.com>
 
 	* misc/sys/param.h [!MAXHOSTNAMELEN && HOST_NAME_MAX]
