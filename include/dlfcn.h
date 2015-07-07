@@ -54,7 +54,8 @@ struct link_map;
 extern void _dl_close (void *map) attribute_hidden;
 /* Same as above, but without locking and safety checks for user
    provided map arguments.  */
-extern void _dl_close_worker (struct link_map *map) attribute_hidden;
+extern void _dl_close_worker (struct link_map *map, bool force)
+    attribute_hidden;
 
 /* Look up NAME in shared object HANDLE (which may be RTLD_DEFAULT or
    RTLD_NEXT).  WHO is the calling function, for RTLD_NEXT.  Returns

@@ -670,7 +670,7 @@ no more namespaces available for dlmopen()"));
 	  if ((mode & __RTLD_AUDIT) == 0)
 	    GL(dl_tls_dtv_gaps) = true;
 
-	  _dl_close_worker (args.map);
+	  _dl_close_worker (args.map, true);
 	}
 
       assert (_dl_debug_initialize (0, args.nsid)->r_state == RT_CONSISTENT);

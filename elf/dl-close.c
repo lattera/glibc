@@ -108,7 +108,7 @@ remove_slotinfo (size_t idx, struct dtv_slotinfo_list *listp, size_t disp,
 
 
 void
-_dl_close_worker (struct link_map *map)
+_dl_close_worker (struct link_map *map, bool force)
 {
   /* One less direct use.  */
   --map->l_direct_opencount;
@@ -152,6 +152,10 @@ _dl_close_worker (struct link_map *map)
       l->l_idx = idx;
       maps[idx] = l;
       ++idx;
+
+      /* Clear DF_1_NODELETE to force object deletion.  */
+      if (force)
+	l->l_flags_1 &= ~DF_1_NODELETE;
     }
   assert (idx == nloaded);
 
@@ -635,6 +639,31 @@ _dl_close_worker (struct link_map *map)
 		}
 	    }
 
+	  /* Reset unique symbols if forced.  */
+	  if (force)
+	    {
+	      struct unique_sym_table *tab = &ns->_ns_unique_sym_table;
+	      __rtld_lock_lock_recursive (tab->lock);
+	      struct unique_sym *entries = tab->entries;
+	      if (entries != NULL)
+		{
+		  size_t idx, size = tab->size;
+		  for (idx = 0; idx < size; ++idx)
+		    {
+		      /* Clear unique symbol entries that belong to this
+			 object.  */
+		      if (entries[idx].name != NULL
+			  && entries[idx].map == imap)
+			{
+			  entries[idx].name = NULL;
+			  entries[idx].hashval = 0;
+			  tab->n_elements--;
+			}
+		    }
+		}
+	      __rtld_lock_unlock_recursive (tab->lock);
+	    }
+
 	  /* We can unmap all the maps at once.  We determined the
 	     start address and length when we loaded the object and
 	     the `munmap' call does the rest.  */
@@ -782,7 +811,7 @@ _dl_close (void *_map)
   /* Acquire the lock.  */
   __rtld_lock_lock_recursive (GL(dl_load_lock));
 
-  _dl_close_worker (map);
+  _dl_close_worker (map, false);
 
   __rtld_lock_unlock_recursive (GL(dl_load_lock));
 }

@@ -132,7 +132,7 @@ tests += $(tests-static)
 ifeq (yes,$(build-shared))
 tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 constload1 order noload filter unload \
-	 reldep reldep2 reldep3 reldep4 nodelete nodelete2 \
+	 reldep reldep2 reldep3 reldep4 nodelete nodelete2 tst-nodelete \
 	 nodlopen nodlopen2 neededtest neededtest2 \
 	 neededtest3 neededtest4 unload2 lateglobal initfirst global \
 	 restest2 next dblload dblunload reldep5 reldep6 reldep7 reldep8 \
@@ -207,7 +207,9 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-unique1mod1 tst-unique1mod2 \
 		tst-unique2mod1 tst-unique2mod2 \
 		tst-auditmod9a tst-auditmod9b \
-		$(if $(CXX),tst-unique3lib tst-unique3lib2 tst-unique4lib) \
+		$(if $(CXX),tst-unique3lib tst-unique3lib2 tst-unique4lib \
+		  tst-nodelete-uniquemod) \
+		tst-nodelete-rtldmod tst-nodelete-zmod \
 		tst-initordera1 tst-initorderb1 \
 		tst-initordera2 tst-initorderb2 \
 		tst-initordera3 tst-initordera4 \
@@ -591,6 +593,9 @@ ifuncmod5.so-no-z-defs = yes
 ifuncmod6.so-no-z-defs = yes
 tst-auditmod9a.so-no-z-defs = yes
 tst-auditmod9b.so-no-z-defs = yes
+tst-nodelete-uniquemod.so-no-z-defs = yes
+tst-nodelete-rtldmod.so-no-z-defs = yes
+tst-nodelete-zmod.so-no-z-defs = yes
 
 ifeq ($(build-shared),yes)
 # Build all the modules even when not actually running test programs.
@@ -1152,6 +1157,14 @@ $(objpfx)tst-unique3: $(libdl) $(objpfx)tst-unique3lib.so
 $(objpfx)tst-unique3.out: $(objpfx)tst-unique3lib2.so
 
 $(objpfx)tst-unique4: $(objpfx)tst-unique4lib.so
+
+$(objpfx)tst-nodelete: $(libdl)
+$(objpfx)tst-nodelete.out: $(objpfx)tst-nodelete-uniquemod.so \
+			   $(objpfx)tst-nodelete-rtldmod.so \
+			   $(objpfx)tst-nodelete-zmod.so
+
+LDFLAGS-tst-nodelete = -rdynamic
+LDFLAGS-tst-nodelete-zmod.so = -Wl,--enable-new-dtags,-z,nodelete
 
 $(objpfx)tst-initorder-cmp.out: tst-initorder.exp $(objpfx)tst-initorder.out
 	cmp $^ > $@; \

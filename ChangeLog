@@ -1,3 +1,25 @@
+2015-07-07  Pavel Kopyl  <p.kopyl@samsung.com>
+	    Mikhail Ilin  <m.ilin@samsung.com>
+
+	[BZ #17833]
+	* elf/Makefile (tests): Add tst-nodelete.
+	(modules-names): Add tst-nodelete-uniquemod.
+	(tst-nodelete-uniquemod.so-no-z-defs): New.
+	(tst-nodelete-rtldmod.so-no-z-defs): Likewise.
+	(tst-nodelete-zmod.so-no-z-defs): Likewise.
+	($(objpfx)tst-nodelete): Likewise.
+	($(objpfx)tst-nodelete.out): Likewise.
+	(LDFLAGS-tst-nodelete): Likewise.
+	(LDFLAGS-tst-nodelete-zmod.so): Likewise.
+	* elf/dl-close.c (_dl_close_worker): Add a parameter to
+	implement forced object deletion.
+	(_dl_close): Pass false to _dl_close_worker.
+	* elf/dl-open.c (_dl_open): Pass true to _dl_close_worker.
+	* elf/tst-nodelete.cc: New file.
+	* elf/tst-nodeletelib.cc: Likewise.
+	* elf/tst-znodeletelib.cc: Likewise.
+	* include/dlfcn.h (_dl_close_worker): Add a new parameter.
+
 2015-07-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	[BZ #18508]
