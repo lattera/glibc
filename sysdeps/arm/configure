@@ -260,6 +260,55 @@ if test $libc_cv_arm_pcrel_movw = yes; then
 
 fi
 
+# This was buggy in assemblers from GNU binutils versions before 2.25.1
+# (it's known to be broken in 2.24 and 2.25; see
+# https://sourceware.org/bugzilla/show_bug.cgi?id=18383).
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether TPOFF relocs with addends are assembled correctly" >&5
+$as_echo_n "checking whether TPOFF relocs with addends are assembled correctly... " >&6; }
+if ${libc_cv_arm_tpoff_addend+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+cat > conftest.s <<\EOF
+	.syntax unified
+	.arm
+	.arch armv7-a
+
+	.text
+foo:
+	.word tbase(tpoff)+4
+
+	.section .tdata,"awT",%progbits
+	.word -4
+tbase:	.word 0
+	.word 4
+EOF
+libc_cv_arm_tpoff_addend=no
+${CC-cc} -c $CFLAGS $CPPFLAGS \
+	 -o conftest.o conftest.s 1>&5 2>&5 &&
+LC_ALL=C $READELF -x.text conftest.o > conftest.x 2>&5 &&
+{
+  cat conftest.x 1>&5
+  $AWK 'BEGIN { result = 2 }
+$1 ~ /0x0+/ && $2 ~ /[0-9a-f]+/ {
+# Check for little-endian or big-endian encoding of 4 in the in-place addend.
+  result = ($2 == "04000000" || $2 == "00000004") ? 0 : 1
+}
+END { exit(result) }
+' conftest.x 2>&5 && libc_cv_arm_tpoff_addend=yes
+}
+rm -f conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_arm_tpoff_addend" >&5
+$as_echo "$libc_cv_arm_tpoff_addend" >&6; }
+if test $libc_cv_arm_tpoff_addend = no; then
+  config_vars="$config_vars
+test-xfail-tst-tlsalign = yes"
+  config_vars="$config_vars
+test-xfail-tst-tlsalign-static = yes"
+fi
+
+
 libc_cv_gcc_unwind_find_fde=no
 
 # Remove -fno-unwind-tables that was added in sysdeps/arm/preconfigure.ac.

@@ -1,5 +1,12 @@
 2015-07-08  Roland McGrath  <roland@hack.frob.com>
 
+	[BZ #18383]
+	* sysdeps/arm/configure.ac (libc_cv_arm_tpoff_addend): New check.
+	Emit test-xfail-tst-tlsalign{,-static}=yes if it fails.
+	* sysdeps/arm/configure: Regenerated.
+	* elf/Makefile (test-xfail-tst-tlsalign): Variable removed.
+	(test-xfail-tst-tlsalign-static): Variable removed.
+
 	* Makerules (do-install-so): Use $(LN_S) rather than explicit 'ln -s'.
 	* elf/Makefile ($(objpfx)$(rtld-installed-name)): Use $(make-link)
 	rather than explicit 'ln -s'.
