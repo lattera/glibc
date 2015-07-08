@@ -1,3 +1,9 @@
+2015-06-18  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #18557]
+	* inet/rcmd.c (__validuser2_sa): Check user first to
+	short-circuit host check.
+
 2015-07-07  Pavel Kopyl  <p.kopyl@samsung.com>
 	    Mikhail Ilin  <m.ilin@samsung.com>
 

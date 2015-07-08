@@ -809,31 +809,43 @@ __validuser2_sa(hostf, ra, ralen, luser, ruser, rhost)
 	*p = '\0';              /* <nul> terminate username (+host?) */
 
 	/* buf -> host(?) ; user -> username(?) */
+	if (*buf == '\0')
+	  break;
+	if (*user == '\0')
+	  user = luser;
 
-	/* First check host part */
-	hcheck = __checkhost_sa (ra, ralen, buf, rhost);
+	/* First check the user part.  In a naive implementation we
+	   would check the host part first, then the user.  However,
+	   if we check the user first and reject the entry we will
+	   have saved doing any host lookups to normalize the comparison
+	   and that likely saves several DNS queries.  Therefore we
+	   check the user first.  */
+	ucheck = __icheckuser (user, ruser);
 
-	if (hcheck < 0)
-	    break;
+	/* Either we found the user, or we didn't and this is a
+	   negative host check.  We must do the negative host lookup
+	   in order to preserve the semantics of stopping on this line
+	   before processing others.  */
+	if (ucheck != 0 || *buf == '-') {
 
-	if (hcheck) {
-	    /* Then check user part */
-	    if (! (*user))
-		user = luser;
+	    /* Next check host part.  */
+	    hcheck = __checkhost_sa (ra, ralen, buf, rhost);
 
-	    ucheck = __icheckuser (user, ruser);
+	    /* Negative '-host user(?)' match?  */
+	    if (hcheck < 0)
+		break;
 
-	    /* Positive 'host user' match? */
-	    if (ucheck > 0) {
+	    /* Positive 'host user' match?  */
+	    if (hcheck > 0 && ucheck > 0) {
 		retval = 0;
 		break;
 	    }
 
-	    /* Negative 'host -user' match? */
-	    if (ucheck < 0)
-		break;
+	    /* Negative 'host -user' match?  */
+	    if (hcheck > 0 && ucheck < 0)
+	      break;
 
-	    /* Neither, go on looking for match */
+	    /* Neither, go on looking for match.  */
 	}
     }
 
