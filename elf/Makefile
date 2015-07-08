@@ -377,8 +377,7 @@ ifneq (ld.so,$(rtld-installed-name))
 # Make sure ld.so.1 exists in the build directory so we can link
 # against it.
 $(objpfx)$(rtld-installed-name): $(objpfx)ld.so
-	rm -f $@
-	ln -s $(<F) $@
+	$(make-link)
 generated += $(rtld-installed-name)
 endif
 

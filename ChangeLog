@@ -1,5 +1,9 @@
 2015-07-08  Roland McGrath  <roland@hack.frob.com>
 
+	* Makerules (do-install-so): Use $(LN_S) rather than explicit 'ln -s'.
+	* elf/Makefile ($(objpfx)$(rtld-installed-name)): Use $(make-link)
+	rather than explicit 'ln -s'.
+
 	* resolv/rpc/netdb.h: New file.
 	* resolv/Makefile [sunrpc not in $(subdirs)] (headers): Add it.
 

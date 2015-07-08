@@ -1132,7 +1132,8 @@ endif
 
 define do-install-so
 $(do-install-program)
-$(patsubst %,ln -s -f $(@F) $(@D)/$(patsubst %$*.so,%,$(<F))$(libprefix)$*.so,\
+$(patsubst %,$(LN_S) -f $(@F) \
+			$(@D)/$(patsubst %$*.so,%,$(<F))$(libprefix)$*.so,\
 	   $(filter-out %.so,$@))
 endef
 
