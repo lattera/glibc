@@ -1,3 +1,10 @@
+2015-07-08  Feng Gao  <gfree.wind@gmail.com>
+
+	* libio/fileops.c: Use "|" instead of "+" when combine _IO_LINE_BUF
+	and _IO_UNBUFFERED.
+	* libio/oldfileops.c: Likewise.
+	* libio/wfileops.c: Likewise.
+
 2015-07-08  Mike Frysinger  <vapier@gentoo.org>
 
 	* nscd/selinux.c: Delete selinux/flask.h include.

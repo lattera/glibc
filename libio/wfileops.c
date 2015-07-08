@@ -118,7 +118,7 @@ _IO_wdo_write (_IO_FILE *fp, const wchar_t *data, _IO_size_t to_do)
 	     fp->_wide_data->_IO_buf_base);
   fp->_wide_data->_IO_write_base = fp->_wide_data->_IO_write_ptr
     = fp->_wide_data->_IO_buf_base;
-  fp->_wide_data->_IO_write_end = ((fp->_flags & (_IO_LINE_BUF+_IO_UNBUFFERED))
+  fp->_wide_data->_IO_write_end = ((fp->_flags & (_IO_LINE_BUF | _IO_UNBUFFERED))
 				   ? fp->_wide_data->_IO_buf_base
 				   : fp->_wide_data->_IO_buf_end);
 
@@ -216,7 +216,7 @@ _IO_wfile_underflow (_IO_FILE *fp)
 
   /* Flush all line buffered files before reading. */
   /* FIXME This can/should be moved to genops ?? */
-  if (fp->_flags & (_IO_LINE_BUF|_IO_UNBUFFERED))
+  if (fp->_flags & (_IO_LINE_BUF | _IO_UNBUFFERED))
     {
 #if 0
       _IO_flush_all_linebuffered ();
@@ -477,7 +477,7 @@ _IO_wfile_overflow (_IO_FILE *f, wint_t wch)
       f->_IO_read_base = f->_IO_read_ptr = f->_IO_read_end;
 
       f->_flags |= _IO_CURRENTLY_PUTTING;
-      if (f->_flags & (_IO_LINE_BUF+_IO_UNBUFFERED))
+      if (f->_flags & (_IO_LINE_BUF | _IO_UNBUFFERED))
 	f->_wide_data->_IO_write_end = f->_wide_data->_IO_write_ptr;
     }
   if (wch == WEOF)
