@@ -1,3 +1,8 @@
+2015-07-08  Roland McGrath  <roland@hack.frob.com>
+
+	* resolv/rpc/netdb.h: New file.
+	* resolv/Makefile [sunrpc not in $(subdirs)] (headers): Add it.
+
 2015-07-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* stdio-common/tst-fmemopen2.c (do_test): Add test for NULL and zero
