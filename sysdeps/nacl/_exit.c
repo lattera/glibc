@@ -31,4 +31,5 @@ _exit (int status)
     __builtin_trap ();
 }
 libc_hidden_def (_exit)
+rtld_hidden_def (_exit)
 weak_alias (_exit, _Exit)
