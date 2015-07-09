@@ -1,3 +1,10 @@
+2015-07-09  Martin Sebor  <msebor@redhat.com>
+
+	[BZ #18435]
+	* nptl/pthreadP.h (pthread_cleanup_push, pthread_cleanup_pop):
+	Revert commit ed225df3ad9cbac3c22ec3f0fbbed1f9c61d1c54.
+	* nptl/Makefile (test-xfail-tst-once5): Define.
+
 2015-07-09  Roland McGrath  <roland@hack.frob.com>
 
 	* include/stdio.h: Add rtld_hidden_proto (__libc_fatal).

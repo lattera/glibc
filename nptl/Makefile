@@ -288,6 +288,10 @@ xtests = tst-setuid1 tst-setuid1-static tst-setuid2 \
 	tst-mutexpp1 tst-mutexpp6 tst-mutexpp10
 test-srcs = tst-oddstacklimit
 
+# Test expected to fail on most targets (except x86_64) due to bug
+# 18435 - pthread_once hangs when init routine throws an exception.
+test-xfail-tst-once5 = yes
+
 # Files which must not be linked with libpthread.
 tests-nolibpthread = tst-unload
 

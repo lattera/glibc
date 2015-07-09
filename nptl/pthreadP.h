@@ -537,8 +537,19 @@ extern void __pthread_cleanup_push (struct _pthread_cleanup_buffer *buffer,
 				    void (*routine) (void *), void *arg)
      attribute_hidden;
 
+/* Replace cleanup macros defined in <pthread.h> with internal
+   versions that don't depend on unwind info and better support
+   cancellation.  */
+# undef pthread_cleanup_push
+# define pthread_cleanup_push(routine,arg)              \
+  { struct _pthread_cleanup_buffer _buffer;             \
+  __pthread_cleanup_push (&_buffer, (routine), (arg));
+
 extern void __pthread_cleanup_pop (struct _pthread_cleanup_buffer *buffer,
 				   int execute) attribute_hidden;
+# undef pthread_cleanup_pop
+# define pthread_cleanup_pop(execute)                   \
+  __pthread_cleanup_pop (&_buffer, (execute)); }
 #endif
 
 extern void __pthread_cleanup_push_defer (struct _pthread_cleanup_buffer *buffer,
