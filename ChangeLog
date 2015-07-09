@@ -1,7 +1,11 @@
 2015-07-09  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
+	[BZ #18400]
+	[BZ #18648]
 	* sysdeps/unix/sysv/linux/aarch64/sys/procfs.h (struct elf_prpsinfo):
 	Fix pr_uid and pr_gid members.
+	* sysdeps/unix/sysv/linux/aarch64/sys/ucontext.h (greg_t): Change the
+	definition to elf_greg_t.
 
 2015-07-08  Roland McGrath  <roland@hack.frob.com>
 

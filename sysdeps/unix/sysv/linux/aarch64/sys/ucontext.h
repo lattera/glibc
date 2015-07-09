@@ -29,7 +29,7 @@
    included in <signal.h>.  */
 #include <bits/sigcontext.h>
 
-typedef int greg_t;
+typedef elf_greg_t greg_t;
 
 /* Container for all general registers.  */
 typedef elf_gregset_t gregset_t;
