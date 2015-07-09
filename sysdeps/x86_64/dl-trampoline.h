@@ -63,20 +63,6 @@
 	movaps (LR_XMM_OFFSET + XMM_SIZE*6)(%rsp), %xmm6
 	movaps (LR_XMM_OFFSET + XMM_SIZE*7)(%rsp), %xmm7
 
-#ifndef __ILP32__
-# ifdef HAVE_MPX_SUPPORT
-	bndmov 		    (LR_BND_OFFSET)(%rsp), %bnd0  # Restore bound
-	bndmov (LR_BND_OFFSET +   BND_SIZE)(%rsp), %bnd1  # registers.
-	bndmov (LR_BND_OFFSET + BND_SIZE*2)(%rsp), %bnd2
-	bndmov (LR_BND_OFFSET + BND_SIZE*3)(%rsp), %bnd3
-# else
-	.byte 0x66,0x0f,0x1a,0x84,0x24;.long (LR_BND_OFFSET)
-	.byte 0x66,0x0f,0x1a,0x8c,0x24;.long (LR_BND_OFFSET + BND_SIZE)
-	.byte 0x66,0x0f,0x1a,0x94,0x24;.long (LR_BND_OFFSET + BND_SIZE*2)
-	.byte 0x66,0x0f,0x1a,0x9c,0x24;.long (LR_BND_OFFSET + BND_SIZE*3)
-# endif
-#endif
-
 #ifdef RESTORE_AVX
 	/* Check if any xmm0-xmm7 registers are changed by audit
 	   module.  */
@@ -154,8 +140,24 @@
 
 1:
 #endif
+
+#ifndef __ILP32__
+# ifdef HAVE_MPX_SUPPORT
+	bndmov              (LR_BND_OFFSET)(%rsp), %bnd0  # Restore bound
+	bndmov (LR_BND_OFFSET +   BND_SIZE)(%rsp), %bnd1  # registers.
+	bndmov (LR_BND_OFFSET + BND_SIZE*2)(%rsp), %bnd2
+	bndmov (LR_BND_OFFSET + BND_SIZE*3)(%rsp), %bnd3
+# else
+	.byte 0x66,0x0f,0x1a,0x84,0x24;.long (LR_BND_OFFSET)
+	.byte 0x66,0x0f,0x1a,0x8c,0x24;.long (LR_BND_OFFSET + BND_SIZE)
+	.byte 0x66,0x0f,0x1a,0x94,0x24;.long (LR_BND_OFFSET + BND_SIZE*2)
+	.byte 0x66,0x0f,0x1a,0x9c,0x24;.long (LR_BND_OFFSET + BND_SIZE*3)
+# endif
+#endif
+
 	mov  16(%rbx), %R10_LP	# Anything in framesize?
 	test %R10_LP, %R10_LP
+	PRESERVE_BND_REGS_PREFIX
 	jns 3f
 
 	/* There's nothing in the frame size, so there
@@ -174,6 +176,7 @@
 	addq $48, %rsp		# Adjust the stack to the return value
 				# (eats the reloc index and link_map)
 	cfi_adjust_cfa_offset(-48)
+	PRESERVE_BND_REGS_PREFIX
 	jmp *%r11		# Jump to function address.
 
 3:
@@ -200,6 +203,7 @@
 	movq 32(%rdi), %rsi
 	movq 40(%rdi), %rdi
 
+	PRESERVE_BND_REGS_PREFIX
 	call *%r11
 
 	mov 24(%rbx), %rsp	# Drop the copied stack content
@@ -280,11 +284,11 @@
 
 #ifndef __ILP32__
 # ifdef HAVE_MPX_SUPPORT
-	bndmov LRV_BND0_OFFSET(%rcx), %bnd0  # Restore bound registers.
-	bndmov LRV_BND1_OFFSET(%rcx), %bnd1
+	bndmov LRV_BND0_OFFSET(%rsp), %bnd0  # Restore bound registers.
+	bndmov LRV_BND1_OFFSET(%rsp), %bnd1
 # else
-	.byte  0x66,0x0f,0x1a,0x81;.long (LRV_BND0_OFFSET)
-	.byte  0x66,0x0f,0x1a,0x89;.long (LRV_BND1_OFFSET)
+	.byte  0x66,0x0f,0x1a,0x84,0x24;.long (LRV_BND0_OFFSET)
+	.byte  0x66,0x0f,0x1a,0x8c,0x24;.long (LRV_BND1_OFFSET)
 # endif
 #endif
 
@@ -299,6 +303,7 @@
 	addq $48, %rsp		# Adjust the stack to the return value
 				# (eats the reloc index and link_map)
 	cfi_adjust_cfa_offset(-48)
+	PRESERVE_BND_REGS_PREFIX
 	retq
 
 #ifdef MORE_CODE

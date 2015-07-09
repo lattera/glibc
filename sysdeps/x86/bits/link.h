@@ -38,6 +38,8 @@ typedef struct La_i86_retval
   uint32_t lrv_edx;
   long double lrv_st0;
   long double lrv_st1;
+  uint64_t lrv_bnd0;
+  uint64_t lrv_bnd1;
 } La_i86_retval;
 
 

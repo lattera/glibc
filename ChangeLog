@@ -1,3 +1,23 @@
+2015-07-09  Igor Zamyatin  <igor.zamyatin@intel.com>
+	    H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18134]
+	* sysdeps/i386/configure.ac: Set HAVE_MPX_SUPPORT.
+	* sysdeps/i386/configure: Regenerated.
+	* sysdeps/i386/dl-trampoline.S (PRESERVE_BND_REGS_PREFIX): New.
+	(_dl_runtime_profile): Save and restore Intel MPX return bound
+	registers when calling _dl_call_pltexit.  Add
+	PRESERVE_BND_REGS_PREFIX before return.
+	* sysdeps/i386/link-defines.sym (LRV_BND0_OFFSET): New.
+	(LRV_BND1_OFFSET): Likewise.
+	* sysdeps/x86/bits/link.h (La_i86_retval): Add lrv_bnd0 and
+	lrv_bnd1.
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Fix
+	typo in bndmov encoding.
+	* sysdeps/x86_64/dl-trampoline.h: Properly save and restore
+	Intel MPX bound registers.  Add PRESERVE_BND_REGS_PREFIX before
+	branch instructions to preserve bounds.
+
 2015-07-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc-le.abilist

@@ -88,6 +88,21 @@ LIBC_TRY_CC_OPTION([-mno-vzeroupper],
 ])
 LIBC_CONFIG_VAR([config-cflags-novzeroupper], [$libc_cv_cc_novzeroupper])
 
+dnl Check whether asm supports Intel MPX
+AC_CACHE_CHECK(for Intel MPX support, libc_cv_asm_mpx, [dnl
+cat > conftest.s <<\EOF
+        bndmov %bnd0,(%esp)
+EOF
+if AC_TRY_COMMAND(${CC-cc} -c $ASFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD); then
+  libc_cv_asm_mpx=yes
+else
+  libc_cv_asm_mpx=no
+fi
+rm -f conftest*])
+if test $libc_cv_asm_mpx == yes; then
+  AC_DEFINE(HAVE_MPX_SUPPORT)
+fi
+
 dnl Check if -mavx2 works.
 AC_CACHE_CHECK(for AVX2 support, libc_cv_cc_avx2, [dnl
 LIBC_TRY_CC_OPTION([-mavx2], [libc_cv_cc_avx2=yes], [libc_cv_cc_avx2=no])
