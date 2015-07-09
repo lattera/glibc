@@ -1,5 +1,38 @@
 2015-07-15  Arjun Shankar  <arjun.is@lostca.se>
 
+	* elf/tst-leaks1.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* localedata/tst-langinfo.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* math/test-fpucw.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* math/test-tgmath.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* math/test-tgmath2.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* setjmp/tst-setjmp.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* stdio-common/tst-sscanf.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* sysdeps/x86_64/tst-audit6.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+
 	* elf/tst-audit9.c (main): Converted to ...
 	(do_test): ... this.
 	(TEST_FUNCTION): New macro.

@@ -334,8 +334,8 @@ test (const int Vint4, const long long int Vllong4)
   return result;
 }
 
-int
-main (void)
+static int
+do_test (void)
 {
   return test (vint1, vllong1);
 }
@@ -365,6 +365,9 @@ main (void)
 #define C Tcldouble
 #include "test-tgmath2.c"
 #endif
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
 
 #else
 

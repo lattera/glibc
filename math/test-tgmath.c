@@ -54,8 +54,8 @@ int count_cldouble;
 #define NCALLS_INT 4
 #define NCCALLS    47
 
-int
-main (void)
+static int
+do_test (void)
 {
   int result = 0;
 
@@ -209,6 +209,9 @@ main (void)
 #define ccount count_cldouble
 #include "test-tgmath.c"
 #endif
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
 
 #else
 

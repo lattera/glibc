@@ -25,8 +25,8 @@ avx_enabled (void)
 }
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   /* Run AVX test only if AVX is supported.  */
   if (avx_enabled ())
@@ -40,3 +40,6 @@ main (void)
     }
   return 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../../test-skeleton.c"

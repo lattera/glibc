@@ -28,8 +28,8 @@ jump (int val)
   longjmp (env, val);
 }
 
-int
-main (void)
+static int
+do_test (void)
 {
   int value;
 
@@ -115,3 +115,6 @@ main (void)
 
   return lose ? EXIT_FAILURE : EXIT_SUCCESS;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
