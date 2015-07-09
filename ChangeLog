@@ -1,3 +1,8 @@
+2015-07-09  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_resolve): Improve
+	bndmov encoding with zero displacement.
+
 2015-07-09  Igor Zamyatin  <igor.zamyatin@intel.com>
 	    H.J. Lu  <hongjiu.lu@intel.com>
 
