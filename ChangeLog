@@ -1,3 +1,10 @@
+2015-07-09  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/mlock.c (mlock): When __get_privileged_ports
+	returns an error, also try to use host port from __mach_host_self for
+	the __vm_wire call.
+	* sysdeps/mach/hurd/munlock.c (munlock): Likewise.
+
 2015-07-09  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	[BZ #18400]
