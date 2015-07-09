@@ -1,3 +1,8 @@
+2015-07-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc-le.abilist
+	[GLIBC_2.22]: Add fmemopen.
+
 2015-07-09  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/mlock.c (mlock): When __get_privileged_ports

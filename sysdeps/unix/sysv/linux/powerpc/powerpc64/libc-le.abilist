@@ -2169,3 +2169,6 @@ GLIBC_2.17
 GLIBC_2.18
  GLIBC_2.18 A
  __cxa_thread_atexit_impl F
+GLIBC_2.22
+ GLIBC_2.22 A
+ fmemopen F
