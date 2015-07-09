@@ -172,6 +172,7 @@ libc_hidden_proto (fmemopen)
 extern FILE *__open_memstream (char **, size_t *) __THROW __wur;
 libc_hidden_proto (__open_memstream)
 libc_hidden_proto (__libc_fatal)
+rtld_hidden_proto (__libc_fatal)
 libc_hidden_proto (__vsprintf_chk)
 libc_hidden_proto (__vsnprintf_chk)
 libc_hidden_proto (__vfprintf_chk)

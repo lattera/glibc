@@ -1,5 +1,10 @@
 2015-07-09  Roland McGrath  <roland@hack.frob.com>
 
+	* include/stdio.h: Add rtld_hidden_proto (__libc_fatal).
+	* elf/dl-minimal.c: For readability, reorder some definitions and
+	introduce more page breaks.  Include <stdio.h>.
+	(__libc_fatal): New function.
+
 	* include/unistd.h: Add rtld_hidden_proto for _exit.
 	* posix/_exit.c: Add rtld_hidden_def.
 	* sysdeps/mach/hurd/_exit.c: Likewise.
