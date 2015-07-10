@@ -1,3 +1,7 @@
+2015-07-10  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/nacl/pthread_condattr_setclock.c: New file.
+
 2015-07-10  Chris Metcalf  <cmetcalf@ezchip.com>
 
 	* sysdeps/tile/libm-test-ulps: Regenerated.
