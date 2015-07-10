@@ -1,5 +1,7 @@
 2015-07-10  Chris Metcalf  <cmetcalf@ezchip.com>
 
+	* sysdeps/tile/libm-test-ulps: Regenerated.
+
 	* math/test-fenvinline.c (feenable_test) [FE_ALL_EXCEPT == 0]:
 	Comment out the whole function, not just its body.
 
