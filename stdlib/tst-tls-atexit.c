@@ -36,7 +36,7 @@ load (void *u)
 {
   pthread_mutex_lock (&m);
   handle = dlopen ("$ORIGIN/tst-tls-atexit-lib.so", RTLD_LAZY);
-  if (!handle)
+  if (handle == NULL)
     {
       printf ("Unable to load DSO: %s\n", dlerror ());
       return (void *) (uintptr_t) 1;
@@ -44,7 +44,7 @@ load (void *u)
 
   void (*foo) (void) = (void (*) (void)) dlsym(handle, "do_foo");
 
-  if (!foo)
+  if (foo == NULL)
     {
       printf ("Unable to find symbol: %s\n", dlerror ());
       exit (1);
