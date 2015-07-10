@@ -29,12 +29,10 @@
 #include <errno.h>
 
 void *handle;
-pthread_mutex_t m = PTHREAD_MUTEX_INITIALIZER;
 
 void *
 load (void *u)
 {
-  pthread_mutex_lock (&m);
   handle = dlopen ("$ORIGIN/tst-tls-atexit-lib.so", RTLD_LAZY);
   if (handle == NULL)
     {
@@ -55,7 +53,6 @@ load (void *u)
   /* This should not unload the DSO.  If it does, then the thread exit will
      result in a segfault.  */
   dlclose (handle);
-  pthread_mutex_unlock (&m);
 
   return NULL;
 }

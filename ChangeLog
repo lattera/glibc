@@ -1,5 +1,8 @@
 2015-07-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* stdlib/tst-tls-atexit.c (load): Remove unnecessary mutex
+	locks.
+
 	* stdlib/tst-tls-atexit.c (load): Avoid boolean coercion.
 
 2015-07-10  Torvald Riegel  <triegel@redhat.com>
