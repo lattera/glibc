@@ -200,11 +200,11 @@ test_fesetround (void)
 #endif
 }
 
+#if FE_ALL_EXCEPT
 /* Tests for feenableexcept/fedisableexcept.  */
 static void
 feenable_test (const char *flag_name, fexcept_t fe_exc)
 {
-#if FE_ALL_EXCEPT
   int fe_exci = fe_exc;
   double fe_excd = fe_exc;
   int excepts;
@@ -287,8 +287,8 @@ feenable_test (const char *flag_name, fexcept_t fe_exc)
               flag_name, (unsigned int)fe_exc, excepts);
       ++count_errors;
     }
-#endif
 }
+#endif
 
 static void
 test_feenabledisable (void)
