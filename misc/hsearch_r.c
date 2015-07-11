@@ -19,7 +19,7 @@
 #include <errno.h>
 #include <malloc.h>
 #include <string.h>
-
+#include <stdint.h>
 #include <search.h>
 
 /* [Aho,Sethi,Ullman] Compilers: Principles, Techniques and Tools, 1986
@@ -72,6 +72,13 @@ __hcreate_r (nel, htab)
       __set_errno (EINVAL);
       return 0;
     }
+
+  if (nel >= SIZE_MAX / sizeof (_ENTRY))
+    {
+      __set_errno (ENOMEM);
+      return 0;
+    }
+
 
   /* There is still another table active. Return with error. */
   if (htab->table != NULL)
