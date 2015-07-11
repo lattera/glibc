@@ -1,3 +1,9 @@
+2015-07-11  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* stdio-common/tst-fmemopen2.c (do_test_without_buffer): Replace
+	%ld with %jd and cast to intmax_t.
+	(do_test_length_zero): Likewise.
+
 2015-07-10  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/nacl/pthread_condattr_setclock.c: New file.

@@ -121,7 +121,8 @@ do_test_without_buffer (void)
   off_t o = ftello (fp);
   if (o != nstr)
     {
-      printf ("FAIL: first ftello returned %ld, expected %zu\n", o, nstr);
+      printf ("FAIL: first ftello returned %jd, expected %zu\n",
+	      (intmax_t) o, nstr);
       result = 1;
     }
   if (fseeko (fp, 0, SEEK_END) != 0)
@@ -132,7 +133,8 @@ do_test_without_buffer (void)
   o = ftello (fp);
   if (o != nstr)
     {
-      printf ("FAIL: second ftello returned %ld, expected %zu\n", o, nbuf);
+      printf ("FAIL: second ftello returned %jd, expected %zu\n",
+	      (intmax_t) o, nbuf);
       result = 1;
     }
 
@@ -145,7 +147,8 @@ do_test_without_buffer (void)
   o = ftello (fp);
   if (o != nstr2)
     {
-      printf ("FAIL: third ftello returned %ld, expected %zu\n", o, nstr2);
+      printf ("FAIL: third ftello returned %jd, expected %zu\n",
+	      (intmax_t) o, nstr2);
       result = 1;
     }
   fclose (fp);
@@ -180,7 +183,8 @@ do_test_length_zero (void)
   off_t o = ftello (fp);
   if (o != 0)
     {
-      printf ("FAIL: first ftello returned %ld, expected 0\n", o);
+      printf ("FAIL: first ftello returned %jd, expected 0\n",
+	      (intmax_t) o);
       result = 1;
     }
   fclose (fp);
