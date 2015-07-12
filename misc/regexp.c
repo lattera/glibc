@@ -1,4 +1,4 @@
-/* Define function and variables for the obsolete <regexp.h> interface.
+/* Compatibility symbols for the obsolete <regexp.h> interface.
    Copyright (C) 1996-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
@@ -17,17 +17,27 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* We don't include regexp.h here because of the macros it requires, and
-   because it now contains an unconditional #warning.  */
+/* regexp.h now contains only an #error directive, so it cannot be
+   used in this file.
+
+   The function that would produce an 'expbuf' to use as the second
+   argument to 'step' and 'advance' was defined only in regexp.h,
+   as its definition depended on macros defined by the user.  */
 
 #include <regex.h>
+#include <shlib-compat.h>
+
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_23)
 
 /* Define the variables used for the interface.  */
 char *loc1;
 char *loc2;
+compat_symbol (libc, loc1, loc1, GLIBC_2_0);
+compat_symbol (libc, loc2, loc2, GLIBC_2_0);
 
 /* Although we do not support the use we define this variable as well.  */
 char *locs;
+compat_symbol (libc, locs, locs, GLIBC_2_0);
 
 
 /* Find the next match in STRING.  The compiled regular expression is
@@ -35,7 +45,8 @@ char *locs;
    first character matched and `loc2' points to the next unmatched
    character.  */
 int
-__step (const char *string, const char *expbuf)
+weak_function attribute_compat_text_section
+step (const char *string, const char *expbuf)
 {
   regmatch_t match;	/* We only need info about the full match.  */
 
@@ -50,14 +61,15 @@ __step (const char *string, const char *expbuf)
   loc2 = (char *) string + match.rm_eo;
   return 1;
 }
-weak_alias (__step, step)
+compat_symbol (libc, step, step, GLIBC_2_0);
 
 
 /* Match the beginning of STRING with the compiled regular expression
    in EXPBUF.  If the match is successful `loc2' will contain the
    position of the first unmatched character.  */
 int
-__advance (const char *string, const char *expbuf)
+weak_function attribute_compat_text_section
+advance (const char *string, const char *expbuf)
 {
   regmatch_t match;	/* We only need info about the full match.  */
 
@@ -74,4 +86,7 @@ __advance (const char *string, const char *expbuf)
   loc2 = (char *) string + match.rm_eo;
   return 1;
 }
-weak_alias (__advance, advance)
+compat_symbol (libc, advance, advance, GLIBC_2_0);
+
+
+#endif /* SHLIB_COMPAT (2.0, 2.23) */

@@ -1,3 +1,11 @@
+2015-08-16  Zack Weinberg  <zackw@panix.com>
+
+	[BZ #18681]
+	* misc/regexp.h: This interface is no longer supported.
+	Remove all contents, leaving only an #error directive.
+	* misc/regexp.c (loc1, loc2, locs, step, advance):
+	Demote to compatibility symbols.
+
 2015-08-15  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #18084]
