@@ -270,7 +270,7 @@ Locks}.
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@acsmem{} @acsfd{} @aculock{}}}
 This function is similar to @code{fopen} but the stream it returns a
 pointer for is opened using @code{open64}.  Therefore this stream can be
-used even on files larger than @math{2^31} bytes on 32 bit machines.
+used even on files larger than @twoexp{31} bytes on 32 bit machines.
 
 Please note that the return type is still @code{FILE *}.  There is no
 special @code{FILE} type for the LFS interface.
@@ -336,7 +336,7 @@ interface replaces transparently the old interface.
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{} @acsfd{}}}
 This function is similar to @code{freopen}.  The only difference is that
 on 32 bit machine the stream returned is able to read beyond the
-@math{2^31} bytes limits imposed by the normal interface.  It should be
+@twoexp{31} bytes limits imposed by the normal interface.  It should be
 noted that the stream pointed to by @var{stream} need not be opened
 using @code{fopen64} or @code{freopen64} since its mode is not important
 for this function.
@@ -4412,7 +4412,7 @@ This function is similar to @code{ftello} with the only difference that
 the return value is of type @code{off64_t}.  This also requires that the
 stream @var{stream} was opened using either @code{fopen64},
 @code{freopen64}, or @code{tmpfile64} since otherwise the underlying
-file operations to position the file pointer beyond the @math{2^31}
+file operations to position the file pointer beyond the @twoexp{31}
 bytes limit might fail.
 
 If the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a 32
@@ -4473,7 +4473,7 @@ the @var{offset} parameter is of type @code{off64_t}.  This also
 requires that the stream @var{stream} was opened using either
 @code{fopen64}, @code{freopen64}, or @code{tmpfile64} since otherwise
 the underlying file operations to position the file pointer beyond the
-@math{2^31} bytes limit might fail.
+@twoexp{31} bytes limit might fail.
 
 If the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a 32
 bits machine this function is available under the name @code{fseeko}

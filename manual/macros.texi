@@ -256,4 +256,15 @@ cwd\comments\
 !posix\comments\
 @end macro
 
+@iftex
+@macro twoexp{exp}
+@math{2^{{\exp\}}}
+@end macro
+@end iftex
+@ifnottex
+@macro twoexp{exp}
+2^\exp\
+@end macro
+@end ifnottex
+
 @end ifclear

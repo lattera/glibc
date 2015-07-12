@@ -1834,7 +1834,7 @@ writing the file.  (This is unrelated to @code{st_blocks}.)
 @end deftp
 
 The extensions for the Large File Support (LFS) require, even on 32-bit
-machines, types which can handle file sizes up to @math{2^63}.
+machines, types which can handle file sizes up to @twoexp{63}.
 Therefore a new definition of @code{struct stat} is necessary.
 
 @comment sys/stat.h
@@ -2024,7 +2024,7 @@ replaces the normal implementation.
 @deftypefun int stat64 (const char *@var{filename}, struct stat64 *@var{buf})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is similar to @code{stat} but it is also able to work on
-files larger than @math{2^31} bytes on 32-bit systems.  To be able to do
+files larger than @twoexp{31} bytes on 32-bit systems.  To be able to do
 this the result is stored in a variable of type @code{struct stat64} to
 which @var{buf} must point.
 
@@ -2097,7 +2097,7 @@ replaces the normal implementation.
 @c Direct system call through lxstat64, sometimes with an xstat conv
 @c call afterwards.
 This function is similar to @code{lstat} but it is also able to work on
-files larger than @math{2^31} bytes on 32-bit systems.  To be able to do
+files larger than @twoexp{31} bytes on 32-bit systems.  To be able to do
 this the result is stored in a variable of type @code{struct stat64} to
 which @var{buf} must point.
 
@@ -3073,7 +3073,7 @@ systems do not support this feature and will leave the file unchanged.
 When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} the
 @code{truncate} function is in fact @code{truncate64} and the type
 @code{off_t} has 64 bits which makes it possible to handle files up to
-@math{2^63} bytes in length.
+@twoexp{63} bytes in length.
 
 The return value is @math{0} for success, or @math{-1} for an error.  In
 addition to the usual file name errors, the following errors may occur:
@@ -3110,7 +3110,7 @@ The operation was interrupted by a signal.
 This function is similar to the @code{truncate} function.  The
 difference is that the @var{length} argument is 64 bits wide even on 32
 bits machines, which allows the handling of files with sizes up to
-@math{2^63} bytes.
+@twoexp{63} bytes.
 
 When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} on a
 32 bits machine this function is actually available under the name
@@ -3144,7 +3144,7 @@ The example below shows how this works.
 When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} the
 @code{ftruncate} function is in fact @code{ftruncate64} and the type
 @code{off_t} has 64 bits which makes it possible to handle files up to
-@math{2^63} bytes in length.
+@twoexp{63} bytes in length.
 
 The return value is @math{0} for success, or @math{-1} for an error.  The
 following errors may occur:
@@ -3190,7 +3190,7 @@ The operation was interrupted by a signal.
 This function is similar to the @code{ftruncate} function.  The
 difference is that the @var{length} argument is 64 bits wide even on 32
 bits machines which allows the handling of files with sizes up to
-@math{2^63} bytes.
+@twoexp{63} bytes.
 
 When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} on a
 32 bits machine this function is actually available under the name
@@ -3430,7 +3430,7 @@ interface transparently replaces the old interface.
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@acsmem{} @acsfd{} @aculock{}}}
 This function is similar to @code{tmpfile}, but the stream it returns a
 pointer to was opened using @code{tmpfile64}.  Therefore this stream can
-be used for files larger than @math{2^31} bytes on 32-bit machines.
+be used for files larger than @twoexp{31} bytes on 32-bit machines.
 
 Please note that the return type is still @code{FILE *}.  There is no
 special @code{FILE} type for the LFS interface.
