@@ -394,8 +394,9 @@ __lll_timedwait_tid:
 	movq	%rdi, %r12
 	movq	%rsi, %r13
 
-	subq	$16, %rsp
-	cfi_adjust_cfa_offset(16)
+	/* Align stack to 16 bytes when calling __gettimeofday.  */
+	subq	$24, %rsp
+	cfi_adjust_cfa_offset(24)
 
 	/* Get current time.  */
 2:	movq	%rsp, %rdi
@@ -441,8 +442,8 @@ __lll_timedwait_tid:
 	jne	1f
 4:	xorl	%eax, %eax
 
-8:	addq	$16, %rsp
-	cfi_adjust_cfa_offset(-16)
+8:	addq	$24, %rsp
+	cfi_adjust_cfa_offset(-24)
 	popq	%r13
 	cfi_adjust_cfa_offset(-8)
 	cfi_restore(%r13)

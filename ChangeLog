@@ -1,6 +1,13 @@
 2015-08-05  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18661]
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S
+	(__lll_timedwait_tid): Align stack to 16 bytes when calling
+	__gettimeofday.
+
+2015-08-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18661]
 	* sysdeps/unix/sysv/linux/x86_64/__start_context.S
 	(__start_context): Don't use pop to restore %rdi so that stack
 	is aligned to 16 bytes when calling __setcontext.
