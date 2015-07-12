@@ -31,8 +31,8 @@ ENTRY(__start_context)
 	   on the stack pointer for the next context.  */
 	movq	%rbx, %rsp
 
-	popq	%rdi			/* This is the next context.  */
-	cfi_adjust_cfa_offset(-8)
+	/* Don't use pop here so that stack is aligned to 16 bytes.  */
+	movq	(%rsp), %rdi		/* This is the next context.  */
 	testq	%rdi, %rdi
 	je	2f			/* If it is zero exit.  */
 

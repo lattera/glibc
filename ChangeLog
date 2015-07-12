@@ -1,5 +1,12 @@
 2015-08-05  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #18661]
+	* sysdeps/unix/sysv/linux/x86_64/__start_context.S
+	(__start_context): Don't use pop to restore %rdi so that stack
+	is aligned to 16 bytes when calling __setcontext.
+
+2015-08-05  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/multiarch/memcpy-sse2-unaligned.S: Compile
 	only for libc.
 	* sysdeps/x86_64/multiarch/strcmp-sse2-unaligned.S: Likewise.
