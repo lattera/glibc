@@ -336,8 +336,14 @@ L(arg_inf_or_nan):
 	/* Here if |x| is Inf or NAN */
 	jne	L(skip_errno_setting)	/* in case of x is NaN */
 
+	/* Align stack to 16 bytes.  */
+	subq	$8, %rsp
+	cfi_adjust_cfa_offset (8)
 	/* Here if x is Inf. Set errno to EDOM.  */
 	call	JUMPTARGET(__errno_location)
+	addq	$8, %rsp
+	cfi_adjust_cfa_offset (-8)
+
 	movl	$EDOM, (%rax)
 
 	.p2align	4

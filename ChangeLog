@@ -1,6 +1,14 @@
 2015-08-05  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18661]
+	* sysdeps/x86_64/fpu/s_cosf.S (__cosf): Align stack to 16 bytes
+	when calling __errno_location.
+	* sysdeps/x86_64/fpu/s_sincosf.S (__sincosf): Likewise.
+	* sysdeps/x86_64/fpu/s_sinf.S (__sinf): Likewise.
+
+2015-08-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18661]
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S
 	(__lll_timedwait_tid): Align stack to 16 bytes when calling
 	__gettimeofday.
