@@ -22,6 +22,11 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
+#define math_opt_barrier(x) \
+({ __typeof (x) __x = (x); __asm ("" : "+w" (__x)); __x; })
+#define math_force_eval(x) \
+({ __typeof (x) __x = (x); __asm __volatile__ ("" : : "w" (__x)); })
+
 extern __always_inline double
 __ieee754_sqrt (double d)
 {

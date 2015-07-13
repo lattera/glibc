@@ -1,3 +1,9 @@
+2015-04-01  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* sysdeps/aarch64/fpu/math_private.h
+	(define math_opt_barrier): Add AArch64 version.
+	(math_force_eval): Likewise.
+
 2015-07-13  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/aarch64/strlen.S (strlen): Optimize strlen.
