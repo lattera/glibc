@@ -1,3 +1,7 @@
+2015-07-13  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* sysdeps/aarch64/strlen.S (strlen): Optimize strlen.
+
 2015-07-11  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* stdio-common/tst-fmemopen2.c (do_test_without_buffer): Replace
