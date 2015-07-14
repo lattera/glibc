@@ -2,7 +2,7 @@
 
 	* stdlib/tst-tls-atexit.c (load): Fix up whitespace.
 
-2015-04-01  Wilco Dijkstra  <wdijkstr@arm.com>
+2015-07-13  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/aarch64/fpu/math_private.h
 	(define math_opt_barrier): Add AArch64 version.
