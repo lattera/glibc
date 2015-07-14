@@ -872,7 +872,6 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
   const ElfW(Phdr) *ph;
   size_t maplength;
   int type;
-  struct stat64 st;
   /* Initialize to keep the compiler happy.  */
   const char *errstring = NULL;
   int errval = 0;
@@ -880,7 +879,8 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
   bool make_consistent = false;
 
   /* Get file information.  */
-  if (__glibc_unlikely (__fxstat64 (_STAT_VER, fd, &st) < 0))
+  struct r_file_id id;
+  if (__glibc_unlikely (!_dl_get_file_id (fd, &id)))
     {
       errstring = N_("cannot stat shared object");
     call_lose_errno:
@@ -891,8 +891,8 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
     }
 
   /* Look again to see if the real name matched another already loaded.  */
-  for (l = GL(dl_ns)[nsid]._ns_loaded; l; l = l->l_next)
-    if (l->l_removed == 0 && l->l_ino == st.st_ino && l->l_dev == st.st_dev)
+  for (l = GL(dl_ns)[nsid]._ns_loaded; l != NULL; l = l->l_next)
+    if (!l->l_removed && _dl_file_id_match_p (&l->l_file_id, &id))
       {
 	/* The object is already loaded.
 	   Just bump its reference count and return it.  */
@@ -910,8 +910,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
   /* When loading into a namespace other than the base one we must
      avoid loading ld.so since there can only be one copy.  Ever.  */
   if (__glibc_unlikely (nsid != LM_ID_BASE)
-      && ((st.st_ino == GL(dl_rtld_map).l_ino
-	   && st.st_dev == GL(dl_rtld_map).l_dev)
+      && (_dl_file_id_match_p (&id, &GL(dl_rtld_map).l_file_id)
 	  || _dl_name_match_p (name, &GL(dl_rtld_map))))
     {
       /* This is indeed ld.so.  Create a new link_map which refers to
@@ -1220,7 +1219,7 @@ cannot allocate TLS data structures for initial thread");
        l_map_start, l_map_end, l_addr, l_contiguous, l_text_end, l_phdr
      */
     errstring = _dl_map_segments (l, fd, header, type, loadcmds, nloadcmds,
-                                  maplength, has_holes, loader);
+				  maplength, has_holes, loader);
     if (__glibc_unlikely (errstring != NULL))
       goto call_lose;
   }
@@ -1390,8 +1389,7 @@ cannot enable executable stack as shared object requires");
     GL(dl_initfirst) = l;
 
   /* Finally the file information.  */
-  l->l_dev = st.st_dev;
-  l->l_ino = st.st_ino;
+  l->l_file_id = id;
 
   /* When we profile the SONAME might be needed for something else but
      loading.  Add it right away.  */
@@ -1890,7 +1888,7 @@ open_path (const char *name, size_t namelen, int mode,
 	free (sps->dirs);
 
       /* rtld_search_dirs and env_path_list are attribute_relro, therefore
-         avoid writing into it.  */
+	 avoid writing into it.  */
       if (sps != &rtld_search_dirs && sps != &env_path_list)
 	sps->dirs = (void *) -1;
     }

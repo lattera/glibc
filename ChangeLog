@@ -1,3 +1,14 @@
+2015-07-14  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/generic/dl-fileid.h: New file.
+	* sysdeps/posix/dl-fileid.h: New file.
+	* sysdeps/nacl/dl-fileid.h: New file.
+	* include/link.h: Include <dl-fileid.h>.
+	(struct link_map): Replace l_dev and l_ino with l_file_id.
+	* elf/dl-load.c (_dl_map_object_from_fd): Use _dl_get_file_id rather
+	than __fxstat64.  Use _dl_file_id_match_p rather than comparing l_dev
+	and l_ino directly.  Initialize l_file_id rather than l_dev and l_ino.
+
 2015-07-14  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* stdlib/tst-tls-atexit.c (do_test): Fix typo.

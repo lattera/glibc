@@ -40,6 +40,7 @@ extern unsigned int la_objopen (struct link_map *__map, Lmid_t __lmid,
 #include <stdint.h>
 #include <stddef.h>
 #include <bits/linkmap.h>
+#include <dl-fileid.h>
 #include <dl-lookupcfg.h>
 #include <tls.h>
 #include <bits/libc-lock.h>
@@ -235,8 +236,7 @@ struct link_map
 
     /* This information is kept to check for sure whether a shared
        object is the same as one already loaded.  */
-    dev_t l_dev;
-    ino64_t l_ino;
+    struct r_file_id l_file_id;
 
     /* Collected information about own RUNPATH directories.  */
     struct r_search_path_struct l_runpath_dirs;
