@@ -191,14 +191,21 @@ extern int __lll_robust_timedlock_wait (int *futex, const struct timespec *,
    that's cast to void.  */
 /* Unconditionally set FUTEX to 0 (not acquired), releasing the lock.  If FUTEX
    was >1 (acquired, possibly with waiters), then wake any waiters.  The waiter
-   that acquires the lock will set FUTEX to >1.  */
+   that acquires the lock will set FUTEX to >1.
+   Evaluate PRIVATE before releasing the lock so that we do not violate the
+   mutex destruction requirements.  Specifically, we need to ensure that
+   another thread can destroy the mutex (and reuse its memory) once it
+   acquires the lock and when there will be no further lock acquisitions;
+   thus, we must not access the lock after releasing it, or those accesses
+   could be concurrent with mutex destruction or reuse of the memory.  */
 #define __lll_unlock(futex, private)                    \
   ((void)                                               \
    ({                                                   \
      int *__futex = (futex);                            \
+     int __private = (private);                         \
      int __oldval = atomic_exchange_rel (__futex, 0);   \
      if (__glibc_unlikely (__oldval > 1))               \
-       lll_futex_wake (__futex, 1, private);            \
+       lll_futex_wake (__futex, 1, __private);          \
    }))
 #define lll_unlock(futex, private)	\
   __lll_unlock (&(futex), private)
@@ -209,14 +216,17 @@ extern int __lll_robust_timedlock_wait (int *futex, const struct timespec *,
    that's cast to void.  */
 /* Unconditionally set FUTEX to 0 (not acquired), releasing the lock.  If FUTEX
    had FUTEX_WAITERS set then wake any waiters.  The waiter that acquires the
-   lock will set FUTEX_WAITERS.  */
+   lock will set FUTEX_WAITERS.
+   Evaluate PRIVATE before releasing the lock so that we do not violate the
+   mutex destruction requirements (see __lll_unlock).  */
 #define __lll_robust_unlock(futex, private)             \
   ((void)                                               \
    ({                                                   \
      int *__futex = (futex);                            \
+     int __private = (private);                         \
      int __oldval = atomic_exchange_rel (__futex, 0);   \
      if (__glibc_unlikely (__oldval & FUTEX_WAITERS))	\
-       lll_futex_wake (__futex, 1, private);            \
+       lll_futex_wake (__futex, 1, __private);          \
    }))
 #define lll_robust_unlock(futex, private)       \
   __lll_robust_unlock (&(futex), private)

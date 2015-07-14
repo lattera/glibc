@@ -230,16 +230,18 @@ __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
 	/* One less user.  */
 	--mutex->__data.__nusers;
 
-      /* Unlock.  */
+      /* Unlock.  Load all necessary mutex data before releasing the mutex
+	 to not violate the mutex destruction requirements (see
+	 lll_unlock).  */
+      int robust = mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP;
+      int private = (robust
+		     ? PTHREAD_ROBUST_MUTEX_PSHARED (mutex)
+		     : PTHREAD_MUTEX_PSHARED (mutex));
       if ((mutex->__data.__lock & FUTEX_WAITERS) != 0
 	  || atomic_compare_and_exchange_bool_rel (&mutex->__data.__lock, 0,
 						   THREAD_GETMEM (THREAD_SELF,
 								  tid)))
 	{
-	  int robust = mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP;
-	  int private = (robust
-			 ? PTHREAD_ROBUST_MUTEX_PSHARED (mutex)
-			 : PTHREAD_MUTEX_PSHARED (mutex));
 	  INTERNAL_SYSCALL_DECL (__err);
 	  INTERNAL_SYSCALL (futex, __err, 2, &mutex->__data.__lock,
 			    __lll_private_flag (FUTEX_UNLOCK_PI, private));

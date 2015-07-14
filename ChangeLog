@@ -1,3 +1,15 @@
+2015-12-23  Torvald Riegel  <triegel@redhat.com>
+
+	[BZ #13690]
+	* sysdeps/nptl/lowlevellock.h (__lll_unlock): Do not access the lock
+	after releasing it.
+	(__lll_robust_unlock): Likewise.
+	* nptl/pthread_mutex_unlock.c (__pthread_mutex_unlock_full): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h (lll_unlock): Likewise.
+	(lll_robust_unlock): Likewise.
+	* sysdeps/unix/sysv/linux/lowlevellock-futex.h (__lll_private_flag):
+	Prevent warnings in callers.
+
 2015-12-23  Florian Weimer  <fweimer@redhat.com>
 
 	* malloc/arena.c (list_lock): Update comment.
