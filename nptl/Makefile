@@ -400,7 +400,7 @@ endif
 
 ifeq (,$(CXX))
 # These tests require a C++ compiler and runtime.
-tests-unsupported += tst-cancel24 tst-cancel24-static
+tests-unsupported += tst-cancel24 tst-cancel24-static tst-once5
 endif
 
 include ../Rules
