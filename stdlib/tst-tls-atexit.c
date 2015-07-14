@@ -40,7 +40,7 @@ load (void *u)
       return (void *) (uintptr_t) 1;
     }
 
-  void (*foo) (void) = (void (*) (void)) dlsym(handle, "do_foo");
+  void (*foo) (void) = (void (*) (void)) dlsym (handle, "do_foo");
 
   if (foo == NULL)
     {

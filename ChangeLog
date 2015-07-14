@@ -1,3 +1,7 @@
+2015-07-14  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* stdlib/tst-tls-atexit.c (load): Fix up whitespace.
+
 2015-04-01  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/aarch64/fpu/math_private.h
