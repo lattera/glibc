@@ -72,7 +72,7 @@ do_test (void)
 
   if ((ret = pthread_join (t, &thr_ret)) != 0)
     {
-      printf ("pthread_create failed: %s\n", strerror (ret));
+      printf ("pthread_join failed: %s\n", strerror (ret));
       return 1;
     }
 
