@@ -25,6 +25,7 @@
 #include <time.h>
 #include <unistd.h>
 
+#define TIMEOUT 5
 static int do_test (void);
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"

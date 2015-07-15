@@ -1,3 +1,7 @@
+2015-07-15  Mike Frysinger  <vapier@gentoo.org>
+
+	* timezone/tst-tzset.c (TIMEOUT): Define to 5.
+
 2015-07-15  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/i386/i686/Makefile (test-xfail-tst-makecontext):
