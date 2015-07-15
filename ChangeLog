@@ -1,5 +1,12 @@
 2015-07-16  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/hppa/Versions (GLIBC_PRIVATE): Delete _dl_unmap.
+	* sysdeps/hppa/dl-lookupcfg.h (_dl_unmap): Add attribute_hidden.
+	* sysdeps/ia64/Versions (GLIBC_PRIVATE): Delete _dl_unmap.
+	* sysdeps/ia64/dl-lookupcfg.h (_dl_unmap): Add attribute_hidden.
+
+2015-07-16  Mike Frysinger  <vapier@gentoo.org>
+
 	* elf/dl-symaddr.c (_dl_symbol_address): Add rtld_hidden_def.
 	* sysdeps/hppa/dl-lookupcfg.h (_dl_symbol_address): Add
 	rtld_hidden_proto.

@@ -35,7 +35,7 @@ Elf32_Addr _dl_lookup_address (const void *address);
 #define DL_LOOKUP_ADDRESS(addr) \
   (_dl_lookup_address ((void *)((unsigned long)addr & ~3)))
 
-void _dl_unmap (struct link_map *map);
+void attribute_hidden _dl_unmap (struct link_map *map);
 
 #define DL_UNMAP(map) _dl_unmap (map)
 
