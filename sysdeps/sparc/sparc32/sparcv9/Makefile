@@ -14,6 +14,11 @@ ASFLAGS-.og += -Wa,-Av9a
 ASFLAGS-.oS += -Wa,-Av9a
 endif
 
+# nscd uses atomic_spin_nop which in turn requires cpu_relax
+ifeq ($(subdir),nscd)
+routines += cpu_relax
+endif
+
 ifeq ($(subdir), nptl)
 libpthread-routines += cpu_relax
 endif

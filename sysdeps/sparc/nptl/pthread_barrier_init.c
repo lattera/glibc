@@ -19,6 +19,7 @@
 #include <errno.h>
 #include "pthreadP.h"
 #include <lowlevellock.h>
+#include <futex-internal.h>
 #include <sparc-nptl.h>
 
 int

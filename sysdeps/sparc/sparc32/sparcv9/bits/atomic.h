@@ -102,4 +102,4 @@ typedef uintmax_t uatomic_max_t;
   __asm __volatile ("membar #LoadStore | #StoreStore" : : : "memory")
 
 extern void __cpu_relax (void);
-#define atomic_spin_nop () __cpu_relax ()
+#define atomic_spin_nop() __cpu_relax ()

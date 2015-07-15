@@ -1,3 +1,13 @@
+2015-07-15  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/nptl/pthread_barrier_init.c: Include
+	futex-intenal.h
+	* sysdeps/sparc/sparc32/sparcv9/Makefile (nscd): Add cpu_relax.
+	* sysdeps/sparc/sparc64/Makefile: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/bits/atomic.h (atomic_spin_nop):
+	Remove space from macro define.
+	* sysdeps/sparc/sparc64/bits/atomic.h (atomic_spin_nop): Likewise.
+
 2015-07-15  Pravin Satpute  <psatpute@redhat.com>
 
 	[BZ #17475]
