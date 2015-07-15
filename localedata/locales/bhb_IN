@@ -16,18 +16,18 @@ territory  "India"
 revision   "0.1"
 date       "2014-09-30"
 %
-category  "bh_IN:2014";LC_IDENTIFICATION
-category  "bh_IN:2014";LC_CTYPE
-category  "bh_IN:2014";LC_COLLATE
-category  "bh_IN:2014";LC_TIME
-category  "bh_IN:2014";LC_NUMERIC
-category  "bh_IN:2014";LC_MONETARY
-category  "bh_IN:2014";LC_MESSAGES
-category  "bh_IN:2014";LC_PAPER
-category  "bh_IN:2014";LC_NAME
-category  "bh_IN:2014";LC_ADDRESS
-category  "bh_IN:2014";LC_TELEPHONE
-category  "bh_IN:2014";LC_MEASUREMENT
+category  "bhb_IN:2014";LC_IDENTIFICATION
+category  "bhb_IN:2014";LC_CTYPE
+category  "bhb_IN:2014";LC_COLLATE
+category  "bhb_IN:2014";LC_TIME
+category  "bhb_IN:2014";LC_NUMERIC
+category  "bhb_IN:2014";LC_MONETARY
+category  "bhb_IN:2014";LC_MESSAGES
+category  "bhb_IN:2014";LC_PAPER
+category  "bhb_IN:2014";LC_NAME
+category  "bhb_IN:2014";LC_ADDRESS
+category  "bhb_IN:2014";LC_TELEPHONE
+category  "bhb_IN:2014";LC_MEASUREMENT
 
 END LC_IDENTIFICATION
 

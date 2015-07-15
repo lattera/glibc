@@ -1,3 +1,9 @@
+2015-07-15  Pravin Satpute  <psatpute@redhat.com>
+
+	[BZ #17475]
+	* locale/iso-639.def: Update Bhili and Tulu language codes as
+	per iso639-3.
+
 2015-07-15  Arjun Shankar  <arjun.is@lostca.se>
 
 	* elf/tst-leaks1.c (main): Converted to ...

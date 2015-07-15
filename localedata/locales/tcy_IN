@@ -18,18 +18,18 @@ territory  "India"
 revision   "0.1"
 date       "2014-09-30"
 %
-category  "tu_IN:2014";LC_IDENTIFICATION
-category  "tu_IN:2014";LC_CTYPE
-category  "tu_IN:2014";LC_COLLATE
-category  "tu_IN:2014";LC_TIME
-category  "tu_IN:2014";LC_NUMERIC
-category  "tu_IN:2014";LC_MONETARY
-category  "tu_IN:2014";LC_MESSAGES
-category  "tu_IN:2014";LC_PAPER
-category  "tu_IN:2014";LC_NAME
-category  "tu_IN:2014";LC_ADDRESS
-category  "tu_IN:2014";LC_TELEPHONE
-category  "tu_IN:2014";LC_MEASUREMENT
+category  "tcy_IN:2014";LC_IDENTIFICATION
+category  "tcy_IN:2014";LC_CTYPE
+category  "tcy_IN:2014";LC_COLLATE
+category  "tcy_IN:2014";LC_TIME
+category  "tcy_IN:2014";LC_NUMERIC
+category  "tcy_IN:2014";LC_MONETARY
+category  "tcy_IN:2014";LC_MESSAGES
+category  "tcy_IN:2014";LC_PAPER
+category  "tcy_IN:2014";LC_NAME
+category  "tcy_IN:2014";LC_ADDRESS
+category  "tcy_IN:2014";LC_TELEPHONE
+category  "tcy_IN:2014";LC_MEASUREMENT
 
 END LC_IDENTIFICATION
 
