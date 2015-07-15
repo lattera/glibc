@@ -18,3 +18,9 @@ ASFLAGS-.op += -Wa,-mtune=i686
 ASFLAGS-.og += -Wa,-mtune=i686
 ASFLAGS-.oS += -Wa,-mtune=i686
 endif
+
+ifeq ($(subdir),stdlib)
+# _Unwind_Backtrace from libgcc produces a segmentation fault if it was
+# called within a context created by makecontext. See Bug 18635.
+test-xfail-tst-makecontext = yes
+endif

@@ -1,5 +1,10 @@
 2015-07-15  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/i386/i686/Makefile (test-xfail-tst-makecontext):
+	New variable.
+
+2015-07-15  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/fpu/libm-test-ulps: Regenerated.
 
 2015-07-14  Roland McGrath  <roland@hack.frob.com>
