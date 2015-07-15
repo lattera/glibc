@@ -1,3 +1,10 @@
+2015-07-16  Mike Frysinger  <vapier@gentoo.org>
+
+	* elf/dl-symaddr.c (_dl_symbol_address): Add rtld_hidden_def.
+	* sysdeps/hppa/dl-lookupcfg.h (_dl_symbol_address): Add
+	rtld_hidden_proto.
+	* sysdeps/ia64/dl-lookupcfg.h (_dl_symbol_address): Likewise.
+
 2015-07-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* tst-nodelete-opened.c (do_test): Add comment to clarify how

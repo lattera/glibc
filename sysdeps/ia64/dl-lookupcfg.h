@@ -28,6 +28,7 @@
 struct link_map;
 
 extern void *_dl_symbol_address (struct link_map *map, const Elf64_Sym *ref);
+rtld_hidden_proto (_dl_symbol_address)
 
 #define DL_SYMBOL_ADDRESS(map, ref) _dl_symbol_address(map, ref)
 

@@ -30,3 +30,4 @@ _dl_symbol_address (struct link_map *map, const ElfW(Sym) *ref)
   else
     return (void *) value;
 }
+rtld_hidden_def (_dl_symbol_address)
