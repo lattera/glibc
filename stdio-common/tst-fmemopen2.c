@@ -34,7 +34,7 @@ do_test_with_buffer (void)
   FILE *fp = fmemopen (buf, nbuf, "w");
   if (fp == NULL)
     {
-      printf ("FAIL: fmemopen failedi (%s)\n", __FUNCTION__);
+      printf ("FAIL: fmemopen failed (%s)\n", __FUNCTION__);
       return 1;
     }
 
@@ -69,7 +69,7 @@ do_test_with_buffer (void)
   if (o != nstr)
     {
       printf ("FAIL: third ftello returned %jd, expected %zu\n",
-	      (intmax_t)o, nbuf);
+	      (intmax_t)o, nstr);
       result = 1;
     }
 

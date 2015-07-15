@@ -150,7 +150,7 @@ __fmemopen (void *buf, size_t len, const char *mode)
   cookie_io_functions_t iof;
   fmemopen_cookie_t *c;
 
-  c = (fmemopen_cookie_t *) malloc (sizeof (fmemopen_cookie_t));
+  c = (fmemopen_cookie_t *) calloc (sizeof (fmemopen_cookie_t), 1);
   if (c == NULL)
     return NULL;
 
@@ -165,7 +165,6 @@ __fmemopen (void *buf, size_t len, const char *mode)
 	  return NULL;
 	}
       c->buffer[0] = '\0';
-      c->maxpos = 0;
     }
   else
     {
@@ -182,7 +181,8 @@ __fmemopen (void *buf, size_t len, const char *mode)
       if (mode[0] == 'w' && mode[1] == '+')
 	c->buffer[0] = '\0';
 
-      c->maxpos = strnlen (c->buffer, len);
+      if (mode[0] == 'a')
+        c->maxpos = strnlen (c->buffer, len);
     }
 
 
