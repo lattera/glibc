@@ -1,5 +1,8 @@
 2015-07-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* tst-nodelete-opened.c (do_test): Add comment to clarify how
+	the test can fail.
+
 	* stdlib/cxa_thread_atexit_impl.c: Whitespace fixup.
 
 	[BZ #18676]

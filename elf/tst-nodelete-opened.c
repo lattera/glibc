@@ -58,6 +58,8 @@ do_test (void)
       return 1;
     }
 
+  /* This FOO dereference will crash with a segfault if the DSO was
+     unloaded.  */
   printf ("foo == %d\n", *foo);
 
   return 0;
