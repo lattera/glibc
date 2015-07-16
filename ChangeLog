@@ -1,3 +1,7 @@
+2015-07-16  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/fpu/libm-test-ulps: Regenerated.
+
 2015-07-16  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* libio/fmemopen.c (__fmemopen): Fix 'w' openmode with provided
