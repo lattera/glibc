@@ -1,3 +1,12 @@
+2015-07-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #18676]
+	* elf/tst-nodelete-opened.c: New test case.
+	* elf/tst-nodelete-opened-lib.c: New test case module.
+	* elf/Makefile (tests, modules-names): Use them.
+	* elf/dl-open.c (dl_open_worker): Set DF_1_NODELETE flag
+	early.
+
 2015-07-15  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/nptl/pthread_barrier_init.c: Include

@@ -148,7 +148,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-unique1 tst-unique2 $(if $(CXX),tst-unique3 tst-unique4 \
 	 tst-nodelete) \
 	 tst-initorder tst-initorder2 tst-relsort1 tst-null-argv \
-	 tst-ptrguard1 tst-tlsalign tst-tlsalign-extern
+	 tst-ptrguard1 tst-tlsalign tst-tlsalign-extern tst-nodelete-opened
 #	 reldep9
 ifeq ($(build-hardcoded-path-in-tests),yes)
 tests += tst-dlopen-aout
@@ -218,7 +218,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-initorder2d \
 		tst-relsort1mod1 tst-relsort1mod2 tst-array2dep \
 		tst-array5dep tst-null-argv-lib \
-		tst-tlsalign-lib
+		tst-tlsalign-lib tst-nodelete-opened-lib
 ifeq (yes,$(have-protected-data))
 modules-names += tst-protected1moda tst-protected1modb
 tests += tst-protected1a tst-protected1b
@@ -525,6 +525,8 @@ $(objpfx)tst-initordera4.so: $(objpfx)tst-initordera3.so
 $(objpfx)tst-initorder: $(objpfx)tst-initordera4.so $(objpfx)tst-initordera1.so $(objpfx)tst-initorderb2.so
 $(objpfx)tst-null-argv: $(objpfx)tst-null-argv-lib.so
 $(objpfx)tst-tlsalign: $(objpfx)tst-tlsalign-lib.so
+$(objpfx)tst-nodelete-opened.out: $(objpfx)tst-nodelete-opened-lib.so
+$(objpfx)tst-nodelete-opened: $(libdl)
 
 $(objpfx)tst-tlsalign-extern: $(objpfx)tst-tlsalign-vars.o
 $(objpfx)tst-tlsalign-extern-static: $(objpfx)tst-tlsalign-vars.o
