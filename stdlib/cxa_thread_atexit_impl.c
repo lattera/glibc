@@ -59,7 +59,7 @@ __cxa_thread_atexit_impl (dtor_func func, void *obj, void *dso_symbol)
       struct link_map *l = _dl_find_dso_for_object (caller);
 
       /* If the address is not recognized the call comes from the main
-         program (we hope).  */
+	 program (we hope).  */
       lm_cache = l ? l : GL(dl_ns)[LM_ID_BASE]._ns_loaded;
     }
   /* A destructor could result in a thread_local construction and the former

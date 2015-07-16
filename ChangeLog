@@ -1,5 +1,7 @@
 2015-07-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* stdlib/cxa_thread_atexit_impl.c: Whitespace fixup.
+
 	[BZ #18676]
 	* elf/tst-nodelete-opened.c: New test case.
 	* elf/tst-nodelete-opened-lib.c: New test case module.
