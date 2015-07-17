@@ -1,3 +1,9 @@
+2015-07-21  Khem Raj  <raj.khem@gmail.com>
+
+	[BZ #17475]
+	* benchtests/strcoll-inputs/filelist#en_US.UTF-8: Adjust for rename
+	of tu_IN and bh_IN.
+
 2015-07-21  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #18694]

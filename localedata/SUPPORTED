@@ -62,7 +62,7 @@ ber_DZ/UTF-8 \
 ber_MA/UTF-8 \
 bg_BG.UTF-8/UTF-8 \
 bg_BG/CP1251 \
-bh_IN.UTF-8/UTF-8 \
+bhb_IN.UTF-8/UTF-8 \
 bho_IN/UTF-8 \
 bn_BD/UTF-8 \
 bn_IN/UTF-8 \
@@ -404,6 +404,7 @@ sw_TZ/UTF-8 \
 szl_PL/UTF-8 \
 ta_IN/UTF-8 \
 ta_LK/UTF-8 \
+tcy_IN.UTF-8/UTF-8 \
 te_IN/UTF-8 \
 tg_TJ.UTF-8/UTF-8 \
 tg_TJ/KOI8-T \
@@ -424,7 +425,6 @@ tr_TR/ISO-8859-9 \
 ts_ZA/UTF-8 \
 tt_RU/UTF-8 \
 tt_RU@iqtelif/UTF-8 \
-tu_IN.UTF-8/UTF-8 \
 ug_CN/UTF-8 \
 uk_UA.UTF-8/UTF-8 \
 uk_UA/KOI8-U \

@@ -1,3 +1,8 @@
+2015-07-21  Khem Raj  <raj.khem@gmail.com>
+
+	[BZ #17475]
+	* SUPPORTED: Rename tu_IN to tcy_IN and bh_IN to bhb_IN.
+
 2015-07-20  Chris Metcalf  <cmetcalf@ezchip.com>
 
 	* tst-leaks.c (TIMEOUT): Bump up to 5 seconds.
@@ -5,8 +10,8 @@
 2015-07-15  Pravin Satpute  <psatpute@redhat.com>
 
 	[BZ #17475]
-	* locales/tu_IN: renamed to tcy_IN
-	* locales/bh_IN: renamed to bhb_IN
+	* locales/tu_IN: renamed to tcy_IN.
+	* locales/bh_IN: renamed to bhb_IN.
 
 2015-05-16  Carlos O'Donell  <carlos@redhat.com>
 
