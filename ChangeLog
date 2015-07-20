@@ -1,3 +1,11 @@
+2015-07-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18696]
+	* sysdeps/unix/sysv/linux/x86/bits/siginfo.h (_sigfault): Add
+	si_addr_bnd.
+	(si_lower): New.
+	(si_upper): Likewise.
+
 2015-07-16  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Regenerated.
