@@ -27,7 +27,7 @@ Version 2.22
   18522, 18527, 18528, 18529, 18530, 18532, 18533, 18534, 18536, 18539,
   18540, 18542, 18544, 18545, 18546, 18547, 18549, 18553, 18557, 18558,
   18569, 18583, 18585, 18586, 18592, 18593, 18594, 18602, 18612, 18613,
-  18619, 18633, 18641, 18643, 18648, 18676, 18696.
+  18619, 18633, 18641, 18643, 18648, 18676, 18694, 18696.
 
 * Cache information can be queried via sysconf() function on s390 e.g. with
   _SC_LEVEL1_ICACHE_SIZE as argument.
@@ -71,6 +71,10 @@ Version 2.22
   compliance. The new implementation fixes the following long-standing
   issues: BZ#6544, BZ#11216, BZ#12836, BZ#13151, BZ#13152, and BZ#14292. The
   old implementation is still present for use be by existing binaries.
+
+* The 32-bit sparc sigaction ABI was inadvertently broken in the 2.20 and 2.21
+  releases.  It has been fixed to match 2.19 and older, but binaries built
+  against 2.20 and 2.21 might need to be recompiled.  See BZ#18694.
 
 Version 2.21
 

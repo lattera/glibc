@@ -1,3 +1,10 @@
+2015-07-21  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #18694]
+	* sysdeps/unix/sysv/linux/sparc/bits/sigaction.h: Include
+	bits/wordsize.h.
+	(sigaction): Declare __glibc_reserved0 only when __WORDSIZE is 64.
+
 2015-07-21  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* stdlib/tst-tls-atexit-lib.c (do_foo): Rename to reg_dtor.
