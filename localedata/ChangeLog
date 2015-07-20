@@ -1,3 +1,7 @@
+2015-07-20  Chris Metcalf  <cmetcalf@ezchip.com>
+
+	* tst-leaks.c (TIMEOUT): Bump up to 5 seconds.
+
 2015-07-15  Pravin Satpute  <psatpute@redhat.com>
 
 	[BZ #17475]
