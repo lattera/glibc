@@ -190,7 +190,9 @@ END (__setcontext)
 weak_alias (__setcontext, setcontext)
 
 ENTRY (__startcontext)
+	cfi_undefined (lr)
 	FEEDBACK_ENTER(__startcontext)
+	jalr r31
 	BEQZ r30, 1f
 	{
 	 move r0, r30

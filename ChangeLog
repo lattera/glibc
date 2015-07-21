@@ -1,3 +1,10 @@
+2015-07-21  Chris Metcalf  <cmetcalf@ezchip.com>
+
+	* sysdeps/unix/sysv/linux/tile/makecontext.c (__makecontext): Call
+	__startcontext to initialize the new context.
+	* sysdeps/unix/sysv/linux/tile/setcontext.S (__startcontext): Set
+	up CFI directive to forbid further backtracing.
+
 2015-07-21  Marko Myllynen  <myllynen@redhat.com>
 
 	* charmaps/ANSI_X3.110-1983: Remove obsolete repertoire map

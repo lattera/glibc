@@ -52,14 +52,14 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
     }
   va_end (ap);
 
-  /* Pass (*func) to __startcontext in pc.  */
-  ucp->uc_mcontext.pc = (long) func;
+  /* Start in the trampoline.  */
+  ucp->uc_mcontext.pc = (long) __startcontext;
 
   /* Set stack pointer.  */
   ucp->uc_mcontext.sp = (long) sp;
 
-  /* Set the return address to trampoline.  */
-  ucp->uc_mcontext.lr = (long) __startcontext;
+  /* Pass FUNC to __startcontext in r31.  */
+  ucp->uc_mcontext.gregs[31] = (long) func;
 
   /* Pass ucp->uc_link to __startcontext in r30.  */
   ucp->uc_mcontext.gregs[30] = (long) ucp->uc_link;
