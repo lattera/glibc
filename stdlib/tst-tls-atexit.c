@@ -16,10 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* There are two tests in this test case.  The first is implicit where it is
-   assumed that the destructor call on exit of the LOAD function does not
-   segfault.  The other is a verification that after the thread has exited, a
-   dlclose will unload the DSO.  */
+/* This test dynamically loads a DSO and spawns a thread that subsequently
+   calls into the DSO to register a destructor for an object in the DSO and
+   then calls dlclose on the handle for the DSO.  When the thread exits, the
+   DSO should not be unloaded or else the destructor called during thread exit
+   will crash.  Further in the main thread, the DSO is opened and closed again,
+   at which point the DSO should be unloaded.  */
 
 #include <dlfcn.h>
 #include <pthread.h>
@@ -27,44 +29,53 @@
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
+#include <link.h>
 
-void *handle;
+#define DSO_NAME "$ORIGIN/tst-tls-atexit-lib.so"
 
-void *
-load (void *u)
+/* Walk through the map in the _r_debug structure to see if our lib is still
+   loaded.  */
+static bool
+is_loaded (void)
 {
-  handle = dlopen ("$ORIGIN/tst-tls-atexit-lib.so", RTLD_LAZY);
-  if (handle == NULL)
+  struct link_map *lm = (struct link_map *) _r_debug.r_map;
+
+  for (; lm; lm = lm->l_next)
+    if (lm->l_type == lt_loaded && lm->l_name
+	&& strcmp (basename (DSO_NAME), basename (lm->l_name)) == 0)
+	  return true;
+  return false;
+}
+
+/* Accept a valid handle returned by DLOPEN, load the reg_dtor symbol to
+   register a destructor and then call dlclose on the handle.  The dlclose
+   should not unload the DSO since the destructor has not been called yet.  */
+static void *
+reg_dtor_and_close (void *h)
+{
+  void (*reg_dtor) (void) = (void (*) (void)) dlsym (h, "reg_dtor");
+
+  if (reg_dtor == NULL)
     {
-      printf ("Unable to load DSO: %s\n", dlerror ());
+      printf ("Unable to find symbol: %s\n", dlerror ());
       return (void *) (uintptr_t) 1;
     }
 
-  void (*foo) (void) = (void (*) (void)) dlsym (handle, "do_foo");
+  reg_dtor ();
 
-  if (foo == NULL)
-    {
-      printf ("Unable to find symbol: %s\n", dlerror ());
-      exit (1);
-    }
-
-  foo ();
-
-  /* This should not unload the DSO.  If it does, then the thread exit will
-     result in a segfault.  */
-  dlclose (handle);
+  dlclose (h);
 
   return NULL;
 }
 
 static int
-do_test (void)
+spawn_thread (void *h)
 {
   pthread_t t;
   int ret;
   void *thr_ret;
 
-  if ((ret = pthread_create (&t, NULL, load, NULL)) != 0)
+  if ((ret = pthread_create (&t, NULL, reg_dtor_and_close, h)) != 0)
     {
       printf ("pthread_create failed: %s\n", strerror (ret));
       return 1;
@@ -79,30 +90,31 @@ do_test (void)
   if (thr_ret != NULL)
     return 1;
 
-  /* Now this should unload the DSO.  */
-  dlclose (handle);
+  return 0;
+}
 
-  /* Run through our maps and ensure that the DSO is unloaded.  */
-  FILE *f = fopen ("/proc/self/maps", "r");
-
-  if (f == NULL)
+static int
+do_test (void)
+{
+  /* Load the DSO.  */
+  void *h1 = dlopen (DSO_NAME, RTLD_LAZY);
+  if (h1 == NULL)
     {
-      perror ("Failed to open /proc/self/maps");
-      fprintf (stderr, "Skipping verification of DSO unload\n");
-      return 0;
+      printf ("h1: Unable to load DSO: %s\n", dlerror ());
+      return 1;
     }
 
-  char *line = NULL;
-  size_t s = 0;
-  while (getline (&line, &s, f) > 0)
-    {
-      if (strstr (line, "tst-tls-atexit-lib.so"))
-        {
-	  printf ("DSO not unloaded yet:\n%s", line);
-	  return 1;
-	}
-    }
-  free (line);
+  if (spawn_thread (h1) != 0)
+    return 1;
+
+  /* Now this should unload the DSO.  FIXME: This is a bug, calling dlclose
+     like this is actually wrong, but it works because cxa_thread_atexit_impl
+     has a bug which results in dlclose allowing this to work.  */
+  dlclose (h1);
+
+  /* Check link maps to ensure that the DSO has unloaded.  */
+  if (is_loaded ())
+    return 1;
 
   return 0;
 }
