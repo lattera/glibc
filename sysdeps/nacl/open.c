@@ -38,7 +38,7 @@ __libc_open (const char *file, int oflag, ...)
     }
 
   int fd;
-  return NACL_CALL (__nacl_irt_filename.open (file, oflag, mode, &fd), fd);
+  return NACL_CALL (__nacl_irt_dev_filename.open (file, oflag, mode, &fd), fd);
 }
 libc_hidden_def (__libc_open)
 weak_alias (__libc_open, __open)

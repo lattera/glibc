@@ -21,8 +21,6 @@ NACL_MANDATORY_INTERFACE (rtld,
 NACL_MANDATORY_INTERFACE (rtld,
 			  NACL_IRT_FDIO_v0_1, nacl_irt_fdio)
 NACL_MANDATORY_INTERFACE (rtld,
-			  NACL_IRT_FILENAME_v0_1, nacl_irt_filename)
-NACL_MANDATORY_INTERFACE (rtld,
 			  NACL_IRT_MEMORY_v0_3, nacl_irt_memory)
 NACL_MANDATORY_INTERFACE (libc,
 			  NACL_IRT_THREAD_v0_1, nacl_irt_thread)

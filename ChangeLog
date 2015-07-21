@@ -1,5 +1,10 @@
 2015-07-21  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/nacl/nacl-interface-list.h: Remove nacl_irt_filename.
+	* sysdeps/nacl/open.c (__libc_open): Use __nacl_irt_dev_filename
+	rather than __nacl_irt_filename.
+	* sysdeps/nacl/xstat.c (__xstat): Likewise.
+
 	* NEWS: New item for arm-nacl port.
 	* sysdeps/arm/nacl/libc.abilist: New file.
 	* sysdeps/nacl/ld.abilist: New file.
