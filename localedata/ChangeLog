@@ -1,6 +1,12 @@
 2015-07-21  Khem Raj  <raj.khem@gmail.com>
 
 	[BZ #17475]
+	* locales/bhb_IN: Do not define lang_ab.
+	* locales/tcy_IN: Ditto.
+
+2015-07-21  Khem Raj  <raj.khem@gmail.com>
+
+	[BZ #17475]
 	* SUPPORTED: Rename tu_IN to tcy_IN and bh_IN to bhb_IN.
 
 2015-07-20  Chris Metcalf  <cmetcalf@ezchip.com>

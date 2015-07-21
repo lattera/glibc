@@ -179,7 +179,7 @@ country_ab3 "<U0049><U004E><U0044>"
 country_car "<U0049><U004E><U0044>"
 country_num 356
 lang_name     "<U0CA4><U0CC1><U0CB3><U0CC1>"
-lang_ab       "<U0074><U0075>"
+lang_ab       ""
 lang_term     "<U0074><U0063><U0079>"
 lang_lib      "<U0074><U0063><U0079>"
 END LC_ADDRESS
