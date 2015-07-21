@@ -1,3 +1,17 @@
+2015-07-21  Roland McGrath  <roland@hack.frob.com>
+
+	* NEWS: New item for arm-nacl port.
+	* sysdeps/arm/nacl/libc.abilist: New file.
+	* sysdeps/nacl/ld.abilist: New file.
+	* sysdeps/nacl/libBrokenLocale.abilist: New file.
+	* sysdeps/nacl/libanl.abilist: New file.
+	* sysdeps/nacl/libcrypt.abilist: New file.
+	* sysdeps/nacl/libdl.abilist: New file.
+	* sysdeps/nacl/libm.abilist: New file.
+	* sysdeps/nacl/libpthread.abilist: New file.
+	* sysdeps/nacl/libresolv.abilist: New file.
+	* sysdeps/nacl/librt.abilist: New file.
+
 2015-07-21  Chris Metcalf  <cmetcalf@ezchip.com>
 
 	* sysdeps/unix/sysv/linux/tile/makecontext.c (__makecontext): Call

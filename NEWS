@@ -75,6 +75,9 @@ Version 2.22
 * The 32-bit sparc sigaction ABI was inadvertently broken in the 2.20 and 2.21
   releases.  It has been fixed to match 2.19 and older, but binaries built
   against 2.20 and 2.21 might need to be recompiled.  See BZ#18694.
+
+* Port to Native Client running on ARMv7-A (--host=arm-nacl).
+  Contributed by Roland McGrath (Google).
 
 Version 2.21
 
