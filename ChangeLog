@@ -1,3 +1,15 @@
+2015-10-19  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	[BZ #18743]
+	* sysdeps/powerpc/nptl/elide.h (__elide_lock): Move most of this
+	code to...
+	(ELIDE_LOCK): ...here.
+	(__get_new_count): New function with part of the code from
+	__elide_lock that updates the value of adapt_count after a
+	transaction abort.
+	(__elided_trylock): Moved this code to...
+	(ELIDE_TRYLOCK): ...here.
+
 2015-10-19  Mike Frysinger  <vapier@gentoo.org>
 
 	* configure.ac (AC_ARG_ENABLE(timezone-tools)): Tweak help phrasing.
