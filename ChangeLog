@@ -1,5 +1,14 @@
 2015-07-22  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/unix/sysv/linux/ia64/bits/msq.h: Change sys/types.h include
+	to bits/types.h.
+	(msgqnum_t): New typedef.
+	(msglen_t): Likewise.
+	(struct msqid_ds): Update comment.  Change msg_qnum type to msgqnum_t
+	and msg_qbytes type to msglen_t.
+
+2015-07-22  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/unix/sysv/linux/ia64/bits/stat.h (struct stat): Rename
 	pad0 to __glibc_reserved0.
 	(struct stat64): Likewise.
