@@ -1,5 +1,21 @@
 2015-07-30  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/unix/sysv/linux/hppa/bits/sigaction.h: Include bits/wordsize.h.
+	(struct sigaction): Change sa_flags from a long to an int, and add
+	__glibc_reserved0 before it for padding when __WORDSIZE is 64.
+
+2015-07-30  Mike Frysinger  <vapier@gentoo.org>
+
+	* hppa/sysdep.h: Delete sys/syscall.h and config.h includes.
+	* sysdeps/unix/sysv/linux/hppa/sysdep-cancel.h: Delete
+	sysdeps/generic/sysdep.h include.
+	* sysdeps/unix/sysv/linux/hppa/sysdep.h: Wrap the whole file in
+	_LINUX_HPPA_SYSDEP_H defines.  Include sysdeps/unix/sysdep.h and
+	sysdeps/hppa/sysdep.h.
+	(ENTRY, PSEUDO): Undefine before defining.
+
+2015-07-30  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/unix/sysv/linux/hppa/sysdep.h (INLINE_SYSCALL): Rewrite
 	from scratch to use INTERNAL_SYSCALL.
 
