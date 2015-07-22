@@ -1,3 +1,8 @@
+2015-07-22  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h (siginfo_t): Make struct
+	anonymous by deleting "siginfo" name.
+
 2015-07-21  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/nacl/nacl-interface-list.h: Remove nacl_irt_filename.

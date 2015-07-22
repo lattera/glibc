@@ -42,7 +42,7 @@ typedef union sigval
 # define __SI_MAX_SIZE     128
 # define __SI_PAD_SIZE     ((__SI_MAX_SIZE / sizeof (int)) - 4)
 
-typedef struct siginfo
+typedef struct
   {
     int si_signo;		/* Signal number.  */
     int si_errno;		/* If non-zero, an errno value associated with
