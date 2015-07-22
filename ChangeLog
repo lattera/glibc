@@ -1,5 +1,11 @@
 2015-07-22  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/unix/sysv/linux/ia64/bits/sigaction.h (struct sigaction):
+	Change sa_flags from a long to an int and add __glibc_reserved0 before
+	it for padding.
+
+2015-07-22  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h (siginfo_t): Make struct
 	anonymous by deleting "siginfo" name.
 
