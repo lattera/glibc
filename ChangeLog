@@ -1,5 +1,11 @@
 2015-07-22  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/unix/sysv/linux/ia64/bits/stat.h (struct stat): Rename
+	pad0 to __glibc_reserved0.
+	(struct stat64): Likewise.
+
+2015-07-22  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/unix/sysv/linux/ia64/bits/sigaction.h (struct sigaction):
 	Change sa_flags from a long to an int and add __glibc_reserved0 before
 	it for padding.
