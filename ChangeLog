@@ -1,3 +1,14 @@
+2015-08-18  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Port the 0x7efe...feff pattern to GCC 6.
+	See Steve Ellcey's bug report in:
+	https://sourceware.org/ml/libc-alpha/2015-07/msg00673.html
+	* string/memrchr.c (MEMRCHR):
+	* string/rawmemchr.c (RAWMEMCHR):
+	* string/strchr.c (strchr):
+	* string/strchrnul.c (STRCHRNUL):
+	Rewrite code to avoid issues with signed shift overflow.
+
 2015-08-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86/cpu-features.c (init_cpu_features): Check

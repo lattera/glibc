@@ -60,13 +60,8 @@ strchr (const char *s, int c_in)
 
      The 1-bits make sure that carries propagate to the next 0-bit.
      The 0-bits provide holes for carries to fall into.  */
-  switch (sizeof (longword))
-    {
-    case 4: magic_bits = 0x7efefeffL; break;
-    case 8: magic_bits = ((0x7efefefeL << 16) << 16) | 0xfefefeffL; break;
-    default:
-      abort ();
-    }
+  magic_bits = -1;
+  magic_bits = magic_bits / 0xff * 0xfe << 1 >> 1 | 1;
 
   /* Set up a longword, each of whose bytes is C.  */
   charmask = c | (c << 8);
