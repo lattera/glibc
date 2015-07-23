@@ -1,3 +1,8 @@
+2015-07-23  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/nacl/getdtsz.c (getdtablesize): Add missing weak_alias.
+	* sysdeps/arm/nacl/libc.abilist: Add it.
+
 2015-07-23  Mike Frysinger  <vapier@gentoo.org>
 
 	* conform/linknamespace.pl (@whitelist): Add matherrf and matherrl.

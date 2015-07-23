@@ -853,6 +853,7 @@ GLIBC_2.22
  getdate_r F
  getdelim F
  getdomainname F
+ getdtablesize F
  getegid F
  getenv F
  geteuid F

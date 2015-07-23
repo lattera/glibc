@@ -26,3 +26,4 @@ __getdtablesize (void)
   /* There is no actual limit in NaCl, just memory.  */
   return -1;
 }
+weak_alias (__getdtablesize, getdtablesize)
