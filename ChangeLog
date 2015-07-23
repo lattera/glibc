@@ -1,3 +1,21 @@
+2015-07-23  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #18657]
+	* elf/dl-close.c (_dl_close_worker): Don't unload DSO if there
+	are pending TLS destructor calls.
+	* include/link.h (struct link_map): Add concurrency note for
+	L_TLS_DTOR_COUNT.
+	* stdlib/cxa_thread_atexit_impl.c (__cxa_thread_atexit_impl):
+	Don't touch the link map flag.  Atomically increment
+	l_tls_dtor_count.
+	(__call_tls_dtors): Atomically decrement l_tls_dtor_count.
+	Avoid taking the load lock and don't touch the link map flag.
+	* stdlib/tst-tls-atexit-nodelete.c: New test case.
+	* stdlib/Makefile (tests): Use it.
+	* stdlib/tst-tls-atexit.c (do_test): dlopen
+	tst-tls-atexit-lib.so again before dlclose.  Add conditionals
+	to allow tst-tls-atexit-nodelete test case to use it.
+
 2015-07-22  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/ia64/bits/msq.h: Change sys/types.h include

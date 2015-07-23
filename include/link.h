@@ -302,7 +302,9 @@ struct link_map
     /* Index of the module in the dtv array.  */
     size_t l_tls_modid;
 
-    /* Number of thread_local objects constructed by this DSO.  */
+    /* Number of thread_local objects constructed by this DSO.  This is
+       atomically accessed and modified and is not always protected by the load
+       lock.  See also: CONCURRENCY NOTES in cxa_thread_atexit_impl.c.  */
     size_t l_tls_dtor_count;
 
     /* Information used to change permission after the relocations are

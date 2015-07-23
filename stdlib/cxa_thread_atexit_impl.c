@@ -16,6 +16,61 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+/* CONCURRENCY NOTES:
+
+   This documents concurrency for the non-POD TLS destructor registration,
+   calling and destruction.  The functions __cxa_thread_atexit_impl,
+   _dl_close_worker and __call_tls_dtors are the three main routines that may
+   run concurrently and access shared data.  The shared data in all possible
+   combinations of all three functions are the link map list, a link map for a
+   DSO and the link map member l_tls_dtor_count.
+
+   __cxa_thread_atexit_impl acquires the load_lock before accessing any shared
+   state and hence multiple of its instances can safely execute concurrently.
+
+   _dl_close_worker acquires the load_lock before accessing any shared state as
+   well and hence can concurrently execute multiple of its own instances as
+   well as those of __cxa_thread_atexit_impl safely.  Not all accesses to
+   l_tls_dtor_count are protected by the load lock, so we need to synchronize
+   using atomics.
+
+   __call_tls_dtors accesses the l_tls_dtor_count without taking the lock; it
+   decrements the value by one.  It does not need the big lock because it does
+   not access any other shared state except for the current DSO link map and
+   its member l_tls_dtor_count.
+
+   Correspondingly, _dl_close_worker loads l_tls_dtor_count and if it is zero,
+   unloads the DSO, thus deallocating the current link map.  This is the goal
+   of maintaining l_tls_dtor_count - to unload the DSO and free resources if
+   there are no pending destructors to be called.
+
+   We want to eliminate the inconsistent state where the DSO is unloaded in
+   _dl_close_worker before it is used in __call_tls_dtors.  This could happen
+   if __call_tls_dtors uses the link map after it sets l_tls_dtor_count to 0,
+   since _dl_close_worker will conclude from the 0 l_tls_dtor_count value that
+   it is safe to unload the DSO.  Hence, to ensure that this does not happen,
+   the following conditions must be met:
+
+   1. In _dl_close_worker, the l_tls_dtor_count load happens before the DSO
+      is unload and its link map is freed
+   2. The link map dereference in __call_tls_dtors happens before the
+      l_tls_dtor_count dereference.
+
+   To ensure this, the l_tls_dtor_count decrement in __call_tls_dtors should
+   have release semantics and the load in _dl_close_worker should have acquire
+   semantics.
+
+   Concurrent executions of __call_tls_dtors should only ensure that the value
+   is accessed atomically; no reordering constraints need to be considered.
+   Likewise for the increment of l_tls_dtor_count in __cxa_thread_atexit_impl.
+
+   There is still a possibility on concurrent execution of _dl_close_worker and
+   __call_tls_dtors where _dl_close_worker reads the value of l_tls_dtor_count
+   as 1, __call_tls_dtors decrements the value of l_tls_dtor_count but
+   _dl_close_worker does not unload the DSO, having read the old value.  This
+   is not very different from a case where __call_tls_dtors is called after
+   _dl_close_worker on the DSO and hence is an accepted execution.  */
+
 #include <stdlib.h>
 #include <ldsodefs.h>
 
@@ -49,9 +104,11 @@ __cxa_thread_atexit_impl (dtor_func func, void *obj, void *dso_symbol)
   new->next = tls_dtor_list;
   tls_dtor_list = new;
 
-  /* See if we already encountered the DSO.  */
+  /* We have to acquire the big lock to prevent a racing dlclose from pulling
+     our DSO from underneath us while we're setting up our destructor.  */
   __rtld_lock_lock_recursive (GL(dl_load_lock));
 
+  /* See if we already encountered the DSO.  */
   if (__glibc_unlikely (dso_symbol_cache != dso_symbol))
     {
       ElfW(Addr) caller = (ElfW(Addr)) dso_symbol;
@@ -62,15 +119,16 @@ __cxa_thread_atexit_impl (dtor_func func, void *obj, void *dso_symbol)
 	 program (we hope).  */
       lm_cache = l ? l : GL(dl_ns)[LM_ID_BASE]._ns_loaded;
     }
-  /* A destructor could result in a thread_local construction and the former
-     could have cleared the flag.  */
-  if (lm_cache->l_type == lt_loaded && lm_cache->l_tls_dtor_count == 0)
-    lm_cache->l_flags_1 |= DF_1_NODELETE;
+
+  /* This increment may only be concurrently observed either by the decrement
+     in __call_tls_dtors since the other l_tls_dtor_count access in
+     _dl_close_worker is protected by the load lock.  The execution in
+     __call_tls_dtors does not really depend on this value beyond the fact that
+     it should be atomic, so Relaxed MO should be sufficient.  */
+  atomic_fetch_add_relaxed (&lm_cache->l_tls_dtor_count, 1);
+  __rtld_lock_unlock_recursive (GL(dl_load_lock));
 
   new->map = lm_cache;
-  new->map->l_tls_dtor_count++;
-
-  __rtld_lock_unlock_recursive (GL(dl_load_lock));
 
   return 0;
 }
@@ -83,19 +141,15 @@ __call_tls_dtors (void)
   while (tls_dtor_list)
     {
       struct dtor_list *cur = tls_dtor_list;
-      tls_dtor_list = tls_dtor_list->next;
 
+      tls_dtor_list = tls_dtor_list->next;
       cur->func (cur->obj);
 
-      __rtld_lock_lock_recursive (GL(dl_load_lock));
-
-      /* Allow DSO unload if count drops to zero.  */
-      cur->map->l_tls_dtor_count--;
-      if (cur->map->l_tls_dtor_count == 0 && cur->map->l_type == lt_loaded)
-        cur->map->l_flags_1 &= ~DF_1_NODELETE;
-
-      __rtld_lock_unlock_recursive (GL(dl_load_lock));
-
+      /* Ensure that the MAP dereference happens before
+	 l_tls_dtor_count decrement.  That way, we protect this access from a
+	 potential DSO unload in _dl_close_worker, which happens when
+	 l_tls_dtor_count is 0.  See CONCURRENCY NOTES for more detail.  */
+      atomic_fetch_add_release (&cur->map->l_tls_dtor_count, -1);
       free (cur);
     }
 }

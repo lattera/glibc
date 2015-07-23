@@ -153,7 +153,11 @@ _dl_close_worker (struct link_map *map, bool force)
       maps[idx] = l;
       ++idx;
 
-      /* Clear DF_1_NODELETE to force object deletion.  */
+      /* Clear DF_1_NODELETE to force object deletion.  We don't need to touch
+	 l_tls_dtor_count because forced object deletion only happens when an
+	 error occurs during object load.  Destructor registration for TLS
+	 non-POD objects should not have happened till then for this
+	 object.  */
       if (force)
 	l->l_flags_1 &= ~DF_1_NODELETE;
     }
@@ -177,6 +181,9 @@ _dl_close_worker (struct link_map *map, bool force)
       if (l->l_type == lt_loaded
 	  && l->l_direct_opencount == 0
 	  && (l->l_flags_1 & DF_1_NODELETE) == 0
+	  /* See CONCURRENCY NOTES in cxa_thread_atexit_impl.c to know why
+	     acquire is sufficient and correct.  */
+	  && atomic_load_acquire (&l->l_tls_dtor_count) == 0
 	  && !used[done_index])
 	continue;
 
