@@ -1,3 +1,8 @@
+2015-07-23  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/sigaction.h (struct sigaction):
+	Swap __glibc_reserved0 and sa_flags order.
+
 2015-07-23  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #18657]
