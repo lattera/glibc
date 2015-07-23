@@ -28,9 +28,13 @@
 # define SIG_HOLD ((__sighandler_t)  2)	/* Add signal to hold mask.  */
 #endif
 
-/* We define here all the signal names listed in POSIX (1003.1-2008).
+/* We define here all the signal names listed in POSIX (1003.1-2008);
+   as of 1003.1-2013, no additional signals have been added by POSIX.
+   We also define here signal names that historically exist in every
+   real-world POSIX variant (e.g. SIGWINCH).
+
    Signals in the 1-15 range are defined with their historical numbers.
-   For other signals specified by POSIX, we use the BSD numbers.  */
+   For other signals, we use the BSD numbers.  */
 
 /* ISO C99 signals.  */
 #define	SIGINT		2	/* Interactive attention signal.  */
@@ -50,7 +54,7 @@
 #define	SIGPIPE		13	/* Broken pipe.  */
 #define	SIGALRM		14	/* Alarm clock.  */
 
-/* New(er) POSIX signals (1003.1-2008).  */
+/* New(er) POSIX signals (1003.1-2008, 1003.1-2013).  */
 #define	SIGURG		16 /* High bandwidth data is available at a socket.  */
 #define	SIGSTOP		17	/* Stopped (signal).  */
 #define	SIGTSTP		18	/* Stopped.  */
@@ -67,10 +71,14 @@
 #define	SIGUSR1		30	/* User-defined signal 1.  */
 #define	SIGUSR2		31	/* User-defined signal 2.  */
 
+/* Nonstandard signals found in all modern POSIX systems
+   (including both BSD and Linux).  */
+#define	SIGWINCH	28	/* Window size change (4.3 BSD, Sun).  */
+
 #define	_NSIG		32
 
 /* Archaic names for compatibility. */
-#define	SIGIOT		SIGABRT	/* IOT instruction, abort() on a PDP11 */
+#define	SIGIOT		SIGABRT	/* IOT instruction, abort() on a PDP-11.  */
 #define	SIGCLD		SIGCHLD	/* Old System V name */
 
 #endif	/* <signal.h> included.  */

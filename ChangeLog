@@ -1,5 +1,8 @@
 2015-07-23  Roland McGrath  <roland@hack.frob.com>
 
+	* bits/signum.h: Update comments to mention 1003.1-2013 too.
+	(SIGWINCH): New macro.
+
 	* sysdeps/nacl/getdtsz.c (getdtablesize): Add missing weak_alias.
 	* sysdeps/arm/nacl/libc.abilist: Add it.
 
