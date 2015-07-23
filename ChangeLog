@@ -1,5 +1,9 @@
 2015-07-23  Mike Frysinger  <vapier@gentoo.org>
 
+	* conform/linknamespace.pl (@whitelist): Add matherrf and matherrl.
+
+2015-07-23  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/unix/sysv/linux/ia64/bits/sigaction.h (struct sigaction):
 	Swap __glibc_reserved0 and sa_flags order.
 

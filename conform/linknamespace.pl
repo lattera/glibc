@@ -49,9 +49,11 @@ close (STDSYMS) || die ("close $stdsyms_file: $!\n");
 # * Bug 18442: re_syntax_options wrongly brought in by regcomp and
 # used by re_comp.
 #
-# * False positive: matherr only used conditionally.
+# * False positive: matherr only used conditionally.  matherrf/matherrl are used
+# by IA64 too for the same reason.
 #
-@whitelist = qw(signgam stdin stdout stderr re_syntax_options matherr);
+@whitelist = qw(signgam stdin stdout stderr re_syntax_options matherr matherrf
+		matherrl);
 foreach my $sym (@whitelist) {
   $stdsyms{$sym} = 1;
 }
