@@ -35,10 +35,6 @@
 #define O_ASYNC         020000  /* Send SIGIO to owner when data is ready.  */
 #define O_FSYNC         010000  /* Synchronous writes.  */
 #define O_SYNC          O_FSYNC
-#ifdef  __USE_MISC
-# define O_SHLOCK       XXX     /* Open with shared file lock.  */
-# define O_EXLOCK       XXX     /* Open with shared exclusive lock.  */
-#endif
 #ifdef __USE_XOPEN2K8
 # define O_DIRECTORY    00200000        /* Must be a directory.  */
 # define O_NOFOLLOW     00400000        /* Do not follow links.  */

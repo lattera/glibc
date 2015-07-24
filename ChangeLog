@@ -1,3 +1,7 @@
+2015-07-24  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/nacl/bits/fcntl.h (O_SHLOCK, O_EXLOCK): Macros removed.
+
 2015-07-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #18457]
