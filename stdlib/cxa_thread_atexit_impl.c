@@ -25,14 +25,15 @@
    combinations of all three functions are the link map list, a link map for a
    DSO and the link map member l_tls_dtor_count.
 
-   __cxa_thread_atexit_impl acquires the load_lock before accessing any shared
-   state and hence multiple of its instances can safely execute concurrently.
+   __cxa_thread_atexit_impl acquires the dl_load_lock before accessing any
+   shared state and hence multiple of its instances can safely execute
+   concurrently.
 
-   _dl_close_worker acquires the load_lock before accessing any shared state as
-   well and hence can concurrently execute multiple of its own instances as
+   _dl_close_worker acquires the dl_load_lock before accessing any shared state
+   as well and hence can concurrently execute multiple of its own instances as
    well as those of __cxa_thread_atexit_impl safely.  Not all accesses to
-   l_tls_dtor_count are protected by the load lock, so we need to synchronize
-   using atomics.
+   l_tls_dtor_count are protected by the dl_load_lock, so we need to
+   synchronize using atomics.
 
    __call_tls_dtors accesses the l_tls_dtor_count without taking the lock; it
    decrements the value by one.  It does not need the big lock because it does
@@ -51,8 +52,8 @@
    it is safe to unload the DSO.  Hence, to ensure that this does not happen,
    the following conditions must be met:
 
-   1. In _dl_close_worker, the l_tls_dtor_count load happens before the DSO
-      is unload and its link map is freed
+   1. In _dl_close_worker, the l_tls_dtor_count load happens before the DSO is
+      unloaded and its link map is freed
    2. The link map dereference in __call_tls_dtors happens before the
       l_tls_dtor_count dereference.
 
@@ -122,7 +123,7 @@ __cxa_thread_atexit_impl (dtor_func func, void *obj, void *dso_symbol)
 
   /* This increment may only be concurrently observed either by the decrement
      in __call_tls_dtors since the other l_tls_dtor_count access in
-     _dl_close_worker is protected by the load lock.  The execution in
+     _dl_close_worker is protected by the dl_load_lock.  The execution in
      __call_tls_dtors does not really depend on this value beyond the fact that
      it should be atomic, so Relaxed MO should be sufficient.  */
   atomic_fetch_add_relaxed (&lm_cache->l_tls_dtor_count, 1);

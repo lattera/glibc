@@ -1,3 +1,8 @@
+2015-07-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* stdlib/cxa_thread_atexit_impl.c: Use the lock name dl_load_lock
+	instead of just saying load lock in the comments.
+
 2015-07-23  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/Subdirs: Moved ...
