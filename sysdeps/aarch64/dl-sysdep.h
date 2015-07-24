@@ -21,3 +21,5 @@
 /* _dl_argv cannot be attribute_relro, because _dl_start_user
    might write into it after _dl_start returns.  */
 #define DL_ARGV_NOT_RELRO 1
+
+#define DL_EXTERN_PROTECTED_DATA

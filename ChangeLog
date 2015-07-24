@@ -1,3 +1,10 @@
+2015-07-24  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	[BZ #17711]
+	* sysdeps/aarch64/dl-sysdep.h (DL_EXTERN_PROTECTED_DATA): Define.
+	* sysdeps/aarch64/dl-machine.h (elf_machine_type_class): Handle
+	ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA.
+
 2015-07-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* stdlib/cxa_thread_atexit_impl.c: Use the lock name dl_load_lock
