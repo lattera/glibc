@@ -23,16 +23,16 @@
 ENTRY (_ZGVeN16v_expf)
         .type   _ZGVeN16v_expf, @gnu_indirect_function
         cmpl    $0, KIND_OFFSET+__cpu_features(%rip)
-        jne     1
+        jne     1f
         call    __init_cpu_features
 1:      leaq    _ZGVeN16v_expf_skx(%rip), %rax
         testl   $bit_AVX512DQ_Usable, __cpu_features+FEATURE_OFFSET+index_AVX512DQ_Usable(%rip)
-        jnz     3
-2:      leaq    _ZGVeN16v_expf_knl(%rip), %rax
+        jnz     2f
+        leaq    _ZGVeN16v_expf_knl(%rip), %rax
         testl   $bit_AVX512F_Usable, __cpu_features+FEATURE_OFFSET+index_AVX512F_Usable(%rip)
-        jnz     3
+        jnz     2f
         leaq    _ZGVeN16v_expf_avx2_wrapper(%rip), %rax
-3:      ret
+2:      ret
 END (_ZGVeN16v_expf)
 
 #define _ZGVeN16v_expf _ZGVeN16v_expf_avx2_wrapper

@@ -46,6 +46,7 @@ WRAPPER_IMPL_AVX512 _ZGVdN8v_expf
      The table lookup is skipped if k = 0.
      For low accuracy approximation, exp(r) ~ 1 or 1+r.  */
 
+        pushq     %rbp
         cfi_adjust_cfa_offset (8)
         cfi_rel_offset (%rbp, 0)
         movq      %rsp, %rbp

@@ -1,3 +1,22 @@
+2015-07-24  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cos8_core.S: Fixed AVX512 IFUNC.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp8_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_log8_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_pow8_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin8_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos8_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_cosf16_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_expf16_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_logf16_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_powf16_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf16_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sinf16_core.S: Likewise.
+	* sysdeps/x86_64/fpu/svml_d_wrapper_impl.h: Fixed wrappers to AVX2.
+	* sysdeps/x86_64/fpu/svml_s_wrapper_impl.h: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_expf16_core_avx512.S: Fixed KNL
+	implementation.
+
 2015-07-24  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	[BZ #17711]

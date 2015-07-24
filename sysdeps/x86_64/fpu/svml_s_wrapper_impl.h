@@ -239,28 +239,39 @@
 
 /* AVX512 ISA version as wrapper to AVX2 ISA version.  */
 .macro WRAPPER_IMPL_AVX512 callee
-        pushq	%rbp
+        pushq     %rbp
         cfi_adjust_cfa_offset (8)
         cfi_rel_offset (%rbp, 0)
-        movq	%rsp, %rbp
+        movq      %rsp, %rbp
         cfi_def_cfa_register (%rbp)
-        andq	$-64, %rsp
-        subq	$64, %rsp
-/* Below is encoding for vmovaps %zmm0, (%rsp).  */
-        .byte	0x62
-        .byte	0xf1
-        .byte	0x7c
-        .byte	0x48
-        .byte	0x29
-        .byte	0x04
-        .byte	0x24
-        vmovaps (%rsp), %ymm0
-        call	HIDDEN_JUMPTARGET(\callee)
-        vmovaps 32(%rsp), %ymm0
-        call	HIDDEN_JUMPTARGET(\callee)
-        movq	%rbp, %rsp
+        andq      $-64, %rsp
+        subq      $128, %rsp
+/* Below is encoding for vmovups %zmm0, (%rsp).  */
+        .byte   0x62
+        .byte   0xf1
+        .byte   0x7c
+        .byte   0x48
+        .byte   0x11
+        .byte   0x04
+        .byte   0x24
+        vmovupd   (%rsp), %ymm0
+        call      HIDDEN_JUMPTARGET(\callee)
+        vmovupd   %ymm0, 64(%rsp)
+        vmovupd   32(%rsp), %ymm0
+        call      HIDDEN_JUMPTARGET(\callee)
+        vmovupd   %ymm0, 96(%rsp)
+/* Below is encoding for vmovups 64(%rsp), %zmm0.  */
+        .byte   0x62
+        .byte   0xf1
+        .byte   0x7c
+        .byte   0x48
+        .byte   0x10
+        .byte   0x44
+        .byte   0x24
+        .byte   0x01
+        movq      %rbp, %rsp
         cfi_def_cfa_register (%rsp)
-        popq	%rbp
+        popq      %rbp
         cfi_adjust_cfa_offset (-8)
         cfi_restore (%rbp)
         ret
@@ -274,29 +285,41 @@
         movq      %rsp, %rbp
         cfi_def_cfa_register (%rbp)
         andq      $-64, %rsp
-        subq      $128, %rsp
-/* Below is encoding for vmovaps %zmm0, (%rsp).  */
-        .byte	0x62
-        .byte	0xf1
-        .byte	0x7c
-        .byte	0x48
-        .byte	0x29
-        .byte	0x04
-        .byte	0x24
-/* Below is encoding for vmovaps %zmm1, 64(%rsp).  */
-        .byte	0x62
-        .byte	0xf1
-        .byte	0x7c
-        .byte	0x48
-        .byte	0x29
-        .byte	0x4c
-        .byte	0x24
-        vmovaps (%rsp), %ymm0
-        vmovaps 64(%rsp), %ymm1
+        subq      $192, %rsp
+/* Below is encoding for vmovups %zmm0, (%rsp).  */
+        .byte   0x62
+        .byte   0xf1
+        .byte   0x7c
+        .byte   0x48
+        .byte   0x11
+        .byte   0x04
+        .byte   0x24
+/* Below is encoding for vmovups %zmm1, 64(%rsp).  */
+        .byte   0x62
+        .byte   0xf1
+        .byte   0x7c
+        .byte   0x48
+        .byte   0x11
+        .byte   0x4c
+        .byte   0x24
+        .byte   0x01
+        vmovups   (%rsp), %ymm0
+        vmovups   64(%rsp), %ymm1
         call      HIDDEN_JUMPTARGET(\callee)
-        vmovaps 32(%rsp), %ymm0
-        vmovaps 96(%rsp), %ymm1
+        vmovups   %ymm0, 128(%rsp)
+        vmovups   32(%rsp), %ymm0
+        vmovups   96(%rsp), %ymm1
         call      HIDDEN_JUMPTARGET(\callee)
+        vmovups   %ymm0, 160(%rsp)
+/* Below is encoding for vmovups 128(%rsp), %zmm0.  */
+        .byte   0x62
+        .byte   0xf1
+        .byte   0x7c
+        .byte   0x48
+        .byte   0x10
+        .byte   0x44
+        .byte   0x24
+        .byte   0x02
         movq      %rbp, %rsp
         cfi_def_cfa_register (%rsp)
         popq      %rbp
