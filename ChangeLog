@@ -4,6 +4,9 @@
 	* sysdeps/aarch64/dl-sysdep.h (DL_EXTERN_PROTECTED_DATA): Define.
 	* sysdeps/aarch64/dl-machine.h (elf_machine_type_class): Handle
 	ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA.
+	* sysdeps/arm/dl-sysdep.h (DL_EXTERN_PROTECTED_DATA): Define.
+	* sysdeps/arm/dl-machine.h (elf_machine_type_class): Handle
+	ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA.
 
 2015-07-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
 

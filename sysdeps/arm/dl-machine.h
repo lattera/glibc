@@ -224,18 +224,22 @@ _dl_start_user:\n\
    TLS variable, so undefined references should not be allowed to
    define the value.
    ELF_RTYPE_CLASS_COPY iff TYPE should not be allowed to resolve to one
-   of the main executable's symbols, as for a COPY reloc.  */
+   of the main executable's symbols, as for a COPY reloc.
+   ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA iff TYPE describes relocation against
+   protected data whose address may be external due to copy relocation.  */
 #ifndef RTLD_BOOTSTRAP
 # define elf_machine_type_class(type) \
   ((((type) == R_ARM_JUMP_SLOT || (type) == R_ARM_TLS_DTPMOD32		\
      || (type) == R_ARM_TLS_DTPOFF32 || (type) == R_ARM_TLS_TPOFF32	\
      || (type) == R_ARM_TLS_DESC)					\
     * ELF_RTYPE_CLASS_PLT)						\
-   | (((type) == R_ARM_COPY) * ELF_RTYPE_CLASS_COPY))
+   | (((type) == R_ARM_COPY) * ELF_RTYPE_CLASS_COPY)			\
+   | (((type) == R_ARM_GLOB_DAT) * ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA))
 #else
 #define elf_machine_type_class(type) \
   ((((type) == R_ARM_JUMP_SLOT) * ELF_RTYPE_CLASS_PLT)	\
-   | (((type) == R_ARM_COPY) * ELF_RTYPE_CLASS_COPY))
+   | (((type) == R_ARM_COPY) * ELF_RTYPE_CLASS_COPY)	\
+   | (((type) == R_ARM_GLOB_DAT) * ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA))
 #endif
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
