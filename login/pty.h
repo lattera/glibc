@@ -21,6 +21,9 @@
 
 #include <features.h>
 
+struct termios;
+struct winsize;
+
 #include <termios.h>
 #include <sys/ioctl.h>
 

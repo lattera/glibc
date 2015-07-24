@@ -1,5 +1,13 @@
 2015-07-23  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/Subdirs: Moved ...
+	* sysdeps/posix/Subdirs: ... here.
+	* login/pty.h (struct termios, struct winsize): Add forward decls.
+	* login/openpty.c (openpty): Put ioctl call under [TIOCSWINSZ].
+	* sysdeps/nacl/glob.c: Just #include <sysdeps/wordsize-64/glob.c>.
+	* sysdeps/arm/nacl/libc.abilist: Updated.
+	* sysdeps/nacl/libutil.abilist: New file.
+
 	* bits/signum.h: Update comments to mention 1003.1-2013 too.
 	(SIGWINCH): New macro.
 

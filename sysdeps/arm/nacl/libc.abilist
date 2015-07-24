@@ -224,6 +224,7 @@ GLIBC_2.22
  __getdomainname_chk F
  __getgroups_chk F
  __gethostname_chk F
+ __getlogin_r_chk F
  __getpagesize F
  __getpgid F
  __getpid F
@@ -348,6 +349,7 @@ GLIBC_2.22
  __profile_frequency F
  __progname D 0x4
  __progname_full D 0x4
+ __ptsname_r_chk F
  __pwrite64 F
  __rawmemchr F
  __rcmd_errstr D 0x4
@@ -680,6 +682,8 @@ GLIBC_2.22
  endspent F
  endttyent F
  endusershell F
+ endutent F
+ endutxent F
  environ D 0x4
  envz_add F
  envz_entry F
@@ -884,6 +888,8 @@ GLIBC_2.22
  getitimer F
  getline F
  getloadavg F
+ getlogin F
+ getlogin_r F
  getmntent F
  getmntent_r F
  getnameinfo F
@@ -912,6 +918,7 @@ GLIBC_2.22
  getprotobynumber_r F
  getprotoent F
  getprotoent_r F
+ getpt F
  getpw F
  getpwent F
  getpwent_r F
@@ -950,6 +957,17 @@ GLIBC_2.22
  getttynam F
  getuid F
  getusershell F
+ getutent F
+ getutent_r F
+ getutid F
+ getutid_r F
+ getutline F
+ getutline_r F
+ getutmp F
+ getutmpx F
+ getutxent F
+ getutxid F
+ getutxline F
  getw F
  getwc F
  getwc_unlocked F
@@ -966,6 +984,7 @@ GLIBC_2.22
  gmtime_r F
  gnu_get_libc_release F
  gnu_get_libc_version F
+ grantpt F
  group_member F
  gsignal F
  gtty F
@@ -1255,6 +1274,7 @@ GLIBC_2.22
  posix_fallocate64 F
  posix_madvise F
  posix_memalign F
+ posix_openpt F
  posix_spawn F
  posix_spawn_file_actions_addclose F
  posix_spawn_file_actions_adddup2 F
@@ -1322,6 +1342,8 @@ GLIBC_2.22
  pthread_setcanceltype F
  pthread_setschedparam F
  ptrace F
+ ptsname F
+ ptsname_r F
  putc F
  putc_unlocked F
  putchar F
@@ -1332,6 +1354,8 @@ GLIBC_2.22
  puts F
  putsgent F
  putspent F
+ pututline F
+ pututxline F
  putw F
  putwc F
  putwc_unlocked F
@@ -1466,6 +1490,7 @@ GLIBC_2.22
  setjmp F
  setlinebuf F
  setlocale F
+ setlogin F
  setlogmask F
  setmntent F
  setnetent F
@@ -1493,6 +1518,8 @@ GLIBC_2.22
  setttyent F
  setuid F
  setusershell F
+ setutent F
+ setutxent F
  setvbuf F
  setxattr F
  sgetsgent F
@@ -1690,13 +1717,18 @@ GLIBC_2.22
  ungetwc F
  unlink F
  unlinkat F
+ unlockpt F
  unsetenv F
+ updwtmp F
+ updwtmpx F
  uselocale F
  usleep F
  ustat F
  utime F
  utimensat F
  utimes F
+ utmpname F
+ utmpxname F
  valloc F
  vasprintf F
  vdprintf F

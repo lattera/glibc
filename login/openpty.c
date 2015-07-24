@@ -117,10 +117,12 @@ openpty (int *amaster, int *aslave, char *name,
     }
 
   /* XXX Should we ignore errors here?  */
-  if(termp)
+  if (termp)
     tcsetattr (slave, TCSAFLUSH, termp);
+#ifdef TIOCSWINSZ
   if (winp)
     ioctl (slave, TIOCSWINSZ, winp);
+#endif
 
   *amaster = master;
   *aslave = slave;
