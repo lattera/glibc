@@ -245,7 +245,7 @@ tests = tst-typesizes \
 	tst-basic7 \
 	tst-kill1 tst-kill2 tst-kill3 tst-kill4 tst-kill5 tst-kill6 \
 	tst-raise1 \
-	tst-join1 tst-join2 tst-join3 tst-join4 tst-join5 tst-join6 \
+	tst-join1 tst-join2 tst-join3 tst-join4 tst-join5 tst-join6 tst-join7 \
 	tst-detach1 \
 	tst-eintr1 tst-eintr2 tst-eintr3 tst-eintr4 tst-eintr5 \
 	tst-tsd1 tst-tsd2 tst-tsd3 tst-tsd4 tst-tsd5 tst-tsd6 \
@@ -327,7 +327,8 @@ endif
 modules-names = tst-atfork2mod tst-tls3mod tst-tls4moda tst-tls4modb \
 		tst-tls5mod tst-tls5moda tst-tls5modb tst-tls5modc \
 		tst-tls5modd tst-tls5mode tst-tls5modf tst-stack4mod \
-		tst-_res1mod1 tst-_res1mod2 tst-execstack-mod tst-fini1mod
+		tst-_res1mod1 tst-_res1mod2 tst-execstack-mod tst-fini1mod \
+		tst-join7mod
 extra-test-objs += $(addsuffix .os,$(strip $(modules-names))) tst-cleanup4aux.o
 test-extras += $(modules-names) tst-cleanup4aux
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
@@ -531,6 +532,11 @@ $(objpfx)tst-tls6.out: tst-tls6.sh $(objpfx)tst-tls5 \
 	  '$(test-wrapper-env)' '$(run-program-env)'; \
 	$(evaluate-test)
 endif
+
+$(objpfx)tst-join7: $(libdl) $(shared-thread-library)
+$(objpfx)tst-join7.out: $(objpfx)tst-join7mod.so
+$(objpfx)tst-join7mod.so: $(shared-thread-library)
+LDFLAGS-tst-join7mod.so = -Wl,-soname,tst-join7mod.so
 
 $(objpfx)tst-dlsym1: $(libdl) $(shared-thread-library)
 

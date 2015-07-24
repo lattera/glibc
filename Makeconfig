@@ -858,6 +858,10 @@ in-module = $(subst -,_,$(firstword $(libof-$(basename $(@F))) \
 				    $(libof-$(@F)) \
 				    libc))
 
+# Build ld.so, libc.so and libpthread.so with -ftls-model=initial-exec
+tls-model = $(if $(filter libpthread rtld \
+			  libc,$(in-module)),-ftls-model=initial-exec,)
+
 module-cppflags-real = -include $(common-objpfx)libc-modules.h \
 		       -DMODULE_NAME=$(in-module)
 
@@ -883,7 +887,7 @@ CPPFLAGS = $(config-extra-cppflags) $(CPPUNDEFS) $(CPPFLAGS-config) \
 override CFLAGS	= -std=gnu99 $(gnu89-inline-CFLAGS) $(config-extra-cflags) \
 		  $(filter-out %frame-pointer,$(+cflags)) $(+gccwarn-c) \
 		  $(sysdep-CFLAGS) $(CFLAGS-$(suffix $@)) $(CFLAGS-$(<F)) \
-		  $(CFLAGS-$(@F)) \
+		  $(CFLAGS-$(@F)) $(tls-model) \
 		  $(foreach lib,$(libof-$(basename $(@F))) \
 				$(libof-$(<F)) $(libof-$(@F)),$(CFLAGS-$(lib)))
 override CXXFLAGS = $(c++-sysincludes) \

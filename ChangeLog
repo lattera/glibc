@@ -1,3 +1,13 @@
+2015-07-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #18457]
+	* nptl/Makefile (tests): New test case tst-join7.
+	(modules-names): New test case module tst-join7mod.
+	* nptl/tst-join7.c: New file.
+	* nptl/tst-join7mod.c: New file.
+	* Makeconfig (tls-model): Pass -ftls-model=initial-exec for
+	all translation units in libc.so, libpthread.so and rtld.
+
 2015-07-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
