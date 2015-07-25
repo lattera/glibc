@@ -1,5 +1,9 @@
 2015-07-25  Chung-Lin Tang  <cltang@codesourcery.com>
 
+	* sysdeps/nios2/libm-test-ulps: Update.
+
+2015-07-25  Chung-Lin Tang  <cltang@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/nios2/setcontext.S (__setcontext):
 	Fix order of arguments to the rt_sigprocmask syscall.
 	* sysdeps/unix/sysv/linux/nios2/swapcontext.S (__swapcontext):

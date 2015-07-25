@@ -1,12 +1,27 @@
 # Begin of automatic generation
 
 # Maximal error of functions:
+Function: "acos":
+float: 1
+ifloat: 1
+
 Function: "acosh":
 double: 1
+float: 2
 idouble: 1
+ifloat: 2
+
+Function: "asin":
+float: 1
+ifloat: 1
 
 Function: "asinh":
 double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: "atan":
 float: 1
 ifloat: 1
 
@@ -15,8 +30,14 @@ float: 1
 ifloat: 1
 
 Function: "atanh":
-float: 1
-ifloat: 1
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+
+Function: "cabs":
+double: 1
+idouble: 1
 
 Function: Real part of "cacos":
 double: 1
@@ -41,6 +62,10 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
+
+Function: "carg":
+float: 1
+ifloat: 1
 
 Function: Real part of "casin":
 double: 1
@@ -87,9 +112,9 @@ float: 1
 ifloat: 1
 
 Function: "cbrt":
-double: 1
+double: 3
 float: 1
-idouble: 1
+idouble: 3
 ifloat: 1
 
 Function: Real part of "ccos":
@@ -129,26 +154,26 @@ idouble: 1
 ifloat: 2
 
 Function: Real part of "clog":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
+double: 3
+float: 2
+idouble: 3
+ifloat: 2
 
 Function: Imaginary part of "clog":
 float: 1
 ifloat: 1
 
 Function: Real part of "clog10":
+double: 3
+float: 3
+idouble: 3
+ifloat: 3
+
+Function: Imaginary part of "clog10":
 double: 2
 float: 2
 idouble: 2
 ifloat: 2
-
-Function: Imaginary part of "clog10":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
 
 Function: "cos":
 float: 1
@@ -187,16 +212,16 @@ idouble: 1
 ifloat: 1
 
 Function: Real part of "csqrt":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
 
 Function: Imaginary part of "csqrt":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
 
 Function: Real part of "ctan":
 double: 1
@@ -224,17 +249,25 @@ ifloat: 2
 
 Function: "erf":
 double: 1
-idouble: 1
-
-Function: "erfc":
-double: 1
 float: 1
 idouble: 1
 ifloat: 1
 
+Function: "erfc":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+
 Function: "exp10":
+double: 2
+idouble: 2
+
+Function: "exp2":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 
 Function: "expm1":
 double: 1
@@ -243,10 +276,10 @@ idouble: 1
 ifloat: 1
 
 Function: "gamma":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
 
 Function: "hypot":
 double: 1
@@ -271,32 +304,40 @@ idouble: 4
 ifloat: 4
 
 Function: "lgamma":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
 
 Function: "log":
 float: 1
 ifloat: 1
 
 Function: "log10":
-double: 1
+double: 2
 float: 2
-idouble: 1
+idouble: 2
 ifloat: 2
 
 Function: "log1p":
+double: 1
 float: 1
+idouble: 1
+ifloat: 1
+
+Function: "log2":
+double: 2
+float: 1
+idouble: 2
 ifloat: 1
 
 Function: "pow":
-float: 1
-ifloat: 1
+float: 3
+ifloat: 3
 
 Function: "pow10":
-double: 1
-idouble: 1
+double: 2
+idouble: 2
 
 Function: "sin":
 float: 1
@@ -306,11 +347,27 @@ Function: "sincos":
 float: 1
 ifloat: 1
 
+Function: "sinh":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+
+Function: "tan":
+float: 1
+ifloat: 1
+
+Function: "tanh":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
+
 Function: "tgamma":
 double: 4
-float: 3
+float: 5
 idouble: 4
-ifloat: 3
+ifloat: 5
 
 Function: "y0":
 double: 2
