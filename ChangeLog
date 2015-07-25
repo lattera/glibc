@@ -1,3 +1,10 @@
+2015-07-25  Chung-Lin Tang  <cltang@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/nios2/setcontext.S (__setcontext):
+	Fix order of arguments to the rt_sigprocmask syscall.
+	* sysdeps/unix/sysv/linux/nios2/swapcontext.S (__swapcontext):
+	Likewise.
+
 2015-07-24  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/nacl/bits/fcntl.h (O_SHLOCK, O_EXLOCK): Macros removed.
