@@ -193,7 +193,8 @@ _start:\n\
      || (type) == R_NIOS2_TLS_DTPMOD				\
      || (type) == R_NIOS2_TLS_DTPREL				\
      || (type) == R_NIOS2_TLS_TPREL) * ELF_RTYPE_CLASS_PLT)	\
-   | (((type) == R_NIOS2_COPY) * ELF_RTYPE_CLASS_COPY))
+   | (((type) == R_NIOS2_COPY) * ELF_RTYPE_CLASS_COPY)		\
+   | (((type) == R_NIOS2_GLOB_DAT) * ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA))
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT  R_NIOS2_JUMP_SLOT

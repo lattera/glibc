@@ -1,5 +1,11 @@
 2015-07-26  Chung-Lin Tang  <cltang@codesourcery.com>
 
+	* sysdeps/nios2/dl-sysdep.h (DL_EXTERN_PROTECTED_DATA): Define.
+	* sysdeps/nios2/dl-machine.h (elf_machine_type_class): Handle
+	ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA.
+
+2015-07-26  Chung-Lin Tang  <cltang@codesourcery.com>
+
 	* nptl/tst-join7mod.c: Add #include <string.h>.
 
 2015-07-25  Chung-Lin Tang  <cltang@codesourcery.com>
