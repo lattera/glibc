@@ -1,3 +1,7 @@
+2015-07-26  Chung-Lin Tang  <cltang@codesourcery.com>
+
+	* nptl/tst-join7mod.c: Add #include <string.h>.
+
 2015-07-25  Chung-Lin Tang  <cltang@codesourcery.com>
 
 	* sysdeps/nios2/libm-test-ulps: Update.
