@@ -3064,6 +3064,7 @@
 
 2015-05-28  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #2981]
 	[BZ #18422]
 	* Makefile ($(objpfx)tst-audit2): Depend on $(libdl).
 	($(objpfx)tst-audit2.out): Also depend on
@@ -3276,6 +3277,7 @@
 
 2015-05-22  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #2981]
 	[BZ #18410]
 	* elf/dl-reloc.c (_dl_relocate_object): Don't issue an error
 	for missing DT_PLTRELSZ.
