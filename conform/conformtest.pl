@@ -275,9 +275,8 @@ sub checknamespace {
     } else {
       # We have to tokenize the line.
       my($str) = $_;
-      my($index) = 0;
-      my($len) = length ($str);
 
+      $str =~ s/"[^"]*"//g;
       foreach $token (split(/[^a-zA-Z0-9_]/, $str)) {
 	if ($token ne "") {
 	  newtoken ($token, @allow);
