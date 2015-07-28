@@ -1,5 +1,9 @@
 2015-08-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/powerpc/powerpc64/power7/strnlen.S (__strnlen): Add
+	libc_hidden_def.
+	(strnlen): Remove libc_hidden_builtin_def and add libc_hidden_def.
+
 	* sysdeps/powerpc/powerpc64/power7/Makefile [$(subdir) = string]
 	(sysdep_routines): Add strstr-ppc64.
 	* sysdeps/powerpc/powerpc64/power7/strstr-ppc64.c: New file.
