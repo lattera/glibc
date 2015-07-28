@@ -1,5 +1,10 @@
 2015-07-27  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/unix/sysv/linux/ia64/Makefile (CPPFLAGS): Delete
+	the -D_ASM_IA64_CURRENT_H flag.
+
+2015-07-27  Mike Frysinger  <vapier@gentoo.org>
+
 	[BZ #18641]
 	* pwd/pwd.h (putpwent): Delete __nonnull markings.
 
