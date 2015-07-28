@@ -1,3 +1,8 @@
+2015-07-27  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #18641]
+	* pwd/pwd.h (putpwent): Delete __nonnull markings.
+
 2015-07-27  Andreas Schwab  <schwab@suse.de>
 
 	* conform/conformtest.pl (checknamespace): Filter out string

@@ -100,7 +100,7 @@ extern struct passwd *fgetpwent (FILE *__stream) __nonnull ((1));
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
 extern int putpwent (const struct passwd *__restrict __p,
-		     FILE *__restrict __f) __nonnull ((1, 2));
+		     FILE *__restrict __f);
 #endif
 
 /* Search for an entry with a matching user ID.
