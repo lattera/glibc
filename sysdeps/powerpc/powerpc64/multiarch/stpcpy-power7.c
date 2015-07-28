@@ -1,5 +1,5 @@
-/* Optimized stpcpy implementation for POWER7.
-   Copyright (C) 2013-2015 Free Software Foundation, Inc.
+/* Multiarch stpcpy for POWER7/PPC64.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,25 +16,21 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
+#include <string.h>
 
-#undef EALIGN
-#define EALIGN(name, alignt, words)				\
-  .section ".text";						\
-  ENTRY_2(__stpcpy_power7)					\
-  .align ALIGNARG(alignt);					\
-  EALIGN_W_##words;						\
-  BODY_LABEL(__stpcpy_power7):					\
-  cfi_startproc;						\
-  LOCALENTRY(__stpcpy_power7)
+extern __typeof (memcpy) __memcpy_power7 attribute_hidden;
+extern __typeof (strlen) __strlen_power7 attribute_hidden;
+extern __typeof (stpcpy) __stpcpy_power7 attribute_hidden;
 
-#undef END
-#define END(name)						\
-  cfi_endproc;							\
-  TRACEBACK(__stpcpy_power7)					\
-  END_2(__stpcpy_power7)
+#define STPCPY __stpcpy_power7
+#define memcpy __memcpy_power7
+#define strlen __strlen_power7
 
+#undef libc_hidden_def
+#define libc_hidden_def(name)
+#undef weak_alias
+#define weak_alias(name, alias)
 #undef libc_hidden_builtin_def
 #define libc_hidden_builtin_def(name)
 
-#include <sysdeps/powerpc/powerpc64/power7/stpcpy.S>
+#include <string/stpcpy.c>

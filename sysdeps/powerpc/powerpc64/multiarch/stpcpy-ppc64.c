@@ -1,5 +1,5 @@
-/* Optimized stpcpy implementation for PowerPC64.
-   Copyright (C) 1997-2015 Free Software Foundation, Inc.
+/* Multiarch stpcpy for PPC64.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,9 +16,24 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define USE_AS_STPCPY
-#include <sysdeps/powerpc/powerpc64/strcpy.S>
+#include <string.h>
 
-weak_alias (__stpcpy, stpcpy)
-libc_hidden_def (__stpcpy)
-libc_hidden_builtin_def (stpcpy)
+extern __typeof (memcpy) __memcpy_ppc attribute_hidden;
+extern __typeof (strlen) __strlen_ppc attribute_hidden;
+extern __typeof (stpcpy) __stpcpy_ppc attribute_hidden;
+
+#define STPCPY __stpcpy_ppc
+#define memcpy __memcpy_ppc
+#define strlen __strlen_ppc
+
+#undef weak_alias
+#define weak_alias(name, aliasname) \
+  extern __typeof (__stpcpy_ppc) aliasname \
+    __attribute__ ((weak, alias ("__stpcpy_ppc")));
+
+#undef libc_hidden_def
+#define libc_hidden_def(name)
+#undef libc_hidden_builtin_def
+#define libc_hidden_builtin_def(name)
+
+#include <string/stpcpy.c>

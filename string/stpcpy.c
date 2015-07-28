@@ -25,25 +25,17 @@
 #undef __stpcpy
 #undef stpcpy
 
-#ifndef weak_alias
-# define __stpcpy stpcpy
+#ifndef STPCPY
+# define STPCPY __stpcpy
 #endif
 
 /* Copy SRC to DEST, returning the address of the terminating '\0' in DEST.  */
 char *
-__stpcpy (dest, src)
-     char *dest;
-     const char *src;
+STPCPY (char *dest, const char *src)
 {
   size_t len = strlen (src);
   return memcpy (dest, src, len + 1) + len;
 }
-#ifdef libc_hidden_def
-libc_hidden_def (__stpcpy)
-#endif
-#ifdef weak_alias
 weak_alias (__stpcpy, stpcpy)
-#endif
-#ifdef libc_hidden_builtin_def
+libc_hidden_def (__stpcpy)
 libc_hidden_builtin_def (stpcpy)
-#endif

@@ -1,5 +1,27 @@
 2015-08-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* string/stpcpy.c (__stpcpy): Use STPCPY to redefine symbol name and
+	cleanup macro usage.
+	* string/strcpy.c (strcpt): Use STRCPY to redefine symbol name.
+	* sysdeps/powerpc/powerpc64/multiarch/stpcpy-power7.S: Remove file.
+	* sysdeps/powerpc/powerpc64/multiarch/stpcpy-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcpy-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcpy-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/stpcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strcpy.c: Likewise.
+	* sysdeps/powerpc/powerpc64/stpcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/strcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/stpcpy.c
+	[SHARED && IS_IN (libc)]: Include <string/strcpy.c>.
+	* sysdeps/powerpc/powerpc64/multiarch/stpcpy.c
+	[SHARED && IS_IN (libc)]: Include <string/stpcpy.c>.
+	* sysdeps/powerpc/powerpc64/multiarch/stpcpy-power7.c: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/stpcpy-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcpy-power7.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcpy-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strcpy.c: Likewise.
+
 	* sysdeps/powerpc/powerpc64/power7/strnlen.S (__strnlen): Add
 	libc_hidden_def.
 	(strnlen): Remove libc_hidden_builtin_def and add libc_hidden_def.

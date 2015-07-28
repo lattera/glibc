@@ -32,4 +32,6 @@ libc_ifunc (__stpcpy,
 
 weak_alias (__stpcpy, stpcpy)
 libc_hidden_def (stpcpy)
+#else
+# include <string/stpcpy.c>
 #endif
