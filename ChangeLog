@@ -1,3 +1,7 @@
+2015-08-10  Ondrej Bilka  <neleai@seznam.cz>
+
+	* sysdeps/powerpc/powerpc64/multiarch/stpcpy.c: Fix ifunc.
+
 2015-08-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/powerpc/powerpc64/power7/memmove.S (bcopy): Changing to
