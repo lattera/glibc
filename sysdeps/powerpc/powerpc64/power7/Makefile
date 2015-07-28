@@ -5,6 +5,7 @@ CFLAGS-rtld.c += -mno-vsx
 endif
 
 ifeq ($(subdir),string)
+sysdep_routines += strstr-ppc64
 CFLAGS-strncase.c += -funroll-loops
 CFLAGS-strncase_l.c += -funroll-loops
 endif
