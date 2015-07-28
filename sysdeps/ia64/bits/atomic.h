@@ -82,9 +82,7 @@ typedef uintmax_t uatomic_max_t;
   (__sync_synchronize (), __sync_lock_test_and_set (mem, value))
 
 #define atomic_exchange_and_add(mem, value) \
-  ({ __typeof (*mem) __result;						      \
-     __result = __sync_fetch_and_add ((mem), (int) (value));		      \
-     __result; })
+  __sync_fetch_and_add ((mem), (value))
 
 #define atomic_decrement_if_positive(mem) \
   ({ __typeof (*mem) __oldval, __val;					      \

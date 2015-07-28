@@ -1,5 +1,10 @@
 2015-07-27  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/ia64/bits/atomic.h (atomic_exchange_and_add): Define
+	directly in terms of __sync_fetch_and_add and delete (int) cast.
+
+2015-07-27  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/unix/sysv/linux/ia64/Makefile (CPPFLAGS): Delete
 	the -D_ASM_IA64_CURRENT_H flag.
 
