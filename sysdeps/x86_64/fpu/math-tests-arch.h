@@ -16,7 +16,29 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined REQUIRE_AVX2
+#if defined REQUIRE_AVX
+# include <init-arch.h>
+
+/* Set to 1 if AVX supported.  */
+static int avx_usable;
+
+# define INIT_ARCH_EXT                                         \
+  do                                                           \
+    {                                                          \
+      __init_cpu_features ();                                  \
+      avx_usable = __cpu_features.feature[index_AVX_Usable]    \
+                   & bit_AVX_Usable;                           \
+    }                                                          \
+  while (0)
+
+# define CHECK_ARCH_EXT                                        \
+  do                                                           \
+    {                                                          \
+      if (!avx_usable) return;                                 \
+    }                                                          \
+  while (0)
+
+#elif defined REQUIRE_AVX2
 # include <init-arch.h>
 
   /* Set to 1 if AVX2 supported.  */

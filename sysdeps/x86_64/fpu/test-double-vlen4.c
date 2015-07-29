@@ -25,4 +25,6 @@
 #define TEST_VECTOR_exp 1
 #define TEST_VECTOR_pow 1
 
+#define REQUIRE_AVX
+
 #include "libm-test.c"
