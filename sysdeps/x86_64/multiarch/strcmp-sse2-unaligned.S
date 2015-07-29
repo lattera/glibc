@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#if IS_IN (libc)
+
 #include "sysdep.h"
 
 ENTRY ( __strcmp_sse2_unaligned)
@@ -207,3 +209,5 @@ L(different):
 	subl	%ecx, %eax
 	ret
 END (__strcmp_sse2_unaligned)
+
+#endif

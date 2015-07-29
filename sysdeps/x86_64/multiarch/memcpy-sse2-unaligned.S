@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#if IS_IN (libc)
+
 #include <sysdep.h>
 
 #include "asm-syntax.h"
@@ -169,3 +171,5 @@ L(between_5_8):
 	movl	%eax, -4(%rdi,%rdx)
 	jmp	L(return)
 END(__memcpy_sse2_unaligned)
+
+#endif

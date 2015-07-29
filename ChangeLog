@@ -1,3 +1,9 @@
+2015-08-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/memcpy-sse2-unaligned.S: Compile
+	only for libc.
+	* sysdeps/x86_64/multiarch/strcmp-sse2-unaligned.S: Likewise.
+
 2015-08-05  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* string/string.h: (mempcpy): Redirect to __mempcpy_inline.
