@@ -1,0 +1,19 @@
+# See scripts/check-localplt.awk for how this file is processed.
+# PLT use is required for the malloc family and for matherr because
+# users can define their own functions and have library internals call them.
+# Linker in binutils 2.26 and newer consolidates R_X86_64_JUMP_SLOT
+# relocation with R_X86_64_GLOB_DAT relocation against the same symbol.
+libc.so: calloc
+libc.so: free + RELA R_X86_64_GLOB_DAT
+libc.so: malloc + RELA R_X86_64_GLOB_DAT
+libc.so: memalign
+libc.so: realloc
+libm.so: matherr
+# The dynamic loader uses __libc_memalign internally to allocate aligned
+# TLS storage. The other malloc family of functions are expected to allow
+# user symbol interposition.
+ld.so: __libc_memalign
+ld.so: malloc
+ld.so: calloc
+ld.so: realloc
+ld.so: free + RELA R_X86_64_GLOB_DAT

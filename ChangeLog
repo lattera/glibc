@@ -1,3 +1,13 @@
+2015-07-29  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18078]
+	* scripts/check-localplt.awk: Support alternate relocations.
+	* scripts/localplt.awk: Also check relocations in DT_RELA/DT_REL
+	sections.
+	* sysdeps/unix/sysv/linux/i386/localplt.data: Mark free and
+	malloc entries with + REL R_386_GLOB_DAT.
+	* sysdeps/x86_64/localplt.data: New file.
+
 2015-07-29  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	[BZ #18731]

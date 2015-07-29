@@ -1,7 +1,9 @@
+# Linker in binutils 2.26 and newer consolidates R_X86_64_JUMP_SLOT
+# relocation with R_386_GLOB_DAT relocation against the same symbol.
 libc.so: _Unwind_Find_FDE
 libc.so: calloc
-libc.so: free
-libc.so: malloc
+libc.so: free + REL R_386_GLOB_DAT
+libc.so: malloc + REL R_386_GLOB_DAT
 libc.so: memalign
 libc.so: realloc
 libm.so: matherr
@@ -12,4 +14,4 @@ ld.so: __libc_memalign
 ld.so: malloc
 ld.so: calloc
 ld.so: realloc
-ld.so: free
+ld.so: free + REL R_386_GLOB_DAT
