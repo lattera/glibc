@@ -1,5 +1,10 @@
 2015-08-05  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/unix/sysv/linux/mmap64.c: Move MMAP2_PAGE_SHIFT define
+	before first use.
+
+2015-08-05  Mike Frysinger  <vapier@gentoo.org>
+
 	* nptl/allocatestack.c (allocate_stack): Move stacktop decl down to
 	bottom and under _STACK_GROWS_DOWN.  Move the stacktop assignment
 	in there too.

@@ -25,12 +25,12 @@
 #include <sys/syscall.h>
 
 /* This is always 12, even on architectures where PAGE_SHIFT != 12.  */
+#ifndef MMAP2_PAGE_SHIFT
+# define MMAP2_PAGE_SHIFT 12
+#endif
 #if MMAP2_PAGE_SHIFT == -1
 static int page_shift;
 #else
-# ifndef MMAP2_PAGE_SHIFT
-#  define MMAP2_PAGE_SHIFT 12
-# endif
 #define page_shift MMAP2_PAGE_SHIFT
 #endif
 
