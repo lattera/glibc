@@ -1,3 +1,9 @@
+2015-07-30  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/hppa/nptl/bits/pthreadtypes.h (pthread_mutex_t): Change
+	aligned to __aligned__.
+	(pthread_cond_t, pthread_rwlock_t): Likewise.
+
 2015-07-30  Torvald Riegel  <triegel@redhat.com>
 
 	* sysdeps/unix/sysv/linux/hppa/lowlevellock.h: Remove file.
