@@ -1,5 +1,6 @@
 2015-07-30  Mike Frysinger  <vapier@gentoo.org>
 
+	[BZ #14113]
 	* sysdeps/hppa/nptl/bits/pthreadtypes.h (pthread_mutex_t): Change
 	aligned to __aligned__.
 	(pthread_cond_t, pthread_rwlock_t): Likewise.
