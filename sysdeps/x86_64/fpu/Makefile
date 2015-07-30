@@ -33,12 +33,10 @@ ifeq (yes,$(config-cflags-avx512))
 libmvec-tests += double-vlen8 float-vlen16
 endif
 
-double-vlen2-arch-ext-cflags = -msse4
 double-vlen4-arch-ext-cflags = -mavx
 double-vlen4-arch-ext2-cflags = -mavx2
 double-vlen8-arch-ext-cflags = -mavx512f
 
-float-vlen4-arch-ext-cflags = -msse4
 float-vlen8-arch-ext-cflags = -mavx
 float-vlen8-arch-ext2-cflags = -mavx2
 float-vlen16-arch-ext-cflags = -mavx512f

@@ -1,3 +1,11 @@
+2015-07-30  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	[BZ #18740]
+	* sysdeps/x86_64/fpu/Makefile (double-vlen2-arch-ext-cflags,
+	float-vlen4-arch-ext-cflags): Removed.
+	* math/Makefile (CFLAGS-test-double-vlen2-wrappers.c,
+	CFLAGS-test-float-vlen4-wrappers.c): Likewise.
+
 2015-07-30  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #14113]

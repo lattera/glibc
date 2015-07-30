@@ -151,7 +151,6 @@ libm-test-vec-cflags = $(libm-test-fast-math-cflags) -fno-inline \
 		       -ffloat-store -D_OPENMP=201307 -Wno-unknown-pragmas
 
 CFLAGS-test-double-vlen2.c = $(libm-test-vec-cflags)
-CFLAGS-test-double-vlen2-wrappers.c = $(double-vlen2-arch-ext-cflags)
 
 CFLAGS-test-double-vlen4.c = $(libm-test-vec-cflags)
 CFLAGS-test-double-vlen4-wrappers.c = $(double-vlen4-arch-ext-cflags)
@@ -160,7 +159,6 @@ CFLAGS-test-double-vlen8.c = $(libm-test-vec-cflags)
 CFLAGS-test-double-vlen8-wrappers.c = $(double-vlen8-arch-ext-cflags)
 
 CFLAGS-test-float-vlen4.c = $(libm-test-vec-cflags)
-CFLAGS-test-float-vlen4-wrappers.c = $(float-vlen4-arch-ext-cflags)
 
 CFLAGS-test-float-vlen8.c = $(libm-test-vec-cflags)
 CFLAGS-test-float-vlen8-wrappers.c = $(float-vlen8-arch-ext-cflags)
