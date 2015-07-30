@@ -1,3 +1,9 @@
+2015-08-05  Mike Frysinger  <vapier@gentoo.org>
+
+	* nptl/allocatestack.c (allocate_stack): Move stacktop decl down to
+	bottom and under _STACK_GROWS_DOWN.  Move the stacktop assignment
+	in there too.
+
 2015-08-05  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* version.h (RELEASE): Set to "development".
