@@ -18,8 +18,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdeps/generic/sysdep.h>
-#include <sys/syscall.h>
-#include "config.h"
 
 #undef ASM_LINE_SEP
 #define ASM_LINE_SEP !

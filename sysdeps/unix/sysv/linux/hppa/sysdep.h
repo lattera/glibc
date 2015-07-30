@@ -18,8 +18,11 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <asm/unistd.h>
-#include <sysdeps/generic/sysdep.h>
+#ifndef _LINUX_HPPA_SYSDEP_H
+#define _LINUX_HPPA_SYSDEP_H 1
+
+#include <sysdeps/unix/sysdep.h>
+#include <sysdeps/hppa/sysdep.h>
 
 /* Defines RTLD_PRIVATE_ERRNO.  */
 #include <dl-sysdep.h>
@@ -118,6 +121,7 @@
    There is currently a bug in gdb which prevents us from specifying
    incomplete stabs information.  Fake some entries here which specify
    the current source file.  */
+#undef ENTRY
 #define	ENTRY(name)							\
 	.text						ASM_LINE_SEP	\
 	.align ALIGNARG(4)				ASM_LINE_SEP	\
@@ -174,6 +178,7 @@
 	bv,n 0(2)
 */
 
+#undef PSEUDO
 #define	PSEUDO(name, syscall_name, args)			\
   ENTRY (name)					ASM_LINE_SEP	\
   /* If necc. load args from stack */		ASM_LINE_SEP	\
@@ -483,3 +488,5 @@ L(pre_end):					ASM_LINE_SEP	\
 /* Pointer mangling is not yet supported for HPPA.  */
 #define PTR_MANGLE(var) (void) (var)
 #define PTR_DEMANGLE(var) (void) (var)
+
+#endif /* _LINUX_HPPA_SYSDEP_H */
