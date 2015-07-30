@@ -1,3 +1,8 @@
+2015-07-30  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/hppa/sysdep.h (INLINE_SYSCALL): Rewrite
+	from scratch to use INTERNAL_SYSCALL.
+
 2015-07-29  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18078]
