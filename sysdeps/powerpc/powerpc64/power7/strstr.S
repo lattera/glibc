@@ -39,7 +39,7 @@
 # ifdef SHARED
 #  define STRNLEN   __GI_strnlen
 # else
-#  define STRNLEN   strnlen
+#  define STRNLEN  __strnlen
 # endif
 #endif
 

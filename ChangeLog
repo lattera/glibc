@@ -1,5 +1,10 @@
 2015-08-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/powerpc/powerpc64/power7/memmove.S (bcopy): Changing to
+	__bcopy and add a weak_alias to bcopy.
+	* sysdeps/powerpc/powerpc64/power7/strstr.S (strstr): Use __strnlen
+	for static build.
+
 	* string/stpcpy.c (__stpcpy): Use STPCPY to redefine symbol name and
 	cleanup macro usage.
 	* string/strcpy.c (strcpt): Use STRCPY to redefine symbol name.
