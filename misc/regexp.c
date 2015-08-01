@@ -17,8 +17,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define __DO_NOT_DEFINE_COMPILE
-#include <regexp.h>
+/* We don't include regexp.h here because of the macros it requires, and
+   because it now contains an unconditional #warning.  */
+
+#include <regex.h>
 
 /* Define the variables used for the interface.  */
 char *loc1;
@@ -32,7 +34,6 @@ char *locs;
    found in the buffer starting at EXPBUF.  `loc1' will return the
    first character matched and `loc2' points to the next unmatched
    character.  */
-extern int __step (const char *string, const char *expbuf);
 int
 __step (const char *string, const char *expbuf)
 {
@@ -55,7 +56,6 @@ weak_alias (__step, step)
 /* Match the beginning of STRING with the compiled regular expression
    in EXPBUF.  If the match is successful `loc2' will contain the
    position of the first unmatched character.  */
-extern int __advance (const char *string, const char *expbuf);
 int
 __advance (const char *string, const char *expbuf)
 {

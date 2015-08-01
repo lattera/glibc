@@ -79,6 +79,14 @@ Version 2.22
 
 * Port to Native Client running on ARMv7-A (--host=arm-nacl).
   Contributed by Roland McGrath (Google).
+
+* The header <regexp.h> is deprecated, and will be removed in a future
+  release.  Use of this header will trigger a deprecation warning.
+  Application developers should update their code to use <regex.h> instead.
+
+  This header was formerly part of SUSv2, but was deprecated in 1997 and
+  removed from the standard in 2001.  Also, the glibc implementation
+  leaks memory.  See BZ#18681 for more details.
 
 Version 2.21
 

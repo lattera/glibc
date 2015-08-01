@@ -1,3 +1,13 @@
+2015-07-31  Zack Weinberg  <zackw@panix.com>
+
+	[BZ #18681]
+	* regexp.h: Add unconditional #warning stating that this header
+	will be removed soon.  Revise banner comment to match.
+	(compile): Consistently use ERROR instead of RETURN to report
+	errors (partial fix for bz#18681).
+	* regexp.c: Don't include regexp.h. Remove some unnecessary
+	declarations.
+
 2015-07-31  Carlos O'Donell  <carlos@redhat.com>
 
 	* po/libc.pot: Regenerated.
