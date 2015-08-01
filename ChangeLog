@@ -1,3 +1,12 @@
+2015-08-01  Carlos O'Donell  <carlos@redhat.com>
+
+	* po/pl.po: Updated translation.
+	* po/uk.po: Likewise.
+	* po/fi.po: Likewise.
+	* po/ko.po: Likewise.
+	* po/ru.po: Likewise.
+	* po/vi.po: Likewise.
+
 2015-07-31  Zack Weinberg  <zackw@panix.com>
 
 	[BZ #18681]
