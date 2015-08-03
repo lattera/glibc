@@ -124,8 +124,8 @@ test_tm (void)
 }
 
 
-int
-main (int argc, char *argv[])
+static int
+do_test (void)
 {
   struct tm tm;
   size_t i;
@@ -194,3 +194,6 @@ main (int argc, char *argv[])
 
   return result;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

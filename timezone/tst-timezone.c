@@ -87,8 +87,8 @@ check_tzvars (const char *name, int dayl, int timez, const char *const tznam[])
 }
 
 
-int
-main (int argc, char ** argv)
+static int
+do_test (void)
 {
   time_t t;
   const struct test_times *pt;
@@ -166,3 +166,6 @@ main (int argc, char ** argv)
 
   return failed ? EXIT_FAILURE : EXIT_SUCCESS;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

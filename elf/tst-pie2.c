@@ -31,8 +31,11 @@ init_g (void)
   g += 1;
 }
 
-int
-main (int argc, char *argv[])
+static int
+do_test (void)
 {
   return 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

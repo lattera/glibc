@@ -44,8 +44,8 @@ static struct tests
 };
 
 
-int
-main (int argc, char *argv[])
+static int
+do_test (void)
 {
   int result = 0;
   size_t cnt;
@@ -72,3 +72,6 @@ main (int argc, char *argv[])
 
   return result;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

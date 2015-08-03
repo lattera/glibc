@@ -2,8 +2,8 @@
 #include <dirent.h>
 #include <stdlib.h>
 
-int
-main (int argc, char *argv[])
+static int
+do_test (void)
 {
   DIR * dirp;
   long int save3 = 0;
@@ -76,3 +76,6 @@ main (int argc, char *argv[])
   closedir (dirp);
   return result;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

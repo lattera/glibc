@@ -92,8 +92,8 @@ unload (const char *path, void *handle)
   dl_iterate_phdr (callback, (void *)(intptr_t) REMOVE);
 }
 
-int
-main (int argc, char **argv)
+static int
+do_test (void)
 {
   void *handle1, *handle2;
 
@@ -104,3 +104,6 @@ main (int argc, char **argv)
   unload ("globalmod1.so", handle2);
   return 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

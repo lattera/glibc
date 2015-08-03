@@ -248,8 +248,8 @@ mangle_tree (enum order how, enum action what, void **root, int lag)
 }
 
 
-int
-main (int argc, char **argv)
+static int
+do_test (void)
 {
   int total_error = 0;
   static char state[8] = { 1, 2, 3, 4, 5, 6, 7, 8 };
@@ -350,3 +350,6 @@ main (int argc, char **argv)
 
   return total_error;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

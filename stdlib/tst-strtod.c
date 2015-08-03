@@ -81,8 +81,8 @@ static void expand (char *dst, int c);
 static int long_dbl (void);
 static int locale_test (void);
 
-int
-main (int argc, char ** argv)
+static int
+do_test (void)
 {
   char buf[100];
   const struct ltest *lt;
@@ -276,3 +276,6 @@ locale_test (void)
 
   return result;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

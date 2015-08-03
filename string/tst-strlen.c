@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include <string.h>
 
-int
-main(int argc, char *argv[])
+static int
+do_test (void)
 {
   static const size_t lens[] = { 0, 1, 0, 2, 0, 1, 0, 3,
 				 0, 1, 0, 2, 0, 1, 0, 4 };
@@ -53,3 +53,6 @@ strnlen failed for base=%Zu, words=%Zu, and last=%Zu (is %zd, expected %zd)\n",
     }
   return 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

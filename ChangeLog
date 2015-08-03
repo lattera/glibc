@@ -1,3 +1,78 @@
+2015-08-06  Arjun Shankar  <arjun.is@lostca.se>
+
+	* dirent/tst-seekdir.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* elf/tst-dlmodcount.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* elf/tst-order-main.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* elf/tst-pie2.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* inet/tst-ether_aton.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* misc/tst-mntent.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* misc/tst-tsearch.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* posix/tst-regexloc.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* resolv/tst-aton.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* stdio-common/test-fwrite.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* stdio-common/tst-ferror.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* stdio-common/tst-printf.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* stdio-common/tst-printfsz.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* stdlib/tst-strtod.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* string/tst-strlen.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* string/tst-svc.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* time/tst-strptime.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+	* timezone/tst-timezone.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	Include test-skeleton.c.
+
 2015-08-05  Zack Weinberg  <zackw@panix.com>
 
 	* misc/regexp.h: Update comments.
