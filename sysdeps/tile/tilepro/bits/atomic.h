@@ -39,10 +39,12 @@ int __atomic_cmpxchg_32 (volatile int *mem, int newval, int oldval)
 }
 
 #define atomic_compare_and_exchange_val_acq(mem, n, o)                  \
-  ((__typeof (*(mem)))                                                  \
-   ((sizeof (*(mem)) == 4) ?                                            \
-    __atomic_cmpxchg_32 ((int *) (mem), (int) (n), (int) (o)) :         \
-    __atomic_error_bad_argument_size()))
+  ({                                                                    \
+    if (sizeof (*(mem)) != 4)                                           \
+      __atomic_error_bad_argument_size ();                              \
+    (__typeof (*(mem)))                                                 \
+      __atomic_cmpxchg_32 ((int *) (mem), (int) (n), (int) (o));        \
+  })
 
 /* Atomically compute:
      int old = *ptr;
@@ -64,10 +66,12 @@ int __atomic_update_32 (volatile int *mem, int mask, int addend)
 
 /* Size-checked verson of __atomic_update_32. */
 #define __atomic_update(mem, mask, addend)                              \
-  ((__typeof (*(mem)))                                                  \
-   ((sizeof (*(mem)) == 4) ?                                            \
-    __atomic_update_32 ((int *) (mem), (int) (mask), (int) (addend)) :  \
-    __atomic_error_bad_argument_size ()))
+  ({                                                                    \
+    if (sizeof (*(mem)) != 4)                                           \
+      __atomic_error_bad_argument_size ();                              \
+    (__typeof (*(mem)))                                                 \
+      __atomic_update_32 ((int *) (mem), (int) (mask), (int) (addend)); \
+  })
 
 #define atomic_exchange_acq(mem, newvalue)              \
   __atomic_update ((mem), 0, (newvalue))

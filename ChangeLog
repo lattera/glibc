@@ -1,3 +1,9 @@
+2015-08-04  Chris Metcalf  <cmetcalf@ezchip.com>
+
+	* sysdeps/tile/tilepro/bits/atomic.h (__atomic_update):
+	Restructure macro to avoid "value computed is not used" warning.
+	(atomic_compare_and_exchange_val_acq): Likewise.
+
 2015-08-04  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #18635]
