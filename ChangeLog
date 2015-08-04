@@ -1,3 +1,10 @@
+2015-08-04  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #18635]
+	* sysdeps/unix/sysv/linux/i386/makecontext.S: Terminate FDE before
+	ret.
+	* sysdeps/i386/i686/Makefile (test-xfail-tst-makecontext): Remove.
+
 2015-08-01  Carlos O'Donell  <carlos@redhat.com>
 
 	* po/pl.po: Updated translation.
