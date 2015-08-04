@@ -250,6 +250,41 @@ set_fortify_handler (void (*handler) (int sig))
   ignore_stderr ();
 }
 
+/* Show people how to run the program.  */
+static void
+usage (void)
+{
+  size_t i;
+
+  printf ("Usage: %s [options]\n"
+	  "\n"
+	  "Environment Variables:\n"
+	  "  TIMEOUTFACTOR          An integer used to scale the timeout\n"
+	  "  TMPDIR                 Where to place temporary files\n"
+	  "\n",
+	  program_invocation_short_name);
+  printf ("Options:\n");
+  for (i = 0; options[i].name; ++i)
+    {
+      int indent;
+
+      indent = printf ("  --%s", options[i].name);
+      if (options[i].has_arg == required_argument)
+	indent += printf (" <arg>");
+      printf ("%*s", 25 - indent, "");
+      switch (options[i].val)
+	{
+	case OPT_DIRECT:
+	  printf ("Run the test directly (instead of forking & monitoring)");
+	  break;
+	case OPT_TESTDIR:
+	  printf ("Override the TMPDIR env var");
+	  break;
+	}
+      printf ("\n");
+    }
+}
+
 /* We provide the entry point here.  */
 int
 main (int argc, char *argv[])
@@ -271,6 +306,7 @@ main (int argc, char *argv[])
     switch (opt)
       {
       case '?':
+	usage ();
 	exit (1);
       case OPT_DIRECT:
 	direct = 1;

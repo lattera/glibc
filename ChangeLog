@@ -1,5 +1,10 @@
 2015-08-05  Mike Frysinger  <vapier@gentoo.org>
 
+	* test-skeleton.c (usage): New function.
+	(main): Call usage when opt is '?'.
+
+2015-08-05  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/unix/sysv/linux/mmap64.c: Move MMAP2_PAGE_SHIFT define
 	before first use.
 
