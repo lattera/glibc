@@ -1,5 +1,10 @@
 2015-08-05  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* string/memccpy.c (memccpy):
+	Improve performance by using memchr/memcpy/__mempcpy.
+
+2015-08-05  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* string/strncpy.c (strncpy):
 	Improve performance by using __strnlen/memcpy.
 

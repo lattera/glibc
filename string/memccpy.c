@@ -26,15 +26,12 @@
 void *
 __memccpy (void *dest, const void *src, int c, size_t n)
 {
-  const char *s = src;
-  char *d = dest;
-  const char x = c;
-  size_t i = n;
+  void *p = memchr (src, c, n);
 
-  while (i-- > 0)
-    if ((*d++ = *s++) == x)
-      return d;
+  if (p != NULL)
+    return __mempcpy (dest, src, p - src + 1);
 
+  memcpy (dest, src, n);
   return NULL;
 }
 
