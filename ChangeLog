@@ -1,3 +1,9 @@
+2015-08-05  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* version.h (RELEASE): Set to "stable".
+	(VERSION): Set to "2.22"
+	* include/features.h (__GLIBC_MINOR__): Set to 22.
+
 2015-08-04  Chris Metcalf  <cmetcalf@ezchip.com>
 
 	* sysdeps/tile/tilepro/bits/atomic.h (__atomic_update):
