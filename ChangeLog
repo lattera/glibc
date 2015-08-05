@@ -1,3 +1,8 @@
+2015-08-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* locale/loadarchive.c (_nl_archive_subfreeres): Also check
+	dead->data[category] != NULL.
+
 2015-08-05  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18647]

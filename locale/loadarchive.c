@@ -515,7 +515,7 @@ _nl_archive_subfreeres (void)
 
       free (dead->name);
       for (category = 0; category < __LC_LAST; ++category)
-	if (category != LC_ALL)
+	if (category != LC_ALL && dead->data[category] != NULL)
 	  {
 	    /* _nl_unload_locale just does this free for the archive case.  */
 	    if (dead->data[category]->private.cleanup)
