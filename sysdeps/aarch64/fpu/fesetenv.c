@@ -29,8 +29,20 @@ __fesetenv (const fenv_t *envp)
   fpu_fpsr_t fpsr_new;
 
   _FPU_GETCW (fpcr);
-  _FPU_GETFPSR (fpsr);
 
+  if ((envp != FE_DFL_ENV) && (envp != FE_NOMASK_ENV))
+    {
+      /* The new FPCR/FPSR are valid, so don't merge the reserved flags.  */
+      fpcr_new = envp->__fpcr;
+
+      if (fpcr != fpcr_new)
+	_FPU_SETCW (fpcr_new);
+
+      _FPU_SETFPSR (envp->__fpsr);
+      return 0;
+    }
+
+  _FPU_GETFPSR (fpsr);
   fpcr_new = fpcr & _FPU_RESERVED;
   fpsr_new = fpsr & _FPU_FPSR_RESERVED;
 
@@ -39,31 +51,25 @@ __fesetenv (const fenv_t *envp)
       fpcr_new |= _FPU_DEFAULT;
       fpsr_new |= _FPU_FPSR_DEFAULT;
     }
-  else if (envp == FE_NOMASK_ENV)
+  else
     {
       fpcr_new |= _FPU_FPCR_IEEE;
       fpsr_new |= _FPU_FPSR_IEEE;
     }
-  else
-    {
-      fpcr_new |= envp->__fpcr & ~_FPU_RESERVED;
-      fpsr_new |= envp->__fpsr & ~_FPU_FPSR_RESERVED;
-    }
 
-  if (fpsr != fpsr_new)
-    _FPU_SETFPSR (fpsr_new);
+  _FPU_SETFPSR (fpsr_new);
 
   if (fpcr != fpcr_new)
-    _FPU_SETCW (fpcr_new);
+    {
+      _FPU_SETCW (fpcr_new);
 
-  /* Trapping exceptions are optional in AArch64 the relevant enable
-     bits in FPCR are RES0 hence the absence of support can be
-     detected by reading back the FPCR and comparing with the required
-     value.  */
+      /* Trapping exceptions are optional in AArch64; the relevant enable
+	 bits in FPCR are RES0 hence the absence of support can be detected
+	 by reading back the FPCR and comparing with the required value.  */
+      _FPU_GETCW (updated_fpcr);
 
-  _FPU_GETCW (updated_fpcr);
-  if ((updated_fpcr & fpcr_new) != fpcr_new)
-    return 1;
+      return fpcr_new & ~updated_fpcr;
+    }
 
   return 0;
 }
