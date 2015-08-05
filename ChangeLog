@@ -1,5 +1,8 @@
 2015-08-05  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* version.h (RELEASE): Set to "development".
+	(VERSION): Set to "2.22.90"
+
 	* version.h (RELEASE): Set to "stable".
 	(VERSION): Set to "2.22"
 	* include/features.h (__GLIBC_MINOR__): Set to 22.
