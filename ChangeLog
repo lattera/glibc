@@ -1,3 +1,11 @@
+2015-08-05  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18647]
+	* sysdeps/ieee754/flt-32/e_powf.c (__ieee754_powf): For large y
+	and |x| close to 1, use absolute value of x when computing log.
+	* math/auto-libm-test-in: Add more tests of pow.
+	* math/auto-libm-test-out: Regenerated.
+
 2015-08-05  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/arm/mmap.c: Add file.
