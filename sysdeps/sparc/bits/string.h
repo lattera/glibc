@@ -26,3 +26,6 @@
 /* sparc32 and sparc64 strchr(x, '\0') perform better than
    __rawmemchr(x, '\0').  */
 #define _HAVE_STRING_ARCH_strchr 1
+
+/* Don't inline mempcpy into memcpy as sparc has an optimized mempcpy.  */
+#define _HAVE_STRING_ARCH_mempcpy 1

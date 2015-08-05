@@ -636,6 +636,25 @@ extern char *basename (const char *__filename) __THROW __nonnull ((1));
 # endif
 #endif
 
+#if defined __USE_GNU && defined __OPTIMIZE__ \
+    && defined __extern_always_inline && __GNUC_PREREQ (3,2)
+# if !defined _FORCE_INLINES && !defined _HAVE_STRING_ARCH_mempcpy
+
+#undef mempcpy
+#undef __mempcpy
+#define mempcpy(dest, src, n) __mempcpy_inline (dest, src, n)
+#define __mempcpy(dest, src, n) __mempcpy_inline (dest, src, n)
+
+__extern_always_inline void *
+__mempcpy_inline (void *__restrict __dest,
+		  const void *__restrict __src, size_t __n)
+{
+  return (char *) memcpy (__dest, __src, __n) + __n;
+}
+
+# endif
+#endif
+
 __END_DECLS
 
 #endif /* string.h  */

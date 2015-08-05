@@ -1,5 +1,11 @@
 2015-08-05  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* string/string.h: (mempcpy): Redirect to __mempcpy_inline.
+	(__mempcpy): Likewise.  (__mempcpy_inline): New inline function.
+	* sysdeps/sparc/bits/string.h: (_HAVE_STRING_ARCH_mempcpy): Define.
+
+2015-08-05  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* string/memccpy.c (memccpy):
 	Improve performance by using memchr/memcpy/__mempcpy.
 
