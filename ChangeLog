@@ -1,5 +1,10 @@
 2015-08-05  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* string/strncpy.c (strncpy):
+	Improve performance by using __strnlen/memcpy.
+
+2015-08-05  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* sysdeps/aarch64/fpu/feenablxcpt.c (feenableexcept):
 	Optimize to avoid an unnecessary FPCR read.
 
