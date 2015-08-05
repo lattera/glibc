@@ -74,8 +74,11 @@ ENTRY(__makecontext)
 	   have to install the context listed in the uc_link element of
 	   the context 'makecontext' manipulated at the time of the
 	   'makecontext' call.  If the pointer is NULL the process must
-	   terminate.  */
+	   terminate.
+	   Make sure to separate the return label from the previous unwind
+	   region, because the unwinder uses ra-1 to find the FDE.  */
 	cfi_endproc
+	nop
 1:
 	/* This removes the parameters passed to the function given to
 	   'makecontext' from the stack.  D7 contains the number of
